@@ -1,0 +1,658 @@
+/* vcal-conduit.cc                      KPilot
+**
+** Copyright (C) 2001 by Dan Pilone
+**
+** This file defines the vcal-conduit plugin.
+*/
+
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
+** MA 02139, USA.
+*/
+
+/*
+** Bug reports and questions can be sent to kde-pim@kde.org
+*/
+
+static const char *vcalconduitbase_id = "$Id$";
+
+#include <options.h>
+#include <unistd.h>
+
+#include <qdatetime.h>
+#include <qtimer.h>
+
+#include <pilotUser.h>
+#include <kconfig.h>
+
+#include <calendar.h>
+#include <calendarlocal.h>
+#include <incidence.h>
+
+
+/*
+** KDE 2.2 uses class KORecurrence in a different header file.
+*/
+#ifdef KDE2
+#include <korecurrence.h>
+#define Recurrence_t KCal::KORecurrence
+#define DateList_t QDateList
+#define DateListIterator_t QDateListIterator
+#else
+#include <recurrence.h>
+#define Recurrence_t KCal::Recurrence
+#define DateList_t KCal::DateList
+#define DateListIterator_t KCal::DateList::ConstIterator
+#endif
+
+#include <pilotSerialDatabase.h>
+#include <pilotLocalDatabase.h>
+#include <pilotDateEntry.h>
+
+//#include "vcal-conduitbase.h"
+#include "vcal-factory.h"
+#include "vcal-conduitbase.moc"
+
+QDateTime readTm(const struct tm &t)
+{
+  QDateTime dt;
+  dt.setDate(QDate(1900 + t.tm_year, t.tm_mon + 1, t.tm_mday));
+  dt.setTime(QTime(t.tm_hour, t.tm_min, t.tm_sec));
+  return dt;
+}
+
+
+struct tm writeTm(const QDateTime &dt)
+{
+  struct tm t;
+
+  t.tm_wday = 0; // unimplemented
+  t.tm_yday = 0; // unimplemented
+  t.tm_isdst = 0; // unimplemented
+
+  t.tm_year = dt.date().year() - 1900;
+  t.tm_mon = dt.date().month() - 1;
+  t.tm_mday = dt.date().day();
+  t.tm_hour = dt.time().hour();
+  t.tm_min = dt.time().minute();
+  t.tm_sec = dt.time().second();
+
+  return t;
+}
+
+
+struct tm writeTm(const QDate &dt)
+{
+  struct tm t;
+
+  t.tm_wday = 0; // unimplemented
+  t.tm_yday = 0; // unimplemented
+  t.tm_isdst = 0; // unimplemented
+
+  t.tm_year = dt.year() - 1900;
+  t.tm_mon = dt.month() - 1;
+  t.tm_mday = dt.day();
+  t.tm_hour = 0;
+  t.tm_min = 0;
+  t.tm_sec = 0;
+
+  return t;
+}
+
+
+
+/****************************************************************************
+ *                          VCalConduitBase class                               *
+ ****************************************************************************/
+
+VCalConduitBase::VCalConduitBase(KPilotDeviceLink *d,
+	const char *n,
+	const QStringList &a) :
+	ConduitAction(d,n,a),
+	fCalendar(0L),
+	fCurrentDatabase(0L),
+	fBackupDatabase(0L),
+	fP(0L)
+{
+	FUNCTIONSETUP;
+	(void) vcalconduitbase_id;
+}
+
+
+VCalConduitBase::~VCalConduitBase()
+{
+	FUNCTIONSETUP;
+
+	KPILOT_DELETE(fP);
+	KPILOT_DELETE(fCurrentDatabase);
+	KPILOT_DELETE(fBackupDatabase);
+	KPILOT_DELETE(fCalendar);
+}
+
+
+/* There are several different scenarios for a record on the Palm and its PC counterpart
+  N means a new record, M flags a modified record, D a deleted and - an unmodified record
+  first is the Palm record, second the corresponding PC record
+  (-,-)...unchanged, just sync if first time or full sync
+  (N,-)...no rec matching the Palm ID in the backupDB/calendar yet => add KCal::Event
+  (M,-)...record is in backupDB, unchanged in calendar => modify in calendar and in backupDB
+  (D,-)...deleted on Palm, exists in backupDB and calendar => just delete from calendar and backupDB
+  (-,N)...no or invalid pilotID set for the KCal::Event => just add to palm and backupDB
+  (-,M)...valid PilotID set => just modify on Palm
+  (-,D)...Record in backupDB, but not in calendar => delete from Palm and backupDB
+  (N,N)...Can't find out (the two records are not correlated in any way, they just have the same data!!
+  (M,M),(M,L),(L,M)...(Record exists on Palm and the Event has the ID) CONFLICT, ask the user what to do
+                      or use a config setting
+  (L,L)...already deleted on both, no need to do anything.
+
+
+   The sync process is as follows (for a fast sync):
+	1) syncRecord goes through all records on Palm (just the modified one are necessary), find it
+	   in the backupDB. The following handles ([NMD],*)
+	   a) if it doesn't exist and was not deleted, add it to the calendar and the backupDB
+	   b) if it exists and was not deleted,
+			A) if it is unchanged in the calendar, just modify in the calendar
+		c) if it exists and was deleted, delete it from the calendar if necessary
+	2) syncEvent goes through all KCale::Events in the calendar (just modified, this is the modification
+	   time is later than the last sync time). This handles (-,N),(-,M)
+		a) if it does not have a pilotID, add it to the palm and backupDB, store the PalmID
+		b) if it has a valid pilotID, update the Palm record and the backup
+	3) finally, deleteRecord goes through all records (which don't have the deleted flag) of the backup db
+	   and if one does not exist in the Calendar, it was deleted there, so delete it from the Palm, too.
+		This handles the last remaining case of (-,D)
+
+
+In addition to the fast sync, where the last sync was done with this very PC and calendar file,
+there are two special cases: a full and a first sync.
+-) a full sync goes through all records, not just the modified ones. The pilotID setting of the calendar
+   records is used to determine if the record already exists. if yes, the record is just modified
+-) a first sync completely ignores the pilotID setting of the calendar events. All records are added,
+	so there might be duplicates. The add function for the calendar should check if a similar record already
+	exists, but this is not done yet.
+
+
+-) a full sync is done if
+	a) there is a backupdb and a calendar, but the PC id number changed
+	b) it was explicitely requested by pressing the full sync button in KPilot
+	c) the setting "always full sync" was selected in the configuration dlg
+-) a first sync is done if
+	a) either the calendar or the backup DB does not exist.
+	b) the calendar and the backup DB exists, but the sync is done for a different User name
+	c) it was explicitely requested in KPilot
+
+*/
+
+/* virtual */ void VCalConduitBase::exec()
+{
+//	debug_level=0;
+	FUNCTIONSETUP;
+
+//	bool loadSuccesful = true;
+	KPilotUser*usr;
+
+	if (!fConfig)
+	{
+		kdWarning() << k_funcinfo
+			<< ": No configuration set for vcal-conduit"
+			<< endl;
+		goto error;
+	}
+
+	if (PluginUtility::isRunning("korganizer") ||
+		PluginUtility::isRunning("alarmd"))
+	{
+		addSyncLogEntry(i18n("KOrganizer is running, can't update datebook."));
+#ifdef DEBUG
+		DEBUGCONDUIT<<fname<<": KOrganizer is running, can't update datebook."<<endl;
+#endif
+		emit syncDone(this);
+		return;
+	}
+
+	fConfig->setGroup(configGroup());
+
+	fCalendarFile = fConfig->readEntry(VCalConduitFactory::calendarFile);
+	fDeleteOnPilot = fConfig->readBoolEntry(VCalConduitFactory::deleteOnPilot, false);
+	// don't do a first sync by default in any case, only when explicitely requested, or the backup
+	// database or the calendar are empty.
+	fFirstTime = fConfig->readBoolEntry(VCalConduitFactory::firstTime, false);
+	usr=fHandle->getPilotUser();
+	// changing the PC or using a different Palm Desktop app causes a full sync
+	// User gethostid for this, since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0))
+	// as PC_ID, so using JPilot and KPilot is the same as using two differenc PCs
+	fFullSync = (fConfig->readBoolEntry(VCalConduitFactory::alwaysFullSync, false) ||
+		((usr->getLastSyncPC()!=(unsigned long) gethostid()) && fConfig->readBoolEntry(VCalConduitFactory::fullSyncOnPCChange, true)) );
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Using calendar file "
+		<< fCalendarFile
+		<< endl;
+#endif
+
+	fCurrentDatabase = new PilotSerialDatabase(pilotSocket(), dbname(), this, dbname());
+	fBackupDatabase = new PilotLocalDatabase(dbname());
+	fCalendar = new KCal::CalendarLocal();
+	if (!fCurrentDatabase || !fBackupDatabase || !fCalendar) goto error;
+
+	// if there is no backup db yet, fetch it from the palm, open it and set the full sync flag.
+	if (!fBackupDatabase->isDBOpen() )
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << "Backup database "<<fBackupDatabase->dbPathName()<<" could not be opened. Will fetch a copy from the palm and do a full sync"<<endl;
+#endif
+		struct DBInfo dbinfo;
+		strncpy(&dbinfo.name[0], dbname().latin1(), sizeof(dbinfo.name));
+		if (!fHandle->retrieveDatabase(fBackupDatabase->dbPathName(), &dbinfo) ) goto error;
+		KPILOT_DELETE(fBackupDatabase);
+		fBackupDatabase = new PilotLocalDatabase(dbname());
+		if (!fBackupDatabase || !fBackupDatabase->isDBOpen()) goto error;
+		fFullSync=true;
+	}
+
+	// Handle lots of error cases.
+	if (!fCurrentDatabase->isDBOpen() ||
+		 !fBackupDatabase->isDBOpen()) goto error;
+
+
+	// TODO: fix the time zone setting: How do I get the correct setting???
+	//       I have to set this explicitely, otherwise, all entries will be in GMT...
+//	fCalendar->setTimeZone(0);
+
+
+	// if there is no calendar yet, use a first sync..
+	// the calendar is initialized, so nothing more to do...
+	if (!fCalendar->load(fCalendarFile) )
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << "calendar file "<<fCalendarFile<<" could not be opened. Will create a new one"<<endl;
+#endif
+		fFirstTime=true;
+	}
+// TODO: remove this:
+//fFullSync=true;
+//fFirstTime=false;
+
+	fP = newVCalPrivate(fCalendar);
+   if (!fP) goto error;
+	fP->updateIncidences();
+
+#ifdef DEBUG
+	DEBUGCONDUIT<<fname<<": fullsync="<<fFullSync<<", firstSync="<<fFirstTime<<endl;
+#endif
+
+	pilotindex=0;
+	QTimer::singleShot(0,this,SLOT(syncRecord()));
+	return;
+
+error:
+	if (!fCurrentDatabase)
+	{
+		kdWarning() << k_funcinfo
+			<< ": Couldn't open database on Pilot"
+			<< endl;
+	}
+	if (!fBackupDatabase)
+	{
+		kdWarning() << k_funcinfo
+			<< ": Couldn't open local copy"
+			<< endl;
+	}
+/*	if (!loadSuccesful)
+	{
+		kdWarning() << k_funcinfo
+			<< ": Couldn't load <"
+			<< fCalendarFile
+			<< ">"
+			<< endl;
+	}*/
+
+	emit logError(i18n("Couldn't open the calendar databases."));
+
+	KPILOT_DELETE(fCurrentDatabase);
+	KPILOT_DELETE(fBackupDatabase);
+	KPILOT_DELETE(fCalendar);
+   KPILOT_DELETE(fP);
+	emit syncDone(this);
+}
+
+
+void VCalConduitBase::syncRecord()
+{
+	FUNCTIONSETUP;
+// TODO:: remove
+//QTimer::singleShot(0 ,this,SLOT(syncIncidence()));
+//return;
+
+	PilotRecord *r;
+	if (fFirstTime || fFullSync)
+	{
+		r = fCurrentDatabase->readRecordByIndex(pilotindex++);
+	}
+	else
+	{
+		r = fCurrentDatabase->readNextModifiedRec();
+	}
+	PilotRecord *s = 0L;
+
+	if (!r)
+	{
+		fP->updateIncidences();
+		QTimer::singleShot(0 ,this,SLOT(syncIncidence()));
+		return;
+	}
+
+	s = fBackupDatabase->readRecordById(r->getID());
+	if (!s || (fFirstTime && !r->isDeleted()) )
+	{
+#ifdef DEBUG
+		if (r->getID()>0)
+		{
+			DEBUGCONDUIT<<"---------------------------------------------------------------------------"<<endl;
+			DEBUGCONDUIT<< fname<<": Could not read palm record with ID "<<r->getID()<<endl;
+		}
+#endif
+		addRecord(r);
+	}
+	else
+	{
+		if (r->isDeleted())
+		{
+			deleteRecord(r,s);
+		}
+		else
+		{
+			changeRecord(r,s);
+		}
+	}
+
+	KPILOT_DELETE(r);
+	KPILOT_DELETE(s);
+
+	QTimer::singleShot(0,this,SLOT(syncRecord()));
+}
+
+
+void VCalConduitBase::syncIncidence()
+{
+	FUNCTIONSETUP;
+	KCal::Incidence*e=0L;
+	if (fFirstTime || fFullSync) e=fP->getNextIncidence();
+	else e=fP->getNextModifiedIncidence();
+
+	if (!e)
+	{
+		pilotindex=0;
+//		debug_level=1;
+		QTimer::singleShot(0,this,SLOT(syncDeletedIncidence()));
+		return;
+	}
+	// find the corresponding index on the palm and sync. If there is none, create it.
+	int ix=e->pilotId();
+#ifdef DEBUG
+		DEBUGCONDUIT<<fname<<": found PC entry with pilotID "<<ix<<endl;
+		DEBUGCONDUIT<<fname<<": Description: "<<e->summary()<<endl;
+#endif
+	PilotRecord *s=0L;
+	if (ix>0 && (s=fCurrentDatabase->readRecordById(ix)))
+	{
+		if (e->syncStatus()==KCal::Incidence::SYNCDEL)
+		{
+			deletePalmRecord(e, s);
+		}
+		else
+		{
+			changePalmRecord(e, s);
+		}
+		KPILOT_DELETE(s);
+	} else {
+#ifdef DEBUG
+		if (ix>0)
+		{
+			DEBUGCONDUIT<<"---------------------------------------------------------------------------"<<endl;
+			DEBUGCONDUIT<< fname<<": Could not read palm record with ID "<<ix<<endl;
+		}
+#endif
+		addPalmRecord(e);
+	}
+	QTimer::singleShot(0, this, SLOT(syncIncidence()));
+}
+
+
+void VCalConduitBase::syncDeletedIncidence()
+{
+	FUNCTIONSETUP;
+
+	PilotRecord *r = fBackupDatabase->readRecordByIndex(pilotindex++);
+	if (!r || fFullSync || fFirstTime)
+	{
+		QTimer::singleShot(0 ,this,SLOT(cleanup()));
+		return;
+	}
+
+	KCal::Incidence *e = fP->findIncidence(r->getID());
+	if (!e)
+	{
+		// entry was deleted from Calendar, so delete it from the palm
+		PilotRecord*s=fBackupDatabase->readRecordById(r->getID());
+		if (s)
+		{
+			// delete the record from the palm
+//			dlp_DeleteRecord(fHandle->pilotSocket(), int dbhandle, int all, recordid_t recID);
+			s->setAttrib(s->getAttrib() & ~dlpRecAttrDeleted);
+			fCurrentDatabase->writeRecord(s);
+			KPILOT_DELETE(s);
+		}
+		r->setAttrib(r->getAttrib() & ~dlpRecAttrDeleted);
+		fBackupDatabase->writeRecord(r);
+	}
+
+	KPILOT_DELETE(r);
+	QTimer::singleShot(0,this,SLOT(syncDeletedIncidence()));
+}
+
+
+void VCalConduitBase::cleanup()
+{
+	FUNCTIONSETUP;
+
+	KPILOT_DELETE(fCurrentDatabase);
+	KPILOT_DELETE(fBackupDatabase);
+
+	fCalendar->save(fCalendarFile);
+	KPILOT_DELETE(fCalendar);
+	KPILOT_DELETE(fP);
+
+	emit syncDone(this);
+}
+
+
+void VCalConduitBase::addRecord(PilotRecord *r)
+{
+	FUNCTIONSETUP;
+
+	recordid_t id=fBackupDatabase->writeRecord(r);
+#ifdef DEBUG
+	DEBUGCONDUIT<<fname<<": Pilot Record ID="<<r->getID()<<", backup ID="<<id<<endl;
+#endif
+
+	PilotAppCategory *de=newPilotEntry(r);
+	KCal::Incidence*e = newIncidence();
+	if (e && de) 
+	{
+		incidenceFromRecord(e,de);
+		// TODO: find out if there is already an entry with this data...
+
+		fP->addIncidence(e);
+	}
+	KPILOT_DELETE(de);
+}
+
+
+void VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *s)
+{
+	FUNCTIONSETUP;
+
+	PilotAppCategory*de=newPilotEntry(r);
+	KCal::Incidence *e = fP->findIncidence(r->getID());
+
+	if (e && de)
+	{
+		incidenceFromRecord(e,de);
+		fBackupDatabase->writeRecord(r);
+	}
+	else
+	{
+		// TODO: the record was modified  on the palm and deleted in the calendar. What shall I do????
+		//       ASK THE USER, or take the config setting
+		kdWarning() << k_funcinfo
+			<< ": While changing record -- not found in iCalendar"
+			<< endl;
+
+		addRecord(r);
+	}
+	KPILOT_DELETE(de);
+}
+
+
+void VCalConduitBase::deleteRecord(PilotRecord *r, PilotRecord *s)
+{
+	FUNCTIONSETUP;
+
+	KCal::Incidence *e = fP->findIncidence(r->getID());
+	if (e)
+	{
+		// RemoveEvent also takes it out of the calendar.
+		fP->removeIncidence(e);
+	}
+	fBackupDatabase->writeRecord(r);
+}
+
+
+void VCalConduitBase::addPalmRecord(KCal::Incidence*e)
+{
+	FUNCTIONSETUP;
+
+	PilotAppCategory*de=newPilotEntry(NULL);
+	updateIncidenceOnPalm(e, de);
+	KPILOT_DELETE(de);
+}
+
+
+void VCalConduitBase::changePalmRecord(KCal::Incidence*e, PilotRecord*s)
+{
+	PilotAppCategory*de=newPilotEntry(s);
+	updateIncidenceOnPalm(e, de);
+	KPILOT_DELETE(de);
+}
+
+
+void VCalConduitBase::deletePalmRecord(KCal::Incidence*e, PilotRecord*s)
+{
+	FUNCTIONSETUP;
+	if (s)
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": deleting record " << s->getID() << endl;
+#endif
+		s->setAttrib(~dlpRecAttrDeleted);
+		fCurrentDatabase->writeRecord(s);
+		fBackupDatabase->writeRecord(s);
+	}
+	else
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": could not find record to delete (" << e->pilotId() << ")" << endl;
+#endif
+	}
+}
+
+
+/* I have to use a pointer to an existing PilotDateEntry so that I can handle
+   new records as well (and to prevent some crashes concerning the validity
+   domain of the PilotRecord*r). In syncEvent this PilotDateEntry is created. */
+void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*de)
+{
+	FUNCTIONSETUP;
+	if (!de || !e ) {
+#ifdef DEBUG
+		DEBUGCONDUIT<<fname<<": NULL event given... Skipping it"<<endl;
+#endif
+		return;
+	}
+	PilotRecord*r=recordFromIncidence(de, e);
+
+	if (r)
+	{
+		recordid_t id=fCurrentDatabase->writeRecord(r);
+		r->setID(id);
+		fBackupDatabase->writeRecord(r);
+		e->setSyncStatus(KCal::Incidence::SYNCNONE);
+		e->setPilotId(id);
+		KPILOT_DELETE(r);
+	}
+}
+
+
+// $Log$
+// Revision 1.1.2.2  2002/04/28 20:20:03  kainhofe
+// calendar and backup databases are now created if they didn't exist
+//
+// Revision 1.1.2.1  2002/04/28 12:58:54  kainhofe
+// Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
+//
+// Revision 1.62  2002/04/21 17:39:01  kainhofe
+// recurrences without enddate work now
+//
+// Revision 1.61  2002/04/21 17:07:12  kainhofe
+// Fixed some memory leaks, old alarms and exceptions are deleted before new are added, Alarms are now correct
+//
+// Revision 1.60  2002/04/20 18:05:50  kainhofe
+// No duplicates any more in the calendar
+//
+// Revision 1.59  2002/04/20 17:38:02  kainhofe
+// recurrence now correctly written to the palm, no longer crashes
+//
+// Revision 1.58  2002/04/20 14:21:26  kainhofe
+// Alarms are now written to the palm. Some bug fixes, extensive testing. Exceptions still crash the palm ;-(((
+//
+// Revision 1.57  2002/04/19 19:34:11  kainhofe
+// didn't compile
+//
+// Revision 1.56  2002/04/19 19:10:29  kainhofe
+// added some comments describin the sync logic, deactivated the sync again (forgot it when I commited last time)
+//
+// Revision 1.55  2002/04/17 20:47:04  kainhofe
+// Implemented the alarm sync
+//
+// Revision 1.54  2002/04/17 00:28:11  kainhofe
+// Removed a few #ifdef DEBUG clauses I had inserted for debugging purposes
+//
+// Revision 1.53  2002/04/16 23:40:36  kainhofe
+// Exceptions no longer crash the daemon, recurrences are correct now, end date is set correctly. Problems: All events are off 1 day, lots of duplicates, exceptions are duplicate, too.
+//
+// Revision 1.52  2002/04/14 22:18:16  kainhofe
+// Implemented the second part of the sync (PC=>Palm), but disabled it, because it corrupts the Palm datebook
+//
+// Revision 1.51  2002/02/23 20:57:41  adridg
+// #ifdef DEBUG stuff
+//
+// Revision 1.50  2002/01/26 15:01:02  adridg
+// Compile fixes and more
+//
+// Revision 1.49  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
+
