@@ -298,7 +298,7 @@ alarm message window.</para>
 
 <para>To display &kalarm; in the &kde; system tray when it is not
 currently displayed, select <menuchoice>
-<guimenu>Actions</guimenu><guimenuitem>Show System Tray Icon</guimenuitem>
+<guimenu>View</guimenu><guimenuitem>Show System Tray Icon</guimenuitem>
 </menuchoice> or use the keybinding
 <keycombo action="simul">&Ctrl;<keycap>T</keycap></keycombo>. This
 menu option is available only if you are currently running the &kde;
@@ -309,7 +309,7 @@ currently displayed, do one of the following:</para>
 
 <itemizedlist>
 <listitem>
-<para>Select <menuchoice><guimenu>Actions</guimenu>
+<para>Select <menuchoice><guimenu>View</guimenu>
 <guimenuitem>Hide System Tray Icon</guimenuitem></menuchoice>
 or use the keybinding
 <keycombo action="simul">&Ctrl;<keycap>T</keycap></keycombo>.</para>
