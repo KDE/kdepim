@@ -25,6 +25,7 @@ class KNArticle;
 class KNArticleWidget;
 class KNArticleCollection;
 
+
 class KNArticleWindow : public KMainWindow  {
 
   Q_OBJECT
@@ -39,7 +40,6 @@ class KNArticleWindow : public KMainWindow  {
     static bool raiseWindowForArticle(KNArticle *art);   // false: no window found
     static bool raiseWindowForArticle(const QCString &mid);
 
-      
   protected:
     KAccel *a_ccel;
     KNArticleWidget *artW;

@@ -704,7 +704,7 @@ void KNConfig::DisplayedHeaders::save()
 
   QString dir(KGlobal::dirs()->saveLocation("appdata"));
   if (dir==QString::null) {
-    displayInternalFileError();
+    KNHelper::displayInternalFileError();
     return;
   }
   KSimpleConfig headerConf(dir+"headers.rc");
@@ -864,7 +864,7 @@ void KNConfig::PostNewsTechnical::save()
 
   QString dir(KGlobal::dirs()->saveLocation("appdata"));
   if (dir==QString::null)
-    displayInternalFileError();
+    KNHelper::displayInternalFileError();
   else {
     QFile f(dir+"xheaders");
     if(f.open(IO_WriteOnly)) {
@@ -875,7 +875,7 @@ void KNConfig::PostNewsTechnical::save()
       f.close();
     }
     else
-      displayInternalFileError();
+      KNHelper::displayInternalFileError();
   }
 }
 

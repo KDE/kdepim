@@ -99,7 +99,7 @@ QString KNFolder::path()
 {
   QString dir(KGlobal::dirs()->saveLocation("appdata","folders/"));
   /*if (dir==QString::null)
-    displayInternalFileError();*/
+    KNHelper::displayInternalFileError();*/
   return dir;
 }
 

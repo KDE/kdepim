@@ -33,7 +33,6 @@
 
 #include "knjobdata.h"
 
-
 class KNArticle;
 class KNArticleCollection;
 class KNMimeContent;

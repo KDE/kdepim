@@ -503,7 +503,7 @@ void KNGroup::saveDynamicData(int cnt,bool ovr)
       }
       f.close();
     }
-    else displayInternalFileError();
+    else KNHelper::displayInternalFileError();
   }
 }
 
@@ -547,7 +547,7 @@ void KNGroup::syncDynamicData()
 
       r_eadCount=readCnt;
     }
-    else displayInternalFileError();
+    else KNHelper::displayInternalFileError();
   }
 }
 

@@ -225,7 +225,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
     notRewraped=quoted;     // store the original text in here, the user can request it in the composer
     quoted=attribution;
 
-    quoted += rewrapStringList(text, knGlobals.cfgManager->postNewsComposer()->maxLineLength(), '>', !incSig, false);
+    quoted += KNHelper::rewrapStringList(text, knGlobals.cfgManager->postNewsComposer()->maxLineLength(), '>', !incSig, false);
   }
 
   //-------------------------- </Body> -----------------------------
@@ -532,7 +532,7 @@ void KNArticleFactory::edit(KNLocalArticle *a)
 void KNArticleFactory::saveArticles(KNLocalArticle::List *l, KNFolder *f)
 {
   if(!f->saveArticles(l)) {
-    displayInternalFileError();
+    KNHelper::displayInternalFileError();
     for(KNLocalArticle *a=l->first(); a; a=l->next())
       if(a->id()==-1)
         delete a; //ok, this is ugly - we simply delete orphant articles
@@ -736,7 +736,7 @@ void KNArticleFactory::processJob(KNJobData *j)
 
     //article has been sent successfully => move it to the "Sent-folder"
     if(!f_olManager->sent()->saveArticles(&lst)) {
-      displayInternalFileError();
+      KNHelper::displayInternalFileError();
       if(art->collection()==0)
         delete art;
     }
@@ -1041,13 +1041,13 @@ KNSendErrorDialog::KNSendErrorDialog() : QSemiModal(knGlobals.topWidget, 0, true
   connect(c_loseBtn, SIGNAL(clicked()), this, SLOT(slotCloseBtnClicked()));
 
   setCaption(kapp->makeStdCaption(i18n("Errors while sending")));
-  restoreWindowSize("sendDlg", this, sizeHint());
+  KNHelper::restoreWindowSize("sendDlg", this, sizeHint());
 }
 
 
 KNSendErrorDialog::~KNSendErrorDialog()
 {
-  saveWindowSize("sendDlg", size());
+  KNHelper::saveWindowSize("sendDlg", size());
 }
 
 

@@ -17,8 +17,6 @@
 #ifndef KNARTICLECOLLECTION_H
 #define KNARTICLECOLLECTION_H
 
-#include <qfile.h>
-
 #include "kncollection.h"
 
 class KNArticle;
@@ -63,8 +61,6 @@ class KNArticleVector {
 
     int indexForId(int id);
     int indexForMsgId(const QCString &id);
-
-
 
   protected:
     KNArticleVector *m_aster;
@@ -117,24 +113,5 @@ class KNArticleCollection : public KNCollection {
     KNArticleVector m_idIndex;
 };
 
-
-//==============================================================================
-
-
-class KNFile : public QFile {
-
-  public:
-    KNFile(const QString& fname=QString::null);
-    ~KNFile();
-    const QCString& readLine();
-    const QCString& readLineWnewLine();
-
-   protected:
-    bool increaseBuffer();
-
-    QCString buffer;
-    char *dataPtr;
-    int filePos, readBytes;
-};
 
 #endif

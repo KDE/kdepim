@@ -18,12 +18,10 @@
 #define KNARTICLEMANAGER_H
 
 #include <qlist.h>
-#include <kurl.h>
-#include <qfile.h>
-#include <qlistview.h>
 
 #include "knmime.h"
 
+class QListViewItem;
 class KNArticle;
 class KTempFile;
 class KNListView;
@@ -34,35 +32,6 @@ class KNFolder;
 class KNArticleFilter;
 class KNFilterManager;
 class KNSearchDialog;
-
-
-//===============================================================================
-
-
-// handles file saving for KNArticleManager => no duplicated code
-class KNSaveHelper {
-
-public:
-  
-  KNSaveHelper(QString saveName, QWidget *parent);
-  ~KNSaveHelper();
-  
-  // returns a file open for writing
-  QFile* getFile(QString dialogTitle);
-  
-private:
-
-  QWidget *p_arent;
-  QString s_aveName;
-  KURL url;
-  QFile* file;
-  KTempFile* tmpFile;
-  static QString lastPath;
-
-};
-
-
-//===============================================================================
 
 
 class KNArticleManager : public QObject {
@@ -135,6 +104,5 @@ class KNArticleManager : public QObject {
     void slotItemExpanded(QListViewItem *p);
 
 };
-
 
 #endif

@@ -1827,7 +1827,7 @@ void KNLocalArticle::setForceDefaultCS(bool b)
 
 
 KNAttachment::KNAttachment(KNMimeContent *c)
-  : c_ontent(c), i_sAttached(true), h_asChanged(false)
+  : c_ontent(c), l_oadHelper(0), i_sAttached(true), h_asChanged(false)
 {
   KNHeaders::ContentType  *t=c->contentType();
   KNHeaders::CTEncoding   *e=c->contentTransferEncoding();
@@ -1843,12 +1843,11 @@ KNAttachment::KNAttachment(KNMimeContent *c)
 }
 
 
-KNAttachment::KNAttachment(const QString &path)
-  : c_ontent(0), i_sAttached(false), h_asChanged(true)
+KNAttachment::KNAttachment(KNLoadHelper *helper)
+  : c_ontent(0), l_oadHelper(helper), i_sAttached(false), h_asChanged(true)
 {
-  setMimeType((KMimeMagic::self()->findFileType(path))->mimeType());
-  f_ile.setName(path);
-  n_ame=QFileInfo(f_ile).fileName();
+  setMimeType((KMimeMagic::self()->findFileType(helper->getFile()->name()))->mimeType());
+  n_ame=helper->getURL().fileName();
 }
 
 
@@ -1856,6 +1855,7 @@ KNAttachment::~KNAttachment()
 {
   if(!i_sAttached && c_ontent)
     delete c_ontent;
+  delete l_oadHelper;
 }
 
 
@@ -1885,8 +1885,10 @@ QString KNAttachment::contentSize()
 
   if(c_ontent && c_ontent->hasContent())
     s=c_ontent->size();
-  else
-    s=f_ile.size();
+  else {
+  	if (l_oadHelper)
+	    s=l_oadHelper->getFile()->size();
+	}
 
   if(s > 1023) {
     s=s/1024;
@@ -1937,17 +1939,11 @@ void KNAttachment::updateContentInfo()
 
 void KNAttachment::attach(KNMimeContent *c)
 {
-  if(i_sAttached || f_ile.name().isEmpty())
+  if(i_sAttached || !l_oadHelper)
     return;
-
-
-  if(!f_ile.open(IO_ReadOnly)) {
-    displayExternalFileError();
-    i_sAttached=false;
-    return;
-  }
 
   c_ontent=new KNMimeContent();
+ 	QFile *file = l_oadHelper->getFile();
   updateContentInfo();
   KNHeaders::ContentType *type=c_ontent->contentType();
   KNHeaders::CTEncoding *e=c_ontent->contentTransferEncoding();
@@ -1958,17 +1954,16 @@ void KNAttachment::attach(KNMimeContent *c)
     int readBytes=0;
     DwString dest;
     DwString src;
-    QCString data( (f_ile.size()*4/3)+10 );
+    QCString data( (file->size()*4/3)+10 );
     data.at(0)='\0';
 
-    while(!f_ile.atEnd()) {
+    while(!file->atEnd()) {
       // read 5700 bytes at once :
       // 76 chars per line * 6 bit per char / 8 bit per byte => 57 bytes per line
       // we append 100 lines in a row => encode 5700 bytes
-      readBytes=f_ile.readBlock(buff, 5700);
-      if(readBytes<5700 && f_ile.status()!=IO_Ok) {
-        displayExternalFileError();
-        f_ile.close();
+      readBytes=file->readBlock(buff, 5700);
+      if(readBytes<5700 && file->status()!=IO_Ok) {
+        KNHelper::displayExternalFileError();
         delete c_ontent;
         c_ontent=0;
         break;
@@ -1979,7 +1974,6 @@ void KNAttachment::attach(KNMimeContent *c)
       data+=dest.c_str();
     }
 
-    f_ile.close();
     delete[] buff;
 
     c_ontent->b_ody=data;
@@ -1987,12 +1981,11 @@ void KNAttachment::attach(KNMimeContent *c)
     e->setDecoded(false);
   }
   else { //do not encode text
-    QCString txt(f_ile.size()+10);
-    int readBytes=f_ile.readBlock(txt.data(), f_ile.size());
-    f_ile.close();
+    QCString txt(file->size()+10);
+    int readBytes=file->readBlock(txt.data(), file->size());
 
-    if(readBytes<(int)f_ile.size() && f_ile.status()!=IO_Ok) {
-      displayExternalFileError();
+    if(readBytes<(int)file->size() && file->status()!=IO_Ok) {
+      KNHelper::displayExternalFileError();
       delete c_ontent;
       c_ontent=0;
     }

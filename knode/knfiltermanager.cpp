@@ -145,7 +145,7 @@ void KNFilterManager::saveFilterLists()
 {
   QString dir(KGlobal::dirs()->saveLocation("appdata","filters/"));
   if (dir==QString::null) {
-    displayInternalFileError();
+    KNHelper::displayInternalFileError();
     return;
   }
   KSimpleConfig conf(dir+"filters.rc");
@@ -386,7 +386,7 @@ void KNFilterManager::slotShowFilterChooser()
   if (currentItem==-1)
     currentItem=0;
 
-  int newFilter = selectDialog(knGlobals.topWidget, i18n("Select Filter"), items, currentItem);
+  int newFilter = KNHelper::selectDialog(knGlobals.topWidget, i18n("Select Filter"), items, currentItem);
   if (newFilter != -1)
     setFilter(ids[newFilter]);
 }

@@ -1345,7 +1345,7 @@ void KNodeView::slotArtSortHeadersKeyb()
 {
   kdDebug(5003) << "KNodeView::slotArtSortHeadersKeyb()" << endl;
 
-  int newCol = selectDialog(this, i18n("Select Sort Column"), a_ctArtSortHeaders->items(), a_ctArtSortHeaders->currentItem());
+  int newCol = KNHelper::selectDialog(this, i18n("Select Sort Column"), a_ctArtSortHeaders->items(), a_ctArtSortHeaders->currentItem());
   if (newCol != -1)
     h_drView->slotSortList(newCol);
 }
@@ -1610,7 +1610,7 @@ void KNodeView::slotFetchArticleWithID()
   QLineEdit *edit = new QLineEdit(page);
   label->setBuddy(edit);
   edit->setFocus();
-  restoreWindowSize("fetchArticleWithID", dlg, QSize(325,66));
+  KNHelper::restoreWindowSize("fetchArticleWithID", dlg, QSize(325,66));
 
   if (dlg->exec()) {
     QString id = edit->text().simplifyWhiteSpace();
@@ -1627,7 +1627,7 @@ void KNodeView::slotFetchArticleWithID()
     }
   }
 
-  saveWindowSize("fetchArticleWithID",dlg->size());
+  KNHelper::saveWindowSize("fetchArticleWithID",dlg->size());
   delete dlg;
 }
 

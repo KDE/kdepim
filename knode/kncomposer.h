@@ -68,7 +68,8 @@ class KNComposer : public KMainWindow  {
 
     // inserts at cursor position if clear is false, replaces content otherwise
     // puts the file content into a box if box==true
-    void insertFile(QString fileName, bool clear=false, bool box=false, QString boxTitle=QString::null);
+    // "file" is already open for reading
+    void insertFile(QFile *file, bool clear=false, bool box=false, QString boxTitle=QString::null);
 
     // ask for a filename, handle network urls
     void insertFile(bool clear=false, bool box=false);

@@ -326,7 +326,7 @@ bool KNComposer::hasValidData()
     KMessageBox::sorry(this, i18n("Please enter a subject!"));
     return false;
   }
-  if (!n_eeds8Bit && !isUsAscii(v_iew->s_ubject->text()))
+  if (!n_eeds8Bit && !KNHelper::isUsAscii(v_iew->s_ubject->text()))
     n_eeds8Bit=true;
 
   if (m_ode != mail) {
@@ -370,7 +370,7 @@ bool KNComposer::hasValidData()
       KMessageBox::sorry(this, i18n("Please enter the mail-address!"));
       return false;
     }
-    if (!n_eeds8Bit && !isUsAscii(v_iew->t_o->text()))
+    if (!n_eeds8Bit && !KNHelper::isUsAscii(v_iew->t_o->text()))
       n_eeds8Bit=true;
   }
 
@@ -385,14 +385,14 @@ bool KNComposer::hasValidData()
   for(int i=0; i<v_iew->e_dit->numLines(); i++) {
     line=v_iew->e_dit->textLine(i);
 
-    if (!n_eeds8Bit && !isUsAscii(line))
+    if (!n_eeds8Bit && !KNHelper::isUsAscii(line))
       n_eeds8Bit=true;
 
     if (line == "-- ") {   // signature text
       for (int j=i+1; j<v_iew->e_dit->numLines(); j++) {
         line=v_iew->e_dit->textLine(j);
 
-        if (!n_eeds8Bit && !isUsAscii(line))
+        if (!n_eeds8Bit && !KNHelper::isUsAscii(line))
           n_eeds8Bit=true;
 
         sigLength++;
@@ -651,50 +651,41 @@ void KNComposer::initData(const QString &text, bool firstEdit)
 
 // inserts at cursor position if clear is false, replaces content otherwise
 // puts the file content into a box if box==true
-void KNComposer::insertFile(QString fileName, bool clear, bool box, QString boxTitle)
+// "file" is already open for reading
+void KNComposer::insertFile(QFile *file, bool clear, bool box, QString boxTitle)
 {
   QString temp;
-  QFile file(fileName);
   bool ok=true;
   QTextCodec *codec=KGlobal::charsets()->codecForName(c_harset, ok);
-  QTextStream ts(&file);
+  QTextStream ts(file);
   ts.setCodec(codec);
 
-  if(!file.open(IO_ReadOnly)) {
-    if(clear)                // ok, not pretty, assuming that we load a tempfile when clear==true (external editor)
-      displayTempFileError(this);
-    else
-      displayExternalFileError(this);
-    return;
-  }
-  else {
-    if (box)
-      temp = QString::fromLatin1(",----[ %1 ]\n").arg(boxTitle);
+  if (box)
+    temp = QString::fromLatin1(",----[ %1 ]\n").arg(boxTitle);
 
-    if (box && (v_iew->e_dit->wordWrap()!=QMultiLineEdit::NoWrap)) {
-      int wrapAt = v_iew->e_dit->wrapColumnOrWidth();
-      QStringList lst;
-      QString line;
-      while(!file.atEnd()) {
-        line=ts.readLine();
-        if (!file.atEnd())
-          line+="\n";
-        lst.append(line);
-      }
-      temp+=rewrapStringList(lst, wrapAt, '|', false, true);
-    } else {
-      while(!file.atEnd()) {
-        if (box)
-          temp+="| ";
-        temp+=ts.readLine();
-        if (!file.atEnd())
-          temp+="\n";
-      }
+  if (box && (v_iew->e_dit->wordWrap()!=QMultiLineEdit::NoWrap)) {
+    int wrapAt = v_iew->e_dit->wrapColumnOrWidth();
+    QStringList lst;
+    QString line;
+    while(!file->atEnd()) {
+      line=ts.readLine();
+      if (!file->atEnd())
+        line+="\n";
+      lst.append(line);
     }
-
-    if (box)
-      temp += QString::fromLatin1("\n`----");
+    temp+=KNHelper::rewrapStringList(lst, wrapAt, '|', false, true);
+  } else {
+    while(!file->atEnd()) {
+      if (box)
+        temp+="| ";
+      temp+=ts.readLine();
+      if (!file->atEnd())
+        temp+="\n";
+    }
   }
+
+  if (box)
+    temp += QString::fromLatin1("\n`----");
 
   if(clear)
     v_iew->e_dit->setText(temp);
@@ -706,25 +697,20 @@ void KNComposer::insertFile(QString fileName, bool clear, bool box, QString boxT
 // ask for a filename, handle network urls
 void KNComposer::insertFile(bool clear, bool box)
 {
-  KURL url = KFileDialog::getOpenURL(QString::null, QString::null, this, i18n("Insert File"));
-  QString fileName,boxName;
+	KNLoadHelper helper(this);
+	QFile *file = helper.getFile(i18n("Insert File"));
+	KURL url;
+	QString boxName;
+	
+	if (file) {
+		url = helper.getURL();
+		
+    if (url.isLocalFile())
+      boxName = url.path();
+    else
+      boxName = url.prettyURL();
 
-  if (url.isEmpty())
-    return;
-
-  if (url.isLocalFile()) {
-    fileName = url.path();
-    boxName = fileName;
-  } else {
-    if (!KIO::NetAccess::download(url, fileName))
-      return;
-    boxName = url.prettyURL();
-  }
-
-  insertFile(fileName,clear,box,boxName);
-
-  if (!url.isLocalFile()) {
-    KIO::NetAccess::removeTempFile(fileName);
+    insertFile(file,clear,box,boxName);
   }
 }
 
@@ -783,21 +769,16 @@ void KNComposer::slotInsertFileBoxed()
 
 void KNComposer::slotAttachFile()
 {
-  QString path=KFileDialog::getOpenFileName(QString::null, QString::null, this, i18n("Attach File"));   // this needs to be network-transparent (CG)
-
-  if(path.isEmpty()) // no file choosen
-    return;
-
-  if(QFile::exists(path)) {
-    if (!v_iew->v_iewOpen) {
-      ::saveWindowSize("composer", size());
+	KNLoadHelper *helper = new KNLoadHelper(this);
+	
+	if (helper->getFile(i18n("Attach File"))) {
+   if (!v_iew->v_iewOpen) {
+      KNHelper::saveWindowSize("composer", size());
       v_iew->showAttachmentView();
     }
-    (void) new AttachmentViewItem(v_iew->a_ttView, new KNAttachment(path));
+    (void) new AttachmentViewItem(v_iew->a_ttView, new KNAttachment(helper));
     a_ttChanged=true;
   }
-  else
-    displayExternalFileError(this);
 }
 
 
@@ -814,7 +795,7 @@ void KNComposer::slotRemoveAttachment()
     delete it;
 
     if(v_iew->a_ttView->childCount()==0) {
-      ::saveWindowSize("composerAtt", size());
+      KNHelper::saveWindowSize("composerAtt", size());
       v_iew->hideAttachmentView();
     }
 
@@ -927,7 +908,7 @@ void KNComposer::slotSetCharset(const QString &s)
 
 void KNComposer::slotSetCharsetKeyboard()
 {
-  int newCS = selectDialog(this, i18n("Select Charset"), a_ctSetCharset->items(), a_ctSetCharset->currentItem());
+  int newCS = KNHelper::selectDialog(this, i18n("Select Charset"), a_ctSetCharset->items(), a_ctSetCharset->currentItem());
   if (newCS != -1) {
     a_ctSetCharset->setCurrentItem(newCS);
     slotSetCharset(*(a_ctSetCharset->items().at(newCS)));
@@ -969,7 +950,7 @@ void KNComposer::slotExternalEditor()
   e_ditorTempfile=new KTempFile();
 
   if(e_ditorTempfile->status()!=0) {
-    displayTempFileError(this);
+    KNHelper::displayTempFileError(this);
     e_ditorTempfile->unlink();
     delete e_ditorTempfile;
     e_ditorTempfile=0;
@@ -987,10 +968,10 @@ void KNComposer::slotExternalEditor()
   }
 
   e_ditorTempfile->file()->writeBlock(codec->fromUnicode(tmp));
-  e_ditorTempfile->close();
+  e_ditorTempfile->file()->flush();
 
   if(e_ditorTempfile->status()!=0) {
-    displayTempFileError(this);
+    KNHelper::displayTempFileError(this);
     e_ditorTempfile->unlink();
     delete e_ditorTempfile;
     e_ditorTempfile=0;
@@ -1221,7 +1202,8 @@ void KNComposer::slotGroupsBtnClicked()
 void KNComposer::slotEditorFinished(KProcess *)
 {
   if(e_xternalEditor->normalExit()) {
-    insertFile(e_ditorTempfile->name(), true);
+    e_ditorTempfile->file()->at(0);
+    insertFile(e_ditorTempfile->file(), true);
     e_xternalEdited=true;
   }
 
@@ -1718,7 +1700,7 @@ void KNComposer::Editor::slotRemoveBox()
 void KNComposer::Editor::slotRot13()
 {
   if (hasMarkedText())
-    pasteString(rot13(markedText()));
+    pasteString(KNHelper::rot13(markedText()));
 }
 
 
@@ -1856,14 +1838,14 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg(KNAttachment *a, QW
 
   //finish GUI
   setFixedHeight(sizeHint().height());
-  ::restoreWindowSize("attProperties", this, QSize(300,250));
+  KNHelper::restoreWindowSize("attProperties", this, QSize(300,250));
   setHelp("anc-knode-editor-advanced");
 }
 
 
 KNComposer::AttachmentPropertiesDlg::~AttachmentPropertiesDlg()
 {
-  ::saveWindowSize("attProperties", this->size());
+  KNHelper::saveWindowSize("attProperties", this->size());
 }
 
 

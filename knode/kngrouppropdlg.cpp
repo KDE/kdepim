@@ -145,14 +145,14 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
   // Specfic Identity tab =========================================
   i_dWidget=new KNConfig::IdentityWidget(g_rp->identity(), addVBoxPage(i18n("&Identity")));
 
-  restoreWindowSize("groupPropDLG", this, sizeHint());
+  KNHelper::restoreWindowSize("groupPropDLG", this, sizeHint());
 }
 
 
 
 KNGroupPropDlg::~KNGroupPropDlg()
 {
-  saveWindowSize("groupPropDLG", size());
+  KNHelper::saveWindowSize("groupPropDLG", size());
 }
 
 

@@ -441,7 +441,7 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
   // Specfic Identity tab =========================================
   i_dWidget=new KNConfig::IdentityWidget(a->identity(), addVBoxPage(i18n("&Identity")));
 
-  restoreWindowSize("accNewsPropDLG", this, sizeHint());
+  KNHelper::restoreWindowSize("accNewsPropDLG", this, sizeHint());
 
   setHelp("anc-setting-the-news-account");
 }
@@ -450,7 +450,7 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
 
 KNConfig::NntpAccountConfDialog::~NntpAccountConfDialog()
 {
-  saveWindowSize("accNewsPropDLG", size());
+  KNHelper::saveWindowSize("accNewsPropDLG", size());
 }
 
 
@@ -1275,7 +1275,7 @@ KNConfig::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog(KNDisplayedHeader
   }
 
   setFixedHeight(sizeHint().height());
-  restoreWindowSize("accReadHdrPropDLG", this, sizeHint());
+  KNHelper::restoreWindowSize("accReadHdrPropDLG", this, sizeHint());
 
   setHelp("anc-knode-headers");
 }
@@ -1283,7 +1283,7 @@ KNConfig::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog(KNDisplayedHeader
 
 KNConfig::DisplayedHeaderConfDialog::~DisplayedHeaderConfDialog()
 {
-  saveWindowSize("accReadHdrPropDLG", size());
+  KNHelper::saveWindowSize("accReadHdrPropDLG", size());
 }
 
 
@@ -1819,7 +1819,7 @@ KNConfig::XHeaderConfDialog::XHeaderConfDialog(const QString &h, QWidget *p, con
   }
 
   setFixedHeight(sizeHint().height());
-  restoreWindowSize("XHeaderDlg", this, sizeHint());
+  KNHelper::restoreWindowSize("XHeaderDlg", this, sizeHint());
 
   n_ame->setFocus();
 }
@@ -1828,7 +1828,7 @@ KNConfig::XHeaderConfDialog::XHeaderConfDialog(const QString &h, QWidget *p, con
 
 KNConfig::XHeaderConfDialog::~XHeaderConfDialog()
 {
-  saveWindowSize("XHeaderDlg", size());
+  KNHelper::saveWindowSize("XHeaderDlg", size());
 }
 
 

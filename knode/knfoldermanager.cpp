@@ -45,7 +45,7 @@ KNFolderManager::KNFolderManager(KNListView *v, KNArticleManager *a) : v_iew(v),
   //standard folders
   QString dir(KGlobal::dirs()->saveLocation("appdata","folders/"));
   if (dir==QString::null) {
-    displayInternalFileError();
+    KNHelper::displayInternalFileError();
     return;
   }
 
@@ -164,7 +164,7 @@ void KNFolderManager::renameFolder(KNFolder *f, bool isNew)
 
   label->setBuddy(edit);
   edit->setFocus();
-  restoreWindowSize("renameFolder", dlg, QSize(325,66));
+  KNHelper::restoreWindowSize("renameFolder", dlg, QSize(325,66));
 
   if(dlg->exec()) {
     f->setName(edit->text());
@@ -251,7 +251,7 @@ void KNFolderManager::syncFolders()
 {
   QString dir(KGlobal::dirs()->saveLocation("appdata","folders/"));
   if (dir==QString::null) {
-    displayInternalFileError();
+    KNHelper::displayInternalFileError();
     return;
   }
 
@@ -272,7 +272,7 @@ int KNFolderManager::loadCustomFolders()
   KNFolder *f;
 
   if (dir == QString::null) {
-    displayInternalFileError();
+    KNHelper::displayInternalFileError();
     return 0;
   }
 

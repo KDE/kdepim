@@ -58,11 +58,3 @@ class KNGlobals {
 extern KNGlobals knGlobals;
 
 #endif
-
-
-
-
-
-
-
-

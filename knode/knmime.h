@@ -27,6 +27,7 @@
 #include "knjobdata.h"
 
 class KNMimeContent;
+class KNLoadHelper;
 typedef QValueList<QCString> QCStringList;
 
 
@@ -480,7 +481,7 @@ class KNAttachment {
 
   public:
     KNAttachment(KNMimeContent *c);
-    KNAttachment(const QString &path);
+    KNAttachment(KNLoadHelper *helper);
     ~KNAttachment();
 
     //name (used as a Content-Type parameter and as filename)
@@ -517,7 +518,7 @@ class KNAttachment {
     QString n_ame,
             d_escription;
     KNHeaders::CTEncoding e_ncoding;
-    QFile f_ile;
+    KNLoadHelper *l_oadHelper;
     bool  i_sAttached,
           h_asChanged,
           f_b64;

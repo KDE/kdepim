@@ -17,9 +17,11 @@
 #ifndef KNFOLDER_H
 #define KNFOLDER_H
 
+#include <time.h>
+
 #include "knarticlecollection.h"
 #include "knmime.h"
-#include <time.h>
+#include "utilities.h"
 
 
 class KNFolder : public KNArticleCollection  {

@@ -71,7 +71,7 @@ void KNServerInfo::readConf(KConfig *conf)
     i_d=conf->readNumEntry("id", -1);
     n_eedsLogon=conf->readBoolEntry("needsLogon",false);
     u_ser=conf->readEntry("user");
-    p_ass=decryptStr(conf->readEntry("pass"));
+    p_ass=KNHelper::decryptStr(conf->readEntry("pass"));
   }
 }
 
@@ -87,7 +87,7 @@ void KNServerInfo::saveConf(KConfig *conf)
     conf->writeEntry("id", i_d);
     conf->writeEntry("needsLogon", n_eedsLogon);
     conf->writeEntry("user", u_ser);
-    conf->writeEntry("pass", encryptStr(p_ass));
+    conf->writeEntry("pass", KNHelper::encryptStr(p_ass));
   }
 }
 

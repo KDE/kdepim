@@ -80,7 +80,7 @@ KNFilterDialog::KNFilterDialog(KNArticleFilter *f, QWidget *parent, const char *
   fw->from->setFilter(f->from);
   
   setFixedHeight(sizeHint().height());
-  restoreWindowSize("filterDLG", this, sizeHint());
+  KNHelper::restoreWindowSize("filterDLG", this, sizeHint());
 
   setHelp("anc-using-filters");
 }
@@ -89,7 +89,7 @@ KNFilterDialog::KNFilterDialog(KNArticleFilter *f, QWidget *parent, const char *
 
 KNFilterDialog::~KNFilterDialog()
 {
-  saveWindowSize("filterDLG", size());
+  KNHelper::saveWindowSize("filterDLG", size());
 }
 
 

@@ -69,14 +69,14 @@ KNScoreDialog::KNScoreDialog(short sc, QWidget *parent, const char *name )
   spin->setEnabled(cBtn->isChecked());
 
   setFixedHeight(sizeHint().height());
-  restoreWindowSize("scoreDlg", this, sizeHint());
+  KNHelper::restoreWindowSize("scoreDlg", this, sizeHint());
 }
 
 
 
 KNScoreDialog::~KNScoreDialog()
 {
-  saveWindowSize("scoreDlg", size());
+  KNHelper::saveWindowSize("scoreDlg", size());
 }
 
 

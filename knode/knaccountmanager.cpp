@@ -74,7 +74,7 @@ void KNAccountManager::loadAccounts()
 {
   QString dir(KGlobal::dirs()->saveLocation("appdata"));
   if (dir==QString::null) {
-    displayInternalFileError();
+    KNHelper::displayInternalFileError();
     return;
   }
   QDir d(dir);
@@ -128,7 +128,7 @@ bool KNAccountManager::newAccount(KNNntpAccount *a)
   QString dir(KGlobal::dirs()->saveLocation("appdata"));
   if (dir==QString::null) {
     delete a;
-    displayInternalFileError();
+    KNHelper::displayInternalFileError();
     return false;
   }
   QDir d(dir);

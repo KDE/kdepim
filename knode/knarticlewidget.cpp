@@ -88,14 +88,14 @@ KNSourceViewWindow::KNSourceViewWindow(const QString &htmlCode)
   style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpaceNoWrap);
 
   setText(QString("<qt><txt>%1</txt></qt>").arg(htmlCode));
-  restoreWindowSize("sourceWindow", this, QSize(500,300));
+  KNHelper::restoreWindowSize("sourceWindow", this, QSize(500,300));
   show();
 }
 
 
 KNSourceViewWindow::~KNSourceViewWindow()
 {
-  saveWindowSize("sourceWindow",size());
+  KNHelper::saveWindowSize("sourceWindow",size());
 }
 
 
@@ -361,7 +361,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
   bool forceNBSP=false; //use "&nbsp;" for spaces => workaround for a bug in QTextBrowser
 
   if (allowRot13 && r_ot13)
-    text = rot13(line);
+    text = KNHelper::rot13(line);
   else
     text = line;
 
@@ -1447,7 +1447,7 @@ void KNArticleWidget::slotSetCharset(const QString &s)
 
 void KNArticleWidget::slotSetCharsetKeyboard()
 {
-  int newCS = selectDialog(this, i18n("Select Charset"), a_ctSetCharset->items(), a_ctSetCharset->currentItem());
+  int newCS = KNHelper::selectDialog(this, i18n("Select Charset"), a_ctSetCharset->items(), a_ctSetCharset->currentItem());
   if (newCS != -1) {
     a_ctSetCharset->setCurrentItem(newCS);
     slotSetCharset(*(a_ctSetCharset->items().at(newCS)));

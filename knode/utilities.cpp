@@ -22,15 +22,205 @@
 #include <kglobal.h>
 #include <kmessagebox.h>
 #include <kdialogbase.h>
+#include <kdebug.h>
+#include <kio/netaccess.h>
+#include <ktempfile.h>
+#include <kfiledialog.h>
 
 #include "knlistbox.h"
 #include "knglobals.h"
 #include "utilities.h"
 
 
-// **** keyboard selection dialog *********************************************
 
-int selectDialog(QWidget *parent, const QString &caption, const QStringList &options, int initialValue)
+//================================================================================
+
+KNFile::KNFile(const QString& fname)
+ : QFile(fname), filePos(0), readBytes(0)
+{
+  buffer.resize(512);
+  dataPtr=buffer.data();
+  dataPtr[0]='\0';
+}
+
+
+KNFile::~KNFile()
+{
+}
+
+
+const QCString& KNFile::readLine()
+{
+  filePos=at();
+  readBytes=QFile::readLine(dataPtr, buffer.size()-1);
+  if(readBytes!=-1) {
+    while ((dataPtr[readBytes-1]!='\n')&&(static_cast<uint>(readBytes+2)==buffer.size())) {  // don't get tricked by files without newline
+      at(filePos);
+      if (!increaseBuffer() ||
+         (readBytes=QFile::readLine(dataPtr, buffer.size()-1))==-1) {
+        readBytes=1;
+        break;
+      }
+    }
+  } else
+    readBytes=1;
+
+  dataPtr[readBytes-1] = '\0';
+  return buffer;
+}
+
+
+const QCString& KNFile::readLineWnewLine()
+{
+  filePos=at();
+  readBytes=QFile::readLine(dataPtr, buffer.size()-1);
+  if(readBytes!=-1) {
+    while ((dataPtr[readBytes-1]!='\n')&&(static_cast<uint>(readBytes+2)==buffer.size())) {  // don't get tricked by files without newline
+      at(filePos);
+      if (!increaseBuffer() ||
+         (readBytes=QFile::readLine(dataPtr, buffer.size()-1))==-1) {
+        dataPtr[0] = '\0';
+        break;
+      }
+    }
+  }
+  else dataPtr[0] = '\0';
+
+  return buffer;
+}
+
+
+bool KNFile::increaseBuffer()
+{
+  if(buffer.resize(2*buffer.size())) {;
+    dataPtr=buffer.data();
+    dataPtr[0]='\0';
+    kdDebug(5003) << "KNFile::increaseBuffer() : buffer doubled" << endl;
+    return true;
+  }
+  else return false;
+}
+
+
+//===============================================================================
+
+QString KNSaveHelper::lastPath;
+
+KNSaveHelper::KNSaveHelper(QString saveName, QWidget *parent)
+  : p_arent(parent), s_aveName(saveName), file(0), tmpFile(0)
+{
+}
+
+
+KNSaveHelper::~KNSaveHelper()
+{
+  if (file) {       // local filesystem, just close the file
+    delete file;
+  } else
+    if (tmpFile) {      // network location, initiate transaction
+      tmpFile->close();
+      if (KIO::NetAccess::upload(tmpFile->name(),url) == false)
+        KNHelper::displayRemoteFileError();
+      tmpFile->unlink();   // delete temp file
+      delete tmpFile;
+    }
+}
+
+
+QFile* KNSaveHelper::getFile(QString dialogTitle)
+{
+  if (lastPath.isEmpty())
+    lastPath = "file:/";
+
+  url = KFileDialog::getSaveURL(lastPath+s_aveName,QString::null,p_arent,dialogTitle);
+
+  if (url.isEmpty())
+    return 0;
+
+  lastPath = url.url(-1);
+  lastPath.truncate(lastPath.length()-url.fileName().length());
+
+  if (url.isLocalFile()) {
+    if (QFileInfo(url.path()).exists() &&
+        (KMessageBox::warningContinueCancel(knGlobals.topWidget,
+                                            i18n("A file named %1 already exists.\nDo you want to replace it?").arg(url.path()),
+                                            dialogTitle, i18n("&Replace")) != KMessageBox::Continue)) {
+      return 0;
+    }
+
+    file = new QFile(url.path());
+    if(!file->open(IO_WriteOnly)) {
+      KNHelper::displayExternalFileError();
+      delete file;
+      file = 0;
+    }
+    return file;
+  } else {
+    tmpFile = new KTempFile();
+    if (tmpFile->status()!=0) {
+      KNHelper::displayTempFileError();
+      delete tmpFile;
+      tmpFile = 0;
+      return 0;
+    }
+    return tmpFile->file();
+  }
+}
+
+
+//===============================================================================
+
+QString KNLoadHelper::lastPath;
+
+KNLoadHelper::KNLoadHelper(QWidget *parent)
+  : p_arent(parent), file(0)
+{
+}
+
+
+KNLoadHelper::~KNLoadHelper()
+{
+	delete file;
+	if (!tempName.isEmpty())
+   	KIO::NetAccess::removeTempFile(tempName);
+}
+
+
+QFile* KNLoadHelper::getFile(QString dialogTitle)
+{
+  url = KFileDialog::getOpenURL(lastPath,QString::null,p_arent,dialogTitle);
+
+  if (url.isEmpty())
+    return 0;
+
+  lastPath = url.url(-1);
+  lastPath.truncate(lastPath.length()-url.fileName().length());
+
+  QString fileName;
+  if (!url.isLocalFile()) {
+    if (KIO::NetAccess::download(url, tempName))
+      fileName = tempName;
+  } else
+    fileName = url.path();
+
+  if (fileName.isEmpty())
+    return 0;
+
+  file = new QFile(fileName);
+  if(!file->open(IO_ReadOnly)) {
+    KNHelper::displayExternalFileError();
+    delete file;
+    file = 0;
+  }
+  return file;
+}
+
+
+//===============================================================================
+
+
+// **** keyboard selection dialog *********************************************
+int KNHelper::selectDialog(QWidget *parent, const QString &caption, const QStringList &options, int initialValue)
 {
   KDialogBase *dlg=new KDialogBase(KDialogBase::Plain, caption, KDialogBase::Ok|KDialogBase::Cancel,
                                    KDialogBase::Ok, parent);
@@ -64,7 +254,7 @@ int selectDialog(QWidget *parent, const QString &caption, const QStringList &opt
 
 // **** window geometry managing *********************************************
 
-void saveWindowSize(const QString &name, const QSize &s)
+void KNHelper::saveWindowSize(const QString &name, const QSize &s)
 {
   KConfig *c=KGlobal::config();
   c->setGroup("WINDOW_SIZES");
@@ -72,7 +262,7 @@ void saveWindowSize(const QString &name, const QSize &s)
 }
 
 
-void restoreWindowSize(const QString &name, QWidget *d, const QSize &defaultSize)
+void KNHelper::restoreWindowSize(const QString &name, QWidget *d, const QSize &defaultSize)
 {
   KConfig *c=KGlobal::config();
   c->setGroup("WINDOW_SIZES");
@@ -84,7 +274,7 @@ void restoreWindowSize(const QString &name, QWidget *d, const QSize &defaultSize
 
 // **** scramble password strings **********************************************
 
-const QString encryptStr(const QString& aStr)
+const QString KNHelper::encryptStr(const QString& aStr)
 {
   uint i,val,len = aStr.length();
   QCString result;
@@ -100,14 +290,14 @@ const QString encryptStr(const QString& aStr)
 }
 
 
-const QString decryptStr(const QString& aStr)
+const QString KNHelper::decryptStr(const QString& aStr)
 {
   return encryptStr(aStr);
 }
 
 // **** rot13 *******************************************************************
 
-QString rot13(const QString &s)
+QString KNHelper::rot13(const QString &s)
 {
   QString r(s);
 
@@ -126,7 +316,7 @@ QString rot13(const QString &s)
 
 // **** us-ascii check **********************************************************
 
-bool isUsAscii(const QString &s)
+bool KNHelper::isUsAscii(const QString &s)
 {
   for (uint i=0; i<s.length(); i++)
     if (s.at(i).latin1()<=0)    // c==0: non-latin1, c<0: non-us-ascii
@@ -171,7 +361,7 @@ void appendTextWPrefix(QString &result, const QString &text, int wrapAt, const Q
 }
 
 
-QString rewrapStringList(QStringList text, int wrapAt, QChar quoteChar, bool stopAtSig, bool alwaysSpace)
+QString KNHelper::rewrapStringList(QStringList text, int wrapAt, QChar quoteChar, bool stopAtSig, bool alwaysSpace)
 {
   QString quoted, lastPrefix, thisPrefix, leftover, thisLine;
   int breakPos;
@@ -229,25 +419,25 @@ QString rewrapStringList(QStringList text, int wrapAt, QChar quoteChar, bool sto
 
 // **** misc. message-boxes **********************************************************
 
-void displayInternalFileError(QWidget *w)
+void KNHelper::displayInternalFileError(QWidget *w)
 {
   KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to load/save configuration!\nWrong permissions on home directory?\nYou should close KNode now, to avoid data loss!"));
 }
 
 
-void displayExternalFileError(QWidget *w)
+void KNHelper::displayExternalFileError(QWidget *w)
 {
   KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to load/save file!"));
 }
 
 
-void displayRemoteFileError(QWidget *w)
+void KNHelper::displayRemoteFileError(QWidget *w)
 {
   KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to save remote file!"));
 }
 
 
-void displayTempFileError(QWidget *w)
+void KNHelper::displayTempFileError(QWidget *w)
 {
   KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to create temporary file!"));
 }

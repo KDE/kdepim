@@ -23,14 +23,13 @@
 #include <kfiledialog.h>
 #include <kmessagebox.h>
 #include <krun.h>
-#include <kio/netaccess.h>
-#include <ktempfile.h>
 #include <kuserprofile.h>
 #include <kopenwith.h>
 #include <klocale.h>
 #include <kdebug.h>
 #include <kwin.h>
 #include <kcharsets.h>
+#include <ktempfile.h>
 
 #include "knode.h"
 #include "knglobals.h"
@@ -50,72 +49,6 @@
 #include "knnetaccess.h"
 #include "knpgp.h"
 
-
-QString KNSaveHelper::lastPath;
-
-KNSaveHelper::KNSaveHelper(QString saveName, QWidget *parent)
-  : p_arent(parent), s_aveName(saveName), file(0), tmpFile(0)
-{
-}
-
-
-KNSaveHelper::~KNSaveHelper()
-{
-  if (file) {       // local filesystem, just close the file
-    delete file;
-  } else
-    if (tmpFile) {      // network location, initiate transaction
-      tmpFile->close();
-      if (KIO::NetAccess::upload(tmpFile->name(),url) == false)
-        displayRemoteFileError();
-      tmpFile->unlink();   // delete temp file
-      delete tmpFile;
-    }
-}
-
-
-QFile* KNSaveHelper::getFile(QString dialogTitle)
-{
-  if (lastPath.isEmpty())
-    lastPath = "file:/";
-
-  url = KFileDialog::getSaveURL(lastPath+s_aveName,QString::null,p_arent,dialogTitle);
-
-  if (url.isEmpty())
-    return 0;
-
-  lastPath = url.url(-1);
-  lastPath.truncate(lastPath.length()-url.fileName().length());
-
-  if (url.isLocalFile()) {
-    if (QFileInfo(url.path()).exists() &&
-        (KMessageBox::warningContinueCancel(knGlobals.topWidget,
-                                            i18n("A file named %1 already exists.\nDo you want to replace it?").arg(url.path()),
-                                            dialogTitle, i18n("&Replace")) != KMessageBox::Continue)) {
-      return 0;
-    }
-
-    file = new QFile(url.path());
-    if(!file->open(IO_WriteOnly)) {
-      displayExternalFileError();
-      delete file;
-      file = 0;
-    }
-    return file;
-  } else {
-    tmpFile = new KTempFile();
-    if (tmpFile->status()!=0) {
-      displayTempFileError();
-      delete tmpFile;
-      tmpFile = 0;
-      return 0;
-    }
-    return tmpFile->file();
-  }
-}
-
-
-//===============================================================================
 
 
 KNArticleManager::KNArticleManager(KNListView *v, KNFilterManager *f) : QObject(0,0)
@@ -207,7 +140,7 @@ QString KNArticleManager::saveContentToTemp(KNMimeContent *c)
 
   tmpFile=new KTempFile();
   if (tmpFile->status()!=0) {
-    displayTempFileError();
+    KNHelper::displayTempFileError();
     delete tmpFile;
     return QString::null;
   }
@@ -637,7 +570,7 @@ void KNArticleManager::moveToFolder(KNRemoteArticle::List &l, KNFolder *f)
 
   if(!l2.isEmpty())
     if(!f->saveArticles(&l2))
-      displayInternalFileError();
+      KNHelper::displayInternalFileError();
 }
 
 
@@ -645,7 +578,7 @@ void KNArticleManager::moveToFolder(KNLocalArticle::List &l, KNFolder *f)
 {
   if(!f) return;
   if(!f->saveArticles(&l))
-    displayInternalFileError();
+    KNHelper::displayInternalFileError();
 }
 
 

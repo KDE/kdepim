@@ -177,7 +177,7 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   frame = addHBoxPage(QString(" ")+i18n("Cleanup"),i18n("Preserving disk space"), BarIcon("wizard"));
   w_idgets.append(new KNConfig::CleanupWidget(m->cleanup(), frame));
 
-  restoreWindowSize("settingsDlg", this, QSize(508,424));
+  KNHelper::restoreWindowSize("settingsDlg", this, QSize(508,424));
 
   setHelp("anc-setting-your-identity");
 }
@@ -185,7 +185,7 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
 
 KNConfigDialog::~KNConfigDialog()
 {
-  saveWindowSize("settingsDlg", this->size());
+  KNHelper::saveWindowSize("settingsDlg", this->size());
 }
 
 

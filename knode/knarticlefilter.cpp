@@ -132,7 +132,7 @@ void KNArticleFilter::save()
     return;
   QString dir(KGlobal::dirs()->saveLocation("appdata","filters/"));
   if (dir==QString::null) {
-    displayInternalFileError();
+    KNHelper::displayInternalFileError();
     return;
   }
   KSimpleConfig conf(dir+QString("%1.fltr").arg(i_d));

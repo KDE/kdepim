@@ -109,7 +109,7 @@ QString KNNntpAccount::path()
 {
   QString dir(KGlobal::dirs()->saveLocation("appdata",QString("nntp.%1/").arg(i_d)));
   if (dir==QString::null)
-    displayInternalFileError();
+    KNHelper::displayInternalFileError();
   return (dir);
 }
 
