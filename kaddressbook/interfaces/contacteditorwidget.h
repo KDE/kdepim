@@ -73,11 +73,28 @@ class ContactEditorWidget : public QWidget
      */
     virtual void setReadOnly( bool readOnly ) = 0;
 
+    /**
+      Returns whether this widget was modified.
+     */
+    bool modified() const;
+
   signals:
     /**
-      Emitted whenever the page has changed.
+      Emitted whenever the page has changed, do not emit it directly,
+      use setModified() instead.
      */
     void changed();
+
+  public slots:
+    /**
+      Call this slot whenever the data were changed by the user. It
+      will emit the changed() signal and set the modified property.
+
+      @param modified Set whether the widget was modified.
+     */
+    void setModified( bool modified );
+
+    void setModified();
 
   protected:
     /**
@@ -87,6 +104,7 @@ class ContactEditorWidget : public QWidget
 
   private:
     KABC::AddressBook *mAddressBook;
+    bool mModified;
 
     class ContactEditorWidgetPrivate;
     ContactEditorWidgetPrivate *d;

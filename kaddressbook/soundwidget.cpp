@@ -62,11 +62,11 @@ SoundWidget::SoundWidget( KABC::AddressBook *ab, QWidget *parent, const char *na
   topLayout->addWidget( mUseSoundUrl, 1, 2 );
 
   connect( mSoundUrl, SIGNAL( textChanged( const QString& ) ),
-           SIGNAL( changed() ) );
+           SLOT( setModified() ) );
   connect( mSoundUrl, SIGNAL( textChanged( const QString& ) ),
            SLOT( urlChanged( const QString& ) ) );
   connect( mUseSoundUrl, SIGNAL( toggled( bool ) ),
-           SIGNAL( changed() ) );
+           SLOT( setModified() ) );
   connect( mUseSoundUrl, SIGNAL( toggled( bool ) ),
            mPlayButton, SLOT( setDisabled( bool ) ) );
   connect( mSoundUrl, SIGNAL( urlSelected( const QString& ) ),

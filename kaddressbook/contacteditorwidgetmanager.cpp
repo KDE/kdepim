@@ -138,15 +138,21 @@ void ContactEditorTabPage::addWidget( KAB::ContactEditorWidget *widget )
 void ContactEditorTabPage::loadContact( KABC::Addressee *addr )
 {
   KAB::ContactEditorWidget::List::Iterator it;
-  for ( it = mWidgets.begin(); it != mWidgets.end(); ++it )
+  for ( it = mWidgets.begin(); it != mWidgets.end(); ++it ) {
+    (*it)->setModified( false );
     (*it)->loadContact( addr );
+  }
 }
 
 void ContactEditorTabPage::storeContact( KABC::Addressee *addr )
 {
   KAB::ContactEditorWidget::List::Iterator it;
-  for ( it = mWidgets.begin(); it != mWidgets.end(); ++it )
-    (*it)->storeContact( addr );
+  for ( it = mWidgets.begin(); it != mWidgets.end(); ++it ) {
+    if ( (*it)->modified() ) {
+      (*it)->storeContact( addr );
+      (*it)->setModified( false );
+    }
+  }
 }
 
 void ContactEditorTabPage::setReadOnly( bool readOnly )

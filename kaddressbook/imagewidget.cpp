@@ -121,7 +121,7 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent, const c
   topLayout->addWidget( box );
 
   connect( mImageLabel, SIGNAL( changed() ),
-           SLOT( imageChanged() ) );
+           SIGNAL( changed() ) );
   connect( mImageUrl, SIGNAL( textChanged( const QString& ) ),
            SIGNAL( changed() ) );
   connect( mImageUrl, SIGNAL( urlSelected( const QString& ) ),
@@ -249,8 +249,8 @@ ImageWidget::ImageWidget( KABC::AddressBook *ab, QWidget *parent, const char *na
   mLogoWidget = new ImageBaseWidget( KABC::Addressee::logoLabel(), this );
   layout->addWidget( mLogoWidget );
 
-  connect( mPhotoWidget, SIGNAL( changed() ), SIGNAL( changed() ) );
-  connect( mLogoWidget, SIGNAL( changed() ), SIGNAL( changed() ) );
+  connect( mPhotoWidget, SIGNAL( changed() ), SLOT( setModified() ) );
+  connect( mLogoWidget, SIGNAL( changed() ), SLOT( setModified() ) );
 }
 
 void ImageWidget::loadContact( KABC::Addressee *addr )

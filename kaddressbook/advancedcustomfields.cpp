@@ -168,25 +168,25 @@ void AdvancedCustomFields::initGUI( const QString &uiFile )
         if ( it.current()->isA( "QLineEdit" ) ||
              it.current()->isA( "KLineEdit" ) )
           connect( it.current(), SIGNAL( textChanged( const QString& ) ),
-                   this, SIGNAL( changed() ) );
+                   this, SLOT( setModified() ) );
         else if ( it.current()->isA( "QSpinBox" ) )
           connect( it.current(), SIGNAL( valueChanged( int ) ),
-                   this, SIGNAL( changed() ) );
+                   this, SLOT( setModified() ) );
         else if ( it.current()->isA( "QCheckBox" ) )
           connect( it.current(), SIGNAL( toggled( bool ) ),
-                   this, SIGNAL( changed() ) );
+                   this, SLOT( setModified() ) );
         else if ( it.current()->isA( "QComboBox" ) )
           connect( it.current(), SIGNAL( activated( const QString& ) ),
-                   this, SIGNAL( changed() ) );
+                   this, SLOT( setModified() ) );
         else if ( it.current()->isA( "QDateTimeEdit" ) )
           connect( it.current(), SIGNAL( valueChanged( const QDateTime& ) ),
-                   this, SIGNAL( changed() ) );
+                   this, SLOT( setModified() ) );
         else if ( it.current()->isA( "KDateTimeWidget" ) )
           connect( it.current(), SIGNAL( valueChanged( const QDateTime& ) ),
-                   this, SIGNAL( changed() ) );
+                   this, SLOT( setModified() ) );
         else if ( it.current()->isA( "KDatePicker" ) )
           connect( it.current(), SIGNAL( dateChanged( QDate ) ),
-                   this, SIGNAL( changed() ) );
+                   this, SLOT( setModified() ) );
       }
     }
 

@@ -85,9 +85,9 @@ GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
   topLayout->addMultiCellWidget( mExtendedButton, 3, 3, 1, 2 );
 
   connect( mLatitudeBox, SIGNAL( valueChanged( double ) ),
-           SIGNAL( changed() ) );
+           SLOT( setModified() ) );
   connect( mLongitudeBox, SIGNAL( valueChanged( double ) ),
-           SIGNAL( changed() ) );
+           SLOT( setModified() ) );
   connect( mExtendedButton, SIGNAL( clicked() ),
            SLOT( editGeoData() ) );
 
@@ -98,7 +98,7 @@ GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
   connect( mGeoIsValid, SIGNAL( toggled( bool ) ),
            mExtendedButton, SLOT( setEnabled( bool ) ) );
   connect( mGeoIsValid, SIGNAL( toggled( bool ) ),
-           SIGNAL( changed() ) );
+           SLOT( setModified() ) );
 }
 
 GeoWidget::~GeoWidget()
@@ -151,7 +151,7 @@ void GeoWidget::editGeoData()
     mLatitudeBox->setValue( dlg.latitude() );
     mLongitudeBox->setValue( dlg.longitude() );
 
-    emit changed();
+    setModified( true );
   }
 }
 

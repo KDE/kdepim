@@ -44,7 +44,7 @@ FreeBusyWidget::FreeBusyWidget( KABC::AddressBook *ab, QWidget *parent, const ch
   layout->addWidget( mURL );
 
   connect( mURL, SIGNAL( textChanged( const QString& ) ),
-           this, SIGNAL( changed() ) );
+           this, SLOT( setModified() ) );
 }
 
 FreeBusyWidget::~FreeBusyWidget()

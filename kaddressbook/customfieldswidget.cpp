@@ -330,7 +330,7 @@ CustomFieldsWidget::CustomFieldsWidget( KABC::AddressBook *ab,
   connect( mAddButton, SIGNAL( clicked() ), this, SLOT( addField() ) );
   connect( mRemoveButton, SIGNAL( clicked() ), this, SLOT( removeField() ) );
 
-  connect( mFieldWidget, SIGNAL( changed() ), this, SIGNAL( changed() ) );
+  connect( mFieldWidget, SIGNAL( changed() ), this, SLOT( setModified() ) );
 }
 
 void CustomFieldsWidget::loadContact( KABC::Addressee *addr )
