@@ -101,7 +101,7 @@
 #define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
 #endif
 
-#define KPILOT_VERSION	"4.2.9"
+#define KPILOT_VERSION	"4.2.9b"
 
 #ifdef DEBUG
 // * KPilot debugging code looks like:
@@ -195,6 +195,9 @@ extern const int fname;
 
 
 // $Log$
+// Revision 1.1  2001/10/08 21:56:02  adridg
+// Start of making a separate KPilot lib
+//
 // Revision 1.36  2001/09/30 19:51:56  adridg
 // Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
 //
