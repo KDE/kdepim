@@ -178,7 +178,7 @@ Kleo::KeyListView::~KeyListView() {
   // unregister from us.
   clear();
   assert( d->itemMap.size() == 0 );
-  // need to delete the tooptip ourselves, as ~QToolTip isn't virtual :o
+  // need to delete the tooltip ourselves, as ~QToolTip isn't virtual :o
   delete d->itemToolTip; d->itemToolTip = 0;
   delete d; d = 0;
   delete mColumnStrategy; mColumnStrategy = 0;
@@ -187,15 +187,9 @@ Kleo::KeyListView::~KeyListView() {
 
 void Kleo::KeyListView::insertItem( QListViewItem * qlvi ) {
   //qDebug( "Kleo::KeyListView::insertItem( %p )", qlvi );
+  KListView::insertItem( qlvi );
   if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( qlvi ) )
     registerItem( item );
-#if 0
-  else {
-    kdWarning(5150) << "Kleo::KeyListView::insertItem() Tried to insert a non-KeyListViewItem subclass." << endl;
-    return;
-  }
-#endif
-  KListView::insertItem( qlvi );
 }
 
 void Kleo::KeyListView::takeItem( QListViewItem * qlvi ) {
@@ -249,12 +243,12 @@ void Kleo::KeyListView::slotUpdateTimeout() {
 
 void Kleo::KeyListView::clear() {
   d->updateTimer->stop();
-  d->itemMap.clear();
   d->keyBuffer.clear();
   KListView::clear();
 }
 
 void Kleo::KeyListView::registerItem( KeyListViewItem * item ) {
+  //qDebug( "registerItem( %p )", item );
   if ( !item )
     return;
   const QCString fpr = item->key().primaryFingerprint();
@@ -263,6 +257,7 @@ void Kleo::KeyListView::registerItem( KeyListViewItem * item ) {
 }
 
 void Kleo::KeyListView::deregisterItem( const KeyListViewItem * item ) {
+  //qDebug( "deregisterItem( KeyLVI: %p )", item );
   if ( !item )
     return;
   std::map<QCString,KeyListViewItem*>::iterator it
@@ -281,7 +276,7 @@ void Kleo::KeyListView::doHierarchicalInsert( const GpgME::Key & key ) {
     return;
   KeyListViewItem * item = 0;
   if ( !key.isRoot() )
-    if ( KeyListViewItem * parent = parentFor( key.chainID() ) ) {
+    if ( KeyListViewItem * parent = itemByFingerprint( key.chainID() ) ) {
       item = new KeyListViewItem( parent, key );
       parent->setOpen( true );
     }
@@ -298,7 +293,7 @@ void Kleo::KeyListView::gatherScattered() {
     item = item->nextSibling();
     if ( cur->key().isRoot() )
       continue;
-    if ( KeyListViewItem * parent = parentFor( cur->key().chainID() ) ) {
+    if ( KeyListViewItem * parent = itemByFingerprint( cur->key().chainID() ) ) {
       // found a new parent...
       // ### todo: optimize by suppressing removing/adding the item to the itemMap...
       takeItem( cur );
@@ -326,15 +321,7 @@ void Kleo::KeyListView::scatterGathered( QListViewItem * start ) {
   }
 }
 
-void Kleo::KeyListView::refillFingerprintDictionary() {
-  d->itemMap.clear();
-  for ( QListViewItemIterator it( this ) ; it.current() ; ++it )
-    if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( it.current() ) )
-      if ( const char * fpr = item->key().primaryFingerprint() )
-	d->itemMap.insert( std::make_pair( QCString( fpr ), item ) );
-}
-
-Kleo::KeyListViewItem * Kleo::KeyListView::parentFor( const QCString & s ) const {
+Kleo::KeyListViewItem * Kleo::KeyListView::itemByFingerprint( const QCString & s ) const {
   if ( s.isEmpty() )
     return 0;
   const std::map<QCString,KeyListViewItem*>::const_iterator it = d->itemMap.find( s );
@@ -412,9 +399,16 @@ Kleo::KeyListViewItem::KeyListViewItem( KeyListViewItem * parent, KeyListViewIte
 }
 
 Kleo::KeyListViewItem::~KeyListViewItem() {
+  // delete the children first... When children are deleted in the
+  // QLVI dtor, they don't have listView() anymore, thus they don't
+  // call deregister( this ), leading to stale entries in the
+  // itemMap...
+  while ( QListViewItem * item = firstChild() )
+    delete item;
   // better do this here, too, since deletion is top-down and thus
   // we're deleted when our parent item is no longer a
-  // KeyListViewItem, but a mere QListViewItem...
+  // KeyListViewItem, but a mere QListViewItem, so our takeItem()
+  // overload is gone by that time...
   if ( KeyListView * lv = listView() )
     lv->deregisterItem( this );
 }
@@ -474,15 +468,9 @@ void Kleo::KeyListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int
 
 void Kleo::KeyListViewItem::insertItem( QListViewItem * qlvi ) {
   //qDebug( "Kleo::KeyListViewItem::insertItem( %p )", qlvi );
+  QListViewItem::insertItem( qlvi );
   if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( qlvi ) )
     listView()->registerItem( item );
-#if 0
-  else {
-    kdWarning(5150) << "Kleo::KeyListView::insertItem() Tried to insert a non-KeyListViewItem subclass." << endl;
-    return;
-  }
-#endif
-  QListViewItem::insertItem( qlvi );
 }
 
 void Kleo::KeyListViewItem::takeItem( QListViewItem * qlvi ) {

@@ -221,6 +221,8 @@ namespace Kleo {
 
     bool hasSelection() const;
 
+    KeyListViewItem * itemByFingerprint( const QCString & ) const;
+
   signals:
     void doubleClicked( Kleo::KeyListViewItem*, const QPoint&, int );
     void returnPressed( Kleo::KeyListViewItem* );
@@ -259,8 +261,6 @@ namespace Kleo {
     void doHierarchicalInsert( const GpgME::Key & );
     void gatherScattered();
     void scatterGathered( QListViewItem * );
-    void refillFingerprintDictionary();
-    KeyListViewItem * parentFor( const QCString & ) const;
     void registerItem( KeyListViewItem * );
     void deregisterItem( const KeyListViewItem * );
 
