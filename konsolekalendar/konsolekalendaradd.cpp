@@ -53,8 +53,10 @@ bool KonsoleKalendarAdd::addEvent()
 	
 	event.setDtStart( m_variables->getStartDate() );
 	event.setDtEnd( m_variables->getStartDate() );
-	
-	
+	event.setDescription( m_variables->getDescription() );
+	event.setSummary( m_variables->getSummary() );
+	m_variables->getCalendar()->addEvent( &event );
+	m_variables->getCalendar()->save();
 	
 	
 	return true;
