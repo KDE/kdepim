@@ -235,8 +235,6 @@ bool ResourceXMLRPC::asyncSave( Ticket *ticket )
 
 void ResourceXMLRPC::addContact( const Addressee& addr )
 {
-  qDebug( "addContact: %s (%s)", addr.assembledName().latin1(), addr.uid().latin1() );
-
   QMap<QString, QVariant> args;
   writeContact( addr, args );
 
@@ -248,12 +246,10 @@ void ResourceXMLRPC::addContact( const Addressee& addr )
 
 void ResourceXMLRPC::updateContact( const Addressee& addr )
 {
-  qDebug( "updateContact: %s (%s)", addr.assembledName().latin1(), addr.uid().latin1() );
-
   QMap<QString, QVariant> args;
   writeContact( addr, args );
 
-  args.insert( "id", remoteUid( addr.uid() ) );
+  args.insert( "id", idMapper().remoteId( addr.uid() ) );
   mServer->call( AddContactCommand, args,
                  this, SLOT( updateContactFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( updateContactFault( int, const QString&, const QVariant& ) ),
@@ -262,9 +258,7 @@ void ResourceXMLRPC::updateContact( const Addressee& addr )
 
 void ResourceXMLRPC::deleteContact( const Addressee& addr )
 {
-  qDebug( "deleteContact: %s (%s)", addr.assembledName().latin1(), addr.uid().latin1() );
-
-  mServer->call( DeleteContactCommand, remoteUid( addr.uid() ),
+  mServer->call( DeleteContactCommand, idMapper().remoteId( addr.uid() ),
                  this, SLOT( deleteContactFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( deleteContactFault( int, const QString&, const QVariant& ) ),
                  QVariant( addr.uid() ) );
@@ -327,9 +321,9 @@ void ResourceXMLRPC::listContactsFinished( const QValueList<QVariant> &mapList,
       addr.setResource( this );
       addr.setChanged( false );
 
-      QString local = localUid( uid );
+      QString local = idMapper().localId( uid );
       if ( local.isEmpty() ) { // new entry
-        setRemoteUid( addr.uid(), uid );
+        idMapper().setRemoteId( addr.uid(), uid );
       } else {
         addr.setUid( local );
       }
@@ -349,7 +343,7 @@ void ResourceXMLRPC::addContactFinished( const QValueList<QVariant> &list,
                                          const QVariant &id )
 {
   clearChange( id.toString() );
-  setRemoteUid( id.toString(), list[ 0 ].toString() );
+  idMapper().setRemoteId( id.toString(), list[ 0 ].toString() );
 
   saveCache();
 }
@@ -366,7 +360,7 @@ void ResourceXMLRPC::deleteContactFinished( const QValueList<QVariant>&,
                                             const QVariant &id )
 {
   clearChange( id.toString() );
-  removeRemoteUid( remoteUid( id.toString() ) );
+  idMapper().removeRemoteId( idMapper().remoteId( id.toString() ) );
 
   saveCache();
 }

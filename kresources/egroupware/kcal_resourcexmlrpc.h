@@ -169,6 +169,7 @@ class ResourceXMLRPC : public ResourceCached
       Public because needed in MultiCalendar::load()
      */
     bool doOpen();
+    void doClose();
 
     void dump() const;
 
@@ -209,6 +210,8 @@ class ResourceXMLRPC : public ResourceCached
     void writeTodo( Todo*, QMap<QString, QVariant>& );
     void readTodo( const QMap<QString, QVariant>&, Todo*, QString& );
 
+    void checkLoadingFinished();
+
     void enter_loop();
     void exit_loop();
 
@@ -219,8 +222,6 @@ class ResourceXMLRPC : public ResourceCached
     QString mSessionID;
     QString mKp3;
 
-    UIDMapper *mEventUidMapper;
-    UIDMapper *mTodoUidMapper;
     QMap<QString, int> mEventCategoryMap;
     QMap<QString, int> mTodoCategoryMap;
     QMap<QString, QString> mTodoStateMap;
@@ -228,6 +229,7 @@ class ResourceXMLRPC : public ResourceCached
     bool mSyncComm;
 
     KABC::Lock *mLock;
+    int mLoaded;
 };
 
 }
