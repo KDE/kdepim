@@ -1,5 +1,6 @@
 
-#include <qlayout.h>
+#include <qvbox.h>
+#include <qsize.h>
 
 #include <kaction.h>
 #include <klocale.h>
@@ -21,7 +22,14 @@ KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
   setXMLFile("ksyncgui.rc");
   createGUI( 0l );
   // now add a layout or QWidget?
-  m_lay = new QHBoxLayout( this, 0, -1, "m_layout" );
+  m_lay = new QHBox(this,   "main widget" );
+  setCentralWidget( m_lay );
+  m_bar = new PartBar(m_lay , "partBar" );
+  QWidget *wid = new QWidget( m_lay, "dummy" );
+  wid->setBackgroundColor(Qt::darkRed );
+  m_bar->setMaximumWidth(100 );
+  m_bar->setMinimumWidth(100 );
+  
 };
 
 KSyncMainWindow::~KSyncMainWindow()

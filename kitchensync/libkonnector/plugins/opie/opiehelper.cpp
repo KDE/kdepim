@@ -7,34 +7,37 @@
 
 #include <kstaticdeleter.h>
 
+#include <kabc/resourcefile.h>
+#include <kabc/phonenumber.h>
+#include <kabc/address.h>
+
 #include "opiehelper.h"
 
 namespace {
 QString categoryById(const QString &id, const QString &app, QValueList<OpieCategories> cate )
 {
-    QValueList<OpieCategories>::Iterator it;
-    QString category;
-    for( it = cate.begin(); it != cate.end(); ++it ){
-	kdDebug() << "it :" << (*it).id() << "id:" << id << "ende"<<endl; 
-	if( id.stripWhiteSpace() == (*it).id().stripWhiteSpace() ){
-	    //if( app == (*it).app() ){
-	    kdDebug() << "found category" << endl;
-	    category = (*it).name();
-	    break;
-		//}
-	}else {
-	    kdDebug() << "not equal " << endl;
-	}
+  QValueList<OpieCategories>::Iterator it;
+  QString category;
+  for( it = cate.begin(); it != cate.end(); ++it ){
+    kdDebug() << "it :" << (*it).id() << "id:" << id << "ende"<<endl; 
+    if( id.stripWhiteSpace() == (*it).id().stripWhiteSpace() ){
+      //if( app == (*it).app() ){
+      kdDebug() << "found category" << endl;
+      category = (*it).name();
+      break;
+      //}
+    }else {
+      kdDebug() << "not equal " << endl;
     }
-    kdDebug() << "CategoryById: " << category << endl;
-    return category;
+    }
+  kdDebug() << "CategoryById: " << category << endl;
+  return category;
 };
   void dump(const KABC::Addressee &test ){
     kdDebug() << "Addressee" << endl;
     kdDebug() << "Name " << test.name() << endl;
     kdDebug() << "UID" << test.uid() << endl;
-    kdDebug() << "LastName" << test.familyName() << endl;
-
+    kdDebug() << "LastName" << test.familyName() << endl; 
   }
 
 };
@@ -74,7 +77,7 @@ void OpieHelper::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntry> *e
 	QString con( (*it) );
 	con = con.stripWhiteSpace();
 	kdDebug() << "CurrentLine " << con << endl;
-	if( con.startsWith("Categories = " ) ){
+	if( con.startsWith("Categories = " ) ){ // FIXME for multiple Categories they're separated by a ;
 	    con = con.remove(0, 13 );
 	    con = con.remove( con.length() -1, 1 );
 	    category = categoryById( con, "Document View", cat );
@@ -108,9 +111,10 @@ void OpieHelper::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntry> *e
     QPtrList<KAlendarSyncEntry> entry;
     //return entry;
 }
-void OpieHelper::toAddressbook(const QString &fileName, QPtrList<KSyncEntry> *list,const QValueList<OpieCategories> &)
+void OpieHelper::toAddressbook(const QString &fileName, QPtrList<KSyncEntry> *list,const QValueList<OpieCategories> &vals)
 {
     KAddressbookSyncEntry *entry = new KAddressbookSyncEntry();
+    list->append( entry );
     //return entry;
     QFile file( fileName );
     if( !file.open(IO_ReadOnly ) ){
@@ -128,6 +132,7 @@ void OpieHelper::toAddressbook(const QString &fileName, QPtrList<KSyncEntry> *li
     entry->setAddressbook( abook );
     list->append( entry );
 
+
     QDomElement docElem = doc.documentElement( );
     QDomNode n =  docElem.firstChild();
     while(!n.isNull() ){
@@ -142,33 +147,76 @@ void OpieHelper::toAddressbook(const QString &fileName, QPtrList<KSyncEntry> *li
 			kdDebug() << "Contacts: " << el.tagName() << endl;
 			KABC::Addressee adr;
 			adr.setUid(el.attribute("Uid" ) );
-			kdDebug()<< el.attribute("Uid" ) << endl;
-
-			kdDebug() << el.attribute("LastName" ) << endl;
 			adr.setFamilyName(el.attribute("LastName" ) );
-
-			kdDebug() << el.attribute("FirstName" )<< endl;
 			adr.setGivenName(el.attribute("FirstName" ) );
-
-			kdDebug() << el.attribute("MiddleName" )<< endl;
 			adr.setAdditionalName(el.attribute("MiddleName" )  );
-
-			kdDebug() << el.attribute("Suffix") << endl;
 			adr.setSuffix(el.attribute("Suffix") );
-
-			kdDebug() << el.attribute("Nickname" ) << endl;
 			adr.setNickName(el.attribute("Nickname" ) );
-
-			kdDebug() <<el.attribute("Birthday")  << endl;
 			adr.setBirthday( QDate::fromString(el.attribute("Birthday")  ) );
-			
-			kdDebug() << el.attribute("JobTitle" ) << endl;
 			adr.setRole(el.attribute("JobTitle" ) );
 			// inside into custom
-			dump(adr);
+			adr.setSortString( el.attribute("FileAs" ) );
+			el.attribute("Department");
+			adr.setOrganization( el.attribute("Company") );
+			KABC::PhoneNumber businessPhoneNum(el.attribute("BusinessPhone"),
+							   KABC::PhoneNumber::Work   );
+			KABC::PhoneNumber businessFaxNum ( el.attribute("BusinessFax"),
+							   KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax  );
+			KABC::PhoneNumber businessMobile ( el.attribute("BusinessMobile"),
+							   KABC::PhoneNumber::Work | KABC::PhoneNumber::Cell );
+			KABC::PhoneNumber businessPager( el.attribute("BusinessPager"),
+							 KABC::PhoneNumber::Work | KABC::PhoneNumber::Pager);
+			adr.insertPhoneNumber( businessPhoneNum );
+			adr.insertPhoneNumber( businessFaxNum );
+			adr.insertPhoneNumber( businessMobile );
+			adr.insertPhoneNumber( businessPager  );
+			adr.insertEmail( el.attribute("Emails") );
+
+			KABC::PhoneNumber homePhoneNum( el.attribute("HomePhone"),
+							KABC::PhoneNumber::Home );
+
+			KABC::PhoneNumber homeFax (el.attribute("HomeFax"),
+						   KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
+
+			KABC::PhoneNumber homeMobile( el.attribute("HomeMobile"),
+						     KABC::PhoneNumber::Home | KABC::PhoneNumber::Cell );
+			adr.insertPhoneNumber(homePhoneNum );
+			adr.insertPhoneNumber(homeFax );
+			adr.insertPhoneNumber(homeMobile );
+			KABC::Address business( KABC::Address::Work );
+
+			business.setStreet  ( el.attribute("BusinessStreet") );
+			business.setLocality( el.attribute("BusinessCity"  ) );
+			business.setRegion  ( el.attribute("BusinessState" ) );
+			business.setPostalCode( el.attribute("BusinessZip")  );
+			
+			adr.insertAddress( business );
+			
+			KABC::Address home( KABC::Address::Home );
+			home.setStreet( el.attribute("HomeStreet") );
+			home.setLocality( el.attribute("HomeCity") );
+			home.setRegion( el.attribute("HomeState") );
+			home.setPostalCode( el.attribute("HomeZip") );
+			adr.insertAddress( home );
+			//el.attribute("Birthday");
+			
+			adr.setNickName( el.attribute("Nickname") );
+			adr.setNote( el.attribute("Notes") );
+
+			QStringList categories = QStringList::split(";", el.attribute("Categories" ) );
+			for(int i=0; i < categories.count(); i++ ){
+			  adr.setCategories(categoryById(categories[i], QString::null, vals  ) );
+			}
+			adr.insertCustom("opie", "HomeWebPage", el.attribute("HomeWebPage") );
+			adr.insertCustom("opie", "Spouse", el.attribute("Spouse") );
+			adr.insertCustom("opie", "Gender", el.attribute("Gender") );
+			adr.insertCustom("opie", "Anniversary", el.attribute("Anniversary") );
+			adr.insertCustom("opie", "Children", el.attribute("Children") );
+			adr.insertCustom("opie", "Office", el.attribute("Office") );
+			adr.insertCustom("opie", "Profession", el.attribute("Profession") );
+			adr.insertCustom("opie", "Assistant", el.attribute("Assistant") );
+			adr.insertCustom("opie", "Manager", el.attribute("Manager") );
 			abook->insertAddressee(adr );
-
-
 		    }
 		    no = no.nextSibling();
 		}
@@ -176,7 +224,10 @@ void OpieHelper::toAddressbook(const QString &fileName, QPtrList<KSyncEntry> *li
 	}
 	n = n.nextSibling();
     }
-    abook->dump();
+    /*    KABC::ResourceFile r( abook, "/home/ich/addressbook.vcf" );
+    abook->addResource(&r );
+    KABC::Ticket *t = abook->requestSaveTicket( &r );
+    abook->save( t );*/
     kdDebug() << "Dumped " << endl;
 }
 

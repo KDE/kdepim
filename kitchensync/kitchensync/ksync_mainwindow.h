@@ -3,7 +3,7 @@
 #include <kparts/mainwindow.h>
 
 class PartBar;
-class QHBoxLayout;
+class QHBox;
 
 namespace KitchenSync {
   // no idea why we have this window
@@ -17,6 +17,6 @@ namespace KitchenSync {
     private:
       virtual void initActions();
       PartBar *m_bar;
-      QHBoxLayout *m_lay;
+      QHBox *m_lay;
     };
 };
