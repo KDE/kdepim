@@ -397,11 +397,14 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   }
 
   // duration
-  if (incidence->hasDuration()) {
-    icaldurationtype duration;
-    duration = writeICalDuration(incidence->duration());
-    icalcomponent_add_property(parent,icalproperty_new_duration(duration));
-  }
+
+// turned off as it always is set to PTS0 (and must not occur together with DTEND
+
+//  if (incidence->hasDuration()) {
+//    icaldurationtype duration;
+//    duration = writeICalDuration(incidence->duration());
+//    icalcomponent_add_property(parent,icalproperty_new_duration(duration));
+//  }
 }
 
 icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)

@@ -158,8 +158,21 @@ bool Scheduler::acceptRequest(IncidenceBase *incidence,ScheduleMessage::Status s
     return true;
   } else {
     switch (status) {
-    case ScheduleMessage::Obsolete:
+    case ScheduleMessage::Obsolete: {
+      // why the same s "RequestUpdate?
+      Event *even = mCalendar->event(incidence->uid());
+      if (even) {
+	mCalendar->deleteEvent(even);
+      } else {
+	Todo *todo = mCalendar->todo(incidence->uid());
+	if (todo) {
+	  mCalendar->deleteTodo(todo);
+	}
+      }
+      mCalendar->addIncidence(inc);
+      deleteTransaction(incidence);
       return true;
+    }
     case ScheduleMessage::RequestNew:
       mCalendar->addIncidence(inc);
       deleteTransaction(incidence);
