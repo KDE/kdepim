@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
   KCmdLineArgs::init(argc, argv, &about);
   KCmdLineArgs::addCmdLineOptions( kmoptions ); // Add kmail options
   
-  KApplication app(argc, argv, "Abbrowser");
+  KApplication app("Abbrowser");
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
   // All session management is handled in the RESTORE macro
