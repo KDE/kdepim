@@ -1153,12 +1153,25 @@ void imapParser::parseBody (parseString & inWords)
     }
     else
     {
+      QCString spec(specifier.data(), specifier.size()+1);
+      if (spec.find(".MIME") != -1)
+      {
+        mailHeader *envelope = new mailHeader;
+        QString theHeader = parseLiteralC(inWords, true);
+        mimeIOQString myIO;
+        myIO.setString (theHeader);
+        envelope->parseHeader (myIO);
+        if (lastHandled)
+          lastHandled->setHeader (envelope);
+        return;
+      }
       // throw it away
+      kdDebug(7116) << "imapParser::parseBody - discarding " << seenUid.ascii () << endl;
       parseLiteralC(inWords, true);
     }
 
   }
-  else
+  else // no part specifier
   {
     mailHeader *envelope = NULL;
     if (lastHandled)
@@ -1428,7 +1441,7 @@ int imapParser::parseLoop ()
           sentQueue.removeRef (current);
           completeQueue.append (current);
           if (result.length())
-		parseResult (resultCode, result, current->command());
+            parseResult (resultCode, result, current->command());
         }
         else
         {
