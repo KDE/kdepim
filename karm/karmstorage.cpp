@@ -1,3 +1,8 @@
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+
 #include <qfile.h>
 #include <qdict.h>
 #include <qdatetime.h>
@@ -40,6 +45,7 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
   // as a string (empty is no error).  -- Mark, Aug 8, 2003
   QString err;
   KEMailSettings settings;
+  int handle;
 
   kdDebug() << "KarmStorage::load - old = \"" << _icalfile
     << "\", new = \"" << preferences->iCalFile() << "\"" << endl;
@@ -47,21 +53,33 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
   // if same file, don't reload
   if (preferences->iCalFile() == _icalfile)
     return err;
-  else
+
+  // If file doesn't exist, create a blank one.  This avoids an error dialog
+  // that libkcal presents when asked to load a non-existent file.  We make it
+  // user and group read/write, others read.  This is masked by the users
+  // umask.  (See man creat)
+  handle = open(preferences->iCalFile(), O_CREAT|O_EXCL|O_WRONLY,
+      S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
+     
+  kdDebug() << "KarmStorage::load: handle = " << handle << endl;
+  if (handle != -1)
   {
-    view->clear();
-    _calendar.close();
-    _icalfile = preferences->iCalFile();
+    close(handle);
   }
 
-  kdDebug() << "KarmStorage::load - loading " << _icalfile << endl;
+  // Clear view and calendar from memory.
+  view->clear();
+  _calendar.close();
 
+  // Load new file
+  _icalfile = preferences->iCalFile();
+  kdDebug() << "KarmStorage::load - loading " << _icalfile << endl;
   _calendar.setEmail( settings.getSetting( KEMailSettings::EmailAddress ) );
   _calendar.setOwner( settings.getSetting( KEMailSettings::RealName ) );
-
   if (!_calendar.load(_icalfile))
     err = i18n("Library error loading calendar file ") + _icalfile;
 
+  // Build task view from iCal data
   if (!err)
   {
     KCal::Todo::List todoList;
