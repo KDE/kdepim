@@ -66,8 +66,8 @@ bool ICSPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
   }
 
   appendItem( group, "ProductID", QVariant( cal.loadedProductId() ) );
-  appendItem( group, "Events", QVariant( cal.events().count() ) );
-  appendItem( group, "Journals", QVariant( cal.journals().count() ) );
+  appendItem( group, "Events", QVariant( int( cal.events().count() ) ) );
+  appendItem( group, "Journals", QVariant( int( cal.journals().count() ) ) );
   Todo::List todos = cal.todos();
 
   // count completed and overdue
@@ -84,7 +84,7 @@ bool ICSPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
       ++overdue;
   }
 
-  appendItem( group, "Todos", QVariant( todos.count() ) );
+  appendItem( group, "Todos", QVariant( int(todos.count() ) ) );
   appendItem( group, "TodoCompleted", QVariant( completed ) );
   appendItem( group, "TodoOverdue", QVariant( overdue ) );
 
