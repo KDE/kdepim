@@ -134,6 +134,11 @@ k_dcop:
    * Fetch all the new article headers
    */
   virtual void fetchHeaders() = 0;
+
+  /**
+   * Expire articles in all groups
+   */
+  virtual void expireArticles() = 0;
 };
 
 #endif

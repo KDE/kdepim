@@ -141,6 +141,8 @@ public:
   virtual void editArticle();
   /// Fetch all the new article headers
   virtual void fetchHeaders();
+  /// Expire articles in all groups
+  virtual void expireArticles();
 
   //end dcop interface
 signals:

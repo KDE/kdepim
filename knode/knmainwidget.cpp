@@ -2375,6 +2375,11 @@ void KNMainWidget::fetchHeaders()
   slotAccGetNewHdrs();
 }
 
+void KNMainWidget::expireArticles()
+{
+  slotAccExpireAll();
+}
+
 // Open the editor to post a new article in the selected group
 void KNMainWidget::postArticle()
 {
