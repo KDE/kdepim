@@ -148,7 +148,7 @@ void JPilotProxyWidgetSetup::slotConfigureConduit(QListViewItem*item) {
 void JPilotProxyWidgetSetup::slotBrowse() {
 	FUNCTIONSETUP;
 	QString oldname=fConfigWidget->DirEdit->text();
-	QString fn=KFileDialog::getExistingDirectory(oldname, this, i18n("Change plugin directory"));
+	QString fn=KFileDialog::getExistingDirectory(oldname, this, i18n("Change Plugin Directory"));
 	if(fn.isNull()) return;
 	fConfigWidget->DirEdit->setText(fn);
 }
@@ -164,7 +164,7 @@ void JPilotProxyWidgetSetup::slotSelectPluginPath() {
 
 void JPilotProxyWidgetSetup::slotAddPluginPath() {
 	FUNCTIONSETUP;
-	QString fn=KFileDialog::getExistingDirectory(QString::null, this, i18n("Add plugin directory"));
+	QString fn=KFileDialog::getExistingDirectory(QString::null, this, i18n("Add Plugin Directory"));
 	if (!fn.isNull()) {
 		fConfigWidget->ListPluginPathes->insertItem(fn);
 		fConfigWidget->ListPluginPathes->setCurrentItem(-1);
@@ -229,6 +229,9 @@ void JPilotProxyWidgetSetup::slotUpdatePluginPath(const QString &newpath) {
 
 
 // $Log$
+// Revision 1.4  2002/04/09 01:11:55  kainhofe
+// Renamed JPilotPluginProxy.ui (should not have the same name as the directory, since that creates problems when linking), some more debug message, when successfully loading a conduit the is no error message any more,
+//
 // Revision 1.3  2002/04/08 12:56:43  mhunter
 // Corrected typographical errors
 //

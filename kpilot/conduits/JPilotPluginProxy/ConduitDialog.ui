@@ -145,7 +145,7 @@
                                         </property>
                                         <property stdset="1">
                                             <name>text</name>
-                                            <string>&amp;Configure selected...</string>
+                                            <string>&amp;Configure Selected...</string>
                                         </property>
                                     </widget>
                                 </grid>
