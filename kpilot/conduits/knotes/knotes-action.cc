@@ -1,6 +1,7 @@
 /* knotes-action.cc                      KPilot
 **
-** Copyright (C) 2001,2002,2003 by Dan Pilone
+** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2002,2003,2004 by Adriaan de Groot
 **
 ** This file defines the SyncAction for the knotes-conduit plugin.
 */
@@ -60,6 +61,10 @@ class NoteAndMemo
 public:
 	NoteAndMemo() : noteId(),memoId(-1) { } ;
 	NoteAndMemo(KNoteID_pt noteid,int memoid) : noteId(noteid),memoId(memoid) { } ;
+	bool operator ==(const NoteAndMemo &p) const
+	{
+		return (p.memo()==memoId) && (p.note()==noteId);
+	}
 
 	int memo() const { return memoId; } ;
 	KNoteID_t note() const { return noteId; } ;
@@ -538,55 +543,55 @@ bool KNotesAction::syncMemoToKNotes()
 		<< endl;
 #endif
 
-	if (m.valid())
+	if (memo->isDeleted() && m.valid())
 	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": It's been deleted." << endl;
+#endif
 		// We knew about the note already, but it
 		// has changed on the Pilot.
 		//
 		//
-		if (memo->isDeleted())
-		{
+		fP->fKNotes->killNote(m.note());
+	}
+	else if (memo->isDeleted() /* && !m.valid() */ )
+	{
 #ifdef DEBUG
-			DEBUGCONDUIT << fname << ": It's been deleted." << endl;
+		DEBUGCONDUIT << fname << ": It's new and deleted." << endl;
 #endif
-			fP->fKNotes->killNote(m.note());
+	}
+	else if (!memo->isDeleted() && m.valid())
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": It's just modified." << endl;
+		DEBUGCONDUIT << fname << ": <"
+			<< fP->fNotes[m.note()]
+			<< "> <"
+			<< memo->shortTitle()
+			<< ">"
+			<< endl;
+#endif
+		// Check if KNotes still knows about this note
+		if (!(fP->fKNotes->name(m.note()).isEmpty()))
+		{
+			updateNote(m,memo);
 		}
 		else
 		{
-#ifdef DEBUG
-			DEBUGCONDUIT << fname << ": It's just modified." << endl;
-			DEBUGCONDUIT << fname << ": <"
-				<< fP->fNotes[m.note()]
-				<< "> <"
-				<< memo->shortTitle()
-				<< ">"
-				<< endl;
-#endif
-			if (fP->fNotes[m.note()] != memo->shortTitle())
+			uint c = fP->fIdList.remove(m);
+			if (!c)
 			{
-				// Name changed. KNotes might complain though.
-				fP->fKNotes->setName(m.note(),memo->shortTitle());
+				kdWarning() << k_funcinfo 
+					<< ": Tried to remove valid note "
+					   "and failed."
+					<< endl;
 			}
-			fP->fKNotes->setText(m.note(),memo->text());
+			addNote(memo);
 		}
 	}
-	else
+	else if (!memo->isDeleted() && !m.valid())
 	{
-		if (memo->isDeleted())
-		{
-#ifdef DEBUG
-			DEBUGCONDUIT << fname << ": It's new and deleted." << endl;
-#endif
-			// Do nothing, it's new and deleted at the same time
-		}
-		else
-		{
-			KNoteID_t i = fP->fKNotes->newNote(memo->shortTitle(),memo->text());
-			fP->fIdList.append(NoteAndMemo(i,memo->id()));
-#ifdef DEBUG
-			DEBUGCONDUIT << fname << ": It's new with knote id " << i << endl;
-#endif
-		}
+		addNote(memo);
 	}
 
 	if (memo) delete memo;
@@ -595,6 +600,26 @@ bool KNotesAction::syncMemoToKNotes()
 	return false;
 }
 
+void KNotesAction::updateNote(const NoteAndMemo &m, const PilotMemo *memo)
+{
+	if (fP->fNotes[m.note()] != memo->shortTitle())
+	{
+		// Name changed. KNotes might complain though.
+		fP->fKNotes->setName(m.note(), memo->shortTitle());
+	}
+	fP->fKNotes->setText(m.note(),memo->text());
+}
+
+void KNotesAction::addNote(const PilotMemo *memo)
+{
+	// This note is new to KNotes
+	KNoteID_t i = fP->fKNotes->newNote(memo->shortTitle(), memo->text());
+	fP->fIdList.append(NoteAndMemo(i,memo->id()));
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": It's new with knote id " << i << endl;
+#endif
+}
 
 void KNotesAction::cleanupMemos()
 {

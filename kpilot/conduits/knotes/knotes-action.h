@@ -30,6 +30,10 @@
 
 #include "plugin.h"
 
+
+class NoteAndMemo;
+class PilotMemo;
+
 class KNotesAction : public ConduitAction
 {
 Q_OBJECT
@@ -70,6 +74,9 @@ protected:
 	bool addNewNoteToPilot();
 	bool syncMemoToKNotes();
 	void cleanupMemos();
+
+	void updateNote(const NoteAndMemo &,const PilotMemo *);
+	void addNote(const PilotMemo *);
 
 	void resetIndexes();
 
