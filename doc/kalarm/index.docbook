@@ -35,7 +35,7 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2002-08-02</date>
+<date>2002-08-09</date>
 <releaseinfo>0.07.04</releaseinfo>
 
 <abstract>
@@ -146,7 +146,7 @@ or text by clicking on the title bar for the appropriate column.
 To reverse the sort order, click the column title bar again.</para>
 
 <para>When &kalarm; starts in graphical mode, it checks whether the
-<application>alarm daemon</application> is running.  If it is not
+<application>alarm daemon</application> is running. If it is not
 already running, &kalarm; starts it.</para>
 
 <sect2>
@@ -154,7 +154,7 @@ already running, &kalarm; starts it.</para>
 
 <para>To add a new alarm, select <menuchoice>
 <guimenu>Actions</guimenu><guimenuitem>New</guimenuitem></menuchoice>.
-This displays the alarm edit window as described below.</para>
+This displays the alarm edit dialog as described below.</para>
 
 </sect2>
 
@@ -182,16 +182,16 @@ context menu.</para>
 </listitem>
 </itemizedlist>
 
-<para>This displays the alarm edit window:</para>
+<para>This displays the alarm edit dialog:</para>
 
 <screenshot>
-<screeninfo>Screenshot of the alarm edit window</screeninfo>
+<screeninfo>Screenshot of the alarm edit dialog</screeninfo>
 <mediaobject>
 <imageobject>
 <imagedata fileref="editwindow.png" format="PNG"/>
 </imageobject>
 <textobject>
-<phrase>Alarm edit window</phrase>
+<phrase>Alarm edit dialog</phrase>
 </textobject>
 </mediaobject>
 </screenshot>
@@ -215,7 +215,7 @@ change the deferred time or to cancel the deferral.</para>
 
 <itemizedlist>
 <listitem>
-<para><guilabel>At date/time:</guilabel> to enter the date and time
+<para><guilabel>At date/time</guilabel> to enter the date and time
 when the alarm is to be triggered. Check the <guilabel>Any
 time</guilabel> checkbox if you want to specify only a date for the
 alarm: in this case the alarm will be displayed at the first
@@ -225,7 +225,7 @@ options</link> describes how to set the start-of-day time.)</para>
 </listitem>
 
 <listitem>
-<para><guilabel>Time from now:</guilabel> to enter how long after now
+<para><guilabel>Time from now</guilabel> to enter how long after now
 (in hours and minutes) the alarm should be triggered.</para>
 </listitem>
 </itemizedlist>
@@ -308,7 +308,7 @@ running.</para></note>
 
 <para>The <guilabel>Confirm acknowledgement</guilabel> checkbox lets
 you specify whether you will be prompted for confirmation when you
-close the alarm message window. This may be used as an extra safeguard
+close the alarm message window. This may be used as a safeguard
 against accidental acknowledgement of alarms.</para>
 
 <para>Check the <guilabel>Sound</guilabel> checkbox if you want an
@@ -543,15 +543,16 @@ following:</para>
 <itemizedlist>
 <listitem>
 <para>Acknowledge it by clicking the <guibutton>Close</guibutton>
-button.</para>
+button. This closes the window (after a prompt for confirmation, if
+you selected <guilabel>Confirm acknowledgement</guilabel>).</para>
 </listitem>
 
 <listitem>
 <para>Display options to defer the alarm by clicking the
 <guibutton>Defer...</guibutton> button. Then select
-<guilabel>Defer to date/time:</guilabel> to enter the date and time
+<guilabel>Defer to date/time</guilabel> to enter the date and time
 when the message is to be redisplayed, or select <guilabel>Defer for
-time interval:</guilabel> to enter how long after now (in hours and
+time interval</guilabel> to enter how long after now (in hours and
 minutes) the message should be redisplayed. Then click
 <guibutton>Defer</guibutton> to defer the alarm message.</para>
 
@@ -652,7 +653,9 @@ alarms while not running</guilabel> in the Preferences dialog).</para>
 <para>To set default options for &kalarm;, select
 <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Configure &kalarm;...</guimenuitem></menuchoice>.
-This displays the configuration dialog. Here, you can:</para>
+This displays the configuration dialog. The
+<guilabel>General</guilabel> section lets you control &kalarm;'s
+overall behaviour:</para>
 
 <itemizedlist>
 <listitem><para>Specify &kalarm;'s run mode. You can choose either to
@@ -698,9 +701,28 @@ such alarms will be output at the earliest opportunity during the
 <listitem><para>Specify whether you should be prompted for
 confirmation each time you delete an alarm.</para>
 </listitem>
+</itemizedlist>
+
+<para>The <guilabel>Alarm Defaults</guilabel> and
+<guilabel>Appearance</guilabel> sections let you choose default values
+for the options in the alarm edit dialog:</para>
+<itemizedlist>
 
 <listitem><para>Set the default font and background colour to use for
 alarm message display.</para>
+</listitem>
+
+<listitem><para>Set the default states for the <guilabel>Cancel if
+late</guilabel> and <guilabel>Confirm acknowledgement</guilabel>
+checkboxes.</para>
+</listitem>
+
+<listitem><para>Set beep as the default for the
+<guilabel>Sound</guilabel> option.</para>
+</listitem>
+
+<listitem><para>Set the default recurrence period for recurring
+alarms.</para>
 </listitem>
 </itemizedlist>
 
@@ -751,6 +773,11 @@ time.</para>
 </thead>
 <tbody>
 <row>
+  <entry><option>-a</option>, <option>--ack-confirm</option></entry>
+  <entry>Prompt for confirmation when the alarm message is
+  acknowledged.</entry>
+</row>
+<row>
   <entry><option>-b</option>, <option>--beep</option></entry>
   <entry>Make an audible beep when the message is displayed.
   <option>--sound</option> must not be present if this option is
@@ -768,8 +795,8 @@ time.</para>
   must be the last &kalarm; option in &kalarm;'s command line. All subsequent
   command parameters and options  are interpreted as forming the command line to 
   execute. <option>--file</option> cannot be specified with this 
-  option. <option>--beep</option> and <option>--color</option> are 
-  ignored with this option.</entry>
+  option. <option>--ack-confirm</option>, <option>--beep</option> and
+  <option>--color</option> are ignored with this option.</entry>
 </row>
 <row>
   <entry><option>-f</option>, <option>--file <replaceable>URL</replaceable></option></entry>
