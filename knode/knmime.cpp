@@ -630,7 +630,7 @@ KNMimeContent::~KNMimeContent()
 
 void KNMimeContent::setContent(QStrList *l)
 {
-  qDebug("KNMimeContent::setContent(QStrList *l) : start");
+  //qDebug("KNMimeContent::setContent(QStrList *l) : start");
   h_ead.resize(0);
   b_ody.resize(0);
 
@@ -656,7 +656,7 @@ void KNMimeContent::setContent(QStrList *l)
   hts << '\0';
   bts << '\0';
 
-  qDebug("KNMimeContent::setContent(QStrList *l) : finished");
+  //qDebug("KNMimeContent::setContent(QStrList *l) : finished");
 }
 
 
@@ -664,9 +664,8 @@ void KNMimeContent::setContent(const QCString &s)
 {
   int pos=s.find("\n\n", 0);
   if(pos>-1) {
-    h_ead=s.left(pos);
-    pos+=2;
-    b_ody=s.mid(pos, s.length()-pos);
+    h_ead=s.left(++pos);  //header *must* end with "\n" !!
+    b_ody=s.mid(++pos, s.length()-pos);
   }
   else
     h_ead=s;
