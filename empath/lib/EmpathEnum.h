@@ -28,14 +28,13 @@ enum SavePolicy            { Forever, ThisSession, Never };
 
 enum ActionType {
     RetrieveMessage,
+    WriteMessage,
     MoveMessage,
     CopyMessage,
-    DeleteMessage,
+    RemoveMessage,
+    MarkMessage,
     IgnoreMessage,
     ForwardMessage,
-    MarkMessage,
-    WriteMessage,
-    RemoveMessage,
     CreateFolder,
     RemoveFolder
 };

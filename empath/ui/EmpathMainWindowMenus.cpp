@@ -24,7 +24,7 @@ EmpathMainWindow::_setupMenuBar()
 
     // File menu
     
-    fileMenu_->insertItem(empathIcon("send.png"), i18n("&Send Pending Mail"),
+    fileMenu_->insertItem(empathIcon("send"), i18n("&Send Pending Mail"),
         this, SLOT(s_fileSendNew()));
 
 //    fileMenu_->insertSeparator();
@@ -39,10 +39,10 @@ EmpathMainWindow::_setupMenuBar()
 
     // Edit menu
     
-    editMenu_->insertItem(empathIcon("tree-marked.png"), i18n("Select &Tagged"),
+    editMenu_->insertItem(empathIcon("tree-marked"), i18n("Select &Tagged"),
         this, SLOT(s_editSelectTagged()));
     
-    editMenu_->insertItem(empathIcon("tree-read.png"), i18n("Select &Read"),
+    editMenu_->insertItem(empathIcon("tree-read"), i18n("Select &Read"),
         this, SLOT(s_editSelectRead()));
     
     editMenu_->insertItem(i18n("Select &All"),
@@ -53,7 +53,7 @@ EmpathMainWindow::_setupMenuBar()
     
     // Folder menu
 
-    folderMenu_->insertItem(empathIcon("mini-folder-grey.png"),
+    folderMenu_->insertItem(empathIcon("mini-folder-grey"),
         i18n("&New") + "...",
         this, SLOT(s_folderNew()));
 
@@ -61,7 +61,7 @@ EmpathMainWindow::_setupMenuBar()
         i18n("&Properties") + "...",
         this, SLOT(s_folderEdit()));
 
-    folderMenu_->insertItem(empathIcon("mini-folder-outbox.png"),
+    folderMenu_->insertItem(empathIcon("mini-folder-outbox"),
         i18n("&Clear") + "...",
         this, SLOT(s_folderClear()));
 
@@ -70,51 +70,51 @@ EmpathMainWindow::_setupMenuBar()
         this, SLOT(s_folderDelete()));
 
     
-    messageMenu_->insertItem(empathIcon("mini-view.png"),
+    messageMenu_->insertItem(empathIcon("mini-view"),
         i18n("&View"),
         this, SLOT(s_messageView()));
     
     messageMenu_->insertSeparator();
 
-    messageMenu_->insertItem(empathIcon("mini-compose.png"),
+    messageMenu_->insertItem(empathIcon("mini-compose"),
         i18n("&New"),
         this, SLOT(s_messageNew()));
 
-    messageMenu_->insertItem(empathIcon("mini-reply.png"),
+    messageMenu_->insertItem(empathIcon("mini-reply"),
         i18n("&Reply"),
         this, SLOT(s_messageReply()));
 
-    messageMenu_->insertItem(empathIcon("mini-reply.png"),
+    messageMenu_->insertItem(empathIcon("mini-reply"),
         i18n("Reply to &All"),
         this, SLOT(s_messageReplyAll()));
 
-    messageMenu_->insertItem(empathIcon("mini-forward.png"),
+    messageMenu_->insertItem(empathIcon("mini-forward"),
         i18n("&Forward"),
         this, SLOT(s_messageForward()));
 
-    messageMenu_->insertItem(empathIcon("mini-bounce.png"),
+    messageMenu_->insertItem(empathIcon("mini-bounce"),
         i18n("&Bounce"),
         this, SLOT(s_messageBounce()));
 
-    messageMenu_->insertItem(empathIcon("mini-delete.png"),
+    messageMenu_->insertItem(empathIcon("mini-delete"),
         i18n("&Delete"),
         this, SLOT(s_messageDelete()));
 
-    messageMenu_->insertItem(empathIcon("mini-save.png"),
+    messageMenu_->insertItem(empathIcon("mini-save"),
         i18n("Save &As"),
         this, SLOT(s_messageSaveAs()));
     
-    messageMenu_->insertItem(empathIcon("copy.png"),
+    messageMenu_->insertItem(empathIcon("copy"),
         i18n("&Copy to..."),
         this, SLOT(s_messageCopyTo()));
     
-    messageMenu_->insertItem(empathIcon("move.png"),
+    messageMenu_->insertItem(empathIcon("move"),
         i18n("&Move to..."),
         this, SLOT(s_messageMoveTo()));
     
     messageMenu_->insertSeparator();
         
-    messageMenu_->insertItem(empathIcon("empath-print.png"),
+    messageMenu_->insertItem(empathIcon("empath-print"),
         i18n("&Print") + "...",
         this, SLOT(s_messagePrint()));
     
@@ -122,27 +122,27 @@ EmpathMainWindow::_setupMenuBar()
 //        i18n("Fil&ter"),
 //        this, SLOT(s_messageFilter()));
 
-    optionsMenu_->insertItem(empathIcon("settings-display.png"),
+    optionsMenu_->insertItem(empathIcon("settings-display"),
         i18n("&Display"),
         empath, SLOT(s_setupDisplay()));
     
-    optionsMenu_->insertItem(empathIcon("settings-identity.png"),
+    optionsMenu_->insertItem(empathIcon("settings-identity"),
         i18n("&Identity"),
         empath, SLOT(s_setupIdentity()));
     
-    optionsMenu_->insertItem(empathIcon("settings-compose.png"),
+    optionsMenu_->insertItem(empathIcon("settings-compose"),
         i18n("&Compose"),
         empath, SLOT(s_setupComposing()));
     
-    optionsMenu_->insertItem(empathIcon("settings-sending.png"),
+    optionsMenu_->insertItem(empathIcon("settings-sending"),
         i18n("&Sending"),
         empath, SLOT(s_setupSending()));
     
-    optionsMenu_->insertItem(empathIcon("settings-accounts.png"),
+    optionsMenu_->insertItem(empathIcon("settings-accounts"),
         i18n("&Accounts"),
         empath, SLOT(s_setupAccounts()));
     
-    optionsMenu_->insertItem(empathIcon("filter.png"),
+    optionsMenu_->insertItem(empathIcon("filter"),
         i18n("&Filters"),
         empath, SLOT(s_setupFilters()));
     

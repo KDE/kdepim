@@ -386,12 +386,13 @@ EmpathFolderWidget::s_newFolder()
     
     if (name.isEmpty()) return;
         
-    EmpathMailbox * m = empath->mailbox(popupMenuOver->url());
-    if (m == 0) return;
-    
     EmpathURL newFolderURL(popupMenuOver->url().asString() + "/" + name + "/");
 
-    if (!m->addFolder(newFolderURL)) return;
+    empath->createFolder(newFolderURL, "");
+
+#warning ASYNC FIX NEEDED
+
+    // FIXME: Check createFolder retval !
     
     empathDebug("popupMenuOver == " + popupMenuOver->url().asString());
     empathDebug("newFolderURL  == " + newFolderURL.asString());
@@ -412,15 +413,9 @@ EmpathFolderWidget::s_removeFolder()
     empathDebug("s_removeFolder \"" +
         popupMenuOver->url().asString() + "\" called");
 
-    EmpathMailbox * m = empath->mailbox(popupMenuOver->url());
-    if (m == 0) return;
-    if (!m->removeFolder(popupMenuOver->url())) {
-        empathDebug("Couldn't remove folder \"" +
-            popupMenuOver->url().asString() + "\"");
-        return;
-    }
-    
-    delete popupMenuOver;
+    empath->remove(popupMenuOver->url(), QString::null);
+#warning ASYNC FIX NEEDED
+    // FIXME: Check retval from remove()
 }
 
     void

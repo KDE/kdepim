@@ -81,14 +81,14 @@ EmpathMessageListWidget::EmpathMessageListWidget(
     addColumn(i18n("Date"));
     addColumn(i18n("Size"));
     
-    px_xxx_    = empathIcon("tree.png");
-    px_Sxx_    = empathIcon("tree-read.png");
-    px_xMx_    = empathIcon("tree-marked.png");
-    px_xxR_    = empathIcon("tree-replied.png");
-    px_SMx_    = empathIcon("tree-read-marked.png");
-    px_SxR_    = empathIcon("tree-read-replied.png");
-    px_xMR_    = empathIcon("tree-marked-replied.png");
-    px_SMR_    = empathIcon("tree-read-marked-replied.png");
+    px_xxx_    = empathIcon("tree");
+    px_Sxx_    = empathIcon("tree-read");
+    px_xMx_    = empathIcon("tree-marked");
+    px_xxR_    = empathIcon("tree-replied");
+    px_SMx_    = empathIcon("tree-read-marked");
+    px_SxR_    = empathIcon("tree-read-replied");
+    px_xMR_    = empathIcon("tree-marked-replied");
+    px_SMR_    = empathIcon("tree-read-marked-replied");
 
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_GENERAL);
@@ -659,7 +659,7 @@ EmpathMessageListWidget::s_headerClicked(int i)
 EmpathMessageListWidget::_setupMessageMenu()
 {
     messageMenuItemView =
-        messageMenu_.insertItem(empathIcon("mini-view.png"), i18n("View"),
+        messageMenu_.insertItem(empathIcon("mini-view"), i18n("View"),
         this, SLOT(s_messageView()));
     
     messageMenu_.insertSeparator();
@@ -682,38 +682,38 @@ EmpathMessageListWidget::_setupMessageMenu()
     messageMenu_.insertSeparator();
 
     messageMenuItemReply =
-    messageMenu_.insertItem(empathIcon("mini-reply.png"), i18n("Reply"),
+    messageMenu_.insertItem(empathIcon("mini-reply"), i18n("Reply"),
         this, SLOT(s_messageReply()));
 
     messageMenuItemReplyAll =
-    messageMenu_.insertItem(empathIcon("mini-reply.png"),i18n("Reply to A&ll"),
+    messageMenu_.insertItem(empathIcon("mini-reply"),i18n("Reply to A&ll"),
         this, SLOT(s_messageReplyAll()));
 
     messageMenuItemForward =
-    messageMenu_.insertItem(empathIcon("mini-forward.png"), i18n("Forward"),
+    messageMenu_.insertItem(empathIcon("mini-forward"), i18n("Forward"),
         this, SLOT(s_messageForward()));
 
     messageMenuItemDelete =
-    messageMenu_.insertItem(empathIcon("mini-delete.png"), i18n("Delete"),
+    messageMenu_.insertItem(empathIcon("mini-delete"), i18n("Delete"),
         this, SLOT(s_messageDelete()));
 
     messageMenuItemSaveAs =
-    messageMenu_.insertItem(empathIcon("mini-save.png"), i18n("Save As"),
+    messageMenu_.insertItem(empathIcon("mini-save"), i18n("Save As"),
         this, SLOT(s_messageSaveAs()));
     
     multipleMessageMenu_.insertItem(i18n("Mark..."),
         this, SLOT(s_messageMarkMany()));
     
     multipleMessageMenu_.insertItem(
-        empathIcon("mini-forward.png"), i18n("Forward"),
+        empathIcon("mini-forward"), i18n("Forward"),
         this, SLOT(s_messageForward()));
 
     multipleMessageMenu_.insertItem(
-        empathIcon("mini-delete.png"), i18n("Delete"),
+        empathIcon("mini-delete"), i18n("Delete"),
         this, SLOT(s_messageDelete()));
 
     multipleMessageMenu_.insertItem(
-        empathIcon("mini-save.png"), i18n("Save As"),
+        empathIcon("mini-save"), i18n("Save As"),
         this, SLOT(s_messageSaveAs()));
 }
 
@@ -996,7 +996,7 @@ EmpathMessageListWidget::contentsMouseMoveEvent(QMouseEvent * e)
     QTextDrag * u  = new QTextDrag(c, this);
     CHECK_PTR(u);
     
-    u->setPixmap(empathIcon("tree.png")); 
+    u->setPixmap(empathIcon("tree")); 
     
     empathDebug("Starting the drag copy");
     u->drag();

@@ -116,22 +116,24 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
             SLOT(s_URLSelected(QString, int)));
 
     QObject::connect(
-        empath, SIGNAL(operationComplete(ActionType, bool, const EmpathURL &)),
-        this,   SLOT(s_operationComplete(ActionType, bool, const EmpathURL &)));
+        empath, SIGNAL(retrieveComplete(bool, const EmpathURL &, QString)),
+        this,   SLOT(s_retrieveComplete(bool, const EmpathURL &, QString)));
     
     mainLayout_->activate();
     QWidget::show();    
 }
 
     void
-EmpathMessageViewWidget::s_operationComplete(
-    ActionType t, bool b, const EmpathURL & url)
+EmpathMessageViewWidget::s_retrieveComplete(
+    bool b, const EmpathURL & url, QString xinfo)
 {
+    if ((b == false) || (xinfo != "view"))
+        return;
+
+    url_ = url;
+
     empathDebug("Got operation complete signal");
     empathDebug("b is " + QString(b ? "true" : "false")); 
-    empathDebug(QString().setNum((int)t)); 
-    if ((t != RetrieveMessage) || (b != true))
-        return;
 
     RMM::RMessage * m(empath->message(url_));
     
@@ -320,7 +322,7 @@ EmpathMessageViewWidget::s_setMessage(const EmpathURL & url)
 {
     empathDebug("setMessage() called with \"" + url.asString() + "\"");
     url_ = url;
-    empath->request(url_);
+    empath->retrieve(url_, "view");
 }
 
     void

@@ -50,28 +50,31 @@ sync(const EmpathURL &);
 protected:
     
     virtual void
-_retrieve(const EmpathURL &);
+_retrieve(const EmpathURL &, QString);
 
+    virtual void
+_retrieve(const EmpathURL &, const EmpathURL &, QString, QString);
+    
     virtual QString
-_write(const EmpathURL &, RMM::RMessage &);
+_write(const EmpathURL &, RMM::RMessage &, QString);
     
     virtual void
-_removeMessage(const EmpathURL &);
+_removeMessage(const EmpathURL &, QString);
     
     virtual void
-_removeMessage(const EmpathURL &, const QStringList &);
+_removeMessage(const EmpathURL &, const QStringList &, QString);
     
     virtual void
-_createFolder(const EmpathURL &);
+_createFolder(const EmpathURL &, QString);
 
     virtual void
-_removeFolder(const EmpathURL &);
+_removeFolder(const EmpathURL &, QString);
     
     virtual void
-_mark(const EmpathURL &, RMM::MessageStatus);
+_mark(const EmpathURL &, RMM::MessageStatus, QString);
     
     virtual void
-_mark(const EmpathURL &, const QStringList &, RMM::MessageStatus);
+_mark(const EmpathURL &, const QStringList &, RMM::MessageStatus, QString);
         
 public slots:
 

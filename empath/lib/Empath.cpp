@@ -201,66 +201,108 @@ Empath::folder(const EmpathURL & url)
 }
 
     void
-Empath::request(const EmpathURL & url)
+Empath::copy(const EmpathURL & from, const EmpathURL & to, QString xinfo)
+{
+    EmpathMailbox * m_from = mailbox(from);
+    
+    if (m_from == 0) {
+        empathDebug("Can't find mailbox " + from.mailboxName());
+        emit(copyComplete(false, from, to, xinfo));
+        return;
+    }
+
+    m_from->retrieve(from, to, "copy", xinfo);
+}
+
+    void
+Empath::move(const EmpathURL & from, const EmpathURL & to, QString xinfo)
+{
+    EmpathMailbox * m_from = mailbox(from);
+    
+    if (m_from == 0) {
+        empathDebug("Can't find mailbox " + from.mailboxName());
+        emit(moveComplete(false, from, to, xinfo));
+        return;
+    }
+
+    m_from->retrieve(from, to, "move", xinfo);
+}
+
+    void
+Empath::retrieve(const EmpathURL & url, QString xinfo)
 {
     EmpathMailbox * m = mailbox(url);
     
     if (m == 0) {
         empathDebug("Can't find mailbox " + url.mailboxName());
-        emit(operationComplete(RetrieveMessage, false, url));
+        emit(retrieveComplete(false, url, xinfo));
         return;
     }
-    m->request(url);
+
+    m->retrieve(url, xinfo);
 }
 
     EmpathURL
-Empath::write(const EmpathURL & url, RMM::RMessage & msg)
+Empath::write(const EmpathURL & url, RMM::RMessage & msg, QString xinfo)
 {
     EmpathMailbox * m = mailbox(url);
     
     if (m == 0) {
         empathDebug("Can't find mailbox " + url.mailboxName());
-        emit(operationComplete(WriteMessage, false, url));
+        emit(writeComplete(false, url, xinfo));
         return EmpathURL("");
     }
-    return m->write(url, msg);
+    return m->write(url, msg, xinfo);
 }
 
     void
-Empath::remove(const EmpathURL & url)
+Empath::createFolder(const EmpathURL & url, QString xinfo)
+{
+    EmpathMailbox * m = mailbox(url);
+
+    if (m == 0) {
+        empathDebug("Can't find mailbox " + url.mailboxName());
+        emit(createFolderComplete(false, url, xinfo));
+    }
+
+    m->createFolder(url, xinfo);
+}
+
+    void
+Empath::remove(const EmpathURL & url, QString xinfo)
 {
     EmpathMailbox * m = mailbox(url);
     
     if (m == 0) {
         empathDebug("Can't find mailbox " + url.mailboxName());
         if (url.hasMessageID())
-            emit(operationComplete(RemoveMessage, false, url));
+            emit(removeComplete(false, url, xinfo));
         else
-            emit(operationComplete(RemoveFolder, false, url));
+            emit(removeComplete(false, url, xinfo));
         return;
     }
-    m->remove(url);
+    m->remove(url, xinfo);
 }
 
     void
-Empath::remove(const EmpathURL & url, const QStringList & l)
+Empath::remove(const EmpathURL & url, const QStringList & l, QString xinfo)
 {
     EmpathMailbox * m = mailbox(url);
 
     if (m == 0) {
         empathDebug("Can't find mailbox " + url.mailboxName());
         if (url.hasMessageID())
-            emit(operationComplete(RemoveMessage, false, url));
+            emit(removeComplete(false, url, xinfo));
         else
-            emit(operationComplete(RemoveFolder, false, url));
+            emit(removeComplete(false, url, xinfo));
         return;
     }
 
-    return m->remove(url, l);
+    return m->remove(url, l, xinfo);
 }
 
     void
-Empath::mark(const EmpathURL & url, RMM::MessageStatus s)
+Empath::mark(const EmpathURL & url, RMM::MessageStatus s, QString xinfo)
 {
     empathDebug("mark() called");
     
@@ -268,15 +310,19 @@ Empath::mark(const EmpathURL & url, RMM::MessageStatus s)
     
     if (m == 0) {
         empathDebug("Can't find mailbox " + url.mailboxName());
-        emit(operationComplete(MarkMessage, false, url));
+        emit(markComplete(false, url, xinfo));
         return;
     }
 
-    m->mark(url, s);
+    m->mark(url, s, xinfo);
 }
 
     void
-Empath::mark(const EmpathURL & url, const QStringList & l, RMM::MessageStatus s)
+Empath::mark(
+    const EmpathURL & url,
+    const QStringList & l,
+    RMM::MessageStatus s,
+    QString xinfo)
 {
     empathDebug("mark() called");
 
@@ -284,11 +330,11 @@ Empath::mark(const EmpathURL & url, const QStringList & l, RMM::MessageStatus s)
     
     if (m == 0) {
         empathDebug("Can't find mailbox " + url.mailboxName());
-        emit(operationComplete(MarkMessage, false, url));
+        emit(markComplete(false, url, xinfo));
         return;
     }
 
-    m->mark(url, l, s);
+    m->mark(url, l, s, xinfo);
 }
 
     EmpathTask *
@@ -344,6 +390,98 @@ Empath::generateUnique()
 Empath::cacheMessage(const EmpathURL & url, RMM::RMessage * m)
 {
     cache_.insert(url.messageID(), m);
+}
+
+    void
+Empath::s_retrieveComplete(
+    bool status,
+    const EmpathURL & from,
+    const EmpathURL & to,
+    QString ixinfo,
+    QString xinfo)
+{
+    emit(retrieveComplete(status, from, to, xinfo));
+}
+
+    void
+Empath::s_retrieveComplete(
+    bool status,
+    const EmpathURL & url,
+    QString xinfo)
+{
+    emit(retrieveComplete(status, url, xinfo));
+}
+
+    void
+Empath::s_moveComplete(
+    bool status,
+    const EmpathURL & from,
+    const EmpathURL & to,
+    QString /* ixinfo */,
+    QString xinfo)
+{
+    emit(moveComplete(status, from, to, xinfo));
+}
+
+    void
+Empath::s_copyComplete(
+    bool status,
+    const EmpathURL & from,
+    const EmpathURL & to,
+    QString /* ixinfo */,
+    QString xinfo)
+{
+    emit(copyComplete(status, from, to, xinfo));
+}
+
+    void
+Empath::s_removeComplete(
+    bool status,
+    const EmpathURL & url,
+    QString /* ixinfo */,
+    QString xinfo)
+{
+    emit(removeComplete(status, url, xinfo));
+}
+
+    void
+Empath::s_markComplete(
+    bool status,
+    const EmpathURL & url,
+    QString /* ixinfo */,
+    QString xinfo)
+{
+    emit(markComplete(status, url, xinfo));
+}
+
+    void
+Empath::s_writeComplete(
+    bool status,
+    const EmpathURL & url,
+    QString /* ixinfo */,
+    QString xinfo)
+{    
+    emit(writeComplete(status, url, xinfo));
+}
+
+    void
+Empath::s_createFolderComplete(
+    bool status,
+    const EmpathURL & url,
+    QString /* ixinfo */,
+    QString xinfo) 
+{
+    emit(createFolderComplete(status, url, xinfo));
+}
+
+    void
+Empath::s_removeFolderComplete(
+    bool status,
+    const EmpathURL & url,
+    QString /* ixinfo */,
+    QString xinfo)
+{
+    emit(removeFolderComplete(status, url, xinfo));
 }
 
 // vim:ts=4:sw=4:tw=78

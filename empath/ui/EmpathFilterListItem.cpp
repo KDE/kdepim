@@ -45,7 +45,7 @@ EmpathFilterListItem::EmpathFilterListItem(
         filter_(_filter)
 {
     empathDebug("ctor");
-    setPixmap(0, empathIcon("filter.png"));
+    setPixmap(0, empathIcon("filter"));
     setText(1, QString().setNum(filter_->priority()));
 }
 

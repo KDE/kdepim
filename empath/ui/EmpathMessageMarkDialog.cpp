@@ -152,18 +152,18 @@ EmpathMessageMarkDialog::EmpathMessageMarkDialog(
     l_tagged_    = new QLabel(w_type_);
     CHECK_PTR(l_tagged_);
     
-    l_tagged_->setPixmap(empathIcon("tree-marked.png"));
+    l_tagged_->setPixmap(empathIcon("tree-marked"));
     
     l_replied_    = new QLabel(w_type_);
     
     CHECK_PTR(l_replied_);
     
-    l_replied_->setPixmap(empathIcon("tree-replied.png"));
+    l_replied_->setPixmap(empathIcon("tree-replied"));
     
     l_read_        = new QLabel(w_type_);
     CHECK_PTR(l_read_);
 
-    l_read_->setPixmap(empathIcon("tree-read.png"));
+    l_read_->setPixmap(empathIcon("tree-read"));
     
     stateButtonGroup_->insert(rb_tagged_,    RMM::Marked);
     stateButtonGroup_->insert(rb_replied_,    RMM::Replied);

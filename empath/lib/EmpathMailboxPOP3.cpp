@@ -156,11 +156,11 @@ EmpathMailboxPOP3::s_checkNewMail()
 }
 
     QString
-EmpathMailboxPOP3::_write(const EmpathURL & url, RMM::RMessage &)
+EmpathMailboxPOP3::_write(const EmpathURL & url, RMM::RMessage &, QString xinfo)
 {
     empathDebug("writeMessage() called");
     empathDebug("This mailbox is READ ONLY !");
-    emit(operationComplete(WriteMessage, false, url));
+    emit(writeComplete( false, url, xinfo));
     return QString::null;
 }
     
@@ -184,9 +184,14 @@ EmpathMailboxPOP3::path()
 {
     return url_;
 }
+    
+    void
+EmpathMailboxPOP3::_retrieve(const EmpathURL & from, const EmpathURL & to, QString, QString xinfo)
+{
+}
 
     void
-EmpathMailboxPOP3::_retrieve(const EmpathURL & url)
+EmpathMailboxPOP3::_retrieve(const EmpathURL & url, QString xinfo)
 {
     QString inID = url.messageID();
     
@@ -221,7 +226,7 @@ EmpathMailboxPOP3::_retrieve(const EmpathURL & url)
 }
 
     void
-EmpathMailboxPOP3::_removeMessage(const EmpathURL & url, const QStringList & l)
+EmpathMailboxPOP3::_removeMessage(const EmpathURL & url, const QStringList & l, QString xinfo)
 {
     EmpathURL u(url);
 
@@ -230,14 +235,14 @@ EmpathMailboxPOP3::_removeMessage(const EmpathURL & url, const QStringList & l)
     for (; it != l.end(); ++it) {
         u.setMessageID(*it);
 //        _enqueue(EmpathPOPCommand::Remove, *it);
-        emit (operationComplete(RemoveMessage, false, u));
+        emit (removeComplete(false, u, xinfo));
     }
 }
 
     void
-EmpathMailboxPOP3::_removeMessage(const EmpathURL & url)
+EmpathMailboxPOP3::_removeMessage(const EmpathURL & url, QString xinfo)
 {
-    emit (operationComplete(RemoveMessage, false, url));
+    emit (removeComplete(false, url, xinfo));
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -341,25 +346,25 @@ EmpathMailboxPOP3::s_jobData(int, const char * data, int)
 //////////////////////////////////////////////////////////////////////////////
 
     void
-EmpathMailboxPOP3::_createFolder(const EmpathURL & url)
+EmpathMailboxPOP3::_createFolder(const EmpathURL & url, QString xinfo)
 {
-    emit (operationComplete(CreateFolder, false, url));
+    emit (createFolderComplete(false, url, xinfo));
 }
 
     void
-EmpathMailboxPOP3::_removeFolder(const EmpathURL & url)
+EmpathMailboxPOP3::_removeFolder(const EmpathURL & url, QString xinfo)
 {
-    emit (operationComplete(RemoveFolder, false, url));
+    emit (removeFolderComplete(false, url, xinfo));
 }
     void
-EmpathMailboxPOP3::_mark(const EmpathURL & url, RMM::MessageStatus)
+EmpathMailboxPOP3::_mark(const EmpathURL & url, RMM::MessageStatus, QString xinfo)
 {
-    emit (operationComplete(MarkMessage, false, url));
+    emit (markComplete(false, url, xinfo));
 }
 
     void
 EmpathMailboxPOP3::_mark(
-    const EmpathURL & url, const QStringList & l, RMM::MessageStatus)
+    const EmpathURL & url, const QStringList & l, RMM::MessageStatus, QString xinfo)
 {
     EmpathURL u(url);
     
@@ -367,7 +372,7 @@ EmpathMailboxPOP3::_mark(
     
     for (it = l.begin(); it != l.end(); ++it) {
         u.setMessageID(*it);
-        emit (operationComplete(MarkMessage, false, u));
+        emit (markComplete(false, u, xinfo));
     }
 }
 

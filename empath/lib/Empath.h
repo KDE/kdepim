@@ -221,26 +221,15 @@ class Empath : public QObject
          * It'll probably turn up in all statusbars.
          */
         void s_infoMessage(const QString &);
-        
-        /**
-         * @internal
-         */
-        void s_newTask(EmpathTask *);
-
-        /**
-         * @internal
-         */
-        void s_newMailArrived();
-    
+   
         /**
          * Use when folders have changed and any displayed lists need updating.
          */
         void s_updateFolderLists() { emit(updateFolderLists()); }
+       
+        ///////////////////////////////////////////////////////////////////
+        // Message composition.
         
-        /**
-         * @internal
-         */
-        void s_saveConfig();
         /**
          * Compose a new message.
          */
@@ -258,36 +247,88 @@ class Empath : public QObject
          */
         void s_forward(const EmpathURL & url);
         /**
-         * Ask for a message to be retrieved.
-         */
-        void request(const EmpathURL &);
-        /**
-         * Write a new message to the specified folder.
-         */
-        EmpathURL write(const EmpathURL & folder, RMM::RMessage & msg);
-        /**
-         * Remove given message.
-         */
-        void remove(const EmpathURL &);
-        /**
-         * Remove messages. The mailbox and folder are given in the URL.
-         * The QStringList is used to pass the message ids.
-         */
-        void remove(const EmpathURL &, const QStringList &);
-        /**
          * Bounce a message.
          */
         void s_bounce(const EmpathURL &);
         /**
+         * Creates a new composer using the bug report template.
+         */
+        void s_bugReport();
+
+        ///////////////////////////////////////////////////////////////////
+        // Async methods.
+        
+        void createFolder(const EmpathURL &, QString extraInfo = QString::null);
+        
+        /**
+         * Ask for a message to be copied from one folder to another.
+         */
+        void copy(
+            const EmpathURL &,
+            const EmpathURL &,
+            QString extraInfo = QString::null);
+         
+        /**
+         * Ask for a message to be moved from one folder to another.
+         */
+        void move(
+            const EmpathURL &,
+            const EmpathURL &,
+            QString extraInfo = QString::null);
+        
+        /**
+         * Ask for a message to be retrieved.
+         */
+        void retrieve(
+            const EmpathURL &,
+            QString extraInfo = QString::null);
+        
+        /**
+         * Write a new message to the specified folder.
+         */
+        EmpathURL write(
+            const EmpathURL & folder,
+            RMM::RMessage & msg,
+            QString extraInfo = QString::null);
+        
+        /**
+         * Remove given message (or folder if no message id present in URL).
+         */
+        void remove(
+            const EmpathURL &,
+            QString extraInfo = QString::null);
+        
+        /**
+         * Remove messages. The mailbox and folder are given in the URL.
+         * The QStringList is used to pass the message ids.
+         */
+        void remove(
+             const EmpathURL &,
+             const QStringList &,
+             QString extraInfo = QString::null);
+       
+        /**
          * Mark a message with a particular status (Read, Marked, ...)
          */
-        void mark(const EmpathURL &, RMM::MessageStatus);
+        void mark(
+            const EmpathURL &,
+            RMM::MessageStatus,
+            QString extraInfo = QString::null);
+        
         /**
          * Mark many messages with a particular status.
          * The mailbox and folder to use are given in the URL. The QStringList
          * is used to pass the message ids.
          */
-        void mark(const EmpathURL &, const QStringList &, RMM::MessageStatus);
+        void mark(
+            const EmpathURL &,
+            const QStringList &,
+            RMM::MessageStatus,
+            QString extraInfo = QString::null);
+
+        //////////////////////////////////////////////////////////////////
+        // Request user interaction to alter configuration.
+
         /**
          * Request that the UI bring up the settings for the display.
          */
@@ -316,23 +357,162 @@ class Empath : public QObject
          * Connect to this from anywhere to provide the about box.
          */
         void s_about();
-        /**
-         * Creates a new composer using the bug report template.
-         */
-        void s_bugReport();
 
-        void s_operationComplete(ActionType, bool b, const EmpathURL & url);
-    
-    signals:
-    
+        //////////////////////////////////////////////////////////////////
+        // Internal.
+          
         /**
-         * The queued operation that was requested has finished.
-         * @param t Type of operation.
-         * @param b Whether the operation was successful.
-         * @param url Dependent on type of action. For a message retrieval,
-         * it points to the location to use when asking for the message data.
+         * @internal
          */
-        void operationComplete(ActionType, bool b, const EmpathURL & url);
+        void s_newTask(EmpathTask *);
+
+        /**
+         * @internal
+         */
+        void s_newMailArrived();
+        
+        /**
+         * @internal
+         */
+        void s_saveConfig();
+
+    protected slots:        
+
+        /**
+         * @internal
+         */
+        void s_retrieveComplete(
+            bool status,
+            const EmpathURL & from,
+            const EmpathURL & to,
+            QString ixinfo,
+            QString xinfo);
+
+        /**
+         * @internal
+         */
+        void s_retrieveComplete(
+            bool status,
+            const EmpathURL & url,
+            QString xinfo);
+
+
+        /**
+         * @internal
+         */
+        void s_moveComplete(
+            bool status,
+            const EmpathURL & from,
+            const EmpathURL & to,
+            QString ixinfo,
+            QString xinfo);
+        
+        /**
+         * @internal
+         */
+        void s_copyComplete(
+            bool status,
+            const EmpathURL & from,
+            const EmpathURL & to,
+            QString ixinfo,
+            QString xinfo);
+
+        /**
+         * @internal
+         */
+        void s_removeComplete(
+            bool status,
+            const EmpathURL & url,
+            QString ixinfo,
+            QString xinfo);
+
+        /**
+         * @internal
+         */
+        void s_markComplete(
+            bool status,
+            const EmpathURL & url,
+            QString ixinfo,
+            QString xinfo);
+
+        /**
+         * @internal
+         */
+        void s_writeComplete(
+            bool status,
+            const EmpathURL & url,
+            QString ixinfo,
+            QString xinfo);
+
+        /**
+         * @internal
+         */
+        void s_createFolderComplete(
+            bool status,
+            const EmpathURL & url,
+            QString ixinfo,
+            QString xinfo);
+
+        /**
+         * @internal
+         */
+        void s_removeFolderComplete(
+            bool status,
+            const EmpathURL & url,
+            QString ixinfo,
+            QString xinfo);
+ 
+    signals:
+ 
+        void retrieveComplete(
+            bool status,
+            const EmpathURL & from,
+            const EmpathURL & to,
+            QString xinfo);
+
+   
+        void retrieveComplete(
+            bool status,
+            const EmpathURL & url,
+            QString xinfo);
+
+        void moveComplete(
+            bool status,
+            const EmpathURL & from,
+            const EmpathURL & to,
+            QString xinfo);
+        
+        void copyComplete(
+            bool status,
+            const EmpathURL & from,
+            const EmpathURL & to,
+            QString xinfo);
+
+        void removeComplete(
+            bool status,
+            const EmpathURL & url,
+            QString xinfo);
+
+        void markComplete(
+            bool status,
+            const EmpathURL & url,
+            QString xinfo);
+
+        void writeComplete(
+            bool status,
+            const EmpathURL & url,
+            QString xinfo);
+
+        void createFolderComplete(
+            bool status,
+            const EmpathURL & url,
+            QString xinfo);
+
+        void removeFolderComplete(
+            bool status,
+            const EmpathURL & url,
+            QString xinfo);
+        
         /**
          * Signals that the on-screen folder lists should be updated.
          * Usually connected to a slot in the UI module.
@@ -481,10 +661,6 @@ Empath::s_bounce(const EmpathURL & url)
 inline void
 Empath::s_infoMessage(const QString & s)
 { emit(infoMessage(s)); }
-
-inline void
-Empath::s_operationComplete(ActionType t, bool b, const EmpathURL & url)
-{ emit(operationComplete(t, b, url)); }
 
 #endif
 

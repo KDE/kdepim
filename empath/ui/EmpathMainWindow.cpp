@@ -77,7 +77,7 @@ EmpathMainWindow::EmpathMainWindow(const char * name)
     messageListWidget_ = mainWidget_->messageListWidget();
 
     setView(mainWidget_, false);
-    setIcon(empathIcon("empath.png"));
+    setIcon(empathIcon("empath"));
     kapp->setMainWidget(this);
     
     _setupMenuBar();
@@ -105,7 +105,7 @@ EmpathMainWindow::~EmpathMainWindow()
     void
 EmpathMainWindow::_setupToolBar()
 {
-    QPixmap p = empathIcon("compose.png");
+    QPixmap p = empathIcon("compose");
     int i = QMAX(p.width(), p.height());
 
     KToolBar * tb = new KToolBar(this, "tooly", i + 4 );
@@ -131,25 +131,25 @@ EmpathMainWindow::_setupToolBar()
     QObject::connect(tb, SIGNAL(moved(BarPosition)),
             this, SLOT(s_toolbarMoved(BarPosition)));
 
-    tb->insertButton(empathIcon("compose.png"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("compose"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageNew()), true, i18n("Compose"));
     
-    tb->insertButton(empathIcon("reply.png"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("reply"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageReply()), true, i18n("Reply"));
     
-    tb->insertButton(empathIcon("forward.png"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("forward"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageForward()), true, i18n("Forward"));
     
     tb->insertSeparator();
     
-    tb->insertButton(empathIcon("delete.png"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("delete"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageDelete()), true, i18n("Delete"));
     
-    tb->insertButton(empathIcon("save.png"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("save"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageSaveAs()), true, i18n("Save"));
     
 //    // Debugging
-//    tb->insertButton(empathIcon("mini-view.png"), 0, SIGNAL(clicked()),
+//    tb->insertButton(empathIcon("mini-view"), 0, SIGNAL(clicked()),
 //            this, SLOT(s_dumpWidgetList()), true, i18n("Debug"));
 }
 

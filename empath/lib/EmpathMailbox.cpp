@@ -140,32 +140,41 @@ EmpathMailbox::folder(const EmpathURL & url)
 }
 
     void
-EmpathMailbox::request(const EmpathURL & url)
+EmpathMailbox::retrieve(const EmpathURL & url, QString xinfo)
 {
-    _enqueue(RetrieveMessage, url);
+    _enqueue(RetrieveMessage, url, xinfo);
+}
+
+    void
+EmpathMailbox::retrieve(
+    const EmpathURL & from, const EmpathURL & to, QString xxinfo, QString xinfo)
+{
+//    _enqueue(RetrieveMessage, from, to, xxinfo, xinfo);
 }
 
     EmpathURL
-EmpathMailbox::write(const EmpathURL & folder, RMM::RMessage & msg)
+EmpathMailbox::write(
+    const EmpathURL & folder, RMM::RMessage & msg, QString xinfo)
 {
     QString id = empath->generateUnique();
     EmpathURL u(folder);
     u.setMessageID(id);
-    _enqueue(u, msg);
+    _enqueue(u, msg, xinfo);
     return u;
 }
     
     void
-EmpathMailbox::remove(const EmpathURL & url)
+EmpathMailbox::remove(const EmpathURL & url, QString xinfo)
 {
     if (url.hasMessageID())
-        _enqueue(RemoveMessage, url);
+        _enqueue(RemoveMessage, url, xinfo);
     else
-        _enqueue(RemoveFolder, url);
+        _enqueue(RemoveFolder, url, xinfo);
 }
     
     void
-EmpathMailbox::remove(const EmpathURL & url, const QStringList & l)
+EmpathMailbox::remove(
+    const EmpathURL & url, const QStringList & l, QString xinfo)
 {
     EmpathURL u(url);
     
@@ -173,25 +182,28 @@ EmpathMailbox::remove(const EmpathURL & url, const QStringList & l)
 
     for (it = l.begin(); it != l.end(); ++it) {
         u.setMessageID(*it);
-        _enqueue(RemoveMessage, u);
+        _enqueue(RemoveMessage, u, xinfo);
     }
 }
     
     void
-EmpathMailbox::createFolder(const EmpathURL & url)
+EmpathMailbox::createFolder(const EmpathURL & url, QString xinfo)
 {
-    _enqueue(CreateFolder, url);
+    _enqueue(CreateFolder, url, xinfo);
 }
     
     void
-EmpathMailbox::mark(const EmpathURL & url, RMM::MessageStatus s)
+EmpathMailbox::mark(const EmpathURL & url, RMM::MessageStatus s, QString xinfo)
 {
-    _enqueue(url, s);
+    _enqueue(url, s, xinfo);
 }
     
     void
-EmpathMailbox::mark
-    (const EmpathURL & url, const QStringList & l, RMM::MessageStatus s)
+EmpathMailbox::mark(
+    const EmpathURL & url,
+    const QStringList & l,
+    RMM::MessageStatus s,
+    QString xinfo)
 {
     EmpathURL u(url);
     
@@ -199,26 +211,28 @@ EmpathMailbox::mark
 
     for (it = l.begin(); it != l.end(); ++it) {
         u.setMessageID(*it);
-        _enqueue(u, s);
+        _enqueue(u, s, xinfo);
     }
 }
 
     void
-EmpathMailbox::_enqueue(const EmpathURL & url, RMM::MessageStatus s)
+EmpathMailbox::_enqueue(
+    const EmpathURL & url, RMM::MessageStatus s, QString xinfo)
 {
-    _enqueue(new MarkAction(url, s));
+    _enqueue(new MarkAction(url, s, xinfo));
 }
 
     void
-EmpathMailbox::_enqueue(ActionType t, const EmpathURL & url)
+EmpathMailbox::_enqueue(ActionType t, const EmpathURL & url, QString xinfo)
 {
-    _enqueue(new Action(t, url));
+    _enqueue(new Action(t, url, xinfo));
 }
 
     void
-EmpathMailbox::_enqueue(const EmpathURL & url, RMM::RMessage & msg)
+EmpathMailbox::_enqueue(
+    const EmpathURL & url, RMM::RMessage & msg, QString xinfo)
 {
-    _enqueue(new WriteAction(url, msg));
+    _enqueue(new WriteAction(url, msg, xinfo));
 }
 
     void
@@ -237,20 +251,36 @@ EmpathMailbox::_runQueue()
 
         Action * a = queue_.dequeue();
 
-        ActionType t = a->actionType();
-
         EmpathURL u = a->url();
-        bool b = false;
 
         switch (a->actionType())
         {
-        case RetrieveMessage:   _retrieve(u);                           break;
-        case MarkMessage:       _mark (u, ((MarkAction *)a)->status()); break;
-        case WriteMessage:      _write(u, ((WriteAction *)a)->msg());   break;
-        case RemoveMessage:     _removeMessage(u);                      break;
-        case CreateFolder:      _createFolder(u);                       break;
-        case RemoveFolder:      _removeFolder(u);                       break;
-        default:                                                        break;
+            case RetrieveMessage:
+                _retrieve(u, a->xinfo());
+                break;
+        
+            case MarkMessage:
+                _mark(u, ((MarkAction *)a)->status(), a->xinfo());
+                break;
+        
+            case WriteMessage:
+                _write(u, ((WriteAction *)a)->msg(), a->xinfo());
+                break;
+        
+            case RemoveMessage:
+                _removeMessage(u, a->xinfo());
+                break;
+        
+            case CreateFolder:
+                _createFolder(u, a->xinfo());
+                break;
+        
+            case RemoveFolder:
+                _removeFolder(u, a->xinfo());
+                break;
+                
+            default:
+                break;
         }
     }
 }

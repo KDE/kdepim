@@ -127,7 +127,7 @@ EmpathComposeWindow::setupToolBar()
 {
     empathDebug("setting up tool bar");
 
-    QPixmap p = empathIcon("compose.png");
+    QPixmap p = empathIcon("compose");
     int i = QMAX(p.width(), p.height());
 
     KToolBar * tb = new KToolBar(this, "tooly", i + 4 );
@@ -137,13 +137,13 @@ EmpathComposeWindow::setupToolBar()
 
     this->addToolBar(tb, 0);
 
-    tb->insertButton(empathIcon("send.png"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("send"), 0, SIGNAL(clicked()),
             this, SLOT(s_fileSendMessage()), true, i18n("Send"));
     
-    tb->insertButton(empathIcon("sendlater.png"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("sendlater"), 0, SIGNAL(clicked()),
             this, SLOT(s_fileSendLater()), true, i18n("Send Later"));
     
-    tb->insertButton(empathIcon("save.png"), 0, SIGNAL(clicked()),
+    tb->insertButton(empathIcon("save"), 0, SIGNAL(clicked()),
             this, SLOT(s_fileSaveAs()), true, i18n("Save"));
     
     KToolBar * tb2 = new KToolBar(this, "tooly2", i + 4 );
@@ -160,27 +160,27 @@ EmpathComposeWindow::setupToolBar()
     id_encrypt_                = 12;
     
     tb2->insertButton(
-        empathIcon("confirm-delivery.png"),
+        empathIcon("confirm-delivery"),
         id_confirmDelivery_, SIGNAL(toggled(bool)),
         this, SLOT(s_confirmDelivery(bool)), true, i18n("Confirm Delivery"));
     
     tb2->insertButton(
-        empathIcon("confirm-reading.png"),
+        empathIcon("confirm-reading"),
         id_confirmReading_, SIGNAL(toggled(bool)),
         this, SLOT(s_confirmReading(bool)), true, i18n("Confirm Reading"));
     
     tb2->insertButton(
-        empathIcon("encrypt.png"),
+        empathIcon("encrypt"),
         id_encrypt_, SIGNAL(toggled(bool)),
         this, SLOT(s_encrypt(bool)), true, i18n("Encrypt"));
     
     tb2->insertButton(
-        empathIcon("dig-sign.png"),
+        empathIcon("dig-sign"),
         id_digitallySign_, SIGNAL(toggled(bool)),
         this, SLOT(s_digitallySign(bool)), true, i18n("Digitally Sign"));
 
     tb2->insertButton(
-        empathIcon("sign.png"),
+        empathIcon("sign"),
         id_addSignature_, SIGNAL(toggled(bool)),
         this, SLOT(s_addSignature(bool)), true, i18n("Add Signature"));
     

@@ -33,6 +33,7 @@
 
 // Local includes
 #include "EmpathDefines.h"
+#include "EmpathEnum.h"
 #include "EmpathURL.h"
 #include <RMM_Message.h>
 
@@ -98,6 +99,10 @@ class EmpathMailSender : public QObject
         virtual void readConfig() = 0;
         
         void sendCompleted(const QString &, bool);
+    
+    protected slots:
+            
+        void operationComplete(ActionType, bool, const EmpathURL &, QString);
     
     private:
         

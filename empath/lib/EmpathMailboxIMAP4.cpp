@@ -129,10 +129,11 @@ EmpathMailboxIMAP4::passwordSavePolicy()
 }
 
     QString
-EmpathMailboxIMAP4::_write(const EmpathURL & url, RMM::RMessage &)
+EmpathMailboxIMAP4::_write(
+    const EmpathURL & url, RMM::RMessage &, QString xinfo)
 {
     // STUB
-    emit (operationComplete(WriteMessage, false, url));
+    emit (writeComplete(false, url, xinfo));
     return QString::null;
 }
 
@@ -156,43 +157,53 @@ EmpathMailboxIMAP4::init()
 }
 
     void
-EmpathMailboxIMAP4::_retrieve(const EmpathURL & url)
+EmpathMailboxIMAP4::_retrieve(const EmpathURL & from, const EmpathURL & to, QString, QString xinfo)
 {
     // STUB
-    emit (operationComplete(RetrieveMessage, false, url));
 }
 
     void
-EmpathMailboxIMAP4::_removeMessage(const EmpathURL & url)
+EmpathMailboxIMAP4::_retrieve(const EmpathURL & url, QString xinfo)
 {
     // STUB
-    emit (operationComplete(RemoveMessage, false, url));
+    emit (retrieveComplete(false, url, xinfo));
 }
 
     void
-EmpathMailboxIMAP4::_createFolder(const EmpathURL & url)
+EmpathMailboxIMAP4::_removeMessage(const EmpathURL & url, QString xinfo)
 {
     // STUB
-    emit (operationComplete(CreateFolder, false, url));
+    emit (removeComplete(false, url, xinfo));
 }
 
     void
-EmpathMailboxIMAP4::_removeFolder(const EmpathURL & url)
+EmpathMailboxIMAP4::_createFolder(const EmpathURL & url, QString xinfo)
 {
     // STUB
-    emit (operationComplete(RemoveFolder, false, url));
+    emit (createFolderComplete(false, url, xinfo));
 }
 
     void
-EmpathMailboxIMAP4::_mark(const EmpathURL & url, RMM::MessageStatus)
+EmpathMailboxIMAP4::_removeFolder(const EmpathURL & url, QString xinfo)
 {
     // STUB
-    emit (operationComplete(MarkMessage, false, url));
+    emit (removeFolderComplete(false, url, xinfo));
 }
 
     void
 EmpathMailboxIMAP4::_mark(
-    const EmpathURL & url, const QStringList & l, RMM::MessageStatus)
+    const EmpathURL & url, RMM::MessageStatus, QString xinfo)
+{
+    // STUB
+    emit (markComplete(false, url, xinfo));
+}
+
+    void
+EmpathMailboxIMAP4::_mark(
+    const EmpathURL & url,
+    const QStringList & l,
+    RMM::MessageStatus,
+    QString xinfo)
 {
     // STUB
     EmpathURL u(url);
@@ -201,12 +212,13 @@ EmpathMailboxIMAP4::_mark(
     
     for (it = l.begin(); it != l.end(); ++it) {
         u.setMessageID(*it);
-        emit (operationComplete(MarkMessage, false, u));
+        emit (markComplete(false, u, xinfo));
     }
 }
 
     void
-EmpathMailboxIMAP4::_removeMessage(const EmpathURL & url, const QStringList & l)
+EmpathMailboxIMAP4::_removeMessage(
+    const EmpathURL & url, const QStringList & l, QString xinfo)
 {
     // STUB
     EmpathURL u(url);
@@ -215,7 +227,7 @@ EmpathMailboxIMAP4::_removeMessage(const EmpathURL & url, const QStringList & l)
     
     for (it = l.begin(); it != l.end(); ++it) {
         u.setMessageID(*it);
-        emit (operationComplete(RemoveMessage, false, u));
+        emit (removeComplete(false, u, xinfo));
     }
 
 }

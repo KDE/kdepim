@@ -203,11 +203,25 @@ EmpathMailboxList::readConfig()
         empathDebug("Adding mailbox with name = " + m->name());
         QList::append(m);
         m->init();
+
         QObject::connect(
-            m,
-            SIGNAL(operationComplete(ActionType, bool, const EmpathURL &)),
-            empath,
-            SLOT(s_operationComplete(ActionType, bool, const EmpathURL &)));
+            m, SIGNAL(retrieveComplete(
+                bool, const EmpathURL &, const EmpathURL &, QString, QString)),
+            empath, SLOT(s_retrieveComplete(
+                bool, const EmpathURL &, const EmpathURL &, QString, QString)));
+        
+        QObject::connect(
+            m, SIGNAL(retrieveComplete(bool, const EmpathURL &, QString)),
+            empath, SLOT(s_retrieveComplete(bool, const EmpathURL &, QString)));
+        QObject::connect(
+            m, SIGNAL(removeComplete(bool, const EmpathURL &, QString)),
+            empath, SLOT(s_removeComplete(bool, const EmpathURL &, QString)));
+        QObject::connect(
+            m, SIGNAL(writeComplete(bool, const EmpathURL &, QString)),
+            empath, SLOT(s_writeComplete(bool, const EmpathURL &, QString)));
+        QObject::connect(
+            m, SIGNAL(markComplete(bool, const EmpathURL &, QString)),
+            empath, SLOT(s_markComplete(bool, const EmpathURL &, QString)));
     }
 }
 
