@@ -178,15 +178,18 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
   // Find out if this note was previously stored in KMail
   bool newNote = subresource.isEmpty();
 
-  mCalendar.addJournal( journal );
-  manager()->registerNote( this, journal );
-  journal->registerObserver( this );
+  if ( !newNote ) {
+    mCalendar.addJournal( journal );
+    manager()->registerNote( this, journal );
+    journal->registerObserver( this );
+  }
 
   QString resource =
     newNote ? findWritableResource( mResources ) : subresource;
 
   if ( !mSilent ) {
     QString xml = Note::journalToXML( journal );
+    kdDebug(5500) << k_funcinfo << "XML string:\n" << xml << endl;
 
     if( !kmailUpdate( resource, sernum, xml ) ) {
       kdError(5500) << "Communication problem in ResourceKolab::addNote()\n";
@@ -194,9 +197,12 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
     }
   }
 
-  mUidMap[ journal->uid() ] = StorageReference( resource, sernum );
+  if ( !resource.isEmpty() && sernum != 0 ) {
+    mUidMap[ journal->uid() ] = StorageReference( resource, sernum );
+    return true;
+  }
 
-  return true;
+  return false;
 }
 
 bool ResourceKolab::deleteNote( KCal::Journal* journal )
