@@ -65,7 +65,7 @@ static const char *vcalconduit_id = "$Id$";
 
 
 
-VCalConduitPrivate::VCalConduitPrivate(KCal::CalendarLocal *b) :
+VCalConduitPrivate::VCalConduitPrivate(KCal::Calendar *b) :
 	VCalConduitPrivateBase(b)
 {
 	fAllEvents.setAutoDelete(false);
@@ -172,7 +172,7 @@ VCalConduit::~VCalConduit()
 //	FUNCTIONSETUP;
 };
 
-VCalConduitPrivateBase* VCalConduit::newVCalPrivate(KCal::CalendarLocal *fCalendar) {
+VCalConduitPrivateBase* VCalConduit::newVCalPrivate(KCal::Calendar *fCalendar) {
 	return new VCalConduitPrivate(fCalendar);
 };
 
@@ -266,6 +266,9 @@ void VCalConduit::setStartEndTimes(KCal::Event *e,const PilotDateEntry *de)
 {
 	FUNCTIONSETUP;
 	e->setDtStart(readTm(de->getEventStart()));
+#ifdef DEBUG
+	DEBUGCONDUIT<<"Start time on Palm: "<<readTm(de->getEventStart())<<", on PC: "<<e->dtStart()<<endl;
+#endif
 	e->setFloats(de->isEvent());
 
 	if (de->isMultiDay())

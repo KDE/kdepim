@@ -40,7 +40,7 @@
 
 namespace KCal
 {
-class CalendarLocal;
+class Calendar;
 // class Event;
 class Incidence;
 } ;
@@ -60,9 +60,9 @@ class VCalConduitPrivateBase
 {
 protected:
 	bool reading;
-	KCal::CalendarLocal *fCalendar;
+	KCal::Calendar *fCalendar;
 public:
-	VCalConduitPrivateBase(KCal::CalendarLocal *buddy):fCalendar(buddy) { reading=false;};
+	VCalConduitPrivateBase(KCal::Calendar *buddy):fCalendar(buddy) { reading=false;};
 
 	virtual int updateIncidences()=0;
 	virtual void addIncidence(KCal::Incidence*)=0;
@@ -144,18 +144,22 @@ protected:
 	virtual void preIncidence(KCal::Incidence *){};
 
 protected:
-	KCal::CalendarLocal *fCalendar;
+	KCal::Calendar *fCalendar;
 
 	QString fCalendarFile;
 	int syncAction, nextSyncAction, conflictResolution;
 	bool archive;
 	bool fFirstTime, fFullSync;
 	int pilotindex;
+	enum eCalendarTypeEnum {
+		eCalendarResource=0,
+		eCalendarLocal
+	} fCalendarType;
 
 protected:
 //	class VCalPrivateBase;
 	VCalConduitPrivateBase *fP;
-   virtual VCalConduitPrivateBase* newVCalPrivate(KCal::CalendarLocal *fCalendar)=0;
+   virtual VCalConduitPrivateBase* newVCalPrivate(KCal::Calendar *fCalendar)=0;
 } ;
 
 #endif

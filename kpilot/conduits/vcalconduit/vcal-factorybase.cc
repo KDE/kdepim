@@ -36,6 +36,7 @@ const char *const VCalConduitFactoryBase::nextSyncAction = "NextSyncAction";
 const char *const VCalConduitFactoryBase::archive = "SyncArchived";
 const char *const VCalConduitFactoryBase::conflictResolution = "ConflictResolution";
 const char * const VCalConduitFactoryBase::fullSyncOnPCChange = "FullSyncOnPCChange";
+const char * const VCalConduitFactoryBase::calendarType = "CalendarType";
 
 const char * const VCalConduitFactoryBase::calendarFile = "CalFile" ;
 

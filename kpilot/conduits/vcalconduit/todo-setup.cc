@@ -88,6 +88,8 @@ ToDoWidgetSetup::~ToDoWidgetSetup()
 	fConfig->writeEntry(VCalConduitFactoryBase::archive, fConfigWidget->fArchive->isChecked());
 	fConfig->writeEntry(VCalConduitFactoryBase::conflictResolution,
 		fConfigWidget->conflictResolution->id(fConfigWidget->conflictResolution->selected()));
+	fConfig->writeEntry(VCalConduitFactoryBase::calendarType,
+		fConfigWidget->fSyncDestination->id(fConfigWidget->fSyncDestination->selected()));
 
 	int act=fConfigWidget->syncAction->id(fConfigWidget->syncAction->selected())+1;
 	if (act>SYNC_MAX)
@@ -112,6 +114,7 @@ ToDoWidgetSetup::~ToDoWidgetSetup()
 	fConfigWidget->fCalendarFile->setURL( fConfig->readEntry(VCalConduitFactoryBase::calendarFile,QString::null));
 	fConfigWidget->fArchive->setChecked( fConfig->readBoolEntry(VCalConduitFactoryBase::archive, true));
 	fConfigWidget->conflictResolution->setButton( fConfig->readNumEntry(VCalConduitFactoryBase::conflictResolution, RES_ASK));
+	fConfigWidget->fSyncDestination->setButton( fConfig->readNumEntry(VCalConduitFactoryBase::calendarType, 0));
 
 	int nextAction=fConfig->readNumEntry(VCalConduitFactoryBase::nextSyncAction, 0);
 	if (nextAction)

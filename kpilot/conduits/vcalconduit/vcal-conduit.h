@@ -45,7 +45,7 @@ class PilotLocalDatabase;
 class VCalConduitPrivate : public VCalConduitPrivateBase
 {
 public:
-	VCalConduitPrivate(KCal::CalendarLocal *buddy);
+	VCalConduitPrivate(KCal::Calendar *buddy);
 	virtual ~VCalConduitPrivate() {};
 
 #ifdef KDE2
@@ -83,7 +83,7 @@ protected:
 	virtual const QString configGroup() { return QString::fromLatin1(VCalConduitFactory::group); };
 	virtual const QString dbname() { return CSL1("DatebookDB"); };
 
-	virtual VCalConduitPrivateBase*newVCalPrivate(KCal::CalendarLocal *fCalendar);
+	virtual VCalConduitPrivateBase*newVCalPrivate(KCal::Calendar *fCalendar);
 
 
 	virtual PilotAppCategory*newPilotEntry(PilotRecord*r) { if (r) return new PilotDateEntry(r);  else return new PilotDateEntry();};

@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>488</width>
-            <height>325</height>
+            <width>572</width>
+            <height>442</height>
         </rect>
     </property>
     <property name="caption">
@@ -36,30 +36,60 @@
                 <attribute name="title">
                     <string>Calendar File</string>
                 </attribute>
-                <grid>
+                <vbox>
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QLabel" row="0" column="0">
+                    <widget class="QButtonGroup">
                         <property name="name">
-                            <cstring>TextLabel1</cstring>
+                            <cstring>fSyncDestination</cstring>
                         </property>
-                        <property name="text">
-                            <string>Calendar file:</string>
+                        <property name="title">
+                            <string>Sync destination</string>
                         </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="KURLRequester" row="1" column="1" rowspan="1" colspan="2">
+                                <property name="name">
+                                    <cstring>fCalendarFile</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>false</bool>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>&lt;qt&gt;Path to the KOrganizer calendar file&lt;/qt&gt;</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>&lt;qt&gt;Path to the KOrganizer calendar file&lt;/qt&gt;</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="0" column="0" rowspan="1" colspan="2">
+                                <property name="name">
+                                    <cstring>fSyncStdCalendar</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Standard calendar</string>
+                                </property>
+                                <property name="checked">
+                                    <bool>true</bool>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="1" column="0">
+                                <property name="name">
+                                    <cstring>fSyncFile</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="text">
+                                    <string>Calendar &amp;file:</string>
+                                </property>
+                            </widget>
+                        </grid>
                     </widget>
-                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>fArchive</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Sync &amp;archived entries to the PC</string>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Deleting something in KOrganizer will delete it in your PDA as well&lt;/qt&gt;</string>
-                        </property>
-                    </widget>
-                    <widget class="QButtonGroup" row="1" column="0" rowspan="1" colspan="2">
+                    <widget class="QButtonGroup">
                         <property name="name">
                             <cstring>syncAction</cstring>
                         </property>
@@ -113,7 +143,18 @@
                             </widget>
                         </vbox>
                     </widget>
-                    <spacer row="3" column="1">
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>fArchive</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Sync &amp;archived entries to the PC</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Deleting something in KOrganizer will delete it in your PDA as well&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <spacer>
                         <property name="name">
                             <cstring>Spacer1</cstring>
                         </property>
@@ -126,22 +167,11 @@
                         <property name="sizeHint">
                             <size>
                                 <width>20</width>
-                                <height>20</height>
+                                <height>80</height>
                             </size>
                         </property>
                     </spacer>
-                    <widget class="KURLRequester" row="0" column="1">
-                        <property name="name">
-                            <cstring>fCalendarFile</cstring>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>&lt;qt&gt;Path to the KOrganizer calendar file&lt;/qt&gt;</string>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Path to the KOrganizer calendar file&lt;/qt&gt;</string>
-                        </property>
-                    </widget>
-                </grid>
+                </vbox>
             </widget>
             <widget class="QWidget">
                 <property name="name">
@@ -246,6 +276,14 @@
         </widget>
     </grid>
 </widget>
+<connections>
+    <connection>
+        <sender>fSyncFile</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>fCalendarFile</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+</connections>
 <tabstops>
     <tabstop>tabWidget</tabstop>
     <tabstop>RadioButton9</tabstop>

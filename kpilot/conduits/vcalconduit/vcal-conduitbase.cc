@@ -45,6 +45,7 @@ static const char *vcalconduitbase_id = "$Id$";
 #include <libkcal/calendar.h>
 #include <libkcal/calendarlocal.h>
 #include <libkcal/incidence.h>
+#include <libkcal/calendarresources.h> 
 #include <kstandarddirs.h>
 #include <ksimpleconfig.h>
 
@@ -290,6 +291,7 @@ error:
 	nextSyncAction = fConfig->readNumEntry(VCalConduitFactoryBase::nextSyncAction);
 	conflictResolution = fConfig->readNumEntry(VCalConduitFactoryBase::conflictResolution);
 	archive = fConfig->readBoolEntry(VCalConduitFactoryBase::archive);
+	fCalendarType = (eCalendarTypeEnum)fConfig->readNumEntry(VCalConduitFactoryBase::calendarType, 0);
 }
 
 
@@ -308,32 +310,53 @@ error:
 
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname
-		<< ": Using calendar file "
-		<< fCalendarFile
-		<< endl;
+	DEBUGCONDUIT << fname << ": Using calendar file " << fCalendarFile << endl;
+	DEBUGCONDUIT << "fCalendarType="<<fCalendarType<<endl;
+	DEBUGCONDUIT<<"eCalendarLocal would be "<<eCalendarLocal<<", eCalendarResources would be "<<eCalendarResource<<endl;
 #endif
 
-//	emit logMessage(i18n("Using calendar file %1.")
-//		.arg(fCalendarFile));
-
-	fCalendar = new KCal::CalendarLocal(tz);
-	if ( !fCalendar)
+	switch(fCalendarType)
 	{
+		case eCalendarLocal:
+#
+			fCalendar = new KCal::CalendarLocal(tz);
+/*			fCalendar = new KCal::CalendarLocal();
+			fCalendar->setLocalTime();*/
+			if ( !fCalendar)
+			{
+				kdWarning() << fname << ":Cannot initialize calendar object"<<endl;
+				return false;
+			}
 #ifdef DEBUG
-		DEBUGCONDUIT << fname << ":Cannot initialize calendar object"<<endl;
+			DEBUGCONDUIT<<"Calendar's timezone: "<<fCalendar->getTimeZoneStr()<<endl;
+			DEBUGCONDUIT<<"Calendar is local time: "<<fCalendar->isLocalTime()<<endl;
 #endif
-		return false;
-	}
 
-	// if there is no calendar yet, use a first sync..
-	// the calendar is initialized, so nothing more to do...
-	if (!fCalendar->load(fCalendarFile) )
-	{
+			// if there is no calendar yet, use a first sync..
+			// the calendar is initialized, so nothing more to do...
+			if (!dynamic_cast<KCal::CalendarLocal*>(fCalendar)->load(fCalendarFile) )
+			{
 #ifdef DEBUG
-		DEBUGCONDUIT << "calendar file "<<fCalendarFile<<" could not be opened. Will create a new one"<<endl;
+				DEBUGCONDUIT << "calendar file "<<fCalendarFile<<" could not be opened. Will create a new one"<<endl;
 #endif
-		fFirstTime=true;
+				fFirstTime=true;
+			}
+			break;
+
+		case eCalendarResource:
+#ifdef DEBUG
+			DEBUGCONDUIT<<"Using CalendarResource!"<<endl;
+#endif
+			fCalendar = new KCal::CalendarResources(tz);
+			if ( !fCalendar)
+			{
+				kdWarning() << fname << ":Cannot initialize calendar object"<<endl;
+				return false;
+			}
+			break;
+		default:
+			break;
+
 	}
 
 	fP = newVCalPrivate(fCalendar);
@@ -341,7 +364,7 @@ error:
 	fP->updateIncidences();
 	if (fP->count()<1) //fFullSync=true;
 		fFirstTime=true;
-	
+
 	return (fCalendar && fP);
 }
 
@@ -361,7 +384,7 @@ void VCalConduitBase::syncPalmRecToPC()
 		r = fDatabase->readNextModifiedRec();
 	}
 	PilotRecord *s = 0L;
-	
+
 	if (!r)
 	{
 		fP->updateIncidences();
@@ -438,7 +461,7 @@ void VCalConduitBase::syncPCRecToPalm()
 	if (!e)
 	{
 		pilotindex=0;
-		if (nextSyncAction!=0) 
+		if (nextSyncAction!=0)
 		{
 			QTimer::singleShot(0, this, SLOT(cleanup()));
 			return;
@@ -532,14 +555,28 @@ void VCalConduitBase::cleanup()
 		fDatabase->resetSyncFlags();
 		fDatabase->cleanup();
 	}
-	if (fLocalDatabase) 
+	if (fLocalDatabase)
 	{
 		fLocalDatabase->resetSyncFlags();
 		fLocalDatabase->cleanup();
 	}
 	KPILOT_DELETE(fDatabase);
 	KPILOT_DELETE(fLocalDatabase);
-	if (fCalendar) fCalendar->save(fCalendarFile);
+	if (fCalendar)
+	{
+		switch(fCalendarType)
+		{
+			case eCalendarLocal:
+					dynamic_cast<KCal::CalendarLocal*>(fCalendar)->save(fCalendarFile);
+				break;
+			case eCalendarResource:
+				fCalendar->save();
+				break;
+			default:
+				break;
+		}
+		fCalendar->close();
+	}
 	KPILOT_DELETE(fCalendar);
 	KPILOT_DELETE(fP);
 

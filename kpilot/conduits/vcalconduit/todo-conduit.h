@@ -54,7 +54,7 @@ class PilotLocalDatabase;
 class TodoConduitPrivate : public VCalConduitPrivateBase
 {
 public:
-	TodoConduitPrivate(KCal::CalendarLocal *buddy);
+	TodoConduitPrivate(KCal::Calendar *buddy);
 	virtual ~TodoConduitPrivate() {};
 
 #ifdef KDE2
@@ -92,7 +92,7 @@ protected:
 	virtual const QString configGroup() { return QString::fromLatin1(ToDoConduitFactory::group); };
 	virtual const QString dbname() { return CSL1("ToDoDB"); };
 	virtual void preSync() {_setAppInfo(); };
-	virtual VCalConduitPrivateBase* newVCalPrivate(KCal::CalendarLocal *fCalendar) { return new TodoConduitPrivate(fCalendar);};
+	virtual VCalConduitPrivateBase* newVCalPrivate(KCal::Calendar *fCalendar) { return new TodoConduitPrivate(fCalendar);};
 
 	virtual void readConfig();
 	void _setAppInfo();

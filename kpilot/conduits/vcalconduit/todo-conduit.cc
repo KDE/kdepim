@@ -44,7 +44,7 @@ static const char *TodoConduit_id = "$Id$";
 #include <pilotUser.h>
 #include <kconfig.h>
 
-#include <libkcal/calendarlocal.h>
+#include <libkcal/calendar.h>
 #include <libkcal/todo.h>
 
 
@@ -70,7 +70,7 @@ static const char *TodoConduit_id = "$Id$";
 
 
 
-TodoConduitPrivate::TodoConduitPrivate(KCal::CalendarLocal *b) :
+TodoConduitPrivate::TodoConduitPrivate(KCal::Calendar *b) :
 	VCalConduitPrivateBase(b)
 {
 	fAllTodos.setAutoDelete(false);

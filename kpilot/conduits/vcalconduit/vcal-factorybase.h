@@ -54,7 +54,8 @@ public:
 		*const nextSyncAction,
 		*const archive,
 		*const conflictResolution,
-		*const fullSyncOnPCChange;
+		*const fullSyncOnPCChange,
+		*const calendarType;
 
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
