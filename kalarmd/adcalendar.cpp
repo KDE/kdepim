@@ -126,7 +126,7 @@ bool ADCalendar::getEventPending(QString& ID)
 {
   if (actionType() == KALARM)
   {
-    QValueList<QString>::iterator it = eventsPending_.begin();
+    QValueListIterator<QString> it = eventsPending_.begin();
     if (it != eventsPending_.end())
     {
       ID = *it;
