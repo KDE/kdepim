@@ -40,7 +40,7 @@ libkaddressbook_la_SOURCES = addresseeconfig.cpp addresseeeditordialog.cpp \
     viewconfigurewidget.cpp undo.cpp undocmds.cpp viewmanager.cpp \
     xxportmanager.cpp xxportselectdialog.cpp contacteditorwidgetmanager.cpp \
     simpleaddresseeeditor.cpp advancedcustomfields.cpp customfieldswidget.cpp \
-    freebusywidget.cpp searchmanager.cpp imeditwidget.cpp
+    freebusywidget.cpp searchmanager.cpp imeditwidget.cpp kabtools.cpp
 libkaddressbook_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
 libkaddressbook_la_LIBADD = $(top_builddir)/kaddressbook/printing/libprinter.la \
                             $(top_builddir)/kaddressbook/interfaces/libkabinterfaces.la \

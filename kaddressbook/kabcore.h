@@ -355,8 +355,6 @@ class KDE_EXPORT KABCore : public KAB::Core
     void initGUI();
     void initActions();
 
-    KABC::Addressee mergeContacts( const KABC::Addressee::List &list );
-
     void updateCategories();
     QStringList allCategories() const;
 

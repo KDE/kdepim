@@ -53,7 +53,6 @@
 #include <kstandarddirs.h>
 #include <kstatusbar.h>
 #include <kstdguiitem.h>
-#include <ktempfile.h>
 #include <kxmlguiclient.h>
 #include <ktoolbar.h>
 #include <libkdepim/addresseeview.h>
@@ -68,6 +67,7 @@
 #include "jumpbuttonbar.h"
 #include "kablock.h"
 #include "kabprefs.h"
+#include "kabtools.h"
 #include "kaddressbookservice.h"
 #include "kaddressbookiface.h"
 #include "ldapsearchdialog.h"
@@ -365,57 +365,9 @@ void KABCore::mailVCard()
     mailVCard( uids );
 }
 
-void KABCore::mailVCard( const QStringList& uids )
+void KABCore::mailVCard( const QStringList &uids )
 {
-  //QStringList urls;
-  KURL::List urls;
-
-  // Create a temp dir, so that we can put the files in it with proper names
-  KTempFile tempDir;
-  if ( tempDir.status() != 0 ) {
-    kdWarning() << strerror( tempDir.status() ) << endl;
-    return;
-  }
-
-  QString dirName = tempDir.name();
-  tempDir.unlink();
-  QDir().mkdir( dirName, true );
-
-  for( QStringList::ConstIterator it = uids.begin(); it != uids.end(); ++it ) {
-    KABC::Addressee a = mAddressBook->findByUid( *it );
-
-    if ( a.isEmpty() )
-      continue;
-
-    QString name = a.givenName().utf8() + "_" + a.familyName().utf8() + ".vcf";
-    name.replace( ' ', '_' );
-    name.replace( '/', '_' );
-
-    QString fileName = dirName + "/" + name;
-
-    QFile outFile(fileName);
-    if ( outFile.open( IO_WriteOnly ) ) {  // file opened successfully
-      KABC::VCardConverter converter;
-      KABC::Addressee::List list;
-      list.append( a );
-      QString vcard = converter.createVCards( list, KABC::VCardConverter::v3_0 );
-
-      QTextStream t( &outFile );  // use a text stream
-      t.setEncoding( QTextStream::UnicodeUTF8 );
-      t << vcard;
-
-      outFile.close();
-
-      KURL url( fileName );
-      url.setFileEncoding( "UTF-8" );
-      urls.append( url );
-    }
-  }
-  kapp->invokeMailer( QString::null, QString::null, QString::null,
-                      QString::null,  // subject
-                      QString::null,  // body
-                      QString::null,
-                      urls.toStringList() );  // attachments
+  KABTools::mailVCards( uids, mAddressBook );
 }
 
 void KABCore::startChat()
@@ -521,7 +473,7 @@ void KABCore::mergeContacts()
   if ( list.count() < 2 )
     return;
 
-  KABC::Addressee addr = mergeContacts( list );
+  KABC::Addressee addr = KABTools::mergeContacts( list );
 
   KABC::Addressee::List::Iterator it = list.begin();
   ++it;
@@ -1165,143 +1117,6 @@ void KABCore::updateActionMenu()
 void KABCore::updateIncSearchWidget()
 {
   mIncSearchWidget->setViewFields( mViewManager->viewFields() );
-}
-
-KABC::Addressee KABCore::mergeContacts( const KABC::Addressee::List &list )
-{
-  if ( list.count() == 0 ) //emtpy
-    return KABC::Addressee();
-  else if ( list.count() == 1 ) // nothing to merge
-    return list.first();
-
-  KABC::Addressee masterAddressee = list.first();
-
-  KABC::Addressee::List::ConstIterator contactIt = list.begin();
-  for ( ++contactIt; contactIt != list.end(); ++contactIt ) {
-    // ADR + LABEL
-    KABC::Address::List addresses = (*contactIt).addresses();
-    KABC::Address::List masterAddresses = masterAddressee.addresses();
-    KABC::Address::List::Iterator addrIt ;
-    for ( addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt ) {
-      if ( !masterAddresses.contains( *addrIt ) )
-        masterAddressee.insertAddress( *addrIt );
-    }
-
-    if ( masterAddressee.birthday().isNull() && !(*contactIt).birthday().isNull() )
-      masterAddressee.setBirthday( (*contactIt).birthday() );
-
-
-    // CATEGORIES
-    QStringList::Iterator it;
-    QStringList categories = (*contactIt).categories();
-    QStringList masterCategories = masterAddressee.categories();
-    QStringList newCategories( masterCategories );
-    for ( it = categories.begin(); it != categories.end(); ++it )
-      if ( !masterCategories.contains( *it ) )
-        newCategories.append( *it );
-    masterAddressee.setCategories( newCategories );
-
-    // CLASS
-    if ( !masterAddressee.secrecy().isValid() && (*contactIt).secrecy().isValid() )
-      masterAddressee.setSecrecy( (*contactIt).secrecy() );
-
-    // EMAIL
-    QStringList emails = (*contactIt).emails();
-    QStringList masterEmails = masterAddressee.emails();
-    for ( it = emails.begin(); it != emails.end(); ++it )
-      if ( !masterEmails.contains( *it ) )
-        masterAddressee.insertEmail( *it, false );
-
-    // FN
-    if ( masterAddressee.formattedName().isEmpty() && !(*contactIt).formattedName().isEmpty() )
-      masterAddressee.setFormattedName( (*contactIt).formattedName() );
-
-    // GEO
-    if ( !masterAddressee.geo().isValid() && (*contactIt).geo().isValid() )
-      masterAddressee.setGeo( (*contactIt).geo() );
-
-/*
-  // KEY
-  // LOGO
-*/
-
-    // MAILER
-    if ( masterAddressee.mailer().isEmpty() && !(*contactIt).mailer().isEmpty() )
-      masterAddressee.setMailer( (*contactIt).mailer() );
-
-    // N
-    if ( masterAddressee.assembledName().isEmpty() && !(*contactIt).assembledName().isEmpty() )
-      masterAddressee.setNameFromString( (*contactIt).assembledName() );
-
-    // NICKNAME
-    if ( masterAddressee.nickName().isEmpty() && !(*contactIt).nickName().isEmpty() )
-      masterAddressee.setNickName( (*contactIt).nickName() );
-
-    // NOTE
-    if ( masterAddressee.note().isEmpty() && !(*contactIt).note().isEmpty() )
-      masterAddressee.setNote( (*contactIt).note() );
-
-    // ORG
-    if ( masterAddressee.organization().isEmpty() && !(*contactIt).organization().isEmpty() )
-      masterAddressee.setOrganization( (*contactIt).organization() );
-
-/*
-  // PHOTO
-*/
-
-    // PROID
-    if ( masterAddressee.productId().isEmpty() && !(*contactIt).productId().isEmpty() )
-      masterAddressee.setProductId( (*contactIt).productId() );
-
-    // REV
-    if ( masterAddressee.revision().isNull() && !(*contactIt).revision().isNull() )
-      masterAddressee.setRevision( (*contactIt).revision() );
-
-    // ROLE
-    if ( masterAddressee.role().isEmpty() && !(*contactIt).role().isEmpty() )
-      masterAddressee.setRole( (*contactIt).role() );
-
-    // SORT-STRING
-    if ( masterAddressee.sortString().isEmpty() && !(*contactIt).sortString().isEmpty() )
-      masterAddressee.setSortString( (*contactIt).sortString() );
-
-/*
-  // SOUND
-*/
-
-    // TEL
-    KABC::PhoneNumber::List phones = (*contactIt).phoneNumbers();
-    KABC::PhoneNumber::List masterPhones = masterAddressee.phoneNumbers();
-    KABC::PhoneNumber::List::ConstIterator phoneIt;
-    for ( phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt )
-      if ( !masterPhones.contains( *it ) )
-        masterAddressee.insertPhoneNumber( *it );
-
-    // TITLE
-    if ( masterAddressee.title().isEmpty() && !(*contactIt).title().isEmpty() )
-      masterAddressee.setTitle( (*contactIt).title() );
-
-    // TZ
-    if ( !masterAddressee.timeZone().isValid() && (*contactIt).timeZone().isValid() )
-      masterAddressee.setTimeZone( (*contactIt).timeZone() );
-
-    // UID // ignore UID
-
-    // URL
-    if ( masterAddressee.url().isEmpty() && !(*contactIt).url().isEmpty() )
-      masterAddressee.setUrl( (*contactIt).url() );
-
-    // X-
-    QStringList customs = (*contactIt).customs();
-    QStringList masterCustoms = masterAddressee.customs();
-    QStringList newCustoms( masterCustoms );
-    for ( it = customs.begin(); it != customs.end(); ++it )
-      if ( !masterCustoms.contains( *it ) )
-        newCustoms.append( *it );
-    masterAddressee.setCustoms( newCustoms );
-  }
-
-  return masterAddressee;
 }
 
 void KABCore::updateCategories()
