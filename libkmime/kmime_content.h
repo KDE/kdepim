@@ -56,7 +56,7 @@ class Base {
     structure, that represents the structure of the
     message */
 
-class Content : public Base {
+class KDE_EXPORT Content : public Base {
 
   public:
     typedef QPtrList<KMime::Content> List;

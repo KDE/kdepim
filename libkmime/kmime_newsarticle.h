@@ -18,9 +18,11 @@
 
 #include "kmime_message.h"
 
+#include <kdemacros.h>
+
 namespace KMime {
 
-class NewsArticle : public Message {
+class KDE_EXPORT NewsArticle : public Message {
 
 public:
 

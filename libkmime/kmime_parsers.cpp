@@ -78,7 +78,7 @@ bool MultiPart::parse()
         if(s_rc[pos2]=='-' && s_rc[pos2+1]=='-') { //end-boundary
           pos1=pos2+2; //pos1 points now to the character directly after the end-boundary
           if( (pos1=s_rc.find('\n', pos1))>-1 ) //skipt the rest of this line
-            e_pilouge=s_rc.mid(++pos1, s_rc.length()-pos1); //everything after the end-boundary is considered as the epilouge
+            e_pilouge=s_rc.mid(pos1+1, s_rc.length()-pos1-1); //everything after the end-boundary is considered as the epilouge
           pos1=-1;
           pos2=-1; //break
         }

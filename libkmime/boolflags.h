@@ -17,13 +17,15 @@
 #ifndef __KMIME_BOOLFLAGS_H__
 #define __KMIME_BOOLFLAGS_H__
 
+#include <kdemacros.h>
+
 /** This class stores boolean values in single bytes.
     It provides a similar functionality as QBitArray
     but requires much less memory.
     We use it to store the flags of an article
     @internal
 */
-class BoolFlags {
+class KDE_EXPORT BoolFlags {
 
 public:
   BoolFlags()       { clear(); }

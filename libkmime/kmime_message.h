@@ -22,7 +22,7 @@
 
 namespace KMime {
 
-class Message : public Content {
+class KDE_EXPORT Message : public Content {
 
 public:
   typedef QPtrList<Message> List;

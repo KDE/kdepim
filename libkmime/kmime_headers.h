@@ -35,6 +35,8 @@
 
 #include <time.h>
 
+#include <kdemacros.h>
+
 namespace KMime {
 
 //forward declaration
@@ -106,7 +108,7 @@ mk_parsing_subclass_with_name( subclass, subclass, baseclass )
 
 /** Baseclass of all header-classes. It represents a
     header-field as described in RFC-822.  */
-class Base {
+class KDE_EXPORT Base {
 
   public:
     typedef QPtrList<Base> List;
@@ -211,7 +213,7 @@ namespace Generics {
   // known issues:
   // - uses old decodeRFC2047String function, instead of our own...
 
-class GUnstructured : public Base {
+class KDE_EXPORT GUnstructured : public Base {
 
 public:
   GUnstructured() : Base()  {}
@@ -264,7 +266,7 @@ private:
     @author Marc Mutz <mutz@kde.org>
 */
 
-class GStructured : public Base {
+class KDE_EXPORT GStructured : public Base {
 public:
   GStructured() : Base()  {}
   GStructured( Content * p ) : Base( p ) {}
@@ -298,7 +300,7 @@ protected:
 };
 
 
-class GAddress : public GStructured {
+class KDE_EXPORT GAddress : public GStructured {
 public:
   GAddress() : GStructured()  {}
   GAddress( Content * p ) : GStructured( p ) {}
@@ -314,7 +316,7 @@ protected:
 
 /** Base class for headers that deal with (possibly multiple)
     addresses, but don't allow groups: */
-class MailboxList : public GAddress {
+class KDE_EXPORT MailboxList : public GAddress {
 public:
   MailboxList() : GAddress()  {}
   MailboxList( Content * p ) : GAddress( p ) {}
@@ -338,7 +340,7 @@ mk_parsing_subclass(SingleMailbox,MailboxList);
 
 /** Base class for headers that deal with (possibly multiple)
     addresses, allowing groups. */
-class AddressList : public GAddress {
+class KDE_EXPORT AddressList : public GAddress {
 public:
   AddressList() : GAddress()  {}
   AddressList( Content * p ) : GAddress( p ) {}
@@ -356,7 +358,7 @@ protected:
 };
 
 /** Base class for headers which deal with a list of msg-id's */
-class GIdent : public GAddress {
+class KDE_EXPORT GIdent : public GAddress {
 public:
   GIdent() : GAddress()  {}
   GIdent( Content * p ) : GAddress( p ) {}
@@ -377,7 +379,7 @@ protected:
 mk_parsing_subclass(GSingleIdent,GIdent);
 
 /** Base class for headers which deal with a single atom. */
-class GToken : public GStructured {
+class KDE_EXPORT GToken : public GStructured {
 public:
   GToken() : GStructured()  {}
   GToken( Content * p ) : GStructured( p ) {}
@@ -394,7 +396,7 @@ protected:
 };
 
 
-class GPhraseList : public GStructured {
+class KDE_EXPORT GPhraseList : public GStructured {
 public:
   GPhraseList() : GStructured()  {}
   GPhraseList( Content * p ) : GStructured( p ) {}
@@ -410,7 +412,7 @@ protected:
   QStringList mPhraseList;
 };
 
-class GDotAtom : public GStructured {
+class KDE_EXPORT GDotAtom : public GStructured {
 public:
   GDotAtom() : GStructured()  {}
   GDotAtom( Content * p ) : GStructured( p ) {}
@@ -426,7 +428,7 @@ protected:
   QString mDotAtom;
 };
 
-class GParametrized : public GStructured {
+class KDE_EXPORT GParametrized : public GStructured {
 public:
   GParametrized() : GStructured()  {}
   GParametrized( Content * p ) : GStructured( p ) {}
@@ -442,7 +444,7 @@ protected:
 private:
 };
 
-class GContentType : public GParametrized {
+class KDE_EXPORT GContentType : public GParametrized {
 public:
   GContentType() : GParametrized()  {}
   GContentType( Content * p ) : GParametrized( p ) {}
@@ -460,7 +462,7 @@ protected:
 };
 
 
-class GCISTokenWithParameterList : public GParametrized {
+class KDE_EXPORT GCISTokenWithParameterList : public GParametrized {
 public:
   GCISTokenWithParameterList() : GParametrized()  {}
   GCISTokenWithParameterList( Content * p ) : GParametrized( p ) {}
@@ -487,7 +489,7 @@ protected:
 
 
 /** Represents the Return-Path header field. */
-class ReturnPath : public Generics::GAddress {
+class KDE_EXPORT ReturnPath : public Generics::GAddress {
 public:
   ReturnPath() : Generics::GAddress()  {}
   ReturnPath( Content * p ) : Generics::GAddress( p ) {}
@@ -563,7 +565,7 @@ mk_trivial_subclass_with_name(ContentDisposition,Content-Disposition,
     Adds a type over GUnstructured.
     @see GUnstructured
 */
-class Generic : public Generics::GUnstructured {
+class KDE_EXPORT Generic : public Generics::GUnstructured {
 
   public:
     Generic() : Generics::GUnstructured(), t_ype(0) {}
@@ -589,7 +591,7 @@ class Generic : public Generics::GUnstructured {
 
 
 /** Represents a "Subject" header */
-class Subject : public Generics::GUnstructured {
+class KDE_EXPORT Subject : public Generics::GUnstructured {
 
   public:
     Subject() : Generics::GUnstructured()  {}
@@ -608,7 +610,7 @@ class Subject : public Generics::GUnstructured {
 };
 
 /** Represents a "Organization" header */
-class Organization : public Generics::GUnstructured {
+class KDE_EXPORT Organization : public Generics::GUnstructured {
 
   public:
     Organization() : Generics::GUnstructured() {}
@@ -632,7 +634,7 @@ class Organization : public Generics::GUnstructured {
 
 
 /** Represents a "Control" header */
-class Control : public Base {
+class KDE_EXPORT Control : public Base {
 
   public:
     Control() : Base()  {}
@@ -657,7 +659,7 @@ class Control : public Base {
 };
 
 /** Represents a "Date" header */
-class Date : public Base {
+class KDE_EXPORT Date : public Base {
 
   public:
     Date() : Base(), t_ime(0)  {}
@@ -688,7 +690,7 @@ class Date : public Base {
 
 
 /** Represents a "Newsgroups" header */
-class Newsgroups : public Base {
+class KDE_EXPORT Newsgroups : public Base {
 
   public:
     Newsgroups() : Base()  {}
@@ -716,7 +718,7 @@ class Newsgroups : public Base {
 
 
 /** Represents a "Followup-To" header */
-class FollowUpTo : public Newsgroups {
+class KDE_EXPORT FollowUpTo : public Newsgroups {
 
   public:
     FollowUpTo() : Newsgroups()  {}
@@ -731,7 +733,7 @@ class FollowUpTo : public Newsgroups {
 
 
 /** Represents a "Lines" header */
-class Lines : public Base {
+class KDE_EXPORT Lines : public Base {
 
   public:
     Lines() : Base(),l_ines(-1)  {}
@@ -760,7 +762,7 @@ class Lines : public Base {
 
 
 /** Represents a "User-Agent" header */
-class UserAgent : public Base {
+class KDE_EXPORT UserAgent : public Base {
 
   public:
     UserAgent() : Base()  {}

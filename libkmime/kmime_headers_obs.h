@@ -20,8 +20,10 @@
 #error You cannot use this file with the new header classes!
 #endif
 
+#include <kdemacros.h>
+
 /** Represents a "Message-Id" header */
-class MessageID : public Base {
+class KDE_EXPORT MessageID : public Base {
 
   public:
     MessageID() : Base()  {}
@@ -46,7 +48,7 @@ class MessageID : public Base {
 };
 
 /** Represents a "Supersedes" header */
-class Supersedes : public MessageID {
+class KDE_EXPORT Supersedes : public MessageID {
 
   public:
     Supersedes() : MessageID()  {}
@@ -61,7 +63,7 @@ class Supersedes : public MessageID {
 
 /** This class encapsulates an address-field, containing
     an email-address and a real name */
-class AddressField : public Base {
+class KDE_EXPORT AddressField : public Base {
 
   public:
     AddressField() : Base()  {}
@@ -96,7 +98,7 @@ class AddressField : public Base {
 typedef QPtrList<AddressField> ObsAddressList;
 
 /** Represent a "From" header */
-class From : public AddressField {
+class KDE_EXPORT From : public AddressField {
 
   public:
     From() : AddressField()  {}
@@ -110,7 +112,7 @@ class From : public AddressField {
 
 
 /** Represents a "Reply-To" header */
-class ReplyTo : public AddressField {
+class KDE_EXPORT ReplyTo : public AddressField {
 
   public:
     ReplyTo() : AddressField()  {}
@@ -126,7 +128,7 @@ class ReplyTo : public AddressField {
 
 /** Represents a "Mail-Copies-To" header
     http://www.newsreaders.com/misc/mail-copies-to.html */
-class MailCopiesTo : public AddressField {
+class KDE_EXPORT MailCopiesTo : public AddressField {
 
   public:
     MailCopiesTo() : AddressField()  {}
@@ -144,7 +146,7 @@ class MailCopiesTo : public AddressField {
 };
 
 /** Represents a "To" header */
-class To : public Base {
+class KDE_EXPORT To : public Base {
 
   public:
     To() : Base(),a_ddrList(0)  {}
@@ -172,7 +174,7 @@ class To : public Base {
 
 
 /** Represents a "CC" header */
-class CC : public To {
+class KDE_EXPORT CC : public To {
 
   public:
     CC() : To()  {}
@@ -187,7 +189,7 @@ class CC : public To {
 
 
 /** Represents a "BCC" header */
-class BCC : public To {
+class KDE_EXPORT BCC : public To {
 
   public:
     BCC() : To()  {}
@@ -201,7 +203,7 @@ class BCC : public To {
 };
 
 /** Represents a "References" header */
-class References : public Base {
+class KDE_EXPORT References : public Base {
 
   public:
     References() : Base(),p_os(-1)  {}
@@ -231,7 +233,7 @@ class References : public Base {
 };
 
 /** Represents a "Content-Type" header */
-class ContentType : public Base {
+class KDE_EXPORT ContentType : public Base {
 
   public:
     ContentType() : Base(),m_imeType("invalid/invalid"),c_ategory(CCsingle)  {}
@@ -290,7 +292,7 @@ class ContentType : public Base {
 
 
 /** Represents a "Content-Transfer-Encoding" header */
-class CTEncoding : public Base {
+class KDE_EXPORT CTEncoding : public Base {
 
   public:
     CTEncoding() : Base(),c_te(CE7Bit),d_ecoded(true)  {}
@@ -320,7 +322,7 @@ class CTEncoding : public Base {
 
 
 /** Represents a "Content-Disposition" header */
-class CDisposition : public Base {
+class KDE_EXPORT CDisposition : public Base {
 
   public:
     CDisposition() : Base(),d_isp(CDinline)  {}
@@ -351,7 +353,7 @@ class CDisposition : public Base {
 
 
 /** Represents a "Content-Description" header */
-class CDescription : public Generics::GUnstructured {
+class KDE_EXPORT CDescription : public Generics::GUnstructured {
 
   public:
     CDescription() : Generics::GUnstructured()  {}
@@ -361,7 +363,7 @@ class CDescription : public Generics::GUnstructured {
     CDescription( Content * p, const QString & s, const QCString & cs )
       : Generics::GUnstructured( p, s, cs ) {}
     ~CDescription()  {}
-    
+
     virtual const char* type()      { return "Content-Description"; }
 };
 

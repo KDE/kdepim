@@ -19,8 +19,9 @@
 
 #include <qcstring.h>
 
+#include <kdemacros.h>
 
-class KQCStringSplitter {
+class KDE_EXPORT KQCStringSplitter {
   
   public:
     KQCStringSplitter();

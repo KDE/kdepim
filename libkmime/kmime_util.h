@@ -23,20 +23,22 @@
 #include "time.h"
 #include <kdepimmacros.h>
 
+#include <kdemacros.h>
+
 typedef QValueList<QCString> QCStringList;
 
 namespace KMime {
 
   /** Consult the charset cache. Only used for reducing mem usage by
       keeping strings in a common repository.*/
-  extern const char* cachedCharset(const QCString &name);
+  extern const char* cachedCharset(const QCString &name) KDE_EXPORT;
 
   /** Consult the language cache. Only used for reducing mem usage by
       keeping strings in a common repository.*/
-  extern const char* cachedLanguage(const QCString &name);
+  extern const char* cachedLanguage(const QCString &name) KDE_EXPORT;
 
   /** checks whether @p s contains any non-us-ascii characters */
-  extern bool isUsAscii(const QString &s);
+  extern bool isUsAscii(const QString &s) KDE_EXPORT;
 
   inline bool isOfSet(const uchar map[16], unsigned char ch) {
     Q_ASSERT( ch < 128 );
@@ -75,7 +77,7 @@ namespace KMime {
       @return the decoded string.
   */
   extern QString decodeRFC2047String(const QCString &src, const char **usedCS,
-				     const QCString &defaultCS, bool forceCS);
+				     const QCString &defaultCS, bool forceCS) KDE_EXPORT;
 
   /** Encode string @p src according to RFC2047 using charset
       @p charset.
@@ -88,7 +90,7 @@ namespace KMime {
       @return the encoded string.
   */
   extern QCString encodeRFC2047String(const QString &src, const char *charset,
-				      bool addressHeader=false, bool allow8bitHeaders=false);
+				      bool addressHeader=false, bool allow8bitHeaders=false) KDE_EXPORT;
 
   /** Uses current time, pid and random numbers to construct a string
       that aims to be unique on a per-host basis (ie. for the local
@@ -96,7 +98,7 @@ namespace KMime {
       @return the unique string.
       @see multiPartBoundary
   */
-  extern QCString uniqueString();
+  extern QCString uniqueString() KDE_EXPORT;
 
   /** Constructs a random string (sans leading/trailing "--") that can
       be used as a multipart delimiter (ie. as @p boundary parameter
@@ -104,7 +106,7 @@ namespace KMime {
       @return the randomized string.
       @see uniqueString
   */
-  extern QCString multiPartBoundary();
+  extern QCString multiPartBoundary() KDE_EXPORT;
 
   /** Tries to extract the header with name @p name from the string
       @p src, unfolding it if necessary.
@@ -113,7 +115,7 @@ namespace KMime {
       @return the first instance of the header @p name in @p src
               or a null QCString if no such header was found.
   */
-  extern QCString extractHeader(const QCString &src, const char *name);
+  extern QCString extractHeader(const QCString &src, const char *name) KDE_EXPORT;
   /** Converts all occurrences of "\r\n" (CRLF) in @p s to "\n" (LF).
 
       This function is expensive and should be used only if the mail
@@ -123,7 +125,7 @@ namespace KMime {
       @return the string with CRLF's substitued for LF's
       @see CRLFtoLF(const char*) LFtoCRLF
   */
-  extern QCString CRLFtoLF(const QCString &s);
+  extern QCString CRLFtoLF(const QCString &s) KDE_EXPORT;
   /** Converts all occurrences of "\r\n" (CRLF) in @p s to "\n" (LF).
 
       This function is expensive and should be used only if the mail
@@ -133,7 +135,7 @@ namespace KMime {
       @return the string with CRLF's substitued for LF's
       @see CRLFtoLF(const QCString&) LFtoCRLF
   */
-  extern QCString CRLFtoLF(const char *s);
+  extern QCString CRLFtoLF(const char *s) KDE_EXPORT;
   /** Converts all occurrences of "\n" (LF) in @p s to "\r\n" (CRLF).
 
       This function is expensive and should be used only if the mail
@@ -145,27 +147,27 @@ namespace KMime {
       @return the string with CRLF's substitued for LF's
       @see CRLFtoLF(const QCString&) LFtoCRLF
   */
-  extern QCString LFtoCRLF(const QCString &s);
+  extern QCString LFtoCRLF(const QCString &s) KDE_EXPORT;
 
   /** Removes quote (DQUOTE) characters and decodes "quoted-pairs"
       (ie. backslash-escaped characters)
       @param str the string to work on.
       @see addQuotes
   */
-  extern void removeQuots(QCString &str);
+  KDE_EXPORT extern void removeQuots(QCString &str);
   /** Removes quote (DQUOTE) characters and decodes "quoted-pairs"
       (ie. backslash-escaped characters)
       @param str the string to work on.
       @see addQuotes
   */
-  extern void removeQuots(QString &str);
+  KDE_EXPORT extern void removeQuots(QString &str);
   /** Converts the given string into a quoted-string if
       the string contains any special characters
       (ie. one of ()<>@,.;:[]=\").
       @param str us-ascii string to work on.
       @param forceQuotes if @p true, always add quote characters.
   */
-  extern KDE_EXPORT void addQuotes(QCString &str, bool forceQuotes);
+  KDE_EXPORT extern void addQuotes(QCString &str, bool forceQuotes);
 
 
   /**
@@ -184,7 +186,7 @@ namespace KMime {
    *
    *
    */
-  class DateFormatter {
+  class KDE_EXPORT DateFormatter {
   public:
     enum FormatType {
       CTime,      //< ctime "Sun Mar 31 02:08:35 2002"
