@@ -98,9 +98,6 @@ KABC::AddresseeList LDIFXXPort::importContacts( const QString& ) const
   t.setEncoding(QTextStream::Latin1);
   QString s, completeline, fieldname;
 
-  // Set to true if data currently read is part of
-  // a list of names. Lists will be ignored.
-  bool isGroup = false;
   bool lastWasComment = false;
   int numEntries = 0;
 
@@ -115,16 +112,14 @@ KABC::AddresseeList LDIFXXPort::importContacts( const QString& ) const
 	if (s.isEmpty() && t.eof()) {
 		// Newline: Write data
 writeData:
-		if (!isGroup) {
-			if (!a->formattedName().isEmpty()) {
-				numEntries++;
-				if (!homeAddr->isEmpty())
-					a->insertAddress(*homeAddr);
-				if (!workAddr->isEmpty())
-					a->insertAddress(*workAddr);
-				addrList.append(*a);
-			}
-   		};
+		if (!a->formattedName().isEmpty()) {
+			numEntries++;
+			if (!homeAddr->isEmpty())
+				a->insertAddress(*homeAddr);
+			if (!workAddr->isEmpty())
+				a->insertAddress(*workAddr);
+			addrList.append(*a);
+		}
 
 		// delete old and create a new empty address entry
 		delete a;
@@ -136,7 +131,6 @@ writeData:
 		workAddr = new KABC::Address();
 		workAddr->setType(KABC::Address::Work);
 
-		isGroup = false;
 		lastWasComment = false;
 		continue;
 	}
@@ -233,6 +227,9 @@ addComment:
 	if (fieldname == "facsimiletelephonenumber")
 		{ a->insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Fax ) ); continue; }
 	
+	if (fieldname == "xmozillaanyphone")	// mozilla
+		{ a->insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Work ) ); continue; }
+	
 	if (fieldname == "streethomeaddress")
 		{ homeAddr->setStreet(s); continue; }
 
@@ -283,9 +280,24 @@ addComment:
 
 	if (fieldname == "ou")
 		{ a->setRole(s); continue; }
-
-	if (fieldname == "objectclass" && s == "groupOfNames")
-			isGroup = true;
+	
+	if (fieldname == "member") {
+		/* this is a mozilla list member (cn=xxx, mail=yyy) */
+		QStringList list( QStringList::split(',', s));
+		QString name, email;
+		for (unsigned int i=0; i<list.count(); i++) {
+		    QString n = *list.at(i);
+		    if (n.startsWith("cn="))
+			name = n.mid(3).stripWhiteSpace();
+		    if (n.startsWith("mail="))
+			email = n.mid(5).stripWhiteSpace();
+		}
+		if (!name.isEmpty() && !email.isEmpty())
+		    email = " <" + email + ">";
+		a->insertEmail(name+email);
+		a->insertCategory(i18n("List of E-Mails"));
+		continue; 
+	}
 
 	if (fieldname == "modifytimestamp" || fieldname == "objectclass") // ignore 
 		{ continue; }
@@ -352,7 +364,9 @@ static void ldif_out( QTextStream *t, QString str, QString field )
 void LDIFXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
 {
   QTextStream t( fp );
-  t.setEncoding(QTextStream::Latin1);
+  t.setEncoding(QTextStream::UnicodeUTF8);
+
+  QStringList streets;
 
   KABC::AddresseeList::ConstIterator it;
   for ( it = list.begin(); it != list.end(); ++it ) {
@@ -366,38 +380,41 @@ void LDIFXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
     ldif_out(&t, "dn: cn=%1,mail=", addr->formattedName());
     ldif_out(&t, "%1", addr->preferredEmail());
     t << "\n";
-    ldif_out(&t, "givenName: %1\n", addr->givenName());
+    ldif_out(&t, "givenname: %1\n", addr->givenName());
     ldif_out(&t, "sn: %1\n", addr->familyName());
     ldif_out(&t, "cn: %1\n", addr->formattedName());
     ldif_out(&t, "xmozillanickname: %1\n", addr->nickName());
 
     ldif_out(&t, "mail: %1\n", addr->preferredEmail());
     if (addr->emails().count() > 1)
-       ldif_out(&t, "mozillaSecondEmail: %1\n", *(addr->emails().at(1)));
-//    ldif_out(&t, "mozilla_AimScreenName: %1\n", "screen_name");
+       ldif_out(&t, "mozillasecondemail: %1\n", *(addr->emails().at(1)));
+//  ldif_out(&t, "mozilla_AIMScreenName: %1\n", "screen_name");
 
-    ldif_out(&t, "telephoneNumber: %1\n", addr->phoneNumber(KABC::PhoneNumber::Work).number());
-    ldif_out(&t, "facsimileTelephoneNumber: %1\n", addr->phoneNumber(KABC::PhoneNumber::Fax).number());
+    ldif_out(&t, "telephonenumber: %1\n", addr->phoneNumber(KABC::PhoneNumber::Work).number());
+    ldif_out(&t, "facsimiletelephonenumber: %1\n", addr->phoneNumber(KABC::PhoneNumber::Fax).number());
     ldif_out(&t, "homephone: %1\n", addr->phoneNumber(KABC::PhoneNumber::Home).number());
     ldif_out(&t, "mobile: %1\n", addr->phoneNumber(KABC::PhoneNumber::Cell).number());
     ldif_out(&t, "cellphone: %1\n", addr->phoneNumber(KABC::PhoneNumber::Cell).number());
     ldif_out(&t, "pager: %1\n", addr->phoneNumber(KABC::PhoneNumber::Pager).number());
 
     ldif_out(&t, "streethomeaddress: %1\n", homeAddr.street());
-    ldif_out(&t, "postaladdress: %1\n", homeAddr.street());
-    ldif_out(&t, "mozillapostaladdress2: %1\n", workAddr.street());
     ldif_out(&t, "postalcode: %1\n", workAddr.postalCode());
-    QStringList streets = QStringList::split('\n', homeAddr.street());
-    streets.append("");
-    streets.append("");
-    ldif_out(&t, "homepostaladdress: %1\n", streets[0]);
-    ldif_out(&t, "mozillahomepostaladdress2: %1\n", streets[1]);
+    streets = QStringList::split('\n', homeAddr.street());
+    if (streets.count()>0)
+      ldif_out(&t, "homepostaladdress: %1\n", streets[0]);
+    if (streets.count()>1)
+      ldif_out(&t, "mozillahomepostaladdress2: %1\n", streets[1]);
     ldif_out(&t, "mozillahomelocalityname: %1\n", homeAddr.locality());
     ldif_out(&t, "mozillahomestate: %1\n", homeAddr.region());
     ldif_out(&t, "mozillahomepostalcode: %1\n", homeAddr.postalCode());
     ldif_out(&t, "mozillahomecountryname: %1\n", homeAddr.country());
     ldif_out(&t, "locality: %1\n", workAddr.locality());
     ldif_out(&t, "streetaddress: %1\n", workAddr.street());
+    streets = QStringList::split('\n', workAddr.street());
+    if (streets.count()>0)
+      ldif_out(&t, "postaladdress: %1\n", streets[0]);
+    if (streets.count()>1)
+      ldif_out(&t, "mozillapostaladdress2: %1\n", streets[1]);
     ldif_out(&t, "countryname: %1\n", workAddr.country());
     ldif_out(&t, "l: %1\n", workAddr.locality());
     ldif_out(&t, "c: %1\n", workAddr.country());
@@ -407,7 +424,11 @@ void LDIFXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
     ldif_out(&t, "ou: %1\n", addr->role());
     ldif_out(&t, "o: %1\n", addr->organization());
     ldif_out(&t, "workurl: %1\n", addr->url().prettyURL());
-    ldif_out(&t, "description: %1\n", addr->note().replace("\n", "\\n"));
+    ldif_out(&t, "homeurl: %1\n", addr->url().prettyURL());
+    ldif_out(&t, "description:: %1\n", KCodecs::base64Encode(addr->note().utf8()));
+
+    t << "objectclass: top\n";
+    t << "objectclass: person\n";
 
     t << "\n";
   }
