@@ -7,4 +7,4 @@ Name=Calendar on IMAP-server via kmail
 
 [Plugin]
 Type=imap
-X-KDE-Library=libcalendarresources
+X-KDE-Library=resourcecalendarimap

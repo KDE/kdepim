@@ -25,19 +25,27 @@
 #include <qstring.h>
 #include <qdatetime.h>
 
+#include <dcopobject.h>
 #include <kconfig.h>
 
 #include <libkcal/incidence.h>
+#include <libkcal/icalformat.h>
 
 #include "resourcecalendar.h"
+
+class DCOPClient;
 
 namespace KCal {
 
 /**
   This class provides a calendar stored on an IMAP-server via kmail
 */
-class ResourceIMAP : public ResourceCalendar, public IncidenceBase::Observer
+  class ResourceIMAP : public ResourceCalendar, public IncidenceBase::Observer, virtual public DCOPObject
 {
+  k_dcop:
+    virtual void addIncidence( const QString& type, const QString& ical );
+    virtual void deleteIncidence( const QString& type, const QString& uid );
+
   public:
     ResourceIMAP( const KConfig * );
     virtual ~ResourceIMAP();
@@ -162,7 +170,8 @@ class ResourceIMAP : public ResourceCalendar, public IncidenceBase::Observer
     QDate *mNewestDate;
 
     QString mServer;
-    
+    ICalFormat mFormat;
+    DCOPClient* mDCOPClient;
 };  
 
 }

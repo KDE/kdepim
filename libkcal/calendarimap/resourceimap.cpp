@@ -20,10 +20,10 @@
 */
 
 #include <kdebug.h>
+#include <dcopclient.h>
 
 #include <libkcal/vcaldrag.h>
 #include <libkcal/vcalformat.h>
-#include <libkcal/icalformat.h>
 #include <libkcal/exceptions.h>
 #include <libkcal/incidence.h>
 #include <libkcal/event.h>
@@ -50,7 +50,8 @@ extern "C"
 }
 
 ResourceIMAP::ResourceIMAP( const KConfig* config )
-  : ResourceCalendar( config )
+  : ResourceCalendar( config ),
+    DCOPObject("ResourceIMAP")
 {
   if ( config ) {
     mServer = config->readEntry( "Servername" );
@@ -72,8 +73,23 @@ void ResourceIMAP::init()
   mRecursList.setAutoDelete(TRUE);
   mTodoList.setAutoDelete(TRUE);
   mEventList.setAutoDelete(TRUE);
-}
 
+  mDCOPClient = new DCOPClient();
+  mDCOPClient->attach();
+
+  // TODO: Make sure KMail is running!
+
+  // attach to KMail
+  if( !mDCOPClient->connectDCOPSignal( "KMail", "KmailICalIface", "incidenceAdded(QString,QString)",
+				       "ResourceIMAP", "addIncidence(QString,QString)", true ) ) {
+    kdError() << "DCOP connection to incidenceAdded failed" << endl;
+  }
+  if( !mDCOPClient->connectDCOPSignal( "KMail", "KmailICalIface", "incidenceDeleted(QString,QString)",
+				       "ResourceIMAP", "deleteIncidence(QString,QString)", true ) ) {
+    kdError() << "DCOP connection to incidenceDeleted failed" << endl;
+  }
+}
+  
 
 ResourceIMAP::~ResourceIMAP()
 {
@@ -85,6 +101,20 @@ ResourceIMAP::~ResourceIMAP()
 bool ResourceIMAP::doOpen()
 {
   kdDebug(5800) << "Opening resource " << resourceName() << " on " << mServer << endl;
+
+  QByteArray data;
+  QDataStream arg(data, IO_WriteOnly);
+  arg << "Calendar";
+  QCString replyType;
+  QByteArray reply;
+  if( !mDCOPClient->call( "KMail", "KMailICalIface", "incidences(QString)",
+			  data, replyType, reply )) {
+    kdError() << "DCOP error during addIncicence(QString)" << endl;
+  }
+  QStringList lst;
+  lst << reply;
+  kdDebug() << "Got incidences " << lst.join("\n") << endl;
+  // NYI: add list of icals to calendar
   return true;
 }
 
@@ -104,6 +134,15 @@ void ResourceIMAP::addEvent(Event *anEvent)
   anEvent->registerObserver( this );
   
   // call kmail ...
+  QByteArray data;
+  QDataStream arg(data, IO_WriteOnly);
+  arg << "Calendar";
+  arg << anEvent->uid();
+  arg << mFormat.toString(anEvent);
+  if( !mDCOPClient->send( "KMail", "KMailICalIface", "addIncicence(QString,QString,QString)",
+				      data )) {
+    kdError() << "DCOP error during addIncicence(QString)" << endl;
+  }
 
   //setModified( true );
 }
@@ -115,6 +154,14 @@ void ResourceIMAP::deleteEvent(Event *event)
   mEventList.findRef(event);
   
   // call kmail ...
+  QByteArray data;
+  QDataStream arg(data, IO_WriteOnly);
+  arg << "Calendar";
+  arg << event->uid();
+  if( !mDCOPClient->send( "KMail", "KMailICalIface", "deleteIncicence(QString,QString)",
+				      data )) {
+    kdError() << "DCOP error during addIncicence(QString)" << endl;
+  }
   
   mEventList.remove();
 }
@@ -400,3 +447,12 @@ void ResourceIMAP::update(IncidenceBase *incidence)
 }
 
 
+void ResourceIMAP::addIncidence( const QString& type, const QString& ical )
+{
+  kdDebug() << "ResourceIMAP::addIncidence( " << type << ", " << ical << " )" << endl;
+}
+
+void ResourceIMAP::deleteIncidence( const QString& type, const QString& uid )
+{
+  kdDebug() << "ResourceIMAP::deleteIncidence( " << type << ", " << uid << " )" << endl;
+}
