@@ -36,6 +36,7 @@
 #include <kmessagebox.h>
 #include <ktempfile.h>
 #include <kurl.h>
+#include <kapplication.h>
 #include <libkdepim/addresseeview.h>
 
 #include "config.h" // ??
@@ -198,6 +199,7 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
       return addrList;
 
     QString caption( i18n( "vCard Import Failed" ) );
+    bool anyFailures = false;
     KURL::List::Iterator it;
     for ( it = urls.begin(); it != urls.end(); ++it ) {
       if ( KIO::NetAccess::download( *it, fileName, parentWidget() ) ) {
@@ -214,18 +216,26 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
 
           KIO::NetAccess::removeTempFile( fileName );
         } else {
-          QString text = i18n( "<qt>Unable to open the file <b>%1</b>.</qt>" );
-          KMessageBox::error( parentWidget(), text.arg( (*it).url() ), caption );
+          QString text = i18n( "<qt>When trying to read the vCard, there was an error opening the file '%1': %2</qt>" );
+	  text = text.arg( (*it).url());
+	  text = text.arg(kapp->translate("QFile",file.errorString().latin1()));
+	  KMessageBox::error( parentWidget(), text, caption );
+	  anyFailures = true;
         }
       } else {
-        QString text = i18n( "<qt>Unable to access <b>%1</b>.</qt>" );
-        KMessageBox::error( parentWidget(), text.arg( (*it).url() ), caption );
+        QString text = i18n( "<qt>Unable to access vCard: %1</qt>" );
+	text = text.arg(KIO::NetAccess::lastErrorString());
+        KMessageBox::error( parentWidget(), text, caption );
+	anyFailures = true;
       }
     }
 
     if ( !XXPortManager::importURL.isEmpty() ) { // a vcard was passed via cmd
       if ( addrList.isEmpty() ) {
-        KMessageBox::information( parentWidget(), i18n( "The vCard does not contain any contacts." ) );
+	if(anyFailures && urls.count() > 1)
+	  KMessageBox::information( parentWidget(), i18n( "No contacts were imported, due to errors with the vcards."));
+	else if(!anyFailures)
+          KMessageBox::information( parentWidget(), i18n( "The vCard does not contain any contacts." ) );
       } else {
         VCardViewerDialog dlg( addrList, parentWidget() );
         dlg.exec();
