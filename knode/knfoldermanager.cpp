@@ -459,7 +459,7 @@ int KNFolderManager::loadCustomFolders()
 
   QDir d(dir);
   QStringList entries(d.entryList("custom_*.info"));  // ignore info files of standard folders
-  for(QStringList::Iterator it=entries.begin(); it != entries.end(); it++) {
+  for(QStringList::Iterator it=entries.begin(); it != entries.end(); ++it) {
     f=new KNFolder();
     if(f->readInfo(d.absFilePath(*it))) {
       if(f->id()>l_astId)
