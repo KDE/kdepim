@@ -55,26 +55,40 @@ inline QPixmap loadIcon( QString s ) {
     ->loadIcon( s.replace( QRegExp( "[^a-zA-Z0-9_]" ), "_" ), KIcon::NoGroup, KIcon::SizeMedium );
 }
 
+static const KJanusWidget::Face determineJanusFace( const Kleo::CryptoConfig * config ) {
+  return config && config->componentList().size() < 2
+    ? KJanusWidget::Plain
+    : KJanusWidget::IconList ;
+}
+
 Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent, const char * name )
-  : KJanusWidget( parent, name, KJanusWidget::IconList ), mConfig( config )
+  : KJanusWidget( parent, name, determineJanusFace( config ) ), mConfig( config )
 {
 //  QVBoxLayout *vlay = new QVBoxLayout( this, 0, KDialog::spacingHint() );
 //  mTabWidget = new QTabWidget( this );
 //  vlay->addWidget( mTabWidget );
 
-  QStringList components = config->componentList();
+  const QStringList components = config->componentList();
 
-  for( QStringList::Iterator compit = components.begin(); compit != components.end(); ++compit ) {
+  QWidget * vbox = 0;
+  if ( face() == Plain ) {
+    vbox = plainPage();
+    QVBoxLayout * vlay = new QVBoxLayout( vbox, 0, KDialog::spacingHint() );
+    vlay->setAutoAdd( true );
+  }
+
+  for( QStringList::const_iterator compit = components.begin(); compit != components.end(); ++compit ) {
     //kdDebug(5150) << "Component " << (*compit).local8Bit() << ":" << endl;
     Kleo::CryptoConfigComponent* comp = config->component( *compit );
     Q_ASSERT( comp );
-    if ( !comp->groupList().isEmpty() ) {
-      QVBox* vbox = addVBoxPage( comp->description(), QString::null, loadIcon( *compit ) );
-      CryptoConfigComponentGUI* compGUI =
-        new CryptoConfigComponentGUI( this, comp, vbox, (*compit).local8Bit() );
-      // KJanusWidget doesn't seem to have iterators, so we store a copy...
-      mComponentGUIs.append( compGUI );
-    }
+    if ( comp->groupList().empty() )
+      continue;
+    if ( face() != Plain )
+    vbox = addVBoxPage( comp->description(), QString::null, loadIcon( *compit ) );
+    CryptoConfigComponentGUI* compGUI =
+      new CryptoConfigComponentGUI( this, comp, vbox, (*compit).local8Bit() );
+    // KJanusWidget doesn't seem to have iterators, so we store a copy...
+    mComponentGUIs.append( compGUI );
   }
 }
 
