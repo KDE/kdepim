@@ -102,22 +102,27 @@ bool ResourceIMAP::loadAllEvents()
 
   // We get a fresh list of events, so clean out the old ones
   mCalendar.deleteAllEvents();
+  mEventResources = resources;
+  mUidmap.clear();
 
+  bool silent = mSilent;
+  mSilent = true;
   QStringList::ConstIterator itR;
   for ( itR = resources.begin(); itR != resources.end(); ++itR ) {
     // Get the list of events
     QStringList lst;
-    if ( !kmailIncidences( lst, "Calendar", *itR ) )
+    if ( !kmailIncidences( lst, "Calendar", *itR ) ) {
       // The get failed
+      mSilent = silent;
       return false;
+    }
 
     // Populate the calendar with the new events
     for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
       Incidence* i = parseIncidence( *it );
       if ( i ) {
         if ( i->type() == "Event" ) {
-          mCalendar.addEvent(static_cast<Event*>(i));
-          i->registerObserver( this );
+          addEvent( static_cast<Event*>( i ) );
           changed = true;
         } else {
           kdDebug(5650) << "Unknown incidence type " << i->type();
@@ -127,6 +132,7 @@ bool ResourceIMAP::loadAllEvents()
         kdDebug(5650) << "Problem reading: " << *it << endl;
     }
   }
+  mSilent = silent;
 
   if ( changed )
     emit resourceChanged( this );
@@ -232,18 +238,29 @@ KABC::Lock *ResourceIMAP::lock()
 /***********************************************
  * Adding and removing Events
  */
+bool ResourceIMAP::addEvent( Event *anEvent )
+{
+  return addEvent( anEvent, QString::null );
+}
 
-bool ResourceIMAP::addEvent(Event *anEvent)
+bool ResourceIMAP::addEvent( Event *anEvent, const QString& subresource )
 {
   kdDebug(5800) << "ResourceIMAP::addEvent" << endl;
   mCalendar.addEvent(anEvent);
   anEvent->registerObserver( this );
 
+  // Register for the subresource
+  QString resource = subresource;
+  if ( subresource.isEmpty() )
+    // TODO: Do something a bit more clever
+    resource = mEventResources[ 0 ];
+  mUidmap[ anEvent->uid() ] = resource;
+
   if ( mSilent ) return true;
 
   mCurrentUID = anEvent->uid();
   QString vCal = mFormat.createScheduleMessage( anEvent, Scheduler::Request );
-  bool rc = kmailAddIncidence( "Calendar", "FIXME", mCurrentUID, vCal );
+  bool rc = kmailAddIncidence( "Calendar", resource, mCurrentUID, vCal );
   mCurrentUID = QString::null;
 
   if ( !rc )
@@ -256,14 +273,16 @@ bool ResourceIMAP::addEvent(Event *anEvent)
 void ResourceIMAP::deleteEvent(Event *event)
 {
   kdDebug(5800) << "ResourceIMAP::deleteEvent" << endl;
+  Q_ASSERT( mUidmap.contains( mCurrentUID ) );
 
   // Call kmail ...
   if ( !mSilent ) {
     mCurrentUID = event->uid();
-    kmailDeleteIncidence( "Calendar", "FIXME", mCurrentUID );
+    kmailDeleteIncidence( "Calendar", mUidmap[ mCurrentUID ], mCurrentUID );
     mCurrentUID = QString::null;
   }
 
+  mUidmap.erase( event->uid() );
   mCalendar.deleteEvent(event);
 }
 
@@ -439,12 +458,13 @@ void ResourceIMAP::update(IncidenceBase *incidencebase)
   // or internally in the Event itself when certain things change.
   // need to verify with ical documentation.
 
-  // Delete the old one and add the new version
   mCurrentUID = incidencebase->uid();
-  QString vCal = mFormat.createScheduleMessage( incidencebase,
+  Q_ASSERT( mUidmap.contains( mCurrentUID ) );
+
+  // Update the iCal
+  QString iCal = mFormat.createScheduleMessage( incidencebase,
                                                 Scheduler::Request );
-  bool rc = kmailDeleteIncidence( type, "FIXME", mCurrentUID );
-  rc &= kmailAddIncidence( type, "FIXME", mCurrentUID, vCal );
+  bool rc = kmailUpdate( type, mUidmap[ mCurrentUID ], mCurrentUID, iCal );
   mCurrentUID = QString::null;
 
   if ( !rc )
@@ -532,7 +552,7 @@ void ResourceIMAP::slotRefresh( const QString& type )
 
 QStringList ResourceIMAP::subresources() const
 {
-    return mSubresources.keys();
+  return mEventResources + mTaskResources + mJournalResources;
 }
 
 void ResourceIMAP::setSubresourceActive( const QString& subresource,

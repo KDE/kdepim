@@ -59,7 +59,8 @@ public:
   KABC::Lock *lock();
 
   /** Add Event to calendar. */
-  bool addEvent(Event *anEvent);
+  bool addEvent( Event *anEvent );
+  bool addEvent( Event *anEvent, const QString& subresource );
   /** deletes an event from this calendar. */
   void deleteEvent(Event *);
 
@@ -194,8 +195,10 @@ private:
   // The default calendar
   CalendarLocal mCalendar;
 
-  // The subresources
-  QMap<QString, CalendarLocal> mSubresources;
+  // The list of subresources
+  QStringList mEventResources, mTaskResources, mJournalResources;
+  // Mapping from uid to resource
+  QMap<QString, QString> mUidmap;
 };
 
 }
