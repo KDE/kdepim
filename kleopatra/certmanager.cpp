@@ -22,6 +22,7 @@
 #include <ktoolbar.h>
 #include <klineedit.h>
 #include <kstatusbar.h>
+#include <kcombobox.h>
 
 // Qt
 #include <qtextedit.h>
@@ -35,11 +36,13 @@ extern CryptPlugWrapper* pWrapper;
 
 static const int ID_LINEEDIT = 1;
 static const int ID_BUTTON   = 2;
+static const int ID_COMBO    = 3;
+static const int ID_LABEL    = 10;
 
 
 CertManager::CertManager( bool remote, const QString& query, QWidget* parent, const char* name ) :
     KMainWindow( parent, name ),
-    gpgsmProc( 0 ), _remote( remote )
+    gpgsmProc( 0 ), _certBox(0), _remote( remote )
 {
   KMenuBar* bar = menuBar();
 
@@ -50,11 +53,13 @@ CertManager::CertManager( bool remote, const QString& query, QWidget* parent, co
   KAction* update = KStdAction::redisplay( this, SLOT( loadCertificates() ), actionCollection());
   update->plug( fileMenu );
 
+  /*
   KToggleAction* remoteaction = new KToggleAction( i18n("Remote lookup"), KShortcut(), this);
   connect( remoteaction, SIGNAL( toggled(bool) ), this, SLOT( slotToggleRemote( bool ) ) );
   remoteaction->setChecked( _remote );
   remoteaction->plug( fileMenu );
-  
+  */
+
   fileMenu->insertSeparator();
 
   KAction* quit = KStdAction::quit( this, SLOT( quit() ), actionCollection());
@@ -119,9 +124,18 @@ CertManager::CertManager( bool remote, const QString& query, QWidget* parent, co
   // Toolbar
   _toolbar = toolBar( "mainToolBar" );
 
+  _toolbar->insertWidget( ID_LABEL, -1, new QLabel( i18n("Look for"), _toolbar ) );
+
+
   _toolbar->insertLined( query, ID_LINEEDIT, SIGNAL( returnPressed() ), this, 
 			 SLOT( loadCertificates() ) );
   _toolbar->setItemAutoSized( ID_LINEEDIT, true );
+
+  QStringList lst;
+  lst << i18n("in local certificates") << i18n("in external certificates");
+  _toolbar->insertCombo( lst, ID_COMBO, false, SIGNAL( highlighted(int) ),
+			 this, SLOT( slotToggleRemote(int) ) );
+  _toolbar->getCombo( ID_COMBO )->setCurrentItem( _remote?1:0 );
 
   KAction* find = KStdAction::find( this, SLOT( loadCertificates() ), actionCollection());
   _toolbar->insertButton( find->icon(), ID_BUTTON, SIGNAL( clicked() ), this, 
@@ -172,11 +186,9 @@ CertItem* CertManager::fillInOneItem( CertBox* lv, CertItem* parent,
   }
 }
 
-void CertManager::slotToggleRemote(bool b)
+void CertManager::slotToggleRemote( int idx )
 {
-  _remote = b;
-  // Clear display
-  _certBox->clear();
+  _remote = idx==0?false:true;
 }
 
 /**
@@ -201,14 +213,14 @@ void CertManager::loadCertificates()
 
   QString text = _toolbar->getLinedText( ID_LINEEDIT ).stripWhiteSpace();
 
-  qDebug("About to query plugin");
+  //qDebug("About to query plugin");
   bool truncated;
   if( text.isEmpty() ) {
     _certList = pWrapper->listKeys(QString::null, _remote, &truncated );
   } else {
     _certList = pWrapper->listKeys(text, _remote, &truncated );
   }
-  qDebug("Done");
+  //qDebug("Done");
   
   if( truncated ) {
     //statusBar()->message();

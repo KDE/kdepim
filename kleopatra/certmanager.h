@@ -10,7 +10,7 @@ class KToolBar;
 
 class CertManager :public KMainWindow
 {
-Q_OBJECT
+  Q_OBJECT
 
 public:
     CertManager( bool remote = false, const QString& query = QString::null, 
@@ -30,7 +30,7 @@ protected slots:
     void importCRLFromFile();
     void importCRLFromLDAP();
     void slotGPGSMExited();
-    void slotToggleRemote(bool);
+    void slotToggleRemote(int idx);
 
 private:
   CertItem* fillInOneItem( CertBox* lv, CertItem* parent, 

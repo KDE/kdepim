@@ -10,6 +10,7 @@ CertBox::CertBox( QWidget* parent, const char* name ) :QListView( parent, name )
   addColumn( i18n("Serial")/*, fm.width( i18n("Serial") ) * 3*/ );
   setColumnWidthMode( 0, QListView::Manual );
   setColumnWidthMode( 1, QListView::Manual );
+  setAllColumnsShowFocus( true );
 
   connect( this, SIGNAL( doubleClicked (QListViewItem*) ), this, SLOT( handleDoubleClick( QListViewItem*) ) );
   connect( this, SIGNAL( returnPressed (QListViewItem*) ), this, SLOT( handleDoubleClick( QListViewItem*) ) );
