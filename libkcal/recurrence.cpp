@@ -283,6 +283,30 @@ QDateTime Recurrence::endDateTime(bool *result) const
   return mCachedEndDT;
 }
 
+QString Recurrence::endDateStr(bool shortfmt) const
+{
+  return KGlobal::locale()->formatDate(rEndDateTime.date(),shortfmt);
+}
+
+void Recurrence::setEndDate(const QDate &date)
+{
+  setEndDateTime(QDateTime(date, mRecurStart.time()));
+}
+
+void Recurrence::setEndDateTime(const QDateTime &dateTime)
+{
+  if (mRecurReadOnly) return;
+  rEndDateTime = dateTime;
+  rDuration = 0; // set to 0 because there is an end date/time
+  mCompatDuration = 0;
+  mUseCachedEndDT = false;
+}
+
+int Recurrence::duration() const
+{
+  return rDuration;
+}
+
 int Recurrence::durationTo(const QDate &date) const
 {
   QDate d = date;
@@ -293,6 +317,18 @@ int Recurrence::durationTo(const QDateTime &datetime) const
 {
   QDateTime dt = datetime;
   return recurCalc(COUNT_TO_DATE, dt);
+}
+
+void Recurrence::setDuration(int _rDuration)
+{
+  if (mRecurReadOnly) return;
+  if (_rDuration > 0) {
+    rDuration = _rDuration;
+    // Compatibility mode is only needed when reading the calendar in ICalFormatImpl,
+    // so explicitly setting the duration means no backwards compatibility is needed.
+    mCompatDuration = 0;
+  }
+  mUseCachedEndDT = false;
 }
 
 void Recurrence::unsetRecurs()
@@ -384,26 +420,11 @@ int Recurrence::frequency() const
   return rFreq;
 }
 
-int Recurrence::duration() const
+void Recurrence::setFrequency(int freq)
 {
-  return rDuration;
-}
-
-void Recurrence::setDuration(int _rDuration)
-{
-  if (mRecurReadOnly) return;
-  if (_rDuration > 0) {
-    rDuration = _rDuration;
-    // Compatibility mode is only needed when reading the calendar in ICalFormatImpl,
-    // so explicitly setting the duration means no backwards compatibility is needed.
-    mCompatDuration = 0;
-  }
+  if (mRecurReadOnly || freq <= 0) return;
+  rFreq = freq;
   mUseCachedEndDT = false;
-}
-
-QString Recurrence::endDateStr(bool shortfmt) const
-{
-  return KGlobal::locale()->formatDate(rEndDateTime.date(),shortfmt);
 }
 
 const QBitArray &Recurrence::days() const
@@ -428,51 +449,51 @@ const QPtrList<int> &Recurrence::monthDays() const
 
 void Recurrence::setMinutely(int _rFreq, int _rDuration)
 {
-  if (mRecurReadOnly || _rDuration == 0 || _rDuration < -1)
+  if (mRecurReadOnly || _rFreq <= 0 || _rDuration == 0 || _rDuration < -1)
     return;
   setDailySub(rMinutely, _rFreq, _rDuration);
 }
 
 void Recurrence::setMinutely(int _rFreq, const QDateTime &_rEndDateTime)
 {
-  if (mRecurReadOnly) return;
+  if (mRecurReadOnly || _rFreq <= 0) return;
   rEndDateTime = _rEndDateTime;
   setDailySub(rMinutely, _rFreq, 0);
 }
 
 void Recurrence::setHourly(int _rFreq, int _rDuration)
 {
-  if (mRecurReadOnly || _rDuration == 0 || _rDuration < -1)
+  if (mRecurReadOnly || _rFreq <= 0 || _rDuration == 0 || _rDuration < -1)
     return;
   setDailySub(rHourly, _rFreq, _rDuration);
 }
 
 void Recurrence::setHourly(int _rFreq, const QDateTime &_rEndDateTime)
 {
-  if (mRecurReadOnly) return;
+  if (mRecurReadOnly || _rFreq <= 0) return;
   rEndDateTime = _rEndDateTime;
   setDailySub(rHourly, _rFreq, 0);
 }
 
 void Recurrence::setDaily(int _rFreq, int _rDuration)
 {
-  if (mRecurReadOnly || _rDuration == 0 || _rDuration < -1)
+  if (mRecurReadOnly || _rFreq <= 0 || _rDuration == 0 || _rDuration < -1)
     return;
   setDailySub(rDaily, _rFreq, _rDuration);
 }
 
 void Recurrence::setDaily(int _rFreq, const QDate &_rEndDate)
 {
-  if (mRecurReadOnly) return;
+  if (mRecurReadOnly || _rFreq <= 0) return;
   rEndDateTime.setDate(_rEndDate);
   rEndDateTime.setTime(mRecurStart.time());
   setDailySub(rDaily, _rFreq, 0);
 }
 
 void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
-                               int _rDuration, int _rWeekStart)
+                           int _rDuration, int _rWeekStart)
 {
-  if (mRecurReadOnly || _rDuration == 0 || _rDuration < -1)
+  if (mRecurReadOnly || _rFreq <= 0 || _rDuration == 0 || _rDuration < -1)
     return;
   mUseCachedEndDT = false;
 
@@ -502,7 +523,7 @@ void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
 void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
                            const QDate &_rEndDate, int _rWeekStart)
 {
-  if (mRecurReadOnly) return;
+  if (mRecurReadOnly || _rFreq <= 0) return;
   mUseCachedEndDT = false;
 
   recurs = rWeekly;
@@ -521,7 +542,7 @@ void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
 
 void Recurrence::setMonthly(short type, int _rFreq, int _rDuration)
 {
-  if (mRecurReadOnly || _rDuration == 0 || _rDuration < -1)
+  if (mRecurReadOnly || _rFreq <= 0 || _rDuration == 0 || _rDuration < -1)
     return;
   mUseCachedEndDT = false;
 
@@ -534,10 +555,9 @@ void Recurrence::setMonthly(short type, int _rFreq, int _rDuration)
   if (mParent) mParent->updated();
 }
 
-void Recurrence::setMonthly(short type, int _rFreq,
-                            const QDate &_rEndDate)
+void Recurrence::setMonthly(short type, int _rFreq, const QDate &_rEndDate)
 {
-  if (mRecurReadOnly) return;
+  if (mRecurReadOnly || _rFreq <= 0) return;
   mUseCachedEndDT = false;
 
   recurs = type;
@@ -631,7 +651,7 @@ void Recurrence::addMonthlyDay(short _rDay)
 
 void Recurrence::setYearly(int type, int _rFreq, int _rDuration)
 {
-  if (mRecurReadOnly || _rDuration == 0 || _rDuration < -1)
+  if (mRecurReadOnly || _rFreq <= 0 || _rDuration == 0 || _rDuration < -1)
     return;
   if (mCompatVersion < 310)
     mCompatDuration = (_rDuration > 0) ? _rDuration : 0;
@@ -640,7 +660,7 @@ void Recurrence::setYearly(int type, int _rFreq, int _rDuration)
 
 void Recurrence::setYearly(int type, int _rFreq, const QDate &_rEndDate)
 {
-  if (mRecurReadOnly) return;
+  if (mRecurReadOnly || _rFreq <= 0) return;
   rEndDateTime.setDate(_rEndDate);
   rEndDateTime.setTime(mRecurStart.time());
   mCompatDuration = 0;
@@ -659,7 +679,7 @@ void Recurrence::setYearlyByDate(Feb29Type type, int _rFreq, const QDate &_rEndD
 
 void Recurrence::setYearlyByDate(int day, Feb29Type type, int _rFreq, int _rDuration)
 {
-  if (mRecurReadOnly || _rDuration == 0 || _rDuration < -1)
+  if (mRecurReadOnly || _rFreq <= 0 || _rDuration == 0 || _rDuration < -1)
     return;
   if (mCompatVersion < 310)
     mCompatDuration = (_rDuration > 0) ? _rDuration : 0;
@@ -670,7 +690,7 @@ void Recurrence::setYearlyByDate(int day, Feb29Type type, int _rFreq, int _rDura
 
 void Recurrence::setYearlyByDate(int day, Feb29Type type, int _rFreq, const QDate &_rEndDate)
 {
-  if (mRecurReadOnly) return;
+  if (mRecurReadOnly || _rFreq <= 0) return;
   rEndDateTime.setDate(_rEndDate);
   rEndDateTime.setTime(mRecurStart.time());
   mCompatDuration = 0;

@@ -148,6 +148,9 @@ class Recurrence
 
     /** Returns frequency of recurrence, in terms of the recurrence time period type. */
     int frequency() const;
+    /** Sets the frequency of recurrence, in terms of the recurrence time period type. */
+    void setFrequency(int freq);
+
     /** Returns the total number of recurrences, including the initial occurrence. */
     int duration() const;
     /** Sets the total number of times the event is to occur, including both the
@@ -173,6 +176,12 @@ class Recurrence
     /** Returns a string representing the recurrence end date in the format
      according to the user's locale settings. */
     QString endDateStr(bool shortfmt=true) const;
+    /** Sets the date of the last recurrence. The end time is set to the recurrence start time.
+     * @param endDate the ending date after which to stop recurring. */
+    void setEndDate(const QDate &endDate);
+    /** Sets the date and time of the last recurrence.
+     * @param endDateTime the ending date/time after which to stop recurring. */
+    void setEndDateTime(const QDateTime &endDateTime);
 
     /** Sets an event to recur minutely.
      * @param _rFreq the frequency to recur, e.g. 2 is every other minute
