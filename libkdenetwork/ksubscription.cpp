@@ -196,6 +196,7 @@ KSubscription::KSubscription( QWidget *parent, const QString &caption,
     mAcct( acct )
 {
   mLoading = true;
+  setWFlags( getWFlags() | WDestructiveClose );
 
   // create Widgets
   page = new QWidget(this);
