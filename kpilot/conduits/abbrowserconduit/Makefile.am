@@ -5,7 +5,6 @@ servicedir = $(kde_servicesdir)
 service_DATA = abbrowser_conduit.desktop
 
 kde_module_LTLIBRARIES = libaddressconduit.la
-KDE_CXXFLAGS=-DDO_DANGEROUS_ABOOK_SYNC
 
 libaddressconduit_la_SOURCES = \
 	resolutionDialog.cc \
