@@ -823,7 +823,7 @@ void KNotesAction::cleanupMemos()
 	if (fP->fAddedNotesCounter)
 	{
 		addSyncLogEntry(i18n("Added one note to KNotes.",
-			"Added %n notess to KNotes.",fP->fAddedNotesCounter));
+			"Added %n notes to KNotes.",fP->fAddedNotesCounter));
 		spoke = true;
 	}
 	if (fP->fModifiedNotesCounter)
@@ -835,7 +835,7 @@ void KNotesAction::cleanupMemos()
 	if (fP->fDeletedNotesCounter)
 	{
 		addSyncLogEntry(i18n("Deleted one note from KNotes.",
-			"Deleted %n note from KNotes.",fP->fDeletedNotesCounter));
+			"Deleted %n notes from KNotes.",fP->fDeletedNotesCounter));
 		spoke = true;
 	}
 	if (!spoke)
