@@ -95,8 +95,6 @@ class KCalResourceSlox : public KCal::ResourceCached
 
     void dump() const;
 
-    QString errorMessage();
-
   protected slots:
     void slotLoadEventsResult( KIO::Job * );
     void slotLoadTodosResult( KIO::Job * );
@@ -162,8 +160,6 @@ class KCalResourceSlox : public KCal::ResourceCached
     bool mUploadIsDelete;
 
     KABC::Lock *mLock;
-
-    QString mErrorMessage;
 
     WebdavHandler mWebdavHandler;
 };

@@ -154,10 +154,6 @@ bool KCalResourceSlox::load()
     return true;
   }
 
-  // The SLOX contacts are loaded asynchronously, so make sure that they are
-  // actually loaded.
-  KABC::StdAddressBook::self()->asyncLoad();
-
   if ( mLoadEventsJob || mLoadTodosJob ) {
     kdWarning() << "KCalResourceSlox::load(): download still in progress."
                 << endl;
@@ -179,10 +175,15 @@ bool KCalResourceSlox::load()
 
   QString p = KURL( mPrefs->url() ).protocol();
   if ( p != "http" && p != "https" && p != "webdav" && p != "webdavs" ) {
-    mErrorMessage = i18n("Non-http protcol: '%1'").arg( p );
-    kdDebug() << mErrorMessage << endl;
+    QString err = i18n("Non-http protcol: '%1'").arg( p );
+    kdDebug() << "KCalResourceSlox::load(): " << err << endl;
+    emit resourceLoadError( this, err );
     return false;
   }
+
+  // The SLOX contacts are loaded asynchronously, so make sure that they are
+  // actually loaded.
+  KABC::StdAddressBook::self()->asyncLoad();
 
 #if 1
   requestEvents();
@@ -190,11 +191,6 @@ bool KCalResourceSlox::load()
   requestTodos();
 
   return true;
-}
-
-QString KCalResourceSlox::errorMessage()
-{
-  return mErrorMessage;
 }
 
 void KCalResourceSlox::requestEvents()
@@ -588,7 +584,7 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
   kdDebug() << "KCalResourceSlox::slotLoadTodosJobResult()" << endl;
 
   if ( job->error() ) {
-    job->showErrorDialog( 0 );
+    emit resourceLoadError( this, job->errorString() );
   } else {
     kdDebug() << "KCalResourceSlox::slotLoadTodosJobResult() success" << endl;
 
@@ -656,7 +652,7 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
   kdDebug() << "KCalResourceSlox::slotLoadEventsResult() " << int( this ) << endl;
 
   if ( job->error() ) {
-    job->showErrorDialog( 0 );
+    emit resourceLoadError( this, job->errorString() );
   } else {
     kdDebug() << "KCalResourceSlox::slotLoadEventsResult() success" << endl;
 
@@ -728,7 +724,7 @@ void KCalResourceSlox::slotUploadResult( KIO::Job *job )
   kdDebug() << "KCalResourceSlox::slotUploadResult()" << endl;
 
   if ( job->error() ) {
-    job->showErrorDialog( 0 );
+    emit resourceSaveError( this, job->errorString() );
   } else {
     kdDebug() << "KCalResourceSlox::slotUploadResult() success" << endl;
 
