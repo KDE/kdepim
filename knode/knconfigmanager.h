@@ -2,7 +2,7 @@
     knconfigmanager.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -16,6 +16,8 @@
 
 #ifndef KNCONFIGMANAGER_H
 #define KNCONFIGMANAGER_H
+
+#include <kcmultidialog.h>
 
 #include "knconfig.h"
 
@@ -66,21 +68,15 @@ class KNConfigManager : QObject {
 };
 
 
-class KNConfigDialog : public KDialogBase {
+class KNConfigDialog : public KCMultiDialog {
 
   Q_OBJECT
 
   public:
-    KNConfigDialog(KNConfigManager *m, QWidget *p=0, const char *n=0);
-    ~KNConfigDialog();
-
-  protected:
-    QPtrList<KNConfig::BaseWidget> w_idgets;
-    KNConfigManager *m_anager;
+    KNConfigDialog(QWidget *p=0, const char *n=0);
 
   protected slots:
-    void slotApply();
-    void slotOk();
+    void slotConfigCommitted();
 
 };
 

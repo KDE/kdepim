@@ -1,0 +1,16 @@
+[Desktop Entry]
+Encoding=UTF-8
+Icon=mail_forward
+Type=Service
+ServiceTypes=KCModule
+
+X-KDE-ModuleType=Library
+X-KDE-Library=knode
+X-KDE-FactoryName=knode_config_post_news
+X-KDE-HasReadOnlyMode=false
+X-KDE-ParentApp=knode
+X-KDE-ParentComponents=knode,kontact_knodeplugin
+X-KDE-CfgDlgHierarchy=KNode
+
+Name=Posting News
+

@@ -257,6 +257,7 @@ KNConfig::Appearance::Appearance()
   f_ontNames[articleList]=i18n("Article List");
 
   //icons
+  KGlobal::iconLoader()->addAppDir("knode");
   recreateLVIcons();
   i_cons[newFups]         = UserIcon("newsubs");
   i_cons[eyes]            = UserIcon("eyes");

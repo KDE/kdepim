@@ -4,21 +4,26 @@ INCLUDES=	-I$(top_srcdir)/libkdenetwork \
 		-I$(top_srcdir)/libkdepim \
 		 $(all_includes)
 
-noinst_LTLIBRARIES = libknodecommon.la
+lib_LTLIBRARIES = libknodecommon.la
 
-kde_module_LTLIBRARIES = libknodepart.la
+kde_module_LTLIBRARIES = kcm_knode.la libknodepart.la
 libknodepart_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -version-info 1:0
-libknodepart_la_LIBADD	= $(LIB_KHTML) $(LIB_KSPELL) $(LIB_KABC) -lkwalletclient \
-			../libkdenetwork/libkdenetwork.la ../libkdepim/libkdepim.la \
-			../mimelib/libmimelib.la libknodecommon.la
+libknodepart_la_LIBADD	= libknodecommon.la
+
 SUBDIRS = pics filters
 
 bin_PROGRAMS = knode
 
 knode_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-knode_LDADD   = -lkdeprint -lkwalletclient $(top_builddir)/libkdenetwork/libkdenetwork.la ../libkdepim/libkdepim.la libknodecommon.la $(LIB_KSPELL) $(LIB_KABC) $(LIB_KFILE) $(LIBRESOLV)
+knode_LDADD   = libknodecommon.la
+
+kcm_knode_la_SOURCES = knconfigpages.cpp
+kcm_knode_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
+kcm_knode_la_LIBADD = libknodecommon.la $(LIB_KDECORE)
 
 
+libknodecommon_la_LDFLAGS = $(all_libraries) -no-undefined
+libknodecommon_la_LIBADD = -lkdeprint -lkwalletclient $(top_builddir)/libkdenetwork/libkdenetwork.la $(top_builddir)/libkdepim/libkdepim.la $(LIB_KSPELL) $(LIB_KABC) $(LIB_KFILE) $(LIB_KUTILS) $(LIBRESOLV)
 libknodecommon_la_SOURCES =   knconfigmanager.cpp \
                   knconfig.cpp \
                   knconfigwidgets.cpp \
@@ -158,6 +163,8 @@ rc_DATA = headers.rc knodeui.rc knreaderui.rc kncomposerui.rc
 
 knewsprotocol_DATA = knewsservice.protocol
 knewsprotocoldir = $(kde_servicesdir)
+
+kde_services_DATA = knode_config_identity.desktop knode_config_accounts.desktop knode_config_appearance.desktop knode_config_read_news.desktop knode_config_post_news.desktop knode_config_privacy.desktop knode_config_cleanup.desktop
 
 KDE_ICON = AUTO
 

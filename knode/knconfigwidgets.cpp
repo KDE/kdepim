@@ -2,7 +2,7 @@
     knconfigwidgets.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -115,6 +115,7 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
 		     "used to sign your articles.</p></qt>");
   QWhatsThis::add( l, msg );
   QWhatsThis::add( s_igningKey, msg );
+  // FIXME: there is no changed signal for Kgpg::SecretKeyRequester
 
   b_uttonGroup = new QButtonGroup(this);
   connect( b_uttonGroup, SIGNAL(clicked(int)),
@@ -279,8 +280,11 @@ void KNConfig::IdentityWidget::slotSignatureEdit()
 
 
 KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n)
-  : BaseWidget(p, n), p_ixmap(UserIcon("server")), a_ccManager(knGlobals.accountManager())
+  : BaseWidget(p, n), a_ccManager(knGlobals.accountManager())
 {
+  KGlobal::iconLoader()->addAppDir("knode");
+  p_ixmap = UserIcon("server");
+
   QGridLayout *topL=new QGridLayout(this, 6,2, 5,5);
 
   // account listbox
@@ -782,8 +786,8 @@ int KNConfig::AppearanceWidget::FontListItem::width(const QListBox *lb ) const
 //===================================================================================
 
 
-KNConfig::AppearanceWidget::AppearanceWidget(Appearance *d, QWidget *p, const char *n)
-  : BaseWidget(p, n), d_ata(d)
+KNConfig::AppearanceWidget::AppearanceWidget(QWidget *p, const char *n)
+  : BaseWidget(p, n), d_ata(knGlobals.configManager()->appearance())
 {
   QGridLayout *topL=new QGridLayout(this, 8,2, 5,5);
 
@@ -801,6 +805,7 @@ KNConfig::AppearanceWidget::AppearanceWidget(Appearance *d, QWidget *p, const ch
   connect(c_olChngBtn, SIGNAL(clicked()), this, SLOT(slotColChangeBtnClicked()));
   topL->addWidget(c_olChngBtn,1,1);
 
+  // FIXME: use global default button instead
   c_olDefBtn=new KPushButton(KStdGuiItem::defaults(), this);
   connect(c_olDefBtn, SIGNAL(clicked()), this, SLOT(slotColDefaultBtnClicked()));
   topL->addWidget(c_olDefBtn,2,1);
@@ -2425,7 +2430,8 @@ void KNConfig::PrivacyWidget::save()
 //==============================================================================================================
 
 
-KNConfig::CleanupWidget::CleanupWidget(Cleanup *d, QWidget *p, const char *n) : BaseWidget(p, n), d_ata(d)
+KNConfig::CleanupWidget::CleanupWidget(QWidget *p, const char *n) 
+  : BaseWidget(p, n), d_ata(knGlobals.configManager()->cleanup())
 {
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
 

@@ -2,7 +2,7 @@
     knconfig.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2004 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -20,6 +20,7 @@
 #include <qasciidict.h>
 
 #include <kdialogbase.h>
+#include <kcmodule.h>
 
 #include "knwidgets.h"
 
@@ -69,25 +70,18 @@ class Base {
 };
 
 
-class BaseWidget : public QWidget {
+class BaseWidget : public KCModule {
 
   Q_OBJECT
 
   public:
-    BaseWidget(QWidget *p=0, const char *n=0) : QWidget(p, n), d_irty(false) {}
+    BaseWidget(QWidget *p=0, const char *n=0) : KCModule(p, n), d_irty(false) {}
     ~BaseWidget() {}
 
     void show()             { d_irty=true; QWidget::show(); }
 
     bool dirty()const            { return d_irty; }
     void setDirty(bool b)   { d_irty=b; }
-
-    virtual void load() {}
-    virtual void save() {}
-    virtual void defaults() {}
-
-  signals:
-    void changed(bool);
 
   protected:
     bool d_irty;
@@ -400,7 +394,7 @@ class AppearanceWidget : public BaseWidget {
   Q_OBJECT
 
   public:
-    AppearanceWidget(Appearance *d, QWidget *p=0, const char *n=0);
+    AppearanceWidget(QWidget *p=0, const char *n=0);
     ~AppearanceWidget();
 
     void load();
@@ -1150,7 +1144,7 @@ class CleanupWidget : public BaseWidget {
   Q_OBJECT
 
   public:
-    CleanupWidget(Cleanup *d, QWidget *p=0, const char *n=0);
+    CleanupWidget(QWidget *p=0, const char *n=0);
     ~CleanupWidget();
 
     void load();

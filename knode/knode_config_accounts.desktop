@@ -1,0 +1,16 @@
+[Desktop Entry]
+Encoding=UTF-8
+Icon=server_big
+Type=Service
+ServiceTypes=KCModule
+
+X-KDE-ModuleType=Library
+X-KDE-Library=knode
+X-KDE-FactoryName=knode_config_accounts
+X-KDE-HasReadOnlyMode=false
+X-KDE-ParentApp=knode
+X-KDE-ParentComponents=knode,kontact_knodeplugin
+X-KDE-CfgDlgHierarchy=KNode
+
+Name=Accounts
+Comment=Setup for Newsgroup and Mail Servers
