@@ -25,9 +25,17 @@
 #include <qobject.h>
 #include <dcopobject.h>
 
+/** @file */
+
+/**
+    \brief KPIM holds all kinds of functions specific to KDE PIM.
+*/
 namespace KPIM {
 
 /**
+    This is a class for monitoring network status -- basically,
+    the machine KDE is running on going from "online" mode to
+    offline. What this means is left as an exercise for the reader.
  */
 class NetworkStatus : public QObject, public DCOPObject
 {

@@ -126,7 +126,7 @@ KDE_EXPORT QString simpleEmailAddressErrorMsg();
     (mailbox in RFC2822).
 
     @param address  an email address, e.g. "Joe User <joe.user@kde.org>"
-    @return         the addr-spec of @p address, i.e. joe.user@kde.org in the
+    @return         the addr-spec of @a address, i.e. joe.user@kde.org in the
                       example
 */
 KDE_EXPORT QCString getEmailAddress( const QCString & address );

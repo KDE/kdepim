@@ -1,0 +1,10 @@
+/** @mainpage libemailfunctions
+
+This library contains utility functions for dealing with email addresses.
+This includes parsing, splitting, and munging email addresses represented
+as strings (e.g. in email headers); some additional functions handle
+non-latin1 upper- and lower-case conversions.
+
+Everything lives in the KPIM namespace.
+
+*/

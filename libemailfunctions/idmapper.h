@@ -31,10 +31,6 @@
 
 /**
     \brief KPIM holds all kinds of functions specific to KDE PIM.
-
-    The KPIM namespace hides away functions, enums, and other things
-    that are KDE PIM specific and that we don't want to have polluting
-    the global namespace.
 */
 namespace KPIM {
 
