@@ -135,7 +135,7 @@ bool KNAccountManager::newAccount(KNNntpAccount *a)
 
   a->setId(id);
 
-  dir = locateLocal("data","knode/") + QString("nntp.%1/").arg(a->id());
+  dir = locateLocal("data",QString("knode/nntp.%1/").arg(a->id()));
   if (!dir.isNull()) {
     accList->append(a);
     KNCollectionViewItem *it = new KNCollectionViewItem(view);
