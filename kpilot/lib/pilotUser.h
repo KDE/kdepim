@@ -35,6 +35,8 @@
 
 #include <pi-dlp.h>
 
+#include "config.h"
+
 class KPilotUser
 {
 public:
