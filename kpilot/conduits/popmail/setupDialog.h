@@ -34,7 +34,7 @@
 
 
 #include <qwidget.h>
-
+#include "plugin.h"
 class KConfig;
 class QLabel;
 class QLineEdit;
@@ -146,5 +146,34 @@ private:
 
 	RetrievalMode fMode;
 } ;
+
+class PopMailWidget;
+
+class PopMailWidgetConfig : public ConduitConfigBase
+{
+Q_OBJECT
+public:
+	PopMailWidgetConfig(QWidget *, const char *);
+	virtual void load(KConfig *);
+	virtual void commit(KConfig *);
+
+	static ConduitConfigBase *create(QWidget *w, const char *n)
+		{ return new PopMailWidgetConfig(w,n); } ;
+
+	// These enums must follow the order of items in the combo box
+	enum RecvMode { NoRecv=0, RecvPOP=1, RecvMBOX=2 } ;
+	enum SendMode { NoSend=0, SendSendmail=1, SendSMTP=2, SendKMail=3 } ;
+
+protected:
+	PopMailWidget *fConfigWidget;
+
+public slots:
+	void toggleRecvMode(int);
+	void toggleSendMode(int);
+
+signals:
+	void moose();
+} ;
+
 
 #endif

@@ -104,12 +104,36 @@ PopmailConduitFactory::~PopmailConduitFactory()
 		<< endl;
 #endif
 
+#if 0
+	if (qstrcmp(c,"ConduitConfigBase")==0)
+	{
+		QWidget *w = dynamic_cast<QWidget *>(p);
+
+		if (w)
+		{
+			return new PopMailWidgetConfig(w,n);
+		}
+		else
+		{
+#ifdef DEBUG
+			DEBUGCONDUIT << fname
+				<< ": Couldn't cast parent to widget."
+				<< endl;
+#endif
+			return 0L;
+		}
+	}
+#endif
 	if (qstrcmp(c,"ConduitConfig")==0)
 	{
 		QWidget *w = dynamic_cast<QWidget *>(p);
 
 		if (w)
 		{
+#if 0
+			return new ConduitConfigImplementation(w,n,a,
+				PopMailWidgetConfig::create);
+#endif
 			return new PopmailWidgetSetup(w,n,a);
 		}
 		else

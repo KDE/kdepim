@@ -1,7 +1,5 @@
-### Makefile for the VCal and Todo conduits
+### Makefile for the popmail conduit
 ###
-### The conduits are copyrighted by all kinds of people, see
-### the individual files.
 
 INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 METASOURCES = AUTO
@@ -14,7 +12,8 @@ service_DATA = popmail-conduit.desktop
 kde_module_LTLIBRARIES = libpopmailconduit.la
 
 # Which sources should be compiled for popmail_conduit
-libpopmailconduit_la_SOURCES = popmail-factory.cc setupDialog.cc \
+libpopmailconduit_la_SOURCES = setup-dialog.ui \
+	popmail-factory.cc setupDialog.cc \
 	passworddialog.cc popmail-conduit.cc parsedate.c
 libpopmailconduit_la_LDFLAGS = $(KDE_PLUGIN) $(all_libraries)
 libpopmailconduit_la_LIBADD  =  ../../lib/libkpilot.la $(LIB_KIO)

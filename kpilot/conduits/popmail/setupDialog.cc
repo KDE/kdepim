@@ -43,73 +43,34 @@ static const char *setupDialog_id=
 #include <sys/stat.h>
 #include <stdlib.h>
 
-#include <qwhatsthis.h>
-
-#ifndef _KCONFIG_H
 #include <kconfig.h>
-#endif
-
-#ifndef _KAPP_H
-#include <kapplication.h>
-#endif
-
-#ifndef _KLOCALE_H
-#include <klocale.h>
-#endif
-
-#ifndef _KSTDDIRS_H
 #include <kstddirs.h>
-#endif
+#include <klineedit.h>
 
-#ifndef _KDEBUG_H
-#include <kdebug.h>
-#endif
-
-
-
-#ifndef QLABEL_H
-#include <qlabel.h>
-#endif
-
-#ifndef QCHKBOX_H
-#include <qchkbox.h>
-#endif
-
-#ifndef QLINED_H
-#include <qlined.h>
-#endif
-
-#ifndef QDIR_H
+#include <qcheckbox.h>
 #include <qdir.h>
-#endif
-
-#ifndef QFILEDLG_H
 #include <qfiledlg.h>
-#endif
+#include <qcombobox.h>
 
-#ifndef QBTTNGRP_H
+#define OLDSTYLE
+#ifdef OLDSTYLE
+#include <qlabel.h>
+#include <qwhatsthis.h>
 #include <qbttngrp.h>
-#endif
-
-#ifndef QPUSHBUTTON_H
 #include <qpushbutton.h>
-#endif
-
-#ifndef QRADIOBT_H
 #include <qradiobt.h>
-#endif
-
-#ifndef QLAYOUT_H
 #include <qlayout.h>
-#endif
-
-#ifndef QVBUTTONGROUP_H
 #include <qvbuttongroup.h>
 #endif
 
 #include "kfiledialog.h"
 
+#include <kurlrequester.h>
+
+#include "uiDialog.h"
+
 #include "popmail-factory.h"
+#include "setup-dialog.h"
 #include "setupDialog.moc"
 
 
@@ -595,7 +556,7 @@ void PopMailReceivePage::setMode(RetrievalMode m)
 	}
 #endif
 
-	if (filename.isEmpty()) 
+	if (filename.isEmpty())
 	{
 		filename=QDir::currentDirPath();
 	}
@@ -634,43 +595,134 @@ void PopMailReceivePage::togglePopPass()
 }
 
 
-#if 0
-/* static */ const QString PopMailOptions::PopGroup("popmailOptions");
 
-PopMailOptions::PopMailOptions(QWidget *parent) :
-	setupDialog(parent, PopGroup,
-		PopMailConduit::version())
+PopMailWidgetConfig::PopMailWidgetConfig(QWidget *p,const char *n) :
+	ConduitConfigBase(p,n),
+	fConfigWidget(new PopMailWidget(p,"PopMailWidget"))
 {
 	FUNCTIONSETUP;
-	setupWidget();
-	setupDialog::setupWidget();
+	fConduitName = i18n("Popmail");
+	UIDialog::addAboutPage(fConfigWidget->fTabWidget,PopmailConduitFactory::about());
+	fWidget=fConfigWidget;
+
+#define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
+	CM(fStorePass,SIGNAL(toggled(bool)));
+	CM(fPopPass,SIGNAL(textChanged(const QString &)));
+	CM(fRecvMode,SIGNAL(activated(int)));
+	CM(fSendMode,SIGNAL(activated(int)));
+#undef CM
+
+	connect(fConfigWidget->fStorePass,SIGNAL(toggled(bool)),
+		fConfigWidget->fPopPass,SLOT(setEnabled(bool)));
+	connect(fConfigWidget->fRecvMode,SIGNAL(activated(int)),
+		this,SLOT(toggleRecvMode(int)));
+	connect(fConfigWidget->fSendMode,SIGNAL(activated(int)),
+		this,SLOT(toggleSendMode(int)));
 }
 
-PopMailOptions::~PopMailOptions()
+void PopMailWidgetConfig::commit(KConfig *fConfig)
 {
 	FUNCTIONSETUP;
-
+#define WR(a,b,c) fConfig->writeEntry(c,fConfigWidget->a->b);
+	WR(fSendMode,currentItem(),PopmailConduitFactory::syncIncoming);
+	WR(fEmailFrom,text(),"EmailAddress");
+	WR(fSignature,url(),"Signature");
+	WR(fLeaveMail,isChecked(),"LeaveMail");
+#undef WR
 }
 
-
-  
-
-
-
-
-void
-PopMailOptions::setupWidget()
+void PopMailWidgetConfig::load(KConfig *fConfig)
 {
 	FUNCTIONSETUP;
+#define RD(a,b,c,d,e) fConfigWidget->a->b(fConfig->read##c##Entry(d,e))
+	RD(fSendMode,setCurrentItem,Num,PopmailConduitFactory::syncIncoming,(int)NoSend);
+	RD(fEmailFrom,setText,,"EmailAddress",QString::null);
+	RD(fSignature,setURL,,"Signature",QString::null);
+	RD(fLeaveMail,setChecked,Bool,"LeaveMail",true);
+#undef RD
 
-	KConfig& config = KPilotConfig::getConfig();
-	config.setGroup(PopGroup);
-
-
-	addPage(new PopMailSendPage(this,config));
-	addPage(new PopMailReceivePage(this,config));
-	addPage(new setupInfoPage(this));
+	toggleSendMode(fConfigWidget->fSendMode->currentItem());
+	toggleRecvMode(fConfigWidget->fRecvMode->currentItem());
 }
+
+
+/* slot */ void PopMailWidgetConfig::toggleRecvMode(int i)
+{
+	FUNCTIONSETUP;
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": Got mode " << i << endl;
 #endif
+
+#define E(a,b) fConfigWidget->a->setEnabled(b)
+	switch(i)
+	{
+	case RecvPOP :
+		E(fPopPass,true);
+		E(fStorePass,true);
+		E(fPopServer,true);
+		E(fPopUser,true);
+		E(fLeaveMail,true);
+		E(fMailbox,false);
+		break;
+	case RecvMBOX :
+		E(fPopPass,false);
+		E(fStorePass,false);
+		E(fPopServer,false);
+		E(fPopUser,false);
+		E(fLeaveMail,false);
+		E(fMailbox,true);
+		break;
+	case NoRecv : /* FALLTHRU */
+	default :
+		E(fPopPass,false);
+		E(fStorePass,false);
+		E(fPopServer,false);
+		E(fPopUser,false);
+		E(fLeaveMail,false);
+		E(fMailbox,false);
+		break;
+	}
+#undef E
+}
+
+/* slot */ void PopMailWidgetConfig::toggleSendMode(int i)
+{
+	FUNCTIONSETUP;
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": Got mode " << i << endl;
+#endif
+
+#define E(a,b) fConfigWidget->a->setEnabled(b)
+	switch(i)
+	{
+	case SendKMail :
+		E(fEmailFrom,true);
+		E(fSignature,true);
+		E(fSMTPServer,false);
+		E(fSendmailCmd,false);
+		break;
+	case SendSMTP :
+		E(fEmailFrom,true);
+		E(fSignature,true);
+		E(fSMTPServer,true);
+		E(fSendmailCmd,false);
+		break;
+	case SendSendmail :
+		E(fEmailFrom,true);
+		E(fSignature,true);
+		E(fSMTPServer,false);
+		E(fSendmailCmd,true);
+		break;
+	case NoSend : /* FALLTHRU */
+	default :
+		E(fEmailFrom,false);
+		E(fSignature,false);
+		E(fSMTPServer,false);
+		E(fSendmailCmd,false);
+		break;
+	}
+#undef E
+}
+
 
 

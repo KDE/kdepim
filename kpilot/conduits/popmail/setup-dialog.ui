@@ -1,0 +1,315 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>PopMailWidget</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>PopMailWidget</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>323</width>
+            <height>250</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Form1</string>
+    </property>
+    <widget class="QTabWidget">
+        <property name="name">
+            <cstring>fTabWidget</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>315</width>
+                <height>237</height>
+            </rect>
+        </property>
+        <widget class="QWidget">
+            <property name="name">
+                <cstring>tab</cstring>
+            </property>
+            <attribute name="title">
+                <string>Send Mail</string>
+            </attribute>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <spacer row="5" column="1">
+                    <property name="name">
+                        <cstring>spacer1</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>16</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>textLabel1_2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Send method:</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="0">
+                    <property name="name">
+                        <cstring>textLabel1</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Email address:</string>
+                    </property>
+                </widget>
+                <widget class="KLineEdit" row="1" column="1">
+                    <property name="name">
+                        <cstring>fEmailFrom</cstring>
+                    </property>
+                    <property name="text">
+                        <string>$USER</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Set this to the email address you want to send messages as.</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="2" column="0">
+                    <property name="name">
+                        <cstring>textLabel2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Signature file:</string>
+                    </property>
+                </widget>
+                <widget class="KURLRequester" row="2" column="1">
+                    <property name="name">
+                        <cstring>fSignature</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Enter the path of your .signature file here. The signature is added to the end of mail messages.</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="3" column="0">
+                    <property name="name">
+                        <cstring>textLabel4</cstring>
+                    </property>
+                    <property name="text">
+                        <string>SMTP server:</string>
+                    </property>
+                </widget>
+                <widget class="KLineEdit" row="3" column="1">
+                    <property name="name">
+                        <cstring>fSMTPServer</cstring>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Enter the hostname and port number (usually 25) of your SMTP server, separated by colons, e.g. &lt;i&gt;smtp.mydomain.com:25&lt;/i&gt;.</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="4" column="0">
+                    <property name="name">
+                        <cstring>textLabel3</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Sendmail:</string>
+                    </property>
+                </widget>
+                <widget class="KLineEdit" row="4" column="1">
+                    <property name="name">
+                        <cstring>fSendmailCmd</cstring>
+                    </property>
+                    <property name="text">
+                        <string>/usr/lib/sendmail -t -i</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Enter the command used to execute sendmail on your system.</string>
+                    </property>
+                </widget>
+                <widget class="QComboBox" row="0" column="1">
+                    <item>
+                        <property name="text">
+                            <string>Do not send mail</string>
+                        </property>
+                    </item>
+                    <item>
+                        <property name="text">
+                            <string>Use Sendmail</string>
+                        </property>
+                    </item>
+                    <item>
+                        <property name="text">
+                            <string>Use SMTP</string>
+                        </property>
+                    </item>
+                    <item>
+                        <property name="text">
+                            <string>Use KMail</string>
+                        </property>
+                    </item>
+                    <property name="name">
+                        <cstring>fSendMode</cstring>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QWidget">
+            <property name="name">
+                <cstring>tab</cstring>
+            </property>
+            <attribute name="title">
+                <string>Retrieve Mail</string>
+            </attribute>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <spacer row="7" column="1">
+                    <property name="name">
+                        <cstring>spacer13</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>16</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QLabel" row="0" column="0" rowspan="2" colspan="1">
+                    <property name="name">
+                        <cstring>textLabel2_2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Receive method:</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="2" column="0">
+                    <property name="name">
+                        <cstring>textLabel7</cstring>
+                    </property>
+                    <property name="text">
+                        <string>POP server:</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="3" column="0">
+                    <property name="name">
+                        <cstring>textLabel9</cstring>
+                    </property>
+                    <property name="text">
+                        <string>POP username:</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="4" column="0">
+                    <property name="name">
+                        <cstring>textLabel10</cstring>
+                    </property>
+                    <property name="text">
+                        <string>POP password:</string>
+                    </property>
+                </widget>
+                <widget class="KLineEdit" row="4" column="1">
+                    <property name="name">
+                        <cstring>fPopPass</cstring>
+                    </property>
+                </widget>
+                <widget class="KLineEdit" row="3" column="1">
+                    <property name="name">
+                        <cstring>fPopUser</cstring>
+                    </property>
+                    <property name="text">
+                        <string>$USER</string>
+                    </property>
+                </widget>
+                <widget class="KLineEdit" row="1" column="1" rowspan="2" colspan="1">
+                    <property name="name">
+                        <cstring>fPopServer</cstring>
+                    </property>
+                    <property name="text">
+                        <string>pop:110</string>
+                    </property>
+                </widget>
+                <widget class="QComboBox" row="0" column="1">
+                    <item>
+                        <property name="text">
+                            <string>Do not receive mail</string>
+                        </property>
+                    </item>
+                    <item>
+                        <property name="text">
+                            <string>Use POP3 server</string>
+                        </property>
+                    </item>
+                    <item>
+                        <property name="text">
+                            <string>Use system mailbox</string>
+                        </property>
+                    </item>
+                    <property name="name">
+                        <cstring>fRecvMode</cstring>
+                    </property>
+                </widget>
+                <widget class="KURLRequester" row="6" column="1">
+                    <property name="name">
+                        <cstring>fMailbox</cstring>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="6" column="0">
+                    <property name="name">
+                        <cstring>textLabel6</cstring>
+                    </property>
+                    <property name="text">
+                        <string>System mailbox:</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="5" column="0">
+                    <property name="name">
+                        <cstring>fLeaveMail</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Leave mail on server</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="5" column="1">
+                    <property name="name">
+                        <cstring>fStorePass</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Save &amp;POP password</string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+    </widget>
+</widget>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>klineedit.h</includehint>
+    <includehint>kurlrequester.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kurlrequester.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+</includehints>
+</UI>
