@@ -242,7 +242,7 @@ recordid_t PilotSerialDatabase::writeRecord(PilotRecord * newRecord)
 		newRecord->getAttrib(), newRecord->getID(),
 		newRecord->getCat(), newRecord->getData(),
 		newRecord->getLen(), &newid);
-	if (newRecord->getID() != newid)
+	if ( (newRecord->getID() != newid) && (newid!=0) )
 		newRecord->setID(newid);
 	return newid;
 }
