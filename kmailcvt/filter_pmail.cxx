@@ -29,9 +29,9 @@
 
 
 FilterPMail::FilterPMail() :
-   Filter(i18n("Import Folders From Pegasus-Mail (*.CNM, *.PMM, *.MBX)"),
+   Filter(i18n("Import Folders From Pegasus-Mail"),
    "Holger Schurig",
-   i18n("<p>Select the Pegasus-Mail directory on your system. "
+   i18n("<p>Select the Pegasus-Mail directory on your system, containing CNM, PMM and MBX files.  "
               "This import filter will import your folders, but not "
               "the folder structure. But you will probably only do "
               "this one time. </p>"
@@ -41,7 +41,6 @@ FilterPMail::FilterPMail() :
               "will allow you to do that) and rename the existing KMail "
               "folders.</p>"))
 {
-  CAP=i18n("Import Pegasus-Mail");
 }
 
 

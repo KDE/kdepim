@@ -31,7 +31,6 @@
 
 FilterEudoraAb::FilterEudoraAb() : Filter(i18n("Import Filter for Eudora Light Addressbook"),"Hans Dijkema")
 {
-  CAP=i18n("Import Filter for Eudora Light Addressbook");
   LINES=0;
 }
 

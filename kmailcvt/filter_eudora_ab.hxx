@@ -37,7 +37,6 @@ class FilterEudoraAb : public Filter
     int     find(const QString& key) const;
 
   private:
-    QString CAP;
     int     LINES;
 
     QStringList keys;

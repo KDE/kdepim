@@ -26,7 +26,6 @@
 
 class FilterPMail : public Filter  {
 private:
-  QString CAP;
   /** the working directory */
   QString dir;
   /**  */
