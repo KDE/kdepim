@@ -56,7 +56,7 @@ GeoWidget::GeoWidget( QWidget *parent, const char *name )
   decimalLayout->addWidget( label, 0, 0 );
 
   mLatitudeBox = new KDoubleSpinBox( -90, 90, 0.5, 0, 6, decimalGroup );
-//  mLatitudeBox->setSuffix( "°" );
+  mLatitudeBox->setSuffix( "°" );
   decimalLayout->addWidget( mLatitudeBox, 0, 1 );
   label->setBuddy( mLatitudeBox );
 
@@ -64,7 +64,7 @@ GeoWidget::GeoWidget( QWidget *parent, const char *name )
   decimalLayout->addWidget( label, 1, 0 );
 
   mLongitudeBox = new KDoubleSpinBox( -180, 180, 0.5, 0, 6, decimalGroup );
-//  mLongitudeBox->setSuffix( "°" );
+  mLongitudeBox->setSuffix( "°" );
   decimalLayout->addWidget( mLongitudeBox, 1, 1 );
   label->setBuddy( mLongitudeBox );
 
@@ -79,13 +79,14 @@ GeoWidget::GeoWidget( QWidget *parent, const char *name )
 
   mLatDegrees = new QSpinBox( 0, 90, 1, sexagesimalGroup );
   mLatDegrees->setSuffix( "°" );
+  mLatDegrees->setWrapping( false );
   sexagesimalLayout->addWidget( mLatDegrees, 0, 1 );
 
-  mLatMinutes = new QSpinBox( 0, 60, 1, sexagesimalGroup );
+  mLatMinutes = new QSpinBox( 0, 59, 1, sexagesimalGroup );
   mLatMinutes->setSuffix( "'" );
   sexagesimalLayout->addWidget( mLatMinutes, 0, 2 );
 
-  mLatSeconds = new QSpinBox( 0, 60, 1, sexagesimalGroup );
+  mLatSeconds = new QSpinBox( 0, 59, 1, sexagesimalGroup );
   mLatSeconds->setSuffix( "\"" );
   sexagesimalLayout->addWidget( mLatSeconds, 0, 3 );
 
@@ -101,11 +102,11 @@ GeoWidget::GeoWidget( QWidget *parent, const char *name )
   mLongDegrees->setSuffix( "°" );
   sexagesimalLayout->addWidget( mLongDegrees, 1, 1 );
 
-  mLongMinutes = new QSpinBox( 0, 60, 1, sexagesimalGroup );
+  mLongMinutes = new QSpinBox( 0, 59, 1, sexagesimalGroup );
   mLongMinutes->setSuffix( "'" );
   sexagesimalLayout->addWidget( mLongMinutes, 1, 2 );
 
-  mLongSeconds = new QSpinBox( 0, 60, 1, sexagesimalGroup );
+  mLongSeconds = new QSpinBox( 0, 59, 1, sexagesimalGroup );
   mLongSeconds->setSuffix( "\"" );
   sexagesimalLayout->addWidget( mLongSeconds, 1, 3 );
 
@@ -156,7 +157,7 @@ void GeoWidget::setGeo( const KABC::Geo &geo )
 KABC::Geo GeoWidget::geo()
 {
   KABC::Geo geo;
-  
+
   geo.setLatitude( mLatitude );
   geo.setLongitude( mLongitude );
 
@@ -193,7 +194,7 @@ void GeoWidget::updateInputs()
 
   degrees = (int)( latitude * 1 );
   minutes = (int)( ( latitude - degrees ) * 60 );
-  seconds = (int)( (float)( latitude - (float)degrees - ( (float)minutes / 60 ) ) * 3600 );
+  seconds = (int)( (float)( (float)latitude - (float)degrees - ( (float)minutes / (float)60 ) ) * (float)3600 );
 
   mLatDegrees->setValue( degrees );
   mLatMinutes->setValue( minutes );
@@ -306,18 +307,18 @@ void GeoMapWidget::mousePressEvent( QMouseEvent *event )
 
   emit changed();
 }
-    
+
 void GeoMapWidget::paintEvent( QPaintEvent* )
 {
-	uint w = width();
-	uint h = height();
+  uint w = width();
+  uint h = height();
 
-	QPixmap pm( w, h );
-	QPainter p;
-	p.begin( &pm, this );
+  QPixmap pm( w, h );
+  QPainter p;
+  p.begin( &pm, this );
 
-	p.setPen( QColor( 255, 0, 0 ) );
-	p.setBrush( QColor( 255, 0, 0 ) );
+  p.setPen( QColor( 255, 0, 0 ) );
+  p.setBrush( QColor( 255, 0, 0 ) );
 
   QPixmap world( locate( "data", "kaddressbook/pics/world.jpg" ) );
   p.drawPixmap( 0, 0, world );
@@ -332,8 +333,8 @@ void GeoMapWidget::paintEvent( QPaintEvent* )
   int y = (int)(latMid - latOffset);
   p.drawEllipse( x, y, 4, 4 );
 
-	p.end();
-	bitBlt( this, 0, 0, &pm );
+  p.end();
+  bitBlt( this, 0, 0, &pm );
 }
 
 #include "geowidget.moc"
