@@ -22,7 +22,6 @@ Envelope_generated.h \
 Header.h \
 HeaderBody.h \
 HeaderBody_generated.h \
-HeaderList.h \
 Header_generated.h \
 Mailbox.h \
 Mailbox_generated.h \
