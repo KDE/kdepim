@@ -3,7 +3,16 @@ TODO
 * Really need to do something about all the disabled options in the
   config dialog. Some of them might make sense.
 
+  
+KPilot Developer's notes for july 31th, 2002
+===========================================
 
+2002-07-31  Reinhold Kainhofer
+* Added a time conduit which syncs the time from the pc to the palm
+* Also wrote an AvantGo conduit, but didn't add it to the cvs tree yet
+  because it uses libmal, which is MPL (and thus GPL-incompatible).
+  We have yet to figure out a way to make them compatible...
+  
 KPilot Developer's notes for july 17th, 2002
 ===========================================
 
