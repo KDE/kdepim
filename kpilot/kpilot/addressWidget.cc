@@ -66,9 +66,7 @@ static const char *addresswidget_id =
 #ifndef QCOMBOBOX_H
 #include <qcombobox.h>
 #endif
-#ifndef QTOOLTIP_H
-#include <qtooltip.h>
-#endif
+#include <qwhatsthis.h>
 #ifndef QTEXTVIEW_H
 #include <qtextview.h>
 #endif
@@ -255,7 +253,7 @@ void AddressWidget::setupWidget()
 	grid->addWidget(fCatList, 0, 1);
 	connect(fCatList, SIGNAL(activated(int)),
 		this, SLOT(slotSetCategory(int)));
-	QToolTip::add(fCatList,
+	QWhatsThis::add(fCatList,
 		i18n("<qt>Select the category of addresses to display here.</qt>"));
 
 	label = new QLabel(i18n("Category:"), this);
@@ -268,7 +266,7 @@ void AddressWidget::setupWidget()
 		this, SLOT(slotShowAddress(int)));
 	connect(fListBox, SIGNAL(selected(int)),
 		this, SLOT(slotEditRecord()));
-	QToolTip::add(fListBox,
+	QWhatsThis::add(fListBox,
 		i18n("<qt>This list displays all the addresses "
 			"in the selected category. Click on "
 			"one to display it to the right.</qt>"));
@@ -285,19 +283,19 @@ void AddressWidget::setupWidget()
 	fEditButton = new QPushButton(i18n("Edit Record"), this);
 	grid->addWidget(fEditButton, 2, 0);
 	connect(fEditButton, SIGNAL(clicked()), this, SLOT(slotEditRecord()));
-	QToolTip::add(fEditButton,
+	QWhatsThis::add(fEditButton,
 		i18n("<qt>You can edit an address when it is selected.</qt>"));
 
 	button = new QPushButton(i18n("New Record"), this);
 	grid->addWidget(button, 2, 1);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotCreateNewRecord()));
-	QToolTip::add(button, i18n("<qt>Add a new address to the address book.</qt>"));
+	QWhatsThis::add(button, i18n("<qt>Add a new address to the address book.</qt>"));
 
 	fDeleteButton = new QPushButton(i18n("Delete Record"), this);
 	grid->addWidget(fDeleteButton, 3, 0);
 	connect(fDeleteButton, SIGNAL(clicked()),
 		this, SLOT(slotDeleteRecord()));
-	QToolTip::add(fDeleteButton,
+	QWhatsThis::add(fDeleteButton,
 		i18n("<qt>Delete the selected address from the address book.</qt>"));
 }
 
@@ -774,6 +772,9 @@ void AddressWidget::writeAddress(PilotAddress * which,
 }
 
 // $Log$
+// Revision 1.45  2001/12/31 15:52:40  adridg
+// CVS_SILENT: Spit 'n polish
+//
 // Revision 1.44  2001/12/10 22:08:55  adridg
 // Remove bad setBackground -- thx Martin J
 //

@@ -59,6 +59,7 @@ static const char *interactivesync_id =
 #endif
 
 #include "pilotUser.h"
+#include "pilotLocalDatabase.h"
 #include "kpilotConfig.h"
 #include "kpilotlink.h"
 
@@ -179,7 +180,29 @@ CheckUser::~CheckUser()
 		}
 	}
 
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": User name set to <"
+		<< guiUserName
+		<< ">"
+		<< endl;
+#endif
+
 	config.sync();
+
+	// Now we've established which user will be used,
+	// fix the database location for local databases.
+	//
+	//
+	QString pathName = KGlobal::dirs()->saveLocation("data",
+		QString("kpilot/DBBackup/"));
+	if (!guiUserName.isEmpty())
+	{
+		pathName.append(guiUserName);
+		pathName.append("/");
+	}
+	PilotLocalDatabase::setDBPath(pathName);
+
 	emit syncDone(this);
 }
 
@@ -469,6 +492,9 @@ nextFile:
 
 
 // $Log$
+// Revision 1.8  2001/12/31 09:37:27  adridg
+// Attempt to save the newly-set username
+//
 // Revision 1.7  2001/12/29 15:45:02  adridg
 // Lots of little changes for the syncstack
 //

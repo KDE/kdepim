@@ -141,7 +141,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                     <string>/dev/pilot</string>
                                 </property>
                                 <property>
-                                    <name>toolTip</name>
+                                    <name>whatsThis</name>
                                     <string>&lt;qt&gt;Enter the port the Pilot is attached to, serial or USB.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
@@ -176,7 +176,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                     <cstring>fPortType</cstring>
                                 </property>
                                 <property>
-                                    <name>toolTip</name>
+                                    <name>whatsThis</name>
                                     <string>&lt;qt&gt;Choose what kind of connection you use to the Pilot.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
@@ -228,7 +228,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                     <cstring>fPilotSpeed</cstring>
                                 </property>
                                 <property>
-                                    <name>toolTip</name>
+                                    <name>whatsThis</name>
                                     <string>&lt;qt&gt;Sets the speed of the connection to your Pilot.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
@@ -250,7 +250,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                     <cstring>fUserName</cstring>
                                 </property>
                                 <property>
-                                    <name>toolTip</name>
+                                    <name>whatsThis</name>
                                     <string>&lt;qt&gt;Enter your name here, as it appears in the Pilot's &amp;quot;Owner&amp;quot; setting.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
@@ -290,7 +290,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                     <bool>true</bool>
                                 </property>
                                 <property>
-                                    <name>toolTip</name>
+                                    <name>whatsThis</name>
                                     <string>&lt;qt&gt;Start up the KPilot daemon every time you log in to KDE.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
@@ -309,7 +309,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                     <bool>true</bool>
                                 </property>
                                 <property>
-                                    <name>toolTip</name>
+                                    <name>whatsThis</name>
                                     <string>&lt;qt&gt;Places a HotSync icon in the system tray, which you can use to configure the KPilot daemon.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
@@ -324,7 +324,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                     <string>S&amp;top Daemon on exit</string>
                                 </property>
                                 <property>
-                                    <name>toolTip</name>
+                                    <name>whatsThis</name>
                                     <string>Stop the KPilot daemon when you quit KPilot.</string>
                                 </property>
                             </widget>
@@ -387,7 +387,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                             <bool>false</bool>
                         </property>
                         <property>
-                            <name>toolTip</name>
+                            <name>whatsThis</name>
                             <string>&lt;qt&gt;Combine all entries with the same last name.&lt;/qt&gt;</string>
                         </property>
                     </widget>
@@ -421,7 +421,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                     <string>&amp;Company, Last</string>
                                 </property>
                                 <property>
-                                    <name>toolTip</name>
+                                    <name>whatsThis</name>
                                     <string>&lt;qt&gt;Addresses are displayed in the address viewer sorted by company name, last name.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
@@ -440,7 +440,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                     <bool>true</bool>
                                 </property>
                                 <property>
-                                    <name>toolTip</name>
+                                    <name>whatsThis</name>
                                     <string>&lt;qt&gt;Addresses are displayed in the address viewer sorted by last name, first name.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
@@ -540,7 +540,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                     <string>Arng,PmDB,lnch</string>
                                 </property>
                                 <property>
-                                    <name>toolTip</name>
+                                    <name>whatsThis</name>
                                     <string>&lt;qt&gt;Databases listed here are only backed up, not synced.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
@@ -555,7 +555,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                     <string>AvGo</string>
                                 </property>
                                 <property>
-                                    <name>toolTip</name>
+                                    <name>whatsThis</name>
                                     <string>&lt;qt&gt;Databases listed here are neither backed up, nor synced.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
@@ -572,7 +572,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                             <string>&amp;Show Secrets</string>
                         </property>
                         <property>
-                            <name>toolTip</name>
+                            <name>whatsThis</name>
                             <string>&lt;qt&gt;Records that are marked &amp;quot;Private&amp;quot; in the Pilot are displayed by KPilot only when this box is checked.&lt;/qt&gt;</string>
                         </property>
                     </widget>
@@ -652,7 +652,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 <number>276824134</number>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>We really don't know what this does.</string>
                             </property>
                         </widget>
@@ -680,7 +680,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 <bool>true</bool>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>We really don't know what this does.</string>
                             </property>
                         </widget>
@@ -704,7 +704,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 <string>&amp;Prefer FastSync to HotSync</string>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>We really don't know what this does.</string>
                             </property>
                         </widget>
@@ -736,7 +736,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 <bool>true</bool>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>&lt;qt&gt;Install files that have been dragged onto KPilot or the KPilot daemon on the Pilot.&lt;/qt&gt;</string>
                             </property>
                         </widget>
@@ -760,7 +760,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 <string>&amp;Local Overrides Pilot</string>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>We really don't know what this does.</string>
                             </property>
                         </widget>

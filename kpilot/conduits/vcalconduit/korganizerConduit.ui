@@ -71,7 +71,7 @@
                         <cstring>fCalendarFile</cstring>
                     </property>
                     <property>
-                        <name>toolTip</name>
+                        <name>whatsThis</name>
                         <string>&lt;qt&gt;Path to the KOrganizer calendar file&lt;/qt&gt;</string>
                     </property>
                 </widget>
@@ -86,7 +86,7 @@
                         <string>Browse</string>
                     </property>
                     <property>
-                        <name>toolTip</name>
+                        <name>whatsThis</name>
                         <string>Open a file browser</string>
                     </property>
                 </widget>
@@ -101,7 +101,7 @@
                         <string>Prompt before changing data</string>
                     </property>
                     <property>
-                        <name>toolTip</name>
+                        <name>whatsThis</name>
                         <string>&lt;qt&gt;Prompt for confirmation before each change&lt;/qt&gt;</string>
                     </property>
                 </widget>
@@ -116,7 +116,7 @@
                         <string>Delete locally deleted records on PDA</string>
                     </property>
                     <property>
-                        <name>toolTip</name>
+                        <name>whatsThis</name>
                         <string>&lt;qt&gt;Deleting something in KOrganizer will delete it in your PDA as well. Use carefully!&lt;/qt&gt;</string>
                     </property>
                 </widget>

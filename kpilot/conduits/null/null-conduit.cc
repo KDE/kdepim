@@ -92,9 +92,8 @@ void NullConduit::exec()
 	fConfig->setGroup(NullConduitFactory::group);
 
 	QString m=fConfig->readEntry(NullConduitFactory::message);
-	QString t = i18n("[Null Conduit: %1]\n").arg(m);
-	addSyncLogEntry(t);
-	emit logMessage(t);
+	addSyncLogEntry(m);
+	emit logMessage(m);
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
@@ -108,6 +107,9 @@ void NullConduit::exec()
 
 
 // $Log$
+// Revision 1.24  2001/12/29 15:43:46  adridg
+// Various config buglets
+//
 // Revision 1.23  2001/12/18 13:11:55  cschumac
 // Make it compile.
 //

@@ -55,9 +55,7 @@ static const char *memowidget_id =
 #ifndef QLAYOUT_H
 #include <qlayout.h>
 #endif
-#ifndef QTOOLTIP_H
-#include <qtooltip.h>
-#endif
+#include <qwhatsthis.h>
 
 #include <qlabel.h>
 
@@ -284,7 +282,7 @@ void MemoWidget::setupWidget()
 	grid->addWidget(fCatList, 0, 1);
 	connect(fCatList, SIGNAL(activated(int)),
 		this, SLOT(slotSetCategory(int)));
-	QToolTip::add(fCatList,
+	QWhatsThis::add(fCatList,
 		i18n("Select the category of addresses\n"
 			"to display here."));
 
@@ -298,7 +296,7 @@ void MemoWidget::setupWidget()
 		this, SLOT(slotShowMemo(int)));
 	connect(fListBox, SIGNAL(selectionChanged()),
 		this, SLOT(slotUpdateButtons()));
-	QToolTip::add(fListBox,
+	QWhatsThis::add(fListBox,
 		i18n("This list displays all the memos\n"
 			"in the selected category. Click on\n"
 			"one to display it to the right."));
@@ -309,13 +307,13 @@ void MemoWidget::setupWidget()
 	fTextWidget = new QMultiLineEdit(this, "textArea");
 	fTextWidget->setWordWrap(QMultiLineEdit::WidgetWidth);
 	grid->addMultiCellWidget(fTextWidget, 1, 4, 2, 2);
-	QToolTip::add(fTextWidget,
+	QWhatsThis::add(fTextWidget,
 		i18n("The text of the selected memo appears here."));
 
 	button = new QPushButton(i18n("Import Memo"), this);
 	grid->addWidget(button, 2, 0);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotImportMemo()));
-	QToolTip::add(button,
+	QWhatsThis::add(button,
 		i18n
 		("Read a text file and add it to the Pilot's memo database."));
 
@@ -323,14 +321,14 @@ void MemoWidget::setupWidget()
 	grid->addWidget(fExportButton, 2, 1);
 	connect(fExportButton, SIGNAL(clicked()), this,
 		SLOT(slotExportMemo()));
-	QToolTip::add(fExportButton,
+	QWhatsThis::add(fExportButton,
 		i18n("Write the selected memo to a file."));
 
 	fDeleteButton = new QPushButton(i18n("Delete Memo"), this);
 	grid->addWidget(fDeleteButton, 3, 0);
 	connect(fDeleteButton, SIGNAL(clicked()), this,
 		SLOT(slotDeleteMemo()));
-	QToolTip::add(fDeleteButton, i18n("Delete the selected memo."));
+	QWhatsThis::add(fDeleteButton, i18n("Delete the selected memo."));
 }
 
 void MemoWidget::slotUpdateButtons()
@@ -604,6 +602,9 @@ void MemoWidget::slotExportMemo()
 }
 
 // $Log$
+// Revision 1.43  2002/01/20 06:46:23  waba
+// Messagebox changes.
+//
 // Revision 1.42  2001/10/19 14:03:04  adridg
 // Qt3 include fixes
 //

@@ -195,7 +195,8 @@ void PilotDaemonTray::setupWidget()
 	busyicon = KGlobal::iconLoader()->loadIcon("busysync", KIcon::Toolbar,
 		0, KIcon::DefaultState, 0, false);
 
-	changeIcon(Normal);
+	slotShowBusy();
+	QTimer::singleShot(2000,this,SLOT(slotShowNormal()));
 
 	KPopupMenu *menu = contextMenu();
 
@@ -256,14 +257,24 @@ void PilotDaemonTray::changeIcon(IconShape i)
 	}
 }
 
+void PilotDaemonTray::slotShowNormal()
+{
+	FUNCTIONSETUP;
+	changeIcon(Normal);
+}
 
-
+void PilotDaemonTray::slotShowBusy()
+{
+	FUNCTIONSETUP;
+	changeIcon(Busy);
+}
 
 
 
 PilotDaemon::PilotDaemon() :
 	DCOPObject("KPilotDaemonIface"),
 	fStatus(INIT),
+	fQuitAfterSync(false),
 	fPilotLink(0L),
 	fPilotDevice(QString::null),
 	fNextSyncType(0),
@@ -676,7 +687,7 @@ QString PilotDaemon::syncTypeString(int i) const
 
 	if (fTray)
 	{
-		fTray->changeIcon(PilotDaemonTray::Normal);
+		QTimer::singleShot(2000,fTray,SLOT(slotShowNormal()));
 	}
 
 	KPILOT_DELETE(fSyncStack);
@@ -737,7 +748,7 @@ int main(int argc, char **argv)
 	FUNCTIONSETUP;
 
 	KAboutData about("kpilotDaemon",
-		I18N_NOOP("KPilot"),
+		I18N_NOOP("KPilot Daemon"),
 		KPILOT_VERSION,
 		"KPilot - Hot-sync software for unix\n\n",
 		KAboutData::License_GPL, "(c) 1998-2001, Dan Pilone");
@@ -811,6 +822,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.57  2002/01/23 08:35:54  adridg
+// Remove K-menu dependency
+//
 // Revision 1.56  2002/01/20 13:53:52  adridg
 // Added new sync types
 //

@@ -157,6 +157,12 @@ void KPilotDeviceLink::openDevice()
 	{
 		if (!QFile::exists(fPilotPath))
 		{
+			if (QFile::exists(fPilotPath))
+			{
+				kdWarning() << k_funcinfo
+					<< ": QFile::exists seems to create device node."
+					<< endl;
+			}
 			return;
 		}
 	}
@@ -560,6 +566,9 @@ QString KPilotDeviceLink::statusString() const
 
 
 // $Log$
+// Revision 1.5  2002/01/21 23:14:03  adridg
+// Old code removed; extra abstractions added; utility extended
+//
 // Revision 1.4  2002/01/18 16:28:57  adridg
 // CVS_SILENT: Less compile warnings
 //

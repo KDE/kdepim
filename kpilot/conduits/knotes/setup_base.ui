@@ -68,7 +68,7 @@
                         <bool>true</bool>
                     </property>
                     <property>
-                        <name>toolTip</name>
+                        <name>whatsThis</name>
                         <string>&lt;qt&gt;Use this carefully&lt;/qt&gt;</string>
                     </property>
                 </widget>

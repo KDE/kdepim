@@ -1,13 +1,10 @@
-#ifndef _VCAL_VCALCONDUIT_H
-#define _VCAL_VCALCONDUIT_H
-/* vcal-conduit.c  VCalendar Conduit
+#ifndef _KPILOT_VCAL_CONDUIT_H
+#define _KPILOT_VCAL_CONDUIT_H
+/* vcal-conduit.h                       KPilot
 **
-** Copyright (C) 1998-2000 by Dan Pilone, Preston Brown, and
-**	Herwin Jan Steehouwer
-** Copyright (C) 2001 by Cornelius Schumacher
+** Copyright (C) 2001 by Dan Pilone
 **
-** A program to synchronize KOrganizer's date book with the Palm
-** Pilot / KPilot. This program is part of KPilot.
+** This file defines the vcal-conduit plugin.
 */
 
 /*
@@ -28,95 +25,60 @@
 */
 
 /*
-** Bug reports and questions can be sent to groot@kde.org
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "vcalBase.h"
+#include <plugin.h>
+
+namespace KCal
+{
+class Calendar;
+class Event;
+} ;
 
 class PilotRecord;
+class PilotSerialDatabase;
+class PilotLocalDatabase;
 class PilotDateEntry;
 
-using namespace KCal;
-
-class VCalConduit : public VCalBaseConduit
+class VCalConduit : public ConduitAction
 {
+Q_OBJECT
 public:
-	 VCalConduit(KPilotDeviceLink *,
-	 	const char * = 0L,
-		const QStringList & = QStringList() );
+	VCalConduit(KPilotDeviceLink *,
+		const char *name=0L,
+		const QStringList &args = QStringList());
 	virtual ~VCalConduit();
 
 	virtual void exec();
-	virtual void doSync();
-	virtual void doBackup();
-	virtual void doTest();
+
+protected slots:
+	void syncRecord();
+	void cleanup();
 
 protected:
-	void doLocalSync();
-	void updateEvent(PilotRecord *rec);
+	void addRecord(PilotRecord *);
+	void deleteRecord(PilotRecord *,PilotRecord *);
+	void changeRecord(PilotRecord *,PilotRecord *);
 
-private:
-	void setAlarms(PilotDateEntry *dateEntry, Event *vevent);
-	void firstSyncCopy(bool DeleteOnPilot);
-    /** Copy the start and end times from @arg *vevent to @arg
-      *dateEntry. */
-    void setStartEndTimes(PilotDateEntry *dateEntry,Event *vevent);
-    void setRepetition(PilotDateEntry *dateEntry,Incidence *incidence);
+	KCal::Event *eventFromRecord(const PilotDateEntry &);
 
-    void setVcalStartEndTimes(Event *vevent,const PilotDateEntry &dateEntry);
-    void setVcalAlarms(Incidence *vevent,const PilotDateEntry &dateEntry);
-    void setVcalRecurrence(Incidence *vevent,const PilotDateEntry &dateEntry);
-    void setVcalExceptions(Incidence *vevent,const PilotDateEntry &dateEntry);
-    /** Get the list of exceptions for a repeating event. The
-      result is an array of struct tm and should be free()d
-      after use. The number of exceptions is written to @arg
-      *n. */
-    struct tm *getExceptionDates(Event *vevent, int *n);
+	void setStartEndTimes(KCal::Event *,const PilotDateEntry &);
+	void setAlarms(KCal::Event *,const PilotDateEntry &);
+	void setRecurrence(KCal::Event *,const PilotDateEntry &);
+	void setExceptions(KCal::Event *,const PilotDateEntry &);
 
-    /**
-     * The following enums distinguish various repeat-by
-     * possiblities. Sometimes the specific value of the
-     * enum (like DailyPeriod) encodes something special,
-     * so these shouldn't be changed at whim without
-     * changing @ref repeatUntil as well.
-     */
+	KCal::Event *findEvent(recordid_t);
 
-     typedef enum { DailyPeriod=60*60*24,     /* seconds per day */
-                    WeeklyPeriod=60*60*24*7,  /* seconds per week */
-                    MonthlyByPosPeriod=1,     /* just a constant */
-                    MonthlyByDayPeriod=2,
-                    YearlyByDayPeriod=3
-                  } PeriodConstants;
+protected:
+	KCal::Calendar *fCalendar;
+	PilotSerialDatabase *fCurrentDatabase;
+	PilotLocalDatabase *fPreviousDatabase;
 
-     /**
-      * Set the date entry to repeat every rFreq periods,
-      * rDuration times, starting at start. 
-      *
-      * This function contains code by Dag Nygren.
-      */
-      struct tm repeatUntil(const QDateTime &startDt,int rFreq,int rDuration,
-                            PeriodConstants period);
-};
+	QString fCalendarFile;
+	bool fFirstTime,fDeleteOnPilot;
+} ;
 
+// $Log: $
 
-// $Log$
-// Revision 1.17  2001/06/18 19:51:40  cschumac
-// Fixed todo and datebook conduits to cope with KOrganizers iCalendar format.
-// They use libkcal now.
-//
-// Revision 1.16  2001/06/05 22:58:40  adridg
-// General rewrite, cleanup thx. Philipp Hullmann
-//
-// Revision 1.15  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.14  2001/03/10 18:26:04  adridg
-// Refactored vcal conduit and todo conduit
-//
-// Revision 1.13  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.12  2001/02/07 15:46:32  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
-//
 #endif

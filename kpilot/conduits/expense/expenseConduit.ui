@@ -72,7 +72,7 @@
                         <cstring>fCSVFilename</cstring>
                     </property>
                     <property>
-                        <name>toolTip</name>
+                        <name>whatsThis</name>
                         <string>&lt;qt&gt;Full path to csv file containing expense data&lt;/qt&gt;</string>
                     </property>
                 </widget>
@@ -98,7 +98,7 @@
                         <string>Rotate Policy</string>
                     </property>
                     <property>
-                        <name>toolTip</name>
+                        <name>whatsThis</name>
                         <string>&lt;qt&gt;For an explanation of these options, please read the documentation!&lt;/qt&gt;</string>
                     </property>
                     <widget>
@@ -301,7 +301,7 @@
                         <cstring>fDBName</cstring>
                     </property>
                     <property>
-                        <name>toolTip</name>
+                        <name>whatsThis</name>
                         <string>&lt;qt&gt;Name of the database, like Expenses&lt;/qt&gt;</string>
                     </property>
                 </widget>
@@ -312,7 +312,7 @@
                         <cstring>fDBTable</cstring>
                     </property>
                     <property>
-                        <name>toolTip</name>
+                        <name>whatsThis</name>
                         <string>&lt;qt&gt;Name of the table to update, like UsernameExpenses&lt;/qt&gt;</string>
                     </property>
                 </widget>
@@ -327,7 +327,7 @@
                         <string>Database Type</string>
                     </property>
                     <property>
-                        <name>toolTip</name>
+                        <name>whatsThis</name>
                         <string>&lt;qt&gt;Select "None" if you are using a CSV file&lt;/qt&gt;</string>
                     </property>
                     <widget>
@@ -402,7 +402,7 @@
                         <cstring>fDBServer</cstring>
                     </property>
                     <property>
-                        <name>toolTip</name>
+                        <name>whatsThis</name>
                         <string>foo.bar.com</string>
                     </property>
                 </widget>
@@ -413,7 +413,7 @@
                         <cstring>fDBLogin</cstring>
                     </property>
                     <property>
-                        <name>toolTip</name>
+                        <name>whatsThis</name>
                         <string>username</string>
                     </property>
                 </widget>
@@ -432,7 +432,7 @@
                         <enum>Password</enum>
                     </property>
                     <property>
-                        <name>toolTip</name>
+                        <name>whatsThis</name>
                         <string>&lt;qt&gt;Password, not echoed to the screen!&lt;/qt&gt;</string>
                     </property>
                 </widget>

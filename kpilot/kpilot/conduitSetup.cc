@@ -40,9 +40,7 @@
 #ifndef QHBOX_H
 #include <qhbox.h>
 #endif
-#ifndef QTOOLTIP_H
-#include <qtooltip.h>
-#endif
+#include <qwhatsthis.h>
 #include <qheader.h>
 
 #ifndef _KSIMPLECONFIG_H
@@ -129,7 +127,7 @@ CConduitSetup::CConduitSetup(QWidget * parent,
 	connect(categories, SIGNAL(selectionChanged(QListViewItem *)),
 		this, SLOT(conduitSelected(QListViewItem *)));
 
-	QToolTip::add(categories,
+	QWhatsThis::add(categories,
 		i18n("You can drag and drop conduits between the\n"
 			"active and available groups. Only the conduits\n"
 			"in the active group will run when you do a HotSync."));
@@ -616,6 +614,9 @@ void CConduitSetup::warnSetupRunning()
 
 
 // $Log$
+// Revision 1.30  2001/09/30 23:02:13  adridg
+// Add support for multi-line comments in conduit configurator and add it to kpilotConfig
+//
 // Revision 1.29  2001/09/30 19:51:56  adridg
 // Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
 //

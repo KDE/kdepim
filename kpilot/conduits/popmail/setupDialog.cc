@@ -44,9 +44,7 @@ static const char *setupDialog_id=
 #include <stdlib.h>
 #include <iostream.h>
 
-#ifndef QTOOLTIP_H
-#include <qtooltip.h>
-#endif
+#include <qwhatsthis.h>
 
 #ifndef _KCONFIG_H
 #include <kconfig.h>
@@ -214,11 +212,11 @@ PopMailSendPage::PopMailSendPage(QWidget *parent) :
 		this);
 	grid->addRowSpacing(10,SPACING);
 	grid->addWidget(fKMailSendImmediate,11,1);
-	QToolTip::add(fKMailSendImmediate,
-		i18n("Check this box if you want the conduit "
+	QWhatsThis::add(fKMailSendImmediate,
+		i18n("<qt>Check this box if you want the conduit "
 			"to send all items in the outbox as soon "
 			"as it is done, as if you clicked KMail's "
-			"File->Send Queued menu item."));
+			"File->Send Queued menu item.</qt>"));
 
 
 
@@ -676,6 +674,9 @@ PopMailOptions::setupWidget()
 
 
 // $Log$
+// Revision 1.23  2002/01/20 06:46:22  waba
+// Messagebox changes.
+//
 // Revision 1.22  2001/12/31 09:35:23  adridg
 // Sanitizing __FUNCTION__ and cerr
 //

@@ -50,6 +50,9 @@ void *init_libvcalconduit()
 //
 //
 const char * const VCalConduitFactory::group = "vcalOptions" ;
+const char * const VCalConduitFactory::calendarFile = "CalFile" ;
+const char * const VCalConduitFactory::firstTime = "FirstTime" ;
+const char * const VCalConduitFactory::deleteOnPilot = "DeleteOnPilot" ;
 
 
 KAboutData *VCalConduitFactory::fAbout = 0L;
@@ -142,6 +145,9 @@ VCalConduitFactory::~VCalConduitFactory()
 }
 
 // $Log$
+// Revision 1.4  2001/12/31 09:25:05  adridg
+// Cleanup, various fixes for runtime loading
+//
 // Revision 1.3  2001/12/28 12:56:46  adridg
 // Added SyncAction, it may actually do something now.
 //

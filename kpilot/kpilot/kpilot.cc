@@ -633,6 +633,7 @@ void KPilotInstaller::slotConfigureKPilot()
 		DEBUGKPILOT << fname << ": Updating link." << endl;
 #endif
 
+		KPilotConfig::getConfig().sync();
 		readConfig();
 
 		// Update the daemon to reflect new settings.
@@ -856,6 +857,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.69  2002/01/23 08:35:54  adridg
+// Remove K-menu dependency
+//
 // Revision 1.68  2001/12/31 15:52:40  adridg
 // CVS_SILENT: Spit 'n polish
 //

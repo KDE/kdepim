@@ -113,12 +113,15 @@ private:
 class CleanupAction : public SyncAction
 {
 public:
-	CleanupAction(KPilotDeviceLink * p) : SyncAction(p) { } ;
+	CleanupAction(KPilotDeviceLink * p);
 
 	virtual void exec();
 } ;
 
 // $Log$
+// Revision 1.6  2001/12/29 15:45:02  adridg
+// Lots of little changes for the syncstack
+//
 // Revision 1.5  2001/10/08 22:20:18  adridg
 // Changeover to libkpilot, prepare for lib-based conduits
 //

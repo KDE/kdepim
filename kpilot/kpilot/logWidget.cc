@@ -34,7 +34,7 @@ static const char *logw_id =
 #include <qfile.h>
 #include <qlayout.h>
 #include <qtextview.h>
-#include <qtooltip.h>
+#include <qwhatsthis.h>
 #include <qdatetime.h>
 #include <qlabel.h>
 #include <qpixmap.h>
@@ -74,7 +74,7 @@ LogWidget::LogWidget(QWidget * parent) :
 	grid->setColStretch(2, 50);
 
 	fLog = new QTextView(this);
-	QToolTip::add(fLog, i18n("<qt>This lists all the messages received "
+	QWhatsThis::add(fLog, i18n("<qt>This lists all the messages received "
 			"during the current HotSync</qt>"));
 	grid->addMultiCellWidget(fLog, 1, 1,1,2);
 
@@ -85,12 +85,12 @@ LogWidget::LogWidget(QWidget * parent) :
 	QPushButton *b = new QPushButton(
 		i18n("Clear the text of HotSync messages","Clear Log"),
 		h);
-	QToolTip::add(b,i18n("<qt>Clears the list of messages from the "
+	QWhatsThis::add(b,i18n("<qt>Clears the list of messages from the "
 		"current HotSync.</qt>"));
 	connect(b,SIGNAL(clicked()),this,SLOT(clearLog()));
 
 	b = new QPushButton(i18n("Save Log"),h);
-	QToolTip::add(b,i18n("<qt>You can save the list of messages received "
+	QWhatsThis::add(b,i18n("<qt>You can save the list of messages received "
 		"during this HotSync to a file (for example for use in a "
 		"bug report) by clicking here.</qt>"));
 	connect(b,SIGNAL(clicked()),this,SLOT(saveLog()));
@@ -100,7 +100,7 @@ LogWidget::LogWidget(QWidget * parent) :
 	fLabel = new QLabel(i18n("Sync Progress:"),this);
 	grid->addWidget(fLabel,3,1);
 	fProgress = new KProgress(this);
-	QToolTip::add(fProgress,i18n("<qt>The (estimated) percentage "
+	QWhatsThis::add(fProgress,i18n("<qt>The (estimated) percentage "
 		"completed in the current HotSync.</qt>"));
 	grid->addWidget(fProgress,3,2);
 
@@ -149,6 +149,8 @@ LogWidget::LogWidget(QWidget * parent) :
 void LogWidget::addMessage(const QString & s)
 {
 	FUNCTIONSETUP;
+
+	if (s.isEmpty()) return;
 
 	if (fShowTime)
 	{
@@ -327,6 +329,10 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.15  2002/01/23 18:55:19  danimo
+// - xml tags in QTextEdit logwin
+// - new line for each entry in log
+//
 // Revision 1.14  2002/01/23 08:36:26  adridg
 // Handle KProgress::setValue vs setProgress decisively
 //

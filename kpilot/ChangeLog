@@ -1,4 +1,4 @@
-KPilot Developer's notes for january 27th 2002
+KPilot Developer's notes for january 25th 2002
 ==============================================
 
 Found my Pilot again, made tea, thought about Dag's and Neil's comments
@@ -24,6 +24,38 @@ PilotTodoEntry, etc. could use a good dose of sanity.
 * lib/pilotLocalDatabase.{h,cc}
   - Added a hook for UserCheck to set the default search path for
     databases opened by name only.
+
+It's time to say hi, welcome, and thanks to a couple of new people on
+the KPilot / kde-pim team. There's Chris Abiad, who has already made his
+presence felt on the mailing list. Thanks for fielding questions for
+me, Chris, and stalling on the question of when the next release is.
+Chris will also be maintaining the website. Next up is Stephanie Bryant,
+a writer of technical documentation. She'll be helping me document the
+various files in kpilot/lib so that they actually form an understandable
+and usable API for third-party conduit-writers. Philipp Hullmann, you
+should be overjoyed to hear this :) Once she's practiced on KPilot, Steph
+will be leaving us for kdelibs, where weird and wonderful things await ...
+
+2002-01-25  Adriaan de Groot
+* *.ui
+  - Danimo was wondering why we use ToolTips everywhere instead of WhatsThis.
+    My answer was "because we knew about QToolTip before QWhatsThis." Anyway,
+    switching over to the correct form of on-line help is a simple search-
+    and-replace thing. So that has happened. David, can you keep that in
+    mind as well?
+* kpilot/pilotDaemon.{h,cc} kpilot/Icons/
+  - Minor changes to get the daemon's icons to display properly.
+  - Woo.. the busysync icon is *ugly*. Partly fixed, and I hope Kristof
+    can do something about it sometime. Really we need the icon in 4 rotated
+    states (well, maybe 2) to indicate activity during the sync.
+  - Of course the daemon was exiting after each sync .. I forgot to initialize
+    fQuitAfterSync (which isn't used, BTW, except if you use DCOP to call
+    quitNow()) to false.
+* kpilot/kpilot.cc
+  - Forgot to inform daemon of changing settings.
+* kpilot/syncStack.cc
+  - All conduits now put *something* in the Sync log.
+
 
 KPilot Developer's notes for january 20th 2002
 ==============================================

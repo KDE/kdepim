@@ -76,7 +76,7 @@
                                 <cstring>fAbFirst</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -87,7 +87,7 @@
                                 <cstring>fPalmFaxPhone</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -98,7 +98,7 @@
                                 <cstring>fAbEmail</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -120,7 +120,7 @@
                                 <cstring>fAbZip</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -131,7 +131,7 @@
                                 <cstring>fPalmHomePhone</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -142,7 +142,7 @@
                                 <cstring>fAbFaxPhone</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -207,7 +207,7 @@
                                 <cstring>fPalmFirst</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -218,7 +218,7 @@
                                 <cstring>fPalmOther</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -229,7 +229,7 @@
                                 <cstring>fAbHomePhone</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -240,7 +240,7 @@
                                 <cstring>fPalmMobilePhone</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -251,7 +251,7 @@
                                 <cstring>fPalmCountry</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -266,7 +266,7 @@
                                 <string>Nowhere</string>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -281,7 +281,7 @@
                                 <string>Doe</string>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -339,7 +339,7 @@
                                 <cstring>fAbStreet</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -386,7 +386,7 @@
                                 <cstring>fAbMobilePhone</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -397,7 +397,7 @@
                                 <cstring>fAbWorkPhone</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -408,7 +408,7 @@
                                 <cstring>fPalmCompany</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -437,7 +437,7 @@
                                 <cstring>fAbCountry</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -459,7 +459,7 @@
                                 <cstring>fAbOther</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -470,7 +470,7 @@
                                 <cstring>fPalmWorkPhone</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -517,7 +517,7 @@
                                 <cstring>fPalmState</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -550,7 +550,7 @@
                                 <string>Doe</string>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -568,7 +568,7 @@
                                 </sizepolicy>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -615,7 +615,7 @@
                                 <cstring>fAbState</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -626,7 +626,7 @@
                                 <cstring>fPalmCity</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -637,7 +637,7 @@
                                 <cstring>fPalmEmail</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -648,7 +648,7 @@
                                 <cstring>fPalmZip</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -659,7 +659,7 @@
                                 <cstring>fAbCity</cstring>
                             </property>
                             <property>
-                                <name>toolTip</name>
+                                <name>whatsThis</name>
                                 <string>Click with left mouse button to select</string>
                             </property>
                         </widget>
@@ -884,7 +884,7 @@
                                         <bool>false</bool>
                                     </property>
                                     <property>
-                                        <name>toolTip</name>
+                                        <name>whatsThis</name>
                                         <string>Abbrowser field that the pilot "other" is mapped</string>
                                     </property>
                                 </widget>

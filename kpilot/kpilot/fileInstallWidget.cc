@@ -57,9 +57,7 @@ static const char *fileinstallwidget_id =
 #ifndef QLAYOUT_H
 #include <qlayout.h>
 #endif
-#ifndef QTOOLTIP_H
-#include <qtooltip.h>
-#endif
+#include <qwhatsthis.h>
 #ifndef QMULTILINEEDIT_H
 #include <qmultilineedit.h>
 #endif
@@ -95,20 +93,20 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotClearButton()));
 	grid->addWidget(abutton, 3, 1);
-	QToolTip::add(abutton,
+	QWhatsThis::add(abutton,
 		i18n
 		("<qt>Clear the list of files to install. No files will be installed.</qt>"));
 
 	abutton = new QPushButton(i18n("Add File"), this);
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotAddFile()));
 	grid->addWidget(abutton, 4, 1);
-	QToolTip::add(abutton,
+	QWhatsThis::add(abutton,
 		i18n
 		("<qt>Choose a file to add to the list of files to install.</qt>"));
 
 	fListBox = new QListBox(this);
 	grid->addMultiCellWidget(fListBox, 1, 4, 2, 3);
-	QToolTip::add(fListBox,
+	QWhatsThis::add(fListBox,
 		i18n
 		("<qt>This lists files that will be installed on the Pilot during the next HotSync. Drag files here or use the Add button.</qt>"));
 
@@ -191,6 +189,9 @@ void FileInstallWidget::refreshFileInstallList()
 
 
 // $Log$
+// Revision 1.22  2001/12/02 15:28:45  mhunter
+// Corrected typographical errors
+//
 // Revision 1.21  2001/11/18 16:59:55  adridg
 // New icons, DCOP changes
 //

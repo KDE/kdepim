@@ -344,12 +344,14 @@ KPilotConfigSettings & KPilotConfigSettings::setDatabaseGroup()
 QStringList KPilotConfigSettings::getInstalledConduits()
 {
 	FUNCTIONSETUP;
+	KConfigGroupSaver cgs(this,"Conduit Names");
 	return readListEntry("InstalledConduits");
 }
 
 void KPilotConfigSettings::setInstalledConduits(const QStringList & l)
 {
 	FUNCTIONSETUP;
+	KConfigGroupSaver cgs(this,"Conduit Names");
 	writeEntry("InstalledConduits", l);
 }
 
@@ -363,6 +365,9 @@ void KPilotConfigSettings::setDatabaseConduit(const QString & database,
 
 
 // $Log$
+// Revision 1.11  2001/10/02 17:48:50  adridg
+// No debugging when not debugging
+//
 // Revision 1.10  2001/09/30 19:51:56  adridg
 // Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
 //

@@ -37,7 +37,6 @@
 
 #include "korganizerConduit.h"
 #include "vcal-factory.h"
-#include "vcalBase.h"
 #include "vcal-setup.moc"
 
 
@@ -79,11 +78,11 @@ VCalWidgetSetup::~VCalWidgetSetup()
 
 	KConfigGroupSaver s(fConfig,VCalConduitFactory::group);
 
-	fConfig->writeEntry(VCalBaseConduit::calendarFile,
+	fConfig->writeEntry(VCalConduitFactory::calendarFile,
 		fConfigWidget->fCalendarFile->text());
-	fConfig->writeEntry(VCalBaseConduit::firstTime,
+	fConfig->writeEntry(VCalConduitFactory::firstTime,
 		fConfigWidget->fPromptFirstTime->isChecked());
-	fConfig->writeEntry(VCalBaseConduit::deleteOnPilot,
+	fConfig->writeEntry(VCalConduitFactory::deleteOnPilot,
 		fConfigWidget->fDeleteOnPilot->isChecked());
 }
 
@@ -95,12 +94,11 @@ VCalWidgetSetup::~VCalWidgetSetup()
 
 	KConfigGroupSaver s(fConfig,VCalConduitFactory::group);
 	fConfigWidget->fCalendarFile->setText(
-		fConfig->readEntry(VCalBaseConduit::calendarFile,QString::null));
-
+		fConfig->readEntry(VCalConduitFactory::calendarFile,QString::null));
 	fConfigWidget->fPromptFirstTime->setChecked(
-		fConfig->readBoolEntry(VCalBaseConduit::firstTime,false));
+		fConfig->readBoolEntry(VCalConduitFactory::firstTime,false));
 	fConfigWidget->fDeleteOnPilot->setChecked(
-		fConfig->readBoolEntry(VCalBaseConduit::deleteOnPilot,false));
+		fConfig->readBoolEntry(VCalConduitFactory::deleteOnPilot,false));
 }
 
 void VCalWidgetSetup::slotBrowseCalendar()
@@ -113,6 +111,9 @@ void VCalWidgetSetup::slotBrowseCalendar()
 }
 
 // $Log$
+// Revision 1.17  2002/01/02 12:21:16  bero
+// Fix build
+//
 // Revision 1.16  2001/12/28 12:56:46  adridg
 // Added SyncAction, it may actually do something now.
 //

@@ -28,7 +28,7 @@
 */
 #include "options.h"
 
-static const char *syncStack_id = "$Id: $";
+static const char *syncStack_id = "$Id$";
 
 #include <qtimer.h>
 
@@ -149,6 +149,9 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	}
 	fConduit->setConfig(fConfig);
 
+	logMessage(i18n("[Conduit %1]").arg(fDesktopName));
+
+
 	// Handle the syncDone signal properly & unload the conduit.
 	QObject::connect(fConduit,SIGNAL(syncDone(SyncAction *)),
 		this,SLOT(execDone(SyncAction *)));
@@ -195,6 +198,10 @@ SyncStack::SyncStack(KPilotDeviceLink *d,
 	fReady(false)
 {
 	FUNCTIONSETUP;
+
+#ifdef DEBUG
+	listStrList(DEBUGCONDUIT,conduits);
+#endif
 }
 
 SyncStack::~SyncStack()
@@ -322,5 +329,8 @@ void SyncStack::nextAction(SyncAction *b)
 	QTimer::singleShot(0,a,SLOT(exec()));
 }
 
-// $Log: $
+// $Log$
+// Revision 1.1  2001/12/29 15:41:36  adridg
+// Added unified sync-action handling for kpilotTest and daemon
+//
 //

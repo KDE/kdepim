@@ -45,6 +45,9 @@ public:
 	static KAboutData *about() { return fAbout; } ;
 
 	static const char * const group;
+	static const char * const calendarFile,
+		* const firstTime,
+		* const deleteOnPilot;
 
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
@@ -64,6 +67,9 @@ void *init_libvcalconduit();
 } ;
 
 // $Log$
+// Revision 1.3  2001/12/28 12:56:46  adridg
+// Added SyncAction, it may actually do something now.
+//
 // Revision 1.2  2001/12/27 16:43:36  adridg
 // Fixup configuration
 //

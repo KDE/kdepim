@@ -97,7 +97,7 @@ the Null-conduit settings.</comment>
                             <string>KPilot was here!</string>
                         </property>
                         <property>
-                            <name>toolTip</name>
+                            <name>whatsThis</name>
                             <string>&lt;qt&gt;Enter the message to add to the Sync Log on your Pilot here.&lt;/qt&gt;</string>
                         </property>
                     </widget>
@@ -138,7 +138,7 @@ the Null-conduit settings.</comment>
                             <cstring>fDatabases</cstring>
                         </property>
                         <property>
-                            <name>toolTip</name>
+                            <name>whatsThis</name>
                             <string>&lt;qt&gt;The Null-conduit can be attached to several databases, effectively preventing them from Syncing. Enter the database names here.&lt;/qt&gt;</string>
                         </property>
                     </widget>

@@ -73,7 +73,9 @@ protected:
 
 protected slots:
 	void slotShowAbout();
-
+	void slotShowBusy();
+	void slotShowNormal();
+	
 	// "Regular" QT actions
 	//
 	//
@@ -201,6 +203,9 @@ private:
 
 
 // $Log$
+// Revision 1.31  2001/12/29 15:49:01  adridg
+// SyncStack changes
+//
 // Revision 1.30  2001/11/18 16:59:55  adridg
 // New icons, DCOP changes
 //
