@@ -190,7 +190,7 @@ bool KonsoleKalendar::showInstance()
 	} else if( m_variables->isUID() ) {
 	  // TODO
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | HTML view events by uid list" << endl;
-	  kdError() << i18n("Sorry, export to HTML by UID is not supported yet").local8Bit() << endl;
+	  cout << i18n("Sorry, export to HTML by UID is not supported yet").local8Bit() << endl;
 	  return( false );
 	} else {
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | HTML view raw events within date range list" << endl;
