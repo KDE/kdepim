@@ -103,13 +103,20 @@ ViewOptions::ViewOptions( bool backPixmapOn,
 
 void ViewOptions::pickPixmap()
 {
-  QString fileName = KFileDialog::getOpenFileName( leBackPixmap->text(), //QDir::currentDirPath(),
-						   QString::null,
-						   this );
+// Replaced getOpenFileName by getOpenUrl to make abbrowser compile again.
+// Don't know if this is useful, but it seems that the result is currently not
+// used anyway.
+
+//  QString fileName = KFileDialog::getOpenFileName( leBackPixmap->text(), //QDir::currentDirPath(),
+//                                                   QString::null,
+//					             this );
+  KURL u = KFileDialog::getOpenURL( leBackPixmap->text(), //QDir::currentDirPath(),
+                                    QString::null,this );
+  QString fileName = u.decodedURL();
   if (fileName.isEmpty())
     return;
   leBackPixmap->setText( fileName );
-}  
+}
 
 void ViewOptions::pixmapOn()
 {
