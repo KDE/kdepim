@@ -14,6 +14,9 @@
 #include "putc_unlocked.c"
 #endif
 
-/*#ifndef HAVE_MEMRCHR
+#ifndef HAVE_MEMRCHR
 #include "memrchr.c"
-#endif*/
+#endif
+
+
+
