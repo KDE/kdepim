@@ -122,7 +122,7 @@ void KNProtocolClient::waitForWork()
     do {
       FD_ZERO(&fdsR);
       FD_SET(fdPipeIn, &fdsR);
-    } while (KSocks::self()->select(FD_SETSIZE, &fdsR, NULL, NULL, NULL)<0);  // don't get tricked by signals
+    } while (select(FD_SETSIZE, &fdsR, NULL, NULL, NULL)<0);  // don't get tricked by signals
 
     clearPipe();      // remove start signal
 
@@ -434,7 +434,7 @@ void KNProtocolClient::sendSignal(threadSignal s)
 {
   int signal=(int)s;
   // qDebug("knode: KNProtcolClient::sendSignal() : sending signal to main thread");
-  KSocks::self()->write(fdPipeOut, &signal, sizeof(int));
+  write(fdPipeOut, &signal, sizeof(int));
 }
 
 
@@ -616,8 +616,8 @@ void KNProtocolClient::clearPipe()
   do {
     FD_ZERO(&fdsR);
     FD_SET(fdPipeIn,&fdsR);
-    if (1==(selectRet=KSocks::self()->select(FD_SETSIZE,&fdsR,NULL,NULL,&tv)))
-      if ( KSocks::self()->read(fdPipeIn, &buf, 1 ) == -1 )
+    if (1==(selectRet=select(FD_SETSIZE,&fdsR,NULL,NULL,&tv)))
+      if ( read(fdPipeIn, &buf, 1 ) == -1 )
   ::perror( "clearPipe()" );
   } while (selectRet == 1);
 }

@@ -26,6 +26,7 @@
 #include <kglobal.h>
 #include <kdebug.h>
 #include <kio/passdlg.h>
+#include <ksocks.h>
 
 #include "knode.h"
 #include "knjobdata.h"
@@ -58,6 +59,10 @@ KNNetAccess::KNNetAccess(QObject *parent, const char *name )
   connect(nntpNotifier, SIGNAL(activated(int)), this, SLOT(slotThreadSignal(int)));
   smtpNotifier=new QSocketNotifier(smtpInPipe[0], QSocketNotifier::Read);
   connect(smtpNotifier, SIGNAL(activated(int)), this, SLOT(slotThreadSignal(int)));
+
+  // initialize the KSocks stuff in the main thread, otherwise we get
+  // strange effects on FreeBSD
+  (void) KSocks::self();
 
   nntpClient=new KNNntpClient(nntpOutPipe[0],nntpInPipe[1],&nntp_Mutex,this);
   smtpClient=new KNSmtpClient(smtpOutPipe[0],smtpInPipe[1],this);
