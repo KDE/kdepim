@@ -841,7 +841,8 @@ static bool runConfigure(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 		KPilotSettings::self()->readConfig();
 
 		// Update the daemon to reflect new settings.
-		//
+		// @TODO: This should also be done when pressing apply without
+		// closing the dialog.
 		//
 		daemon.reloadSettings();
 		ret = true;
