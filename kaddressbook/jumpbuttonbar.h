@@ -77,6 +77,7 @@ class JumpButtonBar : public QWidget
 
     QButtonGroup *mGroupBox;
     QPtrList<QPushButton> mButtons;
+    QPushButton *mAllButton;
 };
 
 #endif

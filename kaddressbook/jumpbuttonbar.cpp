@@ -44,6 +44,7 @@ class JumpButton : public QPushButton
   public:
     JumpButton( const QString &firstChar, const QString &lastChar,
                 const QString &charRange, QWidget *parent );
+    JumpButton( const QString &text, QWidget *parent );
 
     QString charRange() const { return mCharRange; }
 
@@ -60,6 +61,12 @@ JumpButton::JumpButton( const QString &firstChar, const QString &lastChar,
   else
     setText( firstChar.upper() );
 
+  setToggleType( QButton::Toggle );
+}
+
+JumpButton::JumpButton( const QString &text, QWidget *parent )
+  : QPushButton( text, parent ), mCharRange( "" )
+{
   setToggleType( QButton::Toggle );
 }
 
@@ -110,8 +117,13 @@ void JumpButtonBar::updateButtons()
                      expandedTo( QApplication::globalStrut() );
   delete btn;
 
+  mAllButton = new JumpButton( i18n( "All" ), mGroupBox );
+  connect( mAllButton, SIGNAL( clicked() ), this, SLOT( reset() ) );
+  mButtons.append( mAllButton );
+  mAllButton->show();
+
   int buttonHeight = buttonSize.height() + 12;
-  uint possibleButtons = height() / buttonHeight;
+  uint possibleButtons = (height() / buttonHeight) - 1;
 
   QString character;
   KABC::AddressBook *ab = mCore->addressBook();
@@ -181,13 +193,13 @@ void JumpButtonBar::updateButtons()
 
   if ( currentButton != -1 )
     mGroupBox->setButton( currentButton );
+  else
+    mGroupBox->setButton( 0 );
 }
 
 void JumpButtonBar::reset()
 {
-  QButton *button = mGroupBox->selected();
-  if ( button )
-    button->toggle();
+  mGroupBox->setButton( 0 );
 
   QStringList list;
   list.append( "" );
