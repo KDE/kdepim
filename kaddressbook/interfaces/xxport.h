@@ -31,6 +31,8 @@
 #include <klibloader.h>
 #include <kxmlguiclient.h>
 
+class KApplication;
+
 namespace KAB {
 
 class XXPort : public QObject, virtual public KXMLGUIClient
@@ -52,6 +54,20 @@ class XXPort : public QObject, virtual public KXMLGUIClient
       pass a sorted list to @ref exportContacts().
      */
     virtual bool requiresSorting() const { return false; }
+
+    /**
+      set the KApplication pointer.
+      @see: processEvents()
+     */
+    void setKApplication( KApplication *app );
+
+    /**
+      Processes outstanding KApplication events. It should be called 
+      occasionally when the import/export filter is busy performing
+      a long operation (e.g. reading from slow external devices).
+      @see: QApplication::processEvents()
+     */
+    void processEvents() const;
 
   public slots:
     /**

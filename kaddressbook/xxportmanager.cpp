@@ -29,6 +29,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <ktrader.h>
+#include <kapplication.h>
 
 #include "core.h"
 #include "kablock.h"
@@ -156,6 +157,8 @@ void XXPortManager::loadPlugins()
                this, SLOT( slotExport( const QString&, const QString& ) ) );
       connect( obj, SIGNAL( importActivated( const QString&, const QString& ) ),
                this, SLOT( slotImport( const QString&, const QString& ) ) );
+
+      obj->setKApplication( kapp );
     }
   }
 }

@@ -1,6 +1,6 @@
 /*
     This file is part of KAddressbook.
-    Copyright (c) 2003 Helge Deller <deller@kde.org>
+    Copyright (c) 2003-2004 Helge Deller <deller@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as 
@@ -27,21 +27,28 @@
     Gnokii homepage: http://www.gnokii.org
 
     TODO:
-	- modal mode (show dialog during up/download)
 	- handle callergroup value (Friend, VIP, Family, ...) better
 	- we do not yet write back to SIM memory (for security reasons)
 */
 
 #include "config.h"
 
+#include <qcursor.h>
+
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kprogress.h>
+#include <kguiitem.h>
 
 #ifdef HAVE_GNOKII_H
 extern "C" {
 #include <gnokii.h>
 }
+#else
+#ifdef __GNUC__
+# warning "Please install the gnokii development headers and libraries !"
+#endif
 #endif
 
 #include "gnokii_xxport.h"
@@ -62,7 +69,11 @@ extern "C" {
 // Locale conversion routines:
 // Gnokii uses the local 8 Bit encoding (based on LC_ALL), kaddressbook uses Unicode
 #define GN_FROM(x)	QString::fromLocal8Bit(x)
-#define GN_TO(x)	QString(x).local8Bit()
+#define GN_TO(x)	(x).local8Bit()
+
+// static variables for GUI updates
+static GNOKIIXXPort *this_filter;
+static KProgressDialog *m_progressDlg;
 
 class GNOKIIXXPortFactory : public KAB::XXPortFactory
 {
@@ -85,6 +96,8 @@ extern "C"
 GNOKIIXXPort::GNOKIIXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )
 {
+	this_filter = this;
+	m_progressDlg = NULL;
 	createImportAction( i18n( "Import From Nokia Mobile Phone..." ) );
 	createExportAction( i18n( "Export to Nokia Mobile Phone..." ) );
 }
@@ -116,7 +129,7 @@ static QString businit(void)
 	static char *BinDir;
 	if (gn_cfg_read(&BinDir)<0)
 #endif
-		return i18n("Failed to initialize the Gnokii library.");
+		return i18n("Failed to initialize the Gnokii Library.");
 
 	if (!gn_cfg_phone_load("", &state))
 		return i18n("Gnokii is not yet configured.");
@@ -131,9 +144,9 @@ static QString businit(void)
 	if (aux && !strcmp(aux, "yes")) {
 		lockfile = gn_device_lock(state.config.port_device);
 		if (lockfile == NULL) {
-			return i18n("Gnokii reports a 'Lock file error'.\n "
-			"Please exit all other running instances of gnokii, check if you have "
-			"write permissions in the /var/lock directory and try again.");
+			return i18n("Gnokii reports a 'Lock File Error'.\n "
+			"Please exit all other running Instances of Gnokii, check if you have "
+			"Write Permissions in the /var/lock Directory and try again.");
 		}
 	}
 
@@ -145,35 +158,46 @@ static QString businit(void)
 	state.config.require_dcd = old_dcd;
 	if (error != GN_ERR_NONE) {
 		busterminate();
-		return i18n("Mobile phone interface initialization failed:\n%1").arg(gn_error_print(error));
+		return i18n("<qt>Mobile Phone Interface Initialization failed.<br><br>"
+			"The returned Error Message was:<br><b>%1</b></qt>")
+			.arg(gn_error_print(error));
 	}
 
 	// model
 	gn_data_clear(&data);
 	data.model = model;
 	model[0] = 0;
-	error = gn_sm_functions(GN_OP_GetModel, &data, &state);
+	if (m_progressDlg->wasCancelled())
+		return QString::null;
+	else
+		error = gn_sm_functions(GN_OP_GetModel, &data, &state);
 	GNOKII_CHECK_ERROR(error);
 	if (model[0] == 0)
-		strcpy(model, GN_TO(i18n("unknown")));
+		strcpy(model, GN_TO(i18n("Unknown")));
 	data.model = NULL;
 
 	// revision
 	data.revision = revision;
 	revision[0] = 0;
-	error = gn_sm_functions(GN_OP_GetRevision, &data, &state);
+	if (m_progressDlg->wasCancelled())
+		return QString::null;
+	else
+		error = gn_sm_functions(GN_OP_GetRevision, &data, &state);
 	GNOKII_CHECK_ERROR(error);
 	data.revision = NULL;
 
 	// imei	
 	data.imei = imei;
 	imei[0] = 0;
-	error = gn_sm_functions(GN_OP_GetImei, &data, &state);
+	if (m_progressDlg->wasCancelled())
+		return QString::null;
+	else
+		error = gn_sm_functions(GN_OP_GetImei, &data, &state);
 	GNOKII_CHECK_ERROR(error);
 	data.imei = NULL;
 
 	GNOKII_DEBUG( QString("Found mobile phone: Model: %1, Revision: %2, IMEI: %3\n")
-				.arg(model).arg(revision).arg(imei) ); 
+				.arg(model, revision, imei) ); 
 
 	PhoneProductId = QString("%1-%2-%3-%4").arg(APP).arg(model).arg(revision).arg(imei);
 
@@ -182,7 +206,7 @@ static QString businit(void)
 
 
 // get number of entries in this phone memory type (internal/SIM-card)
-static gn_error read_phone_memstat( gn_memory_type memtype, gn_memory_status *memstat )
+static gn_error read_phone_memstat( const gn_memory_type memtype, gn_memory_status *memstat )
 {
 	gn_error error;
 
@@ -213,7 +237,7 @@ static gn_error read_phone_memstat( gn_memory_type memtype, gn_memory_status *me
 
 
 // read phone entry #index from memory #memtype
-static gn_error read_phone_entry( int index, gn_memory_type memtype, gn_phonebook_entry *entry )
+static gn_error read_phone_entry( const int index, const gn_memory_type memtype, gn_phonebook_entry *entry )
 {
 	gn_error error;
 	entry->memory_type = memtype;
@@ -224,7 +248,7 @@ static gn_error read_phone_entry( int index, gn_memory_type memtype, gn_phoneboo
 	return error;
 }
 
-static bool phone_entry_empty( int index, gn_memory_type memtype )
+static bool phone_entry_empty( const int index, const gn_memory_type memtype )
 {
 	gn_error error;
 	gn_phonebook_entry entry;
@@ -240,11 +264,45 @@ static bool phone_entry_empty( int index, gn_memory_type memtype )
 	return false;
 }
 
+static QString buildPhoneInfoString( const gn_memory_status &memstat )
+{
+	return QString("<b>%1</b><br><table>"
+		"<tr><td><b>%2</b></td><td>%3</td></tr>"
+		"<tr><td><b>%4</b></td><td>%5</td></tr>"
+		"<tr><td><b>%6</b></td><td>%7</td></tr>"
+		"<tr><td><b>%8</b></td><td>%9</td></tr>"
+		"</table><br>")
+		.arg(i18n("Mobile Phone information:"))
+		.arg(i18n("Phone Model"))	.arg(GN_FROM(model))
+		.arg(i18n("Revision"))		.arg(GN_FROM(revision))
+		.arg(i18n("IMEI"))		.arg(GN_FROM(imei))
+		.arg(i18n("Phonebook Status"))
+		.arg(i18n("%1 out of %2 Contacts used").arg(memstat.used).arg(memstat.used+memstat.free));
+}
+
+static QString buildMemoryTypeString( gn_memory_type memtype )
+{
+	switch (memtype) {
+	case GN_MT_ME:	return i18n("Internal Memory");
+	case GN_MT_SM:	return i18n("SIM-card Memory");
+	default:	return i18n("Unknown Memory");
+	}
+}
+
 // read and evaluate all phone entries
-static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memtype, KABC::AddresseeList *addrList )
+static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memtype, 
+			KABC::AddresseeList *addrList )
 {
   gn_error error;
   
+  if (m_progressDlg->wasCancelled())
+	return GN_ERR_NONE;
+
+  KProgress* progress = (KProgress*)m_progressDlg->progressBar();
+
+  progress->setProgress(0);
+  this_filter->processEvents();
+
   // get number of entries in this phone memory type (internal/SIM-card)
   gn_memory_status memstat;
   error = read_phone_memstat(memtype, &memstat);
@@ -254,10 +312,19 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
   KABC::Address *addr;
   QString s, country;
 
+  progress->setTotalSteps(memstat.used);
+  m_progressDlg->setLabel(i18n("<qt>Importing <b>%1</b> Contacts from <b>%2</b> of the Mobile Phone.<br><br>%3</qt>")
+		.arg(memstat.used)
+		.arg(buildMemoryTypeString(memtype))
+		.arg(buildPhoneInfoString(memstat)) );
+
   int num_read = 0;
 
-  for (int i = 1; i <= (memstat.used + memstat.free); i++) {
+  for (int i = 1; !m_progressDlg->wasCancelled() && i <= memstat.used + memstat.free; i++) {
 	error = read_phone_entry( i, memtype, &entry );
+
+	progress->setProgress(num_read);
+  	this_filter->processEvents();
 
 	if (error == GN_ERR_EMPTYLOCATION)
 		continue;
@@ -407,13 +474,38 @@ KABC::AddresseeList GNOKIIXXPort::importContacts( const QString& ) const
 
 #else
 
+	if (KMessageBox::Continue != KMessageBox::warningContinueCancel(parentWidget(),
+		i18n("<qt>Please connect your Mobile Phone to your Computer and press "
+		     "<b>Continue</b> to start Importing the Personal Contacts.<br><br>"
+		     "Please note, that in case your Mobile Phone is not properly connected "
+		     "the following Detection Phase might take up to two Minutes in which "
+                     "KAddressbook will behave unresponsive.</qt>") ))
+	  return addrList;
+
+	m_progressDlg = new KProgressDialog( parentWidget(), "importwidget",
+		i18n("Mobile Phone Import"),
+		i18n("<qt><center>Establishing Connection to the Mobile Phone.<br><br>"
+		     "Please wait...</center></qt>") );
+	m_progressDlg->setAllowCancel(true);
+	m_progressDlg->progressBar()->setProgress(0);
+	m_progressDlg->progressBar()->setCenterIndicator(true);
+	m_progressDlg->setModal(true);
+	m_progressDlg->setMinimumSize(450,300); // not honored yet - seems like bug in KProgressDialog
+	m_progressDlg->show();
+  	processEvents();
+
+	m_progressDlg->setCursor( Qt::BusyCursor );
 	QString errStr = businit();
+	m_progressDlg->unsetCursor();
+
 	if (!errStr.isEmpty()) {
 		KMessageBox::error(parentWidget(), errStr);
+		delete m_progressDlg;
 		return addrList;
 	}
 
 	GNOKII_DEBUG("GNOKII import filter started.\n");
+	m_progressDlg->setButtonText(i18n("&Stop import"));
   
 	read_phone_entries("ME", GN_MT_ME, &addrList); // internal phone memory
 	read_phone_entries("SM", GN_MT_SM, &addrList); // SIM card
@@ -421,6 +513,7 @@ KABC::AddresseeList GNOKIIXXPort::importContacts( const QString& ) const
 	GNOKII_DEBUG("GNOKII import filter finished.\n");
 
 	busterminate();
+	delete m_progressDlg;
 
 #endif
 
@@ -617,15 +710,41 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 		"Please ask your distributor to add gnokii during compile time."));
 
 #else
+	if (KMessageBox::Continue != KMessageBox::warningContinueCancel(parentWidget(),
+		i18n("<qt>Please connect your Mobile Phone to your Computer and press "
+		     "<b>Continue</b> to start Exporting the selected Personal Contacts.<br><br>"
+		     "Please note, that in case your Mobile Phone is not properly connected "
+		     "the following Detection Phase might take up to two Minutes in which "
+		     "KAddressbook will behave unresponsive.</qt>") ))
+	  return false;
+
+	m_progressDlg = new KProgressDialog( parentWidget(), "importwidget",
+		i18n("Mobile Phone Export"),
+		i18n("<qt><center>Establishing Connection to the Mobile Phone.<br><br>"
+		     "Please wait...</center></qt>") );
+	m_progressDlg->setAllowCancel(true);
+	m_progressDlg->progressBar()->setProgress(0);
+	m_progressDlg->progressBar()->setCenterIndicator(true);
+	m_progressDlg->setModal(true);
+	m_progressDlg->setMinimumSize(450,300); // not honored yet - seems like bug in KProgressDialog
+	m_progressDlg->show();
+  	processEvents();
+
+	KProgress* progress = (KProgress*)m_progressDlg->progressBar();
 
 	KABC::AddresseeList::ConstIterator it;
 	QStringList failedList;
 
 	gn_error error;
+	bool deleteLabelInitialized = false;
 
+	m_progressDlg->setCursor( Qt::BusyCursor );
 	QString errStr = businit();
+	m_progressDlg->unsetCursor();
+
 	if (!errStr.isEmpty()) {
 		KMessageBox::error(parentWidget(), errStr);
+		delete m_progressDlg;
 		return false;
 	}
 
@@ -635,7 +754,7 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 
 	int phone_count;	// num entries in phone
 	bool overwrite_phone_entries = false;
-	int phone_entry_no;
+	int phone_entry_no, entries_written;
 	bool entry_empty;
 
 	// get number of entries in this phone memory
@@ -654,21 +773,27 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 
 	if (memstat.free >= (int) list.count()) {
 		if (KMessageBox::No == KMessageBox::questionYesNo(parentWidget(),
-			i18n("The selected phonebook entries can either be added to the mobile phonebook or they "
-				 "can replace existing phonebook entries.\n\n"
-				 "Do you want to just add the new entries ?"),
-			i18n("Export to mobile phone") ) )
-			overwrite_phone_entries = true;
+			i18n("<qt>Do you want the selected Contacts to be <b>added</b> to "
+			     "the Mobile Phonebook or should they <b>replace</b> all existing "
+			     "Phonebook Entries ?<br><br>"
+			     "Please note, that in case you choose to Replace the Phonebook "
+			     "Entries, every Contact in your Phone will be deleted and only "
+			     "the new exported Contacts will be available from inside your Phone.</qt>"),
+			i18n("Export to mobile phone"),
+			KGuiItem(i18n("&Add to current Phonebook")),
+			KGuiItem(i18n("&Replace current Phonebook with new Contacts")) ) )
+				overwrite_phone_entries = true;
 	}
 	
-	if (overwrite_phone_entries) {
-	  if (KMessageBox::Continue != KMessageBox::warningContinueCancel(parentWidget(),
-			i18n("During the export now all your existing phonebook entries in the mobile phone "
-				 "will be deleted and replaced with the new entries.\n"
-				 "Do you really want to continue ?"),
-			i18n("Export to mobile phone") ) )
-		goto finish;
-	}
+  	progress->setTotalSteps(list.count());
+	entries_written = 0;
+	progress->setProgress(entries_written);
+	m_progressDlg->setButtonText(i18n("&Stop Export"));
+	m_progressDlg->setLabel(i18n("<qt>Exporting <b>%1</b> Contacts to the <b>%2</b> "
+			"of the Mobile Phone.<br><br>%3</qt>")
+		.arg(list.count())
+		.arg(buildMemoryTypeString(memtype))
+		.arg(buildPhoneInfoString(memstat)) );
 
 	// Now run the loop...
 	phone_entry_no = 1;
@@ -680,7 +805,13 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 		if (addr->custom(APP, "X_GSM_STORE_AT").startsWith("SM"))
 			continue;
 
+		progress->setProgress(entries_written++);
+
 try_next_phone_entry:
+  		this_filter->processEvents();
+		if (m_progressDlg->wasCancelled())
+			break;
+
 		// End of phone memory reached ?
 		if (phone_entry_no > (memstat.used + memstat.free))
 			break;
@@ -721,23 +852,44 @@ try_next_phone_entry:
 	// if we wanted to overwrite all entries, make sure, that we also
 	// delete all remaining entries in the mobile phone.
 	while (overwrite_phone_entries && error==GN_ERR_NONE && phone_count>0) {
+		if (m_progressDlg->wasCancelled())
+			break;
+		if (!deleteLabelInitialized) {
+			m_progressDlg->setLabel(
+				i18n("<qt><center>"
+				     "All selected Contacts have been sucessfully copied to "
+				     "the Mobile Phone.<br><br>"
+				     "Please wait until all remaining orphaned Contacts from "
+				     "the Mobile Phone have been deleted.</center></qt>") );
+			m_progressDlg->setButtonText(i18n("&Stop Delete"));
+			deleteLabelInitialized = true;
+  			progress->setTotalSteps(phone_count);
+			entries_written = 0;
+			progress->setProgress(entries_written);
+  			this_filter->processEvents();
+		}
 		if (phone_entry_no > (memstat.used + memstat.free))
 			break;
 		entry_empty = phone_entry_empty(phone_entry_no, memtype);
 		if (!entry_empty) {
 			error = xxport_phone_delete_entry(phone_entry_no, memtype);
 			phone_count--;
+			progress->setProgress(++entries_written);
+  			this_filter->processEvents();
 		}
 		phone_entry_no++;
 	}
 
 finish:
+	m_progressDlg->setLabel(i18n("Export to Phone finished."));
+	this_filter->processEvents();
 	if (!failedList.isEmpty())
 		GNOKII_DEBUG(QString("Failed to export: %1\n").arg(failedList.join(", ")));
 
 	GNOKII_DEBUG("GNOKII export filter finished.\n");
 
 	busterminate();
+	delete m_progressDlg;
 
 #endif
 

@@ -27,6 +27,7 @@
 #include <kaction.h>
 #include <kinstance.h>
 #include <kmessagebox.h>
+#include <kapplication.h>
 #include "xxport.h"
 
 using namespace KAB;
@@ -36,6 +37,7 @@ class XXPort::XXPortPrivate
   public:
     QSignalMapper *mExportMapper;
     QSignalMapper *mImportMapper;
+    KApplication *kApp;
 };
 
 XXPort::XXPort( KABC::AddressBook *ab, QWidget *parent,
@@ -100,6 +102,17 @@ KABC::AddressBook *XXPort::addressBook() const
 QWidget *XXPort::parentWidget() const
 {
   return mParentWidget;
+}
+
+void XXPort::setKApplication( KApplication *app )
+{
+  d->kApp = app;
+}
+
+void XXPort::processEvents() const
+{
+  if (d->kApp)
+	d->kApp->processEvents();
 }
 
 void XXPort::slotExportActivated( const QString &data )
