@@ -1,1 +1,1 @@
-SUBDIRS = shared #kcal kabc knotes
+SUBDIRS = shared #knotes #kcal kabc

@@ -141,7 +141,7 @@ bool ResourceKolab::load()
     rc &= loadResource( itR.key() );
   }
 
-  return true;
+  return rc;
 }
 
 bool ResourceKolab::save()
@@ -155,7 +155,7 @@ bool ResourceKolab::addNote( KCal::Journal* journal )
 }
 
 bool ResourceKolab::addNote( KCal::Journal* journal,
-                                        const QString& subresource )
+                             const QString& subresource )
 {
   kdDebug(5500) << "ResourceKolab::addNote( KCal::Journal* )\n";
 
@@ -202,8 +202,8 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* i )
  * changed.
  */
 bool ResourceKolab::addIncidence( const QString& type,
-                                             const QString& resource,
-                                             const QString& note )
+                                  const QString& resource,
+                                  const QString& note )
 {
   // Check if this is a note
   if( type != "Kolab/Note" ) return false;
@@ -222,8 +222,8 @@ bool ResourceKolab::addIncidence( const QString& type,
 }
 
 void ResourceKolab::deleteIncidence( const QString& type,
-                                                const QString& /*resource*/,
-                                                const QString& uid )
+                                     const QString& /*resource*/,
+                                     const QString& uid )
 {
   // Check if this is a note
   if( type != "Kolab/Note" ) return;
@@ -239,14 +239,14 @@ void ResourceKolab::deleteIncidence( const QString& type,
 }
 
 void ResourceKolab::slotRefresh( const QString& type,
-                                            const QString& /*resource*/ )
+                                 const QString& /*resource*/ )
 {
   if ( type == "Kolab/Note" )
     load();
 }
 
 void ResourceKolab::subresourceAdded( const QString& type,
-                                                 const QString& resource )
+                                      const QString& resource )
 {
   if ( type != "Kolab/Note" )
     // Not ours
@@ -265,7 +265,7 @@ void ResourceKolab::subresourceAdded( const QString& type,
 }
 
 void ResourceKolab::subresourceDeleted( const QString& type,
-                                                   const QString& resource )
+                                        const QString& resource )
 {
   if ( type != "Kolab/Note" )
     // Not ours
