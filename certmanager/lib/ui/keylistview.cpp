@@ -234,8 +234,10 @@ void Kleo::KeyListView::doHierarchicalInsert( const GpgME::Key & key ) {
     return;
   KeyListViewItem * item = 0;
   if ( !key.isRoot() )
-    if ( KeyListViewItem * parent = parentFor( key.chainID() ) ) 
+    if ( KeyListViewItem * parent = parentFor( key.chainID() ) ) {
       item = new KeyListViewItem( parent, key );
+      parent->setOpen( true );
+    }
   if ( !item )
     item = new KeyListViewItem( this, key ); // top-level (for now)
 
@@ -253,6 +255,7 @@ void Kleo::KeyListView::gatherScattered() {
       // found a new parent...
       takeItem( cur );
       parent->insertItem( cur );
+      parent->setOpen( true );
     }
   }
 }
