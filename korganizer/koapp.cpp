@@ -186,7 +186,7 @@ int KOrganizerApp::newInstance()
     }
   } else {
     KGlobal::config()->setGroup("General");
-    QString urlString = KGlobal::config()->readEntry("Active Calendar");
+    QString urlString = KGlobal::config()->readPathEntry("Active Calendar");
 
     // Force alarm daemon to load active calendar
     AlarmDaemonIface_stub stub( "kalarmd", "ad" );

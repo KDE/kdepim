@@ -746,7 +746,7 @@ bool KOrganizer::openURL(const KURL &url,bool merge)
         mURL = url;
         mFile = tmpFile;
         KGlobal::config()->setGroup("General");
-        QString active = KGlobal::config()->readEntry("Active Calendar");
+        QString active = KGlobal::config()->readPathEntry("Active Calendar");
         if (KURL(active) == mURL) setActive(true);
         else setActive(false);
         setTitle();
@@ -876,7 +876,7 @@ bool KOrganizer::saveAsURL(const KURL &url)
     mTempFile = tempFile;
     KIO::NetAccess::removeTempFile(fileOrig);
     KGlobal::config()->setGroup("General");
-    QString active = KGlobal::config()->readEntry("Active Calendar");
+    QString active = KGlobal::config()->readPathEntry("Active Calendar");
     if (KURL(active) == mURL) {
       setActive(true);
 //      emit calendarActivated(this);
@@ -997,13 +997,13 @@ void KOrganizer::saveProperties(KConfig *config)
 
 void KOrganizer::readProperties(KConfig *config)
 {
-  QString calendarUrl = config->readEntry("Calendar");
+  QString calendarUrl = config->readPathEntry("Calendar");
   if (!calendarUrl.isEmpty()) {
     KURL u(calendarUrl);
     openURL(u);
 
     KGlobal::config()->setGroup("General");
-    QString active = KGlobal::config()->readEntry("Active Calendar");
+    QString active = KGlobal::config()->readPathEntry("Active Calendar");
     if (active == calendarUrl) setActive(true);
   }
 }
