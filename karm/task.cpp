@@ -417,33 +417,36 @@ QString Task::comment() const
 
 int Task::compare ( QListViewItem * i, int col, bool ascending ) const
 {
+  long thistime = 0;
+  long thattime = 0;
+  Task *task = static_cast<Task*>(i);
+
   switch ( col )
   {
     case 1: 
-      if      ( _sessionTime < static_cast<Task*>(i)->sessionTime() ) return -1;
-      else if ( _sessionTime > static_cast<Task*>(i)->sessionTime() ) return 1;
-      else return 0;
+      thistime = _sessionTime;
+      thattime = task->sessionTime();
       break;
     case 2:
-      if      ( _time < static_cast<Task*>(i)->time() ) return -1;
-      else if ( _time > static_cast<Task*>(i)->time() ) return 1;
-      else return 0;
+      thistime = _time;
+      thattime = task->time();
       break;
     case 3:
-      if      ( _totalSessionTime < static_cast<Task*>(i)->totalSessionTime() ) 
-        return -1;
-      else if ( _totalSessionTime > static_cast<Task*>(i)->totalSessionTime() ) 
-        return 1;
-      else return 0;
+      thistime = _totalSessionTime;
+      thattime = task->totalSessionTime();
       break;
     case 4:
-      if      ( _totalTime < static_cast<Task*>(i)->totalTime() ) return -1;
-      else if ( _totalTime > static_cast<Task*>(i)->totalTime() ) return 1;
-      else return 0;
+      thistime = _totalTime;
+      thattime = task->totalTime();
       break;
     default:
       return key(col, ascending).localeAwareCompare( i->key(col, ascending) );
   }
+
+  if ( thistime < thattime ) return -1;
+  if ( thistime > thattime ) return 1;
+  return 0;
+
 }
 
 #include "task.moc"
