@@ -17,8 +17,8 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -574,7 +574,7 @@ void KPilotDeviceLink::tickle() const
 }
 
 
-int KPilotDeviceLink::installFiles(const QStringList & l)
+int KPilotDeviceLink::installFiles(const QStringList & l, const bool deleteFiles)
 {
 	FUNCTIONSETUP;
 
@@ -587,7 +587,7 @@ int KPilotDeviceLink::installFiles(const QStringList & l)
 		emit logProgress(QString::null,
 			(int) ((100.0 / l.count()) * (float) n));
 
-		if (installFile(*i))
+		if (installFile(*i, deleteFiles))
 			k++;
 		n++;
 	}
@@ -596,7 +596,7 @@ int KPilotDeviceLink::installFiles(const QStringList & l)
 	return k;
 }
 
-bool KPilotDeviceLink::installFile(const QString & f)
+bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 {
 	FUNCTIONSETUP;
 
@@ -632,7 +632,7 @@ bool KPilotDeviceLink::installFile(const QString & f)
 	}
 
 	pi_file_close(pf);
-	QFile::remove(f);
+	if (deleteFile) QFile::remove(f);
 
 	return true;
 }
@@ -737,11 +737,12 @@ int KPilotDeviceLink::getNextDatabase(int index,struct DBInfo *dbinfo)
 }
 
 // Find a database with the given name. Info about the DB is stored into dbinfo (e.g. to be used later on with retrieveDatabase).
-int KPilotDeviceLink::findDatabase(const char *name, struct DBInfo *dbinfo) 
+int KPilotDeviceLink::findDatabase(const char *name, struct DBInfo *dbinfo,
+	int index, long type, long creator) 
 {
 	FUNCTIONSETUP;
-	return dlp_FindDBInfo(pilotSocket(), 0, 0, 
-		const_cast<char *>(name), 0, 0, dbinfo);
+	return dlp_FindDBInfo(pilotSocket(), 0, index, 
+		const_cast<char *>(name), type, creator, dbinfo);
 }
 
 bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName, 

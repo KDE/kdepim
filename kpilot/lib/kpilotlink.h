@@ -290,9 +290,9 @@ signals:
 ** File installation.
 */
 public:
-	int installFiles(const QStringList &);
+	int installFiles(const QStringList &, const bool deleteFiles=true);
 protected:
-	bool installFile(const QString &);
+	bool installFile(const QString &, const bool deleteFile=true);
 
  	/**
  	* Write a log entry to the pilot. Note that the library
@@ -340,7 +340,8 @@ protected:
 	int openConduit();
 public:
 	int getNextDatabase(int index,struct DBInfo *);
-	int findDatabase(const char *name, struct DBInfo*);
+	int findDatabase(const char *name, struct DBInfo*, 
+		int index=0, long type=0, long creator=0);
 
 	/**
 	* Retrieve the database indicated by DBInfo *db into the
