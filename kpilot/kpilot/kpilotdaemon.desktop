@@ -1,7 +1,8 @@
 # KDE Config File
 [KDE Desktop Entry]
 Name=KPilotDaemon
-Name[af]=KPILOTDAEMON
+Name[af]=kpilotdaemon
+Name[ar]=مراقب KPilot
 Name[az]=KPilotProgramı
 Name[bg]=Демон на KPilot
 Name[da]=KPilotdæmon
@@ -10,17 +11,22 @@ Name[eo]=KPiloto-demono
 Name[es]=Demonio de KPilot
 Name[et]=KPilotDeemon
 Name[fr]=kPilotDaemon
-Name[he]=KPilot תרש
+Name[he]=תהליך השירות של KPilot
 Name[is]=KPilotþjónn
 Name[it]=Demone KPilot
 Name[ja]=KPilotデーモン
 Name[lv]=KPilotDēmons
 Name[pl]=demon KPilota
+Name[pt_BR]=Servidor do KPilot
 Name[ru]=Демон KPilot
 Name[sk]=KPilotDémon
 Name[sl]=StrežnikKPilot
 Name[sv]=Kpilotdemon
+Name[xh]=Umqhubi wenqwelo moya we K Daemon
+Name[xx]=xx
+Name[zu]=KUmshayeli webhanoyi Daemon
 Exec=kpilotDaemon
+Hidden=true
 Icon=kpilot.xpm
 Type=Application
 Terminal=0
