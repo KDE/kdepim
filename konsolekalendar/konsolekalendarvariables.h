@@ -49,15 +49,24 @@ namespace KCal
    */
   enum ExportType
   {
-    ExportTypeNone,     /* Export none */
-    ExportTypeText,     /* Export as text (default) */
-    ExportTypeTextShort,/* Export as compact text */
-    ExportTypeHTML,     /* Export HTML for the specified time span */
-    ExportTypeMonthHTML,/* Export HTML for the time span on month boundaries */
-    ExportTypeXHTML,    /* Export XHTML (NOT AVAILABLE YET) */
-    ExportTypeXML,      /* Export XML (NOT AVAILABLE YET) */
-    ExportTypeCSV,      /* Export Comma-Separated Values */
-    ExportTypeVCard     /* Export VCard (NOT AVAILABLE YET) */
+    /** Export none */
+    ExportTypeNone,
+    /** Export as text (default) */
+    ExportTypeText,
+    /** Export as compact text */
+    ExportTypeTextShort,
+    /** Export HTML for the specified time span */
+    ExportTypeHTML,
+    /** Export HTML for the time span on month boundaries */
+    ExportTypeMonthHTML,
+    /** Export XHTML (NOT AVAILABLE YET) */
+    ExportTypeXHTML,
+    /** Export XML (NOT AVAILABLE YET) */
+    ExportTypeXML,
+    /** Export Comma-Separated Values */
+    ExportTypeCSV,
+    /** Export VCard (NOT AVAILABLE YET) */
+    ExportTypeVCard
   };
 
   /**
