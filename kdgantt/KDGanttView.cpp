@@ -1099,9 +1099,10 @@ void KDGanttView::centerTimeline( const QDateTime& center )
 void KDGanttView::centerTimelineAfterShow( const QDateTime& center )
 {
   myTimeHeader->centerDateTime( center );
-  if ( isVisible() ) return;
-  dtCenterTimeLineAfterShow = center;
-  fCenterTimeLineAfterShow = true;
+  if ( ! isVisible() ) {
+    dtCenterTimeLineAfterShow = center;
+    fCenterTimeLineAfterShow = true;
+  }
 }
 
 /*!
