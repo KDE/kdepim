@@ -34,6 +34,7 @@ class Core;
 }
 
 class QSignalMapper;
+class KActionCollection;
 
 class ExtensionData
 {
@@ -93,6 +94,7 @@ class ExtensionManager : public QHBox
     ExtensionData::List mExtensionList;
     QSignalMapper *mMapper;
     QPtrList<KAction> mActionList;
+    KActionCollection *mActionCollection;
 };
 
 #endif

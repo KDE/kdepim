@@ -44,6 +44,8 @@ ExtensionManager::ExtensionManager( KAB::Core *core, QWidget *parent,
 {
   createExtensionWidgets();
 
+  mActionCollection = new KActionCollection( this, "ActionCollection" );
+
   QTimer::singleShot( 0, this, SLOT( createActions() ) );
 }
 
@@ -86,6 +88,7 @@ void ExtensionManager::reconfigure()
 {
   saveSettings();
   createExtensionWidgets();
+  createActions();
   restoreSettings();
 }
 
@@ -141,7 +144,7 @@ void ExtensionManager::createActions()
   for ( it = mExtensionList.begin(); it != mExtensionList.end(); ++it ) {
     ExtensionData data = *it;
     KToggleAction *action = new KToggleAction( data.title, 0, mMapper, SLOT( map() ),
-                                               mCore->actionCollection(),
+                                               mActionCollection,
                                                QString( data.identifier + "_extension" ).latin1() );
     action->setExclusiveGroup( "extensions" );
     mMapper->setMapping( action, actionCounter++ );
@@ -229,8 +232,6 @@ void ExtensionManager::createExtensionWidgets()
   }
 
   mCurrentExtensionWidget = 0;
-
-  createActions();
 }
 
 #include "extensionmanager.moc"
