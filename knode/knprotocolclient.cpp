@@ -185,9 +185,8 @@ bool KNProtocolClient::openConnection()
   }
 
   // use non-blocking sockets only if we are sure that
-  // they work reliable. (i.e. on linux / glibc >=2.0)
-#ifdef __linux__
-#if (__GNU_LIBRARY__ != 1)        // non-blocking operation doesn't work on libc5
+  // they work reliable. (i.e. on linux/glibc>=2.0 and Solaris)
+#if ((defined(__linux__) && (__GNU_LIBRARY__ != 1)) || defined(__sun__))
   if (-1 == fcntl(tcpSocket,F_SETFL,O_NONBLOCK)) {  // make socket non-blocking
     QString str = i18n("Communication error:\n");
     str += strerror(errno);
@@ -196,13 +195,11 @@ bool KNProtocolClient::openConnection()
     return false;
   }
 #endif
-#endif
 
   in_addr address;
 
- // can only use inet_addr because of portability problem on Solaris
- // TODO: port to QDns/QSocket
- // Solaris uses deprecated inet_addr instead of inet_aton (David F.)
+  // can only use inet_addr because of portability problem on Solaris
+  // Solaris uses deprecated inet_addr instead of inet_aton (David F.)
   address.s_addr = inet_addr(account.server().local8Bit().data());
   // unsigned int is ok because its uint/32bit in fact
   if ( (unsigned int) address.s_addr != (unsigned int)-1 ) {
@@ -602,6 +599,26 @@ bool KNProtocolClient::conRawIP(in_addr* ip)
       if ((ret > 0)&&(FD_ISSET(fdPipeIn,&fdsR)))   // stop signal
         return false;
 
+      // the getsockopt() stuff doesn't work on solaris...
+#ifdef __sun__
+      if (-1 == ::connect(tcpSocket,(struct sockaddr*)&address,sizeof(struct sockaddr_in))) {
+        switch (errno) {
+          case EISCONN:
+          case 0:
+            return true;   // success!!
+          case ECONNREFUSED:
+            job->setErrorString(i18n("The server refused the connection."));
+            return false;
+          case ETIMEDOUT:
+            job->setErrorString(i18n("A delay occured which exceeded the\ncurrent timeout limit."));
+            return false;
+          default:
+            job->setErrorString(i18n("Unable to connect:\n%1").arg(strerror(errno)));
+            return false;
+        }
+      } else
+        return true;
+#else
       int err = 0;
       unsigned int len = 1;
       if (getsockopt(tcpSocket,SOL_SOCKET,SO_ERROR,(char*)&err,&len)!=0) {
@@ -620,10 +637,11 @@ bool KNProtocolClient::conRawIP(in_addr* ip)
             job->setErrorString(i18n("A delay occured which exceeded the\ncurrent timeout limit."));
             return false;
           default:
-                      job->setErrorString(i18n("Unable to connect:\n%1").arg(strerror(err)));
+            job->setErrorString(i18n("Unable to connect:\n%1").arg(strerror(err)));
             return false;
         }
       }
+#endif
     } else {
       QCString str;
       switch (errno) {
