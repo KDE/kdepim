@@ -407,6 +407,8 @@ public:
   /** @brief see if server has a capability */
   bool hasCapability (const QString &);
 
+  void removeCapability (const QString & cap);
+
   static inline void skipWS (parseString & inWords)
   {
     char c;

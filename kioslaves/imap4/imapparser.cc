@@ -1853,3 +1853,8 @@ bool imapParser::hasCapability (const QString & cap)
   return false;
 }
 
+void imapParser::removeCapability (const QString & cap)
+{
+  imapCapabilities.remove(cap.lower());
+}
+
