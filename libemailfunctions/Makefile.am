@@ -1,4 +1,4 @@
-INCLUDES = $(all_includes)
+INCLUDES = -I$(top_builddir)/libkdepim $(all_includes)
 
 noinst_LTLIBRARIES = libemailfunctions.la
 libemailfunctions_la_SOURCES = email.cpp idmapper.cpp kasciistricmp.cpp
