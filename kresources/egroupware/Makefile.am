@@ -5,6 +5,8 @@ INCLUDES = -I$(top_srcdir)/libical/src/libical \
            -I$(srcdir)/versit -I$(top_srcdir)/ \
            -I$(top_srcdir)/knotes \
            -I$(top_builddir)/kaddressbook \
+           -I$(top_builddir)/kaddressbook/common \
+           -I$(top_srcdir)/kaddressbook/common \
            -I$(top_builddir)/kresources/egroupware \
            $(all_includes)
 
