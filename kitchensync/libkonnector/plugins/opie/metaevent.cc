@@ -100,16 +100,16 @@ namespace {
     {
         bool ret = false;
         kdDebug() << "summary  " << fi->summary() << endl;
-        if (fi->summary() != se->summary() ) {
+        if ( (!fi->summary().isEmpty()  && !se->summary().isEmpty() ) && fi->summary() != se->summary() ) {
             kdDebug() << "Summary mismatch" << endl;
             kdDebug() << "New " << fi->summary() << endl;
             kdDebug() << "Old " << se->summary() << endl;
             return true;
         }
-        if (fi->location() != se->location() ) {
+        if ( (!fi->location().isEmpty() && !se->location().isEmpty() ) && fi->location() != se->location() ) {
             kdDebug() << "Location mismatch" << endl;
-            kdDebug() << "New " << fi->location() << endl;
-            kdDebug() << "Old " << se->location() << endl;
+            kdDebug() << "New " << fi->location() << "empty " << fi->location().isEmpty() << endl;
+            kdDebug() << "Old " << se->location() << "empty " << se->location().isEmpty() << endl;
             return true;
         }
         if (fi->categories() != se->categories() ) {
@@ -130,7 +130,7 @@ namespace {
             kdDebug() << "Old " << se->dtEnd().toString() << endl;
             return true;
         }
-        if ( fi->description() != se->description() ) {
+        if ( (!fi->description().isEmpty() && !se->description().isEmpty()  ) && fi->description() != se->description() ) {
             kdDebug() << "Description mismatch " << endl;
             kdDebug() << "New " << fi->description() << endl;
             kdDebug() << "Old " << se->description() << endl;
