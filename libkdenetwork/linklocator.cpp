@@ -104,7 +104,7 @@ bool LinkLocator::atUrl() const
   return (ch=='h' && ( mText.mid(mPos, 7) == "http://" ||
                        mText.mid(mPos, 8) == "https://") ) ||
          (ch=='v' && mText.mid(mPos, 6) == "vnc://") ||
-         (ch=='f' && ( mText.mid(mPos, 6) == "ftp://" || 
+         (ch=='f' && ( mText.mid(mPos, 6) == "ftp://" ||
                        mText.mid(mPos, 7) == "ftps://") ) ||
          (ch=='s' && ( mText.mid(mPos, 7) == "sftp://" ||
                        mText.mid(mPos, 6) == "smb://") ) ||
@@ -155,7 +155,7 @@ QString LinkLocator::getEmailAddress()
 
     // determine the domain part of the email address
     int end = mPos + 1;
-    while (end < (int)mText.length() && mText[end].unicode() < 128 &&
+    while (end < (int)mText.length() &&
       (mText[end].isLetterOrNumber() ||
         mText[end] == '@' || // allow @ to find invalid email addresses
         allowedSpecialChars.find(mText[end]) != -1))
