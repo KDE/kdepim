@@ -25,6 +25,45 @@ Next up is checking out kpilotTest and making sure that it does sensible
 things, like closing the device handle, allowing multiple syncs, and
 running file install correctly. After that, testing testing testing.
 
+2001-12-28  Adriaan de Groot
+* kpilot/main-test.cc
+  - Added one-letter cmd-line-options, sanity checking.
+  - Switched to SyncStack integrated syncing (see below).
+* kpilot/main-config.cc
+  - Removed unused new-style option.
+* kpilot/syncStack.{h,cc}
+  - New files encapsulating sync sequence knowledge.
+
+2001-12-29  Adriaan de Groot
+* kpilot/pilotDaemon.{h,cc}
+  - Switched to SyncStack.
+* lib/kpilotlink.cc
+  - Work around an off-by-one bug in pilot-link versions < 0.9.6.
+* kpilot/interactiveSync.cc
+  - Added support for don't ask again in the check-user questions.
+    This changes the API of questionYesNo, but only inserts a 
+    (defaulted) parameter, so "regular" calls of this should be
+    unaffected.
+
+The GUI isn't updated at all (?) during a backup action. Hmph. Well, only
+between databases, but that's not much. The backup appears to work, which
+is a good thing. Gonna hafta try the restore action soon ;)
+
+2001-12-29  Adriaan de Groot
+* conduits/null/null-*.{h,cc}
+  - Fixed some configuration load / restore / use bugs. 
+    Moved configuration keys to the factory.
+* kpilot/syncStack.{h,cc}
+  - The conduit proxy action also needs to proxy the messages from the conduit.
+    I never knew connect(p,SIGNAL(),q,SIGNAL()) worked! Wow.
+* kpilot/logWidget.{h,cc}
+  - Added missing slot for logProgress.
+
+Aieee! I'm becoming a kate user, vi is suffering from abandonment on my
+devel box. This is troubling -- using the software you write. Heck, next
+thing you know, I'll be using KPilot to sync my Pilot. Ewwwww.
+
+
 KPilot Developer's notes for december 27th 2001
 ===============================================
 
