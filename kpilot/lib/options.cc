@@ -56,11 +56,7 @@ static const char *options_id =
 // to align FUNCTIONSETUP output.
 //
 //
-#ifdef DEBUG
-int debug_level = 1;
-#else
 int debug_level = 0;
-#endif
 const char *debug_spaces =
 	"                                                    ";
 QString rtExpand(const QString &s, bool richText)

@@ -1,6 +1,10 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-04-18  Adriaan de Groot
+* Default debug_level to 0, so it doesn't print the call trace, but just the
+  (sometimes) useful debug output; use --debug 1 to print the call trace.
+
 2004-04-16  Adriaan de Groot
 * Fixed double dialog when cancelling a change in the selection in the config
   dialog. Took patch from Jörn to fix resize problem in abbrowser resolution
