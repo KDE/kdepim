@@ -114,6 +114,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, QWidget* parent,
     User2 | User3 | Cancel, Default, parent, name, false, true ),
     mAddressBook( ab )
 {
+  setButtonCancel( KStdGuiItem::close() );
   QFrame *page = plainPage();
   QVBoxLayout *topLayout = new QVBoxLayout( page, marginHint(), spacingHint() );
 
