@@ -4,12 +4,14 @@ Adriaan de Groot is currently the primary maintainer.
 
 o The vcal and todo conduit were written by Preston Brown.
 
-o The popclient conduit was written by Michael Kropfberger 
+o The popclient conduit was written by Michael Kropfberger.
 
-o The null conduit and KNotes conduit were written by Adriaan de Groot
+o The null conduit and KNotes conduit were written by Adriaan de Groot.
+
+o The XML GUI stuff was written by Martin Junius.
 
 For more information, see:
 http://www.slac.com/pilone/kpilot_home/
 
 -- Dan Pilone 5/30/99
--- Adriaan de Groot February 4 2001
+-- Adriaan de Groot April 14th 2001

@@ -1,3 +1,9 @@
+KPilot Developer's notes for april 22nd 2001
+===========================================
+
+* Martin Junius has contributed an XML GUI framework for KPilot, so
+  it now finally uses the "modern" way of doing GUIs. [14-4]
+
 KPilot Developer's notes for april 8th 2001
 ===========================================
 
