@@ -661,6 +661,8 @@ CalendarResources::Ticket *CalendarResources::requestSaveTicket( ResourceCalenda
 
 bool CalendarResources::save( Ticket *ticket )
 {
+  kdDebug() << "CalendarResources::save( Ticket *)" << endl;
+
   if ( !ticket || !ticket->resource() ) return false;
 
   if ( ticket->resource()->save() ) {
