@@ -58,14 +58,12 @@ class EmpathProgressIndicator : public QWidget
 
     protected slots:
 
-        void s_setValue(int);
         void s_setMaxValue(int);
         void s_incValue();
         void s_finished();
 
     private:
         
-        int max_, pos_;
         KProgress * progress_;
 };
 

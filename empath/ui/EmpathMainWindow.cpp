@@ -438,7 +438,7 @@ EmpathProgressIndicator::EmpathProgressIndicator
 
     QHBoxLayout * layout = new QHBoxLayout(this, 0, 6);
 
-    progress_ = new KProgress(0, 100, 0, KProgress::Horizontal, this);
+    progress_ = new KProgress(t->pos(), t->max(), 0, KProgress::Horizontal, this);
     progress_->setFixedWidth(120);
     QLabel * l = new QLabel(t->name(), this);
 
@@ -446,7 +446,7 @@ EmpathProgressIndicator::EmpathProgressIndicator
     layout->addWidget(l);
     layout->addStretch(10);
 
-    QObject::connect(t, SIGNAL(posChanged(int)),    SLOT(s_setValue(int)));
+    QObject::connect(t, SIGNAL(posChanged(int)),    progress_, SLOT(setValue(int)));
     QObject::connect(t, SIGNAL(maxChanged(int)),    SLOT(s_setMaxValue(int)));
     QObject::connect(t, SIGNAL(addOne()),           SLOT(s_incValue()));
     QObject::connect(t, SIGNAL(finished()),         SLOT(s_finished()));
@@ -460,29 +460,15 @@ EmpathProgressIndicator::~EmpathProgressIndicator()
 }
 
     void
-EmpathProgressIndicator::s_setValue(int v)
-{
-    pos_ = v;
-    progress_->setValue(v);
-    kapp->processEvents();
-}
-
-    void
 EmpathProgressIndicator::s_setMaxValue(int v)
 {
-    if (max_ != 0)
-        pos_ = (pos_ / max_) * v;
-
-    max_ = v;
-    progress_->setValue(v);
+    progress_->setRange(progress_->minValue(), v);
 }
 
     void
 EmpathProgressIndicator::s_incValue()
 {
-    ++pos_;
     progress_->advance(1);
-    kapp->processEvents();
 }
 
     void

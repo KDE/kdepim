@@ -56,8 +56,8 @@ QListViewItem * EmpathMessageListWidget::lastSelected_ = 0;
 
 EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
     :   EmpathListView      (parent, "MessageListWidget"),
-        filling_            (false),
-        listenTo_           (0)
+        listenTo_           (0),
+        filling_            (false)
 {
     setFrameStyle(QFrame::NoFrame);
 
@@ -547,7 +547,6 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url, unsigned int i)
     }
    
     clear();
-    masterList_.clear();
     
     f->index()->sync();
     
@@ -879,16 +878,61 @@ EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
     
     setUpdatesEnabled(false);
     viewport()->setUpdatesEnabled(false);
+ 
+    EmpathTask t(i18n("Sorting messages"));
+    t.setMax(f->messageCount());
+    
+    setSorting(-1);
+    
+    QStrList l(f->index()->allKeys());
+    empathDebug("There are " + QString().setNum(l.count()) + " keys");
+    
+    KConfig * c(KGlobal::config());
     
     using namespace EmpathConfig;
 
-    KGlobal::config()->setGroup(GROUP_DISPLAY);
+    c->setGroup(GROUP_DISPLAY);
 
-    if (KGlobal::config()->readBoolEntry(UI_THREAD))
-        _fillThreading(f);
-    else
-        _fillNonThreading(f);
+    QStrListIterator it(l);
     
+    if (KGlobal::config()->readBoolEntry(UI_THREAD))
+        
+        // fill threading
+
+        for (; it.current(); ++it) {
+
+            EmpathIndexRecord * rec = f->index()->record(it.current());
+            
+            if (rec == 0) {
+                continue;
+            }
+
+            addItem(rec);
+            t.doneOne();
+        }
+    
+    else
+        
+        // fill nonthreading;
+        for (; it.current(); ++it) {
+            
+            EmpathIndexRecord * rec = f->index()->record(it.current());
+
+            if (rec == 0) {
+                continue;
+            }
+            
+            EmpathMessageListItem * newItem = _addItem(this, *rec);
+            
+            setStatus(newItem, rec->status());
+            
+            t.doneOne();
+        }
+    
+    setSorting(
+        c->readNumEntry(UI_SORT_COLUMN, DFLT_SORT_COL),
+        c->readNumEntry(UI_SORT_ASCENDING, DFLT_SORT_ASCENDING));
+
     viewport()->setUpdatesEnabled(true);
     setUpdatesEnabled(true);
     
@@ -897,99 +941,6 @@ EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
     filling_ = false;
     
    // emit(showing());
-}
-
-    void
-EmpathMessageListWidget::_fillNonThreading(EmpathFolder * f)
-{
-    setRootIsDecorated(false);
-
-    EmpathTask * t = new EmpathTask(i18n("Sorting messages"));
-    t->setMax(f->messageCount());
-    
-    setSorting(-1);
-    
-    QStrList l(f->index()->allKeys());
-    
-    QStrListIterator it(l);
-
-    for (; it.current(); ++it) {
-        
-        EmpathIndexRecord * rec = f->index()->record(it.current());
-
-        if (rec == 0) {
-            empathDebug("Can't find index record.");
-            continue;
-        }
-        
-        EmpathMessageListItem * newItem = _addItem(this, *rec);
-        
-        setStatus(newItem, rec->status());
-        
-        t->doneOne();
-        kapp->processEvents();
-    }
-
-    KConfig * c(KGlobal::config());
-
-    using namespace EmpathConfig;
-    
-    c->setGroup(GROUP_DISPLAY);
-    
-    setSorting(
-        c->readNumEntry(UI_SORT_COLUMN, DFLT_SORT_COL),
-        c->readNumEntry(UI_SORT_ASCENDING, DFLT_SORT_ASCENDING));
-    
-    t->done();
-}
-
-    void
-EmpathMessageListWidget::_fillThreading(EmpathFolder * f)
-{
-    setRootIsDecorated(true);
-    
-    EmpathTask * t = new EmpathTask(i18n("Sorting messages"));
-    t->setMax(f->messageCount());
-    
-    QStrList l(f->index()->allKeys());
-
-    empathDebug("There are " + QString().setNum(l.count()) + " keys");
-    
-    QStrListIterator it(l);
-    
-    for (; it.current(); ++it) {
-        
-        EmpathIndexRecord * rec = f->index()->record(it.current());
-        
-        if (rec == 0) {
-            continue;
-        }
-        
-        masterList_.inSort(rec);
-    }
-    
-    QListIterator<EmpathIndexRecord> mit(masterList_);
-    
-    setSorting(-1);
-    
-    for (; mit.current(); ++mit) {
-
-        addItem(mit.current());
-        t->doneOne();
-        kapp->processEvents();
-    }
-    
-    KConfig * c(KGlobal::config());
-
-    using namespace EmpathConfig;
-    
-    c->setGroup(GROUP_DISPLAY);
-    
-    setSorting(
-        c->readNumEntry(UI_SORT_COLUMN, DFLT_SORT_COL),
-        c->readNumEntry(UI_SORT_ASCENDING, DFLT_SORT_ASCENDING));
- 
-    t->done();
 }
 
     void

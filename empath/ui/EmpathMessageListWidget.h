@@ -143,9 +143,6 @@ class EmpathMessageListWidget : public EmpathListView
     private:
         
         void _fillDisplay       (EmpathFolder *);
-        void _fillThreading     (EmpathFolder *);
-        void _fillNonThreading  (EmpathFolder *);
-
         
         void _setupMessageMenu();
         
@@ -171,7 +168,6 @@ class EmpathMessageListWidget : public EmpathListView
         QPopupMenu  messageMarkMenu_;
         QPopupMenu  threadMenu_;
         
-        EmpathIndexRecordList masterList_;
         EmpathMessageListItemList itemList_;
 
         QPixmap    px_xxx_, px_Sxx_, px_xMx_, px_xxR_,
