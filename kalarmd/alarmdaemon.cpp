@@ -200,15 +200,22 @@ void AlarmDaemon::reloadCal_(ADCalendarBase* cal)
 {
   kdDebug(5900) << "AlarmDaemon::reloadCal_(): calendar" << endl;
 
-  if (cal)
+  if (cal && !cal->downloading())
   {
     cal->close();
-    if (cal->loadFile())
-      kdDebug(5900) << "AlarmDaemon::reloadCal_(): calendar reloaded" << endl;
+    connect( cal, SIGNAL( loaded(ADCalendarBase*, bool) ),
+             SLOT( calendarLoaded(ADCalendarBase*, bool) ) );
+    cal->loadFile();
+  }
+}
+
+void AlarmDaemon::calendarLoaded(ADCalendarBase* cal, bool success)
+{
+    if (success)
+      kdDebug(5900) << "Calendar reloaded" << endl;
     notifyGuiCalStatus(cal);
     setTimerStatus();
     checkAlarms(cal);
-  }
 }
 
 /*

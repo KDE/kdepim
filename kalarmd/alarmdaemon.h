@@ -44,6 +44,7 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     virtual ~AlarmDaemon();
 
   private slots:
+    void    calendarLoaded( ADCalendarBase *, bool success );
     void    checkAlarmsSlot();
 //    void    checkIfSessionStarted();
 

@@ -27,12 +27,16 @@
 #define ADCALENDARBASE_H
 
 #include <libkcal/calendarlocal.h>
+namespace KIO {
+  class Job;
+}
 
 using namespace KCal;
 
 // Base class for Alarm Daemon calendar access
 class ADCalendarBase : public CalendarLocal
 {
+    Q_OBJECT
   public:
     enum Type { KORGANIZER = 0, KALARM = 1 };
     ADCalendarBase(const QString& url, const QCString& appname, Type);
@@ -58,6 +62,7 @@ class ADCalendarBase : public CalendarLocal
     bool unregistered() const { return mUnregistered; }
 
     virtual bool loadFile() = 0;
+    bool         downloading() const  { return !mTempFileName.isNull(); }
 
     void         setRcIndex(int i)                  { mRcIndex = i; }
     void         setLastCheck(const QDateTime& dt)  { mLastCheck = dt; }
@@ -65,14 +70,21 @@ class ADCalendarBase : public CalendarLocal
     virtual void setEventHandled(const Event*, const QValueList<QDateTime> &) = 0;
     virtual bool eventHandled(const Event*, const QValueList<QDateTime> &) = 0;
 
-    void dump() const;
+    void         dump() const;
+
+  signals:
+    void         loaded(ADCalendarBase*, bool success);
 
   protected:
-    bool            loadFile_(const QCString& appName);
+    bool         loadFile_(const QCString& appName);
 
   private:
     ADCalendarBase(const ADCalendarBase&);             // prohibit copying
     ADCalendarBase& operator=(const ADCalendarBase&);  // prohibit copying
+    void         loadLocalFile( const QString& filename );
+
+  private slots:
+    void         slotDownloadJobResult( KIO::Job * );
 
   protected:
     struct EventItem
@@ -94,6 +106,7 @@ class ADCalendarBase : public CalendarLocal
     QCString          mAppName;       // name of application owning this calendar
     Type              mActionType;    // action to take on event
     QDateTime         mLastCheck;     // time at which calendar was last checked for alarms
+    QString           mTempFileName;  // temporary file used if currently downloading, else null
     int               mRcIndex;       // index within 'clients' RC file for this calendar's entry
     bool              mLoaded;        // true if calendar file is currently loaded
     bool              mUnregistered;  // client has registered, but has not since added the calendar

@@ -26,9 +26,13 @@
 #include <unistd.h>
 #include <time.h>
 
+#include <qfile.h>
+
 #include <kstandarddirs.h>
 #include <ksimpleconfig.h>
-#include <kio/netaccess.h>
+#include <ktempfile.h>
+#include <kio/job.h>
+#include <kio/jobclasses.h>
 #include <kdebug.h>
 
 #include "adcalendarbase.h"
@@ -75,40 +79,66 @@ ADCalendarBase::ADCalendarBase(const QString& url, const QCString& appname, Type
  */
 bool ADCalendarBase::loadFile_(const QCString& appName)
 {
+  if ( !mTempFileName.isNull() ) {
+    // Don't try to load the file if already downloading it
+    kdError(5900) << "ADCalendarBase::loadFile_(): already downloading another file\n";
+    return false;
+  }
   mLoaded = false;
-  KURL url(mUrlString);
-  QString tmpFile;
-  if (KIO::NetAccess::download(url, tmpFile))
+  KURL url( mUrlString );
+  if ( url.isLocalFile() ) {
+    // It's a local file
+    loadLocalFile( url.path() );
+    emit loaded( this, mLoaded );
+  } else {
+    // It's a remote file. Download to a temporary file before loading it.
+    KTempFile tempFile;
+    mTempFileName = tempFile.name();
+    KURL dest;
+    dest.setPath( mTempFileName );
+    KIO::FileCopyJob *job = KIO::file_copy( url, dest, -1, true );
+    connect( job, SIGNAL( result( KIO::Job * ) ),
+             SLOT( slotDownloadJobResult( KIO::Job * ) ) );
+  }
+  return true;
+}
+
+void ADCalendarBase::slotDownloadJobResult( KIO::Job *job )
+{
+  if ( job->error() ) {
+    KURL url( mUrlString );
+    kdDebug(5900) << "Error downloading calendar from " << url.prettyURL() << endl;
+    job->showErrorDialog( 0 );
+  } else {
+    kdDebug(5900) << "--- Downloaded to " << mTempFileName << endl;
+    loadLocalFile( mTempFileName );
+  }
+  unlink( QFile::encodeName( mTempFileName ) );
+  mTempFileName = QString::null;
+  emit loaded( this, mLoaded );
+}
+
+void ADCalendarBase::loadLocalFile( const QString& filename )
+{
+  mLoaded = load( filename );
+  if (!mLoaded)
+    kdDebug(5900) << "ADCalendarBase::loadLocalFile(): Error loading calendar file '" << filename << "'\n";
+  else
   {
-    kdDebug(5900) << "--- Downloaded to " << tmpFile << endl;
-    mLoaded = load(tmpFile);
-    KIO::NetAccess::removeTempFile(tmpFile);
-    if (!mLoaded)
-      kdDebug(5900) << "ADCalendarBase::loadFile_(): Error loading calendar file '" << tmpFile << "'\n";
-    else
+    // Remove all now non-existent events from the handled list
+    for (EventsMap::Iterator it = eventsHandled_.begin();  it != eventsHandled_.end();  )
     {
-      // Remove all now non-existent events from the handled list
-      for (EventsMap::Iterator it = eventsHandled_.begin();  it != eventsHandled_.end();  )
+      if (it.data().calendarURL == mUrlString  &&  !event(it.key()))
       {
-        if (it.data().calendarURL == mUrlString  &&  !event(it.key()))
-        {
-          // Event belonged to this calendar, but can't find it any more
-          EventsMap::Iterator i = it;
-          ++it;                      // prevent iterator becoming invalid with remove()
-          eventsHandled_.remove(i);
-        }
-        else
-          ++it;
+        // Event belonged to this calendar, but can't find it any more
+        EventsMap::Iterator i = it;
+        ++it;                      // prevent iterator becoming invalid with remove()
+        eventsHandled_.remove(i);
       }
+      else
+        ++it;
     }
   }
-  else if (!appName.isEmpty()) {
-#ifdef TODO_handle_download_error
-//    KMessageBox::error(0L, i18n("Cannot download calendar from\n%1.")
-//                           .arg(url.prettyURL()), appName);
-#endif
-  }
-  return mLoaded;
 }
 
 void ADCalendarBase::dump() const
