@@ -201,13 +201,13 @@ void IncidenceBase::addComment(const QString& comment)
   mComments += comment;
 }
 
-bool IncidenceBase::removeComment(QString& comment)
+bool IncidenceBase::removeComment( const QString& comment)
 {
   bool found = false;
   QStringList::Iterator i;
 
   for ( i = mComments.begin(); !found && i != mComments.end(); ++i ) {
-    if ( (*i) == comment) {
+    if ( (*i) == comment ) {
       found = true;
       mComments.remove(i);
     }

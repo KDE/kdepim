@@ -117,7 +117,7 @@ class IncidenceBase : public CustomProperties
      *
      * @return true if match found, false otherwise.
      */
-    bool removeComment(QString& comment);
+    bool removeComment( const QString& comment );
 
     /** Delete all comments associated with this incidence. */
     void clearComments();
