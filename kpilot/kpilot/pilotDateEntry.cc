@@ -153,6 +153,7 @@ void PilotDateEntry::setDescription(const char *desc)
 
 	if (desc)
 	{
+	  if (::strlen(desc) > 0) {
 		fAppointmentInfo.description =
 			(char *) malloc(strlen(desc) + 1);
 		if (fAppointmentInfo.description)
@@ -165,6 +166,8 @@ void PilotDateEntry::setDescription(const char *desc)
 				<< ": malloc() failed, description not set"
 				<< endl;
 		}
+	  } else
+	    fAppointmentInfo.description = 0L;
 	}
 	else
 	{
@@ -179,6 +182,7 @@ void PilotDateEntry::setNote(const char *note)
 
 	if (note)
 	{
+	  if (::strlen(note) > 0) {
 		fAppointmentInfo.note = (char *)::malloc(strlen(note) + 1);
 		if (fAppointmentInfo.note)
 		{
@@ -189,6 +193,8 @@ void PilotDateEntry::setNote(const char *note)
 			kdError(LIBPILOTDB_AREA) << __FUNCTION__
 				<< ": malloc() failed, note not set" << endl;
 		}
+	  } else
+	    fAppointmentInfo.note = 0L;
 	}
 	else
 	{
@@ -199,6 +205,9 @@ void PilotDateEntry::setNote(const char *note)
 
 
 // $Log$
+// Revision 1.7  2001/05/24 10:31:38  adridg
+// Philipp Hullmann's extensive memory-leak hunting patches
+//
 // Revision 1.6  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

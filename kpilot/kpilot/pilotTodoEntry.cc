@@ -102,6 +102,7 @@ void PilotTodoEntry::setDescription(const char *desc)
 	KPILOT_FREE(fTodoInfo.description);
 	if (desc)
 	{
+	  if (::strlen(desc) > 0) {
 		fTodoInfo.description = (char *)::malloc(::strlen(desc) + 1);
 		if (fTodoInfo.description)
 		{
@@ -113,6 +114,8 @@ void PilotTodoEntry::setDescription(const char *desc)
 				<< ": malloc() failed, description not set"
 				<< endl;
 		}
+	  } else
+		fTodoInfo.description = 0L;
 	}
 	else
 	{
@@ -124,17 +127,20 @@ void PilotTodoEntry::setNote(const char *note)
 {
 	KPILOT_FREE(fTodoInfo.note);
 	if (note)
-	{
+	  {
+	    if (::strlen(note) > 0) {
 		fTodoInfo.note = (char *)::malloc(::strlen(note) + 1);
 		if (fTodoInfo.note)
 		{
-			::strcpy(fTodoInfo.note, note);
+		    ::strcpy(fTodoInfo.note, note);
 		}
 		else
 		{
 			kdError(LIBPILOTDB_AREA) << __FUNCTION__
 				<< ": malloc() failed, note not set" << endl;
 		}
+	    } else
+	      fTodoInfo.note = 0;
 	}
 	else
 	{
@@ -145,6 +151,9 @@ void PilotTodoEntry::setNote(const char *note)
 
 
 // $Log$
+// Revision 1.8  2001/05/24 10:31:38  adridg
+// Philipp Hullmann's extensive memory-leak hunting patches
+//
 // Revision 1.7  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //
