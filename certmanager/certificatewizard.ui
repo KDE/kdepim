@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
 <class>CertificateWizard</class>
 <widget class="QWizard">
     <property name="name">
@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>444</width>
-            <height>354</height>
+            <width>438</width>
+            <height>375</height>
         </rect>
     </property>
     <property name="caption">
@@ -208,12 +208,6 @@ The certificates will be generated in a decentralized manner. Please contact you
             <property name="name">
                 <cstring>unnamed</cstring>
             </property>
-            <property name="margin">
-                <number>11</number>
-            </property>
-            <property name="spacing">
-                <number>6</number>
-            </property>
             <widget class="QLabel" row="0" column="0">
                 <property name="name">
                     <cstring>TextLabel4</cstring>
@@ -343,6 +337,14 @@ The certificates will be generated in a decentralized manner. Please contact you
                             <cstring>caEmailED</cstring>
                         </property>
                     </widget>
+                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>brokenCA</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Add email to DN in request for broken CAs</string>
+                        </property>
+                    </widget>
                 </grid>
             </widget>
         </grid>
@@ -433,4 +435,9 @@ If you want to change anything, press Back and make your changes. Otherwise pres
     <slot access="protected">slotGenerateCertificate()</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>kurlrequester.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+</includehints>
 </UI>
