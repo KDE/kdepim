@@ -151,10 +151,11 @@ void KFolderTreeItem::paintCell( QPainter * p, const QColorGroup & cg,
                                   int column, int width, int align )
 {
   QListView *lv = listView();
-  QString oldText = text(0);
+  QString oldText = text(column);
 
-  if (column == 0) //Handle drawing text in column 0 below
-    setText( 0, "" );
+  // set an empty text so that we can have our own implementation (see further down)
+  // but still benefit from KListView::paintCell
+  setText( column, "" );
   
   KListViewItem::paintCell( p, cg, column, width, align );
 
@@ -165,7 +166,7 @@ void KFolderTreeItem::paintCell( QPainter * p, const QColorGroup & cg,
 
   QString t;
   QRect br;
-  setText( 0, oldText );
+  setText( column, oldText );
   if ( isSelected() )
     p->setPen( cg.highlightedText() );
   else
