@@ -23,7 +23,7 @@
 #include "ktnefmain.h"
 
 static const char description[] =
-	I18N_NOOP("KTnef");
+	I18N_NOOP("Viewer for mail attachments using TNEF format");
 
 
 static KCmdLineOptions options[] =
