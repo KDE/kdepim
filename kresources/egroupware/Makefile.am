@@ -15,18 +15,18 @@ noinst_HEADERS = kabc_resourcexmlrpcconfig.h kcal_resourcexmlrpcconfig.h \
 
 lib_LTLIBRARIES = libkabc_xmlrpc.la libkcal_xmlrpc.la libknotes_xmlrpc.la
 libkabc_xmlrpc_la_SOURCES = kabc_resourcexmlrpc.cpp kabc_resourcexmlrpcconfig.cpp xmlrpciface.cpp uidmapper.cpp \
-                            kabc_egroupwareprefs.kcfgc
+                            kabc_egroupwareprefs.kcfgc synchronizer.cpp
 libkabc_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
 libkabc_xmlrpc_la_LIBADD = $(LIB_KIO) -lkabc $(top_builddir)/libkdepim/libkdepim.la \
                            $(top_builddir)/kaddressbook/common/libkabcommon.la
 
 libkcal_xmlrpc_la_SOURCES = kcal_resourcexmlrpc.cpp kcal_resourcexmlrpcconfig.cpp xmlrpciface.cpp uidmapper.cpp \
-                            kcal_egroupwareprefs.kcfgc
+                            kcal_egroupwareprefs.kcfgc synchronizer.cpp
 libkcal_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
 libkcal_xmlrpc_la_LIBADD = $(top_builddir)/libkcal/libkcal.la $(top_builddir)/libkdepim/libkdepim.la
 
 libknotes_xmlrpc_la_SOURCES = knotes_resourcexmlrpc.cpp knotes_resourcexmlrpcconfig.cpp xmlrpciface.cpp \
-                              knotes_egroupwareprefs.kcfgc
+                              knotes_egroupwareprefs.kcfgc synchronizer.cpp
 libknotes_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
 libknotes_xmlrpc_la_LIBADD = $(top_builddir)/libkcal/libkcal.la -lkdeprint \
                              $(top_builddir)/knotes/libknotesresources.la \

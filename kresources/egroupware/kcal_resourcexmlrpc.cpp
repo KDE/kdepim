@@ -52,6 +52,7 @@
 #include "kcal_resourcexmlrpcconfig.h"
 #include "kcal_resourcexmlrpc.h"
 
+#include "synchronizer.h"
 #include "xmlrpciface.h"
 
 #define CAL_PRIO_LOW 1
@@ -143,6 +144,9 @@ ResourceXMLRPC::~ResourceXMLRPC()
 
   delete mPrefs;
   mPrefs = 0;
+
+  delete mSynchronizer;
+  mSynchronizer = 0;
 }
 
 void ResourceXMLRPC::init()
@@ -152,8 +156,8 @@ void ResourceXMLRPC::init()
   mPrefs = new EGroupwarePrefs;
   mLoaded = 0;
 
-  mSyncComm = false;
   mLock = new KABC::LockNull( true );
+  mSynchronizer = new Synchronizer();
 }
 
 void ResourceXMLRPC::initEGroupware()
@@ -197,7 +201,7 @@ bool ResourceXMLRPC::doOpen()
                  this, SLOT( loginFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
-  enter_loop();
+  mSynchronizer->start();
 
   return true;
 }
@@ -214,7 +218,7 @@ void ResourceXMLRPC::doClose()
                  this, SLOT( logoutFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
-  enter_loop();
+  mSynchronizer->start();
 }
 
 bool ResourceXMLRPC::doLoad()
@@ -288,7 +292,7 @@ bool ResourceXMLRPC::doSave()
   }
 
   if ( counter != 0 )
-    enter_loop();
+    mSynchronizer->start();
 
   return true;
 }
@@ -501,7 +505,7 @@ void ResourceXMLRPC::loginFinished( const QValueList<QVariant>& variant,
   url.setPass( mKp3 );
   mServer->setUrl( url );
 
-  exit_loop();
+  mSynchronizer->stop();
 }
 
 void ResourceXMLRPC::logoutFinished( const QValueList<QVariant>& variant,
@@ -518,7 +522,7 @@ void ResourceXMLRPC::logoutFinished( const QValueList<QVariant>& variant,
   url.setPass( mKp3 );
   mServer->setUrl( url );
 
-  exit_loop();
+  mSynchronizer->stop();
 }
 
 void ResourceXMLRPC::listEventsFinished( const QValueList<QVariant>& list,
@@ -600,7 +604,7 @@ void ResourceXMLRPC::deleteEventFinished( const QValueList<QVariant>&,
 void ResourceXMLRPC::updateEventFinished( const QValueList<QVariant>&,
                                           const QVariant& )
 {
-  exit_loop();
+  mSynchronizer->stop();
 }
 
 void ResourceXMLRPC::addEventFinished( const QValueList<QVariant>& list,
@@ -712,7 +716,7 @@ void ResourceXMLRPC::addTodoFinished( const QValueList<QVariant>& list,
 void ResourceXMLRPC::updateTodoFinished( const QValueList<QVariant>&,
                                          const QVariant& )
 {
-  exit_loop();
+  mSynchronizer->stop();
 }
 
 void ResourceXMLRPC::loadTodoCategoriesFinished( const QValueList<QVariant> &mapList, const QVariant& )
@@ -740,7 +744,7 @@ void ResourceXMLRPC::fault( int error, const QString& errorMsg,
                             const QVariant& )
 {
   kdError() << "Server send error " << error << ": " << errorMsg << endl;
-  exit_loop();
+  mSynchronizer->stop();
 }
 
 void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *event,
@@ -1173,27 +1177,6 @@ void ResourceXMLRPC::checkLoadingFinished()
   if ( mLoaded == 4 ) {
     mLoaded = 0;
     emit resourceLoaded( this );
-  }
-}
-
-void qt_enter_modal( QWidget* widget );
-void qt_leave_modal( QWidget* widget );
-
-void ResourceXMLRPC::enter_loop()
-{
-  QWidget dummy( 0, 0, WType_Dialog | WShowModal );
-  dummy.setFocusPolicy( QWidget::NoFocus );
-  qt_enter_modal( &dummy );
-  mSyncComm = true;
-  qApp->enter_loop();
-  qt_leave_modal( &dummy );
-}
-
-void ResourceXMLRPC::exit_loop()
-{
-  if ( mSyncComm ) {
-    mSyncComm = false;
-    qApp->exit_loop();
   }
 }
 

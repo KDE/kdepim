@@ -27,6 +27,7 @@
 #include "libkdepim/kabcresourcecached.h"
 
 class KConfig;
+class Synchronizer;
 
 namespace KXMLRPC {
 class Server;
@@ -89,8 +90,6 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceCached
 
     QString addrTypesToTypeStr( int );
 
-    void enter_loop();
-    void exit_loop();
     void writeContact( const Addressee&, QMap<QString, QVariant>& );
     void readContact( const QMap<QString, QVariant>&, Addressee &addr, QString& );
 
@@ -104,7 +103,7 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceCached
     QMap<QString, QString> mCustomFieldsMap;
 
     KXMLRPC::Server *mServer;
-    bool mSyncComm;
+    Synchronizer *mSynchronizer;
 
     class ResourceXMLRPCPrivate;
     ResourceXMLRPCPrivate *d;

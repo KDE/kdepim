@@ -37,6 +37,8 @@ namespace KXMLRPC {
 class Server;
 }
 
+class Synchronizer;
+
 namespace KNotes {
 
 class EGroupwarePrefs;
@@ -82,9 +84,6 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceNotes
     void writeNote( KCal::Journal*, QMap<QString, QVariant>& );
     void readNote( const QMap<QString, QVariant>&, KCal::Journal*, QString& );
 
-    void enter_loop();
-    void exit_loop();
-
     KCal::CalendarLocal mCalendar;
     KXMLRPC::Server *mServer;
 
@@ -94,7 +93,7 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceNotes
     QString mKp3;
     QMap<QString, QString> mUidMap;
 
-    bool mSyncComm;
+    Synchronizer *mSynchronizer;
 };
 
 }

@@ -35,6 +35,7 @@
 #include "kabc_resourcexmlrpc.h"
 #include "kabc_resourcexmlrpcconfig.h"
 
+#include "synchronizer.h"
 #include "xmlrpciface.h"
 
 using namespace KABC;
@@ -78,7 +79,7 @@ void ResourceXMLRPC::init()
 {
   setType( "xmlrpc" );
 
-  mSyncComm = false;
+  mSynchronizer = new Synchronizer;
 
   mPrefs = new EGroupwarePrefs;
 }
@@ -102,6 +103,9 @@ ResourceXMLRPC::~ResourceXMLRPC()
 
   delete mPrefs;
   mPrefs = 0;
+
+  delete mSynchronizer;
+  mSynchronizer = 0;
 }
 
 void ResourceXMLRPC::writeConfig( KConfig *config )
@@ -144,7 +148,7 @@ bool ResourceXMLRPC::doOpen()
                  this, SLOT( loginFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
-  enter_loop();
+  mSynchronizer->start();
 
   return true;
 }
@@ -159,10 +163,7 @@ void ResourceXMLRPC::doClose()
                  this, SLOT( logoutFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
-  enter_loop();
-
-  delete mServer;
-  mServer = 0;
+  mSynchronizer->start();
 }
 
 bool ResourceXMLRPC::load()
@@ -282,7 +283,7 @@ void ResourceXMLRPC::loginFinished( const QValueList<QVariant> &variant,
   url.setPass( mKp3 );
   mServer->setUrl( url );
 
-  exit_loop();
+  mSynchronizer->stop();
 }
 
 void ResourceXMLRPC::logoutFinished( const QValueList<QVariant> &variant,
@@ -299,7 +300,7 @@ void ResourceXMLRPC::logoutFinished( const QValueList<QVariant> &variant,
   url.setPass( mKp3 );
   mServer->setUrl( url );
 
-  exit_loop();
+  mSynchronizer->stop();
 }
 
 void ResourceXMLRPC::listContactsFinished( const QValueList<QVariant> &mapList,
@@ -371,7 +372,7 @@ void ResourceXMLRPC::fault( int error, const QString &errorMsg,
   QString msg = i18n( "<qt>Server sent error %1: <b>%2</b></qt>" ).arg( error ).arg( errorMsg );
   addressBook()->error( msg );
 
-  exit_loop();
+  mSynchronizer->stop();
 }
 
 void ResourceXMLRPC::addContactFault( int, const QString &errorMsg,
@@ -424,27 +425,6 @@ QString ResourceXMLRPC::addrTypesToTypeStr( int typeMask )
       types.append( it.key() );
 
   return types.join( ";" );
-}
-
-void qt_enter_modal( QWidget *widget );
-void qt_leave_modal( QWidget *widget );
-
-void ResourceXMLRPC::enter_loop()
-{
-  QWidget dummy( 0, 0, WType_Dialog | WShowModal );
-  dummy.setFocusPolicy( QWidget::NoFocus );
-  qt_enter_modal( &dummy );
-  mSyncComm = true;
-  qApp->enter_loop();
-  qt_leave_modal( &dummy );
-}
-
-void ResourceXMLRPC::exit_loop()
-{
-  if ( mSyncComm ) {
-    mSyncComm = false;
-    qApp->exit_loop();
-  }
 }
 
 void ResourceXMLRPC::writeContact( const Addressee &addr, QMap<QString, QVariant> &args )

@@ -36,6 +36,7 @@
 #include "knotes_resourcexmlrpc.h"
 #include "knotes_resourcexmlrpcconfig.h"
 
+#include "synchronizer.h"
 #include "xmlrpciface.h"
 
 using namespace KNotes;
@@ -70,7 +71,13 @@ ResourceXMLRPC::ResourceXMLRPC( )
 ResourceXMLRPC::~ResourceXMLRPC()
 {
   delete mServer;
+  mServer = 0;
+
   delete mPrefs;
+  mPrefs = 0;
+
+  delete mSynchronizer;
+  mSynchronizer = 0;
 }
 
 void ResourceXMLRPC::init()
@@ -79,7 +86,7 @@ void ResourceXMLRPC::init()
 
   mPrefs = new EGroupwarePrefs;
 
-  mSyncComm = false;
+  mSynchronizer = new Synchronizer;
 }
 
 void ResourceXMLRPC::readConfig( const KConfig* )
@@ -114,7 +121,7 @@ bool ResourceXMLRPC::load()
                  this, SLOT( loginFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
-  enter_loop();
+  mSynchronizer->start();
 
   columns.insert( "type", "note" );
   args.clear();
@@ -126,7 +133,7 @@ bool ResourceXMLRPC::load()
                  this, SLOT( listNotesFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
-  enter_loop();
+  mSynchronizer->start();
 
   return true;
 }
@@ -167,7 +174,7 @@ bool ResourceXMLRPC::addNote( KCal::Journal *journal )
   }
 
   if ( added )
-    enter_loop();
+    mSynchronizer->start();
 
   return true;
 }
@@ -180,7 +187,7 @@ bool ResourceXMLRPC::deleteNote( KCal::Journal *journal )
                  this, SLOT( deleteNoteFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ),
                  QVariant( journal->uid() ) );
-  enter_loop();
+  mSynchronizer->start();
 
   return true;
 }
@@ -202,7 +209,7 @@ void ResourceXMLRPC::loginFinished( const QValueList<QVariant>& variant,
   url.setPass( mKp3 );
   mServer->setUrl( url );
 
-  exit_loop();
+  mSynchronizer->stop();
 }
 
 void ResourceXMLRPC::logoutFinished( const QValueList<QVariant>& variant,
@@ -219,7 +226,7 @@ void ResourceXMLRPC::logoutFinished( const QValueList<QVariant>& variant,
   url.setPass( mKp3 );
   mServer->setUrl( url );
 
-  exit_loop();
+  mSynchronizer->stop();
 }
 
 void ResourceXMLRPC::listNotesFinished( const QValueList<QVariant> &list, const QVariant& )
@@ -248,7 +255,7 @@ void ResourceXMLRPC::listNotesFinished( const QValueList<QVariant> &list, const 
     manager()->registerNote( this, journal );
   }
 
-  exit_loop();
+  mSynchronizer->stop();
 }
 
 void ResourceXMLRPC::addNoteFinished( const QValueList<QVariant> &list, const QVariant &id )
@@ -256,12 +263,12 @@ void ResourceXMLRPC::addNoteFinished( const QValueList<QVariant> &list, const QV
   int uid = list[ 0 ].toInt();
   mUidMap.insert( id.toString(), QString::number( uid ) );
 
-  exit_loop();
+  mSynchronizer->stop();
 }
 
 void ResourceXMLRPC::updateNoteFinished( const QValueList<QVariant>&, const QVariant& )
 {
-  exit_loop();
+  mSynchronizer->stop();
 }
 
 void ResourceXMLRPC::deleteNoteFinished( const QValueList<QVariant>&, const QVariant &id )
@@ -271,13 +278,13 @@ void ResourceXMLRPC::deleteNoteFinished( const QValueList<QVariant>&, const QVar
   KCal::Journal *journal = mCalendar.journal( id.toString() );
   mCalendar.deleteJournal( journal );
 
-  exit_loop();
+  mSynchronizer->stop();
 }
 
 void ResourceXMLRPC::fault( int error, const QString& errorMsg, const QVariant& )
 {
   kdError() << "Server send error " << error << ": " << errorMsg << endl;
-  exit_loop();
+  mSynchronizer->stop();
 }
 
 void ResourceXMLRPC::writeNote( KCal::Journal* journal, QMap<QString, QVariant>& args )
@@ -296,27 +303,6 @@ void ResourceXMLRPC::readNote( const QMap<QString, QVariant>& args, KCal::Journa
   journal->setDescription( args[ "des" ].toString() );
   journal->setSecrecy( args[ "access" ].toString() == "public" ?
                        KCal::Journal::SecrecyPublic : KCal::Journal::SecrecyPrivate );
-}
-
-void qt_enter_modal( QWidget* widget );
-void qt_leave_modal( QWidget* widget );
-
-void ResourceXMLRPC::enter_loop()
-{
-  QWidget dummy( 0, 0, WType_Dialog | WShowModal );
-  dummy.setFocusPolicy( QWidget::NoFocus );
-  qt_enter_modal( &dummy );
-  mSyncComm = true;
-  qApp->enter_loop();
-  qt_leave_modal( &dummy );
-}
-
-void ResourceXMLRPC::exit_loop()
-{
-  if ( mSyncComm ) {
-    mSyncComm = false;
-    qApp->exit_loop();
-  }
 }
 
 #include "knotes_resourcexmlrpc.moc"

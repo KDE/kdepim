@@ -39,6 +39,7 @@ namespace KXMLRPC {
 class Server;
 }
 
+class Synchronizer;
 class UIDMapper;
 class QTimer;
 
@@ -209,9 +210,6 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceCached
 
     void checkLoadingFinished();
 
-    void enter_loop();
-    void exit_loop();
-
     KXMLRPC::Server *mServer;
 
     EGroupwarePrefs *mPrefs;
@@ -223,7 +221,7 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceCached
     QMap<QString, int> mTodoCategoryMap;
     QMap<QString, QString> mTodoStateMap;
 
-    bool mSyncComm;
+    Synchronizer *mSynchronizer;
 
     KABC::Lock *mLock;
     int mLoaded;
