@@ -5,6 +5,10 @@
 		<Action name="redisplay" />
 		<Action name="quit" />
 	</Menu>
+	<Menu name="view" >
+		<text>View</text>
+		<Action name="viewCRLs" />
+	</Menu>
 	<Menu name="certMenu" >
 		<text>Certificates</text>
 		<Action name="newCert" />

@@ -1,10 +1,13 @@
 bin_PROGRAMS = kgpgcertmanager
 kgpgcertmanager_SOURCES=main.cpp certmanager.cpp certbox.cpp certitem.cpp agent.cpp \
 	certificatewizard.ui certificatewizardimpl.cpp \
-	certificateinfowidget.ui certificateinfowidgetimpl.cpp 
+	certificateinfowidget.ui certificateinfowidgetimpl.cpp \
+	crlview.cpp
 noinst_HEADERS=certmanager.h certbox.h certitem.h agent.h \
 	certificatewizardimpl.h \
-	certificateinfowidgetimpl.h
+	certificateinfowidgetimpl.h \
+	crlview.h
+
 METASOURCES = AUTO
 INCLUDES =  -I$(top_srcdir)/libkdenetwork -I../kmail $(all_includes)
 

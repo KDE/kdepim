@@ -4,6 +4,7 @@
 #include "certitem.h"
 #include "agent.h"
 #include "certificatewizardimpl.h"
+#include "crlview.h"
 
 // kdenetwork
 #include <cryptplugwrapper.h>
@@ -152,12 +153,12 @@ CertManager::CertManager( bool remote, const QString& query,
 
   // Import Certificates
   // Import from file
-  KAction* importCertFromFile = new KAction( i18n("From &File..."), QIconSet(),
+  (void)new KAction( i18n("From &File..."), QIconSet(),
                                              0, this,
                                              SLOT( importCertFromFile() ),
                                              actionCollection(),
                                              "importCertFromFile" );
-  // Import CRLs
+  // CRLs
   // Import from file
   KAction* importCRLFromFile = new KAction( i18n("From &File..."), QIconSet(), 0, this, SLOT( importCRLFromFile() ),
                                             actionCollection(), "importCRLFromFile" );
@@ -169,6 +170,11 @@ CertManager::CertManager( bool remote, const QString& query,
   KAction* importCRLFromLDAP = new KAction( i18n("From &LDAP"), QIconSet(), 0, this, SLOT( importCRLFromLDAP() ),
                                             actionCollection(), "importCRLFromLDAP" );
   importCRLFromLDAP->setEnabled( false );
+
+  KAction* viewCRLs = new KAction( i18n("CRL cache..."), QIconSet(), 0, this, SLOT( slotViewCRLs() ),
+				   actionCollection(), "viewCRLs");
+  viewCRLs->setEnabled( importCRLFromFile->isEnabled() ); // we also need dirmngr for this
+  
 
   // Toolbar
   _toolbar = toolBar( "mainToolBar" );
@@ -421,6 +427,15 @@ void CertManager::slotStderr( KProcess*, char* buf, int len )
 void CertManager::importCRLFromLDAP()
 {
   qDebug("Not Yet Implemented");
+}
+
+void CertManager::slotViewCRLs()
+{
+  if( _crlView == 0 ) {
+    _crlView = new CRLView( this );
+  }
+  _crlView->show();
+  _crlView->slotUpdateView();
 }
 
 int CertManager::importCertificateWithFingerprint( const QString& fingerprint, QString* info )

@@ -9,6 +9,8 @@ class CertItem;
 class KToolBar;
 class KAction;
 
+class CRLView;
+
 class LineEditAction;
 class ComboAction;
 
@@ -44,7 +46,8 @@ protected slots:
     void slotStderr( KProcess*, char*, int );
 
     void slotToggleRemote(int idx);
-
+  
+    void slotViewCRLs();
 
 private:
     bool checkExec( const QStringList& args );
@@ -58,6 +61,7 @@ private:
     KProcess* dirmngrProc;
     QString errorbuffer;
 
+    CRLView* _crlView;
 
     KToolBar* _toolbar;
     LineEditAction* _leAction;
