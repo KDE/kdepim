@@ -37,6 +37,7 @@
 
 #include <qthread.h>
 struct NotePad;
+class NotepadActionThread;
 
 class NotepadConduit : public ConduitAction
 {
@@ -46,8 +47,12 @@ public:
 		const QStringList &args = QStringList());
 	virtual ~NotepadConduit();
 	virtual bool event(QEvent *e);
+	
 protected:
 	virtual bool exec();           // From ConduitAction
+	
+private:
+	NotepadActionThread *thread;
 };
 
 
@@ -60,10 +65,20 @@ public:
 	NotepadActionThread(QObject *parent, int pilotSocket);
 
 	virtual void run();
-	
+	int	getFailed() { return notSaved; }
+	int getSaved() { return saved; }
+		
 private:
 	QObject *fParent;
 	int fPilotSocket;
+	/**
+	 * counts how many notepads couldn't be saved during the sync
+	 */
+	int notSaved;
+	/**
+	 * counts how many files a saved during the sync
+	 */
+	int saved;
 	
 	int unpackNotePad(struct NotePad *a, unsigned char *buffer, int len);
 	void saveImage(struct NotePad *n);

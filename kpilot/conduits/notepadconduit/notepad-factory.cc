@@ -32,6 +32,7 @@
 #include <kinstance.h>
 #include <kaboutdata.h>
 #include <kurlrequester.h>
+#include <kmessagebox.h>
 #include <qlineedit.h>
 
 #include "notepad-conduit.h"     // Conduit action
@@ -49,6 +50,9 @@ void *init_conduit_notepad()
 
 }
 
+//----------------------------------------------------------------------------
+// Conduit Confuguration
+//----------------------------------------------------------------------------
 class NotepadConduitConfig : public ConduitConfigBase
 {
 public:
@@ -76,7 +80,6 @@ NotepadConduitConfig::NotepadConduitConfig(QWidget *p, const char *n) :
 	QObject::connect(fConfigWidget->fOutputDirectory, SIGNAL(textChanged(const QString&)),
 		this, SLOT(modified()));
 	fConfigWidget->fOutputDirectory->setMode(KFile::Directory | 
-											KFile::ExistingOnly |
 											KFile::LocalOnly);
 }
 
@@ -93,13 +96,15 @@ NotepadConduitConfig::NotepadConduitConfig(QWidget *p, const char *n) :
 	FUNCTIONSETUP;
 	
 	NotepadConduitSettings::self()->readConfig();
-
 	fConfigWidget->fOutputDirectory->setURL(NotepadConduitSettings::outputDirectory());
-
 	fModified=false;
 }
 
+//----------------------------------------------------------------------------
+// Conduit Factory
+//----------------------------------------------------------------------------
 KAboutData *NotepadConduitFactory::fAbout = 0L;
+
 NotepadConduitFactory::NotepadConduitFactory(QObject *p, const char *n) :
 	KLibFactory(p,n)
 {
@@ -129,43 +134,37 @@ NotepadConduitFactory::~NotepadConduitFactory()
 	KPILOT_DELETE(fAbout);
 }
 
-/* virtual */ QObject *NotepadConduitFactory::createObject( QObject *p,
-	const char *n,
-	const char *c,
-	const QStringList &a)
+/* virtual */ QObject *NotepadConduitFactory::createObject( QObject *parent,
+	const char *name, const char *className, const QStringList &args)
 {
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Creating object of class "
-		<< c
+		<< className
 		<< endl;
 #endif
 
-	if (qstrcmp(c,"ConduitConfigBase")==0)
+	if(qstrcmp(className, "ConduitConfigBase") == 0)
 	{
-		QWidget *w = dynamic_cast<QWidget *>(p);
-		if (w)
-		{
+		QWidget *w = dynamic_cast<QWidget *>(parent);
+		if (w) {
 			return new NotepadConduitConfig(w);
 		}
-		else
-		{
+		else {
 			return 0L;
 		}
 	}
 
-	if (qstrcmp(c,"SyncAction")==0)
+	if(qstrcmp(className, "SyncAction") == 0)
 	{
-		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);
+		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(parent);
 
-		if (d)
-		{
-			return new NotepadConduit(d, 0L, n);
+		if (d) {
+			return new NotepadConduit(d, name, args);
 		}
-		else
-		{
+		else {
 			kdError() << k_funcinfo
 				<< ": Couldn't cast to KPilotDeviceLink"
 				<< endl;
