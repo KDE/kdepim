@@ -1,6 +1,13 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-04-11  Reinhold Kainhofer
+* Fix the codec handling to use KGlobal::charsets.
+* Implemented the startListening and stopListening methods of the daemon.
+* Fixed the config dialog so that just showing a conduit's config widget
+  doesn't trigger the modified signal.
+* Some cleanup in the daemon
+
 2004-04-10  Reinhold Kainhofer
 * Split kpilot's configuration into several files, one for each conduit. 
   Also wrote a kconf_update script so the old settings are preserved.
