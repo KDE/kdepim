@@ -50,6 +50,7 @@ IncidenceBase::IncidenceBase(const IncidenceBase &i)
   mLastModified = i.mLastModified;
   mPilotId = i.mPilotId;
   mSyncStatus = i.mSyncStatus;
+  mObserver = i.mObserver;
 }
 
 IncidenceBase::~IncidenceBase()
@@ -264,7 +265,7 @@ int IncidenceBase::syncStatus() const
 void IncidenceBase::setPilotId( int id )
 {
   if (mReadOnly) return;
-  
+
   mPilotId = id;
 }
 
