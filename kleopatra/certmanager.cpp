@@ -15,6 +15,8 @@
 #include <ktempfile.h>
 #include <dcopclient.h>
 #include <qlineedit.h>
+#include <qradiobutton.h>
+#include <kurlrequester.h>
 
 extern CryptPlugWrapper* pWrapper;
 
@@ -86,9 +88,6 @@ void CertManager::loadCertificates()
   Agent* root = new Agent( "Root Agent", 0, this );
   Agent* sub = new Agent( "Sub Agent", root, this );
   Agent* subsub = new Agent( "SubSub Agent", sub, this );
-  CertItem* item = new CertItem( "JesperPedersenKlaralv", "Verein der Schornsteinfeger", "DK", subsub, _certBox );
-  item->addKey( "email", "blackie@blackie.dk" );
-  item->addKey( "email", "blackie@klabberdabberdalens-datakonsålt" );
 }
 
 /**
@@ -98,21 +97,33 @@ void CertManager::newCertificate()
 {
   CertificateWizardImpl* wizard = new CertificateWizardImpl( this );
   if( wizard->exec() == QDialog::Accepted ) {
-      qDebug( "Cert Wizard was Accepted" );
-      // Ask KMail to send this key to the CA.
-      DCOPClient* dcopClient = kapp->dcopClient();
-      QByteArray data;
-      QDataStream arg( data, IO_WriteOnly );
-      arg << wizard->caEmailED->text();
-      arg << wizard->keyData();
-      if( !dcopClient->send( "kmail*", "KMailIface",
-                             "sendCertificate(QString,QByteArray)", data ) ) {
-          KMessageBox::error( this,
-                              i18n( "DCOP Communication Error, can't ask KMail to send certificate" ),
-                              i18n( "Certificate Manager Error" ) );
-          return;
-      } else
-          qDebug( "DCOP message sent" );
+      if( wizard->sendToCARB->isChecked() ) {
+          // Ask KMail to send this key to the CA.
+          DCOPClient* dcopClient = kapp->dcopClient();
+          QByteArray data;
+          QDataStream arg( data, IO_WriteOnly );
+          arg << wizard->caEmailED->text();
+          arg << wizard->keyData();
+          if( !dcopClient->send( "kmail*", "KMailIface",
+                                 "sendCertificate(QString,QByteArray)", data ) ) {
+              KMessageBox::error( this,
+                                  i18n( "DCOP Communication Error, can't ask KMail to send certificate" ) );
+              return;
+          }
+      } else {
+          // Store in file
+          QFile file( wizard->storeUR->url() );
+          if( file.open( IO_WriteOnly ) ) {
+              file.writeBlock( wizard->keyData().data(), 
+                               wizard->keyData().count() );
+              file.close();
+          } else {
+              KMessageBox::error( this,
+                                  i18n( "Could not open output file for writing" ) );
+              return;
+          }
+          
+      }
   }
 }
 

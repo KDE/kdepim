@@ -13,9 +13,10 @@ public:
     ~CertificateWizardImpl();
 
     QByteArray keyData() const { return _keyData; }
-    
+
 protected slots:
     void slotGenerateCertificate();
+    void slotEmailAddressChanged( const QString& text );
 
 private:
     QByteArray _keyData;

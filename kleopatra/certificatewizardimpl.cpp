@@ -4,6 +4,7 @@
 #include <qtextedit.h>
 #include <kmessagebox.h>
 #include <klocale.h>
+#include <qpushbutton.h>
 
 extern CryptPlugWrapper* pWrapper;
 
@@ -19,7 +20,10 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent,  const char* name
 {
     // don't allow to go to last page until a key has been generated
     setNextEnabled( generatePage, false );
+    setNextEnabled( personalDataPage, false );
     nameED->setFocus();
+    // work around a QWizard bug
+    setFixedHeight( 300 );
 }
 
 /*
@@ -29,6 +33,16 @@ CertificateWizardImpl::~CertificateWizardImpl()
 {
     // no need to delete child widgets, Qt does it all for us
 }
+
+/*
+  This slot is called when the user changes the text in the email
+  address field.
+*/
+void CertificateWizardImpl::slotEmailAddressChanged( const QString& text )
+{
+    setNextEnabled( personalDataPage, text.contains( '@' ) );
+}
+  
 
 /*
  * protected slot
