@@ -197,19 +197,19 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
                           SLOT(slotViewSource()), a_ctions, "article_viewSource");
 
     // scoring
-  a_ctScoresEdit            = new KAction(i18n("&Edit Scores..."), "scoreedit",CTRL+Key_E,this,
+  a_ctScoresEdit            = new KAction(i18n("&Edit Scores..."), CTRL+Key_E,this,
                                           SLOT(slotScoreEdit()), a_ctions, "scoreedit");
-  a_ctScoreLower            = new KAction(i18n("&Lower Score..."), "scorelower",CTRL+Key_L,this,
+  a_ctScoreLower            = new KAction(i18n("&Lower Score..."), CTRL+Key_L,this,
                                           SLOT(slotScoreLower()), a_ctions, "scorelower");
   a_ctScoreLower->setEnabled(false);
-  a_ctScoreRaise            = new KAction(i18n("&Raise Score..."), "scoreraise",CTRL+Key_I,
-					  this, SLOT(slotScoreRaise()),a_ctions,"scoreraise");
+  a_ctScoreRaise            = new KAction(i18n("&Raise Score..."), CTRL+Key_I,
+                                          this, SLOT(slotScoreRaise()),a_ctions,"scoreraise");
   a_ctScoreRaise->setEnabled(false);
-
-  a_ctReScore            = new KAction(i18n("Re&Score..."), "rescore",0,
-				       this, SLOT(slotReScore()),a_ctions,"rescore");
-
-
+  
+  a_ctReScore            = new KAction(i18n("Re&Score..."), 0,
+                                       this, SLOT(slotReScore()),a_ctions,"rescore");
+  
+  
 
   a_ctSetCharset = new KSelectAction(i18n("Chars&et"), 0, a_ctions, "set_charset");
   QStringList cs=KGlobal::charsets()->availableEncodingNames();
@@ -1490,10 +1490,10 @@ void KNArticleWidget::slotVerify()
 void KNArticleWidget::slotScoreEdit()
 {
   kdDebug(5003) << "KNArticleWidget::slotScoreEdit()" << endl;
-  KDialogBase *dlg = new KDialogBase("Edit Scores",KDialogBase::Close);
+  KDialogBase *dlg = new KDialogBase(0,0,false,"Edit Scores",KDialogBase::Close,KDialogBase::Close,true);
   KScoringRulesConfig *c = new KScoringRulesConfig(knGlobals.scoreManager,dlg);
   dlg->setMainWidget(c);
-  dlg->exec();
+  dlg->show();
 }
 
 
