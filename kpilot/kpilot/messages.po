@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2000-07-31 13:47+0200\n"
+"POT-Creation-Date: 2000-08-02 01:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -123,7 +123,7 @@ msgstr ""
 msgid "and many others."
 msgstr ""
 
-#: kpilot.cc:979 kpilotOptions.cc:518
+#: kpilot.cc:979 kpilotOptions.cc:473
 msgid "KPilot"
 msgstr ""
 
@@ -325,131 +325,137 @@ msgid ""
 " Hot-Synced with pilot."
 msgstr ""
 
-#: kpilotOptions.cc:55
+#: kpilotOptions.cc:57
 msgid "DB Specials"
 msgstr ""
 
-#: kpilotOptions.cc:68
+#: kpilotOptions.cc:70
 msgid "Show Secrets"
 msgstr ""
 
-#: kpilotOptions.cc:76
+#: kpilotOptions.cc:78
 msgid "Backup Only:"
 msgstr ""
 
-#: kpilotOptions.cc:83
+#: kpilotOptions.cc:85
 msgid "Skip:"
 msgstr ""
 
-#: kpilotOptions.cc:120
+#: kpilotOptions.cc:122
 msgid "Address"
 msgstr ""
 
-#: kpilotOptions.cc:139
+#: kpilotOptions.cc:141
 msgid "Address Formats"
 msgstr ""
 
-#: kpilotOptions.cc:149
+#: kpilotOptions.cc:151
 msgid "Import Format:"
 msgstr ""
 
-#: kpilotOptions.cc:163
+#: kpilotOptions.cc:165
 msgid "Export Format:"
 msgstr ""
 
-#: kpilotOptions.cc:177
+#: kpilotOptions.cc:179
 msgid "Use &Key Field"
 msgstr ""
 
-#: kpilotOptions.cc:190
+#: kpilotOptions.cc:192
 msgid "Address Display"
 msgstr ""
 
-#: kpilotOptions.cc:194
+#: kpilotOptions.cc:196
 msgid "Last,First"
 msgstr ""
 
-#: kpilotOptions.cc:199
+#: kpilotOptions.cc:201
 msgid "Company,Last"
 msgstr ""
 
-#: kpilotOptions.cc:279
+#: kpilotOptions.cc:281
 msgid "General"
 msgstr ""
 
-#: kpilotOptions.cc:294
+#: kpilotOptions.cc:296
 msgid "Pilot Device: "
 msgstr ""
 
-#: kpilotOptions.cc:303
+#: kpilotOptions.cc:305
 msgid "Speed: "
 msgstr ""
 
-#: kpilotOptions.cc:321
+#: kpilotOptions.cc:323
 msgid "Pilot User: "
 msgstr ""
 
-#: kpilotOptions.cc:330
+#: kpilotOptions.cc:332
 msgid "Sync Options:"
 msgstr ""
 
-#: kpilotOptions.cc:332
+#: kpilotOptions.cc:334
 msgid "Sync &Files"
 msgstr ""
 
-#: kpilotOptions.cc:339
+#: kpilotOptions.cc:341
 msgid "Local &overrides Pilot."
 msgstr ""
 
-#: kpilotOptions.cc:346
-msgid "Start Hot-Sync Daemon at login. (Only available with KFM)"
+#: kpilotOptions.cc:348
+msgid "Start Hot-Sync Daemon at login. "
 msgstr ""
 
-#: kpilotOptions.cc:374
+#: kpilotOptions.cc:356
 msgid "Start KPilot at Hot-Sync."
 msgstr ""
 
-#: kpilotOptions.cc:381
+#: kpilotOptions.cc:363
 msgid "Show Daemon in KPanel. (Only available with KWM.)"
 msgstr ""
 
-#: kpilotOptions.cc:486
+#: kpilotOptions.cc:410
+msgid ""
+"Can't find the KPilotDaemon link file\n"
+"needed to autostart the daemon."
+msgstr ""
+
+#: kpilotOptions.cc:441
 msgid "KPilot Options"
 msgstr ""
 
-#: kpilotOptions.cc:520
+#: kpilotOptions.cc:475
 msgid "Pilot Hot-sync software for KDE"
 msgstr ""
 
-#: kpilotOptions.cc:528
+#: kpilotOptions.cc:483
 msgid "Project Leader"
 msgstr ""
 
-#: kpilotOptions.cc:531
+#: kpilotOptions.cc:486
 msgid "KDE1 Maintainer"
 msgstr ""
 
-#: kpilotOptions.cc:535
+#: kpilotOptions.cc:490
 msgid "KOrganizer Support"
 msgstr ""
 
-#: kpilotOptions.cc:538
+#: kpilotOptions.cc:493
 msgid ".de localization"
 msgstr ""
 
-#: kpilotOptions.cc:540
+#: kpilotOptions.cc:495
 msgid ".fr localization"
 msgstr ""
 
-#: kpilotOptions.cc:542
+#: kpilotOptions.cc:497
 msgid "BSD porting"
 msgstr ""
 
-#: kpilotOptions.cc:544
+#: kpilotOptions.cc:499
 msgid "Moral and Mandrake Support"
 msgstr ""
 
-#: kpilotOptions.cc:546
+#: kpilotOptions.cc:501
 msgid "Bug Fixes"
 msgstr ""
 
