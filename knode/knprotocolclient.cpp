@@ -373,6 +373,14 @@ bool KNProtocolClient::getNextLine()
       closeSocket();
       return false;
     }
+
+    // remove null characters that some stupid servers return...
+    for (int i=0; i<received; i++)
+      if (inputEnd[i] == 0) {
+         memmove(inputEnd+i,inputEnd+i+1,received-i-1);
+         received--;
+      }
+
     inputEnd += received;
     inputEnd[0] = 0;  // terminate *char
 
