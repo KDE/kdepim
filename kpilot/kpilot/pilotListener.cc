@@ -46,6 +46,11 @@ static const char *id="$Id$";
 //
 int main(int argc, char* argv[])
 {  
+#ifndef NDEBUG
+	int p = getpid();
+
+	cerr << "*** " << argv[0] << " with pid=" << p << " started." << endl;
+#endif
   if(argc < 2)
     {
       cerr << "Usage: " << argv[0] << " <pilotPort>" << endl;
@@ -65,10 +70,16 @@ int main(int argc, char* argv[])
   FD_SET(serialPort, &set);
   select(serialPort + 1, &set, 0L, 0L, 0L);
   close(serialPort);
+#ifndef NDEBUG
+	cerr << "*** " << argv[0] << " with pid=" << p << " ended." << endl;
+#endif
   return 0;
 	/* NOTREACHED */
 	(void) id;
 }
 
 
-// $Log:$
+// $Log$
+// Revision 1.9  2001/02/05 20:58:48  adridg
+// Fixed copyright headers for source releases. No code changed
+//
