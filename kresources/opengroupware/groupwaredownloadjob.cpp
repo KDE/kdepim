@@ -45,7 +45,6 @@ using namespace KPIM;
 GroupwareDownloadJob::GroupwareDownloadJob( GroupwareDataAdaptor *adaptor )
   : GroupwareJob( adaptor )
 {
-  QTimer::singleShot( 0, this, SLOT( run() ) );
 }
 
 void GroupwareDownloadJob::run()
