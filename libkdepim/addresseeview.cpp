@@ -638,8 +638,8 @@ void AddresseeView::result( KIO::Job *job )
 
   if ( job->error() )
     mImageData.truncate( 0 );
-
-  updateView();
+  else
+    updateView();
 }
 
 void AddresseeView::load()
