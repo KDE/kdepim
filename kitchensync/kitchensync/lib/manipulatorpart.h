@@ -16,7 +16,7 @@ namespace KitchenSync {
   class ManipulatorPart : public KParts::Part {
     Q_OBJECT
     public:
-     ManipulatorPart(QWidget *parent = 0, const char *name  = 0, const QStringList & = QStringList() );
+     ManipulatorPart(QWidget *parent = 0, const char *name  = 0 );
      virtual ~ManipulatorPart() {};
      // the Type this Part understands/ is able to interpret
      virtual QString type()const {return QString::null; };

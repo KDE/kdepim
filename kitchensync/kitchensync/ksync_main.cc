@@ -9,7 +9,7 @@
 
 #include "ksync_mainwindow.h"
 
-#include "overviewwidget.h"
+//#include "overviewwidget.h"
 
 static KCmdLineOptions options[] =
 {
@@ -48,8 +48,8 @@ int main(int argc,  char* argv[] )
 
   KitchenSync::KSyncMainWindow *mainwindow = new KitchenSync::KSyncMainWindow;
   mainwindow->show();
-  QWidget *wid = new KitchenSync::OverviewWidget();
-  wid->show();
+//  QWidget *wid = new KitchenSync::OverviewWidget();
+//  wid->show();
   kdDebug() << "exec now " << endl;
   a.exec();
 

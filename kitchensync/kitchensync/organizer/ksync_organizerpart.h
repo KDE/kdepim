@@ -9,6 +9,7 @@
 namespace KitchenSync {
 
   class OrganizerPart : public ManipulatorPart {
+  Q_OBJECT
   public:
     OrganizerPart(QWidget *parent, const char *name, const QStringList & );
     virtual ~OrganizerPart();
