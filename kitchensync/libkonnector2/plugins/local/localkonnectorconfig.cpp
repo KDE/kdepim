@@ -50,7 +50,7 @@ LocalKonnectorConfig::LocalKonnectorConfig( QWidget *parent )
   topLayout->addWidget( mCalendarFile );
 
   QPushButton *button =
-      new QPushButton( i18n("Select From Existing Resources..."), this );
+      new QPushButton( i18n("Select From Existing Calendars..."), this );
   connect( button, SIGNAL( clicked() ), SLOT( selectCalendarResource() ) );
   topLayout->addWidget( button );
 
@@ -62,7 +62,7 @@ LocalKonnectorConfig::LocalKonnectorConfig( QWidget *parent )
   mAddressBookFile->setMode( KFile::File | KFile::LocalOnly );
   topLayout->addWidget( mAddressBookFile );
 
-  button = new QPushButton( i18n("Select From Existing Resources..."), this );
+  button = new QPushButton( i18n("Select From Existing Address Books..."), this );
   connect( button, SIGNAL( clicked() ), SLOT( selectAddressBookResource() ) );
   topLayout->addWidget( button );
 }
