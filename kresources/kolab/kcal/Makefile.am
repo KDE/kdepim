@@ -20,3 +20,5 @@ kcal_kolab_la_LIBADD = libkcalkolab.la
 
 servicedir = $(kde_servicesdir)/kresources/kcal
 service_DATA = kolab.desktop
+
+KDE_OPTIONS = nofinal
