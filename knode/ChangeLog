@@ -1,4 +1,4 @@
-changes between 0.1.13 and 0.3
+changes between 0.1.13 and 0.3.2
 - ported to KDE2, new style guide compilant XML-GUI
 - multithreaded network-code
 - correct MIME-handling including multipart-messages
@@ -33,6 +33,7 @@ changes between 0.1.13 and 0.3
   default colors adapt to all color schemes (including inverse ones)
 - markup like *word* _word_ and /word/ is supported now
 - you can use netscape instead of konqueror for links
+- support for news://server/group urls as commmand line argument
 - vastly improved new documentation (with screenshots)
   written by Stephan Johach
 - implemented search functionality for newsgroups
