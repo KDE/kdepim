@@ -22,12 +22,6 @@ Widget::Widget( QWidget* parent, const char* name )
   QVBoxLayout *layout = new QVBoxLayout( this );
   layout->setMargin( KDialog::marginHint() );
 
-  QLabel* label = new QLabel( this );
-  label->setText( "<qt><h1>" + i18n( "Overview" ) + "</h1></qt>" );
-
-  QFrame* line = new QFrame( this );
-  line->setFrameStyle( QFrame::HLine | QFrame::Sunken );
-
   QHBox* info = new QHBox( this );
   info->setSpacing( 10 );
   info->setMargin( 10 );
@@ -60,8 +54,6 @@ Widget::Widget( QWidget* parent, const char* name )
   m_layout->insertStretch( -1, 5 );
   m_layoutFillIndex = 0;
 
-  layout->addWidget( label );
-  layout->addWidget( line );
   layout->addWidget( info );
   layout->addWidget( m_split, 100 );
 
