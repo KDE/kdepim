@@ -1,11 +1,16 @@
 runscripts.cpp
 
-  Parse directory for script files (Python and Bash).  Run them if found.
-  Script files need to return a zero or 1 to indicate test result.
-
-  So the idea is you can add a new test without having to edit any C code.
+  Parses this directory for script files (Python, Perl and Bash).  It
+  identifies a script file by the extension.
   
-  iCalendar testing is a lot of string manipulation, so Python seems like
-  a good fit.
+  To add a new test, save the script file here and then run "make check."
+  
+  It runs any script files it finds.  Within each script type, it runs the
+  scripts in alphabetical order.
 
-  The Bash scripts will be, for example, Thorsten's xautomation testing.
+  If any script fails, then the program stops.
+
+  Script files should return a non-zero exit code to indicate a failure.
+
+  NOTE: runscripts does not kill scripts that never return.  You have to 
+  press Control-C to terminate the "make check" command.
