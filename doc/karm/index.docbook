@@ -409,7 +409,7 @@ which is that it is based on the Xt toolkit.</para>
 <appendix id="installation">
 <title>Installation</title>
 
-<sect1 id="getting-kapp">
+<sect1 id="getting-karm">
 <title>How to obtain &karm;</title>
 
 &install.intro.documentation;
