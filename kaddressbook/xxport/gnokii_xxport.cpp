@@ -496,9 +496,9 @@ KABC::AddresseeList GNOKIIXXPort::importContacts( const QString& ) const
 	if (KMessageBox::Continue != KMessageBox::warningContinueCancel(parentWidget(),
 		i18n("<qt>Please connect your Mobile Phone to your computer and press "
 		     "<b>Continue</b> to start importing the personal contacts.<br><br>"
-		     "Please note, that in case your mobile phone is not properly connected "
-		     "the following detection phase might take up to two minutes in which "
-                     "KAddressbook will behave unresponsive.</qt>") ))
+		     "Please note that if your mobile phone is not properly connected "
+		     "the following detection phase might take up to two minutes, during which "
+                     "KAddressbook will behave unresponsively.</qt>") ))
 	  return addrList;
 
 	m_progressDlg = new KProgressDialog( parentWidget(), "importwidget",
@@ -732,9 +732,9 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 	if (KMessageBox::Continue != KMessageBox::warningContinueCancel(parentWidget(),
 		i18n("<qt>Please connect your Mobile Phone to your computer and press "
 		     "<b>Continue</b> to start exporting the selected personal contacts.<br><br>"
-		     "Please note, that in case your Mobile Phone is not properly connected "
-		     "the following detection phase might take up to two minutes in which "
-		     "KAddressbook will behave unresponsive.</qt>") ))
+		     "Please note that if your Mobile Phone is not properly connected "
+		     "the following detection phase might take up to two minutes, during which "
+		     "KAddressbook will behave unresponsively.</qt>") ))
 	  return false;
 
 	m_progressDlg = new KProgressDialog( parentWidget(), "importwidget",
