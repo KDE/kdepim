@@ -1345,9 +1345,9 @@ IMAP4Protocol::rename (const KURL & src, const KURL & dest, bool overwrite)
   QString sBox, sSequence, sLType, sSection, sValidity, sDelimiter, sInfo;
   QString dBox, dSequence, dLType, dSection, dValidity, dDelimiter, dInfo;
   enum IMAP_TYPE sType =
-    parseURL (src, sBox, sSection, sLType, sSequence, sValidity, sDelimiter, sInfo);
+    parseURL (src, sBox, sSection, sLType, sSequence, sValidity, sDelimiter, sInfo, false, false);
   enum IMAP_TYPE dType =
-    parseURL (dest, dBox, dSection, dLType, dSequence, dValidity, dDelimiter, dInfo);
+    parseURL (dest, dBox, dSection, dLType, dSequence, dValidity, dDelimiter, dInfo, false, false);
 
   if (dType == ITYPE_UNKNOWN)
   {
@@ -1678,7 +1678,7 @@ bool IMAP4Protocol::makeLogin ()
       }
     }
 
-    kdDebug(7116) << "IMAP4::makeLogin - open_PassDlg: user=" << myUser << " pass=xx" << endl;
+    kdDebug(7116) << "IMAP4::makeLogin - open_PassDlg said user=" << myUser << " pass=xx" << endl;
 
     QString resultInfo;
     if (myAuth.isEmpty () || myAuth == "*")
@@ -1932,7 +1932,7 @@ enum IMAP_TYPE
 IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
                          QString & _section, QString & _type, QString & _uid,
                          QString & _validity, QString & _hierarchyDelimiter,
-                         QString & _info, bool cache)
+                         QString & _info, bool cache, bool maybePrefix)
 {
   enum IMAP_TYPE retVal;
   retVal = ITYPE_UNKNOWN;
@@ -1994,9 +1994,10 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
               }
             }
             // if we got no list response for the box it's probably some kind of prefix
-            // e.g. #mh
-            if (retVal == ITYPE_UNKNOWN)
+            // e.g. "#mh" (as in #70377)
+            if (maybePrefix && retVal == ITYPE_UNKNOWN) {
               retVal = ITYPE_DIR;
+            }
           } else {
             kdDebug(7116) << "IMAP4::parseURL - got error for " << _box << endl;
           }

@@ -68,7 +68,7 @@ public:
    * the data is normally send as we get it from the server
    * if you want the slave to decode the content (e.g. for attachments)
    * then append an additional INFO=DECODE to the URL
-   */ 
+   */
   virtual void get (const KURL & _url);
   /**
    * @brief stat a mailbox, message, attachment
@@ -139,13 +139,17 @@ protected:
    * @brief Parses the given URL
    * The return value is the type of the box
    * If you set caching to true the server is not queried but the delimiter
-   * is fetched from the cache. The return type is always ITYPE_DIR in this case 
+   * is fetched from the cache. The return type is always ITYPE_DIR in this case
+   *
+   * @param maybePrefix By default if the given url can't be listed we'll assume
+   * that it's a strange prefix (see #70377). But when testing whether something
+   * exist (e.g. from rename()) we don't want this hack to be activated.
    */
   enum IMAP_TYPE
   parseURL (const KURL & _url, QString & _box, QString & _section,
             QString & _type, QString & _uid, QString & _validity,
             QString & _hierarchyDelimiter, QString & _info,
-            bool cache = false); 
+            bool cache = false, bool maybePrefix = true);
   QString getMimeType (enum IMAP_TYPE);
 
   bool makeLogin ();
