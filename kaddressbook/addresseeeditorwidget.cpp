@@ -417,7 +417,6 @@ void AddresseeEditorWidget::save()
 {
   if ( !mDirty ) return;
 
-  mAddressee.setNameFromString(mNameEdit->text());
   mAddressee.setFormattedName(mFormattedNameBox->currentText());
   mAddressee.setRole(mRoleEdit->text());
   mAddressee.setOrganization(mOrgEdit->text());
