@@ -223,12 +223,14 @@ there are two special cases: a full and a first sync.
 		return false;
 	}
 
+/*	// Since we now have the calendar resource framework
+		// this check is no longer needeed to prevent corruption
 	if (PluginUtility::isRunning("korganizer") ||
 		PluginUtility::isRunning("alarmd"))
 	{
 		addSyncLogEntry(i18n("KOrganizer is running, can't update datebook."));
 		return false;
-	}
+	}*/
 
 	readConfig();
 

@@ -57,6 +57,10 @@ TODO: Update libkcal files.
 	dialog.
 * Updated the copyright lines in the source files as well as 
   in the about tabs of kpilot and the conduits.
+* Since we have the calendar resource framework, the calendarr conduit
+  can run even while korganizer has the calendar open without causing
+	calendar corruption. So I removed the check for running korganizer 
+	and alarm daemon
 
 
 2003-2-27  Adriaan de Groot
