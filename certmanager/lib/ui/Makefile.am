@@ -12,6 +12,7 @@ libkleopatra_ui_la_SOURCES = \
 	keylistview.cpp \
 	keyselectiondialog.cpp \
 	keyrequester.cpp \
+	keyapprovaldialog.cpp \
 	backendconfigwidget.cpp \
 	cryptoconfigmodule.cpp \
 	cryptoconfigdialog.cpp \
@@ -27,6 +28,7 @@ kleo_HEADERS = \
 	keylistview.h \
 	keyselectiondialog.h \
 	keyrequester.h \
+	keyapprovaldialog.h \
 	backendconfigwidget.h
 
 METASOURCES = AUTO

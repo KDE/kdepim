@@ -842,9 +842,8 @@ void CertManager::slotExportSecretKey() {
 				i18n("Select the secret key to export "
 				     "(<b>Warning: The PKCS#12 format is insecure. "
 				     "Exporting secret keys is discouraged</b>):"),
-				Kleo::CryptPlugFactory::instance()->smime(),
 				std::vector<GpgME::Key>(),
-				Kleo::KeySelectionDialog::SecretKeys,
+				Kleo::KeySelectionDialog::SecretKeys|Kleo::KeySelectionDialog::SMIMEKeys,
 				false /* no multiple selection */,
 				false /* no remember choice box */,
 				this, "secret key export key selection dialog" );

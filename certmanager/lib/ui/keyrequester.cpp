@@ -57,6 +57,7 @@
 #include <kleo/cryptobackend.h>
 #include <kleo/keylistjob.h>
 #include <kleo/dn.h>
+#include <cryptplugfactory.h>
 
 // gpgme++
 #include <gpgmepp/key.h>
@@ -80,13 +81,12 @@
 
 #include <assert.h>
 
-Kleo::KeyRequester::KeyRequester( const CryptoBackend::Protocol * backend,
-				  unsigned int allowedKeys, bool multipleKeys,
+Kleo::KeyRequester::KeyRequester( unsigned int allowedKeys, bool multipleKeys,
 				  QWidget * parent, const char * name )
   : QWidget( parent, name ),
-    mBackend( backend ),
     mMulti( multipleKeys ),
     mKeyUsage( allowedKeys ),
+    mJobs( 0 ),
     d( 0 )
 {
   QHBoxLayout * hlay = new QHBoxLayout( this, 0, KDialog::spacingHint() );
@@ -117,15 +117,20 @@ Kleo::KeyRequester::KeyRequester( const CryptoBackend::Protocol * backend,
   setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding,
 			      QSizePolicy::Fixed ) );
 
-  if ( backend && backend->name() == "openpgp" ) {
+  if ( mKeyUsage & KeySelectionDialog::OpenPGPKeys )
+    mOpenPGPBackend = Kleo::CryptPlugFactory::instance()->openpgp();
+  if ( mKeyUsage & KeySelectionDialog::SMIMEKeys )
+    mSMIMEBackend = Kleo::CryptPlugFactory::instance()->smime();
+
+  if ( mOpenPGPBackend && !mSMIMEBackend ) {
     mDialogCaption = i18n("OpenPGP Key Selection");
     mDialogMessage = i18n("Please select an OpenPGP key to use.");
-  } else if ( backend && backend->name() == "smime" ) {
+  } else if ( !mOpenPGPBackend && mSMIMEBackend ) {
     mDialogCaption = i18n("S/MIME Key Selection");
     mDialogMessage = i18n("Please select an S/MIME key to use.");
   } else {
     mDialogCaption = i18n("Key Selection");
-    mDialogMessage = i18n("Please select a key to use.");
+    mDialogMessage = i18n("Please select an (OpenPGP or S/MIME) key to use.");
   }
 }
 
@@ -225,10 +230,11 @@ static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
 }
 
 void Kleo::KeyRequester::startKeyListJob( const QStringList & fingerprints ) {
-  if ( !mBackend )
+  if ( !mSMIMEBackend && !mOpenPGPBackend )
     return;
 
   mTmpKeys.clear();
+  mJobs = 0;
 
   unsigned int count = 0;
   for ( QStringList::const_iterator it = fingerprints.begin() ; it != fingerprints.end() ; ++it )
@@ -242,29 +248,58 @@ void Kleo::KeyRequester::startKeyListJob( const QStringList & fingerprints ) {
     return;
   }
 
-  KeyListJob * job = mBackend->keyListJob( false ); // local, no sigs
-  if ( !job ) {
-    KMessageBox::error( this,
-			i18n("The chosen backend does not support listing keys. "
-			     "Check your installation."),
-			i18n("Key Listing Failed") );
-    return;
-  }
+  if ( mOpenPGPBackend ) {
+    KeyListJob * job = mOpenPGPBackend->keyListJob( false ); // local, no sigs
+    if ( !job ) {
+      KMessageBox::error( this,
+			  i18n("The OpenPGP backend does not support listing keys. "
+			       "Check your installation."),
+			  i18n("Key Listing Failed") );
+    } else {
+      connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
+	       SLOT(slotKeyListResult(const GpgME::KeyListResult&)) );
+      connect( job, SIGNAL(nextKey(const GpgME::Key&)),
+	       SLOT(slotNextKey(const GpgME::Key&)) );
 
-  connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
-	   SLOT(slotKeyListResult(const GpgME::KeyListResult&)) );
-  connect( job, SIGNAL(nextKey(const GpgME::Key&)),
-	   SLOT(slotNextKey(const GpgME::Key&)) );
-
-  const GpgME::Error err = job->start( fingerprints,
+      const GpgME::Error err = job->start( fingerprints,
         mKeyUsage & Kleo::KeySelectionDialog::SecretKeys &&
         !( mKeyUsage & Kleo::KeySelectionDialog::PublicKeys ) );
 
-  if ( err )
-    return showKeyListError( this, err );
+      if ( err )
+	showKeyListError( this, err );
+      else
+	++mJobs;
+    }
+  }
 
-  mEraseButton->setEnabled( false );
-  mDialogButton->setEnabled( false );
+  if ( mSMIMEBackend ) {
+    KeyListJob * job = mSMIMEBackend->keyListJob( false ); // local, no sigs
+    if ( !job ) {
+      KMessageBox::error( this,
+			  i18n("The S/MIME backend does not support listing keys. "
+			       "Check your installation."),
+			  i18n("Key Listing Failed") );
+    } else {
+      connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
+	       SLOT(slotKeyListResult(const GpgME::KeyListResult&)) );
+      connect( job, SIGNAL(nextKey(const GpgME::Key&)),
+	       SLOT(slotNextKey(const GpgME::Key&)) );
+
+      const GpgME::Error err = job->start( fingerprints,
+        mKeyUsage & Kleo::KeySelectionDialog::SecretKeys &&
+        !( mKeyUsage & Kleo::KeySelectionDialog::PublicKeys ) );
+
+      if ( err )
+	showKeyListError( this, err );
+      else
+	++mJobs;
+    }
+  }
+
+  if ( mJobs > 0 ) {
+    mEraseButton->setEnabled( false );
+    mDialogButton->setEnabled( false );
+  }
 }
 
 void Kleo::KeyRequester::slotNextKey( const GpgME::Key & key ) {
@@ -276,19 +311,18 @@ void Kleo::KeyRequester::slotKeyListResult( const GpgME::KeyListResult & res ) {
   if ( res.error() )
     showKeyListError( this, res.error() );
 
-  mEraseButton->setEnabled( true );
-  mDialogButton->setEnabled( true );
+  if ( --mJobs <= 0 ) {
+    mEraseButton->setEnabled( true );
+    mDialogButton->setEnabled( true );
 
-  setKeys( mTmpKeys );
-  mTmpKeys.clear();
+    setKeys( mTmpKeys );
+    mTmpKeys.clear();
+  }
 }
 
 
 void Kleo::KeyRequester::slotDialogButtonClicked() {
-  if ( !mBackend )
-    return;
-  KeySelectionDialog dlg( mDialogCaption, mDialogMessage, mBackend,
-			  mKeys, mKeyUsage, mMulti );
+  KeySelectionDialog dlg( mDialogCaption, mDialogMessage, mKeys, mKeyUsage, mMulti );
   if ( dlg.exec() == QDialog::Accepted )
     if ( mMulti )
       setKeys( dlg.selectedKeys() );
@@ -339,8 +373,12 @@ QPushButton * Kleo::KeyRequester::eraseButton() {
   return mEraseButton;
 }
 
-static inline unsigned int encryptionKeyUsage( bool trusted, bool valid ) {
-  unsigned int result = Kleo::KeySelectionDialog::EncryptionKeys | Kleo::KeySelectionDialog::PublicKeys;
+static inline unsigned int foo( bool openpgp, bool smime, bool trusted, bool valid ) {
+  unsigned int result = 0;
+  if ( openpgp )
+    result |= Kleo::KeySelectionDialog::OpenPGPKeys;
+  if ( smime )
+    result |= Kleo::KeySelectionDialog::SMIMEKeys;
   if ( trusted )
     result |= Kleo::KeySelectionDialog::TrustedKeys;
   if ( valid )
@@ -348,19 +386,18 @@ static inline unsigned int encryptionKeyUsage( bool trusted, bool valid ) {
   return result;
 }
 
-static inline unsigned int signingKeyUsage( bool trusted, bool valid ) {
-  unsigned int result = Kleo::KeySelectionDialog::SigningKeys | Kleo::KeySelectionDialog::SecretKeys;
-  if ( trusted )
-    result |= Kleo::KeySelectionDialog::TrustedKeys;
-  if ( valid )
-    result |= Kleo::KeySelectionDialog::ValidKeys;
-  return result;
+static inline unsigned int encryptionKeyUsage( bool openpgp, bool smime, bool trusted, bool valid ) {
+  return foo( openpgp, smime, trusted, valid ) | Kleo::KeySelectionDialog::EncryptionKeys | Kleo::KeySelectionDialog::PublicKeys;
 }
 
-Kleo::EncryptionKeyRequester::EncryptionKeyRequester( const CryptoBackend::Protocol * backend,
-						      bool multi, QWidget * parent, const char * name,
+static inline unsigned int signingKeyUsage( bool openpgp, bool smime, bool trusted, bool valid ) {
+  return foo( openpgp, smime, trusted, valid ) | Kleo::KeySelectionDialog::SigningKeys | Kleo::KeySelectionDialog::SecretKeys;
+}
+
+Kleo::EncryptionKeyRequester::EncryptionKeyRequester( bool multi, unsigned int proto,
+						      QWidget * parent, const char * name,
 						      bool onlyTrusted, bool onlyValid )
-  : KeyRequester( backend, encryptionKeyUsage( onlyTrusted, onlyValid ), multi,
+  : KeyRequester( encryptionKeyUsage( proto & OpenPGP, proto & SMIME, onlyTrusted, onlyValid ), multi,
 		  parent, name )
 {
 
@@ -369,10 +406,10 @@ Kleo::EncryptionKeyRequester::EncryptionKeyRequester( const CryptoBackend::Proto
 Kleo::EncryptionKeyRequester::~EncryptionKeyRequester() {}
 
 
-Kleo::SigningKeyRequester::SigningKeyRequester( const CryptoBackend::Protocol * backend,
-						bool multi, QWidget * parent, const char * name,
+Kleo::SigningKeyRequester::SigningKeyRequester( bool multi, unsigned int proto,
+						QWidget * parent, const char * name,
 						bool onlyTrusted, bool onlyValid )
-  : KeyRequester( backend, signingKeyUsage( onlyTrusted, onlyValid ), multi,
+  : KeyRequester( signingKeyUsage( proto & OpenPGP, proto & SMIME, onlyTrusted, onlyValid ), multi,
 		  parent, name )
 {
 

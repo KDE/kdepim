@@ -74,8 +74,7 @@ namespace Kleo {
   class KeyRequester : public QWidget {
     Q_OBJECT
   public:
-    KeyRequester( const CryptoBackend::Protocol * backend,
-		  unsigned int allowedKeys, bool multipleKeys=false,
+    KeyRequester( unsigned int allowedKeys, bool multipleKeys=false,
 		  QWidget * parent=0, const char * name=0 );
     ~KeyRequester();
 
@@ -128,13 +127,15 @@ namespace Kleo {
     void slotEraseButtonClicked();
 
   private:
-    const CryptoBackend::Protocol * mBackend;
+    const CryptoBackend::Protocol * mOpenPGPBackend;
+    const CryptoBackend::Protocol * mSMIMEBackend;
     QLabel * mLabel;
     QPushButton * mEraseButton;
     QPushButton * mDialogButton;
     QString mDialogCaption, mDialogMessage;
     bool mMulti;
     unsigned int mKeyUsage;
+    int mJobs;
     std::vector<GpgME::Key> mKeys;
     std::vector<GpgME::Key> mTmpKeys;
 
@@ -149,8 +150,9 @@ namespace Kleo {
   class EncryptionKeyRequester : public KeyRequester {
     Q_OBJECT
   public:
-    EncryptionKeyRequester( const CryptoBackend::Protocol * backend,
-			    bool multipleKeys=false,
+    enum { OpenPGP = 1, SMIME = 2, AllProtocols = OpenPGP|SMIME };
+
+    EncryptionKeyRequester( bool multipleKeys=false, unsigned int proto=AllProtocols,
 			    QWidget * parent=0, const char * name=0,
 			    bool onlyTrusted=true, bool onlyValid=true );
     ~EncryptionKeyRequester();
@@ -166,10 +168,11 @@ namespace Kleo {
   class SigningKeyRequester : public KeyRequester {
     Q_OBJECT
   public:
-    SigningKeyRequester( const CryptoBackend::Protocol * backend,
-			bool multipleKeys=false,
-			QWidget * parent=0, const char * name=0,
-			bool onlyTrusted=true, bool onlyValid=true );
+    enum { OpenPGP = 1, SMIME = 2, AllProtocols = OpenPGP|SMIME };
+
+    SigningKeyRequester( bool multipleKeys=false, unsigned int proto=AllProtocols,
+			 QWidget * parent=0, const char * name=0,
+			 bool onlyTrusted=true, bool onlyValid=true );
     ~SigningKeyRequester();
 
   private:

@@ -296,7 +296,6 @@ static const int sCheckSelectionDelay = 250;
 
 Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
 					      const QString & text,
-					      const CryptoBackend::Protocol * backend,
 					      const std::vector<GpgME::Key> & selectedKeys,
 					      unsigned int keyUsage,
 					      bool extendedSelection,
@@ -311,40 +310,11 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
     mKeyUsage( keyUsage ),
     mCurrentContextMenuItem( 0 )
 {
-  if ( backend )
-    if ( backend->name() == "openpgp" )
-      mOpenPGPBackend = backend;
-    else
-      mSMIMEBackend = backend;
-  else {
+  if ( mKeyUsage & OpenPGPKeys )
     mOpenPGPBackend = Kleo::CryptPlugFactory::instance()->openpgp();
+  if ( mKeyUsage & SMIMEKeys )
     mSMIMEBackend = Kleo::CryptPlugFactory::instance()->smime();
-  }
-  init( text, extendedSelection, rememberChoice );
-}
 
-Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
-					      const QString & text,
-					      const CryptoBackend::Protocol * openpgp,
-					      const CryptoBackend::Protocol * smime,
-					      const std::vector<GpgME::Key> & selectedKeys,
-					      unsigned int keyUsage,
-					      bool extendedSelection,
-					      bool rememberChoice,
-					      QWidget * parent, const char * name,
-					      bool modal )
-  : KDialogBase( parent, name, modal, title, Default|Ok|Cancel, Ok ),
-    mOpenPGPBackend( openpgp ),
-    mSMIMEBackend( smime ),
-    mRememberCB( 0 ),
-    mSelectedKeys( selectedKeys ),
-    mKeyUsage( keyUsage ),
-    mCurrentContextMenuItem( 0 )
-{
-  init( text, extendedSelection, rememberChoice );
-}
-
-void Kleo::KeySelectionDialog::init( const QString & text, bool extendedSelection, bool rememberChoice ) {
   QSize dialogSize( 580, 400 );
   if ( kapp ) {
     KWin::setIcons( winId(), kapp->icon(), kapp->miniIcon() );

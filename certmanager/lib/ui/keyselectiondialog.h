@@ -75,22 +75,13 @@ namespace Kleo {
       TrustedKeys = 32,
       CertificationKeys = 64,
       AuthenticationKeys = 128,
-      AllKeys = PublicKeys | SecretKeys
+      OpenPGPKeys = 256,
+      SMIMEKeys = 512,
+      AllKeys = PublicKeys | SecretKeys | OpenPGPKeys | SMIMEKeys
     };
 
     KeySelectionDialog( const QString & title,
                         const QString & text,
-                        const Kleo::CryptoBackend::Protocol * backend,
-			const std::vector<GpgME::Key> & selectedKeys=std::vector<GpgME::Key>(),
-                        unsigned int keyUsage=AllKeys,
-                        bool extendedSelection=false,
-			bool rememberChoice=false,
-                        QWidget * parent=0, const char * name=0,
-                        bool modal=true );
-    KeySelectionDialog( const QString & title,
-                        const QString & text,
-                        const Kleo::CryptoBackend::Protocol * openpgp,
-                        const Kleo::CryptoBackend::Protocol * smime,
 			const std::vector<GpgME::Key> & selectedKeys=std::vector<GpgME::Key>(),
                         unsigned int keyUsage=AllKeys,
                         bool extendedSelection=false,
@@ -131,7 +122,6 @@ namespace Kleo {
     void slotFilter();
 
   private:
-    void init( const QString &, bool, bool );
     void filterByKeyID( const QString & keyID );
     void filterByKeyIDOrUID( const QString & keyID );
     void filterByUID( const QString & uid );
