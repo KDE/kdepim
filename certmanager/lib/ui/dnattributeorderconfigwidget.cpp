@@ -36,8 +36,6 @@
 
 #include "dnattributeorderconfigwidget.h"
 
-#include "cryptplugfactory.h"
-
 #include "kleo/dn.h"
 
 #include <klocale.h>

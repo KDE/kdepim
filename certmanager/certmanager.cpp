@@ -46,8 +46,7 @@
 #include "conf/configuredialog.h"
 
 // libkleopatra
-#include <cryptplugwrapper.h>
-#include <cryptplugfactory.h>
+#include <kleo/cryptobackendfactory.h>
 #include <kleo/downloadjob.h>
 #include <kleo/importjob.h>
 #include <kleo/exportjob.h>
@@ -459,7 +458,7 @@ static QStringList stringlistFromSet( const std::set<std::string> & set ) {
 
 void CertManager::slotRefreshKeys() {
   const QStringList keys = stringlistFromSet( extractKeyFingerprints( mKeyListView->selectedItems() ) );
-  Kleo::RefreshKeysJob * job = Kleo::CryptPlugFactory::instance()->smime()->refreshKeysJob();
+  Kleo::RefreshKeysJob * job = Kleo::CryptoBackendFactory::instance()->smime()->refreshKeysJob();
   assert( job );
 
   connect( job, SIGNAL(result(const GpgME::Error&)),
@@ -517,10 +516,10 @@ void CertManager::startKeyListing( bool validating, bool refresh, const QStringL
 
   Kleo::KeyListJob * job = 0;
   if ( !validating && !refresh && mKeyListView->hierarchical() && !patterns.empty() )
-    job = new Kleo::HierarchicalKeyListJob( Kleo::CryptPlugFactory::instance()->smime(),
+    job = new Kleo::HierarchicalKeyListJob( Kleo::CryptoBackendFactory::instance()->smime(),
 					    mRemote, false, validating );
   else
-    job = Kleo::CryptPlugFactory::instance()->smime()->keyListJob( mRemote, false, validating );
+    job = Kleo::CryptoBackendFactory::instance()->smime()->keyListJob( mRemote, false, validating );
   assert( job );
 
   connect( job, SIGNAL(nextKey(const GpgME::Key&)),
@@ -678,7 +677,7 @@ void CertManager::slotStartCertificateDownload( const QString& fingerprint, cons
     return;
 
   Kleo::DownloadJob * job =
-    Kleo::CryptPlugFactory::instance()->smime()->downloadJob( false /* no armor */ );
+    Kleo::CryptoBackendFactory::instance()->smime()->downloadJob( false /* no armor */ );
   assert( job );
 
   connect( job, SIGNAL(result(const GpgME::Error&,const QByteArray&)),
@@ -731,7 +730,7 @@ static void showCertificateImportError( QWidget * parent, const GpgME::Error & e
 }
 
 void CertManager::startCertificateImport( const QByteArray & keyData, const QString& certDisplayName ) {
-  Kleo::ImportJob * job = Kleo::CryptPlugFactory::instance()->smime()->importJob();
+  Kleo::ImportJob * job = Kleo::CryptoBackendFactory::instance()->smime()->importJob();
   assert( job );
 
   connect( job, SIGNAL(result(const GpgME::ImportResult&)),
@@ -950,7 +949,7 @@ void CertManager::slotDeleteCertificate() {
 
   if ( !mHierarchyAnalyser ) {
     mHierarchyAnalyser = new HierarchyAnalyser( this, "mHierarchyAnalyser" );
-    Kleo::KeyListJob * job = Kleo::CryptPlugFactory::instance()->smime()->keyListJob();
+    Kleo::KeyListJob * job = Kleo::CryptoBackendFactory::instance()->smime()->keyListJob();
     assert( job );
     connect( job, SIGNAL(nextKey(const GpgME::Key&)),
 	     mHierarchyAnalyser, SLOT(slotNextKey(const GpgME::Key&)) );
@@ -1005,7 +1004,7 @@ void CertManager::slotDeleteCertificate() {
        != KMessageBox::Continue )
     return;
 
-  if ( Kleo::DeleteJob * job = Kleo::CryptPlugFactory::instance()->smime()->deleteJob() )
+  if ( Kleo::DeleteJob * job = Kleo::CryptoBackendFactory::instance()->smime()->deleteJob() )
     job->slotCancel();
   else {
     QString str = keys.size() == 1
@@ -1019,7 +1018,7 @@ void CertManager::slotDeleteCertificate() {
 			str.arg( i18n("Operation not supported by the backend.") ),
 			i18n("Certificate Deletion Failed") );
   }
-  Kleo::MultiDeleteJob * job = new Kleo::MultiDeleteJob( Kleo::CryptPlugFactory::instance()->smime() );
+  Kleo::MultiDeleteJob * job = new Kleo::MultiDeleteJob( Kleo::CryptoBackendFactory::instance()->smime() );
   assert( job );
 
   connect( job, SIGNAL(result(const GpgME::Error&,const GpgME::Key&)),
@@ -1115,7 +1114,7 @@ void CertManager::startCertificateExport( const QStringList & fingerprints ) {
 
   // we need to use PEM (ascii armoured) format, since DER (binary)
   // can't transport more than one certificate *sigh* this is madness :/
-  Kleo::ExportJob * job = Kleo::CryptPlugFactory::instance()->smime()->publicKeyExportJob( true );
+  Kleo::ExportJob * job = Kleo::CryptoBackendFactory::instance()->smime()->publicKeyExportJob( true );
   assert( job );
 
   connect( job, SIGNAL(result(const GpgME::Error&,const QByteArray&)),
@@ -1207,7 +1206,7 @@ void CertManager::startSecretKeyExport( const QString & fingerprint ) {
     return;
 
   // PENDING(marc): let user choose between binary and PEM format?
-  Kleo::ExportJob * job = Kleo::CryptPlugFactory::instance()->smime()->secretKeyExportJob( false );
+  Kleo::ExportJob * job = Kleo::CryptoBackendFactory::instance()->smime()->secretKeyExportJob( false );
   assert( job );
 
   connect( job, SIGNAL(result(const GpgME::Error&,const QByteArray&)),

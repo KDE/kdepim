@@ -38,9 +38,7 @@
 #include "backendconfigwidget.h"
 #include "cryptoconfigdialog.h"
 
-#include "cryptplugfactory.h"
-#include "cryptplugwrapperlist.h"
-#include "cryptplugwrapper.h"
+#include "kleo/cryptobackendfactory.h"
 
 #include <klistview.h>
 #include <kdialog.h>
@@ -63,7 +61,7 @@ public:
   Kleo::BackendListView * listView;
   QPushButton * configureButton;
   QPushButton * rescanButton;
-  Kleo::CryptPlugFactory * backendFactory;
+  Kleo::CryptoBackendFactory * backendFactory;
 };
 
 namespace Kleo {
@@ -193,7 +191,7 @@ void Kleo::BackendListView::deselectAll( ProtocolType protocolType, QCheckListIt
 
 ////
 
-Kleo::BackendConfigWidget::BackendConfigWidget( CryptPlugFactory * factory, QWidget * parent, const char * name, WFlags f )
+Kleo::BackendConfigWidget::BackendConfigWidget( CryptoBackendFactory * factory, QWidget * parent, const char * name, WFlags f )
   : QWidget( parent, name, f ), d( 0 )
 {
   assert( factory );

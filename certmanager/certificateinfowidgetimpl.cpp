@@ -39,11 +39,9 @@
 // libkleopatra
 #include <kleo/keylistjob.h>
 #include <kleo/dn.h>
+#include <kleo/cryptobackendfactory.h>
 
 #include <ui/progressdialog.h>
-
-#include <cryptplugfactory.h>
-#include <cryptplugwrapper.h>
 
 // gpgme++
 #include <gpgmepp/keylistresult.h>
@@ -227,7 +225,7 @@ void CertificateInfoWidgetImpl::startCertificateChainListing() {
   // a chain-id set on the key, we know that we have the issuer's cert
   // in the local keyring, so just use local keylisting.
   Kleo::KeyListJob * job =
-    Kleo::CryptPlugFactory::instance()->smime()->keyListJob( false );
+    Kleo::CryptoBackendFactory::instance()->smime()->keyListJob( false );
   assert( job );
 
   connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
@@ -409,7 +407,7 @@ void CertificateInfoWidgetImpl::startKeyExistanceCheck() {
 
   // start _local_ keylistjob (no progressdialog needed here):
   Kleo::KeyListJob * job =
-    Kleo::CryptPlugFactory::instance()->smime()->keyListJob( false );
+    Kleo::CryptoBackendFactory::instance()->smime()->keyListJob( false );
   assert( job );
 
   connect( job, SIGNAL(nextKey(const GpgME::Key&)),

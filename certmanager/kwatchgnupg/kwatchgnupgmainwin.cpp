@@ -34,7 +34,7 @@
 #include "kwatchgnupgconfig.h"
 #include "tray.h"
 
-#include <cryptplugfactory.h>
+#include <kleo/cryptobackendfactory.h>
 #include <kleo/cryptoconfig.h>
 
 #include <kdebug.h>
@@ -140,7 +140,7 @@ void KWatchGnuPGMainWindow::setGnuPGConfig()
 {
   QStringList logclients;
   // Get config object
-  Kleo::CryptoConfig* cconfig = Kleo::CryptPlugFactory::instance()->config();
+  Kleo::CryptoConfig* cconfig = Kleo::CryptoBackendFactory::instance()->config();
   Q_ASSERT( cconfig );
   KConfig* config = kapp->config();
   config->setGroup("WatchGnuPG");

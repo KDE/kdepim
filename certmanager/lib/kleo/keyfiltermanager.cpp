@@ -36,7 +36,8 @@
 
 #include "keyfiltermanager.h"
 #include "kconfigbasedkeyfilter.h"
-#include <cryptplugfactory.h>
+
+#include "cryptobackendfactory.h"
 
 #include <kconfig.h>
 
@@ -103,12 +104,12 @@ static inline bool by_increasing_specificity( const Kleo::KeyFilter * left, cons
 void Kleo::KeyFilterManager::reload() {
   d->clear();
 
-  KConfig * config = Kleo::CryptPlugFactory::instance()->configObject();
+  KConfig * config = Kleo::CryptoBackendFactory::instance()->configObject();
   if ( !config )
     return;
   const QStringList groups = config->groupList().grep( QRegExp( "^Key Filter #\\d+$" ) );
   for ( QStringList::const_iterator it = groups.begin() ; it != groups.end() ; ++it ) {
-    KConfigGroup cfg( config, *it );
+    const KConfigGroup cfg( config, *it );
     d->filters.push_back( new KConfigBasedKeyFilter( cfg ) );
   }
   std::stable_sort( d->filters.begin(), d->filters.end(), by_increasing_specificity );

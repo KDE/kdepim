@@ -41,11 +41,9 @@
 #include <kleo/oidmap.h>
 #include <kleo/keygenerationjob.h>
 #include <kleo/dn.h>
+#include <kleo/cryptobackendfactory.h>
 
 #include <ui/progressdialog.h>
-
-#include <cryptplugwrapper.h>
-#include <cryptplugfactory.h>
 
 // gpgme++
 #include <gpgmepp/keygenerationresult.h>
@@ -235,7 +233,7 @@ void CertificateWizardImpl::slotGenerateCertificate()
     kdDebug() << certParms << endl;
 
     Kleo::KeyGenerationJob * job =
-      Kleo::CryptPlugFactory::instance()->smime()->keyGenerationJob();
+      Kleo::CryptoBackendFactory::instance()->smime()->keyGenerationJob();
     assert( job );
 
     connect( job, SIGNAL(result(const GpgME::KeyGenerationResult&,const QByteArray&)),

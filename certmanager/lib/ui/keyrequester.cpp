@@ -54,10 +54,9 @@
 
 #include "keyselectiondialog.h"
 
-#include <kleo/cryptobackend.h>
 #include <kleo/keylistjob.h>
 #include <kleo/dn.h>
-#include <cryptplugfactory.h>
+#include <kleo/cryptobackendfactory.h>
 
 // gpgme++
 #include <gpgmepp/key.h>
@@ -360,9 +359,9 @@ void Kleo::KeyRequester::setAllowedKeys( unsigned int keyUsage ) {
   mSMIMEBackend = 0;
 
   if ( mKeyUsage & KeySelectionDialog::OpenPGPKeys )
-    mOpenPGPBackend = Kleo::CryptPlugFactory::instance()->openpgp();
+    mOpenPGPBackend = Kleo::CryptoBackendFactory::instance()->openpgp();
   if ( mKeyUsage & KeySelectionDialog::SMIMEKeys )
-    mSMIMEBackend = Kleo::CryptPlugFactory::instance()->smime();
+    mSMIMEBackend = Kleo::CryptoBackendFactory::instance()->smime();
 
   if ( mOpenPGPBackend && !mSMIMEBackend ) {
     mDialogCaption = i18n("OpenPGP Key Selection");

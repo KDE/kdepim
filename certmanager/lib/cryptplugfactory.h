@@ -33,76 +33,21 @@
 #ifndef __KLEO_CRYPTPLUGFACTORY_H__
 #define __KLEO_CRYPTPLUGFACTORY_H__
 
-#include <qobject.h>
-#include <qvaluevector.h>
+#include "kleo/cryptobackendfactory.h"
 
-#include "kleo/cryptobackend.h"
-
-namespace Kleo {
-  class BackendConfigWidget;
-}
-
-class QWidget;
-class KConfig;
-
-namespace Kleo {
-
-  class CryptPlugFactory : public QObject {
-    Q_OBJECT
-  protected:
-    CryptPlugFactory();
-    ~CryptPlugFactory();
-  public:
-    static CryptPlugFactory * instance();
-
-    const CryptoBackend::Protocol * smime() const;
-    const CryptoBackend::Protocol * openpgp() const;
-    CryptoConfig * config() const;
-
-    const CryptoBackend * backend( unsigned int idx ) const;
-
-    bool hasBackends() const;
-
-    Kleo::BackendConfigWidget * configWidget( QWidget * parent=0, const char * name=0 ) const;
-
-    KConfig* configObject() const;
-
-    // The preferred backend for smime (can be 0) - currently unused
-    //const CryptoBackend* smimeBackend() const;
-    // The preferred backend for openpgp (can be 0) - currently unused
-    //const CryptoBackend* openpgpBackend() const;
-
-    // For BackendConfigWidget to save the configuration
-    // 0 means no backend selected.
-    void setSMIMEBackend( const CryptoBackend* backend );
-    void setOpenPGPBackend( const CryptoBackend* backend );
-
-    void scanForBackends( QStringList * reasons=0 );
-
-  protected:
-    QValueVector<CryptoBackend*> mBackendList;
-    mutable KConfig* mConfigObject;
-    const CryptoBackend* mSMIMEBackend;
-    const CryptoBackend* mOpenPGPBackend;
-
-  private:
-    const CryptoBackend * backendByName( const QString& name ) const;
-    void readConfig();
-    CryptPlugFactory( const CryptPlugFactory & );
-    void operator=( const CryptPlugFactory & );
-
-    static CryptPlugFactory * mSelf;
-  };
-
-} // namespace Kleo
+#include <kdemacros.h>
 
 #ifndef LIBKLEOPATRA_NO_COMPAT
+namespace Kleo {
+  //typedef CryptoBackendFactory CryptPlugFactory KDE_DEPRECATED;
+}
+
 class CryptPlugWrapper;
 class CryptPlugWrapperList;
 
 namespace KMail {
 
-  class CryptPlugFactory : public Kleo::CryptPlugFactory {
+  class CryptPlugFactory : public Kleo::CryptoBackendFactory {
     Q_OBJECT
   protected:
     CryptPlugFactory();

@@ -30,19 +30,22 @@
 */
 
 #include "dirservconfigpage.h"
-#include <qlayout.h>
 #include "directoryserviceswidget.h"
-#include <cryptplugfactory.h>
+
+#include <kleo/cryptobackendfactory.h>
+
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kdebug.h>
 #include <kconfig.h>
+#include <knuminput.h>
+#include <kdialog.h>
+
 #include <qhbox.h>
 #include <qlabel.h>
 #include <qdatetimeedit.h>
 #include <qcheckbox.h>
-#include <knuminput.h>
-#include <kdialog.h>
+#include <qlayout.h>
 
 // For sync'ing kabldaprc
 class KABSynchronizer
@@ -132,7 +135,7 @@ static const char s_addnewservers_entryName[] = "add-servers";
 DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( QWidget * parent, const char * name )
     : KCModule( parent, name )
 {
-  mConfig = Kleo::CryptPlugFactory::instance()->config();
+  mConfig = Kleo::CryptoBackendFactory::instance()->config();
   QVBoxLayout* lay = new QVBoxLayout( this, 0, KDialog::spacingHint() );
   Kleo::CryptoConfigEntry* entry = configEntry( s_dirserv_componentName, s_dirserv_groupName, s_dirserv_entryName,
                                                 Kleo::CryptoConfigEntry::ArgType_LDAPURL, true );

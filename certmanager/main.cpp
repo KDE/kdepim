@@ -37,7 +37,7 @@
 #include "aboutdata.h"
 #include "certmanager.h"
 
-#include <cryptplugfactory.h>
+#include <kleo/cryptobackendfactory.h>
 
 #include <kapplication.h>
 #include <kcmdlineargs.h>
@@ -68,7 +68,7 @@ int main( int argc, char** argv )
   KGlobal::locale()->insertCatalogue( "libkleopatra" );
   KGlobal::iconLoader()->addAppDir( "libkleopatra" );
 
-  if( !Kleo::CryptPlugFactory::instance()->smime() ) {
+  if( !Kleo::CryptoBackendFactory::instance()->smime() ) {
     KMessageBox::error(0,
 			i18n( "<qt>The crypto plugin could not be initialized.<br>"
 			      "Certificate Manager will terminate now.</qt>") );

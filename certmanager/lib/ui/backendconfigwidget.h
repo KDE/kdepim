@@ -37,8 +37,7 @@
 #include <qwidget.h>
 
 namespace Kleo {
-  class MutableBackendFactory;
-  class CryptPlugFactory;
+  class CryptoBackendFactory;
 }
 
 class QListViewItem;
@@ -48,7 +47,7 @@ namespace Kleo {
   class BackendConfigWidget : public QWidget {
     Q_OBJECT
   public:
-    BackendConfigWidget( CryptPlugFactory * factory, QWidget * parent=0, const char * name=0, WFlags f=0 );
+    BackendConfigWidget( CryptoBackendFactory * factory, QWidget * parent=0, const char * name=0, WFlags f=0 );
     ~BackendConfigWidget();
 
     void load();

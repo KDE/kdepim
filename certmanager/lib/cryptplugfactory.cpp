@@ -51,127 +51,7 @@
 
 #include <assert.h>
 
-Kleo::CryptPlugFactory * Kleo::CryptPlugFactory::mSelf = 0;
 KMail::CryptPlugFactory * KMail::CryptPlugFactory::mSelf = 0;
-
-Kleo::CryptPlugFactory::CryptPlugFactory()
-  : QObject( qApp, "CryptPlugFactory::instance()" )
-{
-  mSelf = this;
-  mConfigObject = 0;
-  mBackendList.push_back( new QGpgMEBackend() );
-  mBackendList.push_back( new PGP2Backend() );
-  mBackendList.push_back( new PGP5Backend() );
-  mBackendList.push_back( new PGP6Backend() );
-  mBackendList.push_back( new GPG1Backend() );
-  scanForBackends();
-  readConfig();
-}
-
-Kleo::CryptPlugFactory::~CryptPlugFactory() {
-  mSelf = 0;
-
-  for ( QValueVector<CryptoBackend*>::iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it ) {
-    delete *it;
-    *it = 0;
-  }
-  delete mConfigObject;
-  mConfigObject = 0;
-}
-
-Kleo::CryptPlugFactory * Kleo::CryptPlugFactory::instance() {
-  if ( !mSelf )
-    mSelf = new CryptPlugFactory();
-  return mSelf;
-}
-
-
-// const Kleo::CryptoBackend* Kleo::CryptPlugFactory::smimeBackend() const {
-//   return mSMIMEBackend;
-// }
-
-// const Kleo::CryptoBackend* Kleo::CryptPlugFactory::openpgpBackend() const {
-//   return mOpenPGPBackend;
-// }
-
-const Kleo::CryptoBackend::Protocol * Kleo::CryptPlugFactory::smime() const {
-  return mSMIMEBackend ? mSMIMEBackend->smime() : 0 ;
-}
-
-const Kleo::CryptoBackend::Protocol * Kleo::CryptPlugFactory::openpgp() const {
-  return mOpenPGPBackend ? mOpenPGPBackend->openpgp() : 0 ;
-}
-
-Kleo::CryptoConfig * Kleo::CryptPlugFactory::config() const {
-  // ## should we use mSMIMEBackend? mOpenPGPBackend? backend(0) i.e. always qgpgme?
-  return backend( 0 ) ? backend( 0 )->config() : 0;
-}
-
-bool Kleo::CryptPlugFactory::hasBackends() const {
-  return !mBackendList.empty();
-}
-
-void Kleo::CryptPlugFactory::scanForBackends( QStringList * reasons ) {
-  if ( !reasons )
-    return;
-  for ( QValueVector<CryptoBackend*>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it ) {
-    assert( *it );
-    QString reason;
-    if ( (*it)->supportsOpenPGP() && !(*it)->checkForOpenPGP( &reason ) ) {
-      reasons->push_back( i18n("While scanning for OpenPGP support in backend %1:")
-			  .arg( (*it)->displayName() ) );
-      reasons->push_back( "  " + reason );
-    }
-    if ( (*it)->supportsSMIME() && !(*it)->checkForSMIME( &reason ) ) {
-      reasons->push_back( i18n("While scanning for S/MIME support in backend %1:")
-			  .arg( (*it)->displayName() ) );
-      reasons->push_back( "  " + reason );
-    }
-  }
-}
-
-const Kleo::CryptoBackend * Kleo::CryptPlugFactory::backend( unsigned int idx ) const {
-  return ( idx < mBackendList.size() ) ? mBackendList[idx] : 0 ;
-}
-
-const Kleo::CryptoBackend * Kleo::CryptPlugFactory::backendByName( const QString& name ) const {
-  for ( QValueVector<CryptoBackend*>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it ) {
-    if ( (*it)->name() == name )
-      return *it;
-  }
-  return 0;
-}
-
-Kleo::BackendConfigWidget * Kleo::CryptPlugFactory::configWidget( QWidget * parent, const char * name ) const {
-  return new Kleo::BackendConfigWidget( mSelf, parent, name );
-}
-
-KConfig* Kleo::CryptPlugFactory::configObject() const {
-  if ( !mConfigObject )
-    mConfigObject = new KConfig( "libkleopatrarc" );
-  return mConfigObject;
-}
-
-void Kleo::CryptPlugFactory::setSMIMEBackend( const CryptoBackend* backend ) {
-  QString name = backend ? backend->name() : QString::null;
-  KConfigGroup group( configObject(), "Backends" );
-  group.writeEntry( "SMIME", name );
-}
-
-void Kleo::CryptPlugFactory::setOpenPGPBackend( const CryptoBackend* backend ) {
-  QString name = backend ? backend->name() : QString::null;
-  KConfigGroup group( configObject(), "Backends" );
-  group.writeEntry( "OpenPGP", name );
-}
-
-void Kleo::CryptPlugFactory::readConfig() {
-  KConfigGroup group( configObject(), "Backends" );
-  QString smimeBackend = group.readEntry( "SMIME", "gpgme" );
-  mSMIMEBackend = backendByName( smimeBackend );
-
-  QString openPGPBackend = group.readEntry( "OpenPGP", "gpgme" );
-  mOpenPGPBackend = backendByName( openPGPBackend );
-}
 
 //
 //
@@ -181,7 +61,7 @@ void Kleo::CryptPlugFactory::readConfig() {
 
 
 KMail::CryptPlugFactory::CryptPlugFactory()
-  : Kleo::CryptPlugFactory(),
+  : Kleo::CryptoBackendFactory(),
     mCryptPlugWrapperList( 0 )
 {
   mSelf = this;
@@ -228,7 +108,7 @@ CryptPlugWrapper * KMail::CryptPlugFactory::openpgp() const {
 }
 
 void KMail::CryptPlugFactory::scanForBackends( QStringList * reason ) {
-  Kleo::CryptPlugFactory::scanForBackends( reason );
+  Kleo::CryptoBackendFactory::scanForBackends( reason );
   updateCryptPlugWrapperList();
 }
 

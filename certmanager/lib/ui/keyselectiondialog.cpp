@@ -44,12 +44,8 @@
 #include "progressdialog.h"
 
 #include <kleo/dn.h>
-#include <kleo/cryptobackend.h>
 #include <kleo/keylistjob.h>
-
-#include <cryptplugwrapper.h>
-#include <cryptplugwrapperlist.h>
-#include <cryptplugfactory.h>
+#include <kleo/cryptobackendfactory.h>
 
 // gpgme++
 #include <gpgmepp/key.h>
@@ -330,9 +326,9 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
 void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection,
 				     const QString & text, const QString & initialQuery ) {
   if ( mKeyUsage & OpenPGPKeys )
-    mOpenPGPBackend = Kleo::CryptPlugFactory::instance()->openpgp();
+    mOpenPGPBackend = Kleo::CryptoBackendFactory::instance()->openpgp();
   if ( mKeyUsage & SMIMEKeys )
-    mSMIMEBackend = Kleo::CryptPlugFactory::instance()->smime();
+    mSMIMEBackend = Kleo::CryptoBackendFactory::instance()->smime();
 
   QSize dialogSize( 580, 400 );
   if ( kapp ) {

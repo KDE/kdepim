@@ -36,7 +36,8 @@
 #endif
 
 #include "appearanceconfigwidget.h"
-#include <cryptplugfactory.h>
+
+#include <kleo/cryptobackendfactory.h>
 #include <kleo/keyfiltermanager.h>
 
 #include <klistview.h>
@@ -234,7 +235,7 @@ void AppearanceConfigWidget::slotDefaultClicked()
 void AppearanceConfigWidget::load()
 {
   categoriesLV->clear();
-  KConfig * config = Kleo::CryptPlugFactory::instance()->configObject();
+  KConfig * config = Kleo::CryptoBackendFactory::instance()->configObject();
   if ( !config )
     return;
   QStringList groups = config->groupList().grep( QRegExp( "^Key Filter #\\d+$" ) );
@@ -246,7 +247,7 @@ void AppearanceConfigWidget::load()
 
 void AppearanceConfigWidget::save()
 {
-  KConfig * config = Kleo::CryptPlugFactory::instance()->configObject();
+  KConfig * config = Kleo::CryptoBackendFactory::instance()->configObject();
   if ( !config )
     return;
   // We know (assume) that the groups in the config object haven't changed,
