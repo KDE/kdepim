@@ -36,6 +36,7 @@
  *  The Kapabilities are used to configure the konnector
  *
  */
+namespace KSync {
 class Kapabilities {
 public:
     /**
@@ -302,6 +303,7 @@ private:
     QStringList m_models;
     QString m_currMode;
     QStringList m_modes;
+};
 };
 #endif
 

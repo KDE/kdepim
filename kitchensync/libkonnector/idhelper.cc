@@ -7,6 +7,8 @@
 
 #include "idhelper.h"
 
+using namespace KSync;
+
 // TypeORAppName||%%||KonnectorId||%%||KDEID
 KonnectorUIDHelper::KonnectorUIDHelper( const QString &dir )
 {
@@ -15,6 +17,7 @@ KonnectorUIDHelper::KonnectorUIDHelper( const QString &dir )
     m_config->setGroup("uids");
     QString string = m_config->readEntry( "ids" );
     QStringList list = QStringList::split( "%%||%%",  string );
+
     for ( QStringList::Iterator it = list.begin(); it != list.end() ; ++it ) {
         QStringList list2 = QStringList::split("||%%||",(*it), true ); // allow empty entries
         addId( list2[0],  list2[1], list2[2] );
@@ -28,12 +31,16 @@ KonnectorUIDHelper::~KonnectorUIDHelper()
 }
 QString KonnectorUIDHelper::konnectorId( const QString &appName,  const QString &kdeId, const QString &defaultId )
 {
-    kdDebug(5201) << "IdHelper: KonnectorIdAppName: " << appName << " KDE Id: " << kdeId << " defaultId " << defaultId << endl;
-    QMap<QString,  Kontainer::List >::Iterator it;
+    kdDebug(5201) << "IdHelper: KonnectorIdAppName: "
+                  << appName << " KDE Id: "
+                  << kdeId << " defaultId "
+                  << defaultId << endl;
+
+    QMap<QString,  Kontainer::ValueList >::Iterator it;
     it = m_ids.find( appName );
     if ( it != m_ids.end() ) {
-        Kontainer::List kontainer = it.data();
-        Kontainer::List::Iterator it;
+        Kontainer::ValueList kontainer = it.data();
+        Kontainer::ValueList::Iterator it;
         for ( it = kontainer.begin(); it != kontainer.end(); ++it ) {
             if ( kdeId.stripWhiteSpace() == (*it).second().stripWhiteSpace() ) {
                 kdDebug(5201) << "it.first = " << (*it).first() << endl;
@@ -45,12 +52,15 @@ QString KonnectorUIDHelper::konnectorId( const QString &appName,  const QString 
 }
 QString KonnectorUIDHelper::kdeId( const QString &appName,  const QString &konnectorId, const QString &defaultId )
 {
-    kdDebug(5201) << "kdeId: AppName: " << appName  << " konnectorId " << konnectorId << endl;
-    QMap<QString,  Kontainer::List >::Iterator it;
+    kdDebug(5201) << "kdeId: AppName: "
+                  << appName  << " konnectorId "
+                  << konnectorId << endl;
+
+    QMap<QString,  Kontainer::ValueList >::Iterator it;
     it = m_ids.find( appName );
     if ( it != m_ids.end() ) {
-        Kontainer::List kontainer = it.data();
-        Kontainer::List::Iterator it;
+        Kontainer::ValueList kontainer = it.data();
+        Kontainer::ValueList::Iterator it;
         for ( it = kontainer.begin(); it != kontainer.end(); ++it ) {
             if ( konnectorId.stripWhiteSpace() == (*it).first().stripWhiteSpace() ) {
                 kdDebug(5201) << "it.second " << (*it).second() << endl;
@@ -64,17 +74,21 @@ void KonnectorUIDHelper::addId( const QString& appName,
                                 const QString& konnectorId,
                                 const QString& kdeId )
 {
-    kdDebug(5201) << "addId " << appName << "  konId "  << konnectorId << " kdeId " << kdeId << endl;
-    QMap<QString,  Kontainer::List >::Iterator it;
+    kdDebug(5201) << "addId " << appName
+                  << "  konId "  << konnectorId
+                  << " kdeId " << kdeId << endl;
+
+    QMap<QString,  Kontainer::ValueList >::Iterator it;
     it = m_ids.find( appName );
+
     if ( it == m_ids.end() ) {
         kdDebug(5201) << "First insert" << endl;
-        Kontainer::List kontainer;
+        Kontainer::ValueList kontainer;
         kontainer.append( Kontainer( konnectorId,  kdeId ) );
         m_ids.replace( appName,  kontainer );
     }else{
         kdDebug(5201) << "Already inserted" << endl;
-        Kontainer::List kontainer = it.data();
+        Kontainer::ValueList kontainer = it.data();
         Kontainer kont( konnectorId,  kdeId );
         kontainer.remove( kont );
         kontainer.append( kont );
@@ -83,11 +97,11 @@ void KonnectorUIDHelper::addId( const QString& appName,
 }
 void KonnectorUIDHelper::removeId( const QString &appName,  const QString &id )
 {
-    QMap<QString,  Kontainer::List >::Iterator it;
+    QMap<QString,  Kontainer::ValueList >::Iterator it;
     it = m_ids.find( appName );
     if ( it== m_ids.end() ) {
-        Kontainer::List kontainer = it.data();
-        Kontainer::List::Iterator it;
+        Kontainer::ValueList kontainer = it.data();
+        Kontainer::ValueList::Iterator it;
         for ( it = kontainer.begin(); it != kontainer.end(); ++it ) {
             if ( (*it).first() == id || (*it).second() == id ) {
                 it  = kontainer.remove( it );
@@ -97,7 +111,7 @@ void KonnectorUIDHelper::removeId( const QString &appName,  const QString &id )
     }
 }
 void KonnectorUIDHelper::replaceIds( const QString &app,
-                                     Kontainer::List ids )
+                                     Kontainer::ValueList ids )
 {
     m_ids.replace( app,  ids );
 }
@@ -109,13 +123,21 @@ void KonnectorUIDHelper::clear()
 void KonnectorUIDHelper::save()
 {
     QString string;
-    QMap<QString,  Kontainer::List >::Iterator mapIt;
-    Kontainer::List::Iterator kontainerIt;
+    QMap<QString,  Kontainer::ValueList >::Iterator mapIt;
+    Kontainer::ValueList::Iterator kontainerIt;
     for ( mapIt = m_ids.begin(); mapIt != m_ids.end(); ++mapIt ) {
-        for ( kontainerIt = mapIt.data().begin(); kontainerIt != mapIt.data().end(); ++kontainerIt ) {
-//            AppName||%%||KonnectorId||%%||KDEID%%||%%AppName||%%||KonnectorId||%%||KDEID
-            kdDebug() << mapIt.key() << " " << (*kontainerIt).first() << " " << (*kontainerIt).second() << endl;
-            string.append(mapIt.key()+ "||%%||" + (*kontainerIt).first() + "||%%||" + (*kontainerIt).second()+ "%%||%%");
+        for ( kontainerIt = mapIt.data().begin();
+              kontainerIt != mapIt.data().end();
+              ++kontainerIt ) {
+
+            /*  AppName||%%||KonnectorId||%%||KDEID%%||%%AppName||%%||KonnectorId||%%||KDEID */
+            kdDebug() << mapIt.key() << " "
+                      << (*kontainerIt).first()
+                      << " " << (*kontainerIt).second() << endl;
+
+            string.append(mapIt.key()+ "||%%||"
+                          + (*kontainerIt).first() +
+                          "||%%||" + (*kontainerIt).second()+ "%%||%%");
         }
     }
     m_config->writeEntry( "ids",  string );

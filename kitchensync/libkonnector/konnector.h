@@ -27,12 +27,18 @@
 #include <qstring.h>
 #include <qcstring.h>
 
-#include "ksyncentry.h"
-#include "kdevice.h" 
+
+
+#include <syncer.h>
+
+#include "kdevice.h"
 #include "koperations.h"
 
+
+namespace KSync {
+
 class Kapabilities;
-class KDevice;
+class Device;
 class KonnectorPlugin;
 
 /**
@@ -43,7 +49,7 @@ class KonnectorPlugin;
  *  to the signals and wait for magic happen
  */
 
-class Konnector : public QObject{
+class KonnectorManager : public QObject{
 Q_OBJECT
 public:
    /** c'tor
@@ -51,32 +57,32 @@ public:
      * @param obj the Parent QObject
      * @param name the name of this instance
      */
-     Konnector(QObject * obj= 0, const char* name= 0);
+     KonnectorManager(QObject * obj= 0, const char* name= 0);
 
     /**
      * d'tor will unload every plugins
      */
-    ~Konnector();
+    ~KonnectorManager();
 
     /**
      *  @param  category the Category where Konnector should look \
      *          for konnector descriptions
-     *  @return KDevice::List this will return a list of \
+     *  @return Device::ValueList this will return a list of \
      *          konnector descriptions
      */
-    KDevice::List query( const QString &category= QString::null );
+    Device::ValueList query( const QString &category= QString::null );
 
     /** registers a konnector. register means it will load
      *  the plugin with the DeviceIdentification
-     *  @param DeviceIndentification The Identification of the KDevice
+     *  @param DeviceIndentification The Identification of the Device
      *  @return a runtime unique device id or QString::null if could not be loaded
      */
     QString registerKonnector(const QString &DeviceIdentification );
-    /** registers a konnector to with a KDevice
-     *  @param Device will load the KDevice
+    /** registers a konnector to with a Device
+     *  @param Device will load the Device
      *  @return returns a unique id or QString::null if a failure occured
      */
-    QString registerKonnector(const KDevice &Device );
+    QString registerKonnector(const Device &device );
 
     /**
      * @param udi the unique device id got when registering a device
@@ -84,6 +90,14 @@ public:
      *         by the udi
      */
     Kapabilities capabilities( const QString &udi ) ;
+
+    /**
+     * @return If GUI is available and the KonnectorPlugin
+     *         supports it. a configure widget get's returned
+     *
+     */
+     /*QWidget* configureWidget( const QString& udi );*/
+
     /**
      *  sets the Kabilities of a konnector
      *  @param udi The unique device id
@@ -102,14 +116,14 @@ public:
 
     /**
      * This willfetch data and tries to convert
-     * it to a known KSyncEntry derived class. If not able to convert
-     * it will return a KUnknownSyncEntry
+     * it to a known Syncee derived class. If not able to convert
+     * it will return a UnknownSyncee
      *
      * @param udi the ID of the Konnector plugin
      * @param path The path where to fetch data from
      * @return returns a KSyncEntry
      */
-    KSyncEntry* fileAsEntry( const QString &udi,  const QString &path );
+    Syncee* fileAsEntry( const QString &udi,  const QString &path );
     /**
      * This is a asynchronus mode to fetch data. On sync
      * the file will be fetched
@@ -139,18 +153,18 @@ public:
     QString iconName(const QString& udi )const;
 public slots:
     /**
-     * this will write a List of KSyncEntry
+     * this will write a List of Syncee
      * to udi
      * @param udi Device Id
-     * @param param The list of KSyncEntries
+     * @param param The list of Syncee
      */
-    void write(const QString &udi, KSyncEntry::List param );
+    void write(const QString &udi, Syncee::PtrList param );
     /**
      * This will do the KOperations
      * @param udi Device Id
      * @param ops Operations like delete
      */
-    void write(const QString &udi, KOperations::List );
+    void write(const QString &udi, KOperations::ValueList );
     /**
      * Konnector will write to dest the array
      * @param udi Device Id
@@ -162,9 +176,9 @@ signals:
     /**
      * When the Konnector fetched all data wantsToSync is emitted
      * @param udi Device Id
-     * @param param the List of KSyncEntry
+     * @param param the List of Syncee
      */
-    void wantsToSync(const QString &, KSyncEntry::List);
+    void wantsToSync(const QString &, Syncee::PtrList);
     /**
      * The connection state of udi changes
      * @param udi Device Id
@@ -182,14 +196,17 @@ private:
     class KonnectorPrivate;
     KonnectorPrivate *d;
     void allDevices();
+    Device find( const QString& name );
+    QString generateUID();
+    void addDevice( const QString& path );
     KonnectorPlugin* pluginByUDI(const QString &udi );
     KonnectorPlugin* pluginByUDI(const QString &udi )const;
 
 private slots:
-    void slotSync(const QString&, KSyncEntry::List entry );
+    void slotSync(const QString&, Syncee::PtrList entry );
     void slotError(const QString&, int, const QString&);
     void slotChanged(const QString&,  bool );
 };
-
+};
 #endif
 

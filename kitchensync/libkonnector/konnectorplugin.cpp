@@ -1,6 +1,6 @@
 /* This file is part of the KDE libraries
     Copyright (C) 2002 Holger Freyther <freyher@kde.org>
-		  
+
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
     License version 2 as published by the Free Software Foundation.
@@ -19,7 +19,9 @@
 
 #include "konnectorplugin.h"
 
-KonnectorPlugin::KonnectorPlugin( QObject *obj, const char *name, const QStringList &args)
+using namespace KSync;
+
+KonnectorPlugin::KonnectorPlugin( QObject *obj, const char *name, const QStringList &/*args*/)
   : QObject(obj, name )
 {
 

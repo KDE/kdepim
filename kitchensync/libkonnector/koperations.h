@@ -8,12 +8,14 @@
  *  KOperations is responsible to save filesystem
  *  operations like copy, move, delete
  */
+namespace KSync {
+ 
 class KOperations {
  public:
    /**
     * Typedef for convinience
     */
-    typedef QValueList<KOperations> List;
+    typedef QValueList<KOperations> ValueList;
 	
 	KOperations();
     ~KOperations();
@@ -21,5 +23,5 @@ class KOperations {
     class KOperationsPrivate;
     KOperationsPrivate *d;
 };
-
+};
 #endif

@@ -21,6 +21,8 @@
 #include <qglobal.h>
 #include "kapabilities.h"
 
+using namespace KSync;
+
 class Kapabilities::KapabilitiesPrivate
 {
 public:

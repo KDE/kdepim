@@ -23,20 +23,22 @@
 #include <qvaluelist.h>
 
 /**
- *  KDevice stores informations about any konnector
+ *  Device stores informations about any konnector
  *
  */
-
-class KDevice {
+namespace KSync {
+class Device {
 public:
     /**
      * Convinience typedef
      */
-    typedef QValueList<KDevice> List;
+    typedef QValueList<Device> ValueList;
+    
     /**
      *  C'TOR
      */
-    KDevice();
+    Device();
+    
     /**
      * C'tor
      * @param ident The identity of the Konnector/Device
@@ -44,35 +46,39 @@ public:
      * @param vendor The Vendor of the konnector/Device
      * @param library The libray where the Konnector/Device is in
      */
-    KDevice(const QString &ident, const QString &group,
+    Device(const QString &ident, const QString &group,
             const QString &vendor, const QString &library,
             const QString &id);
-    KDevice( const KDevice & );
-    ~KDevice();
+    Device( const Device & );
+    ~Device();
+    
     /**
-     * @return returns the identity of the KDevice
+     * @return returns the identity of the Device
      */
     QString identify() const;
+    
     /**
-     * @return returns the group/category of the KDevice
+     * @return returns the group/category of the Device
      */
     QString group() const;
+    
     /**
-     * @return returns the vendor of the KDevice
+     * @return returns the vendor of the Device
      */
     QString vendor() const;
+    
     /**
-     * @return returns the library of the KDevice
+     * @return returns the library of the Device
      */
     // untranslated id
     QString id()const;
     QString library() const;
-    KDevice &operator=(const KDevice & );
+    Device &operator=(const Device & );
 private:
-    friend bool operator==(const KDevice &, const KDevice );
+    friend bool operator==(const Device &, const Device );
     friend class Konnector;
-    class KDevicePrivate;
-    KDevicePrivate *d;
+    class DevicePrivate;
+    DevicePrivate *d;
 };
-
+};
 #endif

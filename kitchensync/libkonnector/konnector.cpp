@@ -16,102 +16,125 @@
 #include "koperations.h"
 
 
-class Konnector::KonnectorPrivate{
+using namespace KSync;
+
+class KonnectorManager::KonnectorPrivate{
 public:
   KonnectorPrivate(){
 
   }
   QMap<QString, KonnectorPlugin*> m_konnectors;
-  KDevice::List m_devices;
+  Device::ValueList m_devices;
 };
 
-Konnector::Konnector( QObject *object, const char *name ) : QObject( object, name )
+KonnectorManager::KonnectorManager( QObject *object, const char *name ) : QObject( object, name )
 {
   // initialize
   d = new KonnectorPrivate;
   kdDebug(5201) << "c'tor" << endl;
 }
-Konnector::~Konnector()
+KonnectorManager::~KonnectorManager()
 {
     QMap<QString,  KonnectorPlugin*>::Iterator it;
-    for ( it = d->m_konnectors.begin(); it != d->m_konnectors.end(); ++it ) {
+    for ( it = d->m_konnectors.begin(); it != d->m_konnectors.end(); ++it )
         delete it.data();
-    }
-  delete d;
-};
-KDevice::List Konnector::query(const QString &category )
-{
-  // lets find
-    kdDebug(5201) << "query " << category << endl;
-  allDevices();
-  if(category.isEmpty() ){
-      kdDebug(5201) << "no devices found" << endl;
-    return d->m_devices;
-  }
-  KDevice::List dev;
-  for(KDevice::List::Iterator it = d->m_devices.begin(); it != d->m_devices.end(); ++it ){
-    if( (*it).group() == category){
-      dev.append( (*it) );
-      kdDebug(5201) << "searching" << endl;
-    }
-  }
-  return dev;
-}
-QString Konnector::registerKonnector(const QString &Device )
-{
-    kdDebug(5201) << "registerKonnector " << Device << endl;
-  for(KDevice::List::Iterator it = d->m_devices.begin(); it != d->m_devices.end(); ++it ){
-    if((*it).identify() == Device ){ // ok found
-      // now load the lib
-      QString randStr;
-      do{
-	randStr = kapp->randomString(8);
-	kdDebug(5201) << "randStr :" << randStr << endl;
-      }while( d->m_konnectors.contains( randStr ) );
-      KonnectorPlugin* plugin =  KParts::ComponentFactory::
-	createInstanceFromLibrary<KonnectorPlugin>( (*it).library(), this );
-      if(!plugin){
-	return QString::null;
-      }
-      plugin->setUDI( randStr );
-      connect(plugin, SIGNAL(sync(const QString&, KSyncEntry::List ) ),
-              this, SLOT(slotSync(const QString&,  KSyncEntry::List ) ) );
 
-      connect(plugin, SIGNAL(errorKonnector(const QString&, int, const QString&) ),
-              this, SLOT(slotError(const QString&,int, const QString&)) );
-      connect(plugin, SIGNAL(stateChanged(const QString&,  bool ) ),
-              this, SLOT(slotChanged( const QString&,  bool ) ) );
-      d->m_konnectors.insert(randStr, plugin  );
-      return randStr;
-    }
-  }
-  return QString::null;
-}
-QString Konnector::registerKonnector(const KDevice &Device )
+    delete d;
+};
+Device::ValueList KonnectorManager::query(const QString &category )
 {
-    kdDebug(5201) << "registerKonnector lib:" << Device.library() << endl;
-  QString randStr;
-  do{
-    randStr = kapp->randomString(8);
-  }while( d->m_konnectors.contains( randStr ) );
-  KonnectorPlugin* plugin =  KParts::ComponentFactory::
-    createInstanceFromLibrary<KonnectorPlugin>( Device.library(), this );
-  if(!plugin){
-      kdDebug(5201) << "failed to load"<<  endl;
+    // lets find it
+    kdDebug(5201) << "query " << category << endl;
+    allDevices();
+    if(category.isEmpty() ){
+        kdDebug(5201) << "no devices found" << endl;
+        return d->m_devices;
+    }
+    // filter it
+    Device::ValueList dev;
+    for(Device::ValueList::Iterator it = d->m_devices.begin(); it != d->m_devices.end(); ++it ){
+        if( (*it).group() == category){ // applies to the category filter
+            dev.append( (*it) );
+        }
+    }
+    return dev;
+}
+Device KonnectorManager::find( const QString& device ) {
+    Device dev;
+    if (d->m_devices.isEmpty() )
+        return dev;
+    Device::ValueList::Iterator it;
+    for (it = d->m_devices.begin(); it != d->m_devices.end(); ++it ) {
+        if ( (*it).identify() == device ) {
+            dev = (*it);
+            break;
+        }
+    };
+    return dev;
+}
+QString KonnectorManager::generateUID() {
+    QString uid;
+    do{
+	uid = kapp->randomString(8);
+	kdDebug(5201) << "randStr :" << uid << endl;
+    }while( d->m_konnectors.contains( uid ) );
+
+    return uid;
+}
+QString KonnectorManager::registerKonnector(const QString &device )
+{
+    kdDebug(5201) << "registerKonnector " << device << endl;
+
+    Device dev = find( device );
+    if (dev.library().isEmpty() ) return QString::null; // no lib associtaed
+
+    QString randStr = generateUID();
+
+
+    KonnectorPlugin* plugin =  KParts::ComponentFactory::
+                               createInstanceFromLibrary<KonnectorPlugin>(dev.library(),
+                                                                          this );
+    if(!plugin) // could not load
+	return QString::null;
+
+    plugin->setUDI( randStr );
+    connect(plugin, SIGNAL(sync(const QString&, Syncee::PtrList ) ),
+            this, SLOT(slotSync(const QString&, Syncee::PtrList ) ) );
+
+    connect(plugin, SIGNAL(errorKonnector(const QString&, int, const QString&) ),
+            this, SLOT(slotError(const QString&,int, const QString&)) );
+
+    connect(plugin, SIGNAL(stateChanged(const QString&,  bool ) ),
+            this, SLOT(slotChanged( const QString&,  bool ) ) );
+
+    d->m_konnectors.insert(randStr, plugin  );
+    return randStr;
+}
+QString KonnectorManager::registerKonnector(const Device &device )
+{
+    kdDebug(5201) << "registerKonnector lib:" << device.library() << endl;
+
+    QString randStr = generateUID();
+
+    KonnectorPlugin* plugin =  KParts::ComponentFactory::
+                               createInstanceFromLibrary<KonnectorPlugin>( device.library(),
+                                                                           this );
+  if(!plugin)
     return QString::null;
-  }
+
   plugin->setUDI(randStr);
-  connect(plugin, SIGNAL(sync(const QString&, KSyncEntry::List ) ),
-              this, SLOT(slotSync(const QString&,  KSyncEntry::List ) ) );
+  connect(plugin, SIGNAL(sync(const QString&, Syncee::PtrList ) ),
+          this, SLOT(slotSync(const QString&,  Syncee::PtrList ) ) );
 
   connect(plugin, SIGNAL(errorKonnector(const QString&, int, const QString&) ),
-              this, SLOT(slotError(const QString&,int, const QString&)) );
+          this, SLOT(slotError(const QString&,int, const QString&)) );
   connect(plugin, SIGNAL(stateChanged(const QString&,  bool ) ),
-              this, SLOT(slotChanged( const QString&,  bool ) ) );
+          this, SLOT(slotChanged( const QString&,  bool ) ) );
   d->m_konnectors.insert(randStr, plugin  );
+
   return randStr;
 }
-Kapabilities Konnector::capabilities (const QString&  udi )
+Kapabilities KonnectorManager::capabilities (const QString&  udi )
 {
   KonnectorPlugin *plugin = pluginByUDI( udi );
   if( plugin == 0)
@@ -119,7 +142,7 @@ Kapabilities Konnector::capabilities (const QString&  udi )
 
   return plugin->capabilities();
 }
-void Konnector::setCapabilities(const QString &udi, const Kapabilities& cap )
+void KonnectorManager::setCapabilities(const QString &udi, const Kapabilities& cap )
 {
   KonnectorPlugin *plugin = pluginByUDI( udi );
   if( plugin == 0)
@@ -127,7 +150,7 @@ void Konnector::setCapabilities(const QString &udi, const Kapabilities& cap )
 
   return plugin->setCapabilities( cap);
 }
-QByteArray Konnector::file(const QString &udi, const QString &path )
+QByteArray KonnectorManager::file(const QString &udi, const QString &path )
 {
   KonnectorPlugin *plugin = pluginByUDI( udi );
   if( plugin == 0)
@@ -135,16 +158,15 @@ QByteArray Konnector::file(const QString &udi, const QString &path )
 
   return plugin->retrFile( path );
 }
-KSyncEntry* Konnector::fileAsEntry(const QString& udi,  const QString &path )
+Syncee* KonnectorManager::fileAsEntry(const QString& udi,  const QString &path )
 {
-    KSyncEntry* entry = 0l;
     KonnectorPlugin *plugin = pluginByUDI( udi );
     if( plugin == 0l)
-        return entry;
+        return 0l;
 
     return plugin->retrEntry( path );
 }
-void Konnector::retrieveFile(const QString &udi, const QString &file )
+void KonnectorManager::retrieveFile(const QString &udi, const QString &file )
 {
   KonnectorPlugin *plugin = pluginByUDI( udi );
   if( plugin == 0)
@@ -152,116 +174,115 @@ void Konnector::retrieveFile(const QString &udi, const QString &file )
 
   plugin->insertFile(file );
 }
-void Konnector::write( const QString &udi, KSyncEntry::List entry)
+void KonnectorManager::write( const QString &udi, Syncee::PtrList entry)
 {
     kdDebug() << "write " << endl;
-  KonnectorPlugin *plugin = pluginByUDI( udi );
-  if( plugin == 0)
-    return;
+    KonnectorPlugin *plugin = pluginByUDI( udi );
+    if( plugin == 0)
+        return;
 
-  plugin->slotWrite( entry );
+    plugin->slotWrite( entry );
 }
-void Konnector::write( const QString &udi, KOperations::List operations)
+void KonnectorManager::write( const QString &udi, KOperations::ValueList operations)
 {
-  KonnectorPlugin *plugin = pluginByUDI( udi );
-  if( plugin == 0)
-    return;
+    KonnectorPlugin *plugin = pluginByUDI( udi );
+    if( plugin == 0)
+        return;
 
-  plugin->slotWrite(operations );
+    plugin->slotWrite(operations );
 }
-void Konnector::write( const QString &udi, const QString &dest, const QByteArray &array )
+void KonnectorManager::write( const QString &udi, const QString &dest, const QByteArray &array )
 {
-  KonnectorPlugin *plugin = pluginByUDI( udi );
-  if( plugin == 0)
-    return;
+    KonnectorPlugin *plugin = pluginByUDI( udi );
+    if( plugin == 0)
+        return;
 
-  return plugin->slotWrite(dest, array );
+    return plugin->slotWrite(dest, array );
 }
-bool Konnector::isConnected(const QString &udi ){
-  KonnectorPlugin *plugin = pluginByUDI( udi );
-  if( plugin == 0)
-    return false;
+bool KonnectorManager::isConnected(const QString &udi ){
+    KonnectorPlugin *plugin = pluginByUDI( udi );
+    if( plugin == 0)
+        return false;
 
-  return plugin->isConnected();
+    return plugin->isConnected();
 }
-bool Konnector::startSync(const QString &udi )
+bool KonnectorManager::startSync(const QString &udi )
 {
-  KonnectorPlugin *plugin = pluginByUDI( udi );
-  if( plugin == 0)
-    return false;
+    KonnectorPlugin *plugin = pluginByUDI( udi );
+    if( plugin == 0)
+        return false;
 
-  return plugin->startSync();
+    return plugin->startSync();
 }
-void Konnector::allDevices()
+/**
+ * convert the Service to a Device
+ */
+void KonnectorManager::addDevice( const QString& path ) {
+    KService service( path );
+    QString name = service.name();
+    QString library = service.library();
+
+    QString group = (service.property( QString::fromLatin1("Group")  )).toString();
+    QString vendor = (service.property("Vendor" )).toString();
+
+    QString id = (service.property("Id")).toString();
+
+    Device device( name, group, vendor, library, id );
+    d->m_devices.append(device );
+}
+void KonnectorManager::allDevices()
 {
     kdDebug(5201) << "searching for devices" << endl;
-  d->m_devices.clear();
-  QStringList list = KGlobal::dirs()->findDirs("data", "kitchensync" );
+    d->m_devices.clear();
+    QStringList list = KGlobal::dirs()->findDirs("data", "kitchensync" );
 
-  if(list.isEmpty() )
-      kdDebug(5201) << "no dirs found" << endl;
+    if(list.isEmpty() )
+        kdDebug(5201) << "no dirs found" << endl;
 
-  for(QStringList::Iterator it = list.begin(); it != list.end(); ++it ){
-    QDir dir( (*it), "*.desktop" );
-    kdDebug(5201) << "searching for devices in " << (*it) << endl;
-    QStringList list2 = dir.entryList();
-    QStringList::Iterator it2;
-    for(it2 = list2.begin(); it2 != list2.end(); ++it2 ){
-      kdDebug(5201) << (*it) << " " << (*it2);
-      KService service( (*it) + (*it2) );
-      QString name = service.name();
-      QString library = service.library();
-      kdDebug(5201) << "library library " << library << endl;
-      QString group = (service.property( QString::fromLatin1("Group")  )).toString();
-      QString vendor = (service.property("Vendor" )).toString();
-      kdDebug(5201) << "group : " << group << "  vendor : " << vendor << endl;
-      QString id = (service.property("Id")).toString();
-      KDevice device( name, group, vendor, library, id );
-      d->m_devices.append(device );
-// debug
-      //QStringList lis = service.propertyNames();
-      //for(QStringList::Iterator props = lis.begin(); props != lis.end(); ++props ){
-      //  kdDebug(5201) << "Key " << (*props) << endl;
-      //}
-//end debug
+    for(QStringList::Iterator it = list.begin(); it != list.end(); ++it ){
 
+        QDir dir( (*it), "*.desktop" );
+        kdDebug(5201) << "searching for devices in " << (*it) << endl;
+        QStringList list2 = dir.entryList();
+        QStringList::Iterator it2;
+        for(it2 = list2.begin(); it2 != list2.end(); ++it2 )
+            addDevice( (*it) + (*it2) );
     }
-  }
 }
-KonnectorPlugin* Konnector::pluginByUDI(const QString &udi )
+KonnectorPlugin* KonnectorManager::pluginByUDI(const QString &udi )
 {
   KonnectorPlugin* plugin=0l;
+
   if( d->m_konnectors.contains(udi ) ){
     QMap<QString, KonnectorPlugin*>::Iterator it;
     it = d->m_konnectors.find( udi );
     plugin = it.data();
-    kdDebug(5201) << "UDIS " << udi << " " << plugin->udi() << endl;
    }
   return plugin;
 }
-KonnectorPlugin* Konnector::pluginByUDI(const QString &udi )const
+KonnectorPlugin* KonnectorManager::pluginByUDI(const QString &udi )const
 {
   KonnectorPlugin* plugin=0l;
+
   if( d->m_konnectors.contains(udi ) ){
     QMap<QString, KonnectorPlugin*>::ConstIterator it;
     it = d->m_konnectors.find( udi );
     plugin = it.data();
-    kdDebug(5201) << "UDIS " << udi << " " << plugin->udi() << endl;
    }
   return plugin;
 }
-void Konnector::slotSync(const QString &udi,  KSyncEntry::List entry)
+void KonnectorManager::slotSync(const QString &udi,  Syncee::PtrList entry)
 {
   emit wantsToSync(udi, entry );
 }
 
-void Konnector::slotError(const QString &udi, int mode, const QString &
+void KonnectorManager::slotError(const QString &udi, int mode, const QString &
                           info)
 {
   emit konnectorError(udi, mode, info );
 
 }
-bool Konnector::connectDevice( const QString &udi )
+bool KonnectorManager::connectDevice( const QString &udi )
 {
     KonnectorPlugin *plugin = pluginByUDI( udi );
     if( plugin == 0l)
@@ -269,7 +290,7 @@ bool Konnector::connectDevice( const QString &udi )
 
     return plugin->connectDevice();
 }
-void Konnector::disconnectDevice( const QString &udi )
+void KonnectorManager::disconnectDevice( const QString &udi )
 {
     KonnectorPlugin *plugin = pluginByUDI( udi );
     if( plugin == 0l)
@@ -277,7 +298,7 @@ void Konnector::disconnectDevice( const QString &udi )
 
     return plugin->disconnectDevice();
 }
-QIconSet Konnector::iconSet(const QString& udi )const
+QIconSet KonnectorManager::iconSet(const QString& udi )const
 {
     KonnectorPlugin *plugin = pluginByUDI( udi );
     if( plugin == 0l)
@@ -285,14 +306,14 @@ QIconSet Konnector::iconSet(const QString& udi )const
 
     return plugin->iconSet();
 }
-QString Konnector::iconName( const QString& udi)const
+QString KonnectorManager::iconName( const QString& udi)const
 {
     KonnectorPlugin *plugin = pluginByUDI( udi );
     if (plugin == 0l )
         return QString::null;
     return plugin->iconName();
 }
-QString Konnector::id(const QString& udi )const
+QString KonnectorManager::id(const QString& udi )const
 {
     KonnectorPlugin *plugin = pluginByUDI( udi );
     if( plugin == 0l)
@@ -300,12 +321,12 @@ QString Konnector::id(const QString& udi )const
 
     return plugin->id();
 }
-void Konnector::slotChanged(const QString& i,  bool b)
+void KonnectorManager::slotChanged(const QString& i,  bool b)
 {
     kdDebug(5201) << "Konnector state changed" << endl;
     emit stateChanged( i,  b );
 }
-QString Konnector::metaId( const QString& udi ) const
+QString KonnectorManager::metaId( const QString& udi ) const
 {
     KonnectorPlugin *plugin = pluginByUDI( udi );
     if( plugin == 0l)

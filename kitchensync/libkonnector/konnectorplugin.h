@@ -26,8 +26,11 @@
 #include <qstringlist.h>
 #include <qptrlist.h>
 
-#include "ksyncentry.h"
+#include <syncer.h>
+
 #include "koperations.h"
+
+namespace KSync {
 
 class Kapabilities;
 
@@ -51,7 +54,7 @@ public:
     virtual bool isConnected() = 0;
     virtual bool insertFile(const QString &fileName ) = 0;
     virtual QByteArray retrFile(const QString &path ) = 0;
-    virtual KSyncEntry* retrEntry( const QString &path ) = 0;
+    virtual Syncee* retrEntry( const QString &path ) = 0;
     virtual QIconSet iconSet()const = 0;
     virtual QString  iconName()const =0;
     virtual QString id()const = 0;
@@ -59,11 +62,12 @@ public:
     //virtual QString metaId()const = 0;
 public slots:
     virtual void slotWrite(const QString &, const QByteArray & ) = 0;
-    virtual void slotWrite(KSyncEntry::List ) = 0;
-    virtual void slotWrite(KOperations::List ) = 0;
+    virtual void slotWrite(Syncee::PtrList ) = 0;
+    virtual void slotWrite(KOperations::ValueList ) = 0;
 signals:
-    void sync(const QString&,  KSyncEntry::List );
+    void sync(const QString&,  Syncee::PtrList );
     void errorKonnector(const QString&, int, const QString& );
+};
 };
 #endif
 

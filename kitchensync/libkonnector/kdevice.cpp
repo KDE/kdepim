@@ -19,9 +19,11 @@
 
 #include "kdevice.h"
 
-class KDevice::KDevicePrivate {
+using namespace KSync;
+
+class Device::DevicePrivate {
 public:
-  KDevicePrivate(){
+  DevicePrivate(){
   }
   QString name;
   QString group;
@@ -30,31 +32,31 @@ public:
   QString id;
 };
 
-KDevice::KDevice(const QString &ident, const QString &group,
+Device::Device(const QString &ident, const QString &group,
 		 const QString &vendor, const QString &library,
                  const QString &id)
 {
-  d = new KDevicePrivate();
+  d = new DevicePrivate();
   d->name= ident;
   d->group = group;
   d->vendor = vendor;
   d->library = library;
   d->id = id;
 }
-KDevice::KDevice()
+Device::Device()
 {
-  d = new KDevicePrivate();
+  d = new DevicePrivate();
 }
-KDevice::KDevice(const KDevice &dev )
+Device::Device(const Device &dev )
 {
-  d = new KDevicePrivate();
+  d = new DevicePrivate();
   d->name = dev.identify();
   d->group = dev.group();
   d->vendor = dev.vendor();
   d->library = dev.library();
   d->id = dev.id();
 }
-KDevice &KDevice::operator=( const KDevice &dev )
+Device &Device::operator=( const Device &dev )
 {
     d->name = dev.d->name;
     d->group = dev.d->group;
@@ -62,31 +64,31 @@ KDevice &KDevice::operator=( const KDevice &dev )
     d->library = dev.d->library;
     d->id = dev.d->id;
 }
-KDevice::~KDevice()
+Device::~Device()
 {
   delete d;
 }
-QString KDevice::identify() const
+QString Device::identify() const
 {
   return d->id;
 }
-QString KDevice::group() const
+QString Device::group() const
 {
   return d->group;
 }
-QString KDevice::vendor() const
+QString Device::vendor() const
 {
   return d->vendor;
 }
-QString KDevice::library() const
+QString Device::library() const
 {
   return d->library;
 }
-QString KDevice::id()const
+QString Device::id()const
 {
     return d->id;
 }
-bool operator==(const KDevice &orig, const KDevice &dest ){
+bool operator==(const Device &orig, const Device &dest ){
   if( orig.identify() == dest.identify() && orig.group() == dest.group() && dest.vendor() == orig.vendor() ){
     return true;
   }else{
