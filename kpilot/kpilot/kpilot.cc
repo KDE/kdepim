@@ -929,11 +929,12 @@ sorry:
 /* virtual DCOP */ ASYNC KPilotInstaller::configureWizard()
 {
 	FUNCTIONSETUP;
+   
 	if ( fAppStatus!=Normal || fConfigureKPilotDialogInUse )
 	{
 		if (fLogWidget)
 		{
-			fLogWidget->addMessage(i18n("Cannot configure KPilot right now."));
+			fLogWidget->addMessage(i18n("Cannot run KPilot's configuration wizard right now (KPilot's UI is already busy)."));
 		}
 		return;
 	}
@@ -964,7 +965,7 @@ sorry:
 	{
 		if (fLogWidget)
 		{
-			fLogWidget->addMessage(i18n("Cannot configure KPilot right now."));
+			fLogWidget->addMessage(i18n("Cannot configure KPilot right now (KPilot's UI is already busy)."));
 		}
 		return;
 	}

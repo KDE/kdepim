@@ -130,7 +130,7 @@ Network: This has not been tested by any of the KPilot developers themselves (ha
                 <cstring>fPilotRunningPermanently</cstring>
             </property>
             <property name="text">
-                <string>&amp;Start daemon at login</string>
+                <string>&amp;Start KPilot at login</string>
             </property>
             <property name="checked">
                 <bool>true</bool>
