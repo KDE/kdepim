@@ -54,11 +54,35 @@ public:
 
 public slots:
 	void slotPolicyChanged();
+	void slotBrowse();
 
 protected:
 	QLineEdit *fCSVFileName;
 	QRadioButton *fOverWrite,*fAppend,*fRotate;
 	QSpinBox *fRotateNumber;
+	QPushButton *fBrowseButton;
+} ;
+
+class ExpenseDBPage : public setupDialogPage
+{
+	Q_OBJECT
+
+public:
+	ExpenseDBPage(setupDialog *,KConfig& );
+
+	virtual int commitChanges(KConfig&);
+
+	typedef enum { PolicyPostgresql,
+		PolicyMysql,
+		PolicyNone } DBTypePolicy;
+	int getPolicy() const;
+
+public slots:
+	void slotPolicyChanged();
+
+protected:
+	QLineEdit *fDBServer, *fDBlogin, *fDBpasswd, *fDBname, *fDBtable;
+	QRadioButton *fpostgresql,*fmysql,*fnone;
 } ;
 
 class ExpenseOptions : public setupDialog
@@ -78,3 +102,6 @@ protected:
 
 
 // $Log$
+// Revision 1.1  2001/03/04 21:47:04  adridg
+// New expense conduit, non-functional but it compiles
+//
