@@ -143,7 +143,7 @@ bool KonsoleKalendarExports::exportAsTxtShort( QTextStream *ts,
   // {<Incidence Date>(dddd yyyy-MM-dd)]
   // [<Incidence Start Time>(hh:mm) - <Incidence End Time>(hh:mm) | "\t"]
   // \t<Incidence Summary | \t>[, <Incidence Location>]
-  // \t\t<Incidence Description | "\t">, <Incidence UID>
+  // \t\t<Incidence Description | "\t">
 
   if ( !sameday ) {
     // If a new date, then print the day separator
@@ -181,12 +181,13 @@ bool KonsoleKalendarExports::exportAsTxtShort( QTextStream *ts,
   *ts << "\t\t";
   if ( !event->description().isEmpty() ) {
     *ts << event->description()
-        << ", ";
+        << endl;
   }
 
   // Print Event UID
-  *ts << event->uid()
-      << endl;
+// By user request, no longer print UIDs if export-type==short
+//      << event->uid()
+//      << endl;
 
   *ts << endl;  // blank line between events
 
