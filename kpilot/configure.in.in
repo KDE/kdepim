@@ -41,10 +41,10 @@ fi
 if test "$HAVE_PISOCK" = "1" ; then
 	HAVE_PISOCK=0
 	ac_save_cppflags="$CPPFLAGS"
-	for pisock_libs in "" "-lpisock" "-lsocket" "-lxnet" "-lsocket -lxnet" ; do
-		AC_CHECK_LIB(pisock,
+	for pisock_libs in "pisock" "socket" "xnet" "socket -lxnet" ; do
+		AC_CHECK_LIB("$pisock_libs",
 			pi_accept,
-			[LIBPISOCK="$pisock_libs"
+			[LIBPISOCK="-l$pisock_libs"
 			HAVE_PISOCK=1
 			break
 			],
