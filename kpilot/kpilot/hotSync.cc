@@ -247,6 +247,8 @@ static inline void initNoBackup(QStringList &dbnames,
 		PilotAppCategory::codec()->toUnicode(fHandle->getPilotUser()->getUserName()) +
 		CSL1("/");
 
+	logMessage(i18n("Backup directory: %1.").arg(fBackupDir));
+
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": This Pilot user's name is \""
@@ -467,11 +469,7 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 	// Just fetch the database to the backup dir
 	if (!checkBackupDirectory(fBackupDir)) return false;
 
-#if QT_VERSION < 0x30100
-	databaseName.replace(QRegExp(CSL1("/")), CSL1("_"));
-#else
 	databaseName.replace('/', CSL1("_"));
-#endif
 
 	QString fullBackupName = fBackupDir + databaseName;
 
