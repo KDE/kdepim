@@ -155,7 +155,15 @@ void AddresseeEditorWidget::setupTab1()
            SLOT( nameTextChanged( const QString& ) ) );
   connect( button, SIGNAL( clicked() ), SLOT( nameButtonClicked() ) );
   mNameLabel = new KSqueezedTextLabel( tab1 );
-  mNameLabel->hide();
+
+  if ( KABPrefs::instance()->mAutomaticNameParsing ) {
+    mNameLabel->hide();
+    mNameEdit->show();
+  } else {
+    mNameEdit->hide();
+    mNameLabel->show();
+  }
+
   layout->addWidget( button, 0, 1 );
   layout->addWidget( mNameEdit, 0, 2 );
   layout->addWidget( mNameLabel, 0, 2 );
