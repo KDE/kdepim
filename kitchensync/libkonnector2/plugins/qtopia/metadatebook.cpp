@@ -41,7 +41,9 @@ QString MetaDatebook::string( KSync::EventSyncEntry* ev) {
         case KCal::Recurrence::rMonthlyDay:
             string += "MonthlyDate";
             break;
-        case KCal::Recurrence::rYearlyDay:
+        case KCal::Recurrence::rYearlyDay: // see datebook.cpp
+        case KCal::Recurrence::rYearlyMonth:
+        case KCal::Recurrence::rYearlyPos:
             string += "Yearly";
             break;
         case KCal::Recurrence::rNone:

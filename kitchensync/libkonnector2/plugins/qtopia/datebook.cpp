@@ -347,25 +347,28 @@ QString DateBook::event2string( KCal::Event *event )
 
             break;
         }
+        case KCal::Recurrence::rYearlyMonth: // fall through
+        case KCal::Recurrence::rYearlyPos: // fall through Might be wrong though
         case KCal::Recurrence::rYearlyDay :{
             type = "Yearly";
             break;
         }
         case KCal::Recurrence::rNone : // fall through
         default :
+            type = QString::null;
             break;
         }
-        str.append( "rtype=\"" + type + "\" ");
-        str.append( "rfreq=\"" + QString::number( rec->frequency() ) + "\" ");
-        if ( rec->duration() == -1 || rec->duration() != 0 )
-            str.append( "rhasenddate=\"0\" ");
-        else if ( rec->duration() == 0 ) {
-            str.append( "rhasenddate=\"1\" ");
-            str.append( "enddt=\"" + QString::number( toUTC(rec->endDate() ) ) + "\" ");
+        if (!type.isEmpty() ) {
+            str.append( "rtype=\"" + type + "\" ");
+            str.append( "rfreq=\"" + QString::number( rec->frequency() ) + "\" ");
+            if ( rec->duration() == -1 || rec->duration() != 0 )
+                str.append( "rhasenddate=\"0\" ");
+            else if ( rec->duration() == 0 ) {
+                str.append( "rhasenddate=\"1\" ");
+                str.append( "enddt=\"" + QString::number( toUTC(rec->endDate() ) ) + "\" ");
+            }
+            str.append( "created=\"" + QString::number( toUTC(rec->recurStart() ) ) + "\" ");
         }
-        str.append( "created=\"" + QString::number( toUTC(rec->recurStart() ) ) + "\" ");
-
-
     }
     // alarm
     KCal::Alarm *al = event->alarms().first();
