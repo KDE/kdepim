@@ -829,7 +829,7 @@ void KNComposer::slotSignArticle()
   pgp->setMessage(text.latin1());
   pgp->setUser(article()->from()->email());
   kdDebug(5003) << "signing article from " << article()->from()->email() << endl;
-  if (!pgp->sign())
+  if (!pgp->sign(article()->from()->email()))
     KMessageBox::error(this,i18n("Sorry, couldn't sign this message!\n\n%1").arg(pgp->lastErrorMsg()));
   else {
     v_iew->e_dit->setText( pgp->message() );
