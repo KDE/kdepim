@@ -26,13 +26,10 @@
 #include "resource.h"
 
 #include <qglobal.h>
-#if QT_VERSION < 290
-#  define QPtrList QList
-#  define QPtrListIterator QListIterator
-#endif
 
 class QListViewItem;
 
+class KURL;
 class KAccel;
 class KAction;
 class KToggleAction;

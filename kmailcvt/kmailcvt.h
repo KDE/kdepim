@@ -24,7 +24,6 @@
 #include <config.h>
 #endif
 
-#include <kapp.h>
 #include <qwidget.h>
 #include <stdio.h>
 
@@ -36,8 +35,6 @@ void procEvents(void);
 int  dcopAddMessage(QString folderName,QString message);
 void dcopReload(void);
 
-#include <kapp.h>
-#include <qwidget.h>
 #include <qpushbutton.h>
 
 #include "filters.hxx"

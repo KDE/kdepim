@@ -243,7 +243,7 @@ void KNCleanUp::compactFolder(KNFolder *f)
 
 
 KNCleanUp::ProgressDialog::ProgressDialog(int steps)
- : QSemiModal(knGlobals.topWidget, 0, true)
+ : QDialog(knGlobals.topWidget, 0, true)
 {
   const int w=400,
             h=160;

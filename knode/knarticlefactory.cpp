@@ -20,6 +20,7 @@
 #include <kmessagebox.h>
 #include <kwin.h>
 #include <kseparator.h>
+#include <kapplication.h>
 
 #include "knarticlefactory.h"
 #include "knglobals.h"
@@ -1055,7 +1056,7 @@ void KNArticleFactory::slotSendErrorDialogDone()
 //======================================================================================================
 
 
-KNSendErrorDialog::KNSendErrorDialog() : QSemiModal(knGlobals.topWidget, 0, true)
+KNSendErrorDialog::KNSendErrorDialog() : QDialog(knGlobals.topWidget, 0, true)
 {
   p_ixmap=knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::sendErr);
 
@@ -1123,7 +1124,7 @@ void KNSendErrorDialog::keyPressEvent(QKeyEvent *e)
   if ((e->key()==Key_Enter)||(e->key()==Key_Return)||(e->key()==Key_Escape))
     emit dialogDone();
   else
-    QSemiModal::keyPressEvent(e);
+    QDialog::keyPressEvent(e);
 }
 
 

@@ -18,6 +18,7 @@
 #include <qtextcodec.h>
 #include <qclipboard.h>
 #include <qdragobject.h>
+#include <qapplication.h>
 
 #include <kaccel.h>
 #include <kcharsets.h>

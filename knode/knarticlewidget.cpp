@@ -33,6 +33,7 @@
 #include <kprocess.h>
 #include <kcharsets.h>
 #include <kaction.h>
+#include <kapplication.h>
 
 #include "resource.h"
 #include "knarticlewidget.h"
@@ -450,7 +451,8 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
             startIdx--;
 
           regExp.setPattern("[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
-          if (regExp.match(text,startIdx,&matchLen)!=-1) {
+          if (regExp.search(text,startIdx)!=-1) {
+            matchLen = regExp.matchedLength();
             if (text[startIdx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
             else if (text[startIdx+matchLen-1]==',')   // remove trailing comma
@@ -474,7 +476,8 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
         if((parseURLs)&&
            (text[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'h'
           regExp.setPattern("^https?://[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
-          if (regExp.match(text,idx,&matchLen)!=-1) {
+          if (regExp.search(text,idx)!=-1) {
+            matchLen = regExp.matchedLength();
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
             else if (text[idx+matchLen-1]==',')   // remove trailing comma
@@ -493,7 +496,8 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
         if((parseURLs)&&
            (text[idx+1].latin1()=='w')) {   // don't do all the stuff for every 'w'
           regExp.setPattern("^www\\.[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+\\.[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
-          if (regExp.match(text,idx,&matchLen)!=-1) {
+          if (regExp.search(text,idx)!=-1) {
+            matchLen = regExp.matchedLength();
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
             else if (text[idx+matchLen-1]==',')   // remove trailing comma
@@ -512,7 +516,8 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
         if((parseURLs)&&
            (text[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'f'
           regExp.setPattern("^ftp://[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
-          if (regExp.match(text,idx,&matchLen)!=-1) {
+          if (regExp.search(text,idx)!=-1) {
+            matchLen = regExp.matchedLength();
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
             else if (text[idx+matchLen-1]==',')   // remove trailing comma
@@ -524,7 +529,8 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
             break;
           }
           regExp.setPattern("^ftp\\.[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+\\.[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
-          if (regExp.match(text,idx,&matchLen)!=-1) {
+          if (regExp.search(text,idx)!=-1) {
+            matchLen = regExp.matchedLength();
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
             else if (text[idx+matchLen-1]==',')   // remove trailing comma
@@ -543,7 +549,8 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
         if((parseURLs)&&
            (text[idx+1].latin1()=='e')) {   // don't do all the stuff for every 'e'
           regExp.setPattern("^news:[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
-          if (regExp.match(text,idx,&matchLen)!=-1) {
+          if (regExp.search(text,idx)!=-1) {
+            matchLen = regExp.matchedLength();
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
             else if (text[idx+matchLen-1]==',')   // remove trailing comma
@@ -562,7 +569,8 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
         if((parseURLs)&&
            (text[idx+1].latin1()=='a')) {   // don't do all the stuff for every 'm'
           regExp.setPattern("^mailto:[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
-          if (regExp.match(text,idx,&matchLen)!=-1) {
+          if (regExp.search(text,idx)!=-1) {
+            matchLen = regExp.matchedLength();
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
             else if (text[idx+matchLen-1]==',')   // remove trailing comma
@@ -582,7 +590,8 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case '*' :
         if(beautification) {
           regExp=QString("^\\%1[^\\s%2]+\\%3").arg(text[idx]).arg(text[idx]).arg(text[idx]);
-          if (regExp.match(text,idx,&matchLen)!=-1) {
+          if (regExp.search(text,idx)!=-1) {
+            matchLen = regExp.matchedLength();
             if (( matchLen > 3 ) &&
                 ((idx==0)||text[idx-1].isSpace()||(text[idx-1] == '(')) &&
                 ((idx+matchLen==len)||text[idx+matchLen].isSpace()||(text[idx+matchLen]==',')||

@@ -19,11 +19,6 @@
 
 #include <qsemimodal.h>
 
-#if QT_VERSION < 290
-#  define QPtrList QList
-#  define QPtrListIterator QListIterator
-#endif
-
 class QProgressBar;
 class QLabel;
 
@@ -51,7 +46,7 @@ class KNCleanUp {
 
   protected:
 
-    class ProgressDialog : public QSemiModal  {
+    class ProgressDialog : public QDialog  {
 
       public:
         ProgressDialog(int steps);

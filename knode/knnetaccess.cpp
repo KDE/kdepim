@@ -25,6 +25,7 @@
 #include <kdebug.h>
 #include <kio/passdlg.h>
 #include <ksocks.h>
+#include <kapplication.h>
 
 #include "knode.h"
 #include "knjobdata.h"

@@ -22,7 +22,7 @@
 
 #include <kdebug.h>
 #include <kglobal.h>
-#include <kdatepik.h>
+#include <kdatepicker.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <klineedit.h>

@@ -27,6 +27,9 @@
 #include <kdebug.h>
 #include <kmenubar.h>
 #include <kiconloader.h>
+#include <kstatusbar.h>
+#include <klocale.h>
+#include <kapplication.h>
 
 //GUI
 #include "knode.h"
@@ -52,8 +55,6 @@
 #include "knscoring.h"
 #include "knpgp.h"
 #include "knmemorymanager.h"
-#include <kstatusbar.h>
-#include <klocale.h>
 
 
 KNGlobals knGlobals;

@@ -17,7 +17,7 @@
 #ifndef KNARTICLEMANAGER_H
 #define KNARTICLEMANAGER_H
 
-#include <qlist.h>
+#include <qptrlist.h>
 
 #include "knjobdata.h"
 #include "knarticle.h"
@@ -100,7 +100,7 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     KNArticleFilter *f_ilter;
     KNFilterManager *f_ilterMgr;
     KNSearchDialog *s_earchDlg;
-    QList<KTempFile> t_empFiles;
+    QPtrList<KTempFile> t_empFiles;
     bool d_isableExpander;
 
   public slots:

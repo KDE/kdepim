@@ -17,15 +17,8 @@
 #ifndef KNARTICLEFACTORY_H
 #define KNARTICLEFACTORY_H
 
-#include <qsemimodal.h>
-
-#if QT_VERSION >= 290
-#  include <qptrlist.h>
-#else
-#  include <qlist.h>
-#  define QPtrList QList
-#  define QPtrListIterator QListIterator
-#endif
+#include <qdialog.h>
+#include <qptrlist.h>
 
 #include "knjobdata.h"
 #include "knarticle.h"
@@ -103,7 +96,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
 };
 
 
-class KNSendErrorDialog : public QSemiModal  {
+class KNSendErrorDialog : public QDialog  {
 
   Q_OBJECT
 

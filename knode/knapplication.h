@@ -17,7 +17,7 @@
 #ifndef KNAPPLICATION_H
 #define KNAPPLICATION_H
 
-#include <kuniqueapp.h>
+#include <kuniqueapplication.h>
 
 
 class KNApplication : public KUniqueApplication

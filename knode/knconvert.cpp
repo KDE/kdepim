@@ -26,6 +26,7 @@
 #include <kstandarddirs.h>
 #include <klineedit.h>
 #include <kprocess.h>
+#include <kapplication.h>
 
 #include <kmime_util.h>
 
