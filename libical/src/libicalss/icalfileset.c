@@ -282,12 +282,6 @@ int icalfileset_unlock(icalfileset *cluster)
 
 }
 
-#ifdef ICAL_SAFESAVES
-int icalfileset_safe_saves=1;
-#else
-int icalfileset_safe_saves=0;
-#endif
-
 icalerrorenum icalfileset_commit(icalfileset* cluster)
 {
     char tmp[ICAL_PATH_MAX]; 
@@ -306,15 +300,6 @@ icalerrorenum icalfileset_commit(icalfileset* cluster)
 	return ICAL_NO_ERROR;
     }
     
-    if(icalfileset_safe_saves == 1){
-	snprintf(tmp,ICAL_PATH_MAX,"cp %s %s.bak",impl->path,impl->path);
-	
-	if(system(tmp) < 0){
-	    icalerror_set_errno(ICAL_FILE_ERROR);
-	    return ICAL_FILE_ERROR;
-	}
-    }
-
     if(lseek(impl->fd,SEEK_SET,0) < 0){
 	icalerror_set_errno(ICAL_FILE_ERROR);
 	return ICAL_FILE_ERROR;
