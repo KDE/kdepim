@@ -38,36 +38,29 @@ class QPoint;
 class KPopupMenu;
 
 namespace KSync {
-    /**
-     * Our SystemTray but currently not really used
-     */
-    class KSyncSystemTray : public KSystemTray {
 
-        Q_OBJECT
+/**
+  Our SystemTray but currently not really used
+ */
+class KSyncSystemTray : public KSystemTray
+{
+  Q_OBJECT
 
-    public:
-        KSyncSystemTray(QWidget* parent = 0,  const char* name = 0);
-        ~KSyncSystemTray();
+  public:
+    KSyncSystemTray( QWidget* parent = 0 );
+    ~KSyncSystemTray();
 
-        KPopupMenu *getContextMenu() const { return contextMenu(); };
+    KPopupMenu *getContextMenu() const { return contextMenu(); };
 	
-        void gotConnection( QPixmap );
-	void setName( QString& );
-	void setState( bool );
-        void noConnection();
+    void gotConnection( QPixmap );
+    void setName( QString& );
+    void setState( bool );
+    void noConnection();
 
-    private:
-        QPixmap ksyncIconConnected;
-        QPixmap ksyncIconDisconnected;
-
-        //   protected:
-        // virtual void mousePressEvent( QMouseEvent *mEvent);
-
-   
-        //signals:
-        //   void leftClicked ( const QPoint );
-        // void rightClicked ( const QPoint );
-    };
+  private:
+    QPixmap mIconConnected;
+    QPixmap mIconDisconnected;
+};
 
 }
 
