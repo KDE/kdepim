@@ -300,6 +300,11 @@ void Karm::newTask(QString caption, QListViewItem *parent)
     long total, totalDiff, session, sessionDiff;
     dialog->status( &total, &totalDiff, &session, &sessionDiff );
     Task *task;
+
+    if( sessionDiff != 0 ) {
+      emit sessionTimeChanged( sessionDiff );
+    }
+
     if (parent == 0)
       task = new Task(taskName, total, session, this);
     else
@@ -398,8 +403,16 @@ void Karm::deleteTask()
       _idleTimer->stopIdleDetection();
     }
 
-    delete item;
+    long sessionTime = item->sessionTime();
+    long totalTime   = item->totalTime();
 
+    if( sessionTime != 0 ) {
+      emit sessionTimeChanged( -sessionTime );
+    }
+    updateParents( (QListViewItem *) item, -totalTime, -sessionTime );
+    
+    delete item;
+    
     // remove root decoration if there is no more children.
     bool anyChilds = false;
     for(QListViewItem *child=firstChild(); child; child=child->nextSibling()) {
