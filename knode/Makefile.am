@@ -10,7 +10,7 @@ INCLUDES=	-I$(top_srcdir)/libkmime \
 lib_LTLIBRARIES = libknodecommon.la
 
 kde_module_LTLIBRARIES = kcm_knode.la libknodepart.la
-libknodepart_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -version-info 1:0
+libknodepart_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) $(KDE_PLUGIN)
 libknodepart_la_LIBADD	= libknodecommon.la
 
 SUBDIRS = pics filters
