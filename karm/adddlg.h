@@ -24,7 +24,8 @@
 #include <stdlib.h>
 #include <kdialogbase.h>
 #include <qvalidator.h>
-#include "adddlg.h"
+#include "ktimewidget.h"
+
 class QLineEdit;
 class KTimeWidget;
 class QRadioButton;
@@ -40,29 +41,30 @@ class AddTaskDialog : public KDialogBase
   public:
     AddTaskDialog(QString caption, bool editDlg);
     void setTask(const QString &name, long time, long sessionTime );
-    QString taskName( void ) const;
-	  void status( long *total, long *totalDiff, long *session, long *sessionDiff ) const;
+    QString taskName() const;
+    // return user choices
+    void status( long *total, long *totalDiff, long *session, long *sessionDiff ) const;
 	
   private slots:
-	void slotAbsolutePressed();
-	void slotRelativePressed();
-  void enterWhatsThis();
+    void slotAbsolutePressed();
+    void slotRelativePressed();
+    void enterWhatsThis();
 
   private:
-  	QLineEdit* _name;
-	  KTimeWidget* _totalTW;
-	  KTimeWidget* _sessionTW;
-	  KTimeWidget* _diffTW;
-	  QComboBox* _operator;
+    QLineEdit* _name;
+    KTimeWidget* _totalTW;
+    KTimeWidget* _sessionTW;
+    KTimeWidget* _diffTW;
+    QComboBox* _operator;
 
-	  long origTotal;
-  	long origSession;
+    long origTotal;
+    long origSession;
 
-	  QRadioButton *_absoluteRB;
-	  QRadioButton *_relativeRB;
+    QRadioButton *_absoluteRB;
+    QRadioButton *_relativeRB;
 
-  	QLabel* _totalLA;
-	  QLabel* _sessionLA;
+    QLabel* _totalLA;
+    QLabel* _sessionLA;
 };
 
 
