@@ -48,6 +48,7 @@ class Attendee : public Person
       @param rsvp Request for reply
       @param status Status (see enum for list)
       @param role Role
+      @param u the uid for the attendee
     */
     Attendee(const QString& name, const QString &email,
              bool rsvp=false, PartStat status=NeedsAction,
