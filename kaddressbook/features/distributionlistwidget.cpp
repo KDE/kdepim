@@ -223,7 +223,7 @@ void DistributionListWidget::editList()
 void DistributionListWidget::removeList()
 {
   int result = KMessageBox::warningContinueCancel( this,
-      i18n( "Delete distribution list '%1'?" ) .arg( mNameCombo->currentText() ),
+      i18n( "<qt>Delete distribution list <b>%1</b>?</qt>" ) .arg( mNameCombo->currentText() ),
       QString::null, i18n( "Delete" ) );
 
   if ( result != KMessageBox::Continue )
