@@ -117,6 +117,7 @@ private slots:
     void slotListViewItemActivated( Kleo::KeyListViewItem * item );
 
     void slotEditKeybindings();
+    void slotShowConfigurationDialog();
 
 private:
     void createStatusBar();

@@ -203,7 +203,7 @@ void CertManager::createActions() {
                                              SLOT(slotImportCertFromFile()),
                                              actionCollection(),
                                              "importCertFromFile" );
-  
+
 
   // CRLs
   // Import from file
@@ -247,6 +247,8 @@ void CertManager::createActions() {
 
   KStdAction::keyBindings( this, SLOT(slotEditKeybindings()), actionCollection() );
   createStandardStatusBarAction();
+
+  KStdAction::preferences( this, SLOT(slotShowConfigurationDialog()), actionCollection() );
 }
 
 void CertManager::updateImportActions( bool enable ) {
@@ -256,6 +258,10 @@ void CertManager::updateImportActions( bool enable ) {
 
 void CertManager::slotEditKeybindings() {
   KKeyDialog::configure( actionCollection(), true );
+}
+
+void CertManager::slotShowConfigurationDialog() {
+
 }
 
 void CertManager::slotToggleRemote( int idx ) {
@@ -386,7 +392,8 @@ void CertManager::extendCertificate()
 */
 void CertManager::slotImportCertFromFile()
 {
-  slotImportCertFromFile( KFileDialog::getOpenURL( QString::null, QString::null, this,
+  QString filter = QString("*.p7c *.p12|") + i18n("Certificates (*.p7c *.p12)");
+  slotImportCertFromFile( KFileDialog::getOpenURL( QString::null, filter, this,
                                                    i18n( "Select Certificate File" ) ) );
 }
 
@@ -554,12 +561,13 @@ void CertManager::slotDirmngrExited() {
    This slot will import CRLs from a file.
 */
 void CertManager::importCRLFromFile() {
+  QString filter = QString("*.crl *.arl *-crl.der *-arl.der|") + i18n("Certificate Revokation List (*.crl *.arl *-crl.der *-arl.der)");
   KURL url = KFileDialog::getOpenURL( QString::null,
-                                      QString::null,
+                                      filter,
                                       this,
                                       i18n( "Select CRL File" ) );
-  updateImportActions( false );
   if ( url.isValid() ) {
+    updateImportActions( false );
     if ( url.isLocalFile() ) {
       startImportCRL( url.path(), false );
       updateImportActions( true );
