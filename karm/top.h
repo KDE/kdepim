@@ -10,6 +10,8 @@ class KAccel;
 class KAccelMenuWatch;
 class Preferences;
 class QTimer;
+class KListView;
+class QListViewItem;
 
 class KarmWindow : public KMainWindow
 {
@@ -31,13 +33,15 @@ private:
 
 protected slots:
   void keyBindings();
-  void resetSessionTime(); 
+  void resetSessionTime();
   void updateTime();
   void updateStatusBar();
   void save();
   void quit();
   void print();
   void slotSelectionChanged();
+  void openPopup( KListView*, QListViewItem *, const QPoint& );
+
 protected:
   virtual void saveProperties( KConfig* );
   void saveGeometry();
@@ -46,7 +50,7 @@ protected:
   private:
     void makeMenus();
     KDialogBase *dialog;
-  KAction 
+  KAction
     *actionStart,
     *actionStop,
     *actionDelete,

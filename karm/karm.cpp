@@ -26,7 +26,7 @@
 #define T_LINESIZE 1023
 
 Karm::Karm( QWidget *parent, const char *name )
-  : QListView( parent, name )
+  : KListView( parent, name )
 {
   _preferences = Preferences::instance();
 
@@ -410,9 +410,9 @@ void Karm::deleteTask()
       emit sessionTimeChanged( -sessionTime );
     }
     updateParents( (QListViewItem *) item, -totalTime, -sessionTime );
-    
+
     delete item;
-    
+
     // remove root decoration if there is no more children.
     bool anyChilds = false;
     for(QListViewItem *child=firstChild(); child; child=child->nextSibling()) {

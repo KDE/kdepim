@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #include <qsplitter.h>
-#include <qlistview.h>
+#include <klistview.h>
 #include <qptrlist.h>
 #include <qtextstream.h>
 
@@ -18,7 +18,7 @@ class QTimer;
 class Preferences;
 class Task;
 
-class Karm : public QListView
+class Karm : public KListView
 {
     Q_OBJECT
 

@@ -1,16 +1,16 @@
-<!DOCTYPE kpartgui ><kpartgui name="karm" version="2" >
+<!DOCTYPE kpartgui ><kpartgui name="karm" version="3" >
 <MenuBar>
 	<Menu name="file" >
-		<text>File</text>
+		<text>&amp;File</text>
 		<Action name="reset_session_time" />
 	</Menu>
 	<Menu name="clock" >
-		<text>Clock</text>
+		<text>&amp;Clock</text>
 		<Action name="start" />
 		<Action name="stop" />
 	</Menu>
 	<Menu name="task" >
-		<text>Task</text>
+		<text>&amp;Task</text>
 		<Action name="new_task" />
 		<Action name="new_sub_task" />
 		<Action name="delete_task" />
@@ -26,4 +26,9 @@
 	<Action name="delete_task" />
 	<Action name="edit_task" />
 </ToolBar>
+<Menu name="task_popup">
+	<Action name="new_sub_task" />
+	<Action name="delete_task" />
+	<Action name="edit_task" />
+</Menu>
 </kpartgui>

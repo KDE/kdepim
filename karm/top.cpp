@@ -47,6 +47,8 @@ KarmWindow::KarmWindow()
   connect(_karm, SIGNAL(currentChanged ( QListViewItem * )),this,SLOT(slotSelectionChanged()));
   connect(_karm, SIGNAL(selectionChanged  ( QListViewItem * )),this,SLOT(slotSelectionChanged()));
   connect(_karm, SIGNAL( updateButtons() ), this, SLOT(slotSelectionChanged()));
+  connect(_karm, SIGNAL(contextMenu(KListView*, QListViewItem *, const QPoint&)),
+          this, SLOT(openPopup(KListView*, QListViewItem *, const QPoint&)));
   // status bar
   statusBar()->insertItem( i18n( "This session: %1" )
                            .arg(QString::fromLatin1("0:00")), 0, 0, true );
@@ -82,6 +84,17 @@ void KarmWindow::slotSelectionChanged()
   actionEdit->setEnabled(item);
   actionStart->setEnabled(item && !item->isRunning());
   actionStop->setEnabled(item && item->isRunning());
+}
+
+void KarmWindow::openPopup(KListView*, QListViewItem *item, const QPoint& pos)
+{
+  Task* task = static_cast<Task *>( item );
+  if ( task )
+  {
+    QPopupMenu* menu = static_cast<QPopupMenu *>( guiFactory()->container( QString::fromLatin1("task_popup"), this ) );
+    if ( menu )
+      menu->popup( pos );
+  }
 }
 
 void KarmWindow::save()
