@@ -167,11 +167,12 @@ KNArticleWidget::KNArticleWidget(QWidget *parent, const char *name )
 	instances.append(this);	
 	
 
-	p_art->view()->viewport()->setFocusPolicy(QWidget::NoFocus);
+  // No need to deal with focus policies here :) KHTMLPart does it all for us :) (Simon)
+  //	p_art->view()->viewport()->setFocusPolicy(QWidget::NoFocus);
   instances.append(this);	
   view=p_art->view();
-	view->viewport()->setFocusProxy(this);
-  setFocusPolicy(QWidget::WheelFocus);
+  //	view->viewport()->setFocusProxy(this);
+  //  setFocusPolicy(QWidget::WheelFocus);
   urlPopup=new QPopupMenu();
   urlPopup->insertItem(i18n("Open URL"), PUP_OPEN);
   urlPopup->insertItem(i18n("Copy to clipboard"), PUP_COPY);
