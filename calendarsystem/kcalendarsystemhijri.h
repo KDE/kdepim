@@ -25,7 +25,6 @@ class KCalendarSystemHijri : public KCalendarSystem
     KCalendarSystemHijri();
     virtual ~KCalendarSystemHijri();
 
-    QString monthName(const QDate& date, bool shortName);
     int year(const QDate& date);
     QString formatDate(const QDate& date);
     void nextMonthDate(QDate& date);
@@ -33,11 +32,12 @@ class KCalendarSystemHijri : public KCalendarSystem
     void nextYearDate(QDate& date);
     void previousYearDate(QDate& date);
     int monthsInYear(int year);
-    QString monthName(int month);
+    QString monthName(int month, bool shortName = false);
+    QString monthName(const QDate& date, bool shortName = false);
     void constructDateInMonth(QDate& date, int month);
     void constructDateInYear(QDate& date, int year);
-    QDate parseDate(QString text);
-    QString weekDayName(int col, bool shortName);
+    QDate parseDate(const QString& text);
+    QString weekDayName(int col, bool shortName = false);
     int dayOfTheWeek(const QDate& date);
     int numberOfDaysInMonth(const QDate& date);
     int numberOfDaysPrevMonth(const QDate& date);
