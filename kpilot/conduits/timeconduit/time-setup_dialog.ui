@@ -9,8 +9,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>382</width>
-            <height>209</height>
+            <width>399</width>
+            <height>293</height>
         </rect>
     </property>
     <property name="caption">
@@ -47,6 +47,17 @@
                     <property name="spacing">
                         <number>6</number>
                     </property>
+                    <spacer row="2" column="0">
+                        <property name="name">
+                            <cstring>Spacer3</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                    </spacer>
                     <widget class="QButtonGroup" row="0" column="0">
                         <property name="name">
                             <cstring>directionGroup</cstring>
@@ -69,7 +80,7 @@
                                     <cstring>RadioButton1</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Set time on &amp;handheld from time on PC</string>
+                                    <string>set time on &amp;handheld from the PC time</string>
                                 </property>
                                 <property name="checked">
                                     <bool>true</bool>
@@ -83,22 +94,19 @@
                                     <bool>false</bool>
                                 </property>
                                 <property name="text">
-                                    <string>Set time on &amp;PC from time on handheld</string>
+                                    <string>set time on &amp;PC from the time on the handheld</string>
                                 </property>
                             </widget>
                         </grid>
                     </widget>
-                    <spacer row="1" column="0">
+                    <widget class="QLabel" row="1" column="0">
                         <property name="name">
-                            <cstring>Spacer3</cstring>
+                            <cstring>TextLabel1</cstring>
                         </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
+                        <property name="text">
+                            <string>&lt;qt&gt;PalmOS Version 3.25 and 3.3 do not support setting the system time, so this conduit will be skipped for handhelds that run one of these operating systems.&lt;/qt&gt;</string>
                         </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                    </spacer>
+                    </widget>
                 </grid>
             </widget>
         </widget>

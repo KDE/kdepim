@@ -77,6 +77,7 @@ void TimeConduit::readConfig()
 	{
 		kdWarning() << k_funcinfo << ": No config file was set!" << endl;
 		emit syncDone(this);
+		return;
 	}
 
 	readConfig();
@@ -94,7 +95,7 @@ void TimeConduit::readConfig()
 			syncPalmToPC();
 			break;
 		default:
-			emit logError(i18n("Unknown setting for time synchronization."));
+			emit logError(i18n("Unknown setting for time syncronization."));
 			kdWarning() << k_funcinfo << ": unknown sync direction "<<fDirection<<endl;
 			emit syncDone(this);
 			return;
@@ -121,6 +122,14 @@ void TimeConduit::syncPCToPalm()
 	time_t ltime;
 	time(&ltime);
 	QDateTime time=QDateTime::currentDateTime();
+	
+	long int major=fHandle->majorVersion(), minor=fHandle->minorVersion();
+	
+	if (major==3 && (minor==25 || minor==30)) 
+	{
+		emit logMessage(i18n("PalmOS 3.25 and 3.3 do not support setting the system time, so skipping the time conduit"));
+		return;
+	}
 
 //	fHandle->setTime(QDateTime::currentDateTime());
 	fHandle->setTime(ltime);
