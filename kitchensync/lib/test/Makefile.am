@@ -20,13 +20,16 @@ INCLUDES=  -I$(top_srcdir)/kitchensync/lib $(all_includes) -I$(top_srcdir)/libkc
 LDADD = $(top_builddir)/kitchensync/lib/libksync.la
 LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
-check_PROGRAMS = todotest eventtest
+check_PROGRAMS = todotest eventtest abtest
 
 todotest_LDADD = ../libksync.la $(top_builddir)/libkcal/libkcal.la $(LIB_KDEUI) $(LIB_QT)
 todotest_SOURCES =  todomain.cpp
 
 eventtest_LDADD = ../libksync.la $(top_builddir)/libkcal/libkcal.la $(LIB_KDEUI) $(LIB_QT)
 eventtest_SOURCES =  eventmain.cpp
+
+abtest_LDADD = ../libksync.la -lkabc $(LIB_KDEUI) $(LIB_QT)
+abtest_SOURCES =  abmain.cpp
 
 METASOURCES = AUTO
 
