@@ -371,14 +371,19 @@ void HtmlExport::createTodoList ( QTextStream *ts )
       *ts << "  </tr>\n";
 
       Todo::List sortedList;
-      // Sort list by priorities. This is brute force and should be
+      // FIXME: Sort list by priorities. This is brute force and should be
       // replaced by a real sorting algorithm.
-      for ( int i = 1; i <= 5; ++i ) {
+      for ( int i = 1; i <= 9; ++i ) {
         Incidence::List::ConstIterator it2;
         for( it2 = relations.begin(); it2 != relations.end(); ++it2 ) {
           Todo *ev3 = dynamic_cast<Todo *>( *it2 );
           if ( ev3 && ev3->priority() == i ) sortedList.append( ev3 );
         }
+      }
+      Incidence::List::ConstIterator it2;
+      for( it2 = relations.begin(); it2 != relations.end(); ++it2 ) {
+        Todo *ev3 = dynamic_cast<Todo *>( *it2 );
+        if ( ev3 && ev3->priority() == 0 ) sortedList.append( ev3 );
       }
 
       Todo::List::ConstIterator it3;

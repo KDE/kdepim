@@ -154,7 +154,7 @@ class QtopiaParser : public QXmlDefaultHandler
         }
         
         int priority = attributes.value( "Priority" ).toInt();
-        if ( priority == 0 ) priority = 3;
+//        if ( priority == 0 ) priority = 3;
         todo->setPriority( priority );
         
         QString categoryList = attributes.value( "Categories" );

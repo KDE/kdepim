@@ -284,7 +284,7 @@ static QString eventViewerFormatTodo( Todo *todo )
   tmpStr += eventViewerFormatCategories( todo );
 
   tmpStr += i18n("<p><b>Priority:</b> %2</p>")
-                .arg( QString::number( todo->priority() ) );
+                .arg( (todo->priority()>0)?(QString::number( todo->priority() )):i18n("Unspecified") );
 
   tmpStr += i18n("<p><i>%1 % completed</i></p>")
                 .arg( todo->percentComplete() );
