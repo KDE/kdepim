@@ -25,6 +25,8 @@
 #include "EmpathDefines.h"
 #include "EmpathQuotedText.h"
 
+#include <qregexp.h>
+
 EmpathQuotedText::EmpathQuotedText()
     :   parsed_(false),
         assembled_(false)

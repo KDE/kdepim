@@ -44,9 +44,9 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
     headerNameWidget_ = new QLabel(this);
 
     if (
-        (0 == stricmp(headerName.utf8(), "To")) ||
-        (0 == stricmp(headerName.utf8(), "Cc")) ||
-        (0 == stricmp(headerName.utf8(), "Bcc"))
+        (0 == strcasecmp(headerName.utf8(), "To")) ||
+        (0 == strcasecmp(headerName.utf8(), "Cc")) ||
+        (0 == strcasecmp(headerName.utf8(), "Bcc"))
     )
         headerBodyWidget_ = new EmpathAddressHeaderBodyWidget(this);
     else

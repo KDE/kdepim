@@ -100,9 +100,9 @@ class EmpathMailSender : public QObject
 
     protected slots:
 
-        void s_writtenNowSend(EmpathWriteJob);
-        void s_writtenNowQueue(EmpathWriteJob);
-        void s_movedToSent(EmpathMoveJob);
+        void s_writtenNowSend(EmpathWriteJob*);
+        void s_writtenNowQueue(EmpathWriteJob*);
+        void s_movedToSent(EmpathMoveJob*);
 
     private:
 

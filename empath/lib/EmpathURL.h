@@ -26,6 +26,7 @@
 
 // Qt includes
 #include <qstrlist.h>
+#include <qvaluelist.h>
 
 // Local includes
 #include "EmpathIndexRecord.h"

@@ -37,6 +37,7 @@
 #include <kstdaction.h>
 #include <kprogress.h>
 #include <kparts/factory.h>
+#include <kstatusbar.h>
 
 // Local includes
 #include "EmpathSettingsDialog.h"
@@ -50,7 +51,7 @@ class EmpathProgressStack : public QWidgetStack
     public:
 
         EmpathProgressStack(QStatusBar * parent)
-            :   QWidgetStack(parent)
+            :   QWidgetStack((QWidget*)parent)
         {
         }
 

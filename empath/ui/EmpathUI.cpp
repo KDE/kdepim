@@ -30,7 +30,7 @@
 #include <kiconloader.h>
 #include <kstddirs.h>
 #include <klocale.h>
-#include <ktmainwindow.h>
+#include <kmainwindow.h>
 #include <kaboutdialog.h>
 #include <kfiledialog.h>
 #include <kaction.h>

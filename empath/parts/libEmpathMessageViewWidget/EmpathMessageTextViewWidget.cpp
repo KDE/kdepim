@@ -21,6 +21,7 @@
 
 // Qt includes
 #include <qpopupmenu.h>
+#include <qcursor.h>
 
 // KDE includes
 #include <klocale.h>
@@ -79,11 +80,11 @@ EmpathMessageTextViewWidget::setXML(const QString & xml)
     
     QFont f = c->readFontEntry("Font", &defaultFixed);
 
-    setFont(f, true);
+	QTextEdit::setFont(f);
 
     QColor defaultLinkColour = Qt::red;
 
-    setLinkColor(c->readColorEntry("LinkColour", &defaultLinkColour));
+    //setLinkColor(c->readColorEntry("LinkColour", &defaultLinkColour));
     setLinkUnderline(c->readBoolEntry("UnderlineLinks", true));
 
     setText(xml);

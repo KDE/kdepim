@@ -10,7 +10,7 @@ lib_LTLIBRARIES = libEmpathComposePart.la
 libEmpathComposePart_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
 
 libEmpathComposePart_la_LIBADD = \
-	$(LIB_KPARTS) $(LIB_KDEUI) $(LIB_KDECORE) \
+	$(LIB_KPARTS) $(LIB_KDEUI) $(LIB_KDECORE) -lktexteditor \
   $(top_builddir)/empath/ui/libempathui.la
 
 METASOURCES = AUTO

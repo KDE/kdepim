@@ -24,6 +24,7 @@
 #include <qpixmap.h>
 #include <qdragobject.h>
 #include <qstringlist.h>
+#include <qcursor.h>
 
 // KDE includes
 #include <kconfig.h>

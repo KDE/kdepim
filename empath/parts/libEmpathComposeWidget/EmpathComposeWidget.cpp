@@ -29,7 +29,10 @@
 #include <kaction.h>
 #include <klocale.h>
 #include <kinstance.h>
-#include <ktexteditor.h>
+#include <ktexteditor/editor.h>
+#include <ktexteditor/document.h>
+#include <ktexteditor/view.h>
+#include <ktexteditor/editinterface.h>
 #include <klibloader.h>
 #include <ktrader.h>
 #include <kservice.h>
@@ -62,7 +65,7 @@ EmpathComposePartFactory::~EmpathComposePartFactory()
 }
 
     QObject *
-EmpathComposePartFactory::create(
+EmpathComposePartFactory::createObject(
     QObject * parent,
     const char * name,
     const char *,
@@ -273,6 +276,7 @@ EmpathComposeWidget::~EmpathComposeWidget()
     void
 EmpathComposeWidget::setForm(const EmpathComposeForm & form)
 {
+	KTextEditor::EditInterface * editInterface = dynamic_cast<KTextEditor::EditInterface *>(editorPart_);
     composeForm_ = form;
 
     empathDebug("Setting headers.....................");
@@ -281,7 +285,8 @@ EmpathComposeWidget::setForm(const EmpathComposeForm & form)
 
     empathDebug(".................. headers set");
 
-    editorPart_->setText(composeForm_.body());
+	if (editInterface )
+    	editInterface->setText(composeForm_.body());
 
     switch (composeForm_.composeType())
     {
@@ -301,8 +306,10 @@ EmpathComposeWidget::setForm(const EmpathComposeForm & form)
     EmpathComposeForm
 EmpathComposeWidget::form()
 {
+	KTextEditor::EditInterface * editInterface = dynamic_cast<KTextEditor::EditInterface *>(editorPart_);
     composeForm_.setVisibleHeaders(envelopeWidget_->headers());
-    composeForm_.setBody(editorPart_->text());
+	if ( editInterface )
+	    composeForm_.setBody(editInterface->text());
 //TODO    composeForm_.attachments = attachmentWidget_.attachments();
     return composeForm_;
 }

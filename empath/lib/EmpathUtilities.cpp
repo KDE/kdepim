@@ -44,7 +44,7 @@ EmpathIndexRecord indexRecordFromMessage(const QString & id, RMM::Message & m)
         m.size(),
         QString::fromUtf8(m.envelope().messageID().asString()),
         QString::fromUtf8(m.envelope().parentMessageId().asString()),
-        (0 != stricmp(m.envelope().contentType().type(), "multipart"))
+        (0 != strcasecmp(m.envelope().contentType().type(), "multipart"))
     );
 }
 

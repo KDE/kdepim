@@ -62,7 +62,7 @@ EmpathViewPartFactory::~EmpathViewPartFactory()
 }
 
     QObject *
-EmpathViewPartFactory::create(
+EmpathViewPartFactory::createObject(
     QObject * parent,
     const char * name,
     const char *,

@@ -72,9 +72,9 @@ EmpathEnvelopeWidget::haveRecipient()
         if (
             !it.current()->headerBody().isEmpty() &&
             (
-                (0 == stricmp(it.current()->headerName().utf8(), "to"))     ||
-                (0 == stricmp(it.current()->headerName().utf8(), "bcc"))    ||
-                (0 == stricmp(it.current()->headerName().utf8(), "cc"))
+                (0 == strcasecmp(it.current()->headerName().utf8(), "to"))     ||
+                (0 == strcasecmp(it.current()->headerName().utf8(), "bcc"))    ||
+                (0 == strcasecmp(it.current()->headerName().utf8(), "cc"))
             )
         )
         return true;
@@ -90,7 +90,7 @@ EmpathEnvelopeWidget::haveSubject()
     for (; it.current(); ++it)
         if (
             !it.current()->headerBody().isEmpty() &&
-            (0 == stricmp(it.current()->headerName().utf8(), "subject"))
+            (0 == strcasecmp(it.current()->headerName().utf8(), "subject"))
         )
         return true;
     

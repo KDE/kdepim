@@ -69,10 +69,10 @@ EmpathMailSender::queue(RMM::Message message)
 }
 
     void
-EmpathMailSender::s_writtenNowSend(EmpathWriteJob job)
+EmpathMailSender::s_writtenNowSend(EmpathWriteJob * job)
 {
-    if (job.success())
-        impl_->sendOne(job.message(), job.messageID());
+    if (job->success())
+        impl_->sendOne(job->message(), job->messageID());
 
     else {
         // Warn user that message could not be written to queue
@@ -83,15 +83,15 @@ EmpathMailSender::s_writtenNowSend(EmpathWriteJob job)
             i18n("Couldn't queue message ! Writing backup"),
             i18n("OK"));
 
-        _emergencyBackup(job.message());
+        _emergencyBackup(job->message());
     }
 }
 
     void
-EmpathMailSender::s_writtenNowQueue(EmpathWriteJob job)
+EmpathMailSender::s_writtenNowQueue(EmpathWriteJob * job)
 {
-    if (job.success())
-        impl_->sendOne(job.message(), job.messageID());
+    if (job->success())
+        impl_->sendOne(job->message(), job->messageID());
 
     else {
         // Warn user that message could not be written to queue
@@ -102,7 +102,7 @@ EmpathMailSender::s_writtenNowQueue(EmpathWriteJob job)
             i18n("Couldn't queue message ! Writing backup"),
             i18n("OK"));
 
-        _emergencyBackup(job.message());
+        _emergencyBackup(job->message());
     }
 }
 
@@ -144,9 +144,9 @@ EmpathMailSender::sendCompleted(const QString & id, bool)
 }
 
     void
-EmpathMailSender::s_movedToSent(EmpathMoveJob job)
+EmpathMailSender::s_movedToSent(EmpathMoveJob * job)
 {
-    if (!job.success()) {
+    if (!job->success()) {
         empathDebug("Couldn't move message from queue to sent");
         // TODO Something !
     }

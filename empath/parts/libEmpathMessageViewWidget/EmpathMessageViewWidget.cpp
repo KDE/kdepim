@@ -67,7 +67,7 @@ EmpathMessageViewPartFactory::~EmpathMessageViewPartFactory()
 }
 
     QObject *
-EmpathMessageViewPartFactory::create(
+EmpathMessageViewPartFactory::createObject(
     QObject * parent,
     const char * name,
     const char *,
@@ -286,9 +286,9 @@ EmpathMessageViewWidget::_showMessage(RMM::Message & message)
                 qDebug("   Type of this part is \"" + t.type() + "\"");
                 qDebug("SubType of this part is \"" + t.subType() + "\"");
 
-                if (0 == stricmp(t.type(), "text")) {
+                if (0 == strcasecmp(t.type(), "text")) {
                     
-                    if (0 == stricmp(t.subType(), "html")) {
+                    if (0 == strcasecmp(t.subType(), "html")) {
 
                         qDebug("Using this HTML part as body");
 
@@ -298,7 +298,7 @@ EmpathMessageViewWidget::_showMessage(RMM::Message & message)
                         textView_->setXML(s);
                         return;
     
-                    } else if (0 == stricmp(t.subType(), "plain")) {
+                    } else if (0 == strcasecmp(t.subType(), "plain")) {
                     
                         qDebug("Using this plaintext part as body");
 
@@ -401,27 +401,27 @@ EmpathMessageViewWidget::s_partChanged(RMM::BodyPart part)
 
     RMM::ContentType t = part.envelope().contentType();
 
-    if (0 == stricmp(t.type(), "text")) {
+    if (0 == strcasecmp(t.type(), "text")) {
 
         if (
-            (0 == stricmp(t.subType(), "plain")) ||
-            (0 == stricmp(t.subType(), "unknown"))
+            (0 == strcasecmp(t.subType(), "plain")) ||
+            (0 == strcasecmp(t.subType(), "unknown"))
             )
             messageWidget_->show(part.asXML(quote1, quote2));
 
         else if (
-            (0 == stricmp(t.subType(), "html")) ||
-            (0 == stricmp(t.subType(), "richtext"))
+            (0 == strcasecmp(t.subType(), "html")) ||
+            (0 == strcasecmp(t.subType(), "richtext"))
             )
             messageWidget_->show(part.asString());
 
-    } else if (0 == stricmp(t.type(), "image")) {
+    } else if (0 == strcasecmp(t.type(), "image")) {
 
         // TODO: Enable this when we work out how to use QMimeSourceFactory.
         if (
-            (0 == stricmp(t.subType(), "png")) ||
-            (0 == stricmp(t.subType(), "jpeg")) ||
-            (0 == stricmp(t.subType(), "xpm"))) {
+            (0 == strcasecmp(t.subType(), "png")) ||
+            (0 == strcasecmp(t.subType(), "jpeg")) ||
+            (0 == strcasecmp(t.subType(), "xpm"))) {
 
             QByteArray data = part.decode();
 
