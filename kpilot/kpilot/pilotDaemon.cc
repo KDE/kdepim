@@ -40,7 +40,6 @@ static const char *id="$Id$";
 #include <fstream.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <getopt.h>
 #include <signal.h>
 #include <errno.h>
 
@@ -450,11 +449,24 @@ PilotDaemon::setupSubProcesses()
 		*fMonitorProcess << "pilotListener" << fPilotDevice;
 		connect(fMonitorProcess, SIGNAL(processExited(KProcess*)),
 			this, SLOT(slotProcFinished(KProcess*)));
-		fMonitorProcess->start(KProcess::NotifyOnExit);
+		if (!fMonitorProcess->start(KProcess::NotifyOnExit))
+		{
+			kdWarning() << __FUNCTION__
+				<< ": Can't start listener process."
+				<< endl;
+		}
+		else
+		{
+			DEBUGDAEMON << fname
+				<< ": Started listener with pid "
+				<< fMonitorProcess->pid()
+				<< endl;
+		}
 	}
 	else
 	{
-		kdWarning() << __FUNCTION__ << ": Can't start new listener process."
+		kdWarning() << __FUNCTION__ 
+			<< ": Can't allocate new listener process."
 			<< endl;
 	}
 }
@@ -1063,7 +1075,7 @@ void signalHandler(int s)
 	// a *third* time, give up.
 	//
 	//
-	if ( crashFlag>2 ) exit(-1);
+	if ( crashFlag>2 ) exit(3);
 
 	// Often popping up the message for the user
 	// gets KApplication into a weird state so
@@ -1101,7 +1113,7 @@ void signalHandler(int s)
 	}
 
 
-	exit(-1);
+	exit(3);
 }
 #endif
 
@@ -1205,6 +1217,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.30  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.29  2001/02/08 13:17:19  adridg
 // Fixed crash when conduits run during a backup and exit after the
 // end of that backup (because the event loop is blocked by the backup
