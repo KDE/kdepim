@@ -51,6 +51,6 @@ messages: #rc.cpp
 	$(XGETTEXT) *.cpp *.h \
 	kleo/*.cpp kleo/*.h \
 	ui/*.cpp ui/*.h \
-	backends/*/*.cpp backends/*/*.h -o $(podir)/libkleopatra.pot
+	backends/*/*.cpp backends/*/*.c backends/*/*.h -o $(podir)/libkleopatra.pot
 
 include ../../admin/Doxyfile.am
