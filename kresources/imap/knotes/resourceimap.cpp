@@ -29,10 +29,14 @@
     your version.
 */
 
+#include "resourceimap.h"
+
+#include <resourcemanager.h>
+
+#include <libkcal/icalformat.h>
+
 #include <kdebug.h>
 #include <kglobal.h>
-
-#include "resourceimap.h"
 
 
 class IMAPFactory : public KRES::PluginFactoryBase
@@ -71,8 +75,27 @@ KNotesIMAP::ResourceIMAP::~ResourceIMAP()
 
 bool KNotesIMAP::ResourceIMAP::load()
 {
-  kdDebug() << "NYI: KNotesIMAP::ResourceIMAP::load()\n";
-  return false;
+  // Get the list of journals
+  QStringList lst;
+  if( !kmailIncidences( lst, "Notes" ) ) {
+    kdError() << "Communication problem in ResourceIMAP::getIncidenceList()\n";
+    return false;
+  }
+
+  // We got a fresh list of events, so clean out the old ones
+  mCalendar.deleteAllEvents();
+
+  // Populate the calendar with the new events
+  for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+    KCal::Journal* journal = parseJournal( *it );
+    if( journal ) {
+      mCalendar.addJournal( journal );
+      journal->registerObserver( this );
+      manager()->registerNote( this, journal, true );
+    }
+  }
+
+  return true;
 }
 
 bool KNotesIMAP::ResourceIMAP::save()
@@ -124,6 +147,24 @@ void KNotesIMAP::ResourceIMAP::slotRefresh( const QString& type )
   Q_UNUSED( type );
   kdDebug() << "NYI: KNotesIMAP::ResourceIMAP::slotRefresh()\n";
 }
+
+
+KCal::Journal* KNotesIMAP::ResourceIMAP::parseJournal( const QString& str )
+{
+  KCal::Incidence* i = mFormat->fromString( str );
+  if ( i ) {
+    if ( i->type() == "Journal" )
+      return static_cast<KCal::Journal*>( i );
+    else {
+      kdDebug() << "Unknown incidence type " << i->type() << endl;
+      delete i;
+    }
+  } else
+    kdDebug() << "Parse error\n";
+
+  return 0;
+}
+
 
 
 #include "resourceimap.moc"

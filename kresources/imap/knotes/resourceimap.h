@@ -77,6 +77,9 @@ public:
     virtual void slotRefresh( const QString& type );
 
 private:
+    // Parse a journal from a string
+    KCal::Journal* parseJournal( const QString& str );
+
     bool mSilent;
 };
 
