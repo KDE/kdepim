@@ -128,7 +128,7 @@ int TypeCombo<T>::selectedType()
 }
 
 template <class T>
-TypeCombo<T>::Iterator TypeCombo<T>::selectedElement()
+typename TypeCombo<T>::Iterator TypeCombo<T>::selectedElement()
 {
   return mTypeList.at( currentItem() );
 }
