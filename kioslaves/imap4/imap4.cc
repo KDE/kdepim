@@ -1369,6 +1369,21 @@ IMAP4Protocol::rename (const KURL & src, const KURL & dest, bool overwrite)
     case ITYPE_DIR:
     case ITYPE_DIR_AND_BOX:
       {
+        if (getState() == ISTATE_SELECT && sBox == getCurrentBox())
+        {
+          kdDebug(7116) << "IMAP4::rename - close " << getCurrentBox() << endl;
+          // mailbox can only be renamed if it is closed
+          imapCommand *cmd = doCommand (imapCommand::clientClose());
+          bool ok = cmd->result() == "OK";
+          completeQueue.removeRef(cmd);
+          if (!ok)
+          {
+            error(ERR_CANNOT_RENAME, i18n("Unable to close mailbox."));
+            finished ();
+            return;
+          }
+          setState(ISTATE_LOGIN);
+        }
         imapCommand *cmd = doCommand (imapCommand::clientRename (sBox, dBox));
         if (cmd->result () != "OK")
           error (ERR_CANNOT_RENAME, cmd->result ());
