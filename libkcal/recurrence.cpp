@@ -3343,7 +3343,7 @@ QDate Recurrence::getFirstDateInYear(const QDate &earliestDate) const
   QPtrListIterator<int> it(rYearNums);
   switch (recurs) {
     case rYearlyMonth: {
-      int day = recurStart().date().day();
+      int day = rMonthDays.count() ? *rMonthDays.getFirst() : recurStart().date().day();
       int earliestYear  = earliestDate.year();
       int earliestMonth = earliestDate.month();
       int earliestDay   = earliestDate.day();
@@ -3416,7 +3416,7 @@ QDate Recurrence::getLastDateInYear(const QDate &latestDate) const
   QPtrListIterator<int> it(rYearNums);
   switch (recurs) {
     case rYearlyMonth: {
-      int day = recurStart().date().day();
+      int day = rMonthDays.count() ? *rMonthDays.getFirst() : recurStart().date().day();
       int latestYear  = latestDate.year();
       int latestMonth = latestDate.month();
       if (latestDate.day() > day) {
