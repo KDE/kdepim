@@ -443,7 +443,8 @@ FileInstallAction::~FileInstallAction()
 	if (!fList.count())
 	{
 		emit logMessage(i18n("No Files to install"));
-		return false;
+		delayDone();
+		return true;
 	}
 
 	fTimer = new QTimer(this);
