@@ -15,7 +15,8 @@ MAGIC=$(kde_mimedir)/magic
 abbrowser_conduit_SOURCES= abbrowser-conduit.cc \
 	abbrowserConduitConfig_base.ui \
 	abbrowserConduitConfig.cc \
-	setupDialog.cc
+	setupDialog.cc \
+	contactentry.cpp
 
 # the library search path
 abbrowser_conduit_LDFLAGS = $(all_libraries) \
@@ -25,7 +26,6 @@ abbrowser_conduit_LDFLAGS = $(all_libraries) \
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
 abbrowser_conduit_LDADD   =  ../../kpilot/pilotAddress.o \
-	$(top_srcdir)/abbrowser/contactentry.o \
 	-lconduit -lpilotdb \
 	$(LIB_KDEUI) $(LIB_KFILE) $(LIB_KDECORE) \
 	@LIBSOCKET@ -lpisock

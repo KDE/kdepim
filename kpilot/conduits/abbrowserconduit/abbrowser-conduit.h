@@ -16,8 +16,12 @@
 
 #include <qmap.h>
 #include <qlist.h>
-#include <contactentry.h>
 #include <pilotAddress.h>
+
+// Made a local copy of contactentry.h now that abbrowser has moved.
+//
+//
+#include "contactentry.h"
 
 class DCOPClient;
 class AbbrowserConduit : public BaseConduit

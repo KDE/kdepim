@@ -1,12 +1,16 @@
+#include <unistd.h> // for usleep
+#include <assert.h>
+#include <qdict.h>
+
+#include <qstringlist.h>
+
 #include <dcopclient.h>
 #include <kapp.h>
 #include <kdebug.h>
 #include <krun.h>
-#include <qstringlist.h>
-#include <assert.h>
-#include <qdict.h>
+
+
 #include "contactentry.h"
-#include <unistd.h> // for usleep
 
 
 void output(const QStringList &strlist)

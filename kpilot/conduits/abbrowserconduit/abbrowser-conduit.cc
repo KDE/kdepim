@@ -61,16 +61,15 @@ static const char *abbrowser_conduit_id=
 int main(int argc, char* argv[])
     {
     ConduitApp a(argc,argv,"abbrowser",
-		 I18N_NOOP("Abbrowser Conduit"),
-		 "0.1");
+		 I18N_NOOP("KAddressBook Conduit"),
+		 "0.2");
     
     a.addAuthor("Gregory Stern",
-		"Abbrowser Conduit author",
+		"KAddressBook Conduit author",
 		"stern@enews.nrl.navy.mil");
     
     AbbrowserConduit conduit(a.getMode(), a.getDBSource());
     a.setConduit(&conduit);
-    cout << "AbbrowserConduit about to call exec" << endl;
     return a.exec(true /* with DCOP support */, false);
     
     /* NOTREACHED */
@@ -150,11 +149,16 @@ bool AbbrowserConduit::_startAbbrowser()
 	// while keeping the Pilot awake.
 	//
 	//
-	for (i=0; !foundAbbrowser && (i<20); i++)
+	for (int i=0; !foundAbbrowser && (i<20); i++)
 	{
 		sleep(1);
 		kapp->processEvents();
-		tickle();
+		// tickle() was added to kpilotlink but not anywhere
+		// where we can reach it. Making it accesible is 
+		// adding a feature .. sigh. Post 2.2 fix.
+		//
+		//
+		// tickle();
 		foundAbbrowser = PING_ABBROWSER;
 	}
 
@@ -1401,8 +1405,6 @@ void AbbrowserConduit::readConfig()
     //			   true);
     fBackupDone = !getFirstTime(c);
 #ifdef DEBUG
-    if (debug_level & SYNC_MINOR)
-	{
 	kdDebug() << fname
 		  << ": Settings "
 		  << "fSmartMerge=" << fSmartMerge
@@ -1411,6 +1413,5 @@ void AbbrowserConduit::readConfig()
 		  << " fPilotStreetHome=" << fPilotStreetHome
 		  << " fPilotFaxHome=" << fPilotFaxHome
 		  << endl;
-	}
 #endif
     }
