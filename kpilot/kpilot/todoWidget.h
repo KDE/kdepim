@@ -159,7 +159,7 @@ private:
 	QPtrList<PilotTodoEntry>	fTodoList;
 	TodoListView		*fListBox;
 	QPushButton		*fEditButton,*fDeleteButton;
-
+	PilotDatabase		*fTodoDB;
 protected:
 	/**
 	* Keep track of how many open todo editing windows there

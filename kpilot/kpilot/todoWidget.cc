@@ -78,6 +78,7 @@ TodoWidget::TodoWidget(QWidget * parent,
 	const QString & path) :
 	PilotComponent(parent, "component_todo", path),
 	fTodoInfo(0),
+	fTodoDB(0),
 	fPendingTodos(0)
 {
 	FUNCTIONSETUP;
@@ -92,6 +93,7 @@ TodoWidget::TodoWidget(QWidget * parent,
 TodoWidget::~TodoWidget()
 {
 	FUNCTIONSETUP;
+	KPILOT_DELETE( fTodoDB );
 }
 
 int TodoWidget::getAllTodos(PilotDatabase * todoDB)
@@ -124,7 +126,7 @@ int TodoWidget::getAllTodos(PilotDatabase * todoDB)
 			}
 			fTodoList.append(todo);
 		}
-		delete pilotRec;
+		KPILOT_DELETE( pilotRec );
 
 		currentRecord++;
 	}
@@ -146,20 +148,19 @@ void TodoWidget::initialize()
 		<< ": Reading from directory " << dbPath() << endl;
 #endif
 
-	PilotDatabase *todoDB =
-		new PilotLocalDatabase(dbPath(), CSL1("ToDoDB"));
+	fTodoDB = new PilotLocalDatabase(dbPath(), CSL1("ToDoDB"));
 	unsigned char buffer[BUFFERSIZE];
 	int appLen;
 
 	fTodoList.clear();
 
-	if (todoDB->isDBOpen())
+	if (fTodoDB->isDBOpen())
 	{
-		appLen = todoDB->readAppBlock(buffer, BUFFERSIZE);
+		appLen = fTodoDB->readAppBlock(buffer, BUFFERSIZE);
 		unpack_ToDoAppInfo(&fTodoAppInfo, buffer, appLen);
 
 		populateCategories(fCatList, &fTodoAppInfo.category);
-		getAllTodos(todoDB);
+		getAllTodos(fTodoDB);
 
 	}
 	else
@@ -169,7 +170,7 @@ void TodoWidget::initialize()
 			<< ": Could not open local TodoDB" << endl;
 	}
 
-	delete todoDB;
+	KPILOT_DELETE( fTodoDB );
 
 	updateWidget();
 }
@@ -403,7 +404,7 @@ void TodoWidget::slotCreateNewRecord()
 			i18n("Can't Add New Todo"));
 
 		if (myDB)
-			delete myDB;
+			KPILOT_DELETE( myDB );
 
 		return;
 	}
@@ -557,7 +558,7 @@ void TodoWidget::writeTodo(PilotTodoEntry * which,
 
 	myDB->writeRecord(pilotRec);
 	markDBDirty("ToDoDB");
-	delete pilotRec;
+	KPILOT_DELETE(pilotRec);
 
 
 	// Clean up in the case that we allocated our own DB.
@@ -565,7 +566,7 @@ void TodoWidget::writeTodo(PilotTodoEntry * which,
 	//
 	if (usemyDB)
 	{
-		delete myDB;
+		KPILOT_DELETE(myDB);
 	}
 }
 
