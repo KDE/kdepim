@@ -14,11 +14,19 @@ namespace KAB
 {
  
 class Group;
-    
+
+/**
+ * @short Programmers' API for talking to a remote addressbook.
+ * The AddressBookClient class is the one that you the programmer talk to.
+ * This class does the chatting to the server for you.
+ */
 class AddressBookClient
 {
   public:
-    
+
+    /**
+     * Create a client
+     */    
     AddressBookClient(
       const QString & name, const KURL & url);
     
@@ -39,7 +47,7 @@ class AddressBookClient
      * 
      * The entity will be copied so you may delete it.
      */
-    void write(Entity *);
+    bool write(Entity *);
     /**
      * @short Delete an entity.
      * 
@@ -55,7 +63,7 @@ class AddressBookClient
      *
      * If the given entity did not already exist, it is simply added.
      */
-    void update(Entity *);
+    bool update(Entity *);
     /**
      * @short Retrieve a list of all keys in the addressbook.
      *
@@ -76,6 +84,11 @@ class AddressBookClient
     
     QString name_;
     KURL url_;
+    int fd;
+    QString serverName_;
+
+    bool _connect();
+    void _disconnect();
 };
 
 

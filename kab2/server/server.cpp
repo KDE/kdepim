@@ -22,6 +22,20 @@ int PORT = 6566;
 decodeToInt(char * s)
 { return (s[0] << 24) | (s[1] << 16) | (s[2] << 8) | s[3]; }
 
+  char *
+fourOctets(Q_UINT32 i)
+{
+  char * s = new char[4];
+
+  s[0] = (i >> 24)  & 0x000000ff;
+  s[1] = (i >> 16)  & 0x000000ff;
+  s[2] = (i >> 8)   & 0x000000ff;
+  s[3] = i          & 0x000000ff;
+
+  return s;
+}
+
+
 const QCString welcomeMessage = "KAB " + QCString().setNum(version) + "\n"; 
 
 KAB::AddressBook * ab;
@@ -40,18 +54,19 @@ processCommand(int fd)
   
   char commandType;
 
+  cerr << "Server: Waiting for command" << endl;
   // First find out what type of request we're doing.
   nrecv = ::read(fd, &commandType, (size_t)1);
   
   if (nrecv != 1) {
-    cerr << "Connection died" << endl;
+    cerr << "Server: Connection died" << endl;
     return false;
   }
 
-  cerr << "Command: " << commandType << endl;
+  cerr << "Server: Command: " << commandType << endl;
 
   if (commandType == 'q') {
-    cerr << "Quit requested" << endl;
+    cerr << "Server: Quit requested" << endl;
     return false;
   }
   
@@ -66,14 +81,14 @@ processCommand(int fd)
     nrecv = ::read(fd, total, (size_t)4);
 
     if (nrecv != 4) {
-      cerr << "Couldn't get total number of octets to read" << endl;
+      cerr << "Server: Couldn't get total number of octets to read" << endl;
       return false;
     }
 
     Q_UINT32 totalOctets = decodeToInt(total);
 
     if (totalOctets == 0) {
-      cerr << "Total number of octets to read is 0" << endl;
+      cerr << "Server: Total number of octets to read is 0" << endl;
       return false;
     }
 
@@ -82,7 +97,7 @@ processCommand(int fd)
     nrecv = ::read(fd, buf, (size_t)totalOctets);
 
     if (nrecv != (int)totalOctets) {
-      cerr << "Couldn't read " << totalOctets << " octets" << endl;
+      cerr << "Server: Couldn't read " << totalOctets << " octets" << endl;
       delete [] buf;
       return false;
     }
@@ -106,6 +121,7 @@ processCommand(int fd)
     delete [] buf;
   }
   
+  cerr << "Server: Done command" << endl;
   return true;
 }
 
@@ -159,7 +175,7 @@ setupConnection()
   int server_fd = createSocket();
   
   if (server_fd == -1) {
-    cerr << "Couldn't create server socket" << endl;
+    cerr << "Server: Couldn't create server socket" << endl;
     exit(1);
   }
   
@@ -168,14 +184,14 @@ setupConnection()
   i = bindToSocket(server_fd);
   
   if (i == -1) {
-    cerr << "Couldn't bind to server socket" << endl;
+    cerr << "Server: Couldn't bind to server socket" << endl;
     exit(1);
   }
   
   i = listenToSocket(server_fd);
   
   if (i == -1) {
-    cerr << "Couldn't listen on server socket" << endl;
+    cerr << "Server: Couldn't listen on server socket" << endl;
     exit(1);
   }
 
@@ -200,7 +216,7 @@ main(int argc, char **argv)
   ab = KAB::AddressBook::create("localhost", format, location);
 
   if (ab == 0) {
-    cerr << "Cannot initialise addressbook. Exiting." << endl;
+    cerr << "Server: Cannot initialise addressbook. Exiting." << endl;
     exit(1);
   }
 
@@ -209,11 +225,12 @@ main(int argc, char **argv)
     int fd = acceptOnSocket(server_fd);
     
     if (fd == -1) {
-      cerr << "Accept failed" << endl;
+      cerr << "Server: Accept failed" << endl;
       ::sleep(1);
       continue;
     }
     
+#if 0
     ssize_t i = ::write(fd, welcomeMessage, welcomeMessage.length());
     
     if (i == -1) {
@@ -221,11 +238,14 @@ main(int argc, char **argv)
       ::close(fd);
       exit(1);
     }
-    
+#endif
+
     if (fork() == 0) {
       // Child process.
+      cerr << "Server: Hello I'm a child process serving requests !" << endl;
       while (processCommand(fd));
       ::close(fd);
+      cerr << "Server: Goodbye." << endl;
     }
 
     ::close(fd);
@@ -249,7 +269,7 @@ doReplace(int fd, const QByteArray & s)
   // Sanity check
   if (4 + sizeOfKey + sizeOfEntity != s.size()) {
     // Ensure that the sizes given correspond to the actual data size.
-    cerr << "doReplace: Data size is incorrect" << endl;
+    cerr << "Server: doReplace: Data size is incorrect" << endl;
   }
 
   QByteArray key;
@@ -304,6 +324,7 @@ doErase(int fd, const QByteArray & s)
   void
 doAdd(int fd, const QByteArray & s)
 {
+  cerr << "Server: Adding entity" << endl;
   char * d = s.data();
   
   Q_UINT32 sizeOfEntity = s.size() - 1;
@@ -320,7 +341,11 @@ doAdd(int fd, const QByteArray & s)
   // Create a data stream (using the data for the entity) and tell
   // the entity to load itself from that stream.
   QDataStream str(entityData, IO_ReadOnly);
+  cerr << "Server: ,,," << endl;
   e->load(str);
+  cerr << "Server: ,,," << endl;
+  cerr << "Server: Loaded entity from stream" << endl;
+  cerr << "Server: Entity's name is \"" << e->name() << "\"" << endl;
   
   // Remember to do 'resetRawData'
   entityData.resetRawData(d + 1, sizeOfEntity);
@@ -328,6 +353,7 @@ doAdd(int fd, const QByteArray & s)
   // Write the new entity to the addressbook.
   ab->write(e);
 
+  cerr << "Server: Writing entity to backend" << endl;
   char c = '0';
   ::write(fd, &c, 1);
 }
@@ -354,12 +380,9 @@ doFind(int fd, const QByteArray & s)
 
   Q_UINT32 sz = entityAsByteArray.size();
   
-  char c[4];
-  c[0] = sz >> 24;
-  c[1] = sz >> 16;
-  c[2] = sz >> 8;
-  c[3] = sz;
+  char * c = fourOctets(sz);
   ::write(fd, c, 4);
+  delete [] c;
 }
 
   void
@@ -377,17 +400,17 @@ doSearch(int fd, const QByteArray & s)
   void
 doList(int fd)
 {
+  cerr << "Server: Doing listing" << endl;
   QStrList l = ab->allKeys();
+  cerr << "There are " << l.count() << " keys in this addressbook" << endl;
 
   int sz = l.count();
   
-  char c[4];
-  c[0] = sz >> 24;
-  c[1] = sz >> 16;
-  c[2] = sz >> 8;
-  c[3] = sz;
+  char * c = fourOctets(sz);
+  fprintf(stderr, "c == %d %d %d %d\n", c[0], c[1], c[2], c[3]);
   ::write(fd, c, 4);
-
+  delete [] c;
+  c = 0;
   
   QStrListIterator it(l);
   
@@ -396,16 +419,14 @@ doList(int fd)
     QCString s(it.current());
     
     sz = s.length();
-    
-    c[0] = sz >> 24;
-    c[1] = sz >> 16;
-    c[2] = sz >> 8;
-    c[3] = sz;
-    
+    c = fourOctets(sz);
     ::write(fd, c, 4);
+    delete [] c;
+    c = 0;
 
     ::write(fd, s, s.length());
   }
+  cerr << "Server: Done listing" << endl;
 }
  
 
