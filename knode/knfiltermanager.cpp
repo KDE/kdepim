@@ -61,7 +61,7 @@ KNFilterSelectAction::~KNFilterSelectAction()
 
 
 
-int KNFilterSelectAction::plug(QWidget* widget, int index = -1 )
+int KNFilterSelectAction::plug(QWidget* widget, int index)
 {
   if ( widget->inherits("QPopupMenu") ) {
     QPopupMenu* menu = static_cast<QPopupMenu*>( widget );

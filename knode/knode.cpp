@@ -53,7 +53,7 @@ KNGlobals knGlobals;
 //========================================================================
 
 
-KNProgress::KNProgress (int desiredHeight, int minValue, int maxValue, int value, KProgress::Orientation orient, QWidget *parent=0, const char *name=0)
+KNProgress::KNProgress (int desiredHeight, int minValue, int maxValue, int value, KProgress::Orientation orient, QWidget *parent, const char *name)
  : KProgress(minValue, maxValue, value, orient, parent, name), desHeight(desiredHeight)
 {
 	setFixedWidth(110);

@@ -17,7 +17,7 @@
 #include "knlistbox.h"
 
 
-KNLBoxItem::KNLBoxItem(const QString& text, void *d=0, QPixmap *_pm=0)
+KNLBoxItem::KNLBoxItem(const QString& text, void *d, QPixmap *_pm)
 {
 	if(_pm) pm=*_pm;
 	setText(text);

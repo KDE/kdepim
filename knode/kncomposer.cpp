@@ -197,7 +197,7 @@ QCString KNComposer::followUp2()
 
 
 // inserts at cursor position if clear is false, replaces content otherwise
-void KNComposer::insertFile(QString fileName, bool clear=false)
+void KNComposer::insertFile(QString fileName, bool clear)
 {
   unsigned int len = QFileInfo(fileName).size();
   unsigned int readLen;

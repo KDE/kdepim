@@ -204,7 +204,7 @@ int KNArticleCollection::findId(int id)
 
 // ================================================================================
 
-KNFile::KNFile(const QString& fname=QString::null)
+KNFile::KNFile(const QString& fname)
  : QFile(fname), filePos(0), readBytes(0)
 {
   buffer.resize(512);

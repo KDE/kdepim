@@ -76,3 +76,4 @@ class KNStringFilterWidget : public QGroupBox  {
 
 
 #endif
+

@@ -104,3 +104,4 @@ class KNFilterManager : public QObject
 };
 
 #endif
+
