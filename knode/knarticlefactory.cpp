@@ -216,6 +216,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   attribution.replace(QRegExp("%DATE"),KGlobal::locale()->formatDateTime(a->date()->qdt(),false));
   attribution.replace(QRegExp("%MSID"),a->messageID()->asUnicodeString());
   attribution.replace(QRegExp("%GROUP"),g->groupname());
+  attribution.replace(QRegExp("%L"),"\n");
   attribution+="\n\n";
 
   QString quoted=attribution;

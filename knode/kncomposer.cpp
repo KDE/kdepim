@@ -344,8 +344,10 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   setConfig(false);
 
   if (firstEdit) {   // now we place the cursor at the end of the quoted text / below the attribution line
-    if (knGlobals.configManager()->postNewsComposer()->cursorOnTop())
-      v_iew->e_dit->setCursorPosition(1,0);
+    if (knGlobals.configManager()->postNewsComposer()->cursorOnTop()) {
+      int numLines = knGlobals.configManager()->postNewsComposer()->intro().contains("%L");
+      v_iew->e_dit->setCursorPosition(numLines+1,0);
+    }
     else
       v_iew->e_dit->setCursorPosition(v_iew->e_dit->numLines()-1,0);
   } else
@@ -2056,16 +2058,12 @@ bool KNComposer::Editor::eventFilter(QObject*o, QEvent* e)
           //Save the cursor position
           int parIdx = 1, txtIdx = 1;
           getCursorPosition(&parIdx, &txtIdx);
-
-          //Put in our replacement
-          QString txtContents = text();
-          QString newContents = txtContents.left(firstSpace) + m_replacements[word][id] +
-                                txtContents.right( txtContents.length() - lastSpace );
-          setText( newContents );
-
-          //Restore the cursor position
-          if( txtIdx > lastSpace )
-            txtIdx += newContents.length() - txtContents.length();
+          setSelection(para, firstSpace, para, lastSpace);
+          insert(m_replacements[word][id]);
+          // Restore the cursor position; if the cursor was behind the
+          // misspelled word then adjust the cursor position
+          if ( para == parIdx && txtIdx >= lastSpace )
+            txtIdx += m_replacements[word][id].length() - word.length();
           setCursorPosition(parIdx, txtIdx);
         }
         //Cancel original event

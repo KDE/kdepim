@@ -729,7 +729,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
           regExp=QRegExp( QString("\\%1[^\\s%2]+\\%3").arg(text[idx]).arg(text[idx]).arg(text[idx]) );
           if (regExp.search(text,idx)==(int)idx) {
             matchLen = regExp.matchedLength();
-            if (( matchLen > 3 ) &&
+            if (( matchLen >= 3 ) &&
                 ((idx==0)||text[idx-1].isSpace()||(text[idx-1] == '(')) &&
                 ((idx+matchLen==len)||text[idx+matchLen].isSpace()||(text[idx+matchLen]==',')||
                  (text[idx+matchLen]=='.')||(text[idx+matchLen]==')'))) {
@@ -1367,8 +1367,10 @@ void KNArticleWidget::createHtmlPage()
                 html+=QString("<font color=\"%1\">").arg(app->quotedTextHexcode(newLevel-1));
               }
             }
+            html+=toHtmlString(line,true,true,true)+"<br>";
           }
-          html+=toHtmlString(line,true,true,true)+"<br>";
+          else
+            html+=toHtmlString(line,true,false,true)+"<br>";
         }
         else
           html+="<br>";
@@ -1790,17 +1792,23 @@ void KNArticleWidget::slotToggleFullHdrs()
 
 void KNArticleWidget::slotToggleRot13()
 {
+  int x = contentsX();
+  int y = contentsY();
   r_ot13=!r_ot13;
   updateContents();
+  setContentsPos(x, y);
 }
 
 
 void KNArticleWidget::slotToggleFixedFont()
 {
+  int x = contentsX();
+  int y = contentsY();
   // ok, this is a hack
   if (knGlobals.artWidget == this)
     knGlobals.configManager()->readNewsViewer()->setUseFixedFont(!knGlobals.configManager()->readNewsViewer()->useFixedFont());
   applyConfig();
+  setContentsPos(x, y);
 }
 
 
