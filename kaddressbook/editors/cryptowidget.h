@@ -58,6 +58,7 @@ class CryptoWidget : public KAB::ContactEditorWidget
 class CryptoWidgetFactory : public KAB::ContactEditorWidgetFactory
 {
   public:
+    CryptoWidgetFactory();
     KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
     {
       return new CryptoWidget( ab, parent, name );

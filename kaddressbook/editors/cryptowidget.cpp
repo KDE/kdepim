@@ -52,6 +52,12 @@ extern "C" {
   }
 }
 
+CryptoWidgetFactory::CryptoWidgetFactory()
+{
+  KGlobal::locale()->insertCatalogue( "libkleopatra" );
+  KGlobal::iconLoader()->addAppDir( "libkleopatra" );
+}
+
 QString CryptoWidgetFactory::pageTitle() const
 {
   return "Crypto Settings";
@@ -105,11 +111,10 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
   l = new QLabel( i18n("Sign:"), hbox );
 
   mSignPref = new QComboBox( false, hbox );
-  mSignPref->insertItem( i18n("Ask") );
-  //mSignPref->insertItem( i18n("Ask Whenever Possible") );
-  mSignPref->insertItem( i18n("Always Sign") );
-  //mSignPref->insertItem( i18n("Always Sign If Possible") );
-  mSignPref->insertItem( i18n("Never Sign") );
+  for ( unsigned int i = Kleo::UnknownSigningPreference ;
+        i < Kleo::MaxSigningPreference ; ++i )
+      mSignPref->insertItem( Kleo::signingPreferenceToLabel(
+                                 static_cast<Kleo::SigningPreference>( i ) ) );
 
   //send preferences/encrypt (see certmanager/lib/kleo/enum.h)
   hbox = new QHBox(box);
@@ -117,11 +122,10 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
   l = new QLabel( i18n("Encrypt:"), hbox );
 
   mCryptPref = new QComboBox( false, hbox );
-  mCryptPref->insertItem( i18n("Ask") );
-  mCryptPref->insertItem( i18n("Ask Whenever Possible") );
-  mCryptPref->insertItem( i18n("Always Encrypt") );
-  mCryptPref->insertItem( i18n("Always Encrypt If Possible") );
-  mCryptPref->insertItem( i18n("Never Encrypt") );
+  for ( unsigned int i = Kleo::UnknownPreference ;
+        i < Kleo::MaxEncryptionPreference ; ++i )
+      mCryptPref->insertItem(
+          Kleo::encryptionPreferenceToLabel( static_cast<Kleo::EncryptionPreference>( i ) ) );
 
   // Emit "changed()" signal
   connect( mSignPref, SIGNAL( activated(int) ), this, SLOT( setModified() ) );
@@ -135,39 +139,6 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
 
 CryptoWidget::~CryptoWidget()
 {
-}
-
-// Keep in sync with certmanager/lib/kleo/enum.cpp
-static int encrypt_pref_string_to_int( const QString& str )
-{
-  if( str == "askAlways" ) return 0;
-  if( str == "askWhenPossible" ) return 1;
-  if( str == "always" ) return 2;
-  if( str == "alwaysIfPossible" ) return 3;
-  if( str == "never" ) return 4;
-  else return 0; // default
-}
-
-static QString encrypt_pref_int_to_string( int i )
-{
-  static const char* str[5] = { "askAlways", "askWhenPossible", "always", "alwaysIfPossible", "never" };
-  if( i >= 0 && i < 5 ) return QString::fromLatin1( str[i] );
-  else return QString::null;
-}
-
-static int sign_pref_string_to_int( const QString& str )
-{
-  if( str == "askAlways" ) return 0;
-  if( str == "always" ) return 1;
-  if( str == "never" ) return 2;
-  else return 0; // default
-}
-
-static QString sign_pref_int_to_string( int i )
-{
-  static const char* str[3] = { "askAlways", "always", "never" };
-  if( i >= 0 && i < 3 ) return QString::fromLatin1( str[i] );
-  else return QString::null;
 }
 
 void CryptoWidget::loadContact( KABC::Addressee *addr )
@@ -184,10 +155,10 @@ void CryptoWidget::loadContact( KABC::Addressee *addr )
       mProtocolCB[i]->setChecked( cryptoFormats & msgFormat );
   }
 
-  mSignPref->setCurrentItem( sign_pref_string_to_int(addr->custom( "KADDRESSBOOK",
-                                                                   "CRYPTOSIGNPREF" )) );
-  mCryptPref->setCurrentItem( encrypt_pref_string_to_int(addr->custom( "KADDRESSBOOK",
-                                                                       "CRYPTOENCRYPTPREF" )) );
+  mSignPref->setCurrentItem( Kleo::stringToSigningPreference(addr->custom( "KADDRESSBOOK",
+                                                                           "CRYPTOSIGNPREF" )) );
+  mCryptPref->setCurrentItem( Kleo::stringToEncryptionPreference(addr->custom( "KADDRESSBOOK",
+                                                                               "CRYPTOENCRYPTPREF" )) );
 
   // We dont use the contents of addr->key(...) because we want just a ref.
   // to the key/cert. stored elsewhere.
@@ -210,9 +181,11 @@ void CryptoWidget::storeContact( KABC::Addressee *addr )
 
   addr->insertCustom( "KADDRESSBOOK", "CRYPTOPROTOPREF", lst.join( "," ) );
   addr->insertCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF",
-                      sign_pref_int_to_string(mSignPref->currentItem()) );
+                      Kleo::signingPreferenceToString(
+                          static_cast<Kleo::SigningPreference>( mSignPref->currentItem() )) );
   addr->insertCustom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF",
-                      encrypt_pref_int_to_string(mCryptPref->currentItem()) );
+                      Kleo::encryptionPreferenceToString(
+                          static_cast<Kleo::EncryptionPreference>( mCryptPref->currentItem()) ) );
 
   QString pfp = mPgpKey->fingerprint();
   QString sfp = mSmimeCert->fingerprint();
