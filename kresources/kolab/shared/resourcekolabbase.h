@@ -2,7 +2,7 @@
     This file is part of the kolab resource - the implementation of the
     Kolab storage format. See www.kolab.org for documentation on this.
 
-    Copyright (c) 2004 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
+    Copyright (c) 2004 Bo Thorsen <bo@sonofthor.dk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -88,7 +88,7 @@ public:
                                  const QString& resource ) = 0;
   virtual void fromKMailAddSubresource( const QString& type,
                                         const QString& resource,
-                                        const QString& label, 
+                                        const QString& label,
                                         bool writable ) = 0;
   virtual void fromKMailDelSubresource( const QString& type,
                                         const QString& resource ) = 0;

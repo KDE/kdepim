@@ -2,7 +2,7 @@
     This file is part of the kolab resource - the implementation of the
     Kolab storage format. See www.kolab.org for documentation on this.
 
-    Copyright (c) 2004 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
+    Copyright (c) 2004 Bo Thorsen <bo@sonofthor.dk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public

@@ -2,7 +2,7 @@
     This file is part of the kolab resource - the implementation of the
     Kolab storage format. See www.kolab.org for documentation on this.
 
-    Copyright (c) 2004 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
+    Copyright (c) 2004 Bo Thorsen <bo@sonofthor.dk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -57,7 +57,7 @@ QString Task::taskToXML( KCal::Todo* todo, const QString& tz )
 Task::Task( const QString& tz, KCal::Todo* task )
   : Incidence( tz ), mPriority( 3 ), mPercentCompleted( 100 ),
     mStatus( KCal::Incidence::StatusNone ),
-    mHasStartDate( false ), mHasDueDate( false ), 
+    mHasStartDate( false ), mHasDueDate( false ),
     mHasCompletedDate( false )
 {
   if ( task )
@@ -302,7 +302,7 @@ void Task::setFields( const KCal::Todo* task )
     mHasDueDate = false;
   if ( task->relatedTo() )
     setParent( task->relatedTo()->uid() );
-  else 
+  else
     setParent( QString::null );
 
   if ( task->hasCompletedDate() )

@@ -2,7 +2,7 @@
     This file is part of the kolab resource - the implementation of the
     Kolab storage format. See www.kolab.org for documentation on this.
 
-    Copyright (c) 2004 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
+    Copyright (c) 2004 Bo Thorsen <bo@sonofthor.dk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -117,7 +117,7 @@ public:
 
   /** What is the label for this subresource? */
   virtual const QString labelForSubresource( const QString& resource ) const;
-  
+
   KABC::Lock* lock();
 
 signals:
@@ -125,7 +125,7 @@ signals:
 protected slots:
    void slotEmitResourceChanged();
 
-private: 
+private:
   void resolveConflict( KCal::Incidence*, const QString& subresource, Q_UINT32 sernum );
   void addIncidence( const char* mimetype, const QString& xml,
                      const QString& subResource, Q_UINT32 sernum );
