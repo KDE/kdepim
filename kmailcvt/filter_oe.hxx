@@ -49,7 +49,7 @@ class FilterOE : public Filter {
     int totalEmails;
     /** which email (of totalFiles) is now in the work? */
     int currentEmail;
-
+    
     QString folderName;
 };
 

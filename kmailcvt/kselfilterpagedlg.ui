@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
 <class>KSelFilterPageDlg</class>
 <widget class="QWidget">
     <property name="name">
@@ -9,44 +9,16 @@
             <x>0</x>
             <y>0</y>
             <width>532</width>
-            <height>452</height>
+            <height>461</height>
         </rect>
+    </property>
+    <property name="caption">
+        <string>KSelFilterPageDlg</string>
     </property>
     <grid>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QLabel" row="0" column="0" rowspan="3" colspan="1">
-            <property name="name">
-                <cstring>mIntroSidebar</cstring>
-            </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>0</hsizetype>
-                    <vsizetype>0</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-            <property name="minimumSize">
-                <size>
-                    <width>170</width>
-                    <height>430</height>
-                </size>
-            </property>
-            <property name="frameShape">
-                <enum>Panel</enum>
-            </property>
-            <property name="frameShadow">
-                <enum>Sunken</enum>
-            </property>
-            <property name="scaledContents">
-                <bool>true</bool>
-            </property>
-            <property name="indent">
-                <number>0</number>
-            </property>
-        </widget>
         <widget class="QComboBox" row="1" column="1">
             <property name="name">
                 <cstring>mFilterCombo</cstring>
@@ -95,6 +67,48 @@ This program will help you import your email from your previous email program in
             </property>
             <property name="readOnly">
                 <bool>true</bool>
+            </property>
+        </widget>
+        <widget class="QLabel" row="0" column="0" rowspan="4" colspan="1">
+            <property name="name">
+                <cstring>mIntroSidebar</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>0</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>170</width>
+                    <height>430</height>
+                </size>
+            </property>
+            <property name="frameShape">
+                <enum>Panel</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="scaledContents">
+                <bool>true</bool>
+            </property>
+            <property name="indent">
+                <number>0</number>
+            </property>
+        </widget>
+        <widget class="QCheckBox" row="3" column="1">
+            <property name="name">
+                <cstring>remDupMsg</cstring>
+            </property>
+            <property name="text">
+                <string>Remove duplicate messages during import.</string>
+            </property>
+            <property name="checked">
+                <bool>false</bool>
             </property>
         </widget>
     </grid>

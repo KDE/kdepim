@@ -1,9 +1,9 @@
 /***************************************************************************
-                          kselfilterpage.h  -  description
+            filter_thunderbird.hxx  -  Thunderbird mail import
                              -------------------
-    begin                : Fri Jan 17 2003
-    copyright            : (C) 2003 by Laurence Anderson
-    email                : l.d.anderson@warwick.ac.uk
+    begin                : Januar 26 2005
+    copyright            : (C) 2005 by Danny Kukawka
+    email                : danny.kukawka@web.de
  ***************************************************************************/
 
 /***************************************************************************
@@ -14,28 +14,27 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+ 
+#ifndef FILTER_THUNDERBIRD_HXX
+#define FILTER_THUNDERBIRD_HXX
 
-#ifndef KSELFILTERPAGE_H
-#define KSELFILTERPAGE_H
+#include "filters.hxx"
 
-#include "kselfilterpagedlg.h"
-class Filter;
-
-template <class T> class QPtrList;
-
-class KSelFilterPage : public KSelFilterPageDlg  {
-	Q_OBJECT
+/**
+ * Imports Thinderbird mail folder recursively, keeping the folder structure.
+ * @author Danny Kukawka
+ */
+class FilterThunderbird : public Filter
+{
 public:
-	KSelFilterPage(QWidget *parent=0, const char *name=0);
-	~KSelFilterPage();
-public:
-	void  addFilter(Filter *f);
-	Filter *getSelectedFilter(void);
-        bool removeDupMsg_checked();
+  FilterThunderbird(void);
+  ~FilterThunderbird(void);
+
+  void import(FilterInfo *info);
+
 private:
-	QPtrList<Filter> mFilterList;
-private slots:
-	void filterSelected(int i);
+  void importDirContents(FilterInfo*, const QString&, const QString&, const QString&);
+  void importMBox(FilterInfo*, const QString&, const QString&, const QString&);
 };
 
 #endif

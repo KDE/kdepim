@@ -36,7 +36,7 @@
 
 FilterOE::FilterOE() :
 Filter(	i18n("Import Outlook Express Emails"),
-    "Laurence Anderson",
+    "Laurence Anderson <p>( Filter accelerated by Danny Kukawka )</p>",
     i18n("<p><b>Outlook Express 4/5/6 import filter</b></p>"
       "<p>You will need to locate the folder where the mailbox has been stored by searching for .dbx or .mbx files under "
       "<ul><li><i>C:\\Windows\\Application Data</i> in Windows 9x"
@@ -48,6 +48,7 @@ Filter(	i18n("Import Outlook Express Emails"),
 
 FilterOE::~FilterOE()
 {
+   endImport();
 }
 
 void FilterOE::import(FilterInfo *info)
@@ -67,6 +68,7 @@ void FilterOE::import(FilterInfo *info)
     info->alert(i18n("No Outlook Express mailboxes found in directory %1.").arg(mailDir));
     return;
   }
+  
   totalFiles = files.count();
   currentFile = 0;
 
@@ -152,7 +154,13 @@ void FilterOE::mbxImport(QDataStream& ds)
     } while ( !ds.atEnd() );
 
     tmp.close();
-    addMessage(inf, folderName, tmp.name());
+    /* comment by Danny Kukawka:
+     * addMessage() == old function, need more time and check for duplicates
+     * addMessage_fastImport == new function, faster and no check for duplicates
+     */
+    if(inf->removeDupMsg) addMessage( inf, folderName, tmp.name() );
+    else addMessage_fastImport( inf, folderName, tmp.name() );
+    
     tmp.unlink();
   }
 }
@@ -251,7 +259,10 @@ void FilterOE::dbxReadEmail(QDataStream& ds, int filePos)
     ds.device()->at(nextAddress);
   } while (nextAddress != 0);
   tmp.close();
-  addMessage(inf, folderName, tmp.name());
+  
+  if(inf->removeDupMsg) addMessage( inf, folderName, tmp.name() );
+  else addMessage_fastImport( inf, folderName, tmp.name() );
+  
   inf->setCurrent( ++currentEmail / totalEmails * 100);
   tmp.unlink();
 

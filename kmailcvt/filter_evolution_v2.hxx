@@ -1,9 +1,10 @@
 /***************************************************************************
-                          kselfilterpage.h  -  description
+            filter_evolution_v2.hxx  -  Evolution 2.0.x mail import
                              -------------------
-    begin                : Fri Jan 17 2003
-    copyright            : (C) 2003 by Laurence Anderson
-    email                : l.d.anderson@warwick.ac.uk
+    begin                : Januar 26 2005
+    copyright            : (C) 2005 by Danny Kukawka
+                           (inspired and partly copied from filter_evolution)
+    email                : danny.kukawka@web.de
  ***************************************************************************/
 
 /***************************************************************************
@@ -14,28 +15,27 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+ 
+#ifndef FILTER_EVOLUTION_V2_HXX
+#define FILTER_EVOLUTION_V2_HXX
 
-#ifndef KSELFILTERPAGE_H
-#define KSELFILTERPAGE_H
+#include "filters.hxx"
 
-#include "kselfilterpagedlg.h"
-class Filter;
-
-template <class T> class QPtrList;
-
-class KSelFilterPage : public KSelFilterPageDlg  {
-	Q_OBJECT
+/**
+ * Imports Evolution v2.x mail folder recursively, keeping the folder structure.
+ * @author Danny Kukawka
+ */
+class FilterEvolution_v2 : public Filter
+{
 public:
-	KSelFilterPage(QWidget *parent=0, const char *name=0);
-	~KSelFilterPage();
-public:
-	void  addFilter(Filter *f);
-	Filter *getSelectedFilter(void);
-        bool removeDupMsg_checked();
+  FilterEvolution_v2(void);
+  ~FilterEvolution_v2(void);
+
+  void import(FilterInfo *info);
+
 private:
-	QPtrList<Filter> mFilterList;
-private slots:
-	void filterSelected(int i);
+  void importDirContents(FilterInfo*, const QString&, const QString&, const QString&);
+  void importMBox(FilterInfo*, const QString&, const QString&, const QString&);
 };
 
 #endif

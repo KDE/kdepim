@@ -29,7 +29,7 @@
 /** Default constructor. */
 FilterEvolution::FilterEvolution(void) : 
   Filter(i18n("Import Evolution Mails and Folder Structure"),
-	 "Simon MARTIN",
+	 "Simon MARTIN<br /><br />( Filter accelerated by Danny Kukawka )",
 	 i18n("<p>Select the base directory of Evolution's mails (usually ~/evolution/local).</p>"
               "<p>As it is currently impossible to recreate the folder structure, it will be "
 	      "\"contained\" in the generated folder's names.</p>"
@@ -38,7 +38,9 @@ FilterEvolution::FilterEvolution(void) :
 {}
 
 /** Destructor. */
-FilterEvolution::~FilterEvolution(void) {}
+FilterEvolution::~FilterEvolution(void) {
+   endImport();
+}
 
 /** Recursive import of Evolution's mboxes. */
 void FilterEvolution::import(FilterInfo *info)
@@ -118,7 +120,14 @@ void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, cons
       QString destFolder = rootDir;
       if(!targetDir.isNull())
 	destFolder = destFolder + "-" + targetDir;
-      addMessage(info, destFolder, tmp.name());
+      
+      /* comment by Danny Kukawka:
+       * addMessage() == old function, need more time and check for duplicates
+       * addMessage_fastImport == new function, faster and no check for duplicates
+       */
+      if(info->removeDupMsg) addMessage( info, destFolder, tmp.name() );
+      else addMessage_fastImport( info, destFolder, tmp.name() );
+      
       tmp.unlink();
       int currentPercentage = (int) (((float) mbox.at() / filenameInfo.size()) * 100);
       info->setCurrent(currentPercentage);
@@ -126,6 +135,11 @@ void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, cons
     }
   
     info->addLog(i18n("Finished importing emails from %1").arg(mboxName));
+    if (count_duplicates > 0)
+    {
+	info->addLog( i18n("%1 Duplicate messages not imported").arg(count_duplicates));
+    }
+    count_duplicates = 0;
     mbox.close();
   }
 }

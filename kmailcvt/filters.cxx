@@ -33,10 +33,11 @@
 
 bool FilterInfo::s_terminateASAP = false;
 
-FilterInfo::FilterInfo( KImportPageDlg* dlg, QWidget* parent )
+FilterInfo::FilterInfo( KImportPageDlg* dlg, QWidget* parent , bool _removeDupMsg)
   : m_dlg( dlg ),
     m_parent( parent )
 {
+  removeDupMsg = _removeDupMsg;
   s_terminateASAP = false;
 }
 
@@ -120,6 +121,8 @@ Filter::Filter( const QString& name, const QString& author,
     m_author( author ),
     m_info( info )
 {
+    //public
+    count_duplicates = 0;
 }
 
 bool Filter::addMessage( FilterInfo* info, const QString& folderName,
@@ -131,8 +134,8 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
   if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
     KApplication::startServiceByDesktopName( "kmail", QString::null ); // Will wait until kmail is started
 
-    DCOPReply reply = DCOPRef( "kmail", "KMailIface" )
-                        .call( "dcopAddMessage", folderName, msgURL );
+  DCOPReply reply = DCOPRef( "kmail", "KMailIface" ).call( "dcopAddMessage", folderName, msgURL );
+  
   if ( !reply.isValid() )
   {
     info->alert( i18n( "<b>Fatal:</b> Unable to start KMail for DCOP communication. "
@@ -148,17 +151,60 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
     case -2:
       info->alert( i18n( "Cannot add message to folder %1 in KMail" ).arg( folderName ) );
       return false;
-      /* chowells -- disabled. Checking for a duplicate subject seems to be totally bogus, of course you
-      will get duplicate subjects in any normal import
-      case -4:
-      info->alert( i18n( "Duplicate message subject error when adding message to folder %1 in KMail" ).arg( folderName ) );
-      return false;*/
+    case -4:
+      count_duplicates++;
+      return false;
     case 0:
       info->alert( i18n( "Error while adding message to folder %1 in KMail" ).arg( folderName ) );
       return false;
   }
-
   return true;
 }
 
+bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
+                         	    const QString& msgPath )
+{
+  KURL msgURL;
+  msgURL.setPath( msgPath );
+  
+  if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
+    KApplication::startServiceByDesktopName( "kmail", QString::null ); // Will wait until kmail is started
+
+  DCOPReply reply = DCOPRef( "kmail", "KMailIface" ).call( "dcopAddMessage_fastImport", folderName, msgURL );
+  
+  if ( !reply.isValid() )
+  {
+    info->alert( i18n( "<b>Fatal:</b> Unable to start KMail for DCOP communication. "
+                       "Make sure <i>kmail</i> is installed." ) );
+    return false;
+  }
+
+  switch ( int( reply ) )
+  {
+    case -1:
+      info->alert( i18n( "Cannot make folder %1 in KMail" ).arg( folderName ) );
+      return false;
+    case -2:
+      info->alert( i18n( "Cannot add message to folder %1 in KMail" ).arg( folderName ) );
+      return false;
+    case 0:
+      info->alert( i18n( "Error while adding message to folder %1 in KMail" ).arg( folderName ) );
+      return false;
+  }
+  return true;
+}
+
+bool Filter::endImport()
+{
+    if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
+    KApplication::startServiceByDesktopName( "kmail", QString::null ); // Will wait until kmail is started
+
+    DCOPReply reply = DCOPRef( "kmail", "KMailIface" ).call(  "dcopAddMessage", QString::null, QString::null);
+    if ( !reply.isValid() ) return false;
+
+    reply = DCOPRef( "kmail", "KMailIface" ).call( "dcopResetAddMessage" );
+    if ( !reply.isValid() ) return false;
+
+    return true;
+}
 // vim: ts=2 sw=2 et

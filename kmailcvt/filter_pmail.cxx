@@ -27,7 +27,7 @@
 
 FilterPMail::FilterPMail() :
    Filter(i18n("Import Folders From Pegasus-Mail"),
-   "Holger Schurig",
+   "Holger Schurig <p>( Filter accelerated by Danny Kukawka )</p>",
    i18n("<p>Select the Pegasus-Mail directory on your system (containing CNM, PMM and MBX files). "
               "On many systems this is stored in C:\\PMail\\mail</p>"
               "<p><b>Note:</b> This import filter will import your folders, but not "
@@ -39,6 +39,7 @@ FilterPMail::FilterPMail() :
 
 FilterPMail::~FilterPMail()
 {
+   endImport();
 }
 
 void FilterPMail::import(FilterInfo *info)
@@ -96,7 +97,13 @@ void FilterPMail::importNewMessage(const QString& file)
 {
    QString destFolder("PMail-New Messages");
    inf->setTo(destFolder);
-   addMessage(inf, destFolder, file);
+   
+   /* comment by Danny Kukawka:
+    * addMessage() == old function, need more time and check for duplicates
+    * addMessage_fastImport == new function, faster and no check for duplicates
+    */
+   if(inf->removeDupMsg) addMessage( inf, destFolder, file );
+   else addMessage_fastImport( inf, destFolder, file );
 }
 
 
@@ -168,7 +175,10 @@ void FilterPMail::importMailFolder(const QString& file)
          if (ch == 0x1a) {
             // close file, send it
             tempfile->close();
-            addMessage(inf, folder, tempfile->name());
+            
+	    if(inf->removeDupMsg) addMessage( inf, folder, tempfile->name() );
+	    else addMessage_fastImport( inf, folder, tempfile->name() );
+            
             tempfile->unlink();
             delete tempfile;
             state = 0;
@@ -185,7 +195,9 @@ void FilterPMail::importMailFolder(const QString& file)
    // did Folder end without 0x1a at the end?
    if (state != 0) {
       tempfile->close();
-      addMessage(inf, folder, tempfile->name());
+      if(inf->removeDupMsg) addMessage( inf, folder, tempfile->name() );
+      else addMessage_fastImport( inf, folder, tempfile->name() );
+      
       tempfile->unlink();
       delete tempfile;
    }
@@ -242,7 +254,10 @@ void FilterPMail::importUnixMailFolder(const QString& file)
          regexp.search(line) >= 0))                            // slower regexp
       {
          tempfile->close();
-         addMessage(inf, folder, tempfile->name());
+         
+	 if(inf->removeDupMsg) addMessage( inf, folder, tempfile->name() );
+      	 else addMessage_fastImport( inf, folder, tempfile->name() );
+	 
          tempfile->unlink();
          delete tempfile;
          tempfile = 0;
@@ -261,7 +276,10 @@ void FilterPMail::importUnixMailFolder(const QString& file)
 
    if (tempfile) {
       tempfile->close();
-      addMessage(inf, folder, tempfile->name());
+      
+      if(inf->removeDupMsg) addMessage( inf, folder, tempfile->name() );
+      else addMessage_fastImport( inf, folder, tempfile->name() );
+      
       tempfile->unlink();
       delete tempfile;
    }

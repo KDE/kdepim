@@ -49,7 +49,7 @@ void KMailCVT::next() {
 		setBackEnabled( currentPage(), false );
 		setFinishEnabled( currentPage(), false );
 		// Start import
-		FilterInfo *info = new FilterInfo(importpage, this);
+		FilterInfo *info = new FilterInfo(importpage, this, selfilterpage->removeDupMsg_checked());
 		info->setStatusMsg(i18n("Import in progress"));
 		info->clear(); // Clear info from last time
 		selectedFilter->import(info);

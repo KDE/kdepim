@@ -17,6 +17,7 @@
 
 #include <kstandarddirs.h>
 #include <qtextedit.h>
+#include <qcheckbox.h> 
 #include <klocale.h>
 #include "filters.hxx"
 
@@ -26,6 +27,9 @@
 #include "filter_plain.hxx"
 #include "filter_evolution.hxx"
 #include "filter_mailapp.hxx"
+#include "filter_evolution_v2.hxx"
+#include "filter_opera.hxx"
+#include "filter_thunderbird.hxx"
 
 #include "kselfilterpage.h"
 
@@ -41,11 +45,14 @@ KSelFilterPage::KSelFilterPage(QWidget *parent, const char *name ) : KSelFilterP
         // Patches appreciated. (danimo)
 
         addFilter(new FilterOE);
+        addFilter(new FilterOpera);
+        addFilter(new FilterThunderbird);
+        addFilter(new FilterEvolution);
+        addFilter(new FilterEvolution_v2);
+        addFilter(new FilterMailApp);
+        addFilter(new FilterPMail);
         addFilter(new FilterMBox);
         addFilter(new FilterPlain);
-        addFilter(new FilterPMail);
-        addFilter(new FilterEvolution);
-        addFilter(new FilterMailApp);
 }
 
 KSelFilterPage::~KSelFilterPage() {
@@ -65,6 +72,11 @@ void KSelFilterPage::addFilter(Filter *f)
 	mFilterList.append(f);
 	mFilterCombo->insertItem(f->name());
 	if (mFilterCombo->count() == 1) filterSelected(0); // Setup description box with fist filter selected
+}
+
+bool KSelFilterPage::removeDupMsg_checked()
+{
+        return remDupMsg->isChecked();
 }
 
 Filter * KSelFilterPage::getSelectedFilter(void)

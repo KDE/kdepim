@@ -29,7 +29,7 @@
 class FilterInfo
 {
   public:
-    FilterInfo(KImportPageDlg *dlg, QWidget *parent);
+    FilterInfo(KImportPageDlg *dlg, QWidget *parent, bool _removeDupMsg);
    ~FilterInfo();
 
     void setStatusMsg( const QString& status );
@@ -45,8 +45,8 @@ class FilterInfo
     bool shouldTerminate();
 
     QWidget *parent() { return m_parent; }
+    bool removeDupMsg;
 
-    
   private:
     KImportPageDlg *m_dlg;
     QWidget      *m_parent;
@@ -63,11 +63,17 @@ class Filter
     QString author() const { return m_author; }
     QString name() const { return m_name; }
     QString info() const { return m_info; }
-
+    
+    int count_duplicates; //to count all duplicate messages
+    
   protected:
     bool addMessage( FilterInfo* info,
                      const QString& folder,
                      const QString& msgFile );
+    bool addMessage_fastImport( FilterInfo* info,
+                     		const QString& folder,
+                     		const QString& msgFile );
+    bool endImport();
   private:
     QString m_name;
     QString m_author;

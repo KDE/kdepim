@@ -1,9 +1,9 @@
 /***************************************************************************
-                          kselfilterpage.h  -  description
+                  filter_opera.hxx  -  Opera mail import
                              -------------------
-    begin                : Fri Jan 17 2003
-    copyright            : (C) 2003 by Laurence Anderson
-    email                : l.d.anderson@warwick.ac.uk
+    begin                : Januar 26 2005
+    copyright            : (C) 2005 by Danny Kukawka
+    email                : danny.kukawka@web.de
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,27 +15,23 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef KSELFILTERPAGE_H
-#define KSELFILTERPAGE_H
+#ifndef FILTER_OPERA_HXX
+#define FILTER_OPERA_HXX
 
-#include "kselfilterpagedlg.h"
-class Filter;
+#include "filters.hxx"
 
-template <class T> class QPtrList;
+/**imports opera account-archives into KMail
+ *@author Danny Kukawka
+ */
 
-class KSelFilterPage : public KSelFilterPageDlg  {
-	Q_OBJECT
-public:
-	KSelFilterPage(QWidget *parent=0, const char *name=0);
-	~KSelFilterPage();
-public:
-	void  addFilter(Filter *f);
-	Filter *getSelectedFilter(void);
-        bool removeDupMsg_checked();
-private:
-	QPtrList<Filter> mFilterList;
-private slots:
-	void filterSelected(int i);
+class FilterOpera : public Filter {
+  public:
+    FilterOpera();
+    ~FilterOpera();
+
+    void import(FilterInfo *info);
 };
 
 #endif
+
+// vim: ts=2 sw=2 et
