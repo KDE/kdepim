@@ -1196,17 +1196,21 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
   else if(a.left(9)=="addrOrId:") {
     target=a.mid(9, a.length()-9);
 
-    if (a_rticle->collection()->type()!=KNArticleCollection::CTgroup)
-      type=ATmailto;
-    else {
-      switch (KMessageBox::warningYesNoCancel(this, i18n("<qt>Do you want treat the selected text as an <b>email address</b> or a <b>message-id</b>?</qt>"),
-                                              i18n("Address or ID"), i18n("&Email"), i18n("&Message-Id"))) {
-        case KMessageBox::Yes:  type=ATmailto;
-                                break;
-        case KMessageBox::No:   type=ATmsgid;
-                                break;
-        default:                type=ATunknown;
+    if ((button==LeftButton)||(button==MidButton)) {
+      if (a_rticle->collection()->type()!=KNArticleCollection::CTgroup)
+        type=ATmailto;
+      else {
+        switch (KMessageBox::warningYesNoCancel(this, i18n("<qt>Do you want treat the selected text as an <b>email address</b> or a <b>message-id</b>?</qt>"),
+                                                i18n("Address or ID"), i18n("&Email"), i18n("&Message-Id"))) {
+          case KMessageBox::Yes:  type=ATmailto;
+                                  break;
+          case KMessageBox::No:   type=ATmsgid;
+                                  break;
+          default:                type=ATunknown;
+        }
       }
+    } else {
+      type=ATunknown;
     }
   }
 
