@@ -23,6 +23,7 @@
 #include "konnector.h"
 
 #include "konnectorinfo.h"
+#include "filter.h"
 
 #include <kmdcodec.h>
 #include <kdebug.h>
@@ -42,6 +43,11 @@ Konnector::Konnector( const KConfig *config )
 
 Konnector::~Konnector()
 {
+  for ( KSync::Filter::List::Iterator it = m_filterList.begin();
+        it != m_filterList.end(); ++it )
+    delete *it;
+
+  m_filterList.clear();
 }
 
 void Konnector::writeConfig( KConfig *config )
@@ -125,8 +131,9 @@ void Konnector::appendSyncee( Syncee* ap )
  *
  * @return a MD5SUM for the name
  */
-QString Konnector::generateMD5Sum( const QString& base) {
-  KMD5 sum(base.local8Bit() );
+QString Konnector::generateMD5Sum( const QString& base )
+{
+  KMD5 sum( base.local8Bit() );
   QString str = QString::fromLatin1( sum.hexDigest().data() );
 
   return str;
@@ -137,11 +144,12 @@ QString Konnector::generateMD5Sum( const QString& base) {
  *
  * @param sync The Syncee to manipulate
  */
-void Konnector::purgeRemovedEntries( Syncee* sync) {
+void Konnector::purgeRemovedEntries( Syncee* sync )
+{
   QPtrList<SyncEntry> lst = sync->removed();
   SyncEntry* entry;
 
-  for (entry = lst.first(); entry; entry = lst.next() ) {
+  for ( entry = lst.first(); entry; entry = lst.next() ) {
     kdDebug() << "purgeRemoved Entries " << entry->id() << " " << entry->name() << endl;
     sync->removeEntry( entry );
   }
@@ -149,6 +157,46 @@ void Konnector::purgeRemovedEntries( Syncee* sync) {
 
   lst.setAutoDelete( true );
   lst.clear();
+}
+
+
+void Konnector::addFilter( KSync::Filter* filter )
+{
+  m_filterList.append( filter );
+}
+
+void Konnector::removeFilter( KSync::Filter* filter )
+{
+  m_filterList.remove( filter );
+}
+
+KSync::Filter::List Konnector::filters() const
+{
+  return m_filterList;
+}
+
+/*
+ * Now apply the Filter
+ */
+void Konnector::applyFilters( FilterMode mode )
+{
+  SynceeList lst = syncees();
+
+  /*
+   * anyway to do that without the if in front? and without
+   * checking the mode each time?
+   */
+  if ( mode == FilterBeforeSync ) {
+    for ( SynceeList::Iterator syncIt = lst.begin(); syncIt != lst.end(); ++syncIt )
+      for ( Filter::List::Iterator filtIt = m_filterList.begin(); filtIt != m_filterList.end(); ++filtIt )
+        if ( (*filtIt)->supports( *syncIt ) )
+          (*filtIt)->convert( *syncIt );
+  } else if ( mode == FilterAfterSync ) {
+    for ( SynceeList::Iterator syncIt = lst.begin(); syncIt != lst.end(); ++syncIt )
+      for ( Filter::List::Iterator filtIt = m_filterList.begin(); filtIt != m_filterList.end(); ++filtIt )
+        if ( (*filtIt)->supports( *syncIt ) )
+          (*filtIt)->reconvert( *syncIt );
+  }
 }
 
 #include "konnector.moc"

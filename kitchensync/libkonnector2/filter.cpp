@@ -25,32 +25,40 @@
 
 namespace KSync {
 
-Filter::Filter(QObject* parent, const char* name)
-  : QObject( parent,name ), m_cfg( 0l )
-{}
-
-Filter::~Filter() {}
-
-void Filter::load( KConfig* cfg ) 
+Filter::Filter( QObject* parent, const char* name )
+  : QObject( parent, name ), mConfig( 0 )
 {
-  m_cfg = cfg;
+}
+
+Filter::~Filter()
+{
+}
+
+void Filter::load( KConfig* config ) 
+{
+  mConfig = config;
   doLoad();
 }
 
-QString Filter::name()const 
+void Filter::save( KConfig* config ) 
 {
-  return m_name;
+  mConfig = config;
+  doSave();
+}
+
+QString Filter::name() const 
+{
+  return mName;
 }
 
 KConfig* Filter::config() 
 {
-  return m_cfg;
+  return mConfig;
 }
 
 void Filter::setName( const QString& name ) 
 {
-  m_name = name;
+  mName = name;
 }
-
 
 }

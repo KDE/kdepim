@@ -30,6 +30,7 @@
 
 #include <kresources/resource.h>
 
+#include <filter.h>
 #include <syncee.h>
 #include <synceelist.h>
 
@@ -57,6 +58,11 @@ class KDE_EXPORT Konnector : public KRES::Resource
     typedef QPtrList<Konnector> List;
     static QString generateMD5Sum( const QString& );
     static void purgeRemovedEntries( Syncee* );
+
+    enum FilterMode {
+      FilterBeforeSync,
+      FilterAfterSync
+    };
 
     /**
       Construct Konnector from information in config file.
@@ -127,18 +133,22 @@ class KDE_EXPORT Konnector : public KRES::Resource
 
     /**
       Connect device. Return true, if device could be connected.
-    */
+     */
     virtual bool connectDevice() = 0;
+
     /**
       Disconnect device.
-    */
+     */
     virtual bool disconnectDevice() = 0;
 
+    /**
+      Returns whether the device is connected.
+     */
     bool isConnected() const;
 
     /**
       Return meta information about this Konnector.
-    */
+     */
     virtual KonnectorInfo info() const = 0;
 
     // Obsolete ?
@@ -149,6 +159,38 @@ class KDE_EXPORT Konnector : public KRES::Resource
      * the Syncees that are supported builtIn
      */
     virtual QStringList builtIn() const;
+
+    /**
+     * Filter related methods
+     */
+    //@{
+    /**
+     * Add a Filter to the list of filters
+     * ownership is transfered to the Konnector
+     */
+    void addFilter( KSync::Filter* );
+
+    /**
+     * remove a  Filter of the list of filters
+     * the ownership of the filter is transfered
+     * back to the caller
+     */
+    void removeFilter( KSync::Filter* );
+
+    /**
+     * the list of filters
+     */
+    KSync::Filter::List filters() const;
+
+    /**
+     * apply the filter to the synceeList()
+     *
+     * @param
+     *
+     * @see synceeList()
+     */
+    void applyFilters( FilterMode );
+    //@}
 
   signals:
     /**
@@ -183,6 +225,7 @@ class KDE_EXPORT Konnector : public KRES::Resource
     void progressItemCanceled( KPIM::ProgressItem* );
 
   private:
+    KSync::Filter::List m_filterList;
     QStringList m_resources;
     QString m_sPath;
     bool m_isCon : 1;

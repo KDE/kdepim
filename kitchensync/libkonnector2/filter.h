@@ -52,35 +52,42 @@ namespace KSync {
  * A Filter can have multiple instances with different
  * Config Option set
  */
-struct Filter : public QObject {
-  typedef QValueList<Filter*> List;
+class Filter : public QObject
+{
+  public:
+    typedef QValueList<Filter*> List;
   
-  Filter( QObject* obj, const char* name);
-  virtual ~Filter();
+    Filter( QObject* obj, const char* name);
+    virtual ~Filter();
   
-  void load( KConfig* );
-  QString name()const;
+    void load( KConfig* );
+    void save( KConfig* );
+    QString name()const;
   
-  virtual bool wantToFilter( Syncee* ) = 0;
-  virtual QWidget *configWidget( QWidget* wid , KConfig* cfg) = 0;
+    virtual bool supports( Syncee* ) = 0;
+    virtual QWidget *configWidget( QWidget *parent ) = 0;
+    virtual void configWidgetClosed( QWidget *widget ) = 0;
   
-  
-  /*
-   * both methods may return 0 if they're
-   * not able to convert!
-   */
-  virtual Syncee* reconvert( Syncee* ) = 0;
-  virtual Syncee* convert( Syncee* ) = 0;
+    /*
+     * operate on the Syncee
+     *
+     * ### FIXME implement replacing of Syncee from the Konnector
+     * synceeList
+     */
+    virtual void convert( Syncee* ) = 0;
+    virtual void reconvert( Syncee* ) = 0;
   
   protected:
-  KConfig *config();
-  void setName( const QString& name );
+    KConfig *config();
+    void setName( const QString& name );
   
   private:
-  virtual void doLoad() = 0;
-  KConfig *m_cfg;
-  QString m_name;
+    virtual void doLoad() = 0;
+    virtual void doSave() = 0;
+    KConfig *mConfig;
+    QString mName;
 };
+
 }
 
 /**
@@ -103,7 +110,7 @@ struct Filter : public QObject {
  */
 
 /**
- * \fn bool KSync::Filter::wantToFilter(Syncee* syncee)
+ * \fn bool KSync::Filter::supports(Syncee* syncee)
  * \brief Test if a Filter can operate on the Syncee
  *
  * Before requesting to convert/reconvert the Syncee
@@ -114,6 +121,24 @@ struct Filter : public QObject {
  * @param syncee Can the filter operate on this Syncee
  */
 
+
+/*
+ * ### FIXME implement replacing of Syncees
+ */
+#if 0
+/**
+ * \fn Syncee* KSync::Filter::convert(Syncee* syn)
+ * \brief Convert the Syncee before emitting the Read signal
+ *
+ * Before the Syncee emits the read signal you can filter the
+ * Syncee.
+ * If you return a different Syncee the old one will be replaced.
+ * The old one will be cleaned up and removed by the
+ * KonnectorManager
+ *
+ * @param syn The Syncee to filter
+ * @return The filtered Syncee or a new one
+ */
 
 /**
  * \fn Syncee* KSync::Filter::reconvert(Syncee* syn)
@@ -129,19 +154,7 @@ struct Filter : public QObject {
  * @return The filtered Syncee or a new one
  */
 
-/**
- * \fn Syncee* KSync::Filter::convert(Syncee* syn)
- * \brief Convert the Syncee before emitting the Read signal
- *
- * Before the Syncee emits the read signal you can filter the
- * Syncee.
- * If you return a different Syncee the old one will be replaced.
- * The old one will be cleaned up and removed by the
- * KonnectorManager
- *
- * @param syn The Syncee to filter
- * @return The filtered Syncee or a new one
- */
+#endif
 
 /**
  * \fn KConfig* KSync::Filter::config()
@@ -173,19 +186,21 @@ struct Filter : public QObject {
  *
  */
 
-
 /**
- * \fn QWidget* KSync::Filter::configWidget(QWidget* parent, KConfig *cfg )
+ * \fn QWidget* KSync::Filter::configWidget( QWidget* parent )
  * \brief Create a new Configure Widget
  *
- * Create a new KConfig widget. Use @param parent as the parent
- * @param cfg as the destination for the config data.
+ * Create a new KConfig widget. Use @param parent as the parent.
  *
  * Use the current values for your Config Widget.
  *
- * On d'tor you may save to the KConfig Instance, the right
- * group is set.
+ */
+
+/**
+ * \fn void KSync::Filter::configWidgetClosed( QWidget* widget )
+ * \brief Called when config widget is closed
  *
+ * @param widget is the widget that was created by @ref configWidget().
  *
  */
 #endif
