@@ -2,7 +2,7 @@
     cryptobackendfactory.cpp
 
     This file is part of libkleopatra, the KDE key management library
-    Copyright (c) 2001,2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2001,2004,2005 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -37,10 +37,15 @@
 #include "cryptobackendfactory.h"
 
 #include <backends/qgpgme/qgpgmebackend.h>
+#if 0 // disabled for kde-3.3
 #include <backends/kpgp/pgp2backend.h>
 #include <backends/kpgp/pgp5backend.h>
 #include <backends/kpgp/pgp6backend.h>
 #include <backends/kpgp/gpg1backend.h>
+#endif
+#ifdef KLEO_CHIASMUS
+#include <backends/chiasmus/chiasmusbackend.h>
+#endif
 #include <ui/backendconfigwidget.h>
 
 #include <kconfig.h>
@@ -49,15 +54,25 @@
 #include <kmessagebox.h>
 #include <kapplication.h>
 
-#include <assert.h>
+#include <iterator>
+
+#include <cassert>
 
 Kleo::CryptoBackendFactory * Kleo::CryptoBackendFactory::mSelf = 0;
 
+static const char * availableProtocols[] = {
+#ifdef KLEO_CHIASMUS
+  "Chiasmus",
+#endif
+  "OpenPGP", "SMIME",
+};
+static const unsigned int numAvailableProtocols = sizeof availableProtocols / sizeof *availableProtocols;
+
 Kleo::CryptoBackendFactory::CryptoBackendFactory()
-  : QObject( qApp, "CryptoBackendFactory::instance()" )
+  : QObject( qApp, "CryptoBackendFactory::instance()" ),
+    mConfigObject( 0 ),
+    mAvailableProtocols( availableProtocols, availableProtocols + numAvailableProtocols )
 {
-  mSelf = this;
-  mConfigObject = 0;
   mBackendList.push_back( new QGpgMEBackend() );
 #if 0 // disabled for kde-3.3
   mBackendList.push_back( new PGP2Backend() );
@@ -65,14 +80,19 @@ Kleo::CryptoBackendFactory::CryptoBackendFactory()
   mBackendList.push_back( new PGP6Backend() );
   mBackendList.push_back( new GPG1Backend() );
 #endif
+#ifdef KLEO_CHIASMUS
+  mBackendList.push_back( new ChiasmusBackend() );
+#endif
   scanForBackends();
   readConfig();
+
+  mSelf = this; // last!
 }
 
 Kleo::CryptoBackendFactory::~CryptoBackendFactory() {
-  mSelf = 0;
+  mSelf = 0; // first!
 
-  for ( QValueVector<CryptoBackend*>::iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it ) {
+  for ( std::vector<CryptoBackend*>::iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it ) {
     delete *it;
     *it = 0;
   }
@@ -96,11 +116,30 @@ Kleo::CryptoBackendFactory * Kleo::CryptoBackendFactory::instance() {
 // }
 
 const Kleo::CryptoBackend::Protocol * Kleo::CryptoBackendFactory::smime() const {
-  return mSMIMEBackend ? mSMIMEBackend->smime() : 0 ;
+  const BackendMap::const_iterator it = mBackends.find( "SMIME" );
+  if ( it == mBackends.end() )
+    return 0;
+  if ( !it->second )
+    return 0;
+  return it->second->smime();
 }
 
 const Kleo::CryptoBackend::Protocol * Kleo::CryptoBackendFactory::openpgp() const {
-  return mOpenPGPBackend ? mOpenPGPBackend->openpgp() : 0 ;
+  const BackendMap::const_iterator it = mBackends.find( "OpenPGP" );
+  if ( it == mBackends.end() )
+    return 0;
+  if ( !it->second )
+    return 0;
+  return it->second->openpgp();
+}
+
+const Kleo::CryptoBackend::Protocol * Kleo::CryptoBackendFactory::protocol( const char * name ) const {
+  const BackendMap::const_iterator it = mBackends.find( name );
+  if ( it == mBackends.end() )
+    return 0;
+  if ( !it->second )
+    return 0;
+  return it->second->protocol( name );
 }
 
 Kleo::CryptoConfig * Kleo::CryptoBackendFactory::config() const {
@@ -113,20 +152,17 @@ bool Kleo::CryptoBackendFactory::hasBackends() const {
 }
 
 void Kleo::CryptoBackendFactory::scanForBackends( QStringList * reasons ) {
-  if ( !reasons )
-    return;
-  for ( QValueVector<CryptoBackend*>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it ) {
+  for ( std::vector<CryptoBackend*>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it ) {
     assert( *it );
-    QString reason;
-    if ( (*it)->supportsOpenPGP() && !(*it)->checkForOpenPGP( &reason ) ) {
-      reasons->push_back( i18n("While scanning for OpenPGP support in backend %1:")
-			  .arg( (*it)->displayName() ) );
-      reasons->push_back( "  " + reason );
-    }
-    if ( (*it)->supportsSMIME() && !(*it)->checkForSMIME( &reason ) ) {
-      reasons->push_back( i18n("While scanning for S/MIME support in backend %1:")
-			  .arg( (*it)->displayName() ) );
-      reasons->push_back( "  " + reason );
+    for ( int i = 0 ; const char * protocol = (*it)->enumerateProtocols( i ) ; ++i ) {
+      QString reason;
+      if ( (*it)->supportsProtocol( protocol ) && !(*it)->checkForProtocol( protocol, &reason ) ) {
+        if ( reasons ) {
+          reasons->push_back( i18n("While scanning for %1 support in backend %2:")
+                              .arg( protocol, (*it)->displayName() ) );
+          reasons->push_back( "  " + reason );
+        }
+      }
     }
   }
 }
@@ -136,7 +172,7 @@ const Kleo::CryptoBackend * Kleo::CryptoBackendFactory::backend( unsigned int id
 }
 
 const Kleo::CryptoBackend * Kleo::CryptoBackendFactory::backendByName( const QString& name ) const {
-  for ( QValueVector<CryptoBackend*>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it ) {
+  for ( std::vector<CryptoBackend*>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it ) {
     if ( (*it)->name() == name )
       return *it;
   }
@@ -149,33 +185,57 @@ Kleo::BackendConfigWidget * Kleo::CryptoBackendFactory::configWidget( QWidget * 
 
 KConfig* Kleo::CryptoBackendFactory::configObject() const {
   if ( !mConfigObject )
+    // this is unsafe. We're a lib, used by concurrent apps.
     mConfigObject = new KConfig( "libkleopatrarc" );
   return mConfigObject;
 }
 
 void Kleo::CryptoBackendFactory::setSMIMEBackend( const CryptoBackend* backend ) {
-  const QString name = backend ? backend->name() : QString::null;
-  KConfigGroup group( configObject(), "Backends" );
-  group.writeEntry( "SMIME", name );
-  configObject()->sync();
-  mSMIMEBackend = backend;
+  setProtocolBackend( "SMIME", backend );
 }
 
 void Kleo::CryptoBackendFactory::setOpenPGPBackend( const CryptoBackend* backend ) {
-  const QString name = backend ? backend->name() : QString::null;
+  setProtocolBackend( "OpenPGP", backend );
+}
+
+void Kleo::CryptoBackendFactory::setProtocolBackend( const char * protocol, const CryptoBackend * backend ) {
+  const QString name = backend ? backend->name() : QString::null ;
   KConfigGroup group( configObject(), "Backends" );
-  group.writeEntry( "OpenPGP", name );
+  group.writeEntry( protocol, name );
   configObject()->sync();
-  mOpenPGPBackend = backend;
+  mBackends[protocol] = backend;
+}
+
+static const char * defaultBackend( const char * proto ) {
+  static const struct {
+    const char * proto;
+    const char * backend;
+  } defaults[] = {
+    { "OpenPGP", "gpgme" },
+    { "SMIME", "gpgme" },
+#ifdef KLEO_CHIASMUS
+    { "Chiasmus", "chiasmus" },
+#endif
+  };
+  for ( unsigned int i = 0 ; i < sizeof defaults / sizeof *defaults ; ++i )
+    if ( qstricmp( proto, defaults[i].proto ) == 0 )
+      return defaults[i].backend;
+  return 0;
 }
 
 void Kleo::CryptoBackendFactory::readConfig() {
+  mBackends.clear();
   const KConfigGroup group( configObject(), "Backends" );
-  const QString smimeBackend = group.readEntry( "SMIME", "gpgme" );
-  mSMIMEBackend = backendByName( smimeBackend );
+  for ( ProtocolSet::const_iterator it = mAvailableProtocols.begin(), end = mAvailableProtocols.end() ; it != end ; ++it ) {
+    const QString backend = group.readEntry( *it, defaultBackend( *it ) );
+    mBackends[*it] = backendByName( backend );
+  }
+}
 
-  const QString openPGPBackend = group.readEntry( "OpenPGP", "gpgme" );
-  mOpenPGPBackend = backendByName( openPGPBackend );
+const char * Kleo::CryptoBackendFactory::enumerateProtocols( int i ) const {
+  if ( i < 0 || static_cast<unsigned int>( i ) >= mAvailableProtocols.size() )
+    return 0;
+  return mAvailableProtocols[i];
 }
 
 #include "cryptobackendfactory.moc"

@@ -108,7 +108,7 @@ void KMail::CryptPlugFactory::scanForBackends( QStringList * reason ) {
 
 void KMail::CryptPlugFactory::updateCryptPlugWrapperList() {
   mCryptPlugWrapperList->clear();
-  for ( QValueVector<Kleo::CryptoBackend*>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it ) {
+  for ( std::vector<Kleo::CryptoBackend*>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it ) {
     if ( CryptPlugWrapper * w = dynamic_cast<CryptPlugWrapper*>( (*it)->openpgp() ) )
       mCryptPlugWrapperList->append( w );
     if ( CryptPlugWrapper * w = dynamic_cast<CryptPlugWrapper*>( (*it)->smime() ) )

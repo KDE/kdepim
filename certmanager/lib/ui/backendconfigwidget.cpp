@@ -2,7 +2,7 @@
     backendconfigwidget.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2002,2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2002,2004,2005 Klarälvdalens Datakonsult AB
     Copyright (c) 2002,2003 Marc Mutz <mutz@kde.org>
 
     Libkleopatra is free software; you can redistribute it and/or
@@ -39,6 +39,7 @@
 #include "cryptoconfigdialog.h"
 
 #include "kleo/cryptobackendfactory.h"
+#include "ui/keylistview.h" // for lvi_cast<>
 
 #include <klistview.h>
 #include <kdialog.h>
@@ -69,7 +70,6 @@ public:
 namespace Kleo {
   class BackendListViewItem;
   class ProtocolCheckListItem;
-  enum ProtocolType { OpenPGP, SMIME };
 }
 
 class Kleo::BackendListView : public KListView
@@ -82,10 +82,10 @@ public:
   const Kleo::CryptoBackend* currentBackend() const;
 
   /// return which protocol implementation was chosen (checked) for each type (used when saving)
-  const Kleo::CryptoBackend* chosenBackend( ProtocolType protocolType );
+  const Kleo::CryptoBackend* chosenBackend( const char * protocol );
 
   /// deselect all except one for a given protocol type (radiobutton-like exclusivity)
-  void deselectAll( ProtocolType protocolType, QCheckListItem* except );
+  void deselectAll( const char * protocol, QCheckListItem* except );
 
   void emitChanged() { static_cast<BackendConfigWidget *>( parentWidget() )->emitChanged( true ); }
 };
@@ -99,8 +99,8 @@ public:
     {}
 
   const CryptoBackend *cryptoBackend() const { return mCryptoBackend; }
-  static const int RTTI = 20001;
-  virtual int rtti() const { return RTTI; }
+  enum { RTTI = 0x2EAE3BE0, RTTI_MASK = 0xFFFFFFFF };
+  int rtti() const { return RTTI; }
 
 private:
   const CryptoBackend *mCryptoBackend;
@@ -113,85 +113,83 @@ class Kleo::ProtocolCheckListItem : public QCheckListItem
 {
 public:
   ProtocolCheckListItem( BackendListViewItem* blvi,
-                         QListViewItem* prev,
-                         ProtocolType protocolType,
+                         QListViewItem* prev, const char * protocolName,
                          const CryptoBackend::Protocol* protocol ) // can be 0
-    : QCheckListItem( blvi, prev, itemText( protocolType, protocol ),
+    : QCheckListItem( blvi, prev, itemText( protocolName, protocol ),
                       QCheckListItem::CheckBox ),
-      mProtocol( protocol ), mProtocolType( protocolType )
+      mProtocol( protocol ), mProtocolName( protocolName )
     {}
 
-  static const int RTTI = 20002;
+  enum { RTTI = 0x2EAE3BE1, RTTI_MASK = 0xFFFFFFFF };
   virtual int rtti() const { return RTTI; }
 
   // can be 0
   const CryptoBackend::Protocol* protocol() const { return mProtocol; }
-  ProtocolType protocolType() const { return mProtocolType; }
+  const char * protocolName() const { return mProtocolName; }
 
 protected:
   virtual void stateChange( bool b ) {
     BackendListView* lv = static_cast<BackendListView *>( listView() );
     // "radio-button-like" behavior for the protocol checkboxes
     if ( b )
-      lv->deselectAll( mProtocolType, this );
+      lv->deselectAll( mProtocolName, this );
     lv->emitChanged();
     QCheckListItem::stateChange( b );
   }
 
 private:
   // Helper for the constructor.
-  static QString itemText( ProtocolType protocolType, const CryptoBackend::Protocol* protocol ) {
-    // First one is the generic name (OpenPGP, SMIME)
-    QString protoTypeName = protocolType == OpenPGP ? i18n( "OpenPGP" ) : i18n( "S/MIME" );
+  static QString itemText( const char * protocolName, const CryptoBackend::Protocol* protocol ) {
+    // First one is the generic name (find a nice one for OpenPGP, SMIME)
+    const QString protoName = qstricmp( protocolName, "openpgp" ) != 0
+                              ? qstricmp( protocolName, "smime" ) != 0
+                              ? QString::fromLatin1( protocolName )
+                              : i18n( "S/MIME" )
+                              : i18n( "OpenPGP" );
     // second one is implementation name (gpg, gpgsm...)
-    QString impName = protocol ? protocol->displayName() : i18n( "failed" );
-    return QString( "%1 (%2)" ).arg( protoTypeName ).arg( impName );
+    const QString impName = protocol ? protocol->displayName() : i18n( "failed" );
+    return i18n( "Items in Kleo::BackendConfigWidget listview (1: protocol; 2: implementation name)",
+                 "%1 (%2)" ).arg( protoName, impName );
   }
 
   const CryptoBackend::Protocol* mProtocol; // can be 0
-  ProtocolType mProtocolType;
+  const char * mProtocolName;
 };
 
 const Kleo::CryptoBackend* Kleo::BackendListView::currentBackend() const {
-  QListViewItem* curItem = currentItem();
+  const QListViewItem* curItem = currentItem();
   if ( !curItem ) // can't happen
     return 0;
-  if ( curItem->rtti() == Kleo::ProtocolCheckListItem::RTTI )
+  if ( lvi_cast<Kleo::ProtocolCheckListItem>( curItem ) )
     curItem = curItem->parent();
-  if ( curItem && curItem->rtti() == Kleo::BackendListViewItem::RTTI )
-    return static_cast<Kleo::BackendListViewItem *>( curItem )->cryptoBackend();
+  if ( const Kleo::BackendListViewItem * blvi = lvi_cast<Kleo::BackendListViewItem>( curItem ) )
+    return blvi->cryptoBackend();
   return 0;
 }
 
 // can't be const method due to QListViewItemIterator (why?)
-const Kleo::CryptoBackend* Kleo::BackendListView::chosenBackend( ProtocolType protocolType )
+const Kleo::CryptoBackend* Kleo::BackendListView::chosenBackend( const char * protocolName )
 {
-  QListViewItemIterator it( this /*, QListViewItemIterator::Checked doesn't work*/ );
-  for ( ; it.current() ; ++it ) {
-    if( it.current()->rtti() == Kleo::ProtocolCheckListItem::RTTI ) {
-      Kleo::ProtocolCheckListItem* p = static_cast<Kleo::ProtocolCheckListItem *>( it.current() );
-      if ( p->isOn() && p->protocolType() == protocolType ) {
+  for ( QListViewItemIterator it( this /*, QListViewItemIterator::Checked doesn't work*/ ) ;
+        it.current() ; ++it )
+    if ( ProtocolCheckListItem * p = lvi_cast<ProtocolCheckListItem>( it.current() ) )
+      if ( p->isOn() && qstricmp( p->protocolName(), protocolName ) == 0 ) {
         // OK that's the one. Now go up to the parent backend
         // (need to do that in the listview since Protocol doesn't know it)
-        QListViewItem* parItem = it.current()->parent();
-        if ( parItem && parItem->rtti() == Kleo::BackendListViewItem::RTTI )
-          return static_cast<Kleo::BackendListViewItem *>( parItem )->cryptoBackend();
+        if ( const BackendListViewItem * parItem = lvi_cast<BackendListViewItem>( it.current()->parent() ) )
+          return parItem->cryptoBackend();
       }
-    }
-  }
   return 0;
 }
 
-void Kleo::BackendListView::deselectAll( ProtocolType protocolType, QCheckListItem* except )
+void Kleo::BackendListView::deselectAll( const char * protocolName, QCheckListItem* except )
 {
-  QListViewItemIterator it( this /*, QListViewItemIterator::Checked doesn't work*/ );
-  for ( ; it.current() ; ++it ) {
-    if( it.current() != except &&
-        it.current()->rtti() == Kleo::ProtocolCheckListItem::RTTI ) {
-      Kleo::ProtocolCheckListItem* p = static_cast<Kleo::ProtocolCheckListItem *>( it.current() );
-      if ( p->isOn() && p->protocolType() == protocolType )
+  for ( QListViewItemIterator it( this /*, QListViewItemIterator::Checked doesn't work*/ ) ;
+        it.current() ; ++it ) {
+    if ( it.current() == except ) continue;
+    if ( ProtocolCheckListItem * p = lvi_cast<ProtocolCheckListItem>( it.current() ) )
+      if ( p->isOn() && qstricmp( p->protocolName(), protocolName ) == 0 )
         p->setOn( false );
-    }
   }
 }
 
@@ -250,29 +248,24 @@ void Kleo::BackendConfigWidget::load() {
   // populate the plugin list:
   BackendListViewItem * top = 0;
   for ( unsigned int i = 0 ; const CryptoBackend * b = d->backendFactory->backend( i ) ; ++i ) {
-    const CryptoBackend::Protocol * openpgp = b->openpgp();
-    const CryptoBackend::Protocol * smime = b->smime();
 
     top = new Kleo::BackendListViewItem( d->listView, top, b );
-    ProtocolCheckListItem * last = 0;
-    if ( openpgp ) {
-      last = new ProtocolCheckListItem( top, last, Kleo::OpenPGP, openpgp );
-      last->setOn( openpgp == d->backendFactory->openpgp() );
-    } else if ( b->supportsOpenPGP() ) {
-      last = new ProtocolCheckListItem( top, last, Kleo::OpenPGP, 0 );
-      last->setOn( false );
-      last->setEnabled( false );
-    }
-    if ( smime ) {
-      last = new ProtocolCheckListItem( top, last, Kleo::SMIME, smime );
-      last->setOn( smime == d->backendFactory->smime() );
-    } else if ( b->supportsSMIME() ) {
-      last = new ProtocolCheckListItem( top, last, Kleo::SMIME, 0 );
-      last->setOn( false );
-      last->setEnabled( false );
-    }
-    top->setOpen( true );
 
+    ProtocolCheckListItem * last = 0;
+    for ( int i = 0 ; const char * name = b->enumerateProtocols( i ) ; ++i ) {
+      const CryptoBackend::Protocol * protocol = b->protocol( name );
+
+      if ( protocol ) {
+        last = new ProtocolCheckListItem( top, last, name, protocol );
+        last->setOn( protocol == d->backendFactory->protocol( name ) );
+      } else if ( b->supportsProtocol( name ) ) {
+        last = new ProtocolCheckListItem( top, last, name, 0 );
+        last->setOn( false );
+        last->setEnabled( false );
+      }
+    }
+
+    top->setOpen( true );
     ++backendCount;
   }
 
@@ -286,6 +279,8 @@ void Kleo::BackendConfigWidget::load() {
 
 void Kleo::BackendConfigWidget::slotSelectionChanged( QListViewItem * ) {
   const CryptoBackend* backend = d->listView->currentBackend();
+  if ( backend && !backend->config() )
+    kdDebug(5150) << "Backend w/o config object!" << endl;
   d->configureButton->setEnabled( backend && backend->config() );
 }
 
@@ -317,8 +312,8 @@ void Kleo::BackendConfigWidget::slotConfigureButtonClicked() {
 }
 
 void Kleo::BackendConfigWidget::save() const {
-  d->backendFactory->setSMIMEBackend( d->listView->chosenBackend( Kleo::SMIME ) );
-  d->backendFactory->setOpenPGPBackend( d->listView->chosenBackend( Kleo::OpenPGP ) );
+  for ( int i = 0 ; const char * name = d->backendFactory->enumerateProtocols( i ) ; ++i )
+    d->backendFactory->setProtocolBackend( name,  d->listView->chosenBackend( name ) );
 }
 
 void Kleo::BackendConfigWidget::virtual_hook( int, void* ) {}

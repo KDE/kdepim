@@ -1,8 +1,8 @@
 /*  -*- mode: C++; c-file-style: "gnu" -*-
-    qgpgmebackend.h
+    chiasmusbackend.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004,2005 Klarälvdalens Datakonsult AB
+    Copyright (c) 2005 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -31,8 +31,8 @@
 */
 
 
-#ifndef __KLEO_QGPGMEBACKEND_H__
-#define __KLEO_QGPGMEBACKEND_H__
+#ifndef __KLEO_CHIASMUSBACKEND_H__
+#define __KLEO_CHIASMUSBACKEND_H__
 
 #include "kleo/cryptobackend.h"
 
@@ -41,42 +41,43 @@ class CryptPlugWrapper;
 namespace Kleo {
   class CryptoConfig;
 }
-class QGpgMECryptoConfig;
 class QString;
 
 namespace Kleo {
 
-  class QGpgMEBackend : public Kleo::CryptoBackend {
+  class ChiasmusBackend : public Kleo::CryptoBackend {
   public:
-    QGpgMEBackend();
-    ~QGpgMEBackend();
+    ChiasmusBackend();
+    ~ChiasmusBackend();
 
     QString name() const;
     QString displayName() const;
 
-    CryptoConfig * config() const;
+    Kleo::CryptoConfig * config() const;
 
-    Protocol * openpgp() const;
-    Protocol * smime() const;
-    Protocol * protocol( const char * name ) const;
+    Kleo::CryptoBackend::Protocol * openpgp() const { return 0; }
+    Kleo::CryptoBackend::Protocol * smime() const { return 0; }
+    Kleo::CryptoBackend::Protocol * protocol( const char * name ) const;
 
     bool checkForOpenPGP( QString * reason=0 ) const;
     bool checkForSMIME( QString * reason=0 ) const;
-    bool checkForProtocol( const char * name, QString * reason ) const;
+    bool checkForChiasmus( QString * reason=0 ) const;
+    bool checkForProtocol( const char * name, QString * reason=0 ) const;
 
-    bool supportsOpenPGP() const { return true; }
-    bool supportsSMIME() const { return true; }
+    bool supportsOpenPGP() const { return false; }
+    bool supportsSMIME() const { return false; }
     bool supportsProtocol( const char * name ) const;
 
     const char * enumerateProtocols( int i ) const;
 
   private:
-    mutable QGpgMECryptoConfig * mCryptoConfig;
-    mutable CryptPlugWrapper * mOpenPGPProtocol;
-    mutable CryptPlugWrapper * mSMIMEProtocol;
+    class CryptoConfig;
+    class Protocol;
+    mutable CryptoConfig * mCryptoConfig;
+    mutable Protocol * mProtocol;
   };
 
 }
 
 
-#endif // __KLEO_QGPGMEBACKEND_H__
+#endif // __KLEO_CHIASMUSBACKEND_H__

@@ -2,7 +2,7 @@
     qgpgmebackend.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004,2005 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -108,6 +108,16 @@ bool Kleo::QGpgMEBackend::checkForSMIME( QString * reason ) const {
   return check( GpgME::Context::CMS, reason );
 }
 
+bool Kleo::QGpgMEBackend::checkForProtocol( const char * name, QString * reason ) const {
+  if ( qstricmp( name, OpenPGP ) == 0 )
+    return check( GpgME::Context::OpenPGP, reason );
+  if ( qstricmp( name, SMIME ) == 0 )
+    return check( GpgME::Context::CMS, reason );
+  if ( reason )
+    *reason = i18n( "Unsupported protocol \"%1\"" ).arg( name );
+  return false;
+}
+
 Kleo::CryptoBackend::Protocol * Kleo::QGpgMEBackend::openpgp() const {
   if ( !mOpenPGPProtocol )
     if ( checkForOpenPGP() )
@@ -120,4 +130,24 @@ Kleo::CryptoBackend::Protocol * Kleo::QGpgMEBackend::smime() const {
     if ( checkForSMIME() )
       mSMIMEProtocol = new CryptPlugWrapper( "gpgsm", "smime" );
   return mSMIMEProtocol;
+}
+
+Kleo::CryptoBackend::Protocol * Kleo::QGpgMEBackend::protocol( const char * name ) const {
+  if ( qstricmp( name, OpenPGP ) == 0 )
+    return openpgp();
+  if ( qstricmp( name, SMIME ) == 0 )
+    return smime();
+  return 0;
+}
+
+bool Kleo::QGpgMEBackend::supportsProtocol( const char * name ) const {
+  return qstricmp( name, OpenPGP ) == 0 || qstricmp( name, SMIME );
+}
+
+const char * Kleo::QGpgMEBackend::enumerateProtocols( int i ) const {
+  switch ( i ) {
+  case 0: return OpenPGP;
+  case 1: return SMIME;
+  default: return 0;
+  }
 }

@@ -5,6 +5,7 @@ INCLUDES = -I$(top_srcdir)/libkdenetwork \
 noinst_LTLIBRARIES = libkleopatra_core.la
 
 libkleopatra_core_la_SOURCES = \
+        cryptobackend.cpp \
 	cryptobackendfactory.cpp \
 	enum.cpp \
 	dn.cpp \

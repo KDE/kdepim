@@ -1,8 +1,8 @@
-/*  -*- mode: C++; c-file-style: "gnu" -*-
-    qgpgmebackend.h
+/*
+    kleo/cryptobackend.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004,2005 Klarälvdalens Datakonsult AB
+    Copyright (c) 2005 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,53 +30,7 @@
     your version.
 */
 
+#include "cryptobackend.h"
 
-#ifndef __KLEO_QGPGMEBACKEND_H__
-#define __KLEO_QGPGMEBACKEND_H__
-
-#include "kleo/cryptobackend.h"
-
-class CryptPlugWrapper;
-
-namespace Kleo {
-  class CryptoConfig;
-}
-class QGpgMECryptoConfig;
-class QString;
-
-namespace Kleo {
-
-  class QGpgMEBackend : public Kleo::CryptoBackend {
-  public:
-    QGpgMEBackend();
-    ~QGpgMEBackend();
-
-    QString name() const;
-    QString displayName() const;
-
-    CryptoConfig * config() const;
-
-    Protocol * openpgp() const;
-    Protocol * smime() const;
-    Protocol * protocol( const char * name ) const;
-
-    bool checkForOpenPGP( QString * reason=0 ) const;
-    bool checkForSMIME( QString * reason=0 ) const;
-    bool checkForProtocol( const char * name, QString * reason ) const;
-
-    bool supportsOpenPGP() const { return true; }
-    bool supportsSMIME() const { return true; }
-    bool supportsProtocol( const char * name ) const;
-
-    const char * enumerateProtocols( int i ) const;
-
-  private:
-    mutable QGpgMECryptoConfig * mCryptoConfig;
-    mutable CryptPlugWrapper * mOpenPGPProtocol;
-    mutable CryptPlugWrapper * mSMIMEProtocol;
-  };
-
-}
-
-
-#endif // __KLEO_QGPGMEBACKEND_H__
+const char Kleo::CryptoBackend::OpenPGP[] = "OpenPGP";
+const char Kleo::CryptoBackend::SMIME[] = "SMIME";

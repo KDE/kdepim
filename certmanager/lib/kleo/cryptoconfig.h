@@ -33,9 +33,13 @@
 #ifndef CRYPTOCONFIG_H
 #define CRYPTOCONFIG_H
 
+#ifdef __cplusplus
+/* we read this file from a C compiler, and are only interested in the
+ * enums... */
+
 #include <kurl.h>
 
-// Start reading this file from the bottom up :)
+/* Start reading this file from the bottom up :) */
 
 namespace Kleo {
 
@@ -45,6 +49,7 @@ namespace Kleo {
   class CryptoConfigEntry {
 
   public:
+#endif /* __cplusplus */
     /**
        @li basic	This option should always be offered to the user.
        @li advanced	This option may be offered to advanced users.
@@ -75,6 +80,7 @@ namespace Kleo {
                    ArgType_URL = 5,
                    ArgType_LDAPURL = 6 };
 
+#ifdef __cplusplus
     virtual ~CryptoConfigEntry() {}
 
     /**
@@ -342,5 +348,5 @@ namespace Kleo {
   };
 
 }
-
+#endif /* __cplusplus */
 #endif /* CRYPTOCONFIG_H */

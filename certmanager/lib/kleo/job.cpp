@@ -2,7 +2,7 @@
     job.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004,2005 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -50,6 +50,7 @@
 #include "downloadjob.h"
 #include "deletejob.h"
 #include "refreshkeysjob.h"
+#include "specialjob.h"
 
 #include <qapplication.h>
 
@@ -88,6 +89,7 @@ make_job_subclass(ExportJob)
 make_job_subclass(DownloadJob)
 make_job_subclass(DeleteJob)
 make_job_subclass(RefreshKeysJob)
+make_job_subclass(SpecialJob)
 
 #undef make_job_subclass
 
@@ -107,3 +109,4 @@ make_job_subclass(RefreshKeysJob)
 #include "downloadjob.moc"
 #include "deletejob.moc"
 #include "refreshkeysjob.moc"
+#include "specialjob.moc"

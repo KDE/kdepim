@@ -820,9 +820,9 @@ QString CryptPlugWrapper::libName() const
 QString CryptPlugWrapper::protocol() const
 {
   if ( _libName.contains( "smime" ) )
-    return "smime";
+    return "SMIME";
   if ( _libName.contains( "openpgp" ) )
-    return "openpgp";
+    return "OpenPGP";
   return QString::null;
 }
 
