@@ -620,47 +620,66 @@ void CertManager::startCertificateImport( const QByteArray & keyData, const QStr
 void CertManager::slotCertificateImportResult( const GpgME::ImportResult & res ) {
   QString displayName = displayNameForJob( static_cast<const Kleo::Job *>( sender() ) );
 
-  if ( res.error() ) {
+  if ( res.error().isCanceled() ) {
+    // do nothing
+  } else if ( res.error() ) {
     showCertificateImportError( this, res.error(), displayName );
   } else {
 
-  KMessageBox::information( this,
-    QString( "<qt><p>%1</p>"
-    "<p>%1</p>"
-    "<table>"
-    "<tr><td align=right>%1</td><td>%1</td></tr>"
-    "<tr><td align=right>%1</td><td>%1 (%1 %1)</td></tr>"
-    "<tr><td align=right>%1</td><td>%1</td></tr>"
-    "<tr><td align=right>%1</td><td>%1</td></tr>"
-    "<tr><td align=right>%1</td><td>%1</td></tr>"
-    "<tr><td align=right>%1</td><td>%1</td></tr>"
-    "<tr><td align=right>%1</td><td>%1</td></tr>"
-    "<tr><td align=right>%1</td><td>%1</td></tr>"
-    "<tr><td align=right>%1</td><td>%1 <br>&nbsp;</td></tr>"
-    "<tr><td align=right>%1</td><td>%1</td></tr>"
-    "<tr><td align=right>%1</td><td>%1</td></tr>"
-    "<tr><td align=right>%1</td><td>%1</td></tr>"
-    "</table></qt>" )
-    .arg(i18n("Certificate %1 imported successfully.").arg( displayName ))
-    .arg(i18n("Additional info:"))
-    .arg(i18n("Total number processed:")).arg(res.numConsidered())
-    .arg(i18n("imported:")).arg(res.numImported()).arg(i18n("RSA:")).arg(res.numRSAImported())
-    .arg(i18n("new signatures:")).arg(res.newSignatures())
-    .arg(i18n("new user IDs:")).arg(res.newUserIDs())
-    .arg(i18n("keys without user ID:")).arg(res.numKeysWithoutUserID())
-    .arg(i18n("new subkeys:")).arg(res.newSubkeys())
-    .arg(i18n("new revocations:")).arg(res.newRevocations())
-    .arg(i18n("not imported:")).arg(res.notImported())
-    .arg(i18n("unchanged:")).arg(res.numUnchanged())
-    .arg(i18n("number of secret keys:")).arg(res.numSecretKeysConsidered())
-    .arg(i18n("secret keys imported:")).arg(res.numSecretKeysImported())
-    .arg(i18n("secret keys unchanged:")).arg(res.numSecretKeysUnchanged())
-    ,
-    i18n( "Certificate Imported" ) );
-  if ( !isRemote() )
-    slotStartCertificateListing();
-  else
-    disconnectJobFromStatusBarProgress( res.error() );
+    const QString normalLine = i18n("<tr><td align=\"right\">%1</td><td>%2</td></tr>");
+    const QString boldLine = i18n("<tr><td align=\"right\"><b>%1</b></td><td>%2</td></tr>");
+
+    QStringList lines;
+    lines.push_back( normalLine.arg( i18n("Total number processed:"),
+				     QString::number( res.numConsidered() ) ) );
+    lines.push_back( normalLine.arg( i18n("Imported:"),
+				     QString::number( res.numImported() ) ) );
+    if ( res.newSignatures() )
+      lines.push_back( normalLine.arg( i18n("New signatures:"),
+				       QString::number( res.newSignatures() ) ) );
+    if ( res.newUserIDs() )
+      lines.push_back( normalLine.arg( i18n("New user IDs:"),
+				       QString::number( res.newUserIDs() ) ) );
+    if ( res.numKeysWithoutUserID() )
+      lines.push_back( normalLine.arg( i18n("Keys without user IDs:"),
+				       QString::number( res.numKeysWithoutUserID() ) ) );
+    if ( res.newSubkeys() )
+      lines.push_back( normalLine.arg( i18n("New subkeys:"),
+				       QString::number( res.newSubkeys() ) ) );
+    if ( res.newRevocations() )
+      lines.push_back( boldLine.arg( i18n("Newly revoked:"),
+				     QString::number( res.newRevocations() ) ) );
+    if ( res.notImported() )
+      lines.push_back( boldLine.arg( i18n("Not imported:"),
+				     QString::number( res.notImported() ) ) );
+    if ( res.numUnchanged() )
+      lines.push_back( normalLine.arg( i18n("Unchanged:"),
+				       QString::number( res.numUnchanged() ) ) );
+    if ( res.numSecretKeysConsidered() )
+      lines.push_back( normalLine.arg( i18n("Secret keys processed:"),
+				       QString::number( res.numSecretKeysConsidered() ) ) );
+    if ( res.numSecretKeysImported() )
+      lines.push_back( normalLine.arg( i18n("Secret keys imported:"),
+				       QString::number( res.numSecretKeysImported() ) ) );
+    if ( res.numSecretKeysConsidered() - res.numSecretKeysImported() - res.numSecretKeysUnchanged() > 0 )
+      lines.push_back( boldLine.arg( i18n("Secret keys <em>not</em> imported:"),
+				     QString::number( res.numSecretKeysConsidered()
+						      - res.numSecretKeysImported()
+						      - res.numSecretKeysUnchanged() ) ) );
+    if ( res.numSecretKeysUnchanged() )
+      lines.push_back( normalLine.arg( i18n("Secret keys unchanged:"),
+				       QString::number( res.numSecretKeysUnchanged() ) ) );
+
+    KMessageBox::information( this,
+			      i18n( "<qt><p>Detailed results of importing %1:</p>"
+				    "<table>%2</table></qt>" )
+			      .arg( displayName ).arg( lines.join( QString::null ) ),
+			      i18n( "Certificate Import Result" ) );
+
+    if ( !isRemote() )
+      slotStartCertificateListing();
+    else
+      disconnectJobFromStatusBarProgress( res.error() );
   }
   if ( !mURLsToImport.isEmpty() )
     importNextURL();
