@@ -108,6 +108,8 @@
 #include "pilotRecord.h"
 #endif
 
+#define DATESIZE 10
+#include <kdb/connection.h>
 #include <pi-expense.h>
 #include <stdlib.h>
 #include <qcstring.h>
@@ -130,6 +132,95 @@ char * attendees;
 char * note;  
 };
 */
+
+char *get_entry_type(enum ExpenseType type)
+ {
+   switch(type) {     
+	case etAirfare:       
+		return "Airfare";     
+	case etBreakfast:       
+		return "Breakfast";     
+	case etBus:       
+		return "Bus";     
+	case etBusinessMeals:       
+		return "BusinessMeals";     
+	case etCarRental:       
+		return "CarRental";     
+	case etDinner:       
+		return "Dinner";     
+	case etEntertainment:       
+		return "Entertainment";     
+	case etFax:       
+		return "Fax";     
+	case etGas:       
+		return "Gas";
+    case etGifts:
+	      return "Gifts";
+    case etHotel:
+      return "Hotel";
+    case etIncidentals:
+      return "Incidentals";
+    case etLaundry:
+      return "Laundry";
+    case etLimo:
+      return "Limo";
+    case etLodging:
+      return "Lodging";
+    case etLunch:
+      return "Lunch";
+    case etMileage:
+      return "Mileage";
+    case etOther:
+      return "Other";
+    case etParking:
+      return "Parking";
+    case etPostage:
+      return "Postage";
+    case etSnack:
+      return "Snack";
+    case etSubway:
+      return "Subway";
+    case etSupplies:
+      return "Supplies";
+    case etTaxi:
+      return "Taxi";
+    case etTelephone:
+      return "Telephone";
+    case etTips:
+      return "Tips";
+    case etTolls:
+      return "Tolls";
+    case etTrain:
+      return "Train";
+    default:
+      return NULL;
+   }
+}
+
+char *get_pay_type(enum ExpensePayment type)
+{
+   switch (type) {
+    case epAmEx:
+      return "AmEx";
+    case epCash:
+      return "Cash";
+    case epCheck:
+      return "Check";
+    case epCreditCard:
+      return "CreditCard";
+    case epMasterCard:
+      return "MasterCard";
+    case epPrepaid:
+      return "Prepaid";
+    case epVISA:
+      return "VISA";
+    case epUnfiled:
+      return "Unfiled";
+    default:
+      return NULL;
+   }
+}
+
 
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.
@@ -186,8 +277,13 @@ ExpenseConduit::doSync()
 	KConfig& config=KPilotConfig::getConfig();
 	config.setGroup(ExpenseOptions::ExpenseGroup);
 	
+	QString mDBType=config.readEntry("DBTypePolicy");
 	QString mDBnm=config.readEntry("DBname");
 	QString mDBsrv=config.readEntry("DBServer");
+	QString mDBtable=config.readEntry("DBtable");
+	QString mDBlogin=config.readEntry("DBlogin");
+	QString mDBpasswd=config.readEntry("DBpasswd");
+	
 	QString mCSVname=config.readEntry("CSVFileName");
 
 	kdDebug() << "expense" << ": Read config entry \n" << "Db name: " << mDBnm << endl;
@@ -195,6 +291,22 @@ ExpenseConduit::doSync()
 	PilotRecord* rec;
         int recordcount=0;
 	int index=0;
+
+// Now let's open databases
+
+	if (mDBType=="1")
+	{
+		DEBUGCONDUIT << "MySQL database requested" << endl;
+
+	}
+
+	if (mDBType=="2")
+	{
+		DEBUGCONDUIT << "PostgreSQL database requested" << endl;
+
+	}
+
+// Now let's read records
 
 	while ((rec=readRecordByIndex(index++)))
         {
@@ -214,12 +326,6 @@ ExpenseConduit::doSync()
                 	<< (int) rec
 			<< endl;
 			(void) unpack_Expense(&e,(unsigned char *)rec->getData(),rec->getLen());
-			DEBUGCONDUIT << fname
-			<< "Type: " 
-			<< e.type 
-			<< endl 
-			<< "Amount: " 
-			<< e.amount << endl;
 			rec=0L;
 			
 			if (!mCSVname.isEmpty())
@@ -227,46 +333,92 @@ ExpenseConduit::doSync()
 				DEBUGCONDUIT << fname
 				<< mCSVname 
 				<< endl;
+//open file
 				QFile fp(mCSVname);
 				fp.open(IO_ReadWrite|IO_Append);	
-				int tmpyr=e.date.tm_year;
-				char* dtstng;
+				
+//format date for csv file
+				int tmpyr=e.date.tm_year+1900;
+				char dtstng[DATESIZE];
 				int tmpday=e.date.tm_mday;
-				int tmpmon=e.date.tm_mon;
-				sprintf(dtstng,"%i-%i-%i",tmpyr,tmpmon,tmpday);
+				int tmpmon=e.date.tm_mon+1;
+				sprintf(dtstng,"%d-%d-%d",tmpyr,tmpmon,tmpday);
 				const char* mesg=dtstng;
 				fp.writeBlock(mesg,qstrlen(mesg));	
+				const char* delim=",";
+				fp.writeBlock(delim,qstrlen(delim));	
+//write rest of record
 				mesg=e.amount;
 				fp.writeBlock(mesg,qstrlen(mesg));	
-				const char* delim=",";
+				fp.writeBlock(delim,qstrlen(delim));	
+				mesg=get_pay_type(e.payment);
+				fp.writeBlock(mesg,qstrlen(mesg));	
 				fp.writeBlock(delim,qstrlen(delim));	
 				mesg=e.vendor;
 				fp.writeBlock(mesg,qstrlen(mesg));	
 				fp.writeBlock(delim,qstrlen(delim));	
-				mesg="ExpenseType";
+				mesg=get_entry_type(e.type);
 				fp.writeBlock(mesg,qstrlen(mesg));	
 				fp.writeBlock(delim,qstrlen(delim));	
 				mesg=e.city;
 				fp.writeBlock(mesg,qstrlen(mesg));	
 				fp.writeBlock(delim,qstrlen(delim));	
-				mesg=e.attendees;
+
+// remove line breaks from list of attendees - can't have in csv files
+
+				QString tmpatt=e.attendees;
+				QString tmpatt2=tmpatt.simplifyWhiteSpace();
+				mesg=tmpatt2.latin1();				
 				fp.writeBlock(mesg,qstrlen(mesg));	
 				fp.writeBlock(delim,qstrlen(delim));	
 
+// remove extra formatting from notes - can't have in csv files
+
+				QString tmpnotes=e.note;
+				QString tmpnotes2=tmpnotes.simplifyWhiteSpace();
+				DEBUGCONDUIT << tmpnotes2 << endl;
+				mesg=tmpnotes2.latin1();				
+				DEBUGCONDUIT << mesg << endl;
+				fp.writeBlock(mesg,qstrlen(mesg));	
+				fp.writeBlock(delim,qstrlen(delim));	
+
+//Finish line
 				const char* endline="\n";	
 				fp.writeBlock(endline,qstrlen(endline));	
 
-
+//be nice and close file
 				fp.close();	
+				
+			}
 
-				
-				
-			}	
+// Now let's write record to correct database
+	
+			if (mDBType=="0")
+			{
+				DEBUGCONDUIT << "No database requested" << endl;
+
+			}
+
+			if (mDBType=="1")
+			{
+				DEBUGCONDUIT << "MySQL database requested" << endl;
+
+			}
+
+			if (mDBType=="2")
+			{
+				DEBUGCONDUIT << "PostgreSQL database requested" << endl;
+
+			}
+
+// REMEMBER to CLOSE database			
 
 		}
 	DEBUGCONDUIT << "Records: " << recordcount << endl;
 	}
 }
+
+
 
 // aboutAndSetup is pretty much the same
 // on all conduits as well.
@@ -297,6 +449,10 @@ ExpenseConduit::doTest()
 }
 
 // $Log$
+// Revision 1.5  2001/03/16 01:19:49  molnarc
+//
+// added date to csv output
+//
 // Revision 1.4  2001/03/15 21:10:07  molnarc
 //
 //
