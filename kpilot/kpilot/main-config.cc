@@ -44,8 +44,15 @@ static const char *config_id =
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 
+#include "conduitSetup.h"
 #include "kpilotConfigDialog.h"
 #include "kpilotConfig.h"
+
+static KCmdLineOptions kpilotoptions[] = {
+	{ "c",0,0 },
+	{ "conduits", I18N_NOOP("Configure conduits instead."), 0},
+	{ 0,0,0 }
+} ;
 
 int main(int argc, char **argv)
 {
@@ -64,8 +71,9 @@ int main(int argc, char **argv)
 
 	KCmdLineArgs::init(argc, argv, &about);
 #ifdef DEBUG
-	KCmdLineArgs::addCmdLineOptions(debug_options, "debug");
+	KCmdLineArgs::addCmdLineOptions(debug_options, "debug", "debug");
 #endif
+	KCmdLineArgs::addCmdLineOptions(kpilotoptions,"kpilotconfig",0L,"debug");
 	KApplication::addCmdLineOptions();
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
 
@@ -75,9 +83,17 @@ int main(int argc, char **argv)
 
 	int r = 0;
 
-	KDialogBase *d = new KPilotConfigDialog(0L, "configDialog", true);
+	if (p->isSet("conduits"))
+	{
+		CConduitSetup *d = new CConduitSetup(0L,"conduitConfig");
 
-	r = d->exec();
+		r = d->exec();
+	}
+	else
+	{
+		KDialogBase *d = new KPilotConfigDialog(0L, "configDialog", true);
+		r = d->exec();
+	}
 
 	if (r)
 	{
@@ -101,6 +117,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.4  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.3  2001/09/23 21:42:35  adridg
 // Factored out debugging options
 //
