@@ -2041,8 +2041,8 @@ bool CryptPlug::decryptAndCheckMessage( const char*  ciphertext,
   }
   
   if( bWrongKeyUsage ) {
-    if( errId )   // do *not* report that decrypting was wrong
-      *errId = 1; // but also report the error (due to wrong key usage)
+    if( errId )
+      *errId = CRYPTPLUG_ERR_WRONG_KEY_USAGE; // report the wrong key usage
   }  
   
   rCiph = gpgme_data_release_and_get_mem( gPlaintext,  &rCLen );
