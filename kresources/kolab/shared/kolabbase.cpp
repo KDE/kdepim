@@ -255,7 +255,7 @@ bool KolabBase::loadEmailAttribute( QDomElement& element, Email& email )
       continue;
     if ( n.isElement() ) {
       QDomElement e = n.toElement();
-      QString tagName = e.tagName();
+      const QString tagName = e.tagName();
 
       if ( tagName == "display-name" )
         email.displayName = e.text();
@@ -282,31 +282,58 @@ void KolabBase::saveEmailAttribute( QDomElement& element, const Email& email,
 
 bool KolabBase::loadAttribute( QDomElement& element )
 {
-  QString tagName = element.tagName();
-
-  if ( tagName == "uid" )
-    setUid( element.text() );
-  else if ( tagName == "body" )
-    setBody( element.text() );
-  else if ( tagName == "categories" )
-    setCategories( element.text() );
-  else if ( tagName == "creation-date" )
-    setCreationDate( stringToDateTime( element.text() ) );
-  else if ( tagName == "last-modification-date" )
-    setLastModified( stringToDateTime( element.text() ) );
-  else if ( tagName == "sensitivity" )
-    setSensitivity( stringToSensitivity( element.text() ) );
-  else if ( tagName == "product-id" )
-    return true; // ignore this field
-  else if ( tagName == "pilot-sync-id" )
-    setPilotSyncId( element.text().toULong() );
-  else if ( tagName == "pilot-sync-status" )
-    setPilotSyncStatus( element.text().toInt() );
-  else
-    return false;
-
-  // Handled here
-  return true;
+  const QString tagName = element.tagName();
+  switch ( tagName[0].latin1() ) {
+  case 'u':
+    if ( tagName == "uid" ) {
+      setUid( element.text() );
+      return true;
+    }
+    break;
+  case 'b':
+    if ( tagName == "body" ) {
+      setBody( element.text() );
+      return true;
+    }
+    break;
+  case 'c':
+    if ( tagName == "categories" ) {
+      setCategories( element.text() );
+      return true;
+    }
+    if ( tagName == "creation-date" ) {
+      setCreationDate( stringToDateTime( element.text() ) );
+      return true;
+    }
+    break;
+  case 'l':
+    if ( tagName == "last-modification-date" ) {
+      setLastModified( stringToDateTime( element.text() ) );
+      return true;
+    }
+    break;
+  case 's':
+    if ( tagName == "sensitivity" ) {
+      setSensitivity( stringToSensitivity( element.text() ) );
+      return true;
+    }
+    break;
+  case 'p':
+    if ( tagName == "product-id" )
+      return true; // ignore this field
+    if ( tagName == "pilot-sync-id" ) {
+      setPilotSyncId( element.text().toULong() );
+      return true;
+    }
+    if ( tagName == "pilot-sync-status" ) {
+      setPilotSyncStatus( element.text().toInt() );
+      return true;
+    }
+    break;
+  default:
+    break;
+  }
+  return false;
 }
 
 bool KolabBase::saveAttributes( QDomElement& element ) const

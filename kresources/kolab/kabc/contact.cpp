@@ -578,92 +578,176 @@ void Contact::saveDistrListMembers( QDomElement& element ) const
 
 bool Contact::loadAttribute( QDomElement& element )
 {
-  QString tagName = element.tagName();
-
-  if ( tagName == "name" )
-    return loadNameAttribute( element );
-  else if ( tagName == "role" )
-    setRole( element.text() );
-  else if ( tagName == "free-busy-url" )
-    setFreeBusyUrl( element.text() );
-  else if ( tagName == "organization" )
-    setOrganization( element.text() );
-  else if ( tagName == "web-page" )
-    setWebPage( element.text() );
-  else if ( tagName == "im-address" )
-    setIMAddress( element.text() );
-  else if ( tagName == "department" )
-    setDepartment( element.text() );
-  else if ( tagName == "office-location" )
-    setOfficeLocation( element.text() );
-  else if ( tagName == "profession" )
-    setProfession( element.text() );
-  else if ( tagName == "job-title" )
-    // see saveAttributes: <job-title> is mapped to the Role field
-    setRole( element.text() );
-  else if ( tagName == "manager-name" )
-    setManagerName( element.text() );
-  else if ( tagName == "assistant" )
-    setAssistant( element.text() );
-  else if ( tagName == "nick-name" )
-    setNickName( element.text() );
-  else if ( tagName == "spouse-name" )
-    setSpouseName( element.text() );
-  else if ( tagName == "birthday" ) {
-    if ( !element.text().isEmpty() )
-      setBirthday( stringToDate( element.text() ) );
-  }
-  else if ( tagName == "anniversary" ) {
-    if ( !element.text().isEmpty() )
-      setAnniversary( stringToDate( element.text() ) );
-  }
-  else if ( tagName == "picture" ) {
-    mPictureAttachmentName = element.text();
-  }
-  else if ( tagName == "x-logo" ) {
-    mLogoAttachmentName = element.text();
-  }
-  else if ( tagName == "x-sound" ) {
-    mSoundAttachmentName = element.text();
-  }
-  else if ( tagName == "children" )
-    setChildren( element.text() );
-  else if ( tagName == "gender" )
-    setGender( element.text() );
-  else if ( tagName == "language" )
-    setLanguage( element.text() );
-  else if ( tagName == "phone" )
-    return loadPhoneAttribute( element );
-  else if ( tagName == "email" ) {
-    Email email;
-    if ( loadEmailAttribute( element, email ) ) {
-      addEmail( email );
+  const QString tagName = element.tagName();
+  switch ( tagName[0].latin1() ) {
+  case 'a':
+    if ( tagName == "address" )
+      return loadAddressAttribute( element );
+    if ( tagName == "assistant" ) {
+      setAssistant( element.text() );
       return true;
-    } else
-      return false;
-  } else if ( tagName == "address" )
-    return loadAddressAttribute( element );
-  else if ( tagName == "preferred-address" )
-    setPreferredAddress( element.text() );
-  else if ( tagName == "latitude" ) {
-    setLatitude( element.text().toFloat() );
-    mHasGeo = true;
+    }
+    if ( tagName == "anniversary" ) {
+      if ( !element.text().isEmpty() )
+        setAnniversary( stringToDate( element.text() ) );
+      return true;
+    }
+    break;
+  case 'b':
+    if ( tagName == "birthday" ) {
+      if ( !element.text().isEmpty() )
+        setBirthday( stringToDate( element.text() ) );
+      return true;
+    }
+    break;
+  case 'c':
+    if ( tagName == "children" ) {
+      setChildren( element.text() );
+      return true;
+    }
+    break;
+  case 'd':
+    if ( tagName == "department" ) {
+      setDepartment( element.text() );
+      return true;
+    }
+    if ( mIsDistributionList && tagName == "display-name" ) {
+      setFullName( element.text() );
+      return true;
+    }
+    break;
+  case 'e':
+    if ( tagName == "email" ) {
+      Email email;
+      if ( loadEmailAttribute( element, email ) ) {
+        addEmail( email );
+        return true;
+      } else
+        return false;
+    }
+    break;
+  case 'f':
+    if ( tagName == "free-busy-url" ) {
+      setFreeBusyUrl( element.text() );
+      return true;
+    }
+    break;
+  case 'g':
+    if ( tagName == "gender" ) {
+      setGender( element.text() );
+      return true;
+    }
+    break;
+  case 'i':
+    if ( tagName == "im-address" ) {
+      setIMAddress( element.text() );
+      return true;
+    }
+    break;
+  case 'j':
+    if ( tagName == "job-title" ) {
+      // see saveAttributes: <job-title> is mapped to the Role field
+      setRole( element.text() );
+      return true;
+    }
+    break;
+  case 'l':
+    if ( tagName == "language" ) {
+      setLanguage( element.text() );
+      return true;
+    }
+    if ( tagName == "latitude" ) {
+      setLatitude( element.text().toFloat() );
+      mHasGeo = true;
+      return true;
+    }
+    if ( tagName == "longitude" ) {
+      setLongitude( element.text().toFloat() );
+      mHasGeo = true;
+    }
+    break;
+  case 'm':
+    if ( tagName == "manager-name" ) {
+      setManagerName( element.text() );
+      return true;
+    }
+    if ( mIsDistributionList && tagName == "member" ) {
+      loadDistrListMember( element );
+      return true;
+    }
+    break;
+  case 'n':
+    if ( tagName == "name" )
+      return loadNameAttribute( element );
+    if ( tagName == "nick-name" ) {
+      setNickName( element.text() );
+      return true;
+    }
+    break;
+  case 'o':
+    if ( tagName == "organization" ) {
+      setOrganization( element.text() );
+      return true;
+    }
+    if ( tagName == "office-location" ) {
+      setOfficeLocation( element.text() );
+      return true;
+    }
+    break;
+  case 'p':
+    if ( tagName == "profession" ) {
+      setProfession( element.text() );
+      return true;
+    }
+    if ( tagName == "picture" ) {
+      mPictureAttachmentName = element.text();
+      return true;
+    }
+    if ( tagName == "phone" ) {
+      return loadPhoneAttribute( element );
+      return true;
+    }
+    if ( tagName == "preferred-address" ) {
+      setPreferredAddress( element.text() );
+      return true;
+    }
+    break;
+  case 'r':
+    if ( tagName == "role" ) {
+      setRole( element.text() );
+      return true;
+    }
+    break;
+  case 's':
+    if ( tagName == "spouse-name" ) {
+      setSpouseName( element.text() );
+      return true;
+    }
+    break;
+  case 'x':
+    if ( tagName == "x-logo" ) {
+      mLogoAttachmentName = element.text();
+      return true;
+    }
+    if ( tagName == "x-sound" ) {
+      mSoundAttachmentName = element.text();
+      return true;
+    }
+    if ( tagName == "x-custom" ) {
+      loadCustomAttributes( element );
+      return true;
+    }
+    break;
+  case 'w':
+    if ( tagName == "web-page" ) {
+      setWebPage( element.text() );
+      return true;
+    }
+    break;
+  default:
+    break;
   }
-  else if ( tagName == "longitude" ) {
-    setLongitude( element.text().toFloat() );
-    mHasGeo = true;
-  }
-  else if ( tagName == "x-custom" )
-    loadCustomAttributes( element );
-  else if ( mIsDistributionList && tagName == "display-name" )
-    setFullName( element.text() );
-  else if ( mIsDistributionList && tagName == "member" )
-    loadDistrListMember( element );
-  else
-    return KolabBase::loadAttribute( element );
-
-  // We handled this
-  return true;
+  return KolabBase::loadAttribute( element );
 }
 
 bool Contact::saveAttributes( QDomElement& element ) const
