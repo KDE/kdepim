@@ -95,6 +95,8 @@ protected:
     int myItemSize;
     bool blockUpdating;
 
+    void moveTextCanvas(int x, int y);
+
 public:
     virtual ~KDGanttViewItem();
 
@@ -221,7 +223,9 @@ private:
     QPoint getTaskLinkEndCoord();
     QPoint middleLeft();
     QPoint middleRight();
-    void moveTextCanvas(QPoint p);    
+    void moveTextCanvas();
+    void setTextOffset(QPoint p);
+    QPoint myTextOffset;
     QString _name;
     bool shapeDefined;
     int _priority;

@@ -51,15 +51,19 @@ public:
     enum LinkType { None, FinishStart, StartStart, FinishFinish, StartFinish };
     
     KDGanttViewTaskLink( QPtrList<KDGanttViewItem> from,
-                         QPtrList<KDGanttViewItem> to );
+                         QPtrList<KDGanttViewItem> to,
+                         LinkType type=None );
     KDGanttViewTaskLink( KDGanttViewTaskLinkGroup* group,
                          QPtrList<KDGanttViewItem> from,
-                         QPtrList<KDGanttViewItem> to );
+                         QPtrList<KDGanttViewItem> to,
+                         LinkType type=None );
     KDGanttViewTaskLink( KDGanttViewTaskLinkGroup* group,
                          KDGanttViewItem*  from,
-                         KDGanttViewItem* to );
+                         KDGanttViewItem* to,
+                         LinkType type=None );
     KDGanttViewTaskLink( KDGanttViewItem*  from,
-                         KDGanttViewItem* to );
+                         KDGanttViewItem* to,
+                         LinkType type=None );
     ~KDGanttViewTaskLink();
     QPtrList<KDGanttViewItem> from() const;
     QPtrList<KDGanttViewItem> to() const;

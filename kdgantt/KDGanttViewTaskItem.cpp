@@ -268,7 +268,7 @@ void KDGanttViewTaskItem::showItem(bool show, int coordY)
   temp->show();
   int wid = endX-startX - 4;
   if ( !displaySubitemsAsGroup() && !myGanttView->calendarMode()) {
-    textCanvas->move(endX+2*myItemSize,allY-myItemSize/2 );
+    moveTextCanvas(endX,allY);
     textCanvas->show();
   } else {
     if ( textCanvasText.isEmpty()  || wid < 5)

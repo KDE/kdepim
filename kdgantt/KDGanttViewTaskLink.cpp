@@ -62,11 +62,13 @@
   \param to the target items
 */
 KDGanttViewTaskLink::KDGanttViewTaskLink( QPtrList<KDGanttViewItem> from,
-                                          QPtrList<KDGanttViewItem> to )
+                                          QPtrList<KDGanttViewItem> to,
+                                          LinkType type )
 {
   fromList= from;
   toList = to;
   myGroup = 0;
+  setLinkType(type);
   initTaskLink();
 }
 
@@ -82,11 +84,13 @@ KDGanttViewTaskLink::KDGanttViewTaskLink( QPtrList<KDGanttViewItem> from,
   \param to the target item
 */
 KDGanttViewTaskLink::KDGanttViewTaskLink( KDGanttViewItem*  from,
-                                          KDGanttViewItem* to )
+                                          KDGanttViewItem* to,
+                                          LinkType type )
 {
   fromList.append(from);
   toList.append(to);
   myGroup = 0;
+  setLinkType(type);
   initTaskLink();
 
 }
@@ -103,11 +107,13 @@ KDGanttViewTaskLink::KDGanttViewTaskLink( KDGanttViewItem*  from,
 
 KDGanttViewTaskLink::KDGanttViewTaskLink( KDGanttViewTaskLinkGroup* group,
                                           QPtrList<KDGanttViewItem> from,
-                                          QPtrList<KDGanttViewItem> to )
+                                          QPtrList<KDGanttViewItem> to,
+                                          LinkType type )
 {
   fromList = from;
   toList = to;
   myGroup = 0;
+  setLinkType(type);
   initTaskLink();
   setGroup(group);
 }
@@ -127,11 +133,13 @@ KDGanttViewTaskLink::KDGanttViewTaskLink( KDGanttViewTaskLinkGroup* group,
 
 KDGanttViewTaskLink::KDGanttViewTaskLink( KDGanttViewTaskLinkGroup* group,
                                           KDGanttViewItem*  from,
-                                          KDGanttViewItem* to )
+                                          KDGanttViewItem* to,
+                                          LinkType type )
 {
   fromList.append(from);
   toList.append(to);
   myGroup = 0;
+  setLinkType(type);
   initTaskLink();
   setGroup(group);
 }
@@ -154,7 +162,6 @@ KDGanttViewTaskLink::~KDGanttViewTaskLink( )
 
 void KDGanttViewTaskLink::initTaskLink()
 {
-  setLinkType(None);
   horLineList = new QPtrList<KDCanvasLine>;
   verLineList = new QPtrList<KDCanvasLine>;
   horLineList2 = new QPtrList<KDCanvasLine>;
@@ -194,8 +201,8 @@ void KDGanttViewTaskLink::initTaskLink()
       arr.setPoint(1,4,-5);
       arr.setPoint(2,0,0);
       top->setPoints(arr);
-      arr.setPoint(0,5,-4);
-      arr.setPoint(1,5,4);
+      arr.setPoint(0,5,-5); // need an extra y pixel, canvas bug?
+      arr.setPoint(1,5,5);  // need an extra y pixel, canvas bug?
       arr.setPoint(2,0,0);
       topLeft->setPoints(arr);
       arr.setPoint(0,-5,-4);
@@ -273,8 +280,10 @@ void KDGanttViewTaskLink::showMe( bool visible )
     QPtrListIterator<KDGanttViewItem> fromIt(fromList);
     QPtrListIterator<KDGanttViewItem> toIt(toList);
     for ( ; fromIt.current(); ++fromIt ) {
+        (*fromIt)->setTextOffset(QPoint(0,0));
         toIt.toFirst();
         for ( ; toIt.current(); ++toIt ) {
+            (*toIt)->setTextOffset(QPoint(0,0));
             if (!isvisible || ! (*fromIt)->isVisibleInGanttView || !(*toIt)->isVisibleInGanttView || !myTimeTable->taskLinksVisible) {
                 (*horIt)->hide();
                 (*verIt)->hide();
@@ -341,6 +350,8 @@ void KDGanttViewTaskLink::showMeType( bool visible )
     QPtrListIterator<KDGanttViewItem> fromIt(fromList);
     QPtrListIterator<KDGanttViewItem> toIt(toList);
     for ( ; fromIt.current(); ++fromIt ) {
+        (*fromIt)->setTextOffset(QPoint(30,0));
+        (*fromIt)->moveTextCanvas();
         toIt.toFirst();
         for ( ; toIt.current(); ++toIt ) {
             if (isvisible && (*fromIt)->isVisibleInGanttView &&
@@ -353,14 +364,15 @@ void KDGanttViewTaskLink::showMeType( bool visible )
                 (*topIt)->setBrush(b);
                 (*topLeftIt)->setBrush(b);
                 (*topRightIt)->setBrush(b);
+                (*toIt)->setTextOffset(QPoint(30,0));
+                (*toIt)->moveTextCanvas();
                 switch (linkType()) {
                     case StartStart: {
-                        start = (*fromIt)->middleLeft()-QPoint(xOffset((*fromIt)),0);
+                        start = (*fromIt)->middleLeft();
                         end = (*toIt)->middleLeft()-QPoint(12,0);
-                        (*toIt)->moveTextCanvas(QPoint(20,0));
                         bool down = start.y() < end.y();
-                        (*horIt)->setPoints(start.x(),start.y(),
-                                            start.x()-4, start.y());
+                        (*horIt)->setPoints(start.x()-xOffset(*fromIt),start.y(),
+                                            start.x()-10, start.y());
                         (*verIt)->setPoints(
                             (*horIt)->endPoint().x(),
                             (*horIt)->endPoint().y(),
@@ -384,13 +396,11 @@ void KDGanttViewTaskLink::showMeType( bool visible )
                         break;
                     }
                     case FinishFinish: {
-                        start = (*fromIt)->middleRight()+QPoint(xOffset((*fromIt)),0);
+                        start = (*fromIt)->middleRight();
                         end = (*toIt)->middleRight()+QPoint(12,0);
-                        (*fromIt)->moveTextCanvas(QPoint(10,0));
-                        (*toIt)->moveTextCanvas(QPoint(20,0));
                         bool down = start.y() < end.y();
-                        (*horIt)->setPoints(start.x(),start.y(),
-                                            start.x()+4, start.y());
+                        (*horIt)->setPoints(start.x()+xOffset(*fromIt),start.y(),
+                                            start.x()+10, start.y());
                         (*verIt)->setPoints(
                             (*horIt)->endPoint().x(),
                             (*horIt)->endPoint().y(),
@@ -414,12 +424,11 @@ void KDGanttViewTaskLink::showMeType( bool visible )
                         break;
                     }
                     case FinishStart: {
-                        start = (*fromIt)->middleRight()+QPoint(xOffset((*fromIt)),0);
+                        start = (*fromIt)->middleRight();
                         end = (*toIt)->middleLeft() - QPoint(12,0);
-                        (*fromIt)->moveTextCanvas(QPoint(10,0));
                         bool down = start.y() < end.y();                        
-                        (*horIt)->setPoints(start.x(),start.y(),
-                                            start.x()+4,start.y());
+                        (*horIt)->setPoints(start.x()+xOffset(*fromIt),start.y(),
+                                            start.x()+10,start.y());
                         (*verIt)->setPoints(
                             (*horIt)->endPoint().x(),
                             (*horIt)->endPoint().y(),
@@ -445,13 +454,11 @@ void KDGanttViewTaskLink::showMeType( bool visible )
                         break;
                     }
                     case StartFinish: {
-                        start = (*fromIt)->middleRight()+QPoint(xOffset((*fromIt)),0);
+                        start = (*fromIt)->middleRight();
                         end = (*toIt)->middleRight()+QPoint(12,0);
-                        (*fromIt)->moveTextCanvas(QPoint(10,0));
-                        (*toIt)->moveTextCanvas(QPoint(20,0));
                         bool down = start.y() < end.y();
-                        (*horIt)->setPoints(start.x(),start.y(),
-                                            start.x()+4, start.y());
+                        (*horIt)->setPoints(start.x()+xOffset(*fromIt),start.y(),
+                                            start.x()+10, start.y());
                         (*verIt)->setPoints(
                             (*horIt)->endPoint().x(),
                             (*horIt)->endPoint().y(),
@@ -757,7 +764,7 @@ void KDGanttViewTaskLink::createNode( QDomDocument& doc,
                                  group()->name() );
     KDGanttXML::createBoolNode( doc, taskLinkElement, "Visible",
                            isVisible() );
-    KDGanttXML::createStringNode( doc, taskLinkElement, "None",
+    KDGanttXML::createStringNode( doc, taskLinkElement, "Linktype",
                              linkTypeToString( myLinkType ) );
 }
 

@@ -1416,6 +1416,7 @@ void KDGanttViewItem::setCallListViewOnSetOpen( bool call )
 
 void KDGanttViewItem::initColorAndShapes(Type t)
 {
+    setTextOffset(QPoint(0,0));
   //_isCalendar = false;
     _callListViewOnSetOpen = true;
     myType = t;
@@ -2462,9 +2463,35 @@ QPoint KDGanttViewItem::middleRight()
     return QPoint(myGanttView->myTimeHeader->getCoordX(myEndTime), itemPos()+height()/2);
 }
 /*!
-  Moves this items text
+  Moves this items text.
 */
-void KDGanttViewItem::moveTextCanvas(QPoint p) 
+void KDGanttViewItem::moveTextCanvas(int x, int y)
 {
-    textCanvas->move(p.x()+myGanttView->myTimeHeader->getCoordX(myEndTime)+myItemSize, p.y() + itemPos() + height()/2-myItemSize/2);
+    int mx = x + myTextOffset.x();
+    int my = y + myTextOffset.y();
+    if (myTextOffset.x() != 0)
+        mx -= 2*myItemSize; // keep old behaviour
+        
+    textCanvas->move(mx+2*myItemSize,my-myItemSize/2);
+    //qDebug("%s: moveTextCanvas(%d,%d) offset: %d,%d moved to  %d,%d",listViewText(0).latin1(),x,y,myTextOffset.x(),myTextOffset.y(),mx+2*myItemSize,my-myItemSize/2);
+}
+
+/*!
+  Moves this items text relative to the middle right end of the item
+  Used to move text away from link.
+*/
+void KDGanttViewItem::moveTextCanvas() 
+{
+    QPoint m = myTextOffset+middleRight();
+    textCanvas->move(m.x(), m.y()-myItemSize/2);
+}
+
+/*!
+  Sets with how much the item text is offset.
+*/
+void KDGanttViewItem::setTextOffset(QPoint p) 
+{
+    //qDebug("%s: setTextOffset() offset: %d,%d",listViewText(0).latin1(),p.x(),p.y());
+    myTextOffset.setX(p.x());
+    myTextOffset.setY(p.y());
 }

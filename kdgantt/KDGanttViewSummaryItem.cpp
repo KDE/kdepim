@@ -314,7 +314,7 @@ void KDGanttViewSummaryItem::showItem( bool show, int coordY )
 
   endShape->move(endX,allY);
   endShapeBack->move(endX,allY);
-  textCanvas->move(endX+2*myItemSize,allY-myItemSize/2 );
+  moveTextCanvas(endX,allY);
   startShape->show();
   startShapeBack->show();
   endShape->show();
