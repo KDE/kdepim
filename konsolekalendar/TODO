@@ -1,12 +1,3 @@
 Todo:
-
-Big architectural break-down
------------------------------------------------------------------------
-Move all showing code to konsolekalendarexports
-Move HTML to own method
-in some separated lib..
-Parsing args to own methods (from main)
-Clean up starting sequence. (separate sane checks)
- 
-
+Make new plans
 
