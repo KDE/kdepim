@@ -28,7 +28,7 @@ KCMCalendars::KCMCalendars( QWidget *parent, const char *name )
   : KCModule( parent, name )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
-  mConfigPage = new KRES::ResourcesConfigPage( "calendar", QString::null, this );
+  mConfigPage = new KRES::ResourcesConfigPage( "calendar", this );
   layout->addWidget( mConfigPage );
   connect( mConfigPage, SIGNAL( changed( bool ) ), SIGNAL( changed( bool ) ) );
 }
