@@ -22,7 +22,8 @@
 */
 
 #include <kapplication.h>
-#include <kshell.h>
+#include <kmessagebox.h>
+#include <krun.h>
 #include <libkdepim/addresseeview.h>
 
 #include "kabprefs.h"
@@ -53,23 +54,27 @@ void KABHtmlView::setAddressee( const KABC::Addressee &addr )
 void KABHtmlView::phoneNumberClicked( const QString &number )
 {
   QString commandLine = KABPrefs::instance()->mPhoneHookApplication;
+
+  if ( commandLine.isEmpty() ) {
+    KMessageBox::sorry( this, i18n( "There is no application set which could be executed. Please go to the settings dialog and configure one." ) );
+    return;
+  }
+
   commandLine.replace( "%N", number );
-
-  QStringList tokens = KShell::splitArgs( commandLine, KShell::TildeExpand );
-
-  if ( tokens.count() != 0 )
-    KApplication::kdeinitExec( tokens[ 0 ], tokens );
+  KRun::runCommand( commandLine );
 }
 
 void KABHtmlView::faxNumberClicked( const QString &number )
 {
   QString commandLine = KABPrefs::instance()->mFaxHookApplication;
+
+  if ( commandLine.isEmpty() ) {
+    KMessageBox::sorry( this, i18n( "There is no application set which could be executed. Please go to the settings dialog and configure one." ) );
+    return;
+  }
+
   commandLine.replace( "%N", number );
-
-  QStringList tokens = KShell::splitArgs( commandLine, KShell::TildeExpand );
-
-  if ( tokens.count() != 0 )
-    KApplication::kdeinitExec( tokens[ 0 ], tokens );
+  KRun::runCommand( commandLine );
 }
 
 #include "look_html.moc"
