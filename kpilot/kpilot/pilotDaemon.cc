@@ -694,7 +694,7 @@ QString PilotDaemon::syncTypeString(int i) const
 	if (_syncWithKMail)
 	{
 		fSyncStack->addAction(new KroupwareSync(true /* pre-sync */,
-			_kroupwareParts,fPilotLink);
+			_kroupwareParts,fPilotLink));
 	}
 #endif	
 	
@@ -742,7 +742,7 @@ QString PilotDaemon::syncTypeString(int i) const
 	if (_syncWithKMail)
 	{
 		fSyncStack->addAction(new KroupwareSync(false /* post-sync */ ,
-			_kroupwareParts,fPilotLink);
+			_kroupwareParts,fPilotLink));
 	}
 #endif	
 
@@ -960,6 +960,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.72  2003/01/31 14:38:01  adridg
+// Split out Kroupware stuff in a sensible way. Use modified syncStack
+//
 // Revision 1.71  2003/01/30 22:25:22  kainhofe
 // Style fixes
 //
