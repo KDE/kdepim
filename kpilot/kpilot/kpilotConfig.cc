@@ -226,7 +226,7 @@ IntProperty_(Debug, "Debug", 0, 1023)
 BoolProperty_(StartDaemonAtLogin, "StartDaemonAtLogin", true)
 BoolProperty_(DockDaemon, "DockDaemon", true)
 BoolProperty_(KillDaemonOnExit, "StopDaemonAtExit", false)
-BoolProperty_(QuitAfterSync, "QuitAfterSync", false);
+BoolProperty_(QuitAfterSync, "QuitAfterSync", false)
 BoolProperty_(FullSyncOnPCChange, "FullSyncOnPCChange", true)
 // BoolProperty_(SyncFiles, "SyncFiles", true)
 // BoolProperty_(SyncWithKMail, "SyncWithKMail", false)

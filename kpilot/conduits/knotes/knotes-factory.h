@@ -70,7 +70,7 @@ extern "C"
 
 void *init_libknotesconduit();
 
-} ;
+}
 
 
 #endif

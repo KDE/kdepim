@@ -136,7 +136,7 @@ QStringList KPilotDBSelectionDialog::getSelectedDBs()
 	}
 
 	return fSelectedDBs;
-};
+}
 
 void KPilotDBSelectionDialog::slotTextChanged( const QString& dbname)
 {

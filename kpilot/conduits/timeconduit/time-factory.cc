@@ -47,7 +47,7 @@ void *init_conduit_time()
 	return new TimeConduitFactory;
 }
 
-} ;
+}
 
 
 // A number of static variables; except for fAbout, they're 

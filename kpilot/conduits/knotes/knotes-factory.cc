@@ -52,7 +52,7 @@ void *init_conduit_knotes()
 	return new KNotesConduitFactory;
 }
 
-} ;
+}
 
 
 /* static */ KAboutData *KNotesConduitFactory::fAbout = 0L;

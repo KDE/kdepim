@@ -179,11 +179,11 @@ VCalConduit::VCalConduit(KPilotDeviceLink *d,
 VCalConduit::~VCalConduit()
 {
 //	FUNCTIONSETUP;
-};
+}
 
 VCalConduitPrivateBase* VCalConduit::newVCalPrivate(KCal::Calendar *fCalendar) {
 	return new VCalConduitPrivate(fCalendar);
-};
+}
 
 const QString VCalConduit::getTitle(PilotAppCategory*de)
 {

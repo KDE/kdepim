@@ -45,7 +45,7 @@ class KAboutData;
 
 class VCalConduitFactoryBase : public KLibFactory
 {
-Q_OBJECT;
+  Q_OBJECT
 
 public:
 	VCalConduitFactoryBase(QObject * p= 0L,const char * n= 0L):KLibFactory(p,n){};

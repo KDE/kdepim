@@ -72,7 +72,7 @@ extern "C"
 
 void *init_libaddressconduit();
 
-} ;
+}
 
 #endif
 

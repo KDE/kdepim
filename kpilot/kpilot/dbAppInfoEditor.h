@@ -33,7 +33,7 @@
 
 namespace KHE {
 	class KHexEdit;
-};
+}
 
 class QWidget;
 

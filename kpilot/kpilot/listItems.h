@@ -97,7 +97,7 @@ public:
 	int compare( QListViewItem *i, int col, bool ascending ) const;
 protected:
 	QValueList<int> numericCols;
-	recordid_t fid;;
+	recordid_t fid;
 	void *fr;
 	// Caching to make sorting faster:
 	PilotListViewItemData*d;

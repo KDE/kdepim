@@ -73,7 +73,7 @@ private:
 
 extern "C" {
 	void *init_libdocconduit();
-};
+}
 
 
 #endif

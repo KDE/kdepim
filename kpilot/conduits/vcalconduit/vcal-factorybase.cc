@@ -50,5 +50,5 @@ KAboutData *VCalConduitFactoryBase::fAbout = 0L;
 VCalConduitFactoryBase::~VCalConduitFactoryBase()
 {
 	KPILOT_DELETE(fAbout);
-};
+}
 

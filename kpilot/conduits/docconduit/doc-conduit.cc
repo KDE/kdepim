@@ -93,13 +93,13 @@ DOCConduit::~DOCConduit()
 
 bool DOCConduit::isCorrectDBTypeCreator(DBInfo dbinfo) {
 	return dbinfo.type == dbtype() && dbinfo.creator == dbcreator();
-};
+}
 const unsigned long DOCConduit::dbtype() {
 	return get_long(DOCConduitFactory::dbDOCtype);
-};
+}
 const unsigned long DOCConduit::dbcreator() {
 	return get_long(DOCConduitFactory::dbDOCcreator);
-};
+}
 
 
 

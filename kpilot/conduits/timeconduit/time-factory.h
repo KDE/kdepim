@@ -65,6 +65,6 @@ extern "C"
 
 void *init_libtimeconduit();
 
-} ;
+}
 
 #endif

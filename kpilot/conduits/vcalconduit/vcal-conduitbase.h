@@ -38,7 +38,7 @@ namespace KCal
 {
 class Calendar;
 class Incidence;
-} ;
+}
 
 class PilotRecord;
 class PilotSerialDatabase;
@@ -68,7 +68,7 @@ public:
 
 class VCalConduitBase : public ConduitAction
 {
-Q_OBJECT;
+        Q_OBJECT
 public:
 	VCalConduitBase(KPilotDeviceLink *,
 		const char *name=0L,

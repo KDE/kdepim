@@ -42,7 +42,7 @@ extern "C" {
 	void *init_conduit_doc() {
 		return new DOCConduitFactory;
 	}
-};
+}
 
 
 

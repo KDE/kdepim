@@ -66,12 +66,12 @@ bool operator< ( const docBookmark &s1, const docBookmark &s2)
 {
 	if (docBookmark::compare_pos) { return s1.position<s2.position;}
 	else {return s2.bmkName<s2.bmkName;}
-};
+}
 
 bool operator== ( const docBookmark &s1, const docBookmark &s2)
 {
 	return (s1.position==s2.position) && (s1.bmkName==s2.bmkName);
-};
+}
 
 
 int docMatchBookmark::findMatches(QString doctext, bmkList &fBookmarks) {
@@ -95,7 +95,7 @@ int docMatchBookmark::findMatches(QString doctext, bmkList &fBookmarks) {
 		}
 	}
 	return nr;
-};
+}
 
 
 
@@ -127,7 +127,7 @@ int docRegExpBookmark::findMatches(QString doctext, bmkList &fBookmarks) {
 		}
 	}
 	return nr;
-};
+}
 
 
 
@@ -170,19 +170,19 @@ void DOCConverter::setTXTpath(QString path, QString file) {
 	QFileInfo pth(dr, file);
 	if (!file.isEmpty())
 		 txtfilename = pth.absFilePath();
-};
+}
 
 
 
 void DOCConverter::setTXTpath(QString filename) {
 	if (!filename.isEmpty()) txtfilename = filename;
-};
+}
 
 
 
 void DOCConverter::setPDB(PilotDatabase * dbi) {
 	if (dbi) docdb = dbi;
-};
+}
 
  
 

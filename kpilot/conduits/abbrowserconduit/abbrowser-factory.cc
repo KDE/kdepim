@@ -45,7 +45,7 @@ void *init_conduit_address()
 	return new AbbrowserConduitFactory;
 }
 
-} ;
+}
 
 
 // A number of static variables; except for fAbout, they're

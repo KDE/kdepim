@@ -38,7 +38,7 @@ class KAboutData;
 
 class VCalConduitFactory : public VCalConduitFactoryBase
 {
-Q_OBJECT;
+    Q_OBJECT
 
 public:
 	VCalConduitFactory(QObject * = 0L,const char * = 0L);
@@ -51,13 +51,13 @@ protected:
 		const QStringList &args = QStringList() );
 private:
 	KInstance *fInstance;
-} ;
+};
 
 extern "C"
 {
 
 void *init_libvcalconduit();
 
-} ;
+}
 
 #endif

@@ -46,7 +46,7 @@ void *init_conduit_sysinfo()
 	return new SysInfoConduitFactory;
 }
 
-} ;
+}
 
 
 // A number of static variables; except for fAbout, they're

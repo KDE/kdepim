@@ -67,6 +67,6 @@ extern "C"
 
 void *init_libsysinfoconduit();
 
-} ;
+}
 
 #endif

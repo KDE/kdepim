@@ -58,6 +58,6 @@ extern "C"
 
 void *init_libtodoconduit();
 
-} ;
+}
 
 #endif

@@ -45,7 +45,7 @@ void *init_conduit_vcal()
 	return new VCalConduitFactory;
 }
 
-} ;
+}
 
 // Configuration keys
 //

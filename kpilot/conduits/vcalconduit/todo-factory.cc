@@ -45,7 +45,7 @@ void *init_conduit_todo()
 	return new ToDoConduitFactory;
 }
 
-} ;
+}
 
 
 ToDoConduitFactory::ToDoConduitFactory(QObject *p, const char *n) :
