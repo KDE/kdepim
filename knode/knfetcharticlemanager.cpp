@@ -49,17 +49,17 @@ KNFetchArticleManager::KNFetchArticleManager(KNListView *v, KNFilterManager* fiM
 {
 	connect(fiManager, SIGNAL(filterChanged(KNArticleFilter*)), this, SLOT(slotFilterChanged(KNArticleFilter*)));
   f_ilter = fiManager->currentFilter();
-		
+
 	timer=new QTimer();
 	connect(timer, SIGNAL(timeout()), this, SLOT(slotTimer()));
 	connect(view, SIGNAL(expanded(QListViewItem*)), this, SLOT(slotItemExpanded(QListViewItem*)));
-	
+
 	readConfig();
-	
+
   actShowThreads = new KToggleAction(i18n("Show th&reads"), 0 , this, SLOT(slotToggleShowThreads()),
                                      &actionCollection, "view_showThreads");
 	actShowThreads->setChecked(t_hreaded);
-	
+
 	actExpandAll = new KAction(i18n("&Expand all threads"), 0 , this, SLOT(slotThreadsExpand()),
                              &actionCollection, "view_ExpandAll");
   actCollapseAll = new KAction(i18n("&Collapse all threads"), 0 , this, SLOT(slotThreadsCollapse()),
@@ -126,12 +126,12 @@ void KNFetchArticleManager::setGroup(KNGroup *g)
 		if(sDlg) {
 			sDlg->hide();
 			if(f_ilter==sDlg->filter()) slotFilterChanged(0);
-		}				
+		}
 	}
-	
+
 	g_roup=g;
 	setCurrentArticle(0);
-	timer->stop();		
+	timer->stop();
 }
 
 
@@ -139,41 +139,41 @@ void KNFetchArticleManager::showHdrs(bool clear)
 {
 	if(!g_roup) return;
 	KNFetchArticle *art;
-		
+
 	knGlobals.top->setCursorBusy(true);
 	knGlobals.top->setStatusMsg(i18n(" Creating list ..."));
 	if(clear) {
-		view->clear();	
+		view->clear();
  		setCurrentArticle(0);
  	}
  	if(f_ilter) f_ilter->doFilter(g_roup);
 	else
 		for (int i=0; i<g_roup->length(); i++)
 			g_roup->at(i)->setFilterResult(true);
-	
+
 	for (int i=0; i<g_roup->length(); i++){
 		art=g_roup->at(i);
 		if( ( !art->listItem() && art->filterResult() ) &&
 		    ( art->idRef()==0 || !g_roup->byId(art->idRef())->filterResult() ) ) {
-		
+
 		  art->setListItem(new KNHdrViewItem(view));
 		  art->initListItem();
 		}
 		else if(art->listItem())
 		  art->updateListItem();
-		
-		
+
+
 			/*if(t_hreaded) createThread(art);
 			else createHdrItem(art);
-		}*/		
+		}*/
 	}
-	
+
 	if(view->firstChild())
 	  view->setCurrentItem(view->firstChild());
-	
-	knGlobals.top->setStatusMsg("");	
+
+	knGlobals.top->setStatusMsg("");
 	knGlobals.top->setCursorBusy(false);
-	
+
 	updateStatusString();
 }
 
@@ -219,12 +219,12 @@ void KNFetchArticleManager::articleWindow(KNFetchArticle *a)
 	if(!a) return;
 	KNArticleWindow *win=new KNArticleWindow(a, g_roup);
 	win->show();
-		
+
 	if(a->hasContent()) win->artWidget()->createHtmlPage();
 	else {
 		KNJobData *job=new KNJobData(KNJobData::JTfetchArticle, g_roup->account(), a);
 		knGlobals.netAccess->addJob(job);
-	}		
+	}
 }
 
 
@@ -236,12 +236,12 @@ void KNFetchArticleManager::setArticleRead(KNFetchArticle *a, bool r, bool ugli)
 	if(a->isRead()!=r) {
 		KNFetchArticle *ref;
 		int idRef;
-		a->setRead(r);	
+		a->setRead(r);
 	 	a->setHasChanged(true);
 	 	a->updateListItem();
-	 	
+
 	 	idRef=a->idRef();
-	 	
+
 	 	while(idRef!=0) {
 			ref=g_roup->byId(idRef);
 			if(r) {
@@ -255,10 +255,10 @@ void KNFetchArticleManager::setArticleRead(KNFetchArticle *a, bool r, bool ugli)
 			if(	ref->listItem() &&
 					( (ref->unreadFollowUps()==0 || ref->unreadFollowUps()==1) ||
 					  (ref->newFollowUps()==0 || ref->newFollowUps()==1)))    ref->updateListItem();
-				
+
 			idRef=ref->idRef();
-		}	  	
-	 	
+		}
+
 	 	if(r) {
 	 		g_roup->incReadCount();
 	 		if(a->isNew()) g_roup->decNewCount();
@@ -268,7 +268,7 @@ void KNFetchArticleManager::setArticleRead(KNFetchArticle *a, bool r, bool ugli)
 	 		if(a->isNew()) g_roup->incNewCount();
 	 	}
 		if(ugli) g_roup->updateListItem();
-	}	
+	}
   if(a->isNew()) updateStatusString();
 }
 
@@ -287,15 +287,15 @@ void KNFetchArticleManager::setAllRead(KNGroup *g, bool r)
 	for(int i=0; i<g->length(); i++) {
 	  g->at(i)->setRead(r);
 	}
-	
+
 	g->updateThreadInfo();
 	if(r)
 	  g->setReadCount(g->length());
 	else
 	  g->setReadCount(0);
-	
+
 	g->updateListItem();
-	showHdrs(true);	
+	showHdrs(true);
 }
 
 
@@ -308,7 +308,7 @@ void KNFetchArticleManager::setThreadRead(KNFetchArticle *a, bool r)
 		KNThread *thr=new KNThread(g_roup, a);
 		int cnt, n_ew;
 		cnt=thr->setRead(r, n_ew);
-		
+
 		if(cnt>0) {
 			if(r) {
 				g_roup->incReadCount(cnt);
@@ -322,7 +322,7 @@ void KNFetchArticleManager::setThreadRead(KNFetchArticle *a, bool r)
 		}
 		delete thr;
 	  if(n_ew>0) updateStatusString();
-	}		
+	}
 }
 
 
@@ -335,7 +335,7 @@ void KNFetchArticleManager::toggleWatched(KNFetchArticle *a)
 		thr=new KNThread(g_roup, a);
 		thr->toggleWatched();
 		delete thr;
-	}			
+	}
 }
 
 
@@ -348,12 +348,12 @@ void KNFetchArticleManager::toggleIgnored(KNFetchArticle *a)
 		thr=new KNThread(g_roup, a);
 		thr->toggleIgnored();
 		delete thr;
-	}		
+	}
 }
 
 
 
-void KNFetchArticleManager::setArticleScore(KNFetchArticle *a)
+void KNFetchArticleManager::setArticleScore(KNFetchArticle *)
 {
 }
 
@@ -373,7 +373,7 @@ void KNFetchArticleManager::setThreadScore(KNFetchArticle *a, int score)
 		thr=new KNThread(g_roup, a);
 		thr->setScore(score);
 		delete thr;
-	}		
+	}
 }
 
 
@@ -411,7 +411,7 @@ void KNFetchArticleManager::showCancel(KNArticle *a)
 	if(a==c_urrent) {
 		timer->stop();
 //		knGlobals.top->fetchArticleDisplayed(false);
-	}	
+	}
 //	if(aw) aw->showCancelMessage();             // I think we don't need this, check later (CG)
 }
 
@@ -439,7 +439,7 @@ void KNFetchArticleManager::createHdrItem(KNFetchArticle *a)
 
 void KNFetchArticleManager::createThread(KNFetchArticle *a)
 {
-	KNFetchArticle *ref;	
+	KNFetchArticle *ref;
   int idRef;
 	bool found;
 
@@ -451,15 +451,15 @@ void KNFetchArticleManager::createThread(KNFetchArticle *a)
     ref=g_roup->byId(idRef);
     found=ref->filterResult();
     idRef=ref->idRef();
-  }	
-  		
-  if(found) {	
+  }
+
+  if(found) {
   	if(!ref->listItem())  createThread(ref);
   	a->setListItem(new KNHdrViewItem(ref->listItem()));
   }
   else
     a->setListItem(new KNHdrViewItem(view));
-  		
+
   a->initListItem();
 }
 
@@ -468,7 +468,7 @@ void KNFetchArticleManager::createThread(KNFetchArticle *a)
 void KNFetchArticleManager::jobDone(KNJobData *j)
 {
 	KNFetchArticle *art=(KNFetchArticle*)j->data();
-	
+
 	if(art==n_ext) {
 		c_urrent=n_ext;
 		n_ext=0;
@@ -482,7 +482,7 @@ void KNFetchArticleManager::jobDone(KNJobData *j)
 		}
 		else showError(art, j->errorString());
 	}
-	delete j;	
+	delete j;
 }
 
 
@@ -493,7 +493,7 @@ void KNFetchArticleManager::referenceClicked(int refNr, KNArticleWidget *aw,int 
 	KNFetchArticle *art, *ref;
 	KNArticleWidget *target;
 	KNArticleWindow *win;
-	
+
 	grp=(KNGroup*)aw->collection();
 	art=(KNFetchArticle*)aw->article();
 	ref=grp->byMessageId(art->references().at(refNr));
@@ -503,18 +503,18 @@ void KNFetchArticleManager::referenceClicked(int refNr, KNArticleWidget *aw,int 
 		target=win->artWidget();
 	}
 	else target=aw;
-	
+
 	target->setData(ref, grp);
 	if(ref) {
 		if(ref->hasContent()) target->createHtmlPage();
 		else {
 			KNJobData *job=new KNJobData(KNJobData::JTfetchArticle, g_roup->account(), ref);
 			knGlobals.netAccess->addJob(job);
-		}	
+		}
 		if(target==mainArtWidget && ref->listItem())
-			view->setSelected(ref->listItem(), true);			
+			view->setSelected(ref->listItem(), true);
 	}
-	else target->showErrorMessage(i18n("article not found"));	
+	else target->showErrorMessage(i18n("article not found"));
 }
 
 
@@ -573,7 +573,7 @@ void KNFetchArticleManager::slotFilterChanged(KNArticleFilter *f)
 void KNFetchArticleManager::slotSearchDialogDone()
 {
 	sDlg->hide();
-	slotFilterChanged(knGlobals.fiManager->currentFilter());	
+	slotFilterChanged(knGlobals.fiManager->currentFilter());
 }
 
 
@@ -586,15 +586,15 @@ void KNFetchArticleManager::slotTimer()
 
 
 void KNFetchArticleManager::slotReply()
-{	
+{
   knGlobals.sArtManager->reply(c_urrent,g_roup);
 }
 
 
 
 void KNFetchArticleManager::slotRemail()
-{	
-  knGlobals.sArtManager->reply(c_urrent,0);	
+{
+  knGlobals.sArtManager->reply(c_urrent,0);
 }
 
 
@@ -609,23 +609,23 @@ void KNFetchArticleManager::slotForward()
 void KNFetchArticleManager::updateStatusString()
 {
 	int displCnt=0;
-	
-	if(g_roup) {				
+
+	if(g_roup) {
 		if (f_ilter)
 		  displCnt=f_ilter->count();
 		else
 		  displCnt=g_roup->count();
-		
+
 		knGlobals.top->setStatusMsg(i18n(" %1 : %2 new , %3 displayed")
 		                    .arg(g_roup->name()).arg(g_roup->newCount()).arg(displCnt),SB_GROUP);
-		
+
 		if (f_ilter)
   		knGlobals.top->setStatusMsg(i18n(" Filter: %1").arg(f_ilter->name()), SB_FILTER);
   	else
       knGlobals.top->setStatusMsg(QString::null, SB_FILTER);
 
-    knGlobals.top->setCaption(g_roup->name());		
-	}	
+    knGlobals.top->setCaption(g_roup->name());
+	}
 }
 
 

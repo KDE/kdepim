@@ -22,12 +22,12 @@
 #include <qvbox.h>
 #include <qlist.h>
 
+#include <kaction.h>
 #include <kparts/browserextension.h>
 
 class QPopupMenu;
 class QScrollView;
 
-class KActionCollection;
 class KHTMLPart;
 
 class KNArticle;
@@ -37,23 +37,23 @@ class KNMimeContent;
 class KNArticleWidget : public QVBox  {
 
   Q_OBJECT
-	
+
 	public:
 		enum browserType { BTkonqueror=0 , BTnetscape=1 };
-		
+
 		KNArticleWidget(QWidget *parent=0, const char *name=0 );
 		~KNArticleWidget();
-		
-//=======================================	
+
+//=======================================
   	static void readOptions();
   	static void saveOptions();
 		static void updateInstances();
 		static KNArticleWidget* find(KNArticle *a);
 		static KNArticleWidget* mainWidget();
 		static void showArticle(KNArticle *a);
-		static void setFullHeaders(bool b);					
+		static void setFullHeaders(bool b);
 		static void toggleFullHeaders();
-		static bool fullHeaders();						
+		static bool fullHeaders();
 //=======================================
 
     const KActionCollection& actions()      { return actionCollection; }
@@ -61,16 +61,16 @@ class KNArticleWidget : public QVBox  {
     bool scrollingDownPossible();       // needed for "read-through"
     void scrollDown();
 
-		void applyConfig();	
-		
-		void setData(KNArticle *a, KNArticleCollection *c);			
+		void applyConfig();
+
+		void setData(KNArticle *a, KNArticleCollection *c);
 		void createHtmlPage();
 		void showBlankPage();
 		void showErrorMessage(const QString &s);
 
 		void updateContents();
-				
-		KNArticle* article()							{ return a_rticle; }		
+
+		KNArticle* article()							{ return a_rticle; }
 		KNArticleCollection* collection()	{ return c_oll; }
    	KHTMLPart* part()                 { return p_art; }
 
@@ -83,33 +83,33 @@ class KNArticleWidget : public QVBox  {
 		void openURL(const QString &url);
 		void saveAttachement(const QString &id);
 		void openAttachement(const QString &id);
-		bool inlinePossible(KNMimeContent *c);		
-		KNArticle *a_rticle;	
+		bool inlinePossible(KNMimeContent *c);
+		KNArticle *a_rticle;
 		KNArticleCollection *c_oll;
-		QList<KNMimeContent> *att;			
+		QList<KNMimeContent> *att;
 		bool h_tmlDone;
 		QPopupMenu *urlPopup, *attPopup;
 		KHTMLPart *p_art;
 		QScrollView *view;
 		KAction *actSave, *actPrint, *actCopy;
 		KActionCollection actionCollection;
-					
+
 		static bool showSig, fullHdrs, inlineAtt, openAtt, altAsAtt;
 		static QString hexColors[7];
 		static QString htmlFont;
 		static int htmlFontSize;
 		static browserType browser;
 		static QList<KNArticleWidget> instances;
-			
+
 	protected slots:
 		void slotURLRequest (const KURL &url, const KParts::URLArgs &args);
 		void slotPopup(const QString &url, const QPoint &p);
 		void slotSave();
  		void slotEnableAction(const char *, bool);
-		
+
 	signals:
-		void focusChanged(QFocusEvent*);				
-				
+		void focusChanged(QFocusEvent*);
+
 };
 
 #endif
