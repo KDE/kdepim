@@ -718,9 +718,11 @@ void ResourceXMLRPC::loadCategoriesFinished( const QValueList<QVariant> &mapList
   for ( it = map.begin(); it != map.end(); ++it ) {
     mCategoryMap.insert( it.data().toString(), it.key().toInt() );
 
-    if ( prefs->mCustomCategories.find( it.data().toString() ) == prefs->mCustomCategories.end() ) {
-      prefs->mCustomCategories.append( it.data().toString() );
-    }
+    QStringList categories = prefs->customCategories();
+    if ( categories.find( it.data().toString() ) == categories.end() )
+      categories.append( it.data().toString() );
+
+    prefs->setCustomCategories( categories );
   }
 }
 
