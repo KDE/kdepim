@@ -236,7 +236,7 @@ void DBRecordEditor::fillWidgets()
 		int len = rec->getLen();
 		char* buffer = new char[len];
 		memcpy( buffer, rec->getData(), len );
-		fRecordDataIf->setData( buffer, len );
+		fRecordDataIf->setData( buffer, len, -1, false );
 		fRecordDataIf->setMaxDataSize( 4096 );
 		fRecordDataIf->setReadOnly( false );
 		// Here we set auto delete to true. Only if we 
