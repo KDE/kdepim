@@ -33,6 +33,7 @@ class KPilotDeviceLink;
 class QButtonGroup;
 class QCheckBox;
 class QTimer;
+
 class ResolutionDlg : public KDialogBase
 { 
     Q_OBJECT

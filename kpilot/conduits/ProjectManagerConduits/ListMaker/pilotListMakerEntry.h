@@ -55,32 +55,5 @@ protected:
 
 
 
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
 #endif
 
-
-// $Log$
-// Revision 1.7  2002/04/07 11:56:19  reinhold
-// Last version before moving to KDE CVS
-//
-// Revision 1.6  2002/04/06 00:51:08  reinhold
-// Finally the conduit compiles again... Still have a lot of TODOS
-//
-// Revision 1.5  2002/04/05 21:17:01  reinhold
-// *** empty log message ***
-//
-// Revision 1.4  2002/03/23 21:46:43  reinhold
-// config  dlg works, but the last changes crash the plugin itself
-//
-// Revision 1.3  2002/03/10 23:58:33  reinhold
-// Made the conduit compile...
-//
-// Revision 1.2  2002/03/10 16:06:43  reinhold
-// Cleaned up the class hierarchy, implemented some more features (should be quite finished now...)
-//
-// Revision 1.1  2002/03/09 15:48:32  reinhold
-// Added the classes for the different palm database formats
-//

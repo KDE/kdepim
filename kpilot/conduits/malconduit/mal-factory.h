@@ -81,8 +81,4 @@ void *init_libtimeconduit();
 
 } ;
 
-// $Log$
-// Revision 1.1  2002/08/15 23:07:37  kainhofe
-// First official version of the malconduit
-//
 #endif

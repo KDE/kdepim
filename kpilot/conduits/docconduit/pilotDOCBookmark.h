@@ -1,6 +1,6 @@
 /* pilotDOCBookmark.h	-*- C++ -*-		KPilot
 **
-** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003 by Reinhold Kainhofer
 **
 ** See the .cc file for an explanation of what this file is for.
 */
@@ -23,21 +23,13 @@
 */
 
 /*
-** Bug reports and questions can be sent to groot@kde.org
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 #ifndef _KPILOT_PILOTDOCBOOKMARK_H
 #define _KPILOT_PILOTDOCBOOKMARK_H
 
-#include <string.h>
-
-#ifndef _KPILOT_PILOTAPPCATEGORY_H
 #include "pilotAppCategory.h"
-#endif
-
-#ifndef _KPILOT_PILOTRECORD_H
-#include "pilotRecord.h"
-#endif
-
+class PilotRecord;
 
 
 class PilotDOCBookmark:public PilotAppCategory {
@@ -45,8 +37,8 @@ public:
 	PilotDOCBookmark();
 	PilotDOCBookmark(PilotRecord * rec);
 	PilotDOCBookmark(const PilotDOCBookmark & e);
-	~PilotDOCBookmark() {
-	} PilotDOCBookmark & operator=(const PilotDOCBookmark & e);
+	~PilotDOCBookmark() {};
+	PilotDOCBookmark & operator=(const PilotDOCBookmark & e);
 	PilotRecord *pack() {
 		return PilotAppCategory::pack();
 	}
@@ -55,21 +47,10 @@ protected:
 	void *pack(void *, int *);
 	void unpack(const void *, int = 0) {}
 
-// private:
 public:
 	char bookmarkName[17];
 	long int pos;
 };
 
 
-
-
-#else
-#ifdef DEBUG
-#warning "File doubly included"
 #endif
-#endif
-
-
-// $Log$
-//

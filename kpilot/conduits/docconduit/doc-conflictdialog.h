@@ -1,25 +1,55 @@
-#ifndef FORM1_H
-#define FORM1_H
+#ifndef CONFLICTDIALOG_H
+#define CONFLICTDIALOG_H
+// doc-conflictdialog.h
+//
+// Copyright (C) 2003 by Reinhold Kainhofer
+//
+// This file is distributed under the Gnu General Public Licence (GPL).
+// The GPL should have been included with this file in a file called
+// COPYING. 
+//
+// $Revision$
+//
 
-//#include <qvariant.h>
-//#include <qdialog.h>
+/*
+** Bug reports and questions can be sent to kde-pim@kde.org
+*/
+
+
 #include <kdialogbase.h>
 #include "doc-conduit.h"
 
-class QLabel;
+
+#define SCROLL_TABLE
+
+#ifdef SCROLL_TABLE
+class QComboTableItem;
+class QTable;
+#else
 class QComboBox;
-class QPushButton;
 class QGridLayout;
 class QGroupBox;
+#endif
+
+class QLabel;
+class QPushButton;
 class QTimer;
+class KPilotDeviceLink;
+
 
 typedef struct conflictEntry {
+#ifdef SCROLL_TABLE
+	QString dbname;
+	QComboTableItem*resolution;
+#else
 	QLabel*dbname;
-	QComboBox*resolution;
+	QComboBox* resolution;
+#endif
 	QPushButton*info;
 	int index;
 	bool conflict;
 };
+
 
 class ResolutionDialog : public KDialogBase
 {
@@ -37,14 +67,17 @@ protected:
 	KPilotDeviceLink* fHandle;
 
 protected:
-	QGridLayout* Form1Layout;
-	QGridLayout* resolutionGroupBoxLayout;
 	syncInfoList*syncInfo;
 	
-	QValueList<conflictEntry> conflictEntries;
+#ifdef SCROLL_TABLE
+	QTable* resolutionTable;
+#else
 	QGroupBox* resolutionGroupBox;
-	QLabel* textLabel1;
-	QLabel* textLabel2;
+	QGridLayout*resolutionGroupBoxLayout;
+#endif
+
+	QValueList<conflictEntry> conflictEntries;
+	QLabel *textLabel1,*textLabel2;
 
 protected slots:
 	virtual void slotOk();
@@ -52,4 +85,4 @@ protected slots:
 
 };
 
-#endif // FORM1_H
+#endif // CONFLICTDIALOG_H

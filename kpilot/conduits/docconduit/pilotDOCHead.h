@@ -28,18 +28,9 @@
 #ifndef _KPILOT_PILOTDOCHEAD_H
 #define _KPILOT_PILOTDOCHEAD_H
 
-#include <string.h>
-
-#ifndef _KPILOT_PILOTAPPCATEGORY_H
 #include "pilotAppCategory.h"
-#endif
 
-#ifndef _KPILOT_PILOTRECORD_H
-#include "pilotRecord.h"
-#endif
-
-#include "makedoc9.h"
-
+class PilotRecord;
 
 
 class PilotDOCHead:public PilotAppCategory {
@@ -72,12 +63,5 @@ class PilotDOCHead:public PilotAppCategory {
 
 
 
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
 #endif
 
-
-// $Log$
-//

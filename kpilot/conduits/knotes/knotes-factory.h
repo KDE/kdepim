@@ -72,21 +72,5 @@ void *init_libknotesconduit();
 
 } ;
 
-// $Log$
-// Revision 1.4  2001/10/31 23:46:51  adridg
-// CVS_SILENT: Ongoing conduits ports
-//
-// Revision 1.3  2001/10/16 21:44:53  adridg
-// Split up some files, added behavior
-//
-// Revision 1.2  2001/10/10 21:42:09  adridg
-// Actually do part of a sync now
-//
-// Revision 1.1  2001/10/08 22:27:41  adridg
-// New ui, moved to lib-based conduit
-//
-// Revision 1.1  2001/10/04 23:51:55  adridg
-// Nope. One more really final commit to get the alpha to build. Dirk, otherwise just remove the conduits/ subdir from kdepim/kpilot/Makefile.am
-//
 
 #endif

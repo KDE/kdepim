@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
 <class>AbbrowserWidget</class>
 <author>Adriaan de Groot and David Bishop</author>
 <widget class="QWidget">
@@ -9,7 +9,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>486</width>
+            <width>491</width>
             <height>364</height>
         </rect>
     </property>
@@ -325,6 +325,300 @@
                             </size>
                         </property>
                     </spacer>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Custom Fields</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>textLabel1</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Handheld custom field 1</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="1" column="0">
+                        <property name="name">
+                            <cstring>textLabel1_2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Handheld custom field 2</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="2" column="0">
+                        <property name="name">
+                            <cstring>textLabel1_3</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Handheld custom field 3</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="3" column="0">
+                        <property name="name">
+                            <cstring>textLabel1_4</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Handheld custom field 4</string>
+                        </property>
+                    </widget>
+                    <spacer row="4" column="2">
+                        <property name="name">
+                            <cstring>spacer5</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>31</width>
+                                <height>181</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QComboBox" row="0" column="1" rowspan="1" colspan="2">
+                        <item>
+                            <property name="text">
+                                <string>Store as custom field</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Birthdate</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>URL</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>IM address (ICQ, MS,...)</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>fCustom0</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="1" column="1" rowspan="1" colspan="2">
+                        <item>
+                            <property name="text">
+                                <string>Store as custom field</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Birthdate</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>URL</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>IM address (ICQ, MSN,...)</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>fCustom1</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="2" column="1" rowspan="1" colspan="2">
+                        <item>
+                            <property name="text">
+                                <string>Store as custom field</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Birthdate</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>URL</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>IM address (ICQ, MSN,...)</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>fCustom2</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="3" column="1" rowspan="1" colspan="2">
+                        <item>
+                            <property name="text">
+                                <string>Store as custom field</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>Birthdate</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>URL</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>IM address (ICQ, MSN,...)</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>fCustom3</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="0" column="3">
+                        <item>
+                            <property name="text">
+                                <string>locale Settings</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>dd/mm/yy</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>dd/mm/yyyy</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>dd.MMMM. yyy</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>mm/dd/yyyy</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>fCustomDate0</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="1" column="3">
+                        <item>
+                            <property name="text">
+                                <string>locale Settings</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>dd/mm/yy</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>dd/mm/yyyy</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>dd.MMMM. yyy</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>mm/dd/yyyy</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>fCustomDate1</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="2" column="3">
+                        <item>
+                            <property name="text">
+                                <string>locale Settings</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>dd/mm/yy</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>dd/mm/yyyy</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>dd.MMMM. yyy</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>mm/dd/yyyy</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>fCustomDate2</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="3" column="3">
+                        <item>
+                            <property name="text">
+                                <string>locale Settings</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>dd/mm/yy</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>dd/mm/yyyy</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>dd.MMMM. yyy</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>mm/dd/yyyy</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>fCustomDate3</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
                 </grid>
             </widget>
         </widget>

@@ -27,21 +27,13 @@
 */
 
 #include "options.h"
+#include "abbrowser-factory.moc"
 
-#include <kapplication.h>
 #include <kinstance.h>
 #include <kaboutdata.h>
 
-#include <dcopclient.h>
-
-#include <time.h> // Needed by pilot-link include
-
-#include <pi-memo.h>
-
 #include "abbrowser-conduit.h"
 #include "abbrowser-setup.h"
-
-#include "abbrowser-factory.moc"
 
 
 extern "C"
@@ -71,6 +63,7 @@ const char *AbbrowserConduitFactory::fSyncMode = "SyncMode";
 const char *AbbrowserConduitFactory::fFirstSync = "FirstSync";
 const char *AbbrowserConduitFactory::fFullSyncOnPCChange = "FullSyncOnPCChange";
 const char *AbbrowserConduitFactory::fOtherField = "PilotOther";
+const char *AbbrowserConduitFactory::fCustom = "Custom %1";
 
 
 AbbrowserConduitFactory::AbbrowserConduitFactory(QObject *p, const char *n) :
@@ -155,28 +148,3 @@ AbbrowserConduitFactory::~AbbrowserConduitFactory()
 	return 0L;
 }
 
-
-// $Log$
-// Revision 1.6  2002/06/30 16:23:23  kainhofe
-// Started rewriting the addressbook conduit to use libkabc instead of direct dcop communication with abbrowser. Palm->PC is enabled (but still creates duplicate addresses), the rest is completely untested and thus disabled for now
-//
-// Revision 1.5  2002/05/15 17:15:32  gioele
-// kapp.h -> kapplication.h
-// I have removed KDE_VERSION checks because all that files included "options.h"
-// which #includes <kapplication.h> (which is present also in KDE_2).
-// BTW you can't have KDE_VERSION defined if you do not include
-// - <kapplication.h>: KDE3 + KDE2 compatible
-// - <kdeversion.h>: KDE3 only compatible
-//
-// Revision 1.4  2002/04/16 18:22:12  adridg
-// Wishlist fix from David B: handle formatted names when syncing
-//
-// Revision 1.3  2001/12/20 22:55:21  adridg
-// Making conduits save their configuration and doing syncs
-//
-// Revision 1.2  2001/12/10 22:10:17  adridg
-// Make the conduit compile, for Danimo, but it may not work
-//
-// Revision 1.1  2001/10/31 23:54:45  adridg
-// CVS_SILENT: Ongoing conduits ports
-//

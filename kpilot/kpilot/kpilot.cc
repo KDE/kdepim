@@ -38,7 +38,7 @@ static const char *kpilot_id =
 
 #include <sys/types.h>
 #include <dirent.h>
-#include <iostream.h>
+#include <iostream>
 #include <fstream.h>
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -944,6 +944,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.83  2002/12/24 11:26:28  adridg
+// Forgot that moc can't handle #ifdef
+//
 // Revision 1.82  2002/12/10 15:54:00  faure
 // Mainwindow settings and KEditToolbar fix, as usual. (untested, other than compilation)
 //

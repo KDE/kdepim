@@ -49,23 +49,4 @@ protected:
 	virtual long dbcreator() { return 0x4441544f;}
 };
 
-
-// $Log$
-// Revision 1.4  2002/04/07 11:56:18  reinhold
-// Last version before moving to KDE CVS
-//
-// Revision 1.3  2002/04/05 21:17:01  reinhold
-// *** empty log message ***
-//
-// Revision 1.2  2002/03/23 21:46:43  reinhold
-// config  dlg works, but the last changes crash the plugin itself
-//
-// Revision 1.1  2002/03/09 15:45:48  reinhold
-// Moved the files around
-//
-// Revision 1.1.1.1  2002/03/09 15:38:45  reinhold
-// Initial checin of the  project manager / List manager conduit.
-//
-//
-//
 #endif

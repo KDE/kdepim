@@ -46,7 +46,7 @@ static const char *popmail_conduit_id=
 #include <sys/socket.h>
 #include <sys/utsname.h>
 #include <ctype.h>
-#include <iostream.h>
+#include <iostream>
 
 #include <unistd.h>
 #include <errno.h>
@@ -1935,6 +1935,7 @@ int PopMailConduit::doUnixStyle()
 /* virtual */ bool PopMailConduit::exec()
 {
 	FUNCTIONSETUP;
+	DEBUGCONDUIT<<popmail_conduit_id<<endl;
 
 	if (!fConfig) return false;
 
@@ -1971,6 +1972,9 @@ int PopMailConduit::doUnixStyle()
 
 
 // $Log$
+// Revision 1.47  2003/01/08 23:07:20  adridg
+// Compile fix from Bausi. Seems to work on BSD too.
+//
 // Revision 1.46  2002/12/20 17:33:12  coolo
 // getdomainname returns the NIS/LDAP domain, you don't want that for DNS/SMTP
 //

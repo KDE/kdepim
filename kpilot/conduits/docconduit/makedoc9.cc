@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <iostream.h>
+#include <iostream>
 
 
 #include "makedoc9.h"

@@ -27,21 +27,18 @@
 */
 
 #include "options.h"
+#include "doc-setup.moc"
 
 #include <qtabwidget.h>
 #include <qcheckbox.h>
-#include <qlineedit.h>
-#include <qcombobox.h>
 #include <qbuttongroup.h>
 
-#include <kapplication.h>
 #include <kconfig.h>
 #include <kurlrequester.h>
 
 #include "doc-setupdialog.h"
-
 #include "doc-factory.h"
-#include "doc-setup.moc"
+
 
 
 DOCWidgetSetup::DOCWidgetSetup(QWidget * w, const char *n, const QStringList & a):
@@ -144,12 +141,3 @@ DOCWidgetSetup::~DOCWidgetSetup()
 		fConfig->readBoolEntry(DOCConduitFactory::fAlwaysUseResolution, false));
 }
 
-
-// $Log$
-// Revision 1.2  2002/12/31 00:22:10  kainhofe
-// Currently restructuring everything. Not yet finished.
-//
-// Revision 1.1  2002/12/13 16:29:53  kainhofe
-// New PalmDOC conduit to syncronize text files with doc databases (AportisDoc, TealReader, etc) on the handheld
-//
-//

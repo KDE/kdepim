@@ -42,7 +42,7 @@ static const char *setupDialog_id=
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdlib.h>
-#include <iostream.h>
+#include <iostream>
 
 #include <qwhatsthis.h>
 
@@ -676,6 +676,9 @@ PopMailOptions::setupWidget()
 
 
 // $Log$
+// Revision 1.31  2002/08/11 11:40:37  binner
+// Use KFileDialog.
+//
 // Revision 1.30  2002/08/01 16:05:03  binner
 // CVS_SILENT Style guide fix
 //

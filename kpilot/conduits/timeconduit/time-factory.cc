@@ -134,8 +134,3 @@ TimeConduitFactory::~TimeConduitFactory()
 	return 0L;
 }
 
-
-// $Log$
-// Revision 1.1  2002/07/25 21:15:20  kainhofe
-// Added a conduit to sync the PC time to the handheld
-//

@@ -17,9 +17,6 @@
 
 
 
-#include <plugin.h>
-#include <qptrlist.h>
-
 #define DOC_UNCOMPRESSED 1
 #define DOC_COMPRESSED 2
 
@@ -28,8 +25,6 @@
 #define PDBBMK_SUFFIX ".bm"
 
 
-class PilotLocalDatabase;
-class PilotSerialDatabase;
 class PilotDatabase;
 
 
@@ -170,15 +165,4 @@ signals:
 	void logError(const QString &);
 };
 
-
-
-
-// $Log$
-// Revision 1.2  2002/12/15 13:48:45  kainhofe
-// Several bugfixes. Bookmark files work now, compression is done right
-//
-// Revision 1.1  2002/12/13 16:29:53  kainhofe
-// New PalmDOC conduit to syncronize text files with doc databases (AportisDoc, TealReader, etc) on the handheld
-//
-//
 #endif

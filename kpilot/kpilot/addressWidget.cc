@@ -35,9 +35,9 @@ static const char *addresswidget_id =
 #include "options.h"
 #endif
 
-#include <iostream.h>
-#include <string.h>
-#include <stdlib.h>
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
 
 #ifndef QLIST_H
 #include <qlist.h>
@@ -775,6 +775,9 @@ void AddressWidget::writeAddress(PilotAddress * which,
 }
 
 // $Log$
+// Revision 1.54  2002/08/23 22:03:21  adridg
+// See ChangeLog - exec() becomes bool, debugging added
+//
 // Revision 1.53  2002/07/20 22:08:19  mhunter
 // Hot-Sync -> HotSync
 //

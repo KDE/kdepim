@@ -31,7 +31,7 @@
 #include "options.h"
 
 #include <time.h>
-#include <iostream.h>
+#include <iostream>
 
 #ifndef _PILOT_APPINFO_H_
 #include <pi-appinfo.h>
@@ -298,6 +298,9 @@ void PilotComponent::slotShowComponent()
 }
 
 // $Log$
+// Revision 1.23  2001/09/30 19:51:56  adridg
+// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
+//
 // Revision 1.22  2001/09/30 17:19:02  adridg
 // Updated preHotSync
 //

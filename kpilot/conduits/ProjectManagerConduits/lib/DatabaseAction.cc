@@ -124,37 +124,3 @@ int DBSettings::SyncTypeToId(int tt) {
 	return -1;
 }
 
-
-// $Log$
-// Revision 1.1  2002/04/07 12:09:42  kainhofe
-// Initial checkin of the conduit. The gui works mostly, but syncing crashes KPilot...
-//
-// Revision 1.2  2002/04/07 11:56:19  reinhold
-// Last version before moving to KDE CVS
-//
-// Revision 1.1  2002/04/07 01:03:52  reinhold
-// the list of possible actions is now created dynamically
-//
-// Revision 1.7  2002/04/05 21:17:00  reinhold
-// *** empty log message ***
-//
-// Revision 1.6  2002/03/28 13:47:53  reinhold
-// Added the list of synctypes, aboutbox is now directly passed on to the setup dlg (instead of being a static var)
-//
-// Revision 1.5  2002/03/15 20:43:17  reinhold
-// Fixed the crash on loading (member function not defined)...
-//
-// Revision 1.4  2002/03/13 22:14:40  reinhold
-// GUI should work now...
-//
-// Revision 1.3  2002/03/10 23:58:32  reinhold
-// Made the conduit compile...
-//
-// Revision 1.2  2002/03/10 16:06:43  reinhold
-// Cleaned up the class hierarchy, implemented some more features (should be quite finished now...)
-//
-// Revision 1.1.1.1  2002/03/09 15:38:45  reinhold
-// Initial checin of the  project manager / List manager conduit.
-//
-//
-

@@ -27,17 +27,14 @@
 */ 
 	
 #include "options.h"
+#include "doc-factory.moc"
 	
-#include <kapplication.h>
 #include <kinstance.h>
 #include <kaboutdata.h>
-	
-	
+#include <kpilotlink.h>
+
 #include "doc-conduit.h"
 #include "doc-setup.h"
-	
-#include "doc-factory.moc"
-#include "doc-factory.h"
 
 
 extern "C" {
@@ -137,14 +134,3 @@ DOCConduitFactory::~DOCConduitFactory()
 	return 0L;
 }
 
-
-
-
-// $Log$
-// Revision 1.2  2002/12/31 00:22:10  kainhofe
-// Currently restructuring everything. Not yet finished.
-//
-// Revision 1.1  2002/12/13 16:29:53  kainhofe
-// New PalmDOC conduit to syncronize text files with doc databases (AportisDoc, TealReader, etc) on the handheld
-//
-//

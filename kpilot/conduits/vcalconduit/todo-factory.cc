@@ -141,23 +141,3 @@ ToDoConduitFactory::~ToDoConduitFactory()
 	return 0L;
 }
 
-// $Log$
-// Revision 1.3.2.2  2002/05/01 21:11:49  kainhofe
-// Reworked the settings dialog, added various different sync options
-//
-// Revision 1.3.2.1  2002/04/28 12:58:54  kainhofe
-// Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
-//
-// Revision 1.4  2002/04/22 22:51:51  kainhofe
-// Added the first version of the todo conduit, fixed a check for a null pointer in the datebook conduit
-//
-// Revision 1.3  2001/12/31 09:25:05  adridg
-// Cleanup, various fixes for runtime loading
-//
-// Revision 1.2  2001/12/27 16:43:36  adridg
-// Fixup configuration
-//
-// Revision 1.1  2001/12/13 21:40:40  adridg
-// New files for move to .so
-//
-

@@ -36,7 +36,7 @@
 // then Qt, then KDE, then local includes.
 //
 //
-#include <iostream.h>
+#include <iostream>
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -204,6 +204,7 @@ ExpenseConduit::~ExpenseConduit()
 /* virtual */ bool ExpenseConduit::exec()
 {
 	FUNCTIONSETUP;
+	DEBUGCONDUIT<<expense_id<<endl;
 
 	if (!fConfig)
 	{
@@ -486,6 +487,11 @@ void ExpenseConduit::cleanup()
 
 
 // $Log$
+// Revision 1.25  2002/12/08 10:29:40  waba
+// CCMAIL: groot@kde.org
+// Fix quoting.
+// Adriaan: can you check that this still works as intended?
+//
 // Revision 1.24  2002/08/24 21:27:32  adridg
 // Lots of small stuff to remove warnings
 //

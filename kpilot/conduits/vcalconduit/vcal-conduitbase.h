@@ -159,40 +159,4 @@ protected:
 } ;
 
 
-// $Log$
-// Revision 1.11  2002/08/23 22:03:21  adridg
-// See ChangeLog - exec() becomes bool, debugging added
-//
-// Revision 1.10  2002/08/15 10:47:56  kainhofe
-// Finished categories syncing for the todo conduit
-//
-// Revision 1.9  2002/07/28 17:27:54  cschumac
-// Move file loading/saving code from CalendarLocal to own class.
-//
-// Revision 1.8  2002/07/09 22:38:04  kainhofe
-// Implemented a first (not-yet-functional) version of the category sync
-//
-// Revision 1.7  2002/06/09 21:08:06  kainhofe
-// Use the openDatabases() function and the fDatabase/fLocalDatabase instead of our own fCurrentDatabase/fBackupDatabase
-//
-// Revision 1.6  2002/06/07 07:13:24  adridg
-// Make VCal conduit use base-class fDatabase and fLocalDatabase (hack).
-// Extend *Database classes with dbPathName() for consistency.
-//
-// Revision 1.5  2002/05/18 13:08:57  kainhofe
-// dirty flag is now cleared, conflict resolution shows the correct item title and asks the correct question
-//
-// Revision 1.4  2002/05/14 23:07:49  kainhofe
-// Added the conflict resolution code. the Palm and PC precedence is currently swapped, and will be improved in the next few days, anyway...
-//
-// Revision 1.3  2002/05/01 21:18:23  kainhofe
-// Reworked the settings dialog, added various different sync options
-//
-// Revision 1.1.2.2  2002/05/01 21:11:49  kainhofe
-// Reworked the settings dialog, added various different sync options
-//
-// Revision 1.1.2.1  2002/04/28 12:58:54  kainhofe
-// Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
-//
-
 #endif

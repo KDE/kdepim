@@ -26,6 +26,8 @@
 */
 static const char *kpilotlink_id = "$Id$";
 
+#include "kpilotlink.moc"
+
 #include "options.h"
 
 #include <pi-source.h>
@@ -46,7 +48,6 @@ static const char *kpilotlink_id = "$Id$";
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <iostream.h>
 #include <errno.h>
 
 #include <qdir.h>
@@ -58,8 +59,6 @@ static const char *kpilotlink_id = "$Id$";
 #include <kmessagebox.h>
 
 #include "pilotUser.h"
-
-#include "kpilotlink.moc"
 
 
 
@@ -823,6 +822,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.28  2003/01/06 13:38:13  kainhofe
+// Optional argument to installFiles to not delete the local pdb files after installing to the handheld
+//
 // Revision 1.27  2002/12/13 16:26:09  kainhofe
 // Added default args to readNextModifiedRec, and findDatabase, new functions: deleteRecord and createDatabase
 //

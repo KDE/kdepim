@@ -33,7 +33,7 @@ static const char *memowidget_id =
 #endif
 
 #include <time.h>
-#include <iostream.h>
+#include <iostream>
 #include <pi-macros.h>
 #include <pi-dlp.h>
 
@@ -794,6 +794,9 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &m
 }
 
 // $Log$
+// Revision 1.51  2002/12/04 10:55:37  thorsen
+// Kroupware merge to HEAD. 3.1 will follow when the issues with the patch have been worked out.
+//
 // Revision 1.48.2.3  2002/11/29 11:12:10  thorsen
 // Merged from head
 //

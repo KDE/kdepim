@@ -62,18 +62,4 @@ BonsaiConduit::BonsaiConduit(KPilotDeviceLink *d, 	const char *n, 	const QString
 }
 
 
-// $Log$
-// Revision 1.1  2002/04/07 12:09:42  kainhofe
-// Initial checkin of the conduit. The gui works mostly, but syncing crashes KPilot...
-//
-// Revision 1.2  2002/03/23 21:46:43  reinhold
-// config  dlg works, but the last changes crash the plugin itself
-//
-// Revision 1.1  2002/03/09 15:45:48  reinhold
-// Moved the files around
-//
-// Revision 1.1.1.1  2002/03/09 15:38:45  reinhold
-// Initial checin of the generic project manager / List manager conduit.
-//
-//
 #include "Bonsai-conduit.moc"

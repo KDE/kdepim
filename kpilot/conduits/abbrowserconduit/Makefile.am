@@ -24,3 +24,11 @@ libaddressconduit_la_SOURCES = \
 	kaddressbookConduit.ui
 libaddressconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib $(all_libraries)
 libaddressconduit_la_LIBADD = -lkpilot -lkabc
+
+
+#bin_PROGRAMS = test
+#
+#test_SOURCES = test.cpp
+#test_LDFLAGS = $(all_libraries) $(KDE_RPATH) -L../../lib
+#test_LDADD = $(LIB_KFILE) 
+

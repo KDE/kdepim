@@ -82,5 +82,3 @@ TimeWidgetSetup::~TimeWidgetSetup()
 	fConfigWidget->directionGroup->setButton(fConfig->readNumEntry(TimeConduitFactory::direction(), DIR_PCToPalm) );
 }
 
-
-// $Log$

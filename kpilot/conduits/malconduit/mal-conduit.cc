@@ -173,6 +173,7 @@ bool MALConduit::skip()
 /* virtual */ bool MALConduit::exec()
 {
 	FUNCTIONSETUP;
+	DEBUGCONDUIT<<MAL_conduit_id<<endl;
 
 	if (!fConfig)
 	{
@@ -242,24 +243,4 @@ void MALConduit::printLogMessage(QString msg)
 	FUNCTIONSETUP;
 	emit logMessage(msg);
 }
-
-
-// $Log$
-// Revision 1.5  2002/08/24 18:02:58  kainhofe
-// Skipping the malconduit doesn't lock up kpilotDaemon any more...
-//
-// Revision 1.4  2002/08/23 22:59:29  kainhofe
-// Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
-//
-// Revision 1.3  2002/08/23 22:33:48  kainhofe
-// Added a license exception to be able to legally link to libmal
-//
-// Revision 1.2  2002/08/17 22:31:20  mhunter
-// CVS_SILENT Corrected typographical errors
-//
-// When replying, please CC me - I'm not subscribed
-//
-// Revision 1.1  2002/08/15 23:07:37  kainhofe
-// First official version of the malconduit
-//
 

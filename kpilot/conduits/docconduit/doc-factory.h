@@ -32,7 +32,6 @@
 #include <klibloader.h>
 	
 class KInstance;
-
 class KAboutData;
 
 
@@ -77,13 +76,4 @@ extern "C" {
 };
 
 
-
-// $Log$
-// Revision 1.2  2002/12/31 00:22:10  kainhofe
-// Currently restructuring everything. Not yet finished.
-//
-// Revision 1.1  2002/12/13 16:29:53  kainhofe
-// New PalmDOC conduit to syncronize text files with doc databases (AportisDoc, TealReader, etc) on the handheld
-//
-//
 #endif

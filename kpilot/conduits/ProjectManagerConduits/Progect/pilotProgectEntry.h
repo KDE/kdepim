@@ -64,29 +64,5 @@ protected:
 
 
 
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
 #endif
 
-
-// $Log$
-// Revision 1.4  2002/04/05 21:17:01  reinhold
-// *** empty log message ***
-//
-// Revision 1.3  2002/03/23 21:46:43  reinhold
-// config  dlg works, but the last changes crash the plugin itself
-//
-// Revision 1.2  2002/03/23 18:21:14  reinhold
-// Cleaned up the structure. Works with QTimer instead of loops.
-//
-// Revision 1.3  2002/03/10 23:58:33  reinhold
-// Made the conduit compile...
-//
-// Revision 1.2  2002/03/10 16:06:43  reinhold
-// Cleaned up the class hierarchy, implemented some more features (should be quite finished now...)
-//
-// Revision 1.1  2002/03/09 15:48:32  reinhold
-// Added the classes for the different palm database formats
-//

@@ -72,14 +72,4 @@ private:
 } ;
 
 
-
-
-// $Log$
-// Revision 1.2  2002/08/23 22:33:48  kainhofe
-// Added a license exception to be able to legally link to libmal
-//
-// Revision 1.1  2002/08/15 23:07:37  kainhofe
-// First official version of the malconduit
-//
-
 #endif

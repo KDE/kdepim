@@ -44,7 +44,7 @@ static const char *pilotdaemon_id =
 #include <dirent.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <iostream.h>
+#include <iostream>
 #include <fstream.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -1162,6 +1162,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.69  2002/12/31 13:22:07  mueller
+// CVS_SILENT fixincludes
+//
 // Revision 1.68  2002/12/04 10:55:37  thorsen
 // Kroupware merge to HEAD. 3.1 will follow when the issues with the patch have been worked out.
 //

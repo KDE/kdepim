@@ -47,7 +47,4 @@ class DOCWidgetSetup:public ConduitConfig {
 	 DOCWidget * fConfigWidget;
 };
 
-// $Log$
-//
-
 #endif

@@ -19,41 +19,29 @@
 
 #include "options.h"
 
+#include "abbrowser-conduit.moc"
+
 // Only include what we really need:
 // First UNIX system stuff, then std C++,
 // then Qt, then KDE, then local includes.
 //
-//
-#include <unistd.h>
-#include <assert.h>
-#include <iostream.h>
-#include <time.h>
 
-#include <qdir.h>
+#include <unistd.h>
+
 #include <qtimer.h>
 #include <qvbuttongroup.h>
 #include <qcheckbox.h>
 
 #include <kglobal.h>
-#include <kstandarddirs.h>
-#include <kmessagebox.h>
-#include <kconfig.h>
-#include <dcopclient.h>
 #include <kdebug.h>
-
-#include <pi-appinfo.h>
-#include <pi-source.h>
-#include <pi-address.h>
-
-#include <kabc/stdaddressbook.h>
-#include <kabc/resource.h>
+#include <kconfig.h>
 #include <kabc/addressbook.h>
+#include <kabc/stdaddressbook.h>
+
 #include <pilotUser.h>
 #include <pilotSerialDatabase.h>
 
 #include "abbrowser-factory.h"
-
-#include "abbrowser-conduit.moc"
 #include "resolutionDialog.h"
 
 // Something to allow us to check what revision
@@ -70,6 +58,8 @@ bool AbbrowserConduit::fPilotStreetHome=true;
 bool AbbrowserConduit::fPilotFaxHome=true;
 enum AbbrowserConduit::ePilotOtherEnum AbbrowserConduit::ePilotOther=AbbrowserConduit::eOtherPhone;
 
+enum AbbrowserConduit::eCustomEnum AbbrowserConduit::eCustom[4]={AbbrowserConduit::eCustomField, AbbrowserConduit::eCustomField, AbbrowserConduit::eCustomField, AbbrowserConduit::eCustomField};
+
 
 
 /*********************************************************************
@@ -80,15 +70,12 @@ enum AbbrowserConduit::ePilotOtherEnum AbbrowserConduit::ePilotOther=AbbrowserCo
 
 
 
-AbbrowserConduit::AbbrowserConduit(KPilotDeviceLink * o,
-	const char *n,
-	const QStringList & a):
-ConduitAction(o, n, a),
-addresseeMap(),
-syncedIds(),
-//      recordIds(),
-aBook(0L),
-abiter()
+AbbrowserConduit::AbbrowserConduit(KPilotDeviceLink * o, const char *n, const QStringList & a):
+    ConduitAction(o, n, a),
+    addresseeMap(),
+    syncedIds(),
+    aBook(0L),
+    abiter()
 {
   FUNCTIONSETUP;
  (void) abbrowser_conduit_id;
@@ -133,7 +120,9 @@ void AbbrowserConduit::_mapContactsToPilot(QMap < recordid_t, QString > &idConta
 		}
 	}
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Loaded " << idContactMap.size() << " addresses from the addressbook " << dynamic_cast <KABC::StdAddressBook*>(aBook)->fileName() << endl;
+	DEBUGCONDUIT << fname << ": Loaded " << idContactMap.size() << 
+	    " addresses from the addressbook " << 
+			dynamic_cast <KABC::StdAddressBook*>(aBook)->fileName() << endl;
 #endif
 }
 
@@ -165,6 +154,11 @@ void AbbrowserConduit::readConfig()
 	syncAction=fConfig->readNumEntry(AbbrowserConduitFactory::syncMode(), SYNC_FAST);
 	fFirstTime=fConfig->readBoolEntry(AbbrowserConduitFactory::firstSync(), false);
 	ePilotOther=(ePilotOtherEnum)(fConfig->readNumEntry(AbbrowserConduitFactory::otherField(), eOtherPhone));
+	
+	eCustom[0]=(eCustomEnum)(fConfig->readNumEntry(AbbrowserConduitFactory::custom().arg(0), eCustomField) );
+	eCustom[1]=(eCustomEnum)(fConfig->readNumEntry(AbbrowserConduitFactory::custom().arg(1), eCustomField) );
+	eCustom[2]=(eCustomEnum)(fConfig->readNumEntry(AbbrowserConduitFactory::custom().arg(2), eCustomField) );
+	eCustom[3]=(eCustomEnum)(fConfig->readNumEntry(AbbrowserConduitFactory::custom().arg(3), eCustomField) );
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
@@ -174,7 +168,11 @@ void AbbrowserConduit::readConfig()
 		<< " fPilotStreetHome=" << fPilotStreetHome
 		<< " fPilotFaxHome=" << fPilotFaxHome
 		<< " syncAction=" << syncAction
-		<< " fArchive=" << fArchive
+		<< " fArchive=" << fArchive 
+		<<" eCustom[0]="<<eCustom[0]
+		<<" eCustom[1]="<<eCustom[1]
+		<<" eCustom[2]="<<eCustom[2]
+		<<" eCustom[3]="<<eCustom[3]
 		<< " fFirstTime=" << fFirstTime << endl;
 #endif
 }
@@ -207,7 +205,6 @@ bool AbbrowserConduit::_saveAddressBook()
 	FUNCTIONSETUP;
 
 	if(!abChanged) return true;
-//	return(aBook) &&(aBook->saveAll());
 	return StdAddressBook::save();
 }
 
@@ -226,26 +223,82 @@ void AbbrowserConduit::_setAppInfo()
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << " lastUniqueId" << fAddressAppInfo.category.lastUniqueID << endl;
-#endif
 	for(int i = 0; i < 16; i++)
 	{
-#ifdef DEBUG
 		DEBUGCONDUIT << fname << " cat " << i << " =" << fAddressAppInfo.category.name[i] << endl;
-#endif
 	}
 
 	for(int x = 0; x < 8; x++)
 	{
-#ifdef DEBUG
 		DEBUGCONDUIT << fname << " phone[" << x << "] = " << fAddressAppInfo.phoneLabels[x] << endl;
-#endif
 	}
+#endif
+}
+
+QString AbbrowserConduit::getCustomField(const KABC::Addressee &abEntry, const int index) 
+{
+	FUNCTIONSETUP;
+	return abEntry.custom(appString, "CUSTOM"+QString::number(index));
+	
+	// TODO: The date things do  not work yet, so disable this for now...
+	switch (eCustom[index]) {
+		case eCustomBirthdate: {
+			QDate bdate(abEntry.birthday().date());
+#ifdef DEBUG
+			DEBUGCONDUIT<<bdate<<endl;
+			DEBUGCONDUIT<<bdate.toString("d.M.yyyy")<<endl;;
+#endif
+			if (bdate.isValid() ) return bdate.toString("d.M.yyyy");
+			else return "";
+			break;
+		}
+		case eCustomURL: 
+			return abEntry.url().url();
+			break;
+		case eCustomIM: 
+			return abEntry.custom("KADDRESSBOOK", "X-IMAddress");
+			break;
+		case eCustomField: 
+		default: 
+			return abEntry.custom(appString, "CUSTOM"+QString::number(index));
+			break;
+	}
+}
+
+
+void AbbrowserConduit::setCustomField(KABC::Addressee &abEntry,  int index, QString cust) 
+{
+	FUNCTIONSETUP;
+	return abEntry.insertCustom(appString, "CUSTOM"+QString::number(index), cust);
+	
+	// TODO: The date things do  not work yet, so disable this for now...
+	switch (eCustom[index]) {
+		case eCustomBirthdate: {
+			QDate bdate=KGlobal::locale()->readDate(cust, "d.m.y");
+#ifdef DEBUG
+			DEBUGCONDUIT<<bdate<<endl;
+			DEBUGCONDUIT<<"Is Valid: "<<bdate.isValid()<<endl;
+#endif
+//			QDate bdate=QDate::fromString(cust);
+			if (bdate.isValid()) return abEntry.setBirthday(QDateTime(bdate));
+			break;}
+		case eCustomURL: {
+			return abEntry.setUrl(cust);
+			break;}
+		case eCustomIM: {
+			return abEntry.insertCustom("KADDRESSBOOK", "X-IMAddress", cust);
+			break;}
+		case eCustomField: 
+		default: {
+			return abEntry.insertCustom(appString, "CUSTOM"+QString::number(index), cust);
+			break;}
+	}
+	return;
 }
 
 
 QString AbbrowserConduit::getOtherField(const KABC::Addressee & abEntry)
 {
-//	FUNCTIONSETUP;
 	switch(ePilotOther)
 	{
 		case eOtherPhone:
@@ -272,7 +325,6 @@ QString AbbrowserConduit::getOtherField(const KABC::Addressee & abEntry)
 
 void AbbrowserConduit::setOtherField(KABC::Addressee & abEntry, QString nr)
 {
-//FUNCTIONSETUP;
 	KABC::PhoneNumber phone;
 	switch(ePilotOther)
 	{
@@ -394,6 +446,7 @@ void AbbrowserConduit::showPilotAddress(const PilotAddress & pilotAddress)
 /* virtual */ bool AbbrowserConduit::exec()
 {
 	FUNCTIONSETUP;
+	DEBUGCONDUIT<<abbrowser_conduit_id<<endl;
 
 	KPilotUser *usr;
 
@@ -563,8 +616,7 @@ void AbbrowserConduit::syncPCRecToPalm()
 	else if(syncedIds.contains(rid))
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname << ": address with id " << rid <<
-			" already synced." << endl;
+		DEBUGCONDUIT << fname << ": address with id " << rid <<	" already synced." << endl;
 #endif
 		QTimer::singleShot(0, this, SLOT(syncPCRecToPalm()));
 		return;
@@ -572,8 +624,7 @@ void AbbrowserConduit::syncPCRecToPalm()
 	if(ad.custom(appString, flagString) == QString::number(SYNCDEL))
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname << ": address with id " << rid <<
-			" marked archived, so don't sync." << endl;
+		DEBUGCONDUIT << fname << ": address with id " << rid <<	" marked archived, so don't sync." << endl;
 #endif
 		syncedIds.append(rid);
 		QTimer::singleShot(0, this, SLOT(syncPCRecToPalm()));
@@ -595,6 +646,7 @@ void AbbrowserConduit::syncPCRecToPalm()
 			// being deleted from the addressbook. This can only be the case if the last sync on this computer was done with a
 			// different addressbook. In this situation, however it's impossible to decide if that record comes from a sync
 			// with a different Handheld or from a deleted record that was synced with a different addressbook.
+
 #ifdef DEBUG
 			DEBUGCONDUIT<<"Addressbook entry "<<ad.realName()<<" has a non-existent Record-ID "<<ad.custom(appString, idString)<<", so disregard that ID"<<endl;
 #endif
@@ -742,21 +794,21 @@ KABC::Addressee AbbrowserConduit::_saveAbEntry(KABC::Addressee & abEntry)
 {
 	FUNCTIONSETUP;
 
-	#ifdef DEBUG
-		DEBUGCONDUIT<<"Before _saveAbEntry, abEntry.custom="<<abEntry.custom(appString, idString)<<endl;
-	#endif
+#ifdef DEBUG
+	DEBUGCONDUIT<<"Before _saveAbEntry, abEntry.custom="<<abEntry.custom(appString, idString)<<endl;
+#endif
 	if(!abEntry.custom(appString, idString).isEmpty())
 	{
 		addresseeMap.insert(abEntry.custom(appString, idString).toLong(), abEntry.uid());
 	}
-	#ifdef DEBUG
-		DEBUGCONDUIT<<"Before insertAddressee, abEntry.custom="<<abEntry.custom(appString, idString)<<endl;
-	#endif
+#ifdef DEBUG
+	DEBUGCONDUIT<<"Before insertAddressee, abEntry.custom="<<abEntry.custom(appString, idString)<<endl;
+#endif
 
 	aBook->insertAddressee(abEntry);
-	#ifdef DEBUG
-		DEBUGCONDUIT<<"After insertAddressee, abEntry.custom="<<abEntry.custom(appString, idString)<<endl;
-	#endif
+#ifdef DEBUG
+	DEBUGCONDUIT<<"After insertAddressee, abEntry.custom="<<abEntry.custom(appString, idString)<<endl;
+#endif
 
 	abChanged = true;
 	return abEntry;
@@ -777,13 +829,13 @@ bool AbbrowserConduit::_savePilotAddress(PilotAddress & address, KABC::Addressee
 #endif
 
 	PilotRecord *pilotRec = address.pack();
-	#ifdef DEBUG
-		DEBUGCONDUIT<<"PilotRec vor writeRecord: ID="<<pilotRec->getID()<<", address.id="<<address.id()<<endl;
-	#endif
+#ifdef DEBUG
+	DEBUGCONDUIT<<"PilotRec vor writeRecord: ID="<<pilotRec->getID()<<", address.id="<<address.id()<<endl;
+#endif
 	recordid_t pilotId = fDatabase->writeRecord(pilotRec);
-	#ifdef DEBUG
-		DEBUGCONDUIT<<"PilotRec nach writeRecord ("<<pilotId<<": ID="<<pilotRec->getID()<<endl;
-	#endif
+#ifdef DEBUG
+	DEBUGCONDUIT<<"PilotRec nach writeRecord ("<<pilotId<<": ID="<<pilotRec->getID()<<endl;
+#endif
 	pilotRec->setID(pilotId);
 	fLocalDatabase->writeRecord(pilotRec);
 	KPILOT_DELETE(pilotRec);
@@ -1001,15 +1053,15 @@ void AbbrowserConduit::_addToPalm(KABC::Addressee & entry)
 	PilotAddress pilotAddress(fAddressAppInfo);
 
 	_copy(pilotAddress, entry);
-	#ifdef DEBUG
-		DEBUGCONDUIT<<"pilotAddress.id="<<pilotAddress.getID()<<", abEntry.ID="<<entry.custom(appString, idString)<<endl;
-	#endif
+#ifdef DEBUG
+	DEBUGCONDUIT<<"pilotAddress.id="<<pilotAddress.getID()<<", abEntry.ID="<<entry.custom(appString, idString)<<endl;
+#endif
 
 	if(_savePilotAddress(pilotAddress, entry))
 	{
-		#ifdef DEBUG
-			DEBUGCONDUIT<<"Vor _saveAbEntry, pilotAddress.id="<<pilotAddress.getID()<<", abEntry.ID="<<entry.custom(appString, idString)<<endl;
-		#endif
+#ifdef DEBUG
+		DEBUGCONDUIT<<"Vor _saveAbEntry, pilotAddress.id="<<pilotAddress.getID()<<", abEntry.ID="<<entry.custom(appString, idString)<<endl;
+#endif
 		_saveAbEntry(entry);
 	}
 }
@@ -1084,10 +1136,10 @@ bool AbbrowserConduit::_equal(const PilotAddress & piAddress, KABC::Addressee & 
 	if(_compare(address.country(), piAddress.getField(entryCountry))) return false;
 
 	if(
-		_compare(abEntry.custom(appString, "CUSTOM1"), piAddress.getField(entryCustom1)) ||
-		_compare(abEntry.custom(appString, "CUSTOM2"), piAddress.getField(entryCustom2)) ||
-		_compare(abEntry.custom(appString, "CUSTOM3"), piAddress.getField(entryCustom3)) ||
-		_compare(abEntry.custom(appString, "CUSTOM4"), piAddress.getField(entryCustom4)))
+		_compare(getCustomField(abEntry, 0), piAddress.getField(entryCustom1)) ||
+		_compare(getCustomField(abEntry, 1), piAddress.getField(entryCustom2)) ||
+		_compare(getCustomField(abEntry, 2), piAddress.getField(entryCustom3)) ||
+		_compare(getCustomField(abEntry, 3), piAddress.getField(entryCustom4)))
 	{
 		return false;
 	}
@@ -1131,10 +1183,10 @@ void AbbrowserConduit::_copy(PilotAddress & toPilotAddr, KABC::Addressee & fromA
 	_setPilotAddress(toPilotAddr, homeAddress);
 
 	// Process the additional entries from the Palm(the palm database app block tells us the name of the fields)
-	toPilotAddr.setField(entryCustom1, fromAbEntry.custom(appString, "CUSTOM1"));
-	toPilotAddr.setField(entryCustom2, fromAbEntry.custom(appString, "CUSTOM2"));
-	toPilotAddr.setField(entryCustom3, fromAbEntry.custom(appString, "CUSTOM3"));
-	toPilotAddr.setField(entryCustom4, fromAbEntry.custom(appString, "CUSTOM4"));
+	toPilotAddr.setField(entryCustom1, getCustomField(fromAbEntry, 0));
+	toPilotAddr.setField(entryCustom2, getCustomField(fromAbEntry, 1));
+	toPilotAddr.setField(entryCustom3, getCustomField(fromAbEntry, 2));
+	toPilotAddr.setField(entryCustom4, getCustomField(fromAbEntry, 3));
 
 	toPilotAddr.setCat(_getCat(fromAbEntry.categories()));
 }
@@ -1236,10 +1288,10 @@ void AbbrowserConduit::_copy(KABC::Addressee & toAbEntry, const PilotAddress & f
 	homeAddress.setCountry(fromPiAddr.getField(entryCountry));
 	toAbEntry.insertAddress(homeAddress);
 
-	toAbEntry.insertCustom(appString, "CUSTOM1", fromPiAddr.getField(entryCustom1));
-	toAbEntry.insertCustom(appString, "CUSTOM2", fromPiAddr.getField(entryCustom2));
-	toAbEntry.insertCustom(appString, "CUSTOM3", fromPiAddr.getField(entryCustom3));
-	toAbEntry.insertCustom(appString, "CUSTOM4", fromPiAddr.getField(entryCustom4));
+	setCustomField(toAbEntry, 0, fromPiAddr.getField(entryCustom1));
+	setCustomField(toAbEntry, 1, fromPiAddr.getField(entryCustom2));
+	setCustomField(toAbEntry, 2, fromPiAddr.getField(entryCustom3));
+	setCustomField(toAbEntry, 3, fromPiAddr.getField(entryCustom4));
 
 	// copy the fromPiAddr pilot id to the custom field KPilot_Id;
 	// pilot id may be zero(since it could be new) but couldn't hurt
@@ -1329,6 +1381,7 @@ int AbbrowserConduit::_conflict(const QString & entry, const QString & field, co
 #ifdef DEBUG
 	DEBUGCONDUIT << "fieldres=" << fieldres << endl;
 #endif
+
 	switch(fieldres)
 	{
 		case eAbbrowserOverides:
@@ -1493,26 +1546,27 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress,
 	if(res >= 0) return res;
 	else if(!mergedStr.isEmpty()) abEntry.setNote(mergedStr);
 
-	res = _smartMergeEntry(abEntry.custom(appString, "CUSTOM1"), backupAddress, pilotAddress, 
+	res = _smartMergeEntry(getCustomField(abEntry, 0), backupAddress, pilotAddress, 
 		entryCustom1, thisName, i18n("custom 1"), mergedStr);
 	if(res >= 0) return res;
-	else if(!mergedStr.isEmpty()) abEntry.insertCustom(appString, "CUSTOM1", mergedStr);
+	else if(!mergedStr.isEmpty()) setCustomField(abEntry, 0, mergedStr);
 
-	res = _smartMergeEntry(abEntry.custom(appString, "CUSTOM2"), backupAddress, pilotAddress, 
+	res = _smartMergeEntry(getCustomField(abEntry, 1), backupAddress, pilotAddress, 
 		entryCustom2, thisName, i18n("custom 2"), mergedStr);
 	if(res >= 0) return res;
-	else if(!mergedStr.isEmpty()) abEntry.insertCustom(appString, "CUSTOM2", mergedStr);
+	else if(!mergedStr.isEmpty()) setCustomField(abEntry, 1, mergedStr);
 
-	res = _smartMergeEntry(abEntry.custom(appString, "CUSTOM3"), backupAddress, pilotAddress, 
+	res = _smartMergeEntry(getCustomField(abEntry, 2), backupAddress, pilotAddress, 
 		entryCustom3, thisName, i18n("custom 3"), mergedStr);
 	if(res >= 0) return res;
-	else if(!mergedStr.isEmpty()) abEntry.insertCustom(appString, "CUSTOM3", mergedStr);
+	else if(!mergedStr.isEmpty()) setCustomField(abEntry, 2, mergedStr);
 
-	res = _smartMergeEntry(abEntry.custom(appString, "CUSTOM4"), backupAddress, pilotAddress, 
+	res = _smartMergeEntry(getCustomField(abEntry, 3), backupAddress, pilotAddress, 
 		entryCustom4, thisName, i18n("custom 4"), mergedStr);
 	if(res >= 0) return res;
-	else if(!mergedStr.isEmpty()) abEntry.insertCustom(appString, "CUSTOM4", mergedStr);
+	else if(!mergedStr.isEmpty()) setCustomField(abEntry, 3, mergedStr);
 
+	
 	res = _smartMergePhone(abEntry, backupAddress, pilotAddress, 
 		PilotAddress::eWork, abEntry.phoneNumber(KABC::PhoneNumber::Work), 
 		thisName, i18n("work phone"));
@@ -1826,6 +1880,7 @@ AbbrowserConduit::EConflictResolution AbbrowserConduit::getEntryResolution(const
 			else pilotEntryString=i18n("(deleted)");
 
 			if(!abEntry.isEmpty() && !pilotEmpty) lst << i18n("Duplicate both");
+
 #ifdef DEBUG
 			DEBUGCONDUIT<<"pilotAddress.firstName="<<pilotAddress.getField(entryFirstname)<<", pilotAddress.LastName="<<pilotAddress.getField(entryLastname)<<", pilotEmpty="<<pilotEmpty<<", pilotEntryString="<<pilotEntryString<<endl;
 			DEBUGCONDUIT<<"backupAddress.firstName="<<backupAddress.getField(entryFirstname)<<", backupAddress.LastName="<<backupAddress.getField(entryLastname)<<", backupEmpty="<<backupEmpty<<", backupEntryString="<<backupEntryString<<endl;
@@ -1863,7 +1918,7 @@ AbbrowserConduit::EConflictResolution AbbrowserConduit::ResolutionDialog(QString
 	else
 	{
 		EConflictResolution res = (EConflictResolution)(dlg->ResolutionButtonGroup->id(dlg->ResolutionButtonGroup->selected()) + 1);
-		cout << "res=" << res << endl;
+
 		if(!remember.isEmpty() && rem)
 		{
 			*rem = dlg->rememberCheck->isChecked();
@@ -1999,90 +2054,3 @@ void AbbrowserConduit::_checkDelete(PilotRecord* r, PilotRecord *s)
 	}
 }
 
-
-// $Log$
-// Revision 1.57  2002/12/31 00:25:46  kainhofe
-// No idea why I ever changed the default to 10 instead of 0. Reverted it
-//
-// Revision 1.56  2002/12/21 20:17:24  kainhofe
-// Forgot a #ifdef DEBUG, so the conduit didn't compile
-//
-// Revision 1.55  2002/12/13 16:27:22  kainhofe
-// Some bugfixes
-//
-// Revision 1.54  2002/10/10 13:44:41  kainhofe
-// This fixes several bugs:
-// -) conflict resolution now also works if you chose ignore on the last sync
-// -) home/work phone/fax were mixed up
-// -) deleting an address in kaddressbook now also deletes the address from the handheld
-// -) variable renaming for consistent naming
-// -) fix a crash with an iterator being deleted and then incremented
-// -) Offering the value from the last sync in the conflict resolution dialog
-// -) Using an addressbook for several handhelds should work now
-// -) archived records are now synced to the PC, but not back to the handheld
-// -) If an addressee has a wrong pilotID, the pilotID is reset
-//
-// Revision 1.53  2002/10/05 13:59:29  kainhofe
-// duplication now works as conflict resolution. Removed the warning in the setup dialog.
-//
-// Revision 1.52  2002/10/04 21:22:08  sschiman
-// * only use debug methods if debug is enabled
-//
-// Revision 1.51  2002/10/04 12:46:23  cschumac
-// Use right save call. This still isn't optimal, because the conduit should
-// lock the addressbook before changing it and not only on saving it, but
-// it at least works in most cases.
-//
-// Revision 1.50  2002/09/12 22:21:19  kainhofe
-// FINALLLY!!! The conduit seems to work. Had the company field hardcoded, where a variable should have been. This messed up the whole conduit ;-((( Some minor issues remain, but the conduit can be released as beta 2
-//
-// Revision 1.49  2002/09/12 13:58:20  kainhofe
-// some more fixes, still does not do any sync unless compiled with -NDO_DANGEROUS_ABOOK_SYNC . Most things work, except for several conflict resolution settings
-//
-// Revision 1.48  2002/09/09 15:11:02  adridg
-// No idea how Reinhold missed this
-//
-// Revision 1.47  2002/08/25 13:28:28  mhunter
-// CVS_SILENT Corrected typographical errors
-//
-// When replying, please CC me - I'm not subscribed
-//
-// Revision 1.46  2002/08/23 22:59:29  kainhofe
-// Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
-//
-// Revision 1.45  2002/08/20 20:29:42  kainhofe
-// The conduit now seems to work in most cases
-//
-// Revision 1.44  2002/08/18 23:51:20  kainhofe
-// removed some debug messages
-//
-// Revision 1.42  2002/08/16 18:54:06  kainhofe
-// Tried to fix the conduit, but KABC has changed so much that the conduit was totaly broken again. I will not touch the conduit any more until KABC is really solid and doesn't change any more!!!!
-//
-// Revision 1.41  2002/08/15 21:40:14  kainhofe
-// some more work in the addressbook conduit. Does not yet work
-//
-// Revision 1.40  2002/07/23 00:52:02  kainhofe
-// Reorder the resolution methods
-//
-// Revision 1.39  2002/07/20 18:50:45  kainhofe
-// added a terrible hack to add new contacts to the addressbook. Need to fix kabc for this...
-//
-// Revision 1.38  2002/07/11 13:27:28  mhunter
-// Corrected typographical errors
-//
-// Revision 1.37  2002/07/09 22:40:18  kainhofe
-// backup database fixes, prevent duplicate vcal entries, fixed the empty record that was inserted on the palm on every sync
-//
-// Revision 1.36  2002/07/04 23:47:00  kainhofe
-// Phone, email and address entries are no longer duplicated on a sync.
-//
-// Revision 1.35  2002/07/01 23:25:46  kainhofe
-// implemented categories syncing, many things seem to work, but still every sync creates an empty zombie.
-//
-// Revision 1.34  2002/06/30 22:17:50  kainhofe
-// some cleanup. Changes from the palm are still not applied to the pc, pc->palm still disabled.
-//
-// Revision 1.33  2002/06/30 16:23:23  kainhofe
-// Started rewriting the addressbook conduit to use libkabc instead of direct dcop communication with abbrowser. Palm->PC is enabled(but still creates duplicate addresses), the rest is completely untested and thus disabled for now
-//

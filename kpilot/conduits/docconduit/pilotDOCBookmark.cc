@@ -25,17 +25,11 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#include <stdlib.h>
 
-#ifndef _KDEBUG_H_
-#include <kdebug.h>
-#endif
-
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
-
 #include "pilotDOCBookmark.h"
+
+
 
 static const char *pilotDOCBookmark_id =
 	"$Id$";
@@ -99,7 +93,3 @@ void *PilotDOCBookmark::pack(void *buf, int *len)
 	return buf;
 }
 
-
-
-// $Log$
-//

@@ -13,23 +13,18 @@
 
 
 
-
 #include "options.h"
+#include "DOC-converter.moc"
 
 // Only include what we really need:
 // First UNIX system stuff, then std C++,
 // then Qt, then KDE, then local includes.
 //
 //
-#include <unistd.h>
-//
-//#include <qtimer.h>
 #include <qdir.h>
-#include <qfile.h>
 #include <qfileinfo.h>
 #include <qregexp.h>
 #include <qsortedlist.h>
-
 
 #include <pilotDatabase.h>
 #include <pilotLocalDatabase.h>
@@ -39,8 +34,7 @@
 #include "pilotDOCEntry.h"
 #include "pilotDOCBookmark.h"
 
-#include "DOC-converter.moc"
-#include "DOC-converter.h"
+
 
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.
@@ -422,7 +416,7 @@ bool DOCConverter::convertDOCtoPDB() {
 	DEBUGCONDUIT << "Bookmarks: "<<endl;
 	for (bmk = pdbBookmarks.first(); bmk; bmk = pdbBookmarks.next())
 	{
-		DEBUGCONDUIT<<bmk->bmkName<<" at position "<<bmk->position<<endl;
+		DEBUGCONDUIT<<bmk->bmkName.left(20)<<" at position "<<bmk->position<<endl;
 	}
 #endif
 	
@@ -475,7 +469,7 @@ bool DOCConverter::convertDOCtoPDB() {
 //	for (bmkList::const_iterator it=pdbBookmarks.begin(); it!=pdbBookmarks.end(); it++)
 	{
 		recnum++;
-		DEBUGCONDUIT << "Bookmark #"<<recnum<<", Name="<<bmk->bmkName.latin1()<<", Position="<<bmk->position<<endl;
+		DEBUGCONDUIT << "Bookmark #"<<recnum<<", Name="<<bmk->bmkName.left(20)<<", Position="<<bmk->position<<endl;
 		
 		PilotDOCBookmark bmkEntry;
 		bmkEntry.pos=bmk->position;
@@ -591,12 +585,3 @@ bool DOCConverter::convertPDBtoDOC()
 }
 
 
-
-
-// $Log$
-// Revision 1.2  2002/12/15 13:48:45  kainhofe
-// Several bugfixes. Bookmark files work now, compression is done right
-//
-// Revision 1.1  2002/12/13 16:29:53  kainhofe
-// New PalmDOC conduit to syncronize text files with doc databases (AportisDoc, TealReader, etc) on the handheld
-//

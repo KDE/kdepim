@@ -19,39 +19,26 @@
 
 
 #include "options.h"
+#include "doc-conduit.moc"
 
 // Only include what we really need:
 // First UNIX system stuff, then std C++,
 // then Qt, then KDE, then local includes.
 //
-//
-#include <unistd.h>
-#include <iostream.h>
-//
 #include <qtimer.h>
 #include <qdir.h>
-#include <qfile.h>
-//
-//#include <kglobal.h>
-//#include <kstddirs.h>
-#include <kconfig.h>
-#include <kdebug.h>
-#include <kmdcodec.h> 
 
-#include <pi-macros.h>
+#include <kconfig.h>
+#include <kmdcodec.h> 
 
 #include <pilotLocalDatabase.h>
 #include <pilotSerialDatabase.h>
 
 #include "doc-factory.h"
-
-#include "doc-conduit.moc"
-#include "doc-setup.h"
-#include"DOC-converter.h"
-#include "pilotDOCHead.h"
-#include "pilotDOCBookmark.h"
-#include "pilotDOCEntry.h"
 #include "doc-conflictdialog.h"
+#include "DOC-converter.h"
+#include "pilotDOCHead.h"
+
 
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.
@@ -90,6 +77,15 @@ DOCConduit::~DOCConduit()
 }
 
 
+bool DOCConduit::isCorrectDBTypeCreator(DBInfo dbinfo) {
+	return dbinfo.type == dbtype() && dbinfo.creator == dbcreator();
+};
+const unsigned long DOCConduit::dbtype() {
+	return get_long(DOCConduitFactory::dbDOCtype);
+};
+const unsigned long DOCConduit::dbcreator() {
+	return get_long(DOCConduitFactory::dbDOCcreator);
+};
 
 
 
@@ -158,14 +154,18 @@ bool DOCConduit::textChanged(QString docfn)
 	{
 		return true;
 	}
+#ifdef DEBUG
 	DEBUGCONDUIT<<"Old digest is "<<oldDigest<<endl;
+#endif
 	
 	KMD5 docmd5;
 	QFile docfile(docfn);
 	if (docfile.open(IO_ReadOnly)){
 		docmd5.update(docfile);
 		QString thisDigest(docmd5.hexDigest().data());
+#ifdef DEBUG
 		DEBUGCONDUIT<<"New digest is "<<thisDigest<<endl;
+#endif
 		return (thisDigest.length()<=0) || (thisDigest!=oldDigest);
 	} else {
 		// File does not exist. This should actually never happen. Anyways, just return true to indicate it has changed. 
@@ -214,8 +214,9 @@ QString DOCConduit::constructDOCFileName(QString name) {
 /* virtual */ bool DOCConduit::exec()
 {
 	FUNCTIONSETUP;
-
+#ifdef DEBUG
 	DEBUGCONDUIT<<"Conduit version: "<<doc_conduit_id<<endl;
+#endif
 
 	if (!fConfig) {
 		kdWarning() << k_funcinfo << ": No config file was set!" << endl;
@@ -246,7 +247,9 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 			}
 			bmkfilename+=PDBBMK_SUFFIX;
 			if (!QFile::remove(bmkfilename)) {
+#ifdef DEBUG
 				DEBUGCONDUIT<<"Could not remove bookmarks file "<<bmkfilename<<" for database "<<sinfo.handheldDB<<endl;
+#endif
 			}
 		}
 		if (!sinfo.pdbfilename.isEmpty() && fKeepPDBLocally) {
@@ -273,9 +276,13 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 	PilotDatabase *database = preSyncAction(sinfo);
 
 	if (database && ( !database->isDBOpen() ) ) {
+#ifdef DEBUG
 		DEBUGCONDUIT<<"Database "<<sinfo.dbinfo.name<<" does not yet exist. Creating it:"<<endl;
+#endif
 		if (!database->createDatabase(dbcreator(), dbtype()) ) {
+#ifdef DEBUG
 			DEBUGCONDUIT<<"Failed"<<endl;
+#endif
 		}
 	}
 
@@ -310,9 +317,13 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 				QString thisDigest(docmd5.hexDigest().data());
 				fConfig->writeEntry(docconverter.docFilename(), thisDigest);
 				fConfig->sync();
+#ifdef DEBUG
 				DEBUGCONDUIT<<"MD5 Checksum of the text "<<sinfo.docfilename<<" is "<<thisDigest<<endl;
+#endif
 			} else {
+#ifdef DEBUG
 				DEBUGCONDUIT<<"couldn't open file "<<docconverter.docFilename()<<" for reading!!!"<<endl;
+#endif
 			}
 		}
 		
@@ -345,7 +356,9 @@ void DOCConduit::syncNextDB() {
 		return;
 	}
 	dbnr=dbinfo.index+1;
+#ifdef DEBUG
 	DEBUGCONDUIT<<"Next Palm database to sync: "<<dbinfo.name<<", Index="<<dbinfo.index<<endl;
+#endif
 
 	// if creator and/or type don't match, go to next db
 	if (!isCorrectDBTypeCreator(dbinfo) || fDBNames.contains(dbinfo.name))
@@ -415,7 +428,9 @@ void DOCConduit::syncNextDOC()
 		fSyncInfoList.append(syncInfo);
 		fDBNames.append(dbinfo.name);
 	} else {
+#ifdef DEBUG
 		DEBUGCONDUIT<<docfilename<<" has already been synced, skipping it."<<endl;
+#endif
 	}
 	
 	QTimer::singleShot(0, this, SLOT(syncNextDOC()));
@@ -473,7 +488,9 @@ void DOCConduit::checkPDBFiles() {
 			fSyncInfoList.append(syncInfo);
 			fDBNames.append(dbinfo.name);
 		} else {
+#ifdef DEBUG
 			DEBUGCONDUIT<<"Could not install database "<<dbname<<" ("<<pdbfilename<<") to the handheld"<<endl;
+#endif
 		}
 	}
 	
@@ -489,25 +506,35 @@ void DOCConduit::resolve() {
 		// Walk through each database and apply the conflictResolution option. 
 		// the remaining conflicts will be resolved in the resolution dialog
 		if ((*fSyncInfoListIterator).direction==eSyncConflict){
+#ifdef DEBUG
 			DEBUGCONDUIT<<"We have a conflict for "<<(*fSyncInfoListIterator).handheldDB<<", default="<<eConflictResolution<<endl;
+#endif
 			switch (eConflictResolution)
 			{
 				case eSyncPDAToPC:
+#ifdef DEBUG
 					DEBUGCONDUIT<<"PDA overrides for database "<<(*fSyncInfoListIterator).handheldDB<<endl;
+#endif
 					(*fSyncInfoListIterator).direction = eSyncPDAToPC;
 					break;
 				case eSyncPCToPDA:
+#ifdef DEBUG
 					DEBUGCONDUIT<<"PC overrides for database "<<(*fSyncInfoListIterator).handheldDB<<endl;
+#endif
 					(*fSyncInfoListIterator).direction = eSyncPCToPDA;
 					break;
 				case eSyncNone:
+#ifdef DEBUG
 					DEBUGCONDUIT<<"No sync for database "<<(*fSyncInfoListIterator).handheldDB<<endl;
+#endif
 					(*fSyncInfoListIterator).direction = eSyncNone;
 					break;
 				case eSyncDelete:
 				case eSyncConflict:
 				default:
+#ifdef DEBUG
 					DEBUGCONDUIT<<"Conflict remains due to default resolution setting for database "<<(*fSyncInfoListIterator).handheldDB<<endl;
+#endif
 					break;
 			}
 		}
@@ -549,8 +576,10 @@ void DOCConduit::syncDatabases() {
 	
 	switch (sinfo.direction) {
 		case eSyncConflict:
+#ifdef DEBUG
 			DEBUGCONDUIT<<"Entry "<<sinfo.handheldDB<<"( docfilename: "<<sinfo.docfilename<<
 				", pdbfilename: "<<sinfo.pdbfilename<<") had sync direction eSyncConflict!!!"<<endl;
+#endif
 			break;
 		case eSyncDelete:
 		case eSyncPDAToPC:
@@ -558,7 +587,9 @@ void DOCConduit::syncDatabases() {
 			emit logMessage(i18n("Syncronizing text \"%1\"").arg(sinfo.handheldDB));
 			if (!doSync(sinfo)) {
 				// The sync could not be done, so inform the user (the error message should probably issued inside doSync)
+#ifdef DEBUG
 				DEBUGCONDUIT<<"There was some error syncing the text \""<<sinfo.handheldDB<<"\" with the file "<<sinfo.docfilename<<endl;
+#endif
 			}
 			break;
 		case eSyncNone:
@@ -586,7 +617,9 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 	PilotDatabase*docdb=openDOCDatabase(sinfo.dbinfo.name);
 	if (!fDBListSynced.contains(sinfo.handheldDB)) {
 		// the database wasn't included on last sync, so it has to be new.
+#ifdef DEBUG
 		DEBUGCONDUIT<<"Database "<<sinfo.dbinfo.name<<" wasn't included in the previous sync!"<<endl;
+#endif
 
 		if (QFile::exists(sinfo.docfilename)) sinfo.fPCStatus=eStatNew;
 		else sinfo.fPCStatus=eStatDoesntExist;
@@ -613,10 +646,14 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 	if (!QFile::exists(sinfo.docfilename)) sinfo.fPCStatus=eStatDeleted;
 	else if(textChanged(sinfo.docfilename)) {
 		sinfo.fPCStatus=eStatChanged;
+#ifdef DEBUG
 		DEBUGCONDUIT<<"PC side has changed!"<<endl;
+#endif
 		// TODO: Check for changed bookmarks on the PC side
 	} else {
+#ifdef DEBUG
 		DEBUGCONDUIT<<"PC side has NOT changed!"<<endl;
+#endif
 	}
 	if (!docdb || !docdb->isDBOpen()) sinfo.fPalmStatus=eStatDeleted;
 	else {
@@ -629,37 +666,51 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 		// determine the index of the next modified record (does it lie beyond the actual text records?)
 		int modRecInd=-1;
 		PilotRecord*modRec=docdb->readNextModifiedRec(&modRecInd);
+#ifdef DEBUG
 		DEBUGCONDUIT<<"Index of first changed record: "<<modRecInd<<endl;
+#endif
 		
 		KPILOT_DELETE(modRec);
 		// if the header record was changed, find out which is the first changed real document record:
 		if (modRecInd==0) {
 			modRec=docdb->readNextModifiedRec(&modRecInd);
+#ifdef DEBUG
 			DEBUGCONDUIT<<"Reread Index of first changed records: "<<modRecInd<<endl;
+#endif
 			KPILOT_DELETE(modRec);
 		}
 	
 		// The record index starts with 0, so only a negative number means no modified record was found
 		if (modRecInd >= 0) {
 //			sinfo.fPalmStatus=eStatBookmarksChanged;
+#ifdef DEBUG
 			DEBUGCONDUIT<<"Handheld side has changed!"<<endl;
+#endif
 			if ((!fIgnoreBmkChangesOnly) || (modRecInd <= storyRecs)) 
 				sinfo.fPalmStatus=eStatChanged;
+#ifdef DEBUG
 			DEBUGCONDUIT<<"PalmStatus="<<sinfo.fPalmStatus<<", condition="<<((!fIgnoreBmkChangesOnly) || (modRecInd <= storyRecs))<<endl;
+#endif
 		} else {
+#ifdef DEBUG
 			DEBUGCONDUIT<<"Handheld side has NOT changed!"<<endl;
+#endif
 		}
 	}
 	KPILOT_DELETE(docdb);
 
 	if (sinfo.fPCStatus == eStatNone && sinfo.fPalmStatus==eStatNone) {
+#ifdef DEBUG
 		DEBUGCONDUIT<<"Nothing has changed, not need for a sync."<<endl;
+#endif
 		return false;
 	}
 	// if either is deleted, and the other is not changed, delete
 	if ( ((sinfo.fPCStatus == eStatDeleted) && (sinfo.fPalmStatus!=eStatChanged)) ||
 	     ((sinfo.fPalmStatus == eStatDeleted) && (sinfo.fPCStatus!=eStatChanged)) ) {
+#ifdef DEBUG
 		DEBUGCONDUIT<<"Database was deleted on one side and not changed on the other -> Delete it."<<endl;
+#endif
 		sinfo.direction=eSyncDelete;
 		return true;
 	}
@@ -667,7 +718,9 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 	// eStatDeleted (and both not changed) have already been treated, for all 
 	// other values in combination with eStatNone, just copy the texts.
 	if (sinfo.fPCStatus==eStatNone) {
+#ifdef DEBUG
 		DEBUGCONDUIT<<"PC side has changed!"<<endl;
+#endif
 		sinfo.direction=eSyncPDAToPC;
 		return true;
 	}
@@ -710,7 +763,9 @@ PilotDatabase *DOCConduit::preSyncAction(docSyncInfo &sinfo) const
 				{
 					dir.mkdir(dir.absPath());
 				}
+#ifdef DEBUG
 				DEBUGCONDUIT<<"Need to fetch database "<<dbinfo.name<<" to the directory "<<dir.absPath()<<endl;
+#endif
 				dbinfo.flags &= ~dlpDBFlagOpen;
 
 				if (!fHandle->retrieveDatabase(sinfo.pdbfilename, &dbinfo) )
@@ -756,13 +811,25 @@ bool DOCConduit::postSyncAction(PilotDatabase * database, docSyncInfo &sinfo, bo
 	{
 		case eSyncPDAToPC:
 			// also reset the sync flags on the handheld
+#ifdef DEBUG
+				DEBUGCONDUIT<<"Resetting sync flags for database "<<sinfo.dbinfo.name<<endl;
+#endif
 			if (fKeepPDBLocally && !fLocalSync) {
 				PilotSerialDatabase*db=new PilotSerialDatabase(pilotSocket(), sinfo.dbinfo.name);
+#ifdef DEBUG
+				DEBUGCONDUIT<<"Middle 1 Resetting sync flags for database "<<sinfo.dbinfo.name<<endl;
+#endif
 				if (db) {
 					db->resetSyncFlags();
 					KPILOT_DELETE(db);
 				}
+#ifdef DEBUG
+				DEBUGCONDUIT<<"Middle2 Resetting sync flags for database "<<sinfo.dbinfo.name<<endl;
+#endif
 			}
+#ifdef DEBUG
+				DEBUGCONDUIT<<"End Resetting sync flags for database "<<sinfo.dbinfo.name<<endl;
+#endif
 			break;
 		case eSyncPCToPDA:
 			if (fKeepPDBLocally && !fLocalSync && res)
@@ -771,21 +838,32 @@ bool DOCConduit::postSyncAction(PilotDatabase * database, docSyncInfo &sinfo, bo
 				PilotLocalDatabase*localdb=dynamic_cast<PilotLocalDatabase*>(database);
 				if (localdb)
 				{
+#ifdef DEBUG
 					DEBUGCONDUIT<<"Installing file "<<localdb->dbPathName()<<" ("<<sinfo.handheldDB<<") to the handheld"<<endl;
+#endif
 					QString dbpathname=localdb->dbPathName();
 					KPILOT_DELETE(database); // deletes localdb as well, which is just casted from database!!!
-					if (!fHandle->installFiles(dbpathname )) 
+/*					if (!fHandle->installFiles(dbpathname )) 
 					{
 						rs = false;
+#ifdef DEBUG
 						DEBUGCONDUIT<<"Could not install the database "<<dbpathname<<" ("<<sinfo.handheldDB<<")"<<endl;
-					}
+#endif
+					}*/
 				}
 			}
 		default:
 			break;
 	}
+	
+#ifdef DEBUG
+	DEBUGCONDUIT<<"Vor KPILOT_DELETE(database)"<<endl;
+#endif
 
 	KPILOT_DELETE(database);
+#ifdef DEBUG
+	DEBUGCONDUIT<<"End postSyncAction"<<endl;
+#endif
 	return rs;
 }
 
@@ -802,17 +880,3 @@ void DOCConduit::cleanup()
 	emit syncDone(this);
 }
 
-
-
-
-
-// $Log$
-// Revision 1.3  2002/12/31 00:22:10  kainhofe
-// Currently restructuring everything. Not yet finished.
-//
-// Revision 1.2  2002/12/15 13:48:45  kainhofe
-// Several bugfixes. Bookmark files work now, compression is done right
-//
-// Revision 1.1  2002/12/13 16:29:53  kainhofe
-// New PalmDOC conduit to syncronize text files with doc databases (AportisDoc, TealReader, etc) on the handheld
-//

@@ -240,18 +240,3 @@ PilotProgectEntry & PilotProgectEntry::operator = (const PilotProgectEntry & e) 
 	return *this;
 }				// end of assignment operator
 
-
-// $Log$
-// Revision 1.2  2002/03/23 18:21:14  reinhold
-// Cleaned up the structure. Works with QTimer instead of loops.
-//
-// Revision 1.3  2002/03/10 23:58:32  reinhold
-// Made the conduit compile...
-//
-// Revision 1.2  2002/03/10 16:06:43  reinhold
-// Cleaned up the class hierarchy, implemented some more features (should be quite finished now...)
-//
-// Revision 1.1  2002/03/09 15:48:32  reinhold
-// Added the classes for the different palm database formats
-//
-//

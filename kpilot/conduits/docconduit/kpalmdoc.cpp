@@ -28,28 +28,14 @@
 
 
 static const char *kpalmdoc_id =
-	"$Id: $";
+	"$Id$";
 
 
-/*#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif*/
-
-#include <qdialog.h>
 
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 #include <kapplication.h>
-
-#include <sys/types.h>
-#include <dirent.h>
-#include <iostream.h>
-#include <fstream.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <errno.h>
 
 #include <converterdlg_base.h>
 
@@ -76,5 +62,3 @@ int main(int argc, char **argv)
 	return app.exec();
 }
 
-
-// $Log:  $

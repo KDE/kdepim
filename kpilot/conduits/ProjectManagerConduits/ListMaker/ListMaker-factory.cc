@@ -66,26 +66,3 @@ ListMakerConduitFactory::ListMakerConduitFactory(QObject *p, const char *n) :
 
 #include "ListMaker-factory.moc"
 
-
-
-// $Log$
-// Revision 1.1  2002/04/07 12:09:42  kainhofe
-// Initial checkin of the conduit. The gui works mostly, but syncing crashes KPilot...
-//
-// Revision 1.4  2002/04/07 11:56:19  reinhold
-// Last version before moving to KDE CVS
-//
-// Revision 1.3  2002/03/15 20:43:17  reinhold
-// Fixed the crash on loading (member function not defined)...
-//
-// Revision 1.2  2002/03/13 22:14:40  reinhold
-// GUI should work now...
-//
-// Revision 1.1  2002/03/10 23:59:17  reinhold
-// Made the conduit compile...
-//
-// Revision 1.1.1.1  2002/03/09 15:38:45  reinhold
-// Initial checin of the  project manager / List manager conduit.
-//
-//
-

@@ -34,7 +34,7 @@ static const char *pilotlocaldatabase_id =
 
 #include <stdio.h>
 #include <unistd.h>
-#include <iostream.h>
+#include <iostream>
 
 #include <qstring.h>
 #include <qfile.h>
@@ -632,6 +632,9 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 }
 
 // $Log$
+// Revision 1.12  2002/12/31 13:22:07  mueller
+// CVS_SILENT fixincludes
+//
 // Revision 1.11  2002/12/31 00:32:15  kainhofe
 // Added function deleteDatabase to the Pilot*Database classes
 //

@@ -84,22 +84,5 @@ private:
 	KNotesActionPrivate *fP;
 } ;
 
-// $Log$
-// Revision 1.5  2002/05/19 15:01:49  adridg
-// Patches for the KNotes conduit
-//
-// Revision 1.4  2002/01/20 22:42:43  adridg
-// CVS_SILENT: Administrative
-//
-// Revision 1.3  2001/12/20 22:55:44  adridg
-// Making conduits save their configuration and doing syncs
-//
-// Revision 1.2  2001/10/31 23:46:51  adridg
-// CVS_SILENT: Ongoing conduits ports
-//
-// Revision 1.1  2001/10/16 21:44:53  adridg
-// Split up some files, added behavior
-//
-//
 
 #endif

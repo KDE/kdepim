@@ -51,9 +51,4 @@ private:
 	VCalWidget *fConfigWidget;
 } ;
 
-// $Log$
-// Revision 1.1  2001/12/13 21:40:40  adridg
-// New files for move to .so
-//
-
 #endif

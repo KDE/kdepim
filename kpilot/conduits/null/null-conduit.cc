@@ -79,6 +79,7 @@ NullConduit::~NullConduit()
 /* virtual */ bool NullConduit::exec()
 {
 	FUNCTIONSETUP;
+	DEBUGCONDUIT<<null_conduit_id<<endl;
 
 	if (!fConfig)
 	{
@@ -116,6 +117,9 @@ NullConduit::~NullConduit()
 
 
 // $Log$
+// Revision 1.28  2002/08/25 19:39:28  adridg
+// Add testing instruments for exec() returning false
+//
 // Revision 1.27  2002/08/23 22:03:20  adridg
 // See ChangeLog - exec() becomes bool, debugging added
 //

@@ -28,18 +28,11 @@
 #ifndef _KPILOT_PILOTDOCENTRY_H
 #define _KPILOT_PILOTDOCENTRY_H
 
-#include <string.h>
-
-#ifndef _KPILOT_PILOTAPPCATEGORY_H
 #include "pilotAppCategory.h"
-#endif
-
-#ifndef _KPILOT_PILOTRECORD_H
-#include "pilotRecord.h"
-#endif
-
 #include "makedoc9.h"
 
+
+class PilotRecord;
 
 
 class PilotDOCEntry:public PilotAppCategory {
@@ -82,12 +75,5 @@ protected:
 
 
 
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
 #endif
 
-
-// $Log$
-//

@@ -18,23 +18,19 @@
 */
 
 
-
-#include <plugin.h>
-
 #include <qmap.h>
-#include <qptrlist.h>
 
-#include <kapplication.h>
-#include <qdict.h>
-
-#include <pilotAddress.h>
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
+
+#include <pilotAddress.h>
+#include <plugin.h>
+
+
 
 #define SYNCNONE 0
 #define SYNCMOD 1
 #define SYNCDEL 3
-
 
 #define SYNC_FULL 1
 #define SYNC_FAST 0
@@ -48,13 +44,8 @@
 #define CHANGED_NORES 0x200
 #define CHANGED_DUPLICATE CHANGED_ADD|CHANGED_NORES|CHANGED_BOTH
 
-//#define ADD_BOTH CHANGED_BOTH|CHANGED_ADD
 
 using namespace KABC;
-
-//class DCOPClient;
-class PilotLocalDatabase;
-class PilotSerialDatabase;
 
 class AbbrowserConduit : public ConduitAction
 {
@@ -127,6 +118,8 @@ private:
 	
 	static QString getOtherField(const KABC::Addressee&abEntry);
 	static void setOtherField(KABC::Addressee&abEntry, QString nr);
+	static QString getCustomField(const KABC::Addressee &abEntry, const int index);
+	static void setCustomField(KABC::Addressee &abEntry,  int index, QString cust);
 	static KABC::PhoneNumber getFax(const KABC::Addressee &abEntry);
 	static KABC::Address getAddress(const KABC::Addressee &abEntry);
 	
@@ -217,7 +210,12 @@ private:
 	KABC::AddressBook* aBook;
 	KABC::AddressBook::Iterator abiter;
 	
-	
+	static enum eCustomEnum {
+		eCustomField,
+		eCustomBirthdate,
+		eCustomURL,
+		eCustomIM
+	} eCustom[4];
 	
 	
 	
@@ -226,72 +224,4 @@ private:
 } ;
 
 
-
-
-// $Log$
-// Revision 1.28  2002/10/10 13:44:41  kainhofe
-// This fixes several bugs:
-// -) conflict resolution now also works if you chose ignore on the last sync
-// -) home/work phone/fax were mixed up
-// -) deleting an address in kaddressbook now also deletes the address from the handheld
-// -) variable renaming for consistent naming
-// -) fix a crash with an iterator being deleted and then incremented
-// -) Offering the value from the last sync in the conflict resolution dialog
-// -) Using an addressbook for several handhelds should work now
-// -) archived records are now synced to the PC, but not back to the handheld
-// -) If an addressee has a wrong pilotID, the pilotID is reset
-//
-// Revision 1.27  2002/10/05 13:59:29  kainhofe
-// duplication now works as conflict resolution. Removed the warning in the setup dialog.
-//
-// Revision 1.26  2002/09/12 13:58:20  kainhofe
-// some more fixes, still does not do any sync unless compiled with -NDO_DANGEROUS_ABOOK_SYNC . Most things work, except for several conflict resolution settings
-//
-// Revision 1.25  2002/08/23 22:59:29  kainhofe
-// Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
-//
-// Revision 1.24  2002/08/16 18:54:06  kainhofe
-// Tried to fix the conduit, but KABC has changed so much that the conduit was totaly broken again. I will not touch the conduit any more until KABC is really solid and doesn't change any more!!!!
-//
-// Revision 1.23  2002/08/15 21:48:59  kainhofe
-// removed deprecated files (ContactEntry class and DCOP things)
-//
-// Revision 1.22  2002/08/15 21:40:14  kainhofe
-// some more work in the addressbook conduit. Does not yet work
-//
-// Revision 1.21  2002/07/23 00:52:02  kainhofe
-// Reorder the resolution methods
-//
-// Revision 1.20  2002/07/20 18:50:45  kainhofe
-// added a terrible hack to add new contacts to the addressbook. Need to fix kabc for this...
-//
-// Revision 1.19  2002/07/09 22:40:18  kainhofe
-// backup database fixes, prevent duplicate vcal entries, fixed the empty record that was inserted on the palm on every sync
-//
-// Revision 1.18  2002/07/01 23:25:46  kainhofe
-// implemented categories syncing, many things seem to work, but still every sync creates an empty zombie.
-//
-// Revision 1.17  2002/06/30 22:17:50  kainhofe
-// some cleanup. Changes from the palm are still not applied to the pc, pc->palm still disabled.
-//
-// Revision 1.16  2002/06/30 16:23:23  kainhofe
-// Started rewriting the addressbook conduit to use libkabc instead of direct dcop communication with abbrowser. Palm->PC is enabled (but still creates duplicate addresses), the rest is completely untested and thus disabled for now
-//
-// Revision 1.15  2002/05/15 17:15:32  gioele
-// kapp.h -> kapplication.h
-// I have removed KDE_VERSION checks because all that files included "options.h"
-// which #includes <kapplication.h> (which is present also in KDE_2).
-// BTW you can't have KDE_VERSION defined if you do not include
-// - <kapplication.h>: KDE3 + KDE2 compatible
-// - <kdeversion.h>: KDE3 only compatible
-//
-// Revision 1.14  2002/04/16 18:22:12  adridg
-// Wishlist fix from David B: handle formatted names when syncing
-//
-// Revision 1.13  2001/12/10 22:10:17  adridg
-// Make the conduit compile, for Danimo, but it may not work
-//
-// Revision 1.12  2001/10/31 23:54:45  adridg
-// CVS_SILENT: Ongoing conduits ports
-//
 #endif

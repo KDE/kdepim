@@ -28,8 +28,10 @@
 */
 #include "options.h"
 
-#include <time.h>
-#include <iostream.h>
+#include "pilotSerialDatabase.h"
+
+#include <ctime>
+#include <iostream>
 
 #include <qfile.h>
 
@@ -38,8 +40,6 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-
-#include "pilotSerialDatabase.h"
 
 static const char *pilotSerialDatabase_id =
 	"$Id$";
@@ -338,6 +338,9 @@ int PilotSerialDatabase::deleteDatabase()
 
 
 // $Log$
+// Revision 1.8  2002/12/31 00:32:15  kainhofe
+// Added function deleteDatabase to the Pilot*Database classes
+//
 // Revision 1.7  2002/12/13 16:26:09  kainhofe
 // Added default args to readNextModifiedRec, and findDatabase, new functions: deleteRecord and createDatabase
 //

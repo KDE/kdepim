@@ -181,21 +181,3 @@ PilotListMakerEntry::PilotListMakerEntry(PilotRecord * rec):PilotOrganizerEntry(
 	(void) pilotListMakerEntry_id;
 }
 
-
-// $Log$
-// Revision 1.5  2002/04/05 23:35:29  reinhold
-// Restructuring the dir structure
-//
-// Revision 1.4  2002/04/05 21:17:01  reinhold
-// *** empty log message ***
-//
-// Revision 1.3  2002/03/10 23:58:32  reinhold
-// Made the conduit compile...
-//
-// Revision 1.2  2002/03/10 16:06:43  reinhold
-// Cleaned up the class hierarchy, implemented some more features (should be quite finished now...)
-//
-// Revision 1.1  2002/03/09 15:48:32  reinhold
-// Added the classes for the different palm database formats
-//
-//

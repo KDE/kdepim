@@ -16,19 +16,7 @@
 */
 
 
-
 #include <plugin.h>
-
-#include <kapplication.h>
-
-
-class PilotLocalDatabase;
-class PilotSerialDatabase;
-class PilotDatabase;
-class docDBInfo;
-#include <qdir.h> 
-
-#include "doc-factory.h"
 
 class docSyncInfo;
 typedef QValueList<docSyncInfo> syncInfoList;
@@ -67,15 +55,9 @@ public:
 	bool decode(PilotDatabase * db, QString fileName);
 	virtual bool exec();
 protected:
-	virtual bool isCorrectDBTypeCreator(DBInfo dbinfo) {
-		return dbinfo.type == dbtype() && dbinfo.creator == dbcreator();
-	};
-	virtual const unsigned long dbtype() {
-		return get_long(DOCConduitFactory::dbDOCtype);
-	}
-	virtual const unsigned long dbcreator() {
-		return get_long(DOCConduitFactory::dbDOCcreator);
-	}
+	virtual bool isCorrectDBTypeCreator(DBInfo dbinfo);
+	virtual const unsigned long dbtype();
+	virtual const unsigned long dbcreator();
 
 public slots:
 /** syncNextDB walks through all PalmDoc databases on the handheld and decides if they are supposed to be synced to the PC. 
@@ -121,8 +103,6 @@ public slots:
 	QString constructDOCFileName(QString name);
 
 
-
-
 	QString fDOCDir, fPDBDir;
 	bool fKeepPDBLocally;
 	eSyncDirectionEnum  eConflictResolution;
@@ -132,7 +112,6 @@ public slots:
 	QStringList fDBNames;
 	syncInfoList fSyncInfoList;
 	syncInfoList::Iterator fSyncInfoListIterator;
-//	QString docfilename, pdbfilename;
 	long int dbnr;
 
 	QStringList docnames;
@@ -152,13 +131,4 @@ public:
 };
 
 
-
-// $Log$
-// Revision 1.2  2002/12/31 00:22:10  kainhofe
-// Currently restructuring everything. Not yet finished.
-//
-// Revision 1.1  2002/12/13 16:29:53  kainhofe
-// New PalmDOC conduit to syncronize text files with doc databases (AportisDoc, TealReader, etc) on the handheld
-//
-//
 #endif

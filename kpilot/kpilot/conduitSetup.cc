@@ -32,7 +32,7 @@
 
 #include <stdio.h>
 #include <unistd.h>
-#include <iostream.h>
+#include <iostream>
 
 #ifndef QDIR_H
 #include <qdir.h>
@@ -614,6 +614,9 @@ void CConduitSetup::warnSetupRunning()
 
 
 // $Log$
+// Revision 1.35  2003/01/11 03:05:12  zelenko
+// Make "Conduit Error." message box caption same as others
+//
 // Revision 1.34  2002/07/20 22:08:19  mhunter
 // Hot-Sync -> HotSync
 //

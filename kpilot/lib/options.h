@@ -74,12 +74,14 @@
 #define DEBUGFUNC	kdDebug()
 #endif
 
-#include <iostream.h>
+#include <iostream>
 #include <qstring.h>
 #include <qstrlist.h>
 #include <klocale.h>
 #include <kdebug.h>
 
+
+using namespace std;
 
 // KPilot will move towards the *standard* way of doing
 // debug messages soon. This means that we need some

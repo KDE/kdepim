@@ -25,18 +25,11 @@
 /*
 ** Bug reports and questions can be sent to groot@kde.org
 */
-#include <stdlib.h>
-#include <string.h>
 
-#ifndef _KDEBUG_H_
-#include <kdebug.h>
-#endif
-
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
-
 #include "pilotDOCEntry.h"
+
+
 
 static const char *pilotDOCEntry_id =
 	"$Id$";
@@ -105,8 +98,3 @@ void *PilotDOCEntry::pack(void *buf, int *len)
 }
 
 
-
-
-
-// $Log$
-//
