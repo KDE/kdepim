@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>359</width>
-            <height>292</height>
+            <width>512</width>
+            <height>296</height>
         </rect>
     </property>
     <property name="caption">
@@ -46,11 +46,23 @@
                 <cstring>groupBox2</cstring>
             </property>
             <property name="title">
-                <string>Handheld &amp;&amp; User Name</string>
+                <string>Handheld and User Name</string>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>You can either let KPilot detect these values automatically (for this you need your handheld ready and connected to the PC)  or enter them manually.
-Please enter the user name exactly as set on the handheld. The device means a system device on your PC, like /dev/pilot, or /dev/ttyUSB0 or /dev/ttyUSB1 for usb on Linux, or /dev/ttyS1 for serial devices.</string>
+                <string>&lt;p&gt;You can either let KPilot detect these values automatically (for this you need your handheld ready and connected to the PC)  or enter them manually.&lt;/p&gt; 
+&lt;p&gt;Please enter the user name exactly as set on the handheld. &lt;/p&gt;
+&lt;p&gt;If setting the device type manually (i.e., if automatic detection did not work for you), please look below for tips on choosing the right device name.  {0...n} means a number from 0 up to a very large number, though usually just 255.
+&lt;p&gt;
+Serial Port: And "old-school" method of connection, used primarily by the original line of Palm Pilots, and various Palm-based cellphones.  Device name will look like /dev/ttyS{0...n} (Linux) or /dev/cuaa{0...n} (FreeBSD).&lt;/p&gt;
+&lt;p&gt;
+USB Port: A newer style of connection, used by most newer Palms, Handsprings, and Sony Clies.  Device name will look like /dev/ttyUSB{0...n} or /dev/usb/tts/{0...n} (Linux) or /dev/ucom{0...n} (FreeBSD).  On Linux, definetly check both 0 and 1, as newer devices tend to use 1, and older devices tend to use 0.&lt;/p&gt;
+&lt;p&gt;
+Infrared: (pronounced infra-red, *not* in-fraired) is a dog-slow connection type used soley as a last resort.  Device name will be /dev/ircomm0 or /dev/ttyS{0...n} (Linux) or /dev/sio{0...n} (FreeBSD).&lt;/p&gt;
+&lt;p&gt;
+Bluetooth: The new-kid on the block, this is used almost exclusively on new, high-end devices like the Tungsten T3 or the Zire 72.  Device name will be /dev/usb/ttub/{0...n} or /dev/ttyUB{0...n} (Linux) or /dev/ttyp{0...n} (FreeBSD).&lt;/p&gt;
+&lt;p&gt;
+Network: This has not been tested by any of the KPilot developers themselves (hardware donations always accepted!), but it has been reported that setting the device to "net:any" will work for network-enabled devices.  However, this has also been known to lock KPilot up when doing anything other than just syncing.  With Free Software, when it breaks, you get to keep *both* pieces!
+&lt;/p&gt;</string>
             </property>
             <grid>
                 <property name="name">
@@ -72,7 +84,7 @@ Please enter the user name exactly as set on the handheld. The device means a sy
                         <cstring>fProbeButton</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;Automatically Detect Handheld and User Name...</string>
+                        <string>&amp;Automatically detect the handheld and the user name...</string>
                     </property>
                 </widget>
                 <widget class="QLineEdit" row="1" column="1">
@@ -108,8 +120,16 @@ Please enter the user name exactly as set on the handheld. The device means a sy
             <property name="text">
                 <string>KPilot should be &amp;running all the time</string>
             </property>
+            <property name="accel">
+                <string>Alt+R</string>
+            </property>
             <property name="checked">
                 <bool>true</bool>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;p&gt;
+This will make the kpilot daemon load when you first log in until you log out.  That means (in theory), that you shouldn't have to do anything other than connect your handheld and push "sync", and kpilot will appear and magically do your bidding. Hooray for magic!
+&lt;/p&gt;</string>
             </property>
         </widget>
         <spacer>
