@@ -281,6 +281,15 @@ class ResourceCalendar : public KRES::Resource
       Is this subresource active or not?
     */
     virtual bool subresourceActive( const QString& ) const { return true; }
+    
+    /**
+      What is the label for this subresource?
+     */
+    virtual const QString labelForSubresource( const QString& resource ) const
+    {
+       // the resource identifier is a sane fallback
+       return resource;
+    };
 
   public slots:
     /**
