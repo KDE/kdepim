@@ -28,9 +28,9 @@
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <krun.h>
-#include <dcopclient.h>
 
 #ifndef KORG_NODCOP
+#include <dcopclient.h>
 #include "korganizer.h"
 #endif
 

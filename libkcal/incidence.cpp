@@ -167,6 +167,7 @@ void Incidence::setCategories(const QStringList &categories)
 void Incidence::setCategories(const QString &catStr)
 {
   if (mReadOnly) return;
+  mCategories.clear();
 
   if (catStr.isEmpty()) return;
 

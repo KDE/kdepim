@@ -1,0 +1,8 @@
+debian/tmp/etc/kde3/knotesrc
+debian/tmp/usr/bin/knotes
+debian/tmp/usr/share/applnk/Utilities/knotes.desktop
+debian/tmp/usr/share/apps/knotes
+debian/tmp/usr/share/doc/kde/HTML/en/knotes
+debian/tmp/usr/share/icons/hicolor/16x16/apps/knotes.png
+debian/tmp/usr/share/icons/hicolor/32x32/apps/knotes.png
+debian/tmp/usr/share/icons/hicolor/48x48/apps/knotes.png

@@ -44,7 +44,7 @@
 
 ConduitConfig::ConduitConfig(QWidget *parent,
 	const char *name,
-	const QStringList &args) : 
+	const QStringList &args) :
 	UIDialog(parent,name,PluginUtility::isModal(args)),
 	fConfig(0L)
 {
@@ -66,6 +66,15 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	fBackup(args.contains("backup"))
 {
 	FUNCTIONSETUP;
+
+#ifdef DEBUG
+	for (QStringList::ConstIterator it = args.begin();
+		it != args.end();
+		++it)
+	{
+		DEBUGCONDUIT << fname << ": " << *it << endl;
+	}
+#endif
 }
 
 /* virtual */ ConduitAction::~ConduitAction()
@@ -121,6 +130,9 @@ bool PluginUtility::isModal(const QStringList &a)
 }
 
 // $Log$
+// Revision 1.6  2002/02/02 20:53:53  leitner
+// removed re-definition of default arg.
+//
 // Revision 1.5  2002/01/21 23:14:03  adridg
 // Old code removed; extra abstractions added; utility extended
 //

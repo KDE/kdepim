@@ -1,8 +1,8 @@
-#ifndef _TODOCONDUIT_H
-#define _TODOCONDUIT_H
-
-/* todo-conduit.h			KPilot
+#ifndef _KPILOT_TODO_CONDUIT_H
+#define _KPILOT_TODO_CONDUIT_H
+/* todo-conduit.h                       KPilot
 **
+** Copyright (C) 2002 Reinhold Kainhofer
 ** Copyright (C) 1998-2001 Dan Pilone
 ** Copyright (C) 1998-2000 Preston Brown
 ** Copyright (C) 1998 Herwin-Jan Steehouwer
@@ -30,52 +30,98 @@
 */
 
 /*
-** Bug reports and questions can be sent to groot@kde.org
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "vcalBase.h"
+#include <plugin.h>
 
-using namespace KCal;
+#include <todo.h>
+#include <calendar.h>
+#include <pilotTodoEntry.h>
+//#include <pilotRecord.h>
+#include "todo-factory.h"
+#include "vcal-conduitbase.h"
 
-class TodoConduit : public VCalBaseConduit
+class PilotRecord;
+class PilotSerialDatabase;
+class PilotLocalDatabase;
+//class PilotAppCategory;
+//class PilotDateEntry: public PilotAppCategory;
+//class VCalConduitFactory;
+
+//class VCalConduitBase;
+
+class TodoConduitPrivate : public VCalConduitPrivateBase
 {
 public:
-	TodoConduit(KPilotDeviceLink *,
-		const char *n=0L,
-		const QStringList &l=QStringList());
-	virtual ~TodoConduit();
+	TodoConduitPrivate(KCal::Calendar *buddy);
+	virtual ~TodoConduitPrivate() {};
 
-	virtual void doSync();
-	virtual void doBackup();
-	virtual void exec();
+#ifdef KDE2
+	QList<KCal::Todo> fAllTodos;
+#else
+	QPtrList<KCal::Todo> fAllTodos;
+#endif
+
+	virtual int updateIncidences();
+	virtual void addIncidence(KCal::Incidence*);
+	virtual void removeIncidence(KCal::Incidence *);
+	virtual KCal::Incidence *findIncidence(recordid_t);
+	virtual KCal::Incidence *getNextIncidence();
+	virtual KCal::Incidence *getNextModifiedIncidence();
+	virtual int count() {return fAllTodos.count();};
+} ;
+
+
+
+class TodoConduit : public VCalConduitBase
+{
+Q_OBJECT
+//protected:
+//	class VCalPrivate;
+public:
+	TodoConduit(KPilotDeviceLink *,
+		const char *name=0L,
+		const QStringList &args = QStringList());
+	virtual ~TodoConduit();
+   
+protected:
+	virtual const QString configGroup() { return ToDoConduitFactory::group; };
+	virtual const QString dbname() { return "ToDoDB"; };
+
+   virtual VCalConduitPrivateBase* newVCalPrivate(KCal::Calendar *fCalendar) { return new TodoConduitPrivate(fCalendar);};
+
+
+	virtual PilotAppCategory*newPilotEntry(PilotRecord*r) {FUNCTIONSETUP; if (r) return new PilotTodoEntry(r); else return new PilotTodoEntry;};
+	virtual KCal::Incidence*newIncidence() { return new KCal::Todo; };
 
 protected:
-	virtual void doLocalSync();
-	virtual void updateTodo(PilotRecord *rec);
 
-private:
-	void firstSyncCopy(bool DeleteOnPilot);
-};
+	PilotRecord *recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e);
+	PilotRecord *recordFromIncidence(PilotTodoEntry*de, const KCal::Todo*e);
+	KCal::Incidence *incidenceFromRecord(KCal::Incidence *, const PilotAppCategory *);
+	KCal::Todo *incidenceFromRecord(KCal::Todo *, const PilotTodoEntry *);
 
+} ;
 
 // $Log$
-// Revision 1.3  2001/06/18 19:51:40  cschumac
-// Fixed todo and datebook conduits to cope with KOrganizers iCalendar format.
-// They use libkcal now.
+// Revision 1.4.2.1  2002/04/28 12:58:54  kainhofe
+// Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
 //
-// Revision 1.2  2001/06/05 22:58:40  adridg
-// General rewrite, cleanup thx. Philipp Hullmann
+// Revision 1.5  2002/04/22 22:51:51  kainhofe
+// Added the first version of the todo conduit, fixed a check for a null pointer in the datebook conduit
 //
-// Revision 1.1  2001/04/16 13:36:20  adridg
-// Moved todoconduit
+// Revision 1.22  2002/04/19 19:10:29  kainhofe
+// added some comments describin the sync logic, deactivated the sync again (forgot it when I commited last time)
 //
-// Revision 1.10  2001/03/10 18:26:04  adridg
-// Refactored vcal conduit and todo conduit
+// Revision 1.21  2002/04/14 22:18:16  kainhofe
+// Implemented the second part of the sync (PC=>Palm), but disabled it, because it corrupts the Palm datebook
 //
-// Revision 1.9  2001/03/04 13:46:49  adridg
-// struct tm woes
+// Revision 1.20  2002/01/26 15:01:02  adridg
+// Compile fixes and more
 //
-// Revision 1.8  2001/02/07 15:46:32  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
+// Revision 1.19  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //
+
 #endif

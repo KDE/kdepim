@@ -304,6 +304,8 @@ protected:
 	int openConduit();
 public:
 	int getNextDatabase(int index,struct DBInfo *);
+	int findDatabase(char*name, struct DBInfo*);
+
 	/**
 	* Retrieve the database indicated by DBInfo *db into the
 	* local file @p path.
@@ -315,6 +317,9 @@ bool operator < ( const struct db &, const struct db &) ;
 
 
 // $Log$
+// Revision 1.3  2002/02/02 11:46:03  adridg
+// Abstracting away pilot-link stuff
+//
 // Revision 1.2  2002/01/21 23:14:03  adridg
 // Old code removed; extra abstractions added; utility extended
 //
