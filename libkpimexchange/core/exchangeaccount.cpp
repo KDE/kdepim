@@ -44,6 +44,20 @@ ExchangeAccount::ExchangeAccount( QString host, QString account, QString passwor
 {
   mHost = host;
   mAccount = account;
+  mMailbox = account;
+  mPassword = password;
+
+  mCalendarURL = 0;
+}
+
+ExchangeAccount::ExchangeAccount( QString host, QString account, QString mailbox, QString password )
+{
+  mHost = host;
+  mAccount = account;
+  if ( mailbox.isNull() ) 
+    mMailbox = account;
+  else 
+    mMailbox = mailbox;
   mPassword = password;
 
   mCalendarURL = 0;
@@ -72,6 +86,7 @@ void ExchangeAccount::save( QString const& group )
   kapp->config()->setGroup( group );
   kapp->config()->writeEntry( "host", mHost );
   kapp->config()->writeEntry( "user", mAccount );
+  kapp->config()->writeEntry( "mailbox", mMailbox );
   kapp->config()->writeEntry( "MS-ID", endecryptStr( mPassword ) );
   kapp->config()->sync();
 }
@@ -90,6 +105,13 @@ void ExchangeAccount::load( QString const& group )
     mAccount = user;
   }
 
+  QString mailbox = kapp->config()->readEntry( "mailbox" );
+  if ( ! mailbox.isNull() ) {
+    mMailbox = mailbox;
+  } else {
+    mMailbox = mAccount;
+  }
+
   QString password = endecryptStr( kapp->config()->readEntry( "MS-ID" ) );
   if ( ! password.isNull() ) {
     mPassword = password;
@@ -98,7 +120,7 @@ void ExchangeAccount::load( QString const& group )
 
 KURL ExchangeAccount::baseURL()
 {
-  KURL url = KURL( "webdav://" + mHost + "/exchange/" + mAccount );
+  KURL url = KURL( "webdav://" + mHost + "/exchange/" + mMailbox );
   return url;
 }
 

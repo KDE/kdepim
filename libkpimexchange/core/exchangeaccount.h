@@ -34,6 +34,7 @@ class ExchangeAccount : public QObject {
   Q_OBJECT
   public:
     ExchangeAccount( QString host, QString account, QString password );
+    ExchangeAccount( QString host, QString account, QString mailbox, QString password );
     /** 
      Create a new account object, read data from group app data
      */
@@ -45,10 +46,12 @@ class ExchangeAccount : public QObject {
 
     QString const & host() { return mHost; }
     QString const & account() { return mAccount; }
+    QString const & mailbox() { return mMailbox; }
     QString const & password() { return mPassword; }
 
     void setHost( QString host ) { mHost = host; }
     void setAccount( QString account ) { mAccount = account; }
+    void setMailbox( QString mailbox ) { mMailbox = mailbox; }
     void setPassword( QString password ) { mPassword = password; }
 
     KURL baseURL();
@@ -69,6 +72,7 @@ class ExchangeAccount : public QObject {
   private:
     QString mHost;
     QString mAccount;
+    QString mMailbox;
     QString mPassword;
 
     KURL* mCalendarURL;
