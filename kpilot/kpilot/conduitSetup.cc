@@ -151,17 +151,18 @@ void CConduitSetup::conduitExecuted(QListViewItem *p)
 		return;
 	}
 
-#ifdef DEBUG
-	if (debug_level & SYNC_MAJOR)
-	{
-		kdDebug() << fname
-			<< ": Executing conduit "
-			<< p->text(0)
-			<< endl;
-	}
-#endif
+	DEBUGKPILOT << fname
+		<< ": Executing conduit "
+		<< p->text(0)
+		<< endl;
 
 	QString execPath = findExecPath(p);
+
+	DEBUGKPILOT << fname
+		<< ": Exec path="
+		<< execPath
+		<< endl;
+
 	if (execPath.isNull()) 
 	{
 		warnNoExec(p);
@@ -175,7 +176,7 @@ void CConduitSetup::conduitExecuted(QListViewItem *p)
 	}
 
 	conduitSetup = new KProcess;
-	*conduitSetup << execPath.local8Bit() << "--setup" ;
+	*conduitSetup << execPath << "--setup" ;
 	*conduitSetup << "-geometry"
 		<< QString("+%1+%2").arg(x()+20).arg(y()+20);
 #ifdef DEBUG
@@ -190,7 +191,15 @@ void CConduitSetup::conduitExecuted(QListViewItem *p)
 		this,
 		SLOT(setupDone(KProcess *))
 		);
-	conduitSetup->start(KProcess::NotifyOnExit);
+	if (!conduitSetup->start(KProcess::NotifyOnExit))
+	{
+		kdWarning() << __FUNCTION__
+			<< ": Could not start process for conduit setup!"
+			<< endl;
+		warnNoExec(p);
+		delete conduitSetup;
+		conduitSetup=0L;
+	}
 }
 
 /* slot */ void CConduitSetup::setupDone(KProcess *p)
@@ -475,6 +484,9 @@ void CConduitSetup::warnSetupRunning()
 
 
 // $Log$
+// Revision 1.23  2001/04/23 06:30:38  adridg
+// XML UI updates
+//
 // Revision 1.22  2001/04/16 13:54:17  adridg
 // --enable-final file inclusion fixups
 //
