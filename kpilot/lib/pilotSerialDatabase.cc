@@ -149,7 +149,7 @@ QValueList<recordid_t> PilotSerialDatabase::idList()
 // Reads a record from database by id, returns record length
 PilotRecord *PilotSerialDatabase::readRecordById(recordid_t id)
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(3);
 	int index, attr, category;
 
 	if (isDBOpen() == false)
@@ -182,7 +182,7 @@ PilotRecord *PilotSerialDatabase::readRecordById(recordid_t id)
 // Reads a record from database, returns the record length
 PilotRecord *PilotSerialDatabase::readRecordByIndex(int index)
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(3);
 
 	if (isDBOpen() == false)
 	{

@@ -391,7 +391,7 @@ void AbbrowserConduit::_setAppInfo()
 
 int AbbrowserConduit::getCustom(const int index)
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 
 	int customEnum;
 	switch(index) {
@@ -422,7 +422,7 @@ int AbbrowserConduit::getCustom(const int index)
 
 QString AbbrowserConduit::getCustomField(const Addressee &abEntry, const int index)
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 
 	switch (getCustom(index)) {
 		case AbbrowserSettings::eCustomBirthdate: {
@@ -454,7 +454,7 @@ QString AbbrowserConduit::getCustomField(const Addressee &abEntry, const int ind
 
 void AbbrowserConduit::setCustomField(Addressee &abEntry,  int index, QString cust)
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 
 	switch (getCustom(index)) {
 		case AbbrowserSettings::eCustomBirthdate: {
@@ -720,17 +720,19 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 /* virtual */ bool AbbrowserConduit::exec()
 {
 	FUNCTIONSETUP;
-	DEBUGCONDUIT<<id_conduit_address<<endl;
+	DEBUGCONDUIT << fname << id_conduit_address << endl;
 
 	_prepare();
 
 	fFirstSync = false;
-	// Database names probably in latin1.
-	if(!openDatabases(QString::fromLatin1("AddressDB"), &fFirstSync))
+	if(!openDatabases(CSL1("AddressDB"), &fFirstSync))
 	{
 		emit logError(i18n("Unable to open the addressbook databases on the handheld."));
 		return false;
 	}
+
+	DEBUGCONDUIT << fname << ": First sync now " << fFirstSync << endl;
+
 	_getAppInfo();
 	if(!_loadAddressBook())
 	{
@@ -738,6 +740,11 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 		return false;
 	}
 	fFirstSync = fFirstSync || (aBook->begin() == aBook->end());
+
+	DEBUGCONDUIT << fname << ": First sync now " << fFirstSync
+		<< " and addressbook is "
+		<< ((aBook->begin() == aBook->end()) ? "" : "non-")
+		<< "empty." << endl;
 
 	// perform syncing from palm to abbrowser
 	// iterate through all records in palm pilot
@@ -1443,7 +1450,7 @@ int AbbrowserConduit::_compare(const QString & str1, const QString & str2) const
 bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &abEntry,
 	enum eqFlagsType flags) const
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(8);
 	// empty records are never equal!
 	if (!piAddress) return false;
 	if (abEntry.isEmpty()) return false;
