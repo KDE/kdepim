@@ -1,7 +1,7 @@
 COMPILE_FIRST = vcalconduit
 SUBDIRS = null \
-	vcalconduit todoconduit \
+	vcalconduit \
+	todoconduit \
 	popmail \
-	knotes abbrowserconduit \
+	knotes \
 	expense
-
