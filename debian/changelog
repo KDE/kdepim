@@ -2,6 +2,7 @@ kdepim (4:2.2-cvs20010507-1) experimental; urgency=low
  
   * New upstream cvs pull
   * Adding in Enhances
+  * abbrowser moved to kdelibs
  
  -- Ivan E. Moore II <rkrusty@debian.org>  Mon, 07 May 2001 06:46:00 -0700
 

@@ -10,7 +10,7 @@ Architecture: any
 Section: x11
 Replaces: kdepim, kdepim-common
 Depends: ${shlibs:Depends}, kdebase-libs
-Suggests: abbrowser, kpilot
+Suggests: kpilot
 Enhances: kdebase, kpilot
 Description: Personal organizer based on QT and KDE 
  A complete calendar and scheduling program. KOrganizer supports
@@ -31,15 +31,6 @@ Description: Personal organizer based on QT and KDE
  .
  KOrganizer also offers full synchronization with your Palm Pilot, if you
  have kpilot installed.
-
-Package: abbrowser
-Architecture: any
-Section: utils
-Replaces: kdepim, kdepim-common
-Depends: ${shlibs:Depends}, kdebase-libs
-Enhances: kdebase, korganizer, kdepim
-Description: Address book reader
- Address book reader for KDE
 
 Package: kpilot
 Architecture: any

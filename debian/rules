@@ -59,7 +59,6 @@ binary-arch: build
 	dh_installmenu -a
 	dh_installmime -a
 	dh_installchangelogs -pkorganizer
-	dh_installchangelogs -pabbrowser
 	dh_installchangelogs -pkpilot kpilot/ChangeLog
 	dh_installchangelogs -pkdepim-libs
 	dh_installchangelogs -pkdepim-dev

@@ -1,8 +1,0 @@
-?package(abbrowser):\
-	needs=x11\
-	section=Apps/Tools\
-	hints="KDE"\
-	kderemove="y"\
-	title="abbrowser"\
-	command=/usr/bin/abbrowser
-
