@@ -106,9 +106,9 @@ class Incidence : public IncidenceBase
       public:
         DeleteVisitor( T *r ) : mResource( r ) {}
 
-        bool visit( Event *e ) { return mResource->deleteEvent( e ); }
-        bool visit( Todo *t ) { return mResource->deleteTodo( t ); }
-        bool visit( Journal *j ) { return mResource->deleteJournal( j ); }
+        bool visit( Event *e ) { mResource->deleteEvent( e ); return true; }
+        bool visit( Todo *t ) { mResource->deleteTodo( t ); return true; }
+        bool visit( Journal *j ) { mResource->deleteJournal( j ); return true; }
 
       private:
         T *mResource;
