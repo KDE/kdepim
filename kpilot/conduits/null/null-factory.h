@@ -62,7 +62,11 @@ public:
 	virtual ~NullConduitFactory();
 
 	static KAboutData *about() { return fAbout; } ;
-	static const char *group() { return fGroup; } ;
+
+	// Configuration keys
+	static const char * const group;
+	static const char * const databases,
+		* const message;
 
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
@@ -72,7 +76,6 @@ protected:
 private:
 	KInstance *fInstance;
 	static KAboutData *fAbout;
-	static const char *fGroup;
 } ;
 
 extern "C"
@@ -83,6 +86,9 @@ void *init_libnullconduit();
 } ;
 
 // $Log$
+// Revision 1.3  2001/12/18 07:43:25  adridg
+// Actually do a (null) sync
+//
 // Revision 1.2  2001/10/08 22:25:41  adridg
 // Moved to libkpilot and lib-based conduits
 //

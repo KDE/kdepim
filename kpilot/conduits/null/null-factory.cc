@@ -51,7 +51,10 @@ void *init_libnullconduit()
 } ;
 
 
-/* static */ const char *NullConduitFactory::fGroup = "Null-conduit";
+/* static */ const char * const NullConduitFactory::group = "Null-conduit";
+const char * const NullConduitFactory::databases = "Databases" ;
+const char * const NullConduitFactory::message = "LogMessage";
+
 KAboutData *NullConduitFactory::fAbout = 0L;
 NullConduitFactory::NullConduitFactory(QObject *p, const char *n) :
 	KLibFactory(p,n)
@@ -167,10 +170,10 @@ NullWidgetSetup::~NullWidgetSetup()
 		<< endl;
 #endif
 
-	KConfigGroupSaver s(fConfig,NullConduitFactory::group());
+	KConfigGroupSaver s(fConfig,NullConduitFactory::group);
 
-	fConfig->writeEntry("LogMessage",fConfigWidget->fLogMessage->text());
-	fConfig->writeEntry("Databases",fConfigWidget->fDatabases->text());
+	fConfig->writeEntry(NullConduitFactory::message,fConfigWidget->fLogMessage->text());
+	fConfig->writeEntry(NullConduitFactory::databases,fConfigWidget->fDatabases->text());
 }
 
 /* virtual */ void NullWidgetSetup::readSettings()
@@ -179,12 +182,12 @@ NullWidgetSetup::~NullWidgetSetup()
 
 	if (!fConfig) return;
 
-	KConfigGroupSaver s(fConfig,NullConduitFactory::group());
+	KConfigGroupSaver s(fConfig,NullConduitFactory::group);
 
 	fConfigWidget->fLogMessage->setText(
-		fConfig->readEntry("LogMessage",i18n("KPilot was here!")));
+		fConfig->readEntry(NullConduitFactory::message,i18n("KPilot was here!")));
 	fConfigWidget->fDatabases->setText(
-		fConfig->readEntry("Databases"));
+		fConfig->readEntry(NullConduitFactory::databases));
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
@@ -200,6 +203,9 @@ NullWidgetSetup::~NullWidgetSetup()
 
 
 // $Log$
+// Revision 1.4  2001/12/20 22:56:04  adridg
+// Making conduits save their configuration and doing syncs
+//
 // Revision 1.3  2001/12/18 07:43:25  adridg
 // Actually do a (null) sync
 //

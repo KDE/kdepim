@@ -89,10 +89,12 @@ void NullConduit::exec()
 		return;
 	}
 
-	fConfig->setGroup(NullConduitFactory::group());
+	fConfig->setGroup(NullConduitFactory::group);
 
-	QString m=fConfig->readEntry("Text");
-	addSyncLogEntry(m);
+	QString m=fConfig->readEntry(NullConduitFactory::message);
+	QString t = i18n("[Null Conduit: %1]\n").arg(m);
+	addSyncLogEntry(t);
+	emit logMessage(t);
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
@@ -106,6 +108,9 @@ void NullConduit::exec()
 
 
 // $Log$
+// Revision 1.23  2001/12/18 13:11:55  cschumac
+// Make it compile.
+//
 // Revision 1.22  2001/12/18 07:43:25  adridg
 // Actually do a (null) sync
 //
