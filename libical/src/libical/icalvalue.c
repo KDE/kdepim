@@ -245,7 +245,6 @@ icalvalue* icalvalue_new_from_string_with_error(icalvalue_kind kind,const char* 
 {
 
     struct icalvalue_impl *value = 0;
-    struct icalattachtype *attach = 0;
 
     icalerror_check_arg_rz(str!=0,"str");
 
@@ -255,12 +254,14 @@ icalvalue* icalvalue_new_from_string_with_error(icalvalue_kind kind,const char* 
 
     switch (kind){
 
-    case ICAL_ATTACH_VALUE:
-        attach = icalattachtype_new();
+    case ICAL_ATTACH_VALUE: 
+        {
+        struct icalattachtype *attach = icalattachtype_new();
       	value = icalvalue_new_attach( attach );
         icalattachtype_free( attach );
-	icalattachtype_set_url( value->data.v_attach, str );
-	break;
+        icalattachtype_set_url( value->data.v_attach, str );
+				}
+        break;
     case ICAL_BINARY_VALUE:
     case ICAL_BOOLEAN_VALUE:
         {
