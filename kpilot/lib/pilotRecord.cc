@@ -89,8 +89,8 @@ PilotRecord::PilotRecord(PilotRecord * orig)
 	memcpy(fData, orig->getData(), orig->getLen());
 	fLen = orig->getLen();
 	fAttrib = orig->getAttrib();
-	fCat = orig->getCat();
-	fID = orig->getID();
+	fCat = orig->category();
+	fID = orig->id();
 
 	fAllocated++;
 }
@@ -105,8 +105,8 @@ PilotRecord & PilotRecord::operator = (PilotRecord & orig)
 	memcpy(fData, orig.getData(), orig.getLen());
 	fLen = orig.getLen();
 	fAttrib = orig.getAttrib();
-	fCat = orig.getCat();
-	fID = orig.getID();
+	fCat = orig.category();
+	fID = orig.id();
 	return *this;
 }
 
@@ -123,6 +123,16 @@ void PilotRecord::makeDeleted()
 void PilotRecord::makeSecret()
 {
 	setSecret(true);
+}
+
+int PilotRecord::getCat() const
+{
+	return category();
+}
+
+void PilotRecord::setCat(int i)
+{
+	return setCategory(i);
 }
 
 void PilotRecord::setData(const char *data, int len)

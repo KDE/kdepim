@@ -61,8 +61,10 @@ public:
 	inline int   getAttrib() const { return fAttrib; }
 	inline void  setAttrib(int attrib) { fAttrib = attrib; }
 
-	int   getCat() const { return fCat; }
-	void  setCat(int cat) { fCat = cat; }
+	int   category() const { return fCat; }
+	void  setCategory(int cat) { fCat = cat; }
+	int   getCat() const KDE_DEPRECATED;
+	void  setCat(int cat) KDE_DEPRECATED;
 
 	inline recordid_t id() const { return fID; }
 	recordid_t getID() const KDE_DEPRECATED;
