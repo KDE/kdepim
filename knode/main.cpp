@@ -32,19 +32,19 @@ int main(int argc, char* argv[])
 {
 
 	KAboutData aboutData("knode",
-												I18N_NOOP("KNode"),
-												KNODE_VERSION,
-												I18N_NOOP("A newsreader for KDE"),
-												KAboutData::License_GPL,
-    										"(c) 1999-2000, Christian Thurner",
-    										0,
-    										"http://knode.sourceforge.net/",
-    										"cthurner@freepage.de");
+                        I18N_NOOP("KNode"),
+                        KNODE_VERSION,
+                        I18N_NOOP("A newsreader for KDE"),
+                        KAboutData::License_GPL,
+                        "Copyright (C) 1999, 2000, Christian Thurner",
+                        0,
+                        "http://knode.sourceforge.net/",
+                        "cthurner@freepage.de");
     										
   aboutData.addAuthor("Christian Thurner",I18N_NOOP("Maintainer"),"cthurner@freepage.de");
   aboutData.addAuthor("Christian Gebauer",0,"gebauer@bigfoot.com");
   aboutData.addAuthor("Dirk Mueller",0,"mueller@kde.org");
-
+  aboutData.addAuthor("Matthias Kalle Dalheimer",0,"kalle@kde.org");
   KCmdLineArgs::init( argc, argv, &aboutData );
 	KCmdLineArgs::addCmdLineOptions( options );
 	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
