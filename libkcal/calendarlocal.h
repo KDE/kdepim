@@ -57,11 +57,13 @@ class CalendarLocal : public Calendar
       @param fileName the name of the calendar on disk.
     */
     bool load( const QString &fileName );
+
     /**
       Writes out the calendar to disk in the specified \a format.
       CalendarLocal takes ownership of the CalFormat object.
-      @return true, if successful, false on error.
       @param fileName the name of the file
+      @param format the format to use
+      @return true, if successful, false on error.
     */
     bool save( const QString &fileName, CalFormat *format = 0 );
 
