@@ -336,6 +336,8 @@ void KNNntpClient::doFetchNewHeaders()
   int first=0, last=0, oldlast=0, toFetch=0, rep=0;
   QCString cmd;
 
+  target->setLastFetchCount(0);
+
   sendSignal(TSdownloadNew);
   errorPrefix=i18n("No new articles could be retrieved for\n%1/%2!\nThe following error ocurred:\n")
               .arg(account.server()).arg(target->groupname());

@@ -66,6 +66,9 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     int firstNewIndex()           { return f_irstNew; }
     void setFirstNewIndex(int i)  { f_irstNew=i; }
 
+    int lastFetchCount()          { return l_astFetchCount; }
+    void setLastFetchCount(int i) { l_astFetchCount=i; }
+
     int readCount()               { return r_eadCount; }
     void setReadCount(int i)      { r_eadCount=i; }
     void incReadCount(int i=1)    { r_eadCount+=i; }
@@ -129,6 +132,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     KNRemoteArticle* findReference(KNRemoteArticle *a);
         
     int       n_ewCount,
+              l_astFetchCount,
               r_eadCount,
               f_irstNr,
               l_astNr,

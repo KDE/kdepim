@@ -42,7 +42,7 @@
 #define SORT_DEPTH 5
 
 KNGroup::KNGroup(KNCollection *p)
-  : KNArticleCollection(p), n_ewCount(0), r_eadCount(0),
+  : KNArticleCollection(p), n_ewCount(0), l_astFetchCount(0), r_eadCount(0),
     l_astNr(0), m_axFetch(0), d_ynDataFormat(1), f_irstNew(-1), l_ocked(false),
     u_seCharset(false), s_tatus(unknown), i_dentity(0)
 {
@@ -371,6 +371,8 @@ void KNGroup::insortNewHeaders(QStrList *hdrs, KNProtocolClient *client)
   int new_cnt=0, added_cnt=0, todo=hdrs->count();
   QTime timer;
 
+  l_astFetchCount=0;
+
   if(!hdrs || hdrs->count()==0)
     return;
 
@@ -465,6 +467,7 @@ void KNGroup::insortNewHeaders(QStrList *hdrs, KNProtocolClient *client)
   // update group-info
   c_ount=length();
   n_ewCount+=new_cnt;
+  l_astFetchCount=new_cnt;
   updateListItem();
   saveInfo();
 }
@@ -836,7 +839,7 @@ void KNGroup::scoreArticles(bool onlynew)
 {
   kdDebug(5003) << "KNGroup::scoreArticles()" << endl;
   int len=length(),
-      todo=(onlynew)? newCount():length();
+      todo=(onlynew)? lastFetchCount():length();
 
   if (todo) {
     // reset the notify collection
