@@ -102,7 +102,7 @@ class KNArticleWidget : public QVBox  {
 		void slotURLRequest (const KURL &url, const KParts::URLArgs &args);
 		void slotPopup(const QString &url, const QPoint &p);
 		void slotSave();
- 		void slotSelectionChanged();
+ 		void slotEnableAction(const char *, bool);
 		
 	signals:
 		void focusChanged(QFocusEvent*);				

@@ -197,7 +197,7 @@ KNArticleWidget::KNArticleWidget(QWidget *parent, const char *name )
   actPrint->setEnabled(false);
   actCopy = KStdAction::copy(p_art->browserExtension(), SLOT(copy()), &actionCollection);
   actCopy->setEnabled(false);
-  connect(p_art,SIGNAL(selectionChanged()),this,SLOT(slotSelectionChanged()));
+  connect(p_art->browserExtension(),SIGNAL(enableAction(const char *,bool)),this,SLOT(slotEnableAction(const char *,bool)));
 
 	applyConfig();
 }
@@ -551,7 +551,7 @@ void KNArticleWidget::showErrorMessage(const QString &s)
 	att=0;
   h_tmlDone=false;
   actSave->setEnabled(false);
-  actPrint->setEnabled(false);
+  actPrint->setEnabled(true);
 }
 
 
@@ -838,9 +838,13 @@ void KNArticleWidget::slotSave()
 
 
 
-void KNArticleWidget::slotSelectionChanged()
+void KNArticleWidget::slotEnableAction( const char * name, bool enabled )
 {
-  actCopy->setEnabled(p_art->hasSelection());		
+  if (!strcmp(name,"copy"))
+    actCopy->setEnabled(enabled);		
+  else
+    if (!strcmp(name,"print"))
+      actPrint->setEnabled(enabled);		
 }
 
 
