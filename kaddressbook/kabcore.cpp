@@ -1027,6 +1027,11 @@ void KABCore::initActions()
   mActionDetails->setWhatsThis( i18n( "Toggle whether the details page shall be visible." ) );
   connect( mActionDetails, SIGNAL( toggled( bool ) ), SLOT( setDetailsVisible( bool ) ) );
 
+#if KDE_IS_VERSION(3,2,90)
+  mActionJumpBar->setCheckedState( i18n( "Hide Jump Bar") );
+  mActionDetails->setCheckedState( i18n( "Hide Details") );
+#endif
+
   if ( mIsPart )
     action = new KAction( i18n( "&Configure KAddressBook..." ), "configure", 0,
                           this, SLOT( configure() ), actionCollection(),
