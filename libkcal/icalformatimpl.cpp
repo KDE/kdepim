@@ -1561,7 +1561,8 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
   // Now that recurrence and exception stuff is completely set up,
   // do any backwards compatibility adjustments.
-  mCompat->fixRecurrence( incidence );
+  if (incidence->doesRecur())
+      mCompat->fixRecurrence( incidence );
 
   // add categories
   incidence->setCategories(categories);
