@@ -1,6 +1,7 @@
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN" [
  <!ENTITY KMail "<application>KMail</application>">
 ]>
+
 <book lang="en">
 <bookinfo>
 	<title>The KMail Handbook</title>
@@ -19,6 +20,9 @@
 	</author>
 	</authorgroup>
 
+	<date>23/05/2000</date>
+	<releaseinfo>1.01.45</releaseinfo>
+
 	<abstract>
 	
 	<para>Even if you don't like reading documentation: Some very helpful hints you probably
@@ -32,10 +36,6 @@
 	<para>This documentation was last updated for KMail version 1.1.45.</para>
 
 	</abstract>
-
-	<date>2000-05-23</date>
-
-	<releaseinfo><!-- information about this particular version --></releaseinfo>
 
 	<keywordset>
 	<keyword>KDE</keyword>
