@@ -74,7 +74,7 @@ bool SorryAction::exec()
 	FUNCTIONSETUP;
 
 	addSyncLogEntry(i18n("KPilot is busy and cannot process the "
-		"HotSync sight now."));
+		"HotSync right now."));
 	return delayDone();
 }
 
