@@ -1,7 +1,7 @@
 METASOURCES = AUTO
 
 INCLUDES = -I$(top_srcdir)/kresources/imap/shared \
-	-I$(top_srcdir)/knotes $(all_includes)
+	-I$(top_srcdir) -I$(top_srcdir)/knotes $(all_includes)
 
 kde_module_LTLIBRARIES = knotes_imap.la
 
