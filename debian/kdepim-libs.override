@@ -1,0 +1,5 @@
+kdepim-libs: shlib-with-non-pic-code usr/lib/libkimap.so.0.0.0
+kdepim-libs: shlib-with-non-pic-code usr/lib/librmm.so.1.0.0
+kdepim-libs: shlib-with-non-pic-code usr/lib/libvcard.so.0.0.0
+kdepim-libs: shlib-with-non-pic-code usr/lib/libkgantt.so.0.0.2
+
