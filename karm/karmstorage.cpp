@@ -42,6 +42,7 @@
 #include <kprogress.h>
 #include <resourcecalendar.h>
 #include <resourcelocal.h>
+#include <kpimprefs.h>
 #include <taskview.h>
 
 //#include <calendarlocal.h>
@@ -94,8 +95,7 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
   // Create local file resource and add to resources
   _icalfile = preferences->iCalFile();
   KCal::ResourceCalendar *l = new KCal::ResourceLocal( _icalfile );
-  // TODO: Set time zone from control center
-  //l->setTimeZone();
+  l->setTimeZoneId( KPimPrefs::timezone() );
   l->setResourceName( QString::fromLatin1("KArm") );
   l->open();
   l->load();
@@ -231,10 +231,7 @@ void KarmStorage::writeTaskAsTodo(Task* task, const int level,
 
   todo = _calendar->todo(task->uid());
   task->asTodo(todo);
-
-  if ( !parents.isEmpty() )
-    todo->setRelatedTo( parents.top() );
-
+  if ( !parents.isEmpty() ) todo->setRelatedTo( parents.top() );
   parents.push( todo );
 
   for (Task* nextTask = task->firstChild(); nextTask;
