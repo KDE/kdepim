@@ -232,6 +232,7 @@ KNConfig::Appearance::Appearance()
   c_olorNames[selectedItem]=i18n("Selected Item Background");
 
   //fonts
+  u_seFonts = c->readBoolEntry("customFonts", false);
   QFont defFont=KGlobalSettings::generalFont();
   f_onts[article]=c->readFontEntry("articleFont",&defFont);
   f_ontNames[article]=i18n("Article Body");
