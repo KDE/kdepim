@@ -70,4 +70,13 @@ See e.g. kdepim/kaddressbook/dcopaddressbook.desktop
 
 * Add DCOP/Foo to the application's ServiceTypes list, in its .desktop file
 See e.g. kdepim/kaddressbook/kaddressbook.desktop
+* Make sure that X-DCOP-ServiceType and X-DCOP-ServiceName are specified too.
 
+Designing DCOP interfaces
+=========================
+Porting the kroupware signals/slots to DCOP requires some changes.
+For instance any non-const reference (such as those used for returning
+values to the caller) has to be changed. If there is more than one
+value to be returned, you need to
+* define a structure containing all the returned values
+* define QDataStream << and >> operators for that structure.
