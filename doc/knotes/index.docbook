@@ -325,7 +325,7 @@ bar.</para></step>
 <procedure>
 <step><para><mousebutton>Right</mousebutton> click on the note title
 bar.</para></step>
-<step><para>Select <guimenuitem>Delete Note</guimenuitem>.</para></step>
+<step><para>Select <guimenuitem>Delete</guimenuitem>.</para></step>
 </procedure>
 </sect1>
 
@@ -362,13 +362,13 @@ hide a note and later want to display it:</para>
 note.</para></step>
 <step><para>Select <guimenuitem>To Desktop</guimenuitem></para></step>
 <step><para>Choose the desktop desired, or alternatively,
-<guimenuitem>All Desktops</guimenuitem></para></step> </procedure>
+<guimenuitem>All desktops</guimenuitem></para></step> </procedure>
 
 <para>To make the note remain on top of other windows:</para>
 <procedure>
 <step><para><mousebutton>Right</mousebutton> click on the title bar of the
 note.</para></step>
-<step><para>Select <guimenuitem>Always on Top</guimenuitem>.</para></step>
+<step><para>Select <guimenuitem>Always On Top</guimenuitem>.</para></step>
 </procedure>
 
 <para>To return the note to more normal window behavior, simply repeat this
@@ -386,14 +386,13 @@ section, but they will apply only to the note you are changing.  Any
 other open notes, and any new notes you create, will use the default
 settings.</para>
 
-
 <para>To customize a note display:</para>
 
 <procedure>
 <step><para><guimenuitem>Right</guimenuitem> click on the note
 title bar.</para></step>
-<step><para>Select <guimenuitem>Note preferences...</guimenuitem>.</para>
-<para>The <guilabel>Local Settings - Knotes</guilabel> dialog will
+<step><para>Select <guimenuitem>Note Preferences...</guimenuitem>.</para>
+<para>The <guilabel>Local Settings</guilabel> dialog will
 open.</para></step>
 <step><para>Choose the <guiicon>Display</guiicon> icon from the three icons at
 the left.</para></step>
