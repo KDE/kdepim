@@ -55,7 +55,7 @@ namespace GpgME {
     bool isCanceled() const;
 
     operator int() const { return mErr; }
-    operator bool() const { return mErr; }
+    operator bool() const { return mErr && !isCanceled(); }
   private:
     int mErr;
   };
