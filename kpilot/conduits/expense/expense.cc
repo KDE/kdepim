@@ -20,7 +20,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
@@ -32,7 +32,7 @@
 #include <options.h>
 
 // Only include what we really need:
-// First UNIX system stuff, then std C++, 
+// First UNIX system stuff, then std C++,
 // then Qt, then KDE, then local includes.
 //
 //
@@ -65,7 +65,7 @@
 
 #include "setupDialog.h"
 #include "expense.moc"
-
+#include <qtimer.h>
 #define DATESIZE 10
 /*  This was copied out of the pilot-link package.
 *  I just like it here for quick reference.
@@ -88,21 +88,21 @@ get_entry_type(enum ExpenseType type)
    switch(type) {
 	case etAirfare:
 		return "Airfare";
-	case etBreakfast:       
-		return "Breakfast";     
+	case etBreakfast:
+		return "Breakfast";
 	case etBus:
-		return "Bus";     
+		return "Bus";
 	case etBusinessMeals:
-		return "BusinessMeals";     
-	case etCarRental:       
-		return "CarRental";     
-	case etDinner:       
-		return "Dinner";     
+		return "BusinessMeals";
+	case etCarRental:
+		return "CarRental";
+	case etDinner:
+		return "Dinner";
 	case etEntertainment:
-		return "Entertainment";     
-	case etFax:       
-		return "Fax";     
-	case etGas:       
+		return "Entertainment";
+	case etFax:
+		return "Fax";
+	case etGas:
 		return "Gas";
     case etGifts:
 	      return "Gifts";
@@ -477,6 +477,9 @@ void ExpenseConduit::cleanup()
 
 
 // $Log$
+// Revision 1.18  2001/12/02 22:03:07  adridg
+// Expense conduit finally works
+//
 // Revision 1.17  2001/11/25 22:03:44  adridg
 // Port expense conduit to new arch. Doesn't compile yet.
 //

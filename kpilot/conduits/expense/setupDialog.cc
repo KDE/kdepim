@@ -39,6 +39,7 @@
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kfiledialog.h>
+#include <qpushbutton.h>
 
 #include "setupDialog.moc"
 
@@ -93,7 +94,7 @@ ExpenseCSVPage::ExpenseCSVPage(QWidget *parent) :
 void ExpenseCSVPage::slotBrowse()
 {
         FUNCTIONSETUP;
- 
+
 	QString fileName = KFileDialog::getOpenFileName(0L, "*.csv");
 	if(fileName.isNull()) return;
 	fCSVFileName->setText(fileName);
@@ -198,7 +199,7 @@ int ExpenseCSVPage::commitChanges(KConfig& c)
 	FUNCTIONSETUP;
 
 	c.writeEntry("CSVFileName",fCSVFileName->text());
-	
+
 	int m = getPolicy();
 	c.writeEntry("CSVRotatePolicy",m);
 	c.writeEntry("CSVRotate",
@@ -216,7 +217,7 @@ int ExpenseDBPage::commitChanges(KConfig& c)
 	c.writeEntry("DBpasswd",fDBpasswd->text());
 	c.writeEntry("DBname",fDBname->text());
 	c.writeEntry("DBtable",fDBtable->text());
-	
+
 	int m = getPolicy();
 	c.writeEntry("DBTypePolicy",m);
 
@@ -231,7 +232,7 @@ ExpenseDBPage::ExpenseDBPage(QWidget *parent) :
 
 
 	QGridLayout *grid = new QGridLayout(this,3,3,0,SPACING);
-	
+
 	QLabel *ld1 = new QLabel(i18n("DB Server:"),this);
 	grid->addWidget(ld1,2,1);
 
@@ -270,7 +271,7 @@ ExpenseDBPage::ExpenseDBPage(QWidget *parent) :
 	fpostgresql = new QRadioButton(i18n("&PostgreSQL"),gt);
 	fmysql = new QRadioButton(i18n("&MySQL"),gt);
 	fmysql->setEnabled(false);
-	
+
 	grid->addMultiCellWidget(gt,1,1,1,2);
 
 
@@ -337,8 +338,11 @@ void ExpenseDBPage::slotPolicyChanged()
 	}
 }
 
-  
+
 // $Log$
+// Revision 1.7  2001/12/02 22:03:07  adridg
+// Expense conduit finally works
+//
 // Revision 1.6  2001/11/25 22:03:44  adridg
 // Port expense conduit to new arch. Doesn't compile yet.
 //

@@ -38,6 +38,7 @@ class QLineEdit;
 class QRadioButton;
 class QSpinBox;
 class KConfig;
+class QPushButton;
 
 class ExpenseCSVPage : public QWidget
 {
@@ -93,6 +94,9 @@ protected:
 
 
 // $Log$
+// Revision 1.4  2001/12/02 22:03:07  adridg
+// Expense conduit finally works
+//
 // Revision 1.3  2001/11/25 22:03:44  adridg
 // Port expense conduit to new arch. Doesn't compile yet.
 //
