@@ -1,6 +1,3 @@
-#ifndef IMPORTDIALOG_H
-#define IMPORTDIALOG_H
-
 /*                                                                      
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
@@ -22,17 +19,20 @@
     As a special exception, permission is given to link this program    
     with any edition of Qt, and distribute the resulting executable,    
     without including the source code for Qt in the source distribution.
-*/                                                                      
+*/
+#ifndef IMPORTDIALOG_H
+#define IMPORTDIALOG_H
 
-#include <qwidget.h>
+#include <libkdepim/kimportdialog.h>
 
-#include "kimportdialog.h"
+class QWidget;
 
 namespace KABC { class AddressBook; }
 
-/** Dialog used for importing CSV style contact lists.
-*
-* @author Cornelius Schumacher
+/**
+  Dialog used for importing CSV style contact lists.
+  
+  @author Cornelius Schumacher
 */
 class ContactImportDialog : public KImportDialog 
 {
@@ -47,7 +47,7 @@ class ContactImportDialog : public KImportDialog
     KImportColumn *mAdditionalName;
     KImportColumn *mNamePrefix;
     KImportColumn *mNameSuffix;
-	KImportColumn *mFormattedName;
+    KImportColumn *mFormattedName;
     KImportColumn *mNickName;
     KImportColumn *mBirthday;
     KImportColumn *mEmail;
@@ -74,6 +74,7 @@ class ContactImportDialog : public KImportDialog
     KImportColumn *mAddressBusinessZip;
     KImportColumn *mAddressBusinessCountry;
 
-   KABC::AddressBook *mDocument;
+    KABC::AddressBook *mDocument;
 };
+
 #endif
