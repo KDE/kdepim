@@ -1,5 +1,5 @@
 # set the include path for X, qt and KDE, and versit library for vCalendar
-INCLUDES= $(all_includes) -I$(top_srcdir)/libkcal -I$(top_srcdir)/korganizer
+INCLUDES= $(all_includes) -I$(top_srcdir)/libkcal
 
 bin_PROGRAMS = kalarmd
 kalarmd_LDFLAGS = $(all_libraries) $(KDE_RPATH)
