@@ -59,6 +59,7 @@ address book and other &PIM; functionality.  </para></abstract>
 <keyword>Organizer</keyword>
 <keyword>KAddressBook</keyword>
 <keyword>KNotes</keyword>
+<keyword>Akregator</keyword>
 <keyword>PIM</keyword>
 <keyword>groupware</keyword>
 <keyword>Outlook</keyword>
@@ -92,39 +93,56 @@ provides, a summary view and advanced drag &amp; drop features between component
 
 <chapter id="components">
 <title>&kontact; Components</title>
-<para>
-&kontact; integrates the following applications. See their manuals for details on
-how to use them. These apply to running them as components inside &kontact; just
-as well as running them stand-alone.
-<itemizedlist>
-<listitem>
-  <para><ulink url="help:kmail">&kmail;</ulink>, the &kde; mail client.</para>
-</listitem>
-<listitem>
-  <para><ulink url="help:korganizer">&korganizer;</ulink>, the &kde; organizer and
-  scheduling application.</para>
-</listitem>
-<listitem>
-  <para><ulink url="help:kaddressbook">&kaddressbook;</ulink>, the &kde; contact
-  manager.</para>
-</listitem>
-<listitem>
-  <para><ulink url="help:knotes">&knotes;</ulink>, yellow sticky notes.</para>
-</listitem>
-<listitem>
-  <para><ulink url="help:knode">&knode;</ulink>, the &kde; news reader.</para>
-</listitem>
-<listitem>
-  <para><ulink url="help:kpilot">&kpilot;</ulink>, the &kde; Pilot synchronization application.</para>
-</listitem>
-<listitem>
-  <para><ulink url="help:kitchensync">&kitchensync;</ulink>, the &kde; synchronization application.</para>
-</listitem>
-<listitem>
-  <para><ulink url="help:akregator">&akregator;</ulink>, the &kde; RSS feed reader.</para>
-</listitem>
-</itemizedlist>
-</para>
+
+&kontact; integrates the following applications. See the individual
+application manuals for details on how to use them. These apply to
+running them as components inside &kontact; just as well as running
+them stand-alone.
+
+<sect1 id="mail">
+<title>&kmail;</title>
+<ulink url="help:kmail">&kmail;</ulink>, the &kde; mail client.
+</sect1>
+
+<sect1 id="organizer">
+<title>&korganizer;</title>
+<ulink url="help:korganizer">&korganizer;</ulink>, the &kde; organizer
+and scheduling application.
+</sect1>
+
+<sect1 id="addressbook">
+<title>&kaddressbook;</title>
+<ulink url="help:kaddressbook">&kaddressbook;</ulink>, the &kde; contact
+ manager.
+</sect1>
+
+<sect1 id="notes">
+<title>&knotes;</title>
+<ulink url="help:knotes">&knotes;</ulink>, yellow sticky notes.
+</sect1>
+
+<sect1 id="newsreader">
+<title>&knode;</title>
+<ulink url="help:knode">&knode;</ulink>, the &kde; news reader.
+</sect1>
+
+<sect1 id="pilot">
+<title>&kpilot;</title>
+<ulink url="help:kpilot">&kpilot;</ulink>, the &kde; Pilot synchronization
+application.
+</sect1>
+
+<sect1 id="synchronization">
+<title>&kitchensync;</title>
+<ulink url="help:kitchensync">&kitchensync;</ulink>, the &kde; synchronization
+application.
+</sect1>
+
+<sect1 id="feeds">
+<title>&akregator;</title>
+<ulink url="help:akregator">&akregator;</ulink>, the &kde; RSS feed reader.
+</sect1>
+
 </chapter>
 
 <chapter id="main-window">
