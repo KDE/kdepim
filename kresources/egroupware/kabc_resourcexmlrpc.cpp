@@ -250,7 +250,7 @@ void ResourceXMLRPC::loginFinished( const QValueList<QVariant> &variant,
   KURL url = mURL;
   if ( map[ "GOAWAY" ].toString() == "XOXO" ) { // failed
     mSessionID = mKp3 = "";
-    addressBook()->error( i18n( "Login failed, please check your username and password." ) );
+    addressBook()->error( i18n( "Login failed, please check your user name and password." ) );
   } else {
     mSessionID = map[ "sessionid" ].toString();
     mKp3 = map[ "kp3" ].toString();
@@ -269,7 +269,7 @@ void ResourceXMLRPC::logoutFinished( const QValueList<QVariant> &variant,
   QMap<QString, QVariant> map = variant[0].toMap();
 
   if ( map[ "GOODBYE" ].toString() != "XOXO" )
-    addressBook()->error( i18n( "Logout failed, please check your username and password." ) );
+    addressBook()->error( i18n( "Logout failed, please check your user name and password." ) );
 
   KURL url = mURL;
   mSessionID = mKp3 = "";

@@ -780,7 +780,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QC
   KNConfig::PostNewsTechnical *pnt=knGlobals.configManager()->postNewsTechnical();
 
   if(pnt->generateMessageID() && pnt->hostname().isEmpty()) {
-    KMessageBox::sorry(knGlobals.topWidget, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
+    KMessageBox::sorry(knGlobals.topWidget, i18n("Please set a host name for the generation\nof the message-id or disable it."));
     return 0;
   }
 

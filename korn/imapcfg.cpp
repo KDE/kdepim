@@ -77,7 +77,7 @@ QWidget *KImapCfg::makeWidget( QWidget *parent )
 	slay = new QGridLayout(aGroup, 5, 2, 10);
 	slay->addRowSpacing(0,10);
 
-	aLabel = new QLabel( i18n("Username:"), aGroup);
+	aLabel = new QLabel( i18n("User name:"), aGroup);
 	slay->addWidget(aLabel, 1, 0);
 
 	_userEdit = new QLineEdit( d->user(), aGroup );

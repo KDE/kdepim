@@ -69,7 +69,7 @@ QWidget *KPopCfg::makeWidget( QWidget *parent )
 	slay = new QGridLayout ( aGroup, 4, 2, 10);
 	slay->addRowSpacing (0, 10);
 
-	slay->addWidget( new QLabel( i18n("Username:"), aGroup ), 1, 0);
+	slay->addWidget( new QLabel( i18n("User name:"), aGroup ), 1, 0);
 
 	_userEdit = new QLineEdit( d->user(), aGroup );
 	slay->addWidget( _userEdit, 1, 1);

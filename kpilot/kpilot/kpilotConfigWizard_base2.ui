@@ -32,7 +32,7 @@
                 <cstring>textLabel5</cstring>
             </property>
             <property name="text">
-                <string>As a first step, we need to determine the username and how the handheld is connected to the computer.</string>
+                <string>As a first step, we need to determine the user name and how the handheld is connected to the computer.</string>
             </property>
             <property name="alignment">
                 <set>WordBreak|AlignVCenter</set>

@@ -416,7 +416,7 @@ your messages. To create a new folder, select
 the <link linkend="folders-properties-window">folder properties</link> dialog
 will then prompt you for the necessary information. If you ever need to change
 the settings for a folder, select the folder you wish to modify in the Folders pane and select
-<menuchoice><guimenu>Folder</guimenu><guimenuitem>Properties...</guimenuitem>
+<menuchoice><guimenu>Folder</guimenu><guimenuitem>Properties</guimenuitem>
 </menuchoice>.</para>
 
 <para>To move messages from one folder into another, select the message(s) you

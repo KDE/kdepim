@@ -174,7 +174,7 @@ bool KNProtocolClient::openConnection()
 #endif
 
   if (account.server().isEmpty()) {
-    job->setErrorString(i18n("Unable to resolve hostname"));
+    job->setErrorString(i18n("Unable to resolve host name"));
     return false;
   }
 
@@ -184,7 +184,7 @@ bool KNProtocolClient::openConnection()
   ks.setTimeout(account.timeout());
   if (ks.connect() < 0) {
     if (ks.status() == IO_LookupError) {
-      job->setErrorString(i18n("Unable to resolve hostname"));
+      job->setErrorString(i18n("Unable to resolve host name"));
     } else if (ks.status() == IO_ConnectError) {
       job->setErrorString(i18n("Unable to connect:\n%1").arg(KExtendedSocket::strError(ks.status(), errno)));
     } else if (ks.status() == IO_TimeOutError)
