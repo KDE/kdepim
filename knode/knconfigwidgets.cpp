@@ -115,6 +115,8 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
 		     "used to sign your articles.</p></qt>");
   QWhatsThis::add( l, msg );
   QWhatsThis::add( s_igningKey, msg );
+  connect( s_igningKey->dialogButton(), SIGNAL(clicked()), SLOT(slotEmitChanged()) );
+  connect( s_igningKey->eraseButton(), SIGNAL(clicked()), SLOT(slotEmitChanged()) );
   // FIXME: there is no changed signal for Kgpg::SecretKeyRequester
 
   b_uttonGroup = new QButtonGroup(this);
@@ -2016,7 +2018,7 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
 
   QGroupBox *xgb=new QGroupBox(i18n("X-Headers"), this);
   topL->addWidget(xgb, 1);
-  QGridLayout *xgbL=new QGridLayout(xgb, 6,2, 8,5);
+  QGridLayout *xgbL=new QGridLayout(xgb, 7,2, 8,5);
 
   xgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
@@ -2037,8 +2039,11 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   connect(e_ditBtn, SIGNAL(clicked()), SLOT(slotEditBtnClicked()));
   xgbL->addWidget(e_ditBtn, 3,1);
 
+  QLabel *placeHolders = new QLabel("<qt>Placeholders: %NAME=name, %EMAIL=email address</qt>", xgb);
+  xgbL->addMultiCellWidget(placeHolders, 5, 5, 0, 1);
+
   i_ncUaCB=new QCheckBox(i18n("Do not add the \"&User-Agent\" identification header"), xgb);
-  xgbL->addMultiCellWidget(i_ncUaCB, 5,5, 0,1);
+  xgbL->addMultiCellWidget(i_ncUaCB, 6,6, 0,1);
   connect(i_ncUaCB, SIGNAL(toggled(bool)), SLOT(slotEmitChanged()));
 
   xgbL->setRowStretch(4,1);

@@ -139,6 +139,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     int       n_ewCount,
               l_astFetchCount,
               r_eadCount,
+              i_gnoreCount,
               f_irstNr,
               l_astNr,
               m_axFetch,

@@ -1189,7 +1189,7 @@ KeyRequester::KeyRequester( QWidget * parent, bool multipleKeys,
   hlay->addWidget( mEraseButton );
   hlay->addWidget( mDialogButton );
 
-  connect( mEraseButton, SIGNAL(clicked()), mLabel, SLOT(clear()) );
+  connect( mEraseButton, SIGNAL(clicked()), SLOT(slotEraseButtonClicked()) );
   connect( mDialogButton, SIGNAL(clicked()), SLOT(slotDialogButtonClicked()) );
 
   setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding,
@@ -1229,6 +1229,11 @@ void KeyRequester::slotDialogButtonClicked() {
   }
 
   setKeyIDs( keyRequestHook( pgp ) );
+}
+
+void KeyRequester::slotEraseButtonClicked() {
+  mKeys.clear();
+  mLabel->clear();
 }
 
 void KeyRequester::setDialogCaption( const QString & caption ) {

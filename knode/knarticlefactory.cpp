@@ -875,8 +875,15 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QC
   //X-Headers
   if(withXHeaders) {
     KNConfig::XHeaders::Iterator it;
-    for(it=pnt->xHeaders().begin(); it!=pnt->xHeaders().end(); ++it)
-      art->setHeader( new KMime::Headers::Generic( (QCString("X-")+(*it).name()), art, (*it).value(), pnt->charset() ) );
+    for(it=pnt->xHeaders().begin(); it!=pnt->xHeaders().end(); ++it) {
+      QString name(art->from()->name());
+      if (name.isEmpty())
+        name = QString::fromLatin1(art->from()->email());
+      QString value = (*it).value();
+      value.replace(QRegExp("%NAME"), name);
+      value.replace(QRegExp("%EMAIL"), QString::fromLatin1(art->from()->email()));
+      art->setHeader( new KMime::Headers::Generic( (QCString("X-")+(*it).name()), art, value, pnt->charset() ) );
+    }
   }
 
   //Signature

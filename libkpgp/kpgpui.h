@@ -235,6 +235,7 @@ protected:
 
 protected slots:
   void slotDialogButtonClicked();
+  void slotEraseButtonClicked();
 
 private:
   class Private;

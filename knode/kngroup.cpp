@@ -37,7 +37,7 @@
 #define SORT_DEPTH 5
 
 KNGroup::KNGroup(KNCollection *p)
-  : KNArticleCollection(p), n_ewCount(0), l_astFetchCount(0), r_eadCount(0),
+  : KNArticleCollection(p), n_ewCount(0), l_astFetchCount(0), r_eadCount(0), i_gnoreCount(0),
     l_astNr(0), m_axFetch(0), d_ynDataFormat(1), f_irstNew(-1), l_ocked(false),
     u_seCharset(false), s_tatus(unknown), i_dentity(0)
 {
@@ -71,7 +71,7 @@ void KNGroup::updateListItem()
 {
   if(!l_istItem) return;
   l_istItem->setNumber(1,c_ount);
-  l_istItem->setNumber(2,c_ount-r_eadCount);
+  l_istItem->setNumber(2,c_ount-r_eadCount-i_gnoreCount);
 }
 
 
@@ -469,7 +469,7 @@ void KNGroup::insortNewHeaders(QStrList *hdrs, QStrList *hdrfmt, KNProtocolClien
       delete art;
       new_cnt++;
     }
-    else if ( (append(art)) && ( !art->isIgnored() ) ) {
+    else if (append(art)) {
       added_cnt++;
       new_cnt++;
     }
@@ -843,7 +843,10 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
 
       }
       if (art) {
-        at(idx)->setIgnored(art->isIgnored());
+        if (art->isIgnored()) {
+          at(idx)->setIgnored(true);
+          ++i_gnoreCount;
+        }
         at(idx)->setWatched(art->isWatched());
       }
     }
