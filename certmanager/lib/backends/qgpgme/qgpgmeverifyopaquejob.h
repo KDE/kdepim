@@ -60,6 +60,9 @@ namespace Kleo {
     /*! \reimp from VerifyOpaqueJob */
     GpgME::Error start( const QByteArray & signedData );
 
+    /*! \reimp form VerifyOpaqueJob */
+    GpgME::VerificationResult exec( const QByteArray & signedData, QByteArray & plainData );
+
   private slots:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
     /*! \reimp from Job */
@@ -68,6 +71,7 @@ namespace Kleo {
   private:
     /*! \reimp from GpgME::ProgressProvider */
     void showProgress( const char * what, int type, int current, int total );
+    void setup( const QByteArray & );
 
   private:
     GpgME::Context * mCtx;

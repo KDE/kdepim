@@ -67,7 +67,7 @@ Kleo::QGpgMEVerifyOpaqueJob::~QGpgMEVerifyOpaqueJob() {
   delete mSignedDataDataProvider; mSignedDataDataProvider = 0;
 }
 
-GpgME::Error Kleo::QGpgMEVerifyOpaqueJob::start( const QByteArray & signedData ) {
+void Kleo::QGpgMEVerifyOpaqueJob::setup( const QByteArray & signedData ) {
   assert( !mPlainText );
   assert( !mSignedData );
 
@@ -80,6 +80,10 @@ GpgME::Error Kleo::QGpgMEVerifyOpaqueJob::start( const QByteArray & signedData )
   mSignedDataDataProvider = new QGpgME::QByteArrayDataProvider( signedData );
   mSignedData = new GpgME::Data( mSignedDataDataProvider );
   assert( !mSignedData->isNull() );
+}
+
+GpgME::Error Kleo::QGpgMEVerifyOpaqueJob::start( const QByteArray & signedData ) {
+  setup( signedData );
 
   // hook up the context to the eventloopinteractor:
   mCtx->setManagedByEventLoopInteractor( true );
@@ -93,6 +97,13 @@ GpgME::Error Kleo::QGpgMEVerifyOpaqueJob::start( const QByteArray & signedData )
   if ( err )
     deleteLater();
   return err;
+}
+
+GpgME::VerificationResult Kleo::QGpgMEVerifyOpaqueJob::exec( const QByteArray & signedData, QByteArray & plainText ) {
+  setup( signedData );
+  const GpgME::VerificationResult res = mCtx->verifyOpaqueSignature( *mSignedData, *mPlainText );
+  plainText = mPlainTextDataProvider->data();
+  return res;
 }
 
 void Kleo::QGpgMEVerifyOpaqueJob::slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & ) {

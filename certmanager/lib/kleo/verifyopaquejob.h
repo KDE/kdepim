@@ -73,6 +73,9 @@ namespace Kleo {
     */
     virtual GpgME::Error start( const QByteArray & signedData ) = 0;
 
+    /** Synchronous version of @ref start */
+    virtual GpgME::VerificationResult exec( const QByteArray & signedData, QByteArray & plainText ) = 0;
+
   signals:
     void result( const GpgME::VerificationResult & result, const QByteArray & plainText );
   };
