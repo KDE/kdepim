@@ -289,7 +289,7 @@ void KABC::ResourceIMAP::subresourceAdded( const QString& type,
     // Not ours
     return;
 
-  if ( !mResources.contains( resource ) )
+  if ( mResources.contains( resource ) )
     // Already registered
     return;
 
