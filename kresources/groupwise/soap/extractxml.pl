@@ -17,22 +17,41 @@ if ( !open IN, $in ) {
 $count = 1;
 
 while ( <IN> ) {
-  if ( $_ =~ /^(\<\?xml.*\<\/SOAP-ENV:Envelope\>)/ ) {
-    $xml = $1;
-
-    $out = "$in.$count.xml";
-
-    print "Out: $out\n";
-
-    if ( !open OUT, ">$out" ) {
-      print STDERR "Unable to open file '$out'.\n";
+  if ( $xml ) {
+    if ( $_ =~ /(.*\<\/SOAP-ENV:Envelope\>)/ ) {
+      printXml( $xml . $1 );
+      $xml = "";
     } else {
-      print OUT $xml;
-      close OUT;
+      $xml .= $_;
     }
-    
-    $count += 1;
-  } else {
-#    print "XXXX: $_";
+  } elsif ( $_ =~ /^(\<\?xml.*\?>)(.*)$/ ) {
+    $xml = $1 . $2;
+
+    if ( $xml =~ /(.*\<\/SOAP-ENV:Envelope\>)/ ) { 
+      printXml( $1 );
+      $xml = "";
+      
+    }
   }
+}
+
+sub printXml()
+{
+  $xml = shift;
+
+  $xml =~ s/\n//g;
+  $xml =~ s/\r//g;
+
+  $out = "$in.$count.xml";
+
+  print "Out: $out\n";
+
+  if ( !open OUT, ">$out" ) {
+    print STDERR "Unable to open file '$out'.\n";
+  } else {
+    print OUT $xml;
+    close OUT;
+  }
+
+  $count += 1;
 }
