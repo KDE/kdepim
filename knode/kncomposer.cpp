@@ -228,9 +228,12 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   //apply configuration
   setConfig(false);
 
-  if(firstEdit)    // now we place the cusor at the end of the quoted text
-    v_iew->e_dit->setCursorPosition(v_iew->e_dit->numLines()-1,0);
-  else
+  if (firstEdit) {   // now we place the cursor at the end of the quoted text / below the attribution line
+    if (knGlobals.cfgManager->postNewsComposer()->cursorOnTop())
+      v_iew->e_dit->setCursorPosition(1,0);
+    else
+      v_iew->e_dit->setCursorPosition(v_iew->e_dit->numLines()-1,0);
+  } else
     v_iew->e_dit->setCursorPosition(0,0);
   v_iew->e_dit->setFocus();
 
@@ -1526,7 +1529,7 @@ QString KNComposer::Editor::textLine(int line) const
 }
 
 
-// inserts s at the current cusor position, deletes the current selection
+// inserts s at the current cursor position, deletes the current selection
 void  KNComposer::Editor::pasteString(const QString &s)
 {
   if (hasMarkedText())

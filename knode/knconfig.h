@@ -919,6 +919,7 @@ class PostNewsComposer : public Base {
     QString intro()             { return i_ntro; }
     bool rewrap()               { return r_ewrap; }
     bool includeSignature()     { return i_ncSig; }
+    bool cursorOnTop()          { return c_ursorOnTop; }
 
     QString externalEditor()    { return e_xternalEditor; }
     bool useExternalEditor()    { return u_seExtEditor; }
@@ -930,6 +931,7 @@ class PostNewsComposer : public Base {
             a_ppSig,
             r_ewrap,
             i_ncSig,
+            c_ursorOnTop,
             u_seExtEditor;
     QString i_ntro,
             e_xternalEditor;
@@ -947,19 +949,18 @@ class PostNewsComposerWidget : public BaseWidget {
 
     void apply();
 
-
   protected:
     KIntSpinBox *m_axLen;
     QCheckBox   *w_ordWrapCB,
                 *o_wnSigCB,
-                *a_uthSigCB,
                 *r_ewrapCB,
+                *a_uthSigCB,
+                *c_ursorOnTopCB,
                 *e_xternCB;
     QLineEdit   *i_ntro,
                 *e_ditor;
 
     PostNewsComposer *d_ata;
-
 
   protected slots:
     void slotChooseEditor();

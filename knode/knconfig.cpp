@@ -1030,6 +1030,7 @@ KNConfig::PostNewsComposer::PostNewsComposer()
   a_ppSig=conf->readBoolEntry("appSig",true);
   r_ewrap=conf->readBoolEntry("rewrap",true);
   i_ncSig=conf->readBoolEntry("incSig",false);
+  c_ursorOnTop=conf->readBoolEntry("cursorOnTop",false);
   u_seExtEditor=conf->readBoolEntry("useExternalEditor",false);
   i_ntro=conf->readEntry("Intro","%NAME wrote:");
   e_xternalEditor=conf->readEntry("externalEditor","kwrite %f");
@@ -1053,6 +1054,7 @@ void KNConfig::PostNewsComposer::save()
   conf->writeEntry("appSig", a_ppSig);
   conf->writeEntry("rewrap",r_ewrap);
   conf->writeEntry("incSig", i_ncSig);
+  conf->writeEntry("cursorOnTop", c_ursorOnTop);
   conf->writeEntry("useExternalEditor", u_seExtEditor);
   conf->writeEntry("Intro", i_ntro);
   conf->writeEntry("externalEditor", e_xternalEditor);

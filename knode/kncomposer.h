@@ -221,7 +221,7 @@ class KNComposer::Editor : public KEdit {
     ~Editor();
     QString textLine(int line) const;
 
-    // inserts s at the current cusor position, deletes the current selection
+    // inserts s at the current cursor position, deletes the current selection
     void pasteString(const QString &s);
 
   public slots:

@@ -1934,7 +1934,7 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
 
   QGroupBox *replyB=new QGroupBox(i18n("Reply"), this);
   topL->addWidget(replyB);
-  QGridLayout *replyL=new QGridLayout(replyB, 6,2, 8,5);
+  QGridLayout *replyL=new QGridLayout(replyB, 7,2, 8,5);
 
   replyL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
@@ -1948,6 +1948,9 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
 
   a_uthSigCB=new QCheckBox(i18n("Include the a&uthors signature"), replyB);
   replyL->addMultiCellWidget(a_uthSigCB, 6,6,0,1);
+
+  c_ursorOnTopCB=new QCheckBox(i18n("Put the cursor &below the introduction phrase"), replyB);
+  replyL->addMultiCellWidget(c_ursorOnTopCB, 6,6,0,1);
 
   replyL->setColStretch(1,1);
 
@@ -1979,6 +1982,7 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
   w_ordWrapCB->setChecked(d->w_ordWrap);
   m_axLen->setEnabled(d->w_ordWrap);
   a_uthSigCB->setChecked(d->i_ncSig);
+  c_ursorOnTopCB->setChecked(d->c_ursorOnTop);
   e_xternCB->setChecked(d->u_seExtEditor);
   o_wnSigCB->setChecked(d->a_ppSig);
   r_ewrapCB->setChecked(d->r_ewrap);
@@ -2004,6 +2008,7 @@ void KNConfig::PostNewsComposerWidget::apply()
   d_ata->a_ppSig=o_wnSigCB->isChecked();
   d_ata->i_ntro=i_ntro->text();
   d_ata->i_ncSig=a_uthSigCB->isChecked();
+  d_ata->c_ursorOnTop=c_ursorOnTopCB->isChecked();
   d_ata->e_xternalEditor=e_ditor->text();
   d_ata->u_seExtEditor=e_xternCB->isChecked();
 
@@ -2053,7 +2058,7 @@ void KNConfig::PostNewsSpellingWidget::apply()
 
 //==============================================================================================================
 
-KNConfig::PrivacyWidget::PrivacyWidget(QWidget *p, const char *n) 
+KNConfig::PrivacyWidget::PrivacyWidget(QWidget *p, const char *n)
   : BaseWidget(p,n)
 {
   QGridLayout *topLayout = new QGridLayout(this,1,1);
