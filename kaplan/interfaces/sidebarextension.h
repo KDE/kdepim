@@ -62,7 +62,7 @@ namespace KParts
 			/**
 			 * Retrieve the display name
 			 **/
-			QString displayNamee() const { return m_name; };
+			QString displayName() const { return m_name; };
 
 			/**
 			 * Retrieve the name of the icon
