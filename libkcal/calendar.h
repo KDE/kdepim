@@ -150,21 +150,21 @@ class Calendar : public QObject, public CustomProperties,
     /**
        Sort eventList according to sortField
     */
-    Event::List sortEvents( Event::List *eventList,
+    static Event::List sortEvents( Event::List *eventList,
                             EventSortField sortField,
                             SortDirection sortDirection );
 
     /**
        Sort todoList according to sortField
     */
-    Todo::List sortTodos( Todo::List *todoList,
+    static Todo::List sortTodos( Todo::List *todoList,
                           TodoSortField sortField,
                           SortDirection sortDirection );
 
     /**
        Sort journalList according to sortField
     */
-    Journal::List sortJournals( Journal::List *journalList,
+    static Journal::List sortJournals( Journal::List *journalList,
                                 JournalSortField sortField,
                                 SortDirection sortDirection );
 
