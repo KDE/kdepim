@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>343</width>
-            <height>406</height>
+            <height>410</height>
         </rect>
     </property>
     <property name="caption">
@@ -176,22 +176,6 @@
                 </property>
                 <widget class="QRadioButton">
                     <property name="name">
-                        <cstring>radioSemicolon</cstring>
-                    </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>103</x>
-                            <y>20</y>
-                            <width>82</width>
-                            <height>19</height>
-                        </rect>
-                    </property>
-                    <property name="text">
-                        <string>Semicolon</string>
-                    </property>
-                </widget>
-                <widget class="QRadioButton">
-                    <property name="name">
                         <cstring>radioTab</cstring>
                     </property>
                     <property name="geometry">
@@ -293,6 +277,22 @@
                         <number>1</number>
                     </property>
                 </widget>
+                <widget class="QRadioButton">
+                    <property name="name">
+                        <cstring>radioSemicolon</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>103</x>
+                            <y>20</y>
+                            <width>82</width>
+                            <height>19</height>
+                        </rect>
+                    </property>
+                    <property name="text">
+                        <string>Semicolon</string>
+                    </property>
+                </widget>
             </widget>
             <spacer row="5" column="0">
                 <property name="name">
@@ -330,8 +330,8 @@
                     </property>
                     <property name="geometry">
                         <rect>
-                            <x>31</x>
-                            <y>31</y>
+                            <x>30</x>
+                            <y>20</y>
                             <width>33</width>
                             <height>21</height>
                         </rect>
@@ -340,14 +340,38 @@
                         <string>From:</string>
                     </property>
                 </widget>
+                <widget class="KDateEdit">
+                    <property name="name">
+                        <cstring>dtFrom</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>30</x>
+                            <y>40</y>
+                            <width>95</width>
+                            <height>21</height>
+                        </rect>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>1</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="focusPolicy">
+                        <enum>StrongFocus</enum>
+                    </property>
+                </widget>
                 <widget class="QLabel">
                     <property name="name">
                         <cstring>textLabel1_2</cstring>
                     </property>
                     <property name="geometry">
                         <rect>
-                            <x>171</x>
-                            <y>31</y>
+                            <x>170</x>
+                            <y>20</y>
                             <width>18</width>
                             <height>21</height>
                         </rect>
@@ -362,27 +386,19 @@
                     </property>
                     <property name="geometry">
                         <rect>
-                            <x>195</x>
-                            <y>31</y>
+                            <x>170</x>
+                            <y>40</y>
                             <width>95</width>
                             <height>21</height>
                         </rect>
                     </property>
-                    <property name="focusPolicy">
-                        <enum>StrongFocus</enum>
-                    </property>
-                </widget>
-                <widget class="KDateEdit">
-                    <property name="name">
-                        <cstring>dtFrom</cstring>
-                    </property>
-                    <property name="geometry">
-                        <rect>
-                            <x>70</x>
-                            <y>31</y>
-                            <width>95</width>
-                            <height>21</height>
-                        </rect>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>1</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
                     </property>
                     <property name="focusPolicy">
                         <enum>StrongFocus</enum>
@@ -453,7 +469,7 @@
 <customwidgets>
     <customwidget>
         <class>KDateEdit</class>
-        <header>kdateedit.h</header>
+        <header location="global">/usr/local/src/kdecvs/kdepim/libkdepim/kdateedit.h</header>
         <sizehint>
             <width>95</width>
             <height>21</height>
