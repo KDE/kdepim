@@ -37,7 +37,8 @@ namespace KCal {
   This class provides a calendar resource using a local CalendarLocal object to
   cache the calendar data.
 */
-class ResourceCached : public ResourceCalendar
+class ResourceCached : public ResourceCalendar,
+                       public KCal::Calendar::Observer
 {
   public:
     ResourceCached( const KConfig * );
@@ -139,11 +140,33 @@ class ResourceCached : public ResourceCalendar
     void setTimeZoneId( const QString& tzid );
   
     QString timeZoneId() const;
-  
+
+    void enableChangeNotification();
+    void disableChangeNotification();
+
+    void clearChange( Incidence * );
+
+    void clearChanges();
+
+    bool hasChanges() const;
+
+    Incidence::List addedIncidences() const;
+    Incidence::List changedIncidences() const;
+    Incidence::List deletedIncidences() const;
+
   protected:
+    // From Calendar::Observer
+    void calendarIncidenceAdded( KCal::Incidence * );
+    void calendarIncidenceChanged( KCal::Incidence * );
+    void calendarIncidenceDeleted( KCal::Incidence * );
+
     CalendarLocal mCalendar;
 
   private:
+    QMap<KCal::Incidence *,bool> mAddedIncidences;
+    QMap<KCal::Incidence *,bool> mChangedIncidences;
+    QMap<KCal::Incidence *,bool> mDeletedIncidences;
+
     class Private;
     Private *d;
 };

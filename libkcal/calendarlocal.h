@@ -159,13 +159,6 @@ class CalendarLocal : public Calendar
     Alarm::List alarmsTo( const QDateTime &to );
 
     /**
-      This method should be called whenever a Event is modified directly
-      via it's pointer. It makes sure that the calendar is internally
-      consistent.
-    */
-    void update( IncidenceBase *incidence );
-
-    /**
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
     */
@@ -189,7 +182,7 @@ class CalendarLocal : public Calendar
   protected:
 
     /** Notification function of IncidenceBase::Observer. */
-    void incidenceUpdated( IncidenceBase *i ) { update( i ); }
+    void incidenceUpdated( IncidenceBase *i );
 
     /** inserts an event into its "proper place" in the calendar. */
     void insertEvent( Event *event );
@@ -210,6 +203,8 @@ class CalendarLocal : public Calendar
     EventDict mEvents;
     Todo::List mTodoList;
     Journal::List mJournalList;
+
+    Incidence::List mDeletedIncidences;
 
     class Private;
     Private *d;

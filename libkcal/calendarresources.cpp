@@ -222,7 +222,7 @@ bool CalendarResources::addEvent( Event *event )
   return addIncidence( event );
 }
 
-bool CalendarResources::addEvent(Event *anEvent, ResourceCalendar *resource)
+bool CalendarResources::addEvent( Event *anEvent, ResourceCalendar *resource )
 {
   bool validRes = false;
   CalendarResourceManager::ActiveIterator it;
@@ -239,11 +239,11 @@ bool CalendarResources::addEvent(Event *anEvent, ResourceCalendar *resource)
   return true;
 }
 
-void CalendarResources::deleteEvent(Event *event)
+void CalendarResources::deleteEvent( Event *event )
 {
   kdDebug(5800) << "CalendarResources::deleteEvent" << endl;
 
-  if ( mResourceMap.find(event)!=mResourceMap.end() ) {
+  if ( mResourceMap.find( event ) != mResourceMap.end() ) {
     mResourceMap[event]->deleteEvent( event );
     mResourceMap.remove( event );
   } else {
@@ -299,13 +299,13 @@ bool CalendarResources::addTodo(Todo *todo, ResourceCalendar *resource)
   return true;
 }
 
-void CalendarResources::deleteTodo(Todo *todo)
+void CalendarResources::deleteTodo( Todo *todo )
 {
   kdDebug(5800) << "CalendarResources::deleteTodo" << endl;
 
   Q_ASSERT(todo);
 
-  if ( mResourceMap.find(todo)!=mResourceMap.end() ) {
+  if ( mResourceMap.find(todo) != mResourceMap.end() ) {
     mResourceMap[todo]->deleteTodo( todo );
     mResourceMap.remove( todo );
   } else {
@@ -733,8 +733,6 @@ bool CalendarResources::endChange( Incidence *incidence )
   if ( !r ) return false;
 
   int count = decrementChangeCount( r );
-
-  r->changeIncidence( incidence );
 
   if ( count == 0 ) {
     bool ok = save( mTickets[ r ] );

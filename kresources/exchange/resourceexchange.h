@@ -44,6 +44,7 @@ class CalFormat;
 /**
   This class provides a calendar stored on a Microsoft Exchange 2000 server
 */
+// FIXME: Use ResourceCached
 class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
 {
   Q_OBJECT
@@ -94,6 +95,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     /** deletes an event from this calendar. */
     void deleteEvent(Event *);
 
+    // Isn't called anymore.
     void changeIncidence( Incidence * );
 
     /**
@@ -195,13 +197,8 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     Event::List rawEvents( const QDate &start, const QDate &end,
                                bool inclusive = false );
 
-    /** this method should be called whenever a Event is modified directly
-     * via it's pointer.  It makes sure that the calendar is internally
-     * consistent. */
-    void update(IncidenceBase *incidence);
-  
     /** Notification function of IncidenceBase::Observer. */
-    void incidenceUpdated( IncidenceBase *i ) { mCache->update( i ); update( i ); }
+    void incidenceUpdated( IncidenceBase *i );
   
     /** inserts an event into its "proper place" in the calendar. */
 //    void insertEvent(const Event *anEvent);
@@ -241,6 +238,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
 
     KABC::Lock *mLock;
 
+    // FIXME: Remove variable, use ResourceCached::changedIncidences() instead.
     Incidence::List mChangedIncidences;
 };
 

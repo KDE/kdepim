@@ -2,7 +2,7 @@
     This file is part of libkcal.
 
     Copyright (c) 1998 Preston Brown
-    Copyright (c) 2000-2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2000-2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -50,8 +50,8 @@ Calendar::Calendar( const QString &timeZoneId )
 
 void Calendar::init()
 {
-  mObserver = 0;
   mNewObserver = false;
+  mObserversEnabled = true;
 
   mModified = false;
 
@@ -424,22 +424,58 @@ void Calendar::removeRelations( Incidence *incidence )
 
 void Calendar::registerObserver( Observer *observer )
 {
-  // FIXME: Support more than one observer
-  mObserver = observer;
+  if( !mObservers.contains( observer ) ) mObservers.append( observer );
   mNewObserver = true;
 }
 
 void Calendar::unregisterObserver( Observer *observer )
 {
-  if ( mObserver == observer ) mObserver = 0;
+  mObservers.remove( observer );
 }
 
 void Calendar::setModified( bool modified )
 {
   if ( modified != mModified || mNewObserver ) {
     mNewObserver = false;
-    if ( mObserver ) mObserver->calendarModified( modified, this );
+    Observer *observer;
+    for( observer = mObservers.first(); observer;
+         observer = mObservers.next() ) {
+      observer->calendarModified( modified, this );
+    }
     mModified = modified;
+  }
+}
+
+void Calendar::notifyIncidenceAdded( Incidence *i )
+{
+  if ( !mObserversEnabled ) return;
+
+  Observer *observer;
+  for( observer = mObservers.first(); observer;
+       observer = mObservers.next() ) {
+    observer->calendarIncidenceAdded( i );
+  }
+}
+
+void Calendar::notifyIncidenceChanged( Incidence *i )
+{
+  if ( !mObserversEnabled ) return;
+
+  Observer *observer;
+  for( observer = mObservers.first(); observer;
+       observer = mObservers.next() ) {
+    observer->calendarIncidenceChanged( i );
+  }
+}
+
+void Calendar::notifyIncidenceDeleted( Incidence *i )
+{
+  if ( !mObserversEnabled ) return;
+
+  Observer *observer;
+  for( observer = mObservers.first(); observer;
+       observer = mObservers.next() ) {
+    observer->calendarIncidenceDeleted( i );
   }
 }
 
@@ -479,6 +515,11 @@ bool Calendar::beginChange( Incidence * )
 bool Calendar::endChange( Incidence * )
 {
   return true;
+}
+
+void Calendar::setObserversEnabled( bool enabled )
+{
+  mObserversEnabled = enabled;
 }
 
 #include "calendar.moc"

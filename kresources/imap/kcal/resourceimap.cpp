@@ -448,20 +448,16 @@ Alarm::List ResourceIMAP::alarms( const QDateTime &from, const QDateTime &to )
   return mCalendar.alarms( from, to );
 }
 
-/***********************************************
- * update() (kind of slot)
- */
-
-// after changes are made to an event, this should be called.
-void ResourceIMAP::update(IncidenceBase *incidencebase)
+// after changes are made to an incidence, this is called via the Observer.
+void ResourceIMAP::incidenceUpdated( IncidenceBase *incidencebase )
 {
   QString type = incidencebase->type();
   if ( type == "Event" ) type = "Calendar";
   else if ( type == "Todo" ) type = "Task";
   else if ( type != "Journal" ) return;
 
-  incidencebase->setSyncStatus(Event::SYNCMOD);
-  incidencebase->setLastModified(QDateTime::currentDateTime());
+  incidencebase->setSyncStatus( Event::SYNCMOD );
+  incidencebase->setLastModified( QDateTime::currentDateTime() );
   // we should probably update the revision number here,
   // or internally in the Event itself when certain things change.
   // need to verify with ical documentation.

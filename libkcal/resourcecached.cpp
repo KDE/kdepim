@@ -168,3 +168,105 @@ QString ResourceCached::timeZoneId() const
 {
   return mCalendar.timeZoneId();
 }
+
+void ResourceCached::clearChanges()
+{
+  mAddedIncidences.clear();
+  mChangedIncidences.clear();
+  mDeletedIncidences.clear();
+}
+
+void ResourceCached::calendarIncidenceAdded( Incidence *i )
+{
+#if 1
+  kdDebug() << "ResourceCached::calendarIncidenceAdded(): "
+            << i->uid() << endl;
+#endif
+
+  QMap<Incidence *,bool>::ConstIterator it;
+  it = mAddedIncidences.find( i );
+  if ( it == mAddedIncidences.end() ) {
+    mAddedIncidences.insert( i, true );
+  }
+}
+
+void ResourceCached::calendarIncidenceChanged( Incidence *i )
+{
+#if 1
+  kdDebug() << "ResourceCached::calendarIncidenceChanged(): "
+            << i->uid() << endl;
+#endif
+
+  QMap<Incidence *,bool>::ConstIterator it;
+  it = mChangedIncidences.find( i );
+  if ( it == mChangedIncidences.end() ) {
+    mChangedIncidences.insert( i, true );
+  }
+}
+
+void ResourceCached::calendarIncidenceDeleted( Incidence *i )
+{
+#if 1
+  kdDebug() << "ResourceCached::calendarIncidenceDeleted(): "
+            << i->uid() << endl;
+#endif
+
+  QMap<Incidence *,bool>::ConstIterator it;
+  it = mDeletedIncidences.find( i );
+  if ( it == mDeletedIncidences.end() ) {
+    mDeletedIncidences.insert( i, true );
+  }
+}
+
+Incidence::List ResourceCached::addedIncidences() const
+{
+  Incidence::List added;
+  QMap<Incidence *,bool>::ConstIterator it;
+  for( it = mAddedIncidences.begin(); it != mAddedIncidences.end(); ++it ) {
+    added.append( it.key() );
+  }
+  return added;
+}
+
+Incidence::List ResourceCached::changedIncidences() const
+{
+  Incidence::List changed;
+  QMap<Incidence *,bool>::ConstIterator it;
+  for( it = mChangedIncidences.begin(); it != mChangedIncidences.end(); ++it ) {
+    changed.append( it.key() );
+  }
+  return changed;
+}
+
+Incidence::List ResourceCached::deletedIncidences() const
+{
+  Incidence::List deleted;
+  QMap<Incidence *,bool>::ConstIterator it;
+  for( it = mDeletedIncidences.begin(); it != mDeletedIncidences.end(); ++it ) {
+    deleted.append( it.key() );
+  }
+  return deleted;
+}
+
+bool ResourceCached::hasChanges() const
+{
+  return !( mAddedIncidences.isEmpty() && mChangedIncidences.isEmpty() &&
+            mDeletedIncidences.isEmpty() );
+}
+
+void ResourceCached::clearChange( Incidence *incidence )
+{
+  mAddedIncidences.remove( incidence );
+  mChangedIncidences.remove( incidence );
+  mDeletedIncidences.remove( incidence );
+}
+
+void ResourceCached::enableChangeNotification()
+{
+  mCalendar.registerObserver( this );
+}
+
+void ResourceCached::disableChangeNotification()
+{
+  mCalendar.unregisterObserver( this );
+}

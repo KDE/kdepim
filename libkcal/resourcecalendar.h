@@ -122,8 +122,6 @@ class ResourceCalendar : public KRES::Resource
     */
     virtual void deleteEvent( Event * ) = 0;
 
-    virtual void changeIncidence( Incidence * ) {};
-
     /**
       Retrieves an event on the basis of the unique string ID.
     */
@@ -244,13 +242,6 @@ class ResourceCalendar : public KRES::Resource
     */
     virtual Alarm::List alarmsTo( const QDateTime &to ) = 0;
 
-
-    /**
-      This method should be called whenever a Event is modified directly
-      via it's pointer. It makes sure that the resource is internally
-      consistent.
-    */
-    virtual void update( IncidenceBase *incidence ) = 0;
 
     /** Returns a list of all incideces */
     Incidence::List rawIncidences();

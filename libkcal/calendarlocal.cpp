@@ -2,7 +2,7 @@
     This file is part of libkcal.
 
     Copyright (c) 1998 Preston Brown
-    Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2001,2003,2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -44,14 +44,15 @@ CalendarLocal::CalendarLocal()
   init();
 }
 
-CalendarLocal::CalendarLocal(const QString &timeZoneId)
-  : Calendar(timeZoneId), mEvents( 47 )
+CalendarLocal::CalendarLocal( const QString &timeZoneId )
+  : Calendar( timeZoneId ), mEvents( 47 )
 {
   init();
 }
 
 void CalendarLocal::init()
 {
+  mDeletedIncidences.setAutoDelete( true );
 }
 
 
@@ -74,11 +75,16 @@ bool CalendarLocal::save( const QString &fileName, CalFormat *format )
 
 void CalendarLocal::close()
 {
+  setObserversEnabled( false );
+
   deleteAllEvents();
   deleteAllTodos();
   deleteAllJournals();
 
+  mDeletedIncidences.clear();
   setModified( false );
+
+  setObserversEnabled( true );
 }
 
 
@@ -90,6 +96,8 @@ bool CalendarLocal::addEvent( Event *event )
 
   setModified( true );
 
+  notifyIncidenceAdded( event );
+
   return true;
 }
 
@@ -99,6 +107,8 @@ void CalendarLocal::deleteEvent( Event *event )
 
   if ( mEvents.remove( event->uid() ) ) {
     setModified( true );
+    notifyIncidenceDeleted( event );
+    mDeletedIncidences.append( event );
   } else {
     kdWarning() << "CalendarLocal::deleteEvent(): Event not found." << endl;
   }
@@ -107,6 +117,12 @@ void CalendarLocal::deleteEvent( Event *event )
 void CalendarLocal::deleteAllEvents()
 {
   // kdDebug(5800) << "CalendarLocal::deleteAllEvents" << endl;
+  QDictIterator<Event> it( mEvents );
+  while( it.current() ) {
+    notifyIncidenceDeleted( it.current() );
+    ++it;
+  }
+
   mEvents.setAutoDelete( true );
   mEvents.clear();
   mEvents.setAutoDelete( false );
@@ -129,6 +145,8 @@ bool CalendarLocal::addTodo( Todo *todo )
 
   setModified( true );
 
+  notifyIncidenceAdded( todo );
+
   return true;
 }
 
@@ -139,12 +157,19 @@ void CalendarLocal::deleteTodo( Todo *todo )
 
   if ( mTodoList.removeRef( todo ) ) {
     setModified( true );
+    notifyIncidenceDeleted( todo );
+    mDeletedIncidences.append( todo );
   }
 }
 
 void CalendarLocal::deleteAllTodos()
 {
   // kdDebug(5800) << "CalendarLocal::deleteAllTodos()\n";
+  Todo::List::ConstIterator it;
+  for( it = mTodoList.begin(); it != mTodoList.end(); ++it ) {
+    notifyIncidenceDeleted( *it );
+  }
+  
   mTodoList.setAutoDelete( true );
   mTodoList.clear();
   mTodoList.setAutoDelete( false );
@@ -276,14 +301,16 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
 }
 
 
-// after changes are made to an event, this should be called.
-void CalendarLocal::update( IncidenceBase *incidence )
+void CalendarLocal::incidenceUpdated( IncidenceBase *incidence )
 {
   incidence->setSyncStatus( Event::SYNCMOD );
   incidence->setLastModified( QDateTime::currentDateTime() );
   // we should probably update the revision number here,
   // or internally in the Event itself when certain things change.
   // need to verify with ical documentation.
+
+  // The static_cast is ok as the CalendarLocal only observes Incidence objects
+  notifyIncidenceChanged( static_cast<Incidence *>( incidence ) );
 
   setModified( true );
 }
@@ -460,18 +487,27 @@ bool CalendarLocal::addJournal(Journal *journal)
 
   setModified( true );
 
+  notifyIncidenceAdded( journal );
+
   return true;
 }
 
 void CalendarLocal::deleteJournal( Journal *journal )
 {
-  if ( mJournalList.removeRef(journal) ) {
+  if ( mJournalList.removeRef( journal ) ) {
     setModified( true );
+    notifyIncidenceDeleted( journal );
+    mDeletedIncidences.append( journal );
   }
 }
 
 void CalendarLocal::deleteAllJournals()
 {
+  Journal::List::ConstIterator it;
+  for( it = mJournalList.begin(); it != mJournalList.end(); ++it ) {
+    notifyIncidenceDeleted( *it );
+  }
+  
   mJournalList.setAutoDelete( true );
   mJournalList.clear();
   mJournalList.setAutoDelete( false );

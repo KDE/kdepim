@@ -206,10 +206,6 @@ void ResourceLocal::doClose()
 }
 
 
-void ResourceLocal::update(IncidenceBase *)
-{
-}
-
 void ResourceLocal::dump() const
 {
   ResourceCalendar::dump();

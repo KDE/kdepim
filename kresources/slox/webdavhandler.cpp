@@ -85,13 +85,13 @@ QValueList<SloxItem> WebdavHandler::getSloxItems( const QDomDocument &doc )
         continue;
       }
 
-      QDomNode sloxId = prop.namedItem( "sloxid" );
-      if ( sloxId.isNull() ) {
+      QDomNode sloxIdNode = prop.namedItem( "sloxid" );
+      if ( sloxIdNode.isNull() ) {
         kdError() << "Unable to find SLOX id." << endl;
         continue;
       }
-      QDomElement idElement = sloxId.toElement();
-      QString uid = "KResources_SLOX_" + idElement.text();
+      QDomElement sloxIdElement = sloxIdNode.toElement();
+      QString sloxId = sloxIdElement.text();
 
       QDomNode sloxStatus = prop.namedItem( "sloxstatus" );
       if ( sloxStatus.isNull() ) {
@@ -100,7 +100,7 @@ QValueList<SloxItem> WebdavHandler::getSloxItems( const QDomDocument &doc )
       }
 
       SloxItem item;
-      item.uid = uid;
+      item.sloxId = sloxId;
       item.domNode = prop;
 
       QDomElement sloxStatusElement = sloxStatus.toElement();
@@ -120,13 +120,17 @@ QValueList<SloxItem> WebdavHandler::getSloxItems( const QDomDocument &doc )
 QString WebdavHandler::qDateTimeToSlox( const QDateTime &dt )
 {
   uint ticks = dt.toTime_t();
+
   return QString::number( ticks ) + "000";
 }
 
 QString WebdavHandler::qDateTimeToSlox( const QDateTime &dt,
                                         const QString &timeZoneId )
 {
-  uint ticks = dt.toTime_t();
+  QDateTime utc = KPimPrefs::localTimeToUtc( dt, timeZoneId );
+
+  uint ticks = utc.toTime_t();
+
   return QString::number( ticks ) + "000";
 }
 
@@ -153,6 +157,14 @@ QDateTime WebdavHandler::sloxToQDateTime( const QString &str,
   dt.setTime_t( ticks, Qt::UTC );
 
   return KPimPrefs::utcToLocalTime( dt, timeZoneId );
+}
+
+QDomElement WebdavHandler::addElement( QDomDocument &doc, QDomNode &node,
+                                       const QString &tag )
+{
+  QDomElement el = doc.createElement( tag );
+  node.appendChild( el );
+  return el;
 }
 
 QDomElement WebdavHandler::addDavElement( QDomDocument &doc, QDomNode &node,

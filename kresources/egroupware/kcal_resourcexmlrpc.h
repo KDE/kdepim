@@ -207,7 +207,6 @@ class ResourceXMLRPC : public ResourceCalendar
 
   protected:
     void doClose();
-    virtual void update( IncidenceBase* incidence );
 
   private slots:
     void reload();

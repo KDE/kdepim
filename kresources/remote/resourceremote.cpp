@@ -319,10 +319,6 @@ KABC::Lock *ResourceRemote::lock()
   return mLock;
 }
 
-void ResourceRemote::update(IncidenceBase *)
-{
-}
-
 void ResourceRemote::dump() const
 {
   ResourceCalendar::dump();

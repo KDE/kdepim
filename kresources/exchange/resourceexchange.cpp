@@ -381,7 +381,7 @@ Alarm::List ResourceExchange::alarms( const QDateTime &from, const QDateTime &to
 /****************************** PROTECTED METHODS ****************************/
 
 // after changes are made to an event, this should be called.
-void ResourceExchange::update( IncidenceBase *incidence )
+void ResourceExchange::incidenceUpdated( IncidenceBase *incidence )
 {
   Event* event = dynamic_cast<Event *>( incidence );
   if ( event ) {

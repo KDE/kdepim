@@ -81,11 +81,6 @@ class ResourceLocalDir : public ResourceCached
     /** clears out the current calendar, freeing all used memory etc. etc. */
     void doClose();
 
-    /** this method should be called whenever a Event is modified directly
-     * via it's pointer.  It makes sure that the calendar is internally
-     * consistent. */
-    virtual void update(IncidenceBase *incidence);
-
   private:
     void init();
     bool deleteIncidenceFile(Incidence *incidence);

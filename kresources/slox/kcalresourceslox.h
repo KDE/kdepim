@@ -100,13 +100,15 @@ class KCalResourceSlox : public KCal::ResourceCached
   protected slots:
     void slotLoadEventsResult( KIO::Job * );
     void slotLoadTodosResult( KIO::Job * );
-    void slotSaveJobResult( KIO::Job * );
+    void slotUploadResult( KIO::Job * );
     
     void slotEventsProgress( KIO::Job *job, unsigned long percent );
     void slotTodosProgress( KIO::Job *job, unsigned long percent );
+    void slotUploadProgress( KIO::Job *job, unsigned long percent );
 
     void cancelLoadEvents();
     void cancelLoadTodos();
+    void cancelUpload();
 
   protected:
     bool doOpen();
@@ -114,13 +116,10 @@ class KCalResourceSlox : public KCal::ResourceCached
     /** clears out the current calendar, freeing all used memory etc. etc. */
     void doClose();
 
-    /** this method should be called whenever a Event is modified directly
-     * via it's pointer.  It makes sure that the calendar is internally
-     * consistent. */
-    virtual void update( KCal::IncidenceBase *incidence );
-
     void requestEvents();
     void requestTodos();
+
+    void uploadIncidences();
  
     void parseMembersAttribute( const QDomElement &e,
                                 KCal::Incidence *incidence );
@@ -128,6 +127,21 @@ class KCalResourceSlox : public KCal::ResourceCached
                                   KCal::Incidence *incidence );
     void parseTodoAttribute( const QDomElement &e, KCal::Todo *todo );
     void parseEventAttribute( const QDomElement &e, KCal::Event *event );
+
+    void createIncidenceAttributes( QDomDocument &doc,
+                                    QDomElement &parent,
+                                    KCal::Incidence *incidence );
+    void createEventAttributes( QDomDocument &doc,
+                                QDomElement &parent,
+                                KCal::Event *event );
+    void createTodoAttributes( QDomDocument &doc,
+                               QDomElement &parent,
+                               KCal::Todo *todo );
+
+    bool confirmSave();
+
+    QString sloxIdToEventUid( const QString &sloxId );
+    QString sloxIdToTodoUid( const QString &sloxId );
 
   private:
     void init();
@@ -138,11 +152,13 @@ class KCalResourceSlox : public KCal::ResourceCached
 
     KIO::DavJob *mLoadEventsJob;
     KIO::DavJob *mLoadTodosJob;
-
-    KIO::FileCopyJob *mUploadJob;
+    KIO::DavJob *mUploadJob;
 
     KPIM::ProgressItem *mLoadEventsProgress;
     KPIM::ProgressItem *mLoadTodosProgress;
+    KPIM::ProgressItem *mUploadProgress;
+
+    KCal::Incidence *mUploadedIncidence;
 
     KABC::Lock *mLock;
 

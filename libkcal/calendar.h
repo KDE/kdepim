@@ -2,7 +2,7 @@
     This file is part of libkcal.
 
     Copyright (c) 1998 Preston Brown
-    Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2001,2003,2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -161,7 +161,7 @@ class Calendar : public QObject, public CustomProperties,
       date specified. useful for dayView, etc. etc.
       The calendar filter is applied.
     */
-    Event::List events( const QDate &date, bool sorted = false);
+    Event::List events( const QDate &date, bool sorted = false );
     /**
       Get events, which occur on the given date.
       The calendar filter is applied.
@@ -272,7 +272,11 @@ class Calendar : public QObject, public CustomProperties,
 
     class Observer {
       public:
-        virtual void calendarModified( bool, Calendar * ) = 0;
+        virtual void calendarModified( bool, Calendar * ) {};
+
+        virtual void calendarIncidenceAdded( Incidence * ) {}
+        virtual void calendarIncidenceChanged( Incidence * ) {}
+        virtual void calendarIncidenceDeleted( Incidence * ) {}
     };
   
     void registerObserver( Observer * );
@@ -337,6 +341,12 @@ class Calendar : public QObject, public CustomProperties,
     */
     virtual void doSetTimeZoneId( const QString & ) {}
 
+    void notifyIncidenceAdded( Incidence * );
+    void notifyIncidenceChanged( Incidence * );
+    void notifyIncidenceDeleted( Incidence * );
+
+    void setObserversEnabled( bool enabled );
+
   private:
     void init();
   
@@ -350,8 +360,9 @@ class Calendar : public QObject, public CustomProperties,
     
     QString mTimeZoneId;
 
-    Observer *mObserver;
+    QPtrList<Observer> mObservers;
     bool mNewObserver;
+    bool mObserversEnabled;
     
     bool mModified;
 

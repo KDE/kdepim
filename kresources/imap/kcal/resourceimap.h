@@ -136,11 +136,6 @@ public:
   Alarm::List alarmsTo( const QDateTime &to );
 
 
-  /** this method should be called whenever a Event is modified directly
-   * via it's pointer.  It makes sure that the calendar is internally
-   * consistent. */
-  void update(IncidenceBase *incidence);
-
   friend class ResourceIMAPConfig;
 
   // Public because needed in MultiCalendar::load()
@@ -175,7 +170,7 @@ public slots:
 
 protected:
   /** Notification function of IncidenceBase::Observer. */
-  virtual void incidenceUpdated( IncidenceBase *i ) { update( i ); }
+  virtual void incidenceUpdated( IncidenceBase *i );
   /** Append alarms of incidence in interval to list of alarms. */
 
   void deleteIncidence( const QString& type, const QString& uid,

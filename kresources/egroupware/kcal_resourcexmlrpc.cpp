@@ -421,12 +421,14 @@ Todo::List ResourceXMLRPC::rawTodosForDate( const QDate& date )
   return mCalendar.rawTodosForDate( date );
 }
 
-void ResourceXMLRPC::changeIncidence( Incidence *incedence )
+// FIXME: This function isn't called anymore. Use an Observer instead, or write
+// the data in the save() function.
+void ResourceXMLRPC::changeIncidence( Incidence *incidence )
 {
-  if ( incedence->type() != "Todo" )
+  if ( incidence->type() != "Todo" )
     return;
 
-  Todo *todo = dynamic_cast<Todo*>( incedence );
+  Todo *todo = dynamic_cast<Todo*>( incidence );
   if ( !todo )
     return;
 
@@ -478,10 +480,6 @@ Alarm::List ResourceXMLRPC::alarmsTo( const QDateTime& to )
 Alarm::List ResourceXMLRPC::alarms( const QDateTime& from, const QDateTime& to )
 {
   return mCalendar.alarms( from, to );
-}
-
-void ResourceXMLRPC::update( IncidenceBase* )
-{
 }
 
 void ResourceXMLRPC::dump() const

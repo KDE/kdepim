@@ -419,10 +419,6 @@ Alarm::List ResourceKABC::alarms( const QDateTime &from, const QDateTime &to )
   return mCalendar.alarms( from, to );
 }
 
-void ResourceKABC::update(IncidenceBase *)
-{
-}
-
 void ResourceKABC::dump() const
 {
   ResourceCalendar::dump();

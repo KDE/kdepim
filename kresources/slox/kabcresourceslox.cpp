@@ -182,16 +182,17 @@ void ResourceSlox::slotResult( KIO::Job *job )
     QValueList<SloxItem>::ConstIterator it;
     for( it = items.begin(); it != items.end(); ++it ) {
       SloxItem item = *it;
+      QString uid = "kresources_slox_kabc_" + item.sloxId;
       if ( item.status == SloxItem::Delete ) {
         QMap<QString,Addressee>::Iterator it;
-        it = mAddrMap.find( item.uid );
+        it = mAddrMap.find( uid );
         if ( it != mAddrMap.end() ) {
           mAddrMap.remove( it );
           changed = true;
         }
       } else if ( item.status == SloxItem::Create ) {
         Addressee a;
-        a.setUid( item.uid );
+        a.setUid( uid );
 
         QString userId;
 
@@ -207,7 +208,7 @@ void ResourceSlox::slotResult( KIO::Job *job )
         mAddrMap.replace( a.uid(), a );
 
         if ( userId.isEmpty() ) {
-          kdWarning() << "Empty user id for contact " << item.uid << endl;
+          kdWarning() << "Empty user id for contact " << uid << endl;
         } else {
           SloxAccounts::self()->insertUser( userId, a );
         }
@@ -288,10 +289,12 @@ bool ResourceSlox::asyncSave( Ticket* )
 
 void ResourceSlox::insertAddressee( const Addressee& addr )
 {
+  Q_UNUSED( addr );
 }
 
 void ResourceSlox::removeAddressee( const Addressee& addr )
 {
+  Q_UNUSED( addr );
 }
 
 #include "kabcresourceslox.moc"

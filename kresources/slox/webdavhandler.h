@@ -33,7 +33,7 @@ class SloxItem
     SloxItem();
     
     QDomNode domNode;
-    QString uid;
+    QString sloxId;
     Status status;
 };
 
@@ -44,6 +44,8 @@ class WebdavHandler
 
     void log( const QString & );
 
+    static QDomElement addElement( QDomDocument &, QDomNode &,
+                                   const QString &tag );
     static QDomElement addDavElement( QDomDocument &, QDomNode &,
                                       const QString &tag );
     static QDomElement addSloxElement( QDomDocument &, QDomNode &,

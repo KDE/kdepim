@@ -220,10 +220,6 @@ void ResourceLocalDir::deleteTodo(Todo *todo)
 }
 
 
-void ResourceLocalDir::update(IncidenceBase *)
-{
-}
-
 void ResourceLocalDir::dump() const
 {
   ResourceCalendar::dump();
