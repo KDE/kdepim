@@ -588,7 +588,7 @@ void ViewManager::setDetailsVisible(bool visible)
 // WORK_TO_DO: obsolete
 bool ViewManager::isQuickEditVisible()
 {
-  return !mQuickEdit->isHidden();
+  return mQuickEdit->isVisible();
 }
 
 void ViewManager::dropped(QDropEvent *e)
