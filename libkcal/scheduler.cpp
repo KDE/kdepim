@@ -242,24 +242,24 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
     if ( i->revision() <= inc->revision() ) {
       // The new incidence might be an update for the found one
       bool isUpdate = true;
-      // Note status==Obsolete seems to happen if libical parses the same ical twice
-      // (once for sending and once for receiving) ... the 2nd time it becomes "obsolete"
-      // since it has the same dtstamp as the first time
-      if ( status == ScheduleMessage::RequestNew || status == ScheduleMessage::Obsolete ) {
-        kdDebug(5800) << "looking in " << i->uid() << "'s attendees" << endl;
-        // This is supposed to be a new request, not an update - however we want to update
-        // the existing one to handle the "clicking more than once on the invitation" case.
-        // So check the attendee status of the attendee.
-        const KCal::Attendee::List attendees = i->attendees();
-        KCal::Attendee::List::ConstIterator ait;
-        for ( ait = attendees.begin(); ait != attendees.end(); ++ait ) {
-          if( (*ait)->email() == attendee && (*ait)->status() == Attendee::NeedsAction ) {
-            // This incidence wasn't created by me - it's probably in a shared folder
-            // and meant for someone else, ignore it.
-            kdDebug(5800) << "ignoring " << i->uid() << " since I'm still NeedsAction there" << endl;
-            isUpdate = false;
-            break;
-          }
+      // Code for new invitations:
+      // If you think we could check the value of "status" to be RequestNew: we can't.
+      // It comes from a similar check inside libical, where the event is compared to
+      // other events in the calendar. But if we have another version of the event around
+      // (e.g. shared folder for a group), the status could be RequestNew, Obsolete or Updated.
+      kdDebug(5800) << "looking in " << i->uid() << "'s attendees" << endl;
+      // This is supposed to be a new request, not an update - however we want to update
+      // the existing one to handle the "clicking more than once on the invitation" case.
+      // So check the attendee status of the attendee.
+      const KCal::Attendee::List attendees = i->attendees();
+      KCal::Attendee::List::ConstIterator ait;
+      for ( ait = attendees.begin(); ait != attendees.end(); ++ait ) {
+        if( (*ait)->email() == attendee && (*ait)->status() == Attendee::NeedsAction ) {
+          // This incidence wasn't created by me - it's probably in a shared folder
+          // and meant for someone else, ignore it.
+          kdDebug(5800) << "ignoring " << i->uid() << " since I'm still NeedsAction there" << endl;
+          isUpdate = false;
+          break;
         }
       }
       if ( isUpdate ) {
