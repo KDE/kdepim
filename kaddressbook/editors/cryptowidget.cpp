@@ -91,14 +91,14 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
   topLayout->addWidget( l,1,0 );
 
   mPgpKey =
-	new Kleo::EncryptionKeyRequester( false, Kleo::EncryptionKeyRequester::OpenPGP, this );
+	new Kleo::EncryptionKeyRequester( true, Kleo::EncryptionKeyRequester::OpenPGP, this );
   topLayout->addWidget( mPgpKey,1,1 );
 
   l = new QLabel( i18n("Preferred S/MIME encryption certificate:"), this );
   topLayout->addWidget( l,2,0 );
 
   mSmimeCert =
-	new Kleo::EncryptionKeyRequester( false, Kleo::EncryptionKeyRequester::SMIME, this );
+	new Kleo::EncryptionKeyRequester( true, Kleo::EncryptionKeyRequester::SMIME, this );
   topLayout->addWidget( mSmimeCert,2,1 );
 
   QGroupBox* box = new QVGroupBox( i18n("Message Preference"), this );
@@ -163,8 +163,8 @@ void CryptoWidget::loadContact( KABC::Addressee *addr )
   // We dont use the contents of addr->key(...) because we want just a ref.
   // to the key/cert. stored elsewhere.
 
-  mPgpKey->setFingerprint( addr->custom( "KADDRESSBOOK", "OPENPGPFP" ) );
-  mSmimeCert->setFingerprint( addr->custom( "KADDRESSBOOK", "SMIMEFP" ) );
+  mPgpKey->setFingerprints( QStringList::split( ",", addr->custom( "KADDRESSBOOK", "OPENPGPFP" ) ) );
+  mSmimeCert->setFingerprints( QStringList::split( ",", addr->custom( "KADDRESSBOOK", "SMIMEFP" ) ) );
 
   blockSignals( blocked );
 }
@@ -187,17 +187,17 @@ void CryptoWidget::storeContact( KABC::Addressee *addr )
                       Kleo::encryptionPreferenceToString(
                           static_cast<Kleo::EncryptionPreference>( mCryptPref->currentItem()) ) );
 
-  QString pfp = mPgpKey->fingerprint();
-  QString sfp = mSmimeCert->fingerprint();
+  QStringList pfp = mPgpKey->fingerprints();
+  QStringList sfp = mSmimeCert->fingerprints();
 
-  if( !pfp.isNull() ) {
-	addr->insertCustom( "KADDRESSBOOK", "OPENPGPFP", pfp );
+  if( !pfp.isEmpty() ) {
+	addr->insertCustom( "KADDRESSBOOK", "OPENPGPFP", pfp.join( "," ) );
   } else {
 	addr->removeCustom( "KADDRESSBOOK", "OPENPGPFP" );
   }
 
-  if( !sfp.isNull() ) {
-	addr->insertCustom( "KADDRESSBOOK", "SMIMEFP", sfp );
+  if( !sfp.isEmpty() ) {
+	addr->insertCustom( "KADDRESSBOOK", "SMIMEFP", sfp.join( "," ) );
   } else {
 	addr->removeCustom( "KADDRESSBOOK", "SMIMEFP" );
   }
