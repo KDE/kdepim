@@ -186,11 +186,14 @@ else
     system ("xte 'key Q'");
     system ("xte 'keyup Control_L'");
     
-    $ics=fopen("/tmp/karmtest.ics","r");
-    for ($i=1; $i<=13; $i++) $line=fgets($ics); 
-    if ($line<>"SUMMARY:example 1\n") $err.="iCal file content was wrong";
-    fclose($ics);
-    sleep (1);
+    $content=file_get_contents("/tmp/karmtest.ics");
+    $lines=explode("\n",$content);
+    if (!preg_match("/DTSTAMP:[0-9]{1,8}T[0-9]{1,6}Z/", $lines[4])) $err.="iCal file: wrong dtstamp";
+    if ($lines[12]<>"SUMMARY:example 1") $err.="iCal file: wrong task example 1";
+    if ($lines[16]<>"END:VTODO") $err.="iCal file: wrong end of vtodo";
+    if ($lines[27]<>"SUMMARY:task 1") $err.="iCal file: wrong task task 1";
+    if (!preg_match("/^UID:libkcal-[0-9]{1,8}.[0-9]{1,3}/", $lines[39])) $err.="iCal file: wrong uid";
+
   }
 }
   echo $err;
