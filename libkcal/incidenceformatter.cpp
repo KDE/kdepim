@@ -113,15 +113,15 @@ static QString eventViewerFormatAttendees( Incidence *event )
     tmpStr += "<ul><li>" ;
     KABC::AddressBook *add_book = KABC::StdAddressBook::self();
     KABC::Addressee::List addressList;
-    addressList = add_book->findByEmail( event->organizer() );
+    addressList = add_book->findByEmail( event->organizer().email() );
     KABC::Addressee o = addressList.first();
     if ( !o.isEmpty() && addressList.size() < 2 ) {
       tmpStr += eventViewerAddLink( "uid" + o.uid(), o.formattedName() );
     } else {
-      tmpStr += event->organizer();
+      tmpStr += event->organizer().fullName();
     }
     if ( !iconPath.isNull() ) {
-      tmpStr += eventViewerAddLink( "mailto:" + event->organizer(),
+      tmpStr += eventViewerAddLink( "mailto:" + event->organizer().email(),
                "<img src=\"" + iconPath + "\">" );
     }
     tmpStr += "</li></ul>";
@@ -291,7 +291,7 @@ static QString eventViewerFormatJournal( Journal *journal )
 static QString eventViewerFormatFreeBusy( FreeBusy *fb )
 {
   if ( !fb ) return QString::null;
-  QString tmpStr( eventViewerAddTag( "h1", i18n("Free/Busy information for %1").arg( fb->organizer() ) ) );
+  QString tmpStr( eventViewerAddTag( "h1", i18n("Free/Busy information for %1").arg( fb->organizer().fullName() ) ) );
   tmpStr += eventViewerAddTag( "h3", i18n("Busy times in date range %1 - %2:")
       .arg( KGlobal::locale()->formatDate( fb->dtStart().date(), true ) )
       .arg( KGlobal::locale()->formatDate( fb->dtEnd().date(), true ) ) );
@@ -527,7 +527,7 @@ static QString invitationDetailsFreeBusy( FreeBusy *fb )
     return QString::null;
   QString html( "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n" );
 
-  html += invitationRow( i18n("Person:"), fb->organizer() );
+  html += invitationRow( i18n("Person:"), fb->organizer().fullName() );
   html += invitationRow( i18n("Start date:"), fb->dtStartDateStr() );
   html += invitationRow( i18n("End date:"), 
       KGlobal::locale()->formatDate( fb->dtEnd().date(), true ) );
@@ -1167,6 +1167,7 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
         s = tnefMsg->findProp( 0x0c1f ); // look for organizer property
         if( s.isEmpty() && !bIsReply )
           s = sSenderSearchKeyEmail;
+        // TODO: Use the common name?
         if( !s.isEmpty() )
           event->setOrganizer( s );
 
@@ -1496,7 +1497,8 @@ bool ToolTipVisitor::visit( Journal *journal )
 
 bool ToolTipVisitor::visit( FreeBusy *fb )
 {
-  mResult = "<qt><b>" + i18n("Free/Busy information for %1").arg(fb->organizer()) + "</b>";
+  mResult = "<qt><b>" + i18n("Free/Busy information for %1")
+        .arg(fb->organizer().fullName()) + "</b>";
   mResult += dateRangeText( fb );
   mResult += "</qt>";
   return !mResult.isEmpty();
@@ -1566,7 +1568,7 @@ static QString mailBodyIncidence( Incidence *incidence )
 {
   QString body("");
   if ( !incidence->organizer().isEmpty() ) {
-    body += i18n("Organizer: %1\n").arg( incidence->organizer() );
+    body += i18n("Organizer: %1\n").arg( incidence->organizer().fullName() );
   }
   body += i18n("Summary: %1\n").arg( incidence->summary() );
   if ( !incidence->location().isEmpty() ) {

@@ -179,7 +179,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         subject = i18n( "Answer: %1" ).arg( incidence->summary() );
       else
         subject = i18n( "Answer: Incidence with no summary" );
-      return callback.mailICal( incidence->organizer(), msg, subject );
+      return callback.mailICal( incidence->organizer().fullName(), msg, subject );
     }
 
     bool saveFile( const QString& receiver, const QString& iCal,

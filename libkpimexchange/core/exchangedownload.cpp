@@ -407,6 +407,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job *job )
   }
 
   QString organizer = prop.namedItem( "organizer" ).toElement().text();
+  // TODO: Does outlook have a common name? Or does the organizer already contain both?
   event->setOrganizer( organizer );
   // kdDebug() << "Got organizer: " << organizer << endl;
 

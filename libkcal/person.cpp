@@ -27,6 +27,7 @@ using namespace KCal;
 
 Person::Person( const QString &fullName )
 {
+  // @TODO: This is completely messed. A space at the end messes up everyting! Fix this properly!
   int emailPos = fullName.find( '<' );
   if ( emailPos < 0 ) {
     setEmail(fullName);
@@ -62,6 +63,11 @@ QString Person::fullName() const
   }
 }
 
+bool Person::isEmpty() const
+{
+  return mEmail.isEmpty() && mName.isEmpty();
+}
+
 void Person::setName(const QString &name)
 {
   mName = name;
@@ -69,7 +75,7 @@ void Person::setName(const QString &name)
 
 void Person::setEmail(const QString &email)
 {
-  if (email.left(7).lower() == "mailto:") {
+  if ( email.startsWith( "mailto:", false ) ) {
     mEmail = email.mid(7);
   } else {
     mEmail = email;

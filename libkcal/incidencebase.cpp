@@ -133,19 +133,27 @@ QDateTime IncidenceBase::lastModified() const
   return mLastModified;
 }
 
-void IncidenceBase::setOrganizer(const QString &o)
+void IncidenceBase::setOrganizer( const Person &o )
 {
   // we don't check for readonly here, because it is
   // possible that by setting the organizer we are changing
   // the event's readonly status...
   mOrganizer = o;
-  if (mOrganizer.left(7).upper() == "MAILTO:")
-    mOrganizer = mOrganizer.remove(0,7);
 
   updated();
 }
 
-QString IncidenceBase::organizer() const
+void IncidenceBase::setOrganizer(const QString &o)
+{
+  QString mail( o );
+  if ( mail.startsWith("MAILTO:", false) )
+    mail = mail.remove( 0, 7 );
+  // split the string into full name plus email.
+  Person organizer( mail );
+  setOrganizer( organizer );
+}
+
+Person IncidenceBase::organizer() const
 {
   return mOrganizer;
 }

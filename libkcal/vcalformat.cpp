@@ -233,7 +233,8 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
   addPropValue(vtodo, VCLastModifiedProp, tmpStr.local8Bit());
 
   // organizer stuff
-  tmpStr = "MAILTO:" + anEvent->organizer();
+  // @TODO: How about the common name?
+  tmpStr = "MAILTO:" + anEvent->organizer().email();
   addPropValue(vtodo, ICOrganizerProp, tmpStr.local8Bit());
 
   // attendees
@@ -394,7 +395,8 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
   addPropValue(vevent, VCLastModifiedProp, tmpStr.local8Bit());
 
   // attendee and organizer stuff
-  tmpStr = "MAILTO:" + anEvent->organizer();
+  // TODO: What to do with the common name?
+  tmpStr = "MAILTO:" + anEvent->organizer().email();
   addPropValue(vevent, ICOrganizerProp, tmpStr.local8Bit());
 
   // TODO: Put this functionality into Attendee class
@@ -684,10 +686,11 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
   // organizer
   // if our extension property for the event's ORGANIZER exists, add it.
   if ((vo = isAPropertyOf(vtodo, ICOrganizerProp)) != 0) {
-    anEvent->setOrganizer(s = fakeCString(vObjectUStringZValue(vo)));
+    anEvent->setOrganizer( s = fakeCString(vObjectUStringZValue(vo) ) );
     deleteStr(s);
   } else {
-    anEvent->setOrganizer(mCalendar->getEmail());
+    // TODO: Use the common name, too!
+    anEvent->setOrganizer( mCalendar->getEmail());
   }
 
   // attendees.
@@ -911,10 +914,12 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
   // organizer
   // if our extension property for the event's ORGANIZER exists, add it.
   if ((vo = isAPropertyOf(vevent, ICOrganizerProp)) != 0) {
-    anEvent->setOrganizer(s = fakeCString(vObjectUStringZValue(vo)));
+    // @TODO: Fix this to remove the mailto:
+    anEvent->setOrganizer( s = fakeCString(vObjectUStringZValue(vo) ) );
     deleteStr(s);
   } else {
-    anEvent->setOrganizer(mCalendar->getEmail());
+    // @TODO: Use the common name?
+    anEvent->setOrganizer( mCalendar->getEmail() );
   }
 
   // deal with attendees.

@@ -114,8 +114,9 @@ class IncidenceBase : public CustomProperties
     QDateTime lastModified() const;
 
     /** sets the organizer for the event */
+    void setOrganizer( const Person &o );
     void setOrganizer( const QString &o );
-    QString organizer() const;
+    Person organizer() const;
 
     /** Set readonly status. */
     virtual void setReadOnly( bool );
@@ -253,7 +254,7 @@ class IncidenceBase : public CustomProperties
   private:
     // base components
     QDateTime mDtStart;
-    QString mOrganizer;
+    Person mOrganizer;
     QString mUid;
     QDateTime mLastModified;
     Attendee::List mAttendees;
