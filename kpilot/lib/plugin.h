@@ -211,6 +211,19 @@ protected:
 	eConflictResolution getConflictResolution() const 
 		{ return fConflictResolution; };
 
+	// Set the conflict resolution, except if the resolution
+	// form is UseGlobalSetting, in which case nothing changes
+	// (assumes then that the resolution form is already set
+	// according to that global setting).
+	//
+	void setConflictResolution(eConflictResolution res)
+	{ 
+		if (SyncAction::eUseGlobalSetting != res) 
+			fConflictResolution=res; 
+	}
+	void setSyncDirection(int dir)
+		{ fSyncDirection=dir; }
+
 	/**
 	* A full sync happens for eFullSync, eCopyPCToHH and eCopyHHToPC. It 
 	* completely ignores all modified flags and walks through all records 
@@ -248,11 +261,11 @@ private:
 	bool fTest;	// Do some kind of test run on the pilot
 	bool fBackup;	// Do a backup of the database
 	bool fLocal;	// Local test without a Pilot
+	int fSyncDirection; // Stores fast, full, PCToHH or HHToPC 
+	eConflictResolution fConflictResolution;
 
 	// Make these only protected so the conduit can change the variable
 protected:
-	int fSyncDirection; // Stores fast, full, PCToHH or HHToPC as sync directions.
-	eConflictResolution fConflictResolution;
 	bool fFirstSync;
 	QString fConduitName;
 
