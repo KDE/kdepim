@@ -264,7 +264,7 @@ KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n
   p_ortInfo = new QLabel(gb);
 
   // buttons
-  a_ddBtn=new QPushButton(i18n("&New"), this);
+  a_ddBtn=new QPushButton(i18n("&New..."), this);
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn, 0,1);
 
@@ -272,11 +272,11 @@ KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n
   connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
   topL->addWidget(d_elBtn, 1,1);
 
-  e_ditBtn=new QPushButton(i18n("modify something","&Edit"), this);
+  e_ditBtn=new QPushButton(i18n("modify something","&Edit..."), this);
   connect(e_ditBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
   topL->addWidget(e_ditBtn, 2,1);
 
-  s_ubBtn=new QPushButton(i18n("&Subscribe"), this);
+  s_ubBtn=new QPushButton(i18n("&Subscribe..."), this);
   connect(s_ubBtn, SIGNAL(clicked()), this, SLOT(slotSubBtnClicked()));
   topL->addWidget(s_ubBtn, 3,1);
 
@@ -720,7 +720,7 @@ KNConfig::AppearanceWidget::AppearanceWidget(Appearance *d, QWidget *p, const ch
   topL->addWidget(c_olorCB,0,0);
   connect(c_olorCB, SIGNAL(toggled(bool)), this, SLOT(slotColCheckBoxToggled(bool)));
 
-  c_olChngBtn=new QPushButton(i18n("Cha&nge"), this);
+  c_olChngBtn=new QPushButton(i18n("Cha&nge..."), this);
   connect(c_olChngBtn, SIGNAL(clicked()), this, SLOT(slotColChangeBtnClicked()));
   topL->addWidget(c_olChngBtn,1,1);
 
@@ -740,7 +740,7 @@ KNConfig::AppearanceWidget::AppearanceWidget(Appearance *d, QWidget *p, const ch
   topL->addWidget(f_ontCB,5,0);
   connect(f_ontCB, SIGNAL(toggled(bool)), this, SLOT(slotFontCheckBoxToggled(bool)));
 
-  f_ntChngBtn=new QPushButton(i18n("Chang&e"), this);
+  f_ntChngBtn=new QPushButton(i18n("Chang&e..."), this);
   connect(f_ntChngBtn, SIGNAL(clicked()), this, SLOT(slotFontChangeBtnClicked()));
   topL->addWidget(f_ntChngBtn,6,1);
 
@@ -1231,7 +1231,7 @@ KNConfig::DisplayedHeadersWidget::DisplayedHeadersWidget(DisplayedHeaders *d, QW
   topL->addMultiCellWidget(l_box, 0,6, 0,0);
 
   // buttons
-  a_ddBtn=new QPushButton(i18n("&New"), this);
+  a_ddBtn=new QPushButton(i18n("&New..."), this);
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn, 0,1);
 
@@ -1239,7 +1239,7 @@ KNConfig::DisplayedHeadersWidget::DisplayedHeadersWidget(DisplayedHeaders *d, QW
   connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
   topL->addWidget(d_elBtn, 1,1);
 
-  e_ditBtn=new QPushButton(i18n("modify something","&Edit"), this);
+  e_ditBtn=new QPushButton(i18n("modify something","&Edit..."), this);
   connect(e_ditBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
   topL->addWidget(e_ditBtn, 2,1);
 
@@ -1554,7 +1554,7 @@ KNConfig::FilterListWidget::FilterListWidget(QWidget *p, const char *n)
   connect(f_lb, SIGNAL(selected(int)), SLOT(slotItemSelectedFilter(int)));
   topL->addMultiCellWidget(f_lb,1,5,0,0);
 
-  a_ddBtn=new QPushButton(i18n("&New"), this);
+  a_ddBtn=new QPushButton(i18n("&New..."), this);
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn,1,1);
 
@@ -1562,11 +1562,11 @@ KNConfig::FilterListWidget::FilterListWidget(QWidget *p, const char *n)
   connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
   topL->addWidget(d_elBtn,2,1);
 
-  e_ditBtn=new QPushButton(i18n("modify something","&Edit"), this);
+  e_ditBtn=new QPushButton(i18n("modify something","&Edit..."), this);
   connect(e_ditBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
   topL->addWidget(e_ditBtn,3,1);
 
-  c_opyBtn=new QPushButton(i18n("Co&py"), this);
+  c_opyBtn=new QPushButton(i18n("Co&py..."), this);
   connect(c_opyBtn, SIGNAL(clicked()), this, SLOT(slotCopyBtnClicked()));
   topL->addWidget(c_opyBtn,4,1);
 
@@ -1861,7 +1861,7 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   connect(l_box, SIGNAL(selectionChanged()), SLOT(slotSelectionChanged()));
   xgbL->addMultiCellWidget(l_box, 1,4, 0,0);
 
-  a_ddBtn=new QPushButton(i18n("&New"), xgb);
+  a_ddBtn=new QPushButton(i18n("&New..."), xgb);
   connect(a_ddBtn, SIGNAL(clicked()), SLOT(slotAddBtnClicked()));
   xgbL->addWidget(a_ddBtn, 1,1);
 
@@ -1869,7 +1869,7 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   connect(d_elBtn, SIGNAL(clicked()), SLOT(slotDelBtnClicked()));
   xgbL->addWidget(d_elBtn, 2,1);
 
-  e_ditBtn=new QPushButton(i18n("modify something","&Edit"), xgb);
+  e_ditBtn=new QPushButton(i18n("modify something","&Edit..."), xgb);
   connect(e_ditBtn, SIGNAL(clicked()), SLOT(slotEditBtnClicked()));
   xgbL->addWidget(e_ditBtn, 3,1);
 
