@@ -217,12 +217,12 @@ connection, follow the instructions for setting up sendmail for a
 dial-up connection in the <link linkend="faq">&FAQ;</link>
 section.</para>
 
-<para>The way of sending messages configured here will be used for your
-default identity and for all other identities that have no own way of
-sending messages. You can use different ways of sending messages for
-different identities by adding them with the <guilabel>Add
-Transport...</guilabel> button in the <guilabel>Identity</guilabel>
-section.</para>
+<para>The way of sending messages configured here will be used for
+your default identity and for all other identities that have no own
+way of sending messages. You can use different ways of sending
+messages for different identities by selecting the <guilabel>Special
+transport</guilabel> checkbox in the <guilabel>Advanced</guilabel>
+tab of the <guilabel>Identity</guilabel> section.</para>
 
 <para>A description of the other options can be found
 in the <link linkend="configure-network-sending">Configuration</link>
@@ -322,13 +322,20 @@ option.</para></warning>
 <guilabel>TLS</guilabel> (<guilabel>TLS</guilabel> should be preferred
 if it is available).</para>
 
-<para>For POP3 &kmail; supports <guilabel>Clear text</guilabel>,
-<guilabel>PLAIN</guilabel>, <guilabel>LOGIN</guilabel>, <guilabel>CRAM-MD5</guilabel>,
-<guilabel>DIGEST-MD5</guilabel> and
-<guilabel>APOP</guilabel> authentication.
-<!-- fixme: still correct?: -->
-<guilabel>APOP</guilabel> and
-<guilabel>CRAM-MD5</guilabel> are secure on their own, all the other
+<para>For POP3 &kmail; supports:</para>
+
+<itemizedlist>
+<listitem><para><guilabel>Clear text</guilabel>, </para></listitem>
+<listitem><para><guilabel>PLAIN</guilabel>, </para></listitem>
+<listitem><para><guilabel>LOGIN</guilabel>, </para></listitem>
+<listitem><para><guilabel>CRAM-MD5</guilabel> (recommended 
+if <guilabel>DIGEST-MD5</guilabel> is not available),</para></listitem>
+<listitem><para><guilabel>DIGEST-MD5</guilabel> (recommended) and</para></listitem>
+<listitem><para><guilabel>APOP</guilabel> authentication.</para></listitem>
+</itemizedlist>
+
+<para><guilabel>DIGEST-MD5</guilabel>, <guilabel>CRAM-MD5</guilabel> and
+<guilabel>APOP</guilabel> are secure on their own, the other
 options are only secure when used together with <guilabel>SSL</guilabel>
 or <guilabel>TLS</guilabel>.  You should only use <guilabel>Clear
 text</guilabel> if your server doesn't support any of the other
@@ -3814,39 +3821,6 @@ menu</link>.</para>
 start a new version of &kmail; the first time. You can always look at it again
 by selecting the root element of the folder list, &ie; <guilabel>Mail</guilabel>.</para>
 </answer>
-</qandaentry>
-
-<qandaentry>
-<question><para>The <guilabel>&lt;recipients&gt;</guilabel>
-<guilabel>doesn't contain</guilabel> <userinput>xxx</userinput> filter
-criterion doesn't work.</para></question>
-<answer><para>This not strictly a bug, but a bit unintuitive. The
-source of the confusion seems to stem from the fact that people think
-<guilabel>&lt;recipients&gt;</guilabel> <guilabel>doesn't
-contain</guilabel> <userinput>xxx</userinput> should mean that neither
-<guilabel>To</guilabel> nor <guilabel>Cc</guilabel> should contain
-<userinput>xxx</userinput>. This interpretation assumes that using
-<guilabel>doesn't contain</guilabel> means negation of the whole
-rule. This is not the case.</para>
-<para>In fact, <guilabel>doesn't contain</guilabel> is just another
-<emphasis>operator</emphasis>, just like
-<guilabel>contains</guilabel>. It doesn't mean <quote>negate the
-rule</quote>. Just like <guilabel>&lt;recipients&gt;</guilabel>
-<guilabel>contains</guilabel> <userinput>xxx</userinput> means
-<quote><guilabel>To</guilabel> <guilabel>contains</guilabel>
-<userinput>xxx</userinput> <emphasis>or</emphasis>
-<guilabel>Cc</guilabel> <guilabel>contains</guilabel>
-<userinput>xxx</userinput></quote>, <guilabel>&lt;To or
-Cc&gt;</guilabel> <guilabel>doesn't contain</guilabel>
-<userinput>xxx</userinput> means <quote><guilabel>To</guilabel>
-<guilabel> doesn't contain</guilabel> <userinput>xxx</userinput>
-<emphasis>or</emphasis> <guilabel>Cc</guilabel> <guilabel>doesn't
-contain</guilabel> <userinput>xxx</userinput></quote>.</para>
-<para>You can emulate the other behavior by using two rules: One for
-<guilabel>To</guilabel> and one for <guilabel>Cc</guilabel>. One of
-the next versions of &kmail; will include an overhaul of the search
-criteria, which will make it possible to easily use the above
-semantics.</para></answer>
 </qandaentry>
 
 <qandaentry>
