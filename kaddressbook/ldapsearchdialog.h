@@ -57,6 +57,7 @@ class LDAPSearchDialog : public KDialogBase
     void slotStopSearch();
     void slotSearchDone();
     void slotError( const QString& );
+    void slotHelp();
     virtual void slotUser1();
     virtual void slotUser2();
     virtual void slotUser3();

@@ -78,6 +78,7 @@ class FilterEditDialog : public KDialogBase
 
   protected slots:
     void filterNameTextChanged( const QString& );
+    void slotHelp();
 
   private:
     void initGUI();

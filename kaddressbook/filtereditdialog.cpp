@@ -33,6 +33,7 @@
 #include <qtooltip.h>
 #include <qwidget.h>
 
+#include <kapplication.h>
 #include <kbuttonbox.h>
 #include <kdebug.h>
 #include <kiconloader.h>
@@ -46,7 +47,7 @@
 
 FilterEditDialog::FilterEditDialog( QWidget *parent, const char *name )
   : KDialogBase( Plain, i18n( "Edit Address Book Filter" ),
-                 Ok | Cancel, Ok, parent, name, false )
+                 Help | Ok | Cancel, Ok, parent, name, false )
 {
   initGUI();
 
@@ -153,6 +154,11 @@ void FilterEditDialog::initGUI()
 void FilterEditDialog::filterNameTextChanged( const QString &text )
 {
   enableButtonOK( !text.isEmpty() );
+}
+
+void FilterEditDialog::slotHelp()
+{
+  kapp->invokeHelp( "using-filters" );
 }
 
 FilterDialog::FilterDialog( QWidget *parent, const char *name )

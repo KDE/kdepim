@@ -46,9 +46,8 @@
 
 NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
                                 QWidget *parent, const char *name )
-  : KDialogBase( KDialogBase::Plain, i18n( "Edit Contact Name" ),
-                 KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok,
-                 parent, name, true )
+  : KDialogBase( Plain, i18n( "Edit Contact Name" ), Help | Ok | Cancel,
+                 Ok, parent, name, true )
 {
   QWidget *page = plainPage();
   QGridLayout *layout = new QGridLayout( page );
@@ -259,6 +258,11 @@ void NameEditDialog::updateTypeCombo()
   mFormattedNameCombo->insertItem( formattedName( addr, ReverseName ) );
 
   mFormattedNameCombo->setCurrentItem( pos );
+}
+
+void NameEditDialog::slotHelp()
+{
+  kapp->invokeHelp( "managing-contacts-automatic-nameparsing" );
 }
 
 #include "nameeditdialog.moc"

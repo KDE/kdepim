@@ -95,8 +95,8 @@ class ContactListItem : public QListViewItem
 
 LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, QWidget* parent,
                                             const char* name )
-  : KDialogBase( Plain, i18n( "Search for Addresses in Directory" ), User1 |
-                 User2 | User3 | Cancel, Cancel, parent, name, false, true ),
+  : KDialogBase( Plain, i18n( "Search for Addresses in Directory" ), Help | User1 |
+    User2 | User3 | Cancel, Cancel, parent, name, false, true ),
     mAddressBook( ab )
 {
   QFrame *page = plainPage();
@@ -440,6 +440,11 @@ void LDAPSearchDialog::slotUser3()
   }
 
   emit addresseesAdded();
+}
+
+void LDAPSearchDialog::slotHelp()
+{
+  kapp->invokeHelp( "ldap-queries" );
 }
 
 #include "ldapsearchdialog.moc"

@@ -24,6 +24,7 @@
 #include <qlayout.h>
 #include <qvbox.h>
 
+#include <kapplication.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kglobal.h>
@@ -84,8 +85,8 @@ QVBox *ViewConfigureWidget::addPage( const QString &item, const QString &header,
 
 ViewConfigureDialog::ViewConfigureDialog( ViewConfigureWidget *wdg, const QString &viewName,
                                           QWidget *parent, const char *name )
-  : KDialogBase( Swallow, i18n( "Modify View: " ) + viewName, Ok | Cancel, Ok,
-                 parent, name, true, true ), mConfigWidget( wdg )
+  : KDialogBase( Swallow, i18n( "Modify View: " ) + viewName, Help | Ok | Cancel,
+                 Ok, parent, name, true, true ), mConfigWidget( wdg )
 {
   setMainWidget( mConfigWidget );
 }
@@ -102,6 +103,11 @@ void ViewConfigureDialog::restoreSettings( KConfig *config )
 void ViewConfigureDialog::saveSettings( KConfig *config )
 {
   mConfigWidget->saveSettings( config );
+}
+
+void ViewConfigureDialog::slotHelp()
+{
+  kapp->invokeHelp( "using-views" );
 }
 
 #include "viewconfigurewidget.moc"

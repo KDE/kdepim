@@ -86,6 +86,8 @@ class ViewConfigureWidget : public ConfigureWidget
 
 class ViewConfigureDialog : public KDialogBase
 {
+  Q_OBJECT
+
   public:
     ViewConfigureDialog( ViewConfigureWidget *wdg, const QString &viewName,
                          QWidget *parent, const char *name = 0 );
@@ -93,6 +95,9 @@ class ViewConfigureDialog : public KDialogBase
 
     void restoreSettings( KConfig* );
     void saveSettings( KConfig* );
+
+  protected slots:
+    void slotHelp();
 
   private:
     ViewConfigureWidget *mConfigWidget;
