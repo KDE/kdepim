@@ -85,8 +85,8 @@ public:
 	virtual ~VCalConduit();
 
 protected:
-	virtual const QString configGroup() { return VCalConduitFactory::group; };
-	virtual const QString dbname() { return "DatebookDB"; };
+	virtual const QString configGroup() { return QString::fromLatin1(VCalConduitFactory::group); };
+	virtual const QString dbname() { return CSL1("DatebookDB"); };
 
 	virtual VCalConduitPrivateBase*newVCalPrivate(KCal::CalendarLocal *fCalendar);
 

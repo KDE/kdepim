@@ -182,7 +182,7 @@ const QString VCalConduit::getTitle(PilotAppCategory*de)
 {
 	PilotDateEntry*d=dynamic_cast<PilotDateEntry*>(de);
 	if (d) return QString(d->getDescription());
-	return "";
+	return QString::null;
 }
 
 
@@ -217,9 +217,8 @@ PilotRecord*VCalConduit::recordFromIncidence(PilotDateEntry*de, const KCal::Even
 	setAlarms(de, e);
 	setRecurrence(de, e);
 	setExceptions(de, e);
-	// TODO: Use the right Palm codec
-	de->setDescription(e->summary().latin1());
-	de->setNote(e->description().latin1());
+	de->setDescription(e->summary());
+	de->setNote(e->description());
 DEBUGCONDUIT<<"-------- "<<e->summary()<<endl;
 	return de->pack();
 }

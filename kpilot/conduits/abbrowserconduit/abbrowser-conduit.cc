@@ -32,6 +32,7 @@
 #include <qtimer.h>
 #include <qvbuttongroup.h>
 #include <qcheckbox.h>
+#include <qtextcodec.h>
 
 #include <kglobal.h>
 #include <kstddirs.h>
@@ -61,9 +62,9 @@
 //
 const char *abbrowser_conduit_id="$Id$";
 
-const QString AbbrowserConduit::flagString="Flag";
-const QString AbbrowserConduit::appString="KPILOT";
-const QString AbbrowserConduit::idString="RecordID";
+const QString AbbrowserConduit::flagString=CSL1("Flag");
+const QString AbbrowserConduit::appString=CSL1("KPILOT");
+const QString AbbrowserConduit::idString=CSL1("RecordID");
 
 bool AbbrowserConduit::fPilotStreetHome=true;
 bool AbbrowserConduit::fPilotFaxHome=true;
@@ -250,7 +251,7 @@ QString AbbrowserConduit::getOtherField(const KABC::Addressee & abEntry)
 		case eOtherPhone:
 			return abEntry.phoneNumber(0).number();
 		case eAssistant:
-			return abEntry.custom("KADDRESSBOOK", "AssistantsName");
+			return abEntry.custom(CSL1("KADDRESSBOOK"), CSL1("AssistantsName"));
 		case eBusinessFax:
 			return abEntry.phoneNumber(KABC::PhoneNumber::Fax | KABC::PhoneNumber::Work).number();
 		case eCarPhone:
@@ -264,7 +265,7 @@ QString AbbrowserConduit::getOtherField(const KABC::Addressee & abEntry)
 		case eTTYTTDPhone:
 			return abEntry.phoneNumber(KABC::PhoneNumber::Pcs).number();
 		default:
-			return "";
+			return QString::null;
 	}
 }
 
@@ -281,7 +282,7 @@ void AbbrowserConduit::setOtherField(KABC::Addressee & abEntry, QString nr)
 			abEntry.insertPhoneNumber(phone);
 			break;
 		case eAssistant:
-			abEntry.insertCustom("KADDRESSBOOK", "AssistantsName", nr);
+			abEntry.insertCustom(CSL1("KADDRESSBOOK"), CSL1("AssistantsName"), nr);
 			break;
 		case eBusinessFax:
 			phone = abEntry.phoneNumber(KABC::PhoneNumber::Fax | KABC::PhoneNumber::Work);
@@ -414,7 +415,8 @@ void AbbrowserConduit::showPilotAddress(const PilotAddress & pilotAddress)
 		&& fConfig->readBoolEntry(AbbrowserConduitFactory::fullSyncOnPCChange(), true));
 
 	fFirstTime = false;
-	if(!openDatabases("AddressDB", &fFirstTime))
+	// Database names probably in latin1.
+	if(!openDatabases(QString::fromLatin1("AddressDB"), &fFirstTime))
 	{
 		emit logError(i18n("Unable to open the addressbook databases on the handheld."));
 		return false;
@@ -834,8 +836,8 @@ KABC::Addressee AbbrowserConduit::_addToAbbrowser(const PilotAddress & address)
 // flags modify and deleted will be set but the contents are empty.
 // We shouldn't add such zombies to database:
 	if((address.isModified() && address.isDeleted())
-			&&(address.getField(entryLastname) == 0)
-			&&(address.getField(entryFirstname) == 0))
+			&&(address.getField(entryLastname).isEmpty())
+			&&(address.getField(entryFirstname).isEmpty()))
 		return entry;
 
 	_copy(entry, address);
@@ -1061,7 +1063,10 @@ bool AbbrowserConduit::_equal(const PilotAddress & piAddress, KABC::Addressee & 
 	if(_compare(abEntry.organization(), piAddress.getField(entryCompany))) return false;
 	if(_compare(abEntry.note(), piAddress.getField(entryNote))) return false;
 	int cat = _getCat(abEntry.categories());
-	if(_compare(fAddressAppInfo.category.name[cat], piAddress.getCategoryLabel())) return false;
+	// TODO: Add general getCategoryName() to pilotAppCategory to
+	// retrieve category names.
+	if(_compare(PilotAppCategory::codec()->toUnicode(fAddressAppInfo.category.name[cat]), 
+		piAddress.getCategoryLabel())) return false;
 	if(_compare(abEntry.phoneNumber(KABC::PhoneNumber::Work).number(),
 			piAddress.getPhoneField(PilotAddress::eWork))) return false;
 	if(_compare(abEntry.phoneNumber(KABC::PhoneNumber::Home).number(),
@@ -1083,10 +1088,10 @@ bool AbbrowserConduit::_equal(const PilotAddress & piAddress, KABC::Addressee & 
 	if(_compare(address.country(), piAddress.getField(entryCountry))) return false;
 
 	if(
-		_compare(abEntry.custom(appString, "CUSTOM1"), piAddress.getField(entryCustom1)) ||
-		_compare(abEntry.custom(appString, "CUSTOM2"), piAddress.getField(entryCustom2)) ||
-		_compare(abEntry.custom(appString, "CUSTOM3"), piAddress.getField(entryCustom3)) ||
-		_compare(abEntry.custom(appString, "CUSTOM4"), piAddress.getField(entryCustom4)))
+		_compare(abEntry.custom(appString, CSL1("CUSTOM1")), piAddress.getField(entryCustom1)) ||
+		_compare(abEntry.custom(appString, CSL1("CUSTOM2")), piAddress.getField(entryCustom2)) ||
+		_compare(abEntry.custom(appString, CSL1("CUSTOM3")), piAddress.getField(entryCustom3)) ||
+		_compare(abEntry.custom(appString, CSL1("CUSTOM4")), piAddress.getField(entryCustom4)))
 	{
 		return false;
 	}
@@ -1103,26 +1108,26 @@ void AbbrowserConduit::_copy(PilotAddress & toPilotAddr, KABC::Addressee & fromA
 	FUNCTIONSETUP;
 	// don't do a reset since this could wipe out non copied info
 	//toPilotAddr.reset();
-	toPilotAddr.setField(entryLastname, fromAbEntry.familyName().latin1());
+	toPilotAddr.setField(entryLastname, fromAbEntry.familyName());
 	QString firstAndMiddle = fromAbEntry.givenName();
-	if(!fromAbEntry.additionalName().isEmpty()) firstAndMiddle += " " + fromAbEntry.additionalName();
-	toPilotAddr.setField(entryFirstname, firstAndMiddle.latin1());
-	toPilotAddr.setField(entryCompany, fromAbEntry.organization().latin1());
-	toPilotAddr.setField(entryTitle, fromAbEntry.title().latin1());
-	toPilotAddr.setField(entryNote, fromAbEntry.note().latin1());
+	if(!fromAbEntry.additionalName().isEmpty()) firstAndMiddle += CSL1(" ") + fromAbEntry.additionalName();
+	toPilotAddr.setField(entryFirstname, firstAndMiddle);
+	toPilotAddr.setField(entryCompany, fromAbEntry.organization());
+	toPilotAddr.setField(entryTitle, fromAbEntry.title());
+	toPilotAddr.setField(entryNote, fromAbEntry.note());
 
 	// do email first, to ensure its gets stored
-	toPilotAddr.setPhoneField(PilotAddress::eEmail, fromAbEntry.preferredEmail().latin1());
+	toPilotAddr.setPhoneField(PilotAddress::eEmail, fromAbEntry.preferredEmail());
 	toPilotAddr.setPhoneField(PilotAddress::eWork,
-		fromAbEntry.phoneNumber(KABC::PhoneNumber::Work).number().latin1());
+		fromAbEntry.phoneNumber(KABC::PhoneNumber::Work).number());
 	toPilotAddr.setPhoneField(PilotAddress::eHome,
-		fromAbEntry.phoneNumber(KABC::PhoneNumber::Home).number().latin1());
+		fromAbEntry.phoneNumber(KABC::PhoneNumber::Home).number());
 	toPilotAddr.setPhoneField(PilotAddress::eMobile,
-		fromAbEntry.phoneNumber(KABC::PhoneNumber::Cell).number().latin1());
-	toPilotAddr.setPhoneField(PilotAddress::eFax, getFax(fromAbEntry).number().latin1());
+		fromAbEntry.phoneNumber(KABC::PhoneNumber::Cell).number());
+	toPilotAddr.setPhoneField(PilotAddress::eFax, getFax(fromAbEntry).number());
 	toPilotAddr.setPhoneField(PilotAddress::ePager,
-		fromAbEntry.phoneNumber(KABC::PhoneNumber::Pager).number().latin1());
-	toPilotAddr.setPhoneField(PilotAddress::eOther, getOtherField(fromAbEntry).latin1());
+		fromAbEntry.phoneNumber(KABC::PhoneNumber::Pager).number());
+	toPilotAddr.setPhoneField(PilotAddress::eOther, getOtherField(fromAbEntry));
 	toPilotAddr.setShownPhone(PilotAddress::eMobile);
 
 	KABC::Address homeAddress = getAddress(fromAbEntry);
@@ -1134,10 +1139,10 @@ void AbbrowserConduit::_copy(PilotAddress & toPilotAddr, KABC::Addressee & fromA
 	// correct Palm codec within the PilotAddress class by using QString
 	// arguments instead.
 	//
-	toPilotAddr.setField(entryCustom1, fromAbEntry.custom(appString, "CUSTOM1").latin1());
-	toPilotAddr.setField(entryCustom2, fromAbEntry.custom(appString, "CUSTOM2").latin1());
-	toPilotAddr.setField(entryCustom3, fromAbEntry.custom(appString, "CUSTOM3").latin1());
-	toPilotAddr.setField(entryCustom4, fromAbEntry.custom(appString, "CUSTOM4").latin1());
+	toPilotAddr.setField(entryCustom1, fromAbEntry.custom(appString, CSL1("CUSTOM1")));
+	toPilotAddr.setField(entryCustom2, fromAbEntry.custom(appString, CSL1("CUSTOM2")));
+	toPilotAddr.setField(entryCustom3, fromAbEntry.custom(appString, CSL1("CUSTOM3")));
+	toPilotAddr.setField(entryCustom4, fromAbEntry.custom(appString, CSL1("CUSTOM4")));
 
 	toPilotAddr.setCat(_getCat(fromAbEntry.categories()));
 }
@@ -1156,7 +1161,9 @@ int AbbrowserConduit::_getCat(const QStringList cats) const
 	{
 		for(j = 1; j <= 15; j++)
 		{
-			if(!(*it).isEmpty() && !_compare(*it, fAddressAppInfo.category.name[j]))
+			QString catName = PilotAppCategory::codec()->
+				toUnicode(fAddressAppInfo.category.name[j]);
+			if(!(*it).isEmpty() && !_compare(*it, catName))
 			{
 				return j;
 			}
@@ -1169,11 +1176,11 @@ int AbbrowserConduit::_getCat(const QStringList cats) const
 
 void AbbrowserConduit::_setPilotAddress(PilotAddress & toPilotAddr, const KABC::Address & abAddress)
 {
-	toPilotAddr.setField(entryAddress, abAddress.street().latin1());
-	toPilotAddr.setField(entryCity, abAddress.locality().latin1());
-	toPilotAddr.setField(entryState, abAddress.region().latin1());
-	toPilotAddr.setField(entryZip, abAddress.postalCode().latin1());
-	toPilotAddr.setField(entryCountry, abAddress.country().latin1());
+	toPilotAddr.setField(entryAddress, abAddress.street());
+	toPilotAddr.setField(entryCity, abAddress.locality());
+	toPilotAddr.setField(entryState, abAddress.region());
+	toPilotAddr.setField(entryZip, abAddress.postalCode());
+	toPilotAddr.setField(entryCountry, abAddress.country());
 }
 
 
@@ -1195,7 +1202,8 @@ void AbbrowserConduit::_setCategory(Addressee & abEntry, QString cat)
 {
 	for(int j = 1; j <= 15; j++)
 	{
-		abEntry.removeCategory(fAddressAppInfo.category.name[j]);
+		abEntry.removeCategory(
+			PilotAppCategory::codec()->toUnicode(fAddressAppInfo.category.name[j]));
 	}
 	if(!cat.isEmpty()) abEntry.insertCategory(cat);
 }
@@ -1229,10 +1237,10 @@ void AbbrowserConduit::_copy(KABC::Addressee & toAbEntry, const PilotAddress & f
 	homeAddress.setCountry(fromPiAddr.getField(entryCountry));
 	toAbEntry.insertAddress(homeAddress);
 
-	toAbEntry.insertCustom(appString, "CUSTOM1", fromPiAddr.getField(entryCustom1));
-	toAbEntry.insertCustom(appString, "CUSTOM2", fromPiAddr.getField(entryCustom2));
-	toAbEntry.insertCustom(appString, "CUSTOM3", fromPiAddr.getField(entryCustom3));
-	toAbEntry.insertCustom(appString, "CUSTOM4", fromPiAddr.getField(entryCustom4));
+	toAbEntry.insertCustom(appString, CSL1("CUSTOM1"), fromPiAddr.getField(entryCustom1));
+	toAbEntry.insertCustom(appString, CSL1("CUSTOM2"), fromPiAddr.getField(entryCustom2));
+	toAbEntry.insertCustom(appString, CSL1("CUSTOM3"), fromPiAddr.getField(entryCustom3));
+	toAbEntry.insertCustom(appString, CSL1("CUSTOM4"), fromPiAddr.getField(entryCustom4));
 
 	// copy the fromPiAddr pilot id to the custom field KPilot_Id;
 	// pilot id may be zero(since it could be new) but couldn't hurt
@@ -1371,7 +1379,7 @@ int AbbrowserConduit::_smartMergePhone(KABC::Addressee & abEntry,
 	if(res & CHANGED_NORES) return res;
 	if(mergeNeeded)
 	{
-		pilotAddress.setPhoneField(PalmFlag, mergedStr.latin1());
+		pilotAddress.setPhoneField(PalmFlag, mergedStr);
 		phone.setNumber(mergedStr);
 		abEntry.insertPhoneNumber(phone);
 	}
@@ -1395,7 +1403,7 @@ int AbbrowserConduit::_smartMergeEntry(QString abEntry,
 #ifdef DEBUG
 		DEBUGCONDUIT << "Merged string=" << mergedStr << endl;
 #endif
-		pilotAddress.setField(PalmFlag, mergedStr.latin1());
+		pilotAddress.setField(PalmFlag, mergedStr);
 		mergedString = mergedStr;
 	}
 	return -1;
@@ -1409,7 +1417,8 @@ int AbbrowserConduit::_smartMergeCategories(KABC::Addressee & abEntry,
 	QString & mergedString)
 {
 	int pccat = _getCat(abEntry.categories());
-	QString abAddressCat(fAddressAppInfo.category.name[pccat]);
+	QString abAddressCat =
+		PilotAppCategory::codec()->toUnicode(fAddressAppInfo.category.name[pccat]);
 	bool mergeNeeded = false;
 	QString mergedStr;
 	mergedString = QString();
@@ -1418,7 +1427,7 @@ int AbbrowserConduit::_smartMergeCategories(KABC::Addressee & abEntry,
 	if(res & CHANGED_NORES) return res;
 	if(mergeNeeded)
 	{
-		pilotAddress.setCategory(mergedStr.latin1());
+		pilotAddress.setCategory(mergedStr);
 		_setCategory(abEntry, mergedStr);
 		mergedString = mergedStr;
 	}
@@ -1470,21 +1479,21 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 	if(res >= 0) return res;
 	else if(!mergedStr.isEmpty()) abEntry.setNote(mergedStr);
 
-	res = _smartMergeEntry(abEntry.custom(appString, "CUSTOM1"), backupAddress, pilotAddress, entryCustom1, thisName, i18n("custom 1"), mergedStr);
+	res = _smartMergeEntry(abEntry.custom(appString, CSL1("CUSTOM1")), backupAddress, pilotAddress, entryCustom1, thisName, i18n("custom 1"), mergedStr);
 	if(res >= 0) return res;
-	else if(!mergedStr.isEmpty()) abEntry.insertCustom(appString, "CUSTOM1", mergedStr);
+	else if(!mergedStr.isEmpty()) abEntry.insertCustom(appString, CSL1("CUSTOM1"), mergedStr);
 
-	res = _smartMergeEntry(abEntry.custom(appString, "CUSTOM2"), backupAddress, pilotAddress, entryCustom2, thisName, i18n("custom 2"), mergedStr);
+	res = _smartMergeEntry(abEntry.custom(appString, CSL1("CUSTOM2")), backupAddress, pilotAddress, entryCustom2, thisName, i18n("custom 2"), mergedStr);
 	if(res >= 0) return res;
-	else if(!mergedStr.isEmpty()) abEntry.insertCustom(appString, "CUSTOM2", mergedStr);
+	else if(!mergedStr.isEmpty()) abEntry.insertCustom(appString, CSL1("CUSTOM2"), mergedStr);
 
-	res = _smartMergeEntry(abEntry.custom(appString, "CUSTOM3"), backupAddress, pilotAddress, entryCustom3, thisName, i18n("custom 3"), mergedStr);
+	res = _smartMergeEntry(abEntry.custom(appString, CSL1("CUSTOM3")), backupAddress, pilotAddress, entryCustom3, thisName, i18n("custom 3"), mergedStr);
 	if(res >= 0) return res;
-	else if(!mergedStr.isEmpty()) abEntry.insertCustom(appString, "CUSTOM3", mergedStr);
+	else if(!mergedStr.isEmpty()) abEntry.insertCustom(appString, CSL1("CUSTOM3"), mergedStr);
 
-	res = _smartMergeEntry(abEntry.custom(appString, "CUSTOM4"), backupAddress, pilotAddress, entryCustom4, thisName, i18n("custom 4"), mergedStr);
+	res = _smartMergeEntry(abEntry.custom(appString, CSL1("CUSTOM4")), backupAddress, pilotAddress, entryCustom4, thisName, i18n("custom 4"), mergedStr);
 	if(res >= 0) return res;
-	else if(!mergedStr.isEmpty()) abEntry.insertCustom(appString, "CUSTOM4", mergedStr);
+	else if(!mergedStr.isEmpty()) abEntry.insertCustom(appString, CSL1("CUSTOM4"), mergedStr);
 
 	res = _smartMergePhone(abEntry, backupAddress, pilotAddress, PilotAddress::eWork, abEntry.phoneNumber(KABC::PhoneNumber::Work), thisName, i18n("work phone"));
 	if(res >= 0) return res;
@@ -1501,7 +1510,7 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 	if(res & CHANGED_NORES) return res;
 	if(mergeNeeded)
 	{
-		pilotAddress.setPhoneField(PilotAddress::eOther, mergedStr.latin1());
+		pilotAddress.setPhoneField(PilotAddress::eOther, mergedStr);
 		setOtherField(abEntry, mergedStr);
 	}
 
@@ -1509,7 +1518,7 @@ int AbbrowserConduit::_smartMerge(PilotAddress & outPilotAddress, const PilotAdd
 	if(res & CHANGED_NORES) return res;
 	if(mergeNeeded)
 	{
-		pilotAddress.setPhoneField(PilotAddress::eEmail, mergedStr.latin1());
+		pilotAddress.setPhoneField(PilotAddress::eEmail, mergedStr);
 		abEntry.removeEmail(backupAddress.getPhoneField(PilotAddress::eEmail));
 		abEntry.removeEmail(pilotAddress.getPhoneField(PilotAddress::eEmail));
 		abEntry.insertEmail(mergedStr, true);
@@ -1773,10 +1782,10 @@ AbbrowserConduit::EConflictResolution AbbrowserConduit::getEntryResolution(const
 			bool backupEmpty=backupAddress.isDeleted() || emptyAddress==backupAddress;
 			bool pilotEmpty=pilotAddress.isDeleted() || emptyAddress==pilotAddress;
 			QString backupEntryString;
-			if(!backupEmpty) backupEntryString=QString("%1 %2").arg(backupAddress.getField(entryFirstname)).arg(backupAddress.getField(entryLastname));
+			if(!backupEmpty) backupEntryString=CSL1("%1 %2").arg(backupAddress.getField(entryFirstname)).arg(backupAddress.getField(entryLastname));
 			else backupEntryString=i18n("(deleted)");
 			QString pilotEntryString;
-			if(!pilotEmpty) pilotEntryString=QString("%1 %2").arg(pilotAddress.getField(entryFirstname)).arg(pilotAddress.getField(entryLastname));
+			if(!pilotEmpty) pilotEntryString=CSL1("%1 %2").arg(pilotAddress.getField(entryFirstname)).arg(pilotAddress.getField(entryLastname));
 			else pilotEntryString=i18n("(deleted)");
 
 			if(!abEntry.isEmpty() && !pilotEmpty) lst << i18n("Duplicate both");
@@ -1852,9 +1861,9 @@ KABC::Addressee AbbrowserConduit::_findMatch(const PilotAddress & pilotAddress) 
 		}
 	}
 
-	bool piFirstEmpty =(pilotAddress.getField(entryFirstname) == 0L);
-	bool piLastEmpty =(pilotAddress.getField(entryLastname) == 0L);
-	bool piCompanyEmpty =(pilotAddress.getField(entryCompany) == 0L);
+	bool piFirstEmpty =(pilotAddress.getField(entryFirstname).isEmpty());
+	bool piLastEmpty =(pilotAddress.getField(entryLastname).isEmpty());
+	bool piCompanyEmpty =(pilotAddress.getField(entryCompany).isEmpty());
 
 	// return not found if either one is empty on one side but not on the other
 	if(piFirstEmpty && piLastEmpty && piCompanyEmpty)

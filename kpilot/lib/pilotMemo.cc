@@ -43,48 +43,41 @@ PilotMemo::PilotMemo(PilotRecord * rec) : PilotAppCategory(rec)
 	(void) pilotMemo_id;
 }
 
-void PilotMemo::unpack(const void *text, int firstTime)
+void PilotMemo::unpack(const void *text, int /* firstTime */)
 {
 	FUNCTIONSETUP;
-	if (!firstTime && fText)
-	{
-		delete fText;
-	}
 
-	fSize = strlen((const char *) text) + 1;
-	fText = new char[fSize];
-
-	(void) strcpy(fText, (const char *) text);
-
-	int memoTitleLen = 0;
-
-	while (fText[memoTitleLen] && (fText[memoTitleLen] != '\n'))
-		memoTitleLen++;
-	// Null-terminate for a moment so that toUnicode() works.
-	char c = fText[memoTitleLen];
-	fText[memoTitleLen]=0;
-	fTitle = codec()->toUnicode(fText);
-	fText[memoTitleLen]=c;
+	fText = codec()->toUnicode((const char *)text);
 }
 
 // The indirection just to make the base class happy
 void *PilotMemo::internalPack(unsigned char *buf)
 {
 	FUNCTIONSETUP;
-	return strcpy((char *) buf, fText);
+	QCString s = codec()->fromUnicode(fText);
+	return strcpy((char *) buf, (const char *)s);
 }
 
 void *PilotMemo::pack(void *buf, int *len)
 {
 	FUNCTIONSETUP;
-	if (*len < fSize)
+	if (((unsigned)*len) < fText.length())
 		return NULL;
 
-	*len = fSize;
+	*len = fText.length();
 
 	return internalPack((unsigned char *) buf);
 }
 
+
+QString PilotMemo::getTitle() const
+{
+	if (fText.isEmpty()) return QString::null;
+	
+	int memoTitleLen = fText.find('\n');
+	if (-1 == memoTitleLen) memoTitleLen=fText.length();
+	return fText.left(memoTitleLen);
+}
 
 QString PilotMemo::shortTitle() const
 {
@@ -102,7 +95,7 @@ QString PilotMemo::shortTitle() const
 		t.truncate(spaceIndex);
 	}
 
-	t += "...";
+	t += CSL1("...");
 
 	return t;
 }

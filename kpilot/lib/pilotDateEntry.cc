@@ -26,14 +26,14 @@
 ** Bug reports and questions can be sent to groot@kde.org
 */
 
+#include "options.h"
+
 #include <stdlib.h>
+
+#include <qtextcodec.h>
 
 #ifndef _KDEBUG_H_
 #include <kdebug.h>
-#endif
-
-#ifndef _KPILOT_OPTIONS_H
-#include "options.h"
 #endif
 
 #include "pilotDateEntry.h"
@@ -105,8 +105,8 @@ PilotDateEntry::PilotDateEntry(const PilotDateEntry & e):PilotAppCategory(e)
 	fAppointmentInfo.note = 0L;
 
 	_copyExceptions(e);
-	setDescription(e.fAppointmentInfo.description);
-	setNote(e.fAppointmentInfo.note);
+	setDescriptionP(e.fAppointmentInfo.description);
+	setNoteP(e.fAppointmentInfo.note);
 }
 
 
@@ -132,8 +132,8 @@ PilotDateEntry & PilotDateEntry::operator = (const PilotDateEntry & e)
 		fAppointmentInfo.note = 0L;
 
 		_copyExceptions(e);
-		setDescription(e.fAppointmentInfo.description);
-		setNote(e.fAppointmentInfo.note);
+		setDescriptionP(e.fAppointmentInfo.description);
+		setNoteP(e.fAppointmentInfo.note);
 	}
 
 	return *this;
@@ -161,19 +161,19 @@ void PilotDateEntry::setExceptions(struct tm *e) {
 }
 
 
-void PilotDateEntry::setDescription(const char *desc)
+void PilotDateEntry::setDescriptionP(const char *desc, int l)
 {
 	FUNCTIONSETUP;
 	KPILOT_FREE(fAppointmentInfo.description);
 
-	if (desc)
+	if (desc && *desc)
 	{
-	  if (::strlen(desc) > 0) {
+		if (-1 == l) l=::strlen(desc);
 		fAppointmentInfo.description =
-			(char *) malloc(strlen(desc) + 1);
+			(char *) ::malloc(l + 1);
 		if (fAppointmentInfo.description)
 		{
-			strcpy(fAppointmentInfo.description, desc);
+			::strcpy(fAppointmentInfo.description, desc);
 		}
 		else
 		{
@@ -181,8 +181,6 @@ void PilotDateEntry::setDescription(const char *desc)
 				<< ": malloc() failed, description not set"
 				<< endl;
 		}
-	  } else
-	    fAppointmentInfo.description = 0L;
 	}
 	else
 	{
@@ -190,15 +188,15 @@ void PilotDateEntry::setDescription(const char *desc)
 	}
 }
 
-void PilotDateEntry::setNote(const char *note)
+void PilotDateEntry::setNoteP(const char *note, int l)
 {
 	FUNCTIONSETUP;
 	KPILOT_FREE(fAppointmentInfo.note);
 
-	if (note)
+	if (note && *note)
 	{
-	  if (::strlen(note) > 0) {
-		fAppointmentInfo.note = (char *)::malloc(strlen(note) + 1);
+		if (-1 == l) l=::strlen(note);
+		fAppointmentInfo.note = (char *)::malloc(l + 1);
 		if (fAppointmentInfo.note)
 		{
 			strcpy(fAppointmentInfo.note, note);
@@ -208,11 +206,30 @@ void PilotDateEntry::setNote(const char *note)
 			kdError(LIBPILOTDB_AREA) << __FUNCTION__
 				<< ": malloc() failed, note not set" << endl;
 		}
-	  } else
-	    fAppointmentInfo.note = 0L;
 	}
 	else
 	{
 		fAppointmentInfo.note = 0L;
 	}
 }
+
+void PilotDateEntry::setNote(const QString &s)
+{
+	setNoteP(codec()->fromUnicode(s),s.length());
+}
+
+void PilotDateEntry::setDescription(const QString &s)
+{
+	setDescriptionP(codec()->fromUnicode(s),s.length());
+}
+
+QString PilotDateEntry::getNote() const
+{
+	return codec()->toUnicode(getNoteP());
+}
+
+QString PilotDateEntry::getDescription() const
+{
+	return codec()->toUnicode(getDescriptionP());
+}
+

@@ -73,7 +73,7 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 		else
 		{
 			fPathName = KGlobal::dirs()->saveLocation("data",
-				QString("kpilot/DBBackup/"));
+				CSL1("kpilot/DBBackup/"));
 		}
 		fixupDBName();
 		openDatabase();
@@ -103,7 +103,7 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & dbName,
 	else
 	{
 		fPathName = KGlobal::dirs()->saveLocation("data",
-			QString("kpilot/DBBackup/"));
+			CSL1("kpilot/DBBackup/"));
 	}
 
 	fixupDBName();
@@ -128,7 +128,7 @@ PilotLocalDatabase::~PilotLocalDatabase()
 void PilotLocalDatabase::fixupDBName()
 {
 	FUNCTIONSETUP;
-	fDBName = fDBName.replace(QRegExp("/"), "_");
+	fDBName = fDBName.replace('/', CSL1("_"));
 }
 
 // Reads the application block info
@@ -412,10 +412,11 @@ QString PilotLocalDatabase::dbPathName() const
 {
 	FUNCTIONSETUP;
 	QString tempName(fPathName);
-
-	if (!tempName.endsWith("/")) tempName += "/";
+	QString slash = CSL1("/");
+	
+	if (!tempName.endsWith(slash)) tempName += slash;
 	tempName += getDBName();
-	tempName += ".pdb";
+	tempName += CSL1(".pdb");
 	return tempName;
 }
 
@@ -466,7 +467,7 @@ void PilotLocalDatabase::closeDatabase()
 		return;
 
 	QString tempName_ = dbPathName();
-	QString newName_ = tempName_ + ".bak";
+	QString newName_ = tempName_ + CSL1(".bak");
 	QCString tempName = QFile::encodeName(tempName_);
 	QCString newName = QFile::encodeName(newName_);
 

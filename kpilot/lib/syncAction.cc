@@ -73,7 +73,7 @@ SyncAction::SyncAction(KPilotDeviceLink  *p,
 /* virtual */ QString SyncAction::statusString() const
 {
 	FUNCTIONSETUP;
-	QString s("status=");
+	QString s = CSL1("status=");
 
 	s.append(QString::number(status()));
 	return s;
@@ -97,7 +97,7 @@ SyncAction::SyncAction(KPilotDeviceLink  *p,
 	if (!r)
 	{
 		emit logError(i18n("The conduit %1 could not be executed.")
-			.arg(name()));
+			.arg(QString::fromLatin1(name())));
 		emit syncDone(this);
 	}
 }
@@ -191,11 +191,11 @@ int InteractiveAction::questionYesNo(const QString & text,
 	{
 		QString prev = config->readEntry(key).lower();
 
-		if (prev == "yes")
+		if (prev == CSL1("yes"))
 		{
 			return KDialogBase::Yes;
 		}
-		else if (prev == "no")
+		else if (prev == CSL1("no"))
 		{
 			return KDialogBase::No;
 		}

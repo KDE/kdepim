@@ -69,7 +69,7 @@ FileInstaller::FileInstaller()
 	FUNCTIONSETUP;
 
 	fDirName = KGlobal::dirs()->saveLocation("data",
-		"kpilot/pending_install/");
+		CSL1("kpilot/pending_install/"));
 	fPendingCopies = 0;
 
 	(void) fileinstaller_id;
@@ -111,7 +111,7 @@ void FileInstaller::clearPending()
 #endif
 
 	KURL srcName(s);
-	KURL destDir(fDirName + "/" + srcName.filename());
+	KURL destDir(fDirName + CSL1("/") + srcName.filename());
 
 	return KIO::NetAccess::copy(srcName, destDir);
 }
@@ -127,7 +127,7 @@ void FileInstaller::addFiles(QStrList & fileList)
 
 	while (i < fileList.count())
 	{
-		if (runCopy(fileList.at(i)))
+		if (runCopy(QFile::decodeName(fileList.at(i))))
 			succ++;
 		i++;
 	}

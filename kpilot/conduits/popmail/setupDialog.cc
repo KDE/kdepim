@@ -226,13 +226,13 @@ PopMailSendPage::PopMailSendPage(QWidget *parent) :
 
 void PopMailSendPage::readSettings(KConfig &config)
 {
-	fEmailFrom->setText(config.readEntry("EmailAddress", "$USER"));
-	fSignature->setText(config.readEntry("Signature", ""));
+	fEmailFrom->setText(config.readEntry("EmailAddress", CSL1("$USER")));
+	fSignature->setText(config.readEntry("Signature", QString::null));
 	fSendmailCmd->setText(config.readEntry("SendmailCmd",
-		"/usr/lib/sendmail -t -i"));
-	fSMTPServer->setText(config.readEntry("SMTPServer", "mail"));
-	fSMTPPort->setText(config.readEntry("SMTPPort", "25"));
-	fFirewallFQDN->setText(config.readEntry("explicitDomainName", "$MAILDOMAIN"));
+		CSL1("/usr/lib/sendmail -t -i")));
+	fSMTPServer->setText(config.readEntry("SMTPServer", CSL1("mail")));
+	fSMTPPort->setText(QString::number(config.readNumEntry("SMTPPort", 25)));
+	fFirewallFQDN->setText(config.readEntry("explicitDomainName", CSL1("$MAILDOMAIN")));
 	fKMailSendImmediate->setChecked(config.readBoolEntry("SendImmediate",
 		true));
 	setMode(SendMode(config.readNumEntry(PopmailConduitFactory::syncOutgoing,SEND_NONE)));
@@ -344,7 +344,7 @@ void PopMailSendPage::browseSignature()
 		filename=QFileInfo( filename ).dirPath();
 	}
 
-	filename = KFileDialog::getOpenFileName(filename,"*");
+	filename = KFileDialog::getOpenFileName(filename,CSL1("*"));
 
 #ifdef DEBUG
 	{
@@ -474,24 +474,24 @@ void PopMailReceivePage::readSettings(KConfig &config)
 		u=getenv("HOME");
 		if (u==0L)
 		{
-			defaultMailbox="mbox";
+			defaultMailbox=CSL1("mbox");
 		}
 		else
 		{
-			defaultMailbox=QString(u)+QString("mbox");
+			defaultMailbox=QString::fromLocal8Bit(u)+CSL1("mbox");
 		}
 	}
 	else
 	{
-		defaultMailbox=QString("/var/spool/mail/")+QString(u);
+		defaultMailbox=CSL1("/var/spool/mail/")+QString::fromLocal8Bit(u);
 	}
 
 	fMailbox->setText(config.readEntry("UNIX Mailbox",defaultMailbox));
-	fPopServer->setText(config.readEntry("PopServer", "pop"));
-	fPopPort->setText(config.readEntry("PopPort", "110"));
-	fPopUser->setText(config.readEntry("PopUser", "$USER"));
+	fPopServer->setText(config.readEntry("PopServer", CSL1("pop")));
+	fPopPort->setText(config.readEntry("PopPort", CSL1("110")));
+	fPopUser->setText(config.readEntry("PopUser", CSL1("$USER")));
 	fLeaveMail->setChecked(config.readNumEntry("LeaveMail", 1));
-	fPopPass->setText(config.readEntry("PopPass", ""));
+	fPopPass->setText(config.readEntry("PopPass", QString::null));
 	fPopPass->setEnabled(config.readNumEntry("StorePass", 0));
 	fStorePass->setChecked(config.readNumEntry("StorePass", 0));
 	setMode(RetrievalMode(
@@ -514,9 +514,9 @@ void PopMailReceivePage::readSettings(KConfig &config)
 	//
 	if(fStorePass->isChecked())
 	{
-		chmod(KGlobal::dirs()->findResource("config", "kpilotrc")
+		chmod(KGlobal::dirs()->findResource("config", CSL1("kpilotrc"))
 			.latin1(), 0600);
-		config.writeEntry("PopPass", fPopPass->text().latin1());
+		config.writeEntry("PopPass", fPopPass->text());
 	}
 	else
 	{
@@ -604,7 +604,7 @@ void PopMailReceivePage::setMode(RetrievalMode m)
 		filename=QFileInfo( filename ).dirPath();
 	}
 
-	filename = KFileDialog::getOpenFileName(filename,"*");
+	filename = KFileDialog::getOpenFileName(filename,CSL1("*"));
 
 #ifdef DEBUG
 	{
@@ -672,3 +672,5 @@ PopMailOptions::setupWidget()
 	addPage(new setupInfoPage(this));
 }
 #endif
+
+

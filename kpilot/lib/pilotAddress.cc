@@ -37,6 +37,8 @@ static const char *pilotadress_id =
 #include <stdlib.h>
 #include <assert.h>
 
+#include <qtextcodec.h>
+
 #ifndef _KPILOT_PILOTADDRESS_H
 #include "pilotAddress.h"
 #endif
@@ -98,10 +100,10 @@ bool PilotAddress::operator==(const PilotAddress &compareTo)
 	// now compare all the fields stored in the fAddressInfo.entry array of char*[19]
 	for (int i=0; i<MAXFIELDS; i++) {
 		// if one is NULL, and the other non-empty, they are not equal for sure
-		if ( !getField(i) && compareTo.getField(i)) return false;
-		if ( getField(i) && !compareTo.getField(i)) return false;
+		if ( !getFieldP(i) && compareTo.getFieldP(i)) return false;
+		if ( getFieldP(i) && !compareTo.getFieldP(i)) return false;
 		// test for getField(i)!=... to prevent strcmp or NULL strings!  None or both can be zero, but not a single one.
-		if ( (getField(i) != compareTo.getField(i)) && ( strcmp(getField(i), compareTo.getField(i)) ) )  return false;
+		if ( (getFieldP(i) != compareTo.getFieldP(i)) && ( strcmp(getFieldP(i), compareTo.getFieldP(i)) ) )  return false;
 	}
 	return true;
 }
@@ -135,12 +137,12 @@ PilotAddress::~PilotAddress()
 	free_Address(&fAddressInfo);
 }
 
-bool PilotAddress::setCategory(const char *label)
+bool PilotAddress::setCategory(const QString &label)
 {
 	FUNCTIONSETUPL(4);
 	for (int catId = 0; catId < 16; catId++)
 	{
-		QString aCat = fAppInfo.category.name[catId];
+		QString aCat = codec()->toUnicode(fAppInfo.category.name[catId]);
 
 		if (label == aCat)
 		{
@@ -151,13 +153,24 @@ bool PilotAddress::setCategory(const char *label)
 			// if empty, then no more labels; add it 
 		if (aCat.isEmpty())
 		{
-			qstrncpy(fAppInfo.category.name[catId], label, 16);
+			qstrncpy(fAppInfo.category.name[catId], 
+				codec()->fromUnicode(label), 16);
 			setCat(catId);
 			return true;
 		}
 	}
 	// if got here, the category slots were full
 	return false;
+}
+
+QString PilotAddress::getCategoryLabel() const
+{
+	return codec()->toUnicode(fAppInfo.category.name[getCat()]);
+}
+
+QString PilotAddress::getField(int field) const
+{
+	return codec()->toUnicode(fAddressInfo.entry[field]);
 }
 
 int PilotAddress::_getNextEmptyPhoneSlot() const
@@ -174,7 +187,7 @@ int PilotAddress::_getNextEmptyPhoneSlot() const
 	return entryCustom4;
 }
 
-void PilotAddress::setPhoneField(EPhoneType type, const char *field,
+void PilotAddress::setPhoneField(EPhoneType type, const QString &field,
 	bool overflowCustom)
 {
 	FUNCTIONSETUPL(4);
@@ -182,7 +195,6 @@ void PilotAddress::setPhoneField(EPhoneType type, const char *field,
 	//QString typeStr(_typeToStr(type));
 	//int appPhoneLabelNum = _getAppPhoneLabelNum(typeStr);
 	int appPhoneLabelNum = (int) type;
-	QString typeStr(fAppInfo.phoneLabels[appPhoneLabelNum]);
 	QString fieldStr(field);
 	int fieldSlot = _findPhoneFieldSlot(appPhoneLabelNum);
 
@@ -195,9 +207,11 @@ void PilotAddress::setPhoneField(EPhoneType type, const char *field,
 		if (!fieldStr.isEmpty() && overflowCustom)
 		{
 			QString custom4Field = getField(entryCustom4);
+			QString typeStr(
+				codec()->toUnicode(fAppInfo.phoneLabels[appPhoneLabelNum]));
 
-			custom4Field += typeStr + " " + fieldStr;
-			setField(entryCustom4, custom4Field.latin1());
+			custom4Field += typeStr + CSL1(" ") + fieldStr;
+			setField(entryCustom4, custom4Field);
 		}
 	}
 	else			// phone field 1 - 5; straight forward storage
@@ -221,14 +235,13 @@ int PilotAddress::_findPhoneFieldSlot(int appTypeNum) const
 	return -1;
 }
 
-const char *PilotAddress::getPhoneField(EPhoneType type, bool checkCustom4) const
+QString PilotAddress::getPhoneField(EPhoneType type, bool checkCustom4) const
 {
 	FUNCTIONSETUPL(4);
 	// given the type, need to find which slot is associated with it
 	//QString typeToStr(_typeToStr(type));
 	//int appTypeNum = _getAppPhoneLabelNum(typeToStr);
 	int appTypeNum = (int) type;
-	QString typeToStr(fAppInfo.phoneLabels[appTypeNum]);
 
 	int fieldSlot = _findPhoneFieldSlot(appTypeNum);
 
@@ -237,14 +250,15 @@ const char *PilotAddress::getPhoneField(EPhoneType type, bool checkCustom4) cons
 
 	// look through custom 4 for the field
 	if (!checkCustom4)
-		return 0L;
+		return QString::null;
 
 	// look for the phone type str
+	QString typeToStr(codec()->toUnicode(fAppInfo.phoneLabels[appTypeNum]));
 	QString customField(getField(entryCustom4));
 	int foundField = customField.find(typeToStr);
 
 	if (foundField == -1)
-		return 0L;
+		return QString::null;
 
 	// parse out the next token
 	int startPos = foundField + typeToStr.length() + 1;
@@ -257,7 +271,7 @@ const char *PilotAddress::getPhoneField(EPhoneType type, bool checkCustom4) cons
 	field = field.simplifyWhiteSpace();
 
 	// return the token
-	return field.latin1();
+	return field;
 }
 
 
@@ -266,7 +280,7 @@ int PilotAddress::_getAppPhoneLabelNum(const QString & phoneType) const
 	FUNCTIONSETUPL(4);
 	for (int index = 0; index < 8; index++)
 	{
-		if (phoneType == fAppInfo.phoneLabels[index])
+		if (phoneType == codec()->toUnicode(fAppInfo.phoneLabels[index]))
 			return index;
 	}
 
@@ -291,7 +305,7 @@ void PilotAddress::setShownPhone(EPhoneType type)
 	fAddressInfo.showPhone = fieldSlot - entryPhone1;
 }
 
-void PilotAddress::setField(int field, const char *text)
+void PilotAddress::setField(int field, const QString &text)
 {
 	FUNCTIONSETUPL(4);
 	// This will have either been created with unpack_Address, and/or will
@@ -300,10 +314,10 @@ void PilotAddress::setField(int field, const char *text)
 	{
 		free(fAddressInfo.entry[field]);
 	}
-	if (text)
+	if (!text.isEmpty())
 	{
-		fAddressInfo.entry[field] = (char *) malloc(strlen(text) + 1);
-		strcpy(fAddressInfo.entry[field], text);
+		fAddressInfo.entry[field] = (char *) malloc(text.length() + 1);
+		strcpy(fAddressInfo.entry[field], codec()->fromUnicode(text));
 	}
 	else
 	{

@@ -29,27 +29,13 @@
 #define _KPILOT_PILOTTODOENTRY_H
 
 #include <time.h>
-#include <string.h>
 
-#ifndef QBITARRAY_H
-#include <qbitarray.h>
-#endif
-
-#ifndef _PILOT_MACROS_H_
 #include <pi-macros.h>
-#endif
-
-#ifndef _PILOT_TODO_H_
 #include <pi-todo.h>
-#endif
 
-#ifndef _KPILOT_PILOTAPPCATEGORY_H
+#include <qstring.h>
+
 #include "pilotAppCategory.h"
-#endif
-
-#ifndef _KPILOT_PILOTRECORD_H
-#include "pilotRecord.h"
-#endif
 
 
 
@@ -79,25 +65,30 @@ public:
   int getComplete() const { return fTodoInfo.complete; }
   void setComplete(int c) { fTodoInfo.complete = c; }
 
-  void  setDescription(const char* desc);
-  const char* getDescription() const { return fTodoInfo.description; }
+  void  setDescription(const QString &);
+  QString getDescription() const; // { return fTodoInfo.description; }
 
-  void  setNote(const char* note);
-  const char* getNote() const { return fTodoInfo.note; }
+  void  setNote(const QString &note);
+  QString getNote() const; // { return fTodoInfo.note; }
   
-	const char *getCategoryLabel() const
-		{ return fAppInfo.category.name[getCat()]; }
+	QString getCategoryLabel() const;
+		// { return fAppInfo.category.name[getCat()]; }
 	/** If the label already exists, uses the id; if not, adds the label
 	*  to the category list
 	*  @return false if category labels are full
 	*/
-	bool setCategory(const char *label);
+	bool setCategory(const QString &label);
 
 	static const int APP_BUFFER_SIZE;
 
 protected:
-  void *pack(void *, int *);
-  void unpack(const void *, int = 0) { }
+	void *pack(void *, int *);
+	void unpack(const void *, int = 0) { } ;
+	
+	const char *getDescriptionP() const { return fTodoInfo.description; } ;
+	void setDescriptionP(const char *, int len=-1) ;
+	const char *getNoteP() const { return fTodoInfo.note; } ;
+	void setNoteP(const char *, int len=-1) ;
   
 private:
   struct ToDo fTodoInfo;

@@ -35,13 +35,13 @@
 
 
 
+// #define QT_NO_ASCII_CAST		(1)
+// #define QT_NO_CAST_ASCII		(1)
 
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-
-// #define QT_NO_ASCII_CAST		(1)
 
 #ifndef QT_VERSION
 #include <qglobal.h>
@@ -138,7 +138,7 @@ extern KCmdLineOptions *debug_options;
 //
 #ifdef __GNUC__
 #define KPILOT_FNAMEDEF	static const char *fname=__FUNCTION__
-#define KPILOT_LOCNDEF	debug_spaces+(strlen(fname)) \
+#define KPILOT_LOCNDEF	debug_spaces+(::strlen(fname)) \
 				<< "(" << __FILE__ << ":" << \
 				__LINE__ << ")\n"
 #else
@@ -161,10 +161,6 @@ class KConfig;
 //
 QString qstringExpansion(const QString &);
 QString charExpansion(const char *);
-
-class QSize;
-ostream& operator << (ostream&,const QSize &) ;
-kdbgstream& operator << (kdbgstream&,const QSize &);
 
 #else
 // With debugging turned off, FUNCTIONSETUP doesn't do anything.
@@ -196,11 +192,6 @@ class KConfig;
 QString qstringExpansion(const QString &);
 QString charExpansion(const char *);
 
-class QSize;
-ostream& operator << (ostream&,const QSize &) ;
-kdbgstream& operator << (kdbgstream&,const QSize &);
-kndbgstream& operator << (kndbgstream&,const QSize &);
-
 // class QStringList;
 // ostream& operator <<(ostream&,const QStringList &);
 // kdbgstream& operator <<(kdbgstream&,const QStringList &);
@@ -227,5 +218,22 @@ kndbgstream& operator << (kndbgstream&,const QSize &);
 //
 //
 #define TODO_I18N(a)	QString::fromLatin1(a)
+
+// Handle some cases for QT_NO_CAST_ASCII and NO_ASCII_CAST.
+// Where possible in the source, known constant strings in
+// latin1 encoding are marked with CSL1(), to avoid gobs
+// of latin1() or fromlatin1() calls which might obscure
+// those places where the code really is translating
+// user data from latin1.
+//
+// The extra "" in CSL1 is to enforce that it's only called
+// with constant strings.
+//
+//
+#ifdef QT_NO_CAST_ASCII
+#define CSL1(a)		QString::fromLatin1(a "")
+#else
+#define CSL1(a)		a
+#endif
 
 #endif

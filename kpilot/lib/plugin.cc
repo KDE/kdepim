@@ -71,8 +71,8 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	fConfig(0L),
 	fDatabase(0L),
 	fLocalDatabase(0L),
-	fTest(args.contains("--test")),
-	fBackup(args.contains("--backup"))
+	fTest(args.contains(CSL1("--test"))),
+	fBackup(args.contains(CSL1("--backup")))
 {
 	FUNCTIONSETUP;
 
@@ -93,7 +93,7 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	KPILOT_DELETE(fLocalDatabase);
 }
 
-bool ConduitAction::openDatabases_(const char *name, bool *retrieved)
+bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 {
 	FUNCTIONSETUP;
 
@@ -123,7 +123,7 @@ bool ConduitAction::openDatabases_(const char *name, bool *retrieved)
 		DEBUGCONDUIT << "Backup database "<< dbpath <<" could not be opened. Will fetch a copy from the palm and do a full sync"<<endl;
 #endif
 		struct DBInfo dbinfo;
-		if (fHandle->findDatabase(const_cast<char*>(name), &dbinfo)<0 ) 
+		if (fHandle->findDatabase(name.latin1(), &dbinfo)<0 ) 
 		{
 #ifdef DEBUG
 			DEBUGCONDUIT<<fname<<"Could not get DBInfo for "<<name<<"! "<<endl;
@@ -165,8 +165,9 @@ bool ConduitAction::openDatabases_(const char *name, bool *retrieved)
 		}
 		if (retrieved) *retrieved=true;
 	}
-
-	fDatabase = new PilotSerialDatabase(pilotSocket(), name, this, name);
+	
+	// These latin1()'s are ok, since database names are latin1-coded.
+	fDatabase = new PilotSerialDatabase(pilotSocket(), name.latin1(), this, name.latin1());
 	
 	if (!fDatabase)
 	{
@@ -181,7 +182,7 @@ bool ConduitAction::openDatabases_(const char *name, bool *retrieved)
 	        fLocalDatabase && fLocalDatabase->isDBOpen() );
 }
 
-bool ConduitAction::openDatabases_(const char *dbName,const char *localPath)
+bool ConduitAction::openDatabases_(const QString &dbName,const QString &localPath)
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
@@ -193,14 +194,15 @@ bool ConduitAction::openDatabases_(const char *dbName,const char *localPath)
 	{
 		const QString *where2 = PilotLocalDatabase::getDBPath();
 
+		QString none = CSL1("<null>");
 		kdWarning() << k_funcinfo
 			<< ": Could not open both local copies of \""
 			<< dbName
 			<< "\"" << endl
 			<< "Using \""
-			<< (where2 ? *where2 : QString("<null>"))
+			<< (where2 ? *where2 : none)
 			<< "\" and \""
-			<< (localPath ? localPath : "<null>")
+			<< (localPath.isEmpty() ? localPath : none)
 			<< "\""
 			<< endl;
 	}
@@ -215,7 +217,7 @@ bool ConduitAction::openDatabases(const QString &dbName, bool*retrieved)
 	** that is implemented ..
 	*/
 	
-	return openDatabases_(dbName.latin1(), retrieved);
+	return openDatabases_(dbName, retrieved);
 }
 
 int PluginUtility::findHandle(const QStringList &a)
@@ -226,7 +228,7 @@ int PluginUtility::findHandle(const QStringList &a)
 	for (QStringList::ConstIterator i = a.begin();
 		i != a.end(); ++i)
 	{
-		if ((*i).left(7) == "handle=")
+		if ((*i).left(7) == CSL1("handle="))
 		{
 			QString s = (*i).mid(7);
 			if (s.isEmpty()) continue;
@@ -259,7 +261,7 @@ int PluginUtility::findHandle(const QStringList &a)
 
 bool PluginUtility::isModal(const QStringList &a)
 {
-	return a.contains("modal");
+	return a.contains(CSL1("modal"));
 }
 
 /* static */ bool PluginUtility::isRunning(const QCString &n)

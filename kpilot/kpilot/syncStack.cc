@@ -58,7 +58,8 @@ WelcomeAction::WelcomeAction(KPilotDeviceLink *p) :
 {
 	FUNCTIONSETUP;
 
-	addSyncLogEntry(i18n("KPilot %1 HotSync starting...\n").arg(KPILOT_VERSION));
+	addSyncLogEntry(i18n("KPilot %1 HotSync starting...\n")
+		.arg(QString::fromLatin1(KPILOT_VERSION)));
 	emit syncDone(this);
 	return true;
 }
@@ -119,18 +120,18 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	switch(fMode && SyncStack::ActionMask)
 	{
 	case SyncStack::Backup :
-		l.append("--backup");
+		l.append(CSL1("--backup"));
 		break;
 	default:
 		;
 	}
 	if (fMode & SyncStack::FlagTest)
 	{
-		l.append("--test");
+		l.append(CSL1("--test"));
 	}
 	if (fMode & SyncStack::FlagLocal)
 	{
-		l.append("--local");
+		l.append(CSL1("--local"));
 	}
 
 
@@ -217,7 +218,7 @@ SyncStack::SyncStack(KPilotDeviceLink *d,
 	}
 	else
 	{
-		DEBUGCONDUIT << fname << ": Conduits : " << conduits.join(" + ") << endl;
+		DEBUGCONDUIT << fname << ": Conduits : " << conduits.join(CSL1(" + ")) << endl;
 	}
 #endif
 }

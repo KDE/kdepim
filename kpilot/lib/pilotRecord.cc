@@ -142,5 +142,6 @@ static const char *latin1 = "ISO8859-1" ;
 	DEBUGKPILOT << fname
 		<< ": Got codec " << codec()->name() << endl;
 #endif
+	return codec();
 }
 

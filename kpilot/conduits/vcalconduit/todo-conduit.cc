@@ -39,6 +39,7 @@ static const char *TodoConduit_id = "$Id$";
 
 #include <qdatetime.h>
 #include <qtimer.h>
+#include <qtextcodec.h>
 
 #include <pilotUser.h>
 #include <kconfig.h>
@@ -221,7 +222,7 @@ const QString TodoConduit::getTitle(PilotAppCategory*de)
 {
 	PilotTodoEntry*d=dynamic_cast<PilotTodoEntry*>(de);
 	if (d) return QString(d->getDescription());
-	return "";
+	return QString::null;
 }
 
 
@@ -292,12 +293,11 @@ PilotRecord*TodoConduit::recordFromIncidence(PilotTodoEntry*de, const KCal::Todo
 
 	de->setComplete(todo->isCompleted());
 
-	// TODO: Use the Pilot codec.
 	// what we call summary pilot calls description.
-	de->setDescription(todo->summary().latin1());
+	de->setDescription(todo->summary());
 
 	// what we call description pilot puts as a separate note
-	de->setNote(todo->description().latin1());
+	de->setNote(todo->description());
 
 #ifdef DEBUG
 DEBUGCONDUIT<<"-------- "<<todo->summary()<<endl;
@@ -326,7 +326,7 @@ void TodoConduit::setCategory(PilotTodoEntry*de, const KCal::Todo*todo)
 	de->setCat(_getCat(de->getCat(), todo->categories()));
 #ifdef DEBUG
 	DEBUGCONDUIT<<"old Category="<<de->getCat()<<", new cat will be "<<_getCat(de->getCat(), todo->categories())<<endl;
-	DEBUGCONDUIT<<"Available Categories: "<<todo->categories().join(" - ")<<endl;
+	DEBUGCONDUIT<<"Available Categories: "<<todo->categories().join(CSL1(" - "))<<endl;
 #endif
 }
 
@@ -340,12 +340,14 @@ int TodoConduit::_getCat(int cat, const QStringList cats) const
 {
 	FUNCTIONSETUP;
 	int j;
-	if (cats.contains(fTodoAppInfo.category.name[cat])) 
+	if (cats.contains(PilotAppCategory::codec()->toUnicode(fTodoAppInfo.category.name[cat]))) 
 		return cat;
 	for ( QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it ) {
 		for (j=1; j<=15; j++) 
 		{
-			if (!(*it).isEmpty() && ! (*it).compare( fTodoAppInfo.category.name[j] ) ) 
+			if (!(*it).isEmpty() && 
+				! (*it).compare( PilotAppCategory::codec()->toUnicode(
+					fTodoAppInfo.category.name[j]) ) ) 
 			{
 				return j;
 			}
@@ -427,13 +429,13 @@ void TodoConduit::setCategory(KCal::Todo *e, const PilotTodoEntry *de)
 		// palm categories can be set on the desktop, all others will be deleted from the desktop entry!
 		for (int j=1; j<=15; j++) 
 		{
-			cats.remove(fTodoAppInfo.category.name[j]);
+			cats.remove(PilotAppCategory::codec()->toUnicode(fTodoAppInfo.category.name[j]));
 		}
 	}
 	int cat=de->getCat();
 	if (0<cat && cat<=15) 
 	{
-		cats.append( fTodoAppInfo.category.name[cat] );
+		cats.append( PilotAppCategory::codec()->toUnicode(fTodoAppInfo.category.name[cat]) );
 	}
 	e->setCategories(cats);
 }

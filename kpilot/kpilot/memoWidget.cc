@@ -207,7 +207,7 @@ void MemoWidget::initialize()
 	//
 	//
 	PilotLocalDatabase *memoDB =
-		new PilotLocalDatabase(dbPath(), "MemoDB");
+		new PilotLocalDatabase(dbPath(), CSL1("MemoDB"));
 	if (memoDB == NULL || !memoDB->isDBOpen())
 	{
 		kdWarning() << k_funcinfo <<
@@ -521,7 +521,7 @@ void MemoWidget::writeMemo(PilotMemo * which)
 {
 	FUNCTIONSETUP;
 
-	PilotDatabase *memoDB = new PilotLocalDatabase(dbPath(), "MemoDB");
+	PilotDatabase *memoDB = new PilotLocalDatabase(dbPath(), CSL1("MemoDB"));
 	PilotRecord *pilotRec = which->pack();
 
 	memoDB->writeRecord(pilotRec);
@@ -555,7 +555,7 @@ void MemoWidget::slotTextChanged()
 			slotShowMemo(fListBox->currentItem());
 			return;
 		}
-		currentMemo->setText(fTextWidget->text().latin1());
+		currentMemo->setText(fTextWidget->text());
 		writeMemo(currentMemo);
 	}
 }
@@ -571,7 +571,7 @@ void MemoWidget::slotImportMemo()
 
 	QString fileName = KFileDialog::getOpenFileName();
 
-	if (fileName != NULL)
+	if (!fileName.isEmpty())
 	{
 		QFile importFile(fileName);
 
@@ -606,7 +606,7 @@ void MemoWidget::slotExportMemo()
 
 	QString data;
 
-	const QString filter = "*|Plain text output\n*.xml|XML output";
+	const QString filter = CSL1("*|Plain text output\n*.xml|XML output");
 	QString fileName;
 
 	KFileDialog kfile( QString::null , filter, fExportButton , "memoSave" , true );
@@ -627,7 +627,7 @@ void MemoWidget::slotExportMemo()
 		}
 	}
 
-	if (kfile.currentFilter() == "*.xml" )
+	if (kfile.currentFilter() == CSL1("*.xml") )
 	{
 		MemoWidget::saveAsXML( fileName , menu_items );
 	}
@@ -674,7 +674,7 @@ bool MemoWidget::saveAsText(const QString &fileName,const QList<PilotListItem> &
 
 bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &memo_list)
 {
-	QDomDocument doc( "kpilotmemos" );
+	QDomDocument doc( CSL1("kpilotmemos") );
 	QFile f( fileName );
 	QTextStream stream( &f );
 	QDomElement memos;
@@ -691,7 +691,7 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &m
 		//
 		//Only if QDom can read the .xml file and set the doc object to be populated with it's contents
 			memos = doc.documentElement();
-			if ( memos.tagName()!="memos" )
+			if ( memos.tagName()!= CSL1("memos") )
 			{
 				return false;
 			}
@@ -734,7 +734,7 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &m
 	}
 	else
 	{
-		memos = doc.createElement( "memos" );
+		memos = doc.createElement( CSL1("memos") );
 		doc.appendChild ( memos );
 	}
 
@@ -745,8 +745,8 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &m
 		PilotMemo *theMemo = (PilotMemo *) p->rec();
 
 
-    	QDomElement memo = doc.createElement( "memo" );
-	    memo.setAttribute ( "pilotid" , mpilotid );
+    	QDomElement memo = doc.createElement( CSL1("memo") );
+	    memo.setAttribute ( CSL1("pilotid") , mpilotid );
 	    memos.appendChild ( memo );
 
 	    //QDomElement category = doc.createElement( "category" );
@@ -756,7 +756,7 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &m
 		//category.appendChild ( categorytext );
 		//FIXME
 
-		QDomElement title = doc.createElement( "title" );
+		QDomElement title = doc.createElement(CSL1("title" ));
 		memo.appendChild ( title );
 
 		QDomText titletext = doc.createTextNode( theMemo->shortTitle() );

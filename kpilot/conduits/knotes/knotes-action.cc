@@ -59,7 +59,7 @@ public:
 	int memo() const { return memoId; } ;
 	int note() const { return noteId; } ;
 	bool valid() const { return (noteId>0) && (memoId>0); } ;
-	QString toString() const { return QString("<%1,%2>").arg(noteId).arg(memoId); } ;
+	QString toString() const { return CSL1("<%1,%2>").arg(noteId).arg(memoId); } ;
 
 	static NoteAndMemo findNote(const QValueList<NoteAndMemo> &,int note);
 	static NoteAndMemo findMemo(const QValueList<NoteAndMemo> &,int memo);
@@ -191,7 +191,8 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 
 	fP->fNotes = fP->fKNotes->notes();
 
-	openDatabases("MemoDB");
+	// Database names seem to be latin1
+	openDatabases(QString::fromLatin1("MemoDB"));
 
 	if (isTest())
 	{
@@ -232,7 +233,7 @@ void KNotesAction::listNotes()
 			<< i.key()
 			<< "->"
 			<< i.data()
-			<< (fP->fKNotes->isNew("kpilot",i.key()) ?
+			<< (fP->fKNotes->isNew(CSL1("kpilot"),i.key()) ?
 				" (new)" : "" )
 			<< endl;
 #endif
@@ -358,12 +359,12 @@ bool KNotesAction::modifyNoteOnPilot()
 		}
 		else
 		{
-			addSyncLogEntry("No memos were changed.");
+			addSyncLogEntry(TODO_I18N("No memos were changed."));
 		}
 		return true;
 	}
 
-	if (fP->fKNotes->isModified("kpilot",fP->fIndex.key()))
+	if (fP->fKNotes->isModified(CSL1("kpilot"),fP->fIndex.key()))
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
@@ -380,11 +381,10 @@ bool KNotesAction::modifyNoteOnPilot()
 
 		if (nm.valid())
 		{
-			QString text = fP->fIndex.data() + "\n" ;
+			QString text = fP->fIndex.data() + CSL1("\n") ;
 			text.append(fP->fKNotes->text(fP->fIndex.key()));
 
-			const char *c = text.latin1();
-			PilotMemo *a = new PilotMemo((void *)(const_cast<char *>(c)));
+			PilotMemo *a = new PilotMemo(text);
 			PilotRecord *r = a->pack();
 			r->setID(nm.memo());
 
@@ -427,12 +427,12 @@ bool KNotesAction::addNewNoteToPilot()
 		}
 		else
 		{
-			addSyncLogEntry("No memos were added.");
+			addSyncLogEntry(TODO_I18N("No memos were added."));
 		}
 		return true;
 	}
 
-	if (fP->fKNotes->isNew("kpilot",fP->fIndex.key()))
+	if (fP->fKNotes->isNew(CSL1("kpilot"),fP->fIndex.key()))
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
@@ -444,11 +444,10 @@ bool KNotesAction::addNewNoteToPilot()
 			<< endl;
 #endif
 
-		QString text = fP->fIndex.data() + "\n" ;
+		QString text = fP->fIndex.data() + CSL1("\n") ;
 		text.append(fP->fKNotes->text(fP->fIndex.key()));
 
-		const char *c = text.latin1();
-		PilotMemo *a = new PilotMemo((void *)(const_cast<char *>(c)));
+		PilotMemo *a = new PilotMemo(text);
 		PilotRecord *r = a->pack();
 
 		int newid = fDatabase->writeRecord(r);
@@ -479,7 +478,7 @@ bool KNotesAction::syncMemoToKNotes()
 		}
 		else
 		{
-			addSyncLogEntry("No memos added to KNotes.");
+			addSyncLogEntry(TODO_I18N("No memos added to KNotes."));
 		}
 		return true;
 	}
@@ -560,7 +559,7 @@ void KNotesAction::cleanupMemos()
 	FUNCTIONSETUP;
 
 	// Tell KNotes we're up-to-date
-	fP->fKNotes->sync("kpilot");
+	fP->fKNotes->sync(CSL1("kpilot"));
 
 	if (fConfig)
 	{
@@ -599,7 +598,7 @@ void KNotesAction::cleanupMemos()
 	fDatabase->cleanup();
 	fDatabase->resetSyncFlags();
 
-	addSyncLogEntry("]\n");
+	addSyncLogEntry(CSL1("]\n"));
 }
 
 
@@ -607,13 +606,13 @@ void KNotesAction::cleanupMemos()
 {
 	switch(fStatus)
 	{
-	case Init : return QString("Init");
+	case Init : return CSL1("Init");
 	case NewNotesToPilot :
-		return QString("NewNotesToPilot key=%1")
+		return CSL1("NewNotesToPilot key=%1")
 			.arg(fP->fIndex.key());
 	case Done :
-		return QString("Done");
+		return CSL1("Done");
 	default :
-		return QString("Unknown (%1)").arg(fStatus);
+		return CSL1("Unknown (%1)").arg(fStatus);
 	}
 }

@@ -36,24 +36,25 @@
 class PilotMemo : public PilotAppCategory
 {
 public:
-	PilotMemo(void) : PilotAppCategory() { fText = NULL; fSize = 0; }
+	PilotMemo(void) : PilotAppCategory() { } ;
+	PilotMemo(const QString &s) : PilotAppCategory() { fText=s; } ;
 	PilotMemo(PilotRecord* rec);
-	PilotMemo(void *buf) : PilotAppCategory() { unpack(buf, 1); }
+	PilotMemo(void *buf) : PilotAppCategory() { unpack(buf, 1); } ;
 	PilotMemo(void *buf, int attr, recordid_t id, int category)
-		: PilotAppCategory(attr, id, category) { unpack(buf, 1); }
-	~PilotMemo() { if (fText) delete fText; }
+		: PilotAppCategory(attr, id, category) { unpack(buf, 1); } ;
+	~PilotMemo() { } ;
 
-	const char *text(void) const { return fText; }
-	void setText(const char* text) { unpack(text, 0); }
-	QString getTitle(void) const { return fTitle; }
-	PilotRecord* pack() { return PilotAppCategory::pack(); }
+	QString text(void) const { return fText; } ;
+	void setText(const QString &text) { fText = text; } ;
+	QString getTitle(void) const ;
+	PilotRecord* pack() { return PilotAppCategory::pack(); } ;
 
 	typedef enum { MAX_MEMO_LEN=8192 } Constants ;
 
 	/**
 	* Return a "short but sensible" title. getTitle() returns the
 	* first line of the memo, which may be very long
-	* and inconvenient. sensibleTitle() returns about 30
+	* and inconvenient. sshortTitle() returns about 30
 	* characters.
 	*/
 	QString shortTitle() const;
@@ -69,9 +70,7 @@ protected:
 	void unpack(const void *, int = 0);
 
 private:
-	char *fText;
-	int fSize;
-	QString fTitle;
+	QString fText;
 
 	void *internalPack(unsigned char *);
 };
