@@ -152,18 +152,20 @@ bool FreeBusy::addLocalPeriod(const QDateTime &eventStart, const QDateTime &even
 
   //Check to see if the start *or* end of the event is
   //between the start and end of the freebusy dates.
-  if (!((((this->dtStart()).secsTo(eventStart)>=0)&&(eventStart.secsTo(this->dtEnd())>=0))
-    ||(((this->dtStart()).secsTo(eventEnd) >= 0)&&(eventEnd.secsTo(this->dtEnd()) >= 0))))
+  if ( !( ( ( dtStart().secsTo(eventStart) >= 0 ) && 
+            ( eventStart.secsTo(dtEnd()) >= 0 ) )
+       || ( ( dtStart().secsTo(eventEnd) >= 0 ) &&
+            ( eventEnd.secsTo(dtEnd()) >= 0 ) ) ) )
     return false;
 
-  if ( eventStart.secsTo(this->dtStart())>=0) {
-    tmpStart = this->dtStart();
+  if ( eventStart.secsTo( dtStart() ) >= 0 ) {
+    tmpStart = dtStart();
   } else {
     tmpStart = eventStart;
   }
 
-  if ( eventEnd.secsTo(this->dtEnd())<=0 ) {
-    tmpEnd = this->dtEnd();
+  if ( eventEnd.secsTo( dtEnd() ) <= 0 ) {
+    tmpEnd = dtEnd();
   } else {
     tmpEnd = eventEnd;
   }
