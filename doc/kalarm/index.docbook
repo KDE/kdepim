@@ -42,8 +42,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2004-10-26</date>
-<releaseinfo>1.02.01</releaseinfo>
+<date>2004-11-12</date>
+<releaseinfo>1.03.00</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -1142,17 +1142,6 @@ for details.</para>
 </varlistentry>
 
 <varlistentry>
-<term><menuchoice><guimenuitem>Control Alarm Daemon...</guimenuitem></menuchoice></term>
-<listitem><para><action>Displays the Service Manager dialog which
-allows you to control the alarm
-daemon.</action></para>
-<para>See
-<link linkend="daemon-control">Controlling the alarm daemon with the
-Service Manager</link> for details.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
 <term><menuchoice><guimenuitem>Configure &kalarm;...</guimenuitem></menuchoice></term>
 <listitem><para><action>Displays the &kalarm; preferences dialog.</action></para>
 <para>The preferences dialog is described in
@@ -1300,10 +1289,6 @@ from the context menu.</para>
 necessary and alarms will be monitored for when they become
 due.</para>
 
-<warning><para>Starting the <application>alarm daemon</application>
-will affect any other applications which use the <application>alarm
-daemon</application>.</para></warning>
-
 </sect2>
 
 <sect2>
@@ -1316,9 +1301,7 @@ daemon</application> is configured to start at login - until the next
 time you log in.</para>
 
 <para>To disable alarms without stopping the <application>alarm
-daemon</application> (and therefore without affecting any other
-applications which use the <application>alarm daemon</application>),
-do one of the following:</para>
+daemon</application>, do one of the following:</para>
 
 <itemizedlist>
 <listitem>
@@ -1351,9 +1334,6 @@ displays the Service Manager dialog which enables you to stop the
 <application>alarm daemon</application>.</para>
 </listitem>
 </itemizedlist>
-
-<warning><para>This will affect any other applications which use the
-<application>alarm daemon</application>.</para></warning>
 
 </sect2>
 
@@ -1401,20 +1381,6 @@ from the context menu.</para>
 </sect2>
 </sect1>
 
-<sect1 id="using-daemon">
-<title>Controlling the <application>alarm daemon</application></title>
-
-<para>To control the <application>alarm daemon</application>, select
-<menuchoice><guimenu>Settings</guimenu> <guimenuitem>Control Alarm
-Daemon...</guimenuitem></menuchoice>. This displays the Service
-Manager dialog which allows you to stop or start the
-<application>alarm daemon</application> and configure whether it runs
-automatically at login. See
-<link linkend="daemon-control">Controlling the alarm daemon with the
-Service Manager</link> for details.</para>
-
-</sect1>
-
 <sect1 id="quitting">
 <title>Quitting the program</title>
 
@@ -1457,6 +1423,22 @@ This displays the configuration dialog.</para>
 &kalarm;'s overall behavior:</para>
 
 <itemizedlist>
+<listitem><para><guilabel>Start alarm monitoring at login</guilabel>:
+This starts alarm monitoring at KDE session login, by starting the
+<application>alarm daemon</application>. Note that in order for alarms
+to be activated, you also need to select appropriate options in the
+<guilabel>Run Mode</guilabel> group box.</para>
+
+<warning><para>This option should always be checked unless you intend
+to discontinue use of &kalarm;.</para></warning>
+
+<note><para>This option is automatically reselected whenever &kalarm;
+is run. So if you have unchecked this option and want to continue to
+prevent the <application>alarm daemon</application> from running at
+login, you need to uncheck this option again each time you run
+&kalarm;.</para></note>
+</listitem>
+
 <listitem><para><guilabel>Run Mode</guilabel> group box: These options
 control &kalarm;'s system tray icon, and also allow some control over
 &kalarm;'s use of system resources by specifying whether or not to run
@@ -2236,9 +2218,6 @@ that an alarm is due, it tells &kalarm; to display or execute it, or
 to cancel it if it is late and late trigger was not selected for that
 alarm.</para>
 
-<para>Under &kde;3, the <application>alarm daemon</application> may
-also be used by other applications, including KOrganizer.</para>
-
 <para>The <application>alarm daemon</application> runs in the
 background, with no user interface. It may be controlled as described
 below.</para>
@@ -2247,10 +2226,11 @@ below.</para>
 <title>Starting, resetting and stopping the <application>alarm daemon</application></title>
 
 <para>The <application>alarm daemon</application> is normally started
-at &kde; session login (unless you use the Service Manager dialog to
-disable auto start), and runs continuously until logout. If for any
-reason it is not running, alarm monitoring will not occur and &kalarm;
-will not display or execute any alarms.</para>
+at &kde; session login (unless you disable auto start in the
+<link linkend="preferences">Preferences dialog</link>), and runs
+continuously until logout. If for any reason it is not running, alarm
+monitoring will not occur and &kalarm; will not display or execute any
+alarms.</para>
 
 <sect2>
 <title>Starting the <application>alarm daemon</application></title>
@@ -2259,11 +2239,9 @@ will not display or execute any alarms.</para>
 either run &kalarm; in its default graphical mode (&ie; without any
 command line parameters), enable alarms using &kalarm;'s system tray
 icon menu, reset the daemon as described
-<link linkend="daemon-reset">below</link>, start it using the
-Service Manager dialog (see <link linkend="daemon-control">Controlling
-the alarm daemon with the Service Manager</link>)
-or you can run the <application>alarm daemon</application> directly
-from the command line:</para>
+<link linkend="daemon-reset">below</link>, or you can run the
+<application>alarm daemon</application> directly from the command
+line:</para>
 
 <screen width="40">
 <prompt>%</prompt> <userinput><command>kalarmd</command></userinput>
@@ -2285,10 +2263,7 @@ daemon</application>? It isn't a very likely occurrence, but if for
 any reason &kalarm; was not able to run when the <application>alarm
 daemon</application> told it to trigger an alarm, that alarm will
 never be displayed or executed until the <application>alarm
-daemon</application> is either reset or restarted. Resetting is
-preferable to stopping the <application>alarm daemon</application> and
-restarting it, since resetting the daemon will not affect any other
-applications which use the <application>alarm daemon</application>.</para>
+daemon</application> is either reset or restarted.</para>
 
 <tip><para>Resetting starts the <application>alarm
 daemon</application> if it is not currently running.</para></tip>
@@ -2311,51 +2286,13 @@ the menu command <menuchoice>
 prevent any further monitoring of scheduled alarm messages until the
 daemon is restarted.</para>
 
-<warning><para>Stopping it will affect the functioning of any other
-applications which also use the <application>alarm
-daemon</application>. Consider resetting the daemon
-instead.</para></warning>
-
-<para>To stop the <application>alarm daemon</application>,
-either use the Service Manager dialog (see
-<link linkend="daemon-control">Controlling the alarm daemon with the
-Service Manager</link>), or type the following command:</para>
+<para>To stop the <application>alarm daemon</application>, type the
+following command:</para>
 
 <screen width="40">
 <prompt>%</prompt> <userinput><command>kalarm</command> <option>--stop</option></userinput>
 </screen>
 </sect2>
-
-</sect1>
-
-<sect1 id="daemon-control">
-<title>Controlling the <application>alarm daemon</application> with the Service Manager</title>
-
-<para>The Service Manager dialog allows you to configure and control
-the <application>alarm daemon</application>. You can:</para>
-
-<itemizedlist>
-<listitem>
-<para>Configure whether it runs automatically at login.</para>
-<warning><para>If neither the <application>alarm daemon</application>
-nor &kalarm; is configured to run at login, alarm monitoring will not
-occur and &kalarm; will not display or execute any
-alarms.</para></warning>
-</listitem>
-
-<listitem>
-<para>Stop and start the <application>alarm
-daemon</application>.</para>
-<warning><para>Starting or stopping the <application>alarm
-daemon</application> will affect any other applications which use the
-<application>alarm daemon</application>.</para></warning>
-</listitem>
-</itemizedlist>
-
-<para>The Service Manager dialog can be accessed either via the menu
-option <menuchoice><guimenu>Settings</guimenu> <guimenuitem>Control
-Alarm Daemon...</guimenuitem></menuchoice>, or via the &kde; Control
-Center.</para>
 
 </sect1>
 </chapter>
@@ -3551,12 +3488,8 @@ daemon</application> use?</para>
 </question>
 <answer>
 <para>The file <filename>$KDEHOME/share/config/kalarmdrc</filename>
-holds your <application>alarm daemon</application> preferences.</para>
-
-<para>The file <filename>$KDEHOME/share/apps/kalarmd/clients</filename>
-holds details of client applications which have previously been
-registered with the <application>alarm daemon</application>, and their
-calendar files.</para>
+holds your <application>alarm daemon</application> preferences,
+together with details of the &kalarm; client application.</para>
 </answer>
 </qandaentry>
 
