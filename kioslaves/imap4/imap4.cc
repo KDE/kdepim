@@ -724,7 +724,7 @@ IMAP4Protocol::put (const KURL & _url, int, bool, bool)
         bufferList.append (buffer);
         length += result;
       } else {
-	delete buffer;
+        delete buffer;
       }
     }
     while (result > 0);
@@ -747,6 +747,7 @@ IMAP4Protocol::put (const KURL & _url, int, bool, bool)
       ulong wrote = 0;
 
       QByteArray *buffer;
+      // send data to server
       while (!bufferList.isEmpty () && sendOk)
       {
         buffer = bufferList.take (0);
@@ -755,6 +756,7 @@ IMAP4Protocol::put (const KURL & _url, int, bool, bool)
           (write (buffer->data (), buffer->size ()) ==
            (ssize_t) buffer->size ());
         wrote += buffer->size ();
+        processedSize(wrote);
         delete buffer;
         if (!sendOk)
         {
@@ -834,7 +836,6 @@ IMAP4Protocol::mkdir (const KURL & _url, int)
 
   enum IMAP_TYPE type =
     parseURL(_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter);
-  kdDebug(7116) << "IMAP4::mkdir - parseURL of " << _url << " returned type " << type << endl;
   if (type == ITYPE_BOX)
   {
     if (messageBox(QuestionYesNo,
