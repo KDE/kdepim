@@ -93,7 +93,7 @@ void ProfileFileManager::saveOne( KConfig* conf,  const Profile& prof ) {
     QStringList pathlist;
     for ( pathIt = paths.begin(); pathIt != paths.end(); ++pathIt ) {
         pathlist << pathIt.key();
-        conf->writeEntry("Path"+pathIt.key(), pathIt.data() );
+        conf->writePathEntry("Path"+pathIt.key(), pathIt.data() );
     }
     conf->writeEntry("LocationPath", pathlist );
 
@@ -122,7 +122,7 @@ Profile ProfileFileManager::readOne(KConfig *conf) {
     QStringList::Iterator it;
     QMap<QString,QString> map;
     for ( it = locationPath.begin(); it != locationPath.end(); ++it ) {
-        QString val = conf->readEntry("Path"+(*it) );
+        QString val = conf->readPathEntry("Path"+(*it) );
         map.insert( (*it),  val );
     };
     prof.setPaths( map );
