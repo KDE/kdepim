@@ -43,7 +43,7 @@ int main( int argc, char *argv[] )
   aboutData.addAuthor( "Jesper Pedersen",   0, "blackie@kde.org" );
   aboutData.addAuthor( "Kalle Dalheimer",   0, "kalle@kde.org" );
   aboutData.addAuthor( "Scott Monachello",  0, "smonach@cox.net" );
-  aboutData.addAuthor( "Thorsten Staerk",   0, "dev@staerk.de.net" );
+  aboutData.addAuthor( "Thorsten Staerk",   0, "kde@staerk.de" );
   aboutData.addAuthor( "Tomas Pospisek",    0, "tpo_deb@sourcepole.ch" );
   aboutData.addAuthor( "Willi Richert",     0, "w.richert@gmx.net" );
 
