@@ -90,12 +90,6 @@ void CalendarResources::init()
   mStandardPolicy = new StandardDestinationPolicy( mManager );
   mAskPolicy = new AskDestinationPolicy( mManager );
   mDestinationPolicy = mStandardPolicy;
-
-  // Open all active resources
-  CalendarResourceManager::Iterator it;
-  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
-    connectResource( *it );
-  }
 }
 
 CalendarResources::~CalendarResources()
@@ -110,6 +104,11 @@ CalendarResources::~CalendarResources()
 void CalendarResources::readConfig( KConfig *config )
 {
   mManager->readConfig( config );
+
+  CalendarResourceManager::Iterator it;
+  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+    connectResource( *it );
+  }
 }
 
 void CalendarResources::load()
@@ -136,41 +135,53 @@ void CalendarResources::load()
   mOpen = true;
 }
 
-void CalendarResources::loadResource( ResourceCalendar *r )
+bool CalendarResources::loadResource( ResourceCalendar *r )
 {
   kdDebug(5800) << "Opening resource " + r->resourceName() << endl;
+
+  mReceivedLoadError = false;
 
   bool success = r->open();
   if ( success ) {
     success = r->load();
   }
   if ( !success ) {
-    slotLoadError( r, "" );
     r->setActive( false );
     emit signalResourceModified( r );
+  
+    if ( !mReceivedLoadError ) slotLoadError( r );
   }
+
+  return success;
 }
 
 void CalendarResources::slotLoadError( ResourceCalendar *r, const QString &err )
 {
   kdDebug() << "Error loading resource: " << err << endl;
+
+  mReceivedLoadError = true;
+
+  r->setActive( false );
+  emit signalResourceModified( r );
+
+  QString msg = i18n("Error while loading %1.\n") .arg( r->resourceName() );
   if ( !err.isEmpty() ) {
-    QString msg = i18n("Error while loading %1:\n")
-                  .arg( r->resourceName() );
     msg += err;
-    emit signalErrorMessage( msg );
   }
+  emit signalErrorMessage( msg );
 }
 
 void CalendarResources::slotSaveError( ResourceCalendar *r, const QString &err )
 {
-  kdDebug() << "Error loading resource: " << err << endl;
+  kdDebug() << "Error saving resource: " << err << endl;
+
+  mReceivedSaveError = true;
+
+  QString msg = i18n("Error while saving %1.\n") .arg( r->resourceName() );
   if ( !err.isEmpty() ) {
-    QString msg = i18n("Error while saving %1:\n")
-                  .arg( r->resourceName() );
     msg += err;
-    emit signalErrorMessage( msg );
   }
+  emit signalErrorMessage( msg );
 }
 
 void CalendarResources::setStandardDestinationPolicy()
@@ -210,6 +221,20 @@ void CalendarResources::save()
 
     setModified( false );
   }
+}
+
+bool CalendarResources::saveResource( ResourceCalendar *r )
+{
+  kdDebug(5800) << "Save resource " + r->resourceName() << endl;
+
+  mReceivedSaveError = false;
+
+  bool success = r->save();
+  if ( !success ) {
+    if ( !mReceivedSaveError ) slotSaveError( r );
+  }
+
+  return success;
 }
 
 bool CalendarResources::isSaving()
@@ -640,6 +665,12 @@ void CalendarResources::connectResource( ResourceCalendar *resource )
            SIGNAL( calendarChanged() ) );
   connect( resource, SIGNAL( resourceSaved( ResourceCalendar * ) ),
            SIGNAL( calendarSaved() ) );
+  connect( resource, SIGNAL( resourceLoadError( ResourceCalendar *,
+                                                const QString & ) ),
+           SLOT( slotLoadError( ResourceCalendar *, const QString & ) ) );
+  connect( resource, SIGNAL( resourceSaveError( ResourceCalendar *,
+                                                const QString & ) ),
+           SLOT( slotSaveError( ResourceCalendar *, const QString & ) ) );
 }
 
 ResourceCalendar *CalendarResources::resource(Incidence *inc)

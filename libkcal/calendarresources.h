@@ -128,7 +128,13 @@ class CalendarResources : public Calendar,
       Open and load given resource. If an error occurs the function returns
       false and an error signal is emitted.
     */
-    void loadResource( ResourceCalendar * );
+    bool loadResource( ResourceCalendar * );
+
+    /**
+      Save given resource. If an error occurs the function returns false and an
+      error signal is emitted.
+    */
+    bool saveResource( ResourceCalendar * );
 
     /**
       Return ResourceManager used by this calendar.
@@ -289,8 +295,10 @@ class CalendarResources : public Calendar,
     int decrementChangeCount( ResourceCalendar * );
 
   protected slots:
-    void slotLoadError( ResourceCalendar *r, const QString &err );
-    void slotSaveError( ResourceCalendar *r, const QString &err );
+    void slotLoadError( ResourceCalendar *r,
+                        const QString &err = QString::null );
+    void slotSaveError( ResourceCalendar *r,
+                        const QString &err = QString::null );
 
   private:
     void init();
@@ -306,6 +314,9 @@ class CalendarResources : public Calendar,
 
     QMap<ResourceCalendar *, Ticket *> mTickets;
     QMap<ResourceCalendar *, int> mChangeCounts;
+
+    bool mReceivedLoadError;
+    bool mReceivedSaveError;
 
     class Private;
     Private *d;
