@@ -36,7 +36,6 @@
 
 #include <qstringlist.h>
 
-#include "uiDialog.h"
 #include "syncAction.h"
 
 class PilotDatabase;
