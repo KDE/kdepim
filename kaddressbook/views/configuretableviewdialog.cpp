@@ -34,6 +34,7 @@
 #include <klineedit.h>
 #include <kurlrequester.h>
 #include <kiconloader.h>
+#include <kimageio.h>
 #include <kconfig.h>
 
 #include "configuretableviewdialog.h"
@@ -127,7 +128,7 @@ void LookAndFeelPage::initGUI()
   mBackgroundName = new KURLRequester(this, "mBackgroundName");
   mBackgroundName->setMode(KFile::File | KFile::ExistingOnly |
                            KFile::LocalOnly);
-  mBackgroundName->setFilter(i18n("*.png *.jpg *.xpm|Image Files\n*|All Files"));
+  mBackgroundName->setFilter(KImageIO::pattern(KImageIO::Reading));
   backgroundLayout->addWidget(mBackgroundName);
       
   // ToolTip Checkbox
