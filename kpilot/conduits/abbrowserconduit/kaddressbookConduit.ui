@@ -181,23 +181,6 @@
                             <string>&lt;qt&gt;There are two synchronization modes: &lt;ul&gt;&lt;li&gt;A &lt;i&gt;full sync&lt;/i&gt; synchronizes all records, even if they have not changed.&lt;li&gt;A &lt;i&gt;fast sync&lt;/i&gt; goes just through the addresses that have been changed since the last sync (possibly missing some changes).&lt;/ul&gt;&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                    <widget class="QLabel" row="0" column="0" rowspan="1" colspan="2">
-                        <property name="name">
-                            <cstring>TextLabel2_2</cstring>
-                        </property>
-                        <property name="font">
-                            <font>
-                                <pointsize>12</pointsize>
-                                <bold>1</bold>
-                            </font>
-                        </property>
-                        <property name="text">
-                            <string>The addressbook conduit needed to be completely rewritten since KDE 3.0.3. It is not yet finished, and thus will not do any synchronization to avoid data loss. Sorry for the inconvenience.</string>
-                        </property>
-                        <property name="alignment">
-                            <set>WordBreak|AlignVCenter</set>
-                        </property>
-                    </widget>
                 </grid>
             </widget>
             <widget class="QWidget">
@@ -348,14 +331,15 @@
     </grid>
 </widget>
 <tabstops>
-    <tabstop>fFirstTimeSync</tabstop>
+    <tabstop>fConflictStrategy</tabstop>
+    <tabstop>fSyncMode</tabstop>
     <tabstop>fArchive</tabstop>
     <tabstop>fSmartMerge</tabstop>
-    <tabstop>fConflictStrategy</tabstop>
+    <tabstop>fFirstTimeSync</tabstop>
+    <tabstop>tabWidget</tabstop>
     <tabstop>fOtherPhone</tabstop>
     <tabstop>fAddress</tabstop>
     <tabstop>fFax</tabstop>
-    <tabstop>tabWidget</tabstop>
 </tabstops>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

@@ -67,13 +67,13 @@ public:
 	virtual ~AbbrowserConduit();
 	virtual bool exec();
 
-public slots:
+protected slots:
 	void syncDeletedRecord();
 	void syncPCRecToPalm();
 	void syncPalmRecToPC();
 	void cleanup();
 
-public:
+private:
 	enum EConflictResolution {
 		eUserChoose=0,
 		eDoNotResolve,
@@ -81,7 +81,7 @@ public:
 		eAbbrowserOverides,
 		eRevertToBackup,
 		eKeepBothInAbbrowser
-	} ;
+	};
 	EConflictResolution getResolveConflictOption() const { return fConflictResolution; }
 	bool doSmartMerge() const { return fSmartMerge; }
 	
@@ -97,18 +97,11 @@ public:
 	*  @return the Abbrowser Contact field to map the pilot "other" phone
 	*  field to (such as BusinessFax, etc)
 	*/
-//	const QString &getPilotOtherMap() const { return fPilotOtherMap; }
 	static bool isPilotStreetHome()  { return fPilotStreetHome; }
 	static bool isPilotFaxHome()  { return fPilotFaxHome; }
-//	bool isFormatName() const { return fFormatName; }
-	// bool backupDone() const { return fBackupDone; }
 
 
-protected:
-//	void doTest();
-	
 
-private:
 	/**
 	*  Do the preperations before doSync or doBackup.
 	*  Load contacts, set the pilot 
@@ -185,22 +178,18 @@ private:
 	static void showPilotAddress(const PilotAddress &pilotAddress);
 #endif
 
-//	const char *_getKabFieldForOther(const QString &desc) const;
-//	int _getCatId(int catIndex) const;
+	KABC::Addressee _addToPC(PilotRecord *r);
+	KABC::Addressee _changeOnPC(PilotRecord*rec, PilotRecord*backup);
+	bool _deleteOnPC(PilotRecord*rec,PilotRecord*backup);
 
-   KABC::Addressee _addToPC(PilotRecord *r);
-   KABC::Addressee _changeOnPC(PilotRecord*rec, PilotRecord*backup);
-   bool _deleteOnPC(PilotRecord*rec,PilotRecord*backup);
-//
 	void _addToPalm(KABC::Addressee &entry);
 	void _changeOnPalm(PilotRecord *rec, PilotRecord* backuprec, KABC::Addressee &ad);
 	void _deleteFromPalm(PilotRecord*rec);
-	
+
 	struct AddressAppInfo fAddressAppInfo;
-//
+
 	bool fSmartMerge;
 	EConflictResolution fConflictResolution, fEntryResolution;
-//	int fPilotOther;
 	static bool fPilotStreetHome, fPilotFaxHome;
 	bool fFullSync, fFirstTime, fArchive;
    static enum  ePilotOtherEnum
@@ -224,9 +213,7 @@ private:
 	static const QString idString;
 	QMap < recordid_t, QString> addresseeMap;
 	QValueList <recordid_t> syncedIds;
-//	QValueList <recordid_t> recordIds;
 	KABC::AddressBook* aBook;
-//	KABC::Ticket* ticket;
 	KABC::AddressBook::Iterator abiter;
 	
 	
@@ -241,6 +228,9 @@ private:
 
 
 // $Log$
+// Revision 1.26  2002/09/12 13:58:20  kainhofe
+// some more fixes, still does not do any sync unless compiled with -NDO_DANGEROUS_ABOOK_SYNC . Most things work, except for several conflict resolution settings
+//
 // Revision 1.25  2002/08/23 22:59:29  kainhofe
 // Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
 //

@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>351</width>
-            <height>344</height>
+            <height>333</height>
         </rect>
     </property>
     <property name="caption">
@@ -28,31 +28,6 @@
         <property name="spacing">
             <number>6</number>
         </property>
-        <widget class="QLabel" row="0" column="0" rowspan="1" colspan="3">
-            <property name="name">
-                <cstring>TextLabel1</cstring>
-            </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>2</hsizetype>
-                    <vsizetype>5</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-            <property name="text">
-                <string>&lt;html&gt;&lt;p&gt;The field "first name" of the entry "Reinhold Kainhofer" was changed on the handheld and on the PC.&lt;/p&gt;
-&lt;table border=0&gt;
-&lt;tr&gt;&lt;td&gt;&lt;b&gt;Handheld:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Reinhold&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;&lt;b&gt;PC:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Reiold&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;&lt;b&gt;Last sync:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Reihnhod&lt;/td&gt;&lt;/tr&gt;
-&lt;/table&gt;
-&lt;p&gt;How should this conflict be resolved?&lt;/p&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="alignment">
-                <set>WordBreak|AlignVCenter</set>
-            </property>
-        </widget>
         <spacer row="1" column="2">
             <property name="name">
                 <cstring>Spacer6</cstring>
@@ -62,6 +37,12 @@
             </property>
             <property name="sizeType">
                 <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>114</width>
+                    <height>0</height>
+                </size>
             </property>
         </spacer>
         <spacer row="1" column="0">
@@ -73,6 +54,12 @@
             </property>
             <property name="sizeType">
                 <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>114</width>
+                    <height>0</height>
+                </size>
             </property>
         </spacer>
         <widget class="QButtonGroup" row="1" column="1">
@@ -131,7 +118,38 @@
             <property name="sizeType">
                 <enum>Expanding</enum>
             </property>
+            <property name="sizeHint">
+                <size>
+                    <width>0</width>
+                    <height>16</height>
+                </size>
+            </property>
         </spacer>
+        <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>CheckBox8</cstring>
+            </property>
+            <property name="text">
+                <string>Remember choice for all fields of this record</string>
+            </property>
+            <property name="checked">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <widget class="Line" row="4" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>Line1</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>HLine</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+        </widget>
         <widget class="QLayoutWidget" row="5" column="0" rowspan="1" colspan="3">
             <property name="name">
                 <cstring>Layout1</cstring>
@@ -170,6 +188,12 @@
                     <property name="sizeType">
                         <enum>Expanding</enum>
                     </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>0</height>
+                        </size>
+                    </property>
                 </spacer>
                 <widget class="QPushButton">
                     <property name="name">
@@ -204,29 +228,29 @@
                 </widget>
             </hbox>
         </widget>
-        <widget class="Line" row="4" column="0" rowspan="1" colspan="3">
+        <widget class="QLabel" row="0" column="0" rowspan="1" colspan="3">
             <property name="name">
-                <cstring>Line1</cstring>
+                <cstring>TextLabel1</cstring>
             </property>
-            <property name="frameShape">
-                <enum>HLine</enum>
-            </property>
-            <property name="frameShadow">
-                <enum>Sunken</enum>
-            </property>
-            <property name="orientation">
-                <enum>Horizontal</enum>
-            </property>
-        </widget>
-        <widget class="QCheckBox" row="3" column="0" rowspan="1" colspan="3">
-            <property name="name">
-                <cstring>CheckBox8</cstring>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>5</hsizetype>
+                    <vsizetype>1</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
             </property>
             <property name="text">
-                <string>Remember choice for all fields of this record</string>
+                <string>&lt;html&gt;&lt;p&gt;The field "first name" of the entry "Reinhold Kainhofer" was changed on the handheld and on the PC.&lt;/p&gt;
+&lt;table border=0&gt;
+&lt;tr&gt;&lt;td&gt;&lt;b&gt;Handheld:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Reinhold&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;b&gt;PC:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Reiold&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;b&gt;Last sync:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;Reihnhod&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+&lt;p&gt;How should this conflict be resolved?&lt;/p&gt;&lt;/html&gt;</string>
             </property>
-            <property name="checked">
-                <bool>true</bool>
+            <property name="alignment">
+                <set>WordBreak|AlignTop</set>
             </property>
         </widget>
     </grid>

@@ -48,6 +48,7 @@ ResolutionDlg::ResolutionDlg( QWidget* parent, KPilotDeviceLink*fH, QString capt
 	
 	QLabel* label = new QLabel(Text, page, "TextLabel1" );
 //	TextLabel1->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)2, (QSizePolicy::SizeType)5, 0, 0, TextLabel1->sizePolicy().hasHeightForWidth() ) );
+	label->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5, (QSizePolicy::SizeType)1, 0, 0, label->sizePolicy().hasHeightForWidth() ) );
 	label->setAlignment(WordBreak);
 	topLayout->addMultiCellWidget( label, 0, 0, 0, 2 );
 
@@ -58,7 +59,7 @@ ResolutionDlg::ResolutionDlg( QWidget* parent, KPilotDeviceLink*fH, QString capt
 	for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
 		new QRadioButton(*it, ResolutionButtonGroup);
 	}
-//	ResolutionButtonGroup->setButton(0);
+	ResolutionButtonGroup->setButton(0);
 	spacer = new QSpacerItem( 0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum );
 	topLayout->addItem( spacer, 1, 2 );
 
