@@ -240,7 +240,7 @@ void KNProtocolClient::closeConnection()
   if (ret > 0) {    // we can write...
     QCString cmd = "QUIT\r\n";
     int todo = cmd.length();
-    send(tcpSocket,&cmd.data()[0],todo, MSG_NOSIGNAL);
+    write(tcpSocket,&cmd.data()[0],todo);
   }
   closeSocket();
 }
