@@ -177,7 +177,7 @@ public:
 /**
  * Stateful decoder class, modelled after @ref QTextDecoder.
  *
- * @sect Overview
+ * @section Overview
  *
  * KMime decoders are designed to be able to process encoded data in
  * chunks of arbitrary size and to work with output buffers of also
@@ -194,7 +194,7 @@ public:
  * buffer is filled, so you should be prepared to call @ref finalize
  * as often as necessary, ie. until it returns @p true).
  *
- * @sect Return Values
+ * @section Return Values
  *
  * Both methods return @p true to indicate that they've finished their
  * job. For @ref decode, a return value of @p true means that the
@@ -209,7 +209,7 @@ public:
  * interpreted as "check if the output buffer is full and call me
  * again", just as with @ref decode.
  *
- * @sect Usage Pattern
+ * @section Usage Pattern
  *
  * Since the decoder maintains state, you can only use it once. After
  * a sequence of input blocks has been processed, you @ref finalize
@@ -286,7 +286,7 @@ protected:
 class Encoder {
 protected:
   friend class Codec;
-  /** Protected constructor. Use @ref KMime::Codec::makeEncoder if you
+  /** Protected constructor. Use KMime::Codec::makeEncoder if you
       want one. The bool parameter determines whether lines end with
       CRLF (true) or LF (false, default). */
   Encoder( bool withCRLF=false )
@@ -332,7 +332,7 @@ protected:
   bool flushOutputBuffer( char* & dcursor, const char * const dend );
 
   /** Convenience function. Outputs LF or CRLF, based on the state of
-      @ref mWithCRLF */
+      mWithCRLF */
   bool writeCRLF( char* & dcursor, const char * const dend ) {
     if ( mWithCRLF )
       write( '\r', dcursor, dend );
