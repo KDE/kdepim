@@ -156,7 +156,6 @@ KCal::Event* Task::asEvent( int level )
   event->setCustomProperty( kapp->instanceName(), QCString( "durationInMinutes" ), QString::number( totalTime() ) );
   event->setCustomProperty( kapp->instanceName(), QCString( "desktopList" ), getDesktopStr() );
   event->setCustomProperty( kapp->instanceName(), QCString( "level" ), QString::number( level ) );
-  kdDebug() << "Stored task as event: Name: " << event->summary() << ", Duration: " << event->duration() << endl;
   return event;
 }
 
