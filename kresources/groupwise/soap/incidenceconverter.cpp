@@ -223,7 +223,69 @@ bool IncidenceConverter::convertToCalendarItem( KCal::Incidence* incidence, ns1_
 
   setItemDescription( incidence, item );
 
+#if 0
+  if ( incidence->attendeeCount() > 0 ) {
+    setAttendees( incidence, item );
+  }
+#endif
+
   return true;
+}
+
+void IncidenceConverter::setAttendees( KCal::Incidence *incidence,
+  ns1__CalendarItem *item )
+{
+  ns1__Distribution *dist = soap_new_ns1__Distribution( soap(), -1 );
+  item->distribution = dist;
+
+  ns1__From *from = soap_new_ns1__From( soap(), -1 );
+  dist->from = from;
+
+  from->replyTo = 0;
+  from->displayName = incidence->organizer().name().utf8();
+  from->email = incidence->organizer().email().utf8();
+
+  QString to = "To";
+  dist->to = qStringToString( to );
+  dist->cc = 0;
+  dist->bc = 0;
+  
+  ns1__SendOptions *sendOptions = soap_new_ns1__SendOptions( soap(), -1 );
+  dist->sendoptions = sendOptions;
+
+  sendOptions->requestReply = 0;
+  sendOptions->mimeEncoding = 0;
+  sendOptions->notification = 0;
+
+  ns1__StatusTracking *statusTracking = soap_new_ns1__StatusTracking( soap(),
+    -1 );
+  sendOptions->statusTracking = statusTracking;
+
+  statusTracking->autoDelete = false;
+  statusTracking->__item = Full;
+
+  ns1__RecipientList *recipientList = soap_new_ns1__RecipientList( soap(), -1 );
+  dist->recipients = recipientList;
+  
+  std::vector<ns1__Recipient * > *recipients = 
+    soap_new_std__vectorTemplateOfPointerTons1__Recipient( soap(), -1 );
+  recipientList->recipient = recipients;
+
+  KCal::Attendee::List attendees = incidence->attendees();
+  KCal::Attendee::List::ConstIterator it;
+  for( it = attendees.begin(); it != attendees.end(); ++it ) {
+    kdDebug() << "IncidenceConverter::setAttendee() " << (*it)->fullName()
+      << endl;
+
+    ns1__Recipient *recipient = soap_new_ns1__Recipient( soap(), -1 );
+    recipients->push_back( recipient );
+
+    recipient->recipientStatus = 0;
+    recipient->displayName = (*it)->name().utf8();
+    recipient->email = (*it)->email().utf8();
+    recipient->distType = TO;
+    recipient->recipType = User;
+  }
 }
 
 bool IncidenceConverter::convertFromCalendarItem( ns1__CalendarItem* item, KCal::Incidence* incidence )
@@ -315,12 +377,17 @@ void IncidenceConverter::setItemDescription( KCal::Incidence *incidence, ns1__Ca
 
 void IncidenceConverter::getAttendees( ns1__CalendarItem *item, KCal::Incidence *incidence )
 {
+  kdDebug() << "IncidenceConverter::getAttendees()" << item->subject.c_str()
+    << endl;
+
   if ( item->distribution && item->distribution->recipients &&
        item->distribution->recipients->recipient ) {
+    kdDebug() << "-- recipients" << endl;
     std::vector<ns1__Recipient*> *recipients = item->distribution->recipients->recipient;
     std::vector<ns1__Recipient*>::const_iterator it;
 
     for ( it = recipients->begin(); it != recipients->end(); ++it ) {
+      kdDebug() << "---- recipient " << endl;
       ns1__Recipient *recipient = *it;
       KCal::Attendee *attendee = new KCal::Attendee( stringToQString( recipient->displayName ),
                                                      stringToQString( recipient->email ) );

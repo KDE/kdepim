@@ -12,6 +12,7 @@ SOAP_NMAC struct Namespace namespaces[] =
   {"ns13", "startFreeBusySessionRequestSoapBinding"},
   {"ns14", "closeFreeBusySessionRequestSoapBinding"},
   {"ns15", "getFreeBusyRequestSoapBinding"},
+  {"ns16", "sendItemRequestSoapBinding"},
   {"ns2", "loginRequestSoapBinding"},
   {"ns3", "getCategoryListRequestSoapBinding"},
   {"ns4", "getAddressBookListRequestSoapBinding"},

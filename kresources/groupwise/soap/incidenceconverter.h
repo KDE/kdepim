@@ -47,6 +47,7 @@ class IncidenceConverter : public GWConverter
     void setItemDescription( KCal::Incidence*, ns1__CalendarItem* );
 
     void getAttendees( ns1__CalendarItem*, KCal::Incidence* );
+    void setAttendees( KCal::Incidence *, ns1__CalendarItem * );
 
     QString mTimezone;
 };

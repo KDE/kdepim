@@ -1118,7 +1118,7 @@
 		<xs:sequence>
 			<xs:element name="requestReply" type="tns:SendOptionsRequestReply" minOccurs="0"/>
 			<xs:element name="mimeEncoding" type="xs:string" minOccurs="0"/>
-<!--			<xs:element name="statusTracking" type="tns:StatusTracking" minOccurs="0"/>-->
+			<xs:element name="statusTracking" type="tns:StatusTracking" minOccurs="0"/>
 			<xs:element name="notification" type="tns:ReturnNotification" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -1188,6 +1188,7 @@
 			<xs:enumeration value="Delivered"/>
 			<xs:enumeration value="DeliveredAndOpened"/>
 			<xs:enumeration value="All"/>
+                        <xs:enumeration value="Full"/>
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -2070,7 +2071,7 @@
 	<xs:element name="sendItemResponse">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="id" type="tns:ItemRefList"/>
+				<xs:element name="id" type="tns:uid"/>
 				<xs:element name="status" type="tns:Status"/>
 			</xs:sequence>
 		</xs:complexType>
@@ -2164,6 +2165,14 @@
 
 <message name="createItemResponseMessage">
     <part name="createitem" element="tns:createItemResponse"/>
+</message>
+
+<message name="sendItemRequestMessage">
+    <part name="senditem" element="tns:sendItemRequest"/>
+</message>
+
+<message name="sendItemResponseMessage">
+    <part name="senditem" element="tns:sendItemResponse"/>
 </message>
 
 <message name="modifyItemRequestMessage">
@@ -2267,6 +2276,13 @@
   <operation name="createItemRequest">
     <input message="tns:createItemRequestMessage"/>
     <output message="tns:createItemResponseMessage"/>
+  </operation>
+</portType>
+
+<portType name="sendItemRequest_portType">
+  <operation name="sendItemRequest">
+    <input message="tns:sendItemRequestMessage"/>
+    <output message="tns:sendItemResponseMessage"/>
   </operation>
 </portType>
 
@@ -2408,6 +2424,18 @@
       </output>
     </operation>
   </binding>
+  <binding name="sendItemRequestSoapBinding" type="tns:sendItemRequest_portType">
+    <operation name="sendItemRequest">
+      <soap:operation soapAction="sendItemRequest" style="document" />
+      <input>
+        <soap:header message="tns:header" part="session" use="literal"/>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
   <binding name="modifyItemRequestSoapBinding" type="tns:modifyItemRequest_portType">
     <operation name="modifyItemRequest">
       <soap:operation soapAction="modifyItemRequest" style="document" />
@@ -2509,6 +2537,8 @@
         <port binding="tns:closeFreeBusySessionRequestSoapBinding" name="GroupwiseSOAPPort13" bindings="closeFreeBusySessionRequestSoapBinding">
         </port>
         <port binding="tns:getFreeBusyRequestSoapBinding" name="GroupwiseSOAPPort14" bindings="getFreeBusyRequestSoapBinding">
+        </port>
+        <port binding="tns:sendItemRequestSoapBinding" name="GroupwiseSOAPPort15" bindings="sendItemRequestSoapBinding">
         </port>
   </service>
 </definitions>

@@ -93,7 +93,7 @@ enum ns1__RecipientType {User = 0, PersonalGroup = 1, SystemGroup = 2, PersonalG
 
 #ifndef _SOAP_ns1__StatusTrackingOptions
 #define _SOAP_ns1__StatusTrackingOptions
-enum ns1__StatusTrackingOptions {None = 0, Delivered = 1, DeliveredAndOpened = 2, All = 3};
+enum ns1__StatusTrackingOptions {None = 0, Delivered = 1, DeliveredAndOpened = 2, All = 3, Full = 4};
 #endif
 
 #ifndef _SOAP_ns1__WeekDay
@@ -1206,6 +1206,7 @@ class SOAP_CMAC ns1__SendOptions
 public:
 	ns1__SendOptionsRequestReply *requestReply;
 	std::string *mimeEncoding;
+	class ns1__StatusTracking *statusTracking;
 	ns1__ReturnNotification *notification;
 	struct soap *soap;	/* transient */
 public:
@@ -2783,7 +2784,8 @@ public:
 class SOAP_CMAC _ns1__sendItemResponse
 {
 public:
-	ns1__ItemRefList *id;
+	std::string id;	/* return */
+public:
 	ns1__Status *status;
 	struct soap *soap;	/* transient */
 public:
@@ -3750,6 +3752,12 @@ struct __ns15__getFreeBusyRequest
 	_ns1__getFreeBusyRequest *ns1__getFreeBusyRequest;
 };
 
+/* -ns16:sendItemRequest: */
+struct __ns16__sendItemRequest
+{
+	_ns1__sendItemRequest *ns1__sendItemRequest;
+};
+
 /* -ns2:loginRequest: */
 struct __ns2__loginRequest
 {
@@ -3861,6 +3869,8 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns14__closeFreeBusySessionRequest(struct soap*, _ns1
 
 SOAP_FMAC5 int SOAP_FMAC6 __ns15__getFreeBusyRequest(struct soap*, _ns1__getFreeBusyRequest *, _ns1__getFreeBusyResponse *);
 
+SOAP_FMAC5 int SOAP_FMAC6 __ns16__sendItemRequest(struct soap*, _ns1__sendItemRequest *, _ns1__sendItemResponse *);
+
 SOAP_FMAC5 int SOAP_FMAC6 __ns2__loginRequest(struct soap*, _ns1__loginRequest *, _ns1__loginResponse *);
 
 SOAP_FMAC5 int SOAP_FMAC6 __ns3__getCategoryListRequest(struct soap*, std::string, _ns1__getCategoryListResponse *);
@@ -3890,6 +3900,8 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns13__startFreeBusySessionRequest(struct s
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns14__closeFreeBusySessionRequest(struct soap*, const char*, const char*, _ns1__closeFreeBusySessionRequest *, _ns1__closeFreeBusySessionResponse *);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns15__getFreeBusyRequest(struct soap*, const char*, const char*, _ns1__getFreeBusyRequest *, _ns1__getFreeBusyResponse *);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns16__sendItemRequest(struct soap*, const char*, const char*, _ns1__sendItemRequest *, _ns1__sendItemResponse *);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns2__loginRequest(struct soap*, const char*, const char*, _ns1__loginRequest *, _ns1__loginResponse *);
 
@@ -3924,6 +3936,8 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns13__startFreeBusySessionRequest(struct 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns14__closeFreeBusySessionRequest(struct soap*);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns15__getFreeBusyRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns16__sendItemRequest(struct soap*);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns2__loginRequest(struct soap*);
 

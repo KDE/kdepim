@@ -413,13 +413,13 @@ bool GroupwiseServer::addIncidence( KCal::Incidence *incidence,
     return false;
   }
 
-  _ns1__createItemRequest request;
+  _ns1__sendItemRequest request;
   request.item = item;
 
-  _ns1__createItemResponse response;
+  _ns1__sendItemResponse response;
   mSoap->header->ns1__session = mSession;
 
-  int result = soap_call___ns9__createItemRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ns16__sendItemRequest( mSoap, mUrl.latin1(), 0,
                                                    &request, &response );
   if ( result != 0 ) {
     soap_print_fault( mSoap, stderr );

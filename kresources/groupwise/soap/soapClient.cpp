@@ -8,7 +8,7 @@
 
 SOAP_BEGIN_NAMESPACE(soap)
 
-SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.6.2 2004-09-27 14:34:18 GMT")
+SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.6.2 2004-10-01 12:22:58 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns10__modifyItemRequest(struct soap *soap, const char *URL, const char *action, _ns1__modifyItemRequest *ns1__modifyItemRequest, _ns1__modifyItemResponse *ns1__modifyItemResponse)
@@ -338,6 +338,63 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns15__getFreeBusyRequest(struct soap *soap
 		ns1__getFreeBusyResponse->soap_get(soap, "ns1:getFreeBusyResponse", "");
 	else
 		soap_get__ns1__getFreeBusyResponse(soap, ns1__getFreeBusyResponse, "ns1:getFreeBusyResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+#ifndef WITH_LEANER
+	 || soap_getattachments(soap)
+#endif
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns16__sendItemRequest(struct soap *soap, const char *URL, const char *action, _ns1__sendItemRequest *ns1__sendItemRequest, _ns1__sendItemResponse *ns1__sendItemResponse)
+{
+	struct __ns16__sendItemRequest soap_tmp___ns16__sendItemRequest;
+	soap->encodingStyle = NULL;
+	if (!action)
+		action = "sendItemRequest";
+	soap_tmp___ns16__sendItemRequest.ns1__sendItemRequest=ns1__sendItemRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ns16__sendItemRequest(soap, &soap_tmp___ns16__sendItemRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ns16__sendItemRequest(soap, &soap_tmp___ns16__sendItemRequest, "-ns16:sendItemRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, URL, action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ns16__sendItemRequest(soap, &soap_tmp___ns16__sendItemRequest, "-ns16:sendItemRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+#ifndef WITH_LEANER
+	 || soap_putattachments(soap)
+#endif
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (ns1__sendItemResponse)
+		ns1__sendItemResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	if (ns1__sendItemResponse)
+		ns1__sendItemResponse->soap_get(soap, "ns1:sendItemResponse", "");
+	else
+		soap_get__ns1__sendItemResponse(soap, ns1__sendItemResponse, "ns1:sendItemResponse", "");
 	if (soap->error)
 	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
 			return soap_recv_fault(soap);
