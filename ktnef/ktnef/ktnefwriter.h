@@ -1,7 +1,7 @@
 /*
     ktnefwriter.cpp
 
-    Copyright (C) 2002 Bo Thorsen  <bo@klaralvdalens-datakonsult.se>
+    Copyright (C) 2002 Bo Thorsen  <bo@sonofthor.dk>
 
     This file is part of KTNEF, the KDE TNEF support library/program.
 
@@ -52,7 +52,7 @@ public:
 
   enum PartStat {
     NeedsAction, Accepted, Declined, Tentative,
-    Delegated, Completed, InProcess    
+    Delegated, Completed, InProcess
   };
 
   enum Priority {
@@ -68,7 +68,7 @@ public:
   void setMessageType(MessageType m);
   void setMethod( Method m );
   void clearAttendees();
-  void addAttendee( const QString& cn, Role r, PartStat p, bool rsvp, 
+  void addAttendee( const QString& cn, Role r, PartStat p, bool rsvp,
                     const QString& mailto );
   void setOrganizer( const QString& organizer ); // Is that the same as sender???
   void setDtStart( const QDateTime& dtStart );
