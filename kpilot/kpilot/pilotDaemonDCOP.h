@@ -34,8 +34,6 @@
 #include <dcopobject.h>
 #include <qdatetime.h>
 #include <qstringlist.h>
-class QDateTime;
-class QStringList;
 
 class PilotDaemonDCOP : virtual public DCOPObject
 {
