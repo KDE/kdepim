@@ -206,7 +206,7 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   frame = addHBoxPage(QString(" ")+i18n("Cache"),i18n("Caching of articles"), BarIcon("queue"));
   w_idgets.append(new KNConfig::CacheWidget(m->cache(), frame)); */
 
-  KNHelper::restoreWindowSize("settingsDlg", this, QSize(508,424));
+  KNHelper::restoreWindowSize("settingsDlg", this, QSize(533,466));
 
   setHelp("anc-setting-your-identity");
 }
