@@ -170,6 +170,9 @@ class KFolderTree : public KListView
   protected:
     virtual void drawContentsOffset( QPainter * p, int ox, int oy,
         int cx, int cy, int cw, int ch );
+
+    virtual void contentsMousePressEvent( QMouseEvent *e );
+    virtual void contentsMouseReleaseEvent( QMouseEvent *e );
     
     /** for mimetypes */
     QMemArray<const char*> mAcceptableDropMimetypes;

@@ -243,6 +243,20 @@ void KFolderTree::drawContentsOffset( QPainter * p, int ox, int oy,
 }
 
 //-----------------------------------------------------------------------------
+void KFolderTree::contentsMousePressEvent( QMouseEvent *e )
+{
+    setSelectionModeExt(Single);
+    KListView::contentsMousePressEvent(e);
+}
+
+//-----------------------------------------------------------------------------
+void KFolderTree::contentsMouseReleaseEvent( QMouseEvent *e )
+{
+    KListView::contentsMousePressEvent(e);
+    setSelectionModeExt(Extended);
+}
+
+//-----------------------------------------------------------------------------
 void KFolderTree::addAcceptableDropMimetype( const char *mimeType, bool outsideOk )
 {
   int oldSize = mAcceptableDropMimetypes.size();
