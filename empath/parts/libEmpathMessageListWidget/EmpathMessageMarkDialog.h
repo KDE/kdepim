@@ -20,25 +20,20 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathMessageMarkDialog.h"
-#endif
-
-#ifndef EMPATHMESSAGEMARKDIALOG_H
-#define EMPATHMESSAGEMARKDIALOG_H
-
-// Qt includes
-#include <qpushbutton.h>
-#include <qradiobutton.h>
-#include <qbuttongroup.h>
-#include <qlabel.h>
+#ifndef EMPATH_MESSAGE_MARK_DIALOG_H
+#define EMPATH_MESSAGE_MARK_DIALOG_H
 
 // KDE includes
 #include <kdialog.h>
-#include <kbuttonbox.h>
 
 // Local includes
 #include "EmpathIndexRecord.h"
+
+class QLabel;
+class QPushButton;
+class QRadioButton;
+class QButtonGroup;
+class KButtonBox;
 
 class EmpathMessageMarkDialog : public KDialog
 {

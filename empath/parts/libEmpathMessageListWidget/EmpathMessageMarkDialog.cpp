@@ -20,18 +20,19 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathMessageMarkDialog.h"
-#endif
-
 // Qt includes
 #include <qwhatsthis.h>
 #include <qlayout.h>
+#include <qpushbutton.h>
+#include <qradiobutton.h>
+#include <qbuttongroup.h>
+#include <qlabel.h>
 
 // KDE includes
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kapp.h>
+#include <kbuttonbox.h>
 
 // Local includes
 #include "EmpathMessageMarkDialog.h"

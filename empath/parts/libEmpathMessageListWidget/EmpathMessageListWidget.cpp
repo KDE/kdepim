@@ -20,19 +20,9 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathMessageListWidget.h"
-#endif
-
-// System includes
-#include <stdlib.h>
-#include <stdio.h>
-
 // Qt includes
 #include <qheader.h>
-#include <qapplication.h>
-#include <qtimer.h>
-#include <qstring.h>
+#include <qdragobject.h>
 
 // KDE includes
 #include <kconfig.h>
@@ -40,14 +30,127 @@
 #include <kiconloader.h>
 #include <kglobal.h>
 #include <kaction.h>
-#include <kapp.h>
+#include <kinstance.h>
 
 // Local includes
 #include "EmpathMessageMarkDialog.h"
 #include "EmpathMessageListWidget.h"
 #include "EmpathMessageListItem.h"
 #include "EmpathIndexRecord.h"
-    
+ 
+extern "C"
+{
+    void *init_libEmpathMessageListWidget()
+    {
+        return new EmpathMessageListPartFactory;
+    }
+}
+
+KInstance * EmpathMessageListPartFactory::instance_ = 0L;
+
+EmpathMessageListPartFactory::EmpathMessageListPartFactory()
+{
+}
+
+EmpathMessageListPartFactory::~EmpathMessageListPartFactory()
+{
+    delete instance_;
+    instance_ = 0L;
+}
+
+    QObject *
+EmpathMessageListPartFactory::create(
+    QObject * parent,
+    const char * name,
+    const char *,
+    const QStringList &
+)
+{
+    QObject * o = new EmpathMessageListPart((QWidget *)parent, name);
+    emit objectCreated(o);
+    return o;
+}
+
+    KInstance *
+EmpathMessageListPartFactory::instance()
+{
+    if (0 == instance_)
+        instance_ = new KInstance("EmpathMessageListWidget");
+
+    return instance_;
+}
+
+// -------------------------------------------------------------------------
+
+EmpathMessageListPart::EmpathMessageListPart(
+    QWidget * parent,
+    const char * name
+)
+    :   KParts::ReadOnlyPart(parent, name)
+{
+    setInstance(EmpathMessageListPartFactory::instance());
+
+    w = new EmpathMessageListWidget(parent);
+    w->setFocusPolicy(QWidget::StrongFocus);
+    setWidget(w);
+
+    messageCompose_ =
+        new KAction(
+            i18n("Compose"),
+            QIconSet(BarIcon("messageCompose",
+                    EmpathMessageListPartFactory::instance())),
+            0,
+            w,
+            SLOT(compose()),
+            actionCollection(),
+            "messageCompose");
+
+    messageReply_ =
+        new KAction(
+            i18n("Reply"),
+            QIconSet(BarIcon("messageReply",
+                    EmpathMessageListPartFactory::instance())),
+            0,
+            w,
+            SLOT(reply()),
+            actionCollection(),
+            "messageReply");
+
+    messageReplyAll_ =
+        new KAction(
+            i18n("ReplyAll"),
+            QIconSet(BarIcon("messageReplyAll",
+                    EmpathMessageListPartFactory::instance())),
+            0,
+            w,
+            SLOT(replyAll()),
+            actionCollection(),
+            "messageReplyAll");
+
+    messageForward_ =
+        new KAction(
+            i18n("Forward"),
+            QIconSet(BarIcon("messageForward",
+                    EmpathMessageListPartFactory::instance())),
+            0,
+            w,
+            SLOT(forward()),
+            actionCollection(),
+            "messageForward");
+
+    setXMLFile("EmpathMessageListWidget.rc");
+
+    enableAllActions(false);
+}
+
+EmpathMessageListPart::~EmpathMessageListPart()
+{
+    // Empty.
+}
+
+// -------------------------------------------------------------------------
+
+   
 EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
     :   EmpathListView      (parent, "EmpathMessageListWidget"),
         filling_            (false),
@@ -373,8 +476,6 @@ EmpathMessageListWidget::s_linkChanged(QListViewItem * item)
 
     triggerUpdate();
 
-    kapp->processEvents();
-    
     emit(changeView(firstSelected()));
 }
 

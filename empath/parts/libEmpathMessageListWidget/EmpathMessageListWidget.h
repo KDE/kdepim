@@ -20,31 +20,28 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathMessageListWidget.h"
-#endif
-
-#ifndef EMPATHMESSAGELISTWIDGET_H
-#define EMPATHMESSAGELISTWIDGET_H
+#ifndef EMPATH_MESSAGE_LIST_WIDGET_H
+#define EMPATH_MESSAGE_LIST_WIDGET_H
 
 // Qt includes
 #include <qpixmap.h>
 #include <qlist.h>
 #include <qstring.h>
 #include <qpopupmenu.h>
-#include <qdragobject.h>
 #include <qpoint.h>
 #include <qdict.h>
 
 // KDE includes
-#include <klistview.h>
+#include <kparts/part.h>
+#include <klibloader.h>
 
 // Local includes
+#include "EmpathIndexRecord.h"
 #include "EmpathListView.h"
-#include "EmpathMessageListItem.h"
 
+class EmpathMessageListItem;
 class QActionCollection;
-
+class KInstance;
 class KAction;
 class KToggleAction;
 
@@ -257,6 +254,60 @@ class EmpathMessageListWidget : public EmpathListView
         Q_UINT32            itemListCount_;
         // End order dependency
 };
+
+class EmpathMessageListPartFactory : public KLibFactory
+{
+    Q_OBJECT
+
+    public:
+
+        EmpathMessageListPartFactory();
+        virtual ~EmpathMessageListPartFactory();
+
+        virtual QObject * create(
+            QObject * parent = 0,
+            const char * name = 0,
+            const char * classname = "QObject",
+            const QStringList & args = QStringList());
+
+        static KInstance * instance();
+
+    private:
+
+        static KInstance * instance_;
+};
+
+class EmpathMessageListPart : public KParts::ReadOnlyPart
+{
+    Q_OBJECT
+
+    public:
+        
+        EmpathMessageListPart(QWidget * parent = 0, const char * name = 0);
+        virtual ~EmpathMessageListPart();
+
+        void compose();
+        void reply();
+        void replyAll();
+        void forward();
+
+    protected:
+
+        virtual bool openFile();
+
+        void enableAllActions(bool);
+
+    private:
+
+        EmpathMessageListWidget * w;
+
+        KAction
+            * messageCompose_,
+            * messageReply_,
+            * messageReplyAll_,
+            * messageForward_;
+};
+
 
 #endif
 

@@ -20,12 +20,8 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathListView.h"
-#endif
-
-#ifndef EMPATHLISTVIEW_H
-#define EMPATHLISTVIEW_H
+#ifndef EMPATH_LIST_VIEW_H
+#define EMPATH_LIST_VIEW_H
 
 // Qt includes
 #include <klistview.h>
