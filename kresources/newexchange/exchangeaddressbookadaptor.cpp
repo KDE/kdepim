@@ -108,6 +108,7 @@ kdDebug()<<"ExchangeAddressBookAdaptor::createDownloadItemJob()"<<endl;
   QDomDocument doc;
   QDomElement root = WebdavHandler::addDavElement(  doc, doc, "d:propfind" );
   QDomElement prop = WebdavHandler::addElement( doc, root, "d:prop" );
+  
   QDomAttr att_h = doc.createAttribute( "xmlns:h" );
   att_h.setValue( "urn:schemas:mailheader:" );
   root.setAttributeNode( att_h );
@@ -117,7 +118,7 @@ kdDebug()<<"ExchangeAddressBookAdaptor::createDownloadItemJob()"<<endl;
   root.setAttributeNode( att_m );
 
   if ( ctype == KPIM::GroupwareJob::Contact ) {
-    KABC::ExchangeConverterContact::createRequest( doc, root );
+    KABC::ExchangeConverterContact::createRequest( doc, prop );
     kdDebug(7000) << "doc: " << doc.toString() << endl;
     job = KIO::davPropFind( url, doc, "0", false );
   }
