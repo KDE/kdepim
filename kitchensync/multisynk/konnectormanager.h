@@ -55,23 +55,23 @@ class KonnectorManager : public QObject, public KRES::Manager<Konnector>
       Emitted when Syncee list becomes available as response to
       requestSyncees().
     */
-    void synceesRead( Konnector* );
+    void synceesRead( KSync::Konnector* );
 
     /**
       Emitted when an error occurs during read.
     */
-    void synceeReadError( Konnector* );
+    void synceeReadError( KSync::Konnector* );
 
     /**
       Emitted when Syncee list was successfully written back to connected
       entity.
     */
-    void synceesWritten( Konnector* );
+    void synceesWritten( KSync::Konnector* );
 
     /**
       Emitted when an error occurs during write.
     */
-    void synceeWriteError( Konnector* );
+    void synceeWriteError( KSync::Konnector* );
 
   private:
     class Private;

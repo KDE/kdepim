@@ -28,14 +28,14 @@
 KonnectorPairItem::KonnectorPairItem( KonnectorPair *pair, KListView *parent )
   : QObject( 0 ), QListViewItem( parent ), mPair( pair )
 {
-  connect( pair->manager(), SIGNAL( synceesRead( Konnector* ) ),
-           this, SLOT( synceesRead( Konnector* ) ) );
-  connect( pair->manager(), SIGNAL( synceeReadError( Konnector* ) ),
-           this, SLOT( synceeReadError( Konnector* ) ) );
-  connect( pair->manager(), SIGNAL( synceesWritten( Konnector* ) ),
-           this, SLOT( synceesWritten( Konnector* ) ) );
-  connect( pair->manager(), SIGNAL( synceeWriteError( Konnector* ) ),
-           this, SLOT( synceeWriteError( Konnector* ) ) );
+  connect( pair->manager(), SIGNAL( synceesRead( KSync::Konnector* ) ),
+           this, SLOT( synceesRead( KSync::Konnector* ) ) );
+  connect( pair->manager(), SIGNAL( synceeReadError( KSync::Konnector* ) ),
+           this, SLOT( synceeReadError( KSync::Konnector* ) ) );
+  connect( pair->manager(), SIGNAL( synceesWritten( KSync::Konnector* ) ),
+           this, SLOT( synceesWritten( KSync::Konnector* ) ) );
+  connect( pair->manager(), SIGNAL( synceeWriteError( KSync::Konnector* ) ),
+           this, SLOT( synceeWriteError( KSync::Konnector* ) ) );
 
   mStatusMsg = i18n( "Press \"Sync\" to synchronize" );
 }

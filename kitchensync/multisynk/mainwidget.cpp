@@ -142,14 +142,14 @@ void MainWidget::startSync()
 
   KonnectorPair *pair = mManager->pair( uid );
 
-  connect( pair->manager(), SIGNAL( synceesRead( Konnector* ) ),
-           mEngine, SLOT( slotSynceesRead( Konnector* ) ) );
-  connect( pair->manager(), SIGNAL( synceeReadError( Konnector* ) ),
-           mEngine, SLOT( slotSynceeReadError( Konnector* ) ) );
-  connect( pair->manager(), SIGNAL( synceesWritten( Konnector* ) ),
-           mEngine, SLOT( slotSynceesWritten( Konnector* ) ) );
-  connect( pair->manager(), SIGNAL( synceeWriteError( Konnector* ) ),
-           mEngine, SLOT( slotSynceeWriteError( Konnector* ) ) );
+  connect( pair->manager(), SIGNAL( synceesRead( KSync::Konnector* ) ),
+           mEngine, SLOT( slotSynceesRead( KSync::Konnector* ) ) );
+  connect( pair->manager(), SIGNAL( synceeReadError( KSync::Konnector* ) ),
+           mEngine, SLOT( slotSynceeReadError( KSync::Konnector* ) ) );
+  connect( pair->manager(), SIGNAL( synceesWritten( KSync::Konnector* ) ),
+           mEngine, SLOT( slotSynceesWritten( KSync::Konnector* ) ) );
+  connect( pair->manager(), SIGNAL( synceeWriteError( KSync::Konnector* ) ),
+           mEngine, SLOT( slotSynceeWriteError( KSync::Konnector* ) ) );
   connect( mEngine, SIGNAL( doneSync() ),
            this, SLOT( syncDone() ) );
 
@@ -165,14 +165,14 @@ void MainWidget::syncDone()
 
   KonnectorPair *pair = mManager->pair( uid );
 
-  disconnect( pair->manager(), SIGNAL( synceesRead( Konnector* ) ),
-              mEngine, SLOT( slotSynceesRead( Konnector* ) ) );
-  disconnect( pair->manager(), SIGNAL( synceeReadError( Konnector* ) ),
-              mEngine, SLOT( slotSynceeReadError( Konnector* ) ) );
-  disconnect( pair->manager(), SIGNAL( synceesWritten( Konnector* ) ),
-              mEngine, SLOT( slotSynceesWritten( Konnector* ) ) );
-  disconnect( pair->manager(), SIGNAL( synceeWriteError( Konnector* ) ),
-              mEngine, SLOT( slotSynceeWriteError( Konnector* ) ) );
+  disconnect( pair->manager(), SIGNAL( synceesRead( KSync::Konnector* ) ),
+              mEngine, SLOT( slotSynceesRead( KSync::Konnector* ) ) );
+  disconnect( pair->manager(), SIGNAL( synceeReadError( KSync::Konnector* ) ),
+              mEngine, SLOT( slotSynceeReadError( KSync::Konnector* ) ) );
+  disconnect( pair->manager(), SIGNAL( synceesWritten( KSync::Konnector* ) ),
+              mEngine, SLOT( slotSynceesWritten( KSync::Konnector* ) ) );
+  disconnect( pair->manager(), SIGNAL( synceeWriteError( KSync::Konnector* ) ),
+              mEngine, SLOT( slotSynceeWriteError( KSync::Konnector* ) ) );
   disconnect( mEngine, SIGNAL( doneSync() ),
               this, SLOT( syncDone() ) );
 }

@@ -45,14 +45,14 @@ void KonnectorManager::connectSignals()
 {
   Iterator it;
   for ( it = begin(); it != end(); ++it ) {
-    connect( *it, SIGNAL( synceesRead( Konnector * ) ),
-             SIGNAL( synceesRead( Konnector * ) ) );
-    connect( *it, SIGNAL( synceeReadError( Konnector * ) ),
-             SIGNAL( synceeReadError( Konnector * ) ) );
-    connect( *it, SIGNAL( synceesWritten( Konnector * ) ),
-             SIGNAL( synceesWritten( Konnector * ) ) );
-    connect( *it, SIGNAL( synceeWriteError( Konnector * ) ),
-             SIGNAL( synceeWriteError( Konnector * ) ) );
+    connect( *it, SIGNAL( synceesRead( KSync::Konnector * ) ),
+             SIGNAL( synceesRead( KSync::Konnector * ) ) );
+    connect( *it, SIGNAL( synceeReadError( KSync::Konnector * ) ),
+             SIGNAL( synceeReadError( KSync::Konnector * ) ) );
+    connect( *it, SIGNAL( synceesWritten( KSync::Konnector * ) ),
+             SIGNAL( synceesWritten( KSync::Konnector * ) ) );
+    connect( *it, SIGNAL( synceeWriteError( KSync::Konnector * ) ),
+             SIGNAL( synceeWriteError( KSync::Konnector * ) ) );
   }
 }
 
