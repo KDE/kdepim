@@ -89,7 +89,6 @@ SingleConditionWidget::~SingleConditionWidget()
 void SingleConditionWidget::setCondition(KScoringExpression *e)
 {
   neg->setChecked(e->isNeg());
-  setCurrentItem(headers,e->getHeader());
   headers->setCurrentText( e->getHeader() );
   setCurrentItem(matches,KScoringExpression::getNameForCondition(e->getCondition()));
   expr->setText(e->getExpression());
