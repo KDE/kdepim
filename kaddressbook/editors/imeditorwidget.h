@@ -84,14 +84,14 @@ class IMAddressLVI : public KListViewItem
 	public:
 		IMAddressLVI( KListView *parent, IMProtocol protocol, QString address, IMContext context/*, bool inVCard*/ );
 		//void setInVCard( bool inVCard );
-		void setAddress( QString address );
+		void setAddress( const QString &address );
 		void setProtocol( IMProtocol protocol );
 		void setContext( IMContext context );
 		void activate();
 		IMProtocol protocol() const;
 		QString address() const;
 		IMContext context() const;
-		bool inVCard() const;
+  //bool inVCard() const;
 	private:
 		IMProtocol mProtocol;
 		IMContext mContext;

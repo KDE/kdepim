@@ -85,7 +85,7 @@ void IMAddressLVI::setInVCard( bool inVCard )
 }
 */
 
-void IMAddressLVI::setAddress( QString address )
+void IMAddressLVI::setAddress( const QString &address )
 {
 	setText( 1, address );
 }
