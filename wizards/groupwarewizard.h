@@ -24,7 +24,6 @@
 
 #include <qwidget.h>
 
-class ActionPage;
 class OverViewPage;
 
 class GroupwareWizard : public QWidget
@@ -39,7 +38,6 @@ class GroupwareWizard : public QWidget
     void setServerType( const QString& serverType );
 
   private:
-    ActionPage *mActionPage;
     OverViewPage *mOverViewPage;
 };
 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg>
+
+  <kcfgfile name="egroupwarerc"/>
+
+  <group name="General">
+    <entry name="Server" type="String">
+      <label>Server name</label>
+      <default></default>
+    </entry>
+    <entry name="Domain" type="String">
+      <label>Domain name</label>
+      <default></default>
+    </entry>
+    <entry name="User" type="String">
+      <label>User name</label>
+      <default></default>
+    </entry>
+    <entry name="Password" type="Password">
+      <label>User password</label>
+      <default></default>
+    </entry>
+    <entry name="UseSSLConnection" type="Bool">
+      <label>Use SSL connection</label>
+      <default></default>
+    </entry>
+    <entry name="LogFile" type="String">
+      <label>Log File</label>
+    </entry>
+  </group>
+
+</kcfg>

@@ -24,7 +24,6 @@
 
 #include <klocale.h>
 
-#include "actionpage.h"
 #include "overviewpage.h"
 
 #include "groupwarewizard.h"
@@ -36,13 +35,8 @@ GroupwareWizard::GroupwareWizard( QWidget *parent, const char *name )
 
   QVBoxLayout *layout = new QVBoxLayout( this );
 
-  mActionPage = new ActionPage( this );
-  mActionPage->hide();
-
   mOverViewPage = new OverViewPage( this );
-  mOverViewPage->hide();
 
-  layout->addWidget( mActionPage );
   layout->addWidget( mOverViewPage );
 
   connect( mOverViewPage, SIGNAL( serverTypeSelected( const QString& ) ),
@@ -60,12 +54,9 @@ GroupwareWizard::~GroupwareWizard()
 void GroupwareWizard::setServerType( const QString& serverType )
 {
   if ( serverType.isEmpty() ) {
-    mActionPage->hide();
     mOverViewPage->show();
   } else {
-    mOverViewPage->hide();
-    mActionPage->show();
-    mActionPage->setServerType( serverType );
+    mOverViewPage->show();
   }
 }
 
