@@ -18,8 +18,8 @@
  *
  */
 
-#ifndef KarmAddDlg_included
-#define KarmAddDlg_included
+#ifndef ADD_TASK_DIALOG_included
+#define ADD_TASK_DIALOG_included
 
 #include <stdlib.h>
 #include <kdialogbase.h>
@@ -27,7 +27,7 @@
 #include <qcheckbox.h>
 #include <vector>
 
-#include "karm.h"       // only for DesktopListType
+#include "taskview.h"       // only for DesktopListType
 #include "ktimewidget.h"
 
 class QLineEdit;
@@ -85,5 +85,5 @@ class AddTaskDialog : public KDialogBase
 
 
 
-#endif // KarmAddDlg_included
+#endif // ADD_TASK_DIALOG_included
 

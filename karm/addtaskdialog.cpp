@@ -35,7 +35,7 @@
 #include <qpixmap.h>
 #include <kiconloader.h>
 #include <qwhatsthis.h>
-#include "adddlg.h"
+#include "addtaskdialog.h"
 #include "ktimewidget.h"
 #include <qpushbutton.h>
 #include <qgroupbox.h>
@@ -301,4 +301,4 @@ void AddTaskDialog::status(long *total, long *totalDiff, long *session,
   }
 }
 
-#include "adddlg.moc"
+#include "addtaskdialog.moc"
