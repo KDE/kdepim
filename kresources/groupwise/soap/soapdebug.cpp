@@ -6,15 +6,10 @@ using namespace std;
 
 int main()
 {
-#if 0
-    std::string user = "demo1";
-    std::string pass = "demo1";
-    const char *url = "192.108.102.234";
-#else 
-    std::string user = "user1";
-    std::string pass = "user1";
-    const char *url = "192.108.102.237";
-#endif
+  // FIXME: Get from commandline
+  std::string user;
+  std::string pass;
+  const char *url = 0;
 
     GroupwiseServer server( url, user.c_str(), pass.c_str() );
 

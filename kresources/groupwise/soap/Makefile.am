@@ -1,12 +1,12 @@
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kresources/groupwise $(all_includes)
 
-bin_PROGRAMS = soaptest
+check_PROGRAMS = soapdebug
 
-soaptest_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-soaptest_LDADD   = libgwsoap.la -lkdecore \
+soapdebug_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+soapdebug_LDADD   = libgwsoap.la -lkdecore \
                    $(top_builddir)/libkcal/libkcal.la \
                    $(top_builddir)/libkdepim/libkdepim.la
-soaptest_SOURCES = soaptest.cpp
+soapdebug_SOURCES = soapdebug.cpp
 
 noinst_LTLIBRARIES = libgwsoap.la
 
