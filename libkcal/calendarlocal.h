@@ -74,6 +74,10 @@ class CalendarLocal : public Calendar
       Deletes an event from this calendar.
     */
     void deleteEvent( Event *event );
+    /**
+      Deletes all events from this calendar.
+    */
+    void deleteAllEvents();
 
     /**
       Retrieves an event on the basis of the unique string ID.
@@ -92,6 +96,10 @@ class CalendarLocal : public Calendar
       Remove a todo from the todolist.
     */
     void deleteTodo( Todo * );
+    /**
+      Deletes all todos from this calendar.
+    */
+    void deleteAllTodos();
     /**
       Searches todolist for an event with this unique string identifier,
       returns a pointer or null.
@@ -120,6 +128,10 @@ class CalendarLocal : public Calendar
       Remove a Journal from the calendar.
     */
     void deleteJournal( Journal * );
+    /**
+      Deletes all journals from this calendar.
+    */
+    void deleteAllJournals();
     /**
       Return Journal for given date.
     */

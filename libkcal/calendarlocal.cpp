@@ -74,17 +74,9 @@ bool CalendarLocal::save( const QString &fileName, CalFormat *format )
 
 void CalendarLocal::close()
 {
-  mEventList.setAutoDelete( true );
-  mTodoList.setAutoDelete( true );
-  mJournalList.setAutoDelete( false );
-
-  mEventList.clear();
-  mTodoList.clear();
-  mJournalList.clear();
-
-  mEventList.setAutoDelete( false );
-  mTodoList.setAutoDelete( false );
-  mJournalList.setAutoDelete( false );
+  deleteAllEvents();
+  deleteAllTodos();
+  deleteAllJournals();
 
   setModified( false );
 }
@@ -112,6 +104,13 @@ void CalendarLocal::deleteEvent( Event *event )
   }
 }
 
+void CalendarLocal::deleteAllEvents()
+{
+  // kdDebug(5800) << "CalendarLocal::deleteAllEvents" << endl;
+  mEventList.setAutoDelete( true );
+  mEventList.clear();
+  mEventList.setAutoDelete( false );
+}
 
 Event *CalendarLocal::event( const QString &uid )
 {
@@ -150,6 +149,14 @@ void CalendarLocal::deleteTodo( Todo *todo )
   if ( mTodoList.removeRef( todo ) ) {
     setModified( true );
   }
+}
+
+void CalendarLocal::deleteAllTodos()
+{
+  // kdDebug(5800) << "CalendarLocal::deleteAllTodos()\n";
+  mTodoList.setAutoDelete( true );
+  mTodoList.clear();
+  mTodoList.setAutoDelete( false );
 }
 
 QPtrList<Todo> CalendarLocal::rawTodos()
@@ -418,6 +425,13 @@ void CalendarLocal::deleteJournal( Journal *journal )
   if ( mJournalList.removeRef(journal) ) {
     setModified( true );
   }
+}
+
+void CalendarLocal::deleteAllJournals()
+{
+  mJournalList.setAutoDelete( true );
+  mJournalList.clear();
+  mJournalList.setAutoDelete( false );
 }
 
 Journal *CalendarLocal::journal( const QDate &date )
