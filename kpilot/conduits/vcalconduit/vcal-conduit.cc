@@ -1201,22 +1201,43 @@ void VCalConduit::doLocalSync()
 	}
 
 	// SUMMARY //
-	char *s2=0, *s3=0;
 	// what we call summary pilot calls description.
 	if ((vo = isAPropertyOf(vevent, VCSummaryProp)) != 0L) {
-	  s2 = fakeCString(vObjectUStringZValue(vo));
-	  dateEntry->setDescription(s2);
+		const char *s2 = fakeCString(vObjectUStringZValue(vo));
+		QString s = QString::fromUtf8(s2);
+		dateEntry->setDescription(s.latin1());
+
+		DEBUGCONDUIT << fname
+			<< ": Fake CString = "
+			<< s2
+			<< "    "
+			<< charExpansion(s2)
+			<< endl;
+		DEBUGCONDUIT << fname
+			<< ": QString = "
+			<< s
+			<< endl;
+		DEBUGCONDUIT << fname
+			<< ": Latin1 = "
+			<< s.latin1()
+			<< "    "
+			<< charExpansion(s.latin1())
+			<< endl;
+		deleteStr(s2);
 	} else {
-	  s2 = (char *) malloc(2);
-	  s2[0] = 0;
-	  dateEntry->setDescription(s2);
+		char *s2 = (char *) malloc(2);
+		s2[0] = 0;
+		dateEntry->setDescription(s2);
+		free(s2);
 	}
 
 	// DESCRIPTION //
 	// what we call description pilot puts as a separate note
 	if ((vo = isAPropertyOf(vevent, VCDescriptionProp)) != 0L) {
-	  s3 = fakeCString(vObjectUStringZValue(vo));
-	  dateEntry->setNote(s3);
+		const char *s3 = fakeCString(vObjectUStringZValue(vo));
+		QString s = QString::fromUtf8(s3);
+		dateEntry->setNote(s.latin1());
+		deleteStr(s3);
 	} 
 
 	// put the pilotRec in the database...
@@ -1226,9 +1247,6 @@ void VCalConduit::doLocalSync()
 
 	delete(dateEntry);
 	delete(pRec);
-	deleteStr(s2);
-	if (s3)
-	  deleteStr(s3);
 
 	// write the id we got from writeRecord back to the vObject
 	if (id > 0) 
@@ -1452,6 +1470,9 @@ QWidget* VCalConduit::aboutAndSetup()
 
 
 // $Log$
+// Revision 1.29  2001/03/10 18:26:04  adridg
+// Refactored vcal conduit and todo conduit
+//
 // Revision 1.28  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //
