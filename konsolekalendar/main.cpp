@@ -41,7 +41,7 @@
 using namespace KCal;
 using namespace std;
 
-static const char *description = I18N_NOOP("A command line interface to KDE calendars");
+static const char description[] = I18N_NOOP("A command line interface to KDE calendars");
 
 static KCmdLineOptions options[] =
 {

@@ -22,9 +22,8 @@
 
 #include "ktnefmain.h"
 
-static const char *description =
+static const char description[] =
 	I18N_NOOP("KTnef");
-// INSERT A DESCRIPTION FOR YOUR APPLICATION HERE
 
 
 static KCmdLineOptions options[] =

@@ -7,10 +7,8 @@
 #include "ksync.h"
 
 
-static const char *description =
+static const char description[] =
 	I18N_NOOP("KSync");
-// INSERT A DESCRIPTION FOR YOUR APPLICATION HERE
-
 
 static KCmdLineOptions options[] =
 {
