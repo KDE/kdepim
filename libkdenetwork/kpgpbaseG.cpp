@@ -672,11 +672,14 @@ BaseG::parsePublicKeyData( const QCString& output, Key* key /* = 0 */ )
           break;
         case 10: // User-ID (always empty in --fixed-list-mode)
           QCString uid = output.mid( pos, pos2-pos );
-          // replace "\x3a" with ":" (the colon is escaped this way by GnuPG)
-          // all other escaped characters, i.e. \n, \r etc., are ignored
+          // replace "\xXX" with the corresponding character;
+          // other escaped characters, i.e. \n, \r etc., are ignored
           // because they shouldn't appear in user IDs
-	  for ( int idx = 0 ; (idx = uid.find( "\\x3a", idx )) >= 0 ; ++idx )
-	    uid.replace( idx, 4, ":" );
+          for ( int idx = 0 ; (idx = uid.find( "\\x", idx )) >= 0 ; ++idx ) {
+            char str[2] = "x";
+            str[0] = (char) QString( uid.mid( idx + 2, 2 ) ).toShort( 0, 16 );
+            uid.replace( idx, 4, str );
+          }
           userID->setText( QString::fromUtf8( uid.data() ) );
           break;
         }
@@ -913,11 +916,14 @@ BaseG::parseKeyList(const QCString& output, bool secretKeys)
           break;
         case 10: // User-ID (always empty in --fixed-list-mode)
           QCString uid = output.mid( pos,pos2-pos );
-          // replace "\x3a" with ":" (the colon is escaped this way by GnuPG)
-          // all other escaped characters, i.e. \n, \r etc., are ignored
+          // replace "\xXX" with the corresponding character;
+          // other escaped characters, i.e. \n, \r etc., are ignored
           // because they shouldn't appear in user IDs
-	  for ( int idx = 0 ; (idx = uid.find( "\\x3a", idx )) >= 0 ; ++idx )
-	    uid.replace( idx, 4, ":" );
+          for ( int idx = 0 ; (idx = uid.find( "\\x", idx )) >= 0 ; ++idx ) {
+            char str[2] = "x";
+            str[0] = (char) QString( uid.mid( idx + 2, 2 ) ).toShort( 0, 16 );
+            uid.replace( idx, 4, str );
+          }
           userID->setText( QString::fromUtf8(uid.data()) );
           break;
         }
