@@ -301,6 +301,7 @@ void ConduitProxy::execDone(SyncAction *p)
 
 ActionQueue::ActionQueue(KPilotDeviceLink *d) :
 	SyncAction(d,"ActionQueue"),
+	fTestMode(false),
 	fReady(false)
 	// The string lists have default constructors
 {
@@ -390,7 +391,7 @@ void ActionQueue::actionCompleted(SyncAction *b)
 		delayDone();
 		return;
 	}
-	if (!fHandle->tickle())
+	if (!fTestMode && !fHandle->tickle())
 	{
 		emit logError(i18n("The connection to the handheld "
 			"was lost. Synchronization cannot continue."));

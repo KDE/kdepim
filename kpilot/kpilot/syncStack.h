@@ -65,8 +65,12 @@ public:
 
 	virtual ~ActionQueue();
 
+	void setTestMode(bool b) { fTestMode=b; } ;
+	bool isTestMode() const { return fTestMode; } ;
+
 private:
 	QPtrQueue < SyncAction > SyncActionQueue;
+	bool fTestMode;
 
 public:
 	bool isEmpty() const { return SyncActionQueue.isEmpty(); };
