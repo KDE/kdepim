@@ -10,19 +10,19 @@
 
 QPtrVector<QPixmap> *Task::icons = 0;
 
-Task::Task(const QString& taskName, long minutes, long sessionTime, QListView *parent)
+Task::Task(const QString& taskName, long minutes, long sessionTime, DesktopListType desktops, QListView *parent)
 	: QObject(), QListViewItem(parent)
 {
-  init(taskName, minutes, sessionTime);
+  init(taskName, minutes, sessionTime, desktops);
 };
 
-Task::Task(const QString& taskName, long minutes, long sessionTime, QListViewItem *parent)
+Task::Task(const QString& taskName, long minutes, long sessionTime, DesktopListType desktops, QListViewItem *parent)
   :QObject(), QListViewItem(parent)
 {
-  init(taskName, minutes, sessionTime);
+  init(taskName, minutes, sessionTime, desktops);
 }
 
-void Task::init(const QString& taskName, long minutes, long sessionTime)
+void Task::init(const QString& taskName, long minutes, long sessionTime, DesktopListType desktops)
 {
   if (icons == 0) {
     icons = new QPtrVector<QPixmap>(8);
@@ -43,6 +43,7 @@ void Task::init(const QString& taskName, long minutes, long sessionTime)
   _sessionTime = sessionTime;
   noNegativeTimes();
   _timer = new QTimer(this);
+  _desktops = desktops;
   connect(_timer, SIGNAL(timeout()), this, SLOT(updateActiveIcon()));
   setPixmap(1, UserIcon(QString::fromLatin1("empty-watch.xpm")));
   update();
@@ -96,6 +97,10 @@ void Task::setSessionTime ( long minutes )
   update();
 }
 
+void Task::setDesktopList ( DesktopListType desktopList )
+{
+  _desktops = desktopList;
+}
 
 void Task::incrementTime( long minutes )
 {

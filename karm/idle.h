@@ -51,7 +51,7 @@ signals:
   /** 
       Tells the listener to stop timing
    **/
-  void stopTimer();
+  void stopAllTimers();
 
 public slots:  
   /**

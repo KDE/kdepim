@@ -71,10 +71,6 @@ KarmWindow::KarmWindow()
   _preferences->load();
   loadGeometry();
 
-  // FIXME: this shouldnt stay. We need to check whether the
-  // file exists and if not, create a blank one and ask whether
-  // we want to add a task.
-  _karm->load();
 
   connect( _karm, SIGNAL(contextMenuRequested( QListViewItem*, const QPoint&, int )),
            this,  SLOT(contextMenuRequest( QListViewItem*, const QPoint&, int )));
@@ -88,7 +84,13 @@ KarmWindow::KarmWindow()
   connect( _karm, SIGNAL( tasksChanged( QPtrList<Task> ) ), _tray,
                    SLOT( updateToolTip( QPtrList<Task> ) ) );
   
+  // FIXME: this shouldnt stay. We need to check whether the
+  // file exists and if not, create a blank one and ask whether
+  // we want to add a task.
+  _karm->load();
+
   slotSelectionChanged();
+
 }
 
 void KarmWindow::slotSelectionChanged()

@@ -24,6 +24,10 @@
 #include <stdlib.h>
 #include <kdialogbase.h>
 #include <qvalidator.h>
+#include <qcheckbox.h>
+#include <vector.h>
+
+#include "karm.h"       // only for DesktopListType
 #include "ktimewidget.h"
 
 class QLineEdit;
@@ -39,15 +43,20 @@ class AddTaskDialog : public KDialogBase
   Q_OBJECT
 
   public:
-    AddTaskDialog(QString caption, bool editDlg);
-    void setTask(const QString &name, long time, long sessionTime );
+    AddTaskDialog(QString caption, bool editDlg, DesktopListType* desktopList=0);
+    void setTask(const QString &name, long time, long sessionTime);
     QString taskName() const;
+
     // return user choices
-    void status( long *total, long *totalDiff, long *session, long *sessionDiff ) const;
+    void status( long *total, long *totalDiff, 
+		 long *session, long *sessionDiff, 
+		 DesktopListType *desktopList) const;
 	
   private slots:
     void slotAbsolutePressed();
     void slotRelativePressed();
+    void slotAutoTrackingPressed();
+
     void enterWhatsThis();
 
   private:
@@ -56,12 +65,17 @@ class AddTaskDialog : public KDialogBase
     KTimeWidget* _sessionTW;
     KTimeWidget* _diffTW;
     QComboBox* _operator;
+    vector<QCheckBox*> _deskBox; // we only need an array, but ISO forbids
+                                 // passing an array as a function argument
 
     long origTotal;
     long origSession;
 
     QRadioButton *_absoluteRB;
     QRadioButton *_relativeRB;
+
+    QCheckBox *_desktopCB;
+    int desktopCount;
 
     QLabel* _totalLA;
     QLabel* _sessionLA;

@@ -8,6 +8,8 @@
 #include <qlistview.h>
 #include <qptrlist.h>
 #include <qtextstream.h>
+#include "kwinmodule.h"
+#include <vector.h>
 
 class KMenuBar;
 class KToolBar;
@@ -17,6 +19,9 @@ class IdleTimer;
 class QTimer;
 class Preferences;
 class Task;
+
+typedef vector<int> DesktopListType;
+typedef vector<Task*> TaskVector;
 
 /**
  * Container and interface for the tasks.
@@ -34,14 +39,28 @@ private: // member variables
     Preferences *_preferences;
 
     QPtrList<Task> activeTasks;
+    KWinModule kWinModule;
+
+    // define vectors for at most 16 virtual desktops
+    // E.g.: desktopTrackerStop[3] contains a vector with
+    // all tasks to be stopped, when switching to desk 3.
+    TaskVector desktopTracker[16];
+    int lastDesktop;
+    int desktopCount;
 
 public:
     Karm( QWidget *parent = 0, const char *name = 0 );
     virtual ~Karm();
     static QString formatTime(long minutes);
+    void printTrackers();
 
 private:
     void updateParents( QListViewItem* task, long totalDiff, long sesssionDiff );
+    void startTimerFor(Task* item);
+    void stopTimerFor(Task* item);
+    void applyTrackers();
+    void updateTrackers(Task *task, DesktopListType dl);
+    bool parseLine(QString line, long *time, QString *name, int *level, DesktopListType* desktops);
 
 public slots:
     /*
@@ -50,15 +69,14 @@ public slots:
     1 		number
     time	in minutes
     string	task name
+    [string]    desktops, in which to count. e.g. "1,2,5" (optional) 
     */
     void load();
     void save();
     void writeTaskToFile(QTextStream *, QListViewItem *, int);
-    bool parseLine(QString line, long *time, QString *name, int *level);
-    void stopTimer(Task *item);
+    void startCurrentTimer();
     void stopCurrentTimer();
     void stopAllTimers();
-    void startTimer();
     void changeTimer(QListViewItem * = 0);
     void newTask();
     void newTask(QString caption, QListViewItem *parent);
@@ -67,6 +85,7 @@ public slots:
     void deleteTask();
     void extractTime(int minutes);
     void resetSessionTimeForAllTasks();
+    void handleDesktopChange(int desktop);
 
 protected slots:
     void autoSaveChanged(bool);

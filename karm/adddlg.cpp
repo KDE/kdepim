@@ -36,12 +36,13 @@
 #include <kiconloader.h>
 #include <qwhatsthis.h>
 #include "adddlg.h"
-#include "karm.h"
 #include "ktimewidget.h"
 #include <qpushbutton.h>
+#include <qgroupbox.h>
+#include "kwinmodule.h"
 
 
-AddTaskDialog::AddTaskDialog(QString caption, bool editDlg)
+AddTaskDialog::AddTaskDialog(QString caption, bool editDlg, DesktopListType* desktopList)
   :KDialogBase(0, "AddTaskDialog", true, caption, Ok|Cancel, Ok, true ),
   origTotal( 0 ), origSession( 0 )
 {
@@ -118,6 +119,56 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg)
   
   _diffTW = new KTimeWidget( page, "_sessionAddTW" );
   lay4->addWidget( _diffTW );
+
+  {
+    KWinModule k;
+    desktopCount = k.numberOfDesktops();
+  }
+
+  // The "Choose Desktop" checkbox
+  lay1->addSpacing(10);
+  lay1->addStretch(1);
+  _desktopCB = new QCheckBox(i18n("&Auto tracking in desktop"), page);
+  _desktopCB->setEnabled(true);
+  lay1->addWidget(_desktopCB);
+  QGroupBox* groupBox;
+  {
+    int lines = (int)(desktopCount/2);
+    if (lines*2 != desktopCount) lines++; 
+      groupBox = new QButtonGroup(lines, QGroupBox::Horizontal, i18n(""), page);
+  }
+  lay1->addWidget(groupBox);
+
+  QHBoxLayout *lay6 = new QHBoxLayout();
+	
+  lay1->addLayout(lay6);
+  for (int i=0; i<desktopCount; i++) {
+    _deskBox.push_back(new QCheckBox(groupBox));
+    _deskBox[i]->setText(QString::number(i+1));
+    _deskBox[i]->setChecked(false);
+
+    lay6->addWidget(_deskBox[i]);
+  }
+
+  // check specified Desktop Check Boxes
+  bool enableDesktops = false;
+
+  if (desktopList!=0 and desktopList->size()>0) {
+    DesktopListType::iterator it = desktopList->begin();
+    while (it != desktopList->end()) {
+      _deskBox[*it]->setChecked(true);
+      it++;
+    }
+    enableDesktops = true;
+  }
+  // if some desktops were specified, then enable the parent box
+
+  _desktopCB->setChecked(enableDesktops);
+
+  for (int i=0; i<desktopCount; i++)
+    _deskBox[i]->setEnabled(enableDesktops);
+
+  connect(_desktopCB, SIGNAL(clicked()), this, SLOT(slotAutoTrackingPressed()));
 
   KIconLoader loader;
   
@@ -197,7 +248,16 @@ void AddTaskDialog::slotRelativePressed()
   _sessionTW->setEnabled( false );
 }
 
-  
+void AddTaskDialog::slotAutoTrackingPressed()
+{
+  bool checked = _desktopCB->isChecked();
+  for (unsigned int i=0; i<_deskBox.size(); i++)
+    _deskBox[i]->setEnabled(checked);
+
+  if (!checked)  // uncheck all desktop boxes
+    for (int i=0; i<desktopCount; i++) 
+      _deskBox[i]->setChecked(false);
+}
 
 void AddTaskDialog::setTask( const QString &name, long total, long session )
 {
@@ -216,7 +276,8 @@ QString AddTaskDialog::taskName() const
 }
 
 
-void AddTaskDialog::status( long *total, long *totalDiff, long *session, long *sessionDiff ) const
+void AddTaskDialog::status(long *total, long *totalDiff, long *session, 
+			   long *sessionDiff, DesktopListType *desktopList) const
 { 
   if ( _absoluteRB->isChecked() ) {
     *total = _totalTW->time();
@@ -233,6 +294,11 @@ void AddTaskDialog::status( long *total, long *totalDiff, long *session, long *s
 
   *totalDiff = *total - origTotal;
   *sessionDiff = *session - origSession;
+
+  for (unsigned int i=0; i<_deskBox.size(); i++) {
+    if (_deskBox[i]->isChecked())
+      desktopList->push_back(i);
+  }
 }
 
 #include "adddlg.moc"

@@ -26,6 +26,8 @@
 #include "adddlg.h"
 #include "idle.h"
 #include "preferences.h"
+#include "kdebug.h"
+#include "iostream.h"
 #include "listviewiterator.h"
 #include "subtreeiterator.h"
 #include "karmutility.h"
@@ -53,7 +55,7 @@ Karm::Karm( QWidget *parent, const char *name )
   // Set up the idle detection.
   _idleTimer = new IdleTimer(_preferences->idlenessTimeout());
   connect(_idleTimer, SIGNAL(extractTime(int)), this, SLOT(extractTime(int)));
-  connect(_idleTimer, SIGNAL(stopTimer()), this, SLOT(stopAllTimers()));
+  connect(_idleTimer, SIGNAL(stopAllTimers()), this, SLOT(stopAllTimers()));
   connect(_preferences, SIGNAL(idlenessTimeout(int)), _idleTimer, SLOT(setMaxIdle(int)));
   connect(_preferences, SIGNAL(detectIdleness(bool)), _idleTimer, SLOT(toggleOverAllIdleDetection(bool)));
   if (!_idleTimer->isIdleDetectionPossible())
@@ -66,11 +68,38 @@ Karm::Karm( QWidget *parent, const char *name )
           this, SLOT(autoSavePeriodChanged(int)));
   connect(_autoSaveTimer, SIGNAL(timeout()), this, SLOT(save()));
 
+  connect(&kWinModule, SIGNAL(currentDesktopChanged(int)), this, SLOT(handleDesktopChange(int)));
+
+  desktopCount = kWinModule.numberOfDesktops();
+  lastDesktop = kWinModule.currentDesktop()-1;
 }
 
 Karm::~Karm()
 {
   save();
+}
+
+void Karm::handleDesktopChange(int desktop)
+{
+  cout << "handleDesktopChange("<<desktop<<")"<<endl;
+  desktop--; // desktopTracker starts with 0 for desktop 1
+  // start all tasks setup for running on desktop
+  TaskVector::iterator it;
+
+  // stop trackers for lastDesktop
+  TaskVector tv = desktopTracker[lastDesktop];
+  for (it = tv.begin(); it != tv.end(); it++) {
+    stopTimerFor(*it);
+  }
+
+  // start trackers for desktop
+  tv = desktopTracker[desktop];
+  for (it = tv.begin(); it != tv.end(); it++) {
+    startTimerFor(*it);
+  }
+  lastDesktop = desktop;
+
+  emit updateButtons();
 }
 
 void Karm::load()
@@ -103,8 +132,8 @@ void Karm::load()
     long minutes;
     int level;
     QString name;
-
-    if (!parseLine(line, &minutes, &name, &level))
+    DesktopListType desktops;
+    if (!parseLine(line, &minutes, &name, &level, &desktops))
       continue;
 
     unsigned int stackLevel = stack.count();
@@ -113,25 +142,93 @@ void Karm::load()
     }
 
     if (level == 1) {
-      task = new Task(name, minutes, 0, this);
+      task = new Task(name, minutes, 0, desktops, this);
       emit( sessionTimeChanged( 0, minutes ) );
     }
     else {
       Task *parent = stack.top();
-      task = new Task(name, minutes, 0, parent);
+      task = new Task(name, minutes, 0, desktops, parent);
       emit( sessionTimeChanged( 0, minutes ) );
       setRootIsDecorated(true);
       parent->setOpen(true);
     }
+
+    // update desktop trackers
+    updateTrackers(task, desktops);
+
     stack.push(task);
   }
   f.close();
 
   setSelected(firstChild(), true);
   setCurrentItem(firstChild());
+
+  applyTrackers();
+
+  //emit( sessionTimeChanged() );
 }
 
-bool Karm::parseLine(QString line, long *time, QString *name, int *level)
+void Karm::applyTrackers() 
+{
+  TaskVector &tv = desktopTracker[kWinModule.currentDesktop()-1];
+  TaskVector::iterator tit = tv.begin();
+  while(tit!=tv.end()) {
+    startTimerFor(*tit);
+    tit++;
+  }
+}
+
+void Karm::updateTrackers(Task *task, DesktopListType desktopList)
+{
+  // if no desktop is marked, disable auto tracking for this task
+  if (desktopList.size()==0) {
+    for (int i=0; i<16; i++) {
+      TaskVector *v = &(desktopTracker[i]);
+      TaskVector::iterator tit = std::find(v->begin(), v->end(), task);
+      if (tit != v->end())
+        desktopTracker[i].erase(tit);
+    }
+
+    return;
+  }
+
+  // If desktop contains entries then configure desktopTracker
+  // If a desktop was disabled, it will not be stopped automatically.
+  // If enabled: Start it now.
+  if (desktopList.size()>0) {
+    for (int i=0; i<16; i++) {
+      TaskVector& v = desktopTracker[i];
+      TaskVector::iterator tit = std::find(v.begin(), v.end(), task);
+      // Is desktop i in the desktop list?
+      if (std::find(desktopList.begin(), desktopList.end(), i) != desktopList.end()) {
+        if (tit == v.end())  // not yet in start vector
+          v.push_back(task); // track in desk i
+      }
+      else { // delete it
+        if (tit != v.end())  // not in start vector any more
+          v.erase(tit); // so we delete it from desktopTracker
+      }
+    }
+    // printTrackers();
+    applyTrackers();
+  }
+}
+
+void Karm::printTrackers() {
+  TaskVector::iterator it;
+  for (int i=0; i<16; i++) {
+    cout << "Desktop "<<i<<": ";
+    TaskVector& start = desktopTracker[i];
+    it = start.begin();
+    while (it != start.end()) {
+      cout << (*it)->name() << " ";
+      it++;
+    }
+    cout << endl;
+  }
+}
+
+bool Karm::parseLine(QString line, long *time, QString *name, int *level, DesktopListType* desktops)
 {
   if (line.find('#') == 0) {
     // A comment line
@@ -154,9 +251,42 @@ bool Karm::parseLine(QString line, long *time, QString *name, int *level)
   }
 
   QString timeStr = rest.left(index);
-  *name = rest.remove(0,index+1);
+  rest = rest.remove(0,index+1);
 
   bool ok;
+
+  index = rest.find('\t'); // check for optional desktops string
+  if (index >= 0) {
+    *name = rest.left(index);    
+    QString deskLine = rest.remove(0,index+1);
+
+    // now transform the ds string (e.g. "3", or "1,4,5") into
+    // an DesktopListType
+    QString ds;
+    int d;
+    int commaIdx = deskLine.find(',');
+    while (commaIdx >= 0) {
+      ds = deskLine.left(commaIdx);
+      d = ds.toInt(&ok);
+      if (!ok)
+	return false;
+      
+      desktops->push_back(d);
+      deskLine.remove(0,commaIdx+1);
+      commaIdx = deskLine.find(',');
+    }
+
+    d = deskLine.toInt(&ok);
+
+    if (!ok)
+      return false;
+
+    desktops->push_back(d);
+  }
+  else {
+    *name = rest.remove(0,index+1);  
+  }
+
   *time = timeStr.toLong(&ok);
 
   if (!ok) {
@@ -168,40 +298,50 @@ bool Karm::parseLine(QString line, long *time, QString *name, int *level)
     // the time field was not a number
     return false;
   }
+
   return true;
 }
 
 void Karm::save()
 {
- QFile f(_preferences->saveFile());
+  QFile f(_preferences->saveFile());
 
- if ( !f.open( IO_WriteOnly | IO_Truncate ) ) {
-   QString msg = i18n( "There was an error trying to save your data file.\n"
+  if ( !f.open( IO_WriteOnly | IO_Truncate ) ) {
+    QString msg = i18n( "There was an error trying to save your data file.\n"
                        "Time accumulated during this session will not be saved!\n");
-   KMessageBox::error(0, msg );
-   return;
- }
- const char * comment = "# Karm save data\n";
+    KMessageBox::error(0, msg );
+    return;
+  }
+  const char * comment = "# Karm save data\n";
 
- f.writeBlock(comment, strlen(comment));  //comment
- f.flush();
+  f.writeBlock(comment, strlen(comment));  //comment
+  f.flush();
 
- QTextStream stream(&f);
+  QTextStream stream(&f);
+  for (QListViewItem *child =firstChild(); child; child = child->nextSibling())
+    writeTaskToFile(&stream, child, 1);
 
- for (QListViewItem *child =firstChild(); child; child = child->nextSibling()) {
-   writeTaskToFile(&stream, child, 1);
- }
- f.close();
+  f.close();
 }
 
 void Karm::writeTaskToFile(QTextStream *strm, QListViewItem *item, int level)
 {
   Task * task = (Task *) item;
   //lukas: correct version for non-latin1 users
-  QString _line = QString::fromLatin1("%1\t%2\t%3\n").arg(level).
+  QString _line = QString::fromLatin1("%1\t%2\t%3").arg(level).
           arg(task->totalTime()).arg(task->name());
 
-  *strm << _line;
+  DesktopListType d = task->getDesktops();
+  int dsize = d.size();
+  if (dsize>0) {
+    _line += '\t';
+    for (int i=0; i<dsize-1; i++) {
+      _line += QString::number(d[i]);
+      _line += ',';
+    }
+    _line += QString::number(d[dsize-1]);
+  }
+  *strm << _line << "\n";
 
   QListViewItem * child;
   for (child=item->firstChild(); child; child=child->nextSibling()) {
@@ -209,14 +349,19 @@ void Karm::writeTaskToFile(QTextStream *strm, QListViewItem *item, int level)
   }
 }
 
-void Karm::startTimer()
+void Karm::startCurrentTimer()
 {
-  Task *item = ((Task *) currentItem());
+  startTimerFor((Task *) currentItem());
+}
+
+void Karm::startTimerFor(Task* item)
+{
   if (item != 0 && activeTasks.findRef(item) == -1) {
     _idleTimer->startIdleDetection();
     item->setRunning(true);
     activeTasks.append(item);
     emit updateButtons();
+    cout << activeTasks.count()<<endl;
     if ( activeTasks.count() == 1 )
         emit timerActive();
     
@@ -251,7 +396,7 @@ void Karm::resetSessionTimeForAllTasks()
   }
 }
 
-void Karm::stopTimer(Task *item)
+void Karm::stopTimerFor(Task* item)
 {
   if (item != 0 && activeTasks.findRef(item) != -1) {
     activeTasks.removeRef(item);
@@ -267,8 +412,9 @@ void Karm::stopTimer(Task *item)
 
 void Karm::stopCurrentTimer()
 {
-  stopTimer((Task *) currentItem());
+  stopTimerFor((Task *) currentItem());
 }
+
 
 void Karm::changeTimer(QListViewItem *)
 {
@@ -281,7 +427,7 @@ void Karm::changeTimer(QListViewItem *)
     activeTasks.clear();
 
     // Start the new timer.
-    startTimer();
+    startCurrentTimer();
   }
   else {
     stopCurrentTimer();
@@ -323,12 +469,14 @@ void Karm::newTask(QString caption, QListViewItem *parent)
     }
 
     long total, totalDiff, session, sessionDiff;
-    dialog->status( &total, &totalDiff, &session, &sessionDiff );
+    total = totalDiff = session = sessionDiff = 0;
+    DesktopListType desktopList;
+    dialog->status( &total, &totalDiff, &session, &sessionDiff, &desktopList);
     Task *task;
     if (parent == 0)
-      task = new Task(taskName, total, session, this);
+      task = new Task(taskName, total, session, desktopList, this);
     else
-      task = new Task(taskName, total, session, parent);
+      task = new Task(taskName, total, session, desktopList, parent);
 
     updateParents( (QListViewItem *) task, totalDiff, sessionDiff );
     setCurrentItem(task);
@@ -355,7 +503,7 @@ void Karm::editTask()
   if (!task)
   return;
 
-  AddTaskDialog *dialog = new AddTaskDialog(i18n("Edit Task"), true);
+  AddTaskDialog *dialog = new AddTaskDialog(i18n("Edit Task"), true, &(task->getDesktops()));
   dialog->setTask(task->name(),
                   task->totalTime(),
                   task->sessionTime());
@@ -369,11 +517,19 @@ void Karm::editTask()
 
     // update session time as well if the time was changed
     long total, session, totalDiff, sessionDiff;
-    total = session = totalDiff = sessionDiff = 0;
-    dialog->status( &total, &totalDiff, &session, &sessionDiff );
+    total = totalDiff = session = sessionDiff = 0;
+    DesktopListType desktopList;
+    dialog->status( &total, &totalDiff, &session, &sessionDiff, &desktopList);
 
     task->setTotalTime( total);
     task->setSessionTime( session );
+
+    // If all available desktops are checked, disable auto tracking,
+    // since it makes no sense to track for every desktop.
+    if (desktopList.size() == (unsigned int)desktopCount)
+      desktopList.clear();
+
+    task->setDesktopList(desktopList);
 
     if( sessionDiff || totalDiff ) {
       emit sessionTimeChanged( sessionDiff, totalDiff );
@@ -381,6 +537,9 @@ void Karm::editTask()
 
     // Update the parents for this task.
     updateParents( (QListViewItem *) task, totalDiff, sessionDiff );
+    updateTrackers(task, desktopList);
+
+    emit updateButtons();
   }
   delete dialog;
 }
@@ -424,7 +583,7 @@ void Karm::deleteTask()
 
     // Remove chilren from the active set of tasks.
     stopChildCounters(item);
-    stopTimer(item);
+    stopTimerFor(item);
 
     // Stop idle detection if no more counters is running
     if (activeTasks.count() == 0) {
@@ -436,6 +595,10 @@ void Karm::deleteTask()
     long sessionTime = item->sessionTime();
     long totalTime   = item->totalTime();
     updateParents( item, -totalTime, -sessionTime );
+    
+    DesktopListType desktopList;
+    updateTrackers(item, desktopList); // remove from tracker list
+
     delete item;
 
     // remove root decoration if there is no more children.

@@ -24,9 +24,12 @@ Q_OBJECT
 
 public:
 	/** constructor */
-	Task(const QString& taskame, long minutes, long sessionTime, QListView *parent = 0);
-	Task(const QString& taskame, long minutes, long sessionTime, QListViewItem *parent = 0);
-	void init(const QString& taskame, long minutes, long sessionTime);
+	Task(const QString& taskame, long minutes, long sessionTime, 
+	     DesktopListType desktops, QListView *parent = 0);
+	Task(const QString& taskame, long minutes, long sessionTime, 
+	     DesktopListType desktops, QListViewItem *parent = 0);
+	void init(const QString& taskame, long minutes, long sessionTime, 
+		  DesktopListType desktops);
 
 	/**increments the total task time
 	* @param minutes to increment by
@@ -43,6 +46,7 @@ public:
 	*/
 	void setTotalTime ( long minutes );
 	void setSessionTime ( long minutes );
+	void setDesktopList ( DesktopListType dl );
 
 	/** returns the total time accumulated by the task
 	* @return total time in minutes
@@ -52,6 +56,10 @@ public:
 
 	long sessionTime() const
 		{ return _sessionTime; };
+
+	DesktopListType getDesktops() {
+	  return _desktops;
+	}
 
 	/** sets the name of the task
 	* @param name	a pointer to the name. A deep copy will be made.
@@ -86,6 +94,7 @@ private:
   QString _name;
   long _totalTime;
   long _sessionTime;
+  DesktopListType _desktops;
   QTimer *_timer;
   int _i;
   static QPtrVector<QPixmap> *icons;
