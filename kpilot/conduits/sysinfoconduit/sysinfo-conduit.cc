@@ -176,7 +176,7 @@ void SysInfoConduit::readConfig()
 	KConfigGroupSaver g(fConfig, SysInfoConduitFactory::fGroup);
 	fOutputFile=fConfig->readPathEntry(SysInfoConduitFactory::fOutputFile);
 	fTemplateFile=fConfig->readPathEntry(SysInfoConduitFactory::fTemplateFile);
-	fOutputType=(eOutputTypeEnum)(fConfig->readNumEntry(SysInfoConduitFactory::fOutputType), 0);
+	fOutputType=(eOutputTypeEnum)(fConfig->readNumEntry(SysInfoConduitFactory::fOutputType, 0));
 	fHardwareInfo=fConfig->readBoolEntry(SysInfoConduitFactory::fHardwareInfo, true);
 	fUserInfo=fConfig->readBoolEntry(SysInfoConduitFactory::fUserInfo, true);
 	fMemoryInfo=fConfig->readBoolEntry(SysInfoConduitFactory::fMemoryInfo, true);
@@ -187,6 +187,14 @@ void SysInfoConduit::readConfig()
 	fKDEVersion=fConfig->readBoolEntry(SysInfoConduitFactory::fKDEVersion, true);
 	fPalmOSVersion=fConfig->readBoolEntry(SysInfoConduitFactory::fPalmOSVersion, true);
 	fDebugInfo=fConfig->readBoolEntry(SysInfoConduitFactory::fDebugInfo, true);
+#ifdef DEBUG
+	DEBUGCONDUIT<<"Output file="<<fOutputFile<<" with type "<<
+		fOutputType<<" (Template:"<<fTemplateFile<<")"<<endl;
+	DEBUGCONDUIT<<"HW:"<<fHardwareInfo<<",User:"<<fUserInfo<<
+		",Mem:"<<fMemoryInfo<<",Sto:"<<fStorageInfo<<endl;
+	DEBUGCONDUIT<<"DBL:"<<fDBList<<",Rec:"<<fRecordNumber<<
+		",KDE:"<<fKDEVersion<<",PalmOS:"<<fPalmOSVersion<<endl;
+#endif
 }
 
 
