@@ -3,9 +3,12 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include <cassert>
+
 #include <qfile.h>
 #include <qdict.h>
 #include <qdatetime.h>
+#include <qstringlist.h>
 
 #include "kapplication.h"       // kapp
 #include <kdebug.h>
@@ -43,13 +46,15 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
   // complained that exceptions are not allowed.  Not sure how apps
   // typically handle error conditions in KDE, but I'll return the error
   // as a string (empty is no error).  -- Mark, Aug 8, 2003
-  // Use KDE_CXXFLAGS=$(USE_EXCEPTIONS) in Makefile.am if you want to use exceptions (David Faure)
+
+  // Use KDE_CXXFLAGS=$(USE_EXCEPTIONS) in Makefile.am if you want to use
+  // exceptions (David Faure)
+  //
+  // Ok, put on the TODO list.  :)  (Mark B)
+
   QString err;
   KEMailSettings settings;
   int handle;
-
-  kdDebug() << "KarmStorage::load - old = \"" << _icalfile
-    << "\", new = \"" << preferences->iCalFile() << "\"" << endl;
 
   // if same file, don't reload
   if (preferences->iCalFile() == _icalfile)
@@ -63,7 +68,6 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
       O_CREAT|O_EXCL|O_WRONLY,
       S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
 
-  kdDebug() << "KarmStorage::load: handle = " << handle << endl;
   if (handle != -1)
   {
     close(handle);
@@ -91,7 +95,7 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
     // Build dictionary to look up Task object from Todo uid.  Each task is a
     // QListViewItem, and is initially added with the view as the parent.
     todoList = _calendar.rawTodos();
-    kdDebug() << "KarmStorage::load - just after calendar loaded, "
+    kdDebug() << "KarmStorage::load - after calendar loaded, "
       << "todoList.count() = " << todoList.count() << endl;
     for( todo = todoList.begin(); todo != todoList.end(); ++todo ) 
     {
@@ -487,37 +491,40 @@ void KarmStorage::changeTime(const Task* task, const long deltaSeconds)
 }
   
 
-//
-// private routines
-// 
-
 KCal::Event* KarmStorage::baseEvent(const Task * task)
 {
   KCal::Event* e;
-  KCal::Todo* todo;
+  QStringList categories;
   
   e = new KCal::Event;
   e->setSummary(task->name());
 
   // Can't use setRelatedToUid()--no error, but no RelatedTo written to disk
-  todo = _calendar.todo(task->uid());
-  e->setRelatedTo(todo);
+  e->setRelatedTo(_calendar.todo(task->uid()));
+
+  // Debugging: some events where not getting a related-to field written.
+  assert(e->relatedTo()->uid() == task->uid());
   
   // Have to turn this off to get datetimes in date fields.
   e->setFloats(false);
   e->setDtStart(task->startTime());
 
+  // So someone can filter this mess out of their calendar display
+  categories.append(i18n("KArm"));
+  e->setCategories(categories);
+
   return e;
 }
 
 HistoryEvent::HistoryEvent(QString uid, QString name, long duration, 
-        QDateTime start, QDateTime stop)
+        QDateTime start, QDateTime stop, QString todoUid)
 {
   _uid = uid;
   _name = name;
   _duration = duration;
   _start = start;
   _stop = stop;
+  _todoUid = todoUid;
 }
 
 
@@ -533,14 +540,32 @@ QValueList<HistoryEvent> KarmStorage::getHistory(const QDate& from,
     events = _calendar.rawEventsForDate(d);
     for (event = events.begin(); event != events.end(); event++)
     {
-      retval.append(
-          HistoryEvent(
-            (*event)->uid(),
-            (*event)->summary(), 
-            (*event)->customProperty(kapp->instanceName(), 
-                                    QCString("duration")).toLong(),
-            (*event)->dtStart(),
-            (*event)->dtEnd()));
+      QString duration;
+      
+      // KArm events have the custom property X-KDE-Karm-duration
+      duration = (*event)->customProperty(kapp->instanceName(), 
+          QCString("duration"));
+      if ( ! duration.isNull() )
+      {
+        if ( (*event)->relatedTo()
+            &&  ! (*event)->relatedTo()->uid().isEmpty() )
+        {
+          retval.append(HistoryEvent(
+              (*event)->uid(),
+              (*event)->summary(), 
+              duration.toLong(),
+              (*event)->dtStart(),
+              (*event)->dtEnd(),
+              (*event)->relatedTo()->uid()
+              ));
+        }
+        else
+          // Something is screwy with the ics file, as this KArm history event
+          // does not have a todo related to it.
+          kdDebug() << "KarmStorage::getHistory(): "
+            << "The event " << (*event)->uid() 
+            << " is not related to a todo.  Dropped." << endl;
+      }
     }
   }
 

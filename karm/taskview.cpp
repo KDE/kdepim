@@ -584,7 +584,6 @@ void TaskView::clipHistory()
   PrintDialog *dialog = new PrintDialog();
   if (dialog->exec()== QDialog::Accepted) 
   {
-    kdDebug() << "MainWindow::print: new style" << endl;
     TimeKard *t = new TimeKard();
     KApplication::clipboard()->
       setText(t->historyAsText(this, dialog->from(), dialog->to()));

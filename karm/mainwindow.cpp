@@ -219,12 +219,12 @@ void MainWindow::makeMenus()
       SLOT( startCurrentTimer() ), actionCollection(),
       "start");
   actionStop = new KAction( i18n("S&top"),
-      QString::fromLatin1("stop"), Key_Escape,
+      QString::fromLatin1("stop"), 0,
       _taskView,
       SLOT( stopCurrentTimer() ), actionCollection(),
       "stop");
   actionStopAll = new KAction( i18n("Stop &All Timers"),
-      0,
+      Key_Escape,
       _taskView,
       SLOT( stopAllTimers() ), actionCollection(),
       "stopAll");
@@ -252,21 +252,21 @@ void MainWindow::makeMenus()
       "edit_task");
   actionAddComment = new KAction( i18n("&Add Comment..."),
       QString::fromLatin1("document"),
-      CTRL+ALT+Key_C,
+      CTRL+ALT+Key_E,
       _taskView,
       SLOT( addCommentToTask() ),
       actionCollection(),
       "add_comment_to_task");
   actionAddComment = new KAction( i18n("&Copy totals to clipboard"),
       QString::fromLatin1("klipper"),
-      CTRL+ALT+Key_P,
+      CTRL+Key_C,
       _taskView,
       SLOT( clipTotals() ),
       actionCollection(),
       "clip_totals");
   actionAddComment = new KAction( i18n("&Copy history to clipboard"),
       QString::fromLatin1("klipper"),
-      CTRL+ALT+Key_H,
+      CTRL+ALT+Key_C,
       _taskView,
       SLOT( clipHistory() ),
       actionCollection(),

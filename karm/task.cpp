@@ -71,6 +71,8 @@ void Task::init( const QString& taskName, long minutes, long sessionTime,
     }
   }
 
+  kdDebug() << "Task::init: minutes = " << minutes << endl;
+
   _name = taskName.stripWhiteSpace();
   _lastStart = QDateTime::currentDateTime();
   _totalTime = _time = minutes;

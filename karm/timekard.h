@@ -29,10 +29,32 @@ class Week
     Week(QDate from);
     QDate start() const;
     QDate end() const;
-    void load(QDate from);
+    QValueList<QDate> days() const;
+
+    /**
+     * Returns a list of weeks for the given date range.
+     *
+     * The first day of the week is picked up from the settings in the
+     * KontrolPanel.
+     *
+     * The list is inclusive; for example, if you pass in a date range of two
+     * days, one being a Sunday and the other being a Monday, you will get two
+     * weeks back in the list.
+     */
+    static QValueList<Week> weeksFromDateRange(const QDate& from, 
+        const QDate& to);
+
+    /**
+     *  Return the name of the week.
+     *
+     *  Uses whatever the user has set up for the long date format in
+     *  KControlPanel, prefixed by "Week of".
+     */
+    QString name() const;
+
 
   private:
-    QValueList<QDate> _days;
+    QDate _start;
 };
 
 /**
@@ -61,16 +83,12 @@ class TimeKard
      * Formatted for pasting into clipboard.
      */
     QString historyAsText(TaskView* taskview, const QDate& from, 
-        const QDate& to);
-    QValueList<Week> weeksFromDateRange(const QDate& from, const QDate& to);
+        const QDate& to, bool justThisTask = true);
+
     void printTask(Task *t, QString &s, int level);
+
+    void printWeekTask(const Task *t, const QMap<QString,long>& datamap, 
+         const Week& week, const int level, QString& retval, long& sum);
   
-  /*
-  private:
-    void header(QPainter& painter);
-    void footer(QPainter& painter);
-    void tableheader(QPainter& painter);
-    void tablefooter(QPainter& painter);
-  */
 };
 #endif // KARM_TIMEKARD_H

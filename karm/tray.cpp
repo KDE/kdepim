@@ -129,7 +129,7 @@ void KarmTray::updateToolTip(QPtrList<Task> activeTasks)
   const int maxWidth = desktopWidth - buffer;
 
   QString qTip;
-  QString s = i18n( "Active: " );
+  QString s;
 
   // Build the tool tip with all of the names of the active tasks.
   // If at any time the width of the tool tip is larger than the desktop,

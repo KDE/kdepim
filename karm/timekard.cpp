@@ -3,6 +3,7 @@
 #include <qdatetime.h>
 #include <qpaintdevicemetrics.h>
 #include <qpainter.h>
+#include <qmap.h>
 
 #include <kglobal.h>
 #include <kdebug.h>
@@ -14,38 +15,12 @@
 #include "task.h"
 #include "taskview.h"
 
-const int reportWidth = 75;
+const int taskWidth = 40;
+const int timeWidth = 6; 
+const int totalTimeWidth = 7;
+const int reportWidth = taskWidth + (7 * timeWidth) + totalTimeWidth;
 
-const int taskWidth = 65;
-const int timeWidth = 7; // 9999.99 max size of hours
-
-QValueList<Week> TimeKard::weeksFromDateRange(const QDate& from, 
-    const QDate& to)
-{
-  int dow;
-  QDate start;
-  QValueList<Week> weeks;
-
-  // The QDate weekNumber() method always puts monday as the first day of the
-  // week.  Also, week 1 always includes the first Thursday of the year.  For
-  // example, January 1, 2000 was a Saturday, so QDate(2000,1,1).weekNumber()
-  // returns 52.  QValueList<Week> weeks;
-  
-  dow = from.dayOfWeek();    // Monday = 1
-  
-  // For now, we force the first day of the week to be a Monday
-  if (dow == 1)
-    start = from;
-  else
-    // If from is a Wednesday, then dow = 3.  Subtract 2 to get Monday's date.
-    start = from.addDays(-(dow - 1));
-
-  for (QDate d = start; d <= to; d = d.addDays(7))
-  {
-    weeks.append(Week(d));
-  }
-  return weeks;
-}
+const QString cr = QString::fromLatin1("\n");
 
 QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask)
 {
@@ -111,211 +86,192 @@ void TimeKard::printTask(Task *task, QString &s, int level)
   }      
 }
 
-  /*
-  // Calculate the totals Note the totals are only calculated at the top most
-  // levels, as the totals are increased together with its children.
-  int totalTotal = 0;
-  int sessionTotal = 0;
-  for (Task* task = taskview->current_item()); task;
-      task = static_cast<Task *>(task->nextSibling()) 
-  {
-    totalTotal += task->time();
-    sessionTotal += task->sessionTime();
-  }
-  return QString::fromLatin1("stubbed taskTotalsAsText");
-  */
-
-QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
-    const QDate& to)
+void TimeKard::printWeekTask(const Task *task, 
+    const QMap<QString,long>& datamap, 
+    const Week& week, const int level, QString& s, long& sum)
 {
-  return QString(QString::fromLatin1("Stubbed taskHistoryAsText: "
-      "from %1, to %2"))
-      .arg(from.toString())
-      .arg(to.toString());
-}
+  QString buf;
+  QString key;
+  QDate day;
+  long weeksum;
 
-/*
-void TimeKard::print()
-{
-  QValueList<Week> weeks;
-  QValueList<Week>::iterator week;
-  QValueList<HistoryEvent> events;
-
-  if (setup(0L, i18n("Print Time Card"))) 
+  day = week.start();
+  weeksum = 0;
+  for (int i = 0; i < 7; i++)
   {
-    QPainter painter(this);
-    QPaintDeviceMetrics deviceMetrics(this);
-    QFontMetrics metrics = painter.fontMetrics();
-    pageHeight = deviceMetrics.height();
-    int pageWidth = deviceMetrics.width();
-    xMargin = margins().width();
-    yMargin = margins().height();
-    yoff = yMargin;
-    lineHeight = metrics.height();
-  
-    // FIXME: stubbed
-    realPageWidth = pageWidth;
+    key = QString::fromLatin1("%1_%2")
+      .arg(day.toString(QString::fromLatin1("yyyyMMdd")))
+      .arg(task->uid());
 
-    weeks = weeksFromDateRange(_from, _to);
-    for (week = weeks.begin(); week != weeks.end(); ++week)
+    if (datamap.contains(key))
     {
-      events = _taskview->getHistory((*week).start(), (*week).end());
-
-      if (noRoomForNewTable())
-      {
-        footer(painter);
-        newpage();
-        header(painter);
-      }
-
-      kdDebug() << "TimeKard::print: 3" << endl;
-      tableheader(painter);
-
-      if (events.empty())
-      {
-        painter.drawText(xMargin, yoff, i18n("No hours logged this week."));
-        yoff += lineHeight;
-      }
-      else
-      {
-        kdDebug() << "TimeKard::print: 4" << endl;
-        for (Task* task = _taskview->first_child(); task;
-            task = static_cast<Task *>(task->nextSibling()) )
-        {
-          printTask(task, painter, events, 0);
-        }
-      }
-      if (noRoomForTableFooter())
-      {
-        footer(painter);
-        newpage();
-        header(painter);
-      }
-      tablefooter(painter);
+      s += QString::fromLatin1("%1")
+        .arg(formatTime(datamap[key]/60), timeWidth);
+      sum += datamap[key];  // in seconds
+      weeksum += datamap[key];  // in seconds
+    }
+    else
+    {
+      buf.fill(' ', timeWidth);
+      s += buf;
     }
 
+    day = day.addDays(1);
   }
-}
 
-void TimeKard::printTask(Task *task, QPainter &painter, 
-    QValueList<HistoryEvent> &events, int level)
-{
-  QString time = formatTime(task->time());
-  QString sessionTime = formatTime(task->sessionTime());
-  QString name = task->name();
-  if (noRoomForNewTask())
-  {
-    footer(painter);
-    newpage();
-    header(painter);
-    tableheader(painter);
-  }
-  printLine(time, sessionTime, name, painter, level);
+  // Total for task this week
+  s += QString::fromLatin1("%1").arg(formatTime(weeksum/60), totalTimeWidth);
+  
+  // Task name
+  s += buf.fill(' ', level + 1);
+  s += QString::fromLatin1("%1").arg(task->name(), -taskWidth);
+  s += cr;
 
-  for ( Task* subTask = task->firstChild();
-              subTask;
-              subTask = subTask->nextSibling())
+  for (Task* subTask = task->firstChild();
+      subTask;
+      subTask = subTask->nextSibling())
   {
-    printTask(subTask, painter, events, level+1);
+    printWeekTask(subTask, datamap, week, level+1, s, sum);
   }      
 }
 
-void TimeKard::printLine( QString total, QString session, QString name, 
-                           QPainter &painter, int level )
+QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
+    const QDate& to, bool justThisTask)
 {
-  int xoff = xMargin + 10 * level;
-  kdDebug() << "TimeKard::printLine: " << name << endl;
+  QString retval;
+  QString taskhdr, totalhdr;
+  QString line, buf;
+  long sum;
   
-  painter.drawText(xoff, yoff, nameFieldWidth, lineHeight,
-      QPainter::AlignLeft, name);
+  QValueList<Week>::iterator week;
+  QValueList<HistoryEvent> events;
+  QValueList<HistoryEvent>::iterator event;
+  QMap<QString, long> datamap;
+  QString key;
 
-  xoff = xMargin + nameFieldWidth;
-  
-  painter.drawText(xoff, yoff, sessionTimeWidth, lineHeight,
-      QPainter::AlignRight, session);
+  line.fill('-', reportWidth);
+  line += cr;
 
-  xoff += sessionTimeWidth + 5;
-  
-  painter.drawText(xoff, yoff, timeWidth, lineHeight,
-      QPainter::AlignRight, total);
+  // header
+  retval += i18n("Task History");
 
-  xoff += timeWidth + 5;
+  // output one time card table for each week in the date range
+  QValueList<Week> weeks = Week::weeksFromDateRange(from, to);
+  for (week = weeks.begin(); week != weeks.end(); ++week)
+  {
 
-  yoff += lineHeight;
-  
-  if (yoff + 2 * lineHeight > pageHeight) {
-    newPage();
-    yoff = yMargin;
+    events = taskview->getHistory((*week).start(), (*week).end());
+
+    // Build lookup dictionary used to output data in table cells.  keys are
+    // QStrings in this format: YYYYMMDD_NNNNNN, where Y = year, M = month, d
+    // = day and NNNNN = the VTODO uid.  The value is the total seconds logged
+    // against that task on that day.  Note the UID is the todo id, not the
+    // event id, so things are accumulated for each task.
+    datamap.clear();
+    for (event = events.begin(); event != events.end(); ++event)
+    {
+      key = QString(QString::fromLatin1("%1_%2"))
+        .arg((*event).start().date().toString(QString::fromLatin1("yyyyMMdd")))
+        .arg((*event).todoUid());
+      if (datamap.contains(key))
+        datamap.replace(key, datamap[key] + (*event).duration());
+      else
+        datamap.insert(key, (*event).duration());
+    }
+
+    // week name
+    retval += cr + cr;
+    buf.fill(' ', int((reportWidth - (*week).name().length()) / 2));
+    retval += buf + (*week).name() + cr;
+
+    // day headings
+    for (int i = 0; i < 7; i++)
+    {
+      retval += QString::fromLatin1("%1")
+          .arg((*week).start().addDays(i).day(), timeWidth);
+    }
+    retval += cr;
+    retval += line;
+
+    // the tasks
+    if (events.empty())
+    {
+      retval += i18n("  No hours logged this week.");
+    }
+    else
+    {
+      sum = 0;
+      if (justThisTask)
+      {
+        printWeekTask(taskview->current_item(), datamap, (*week), 0, retval,
+            sum);
+      }
+      else
+      {
+        for (Task* task= taskview->current_item(); task;
+            task= task->nextSibling())
+        {
+          printWeekTask(task, datamap, (*week), 0, retval, sum);
+        }
+      } 
+
+      // total
+      retval += line;
+      buf.fill(' ', 7 * timeWidth);
+      retval += buf;
+      retval += QString::fromLatin1("%1 %2")
+        .arg(formatTime(sum/60), totalTimeWidth)
+        .arg(i18n("Total"), -taskWidth);
+      
+    }
   }
+  return retval;
 }
 
-bool TimeKard::noRoomForNewTable() const
-{
-  // 2 line for blank space before table,
-  // 2 lines for table header
-  // 2 tasks
-  return ( (yoff + 6 * lineHeight) > pageHeight );
-}
-bool TimeKard::noRoomForNewTask() const
-{
-  return ( (yoff + 2 * lineHeight) > pageHeight );
-}
-bool TimeKard::noRoomForTableFooter() const
-{
-  return ( (yoff + 3 * lineHeight) > pageHeight );
-}
-void TimeKard::newpage()
-{
-  newPage();
-  yoff = yMargin;
-}
-void TimeKard::footer(QPainter& painter)
-{
-  yoff += lineHeight;
-  painter.drawLine(xMargin, yoff, xMargin + realPageWidth, yoff);
-  yoff += lineHeight;
-  painter.drawText(xMargin, yoff, i18n("Page %").arg(page_no));
-}
-void TimeKard::tableheader(QPainter& painter)
-{
-  painter.drawText(xMargin, yoff,QString::fromLatin1("Stubbed table header"));
-  yoff += lineHeight;
-  painter.drawLine(xMargin, yoff, xMargin + realPageWidth, yoff);
-  yoff += 2 * lineHeight;
-}
-void TimeKard::tablefooter(QPainter& painter)
-{
-  painter.drawText(xMargin,yoff,QString::fromLatin1("Stubbed table footer"));
-  yoff += lineHeight;
-  painter.drawLine(xMargin, yoff, xMargin + realPageWidth, yoff);
-  yoff += 2 * lineHeight;
-}
-*/
-Week::Week() 
-{
-  load(QDate::currentDate());
-}
+Week::Week() {}
 
 Week::Week(QDate from)
 {
-  load(from);
-}
-
-void Week::load(QDate from)
-{
-  _days.clear();
-  _days.append(from);
-  for (int i = 1; i < 7; i++)
-    _days.append(from.addDays(i));
+  _start = from;
 }
 
 QDate Week::start() const 
 { 
-  return _days.first();
+  return _start;
 }
 
 QDate Week::end() const
 {
-  return _days.last();
+  return _start.addDays(7);
+}
+
+QString Week::name() const
+{
+  return QString(i18n("Week of %1"))
+    .arg(KGlobal::locale()->formatDate(start()));
+}
+
+QValueList<Week> Week::weeksFromDateRange(const QDate& from, const QDate& to)
+{
+  QDate start;
+  QValueList<Week> weeks;
+
+  // The QDate weekNumber() method always puts monday as the first day of the
+  // week.  
+  //
+  // Not that it matters here, but week 1 always includes the first Thursday
+  // of the year.  For example, January 1, 2000 was a Saturday, so
+  // QDate(2000,1,1).weekNumber() returns 52.  
+
+  // Since report always shows a full week, we generate a full week of dates,
+  // even if from and to are the same date.  The week starts on the day
+  // that is set in the locale settings.
+  start = from.addDays( 
+      -((7 - KGlobal::locale()->weekStartDay() + from.dayOfWeek()) % 7));
+
+  for (QDate d = start; d <= to; d = d.addDays(7))
+    weeks.append(Week(d));
+
+  return weeks;
 }
 
