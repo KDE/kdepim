@@ -23,8 +23,11 @@ UI Changes:
   That's not a lot but it should keep Heiko happy for a while and
   it reminds us that we should move towards a more modern method
   of setting up the UI -- or not?
-* Fixed some UI weirdneses like:
+* Tried to fix some UI weirdneses like:
 	- Delete Memo button enabled when no memo selected
+  but QListBox has the nasty habit of always having *something*
+  selected, even if you can't see what it is.
+
   Now I know that the internal conduits -- memoWidget and addressWidget
   will probably die out soon when we have a real working kab2 conduit
   as well as a KNotes conduit, but till then it's nice to have something
@@ -51,6 +54,13 @@ Internal Changes:
 * Replaced several if else if ... constructions with switch() 
 * Added a sensibleTitle() and shortTitle() to PilotMemo for use 
   by the KNotes conduit (and maybe others)
+
+Documentation:
+
+* Spent a little time on the (english) documentation and brought a few
+  parts of it back up-to-date. It needs up-to-date URL's, probably we
+  should move the mailing list to kde-pim@kde.org, and we need new 
+  screenshots.
 
 Wishlist:
 
