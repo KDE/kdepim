@@ -194,7 +194,11 @@ QString ToDo::todo2String( KCal::Todo* todo, ExtraMap& map )
     kdDebug(5227) << " todo->isCompleted " << todo->isCompleted() << endl;
     text.append( "Completed=\""+QString::number( todo->isCompleted()) + "\" " );
     text.append( "Progress=\"" + QString::number( todo->percentComplete() ) + "\" ");
-    text.append( "Summary=\"" + escape( todo->summary() ) + "\" ");
+
+    /* if it is not a Stock Zaurus we will right the summary */
+    if ( device() && device()->distribution() != Device::Zaurus )
+        text.append( "Summary=\"" + escape( todo->summary() ) + "\" ");
+
     if ( todo->hasDueDate() ) {
         text.append( "HasDate=\"1\" ");
         QDateTime time = todo->dtDue();
@@ -205,7 +209,17 @@ QString ToDo::todo2String( KCal::Todo* todo, ExtraMap& map )
         text.append( "HasDate=\"0\" ");
     }
     text.append( "Priority=\"" + QString::number( todo->priority() ) +"\" " );
-    text.append( "Description=\"" +escape( todo->description() ) + "\" " );
+
+    /* if Opie let's write the description right away
+     * else we need to find out if description is empty and then
+     * fallback to the summary if both are empty you're lost!
+     **/
+    if ( device() && device()->distribution() != Device::Zaurus )
+        text.append( "Description=\"" +escape( todo->description() ) + "\" " );
+    else{
+        QString desc = todo->description().isEmpty() ? todo->summary() : todo->description();
+        text.append( "Description=\"" +escape( desc ) );
+    }
 
     // id hacking We don't want to have the ids growing and growing
     // when an id is used again it will be put to the used list and after done
