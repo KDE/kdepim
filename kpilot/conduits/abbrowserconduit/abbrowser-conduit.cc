@@ -205,14 +205,6 @@ bool AbbrowserConduit::_loadAddressBook()
 bool AbbrowserConduit::_saveAddressBook()
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGCONDUIT << "abChanged=" << abChanged << endl;
-	for(KABC::AddressBook::Iterator contactIter = aBook->begin(); contactIter != aBook->end(); ++contactIter)
-	{
-		DEBUGCONDUIT << "Adressee: " <<(*contactIter).realName() << ", uid=" <<(*contactIter).uid() << ", resource=" <<(*contactIter).resource() << endl;
-	}
-	DEBUGCONDUIT << fname << " --------------------------------------------"<<endl;
-#endif
 
 	if(!abChanged) return true;
 //	return(aBook) &&(aBook->saveAll());
@@ -1100,6 +1092,8 @@ bool AbbrowserConduit::_equal(const PilotAddress & piAddress, KABC::Addressee & 
 		return false;
 	}
 
+	if (piAddress.getCat()!=_getCat(abEntry.categories())) return false;	
+	
 	return true;
 }
 
@@ -1957,6 +1951,18 @@ void AbbrowserConduit::_checkDelete(PilotRecord* r, PilotRecord *s)
 
 
 // $Log$
+// Revision 1.54  2002/10/10 13:44:41  kainhofe
+// This fixes several bugs:
+// -) conflict resolution now also works if you chose ignore on the last sync
+// -) home/work phone/fax were mixed up
+// -) deleting an address in kaddressbook now also deletes the address from the handheld
+// -) variable renaming for consistent naming
+// -) fix a crash with an iterator being deleted and then incremented
+// -) Offering the value from the last sync in the conflict resolution dialog
+// -) Using an addressbook for several handhelds should work now
+// -) archived records are now synced to the PC, but not back to the handheld
+// -) If an addressee has a wrong pilotID, the pilotID is reset
+//
 // Revision 1.53  2002/10/05 13:59:29  kainhofe
 // duplication now works as conflict resolution. Removed the warning in the setup dialog.
 //
