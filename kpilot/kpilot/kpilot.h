@@ -177,7 +177,8 @@ private:
 	*/
 	QComboBox	*conduitCombo;
 
-	QPixmap	icon_hotsync,icon_backup,icon_fastsync,icon_restore;
+	QPixmap	icon_hotsync,icon_backup,icon_fastsync,icon_restore,
+		icon_quit;
 	QFont fixedFont;
 
  protected slots:

@@ -289,6 +289,16 @@ void KPilotInstaller::initIcons()
 #endif
 		icon_restore = QPixmap((const char **)toolbar_restore);
 	}
+
+	icon_quit = KGlobal::iconLoader()->loadIcon("exit",
+		KIcon::Toolbar,0,KIcon::DefaultState,0,true);
+
+	if (icon_quit.isNull())
+	{
+#ifdef DEBUG
+		kdDebug() << fname << ": Quit icon not found." << endl;
+#endif
+	}
 }
 
 
@@ -827,7 +837,7 @@ KPilotInstaller::initMenu()
 	fileMenu->insertItem(icon_restore,
 		i18n("&Restore"), KPilotInstaller::ID_FILE_RESTORE);
     fileMenu->insertSeparator(-1);
-	fileMenu->insertItem(SmallIcon("exit"),
+	fileMenu->insertItem(icon_quit,
 		i18n("&Quit"), KPilotInstaller::ID_FILE_QUIT);
     connect(fileMenu, SIGNAL (activated(int)), SLOT (menuCallback(int)));
     
