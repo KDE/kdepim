@@ -73,17 +73,6 @@
                                     <string>&lt;qt&gt;Path to the KOrganizer calendar file&lt;/qt&gt;</string>
                                 </property>
                             </widget>
-                            <widget class="QRadioButton" row="1" column="0">
-                                <property name="name">
-                                    <cstring>fSyncFile</cstring>
-                                </property>
-                                <property name="enabled">
-                                    <bool>true</bool>
-                                </property>
-                                <property name="text">
-                                    <string>Calendar &amp;file:</string>
-                                </property>
-                            </widget>
                             <widget class="QRadioButton" row="0" column="0" rowspan="1" colspan="2">
                                 <property name="name">
                                     <cstring>fSyncStdCalendar</cstring>
@@ -93,6 +82,18 @@
                                 </property>
                                 <property name="checked">
                                     <bool>true</bool>
+
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton" row="1" column="0">
+                                <property name="name">
+                                    <cstring>fSyncFile</cstring>
+                                </property>
+                                <property name="enabled">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="text">
+                                    <string>Calendar &amp;file:</string>
                                 </property>
                             </widget>
                         </grid>

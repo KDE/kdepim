@@ -314,13 +314,15 @@ error:
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": Using calendar file " << fCalendarFile << endl;
 	DEBUGCONDUIT << "fCalendarType="<<fCalendarType<<endl;
-	DEBUGCONDUIT<<"eCalendarLocal would be "<<eCalendarLocal<<", eCalendarResources would be "<<eCalendarResource<<endl;
+	DEBUGCONDUIT << "eCalendarLocal would be "<<eCalendarLocal<<", eCalendarResources would be "<<eCalendarResource<<endl;
 #endif
 
 	switch(fCalendarType)
 	{
 		case eCalendarLocal:
-#
+#ifdef DEBUG
+			DEBUGCONDUIT<<"Using CalendarLocal!"<<endl;
+#endif
 			fCalendar = new KCal::CalendarLocal(tz);
 /*			fCalendar = new KCal::CalendarLocal();
 			fCalendar->setLocalTime();*/
