@@ -47,7 +47,7 @@ class CalendarNull : public Calendar
     void close() {}  
     void save() {}
 
-    bool addEvent( Event * ) { return false; }
+    bool addEvent( Event *anEvent ) { return false; }
     void deleteEvent( Event * ) {}
     Event *event( const QString & ) { return 0; }
     Event::List rawEvents() { return Event::List(); }
