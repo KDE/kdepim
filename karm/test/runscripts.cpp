@@ -85,6 +85,8 @@ int runscripts
       if ( interpreter == "sh" ) s->addArgument( "--batch" );
 
       rval = s->run();
+      delete s;
+      s = new Script();
     }
     ++it;
   }
