@@ -79,6 +79,8 @@ class ReadCalendarJob : public GWJob
 
     // we need the resource here for doing uid mapping
     void setResource( KCal::ResourceCached * );
+    
+    void setCalendar( KCal::Calendar * );
 
     void run();
 
@@ -88,6 +90,7 @@ class ReadCalendarJob : public GWJob
   private:
     std::string *mCalendarFolder;
     KCal::ResourceCached *mResource;
+    KCal::Calendar *mCalendar;
 };
 
 class ThreadedReadCalendarJob : public KPIM::ThreadWeaver::Job,

@@ -27,8 +27,7 @@
 #include <libkcal/freebusy.h>
 #include <libkcal/icalformat.h>
 #include <libkcal/scheduler.h>
-#include <libkcal/resourcelocal.h>
-#include <libkcal/calendarresources.h>
+#include <libkcal/calendarlocal.h>
 
 #include <kabc/vcardconverter.h>
 
@@ -55,6 +54,7 @@ class ResourceMemory : public ResourceCached
 };
 
 }
+
 
 extern "C" {
 int kdemain( int argc, char **argv );
@@ -211,18 +211,14 @@ void Groupwise::getCalendar( const KURL &url )
 
   GroupwiseServer server( u, user, pass, 0 );
 
-  KTempFile temp;
-  KCal::ResourceLocal resource( temp.name() );
-  resource.setActive( true );
-  KCal::CalendarResources calendar;
-  calendar.resourceManager()->add( &resource );
+  KCal::CalendarLocal calendar;
 
   kdDebug() << "Login" << endl;
   if ( !server.login() ) {
     errorMessage( i18n("Unable to login.") );
   } else {
     kdDebug() << "Read calendar" << endl;
-    if ( !server.readCalendarSynchronous( &resource ) ) {
+    if ( !server.readCalendarSynchronous( &calendar ) ) {
       errorMessage( i18n("Unable to read calendar data.") );
     }
     kdDebug() << "Logout" << endl;

@@ -144,7 +144,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
 
 ReadCalendarJob::ReadCalendarJob( struct soap *soap, const QString &url,
                                   const std::string &session )
-  : GWJob( soap, url, session )
+  : GWJob( soap, url, session ), mResource( 0 ), mCalendar( 0 )
 {
   kdDebug() << "ReadCalendarJob()" << endl;
 }
@@ -157,6 +157,11 @@ void ReadCalendarJob::setCalendarFolder( std::string *calendarFolder )
 void ReadCalendarJob::setResource( KCal::ResourceCached *resource )
 {
   mResource = resource;
+}
+
+void ReadCalendarJob::setCalendar( KCal::Calendar *calendar )
+{
+  mCalendar = calendar;
 }
 
 void ReadCalendarJob::run()
@@ -223,9 +228,11 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
   if ( items ) {
     IncidenceConverter conv( mSoap );
 
-    // FIXME: Don't clear cache but merge with cache to preserve uids and in
-    // case not all incidences are retrieved from the server.
-    mResource->clearCache();
+    if ( mResource ) {
+      // FIXME: Don't clear cache but merge with cache to preserve uids and in
+      // case not all incidences are retrieved from the server.
+      mResource->clearCache();
+    }
 
     std::vector<class ns1__Item * >::const_iterator it;
     for( it = items->begin(); it != items->end(); ++it ) {
@@ -243,12 +250,14 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
       if ( i ) {
         i->setCustomProperty( "GWRESOURCE", "CONTAINER", conv.stringToQString( id ) );
 
-        QString remoteUid = conv.stringToQString( (*it)->id );
-        QString localUid = mResource->localUid( remoteUid );
-        if ( localUid.isEmpty() ) {
-          mResource->setRemoteUid( i->uid(), remoteUid );
-        } else {
-          i->setUid( localUid );
+        if ( mResource ) {
+          QString remoteUid = conv.stringToQString( (*it)->id );
+          QString localUid = mResource->localUid( remoteUid );
+          if ( localUid.isEmpty() ) {
+            mResource->setRemoteUid( i->uid(), remoteUid );
+          } else {
+            i->setUid( localUid );
+          }
         }
 
 // Disable uid mapping as long as we load the whole calendar anyway.
@@ -265,8 +274,14 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
           mResource->deleteIncidence( oldIncidence );
         }
 #endif
-
-        mResource->addIncidence( i );
+        if ( mResource ) {
+          mResource->addIncidence( i );
+        } else if ( mCalendar ) {
+          mCalendar->addIncidence( i );
+        } else {
+          kdError() << "ReadCalendarJob::Neither resource nor calendar set" <<
+            endl;
+        }
       }
     }
   }

@@ -196,7 +196,7 @@ size_t GroupwiseServer::gSoapReceiveCallback( struct soap *, char *s, size_t n )
 
   if ( !m_sock ) {
     kdError() << "no open connection" << endl;
-    return -1;
+    return 0;
   }
   if ( !mError.isEmpty() ) {
     kdError() << "SSL is in error state." << endl;
@@ -881,6 +881,24 @@ bool GroupwiseServer::readCalendarSynchronous( KCal::ResourceCached *resource )
   ReadCalendarJob *job = new ReadCalendarJob( mSoap, mUrl, mSession );
   job->setCalendarFolder( &mCalendarFolder );
   job->setResource( resource );
+
+  job->run();
+
+  return true;
+}
+
+bool GroupwiseServer::readCalendarSynchronous( KCal::Calendar *cal )
+{
+  kdDebug() << "GroupwiseServer::readCalendar()" << endl;
+
+  if ( mSession.empty() ) {
+    kdError() << "GroupwiseServer::readCalendar(): no session." << endl;
+    return false;
+  }
+
+  ReadCalendarJob *job = new ReadCalendarJob( mSoap, mUrl, mSession );
+  job->setCalendarFolder( &mCalendarFolder );
+  job->setCalendar( cal );
 
   job->run();
 

@@ -186,7 +186,7 @@ bool ResourceGroupwise::doLoad()
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(), i18n("Downloading calendar") );
   connect( mProgress,
-           SIGNAL( progressItemCanceled( ProgressItem * ) ),
+           SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
            SLOT( cancelLoad() ) );
 #else
 

@@ -75,6 +75,7 @@ class GroupwiseServer : public QObject
     bool deleteIncidence( KCal::Incidence * );
 
     bool readCalendarSynchronous( KCal::ResourceCached *resource );
+    bool readCalendarSynchronous( KCal::Calendar *cal );
 
     QMap<QString, QString> addressBookList();
 
