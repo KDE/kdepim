@@ -9,9 +9,11 @@
 <!-- Title information -->
 
 <title>The KMail Handbook
-<author>Markus Wuebben, <tt/markus.wuebben@kde.org/
-<date>March 5th 1998
-<abstract>This Handbook describes ALPHA KMail
+<author>Markus Wuebben
+<date>Version 0.6, June 7 1998
+<abstract>This documentation was last updated for kmail version 0.6. 
+Please make any comments and additions to the author.
+</abstract>
 
 <!-- Table of contents -->
 <toc>
@@ -30,30 +32,6 @@ We hope you will enjoy this Mailer,
 <p>
 <htmlurl url="mailto:markus.wuebben@kde.org" name="markus.wuebben@kde.org">
 <p>
-
-<sect>Installation
-<p>
-<sect1>How to obtain KMail
-<p>
-KMail is a part of the KDE project <url url="http://www.kde.org">.
-KMail can be found on <url url="ftp://ftp.kde.org/pub/kde/">, the main ftp site
-of the KDE project, in the kdenetwork distribution.
-
-
-<sect1>Compilation and installation
-<p>
-
-In order to compile and install KMail on your system, type the following in the base 
-directory of the KMail distribution:
-<tscreen><verb>
-% ./configure
-% make
-% make install
-</verb></tscreen>
-
-
-Since KMail uses <tt>autoconf</tt> you should have not trouble compiling it.
-Should you run into problems please report them to the <sf/KDE/ mailing lists.
 
 <sect>How to get started...
 <p>
@@ -236,14 +214,33 @@ Displays essential information about KMail.
 
 <sect>Questions and answers
 <p>
-<sect>Authors
-<p>
-Stefan Taferner <tt>taferner@alpin.or.at</tt><p>
-Markus Wuebben <tt>markus.wuebben@kde.org</tt><p>
-based on the work of:<p>
-Lynx <tt>lynx@topaz.hknet.com</tt><p>
-Stephan <tt>Meyer Stephan.Meyer@pobox.com</tt><p>
-and the above authors.<p>
 
+<sect>Epilogue
 <p>
+
+<sect1>Developers
+<p>
+<tt><htmlurl url="mailto:taferner@alpin.or.at" 
+name="Stefan Taferner"></tt><p>
+
+<tt><htmlurl url="mailto:markus.wuebben@kde.org" 
+name="Markus Wuebben"></tt><p>
+
+<bf>Based on the work of:</bf><p>
+
+<tt><htmlurl url="mailto:lynx@topaz.hknet.com" 
+name="Lynx"></tt><p>
+
+<tt><htmlurl url="mailto:Stephan.Meyer@pobox.com" 
+name="Stephan Meyer"></tt><p>
+
+<sect1>Authors
+<p>
+
+<tt><htmlurl url="mailto:markus.wuebben@kde.org" 
+name="Markus Wuebben"></tt><p>
+
+<tt><htmlurl url="mailto:rwilliams@kde.org" 
+name="Robert Williams"></tt><p>
+
 </article>
