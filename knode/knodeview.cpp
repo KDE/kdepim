@@ -425,7 +425,7 @@ void KNodeView::initActions()
                               SLOT(slotGrpExpire()), a_ctions, "group_expire");
   a_ctGrpResort             = new KAction(i18n("Res&ort"), 0, this,
                               SLOT(slotGrpResort()), a_ctions, "group_resort");
-  a_ctGrpUnsubscribe        = new KAction(i18n("&Unsubscribe"), 0, this,
+  a_ctGrpUnsubscribe        = new KAction(i18n("&Unsubscribe"), "news_unsubscribe", 0, this,
                               SLOT(slotGrpUnsubscribe()), a_ctions, "group_unsubscribe");
   a_ctGrpSetAllRead         = new KAction(i18n("Mark all as &read"), "goto", 0, this,
                               SLOT(slotGrpSetAllRead()), a_ctions, "group_allRead");
