@@ -205,7 +205,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   slotAttachmentSelected(0);
 
   //init
-  initData(text);
+  initData(text,firstEdit);
 
   //apply configuration
   setConfig();
@@ -269,16 +269,48 @@ void KNComposer::setConfig()
 
 bool KNComposer::hasValidData()
 {
+  // header checks
+
   if (v_iew->s_ubject->text().isEmpty()) {
     KMessageBox::sorry(this, i18n("Please enter a subject!"));
     return false;
   }
 
-  if (m_ode != mail)
+  if (m_ode != mail) {
     if (v_iew->g_roups->text().isEmpty()) {
       KMessageBox::sorry(this, i18n("Please enter a newsgroup!"));
       return false;
     }
+
+    int groupCount = QStringList::split(',',v_iew->g_roups->text()).count();
+    int fupCount = QStringList::split(',',v_iew->f_up2->currentText()).count();
+    bool followUp = !v_iew->f_up2->currentText().isEmpty();
+
+    if (groupCount>12) {
+      KMessageBox::sorry(this, i18n("You are crossposting to more than 12 newsgroups.\nPlease remove all newsgroups in which your article is off-topic!"));
+      return false;
+    }
+
+    if (groupCount>5)
+      if (!(KMessageBox::warningYesNo( this, i18n("You are crossposting to more than five newsgroups.\nPlease reconsider wether this is really usefull\nand remove groups in which your article is off-topic.\nDo you want to re-edit the article or send it anyway?"),
+                                       QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
+        return false;
+
+    if (!followUp && (groupCount>2))
+      if (!(KMessageBox::warningYesNo( this, i18n("You are crossposting to more than two newsgroups.\nPlease use the \"Followup-To\" header to direct\nthe replies to your article into one group.\nDo you want to re-edit the article or send it anyway?"),
+                                       QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
+        return false;
+
+    if (fupCount>12) {
+      KMessageBox::sorry(this, i18n("You are directing replies into more than 12 newsgroups.\nPlease remove some newsgroups from the \"Followup-To\" header!"));
+      return false;
+    }
+
+    if (fupCount>5)
+      if (!(KMessageBox::warningYesNo( this, i18n("You are directing replies into more than five newsgroups.\nPlease reconsider wether this is really usefull.\nDo you want to re-edit the article or send it anyway?"),
+                                       QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
+        return false;
+  }
 
   if (m_ode != news)
     if (v_iew->t_o->text().isEmpty() ) {
@@ -286,31 +318,69 @@ bool KNComposer::hasValidData()
       return false;
     }
 
-  //GNKSA checks
+  //GNKSA body checks
   bool empty = true;
   bool longLine = false;
+  int sigLength = 0;
+  int notQuoted = 0;
+  int textLines = 0;
   QString line;
 
   for(int i=0; i<v_iew->e_dit->numLines(); i++) {
     line=v_iew->e_dit->textLine(i);
-    if(line == "-- ")
+    if (line == "-- ") {   // signature text
+      for (int j=i+1; j<v_iew->e_dit->numLines(); j++) {
+        line=v_iew->e_dit->textLine(i);
+        sigLength++;
+        if(line.length()>80) {
+          longLine = true;
+          break;
+        }
+      }
       break;
-    if(!line.isEmpty())
+    }
+    if(!line.isEmpty()) {
       empty = false;
+      textLines++;
+      if (line[0]!='>')
+        notQuoted++;
+    }
     if(line.length()>80) {
       longLine = true;
       break;
     }
   }
 
-  if(empty) {
+  if (empty) {
     KMessageBox::sorry(this, i18n("You can't post an empty message!"));
     return false;
   }
 
-  if(longLine)
-    return  (KMessageBox::warningYesNo( this, i18n("Your article contains lines longer than 80 characters.\nDo you want to re-edit the article or send it anyway?"),
-                                              QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes);
+  if ((textLines>1)&&(notQuoted==1)) {
+    if (!(KMessageBox::warningYesNo( this, i18n("Your article seems to consist entirely of quoted text.\nDo you want to re-edit the article or send it anyway?"),
+                                    QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
+      return false;
+  } else {
+    if (notQuoted==0) {
+      KMessageBox::sorry(this, i18n("You can't post an article consisting\nentirely of quoted text!"));
+      return false;
+    }
+  }
+
+  if (longLine)
+    if (!(KMessageBox::warningYesNo( this, i18n("Your article contains lines longer than 80 characters.\nDo you want to re-edit the article or send it anyway?"),
+                                     QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
+      return false;
+
+  if (sigLength>8) {
+    if (!(KMessageBox::warningYesNo( this, i18n("Your signature is more than 8 lines long.\nYou should shorten it to match the widely accepted limit of 4 lines.\nDo you want to re-edit the article or send it anyway?"),
+                                     QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
+      return false;
+  } else
+    if (sigLength>4)
+       KMessageBox::information(this, i18n("Your signature exceeds the widely accepted limit of 4 lines.\nPlease consider to shorten your signature,\notherwise you will probably annoy your readers"),
+                                QString::null,"longSignatureWarning");
+
   return true;
 }
 
@@ -430,7 +500,7 @@ void KNComposer::closeEvent(QCloseEvent *e)
 }
 
 
-void KNComposer::initData(const QString &text)
+void KNComposer::initData(const QString &text, bool firstEdit)
 {
   //Subject
   if(a_rticle->subject()->isEmpty())
@@ -450,15 +520,17 @@ void KNComposer::initData(const QString &text)
     v_iew->f_up2->lineEdit()->setText(fup2->asUnicodeString());
 
   KNMimeContent *textContent=a_rticle->textContent();
+  QString s;
 
   if(text.isEmpty()) {
-    QString decoded;
-    if(textContent) {
-      textContent->decodedText(decoded);
-      v_iew->e_dit->setText(decoded);
-    }
+    if(textContent)
+      textContent->decodedText(s);
   } else
-    v_iew->e_dit->setText(text);
+    s = text;
+
+  if (!firstEdit && (s.right(1)=="\n"))
+      s.truncate(s.length()-1);    // remove new-line
+  v_iew->e_dit->setText(s);
 
   // initialize the charset select action
   if(textContent)
@@ -603,6 +675,9 @@ void KNComposer::slotSetType(int i)
       if (!s.isEmpty())
         v_iew->e_dit->insertLine("",1);
     }
+  } else {
+    if (v_iew->e_dit->textLine(0)==i18n("<posted & mailed>"))
+      v_iew->e_dit->removeLine(0);
   }
 
   slotUpdateStatusBar();
@@ -742,8 +817,11 @@ void KNComposer::slotExternalEditor()
   if(!ok) codec=KGlobal::charsets()->codecForName(KGlobal::locale()->charset());
 
   QString tmp;
-  for(int i=0; i < v_iew->e_dit->numLines(); i++)
-     tmp+=v_iew->e_dit->textLine(i)+"\n";
+  for(int i=0; i < v_iew->e_dit->numLines(); i++) {
+     tmp+=v_iew->e_dit->textLine(i);
+     if (i+1 < v_iew->e_dit->numLines())
+       tmp+="\n";
+  }
 
   e_ditorTempfile->file()->writeBlock(codec->fromUnicode(tmp));
   e_ditorTempfile->close();
@@ -1344,7 +1422,7 @@ void KNComposer::Editor::slotAddQuotes()
   } else {
     int l = currentLine();
     int c = currentColumn();
-    QString s = textLine(l);
+    QString s = KEdit::textLine(l);
     s.prepend("> ");
     insertLine(s,l);
     removeLine(l+1);
@@ -1364,7 +1442,7 @@ void KNComposer::Editor::slotRemoveQuotes()
   } else {
     int l = currentLine();
     int c = currentColumn();
-    QString s = textLine(l);
+    QString s = KEdit::textLine(l);
     if (s.left(2) == "> ") {
       s.remove(0,2);
       insertLine(s,l);
@@ -1386,7 +1464,7 @@ void KNComposer::Editor::slotAddBox()
   } else {
     int l = currentLine();
     int c = currentColumn();
-    QString s = QString::fromLatin1(",----[  ]\n| %1\n`----").arg(textLine(l));
+    QString s = QString::fromLatin1(",----[  ]\n| %1\n`----").arg(KEdit::textLine(l));
     insertLine(s,l);
     removeLine(l+3);
     setCursorPosition(l+1,c+2);
@@ -1408,7 +1486,7 @@ void KNComposer::Editor::slotRemoveBox()
     int l = currentLine();
     int c = currentColumn();
 
-    QString s = textLine(l);   // test if we are in a box
+    QString s = KEdit::textLine(l);   // test if we are in a box
     if (!((s.left(2) == "| ")||(s.left(5)!=",----")||(s.left(5)!="`----")))
       return;
 
@@ -1416,13 +1494,13 @@ void KNComposer::Editor::slotRemoveBox()
 
     // find & remove box begin
     int x = l;
-    while ((x>=0)&&(textLine(x).left(5)!=",----"))
+    while ((x>=0)&&(KEdit::textLine(x).left(5)!=",----"))
       x--;
-    if ((x>=0)&&(textLine(x).left(5)==",----")) {
+    if ((x>=0)&&(KEdit::textLine(x).left(5)==",----")) {
       removeLine(x);
       l--;
       for (int i=x;i<=l;i++) {     // remove quotation
-        s = textLine(i);
+        s = KEdit::textLine(i);
         if (s.left(2) == "| ") {
           s.remove(0,2);
           insertLine(s,i);
@@ -1433,12 +1511,12 @@ void KNComposer::Editor::slotRemoveBox()
 
     // find & remove box end
     x = l;
-    while ((x<numLines())&&(textLine(x).left(5)!="`----"))
+    while ((x<numLines())&&(KEdit::textLine(x).left(5)!="`----"))
       x++;
-    if ((x<numLines())&&(textLine(x).left(5)=="`----")) {
+    if ((x<numLines())&&(KEdit::textLine(x).left(5)=="`----")) {
       removeLine(x);
       for (int i=l+1;i<x;i++) {     // remove quotation
-        s = textLine(i);
+        s = KEdit::textLine(i);
         if (s.left(2) == "| ") {
           s.remove(0,2);
           insertLine(s,i);

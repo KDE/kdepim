@@ -16,6 +16,7 @@ changes between 0.3.3 and 0.4
   + status bar
   + it's now possible to get the original text if
     the automatic rewrap has gone wrong
+  + implemented a lot of sanity checks.
 - '>' instead of '> ' as quote prefix for quote levels >= 2
 - code cleanups
 

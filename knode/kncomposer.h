@@ -63,7 +63,7 @@ class KNComposer : public KMainWindow  {
     void closeEvent(QCloseEvent *e);
 
     //set data from the given article
-    void initData(const QString &text);
+    void initData(const QString &text, bool firstEdit);
 
     // inserts at cursor position if clear is false, replaces content otherwise
     // puts the file content into a box if box==true
