@@ -361,7 +361,7 @@ EmpathFolderListWidget::s_mailboxProperties()
     void
 EmpathFolderListWidget::s_newFolder()
 {
-    KLineEditDlg led(i18n("Folder name"), QString::null, this, false);
+    KLineEditDlg led(i18n("Folder name"), QString::null, this);
     led.exec();
 
     QString name = led.text();
