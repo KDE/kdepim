@@ -63,7 +63,7 @@ METASOURCES = AUTO
 
 # make messages.po. Move this one to ../po/ and "make merge" in po
 messages:
-	$(XGETTEXT) -C -ki18n -kI18N_NOOP `find . -name *.cc -print` -x $(includedir)/kde.pot -o $(podir)/kpilot.pot
+	$(XGETTEXT) -C -ki18n -kI18N_NOOP `find . -name "*.cc" -print` -x $(includedir)/kde.pot -o $(podir)/kpilot.pot
 
 # just install datas here. Use install-exec-data for scripts and etc.
 # the binary itself is already installed from automake
