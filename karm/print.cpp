@@ -22,7 +22,7 @@ MyPrinter::MyPrinter(const TaskView *taskView)
 void MyPrinter::print()
 {
   // FIXME: make a better caption for the printingdialog
-  if (setup(0L, i18n("Print times"))) {
+  if (setup(0L, i18n("Print Times"))) {
     // setup
     QPainter painter(this);
     QPaintDeviceMetrics deviceMetrics(this);

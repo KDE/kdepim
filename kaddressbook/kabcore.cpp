@@ -811,7 +811,7 @@ void KABCore::openLDAPDialog()
 void KABCore::print()
 {
   KPrinter printer;
-  if ( !printer.setup( this, i18n("Print addresses") ) )
+  if ( !printer.setup( this, i18n("Print Addresses") ) )
     return;
 
   KABPrinting::PrintingWizard wizard( &printer, mAddressBook,

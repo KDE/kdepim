@@ -1621,7 +1621,7 @@ void KNArticleWidget::slotPrint()
   KPrinter *printer=new KPrinter();
 
   // FIXME: Add a better caption to the printingdialog
-  if(printer->setup(this, i18n("Print article"))) {
+  if(printer->setup(this, i18n("Print Article"))) {
 
     QPaintDeviceMetrics metrics(printer);
     QPainter p;
