@@ -134,10 +134,8 @@ KNMainWindow::KNMainWindow() : KMainWindow(0,"mainWindow"), b_lockInput(false)
   v_iew->initPopups(this);
 
   //apply settings
-  KConfig *conf = KGlobal::config();
-  conf->setGroup("mainWindow_options");
   resize(787,478);  // default optimized for 800x600
-  applyMainWindowSettings(conf);
+  applyMainWindowSettings(KGlobal::config(),"mainWindow_options");
   a_ctWinToggleToolbar->setChecked(!toolBar()->isHidden());
   a_ctWinToggleStatusbar->setChecked(!statusBar()->isHidden());
 
@@ -262,11 +260,13 @@ void KNMainWindow::slotConfKeys()
 
 void KNMainWindow::slotConfToolbar()
 {
+  saveMainWindowSettings(KGlobal::config(),"mainWindow_options");
   KEditToolbar *dlg = new KEditToolbar(guiFactory(),this);
 
   if (dlg->exec()) {
     createGUI("knodeui.rc");
     v_iew->initPopups(this);
+    applyMainWindowSettings(KGlobal::config(),"mainWindow_options");
   }
 
   delete dlg;
@@ -320,9 +320,7 @@ bool KNMainWindow::queryClose()
   if(!v_iew->requestShutdown())
     return false;
 
-  KConfig *conf = KGlobal::config();
-  conf->setGroup("mainWindow_options");
-  saveMainWindowSettings(conf);
+  saveMainWindowSettings(KGlobal::config(),"mainWindow_options");
   v_iew->prepareShutdown();
 
   return true;
