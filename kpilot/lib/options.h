@@ -67,9 +67,10 @@
 // so DEBUG_CERR changes them into cerr again. Odd and disturbing.
 //
 
+using namespace std;
 
 #ifdef DEBUG_CERR
-#define DEBUGFUNC	cerr
+#define DEBUGFUNC	std::cerr
 #else
 #define DEBUGFUNC	kdDebug()
 #endif
@@ -94,14 +95,14 @@
 #ifdef DEBUG_CERR
 // For ostream
 #include <iostream>
-#define DEBUGSTREAM	ostream
+#define DEBUGSTREAM	std::ostream
 #define DEBUGKPILOT	std::cerr
 #define DEBUGDAEMON	std::cerr
 #define DEBUGCONDUIT	std::cerr
 #define DEBUGDB		std::cerr
 
-inline ostream& operator <<(ostream &o,const QString &s) { if (s.isEmpty()) return o; else return o<<s.latin1(); }
-inline ostream& operator <<(ostream &o,const QCString &s) { return (o << *s ); }
+inline std::ostream& operator <<(std::ostream &o, const QString &s) { if (s.isEmpty()) return o; else return o<<s.latin1(); }
+inline std::ostream& operator <<(std::ostream &o, const QCString &s) { return (o << *s ); }
 
 #else
 #define DEBUGSTREAM	kdbgstream
