@@ -36,6 +36,8 @@
 #include "vcal-factory.h"
 #include "vcal-setup.h"
 
+#include "uiDialog.h"
+
 VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n) :
 	VCalWidgetSetupBase(w,n)
 {

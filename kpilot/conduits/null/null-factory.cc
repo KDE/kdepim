@@ -36,6 +36,8 @@
 #include <kinstance.h>
 #include <kaboutdata.h>
 
+#include "uiDialog.h"
+
 #include "setup_base.h"
 #include "null-conduit.h"
 #include "null-factory.moc"

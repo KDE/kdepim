@@ -33,6 +33,8 @@
 #include <kaboutdata.h>
 #include <qtextedit.h>
 
+#include "uiDialog.h"
+
 #include "python-conduit.h"     // Conduit action
 #include "python-setup.h"
 #include "python-factory.moc"

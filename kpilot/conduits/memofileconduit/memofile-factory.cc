@@ -41,6 +41,7 @@
 #include "memofile-conduit.h"
 #include "memofile-factory.moc"
 #include "memofileSettings.h"
+#include "uiDialog.h"
 
 
 extern "C"

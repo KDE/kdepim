@@ -35,6 +35,8 @@
 #include <kmessagebox.h>
 #include <qlineedit.h>
 
+#include "uiDialog.h"
+
 #include "notepad-conduit.h"     // Conduit action
 #include "notepad-setup.h"
 #include "notepad-factory.moc"

@@ -45,6 +45,8 @@
 #include <kapplication.h>
 #include <kconfig.h>
 
+#include "uiDialog.h"
+
 #include "mal-setup_dialog.h"
 
 #include "mal-factory.h"

@@ -42,6 +42,8 @@
 #include "sysinfo-setup.h"
 #include "sysinfoSettings.h"
 
+#include "uiDialog.h"
+
 typedef struct { const char *name; bool (*accessor)(); void (*mutator)(bool); } sysinfoEntry_t;
 
 const sysinfoEntry_t sysinfoEntries[] =

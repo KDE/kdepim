@@ -35,6 +35,7 @@
 #include "todo-factory.h"
 #include "todo-setup.h"
 
+#include "uiDialog.h"
 
 
 ToDoWidgetSetup::ToDoWidgetSetup(QWidget *w, const char *n) :

@@ -33,6 +33,8 @@
 #include <kaboutdata.h>
 #include <qtextedit.h>
 
+#include "uiDialog.h"
+
 #include "perl-conduit.h"     // Conduit action
 #include "perl-setup.h"
 #include "perl-factory.moc"
