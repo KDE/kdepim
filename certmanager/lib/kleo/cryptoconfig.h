@@ -40,7 +40,7 @@
 namespace Kleo {
 
 /**
- * Description of a single config entry
+ * Description of a single option
  */
 class CryptoConfigEntry {
 
@@ -61,22 +61,22 @@ public:
                  Level_Internal = 4 };
 
     /**
-       Type of the data
-	@li bool	A boolean argument.
-	@li string	An unformatted string.
-	@li int32	A signed integer number.
-	@li uint32	An unsigned integer number.
-	@li pathname	A string that describes the pathname of a file.
-			The file does not necessarily need to exist.
-                        Separated from string so that e.g. a KURLRequester can be used.
-	@li url         A URL
+       Type of the argument
+	@li ArgType_None	The option is set or not set, but no argument.
+	@li ArgType_String	An unformatted string.
+	@li ArgType_Int		A signed integer number.
+	@li ArgType_UInt	An unsigned integer number.
+	@li ArgType_Path	A string that describes the pathname of a file.
+				The file does not necessarily need to exist.
+                        	Separated from string so that e.g. a KURLRequester can be used.
+	@li ArgType_URL		A URL
     */
-    enum DataType { DataType_Bool = 0,
-                    DataType_String = 1,
-                    DataType_Int = 2,
-                    DataType_UInt = 3,
-                    DataType_Path = 4,
-                    DataType_URL = 5 };
+    enum ArgType { ArgType_None = 0,
+                   ArgType_String = 1,
+                   ArgType_Int = 2,
+                   ArgType_UInt = 3,
+                   ArgType_Path = 4,
+                   ArgType_URL = 5 };
 
     virtual ~CryptoConfigEntry() {}
 
@@ -106,17 +106,22 @@ public:
     virtual Level level() const = 0;
 
     /**
-     * Data type
+     * Argument type
      */
-    virtual DataType dataType() const = 0;
+    virtual ArgType argType() const = 0;
 
     /**
-     * Return value as a bool (only valid for Bool datatype)
+     * Return true if the option is set, i.e. different from default
+     */
+    virtual bool isSet() const = 0;
+
+    /**
+     * Return value as a bool (only allowed for ArgType_None)
      */
     virtual bool boolValue() const = 0;
 
     /**
-     * Return value as a string (mostly meaningful for String, Path and URL datatypes)
+     * Return value as a string (mostly meaningful for String, Path and URL argtypes)
      * The returned string can be empty (explicitely set to empty) or null (not set).
      */
     virtual QString stringValue() const = 0;
@@ -132,17 +137,17 @@ public:
     virtual unsigned int uintValue() const = 0;
 
     /**
-     * Return value as a URL (only meaningful for Path and URL datatypes)
+     * Return value as a URL (only meaningful for Path and URL argtypes)
      */
     virtual KURL urlValue() const = 0;
 
     /**
-     * Return value as a list of bools (only valid for Bool datatype, if isList())
+     * Return number of times the option is set (only valid for ArgType_None, if isList())
      */
-    virtual QValueList<bool> boolValueList() const = 0;
+    virtual unsigned int numberOfTimesSet() const = 0;
 
     /**
-     * Return value as a list of strings (mostly meaningful for String, Path and URL datatypes, if isList())
+     * Return value as a list of strings (mostly meaningful for String, Path and URL argtypes, if isList())
      */
     virtual QStringList stringValueList() const = 0;
 
@@ -157,63 +162,48 @@ public:
     virtual QValueList<unsigned int> uintValueList() const = 0;
 
     /**
-     * Return value as a list of URLs (only meaningful for Path and URL datatypes, if isList())
+     * Return value as a list of URLs (only meaningful for Path and URL argtypes, if isList())
      */
     virtual KURL::List urlValueList() const = 0;
 
+    /**
+     * Reset an option to its default value
+     */
+    virtual void resetToDefault() = 0;
 
     /**
-     * Set a new boolean value (only valid for Bool datatype)
-     *
-     * @param runtime If this option is set, the changes will take effect at run-time, as
-     * far as this is possible.  Otherwise, they will take effect at the next
-     * start of the respective backend programs.
+     * Define whether the option is set or not (only allowed for ArgType_None)
+     * #### TODO: and for options with optional args
      */
     virtual void setBoolValue( bool ) = 0;
 
     /**
-     * Set string value (only allowed for String, Path and URL datatypes)
-     *
-     * @param runtime If this option is set, the changes will take effect at run-time, as
-     * far as this is possible.  Otherwise, they will take effect at the next
-     * start of the respective backend programs.
+     * Set string value (only allowed for String, Path and URL argtypes)
      */
     virtual void setStringValue( const QString& ) = 0;
 
     /**
      * Set a new signed int value
-     *
-     * @param runtime If this option is set, the changes will take effect at run-time, as
-     * far as this is possible.  Otherwise, they will take effect at the next
-     * start of the respective backend programs.
      */
     virtual void setIntValue( int ) = 0;
 
     /**
      * Set a new unsigned int value
-     *
-     * @param runtime If this option is set, the changes will take effect at run-time, as
-     * far as this is possible.  Otherwise, they will take effect at the next
-     * start of the respective backend programs.
      */
     virtual void setUIntValue( unsigned int ) = 0;
 
     /**
-     * Set value as a URL (only meaningful for Path (if local) and URL datatypes)
-     *
-     * @param runtime If this option is set, the changes will take effect at run-time, as
-     * far as this is possible.  Otherwise, they will take effect at the next
-     * start of the respective backend programs.
+     * Set value as a URL (only meaningful for Path (if local) and URL argtypes)
      */
     virtual void setURLValue( const KURL& ) = 0;
 
     /**
-     * Set a new list of boolean values (only valid for Bool datatype, if isList())
+     * Set the number of times the option is set (only valid for ArgType_None, if isList())
      */
-    virtual void setBoolValueList( QValueList<bool> ) = 0;
+    virtual void setNumberOfTimesSet( unsigned int ) = 0;
 
     /**
-     * Set a new string-list value (only allowed for String, Path and URL datatypes, if isList())
+     * Set a new string-list value (only allowed for String, Path and URL argtypes, if isList())
      */
     virtual void setStringValueList( const QStringList& ) = 0;
 
@@ -228,7 +218,7 @@ public:
     virtual void setUIntValueList( const QValueList<unsigned int>& ) = 0;
 
     /**
-     * Set value as a URL list (only meaningful for Path (if all URLs are local) and URL datatypes, if isList())
+     * Set value as a URL list (only meaningful for Path (if all URLs are local) and URL argtypes, if isList())
      */
     virtual void setURLValueList( const KURL::List& ) = 0;
 
@@ -337,6 +327,10 @@ public:
 
     /**
      * Write back changes
+     *
+     * @param runtime If this option is set, the changes will take effect at run-time, as
+     * far as this is possible.  Otherwise, they will take effect at the next
+     * start of the respective backend programs.
      */
     virtual void sync( bool runtime ) = 0;
 

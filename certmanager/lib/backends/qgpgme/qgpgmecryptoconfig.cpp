@@ -44,9 +44,12 @@
 // TODO: runtime changes from other apps? Is that possible to support (other than manual clear()?)
 
 #define GPGCONF_FLAG_GROUP 1
-#define GPGCONF_FLAG_OPTIONAL 2  // what does it mean? (asked in aegypten issue89)
+#define GPGCONF_FLAG_OPTIONAL 2
 #define GPGCONF_FLAG_LIST 4
 #define GPGCONF_FLAG_RUNTIME 8
+#define GPGCONF_FLAG_DEFAULT 16 // fixed default value available
+#define GPGCONF_FLAG_DEFAULT_DESC 32 // runtime default value available
+#define GPGCONF_FLAG_NOARG_DESC 64 // option with optional arg; special meaning if no arg set
 
 QGpgMECryptoConfig::QGpgMECryptoConfig( bool showErrors )
  : mComponents( 7 ), mParsed( false )
@@ -175,19 +178,23 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut( KProcIO* proc )
   int result;
   while( ( result = proc->readln(line) ) != -1 ) {
     //kdDebug(5150) << "GOT LINE:" << line << endl;
-    // Format: NAME:FLAGS:LEVEL:DESCRIPTION:TYPE:ALT-TYPE:ARGNAME:DEFAULT:VALUE
+    // Format: NAME:FLAGS:LEVEL:DESCRIPTION:TYPE:ALT-TYPE:ARGNAME:DEFAULT:ARGDEF:VALUE
     QStringList lst = QStringList::split( ':', line, true );
-    if ( lst.count() >= 9 ) {
+    if ( lst.count() >= 10 ) {
       int flags = lst[1].toInt();
       int level = lst[2].toInt();
       if ( flags & GPGCONF_FLAG_GROUP ) {
+        if ( mCurrentGroup && !mCurrentGroup->mEntries.isEmpty() ) // only add non-empty groups
+          mGroups.insert( mCurrentGroupName, mCurrentGroup );
+        //else
+        //  kdDebug(5150) << "Discarding empty group " << mCurrentGroupName << endl;
         mCurrentGroup = new QGpgMECryptoConfigGroup( lst[3], level );
-        mGroups.insert( lst[0], mCurrentGroup );
+        mCurrentGroupName = lst[0];
       } else {
         // normal entry
         if ( !mCurrentGroup ) {  // first toplevel entry -> create toplevel group
           mCurrentGroup = new QGpgMECryptoConfigGroup( QString::null, 0 );
-          mGroups.insert( "<nogroup>", mCurrentGroup );
+          mCurrentGroupName = "<nogroup>";
         }
         mCurrentGroup->mEntries.insert( lst[0], new QGpgMECryptoConfigEntry( lst ) );
       }
@@ -227,8 +234,12 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
       if ( it.current()->isDirty() ) {
         // OK, we can set it.currentKey() to it.current()->outputString()
         QString line = it.currentKey();
-        line += ':';
-        line += it.current()->outputString();
+        if ( it.current()->isSet() ) { // set option
+          line += ":0:";
+          line += it.current()->outputString();
+        } else {                       // unset option
+          line += ":16:0";
+        }
         line += '\n';
         QCString line8bit = line.latin1(); // latin1 is correct here, it's all escaped (and KProcIO uses latin1 when reading).
         tmpFile.file()->writeBlock( line8bit.data(), line8bit.size()-1 /*no 0*/ );
@@ -304,34 +315,59 @@ static QString gpgconf_escape( const QString& str )
   return KURL::encode_string( str );
 }
 
+// gpgconf arg type number -> CryptoConfigEntry arg type enum mapping
+static Kleo::CryptoConfigEntry::ArgType knownArgType( int argType, bool& ok ) {
+  ok = true;
+  switch( argType ) {
+  case 0: // none
+    return Kleo::CryptoConfigEntry::ArgType_None;
+  case 1: // string
+    return Kleo::CryptoConfigEntry::ArgType_String;
+  case 2: // int32
+    return Kleo::CryptoConfigEntry::ArgType_Int;
+  case 3: // uint32
+    return Kleo::CryptoConfigEntry::ArgType_UInt;
+  case 32: // pathname
+    return Kleo::CryptoConfigEntry::ArgType_Path;
+  case 33: // ldap server
+    return Kleo::CryptoConfigEntry::ArgType_URL;
+  default:;
+    ok = false;
+    return Kleo::CryptoConfigEntry::ArgType_None;
+  }
+}
+
 QGpgMECryptoConfigEntry::QGpgMECryptoConfigEntry( const QStringList& parsedLine )
 {
-  // Format: NAME:FLAGS:LEVEL:DESCRIPTION:TYPE:ALT-TYPE:ARGNAME:DEFAULT:VALUE
-  assert( parsedLine.count() >= 9 ); // called checked for it already
+  // Format: NAME:FLAGS:LEVEL:DESCRIPTION:TYPE:ALT-TYPE:ARGNAME:DEFAULT:ARGDEF:VALUE
+  assert( parsedLine.count() >= 10 ); // called checked for it already
   QStringList::const_iterator it = parsedLine.begin();
   ++it; // skip name, stored in group
   mFlags = (*it++).toInt();
   mLevel = (*it++).toInt();
   mDescription = (*it++);
-  int dataType = (*it++).toInt();
-  if ( dataType <= DataType_URL ) // we support all types up to url (5)
-    mDataType = dataType;
-  else if ( !(*it).isEmpty() ) {
-    dataType = (*it).toInt(); // use ALT-TYPE
-    if ( dataType <= DataType_URL )
-      mDataType = dataType;
-    else
-      kdWarning(5150) << "Unsupported datatype: " << parsedLine[4] << " : " << *it << endl;
+  bool ok;
+  mArgType = knownArgType( (*it++).toInt(), ok );
+  if ( !ok && !(*it).isEmpty() ) {
+    // use ALT-TYPE
+    mArgType = knownArgType( (*it).toInt(), ok );
   }
-  ++it; // skip alt-type
-  ++it; // skip argname (what is it good for?) (asked in aegypten issue89)
-  QString value = *it++; // get default value
-  if ( !(*it).isEmpty() )
-    value = *it; // a real value was set
+  if ( !ok )
+    kdWarning(5150) << "Unsupported datatype: " << parsedLine[4] << " : " << *it << endl;
+  ++it; // done with alt-type
+  ++it; // skip argname (not useful in GUIs)
 
-  bool isString = ( dataType == Kleo::CryptoConfigEntry::DataType_String
-                    || dataType == Kleo::CryptoConfigEntry::DataType_Path
-                    || dataType == Kleo::CryptoConfigEntry::DataType_URL );
+  mSet = false;
+  QString value = *it++; // get default value
+  ++it; // ### skip ARGDEF for now. It's only for options with an "optional arg"
+  if ( !(*it).isEmpty() ) {  // a real value was set
+    mSet = true;
+    value = *it;
+  }
+
+  bool isString = ( mArgType == Kleo::CryptoConfigEntry::ArgType_String
+                    || mArgType == Kleo::CryptoConfigEntry::ArgType_Path
+                    || mArgType == Kleo::CryptoConfigEntry::ArgType_URL );
   if ( isString ) {
     if ( value.isEmpty() )
       mValue = QVariant( QString::null ); // not set  [ok with lists too?]
@@ -376,68 +412,68 @@ bool QGpgMECryptoConfigEntry::isRuntime() const
   return mFlags & GPGCONF_FLAG_RUNTIME;
 }
 
+bool QGpgMECryptoConfigEntry::isSet() const
+{
+  return mSet;
+}
+
 bool QGpgMECryptoConfigEntry::boolValue() const
 {
-  Q_ASSERT( mDataType == DataType_Bool );
+  Q_ASSERT( mArgType == ArgType_None );
   Q_ASSERT( !isList() );
   return mValue.toBool();
 }
 
 QString QGpgMECryptoConfigEntry::stringValue() const
 {
-  Q_ASSERT( mDataType == DataType_String || mDataType == DataType_Path || mDataType == DataType_URL );
+  Q_ASSERT( mArgType == ArgType_String || mArgType == ArgType_Path || mArgType == ArgType_URL );
   Q_ASSERT( !isList() );
   return mValue.toString();
 }
 
 int QGpgMECryptoConfigEntry::intValue() const
 {
-  Q_ASSERT( mDataType == DataType_Int );
+  Q_ASSERT( mArgType == ArgType_Int );
   Q_ASSERT( !isList() );
   return mValue.toInt();
 }
 
 unsigned int QGpgMECryptoConfigEntry::uintValue() const
 {
-  Q_ASSERT( mDataType == DataType_UInt );
+  Q_ASSERT( mArgType == ArgType_UInt );
   Q_ASSERT( !isList() );
   return mValue.toUInt();
 }
 
 KURL QGpgMECryptoConfigEntry::urlValue() const
 {
-  Q_ASSERT( mDataType == DataType_Path || mDataType == DataType_URL );
+  Q_ASSERT( mArgType == ArgType_Path || mArgType == ArgType_URL );
   Q_ASSERT( !isList() );
   QString str = mValue.toString();
-  if ( mDataType == DataType_URL )
+  if ( mArgType == ArgType_URL )
     return KURL( str );
   KURL url;
   url.setPath( str );
   return url;
 }
 
-QValueList<bool> QGpgMECryptoConfigEntry::boolValueList() const
+unsigned int QGpgMECryptoConfigEntry::numberOfTimesSet() const
 {
-  Q_ASSERT( mDataType == DataType_Bool );
+  Q_ASSERT( mArgType == ArgType_None );
   Q_ASSERT( isList() );
-  QValueList<bool> ret;
-  QValueList<QVariant> lst = mValue.toList();
-  for( QValueList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
-    ret.append( (*it).toBool() );
-  }
-  return ret;
+  return mValue.toUInt();
 }
 
 QStringList QGpgMECryptoConfigEntry::stringValueList() const
 {
-  Q_ASSERT( mDataType == DataType_String || mDataType == DataType_Path || mDataType == DataType_URL );
+  Q_ASSERT( mArgType == ArgType_String || mArgType == ArgType_Path || mArgType == ArgType_URL );
   Q_ASSERT( isList() );
   return mValue.toStringList();
 }
 
 QValueList<int> QGpgMECryptoConfigEntry::intValueList() const
 {
-  Q_ASSERT( mDataType == DataType_Int );
+  Q_ASSERT( mArgType == ArgType_Int );
   Q_ASSERT( isList() );
   QValueList<int> ret;
   QValueList<QVariant> lst = mValue.toList();
@@ -449,7 +485,7 @@ QValueList<int> QGpgMECryptoConfigEntry::intValueList() const
 
 QValueList<unsigned int> QGpgMECryptoConfigEntry::uintValueList() const
 {
-  Q_ASSERT( mDataType == DataType_UInt );
+  Q_ASSERT( mArgType == ArgType_UInt );
   Q_ASSERT( isList() );
   QValueList<unsigned int> ret;
   QValueList<QVariant> lst = mValue.toList();
@@ -461,10 +497,10 @@ QValueList<unsigned int> QGpgMECryptoConfigEntry::uintValueList() const
 
 KURL::List QGpgMECryptoConfigEntry::urlValueList() const
 {
-  Q_ASSERT( mDataType == DataType_Path || mDataType == DataType_URL );
+  Q_ASSERT( mArgType == ArgType_Path || mArgType == ArgType_URL );
   Q_ASSERT( isList() );
   QStringList lst = mValue.toStringList();
-  if ( mDataType == DataType_URL )
+  if ( mArgType == ArgType_URL )
     return KURL::List( lst );
 
   KURL::List ret;
@@ -476,49 +512,64 @@ KURL::List QGpgMECryptoConfigEntry::urlValueList() const
   return ret;
 }
 
+void QGpgMECryptoConfigEntry::resetToDefault()
+{
+  mSet = false;
+  mDirty = true;
+}
+
 void QGpgMECryptoConfigEntry::setBoolValue( bool b )
 {
+  Q_ASSERT( mArgType == ArgType_None );
+  Q_ASSERT( !isList() );
   mValue = b;
+  mSet = true;
   mDirty = true;
 }
 
 void QGpgMECryptoConfigEntry::setStringValue( const QString& str )
 {
+  Q_ASSERT( mArgType == ArgType_String || mArgType == ArgType_Path || mArgType == ArgType_URL );
+  Q_ASSERT( !isList() );
   mValue = str;
+  mSet = true;
   mDirty = true;
 }
 
 void QGpgMECryptoConfigEntry::setIntValue( int i )
 {
+  Q_ASSERT( mArgType == ArgType_Int );
+  Q_ASSERT( !isList() );
   mValue = i;
+  mSet = true;
   mDirty = true;
 }
 
 void QGpgMECryptoConfigEntry::setUIntValue( unsigned int i )
 {
   mValue = i;
+  mSet = true;
   mDirty = true;
 }
 
 void QGpgMECryptoConfigEntry::setURLValue( const KURL& url )
 {
   mValue = url.url();
+  mSet = true;
   mDirty = true;
 }
 
-void QGpgMECryptoConfigEntry::setBoolValueList( QValueList<bool> lst )
+void QGpgMECryptoConfigEntry::setNumberOfTimesSet( unsigned int i )
 {
-  QValueList<QVariant> ret;
-  for( QValueList<bool>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
-    ret << QVariant( *it );
-  }
-  mValue = ret;
-  mDirty = true;
+  Q_ASSERT( mArgType == ArgType_None );
+  Q_ASSERT( isList() );
+  setUIntValue( i );
 }
 
 void QGpgMECryptoConfigEntry::setStringValueList( const QStringList& lst )
 {
   mValue = lst;
+  mSet = true;
   mDirty = true;
 }
 
@@ -529,6 +580,7 @@ void QGpgMECryptoConfigEntry::setIntValueList( const QValueList<int>& lst )
     ret << QVariant( *it );
   }
   mValue = ret;
+  mSet = true;
   mDirty = true;
 }
 
@@ -539,21 +591,24 @@ void QGpgMECryptoConfigEntry::setUIntValueList( const QValueList<unsigned int>& 
     ret << QVariant( *it );
   }
   mValue = ret;
+  mSet = true;
   mDirty = true;
 }
 
 void QGpgMECryptoConfigEntry::setURLValueList( const KURL::List& lst )
 {
   mValue = lst.toStringList();
+  mSet = true;
   mDirty = true;
 }
 
 QString QGpgMECryptoConfigEntry::outputString() const
 {
+  Q_ASSERT( mSet );
   // Basically the opposite of the constructor
-  bool isString = ( mDataType == Kleo::CryptoConfigEntry::DataType_String
-                    || mDataType == Kleo::CryptoConfigEntry::DataType_Path
-                    || mDataType == Kleo::CryptoConfigEntry::DataType_URL );
+  bool isString = ( mArgType == Kleo::CryptoConfigEntry::ArgType_String
+                    || mArgType == Kleo::CryptoConfigEntry::ArgType_Path
+                    || mArgType == Kleo::CryptoConfigEntry::ArgType_URL );
   if ( isString ) {
     if ( mValue.isNull() )
       return QString::null;
@@ -570,12 +625,11 @@ QString QGpgMECryptoConfigEntry::outputString() const
     return mValue.toString(); // works for ints and bools
 
   // Lists
+  if ( mArgType == ArgType_None )
+    return QString::number( numberOfTimesSet() );
   QStringList ret;
   QValueList<QVariant> lst = mValue.toList();
   for( QValueList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
-    if ( mDataType == DataType_Bool )
-      ret << ( (*it).toBool() ? QString::fromLatin1( "1" ) : QString::null ); // 1 or Y? (issue89)
-    else // DataType_Int or DataType_UInt
       ret << (*it).toString(); // QVariant does the conversion
   }
   return ret.join( "," );

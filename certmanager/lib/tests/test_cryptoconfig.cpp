@@ -57,47 +57,42 @@ int main( int argc, char** argv ) {
     for( QStringList::Iterator groupit = groups.begin(); groupit != groups.end(); ++groupit ) {
       const Kleo::CryptoConfigGroup* group = comp->group( *groupit );
       assert( group );
-      cout << " Group " << (*groupit).local8Bit() << ": descr=" << group->description().local8Bit()
+      cout << " Group " << (*groupit).local8Bit() << ": descr=\"" << group->description().local8Bit() << "\""
            << " level=" << group->level() << endl;
       QStringList entries = group->entryList();
       for( QStringList::Iterator entryit = entries.begin(); entryit != entries.end(); ++entryit ) {
         const Kleo::CryptoConfigEntry* entry = group->entry( *entryit );
         assert( entry );
         cout << "  Entry " << (*entryit).local8Bit() << ":"
-             << " descr=\"" << entry->description().local8Bit() << "\"";
+             << " descr=\"" << entry->description().local8Bit() << "\""
+             << " " << ( entry->isSet() ? "is set" : "is not set" );
         if ( !entry->isList() )
-          switch( entry->dataType() ) {
-          case Kleo::CryptoConfigEntry::DataType_Bool:
-            cout << " boolean value=" << ( entry->boolValue()?"true":"false");
+          switch( entry->argType() ) {
+          case Kleo::CryptoConfigEntry::ArgType_None:
             break;
-          case Kleo::CryptoConfigEntry::DataType_Int:
+          case Kleo::CryptoConfigEntry::ArgType_Int:
             cout << " int value=" << entry->intValue();
             break;
-          case Kleo::CryptoConfigEntry::DataType_UInt:
+          case Kleo::CryptoConfigEntry::ArgType_UInt:
             cout << " uint value=" << entry->uintValue();
             break;
-          case Kleo::CryptoConfigEntry::DataType_URL:
+          case Kleo::CryptoConfigEntry::ArgType_URL:
             cout << " URL value=" << entry->urlValue().prettyURL().local8Bit();
             // fallthrough
-          case Kleo::CryptoConfigEntry::DataType_Path:
+          case Kleo::CryptoConfigEntry::ArgType_Path:
             // fallthrough
-          case Kleo::CryptoConfigEntry::DataType_String:
+          case Kleo::CryptoConfigEntry::ArgType_String:
 
             cout << " string value=" << entry->stringValue().local8Bit();
             break;
           }
         else // lists
-          switch( entry->dataType() ) {
-          case Kleo::CryptoConfigEntry::DataType_Bool: {
-            QValueList<bool> lst = entry->boolValueList();
-            QString str;
-            for( QValueList<bool>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
-              str += ( *it ) ? "true" : "false";
-            }
-            cout << " boolean values=" << str.local8Bit();
+          switch( entry->argType() ) {
+          case Kleo::CryptoConfigEntry::ArgType_None: {
+            cout << " set " << entry->numberOfTimesSet() << " times";
             break;
           }
-          case Kleo::CryptoConfigEntry::DataType_Int: {
+          case Kleo::CryptoConfigEntry::ArgType_Int: {
             QValueList<int> lst = entry->intValueList();
             QString str;
             for( QValueList<int>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
@@ -106,7 +101,7 @@ int main( int argc, char** argv ) {
             cout << " int values=" << str.local8Bit();
             break;
           }
-          case Kleo::CryptoConfigEntry::DataType_UInt: {
+          case Kleo::CryptoConfigEntry::ArgType_UInt: {
             QValueList<uint> lst = entry->uintValueList();
             QString str;
             for( QValueList<uint>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
@@ -115,11 +110,11 @@ int main( int argc, char** argv ) {
             cout << " uint values=" << str.local8Bit();
             break;
           }
-          case Kleo::CryptoConfigEntry::DataType_URL:
+          case Kleo::CryptoConfigEntry::ArgType_URL:
             // fallthrough
-          case Kleo::CryptoConfigEntry::DataType_Path:
+          case Kleo::CryptoConfigEntry::ArgType_Path:
             // fallthrough
-          case Kleo::CryptoConfigEntry::DataType_String: {
+          case Kleo::CryptoConfigEntry::ArgType_String: {
             QStringList lst = entry->stringValueList();
             cout << " string values=" << lst.join(" ").local8Bit();
             break;
@@ -133,9 +128,9 @@ int main( int argc, char** argv ) {
 
   {
     // Static querying of a single boolean option
-    Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "<nogroup>", "ldaptimeout" );
+    Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "LDAP", "ldaptimeout" );
     if ( entry ) {
-      assert( entry->dataType() == Kleo::CryptoConfigEntry::DataType_UInt );
+      assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_UInt );
       uint val = entry->uintValue();
       cout << "LDAP timeout: " << val << " seconds." << endl;
 
@@ -150,28 +145,41 @@ int main( int argc, char** argv ) {
       config->clear();
 
       // Check new value
-      Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "<nogroup>", "ldaptimeout" );
+      Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "LDAP", "ldaptimeout" );
       assert( entry );
-      assert( entry->dataType() == Kleo::CryptoConfigEntry::DataType_UInt );
+      assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_UInt );
       cout << "LDAP timeout: " << entry->uintValue() << " seconds." << endl;
       assert( entry->uintValue() == 101 );
+
+      // Set to default
+      entry->resetToDefault();
+      assert( entry->isDirty() );
+      assert( !entry->isSet() );
+      config->sync( true );
+      config->clear();
+
+      // Check value
+      entry = config->entry( "dirmngr", "LDAP", "ldaptimeout" );
+      assert( !entry->isDirty() );
+      assert( !entry->isSet() );
+      cout << "LDAP timeout reset to default, " << val << " seconds." << endl;
 
       // Reset old value
       entry->setUIntValue( val );
       assert( entry->isDirty() );
       config->sync( true );
 
-      cout << "LDAP timeout reset to " << val << " seconds." << endl;
+      cout << "LDAP timeout reset to initial " << val << " seconds." << endl;
     }
     else
-      cout << "Entry dirmngr/<nogroup>/ldaptimeout not found" << endl;
+      cout << "Entry dirmngr/LDAP/ldaptimeout not found" << endl;
   }
 
   {
     // Static querying of a single string option
-    Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "<nogroup>", "log-file" );
+    Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "Debug", "log-file" );
     if ( entry ) {
-      assert( entry->dataType() == Kleo::CryptoConfigEntry::DataType_Path );
+      assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_Path );
       QString val = entry->stringValue();
       cout << "Log-file: " << val.local8Bit() << endl;
 
@@ -189,9 +197,9 @@ int main( int argc, char** argv ) {
       config->clear();
 
       // Check new value
-      Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "<nogroup>", "log-file" );
+      Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "Debug", "log-file" );
       assert( entry );
-      assert( entry->dataType() == Kleo::CryptoConfigEntry::DataType_Path );
+      assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_Path );
       cout << "Log-file: " << entry->stringValue().local8Bit() << endl;
       // This is what it should be, but gpgconf escapes wrongly the arguments (aegypten issue90)
       //assert( entry->stringValue() == "/tmp/test:%e5ä" ); // (or even with %e5 decoded)
@@ -212,7 +220,7 @@ int main( int argc, char** argv ) {
       cout << "Log-file reset to " << val.local8Bit() << endl;
     }
     else
-      cout << "Entry dirmngr/<nogroup>/log-file not found" << endl;
+      cout << "Entry dirmngr/Debug/log-file not found" << endl;
   }
 
   // TODO setting options

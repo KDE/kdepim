@@ -100,6 +100,7 @@ private:
   QString mName;
   QString mDescription;
   QGpgMECryptoConfigGroup* mCurrentGroup; // during parsing
+  QString mCurrentGroupName; // during parsing
 };
 
 class QGpgMECryptoConfigGroup : public Kleo::CryptoConfigGroup {
@@ -130,23 +131,25 @@ public:
   virtual bool isList() const;
   virtual bool isRuntime() const;
   virtual Level level() const { return static_cast<Level>( mLevel ); }
-  virtual DataType dataType() const { return static_cast<DataType>( mDataType ); }
+  virtual ArgType argType() const { return static_cast<ArgType>( mArgType ); }
+  virtual bool isSet() const;
   virtual bool boolValue() const;
   virtual QString stringValue() const;
   virtual int intValue() const;
   virtual unsigned int uintValue() const;
   virtual KURL urlValue() const;
-  virtual QValueList<bool> boolValueList() const;
+  virtual unsigned int numberOfTimesSet() const;
   virtual QStringList stringValueList() const;
   virtual QValueList<int> intValueList() const;
   virtual QValueList<unsigned int> uintValueList() const;
   virtual KURL::List urlValueList() const;
+  virtual void resetToDefault();
   virtual void setBoolValue( bool );
   virtual void setStringValue( const QString& );
   virtual void setIntValue( int );
   virtual void setUIntValue( unsigned int );
   virtual void setURLValue( const KURL& );
-  virtual void setBoolValueList( QValueList<bool> );
+  virtual void setNumberOfTimesSet( unsigned int );
   virtual void setStringValueList( const QStringList& );
   virtual void setIntValueList( const QValueList<int>& );
   virtual void setUIntValueList( const QValueList<unsigned int>& );
@@ -160,8 +163,9 @@ private:
   QVariant mValue;
   uint mFlags : 4; // bitfield with 4 bits
   uint mLevel : 3; // max is 4 -> 3 bits
-  uint mDataType : 3; // max is 5 -> 3 bits
+  uint mArgType : 6; // max is 33 -> 6 bits
   uint mDirty : 1;
+  uint mSet : 1;
 };
 
 #endif /* KLEO_QGPGMECRYPTOCONFIG_H */
