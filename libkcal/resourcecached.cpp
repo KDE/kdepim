@@ -54,9 +54,7 @@ void ResourceCached::setReloadPolicy( int i )
 {
   mReloadPolicy = i;
 
-  if ( mReloadPolicy == ReloadInterval ) {
-    mReloadTimer.start( mReloadInterval * 60 * 1000 ); // n minutes
-  }
+  setupReloadTimer();
 }
 
 int ResourceCached::reloadPolicy() const
@@ -78,9 +76,7 @@ void ResourceCached::setSavePolicy( int i )
 {
   mSavePolicy = i;
 
-  if ( mSavePolicy == SaveInterval ) {
-    mSaveTimer.start( mSaveInterval * 60 * 1000 ); // n minutes
-  }
+  setupSaveTimer();
 }
 
 int ResourceCached::savePolicy() const
@@ -103,11 +99,36 @@ void ResourceCached::readConfig( const KConfig *config )
   mReloadPolicy = config->readNumEntry( "ReloadPolicy", ReloadNever );
   mReloadInterval = config->readNumEntry( "ReloadInterval", 10 );
 
-  mSavePolicy = config->readNumEntry( "SavePolicy", SaveNever );
   mSaveInterval = config->readNumEntry( "SaveInterval", 10 );
+  mSavePolicy = config->readNumEntry( "SavePolicy", SaveNever );
 
   mLastLoad = config->readDateTimeEntry( "LastLoad" );
   mLastSave = config->readDateTimeEntry( "LastSave" );
+
+  setupSaveTimer();
+  setupReloadTimer();
+}
+
+void ResourceCached::setupSaveTimer()
+{
+  if ( mSavePolicy == SaveInterval ) {
+    kdDebug() << "ResourceCached::setSavePolicy(): start save timer (interval "
+              << mSaveInterval << " minutes)." << endl;
+    mSaveTimer.start( mSaveInterval * 60 * 1000 ); // n minutes
+  } else {
+    mSaveTimer.stop();
+  }
+}
+
+void ResourceCached::setupReloadTimer()
+{
+  if ( mReloadPolicy == ReloadInterval ) {
+    kdDebug() << "ResourceCached::setSavePolicy(): start reload timer "
+                 "(interval " << mReloadInterval << " minutes)" << endl;
+    mReloadTimer.start( mReloadInterval * 60 * 1000 ); // n minutes
+  } else {
+    mReloadTimer.stop();
+  }
 }
 
 void ResourceCached::writeConfig( KConfig *config )

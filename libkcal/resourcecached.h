@@ -266,6 +266,9 @@ class ResourceCached : public ResourceCalendar,
 
     void addInfoText( QString & ) const;
 
+    void setupSaveTimer();
+    void setupReloadTimer();
+
   protected slots:
     void slotReload();
     void slotSave();
