@@ -15,4 +15,4 @@ Terminal=0
 MiniIcon=kpalmdoc
 X-KDE-StartupNotify=true
 X-DCOP-ServiceType=Unique
-Categories=QT;KDE;Utility
+Categories=Qt;KDE;Utility

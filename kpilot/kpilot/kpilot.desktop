@@ -64,4 +64,4 @@ Terminal=0
 MiniIcon=kpilot
 X-KDE-StartupNotify=true
 X-DCOP-ServiceType=Unique
-Categories=QT;KDE;Utility
+Categories=Qt;KDE;Utility

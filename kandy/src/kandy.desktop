@@ -50,4 +50,4 @@ GenericName[zh_TW]=行動電話工具
 GenericName[zu]=Ithuluzi Lamakhala ekhukhwini
 Terminal=0
 X-DCOP-ServiceType=Multi
-Categories=QT;KDE;Utility
+Categories=Qt;KDE;Utility
