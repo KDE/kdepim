@@ -90,6 +90,7 @@ class KNFolder : public KNArticleCollection  {
           DynData()  {}
           ~DynData() {}
           void setData(KNLocalArticle *a);
+          void getData(KNLocalArticle *a);
           
           int id,
               so,

@@ -111,8 +111,8 @@ class KNArticleManager : public QObject, public KNJobConsumer {
 
     void toggleWatched(KNRemoteArticle::List &l);
     void toggleIgnored(KNRemoteArticle::List &l);
-    void setScore(KNRemoteArticle::List &l, int score=-1);
 
+    void rescoreArticles(KNRemoteArticle::List &l);
 
   protected:  
     void processJob(KNJobData *j);

@@ -1539,7 +1539,7 @@ void KNArticle::setForceDefaultCS(bool b)
 
 
 KNRemoteArticle::KNRemoteArticle(KNGroup *g)
- : KNArticle(g), a_rticleNumber(-1), i_dRef(-1), d_ref(0), t_hrLevel(0), s_core(50),
+ : KNArticle(g), a_rticleNumber(-1), i_dRef(-1), d_ref(0), t_hrLevel(0), s_core(0),
    u_nreadFups(0), n_ewFups(0)
 {
   m_essageID.setParent(this);
@@ -1666,7 +1666,7 @@ void KNRemoteArticle::updateListItem()
   else
     i_tem->setPixmap(1, app->icon(KNConfig::Appearance::null));
 
-  if(s_core==100)
+  if(isWatched())
     i_tem->setPixmap(2, app->icon(KNConfig::Appearance::eyes));
   else
     i_tem->setPixmap(2, app->icon(KNConfig::Appearance::null));

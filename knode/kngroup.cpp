@@ -44,8 +44,8 @@
 
 KNGroup::KNGroup(KNCollection *p)
   : KNArticleCollection(p), n_ewCount(0), r_eadCount(0),
-    l_astNr(0), m_axFetch(0), l_ocked(false), u_seCharset(false),
-    s_tatus(unknown), i_dentity(0)
+    l_astNr(0), m_axFetch(0), d_ynDataFormat(1), l_ocked(false),
+    u_seCharset(false), s_tatus(unknown), i_dentity(0)
 {
 }
 
@@ -89,6 +89,7 @@ bool KNGroup::readInfo(const QString &confPath)
   c_ount = info.readNumEntry("count",0);
   r_eadCount = info.readNumEntry("read",0);
   l_astNr = info.readNumEntry("lastMsg",0);
+  d_ynDataFormat = info.readNumEntry("dynDataFormat",0);
   u_seCharset = info.readBoolEntry("useCharset", false);
   d_efaultChSet = info.readEntry("defaultChSet").latin1();
   QString s = info.readEntry("status","unknown");
@@ -128,6 +129,7 @@ void KNGroup::saveInfo()
     info.writeEntry("lastMsg", l_astNr);
     info.writeEntry("count", c_ount);
     info.writeEntry("read", r_eadCount);
+    info.writeEntry("dynDataFormat", d_ynDataFormat);
     info.writeEntry("name", n_ame);
     info.writeEntry("useCharset", u_seCharset);
     info.writeEntry("defaultChSet", QString::fromLatin1(d_efaultChSet));
@@ -271,13 +273,21 @@ bool KNGroup::loadHdrs()
 
   if (f.open(IO_ReadOnly)) {
 
-    dynData data;
-    int readCnt=0,byteCount;
+    dynDataVer0 data0;
+    dynDataVer1 data1;
+    int readCnt=0,byteCount,dataSize;
+    if (d_ynDataFormat==0)
+      dataSize = sizeof(data0);
+    else
+      dataSize = sizeof(data1);
 
     while(!f.atEnd()) {
 
-      byteCount = f.readBlock((char*)(&data), sizeof(dynData));
-      if ((byteCount == -1)||(byteCount!=sizeof(dynData)))
+      if (d_ynDataFormat==0)
+        byteCount = f.readBlock((char*)(&data0), dataSize);
+      else
+        byteCount = f.readBlock((char*)(&data1), dataSize);
+      if ((byteCount == -1)||(byteCount!=dataSize))
         if (f.status() == IO_Ok) {
           kdWarning(5003) << "Found broken entry in dynamic-file: Ignored!" << endl;
           continue;
@@ -287,16 +297,19 @@ bool KNGroup::loadHdrs()
           return false;
         }
 
-      art=byId(data.id);
+      if (d_ynDataFormat==0)
+        art=byId(data0.id);
+      else
+        art=byId(data1.id);
 
       if(art) {
-        art->setIdRef(data.idRef);
-        art->setRead(data.read);
-        art->setThreadingLevel(data.thrLevel);
-        art->setScore(data.score);
-      }
+        if (d_ynDataFormat==0)
+          data0.getData(art);
+        else
+          data1.getData(art);
 
-      if(data.read) readCnt++;
+      if (art->isRead()) readCnt++;
+      }
 
     }
 
@@ -313,6 +326,12 @@ bool KNGroup::loadHdrs()
 
   kdDebug(5003) << cnt << " articles read from file" << endl;
   c_ount=length();
+
+  // convert old data files into current format:
+  if (d_ynDataFormat!=1) {
+    saveDynamicData(length(), true);
+    d_ynDataFormat=1;
+  }
 
   updateThreadInfo();
   processXPostBuffer(false);
@@ -483,7 +502,7 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
 
 void KNGroup::saveDynamicData(int cnt,bool ovr)
 {
-  dynData data;
+  dynDataVer1 data;
   int mode;
   KNRemoteArticle *art;
   
@@ -503,7 +522,7 @@ void KNGroup::saveDynamicData(int cnt,bool ovr)
         art=at(idx);  
         if(art->subject()->isEmpty()) continue;
         data.setData(art);
-        f.writeBlock((char*)(&data), sizeof(dynData));
+        f.writeBlock((char*)(&data), sizeof(data));
       }
       f.close();
     }
@@ -514,7 +533,7 @@ void KNGroup::saveDynamicData(int cnt,bool ovr)
 
 void KNGroup::syncDynamicData()
 {
-  dynData data;
+  dynDataVer1 data;
   int cnt=0, readCnt=0, sOfData;
   KNRemoteArticle *art;
   
@@ -528,7 +547,7 @@ void KNGroup::syncDynamicData()
         
     if(f.open(IO_ReadWrite)) {
       
-      sOfData=sizeof(dynData);  
+      sOfData=sizeof(data);
     
       for(int i=0; i<length(); i++) {
         art=at(i);
@@ -737,20 +756,22 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
   }
 #endif  
   
-
-  //set score for new Headers
-  /*for(int idx=start; idx<end; idx++) {
+  // propagate ignored/watched flags to new headers
+  for(int idx=start; idx<end; idx++) {
     art=at(idx);
-    idRef=art->idRef();
+    int idRef=art->idRef();
     
     if(idRef!=0) {
       while(idRef!=0) {
         art=byId(idRef);
         idRef=art->idRef();
       }
-      if(art) at(idx)->setScore(art->score());
+      if (art) {
+        at(idx)->setIgnored(art->isIgnored());
+        at(idx)->setWatched(art->isWatched());
+      }
     }
-  }*/
+  }
   
   // this method is called from the nntp-thread!!!
 #ifndef NDEBUG
@@ -831,48 +852,53 @@ KNRemoteArticle* KNGroup::findReference(KNRemoteArticle *a)
 void KNGroup::scoreArticles(bool onlynew)
 {
   kdDebug(5003) << "KNGroup::scoreArticles()" << endl;
-  if (onlynew) {
-    if (newCount() > 0) {
-      //int cnt = newCount();
-      kdDebug(5003) << "scoring " << newCount() << " articles" << endl;
-      kdDebug(5003) << "(total " << length() << " article in group)" << endl;
-      knGlobals.top->setCursorBusy(true);
-      knGlobals.top->setStatusMsg(i18n("Scoring..."));
-      KScoringManager *sm = knGlobals.scoreManager;
-      sm->initCache(name());
-      for(int idx=0; idx<newCount(); idx++) {
-        KNRemoteArticle *a = at(length()-idx-1);
-        ASSERT( a );
-        KNScorableArticle sa(a);
-        sm->applyRules( sa );
-        /*if (idx % 10 == 0 ) {
-          kdDebug(5003) << "still " << cnt-idx << " articles to score..." << endl;
-        }*/
+  int len=length(),
+      todo=(onlynew)? newCount():length();
+
+  if (todo) {
+    kdDebug(5003) << "scoring " << newCount() << " articles" << endl;
+    kdDebug(5003) << "(total " << length() << " article in group)" << endl;
+    knGlobals.top->setCursorBusy(true);
+    knGlobals.top->setStatusMsg(i18n(" Scoring..."));
+
+    int defScore;
+    KScoringManager *sm = knGlobals.scoreManager;
+    sm->initCache(groupname());
+    for(int idx=0; idx<todo; idx++) {
+      KNRemoteArticle *a = at(len-idx-1);
+      ASSERT( a );
+
+      defScore = 0;
+      if (a->isIgnored())
+        defScore = -100;
+      else if (a->isWatched())
+        defScore = 100;
+
+      if (a->score() != defScore) {
+        a->setScore(defScore);
+        a->setChanged(true);
       }
-      knGlobals.top->setStatusMsg(QString::null);
-      knGlobals.top->setCursorBusy(false);
+
+      KNScorableArticle sa(a);
+      sm->applyRules(sa);
     }
+
+    knGlobals.top->setStatusMsg(QString::null);
+    knGlobals.top->setCursorBusy(false);
   }
 }
+
 
 void KNGroup::reorganize()
 {
   kdDebug(5003) << "KNGroup::reorganize()" << endl;
 
   knGlobals.top->setCursorBusy(true);
-  knGlobals.top->setStatusMsg(i18n("Reorganizing headers..."));
+  knGlobals.top->setStatusMsg(i18n(" Reorganizing headers..."));
 
-  KScoringManager *sm = knGlobals.scoreManager;
-  sm->initCache(name());
   for(int idx=0; idx<length(); idx++) {
     KNRemoteArticle *a = at(idx);
     ASSERT( a );
-    a->setScore(50);
-    KNScorableArticle sa(a);
-    sm->applyRules( sa );
-    if (a->score() != 50) {
-      kdDebug(5003) << "score of Article " << idx << " changed" << endl;
-    }
     a->setId(idx+1); //new ids
     a->setIdRef(-1);
     a->setThreadingLevel(0);
@@ -958,8 +984,9 @@ int KNGroup::statThrWithUnread()
   return cnt;
 }
 
+//***************************************************************************
 
-void KNGroup::dynData::setData(KNRemoteArticle *a)
+void KNGroup::dynDataVer0::setData(KNRemoteArticle *a)
 {
   id=a->id();
   idRef=a->idRef();
@@ -968,3 +995,39 @@ void KNGroup::dynData::setData(KNRemoteArticle *a)
   score=a->score(); 
 }
 
+
+void KNGroup::dynDataVer0::getData(KNRemoteArticle *a)
+{
+  a->setId(id);
+  a->setIdRef(idRef);
+  a->setRead(read);
+  a->setThreadingLevel(thrLevel);
+  a->setScore(score);
+}
+
+
+void KNGroup::dynDataVer1::setData(KNRemoteArticle *a)
+{
+  id=a->id();
+  idRef=a->idRef();
+  thrLevel=a->threadingLevel();
+  read=a->isRead();
+  score=a->score();
+  ignoredWatched = 0;
+  if (a->isWatched())
+    ignoredWatched = 1;
+  else if (a->isIgnored())
+    ignoredWatched = 2;
+}
+
+
+void KNGroup::dynDataVer1::getData(KNRemoteArticle *a)
+{
+  a->setId(id);
+  a->setIdRef(idRef);
+  a->setRead(read);
+  a->setThreadingLevel(thrLevel);
+  a->setScore(score);
+  a->setWatched(ignoredWatched==1);
+  a->setIgnored(ignoredWatched==2);
+}

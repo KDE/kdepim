@@ -46,7 +46,8 @@ KNScorableArticle::~KNScorableArticle()
 
 void KNScorableArticle::addScore(short s)
 {
-  _a->addScore(s);
+  _a->setScore(_a->score()+s);
+  _a->setChanged(true);
 }
 
 

@@ -49,7 +49,7 @@
 #include "knnetaccess.h"
 #include "knpgp.h"
 #include "knnntpaccount.h"
-
+#include "knscoring.h"
 
 
 KNArticleCache::KNArticleCache()
@@ -733,14 +733,12 @@ void KNArticleManager::toggleWatched(KNRemoteArticle::List &l)
 {
   KNRemoteArticle *a=l.first();
   bool watch=true;
-  if (a && (a->score()==100))
+  if (a && a->isWatched())
     watch=false;
 
   for(KNRemoteArticle *a=l.first(); a; a=l.next()) {
-    if(!watch)
-      a->setScore(50);
-    else
-      a->setScore(100);
+    a->setIgnored(false);
+    a->setWatched(watch);
     a->updateListItem();
     a->setChanged(true);
   }
@@ -751,28 +749,41 @@ void KNArticleManager::toggleIgnored(KNRemoteArticle::List &l)
 {
   KNRemoteArticle *a=l.first();
   bool ignore=true;
-  if (a && (a->score()==0))
+  if (a && a->isIgnored())
     ignore=false;
 
   for(; a; a=l.next()) {
-    if(!ignore)
-      a->setScore(50);
-    else
-      a->setScore(0);
+    a->setWatched(false);
+    a->setIgnored(ignore);
     a->updateListItem();
     a->setChanged(true);
   }
 }
 
 
-void KNArticleManager::setScore(KNRemoteArticle::List &l, int score)
+void  KNArticleManager::rescoreArticles(KNRemoteArticle::List &l)
 {
-  for(KNRemoteArticle *a=l.first(); a; a=l.next())
-    if(a->score()!=score) {
-      a->setScore(score);
+  KNRemoteArticle *a=l.first();
+
+  if (a) {
+    KNGroup *g=static_cast<KNGroup*>(a->collection());
+    KScoringManager *sm = knGlobals.scoreManager;
+    sm->initCache(g->groupname());
+
+    for(; a; a=l.next()) {
+      int defScore = 0;
+      if (a->isIgnored())
+        defScore = -100;
+      else if (a->isWatched())
+        defScore = 100;
+      a->setScore(defScore);
+
+      KNScorableArticle sa(a);
+      sm->applyRules(sa);
       a->updateListItem();
       a->setChanged(true);
     }
+  }
 }
 
 

@@ -31,7 +31,6 @@
 #include "knode.h"
 #include "knarticlewidget.h"
 #include "knarticlewindow.h"
-#include "knscoredialog.h"
 #include "kncollectionviewitem.h"
 #include "knhdrviewitem.h"
 #include "knfocuswidget.h"
@@ -589,18 +588,10 @@ void KNodeView::initActions()
                               SLOT(slotArtSetArtRead()), a_ctions, "article_read");
   a_ctArtSetArtUnread       = new KAction(i18n("Mar&k as Unread"), Key_U , this,
                               SLOT(slotArtSetArtUnread()), a_ctions, "article_unread");
-  a_ctArtSetThreadRead      = new KAction(i18n("Mark Thread as R&ead"), CTRL+Key_D , this,
+  a_ctArtSetThreadRead      = new KAction(i18n("Mark &Thread as Read"), CTRL+Key_D , this,
                               SLOT(slotArtSetThreadRead()), a_ctions, "thread_read");
-  a_ctArtSetThreadUnread    = new KAction(i18n("Mark Thread as U&nread"), CTRL+Key_U , this,
+  a_ctArtSetThreadUnread    = new KAction(i18n("Mark T&hread as Unread"), CTRL+Key_U , this,
                               SLOT(slotArtSetThreadUnread()), a_ctions, "thread_unread");
-  a_ctSetArtScore           = new KAction(i18n("Set Sc&ore..."), "rotate", Key_S , this,
-                              SLOT(slotArtSetArtScore()), a_ctions, "article_setScore");
-  a_ctArtSetThreadScore     = new KAction(i18n("Set Score of &Thread..."), "rotate", CTRL+Key_T , this,
-                              SLOT(slotArtSetThreadScore()), a_ctions, "thread_setScore");
-  a_ctArtToggleIgnored      = new KAction(i18n("&Ignore"), "bottom", Key_I , this,
-                              SLOT(slotArtToggleIgnored()), a_ctions, "thread_ignore");
-  a_ctArtToggleWatched      = new KAction(i18n("&Watch"), "top", Key_W , this,
-                              SLOT(slotArtToggleWatched()), a_ctions, "thread_watch");
   a_ctArtOpenNewWindow      = new KAction(i18n("Open in own &window"), "viewmag+", Key_O , this,
                               SLOT(slotArtOpenNewWindow()), a_ctions, "article_ownWindow");
 
@@ -613,7 +604,11 @@ void KNodeView::initActions()
                               SLOT(slotScoreLower()), a_ctions, "scorelower");
   a_ctScoreRaise            = new KAction(i18n("&Raise Score for Author..."), CTRL+Key_I, this,
                               SLOT(slotScoreRaise()),a_ctions,"scoreraise");
-              
+  a_ctArtToggleIgnored      = new KAction(i18n("&Ignore Thread"), "bottom", Key_I , this,
+                              SLOT(slotArtToggleIgnored()), a_ctions, "thread_ignore");
+  a_ctArtToggleWatched      = new KAction(i18n("&Watch Thread"), "top", Key_W , this,
+                              SLOT(slotArtToggleWatched()), a_ctions, "thread_watch");
+
   //header-view local articles
   a_ctArtSendOutbox         = new KAction(i18n("Sen&d Pending Messages"), "mail_send", 0, this,
                               SLOT(slotArtSendOutbox()), a_ctions, "net_sendPending");
@@ -731,8 +726,6 @@ void KNodeView::slotArticleSelected(QListViewItem *i)
     a_ctArtSetArtUnread->setEnabled(enabled);
     a_ctArtSetThreadRead->setEnabled(enabled);
     a_ctArtSetThreadUnread->setEnabled(enabled);
-    a_ctSetArtScore->setEnabled(enabled);
-    a_ctArtSetThreadScore->setEnabled(enabled);
     a_ctArtToggleIgnored->setEnabled(enabled);
     a_ctArtToggleWatched->setEnabled(enabled);
     a_ctScoreLower->setEnabled(enabled);
@@ -762,8 +755,6 @@ void KNodeView::slotArticleSelectionChanged()
     a_ctArtSetArtUnread->setEnabled(enabled);
     a_ctArtSetThreadRead->setEnabled(enabled);
     a_ctArtSetThreadUnread->setEnabled(enabled);
-    a_ctSetArtScore->setEnabled(enabled);
-    a_ctArtSetThreadScore->setEnabled(enabled);
     a_ctArtToggleIgnored->setEnabled(enabled);
     a_ctArtToggleWatched->setEnabled(enabled);
     a_ctScoreLower->setEnabled(enabled);
@@ -1499,74 +1490,6 @@ void KNodeView::slotArtSetThreadUnread()
 }
 
 
-void KNodeView::slotArtSetArtScore()
-{
-  kdDebug(5003) << "KNodeView::slotArtSetArtScore()" << endl;
-  if( !g_rpManager->currentGroup() )
-    return;
-
-  KNRemoteArticle::List l;
-  getSelectedArticles(l);
-  if(l.isEmpty())
-    return;
-
-  int score=l.first()->score();
-  KNScoreDialog *sd=new KNScoreDialog(score, knGlobals.topWidget);
-  if(sd->exec()) {
-    score=sd->score();
-    delete sd;
-    a_rtManager->setScore(l, score);
-  }
-  else
-    delete sd;
-}
-
-
-void KNodeView::slotArtSetThreadScore()
-{
-  kdDebug(5003) << "KNodeView::slotArtSetThreadScore()" << endl;
-  if(!g_rpManager->currentGroup() )
-    return;
-
-  KNRemoteArticle::List l;
-  getSelectedThreads(l);
-  int score=l.first()->score();
-
-  KNScoreDialog *sd= new KNScoreDialog(score, knGlobals.topWidget);
-  if(sd->exec()) {
-    score=sd->score();
-    delete sd;
-    a_rtManager->setScore(l, score);
-  }
-  else
-    delete sd;
-}
-
-
-void KNodeView::slotArtToggleIgnored()
-{
-  kdDebug(5003) << "KNodeView::slotArtToggleIgnored()" << endl;
-  if( !g_rpManager->currentGroup() )
-    return;
-
-  KNRemoteArticle::List l;
-  getSelectedThreads(l);
-  a_rtManager->toggleIgnored(l);
-}
-
-
-void KNodeView::slotArtToggleWatched()
-{
-  kdDebug(5003) << "KNodeView::slotArtToggleWatched()" << endl;
-  if( !g_rpManager->currentGroup() )
-    return;
-
-  KNRemoteArticle::List l;
-  getSelectedThreads(l);
-  a_rtManager->toggleWatched(l);
-}
-
-
 void KNodeView::slotScoreEdit()
 {
   kdDebug(5003) << "KNodeView::slotScoreEdit()" << endl;
@@ -1580,7 +1503,8 @@ void KNodeView::slotReScore()
   if( !g_rpManager->currentGroup() )
     return;
 
-  g_rpManager->currentGroup()->reorganize();
+  g_rpManager->currentGroup()->scoreArticles(false);
+  a_rtManager->showHdrs(true);
 }
 
 
@@ -1607,6 +1531,32 @@ void KNodeView::slotScoreRaise()
     KNRemoteArticle *ra = static_cast<KNRemoteArticle*>(a_rtView->article());
     s_coreManager->addRule(KNScorableArticle(ra), g_rpManager->currentGroup()->groupname(), +10);
   }
+}
+
+
+void KNodeView::slotArtToggleIgnored()
+{
+  kdDebug(5003) << "KNodeView::slotArtToggleIgnored()" << endl;
+  if( !g_rpManager->currentGroup() )
+    return;
+
+  KNRemoteArticle::List l;
+  getSelectedThreads(l);
+  a_rtManager->toggleIgnored(l);
+  a_rtManager->rescoreArticles(l);
+}
+
+
+void KNodeView::slotArtToggleWatched()
+{
+  kdDebug(5003) << "KNodeView::slotArtToggleWatched()" << endl;
+  if( !g_rpManager->currentGroup() )
+    return;
+
+  KNRemoteArticle::List l;
+  getSelectedThreads(l);
+  a_rtManager->toggleWatched(l);
+  a_rtManager->rescoreArticles(l);
 }
 
 

@@ -122,7 +122,8 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     int       n_ewCount,
               r_eadCount,
               l_astNr,
-              m_axFetch;
+              m_axFetch,
+              d_ynDataFormat;
 
     QCString  d_efaultChSet;
     QString   g_roupname,
@@ -137,17 +138,33 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
 
     KNConfig::Identity *i_dentity;
 
-    class dynData {
+    class dynDataVer0 {
       
       public:
-        dynData()     { id=-1; idRef=-1; read=0; thrLevel=0; score=50; }
-        ~dynData()    {}  
+        dynDataVer0()     { id=-1; idRef=-1; read=0; thrLevel=0; score=50; }
+        ~dynDataVer0()    {}
         void setData(KNRemoteArticle *a);
+        void getData(KNRemoteArticle *a);
       
         int id;
         int idRef;
         bool read;
         short thrLevel, score;
+    };
+
+    class dynDataVer1 {
+
+      public:
+        dynDataVer1()     { id=-1; idRef=-1; read=0; thrLevel=0; score=0, ignoredWatched=0; }
+        ~dynDataVer1()    {}
+        void setData(KNRemoteArticle *a);
+        void getData(KNRemoteArticle *a);
+
+        int id;
+        int idRef;
+        bool read;
+        short thrLevel, score;
+        char ignoredWatched;
     };
     
 };

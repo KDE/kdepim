@@ -344,19 +344,22 @@ class KNRemoteArticle : public KNArticle {
     void setKept(bool b=true)            { f_lags.set(4, b); }
     bool hasChanged()                    { return f_lags.get(5); }
     void setChanged(bool b=true)         { f_lags.set(5, b); }
+    bool isIgnored()                     { return f_lags.get(6); }
+    void setIgnored(bool b=true)         { f_lags.set(6, b); }
+    bool isWatched()                     { return f_lags.get(7); }
+    void setWatched(bool b=true)         { f_lags.set(7, b); }
 
     // thread info
     int idRef()                                     { return i_dRef; }
     void setIdRef(int i)                            { i_dRef=i; }
     KNRemoteArticle* displayedReference()           { return d_ref; }
     void setDisplayedReference(KNRemoteArticle *dr) { d_ref=dr; }
-    bool threadMode()                             { return f_lags.get(6); }
-    void setThreadMode(bool b=true)               { f_lags.set(6, b); }
+    bool threadMode()                             { return f_lags.get(8); }
+    void setThreadMode(bool b=true)               { f_lags.set(8, b); }
     unsigned char threadingLevel()                { return t_hrLevel; }
     void setThreadingLevel(unsigned char l)       { t_hrLevel=l; }
     short score()                                 { return s_core; }
     void setScore(short s)                        { s_core=s; }
-    void addScore(short s)                        { s_core+=s; setChanged(true); }
     unsigned short newFollowUps()                 { return n_ewFups; }
     bool hasNewFollowUps()                        { return (n_ewFups>0); }
     void setNewFollowUps(unsigned short s)        { n_ewFups=s; }
@@ -370,12 +373,12 @@ class KNRemoteArticle : public KNArticle {
     void thread(List &f);
 
     //filtering
-    bool filterResult()                     { return f_lags.get(7); }
-    void setFilterResult(bool b=true)       { f_lags.set(7, b); }
-    bool isFiltered()                       { return f_lags.get(8); }
-    void setFiltered(bool b=true)           { f_lags.set(8, b); }
-    bool hasVisibleFollowUps()              { return f_lags.get(9); }
-    void setVisibleFollowUps(bool b=true)   { f_lags.set(9, b); }
+    bool filterResult()                     { return f_lags.get(9); }
+    void setFilterResult(bool b=true)       { f_lags.set(9, b); }
+    bool isFiltered()                       { return f_lags.get(10); }
+    void setFiltered(bool b=true)           { f_lags.set(10, b); }
+    bool hasVisibleFollowUps()              { return f_lags.get(11); }
+    void setVisibleFollowUps(bool b=true)   { f_lags.set(11, b); }
 
     // list item handling
     void initListItem();

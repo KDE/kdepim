@@ -204,17 +204,7 @@ bool KNFolder::loadHdrs()
     art=new KNLocalArticle(this);
 
     //set index-data
-    art->setId(dynamic.id);
-    art->date()->setUnixTime(dynamic.ti);
-    art->setStartOffset(dynamic.so);
-    art->setEndOffset(dynamic.eo);
-    art->setServerId(dynamic.sId);
-    art->setDoMail(dynamic.flags[0]);
-    art->setMailed(dynamic.flags[1]);
-    art->setDoPost(dynamic.flags[2]);
-    art->setPosted(dynamic.flags[3]);
-    art->setCanceled(dynamic.flags[4]);
-    art->setEditDisabled(dynamic.flags[5]);
+    dynamic.getData(art);
 
     //read overview
     if(!m_boxFile.at(art->startOffset())) {
@@ -356,7 +346,6 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
   bool clear=false;
   QTextStream ts(&m_boxFile);
   ts.setEncoding(QTextStream::Latin1);
-  DynData dynamic;
 
   for(KNLocalArticle *a=l->first(); a; a=l->next()) {
 
@@ -717,5 +706,21 @@ void KNFolder::DynData::setData(KNLocalArticle *a)
   flags[3]=a->posted();
   flags[4]=a->canceled();
   flags[5]=a->editDisabled();
+}
+
+
+void KNFolder::DynData::getData(KNLocalArticle *a)
+{
+  a->setId(id);
+  a->date()->setUnixTime(ti);
+  a->setStartOffset(so);
+  a->setEndOffset(eo);
+  a->setServerId(sId);
+  a->setDoMail(flags[0]);
+  a->setMailed(flags[1]);
+  a->setDoPost(flags[2]);
+  a->setPosted(flags[3]);
+  a->setCanceled(flags[4]);
+  a->setEditDisabled(flags[5]);
 }
 
