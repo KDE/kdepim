@@ -40,7 +40,14 @@
 class PilotRecord
 {
 public:
+	// This constructor makes a copy of the data buffer
 	PilotRecord(void* data, int len, int attrib, int cat, pi_uid_t uid);
+#ifdef HANDOFF_BUFFERS
+	// This constructor assumes ownership of the data buffer
+	PilotRecord(int len, void *data, int attrib, int cat, pi_uid_t uid) :
+		fData(data),fLen(len),fAttrib(attrib),
+		fCat(cat),fID(uid) { fAllocated++; } ;
+#endif
 	PilotRecord(PilotRecord* orig);
 	~PilotRecord() { delete [] fData; fDeleted++; }
 
