@@ -55,12 +55,17 @@ ResourceCalendar *CalendarResources::StandardDestinationPolicy::destination( Inc
 ResourceCalendar *CalendarResources::AskDestinationPolicy::destination( Incidence * )
 {
   QPtrList<KRES::Resource> list;
-
+  
   CalendarResourceManager::ActiveIterator it;
   for( it = resourceManager()->activeBegin();
        it != resourceManager()->activeEnd(); ++it ) {
-    if ( !(*it)->readOnly() )
-      list.append( *it );
+    if ( !(*it)->readOnly() ) {
+      //Insert the first the Standard resource to get be the default selected.
+      if ( resourceManager()->standardResource() == *it ) 
+        list.insert( 0,*it );
+      else
+        list.append( *it );
+    }
   }
 
   KRES::Resource *r;
