@@ -113,7 +113,7 @@ class KonsoleKalendar
      * Builds and then returns a list of all events sorted in time order
      *
      */
-    Event::List KonsoleKalendar::allEventsSorted();
+    Event::List allEventsSorted();
 
    /**
     * Variables that changes stuff in programm
