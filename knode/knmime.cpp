@@ -970,17 +970,21 @@ void KNMimeContent::attachments(KNMimeContent::List *dst, bool incAlternatives)
 {
   dst->setAutoDelete(false); //don't delete the contents
 
-  if(!c_ontents && type()==ATmimeContent)
+  if(!c_ontents)
     dst->append(this);
-  else if(c_ontents) {
-    KNMimeContent *text=textContent();
-
+  else {
     for(KNMimeContent *c=c_ontents->first(); c; c=c_ontents->next()) {
-      if(c==text || (!incAlternatives && c->contentType()->category()==KNHeaders::CCalternativePart) )
+      if( !incAlternatives && c->contentType()->category()==KNHeaders::CCalternativePart)
         continue;
       else
         c->attachments(dst, incAlternatives);
     }
+  }
+
+  if(type()!=ATmimeContent) { // this is the toplevel article
+    KNMimeContent *text=textContent();
+    if(text)
+      dst->removeRef(text);
   }
 }
 
