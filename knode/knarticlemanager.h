@@ -94,6 +94,11 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     // be available when the config dialog is called
     void setView(KNHeaderView* v);
 
+  signals:
+    // signals for the header view to adapt to the upcoming content
+    void aboutToShowGroup();
+    void aboutToShowFolder();
+
   protected:
     void processJob(KNJobData *j);
     void createThread(KNRemoteArticle *a);

@@ -395,19 +395,17 @@ void KNArticleManager::search()
 
 void KNArticleManager::setGroup(KNGroup *g)
 {
-  g_roup=g;
-
-  if(g) {
-    v_iew->header()->setLabel(1, i18n("From"));
-  }
+  g_roup = g;
+  if ( g )
+    emit aboutToShowGroup();
 }
 
 
 void KNArticleManager::setFolder(KNFolder *f)
 {
-  f_older=f;
-  if(f)
-    v_iew->header()->setLabel(1, i18n("Newsgroups/To"));
+  f_older = f;
+  if ( f )
+    emit aboutToShowFolder();
 }
 
 

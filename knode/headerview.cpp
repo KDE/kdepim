@@ -27,6 +27,7 @@
 #include "knhdrviewitem.h"
 #include "kngroupmanager.h"
 #include "knarticle.h"
+#include "knarticlemanager.h"
 #include "knmainwidget.h"
 
 
@@ -59,6 +60,8 @@ KNHeaderView::KNHeaderView(QWidget *parent, const char *name) :
   setRootIsDecorated( true );
   setSorting( mPaintInfo.dateCol );
   header()->setMovingEnabled( true );
+  setColumnAlignment( mPaintInfo.sizeCol, Qt::AlignRight );
+  setColumnAlignment( mPaintInfo.scoreCol, Qt::AlignRight );
 
   // due to our own column text squeezing we need to repaint on column resizing
   disconnect( header(), SIGNAL(sizeChange(int, int, int)) );
@@ -73,6 +76,10 @@ KNHeaderView::KNHeaderView(QWidget *parent, const char *name) :
   mPopup->insertItem( i18n("Score"), KPaintInfo::COL_SCORE );
 
   connect( mPopup, SIGNAL(activated(int)), this, SLOT(toggleColumn(int)) );
+
+  // connect to the article manager
+  connect( knGlobals.articleManager(), SIGNAL(aboutToShowGroup()), SLOT(prepareForGroup()) );
+  connect( knGlobals.articleManager(), SIGNAL(aboutToShowFolder()), SLOT(prepareForFolder()) );
 
   installEventFilter(this);
 }
@@ -418,8 +425,23 @@ void KNHeaderView::toggleColumn( int column, int mode )
     hideColumn( *col );
   }
 
-  if ( mode == -1 )
+  if ( mode == -1 ) // save config when toggled
     writeConfig();
+}
+
+
+void KNHeaderView::prepareForGroup()
+{
+  header()->setLabel( mPaintInfo.senderCol, i18n("From") );
+  KNConfig::ReadNewsGeneral *rngConf = knGlobals.configManager()->readNewsGeneral();
+  toggleColumn( KPaintInfo::COL_SCORE, rngConf->showScore() );
+}
+
+
+void KNHeaderView::prepareForFolder()
+{
+  header()->setLabel( mPaintInfo.senderCol, i18n("Newsgroups / To") );
+  toggleColumn( KPaintInfo::COL_SCORE, false ); // local folders have no score
 }
 
 

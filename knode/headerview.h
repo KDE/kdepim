@@ -63,6 +63,8 @@ class KNHeaderView : public KListView  {
     void selectCurrentArticle();
 
     void toggleColumn( int column, int mode = -1 );
+    void prepareForGroup();
+    void prepareForFolder();
 
   protected:
     void activeRemoved()            { mActiveItem = 0; }
