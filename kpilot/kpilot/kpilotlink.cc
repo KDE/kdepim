@@ -53,16 +53,23 @@ static const char *kpilotlink_id =
 
 #include "kpilotlink.moc"
 
+KPilotDeviceLink *KPilotDeviceLink::fDeviceLink = 0L;
+
 KPilotDeviceLink::KPilotDeviceLink() :
 	KPilotLink("deviceLink"),
 	fPilotPath(QString::null),
 	fTransientDevice(false),
+	fRetries(0),
 	fOpenTimer(0L),
 	fSocketNotifier(0L),
 	fCurrentPilotSocket(-1),
+	fPilotMasterSocket(-1),
 	fStatus(Init)
 {
 	FUNCTIONSETUP;
+
+	ASSERT(fDeviceLink==0L);
+	fDeviceLink=this;
 }
 
 KPilotDeviceLink::~KPilotDeviceLink()
@@ -88,12 +95,17 @@ void KPilotDeviceLink::reset(const QString &dP)
 	FUNCTIONSETUP;
 
 	fStatus=Init;
+	fRetries=0;
 
 	// Release all resources
 	//
 	//
 	KPILOT_DELETE(fOpenTimer);
 	KPILOT_DELETE(fSocketNotifier);
+	if (fCurrentPilotSocket!=-1) pi_close(fCurrentPilotSocket);
+	if (fPilotMasterSocket!=-1) pi_close(fPilotMasterSocket);
+	fPilotMasterSocket = -1;
+	fCurrentPilotSocket = -1;
 
 	fPilotPath=dP;
 	if (fPilotPath.isEmpty()) return;
@@ -135,6 +147,10 @@ void KPilotDeviceLink::openDevice()
 	{
 		emit logError(i18n("Could not open device: %1")
 			.arg(fPilotPath));
+		if (fStatus != PilotLinkError)
+		{
+			fOpenTimer->start(1000,false);
+		}
 	}
 }
 
@@ -148,26 +164,42 @@ KPilotDeviceLink::open()
 	int e = 0;
 	QString msg;
 
-	pi_close(fCurrentPilotSocket);
+	if (fCurrentPilotSocket!=-1) pi_close(fCurrentPilotSocket);
+	fCurrentPilotSocket=-1;
 
-	fPilotMasterSocket = -1;
-	if (fPilotPath.isEmpty())
+	if (fPilotMasterSocket == -1)
 	{
-		kdWarning() << __FUNCTION__
-			<< ": No point in trying empty device." << endl;
+		if (fPilotPath.isEmpty())
+		{
+			kdWarning() << __FUNCTION__
+				<< ": No point in trying empty device." 
+				<< endl;
 
-		msg = i18n("The Pilot device is not configured yet.");
-		e = 0;
-		goto errInit;
+			msg = i18n("The Pilot device is not configured yet.");
+			e = 0;
+			goto errInit;
+		}
+
+		if (!(fPilotMasterSocket = pi_socket(PI_AF_SLP, 
+			PI_SOCK_STREAM, PI_PF_PADP)))
+		{
+			e = errno;
+			msg = i18n("Cannot create socket for communicating "
+				"with the Pilot");
+			goto errInit;
+		}
+
+		DEBUGDAEMON << fname
+			<< ": Got master "
+			<< fPilotMasterSocket
+			<< endl;
+
+		fStatus = CreatedSocket;
 	}
 
-	if (!(fPilotMasterSocket =
-			pi_socket(PI_AF_SLP, PI_SOCK_STREAM, PI_PF_PADP)))
+	if (!(fStatus == CreatedSocket))
 	{
-		e = errno;
-		msg = i18n("Cannot create socket for communicating "
-			"with the Pilot");
-		goto errInit;
+		ASSERT(fStatus == CreatedSocket);
 	}
 
 	DEBUGDAEMON << fname
@@ -180,11 +212,6 @@ KPilotDeviceLink::open()
 
 	ret = pi_bind(fPilotMasterSocket,
 		(struct sockaddr *) &addr, sizeof(addr));
-
-	DEBUGDAEMON << fname
-		<< ": Got master "
-		<< fPilotMasterSocket
-		<< endl;
 
 	if (ret >= 0)
 	{
@@ -199,6 +226,10 @@ KPilotDeviceLink::open()
 	}
 	else
 	{
+		if (fTransientDevice && (fRetries<5))
+		{
+			return false;
+		}
 		e = errno;
 		msg = i18n("Cannot open Pilot port \"%1\". ");
 		// goto errInit;
@@ -353,6 +384,7 @@ QString KPilotDeviceLink::statusString() const
 	case Init : s.append("Init"); break;
 	case WaitingForDevice : s.append("WaitingForDevice"); break;
 	case FoundDevice : s.append("FoundDevice"); break;
+	case CreatedSocket : s.append("CreatedSocket"); break;
 	case DeviceOpen : s.append("DeviceOpen"); break;
 	case AcceptedDevice : s.append("AcceptedDevice"); break;
 	case SyncDone : s.append("SyncDone"); break;
@@ -364,3 +396,8 @@ QString KPilotDeviceLink::statusString() const
 
 
 // $Log$
+// Revision 1.53  2001/09/05 21:53:51  adridg
+// Major cleanup and architectural changes. New applications kpilotTest
+// and kpilotConfig are not installed by default but can be used to test
+// the codebase. Note that nothing else will actually compile right now.
+//

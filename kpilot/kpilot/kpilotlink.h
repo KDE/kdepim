@@ -121,6 +121,8 @@ protected:
 	* Call reset() on it to start looking for a device.
 	*/
 	KPilotDeviceLink();
+private:
+	static KPilotDeviceLink *fDeviceLink;
 
 public:
 	virtual ~KPilotDeviceLink();
@@ -140,6 +142,7 @@ public:
 		Init,
 		WaitingForDevice,
 		FoundDevice,
+		CreatedSocket,
 		DeviceOpen,
 		AcceptedDevice,
 		SyncDone,
@@ -224,6 +227,11 @@ protected:
 	bool fTransientDevice;
 
 	/**
+	* For transient devices: how often have we tried pi_bind()?
+	*/
+	int fRetries;
+
+	/**
 	* Timers and Notifiers for detecting activity on the device.
 	*/
 	QTimer *fOpenTimer;
@@ -281,3 +289,8 @@ protected:
 #endif
 
 // $Log$
+// Revision 1.28  2001/09/05 21:53:51  adridg
+// Major cleanup and architectural changes. New applications kpilotTest
+// and kpilotConfig are not installed by default but can be used to test
+// the codebase. Note that nothing else will actually compile right now.
+//
