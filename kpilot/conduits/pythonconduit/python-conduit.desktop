@@ -1,0 +1,19 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=Python (Sample)
+Name[be]=Python (прыклад)
+Name[da]=Python (eksempel)
+Name[es]=Python (Ejemplo)
+Name[et]=Python (näidis)
+Name[fr]=Python (exemple)
+Name[sv]=Python (exempel)
+Comment=This sample conduit runs a Python interpreter.
+Comment[da]=Denne eksempel-conduit kører en Python-fortolker.
+Comment[es]=Este conducto de ejemplo ejecuta un intérprete de Python
+Comment[et]=See näidiskanal käivitab Pythoni interpretaatori.
+Comment[fr]=Cet exemple de canal lance un interpréteur Python.
+Comment[sv]=Den här exempelkanalen kör en Python-tolk.
+Implemented=file
+ServiceTypes=KPilotConduit
+X-KDE-Library=conduit_python
