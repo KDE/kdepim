@@ -40,7 +40,16 @@ class DeviceConfigWidget;
 class ViewersConfigWidget;
 class BackupConfigWidget;
 
-class DeviceConfigPage : public ConduitConfigBase
+class ConfigPage : public ConduitConfigBase
+{
+public:
+	ConfigPage( QWidget *w, const char *n ) : ConduitConfigBase(w,n) { } ;
+protected:
+	// Override base class virtual function.
+	virtual QString maybeSaveText() const;
+} ;
+
+class DeviceConfigPage : public ConfigPage
 {
 Q_OBJECT
 public:
@@ -64,7 +73,7 @@ private:
 } ;
 
 
-class SyncConfigPage : public ConduitConfigBase
+class SyncConfigPage : public ConfigPage
 {
 public:
 	SyncConfigPage( QWidget *, const char * );
@@ -77,7 +86,7 @@ private:
 	SyncConfigWidget *fConfigWidget;
 } ;
 
-class BackupConfigPage : public ConduitConfigBase
+class BackupConfigPage : public ConfigPage
 {
 Q_OBJECT
 public:
@@ -95,7 +104,7 @@ private:
 	BackupConfigWidget *fConfigWidget;
 } ;
 
-class StartExitConfigPage : public ConduitConfigBase
+class StartExitConfigPage : public ConfigPage
 {
 public:
 	StartExitConfigPage( QWidget *, const char * );
@@ -108,7 +117,7 @@ private:
 	StartExitConfigWidget *fConfigWidget;
 } ;
 
-class ViewersConfigPage : public ConduitConfigBase
+class ViewersConfigPage : public ConfigPage
 {
 public:
 	ViewersConfigPage( QWidget *, const char * );

@@ -59,7 +59,13 @@ static const char *kpilotconfigdialog_id =
 #include "syncAction.h"
 #include "dbSelectionDialog.h"
 
-DeviceConfigPage::DeviceConfigPage(QWidget * w, const char *n ) : ConduitConfigBase( w, n )
+/* virtual */ QString ConfigPage::maybeSaveText() const
+{
+	return i18n("<qt>The settings for configuration page <i>%1</i> have been changed. Do you "
+		"want to save the changes before continuing?</qt>").arg(this->conduitName());
+}
+
+DeviceConfigPage::DeviceConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
 {
 	FUNCTIONSETUP;
 
@@ -194,7 +200,7 @@ void DeviceConfigPage::setEncoding()
 	}
 }
 
-SyncConfigPage::SyncConfigPage(QWidget * w, const char *n ) : ConduitConfigBase( w, n )
+SyncConfigPage::SyncConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
 {
 	FUNCTIONSETUP;
 
@@ -252,7 +258,7 @@ void SyncConfigPage::load()
 
 
 
-BackupConfigPage::BackupConfigPage(QWidget * w, const char *n ) : ConduitConfigBase( w, n )
+BackupConfigPage::BackupConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
 {
 	FUNCTIONSETUP;
 
@@ -339,7 +345,7 @@ void BackupConfigPage::slotSelectNoRestoreDBs()
 
 
 
-ViewersConfigPage::ViewersConfigPage(QWidget * w, const char *n ) : ConduitConfigBase( w, n )
+ViewersConfigPage::ViewersConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
 {
 	FUNCTIONSETUP;
 
@@ -391,7 +397,7 @@ void ViewersConfigPage::load()
 
 
 
-StartExitConfigPage::StartExitConfigPage(QWidget * w, const char *n ) : ConduitConfigBase( w, n )
+StartExitConfigPage::StartExitConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
 {
 	FUNCTIONSETUP;
 
