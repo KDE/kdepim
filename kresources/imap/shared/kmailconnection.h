@@ -46,10 +46,8 @@ class KMailConnection : public QObject, public DCOPObject {
     void deleteIncidence( const QString& type, const QString& resource,
                           const QString& uid );
     void slotRefresh( const QString& type, const QString& resource );
-    void subresourceAdded( const QString& type, const QString& resource,
-                           const QString& id );
-    void subresourceDeleted( const QString& type, const QString& resource,
-                             const QString& id );
+    void subresourceAdded( const QString& type, const QString& resource );
+    void subresourceDeleted( const QString& type, const QString& resource );
 
   public:
     KMailConnection( ResourceIMAPShared* resource, const QCString& objId );

@@ -85,11 +85,11 @@ bool KMailConnection::connectToKMail()
     if ( !connectKMailSignal( "signalRefresh(QString,QString)",
                               "slotRefresh(QString,QString)" ) )
       kdError() << "DCOP connection to signalRefresh failed" << endl;
-    if ( !connectKMailSignal( "subresourceAdded(QString,QString,QString)",
-                              "subresourceAdded(QString,QString,QString)" ) )
+    if ( !connectKMailSignal( "subresourceAdded(QString,QString)",
+                              "subresourceAdded(QString,QString)" ) )
       kdError() << "DCOP connection to signalRefresh failed" << endl;
-    if ( !connectKMailSignal( "subresourceDeleted(QString,QString,QString)",
-                              "subresourceDeleted(QString,QString,QString)" ) )
+    if ( !connectKMailSignal( "subresourceDeleted(QString,QString)",
+                              "subresourceDeleted(QString,QString)" ) )
       kdError() << "DCOP connection to signalRefresh failed" << endl;
   }
 
@@ -115,17 +115,15 @@ void KMailConnection::slotRefresh( const QString& type, const QString& folder )
 }
 
 void KMailConnection::subresourceAdded( const QString& type,
-                                        const QString& resource,
-                                        const QString& id )
+                                        const QString& resource )
 {
-  mResource->subresourceAdded( type, id );
+  mResource->subresourceAdded( type, resource );
 }
 
 void KMailConnection::subresourceDeleted( const QString& type,
-                                          const QString& resource,
-                                          const QString& id )
+                                          const QString& resource )
 {
-  mResource->subresourceDeleted( type, id );
+  mResource->subresourceDeleted( type, resource );
 }
 
 bool KMailConnection::connectKMailSignal( const QCString& signal,
