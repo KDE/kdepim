@@ -2,7 +2,7 @@
     knnetaccess.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -23,6 +23,11 @@
 
 class QSocketNotifier;
 
+namespace KIO {
+  class Job;
+  class StoredTransferJob;
+}
+
 namespace KPIM {
   class ProgressItem;
 }
@@ -30,7 +35,6 @@ using KPIM::ProgressItem;
 
 class KNJobData;
 class KNNntpClient;
-class KNSmtpClient;
 
 
 class KNNetAccess : public QObject  {
@@ -69,12 +73,11 @@ class KNNetAccess : public QObject  {
     QString unshownMsg;
 
     KNNntpClient *nntpClient;
-    KNSmtpClient *smtpClient;
     QPtrList<KNJobData> nntpJobQueue, smtpJobQueue;
     KNJobData *currentNntpJob, *currentSmtpJob;
     QMutex nntp_Mutex;
-    int nntpInPipe[2], nntpOutPipe[2], smtpInPipe[2], smtpOutPipe[2];
-    QSocketNotifier *nntpNotifier,*smtpNotifier;
+    int nntpInPipe[2], nntpOutPipe[2];
+    QSocketNotifier *nntpNotifier;
 
   protected slots:
     void slotThreadSignal(int i);
@@ -84,8 +87,14 @@ class KNNetAccess : public QObject  {
   signals:
     void netActive(bool);
 
+  private slots:
+    void slotJobResult( KIO::Job *job );
+    void slotJobPercent( KIO::Job *job, unsigned long percent );
+    void slotJobInfoMessage( KIO::Job *job, const QString &msg );
+
   private:
     ProgressItem *mNNTPProgressItem, *mSMTPProgressItem;
+    KIO::StoredTransferJob *mSmtpJob;
 
 };
 

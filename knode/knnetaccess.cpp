@@ -2,7 +2,7 @@
     knnetaccess.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -22,16 +22,17 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
+#include <kio/job.h>
 #include <kio/passdlg.h>
 #include <ksocks.h>
 #include <kapplication.h>
 
 #include "progressmanager.h"
 
+#include "knarticle.h"
 #include "knmainwidget.h"
 #include "knjobdata.h"
 #include "knnntpclient.h"
-#include "knsmtpclient.h"
 #include "knglobals.h"
 #include "knnetaccess.h"
 #include "knwidgets.h"
@@ -43,35 +44,25 @@ KNNetAccess::KNNetAccess(QObject *parent, const char *name )
   : QObject(parent,name), currentNntpJob(0), currentSmtpJob(0),
     mNNTPProgressItem(0), mSMTPProgressItem(0)
 {
-  if((pipe(nntpInPipe)==-1)||
-     (pipe(nntpOutPipe)==-1)||
-     (pipe(smtpInPipe)==-1)||
-     (pipe(smtpOutPipe)==-1)) {
+  if ( pipe(nntpInPipe) == -1 || pipe(nntpOutPipe) == -1 ) {
     KMessageBox::error(knGlobals.topWidget, i18n("Internal error:\nFailed to open pipes for internal communication."));
     kapp->exit(1);
   }
-  if((fcntl(nntpInPipe[0],F_SETFL,O_NONBLOCK)==-1)||
-     (fcntl(nntpOutPipe[0],F_SETFL,O_NONBLOCK)==-1)||
-     (fcntl(smtpInPipe[0],F_SETFL,O_NONBLOCK)==-1)||
-     (fcntl(smtpOutPipe[0],F_SETFL,O_NONBLOCK)==-1)) {
+  if ( fcntl( nntpInPipe[0], F_SETFL, O_NONBLOCK ) == -1 ||
+       fcntl( nntpOutPipe[0], F_SETFL, O_NONBLOCK ) == -1 ) {
     KMessageBox::error(knGlobals.topWidget, i18n("Internal error:\nFailed to open pipes for internal communication."));
     kapp->exit(1);
   }
 
   nntpNotifier=new QSocketNotifier(nntpInPipe[0], QSocketNotifier::Read);
   connect(nntpNotifier, SIGNAL(activated(int)), this, SLOT(slotThreadSignal(int)));
-  smtpNotifier=new QSocketNotifier(smtpInPipe[0], QSocketNotifier::Read);
-  connect(smtpNotifier, SIGNAL(activated(int)), this, SLOT(slotThreadSignal(int)));
 
   // initialize the KSocks stuff in the main thread, otherwise we get
   // strange effects on FreeBSD
   (void) KSocks::self();
 
   nntpClient=new KNNntpClient(nntpOutPipe[0],nntpInPipe[1],nntp_Mutex);
-  smtpClient=new KNSmtpClient(smtpOutPipe[0],smtpInPipe[1]);
-
   nntpClient->start();
-  smtpClient->start();
 
   nntpJobQueue.setAutoDelete(false);
   smtpJobQueue.setAutoDelete(false);
@@ -82,7 +73,6 @@ KNNetAccess::KNNetAccess(QObject *parent, const char *name )
 KNNetAccess::~KNNetAccess()
 {
   disconnect(nntpNotifier, SIGNAL(activated(int)), this, SLOT(slotThreadSignal(int)));
-  disconnect(smtpNotifier, SIGNAL(activated(int)), this, SLOT(slotThreadSignal(int)));
 
   if(mNNTPProgressItem)
     mNNTPProgressItem->setComplete();
@@ -91,22 +81,14 @@ KNNetAccess::~KNNetAccess()
 
   nntpClient->terminate();
   nntpClient->wait();
-  smtpClient->terminate();
-  smtpClient->wait();
 
   delete nntpClient;
-  delete smtpClient;
   delete nntpNotifier;
-  delete smtpNotifier;
 
-  if ((::close(nntpInPipe[0]) == -1)||
-      (::close(nntpInPipe[1]) == -1)||
-      (::close(nntpOutPipe[0]) == -1)||
-      (::close(nntpOutPipe[1]) == -1)||
-      (::close(smtpInPipe[0]) == -1)||
-      (::close(smtpInPipe[1]) == -1)||
-      (::close(smtpOutPipe[0]) == -1)||
-      (::close(smtpOutPipe[1]) == -1))
+  if ( ::close(nntpInPipe[0]) == -1 ||
+       ::close(nntpInPipe[1]) == -1 ||
+       ::close(nntpOutPipe[0]) == -1 ||
+       ::close(nntpOutPipe[1]) == -1 )
     kdDebug(5003) << "Can't close pipes" << endl;
 }
 
@@ -188,7 +170,12 @@ void KNNetAccess::stopJobsSmtp(int type)
 {
   if ((currentSmtpJob && !currentSmtpJob->canceled()) && ((type==0)||(currentSmtpJob->type()==type))) {    // stop active job
     currentSmtpJob->cancel();
-    triggerAsyncThread(smtpOutPipe[1]);
+    kdDebug(5003) << k_funcinfo << "killing job" << mSmtpJob << endl;
+    if ( mSmtpJob ) {
+      mSmtpJob->kill();
+      mSmtpJob = 0;
+    }
+    threadDoneSmtp();
   }
 
   KNJobData *tmp;                          // kill waiting jobs
@@ -252,14 +239,40 @@ void KNNetAccess::startJobSmtp()
   unshownMsg = QString::null;
 
   mSMTPProgressItem = ProgressManager::createProgressItem(
-      0, "SMTP", i18n("KNode SMTP"), QString::null, true, false );
+    0, "SMTP", i18n("KNode SMTP"), i18n("Sending message..."), true, false );
   connect(mSMTPProgressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)), SLOT(slotCancelSMTPJobs()));
 
   currentSmtpJob = smtpJobQueue.take(0);
   currentSmtpJob->prepareForExecution();
   if (currentSmtpJob->success()) {
-    smtpClient->insertJob(currentSmtpJob);
-    triggerAsyncThread(smtpOutPipe[1]);
+    KNLocalArticle *art = static_cast<KNLocalArticle*>( currentSmtpJob->data() );
+    // create url query part
+    QString query("headers=0&from=");
+    query += KURL::encode_string( art->from()->email() );
+    QStrList emails;
+    art->to()->emails( &emails );
+    for ( char *e = emails.first(); e; e = emails.next() ) {
+      query += "&to=" + KURL::encode_string( e );
+    }
+    // create url
+    KURL destination;
+    KNServerInfo *account = currentSmtpJob->account();
+    destination.setProtocol("smtp");
+    destination.setHost( account->server() );
+    destination.setPort( account->port() );
+    destination.setQuery( query );
+    if ( account->needsLogon() ) {
+      destination.setUser( account->user() );
+      destination.setPass( account->pass() );
+    }
+    mSmtpJob = KIO::storedPut( art->encodedContent(true), destination, -1, false, false, false );
+    connect( mSmtpJob, SIGNAL( result(KIO::Job*) ),
+             SLOT( slotJobResult(KIO::Job*) ) );
+    connect( mSmtpJob, SIGNAL(percent(KIO::Job*, unsigned long) ),
+             SLOT( slotJobPercent(KIO::Job*, unsigned long) ) );
+    connect( mSmtpJob, SIGNAL(infoMessage(KIO::Job*, const QString&) ),
+             SLOT( slotJobInfoMessage(KIO::Job*, const QString&) ) );
+
     emit netActive(true);
     kdDebug(5003) << "KNNetAccess::startJobSmtp(): job started" << endl;
   } else {
@@ -338,7 +351,6 @@ void KNNetAccess::threadDoneSmtp()
   kdDebug(5003) << "KNNetAccess::threadDoneSmtp(): job done" << endl;
 
   tmp = currentSmtpJob;
-  smtpClient->removeJob();
   currentSmtpJob = 0L;
   if (!currentNntpJob) {
     emit netActive(false);
@@ -437,37 +449,33 @@ void KNNetAccess::slotThreadSignal(int i)
           mNNTPProgressItem->setProgress(nntpClient->getProgressValue()/10);
       break;
     };
-  } else {                    // signal from smtp thread
-    switch(signal) {
-      case KNProtocolClient::TSworkDone:
-        threadDoneSmtp();
-      break;
-      case KNProtocolClient::TSconnect:
-        unshownMsg = i18n(" Connecting to server...");
-        if (!currentNntpJob) {
-          currMsg = unshownMsg;
-          knGlobals.setStatusMsg(currMsg);
-        }
-        mSMTPProgressItem->setStatus(unshownMsg);
-      break;
-      case KNProtocolClient::TSsendMail:
-        unshownMsg = i18n(" Sending mail...");
-        if (!currentNntpJob) {
-          currMsg = unshownMsg;
-          knGlobals.setStatusMsg(currMsg);
-        }
-        mSMTPProgressItem->setStatus(unshownMsg);
-      break;
-      case KNProtocolClient::TSjobStarted:
-        mSMTPProgressItem->setProgress(0);
-      break;
-      case KNProtocolClient::TSprogressUpdate:
-        mSMTPProgressItem->setProgress(smtpClient->getProgressValue()/10);
-      break;
-    }
   }
 }
 
+
+void KNNetAccess::slotJobResult( KIO::Job *job )
+{
+  if ( job->error() )
+    currentSmtpJob->setErrorString( job->errorString() );
+  threadDoneSmtp();
+  mSmtpJob = 0;
+}
+
+
+void KNNetAccess::slotJobPercent( KIO::Job *job, unsigned long percent )
+{
+  kdDebug(5003) << k_funcinfo << "Progress: " << percent << endl;
+  if ( mSMTPProgressItem )
+    mSMTPProgressItem->setProgress( percent );
+}
+
+
+void KNNetAccess::slotJobInfoMessage( KIO::Job *job, const QString &msg )
+{
+  kdDebug(5003) << k_funcinfo << "Status: " << msg << endl;
+  if ( mSMTPProgressItem )
+    mSMTPProgressItem->setStatus( msg );
+}
 
 //--------------------------------
 

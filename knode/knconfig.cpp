@@ -2,7 +2,7 @@
     knconfig.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -30,6 +30,8 @@
 #include <kiconloader.h>
 #include <kiconeffect.h>
 #include <kprocess.h>
+
+#include <email.h>
 
 #include "knglobals.h"
 #include "kngroupmanager.h"
@@ -106,10 +108,7 @@ bool KNConfig::Identity::isEmpty()
 
 bool KNConfig::Identity::emailIsValid()
 {
-  if (e_mail.isEmpty())
-    return false;
-  else
-    return e_mail.contains(QRegExp("?*@?*.??*",true,true));
+  return KPIM::isValidSimpleEmailAddress( e_mail );
 }
 
 

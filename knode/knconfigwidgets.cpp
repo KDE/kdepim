@@ -2,7 +2,7 @@
     knconfigwidgets.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -639,20 +639,6 @@ KNConfig::SmtpAccountWidget::SmtpAccountWidget(QWidget *p, const char *n) : Base
   topL->addWidget(p_ort, 2,1);
   connect(p_ort, SIGNAL(textChanged(const QString&)), SLOT(slotEmitChanged()));
 
-  h_old = new KIntSpinBox(0,300,5,0,10,this);
-  h_old->setSuffix(i18n(" sec"));
-  h_oldLabel = new QLabel(h_old, i18n("Hol&d connection for:"), this);
-  topL->addWidget(h_oldLabel,3,0);
-  topL->addWidget(h_old,3,1);
-  connect(h_old, SIGNAL(valueChanged(int)), SLOT(slotEmitChanged()));
-
-  t_imeout = new KIntSpinBox(15,300,5,15,10,this);
-  t_imeout->setSuffix(i18n(" sec"));
-  t_imeoutLabel = new QLabel(t_imeout, i18n("&Timeout:"), this);
-  topL->addWidget(t_imeoutLabel,4,0);
-  topL->addWidget(t_imeout,4,1);
-  connect(t_imeout, SIGNAL(valueChanged(int)), SLOT(slotEmitChanged()));
-
   topL->setColStretch(1,1);
   topL->setColStretch(2,1);
 
@@ -674,8 +660,6 @@ void KNConfig::SmtpAccountWidget::load()
   useExternalMailerToggled(knGlobals.configManager()->postNewsTechnical()->useExternalMailer());
   s_erver->setText(s_erverInfo->server());
   p_ort->setText(QString::number(s_erverInfo->port()));
-  h_old->setValue(s_erverInfo->hold());
-  t_imeout->setValue(s_erverInfo->timeout());
 }
 
 void KNConfig::SmtpAccountWidget::save()
@@ -688,8 +672,6 @@ void KNConfig::SmtpAccountWidget::save()
 
   s_erverInfo->setServer(s_erver->text());
   s_erverInfo->setPort(p_ort->text().toInt());
-  s_erverInfo->setHold(h_old->value());
-  s_erverInfo->setTimeout(t_imeout->value());
 
   KConfig *conf=knGlobals.config();
   conf->setGroup("MAILSERVER");
@@ -701,12 +683,8 @@ void KNConfig::SmtpAccountWidget::useExternalMailerToggled(bool b)
 {
   s_erver->setEnabled(!b);
   p_ort->setEnabled(!b);
-  h_old->setEnabled(!b);
-  t_imeout->setEnabled(!b);
   s_erverLabel->setEnabled(!b);
   p_ortLabel->setEnabled(!b);
-  h_oldLabel->setEnabled(!b);
-  t_imeoutLabel->setEnabled(!b);
   emit changed(true);
 }
 

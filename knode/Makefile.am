@@ -3,6 +3,7 @@ KDE_CXXFLAGS = $(USE_THREADS)
 INCLUDES=	-I$(top_srcdir)/libkmime \
 		-I$(top_srcdir)/libkdepim \
 		-I$(top_srcdir)/libkpgp \
+		-I$(top_srcdir)/libemailfunctions \
 		-I$(top_srcdir) \
 		 $(all_includes)
 
@@ -32,7 +33,6 @@ libknodecommon_la_SOURCES =   knconfigmanager.cpp \
                   \
                   knnetaccess.cpp \
                   knprotocolclient.cpp \
-                  knsmtpclient.cpp \
                   knnntpclient.cpp \
                   knjobdata.cpp \
                   \
@@ -98,7 +98,6 @@ noinst_HEADERS =  knconfigmanager.h \
                   \
                   knnetaccess.h \
                   knprotocolclient.h \
-                  knsmtpclient.h \
                   knnntpclient.h \
                   knjobdata.h \
                   \

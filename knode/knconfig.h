@@ -2,7 +2,7 @@
     knconfig.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -312,12 +312,8 @@ Q_OBJECT
     QCheckBox     *u_seExternalMailer;
     KLineEdit     *s_erver,
                   *p_ort;
-    KIntSpinBox   *h_old,
-                  *t_imeout;
     QLabel        *s_erverLabel,
-                  *p_ortLabel,
-                  *h_oldLabel,
-                  *t_imeoutLabel;
+                  *p_ortLabel;
 };
 
 
