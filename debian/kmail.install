@@ -2,10 +2,10 @@ debian/tmp/usr/bin/kmail
 debian/tmp/usr/include/kde/kmailIface.h
 debian/tmp/usr/include/kde/kmailpartIface.h
 debian/tmp/usr/include/kde/kmailicalIface.h
-debian/tmp/usr/lib/libkmailpart.la
-debian/tmp/usr/lib/libkmailpart.so
-debian/tmp/usr/lib/libkmailpart.so.1
-debian/tmp/usr/lib/libkmailpart.so.1.0.0
+debian/tmp/usr/lib/kde3/libkmailpart.la
+debian/tmp/usr/lib/kde3/libkmailpart.so
+debian/tmp/usr/lib/kde3/libkmailpart.so.1
+debian/tmp/usr/lib/kde3/libkmailpart.so.1.0.0
 debian/tmp/usr/lib/kde3/kio_sieve.la
 debian/tmp/usr/lib/kde3/kio_sieve.so
 debian/tmp/usr/share/applnk/Internet/KMail.desktop
