@@ -347,8 +347,10 @@ void KNSavedArticleManager::reply(KNArticle *a, KNGroup *g)
 
       if ((int)(thisPrefix.length()+thisLine.length()) > wrapAt-2) {
         int breakPos=findBreakPos(thisLine,wrapAt-thisPrefix.length()-2);
-        leftover = thisLine.right(thisLine.length()-breakPos-1);
-        thisLine.truncate(breakPos);
+        if (breakPos < thisLine.length()) {
+          leftover = thisLine.right(thisLine.length()-breakPos-1);
+          thisLine.truncate(breakPos);
+        }
       }
 
       art->addBodyLine(("> "+thisPrefix+thisLine).local8Bit());
