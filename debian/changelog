@@ -1,3 +1,9 @@
+kdepim (4:2.2.1-1.3) unstable; urgency=low
+
+  * Don't use automake since it's hosed
+
+ -- Ivan E. Moore II <rkrusty@debian.org>  Wed, 03 Oct 2001 01:11:00 -0700
+
 kdepim (4:2.2.1-1.2) unstable; urgency=low
 
   * Remove libical (Closes: #113668)

@@ -35,9 +35,9 @@ clean: debian-clean
 
 debian-clean:
 	dh_testdir
-	if test -d CVS; then \
-	  $(MAKE) -f admin/Makefile.common cvs-clean ;\
-	fi
+	#if test -d CVS; then \
+	#  $(MAKE) -f admin/Makefile.common cvs-clean ;\
+	#fi
 	-$(MAKE) distclean
 
 binary-indep: build
