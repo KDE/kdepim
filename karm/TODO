@@ -35,12 +35,7 @@ Mark - 3.2
   * 2003-09-26: Decide on a page width and ltrim task descriptions.  Use
     either 7pt Courier in KEdit to figure this out.
 
-  * 2003-09-26: Add day totals at bottom of each week.
-
   * 2003-09-26: Add totals table across entire date range.
-
-  * 2003-09-26: Don't print rows for tasks with zero hours???  How to keep
-    hierary?
 
   * 2003-09-19: If task active, editing task stops timer.  Necessary?
 
@@ -90,6 +85,9 @@ Mark - 3.3
 
   * 2003-08-15: Add ability to import tasks from an iCalendar file.
       - TaskView::load()
+
+  * 2003-09-26: Don't print rows for tasks with zero hours???  How to keep
+    hierary?
 
 
 

@@ -109,8 +109,9 @@ class TimeKard
 
     void printTask(Task *t, QString &s, int level);
 
-    void printWeekTask(const Task *t, const QMap<QString,long>& datamap, 
-         const Week& week, const int level, QString& retval, long& sum);
+    void printWeekTask(const Task *t, const QMap<QString, long>& datamap, 
+        QMap<QString, long>& daytotals, 
+        const Week& week, const int level, QString& retval);
   
 };
 #endif // KARM_TIMEKARD_H

@@ -117,11 +117,12 @@ void TimeKard::printTask(Task *task, QString &s, int level)
 }
 
 void TimeKard::printWeekTask(const Task *task, 
-    const QMap<QString,long>& datamap, 
-    const Week& week, const int level, QString& s, long& sum)
+    const QMap<QString,long>& taskdaytotals, 
+    QMap<QString,long>& daytotals, 
+    const Week& week, const int level, QString& s)
 {
   QString buf;
-  QString key;
+  QString daytaskkey, daykey;
   QDate day;
   long weeksum;
 
@@ -129,16 +130,21 @@ void TimeKard::printWeekTask(const Task *task,
   weeksum = 0;
   for (int i = 0; i < 7; i++)
   {
-    key = QString::fromLatin1("%1_%2")
-      .arg(day.toString(QString::fromLatin1("yyyyMMdd")))
+    daykey = day.toString(QString::fromLatin1("yyyyMMdd"));
+    daytaskkey = QString::fromLatin1("%1_%2")
+      .arg(daykey)
       .arg(task->uid());
 
-    if (datamap.contains(key))
+    if (taskdaytotals.contains(daytaskkey))
     {
       s += QString::fromLatin1("%1")
-        .arg(formatTime(datamap[key]/60), timeWidth);
-      sum += datamap[key];  // in seconds
-      weeksum += datamap[key];  // in seconds
+        .arg(formatTime(taskdaytotals[daytaskkey]/60), timeWidth);
+      weeksum += taskdaytotals[daytaskkey];  // in seconds
+      
+      if (daytotals.contains(daykey))
+        daytotals.replace(daykey, daytotals[daykey] + taskdaytotals[daytaskkey]);
+      else
+        daytotals.insert(daykey, taskdaytotals[daytaskkey]);
     }
     else
     {
@@ -161,7 +167,7 @@ void TimeKard::printWeekTask(const Task *task,
       subTask;
       subTask = subTask->nextSibling())
   {
-    printWeekTask(subTask, datamap, week, level+1, s, sum);
+    printWeekTask(subTask, taskdaytotals, daytotals, week, level+1, s);
   }      
 }
 
@@ -176,8 +182,10 @@ QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
   QValueList<Week>::iterator week;
   QValueList<HistoryEvent> events;
   QValueList<HistoryEvent>::iterator event;
-  QMap<QString, long> datamap;
-  QString key;
+  QMap<QString, long> taskdaytotals;
+  QMap<QString, long> daytotals;
+  QString daytaskkey, daykey;
+  QDate day;
 
   line.fill('-', reportWidth);
   line += cr;
@@ -195,7 +203,6 @@ QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
   QValueList<Week> weeks = Week::weeksFromDateRange(from, to);
   for (week = weeks.begin(); week != weeks.end(); ++week)
   {
-
     if ( (*week).start() < from )
     {
       events = taskview->getHistory( from, (*week).end());
@@ -209,21 +216,26 @@ QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
       events = taskview->getHistory((*week).start(), (*week).end());
     }
 
+    taskdaytotals.clear();
+    daytotals.clear();
+
     // Build lookup dictionary used to output data in table cells.  keys are
     // in this format: YYYYMMDD_NNNNNN, where Y = year, M = month, d = day and
     // NNNNN = the VTODO uid.  The value is the total seconds logged against
     // that task on that day.  Note the UID is the todo id, not the event id,
     // so times are accumulated for each task.
-    datamap.clear();
     for (event = events.begin(); event != events.end(); ++event)
     {
-      key = QString(QString::fromLatin1("%1_%2"))
-        .arg((*event).start().date().toString(QString::fromLatin1("yyyyMMdd")))
+      daykey = (*event).start().date().toString(QString::fromLatin1("yyyyMMdd"));
+      daytaskkey = QString(QString::fromLatin1("%1_%2"))
+        .arg(daykey)
         .arg((*event).todoUid());
-      if (datamap.contains(key))
-        datamap.replace(key, datamap[key] + (*event).duration());
+
+      if (taskdaytotals.contains(daytaskkey))
+        taskdaytotals.replace(daytaskkey, 
+            taskdaytotals[daytaskkey] + (*event).duration());
       else
-        datamap.insert(key, (*event).duration());
+        taskdaytotals.insert(daytaskkey, (*event).duration());
     }
 
     // week name
@@ -250,22 +262,41 @@ QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
       sum = 0;
       if (justThisTask)
       {
-        printWeekTask(taskview->current_item(), datamap, (*week), 0, retval,
-            sum);
+        printWeekTask(taskview->current_item(), taskdaytotals, daytotals, 
+            (*week), 0, retval);
       }
       else
       {
         for (Task* task= taskview->current_item(); task;
             task= task->nextSibling())
         {
-          printWeekTask(task, datamap, (*week), 0, retval, sum);
+          printWeekTask(task, taskdaytotals, daytotals, (*week), 0, retval);
         }
       } 
-
-      // total
       retval += line;
-      buf.fill(' ', 7 * timeWidth);
-      retval += buf;
+
+      // totals
+      sum = 0;
+      day = (*week).start();
+      for (int i = 0; i < 7; i++)
+      {
+        daykey = day.toString(QString::fromLatin1("yyyyMMdd"));
+
+        if (daytotals.contains(daykey))
+        {
+          retval += QString::fromLatin1("%1")
+              .arg(formatTime(daytotals[daykey]/60), timeWidth);
+          sum += daytotals[daykey];  // in seconds
+        }
+        else
+        {
+          buf.fill(' ', timeWidth);
+          retval += buf;
+        }
+
+        day = day.addDays(1);
+      }
+
       retval += QString::fromLatin1("%1 %2")
         .arg(formatTime(sum/60), totalTimeWidth)
         .arg(i18n("Total"), -taskWidth);
