@@ -105,7 +105,8 @@ class KNArticleManager : public QObject {
 
     //article handling
     void setAllRead(bool r=true);
-    void setRead(KNRemoteArticle::List &l, bool r=true);
+    void setRead(KNRemoteArticle::List &l, bool r=true, bool handleXPosts=true);
+
 
     void toggleWatched(KNRemoteArticle::List &l);
     void toggleIgnored(KNRemoteArticle::List &l);

@@ -49,19 +49,16 @@ KNGroup::KNGroup(KNCollection *p)
 }
 
 
-
 KNGroup::~KNGroup()
 {
   delete i_dentity;
 }
 
 
-
 QString KNGroup::path()
 {
   return p_arent->path();
 }
-
 
 
 const QString& KNGroup::name()
@@ -73,14 +70,12 @@ const QString& KNGroup::name()
 }
 
 
-
 void KNGroup::updateListItem()
 {
   if(!l_istItem) return;
   l_istItem->setNumber(1,c_ount);
   l_istItem->setNumber(2,c_ount-r_eadCount);
 }
-
 
 
 bool KNGroup::readInfo(const QString &confPath)
@@ -117,7 +112,6 @@ bool KNGroup::readInfo(const QString &confPath)
   
   return (!g_roupname.isEmpty());
 }
-
 
 
 void KNGroup::saveInfo()
@@ -162,7 +156,6 @@ void KNGroup::saveInfo()
 }
 
 
-
 KNNntpAccount* KNGroup::account()
 {
   KNCollection *p=parent();
@@ -172,174 +165,177 @@ KNNntpAccount* KNGroup::account()
 }
 
 
-
-KNRemoteArticle* KNGroup::byId(int id)
+/*KNRemoteArticle* KNGroup::byId(int id)
 {
   int idx=findId(id);
   if(idx!=-1) return ( static_cast<KNRemoteArticle*> (list[idx]) );
   else return 0;
-}
-
+} */
 
 
 bool KNGroup::loadHdrs()
 {
-  if(c_ount>0 && len==0) {
-    kdDebug(5003) << "KNGroup::loadHdrs() : loading headers" << endl;
-    QCString buff;
-    KNFile f;
-    KNStringSplitter split;
-    int cnt=0, id, lines, fileFormatVersion, artNumber;
-    time_t timeT;//, fTimeT;
-    KNRemoteArticle *art;
 
-    QString dir(path());
-    if (dir == QString::null)
+  if(isLoaded()) {
+    kdDebug(5003) << "KNGroup::loadHdrs() : nothing to load" << endl;
+    return true;
+  }
+
+  kdDebug(5003) << "KNGroup::loadHdrs() : loading headers" << endl;
+  QCString buff;
+  KNFile f;
+  KNStringSplitter split;
+  int cnt=0, id, lines, fileFormatVersion, artNumber;
+  time_t timeT;//, fTimeT;
+  KNRemoteArticle *art;
+
+  QString dir(path());
+  if (dir == QString::null)
+    return false;
+
+  f.setName(dir+g_roupname+".static");
+
+  if(f.open(IO_ReadOnly)) {
+
+    if(!resize(c_ount)) {
+      f.close();
       return false;
-      
-    f.setName(dir+g_roupname+".static");
+    }
 
-    if(f.open(IO_ReadOnly)) {
-
-      if(!resize(c_ount)) {
-        f.close();
-        return false;
-      }
-
-      while(!f.atEnd()) {
-        buff=f.readLine();    
-        if(buff.isEmpty()){
-          if (f.status() == IO_Ok) {
-            kdWarning(5003) << "Found broken line in static-file: Ignored!" << endl;
-            continue;
-          } else {        
-            kdError(5003) << "Corrupted static file, IO-error!" << endl;
-            clearList();
-            return false;
-          }
-        }
-        
-        split.init(buff, "\t");
-
-        art=new KNRemoteArticle(this);
-
-        split.first();
-        art->messageID()->from7BitString(split.string());
-    
-        split.next();
-        art->subject()->from7BitString(split.string());
-        
-        split.next();
-        art->from()->setEmail(split.string());
-        split.next();
-        if(split.string()!="0")
-          art->from()->setNameFrom7Bit(split.string());
-
-        buff=f.readLine();
-        if(buff!="0") art->references()->from7BitString(buff.copy());
-
-        buff=f.readLine();
-        if (sscanf(buff,"%d %d %u %d", &id, &lines, (uint*) &timeT, &fileFormatVersion) < 4)
-          fileFormatVersion = 0;          // KNode <= 0.4 had no version number
-        art->setId(id);
-        art->lines()->setNumberOfLines(lines);
-        art->date()->setUnixTime(timeT);
-
-        if (fileFormatVersion > 0) {
-          buff=f.readLine();
-          sscanf(buff,"%d", &artNumber);
-					art->setArticleNumber(artNumber);
-        }
-
-        if(append(art)) cnt++;
-        else {
-          f.close();
-          clearList();
+    while(!f.atEnd()) {
+      buff=f.readLine();
+      if(buff.isEmpty()){
+        if (f.status() == IO_Ok) {
+          kdWarning(5003) << "Found broken line in static-file: Ignored!" << endl;
+          continue;
+        } else {
+          kdError(5003) << "Corrupted static file, IO-error!" << endl;
+          clear();
           return false;
         }
       }
 
-      setLastID();
-      f.close();
-    }
-    else {
-      clearList();
-      return false;
-    } 
-    
-  
-    f.setName(dir+g_roupname+".dynamic");
-  
-    if (f.open(IO_ReadOnly)) {
-  
-      dynData data;
-      int readCnt=0,byteCount;
-    
-      while(!f.atEnd()) {
-      
-        byteCount = f.readBlock((char*)(&data), sizeof(dynData));
-        if ((byteCount == -1)||(byteCount!=sizeof(dynData)))
-          if (f.status() == IO_Ok) {
-            kdWarning(5003) << "Found broken entry in dynamic-file: Ignored!" << endl;
-            continue;
-          } else {
-            kdError(5003) << "Corrupted dynamic file, IO-error!" << endl;
-            clearList();
-            return false;
-          }   
-      
-        art=byId(data.id);
-      
-        if(art) {
-          art->setIdRef(data.idRef);
-          art->setRead(data.read);
-          art->setThreadingLevel(data.thrLevel);
-          art->setScore(data.score);
-        }
-    
-        if(data.read) readCnt++;
-        
+      split.init(buff, "\t");
+
+      art=new KNRemoteArticle(this);
+
+      split.first();
+      art->messageID()->from7BitString(split.string());
+
+      split.next();
+      art->subject()->from7BitString(split.string());
+
+      split.next();
+      art->from()->setEmail(split.string());
+      split.next();
+      if(split.string()!="0")
+        art->from()->setNameFrom7Bit(split.string());
+
+      buff=f.readLine();
+      if(buff!="0") art->references()->from7BitString(buff.copy());
+
+      buff=f.readLine();
+      if (sscanf(buff,"%d %d %u %d", &id, &lines, (uint*) &timeT, &fileFormatVersion) < 4)
+        fileFormatVersion = 0;          // KNode <= 0.4 had no version number
+      art->setId(id);
+      art->lines()->setNumberOfLines(lines);
+      art->date()->setUnixTime(timeT);
+
+      if (fileFormatVersion > 0) {
+        buff=f.readLine();
+        sscanf(buff,"%d", &artNumber);
+				art->setArticleNumber(artNumber);
       }
-    
-      f.close();
-      
-      r_eadCount=readCnt;
-      
-    } 
-    
-    else  {
-      clearList();
-      return false;
+
+      if(append(art)) cnt++;
+      else {
+        f.close();
+        clear();
+        return false;
+      }
     }
-          
-    kdDebug(5003) << cnt << " articles read from file" << endl;
-    c_ount=len;
-    
-    updateThreadInfo();
-    return true;
-  }   
-  
-  else {
-    kdDebug(5003) << "KNGroup::loadHdrs() : nothing to load" << endl;
-    return true;
+
+    setLastID();
+    f.close();
   }
+  else {
+    clear();
+    return false;
+  }
+
+
+  f.setName(dir+g_roupname+".dynamic");
+
+  if (f.open(IO_ReadOnly)) {
+
+    dynData data;
+    int readCnt=0,byteCount;
+
+    while(!f.atEnd()) {
+
+      byteCount = f.readBlock((char*)(&data), sizeof(dynData));
+      if ((byteCount == -1)||(byteCount!=sizeof(dynData)))
+        if (f.status() == IO_Ok) {
+          kdWarning(5003) << "Found broken entry in dynamic-file: Ignored!" << endl;
+          continue;
+        } else {
+          kdError(5003) << "Corrupted dynamic file, IO-error!" << endl;
+          clear();
+          return false;
+        }
+
+      art=byId(data.id);
+
+      if(art) {
+        art->setIdRef(data.idRef);
+        art->setRead(data.read);
+        art->setThreadingLevel(data.thrLevel);
+        art->setScore(data.score);
+      }
+
+      if(data.read) readCnt++;
+
+    }
+
+    f.close();
+
+    r_eadCount=readCnt;
+
+  }
+
+  else  {
+    clear();
+    return false;
+  }
+
+  kdDebug(5003) << cnt << " articles read from file" << endl;
+  c_ount=length();
+
+  updateThreadInfo();
+  return true;
 }
 
 
 // Attention: this method is called from the network thread!
 void KNGroup::insortNewHeaders(QStrList *hdrs, KNProtocolClient *client)
 {
-  KNRemoteArticle *art=0;
+  KNRemoteArticle *art=0, *art2=0;
   QCString tmp;
   KNStringSplitter split;
   split.setIncludeSep(false);
-  int cnt=0,todo=hdrs->count();
+  int new_cnt=0, added_cnt=0, todo=hdrs->count();
   QTime timer;
+
+  if(!hdrs || hdrs->count()==0)
+    return;
 
   timer.start();
 
   //resize the list 
-  if(!resize(siz+hdrs->count())) return;
+  if(!resize(size()+hdrs->count())) return;
+
+  // recreate msg-ID index
+  syncSearchIndex();
 
   for(char *line=hdrs->first(); line; line=hdrs->next()) {
     split.init(line, "\t");
@@ -380,7 +376,20 @@ void KNGroup::insortNewHeaders(QStrList *hdrs, KNProtocolClient *client)
     split.next();
     art->lines()->setNumberOfLines(split.string().toInt());
         
-    if(append(art)) cnt++;
+
+    // check if we have this article already in this group,
+    // if so mark it as new (useful with leafnodes delay-body function)
+    art2=byMessageId(art->messageID()->as7BitString(false));
+    if(art2) { // ok, we already have this article
+      art2->setNew(true);
+      art2->setArticleNumber(art->articleNumber());
+      delete art;
+      new_cnt++;
+    }
+    else if(append(art)) {
+      added_cnt++;
+      new_cnt++;
+    }
     else {
       delete art;
       return;
@@ -388,24 +397,29 @@ void KNGroup::insortNewHeaders(QStrList *hdrs, KNProtocolClient *client)
 
     if (timer.elapsed() > 200) {           // don't flicker
       timer.restart();
-      if (client) client->updatePercentage((cnt*30)/todo);
+      if (client) client->updatePercentage((new_cnt*30)/todo);
     }
   }
 
-  sortHdrs(cnt,client);
+  // now we build the threads
+  syncSearchIndex(); // recreate the msgId-index so it contains the appended headers
+  buildThreads(added_cnt, client);
+  updateThreadInfo();
 
-  int count = saveStaticData(cnt);
+  // save the new headers
+  int count = saveStaticData(added_cnt);
+  saveDynamicData(added_cnt);
+
 #ifndef NDEBUG
   qDebug("knode: %d headers wrote to file",count);
 #endif
-  saveDynamicData(cnt);
-  updateThreadInfo();
-  c_ount=len;
-  n_ewCount+=cnt;
+
+  // update group-info
+  c_ount=length();
+  n_ewCount+=new_cnt;
   updateListItem();
   saveInfo();
 }
-
 
 
 int KNGroup::saveStaticData(int cnt,bool ovr)
@@ -426,7 +440,7 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
   
     QTextStream ts(&f);
     
-    for(idx=len-cnt; idx<len; idx++) {
+    for(idx=length()-cnt; idx<length(); idx++) {
             
       art=at(idx);    
       
@@ -463,14 +477,13 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
 }
 
 
-
 void KNGroup::saveDynamicData(int cnt,bool ovr)
 {
   dynData data;
   int mode;
   KNRemoteArticle *art;
   
-  if(len>0) {
+  if(length()>0) {
     QString dir(path());
     if (dir == QString::null)
       return;
@@ -482,7 +495,7 @@ void KNGroup::saveDynamicData(int cnt,bool ovr)
     
     if(f.open(mode)) {
         
-      for(int idx=len-cnt; idx<len; idx++) {    
+      for(int idx=length()-cnt; idx<length(); idx++) {
         art=at(idx);  
         if(art->subject()->isEmpty()) continue;
         data.setData(art);
@@ -495,14 +508,13 @@ void KNGroup::saveDynamicData(int cnt,bool ovr)
 }
 
 
-
 void KNGroup::syncDynamicData()
 {
   dynData data;
   int cnt=0, readCnt=0, sOfData;
   KNRemoteArticle *art;
   
-  if(len>0) {
+  if(length()>0) {
 
     QString dir(path());
     if (dir == QString::null)
@@ -514,7 +526,7 @@ void KNGroup::syncDynamicData()
       
       sOfData=sizeof(dynData);  
     
-      for(int i=0; i<len; i++) {
+      for(int i=0; i<length(); i++) {
         art=at(i);
         
         if(art->hasChanged() && !art->subject()->isEmpty()) {
@@ -540,13 +552,13 @@ void KNGroup::syncDynamicData()
 }
 
 
-void KNGroup::sortHdrs(int cnt, KNProtocolClient *client)
+void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
 {
-  int end=len,
-      start=len-cnt,
-      foundCnt_1=0, foundCnt_2=0, bySubCnt=0, refCnt=0,
+  int end=length(),
+      start=end-cnt,
+      foundCnt=0, bySubCnt=0, refCnt=0,
       resortCnt=0, idx, oldRef; // idRef;
-  KNRemoteArticle *art;
+  KNRemoteArticle *art, *ref;
   QTime timer;
 
   timer.start();
@@ -562,7 +574,8 @@ void KNGroup::sortHdrs(int cnt, KNProtocolClient *client)
       art=at(idx);
       if(art->threadingLevel()>1) {
         oldRef=art->idRef();
-        if(findRef(art, start, end)!=-1) {
+        ref=findReference(art);
+        if(ref) {
           // this method is called from the nntp-thread!!!
           #ifndef NDEBUG
           qDebug("knode: %d: old %d  new %d",art->id(), oldRef, art->idRef());
@@ -580,28 +593,27 @@ void KNGroup::sortHdrs(int cnt, KNProtocolClient *client)
     
     if(art->idRef()==-1 && !art->references()->isEmpty() ){   //hdr has references
       refCnt++;
-      
-      if(findRef(art, start, end)!=-1)  foundCnt_1++;   //scan new hdrs
-      else if(start!=0)                                 //scan old hdrs
-        if(findRef(art, 0, start, true)!=-1)
-          foundCnt_2++;
+      if(findReference(art))
+        foundCnt++;
     }
     else {
       if(art->subject()->isReply()) {
         art->setIdRef(0); //hdr has no references
         art->setThreadingLevel(0);
       }
-      else if(art->idRef()==-1) refCnt++;
+      else if(art->idRef()==-1)
+        refCnt++;
     }
 
     if (timer.elapsed() > 200) {           // don't flicker
       timer.restart();
-      if (client) client->updatePercentage(30+((foundCnt_1+foundCnt_2)*70)/cnt);
+      if(client)
+        client->updatePercentage(30+((foundCnt)*70)/cnt);
     }
   }
   
     
-  if((foundCnt_1+foundCnt_2)<refCnt) {    // if some references could not be found
+  if(foundCnt<refCnt) {    // some references could not been found
   
     //try to sort by subject
     KNRemoteArticle *oldest;
@@ -618,7 +630,7 @@ void KNGroup::sortHdrs(int cnt, KNProtocolClient *client)
         list.append(art);
         
         //find all headers with same subject
-        for(int idx2=0; idx2<len; idx2++)
+        for(int idx2=0; idx2<length(); idx2++)
           if(at(idx2)==art) continue;
           else if(at(idx2)->subject()==art->subject())
             list.append(at(idx2));
@@ -653,7 +665,7 @@ void KNGroup::sortHdrs(int cnt, KNProtocolClient *client)
 
       if (timer.elapsed() > 200) {           // don't flicker
         timer.restart();
-        if (client) client->updatePercentage(30+((bySubCnt+foundCnt_1+foundCnt_2)*70)/cnt);
+        if (client) client->updatePercentage(30+((bySubCnt+foundCnt)*70)/cnt);
       }
     } 
   }
@@ -712,22 +724,44 @@ void KNGroup::sortHdrs(int cnt, KNProtocolClient *client)
   // this method is called from the nntp-thread!!!
 #ifndef NDEBUG
   qDebug("knode: Sorting : %d headers resorted", resortCnt);
-  qDebug("knode: Sorting : %d references of %d found in step 1", foundCnt_1, refCnt);
-  qDebug("knode: Sorting : %d references of %d found in step 2", foundCnt_2, refCnt);
+  qDebug("knode: Sorting : %d references of %d found", foundCnt, refCnt);
   qDebug("knode: Sorting : %d references of %d sorted by subject", bySubCnt, refCnt);
 #endif
     
 }
 
 
-int KNGroup::findRef(KNRemoteArticle *a, int from, int to, bool reverse)
+KNRemoteArticle* KNGroup::findReference(KNRemoteArticle *a)
 {
-  bool found=false;
+  int found=false;
+  QCString ref_mid;
+  int ref_nr=0;
+  KNRemoteArticle *ref_art=0;
+
+  ref_mid=a->references()->first();
+
+  while(!found && !ref_mid.isNull() && ref_nr < SORT_DEPTH) {
+    ref_art=byMessageId(ref_mid);
+    if(ref_art) {
+      found=true;
+      a->setThreadingLevel(ref_nr+1);
+      a->setIdRef(ref_art->id());
+    }
+    ref_nr++;
+    ref_mid=a->references()->next();
+  }
+
+  return ref_art;
+
+  /*bool found=false;
   int foundID=-1, idx=0;
   short refNr=0;
   QCString ref;
+
+
   ref=a->references()->first();
-  
+
+
   if(!reverse){
     
     while(!found && !ref.isNull() && refNr < SORT_DEPTH) {
@@ -759,8 +793,9 @@ int KNGroup::findRef(KNRemoteArticle *a, int from, int to, bool reverse)
   }
       
   if(foundID!=-1) a->setIdRef(foundID);
-  return foundID;
+  return foundID; */
 }
+
 
 void KNGroup::scoreArticles(bool onlynew)
 {
@@ -769,13 +804,13 @@ void KNGroup::scoreArticles(bool onlynew)
     if (newCount() > 0) {
       int cnt = newCount();
       kdDebug(5003) << "scoring " << newCount() << " articles" << endl;
-      kdDebug(5003) << "(total " << len << " article in group)" << endl;
+      kdDebug(5003) << "(total " << length() << " article in group)" << endl;
       knGlobals.top->setCursorBusy(true);
       knGlobals.top->setStatusMsg(i18n("Scoring..."));
       KScoringManager *sm = knGlobals.scoreManager;
       sm->initCache(name());
       for(int idx=0; idx<newCount(); idx++) {
-	KNRemoteArticle *a = at(len-idx-1);
+	KNRemoteArticle *a = at(length()-idx-1);
 	ASSERT( a );
 	KNScorableArticle sa(a);
 	sm->applyRules( sa );
@@ -798,7 +833,7 @@ void KNGroup::reorganize()
 
   KScoringManager *sm = knGlobals.scoreManager;
   sm->initCache(name());
-  for(int idx=0; idx<len; idx++) {
+  for(int idx=0; idx<length(); idx++) {
     KNRemoteArticle *a = at(idx);
     ASSERT( a );
     a->setScore(50);
@@ -812,9 +847,9 @@ void KNGroup::reorganize()
     a->setThreadingLevel(0);
   }
 
-  sortHdrs(len);
-  saveStaticData(len, true);
-  saveDynamicData(len, true);
+  buildThreads(length());
+  saveStaticData(length(), true);
+  saveDynamicData(length(), true);
   knGlobals.view->headerView()->repaint();
   knGlobals.top->setStatusMsg(QString::null);
   knGlobals.top->setCursorBusy(false);
@@ -826,12 +861,12 @@ void KNGroup::updateThreadInfo()
   KNRemoteArticle *ref;
   bool brokenThread=false;
   
-  for(int idx=0; idx<len; idx++) {
+  for(int idx=0; idx<length(); idx++) {
     at(idx)->setUnreadFollowUps(0);
     at(idx)->setNewFollowUps(0);
   }
     
-  for(int idx=0; idx<len; idx++) {
+  for(int idx=0; idx<length(); idx++) {
     int idRef=at(idx)->idRef();
     while(idRef!=0) {
       ref=byId(idRef);
@@ -857,23 +892,6 @@ void KNGroup::updateThreadInfo()
 }
 
 
-
-
-KNRemoteArticle* KNGroup::byMessageId(const QCString &mId)
-{
-  KNRemoteArticle *ret=0;
-  
-  for(int i=0; i<len; i++) {
-    if(at(i)->messageID()->as7BitString(false)==mId) {
-      ret=at(i);
-      break;
-    }
-  }
-  return ret;   
-}
-
-
-
 void KNGroup::showProperties()
 {
   if(!i_dentity) i_dentity=new KNConfig::Identity(false);
@@ -892,25 +910,22 @@ void KNGroup::showProperties()
 }
 
 
-
 int KNGroup::statThrWithNew()
 {
   int cnt=0;
-  for(int i=0; i<len; i++)
+  for(int i=0; i<length(); i++)
     if( (at(i)->idRef()==0) && (at(i)->hasNewFollowUps()) ) cnt++;
   return cnt;
 }
 
 
-
 int KNGroup::statThrWithUnread()
 {
   int cnt=0;
-  for(int i=0; i<len; i++)
+  for(int i=0; i<length(); i++)
     if( (at(i)->idRef()==0) && (at(i)->hasUnreadFollowUps()) ) cnt++;
   return cnt;
 }
-
 
 
 void KNGroup::dynData::setData(KNRemoteArticle *a)
@@ -921,7 +936,4 @@ void KNGroup::dynData::setData(KNRemoteArticle *a)
   read=a->isRead();
   score=a->score(); 
 }
-
-
-
 

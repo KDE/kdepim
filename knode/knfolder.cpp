@@ -120,7 +120,7 @@ bool KNFolder::readInfo(const QString &infoPath)
     QFileInfo fi(infoPath);
     QString fname=fi.dirPath(true)+"/"+fi.baseName();
     closeFiles();
-    clearList();
+    clear();
 
     m_boxFile.setName(fname+".mbox");
     i_ndexFile.setName(fname+".idx");
@@ -149,17 +149,17 @@ void KNFolder::setParent(KNCollection *p)
 }
 
 
-KNLocalArticle* KNFolder::byId(int id)
+/*KNLocalArticle* KNFolder::byId(int id)
 {
   int idx=findId(id);
   if(idx!=-1) return ( static_cast<KNLocalArticle*>(list[idx]) );
   else return 0;
-}
+} */
 
 
 bool KNFolder::loadHdrs()
 {
-  if(c_ount==0 || len>0) {
+  if(isLoaded()) {
     kdDebug(5003) << "KNFolder::loadHdrs() : already loaded" << endl;
     return true;
   }
@@ -200,7 +200,7 @@ bool KNFolder::loadHdrs()
       else {
         kdError(5003) << "KNFolder::loadHeaders() : corrupted index-file, IO-error!" << endl;
         closeFiles();
-        clearList();
+        clear();
         return false;
       }
 
@@ -223,7 +223,7 @@ bool KNFolder::loadHdrs()
     if(!m_boxFile.at(art->startOffset())) {
       kdError(5003) << "KNFolder::loadHdrs() : cannot set mbox file-pointer!" << endl;
       closeFiles();
-      clearList();
+      clear();
       return false;
     }
     tmp=m_boxFile.readLine(); //KNFile::readLine()
@@ -236,7 +236,7 @@ bool KNFolder::loadHdrs()
       else {
         kdError(5003) << "KNFolder::loadHdrs() : corrupted mbox-file, IO-error!"<< endl;
         closeFiles();
-        clearList();
+        clear();
         return false;
       }
     }
@@ -280,7 +280,7 @@ bool KNFolder::loadHdrs()
     if(!append(art)) {
       kdError(5003) << "KNFolder::loadHdrs() : cannot append article!"<< endl;
       delete art;
-      clearList();
+      clear();
       closeFiles();
       return false;
     }
@@ -348,7 +348,7 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
     return false;
   }
 
-  int idx=0, addCnt=0;
+  int addCnt=0;
   bool ret=true;
   QTextStream ts(&m_boxFile);
   ts.setEncoding(QTextStream::Latin1);
@@ -380,8 +380,7 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
       }
     }
 
-    idx=findId(a->id());
-    if(idx!=-1 && at(idx)==a) {
+    if(byId(a->id())==a) {
 
       //MBox
       ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";
@@ -422,7 +421,7 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
   closeFiles();
 
   if(addCnt>0) {
-    c_ount=len;
+    c_ount=length();
     updateListItem();
     knGlobals.artManager->updateViewForCollection(this);
   }
@@ -445,7 +444,7 @@ void KNFolder::removeArticles(KNLocalArticle::List *l, bool del)
     if(a->isLocked())
       positions[idx]=-1;
     else
-      positions[idx]=findId(a->id());
+      positions[idx]=a_rticles.indexForId(a->id());
   }
 
   for(idx=0; idx < (int)(l->count()); idx++) {
@@ -453,8 +452,6 @@ void KNFolder::removeArticles(KNLocalArticle::List *l, bool del)
       continue;
 
     a=at(positions[idx]);
-    list[(positions[idx])]=0;
-    delCnt++;
 
     //update
     knGlobals.artFactory->deleteComposerForArticle(a);
@@ -463,6 +460,8 @@ void KNFolder::removeArticles(KNLocalArticle::List *l, bool del)
     delete a->listItem();
 
     //delete article
+    a_rticles.remove(positions[idx], del, false);
+    delCnt++;
     if(del)
        delete a;
     else
@@ -470,7 +469,7 @@ void KNFolder::removeArticles(KNLocalArticle::List *l, bool del)
   }
 
   if(delCnt>0) {
-    compactList();
+    compact();
     c_ount-=delCnt;
     updateListItem();
     i_ndexDirty=true;
@@ -485,14 +484,14 @@ void KNFolder::deleteAll()
     return;
 
   KNLocalArticle *a;
-  for(int idx=0; idx<len; idx++) {
+  for(int idx=0; idx<length(); idx++) {
     a=at(idx);
     knGlobals.artFactory->deleteComposerForArticle(a);
     KNArticleWindow::closeAllWindowsForArticle(a);
     KNArticleWidget::articleRemoved(a);
   }
 
-  clearList();
+  clear();
   c_ount=0;
   syncIndex(true);
   updateListItem();
@@ -505,14 +504,14 @@ void KNFolder::killYourself()
     return;
 
   KNLocalArticle *a;
-  for(int idx=0; idx<len; idx++) {
+  for(int idx=0; idx<length(); idx++) {
     a=at(idx);
     knGlobals.artFactory->deleteComposerForArticle(a);
     KNArticleWindow::closeAllWindowsForArticle(a);
     KNArticleWidget::articleRemoved(a);
   }
 
-  clearList();
+  clear();
 
   m_boxFile.remove();
   i_ndexFile.remove();
@@ -533,7 +532,7 @@ void KNFolder::syncIndex(bool force)
 
   KNLocalArticle *a;
   DynData d;
-  for(int idx=0; idx<len; idx++) {
+  for(int idx=0; idx<length(); idx++) {
     a=at(idx);
     d.setData(a);
     i_ndexFile.writeBlock((char*)(&d), sizeof(DynData));

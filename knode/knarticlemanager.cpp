@@ -37,6 +37,7 @@
 #include "knconfigmanager.h"
 #include "utilities.h"
 #include "knarticlemanager.h"
+#include "kngroupmanager.h"
 #include "knodeview.h"
 #include "knarticlewidget.h"
 #include "knsearchdialog.h"
@@ -492,7 +493,7 @@ void KNArticleManager::setAllRead(bool r)
 }
 
 
-void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r)
+void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPosts)
 {
   if(l.isEmpty())
     return;
@@ -503,8 +504,22 @@ void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r)
 
 
   for( ; a; a=l.next()) {
+    if( handleXPosts && a->newsgroups()->isCrossposted() ) {
+      QList<KNGroup> gl;
+      KNRemoteArticle::List al;
+      KNRemoteArticle *xp;
+      QCString mid=a->messageID()->as7BitString(false);
+      knGlobals.grpManager->getAllGroups(&gl);
+      for(KNGroup *grp=gl.first(); grp; grp=gl.next()) {
+        if( (xp=grp->byMessageId(mid)) ) {
+          al.clear();
+          al.append(xp);
+          setRead(al, r, false);
+        }
+      }
+    }
 
-    if(a->isRead()!=r) {
+    else if(a->isRead()!=r) {
       changeCnt++;
       a->setRead(r);
       a->setChanged(true);
@@ -552,6 +567,7 @@ void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r)
       updateStatusString();
   }
 }
+
 
 
 void KNArticleManager::toggleWatched(KNRemoteArticle::List &l)

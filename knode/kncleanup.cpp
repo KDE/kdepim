@@ -154,7 +154,7 @@ void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
     g->saveDynamicData(g->length(), true);
     g->decCount(delCnt);
     g->setNewCount(newCnt);
-    g->clearList();
+    g->clear();
   }
   else
     g->syncDynamicData();

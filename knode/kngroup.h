@@ -36,66 +36,84 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
 
     KNGroup(KNCollection *p=0);
     ~KNGroup();
-    
+
+    // type
+    collectionType type()               { return CTgroup; }
+
+    // list-item handling
     void updateListItem();
-    
+
+    // info
+    QString path();
     bool readInfo(const QString &confPath);
     void saveInfo();
 
-    void showProperties();
+    // name
+    bool hasName()                          { return (!n_ame.isEmpty()); }
+    const QString& name();
+    const QString& groupname()              { return g_roupname; }
+    void setGroupname(const QString &s)     { g_roupname=s; }
+    const QString& description()            { return d_escription; }
+    void setDescription(const QString &s)   { d_escription=s; }
+
+    // count + numbers
+    int newCount()                { return n_ewCount; }
+    void setNewCount(int i)       { n_ewCount=i; }
+    void incNewCount(int i=1)     { n_ewCount+=i; }
+    void decNewCount(int i=1)     { n_ewCount-=i; }
+
+    int readCount()               { return r_eadCount; }
+    void setReadCount(int i)      { r_eadCount=i; }
+    void incReadCount(int i=1)    { r_eadCount+=i; }
+    void decReadCount(int i=1)    { r_eadCount-=i; }
+
+    int lastNr()                  { return l_astNr; }
+    void setLastNr(int i)         { l_astNr=i; }
+    int maxFetch()                { return m_axFetch; }
+    void setMaxFetch(int i)       { m_axFetch=i; }
+
+    int statThrWithNew();
+    int statThrWithUnread();
+
+    // article access
+    KNRemoteArticle* at(int i)          { return static_cast<KNRemoteArticle*> (KNArticleCollection::at(i)); }
+    KNRemoteArticle* byId(int id)       { return static_cast<KNRemoteArticle*> (KNArticleCollection::byId(id)); }
+    KNRemoteArticle* byMessageId(const QCString &mId)
+                                        { return static_cast<KNRemoteArticle*> (KNArticleCollection::byMessageId(mId)); }
+    // load + save
     bool loadHdrs();
     void insortNewHeaders(QStrList *hdrs, KNProtocolClient *client=0);
     int saveStaticData(int cnt,bool ovr=false);
     void saveDynamicData(int cnt,bool ovr=false);
     void syncDynamicData();
+
+    // article handling
     void updateThreadInfo();
     void reorganize();
     void scoreArticles(bool onlynew=true);
 
-    //get
-    collectionType type()               { return CTgroup; }
-    QString path();
-    KNNntpAccount* account();
-    KNRemoteArticle* at(int i)           { return static_cast<KNRemoteArticle*> (list[i]); }
-    KNRemoteArticle* byId(int id);
-    KNRemoteArticle* byMessageId(const QCString &mId);
-    int newCount()                      { return n_ewCount; }
-    int readCount()                     { return r_eadCount; }
-    int lastNr()                        { return l_astNr; }
-    int maxFetch()                      { return m_axFetch; }
-    const QString& name();
-    const QString& groupname()          { return g_roupname; }
-    const QString& description()        { return d_escription; }
-    KNConfig::Identity* identity()      { return i_dentity; }
-    const QCString defaultCharset()     { return d_efaultChSet; }
-    bool useCharset()                   { return ( u_seCharset && !d_efaultChSet.isEmpty() ); }
-    Status status()                     { return s_tatus; }
-    bool hasName()                      { return (!n_ame.isEmpty()); }
-    int statThrWithNew();
-    int statThrWithUnread();
+    // locking
+    bool isLocked()             { return l_ocked; }
+    void setLocked(bool l)      { l_ocked=l; }
 
-    bool isLocked()                     { return l_ocked; }
-
-    //set
-    void setGroupname(const QString &s)      { g_roupname=s; }
-    void setDescription(const QString &s)    { d_escription=s; }
+    // charset-handling
+    const QCString defaultCharset()           { return d_efaultChSet; }
     void setDefaultCharset(const QCString &s) { d_efaultChSet=s; }
-    void setStatus(Status s)                  { s_tatus=s; }
+    bool useCharset()                         { return ( u_seCharset && !d_efaultChSet.isEmpty() ); }
     void setUseCharset(bool b)                { u_seCharset=b; }
-    void setNewCount(int i)                 { n_ewCount=i; }
-    void incNewCount(int i=1)               { n_ewCount+=i; }
-    void decNewCount(int i=1)               { n_ewCount-=i; }
-    void setReadCount(int i)                { r_eadCount=i; }
-    void incReadCount(int i=1)              { r_eadCount+=i; }
-    void decReadCount(int i=1)              { r_eadCount-=i; }
-    void setLastNr(int i)                   { l_astNr=i; }
-    void setMaxFetch(int i)                 { m_axFetch=i; }
+
+    // misc
+    KNNntpAccount* account();
+    KNConfig::Identity* identity()          { return i_dentity; }
     void setIdentity(KNConfig::Identity *i) { i_dentity=i; }
-    void setLocked(bool l)                  { l_ocked=l; }
+    Status status()                         { return s_tatus; }
+    void setStatus(Status s)                { s_tatus=s; }
+    void showProperties();
+
 
   protected:
-    void sortHdrs(int cnt, KNProtocolClient *client=0);
-    int findRef(KNRemoteArticle *a, int from, int to, bool reverse=false);
+    void buildThreads(int cnt, KNProtocolClient *client=0);
+    KNRemoteArticle* findReference(KNRemoteArticle *a);
         
     int       n_ewCount,
               r_eadCount,

@@ -45,6 +45,7 @@
 #include "knarticlewindow.h"
 #include "knarticlewidget.h"
 #include "kngroupmanager.h"
+#include "knstringsplitter.h"
 
 
 //=================================================================================
@@ -305,6 +306,14 @@ void KNGroupManager::getGroupsOfAccount(KNNntpAccount *a, QList<KNGroup> *l)
   }
 }
 
+
+void KNGroupManager::getAllGroups(QList<KNGroup> *l)
+{
+  l->clear();
+  l->setAutoDelete(false);
+
+  (*l) = (*g_List);
+}
 
 
 KNGroup* KNGroupManager::group(const QString &gName, const KNServerInfo *s)

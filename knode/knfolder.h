@@ -49,8 +49,10 @@ class KNFolder : public KNArticleCollection  {
     void saveInfo();
 
     //article access
-    KNLocalArticle* at(int i)           { return static_cast<KNLocalArticle*>(list[i]); }
-    KNLocalArticle* byId(int id);
+    KNLocalArticle* at(int i)           { return static_cast<KNLocalArticle*>(KNArticleCollection::at(i)); }
+    KNLocalArticle* byId(int id)        { return static_cast<KNLocalArticle*>(KNArticleCollection::byId(id)); }
+    KNLocalArticle* byMessageId(const QCString &mid)
+                                        { return static_cast<KNLocalArticle*>(KNArticleCollection::byMessageId(mid)); }
 
     //parent
     void setParent(KNCollection *p);

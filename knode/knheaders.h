@@ -445,6 +445,7 @@ class Newsgroups : public Base {
     virtual const char* type()      { return "Newsgroups"; }
 
     QCString firstGroup();
+    bool isCrossposted()            { return ( g_roups.find(',')>-1 ); }
 
   protected:
     QCString g_roups;
