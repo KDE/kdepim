@@ -720,15 +720,22 @@ void KNArticleFactory::configChanged()
 
 
 void KNArticleFactory::processJob(KNJobData *j)
-{
-  if(j->canceled()) {
-    delete j;
-    return;
-  }
-
+{  
   KNLocalArticle *art=static_cast<KNLocalArticle*>(j->data());
   KNLocalArticle::List lst;
   lst.append(art);
+  
+  if(j->canceled()) {
+    delete j;
+    
+    //sending of this article was canceled => move it to the "Outbox-Folder"
+    if(art->collection()!=knGlobals.folManager->outbox())
+      knGlobals.artManager->moveIntoFolder(lst, knGlobals.folManager->outbox());    
+      
+    /* add approviate info message here !!! */
+      
+    return;
+  }
 
   if(!j->success()) {
     showSendErrorDialog();
