@@ -85,7 +85,7 @@ KDE_ICON = kaddressbook
 
 messages: rc.cpp
 	$(EXTRACTRC) */*.ui >> rc.cpp
-	$(XGETTEXT) *.h *.cpp common/*.cpp editors/*.cpp features/*.cpp printing/*.cpp views/*.cpp xxport/*.cpp details/*.h interfaces/*.h -o $(podir)/kaddressbook.pot
+	$(XGETTEXT) *.h *.cpp common/*.cpp editors/*.cpp features/*.cpp printing/*.cpp views/*.cpp xxport/*.cpp interfaces/*.h -o $(podir)/kaddressbook.pot
 
 srcdoc:
 	$(mkinstalldirs) $(SRCDOC_DEST)
