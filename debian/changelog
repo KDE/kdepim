@@ -3,7 +3,7 @@ kdepim (4:2.1-final-1) unstable; urgency=low
   * New upstream version
   * Upping standards version
   * Fix build problem with new libc 2.2.1 (Closes: #86435)
-  * Fix checkbox problem (Closes: #77622)
+  * Fix checkbox and other todo problems (Closes: #77622, #77803)
  
  -- Ivan E. Moore II <rkrusty@debian.org>  Mon, 19 Feb 2001 02:31:00 -0700
 
