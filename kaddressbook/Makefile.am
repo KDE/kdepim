@@ -28,8 +28,8 @@ libkaddressbookpart_la_SOURCES = \
  addresseeeditordialog.cpp addresseeeditorwidget.cpp addresseeutil.cpp \
  addviewdialog.cpp configurewidget.cpp \
  emaileditwidget.cpp extensionwidget.cpp filter.cpp filtereditdialog.cpp \
- filterselectionwidget.cpp geowidget.cpp importdialog.cpp incsearchwidget.cpp \
- jumpbuttonbar.cpp kaddressbook.cpp \
+ filterselectionwidget.cpp geowidget.cpp imagewidget.cpp importdialog.cpp \
+ incsearchwidget.cpp jumpbuttonbar.cpp kaddressbook.cpp \
  kaddressbook_part.cpp kaddressbookiface.skel kaddressbookmain.cpp \
  kaddressbookview.cpp ldapsearchdialog.cpp \
  nameeditdialog.cpp phoneeditwidget.cpp undo.cpp undocmds.cpp \
@@ -43,7 +43,7 @@ noinst_HEADERS = \
  addresseeeditordialog.h addresseeeditorwidget.h addresseeutil.h \
  addviewdialog.h configurewidget.h \
  emaileditwidget.h filter.h filtereditdialog.h filterselectionwidget.h \
- geowidget.h importdialog.h incsearchwidget.h \
+ geowidget.h imagewidget.h importdialog.h incsearchwidget.h \
  jumpbuttonbar.h kabprefs.h kaddressbook.h kaddressbook_part.h \
  kaddressbookmain.h kaddressbookview.h ldapsearchdialog.h \
  nameeditdialog.h phoneeditwidget.h \

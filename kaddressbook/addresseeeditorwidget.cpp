@@ -54,6 +54,7 @@
 #include "addresseditwidget.h"
 #include "emaileditwidget.h"
 #include "geowidget.h"
+#include "imagewidget.h"
 #include "kabprefs.h"
 #include "nameeditdialog.h"
 #include "phoneeditwidget.h"
@@ -410,7 +411,7 @@ void AddresseeEditorWidget::setupTab3()
   // This is the Misc tab
   QWidget *tab3 = new QWidget( mTabWidget );
 
-  QGridLayout *layout = new QGridLayout( tab3, 1, 2 );
+  QGridLayout *layout = new QGridLayout( tab3, 2, 2 );
   layout->setMargin( KDialogBase::marginHint() );
   layout->setSpacing( KDialogBase::spacingHint() );
   layout->setColStretch( 1, 1 );
@@ -421,6 +422,13 @@ void AddresseeEditorWidget::setupTab3()
   mGeoWidget->setMinimumSize( mGeoWidget->sizeHint() );
   connect( mGeoWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
   layout->addWidget( mGeoWidget, 0, 0, Qt::AlignTop );
+
+  //////////////////////////////////////
+  // Images
+  mImageWidget = new ImageWidget( tab3 );
+  mImageWidget->setMinimumSize( mImageWidget->sizeHint() );
+  connect( mImageWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
+  layout->addWidget( mImageWidget, 1, 0, Qt::AlignTop );
 
    // Build the layout and add to the tab widget
   layout->activate(); // required
@@ -455,6 +463,8 @@ void AddresseeEditorWidget::load()
   mCategoryEdit->setText( mAddressee.categories().join( "," ) );
 
   mGeoWidget->setGeo( mAddressee.geo() );
+  mImageWidget->setPhoto( mAddressee.photo() );
+  mImageWidget->setLogo( mAddressee.logo() );
   
   // Load customs
   mIMAddressEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-IMAddress" ) );
@@ -488,7 +498,9 @@ void AddresseeEditorWidget::save()
   mAddressee.setCategories( QStringList::split( ",", mCategoryEdit->text() ) );
 
   mAddressee.setGeo( mGeoWidget->geo() );
-  
+  mAddressee.setPhoto( mImageWidget->photo() );
+  mAddressee.setLogo( mImageWidget->logo() );
+
   // save custom fields
   mAddressee.insertCustom( "KADDRESSBOOK", "X-IMAddress", mIMAddressEdit->text() );
   mAddressee.insertCustom( "KADDRESSBOOK", "X-SpousesName", mSpouseEdit->text() );

@@ -93,7 +93,11 @@ void IncSearchWidget::setFields( const KABC::Field::List &list )
 
 KABC::Field *IncSearchWidget::currentField()const
 {
-  return mFieldList[ mFieldCombo->currentItem() ];
+  if ( mFieldCombo->currentItem() >= (int)mFieldList.count() ||
+       mFieldCombo->currentItem() == -1 )
+    return 0;
+  else
+    return mFieldList[ mFieldCombo->currentItem() ];
 }
 
 #include "incsearchwidget.moc"

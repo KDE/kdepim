@@ -54,6 +54,7 @@ GeoWidget::GeoWidget( QWidget *parent, const char *name )
 
   label = new QLabel( this );
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "package_network", KIcon::Desktop ) );
+  label->setAlignment( Qt::AlignTop );
   topLayout->addMultiCellWidget( label, 0, 2, 0, 0 );
 
   label = new QLabel( i18n( "Latitude:" ), this );
@@ -95,7 +96,7 @@ void GeoWidget::setGeo( const KABC::Geo &geo )
   mLongitudeBox->setValue( geo.longitude() );
 }
 
-KABC::Geo GeoWidget::geo()
+KABC::Geo GeoWidget::geo() const
 {
   KABC::Geo geo;
 

@@ -62,7 +62,7 @@ class GeoWidget : public QWidget
     /**
       Returns a geo object.
      */
-    KABC::Geo geo();
+    KABC::Geo geo() const;
 
   signals:
     void changed();

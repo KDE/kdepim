@@ -45,6 +45,7 @@ class KSqueezedTextLabel;
 class AddressEditWidget;
 class EmailEditWidget;
 class GeoWidget;
+class ImageWidget;
 class PhoneEditWidget;
 
 namespace KPIM
@@ -124,8 +125,9 @@ class AddresseeEditorWidget : public ExtensionWidget
     KLineEdit *mRoleEdit;
     KLineEdit *mOrgEdit;
     KComboBox *mFormattedNameBox;
-    EmailEditWidget *mEmailWidget;
     AddressEditWidget *mAddressEditWidget;
+    EmailEditWidget *mEmailWidget;
+    ImageWidget *mImageWidget;
     PhoneEditWidget *mPhoneEditWidget;
     KLineEdit *mURLEdit;
     KLineEdit *mIMAddressEdit;
