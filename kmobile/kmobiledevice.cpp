@@ -54,7 +54,6 @@ KMobileDevice::KMobileDevice(QObject *obj, const char *name, const QStringList &
 
   setClassType(Unclassified);
   setCapabilities(hasNothing);
-  m_deviceClassName = defaultClassName(Unclassified);
   m_deviceName = i18n("Unknown Device");
   m_deviceRevision = i18n("n/a");  /* not available */
   m_connectionName = i18n("Unknown Connection");
@@ -114,7 +113,8 @@ bool KMobileDevice::configDialog( QWidget *parent )
 
 void KMobileDevice::setClassType( enum ClassType ct )
 {
-  m_classType = ct; 
+  m_classType = ct;
+  m_deviceClassName = defaultClassName(ct);
 };
 
 enum KMobileDevice::ClassType KMobileDevice::classType() const
@@ -150,7 +150,7 @@ QString KMobileDevice::defaultClassName( ClassType ct )
     case Camera:	name = i18n("Digital Camera");		break;
     case MusicPlayer:	name = i18n("Music/MP3 Player");	break;
     case Unclassified:
-    default:		name = i18n("Unclassified");		break;
+    default:		name = i18n("Unclassified Device");	break;
   }
   return name;
 }

@@ -242,11 +242,9 @@ void KMobile::addDevice()
     return;
 
   ptr = list[index];
-  kdDebug() << "Selected item:\n";
-  kdDebug() << QString("LIBRARY: '%1', NAME: '%2', ICON: '%3', COMMENT: '%4'\n")
-		.arg(ptr->library()).arg(ptr->name()).arg(ptr->icon()).arg(ptr->comment());
 
-  new KMobileItem(m_view, m_config, ptr);
+  // add the new device to the list
+  m_view->addNewDevice(m_config, ptr);
 
   saveAll();
 }

@@ -29,7 +29,7 @@ KMobileItem::KMobileItem(QIconView *parent, KConfig *_config, KService::Ptr serv
 
    if (m_iconName.isEmpty())
         m_iconName = KMOBILE_ICON_UNKNOWN;
-
+   
    setPixmap(getIcon());
    setRenameEnabled(true);
 }
@@ -63,8 +63,6 @@ void KMobileItem::configSave() const
    config->writeEntry( "DesktopFile", m_deviceDesktopFile );
    config->writeEntry( "IconName", m_iconName );
    config->sync();
-
-   writeKonquMimeFile();
 }
 
 bool KMobileItem::configLoad(int idx)
@@ -109,10 +107,16 @@ void KMobileItem::writeKonquMimeFile() const
    p = icon.find('.');
    if (p>=0) icon = icon.left(p);
 
+   QString comment;
+   if (m_dev)
+	comment = m_dev->deviceClassName();
+   if (comment.isEmpty())
+	comment = KMobileDevice::defaultClassName(KMobileDevice::Unclassified);
+
    KConfig conf( getKonquMimeType()+".desktop", false, true, "mime" );
    conf.setDesktopGroup();
    conf.writeEntry("Encoding", "UTF-8");
-   conf.writeEntry("Comment", "Kommentar");
+   conf.writeEntry("Comment", comment );
    conf.writeEntry("Type", "MimeType");
    conf.writeEntry("Icon", icon );
    conf.writeEntry("MimeType", getKonquMimeType());

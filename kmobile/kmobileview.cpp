@@ -32,13 +32,30 @@ KMobileView::~KMobileView()
 {
 }
 
+bool KMobileView::addNewDevice(KConfig *config, KService::Ptr service)
+{
+   kdDebug() << "New mobile device item:\n";
+   kdDebug() << QString("LIBRARY: '%1', NAME: '%2', ICON: '%3', COMMENT: '%4'\n")
+		.arg(service->library()).arg(service->name()).arg(service->icon())
+		.arg(service->comment());
+
+   KMobileItem *it;
+   it = new KMobileItem(this, config, service);
+   it->driverAvailable();
+   it->configSave();
+   it->writeKonquMimeFile();
+   return true;
+}
+
 void KMobileView::saveAll()
 {
    m_config->setGroup( "Main" );
    m_config->writeEntry( "Entries", count() );
    for ( QIconViewItem *item = firstItem(); item; item = item->nextItem() ) {
 	KMobileItem *it = static_cast<KMobileItem *>(item);
+	it->driverAvailable();
 	it->configSave();
+	it->writeKonquMimeFile();
    }
    m_config->sync();
    emit signalChangeStatusbar( i18n("Configuration saved") );
@@ -49,7 +66,10 @@ void KMobileView::restoreAll()
    m_config->setGroup( "Main" );
    int num = m_config->readNumEntry( "Entries" );
    for (int i=0; i<num; ++i) {
-	new KMobileItem(this, m_config, i);
+	KMobileItem *it;
+	it = new KMobileItem(this, m_config, i);
+	it->driverAvailable();
+	it->writeKonquMimeFile();
    }
    emit signalChangeStatusbar( i18n("Configuration restored") );
 }

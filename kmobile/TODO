@@ -3,9 +3,19 @@ DONE:
 - devices:/ kioslave integration
 - show per-device icons in konqueror (same as in the kmobile view)
 - fix mimetypes and their location under /share/mimelnk
+- kioslaves: cellphone:/, organizer:/, pda:/, (camera:/ not activated)
 
 TODO:
 -----
+- finish the functions which are available to client apps.
 - kitchensync driver/plugin (starting...)
+- a plugin for the left side of the "Open File Dialog". ->
+  makes direct access to mobile devices really easy
 - more drivers
 
+
+TODO (lower priority):
+----------------------
+- a kmobile-driver, which can connect to another KDE-computer
+  to be able to access Calendar-Entries, ToDo's, ... from there
+  and to be able to syncronize them via kitchensync (maybe?)

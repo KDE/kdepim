@@ -30,6 +30,8 @@ public:
     KMobileView(QWidget *parent, KConfig *_config);
     virtual ~KMobileView();
 
+    bool addNewDevice(KConfig *config, KService::Ptr service);
+
     /**
      * DCOP implementation
      */
