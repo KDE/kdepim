@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+Comment=
+Comment[xx]=xx
+Name=FileviewPart
+Icon=konqeror
+ServiceTypes=KitchenSync/Manipulator
+X-KDE-Library=libfileviewpart
