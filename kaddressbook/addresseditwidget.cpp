@@ -121,10 +121,12 @@ void AddressEditWidget::edit()
 {
   AddressEditDialog dialog( mAddressList, mTypeCombo->currentItem(), this );
   if ( dialog.exec() ) {
-    mAddressList = dialog.addresses();
-    mTypeCombo->updateTypes();
-    updateAddressEdit();
-    emit modified();
+    if ( dialog.changed() ) {
+      mAddressList = dialog.addresses();
+      mTypeCombo->updateTypes();
+      updateAddressEdit();
+      emit modified();
+    }
   }
 }
 
@@ -249,8 +251,18 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
 
   connect( mTypeCombo, SIGNAL( activated( int ) ),
            SLOT( updateAddressEdits() ) );
+  connect( mStreetTextEdit, SIGNAL( textChanged() ), SLOT( modified() ) );
+  connect( mPOBoxEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+  connect( mLocalityEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+  connect( mRegionEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+  connect( mPostalCodeEdit, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+  connect( mCountryCombo, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+  connect( mPreferredCheckBox, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
+  connect( removeButton, SIGNAL( clicked() ), SLOT( modified() ) );
 
   KAcceleratorManager::manage( this );
+
+  mChanged = false;
 }
 
 AddressEditDialog::~AddressEditDialog()
@@ -262,6 +274,8 @@ void AddressEditDialog::updateAddressEdits()
   KABC::Address::List::Iterator it = mTypeCombo->selectedElement();
   KABC::Address a = *it;
 
+  bool tmp = mChanged;
+
   mStreetTextEdit->setText( a.street() );
   mRegionEdit->setText( a.region() );
   mLocalityEdit->setText( a.locality() );
@@ -272,6 +286,8 @@ void AddressEditDialog::updateAddressEdits()
   mPreferredCheckBox->setChecked( a.type() & KABC::Address::Pref );
 
   mStreetTextEdit->setFocus();
+
+  mChanged = tmp;
 }
 
 KABC::Address::List AddressEditDialog::addresses()
@@ -307,6 +323,8 @@ void AddressEditDialog::addAddress()
     mTypeCombo->updateTypes();
     mTypeCombo->setCurrentItem( mTypeCombo->count() - 1 );
     updateAddressEdits();
+
+    modified();
   }
 }
 
@@ -409,6 +427,16 @@ void AddressEditDialog::fillCountryCombo(KComboBox *combo)
   countries.sort();
   
   combo->insertStringList( countries );
+}
+
+bool AddressEditDialog::changed() const
+{
+  return mChanged;
+}
+
+void AddressEditDialog::modified()
+{
+  mChanged = true;
 }
 
 AddressTypeDialog::AddressTypeDialog( int type, QWidget *parent )

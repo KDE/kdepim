@@ -177,9 +177,11 @@ void PhoneEditWidget::edit()
   PhoneEditDialog dlg( mPhoneList, this );
 
   if ( dlg.exec() ) {
-    mPhoneList = dlg.phoneNumbers();
-    updateCombos();
-    emit modified();
+    if ( dlg.changed() ) {
+      mPhoneList = dlg.phoneNumbers();
+      updateCombos();
+      emit modified();
+    }
   }
 }
 
@@ -361,6 +363,8 @@ PhoneEditDialog::PhoneEditDialog( const KABC::PhoneNumber::List &list, QWidget *
   KABC::PhoneNumber::List::Iterator it;
   for ( it = mPhoneNumberList.begin(); it != mPhoneNumberList.end(); ++it )
     new PhoneViewItem( mListView, *it );
+
+  mChanged = false;
 }
 
 PhoneEditDialog::~PhoneEditDialog()
@@ -376,6 +380,8 @@ void PhoneEditDialog::slotAddPhoneNumber()
     KABC::PhoneNumber phoneNumber = dlg.phoneNumber();
     mPhoneNumberList.append( phoneNumber );
     new PhoneViewItem( mListView, phoneNumber );
+
+    mChanged = true;
   }
 }
 
@@ -389,6 +395,8 @@ void PhoneEditDialog::slotRemovePhoneNumber()
   QListViewItem *currItem = mListView->currentItem();
   mListView->takeItem( currItem );
   delete currItem;
+
+  mChanged = true;
 }
 
 void PhoneEditDialog::slotEditPhoneNumber()
@@ -404,6 +412,8 @@ void PhoneEditDialog::slotEditPhoneNumber()
     KABC::PhoneNumber phoneNumber = dlg.phoneNumber();
     mPhoneNumberList.append( phoneNumber );
     new PhoneViewItem( mListView, phoneNumber );
+
+    mChanged = true;
   }
 }
 
@@ -418,6 +428,11 @@ void PhoneEditDialog::slotSelectionChanged()
 const KABC::PhoneNumber::List &PhoneEditDialog::phoneNumbers()
 {
   return mPhoneNumberList;
+}
+
+bool PhoneEditDialog::changed() const
+{
+  return mChanged;
 }
 
 ///////////////////////////////////////////

@@ -103,6 +103,7 @@ class PhoneEditDialog : public KDialogBase
     ~PhoneEditDialog();
     
     const KABC::PhoneNumber::List &phoneNumbers();
+    bool changed() const;
     
   protected slots:
     void slotAddPhoneNumber();
@@ -118,6 +119,8 @@ class PhoneEditDialog : public KDialogBase
 
     QPushButton *mRemoveButton;
     QPushButton *mEditButton;
+
+    bool mChanged;
 };
 
 /**

@@ -93,12 +93,14 @@ class AddressEditDialog : public KDialogBase
     ~AddressEditDialog();
     
     KABC::Address::List addresses();
+    bool changed() const;
 
   protected slots:
     void addAddress();
     void removeAddress();
 
     void updateAddressEdits();
+    void modified();
 
   private:
     void fillCountryCombo(KComboBox *combo);
@@ -116,6 +118,8 @@ class AddressEditDialog : public KDialogBase
     KLineEdit *mLocalityEdit;
     KLineEdit *mPostalCodeEdit;
     KLineEdit *mPOBoxEdit;
+
+    bool mChanged;
 };
 
 /**
