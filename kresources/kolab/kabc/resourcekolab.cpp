@@ -148,7 +148,7 @@ void KABC::ResourceKolab::releaseSaveTicket( Ticket* ticket )
   delete ticket;
 }
 
-void KABC::ResourceKolab::loadContact( const QString& contactXML, const QString& subResource, Q_UINT32 sernum )
+QString KABC::ResourceKolab::loadContact( const QString& contactXML, const QString& subResource, Q_UINT32 sernum )
 {
   Contact contact( contactXML, this, subResource, sernum ); // load
   KABC::Addressee addr;
@@ -159,6 +159,7 @@ void KABC::ResourceKolab::loadContact( const QString& contactXML, const QString&
   KABC::Resource::insertAddressee( addr ); // same as mAddrMap.insert( addr.uid(), addr );
   mUidMap[ addr.uid() ] = StorageReference( subResource, sernum );
   kdDebug(5650) << "Loaded contact uid=" << addr.uid() << " sernum=" << sernum << " fullName=" << contact.fullName() << endl;
+  return addr.uid();
 }
 
 bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
@@ -204,6 +205,8 @@ bool KABC::ResourceKolab::save( Ticket* )
     if( (*it).changed() ) {
       rc &= kmailUpdateAddressee( *it );
     }
+
+  // TODO save distribution lists too
 
   if ( !rc )
     kdDebug(5650) << k_funcinfo << " failed." << endl;
@@ -318,24 +321,16 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
 
 void KABC::ResourceKolab::insertAddressee( const Addressee& addr )
 {
-   bool ok = false;
-  // Call kmail ...
-  if ( !mSilent ) {
-#if 0
-    // Check if we need to update or save this
-    bool update = false;
-    if( mAddrMap.contains( addr.uid() ) ) {
-      // This address is already in the map
-      if( !addr.changed() )
-        // Not changed, no need to save it
-        return;
-      else
-        update = true;
-    }
-#endif
-
-    ok = kmailUpdateAddressee( addr );
+  const QString uid = addr.uid();
+  //kdDebug(5650) << k_funcinfo << uid << endl;
+  bool ok = false;
+  if ( mUidMap.contains( uid ) ) {
+    mUidsPendingUpdate.append( uid );
+  } else {
+    mUidsPendingAdding.append( uid );
   }
+
+  ok = kmailUpdateAddressee( addr );
 
   if ( ok )
     Resource::insertAddressee( addr );
@@ -344,9 +339,14 @@ void KABC::ResourceKolab::insertAddressee( const Addressee& addr )
 void KABC::ResourceKolab::removeAddressee( const Addressee& addr )
 {
   const QString uid = addr.uid();
+  //kdDebug(5650) << k_funcinfo << uid << endl;
+
+  /* The user told us to delete, tell KMail */
   kmailDeleteIncidence( mUidMap[ uid ].resource(),
                         mUidMap[ uid ].serialNumber() );
+  mUidsPendingDeletion.append( uid );
   mUidMap.remove( uid );
+
   Resource::removeAddressee( addr );
 }
 
@@ -362,14 +362,18 @@ bool KABC::ResourceKolab::fromKMailAddIncidence( const QString& type,
   // Check if this is a contact
   if( type != s_kmailContentsType ) return false;
 
-  const bool silent = mSilent;
-  mSilent = true;
+  // Load contact to find the UID
+  const QString uid = loadContact( contactXML, subResource, sernum );
 
-  loadContact( contactXML, subResource, sernum );
+  //kdDebug(5650) << k_funcinfo << uid << endl;
 
-  addressBook()->emitAddressBookChanged();
-
-  mSilent = silent;
+  // Emit "addressbook changed" if this comes from kmail and not from the GUI
+  if ( !mUidsPendingAdding.contains( uid )
+       && !mUidsPendingUpdate.contains( uid ) ) {
+    addressBook()->emitAddressBookChanged();
+    mUidsPendingAdding.remove( uid );
+    mUidsPendingUpdate.remove( uid );
+  }
 
   return true;
 }
@@ -381,29 +385,32 @@ void KABC::ResourceKolab::fromKMailDelIncidence( const QString& type,
   // Check if this is a contact
   if( type != s_kmailContentsType ) return;
 
-  const bool silent = mSilent;
-  mSilent = true;
+  //kdDebug(5650) << k_funcinfo << uid << endl;
 
-  mAddrMap.remove( uid );
-  mUidMap.remove( uid );
-  addressBook()->emitAddressBookChanged();
-
-  mSilent = silent;
+  // Can't be in both, by contract
+  if ( mUidsPendingDeletion.contains( uid ) ) {
+    mUidsPendingDeletion.remove( uid );
+  } else if ( mUidsPendingUpdate.contains( uid ) ) {
+    // It's good to know if was deleted, but we are waiting on a new one to
+    // replace it, so let's just sit tight.
+  } else {
+    // We didn't trigger this, so KMail did, remove the reference to the uid
+    mAddrMap.remove( uid );
+    mUidMap.remove( uid );
+    addressBook()->emitAddressBookChanged();
+  }
 }
 
 void KABC::ResourceKolab::fromKMailRefresh( const QString& type,
-                                       const QString& /*subResource*/ )
+                                            const QString& /*subResource*/ )
 {
   // Check if this is a contact
   if( type != s_kmailContentsType ) return;
 
-  const bool silent = mSilent;
-  mSilent = true;
+  //kdDebug(5650) << k_funcinfo << endl;
 
   load(); // ### should call loadSubResource(subResource) probably
   addressBook()->emitAddressBookChanged();
-
-  mSilent = silent;
 }
 
 void KABC::ResourceKolab::fromKMailAddSubresource( const QString& type,

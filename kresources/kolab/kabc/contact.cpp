@@ -855,7 +855,8 @@ void Contact::setFields( const KABC::Addressee* addressee )
   setAssistant( addressee->custom( "KADDRESSBOOK", "X-AssistantsName" ) );
   setNickName( addressee->nickName() );
   setSpouseName( addressee->custom( "KADDRESSBOOK", "X-SpousesName" ) );
-  setBirthday( addressee->birthday().date() );
+  if ( addressee->birthday().isNull() )
+    setBirthday( addressee->birthday().date() );
   setAnniversary( stringToDate( addressee->custom( "KADDRESSBOOK", "X-Anniversary" ) ) );
 
   const QStringList emails = addressee->emails();

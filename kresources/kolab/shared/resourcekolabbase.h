@@ -151,6 +151,12 @@ protected:
    */
   UidMap mUidMap;
 
+  /// This is used to distinguish operations triggered by the user,
+  /// from operations triggered by KMail
+  QStringList mUidsPendingAdding;
+  QStringList mUidsPendingDeletion;
+  QStringList mUidsPendingUpdate;
+
 private:
   mutable KMailConnection* mConnection;
 };

@@ -210,8 +210,8 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
   const QString uid = incidencebase->uid();
 
   if ( mUidsPendingUpdate.contains( uid ) || mUidsPendingAdding.contains( uid ) ) {
-    /* We are currently processing this event ( removing and readding or 
-     * adding it ). If so, ignore this update. Keep the last of these around 
+    /* We are currently processing this event ( removing and readding or
+     * adding it ). If so, ignore this update. Keep the last of these around
      * and process once we hear back from KMail on this event. */
     mPendingUpdates.replace( uid, incidencebase );
     return;
@@ -351,7 +351,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       // so we know it's one of our transient ones
       mUidsPendingAdding.append( uid );
 
-      /* Add to the cache immediately if this is a new event coming from 
+      /* Add to the cache immediately if this is a new event coming from
        * KOrganizer. It relies on the incidence being in the calendar when
        * addIncidence returns. */
       if ( newIncidence ) {
@@ -361,9 +361,9 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     }
   } else { /* KMail told us */
     bool ourOwnUpdate = false;
-    /* Check if we updated this one, which means kmail deleted and added it. 
-     * We know the new state, so lets just not do much at all. The old incidence 
-     * in the calendar remains valid, but the serial number changed, so we need to 
+    /* Check if we updated this one, which means kmail deleted and added it.
+     * We know the new state, so lets just not do much at all. The old incidence
+     * in the calendar remains valid, but the serial number changed, so we need to
      * update that */
     if ( ourOwnUpdate = mUidsPendingUpdate.contains( uid ) ) {
       mUidsPendingUpdate.remove( uid );
@@ -382,8 +382,8 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       if ( !mUidsPendingAdding.contains( uid ) ) {
         mCalendar.addIncidence( incidence );
         incidence->registerObserver( this );
+        kdDebug(5650) << "Registering: " << this << " as Observer of: " << incidence << endl;
       }
-      kdDebug(5650) << "Registering: " << this << " as Observer of: " << incidence << endl;
       if ( !subResource.isEmpty() && sernum != 0 ) {
         mUidMap[ uid ] = StorageReference( subResource, sernum );
         incidence->setReadOnly( !(*map)[ subResource ].writable() );
@@ -395,7 +395,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       mPendingUpdates.remove( uid );
       incidenceUpdated( update );
     } else {
-      /* If the uid was added by KMail, KOrganizer needs to be told, so 
+      /* If the uid was added by KMail, KOrganizer needs to be told, so
        * schedule emitting of the resourceChanged signal. */
       if ( !mUidsPendingAdding.contains( uid ) ) {
         if ( !ourOwnUpdate ) mResourceChangedTimer.changeInterval( 100 );
@@ -597,7 +597,7 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
   if ( mUidsPendingDeletion.contains( uid ) ) {
     mUidsPendingDeletion.remove( uid );
   } else if ( mUidsPendingUpdate.contains( uid ) ) {
-    // It's good to know if was deleted, but we are waiting on a new one to 
+    // It's good to know if was deleted, but we are waiting on a new one to
     // replace it, so let's just sit tight.
   } else {
     // We didn't trigger this, so KMail did, remove the reference to the uid
