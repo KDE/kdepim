@@ -406,7 +406,6 @@ void KNArticleWidget::applyConfig()
   style->setFontUnderline(f.underline());
   style->setFontWeight(f.weight());
   style->setFontItalic(f.italic());
-  style->setColor(app->textColor());
 
   style=new QStyleSheetItem(styleSheet(), "bodyblock");
   style->setDisplayMode(QStyleSheetItem::DisplayBlock);
@@ -424,7 +423,6 @@ void KNArticleWidget::applyConfig()
   style->setFontUnderline(f.underline());
   style->setFontWeight(f.weight());
   style->setFontItalic(f.italic());
-  style->setColor(app->textColor());
 
   style=new QStyleSheetItem(styleSheet(), "txt_attachment");
   style->setDisplayMode(QStyleSheetItem::DisplayBlock);
@@ -434,15 +432,16 @@ void KNArticleWidget::applyConfig()
   style->setFontUnderline(f.underline());
   style->setFontWeight(f.weight());
   style->setFontItalic(f.italic());  
-  style->setColor(app->textColor());  
   
   setPaper( QBrush( app->backgroundColor() ) );
 
   QPalette newPalette(palette());
   QColorGroup newColorGroup(newPalette.active());
+  newColorGroup.setColor(QColorGroup::Text, app->textColor());
   newColorGroup.setColor(QColorGroup::Link, app->linkColor());
   newPalette.setActive(newColorGroup);
   newColorGroup = newPalette.inactive();
+  newColorGroup.setColor(QColorGroup::Text, app->textColor());  
   newColorGroup.setColor(QColorGroup::Link, app->linkColor());
   newPalette.setInactive(newColorGroup);
   setPalette(newPalette);
