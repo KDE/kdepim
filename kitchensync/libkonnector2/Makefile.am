@@ -11,10 +11,11 @@ libkonnector_la_SOURCES = konnector.cpp kapabilities.cpp \
     kdevice.cpp konnectormanager.cpp \
     idhelper.cpp \
     konnectorinfo.cpp notify.cpp \
-    error.cpp progress.cpp stdprogress.cpp stderror.cpp
+    error.cpp progress.cpp stdprogress.cpp stderror.cpp \
+    filter.cpp
 
 
-servicetype_DATA = konnector.desktop
+servicetype_DATA = konnector.desktop filter.desktop
 servicetypedir = $(kde_servicetypesdir)
 
 METASOURCES = AUTO

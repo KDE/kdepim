@@ -39,12 +39,7 @@ KonnectorManager* KonnectorManager::m_self = 0;
 KonnectorManager::KonnectorManager()
   : KRES::Manager<Konnector>( "konnector" )
 {
-    m_auto = false;
-    m_filter.setAutoDelete( true );
-    m_konnectors.setAutoDelete( true );
-
   readConfig();
-
   connectSignals();
 }
 
@@ -59,140 +54,9 @@ KonnectorManager* KonnectorManager::self()
   return m_self;
 }
 
-Device::ValueList KonnectorManager::query()
-{
-    return allDevices();
-}
-
-Konnector *KonnectorManager::load( const Device& dev )
-{
-    Konnector *plugin = KParts::ComponentFactory::
-        createInstanceFromLibrary<Konnector>( dev.library().local8Bit(), this );
-    if ( !plugin ) return 0;
-
-    connect( plugin, SIGNAL( synceesRead( Konnector * ) ),
-             SLOT( slotSync( Konnector * ) ) );
-    connect( plugin, SIGNAL( sig_progress( Konnector *, const Progress & ) ),
-             SLOT( slotProgress( Konnector *, const Progress & ) ) );
-    connect( plugin, SIGNAL( sig_error( Konnector *, const Error & ) ),
-             SLOT( slotError( Konnector *, const Error& ) ) );
-    connect( plugin, SIGNAL( sig_downloaded( Konnector *, const SynceeList & ) ),
-             SLOT( slotDownloaded( Konnector *, const SynceeList & ) ) );
-
-    m_konnectors.append( plugin );
-
-    return plugin;
-}
-
-Konnector *KonnectorManager::load( const QString& deviceName )
-{
-    return load( find( deviceName ) );
-}
-
-bool KonnectorManager::unload( Konnector *k )
-{
-    return m_konnectors.remove( k );
-}
-
-bool KonnectorManager::autoLoadFilter() const
-{
-    return m_auto;
-}
-
-void KonnectorManager::setAutoLoadFilter( bool aut )
-{
-    m_auto = aut;
-}
-
-void KonnectorManager::add( Filter* filter)
-{
-    m_filAdded.append( filter );
-}
-
-void KonnectorManager::deleteFilter( Filter* filter)
-{
-    m_filAdded.remove( filter ); // autoDelete is on!
-}
-
-const Filter::PtrList KonnectorManager::filters()
-{
-    return m_filAdded;
-}
-
-void KonnectorManager::write( Konnector * /*plugin*/, const SynceeList & )
-{
-// Konnectors should be directly called.
-#if 0
-    kdDebug(5201) << "KonnectorManager::write" << endl;
-    if ( !plugin ) {
-        kdDebug(5201) << " Did not contain the plugin " << endl;
-        emit error( plugin, StdError::konnectorDoesNotExist() );
-        emit progress( plugin, StdProgress::done() );
-        return;
-    }
-    kdDebug(5201) << "Konnector: " << plugin->info().name() << endl;
-    plugin->writeSyncees();
-#endif
-}
-
-/*
- * find all available desktop files
- * we'll find the kitchensync dir
- * and then parse each .desktop file
- */
-Device::ValueList KonnectorManager::allDevices()
-{
-    m_devices.clear(); // clean up first
-
-    QStringList list = KGlobal::dirs()->findDirs("data", "kitchensync" );
-
-    /* for each dir */
-    for (QStringList::Iterator it = list.begin(); it != list.end(); ++it ) {
-        QDir dir( (*it), "*.desktop" ); // data dir of kitchensync + .desktop as a filter
-        QStringList files = dir.entryList();
-
-        QStringList::Iterator fileIt;
-        /* for each file */
-        for (fileIt = files.begin(); fileIt != files.end(); ++fileIt )
-            m_devices.append( parseDevice( (*it) + (*fileIt  ) ) );
-    }
-    return m_devices;
-}
-
-Device KonnectorManager::parseDevice( const QString &path )
-{
-    KService service( path );
-
-    QString name  = service.name();
-    QString lib   = service.library();
-    QString group = service.property( QString::fromLatin1("Group" ) ).toString();
-    QString vendo = service.property( QString::fromLatin1("Vendor") ).toString();
-    QString id    = service.property( QString::fromLatin1("Id"    ) ).toString();
-
-    kdDebug(5201) << "Id " << id << " " << name << endl;
-
-    return Device(name, group, vendo, lib, id );
-}
-
-Device KonnectorManager::find( const QString& device )
-{
-    Device dev;
-    if ( m_devices.isEmpty() ) return dev;
-
-    Device::ValueList::Iterator it;
-    for ( it = m_devices.begin(); it != m_devices.end(); ++it ) {
-        if ( (*it).identify() == device ) {
-            dev = (*it);
-            break;
-        }
-    }
-    return dev;
-}
-
 void KonnectorManager::slotSync( Konnector *k, const SynceeList & list )
 {
-    const SynceeList & unknown = findUnknown( list );
-    filter( unknown, list );
+
     emit sync( k, list );
 }
 
@@ -208,40 +72,7 @@ void KonnectorManager::slotError( Konnector *k, const Error &err )
 
 void KonnectorManager::slotDownloaded( Konnector *k, const SynceeList & list)
 {
-    const SynceeList & unknown = findUnknown( list );
-    filter( unknown, list );
     emit downloaded( k, list );
-}
-
-/*
- * FIXME Cornelius take a look here when you want to implement
- * a generic KIO <-> Konnector FileBridge
- * The KIO Konnector only retrieves data and the Filter
- * filters for example the AddressBook or any other data...
- *
- * FIXME use filters!!!!
- */
-void KonnectorManager::filter( const SynceeList & /*lst*/,
-                               const SynceeList & /*real*/ )
-{
-    kdError() << "KonnectorManager::filter() not implemented" << endl;
-}
-
-SynceeList KonnectorManager::findUnknown( const SynceeList & )
-{
-#if 0
-    lst.setAutoDelete( false );
-    const SynceeList & list;
-    Syncee* syn;
-    for ( syn = lst.first(); syn; syn = lst.next() ) {
-        if ( syn->type() == QString::fromLatin1("UnknownSyncEntry") ) {
-            lst.remove( syn ); // setAutoDelete should be false
-            list.append( syn );
-        }
-    }
-    return list;
-#endif
-  return SynceeList();
 }
 
 void KonnectorManager::connectSignals()

@@ -51,31 +51,6 @@ class KonnectorManager : public QObject, public KRES::Manager<Konnector>
   public:
     static KonnectorManager *self();
 
-    Device::ValueList query();
-    Konnector *load( const Device& device );
-    Konnector *load( const QString& deviceName );
-    bool unload( Konnector * );
-
-    bool autoLoadFilter() const;
-
-    /**
-     * Set whether or not to load
-     * Filters automatically
-     */
-    void setAutoLoadFilter( bool = true );
-
-    /**
-     * adds a custom filter
-     * a custom filter overwrites
-     * automatic loaded filters
-     */
-    void add( Filter* filter );
-    void deleteFilter( Filter* filter );
-    const Filter::PtrList filters();
-
-  public slots:
-    void write( Konnector *, const SynceeList & );
-
   signals:
     /**
       Emitted when Syncee list becomes available as response to
@@ -115,26 +90,11 @@ class KonnectorManager : public QObject, public KRES::Manager<Konnector>
     void connectSignals();
 
   private:
-    void filter( const SynceeList &unknown, const SynceeList &real );
 
     KonnectorManager();
     ~KonnectorManager();
 
-    Device::ValueList allDevices();
-    Device parseDevice( const QString& path );
-    Device find( const QString& deviceName );
-    SynceeList findUnknown( const SynceeList & );
-
     static KonnectorManager *m_self;
-
-    Filter::PtrList m_filter;
-    Filter::PtrList m_filAdded;
-    bool m_auto;
-
-    Device::ValueList m_devices;
-
-    QPtrList<Konnector> m_konnectors;
-
     class Private;
     Private *d;
 };
