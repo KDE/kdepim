@@ -9,7 +9,7 @@ INCLUDES=	-I$(top_srcdir)/libkmime \
 lib_LTLIBRARIES = libknodecommon.la
 
 kde_module_LTLIBRARIES = kcm_knode.la libknodepart.la
-libknodepart_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) $(KDE_PLUGIN)
+libknodepart_la_LDFLAGS = -module -avoid-version -no-undefined $(all_libraries) $(KDE_RPATH) $(KDE_PLUGIN)
 libknodepart_la_LIBADD	= libknodecommon.la
 
 SUBDIRS = pics filters
@@ -24,7 +24,7 @@ kcm_knode_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
 kcm_knode_la_LIBADD = libknodecommon.la $(LIB_KDECORE)
 
 
-libknodecommon_la_LDFLAGS = $(all_libraries) -no-undefined
+libknodecommon_la_LDFLAGS = -avoid-version -no-undefined $(all_libraries)
 libknodecommon_la_LIBADD = -lkdeprint -lkwalletclient $(top_builddir)/libkmime/libkmime.la $(top_builddir)/libkpgp/libkpgp.la $(top_builddir)/libkdepim/libkdepim.la $(LIB_KSPELL) $(LIB_KABC) $(LIB_KFILE) $(LIB_KUTILS) $(LIBRESOLV)
 libknodecommon_la_SOURCES =   knconfigmanager.cpp \
                   knconfig.cpp \
