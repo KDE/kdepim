@@ -1,7 +1,7 @@
 /*******************************************************************
  KNotes -- Notes for the KDE project
 
- Copyright (c) 1997-2001, The KNotes Developers
+ Copyright (c) 1997-2002, The KNotes Developers
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -39,9 +39,9 @@ public:
 
     void readFile( QString& filename );
     void dumpToFile( QString& filename ) const;
+    
     void setTextFont( QFont& font );
     void setTextColor( QColor& color );
-
     void setTabStop( int tabs );
     void setAutoIndentMode( bool newmode );
 
@@ -71,9 +71,9 @@ signals:
     void gotUrlDrop( const QString& url );
 
 protected:
-    void dragMoveEvent( QDragMoveEvent *event );
-    void dragEnterEvent( QDragEnterEvent *event );
-    void dropEvent( QDropEvent *event );
+    virtual void contentsDragEnterEvent( QDragEnterEvent *e );
+    virtual void contentsDragMoveEvent( QDragMoveEvent *e );
+    virtual void contentsDropEvent( QDropEvent *e );
 
 private slots:
     void slotReturnPressed();

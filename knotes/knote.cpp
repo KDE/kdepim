@@ -23,8 +23,7 @@
 #include <qbitmap.h>
 #include <qcursor.h>
 #include <qpaintdevicemetrics.h>
-
-#include <private/qrichtext_p.h>
+#include <qsimplerichtext.h>
 
 #include <kaction.h>
 #include <kxmlgui.h>
@@ -46,6 +45,7 @@
 #include "knotebutton.h"
 #include "knoteedit.h"
 #include "knoteconfigdlg.h"
+#include "version.h"
 
 #include <kwin.h>
 #include <netwm.h>
@@ -134,9 +134,10 @@ KNote::KNote( KXMLGUIBuilder* builder, QDomDocument buildDoc, const QString& fil
     // WARNING: if the config file doesn't exist a new note will be created!
     if ( load && m_noteDir.exists( m_configFile ) )
     {
-        KSimpleConfig* test = new KSimpleConfig( m_noteDir.absFilePath( m_configFile ), true );
+        QString path = m_noteDir.absFilePath( m_configFile );
+        KSimpleConfig* test = new KSimpleConfig( path, true );
         test->setGroup( "General" );
-        oldconfig = ( test->readNumEntry( "version", 1 ) == 1 );
+        oldconfig = ( test->readDoubleNumEntry( "version", 1 ) < 2 );
         delete test;
     }
     else
@@ -473,14 +474,15 @@ void KNote::slotPrint() const
     if ( printer.setup() )
     {
         KSimpleConfig config( m_noteDir.absFilePath( m_configFile ), true );
+        config.setGroup( "Editor" );
 
-        // TODO
-        const int margin = 40;  // pt
-        QFont font( "helvetica" );
+        QFont font( KGlobalSettings::generalFont() );
         font = config.readFontEntry( "font", &font );
 
         QPainter painter;
         painter.begin( &printer );
+        
+        const int margin = 40;  // pt
 
         QPaintDeviceMetrics metrics( painter.device() );
         int marginX = margin * metrics.logicalDpiX() / 72;
@@ -490,37 +492,25 @@ void KNote::slotPrint() const
                     metrics.width() - marginX * 2,
                     metrics.height() - marginY * 2 );
 
-        QTextDocument* textDoc = new QTextDocument( 0 );
-        textDoc->setFormatter( new QTextFormatterBreakWords );
-#if QT_VERSION > 304
-        textDoc->setDefaultFormat( font, Qt::black );        // only needed for the pointsize
-#else
-	textDoc->setDefaultFont( font );        // only needed for the pointsize
-#endif
-        textDoc->setUnderlineLinks( true );
-        textDoc->setStyleSheet( m_editor->styleSheet() );
-        textDoc->setMimeSourceFactory( m_editor->mimeSourceFactory() );
-        textDoc->flow()->setPageSize( body.height() );
-        textDoc->setPageBreakEnabled( true );
-        textDoc->setText( m_editor->text(), m_editor->context() );
+        QString content;
+        if ( m_editor->textFormat() == PlainText )
+            content = QStyleSheet::convertFromPlainText( m_editor->text() );
+        else
+            content = m_editor->text();
 
-        textDoc->doLayout( &painter, body.width() );
+        QSimpleRichText text( content, font, m_editor->context(),
+                              m_editor->styleSheet(), m_editor->mimeSourceFactory(),
+                              body.height() /*, linkColor, linkUnderline? */ );
 
+        text.setWidth( &painter, body.width() );
         QRect view( body );
 
         int page = 1;
-        int x = body.left();
-        int y = body.top();
 
         for (;;) {
-            painter.translate( x, y );
-            view.moveBy( 0, -y );
-            textDoc->draw( &painter, view, colorGroup() );
-            view.moveBy( 0, y );
-            painter.translate( -x, -y );
-
+            text.draw( &painter, body.left(), body.top(), view, colorGroup() );
             view.moveBy( 0, body.height() );
-            painter.translate( 0 , -body.height() );
+            painter.translate( 0, -body.height() );
 
             // page numbers
             painter.setFont( font );
@@ -529,7 +519,7 @@ void KNote::slotPrint() const
                 view.bottom() + painter.fontMetrics().ascent() + 5, QString::number( page )
             );
 
-            if ( view.top()  >= textDoc->height() )
+            if ( view.top() >= text.height() )
                 break;
 
             printer.newPage();
@@ -559,7 +549,7 @@ void KNote::slotApplyConfig()
         m_editor->setText( m_editor->text() );
     }
 
-    QFont def(KGlobalSettings::generalFont());
+    QFont def( KGlobalSettings::generalFont() );
     def = config.readFontEntry( "font", &def );
     m_editor->setTextFont( def );
 
@@ -619,7 +609,7 @@ void KNote::slotApplyConfig()
         m_button->hide();
         m_editor->cornerWidget()->hide();
     }
-    
+
     emit sigConfigChanged();
 }
 
@@ -781,7 +771,7 @@ void KNote::convertOldConfig()
         // TODO: Needed? What about KConfig? This deletes everything else?
         KSimpleConfig config( m_noteDir.absFilePath( m_configFile ) );
         config.setGroup( "General" );
-        config.writeEntry( "version", 2 );
+        config.writeEntry( "version", KNOTES_VERSION );
 
         config.setGroup( "Display" );
         config.writeEntry( "fgcolor", fg );
@@ -829,7 +819,7 @@ void KNote::resizeEvent( QResizeEvent* qre )
     updateLayout();
 }
 
-void KNote::closeEvent( QCloseEvent* e )
+void KNote::closeEvent( QCloseEvent* /*e*/ )
 {
     slotClose();
 }

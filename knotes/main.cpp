@@ -23,11 +23,12 @@
 #include <kaboutdata.h>
 #include <klocale.h>
 
-#include <iostream.h>
+#include <iostream>
 
 #include "knotesapp.h"
 #include "version.h"
 
+using namespace std;
 
 int main( int argc, char* argv[] )
 {

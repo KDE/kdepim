@@ -69,7 +69,7 @@ KNotesApp::KNotesApp()
     QString configfile = KGlobal::dirs()->findResource( "config", "knotesrc" );
     KSimpleConfig *test = new KSimpleConfig( configfile, true );
     test->setGroup( "General" );
-    if ( test->readNumEntry( "version", 1 ) == 1 )
+    if ( test->readDoubleNumEntry( "version", 1 ) == 1 )
     {
         delete test;
         if ( !( checkAccess( configfile, W_OK ) &&
@@ -142,12 +142,7 @@ KNotesApp::~KNotesApp()
 bool KNotesApp::saveState( QSessionManager& )
 {
     saveNotes();
-
-    QDictIterator<KNote> it( m_noteList );
-    for ( ; it.current(); ++it )
-        it.current()->hide();
-
-   return true;
+    return true;
 }
 
 bool KNotesApp::commitData( QSessionManager& )
@@ -166,7 +161,7 @@ int KNotesApp::newNote( QString name, const QString& text )
         kdError(5500) << "A note with this name already exists!" << endl;
         return -1;
     }
-    
+
     // must be done here to check if !m_noteList[name]
     QDir noteDir( KGlobal::dirs()->saveLocation( "appdata", "notes/" ) );
     if ( name.isEmpty() )
@@ -213,7 +208,7 @@ void KNotesApp::showNote( const QString& name ) const
 void KNotesApp::showNote( int noteId ) const
 {
     KNote* note = noteById( noteId );
-    
+
     if ( !note )
     {
         kdWarning(5500) << "No note with id " << noteId << endl;
@@ -251,7 +246,7 @@ QMap<int,QString> KNotesApp::notes() const
 QString KNotesApp::text( const QString& name ) const
 {
     KNote* note = m_noteList[name];
-    
+
     if ( note )
         return note->text();
     else
@@ -261,7 +256,7 @@ QString KNotesApp::text( const QString& name ) const
 QString KNotesApp::text( int noteId ) const
 {
     KNote* note = noteById( noteId );
-    
+
     if ( note )
         return note->text();
     else
@@ -366,6 +361,7 @@ void KNotesApp::mousePressEvent( QMouseEvent* e )
         break;
     case RightButton:
         m_context_menu->popup( e->globalPos() );
+    default: break;
     }
 }
 
