@@ -203,6 +203,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   const char *out = NULL;
   uint outlen;
   const char *mechusing = NULL;
+  QByteArray tmp, challenge;
 
   kdDebug(7116) << "aAuth: " << aAuth << " FQDN: " << aFQDN << " isSSL: " << isSSL << endl;
 
@@ -224,7 +225,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
 
   do {
     result = sasl_client_start(conn, aAuth.latin1(), &client_interact,
-                       0, &outlen, &mechusing);
+                       &out, &outlen, &mechusing);
 
     if ( result == SASL_INTERACT )
       if ( !sasl_interact( slave, ai, client_interact ) ) {
@@ -241,8 +242,16 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   }
   imapCommand *cmd;
 
+  tmp.setRawData( out, outlen );
+  KCodecs::base64Encode( tmp, challenge );
+  tmp.resetRawData( out, outlen );
   // then lets try it
-  cmd = sendCommand (new imapCommand ("AUTHENTICATE", aAuth));
+  QString firstCommand = aAuth;
+  if ( !challenge.isEmpty() ) { 
+    firstCommand += " ";
+    firstCommand += QString::fromLatin1( challenge.data(), challenge.size() );
+  }
+  cmd = sendCommand (new imapCommand ("AUTHENTICATE", firstCommand.latin1()));
 
   while (!cmd->isComplete ())
   {
@@ -251,7 +260,6 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
 
     if (!continuation.isEmpty())
     {
-      QByteArray challenge, tmp;
 //      kdDebug(7116) << "S: " << QCString(continuation.data(),continuation.size()+1) << endl;
       if ( continuation.size() > 4 ) {
         tmp.setRawData( continuation.data() + 2, continuation.size() - 4 );

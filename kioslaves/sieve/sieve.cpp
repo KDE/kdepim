@@ -933,6 +933,7 @@ bool kio_sieveProtocol::authenticate()
   const char *out = NULL;
   uint outlen;
   const char *mechusing = NULL;
+    QByteArray challenge, tmp;
 
 	/* Retrieve authentication details from user.
 	 * Note: should this require realm as well as user & pass details
@@ -969,7 +970,7 @@ bool kio_sieveProtocol::authenticate()
 
   do {
     result = sasl_client_start(conn, strList.join(" ").latin1(), &client_interact,
-                       0, &outlen, &mechusing);
+                       &out, &outlen, &mechusing);
 
     if (result == SASL_INTERACT) 
       if ( !saslInteract( client_interact, ai ) ) {
@@ -987,7 +988,18 @@ bool kio_sieveProtocol::authenticate()
 
 	ksDebug() << "Preferred authentication method is " << mechusing << "." << endl;
 
-	if (!sendData("AUTHENTICATE \"" + QCString( mechusing ) + "\""))
+  QString firstCommand = "AUTHENTICATE \"" + QString::fromLatin1( mechusing ) + "\"";
+  tmp.setRawData( out, outlen );
+  KCodecs::base64Encode( tmp, challenge );
+  tmp.resetRawData( out, outlen );
+  if ( !challenge.isEmpty() ) {
+    firstCommand += " \"";
+    firstCommand += QString::fromLatin1( challenge.data(), challenge.size() );
+    firstCommand += "\"";
+  }
+
+  ksDebug() << "firstCommand: " << firstCommand << endl;
+	if (!sendData( firstCommand.latin1() ))
 		return false;
 	
 	QCString command;
@@ -1020,7 +1032,6 @@ bool kio_sieveProtocol::authenticate()
 			return false;
 		}
 
-    QByteArray challenge, tmp;
     tmp.setRawData( r.getAction().data(), qty );
     KCodecs::base64Decode( tmp, challenge );
     tmp.resetRawData( r.getAction().data(), qty );
