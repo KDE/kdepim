@@ -70,6 +70,28 @@ const sysinfoEntry_t sysinfoEntries[] =
 } ;
 
 
+/*
+** The QCheckListItems used in the list of parts to print have
+** several text fields with special meanings.
+**    0: The text displayed in the list.
+**    1: The KConfig key the item came from.
+**    2: This string is empty if the part was originally not checked,
+**       and non-empty (probably "1") if the part was originally checked.
+**       This is used to detect changes in the configuration.
+** We introduce some defines for these numbers.
+*/
+
+#define PART_NAME	(0)
+#define PART_KEY	(1)
+#define PART_SETTING	(2)
+
+/*
+** This is a convenience define to update an item's "original setting".
+*/
+#define updateSetting(i) { QCheckListItem *ubbu=(i); \
+	ubbu->setText(PART_SETTING,(ubbu->isOn() ? CSL1("1") : QString::null)); }
+
+
 SysInfoWidgetConfig::SysInfoWidgetConfig(QWidget *w, const char *n) :
 	ConduitConfigBase(w,n),
 	fConfigWidget(new SysInfoWidget(w))
@@ -77,6 +99,13 @@ SysInfoWidgetConfig::SysInfoWidgetConfig(QWidget *w, const char *n) :
 	FUNCTIONSETUP;
 	UIDialog::addAboutPage(fConfigWidget->tabWidget,SysInfoConduitFactory::about());
 	fWidget=fConfigWidget;
+
+	QObject::connect(fConfigWidget->fOutputFile,SIGNAL(textChanged(const QString&)),
+		this,SLOT(modified()));
+	QObject::connect(fConfigWidget->fTemplateFile,SIGNAL(textChanged(const QString&)),
+		this,SLOT(modified()));
+	QObject::connect(fConfigWidget->fOutputType,SIGNAL(clicked(int)),
+		this,SLOT(modified()));
 }
 
 void SysInfoWidgetConfig::commit(KConfig *fConfig)
@@ -95,7 +124,8 @@ void SysInfoWidgetConfig::commit(KConfig *fConfig)
 
 	while(ci)
 	{
-		fConfig->writeEntry(ci->text(1),ci->isOn());
+		fConfig->writeEntry(ci->text(PART_KEY),ci->isOn());
+		updateSetting(ci);
 		i=i->nextSibling();
 		ci = dynamic_cast<QCheckListItem *>(i);
 	}
@@ -116,9 +146,28 @@ void SysInfoWidgetConfig::load(KConfig *fConfig)
 		i = new QCheckListItem(fConfigWidget->fPartsList,i18n(p->name),QCheckListItem::CheckBox);
 		// by default let the sysinfo conduit write out all available information
 		i->setOn(fConfig->readBoolEntry(p->key, true));
-		i->setText(1,QString::fromLatin1(p->key));
+		i->setText(PART_KEY,QString::fromLatin1(p->key));
+		updateSetting(i);
 		p++;
 	}
+}
+
+/* virtual */ bool SysInfoWidgetConfig::isModified()
+{
+	if (fModified) return true;
+
+	QListViewItem *i = fConfigWidget->fPartsList->firstChild();
+	QCheckListItem *ci = dynamic_cast<QCheckListItem *>(i);
+
+	while(ci)
+	{
+		bool current = ci->isOn();
+		bool original = !ci->text(PART_SETTING).isEmpty();
+		if (current!=original) return true;
+		i=i->nextSibling();
+		ci = dynamic_cast<QCheckListItem *>(i);
+	}
+	return false;
 }
 
 SysInfoWidgetSetup::SysInfoWidgetSetup(QWidget *w, const char *n,

@@ -47,7 +47,13 @@ public:
 	ConduitConfigBase(QWidget *parent=0L, const char *n=0L);
 	virtual ~ConduitConfigBase();
 
-	bool isModified() const { return fModified; } ;
+	/**
+	* This function is called to check whether the configuration
+	* of the conduit has changed -- and hence, whether the user
+	* needs to be prompted. By default, this just returns
+	* fModified, but you can do more complicated things.
+	*/
+	virtual bool isModified() const { return fModified; } ;
 	QWidget *widget() const { return fWidget; } ;
 
 public:
@@ -67,12 +73,14 @@ public:
 	* true otherwise, whether or not the changes were saved.
 	*/
 	virtual bool maybeSave(KConfig *);
+protected:
 	/**
 	* This function provides the string for the prompt used
 	* in maybeSave(). Override it to change the text.
 	*/
 	virtual QString maybeSaveText() const;
 
+public:
 	virtual QString conduitName() const;
 
 protected slots:

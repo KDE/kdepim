@@ -39,6 +39,7 @@ public:
 	SysInfoWidgetConfig(QWidget *parent, const char *);
 	virtual void commit(KConfig *);
 	virtual void load(KConfig *);
+	virtual bool isModified();
 protected:
 	SysInfoWidget *fConfigWidget;
 } ;
