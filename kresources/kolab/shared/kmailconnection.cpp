@@ -109,7 +109,6 @@ bool KMailConnection::connectToKMail()
   return ( mKMailIcalIfaceStub != 0 );
 }
 
-// TODO: Reimplement these
 bool KMailConnection::fromKMailAddIncidence( const QString& type,
                                              const QString& folder,
                                              const QString& xml )
@@ -164,7 +163,6 @@ bool KMailConnection::kmailSubresources( QMap<QString, bool>& lst,
   if ( !connectToKMail() )
     return false;
 
-  // TODO: Add this when the iface is updated
   lst = mKMailIcalIfaceStub->subresourcesKolab( annotation );
   return mKMailIcalIfaceStub->ok();
 }
@@ -176,7 +174,6 @@ bool KMailConnection::kmailIncidences( QMap<QString, QString>& lst,
   if ( !connectToKMail() )
     return false;
 
-  // TODO: Add this when the iface is updated
   lst = mKMailIcalIfaceStub->incidencesKolab( mimetype, resource );
   return mKMailIcalIfaceStub->ok();
 }
@@ -189,7 +186,6 @@ bool KMailConnection::kmailGetAttachment( KURL& url,
   if ( !connectToKMail() )
     return false;
 
-  // TODO: Add this when the iface is updated
   url = mKMailIcalIfaceStub->getAttachment( resource, sernum, filename );
   return mKMailIcalIfaceStub->ok();
 }
@@ -198,7 +194,6 @@ bool KMailConnection::kmailDeleteIncidence( const QString& resource,
                                             const QString& sernum )
 {
   return connectToKMail()
-  // TODO: Add this when the iface is updated
     && mKMailIcalIfaceStub->deleteIncidenceKolab( resource, sernum )
     && mKMailIcalIfaceStub->ok();
 }
@@ -209,7 +204,6 @@ bool KMailConnection::kmailUpdate( const QString& resource,
                                    const QStringList& deletedAttachments )
 {
   return connectToKMail()
-  // TODO: Add this when the iface is updated
     && mKMailIcalIfaceStub->update( resource, sernum, attachments,
                                     deletedAttachments )
     && mKMailIcalIfaceStub->ok();
