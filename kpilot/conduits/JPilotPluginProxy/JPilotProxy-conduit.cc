@@ -1,10 +1,8 @@
-/* JPilotProxy-conduit.cc  JPilotProxy-Conduit for syncing KPilot and KOrganizer
+/* JPilotProxy-conduit.cc  
 **
-** Copyright (C) 1998-2001 Dan Pilone
-** Copyright (C) 1998-2000 Preston Brown
-** Copyright (C) 1998 Herwin-Jan Steehouwer
-** Copyright (C) 2001 Cornelius Schumacher
 ** Copyright (C) 2002 by Reinhold Kainhofer
+**
+** JPilotProxy-Conduit for syncing KPilot and KOrganizer
 **
 ** This file is part of the JPilotProxy conduit, a conduit for KPilot that
 ** synchronises the Pilot's JPilotProxy application with the outside world,
@@ -26,6 +24,10 @@
 ** along with this program in a file called COPYING; if not, write to
 ** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
+*/
+ 
+/*
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 #include "options.h"

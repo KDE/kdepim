@@ -1,20 +1,30 @@
 #ifndef _MAL_CONDUIT_H
 #define _MAL_CONDUIT_H
-/* MAL-conduit.cc
+/* mal-conduit.h                           KPilot
 **
 ** Copyright (C) 2002 by Reinhold Kainhofer
+**
 */
 
-/* This file is distributed under the Gnu General Public Licence (GPL).
-** The GPL should have been included with this file in a file called
-** COPYING. 
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
+** MA 02139, USA.
 **
 **
 ** Specific permission is granted for this code to be linked to libmal
 ** (this is necessary because the libmal license is not GPL-compatible).
-*/
-
-/* $Revision$
 */
 
 /*

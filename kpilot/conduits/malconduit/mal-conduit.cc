@@ -25,6 +25,10 @@
 ** (this is necessary because the libmal license is not GPL-compatible).
 */
  
+/*
+** Bug reports and questions can be sent to kde-pim@kde.org
+*/
+ 
 
 
 
