@@ -39,6 +39,7 @@ class SloxWizard : public KConfigWizard
     KLineEdit *mUserEdit;
     KLineEdit *mPasswordEdit;
     QCheckBox *mSavePasswordCheck;
+    QCheckBox *mSecureCheck;
 };
 
 #endif

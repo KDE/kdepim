@@ -38,7 +38,14 @@
 
 QString sloxUrl()
 {
-  return "http://" + SloxConfig::self()->server();
+  QString url;
+
+  if ( SloxConfig::self()->useHttps() ) url = "https://";
+  else url = "http://";
+  
+  url += SloxConfig::self()->server();
+
+  return url;
 }
 
 class CreateSloxKcalResource : public KConfigPropagator::Change
@@ -232,7 +239,11 @@ SloxWizard::SloxWizard() : KConfigWizard( new SloxPropagator )
   mSavePasswordCheck = new QCheckBox( i18n("Save password"), page );
   topLayout->addMultiCellWidget( mSavePasswordCheck, 3, 3, 0, 1 );
 
-  topLayout->setRowStretch( 4, 1 );
+  mSecureCheck = new QCheckBox( i18n("Encrypt communication with server"),
+                                page );
+  topLayout->addMultiCellWidget( mSecureCheck, 4, 4, 0, 1 );
+
+  topLayout->setRowStretch( 5, 1 );
 
   setupRulesPage();
   setupChangesPage();
@@ -250,6 +261,7 @@ void SloxWizard::usrReadConfig()
   mUserEdit->setText( SloxConfig::self()->user() );
   mPasswordEdit->setText( SloxConfig::self()->password() );
   mSavePasswordCheck->setChecked( SloxConfig::self()->savePassword() );
+  mSecureCheck->setChecked( SloxConfig::self()->useHttps() );
 }
 
 void SloxWizard::usrWriteConfig()
@@ -258,4 +270,5 @@ void SloxWizard::usrWriteConfig()
   SloxConfig::self()->setUser( mUserEdit->text() );
   SloxConfig::self()->setPassword( mPasswordEdit->text() );
   SloxConfig::self()->setSavePassword( mSavePasswordCheck->isChecked() );
+  SloxConfig::self()->setUseHttps( mSecureCheck->isChecked() );
 }

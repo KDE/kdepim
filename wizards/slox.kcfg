@@ -19,6 +19,10 @@
     </entry>
     <entry name="SavePassword" type="Bool">
       <label>Save Password</label>
+      <default>true</default>
+    </entry>
+    <entry name="UseHttps" type="Bool">
+      <label>Use HTTPS</label>
       <default>false</default>
     </entry>
     <entry name="LogFile" type="String">
