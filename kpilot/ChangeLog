@@ -3,6 +3,8 @@ TODO LIST (Ignore the file TODO)
 * GJJ: Make the log widget tail properly.
 * GJJ: move the file install widget to an iconview.
 * GJJ: lose the QMultiLineEdit in MemoWidget.
+* GJJ: Add a menuitem "Configure conduits" to the kpilotDaemon RMB Menu
+* GJJ: Show the sync log as a KPassivePopup
 * Good junior job: move the conduit configuration dialog (for the
   umpteenth time) to a list of QCheckBoxes, like noatun's plain
   playlist or kdebugdialog.
@@ -14,6 +16,43 @@ TODO LIST (Ignore the file TODO)
 * Really need to do something about all the disabled options in the
   config dialog. Some of them might make sense.
 * Add force-first-time to the KNotes conduit.
+* Conflict resolution in Addressbook conduit not consistent
+* Add custom field sync to the addressbook conduit
+* GJJ: Replace newlines in TODO summaries (not allowed in libkabc)
+* Sync multiple email addresses in the addressbook conduit
+* Sync with the preferred address in the addressbook conduit
+* Split up events going over midnight in the calendar conduit
+* Do not store the RecordID with the vcalendar entry, but in the kpilot config
+* GJJ: Add a flag to the log{Error,Message} function 
+  to prevent the addition of the trailing <br> and the date
+
+
+KPilot Developer's notes for December 30th, 2002
+================================================
+
+2002-12-15  Reinhold Kainhofer
+* Added a parameter "bool useDefaultPath=false" to 
+  PilotLocalDatabase::PilotLocalDatabase to prevent resetting
+  the dbPathName to the default path (kpilot/DBBackup/UserName)
+
+2002-12-13  Reinhold Kainhofer
+* Initial import of the docconduit, which syncs text files on 
+  the desktop with PalmDOC databases (kind of e-book format for
+	the palm) on the handheld for use with AportisDoc, TealReader, 
+	QED, etc.
+* VCalConduit: yearly recurrence now works correctly (had wrong 
+  yearly recurrence type rYearlyDay instead of rYearlyMonth)
+* Addressbook conduit: _equal also compares the categories to 
+  check if an item was changed
+* Added the new methods createDatabase(..) and deleteRecord(..) 
+  to the PilotDatabase classes. createDatabase creates a new 
+	database with given type and creator, and deleteRecord deletes 
+	either a single record or all records in the whole database
+* PilotDatabse::readNextModifiedRec has a new optional argument 
+  of type int* which receives the index of the returned record.
+* PilotDatabase::findDatabase has optional arguments 
+  int index=0, long type=0, long creator=0
+	 
 
 KPilot Developer's notes for november 10th, 2002
 =======================================
@@ -72,6 +111,22 @@ KPilot Developer's notes for november 10th, 2002
   of popmail in that conduit.
 * Added extra undocumented configuration option to the popmail
   conduit in an effort to save KMail sending capability.
+	
+2002-10-10  Reinhold Kainhofer
+* Addressbook conduit: 
+   - Archived records are now treated correctly
+   - conflict resolution now also works if you chose ignore on the last sync
+   - home/work phone/fax were mixed up
+   - deleting an address in kaddressbook now also deletes the address from the handheld
+   - variable renaming for consistent naming
+   - fix a crash with an iterator being deleted and then incremented
+   - Offering the value from the last sync in the conflict resolution dialog
+   - Using an addressbook for several handhelds should work now
+   - archived records are now synced to the PC, but not back to the handheld
+   - If an addressee has a wrong pilotID, the pilotID is reset
+
+
+
 
 KPilot Developer's notes for september 19th, 2002
 =================================================
