@@ -158,6 +158,10 @@ ContactListViewItem::ContactListViewItem(const KABC::Addressee &a,
 
 QString ContactListViewItem::key(int column, bool ascending) const
 {
+  // Preserve behaviour of QListViewItem::key(), 
+  // otherwise we cause a crash if the column does not exist
+  if ( column >= parentListView->columns() )
+    return QString::null;
 #if KDE_VERSION >= 319
   Q_UNUSED( ascending )
   return mFields[ column ]->sortKey( mAddressee );
