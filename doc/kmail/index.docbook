@@ -792,10 +792,10 @@ filters are actually copied to the internal filter manager.</para>
 
 <para>A filter is considered invalid if</para>
 
-<enumeratedlist>
+<orderedlist>
 <listitem><para>the search pattern contains only empty rules or</para></listitem>
 <listitem><para>the action list is empty.</para></listitem>
-</enumeratedlist>
+</orderedlist>
 
 <para>Simlilarly, empty rules and actions are removed from the pattern
 and action list, resp., before the filter is saved.</para>
@@ -932,7 +932,7 @@ which you don't like.</para>
 return the message to the sender as undeliverable.</para>
 
 <caution><para>This will only work if the senders email address is
-valid. That's <emphasize>not</emphasize> the case for most
+valid. That's <emphasis>not</emphasis> the case for most
 spam.</para></caution>
 </listitem>
 </varlistentry>
@@ -950,7 +950,7 @@ on. Additionally, the whole mail is fed into the program's
 <acronym>stdin</acronym>.</para>
 
 <caution><para>This currently only works if the message has
-<emphasize>at least one</emphasize> attachment. No, not even
+<emphasis>at least one</emphasis> attachment. No, not even
 <symbol>&percnt;0</symbol> will work in the general
 case!</para></caution>
 
