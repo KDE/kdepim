@@ -47,7 +47,12 @@ void FilterPMail::import(FilterInfo *info)
    inf = info;
 
    // Select directory from where I have to import files
-   QString chosenDir=KFileDialog::getExistingDirectory(QDir::homeDirPath(),info->parent());
+   KFileDialog *kfd;
+   kfd = new KFileDialog( QDir::homeDirPath(), "", 0, "kfiledialog", true );
+   kfd->setMode(KFile::Directory | KFile::LocalOnly); 
+   kfd->exec();
+   QString chosenDir  = kfd->selectedFile();
+
    if (chosenDir.isEmpty()) {
       info->alert(i18n("No directory selected."));
       return;
@@ -66,6 +71,10 @@ void FilterPMail::import(FilterInfo *info)
    processFiles("*.[pP][mM][mM]", &FilterPMail::importMailFolder);
    info->addLog(i18n("Importing 'UNIX' mail folders ('.mbx')..."));
    processFiles("*.[mM][bB][xX]", &FilterPMail::importUnixMailFolder);
+
+   info->addLog( i18n("Finished importing emails from %1").arg( chosenDir ));
+   info->setCurrent(100);
+   info->setOverall(100);
 }
 
 /** this looks for all files with the filemask 'mask' and calls the 'workFunc' on each of them */
