@@ -10,8 +10,6 @@ debian/tmp/usr/lib/kde3/libkorg_birthdays.la
 debian/tmp/usr/lib/kde3/libkorg_birthdays.so
 debian/tmp/usr/lib/kde3/libkorg_datenums.la
 debian/tmp/usr/lib/kde3/libkorg_datenums.so
-debian/tmp/usr/lib/kde3/libkorg_exchange.la
-debian/tmp/usr/lib/kde3/libkorg_exchange.so
 debian/tmp/usr/lib/kde3/libkorg_holidays.la
 debian/tmp/usr/lib/kde3/libkorg_holidays.so
 debian/tmp/usr/lib/kde3/libkorg_projectview.la
