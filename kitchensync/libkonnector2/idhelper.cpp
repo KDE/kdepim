@@ -59,9 +59,9 @@ QString KonnectorUIDHelper::konnectorId( const QString &appName,  const QString 
         Kontainer::ValueList kontainer = it.data();
         Kontainer::ValueList::Iterator it;
         for ( it = kontainer.begin(); it != kontainer.end(); ++it ) {
-            if ( kdeId.stripWhiteSpace() == (*it).second().stripWhiteSpace() ) {
+            if ( kdeId.stripWhiteSpace() == (*it).second.stripWhiteSpace() ) {
 //                kdDebug(5201) << "it.first = " << (*it).first() << endl;
-                return (*it).first();
+                return (*it).first;
             }
         }
     }
@@ -79,9 +79,9 @@ QString KonnectorUIDHelper::kdeId( const QString &appName,  const QString &konne
         Kontainer::ValueList kontainer = it.data();
         Kontainer::ValueList::Iterator it;
         for ( it = kontainer.begin(); it != kontainer.end(); ++it ) {
-            if ( konnectorId.stripWhiteSpace() == (*it).first().stripWhiteSpace() ) {
+            if ( konnectorId.stripWhiteSpace() == (*it).first.stripWhiteSpace() ) {
 //                kdDebug(5201) << "it.second " << (*it).second() << endl;
-                return (*it).second();
+                return (*it).second;
             }
         }
     }
@@ -120,7 +120,7 @@ void KonnectorUIDHelper::removeId( const QString &appName,  const QString &id )
         Kontainer::ValueList kontainer = it.data();
         Kontainer::ValueList::Iterator it;
         for ( it = kontainer.begin(); it != kontainer.end(); ++it ) {
-            if ( (*it).first() == id || (*it).second() == id ) {
+            if ( (*it).first == id || (*it).second == id ) {
                 it  = kontainer.remove( it );
                 return;
             }
@@ -153,8 +153,8 @@ void KonnectorUIDHelper::save()
             //          << " " << (*kontainerIt).second() << endl;
 
             string.append(mapIt.key()+ "||%%||"
-                          + (*kontainerIt).first() +
-                          "||%%||" + (*kontainerIt).second()+ "%%||%%");
+                          + (*kontainerIt).first +
+                          "||%%||" + (*kontainerIt).second+ "%%||%%");
         }
     }
     m_config->writeEntry( "ids",  string );
