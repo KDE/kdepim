@@ -30,6 +30,7 @@
 #include <klocale.h>
 #include <kurlrequester.h>
 #include <kimageio.h>
+#include <kmessagebox.h>
 #include <libkdepim/kpixmapregionselectordialog.h>
 
 #include <qcheckbox.h>
@@ -240,7 +241,11 @@ QPixmap ImageBaseWidget::loadPixmap( const KURL &url )
     pixmap = QPixmap( tempFile );
     KIO::NetAccess::removeTempFile( tempFile );
   }
-
+  if(pixmap.isNull()) {
+    //Image does not exist (any more)
+    KMessageBox::sorry( this, i18n( "This contact's image cannot be found."));
+    return pixmap;
+  }
   QPixmap pixmap2 = KPIM::KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 140, this );
   if (!pixmap2.isNull()) 
   {

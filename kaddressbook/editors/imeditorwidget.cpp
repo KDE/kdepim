@@ -309,7 +309,7 @@ void IMEditorWidget::slotEdit()
 
 void IMEditorWidget::slotDelete()
 {
-	if ( mWidget->lvAddresses->selectedItem() && KMessageBox::warningContinueCancel( this, i18n("Do you really want to remove the selected address?"), i18n("Confirm Remove"), KGuiItem(i18n("&Remove"),"editremove") ) == KMessageBox::Continue  )
+	if ( mWidget->lvAddresses->selectedItem() && KMessageBox::warningContinueCancel( this, i18n("Do you really want to remove the selected address?"), i18n("Confirm Remove"), KGuiItem(i18n("&Remove"),"editdelete") ) == KMessageBox::Continue  )
 	{
 		IMAddressLVI * current = static_cast<IMAddressLVI*>( mWidget->lvAddresses->selectedItem() );
 		if ( mChangedProtocols.find( current->protocol() ) == mChangedProtocols.end() )
