@@ -2,7 +2,8 @@
 			  main.cpp  -  description
 			     -------------------
     begin                : Sun Jan  6 11:50:14 EET 2002
-    copyright            : (C) 2002 by Tuukka Pasanen
+    copyright            : (C) 2002-2003 by Tuukka Pasanen
+    copyright            : (C) 2003 by Allen Winter
     email                : illuusio@mailcity.com
 
  ***************************************************************************/
@@ -32,10 +33,6 @@
 #include <stdlib.h>
 #include <iostream>
 
-#ifdef HAVE_TIME_H
-#include <time.h>
-#endif
-
 #include "konsolekalendar.h"
 #include "konsolekalendarepoch.h"
 
@@ -50,27 +47,35 @@ static KCmdLineOptions options[] =
 {
   { "help", I18N_NOOP("Print this help and exit"), 0 },
   { "verbose", I18N_NOOP("Print helpful runtime messages"), 0 },
-  { "dry-run", I18N_NOOP("Show what would have been done, but do not execute"), 0 },
+  { "dry-run", I18N_NOOP("Print what would have been done, but do not execute"), 0 },
   { "file <calendar-file>", I18N_NOOP("Specify which calendar you want to use"), 0 },
-  { "view", I18N_NOOP("Print calendar events in specified export format"), 0 },
-  { "add", I18N_NOOP("Insert an event into the calendar"), 0 },
-  { "change", I18N_NOOP("Modify an existing calendar event"), 0 },
-  { "delete", I18N_NOOP("Remove an existing calendar event"), 0 },
-  { "import <import-file>", I18N_NOOP("Import this calendar to main calendar"), 0 },
+
+  { ":", I18N_NOOP(" Major operation modes:"), 0 },
+  { "view", I18N_NOOP("  Print calendar events in specified export format"), 0 },
+  { "add", I18N_NOOP("  Insert an event into the calendar"), 0 },
+  { "change", I18N_NOOP("  Modify an existing calendar event"), 0 },
+  { "delete", I18N_NOOP("  Remove an existing calendar event"), 0 },
+  { "import <import-file>", I18N_NOOP("  Import this calendar to main calendar"), 0 },
+  { "create", I18N_NOOP("  Create new calendar file if one does not exist"), 0 },
+
+  { ":", I18N_NOOP(" Operation modifiers:"), 0 },
+  { "next", I18N_NOOP("  Next activity in calendar"), 0 },
+  { "all", I18N_NOOP("  Show all calendar entries"), 0 },
+  { "date <start-date>", I18N_NOOP("  Start from this day [YYYY-MM-DD]"), 0 },
+  { "time <start-time>", I18N_NOOP("  Start from this time [HH:MM:SS]"), 0 },
+  { "end-date <end-date>", I18N_NOOP("  End at this day [YYYY-MM-DD]"), 0 },
+  { "end-time <end-time>", I18N_NOOP("  End at this time [HH:MM:SS]"), 0 },
+  { "epoch-start <epoch-time>", I18N_NOOP(" Start from this time [secs since epoch]"), 0 },
+  { "epoch-end <epoch-time>", I18N_NOOP("  End at this time [secs since epoch]"), 0 },
+  { "description <description>", I18N_NOOP("Add description to event (for add/change modes)"), 0 },
+  { "summary <summary>", I18N_NOOP("  Add summary to event (for add/change modes)"), 0 },
+
+  { ":", I18N_NOOP(" Export options:"), 0 },
   { "export-type <export-type>", I18N_NOOP("Export file type (Default: text)"), 0 },
   { "export-file <export-file>", I18N_NOOP("Export to file (Default: stdout)"), 0 },
-  { "export-list", I18N_NOOP("Print list of export types supported and exit"), 0 },
-  { "next", I18N_NOOP("Next activity in calendar"), 0 },
-  { "date <start-date>", I18N_NOOP("Start from this day [YYYY-MM-DD]"), 0 },
-  { "time <start-time>", I18N_NOOP("Start from this time [HH:MM:SS]"), 0 },
-  { "end-date <end-date>", I18N_NOOP("End at this day [YYYY-MM-DD]"), 0 },
-  { "end-time <end-time>", I18N_NOOP("End at this time [HH:MM:SS]"), 0 },
-  { "epoch-start <epoch-time>", I18N_NOOP("Start from this time [secs since epoch]"), 0 },
-  { "epoch-end <epoch-time>", I18N_NOOP("End at this time [secs since epoch]"), 0 },
-  { "description <description>", I18N_NOOP("Add description to event (works with add and change)"), 0 },
-  { "summary <summary>", I18N_NOOP("Add summary to event (works with add and change)"), 0 },
-  { "all", I18N_NOOP("Show all calendar entries"), 0 },
-  { "create", I18N_NOOP("Create new calendar file if one does not exist"), 0 },
+  { "export-list", I18N_NOOP("  Print list of export types supported and exit"), 0 },
+
+  { "", I18N_NOOP("Examples:\n  konsolekalendar --view --all\n  konsolekalendar --add --date 2003-06-04 --time 10:00 --end-time 12:00 \\\n                  --summary \"Doctor Visit\" --description \"Get My Head Examined\""), 0 },
 
   KCmdLineLastOption
 };
@@ -84,7 +89,7 @@ int main(int argc, char *argv[])
       "0.9.6",                           // version string
       description,                     // short porgram description
       KAboutData::License_GPL,         // license type
-      "(c) 2002-2003, Tuukka Pasanen", // copyright statement
+      "(c) 2002-2003, Tuukka Pasanen and Allen Winter", // copyright statement
       0,                               // any free form text
       "http://pim.kde.org",            // program home page address
       "bugs.kde.org"                   // bug report email address
@@ -104,9 +109,23 @@ int main(int argc, char *argv[])
       );
 
 
-      
-  KCmdLineArgs::init( argc, argv, &aboutData );  // TODO: last argument of 'true' crashes program
+
+  // KCmdLineArgs::init() final 'true' argument indicates no commandline options
+  // for QApplication/KApplication (no KDE or Qt options)
+  KCmdLineArgs::init( argc, argv, &aboutData, true );
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+
+  KLocale::setMainCatalogue("kio_help");
+  KInstance ins("konsolekalendar");
+  KGlobal::locale();
+
+// Replace the KApplication call below with the three lines above
+// will make this a pure non-GUI application -- thanks for the info Stephan Kulow.
+
+//  KApplication app(
+//      false, // do not allowstyles -- disable the loading on plugin based styles
+//      false  // GUI is not enabled -- disable all GUI stuff
+//      );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
@@ -130,11 +149,6 @@ int main(int argc, char *argv[])
   bool importFile = false;
 
   QString option;
-
-  KApplication app(
-      false, // do not allowstyles -- disable the loading on plugin based styles
-      false  // GUI is not enabled -- disable all GUI stuff
-      );
 
   KonsoleKalendarVariables variables;
   KonsoleKalendarEpoch epochs;
@@ -456,10 +470,10 @@ int main(int argc, char *argv[])
   // Handle case with time (or epoch) unspecified, and end-time (or epoch) unspecified.
   if( !args->isSet("time") && !args->isSet("epoch-start") &&
       !args->isSet("end-time") && !args->isSet("epoch-end") ) {
-    // default start is 0700 today
+    // set default start date/time
     startdatetime = QDateTime::QDateTime(startdate, starttime);
     kdDebug() << "main | datetimestamp | setting startdatetime from default startdate (today) and starttime" << endl;
-    // default end is 1700 today
+    // set default end date/time
     enddatetime = QDateTime::QDateTime(enddate, endtime);
     kdDebug() << "main | datetimestamp | setting enddatetime from default enddate (today) and endtime" << endl;
   }
@@ -522,8 +536,11 @@ int main(int argc, char *argv[])
   KonsoleKalendar *konsolekalendar = new KonsoleKalendar(variables);
 
   if ( calendarFile && create ) {
-    konsolekalendar->createCalendar();
-    kdDebug() << "main | createcalendar | successfully created calendarfile" << endl;
+    if( konsolekalendar->createCalendar() ) {
+      kdDebug() << "main | createcalendar | successfully created calendarfile" << endl;
+    } else {
+      kdDebug() << "main | createcalendar | failed to create calendarfile" << endl;
+    }
    }
 
   /*
@@ -565,6 +582,11 @@ int main(int argc, char *argv[])
     }
 
     konsolekalendar->closeCalendar();
+
+  } else {
+
+    kdError() << i18n("Cannot open specified calendar file ").local8Bit() << variables.getCalendarFile() << endl;
+
   }
 
   delete konsolekalendar;
