@@ -231,7 +231,7 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 		fi = QFileInfo(fDatabaseDir);
 		if (!(fi.exists() && fi.isDir()))
 		{
-			kdError() << fname
+			kdError() << __FUNCTION__
 				<< ": Database backup directory "
 				<< "doesn't exist."
 				<< endl;
@@ -242,7 +242,7 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 
 		if (!databaseDir.mkdir(fullBackupDir, true))
 		{
-			kdError() << fname
+			kdError() << __FUNCTION__
 				<< ": Can't create backup directory." << endl;
 			return false;
 		}
@@ -1631,6 +1631,9 @@ void CleanupAction::exec()
 
 
 // $Log$
+// Revision 1.7  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.6  2001/09/24 22:17:41  adridg
 // () Removed lots of commented out code from previous incarnations.
 // () Added a cleanup action.
