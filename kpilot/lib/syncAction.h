@@ -192,7 +192,9 @@ protected:
 	int questionYesNo(const QString &question ,
 		const QString &caption = QString::null,
 		const QString &key = QString::null,
-		unsigned timeout = 20 );
+		unsigned timeout = 20,
+		const QString &yes = QString::null,
+		const QString &no = QString::null );
 	int questionYesNoCancel(const QString &question ,
 		const QString &caption = QString::null,
 		const QString &key = QString::null,

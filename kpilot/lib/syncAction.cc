@@ -159,7 +159,9 @@ void SyncAction::stopTickle()
 int SyncAction::questionYesNo(const QString & text,
 	const QString & caption,
 	const QString & key,
-	unsigned timeout)
+	unsigned timeout,
+	const QString & yes,
+	const QString &no )
 {
 	FUNCTIONSETUP;
 
@@ -179,8 +181,8 @@ int SyncAction::questionYesNo(const QString & text,
 		KDialogBase::Yes | KDialogBase::No,
 		KDialogBase::Yes, KDialogBase::No,
 		fParent, "questionYesNo", true, true,
-		KStdGuiItem::yes(),
-		KStdGuiItem::no());
+		yes.isEmpty() ? KStdGuiItem::yes() : yes,
+		no.isEmpty() ? KStdGuiItem::no() : no);
 
 	if (timeout > 0)
 	{
