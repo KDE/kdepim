@@ -24,7 +24,7 @@ noinst_HEADERS = alarmapp.h alarmdaemon.h alarmdaemoniface.h \
 METASOURCES = AUTO
  
 autostart_DATA = kalarmd.autostart.desktop
-autostartdir = $(prefix)/share/autostart
+autostartdir = $(datadir)/autostart
 
 app_DATA = kalarmd.desktop
 appdir = $(kde_appsdir)/.hidden
