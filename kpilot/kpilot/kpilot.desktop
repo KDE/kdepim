@@ -1,7 +1,7 @@
 # KDE Config File
 [KDE Desktop Entry]
 Name=KPilot
-Name[af]=KPILOT
+Name[af]=kpilot
 Name[eo]=Palm-Piloto
 Name[fr]=Palm Pilot
 Name[lv]=KPilots
@@ -13,4 +13,4 @@ Type=Application
 DocPath=kpilot/kpilot.html
 Terminal=0
 MiniIcon=kpilot
-KDE-X-StartupNotify=true
+X-KDE-StartupNotify=true
