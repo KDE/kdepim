@@ -4,7 +4,7 @@ SUBDIRS=
 
 METASOURCES = AUTO
 
-INCLUDES = -I$(top_srcdir)/korganizer/interfaces \
+INCLUDES = -I$(top_srcdir)/korganizer/interfaces -I$(top_srcdir) \
     -I$(top_srcdir)/libical/src/libical -I$(top_srcdir)/libical/src/libicalss \
     -I$(top_builddir)/libical/src/libical -I$(top_builddir)/libical/src/libicalss \
     $(all_includes)
