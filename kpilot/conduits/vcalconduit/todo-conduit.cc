@@ -433,8 +433,6 @@ KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry
 
 	e->setSyncStatus(KCal::Incidence::SYNCNONE);
 
-kdDebug()<<endl<<endl<<endl<<"Todo: "<<e->summary()<<endl;
-kdDebug()<<"rec->completed="<<de->getComplete() << ", e->Completed="<<e->completed()<<", e->CompletedStr="<<e->completedStr()<<endl;
 	return e;
 }
 
