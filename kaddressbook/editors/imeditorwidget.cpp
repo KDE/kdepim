@@ -232,7 +232,14 @@ void IMEditorWidget::setReadOnly( bool readOnly )
 
 void IMEditorWidget::slotUpdateButtons()
 {
-	int num_selected = mWidget->lvAddresses->selectedItems().count(); 
+	int num_selected =0;
+	QListViewItemIterator it( mWidget->lvAddresses, QListViewItemIterator::Selected );
+	while ( it.current() ) {
+		++num_selected;
+		if(num_selected > 1) break; //no need to count above 2.
+		++it;
+        }
+
 	if ( !mReadOnly && num_selected == 1)
 	{
 		//mWidget->btnAdd->setEnabled( true );
