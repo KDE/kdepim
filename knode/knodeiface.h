@@ -139,6 +139,14 @@ k_dcop:
    * Expire articles in all groups
    */
   virtual void expireArticles() = 0;
+
+  /* Kontact integration */
+  /**
+   * Process command-line options
+   * Return true if args were handled, false if there were no args.
+   */
+  virtual bool handleCommandLine() = 0;
+
 };
 
 #endif

@@ -14,30 +14,17 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include <kaboutdata.h>
+#ifndef KNODE_OPTIONS_H
+#define KNODE_OPTIONS_H
+
 #include <kcmdlineargs.h>
 #include <klocale.h>
 
-#include "knapplication.h"
-#include "resource.h"
-#include "knode.h"
-#include "aboutdata.h"
-#include "knode_options.h"
-using KNode::AboutData;
-
-int main(int argc, char* argv[])
+static KCmdLineOptions knode_options[] =
 {
-  AboutData aboutData;
+  { "+[url]", I18N_NOOP("A 'news://server/group' URL."), 0 },
+  KCmdLineLastOption
+};
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( knode_options );
-  KUniqueApplication::addCmdLineOptions();
-
-  if (!KNApplication::start())
-    return 0;
-
-  KNApplication app;
-  KGlobal::locale()->insertCatalogue("libkdenetwork");
-  return app.exec();
-}
+#endif /* KNODE_OPTIONS_H */
 

@@ -56,6 +56,7 @@ using KRecentAddress::RecentAddresses;
 #include "knscoring.h"
 #include <kpgp.h>
 #include "knmemorymanager.h"
+#include <kcmdlineargs.h>
 
 KNGlobals knGlobals;
 
@@ -2452,6 +2453,19 @@ void KNMainWidget::sendNow()
 void KNMainWidget::editArticle()
 {
   slotArtEdit();
+}
+
+bool KNMainWidget::handleCommandLine()
+{
+  bool doneSomething = false;
+  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+  if (args->count()>0) {
+    KURL url=args->url(0);    // we take only one URL
+    openURL(url);
+    doneSomething = true;
+  }
+  args->clear();
+  return doneSomething;
 }
 
 //////////////////////// end DCOP implementation

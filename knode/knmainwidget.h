@@ -146,6 +146,10 @@ public:
   /// Expire articles in all groups
   virtual void expireArticles();
 
+  /* Kontact integration */
+  /// Process command-line options
+  virtual bool handleCommandLine();
+
   //end dcop interface
 signals:
   void signalCaptionChangeRequest( const QString& );

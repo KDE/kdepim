@@ -74,11 +74,7 @@ int KNApplication::newInstance()
 
   // process URLs...
   KNMainWidget *mainWin = static_cast<KNMainWidget*>(mainWidget());
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-  if (args->count()>0) {
-    KURL url=args->url(0);    // we take only one URL
-    mainWin->openURL(url);
-  }
+  mainWin->handleCommandLine();
 
   kdDebug(5003) << "KNApplication::newInstance() done" << endl;
   return 0;
