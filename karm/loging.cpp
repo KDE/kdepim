@@ -58,7 +58,7 @@ void Loging::log( Task * task, short type, long minutes)
 			} else if( type == LOG_NEW_SESSION_TIME) {
 				out << "<new_session_time ";
 			} else {
-				cerr << "Programming error!";
+				std::cerr << "Programming error!";
 			}
 
 			out << "task=\"" << constructTaskName(task) << "\" "
@@ -72,7 +72,7 @@ void Loging::log( Task * task, short type, long minutes)
 
 			f.close();
 		} else {
-			cerr << "Couldn't write to time-log file";
+			std::cerr << "Couldn't write to time-log file";
 		}
 	}
 }
