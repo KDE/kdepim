@@ -1,3 +1,4 @@
+usr/share/lintian/overrides/kpilot
 usr/share/applnk/Utilities/kpilot.desktop
 usr/share/applnk/Utilities/kpilotdaemon.desktop
 usr/share/servicetypes/kpilotconduit.desktop

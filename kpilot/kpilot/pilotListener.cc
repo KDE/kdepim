@@ -38,6 +38,7 @@ static const char *id="$Id$";
 #include <iostream.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // pilotListener is such a small program -- and not even a real
 // KDE app -- that it doesn't use kdDebug() &c. So the use of
@@ -71,4 +72,7 @@ int main(int argc, char* argv[])
 }
 
 
-// $Log:$
+// $Log$
+// Revision 1.9  2001/02/05 20:58:48  adridg
+// Fixed copyright headers for source releases. No code changed
+//

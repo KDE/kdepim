@@ -1,6 +1,10 @@
 bin_PROGRAMS = kpilot kpilotDaemon pilotListener
 noinst_LIBRARIES = libconduit.a
 
+# WABA: We can't build with enable-final because conduits/vclaconduit links
+# with pilotDateEntry.o
+KDE_OPTIONS = nofinal
+
 METASOURCES = AUTO
 
 INCLUDES= $(all_includes) -I$(LIBPISOCK_PATH)
@@ -10,6 +14,7 @@ INCLUDES= $(all_includes) -I$(LIBPISOCK_PATH)
 kpilot_SOURCES	= kpilot.cc kpilotlink.cc fileInstallWidget.cc pilotMemo.cc memoWidget.cc pilotComponent.cc \
 	kpilotOptions.cc messageDialog.cc gsetupDialog.cc \
 	pilotSerialDatabase.cc pilotLocalDatabase.cc pilotRecord.cc pilotAddress.cc \
+	listItems.cc \
 	addressWidget.cc addressEditor.cc \
 	strToken.cc pilotDateEntry.cc \
 	conduitSetup.cc listCat.cc pilotTodoEntry.cc \

@@ -628,22 +628,29 @@ void VCalConduit::updateVObject(PilotRecord *rec)
 		tmpStr.sprintf("D%i ", dateEntry.getRepeatFrequency());
 		break;
     case repeatWeekly:
+	{
+	const int *days = dateEntry.getRepeatDays();
+
+	DEBUGCONDUIT << fname
+		<< ": Got repeat-weekly entry, by-days="
+		<< days[0] << " "
+		<< days[1] << " "
+		<< days[2] << " "
+		<< days[4] << " "
+		<< days[5] << " "
+		<< days[6] << " "
+		<< endl;
+
       tmpStr.sprintf("W%i ", dateEntry.getRepeatFrequency());
-      if (dateEntry.getRepeatDays()[0])
-	tmpStr.append("SU ");
-      else if (dateEntry.getRepeatDays()[1])
-	tmpStr.append("MO ");
-      else if (dateEntry.getRepeatDays()[2])
-	tmpStr.append("TU ");
-      else if (dateEntry.getRepeatDays()[3])
-	tmpStr.append("WE ");
-      else if (dateEntry.getRepeatDays()[4])
-	tmpStr.append("TH ");
-      else if (dateEntry.getRepeatDays()[5])
-	tmpStr.append("FR ");
-      else if (dateEntry.getRepeatDays()[6])
-	tmpStr.append("SA ");
+      if (days[0]) tmpStr.append("SU ");
+      if (days[1]) tmpStr.append("MO ");
+      if (days[2]) tmpStr.append("TU ");
+      if (days[3]) tmpStr.append("WE ");
+      if (days[4]) tmpStr.append("TH ");
+      if (days[5]) tmpStr.append("FR ");
+      if (days[6]) tmpStr.append("SA ");
       break;
+    }
     case repeatMonthlyByDay: {
       tmpStr.sprintf("MP%i %d+ ",dateEntry.getRepeatFrequency(),
 		     (dateEntry.getRepeatDay() / 7) + 1);
@@ -765,12 +772,12 @@ void VCalConduit::setSummary(VObject *vevent,const char *summary)
 		if (vo)
 		{
 			setVObjectUStringZValue_(vo, 
-				fakeUnicode(qsummary.local8Bit(), 0));
+				fakeUnicode(qsummary.latin1(), 0));
 		}
 		else
 		{
 			addPropValue(vevent, VCSummaryProp, 
-				qsummary.local8Bit());
+				qsummary.latin1());
 		}
 	}
 }
@@ -1826,6 +1833,9 @@ int VCalConduit::numFromDay(const QString &day)
 
 
 // $Log$
+// Revision 1.24  2001/02/05 19:16:28  adridg
+// Removing calls to exit() from internal functions
+//
 // Revision 1.23  2001/02/02 17:31:57  adridg
 // Reduced debugging message overload
 //

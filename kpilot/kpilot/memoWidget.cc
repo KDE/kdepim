@@ -44,6 +44,7 @@ static const char *memowidget_id="$Id$";
 #include <kfiledialog.h>
 
 #include "kpilot.h"
+#include "listItems.h"
 #include "memoWidget.moc"
 #include <pi-dlp.h>
 
@@ -313,8 +314,10 @@ MemoWidget::slotDeleteMemo()
 		return;
 	}
 
-	item = fLookupTable[item];
-	if(fMemoList.at(item)->id() == 0x0)
+	PilotListItem *p = (PilotListItem *)fListBox->item(item);
+	PilotMemo *memo = (PilotMemo *)p->rec();
+
+	if(memo->id() == 0x0)
 	{
 		// QADE: Why is this? What prevents us from deleting
 		// a "new" memo, ie. one we've imported, before *ever*
@@ -345,7 +348,6 @@ MemoWidget::slotDeleteMemo()
 		return;
 	}
 
-	PilotMemo* memo = fMemoList.at(item);
 	// QADE: Apparently a PilotMemo is not some kind of PilotRecord,
 	// so the PilotRecord methods don't work on it.
 	//
@@ -393,9 +395,12 @@ MemoWidget::updateWidget()
 			// so there's no memory leak here.
 			//
 			//
-			fListBox->insertItem(fMemoList.current()->shortTitle());
+			PilotListItem *p = new PilotListItem(
+				fMemoList.current()->shortTitle(),
+				listIndex,
+				fMemoList.current());
 
-			fLookupTable[currentEntry++] = listIndex;
+			fListBox->insertItem(p);
 #ifdef DEBUG
 			if (debug_level & UI_TEDIOUS)
 			{
@@ -431,7 +436,9 @@ MemoWidget::slotShowMemo(int which)
 {      
   disconnect(fTextWidget, SIGNAL(textChanged()), this, SLOT(slotTextChanged()));
   fTextWidget->deselect();
-  fTextWidget->setText(fMemoList.at(fLookupTable[which])->text());
+	PilotListItem *p = (PilotListItem *)fListBox->item(which);
+	PilotMemo * theMemo = (PilotMemo *)p->rec();
+	fTextWidget->setText(theMemo->text());
   connect(fTextWidget, SIGNAL(textChanged()), this, SLOT(slotTextChanged()));
 	
 }
@@ -452,11 +459,12 @@ void
 MemoWidget::slotTextChanged()
 {
   FUNCTIONSETUP;
-  PilotMemo* currentMemo;
 
   if(fListBox->currentItem() >= 0)
     {
-      currentMemo = fMemoList.at(fLookupTable[fListBox->currentItem()]);
+	PilotListItem *p = (PilotListItem *)fListBox->item(
+		fListBox->currentItem());
+	PilotMemo* currentMemo = (PilotMemo *)p->rec();
       if(currentMemo->id() == 0x0)
 	{
 	  KMessageBox::error(0L,
@@ -509,12 +517,15 @@ MemoWidget::slotExportMemo()
 
     if(item == -1)
 	return;
-    item = fLookupTable[item];
+
+	PilotListItem *p = (PilotListItem *)fListBox->item(item);
+	PilotMemo* theMemo = (PilotMemo *)p->rec();
+
     QString fileName = KFileDialog::getSaveFileName();
     if(fileName == 0L)
 	return;
 
-    data = fMemoList.at(item)->text();
+    data = theMemo->text();
 
     QFile outFile(fileName);
     if(outFile.open(IO_WriteOnly | IO_Truncate) == FALSE)
@@ -528,6 +539,9 @@ MemoWidget::slotExportMemo()
     }
 
 // $Log$
+// Revision 1.23  2001/02/08 08:13:44  habenich
+// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
+//
 // Revision 1.22  2001/02/07 14:21:43  brianj
 // Changed all include definitions for libpisock headers
 // to use include path, which is defined in Makefile.

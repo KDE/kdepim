@@ -41,7 +41,12 @@ binary-arch: build
 	dh_clean -k
 	-rm -f debian/undocumented
 	mkdir -p debian/tmp/etc/kde2
+	mkdir -p debian/tmp/usr/share/lintian/overrides
 	make install DESTDIR=`pwd`/debian/tmp/
+	cp debian/*.override debian/tmp/usr/share/lintian/overrides/
+	for i in `ls debian/tmp/usr/share/lintian/overrides/`; do \
+	  mv debian/tmp/usr/share/lintian/overrides/$$i debian/tmp/usr/share/lintian/overrides/`echo $$i | sed -e 's#.override##'`; \
+	done
 	perl -w admin/debianrules cleanup
 	for i in `cat debian/undocumented.in | grep -v "#"`; do \
 	  echo "$$i.1" >> debian/undocumented ; \

@@ -56,6 +56,7 @@ static const char *addresswidget_id="$Id$";
 #include "kpilot.h"
 #include "addressEditor.h"
 #include "kpilotOptions.h"
+#include "listItems.h"
 
 #include "addressWidget.moc"
 
@@ -331,8 +332,10 @@ AddressWidget::updateWidget()
 				addressDisplayMode);
 			if (title)
 			{
-				fListBox->insertItem(title, -1);
-				fLookupTable[currentEntry++] = listIndex;
+				PilotListItem *p = new PilotListItem(title,
+					listIndex,
+					fAddressList.current());
+				fListBox->insertItem(p);
 			}
 		}
 		listIndex++;
@@ -452,8 +455,11 @@ AddressWidget::slotEditRecord()
     int item = fListBox->currentItem();
     if(item == -1)
       return;
-    item = fLookupTable[item];
-    if(fAddressList.at(item)->id() == 0x0)
+
+	PilotListItem *p = (PilotListItem *)fListBox->item(item);
+	PilotAddress *selectedRecord = (PilotAddress *)p->rec();
+
+    if(selectedRecord->id() == 0x0)
       {
 	KMessageBox::error(0L, 
 		       i18n("Cannot edit new records until\n"
@@ -462,7 +468,7 @@ AddressWidget::slotEditRecord()
 			 
 	return;
       }
-    AddressEditor* editor = new AddressEditor(fAddressList.at(item),this);
+    AddressEditor* editor = new AddressEditor(selectedRecord,this);
     connect(editor, SIGNAL(recordChangeComplete(PilotAddress*)),
 	    this, SLOT(slotUpdateRecord(PilotAddress*)));
     editor->show();
@@ -537,8 +543,10 @@ AddressWidget::slotDeleteRecord()
   int item = fListBox->currentItem();
   if(item == -1)
     return;
-  item = (int)fLookupTable[item];
-  if(fAddressList.at(item)->id() == 0x0)
+	PilotListItem * p = (PilotListItem *)fListBox->item(item);
+	PilotAddress * address = (PilotAddress *)p->rec();
+
+  if(address->id() == 0x0)
     {
       KMessageBox::error(this, 
 			 i18n("Cannot delete new records until\n"
@@ -549,7 +557,6 @@ AddressWidget::slotDeleteRecord()
   if(KMessageBox::questionYesNo(this, i18n("Delete currently selected record?"),
 				i18n("Delete Record?")) == KMessageBox::No)
     return;
-  PilotAddress* address = fAddressList.at(item);
   address->setAttrib(address->getAttrib() | dlpRecAttrDeleted);
   writeAddress(address);
 	emit(recordChanged(address));
@@ -562,7 +569,8 @@ AddressWidget::slotShowAddress(int which)
     	FUNCTIONSETUP;
 
     char text[BUFFERSIZE];
-    PilotAddress* theAdd = fAddressList.at(fLookupTable[which]);
+	PilotListItem *p = (PilotListItem *)fListBox->item(which);
+	PilotAddress* theAdd = (PilotAddress *)p->rec();
     int i;
     int pad;
     text[0] = 0L;
@@ -919,6 +927,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.26  2001/02/08 08:13:44  habenich
+// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
+//
 // Revision 1.25  2001/02/07 14:21:37  brianj
 // Changed all include definitions for libpisock headers
 // to use include path, which is defined in Makefile.

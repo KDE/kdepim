@@ -4,4 +4,5 @@ usr/share/icons/locolor/16x16/apps/abbrowser.png
 usr/share/applnk/Utilities/abbrowser.desktop
 usr/bin/abbrowser
 usr/share/man/man1/abbrowser*
+usr/share/lintian/overrides/abbrowser
 usr/share/doc/kde/HTML/en/abbrowser/*

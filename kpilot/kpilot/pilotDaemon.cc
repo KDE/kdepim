@@ -440,6 +440,13 @@ PilotDaemon::setupSubProcesses()
 {
 	FUNCTIONSETUP;
 
+	if (fMonitorProcess)
+	{
+		kdWarning() << __FUNCTION__
+			<< ": There is already a monitor process!"
+			<< endl;
+	}
+
 	fMonitorProcess = new KProcess();
 	if (fMonitorProcess)
 	{
@@ -644,6 +651,7 @@ PilotDaemon::slotProcFinished(KProcess*)
 {
 	FUNCTIONSETUP;
 
+	killMonitor(false);
 	startHotSync();
 }
 
@@ -680,7 +688,8 @@ PilotDaemon::slotEndHotSync()
 
 	if(!quit())
 	{
-		fMonitorProcess->start(KProcess::NotifyOnExit);
+		killMonitor(false);
+		setupSubProcesses();
 	}
 	else
 	{
@@ -1201,6 +1210,11 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.29  2001/02/08 13:17:19  adridg
+// Fixed crash when conduits run during a backup and exit after the
+// end of that backup (because the event loop is blocked by the backup
+// itself). Added better debugging error exit message (no i18n needed).
+//
 // Revision 1.28  2001/02/05 21:01:07  adridg
 // Fixed copyright headers for source releases. No code changed
 //
