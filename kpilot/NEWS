@@ -1,3 +1,5 @@
-No news is good news. Development news can be found in the file
-ChangeLog in this directory. Release news can be found in the
-files Documentation/README-*.
+KPilot news. This file lists only major releases &c.
+For more detailed information and musings, see the
+ChangeLog or the README files.
+
+* February 12, 2001: KPilot 4.0.0 released with KDE 2.1.

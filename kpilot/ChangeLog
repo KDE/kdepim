@@ -1,5 +1,23 @@
+KPilot Developer's notes for february 4th 2001
+==============================================
+
+Nick Papadonis spent hours tracking down the vcal conduit crash and
+we found at least one bug in kpilotlink. It's been removed and I
+hope this quashes all the vcal crashes. Other than that there's simply 
+not much we *can* do with the message and feature freeze and all.
+This is why the todo-immediately-after-freeze list exists:
+
+* Split KPilotLink into its separate functionalities: config management,
+  local database management, and link from daemon to conduits.
+* Make KPilot and KPilotDaemon communicate only through DCOP.
+* Add an extra message concerning NULL user on hotsync.
+* Sort out all the icon issues.
+* Make the progress bar show something uring a conduit sync.
+
+
+
 KPilot Developer's notes for january 6th 2001
-===============================================
+=============================================
 
 Happy Millennium. I ([ade]) am off on a two-week vacation to
 Calgary, so no KPilot news from me till (almost) february. 

@@ -6,19 +6,13 @@ KPILOT 4.0.0 by Dan Pilone
 	and probably many more.
 
 	KPilot is software for syncing the 3Com Palm Pilot and IBM Workpad
-(UNTESTED!) with a machine running some flavor of unix. The actual PC->PP
-communications was originally based on pilot-link.0.8.7. By default it
+(UNTESTED!) with a machine running some flavor of unix.  By default KPilot
 attempts to connnect using /dev/pilot which should be a link to the actual
 serial port, however this is configurable in the settings dialog. 
 
 	Release notes can be found in Documentation/README-4.*. These are
 official announcements of KPilot 4.x releases. There is also a README for
 3.2.1 which is probably not interesting any more.
-
-	Additional release notes can be found in the user documentation.
-The user documentation can be found under kpilot/doc. The user documentation
-was last updated for KPilot 3.2.1, which was the last KDE 1 release of
-KPilot. This means that the user documentation is quite out-of-date.
 
 	Developer's notes are listed in the file ChangeLog. This is
 probably only of interest if you want to see how certain features developed
@@ -27,47 +21,12 @@ or if certain bugs have been reported before.
 	Generic installation instructions can be found in the file
 INSTALL, but note that KPilot is part of the kdepim package and you 
 have to configure that package, not KPilot. KPilot does compile and
-install on its own though, once kdepim is configured.
+install on its own though, once kdepim is configured. 
+
+	You NEED pilot-link to compile or install KPilot; KPilot is 
+currently tested using version 0.9.3 of pilot-link. 
 
 
-
-USING THE SOFTWARE
-==================
-	When KPilot is run for the first time it will display the settings
-dialog.  The default device is /dev/pilot (which should be a link to the
-proper device for the pilot) though this is configurable. Please verify
-this is correct.  
-	IMPORTANT NOTE: the KPilot installation DOES NOT setup the serial
-link; your OS installation may also require special handling. See the
-section "Troubleshooting," below.
-	Other settings can be configured at this time but are
-not mandatory (though HIGHLY recommended).  The one setting that you might
-want to take notice of is "Local overrides pilot".  Setting this to true
-means that if both the local record and the pilot record are modified,
-during the next hot sync the local record will be considered the valid one
-and both will be set to that. By default the Pilot is considered to be the
-valid record and if both the local record and the pilot record have been
-modified the local is overwritten by the pilot copy.  
-	Hitting "OK" will continue to the main KPilot screen.
-	It is recommended you preform a full backup of your Pilot at this
-point so that all of the data visible in KPilot is accurate and any
-importing or exporting is properly merged the next time you hot-sync.  
-You can do a full backup of your Pilot by selecting Backup from the File
-Menu.
-
-TROUBLESHOOTING
-===============
-	The default serial device (/dev/pilot) does not exist on
-most systems. Be SURE to either (a) use the actual serial port the Pilot
-is attached to (i.e. /dev/ttyS0 for the device DOS calls COM1:) OR (b) set
-up the link to the actual serial port by running (as root) "ln -s
-/dev/ttySx /dev/pilot", where x is the number of the serial port. Note
-that some older Linux setups use /dev/cuax instead of /dev/ttySx.
-	If you're running Mandrake 7 and having trouble getting the
-daemon to start or KPilot can't connect to the daemon, check the system
-security setting. Sometimes local processes can't connect to *any*
-local ports.
-	More information is available in the user documentation.
 
 
 
@@ -94,4 +53,4 @@ contributions are welcome.  :)
 	Adriaan de Groot
 	adridg@cs.kun.nl
 	http://www.cs.kun.nl/~adridg/kpilot-bugs.html
-	November 26, 2000
+	February 4, 2001

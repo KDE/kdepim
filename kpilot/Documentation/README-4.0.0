@@ -13,14 +13,17 @@ By default KPilot attempts to connnect using /dev/pilot which should be
 a link to the actual serial port, however this is configurable in the 
 settings dialog. 
 
-[ The actual release announcement goes here ]
+	This is the first release of KPilot 4.x, the first version of
+KPilot that works with and under KDE2. It is released as part of KDE 2.1.
 
 INSTALLATION INSTRUCTIONS
 =========================
 
-The files ../README and ../INSTALL contain information on how to compile
-and install KPilot. This README file only contains the release announcement
-for KPilot 4.0.0.
+	The file ../README contains minimal information on how to compile
+and install KPilot. Since KPilot is part of the kdepim package, you
+should also have the INSTALL file for kdepim, probably in ../../INSTALL.
+
+	This README file only contains the release notes for KPilot 4.0.0.
 
 UPGRADING FROM OLDER KPILOTS
 ============================
@@ -33,7 +36,7 @@ conduits (again) because many things have changed there.
 CURRENT FEATURES
 ================
 	* Conduit for KNotes.
-	o Now a KDE2 application.
+	* Now a KDE2 application.
 	o Plug in conduit support, currently including
 		KOrganizer, todolist, null and PopMail
 	o Hot-Sync daemon.  - Now hot-sync with just the push of the
@@ -87,4 +90,4 @@ contributions are welcome.  :)
 	Adriaan de Groot
 	adridg@cs.kun.nl
 	http://www.cs.kun.nl/~adridg/kpilot-bugs.html
-	November 26, 2000
+	February 4, 2001
