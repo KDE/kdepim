@@ -14,7 +14,7 @@
   </entry>
   <entry key="Port" type="UInt" >
    <label>Port</label>
-   <whatsthis>TCP Port of the Groupwise server</whatsthis>
+   <whatsthis>TCP Port of the GroupWise server</whatsthis>
   </entry>
  </group>
  <group name="AddressBooks" >

@@ -1,6 +1,9 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Novell Groupwise server
+Name=Novell GroupWise server
+Name[be]=Сэрвэр Novell Groupwise
+Name[es]=Servidor Novell Groupwise
+Name[sv]=Novell Groupwise-server
 X-KDE-Library=kcal_groupwise
 Type=Service
 ServiceTypes=KResources/Plugin
