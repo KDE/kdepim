@@ -168,7 +168,7 @@ void KNArticleManager::saveContentToFile(KNMimeContent *c, QWidget *parent)
 void KNArticleManager::saveArticleToFile(KNArticle *a, QWidget *parent)
 {
   QString fName = a->subject()->asUnicodeString();
-  fName.replace(QRegExp("[\\s/]"),"_");
+  fName.replace(QRegExp("[\\s/:]"),"_");
   KNSaveHelper helper(fName,parent);
   QFile *file = helper.getFile(i18n("Save Article"));
 
