@@ -434,10 +434,15 @@ void KNFetchArticleManager::setThreadScore(KNFetchArticle *a, int score)
   KNScoreDialog *sd;
   if(!a) a=c_urrent;
   if(a) {
-    if(score==-1) {
+    if(score==-1) {     // let the user decide...
       sd=new KNScoreDialog(a->score(), knGlobals.topWidget);
-      if(sd->exec()) score=sd->score();
-      delete sd;
+      if(sd->exec()) {
+        score=sd->score();
+        delete sd;
+      } else {           // don't touch the score when Cancel was pressed
+        delete sd;
+        return;
+      }
     }
     thr=new KNThread(g_roup, a);
     thr->setScore(score);
