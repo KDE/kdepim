@@ -982,7 +982,7 @@ void KABCore::initActions()
     settingsAction = KStdAction::keyBindings( this, SLOT( configureKeyBindings() ), actionCollection() );
   }
 
-  action->setWhatsThis( i18n( "You will be presented with a dialog, that offers you all possebilities to configure KAddressBook." ) );
+  action->setWhatsThis( i18n( "You will be presented with a dialog, that offers you all possibilities to configure KAddressBook." ) );
   settingsAction->setWhatsThis( i18n( "You will be presented with a dialog, where you can configure the application wide shortcuts." ) );
 
   mActionJumpBar = new KToggleAction( i18n( "Show Jump Bar" ), "next", 0,

@@ -31,7 +31,7 @@ What it is
 * kalarmd: alarm monitoring daemon, shared by korganizer and kalarm.
 * kontact: A shell for the PIM apps, still experimental.
 * karm: Time tracker.
-* kitchensync: Synchronisation framework, still under heavy development.
+* kitchensync: Synchronization framework, still under heavy development.
 * kfile-plugins: vCard KFIleItem plugin.
 * knotes: yellow notes application
 * konsolecalendar: Command line tool for accessing calendar files.

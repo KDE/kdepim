@@ -236,7 +236,7 @@ static QString businit(void)
 	state.config.require_dcd = old_dcd;
 	if (error != GN_ERR_NONE) {
 		busterminate();
-		return i18n("Mobile phone interface initialisation failed:\n%1").arg(gn_error_print(error));
+		return i18n("Mobile phone interface initialization failed:\n%1").arg(gn_error_print(error));
 	}
 
 	// model

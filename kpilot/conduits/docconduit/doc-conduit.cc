@@ -293,7 +293,7 @@ QString DOCConduit::constructTXTFileName(QString name) {
 	readConfig();
 	dbnr=0;
 	
-	emit logMessage(i18n("Searching for texts and databases to syncronize"));
+	emit logMessage(i18n("Searching for texts and databases to synchronize"));
 
 	QTimer::singleShot(0, this, SLOT(syncNextDB()));
 	return true;

@@ -1002,7 +1002,7 @@ MALConduit::MALConduit(KPilotDeviceLink * o,
 
 \section{A per-file conduit: docconduit}\label{SectionDatabasesConduit}
 
-The PalmDoc conduit of KPilot takes a directory of text files and syncronized them with PalmDOC databases on the handheld. These PalmDOC documents can be read with AportisDoc, TealReader, and modified with applications like QED. Optionally, the conduit can also keep local copies of the pdb handheld databases in a local directory.
+The PalmDoc conduit of KPilot takes a directory of text files and synchronized them with PalmDOC databases on the handheld. These PalmDOC documents can be read with AportisDoc, TealReader, and modified with applications like QED. Optionally, the conduit can also keep local copies of the pdb handheld databases in a local directory.
 
 The conduit just needs to find out if a document has changed either on the handheld or on the pc (or on both sides), and then copy the text either to or from the handheld. The docconduit has a class \class{DOCConverter} which does the actual conversion. You only have to set the local path to the text file, and give a pointer to an opened \class{PilotDatabase} (either \class{PilotLocalDatabase} or \class{PilotSerialDatabase}), and then call 
 \code{docconverter.convertPDBtoDOC();} or \code{docconverter.convertDOCtoPDB();}. I will not explain this class here, but rather the algorithm to determine the sync direction and the actual calls of the DOCConverter. 
@@ -1262,7 +1262,7 @@ void DOCConduit::syncDatabases() {
     case eSyncDelete:
     case eSyncPDAToPC:
     case eSyncPCToPDA:
-      emit logMessage(i18n("Syncronizing text \"%1\"").arg(sinfo.handheldDB));
+      emit logMessage(i18n("Synchronizing text \"%1\"").arg(sinfo.handheldDB));
       if (!doSync(sinfo)) {
         // The sync could not be done, so inform the user (the error message should probably issued inside doSync)
         DEBUGCONDUIT<<"There was some error syncing the text \""<<sinfo.handheldDB<<"\" with the file "<<sinfo.docfilename<<endl;

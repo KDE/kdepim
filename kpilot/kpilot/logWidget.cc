@@ -142,7 +142,7 @@ LogWidget::LogWidget(QWidget * parent) :
 		"current HotSync.</qt>"));
 	connect(b,SIGNAL(clicked()),this,SLOT(clearLog()));
 
-	b = new QPushButton(i18n("Save Log"),h);
+	b = new QPushButton(i18n("Save Log..."),h);
 	QWhatsThis::add(b,i18n("<qt>You can save the list of messages received "
 		"during this HotSync to a file (for example for use in a "
 		"bug report) by clicking here.</qt>"));

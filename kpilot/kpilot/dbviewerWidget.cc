@@ -86,7 +86,7 @@ void GenericDBWidget::setupWidget()
 	fDBInfo->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)3, (QSizePolicy::SizeType)0, 0, 0, fDBInfo->sizePolicy().hasHeightForWidth() ) );
 	fDBInfo->setReadOnly( TRUE );
 	g1->addWidget( fDBInfo, 0, 0 );
-	fDBInfoButton = new KPushButton( i18n( "General Database &information..." ), this );
+	fDBInfoButton = new KPushButton( i18n( "General Database &Information..." ), this );
 	g1->addWidget( fDBInfoButton, 1, 0 );
 	fAppInfoButton = new KPushButton( i18n( "&Application Info Block (Categories etc.)" ), this );
 	g1->addWidget( fAppInfoButton, 2, 0 );

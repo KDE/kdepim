@@ -78,7 +78,7 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 		i18n
 		("<qt>Clear the list of files to install. No files will be installed.</qt>"));
 
-	abutton = addButton = new QPushButton(i18n("Add File"), this);
+	abutton = addButton = new QPushButton(i18n("Add File..."), this);
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotAddFile()));
 	grid->addWidget(abutton, 4, 1);
 	QWhatsThis::add(abutton,
