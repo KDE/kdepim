@@ -76,10 +76,9 @@ void ViewContainer::slotStyleSelected(int index)
 
 void ViewContainer::setAddressee(const KABC::Addressee& addressee)
 {
-    if(m_look!=0)
-    {
-        m_look->setEntry(addressee);
-    }
+  if( m_look != 0 ) {
+    m_look->setEntry(addressee);
+  }
 }
 
 KABC::Addressee ViewContainer::addressee()

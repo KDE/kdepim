@@ -233,7 +233,13 @@ void KAddressBookTableView::incrementalSearch(const QString &value,
     if (item)
     {
         // We have a match. Deselect all the others and select this one
+
+        // avoid flickering in details page
+        bool blocked = signalsBlocked();
+        blockSignals( true );
         mListView->clearSelection();
+        blockSignals( blocked );
+
         mListView->setSelected(item, true);
         mListView->ensureItemVisible(item);
     }

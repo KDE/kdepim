@@ -17,7 +17,6 @@
 #include "look_details.h"
 #include <qdir.h>
 #include <qcursor.h>
-// #include "kab_topwidget.h"
 #include "kabentrypainter.h"
 #include "global.h"
 #include <kdebug.h>

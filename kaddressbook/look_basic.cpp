@@ -15,7 +15,7 @@
 */
 
 #include "look_basic.h"
-
+#include <kdebug.h>
 
 KABBasicLook::KABBasicLook(QWidget* parent, const char* name)
     : QWidget(parent, name),
@@ -36,8 +36,11 @@ bool KABBasicLook::readonly() const
 
 void KABBasicLook::setEntry(const KABC::Addressee& e)
 {
-  current=e;
-  repaint(false);
+  if ( current == e )
+    return;
+
+  current = e;
+  repaint( false );
 }
 
 KABC::Addressee KABBasicLook::entry()

@@ -295,6 +295,14 @@ void KAddressBookCardView::incrementalSearch(const QString &value,
     
   if (item)
   {
+    // avoid flickering in details page
+    bool blocked = signalsBlocked();
+    blockSignals( true );
+    for ( CardViewItem *it = mCardView->firstItem(); it; it = it->nextItem() )
+      if ( it != item )
+        mCardView->setSelected( it, false );
+    blockSignals( blocked );
+
     mCardView->setSelected(item, true);
     mCardView->ensureItemVisible(item);
   } else {
