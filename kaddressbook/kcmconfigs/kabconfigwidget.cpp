@@ -138,6 +138,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   boxLayout->setAlignment( Qt::AlignTop );
 
   mLocationMapURL = new QComboBox( true, groupBox );
+  mLocationMapURL->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
   QToolTip::add( mLocationMapURL, i18n( "<ul> <li>%s: Street</li>"
                                  "<li>%r: Region</li>"
                                  "<li>%l: Location</li>"
