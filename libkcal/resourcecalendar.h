@@ -179,7 +179,7 @@ class ResourceCalendar : public KRES::Resource
     /**
      This signal is emitted when a subresource is removed.
     */
-    void signalSubresourceRemoved( ResourceCalendar *, const QString,
+    void signalSubresourceRemoved( ResourceCalendar *, const QString &,
                                    const QString & );
 
   public:
