@@ -429,7 +429,8 @@ void KABCore::deleteContacts( const QStringList &uids )
     QStringList names;
     QStringList::ConstIterator it = uids.begin();
     while ( it != uids.end() ) {
-      names.append( mAddressBook->findByUid( *it ).realName() );
+      KABC::Addressee addr = mAddressBook->findByUid( *it );
+      names.append( addr.realName().isEmpty() ? addr.preferredEmail() : addr.realName() );
       ++it;
     }
 
