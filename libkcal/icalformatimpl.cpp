@@ -1726,6 +1726,7 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
   p = icalcomponent_get_first_property(calendar,ICAL_VERSION_PROPERTY);
   if (!p) {
     kdDebug(5800) << "No VERSION property found" << endl;
+    mParent->setException(new ErrorFormat(ErrorFormat::CalVersionUnknown));
     return false;
   } else {
     const char *version = icalproperty_get_version(p);

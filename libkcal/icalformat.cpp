@@ -96,7 +96,7 @@ bool ICalFormat::save(const QString &fileName)
   if (!file.open( IO_WriteOnly ) ) {
     setException(new ErrorFormat(ErrorFormat::SaveError,
                  i18n("Could not open file '%1'").arg(fileName)));
-    return false;    
+    return false;
   }
   QTextStream ts( &file );
   ts.setEncoding(QTextStream::UnicodeUTF8);
@@ -129,7 +129,9 @@ bool ICalFormat::fromString( const QString &text )
   // put all objects into their proper places
   if (!mImpl->populate(calendar)) {
     kdDebug(5800) << "ICalFormat::load(): Could not populate calendar" << endl;
-    setException(new ErrorFormat(ErrorFormat::ParseErrorKcal));
+    if ( !exception() ) {
+      setException(new ErrorFormat(ErrorFormat::ParseErrorKcal));
+    }
     return false;
   }
 
