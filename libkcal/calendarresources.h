@@ -230,6 +230,8 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
     DestinationPolicy *mDestinationPolicy;
     StandardDestinationPolicy *mStandardPolicy;
     AskDestinationPolicy *mAskPolicy;
+
+    KConfig *mConfig;
 };
 
 }

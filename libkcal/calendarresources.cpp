@@ -83,8 +83,10 @@ void CalendarResources::init()
 {
   kdDebug(5800) << "CalendarResources::init" << endl;
 
-  mManager = new CalendarResourceManager( "calendar", "kcalrc" );
-  mManager->load();
+  mConfig = new KConfig( "kcalrc" );
+
+  mManager = new CalendarResourceManager( "calendar" );
+  mManager->readConfig( mConfig );
 
   if ( !mManager->standardResource() ) {
     kdDebug() << "Warning! No standard resource yet." << endl;
@@ -115,6 +117,7 @@ CalendarResources::~CalendarResources()
   close();
 
   delete mManager;
+  delete mConfig;
 }
 
 void CalendarResources::setStandardDestinationPolicy()
@@ -144,7 +147,7 @@ void CalendarResources::close()
 
 void CalendarResources::save()
 {
-  kdDebug(5800) << "CalendarResources::sync()" << endl;
+  kdDebug(5800) << "CalendarResources::save()" << endl;
 
   if ( mOpen ) {
     CalendarResourceManager::ActiveIterator it;
