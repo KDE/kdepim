@@ -46,7 +46,9 @@ class AlarmDialog : public KDialogBase {
     virtual ~AlarmDialog();
 
     void appendEvent(Event *event);
-
+  
+    void appendTodo(Todo *todo);
+  
     void clearEvents();
 
     void eventNotification();
@@ -63,6 +65,8 @@ class AlarmDialog : public KDialogBase {
 
     QPtrList<Event> mEvents;
 
+    QPtrList<Todo> mTodos;
+  
     QSpinBox *mSuspendSpin;
 };
 

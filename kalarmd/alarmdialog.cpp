@@ -53,7 +53,8 @@ AlarmDialog::AlarmDialog(QWidget *parent,const char *name)
   (void)new QLabel(i18n("The following events triggered alarms:"),topBox);
 
   mEvents.setAutoDelete(true);
-
+  mTodos.setAutoDelete(true);
+  
   mEventViewer = new KOEventViewer(topBox);
 
   QHBox *suspendBox = new QHBox(topBox);
@@ -76,11 +77,18 @@ void AlarmDialog::appendEvent(Event *event)
   mEvents.append(event);
 }
 
+void AlarmDialog::appendTodo(Todo *todo)
+{
+  mEventViewer->appendTodo(todo);
+  mTodos.append(todo);
+}
+
 void AlarmDialog::clearEvents()
 {
   mEventViewer->clearEvents();
 
   mEvents.clear();
+  mTodos.clear();
 }
 
 void AlarmDialog::slotOk()
@@ -102,6 +110,27 @@ void AlarmDialog::eventNotification()
   Event *ev;
   for (ev = mEvents.first(); ev; ev = mEvents.next()) {
     QPtrList<Alarm> alarms = ev->alarms();
+    const Alarm* alarm;
+    for (alarm = alarms.first(); alarm; alarm = alarms.next()) {
+// TODO: Check whether this should be done for all multiple alarms
+      QString program = alarm->programFile();
+      if (!program.isEmpty()) {
+        kdDebug() << "Starting program: '" << program << "'" << endl;
+        KProcess proc;
+        proc << QFile::encodeName(alarm->programFile());
+        proc.start(KProcess::DontCare);
+      }
+
+      if (!alarm->audioFile().isEmpty()) {
+        beeped = true;
+        KAudioPlayer::play(QFile::encodeName(alarm->audioFile()));
+      }
+    }
+  }
+
+  Todo *todo;
+  for (todo = mTodos.first(); todo; todo = mTodos.next()) {
+    QPtrList<Alarm> alarms = todo->alarms();
     const Alarm* alarm;
     for (alarm = alarms.first(); alarm; alarm = alarms.next()) {
 // TODO: Check whether this should be done for all multiple alarms
