@@ -259,8 +259,6 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 	fStack->addWidget(UIDialog::aboutPage(fStack,0L),GENERAL_ABOUT);
 }
 
-#define PAGE_SIZE	QSize(440,300)
-
 ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const char *n,
 	bool) :
 	ConduitConfigWidgetBase(parent,n),
@@ -277,12 +275,13 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const char *n,
 	fConduitList->setTreeStepSize(10);
 	// fConduitList->removeColumn(CONDUIT_COMMENT);
 	fillLists();
-	fConduitList->adjustSize();
-	fConduitList->show();
+	
+	fConduitList->resize(fConduitList->sizeHint());
+	fConduitList->setMinimumSize(fConduitList->sizeHint());
 
-	fStack->resize(PAGE_SIZE);
-	fStack->setMinimumSize(PAGE_SIZE);
-
+	fStack->resize(fStack->sizeHint()+QSize(10,40));
+	fStack->setMinimumSize(fStack->sizeHint()+QSize(10,40));
+	
 	QObject::connect(fConduitList,
 		SIGNAL(selectionChanged(QListViewItem *)),
 		this,SLOT(selected(QListViewItem *)));
