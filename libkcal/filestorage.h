@@ -29,7 +29,7 @@ class CalFormat;
 /**
   This class provides a calendar storage as a local file.
 */
-class FileStorage : public CalStorage
+class LIBKCAL_EXPORT FileStorage : public CalStorage
 {
   public:
     FileStorage( Calendar *, const QString &fileName = QString::null,

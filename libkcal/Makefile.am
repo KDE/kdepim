@@ -49,7 +49,7 @@ libkcalinclude_HEADERS = alarm.h attachment.h attendee.h calendar.h \
   incidencebase.h incidence.h incidenceformatter.h journal.h kcalversion.h listbase.h period.h person.h \
   qtopiaformat.h recurrence.h resourcecached.h resourcecalendar.h \
   resourcelocalconfig.h resourcelocaldirconfig.h resourcelocaldir.h \
-  resourcelocal.h scheduler.h \
+  resourcelocal.h scheduler.h libkcal_export.h \
   todo.h vcaldrag.h vcalformat.h
 
 kde_module_LTLIBRARIES = kcal_local.la kcal_localdir.la kcal_kabc.la

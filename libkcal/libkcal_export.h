@@ -1,8 +1,6 @@
 /*
     This file is part of libkcal.
-
-    Copyright (c) 2002,2003 Cornelius Schumacher <schumacher@kde.org>
-
+		
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
     License as published by the Free Software Foundation; either
@@ -18,41 +16,11 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KCAL_CALSTORAGE_H
-#define KCAL_CALSTORAGE_H
+#ifndef KCAL_KCALEXPORT_H
+#define KCAL_KCALEXPORT_H
 
-#include "libkcal_export.h"
+#include <kdemacros.h>
 
-namespace KCal {
-
-class Calendar;
-
-/**
-  This class provides the interface to the storage of a calendar.
-*/
-class LIBKCAL_EXPORT CalStorage
-{
-  public:
-    CalStorage( Calendar *calendar )
-    {
-      mCalendar = calendar;
-    }
-    virtual ~CalStorage() {}
-
-    Calendar *calendar() const { return mCalendar; }
-  
-    virtual bool open() = 0;
-    virtual bool load() = 0;
-    virtual bool save() = 0;
-    virtual bool close() = 0;
-
-  private:
-    Calendar *mCalendar;
-
-    class Private;
-    Private *d;
-};
-
-}
+#define LIBKCAL_EXPORT KDE_EXPORT
 
 #endif

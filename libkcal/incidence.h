@@ -29,6 +29,7 @@
 #include "recurrence.h"
 #include "alarm.h"
 #include "attachment.h"
+#include "libkcal_export.h"
 
 #include "incidencebase.h"
 #include <kdepimmacros.h>
@@ -39,7 +40,7 @@ namespace KCal {
 /**
   This class provides the base class common to all calendar components.
 */
-class KDE_EXPORT Incidence : public IncidenceBase
+class LIBKCAL_EXPORT Incidence : public IncidenceBase
 {
   public:
     /**

@@ -36,6 +36,8 @@
 
 #include "resourcecached.h"
 
+#include "libkcal_export.h"
+
 namespace KCal {
 
 /**
@@ -43,7 +45,7 @@ namespace KCal {
 
   This class provides a calendar stored as a file per incidence in a directory.
 */
-class KDE_EXPORT ResourceLocalDir : public ResourceCached
+class LIBKCAL_EXPORT ResourceLocalDir : public ResourceCached
 {
     Q_OBJECT
 

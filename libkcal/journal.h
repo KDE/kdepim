@@ -30,7 +30,7 @@ namespace KCal {
 /**
   This class provides a Journal in the sense of RFC2445.
 */
-class KDE_EXPORT Journal : public Incidence
+class LIBKCAL_EXPORT Journal : public Incidence
 {
   public:
     typedef ListBase<Journal> List;

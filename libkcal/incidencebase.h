@@ -30,8 +30,6 @@
 #include "customproperties.h"
 #include "attendee.h"
 
-#include <kdepimmacros.h>
-
 namespace KCal {
 
 typedef QValueList<QDate> DateList;
@@ -44,7 +42,7 @@ class FreeBusy;
 /**
   This class provides the base class common to all calendar components.
 */
-class KDE_EXPORT IncidenceBase : public CustomProperties
+class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
 {
   public:
     /**

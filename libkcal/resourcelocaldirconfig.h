@@ -30,7 +30,7 @@
 #include <kresources/resource.h>
 #include <kresources/configwidget.h>
 
-#include <kdepimmacros.h>
+#include "libkcal_export.h"
 
 namespace KCal {
 
@@ -41,7 +41,7 @@ namespace KCal {
   
   @see ResourceLocalDir
 */
-class KDE_EXPORT ResourceLocalDirConfig : public KRES::ConfigWidget
+class LIBKCAL_EXPORT ResourceLocalDirConfig : public KRES::ConfigWidget
 { 
     Q_OBJECT
   public:

@@ -40,7 +40,7 @@ class FreeBusy;
 
   @short iCalendar format implementation
 */
-class KDE_EXPORT ICalFormat : public CalFormat
+class LIBKCAL_EXPORT ICalFormat : public CalFormat
 {
   public:
     ICalFormat();

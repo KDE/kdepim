@@ -24,12 +24,14 @@
 
 #include <qstring.h>
 
+#include "libkcal_export.h"
+
 namespace KCal {
 
 /**
   This class represents a person. A person has a name and an email address.
 */
-class Person
+class LIBKCAL_EXPORT Person
 {
   public:
     Person() {}

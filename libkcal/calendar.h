@@ -100,7 +100,7 @@ class CalFilter;
   visible in the Calendar. You shouldn't delete any Event object you get from
   Calendar.
 */
-class KDE_EXPORT Calendar : public QObject, public CustomProperties,
+class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
                  public IncidenceBase::Observer
 {
     Q_OBJECT

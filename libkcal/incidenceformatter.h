@@ -24,6 +24,8 @@
 
 #include <qstring.h>
 
+#include "libkcal_export.h"
+
 namespace KCal {
 class Calendar;
 class Incidence;
@@ -43,7 +45,7 @@ class InvitationFormatterHelper
 
   @short methods to format incidences into various formats for displaying them
 */
-class IncidenceFormatter
+class LIBKCAL_EXPORT IncidenceFormatter
 {
   public:
     static QString toolTipString( IncidenceBase *incidence, bool richText = true );

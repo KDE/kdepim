@@ -26,6 +26,8 @@
 #include <qmap.h>
 #include <kdepimmacros.h>
 
+#include "libkcal_export.h"
+
 namespace KCal {
 
 /**
@@ -37,7 +39,7 @@ namespace KCal {
   In keeping with RFC2445, property names must be composed only of the
   characters A-Z, a-z, 0-9 and '-'.
 */
-class KDE_EXPORT CustomProperties
+class LIBKCAL_EXPORT CustomProperties
 {
   public:
     /**

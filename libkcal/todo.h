@@ -28,7 +28,7 @@ namespace KCal {
 /**
   This class provides a Todo in the sense of RFC2445.
 */
-class Todo : public Incidence
+class LIBKCAL_EXPORT Todo : public Incidence
 {
   public:
     typedef ListBase<Todo> List;
