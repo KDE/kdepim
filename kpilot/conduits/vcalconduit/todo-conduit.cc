@@ -277,12 +277,15 @@ void TodoConduit::postSync()
 PilotRecord*TodoConduit::recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e)
 {
 	// don't need to check for null pointers here, the recordFromIncidence(PTE*, KCal::Todo*) will do that.
-	return recordFromIncidence(dynamic_cast<PilotTodoEntry*>(de), dynamic_cast<const KCal::Todo*>(e));
+	PilotTodoEntry *tde = dynamic_cast<PilotTodoEntry*>(de);
+	const KCal::Todo *te = dynamic_cast<const KCal::Todo*>(e);
+
+	return recordFromIncidence(tde, te);
 }
 
 
 
-PilotRecord*TodoConduit::recordFromIncidence(PilotTodoEntry*de, const KCal::Todo*todo)
+PilotRecord*TodoConduit::recordFromTodo(PilotTodoEntry*de, const KCal::Todo*todo)
 {
 	FUNCTIONSETUP;
 	if (!de || !todo) {

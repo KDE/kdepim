@@ -103,7 +103,7 @@ protected:
 protected:
 
 	PilotRecord *recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e);
-	PilotRecord *recordFromIncidence(PilotTodoEntry*de, const KCal::Todo*e);
+	PilotRecord *recordFromTodo(PilotTodoEntry*de, const KCal::Todo*e);
 	KCal::Incidence *incidenceFromRecord(KCal::Incidence *, const PilotAppCategory *);
 	KCal::Todo *incidenceFromRecord(KCal::Todo *, const PilotTodoEntry *);
 
