@@ -22,7 +22,7 @@
 #include <qlineedit.h>
 #include <qsplitter.h>
 
-#include <ktmainwindow.h>
+#include <kmainwindow.h>
 #include <keditcl.h>
 #include <kdialogbase.h>
 
@@ -40,7 +40,7 @@ class KNMimeContent;
 class KNAttachment;
 
 
-class KNComposer : public KTMainWindow  {
+class KNComposer : public KMainWindow  {
 
   Q_OBJECT
 	
@@ -146,7 +146,6 @@ class KNComposer : public KTMainWindow  {
    	void slotToggleToolBar();
   	void slotConfKeys();
   	void slotConfToolbar();
-  	void slotPreferences();
   	
     // spellcheck operation
     void slotSpellStarted(KSpell *);

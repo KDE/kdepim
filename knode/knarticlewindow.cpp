@@ -28,11 +28,12 @@
 #include "knsavedarticlemanager.h"
 #include "utilities.h"
 #include "knglobals.h"
+#include "knode.h"
 #include "knarticlewindow.h"
 
 
 KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, const char *name )
-	: KTMainWindow(name)
+	: KMainWindow(0, name)
 {
 	if(art)
 		setCaption(art->subject());
@@ -40,7 +41,7 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, const
 
 	artW=new KNArticleWidget(this);
 	artW->setData(art, col);
-  setView(artW);
+  setCentralWidget(artW);
 
   *actionCollection() += artW->actions();        // include the actions of the article widget
 
@@ -63,6 +64,7 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, const
   KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
+  KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
 
   createGUI( "knreaderui.rc",false);
   guiFactory()->addClient(artW->part());

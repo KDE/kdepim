@@ -84,6 +84,10 @@ class KNodeApp : public KMainWindow
 
     //network
     void jobDone(KNJobData *j);
+
+  public slots:
+
+    void slotSettings();
     	
 	protected:
 
@@ -133,7 +137,6 @@ class KNodeApp : public KMainWindow
   	void slotToggleStatusBar();
   	void slotConfKeys();
   	void slotConfToolbar();
-  	void slotSettings();
   	void slotSettingsFinished();
   	  	
   	//view-slots  	

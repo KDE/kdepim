@@ -16,11 +16,14 @@
 #include <qpixmap.h>
 
 #include <kmessagebox.h>
+#include <kkeydialog.h>
+#include <kedittoolbar.h>
 #include <kstdaction.h>
 #include <kaccel.h>
 #include <kurl.h>
 #include <klocale.h>
 #include <khtml_part.h>
+#include <kwin.h>
 
 #include "knjobdata.h"
 #include "knnetaccess.h"
@@ -325,7 +328,7 @@ void KNodeApp::initActions()
   actCancel = new KAction(i18n("article","&Cancel"), 0 , this, SLOT(slotCancel()),
                           actionCollection(), "article_cancel");
   actCancel->setEnabled(false);
-  actSupersede = new KAction(i18n("&Supersede"), 0 , this, SLOT(slotSupersede()),
+  actSupersede = new KAction(i18n("S&upersede"), 0 , this, SLOT(slotSupersede()),
                              actionCollection(), "article_supersede");
   actSupersede->setEnabled(false);
 
@@ -480,14 +483,24 @@ void KNodeApp::slotToggleStatusBar()
 
 void KNodeApp::slotConfKeys()
 {
-  #warning FIXME: stub  (open conf dialog and show keyboard config widget)
+  KKeyDialog::configureKeys(actionCollection(), xmlFile());
 }
 
 
 
 void KNodeApp::slotConfToolbar()
 {
-  #warning FIXME: stub  (open conf dialog and show toolbar config widget)
+  KEditToolbar *dlg = new KEditToolbar(guiFactory());
+
+  if (dlg->exec()) {
+    guiFactory()->removeClient(view->artView->part());
+    createGUI("knodeui.rc",false);
+    guiFactory()->addClient(view->artView->part());
+    conserveMemory();
+    initPopups();
+  }
+
+  delete dlg;
 }
 
 
@@ -497,9 +510,12 @@ void KNodeApp::slotSettings()
   if (!setDialog) {
     setDialog = new KNSettingsDialog(this);
     connect(setDialog, SIGNAL(finished()), this, SLOT(slotSettingsFinished()));
+    setDialog->show();
+  } else {
+    KWin::setActiveWindow(setDialog->winId());
   }
-  setDialog->show();
 }
+
 
 
 

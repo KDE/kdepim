@@ -44,7 +44,6 @@
 #include "knpostcomsettings.h"
 #include "knposttechsettings.h"
 #include "kncleanupsettings.h"
-#include "knkeysettings.h"
 #include "knusersettings.h"
 #include "knglobals.h"
 #include "utilities.h"
@@ -127,10 +126,6 @@ KNSettingsDialog::KNSettingsDialog(QWidget *parent, const char *name)
   // Cleanup
   frame = addHBoxPage(i18n("Cleanup"),i18n("Cleanup"), BarIcon("arrow_right"));
   widgets.append(new KNCleanupSettings(frame));
-  
-  // Key bindings
-  frame = addHBoxPage(i18n("Key bindings"), i18n("Key bindings"), BarIcon("arrow_right"));
-  widgets.append(new KNKeySettings(frame));
 
   restoreWindowSize("settingsDlg", this, sizeHint());
 }

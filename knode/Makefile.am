@@ -9,7 +9,7 @@ knode_SOURCES = kngroupbrowser.cpp knpurgeprogressdialog.cpp knsmtpclient.cpp \
 	knfiltersettings.cpp knpostcomsettings.cpp knposttechsettings.cpp \
 	knreadgensettings.cpp knreadappsettings.cpp kncleanupsettings.cpp \
 	knaccmailsettings.cpp knaccnewssettings.cpp knusersettings.cpp \
-	knkeysettings.cpp knsettingswidget.cpp knsettingsdialog.cpp \
+	knsettingswidget.cpp knsettingsdialog.cpp \
 	knsearchdialog.cpp knfilterconfigwidget.cpp knsenderrordialog.cpp \
 	kngroupselectdialog.cpp knsavedarticlemanager.cpp knfetcharticlemanager.cpp \
 	knfoldermanager.cpp kncleanup.cpp knsavedarticle.cpp kncomposer.cpp \
@@ -34,7 +34,7 @@ noinst_HEADERS = knaccmailsettings.h      knglobals.h              knrangefilter
 	knarticlefilter.h        kngroupselectdialog.h    knscoredialog.h \
 	knarticlemanager.h       knhdrviewitem.h          knsearchdialog.h \
 	knarticlewidget.h        knjobdata.h              knsenderrordialog.h \
-	knarticlewindow.h        knkeysettings.h          knserverinfo.h \
+	knarticlewindow.h        knserverinfo.h \
 	kncleanup.h              knsettingsdialog.h \
 	kncleanupsettings.h      knlistbox.h              knsettingswidget.h \
 	kncollection.h           knlistview.h             knsmtpclient.h \

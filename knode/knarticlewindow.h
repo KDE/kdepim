@@ -19,13 +19,13 @@
 #ifndef KNARTICLEWINDOW_H
 #define KNARTICLEWINDOW_H
 
-#include <ktmainwindow.h>
+#include <kmainwindow.h>
 
 class KNArticle;
 class KNArticleWidget;
 class KNArticleCollection;
 
-class KNArticleWindow : public KTMainWindow  {
+class KNArticleWindow : public KMainWindow  {
 
   Q_OBJECT
 	

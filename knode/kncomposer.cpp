@@ -44,11 +44,12 @@
 #include "knstringsplitter.h"
 #include "utilities.h"
 #include "knglobals.h"
+#include "knode.h"
 #include "kncomposer.h"
 
 
 KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)//, int textEnc)
-    :	KTMainWindow(0), spellChecker(0), r_esult(CRsave), a_rticle(a), nntp(n),
+    :	KMainWindow(0), spellChecker(0), r_esult(CRsave), a_rticle(a), nntp(n),
       externalEdited(false), attChanged(false), externalEditor(0), editorTempfile(0)//, textCTE(textEnc)
 {
 	if(!sig.isEmpty()) s_ignature=sig.copy();
@@ -58,7 +59,7 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
 		
   //init view
   view=new ComposerView(this, a_rticle->isMail());
-	setView(view);
+	setCentralWidget(view);
 	connect(view->subject, SIGNAL(textChanged(const QString&)),
       		this, SLOT(slotSubjectChanged(const QString&)));
 	if(!a_rticle->isMail()) {
@@ -94,7 +95,7 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
   KStdAction::find(this, SLOT(slotFind()), actionCollection());
   KStdAction::findNext(this, SLOT(slotFindNext()), actionCollection());
   KStdAction::replace(this, SLOT(slotReplace()), actionCollection());
-  actExternalEditor = new KAction(i18n("&Start External Editor"), 0, this, SLOT(slotExternalEditor()),
+  actExternalEditor = new KAction(i18n("Start &External Editor"), 0, this, SLOT(slotExternalEditor()),
                                   actionCollection(), "external_editor");
   actSpellCheck = KStdAction::spelling (this, SLOT(slotSpellcheck()), actionCollection(), "spellcheck");
 		
@@ -114,7 +115,7 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
   KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
-  KStdAction::preferences(this, SLOT(slotPreferences()), actionCollection());
+  KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
 
   createGUI("kncomposerui.rc");
 
@@ -685,12 +686,6 @@ void KNComposer::slotConfToolbar()
   if (dlg.exec()) {
     createGUI();
   }
-}
-
-
-void KNComposer::slotPreferences()
-{
-  #warning stub - open the main config dialog, section "Post News"
 }
 
 
