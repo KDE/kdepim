@@ -1332,6 +1332,7 @@ void KNConfig::DisplayedHeaderConfDialog::slotNameChanged(const QString& str)
 
 //=============================================================================================
 
+
 KNConfig::ScoreListWidget::ScoreListWidget(QWidget *p, const char *n)
   : BaseWidget(p,n)
 {
@@ -1344,13 +1345,6 @@ KNConfig::ScoreListWidget::ScoreListWidget(QWidget *p, const char *n)
 KNConfig::ScoreListWidget::~ScoreListWidget()
 {
 }
-
-void KNConfig::ScoreListWidget::apply()
-{
-  if(d_irty)
-    knGlobals.scoreManager->save();
-}
-
 
 
 //=============================================================================================

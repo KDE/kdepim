@@ -673,9 +673,9 @@ class ScoreListWidget : public BaseWidget {
     ScoreListWidget(QWidget *p=0, const char *n=0);
     ~ScoreListWidget();
 
-    void apply();
- private:
+  private:
     KScoringRulesConfig *ksc;
+
 };
 
 
