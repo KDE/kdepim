@@ -27,18 +27,70 @@
 
 namespace KPIM {
 
+enum EmailParseResult { AddressOk, AddressEmpty, UnexpectedEnd,
+                        UnbalancedParens, MissingDomainPart,
+                        UnclosedAngleAddr, UnopenedAngleAddr,
+                        TooManyAts, UnexpectedComma,
+                        TooFewAts, MissingLocalPart,
+                        UnbalancedQuote, NoAddressSpec };
+
 // Helper functions
 /** Split a comma separated list of email addresses. */
 QStringList splitEmailAddrList(const QString& aStr);
 
+/** Splits the given address into display name, email address and comment.
+    Returns AddressOk if no error was encountered. Otherwise an appropriate
+    error code is returned. In case of an error the values of displayName,
+    addrSpec and comment are undefined.
+
+    @param address      a single email address,
+                          example: Joe User (comment1) <joe.user@kde.org> (comment2)
+    @param displayName  only out: the display-name of the email address, i.e.
+                          "Joe User" in the example; in case of an error the
+                          return value is undefined
+    @param addrSpec     only out: the addr-spec, i.e. "joe.user@kde.org" in the
+                          example; in case of an error the return value is
+                          undefined
+    @param comment      only out: the space-separated comments, i.e.
+                          "comment1 comment2" in the example; in case of an
+                          error the return value is undefined
+    @return             AddressOk if no error was encountered. Otherwise an
+                          appropriate error code is returned.
+*/
+EmailParseResult splitAddress( const QCString & address,
+                               QCString & displayName,
+                               QCString & addrSpec,
+                               QCString & comment );
+
+/** This is an overloaded member function, provided for convenience. It behaves
+    essentially like the above function.
+
+    Splits the given address into display name, email address and comment.
+    Returns AddressOk if no error was encountered. Otherwise an appropriate
+    error code is returned. In case of an error the values of displayName,
+    addrSpec and comment are undefined.
+
+    @param address      a single email address,
+                          example: Joe User (comment1) <joe.user@kde.org> (comment2)
+    @param displayName  only out: the display-name of the email address, i.e.
+                          "Joe User" in the example; in case of an error the
+                          return value is undefined
+    @param addrSpec     only out: the addr-spec, i.e. "joe.user@kde.org" in the
+                          example; in case of an error the return value is
+                          undefined
+    @param comment      only out: the space-separated comments, i.e.
+                          "comment1 comment2" in the example; in case of an
+                          error the return value is undefined
+    @return             AddressOk if no error was encountered. Otherwise an
+                          appropriate error code is returned.
+*/
+EmailParseResult splitAddress( const QString & address,
+                               QString & displayName,
+                               QString & addrSpec,
+                               QString & comment );
 
 /** Validate email address.
  * Testframework in kdepim/libemailfunctions/tests. */
-enum EmailParseResult { AddressOk, AddressEmpty, UnexpectedEnd,
-                            UnbalancedParens, MissingDomainPart,
-                            UnclosedAngleAddr, UnopenedAngleAddr,
-                            TooManyAts, UnexpectedComma, 
-                            TooFewAts, MissingLocalPart };
 
 EmailParseResult isValidEmailAddress( const QString& aStr );
 
@@ -49,13 +101,49 @@ QString emailParseResultToString( EmailParseResult errorCode );
 /** Check for a simple email address and if it is valid
  * this is used for fields where only a "pure" email
  * is allowed, i,e emails in form xxx@yyy.tld */
-bool isValidSimpleEmailAddress( const QString& aStr ); 
+bool isValidSimpleEmailAddress( const QString& aStr );
 
-/** Return email address from string. Examples:
- * "Stefan Taferner <taferner@kde.org>" returns "taferner@kde.org"
- * "joe@nowhere.com" returns "joe@nowhere.com". Note that this only
- * returns the first address. */
-QCString getEmailAddr(const QString& aStr);
+/** Returns the pure email address (addr-spec in RFC2822) of the given address
+    (mailbox in RFC2822).
+
+    @param address  an email address, e.g. "Joe User <joe.user@kde.org>"
+    @return         the addr-spec of @address, i.e. joe.user@kde.org in the
+                      example
+*/
+QCString getEmailAddress( const QCString & address );
+
+/** This is an overloaded member function, provided for convenience. It behaves
+    essentially like the above function.
+
+    Returns the pure email address (addr-spec in RFC2822) of the given address
+    (mailbox in RFC2822).
+
+    @param address  an email address, e.g. "Joe User <joe.user@kde.org>"
+    @return         the addr-spec of @address, i.e. joe.user@kde.org in the
+                      example
+*/
+QString getEmailAddress( const QString & address );
+
+/** Returns the pure email address (addr-spec in RFC2822) of the first
+    email address of a list of addresses.
+
+    @param address  an email address, e.g. "Joe User <joe.user@kde.org>"
+    @return         the addr-spec of @address, i.e. joe.user@kde.org in the
+                      example
+*/
+QCString getFirstEmailAddress( const QCString & addresses );
+
+/** This is an overloaded member function, provided for convenience. It behaves
+    essentially like the above function.
+
+    Returns the pure email address (addr-spec in RFC2822) of the first
+    email address of a list of addresses.
+
+    @param address  an email address, e.g. "Joe User <joe.user@kde.org>"
+    @return         the addr-spec of @address, i.e. joe.user@kde.org in the
+                      example
+*/
+QString getFirstEmailAddress( const QString & addresses );
 
 /** Return email address and name from string. Examples:
  * "Stefan Taferner <taferner@kde.org>" returns "taferner@kde.org"
@@ -74,6 +162,51 @@ bool getNameAndMail(const QString& aStr, QString& name, QString& mail);
  */
 bool compareEmail( const QString& email1, const QString& email2,
                    bool matchName );
+
+/** Returns a normalized address built from the given parts. The normalized
+    address is of one the following forms:
+    - displayName (comment) <addrSpec>
+    - displayName <addrSpec>
+    - comment <addrSpec>
+    - addrSpec
+
+    @param displayName  the display name of the address
+    @param addrSpec     the actual email address (addr-spec in RFC 2822)
+    @param comment      a comment
+    @return             a normalized address built from the given parts
+ */
+QString normalizedAddress( const QString & displayName,
+                           const QString & addrSpec,
+                           const QString & comment );
+
+/** Decodes the punycode domain part of the given addr-spec if it's an IDN.
+
+    @param addrSpec  a pure 7-bit email address (addr-spec in RFC2822)
+    @return          the email address with Unicode domain
+ */
+QString decodeIDN( const QString & addrSpec );
+
+/** Encodes the domain part of the given addr-spec in punycode if it's an
+    IDN.
+
+    @param addrSpec  a pure email address with Unicode domain
+    @return          the email address with domain in punycode
+ */
+QString encodeIDN( const QString & addrSpec );
+
+/** Normalizes all email addresses in the given list and decodes all IDNs.
+
+    @param addresses  a list of email addresses with punycoded IDNs
+    @return           the email addresses in normalized form with Unicode IDNs
+
+    @also
+ */
+QString normalizeAddressesAndDecodeIDNs( const QString & addresses );
+
+/** Normalizes all email addresses in the given list and encodes all IDNs
+    in punycode.
+ */
+QString normalizeAddressesAndEncodeIDNs( const QString & str );
 
 } // namespace
 

@@ -20,8 +20,11 @@
 */
 
 #include "email.h"
+
 #include <kdebug.h>
 #include <klocale.h>
+#include <kidna.h>
+
 #include <qregexp.h>
 
 //-----------------------------------------------------------------------------
@@ -96,9 +99,185 @@ QStringList KPIM::splitEmailAddrList(const QString& aStr)
 }
 
 //-----------------------------------------------------------------------------
+// Used by KPIM::splitAddress(...) and KPIM::getFirstEmailAddress(...).
+KPIM::EmailParseResult splitAddressInternal( const QCString& address,
+                                             QCString & displayName,
+                                             QCString & addrSpec,
+                                             QCString & comment,
+                                             bool allowMultipleAddresses )
+{
+//  kdDebug() << "KMMessage::splitAddress( " << address << " )" << endl;
+
+  displayName = "";
+  addrSpec = "";
+  comment = "";
+
+  if ( address.isEmpty() )
+    return KPIM::AddressEmpty;
+
+  QCString result;
+
+  // The following is a primitive parser for a mailbox-list (cf. RFC 2822).
+  // The purpose is to extract a displayable string from the mailboxes.
+  // Comments in the addr-spec are not handled. No error checking is done.
+
+  enum { TopLevel, InComment, InAngleAddress } context = TopLevel;
+  bool inQuotedString = false;
+  int commentLevel = 0;
+  bool stop = false;
+
+  for ( char* p = address.data(); *p && !stop; ++p ) {
+    switch ( context ) {
+    case TopLevel : {
+      switch ( *p ) {
+      case '"' : inQuotedString = !inQuotedString;
+                 displayName += *p;
+                 break;
+      case '(' : if ( !inQuotedString ) {
+                   context = InComment;
+                   commentLevel = 1;
+                 }
+                 else
+                   displayName += *p;
+                 break;
+      case '<' : if ( !inQuotedString ) {
+                   context = InAngleAddress;
+                 }
+                 else
+                   displayName += *p;
+                 break;
+      case '\\' : // quoted character
+                 displayName += *p;
+                 ++p; // skip the '\'
+                 if ( *p )
+                   displayName += *p;
+                 else
+                   return KPIM::UnexpectedEnd;
+                 break;
+      case ',' : if ( !inQuotedString ) {
+                   if ( allowMultipleAddresses )
+                     stop = true;
+                   else
+                     return KPIM::UnexpectedComma;
+                 }
+                 else
+                   displayName += *p;
+                 break;
+      default :  displayName += *p;
+      }
+      break;
+    }
+    case InComment : {
+      switch ( *p ) {
+      case '(' : ++commentLevel;
+                 comment += *p;
+                 break;
+      case ')' : --commentLevel;
+                 if ( commentLevel == 0 ) {
+                   context = TopLevel;
+                   comment += ' '; // separate the text of several comments
+                 }
+                 else
+                   comment += *p;
+                 break;
+      case '\\' : // quoted character
+                 comment += *p;
+                 ++p; // skip the '\'
+                 if ( *p )
+                   comment += *p;
+                 else
+                   return KPIM::UnexpectedEnd;
+                 break;
+      default :  comment += *p;
+      }
+      break;
+    }
+    case InAngleAddress : {
+      switch ( *p ) {
+      case '"' : inQuotedString = !inQuotedString;
+                 addrSpec += *p;
+                 break;
+      case '>' : if ( !inQuotedString ) {
+                   context = TopLevel;
+                 }
+                 else
+                   addrSpec += *p;
+                 break;
+      case '\\' : // quoted character
+                 addrSpec += *p;
+                 ++p; // skip the '\'
+                 if ( *p )
+                   addrSpec += *p;
+                 else
+                   return KPIM::UnexpectedEnd;
+                 break;
+      default :  addrSpec += *p;
+      }
+      break;
+    }
+    } // switch ( context )
+  }
+  // check for errors
+  if ( inQuotedString )
+    return KPIM::UnbalancedQuote;
+  if ( context == InComment )
+    return KPIM::UnbalancedParens;
+  if ( context == InAngleAddress )
+    return KPIM::UnclosedAngleAddr;
+
+  displayName = displayName.stripWhiteSpace();
+  comment = comment.stripWhiteSpace();
+  addrSpec = addrSpec.stripWhiteSpace();
+
+  if ( addrSpec.isEmpty() ) {
+    if ( displayName.isEmpty() )
+      return KPIM::NoAddressSpec;
+    else {
+      addrSpec = displayName;
+      displayName.truncate( 0 );
+    }
+  }
+/*
+  kdDebug() << "display-name : \"" << displayName << "\"" << endl;
+  kdDebug() << "comment      : \"" << comment << "\"" << endl;
+  kdDebug() << "addr-spec    : \"" << addrSpec << "\"" << endl;
+*/
+  return KPIM::AddressOk;
+}
+
+
+//-----------------------------------------------------------------------------
+KPIM::EmailParseResult KPIM::splitAddress( const QCString& address,
+                                           QCString & displayName,
+                                           QCString & addrSpec,
+                                           QCString & comment )
+{
+  return splitAddressInternal( address, displayName, addrSpec, comment,
+                               false /* don't allow multiple addresses */ );
+}
+
+
+//-----------------------------------------------------------------------------
+KPIM::EmailParseResult KPIM::splitAddress( const QString & address,
+                                           QString & displayName,
+                                           QString & addrSpec,
+                                           QString & comment )
+{
+  QCString d, a, c;
+  KPIM::EmailParseResult result = splitAddress( address.utf8(), d, a, c );
+  if ( result == AddressOk ) {
+    displayName = QString::fromUtf8( d );
+    addrSpec = QString::fromUtf8( a );
+    comment = QString::fromUtf8( c );
+  }
+  return result;
+}
+
+
+//-----------------------------------------------------------------------------
 KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
 {
-  // If we are passed an empty string bail right away no need to process further 
+  // If we are passed an empty string bail right away no need to process further
   // and waste resources
   if ( aStr.isEmpty() ) {
     return AddressEmpty;
@@ -133,15 +312,15 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
     switch ( context ) {
     case TopLevel : {
       switch ( aStr[index].latin1() ) {
-        case '"' : inQuotedString = !inQuotedString; 
+        case '"' : inQuotedString = !inQuotedString;
           break;
-        case '(' : 
+        case '(' :
           if ( !inQuotedString ) {
             context = InComment;
             commentLevel = 1;
           }
           break;
-        case '<' : 
+        case '<' :
           if ( !inQuotedString ) {
             context = InAngleAddress;
           }
@@ -151,26 +330,26 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
           if ( ++index > strlen )
             return UnexpectedEnd;
           break;
-        case ',' : 
+        case ',' :
           if ( !inQuotedString )
             return UnexpectedComma;
           break;
-        case ')' : 
+        case ')' :
           if ( !inQuotedString )
             return UnbalancedParens;
           break;
-        case '>' : 
+        case '>' :
           if ( !inQuotedString )
             return UnopenedAngleAddr;
           break;
-        case '@' : 
+        case '@' :
           if ( !inQuotedString ) {
             if ( index == 0 ) {  // Missing local part
               return MissingLocalPart;
             } else if( index == strlen-1 ) {
               return MissingDomainPart;
               break;
-              } 
+              }
             } else if ( inQuotedString ) {
               --atCount;
               if ( atCount == 1 ) {
@@ -178,8 +357,8 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
               }
             }
             break;
-      } 
-      break; 
+      }
+      break;
     }
     case InComment : {
       switch ( aStr[index] ) {
@@ -211,7 +390,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
             }
           }
           break;
-        case '>' : 
+        case '>' :
           if ( !inQuotedString ) {
             context = TopLevel;
             break;
@@ -229,7 +408,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
   }
   if ( context == InComment )
     return UnbalancedParens;
- 
+
   if ( context == InAngleAddress )
     return UnclosedAngleAddr;
 
@@ -237,49 +416,56 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
     return TooManyAts;
   }
   return AddressOk;
-} 
+}
 
 //-----------------------------------------------------------------------------
 QString KPIM::emailParseResultToString( EmailParseResult errorCode )
 {
   switch ( errorCode ) {
-    case TooManyAts : 
+    case TooManyAts :
       return i18n("The email address you entered is not valid because it "
-                "contains more than one @ "
-                "you will not create valid messages if you do not "
+                "contains more than one @. "
+                "You will not create valid messages if you do not "
                 "change your address.");
-    case TooFewAts : 
+    case TooFewAts :
       return i18n("The email address you entered is not valid because it "
-                "does not contain a @ "
-                "you will not create valid messages if you do not "
+                "does not contain a @."
+                "You will not create valid messages if you do not "
                 "change your address.");
-    case AddressEmpty : 
+    case AddressEmpty :
       return i18n("You have to enter something in the email address field.");
-    case MissingLocalPart : 
+    case MissingLocalPart :
       return i18n("The email address you entered is not valid because it "
                 "does not contain a local part.");
-    case MissingDomainPart : 
+    case MissingDomainPart :
       return i18n("The email address you entered is not valid because it "
                 "does not contain a domain part.");
-    case UnbalancedParens : 
+    case UnbalancedParens :
       return i18n("The email address you entered is not valid because it "
                 "contains unclosed comments/brackets.");
-    case AddressOk : 
+    case AddressOk :
       return i18n("The email address you entered is valid.");
-    case UnclosedAngleAddr : 
+    case UnclosedAngleAddr :
       return i18n("The email address you entered is not valid because it "
                 "contains an unclosed anglebracket.");
-    case UnopenedAngleAddr : 
+    case UnopenedAngleAddr :
       return i18n("The email address you entered is not valid because it "
                 "contains an unopened anglebracket.");
     case UnexpectedComma :
       return i18n("The email address you have entered is not valid because it "
                 "contains an unexpected comma.");
-    case UnexpectedEnd : 
+    case UnexpectedEnd :
       return i18n("The email address you entered is not valid because it ended "
                 "unexpectadly, this probably means you have used an escaping type "
                 "character like an \\  as the last character in your email "
                 "address.");
+    case UnbalancedQuote :
+      return i18n("The email address you entered is not valid because it "
+                  "contains quoted text which does not end.");
+    case NoAddressSpec :
+      return i18n("The email address you entered is not valid because it "
+                  "does not seem to contain an actual email address, i.e. "
+                  "something of the form joe@kde.org.");
   }
   return i18n("Unknown problem with email address");
 }
@@ -287,7 +473,7 @@ QString KPIM::emailParseResultToString( EmailParseResult errorCode )
 //-----------------------------------------------------------------------------
 bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
 {
-  // If we are passed an empty string bail right away no need to process further·
+  // If we are passed an empty string bail right away no need to process furtherÂ·
   // and waste resources
   if ( aStr.isEmpty() ) {
     return false;
@@ -329,33 +515,56 @@ bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
   return  rx.exactMatch( aStr ) && !tooManyAtsFlag;
 }
 
+
 //-----------------------------------------------------------------------------
-QCString KPIM::getEmailAddr(const QString& aStr)
+QCString KPIM::getEmailAddress( const QCString & address )
 {
-  int a, i, j, len, found = 0;
-  QChar c;
-  // Find the '@' in the email address:
-  a = aStr.findRev('@');
-  if (a<0) return aStr.latin1();
-  // Loop backwards until we find '<', '(', ' ', or beginning of string.
-  for (i = a - 1; i >= 0; i--) {
-    c = aStr[i];
-    if (c == '<' || c == '(' || c == ' ') found = 1;
-    if (found) break;
+  QCString dummy1, dummy2, addrSpec;
+  KPIM::EmailParseResult result =
+    splitAddressInternal( address, dummy1, addrSpec, dummy2,
+                          false /* don't allow multiple addresses */ );
+  if ( result != AddressOk ) {
+    addrSpec = QCString();
+    kdDebug() << k_funcinfo << "\nInput: aStr\nError:"
+              << emailParseResultToString( result );
   }
-  // Reset found for next loop.
-  found = 0;
-  // Loop forwards until we find '>', ')', ' ', or end of string.
-  for (j = a + 1; j < (int)aStr.length(); j++) {
-    c = aStr[j];
-    if (c == '>' || c == ')' || c == ' ') found = 1;
-    if (found) break;
-  }
-  // Calculate the length and return the result.
-  len = j - (i + 1);
-  return aStr.mid(i+1,len).latin1();
+
+  return addrSpec;
 }
 
+
+//-----------------------------------------------------------------------------
+QString KPIM::getEmailAddress( const QString & address )
+{
+  return QString::fromUtf8( getEmailAddress( address.utf8() ) );
+}
+
+
+//-----------------------------------------------------------------------------
+QCString KPIM::getFirstEmailAddress( const QCString & addresses )
+{
+  QCString dummy1, dummy2, addrSpec;
+  KPIM::EmailParseResult result =
+    splitAddressInternal( addresses, dummy1, addrSpec, dummy2,
+                          true /* allow multiple addresses */ );
+  if ( result != AddressOk ) {
+    addrSpec = QCString();
+    kdDebug() << k_funcinfo << "\nInput: aStr\nError:"
+              << emailParseResultToString( result );
+  }
+
+  return addrSpec;
+}
+
+
+//-----------------------------------------------------------------------------
+QString KPIM::getFirstEmailAddress( const QString & addresses )
+{
+  return QString::fromUtf8( getFirstEmailAddress( addresses.utf8() ) );
+}
+
+
+//-----------------------------------------------------------------------------
 bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
 {
   name = QString::null;
@@ -518,6 +727,8 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
   return ! (name.isEmpty() || mail.isEmpty());
 }
 
+
+//-----------------------------------------------------------------------------
 bool KPIM::compareEmail( const QString& email1, const QString& email2,
                          bool matchName )
 {
@@ -529,3 +740,128 @@ bool KPIM::compareEmail( const QString& email1, const QString& email2,
   return e1Email == e2Email &&
     ( !matchName || ( e1Name == e2Name ) );
 }
+
+
+//-----------------------------------------------------------------------------
+QString KPIM::normalizedAddress( const QString & displayName,
+                                 const QString & addrSpec,
+                                 const QString & comment )
+{
+  if ( displayName.isEmpty() && comment.isEmpty() )
+    return addrSpec;
+  else if ( comment.isEmpty() )
+    return displayName + " <" + addrSpec + ">";
+  else if ( displayName.isEmpty() )
+    return comment + " <" + addrSpec + ">";
+  else
+    return displayName + " (" + comment + ") <" + addrSpec + ">";
+}
+
+
+//-----------------------------------------------------------------------------
+QString KPIM::decodeIDN( const QString & addrSpec )
+{
+  const int atPos = addrSpec.findRev( '@' );
+  if ( atPos == -1 )
+    return QString::null;
+
+  QString idn = KIDNA::toUnicode( addrSpec.mid( atPos + 1 ) );
+  if ( idn.isEmpty() )
+    return QString::null;
+
+  return addrSpec.left( atPos + 1 ) + idn;
+}
+
+
+//-----------------------------------------------------------------------------
+QString KPIM::encodeIDN( const QString & addrSpec )
+{
+  const int atPos = addrSpec.findRev( '@' );
+  if ( atPos == -1 )
+    return addrSpec;
+
+  QString idn = KIDNA::toAscii( addrSpec.mid( atPos + 1 ) );
+  if ( idn.isEmpty() )
+    return addrSpec;
+
+  return addrSpec.left( atPos + 1 ) + idn;
+}
+
+
+//-----------------------------------------------------------------------------
+QString KPIM::normalizeAddressesAndDecodeIDNs( const QString & str )
+{
+//  kdDebug() << "KPIM::normalizeAddressesAndDecodeIDNs( \""
+//                << str << "\" )" << endl;
+  if( str.isEmpty() )
+    return str;
+
+  const QStringList addressList = KPIM::splitEmailAddrList( str );
+  QStringList normalizedAddressList;
+
+  QCString displayName, addrSpec, comment;
+
+  for( QStringList::ConstIterator it = addressList.begin();
+       ( it != addressList.end() );
+       ++it ) {
+    if( !(*it).isEmpty() ) {
+      if ( KPIM::splitAddress( (*it).utf8(), displayName, addrSpec, comment )
+           == AddressOk ) {
+
+        normalizedAddressList <<
+          normalizedAddress( QString::fromUtf8( displayName ),
+                             decodeIDN( QString::fromUtf8( addrSpec ) ),
+                             QString::fromUtf8( comment ) );
+      }
+      else {
+        kdDebug() << "splitting address failed: " << *it << endl;
+      }
+    }
+  }
+/*
+  kdDebug() << "normalizedAddressList: \""
+                << normalizedAddressList.join( ", " )
+                << "\"" << endl;
+*/
+  return normalizedAddressList.join( ", " );
+}
+
+//-----------------------------------------------------------------------------
+QString KPIM::normalizeAddressesAndEncodeIDNs( const QString & str )
+{
+  //kdDebug() << "KPIM::normalizeAddressesAndEncodeIDNs( \""
+  //              << str << "\" )" << endl;
+  if( str.isEmpty() )
+    return str;
+
+  const QStringList addressList = KPIM::splitEmailAddrList( str );
+  QStringList normalizedAddressList;
+
+  QCString displayName, addrSpec, comment;
+
+  for( QStringList::ConstIterator it = addressList.begin();
+       ( it != addressList.end() );
+       ++it ) {
+    if( !(*it).isEmpty() ) {
+      if ( KPIM::splitAddress( (*it).utf8(), displayName, addrSpec, comment )
+           == AddressOk ) {
+
+        normalizedAddressList <<
+          normalizedAddress( QString::fromUtf8( displayName ),
+                             encodeIDN( QString::fromUtf8( addrSpec ) ),
+                             QString::fromUtf8( comment ) );
+      }
+      else {
+        kdDebug() << "splitting address failed: " << *it << endl;
+      }
+    }
+  }
+
+  /*
+  kdDebug() << "normalizedAddressList: \""
+                << normalizedAddressList.join( ", " )
+                << "\"" << endl;
+  */
+  return normalizedAddressList.join( ", " );
+}
+
