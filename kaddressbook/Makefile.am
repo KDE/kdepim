@@ -1,4 +1,5 @@
-INCLUDES= -I./details -I./features -I./printing -I./views  \
+INCLUDES= -I$(top_srcdir)/kaddressbook/details -I$(top_srcdir)/kaddressbook/features\
+	 -I$(top_srcdir)/kaddressbook/printing -I$(top_srcdir)/kaddressbook/views  \
 	-I$(top_srcdir) $(all_includes)
 
 SUBDIRS = details features printing views . pics csv-templates
