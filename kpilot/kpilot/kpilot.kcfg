@@ -50,7 +50,7 @@
     <entry name="StartDaemonAtLogin" type="Bool">
         <label>
         </label>
-        <default>true</default>
+        <default>false</default>
     </entry>
     <entry name="KillDaemonAtExit" type="Bool">
         <label>
