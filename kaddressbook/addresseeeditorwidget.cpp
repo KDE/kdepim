@@ -377,11 +377,8 @@ void AddresseeEditorWidget::setupTab2()
   label = new QLabel( i18n( "Birthdate:" ), tab2 );
   layout->addWidget( label, 4, 3 );
   mBirthdayPicker = new KDateEdit( tab2 );
-  mBirthdayPicker->setHandleInvalid( true );
   connect( mBirthdayPicker, SIGNAL( dateChanged( QDate ) ),
            SLOT( dateChanged( QDate ) ) );
-  connect( mBirthdayPicker, SIGNAL( invalidDateEntered() ),
-           SLOT( invalidDate() ) );
   connect( mBirthdayPicker, SIGNAL( textChanged( const QString& ) ),
            SLOT( emitModified() ) );
   label->setBuddy( mBirthdayPicker );
@@ -390,11 +387,8 @@ void AddresseeEditorWidget::setupTab2()
   label = new QLabel( i18n( "Anniversary:" ), tab2 );
   layout->addWidget( label, 5, 3 );
   mAnniversaryPicker = new KDateEdit( tab2 );
-  mAnniversaryPicker->setHandleInvalid( true );
   connect( mAnniversaryPicker, SIGNAL( dateChanged( QDate ) ),
            SLOT( dateChanged( QDate ) ) );
-  connect( mAnniversaryPicker, SIGNAL( invalidDateEntered() ),
-           SLOT( invalidDate() ) );
   connect( mAnniversaryPicker, SIGNAL( textChanged( const QString& ) ),
            SLOT( emitModified() ) );
   label->setBuddy( mAnniversaryPicker );
@@ -559,7 +553,7 @@ void AddresseeEditorWidget::save()
   mAddressee.setOrganization( mOrgEdit->text() );
   mAddressee.setUrl( KURL( mURLEdit->text().stripWhiteSpace() ) );
   mAddressee.setNote( mNoteEdit->text() );
-  if ( mBirthdayPicker->inputIsValid() )
+  if ( mBirthdayPicker->date().isValid() )
     mAddressee.setBirthday( QDateTime( mBirthdayPicker->date() ) );
   else
     mAddressee.setBirthday( QDateTime() );
@@ -600,7 +594,7 @@ void AddresseeEditorWidget::save()
   else
     mAddressee.removeCustom( "KADDRESSBOOK", "X-Profession" );
 
-  if ( mAnniversaryPicker->inputIsValid() )
+  if ( mAnniversaryPicker->date().isValid() )
     mAddressee.insertCustom( "KADDRESSBOOK", "X-Anniversary",
                              mAnniversaryPicker->date().toString( Qt::ISODate ) );
   else
