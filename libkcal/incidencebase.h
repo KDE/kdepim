@@ -90,6 +90,7 @@ class IncidenceBase : public CustomProperties
     IncidenceBase();
     IncidenceBase( const IncidenceBase & );
     virtual ~IncidenceBase();
+
     bool operator==( const IncidenceBase & ) const;
 
     /**

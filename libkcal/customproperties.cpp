@@ -20,6 +20,8 @@
 
 #include "customproperties.h"
 
+#include <kdebug.h>
+
 using namespace KCal;
 
 CustomProperties::CustomProperties()
@@ -33,6 +35,23 @@ CustomProperties::CustomProperties(const CustomProperties &cp)
 
 CustomProperties::~CustomProperties()
 {
+}
+
+bool CustomProperties::operator==( const CustomProperties &other ) const
+{
+  if ( mProperties.count() != other.mProperties.count() ) return false;
+  QMap<QCString, QString>::ConstIterator it;
+  for( it = mProperties.begin(); it != mProperties.end(); ++it ) {
+    QMap<QCString, QString>::ConstIterator itOther =
+      other.mProperties.find( it.key() );
+    
+    if ( itOther == other.mProperties.end() ) {
+      return false;
+    }
+    if ( itOther.data() != it.data() ) return false;
+  }
+
+  return true;
 }
 
 void CustomProperties::setCustomProperty(const QCString &app, const QCString &key,

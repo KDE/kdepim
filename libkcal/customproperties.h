@@ -46,6 +46,8 @@ class CustomProperties
     CustomProperties( const CustomProperties & );
     ~CustomProperties();
 
+    bool operator==( const CustomProperties & ) const;
+
     /**
       Create or modify a custom calendar property.
       

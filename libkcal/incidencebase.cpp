@@ -87,6 +87,9 @@ bool IncidenceBase::operator==( const IncidenceBase& i2 ) const
     }
   }
 
+  if ( !CustomProperties::operator==(i2) )
+    return false;
+
   return ( dtStart() == i2.dtStart() &&
            organizer() == i2.organizer() &&
            uid() == i2.uid() &&
