@@ -2,12 +2,22 @@
 
 # tcm2kcal.pl -- converts a Turner Classic Movies (TCM) calendar
 #                web page into a KDE calendar file.
+############################################################################
+# Copyright (c) 2003 Allen Winter <awinterz@users.sourceforge.net>         #
+# All rights reserved.                                                     #
+# This program is free software; you can redistribute it and/or modify     #
+# it under the terms of the GNU General Public License as published by     #
+# the Free Software Foundation; either version 2 of the License, or        #
+# (at your option) any later version.                                      #
+############################################################################
+#
+# Modify $konkal, $cal, and $TCM as necessary for your needs.
 #
 # Requirements:
 #   lynx
 #   konsolekalendar (from KDE).
 #   Bit-Vector and Date-Calc perl modules (from CPAN).
-
+#
 # Options: -d, delete entries from KDE calendar file
 #          -c, change entries in KDE calendar by re-writing movie titles in all caps.
 #          -m <month>, where month is an integer 1 thru 12
