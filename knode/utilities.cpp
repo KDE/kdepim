@@ -69,30 +69,47 @@ const QString decryptStr(const QString& aStr)
 }
 
 
-
-void displayInternalFileError()
+QString rot13(const QString &s)
 {
-  KMessageBox::error(knGlobals.topWidget, i18n("Unable to load/save configuration!\nWrong permissions on home directory?\nYou should close KNode now, to avoid data loss!"));
+  QString r(s);
+
+  for (int i=0; (uint)i<r.length(); i++) {
+    if ( r[i] >= QChar('A') && r[i] <= QChar('M') ||
+         r[i] >= QChar('a') && r[i] <= QChar('m') )
+         r[i] = (char)((int)QChar(r[i]) + 13);
+    else
+      if  ( r[i] >= QChar('N') && r[i] <= QChar('Z') ||
+            r[i] >= QChar('n') && r[i] <= QChar('z') )
+        r[i] = (char)((int)QChar(r[i]) - 13);
+  }  	
+
+  return r;
+}
+
+
+void displayInternalFileError(QWidget *w)
+{
+  KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to load/save configuration!\nWrong permissions on home directory?\nYou should close KNode now, to avoid data loss!"));
 }
 
 
 
-void displayExternalFileError()
+void displayExternalFileError(QWidget *w)
 {
-  KMessageBox::error(knGlobals.topWidget, i18n("Unable to load/save file!"));
+  KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to load/save file!"));
 }
 
 
 
-void displayRemoteFileError()
+void displayRemoteFileError(QWidget *w)
 {
-  KMessageBox::error(knGlobals.topWidget, i18n("Unable to save remote file!"));
+  KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to save remote file!"));
 }
 
 
 
-void displayTempFileError()
+void displayTempFileError(QWidget *w)
 {
-  KMessageBox::error(knGlobals.topWidget, i18n("Unable to create temporary file!"));
+  KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to create temporary file!"));
 }
 

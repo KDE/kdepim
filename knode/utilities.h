@@ -25,10 +25,11 @@ void restoreWindowSize(const QString &name, QWidget *d, const QSize &defaultSize
 
 const QString encryptStr(const QString& aStr);
 const QString decryptStr(const QString& aStr);
+QString rot13(const QString &s);
 
-void displayInternalFileError();   // use this for all internal files
-void displayExternalFileError();   // use this for all external files
-void displayRemoteFileError();     // use this for remote files
-void displayTempFileError();       // use this for error on temporary files
+void displayInternalFileError(QWidget *w=0);   // use this for all internal files
+void displayExternalFileError(QWidget *w=0);   // use this for all external files
+void displayRemoteFileError(QWidget *w=0);     // use this for remote files
+void displayTempFileError(QWidget *w=0);       // use this for error on temporary files
 
 #endif

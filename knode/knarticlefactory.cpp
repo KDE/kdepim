@@ -183,7 +183,9 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, bool post, bool mail)
           break;
       }
 
-      thisLine=(*line).stripWhiteSpace();
+      thisLine=(*line);
+      thisLine.remove(0,thisPrefix.length());
+      thisLine = thisLine.stripWhiteSpace();
 
       if(!leftover.isEmpty()) {   // don't break paragraphs, tables and quote levels
         if(thisLine.isEmpty() || (thisPrefix!=lastPrefix) || thisLine.contains("  ") || thisLine.contains('\t'))
@@ -251,10 +253,9 @@ void KNArticleFactory::createForward(KNArticle *a)
 
   //------------------------- </Headers> ---------------------------
 
-
   //--------------------------- <Body> -----------------------------
 
-  QString fwd=QString("\n--------------- %1\n").arg(i18n("Forwarded message (begin)"));
+  QString fwd=QString("\n,-------------- %1\n\n").arg(i18n("Forwarded message (begin)"));
 
   fwd+=( i18n("Subject")+": "+a->subject()->asUnicodeString()+"\n");
   fwd+=( i18n("From")+": "+a->from()->asUnicodeString()+"\n");
@@ -267,7 +268,7 @@ void KNArticleFactory::createForward(KNArticle *a)
     fwd+=decoded;
   }
 
-  fwd+=QString("\n--------------- %1\n").arg(i18n("Forwarded message (end)"));
+  fwd+=QString("\n`-------------- %1\n").arg(i18n("Forwarded message (end)"));
 
   //--------------------------- </Body> ----------------------------
 
@@ -909,87 +910,16 @@ void KNArticleFactory::appendTextWPrefix(QString &result, const QString &text, c
 }
 
 
-/*bool KNArticleFactory::cancelAllowed(KNLocalArticle *a)
-{
-  if (!a)
-    return false;
-
-  if(a->doMail() && !a->doPost()) {
-    KMessageBox::sorry(knGlobals.topWidget, i18n("Emails cannot be canceled or superseded!"));
-    return false;
-  }
-
-  KNHeaders::Control *ctrl=a->control(false);
-  if(ctrl && ctrl->isCancel()) {
-    KMessageBox::sorry(knGlobals.topWidget, i18n("Cancel messages cannot be canceled or superseded!"));
-    return false;
-  }
-
-  if(!a->posted()) {
-    KMessageBox::sorry(knGlobals.topWidget, i18n("Only sent articles can be canceled or superseded!"));
-    return false;
-  }
-
-  if(a->canceled()) {
-    KMessageBox::sorry(knGlobals.topWidget, i18n("This article has already been canceled or superseded!"));
-    return false;
-  }
-
-  KNHeaders::MessageID *mid=a->messageID(false);
-
-  if(!mid || mid->isEmpty()) {
-    KMessageBox::sorry(knGlobals.topWidget, i18n("This article cannot be canceled or superseded,\nbecause it's message-id has not been created by KNode!\nBut you can look for your article in the newsgroup\nand cancel (or supersede) it there."));
-    return false;
-  }
-
-  return true;
-}
-
-
-bool KNArticleFactory::cancelAllowed(KNRemoteArticle *a, KNGroup *g)
-{
-  if (!a || !g)
-    return false;
-
-  KNConfig::Identity  *defId=knGlobals.cfgManager->identity(),
-                      *gid=g->identity();
-  bool ownArticle=true;
-
-  if(gid->hasName())
-    ownArticle=( gid->name()==a->from()->name() );
-  else
-    ownArticle=( defId->name()==a->from()->name() );
-
-  if(ownArticle) {
-    if(gid->hasEmail())
-      ownArticle=( gid->email()==a->from()->email() );
-    else
-      ownArticle=( defId->email()==a->from()->email() );
-  }
-
-  if(!ownArticle) {
-    KMessageBox::sorry(knGlobals.topWidget, i18n("This article does not appear to be from you.\nYou can only cancel or supersede you own articles."));
-    return false;
-  }
-
-  if (!a->hasContent())  {
-    KMessageBox::sorry(knGlobals.topWidget, i18n("You have to download the article body\nbefore you can cancel or supersede the article."));
-    return false;
-  }
-
-  return true;
-}*/
-
-
 void KNArticleFactory::slotComposerDone(KNComposer *com)
 {
-  bool delCom=com->hasValidData();
+  bool delCom=true;
   KNLocalArticle::List lst;
   lst.append(com->article());
 
   switch(com->result()) {
 
     case KNComposer::CRsendNow:
+      delCom=com->hasValidData();
       if(delCom) {
         com->applyChanges();
         sendArticles(&lst, true);
@@ -999,6 +929,7 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
     break;
 
     case KNComposer::CRsendLater:
+      delCom=com->hasValidData();
       if(delCom) {
         com->applyChanges();
         sendArticles(&lst, false);
@@ -1008,6 +939,7 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
     break;
 
     case KNComposer::CRsave :
+      delCom=com->hasValidData();
       if(delCom) {
         com->applyChanges();
         saveArticles(&lst, f_olManager->drafts());
@@ -1024,10 +956,13 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
       delCom=deleteArticles(&lst, false);
     break;
 
+    case KNComposer::CRcancel:
+      // just close...
+    break;
+
     default: break;
 
   };
-
 
   if(delCom)
     c_ompList.removeRef(com); //auto delete

@@ -45,6 +45,7 @@ class KNComposer : public KMainWindow  {
   public:
     enum composerResult { CRsendNow, CRsendLater, CRdelAsk,
                           CRdel, CRsave, CRcancel };
+    enum MessageMode { news=0, mail=1, news_mail=2 };
 
     // firstEdit==true: place the cursor at the end of the article
     KNComposer(KNLocalArticle *a, const QString &text=QString::null, const QString &sig=QString::null, bool firstEdit=false);
@@ -66,7 +67,11 @@ class KNComposer : public KMainWindow  {
     void initData(const QString &text);
 
     // inserts at cursor position if clear is false, replaces content otherwise
-    void insertFile(QString fileName, bool clear=false);
+    // puts the file content into a box if box==true
+    void insertFile(QString fileName, bool clear=false, bool box=false, QString boxTitle=QString::null);
+
+    // ask for a filename, handle network urls
+    void insertFile(bool clear=false, bool box=false);
 
     //internal classes
     class ComposerView;
@@ -77,13 +82,14 @@ class KNComposer : public KMainWindow  {
 
     //GUI
     ComposerView *v_iew;
-    QPopupMenu *a_ttPopup;
+    QPopupMenu *a_ttPopup, *e_ditPopup;
 
     //Data
     composerResult r_esult;
     KNLocalArticle *a_rticle;
     QString s_ignature;
     QCString c_harset;
+    MessageMode m_ode;
     bool d_oneSuccess;
 
     //edit
@@ -104,8 +110,8 @@ class KNComposer : public KMainWindow  {
                   *a_ctRemoveAttachment,
                   *a_ctAttachmentProperties;
     KToggleAction *a_ctShowToolbar, *a_ctShowStatusbar;
-    KSelectAction *a_ctSetCharset;
-    
+    KSelectAction *a_ctSetType, *a_ctSetCharset;
+
 
   protected slots:
     void slotSendNow();
@@ -113,16 +119,15 @@ class KNComposer : public KMainWindow  {
     void slotSaveAsDraft();   
     void slotArtDelete();
     void slotSetCharset(const QString &s);
-    void slotFind();
-    void slotFindNext();
-    void slotReplace();
-    void slotExternalEditor();    
-    void slotSpellcheck();
+    void slotSetType(int i);
     void slotAppendSig();
     void slotInsertFile();
+    void slotInsertFileBoxed();
     void slotAttachFile();
     void slotRemoveAttachment();
-    void slotAttachmentProperties();    
+    void slotAttachmentProperties();
+    void slotExternalEditor();
+    void slotSpellcheck();
     void slotToggleToolBar();
     void slotToggleStatusBar();
     void slotUpdateStatusBar();
@@ -136,9 +141,6 @@ class KNComposer : public KMainWindow  {
     void slotGroupsChanged(const QString &t);
     void slotToBtnClicked();
     void slotGroupsBtnClicked();
-    void slotToCheckBoxToggled(bool b);
-    void slotGroupsCheckBoxToggled(bool b);
-    void slotFupCheckBoxToggled(bool b);
 
     // external editor
     void slotEditorFinished(KProcess *);
@@ -155,7 +157,6 @@ class KNComposer : public KMainWindow  {
     void slotSpellDone(const QString&);
     void slotSpellFinished();
 
-
   signals:
     void composerDone(KNComposer*);
               
@@ -168,18 +169,19 @@ class KNComposer::ComposerView  : public QSplitter {
     ComposerView(QWidget *p=0, const char *n=0);
     ~ComposerView();
 
+    void setMessageMode(KNComposer::MessageMode mode);
     void showAttachmentView();
     void hideAttachmentView();
     void showExternalNotification();
     void hideExternalNotification();
 
+    QLabel      *l_to,
+                *l_groups,
+                *l_fup2;
     QLineEdit   *s_ubject,
                 *g_roups,
                 *t_o;
     QComboBox   *f_up2;
-    QCheckBox   *g_roupsCB,
-                *t_oCB,
-                *f_up2CB;
     QPushButton *g_roupsBtn,
                 *t_oBtn;
 
@@ -201,10 +203,26 @@ class KNComposer::ComposerView  : public QSplitter {
 //internal class : handle Tabs... (expanding them in textLine(), etc.)
 class KNComposer::Editor : public KEdit {
 
+  Q_OBJECT
+
   public:
     Editor(QWidget *parent=0, char *name=0);
     ~Editor();
     QString textLine(int line) const;
+
+    // inserts s at the current cusor position, deletes the current selection
+    void pasteString(const QString &s);
+
+  public slots:
+    void slotPasteAsQuotation();
+    void slotFind();
+    void slotFindNext();
+    void slotReplace();
+    void slotAddQuotes();
+    void slotRemoveQuotes();
+    void slotAddBox();
+    void slotRemoveBox();
+    void slotRot13();
 
   protected:
     bool eventFilter(QObject*, QEvent* e);

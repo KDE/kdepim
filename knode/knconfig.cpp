@@ -89,8 +89,11 @@ QString KNConfig::Identity::getSignature()
       QFile f(s_igPath);
       if(f.open(IO_ReadOnly)) {
         QTextStream ts(&f);
-        while(!ts.atEnd())
-          s_igContents += (ts.readLine()+"\n");
+        while(!ts.atEnd()) {
+          s_igContents += ts.readLine();
+          if (!ts.atEnd())
+            s_igContents += "\n";
+        }
         f.close();
       }
       else

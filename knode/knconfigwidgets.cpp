@@ -1666,6 +1666,8 @@ KNConfig::XHeaderConfDialog::XHeaderConfDialog(const QString &h, QWidget *p, con
 
   setFixedHeight(sizeHint().height());
   restoreWindowSize("XHeaderDlg", this, sizeHint());
+
+  n_ame->setFocus();
 }
 
 
