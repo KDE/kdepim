@@ -482,7 +482,7 @@ void KNAttachment::setMimeType(const QString &s)
 }
 
 
-QString KNAttachment::contentSize()
+QString KNAttachment::contentSize() const
 {
   QString ret;
   int s=0;

@@ -218,7 +218,7 @@ class KNLocalArticle : public KNArticle {
     ~KNLocalArticle();
 
     //type
-    articleType type()      { return ATlocal; }
+    articleType type() const     { return ATlocal; }
 
     //content handling
     void parse();
@@ -319,7 +319,7 @@ class KNAttachment {
 
     //content handling
     KMime::Content* content()const             { return c_ontent; }
-    QString contentSize();
+    QString contentSize() const;
     bool isAttached() const                    { return i_sAttached; }
     bool hasChanged() const                    { return h_asChanged; }
     void updateContentInfo();
