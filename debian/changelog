@@ -1,4 +1,4 @@
-kdepim (4:3.0.0-1) unstable; urgency=low
+kdepim (4:3.0.1-0) unstable; urgency=low
 
   * New upstream.
   * Redo debian dir.

@@ -1,4 +1,4 @@
-debian/tmp/usr/include/kde3
+debian/tmp/usr/include/kde
 debian/tmp/usr/lib/libkcal.so
 debian/tmp/usr/lib/libkgantt.so
 debian/tmp/usr/lib/libkalarmd.so
