@@ -37,6 +37,7 @@ static const char *id="$Id$";
 #include <qlist.h>
 #include <qcursor.h>
 #include <qdragobject.h>
+#include <errno.h>
 
 #include <kapp.h>
 #include <kaboutdata.h>

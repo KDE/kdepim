@@ -45,10 +45,6 @@ PilotAddress::pack(void *buf, int *len)
     i = pack_Address(&fAddressInfo, (unsigned char*)buf, *len);
     *len = i;
     return buf;
-#ifdef DEBUG
-	/* NOTREACHED */
-	(void) id;
-#endif
     }
 
 	  
