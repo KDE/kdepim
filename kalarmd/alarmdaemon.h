@@ -110,6 +110,7 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
 //    void        writeConfigClientGui(const QCString& appName, const QString& dcopObject);
     const GuiInfo* getGuiInfo(const QCString &appName) const;
     void        addConfigClient(KSimpleConfig&, const QCString& appName, const QString& key);
+    void        readCheckInterval();
     bool        isSessionStarted();
     void        setTimerStatus();
 
@@ -117,6 +118,7 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     QTimer*           mAlarmTimer;
     QTimer*           mSessionStartTimer;   // timer waiting for session startup to complete
     QString           mClientDataFile;      // path of file containing client data
+    int               mCheckInterval;       // alarm check interval (minutes)
     bool              mEnabled;             // true if the alarm daemon is enabled
     bool              mAlarmTimerSyncing;   // true while alarm timer interval < 1 minute
     bool              mSessionStarted;      // true once session startup is complete

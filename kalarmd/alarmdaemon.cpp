@@ -68,6 +68,7 @@ AlarmDaemon::AlarmDaemon(QObject *parent, const char *name)
     mSessionStartTimer->start(splash ? 1000 : LOGIN_DELAY * 1000);
   }
 
+  readCheckInterval();
   readDaemonData(!!mSessionStartTimer);
 
   enableAutoStart(true);    // switch autostart on whenever the program is run
@@ -278,6 +279,18 @@ void AlarmDaemon::enableAutoStart(bool on)
 }
 
 /*
+ * Read the alarm check interval from the config file.
+ */
+void AlarmDaemon::readCheckInterval()
+{
+  KConfig* config = kapp->config();
+  config->setGroup("General");
+  mCheckInterval = config->readNumEntry("CheckInterval", 1);
+  if (mCheckInterval < 1)
+    mCheckInterval = 1;
+}
+
+/*
  * Check if any alarms are pending for any enabled calendar, and
  * display the pending alarms.
  * Called by the alarm timer.
@@ -288,8 +301,8 @@ void AlarmDaemon::checkAlarmsSlot()
 
   if (mAlarmTimerSyncing)
   {
-    // We've synced to the minute boundary. Now set timer to 1 minute intervals.
-    mAlarmTimer->changeInterval(1000 * 60);
+    // We've synced to the minute boundary. Now set timer to the check interval.
+    mAlarmTimer->changeInterval(mCheckInterval * 60 * 1000);
     mAlarmTimerSyncing = false;
   }
   checkAlarms();
@@ -615,23 +628,6 @@ void AlarmDaemon::notifyGui(AlarmGuiChangeType change, const QString& calendarUR
 void AlarmDaemon::notifyGui(AlarmGuiChangeType change, const QString& calendarURL, const QCString& appName)
 {
   kdDebug(5900) << "AlarmDaemon::notifyGui(" << change << ")\n";
-/*  QString changeType;
-  switch (change)
-  {
-    case CHANGE_STATUS:         changeType = "STATUS";               break;
-    case CHANGE_CLIENT:         changeType = "CLIENT";               break;
-    case CHANGE_GUI:            changeType = "GUI";                  break;
-    case ADD_CALENDAR:          changeType = "ADD_CALENDAR";         break;
-    case ADD_MSG_CALENDAR:      changeType = "ADD_MSG_CALENDAR";     break;
-    case DELETE_CALENDAR:       changeType = "DELETE_CALENDAR";      break;
-    case ENABLE_CALENDAR:       changeType = "ENABLE_CALENDAR";      break;
-    case DISABLE_CALENDAR:      changeType = "DISABLE_CALENDAR";     break;
-    case CALENDAR_UNAVAILABLE:  changeType = "CALENDAR_UNAVAILABLE"; break;
-    default:
-      kdError() << "AlarmDaemon::guiNotify(): " << change << endl;
-      return;
-  }
-  kdDebug(5900) << "AlarmDaemon::notifyGui(" << changeType << ")\n";*/
 
   for (GuiMap::ConstIterator g = mGuis.begin();  g != mGuis.end();  ++g)
   {
