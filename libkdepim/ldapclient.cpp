@@ -523,7 +523,7 @@ void LdapSearch::makeSearchData( QStringList& ret, LdapResultList& resList )
       else if( it2.key() == "sn" )
         sn = tmp;
       else if( it2.key() == "objectClass" &&
-               ( tmp == "groupOfNames" || tmp == "kolabgroupofnames" ) ) {
+               ( tmp == "groupOfNames" || tmp == "kolabGroupOfNames" ) ) {
         isDistributionList = true;
       }
     }
