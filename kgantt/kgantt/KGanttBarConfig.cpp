@@ -9,7 +9,7 @@
 #include "KGanttBarConfig.h"
 #include "xQGanttBarView.h"
 
-#include <kcolorbtn.h> 
+#include <kcolorbutton.h> 
 
 
 KGanttBarConfig::KGanttBarConfig(xQGanttBarView* barview,
