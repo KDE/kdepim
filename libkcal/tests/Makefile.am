@@ -20,7 +20,7 @@ readandwrite_SOURCES = readandwrite.cpp
 readandwrite_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 readandwrite_LDADD = ../libkcal.la
 
-TESTFILES = test1.ics test2.ics test3.ics
+TESTFILES = test1.ics test2.ics test3.ics test4.ics test5.ics
 
 check: readandwrite
 	for i in $(TESTFILES); do \

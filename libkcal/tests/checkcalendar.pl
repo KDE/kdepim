@@ -71,11 +71,32 @@ sub checkfile()
   close READ;
 
   if ( $error > 0 ) {
-    print "\n  FAILED: $error errors found.\n";
-    if ( $error > 5 ) {
-      system( "diff -u $file.ref $outfile" ); 
+    if ( -e "$file.fixme" ) {
+      if ( !open( FIXME, "$file.fixme" ) ) {
+        print STDERR "Unable to open $file.fixme\n";
+        exit 1;
+      }
+      my $firstline = <FIXME>;
+      $firstline =~ /^(\d+) known errors/;
+      my $expected = $1;
+      if ( $expected == $error ) {
+        print "\n  EXPECTED FAIL: $error errors found.\n";
+        print "    Fixme:\n";
+        while( <FIXME> ) {
+          print "      ";
+          print;
+        }
+      } else {
+        print "\n  UNEXPECTED FAIL: $error errors found, $expected expected.\n";
+        exit 1;
+      }
+    } else {
+      print "\n  FAILED: $error errors found.\n";
+      if ( $error > 5 ) {
+        system( "diff -u $file.ref $outfile" ); 
+      }
+      exit 1;
     }
-    exit 1;
   } else {
     print "  OK\n";
   }
