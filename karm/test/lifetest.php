@@ -4,17 +4,14 @@
 // Description:
 // This program starts karm and simulates keypresses to do a real life-test of karm.
 // This program returns zero if all tests went ok, else an error code.
+// You need a US or DE keyboard to run this.
 
 // for those who do not know php:
 // for a tutorial about php, check out www.usegroup.de
 // for a reference about php, surf to www.php.net
 
 // TODO
-// Does it only run with us or de keyboard ? Or is the keyboard no matter ?
-// What to do if my KDE is set to another lang and Task is not reachable via ALT_T ?
 // prepare Windows-port
-// how can we simulate a right cursor key via a pipe ? Perhaps with     
-// fwrite($pipes[0],chr(27).chr(91).chr(67).chr(0));    
 
 function createplannerexample()
 {
@@ -62,7 +59,6 @@ function simkey($s)
 // This function simulates keypresses that form the string $s, e.g. for $s==hallo, it simulates the keypress of h, then a, then l and so on.
 // find a useful list of keycodes under /usr/include/X11/keysymdef.h
 {
-  echo strlen($s);
   for ($i=0; $i<strlen($s); $i++)
   {
     if ($s[$i]=="/") system("xte 'key KP_Divide'");
@@ -74,6 +70,13 @@ function keysim($s)
 // remove everything that makes you have to think twice!!
 {
   simkey($s);
+}
+
+function funkeysim($s, $count=1)
+// same as keysim, but interprets $s as function key name to be used by xte and expects a $count to indicate how often key is to be pressed
+{
+  for ($i=1; $i<=$count; $i++) system("xte 'key $s'", $rc);
+  return $rc;
 }
 
 // int main()
@@ -100,11 +103,17 @@ if ($argv[1]!="--batch")
 }
 else
 {
-  system("xte 'key return' 2&>/dev/null",$rc);
-  if ($rc==1) $err+="this must be run in an X environment\n";
-  if ($rc==127) $err+="you do not have XAutomation installed, get it from http://hoopajoo.net/projects/xautomation.html\n";
-  system ("rm /tmp/karmtest.ics 2>/dev/null");
-  system ("rm /tmp/example.planner 2>/dev/null");
+  switch (funkeysim("Alt_L")) 
+  {
+    case 1: 
+      $err.="this must be run in an X environment\n";
+    break;
+    case 127: 
+      $err.="you do not have XAutomation installed, get it from http://hoopajoo.net/projects/xautomation.html\n";
+    break;
+  }
+  unlink ("/tmp/karmtest.ics");
+  unlink ("/tmp/example.planner");
   if ($err=="")
   {
     echo "\nCalling karm...";
@@ -120,62 +129,51 @@ else
     echo "karm is saving, we can start\n";
     
     
-    system("sleep 1");
+    sleep (1);
 
     
-    system("xte 'key Alt_L'");
+    funkeysim("Alt_L");
     
-    system("xte 'key Right'");
-    system("xte 'key Right'");
-    system("xte 'key Right'");
-    system("xte 'key Down'");
-    system("xte 'key Down'");
-    system("xte 'key Return'");
-    system("sleep 1");
-    system("xte 'key Down'");
-    system("xte 'key Down'");
-    system("xte 'key Tab'");
-    system("xte 'key Tab'");
-    system("xte 'key Tab'");
-    system("xte 'key Tab'");
-    system("xte 'key Tab'");
+    funkeysim("Right",3);
+    funkeysim("Down",2);
+    funkeysim("Return");
+    sleep (1);
+    funkeysim("Down",2);
+    funkeysim("Tab",5);
     simkey("/tmp/karmtest.ics");
-    system("sleep 1");
-    system("xte 'key Return'");
-    system("sleep 1");
-    system("xte 'key Return'");
-    system("sleep 1");
+    sleep (1);
+    funkeysim("Return");
+    sleep (1);
+    funkeysim("Return");
+    sleep (1);
     # 1. add a new task
     # really, this once was impossible!
-    system("xte 'key Alt_L'");
-    system("xte 'key Right'");
-    system("xte 'key Right'");
-    system("xte 'key Down'");
-    system("sleep 1");
-    system("xte 'key Return'");
-    system("sleep 1");
+    funkeysim("Alt_L");
+    funkeysim("Right",2);
+    funkeysim("Down");
+    sleep (1);
+    funkeysim("Return");
+    sleep (1);
     simkey("example 1");
-    system("xte 'key Return'");
-    system("sleep 1");
+    funkeysim("Return");
+    sleep (1);
     
     echo "\nCreating a planner project file...";
     createplannerexample();
     
-    system("xte 'key Alt_L'");
-    system("xte 'key Down'");
-    system("xte 'key Down'");
-    system("xte 'key Down'");
-    system("xte 'key Down'");
-    system("xte 'key Down'");
-    system("xte 'key Right'");
-    system("xte 'key Down'");
+    funkeysim("Alt_L");
+    funkeysim("Down",5);
+    funkeysim("Right");
+    funkeysim("Down");
     system("xte 'key Return'");
-    system("sleep 1");
+    sleep (2);
     keysim("/tmp/example.planner");
-    system("sleep 1");
+    sleep (1);
     system("xte 'key Return'");
-    system("sleep 1");
+    sleep (2);
+    while ($line=fgetc($pipes[2])) ;
     
+    sleep (2);
     echo "\nsending CTRL_Q...\n";
     system ("xte 'keydown Control_L'");
     system ("xte 'key Q'");
@@ -185,7 +183,7 @@ else
     for ($i=1; $i<=13; $i++) $line=fgets($ics); 
     if ($line<>"SUMMARY:example 1\n") $err.="iCal file content was wrong";
     fclose($ics);
-    system ("sleep 1");
+    sleep (1);
   }
 }
   echo $err;
