@@ -236,7 +236,63 @@ change the same data.
 	<listitem>
 	<para>
 	Select the kind of HotSync to do normally.
+
+<!-- TODO: unknown what these settings mean -->
 	</para>
+	</listitem>
+</varlistentry>
+
+<varlistentry>
+	<term><guilabel>Do full backup when changing PCs</guilabel></term>
+	<listitem>
+	<para>
+	If you &HotSync; your &handheld; with multiple PCs,
+	the information on the &handheld; that records which
+	records have changed since the last &HotSync; may be
+	inaccurate. It is recommended to do a full sync when
+	changing PCs.
+	You can disable the full sync by unchecking this box.
+	</para>
+	</listitem>
+</varlistentry>
+
+<varlistentry>
+	<term><guilabel>Conflict Resolution</guilabel></term>
+	<listitem>
+	<para>
+	Data can be changed both on the &handheld; and
+	on the PC; if one record has incompatible changes
+	in both the &handheld; and the PC, (such as 
+	changing a phone number in different ways on both sides),
+	the conflicting change needs to be resolved so
+	that both the &handheld; and the PC are in sync again.
+	Choices for conflict resolution are:
+	</para>
+	<itemizedlist>
+	<listitem><para><emphasis>Ask User</emphasis>
+	&mdash; pop up a dialog for the user to
+	choose how the conflict is to be resolved for
+	every conflict.
+	</para></listitem>
+	<listitem><para><emphasis>Do Nothing</emphasis>
+	&mdash; leave the entries in an inconsistent state.
+	Future syncs will not notice the discrepancy.
+	</para></listitem>
+	<listitem><para><emphasis>Handheld Overrides</emphasis>
+	&mdash; copy the values from the &handheld; to the PC,
+	discarding the changes on the PC.
+	</para></listitem>
+	<listitem><para><emphasis>PC Overrides</emphasis>
+	&mdash; copy the values from the PC to the &handheld;,
+	discarding changes on the &handheld;.
+	</para></listitem>
+	<listitem><para><emphasis>Values From Last Sync</emphasis>
+	<!-- TODO: I have no idea what this means -->
+	</para></listitem>
+	<listitem><para><emphasis>Use Both Entries</emphasis>
+	<!-- TODO: I have no idea what this means -->
+	</para></listitem>
+	</itemizedlist>
 	</listitem>
 </varlistentry>
 
@@ -634,3 +690,5 @@ The default conduits are the following:
 </sect1>
 
 </chapter>
+
+
