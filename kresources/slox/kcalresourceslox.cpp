@@ -115,9 +115,11 @@ void KCalResourceSlox::init()
   enableChangeNotification();
 }
 
-void KCalResourceSlox::readConfig( const KConfig * )
+void KCalResourceSlox::readConfig( const KConfig *config )
 {
   mPrefs->readConfig();
+
+  ResourceCached::readConfig( config );
 }
 
 void KCalResourceSlox::writeConfig( KConfig *config )
@@ -127,6 +129,8 @@ void KCalResourceSlox::writeConfig( KConfig *config )
   ResourceCalendar::writeConfig( config );
 
   mPrefs->writeConfig();
+
+  ResourceCached::writeConfig( config );
 }
 
 QString KCalResourceSlox::cacheFile()
@@ -865,7 +869,7 @@ bool KCalResourceSlox::doSave()
 
   if ( !mOpen ) return true;
 
-  if ( readOnly() ) {
+  if ( readOnly() || !hasChanges() ) {
     emit resourceSaved( this );
     return true;
   }

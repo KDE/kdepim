@@ -29,6 +29,8 @@
 #include <kstandarddirs.h>
 #include <klineedit.h>
 
+#include <libkcal/resourcecachedconfig.h>
+
 #include "kcalresourceslox.h"
 #include "kcalsloxprefs.h"
 
@@ -65,21 +67,11 @@ KCalResourceSloxConfig::KCalResourceSloxConfig( QWidget* parent,  const char* na
                                   this );
   mainLayout->addMultiCellWidget( mLastSyncCheck, 4, 4, 0, 1 );
 
-#if 0
-  // FIXME: Post 3.2: i18n("Upload to:") ( bug 67330 )
-  label = new QLabel( i18n( "Upload URL:" ), this );
-  mUploadUrl = new KURLRequester( this );
-  mUploadUrl->setMode( KFile::File );
-  mainLayout->addWidget( label, 2, 0 );
-  mainLayout->addWidget( mUploadUrl, 2, 1 );
+  mReloadConfig = new KCal::ResourceCachedReloadConfig( this );
+  mainLayout->addMultiCellWidget( mReloadConfig, 5, 5, 0, 1 );
 
-  mReloadGroup = new QButtonGroup( 1, Horizontal, i18n("Reload"), this );
-  mainLayout->addMultiCellWidget( mReloadGroup, 3, 3, 0, 1 );
-  new QRadioButton( i18n("Never"), mReloadGroup );
-  new QRadioButton( i18n("On startup"), mReloadGroup );
-  new QRadioButton( i18n("Once a day"), mReloadGroup );
-  new QRadioButton( i18n("Always"), mReloadGroup );
-#endif
+  mSaveConfig = new KCal::ResourceCachedSaveConfig( this );
+  mainLayout->addMultiCellWidget( mSaveConfig, 6, 6, 0, 1 );
 }
 
 void KCalResourceSloxConfig::loadSettings( KRES::Resource *resource )
@@ -90,11 +82,8 @@ void KCalResourceSloxConfig::loadSettings( KRES::Resource *resource )
     mLastSyncCheck->setChecked( res->prefs()->useLastSync() );
     mUserEdit->setText( res->prefs()->user() );
     mPasswordEdit->setText( res->prefs()->password() );
-#if 0
-    mUploadUrl->setURL( res->uploadUrl().url() );
-    kdDebug() << "ANOTER RELOAD POLICY: " << res->reloadPolicy() << endl;
-    mReloadGroup->setButton( res->reloadPolicy() );
-#endif
+    mReloadConfig->loadSettings( res );
+    mSaveConfig->loadSettings( res );
   } else {
     kdError(5700) << "KCalResourceSloxConfig::loadSettings(): no KCalResourceSlox, cast failed" << endl;
   }
@@ -108,10 +97,8 @@ void KCalResourceSloxConfig::saveSettings( KRES::Resource *resource )
     res->prefs()->setUseLastSync( mLastSyncCheck->isChecked() );
     res->prefs()->setUser( mUserEdit->text() );
     res->prefs()->setPassword( mPasswordEdit->text() );
-#if 0
-    res->setUploadUrl( mUploadUrl->url() );
-    res->setReloadPolicy( mReloadGroup->selectedId() );
-#endif
+    mReloadConfig->saveSettings( res );
+    mSaveConfig->saveSettings( res );
   } else {
     kdError(5700) << "KCalResourceSloxConfig::saveSettings(): no KCalResourceSlox, cast failed" << endl;
   }

@@ -28,6 +28,11 @@
 class QCheckBox;
 class KLineEdit;
 
+namespace KCal {
+class ResourceCachedReloadConfig;
+class ResourceCachedSaveConfig;
+}
+
 /**
   Configuration widget for SLOX resource.
   
@@ -48,6 +53,9 @@ class KCalResourceSloxConfig : public KRES::ConfigWidget
     KLineEdit *mUserEdit;
     KLineEdit *mPasswordEdit;
     QCheckBox *mLastSyncCheck;    
+
+    KCal::ResourceCachedReloadConfig *mReloadConfig;
+    KCal::ResourceCachedSaveConfig *mSaveConfig;
 };
 
 #endif
