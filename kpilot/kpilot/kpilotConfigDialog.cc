@@ -82,10 +82,8 @@ DeviceConfigPage::DeviceConfigPage(QWidget * w, const char *n ) : ConfigPage( w,
 	fConfigWidget->resize(fConfigWidget->size());
 	fWidget = fConfigWidget;
 
-#if defined(PILOT_LINK_VERSION) && defined(PILOT_LINK_MAJOR) && defined(PILOT_LINK_MINOR)
-#if (PILOT_LINK_VERSION * 100 + PILOT_LINK_MAJOR * 10 + PILOT_LINK_MINOR) < 100
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_10_0
 	fConfigWidget->fPilotDevice->setMaxLength(13);
-#endif
 #endif
 
 
@@ -119,8 +117,7 @@ void DeviceConfigPage::load()
 {
 	int r = KMessageBox::Yes;
 
-#if defined(PILOT_LINK_VERSION) && defined(PILOT_LINK_MAJOR) && defined(PILOT_LINK_MINOR)
-#if (PILOT_LINK_VERSION * 100 + PILOT_LINK_MAJOR * 10 + PILOT_LINK_MINOR) < 100
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_10_0
 	QString d = fConfigWidget->fPilotDevice->text();
 
 	if (d.length() > 13)
@@ -135,7 +132,6 @@ void DeviceConfigPage::load()
 		i18n("Device Name too Long")
 		) ;
 	}
-#endif
 #endif
 
 	return KMessageBox::Yes == r;

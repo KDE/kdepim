@@ -59,7 +59,7 @@ public:
 	const unsigned long getLocale() const {return fSysInfo.locale;}
 	void setLocale(unsigned long newval)  {fSysInfo.locale=newval;}
 
-#if PILOT_LINK_NUMBER < 1100
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_11_0
 // Older pilot-link versions < 0.11.x don't have prodID, but name instead,
 // and they also do not have the *Version members.
 	const int getProductIDLength() const { return fSysInfo.nameLength; }

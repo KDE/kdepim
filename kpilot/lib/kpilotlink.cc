@@ -316,7 +316,7 @@ bool KPilotDeviceLink::open()
 		DEBUGDAEMON << fname << ": Typing to open " << fPilotPath << endl;
 #endif
 
-#if PILOT_LINK_NUMBER < 1000
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_10_0
 		fPilotMasterSocket = pi_socket(PI_AF_SLP,
 			PI_SOCK_STREAM, PI_PF_PADP);
 #else
@@ -346,7 +346,7 @@ bool KPilotDeviceLink::open()
 	DEBUGDAEMON << fname << ": Binding to path " << fPilotPath << endl;
 #endif
 
-#if PILOT_LINK_NUMBER < 10
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_10_0
 	addr.pi_family = PI_AF_SLP;
 #else
 	addr.pi_family = PI_AF_PILOT;
@@ -544,7 +544,7 @@ void KPilotDeviceLink::acceptDevice()
 		DEBUGDAEMON << fname
 			<< ": RomVersion=" << fPilotSysInfo->getRomVersion()
 			<< " Locale=" << fPilotSysInfo->getLocale()
-#if PILOT_LINK_NUMBER < 10
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_10_0
 			/* No prodID member */
 #else
 			<< " Product=" << fPilotSysInfo->getProductID()
@@ -676,7 +676,7 @@ void KPilotDeviceLink::addSyncLogEntry(const QString & entry, bool log)
 
 	QString t(entry);
 
-#if PILOT_LINK_NUMBER < 1100
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_11_0
 	t.append("X");
 #endif
 
