@@ -2,7 +2,7 @@ Source: kdepim
 Section: x11
 Priority: optional
 Maintainer: Christopher L Cheney <ccheney@debian.org>
-Build-Depends: automake1.7, bison, byacc, debhelper (>> 4.0.18), flex, gawk, gettext, kdelibs4-dev, libgtk1.2-dev, libpisock-dev, libreadline4-dev, texinfo
+Build-Depends: automake1.7, bison, byacc, debhelper (>> 4.0.18), flex, gawk, gettext, kdelibs4-dev, libgtk1.2-dev, libpisock-dev, libmal-dev, libreadline4-dev, texinfo
 Build-Depends-Indep: doxygen, qt3-doc
 Standards-Version: 3.5.8.0
 
