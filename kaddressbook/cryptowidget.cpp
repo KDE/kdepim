@@ -91,7 +91,7 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
 	new Kleo::EncryptionKeyRequester( Kleo::CryptPlugFactory::instance()->smime(), false, this );
   topLayout->addWidget( mSmimeCert,2,1 );
   
-  QGroupBox* box = new QVGroupBox( i18n("Message preferrence"), this );
+  QGroupBox* box = new QVGroupBox( i18n("Message preference"), this );
   topLayout->addMultiCellWidget( box, 3,3,0,1 );
   
 
