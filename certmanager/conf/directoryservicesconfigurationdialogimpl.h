@@ -48,6 +48,7 @@ public:
     void enableDisable( CryptPlugWrapper* wrapper );
     void setInitialServices( const KURL::List& urls );
     KURL::List urlList() const;
+    void clear();
 
 signals:
     void changed();

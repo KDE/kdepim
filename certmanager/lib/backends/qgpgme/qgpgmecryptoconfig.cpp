@@ -40,6 +40,7 @@
 #include <assert.h>
 #include <ktempfile.h>
 #include <qfile.h>
+#include <stdlib.h>
 
 // TODO: runtime changes from other apps? Is that possible to support (other than manual clear()?)
 
@@ -227,11 +228,13 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   tmpFile.setAutoDelete( true );
 
   // Collect all dirty entries
+  bool foundOne = false;
   QDictIterator<QGpgMECryptoConfigGroup> groupit( mGroups );
   for( ; groupit.current(); ++groupit ) {
     QDictIterator<QGpgMECryptoConfigEntry> it( groupit.current()->mEntries );
     for( ; it.current(); ++it ) {
       if ( it.current()->isDirty() ) {
+        foundOne = true;
         // OK, we can set it.currentKey() to it.current()->outputString()
         QString line = it.currentKey();
         if ( it.current()->isSet() ) { // set option
@@ -248,19 +251,20 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
     }
   }
   tmpFile.close();
+  if ( !foundOne )
+    return;
 
   // Call gpgconf --change-options <component>
   QString commandLine = "gpgconf";
-#if 0 // not implemented in gpgconf yet (mentionned in aegypten issue89)
   if ( runtime )
     commandLine += " --runtime";
-#else
-  (void)runtime;
-#endif
   commandLine += " --change-options ";
   commandLine += KProcess::quote( mName );
   commandLine += " < ";
   commandLine += KProcess::quote( tmpFile.name() );
+
+  //kdDebug() << commandLine << endl;
+  //system( QCString( "cat " ) + tmpFile.name().latin1() ); // DEBUG
 
   KProcess proc;
   proc.setUseShell( true );
@@ -273,7 +277,8 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   else
     rc = ( proc.normalExit() ) ? proc.exitStatus() : -1 ;
 
-  if( rc != 0 ) // Can it really be non-0, when gpg-config --list-components worked?
+  // ####### TODO error handling (message box).
+  if( rc != 0 ) // Happens due to bugs in gpgconf (e.g. issue104)
     kdWarning(5150) << k_funcinfo << ":" << strerror( rc ) << endl;
 }
 
@@ -470,6 +475,17 @@ static KURL parseURL( int mRealArgType, const QString& str )
   return KURL( str );
 }
 
+// The opposite of parseURL
+static QString splitURL( int mRealArgType, const KURL& url )
+{
+  if ( mRealArgType == 33 ) { // LDAP server
+    // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
+    // Not sure about encoding/escaping here. It will all be escaped when passing to gpgconf, but what if the pass contains ':'?
+    return url.host() + ":" + QString::number( url.port() ) + ":" + url.user() + ":" + url.pass() + ":" + url.query().mid(1);
+  }
+  return url.path();
+}
+
 KURL QGpgMECryptoConfigEntry::urlValue() const
 {
   Q_ASSERT( mArgType == ArgType_Path || mArgType == ArgType_URL );
@@ -581,7 +597,8 @@ void QGpgMECryptoConfigEntry::setUIntValue( unsigned int i )
 
 void QGpgMECryptoConfigEntry::setURLValue( const KURL& url )
 {
-  mValue = url.url();
+  QString str = splitURL( mRealArgType, url );
+  mValue = str;
   mSet = true;
   mDirty = true;
 }
@@ -622,9 +639,13 @@ void QGpgMECryptoConfigEntry::setUIntValueList( const QValueList<unsigned int>& 
   mDirty = true;
 }
 
-void QGpgMECryptoConfigEntry::setURLValueList( const KURL::List& lst )
+void QGpgMECryptoConfigEntry::setURLValueList( const KURL::List& urls )
 {
-  mValue = lst.toStringList();
+  QStringList lst;
+  for( KURL::List::const_iterator it = urls.begin(); it != urls.end(); ++it ) {
+    lst << splitURL( mRealArgType, *it );
+  }
+  mValue = lst;
   mSet = true;
   mDirty = true;
 }
@@ -644,7 +665,9 @@ QString QGpgMECryptoConfigEntry::outputString() const
       for( QStringList::iterator it = lst.begin(); it != lst.end(); ++it ) {
         *it = gpgconf_escape( *it );
       }
-      return lst.join( "," ).prepend( "\"" );
+      QString res = lst.join( "," ).prepend( "\"" );
+      kdDebug() << res << endl;
+      return res;
     } else // normal string
       return gpgconf_escape( mValue.toString() ).prepend( "\"" );
   }

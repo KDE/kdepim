@@ -138,6 +138,7 @@ void DirectoryServicesConfigurationDialogImpl::slotDeleteService()
 
 void DirectoryServicesConfigurationDialogImpl::setInitialServices( const KURL::List& urls )
 {
+    x500LV->clear();
     for( KURL::List::const_iterator it = urls.begin(); it != urls.end(); ++it ) {
         QString dn = KURL::decode_string( (*it).query().mid( 1 ) ); // decode query and skip leading '?'
         (void)new QListViewItem( x500LV, x500LV->lastItem(),
@@ -162,6 +163,12 @@ KURL::List DirectoryServicesConfigurationDialogImpl::urlList() const
         lst << url;
     }
     return lst;
+}
+
+void DirectoryServicesConfigurationDialogImpl::clear()
+{
+    x500LV->clear();
+    emit changed();
 }
 
 #include "directoryservicesconfigurationdialogimpl.moc"

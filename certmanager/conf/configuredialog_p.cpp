@@ -86,14 +86,17 @@ void DirectoryServicesConfigurationPage::save()
 
 void DirectoryServicesConfigurationPage::defaults()
 {
+    // ## We can't use  entry->resetToDefault() here. It would reset to default before the user has a chance to click OK or Cancel.
+#if 0
     Kleo::CryptoConfigEntry* entry = configEntry();
     if ( entry ) {
-      entry->resetToDefault();
-      // ### Need to sync and reparse........ Any better way?
+        entry->resetToDefault();
       mConfig->sync( true );
       mConfig->clear();
       load();
     }
+#endif
+    mWidget->clear(); // the default is an empty list.
 }
 
 QString DirectoryServicesConfigurationPage::helpAnchor() const
