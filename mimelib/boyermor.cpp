@@ -86,7 +86,7 @@ void DwBoyerMoore::_Assign(const char* aPat, size_t aPatLen, bool cs)
     mPat = new char[aPatLen+1];
     if (mPat != 0) {
         mPatLen = aPatLen;
-	// for case-insensitive searcj, make a lower-case copy of the pattern:
+	// for case-insensitive search, make a lower-case copy of the pattern:
 	for (size_t i=0; i < mPatLen; ++i) {
 	    mPat[i] = cs ? aPat[i] : tolower(aPat[i]);
 	}
