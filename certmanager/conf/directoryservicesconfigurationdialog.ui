@@ -67,7 +67,7 @@
             </column>
             <column>
                 <property name="text">
-                    <string>Description</string>
+                    <string>Base DN</string>
                 </property>
                 <property name="clickable">
                     <bool>true</bool>

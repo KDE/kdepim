@@ -48,7 +48,7 @@
                 <cstring>descriptionLA</cstring>
             </property>
             <property name="text">
-                <string>&amp;Description:</string>
+                <string>&amp;Base DN:</string>
             </property>
             <property name="buddy" stdset="0">
                 <cstring>descriptionED</cstring>
