@@ -244,7 +244,7 @@ bool KNConvert::Converter04::doConvert()
     }
   }
   else
-    l_og->append(i18n("nothing do be done for folder \"Drafts\""));
+    l_og->append(i18n("nothing to be done for folder \"Drafts\""));
 
   //Outbox
   if(QFile::exists(dir+"folder2.idx")) {
@@ -258,7 +258,7 @@ bool KNConvert::Converter04::doConvert()
     }
   }
   else
-    l_og->append(i18n("nothing do be done for folder \"Outbox\""));
+    l_og->append(i18n("nothing to be done for folder \"Outbox\""));
 
   //Sent
   if(QFile::exists(dir+"folder3.idx")) {
@@ -272,7 +272,7 @@ bool KNConvert::Converter04::doConvert()
     }
   }
   else
-    l_og->append(i18n("nothing do be done for folder \"Sent\""));
+    l_og->append(i18n("nothing to be done for folder \"Sent\""));
 
   //remove old info-files
   QFile::remove(dir+"standard.info");
