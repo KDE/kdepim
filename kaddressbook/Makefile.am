@@ -7,9 +7,7 @@ INCLUDES= -I$(top_srcdir)/kaddressbook/interfaces \
           -I$(top_srcdir)/kaddressbook/features \
           -I$(top_srcdir)/kaddressbook/views \
           -I$(top_srcdir)/kaddressbook/printing \
-	  -I$(top_srcdir)/libkdenetwork/libgpgme-copy/gpgme \
-	  -I$(top_srcdir)/libkdenetwork/libgpg-error-copy \
-          -I$(top_srcdir) $(all_includes) 
+          -I$(top_srcdir) $(all_includes) $(GPGME_CFLAGS)
 
 
 bin_PROGRAMS = kaddressbook
