@@ -20,7 +20,8 @@ public:
 
     bool isRemote() const { return _remote; }
 
-    int importCertificateWithFingerprint( const QString& fingerprint );
+    int importCertificateWithFingerprint( const QString& fingerprint, QString* info );
+    int importCertificateFromFile( const QString& filename, QString* info );
 
     bool haveCertificate( const QString &fingerprint );
 
@@ -35,7 +36,6 @@ protected slots:
     void importCRLFromFile();
     void importCRLFromLDAP();
 
-    void slotGPGSMExited();
     void slotDirmngrExited();
     void slotStderr( KProcess*, char*, int );
 
@@ -49,7 +49,7 @@ private:
 
     CryptPlugWrapper::CertificateInfoList _certList;
 
-    KProcess* gpgsmProc;
+  //KProcess* gpgsmProc;
     KProcess* dirmngrProc;
     QString errorbuffer;
 

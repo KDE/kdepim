@@ -43,7 +43,7 @@ static const int ID_LABEL    = 10;
 CertManager::CertManager( bool remote, const QString& query, 
 			  QWidget* parent, const char* name ) :
     KMainWindow( parent, name ),
-    gpgsmProc( 0 ), dirmngrProc(0), _certBox(0), _remote( remote )
+    dirmngrProc(0), _certBox(0), _remote( remote )
 {
   KMenuBar* bar = menuBar();
 
@@ -99,11 +99,6 @@ CertManager::CertManager( bool remote, const QString& query,
                                              actionCollection(),
                                              "importCertFromFile" );
   importCertFromFile->plug( certImportMenu );
-  QStringList lst;
-  lst << "gpgsm" << "-h";
-  importCertFromFile->setEnabled( checkExec( lst ) );
-  lst.clear();
-
 
   // CRL menu --------------------------------------------------
   QPopupMenu* crlMenu = new QPopupMenu( bar, "crlMenu" );
@@ -117,6 +112,7 @@ CertManager::CertManager( bool remote, const QString& query,
   KAction* importCRLFromFile = new KAction( i18n("From &File..."), QIconSet(), 0, this, SLOT( importCRLFromFile() ),
                                             actionCollection(), "importCRLFromFile" );
   importCRLFromFile->plug( crlImportMenu );
+  QStringList lst;
   lst << "dirmngr" << "-h";
   importCRLFromFile->setEnabled( checkExec( lst ) );
 
@@ -167,33 +163,11 @@ CertItem* CertManager::fillInOneItem( CertBox* lv, CertItem* parent,
 {
   if( parent ) {
     //qDebug("New with parent");
-    return new CertItem( /*info.userid[0].stripWhiteSpace(),
-			 info.serial.stripWhiteSpace(), 
-			 info.issuer.stripWhiteSpace(),
-			 info.dn["CN"], 
-			 info.dn["L"], 
-			 info.dn["O"], 
-			 info.dn["OU"], 
-			 info.dn["C"],
-			 info.dn["1.2.840.113549.1.9.1"], 
-			 info.created,info.expire,
-			 info.sign, info.encrypt, info.certify,*/
-			 info,
+    return new CertItem( info,
 			 0, this, parent );  
   } else {
     //qDebug("New root");
-    return new CertItem( /*info.userid[0].stripWhiteSpace(), 
-			 info.serial.stripWhiteSpace(),
-			 info.issuer.stripWhiteSpace(),
-			 info.dn["CN"], 
-			 info.dn["L"], 
-			 info.dn["O"], 
-			 info.dn["OU"], 
-			 info.dn["C"],
-			 info.dn["1.2.840.113549.1.9.1"], 
-			 info.created,info.expire,
-			 info.sign, info.encrypt, info.certify,*/
-			 info,			
+    return new CertItem( info,			
 			 0, this, lv );
   }
 }
@@ -332,40 +306,16 @@ void CertManager::importCertFromFile()
                                                          i18n( "Select Certificate File" ) );
 
     if( !certFilename.isEmpty() ) {
-        gpgsmProc = new KProcess();
-        *gpgsmProc << "gpgsm";
-        *gpgsmProc << "--import" << certFilename;
-	errorbuffer = "";
-        connect( gpgsmProc, SIGNAL( processExited( KProcess* ) ),
-                 this, SLOT( slotGPGSMExited() ) );
-	connect( gpgsmProc, SIGNAL( receivedStderr(KProcess*, char*, int)  ),
-		 this, SLOT( slotStderr( KProcess*, char*, int ) ) );
-        if( !gpgsmProc->start( KProcess::NotifyOnExit, KProcess::Stderr ) ) { 
-            KMessageBox::error( this, i18n( "Unable to start GPGSM process. Please check your installation." ), i18n( "Certificate Manager Error" ) );
-            delete gpgsmProc;
-            gpgsmProc = 0;
-        }
+	QString info;
+	int retval = importCertificateFromFile( certFilename, &info );
+	if( retval ) {
+	  KMessageBox::error( this, i18n( "An error occurred when trying to import the certificate file. The errorcode from Cryptplug was %1 and output was: %2" ).arg(retval).arg(info), i18n( "Certificate Manager Error" ) );	  
+	} else {
+	  KMessageBox::information( this, i18n( "Certificate file imported successfully. Additional info: %1" ).arg(info), i18n( "Certificate Imported" ) );	  
+	}
     }
 }
 
-
-/**
-   This slot is called when the gpgsm process that imports a
-   certificate file exists.
-*/
-void CertManager::slotGPGSMExited()
-{
-    if( !gpgsmProc->normalExit() )
-        KMessageBox::error( this, i18n( "The GPGSM process that tried to import the certificate file ended prematurely because of an unexpected error." ), i18n( "Certificate Manager Error" ) );
-    else
-        if( gpgsmProc->exitStatus() )
-            KMessageBox::error( this, i18n( "An error occurred when trying to import the certificate file. The output from GPGSM was: " )+errorbuffer, i18n( "Certificate Manager Error" ) );
-        else
-            KMessageBox::information( this, i18n( "Certificate file imported successfully." ), i18n( "Certificate Manager Error" ) );
-
-    if( gpgsmProc )
-        delete gpgsmProc;
-}
 
 /**
    This slot is called when the dirmngr process that imports a
@@ -425,14 +375,13 @@ void CertManager::importCRLFromLDAP()
   qDebug("Not Yet Implemented");
 }
 
-int CertManager::importCertificateWithFingerprint( const QString& fingerprint )
+int CertManager::importCertificateWithFingerprint( const QString& fingerprint, QString* info )
 {
-  bool truncated;
   qDebug("Importing certificate with fpr %s", fingerprint.latin1() );
-  int retval = pWrapper->importCertificate( fingerprint );
+  int retval = pWrapper->importCertificate( fingerprint, info );
 
   qDebug("importCertificate() returned %d", retval );
-  
+
   // values > 0 are "real" GPGME errors
   if( retval > 0 ) return retval;
   if( haveCertificate( fingerprint ) ) {
@@ -451,6 +400,22 @@ bool CertManager::haveCertificate( const QString& fingerprint )
   bool truncated;
   CryptPlugWrapper::CertificateInfoList lst = pWrapper->listKeys( fingerprint, false, &truncated );
   return !lst.isEmpty();
+}
+
+int CertManager::importCertificateFromFile( const QString& filename, QString* info )
+{
+  QFile f( filename );
+  if( !f.open( IO_ReadOnly ) ) {
+    if( info ) *info = i18n( "Error opening file %1" ).arg( filename );
+    return -1;
+  }
+  QByteArray data = f.readAll();
+
+  int retval = pWrapper->importCertificate( data.data(), data.size(), info );
+
+  qDebug("importCertificate() returned %d", retval );
+
+  return retval;
 }
 
 #include "certmanager.moc"

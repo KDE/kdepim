@@ -171,15 +171,16 @@ void CertificateInfoWidgetImpl::slotImportCertificate()
 {
   if( !_manager ) return;
   QApplication::setOverrideCursor( QCursor::WaitCursor );
-  int retval = _manager->importCertificateWithFingerprint( _info.fingerprint );
+  QString info;
+  int retval = _manager->importCertificateWithFingerprint( _info.fingerprint, &info );
   QApplication::restoreOverrideCursor();
 
   if( retval == -42 ) {
     KMessageBox::error( this, i18n("Cryptplug returned success, but no certiftcate was imported.\nYou may need to import the issuer certificate %1 first.").arg( _info.issuer ), i18n("Import error") );    
   } else if( retval ) {
-    KMessageBox::error( this, i18n("Error importing certificate.\nCryptPlug returned %1.").arg(retval), i18n("Import error") );
+    KMessageBox::error( this, i18n("Error importing certificate.\nCryptPlug returned %1. Additional info: %2").arg(retval).arg( info ), i18n("Import error") );
   } else {
-    KMessageBox::information( this, i18n("Certificate %1 with fingerprint %2 is imported to the local database.").arg(_info.userid[0]).arg(_info.fingerprint), i18n("Certificate Imported") );
+    KMessageBox::information( this, i18n("Certificate %1 with fingerprint %2 is imported to the local database. Additional info: %3").arg(_info.userid[0]).arg(_info.fingerprint).arg( info ), i18n("Certificate Imported") );
     importButton->setEnabled( false );
   }
 }
