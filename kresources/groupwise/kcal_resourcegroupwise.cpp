@@ -148,11 +148,6 @@ bool ResourceGroupwise::doLoad()
 
   mServer->readCalendar( &mCalendar );
 
-  Todo *todo = new Todo;
-  todo->setSummary( "My Groupwise Test Todo" );
-  todo->setUid( "1234567890" );
-  mCalendar.addTodo( todo );
-
   enableChangeNotification();
 
   return true;
