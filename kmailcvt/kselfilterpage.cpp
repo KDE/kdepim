@@ -23,6 +23,7 @@
 
 #include "filter_mbox.hxx"
 #include "filter_oe.hxx"
+#include "filter_outlook.hxx"
 #include "filter_pmail.hxx"
 #include "filter_plain.hxx"
 #include "filter_evolution.hxx"
@@ -45,6 +46,7 @@ KSelFilterPage::KSelFilterPage(QWidget *parent, const char *name ) : KSelFilterP
         // Patches appreciated. (danimo)
 
         addFilter(new FilterOE);
+//        addFilter(new FilterOutlook);
         addFilter(new FilterOpera);
         addFilter(new FilterThunderbird);
         addFilter(new FilterEvolution);
