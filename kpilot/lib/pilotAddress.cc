@@ -96,6 +96,10 @@ bool PilotAddress::operator==(const PilotAddress &compareTo) {
 	
 	// now compare all the fields stored in the fAddressInfo.entry array of char*[19]
 	for (int i=0; i<MAXFIELDS; i++) {
+		// if one is NULL, and the other non-empty, they are not equal for sure
+		if ( !getField(i) && compareTo.getField(i)) return false;
+		if ( getField(i) && !compareTo.getField(i)) return false;
+		// test for getField(i)!=... to prevent strcmp or NULL strings!  None or both can be zero, but not a single one.
 		if ( (getField(i) != compareTo.getField(i)) && ( strcmp(getField(i), compareTo.getField(i)) ) )  return false;
 	}
 	return true;
@@ -317,6 +321,9 @@ void *PilotAddress::pack(void *buf, int *len)
 }
 
 // $Log$
+// Revision 1.2  2002/06/30 14:49:53  kainhofe
+// added a function idList, some minor bug fixes
+//
 // Revision 1.1  2001/10/10 22:01:24  adridg
 // Moved from ../kpilot/, shared files
 //
