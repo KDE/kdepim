@@ -106,10 +106,12 @@ void FilterEudoraAb::convert(QFile& f,FilterInfo *info)
     line = stream.readLine();
 
     if (line.left(5) == "alias") {
-      QString k = key(line); 
+      QString k = key(line);
       e=find(k);
-      keys[e]=k;
-      emails[e]=email(line);
+      if (keys.at(e) == keys.end()) keys.append(k);
+      else keys[e]=k;
+      if (emails.at(e) == emails.end()) emails.append(email(line));
+      else emails[e]=email(line);
       {
         QString msg=i18n("Reading '%1', email '%2'").arg(k).arg(emails[e]);
         info->log(msg);
@@ -118,11 +120,16 @@ void FilterEudoraAb::convert(QFile& f,FilterInfo *info)
     else if (line.left(4) == "note") { 
       QString k = key(line); 
       e=find(k);
-      keys[e]=k;
-      comments[e]=comment(line);
-      names[e]=get(line,"name");
-      adr[e]=get(line, "address");
-      phones[e]=get(line, "phone");
+      if (keys.at(e) == keys.end()) keys.append(k);
+      else keys[e]=k;
+      if (comments.at(e) == comments.end()) comments.append(comment(line));
+      else comments[e]=comment(line);
+      if (names.at(e) == names.end()) names.append(get(line,"name"));
+      else names[e]=get(line,"name");
+      if (adr.at(e) == adr.end()) adr.append(get(line, "address"));
+      else adr[e]=get(line, "address");
+      if (phones.at(e) == adr.end()) phones.append(get(line, "phone"));
+      else phones[e]=get(line, "phone");
     }
   }
   info->current(100);
@@ -132,7 +139,8 @@ QString FilterEudoraAb::key(const QString& line) const
 {
   int b,e;
   QString result;
-  b=line.find('\"',0);if (b==-1) { 
+  b=line.find('\"',0);
+  if (b==-1) { 
     b=line.find(' ');
     if (b==-1) { return result; }
     b+=1;
@@ -195,8 +203,9 @@ QString FilterEudoraAb::get(const QString& line,const QString& key) const
 }
 
 int FilterEudoraAb::find(const QString& key) const
-{
-  return keys.findIndex(key);
+{ // Either return the found position, or the next free one
+  int n = keys.findIndex(key);
+  return n == -1 ? keys.count() : n;
 }
 
 // vim: ts=2 sw=2 et
