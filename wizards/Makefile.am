@@ -2,7 +2,8 @@ METASOURCES = AUTO
 
 INCLUDES = -I$(top_srcdir)/libkdepim -I$(top_srcdir)/libkpimidentities -I$(top_srcdir)/libkcal \
            -I$(top_srcdir)/kresources/imap/shared -I$(top_srcdir) \
-           -I$(top_srcdir)/knotes $(all_includes)
+           -I$(top_srcdir)/knotes $(all_includes) \
+           -I$(top_srcdir)/certmanager/lib
 
 bin_PROGRAMS = groupwarewizard egroupwarewizard sloxwizard kolabwizard
 kde_module_LTLIBRARIES = libegroupwarewizard.la libsloxwizard.la libkolabwizard.la
