@@ -126,6 +126,7 @@ class KNArticleManager : public QObject, public KNJobConsumer {
 
     KNArticleCache c_ache;
 
+
   public slots:
     void slotFilterChanged(KNArticleFilter *f);
     void slotSearchDialogDone();

@@ -345,8 +345,10 @@ class KNRemoteArticle : public KNArticle {
     void setChanged(bool b=true)         { f_lags.set(5, b); }
 
     // thread info
-    int idRef()                                   { return i_dRef; }
-    void setIdRef(int i)                          { i_dRef=i; }
+    int idRef()                                     { return i_dRef; }
+    void setIdRef(int i)                            { i_dRef=i; }
+    KNRemoteArticle* displayedReference()           { return d_ref; }
+    void setDisplayedReference(KNRemoteArticle *dr) { d_ref=dr; }
     bool threadMode()                             { return f_lags.get(6); }
     void setThreadMode(bool b=true)               { f_lags.set(6, b); }
     unsigned char threadingLevel()                { return t_hrLevel; }
@@ -386,7 +388,8 @@ class KNRemoteArticle : public KNArticle {
     KNHeaders::From f_rom;
 
     int a_rticleNumber;
-    int i_dRef;                      // id of a possible reference-article
+    int i_dRef;                      // id of a reference-article (0 == none)
+    KNRemoteArticle *d_ref;          // displayed reference-article (may differ from i_dRef)
     unsigned char t_hrLevel;         // quality of threading
     short s_core;                    // guess what ;-)
     unsigned short u_nreadFups,      // number of the article's unread follow-ups

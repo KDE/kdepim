@@ -116,6 +116,7 @@ KNArticleManager::KNArticleManager(KNListView *v, KNFilterManager *f) : QObject(
   s_earchDlg=0;
   s_howThreads=true;
 
+
   connect(v, SIGNAL(expanded(QListViewItem*)), this,
     SLOT(slotItemExpanded(QListViewItem*)));
   connect(f, SIGNAL(filterChanged(KNArticleFilter*)), this,
@@ -237,12 +238,8 @@ void KNArticleManager::showHdrs(bool clear)
 {
   if(!g_roup && !f_older) return;
 
-  KNArticle *currentArt=knGlobals.view->articleView()->article();
-  if(currentArt && !currentArt->listItem()) {
-    currentArt=0;
-    knGlobals.view->articleView()->setArticle(0);
-  }
-  
+  bool setFirstChild=true;
+
   if(clear)
     v_iew->clear();
 
@@ -251,9 +248,16 @@ void KNArticleManager::showHdrs(bool clear)
   knGlobals.top->secureProcessEvents();
 
   if(g_roup) {
-    KNRemoteArticle *art, *ref;
+    KNRemoteArticle *art, *ref, *current;
 
-    if (g_roup->isLocked()) {
+    current=static_cast<KNRemoteArticle*>(knGlobals.view->articleView()->article());
+
+    if(current && !current->listItem()) {
+      current=0;
+      knGlobals.view->articleView()->setArticle(0);
+    }
+
+    if(g_roup->isLocked()) {
       if (0!=pthread_mutex_lock(knGlobals.netAccess->nntpMutex())) {
         kdDebug(5003) << "failed to lock nntp mutex" << endl;
         knGlobals.top->setStatusMsg(QString::null);
@@ -270,47 +274,68 @@ void KNArticleManager::showHdrs(bool clear)
         art=g_roup->at(i);
         art->setFilterResult(true);
         art->setFiltered(true);
-        if(art->idRef()>0)
-          g_roup->byId(art->idRef())->setVisibleFollowUps(true);
+        ref=(art->idRef()!=0) ? g_roup->byId(art->idRef()) : 0;
+        art->setDisplayedReference(ref);
+        if(ref)
+          ref->setVisibleFollowUps(true);
       }
 
     for(int i=0; i<g_roup->length(); i++) {
+
       art=g_roup->at(i);
       art->setThreadMode(s_howThreads);
-      if (s_howThreads) {
-        if( !art->listItem() && art->filterResult() ) {
-          if(art->idRef()!=0)
-            ref=g_roup->byId(art->idRef());
-          else
-            ref=0;
 
-          if( !ref || !ref->filterResult() ) {
+      if(s_howThreads) {
+
+        if( !art->listItem() && art->filterResult() ) {
+
+          if( (ref=art->displayedReference()) ) {
+            if( ref->listItem() && ( ref->listItem()->isOpen() || ref->listItem()->childCount()>0 ) ) {
+              art->setListItem(new KNHdrViewItem(ref->listItem()));
+              art->initListItem();
+            }
+          }
+          else {
             art->setListItem(new KNHdrViewItem(v_iew));
             art->initListItem();
           }
-          else if(ref->listItem() && ( ref->listItem()->isOpen() || ref->listItem()->childCount()>0 ) ) {
-            art->setListItem(new KNHdrViewItem(ref->listItem()));
-            art->initListItem();
-          }
+
         }
         else if(art->listItem())
           art->updateListItem();
+
       }
       else {
+
         if(!art->listItem() && art->filterResult()) {
           art->setListItem(new KNHdrViewItem(v_iew));
           art->initListItem();
         }
+
         else if(art->listItem())
           art->updateListItem();
+
       }
+
+    }
+
+
+    if(current && current->filterResult()) {
+      if(!current->listItem())
+        createThread(current);
+      v_iew->setActive(current->listItem(),true);
+      v_iew->setCurrentItem(current->listItem());
+      v_iew->ensureItemVisible(current->listItem());
+      setFirstChild=false;
     }
 
 
     if (g_roup->isLocked() && (0!=pthread_mutex_unlock(knGlobals.netAccess->nntpMutex())))
       kdDebug(5003) << "failed to unlock nntp mutex" << endl;
   }
+
   else { //folder
+
     KNLocalArticle *art;
     for(int idx=0; idx<f_older->length(); idx++) {
       art=f_older->at(idx);
@@ -319,18 +344,12 @@ void KNArticleManager::showHdrs(bool clear)
         art->updateListItem();
       }
     }
+
   }
 
-  if(currentArt && (static_cast<KNRemoteArticle*>(currentArt))->filterResult()) {
-    if(!currentArt->listItem())
-      createThread(static_cast<KNRemoteArticle*>(currentArt));
-    v_iew->setActive(currentArt->listItem(),true);
-    v_iew->setCurrentItem(currentArt->listItem());
-    v_iew->ensureItemVisible(currentArt->listItem());
-  }
-  else {
-    if(v_iew->firstChild())
-      v_iew->setCurrentItem(v_iew->firstChild());
+
+  if(setFirstChild && v_iew->firstChild()) {
+    v_iew->setCurrentItem(v_iew->firstChild());
     knGlobals.view->articleView()->setArticle(0);
   }
 
@@ -768,17 +787,9 @@ void KNArticleManager::createHdrItem(KNRemoteArticle *a)
 
 void KNArticleManager::createThread(KNRemoteArticle *a)
 {
-  KNRemoteArticle *ref=0;
-  int idRef=a->idRef();
-  bool found=false;
+  KNRemoteArticle *ref=a->displayedReference();
 
-  while(idRef!=0 && !found) {
-    ref=g_roup->byId(idRef);
-    found=ref->filterResult();
-    idRef=ref->idRef();
-  }
-
-  if(found) {
+  if(ref) {
     if(!ref->listItem())
       createThread(ref);
     a->setListItem(new KNHdrViewItem(ref->listItem()));
@@ -840,8 +851,7 @@ void KNArticleManager::slotSearchDialogDone()
 
 void KNArticleManager::slotItemExpanded(QListViewItem *p)
 {
-  int idRef=0, topId=0;
-  KNRemoteArticle *art, *ref;
+  KNRemoteArticle *top, *art, *ref;
   KNHdrViewItem *hdrItem;
   bool inThread=false;
   KNConfig::ReadNewsGeneral *rng=knGlobals.cfgManager->readNewsGeneral();
@@ -854,24 +864,23 @@ void KNArticleManager::slotItemExpanded(QListViewItem *p)
   knGlobals.top->setCursorBusy(true);
 
   hdrItem=static_cast<KNHdrViewItem*>(p);
-  topId=hdrItem->art->id();
+  top=static_cast<KNRemoteArticle*>(hdrItem->art);
 
   for(int i=0; i<g_roup->count(); i++) {
     art=g_roup->at(i);
     if(art->filterResult() && !art->listItem()) {
 
-      if(art->idRef()==topId) {
+      if(art->displayedReference()==top) {
         art->setListItem(new KNHdrViewItem(hdrItem));
         art->setThreadMode(s_howThreads);
         art->initListItem();
       }
       else if(rng->totalExpandThreads()) { //totalExpand
-        idRef=art->idRef();
+        ref=art->displayedReference();
         inThread=false;
-        while(idRef>0 && !inThread) {
-          ref=g_roup->byId(idRef);
-          inThread=(ref->id()==topId);
-          idRef=ref->idRef();
+        while(ref && !inThread) {
+          inThread=(ref==top);
+          ref=ref->displayedReference();
         }
         if(inThread)
           createThread(art);

@@ -169,9 +169,13 @@ void KNArticleFilter::save()
 void KNArticleFilter::doFilter(KNGroup *g)
 {
   c_ount=0;
-  KNRemoteArticle *art, *ref;
+  KNRemoteArticle *art=0, *ref=0;
+  KNRemoteArticle::List orphant_threads;
   int idRef;
-  
+  int mergeCnt=0;
+  bool inThread=false;
+
+
   if(!l_oaded) load();
 
   subject.expand(g);  // replace placeholders
@@ -181,6 +185,7 @@ void KNArticleFilter::doFilter(KNGroup *g)
     art=g->at(idx);
     art->setFiltered(false);
     art->setVisibleFollowUps(false);
+    art->setDisplayedReference(0);
   }
   
     
@@ -188,51 +193,78 @@ void KNArticleFilter::doFilter(KNGroup *g)
   
     art=g->at(idx);
 
-    if(!art->isFiltered() && applyFilter(art)) {
-      if(apon==threads) {
-        idRef=art->idRef();
-        while(idRef!=0) {
-          ref=g->byId(idRef);
-          ref->setFilterResult(true);
-          ref->setFiltered(true);
-          ref->setVisibleFollowUps(true);
-          idRef=ref->idRef();
-        }
+    if(!art->isFiltered() && applyFilter(art) && apon==threads) {
+      idRef=art->idRef();
+      while(idRef!=0) {
+        ref=g->byId(idRef);
+        ref->setFilterResult(true);
+        ref->setFiltered(true);
+        idRef=ref->idRef();
       }
-      else {
-        if(art->idRef() > 0) {
-          ref=g->byId(art->idRef());
-          if(ref)
-            ref->setVisibleFollowUps(true);
-        }
-        c_ount++;
+    }
+
+  }
+
+
+  for(int idx=0; idx<g->length(); idx++) {
+
+    art=g->at(idx);
+
+    if( apon==threads && !art->filterResult() ) {
+      inThread=false;
+      idRef=art->idRef();
+      while(idRef!=0 && !inThread) {
+        ref=g->byId(idRef);
+        inThread=ref->filterResult();
+        idRef=ref->idRef();
+      }
+      art->setFilterResult(inThread);
+    }
+
+    if(art->filterResult()) {
+      c_ount++;
+
+      ref = (art->idRef()>0) ? g->byId(art->idRef()) : 0;
+      while(ref && !ref->filterResult())
+        ref = (ref->idRef()>0) ? g->byId(ref->idRef()) : 0;
+
+      art->setDisplayedReference(ref);
+      if(ref)
+        ref->setVisibleFollowUps(true);
+      else if(art->idRef()>0) {
+        orphant_threads.append(art);
+      }
+    }
+
+  }
+
+  if( orphant_threads.count() > 0 ) {
+    // try to merge orphant threads by subject
+    KNRemoteArticle::List same_subjects;
+    QString s;
+    for(art=orphant_threads.first(); art; art=orphant_threads.next()) {
+      if(art->displayedReference()) // already processed
+        continue;
+
+      s=art->subject()->asUnicodeString();
+      same_subjects.clear();
+      for(QListIterator<KNRemoteArticle> it(orphant_threads); it.current(); ++it) {
+        if(it.current()!=art && it.current()->subject()->asUnicodeString()==s)
+          same_subjects.append(it.current());
+      }
+
+      art->setVisibleFollowUps( art->hasVisibleFollowUps() || (same_subjects.count()>0) );
+      for(QListIterator<KNRemoteArticle> it(same_subjects); it.current(); ++it) {
+        it.current()->setDisplayedReference(art);
+        mergeCnt++;
       }
     }
   }
-    
-      
-  if(apon==threads) {
-    bool inThread;
-    for(int idx=0; idx<g->length(); idx++) {
-      art=g->at(idx);
-      if(!art->filterResult()) {
-        inThread=false;
-        idRef=art->idRef();
-        
-        while(idRef!=0 && !inThread) {
-          ref=g->byId(idRef);
-          inThread=ref->filterResult();
-          idRef=ref->idRef();
-        }
-        if(inThread) {
-          art->setFilterResult(true);
-          g->byId(art->idRef())->setVisibleFollowUps(true);
-          c_ount++;
-        }
-      }
-      else c_ount++;
-    }
-  }
+
+  kdDebug(5003) << "KNArticleFilter::doFilter() : matched " << c_ount
+                << " articles , merged " << mergeCnt
+                << " threads by subject" << endl;
+
 }
 
 
