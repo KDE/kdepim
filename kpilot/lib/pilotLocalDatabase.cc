@@ -169,11 +169,16 @@ bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags,
 
 	for (int i=0; i<fNumRecords; i++) {
 		KPILOT_DELETE(fRecords[i]);
-		fRecords[i]=NULL;
 	}
 	fNumRecords=0;
 	fCurrentRecord=0;
 	fPendingRec=0;
+
+#ifdef SHADOW_LOCAL_DB
+	// Also delete records if the array implementation goes away
+	fRecordList.clear();
+	fRecordIndex = fRecordList.begin();
+#endif
 
 	// TODO: Do I have to open it explicitly???
 	setDBOpen(true);
@@ -231,6 +236,9 @@ int PilotLocalDatabase::writeAppBlock(unsigned char *buffer, int len)
 	// returns the number of records in the database
 int PilotLocalDatabase::recordCount()
 {
+#ifdef SHADOW_LOCAL_DB
+	assert( (unsigned) fNumRecords == fRecordList.count() );
+#endif
 	return fNumRecords;
 }
 
@@ -247,6 +255,22 @@ QValueList<recordid_t> PilotLocalDatabase::idList()
 	{
 		idlist.append(fRecords[id]->getID());
 	}
+
+#ifdef SHADOW_LOCAL_DB
+	assert(fRecordList.count() == (unsigned) idlen);
+
+	QValueList<PilotRecord *>::ConstIterator i = fRecordList.begin();
+	QValueList<recordid_t>::ConstIterator j = idlist.begin();
+
+	while ( (i!=fRecordList.end()) && (j!=idlist.end()) )
+	{
+		assert(*j == (*i)->id());
+		++i;
+		++j;
+	}
+	assert( (i==fRecordList.end()) && (j==idlist.end()));
+#endif
+
 	return idlist;
 }
 

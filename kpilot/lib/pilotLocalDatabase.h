@@ -151,6 +151,10 @@ private:
 	PilotRecord* fRecords[10000]; // Current max records in DB.. hope it's enough
 	int         fPendingRec; // Temp index for the record about to get an ID.
 
+#ifdef SHADOW_LOCAL_DB
+	QValueList<PilotRecord *> fRecordList;
+	QValueList<PilotRecord *>::Iterator fRecordIndex;
+#endif
 
 	/**
 	* For databases opened by name only (constructor 2 -- which is the
