@@ -13,4 +13,17 @@ X-KDE-ParentComponents=knode,kontact_knodeplugin
 X-KDE-CfgDlgHierarchy=KNode
 
 Name=Signing/Verifying
+Name[da]=Underskriver/Verificerer
+Name[es]=Firmar/Verificar
+Name[et]=Signeerimine/kontroll
+Name[nl]=Ondertekening/Verifiëring
+Name[sl]=Podpisovanje/Preverjanje
+Name[sv]=Signera och verifiera
+Name[ta]=கையெழுத்து இடுதல்/சரிபார்த்தல்
 Comment=Protect your privacy by signing and verifying postings
+Comment[da]=Beskyt dine private oplysninger ved at underskrive og verificere indsendelser
+Comment[es]=Proteja su privacidad firmando y verificando sus envíos
+Comment[et]=Kaitseb sinu privaatsus postitusi signeerides ja konrollides
+Comment[nl]=Bescherm uw privacy door uw berichten te ondertekenen en te verifiëren
+Comment[sl]=Zaščitite vašo zasebnost s podpisovanjem ali preverjanjem člankov
+Comment[sv]=Skyddar din integritet genom att signera och verifiera meddelanden

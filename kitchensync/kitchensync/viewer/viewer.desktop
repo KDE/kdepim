@@ -1,6 +1,13 @@
 [Desktop Entry]
 Type=Service
 Name=Data Viewer
+Name[da]=Dataviser
+Name[es]=Visor de datos
+Name[et]=Andmete näitaja
+Name[nl]=Gegevensweergave
+Name[sl]=Pregledovalnik podatkov
+Name[sv]=Datavisning
+Name[ta]=தரவு பார்வையாளர்
 Icon=
 ServiceTypes=KitchenSync/ActionPart
 X-KDE-Library=libksync_viewer

@@ -13,4 +13,11 @@ X-KDE-ParentComponents=knode,kontact_knodeplugin
 X-KDE-CfgDlgHierarchy=KNode
 
 Name=Posting News
+Name[da]=Indsender nyheder
+Name[es]=Enviar noticias
+Name[et]=Uudiste postitamine
+Name[nl]=Nieuws posten
+Name[sl]=Pošiljanje novic
+Name[sv]=Skicka inlägg
+Name[ta]=செய்திகளை அனுப்புதல் 
 

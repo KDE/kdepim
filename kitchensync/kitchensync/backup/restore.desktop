@@ -1,6 +1,13 @@
 [Desktop Entry]
 Type=Service
 Name=Konnector Restore
+Name[da]=Konnector genopret
+Name[es]=Restaurar Konnector
+Name[et]=Konnectori taastaja
+Name[nl]=Konnector-herstel
+Name[sl]=Povrnitev Konnectorja
+Name[sv]=Konnector återställning
+Name[ta]=இணைப்பானைத் திரும்பப் பெறுதல் 
 Icon=
 ServiceTypes=KitchenSync/ActionPart
 X-KDE-Library=libksync_restore
