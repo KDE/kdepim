@@ -58,22 +58,22 @@ public slots:
 // virtual void doTest();
 
 public:
-	enum EConflictResolution { 
-		eUserChoose=0, 
+	enum EConflictResolution {
+		eUserChoose=0,
 		eKeepBothInAbbrowser,
-		ePilotOverides, 
+		ePilotOverides,
 		eAbbrowserOverides,
-		eDoNotResolve 
+		eDoNotResolve
 		} ;
 	EConflictResolution getResolveConflictOption() const
 		{ return fConflictResolution; }
-	bool doSmartMerge() const 
+	bool doSmartMerge() const
 		{ return fSmartMerge; }
-	
+
 	enum Mode { Normal, Backup } ;
 	Mode getMode() const { return fMode; }
 
-	/** 
+	/**
 	*  @return the Abbrowser Contact field to map the pilot "other" phone
 	*  field to (such as BusinessFax, etc)
 	*/
@@ -82,11 +82,15 @@ public:
 	bool isPilotFaxHome() const { return fPilotFaxHome; }
 	// bool backupDone() const { return fBackupDone; }
 
+
+protected:
+	void doTest();
+	
 private:
-	/** 
+	/**
 	*  Do the preperations before doSync or doBackup.
 	*  Start abbrowser, set the pilot app info, assign the fDcop variable,
-	*  and get the contacts from abbrowser over dcop 
+	*  and get the contacts from abbrowser over dcop
 	*/
 	bool _prepare(QDict<ContactEntry> &abbrowserContacts,
 		QMap<recordid_t, QString> &idContactMap,
@@ -99,7 +103,7 @@ private:
 	*/
 	void readConfig();
 
-	/** 
+	/**
 	*  Start the Abbrowser application; if can't start exit's application
 	*  @return true if already running, false if not
 	*/
@@ -161,7 +165,7 @@ private:
 		bool deleteIfNotFound=false);
 	bool _smartMerge(PilotAddress &pilotAddress, 
 		ContactEntry &abEntry);
-	void _backupDone();
+	// void _backupDone();
 	const char *_getKabFieldForOther(const QString &desc) const;
 	int _getCatId(int catIndex) const;
 
@@ -174,9 +178,11 @@ private:
 	QString fPilotOtherMap;
 	bool fPilotStreetHome;
 	bool fPilotFaxHome;
-	bool fBackupDone;
 	Mode fMode;
 } ;
 
-// $Log: $
+// $Log$
+// Revision 1.12  2001/10/31 23:54:45  adridg
+// CVS_SILENT: Ongoing conduits ports
+//
 #endif

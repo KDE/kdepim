@@ -18,7 +18,7 @@
 #include "options.h"
 
 // Only include what we really need:
-// First UNIX system stuff, then std C++, 
+// First UNIX system stuff, then std C++,
 // then Qt, then KDE, then local includes.
 //
 //
@@ -31,7 +31,6 @@
 #include <kglobal.h>
 #include <kstddirs.h>
 #include <kmessagebox.h>
-#include <ksimpleconfig.h>
 #include <kconfig.h>
 #include <dcopclient.h>
 #include <kdebug.h>
@@ -74,6 +73,8 @@ AbbrowserConduit::AbbrowserConduit(KPilotDeviceLink * o,
 AbbrowserConduit::~AbbrowserConduit()
 {
 	FUNCTIONSETUP;
+
+	KPILOT_DELETE(fDatabase);
 }
 
 
@@ -111,8 +112,10 @@ bool AbbrowserConduit::_startAbbrowser()
 		// abbrowser not running, start it
 		kapp->startServiceByDesktopName(abbrowserName, QString::null);
 
+#ifdef DEBUG
 		DEBUGCONDUIT << fname
 			<< "Waiting to run " << abbrowserName << endl;
+#endif
 
 		alreadyRunning = false;
 	}
@@ -736,16 +739,20 @@ void AbbrowserConduit::_handleConflict(PilotAddress * pilotAddress,
 	}
 	else if (pilotAddress)
 	{
-		kdDebug() << fname <<
+#ifdef DEBUG
+		DEBUGCONDUIT << fname <<
 			" ContactEntry was deleted but pilotAddress was modified"
 			<< endl;
+#endif
 		showPilotAddress(*pilotAddress);
 	}
 	else
 	{
-		kdDebug() << fname <<
+#ifdef DEBUG
+		DEBUGCONDUIT << fname <<
 			" PilotAddress was deleted but ConactEntry was modified"
 			<< endl;
+#endif
 		showContactEntry(*abEntry);
 	}
 }
@@ -754,7 +761,9 @@ void AbbrowserConduit::_removePilotAddress(PilotAddress & address)
 {
 	FUNCTIONSETUP;
 
-	kdDebug() << fname << " deleting from palm pilot " << endl;
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << " deleting from palm pilot " << endl;
+#endif
 	showPilotAddress(address);
 
 	address.makeDeleted();
@@ -809,20 +818,29 @@ void AbbrowserConduit::_saveAbEntry(ContactEntry & abEntry,
 {
 	FUNCTIONSETUP;
 
-	KConfig & c = KPilotConfig::getConfig(AbbrowserConduitOptions::Group);
-	QCString abbrowserName(c.readEntry("AbbrowserName", "kaddressbook"));
-	QCString abbrowserIface(c.readEntry("AbbrowserIface",
-			"KAddressBookIface"));
+	// We may need to operate in a KDE 2.1 environment,
+	// where the address book is called "abbrowser" instead
+	// of "kaddressbook".
+	//
+	//
+	KConfigGroupSaver g(fConfig,AbbrowserConduitFactory::group());
+	QCString abbrowserName(fConfig->readEntry("AbbrowserName", 
+		"kaddressbook"));
+	QCString abbrowserIface(fConfig->readEntry("AbbrowserIface",
+		"KAddressBookIface"));
 
 
 	// this marks that this field has been synced
 	abEntry.setModified(false);
 
-	kdDebug() << fname << " saving to " << abbrowserName
+#ifdef DEBUG
+	DEBUGCONDUIT << fname 
+		<< " saving to " 
+		<< abbrowserName
 		<< abEntry.getFullName()
-		<< " " << abEntry.getCompany() << endl;
-
-	//showContactEntry(abEntry);
+		<< " " 
+		<< abEntry.getCompany() << endl;
+#endif
 
 	// save over kdcop to abbrowser
 	QByteArray sendData;
@@ -865,10 +883,16 @@ void AbbrowserConduit::_saveAbChanges()
 	QByteArray replyData;
 	QCString replyTypeStr;
 
-	KConfig & c = KPilotConfig::getConfig(AbbrowserConduitOptions::Group);
-	QCString abbrowserName(c.readEntry("AbbrowserName", "kaddressbook"));
-	QCString abbrowserIface(c.readEntry("AbbrowserIface",
-			"KAddressBookIface"));
+	// We may need to operate in a KDE 2.1 environment,
+	// where the address book is called "abbrowser" instead
+	// of "kaddressbook".
+	//
+	//
+	KConfigGroupSaver g(fConfig,AbbrowserConduitFactory::group());
+	QCString abbrowserName(fConfig->readEntry("AbbrowserName", 
+		"kaddressbook"));
+	QCString abbrowserIface(fConfig->readEntry("AbbrowserIface",
+		"KAddressBookIface"));
 
 
 	if (!fDCOP->call(abbrowserName, abbrowserIface,
@@ -884,14 +908,16 @@ bool AbbrowserConduit::_savePilotAddress(PilotAddress & address,
 {
 	FUNCTIONSETUP;
 
-	kdDebug() << fname <<
+#ifdef DEBUG
+	DEBUGCONDUIT << fname <<
 		" saving to pilot " << address.id()
 		<< " " << address.getField(entryFirstname)
 		<< " " << address.getField(entryLastname)
 		<< " " << address.getField(entryCompany) << endl;
+#endif
 
 	PilotRecord *pilotRec = address.pack();
-	recordid_t pilotId = writeRecord(pilotRec);
+	recordid_t pilotId = fDatabase->writeRecord(pilotRec);
 	delete pilotRec;
 
 	// pilotId == 0 if using local db, so don't overwrite the valid id
@@ -919,20 +945,31 @@ void AbbrowserConduit::_setAppInfo()
 	// get the address application header information
 	unsigned char *buffer =
 		new unsigned char[PilotAddress::APP_BUFFER_SIZE];
-	int appLen = readAppInfo(buffer);
+	int appLen = fDatabase->readAppBlock(buffer,PilotAddress::APP_BUFFER_SIZE);
 
 	unpack_AddressAppInfo(&fAddressAppInfo, buffer, appLen);
 	delete[]buffer;
 	buffer = NULL;
 
-	kdDebug() << fname << " lastUniqueId"
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << " lastUniqueId"
 		<< fAddressAppInfo.category.lastUniqueID << endl;
+#endif
 	for (int i = 0; i < 16; i++)
-		kdDebug() << fname << " cat " << i << " =" <<
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << " cat " << i << " =" <<
 			fAddressAppInfo.category.name[i] << endl;
+#endif
+	}
+
 	for (int x = 0; x < 8; x++)
-		kdDebug() << fname << " phone[" << x << "] = " <<
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << " phone[" << x << "] = " <<
 			fAddressAppInfo.phoneLabels[x] << endl;
+#endif
+	}
 }
 
 bool AbbrowserConduit::_equal(const PilotAddress & piAddress,
@@ -1095,9 +1132,11 @@ ContactEntry *AbbrowserConduit::_syncPilotEntry(PilotAddress & pilotAddress,
 	QString * outAbKey, bool deleteIfNotFound)
 {
 	FUNCTIONSETUP;
-	kdDebug() << fname <<
+#ifdef DEBUG
+	DEBUGCONDUIT << fname <<
 		" trying to sync the existing pilotAddress to the kaddressbook entries"
 		<< endl;
+#endif
 
 	QString abKey;
 
@@ -1110,18 +1149,22 @@ ContactEntry *AbbrowserConduit::_syncPilotEntry(PilotAddress & pilotAddress,
 		// the kpilot id and save
 		if (_equal(pilotAddress, *abEntry))
 		{
-			kdDebug() << fname <<
+#ifdef DEBUG
+			DEBUGCONDUIT << fname <<
 				" both records already exist and are equal, just assigning the KPILOT_ID to the kaddressbook entry"
 				<< endl;
+#endif
 			abEntry->setCustomField("KPILOT_ID",
 				QString::number(pilotAddress.getID()));
 			_saveAbEntry(*abEntry, abKey);
 		}
 		else
 		{
-			kdDebug() << fname <<
+#ifdef DEBUG
+			DEBUGCONDUIT << fname <<
 				" both records exist (no id match) but conflict"
 				<< endl;
+#endif
 			_handleConflict(&pilotAddress, abEntry, abKey);
 		}
 	}
@@ -1143,9 +1186,11 @@ ContactEntry *AbbrowserConduit::_syncPilotEntry(PilotAddress & pilotAddress,
 		}
 		if (addPalm)
 		{
-			kdDebug() << fname <<
+#ifdef DEBUG
+			DEBUGCONDUIT << fname <<
 				" adding new pilot record to kaddressbook => "
 				<< endl;
+#endif
 			showPilotAddress(pilotAddress);
 			_addToAbbrowser(pilotAddress);
 		}
@@ -1161,15 +1206,15 @@ bool AbbrowserConduit::_prepare(QDict < ContactEntry > &abbrowserContacts,
 {
 	FUNCTIONSETUP;
 
-	kdDebug() << fname << endl;
-
 	readConfig();
 
 	if (!fDCOP)
 		fDCOP = KApplication::kApplication()->dcopClient();
 	if (!fDCOP)
 	{
-		kdDebug() << fname << " unable to connect to dcop" << endl;
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << " unable to connect to dcop" << endl;
+#endif
 		return false;
 	}
 	abAlreadyRunning = _startAbbrowser();
@@ -1179,7 +1224,9 @@ bool AbbrowserConduit::_prepare(QDict < ContactEntry > &abbrowserContacts,
 	// get the contacts from kaddressbook
 	if (!_getAbbrowserContacts(abbrowserContacts))
 	{
-		kdDebug() << fname << ": unable to get contacts" << endl;
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << ": unable to get contacts" << endl;
+#endif
 		return false;
 	}
 
@@ -1189,37 +1236,47 @@ bool AbbrowserConduit::_prepare(QDict < ContactEntry > &abbrowserContacts,
 	// - created from the list of Abbrowser Contacts
 	_mapContactsToPilot(abbrowserContacts, idContactMap, newContacts);
 
-	kdDebug() << fname << " mapped pilot contacts, ready to sync" << endl;
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << " mapped pilot contacts, ready to sync" << endl;
+#endif
 
 	return true;
 }
 
+#if 0
 void AbbrowserConduit::_backupDone()
 {
 	FUNCTIONSETUP;
 
 	if (!fBackupDone)
 	{
-		kdDebug() << fname << " setting FIRST_TIME_SYNCING to false"
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << " setting FIRST_TIME_SYNCING to false"
 			<< endl;
+#endif
 		fBackupDone = true;
-		KConfig & c =
-			KPilotConfig::getConfig(AbbrowserConduitOptions::
-			Group);
-		c.writeEntry(AbbrowserConduitConfig::FIRST_TIME_SYNCING,
+
+		KConfigGroupSaver g(fConfig,AbbrowserConduitFactory::group());
+		fConfig->writeEntry(AbbrowserConduitFactory::firstTime(),
 			!fBackupDone);
-		setFirstTime(c, false);
-		c.sync();
+		fConfig->sync();
 	}
 
-	kdDebug() << fname << " stop" << endl;
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << " stop" << endl;
+#endif
 }
+#endif
 
+
+#if 0
 void AbbrowserConduit::doBackup()
 {
 	FUNCTIONSETUP;
 
-	kdDebug() << fname << " start" << endl;
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << " start" << endl;
+#endif
 
 	QDict < ContactEntry > abbrowserContacts;
 	QMap < recordid_t, QString > idContactMap;
@@ -1256,7 +1313,8 @@ void AbbrowserConduit::doBackup()
 			// if equal, do nothing since it is already there
 			if (!_equal(pilotAddress, *abEntry))
 			{
-				kdDebug() << fname << " id = " <<
+#ifdef DEBUG
+				DEBUGCONDUIT << fname << " id = " <<
 					pilotAddress.
 					id() <<
 					" match but not equal; pilot = '" <<
@@ -1266,6 +1324,7 @@ void AbbrowserConduit::doBackup()
 					getField(entryLastname) <<
 					"' abEntry = '" << abEntry->
 					findRef("fn").latin1() << "'" << endl;
+#endif
 
 				// if not equal, let the user choose what to do
 				_handleConflict(&pilotAddress, abEntry,
@@ -1281,6 +1340,7 @@ void AbbrowserConduit::doBackup()
 	_stopAbbrowser(abAlreadyRunning);
 	_backupDone();
 }
+#endif
 
 int AbbrowserConduit::_getCatId(int catIndex) const
 {
@@ -1355,15 +1415,15 @@ void AbbrowserConduit::_removeFromSync(const QString & key,
 	int recIndex = 0;
 
 #ifdef DEBUG
-	kdDebug() << fname 
-		<< " about to readRecordByIndex " 
-		<< recIndex 
+	DEBUGCONDUIT << fname
+		<< " about to readRecordByIndex "
+		<< recIndex
 		<< endl;
 #endif
 
-	for (record = readRecordByIndex(recIndex); 
+	for (record = fDatabase->readRecordByIndex(recIndex);
 		record != NULL ;
-		record = readRecordByIndex(recIndex))
+		record = fDatabase->readRecordByIndex(recIndex))
 	{
 		PilotAddress pilotAddress(fAddressAppInfo, record);
 		QString abKey = QString::null;
@@ -1377,7 +1437,9 @@ void AbbrowserConduit::_removeFromSync(const QString & key,
 			{
 				// assume that it was deleted from the abbrowser since a
 				// backup should have been done before the first sync;
-				bool deleteIfNotFound = fBackupDone;
+				//
+				// was = fBackupDone
+				bool deleteIfNotFound = false;
 				QString abKey;
 				ContactEntry *syncedContact =
 					_syncPilotEntry(pilotAddress,
@@ -1388,11 +1450,13 @@ void AbbrowserConduit::_removeFromSync(const QString & key,
 				// the newContacts or idContactMap structures
 				if (syncedContact && abKey != QString::null)
 				{
-					kdDebug() << fname
+#ifdef DEBUG
+					DEBUGCONDUIT << fname
 						<<
 						" Merged address to unmapped contact "
 						<< syncedContact->
 						getFullName() << endl;
+#endif
 
 					_removeFromSync(abKey, newContacts,
 						idContactMap);
@@ -1430,9 +1494,11 @@ void AbbrowserConduit::_removeFromSync(const QString & key,
 			}
 			else if (abEntry->isModified())
 			{
-				kdDebug() << fname <<
+#ifdef DEBUG
+				DEBUGCONDUIT << fname <<
 					"abEntry is modified but pilot wasn't; abEntry => "
 					<< endl;
+#endif
 				showContactEntry(*abEntry);
 				// update pilot
 				_copy(pilotAddress, *abEntry);
@@ -1467,23 +1533,25 @@ void AbbrowserConduit::_removeFromSync(const QString & key,
 		ContactEntry *abEntry = abbrowserContacts[abKey];
 
 		assert(abKey != NULL);
-		kdDebug() << fname <<
+#ifdef DEBUG
+		DEBUGCONDUIT << fname <<
 			" adding kab contact that has an old pilot id " <<
 			endl;
+#endif
 		showContactEntry(*abEntry);
 		_addToPalm(abKey, *abEntry);
 	}
 
 	_saveAbChanges();
 	_stopAbbrowser(abAlreadyRunning);
-	_backupDone();
 }
 
 void AbbrowserConduit::doTest()
 {
 	FUNCTIONSETUP;
 
-	kdDebug() << fname << " start" << endl;
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << " start" << endl;
 
 	QDict < ContactEntry > abbrowserContacts;
 	QMap < recordid_t, QString > idContactMap;
@@ -1492,12 +1560,19 @@ void AbbrowserConduit::doTest()
 
 	if (!_prepare(abbrowserContacts, idContactMap, newContacts,
 			abAlreadyRunning))
-		kdDebug() << fname << " Test failed" << endl;
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << " Test failed" << endl;
+#endif
+	}
 	else
 	{
-		kdDebug() << fname << " Test passed!" << endl;
+#ifdef DEBUG
+		DEBUGCONDUIT << fname << " Test passed!" << endl;
+#endif
 		_stopAbbrowser(abAlreadyRunning);
 	}
+#endif
 }
 
 const char *AbbrowserConduit::_getKabFieldForOther(const QString & desc) const
@@ -1529,42 +1604,40 @@ void AbbrowserConduit::readConfig()
 {
 	FUNCTIONSETUP;
 
-	KConfig & c = KPilotConfig::getConfig(AbbrowserConduitOptions::Group);
-	getDebugLevel(c);
-	fSmartMerge =
-		c.readBoolEntry(AbbrowserConduitConfig::SMART_MERGE_ENTRY,
-		true);
-	fConflictResolution =
-		(EConflictResolution) c.
-		readNumEntry(AbbrowserConduitConfig::CONFLICT_RESOLV_ENTRY,
-		eDoNotResolve);
-	QString other =
-		c.readEntry(AbbrowserConduitConfig::PILOT_OTHER_MAP_ENTRY,
-		"Other Phone");
+	KConfigGroupSaver g(fConfig,AbbrowserConduitFactory::group());
 
+	fSmartMerge = fConfig->readBoolEntry(
+		AbbrowserConduitFactory::smartMerge(),true);
+	fConflictResolution = (EConflictResolution) 
+		fConfig->readNumEntry(
+			AbbrowserConduitFactory::conflictResolution(),
+			eDoNotResolve);
+
+	QString other = fConfig->readEntry(
+		AbbrowserConduitFactory::mapOther(),"Other Phone");
 	fPilotOtherMap = _getKabFieldForOther(other);
 
-	QString prefsStr =
-		c.readEntry(AbbrowserConduitConfig::PILOT_STREET_TYPE_ENTRY,
-		"Home Street");
+	QString prefsStr = fConfig->readEntry(
+		AbbrowserConduitFactory::streetType(),"Home Street");
 
 	fPilotStreetHome = true;
 	prefsStr = prefsStr.left(prefsStr.find(' '));
 	if (prefsStr != "Home")
+	{
 		fPilotStreetHome = false;
+	}
 
-	prefsStr = c.readEntry(AbbrowserConduitConfig::PILOT_FAX_TYPE_ENTRY,
-		"Home Fax");
+	prefsStr = fConfig->readEntry(
+		AbbrowserConduitFactory::faxType(),"Home Fax");
 	fPilotFaxHome = true;
 	prefsStr = prefsStr.left(prefsStr.find(' '));
 	if (prefsStr != "Home")
+	{
 		fPilotFaxHome = false;
+	}
 
-	//fBackupDone = !c.readBoolEntry(AbbrowserConduitConfig::FIRST_TIME_SYNCING,
-	//                     true);
-	fBackupDone = !getFirstTime(c);
 #ifdef DEBUG
-	kdDebug() << fname
+	DEBUGCONDUIT << fname
 		<< ": Settings "
 		<< "fSmartMerge=" << fSmartMerge
 		<< " fConflictResolution=" << fConflictResolution

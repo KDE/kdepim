@@ -43,6 +43,11 @@ public:
 
 	static KAboutData *about() { return fAbout; } ;
 	static const char *group() { return fGroup; } ;
+	static const char *faxType() { return fFaxType; } ;
+	static const char *streetType() { return fStreetType; } ;
+	static const char *smartMerge() { return fSmartMerge; } ;
+	static const char *mapOther() { return fOtherMap; } ;
+	static const char *conflictResolution() { return fResolution; } ;
 
 protected:
 	virtual QObject* createObject( QObject* parent = 0, 
@@ -52,7 +57,8 @@ protected:
 private:
 	KInstance *fInstance;
 	static KAboutData *fAbout;
-	static const char *fGroup;
+	static const char *fGroup,*fStreetType,*fSmartMerge,*fResolution,
+		*fOtherMap,*fFaxType;
 } ;
 
 extern "C"
@@ -63,5 +69,8 @@ void *init_libknotesconduit();
 } ;
 
 // $Log$
+// Revision 1.1  2001/10/31 23:54:45  adridg
+// CVS_SILENT: Ongoing conduits ports
+//
 
 #endif

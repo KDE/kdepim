@@ -61,6 +61,11 @@ void *init_libabbrowserconduit()
 
 /* static */ KAboutData *AbbrowserConduitFactory::fAbout = 0L;
 /* static */ const char *AbbrowserConduitFactory::fGroup = "Abbrowser-conduit";
+/* static */ const char *AbbrowserConduitFactory::fStreetType = "PilotStreet";
+/* static */ const char *AbbrowserConduitFactory::fSmartMerge = "SmartMerge";
+/* static */ const char *AbbrowserConduitFactory::fResolution = "ConflictResolve";
+/* static */ const char *AbbrowserConduitFactory::fOtherMap = "PilotOther";
+
 
 AbbrowserConduitFactory::AbbrowserConduitFactory(QObject *p, const char *n) :
 	KLibFactory(p,n)
@@ -145,3 +150,6 @@ AbbrowserConduitFactory::~AbbrowserConduitFactory()
 
 
 // $Log$
+// Revision 1.1  2001/10/31 23:54:45  adridg
+// CVS_SILENT: Ongoing conduits ports
+//
