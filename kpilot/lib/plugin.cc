@@ -234,7 +234,6 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 	}
 	fLocalDatabase = localDB;
 
-	// These latin1()'s are ok, since database names are latin1-coded.
 	fDatabase = new PilotSerialDatabase(pilotSocket(), name /* On pilot */);
 
 	if (!fDatabase)
