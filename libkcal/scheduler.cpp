@@ -27,6 +27,7 @@
 #include <kstandarddirs.h>
 
 #include "event.h"
+#include "todo.h"
 #include "freebusy.h"
 #include "icalformat.h"
 #include "calendar.h"
@@ -157,23 +158,28 @@ bool Scheduler::acceptRequest(IncidenceBase *incidence,ScheduleMessage::Status s
     return true;
   } else {
     switch (status) {
-      case ScheduleMessage::Obsolete:
-        return true;
-      case ScheduleMessage::RequestNew:
-        mCalendar->addIncidence(inc);
-        deleteTransaction(incidence);
-        return true;
-      case ScheduleMessage::RequestUpdate:
-        Event *even;
-        even = mCalendar->event(incidence->uid());
-        if (even) {
-          mCalendar->deleteEvent(even);
-        }
-        mCalendar->addIncidence(inc);
-        deleteTransaction(incidence);
-        return true;
-      default:
-        return false;
+    case ScheduleMessage::Obsolete:
+      return true;
+    case ScheduleMessage::RequestNew:
+      mCalendar->addIncidence(inc);
+      deleteTransaction(incidence);
+      return true;
+    case ScheduleMessage::RequestUpdate: {
+      Event *even = mCalendar->event(incidence->uid());
+      if (even) {
+	mCalendar->deleteEvent(even);
+      } else {
+	Todo *todo = mCalendar->todo(incidence->uid());
+	if (todo) {
+	  mCalendar->deleteTodo(todo);
+	}
+      }
+      mCalendar->addIncidence(inc);
+      deleteTransaction(incidence);
+      return true;
+    }
+    default:
+      return false;
     }
   }
   deleteTransaction(incidence);
@@ -189,15 +195,14 @@ bool Scheduler::acceptAdd(IncidenceBase *incidence,ScheduleMessage::Status statu
 bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status status)
 {
   bool ret = false;
-  //get event in calendar
-  QPtrList<Event> eventList;
-  eventList=mCalendar->events(incidence->dtStart().date(),incidence->dtStart().date(),false);
-  Event *ev;
-  for ( ev = eventList.first(); ev; ev = eventList.next() ) {
-    if (ev->uid()==incidence->uid()) {
-      //get matching attendee in calendar
-      kdDebug() << "Scheduler::acceptTransaction match found!" << endl;
-      mCalendar->deleteEvent(ev);
+  Event *even = mCalendar->event(incidence->uid());
+  if (even) {
+    mCalendar->deleteEvent(even);
+    ret = true;
+  } else {
+    Todo *todo = mCalendar->todo(incidence->uid());
+    if (todo) {
+      mCalendar->deleteTodo(todo);
       ret = true;
     }
   }
@@ -224,11 +229,14 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status sta
   }
   bool ret = false;
   Event *ev = mCalendar->event(incidence->uid());
-  if (ev) {
+  Todo *to = mCalendar->todo(incidence->uid());
+  if (ev || to) {
     //get matching attendee in calendar
     kdDebug(5800) << "Scheduler::acceptTransaction match found!" << endl;
     QPtrList<Attendee> attendeesIn = incidence->attendees();
-    QPtrList<Attendee> attendeesEv = ev->attendees();
+    QPtrList<Attendee> attendeesEv;
+    if (ev) attendeesEv = ev->attendees();
+    if (to) attendeesEv = to->attendees();
     Attendee *attIn;
     Attendee *attEv;
     for ( attIn = attendeesIn.first(); attIn; attIn = attendeesIn.next() ) {
@@ -236,10 +244,9 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status sta
         if (attIn->email()==attEv->email()) {
           //update attendee-info
           kdDebug(5800) << "Scheduler::acceptTransaction update attendee" << endl;
-          //attEv->setRole(attIn->role());
           attEv->setStatus(attIn->status());
-          //attEv->setRSVP(attIn->RSVP());
-          ev->setRevision(ev->revision()+1);
+          if (ev) ev->setRevision(ev->revision()+1);
+	  if (to) to->setRevision(to->revision()+1);
           ret = true;
         }
       }
