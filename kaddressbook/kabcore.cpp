@@ -944,7 +944,7 @@ void KABCore::initActions()
                SLOT( newContact() ), actionCollection(), "file_new_contact" );
   action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data of a person, including addresses and phonenumbers." ) );
 
-  mActionMailVCard = new KAction( i18n("Mail &vCard..."), "mail_post_to", 0,
+  mActionMailVCard = new KAction( i18n("Send &Contact..."), "mail_post_to", 0,
                                  this, SLOT( mailVCard() ),
                                   actionCollection(), "file_mail_vcard" );
   mActionMailVCard->setWhatsThis( i18n( "Send a mail with the selected contact as attachment." ) );

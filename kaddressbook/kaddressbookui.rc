@@ -56,7 +56,7 @@
 
   <Menu name="RMBPopup">
     <Action name="file_properties"/>
-    <Action name="file_new"/>
+    <Action name="file_new_contact"/>
     <Action name="edit_delete"/>
     <Separator/>
     <Action name="file_mail"/>
