@@ -93,7 +93,7 @@ libgpgme_real_la_SOURCES =						\
 #else
   ath_pthread_src =
 #endif
-libgpgme_la_SOURCES = ath-compat.c # $(ath_pth_src) $(ath_pthread_src)
+libgpgme_la_SOURCES = ath-compat.c fakes.c # $(ath_pth_src) $(ath_pthread_src)
 #libgpgme_pthread_la_SOURCES = ath.h ath-pthread.c
 #libgpgme_pth_la_SOURCES = ath.h ath-pth.c
 
