@@ -54,6 +54,8 @@
 #include "pilotRecord.h"
 #include "pilotTodoEntry.h"
 
+#include "vcc.h"
+
 #include "todo-conduit.h"
 #include "todo-setup.h"
 #include "conduitApp.h"
@@ -692,6 +694,9 @@ int TodoConduit::numFromDay(const QString &day)
 
 
 // $Log$
+// Revision 1.12  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.11  2001/02/07 15:46:32  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //

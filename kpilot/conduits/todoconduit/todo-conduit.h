@@ -32,11 +32,24 @@
 #ifndef _TODOCONDUIT_H
 #define _TODOCONDUIT_H
 
-#include "baseConduit.h"
-#include "vcc.h"
-#include <pi-datebook.h>
+#include <config.h>
 
+#ifndef _TIME_H
+#include <time.h>
+#endif
+#ifdef TIME_WITH_SYS_TIME
+#ifndef _SYS_TIME_H
+#include <sys/time.h>
+#endif
+#endif
+
+#include <qstring.h>
+#include "baseConduit.h"
+
+class QWidget;
 class PilotRecord;
+class VObject;
+
 
 class TodoConduit : public BaseConduit
 {
@@ -82,4 +95,7 @@ private:
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.8  2001/02/07 15:46:32  adridg
+// Updated copyright headers for source release. Added CVS log. No code change.
+//
