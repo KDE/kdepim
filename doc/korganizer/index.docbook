@@ -788,18 +788,20 @@ you checked the <guilabel>Recurring event</guilabel> checkbox.
 <title>Group Scheduling</title>
 
 <para> Currently &korganizer; can only schedule events. It's using the
-IMIP-protocoll for group scheduling. IMIP is a standard used by many other
-clients too. For example Outlook, Lotus Notes and Evolution. This means that
+IMIP protocol for group scheduling. IMIP is a standard used by many other
+clients too, for example Outlook, Lotus Notes and Evolution. This means that
 you can share events with other users using one of these clients.</para>
 
 <sect1 id="as-organizer">
-<title>Akting in Group Scheduling as Organizer</title>
-<para>In day- and weekview a little icon showing one tux is placed in the
-event, if you are the organizer of an groupscheduling event.</para>
+<title>Acting in Group Scheduling as Organizer</title>
+<para>In day- and weekview a little icon showing a tux is placed in the
+event if you are the organizer of an group scheduling event.</para>
+
 <sect2 id="publish">
 <title>Publishing an Event</title>
-<para>If you simply want to send some other people an event, then klick publish
-in the schedule-menu, when the event is marked. Then a dialog appears, asking
+<para>If you simply want to send some other people an event, then click on
+<guibutton>publish</guibutton>
+in the schedule menu when the event is marked. Then a dialog appears, asking
 you for the emails you want to send this event.
 </para>
 <para>Publishing events does not expect an answer from the receivers.</para>
