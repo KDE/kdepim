@@ -55,6 +55,7 @@
 using namespace KPIM;
 
 KCompletion * AddresseeLineEdit::s_completion = 0L;
+KPIM::CompletionItemsMap* AddresseeLineEdit::s_completionItemMap = 0L;
 bool AddresseeLineEdit::s_addressesDirty = false;
 QTimer* AddresseeLineEdit::s_LDAPTimer = 0L;
 KPIM::LdapSearch* AddresseeLineEdit::s_LDAPSearch = 0L;
@@ -63,6 +64,7 @@ AddresseeLineEdit* AddresseeLineEdit::s_LDAPLineEdit = 0L;
 KConfig *AddresseeLineEdit::s_config = 0L;
 
 static KStaticDeleter<KCompletion> completionDeleter;
+static KStaticDeleter<KPIM::CompletionItemsMap> completionItemsDeleter;
 static KStaticDeleter<QTimer> ldapTimerDeleter;
 static KStaticDeleter<KPIM::LdapSearch> ldapSearchDeleter;
 static KStaticDeleter<QString> ldapTextDeleter;
@@ -101,6 +103,8 @@ void AddresseeLineEdit::init()
     completionDeleter.setObject( s_completion, new KCompletion() );
     s_completion->setOrder( KCompletion::Weighted );
     s_completion->setIgnoreCase( true );
+
+    completionItemsDeleter.setObject( s_completionItemMap, new KPIM::CompletionItemsMap() );
   }
 
 //  connect( s_completion, SIGNAL( match( const QString& ) ),
@@ -497,7 +501,8 @@ void AddresseeLineEdit::loadContacts()
 void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight )
 {
   if ( KPIM::DistributionList::isDistributionList( addr ) ) {
-    s_completion->addItem( addr.formattedName(), weight );
+    //kdDebug(5300) << "AddresseeLineEdit::addContact() distribution list \"" << addr.formattedName() << "\" weight=" << weight << endl;
+    addCompletionItem( addr.formattedName(), weight );
     return;
   }
   //m_contactMap.insert( addr.realName(), addr );
@@ -510,7 +515,7 @@ void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight )
     const QString tmp = (*it).left( len );
     const QString fullEmail = addr.fullEmail( tmp );
     //kdDebug(5300) << "AddresseeLineEdit::addContact() \"" << fullEmail << "\" weight=" << weight << endl;
-    s_completion->addItem( fullEmail.simplifyWhiteSpace(), weight );
+    addCompletionItem( fullEmail.simplifyWhiteSpace(), weight );
     // Try to guess the last name: if found, we add an extra
     // entry to the list to make sure completion works even
     // if the user starts by typing in the last name.
@@ -537,7 +542,7 @@ void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight )
           sExtraEntry.append( tmp.isEmpty() ? addr.preferredEmail() : tmp );
           sExtraEntry.append( ">" );
           //kdDebug(5300) << "AddresseeLineEdit::addContact() added extra \"" << sExtraEntry.simplifyWhiteSpace() << "\" weight=" << weight << endl;
-          s_completion->addItem( sExtraEntry.simplifyWhiteSpace(), weight );
+          addCompletionItem( sExtraEntry.simplifyWhiteSpace(), weight );
           bDone = true;
         }
       }
@@ -550,9 +555,28 @@ void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight )
   }
 }
 
+void AddresseeLineEdit::addCompletionItem( const QString& string, int weight )
+{
+  // Check if there is an exact match for item already, and use the max weight if so.
+  // Since there's no way to get the information from KCompletion, we have to keep our own QMap
+  CompletionItemsMap::iterator it = s_completionItemMap->begin();
+  if ( it != s_completionItemMap->end() ) {
+    weight = QMAX( *it, weight );
+    *it = weight;
+  } else {
+    s_completionItemMap->insert( string, weight );
+  }
+
+  s_completion->addItem( string, weight );
+}
+
 void AddresseeLineEdit::slotStartLDAPLookup()
 {
-  if ( !s_LDAPSearch->isAvailable() || s_LDAPLineEdit != this )
+  if ( !s_LDAPSearch->isAvailable() ) {
+    s_completionItemMap->clear();
+    return;
+  }
+  if (  s_LDAPLineEdit != this )
     return;
 
   startLoadingLDAPEntries();
@@ -562,6 +586,7 @@ void AddresseeLineEdit::stopLDAPLookup()
 {
   s_LDAPSearch->cancelSearch();
   s_LDAPLineEdit = NULL;
+  s_completionItemMap->clear();
 }
 
 void AddresseeLineEdit::startLoadingLDAPEntries()
