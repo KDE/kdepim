@@ -19,6 +19,7 @@
 #include <klocale.h>
 #include <dcopclient.h>
 #include <dcopref.h>
+#include <kurl.h>
 
 #include "filters.hxx"
 #include "kmailcvt.h"
@@ -124,11 +125,14 @@ Filter::Filter( const QString& name, const QString& author,
 bool Filter::addMessage( FilterInfo* info, const QString& folderName,
                          const QString& msgPath )
 {
+  KURL msgURL;
+  msgURL.setPath( msgPath );
+  
   if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
     KApplication::startServiceByDesktopName( "kmail", QString::null ); // Will wait until kmail is started
 
     DCOPReply reply = DCOPRef( "kmail", "KMailIface" )
-                        .call( "dcopAddMessage", folderName, msgPath );
+                        .call( "dcopAddMessage", folderName, msgURL );
   if ( !reply.isValid() )
   {
     info->alert( i18n( "<b>Fatal:</b> Unable to start KMail for DCOP communication. "
