@@ -75,7 +75,6 @@ public:
   ResourceKolabBase( const QCString& objId );
   virtual ~ResourceKolabBase();
 
-  // TODO: Update these methods
   // These are the methods called by KMail when the resource changes
   virtual bool fromKMailAddIncidence( const QString& type,
                                       const QString& resource,
