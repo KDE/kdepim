@@ -43,7 +43,7 @@ class GroupDavAddressBookAdaptor : public DavAddressBookAdaptor
     QString mimeType() const { return "text/x-vcard"; }
     QCString identifier() const { return "KABCResourceGroupDAV"; }
     QString defaultNewItemName( KPIM::GroupwareUploadItem */*item*/ ) { return "new.vcf"; }
-    long flags() const { return GWResBatchDelete; }
+    long flags() const { return 0; }
 
 
     // Creating Jobs
@@ -53,8 +53,8 @@ class GroupDavAddressBookAdaptor : public DavAddressBookAdaptor
         { return GroupDavGlobals::createListItemsJob( url ); }
     KIO::TransferJob *createDownloadJob( const KURL &url, KPIM::FolderLister::ContentType ctype )
         { return GroupDavGlobals::createDownloadJob( this, url, ctype ); }
-    KIO::Job *createRemoveJob( const KURL &uploadurl, const KPIM::GroupwareUploadItem::List &deletedItems )
-        { return GroupDavGlobals::createRemoveJob( this, uploadurl, deletedItems ); }
+    KIO::Job *createRemoveJob( const KURL &uploadurl, KPIM::GroupwareUploadItem *deletedItem )
+        { return GroupDavGlobals::createRemoveJob( this, uploadurl, deletedItem ); }
 
 
     // Interpreting Jobs

@@ -62,11 +62,16 @@ class KDE_EXPORT GroupwareUploadItem
     QString uid() const { return mUid; }
     void setUid( const QString &uid ) { mUid = uid; }
 
+    QString fingerprint() const { return mFingerprint; }
+    void setFingerprint( const QString &fpr ) { mFingerprint = fpr; }
+
     virtual QString data() const { return mData; }
     virtual void setData( const QString &data ) { mData = data; }
     virtual KURL adaptNewItemUrl( GroupwareDataAdaptor *adaptor, 
                                   const KURL &url );
 
+    virtual KIO::TransferJob *createRawUploadJob( 
+                               GroupwareDataAdaptor *adaptor, const KURL &url );
     virtual KIO::TransferJob *createUploadNewJob( 
                                GroupwareDataAdaptor *adaptor, const KURL &url );
     virtual KIO::TransferJob *createUploadJob( GroupwareDataAdaptor *adaptor, 
@@ -78,6 +83,7 @@ class KDE_EXPORT GroupwareUploadItem
     KURL mUrl;
     QString mUid;
     QString mData;
+    QString mFingerprint;
     UploadType mType;
 };
 

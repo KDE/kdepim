@@ -52,7 +52,7 @@ class GroupDavCalendarAdaptor : public DavCalendarAdaptor
     void customAdaptUploadUrl( KURL &url );
     QCString identifier() const { return "KCalResourceGroupDAV"; }
     QString defaultNewItemName( KPIM::GroupwareUploadItem */*item*/ ) { return "new.ics"; }
-    long flags() const { return GWResBatchDelete; }
+    long flags() const { return 0; }
 
 
     // Creating Jobs
@@ -61,9 +61,9 @@ class GroupDavCalendarAdaptor : public DavCalendarAdaptor
     KIO::TransferJob *createListItemsJob( const KURL &url )
         { return GroupDavGlobals::createListItemsJob( url ); }
     KIO::TransferJob *createDownloadJob( const KURL &url, KPIM::FolderLister::ContentType ctype )
-        { return GroupDavGlobals::createDownloadJob( this, url,ctype ); }
-    KIO::Job *createRemoveJob( const KURL &uploadurl, const KPIM::GroupwareUploadItem::List &deletedItems )
-        { return GroupDavGlobals::createRemoveJob( this, uploadurl, deletedItems ); }
+        { return GroupDavGlobals::createDownloadJob( this, url, ctype ); }
+    KIO::Job *createRemoveJob( const KURL &uploadurl, KPIM::GroupwareUploadItem *deletedItem )
+        { return GroupDavGlobals::createRemoveJob( this, uploadurl, deletedItem ); }
 
 
     // Interpreting Jobs

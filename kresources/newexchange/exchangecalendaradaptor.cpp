@@ -52,11 +52,8 @@ kdDebug()<<"mItemType=="<<mItemType<<endl;
 KIO::TransferJob *ExchangeCalendarUploadItem::createUploadJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseUrl )
 {
 kdDebug()<<"ExchangeCalendarUploadItem::createUploadJob, adaptor="<<adaptor<<", URL="<<baseUrl.url()<<endl;
-kdDebug()<<"mItemType=="<<mItemType<<endl;
   Q_ASSERT( adaptor );
-kdDebug()<<"After Q_ASSERT"<<endl;
   if ( !adaptor ) return 0;
-kdDebug()<<"After (!adaptor) check"<<endl;
   KURL upUrl( url() );
   adaptor->adaptUploadUrl( upUrl );
   kdDebug() << "Uploading to: " << upUrl.prettyURL() << endl;
@@ -67,7 +64,6 @@ kdDebug()<<"After (!adaptor) check"<<endl;
 KIO::TransferJob *ExchangeCalendarUploadItem::createUploadNewJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl )
 {
 kdDebug()<<"ExchangeCalendarUploadItem::createUploadNewJob"<<endl;
-kdDebug()<<"mItemType=="<<mItemType<<endl;
   KURL url( baseurl );
   // TODO: Check if this URL doesn't exist yet!
   url.addPath( uid() + ".EML" );

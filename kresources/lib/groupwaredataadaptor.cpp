@@ -32,14 +32,6 @@ GroupwareUploadItem::GroupwareUploadItem( UploadType type ) : mItemType( KPIM::F
 {
 }
 
-KIO::TransferJob *GroupwareUploadItem::createUploadNewJob(
-      GroupwareDataAdaptor *adaptor, const KURL &baseurl )
-{
-kdDebug()<<"GroupwareUploadItem::createUploadNewJob, baseurl=" << baseurl.url() << endl;
-  setUrl( adaptNewItemUrl( adaptor, baseurl ) );
-  return createUploadJob( adaptor, baseurl );
-}
-
 KURL GroupwareUploadItem::adaptNewItemUrl( GroupwareDataAdaptor *adaptor,
                                            const KURL &baseurl )
 {
@@ -57,8 +49,8 @@ kdDebug() << "Final Path for new item: " << u.url() << endl;
   } else return baseurl;
 }
 
-KIO::TransferJob *GroupwareUploadItem::createUploadJob(
-                                GroupwareDataAdaptor *adaptor, const KURL &/*baseurl*/ )
+KIO::TransferJob *GroupwareUploadItem::createRawUploadJob(
+                       GroupwareDataAdaptor *adaptor, const KURL &/*baseurl*/ )
 {
   Q_ASSERT( adaptor );
   if ( !adaptor ) return 0;
@@ -71,8 +63,48 @@ KIO::TransferJob *GroupwareUploadItem::createUploadJob(
   KIO::TransferJob *job = KIO::storedPut( dta.utf8(), upUrl, -1, true,
                                           false, false );
   job->addMetaData( "PropagateHttpHeader", "true" );
-  if ( adaptor )
-    job->addMetaData( "content-type", adaptor->mimeType() );
+  if ( adaptor ) {
+    job->addMetaData( "customHTTPHeader", "Content-Type: " + adaptor->mimeType() );
+  }
+  return job;
+}
+
+KIO::TransferJob *GroupwareUploadItem::createUploadNewJob(
+      GroupwareDataAdaptor *adaptor, const KURL &baseurl )
+{
+kdDebug()<<"GroupwareUploadItem::createUploadNewJob, baseurl=" << baseurl.url() << endl;
+  setUrl( adaptNewItemUrl( adaptor, baseurl ) );
+  KIO::TransferJob *job = createRawUploadJob( adaptor, baseurl );
+  if ( job ) {
+    kdDebug() << "Adding If-None-Match " << endl;
+    QString header;
+    if ( job->outgoingMetaData().contains("customHTTPHeader") ) {
+      header = job->outgoingMetaData()["customHTTPHeader"];
+      header += "\r\n";
+    }
+    header += "If-None-Match: *";
+    job->addMetaData( "customHTTPHeader", header );
+  }
+  return job;
+}
+
+KIO::TransferJob *GroupwareUploadItem::createUploadJob(
+                           GroupwareDataAdaptor *adaptor, const KURL &baseurl )
+{
+kdDebug()<<"GroupwareUploadItem::createUploadJob" << endl;
+  KIO::TransferJob *job = createRawUploadJob( adaptor, baseurl );
+  if ( job && adaptor ) {
+  kdDebug()<<"Adding If-Match header: " << adaptor->idMapper()->fingerprint( uid() ) << endl;
+    QString header;
+    if ( job->outgoingMetaData().contains("customHTTPHeader") ) {
+      header = job->outgoingMetaData()["customHTTPHeader"];
+      header += "\r\n";
+    }
+kdDebug()<<"old HEADER: " << header << endl;
+    header += "If-Match: " + adaptor->idMapper()->fingerprint( uid() );
+kdDebug()<<"new HEADER: " << header << endl;
+    job->addMetaData( "customHTTPHeader", header );
+  }
   return job;
 }
 

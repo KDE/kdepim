@@ -115,7 +115,12 @@ KIO::TransferJob *GroupDavGlobals::createListItemsJob( const KURL &url )
   WebdavHandler::addDavElement( doc, prop, "getetag" );
 //  WebdavHandler::addDavElement( doc, prop, "getcontenttype" );
   kdDebug(5800) << "props = "<< doc.toString() << endl;
-  return KIO::davPropFind( url, doc, "1", false );
+  KIO::TransferJob *job = KIO::davPropFind( url, doc, "1", false );
+  if ( job ) {
+    job->addMetaData( "accept", "text/xml" );
+    job->addMetaData( "customHTTPHeader", "accept-encoding: " );
+  }
+  return job;
 }
 
 
@@ -133,10 +138,27 @@ kdDebug()<<"GroupDavGlobals::createDownloadJob, url="<<url.url()<<endl;
 }
 
 
-KIO::Job *GroupDavGlobals::createRemoveJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &uploadurl,
-       const KPIM::GroupwareUploadItem::List &deletedItems )
+KIO::Job *GroupDavGlobals::createRemoveJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &/*uploadurl*/,
+       KPIM::GroupwareUploadItem *deletedItem )
 {
-  QStringList urls;
+  if ( !deletedItem ) return 0;
+  //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
+  KURL url( deletedItem->url() );
+  if ( adaptor ) {
+    adaptor->adaptUploadUrl( url );
+  }
+  KIO::Job *delJob = 0;
+  if ( !url.isEmpty() ) {
+    kdDebug(5700) << "Delete: " <<   url.url() << endl;
+    delJob = KIO::del( url, false, false );
+  }
+  if ( delJob && adaptor && adaptor->idMapper() ) {
+    kdDebug(5800 ) << "Adding If-Match metadata: " << adaptor->idMapper()->fingerprint( deletedItem->uid() ) << endl;
+    delJob->addMetaData( "customHTTPHeader", "If-Match: " + adaptor->idMapper()->fingerprint( deletedItem->uid() ) );
+  }
+  return delJob;
+
+/*  QStringList urls;
   KPIM::GroupwareUploadItem::List::const_iterator it;
   kdDebug(5800) << " GroupDavGlobals::createRemoveJob, BaseURL="<<uploadurl.url()<<endl;
   for ( it = deletedItems.constBegin(); it != deletedItems.constEnd(); ++it ) {
@@ -144,17 +166,17 @@ KIO::Job *GroupDavGlobals::createRemoveJob( KPIM::GroupwareDataAdaptor *adaptor,
     KURL url( (*it)->url() );
     if ( adaptor ) {
       adaptor->adaptUploadUrl( url );
-    }
+    }*/
 /*    KURL url( uploadurl );
     url.setPath( (*it)->url().path() );
     if ( !(*it)->url().isEmpty() )*/
-    if ( !url.isEmpty() ) {
+/*    if ( !url.isEmpty() ) {
 kdDebug() << "Deleting item at "<< url.url() << endl;
       urls << url.url();
     }
     kdDebug(5700) << "Delete (Mod) : " <<   url.url() << endl;
   }
-  return KIO::del( urls, false, false );
+  return KIO::del( urls, false, false );*/
 }
 
 

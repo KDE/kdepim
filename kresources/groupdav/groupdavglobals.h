@@ -58,7 +58,7 @@ class GroupDavGlobals
     static KIO::TransferJob *createDownloadJob( KPIM::GroupwareDataAdaptor *adaptor,
                        const KURL &url, KPIM::FolderLister::ContentType ctype );
     static KIO::Job *createRemoveJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &uploadurl,
-                          const KPIM::GroupwareUploadItem::List &deletedItems );
+                          KPIM::GroupwareUploadItem *deletedItems );
 
 
     static bool interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor,
