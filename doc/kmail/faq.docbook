@@ -531,6 +531,11 @@ available in <filename>kdenetwork/kmail/kmailIface.h</filename> and
 <filename>kdenetwork/kmail/mailcomposerIface.h</filename>.</para></answer>
 </qandaentry>
 
+<qandaentry>
+<question><para>When I reply to a message, only a part of the message is quoted. How come?</para></question>
+<answer><para>This can happen when the message contains two dashes and a space on a single line. This is seen as the start of the signature. The remaining part of the message will not be quoted, because when you reply to a message KMail strips the signature.</para></answer>
+</qandaentry>
+
 </qandaset>
 
 </chapter>
