@@ -375,6 +375,8 @@ PhoneEditDialog::PhoneEditDialog( const KABC::PhoneNumber::List &list, QWidget *
     new PhoneViewItem( mListView, *it );
 
   mChanged = false;
+
+  setInitialSize( QSize(500, 250) );
 }
 
 PhoneEditDialog::~PhoneEditDialog()
@@ -455,7 +457,7 @@ PhoneTypeDialog::PhoneTypeDialog( const KABC::PhoneNumber &phoneNumber,
 {
   QWidget *page = plainPage();
   QLabel *label = 0;
-  QGridLayout *layout = new QGridLayout( page, 3, 2, marginHint(), spacingHint() );
+  QGridLayout *layout = new QGridLayout( page, 3, 2, 0, spacingHint() );
 
   label = new QLabel( i18n( "Number:" ), page );
   layout->addWidget( label, 0, 0 );
