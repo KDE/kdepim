@@ -602,8 +602,13 @@ void KNGroupManager::processJob(KNJobData *j)
           group->saveInfo();
           knGlobals.memManager->updateCacheEntry(group);
         }
-      } else
+      } else {
+        // ok, hack (?):
+        // stop all other active fetch jobs, this prevents that
+        // we show multiple error dialogs if a server is unavailable
+        knGlobals.netAccess->stopJobsNntp(KNJobData::JTfetchNewHeaders);
         KMessageBox::error(knGlobals.topWidget, j->errorString());
+      }
     }         
     if(group==c_urrentGroup)
       a_rticleMgr->showHdrs(false);
