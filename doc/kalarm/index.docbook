@@ -35,8 +35,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2002-08-09</date>
-<releaseinfo>0.07.04</releaseinfo>
+<date>2002-09-11</date>
+<releaseinfo>0.08.00</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm/reminder message, and command, scheduler for &kde;.</para>
@@ -198,12 +198,12 @@ context menu.</para>
 
 <para>In the <guilabel>Action</guilabel> group box, select either
 <guilabel>Text</guilabel> in order to enter the message text (which
-may include newlines) in the edit box, <guilabel>Command</guilabel> to
-enter a shell command to execute, or <guilabel>File</guilabel> to
+may include newlines) in the edit box, <guilabel>File</guilabel> to
 enter the name or &URL; of a text file whose contents are to be
-displayed in the alarm message.  When <guilabel>File</guilabel> is
-selected, the button to the right may be used to display a file
-selection dialog.</para>
+displayed in the alarm message, or <guilabel>Command</guilabel> to
+enter a shell command to execute.  When <guilabel>File</guilabel> is
+selected, the button to the right of the edit box may be used to
+display a file selection dialog.</para>
 
 <para>If the alarm is a recurring alarm and it was deferred after it
 was last displayed, the <guilabel>Deferred Alarm</guilabel> group box
@@ -244,18 +244,17 @@ alarms, or restart or reset the <application>alarm
 daemon</application>.)</para></listitem>
 
 <listitem><para>Select <guilabel>Recur</guilabel> to trigger the alarm
-at regular intervals. You must then specify how it is to recur in the
-<guilabel>Recurrence Rule</guilabel> group box, and for how long in
-the <guilabel>Recurrence End</guilabel> group box. These group boxes
-appear only while <guilabel>Recur</guilabel> is selected.</para>
+at regular intervals. You must then specify the recurrence parameters
+in the <guilabel>Recurrence</guilabel> tab.</para>
 
-<para>Set the recurrence time period by selecting one of the time
-period types and entering in the <guilabel>Recur every</guilabel> box
-how many time periods should elapse between recurrences. For example,
-to repeat every fortnight, you could select <guilabel>Daily</guilabel>
-and enter a value of 14, or select <guilabel>Weekly</guilabel> and
-enter a value of 2. Depending on the time period type selected, you
-may have further options:</para>
+<para>In the <guilabel>Recurrence Rule</guilabel> group box, set the
+recurrence time period by selecting one of the time period types and
+entering in the <guilabel>Recur every</guilabel> box how many time
+periods should elapse between recurrences. For example, to repeat
+every fortnight, you could select <guilabel>Daily</guilabel> and enter
+a value of 14, or select <guilabel>Weekly</guilabel> and enter a value
+of 2. Depending on the time period type selected, you may have further
+options:</para>
 
 <itemizedlist>
 <listitem>
@@ -275,7 +274,8 @@ May).</para>
 </listitem>
 </itemizedlist>
 
-<para>Set the overall recurrence time span as follows:</para>
+<para>In the <guilabel>Recurrence End</guilabel> group box, set the
+overall recurrence time span as follows:</para>
 
 <itemizedlist>
 <listitem><para>Select <guilabel>No end</guilabel> to continue the
@@ -566,7 +566,7 @@ selected.</para></note>
 </listitem>
 </itemizedlist>
 
-<para>The button with the <guiicon>&kalarm;</guiicon> icon provides a
+<para>The button showing the <guiicon>&kalarm;</guiicon> icon provides a
 convenient way to activate &kalarm;. Clicking it has no effect on the
 alarm message window.</para>
 
@@ -1749,8 +1749,8 @@ a different calendar file is specified in the preferences file.</para>
 you should also edit the <application>alarm daemon</application>'s
 <filename>clients</filename> configuration file to remove the old
 calendar file reference. This should be done while the
-<application>alarm daemon</application> is not running to avoid the
-possibility of it overwriting your change.</para></note>
+<application>alarm daemon</application> is not running to avoid it
+overwriting your change.</para></note>
 </answer>
 </qandaentry>
 
