@@ -30,6 +30,12 @@
 <affiliation><address><email>pea@ahlquist.org</email></address></affiliation>
 </author>
 
+<author>
+<firstname>Jürgen</firstname>
+<surname>Nagel</surname>
+<affiliation><address><email>juergen.nagel@student.fh-reutlingen.de</email></address></affiliation>
+</author>
+
 <othercredit role="developer">
 <firstname>Cornelius</firstname>
 <surname>Schumacher</surname>
@@ -62,10 +68,15 @@
 <holder>Paul E. Ahlquist Jr.</holder>
 </copyright>
 
+<copyright>
+<year>2004</year>
+<holder>Jürgen Nagel</holder>
+</copyright>
+
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2001-07-29</date>
-<releaseinfo>2.20.00</releaseinfo>
+<date>2004-04-27</date>
+<releaseinfo>2.30.00</releaseinfo>
 
 <abstract><para>&korganizer; is an easy to use personal information manager
 (<acronym>PIM</acronym>). You can schedule appointments, events, and to-do
@@ -171,7 +182,7 @@ event.</para></step>
 <guimenuitem>New To-Do</guimenuitem></menuchoice>.</para></step>
 
 <step><para>Enter To-Do details. Use tabs <guilabel>General</guilabel>, 
-<guilabel>Attendees</guilabel> and <guilabel>Attachments</guilabel> to move around.</para></step>
+<guilabel>Attendees</guilabel>, <guilabel>Recurrence</guilabel> and <guilabel>Attachments</guilabel> to move around.</para></step>
 
 <step><para>Click on <guibutton>OK</guibutton> to save the
 To-Do.</para></step>
@@ -203,9 +214,9 @@ original To-Do becomes similar to an appointment. </para>
 
 <para>&korganizer; makes adding exact time to a To-Do very easy. If you
 check the <guilabel>Due</guilabel> checkbox and/or the <guilabel>Start</guilabel>
- checkbox you can specify the appropriate dates, when you check the <guilabel>Time associated</guilabel> checkbox and fill in the associated times, your To-Do becomes very similar to an event
-(but without recurrence tab, which is natural, since a to-do task is supposed
-to be a one-time only event).</para>
+checkbox you can specify the appropriate dates, when you check the
+<guilabel>Time associated</guilabel> checkbox and fill in the associated times, your
+To-Do becomes very similar to an event.</para>
 
 </sect1>
 
@@ -240,11 +251,10 @@ desired time directly.</para>
 <title>Rescheduling To-Do's</title>
 
 <para>To reschedule a To-Do, right click the To-Do in the To-Do panel.
-This will bring up a context menu.  Select <guimenuitem>Edit...</guimenuitem>
-Reschedule the To-Do.</para>
+This will bring up a context menu.  Select <guimenuitem>Copy to</guimenuitem> or <guimenuitem>Move to</guimenuitem> and select the new date from the calendar now appearing. The To-Do is now copied or moved to the selected date.</para>
 
 <para>Alternatively, if the main panel holds List View or To-Do View, you can
-locate and right click the To-Do there.</para>
+locate and right click the To-Do there. If you right click in the column <guilabel>Due Date</guilabel> then the calender will appear instantly.</para>
 </sect1>
 
 <sect1 id="course-conclusion">
@@ -550,8 +560,8 @@ and <guibutton>Cancel</guibutton>.</para>
 
 <para>Some tasks require attachments. You can <guilabel>add</guilabel>, 
 <guilabel>Edit</guilabel>, <guilabel>Remove</guilabel>, and <guilabel>Show</guilabel> 
-attachments. You can refer to the attachment by entering the path to the attachment or 
-internet address.</para>
+attachments. You can refer to the attachment by entering the URI (path or internet address)
+to the attachment.</para>
 
 <para>When you want to confirm, call off or revert the entered data, choose
 among the <link linkend="reference-action-buttons">Action Buttons</link>,
@@ -708,6 +718,105 @@ Buttons</link>, <guibutton>OK</guibutton>,
 <guibutton>Apply</guibutton> and <guibutton>Cancel</guibutton>.</para>
 
 </sect2>
+
+<sect2 id="entering-data-to-do-recurrence">
+<title><guilabel>Recurrence</guilabel> tab</title>
+
+<para>Some tasks take place regularly. You can specify exact scheduling
+here.</para>
+
+<warning><para>To activate the settings, start by checking the
+<guilabel>Enable recurrence</guilabel> checkbox. If it is not checked, you are 
+not able to make any changes on this tab.</para></warning>
+
+<para>The Recurrence tab window is divided into four groups:
+<guilabel>Appointment Time</guilabel>, <guilabel>Recurrence Rule</guilabel>,
+<guilabel>Recurrence Range</guilabel>, and <guilabel>Exceptions</guilabel>.
+</para>
+
+<sect3 id="recurrence-todo-time">
+<title><guilabel>Appointment Time</guilabel></title>
+
+<para>This is a copy of the <link linkend="entering-data-to-do-general">
+<guilabel>General</guilabel> tab window</link> time specification.</para>
+
+</sect3>
+
+<sect3 id="recurrence-todo-recurrence-rule">
+<title>Recurrence Rule</title>
+
+<para>Choose if you want to repeat this To-Do daily, weekly, monthly or
+yearly. More detailed options are as follows:</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Daily</guilabel></term>
+<listitem><para>Specify whether the To-Do occurs every day (1), every other
+day (2) and so on.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Weekly</guilabel></term>
+<listitem><para>Specify whether the To-Do occurs every week (1), every other
+week (2) and so on. Also specify the days (Sunday ... Monday) on which the
+To-Do occurs. </para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Monthly</guilabel></term>
+<listitem><para>You can either have the To-Do occur on the same day of the
+month, or in a specific week on a specific day of the week.  You need to
+choose between these two possibilities.  By default, &korganizer; assumes you
+want to repeat on the same calendar day of the month (for instance the 15th).
+You can also adjust the period, so you can repeat monthly, tri-monthly and so
+on.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Yearly</guilabel></term>
+<listitem>
+<para>This is similar to Monthly.  You need to choose whether or not you
+are indicating a calendar day of the year (&eg;, the 250th day of the
+year) - <guilabel>Recur on this day</guilabel>, or this day of the month
+in a particular month of the year - <guilabel>Recur in the month
+of</guilabel>.  By default, &korganizer; assumes you mean the actual day
+of the year.  You can adjust the period to reflect events that occur
+bi-annually, every four years, and so on.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+
+<sect3 id="recurrence-todo-recurrence-range">
+<title>Recurrence Range</title>
+
+<para>By default, To-Do's which repeat will do so forever; there is no
+<quote>end</quote> to the repetition.  This may or may not be desirable,
+so you are provided with two ways of terminating the repetition: either
+by giving an ending date, or by specifying a total number of
+recurrences.  In this area, you can choose the method that is suitable
+for this event.</para>
+
+</sect3>
+
+<sect3 id="recurrence-todoexceptions">
+<title>Exceptions</title>
+
+<para>You may have a very nice recurrence rule set up, but realize that
+there are a few exceptions. In this area, you can add, change, and delete dates from the list of
+exceptions (&ie; times when even if the recurrence rule matches, the
+To-Do will <emphasis>not be scheduled</emphasis>).  Pick a date with the
+date selector, and press <guibutton>Add</guibutton> to include it. For
+removing dates, highlight them in the box on the right side, and then
+click <guibutton>Delete</guibutton>.</para>
+
+<para>When you want to confirm, call off or revert the entered data,
+choose among the <link linkend="reference-action-buttons">Action
+Buttons</link>, <guibutton>OK</guibutton>, <guibutton>Apply</guibutton>
+and <guibutton>Cancel</guibutton>.</para>
+</sect3>
+</sect2>
+
 <sect2 id="entering-data-to-do-attachements">
 <title><guilabel>Attachments</guilabel> tab</title>
 
@@ -891,7 +1000,7 @@ Categories. Then click the
 <guibutton>OK</guibutton> button.</para></step>
 
 <step><para>Click on the <guilabel>Recurrence</guilabel> tab and check the 
-<guilabel>Recurring event</guilabel> checkbox..</para>
+<guilabel>Enable recurrence</guilabel> checkbox..</para>
 <note><para>Most work has been done for you automatically. &korganizer;
 defaults to recurring weekly. Also note that <guilabel>No ending date
 </guilabel> is chosen. This means that this event will be repeated each
@@ -1022,6 +1131,7 @@ will be emailed with the event schedule information. A small envelope will
 appear in the details list to indicate this. This feature will be more useful
 when full group scheduling is implemented.</para></listitem>
 </varlistentry>
+
 </variablelist>
 
 <para>Repeat the above procedure for all attendees.</para>
@@ -1152,9 +1262,12 @@ plain texts without any icons.</para>
 <sect4 id="config-toolbars-toolbar-position">
 <title>Orientation</title>
 
-<para>You can have the toolbar at the top, bottom, left or right side. If you 
-choose Flat, the toolbar will collapse into a tiny rectangle. You can later 
-click on that rectangle and the toolbar will appear again.</para>
+<para>You can have the toolbar at the top, bottom, left or right side. If you
+choose Floating position, the toolbar will be displayed outside the main
+ &korganizer;
+panel and you can move it around. If you choose Flat, the toolbar will collapse
+into a tiny rectangle. You can later click on that rectangle and the toolbar
+will appear again.</para>
 </sect4>
 
 <sect4 id="config-toolbars-icon-size">
@@ -1180,6 +1293,7 @@ miscellaneous things that don't fall under any of the other general
 categories.</para>
 
 <variablelist>
+
 <varlistentry>
 <term><guilabel>Full Name</guilabel></term>
 <listitem><para><guilabel>Full Name</guilabel> is initially set to
@@ -1229,10 +1343,32 @@ loss of valuable data. You can also specify the save interval in
 will ask you to confirm each deletion. If this is not checked, &korganizer;
 will never ask before deleting events.</para></listitem>
 </varlistentry>
-</variablelist>
-<!-- Mail client selection-->
 
-<!-- Auto-start Alarm Daemon -->
+<varlistentry>
+<term><guilabel>Mail Client</guilabel></term>
+<listitem><para>Here you can choose which type of mail transport you would like
+to use. You can either use KMail or the sendmail command (which must be installed
+on your system in order to work).</para></listitem>
+</varlistentry>
+
+<!-- <varlistentry>
+<term><guilabel>Use Groupware Communication</guilabel></term>
+<listitem><para></para></listitem>
+</varlistentry> -->
+
+<varlistentry>
+<term><guilabel>Export to HTML with every save</guilabel></term>
+<listitem><para>By checking this option, you can order KOrganizer to do an export
+of your to-do list every time you save your changes.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>New Events/Todos Should</guilabel></term>
+<listitem><para>This option lets you choose add a new event/todo item either to
+a standard resource or have KOrganizer ask you which resource should be used.</para></listitem>
+</varlistentry>
+
+</variablelist>
 
 </sect3>
 
@@ -1272,36 +1408,16 @@ before the actual event's scheduled time will alarm activate.</para></listitem>
 </varlistentry>
 
 <!--working hours-->
-
+<varlistentry>
+<term><guilabel>Working Hours</guilabel></term>
+<listitem><para>The options <guilabel>Daily start hour</guilabel> and
+<guilabel>Daily ending hour</guilabel> let you specify when your working day starts
+and when it ends.</para>
+<para>Additionally you have two checkboxes labeled <guilabel>Exclude holidays</guilabel>
+and <guilabel>Exclude Saturdays</guilabel> to tell &korganizer; to exclude these days from
+being marked as working days.</para></listitem>
+</varlistentry>
 </variablelist>
-
-</sect3>
-
-<sect3 id="preferences-fonts">
-<title>Fonts</title>
-
-<itemizedlist>
-<listitem><para>Click the <guilabel>Time Bar Font</guilabel> button to choose
-Font, Font style and Size for the time bar.</para></listitem>
-<listitem><para>Click the <guilabel>Month</guilabel> button to choose Font,
-Font style and Size for the Month View.</para></listitem>
-<listitem><para>Click the <guilabel>Agenda</guilabel> button to choose Font,
-Font style and Size for the Day View, Week View and Work Week
- View.</para></listitem>
-</itemizedlist>
-
-</sect3>
-
-<sect3 id="preferences-colors">
-<title>Colors</title>
-
-<para>Choose the color used for holidays, for highlighting, and for specific
-event categories. You can choose different color for each category. Of course
-too many colors may be confusing, so use common sense.</para>
-
-<para>You can also choose a default event color and agenda view background
-color.</para>	
-
 </sect3>
 
 <sect3 id="preferences-views">
@@ -1315,6 +1431,14 @@ color.</para>
 earlier hour, but the <guilabel>Day begins at</guilabel> should be the
 earliest time that you use for events. It could be the time when you
 usually get up, or the time when you start working.</para></listitem>
+</varlistentry>
+
+<!-- Days to show in next-X-days view -->
+
+<varlistentry>
+<term><guilabel>Hour size in schedule view</guilabel></term>
+<listitem><para>By using this slider you can control the height of the rows
+in the schedule view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -1348,7 +1472,53 @@ seconds.</para></listitem>
 
 <!--Todo View uses full window-->
 
+<varlistentry>
+<term><guilabel>Show current time (Marcus Bains line)</guilabel></term>
+<listitem><para>By checking this option the current time is displayed on a red line.
+This gives you an indication how much time is left e.g. until a meeting takes place.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Show seconds on Marcus Bains line</guilabel></term>
+<listitem><para>This option extends the time displayed on the red line by seconds.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Time range selection in agenda view starts event editor</guilabel></term>
+<listitem><para>By checking this option the event editor automatically pops up as soon as you select
+a time range.</para></listitem>
+</varlistentry>
+
 </variablelist>
+
+</sect3>
+
+<sect3 id="preferences-fonts">
+<title>Fonts</title>
+
+<itemizedlist>
+<listitem><para>Click the <guilabel>Time Bar Font</guilabel> button to choose
+Font, Font style and Size for the time bar.</para></listitem>
+<listitem><para>Click the <guilabel>Month</guilabel> button to choose Font,
+Font style and Size for the Month View.</para></listitem>
+<listitem><para>Click the <guilabel>Agenda</guilabel> button to choose Font,
+Font style and Size for the Day View, Week View and Work Week
+ View.</para></listitem>
+<listitem><para>Click the <guilabel>Marcus Bains line</guilabel> button to choose Font,
+Font style and Size for the Marcus Bains line.</para></listitem>
+</itemizedlist>
+
+</sect3>
+
+<sect3 id="preferences-colors">
+<title>Colors</title>
+
+<para>Choose the color used for holidays, for highlighting, and for specific
+event categories. You can choose different color for each category. Of course
+too many colors may be confusing, so use common sense.</para>
+
+<para>You can also choose a default event color and agenda view background
+color.</para>
 
 </sect3>
 
@@ -1356,6 +1526,7 @@ seconds.</para></listitem>
 <title>Group Scheduling</title>
 
 <variablelist>
+
 <varlistentry>
 <term><guilabel>Scheduler Mails Should Be</guilabel></term>
 <listitem><para>
@@ -1377,7 +1548,47 @@ you are an attenddee of one event, but have another emailaddress there.
 
 </sect3>
 
+<sect3 id="preferences-groupautomation">
+<title>Group Automation</title>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Auto Send Refresh</guilabel></term>
+<listitem><para>
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Auto Insert IMIP Replies</guilabel></term>
+<listitem><para>
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Auto Insert IMIP Requests</guilabel></term>
+<listitem><para>
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Auto Send FreeBusy information</guilabel></term>
+<listitem><para>
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>AutoSave FreeBusy Replies</guilabel></term>
+<listitem><para>
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
 </sect2>
+
 
 <sect2 id="reference-windows-outgoing">
 <title>Outgoing Messages</title>
@@ -1542,6 +1753,7 @@ notified via a message box.</para></listitem>
 <varlistentry id="file-merge">
 <term><menuchoice>
 <guimenu>File</guimenu>
+<guimenu>Import</guimenu>
 <guimenuitem>Merge Calendar</guimenuitem>
 </menuchoice></term>
 <listitem><para><guilabel>Merge Calendar:</guilabel> If you have a different
@@ -1573,6 +1785,49 @@ you do not need the original data or that you have a backup copy.</para></step>
 </procedure></listitem>
 </varlistentry>
 
+<varlistentry id="file-export-as-web">
+<term><menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Export</guimenuitem>
+<guimenuitem>Export Web Page...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>You can export your calendar or a part of it as a HTML
+file, suitable for publishing on the World Wide Web.</action></para>
+<procedure>
+<step><para>Click the <guilabel>Export as web page...</guilabel>.You will get a
+window with three tabs: <guilabel>General</guilabel>,
+ <guilabel>Event</guilabel>, and <guilabel>To-Do</guilabel>.</para></step>
+<step><para><guilabel>General</guilabel> tab:</para>
+<substeps>
+<step><para>Specify the date range that you want published. Enter dates
+manually or use the Calendar Widget.</para></step>
+<step><para>Choose the View type: <guilabel>Event List</guilabel>,
+<guilabel>To-Do List</guilabel> or <guilabel>Both</guilabel>.</para></step>
+<step><para>Specify the web output file in the <guilabel>Output file</guilabel>
+field. If you want to overwrite an existing web file, click on the
+<guibutton>Browse</guibutton> button to find it.</para></step>
+<step><para>Specify if you want to include categories and attendees in the
+exported web page.</para></step>
+</substeps></step>
+<step><para><guilabel>To-Do</guilabel> tab: specify if you want to list Due
+Dates, Categories, and Attendees.</para></step>
+</procedure></listitem>
+</varlistentry>
+
+<varlistentry id="file-make-active">
+<term><menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Make active</guimenuitem>
+</menuchoice></term>
+<listitem><para>If you opened more than one calendar, only one calendar can
+display alarms; only one calendar can be active. Click on the <guilabel>Make
+active</guilabel> menu item to <action>activate the current calendar
+window.</action></para>
+<para>The active calendar is loaded as default calendar when starting
+&korganizer;. In other words, if you work with more than one calendar, you
+ should
+make your main calendar active.</para></listitem>
+</varlistentry>
 
 <varlistentry id="file-quit">
 <term><menuchoice>
@@ -1791,7 +2046,8 @@ information.</para></listitem>
 
 <varlistentry id="view-month-view">
 <term><menuchoice>
-<guimenu> View</guimenu>
+<guimenu><inlinemediaobject><imageobject><imagedata fileref="i_view_month.png"
+ format="PNG"/></imageobject></inlinemediaobject> View</guimenu>
 <guimenuitem>Month</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Switch the display to the Month view.</action></para>
@@ -1953,6 +2209,7 @@ Deletes</guimenuitem></menuchoice> checkbox is <emphasis>not</emphasis> checked,
 you will not be prompted for confirmation, and the event will be deleted
 immediately.</para></listitem>
 </varlistentry>
+
 </variablelist>
 
 </sect2>
@@ -2340,7 +2597,9 @@ computer.</para>
 <title>Command Line</title>
 
 <para>While &korganizer; supports the full score of options that are
-common to all &kde; programs, it also supports DCOP.</para>
+common to all &kde; programs, it also supports DCOP. A nice program 
+to access a &kde; kalendar from the command line is KonsoleKalendar, which 
+is included in the kdepim package together with &korganizer;.</para>
 
 <informaltable>
 <tgroup cols="2">
@@ -2447,7 +2706,7 @@ Ical</guimenuitem></menuchoice> to carry out this task.</para>
 <sect1 id="other-features-palm-sync">
 <title>Palm Synchronization</title>
 
-<para>Palm Synchronization can be done via Kpilot. Choose 
+<para>Palm Synchronization can be done via &kpilot;. Choose 
 <menuchoice><guimenu>Settings</guimenu> <guimenuitem>Configure conduits</guimenuitem></menuchoice> and
 check <guilabel>Korganizer Calendar</guilabel> and <guilabel>Korganizer Todo's</guilabel>. 
 After synchronization the Calendar and Todo's should be visible in Korganizer.</para> 
@@ -2536,14 +2795,13 @@ the next releases.</para>
 <para>Documentation copyright 2000 Milos Prudek</para>
 <para>Documentation copyright 2001 Paul E. Ahlquist, Jr
 <email>pea@ahlquist.org</email></para>
+<para>Documentation copyright 2004 Jürgen Nagel
+<email>juergen.nagel@student.fh-reutlingen.de</email></para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 
 <para>&korganizer; homepage is at <ulink
-url="http://devel-home.kde.org/~korganiz">http://devel-home.kde.org/~korganiz</ulink></para>
-
-
-
+url="http://korganizer.kde.org">http://korganizer.kde.org</ulink></para>
 
 &underFDL;
 &underGPL;
@@ -2565,10 +2823,7 @@ system. If &korganizer; is not there,  either it is not installed, or perhaps
 administrator of your system has moved it to some other place.</para>
 
 <para>&korganizer; homepage is at <ulink
-url="http://devel-home.kde.org/~korganiz">http://devel-home.kde.org/~korganiz</ulink>
-
-
-
+url="http://korganizer.kde.org">http://korganizer.kde.org</ulink>
 </para>
 
 </sect1>
@@ -2576,7 +2831,7 @@ url="http://devel-home.kde.org/~korganiz">http://devel-home.kde.org/~korganiz</u
 <sect1 id="requirements">
 <title>Requirements</title>
 
-<para>&korganizer; requires &kde; 2.0. It requires roughly 2MB of space
+<para>&korganizer; requires &kde; 3.2. It requires roughly 2MB of space
 in your &kde; system folder. Your calendars will require additional
 space in your home folder. Very large calendars slow down
 &korganizer; operation, therefore periodic cleanup is advisable.</para>
@@ -2592,10 +2847,7 @@ is in the kdepim package. All packages can be found on <ulink
 url="http://www.kde.org">&kde; home page.</ulink>.</para>
 
 <para>The &korganizer; homepage is at <ulink
-url="http://devel-home.kde.org/~korganiz">http://devel-home.kde.org/~korganiz</ulink>
-
-
-
+url="http://korganizer.kde.org">http://korganizer.kde.org</ulink>
 </para>
 
 </sect1>
