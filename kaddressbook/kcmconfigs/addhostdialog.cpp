@@ -118,8 +118,8 @@ void AddHostDialog::slotOk()
   if ( mCfg->isSecTLS() ) mServer->setSecurity( 1 );
   if ( mCfg->isSecSSL() ) mServer->setSecurity( 2 );
   mServer->setAuth( 0 );
-  if ( mCfg->isAuthSimple() ) mServer->setSecurity( 1 );
-  if ( mCfg->isAuthSASL() ) mServer->setSecurity( 2 );
+  if ( mCfg->isAuthSimple() ) mServer->setAuth( 1 );
+  if ( mCfg->isAuthSASL() ) mServer->setAuth( 2 );
   mServer->setMech( mCfg->mech() );
   KDialog::accept();
 }
