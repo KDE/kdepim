@@ -358,8 +358,8 @@ void KNMainWindow::updateCaption()
 
 void KNMainWindow::setCursorBusy(bool b)
 {
-  if(b) kapp->setOverrideCursor(waitCursor);
-  else  kapp->restoreOverrideCursor();
+  if(b) KApplication::setOverrideCursor(waitCursor);
+  else  KApplication::restoreOverrideCursor();
 }
 
 
