@@ -158,6 +158,7 @@ class KAddressBook : public QWidget
     void viewModified();
 
     void slotOpenLDAPDialog();
+    void slotLDAPRefresh();
 
     /** Called whenever the configuration is changed. This happens when
     * the user presses the OK or Apply button in the PrefsDialog.
