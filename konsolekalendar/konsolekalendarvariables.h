@@ -86,6 +86,37 @@ class KonsoleKalendarVariables
 
    CalendarLocal *getCalendar();
 
+    /*
+     * Set calendar file for global use
+     */
+
+   void setExportType( int export_type );
+
+   /*
+    * Get global calendar
+    */
+
+   int getExportType();
+
+
+   
+   //Q_ENUMS( export_types );
+   
+   /*
+    * Our export types
+    */
+   enum {
+     NONE,
+     TEXT_NORMAL,
+     TEXT_KORGANIZER,
+     HTML,
+     XHTML,
+     XML,
+     CSV,
+     VCARD
+   } export_types;
+   
+
   private:
     int findNumber( const QString &str, int &pos, int &startpos );
     char findSeparator( const QString &str, int &pos, int &seppos );
@@ -107,6 +138,7 @@ class KonsoleKalendarVariables
     bool m_bAll;
     bool m_bDescription;
     int str_length;
+    int m_export_type;
     // We can use this from everywhere
     CalendarLocal *m_caledarLocal;
    

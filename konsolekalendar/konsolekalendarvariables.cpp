@@ -141,6 +141,18 @@ CalendarLocal *KonsoleKalendarVariables::getCalendar()
 	return m_caledarLocal;
 }
 
+
+void KonsoleKalendarVariables::setExportType( int export_type )
+{
+  m_export_type = export_type;
+}
+
+int KonsoleKalendarVariables::getExportType()
+{
+  return m_export_type;
+}
+
+
 bool KonsoleKalendarVariables::isAll()
 {
   return m_bAll;
