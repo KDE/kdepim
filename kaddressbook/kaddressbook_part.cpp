@@ -91,7 +91,8 @@ KAboutData *KAddressbookPart::createAboutData()
                                      "3.1beta1", I18N_NOOP("The KDE Address Book"),
                                      KAboutData::License_BSD, 
                                      I18N_NOOP("(c) 1997-2002, The KDE PIM Team"));
-  about->addAuthor("Don Sanders",I18N_NOOP("Original author and maintainer"));
+  about->addAuthor("Tobias Koenig", I18N_NOOP("Current maintainer"), "tokoe@kde.org");
+  about->addAuthor("Don Sanders",I18N_NOOP("Original author"));
   about->addAuthor("Cornelius Schumacher",
                   I18N_NOOP("libkabc port, csv import/export"),
                   "schumacher@kde.org");
@@ -100,7 +101,7 @@ KAboutData *KAddressbookPart::createAboutData()
   about->addAuthor("Mischel Boyer de la Giroday", I18N_NOOP("LDAP Lookup"), 
 		   "michel@klaralvdalens-datakonsult.se");
   about->addAuthor("Steffen Hansen", I18N_NOOP("LDAP Lookup"), "hansen@kde.org");
-  about->addAuthor("Tobias Koenig", I18N_NOOP("bug fixes, vCard import/export"), "tokoe@kde.org");
+
 
   return about;
 }
