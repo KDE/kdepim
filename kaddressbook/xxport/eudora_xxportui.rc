@@ -6,9 +6,6 @@
     <Menu name="file_import"><text>&amp;Import</text>
       <Action name="file_import_eudora"/>
     </Menu>
-    <Menu name="file_export"><text>&amp;Export</text>
-      <Action name="file_export_eudora"/>
-    </Menu>
   </Menu>
 </MenuBar>
 </gui>
