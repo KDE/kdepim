@@ -389,8 +389,10 @@ void CertManager::disconnectJobFromStatusBarProgress( const GpgME::Error & err )
 
 void CertManager::updateStatusBarLabels() {
   mKeyListView->flushKeys();
-  mStatusLabel->setText( i18n( "%n Key.",
-			       "%n Keys.", mKeyListView->childCount() ) );
+  int total = 0;
+  for ( QListViewItemIterator it( mKeyListView ) ; it.current() ; ++it )
+    ++total;
+  mStatusLabel->setText( i18n( "%n Key.","%n Keys.", total ) );
 }
 
 //
@@ -471,10 +473,12 @@ void CertManager::startKeyListing( bool validating, bool refresh, const QStringL
 static void selectKeys( Kleo::KeyListView * lv, const std::set<std::string> & fprs ) {
   if ( !lv || fprs.empty() )
     return;
-  for ( Kleo::KeyListViewItem * item = lv->firstChild() ; item ; item = item->nextSibling() ) {
-    const char * fpr = item->key().subkey(0).fingerprint();
-    item->setSelected( fpr && fprs.find( fpr ) != fprs.end() );
-  }
+  for  ( QListViewItemIterator it( lv ) ; it.current() ; ++it )
+    if ( ( it.current()->rtti() & Kleo::KeyListViewItem::RTTI_MASK ) == Kleo::KeyListViewItem::RTTI ) {
+      Kleo::KeyListViewItem * item = static_cast<Kleo::KeyListViewItem*>( it.current() );
+      const char * fpr = item->key().subkey(0).fingerprint();
+      item->setSelected( fpr && fprs.find( fpr ) != fprs.end() );
+    }
 }
 
 void CertManager::slotKeyListResult( const GpgME::KeyListResult & res ) {

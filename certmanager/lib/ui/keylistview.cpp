@@ -772,19 +772,30 @@ Kleo::KeyListViewItem * Kleo::KeyListView::selectedItem() const {
   return static_cast<Kleo::KeyListViewItem*>( KListView::selectedItem() );
 }
 
+static void selectedItems( QPtrList<Kleo::KeyListViewItem> & result, QListViewItem * start ) {
+  for ( QListViewItem * item = start ; item ; item = item->nextSibling() ) {
+    if ( item->isSelected() &&
+	 ( item->rtti() & Kleo::KeyListViewItem::RTTI_MASK ) == Kleo::KeyListViewItem::RTTI )
+      result.append( static_cast<Kleo::KeyListViewItem*>( item ) );
+    selectedItems( result, item->firstChild() );
+  }
+}
+
 QPtrList<Kleo::KeyListViewItem> Kleo::KeyListView::selectedItems() const {
   QPtrList<KeyListViewItem> result;
-  for ( KeyListViewItem * item = firstChild() ; item ; item = item->nextSibling() )
-    if ( item->isSelected() )
-      result.append( item );
+  ::selectedItems( result, firstChild() );
   return result;
 }
 
-bool Kleo::KeyListView::hasSelection() const {
-  for ( KeyListViewItem * item = firstChild() ; item ; item = item->nextSibling() )
-    if ( item->isSelected() )
+static bool hasSelection( QListViewItem * start ) {
+  for ( QListViewItem * item = start ; item ; item = item->nextSibling() )
+    if ( item->isSelected() || hasSelection( item->firstChild() ) )
       return true;
   return false;
+}
+
+bool Kleo::KeyListView::hasSelection() const {
+  return ::hasSelection( firstChild() );
 }
 
 #include "keylistview.moc"
