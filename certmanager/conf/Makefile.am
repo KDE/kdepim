@@ -11,9 +11,13 @@ kde_module_LTLIBRARIES = kcm_kleopatra.la
 kcm_kleopatra_la_SOURCES = dirservconfigpage.cpp \
 	appearanceconfigpage.cpp \
 	appearanceconfigwidgetbase.ui \
-	appearanceconfigwidget.cpp
+	appearanceconfigwidget.cpp \
+	dnorderconfigpage.cpp
 
 kcm_kleopatra_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
 kcm_kleopatra_la_LIBADD = ../lib/libkleopatra.la $(LIB_KDEUI)
 
-kde_services_DATA = kleopatra_config_dirserv.desktop kleopatra_config_appear.desktop 
+kde_services_DATA = \
+	kleopatra_config_dirserv.desktop \
+	kleopatra_config_appear.desktop \
+	kleopatra_config_dnorder.desktop

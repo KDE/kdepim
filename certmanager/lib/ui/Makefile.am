@@ -14,6 +14,7 @@ libkleopatra_ui_la_SOURCES = \
 	keyrequester.cpp \
 	keyapprovaldialog.cpp \
 	backendconfigwidget.cpp \
+	dnattributeorderconfigwidget.cpp \
 	cryptoconfigmodule.cpp \
 	cryptoconfigdialog.cpp \
 	directoryserviceswidgetbase.ui \
@@ -29,6 +30,7 @@ kleo_HEADERS = \
 	keyselectiondialog.h \
 	keyrequester.h \
 	keyapprovaldialog.h \
-	backendconfigwidget.h
+	backendconfigwidget.h \
+	dnattributeorderconfigwidget.h
 
 METASOURCES = AUTO

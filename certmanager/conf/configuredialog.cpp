@@ -32,11 +32,8 @@
 */
 
 #include "configuredialog.h"
-#include "dirservconfigpage.h"
-#include "appearanceconfigpage.h"
-#include <klocale.h>
+
 #include <kwin.h>
-#include <qlayout.h>
 #include <kapplication.h>
 #include <kconfig.h>
 
@@ -47,16 +44,17 @@ ConfigureDialog::ConfigureDialog( QWidget *parent, const char *name, bool modal 
   KWin::setIcons( winId(), kapp->icon(), kapp->miniIcon() );
   showButton( User1, true );
 
-  addModule ( "kleopatra_config_dirserv", false );
-  addModule ( "kleopatra_config_appear", false );
+  addModule( "kleopatra_config_dirserv", false );
+  addModule( "kleopatra_config_appear", false );
+  addModule( "kleopatra_config_dnorder", false );
 
   // We store the size of the dialog on hide, because otherwise
   // the KCMultiDialog starts with the size of the first kcm, not
   // the largest one. This way at least after the first showing of
   // the largest kcm the size is kept.
-  KConfigGroup geometry( KGlobal::config(), "Geometry" );
-  int width = geometry.readNumEntry( "ConfigureDialogWidth" );
-  int height = geometry.readNumEntry( "ConfigureDialogHeight" );
+  const KConfigGroup geometry( KGlobal::config(), "Geometry" );
+  const int width = geometry.readNumEntry( "ConfigureDialogWidth" );
+  const int height = geometry.readNumEntry( "ConfigureDialogHeight" );
   if ( width != 0 && height != 0 ) {
      setMinimumSize( width, height );
   }
