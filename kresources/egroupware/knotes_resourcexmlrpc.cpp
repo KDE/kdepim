@@ -192,6 +192,29 @@ bool ResourceXMLRPC::deleteNote( KCal::Journal *journal )
   return true;
 }
 
+KCal::Alarm::List ResourceXMLRPC::alarms( const QDateTime& from, const QDateTime& to )
+{
+    KCal::Alarm::List alarms;
+    KCal::Journal::List notes = mCalendar.journals();
+    KCal::Journal::List::ConstIterator note;
+    for ( note = notes.begin(); note != notes.end(); ++note )
+    {
+        QDateTime preTime = from.addSecs( -1 );
+        KCal::Alarm::List::ConstIterator it;
+        for( it = (*note)->alarms().begin(); it != (*note)->alarms().end(); ++it )
+        {
+            if ( (*it)->enabled() )
+            {
+                QDateTime dt = (*it)->nextRepetition( preTime );
+                if ( dt.isValid() && dt <= to )
+                    alarms.append( *it );
+            }
+        }
+    }
+
+    return alarms;
+}
+
 void ResourceXMLRPC::loginFinished( const QValueList<QVariant>& variant,
                                     const QVariant& )
 {
