@@ -1,9 +1,9 @@
 /**
    KDE Certificate Manager
-   
+
    by Kalle Dalheimer <kalle@klaralvdalens-datakonsult.se> and Jesper
    K. Pedersen <blackie@klaralvdalens-datakonsult.se>
-   
+
    Copyright (C) 2002 by Klarälvdalens Datakonsult AB
 
    This software is licensed under the GPL.
@@ -20,7 +20,7 @@ CryptPlugWrapper* pWrapper;
 
 int main( int argc, char** argv )
 {
-    KCmdLineArgs::init(argc, argv, "Certificate Manager","","");
+    KCmdLineArgs::init(argc, argv, I18N_NOOP("Certificate Manager"),"","");
     static KCmdLineOptions options[] =
         {
             { "+name", I18N_NOOP("The name of the plugin"), 0 },
@@ -30,7 +30,7 @@ int main( int argc, char** argv )
             { 0, 0, 0 } // End of options.
         };
     KCmdLineArgs::addCmdLineOptions( options );
-          
+
     KApplication app;
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
@@ -40,10 +40,10 @@ int main( int argc, char** argv )
                             i18n( "Certificate Manager Error" ) );
         return -1;
     }
-  
+
     QString pluginName = QString::fromLocal8Bit( args->arg( 0 ) );
     QString pluginLib = QString::fromLocal8Bit( args->arg( 1 ) );
-  
+
     pWrapper = new CryptPlugWrapper( 0, pluginName, pluginLib,
                                      QString::null, true );
     CryptPlugWrapper::InitStatus initStatus;
@@ -54,14 +54,14 @@ int main( int argc, char** argv )
                             i18n( "Certificate Manager Error" ) );
         return -2;
     }
-    CertManager* manager = new CertManager( args->isSet("external"), 
+    CertManager* manager = new CertManager( args->isSet("external"),
 					    QString::fromLocal8Bit(args->getOption("query")) );
     args->clear();
-    manager->show();   
-  
+    manager->show();
+
     QObject::connect( qApp, SIGNAL( lastWindowClosed() ), qApp, SLOT( quit() ) );
     int ret = app.exec();
     delete pWrapper;
-        
+
     return ret;
 }

@@ -12,4 +12,4 @@ LDFLAGS = $(all_libraries) $(KDE_RPATH)
 LDADD    = ../libkdenetwork/libkdenetwork.la $(LIB_KIO) -lkdeprint
 
 messages: rc.cpp
-	$(XGETTEXT) *.cpp *.h -o $(podir)/kpgpcertmanager.pot
+	$(XGETTEXT) *.cpp *.h -o $(podir)/kgpgcertmanager.pot
