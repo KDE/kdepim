@@ -77,14 +77,15 @@ KarmWindow::KarmWindow()
   // we want to add a task.
   _karm->load();
 
-  connect( _karm, SIGNAL(contextMenuRequested(QListViewItem*, const QPoint&, int)), this, SLOT(contextMenuRequest(QListViewItem*, const QPoint&, int)));
+  connect( _karm, SIGNAL(contextMenuRequested( QListViewItem*, const QPoint&, int )),
+           this,  SLOT(contextMenuRequest( QListViewItem*, const QPoint&, int )));
 
-    _tray = new KarmTray( this );
+  _tray = new KarmTray( this );
   
   connect( _karm, SIGNAL( timerActive() ),   _tray, SLOT( startClock() ) );
-  connect( _karm, SIGNAL( timerActive() ), this, SLOT( enableStopAll() ) );
+  connect( _karm, SIGNAL( timerActive() ),    this, SLOT( enableStopAll() ) );
   connect( _karm, SIGNAL( timerInactive() ), _tray, SLOT( stopClock() ) );
-  connect( _karm, SIGNAL( timerInactive() ), this, SLOT( disableStopAll() ) );
+  connect( _karm, SIGNAL( timerInactive() ),  this, SLOT( disableStopAll() ) );
   connect( _karm, SIGNAL( tasksChanged( QPtrList<Task> ) ), _tray,
                    SLOT( updateToolTip( QPtrList<Task> ) ) );
   
@@ -193,11 +194,13 @@ void KarmWindow::makeMenus()
     *actionNew,
     *actionNewSub;
 
-  (void) KStdAction::quit(this, SLOT(quit()), actionCollection());
-  (void) KStdAction::print(this, SLOT(print()), actionCollection());
-  actionKeyBindings = KStdAction::keyBindings(this, SLOT(keyBindings()),actionCollection());
-  actionPreferences = KStdAction::preferences(_preferences, SLOT(showDialog()),actionCollection());
-  (void) KStdAction::save(_preferences, SLOT(save()),actionCollection());
+  (void) KStdAction::quit( this, SLOT(quit()), actionCollection());
+  (void) KStdAction::print( this, SLOT(print()), actionCollection());
+  actionKeyBindings = KStdAction::keyBindings( this, SLOT( keyBindings() ),
+                                               actionCollection() );
+  actionPreferences = KStdAction::preferences( _preferences, SLOT( showDialog() ),
+                                               actionCollection() );
+  (void) KStdAction::save( _preferences, SLOT( save() ), actionCollection() );
   actionResetSession = new KAction(i18n("&Reset Session Times"), CTRL + Key_R,this,
                                    SLOT(resetSessionTime()),actionCollection(),
                                    "reset_session_time");
