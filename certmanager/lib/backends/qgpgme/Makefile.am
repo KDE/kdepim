@@ -2,7 +2,6 @@
 
 INCLUDES = -I$(top_srcdir)/libkdenetwork \
 	-I$(top_srcdir)/certmanager/lib \
-	-I$(top_builddir)/libkdepim \
 	$(GPGME_CFLAGS) $(all_includes)
 
 noinst_LTLIBRARIES = libkleopatra_backend_qgpgme.la
