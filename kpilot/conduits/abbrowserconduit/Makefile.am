@@ -11,6 +11,10 @@ service_DATA = abbrowser_conduit.desktop
 
 kde_module_LTLIBRARIES = libaddressconduit.la
 
+# uncomment the following line to enable the addressbook conduit. 
+# THIS IS DANGEROUS AND MIGHT CAUSE DATA LOSS as the conduit 
+# has not been tested much!!!
+#KDE_CXXFLAGS=-DDO_DANGEROUS_ABOOK_SYNC
 
 libaddressconduit_la_SOURCES = \
 	resolutionDialog.cc \
