@@ -29,14 +29,13 @@
 
 #include "options.h"
 
+#include <Python.h>
 
 #include "python-conduit.h"  // The Conduit action
 #include "pythonconduit.h"   // The settings class
 
 #include <qthread.h>
 #include <qapplication.h>
-
-#include <Python.h>
 
 extern "C"
 {
@@ -125,7 +124,8 @@ void PythonThread::run()
 
 	Py_Initialize();
 	pName = PyString_FromString("KPilot");
-	pModule = PyImport_Import(pName);
+// TODO: This doesn't compile with my python2.3-dev (debian sid)
+//	pModule = PyImport_Import(pName);
 	Py_DECREF(pName);
 
 #ifdef DEBUG

@@ -31,7 +31,7 @@
 #include <kconfig.h>
 #include <kinstance.h>
 #include <kaboutdata.h>
-#include <qlineedit.h>
+#include <qtextedit.h>
 
 #include "python-conduit.h"     // Conduit action
 #include "python-setup.h"
@@ -66,7 +66,7 @@ PythonConduitConfig::PythonConduitConfig(QWidget *p, const char *n) :
 	fConduitName = i18n("Python");
 	UIDialog::addAboutPage(fConfigWidget->tabWidget,PythonConduitFactory::about());
 	fWidget=fConfigWidget;
-	QObject::connect(fConfigWidget->fExpression,SIGNAL(textChanged(const QString&)),
+	QObject::connect(fConfigWidget->fExpression,SIGNAL(textChanged()),
 		this,SLOT(modified()));
 }
 
