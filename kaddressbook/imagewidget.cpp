@@ -57,7 +57,7 @@ ImageWidget::ImageWidget( QWidget *parent, const char *name )
   boxLayout->addMultiCellWidget( mPhotoLabel, 0, 2, 0, 0 );
 
   mPhotoUrl = new KURLRequester( photoBox );
-  mPhotoUrl->setFilter(KImageIO::pattern());
+  mPhotoUrl->setFilter( KImageIO::pattern() );
   boxLayout->addWidget( mPhotoUrl, 0, 1 );
   
   mUsePhotoUrl = new QCheckBox( i18n( "Store as URL" ), photoBox );
@@ -77,7 +77,7 @@ ImageWidget::ImageWidget( QWidget *parent, const char *name )
   boxLayout->addMultiCellWidget( mLogoLabel, 0, 2, 0, 0 );
 
   mLogoUrl = new KURLRequester( logoBox );
-  mLogoUrl->setFilter(KImageIO::pattern());
+  mLogoUrl->setFilter( KImageIO::pattern() );
   boxLayout->addWidget( mLogoUrl, 0, 1 );
   
   mUseLogoUrl = new QCheckBox( i18n( "Store as URL" ), logoBox );
