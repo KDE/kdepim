@@ -31,6 +31,8 @@ using KMail::MaildirJob;
 #include <unistd.h>
 #include <assert.h>
 #include <limits.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 #ifndef MAX_LINE
 #define MAX_LINE 4096
@@ -104,6 +106,8 @@ int KMFolderMaildir::open()
       emit statusMsg(str);
     } else {
       mIndexStream = fopen(QFile::encodeName(indexLocation()), "r+"); // index file
+      if ( mIndexStream )
+        fcntl(fileno(mIndexStream), F_SETFD, FD_CLOEXEC);
       updateIndexStreamPtr();
     }
 
@@ -174,6 +178,7 @@ int KMFolderMaildir::create(bool imap)
     umask(old_umask);
 
     if (!mIndexStream) return errno;
+    fcntl(fileno(mIndexStream), F_SETFD, FD_CLOEXEC);
   }
   else
   {

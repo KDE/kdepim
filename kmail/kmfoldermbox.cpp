@@ -154,6 +154,10 @@ int KMFolderMbox::open()
 
   mChanged = false;
 
+  fcntl(fileno(mStream), F_SETFD, FD_CLOEXEC);
+  if (mIndexStream)
+     fcntl(fileno(mIndexStream), F_SETFD, FD_CLOEXEC);
+
   return rc;
 }
 
@@ -193,6 +197,7 @@ int KMFolderMbox::create(bool imap)
   umask(old_umask);
 
   if (!mStream) return errno;
+  fcntl(fileno(mStream), F_SETFD, FD_CLOEXEC);
 
   if (!path().isEmpty())
   {
@@ -202,6 +207,7 @@ int KMFolderMbox::create(bool imap)
     umask(old_umask);
 
     if (!mIndexStream) return errno;
+    fcntl(fileno(mIndexStream), F_SETFD, FD_CLOEXEC);
   }
   else
   {

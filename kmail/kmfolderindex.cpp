@@ -181,6 +181,8 @@ int KMFolderIndex::writeIndex( bool createEmptyIndex )
 
   mIndexStream = fopen(QFile::encodeName(indexName), "r+"); // index file
   assert( mIndexStream );
+  fcntl(fileno(mIndexStream), F_SETFD, FD_CLOEXEC);
+
   updateIndexStreamPtr();
 
   writeMsgDict();
