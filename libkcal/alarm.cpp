@@ -67,13 +67,26 @@ QString Alarm::programFile() const
 
 void Alarm::setMailAddress(const QString &mailAlarmAddress)
 {
-  mMailAlarmAddress = mailAlarmAddress;
+  mMailAlarmAddresses.clear();
+  mMailAlarmAddresses += mailAlarmAddress;
   mParent->updated();
 }
 
-QString Alarm::mailAddress() const
+void Alarm::setMailAddresses(const QStringList &mailAlarmAddresses)
 {
-  return mMailAlarmAddress;
+  mMailAlarmAddresses = mailAlarmAddresses;
+  mParent->updated();
+}
+
+void Alarm::addMailAddress(const QString &mailAlarmAddress)
+{
+  mMailAlarmAddresses += mailAlarmAddress;
+  mParent->updated();
+}
+
+QStringList Alarm::mailAddresses() const
+{
+  return mMailAlarmAddresses;
 }
 
 void Alarm::setMailSubject(const QString &mailAlarmSubject)
@@ -85,6 +98,30 @@ void Alarm::setMailSubject(const QString &mailAlarmSubject)
 QString Alarm::mailSubject() const
 {
   return mMailAlarmSubject;
+}
+
+void Alarm::setMailAttachment(const QString &mailAttachFile)
+{
+  mMailAttachFiles.clear();
+  mMailAttachFiles += mailAttachFile;
+  mParent->updated();
+}
+
+void Alarm::setMailAttachments(const QStringList &mailAttachFiles)
+{
+  mMailAttachFiles = mailAttachFiles;
+  mParent->updated();
+}
+
+void Alarm::addMailAttachment(const QString &mailAttachFile)
+{
+  mMailAttachFiles += mailAttachFile;
+  mParent->updated();
+}
+
+QStringList Alarm::mailAttachments() const
+{
+  return mMailAttachFiles;
 }
 
 void Alarm::setText(const QString &alarmText)
@@ -109,7 +146,7 @@ void Alarm::setTime(const QDateTime &alarmTime)
 QDateTime Alarm::time() const
 {
   if ( hasTime() ) return mAlarmTime;
-  else 
+  else
   {
     if (mParent->type()=="Todo") {
       Todo *t = static_cast<Todo*>(mParent);
@@ -176,7 +213,7 @@ void Alarm::setOffset( const Duration &offset )
 {
   mOffset = offset;
   mHasTime = false;
-  
+
   mParent->updated();
 }
 

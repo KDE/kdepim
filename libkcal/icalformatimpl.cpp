@@ -631,12 +631,23 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
     icalattachtype_set_url(attach,QFile::encodeName( alarm->audioFile() ).data());
     icalcomponent_add_property(a,icalproperty_new_attach(attach));
     icalattachtype_free(attach);
-  } else if (!alarm->mailAddress().isEmpty()) {
+  } else if (alarm->mailAddresses().count() > 0) {
     action = ICAL_ACTION_EMAIL;
-    icalcomponent_add_property(a,icalproperty_new_attendee(alarm->mailAddress().utf8()));
-    // TODO: multiple attendees can be specified
+    QStringList addresses = alarm->mailAddresses();
+    for (QStringList::Iterator ad = addresses.begin();  ad != addresses.end();  ++ad) {
+      icalcomponent_add_property(a,icalproperty_new_attendee((*ad).utf8()));
+    }
     icalcomponent_add_property(a,icalproperty_new_summary(alarm->mailSubject().utf8()));
     icalcomponent_add_property(a,icalproperty_new_description(alarm->text().utf8()));
+    QStringList attachments = alarm->mailAttachments();
+    if (attachments.count() > 0) {
+      for (QStringList::Iterator at = attachments.begin();  at != attachments.end();  ++at) {
+        attach = icalattachtype_new();
+        icalattachtype_set_url(attach,QFile::encodeName( *at ).data());
+        icalcomponent_add_property(a,icalproperty_new_attach(attach));
+        icalattachtype_free(attach);
+      }
+    }
   } else {
     action = ICAL_ACTION_DISPLAY;
     icalcomponent_add_property(a,icalproperty_new_description(alarm->text().utf8()));
@@ -824,15 +835,15 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
 
       case ICAL_X_PROPERTY:
         if (strcmp(icalproperty_get_name(p),"X-MICROSOFT-CDO-ALLDAYEVENT") == 0) {
-	  const char *text = icalproperty_get_value_as_string(p);
-	  bool floats = (strcmp(text, "TRUE") == 0);
-	  kdDebug(5800) << "ICALFormat::readEvent(): all day event: " << floats << endl;
-	  event->setFloats(floats);
-	  if (floats) {
-	    QDateTime endDate = event->dtEnd();
-	    event->setDtEnd(endDate.addDays(-1));
-	  }
-	}
+          const char *text = icalproperty_get_value_as_string(p);
+          bool floats = (strcmp(text, "TRUE") == 0);
+          kdDebug(5800) << "ICALFormat::readEvent(): all day event: " << floats << endl;
+          event->setFloats(floats);
+          if (floats) {
+            QDateTime endDate = event->dtEnd();
+            event->setDtEnd(endDate.addDays(-1));
+          }
+        }
         break;
 
 
@@ -1393,34 +1404,33 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
 
       // Only in EMAIL alarm
       case ICAL_ATTENDEE_PROPERTY:
-        ialarm->setMailAddress(from8Bit(icalproperty_get_attendee(p)));
-        // TODO: multiple attendees can be specified
+        ialarm->addMailAddress(from8Bit(icalproperty_get_attendee(p)));
         break;
+
+      case ICAL_ATTACH_PROPERTY: {
+        attach = icalproperty_get_attach(p);
+        QString url = QFile::decodeName(icalattachtype_get_url(attach));
+        switch ( action ) {
+          case ICAL_ACTION_AUDIO:
+            ialarm->setAudioFile( url );
+            break;
+          case ICAL_ACTION_PROCEDURE:
+            ialarm->setProgramFile( url );
+            break;
+          case ICAL_ACTION_EMAIL:
+            ialarm->addMailAttachment( url );
+            break;
+          default:
+            break;
+        }
+        break;
+      }
 
       default:
         break;
     }
 
     p = icalcomponent_get_next_property(alarm,ICAL_ANY_PROPERTY);
-  }
-
-  p = icalcomponent_get_first_property(alarm,ICAL_ATTACH_PROPERTY);
-  if ( p ) {
-    attach = icalproperty_get_attach(p);
-    QString url = QFile::decodeName(icalattachtype_get_url(attach));
-
-    switch ( action ) {
-      case ICAL_ACTION_AUDIO:
-        ialarm->setAudioFile( url );
-        break;
-      case ICAL_ACTION_PROCEDURE:
-        ialarm->setProgramFile( url );
-        break;
-      default:
-        break;
-    }
-  } else {
-    kdDebug(5800) << "No attachment found in alarm." << endl;
   }
 
   // TODO: check for consistency of alarm properties

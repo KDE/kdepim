@@ -35,7 +35,7 @@ class Incidence;
 class Alarm {
   public:
     typedef QValueList<Alarm *> List;
-  
+
     /** Constructs a new alarm with variables initialized to "sane" values. */
     Alarm(Incidence *parent);
     /** Destruct Alarm object. */
@@ -53,13 +53,26 @@ class Alarm {
 
     /** send mail to this address when an alarm goes off */
     void setMailAddress(const QString &mailAlarmAddress);
-    /** return the address to send mail to when an alarm goes off */
-    QString mailAddress() const;
+    /** send mail to these addresses when an alarm goes off */
+    void setMailAddresses(const QStringList &mailAlarmAddresses);
+    /** add this address to the list of addresses to send mail to when an alarm goes off */
+    void addMailAddress(const QString &mailAlarmAddress);
+    /** return the addresses to send mail to when an alarm goes off */
+    QStringList mailAddresses() const;
 
     /** set the subject line of the mail */
     void setMailSubject(const QString &mailAlarmSubject);
     /** return the subject line of the mail  */
     QString mailSubject() const;
+
+    /** attach this filename to the email */
+    void setMailAttachment(const QString &mailAttachFile);
+    /** attach these filenames to the email */
+    void setMailAttachments(const QStringList &mailAttachFiles);
+    /** add this filename to the list of files to attach to the email */
+    void addMailAttachment(const QString &mailAttachFile);
+    /** return the filenames to attach to the email */
+    QStringList mailAttachments() const;
 
     /** set the text to display when an alarm goes off */
     void setText(const QString &alarmText);
@@ -75,7 +88,7 @@ class Alarm {
 
     /** Set offset of alarm in time relative to the start of the event. */
     void setOffset( const Duration & );
-    /** Return offset of alarm in time relative to the start of the event. */    
+    /** Return offset of alarm in time relative to the start of the event. */
     Duration offset() const;
 
     /** set the interval between snoozes for the alarm */
@@ -105,7 +118,8 @@ class Alarm {
   private:
     QString mAudioAlarmFile;     // url/filename of sound to play
     QString mProgramAlarmFile;   // filename of program to run
-    QString mMailAlarmAddress;   // who to mail for reminder
+    QStringList mMailAttachFiles;      // filenames to attach to email
+    QStringList mMailAlarmAddresses;   // who to mail for reminder
     QString mMailAlarmSubject;   // subject of email
     QString mAlarmText;          // text to display/mail for alarm
 
