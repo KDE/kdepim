@@ -101,7 +101,7 @@ static inline unsigned long factorForQuantifier( char ch ) {
 }
 
 static inline bool willOverflowULong( unsigned long result, unsigned long add ) {
-  static const unsigned long maxULongByTen = ULONG_MAX / 10.0 ;
+  static const unsigned long maxULongByTen = (unsigned long)(ULONG_MAX / 10.0) ;
   return result > maxULongByTen || ULONG_MAX - 10 * result < add ;
 }
 

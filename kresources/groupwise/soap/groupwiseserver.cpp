@@ -224,7 +224,7 @@ size_t GroupwiseServer::gSoapReceiveCallback( struct soap *soap, char *s,
       p[ret]='\0';
       qDebug("%s", p );
       qDebug("\n*************************");
-      qDebug("kioReceiveCallback return %d", ret);
+      qDebug("kioReceiveCallback return %ld", ret);
     }
     log( "RECV", s, ret );
   }

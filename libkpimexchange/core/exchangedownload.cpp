@@ -86,8 +86,8 @@ void ExchangeDownload::download( KCal::Calendar *calendar, const QDate &start,
   mCalendar = calendar;
   mEvents = 0;
 
-#if 0
   if( showProgress ) {
+#if 0
     //kdDebug() << "Creating progress dialog" << endl;
     mProgress = new ExchangeProgress();
     mProgress->show();
@@ -96,8 +96,8 @@ void ExchangeDownload::download( KCal::Calendar *calendar, const QDate &start,
              SLOT( slotTransferStarted() ) );
     connect( this, SIGNAL(finishDownload() ), mProgress,
              SLOT( slotTransferFinished() ) );
-  }
 #endif
+  }
 
   QString sql = dateSelectQuery( start, end.addDays( 1 ) );
  
