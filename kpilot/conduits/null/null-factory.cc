@@ -98,21 +98,6 @@ NullConduitFactory::~NullConduitFactory()
 		<< endl;
 #endif
 
-	if (qstrcmp(c,"ConduitConfigWidget")==0)
-	{
-		QWidget *w = dynamic_cast<QWidget *>(p);
-		if (w)
-		{
-			NullWidget *nw = new NullWidget(w);
-			UIDialog::addAboutPage(nw->tabWidget,NullConduitFactory::about());
-			return nw;
-		}
-		else
-		{
-			return 0L;
-		}
-	}
-	else
 	if (qstrcmp(c,"ConduitConfig")==0)
 	{
 		QWidget *w = dynamic_cast<QWidget *>(p);
