@@ -386,8 +386,8 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       if ( !mUidsPendingAdding.contains( uid ) ) {
         mCalendar.addIncidence( incidence );
         incidence->registerObserver( this );
-      }
       kdDebug(5650) << "Registering: " << this << " as Observer of: " << incidence << endl;
+      }
       if ( !subResource.isEmpty() && sernum != 0 ) {
         mUidMap[ uid ] = StorageReference( subResource, sernum );
         incidence->setReadOnly( !(*map)[ subResource ].writable() );

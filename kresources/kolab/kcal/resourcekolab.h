@@ -177,9 +177,6 @@ private:
   bool mOpen; // If the resource is open, this is true
   QDict<KCal::IncidenceBase> mPendingUpdates;
   QTimer mResourceChangedTimer;
-  QStringList mUidsPendingAdding;
-  QStringList mUidsPendingDeletion;
-  QStringList mUidsPendingUpdate;
 };
 
 }
