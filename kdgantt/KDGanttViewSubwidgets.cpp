@@ -51,6 +51,8 @@
 #include <qpalette.h>
 #include <qdragobject.h>
 
+#include <klocale.h>
+
 KDTimeTableWidget:: KDTimeTableWidget( QWidget* parent,KDGanttView* myGantt):QCanvas (parent)
 {
     myGanttView = myGantt;
@@ -2517,7 +2519,7 @@ KDLegendWidget:: KDLegendWidget( QWidget* parent,
     scroll = new QScrollView( legendParent );
     setMaximizedWidget( scroll );
 
-    setMinimizedWidget( myLabel = new QLabel(" Legend is hidden",this)  );
+    setMinimizedWidget( myLabel = new QLabel( i18n( " Legend is hidden" ), this) );
     setGeometry( 0, 0, 50, 50 );
     myLegend = 0;
     clearLegend();
@@ -2536,7 +2538,7 @@ void KDLegendWidget::setAsDockwindow( bool dockwin )
             dock->resize( 200, 100 );
             dock->setHorizontallyStretchable( true );
             dock->setVerticallyStretchable( true );
-            dock->setCaption(tr("Legend: ") );
+            dock->setCaption(i18n("Legend: ") );
             dock->setResizeEnabled (true );
             delete myLegend;
             myLegend = 0;
@@ -2618,7 +2620,7 @@ void KDLegendWidget::clearLegend ( )
     if ( dock )
         myLegend = new QGroupBox( 1, Qt::Horizontal, scroll->viewport() );
     else
-        myLegend = new QGroupBox( 1, Qt::Horizontal, "Legend:", scroll->viewport() );
+        myLegend = new QGroupBox( 1, Qt::Horizontal, i18n( "Legend:" ), scroll->viewport() );
     myLegend->setBackgroundColor( Qt::white );
     myLegend->setFont( font() );
     scroll->addChild(  myLegend );
@@ -2687,8 +2689,7 @@ QString KDListView::getWhatsThisText(QPoint p)
     KDGanttViewItem* item = ( KDGanttViewItem* ) itemAt( p );
     if ( item )
         return item->whatsThisText();
-    return "No item Found";
-
+    return i18n( "No item Found" );
 }
 
 void  KDListView::setCalendarMode( bool mode )
@@ -2960,39 +2961,39 @@ KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidg
     onItem = new QPopupMenu( this );
     QPopupMenu * newMenu = new QPopupMenu( this );
     QPopupMenu * onView = new QPopupMenu( this );
-    onView->insertItem( tr( "Summary" ), this,
+    onView->insertItem( i18n( "Summary" ), this,
                         SLOT ( newRootItem( int ) ), 0, 0 );
-    onView->insertItem( tr( "Event" ), this,
+    onView->insertItem( i18n( "Event" ), this,
                         SLOT ( newRootItem( int ) ), 0, 1);
-    onView->insertItem( tr( "Task" ), this,
+    onView->insertItem( i18n( "Task" ), this,
                         SLOT ( newRootItem( int ) ), 0, 2 );
 
-    onItem->insertItem( tr( "New Root" ), onView );
-    newMenu->insertItem( tr( "Summary" ),
+    onItem->insertItem( i18n( "New Root" ), onView );
+    newMenu->insertItem( i18n( "Summary" ),
                          this, SLOT ( newChildItem(  int) ), 0, 0 );
-    newMenu->insertItem( tr( "Event" ),
+    newMenu->insertItem( i18n( "Event" ),
                          this, SLOT ( newChildItem( int ) ), 0, 1 );
-    newMenu->insertItem( tr( "Task" ),
+    newMenu->insertItem( i18n( "Task" ),
                          this, SLOT ( newChildItem( int ) ), 0, 2 );
 
-    onItem->insertItem( tr( "New Child" ), newMenu );
+    onItem->insertItem( i18n( "New Child" ), newMenu );
     QPopupMenu * afterMenu = new QPopupMenu( this );
-    afterMenu->insertItem( tr( "Summary" ),
+    afterMenu->insertItem( i18n( "Summary" ),
                            this, SLOT ( newChildItem(  int) ), 0, 0+4 );
-    afterMenu->insertItem( tr( "Event" ),
+    afterMenu->insertItem( i18n( "Event" ),
                            this, SLOT ( newChildItem( int ) ), 0, 1+4 );
-    afterMenu->insertItem( tr( "Task" ),
+    afterMenu->insertItem( i18n( "Task" ),
                            this, SLOT ( newChildItem( int ) ), 0, 2+4 );
-    onItem->insertItem( tr( "New After" ), afterMenu );
+    onItem->insertItem( i18n( "New After" ), afterMenu );
     QPopupMenu *pasteMenu = new QPopupMenu( this );
-    pasteMenu->insertItem( tr( "As Root" ),
+    pasteMenu->insertItem( i18n( "As Root" ),
                            this, SLOT ( pasteItem( int ) ), 0, 0 );
-    pasteMenu->insertItem( tr( "As Child" ),
+    pasteMenu->insertItem( i18n( "As Child" ),
                            this, SLOT ( pasteItem( int ) ), 0, 1 );
-    pasteMenu->insertItem( tr( "After" ),
+    pasteMenu->insertItem( i18n( "After" ),
                            this, SLOT ( pasteItem( int ) ), 0, 2 );
-    onItem->insertItem( tr( "Paste" ), pasteMenu, 3 );
-    onItem->insertItem( tr( "Cut Item" ), this, SLOT ( cutItem() ) );
+    onItem->insertItem( i18n( "Paste" ), pasteMenu, 3 );
+    onItem->insertItem( i18n( "Cut Item" ), this, SLOT ( cutItem() ) );
     onItem->setItemEnabled( 3, false );
     myMyContentsHeight = 0;
     _showItemAddPopupMenu = false;
@@ -3149,13 +3150,13 @@ void  KDGanttCanvasView::newRootItem(int type)
     KDGanttViewItem* temp = 0;
     switch( type ) {
     case 1:
-        temp = new KDGanttViewEventItem( mySignalSender, "new Event" );
+        temp = new KDGanttViewEventItem( mySignalSender, i18n( "New Event" ) );
         break;
     case 0:
-        temp = new KDGanttViewSummaryItem( mySignalSender, "new Summary" );
+        temp = new KDGanttViewSummaryItem( mySignalSender, i18n( "New Summary" ) );
         break;
     case 2:
-        temp = new KDGanttViewTaskItem( mySignalSender, "new Task" );
+        temp = new KDGanttViewTaskItem( mySignalSender, i18n( "New Task" ) );
         break;
     default:
         ;
@@ -3169,31 +3170,31 @@ void  KDGanttCanvasView::newChildItem( int type )
     KDGanttViewItem* temp = 0;
     switch( type ) {
     case 1:
-        temp = new KDGanttViewEventItem( lastClickedItem, "new Event" );
+        temp = new KDGanttViewEventItem( lastClickedItem, i18n( "New Event" ) );
         break;
     case 0:
-        temp = new KDGanttViewSummaryItem( lastClickedItem, "new Summary" );
+        temp = new KDGanttViewSummaryItem( lastClickedItem, i18n( "New Summary" ) );
         break;
     case 2:
-        temp = new KDGanttViewTaskItem( lastClickedItem, "new Task" );
+        temp = new KDGanttViewTaskItem( lastClickedItem, i18n( "New Task" ) );
         break;
     case 5:
         if ( lastClickedItem->parent() )
-            temp = new KDGanttViewEventItem( lastClickedItem->parent(), lastClickedItem, "new Event" );
+            temp = new KDGanttViewEventItem( lastClickedItem->parent(), lastClickedItem, i18n( "New Event" ) );
         else
-            temp = new KDGanttViewEventItem( mySignalSender, lastClickedItem, "new Event" );
+            temp = new KDGanttViewEventItem( mySignalSender, lastClickedItem, i18n( "New Event" ) );
         break;
     case 4:
         if ( lastClickedItem->parent() )
-            temp = new KDGanttViewSummaryItem( lastClickedItem->parent(), lastClickedItem, "new Summary" );
+            temp = new KDGanttViewSummaryItem( lastClickedItem->parent(), lastClickedItem, i18n( "New Summary" ) );
         else
-            temp = new KDGanttViewSummaryItem( mySignalSender, lastClickedItem, "new Summary" );
+            temp = new KDGanttViewSummaryItem( mySignalSender, lastClickedItem, i18n( "New Summary" ) );
         break;
     case 6:
         if ( lastClickedItem->parent() )
-            temp = new KDGanttViewTaskItem( lastClickedItem->parent(), lastClickedItem, "new Task" );
+            temp = new KDGanttViewTaskItem( lastClickedItem->parent(), lastClickedItem, i18n( "New Task" ) );
         else
-            temp = new KDGanttViewTaskItem( mySignalSender, lastClickedItem, "new Task" );
+            temp = new KDGanttViewTaskItem( mySignalSender, lastClickedItem, i18n( "New Task" ) );
         break;
 
 
