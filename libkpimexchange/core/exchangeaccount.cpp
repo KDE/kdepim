@@ -132,6 +132,7 @@ void ExchangeAccount::authenticate( int windowId )
   info.username = mAccount;
   info.password = mPassword;
   info.realmValue = mHost;
+  info.digestInfo = "Basic";
 
   DCOPClient *dcopClient = new DCOPClient();
   dcopClient->attach();
