@@ -73,9 +73,9 @@ KNRemoteArticle::KNRemoteArticle(KNGroup *g)
   r_eferences.setParent(this);
 
   if (g && g->useCharset())
-    d_efaultCS = cachedCharset( g->defaultCharset() );
+    setDefaultCharset( g->defaultCharset() );
   else
-    d_efaultCS = cachedCharset( knGlobals.cfgManager->postNewsTechnical()->charset() );
+    setDefaultCharset( knGlobals.cfgManager->postNewsTechnical()->charset() );
 }
 
 
@@ -256,9 +256,9 @@ void KNRemoteArticle::setForceDefaultCS(bool b)
   if (!b) { // restore default
     KNGroup *g=static_cast<KNGroup*>(c_ol);
     if (g && g->useCharset())
-      d_efaultCS = cachedCharset( g->defaultCharset() );
+      setDefaultCharset( g->defaultCharset() );
     else
-      d_efaultCS = cachedCharset( knGlobals.cfgManager->postNewsTechnical()->charset() );
+      setDefaultCharset( knGlobals.cfgManager->postNewsTechnical()->charset() );
   }
   KNArticle::setForceDefaultCS(b);
   initListItem();
@@ -273,7 +273,7 @@ KNLocalArticle::KNLocalArticle(KNArticleCollection *c)
 {
   n_ewsgroups.setParent(this);
   t_o.setParent(this);
-  d_efaultCS = cachedCharset( knGlobals.cfgManager->postNewsTechnical()->charset() );
+  setDefaultCharset( knGlobals.cfgManager->postNewsTechnical()->charset() );
 }
 
 
@@ -392,7 +392,7 @@ void KNLocalArticle::updateListItem()
 void KNLocalArticle::setForceDefaultCS(bool b)
 {
   if (!b)  // restore default
-    d_efaultCS = cachedCharset( knGlobals.cfgManager->postNewsTechnical()->charset() );
+    setDefaultCharset( knGlobals.cfgManager->postNewsTechnical()->charset() );
   KNArticle::setForceDefaultCS(b);
   updateListItem();
 }
