@@ -45,20 +45,18 @@ KonsoleKalendarExports::~KonsoleKalendarExports()
 {
 }
 
-bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts, Event *event ){
+bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts, Event *event, QDate date ){
 
   if( m_firstEntry == true ||
-      m_lastDate.day() != event->dtStart().date().day() ||
-      m_lastDate.month() != event->dtStart().date().month() ||
-      m_lastDate.year() != event->dtStart().date().year() ){
+      m_lastDate.day() != date.day() ||
+      m_lastDate.month() != date.month() ||
+      m_lastDate.year() != date.year() ){
 
 
     m_firstEntry=false;
-    int len = event->dtStartStr().length();
-    QString date = event->dtStartStr();
-    date.truncate( len - 5 );
-    *ts << I18N_NOOP("Date:") << "\t" <<  date << endl;
-    m_lastDate = event->dtStart().date();
+    QString sDate = date.toString();
+    *ts << I18N_NOOP("Date:") << "\t" <<  sDate << endl;
+    m_lastDate = date;
 
   }
 
@@ -85,19 +83,22 @@ bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts, Event *event ){
   return true;
 }
 
-bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts, Event *event ){
+bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts, Event *event, QDate date ){
 
 // startdate,starttime,enddate,endtime,summary,description,UID
 
-  QString delim = ",";  //one day maybe the delim character can be an option??
+  QString delim = ",";  //TODO: the delim character can be an option??
 
   if ( !event->doesFloat() ) {
-    *ts <<          event->dtStart().date().toString("yyyy-M-d");
+    *ts <<          date.toString("yyyy-MM-dd");
     *ts << delim << event->dtStart().time().toString("hh:mm");
-    *ts << delim << event->dtEnd().date().toString("yyyy-M-d");
+    *ts << delim << date.toString("yyyy-MM-dd");
     *ts << delim << event->dtEnd().time().toString("hh:mm");
   } else {
-    *ts << ",,,";
+    *ts <<          date.toString("yyyy-MM-dd");
+    *ts << delim;
+    *ts << delim << date.toString("yyyy-MM-dd");
+    *ts << delim;
   }
 
   QString rdelim = "\\" + delim;
