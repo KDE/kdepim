@@ -32,6 +32,7 @@
 #include <klocale.h>
 #include <kstdaction.h>
 #include <kprocess.h>
+#include <krun.h>
 #include <kcharsets.h>
 #include <kaction.h>
 #include <kapplication.h>
@@ -746,6 +747,8 @@ void KNArticleWidget::openURL(const QString &url)
 {
   if(url.isEmpty()) return;
 
+  if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTdefault)
+    (void) new KRun(url);
   if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTkonq)
     kapp->invokeBrowser(url);
   else if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTnetscape){
@@ -762,8 +765,7 @@ void KNArticleWidget::openURL(const QString &url)
   }
   else if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTmozilla){
     KProcess proc;
-    proc << "run-mozilla.sh";
-    proc << "mozilla-bin";
+    proc << "mozilla";
     proc << url;
     proc.start(KProcess::DontCare);
   }

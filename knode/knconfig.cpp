@@ -713,8 +713,10 @@ KNConfig::ReadNewsViewer::ReadNewsViewer()
   s_howAlts=conf->readBoolEntry("showAlts", false);
   f_ullHdrs=conf->readBoolEntry("fullHdrs", false);
   u_seFixedFont=conf->readBoolEntry("articleBodyFixedFont", false);
-  QString s = conf->readEntry("Browser","Konqueror");
-  if (s=="Netscape")
+  QString s = conf->readEntry("Browser","Default");
+  if (s=="konqueror")
+    b_rowser = BTkonq;
+  else if (s=="Netscape")
     b_rowser = BTnetscape;
   else if (s=="Mozilla")
     b_rowser = BTmozilla;
@@ -723,7 +725,7 @@ KNConfig::ReadNewsViewer::ReadNewsViewer()
   else if (s=="Other")
     b_rowser = BTother;
   else
-    b_rowser = BTkonq;
+    b_rowser = BTdefault;
   b_rowserCommand=conf->readEntry("BrowserCommand","netscape %u");
 }
 
@@ -755,6 +757,8 @@ void KNConfig::ReadNewsViewer::save()
   conf->writeEntry("fullHdrs", f_ullHdrs);
   conf->writeEntry("articleBodyFixedFont", u_seFixedFont);
   switch (b_rowser) {
+    case BTdefault: conf->writeEntry("Browser","Default");
+		    break;
     case BTkonq: conf->writeEntry("Browser","Konqueror");
                  break;
     case BTnetscape: conf->writeEntry("Browser","Netscape");

@@ -1093,11 +1093,12 @@ KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget(ReadNewsViewer *d, QWidget 
   a_ltAttCB=new QCheckBox(i18n("Show alternati&ve contents as attachments"), agb);
 
   b_rowser=new QComboBox(bgb);
+  b_rowser->insertItem(i18n("Default Browser"));
   b_rowser->insertItem("Konqueror");
   b_rowser->insertItem("Netscape");
   b_rowser->insertItem("Mozilla");
   b_rowser->insertItem("Opera");
-  b_rowser->insertItem("Other");
+  b_rowser->insertItem(i18n("Other Browser"));
   connect(b_rowser, SIGNAL(activated(int)), SLOT(slotBrowserTypeChanged(int)));
   l1=new QLabel(b_rowser, i18n("Open &links with:"), bgb);
   b_rowserCommand = new KLineEdit(bgb);

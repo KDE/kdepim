@@ -598,7 +598,7 @@ class ReadNewsViewer : public Base {
   friend class ReadNewsViewerWidget;
 
   public:
-    enum browserType { BTkonq=0, BTnetscape=1, BTmozilla=2, BTopera=3, BTother=4 };
+    enum browserType { BTdefault=0, BTkonq=1, BTnetscape=2, BTmozilla=3, BTopera=4, BTother=5 };
 
     ReadNewsViewer();
     ~ReadNewsViewer();
