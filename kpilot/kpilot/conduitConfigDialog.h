@@ -65,6 +65,7 @@ protected slots:
 
 private:
 	QPushButton *fConfigure;
+	QListViewItem *fGeneralItem;
 } ;
 
 class ConduitConfigDialog : public UIDialog

@@ -38,6 +38,7 @@ static const char *conduitconfigdialog_id =
 #include <qpushbutton.h>
 #include <qhbox.h>
 #include <qlayout.h>
+#include <qwidgetstack.h>
 
 #include <kservice.h>
 #include <kservicetype.h>
@@ -58,6 +59,63 @@ static const char *conduitconfigdialog_id =
 #define CONDUIT_COMMENT (1)
 #define CONDUIT_DESKTOP (2)
 #define CONDUIT_LIBRARY (3)
+
+class ConduitTip : public QToolTip
+{
+public:
+	ConduitTip(QListView *parent);
+	virtual ~ConduitTip();
+
+protected:
+	virtual void maybeTip(const QPoint &);
+
+	QListView *fListView;
+} ;
+
+
+ConduitTip::ConduitTip(QListView *p) :
+	QToolTip(p->viewport(),0L),
+	fListView(p)
+{
+	FUNCTIONSETUP;
+}
+
+ConduitTip::~ConduitTip()
+{
+	FUNCTIONSETUP;
+}
+
+/* virtual */ void ConduitTip::maybeTip(const QPoint &p)
+{
+	FUNCTIONSETUP;
+
+	QListViewItem *l = fListView->itemAt(p);
+
+	if (!l) return;
+
+	// ConduitListItem *q = static_cast<ConduitListItem *>(l);
+
+#ifdef DEBUG
+	DEBUGKPILOT << fname
+		<< ": Tip over "
+		<< l->text(CONDUIT_NAME)
+		<< " with text "
+		<< l->text(CONDUIT_COMMENT)
+		<< endl;
+#endif
+
+	QString s = l->text(CONDUIT_COMMENT);
+
+	if (s.isEmpty()) return;
+	if (s.find(CSL1("<qt>"),0,false) == -1)
+	{
+		s.prepend(CSL1("<qt>"));
+		s.append(CSL1("</qt>"));
+	}
+
+	tip(fListView->itemRect(l),s);
+}
+
 
 
 ConduitConfigDialog::ConduitConfigDialog(QWidget * _w, const char *n,
@@ -101,6 +159,7 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *p, const char *n,
 {
 	FUNCTIONSETUP;
 
+	fConduitList->removeColumn(CONDUIT_COMMENT);
 	fillLists();
 	fConduitList->adjustSize();
 	fConduitList->show();
@@ -128,6 +187,9 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *p, const char *n,
 
 	selected(0L);
 	adjustSize();
+	fStack->raiseWidget(0);
+
+	(void) new ConduitTip(fConduitList);
 }
 
 ConduitConfigWidget::~ConduitConfigWidget()
@@ -138,6 +200,10 @@ ConduitConfigWidget::~ConduitConfigWidget()
 void ConduitConfigWidget::fillLists()
 {
 	FUNCTIONSETUP;
+
+	fGeneralItem = new QListViewItem(fConduitList,
+		i18n("General"),
+		i18n("Settings that apply to all conduits."));
 
 	QStringList potentiallyInstalled =
 		KPilotConfig::getConfig().setConduitGroup().
@@ -190,6 +256,16 @@ void ConduitConfigWidget::fillLists()
 void ConduitConfigWidget::selected(QListViewItem *p)
 {
 	FUNCTIONSETUP;
+	// Don't enable configure for the general item.
+	if (p==fGeneralItem) 
+	{
+		fStack->raiseWidget(1);
+		p=0L;
+	}
+	else
+	{
+		fStack->raiseWidget(0);
+	}
 	if (fConfigure) fConfigure->setEnabled(p);
 	emit selectionChanged(p);
 }
@@ -199,7 +275,7 @@ void ConduitConfigWidget::configureConduit()
 	FUNCTIONSETUP;
 
 	QListViewItem *p = fConduitList->selectedItem();
-
+	if (p==fGeneralItem) return;
 	if (!p)
 	{
 #ifdef DEBUG
@@ -243,8 +319,8 @@ void ConduitConfigWidget::configureConduit()
 	QStringList a;
 	a.append(CSL1("modal"));
 
-	QObject *o = f->create(this, 0L, "ConduitConfig",a);
-
+	// QObject *o = f->create(this, 0L, "ConduitConfig",a);
+	QObject *o = f->create(fStack, 0L, "ConduitConfigWidget",a);
 
 	if (!o)
 	{
@@ -260,7 +336,7 @@ void ConduitConfigWidget::configureConduit()
 		return;
 	}
 
-	ConduitConfig *d = dynamic_cast<ConduitConfig *>(o);
+	QWidget *d = dynamic_cast<QWidget *>(o);
 
 	if (!d)
 	{
@@ -277,13 +353,26 @@ void ConduitConfigWidget::configureConduit()
 		return;
 	}
 
-	d->setConfig(&KPilotConfig::getConfig());
-	d->readSettings();
-	d->exec();
+	// d->setConfig(&KPilotConfig::getConfig());
+	// d->readSettings();
+	// d->exec();
+	if (fStack->addWidget(d,2)<0)
+	{
+#ifdef DEBUG
+		DEBUGKPILOT << fname
+			<< ": Can't add config widget to stack."
+			<< endl;
+#endif
+	}
+	else
+	{
+		fStack->raiseWidget(2);
+		d->show();
+	}
 
-	delete d;
-	KLibLoader::self()->unloadLibrary(
-		library);
+	// delete d;
+	// KLibLoader::self()->unloadLibrary(
+	//	library);
 }
 
 
