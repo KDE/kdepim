@@ -62,6 +62,16 @@ class PilotAppCategory
     PilotAppCategory(void) : fAttrs(0), fId(0), fCategory(0) { }
     PilotAppCategory(int a, recordid_t i, int c) : fAttrs(a), fId(i), fCategory(c) { }
     PilotAppCategory(PilotRecord* rec) : fAttrs(rec->getAttrib()), fId(rec->getID()), fCategory(rec->getCat()) { }
+      PilotAppCategory(const PilotAppCategory &copyFrom) :
+	    fAttrs(copyFrom.fAttrs), fId(copyFrom.fId),
+	    fCategory(copyFrom.fCategory) { }
+    PilotAppCategory& operator=( const PilotAppCategory &r )
+		{
+		fAttrs = r.fAttrs;
+		fId = r.fId;
+		fCategory = r.fCategory;
+		return *this;
+		}
 
     virtual ~PilotAppCategory(void) {}
     
@@ -99,6 +109,9 @@ public:
 
 
 // $Log$
+// Revision 1.8  2001/03/30 17:11:31  stern
+// Took out LocalDB for mode and added DatabaseSource enum in BaseConduit.  This the user can set the source for backup and sync
+//
 // Revision 1.7  2001/03/19 23:12:39  stern
 // Made changes necessary for upcoming abbrowser conduit.
 //
