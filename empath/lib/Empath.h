@@ -41,7 +41,7 @@
 #include "EmpathMailboxList.h"
 #include "EmpathFilterList.h"
 #include "EmpathCachedMessage.h"
-#include "EmpathComposer.h"
+#include "EmpathComposeForm.h"
 
 #include "RMM_Enum.h"
 #include "RMM_Message.h"
@@ -51,6 +51,7 @@
 class EmpathMailSender;
 class EmpathFolder;
 class EmpathTask;
+class EmpathComposer;
 
 /**
  * Empath is the controller class for Empath's kernel.
@@ -464,7 +465,7 @@ class Empath : public QObject
          * All the info about the message is kept in the composeform.
          * Usually connected to a slot in the UI module.
          */
-        void newComposer(EmpathComposer::Form);
+        void newComposer(EmpathComposeForm);
        /**
          * Signals that the settings should be provided for
          * review. In other words, bring up the settings dialog.

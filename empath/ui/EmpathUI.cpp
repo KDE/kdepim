@@ -104,7 +104,7 @@ EmpathUI::~EmpathUI()
 }
 
     void    
-EmpathUI::s_newComposer(EmpathComposer::Form composeForm)
+EmpathUI::s_newComposer(EmpathComposeForm composeForm)
 {
     (new EmpathComposeWindow(composeForm))->show();
 }
@@ -246,8 +246,8 @@ EmpathUI::_connectUp()
         this,   SLOT(s_infoMessage(const QString &)));
 
     QObject::connect(
-        empath, SIGNAL(newComposer(EmpathComposer::Form)),
-        this,   SLOT(s_newComposer(EmpathComposer::Form)));
+        empath, SIGNAL(newComposer(EmpathComposeForm)),
+        this,   SLOT(s_newComposer(EmpathComposeForm)));
     
     QObject::connect(
         empath, SIGNAL(configureMailbox(const EmpathURL &, QWidget *)),

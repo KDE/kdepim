@@ -63,9 +63,7 @@ class EmpathComposeWidget : public QWidget
         /**
          * Standard ctor
          */
-        EmpathComposeWidget(
-            EmpathComposer::Form composeForm,
-            QWidget * parent = 0, const char * name = 0);
+        EmpathComposeWidget(EmpathComposeForm, QWidget * parent);
 
         /**
          * dtor
@@ -76,7 +74,7 @@ class EmpathComposeWidget : public QWidget
          * Return a composeform when the user wants to send the 
          * message.
          */
-        EmpathComposer::Form composeForm();
+        EmpathComposeForm composeForm();
         
         /**
          * Test if there are any attachments for this message.
@@ -109,7 +107,7 @@ class EmpathComposeWidget : public QWidget
         
         QCString _body();
 
-        EmpathComposer::Form composeForm_;
+        EmpathComposeForm composeForm_;
        
         EmpathEnvelopeWidget        * envelopeWidget_;
         QMultiLineEdit              * editorWidget_;

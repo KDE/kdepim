@@ -41,41 +41,34 @@
 #include <RMM_Address.h>
 
 EmpathEnvelopeWidget::EmpathEnvelopeWidget(
-        RMM::REnvelope &    headers,
+        RMM::REnvelope      envelope,
         QWidget *           parent,
         const char *        name)
     :
-        QVBox(parent, name),
-        headers_(headers)
+        QVBox(parent, name)
 {
-    empathDebug("");
     setSpacing(2);
     maxSizeColOne_ = 0;
     
-    RMM::RHeaderList headerList = headers_.headerList();
+    RMM::RHeaderList headerList = envelope.headerList();
 
+    empathDebug("Adding " + QString().setNum(headerList.count()) + " headers");
     RMM::RHeaderListIterator it(headerList);
     for (; it.current(); ++it) 
         _addHeader(*it.current());
 
-    empathDebug("");
-
     _lineUpHeaders();
 
-    empathDebug("");
     // headerSpecList_.getFirst()->setFocus();
 }
 
 EmpathEnvelopeWidget::~EmpathEnvelopeWidget()
 {
-    empathDebug("dtor");
 }
 
-    RMM::REnvelope &
+    RMM::REnvelope
 EmpathEnvelopeWidget::headers()
 {
-    // FIXME
-        
     RMM::REnvelope envelope;
 
     QListIterator<EmpathHeaderSpecWidget> hit(headerSpecList_);
@@ -83,9 +76,7 @@ EmpathEnvelopeWidget::headers()
     for (; hit.current(); ++hit)
         envelope.addHeader(hit.current()->header());
     
-    headers_ = envelope;
-    
-    return headers_;
+    return envelope;
 }
 
    bool
@@ -115,12 +106,9 @@ EmpathEnvelopeWidget::haveSubject()
 }
 
     void
-EmpathEnvelopeWidget::_addHeader(RMM::RHeader & header) 
+EmpathEnvelopeWidget::_addHeader(RMM::RHeader header) 
 {
-    empathDebug("adding header: " + header.asString());
-
     EmpathHeaderSpecWidget * newHsw = new EmpathHeaderSpecWidget(header, this);
-    newHsw->show();
     
     if (!headerSpecList_.isEmpty()) {
         QObject::connect(
@@ -140,8 +128,10 @@ EmpathEnvelopeWidget::_lineUpHeaders()
 {
     QListIterator<EmpathHeaderSpecWidget> hit(headerSpecList_);
     
-    for (; hit.current(); ++hit)
+    for (; hit.current(); ++hit) {
         hit.current()->setColumnOneSize(maxSizeColOne_);
+        hit.current()->show();
+    }
 }
 
 // vim:ts=4:sw=4:tw=78

@@ -28,16 +28,10 @@
 #define EMPATHATTACHMENTLISTWIDGET_H
 
 // Qt includes
-#include <qwidget.h>
 #include <qlistview.h>
-#include <qlist.h>
-#include <qstring.h>
-#include <qpushbutton.h>
 
 // Local includes
-#include "EmpathDefines.h"
-#include "EmpathAttachmentListItem.h"
-#include <RMM_Message.h>
+#include "EmpathAttachmentSpec.h"
 
 /**
  * This widget shows the structure of a message.
@@ -48,12 +42,13 @@ class EmpathAttachmentListWidget : public QListView
     
     public:
         
-        EmpathAttachmentListWidget(
-            QWidget * parent = 0, const char * name = 0);
+        EmpathAttachmentListWidget(QWidget * parent);
 
         ~EmpathAttachmentListWidget();
 
-        void use(const RMM::RMessage &);
+        EmpathAttachmentSpecList attachments();
+
+        void use(EmpathAttachmentSpecList l);
         
         void addAttachment();
         void editAttachment();
@@ -62,7 +57,6 @@ class EmpathAttachmentListWidget : public QListView
     private:
 
         QListView    * lv_attachments_;
-        RMM::RMessage    message_;
 };
 
 #endif

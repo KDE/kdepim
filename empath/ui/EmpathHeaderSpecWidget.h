@@ -45,14 +45,14 @@ class EmpathHeaderSpecWidget : public QHBox
 
     public:
         
-        EmpathHeaderSpecWidget(RMM::RHeader & header, QWidget * parent = 0);
+        EmpathHeaderSpecWidget(RMM::RHeader header, QWidget * parent = 0);
 
         ~EmpathHeaderSpecWidget();
 
         int         sizeOfColumnOne();
         void        setColumnOneSize(int);
 
-        RMM::RHeader & header();
+        RMM::RHeader header();
 
         QString     headerName();
         QString     headerBody();

@@ -227,6 +227,12 @@ RHeader::createDefault()
 RHeader::_newHeaderBody(HeaderType headerType)
 {    
     RHeaderBody * b;
+
+    if (headerType > HeaderUnknown) {
+        rmmDebug("You passed me an illegal header type !");
+        headerType = HeaderUnknown;
+    }
+
     switch (headerTypesTable[headerType]) {
         case Address:           b = new RAddress;           break;
         case AddressList:       b = new RAddressList;       break;
@@ -252,6 +258,11 @@ RHeader::_newHeaderBody(HeaderType headerType, RHeaderBody * headerBody)
         return _newHeaderBody(headerType);
 
     RHeaderBody * b;
+
+    if (headerType > HeaderUnknown) {
+        rmmDebug("You passed me an illegal header type !");
+        headerType = HeaderUnknown;
+    }
 
     switch (headerTypesTable[headerType]) {
         case Address:           

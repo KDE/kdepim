@@ -481,15 +481,17 @@ REnvelope::set(HeaderType t, const QCString & s)
 
     switch (hdt) {
 
-        case Address:            d = new RAddress;            break;
-        case AddressList:        d = new RAddressList;        break;
-        case DateTime:            d = new RDateTime;            break;
-        case DispositionType:    d = new RDispositionType;    break;
-        case Mailbox:            d = new RMailbox;            break;
-        case MailboxList:        d = new RMailboxList;        break;
-        case Mechanism:            d = new RMechanism;            break;
-        case MessageID:            d = new RMessageID;            break;
-        case Text: default:        d = new RText;                break;
+        case Address:           d = new RAddress;           break;
+        case AddressList:       d = new RAddressList;       break;
+        case ContentType:       d = new RContentType;       break;
+        case Cte:               d = new RCte;               break;
+        case DateTime:          d = new RDateTime;          break;
+        case DispositionType:   d = new RDispositionType;   break;
+        case Mailbox:           d = new RMailbox;           break;
+        case MailboxList:       d = new RMailboxList;       break;
+        case Mechanism:         d = new RMechanism;         break;
+        case MessageID:         d = new RMessageID;         break;
+        case Text: default:     d = new RText;              break;
     }
     
     CHECK_PTR(d);

@@ -49,7 +49,7 @@ enum MatchExprType {
     HasAttachments,
     AnyMessage
 };
-
+ 
 enum ComposeType {
     ComposeReply,
     ComposeReplyAll,

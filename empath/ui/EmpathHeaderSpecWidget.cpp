@@ -37,19 +37,18 @@
 #include <RMM_Enum.h>
 
 EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
-    RMM::RHeader & header, QWidget * parent)
+    RMM::RHeader header, QWidget * parent)
     :
-        QHBox(parent, "HeaderSpecWidget"),
-        header_(header)
+        QHBox(parent, "HeaderSpecWidget")
 {
     empathDebug("header: " + header.asString());
     
     headerNameWidget_ = new QLabel(this);
-    headerNameWidget_->setText(header_.headerName() + ": ");
+    headerNameWidget_->setText(header.headerName() + ": ");
     
     address_ = false;
 
-    RMM::HeaderDataType t = RMM::headerTypesTable[header_.headerType()];
+    RMM::HeaderDataType t = RMM::headerTypesTable[header.headerType()];
     
     address_ =  t == RMM::AddressList    ||
                 t == RMM::Address        ||
@@ -63,7 +62,7 @@ EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
     } else 
         headerBodyWidget_ = new QLineEdit(this, "headerBodyWidget");
 
-    headerBodyWidget_->setText(header_.headerBody()->asString());
+    headerBodyWidget_->setText(header.headerBody()->asString());
     headerBodyWidget_->setFocus();
 }
 
@@ -72,13 +71,13 @@ EmpathHeaderSpecWidget::~EmpathHeaderSpecWidget()
     // Empty.
 }
 
-    RMM::RHeader &
+    RMM::RHeader
 EmpathHeaderSpecWidget::header()
 {
     QCString headerName = headerNameWidget_->text().local8Bit();
     QCString headerBody = headerBodyWidget_->text().local8Bit();
-    header_ = headerName + headerBody;
-    return header_;
+    RMM::RHeader h(headerName + ": " + headerBody);
+    return h;
 }
 
     int

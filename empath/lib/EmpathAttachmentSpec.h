@@ -25,6 +25,7 @@
 
 // Qt includes
 #include <qstring.h>
+#include <qvaluelist.h>
 
 // Local includes
 #include "EmpathDefines.h"
@@ -56,10 +57,10 @@ class EmpathAttachmentSpec
                 const QString & subType,
                 const QString & charset)
             :
-                filename_        (filename),
+                filename_       (filename),
                 description_    (description),
-                encoding_        (encoding),
-                type_            (type),
+                encoding_       (encoding),
+                type_           (type),
                 subType_        (subType),
                 charset_        (charset)
         {
@@ -67,10 +68,10 @@ class EmpathAttachmentSpec
                 
         EmpathAttachmentSpec(const EmpathAttachmentSpec & a)
             :
-                filename_        (a.filename_),
+                filename_       (a.filename_),
                 description_    (a.description_),
-                encoding_        (a.encoding_),
-                type_            (a.type_),
+                encoding_       (a.encoding_),
+                type_           (a.type_),
                 subType_        (a.subType_),
                 charset_        (a.charset_)
         {
@@ -81,33 +82,43 @@ class EmpathAttachmentSpec
         {    
             if (this == &a) return *this;
             
-            filename_        = a.filename_;
+            filename_       = a.filename_;
             description_    = a.description_;
-            encoding_        = a.encoding_;
-            type_            = a.type_;
+            encoding_       = a.encoding_;
+            type_           = a.type_;
             subType_        = a.subType_;
             charset_        = a.charset_;
             
             return *this;
         }
-        
+
         virtual ~EmpathAttachmentSpec()
         {
         }
+
+        bool operator == (const EmpathAttachmentSpec & other) const
+        {
+            return (
+                filename_   == other.filename_  &&
+                encoding_   == other.encoding_  &&
+                type_       == other.type_      &&
+                subType_    == other.subType_   &&
+                charset_    == other.charset_);
+        } 
         
-        QString filename()        const { return filename_;        }
-        QString description()    const { return description_;    }
-        RMM::CteType encoding()    const { return encoding_;        }
-        QString type()            const { return type_;            }
-        QString subType()        const { return subType_;        }
-        QString charset()        const { return charset_;        }
+        QString filename()      const { return filename_;       }
+        QString description()   const { return description_;    }
+        RMM::CteType encoding() const { return encoding_;       }
+        QString type()          const { return type_;           }
+        QString subType()       const { return subType_;        }
+        QString charset()       const { return charset_;        }
         
-        void setFilename    (const QString & s) { filename_        = s; }
-        void setDescription    (const QString & s) { description_    = s; }
-        void setEncoding    (RMM::CteType t)    { encoding_        = t; }
-        void setType        (const QString & s) { type_            = s; }
-        void setSubType        (const QString & s) { subType_        = s; }
-        void setCharset        (const QString & s) { charset_        = s; }
+        void setFilename    (const QString & s) { filename_     = s; }
+        void setDescription (const QString & s) { description_  = s; }
+        void setEncoding    (RMM::CteType t)    { encoding_     = t; }
+        void setType        (const QString & s) { type_         = s; }
+        void setSubType     (const QString & s) { subType_      = s; }
+        void setCharset     (const QString & s) { charset_      = s; }
         
         /**
          * @internal
@@ -123,6 +134,8 @@ class EmpathAttachmentSpec
         QString subType_;
         QString charset_;
 };
+
+typedef QValueList<EmpathAttachmentSpec> EmpathAttachmentSpecList;
 
 #endif
 

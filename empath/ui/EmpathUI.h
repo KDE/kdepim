@@ -32,6 +32,7 @@
 
 // Local includes
 #include "Empath.h"
+#include "EmpathComposeForm.h"
 #include "EmpathURL.h"
 
 /**
@@ -57,7 +58,7 @@ class EmpathUI : public QObject
         
         void s_infoMessage(const QString &);
         
-        void s_newComposer(EmpathComposer::Form);
+        void s_newComposer(EmpathComposeForm);
 
     private:
 

@@ -95,8 +95,8 @@ Empath::Empath()
     composer_ = new EmpathComposer;
 
     QObject::connect(
-        composer_, SIGNAL(composeFormComplete(EmpathComposer::Form)),
-        SIGNAL(newComposer(EmpathComposer::Form)));
+        composer_, SIGNAL(composeFormComplete(EmpathComposeForm)),
+        SIGNAL(newComposer(EmpathComposeForm)));
 }
 
     void
@@ -546,19 +546,19 @@ Empath::s_compose(const QString & recipient)
 
     void
 Empath::s_reply(const EmpathURL & url)
-{ composer_->newComposeForm(EmpathComposer::ComposeReply, url); }
+{ composer_->newComposeForm(ComposeReply, url); }
 
     void
 Empath::s_replyAll(const EmpathURL & url)
-{ composer_->newComposeForm(EmpathComposer::ComposeReplyAll, url); }
+{ composer_->newComposeForm(ComposeReplyAll, url); }
 
     void
 Empath::s_forward(const EmpathURL & url)
-{ composer_->newComposeForm(EmpathComposer::ComposeForward, url); }
+{ composer_->newComposeForm(ComposeForward, url); }
 
     void
 Empath::s_bounce(const EmpathURL & url)
-{ composer_->newComposeForm(EmpathComposer::ComposeBounce, url); }
+{ composer_->newComposeForm(ComposeBounce, url); }
 
     void
 Empath::s_bugReport()

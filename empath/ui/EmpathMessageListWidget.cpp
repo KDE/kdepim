@@ -461,9 +461,6 @@ EmpathMessageListWidget::setStatus(
         EmpathMessageListItem * item, RMM::MessageStatus status)
 {
     item->setStatus(status);
-    
-    EmpathFolder * f = empath->folder(url_);
-    f->setStatus(item->id(), status);
     setStatusPixmap(item, status);
 }
 

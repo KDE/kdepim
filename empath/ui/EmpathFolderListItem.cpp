@@ -167,6 +167,25 @@ EmpathFolderListItem::setup()
 }
 
     void
+EmpathFolderListItem::paintCell(
+    QPainter * p, const QColorGroup & cg, int column, int width, int align)
+{
+    if ((text(1)[0] == '0') || (text(1)[0] == '.'))
+        QListViewItem::paintCell(p, cg, column, width, align);
+
+    else {
+
+        KConfig * c(KGlobal::config());
+        using namespace EmpathConfig;
+        c->setGroup(GROUP_DISPLAY);
+        QColor col = c->readColorEntry(UI_NEW, &DFLT_NEW);
+        QColorGroup modified(cg);
+        modified.setColor(QColorGroup::Text, col);
+        QListViewItem::paintCell(p, modified, column, width, align);
+    }
+}
+
+    void
 EmpathFolderListItem::s_setCount(unsigned int unread, unsigned int read)
 {
     setText(1, QString().setNum(unread));

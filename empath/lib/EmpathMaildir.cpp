@@ -96,6 +96,7 @@ EmpathMaildir::sync(bool force)
     _markNewMailAsSeen();
     _tagOrAdd(f);
     _removeUntagged(f);
+    _recalculateCounters(f);
     
     f->setIndexInitialised();
 }
@@ -103,6 +104,7 @@ EmpathMaildir::sync(bool force)
     QMap<QString, bool>
 EmpathMaildir::mark(const QStringList & l, RMM::MessageStatus msgStat)
 {
+    empathDebug("Number to mark: " + QString::number(l.count()));
     QMap<QString, bool> successMap;
     
     EmpathTask * t = new EmpathTask (i18n("Marking messages"));
@@ -187,6 +189,7 @@ EmpathMaildir::_removeMessage(const QString & id)
     bool
 EmpathMaildir::_mark(const QString & id, RMM::MessageStatus msgStat)
 {
+    empathDebug("");
     QDir d(path_ + "/cur/", id + "*");
  
     QString statusFlags;
@@ -294,19 +297,56 @@ EmpathMaildir::_messageData(const QString & filename, bool isFullName)
     return messageBuffer;
 }
 
+    void
+EmpathMaildir::_recalculateCounters(EmpathFolder * f)
+{
+    QDir d(
+        path_ + "/cur",
+        QString::null,
+        QDir::Unsorted,
+        QDir::Files | QDir::NoSymLinks);
+    
+    QRegExp re_flags(":2,[A-Z]*$");
+    QString s;
+    unsigned int unread(0);
+
+    QStringList l(d.entryList());
+    
+    for (QStringList::ConstIterator it = l.begin(); it != l.end(); ++it) {
+
+        s = *it;
+
+        if (s[0] != '.') { // Ignore dotfiles.
+            
+            int i = s.find(re_flags);
+            
+            // If no flags or 'S' not in flags, then unread.
+            if ((i == -1) || !(s.right(s.length() - i - 3).contains('S')))
+                ++unread;
+        }
+    }
+
+    f->setIndexUnread(unread);
+}
 
     void
 EmpathMaildir::_markNewMailAsSeen()
 {
-    QDir dn(path_ + "/new");
+    QDir dn(
+        path_ + "/new",
+        QString::null,
+        QDir::Unsorted,
+        QDir::Files | QDir::NoSymLinks | QDir::Writable);
 
-    dn.setFilter(QDir::Files | QDir::NoSymLinks | QDir::Writable);
-    
-    QStringList l = dn.entryList();
+    QStringList l(dn.entryList());
     
     for (QStringList::ConstIterator it = l.begin(); it != l.end(); ++it) {
-        _markAsSeen(*it);
-        kapp->processEvents();
+
+        if ((*it)[0] != '.') {
+
+            _markAsSeen(*it);
+            kapp->processEvents();
+        }
     }
 }
 
@@ -515,7 +555,7 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
     QStringList::ConstIterator it(fileList.begin());
     
     QString s;
-    QRegExp re_flags(":2,[A-Za-z]*$");
+    QRegExp re_flags(":2,[A-Z]*$");
 
     for (; it != fileList.end(); ++it) {
 

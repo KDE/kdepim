@@ -31,16 +31,15 @@
 #include <kfiledialog.h>
 
 // Local includes
+#include "EmpathAttachmentListItem.h"
 #include "EmpathAttachmentListWidget.h"
 #include "EmpathAttachmentEditDialog.h"
 #include "EmpathConfig.h"
 #include "EmpathUIUtils.h"
 #include "Empath.h"
 
-EmpathAttachmentListWidget::EmpathAttachmentListWidget(
-        QWidget * parent,
-        const char * name)
-    :    QListView(parent, name)
+EmpathAttachmentListWidget::EmpathAttachmentListWidget(QWidget * parent)
+    :    QListView(parent, "EmpathAttachmentListWidget")
 {
     setAllColumnsShowFocus(true);
 
@@ -54,35 +53,33 @@ EmpathAttachmentListWidget::EmpathAttachmentListWidget(
 
 EmpathAttachmentListWidget::~EmpathAttachmentListWidget()
 {
-    empathDebug("dtor");
+    // Empty.
 }
 
     void
-EmpathAttachmentListWidget::use(const RMM::RMessage &)
+EmpathAttachmentListWidget::use(EmpathAttachmentSpecList l)
 {
+    clear();
+
+    for (EmpathAttachmentSpecList::Iterator it = l.begin(); it != l.end(); ++it)
+        new EmpathAttachmentListItem(this, *it);
 }
 
     void
 EmpathAttachmentListWidget::addAttachment()
 {
-    empathDebug("addAttachment() called");
-
     EmpathAttachmentEditDialog * e =
         new EmpathAttachmentEditDialog(this, "attachmentEditDialog");
     
     e->browse();
     
-    if (e->exec() != QDialog::Accepted)
-        return;
-    
-    new EmpathAttachmentListItem(this, e->spec());
+    if (e->exec() == QDialog::Accepted)
+        new EmpathAttachmentListItem(this, e->spec());
 }
 
     void
 EmpathAttachmentListWidget::editAttachment()
 {
-    empathDebug("editAttachment() called");
-    
     QListViewItem * item(currentItem());
     
     if (item == 0)
@@ -102,10 +99,27 @@ EmpathAttachmentListWidget::editAttachment()
     void
 EmpathAttachmentListWidget::removeAttachment()
 {
-    empathDebug("removeAttachment() called");
-    
     if (currentItem() != 0)
         QListView::removeItem(currentItem());
+}
+
+    EmpathAttachmentSpecList
+EmpathAttachmentListWidget::attachments()
+{
+    EmpathAttachmentSpecList l;
+
+    if (childCount() != 0) {
+
+        QListViewItem * i = firstChild();
+
+        while (i != 0) {
+
+            l.append((static_cast<EmpathAttachmentListItem *>(i))->spec());
+            i = i->nextSibling();
+        }
+    }
+
+    return l;
 }
 
 // vim:ts=4:sw=4:tw=78

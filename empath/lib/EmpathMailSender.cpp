@@ -88,14 +88,7 @@ EmpathMailSender::queue(RMM::RMessage & message)
     void
 EmpathMailSender::sendQueued()
 {
-    KConfig * c(KGlobal::config());
-    
-    using namespace EmpathConfig;
-    
-    c->setGroup(GROUP_SENDING);
-    EmpathURL queueURL(c->readEntry(FOLDER_OUTBOX));
-    
-    EmpathFolder * queueFolder(empath->folder(queueURL));
+    EmpathFolder * queueFolder(empath->folder(empath->outbox()));
     
     if (queueFolder == 0) {
         empathDebug("Couldn't send messages - couldn't find queue folder !");

@@ -69,25 +69,25 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(QWidget * parent)
     cb_underlineLinks_    =
         new QCheckBox(i18n("&Underline Links"), this, "cb_underlineLinks");
     
-    QLabel * l_quoteColourOne =
-        new QLabel(i18n("Quote colour one"), this, "l_quoteColourOne");
+    QLabel * l_quoteColorOne =
+        new QLabel(i18n("Quote color one"), this, "l_quoteColorOne");
     
-    kcb_quoteColourOne_ = new KColorButton(this, "kcb_quoteColourOne");
+    kcb_quoteColorOne_ = new KColorButton(this, "kcb_quoteColourOne");
 
-    QLabel * l_quoteColourTwo =
-        new QLabel(i18n("Quote colour two"), this, "l_quoteColourTwo");
+    QLabel * l_quoteColorTwo =
+        new QLabel(i18n("Quote color two"), this, "l_quoteColorTwo");
     
-    kcb_quoteColourTwo_ = new KColorButton(this, "kcb_quoteColourTwo");
+    kcb_quoteColorTwo_ = new KColorButton(this, "kcb_quoteColourTwo");
 
-    QLabel * l_linkColour =
-        new QLabel(i18n("Link Colour"), this, "l_linkColour");
+    QLabel * l_linkColor =
+        new QLabel(i18n("Link color"), this, "l_linkColor");
     
-    kcb_linkColour_ = new KColorButton(this, "kcb_linkColour");
+    kcb_linkColor_ = new KColorButton(this, "kcb_linkColour");
             
-    QLabel * l_visitedColour =
-        new QLabel(i18n("Visited Link Colour"), this, "l_visitedColour");
+    QLabel * l_newMessageColor =
+        new QLabel(i18n("New message color"), this, "l_newMessageColor");
     
-    kcb_visitedLinkColour_ = new KColorButton(this, "kcb_visitedColour");
+    kcb_newMessageColor_ = new KColorButton(this, "kcb_newMessageColour");
         
     cb_threadMessages_ =
         new QCheckBox(i18n("Thread messages"), this, "cb_threadMessages");
@@ -110,6 +110,10 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(QWidget * parent)
     layout2->addWidget(sb_timer_);
 
     layout->addWidget(cb_threadMessages_);
+    
+    QHBoxLayout * layoutx = new QHBoxLayout(layout);
+    layoutx->addWidget(kcb_newMessageColor_);
+    layoutx->addWidget(l_newMessageColor);
 
     layout->addWidget(new EmpathSeparatorWidget(this));
  
@@ -123,22 +127,20 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(QWidget * parent)
 
     QGridLayout * layout5 = new QGridLayout(layout);
 
-    layout5->addWidget(l_quoteColourOne,    0, 0);
-    layout5->addWidget(l_quoteColourTwo,    1, 0);
-    layout5->addWidget(l_linkColour,        2, 0);
-    layout5->addWidget(l_visitedColour,     3, 0);
+    layout5->addWidget(l_quoteColorOne,    0, 0);
+    layout5->addWidget(l_quoteColorTwo,    1, 0);
+    layout5->addWidget(l_linkColor,        2, 0);
 
-    layout5->addWidget(kcb_quoteColourOne_,     0, 1);
-    layout5->addWidget(kcb_quoteColourTwo_,     1, 1);
-    layout5->addWidget(kcb_linkColour_,         2, 1);
-    layout5->addWidget(kcb_visitedLinkColour_,  3, 1);
+    layout5->addWidget(kcb_quoteColorOne_,     0, 1);
+    layout5->addWidget(kcb_quoteColorTwo_,     1, 1);
+    layout5->addWidget(kcb_linkColor_,         2, 1);
 
-    int w = kcb_quoteColourOne_->sizeHint().width();
+    int w = kcb_quoteColorOne_->sizeHint().width();
     
-    kcb_quoteColourOne_     ->setFixedWidth(w);
-    kcb_quoteColourTwo_     ->setFixedWidth(w);
-    kcb_linkColour_         ->setFixedWidth(w);
-    kcb_visitedLinkColour_  ->setFixedWidth(w);
+    kcb_quoteColorOne_     ->setFixedWidth(w);
+    kcb_quoteColorTwo_     ->setFixedWidth(w);
+    kcb_linkColor_         ->setFixedWidth(w);
+    kcb_newMessageColor_   ->setFixedWidth(w);
 
     layout->addWidget(cb_underlineLinks_);
 
@@ -179,25 +181,24 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(QWidget * parent)
      QWhatsThis::add(cb_underlineLinks_, i18n(
         "Choose whether to have links underlined.\n"
         "Links are email addresses, http:// type\n"
-        "addresses, etc. If you're colour blind,\n"
+        "addresses, etc. If you're color blind,\n"
         "this is a smart move."));
 
-     QWhatsThis::add(kcb_quoteColourTwo_, i18n(
-        "Choose the secondary colour for quoted text.\n"
+     QWhatsThis::add(kcb_quoteColorTwo_, i18n(
+        "Choose the secondary color for quoted text.\n"
         "Text can be quoted to multiple depths.\n"
         "Text that's quoted to an even number, e.g.\n"
         "where the line begins with '&gt; &gt; ' or '&gt; &gt; &gt; &gt; '\n"
-        "will be shown in this colour."));
+        "will be shown in this color."));
     
-     QWhatsThis::add(kcb_linkColour_, i18n(
-        "Choose the colour that links in messages\n"
+     QWhatsThis::add(kcb_linkColor_, i18n(
+        "Choose the color that links in messages\n"
         "are shown in. Links means URLs, including\n"
         "mailto: URLs."));
 
-     QWhatsThis::add(kcb_visitedLinkColour_, i18n(
-        "Choose the colour that visited links in messages\n"
-        "are shown in. Links means URLs, including\n"
-        "mailto: URLs."));
+     QWhatsThis::add(kcb_newMessageColor_, i18n(
+        "Choose the color for new messages\n"
+        "in the folder and message lists."));
 
      QWhatsThis::add(cb_threadMessages_, i18n(
         "If you select this, messages will be 'threaded'\n"
@@ -238,10 +239,10 @@ EmpathDisplaySettingsDialog::saveData()
 
     c->writeEntry(UI_FIXED_FONT,      pb_chooseFixedFont_->font());
     c->writeEntry(UI_UNDERLINE_LINKS, cb_underlineLinks_->isChecked());
-    c->writeEntry(UI_QUOTE_ONE,       kcb_quoteColourOne_->color());
-    c->writeEntry(UI_QUOTE_TWO,       kcb_quoteColourTwo_->color());
-    c->writeEntry(UI_LINK,            kcb_linkColour_->color());
-    c->writeEntry(UI_VLINK,           kcb_visitedLinkColour_->color());
+    c->writeEntry(UI_QUOTE_ONE,       kcb_quoteColorOne_->color());
+    c->writeEntry(UI_QUOTE_TWO,       kcb_quoteColorTwo_->color());
+    c->writeEntry(UI_LINK,            kcb_linkColor_->color());
+    c->writeEntry(UI_NEW,             kcb_newMessageColor_->color());
     
     c->writeEntry(UI_THREAD,          cb_threadMessages_->isChecked());
     c->writeEntry(UI_SHOW_HEADERS,    le_displayHeaders_->text());
@@ -265,10 +266,10 @@ EmpathDisplaySettingsDialog::loadData()
     pb_chooseFixedFont_->setText(savedFont.family());
     cb_underlineLinks_->setChecked
         (c->readBoolEntry(UI_UNDERLINE_LINKS, DFLT_UNDER_LINKS));
-    kcb_quoteColourOne_->setColor(c->readColorEntry(UI_QUOTE_ONE, &DFLT_Q_1));
-    kcb_quoteColourTwo_->setColor(c->readColorEntry(UI_QUOTE_TWO, &DFLT_Q_2));
-    kcb_linkColour_->setColor(c->readColorEntry(UI_LINK, &DFLT_LINK));
-    kcb_visitedLinkColour_->setColor(c->readColorEntry(UI_VLINK, &DFLT_VLINK));
+    kcb_quoteColorOne_->setColor(c->readColorEntry(UI_QUOTE_ONE, &DFLT_Q_1));
+    kcb_quoteColorTwo_->setColor(c->readColorEntry(UI_QUOTE_TWO, &DFLT_Q_2));
+    kcb_linkColor_->setColor(c->readColorEntry(UI_LINK, &DFLT_LINK));
+    kcb_newMessageColor_->setColor(c->readColorEntry(UI_NEW, &DFLT_NEW));
     cb_threadMessages_->setChecked(c->readBoolEntry(UI_THREAD, DFLT_THREAD));
     le_displayHeaders_->setText(c->readEntry(UI_SHOW_HEADERS, DFLT_HEADERS));
     cb_timer_->setChecked(c->readBoolEntry(UI_MARK_READ, DFLT_MARK));
@@ -316,10 +317,10 @@ EmpathDisplaySettingsDialog::s_default()
     pb_chooseFixedFont_->setFont(KGlobal::fixedFont());
     pb_chooseFixedFont_->setText(KGlobal::fixedFont().family());
     cb_underlineLinks_->setChecked(DFLT_UNDER_LINKS);
-    kcb_quoteColourOne_->setColor(DFLT_Q_1);
-    kcb_quoteColourTwo_->setColor(DFLT_Q_2);
-    kcb_linkColour_->setColor(DFLT_LINK);
-    kcb_visitedLinkColour_->setColor(DFLT_VLINK);
+    kcb_quoteColorOne_->setColor(DFLT_Q_1);
+    kcb_quoteColorTwo_->setColor(DFLT_Q_2);
+    kcb_linkColor_->setColor(DFLT_LINK);
+    kcb_newMessageColor_->setColor(DFLT_NEW);
     cb_threadMessages_->setChecked(DFLT_THREAD);
     le_displayHeaders_->setText(DFLT_HEADERS);
     cb_timer_->setChecked(DFLT_MARK);

@@ -70,7 +70,7 @@ const QString UI_UNDERLINE_LINKS    = "UnderlineLinks";
 const QString UI_QUOTE_ONE          = "QuoteColourOne";
 const QString UI_QUOTE_TWO          = "QuoteColourTwo";
 const QString UI_LINK               = "LinkColour";
-const QString UI_VLINK              = "VisitedLinkColour";
+const QString UI_NEW                = "NewMessageColour";
 const QString UI_STAR_PASSWORD      = "StarPassword";
 const QString UI_FOLDERS_OPEN       = "FolderListItemsOpen";
 const QString UI_MARK_READ          = "MarkAsRead";
@@ -152,7 +152,7 @@ const QString   DFLT_HEADERS        = "From,Date,Subject";
 const QColor    DFLT_Q_1            = Qt::darkBlue;
 const QColor    DFLT_Q_2            = Qt::darkCyan;
 const QColor    DFLT_LINK           = Qt::blue;
-const QColor    DFLT_VLINK          = Qt::darkRed;
+const QColor    DFLT_NEW            = Qt::darkRed;
 
 const bool      DFLT_UNDER_LINKS    = true;
 const bool      DFLT_AUTO_QUOTE     = true;

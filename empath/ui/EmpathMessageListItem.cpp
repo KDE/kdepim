@@ -28,13 +28,14 @@
 #include <qstring.h>
 
 // KDE includes
+#include <kconfig.h>
 #include <kglobal.h>
-#include <klocale.h>
 
 // Local includes
 #include "EmpathMessageListWidget.h"
 #include "EmpathMessageListItem.h"
 #include "EmpathUIUtils.h"
+#include "EmpathConfig.h"
 
 EmpathMessageListItem::EmpathMessageListItem(
         EmpathMessageListWidget * parent,
@@ -163,6 +164,25 @@ EmpathMessageListItem::key(int column, bool) const
 EmpathMessageListItem::setStatus(RMM::MessageStatus s)
 {
     m.setStatus(s);
+}
+
+    void
+EmpathMessageListItem::paintCell(
+    QPainter * p, const QColorGroup & cg, int column, int width, int align)
+{
+    if (m.status() & RMM::Read)
+        QListViewItem::paintCell(p, cg, column, width, align);
+
+    else {
+
+        KConfig * c(KGlobal::config());
+        using namespace EmpathConfig;
+        c->setGroup(GROUP_DISPLAY);
+        QColor col = c->readColorEntry(UI_NEW, &DFLT_NEW);
+        QColorGroup modified(cg);
+        modified.setColor(QColorGroup::Text, col);
+        QListViewItem::paintCell(p, modified, column, width, align);
+    }
 }
 
 // vim:ts=4:sw=4:tw=78

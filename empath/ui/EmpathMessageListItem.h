@@ -75,6 +75,10 @@ class EmpathMessageListItem : public QListViewItem
         
         void setStatus(RMM::MessageStatus);
         
+    protected:
+
+        virtual void paintCell(QPainter * p, const QColorGroup &, int, int, int);
+
     private:
 
         void _init();

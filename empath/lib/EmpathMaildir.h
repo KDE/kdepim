@@ -101,6 +101,7 @@ class EmpathMaildir : public QObject
         bool        _touched(EmpathFolder *);
         void        _tagOrAdd(EmpathFolder *);
         void        _removeUntagged(EmpathFolder *);
+        void        _recalculateCounters(EmpathFolder *);
        
         QDateTime    mtime_;
         QStringList tagList_;

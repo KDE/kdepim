@@ -129,6 +129,7 @@ class Database
 
     QDateTime lastModified() const;
 
+    void setUnread(unsigned int i) { unreadCount_ = i; } 
     void increaseUnreadCount()  { ++unreadCount_; }
     void decreaseUnreadCount()  { --unreadCount_; }
     unsigned int unreadCount()  { return unreadCount_; }

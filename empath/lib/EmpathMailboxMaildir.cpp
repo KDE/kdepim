@@ -116,13 +116,14 @@ EmpathMailboxMaildir::_runJob(EmpathJobInfo & jobInfo)
 
         case MarkMessage:
             {
+                empathDebug("Marking...");
                 // Mark a list of messages with status flag[s].
 
                 EmpathMaildir * m = _box(jobInfo.from());
                 
                 if (m == 0) {
 
-                    empathDebug("jobInfo.IDList().count() == 0 ?");
+                    empathDebug("Can't access maildir");
                     
                     QStringList idList = jobInfo.IDList();
 

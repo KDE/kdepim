@@ -110,8 +110,9 @@ Database::_loadIndex()
   index_.clear();
   
   indexFile_.reset();
-  indexStream_ >> offset_;
-  indexStream_ >> unreadCount_;
+  indexStream_ >> offset_ >> unreadCount_;
+  // For some reason this doesn't save/retrieve properly.
+  unreadCount_ = 0;
 
   QString key;
   Q_UINT32 ofs;
@@ -120,9 +121,6 @@ Database::_loadIndex()
     indexStream_ >> key >> ofs;
     index_.insert(key, new Q_UINT32(ofs));
   }
-
-  if (index_.count() == 0)
-    unreadCount_ = 0;
 
   touched_ = QDateTime::currentDateTime();
   indexDirty_ = false;
@@ -136,8 +134,7 @@ Database::_saveIndex()
     return;
 
   indexFile_.reset();
-  indexStream_ << offset_;
-  indexStream_ << unreadCount_;
+  indexStream_ << offset_ << unreadCount_;
 
   IndexIterator it(index_);
   
@@ -234,10 +231,14 @@ Database::retrieve(const QString & key)
 Database::remove(const QString & key)
 {
   ok_ = true;
+
   bool removed = index_.remove(key);
-  indexDirty_ = removed;
-  if (removed)
+
+  if (removed) {
+    indexDirty_ = true;
     touched_ = QDateTime::currentDateTime();
+  }
+
   return removed;
 }
 
@@ -356,8 +357,7 @@ Database::reorganise()
   }
 
   QDataStream istr(&indexf);
-  istr << offset_;
-  istr << unreadCount_;
+  istr << offset_ << unreadCount_;
 
   QDataStream dstr(&dataf);
 

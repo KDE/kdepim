@@ -65,6 +65,10 @@ class EmpathFolderListItem : public QObject, public QListViewItem
     protected slots:
 
         void s_setCount(unsigned int, unsigned int);
+
+    protected:
+
+        virtual void paintCell(QPainter * p, const QColorGroup &, int, int, int);
     
     public slots:
 

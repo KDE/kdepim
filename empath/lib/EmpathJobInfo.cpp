@@ -147,6 +147,8 @@ EmpathJobInfo::EmpathJobInfo(
     current_.url1   = url;
     current_.xinfo  = extraInfo;
     current_.status = status;
+
+    current_.IDList << url.messageID();
     
     haveOriginal_ = false;
 }

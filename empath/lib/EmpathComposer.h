@@ -30,15 +30,13 @@
 // Qt includes
 #include <qobject.h>
 #include <qcstring.h>
-#include <qvaluelist.h>
 #include <qmap.h>
 
 // Local includes
 #include "EmpathURL.h"
-#include "EmpathDefines.h"
+#include "EmpathEnum.h"
 #include "EmpathJobInfo.h"
-#include "EmpathAttachmentSpec.h"
-#include <RMM_Envelope.h>
+#include "EmpathComposeForm.h"
 #include <RMM_Message.h>
 
 /**
@@ -57,26 +55,8 @@ class EmpathComposer : public QObject
     
     public:
 
-        enum ComposeType 
-        {
-            ComposeReply,
-            ComposeReplyAll,
-            ComposeForward,
-            ComposeBounce,
-            ComposeNormal
-        };
- 
-        /**
-         * A composeform is used by the composer UI.
-         */
-        struct Form 
-        {
-            ComposeType                         composeType;
-            RMM::REnvelope                      visibleHeaders;
-            RMM::REnvelope                      invisibleHeaders;
-            QCString                            body;
-            QValueList<EmpathAttachmentSpec>    attachments;
-        };
+        enum HeaderStyle { Visible, Invisible };
+
 
         /**
          * ctor
@@ -102,7 +82,7 @@ class EmpathComposer : public QObject
         /**
          * Convert a composeform to a message, so that it can be sent.
          */
-        RMM::RMessage message(Form &);
+        static RMM::RMessage message(EmpathComposeForm);
  
     signals:
 
@@ -110,7 +90,7 @@ class EmpathComposer : public QObject
          * Signals that a composeform is ready to be handled by the composer
          * UI.
          */
-        void composeFormComplete(EmpathComposer::Form);
+        void composeFormComplete(EmpathComposeForm);
         
     protected slots:
 
@@ -122,14 +102,14 @@ class EmpathComposer : public QObject
         void _forward   (int id, RMM::RMessage * m);
         void _bounce    (int id, RMM::RMessage * m);
 
-        void _initVisibleHeaders(Form &);
+        void _initVisibleHeaders(EmpathComposeForm &);
         
         QCString _referenceHeaders(RMM::RMessage * m);
         QCString _stdHeaders();
 
         QCString _signature();
         
-        QMap<int, Form> jobs_;
+        QMap<int, EmpathComposeForm> jobs_;
        
         QCString referenceHeaders_;
 

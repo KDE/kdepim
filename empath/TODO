@@ -11,7 +11,8 @@ Highest priority first.
   
 * Implement simple (to one host) SMTP sending.
 
-* Add (configurable) accelerator keys.
+* Switch to using KAction everywhere and sort out some accelerator keys,
+  including mutt+vi style !
 
 * Go back to using templates for viewing messages instead of
   EmpathHeaderViewWidget etc.
@@ -23,8 +24,8 @@ Highest priority first.
 * Plug memory leaks.
   Update: Shouldn't be many existing now. Use of KSharedPtr in librmm
   (by Wilco) and other such developments have virtually eradicated
-  memory management issues.
-
+  memory management issues. Still need to find out why setAutoDelete()
+  in RMM::REnvelope destroys the world.
 
 * Release !
 

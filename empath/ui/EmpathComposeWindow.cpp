@@ -44,11 +44,10 @@
 #include "Empath.h"
 #include <RMM_Message.h>
 
-EmpathComposeWindow::EmpathComposeWindow(EmpathComposer::Form f)
+EmpathComposeWindow::EmpathComposeWindow(EmpathComposeForm f)
     :    KTMainWindow()
 {
-    composeWidget_ = new EmpathComposeWidget(f, this, "composeWidget");
-    
+    composeWidget_ = new EmpathComposeWidget(f, this);
     _init();
 }
 
@@ -177,48 +176,51 @@ EmpathComposeWindow::setupStatusBar()
     void
 EmpathComposeWindow::s_fileSendMessage()
 {
-    EmpathComposer::Form f = composeWidget_->composeForm();
+    EmpathComposeForm f = composeWidget_->composeForm();
     
-    if (!f.visibleHeaders.has(RMM::HeaderTo) &&
-        !f.invisibleHeaders.has(RMM::HeaderTo)) {
+    if (!f.visibleHeaders().has(RMM::HeaderTo) &&
+        !f.invisibleHeaders().has(RMM::HeaderTo)) {
         _askForRecipient();
         return;
     }
 
-    if (!f.visibleHeaders.has(RMM::HeaderSubject) &&
-        !f.invisibleHeaders.has(RMM::HeaderSubject)) {
+    if (!f.visibleHeaders().has(RMM::HeaderSubject) &&
+        !f.invisibleHeaders().has(RMM::HeaderSubject)) {
         _askForSubject();
         return;
     }
 
-    // XXX ??? RMM::RMessage outMessage = EmpathComposer::message(f);
+    EmpathComposer c;
+    RMM::RMessage outMessage = c.message(f);
 
     hide();
-//    empath->send(outMessage);
-    delete this;
+    empath->send(outMessage);
+    close();
 }
 
     void
 EmpathComposeWindow::s_fileSendLater()
 {   
-#if 0
-    if (!composeWidget_->haveTo()) {
+    EmpathComposeForm f = composeWidget_->composeForm();
+    
+    if (!f.visibleHeaders().has(RMM::HeaderTo) &&
+        !f.invisibleHeaders().has(RMM::HeaderTo)) {
         _askForRecipient();
         return;
     }
-    
-    if (!composeWidget_->haveSubject()) {
+
+    if (!f.visibleHeaders().has(RMM::HeaderSubject) &&
+        !f.invisibleHeaders().has(RMM::HeaderSubject)) {
         _askForSubject();
         return;
     }
-    
-    RMM::RMessage outMessage(composeWidget_->message());
 
-//    if (composeWidget_->messageHasAttachments())
-//        outMessage.addAttachmentList(composeWidget_->messageAttachments());
+    EmpathComposer c;
+    RMM::RMessage outMessage = c.message(f);
 
+    hide();
     empath->queue(outMessage);
-#endif 
+    close();
 }
 
     void

@@ -39,6 +39,7 @@
 #include "EmpathDefines.h"
 #include "Empath.h"
 #include "EmpathURL.h"
+#include "EmpathComposeForm.h"
 
 class EmpathComposeWidget;
 
@@ -51,7 +52,7 @@ class EmpathComposeWindow : public KTMainWindow
 
     public:
         
-        EmpathComposeWindow(EmpathComposer::Form);
+        EmpathComposeWindow(EmpathComposeForm);
         ~EmpathComposeWindow();
         
     protected slots:

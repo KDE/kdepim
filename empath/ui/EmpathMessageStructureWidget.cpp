@@ -72,6 +72,11 @@ EmpathMessageStructureWidget::EmpathMessageStructureWidget
     
 }
 
+EmpathMessageStructureWidget::~EmpathMessageStructureWidget()
+{
+    // Empty.
+}
+
     void
 EmpathMessageStructureWidget::setMessage(RMM::RBodyPart & m)
 {

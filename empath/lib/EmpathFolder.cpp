@@ -164,7 +164,14 @@ EmpathFolder::unreadMessageCount()
     void
 EmpathFolder::setStatus(const QString & key, RMM::MessageStatus status)
 {
+    unsigned int oldUnread = index_->countUnread();
+
     index_->setStatus(key, status);
+
+    unsigned int newUnread = index_->countUnread();
+
+    if (oldUnread != newUnread)
+        emit(countUpdated(index_->countUnread(), index_->count()));
 }
 
     bool
@@ -208,6 +215,12 @@ EmpathFolder::indexContains(const QString & key)
 {
     return index_->contains(key);
 } 
+
+    void
+EmpathFolder::setIndexUnread(unsigned int i)
+{
+    index_->setUnread(i);
+}
 
     bool
 EmpathFolder::isContainer() const

@@ -51,102 +51,95 @@
 #include <RMM_Address.h>
 
 EmpathComposeWidget::EmpathComposeWidget(
-        EmpathComposer::Form    composeForm,
-        QWidget *               parent,
-        const char *            name)
-    :
-        QWidget(parent, name),
+        EmpathComposeForm composeForm,
+        QWidget * parent)
+    :  
+        QWidget(parent, "EmpathComposeWidget"),
         composeForm_(composeForm)
 {
     splitter_ = new QSplitter(Vertical, this, "splitter");
  
     envelopeWidget_ = 
         new EmpathEnvelopeWidget(
-            composeForm_.visibleHeaders, this, "envelopeWidget");
+            composeForm_.visibleHeaders(), this, "envelopeWidget");
 
-    editorWidget_ = 
-        new QMultiLineEdit(splitter_, "editorWidget");
+    editorWidget_ = new QMultiLineEdit(splitter_, "editorWidget");
 
-    attachmentWidget_ = 
-        new EmpathAttachmentListWidget(splitter_, "attachmentWidget");
-
+    attachmentWidget_ = new EmpathAttachmentListWidget(splitter_);
     
     splitter_->setResizeMode(attachmentWidget_, QSplitter::FollowSizeHint);
     
     KConfig * c = KGlobal::config();
    
-    // If user wants us to wrap lines at a specific value, we can do that
-    // in the editor to their specified width. This should give the user
-    // a good idea of what their text will look like on the other end.
-    //
-    // If the user doesn't want us to wrap, we'll wrap text dynamically
-    // in the editor anyway to make editing easier. We must not wrap the
-    // actual text we send though.
-    // Update: We decided that it's better to not wrap text at all if the
-    // user doesn't want to. Therefore we set NoWrap.
+    using namespace EmpathConfig;
 
+    c->setGroup(GROUP_COMPOSE);
 
-    c->setGroup(EmpathConfig::GROUP_COMPOSE);
-    if (!c->readBoolEntry(EmpathConfig::C_WRAP_LINES, true))
+    if (!c->readBoolEntry(C_WRAP_LINES, true))
         editorWidget_->setWordWrap(QMultiLineEdit::NoWrap);
+
     else {
+
         editorWidget_->setWordWrap(QMultiLineEdit::FixedColumnWrap);
         editorWidget_->setWrapColumnOrWidth(
-            c->readUnsignedNumEntry(EmpathConfig::C_WRAP_COLUMN, 76));
+            c->readUnsignedNumEntry(C_WRAP_COLUMN, 76));
     }
-        
 
-    c->setGroup(EmpathConfig::GROUP_DISPLAY);
+    c->setGroup(GROUP_DISPLAY);
 
     QFont globalFixedFont = KGlobal::fixedFont();
 
-    editorWidget_->setFont(
-        KGlobal::config()->readFontEntry(EmpathConfig::UI_FIXED_FONT,
-        &globalFixedFont));
+    editorWidget_->setFont(c->readFontEntry(UI_FIXED_FONT, &globalFixedFont));
 
-    QString body = composeForm_.body;
-#warning QMultiLineEdit is broken ! setText hangs !
-    empathDebug("Things stop here because QMultiLineEdit is broken !");
+    QCString body = composeForm_.body();
+    empathDebug("Body follows - length == " + QString::number(body.length()));
 //    editorWidget_->setText(body);
+    empathDebug(body);
  
     // Layouts.
-    QVBoxLayout * layout    = new QVBoxLayout(this, 4);
+    QVBoxLayout * layout = new QVBoxLayout(this, 4);
 
-    layout->addWidget(envelopeWidget_,  0);
-    layout->addWidget(splitter_,        1);
+    layout->addWidget(envelopeWidget_);
+    layout->addWidget(splitter_);
 
-    // set the behaviour of the splitter and its children.
-    QValueList<int> sizes;
-    sizes << height() << 0;
-    splitter_->setSizes(sizes);
-    splitter_->setResizeMode(attachmentWidget_, QSplitter::KeepSize);
+    switch (composeForm_.composeType()) {
 
-    if (composeForm_.composeType == EmpathComposer::ComposeForward) 
-        return;
+        case ComposeForward:
+            envelopeWidget_->setFocus();
+            break;
 
-    if (composeForm_.composeType == EmpathComposer::ComposeReply ||
-        composeForm_.composeType == EmpathComposer::ComposeReplyAll)
-        editorWidget_->setFocus();
-    
-    KGlobal::config()->setGroup(EmpathConfig::GROUP_COMPOSE);
+        case ComposeNormal:
+        case ComposeReply:
+        case ComposeReplyAll:
 
-    if (KGlobal::config()->readBoolEntry(
-            EmpathConfig::C_USE_EXT_EDIT, false)) {
-        
-        editorWidget_->setEnabled(false);
-        _spawnExternalEditor(editorWidget_->text().local8Bit());
+            editorWidget_->setFocus();
+
+            c->setGroup(GROUP_COMPOSE);
+
+            if (c->readBoolEntry(C_USE_EXT_EDIT, false)) {
+                editorWidget_->setEnabled(false);
+                _spawnExternalEditor(editorWidget_->text().local8Bit());
+            }
+
+            break;
+
+        default:
+            empathDebug("Er, what kind of composition is this ?");
+            return;
+            break;
     }
+    empathDebug("done");
 }
 
 EmpathComposeWidget::~EmpathComposeWidget()
 {
 }
 
-    EmpathComposer::Form
+    EmpathComposeForm
 EmpathComposeWidget::composeForm()
 {
-    composeForm_.visibleHeaders = envelopeWidget_->headers();
-    composeForm_.body           = editorWidget_->text().local8Bit();
+    composeForm_.setVisibleHeaders(envelopeWidget_->headers());
+    composeForm_.setBody(editorWidget_->text().local8Bit());
     // composeForm_.attachments    = attachmentWidget_.attachments();
     return composeForm_;
 }
@@ -181,6 +174,7 @@ EmpathComposeWidget::s_editorDone(bool ok, QCString text)
     
     editorWidget_->setText(text);
     editorWidget_->setEnabled(true);
+    editorWidget_->setFocus();
 }
 
     void
@@ -236,15 +230,13 @@ EmpathComposeWidget::s_removeAttachment()
     bool 
 EmpathComposeWidget::haveTo()       
 { 
-    return true;
-    // return envelopeWidget_->haveTo(); 
+    return envelopeWidget_->haveTo(); 
 }
 
     bool 
 EmpathComposeWidget::haveSubject()  
 {
-    return true;
-    // return envelopeWidget_->haveSubject(); 
+    return envelopeWidget_->haveSubject(); 
 }
 
     void

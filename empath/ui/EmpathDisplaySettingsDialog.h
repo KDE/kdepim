@@ -75,10 +75,10 @@ class EmpathDisplaySettingsDialog : public QDialog
 
         QPushButton     * pb_chooseFixedFont_;
         
-        KColorButton    * kcb_quoteColourTwo_;
-        KColorButton    * kcb_quoteColourOne_;
-        KColorButton    * kcb_linkColour_;
-        KColorButton    * kcb_visitedLinkColour_;
+        KColorButton    * kcb_quoteColorTwo_;
+        KColorButton    * kcb_quoteColorOne_;
+        KColorButton    * kcb_linkColor_;
+        KColorButton    * kcb_newMessageColor_;
         
         QCheckBox       * cb_underlineLinks_;
         

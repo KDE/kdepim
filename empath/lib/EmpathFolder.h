@@ -116,6 +116,7 @@ class EmpathFolder : public QObject
         bool indexInitialised();
         QDateTime indexModified();
         bool indexContains(const QString &);
+        void setIndexUnread(unsigned int);
 
         /**
          * Get an index record given an ID.

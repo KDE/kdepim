@@ -31,9 +31,6 @@
 #include <qvbox.h>
 
 // Local includes
-#include "Empath.h"
-#include "EmpathDefines.h"
-#include "EmpathURL.h"
 #include "EmpathHeaderSpecWidget.h"
 #include <RMM_Message.h>
 
@@ -42,34 +39,26 @@
  */
 class EmpathEnvelopeWidget : public QVBox
 {
-    // Q_OBJECT
+    Q_OBJECT
 
     public:
         
-        /**
-         * Standard ctor
-         */
         EmpathEnvelopeWidget(
-            RMM::REnvelope & headers,
+            RMM::REnvelope headers,
             QWidget * parent = 0, const char * name = 0);
 
-        /**
-         * dtor
-         */
         ~EmpathEnvelopeWidget();
 
-        RMM::REnvelope & headers();
+        RMM::REnvelope headers();
         
         bool haveTo();
         bool haveSubject();
         
     private:
 
-        void    _addHeader(RMM::RHeader &);
+        void    _addHeader(RMM::RHeader);
         void    _lineUpHeaders();
        
-        RMM::REnvelope headers_;
-        
         QList<EmpathHeaderSpecWidget> headerSpecList_;
 
         int maxSizeColOne_;

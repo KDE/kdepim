@@ -10,6 +10,7 @@ EmpathInterface.cpp \
 Empath.cpp \
 EmpathJobInfo.cpp \
 EmpathCachedMessage.cpp \
+EmpathComposeForm.cpp \
 EmpathComposer.cpp \
 EmpathEditorProcess.cpp \
 EmpathFilter.cpp \

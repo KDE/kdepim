@@ -47,7 +47,7 @@ class EmpathMessageStructureWidget : public QListView
         EmpathMessageStructureWidget(
             QWidget * parent = 0, const char * name = 0);
 
-        ~EmpathMessageStructureWidget() { empathDebug("dtor"); }
+        ~EmpathMessageStructureWidget();
         
         void setMessage(RMM::RBodyPart & m);
         

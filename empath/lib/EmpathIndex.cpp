@@ -237,13 +237,16 @@ EmpathIndex::replace(const QString & key, EmpathIndexRecord & rec)
         return false;
     }
     
-    EmpathIndexRecord r = record(key);
 
     QByteArray a;
     QDataStream s(a, IO_WriteOnly);
     s << rec;
     
     bool dummy;
+
+    // Save old record first.
+    EmpathIndexRecord oldrec = record(key);
+
     bool ok = dbf_->replace(key, a, dummy);
     
     if (!ok) {
@@ -251,8 +254,25 @@ EmpathIndex::replace(const QString & key, EmpathIndexRecord & rec)
         return false;
     }
 
-    if (!r.isNull() && !(r.status() & RMM::Read))
-        dbf_->decreaseUnreadCount();
+    if (!oldrec.isNull()) {
+
+        bool wasRead = oldrec.status() & RMM::Read;
+        bool nowRead = rec.status() & RMM::Read;
+
+        bool readToUnread = wasRead && !nowRead;
+
+        bool unreadToRead = !wasRead && nowRead;
+
+        if (readToUnread) {
+            empathDebug("Was read, now unread");
+            dbf_->increaseUnreadCount();
+        }
+
+        else if (unreadToRead) {
+            empathDebug("Was unread, now read");
+            dbf_->decreaseUnreadCount();
+        }
+    }
 
     mtime_ = QDateTime::currentDateTime();
     return true;
@@ -301,6 +321,8 @@ EmpathIndex::clear()
     void
 EmpathIndex::setStatus(const QString & key, RMM::MessageStatus status)
 {
+    empathDebug("");
+
     if (dbf_ == 0) {
         empathDebug("Index not open!");
         return;
@@ -331,6 +353,11 @@ EmpathIndex::contains(const QString & s) const
 {
     return dbf_->exists(s);
 }
-	
+
+    void
+EmpathIndex::setUnread(unsigned int i)
+{
+    dbf_->setUnread(i);
+}
 
 // vim:ts=4:sw=4:tw=78

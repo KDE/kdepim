@@ -120,6 +120,8 @@ class EmpathIndex
         bool initialised() const { return initialised_; }
         void setInitialised(bool i) { initialised_ = i; }
 
+        void setUnread(unsigned int);
+
         const char * className() const { return "EmpathIndex"; }
 
     protected:
