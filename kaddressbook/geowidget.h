@@ -101,6 +101,7 @@ class GeoDialog : public KDialogBase
   private:
     void loadCityList();
     double calculateCoordinate( const QString& );
+    int nearestCity( double, double );
 
     GeoMapWidget *mMapWidget;
     KComboBox *mCityCombo;

@@ -116,6 +116,8 @@ void GeoWidget::editGeoData()
   if ( dlg.exec() ) {
     mLatitudeBox->setValue( dlg.latitude() );
     mLongitudeBox->setValue( dlg.longitude() );
+
+    emit changed();
   }
 }
 
@@ -269,6 +271,7 @@ void GeoDialog::cityInputChanged()
 void GeoDialog::updateInputs()
 {
   // hmm, doesn't look nice, but there is no better way AFAIK
+  mCityCombo->blockSignals( true );
   mLatDegrees->blockSignals( true );
   mLatMinutes->blockSignals( true );
   mLatSeconds->blockSignals( true );
@@ -308,6 +311,11 @@ void GeoDialog::updateInputs()
   mLongSeconds->setValue( seconds );
   mLongDirection->setCurrentItem( mLongitude < 0 ? 1 : 0 );
 
+  int pos = nearestCity( mLongitude, mLatitude );
+  if ( pos != -1 )
+    mCityCombo->setCurrentItem( pos );
+
+  mCityCombo->blockSignals( false );
   mLatDegrees->blockSignals( false );
   mLatMinutes->blockSignals( false );
   mLatSeconds->blockSignals( false );
@@ -404,6 +412,20 @@ double GeoDialog::calculateCoordinate( const QString &coordinate )
     return - ( d + m / 60.0 + s / 3600.0 );
   else
     return d + m / 60.0 + s / 3600.0;
+}
+
+int GeoDialog::nearestCity( double x, double y )
+{
+  QMap<QString, GeoData>::Iterator it;
+  int pos = 0;
+  for ( it = mGeoDataMap.begin(); it != mGeoDataMap.end(); ++it, pos++ ) {
+    double dist = ( (*it).longitude - x ) * ( (*it).longitude - x ) +
+                  ( (*it).latitude - y ) * ( (*it).latitude - y );
+    if ( dist < 1.5 )
+      return pos;
+  }
+
+  return -1;
 }
 
 
