@@ -26,7 +26,7 @@ dumpfeaturelist_LDADD   = -lkdecore
 dumpfeaturelist_SOURCES = dumpfeaturelist.cpp kde-features.cpp
 
 kde-features.cpp: $(srcdir)/kde-features.rng \
-  $(top_builddir)/kode/kxml_compiler
-	$(top_builddir)/kode/kxml_compiler $(srcdir)/kde-features.rng
+  $(top_builddir)/kode/kxml_compiler/kxml_compiler
+	$(top_builddir)/kode/kxml_compiler/kxml_compiler $(srcdir)/kde-features.rng
 
 METASOURCES = AUTO
