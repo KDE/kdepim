@@ -59,8 +59,6 @@ MainWindow::MainWindow()
            this, SLOT(slotSelectionChanged()));
   connect( _taskView, SIGNAL( updateButtons() ),
            this, SLOT(slotSelectionChanged()));
-  connect( _preferences, SIGNAL( timeLogging(bool) ),
-           this, SLOT( timeLoggingChanged(bool) ));
 
   loadGeometry();
 
@@ -257,14 +255,14 @@ void MainWindow::makeMenus()
       SLOT( addCommentToTask() ),
       actionCollection(),
       "add_comment_to_task");
-  actionAddComment = new KAction( i18n("&Copy totals to clipboard"),
+  actionClipTotals = new KAction( i18n("&Copy totals to clipboard"),
       QString::fromLatin1("klipper"),
       CTRL+Key_C,
       _taskView,
       SLOT( clipTotals() ),
       actionCollection(),
       "clip_totals");
-  actionAddComment = new KAction( i18n("&Copy history to clipboard"),
+  actionClipHistory = new KAction( i18n("&Copy history to clipboard"),
       QString::fromLatin1("klipper"),
       CTRL+ALT+Key_C,
       _taskView,
@@ -332,6 +330,9 @@ void MainWindow::makeMenus()
                                        "comment can for instance add information on what you "
                                        "are currently doing. The comment will "
                                        "be logged in the log file."));
+  actionClipTotals->setToolTip(i18n("Copy task totals to clipboard"));
+  actionClipHistory->setToolTip(i18n("Copy time card history to clipboard."));
+
   slotSelectionChanged();
 }
 

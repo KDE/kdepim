@@ -71,8 +71,6 @@ void Task::init( const QString& taskName, long minutes, long sessionTime,
     }
   }
 
-  kdDebug() << "Task::init: minutes = " << minutes << endl;
-
   _name = taskName.stripWhiteSpace();
   _lastStart = QDateTime::currentDateTime();
   _totalTime = _time = minutes;
@@ -143,9 +141,10 @@ void Task::changeTimes( long minutesSession, long minutes, bool do_logging,
 {
   if( minutesSession != 0 || minutes != 0) {
     _sessionTime += minutesSession;
-    kdDebug() 
-      << "Task::changeTimes: " << name() 
-      << ", _sessionTime = " << minutesSession << endl;
+
+    //kdDebug() 
+    //  << "Task::changeTimes: " << name() 
+    //  << ", _sessionTime = " << minutesSession << endl;
 
     _time += minutes;
     if ( do_logging )
@@ -159,9 +158,9 @@ void Task::changeTimes( long minutesSession, long minutes, bool do_logging,
 
 void Task::changeTotalTimes( long minutesSession, long minutes )
 {
-  kdDebug() 
-    << "Task::changeTotalTimes(" << minutesSession << ", "
-    << minutes << ") for " << name() << endl;
+  //kdDebug() 
+  //  << "Task::changeTotalTimes(" << minutesSession << ", "
+  //  << minutes << ") for " << name() << endl;
 
   _totalSessionTime += minutesSession;
   _totalTime += minutes;
@@ -182,9 +181,9 @@ void Task::resetTimes()
 
 void Task::changeParentTotalTimes( long minutesSession, long minutes )
 {
-  kdDebug() 
-    << "Task::changeParentTotalTimes(" << minutesSession << ", "
-    << minutes << ") for " << name() << endl;
+  //kdDebug() 
+  //  << "Task::changeParentTotalTimes(" << minutesSession << ", "
+  //  << minutes << ") for " << name() << endl;
 
   if ( isRoot() )
     emit totalTimesChanged( minutesSession, minutes );
