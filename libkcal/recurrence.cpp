@@ -1775,7 +1775,7 @@ class Recurrence::MonthlyData
                recurDays[1] = &days29;
                recurDays[2] = &days30;
                recurDays[3] = &days31;
-               varies = (recurrence->recurs == rMonthlyPos)
+               varies = (recurrence->doesRecur() == rMonthlyPos)
                         ? true : recurrence->getMonthlyDayDays(days31, 31);
              }
     const QValueList<int>* dayList() const {
@@ -1784,7 +1784,7 @@ class Recurrence::MonthlyData
             QDate startOfMonth(year, month + 1, 1);
             int daysInMonth = startOfMonth.daysInMonth();
             QValueList<int>* days = recurDays[daysInMonth - 28];
-            if (recurrence->recurs == rMonthlyPos)
+            if (recurrence->doesRecur() == rMonthlyPos)
               recurrence->getMonthlyPosDays(*days, daysInMonth, startOfMonth.dayOfWeek());
             else if (days->isEmpty())
               recurrence->getMonthlyDayDays(*days, daysInMonth);
@@ -2399,7 +2399,7 @@ class Recurrence::YearlyPosData
     YearlyPosData(const Recurrence* r, const QDate &date)
           : recurrence(r), year(date.year()), month(date.month()), day(date.day()), count(-1)
             { if ((daysPerMonth = r->countMonthlyPosDays()) > 0)
-                count = daysPerMonth * r->rYearNums.count();
+                count = daysPerMonth * r->yearNums().count();
               varies = (daysPerMonth < 0);
             }
     const QValueList<int>* dayList() const {
@@ -2784,8 +2784,9 @@ class Recurrence::YearlyDayData
 
   public:
     YearlyDayData(const Recurrence* r, const QDate &date)
-             : year(date.year()), day(date.dayOfYear()), varies(*r->rYearNums.getLast() == 366),
-               daycount(r->rYearNums.count()) { }
+      : year( date.year() ), day( date.dayOfYear() ),
+        varies( *r->yearNums().getLast() == 366 ),
+        daycount( r->yearNums().count() ) { }
     bool  leapYear() const       { return QDate::leapYear(year); }
     int   dayCount() const       { return daycount - (varies && !QDate::leapYear(year) ? 1 : 0); }
     bool  isMaxDayCount() const  { return !varies || QDate::leapYear(year); }
