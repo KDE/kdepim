@@ -207,6 +207,9 @@ KNArticleWidget::KNArticleWidget(QWidget *parent, const char *name )
   actCopy->setEnabled(false);
   connect(p_art->browserExtension(),SIGNAL(enableAction(const char *,bool)),this,SLOT(slotEnableAction(const char *,bool)));
 
+  KCharsets *cs = KGlobal::charsets();
+  defaultCharset = cs->name(cs->charsetForLocale());
+
   applyConfig();
 }
 
@@ -513,7 +516,7 @@ bool KNArticleWidget::inlinePossible(KNMimeContent *c)
 
 void KNArticleWidget::showBlankPage()
 {
-  p_art->begin(KURL("file:/"));
+  p_art->begin();
   p_art->write(QString("<html><body bgcolor=\"%1\" text=\"%2\" link=\"%3\"></body></html>")
                 .arg(hexColors[BK_COL]).arg(hexColors[TXT_COL]).arg(hexColors[LNK_COL]));
   p_art->end();
@@ -531,7 +534,7 @@ void KNArticleWidget::showBlankPage()
 
 void KNArticleWidget::showErrorMessage(const QString &s)
 {
-  p_art->begin();//(KURL("file:/"));
+  p_art->begin();
   p_art->write(QString("<html><body bgcolor=\"%1\" text=\"%2\" link=\"%3\">")
                 .arg(hexColors[BK_COL]).arg(hexColors[TXT_COL]).arg(hexColors[LNK_COL]));
   p_art->write(i18n("<b><font size=+1 color=red>An error occured!</font></b><hr><br>"));
@@ -578,22 +581,38 @@ void KNArticleWidget::createHtmlPage()
   actSave->setEnabled(true);
   actPrint->setEnabled(true);
 
-  p_art->begin(KURL("file:/"));
-  p_art->write(QString("<html><body bgcolor=\"%1\" text=\"%2\" link=\"%3\">"
-                       "<table width=\"100%\" cols=3 cellpadding=0 style=\"padding-left: 3px\">\n")
-               .arg(hexColors[BK_COL]).arg(hexColors[TXT_COL]).arg(hexColors[LNK_COL]));
-                  
-  QString buffer,hLine;                 
+  KNMimeContent *text=a_rticle->textContent();
+  QString charset;
+  bool brokenCharset=false;
+
+  if(text) {
+    text->decodeText();
+    charset = text->ctCharset();
+  } else
+    charset = defaultCharset;
+
+  if (!p_art->setCharset(charset,true) || !p_art->setEncoding(charset,true)) {
+      brokenCharset=true;
+      p_art->setCharset(defaultCharset,true);
+      p_art->setCharset(defaultCharset,true);
+  }
+
+  QString buffer,hLine;
   int rowCount=0, pos, refCnt=0;
-                                      
+
+  buffer = QString("<html><body bgcolor=\"%1\" text=\"%2\" link=\"%3\">"
+                   "<table width=\"100%\" cols=3 cellpadding=0 style=\"padding-left: 3px\">\n")
+                 .arg(hexColors[BK_COL]).arg(hexColors[TXT_COL]).arg(hexColors[LNK_COL]);
+
+  QString header;
   if(fullHdrs) {  
     for(char *h=a_rticle->firstHeaderLine(); h; h=a_rticle->nextHeaderLine()) {
       hLine = toHtmlString(h,false,false);        
       if ((pos=hLine.find(':'))!=-1)
-        buffer += QString("<tr><td align=right valign=top width=\"1%\"><b>%1</b></td><td valign=top width=\"99%\">%2</td></tr>\n")
+        header += QString("<tr><td align=right valign=top width=\"1%\"><b>%1</b></td><td valign=top width=\"99%\">%2</td></tr>\n")
                           .arg(hLine.left(pos+1)).arg(hLine.mid(pos+1));
       else
-        buffer += QString("<tr><td colspan =\"2\" width=\"100%\">%1</td></tr>\n").arg(hLine);
+        header += QString("<tr><td colspan =\"2\" width=\"100%\">%1</td></tr>\n").arg(hLine);
       ++rowCount;
     }
   } else {
@@ -603,42 +622,40 @@ void KNArticleWidget::createHtmlPage()
       if(hLine.isEmpty()) continue;
       
       if(vh->hasName()) {
-        buffer += QString("<tr><td align=right valign=top width=\"1%\">%1%2:%3</td><td valign=top width=\"99%\">")
+        header += QString("<tr><td align=right valign=top width=\"1%\">%1%2:%3</td><td valign=top width=\"99%\">")
                           .arg(vh->nameOpenTag()).arg(toHtmlString(vh->translatedName(),false,false)).arg(vh->nameCloseTag());
       } else {
-        buffer += "<tr><td colspan =\"2\" width=\"100%\">";
+        header += "<tr><td colspan =\"2\" width=\"100%\">";
       }
       
-      buffer += vh->headerOpenTag();
+      header += vh->headerOpenTag();
       
       if(vh->header().lower()=="subject")
-        buffer+=toHtmlString(a_rticle->subject(), false);
+        header+=toHtmlString(a_rticle->subject(), false);
       else
         if(vh->header().lower()=="from")
-          buffer+=QString("<a href=\"mailto:AUTHOR\">%1 &lt;%2&gt;</a>")
+          header+=QString("<a href=\"mailto:AUTHOR\">%1 &lt;%2&gt;</a>")
                   .arg(toHtmlString(a_rticle->fromName(),false))
                   .arg(toHtmlString(a_rticle->fromEmail(), false));
       else
         if(vh->header().lower()=="date")
-          buffer+=a_rticle->longTimeString();
+          header+=a_rticle->longTimeString();
       else
-          buffer+=toHtmlString(hLine, false);   
+          header+=toHtmlString(hLine, false);
         
-      buffer += vh->headerCloseTag()+"</td></tr>\n";
+      header += vh->headerCloseTag()+"</td></tr>\n";
       ++rowCount;
     } 
   } 
 
   if (!rowCount)
-    buffer += QString("<tr><td width=40 bgcolor=\"%1\">&nbsp;</td><td colspan=\"2\"></td></tr>")
+    header += QString("<tr><td width=40 bgcolor=\"%1\">&nbsp;</td><td colspan=\"2\"></td></tr>")
                       .arg(hexColors[FG_COL]);
   else
-    buffer.insert(4,QString("<td width=40 bgcolor=\"%1\" rowspan=\"%2\">&nbsp;</td>")
+    header.insert(4,QString("<td width=40 bgcolor=\"%1\" rowspan=\"%2\">&nbsp;</td>")
                            .arg(hexColors[FG_COL]).arg(rowCount));
-          
-  p_art->write(buffer);
-                    
-  buffer=QString("<tr><td colspan=3 bgcolor=\"%1\" width=\"100%\">").arg(hexColors[FG_COL]);
+
+  buffer+=header+QString("<tr><td colspan=3 bgcolor=\"%1\" width=\"100%\">").arg(hexColors[FG_COL]);
   
   if(a_rticle->type()==KNArticleBase::ATfetch && a_rticle->hasReferences()) {
     refCnt=a_rticle->references().count();
@@ -649,23 +666,12 @@ void KNArticleWidget::createHtmlPage()
     buffer+=i18n("no references");
   buffer+="</td></tr>\n";
   
-  KNMimeContent *text=a_rticle->textContent();
-
-  if(text) {
-    text->decodeText();
-    
-    if (!p_art->setCharset(text->ctCharset())) {
-      buffer+=QString("<tr><td colspan=3 bgcolor=red width=\"100%\"><font color=black>%1</font></td></tr>\n")
-                .arg(i18n("Unknown charset! Default charset is used instead."));
-      KCharsets *c = KGlobal::charsets();   
-      p_art->setCharset(c->name(c->charsetForLocale()));
-    }
-  }
+  if (brokenCharset)
+    buffer+=QString("<tr><td colspan=3 bgcolor=red width=\"100%\"><font color=black>%1</font></td></tr>\n")
+                    .arg(i18n("Unknown charset! Default charset is used instead."));
     
   buffer+="</table><br>\n<div style=\"padding-left: 4px\">\n";
-  p_art->write(buffer);   
-  buffer=QString::null;
-  
+
   if(!text || a_rticle->isMultipart()) {
     if(att) att->clear();
     else {
@@ -679,9 +685,11 @@ void KNArticleWidget::createHtmlPage()
   } 
   
   if(a_rticle->mimeInfo()->ctSubType()==KNArticleBase::STpartial) {
-    p_art->write("<b>This article has the Mime-Type &quot;message/partial&quot;, \
+    buffer += "<b>This article has the Mime-Type &quot;message/partial&quot;, \
              which KNode cannot handle yet.<br>Meanwhile you can save the \
-             article as a text-file and reassemble it by hand.<b></div></body></html>");
+             article as a text-file and reassemble it by hand.<b></div></body></html>";
+    p_art->begin();
+    p_art->write(buffer);
     p_art->end();
     h_tmlDone=true;
     return;
@@ -741,9 +749,6 @@ void KNArticleWidget::createHtmlPage()
     } 
   }
 
-  p_art->write(buffer);
-  buffer=QString::null;
-
   if(att) {
     int attCnt=0;
     QString path;
@@ -786,8 +791,11 @@ void KNArticleWidget::createHtmlPage()
   } 
 
   buffer += "</div></body></html>";
+
+  p_art->begin();
   p_art->write(buffer);
   p_art->end();
+
   h_tmlDone=true;
 } 
 

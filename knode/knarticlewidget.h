@@ -93,6 +93,7 @@ class KNArticleWidget : public QVBox  {
     QScrollView *view;
     KAction *actSave, *actPrint, *actCopy;
     KActionCollection actionCollection;
+    QString defaultCharset;
 
     static bool showSig, fullHdrs, inlineAtt, openAtt, altAsAtt;
     static QString hexColors[7];

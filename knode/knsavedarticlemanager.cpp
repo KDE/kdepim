@@ -24,6 +24,7 @@
 #include <kstddirs.h>
 #include <kglobal.h>
 #include <kconfig.h>
+#include <kcharsets.h>
 
 #include "knode.h"
 #include "kngroupmanager.h"
@@ -95,7 +96,8 @@ void KNSavedArticleManager::readConfig()
   incSig=conf->readBoolEntry("incSig",true);
   quotSign=conf->readEntry("QuotSign",">").local8Bit();
   intro=conf->readEntry("Intro", "%NAME wrote:").local8Bit();
-  KNArticleBase::setDefaultCharset(conf->readEntry("Charset", "US-ASCII").local8Bit());
+  KCharsets *c = KGlobal::charsets();
+  KNArticleBase::setDefaultCharset(conf->readEntry("Charset",c->name(c->charsetForLocale())).upper().local8Bit());
   KNArticleBase::setDefaultTextEncoding((KNArticleBase::encoding)(conf->readNumEntry("Encoding", 0)));
   KNArticleBase::setAllow8bitHeaders(conf->readBoolEntry("allow8bitChars", false));
   genMId=conf->readBoolEntry("generateMId", false);

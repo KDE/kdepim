@@ -568,7 +568,8 @@ QCString KNMimeContent::ctCharset()
 {
   QCString ret;
   ret=mimeInfo()->getCTParameter("charset").upper();
-  if(ret.isEmpty()) ret="US-ASCII";
+  if (ret.isEmpty() || (ret=="US-ASCII"))
+    ret="ISO-8859-1";
   return ret;
 }
 

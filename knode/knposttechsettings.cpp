@@ -52,8 +52,17 @@ KNPostTechSettings::KNPostTechSettings(QWidget *p) : KNSettingsWidget(p)
   ggbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
   ggbL->addWidget(new QLabel(i18n("Charset"), ggb), 1,0);
   charset=new QComboBox(ggb);
-  charset->insertItem("us-ascii");
-  charset->insertStringList(KGlobal::charsets()->availableCharsetNames());
+  charset->insertItem("US-ASCII");      // availableCharsetNames() returns the wrong format and
+  charset->insertItem("ISO-8859-1");    // posting of non-iso-8859 is currently broken...
+  charset->insertItem("ISO-8859-2");
+  charset->insertItem("ISO-8859-3");
+  charset->insertItem("ISO-8859-4");
+  charset->insertItem("ISO-8859-5");
+  charset->insertItem("ISO-8859-6");
+  charset->insertItem("ISO-8859-7");
+  charset->insertItem("ISO-8859-8");
+  charset->insertItem("ISO-8859-9");
+  //charset->insertStringList(KGlobal::charsets()->availableCharsetNames());
   ggbL->addWidget(charset, 1,1);
 
   ggbL->addWidget(new QLabel(i18n("Encoding"), ggb), 2,0);
@@ -129,16 +138,15 @@ void KNPostTechSettings::init()
   KConfig *conf=KGlobal::config();
 
   conf->setGroup("POSTNEWS");
+  KCharsets *c = KGlobal::charsets();
+  QString tmp=conf->readEntry("Charset",c->name(c->charsetForLocale())).upper();
+  for(int i=0; i < charset->count(); i++)
+    if(charset->text(i) == tmp) {
+      charset->setCurrentItem(i);
+      break;
+    }
   encoding->setCurrentItem(conf->readNumEntry("Encoding",1));
-  QString tmp=conf->readEntry("Charset");
   allow8bitCB->setChecked(conf->readBoolEntry("allow8bitChars", false));
-  if(!tmp.isEmpty()) {
-    for(int i=0; i < charset->count(); i++)
-      if(charset->text(i) == tmp) {
-        charset->setCurrentItem(i);
-        break;
-      }
-  }
   genMIdCB->setChecked(conf->readBoolEntry("generateMId", false));
   host->setText(conf->readEntry("MIdhost"));
   
@@ -168,7 +176,7 @@ void KNPostTechSettings::apply()
 
   conf->setGroup("POSTNEWS");
   conf->writeEntry("Encoding",encoding->currentItem());
-  conf->writeEntry("Charset",charset->currentText());
+  conf->writeEntry("Charset",charset->currentText().upper());
   conf->writeEntry("allow8bitChars", allow8bitCB->isChecked());
   conf->writeEntry("generateMId", genMIdCB->isChecked());
   conf->writeEntry("MIdhost", host->text());
