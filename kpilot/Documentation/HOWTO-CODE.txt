@@ -25,7 +25,31 @@ so code I write -- and code I maintain -- slowly mutates to
 Whether or not anyone else follows is irrelevant, and I do try to
 avoid gratuitous reformatting. Honest.
 
+What I might do every now and then to get stuff "into shape" (and 
+I'd really appreciate it if you did so too before sending me patches)
+is the following horrible invocation of indent:
 
+indent -kr \
+	--blank-lines-after-declarations \
+	--braces-after-if-line \
+	--dont-cuddle-else \
+	--dont-line-up-parentheses \
+	--honour-newlines \
+	--space-after-cast \
+	--brace-indent 0 \
+	--case-brace-indentation 0 \
+	--case-indentation 0 \
+	--continuation-indentation 8 \
+	--indent-level 8 \
+	--tab-size 8 \
+	--line-length 78
+
+This doesn't yield "perfect" code but it's close to my personal ideal.
+If this coding style gives you gas, just use your own favorite indent
+invocation to change it all back.
+
+NOTE: indent wreaks havoc with C++ class definitions in header files,
+so it's best not to touch those with it.
 
 
 Header Files
