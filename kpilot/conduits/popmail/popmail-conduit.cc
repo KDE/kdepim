@@ -1617,7 +1617,7 @@ int PopMailConduit::doPopQuery()
 
 
 
-	retrievePOPMessages(popSocket,flags,msgcount,buffer,1024);
+	retrievePOPMessages(popSocket,msgcount,flags,buffer,1024);
 
 	disconnectPOP(popSocket);
 	delete popSocket;
@@ -2023,6 +2023,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.24  2001/05/08 10:53:50  adridg
+// Moved leitner's __osf__ patches
+//
 // Revision 1.23  2001/05/07 20:03:12  adridg
 // Major SMTP fixups by Marko
 //
