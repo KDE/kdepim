@@ -20,7 +20,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -45,11 +45,11 @@ class PilotListItem;
 class MemoWidget : public PilotComponent
 {
 Q_OBJECT
-  
+
 public:
 	MemoWidget(QWidget* parent, const QString& dbpath);
 	virtual ~MemoWidget();
-  
+
 	// Pilot Component Methods:
 	/* virtual */ void showComponent();
 	/* virtual */ void hideComponent();
@@ -59,18 +59,19 @@ public:
 	// Added by David Bishop, please move to correct location!
 	bool saveAsXML(const QString &fileName,const QPtrList<PilotListItem> &menu_item );
 	bool saveAsText(const QString &fileName,const QPtrList<PilotListItem> &menu_item );
-	
-	typedef enum { 
-		MAX_MEMO_LEN = 8192 
+
+	typedef enum {
+		MAX_MEMO_LEN = 8192
 		} Constants ;
 
 protected:
 	void initializeCategories(PilotDatabase *);
 	void initializeMemos(PilotDatabase *);
 
-	// TODO: Ugh, I have no idea if this fix is in BRANCH as well.
 	void saveChangedMemo();
-  
+
+	bool addMemo(const QString &text, int category);
+
 public slots:
 	/**
 	* Called whenever the selected memo changes in order to:
@@ -81,10 +82,11 @@ public slots:
 	*/
 	void slotShowMemo(int);
 	void slotUpdateButtons();
-	// void slotTextChanged();
+
 	void slotImportMemo();
 	void slotExportMemo();
-	void slotDeleteMemo(); // Delets the currently selected memo(s)
+	void slotDeleteMemo();
+	void slotAddMemo();
 	void slotSetCategory(int);
 
 private:
@@ -92,14 +94,14 @@ private:
 	void updateWidget(); // Called with the lists have changed..
 	void writeMemo(PilotMemo* which);
 	QComboBox* fCatList;
-  
+
 	KTextEdit*		fTextWidget;
 	struct MemoAppInfo	fMemoAppInfo;
 	QPtrList<PilotMemo>	fMemoList;
 	QListBox*		fListBox;
 
 	QPushButton *fExportButton,*fDeleteButton;
-	
+
 	int lastSelectedMemo;
 };
 

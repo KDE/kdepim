@@ -311,13 +311,18 @@ void MemoWidget::setupWidget()
 		i18n("Write the selected memo to a file."));
 
 	fDeleteButton = new QPushButton(i18n("Delete Memo"), this);
-	grid->addWidget(fDeleteButton, 3, 0);
+	grid->addWidget(fDeleteButton, 3, 1);
 	connect(fDeleteButton, SIGNAL(clicked()), this,
 		SLOT(slotDeleteMemo()));
 	wt = KPilotSettings::internalEditors() ?
 		i18n("Delete the selected memo.") :
 		i18n("<qt><i>Deleting is disabled by the 'internal editors' setting.</i></qt>") ;
 	QWhatsThis::add(fDeleteButton, wt);
+
+	button = new QPushButton(i18n("Add Memo"), this);
+	grid->addWidget(button, 3, 0);
+	connect(button, SIGNAL(clicked()), this, SLOT(slotAddMemo()));
+	QWhatsThis::add(button,i18n("Add a new memo to the database."));
 }
 
 void MemoWidget::slotUpdateButtons()
@@ -546,13 +551,46 @@ void MemoWidget::saveChangedMemo()
 	return true;
 }
 
+bool MemoWidget::addMemo(const QString &s, int category)
+{
+	FUNCTIONSETUP;
+
+	if (s.length() >= MemoWidget::MAX_MEMO_LEN)
+	{
+		return false;
+	}
+	if ((category<0) || (category>15)) category=0;
+
+	char *text = new char[s.length() + 2];
+	if (s.isEmpty())
+	{
+		text[0]=0;
+	}
+	else
+	{
+		strlcpy(text,PilotAppCategory::codec()->fromUnicode(s),s.length()+2);
+	}
+	PilotMemo *aMemo = new PilotMemo(text, 0, 0, category);
+	fMemoList.append(aMemo);
+	writeMemo(aMemo);
+	updateWidget();
+	delete[]text;
+	return true;
+}
+
+void MemoWidget::slotAddMemo()
+{
+	FUNCTIONSETUP;
+	int currentCatID = findSelectedCategory(fCatList,
+		&(fMemoAppInfo.category), true);
+	addMemo(QString::null, currentCatID);
+}
+
 void MemoWidget::slotImportMemo()
 {
 	FUNCTIONSETUP;
 	if (!shown) return;
 
-	int i = 0;
-	int nextChar;
 	int currentCatID = findSelectedCategory(fCatList,
 		&(fMemoAppInfo.category), true);
 
@@ -567,19 +605,16 @@ void MemoWidget::slotImportMemo()
 			// show error!
 			return;
 		}
-		char *text = new char[(int) MemoWidget::MAX_MEMO_LEN];
 
-		for (i = 0;
-			(i < (MemoWidget::MAX_MEMO_LEN - 1))
-			&& ((nextChar = importFile.getch()) != -1); i++)
-			text[i] = nextChar;
-		text[i] = 0;
-		PilotMemo *aMemo = new PilotMemo(text, 0, 0, currentCatID);
+		if (importFile.size() > MemoWidget::MAX_MEMO_LEN)
+		{
+			// Perhaps read first 64k?
+			return;
+		}
 
-		fMemoList.append(aMemo);
-		writeMemo(aMemo);
-		updateWidget();
-		delete[]text;
+		QTextStream stream(&importFile);
+		QString memoText = stream.read();
+		addMemo(memoText, currentCatID);
 	}
 }
 
