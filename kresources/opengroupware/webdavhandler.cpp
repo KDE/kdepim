@@ -54,19 +54,6 @@ QDomElement WebdavHandler::addDavElement( QDomDocument &doc, QDomNode &node,
   return el;
 }
 
-QDomElement WebdavHandler::addSloxElement( QDomDocument &doc, QDomNode &node,
-                                           const QString &tag,
-                                           const QString &text )
-{
-  QDomElement el = doc.createElementNS( "SLOX", tag );
-  if ( !text.isEmpty() ) {
-    QDomText textnode = doc.createTextNode( text );
-    el.appendChild( textnode );
-  }
-  node.appendChild( el );
-  return el;
-}
-
 QDomDocument WebdavHandler::createItemsAndVersionsPropsRequest()
 {
   QDomDocument doc;
