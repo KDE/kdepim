@@ -5,9 +5,17 @@
 ### The NULL conduit is a neat programming example, but shouldn't be
 ### installed on user systems.
 ###
+
+if include_malconduit
+        MALSUBDIR = malconduit
+endif
+
+
 SUBDIRS = knotes \
 	expense \
 	null \
 	vcalconduit \
 	popmail \
-	timeconduit
+	timeconduit \
+	$(MALSUBDIR)
+

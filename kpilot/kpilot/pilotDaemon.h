@@ -159,6 +159,7 @@ protected slots:
 	void endHotSync();
 
 	void logMessage(const QString &);
+	void logError(const QString &);
 	void logProgress(const QString &,int);
 
 private:
@@ -215,6 +216,9 @@ private:
 
 
 // $Log$
+// Revision 1.35  2002/06/24 19:29:11  adridg
+// Allow daemon RW access to config file
+//
 // Revision 1.34  2002/06/08 09:17:07  adridg
 // Added tooltip for daemon
 //

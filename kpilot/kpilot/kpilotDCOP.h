@@ -37,12 +37,16 @@ class KPilotDCOP : virtual public DCOPObject
 	K_DCOP
 k_dcop:
 	virtual ASYNC logMessage(QString) = 0;
+	virtual ASYNC logError(QString)=0;
 	virtual ASYNC logProgress(QString,int) = 0;
 } ;
 
 
 
 // $Log$
+// Revision 1.6  2001/11/18 16:59:55  adridg
+// New icons, DCOP changes
+//
 // Revision 1.5  2001/09/29 16:26:18  adridg
 // The big layout change
 //

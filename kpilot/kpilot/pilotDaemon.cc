@@ -567,6 +567,14 @@ bool PilotDaemon::setupPilotLink()
 
 	QObject::connect(fPilotLink, SIGNAL(deviceReady()),
 		this, SLOT(startHotSync()));
+	// connect the signals emitted by the pilotDeviceLink
+	QObject::connect(fPilotLink, SIGNAL(logError(const QString &)),
+		this, SLOT(logError(const QString &)));
+	QObject::connect(fPilotLink, SIGNAL(logMessage(const QString &)),
+		this, SLOT(logMessage(const QString &)));
+	QObject::connect(fPilotLink, SIGNAL(logProgress(const QString &)),
+		this, SLOT(logProgress(const QString &)));
+
 
 	return true;
 }
@@ -717,9 +725,12 @@ QString PilotDaemon::syncTypeString(int i) const
 	}
 
 	QObject::connect(fSyncStack, SIGNAL(logError(const QString &)),
-		this, SLOT(logMessage(const QString &)));
+		this, SLOT(logError(const QString &)));
 	QObject::connect(fSyncStack, SIGNAL(logMessage(const QString &)),
 		this, SLOT(logMessage(const QString &)));
+	QObject::connect(fSyncStack, SIGNAL(logProgress(const QString &)),
+		this, SLOT(logProgress(const QString &)));
+
 	QObject::connect(fSyncStack, SIGNAL(syncDone(SyncAction *)),
 		this, SLOT(endHotSync()));
 
@@ -729,6 +740,17 @@ QString PilotDaemon::syncTypeString(int i) const
 }
 
 /* slot */ void PilotDaemon::logMessage(const QString & s)
+{
+	FUNCTIONSETUP;
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": " << s << endl;
+#endif
+
+	getKPilot().logMessage(s);
+	updateTrayStatus(s);
+}
+
+/* slot */ void PilotDaemon::logError(const QString & s)
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
@@ -762,7 +784,7 @@ QString PilotDaemon::syncTypeString(int i) const
 	KPILOT_DELETE(fSyncStack);
 	fPilotLink->close();
 
-	getKPilot().logProgress(i18n("HotSync Completed."), 100);
+	getKPilot().logProgress(i18n("HotSync Completed.<br>"), 100);
 
 	fStatus = HOTSYNC_END;
 
@@ -912,6 +934,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.63  2002/07/25 15:44:03  kainhofe
+// LMB on tray icon starts kpilot, settings are reloaded when kpilot changes them
+//
 // Revision 1.62  2002/06/24 19:29:11  adridg
 // Allow daemon RW access to config file
 //

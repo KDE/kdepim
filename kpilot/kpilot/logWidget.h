@@ -55,6 +55,7 @@ public:
 	/**
 	* DCOP interface.
 	*/
+	virtual ASYNC logError(QString);
 	virtual ASYNC logMessage(QString);
 	virtual ASYNC logProgress(QString,int);
 
@@ -87,6 +88,9 @@ private:
 } ;
 
 // $Log$
+// Revision 1.8  2002/05/23 20:19:40  adridg
+// Add support for extra buttons to the logwidget; use it for reset in kpilottest
+//
 // Revision 1.7  2001/12/29 15:44:16  adridg
 // Missing progress slots
 //

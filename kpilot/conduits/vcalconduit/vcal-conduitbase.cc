@@ -223,9 +223,6 @@ there are two special cases: a full and a first sync.
 		PluginUtility::isRunning("alarmd"))
 	{
 		addSyncLogEntry(i18n("KOrganizer is running, can't update datebook."));
-#ifdef DEBUG
-		DEBUGCONDUIT<<fname<<": KOrganizer is running, can't update datebook."<<endl;
-#endif
 		emit syncDone(this);
 		return;
 	}
@@ -272,7 +269,6 @@ there are two special cases: a full and a first sync.
 	return;
 
 error:
-			cout<<"Error opening the dbs"<<endl;
 
 	emit logError(i18n("Couldn't open the calendar databases."));
 
@@ -708,6 +704,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.17  2002/08/15 10:47:56  kainhofe
+// Finished categories syncing for the todo conduit
+//
 // Revision 1.16  2002/07/25 21:58:57  kainhofe
 // QString::arg error
 //

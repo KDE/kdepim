@@ -187,14 +187,9 @@ void LogWidget::addMessage(const QString & s)
 
 	QString t;
 
-#ifdef KDE2
-	t = fLog->text();
-#endif
-
 	if (fShowTime)
 	{
 		t.append("<b>");
-
 		t.append(QTime::currentTime().toString());
 		t.append("</b>  ");
 	}
@@ -202,11 +197,12 @@ void LogWidget::addMessage(const QString & s)
 	t.append(s);
 	t.append("<br>");
 
-#ifdef KDE2
-	fLog->setText(t);
-#else
-	fLog->append(t);
-#endif
+//#ifdef KDE2
+//	fLog->setText(t);
+//#else
+//	fLog->append(t);
+//#endif
+	fLog->setText(fLog->text() + t);
 }
 
 void LogWidget::addError(const QString & s)
@@ -218,18 +214,11 @@ void LogWidget::addError(const QString & s)
 	if (s.isEmpty()) return;
 	if (!fLog) return;
 
-	QString t("<qt>");
-
-	if (fShowTime)
-	{
-		t.append("<b>");
-		t = QTime::currentTime().toString();
-		t.append("</b>  ");
-	}
+	QString t;
 
 	t.append("<i>");
 	t.append(s);
-	t.append("</i><br></qt>");
+	t.append("</i>");
 
 	addMessage(t);
 }
@@ -287,10 +276,13 @@ void LogWidget::hideSplash()
 	addMessage(s);
 }
 
+/* DCOP */ ASYNC LogWidget::logError(QString s)
+{
+	addError(s);
+}
+
 /* DCOP */ ASYNC LogWidget::logProgress(QString s, int i)
 {
-	FUNCTIONSETUP;
-
 	addProgress(s,i);
 }
 
@@ -363,9 +355,13 @@ bool LogWidget::saveFile(const QString &saveFileName)
 	}
 
 	f.close();
+	return true;
 }
 
 // $Log$
+// Revision 1.25  2002/07/03 12:22:08  binner
+// CVS_SILENT Style guide fixes
+//
 // Revision 1.24  2002/05/23 20:19:40  adridg
 // Add support for extra buttons to the logwidget; use it for reset in kpilottest
 //
@@ -395,7 +391,7 @@ bool LogWidget::saveFile(const QString &saveFileName)
 // when using PILOT_VERSION. kpilotTest defaults to list, like the options
 // promise. Always do old-style USB sync (also works with serial devices)
 // and runs conduits only for HotSync. KPilot now as it should have been
-// for the 3.0 release.
+	// for the 3.0 release.
 //
 // Revision 1.18  2002/02/10 22:21:33  adridg
 // Handle pilot-link 0.10.1; spit 'n polish; m505 now supported?

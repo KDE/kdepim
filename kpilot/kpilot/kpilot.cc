@@ -318,7 +318,9 @@ void KPilotInstaller::initComponents()
 	ADDICONPAGE(i18n("HotSync"),"kpilot/kpilot-hotsync.png");
 	fLogWidget = new LogWidget(w);
 	addComponentPage(fLogWidget, i18n("HotSync"));
+	fLogWidget->setShowTime(true);
 
+	
 	ADDICONPAGE(i18n("Memo Viewer"),"kpilot/kpilot-knotes.png");
 	addComponentPage(new MemoWidget(w, defaultDBPath),
 		i18n("Memo Viewer"));
@@ -875,6 +877,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.78  2002/08/13 11:57:37  mhunter
+// VCal -> vCal (name consistency)
+//
 // Revision 1.77  2002/08/12 13:07:07  kainhofe
 // Added myself to the credits page
 //
