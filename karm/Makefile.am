@@ -12,9 +12,9 @@ SUBDIRS = support pics
 METASOURCES = AUTO
 
 karm_SOURCES =  adddlg.cpp main.cpp \
-	task.cpp top.cpp kaccelmenuwatch.cpp print.cpp docking.cpp\
+	task.cpp top.cpp kaccelmenuwatch.cpp print.cpp \
 	preferences.cpp ktimewidget.cpp karm.cpp idle.cpp
-noinst_HEADERS = adddlg.h karm.h task.h toolicons.h top.h kaccelmenuwatch.h version.h print.h idle.h docking.h preferences.h ktimewidget.h
+noinst_HEADERS = adddlg.h karm.h task.h toolicons.h top.h kaccelmenuwatch.h version.h print.h idle.h preferences.h ktimewidget.h
 
 KDE_ICON = karm
 
@@ -32,7 +32,6 @@ uninstall-local:
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/karm.pot
-
 
 srcdoc:
 	kdoc -a -p -H -d $(HOME)/web/src/karm karm *.h -lkdecore -lkdeui -lqt
