@@ -42,7 +42,7 @@
 
 
 
-ConduitConfig::ConduitConfig(QWidget *parent=0L,
+ConduitConfig::ConduitConfig(QWidget *parent,
 	const char *name,
 	const QStringList &args) : 
 	UIDialog(parent,name,PluginUtility::isModal(args)),
@@ -121,6 +121,9 @@ bool PluginUtility::isModal(const QStringList &a)
 }
 
 // $Log$
+// Revision 1.5  2002/01/21 23:14:03  adridg
+// Old code removed; extra abstractions added; utility extended
+//
 // Revision 1.4  2002/01/18 12:47:21  adridg
 // CVS_SILENT: More compile fixes
 //
