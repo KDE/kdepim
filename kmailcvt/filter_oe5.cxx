@@ -32,7 +32,7 @@
 #include <klocale.h>
 #include <kfiledialog.h>
 
-filter_oe5::filter_oe5() : filter(i18n("Import Folders From Outlook Express 5"),"Stephan B. Nedregard/Hans Dijkema")
+filter_oe5::filter_oe5() : filter(i18n("Import Folders From Outlook Express 4/5/6"),"Stephan B. Nedregard/Hans Dijkema")
 {
   CAP=i18n("Import Outlook Express 5");
 }
@@ -48,7 +48,7 @@ QWidget *parent=info->parent();
 
    if (!kmailStart(info)) { return; }
 
-   msg=i18n("Stephan B. Nedregard kindly contributed the Outlook Express 4/5\n"
+   msg=i18n("Stephan B. Nedregard kindly contributed the Outlook Express 4/5/6\n"
 	    "import code.\n\n"
 	    "Select the Outlook Express 5 directory on your system.\n\n"
 	    "This import filter will search for folders (the '.mbx' files).\n\n"
@@ -66,7 +66,7 @@ QWidget *parent=info->parent();
    choosen=KFileDialog::getExistingDirectory(QDir::homeDirPath(),parent,"ImportOE5");
    if (choosen.isEmpty()) { return; } // No directory choosen here!
 
-   msg=i18n("Searching for Outlook Express 5 '.dbx' folders in directory %1").arg(choosen);
+   msg=i18n("Searching for Outlook Express '.dbx' folders in directory %1").arg(choosen);
    info->log(msg);
 
    {DIR *d;
