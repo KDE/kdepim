@@ -22,6 +22,7 @@
 
 #include <qdir.h>
 #include <qfile.h>
+#include <qtextstream.h>
 
 #include <klocale.h>
 #include <kdebug.h>

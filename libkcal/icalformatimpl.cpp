@@ -27,7 +27,6 @@
 
 #include <kdebug.h>
 #include <klocale.h>
-#include <korganizer/koprefs.h>
 
 extern "C" {
   #include <ical.h>
@@ -171,9 +170,11 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
 
 icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy, Scheduler::Method method)
 {
+#if QT_VERSION >= 300
   kdDebug() << "icalformatimpl: writeFreeBusy: startDate: "
     << freebusy->dtStart().toString("ddd MMMM d yyyy: h:m:s ap") << " End Date: " 
     << freebusy->dtEnd().toString("ddd MMMM d yyyy: h:m:s ap") << endl;
+#endif
 
   icalcomponent *vfreebusy = icalcomponent_new(ICAL_VFREEBUSY_COMPONENT);
 
@@ -949,7 +950,6 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
   icalproperty *p = icalcomponent_get_first_property(vfreebusy,ICAL_ANY_PROPERTY);
 
   const char *text;
-  int intvalue;
   icaltimetype icaltime;
   icalperiodtype icalperiod;
   QDateTime period_start, period_end;

@@ -144,16 +144,18 @@ FreeBusy::FreeBusy(QValueList<Period> busyPeriods)
   mBusyPeriods = busyPeriods;
 }
 
-void FreeBusy::sortList() {
-  typedef QValueList<Period> periodList;
-  periodList::iterator tmpPeriod, earlyPeriod;
-  periodList sortedList;
+void FreeBusy::sortList()
+{
+  typedef QValueList<Period> PeriodList;
+
+  PeriodList::Iterator tmpPeriod, earlyPeriod;
+  PeriodList sortedList;
   QDateTime earlyTime;
 
-  while(mBusyPeriods.size()>0) {
+  while( mBusyPeriods.count() > 0 ) {
     earlyTime=(*mBusyPeriods.begin()).start();
     for (tmpPeriod=mBusyPeriods.begin(); tmpPeriod!=mBusyPeriods.end(); tmpPeriod++) {
-      if (earlyTime.secsTo((*tmpPeriod).start())<=0) {
+      if (earlyTime.secsTo((*tmpPeriod).start()) <= 0) {
         earlyTime=(*tmpPeriod).start();
         earlyPeriod=tmpPeriod;
       }
@@ -161,7 +163,7 @@ void FreeBusy::sortList() {
     //Move tmpPeriod to sortedList
     Period tmpPeriod( (*earlyPeriod).start(), (*earlyPeriod).end() );
     sortedList.append( tmpPeriod );
-    mBusyPeriods.remove(earlyPeriod);
+    mBusyPeriods.remove( earlyPeriod );
   }
   mBusyPeriods=sortedList;
 }
