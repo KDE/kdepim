@@ -7,11 +7,13 @@ if (!open( ENTRIES, "entrylist" ) ) {
 
   while(<ENTRIES>) {
     if (/^#/) { next; }
-    @entries = split;
-    if (!/^\s*(\w+)\s+(\w+)/) { next; }
-    push @entryTypes, @entries[0];
-    push @entryNames, @entries[1];
-    push @entryDebug, @entries[2];
+    chop;
+    @entries = split /,/;
+    if (!/^.+,(\w+),(\w+)/) { next; }
+    push @entryRealNames, @entries[0];
+    push @entryTypes, @entries[1];
+    push @entryNames, @entries[2];
+    push @entryDebug, @entries[3];
   }
 
 close ENTRIES;
@@ -33,8 +35,14 @@ if (!open( H_OUT, ">../addressee.h" ) ) {
       }
     } elsif (/--DECLARATIONS--/) {
       for( $i=0; $i<@entryNames; ++$i ) {
+        print H_OUT "    /*\n";
+        print H_OUT "      Set $entryRealNames[$i].\n";
+        print H_OUT "    */\n";
         print H_OUT "    void set" . ucfirst($entryNames[$i]);
         print H_OUT "( const $entryTypes[$i] &$entryNames[$i] );\n";
+        print H_OUT "    /*\n";
+        print H_OUT "      Return $entryRealNames[$i].\n";
+        print H_OUT "    */\n";
         print H_OUT "    $entryTypes[$i] $entryNames[$i]() const;\n\n";
       }
     } else {

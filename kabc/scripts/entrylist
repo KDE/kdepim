@@ -1,44 +1,44 @@
-QString uid
-QString name
+unique identifier,QString,uid
+name,QString,name
 
-QString formattedName
+formatted name,QString,formattedName
 
-QString familyName
-QString givenName
-QString additionalName
-QString prefix
-QString suffix
+family name,QString,familyName
+given name,QString,givenName
+additional names,QString,additionalName
+honorific prefixes,QString,prefix
+honorific suffixes,QString,suffix
 
-QString nickName
+nick name,QString,nickName
 #QPixmap photo
 
-QDateTime birthday .toString()
+birthday,QDateTime,birthday,.toString()
 
 #Address address
 #QString label (part of Address)
 
 #phoneNumbers
 #emails
-QString mailer
+mail client,QString,mailer
 
-TimeZone timeZone .asString()
-Geo geo .asString()
+time zone,TimeZone,timeZone,.asString()
+geographic position,Geo,geo,.asString()
 
-QString title
-QString role
+title,QString,title
+role,QString,role
 #QPixmap logo
 #Agent agent
-QString organization
+organization,QString,organization
 
-QString note
+note,QString,note
 
-QString productId
-QDateTime revision .toString()
+product identifier,QString,productId
+revision date,QDateTime,revision,.toString()
 
-QString sortString
+sort string,QString,sortString
 
 #sound
 #class (PUBLIC, PRIVATE, CONFIDENTIAL)
 #key
 
-KURL url .url()
+URL,KURL,url,.url()
