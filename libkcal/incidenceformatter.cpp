@@ -169,7 +169,7 @@ static QString eventViewerFormatAttendees( Incidence *event )
     tmpStr += eventViewerAddTag( "h3", i18n("Organizer") );
     tmpStr += "<ul>";
     tmpStr += linkPerson( event->organizer().email(),
-                          event->organizer().fullName(), "", iconPath );
+                          event->organizer().name(), "", iconPath );
     tmpStr += "</ul>";
 
     // Add attendees links
