@@ -1,3 +1,24 @@
+/*
+    This file is part of KitchenSync.
+
+    Copyright (c) 2004 Tobias Koenig <tokoe@kde.org>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.
+*/
+
 #include <kcombobox.h>
 #include <kdialog.h>
 #include <klineedit.h>
@@ -57,19 +78,21 @@ void PairEditorWidget::setPair( KonnectorPair *pair )
     konnector = 0;
   it++;
 
-  mEditorWidgets[ 0 ]->setKonnector( mPair, konnector );
+  mEditorWidgets[ 0 ]->set( mPair, konnector );
 
   if ( it != manager->end() )
     konnector = *it;
   else
     konnector = 0;
 
-  mEditorWidgets[ 1 ]->setKonnector( mPair, konnector );
+  mEditorWidgets[ 1 ]->set( mPair, konnector );
 }
 
 KonnectorPair *PairEditorWidget::pair() const
 {
   mPair->setName( mPairNameEdit->text() );
+  mEditorWidgets[ 0 ]->get( mPair );
+  mEditorWidgets[ 1 ]->get( mPair );
 
   if ( mResolveManually->isChecked() )
     mPair->setResolveStrategy( KonnectorPair::ResolveManually );

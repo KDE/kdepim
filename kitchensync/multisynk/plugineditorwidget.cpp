@@ -1,3 +1,24 @@
+/*
+    This file is part of KitchenSync.
+
+    Copyright (c) 2004 Tobias Koenig <tokoe@kde.org>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.
+*/
+
 #include <kcombobox.h>
 #include <kdialog.h>
 #include <klocale.h>
@@ -29,14 +50,10 @@ void PluginEditorWidget::setLabel( const QString &label )
   mLabel->setText( label );
 }
 
-void PluginEditorWidget::setKonnector( KonnectorPair *pair, KSync::Konnector *konnector )
+void PluginEditorWidget::set( KonnectorPair *pair, KSync::Konnector *konnector )
 {
   mPair = pair;
-  mKonnector = konnector;
-
-  if ( mKonnector )
-    mKonnectorUid = mKonnector->identifier();
-
+  mOldKonnector = mKonnector = konnector;
 
   fillTypeBox();
 
@@ -48,10 +65,15 @@ void PluginEditorWidget::setKonnector( KonnectorPair *pair, KSync::Konnector *ko
   }
 }
 
-KSync::Konnector* PluginEditorWidget::konnector() const
+void PluginEditorWidget::get( KonnectorPair *pair )
 {
-//  mKonnector->setIdentifier( mKonnectorUid );
-  return mKonnector;
+  if ( mKonnector == mOldKonnector ) {
+    if ( mKonnector )
+      pair->manager()->change( mKonnector );
+  } else {
+    pair->manager()->remove( mOldKonnector );
+    pair->manager()->add( mKonnector );
+  }
 }
 
 void PluginEditorWidget::fillTypeBox()
@@ -62,13 +84,9 @@ void PluginEditorWidget::fillTypeBox()
 
 void PluginEditorWidget::typeChanged( int )
 {
-  if ( mKonnector != 0 )
-    mPair->manager()->remove( mKonnector );
-
-  mKonnector = mPair->manager()->createResource( currentType() );
-
-  if ( mKonnector != 0 )
-    mPair->manager()->add( mKonnector );
+  KSync::Konnector *konnector = mPair->manager()->createResource( currentType() );
+  if ( konnector )
+    mKonnector = konnector;
 }
 
 void PluginEditorWidget::changeOptions()
@@ -78,8 +96,7 @@ void PluginEditorWidget::changeOptions()
 
   KRES::ConfigDialog dlg( this, "konnector", mKonnector );
 
-  if ( dlg.exec() )
-    mPair->manager()->change( mKonnector );
+  dlg.exec();
 }
 
 QString PluginEditorWidget::currentType() const
