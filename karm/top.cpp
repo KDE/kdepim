@@ -64,10 +64,10 @@ KarmWindow::KarmWindow()
   _watcher->updateMenus();
 
   // connections
-  connect( _karm, SIGNAL( sessionTimeChanged() ), this, SLOT( updateTime() ) );
-  connect(_karm, SIGNAL(selectionChanged  ( QListViewItem * )),this,SLOT(slotSelectionChanged()));
-  connect(_karm, SIGNAL( updateButtons() ), this, SLOT(slotSelectionChanged()));
-  connect( _karm, SIGNAL(timerTick()), this, SLOT(updateTime()));
+  connect( _karm, SIGNAL( sessionTimeChanged() ),                 this, SLOT( updateTime() ) );
+  connect( _karm, SIGNAL( selectionChanged  ( QListViewItem * )), this, SLOT(slotSelectionChanged()));
+  connect( _karm, SIGNAL( updateButtons() ),                      this, SLOT(slotSelectionChanged()));
+  connect( _karm, SIGNAL( timerTick()),                           this, SLOT(updateTime()));
 
   _preferences->load();
   loadGeometry();
@@ -194,67 +194,86 @@ void KarmWindow::makeMenus()
     *actionNew,
     *actionNewSub;
 
-  (void) KStdAction::quit( this, SLOT(quit()), actionCollection());
-  (void) KStdAction::print( this, SLOT(print()), actionCollection());
+  (void) KStdAction::quit(  this, SLOT( quit() ),  actionCollection());
+  (void) KStdAction::print( this, SLOT( print() ), actionCollection());
   actionKeyBindings = KStdAction::keyBindings( this, SLOT( keyBindings() ),
                                                actionCollection() );
   actionPreferences = KStdAction::preferences( _preferences, SLOT( showDialog() ),
                                                actionCollection() );
   (void) KStdAction::save( _preferences, SLOT( save() ), actionCollection() );
-  actionResetSession = new KAction(i18n("&Reset Session Times"), CTRL + Key_R,this,
-                                   SLOT(resetSessionTime()),actionCollection(),
-                                   "reset_session_time");
-  actionStart = new KAction(i18n("&Start"), QString::fromLatin1("1rightarrow"),
-                            Key_S ,_karm,
-                            SLOT(changeTimer()),actionCollection(),"start");
-  actionStop = new KAction(i18n("S&top"), QString::fromLatin1("stop"),
-                           Key_Escape,_karm,
-                           SLOT(stopCurrentTimer()),actionCollection(),"stop");
-  actionStopAll = new KAction(i18n("Stop &All Timers"), 0, _karm, SLOT(stopAllTimers()), actionCollection(), "stopAll");
+  actionResetSession = new KAction( i18n("&Reset Session Times"),
+                                    CTRL + Key_R,
+                                    this,
+                                    SLOT( resetSessionTime() ), actionCollection(),
+                                    "reset_session_time");
+  actionStart = new KAction( i18n("&Start"),
+                             QString::fromLatin1("1rightarrow"), Key_S,
+                             _karm,
+                             SLOT( changeTimer() ), actionCollection(),
+                             "start");
+  actionStop = new KAction( i18n("S&top"),
+                            QString::fromLatin1("stop"), Key_Escape,
+                            _karm,
+                            SLOT( stopCurrentTimer() ), actionCollection(),
+                            "stop");
+  actionStopAll = new KAction( i18n("Stop &All Timers"),
+                               0,
+                               _karm,
+                               SLOT( stopAllTimers() ), actionCollection(),
+                               "stopAll");
   actionStopAll->setEnabled(false);
-  actionNew = new KAction(i18n("&New..."), QString::fromLatin1("filenew"),
-                             CTRL+Key_N,
-                             _karm, SLOT(newTask()),
-                             actionCollection(), "new_task");
-  actionNewSub = new KAction(i18n("New &Subtask..."), QString::fromLatin1("kmultiple"),
-                             CTRL+ALT+Key_N,
-                             _karm, SLOT(newSubTask()),
-                             actionCollection(), "new_sub_task");
-  actionDelete = new KAction(i18n("&Delete..."), QString::fromLatin1("editdelete"),
-                             Key_Delete,_karm,
-                             SLOT(deleteTask()),actionCollection(),"delete_task");
-  actionEdit = new KAction(i18n("&Edit..."), QString::fromLatin1("edit"),
-                           CTRL + Key_E,_karm,
-                           SLOT(editTask()),actionCollection(),"edit_task");
+
+  actionNew = new KAction( i18n("&New..."),
+                           QString::fromLatin1("filenew"), CTRL+Key_N,
+                           _karm,
+                           SLOT( newTask() ), actionCollection(),
+                           "new_task");
+  actionNewSub = new KAction( i18n("New &Subtask..."),
+                              QString::fromLatin1("kmultiple"), CTRL+ALT+Key_N,
+                              _karm,
+                              SLOT( newSubTask() ), actionCollection(),
+                              "new_sub_task");
+  actionDelete = new KAction( i18n("&Delete..."),
+                              QString::fromLatin1("editdelete"), Key_Delete,
+                              _karm,
+                              SLOT( deleteTask() ), actionCollection(),
+                              "delete_task");
+  actionEdit = new KAction( i18n("&Edit..."),
+                            QString::fromLatin1("edit"), CTRL + Key_E,
+                            _karm,
+                            SLOT( editTask() ), actionCollection(),
+                            "edit_task");
+
   createGUI( QString::fromLatin1("karmui.rc") );
 
   // Tool tops must be set after the createGUI.
-  actionKeyBindings->setToolTip(i18n("Configure key bindings"));
-  actionKeyBindings->setWhatsThis(i18n("This will let you configure keybindings which is specific to karm"));
+  actionKeyBindings->setToolTip( i18n("Configure key bindings") );
+  actionKeyBindings->setWhatsThis( i18n("This will let you configure keybindings which is specific to karm") );
 
-  actionResetSession->setToolTip(i18n("Reset session time"));
-  actionResetSession->setWhatsThis(i18n("This will reset the session time for all tasks."));
+  actionResetSession->setToolTip( i18n("Reset session time") );
+  actionResetSession->setWhatsThis( i18n("This will reset the session time for all tasks.") );
 
-  actionStart->setToolTip(i18n("Start timing for selected task"));
-  actionStart->setWhatsThis(i18n("This will start timing for the selected task.\n"
+  actionStart->setToolTip( i18n("Start timing for selected task") );
+  actionStart->setWhatsThis( i18n("This will start timing for the selected task.\n"
                             "It is even possible to time several tasks simultaneously.\n\n"
                             "You may also start timing of a tasks by double clicking the left mouse "
                             "button on a given task. This will, however, stop timing of other tasks."));
 
-  actionStop->setToolTip(i18n("Stop timing of the selected task"));
-  actionStop->setWhatsThis(i18n("Stop timing of the selected task"));
+  actionStop->setToolTip( i18n("Stop timing of the selected task") );
+  actionStop->setWhatsThis( i18n("Stop timing of the selected task") );
 
-  actionStopAll->setToolTip(i18n("Stop all of the active timers"));
-  actionStopAll->setWhatsThis(i18n("Stop all of the active timers"));
+  actionStopAll->setToolTip( i18n("Stop all of the active timers") );
+  actionStopAll->setWhatsThis( i18n("Stop all of the active timers") );
 
-  actionNew->setToolTip(i18n("Create new top level task"));
-  actionNew->setWhatsThis(i18n("This will create a new top level task."));
+  actionNew->setToolTip( i18n("Create new top level task") );
+  actionNew->setWhatsThis( i18n("This will create a new top level task.") );
 
-  actionDelete->setToolTip(i18n("Delete selected task"));
-  actionDelete->setWhatsThis(i18n("This will delete the selected task and all its subtasks."));
+  actionDelete->setToolTip( i18n("Delete selected task") );
+  actionDelete->setWhatsThis( i18n("This will delete the selected task and all its subtasks.") );
 
-  actionEdit->setToolTip(i18n("Edit name or times for selected task"));
-  actionEdit->setWhatsThis(i18n("This will bring up a dialog box where you may edit the parameters for the selected task."));
+  actionEdit->setToolTip( i18n("Edit name or times for selected task") );
+  actionEdit->setWhatsThis( i18n("This will bring up a dialog box where you may "
+                                 "edit the parameters for the selected task."));
   slotSelectionChanged();
 }
 
