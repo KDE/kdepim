@@ -76,6 +76,8 @@ static const char *pilotdaemon_id =
 #include <kprocess.h>
 #include <dcopclient.h>
 #include <kurldrag.h>
+#include <kservice.h>
+#include <kservicetype.h>
 
 #include "pilotAppCategory.h"
 
@@ -674,9 +676,65 @@ QDateTime PilotDaemon::lastSyncDate()
 	return KPilotSettings::lastSyncTime();
 }
 
+
+static QDict<QString> *conduitNameMap = 0L;
+
+static void fillConduitNameMap()
+{
+	if (!conduitNameMap)
+	{
+		conduitNameMap = new QDict<QString>;
+		// Fill with internal settings.
+		conduitNameMap->insert(CSL1("internal_fileinstall"),new QString(i18n("File Installer")));
+		conduitNameMap->insert(CSL1("internal_kroupware"),new QString(i18n("Kroupware")));
+
+		conduitNameMap->setAutoDelete(true);
+	}
+
+	QStringList l = KPilotSettings::installedConduits();
+
+	QStringList::ConstIterator end = l.end();
+	for (QStringList::ConstIterator i = l.begin(); i != end; ++i)
+	{
+		if (!conduitNameMap->find(*i))
+		{
+			QString readableName = CSL1("<unknown>");
+			KSharedPtr < KService > o = KService::serviceByDesktopName(*i);
+			if (!o)
+			{
+				kdWarning() << k_funcinfo << ": No service for " << *i << endl;
+			}
+			else
+			{
+				readableName = o->name();
+			}
+			conduitNameMap->insert(*i,new QString(readableName));
+		}
+	}
+}
+
+
 QStringList PilotDaemon::configuredConduitList()
 {
-	return KPilotSettings::installedConduits();
+	fillConduitNameMap();
+
+	QStringList keys;
+
+	QDictIterator<QString> it(*conduitNameMap);
+	for ( ; *it; ++it)
+	{
+		keys << it.currentKey();
+	}
+	keys.sort();
+
+	QStringList::ConstIterator end = keys.end();
+	QStringList result;
+	for (QStringList::ConstIterator i = keys.begin(); i != end; ++i)
+	{
+		result << *(conduitNameMap->find(*i));
+	}
+
+	return result;
 }
 
 QString PilotDaemon::logFileName()
