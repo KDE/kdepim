@@ -263,7 +263,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   commandLine += " < ";
   commandLine += KProcess::quote( tmpFile.name() );
 
-  //kdDebug() << commandLine << endl;
+  //kdDebug(5150) << commandLine << endl;
   //system( QCString( "cat " ) + tmpFile.name().latin1() ); // DEBUG
 
   KProcess proc;
@@ -336,7 +336,7 @@ static Kleo::CryptoConfigEntry::ArgType knownArgType( int argType, bool& ok ) {
     return Kleo::CryptoConfigEntry::ArgType_Path;
   case 33: // ldap server
     return Kleo::CryptoConfigEntry::ArgType_URL;
-  default:;
+  default:
     ok = false;
     return Kleo::CryptoConfigEntry::ArgType_None;
   }
@@ -361,13 +361,18 @@ QGpgMECryptoConfigEntry::QGpgMECryptoConfigEntry( const QStringList& parsedLine 
     mArgType = knownArgType( mRealArgType, ok );
   }
   if ( !ok )
-    kdWarning(5150) << "Unsupported datatype: " << parsedLine[4] << " : " << *it << endl;
+    kdWarning(5150) << "Unsupported datatype: " << parsedLine[4] << " : " << *it << " for " << parsedLine[0] << endl;
   ++it; // done with alt-type
   ++it; // skip argname (not useful in GUIs)
 
   mSet = false;
-  QString value = *it++; // get default value
+  QString value;
+  if ( mFlags & GPGCONF_FLAG_DEFAULT )
+    value = *it; // get default value
+  ++it; // done with DEFAULT
   ++it; // ### skip ARGDEF for now. It's only for options with an "optional arg"
+  //kdDebug(5150) << "Entry " << parsedLine[0] << " val=" << *it << endl;
+
   if ( !(*it).isEmpty() ) {  // a real value was set
     mSet = true;
     value = *it;
@@ -401,6 +406,8 @@ QGpgMECryptoConfigEntry::QGpgMECryptoConfigEntry( const QStringList& parsedLine 
         Q_ASSERT( value[0] == '"' ); // see README.gpgconf
         mValue = QVariant( gpgconf_unescape( value.mid( 1 ) ) );
       }
+    } else {
+      mValue = QVariant( gpgconf_unescape( value ) );
     }
   }
   mDirty = false;
@@ -673,7 +680,7 @@ QString QGpgMECryptoConfigEntry::outputString() const
           *it = gpgconf_escape( *it ).prepend( "\"" );
       }
       QString res = lst.join( "," );
-      kdDebug() << res << endl;
+      kdDebug(5150) << res << endl;
       return res;
     } else // normal string
       return gpgconf_escape( mValue.toString() ).prepend( "\"" );

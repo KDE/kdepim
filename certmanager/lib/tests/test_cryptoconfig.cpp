@@ -141,7 +141,7 @@ int main( int argc, char** argv ) {
       cout << "LDAP timeout: " << val << " seconds." << endl;
 
       // Test setting the option directly, then querying again
-      //system( "echo 'ldaptimeout:101' | gpgconf --change-options dirmngr" );
+      //system( "echo 'ldaptimeout:0:101' | gpgconf --change-options dirmngr" );
       // Now let's do it with the C++ API instead
       entry->setUIntValue( 101 );
       assert( entry->isDirty() );
