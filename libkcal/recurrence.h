@@ -41,6 +41,14 @@ class Recurrence
            rWeekly = 0x0004, rMonthlyPos = 0x0005, rMonthlyDay = 0x0006,
            rYearlyMonth = 0x0007, rYearlyDay = 0x0008, rYearlyPos = 0x0009 };
 
+    /** Enumeration for specifying what date yearly recurrences of February 29th occur
+     * in non-leap years. */
+    enum Feb29Type {
+           rMar1,    // recur on March 1st (default)
+           rFeb28,   // recur on February 28th
+           rFeb29    // only recur on February 29th, i.e. don't recur in non-leap years
+    };
+
     /** structure for Recurs rMonthlyPos */
     struct rMonthPos {
       QBitArray rDays;
@@ -247,6 +255,15 @@ class Recurrence
     void setYearly(int type, int freq, int duration);
     /** Sets an event to recur yearly ending at \a endDate. */
     void setYearly(int type, int freq, const QDate &endDate);
+    /** Sets an event to recur yearly on specified dates.
+     * The dates must be specified by calling addYearlyNum().
+     * @var type the way recurrences of February 29th are to be handled in non-leap years.
+     * @var freq the frequency to recur, e.g. 3 for every third year.
+     * @var duration the number of times the event is to occur, or -1 to recur indefinitely.
+     */
+    void setYearlyByDate(Feb29Type type, int freq, int duration);
+    /** Sets an event to recur yearly ending at \a endDate. */
+    void setYearlyByDate(Feb29Type type, int freq, const QDate &endDate);
     /** Adds position of day or month in year.
      * N.B. for recursYearlyPos, addYearlyMonthPos() must also be called
      * to add positions within the month. */
@@ -260,6 +277,12 @@ class Recurrence
     const QPtrList<int> &yearNums() const;
     /** Returns list of day positions in months, for a recursYearlyPos recurrence rule. */
     const QPtrList<rMonthPos> &yearMonthPositions() const;
+    /** Returns how yearly recurrences of February 29th are handled. */
+    Feb29Type feb29YearlyType() const  { return mFeb29YearlyType; }
+    /** Sets the default method for handling yearly recurrences of February 29th. */
+    static void setFeb29YearlyTypeDefault(Feb29Type t)  { mFeb29YearlyDefaultType = t; }
+    /** Returns the default method for handling yearly recurrences of February 29th. */
+    static Feb29Type setFeb29YearlyTypeDefault()  { return mFeb29YearlyDefaultType; }
 
   protected:
     enum PeriodFunc { END_DATE_AND_COUNT, COUNT_TO_DATE, NEXT_AFTER_DATE };
@@ -282,7 +305,7 @@ class Recurrence
 
     void addMonthlyPos_(short _rPos, const QBitArray &_rDays);
     void setDailySub(short type, int freq, int duration);
-    void setYearly_(short type, int freq, int duration);
+    void setYearly_(short type, Feb29Type, int freq, int duration);
     int  recurCalc(PeriodFunc, QDate &enddate) const;
     int  recurCalc(PeriodFunc, QDateTime &endtime) const;
     int  secondlyCalc(PeriodFunc, QDateTime& endtime, int freq) const;
@@ -351,6 +374,8 @@ class Recurrence
     bool mFloats;                        // the recurrence has no time, just a date
     bool mRecurReadOnly;
     int  mRecurExDatesCount;             // number of recurrences (in addition to rDuration) which are excluded
+    Feb29Type mFeb29YearlyType;          // how to handle yearly recurrences of February 29th
+    static Feb29Type mFeb29YearlyDefaultType;  // default value for mFeb29YearlyType
 
     // Backwards compatibility for KDE < 3.1.
     int   mCompatVersion;                // calendar file version for backwards compatibility
