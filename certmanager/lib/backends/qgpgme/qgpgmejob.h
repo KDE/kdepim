@@ -135,6 +135,8 @@ namespace Kleo {
     QGpgME::QByteArrayDataProvider * mOutDataDataProvider;
   private:
     const char* * mPatterns;
+    // holds the entry - if any - in mPattern that was replaced with
+    // NULL to create a temporary end-of-array marker for gpgme:
     const char * mReplacedPattern;
     unsigned int mNumPatterns;
     unsigned int mChunkSize;
