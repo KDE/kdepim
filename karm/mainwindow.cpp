@@ -3,15 +3,9 @@
 * Distributed under the GPL.
 */
 
-
-
 #include <numeric>
 
-#include <qkeycode.h>
-#include <qpopupmenu.h>
-#include <qptrlist.h>
-#include <qstring.h>
-
+#include "kaccelmenuwatch.h"
 #include <dcopclient.h>
 #include <kaccel.h>
 #include <kaction.h>
@@ -24,15 +18,18 @@
 #include <kmessagebox.h>
 #include <kstatusbar.h>         // statusBar()
 #include <kstdaction.h>
+#include <qkeycode.h>
+#include <qpopupmenu.h>
+#include <qptrlist.h>
+#include <qstring.h>
 
-#include "kaccelmenuwatch.h"
 #include "karmutility.h"
 #include "mainwindow.h"
 #include "preferences.h"
 #include "print.h"
-#include "timekard.h"
 #include "task.h"
 #include "taskview.h"
+#include "timekard.h"
 #include "tray.h"
 #include "version.h"
 
@@ -445,9 +442,39 @@ QString MainWindow::version() const
   return KARM_VERSION;
 }
 
-QString MainWindow::setStorage( const QString &storage )
+int MainWindow::hastodo( const QString &taskname ) const
 {
-  return "stubbed";
+  int rval = 0;
+
+  Task* task = _taskView->first_child();
+  while ( !rval && task )
+  {
+    rval = _hastodo( task, taskname );
+    task = task->nextSibling();
+  }
+  
+  return rval;
+}
+
+int MainWindow::_hastodo( Task* task, const QString &taskname ) const
+{
+  int rval = 0;
+
+  if ( task->name() == taskname ) 
+  {
+    rval = 1;
+  }
+  else
+  {
+    Task* nexttask = task->firstChild();
+    while ( !rval && nexttask )
+    {
+      rval = _hastodo( nexttask, taskname );
+      nexttask = nexttask->nextSibling();
+    }
+  }
+
+  return rval;
 }
 
 #include "mainwindow.moc"

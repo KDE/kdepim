@@ -31,7 +31,7 @@ class KarmDCOPIface : virtual public DCOPObject
   /** Return karm version. */
   virtual QString version() const = 0;
 
-  virtual QString setStorage( const QString& storage ) = 0;
+  virtual int hastodo( const QString& taskname ) const = 0;
 };
 
 #endif // KARM_DCOP_IFAC_H

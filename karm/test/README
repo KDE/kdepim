@@ -1,20 +1,55 @@
-runscripts.cpp
+This directory holds automated tests for karm.
+
+WARNING: The framework is not complete, and there are some major issues:
+
+  (1) The tests require KDE to be running in English.
+
+      The automated XTests use shortcut keys to drive the app.  These key
+      combinations are language specific.
+
+  (2) The tests require that you "make install" first.
+
+      The XAutomation tests and tests that use DCOP run karm from the bash
+      prompt.
+
+  (3) The tests are destructive.
+
+      If you have an already running instance of karm, the tests will kill
+      that instance.  So you cannot, for example, record time spent running
+      karm automated tests.
+
+      The tests are smart enough to use test iCalendar files.  But they will
+      alter the karm storage settings for the ics file name.
+
+  (4) The runscripts program does not kill scripts that never return.
+  
+      You have to monitor the progress and press Control-C if you think a
+      script is hung.
+
+  (5) No attempt is made to check for install script interpreters.
+
+      In addition to required interpreters (Python 2.2, for example), the bash
+      scripts use xte, which on Debian is in the xautomation package.
+
+      If a required library is not found, runscripts will consider this a
+      script failure and stop.
+
+  (6) I have only tested this with Bash on GNU/Linux.
+
+
+Some notes on how runscripts.cpp works:
 
   Parses this directory for script files (Python, Perl and Bash).  It
   identifies a script file by the extension.
   
-  To add a new test, save the script file here and then run "make check."
-  
   It runs any script files it finds.  Within each script type, it runs the
-  scripts in alphabetical order.
+  scripts in alphabetical order.  However, scripts that start with a double
+  underscore are skipped.
 
-  If any script fails, then the program stops.
+  When a script fails runscripts stops.
 
   Script files should return a non-zero exit code to indicate a failure.
 
-  NOTE: runscripts does not kill scripts that never return.  You have to 
-  press Control-C to terminate the "make check" command.
-
-  NOTE: No attempt is made to check if Python, Perl or xautomation are
-  installed.  I expect the make check will just fail, but it has not been
-  tested.
+--
+Mark Bucciarelli <mark@hubcapconsulting.com>
+December 5, 2004

@@ -4,18 +4,18 @@
 #include <kmainwindow.h>
 #include <karmdcopiface.h>
 
+class KAccel;
+class KAccelMenuWatch;
+class KDialogBase;
+class KarmTray;
 class QListViewItem;
 class QPoint;
 class QString;
 
-class KAccel;
-class KDialogBase;
-
-class KAccelMenuWatch;
-class KarmTray;
 class Preferences;
-class TaskView;
 class PrintDialog;
+class Task;
+class TaskView;
 
 /**
  * Main window to tie the application together.
@@ -40,8 +40,7 @@ class MainWindow : public KMainWindow, virtual public KarmDCOPIface
 
     // DCOP
     QString version() const;
-    QString setStorage( const QString & storage);
-
+    int hastodo( const QString &storage ) const;
 
   protected slots:
     void keyBindings();
@@ -69,6 +68,7 @@ class MainWindow : public KMainWindow, virtual public KarmDCOPIface
 
   private:
     void makeMenus();
+    int _hastodo( Task* task, const QString &taskname ) const;
 
     KDialogBase *dialog;
     KAction* actionStart;
