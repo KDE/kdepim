@@ -495,19 +495,25 @@ void ViewManager::initActions()
   connect( mActionSelectView, SIGNAL( activated( const QString& ) ),
            SLOT( setActiveView( const QString& ) ) );
 
-  new KAction( i18n( "Modify View..." ), "configure", 0, this,
-               SLOT( editView() ), mCore->actionCollection(), "view_modify" );
+  KAction *action;
 
-  new KAction( i18n( "Add View..." ), "window_new", 0, this,
+  action = new KAction( i18n( "Modify View..." ), "configure", 0, this,
+               SLOT( editView() ), mCore->actionCollection(), "view_modify" );
+  action->setWhatsThis( i18n( "By pressing this button a dialog opens that allows you to modify the view of the addressbook. There you can add or remove fields that you want to be shown or hidden in the addressbook like the name for example." ) );
+
+  action = new KAction( i18n( "Add View..." ), "window_new", 0, this,
                SLOT( addView() ), mCore->actionCollection(), "view_add" );
+  action->setWhatsThis( i18n( "You can add a new view by choosing one of the dialog that appears after pressing the button. You have to give the view a name, so that you can distinguish between the different views." ) );
 
   mActionDeleteView = new KAction( i18n( "Delete View" ), "view_remove", 0,
                                    this, SLOT( deleteView() ),
                                    mCore->actionCollection(), "view_delete" );
+  mActionDeleteView->setWhatsThis( i18n( "By pressing this button you can delete the actual view, which you have added before." ) );
 
-  new KAction( i18n( "Refresh View" ), "reload", 0, this,
+  action = new KAction( i18n( "Refresh View" ), "reload", 0, this,
                SLOT( refreshView() ), mCore->actionCollection(),
                "view_refresh" );
+  action->setWhatsThis( i18n( "The view will be refreshed by pressing this button." ) );
 
   new KAction( i18n( "Edit &Filters..." ), "filter", 0, this,
                SLOT( configureFilters() ), mCore->actionCollection(),
