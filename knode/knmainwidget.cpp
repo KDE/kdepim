@@ -176,7 +176,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
 
   vlay->addWidget(tb);
   vlay->addWidget(h_drView);
-  
+
 
   h_drView->setAcceptDrops(false);
   h_drView->setDragEnabled(true);
@@ -1847,8 +1847,8 @@ void KNMainWidget::slotFolDelete()
   if(f_olManager->currentFolder()->isStandardFolder())
     KMessageBox::sorry(knGlobals.topWidget, i18n("You cannot delete a standard folder."));
 
-  else if( KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget,
-      i18n("Do you really want to delete this folder and all its children?")) ) {
+  else if( KMessageBox::Yes==KMessageBox::warningContinueCancel(knGlobals.topWidget,
+      i18n("Do you really want to delete this folder and all its children?"),"",KGuiItem(i18n("&Delete"),"editdelete")) ) {
 
     if(!f_olManager->deleteFolder(f_olManager->currentFolder()))
       KMessageBox::sorry(knGlobals.topWidget,
@@ -1898,8 +1898,8 @@ void KNMainWidget::slotFolEmpty()
       i18n("This folder cannot be emptied at the moment\nbecause some of its articles are currently in use.") );
       return;
     }
-    if( KMessageBox::Yes == KMessageBox::questionYesNo(
-        this, i18n("Do you really want to delete all articles in %1?").arg(f_olManager->currentFolder()->name())) )
+    if( KMessageBox::Yes == KMessageBox::warningContinueCancel(
+        this, i18n("Do you really want to delete all articles in %1?").arg(f_olManager->currentFolder()->name()),"",KGuiItem(i18n("&Delete"),"editdelete")) )
       f_olManager->emptyFolder(f_olManager->currentFolder());
   }
 }

@@ -44,7 +44,7 @@
 #include <kstandarddirs.h>
 #include <kactivelabel.h>
 #include <kdirwatch.h>
-#include <kfiledialog.h> 
+#include <kfiledialog.h>
 #include <kmessagebox.h>
 #include <kio/netaccess.h>
 
@@ -93,7 +93,7 @@ class PageItem : public QCheckListItem
           if ( allowedTypes.find( it.current()->className() ) != allowedTypes.end() ) {
             QString name = it.current()->name();
             if ( name.startsWith( "X_" ) ) {
-              new QListViewItem( this, name, 
+              new QListViewItem( this, name,
                                  allowedTypes[ it.current()->className() ],
                                  it.current()->className(),
                                  QWhatsThis::textFor( static_cast<QWidget*>( it.current() ) ) );
@@ -147,14 +147,14 @@ KCMKabCustomFields::KCMKabCustomFields( QWidget *parent, const char *name )
   connect( mImportButton, SIGNAL( clicked() ),
            this, SLOT( importFile() ) );
   connect( mDesignerButton, SIGNAL( clicked() ),
-           this, SLOT( startDesigner() ) );         
-           
+           this, SLOT( startDesigner() ) );
+
   load();
-    
+
   // Install a dirwatcher that will detect newly created or removed designer files
   KDirWatch *dw = new KDirWatch( this );
   dw->addDir( kabLocalDir() + "contacteditorpages", true );
-  connect( dw, SIGNAL( created(const QString&) ), SLOT( rebuildList() ) );  
+  connect( dw, SIGNAL( created(const QString&) ), SLOT( rebuildList() ) );
   connect( dw, SIGNAL( deleted(const QString&) ), SLOT( rebuildList() ) );
   connect( dw, SIGNAL( dirty(const QString&) ),   SLOT( rebuildList() ) );
 
@@ -165,8 +165,8 @@ void KCMKabCustomFields::deleteFile()
   QListViewItem *item = mPageView->selectedItem();
   if ( item ) {
     PageItem *pageItem = static_cast<PageItem*>( item->parent() ? item->parent() : item );
-    if (KMessageBox::questionYesNo(this, 
-         i18n( "<qt>Do you really want to delete '<b>%1</b>'?</qt>").arg( pageItem->text(0) ) ) 
+    if (KMessageBox::warningContinueCancel(this,
+         i18n( "<qt>Do you really want to delete '<b>%1</b>'?</qt>").arg( pageItem->text(0) ), "", KGuiItem( i18n("&Delete"), "editdelete") )
          == KMessageBox::Yes)
       KIO::NetAccess::del( pageItem->path(), 0 );
   }
@@ -175,7 +175,7 @@ void KCMKabCustomFields::deleteFile()
 
 void KCMKabCustomFields::importFile()
 {
-  KURL src = KFileDialog::getOpenFileName( QDir::homeDirPath(), i18n("*.ui|Designer files"), 
+  KURL src = KFileDialog::getOpenFileName( QDir::homeDirPath(), i18n("*.ui|Designer files"),
                                               this, i18n("Import Page") );
   KURL dest = kabLocalDir() + "contacteditorpages/";
   dest.setFileName(src.fileName());
@@ -214,7 +214,7 @@ void KCMKabCustomFields::loadActivePages(const QStringList& ai)
     }
 
     ++it;
-  }  
+  }
 }
 
 void KCMKabCustomFields::load()
@@ -257,7 +257,7 @@ void KCMKabCustomFields::initGUI()
 
   bool noDesigner = KStandardDirs::findExe("designer").isEmpty();
 
-  if ( noDesigner ) 
+  if ( noDesigner )
   {
     QString txt =
       i18n("<qt><b>Warning:</b> Qt Designer could not be found. It is probably not "
@@ -382,14 +382,14 @@ QString KCMKabCustomFields::kabLocalDir()
 void KCMKabCustomFields::startDesigner()
 {
   QString cmdLine = "designer";
-  
+
   // check if path exists and create one if not.
   QString cepPath = kabLocalDir() +"contacteditorpages";
   if( !KGlobal::dirs()->exists(cepPath) ) {
     KIO::NetAccess::mkdir( cepPath, this );
   }
-   
-  // finnally jump there 
+
+  // finnally jump there
   chdir(cepPath.local8Bit());
 
   QListViewItem *item = mPageView->selectedItem();

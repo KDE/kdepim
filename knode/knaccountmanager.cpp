@@ -153,7 +153,7 @@ bool KNAccountManager::removeAccount(KNNntpAccount *a)
   if(knGlobals.folderManager()->unsentForAccount(a->id()) > 0) {
     KMessageBox::sorry(knGlobals.topWidget, i18n("This account cannot be deleted since there are some unsent messages for it."));
   }
-  else if(KMessageBox::questionYesNo(knGlobals.topWidget, i18n("Do you really want to delete this account?"))==KMessageBox::Yes) {
+  else if(KMessageBox::warningContinueCancel(knGlobals.topWidget, i18n("Do you really want to delete this account?"),"",KGuiItem(i18n("&Delete"),"editdelete"))==KMessageBox::Yes) {
     lst=new QPtrList<KNGroup>;
     lst->setAutoDelete(false);
     gManager->getGroupsOfAccount(a, lst);

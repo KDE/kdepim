@@ -102,7 +102,7 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
   topL->addWidget(l, 4,0);
   topL->addMultiCellWidget(m_ailCopiesTo, 4,4, 1,2);
   m_ailCopiesTo->setText(d_ata->m_ailCopiesTo);
-  
+
   s_igningKey = new Kpgp::SecretKeyRequester(this);
   s_igningKey->dialogButton()->setText(i18n("Chan&ge..."));
   s_igningKey->setDialogCaption(i18n("Your OpenPGP Key"));
@@ -140,7 +140,7 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
 	"<p>Ex: <b>/home/robt/.sig</b>.</p></qt>" );
   QWhatsThis::add( f_ileName, msg );
   QWhatsThis::add( s_ig, msg );
-  
+
   c_hooseBtn = new QPushButton( i18n("Choo&se..."), this);
   connect(c_hooseBtn, SIGNAL(clicked()),
           this, SLOT(slotSignatureChoose()));
@@ -1372,7 +1372,7 @@ void KNConfig::DisplayedHeadersWidget::slotDelBtnClicked()
   if(l_box->currentItem()==-1)
     return;
 
-  if(KMessageBox::questionYesNo(this, i18n("Really delete this header?"))==KMessageBox::Yes) {
+  if(KMessageBox::warningContinueCancel(this, i18n("Really delete this header?"),"",KGuiItem(i18n("&Delete"),"editdelete"))==KMessageBox::Yes) {
     KNDisplayedHeader *h = (static_cast<HdrItem*>(l_box->item(l_box->currentItem())))->hdr;
     d_ata->remove(h);
     l_box->removeItem(l_box->currentItem());

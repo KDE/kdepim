@@ -293,7 +293,7 @@ void ViewManager::deleteView()
                      .arg( mActiveView->caption() );
   QString caption = i18n( "Confirm Delete" );
 
-  if ( KMessageBox::questionYesNo( this, text, caption ) == KMessageBox::Yes ) {
+  if ( KMessageBox::warningContinueCancel( this, text, caption, KGuiItem( i18n("&Delete"), "editdelete") ) == KMessageBox::Yes ) {
     mViewNameList.remove( mActiveView->caption() );
 
     // remove the view from the config file

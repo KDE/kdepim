@@ -288,7 +288,7 @@ void EmailEditDialog::remove()
   QString text = i18n( "<qt>Are you sure that you want to remove the email address <b>%1</b>?</qt>" ).arg( address );
   QString caption = i18n( "Confirm Remove" );
 
-  if ( KMessageBox::questionYesNo( this, text, caption ) == KMessageBox::Yes ) {
+  if ( KMessageBox::warningContinueCancel( this, text, caption, KGuiItem( i18n("&Delete"), "editdelete") ) == KMessageBox::Yes ) {
     EmailItem *item = static_cast<EmailItem*>( mEmailListBox->item( mEmailListBox->currentItem() ) );
 
     bool preferred = item->preferred();
