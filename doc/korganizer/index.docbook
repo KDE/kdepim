@@ -5,6 +5,7 @@
   <!ENTITY package "kdepim">
   <!ENTITY exchange-plugin-workshop SYSTEM "exchange-plugin.docbook">
   <!ENTITY group-scheduling-workshop SYSTEM "group-scheduling.docbook">
+  <!ENTITY outlook-to-vcalendar-workshop SYSTEM "outlook-to-vcalendar.docbook">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
 ]>
@@ -1022,7 +1023,7 @@ field.</para>
 
 <tip><para>For instance your language lesson at work belongs to both Business
 and Education categories, while the anniversary of your marriage belongs to
-either Personal or Special Occasion - it's your choice.</para></tip>
+either Personal or Special Occasion - it is your choice.</para></tip>
 
 </sect2>
 
@@ -1800,7 +1801,7 @@ Edit</guimenu> <guimenuitem>Find</guimenuitem>
 </menuchoice></term>
 <listitem><para>Choose <guimenuitem>Find</guimenuitem> from the
 <guimenu>Edit</guimenu> or click the <guiicon>Find</guiicon> icon to
-<action>find an event according to it's summary description</action>. The Find
+<action>find an event according to its summary description</action>. The Find
 will only search in the summary field.</para>
 <tip><para>You can use wildcards if you do not remember the exact summary. If
 you don't know single character of the summary, put <userinput>?</userinput>
@@ -2080,7 +2081,7 @@ immediately.</para></listitem>
 <guimenuitem>Mail Event</guimenuitem>
 </menuchoice></term>
 <listitem><para>Choose <guilabel>Mail Event</guilabel> to <action>mail the
-currently selected event to it's attendees.</action></para></listitem>
+currently selected event to its attendees</action>.</para></listitem>
 </varlistentry>
 
 </variablelist>
@@ -2610,7 +2611,7 @@ linkend="file-import-ical">Import From Ical section</link>.</para>
 <application>Outlook</application>?</para> 
 </question>
 <answer><para>Yes you can, but you must first tell
-<application>Outlook</application> to export it's data to vCalendar format. Then
+<application>Outlook</application> to export its data to vCalendar format. Then
 you must copy this data to your home directory, click
 <menuchoice><guimenu>File</guimenu> <guimenuitem>Open</guimenuitem>
 </menuchoice>, navigate to the file and double-click it.</para>
@@ -2649,6 +2650,7 @@ the next releases.</para>
 
 &exchange-plugin-workshop;
 &group-scheduling-workshop;
+&outlook-to-vcalendar-workshop;
 
 <chapter id="credits">
 <title>Credits and License</title>

@@ -50,7 +50,7 @@ Plugin</quote> was released on November 3, 2002. See the
 
 <para>
 The &korganizer; Exchange plugin allows you to access your calendar on an
-Microsoft Exchange&reg; server from &korganizer;. You can import the
+&Microsoft; Exchange&reg; server from &korganizer;. You can import the
 appointments in a certain date range into your &korganizer; calendar,
 you can export appointments (one at a time) from your &korganizer; calendar
 to the Exchange server&reg; and you can delete appointments (also one at
@@ -65,7 +65,7 @@ to access the Exchange server&reg;.
 
 <itemizedlist>
 <listitem><para>&korganizer; version 3.1 beta2 or later</para></listitem>
-<listitem><para>Microsoft Exchange Server 2000&reg;</para></listitem>
+<listitem><para>&Microsoft; Exchange Server 2000&reg;</para></listitem>
 <listitem><para>On the Exchange Server&reg;, Outlook Web Access needs to be enabled,
 since this also enables the WebDAV protocol</para></listitem>
 </itemizedlist>
@@ -88,7 +88,7 @@ from &korganizer;. You should see this dialog appear:
 </mediaobject>
 
 <para>
-In this dialog, enable the <guilabel>Microsoft Exchange 2000 plugin
+In this dialog, enable the <guilabel>&Microsoft; Exchange 2000 plugin
 for &korganizer;</guilabel> and click <guibutton>OK</guibutton>. This
 should enable a new <guimenu>Exchange</guimenu> menu in &korganizer;,
 as in the following screenshot:
@@ -208,7 +208,7 @@ and from the &korganizer; calendar.
 <para>
 If you find problems with the Exchange Plugin, please report them to the
 <ulink url="mailto:kde-pim@mail.kde.org">kde-pim mailing list</ulink> or
-to the KDE bug repository at <email>bugs.kde.org</email>.
+to the &kde; bug repository at <email>bugs.kde.org</email>.
 </para>
 
 <para>

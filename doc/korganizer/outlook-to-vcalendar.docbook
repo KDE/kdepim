@@ -1,0 +1,254 @@
+<chapter id="outlook-to-vcalendar-ws">
+
+<chapterinfo>
+<authorgroup>
+
+<author>
+<firstname>Randy</firstname> <surname>Pearson</surname>
+<affiliation><address><email>blueboy@bamafolks.com</email></address></affiliation>
+<contrib>Original author</contrib>
+</author>
+
+<author>
+<firstname>Klaus</firstname> <surname>St&auml;rk</surname>
+<affiliation><address><email>staerk@kde.org</email></address></affiliation>
+<contrib>Additionals texts</contrib>
+</author>
+
+<othercredit role="reviewer">
+<firstname>Eric</firstname> <surname>Bischoff</surname>
+<affiliation><address><email>e.bischoff@noos.fr</email></address></affiliation>
+<contrib>Editor</contrib>
+</othercredit>
+
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+
+</authorgroup>
+
+<abstract>
+<para>This version of the &korganizer; workshop <quote>Outlook
+to vCalendar</quote> was released on October 17, 2002. See the
+<filename>ChangeLog</filename> for details.</para>
+</abstract>
+
+<keywordset>
+<keyword>kdepim</keyword>
+<keyword>KOrganizer</keyword>
+<keyword>KOrganizer workshop</keyword>
+<keyword>Outlook</keyword>
+<keyword>vCalendar</keyword>
+<keyword>Outlook2VCal</keyword>
+</keywordset>
+
+<date>2002-10-17</date>
+<releaseinfo>3.1</releaseinfo>
+</chapterinfo>
+
+<title>KOrganizer workshop: Outlook to vCalendar</title>
+
+<sect1 id="outlook-to-vcalendar-overview">
+<title>Overview</title>
+
+<para>
+When moving from &Microsoft; Outlook&reg; to using &kde;'s &korganizer;
+to manage schedules and appointments, you will probably wish to
+export your scheduling data from Outlook&reg; and import it into
+&korganizer;. &Microsoft;'s Outlook&reg; program does provide an export
+option that can save an appointment to the industry standard vCalendar
+format.
+</para>
+
+<para>
+Unfortunately, Outlook&reg; will only export the appointment you have
+selected, one at a time. This is fine if you only wish to transfer a
+few appointments, but transferring the 200-300 appointments you may
+have in your Outlook&reg; folder would not be much fun. Therefore,
+<ulink url="mailto:blueboy@bamafolks.com">Randy Pearson</ulink> created
+a small application named <application>Outlook2VCal</application> that
+can scan and export all the appointments to a vCalendar file at one time.
+</para>
+
+</sect1>
+
+<sect1 id="outlook-to-vcalendar-installation">
+<title>Installation</title>
+
+<para>
+The <application>Outlook2VCal</application> program is <ulink
+url="http://korganizer.kde.org/importdata.html">delivered as a compress
+ZIP file</ulink>, which contains a <application>SETUP.EXE</application>
+application. Merely extract the files using your favorite utility,
+such as <ulink url="http://www.winzip.com">WinZip</ulink> and run the
+<application>SETUP.EXE</application> program to install the program
+on your Windows computer. This should be the same computer where you
+normally run &Microsoft; Outlook 2000&reg;.
+</para>
+
+<para>
+Depending on how up to date your system is, you may or may not be prompted
+to reboot during the installation.
+</para>
+
+</sect1>
+
+<sect1 id="outlook-to-vcalendar-export">
+<title>Export Usage</title>
+
+<para>
+After the program is installed, you can run it
+by accessing <menuchoice><guimenu>Start</guimenu>
+<guisubmenu>Programs</guisubmenu> <guisubmenu>Outlook2vCal</guisubmenu>
+<guimenuitem>Outlook2vCal</guimenuitem></menuchoice>. You should see
+this screen appear:
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="o2v_main.png" format="PNG"/></imageobject>
+<textobject><para><application>Outlook2VCal main window</application></para></textobject>
+</mediaobject>
+
+<para>
+The program automatically attempts to communicate with Outlook&reg;
+using OLE Automation. If an error is reported, this probably means you
+do not have Outlook&reg; installed.
+</para>
+
+<para>
+You should first decide if you want to include information about holidays
+in the exported file or not. Normally you will probably not wish to
+do this, so the <guilabel>Skip Holidays</guilabel> box is checked by
+default. Next, click the <guibutton>Export</guibutton> button, which will
+display a standard <guilabel>File Save</guilabel> dialog box. Browse to
+the desired directory and enter the filename where you wish to create
+the new vCalendar data file.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="o2v_save.png" format="PNG"/></imageobject>
+<textobject><para><application>Save file dialog</application></para></textobject>
+</mediaobject>
+
+<para>
+Depending on the security settings in Outlook&reg;, you may see this
+screen next. If so, be sure to allow access for a minute or two.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="o2v_warning.png" format="PNG"/></imageobject>
+<textobject><para><application>Warning message</application></para></textobject>
+</mediaobject>
+
+<para>
+The program will display progress messages in its main window as it
+loads, converts and saves your appointments. Here is a final shot of
+what a successful run looks like:
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="o2v_progress.png" format="PNG"/></imageobject>
+<textobject><para><application>Progress message</application></para></textobject>
+</mediaobject>
+
+</sect1>
+
+<sect1 id="outlook-to-vcalendar-import">
+<title>Import Usage</title>
+
+<para>
+Now that you have exported Outlook's&reg; appointments, the final step is
+to load the appointments into &korganizer;. Transfer the file over to the
+computer running &korganizer; (via network, floppy disk, whatever). Now,
+run &korganizer;. If desired, you can create a new calendar, or open an
+existing one.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="o2v_importing1.png" format="PNG"/></imageobject>
+<textobject><para><application>Importing data #1</application></para></textobject>
+</mediaobject>
+
+<para>
+Now, select <menuchoice><guimenu>File</guimenu> <guimenuitem>Merge
+Calendar</guimenuitem></menuchoice> from the menu. Browse and/or enter
+the name of the vCalendar file you just transferred to this computer.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="o2v_importing2.png" format="PNG"/></imageobject>
+<textobject><para><application>Importing data #2</application></para></textobject>
+</mediaobject>
+
+<para>
+After you select the <guibutton>OK</guibutton> button, &korganizer;
+will load the appointments from the file and update its calendar.
+</para>
+
+<mediaobject>
+<imageobject><imagedata fileref="o2v_importing3.png" format="PNG"/></imageobject>
+<textobject><para><application>Importing data #3</application></para></textobject>
+</mediaobject>
+
+<para>
+Save your modified calendar and enjoy using &korganizer;!
+</para>
+
+</sect1>
+
+<sect1 id="outlook-to-vcalendar-limitations">
+<title>Limitations</title>
+
+<para>
+This program was tested on &Microsoft; Windows 2000 Server&reg; and
+Professional&reg; running &Microsoft; Outlook 2000&reg;. When attempting
+to use &Microsoft; Outlook 97&reg;, the program will fail miserably.
+</para>
+
+<para>
+After a debugging session, it appears that &Microsoft; Outlook 97&reg;
+does not export appointments correctly via OLE Automation, even though
+the documentation states that it will. Instead of providing complete
+information about an appointment, Outlook 97&reg; only provided the
+subject however. It did not include start and stop times or any details,
+therefore this program will probably only work if you have Outlook
+2000&reg;.
+</para>
+
+<para>
+If anyone has a work around for this problem, feel free to send a note to
+Randy Pearson (<email>blueboy@bamafolks.com</email>).
+</para>
+
+</sect1>
+
+<sect1 id="outlook-to-vcalendar-credits">
+<title>Credits and license</title>
+
+<para>Contributors:</para>
+
+<variablelist>
+<varlistentry>
+<term>Original author</term>
+<listitem><para>Randy Pearson
+  <email>blueboy@bamafolks.com</email></para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Additionals texts</term>
+<listitem><para>Klaus St&auml;rk
+  <email>staerk@kde.org</email></para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Conversion to DocBook</term>
+<listitem><para>Eric Bischoff
+  <email>e.bischoff@noos.fr</email></para></listitem>
+</varlistentry>
+</variablelist>
+
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
+
+&underFDL;
+
+</sect1>
+
+</chapter>
