@@ -16,6 +16,12 @@ If you want to change the configuration options, look at Preferences. If you wan
 look at Task. Look at \ref sig_slot_index for information on the signals and slots used in the program which may be useful
 in understanding the overall flow of the program. See \ref connections to get an index of what signal is connected to which slot.
 
+\section related Related Pages and Design Documents
+
+\ref sig_slot_index
+\ref connections
+\ref integration
+
 */
 
 /** \page sig_slot_index Index of Signals and Slots

@@ -307,7 +307,7 @@ void Karm::newTask()
 
 void Karm::newTask(QString caption, QListViewItem *parent)
 {
-  AddTaskDialog *dialog = new AddTaskDialog(caption, false, true);
+  AddTaskDialog *dialog = new AddTaskDialog(caption, false);
   int result = dialog->exec();
 
   if (result == QDialog::Accepted) {
@@ -337,8 +337,6 @@ void Karm::newSubTask()
   Task *item = static_cast<Task*>( currentItem() );
   if(!item)
     return;
-  item->setSessionTime( 0 );
-  item->setTotalTime( 0 );
   newTask(i18n("New Sub Task"), item);
   // newTask will emit( sessionTimeChanged() ).
   item->setOpen(true);
@@ -351,8 +349,7 @@ void Karm::editTask()
   if (!task)
   return;
 
-  bool leafTask = task->childCount() == 0;
-  AddTaskDialog *dialog = new AddTaskDialog(i18n("Edit Task"), true, leafTask);
+  AddTaskDialog *dialog = new AddTaskDialog(i18n("Edit Task"), true);
   dialog->setTask(task->name(),
                   task->totalTime(),
                   task->sessionTime());

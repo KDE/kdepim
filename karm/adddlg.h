@@ -38,7 +38,7 @@ class AddTaskDialog : public KDialogBase
   Q_OBJECT
 
   public:
-    AddTaskDialog(QString caption, bool editDlg, bool leafTask);
+    AddTaskDialog(QString caption, bool editDlg);
     void setTask(const QString &name, long time, long sessionTime );
     QString taskName( void ) const;
 	  void status( long *total, long *totalDiff, long *session, long *sessionDiff ) const;
@@ -63,7 +63,6 @@ class AddTaskDialog : public KDialogBase
 
   	QLabel* _totalLA;
 	  QLabel* _sessionLA;
-  bool _nameOnly;
 };
 
 

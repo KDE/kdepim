@@ -41,10 +41,9 @@
 #include <qpushbutton.h>
 
 
-AddTaskDialog::AddTaskDialog(QString caption, bool editDlg, bool leafTask)
+AddTaskDialog::AddTaskDialog(QString caption, bool editDlg)
   :KDialogBase(0, "AddTaskDialog", true, caption, Ok|Cancel, Ok, true ),
-  origTotal( 0 ), origSession( 0 ),
-  _nameOnly( editDlg && !leafTask )
+  origTotal( 0 ), origSession( 0 )
 {
   QWidget *page = new QWidget( this ); 
   setMainWidget(page);
@@ -66,10 +65,6 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg, bool leafTask)
   lay2->addWidget( _name );
   label->setBuddy( _name );
 
-  _name->setFocus();
-
-  if ( _nameOnly )
-      return;
 
 	// The "Edit Absolut" radio button
 	lay1->addSpacing(10);lay1->addStretch(1);	
@@ -210,14 +205,10 @@ void AddTaskDialog::setTask( const QString &name, long total, long session )
 {
   _name->setText( name );
 	
-	origTotal = total;
-	origSession = session;
-
-  if ( _nameOnly )
-      return;
-
 	_totalTW->setTime( total / 60, total % 60 );
 	_sessionTW->setTime( session / 60, session % 60 );
+	origTotal = total;
+	origSession = session;
 }
 
 
@@ -229,14 +220,6 @@ QString AddTaskDialog::taskName( void ) const
 
 void AddTaskDialog::status( long *total, long *totalDiff, long *session, long *sessionDiff ) const
 { 
-    if ( _nameOnly ) {
-        *total = origTotal;
-        *totalDiff = 0;
-        *session = origSession;
-        *sessionDiff = 0;
-        return;
-    }
-
 	if ( _absoluteRB->isChecked() ) {
 		*total = _totalTW->time();
 		*session = _sessionTW->time();

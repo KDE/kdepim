@@ -93,19 +93,11 @@ KarmWindow::KarmWindow()
 
 void KarmWindow::slotSelectionChanged()
 {
-    Task* item= static_cast<Task *>( _karm->currentItem() );
-    if ( !item ) {
-        return;
-    }
-
-    if ( item->childCount() == 0 ) {
-        actionStart->setEnabled( !item->isRunning() );
-        actionStop->setEnabled( item->isRunning() );
-    }
-    else {
-        actionStart->setEnabled( false );
-        actionStop->setEnabled( false );
-    }
+  Task* item= static_cast<Task *>(_karm->currentItem());
+  actionDelete->setEnabled(item);
+  actionEdit->setEnabled(item);
+  actionStart->setEnabled(item && !item->isRunning());
+  actionStop->setEnabled(item && item->isRunning());
 }
 
 void KarmWindow::save()
