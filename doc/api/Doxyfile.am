@@ -132,11 +132,12 @@ apidox-am-toplevel-yes:
 
 
 apidox-am-tree:
-	if test -n '$(SUBDIRS)' ; then \
+	@if test -n '$(SUBDIRS)' ; then \
 		list='$(SUBDIRS)' ; \
 		for subdir in $$list ; do \
 			if test "x$$subdir" != "x."; then \
 				if grep '^include .*Doxyfile.am' $(srcdir)/$$subdir/Makefile.am > /dev/null ; then \
+					echo "Making apidox index in $$subdir"; \
 					echo "<li><!-- $(PARENT)/$$subdir -->$(PARENTINDENT)<a href=\"@topdir@$(PARENT)/$$subdir/html\">$$subdir</a></li>" >> $(top_builddir)/apidocs/subdirs ; \
 					(cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) apidox-am-tree PARENT="$(PARENT)/$$subdir" PARENTINDENT='\&nbsp;\&nbsp;$(PARENTINDENT)' ) || exit 1; \
 				fi ; \
@@ -144,7 +145,7 @@ apidox-am-tree:
 		done ; \
 	fi
 
-.PHONY: apidox-am-yes apidox-am-no install-data-local install-apidox install-apidox uninstall-local uninstall-apidox uninstall-apidox apidox apidox-am-toplevel-no apidox-am-toplevel-yes
+.PHONY: apidox-am-yes apidox-am-no install-data-local install-apidox install-apidox uninstall-local uninstall-apidox uninstall-apidox apidox apidox-am-toplevel-no apidox-am-toplevel-yes apidox-am-tree
 
 
 # Local Variables:
