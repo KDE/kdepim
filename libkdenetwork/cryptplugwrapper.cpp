@@ -1540,8 +1540,11 @@ CryptPlugWrapper::CertificateInfoList CryptPlugWrapper::listKeys( const QString&
 	     CertIterator* (*p_func)( const char*, int  )
 		  = (CertIterator* (*)( const char*, int  ))
 		  dlsym(_libPtr, "startListCertificates");
-	     if ( ! wasDLError( "startListCertificates" ) )
+	     if ( ! wasDLError( "startListCertificates" ) ) {
 		  it = (*p_func)( pattern.utf8().data(), remote );
+                  if( !it )
+                      return result;
+             }
 	     else return result;
 	}
 
