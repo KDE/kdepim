@@ -1,3 +1,34 @@
+KPilot Developer's notes for may 7th 2001
+=========================================
+
+It's been great to receive patches from all over the place in the
+past two weeks. What has been fixed is listed below; I have the nasty
+feeling that one set of patches has slipped through the cracks. If
+you've sent me a patch in the past two weeks and don't find yourself
+listed here, please let me know.
+
+2001-04-27  Adriaan de Groot <adridg@cs.kun.nl>
+
+* I actually worked on the docs. Stephan Kulow's meinproc 
+  HTMLizer was wonderfully useful here. The docs aren't 
+  completely up-to-date yet, but they're moving.
+
+2001-04-28  Martin Junius  <mj@m-j-s.net>
+
+* kpilot/kpilot.cc 
+  (initMenu): use KToggleAction and setExclusiveGroup for view menu.
+  (addComponentPage): same here for the other components.
+  (initMenu): setChecked for view_kpilot action.
+
+2001-05-07  Philipp Hullmann
+
+* conduits/vcalconduit/todo-conduit.cc 
+  (): fixed missing due-date bugs
+
+
+
+
+
 KPilot Developer's notes for april 26th 2001
 ============================================
 
