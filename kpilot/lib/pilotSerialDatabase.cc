@@ -35,11 +35,13 @@
 #include <pi-dlp.h>
 
 #include <qfile.h>
+#include <qtextcodec.h>
 
 #include <klocale.h>
 #include <kdebug.h>
 #include <kglobal.h>
 
+#include "pilotAppCategory.h"
 #include "pilotSerialDatabase.h"
 
 static const char *pilotSerialDatabase_id =
@@ -405,7 +407,7 @@ bool PilotSerialDatabase::createDatabase(long creator, long type, int cardno, in
 	// The latin1 seems ok, database names are latin1.
 	int res=dlp_CreateDB(fDBSocket,
 		creator, type, cardno, flags, version,
-		getDBName().latin1(), &db);
+		PilotAppCategory::codec()->fromUnicode(getDBName()), &db);
 	if (res<0) {
 		kdError() <<k_funcinfo
 			<< i18n("Cannot create database %1 on the handheld").arg(getDBName())<<endl;
@@ -432,7 +434,7 @@ int PilotSerialDatabase::deleteDatabase()
 
 	if (isDBOpen()) closeDatabase();
 
-	return dlp_DeleteDB(fDBSocket, 0, fDBName.latin1());
+	return dlp_DeleteDB(fDBSocket, 0, PilotAppCategory::codec()->fromUnicode(fDBName));
 }
 
 

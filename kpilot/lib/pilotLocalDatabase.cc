@@ -43,11 +43,13 @@ static const char *pilotlocaldatabase_id =
 #include <qfile.h>
 #include <qregexp.h>
 #include <qdatetime.h>
+#include <qtextcodec.h>
 
 #include <kdebug.h>
 #include <kglobal.h>
 #include <kstandarddirs.h>
 
+#include "pilotAppCategory.h"
 #include "pilotLocalDatabase.h"
 
 PilotLocalDatabase::PilotLocalDatabase(const QString & path,
@@ -152,7 +154,7 @@ bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags,
 #endif
 
 	// Database names seem to be latin1.
-	memcpy(&fDBInfo.name[0], fDBName.latin1(), 34*sizeof(char));
+	memcpy(&fDBInfo.name[0], PilotAppCategory::codec()->fromUnicode(fDBName), 34*sizeof(char));
 	fDBInfo.creator=creator;
 	fDBInfo.type=type;
 	fDBInfo.more=0;

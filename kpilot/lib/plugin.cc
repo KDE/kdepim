@@ -39,6 +39,7 @@
 #include <qfileinfo.h>
 #include <qdir.h>
 #include <qregexp.h>
+#include <qtextcodec.h>
 
 #include <dcopclient.h>
 #include <kapplication.h>
@@ -48,6 +49,7 @@
 
 #include "pilotSerialDatabase.h"
 #include "pilotLocalDatabase.h"
+#include "pilotAppCategory.h"
 
 #include "plugin.moc"
 
@@ -171,7 +173,7 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 			<< ": Backup database "<< dbpath <<" could not be opened. Will fetch a copy from the palm and do a full sync"<<endl;
 #endif
 		struct DBInfo dbinfo;
-		if (fHandle->findDatabase(name.latin1(), &dbinfo)<0 )
+		if (fHandle->findDatabase(PilotAppCategory::codec()->fromUnicode( name ), &dbinfo)<0 )
 		{
 #ifdef DEBUG
 			DEBUGCONDUIT << fname
