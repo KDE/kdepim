@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 
 	KAboutData aboutData("knode",
 												I18N_NOOP("KNode"),
-												VERSION,
+												"0.2",
 												I18N_NOOP("A newsreader for KDE"),
 												KAboutData::License_GPL,
     										"(c) 1999-2000, Christian Thurner",
@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
     										
   aboutData.addAuthor("Christian Thurner",I18N_NOOP("Maintainer"),"cthurner@freepage.de");
   aboutData.addAuthor("Christian Gebauer",0,"gebauer@bigfoot.com");
-  aboutData.addAuthor("Dirk Mueller",0,"<mueller@kde.org>");
+  aboutData.addAuthor("Dirk Mueller",0,"mueller@kde.org");
 
   KCmdLineArgs::init( argc, argv, &aboutData );
 	KCmdLineArgs::addCmdLineOptions( options );
