@@ -750,7 +750,7 @@ void KABCore::extensionModified( const KABC::Addressee::List &list )
 
 QString KABCore::getNameByPhone( const QString &phone )
 {
-  QRegExp r( "[/*/-]" );
+  QRegExp r( "[/*/-/ ]" );
   QString localPhone( phone );
 
   bool found = false;
