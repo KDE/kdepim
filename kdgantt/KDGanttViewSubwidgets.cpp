@@ -3303,7 +3303,8 @@ void KDGanttCanvasView::contentsMousePressEvent ( QMouseEvent * e )
                 currentItem = getItem(*it);
                 if (! currentItem->enabled() ) {
                     currentItem = 0;
-                } else if (linkItemsEnabled) {
+                } else if (linkItemsEnabled && 
+                           !currentItem->isMyTextCanvas(*it)) {
                     fromArea = getItemArea(currentItem, e->pos().x());
                     if (fromArea > 0) {
                         fromItem = currentItem;
@@ -3387,9 +3388,11 @@ void KDGanttCanvasView::contentsMouseReleaseEvent ( QMouseEvent * e )
                 for ( it = il.begin(); it != il.end(); ++it ) {
                     if (getType(*it) == Type_is_KDGanttViewItem) {
                         KDGanttViewItem *toItem = getItem(*it);
-                        int toArea = getItemArea(toItem, e->pos().x());
-                        if (toArea > 0 && toItem && fromItem != toItem) {
-                            mySignalSender->linkItems(fromItem, toItem, getLinkType(fromArea, toArea));
+                        if (!toItem->isMyTextCanvas(*it)) {
+                            int toArea = getItemArea(toItem, e->pos().x());
+                            if (toArea > 0 && toItem && fromItem != toItem) {
+                                mySignalSender->linkItems(fromItem, toItem, getLinkType(fromArea, toArea));
+                            }
                         }
                         break;
                     }
@@ -3592,9 +3595,6 @@ int KDGanttCanvasView::getItemArea(KDGanttViewItem *item, int x) {
     KDTimeTableWidget *tt = dynamic_cast<KDTimeTableWidget *>(canvas());
     if (!tt) {
         qWarning("Cannot cast canvas to KDTimeTableWidget");
-        return 0;
-    }
-    if (x > tt->getCoordX(item->endTime())) {
         return 0;
     }
     int area = 0;

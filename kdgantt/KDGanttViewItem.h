@@ -225,6 +225,7 @@ private:
     QPoint middleRight();
     void moveTextCanvas();
     void setTextOffset(QPoint p);
+    bool isMyTextCanvas(QCanvasItem *tc);
     QPoint myTextOffset;
     QString _name;
     bool shapeDefined;

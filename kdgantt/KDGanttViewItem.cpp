@@ -2497,3 +2497,8 @@ void KDGanttViewItem::setTextOffset(QPoint p)
     myTextOffset.setX(p.x());
     myTextOffset.setY(p.y());
 }
+
+bool KDGanttViewItem::isMyTextCanvas(QCanvasItem *tc)
+{
+    return tc == textCanvas;
+}
