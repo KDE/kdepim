@@ -372,7 +372,7 @@ void OpieSocket::manageCall(const QString &line )
             // emit signal
             emit sync( d->m_sync );
             stream << "call QPE/System stopSync()" << endl;
-            d->isSyncing = false;
+            d->isSyncing = false; // do it in the write back later on
             d->mode = d->NOOP;
 	    break;
 	}

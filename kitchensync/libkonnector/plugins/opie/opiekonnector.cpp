@@ -38,6 +38,10 @@ OpiePlugin::OpiePlugin(QObject *obj, const char *name, const QStringList )
 
     connect(d->socket, SIGNAL(errorKonnector(int, QString ) ),
 	    this, SLOT(slotErrorKonnector(int, QString) ) );
+    connect(d->socket, SIGNAL(stateChanged( bool ) ),
+            this, SLOT(slotChanged( bool ) ) );
+
+
 }
 OpiePlugin::~OpiePlugin()
 {
@@ -125,7 +129,11 @@ void OpiePlugin::slotWrite(QValueList<KOperations> operations )
 {
     d->socket->write(operations );
 }
-
+void OpiePlugin::slotChanged( bool b)
+{
+    kdDebug() << "State changed Opiekonnector" << endl;
+    emit  stateChanged( d->udi,  b );
+}
 
 
 

@@ -70,11 +70,13 @@ QString Konnector::registerKonnector(const QString &Device )
 	return QString::null;
       }
       plugin->setUDI( randStr );
-      connect(plugin, SIGNAL(sync(const QString&, QPtrLsit<KSyncEntry> ) ),
+      connect(plugin, SIGNAL(sync(const QString&, QPtrList<KSyncEntry> ) ),
               this, SLOT(slotSync(const QString&,  QPtrList<KSyncEntry> ) ) );
 
       connect(plugin, SIGNAL(errorKonnector(const QString&, int, const QString&) ),
               this, SLOT(slotError(const QString&,int, const QString&)) );
+      connect(plugin, SIGNAL(stateChanged(const QString&,  bool ) ),
+              this, SLOT(slotChanged( const QString&,  bool ) ) );
       d->m_konnectors.insert(randStr, plugin  );
       return randStr;
     }
@@ -95,11 +97,13 @@ QString Konnector::registerKonnector(const KDevice &Device )
     return QString::null;
   }
   plugin->setUDI(randStr);
-  connect(plugin, SIGNAL(sync(const QString&, QPtrLsit<KSyncEntry> ) ),
+  connect(plugin, SIGNAL(sync(const QString&, QPtrList<KSyncEntry> ) ),
               this, SLOT(slotSync(const QString&,  QPtrList<KSyncEntry> ) ) );
 
   connect(plugin, SIGNAL(errorKonnector(const QString&, int, const QString&) ),
               this, SLOT(slotError(const QString&,int, const QString&)) );
+  connect(plugin, SIGNAL(stateChanged(const QString&,  bool ) ),
+              this, SLOT(slotChanged( const QString&,  bool ) ) );
   d->m_konnectors.insert(randStr, plugin  );
   return randStr;
 }
@@ -284,5 +288,9 @@ QString Konnector::id(const QString& udi )const
 
     return plugin->id();
 }
-
+void Konnector::slotChanged(const QString& i,  bool b)
+{
+    kdDebug() << "Konnector state changed" << endl;
+    emit stateChanged( i,  b );
+}
 

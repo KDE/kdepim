@@ -41,7 +41,7 @@ signals:
  private slots:
   void slotSync( QPtrList<KSyncEntry> );
   void slotErrorKonnector(int , QString );
-
+    void slotChanged( bool );
 };
 
 

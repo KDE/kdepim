@@ -127,7 +127,7 @@ public:
      * @param udi Device Id
      */
     bool startSync(const QString &udi);
-    //bool canPush(const QString& udi )const;
+    //bool canPush(const QString& udi)const;
     /**
      * Returns an IconSet for the given udi
      */
@@ -184,6 +184,7 @@ private:
 private slots:
     void slotSync(const QString&, QPtrList<KSyncEntry> entry );
     void slotError(const QString&, int, const QString&);
+    void slotChanged(const QString&,  bool );
 };
 
 #endif
