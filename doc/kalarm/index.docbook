@@ -1,0 +1,1134 @@
+<!DOCTYPE book PUBLIC  "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN" [
+  <!ENTITY kappname "KAlarm">
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % English "INCLUDE" -- change language only here -->
+  <!ENTITY % ents PUBLIC "-//KDE//ENTITIES Documentation V2.0//EN">
+  %ents;
+  <!-- Do not define any other entities; instead, use the entities
+       from kde-genent.entities and $LANG/user.entities. -->
+]>
+<!-- kdoctemplate v0.8 October 1 1999 
+     Minor update to "Credits and Licenses" section on August 24, 2000
+     Removed "Revision history" section on 22 January 2001   -->
+
+<!--
+This template was designed by: David Rugge davidrugge@mindspring.com
+with lots of help from: Eric Bischoff ebisch@cybercable.tm.fr
+and Frederik Fouvry fouvry@sfs.nphil.uni-tuebingen.de
+of the KDE DocBook team.
+
+You may freely use this template for writing any sort of KDE documentation.
+If you have any changes or improvements, please let us know.
+
+In the future, we may want to change from SGML-based DocBook to XML-based
+DocBook. To make this change easier, please be careful :
+- in XML, the case of the <tags> and attributes is relevant ;
+- also, quote all attributes.
+
+Please don't forget to remove all these comments in your final documentation,
+thanks ;-).
+-->
+
+<!-- ................................................................ -->
+
+<!-- The language must NOT be changed here. -->
+
+<book lang="&language;">
+
+<!-- This header contains all of the meta-information for the document such
+as Authors, publish date, the abstract, and Keywords -->
+
+<bookinfo>
+<title>The &kappname; Handbook</title>
+
+<authorgroup>
+<author>
+<firstname>David</firstname>
+<othername></othername>
+<surname>Jarvie</surname>
+<affiliation>
+<address><email>software@astrojar.org.uk</email></address>
+</affiliation>
+</author>
+</authorgroup>
+
+
+<copyright>
+<year>2001</year>
+<holder>David Jarvie</holder>
+</copyright>
+<!-- Translators: put here the copyright notice of the translation -->
+<legalnotice>&FDLNotice;</legalnotice>
+
+<!-- Date and version information of the documentation
+Don't forget to include this last date and this last revision number, we
+need them for translation coordination !
+Please respect the format of the date (DD/MM/YYYY) and of the version
+(V.MM.LL), it could be used by automation scripts.
+Do NOT change these in the translation. -->
+
+<date>17/07/2001</date>
+<releaseinfo>0.01.00</releaseinfo>
+
+<!-- Abstract about this handbook -->
+
+<abstract>
+<para>
+&kappname; is an alarm/reminder message scheduler for KDE.
+</para>
+</abstract>
+
+<!-- This is a set of Keywords for indexing by search engines.
+Please at least include KDE, the KDE package it is in, the name
+ of your application, and a few relevant keywords. -->
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>kdepim</keyword>
+<keyword>kalarm</keyword>
+<keyword>alarm</keyword>
+<keyword>reminder</keyword>
+</keywordset>
+
+</bookinfo>
+
+
+<chapter id="introduction">
+<title>Introduction</title>
+
+<!-- The introduction chapter contains a brief introduction for the
+application that explains what it does and where to report
+problems. Basically a long version of the abstract.  Don't include a
+revision history. (see installation appendix comment) -->
+
+<para>&kappname; is a graphical alarm/reminder message scheduler. It provides a graphical interface
+for setting up alarm/reminder messages which pop up at the time you specify.
+</para>
+<para>In its default graphical mode, &kappname; displays a list of pending alarms, showing their times and message texts.
+You can create new alarms, or alternatively you can select existing alarms in order to
+modify or delete them.
+</para>
+<para>When setting up or modifying an alarm, you can choose the colour of the alarm message,
+whether to sound an audible beep, and whether the alarm should be cancelled if it can't
+be displayed at its scheduled time.
+</para>
+<para>Alarms may also be scheduled on the command line, or via DCOP calls from programs.
+</para>
+<para>When an alarm message is due, it is displayed on each KDE desktop to ensure that you
+don't miss it should you happen to be switching desktops just at that moment. The message window
+shows the time for which the alarm was scheduled, which could be useful to know if it was displayed
+late or if you were away from the computer when it popped up. An example of an
+alarm message:
+<screenshot>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="alarmmessage.png" format="PNG">
+	  </imageobject>
+	  <textobject>
+	    <phrase>Alarm message</phrase>
+	  </textobject>
+	</mediaobject>
+</screenshot>
+</para>
+</chapter>
+
+
+<chapter id="using-kalarm">
+<title>Using &kappname;</title>
+
+<sect1 id="graphmode">
+<title>Graphical mode</title>
+<para>
+When it is run with no command line parameters, &kappname; starts in graphical mode. It
+displays the current list of outstanding alarms.
+</para>
+<screenshot>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="mainwindow.png" format="PNG">
+	  </imageobject>
+	  <textobject>
+	    <phrase>Main window</phrase>
+	  </textobject>
+	</mediaobject>
+</screenshot>
+<para>
+The alarms may be ordered by date/time, colour or message text by clicking on the title
+bar for the appropriate column. To reverse the sort order, click the column title bar
+again.
+</para>
+<para>
+When &kappname; starts in graphical mode, it checks whether the alarm daemon is running.
+If it is not already running, &kappname; starts it.
+</para>
+
+<sect2>
+<title>Adding a new alarm</title>
+<para>
+To add a new alarm message, select
+<menuchoice>
+<shortcut><keycap>Ins</keycap></shortcut>
+<guimenu><accel>A</accel>ctions</guimenu><guimenuitem><accel>N</accel>ew</guimenuitem>
+</menuchoice>
+. This displays the alarm message edit window:
+</para>
+<screenshot>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="editwindow.png" format="PNG">
+	  </imageobject>
+	  <textobject>
+	    <phrase>Alarm edit window</phrase>
+	  </textobject>
+	</mediaobject>
+</screenshot>
+<para>
+Enter the message text in the <guilabel>Message</guilabel> edit box. The message text may include newlines.
+</para>
+<para>
+Enter the date and time when the message is to be displayed.
+</para>
+<para>
+The <guilabel>Cancel if late</guilabel> checkbox determines what happens if the alarm
+can't be displayed at its scheduled time. Check this box to cancel the
+alarm if it can't be displayed within 1 minute after the right time. Leave the box unchecked to display the
+alarm at the first opportunity starting at the scheduled time.
+<note><para>An alarm can only be displayed while you are
+logged in, and while both X and the alarm daemon are running.</para></note>
+</para>
+<para>
+Check the <guilabel>Beep</guilabel> checkbox if you want an audible alarm to sound when the alarm message
+is displayed.
+</para>
+<para>
+Select the background colour for the alarm message window.
+</para>
+<para>
+Press the <guibutton><accel>S</accel>et Alarm</guibutton> button when all details are correct, to add the alarm to the scheduled
+list.
+</para>
+
+</sect2>
+
+<sect2>
+<title>Modifying an existing alarm</title>
+
+<para>To modify an existing alarm message, do one of the following:
+</para>
+
+<itemizedlist>
+<listitem><para>Select it by clicking on its entry in the alarm list. Then choose
+<menuchoice>
+<shortcut><keycombo><keycap>Ctrl</keycap><keycap>M</keycap></keycombo></shortcut>
+<guimenu><accel>A</accel>ctions</guimenu><guimenuitem><accel>M</accel>odify</guimenuitem>
+</menuchoice>
+from the menu.
+</para>
+</listitem>
+<listitem><para>Right-click on its entry in the alarm list and choose
+<menuchoice><guimenuitem><accel>M</accel>odify</guimenuitem></menuchoice>
+from the context menu.
+</para>
+</listitem>
+</itemizedlist>
+
+<para>This displays the alarm message edit window as described above.
+</para>
+
+</sect2>
+
+<sect2>
+<title>Deleting an existing alarm</title>
+
+<para>To delete an existing alarm message, do one of the following:
+</para>
+
+<itemizedlist>
+<listitem><para>Select it by clicking on its entry in the alarm list. Then choose
+<menuchoice>
+<shortcut><keycap>Del</keycap></shortcut>
+<guimenu><accel>A</accel>ctions</guimenu><guimenuitem><accel>D</accel>elete</guimenuitem>
+</menuchoice>
+from the menu.
+</para>
+</listitem>
+<listitem><para>Right-click on its entry in the alarm list and choose
+<menuchoice><guimenuitem><accel>D</accel>elete</guimenuitem></menuchoice>
+from the context menu.
+</para>
+</listitem>
+</itemizedlist>
+
+</sect2>
+
+<sect2 id="gui-reset">
+<title>Resetting the alarm daemon</title>
+
+<para>To reset the alarm daemon, select
+<menuchoice>
+<shortcut><keycombo><keycap>Ctrl</keycap><keycap>R</keycap></keycombo></shortcut>
+<guimenu><accel>A</accel>ctions</guimenu><guimenuitem><accel>R</accel>eset Daemon</guimenuitem>
+</menuchoice>
+.</para>
+<para>See the <link linkend="daemon-reset">Alarm daemon</link> section
+for a discussion about resetting the alarm daemon.
+</para>
+
+</sect2>
+
+<sect2>
+<title>Configuring default options</title>
+<para>
+To set default options for &kappname;, select
+<menuchoice>
+<guimenu><accel>S</accel>ettings</guimenu><guimenuitem><accel>C</accel>onfigure &kappname; ...</guimenuitem>
+</menuchoice>
+. This displays the configuration dialog:
+</para>
+<screenshot>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="configwindow.png" format="PNG">
+	  </imageobject>
+	  <textobject>
+	    <phrase>Configuration window</phrase>
+	  </textobject>
+	</mediaobject>
+</screenshot>
+<para>
+Here, you can set the default font and background colour to use for alarm message display.
+</para>
+
+</sect2>
+
+<sect2>
+<title>Quitting the program</title>
+
+<para>To exit from &kappname;, select
+<menuchoice>
+<shortcut><keycombo><keycap>Ctrl</keycap><keycap>Q</keycap></keycombo></shortcut>
+<guimenu><accel>F</accel>ile</guimenu><guimenuitem><accel>Q</accel>uit</guimenuitem>
+</menuchoice>
+.</para>
+<tip><para>This has no effect on the alarm daemon, which if already active will continue to monitor
+scheduled alarms and request their display when they become due.
+</para></tip>
+
+</sect2>
+</sect1>
+
+<sect1 id="cmdline-operation">
+<title>Command line operation</title>
+
+<para>When command line
+parameters are supplied, &kappname; does not display the list of scheduled
+alarms as described in <link linkend="graphmode">Graphical mode</link> above.
+Command line options specific to &kappname; may be used to perform the following operations:
+
+<itemizedlist>
+<listitem><para>schedule a new alarm message</para>
+</listitem>
+<listitem><para>stop the alarm daemon</para>
+</listitem>
+</itemizedlist>
+</para>
+
+<para>
+Additional command line options are provided primarily to enable other programs to interface to
+&kappname;. They are described in the chapter <link linkend="cmdline-interface">Developer's Guide to &kappname;</link>.
+</para>
+
+<para>The command line must only contain options applicable to one &kappname; operation. If you want to
+perform multiple operations, you must invoke &kappname; multiple times with a single set of options each time.
+</para>
+
+<sect2 id="cmdline-schedule">
+<title>Schedule a new alarm message</title>
+
+<para>The following options are used to schedule an alarm message for display by &kappname;:
+<informaltable>
+<tgroup cols="2">
+<thead>
+<row>
+  <entry>Option</entry>
+  <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+  <entry><option>-b</option>, <option>--beep</option></entry>
+  <entry>Make an audible beep when the message is displayed.</entry>
+</row>
+<row>
+  <entry><option>-c</option>, <option>--color</option>, <option>--colour
+  <replaceable>colour</replaceable></option></entry>
+  <entry>Set the message background colour to the specified QT colour name or hex code 0xRRGGBB.</entry>
+</row>
+<row>
+  <entry><option>-l</option>, <option>--late-cancel</option></entry>
+  <entry>Cancel the message if it cannot be displayed at the correct time.</entry>
+</row>
+<row>
+  <entry><option>-t</option>, <option>--time
+  <replaceable>time</replaceable></option></entry>
+  <entry>Display message at 'time' [[[yyyy-]mm-]dd-]hh:mm (default is immediately).</entry>
+</row>
+<row>
+  <entry><replaceable>message</replaceable></entry>
+  <entry>Message text to display.</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</para>
+
+<para>A message text must be specified; all the options are optional.</para>
+<para>Two alternative examples which display a multi-line message with a red background at 10 p.m. on the 27th of this month are:</para>
+<informalexample><screen>
+<prompt>%</prompt> <userinput><command>kalarm</command> <option>-c <replaceable>red</replaceable></option> <option>-t <replaceable>27-22:00</replaceable></option> <option><replaceable>"Remember to\nSTOP"</replaceable></option></userinput>
+<prompt>%</prompt> <userinput><command>kalarm</command> <option>-c <replaceable>0xFF0000</replaceable></option> <option>-t <replaceable>27-22:00</replaceable></option> <option><replaceable>"Remember to\nSTOP"</replaceable></option></userinput>
+</screen>
+</informalexample>
+
+</sect2>
+
+<sect2>
+<title>Control the alarm daemon</title>
+
+<para>The following options are used to reset or halt the alarm daemon.
+</para>
+<para>See the <link linkend="daemon-reset">Alarm daemon</link> section
+for a discussion about resetting and stopping the alarm daemon.
+</para>
+
+<para>
+<informaltable>
+<tgroup cols="2">
+<thead>
+<row>
+  <entry>Option</entry>
+  <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+  <entry><option>-r</option>, <option>--reset</option></entry>
+  <entry>Reset the alarm daemon.</entry>
+</row>
+<row>
+  <entry><option>-s</option>, <option>--stop</option></entry>
+  <entry>Stop the alarm daemon.</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+</para>
+<para>The following command will reset the alarm daemon.</para>
+<informalexample><screen>
+<prompt>%</prompt> <userinput><command>kalarm</command> <option>-r</option></userinput>
+</screen>
+</informalexample>
+<para>The following command will halt the alarm daemon.</para>
+<informalexample><screen>
+<prompt>%</prompt> <userinput><command>kalarm</command> <option>-s</option></userinput>
+</screen>
+</informalexample>
+
+</sect2>
+
+<sect2>
+<title>Help options</title>
+
+<para>The following help options are common to all &kde; programs:
+<informaltable>
+<tgroup cols="2">
+<thead>
+<row>
+  <entry>Option</entry>
+  <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+  <entry><option>--help</option></entry>
+  <entry>Shows a brief options help text.</entry>
+</row>
+<row>
+  <entry><option>--help-qt</option></entry>
+  <entry>Shows numerous generic Qt-specific options.</entry>
+</row>
+<row>
+  <entry><option>--help-kde</option></entry>
+  <entry>Shows numerous generic KDE-specific options.</entry>
+</row>
+<row>
+  <entry><option>--help-all</option></entry>
+  <entry>Shows all options.</entry>
+</row>
+<row>
+  <entry><option>--author</option></entry>
+  <entry>Shows the names and email addresses of &kappname; authors.</entry>
+</row>
+<row>
+  <entry><option>-v</option>, <option>--version</option></entry>
+  <entry>Shows the running versions of the Qt library , &kde; and &kappname;.</entry>
+</row>
+<row>
+  <entry><option>--license</option></entry>
+  <entry>Show licence information.</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</para>
+
+</sect2>
+</sect1>
+
+<sect1 id="daemon">
+<title>Alarm daemon</title>
+
+<para>The alarm daemon, <application>kalarmd</application>, monitors &kappname;'s calendar file for alarms becoming due.
+When it determines that an alarm is due, it tells &kappname; to display it, or to cancel it if
+it is late and late display was not selected for that alarm message.
+</para>
+<para>The alarm daemon may also be used by other applications.
+</para>
+<para>The alarm daemon runs as a KDE panel application. It may be controlled via its menu
+which is accessed by right-clicking on its icon in the KDE panel.
+</para>
+<para>You can activate &kappname; by left-clicking on the alarm daemon icon in the KDE panel,
+provided either that &kappname; is the only application which uses the daemon, or that
+&kappname; is selected for activation in the alarm daemon's menu.
+</para>
+
+<sect2>
+<title>Alarm daemon menu</title>
+
+<variablelist>
+<varlistentry>
+<term><menuchoice><guimenuitem>Alarms Enabled</guimenuitem></menuchoice></term>
+<listitem><para><action>Toggles alarms enabled / disabled.</action></para>
+<para>When alarms are enabled, the calendar files
+marked in the menu as selected will be monitored for alarms becoming due. When alarms are not enabled,
+no alarm monitoring is performed, and &kappname; will not display any alarms.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><menuchoice><guimenuitem>Click starts <replaceable>application</replaceable></guimenuitem></menuchoice></term>
+<listitem><para><action>Selects the application to be activated when the panel icon is left-clicked.</action></para>
+<note><para>There is one menu entry for each application registered with the alarm daemon.
+If &kappname; is the only application registered with the alarm daemon, this menu option will not appear,
+and &kappname; will be activated whenever the icon is left-clicked.</para></note>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><menuchoice><guimenuitem><replaceable>calendar file</replaceable></guimenuitem></menuchoice></term>
+<listitem><para><action>Toggles the calendar file enabled / disabled.</action></para>
+<note><para>There is one menu entry for each calendar file being monitored by the alarm daemon.
+&kappname; always uses a single calendar file. Any additional calendar files shown in the menu will belong
+to other applications which are registered with the alarm daemon.</para></note>
+<para>When the given calendar file is enabled, it will be monitored for alarms becoming due. When it is not enabled,
+no alarm monitoring is performed for that calendar file, and &kappname; will not display any alarms from it.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><menuchoice><guimenuitem>Quit</guimenuitem></menuchoice></term>
+<listitem><para><action>Quits the alarm daemon.</action></para>
+<para>No further alarm monitoring will be performed, and &kappname; will not display any alarms, until the alarm daemon is restarted.</para>
+<warning><para>Quitting will also affect the functioning of any
+other applications which use the alarm daemon.
+</para></warning>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect2>
+
+<sect2>
+<title>Starting, resetting and stopping the alarm daemon</title>
+
+<para>The alarm daemon is normally started at KDE session login, and runs continuously until logout.
+If for any reason it is not running, alarm monitoring will not occur and &kappname; will not display any
+alarms.
+</para>
+
+<sect3>
+<title>Starting the alarm daemon</title>
+<para>To start the alarm daemon, you can either run &kappname; in its default graphical mode (i.e. without any
+command line parameters), reset the daemon as described <link linkend="daemon-reset">below</link>,
+or you can run the alarm daemon directly from the command line:
+</para>
+<screen width="40">
+<prompt>%</prompt> <command>kalarmd</command>
+</screen>
+
+<para>How to start the alarm daemon at KDE session login ????
+</para>
+</sect3>
+
+<sect3 id="daemon-reset">
+<title>Resetting the alarm daemon</title>
+<para>It is also possible to reset the alarm daemon without stopping it. Resetting causes the
+alarm daemon to re-read the list of scheduled messages from the calendar file and re-initialise
+its &kappname;-related data.
+</para>
+<para>Why might you want to reset the alarm daemon? It isn't a very likely occurrence, but
+if for any reason &kappname; was not able to run when the alarm daemon told it
+to output a message, that message will never be output until the alarm daemon is either
+reset or restarted. Resetting is preferable to stopping the
+alarm daemon and restarting it, since resetting the daemon will not affect any other applications
+which use the alarm daemon.
+</para>
+<tip><para>Resetting starts the alarm daemon if it not currently running.
+</para></tip>
+<para>To reset the alarm daemon, either use the menu command
+<menuchoice>
+<shortcut>
+<keycombo><keycap>Ctrl</keycap><keycap>R</keycap></keycombo>
+</shortcut>
+<guimenu>Actions</guimenu><guimenuitem>Reset Daemon</guimenuitem>
+</menuchoice>
+, or type the following command:
+</para>
+<screen width="40">
+<prompt>%</prompt> <command>kalarm -r</command>
+</screen>
+</sect3>
+
+<sect3>
+<title>Stopping the alarm daemon</title>
+<para>Stopping the alarm daemon will prevent any further monitoring of scheduled alarm messages
+until the daemon is restarted.
+</para>
+<warning><para>Stopping it will affect the functioning of any
+other applications which also use the alarm daemon. Consider resetting the daemon  instead.
+</para></warning>
+<para>To stop the alarm daemon, type the following command:
+</para>
+<screen width="40">
+<prompt>%</prompt> <command>kalarm -s</command>
+</screen>
+</sect3>
+
+</sect2>
+</sect1>
+</chapter>
+
+<chapter id="developers">
+<title>Developer's Guide to &kappname;</title>
+
+<para>&kappname; provides an interface to allow other applications to request the following functions:
+<itemizedlist>
+<listitem><para>schedule a new alarm message</para></listitem>
+<listitem><para>display or cancel an already scheduled alarm message</para></listitem>
+<listitem><para>cancel an already scheduled alarm message</para></listitem>
+<listitem><para>display an already scheduled alarm message</para></listitem>
+</itemizedlist>
+</para>
+
+<para>Each of the above functions is implemented both by a DCOP call and by the command line.
+DCOP calls should be used in preference, provided that &kappname; is already running.
+</para>
+
+<sect1 id="dcop-interface">
+<title>DCOP interface</title>
+
+<para>DCOP calls are provided to enable other programs to request the following functions:
+<variablelist>
+<varlistentry>
+<term><function>scheduleMessage</function></term><listitem><para><action>schedule a new alarm message</action></para></listitem>
+</varlistentry>
+<varlistentry>
+<term><function>handleEvent</function></term><listitem><para><action>display or cancel an already scheduled alarm message</action></para></listitem>
+</varlistentry>
+<varlistentry>
+<term><function>cancelMessage</function></term><listitem><para><action>cancel an already scheduled alarm message</action></para></listitem>
+</varlistentry>
+<varlistentry>
+<term><function>displayMessage</function></term><listitem><para><action>display an already scheduled alarm message</action></para></listitem>
+</varlistentry>
+</variablelist>
+</para>
+
+<refentry id="cancelMessage">
+<refmeta>
+<refentrytitle>cancelMessage</refentrytitle>
+</refmeta>
+<refnamediv>
+<refname>cancelMessage</refname>
+<refpurpose>cancel an already scheduled alarm message.</refpurpose>
+</refnamediv>
+<refsynopsisdiv>
+<synopsis>
+void cancelMessage(const QString& <replaceable parameter>calendarFile</replaceable>, const QString& <replaceable parameter>eventID</replaceable>)
+</synopsis>
+
+<refsect2>
+<title>Parameters</title>
+<variablelist>
+<varlistentry>
+<term><replaceable parameter>calendarFile</replaceable></term>
+<listitem>
+<para>Specifies the URL of the calendar file containing the event to be cancelled.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><replaceable parameter>eventID</replaceable></term>
+<listitem>
+<para>Specifies the unique ID of the event to be cancelled, as stored in <replaceable parameter>calendarFile</replaceable>.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect2>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description
+</title>
+<para><function>cancelMessage()</function> is a DCOP call to cancel the specified alarm message. &kappname; deletes the
+alarm message from the calendar file without displaying it.
+</para>
+<note><para>The <replaceable parameter>calendarFile</replaceable> parameter is only used for integrity checking: if the URL does not specify &kappname;'s current default calendar file, the request will be ignored.</para></note>
+</refsect1>
+</refentry>
+
+<refentry id="displayMessage">
+<refmeta>
+<refentrytitle>displayMessage</refentrytitle>
+</refmeta>
+<refnamediv>
+<refname>displayMessage</refname>
+<refpurpose>display an already scheduled alarm message.</refpurpose>
+</refnamediv>
+<refsynopsisdiv>
+<synopsis>
+void displayMessage(const QString& <replaceable parameter>calendarFile</replaceable>, const QString& <replaceable parameter>eventID</replaceable>)
+</synopsis>
+
+<refsect2>
+<title>Parameters</title>
+<variablelist>
+<varlistentry>
+<term><replaceable parameter>calendarFile</replaceable></term>
+<listitem>
+<para>Specifies the URL of the calendar file containing the event to be displayed.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><replaceable parameter>eventID</replaceable></term>
+<listitem>
+<para>Specifies the unique ID of the event to be displayed, as stored in <replaceable parameter>calendarFile</replaceable>.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect2>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description
+</title>
+<para><function>displayMessage()</function> is a DCOP call to display the specified alarm message. &kappname; retrieves the
+alarm message from the calendar file and then displays it.
+</para>
+<note><para>The <replaceable parameter>calendarFile</replaceable> parameter is only used for integrity checking: if the URL does not specify &kappname;'s current default calendar file, the request will be ignored.</para></note>
+</refsect1>
+</refentry>
+
+<refentry id="handleEvent">
+<refmeta>
+<refentrytitle>handleEvent</refentrytitle>
+</refmeta>
+<refnamediv>
+<refname>handleEvent</refname>
+<refpurpose>display or cancel an already scheduled alarm message.</refpurpose>
+</refnamediv>
+<refsynopsisdiv>
+<synopsis>
+void handleEvent(const QString& <replaceable parameter>calendarFile</replaceable>, const QString& <replaceable parameter>eventID</replaceable>)
+</synopsis>
+
+<refsect2>
+<title>Parameters</title>
+<variablelist>
+<varlistentry>
+<term><replaceable parameter>calendarFile</replaceable></term>
+<listitem>
+<para>Specifies the URL of the calendar file containing the event to be displayed or cancelled.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><replaceable parameter>eventID</replaceable></term>
+<listitem>
+<para>Specifies the unique ID of the event to be displayed or cancelled, as stored in <replaceable parameter>calendarFile</replaceable>.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect2>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description
+</title>
+<para><function>handleEvent()</function> is a DCOP call to display or cancel the specified alarm message. &kappname; retrieves the
+alarm message from the calendar file and then determines what action to take.
+If the late-cancel flag is set and the alarm is late, i.e. the scheduled time of display was more than a minute ago, &kappname; deletes the
+alarm message from the calendar file without displaying it; otherwise, &kappname; displays the alarm message.
+</para>
+<note><para>The <replaceable parameter>calendarFile</replaceable> parameter is only used for integrity checking: if the URL does not specify &kappname;'s current default calendar file, the request will be ignored.</para></note>
+</refsect1>
+</refentry>
+
+<refentry id="scheduleMessage">
+<refmeta>
+<refentrytitle>scheduleMessage</refentrytitle>
+</refmeta>
+<refnamediv>
+<refname>scheduleMessage</refname>
+<refpurpose>schedule a new alarm message.</refpurpose>
+</refnamediv>
+<refsynopsisdiv>
+<synopsis>
+bool scheduleMessage(const QString& <replaceable parameter>message</replaceable>, const QDateTime* <replaceable parameter>dateTime</replaceable>, const QColor& <replaceable parameter>bg</replaceable>, int <replaceable parameter>flags</replaceable>)
+</synopsis>
+
+<refsect2>
+<title>Parameters</title>
+<variablelist>
+<varlistentry>
+<term><replaceable parameter>message</replaceable></term>
+<listitem>
+<para>Specifies the text of the message to be scheduled.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><replaceable parameter>dateTime</replaceable></term>
+<listitem>
+<para>Specifies the scheduled date and time at which the message should be displayed.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><replaceable parameter>bg</replaceable></term>
+<listitem>
+<para>Specifies the background colour for displaying the message.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><replaceable parameter>flags</replaceable></term>
+<listitem>
+<para>Specifies the logical OR of the desired alarm message flags. The flag bits are
+those defined in <filename>msgevent.h</filename>
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect2>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description
+</title>
+<para><function>scheduleMessage()</function> is a DCOP call to schedule the specified alarm message for display at the specified date and time.
+If the scheduled time has already passed, &kappname; immediately displays the message or, if the LATE_CANCEL flag bit
+is set, ignores the request. If the scheduled time is in the future, &kappname; adds the alarm message to the calendar file for
+later display.
+</para>
+<para>Use a code sequence similar to the following to set up the parameter data for the DCOP call to <function>scheduleMessage()</function>:
+<screen>
+QString message;
+QDateTime dateTime;
+QColor bgColour;
+Q_UINT32 flags;
+. . .
+QByteArray data;
+QDataStream arg(data, IO_WriteOnly);
+arg << message;
+arg.writeRawBytes((char*)&amp;dateTime, sizeof(QDateTime));
+arg.writeRawBytes((char*)&amp;bgColour, sizeof(QColor));
+arg << flags;
+</screen>
+</para>
+</refsect1>
+</refentry>
+</sect1>
+
+<sect1 id="cmdline-interface">
+<title>Command line interface</title>
+
+<para>Command line options are provided to enable other programs (such as the alarm daemon) to start up &kappname;
+if it is not already running, in order
+to display or cancel scheduled messages, or schedule new messages. The reason for using command line options for
+this purpose is that if &kappname; were started without any command line parameters and then sent DCOP requests,
+it would start in its default graphical mode, which is clearly undesirable for an inter-program request.
+</para>
+<note><para>Programs should first check whether &kappname; is already running;
+if it is, they should instead use DCOP calls to request these operations.
+</para></note>
+
+<para>The command line options for scheduling a new alarm message are as described in
+the chapter <link linkend="cmdline-interface">Using &kappname;</link>. The options for
+displaying and cancelling scheduled messages are as follows:
+</para>
+
+<note><para>Normal users may if they wish use these command line options,
+providing the necessary parameter information can be supplied.
+</para></note>
+
+<para>
+<informaltable>
+<tgroup cols="2">
+<thead>
+<row>
+  <entry>Option</entry>
+  <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+  <entry><option>--calendarURL <replaceable>url</replaceable></option></entry>
+  <entry>Use the calendar file with the specified URL. This option is only used for integrity checking: if the URL doesn't specify &kappname;'s current default calendar file, the request will be ignored.</entry>
+</row>
+<row>
+  <entry><option>--cancelEvent <replaceable>eventID</replaceable></option></entry>
+  <entry>Cancel the event with the specified event ID.</entry>
+</row>
+<row>
+  <entry><option>--displayEvent <replaceable>eventID</replaceable></option></entry>
+  <entry>Display the event with the specified event ID.</entry>
+</row>
+<row>
+  <entry><option>--handleEvent <replaceable>eventID</replaceable></option></entry>
+  <entry>Display or cancel the event with the specified event ID. &kappname; determines which action
+  to take in the same way as for the <link linkend="handleEvent">handleEvent()</link> DCOP call.</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</para>
+
+<para><option>--cancelEvent</option>, <option>--displayEvent</option> and <option>--handleEvent</option> are mutually exclusive.
+<option>--calendarURL</option> is optional, but can only be used with one of the other three options.
+</para>
+
+<para>Examples are:</para>
+<informalexample><screen>
+<prompt>%</prompt> <userinput><command>kalarm</command> <option>--displayEvent <replaceable>KAlarm-387486299.702</replaceable></option> <option>--calendarURL <replaceable>file:/home/zaphod/hydra.ics</replaceable></option></userinput>
+<prompt>%</prompt> <userinput><command>kalarm</command> <option>--cancelEvent <replaceable>KAlarm-388886299.793</replaceable></userinput>
+</screen>
+</informalexample>
+
+</sect1>
+</chapter>
+
+
+<chapter id="faq">
+<title>Questions and Answers</title>
+
+&reporting.bugs;
+&updating.documentation;
+
+<qandaset id="faqlist">
+<qandaentry>
+<question>
+<para>What configuration files does &kappname; use?</para>
+</question>
+<answer>
+<para>The file <filename>~/.kde2/share/config/kalarmrc</filename> holds your &kappname; preferences.
+</para>
+<para>The default calendar file which stores your scheduled alarm messages is
+<filename>~/.kde2/share/apps/kalarm/calendar.vcs</filename>, unless
+a different calendar file is specified in the preferences file.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>What configuration files does the alarm daemon use?</para>
+</question>
+<answer>
+<para>The file <filename>~/.kde2/share/config/kalarmdrc</filename> holds your alarm daemon preferences.
+</para>
+<para>The file <filename>~/.kde2/share/apps/kalarmd/clients</filename> holds details of client
+applications and their calendar files which have previously been registered with the alarm daemon.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>What are the application names of &kappname; and the alarm daemon?</para>
+</question>
+<answer>
+<para>&kappname;'s application name is <application>kalarm</application>, and the alarm daemon's
+application name is <application>kalarmd</application>.
+</para>
+</answer>
+</qandaentry>
+</qandaset>
+</chapter>
+
+
+<chapter id="credits">
+
+<title>Credits and Licence</title>
+
+<para>
+&kappname;
+</para>
+<para>
+Program copyright 2001 David Jarvie <email>software@astrojar.org.uk</email>
+</para>
+<para>
+Contributors (calendar handling libraries and original KOrganizer alarm daemon):
+<itemizedlist>
+<listitem><para>Cornelius Schumacher <email>schumacher@kde.org</email></para>
+</listitem>
+<listitem><para>Preston Brown <email>pbrown@kde.org</email></para>
+</listitem>
+</itemizedlist>
+</para>
+
+<para>
+Documentation copyright 2001 David Jarvie <email>software@astrojar.org.uk</email>
+</para>
+<!-- <para>
+Translations done by:
+<itemizedlist>
+<listitem>
+<para>Babel D. Fish <email>babelfish@kde.org</email> (Sanskrit)</para>
+</listitem>
+</itemizedlist>
+</para> -->
+
+<para>Thanks go to the author of the KDE1 KAlarm application, Stefan Nikolaus
+<email>stefan.nikolaus@stuco.uni-oldenburg.de</email>, who kindly agreed to
+allow the name KAlarm to be used by this KDE2 application.
+</para>
+
+&underFDL;               <!-- FDL: do not remove -->
+
+&underGPL;        	 <!-- GPL License -->
+
+</chapter>
+
+<appendix id="installation">
+<title>Installation</title>
+
+<sect1 id="getting-kalarm">
+<title>How to obtain Kalarm</title>
+
+<para>
+&kappname; is part of the KDE project
+<ulink url="http://www.kde.org">http://www.kde.org</ulink>.
+&kappname; can be found in the kdepim package on
+<ulink url="ftp://ftp.kde.org/pub/kde/">ftp://ftp.kde.org/pub/kde/</ulink>, the
+main ftp site of the KDE project.
+</para>
+<para>&kappname; is also available as a separate package from
+<ulink url="http://www.kalarm.org">http://www.kalarm.org</ulink>
+</para>
+</sect1>
+
+<sect1 id="requirements">
+<title>Requirements</title>
+
+<!--
+List any special requirements for your application here. This should include:
+.Libraries or other software that is not included in kdesupport,
+kdelibs, or kdebase.
+.Hardware requirements like amount of RAM, disk space, graphics card
+capabilities, screen resolution, special expansion cards, etc.
+.Operating systems the app will run on. If your app is designed only for a
+specific OS, (you wrote a graphical LILO configurator for example) put this
+information here.
+-->
+
+<para>
+In order to successfully use &kappname;, you need KDE 2.1 or later. libkcal.lib is required
+in order to support the advanced &kappname; features. &kappname; uses about 5 megs of
+memory to run, but this may vary depending on your platform and configuration.
+</para>
+
+<para>
+All required libraries as well as &kappname; itself can be found
+on <ulink url="ftp://ftp.kalarm.org">The &kappname; home page</ulink>.
+</para>
+
+<!-- For a list of updates, you may refer to the application web site
+or the ChangeLog file, or ... -->
+<para>
+You can find a list of changes at <ulink
+url="http://apps.kde.org/kalarm">http://apps.kde.org/kalarm</ulink>.
+</para>
+</sect1>
+
+<sect1 id="compilation">
+<title>Compilation and installation</title>
+
+<para>If &kappname; is not installed and if you are the administrator of your system,
+your best bet is to use a precompiled binary file.</para>
+
+<itemizedlist>
+
+<listitem><para>If your system understands the RPM binary package format, you should
+get a file "<filename>kalarm.i386.rpm</filename>" or "<filename>kdepim2.i386.rpm</filename>"
+(or similar), depending on whether you want to install kdepim or just &kappname;. The correct
+installation command is: <command>rpm <option>-i
+<replaceable>package.i386.rpm</replaceable></option></command>, and the correct
+upgrade command is: <command>rpm <option>-U
+<replaceable>package.i386.rpm</replaceable></option></command></para></listitem>
+
+<listitem><para>If your system uses a different binary package format, you need to
+read the instructions that came with your system.</para></listitem>
+
+</itemizedlist>
+
+<para>If you cannot obtain a suitable precompiled binary package, you will need to
+compile &kappname; yourself from source files. Find the source package file
+"<filename>kalarm.tar.gz</filename>" or "<filename>kdepim2.tar.gz</filename>"
+(or similar), depending on whether you want to install kdepim or just &kappname;.
+Unpack it in a new directory, change to that directory and enter the following:</para>
+
+<screen width="40">
+<prompt>%</prompt> <command>./configure</command>
+<prompt>%</prompt> <command>make</command>
+<prompt>%</prompt> <command>make <option>install</option></command>
+</screen>
+
+<note><para>If you have both KDE1 and KDE2 installed, this may install &kappname; into the KDE1
+directory unless you give the KDE2 directory as a parameter to <command>./configure</command> .
+For example:</para>
+<para><command>./configure --prefix=<replaceable>/opt/kde2</replaceable></command></para>
+</note>
+
+<para>Since &kappname; uses <application>autoconf</application> and
+<application>automake</application> you should have no trouble compiling
+it. Should you run into problems please report them to the <ulink
+ url="http://lists.kde.org">KDE mailing lists</ulink>.</para>
+
+</sect1>
+
+<sect1 id="configuration">
+<title>Configuration</title>
+
+<para>Don't forget to tell your system to start the <filename>dtd</filename>
+dicer-toaster daemon first, or &kappname; won't work !</para>
+
+</sect1>
+
+</appendix>
+
+&documentation.index;
+</book>
+<!--
+Local Variables:
+mode: sgml
+sgml-minimize-attributes: nil
+sgml-general-insert-case: lower
+End:
+-->
