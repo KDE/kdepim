@@ -1,7 +1,7 @@
 /*
  *  soundpicker.h  -  widget to select a sound file or a beep
  *  Program:  kalarm
- *  (C) 2002 by David Jarvie  software@astrojar.org.uk
+ *  (C) 2002, 2004 by David Jarvie  software@astrojar.org.uk
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@ class SoundPicker : public QFrame
 		void           setChecked(bool);
 		bool           beep() const;
 		QString        file() const;
+		static KURL    browseFile(const QString& initialFile = QString::null, const QString& initialDir = QString::null);
 
 	protected slots:
 		void           slotSoundToggled(bool on);

@@ -1,7 +1,7 @@
 /*
  *  soundpicker.cpp  -  widget to select a sound file or a beep
  *  Program:  kalarm
- *  (C) 2002 by David Jarvie  software@astrojar.org.uk
+ *  (C) 2002, 2004 by David Jarvie  software@astrojar.org.uk
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -119,13 +119,7 @@ void SoundPicker::slotPickFile()
 {
 	if (mFilePicker->isOn())
 	{
-		if (mDefaultDir.isEmpty())
-			mDefaultDir = KGlobal::dirs()->findResourceDir("sound", "KDE_Notify.wav");
-#ifdef WITHOUT_ARTS
-		KURL url = KFileDialog::getOpenURL(mDefaultDir, QString::fromLatin1("*.wav *.mp3 *.ogg|%1\n*|%2").arg(i18n("Sound Files")).arg(i18n("All Files")), 0, i18n("Choose Sound File"));
-#else
-		KURL url = KFileDialog::getOpenURL(mDefaultDir, KDE::PlayObjectFactory::mimeTypes().join(" "), 0, i18n("Choose Sound File"));
-#endif
+		KURL url = browseFile(mFile, mDefaultDir);
 		if (!url.isEmpty())
 		{
 			mFile = url.prettyURL();
@@ -140,6 +134,30 @@ void SoundPicker::slotPickFile()
 		mFile = "";
 		setFilePicker();
 	}
+}
+
+/******************************************************************************
+ * Display a dialogue to choose a sound file, initially highlighting any
+ * specified file. 'initialFile' must be a full path name or URL.
+ * Reply = URL selected. If none is selected, URL.isEmpty() is true.
+ */
+KURL SoundPicker::browseFile(const QString& initialFile, const QString& defaultDir)
+{
+	QString initialDir = !initialFile.isEmpty() ? QString(initialFile).remove(QRegExp("/[^/]*$"))
+	                   : !defaultDir.isEmpty()  ? defaultDir
+	                   : KGlobal::dirs()->findResourceDir("sound", "KDE_Notify.wav");
+#ifdef WITHOUT_ARTS
+	KFileDialog fileDlg(initialDir, QString::fromLatin1("*.wav *.mp3 *.ogg|%1\n*|%2").arg(i18n("Sound Files")).arg(i18n("All Files")), 0, "soundFileDlg", true);
+#else
+	KFileDialog fileDlg(initialDir, KDE::PlayObjectFactory::mimeTypes().join(" "), 0, "soundFileDlg", true);
+#endif
+	fileDlg.setCaption(i18n("Choose Sound File"));
+	fileDlg.setMode(KFile::File | KFile::ExistingOnly);
+	if (!initialFile.isEmpty())
+		fileDlg.setSelection(initialFile);
+	if (fileDlg.exec() == QDialog::Accepted)
+		return fileDlg.selectedURL();
+	return KURL();
 }
 
 /******************************************************************************

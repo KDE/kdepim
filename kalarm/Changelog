@@ -5,6 +5,7 @@ Fix scheduleCommand() and scheduleEmail() DCOP handling.
 Make KAlarm build for "./configure --without-arts".
 Fix email body text not being saved in email alarms.
 Fix loss of --exec command line arguments.
+Show all audio file types in Preferences sound file chooser dialogue.
 
 === Version 1.0.6 (KDE 3.2.2) --- 26 Mar 2004 ===
 Make the Quit menu item in main window quit the program.
