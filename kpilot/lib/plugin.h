@@ -188,6 +188,7 @@ protected:
 		return fFirstSync ||
 		(fSyncDirection==SyncAction::eCopyHHToPC) ||
 		(fSyncDirection==SyncAction::eCopyPCToHH); };
+	void setFirstSync(bool first) { fFirstSync=first; } ;
 
 	PilotDatabase *fDatabase,*fLocalDatabase;
 
@@ -207,8 +208,9 @@ private:
 
 	// Make these only protected so the conduit can change the variable
 protected:
-	bool fFirstSync;
 	QString fConduitName;
+private:
+	bool fFirstSync;
 
 private:
 	/**
