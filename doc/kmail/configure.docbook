@@ -57,7 +57,7 @@ identity.</para>
 <para>To add a new identity to the identity list, click on the
 <guibutton>New...</guibutton> button. 
 The <link linkend="configure-identity-newidentitydialog">New identity</link> dialog
-will show up.</para>
+will then appear.</para>
 
 <sect2 id="configure-identity-newidentitydialog">
 <title>The <guilabel>New Identity</guilabel> Dialog</title>
@@ -94,7 +94,7 @@ under <menuchoice><guimenu>Internet &amp; Network</guimenu>
 <varlistentry>
 <term><guilabel>Duplicate existing identity</guilabel></term>
 <listitem>
-<para>Copies all fields from an already existent identity. You can
+<para>Copies all fields from an existing identity. You can
 choose which identity to copy from by selecting the corresponding
 entry in the <guilabel>Existing identities</guilabel> popup.</para>
 </listitem>
@@ -124,7 +124,7 @@ the correct value here.</para>
 <para>Enter your organization here. This field is 
 optional. Most programs will show this information in a separate
 header field <guilabel>Organization</guilabel>. &kmail;, however, puts
-it between parentheses and displays is together with the email address
+it between parentheses and displays it together with the email address
 in the <guilabel>From</guilabel> header field.</para>
 </listitem>
 </varlistentry>
@@ -183,7 +183,7 @@ should be sent to.</para>
 <varlistentry>
 <term><guilabel>OpenPGP key</guilabel></term>
 <listitem>
-<para>Select here the <application>OpenPGP</application> key
+<para>Select here the <application>OpenPGP</application>
 key that should be used to (digitally) sign messages when this
 identity is used. When you click on the <guilabel>Change...</guilabel>
 button, a key selection dialog comes up where you can select the key
@@ -337,18 +337,20 @@ outgoing mail servers and set some common options.</para>
 <para>For basic information, see <link
 linkend="sending-mail">Setting up your Account: Sending</link>.</para>
 
-<para>When you click <guibutton>Add...</guibutton> or <guibutton>Modify...</guibutton>
-the <guilabel>Add transport</guilabel> resp. <guilabel>Modify
-transport</guilabel> dialog will open. For sending via <command>sendmail</command> you
-can specify a name and the location of the <command>sendmail</command> program.
-For <acronym>SMTP</acronym> you can specify <guilabel>Name</guilabel>,
-<guilabel>Host</guilabel>, and <guilabel>Port</guilabel> of the server.
-<guilabel>Server requires authentication</guilabel> will enable the
-<guilabel>Login</guilabel> and <guilabel>Password</guilabel> fields and
-the <guilabel>Authentication method</guilabel> buttons on the
+<para>When you click <guibutton>Add...</guibutton> or
+<guibutton>Modify...</guibutton> the <guilabel>Add
+transport</guilabel> or <guilabel>Modify transport</guilabel> dialogs
+will open respectively. For sending via <command>sendmail</command>
+you can specify a name and the location of the
+<command>sendmail</command> program.  For <acronym>SMTP</acronym> you
+can specify <guilabel>Name</guilabel>, <guilabel>Host</guilabel>, and
+<guilabel>Port</guilabel> of the server.  <guilabel>Server requires
+authentication</guilabel> will enable the <guilabel>Login</guilabel>
+and <guilabel>Password</guilabel> fields and the
+<guilabel>Authentication method</guilabel> buttons on the
 <guilabel>Security</guilabel> tab. If you are not sure about the
-security settings you can make &kmail; test for the best settings
-by using <guibutton>Check What the Server Supports</guibutton>.</para>
+security settings you can make &kmail; test for the best settings by
+using <guibutton>Check What the Server Supports</guibutton>.</para>
 
 <para><guilabel>Confirm before send</guilabel> will pop up a
 confirmation box every time you send a message.</para>
@@ -368,12 +370,12 @@ check your mail, depending on the setting of
 
 <para><guilabel>Message property</guilabel> lets you select how your
 message will be encoded when it is sent. <guilabel>Allow
-8-bit</guilabel> means that &kmail; will send your message in 8 bit
+8-bit</guilabel> means that &kmail; will send your message in 8-bit
 <acronym>ASCII</acronym>, which means that all special characters such
 as accented letters will be sent as-is. If <guilabel>MIME Compliant
 (Quoted Printable)</guilabel> is selected, special characters will be
 encoded using standard &MIME; encodings, which may be more portable to
-other mailing systems than 8-bit <acronym>ASCII</acronym>. 
+mailing systems other than 8-bit <acronym>ASCII</acronym>. 
 We recommend to use <guilabel>MIME Compliant</guilabel>.</para>
 
 <note><para>Even with <guilabel>Allow 8-bit</guilabel>
@@ -441,7 +443,7 @@ HTML messages might imitate the look of a signed and encrypted message, so
 you should be aware of the fact that you are reading a HTML message. The HTML
 status bar itself cannot be influenced by the HTML code of the message.</para>
 
-<para>The <guilabel>Window Layout</guilabel> section lets choose between
+<para>The <guilabel>Window Layout</guilabel> section lets you choose between
 several layouts of the main window that differ with regard to the size
 of the folder list and to the position of the MIME tree. Let the mouse pointer 
 rest over the icons and you will see a tooltip that explains
@@ -691,9 +693,9 @@ try to find new messages at the top of the current folder.</para>
 <varlistentry>
 <term><guilabel>Jump to first unread message when entering a folder</guilabel></term>
 <listitem>
-<para>When you enter a folder, &kmail; will go to the next unread message
-if this option is enabled. If it is not enabled, &kmail; will go to the message
-that was selected when you left the folder.</para>
+<para>If this option is enabled &kmail; will go to the next unread message
+ when you enter a folder; if it is not enabled, &kmail; will go to 
+ the message that was selected when you last left the folder.</para>
 </listitem>
 </varlistentry>
 
@@ -701,8 +703,8 @@ that was selected when you left the folder.</para>
 <term><guilabel>Mark selected messages as read after...</guilabel></term>
 <listitem>
 <para>When you select a <guilabel>new</guilabel> message, &kmail; will change the
-message's status to <guilabel>read</guilabel> after the amount of seconds
-which is configured here. If you disable this option, messages will keep their
+message's status to <guilabel>read</guilabel> after the number of seconds
+entered here. If you disable this option, messages will keep their
 <guilabel>new</guilabel> status.</para>
 </listitem>
 </varlistentry>

@@ -204,7 +204,7 @@ server. You should carefully test this to make sure it works safely.</para>
 
 <!-- TODO: move all this, this isn't important for beginners?! -->
 <para>If you select <guilabel>Store POP password in configuration
-file</guilabel> resp. <guilabel>Store IMAP password in configuration
+file</guilabel> or <guilabel>Store IMAP password in configuration
 file</guilabel> &kmail; will remember your password so you will not have to
 type it every time you start &kmail; and fetch new mail.</para>
 

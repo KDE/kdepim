@@ -167,7 +167,7 @@ have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Revoke you last move or delete action. Note that you cannot undo a deletion
+<para>Revoke your last move or delete action. Note that you cannot undo a deletion
 in the trash.</para>
 </listitem>
 </varlistentry>
@@ -708,7 +708,7 @@ write a new message.</para>
 <listitem>
 <para>Opens the composer window so you can write a new
 mail. If the current folder holds a mailing list and has a <guilabel>Post 
-Address</guilabel> defined, this address will be default <guilabel>To:</guilabel>
+Address</guilabel> defined, this address will be the default <guilabel>To:</guilabel>
 address.</para>
 </listitem>
 </varlistentry>
@@ -1414,7 +1414,7 @@ clipboard is pasted at the current cursor position.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>This replaces multiple line breaks resp. spaces with single line breaks resp. spaces.
+<para>This replaces multiple line breaks or spaces with single line breaks or spaces.
 It works on the current selection or on the complete message if there is no selection.</para>
 </listitem>
 </varlistentry>
@@ -1785,7 +1785,7 @@ the bottom which shows useful short messages).</para>
 </term>
 <listitem>
 <para>Opens a window that lets you configure the keyboard shortcuts for many
-menu command.</para>
+menu commands.</para>
 </listitem>
 </varlistentry>
 
