@@ -197,6 +197,11 @@ char* icalmemory_strdup_and_dequote(const char* str)
 		    *pout = *p;
 		    break;
 		}
+                case 't':
+                {
+		    *pout = '\t';
+		    break;
+                }
 		default:
 		{
 		    *pout = ' ';
