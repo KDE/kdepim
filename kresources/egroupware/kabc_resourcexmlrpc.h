@@ -26,6 +26,7 @@
 #include <kabc/resource.h>
 
 class KConfig;
+class UIDMapper;
 
 namespace KXMLRPC {
 class Server;
@@ -104,7 +105,7 @@ class ResourceXMLRPC : public Resource
     QString mSessionID;
     QString mKp3;
 
-    QMap<QString, QString> mUidMap;
+    UIDMapper *mUidMapper;
     QMap<QString, int> mCategoryMap;
     QMap<QString, int> mAddrTypes;
     QMap<QString, QString> mCustomFieldsMap;

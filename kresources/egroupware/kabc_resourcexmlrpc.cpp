@@ -33,6 +33,8 @@
 #include "kabc_resourcexmlrpc.h"
 #include "kabc_resourcexmlrpcconfig.h"
 
+#include "uidmapper.h"
+
 #include "xmlrpciface.h"
 
 using namespace KABC;
@@ -70,6 +72,9 @@ void ResourceXMLRPC::init( const KURL &url, const QString &domain,
 
   mSyncComm = false;
 
+  mUidMapper = new UIDMapper( locateLocal( "data", "kabc/egroupware_cache/" + url.host() + "/cache.dat" ) );
+  mUidMapper->load();
+
   mURL = url;
   mDomain = domain;
   mUser = user;
@@ -83,6 +88,11 @@ void ResourceXMLRPC::init( const KURL &url, const QString &domain,
 
 ResourceXMLRPC::~ResourceXMLRPC()
 {
+  mUidMapper->store();
+
+  delete mUidMapper;
+  mUidMapper = 0;
+
   delete mServer;
   mServer = 0;
 }
@@ -210,7 +220,7 @@ void ResourceXMLRPC::insertAddressee( const Addressee& addr )
                    QVariant( addr.uid() ) );
   } else {
     mAddrMap[ addr.uid() ] = addr;
-    args.insert( "id", mUidMap[ addr.uid() ] );
+    args.insert( "id", mUidMapper->remoteUid( addr.uid() ) );
     mServer->call( AddContactCommand, args,
                    this, SLOT( updateContactFinished( const QValueList<QVariant>&, const QVariant& ) ),
                    this, SLOT( fault( int, const QString&, const QVariant& ) ) );
@@ -221,7 +231,7 @@ void ResourceXMLRPC::insertAddressee( const Addressee& addr )
 
 void ResourceXMLRPC::removeAddressee( const Addressee& addr )
 {
-  int id = mUidMap[ addr.uid() ].toInt();
+  int id = mUidMapper->remoteUid( addr.uid() ).toInt();
 
   mServer->call( DeleteContactCommand, id,
                  this, SLOT( deleteContactFinished( const QValueList<QVariant>&, const QVariant& ) ),
@@ -273,8 +283,6 @@ void ResourceXMLRPC::logoutFinished( const QValueList<QVariant> &variant,
 void ResourceXMLRPC::listContactsFinished( const QValueList<QVariant> &mapList,
                                            const QVariant& )
 {
-  mUidMap.clear();
-
   QValueList<QVariant> contactList = mapList[ 0 ].toList();
   QValueList<QVariant>::Iterator contactIt;
 
@@ -290,8 +298,14 @@ void ResourceXMLRPC::listContactsFinished( const QValueList<QVariant> &mapList,
       addr.setResource( this );
       addr.setChanged( false );
 
+      QString localUid = mUidMapper->localUid( uid );
+      if ( localUid.isEmpty() ) {
+        mUidMapper->add( addr.uid(), uid );
+      } else {
+        addr.setUid( localUid );
+      }
+
       mAddrMap.insert( addr.uid(), addr );
-      mUidMap.insert( addr.uid(), uid );
     }
   }
 
@@ -304,7 +318,7 @@ void ResourceXMLRPC::deleteContactFinished( const QValueList<QVariant>&,
                                             const QVariant &id )
 {
   mAddrMap.remove( id.toString() );
-  mUidMap.remove( id.toString() );
+  mUidMapper->removeByLocal( id.toString() );
 
   exit_loop();
 }
@@ -320,7 +334,7 @@ void ResourceXMLRPC::addContactFinished( const QValueList<QVariant> &list,
 {
   int uid = list[ 0 ].toInt();
 
-  mUidMap.insert( id.toString(), QString::number( uid ) );
+  mUidMapper->add( id.toString(), QString::number( uid ) );
 
   exit_loop();
 }

@@ -37,6 +37,7 @@ namespace KXMLRPC {
 class Server;
 }
 
+class UIDMapper;
 class QTimer;
 
 namespace KCal {
@@ -239,8 +240,8 @@ class ResourceXMLRPC : public ResourceCalendar
     QString mSessionID;
     QString mKp3;
 
-    QMap<QString, QString> mEventUidMap;
-    QMap<QString, QString> mTodoUidMap;
+    UIDMapper *mEventUidMapper;
+    UIDMapper *mTodoUidMapper;
     QMap<QString, int> mEventCategoryMap;
     QMap<QString, int> mTodoCategoryMap;
     QMap<QString, QString> mTodoStateMap;
