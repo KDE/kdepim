@@ -1,7 +1,5 @@
 debian/tmp/usr/bin/kpilot
 debian/tmp/usr/bin/kpilotDaemon
-debian/tmp/usr/lib/kde3/libabbrowserconduit.la
-debian/tmp/usr/lib/kde3/libabbrowserconduit.so.*
 debian/tmp/usr/lib/kde3/libexpenseconduit.la
 debian/tmp/usr/lib/kde3/libexpenseconduit.so.*
 debian/tmp/usr/lib/kde3/libknotesconduit.la
@@ -10,6 +8,8 @@ debian/tmp/usr/lib/kde3/libnullconduit.la
 debian/tmp/usr/lib/kde3/libnullconduit.so.*
 debian/tmp/usr/lib/kde3/libpopmailconduit.la
 debian/tmp/usr/lib/kde3/libpopmailconduit.so.*
+debian/tmp/usr/lib/kde3/libtimeconduit.la
+debian/tmp/usr/lib/kde3/libtimeconduit.so.*
 debian/tmp/usr/lib/kde3/libtodoconduit.la
 debian/tmp/usr/lib/kde3/libtodoconduit.so.*
 debian/tmp/usr/lib/kde3/libvcalconduit.la
@@ -26,11 +26,11 @@ debian/tmp/usr/share/icons/hicolor/22x22/apps/kpilot.png
 debian/tmp/usr/share/icons/hicolor/32x32/apps/kpilot.png
 debian/tmp/usr/share/icons/hicolor/48x48/apps/kpilot.png
 debian/tmp/usr/share/icons/hicolor/48x48/apps/kpilotDaemon.png
-debian/tmp/usr/share/services/abbrowser_conduit.desktop
 debian/tmp/usr/share/services/expense-conduit.desktop
 debian/tmp/usr/share/services/knotes-conduit.desktop
 debian/tmp/usr/share/services/null-conduit.desktop
 debian/tmp/usr/share/services/popmail-conduit.desktop
+debian/tmp/usr/share/services/time_conduit.desktop
 debian/tmp/usr/share/services/todo-conduit.desktop
 debian/tmp/usr/share/services/vcal-conduit.desktop
 debian/tmp/usr/share/servicetypes/kpilotconduit.desktop

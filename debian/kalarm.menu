@@ -1,0 +1,7 @@
+?package(kalarm):\
+	needs=X11\
+	section=Apps/Tools\
+	hints="KDE"\
+	kderemove="y"\
+	title="KAlarm"\
+	command="/usr/bin/kalarm"
