@@ -58,9 +58,10 @@ ResourceCalendar *CalendarResources::AskDestinationPolicy::destination( Incidenc
   CalendarResourceManager::ActiveIterator it;
   for( it = resourceManager()->activeBegin();
        it != resourceManager()->activeEnd(); ++it ) {
-    list.append( *it );
+    if ( !(*it)->readOnly() )
+      list.append( *it );
   }
-  
+
   KRES::Resource *r;
   r = KRES::ResourceSelectDialog::getResource( list, mParent );
   return static_cast<ResourceCalendar *>( r );
@@ -99,7 +100,9 @@ void CalendarResources::init()
     connectResource( *it );
   }
 
-  mDestinationPolicy = new StandardDestinationPolicy( mManager );
+  mStandardPolicy = new StandardDestinationPolicy( mManager );
+  mAskPolicy = new AskDestinationPolicy( mManager );
+  mDestinationPolicy = mStandardPolicy;
 
   mOpen = true;
 }
@@ -112,6 +115,16 @@ CalendarResources::~CalendarResources()
   close();
 
   delete mManager;
+}
+
+void CalendarResources::setStandardDestinationPolicy()
+{
+  mDestinationPolicy = mStandardPolicy;
+}
+
+void CalendarResources::setAskDestinationPolicy()
+{
+  mDestinationPolicy = mAskPolicy;
 }
 
 void CalendarResources::close()
@@ -151,7 +164,7 @@ bool CalendarResources::isSaving()
       return true;
     }
   }
-  
+
   return false;
 }
 
@@ -261,7 +274,7 @@ void CalendarResources::deleteTodo(Todo *todo)
   kdDebug(5800) << "CalendarResources::deleteTodo" << endl;
 
   Q_ASSERT(todo);
-  
+
   if ( mResourceMap.find(todo)!=mResourceMap.end() ) {
     mResourceMap[todo]->deleteTodo( todo );
     mResourceMap.remove( todo );

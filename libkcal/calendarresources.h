@@ -63,7 +63,7 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
       public:
         StandardDestinationPolicy( CalendarResourceManager *manager )
           : DestinationPolicy( manager ) {}
-      
+
         ResourceCalendar *destination( Incidence * );
     };
 
@@ -75,7 +75,7 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
           : DestinationPolicy( manager ), mParent( parent ) {}
 
         ResourceCalendar *destination( Incidence * );
-    
+
       private:
         QWidget *mParent;
     };
@@ -93,6 +93,15 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
     {
       return mManager;
     }
+
+    /**
+      Set the destinatinpolicy to add incidences always to the standard resource
+    */
+    void setStandardDestinationPolicy();
+    /**
+      Set the destinatinpolicy to ask to which resource incidences are added
+    */
+    void setAskDestinationPolicy();
 
     /** clears out the current calendar, freeing all used memory etc. etc. */
     void close();
@@ -219,6 +228,8 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
     QMap <Incidence*, ResourceCalendar*> mResourceMap;
 
     DestinationPolicy *mDestinationPolicy;
+    StandardDestinationPolicy *mStandardPolicy;
+    AskDestinationPolicy *mAskPolicy;
 };
 
 }
