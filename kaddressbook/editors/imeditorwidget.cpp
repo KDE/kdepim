@@ -329,6 +329,7 @@ void IMEditorWidget::slotAdd()
 
 		setModified( true );
 	}
+        delete addDialog;
 }
 
 void IMEditorWidget::slotEdit()
@@ -372,6 +373,7 @@ void IMEditorWidget::slotEdit()
 
 			setModified( true );
 		}
+                delete editDialog;
 	}
 }
 
