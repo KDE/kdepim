@@ -361,6 +361,7 @@ static QString eventViewerFormatFreeBusy( FreeBusy *fb )
   return tmpStr;
 }
 
+namespace KCal {
 class EventViewerVisitor : public IncidenceBase::Visitor
 {
   public:
@@ -392,6 +393,7 @@ class EventViewerVisitor : public IncidenceBase::Visitor
   protected:
     QString mResult;
 };
+}
 
 QString IncidenceFormatter::extensiveDisplayString( IncidenceBase *incidence )
 {
@@ -739,6 +741,7 @@ static QString invitationHeaderFreeBusy( FreeBusy *fb, ScheduleMessage *msg )
   }
 }
 
+namespace KCal {
 class ScheduleMessageVisitor : public IncidenceBase::Visitor
 {
   public:
@@ -800,7 +803,7 @@ class InvitationBodyVisitor : public ScheduleMessageVisitor
       return !mResult.isEmpty();
     }
 };
-
+}
 
 QString InvitationFormatterHelper::makeLink( const QString &id, const QString &text )
 {
@@ -1383,7 +1386,7 @@ QString IncidenceFormatter::formatTNEFInvitation( const QByteArray& tnef,
  *  Helper functions for the Incidence tooltips
  *******************************************************************/
 
-
+namespace KCal {
 class ToolTipVisitor : public IncidenceBase::Visitor
 {
   public:
@@ -1414,6 +1417,7 @@ class ToolTipVisitor : public IncidenceBase::Visitor
     bool mRichText;
     QString mResult;
 };
+}
 
 QString ToolTipVisitor::dateRangeText( Event*event )
 {
@@ -1565,7 +1569,7 @@ QString IncidenceFormatter::toolTipString( IncidenceBase *incidence, bool richTe
  *  Helper functions for the Incidence tooltips
  *******************************************************************/
 
-
+namespace KCal {
 class MailBodyVisitor : public IncidenceBase::Visitor
 {
   public:
@@ -1586,6 +1590,7 @@ class MailBodyVisitor : public IncidenceBase::Visitor
   protected:
     QString mResult;
 };
+}
 
 static QString mailBodyIncidence( Incidence *incidence )
 {

@@ -325,6 +325,7 @@ ICalFormatImpl::~ICalFormatImpl()
   delete mCompat;
 }
 
+namespace KCal {
 class ToComponentVisitor : public IncidenceBase::Visitor
 {
   public:
@@ -342,6 +343,7 @@ class ToComponentVisitor : public IncidenceBase::Visitor
     icalcomponent *mComponent;
     Scheduler::Method mMethod;
 };
+}
 
 icalcomponent *ICalFormatImpl::writeIncidence( IncidenceBase *incidence, Scheduler::Method method )
 {
