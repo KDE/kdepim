@@ -134,6 +134,7 @@ protected:
 protected:
 	KCal::Calendar *fCalendar;
 	int pilotindex;
+	QString fCalendarFile;
 
 protected:
 	virtual VCalConduitSettings *config()=0;

@@ -46,7 +46,7 @@ VCalWidgetSetupBase::VCalWidgetSetupBase(QWidget *w, const char *n) :
 	FUNCTIONSETUP;
 	fWidget=fConfigWidget;
 
-	fConfigWidget->fCalendarFile->setMode( KFile::File | KFile::LocalOnly );
+	fConfigWidget->fCalendarFile->setMode(KFile::File);
 	fConfigWidget->fCalendarFile->setFilter("*.vcs *.ics|ICalendars\n*.*|All Files (*.*)");
 
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));

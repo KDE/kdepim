@@ -38,6 +38,7 @@ static const char *vcalconduitbase_id = "$Id$";
 #include <qfile.h>
 
 #include <kmessagebox.h>
+#include <kio/netaccess.h>
 
 #include <libkcal/calendar.h>
 #include <libkcal/calendarlocal.h>
@@ -216,7 +217,7 @@ error:
 
 	switch(config()->calendarType())
 	{
-		case VCalConduitSettings::eCalendarLocal:
+		case VCalConduitSettings::eCalendarLocal:{
 #ifdef DEBUG
 			DEBUGCONDUIT<<"Using CalendarLocal, file="<<config()->calendarFile()<<endl;
 #endif
@@ -242,20 +243,32 @@ error:
 			DEBUGCONDUIT<<"Calendar is local time: "<<fCalendar->isLocalTime()<<endl;
 #endif
 
+			KURL kurl(config()->calendarFile());
+			if(!KIO::NetAccess::download(config()->calendarFile(), fCalendarFile, 0L) &&
+				!kurl.isLocalFile())
+			{
+				emit logError(i18n("You chose to sync with the file \"%1\", which "
+							"cannot be opened. Please make sure to supply a "
+							"valid file name in the conduit's configuration dialog. "
+							"Aborting the conduit.").arg(config()->calendarFile()));
+				KIO::NetAccess::removeTempFile(fCalendarFile);
+				return false;
+			}
+
 			// if there is no calendar yet, use a first sync..
 			// the calendar is initialized, so nothing more to do...
-			if (!dynamic_cast<KCal::CalendarLocal*>(fCalendar)->load(config()->calendarFile()) )
+			if (!dynamic_cast<KCal::CalendarLocal*>(fCalendar)->load(fCalendarFile) )
 			{
 #ifdef DEBUG
-				DEBUGCONDUIT << "calendar file "<<config()->calendarFile()<<
+				DEBUGCONDUIT << "calendar file "<<fCalendarFile <<
 						" could not be opened. Will create a new one"<<endl;
 #endif
 				// Try to create empty file. if it fails, no valid file name was given.
-				QFile fl(config()->calendarFile());
+				QFile fl(fCalendarFile);
 				if (!fl.open(IO_WriteOnly | IO_Append))
 				{
 #ifdef DEBUG
-					DEBUGCONDUIT<<"Invalid calendar file name "<<config()->calendarFile()<<endl;
+					DEBUGCONDUIT<<"Invalid calendar file name "<<fCalendarFile<<endl;
 #endif
 					emit logError(i18n("You chose to sync with the file \"%1\", which "
 							"cannot be opened or created. Please make sure to supply a "
@@ -267,7 +280,7 @@ error:
 				fFirstSync=true;
 			}
 			addSyncLogEntry(i18n("Syncing with file \"%1\"").arg(config()->calendarFile()));
-			break;
+			break;}
 
 		case VCalConduitSettings::eCalendarResource:
 #ifdef DEBUG
@@ -503,10 +516,24 @@ void VCalConduitBase::cleanup()
 	KPILOT_DELETE(fLocalDatabase);
 	if (fCalendar)
 	{
+		KURL kurl(config()->calendarFile());
 		switch(config()->calendarType())
 		{
 			case VCalConduitSettings::eCalendarLocal:
-					dynamic_cast<KCal::CalendarLocal*>(fCalendar)->save(config()->calendarFile());
+				dynamic_cast<KCal::CalendarLocal*>(fCalendar)->save(fCalendarFile);
+				if(!kurl.isLocalFile())
+				{
+					if(!KIO::NetAccess::upload(fCalendarFile, config()->calendarFile(), 0L)) {
+						emit logError(i18n("An error occured while uploading \"%1\". You can try to upload "
+							"the temporary local file \"%2\" manually.")
+							.arg(config()->calendarFile()).arg(fCalendarFile));
+					}
+					else {
+						KIO::NetAccess::removeTempFile(fCalendarFile);
+					}
+					QFile backup(fCalendarFile + "~");
+					backup.remove();
+				}
 				break;
 			case VCalConduitSettings::eCalendarResource:
 				fCalendar->save();

@@ -237,6 +237,7 @@ private:
 	QMap < recordid_t, QString> addresseeMap;
 	RecordIDList syncedIds, allIds;
 	static AddressBook* aBook;
+	QString fABookFile;
 	AddressBook::Iterator abiter;
 	// for a local file, we need to obtain a saveTicket when opening the abook
 	Ticket*ticket;

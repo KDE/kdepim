@@ -48,6 +48,7 @@ AbbrowserWidgetSetup::AbbrowserWidgetSetup(QWidget *w, const char *n) :
 	fConduitName=i18n("Addressbook");
 	UIDialog::addAboutPage(fConfigWidget->tabWidget,AbbrowserConduitFactory::about());
 	fWidget=fConfigWidget;
+	fConfigWidget->fAbookFile->setMode(KFile::File);
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
 	CM(fSyncDestination,SIGNAL(clicked(int)));
 	CM(fAbookFile,SIGNAL(textChanged(const QString &)));

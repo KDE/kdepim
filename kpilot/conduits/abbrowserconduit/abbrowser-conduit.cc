@@ -34,9 +34,11 @@
 
 #include <qtimer.h>
 #include <qtextcodec.h>
+#include <qfile.h>
 
 #include <kabc/stdaddressbook.h>
 #include <kabc/resourcefile.h>
+#include <kio/netaccess.h>
 
 #include <pilotSerialDatabase.h>
 #include <pilotLocalDatabase.h>
@@ -206,6 +208,7 @@ bool AbbrowserConduit::makeArchived(Addressee &addr)
 bool AbbrowserConduit::_loadAddressBook()
 {
 	FUNCTIONSETUP;
+
 	switch ( AbbrowserSettings::addressbookType() )
 	{
 		case AbbrowserSettings::eAbookResource:
@@ -214,11 +217,23 @@ bool AbbrowserConduit::_loadAddressBook()
 			break;
 		case AbbrowserSettings::eAbookFile: { // initialize the abook with the given file
 			DEBUGCONDUIT<<"Loading custom addressbook"<<endl;
+			KURL kurl(AbbrowserSettings::fileName());
+			if(!KIO::NetAccess::download(AbbrowserSettings::fileName(), fABookFile, 0L) &&
+				!kurl.isLocalFile())
+			{
+				emit logError(i18n("You chose to sync with the file \"%1\", which "
+							"cannot be opened. Please make sure to supply a "
+							"valid file name in the conduit's configuration dialog. "
+							"Aborting the conduit.").arg(AbbrowserSettings::fileName()));
+				KIO::NetAccess::removeTempFile(fABookFile);
+				return false;
+			}
+
 			aBook = new AddressBook();
 			if (!aBook) return false;
-			KABC::Resource *res = new ResourceFile( AbbrowserSettings::fileName(), "vcard" );
+			KABC::Resource *res = new ResourceFile(fABookFile, "vcard" );
 			if ( !aBook->addResource( res ) ) {
-				DEBUGCONDUIT << "Unable to open resource for file " << AbbrowserSettings::fileName() << endl;
+				DEBUGCONDUIT << "Unable to open resource for file " << fABookFile << endl;
 				KPILOT_DELETE( aBook );
 				return false;
 			}
@@ -291,6 +306,24 @@ bool AbbrowserConduit::_saveAddressBook()
 	}
 	if ( AbbrowserSettings::addressbookType()!= AbbrowserSettings::eAbookResource )
 	{
+		KURL kurl(AbbrowserSettings::fileName());
+		if(!kurl.isLocalFile())
+		{
+#ifdef DEBUG
+			DEBUGCONDUIT << "Deleting local addressbook tempfile" << endl;
+#endif
+			if(!KIO::NetAccess::upload(fABookFile, AbbrowserSettings::fileName(), 0L)) {
+				emit logError(i18n("An error occured while uploading \"%1\". You can try to upload "
+					"the temporary local file \"%2\" manually")
+					.arg(AbbrowserSettings::fileName()).arg(fABookFile));
+			}
+			else {
+				KIO::NetAccess::removeTempFile(fABookFile);
+			}
+			QFile backup(fABookFile + "~");
+			backup.remove();
+		}
+
 #ifdef DEBUG
 		DEBUGCONDUIT<<"Deleting addressbook"<<endl;
 #endif
