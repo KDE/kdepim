@@ -5,5 +5,4 @@ ksieve_HEADERS = \
 	error.h \
 	lexer.h \
 	parser.h \
-	scriptbuilder.h \
-	dombuilder.h
+	scriptbuilder.h
