@@ -122,10 +122,10 @@ CalFilter *Calendar::filter()
   return mFilter;
 }
 
-QStringList Calendar::incidenceCategories()
+QStringList Calendar::categories()
 {
   Incidence::List rawInc( rawIncidences() );
-  QStringList categories, thisCats;
+  QStringList cats, thisCats;
   // @TODO: For now just iterate over all incidences. In the future,
   // the list of categories should be built when reading the file.
   for ( Incidence::List::ConstIterator i = rawInc.constBegin();
@@ -133,12 +133,12 @@ QStringList Calendar::incidenceCategories()
     thisCats = (*i)->categories();
     for ( QStringList::ConstIterator si = thisCats.constBegin();
           si != thisCats.constEnd(); ++si ) {
-      if ( categories.find( *si ) == categories.end() ) {
-        categories.append( *si );
+      if ( cats.find( *si ) == cats.end() ) {
+        cats.append( *si );
       }
     }
   }
-  return categories;
+  return cats;
 }
 
 Incidence::List Calendar::incidences( const QDate &date )

@@ -293,8 +293,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
        @return a QStringList containing all the categories.
     */
-    //TODO: need a better method name.  how about categories()?
-    QStringList incidenceCategories();
+    QStringList categories();
 
 // Incidence Specific Methods //
 
