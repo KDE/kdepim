@@ -35,7 +35,7 @@
                 <cstring>fConnectionType</cstring>
             </property>
             <property name="title">
-                <string>Handheld connected via:</string>
+                <string>Handheld Connected Via</string>
             </property>
             <vbox>
                 <property name="name">

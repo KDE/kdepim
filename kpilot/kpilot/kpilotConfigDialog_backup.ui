@@ -96,7 +96,7 @@
                 <cstring>fRunConduitsWithBackup</cstring>
             </property>
             <property name="text">
-                <string>Run &amp;Conduits during a backup</string>
+                <string>Run &amp;conduits during a backup</string>
             </property>
             <property name="accel">
                 <string>Alt+C</string>

@@ -24,7 +24,7 @@
                 <cstring>fAppType</cstring>
             </property>
             <property name="title">
-                <string>Set default values for syncing with:</string>
+                <string>Set Default Values for Syncing With</string>
             </property>
             <grid>
                 <property name="name">

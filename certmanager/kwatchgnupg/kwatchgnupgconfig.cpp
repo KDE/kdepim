@@ -52,7 +52,7 @@ static int log_level_to_int( const QString& loglevel )
   if( loglevel == "none" ) {
 	return 0;
   } else if( loglevel == "basic" ) {
-	return 1;	
+	return 1;
   } else if( loglevel == "advanced" ) {
 	return 2;
   } else if( loglevel == "expert" ) {
@@ -68,7 +68,7 @@ static int log_level_to_int( const QString& loglevel )
 KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
   : KDialogBase( KDialogBase::Tabbed, i18n("Configure KWatchGnuPG"),
 				 KDialogBase::Apply|KDialogBase::Ok|KDialogBase::Cancel,
-				 KDialogBase::Ok,				 
+				 KDialogBase::Ok,
 				 parent, name )
 {
   /******************* WatchGnuPG page *******************/
@@ -76,7 +76,7 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
   QVBoxLayout* topLayout = new QVBoxLayout( page, 0, KDialog::spacingHint() );
 
   QHBoxLayout* hbl = new QHBoxLayout( topLayout );
-  QLabel *exeLA = new QLabel( i18n("KWatchGnuPG &executable"), page );
+  QLabel *exeLA = new QLabel( i18n("KWatchGnuPG &executable:"), page );
   hbl->addWidget( exeLA );
   mExeED = new  KURLRequester( page );
   hbl->addWidget( mExeED );
@@ -84,7 +84,7 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
   exeLA->setBuddy( mExeED );
 
   hbl = new QHBoxLayout( topLayout );
-  QLabel *socketLA = new QLabel( i18n("KWatchGnuPG &socket"), page );
+  QLabel *socketLA = new QLabel( i18n("KWatchGnuPG &socket:"), page );
   hbl->addWidget( socketLA );
   mSocketED = new  KURLRequester( page );
   hbl->addWidget( mSocketED );
@@ -92,7 +92,7 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
   socketLA->setBuddy( mSocketED );
 
   hbl = new QHBoxLayout( topLayout );
-  QLabel* logLevelLA = new QLabel( i18n("Log Level"), page );
+  QLabel* logLevelLA = new QLabel( i18n("Log level:"), page );
   hbl->addWidget( logLevelLA );
   mLogLevelCB = new QComboBox( page );
   hbl->addWidget( mLogLevelCB );
@@ -107,8 +107,8 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
   page = addPage( i18n("Log Window") );
   topLayout = new QVBoxLayout( page, 0, KDialog::spacingHint() );
   hbl = new QHBoxLayout( topLayout );
-  
-  QLabel* loglenLA = new QLabel(i18n("&Maximum number of lines in log (zero is infinite)"),
+
+  QLabel* loglenLA = new QLabel(i18n("&Maximum number of lines in log (zero is infinite):"),
 								page );
   hbl->addWidget( loglenLA );
   mLoglenSB = new QSpinBox( 0, 100000, 1, page );
@@ -121,7 +121,7 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
   connect( mWordWrapCB, SIGNAL( clicked() ),
 		   this, SLOT( slotChanged() ) );
   topLayout->addWidget( mWordWrapCB );
-  
+
   connect( this, SIGNAL( applyClicked() ),
 		   this, SLOT( slotSave() ) );
   connect( this, SIGNAL( okClicked() ),
@@ -133,7 +133,7 @@ void KWatchGnuPGConfig::loadConfig()
   KConfig* config = kapp->config();
   config->setGroup("WatchGnuPG");
   mExeED->setURL( config->readEntry( "Executable", "watchgnupg" ) );
-  mSocketED->setURL( config->readEntry( "Socket", QDir::home().canonicalPath() 
+  mSocketED->setURL( config->readEntry( "Socket", QDir::home().canonicalPath()
 										+ "/.gnupg/log-socket") );
   mLogLevelCB->setCurrentItem( log_level_to_int( config->readEntry( "LogLevel", "basic" ) ) );
 

@@ -36,7 +36,7 @@
 #include <kmessagebox.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <kconfigskeleton.h> 
+#include <kconfigskeleton.h>
 
 #include "kpilotConfig.h"
 #include "options.h"
@@ -49,7 +49,7 @@
 
 
 ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
-	KDialogBase(parent, n, true, i18n("Autodetecting your handheld"), KDialogBase::Ok|KDialogBase::Cancel, KDialogBase::Cancel, true), 
+	KDialogBase(parent, n, true, i18n("Autodetecting Your Handheld"), KDialogBase::Ok|KDialogBase::Cancel, KDialogBase::Cancel, true),
 	mDetected(false), mUserName(""), mDevice(""), mUID(0)
 {
 	QVBox *mainWidget = makeVBoxMainWidget();
@@ -65,9 +65,9 @@ ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
 	fStatus->setAlignment( QLabel::WordBreak );
 	fStatusGroupLayout->addWidget( fStatus, 0, 0 );
 
-	
-	
-	fResultsGroup = new QGroupBox( i18n( "Detected values" ), mainWidget, "fResultsGroup" );
+
+
+	fResultsGroup = new QGroupBox( i18n( "Detected Values" ), mainWidget, "fResultsGroup" );
 	fResultsGroup->setEnabled( FALSE );
 	fResultsGroup->setColumnLayout(0, Qt::Vertical );
 	fResultsGroupLayout = new QGridLayout( fResultsGroup->layout() );
@@ -90,7 +90,7 @@ ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
 	resize( QSize(459, 298).expandedTo(minimumSizeHint()) );
 	clearWState( WState_Polished );
 	enableButtonOK(false);
-	
+
 	mDevicesToProbe << "/dev/pilot"
 	                <<"/dev/ttyS0"<<"/dev/ttyS1"<<"/dev/ttyS2"<<"/dev/ttyS3"
 	                <<"/dev/tts/0"<<"/dev/tts/1"<<"/dev/tts/2"<<"/dev/tts/3"
@@ -117,7 +117,7 @@ int ProbeDialog::exec() {
 }
 
 // Devices to probe:
-// Linux: /dev/pilot (symlink), /dev/ttyS* (serial + irda), /dev/tts/[012345...] (with devfs), 
+// Linux: /dev/pilot (symlink), /dev/ttyS* (serial + irda), /dev/tts/[012345...] (with devfs),
 //        /dev/ttyUSB*, /dev/usb/tts/[012345...]
 // *BSD: /dev/pilot, /dev/cuaa[01]   (serial), /dev/ucom* (usb)
 
@@ -128,7 +128,7 @@ void ProbeDialog::startDetection() {
 		daemonStub->stopListening();
 	}
 	KPILOT_DELETE(daemonStub);
-		
+
 		// TODO: connect to all sockets, connect each to the connection() slot
 		// TODO: start timer to poll devfs devices periodically
 }
@@ -140,20 +140,20 @@ void ProbeDialog::timeout() {
 
 void ProbeDialog::connection() {
 //	fStatus->setText( i18n("Found a connected device") );
-	
+
 	// TODO: After we have the connection, query the username and uid and the device and
 	mUserName = "Reinhold Kainhofer";
 	mDevice = "/dev/pilot";
 	mUID = 12345;
-	
-	
+
+
 	disconnectDevices();
 	fStatus->setText( i18n("Found a connected device") );
 	fUser->setText( mUserName );
 	fDevice->setText( mDevice );
 	fDevice->setText("/dev/pilot");
 	mDetected = true;
-	
+
 	fResultsGroup->setEnabled( true );
 	enableButtonOK(true);
 }
@@ -161,7 +161,7 @@ void ProbeDialog::connection() {
 void ProbeDialog::disconnectDevices() {
 	fStatus->setText( i18n("Disconnected from all devices") );
 	// TODO: Really disconnect all devices we are listening on
-	
+
 	PilotDaemonDCOP_stub *daemonStub = new PilotDaemonDCOP_stub("kpilotDaemon", "KPilotDaemonIface");
 	if (daemonStub) {
 		daemonStub->startListening();

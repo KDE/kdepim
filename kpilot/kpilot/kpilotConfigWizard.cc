@@ -40,7 +40,7 @@ static const char *conduitconfigdialog_id =
 #include <kmessagebox.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <kconfigskeleton.h> 
+#include <kconfigskeleton.h>
 
 #include "kpilotConfig.h"
 #include "options.h"
@@ -57,16 +57,16 @@ ConfigWizard::ConfigWizard(QWidget *parent, const char *n) :
 	KWizard(parent, n)
 {
 	page1=new ConfigWizard_base1(this);
-	addPage( page1, i18n("Select connection type") );
+	addPage( page1, i18n("Select Connection Type") );
 	page2=new ConfigWizard_base2(this);
-	addPage( page2, i18n("Pilot info") );
+	addPage( page2, i18n("Pilot Info") );
 	page3=new ConfigWizard_base3(this);
-	addPage( page3, i18n("Application to sync with") );
+	addPage( page3, i18n("Application to Sync With") );
 	setFinishEnabled( page3, true );
-	
+
 	connect( page2->fProbeButton, SIGNAL( pressed() ),
 		this, SLOT( probeHandheld() ) );
-		
+
 	KPilotSettings::self()->readConfig();
 	page2->fUserName->setText( KPilotSettings::userName() );
 	page2->fDeviceName->setText( KPilotSettings::pilotDevice() );
@@ -104,7 +104,7 @@ void ConfigWizard::accept()
 	KPilotSettings::setSyncType(0);
 	KPilotSettings::setFullSyncOnPCChange( true );
 	KPilotSettings::setConflictResolution(0);
-	
+
 	QStringList conduits = KPilotSettings::installedConduits();
 	// TODO: enable the right conduits
 #define APPEND_CONDUIT(a) if (!conduits.contains(a)) conduits.append(a)
@@ -132,16 +132,16 @@ void ConfigWizard::accept()
 	}
 	KPilotSettings::setInstalledConduits( conduits );
 #undef APPEND_CONDUIT
-	
+
 	KMessageBox::information(this, i18n("KPilot is now configured to sync with %1.\n"
 		"The remaining options in the config dialog are advanced options and can "
-		"be used to fine-tune KPilot.").arg(applicationName), i18n("Automatic configuration finished"));
+		"be used to fine-tune KPilot.").arg(applicationName), i18n("Automatic Configuration Finished"));
 	KPilotSettings::self()->writeConfig();
 	QDialog::accept();
 }
 
 // Devices to probe:
-// Linux: /dev/pilot (symlink), /dev/ttyS* (serial + irda), /dev/tts/[012345...] (with devfs), 
+// Linux: /dev/pilot (symlink), /dev/ttyS* (serial + irda), /dev/tts/[012345...] (with devfs),
 //        /dev/ttyUSB*, /dev/usb/tts/[012345...]
 // *BSD: /dev/pilot, /dev/cuaa[01]   (serial), /dev/ucom* (usb)
 
