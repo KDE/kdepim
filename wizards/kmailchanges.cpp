@@ -71,6 +71,9 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
         c.writeEntry( "store-passwd", true );
       }
 
+      c.setGroup( QString("Folder-%1").arg( uid ) );
+      c.writeEntry( "isOpen", true );
+
       c.setGroup( QString("Transport %1").arg(transCnt+1) );
       c.writeEntry( "name", "Kolab Server" );
       c.writeEntry( "host", KolabConfig::self()->server() );
