@@ -36,6 +36,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <ksimpleconfig.h>
+#include <kprocess.h>
 #include <kio/netaccess.h>
 #include <dcopclient.h>
 
@@ -493,26 +494,25 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
       }
 
       // Start the client application
-      QString execStr = locate("exe", calendar->appName());
-      if (execStr.isEmpty()) {
+      KProcess p;
+      QString cmd = locate("exe", calendar->appName());
+      if (cmd.isEmpty()) {
         kdDebug(5900) << "AlarmDaemon::notifyEvent(): '"
                       << calendar->appName() << "' not found" << endl;
         return true;
       }
+      p << cmd;
       if (client.notificationType == ClientInfo::COMMAND_LINE_NOTIFY)
       {
         // Use the command line to tell the client about the alarm
-        execStr += " --handleEvent ";
-        execStr += eventID;
-        execStr += " --calendarURL ";
-        execStr += calendar->urlString();
-        system(QFile::encodeName(execStr));
+        p << "--handleEvent" << eventID << "--calendarURL" << calendar->urlString();
+        p.start(KProcess::Block);
         kdDebug(5900) << "AlarmDaemon::notifyEvent(): used command line" << endl;
         return true;
       }
-      system(QFile::encodeName(execStr));
+      p.start(KProcess::Block);
       kdDebug(5900) << "AlarmDaemon::notifyEvent(): started "
-                    << QFile::encodeName(execStr) << endl;
+                    << cmd << endl;
     }
 
     if (client.notificationType == ClientInfo::DCOP_SIMPLE_NOTIFY)
