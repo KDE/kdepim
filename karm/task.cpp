@@ -75,6 +75,7 @@ void Task::init( const QString& taskName, long minutes, long sessionTime,
   //kdDebug(5970) << "Task::init(" << taskName << ", " << minutes << ", "
   //  << sessionTime << ", desktops)" << endl;
 
+  _removing = false;
   _name = taskName.stripWhiteSpace();
   _lastStart = QDateTime::currentDateTime();
   _totalTime = _time = minutes;
@@ -109,9 +110,11 @@ void Task::setRunning( bool on, KarmStorage* storage )
   else {
     if (_timer->isActive()) {
       _timer->stop();
+      if ( ! _removing ) {
       storage->stopTimer(this);
       setPixmap(1, UserIcon(QString::fromLatin1("empty-watch.xpm")));
     }
+  }
   }
 }
 
@@ -242,8 +245,8 @@ bool Task::remove( QPtrList<Task>& activeTasks, KarmStorage* storage)
 
   bool ok = true;
 
+  _removing = true;
   storage->removeTask(this);
-
   if( isRunning() ) setRunning( false, storage );
 
   for (Task* child = this->firstChild(); child; child = child->nextSibling())
@@ -254,6 +257,8 @@ bool Task::remove( QPtrList<Task>& activeTasks, KarmStorage* storage)
   }
 
   changeParentTotalTimes( -_sessionTime, -_time);
+
+  _removing = false;
 
   return ok;
 }
