@@ -183,7 +183,6 @@ PilotDaemon::reloadSettings()
 	FUNCTIONSETUP;
 
   KConfig* config = KPilotLink::getConfig();
-  config->setGroup(QString());
   
   fPilotDevice = config->readEntry("PilotDevice");
 	getPilotSpeed(config);

@@ -17,6 +17,7 @@
 #include <qmenubar.h>
 #include <qlist.h>
 #include <qpopmenu.h>
+#include <qpixmap.h>
 
 #include <kapp.h>
 #include <klocale.h>
@@ -63,7 +64,7 @@ class KPilotInstaller : public KTMainWindow
 	* the component list -- the logo always remains and
 	* can hide whatever is going on in the background.
 	*/
-	void showTitlePage();
+	void showTitlePage(bool force=false);
 
     void testDir(QString name);
     bool getQuitAfterCopyComplete() const { return fQuitAfterCopyComplete; }
@@ -92,6 +93,7 @@ protected:
 	int testSocket(KSocket *);
 
 private:
+      void initIcons();
       void initMenu();
       void initStatusBar();
       void initToolBar();
@@ -102,6 +104,7 @@ private:
       static const int ID_FILE_SETTINGS;
       static const int ID_FILE_BACKUP;
       static const int ID_FILE_RESTORE;
+      static const int ID_FILE_HOTSYNC;
       static const int ID_HELP_ABOUT;
       static const int ID_HELP_HELP;
       static const int ID_CONDUITS_ENABLE;
@@ -138,6 +141,8 @@ private:
 	* @see conduitMenu
 	*/
 	QComboBox	*conduitCombo;
+
+	QPixmap	icon_hotsync,icon_backup;
 
  protected slots:
       void menuCallback(int);

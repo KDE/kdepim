@@ -51,6 +51,7 @@ static const char *id="$Id$";
 #ifdef KDE2
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
+#include <kiconloader.h>
 #include <kdebug.h>
 #endif
 
@@ -69,6 +70,7 @@ const int KPilotInstaller::ID_FILE_QUIT = 1;
 const int KPilotInstaller::ID_FILE_SETTINGS = 2;
 const int KPilotInstaller::ID_FILE_BACKUP = 3;
 const int KPilotInstaller::ID_FILE_RESTORE = 4;
+const int KPilotInstaller::ID_FILE_HOTSYNC = 9;
 const int KPilotInstaller::ID_HELP_HELP = 5;
 const int KPilotInstaller::ID_HELP_ABOUT = 6;
 const int KPilotInstaller::ID_CONDUITS_ENABLE = 7;
@@ -136,7 +138,7 @@ KPilotInstaller::KPilotInstaller()
     setupWidget();
     initComponents();
     initStatusLink();  // This is separate to allow components to initialize
-    showTitlePage();
+    showTitlePage(true);
     show();
     }
 
@@ -173,6 +175,7 @@ KPilotInstaller::setupWidget()
     setCaption("KPilot");
     setMinimumSize(500,405);
     setMaximumSize(500,405);
+    initIcons();
     initMenu();
     initStatusBar();
     initToolBar();
@@ -229,15 +232,34 @@ KPilotInstaller::initStatusBar()
 #include "hotsync.h"
 #include "toolbar_backup.xpm"
 
+void KPilotInstaller::initIcons()
+{
+	KGlobal::iconLoader()->addAppDir("kpilot");
+	icon_hotsync = KGlobal::iconLoader()->loadIcon("hotsync",
+		KIcon::Toolbar,0,KIcon::DefaultState,0, true);
+	if (icon_hotsync.isNull())
+	{
+		icon_hotsync=QPixmap((const char **)hotsync_icon);
+	}
+
+	icon_backup = KGlobal::iconLoader()->loadIcon("backup",
+		KIcon::Toolbar,0,KIcon::DefaultState,0, true);
+	if (icon_backup.isNull())
+	{
+		icon_backup =QPixmap((const char **)toolbar_backup);
+	}
+}
+
+
 void
 KPilotInstaller::initToolBar()
   {
 	FUNCTIONSETUP;
 
   fToolBar = new KToolBar(this, "toolbar");
-  QPixmap icon(hotsync_icon);
 
-  fToolBar->insertButton(icon, 0, SIGNAL(clicked()), this, SLOT(doHotSync()),
+  fToolBar->insertButton(icon_hotsync, 
+  	0, SIGNAL(clicked()), this, SLOT(doHotSync()),
 			 TRUE, i18n("Hot-Sync"));
 
 	// This next button exactly mirrors
@@ -245,12 +267,9 @@ KPilotInstaller::initToolBar()
 	// "backup" choice.
 	//
 	//
-	{
-		QPixmap bicon((const char **)toolbar_backup);
-		fToolBar->insertButton(bicon,ID_FILE_BACKUP,
-			SIGNAL(clicked(int)),this,SLOT(menuCallback(int)),
-			TRUE, i18n("Full Backup"));
-	}
+	fToolBar->insertButton(icon_backup,ID_FILE_BACKUP,
+		SIGNAL(clicked(int)),this,SLOT(menuCallback(int)),
+		TRUE, i18n("Full Backup"));
 
 
 
@@ -276,7 +295,6 @@ KPilotInstaller::initToolBar()
 		i18n("KPilot Mode"), 140, 0);
 	*/
 
-  // This only works after Beta 4.. 
   fToolBar->alignItemRight(KPilotInstaller::ID_COMBO);
   addToolBar(fToolBar);
   }
@@ -311,12 +329,15 @@ KPilotInstaller::slotModeSelected(int selected)
 	fVisibleWidgetList.at(selected)->show();
 }
 
-void KPilotInstaller::showTitlePage()
+void KPilotInstaller::showTitlePage(bool force)
 {
 	FUNCTIONSETUP;
 
-	slotModeSelected(0);
-	conduitCombo->setCurrentItem(0);
+	if ((conduitCombo->currentItem()!=0) || force)
+	{
+		slotModeSelected(0);
+		conduitCombo->setCurrentItem(0);
+	}
 }
 
 	
@@ -676,10 +697,14 @@ KPilotInstaller::initMenu()
     QPopupMenu* fileMenu = new QPopupMenu;
     fileMenu->insertItem(i18n("&Settings"), KPilotInstaller::ID_FILE_SETTINGS);
     fileMenu->insertSeparator(-1);
-    fileMenu->insertItem(i18n("&Backup"), KPilotInstaller::ID_FILE_BACKUP);
+	fileMenu->insertItem(icon_hotsync,
+		i18n("&Hot-Sync"),KPilotInstaller::ID_FILE_HOTSYNC);
+	fileMenu->insertItem(icon_backup,
+		i18n("&Backup"), KPilotInstaller::ID_FILE_BACKUP);
     fileMenu->insertItem(i18n("&Restore"), KPilotInstaller::ID_FILE_RESTORE);
     fileMenu->insertSeparator(-1);
-    fileMenu->insertItem(i18n("&Quit"), KPilotInstaller::ID_FILE_QUIT);
+	fileMenu->insertItem(SmallIcon("exit"),
+		i18n("&Quit"), KPilotInstaller::ID_FILE_QUIT);
     connect(fileMenu, SIGNAL (activated(int)), SLOT (menuCallback(int)));
     
 	conduitMenu = new QPopupMenu;
@@ -689,10 +714,14 @@ KPilotInstaller::initMenu()
 	connect(conduitMenu, SIGNAL(activated(int)),
 		SLOT(menuCallback(int)));
 
+#ifdef KDE2
+	KPopupMenu *theHelpMenu = helpMenu();
+#else
 	QPopupMenu *theHelpMenu = KTMainWindow::helpMenu(QString(version(0)) +
 		i18n("\n\nCopyright (C) 1998-2000 Dan Pilone, Adriaan de Groot") +
 		i18n("\n\nProgramming by:\n") +
 		authors()) ;
+#endif
     
     this->fMenuBar = new KMenuBar(this);
     this->fMenuBar->insertItem(i18n("&File"), fileMenu);
@@ -852,6 +881,10 @@ void KPilotInstaller::menuCallback(int item)
 	case KPilotInstaller::ID_FILE_RESTORE:
 		showTitlePage();
 		doRestore();
+		break;
+	case KPilotInstaller::ID_FILE_HOTSYNC :
+		showTitlePage();
+		doHotSync();
 		break;
 	case KPilotInstaller::ID_CONDUITS_SETUP:
 		showTitlePage();

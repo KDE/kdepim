@@ -117,7 +117,8 @@ int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig *config)
 
 	if (debug_level & DB_TEDIOUS)
 	{
-		kdDebug() << fname << ": Reading AddressDB...";
+		kdDebug() << fname << ": Reading AddressDB..."
+			<< endl;
 	}
 
 	while((pilotRec = addressDB->readRecordByIndex(currentRecord)) != 0L)
@@ -137,19 +138,12 @@ int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig *config)
 		}
 		delete pilotRec;
 		currentRecord++;
-		// Print out a . after every 16 records (whenever
-		// the low four bits of the record number are 0)
-		//
-		//
-		if ((debug_level & DB_TEDIOUS) && !(currentRecord & 0xf))
-		{
-			kdDebug() << '.' ;
-		}
 	}
 
 	if (debug_level & DB_TEDIOUS)
 	{
-		kdDebug() << '(' << currentRecord << " records)" << endl;
+		kdDebug() << fname 
+			<< ": Total " << currentRecord << " records" << endl;
 	}
 
 	return currentRecord;
@@ -320,7 +314,8 @@ AddressWidget::updateWidget()
 	fAddressList.first();
 	if (debug_level & UI_TEDIOUS)
 	{
-		kdDebug() << fname << ": Adding records...";
+		kdDebug() << fname << ": Adding records..."
+			<< endl;
 	}
 
 	while(fAddressList.current())
@@ -345,19 +340,12 @@ AddressWidget::updateWidget()
 		}
 		listIndex++;
 		fAddressList.next();
-		// Print a . every 16 records (when the low 4
-		// bits of the index are 0)
-		//
-		//
-		if ((debug_level & UI_TEDIOUS) && !(listIndex & 0xf))
-		{
-			kdDebug() << '.' ;
-		}
 	}
 	fTextWidget->clear();
 	if (debug_level & UI_TEDIOUS)
 	{
-		kdDebug() << '(' << listIndex << " records)" << endl;
+		kdDebug() << fname
+			<< ": " << listIndex << " records" << endl;
 	}
 }
 
@@ -862,4 +850,7 @@ AddressWidget::slotExportAddressList()
     outFile.close();
     }
 
-// $Log:$
+// $Log$
+// Revision 1.9  2000/10/25 12:19:44  adridg
+// Conflicts resolved, pilot-link-0.0.0 bug workaround
+//

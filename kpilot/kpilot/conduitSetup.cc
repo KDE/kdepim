@@ -23,8 +23,13 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <iostream.h>
+
 #include <qdir.h>
 #include <qlayout.h>
+#include <qpushbutton.h>
+#include <qlistbox.h>
+#include <qlabel.h>
+
 #include <ksimpleconfig.h>
 #include <kapp.h>
 #include <kprocess.h>
@@ -43,21 +48,21 @@
 static const char *id="$Id$";
 
 CConduitSetup::CConduitSetup(QWidget *parent, char *name) 
-  : QDialog(parent,name,TRUE) //,TRUE,WStyle_Customize | WStyle_NormalBorder )
+	: KDialogBase(Plain,i18n("External Conduit Setup"),
+		Ok | Cancel,Cancel,
+		parent,name,TRUE)
 {
 	FUNCTIONSETUP;
 
-	QGridLayout *grid=new QGridLayout(this,10,3,SPACING); 
+	QWidget *top=plainPage();
+	QGridLayout *grid=new QGridLayout(top,10,3,SPACING); 
 
-  setCaption(i18n("External Conduit Setup"));
-  resize(451,324);
-  
-  label1 = new QLabel(this, "label1");
+  label1 = new QLabel(top, "label1");
   label1->setText(i18n("Available Conduits:"));
 	label1->adjustSize();
 	grid->addWidget(label1,1,1);
 
-  fAvailableConduits = new QListBox(this, "fAvailableConduits");
+  fAvailableConduits = new QListBox(top, "fAvailableConduits");
   fAvailableConduits->setMultiSelection(FALSE);
 	fAvailableConduits->resize(120,200);
 	grid->addMultiCellWidget(fAvailableConduits,2,6,1,1);
@@ -66,12 +71,12 @@ CConduitSetup::CConduitSetup(QWidget *parent, char *name)
 	
 	
 
-  label2 = new QLabel(this, "label2");
+  label2 = new QLabel(top, "label2");
   label2->setText(i18n("Installed Conduits:"));
 	label2->adjustSize();
 	grid->addWidget(label2,1,3);
 
-  fInstalledConduits = new QListBox(this, "fInstalledConduits");
+  fInstalledConduits = new QListBox(top, "fInstalledConduits");
   fInstalledConduits->setMultiSelection(FALSE);
 	fInstalledConduits->resize(120,200);
 	grid->addMultiCellWidget(fInstalledConduits,2,6,3,3);
@@ -79,25 +84,7 @@ CConduitSetup::CConduitSetup(QWidget *parent, char *name)
 	connect(fInstalledConduits, SIGNAL(highlighted(int)), 
 		this, SLOT(slotSelectInstalled()));
 
-  fDoneButton = new QPushButton(this, "fDoneButton");
-  fDoneButton->setText(i18n("Done"));
-  fDoneButton->setDefault(FALSE);
-  fDoneButton->setToggleButton(FALSE);
-	fDoneButton->adjustSize();
-	grid->addWidget(fDoneButton,7,2);
-
-  connect(fDoneButton, SIGNAL(clicked()), this, SLOT(slotDone()));
-
-	fCancelButton = new QPushButton(this,"fCancelButton");
-	fCancelButton->setText(i18n("Cancel"));
-	fCancelButton->setDefault(TRUE);
-	fCancelButton->adjustSize();
-	grid->addWidget(fCancelButton,7,3);
-
-	connect(fCancelButton,SIGNAL(clicked()),this,SLOT(slotCancel()));
-
-
-  fInstallConduit = new QPushButton(this, "fInstallConduit");
+  fInstallConduit = new QPushButton(top, "fInstallConduit");
   fInstallConduit->setText(i18n("Install"));
   fInstallConduit->setDefault(FALSE);
   fInstallConduit->setToggleButton(FALSE);
@@ -108,7 +95,7 @@ CConduitSetup::CConduitSetup(QWidget *parent, char *name)
   connect(fInstallConduit, SIGNAL(clicked()), this, SLOT(slotInstallConduit()));
 
 
-  fRemoveConduit = new QPushButton(this, "fRemoveConduit");
+  fRemoveConduit = new QPushButton(top, "fRemoveConduit");
   fRemoveConduit->setText(i18n("Uninstall"));
   fRemoveConduit->setDefault(FALSE);
   fRemoveConduit->setToggleButton(FALSE);
@@ -118,7 +105,7 @@ CConduitSetup::CConduitSetup(QWidget *parent, char *name)
   connect(fRemoveConduit, SIGNAL(clicked()), 
 		this, SLOT(slotUninstallConduit()));
 
-  fSetupConduit = new QPushButton(this, "fSetupConduit");
+  fSetupConduit = new QPushButton(top, "fSetupConduit");
   fSetupConduit->setText(i18n("Setup"));
   fSetupConduit->setDefault(FALSE);
   fSetupConduit->setToggleButton(FALSE);
@@ -272,7 +259,7 @@ CConduitSetup::cleanupLists(const QStringList* available, QStringList* installed
 }
 
 void
-CConduitSetup::slotDone()
+CConduitSetup::slotOk()
 {
   FUNCTIONSETUP;
   
@@ -280,10 +267,19 @@ CConduitSetup::slotDone()
   int len = 0;
   QString conduitPath = KGlobal::dirs()->resourceDirs("conduits").first();
  
+  // This is the KDE1 comment:
+  //
   // Unfortunately we need to rewrite the whole file 
   // after a conduit setup, since we don't know what 
   // used to be in there and there's no deleteEntry() in KSimpleConfig.
-  
+  //
+  // In KDE2 I can't even find an entryiterator, to
+  // delete entries from section Database Names, so
+  // some extra logic is added to registeredConduit
+  // in pilotlink to find out whether the conduit
+  // for the database should be run or not.
+  //
+  //
   KConfig* config = KPilotLink::getConfig("Conduit Names");
   config->writeEntry("InstalledConduits", fInstalledConduitNames);
   config->setGroup("Database Names");
@@ -507,9 +503,20 @@ CConduitSetup::slotSetupConduit()
 			 i18n("Setup already in progress"));
       return;
     }
-  QString conduitName =   KGlobal::dirs()->resourceDirs("conduits").first();
-  conduitName = conduitName + 
-    fInstalledConduits->text(fInstalledConduits->currentItem());
+	QString conduitName =   
+		fInstalledConduits->text(fInstalledConduits->currentItem());
+	KService::Ptr conduit = KService::serviceByName(conduitName);
+	if (!conduit)
+	{
+		kdDebug() << fname << ": No conduit called "
+			<< conduitName
+			<< " could be found."
+			<< endl;
+		return;
+	}
+	// Misuse of variables
+	conduitName=conduit->exec();
+
   
   if (debug_level & SYNC_TEDIOUS)
     {

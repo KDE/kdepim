@@ -13,16 +13,15 @@
 #define CCONDUITSETUP_H
 
 /* Library Includes */
-#include <qdialog.h>
-#include <qwidget.h>
-#include <qlabel.h>
-#include <qlist.h>
-#include <qlistbox.h>
-#include <qpushbt.h>
+#include <kdialogbase.h>
 #include <qstrlist.h>
 
+class QPushButton;
+class QListBox;
+class QLabel;
+
 class
-CConduitSetup : public QDialog
+CConduitSetup : public KDialogBase
 {
   Q_OBJECT
 
@@ -51,13 +50,14 @@ private:
   void checkButtons() ;
 
 protected:
-    public slots:
+public slots:
   void slotInstallConduit();
   void slotUninstallConduit();
   void slotSelectAvailable();
   void slotSelectInstalled();
-  void slotDone();
-  void slotCancel();
   void slotSetupConduit();
+protected slots:
+  void slotOk();
+  void slotCancel();
 };
 #endif

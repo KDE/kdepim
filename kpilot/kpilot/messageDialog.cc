@@ -23,7 +23,7 @@ MessageDialog::MessageDialog( QString title, QWidget* parent, const char* name, 
     fMessage->setFixedWidth(220);
     fMessage->move(10, 10);
     fMessage->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    fMessage->setAlignment(AlignBottom | AlignCenter);
+    fMessage->setAlignment(AlignBottom | AlignHCenter);
     kapp->processEvents();
     }
   

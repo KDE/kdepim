@@ -288,6 +288,13 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 	QLabel *currentLabel;
 	int value;
 
+	// t is used for extra storage while determining
+	// if certain options (like autostart) are 
+	// actually possible.
+	//
+	//
+	QString t;
+
 	const int labelCol=0;
 	const int fieldCol=1;
 	const int nRows=8;
@@ -354,6 +361,12 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 	fStartDaemonAtLogin->setChecked(
 		config->readNumEntry("StartDaemonAtLogin", 0));
 	grid->addMultiCellWidget(fStartDaemonAtLogin,4,4,fieldCol,fieldCol+2);
+	t = locate("apps","Utilities/KPilotDaemon.desktop");
+	if (t.isNull())
+	{
+		fStartDaemonAtLogin->setEnabled(false);
+	}
+			
 
 	fStartKPilotAtHotSync = new QCheckBox(
 		i18n("Start KPilot at Hot-Sync."), this);
@@ -393,14 +406,15 @@ int KPilotOptionsGeneral::commitChanges(KConfig *config)
 	src = locate("apps","Utilities/KPilotDaemon.desktop");
 	if (src.isNull())
 	{
-		if (fStartDaemonAtLogin->isChecked())
+		if (fStartDaemonAtLogin->isEnabled() &&
+			fStartDaemonAtLogin->isChecked())
 		{
 			KMessageBox::sorry(this,
 				i18n("Can't find the KPilotDaemon link file\n"
-					"needed to autostart the daemon."));
+					"needed to autostart the daemon.\n"
+					"Autostart has been disabled."));
+			fStartDaemonAtLogin->setChecked(false);
 		}
-		fStartDaemonAtLogin->setChecked(false);
-		return 1;
 	}
 
 	config->setGroup(QString::null);
@@ -451,7 +465,7 @@ int KPilotOptionsGeneral::commitChanges(KConfig *config)
 /* static */ bool KPilotOptions::isNewer(KConfig *c)
 {
 	int r=setupDialog::getConfigurationVersion(c);
-	return r<fConfigVersion;
+	return r < fConfigVersion ;
 }
 
 KPilotOptions::KPilotOptions(QWidget* parent) :
@@ -471,11 +485,14 @@ KPilotOptions::KPilotOptions(QWidget* parent) :
 
 
 	KConfig *config=KGlobal::config();
+	config->reparseConfiguration();
 
 	addPage(new KPilotOptionsGeneral(this,config));
 	addPage(new  KPilotOptionsAddress(this,config));
 	addPage(new KPilotOptionsPrivacy(this,config));
+#ifdef USE_STANDALONE
 	addPage(new setupInfoPage(this));
+#endif
 	
 	setupDialog::setupWidget();
 }
@@ -534,6 +551,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.9  2000/10/19 19:21:33  adridg
+// Added decent error messages
+//
 // Revision 1.8  2000/08/01 06:48:15  adridg
 // Ported autostart-daemon to KDE2
 //

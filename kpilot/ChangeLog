@@ -1,1 +1,54 @@
-Please fill in changelog entries here.
+Developer's notes for october 23rd 2000
+
+It's been a week where I couldn't bring myself to tackle
+really big problems, like an address-book conduit for
+kab or pine. So I sat back and polished things, wandered
+through the code finding little bugs (if I was an OpenBSD
+kinda guy I'd call it a proactive code audit). This has
+led to:
+
+A whole slew of minor fixes:
+
+* Updated Help menu in main menu bar
+* Removed superfluous about tab in kpilot setup dialog
+* Fixed config-doesn't-change bug
+* Disable autostart-daemon option if .desktop file unavailable
+* Added quit icon into file menu
+* Added hotsync and backup icons into file menu
+* Cleaned up include files in conduitSetup.h
+* Cleaned up dialog code in conduitSetup.cc for KDE2 compliance
+* Fixed conduits-not-running-during-sync bug in kpilotlink.cc
+* Fixed a minor Qt2 incompatibility in messageDialog.cc
+* Fixed some i18n issues in kpilotlink.cc
+* Replaced sprintf stuff with QString operations in kpilotlink.cc
+* Added hot-sync to file menu for consistency (it's in the toolbar)
+* Added logic in showTitlePage in kpilot.cc to reduce flicker
+
+Some remaining issues:
+
+* The icon for "About KPilot" in the help menu is the wrong one
+* We still need pretty icons for various things (like external conduits)
+
+Some questions:
+
+* Is there a memory leak with the config file in kpilotOptions.cc?
+* Do we really want to be new() and delete()ing the config file so
+  often? Perhaps getConfig() should do some caching.
+* Should we add icons for the other menu items?
+* Is there an entry iterator in KConfig so that you can iterate over
+  entries in a certain group (and possibly delete them?)
+
+Some philosophical stuff:
+
+* Maybe it's time to ditch the internal conduits altogether and work
+  on external conduits for kab and knotes? Although that would still
+  leave the file installer. Maybe a splash of the kpilot logo and then
+  an icon view of what has been dropped into the file installer?
+
+
+
+As far as I can tell KPilot 4 now has the same functionality and bugs
+as KPilot 3.2.1 did (with some polishing). So you still have to be
+careful with KOrganizer. But I think the framework is sufficiently 
+OK to make it worthwhile to really write some conduits for various
+KDE 2 apps. Like a kab conduit and a knotes conduit.

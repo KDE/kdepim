@@ -55,6 +55,7 @@ static const char *id="$Id$";
 #include <kprogress.h>
 #include <kglobal.h>
 #include <kstddirs.h>
+#include <kservice.h>
 #include <kdebug.h>
 
 #include "kpilotlink.moc"
@@ -458,15 +459,34 @@ KPilotLink::slotConduitClosed(KSocket* theSocket)
 QString
 KPilotLink::registeredConduit(const QString &dbName)
 {
-  KConfig* config = getConfig("Database Names");
-  QString result = config->readEntry(dbName);
-  delete config;
+	KConfig* config = getConfig("Database Names");
+
+	QString result = config->readEntry(dbName);
+	if (result.isNull())
+	{
+		delete config;
+		return result;
+	}
+
+	config->setGroup("Conduit Names");
+	QStringList installed = config->readListEntry("InstalledConduits");
+	delete config;
+
+	if (!installed.contains(result))
+	{
+		return QString::null;
+	}
 
 #ifdef KDE2
-  // No datadir, so look elsewhere for conduits --
-  // conduits can be executables anywhere in your path.
-  //
-  return result;
+	KService::Ptr conduit = KService::serviceByName(result);
+	if (!conduit)
+	{
+		return QString::null;
+	}
+	else
+	{
+		return conduit->exec();
+	}
 #else
   QString conduitPath = kapp->kde_datadir() + "/kpilot/conduits/";
 
@@ -1102,7 +1122,7 @@ KPilotLink::syncNextDB()
 {
   FUNCTIONSETUP;
 
-  char message[256];
+	QString message;
   QString skip;
   QString backupOnly;
   DBInfo info;
@@ -1110,7 +1130,6 @@ KPilotLink::syncNextDB()
   // Confine config reads to a local block
   {
     KConfig* c = getConfig();
-    c->setGroup(QString());
     skip=c->readEntry("SkipSync");
     backupOnly=c->readEntry("BackupForSync");
     delete c;
@@ -1140,9 +1159,9 @@ KPilotLink::syncNextDB()
 	       << info.name << endl;
 	}
 
-      sprintf(message, "Syncing: %s .. ", info.name);
+      message=i18n("Syncing: %1 ...").arg(info.name);
       fMessageDialog->setMessage(message);
-      addSyncLogEntry(message);
+      addSyncLogEntry(message.local8Bit());
 
       // Find out if this database has a special disposition
       //
@@ -1198,7 +1217,7 @@ KPilotLink::syncNextDB()
 
   // Fire up the conduit responsible for this db and when it's finished
   // we'll get called again.
-  sprintf(message, "%s: Running conduit", info.name);
+  message=i18n("%1: Running conduit").arg(info.name);
   fMessageDialog->setMessage(message);
   fCurrentDBInfo = info;
 
@@ -1359,9 +1378,9 @@ void KPilotLink::checkPilotUser()
 			   "however KPilot says you are %2.\n"
 			   "Should I assume the Pilot is right and set the "
 			   "user name for KPilot to %1? "
-			   "(Otherwise I'll use %2 for now)")
-		      .arg(getPilotUser().getUserName())
-		      .arg(guiUserName));
+			   "(Otherwise I'll use %2 for now)"));
+	message=message.arg(getPilotUser().getUserName());
+	message=message.arg(guiUserName);
 
       if (KMessageBox::warningYesNo(0L,
 				    message,
