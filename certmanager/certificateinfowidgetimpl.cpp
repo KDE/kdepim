@@ -278,7 +278,7 @@ void CertificateInfoWidgetImpl::slotCollectStdOut(KProcIO* proc) {
 void CertificateInfoWidgetImpl::slotDumpProcessExited(KProcess* proc) {
   int rc = ( proc->normalExit() ) ? proc->exitStatus() : -1 ;
 
-  if ( rc != 0 ) {
+  if ( rc != 0 && dumpView->length() == 0 ) {
     QString wmsg = i18n("Failed to execute gpgsm:\n%1");
     if ( rc == -1 )
         wmsg = wmsg.arg( i18n( "program cannot be executed" ) );
