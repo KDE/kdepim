@@ -398,7 +398,6 @@ protected slots:
   void slotSwitchToGroupView();
   void slotSwitchToHeaderView();
   void slotSwitchToArticleViewer();
-  void slotConfKeys();
   void slotSettings();
 
   //--------------------------- </Actions> -----------------------------

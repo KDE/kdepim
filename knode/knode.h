@@ -46,6 +46,7 @@ public:
 public slots:
   void slotConfToolbar();
   void slotNewToolbarConfig();
+  void slotConfKeys();
 protected:
   bool queryClose();
 private:
