@@ -4,6 +4,7 @@ KDE_CXXFLAGS = $(USE_RTTI)
 INCLUDES = -I$(top_srcdir)/kmail \
            -I$(top_srcdir)/libkdepim \
            -I$(top_srcdir)/libkdenetwork \
+           -I$(top_srcdir)/mimelib \
            -I$(top_srcdir) \
            $(all_includes)
 
