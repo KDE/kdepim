@@ -429,28 +429,3 @@ void ConduitConfigDialog::warnNoLibrary(const QListViewItem *p)
 
 
 
-// $Log$
-// Revision 1.8  2002/04/16 18:18:13  adridg
-// Minor debugging fixups by David B
-//
-// Revision 1.7  2002/01/26 15:00:11  adridg
-// Dblclick to configure
-//
-// Revision 1.6  2002/01/02 11:42:19  bero
-// Fix build.
-//
-// Revision 1.5  2001/12/31 09:26:15  adridg
-// Removed support for old-style Exec= conduits
-//
-// Revision 1.4  2001/11/18 16:59:55  adridg
-// New icons, DCOP changes
-//
-// Revision 1.3  2001/10/19 14:03:04  adridg
-// Qt3 include fixes
-//
-// Revision 1.2  2001/10/08 22:20:18  adridg
-// Changeover to libkpilot, prepare for lib-based conduits
-//
-// Revision 1.1  2001/10/04 16:53:57  adridg
-// New files for newstyle config
-//

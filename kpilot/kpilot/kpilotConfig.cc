@@ -364,39 +364,3 @@ void KPilotConfigSettings::setDatabaseConduit(const QString & database,
 }
 
 
-// $Log$
-// Revision 1.11  2001/10/02 17:48:50  adridg
-// No debugging when not debugging
-//
-// Revision 1.10  2001/09/30 19:51:56  adridg
-// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
-//
-// Revision 1.9  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.8  2001/09/23 21:44:56  adridg
-// Myriad small changes
-//
-// Revision 1.7  2001/09/23 18:25:50  adridg
-// New config architecture
-//
-// Revision 1.6  2001/09/05 21:53:51  adridg
-// Major cleanup and architectural changes. New applications kpilotTest
-// and kpilotConfig are not installed by default but can be used to test
-// the codebase. Note that nothing else will actually compile right now.
-//
-// Revision 1.5  2001/05/25 16:06:52  adridg
-// DEBUG breakage
-//
-// Revision 1.4  2001/04/16 13:54:17  adridg
-// --enable-final file inclusion fixups
-//
-// Revision 1.3  2001/03/27 23:54:43  stern
-// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
-//
-// Revision 1.2  2001/02/25 12:39:15  adridg
-// Removed stupid crash from ::fixed()
-//
-// Revision 1.1  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//

@@ -111,42 +111,4 @@ private:
 };
 
 
-// $Log$
-// Revision 1.18  2001/09/30 16:59:22  adridg
-// Cleaned up preHotSync
-//
-// Revision 1.17  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.16  2001/09/24 10:43:19  cschumac
-// Compile fixes.
-//
-// Revision 1.15  2001/09/06 22:33:43  adridg
-// Cruft cleanup
-//
-// Revision 1.14  2001/06/11 07:35:19  adridg
-// Cleanup before the freeze
-//
-// Revision 1.13  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.12  2001/04/01 17:31:11  adridg
-// --enable-final and #include fixes
-//
-// Revision 1.11  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.10  2001/03/04 13:11:49  adridg
-// More response to bug 21392
-//
-// Revision 1.9  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.8  2001/02/07 14:21:45  brianj
-// Changed all include definitions for libpisock headers
-// to use include path, which is defined in Makefile.
-//
-// Revision 1.7  2001/02/06 08:05:19  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//
 #endif

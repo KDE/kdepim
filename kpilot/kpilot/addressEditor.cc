@@ -281,31 +281,3 @@ void AddressEditor::initLayout()
 	}
 }
 
-// $Log$
-// Revision 1.8  2001/08/27 22:51:41  adridg
-// MartinJ's beautification of the address viewer
-//
-// Revision 1.7  2001/04/16 13:54:17  adridg
-// --enable-final file inclusion fixups
-//
-// Revision 1.6  2001/04/04 21:20:32  stern
-// Added support for category information and copy constructors
-//
-// Revision 1.5  2001/03/19 23:12:39  stern
-// Made changes necessary for upcoming abbrowser conduit.
-//
-// Mainly, I added two public methods to PilotAddress that allow for easier
-// setting and getting of phone fields.
-//
-// I also have added some documentation throughout as I have tried to figure
-// out how everything works.
-//
-// Revision 1.4  2001/03/11 10:50:40  adridg
-// Make address editor reflect real field names
-//
-// Revision 1.3  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.2  2001/02/05 20:55:07  adridg
-// Fixed copyright headers for source releases. No code changed
-//

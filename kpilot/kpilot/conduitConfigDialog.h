@@ -64,13 +64,4 @@ private:
 	ConduitConfigWidget *fConfigWidget;
 } ;
 
-// $Log$
-// Revision 1.2  2001/11/18 16:59:55  adridg
-// New icons, DCOP changes
-//
-// Revision 1.1  2001/10/04 16:53:57  adridg
-// New files for newstyle config
-//
-//
-
 #endif
