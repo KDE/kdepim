@@ -1,4 +1,7 @@
 
+#ifndef OpieHelperBase_H
+#define OpieHelperBase_H
+
 #include <sys/types.h>
 #include <stdlib.h>
 #include <time.h>
@@ -45,3 +48,6 @@ namespace OpieHelper {
         BasePrivate *baseD;
     };
 };
+
+
+#endif

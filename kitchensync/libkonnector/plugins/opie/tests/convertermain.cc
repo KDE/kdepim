@@ -13,11 +13,17 @@
 #include <kontainer.h>
 #include <idhelper.h>
 
+#include <libkcal/event.h>
+#include <libkcal/todo.h>
+#include <libkcal/calendarlocal.h>
+#include <libkcal/icalformat.h>
 
 //#include  "../categoryedit.h"
 //#include "../todo.h"
 
 #include <plugins/opie/categoryedit.h>
+#include <plugins/opie/todo.h>
+#include <plugins/opie/datebook.h>
 
 static KCmdLineOptions options[] =
 {
@@ -78,8 +84,43 @@ int main( int argc,  char *argv[] )
 //    OpieHelper::ToDo todo2( 0,  &helper,  true );
 //    OpieHelperClass helpClass;
 //    Test test;
-    OpieCategories cats;
-    OpieHelper::CategoryEdit edit;
+    OpieHelper::CategoryEdit edit( category );
+    QValueList<OpieCategories> cats = edit.categories();
+    for ( QValueList<OpieCategories>::ConstIterator it = cats.begin(); it != cats.end(); ++it ) {
+        kdDebug() << "Categories --------------------" << endl;
+        kdDebug() << "Id   " << (*it).id() << endl;
+        kdDebug() << "Name " << (*it).name() << endl;
+        kdDebug() << "app  " << (*it).app() << endl;
+    }
+    kdDebug() << edit.categoryById( "-1013207732",  "Test App") << endl;
+
+    KCal::CalendarLocal cal;
+    if (args->isSet("todo") ) {
+        QString todo = QString::fromLocal8Bit( args->getOption("todo") );
+        OpieHelper::ToDo todo2( &edit,  &helper,  true );
+        QPtrList<KCal::Todo> todo3 = todo2.toKDE( todo );
+        KCal::Todo *todo4;
+        for ( todo4 = todo3.first(); todo4 != 0; todo4 = todo3.next() ) {
+            kdDebug() << "First " << endl;
+            cal.addTodo( todo4 );
+        }
+        kdDebug() << "Todo" << endl;
+    }
+    if ( args->isSet("datebook" ) ) {
+        QString ev = QString::fromLocal8Bit( args->getOption("datebook") );
+        OpieHelper::DateBook event( &edit,  &helper,  true);
+        QPtrList<KCal::Event> eve = event.toKDE( ev );
+        KCal::Event *even;
+        for ( even = eve.first(); even != 0; even = eve.next() ) {
+            kdDebug() << "adding Event " << endl;
+            cal.addEvent( even );
+        }
+        kdDebug() << "DateBook add" << endl;
+    }
+    kdDebug() << "Calendar save" << endl;
+    KCal::ICalFormat form( &cal );
+    cal.save( "/home/ich/calendar.ics",  &form);
+    kdDebug() << "End calendar save" << endl;
     helper.save();
     args->clear();
     return app.exec();

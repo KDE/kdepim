@@ -47,6 +47,7 @@ QPtrList<KCal::Todo> ToDo::toKDE( const QString &fileName )
                         QStringList list = QStringList::split(";",  e.attribute("Categories") );
                         QStringList categories;
                         for ( uint i = 0; i < list.count(); i++ ) {
+                            kdDebug()<< list[i] << " Category " << m_edit->categoryById( list[i],  "Todo List") << endl;
                             categories.append(m_edit->categoryById(list[i], "Todo List") );
                         }
                         if (!categories.isEmpty() ) {

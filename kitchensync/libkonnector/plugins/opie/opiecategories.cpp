@@ -25,7 +25,7 @@ QString OpieCategories::name() const
 }
 QString OpieCategories::app() const
 {
-
+    return m_app;
 }
 OpieCategories &OpieCategories::operator=(const OpieCategories &op )
 {
