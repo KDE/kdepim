@@ -20,6 +20,7 @@
 */
 
 #include "icaldrag.h"
+
 #include "icalformat.h"
 
 #include <kdebug.h>
@@ -32,8 +33,7 @@ ICalDrag::ICalDrag( Calendar *cal, QWidget *parent, const char *name )
   ICalFormat icf;
   QString scal = icf.toString( cal );
   
-  QByteArray *data = new QByteArray( scal.local8Bit() ); 
-  setEncodedData( *data );
+  setEncodedData( scal.utf8() );
 }
 
 bool ICalDrag::canDecode( QMimeSource *me )
@@ -46,8 +46,8 @@ bool ICalDrag::decode( QMimeSource *de, Calendar *cal )
   bool success = false;
 
   QByteArray payload = de->encodedData( "text/calendar" );
-  if ( payload.size() ) { // check to see if we got this kind of data
-    QString txt = QString::fromLocal8Bit( payload.data() );
+  if ( payload.size() ) {
+    QString txt = QString::fromUtf8( payload.data() );
     
     ICalFormat icf;    
     success = icf.fromString( cal, txt );

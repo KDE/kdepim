@@ -22,24 +22,27 @@
 #ifndef KCAL_DNDFACTORY_H
 #define KCAL_DNDFACTORY_H
 
-#include "vcalformat.h"
-
 namespace KCal {
+
+class ICalDrag;
+class Event;
+class Todo;
 
 /**
   This class implements functions to create Drag and Drop objects used for
   Drag-and-Drop and Copy-and-Paste.
 
-  @short vCalendar Drag-and-Drop object factory.
+  @short vCalendar/iCalendar Drag-and-Drop object factory.
 */
-class DndFactory : public VCalFormat {
+class DndFactory
+{
   public:
     DndFactory( Calendar * );
 
     /** create an object to be used with the Xdnd Drag And Drop protocol. */
-    VCalDrag *createDrag(Event *selectedEv, QWidget *owner);
+    ICalDrag *createDrag(Event *selectedEv, QWidget *owner);
     /** create an object to be used with the Xdnd Drag And Drop protocol. */
-    VCalDrag *createDragTodo(Todo *selectedEv, QWidget *owner);
+    ICalDrag *createDragTodo(Todo *selectedEv, QWidget *owner);
     /** Create Todo object from drop event */
     Todo *createDropTodo(QDropEvent *de);
     /** Create Event object from drop event */

@@ -133,14 +133,64 @@ bool VCalFormat::fromString( Calendar *calendar, const QString &text )
 {
   // TODO: Factor out VCalFormat::fromString()
 
-  return false;
+  QCString data = text.utf8();
+  
+  if ( !data.size() ) return false;
+
+  VObject *vcal = Parse_MIME( data.data(), data.size());
+  if ( !vcal ) return false;
+
+  VObjectIterator i;
+  VObject *curvo;
+  initPropIterator( &i, vcal );
+
+  // we only take the first object. TODO: parse all incidences.
+  do  {
+    curvo = nextVObject( &i );
+  } while ( strcmp( vObjectName( curvo ), VCEventProp ) &&
+            strcmp( vObjectName( curvo ), VCTodoProp ) );
+
+  if ( strcmp( vObjectName( curvo ), VCEventProp ) == 0 ) {
+    Event *event = VEventToEvent( curvo );
+    calendar->addEvent( event );
+  } else {
+    kdDebug(5800) << "VCalFormat::fromString(): Unknown object type." << endl;
+    deleteVObject( vcal );
+    return false;
+  }
+
+  deleteVObject( vcal );
+
+  return true;
 }
 
 QString VCalFormat::toString( Calendar *calendar )
 {
   // TODO: Factor out VCalFormat::asString()
 
-  return QString::null;
+  VObject *vcal = newVObject(VCCalProp);
+
+  addPropValue( vcal, VCProdIdProp, CalFormat::productId() );
+  QString tmpStr = mCalendar->getTimeZoneStr();
+  addPropValue( vcal, VCTimeZoneProp, tmpStr.local8Bit() );
+  addPropValue( vcal, VCVersionProp, _VCAL_VERSION );
+
+  // TODO: Use all data.
+  QPtrList<Event> events = calendar->events();
+  Event *event = events.first();
+  if ( !event ) return QString::null;
+
+  VObject *vevent = eventToVEvent( event );
+
+  addVObjectProp( vcal, vevent );
+
+  char *buf = writeMemVObject( 0, 0, vcal );
+
+  QString result( buf );
+
+  cleanVObject( vcal );
+
+  return result;
 }
 
 VObject *VCalFormat::eventToVTodo(const Todo *anEvent)

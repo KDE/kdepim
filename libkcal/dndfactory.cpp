@@ -19,9 +19,6 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include "vcc.h"
-#include "vobject.h"
-
 #include <qapplication.h>
 #include <qclipboard.h>
 
@@ -34,10 +31,10 @@
 #include "icaldrag.h"
 #include "calendar.h"
 #include "vcalformat.h"
-
-#include "dndfactory.h"
 #include "icalformat.h"
 #include "calendarlocal.h"
+
+#include "dndfactory.h"
 
 using namespace KCal;
 
@@ -46,116 +43,68 @@ DndFactory::DndFactory( Calendar *cal ) :
 {
 }
 
-VCalDrag *DndFactory::createDrag(Event *selectedEv, QWidget *owner)
+ICalDrag *DndFactory::createDrag(Event *selectedEv, QWidget *owner)
 {
-  VObject *vcal, *vevent;
-  QString tmpStr;
+  CalendarLocal cal;
+  cal.setTimeZone( mCalendar->getTimeZoneStr() );
+  Event *ev = new Event( *selectedEv );
+  cal.addEvent(ev);
+  ICalDrag *icd = new ICalDrag(&cal, owner);
+  icd->setPixmap( BarIcon( "appointment" ) );
 
-  vcal = newVObject(VCCalProp);
-
-  addPropValue(vcal,VCProdIdProp, CalFormat::productId());
-  tmpStr = mCalendar->getTimeZoneStr();
-  addPropValue(vcal,VCTimeZoneProp, tmpStr.local8Bit());
-  addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
-
-  vevent = eventToVEvent(selectedEv);
-
-  addVObjectProp(vcal, vevent);
-
-  VCalDrag *vcd = new VCalDrag(vcal, owner);
-  // free memory associated with vCalendar stuff
-  cleanVObject(vcal);
-  vcd->setPixmap(BarIcon("appointment"));
-
-  return vcd;
+  return icd;
 }
 
-VCalDrag *DndFactory::createDragTodo(Todo *selectedEv, QWidget *owner)
+ICalDrag *DndFactory::createDragTodo(Todo *selectedEv, QWidget *owner)
 {
-  VObject *vcal, *vevent;
-  QString tmpStr;
+  CalendarLocal cal;
+  cal.setTimeZone( mCalendar->getTimeZoneStr() );
+  Todo *ev = new Todo( *selectedEv );
+  cal.addTodo(ev);
+  ICalDrag *icd = new ICalDrag(&cal, owner);
+  icd->setPixmap( BarIcon( "todo" ) );
 
-  vcal = newVObject(VCCalProp);
-
-  addPropValue(vcal,VCProdIdProp, productId());
-  tmpStr = mCalendar->getTimeZoneStr();
-  addPropValue(vcal,VCTimeZoneProp, tmpStr.local8Bit());
-  addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
-
-  vevent = eventToVTodo(selectedEv);
-
-  addVObjectProp(vcal, vevent);
-
-  VCalDrag *vcd = new VCalDrag(vcal, owner);
-  // free memory associated with vCalendar stuff
-  cleanVObject(vcal);
-  vcd->setPixmap(BarIcon("todo"));
-
-  return vcd;
+  return icd;
 }
 
 Event *DndFactory::createDrop(QDropEvent *de)
 {
-  VObject *vcal;
-  Event *event = 0;
+  kdDebug() << "DndFactory::createDrop()" << endl;
 
-  if (VCalDrag::decode(de, &vcal)) {
+  CalendarLocal cal;
+  cal.setTimeZone( mCalendar->getTimeZoneStr() );
+
+  if ( ICalDrag::decode( de, &cal ) || VCalDrag::decode( de, &cal ) ) {
     de->accept();
-    VObjectIterator i;
-    VObject *curvo;
-    initPropIterator(&i, vcal);
 
-    // we only take the first object.
-    do  {
-      curvo = nextVObject(&i);
-    } while (strcmp(vObjectName(curvo), VCEventProp) &&
-             strcmp(vObjectName(curvo), VCTodoProp));
-
-    if (strcmp(vObjectName(curvo), VCTodoProp) == 0) {
-      kdDebug(5800) << "VCalFormat::createDrop(): Got todo instead of event." << endl;
-    } else if (strcmp(vObjectName(curvo), VCEventProp) == 0) {
-      event = VEventToEvent(curvo);
-    } else {
-      kdDebug(5800) << "VCalFormat::createDropTodo(): Unknown event type in drop." << endl;
+    QPtrList<Event> events = cal.events();
+    if ( !events.isEmpty() ) {
+      Event *event = new Event( *events.first() );
+      return event;
     }
-    // get rid of temporary VObject
-    deleteVObject(vcal);
   }
 
-  return event;
+  return 0;
 }
 
 Todo *DndFactory::createDropTodo(QDropEvent *de)
 {
   kdDebug(5800) << "VCalFormat::createDropTodo()" << endl;
 
-  VObject *vcal;
-  Todo *event = 0;
+  CalendarLocal cal;
+  cal.setTimeZone( mCalendar->getTimeZoneStr() );
 
-  if (VCalDrag::decode(de, &vcal)) {
+  if ( ICalDrag::decode( de, &cal ) || VCalDrag::decode( de, &cal ) ) {
     de->accept();
-    VObjectIterator i;
-    VObject *curvo;
-    initPropIterator(&i, vcal);
 
-    // we only take the first object.
-    do  {
-      curvo = nextVObject(&i);
-    } while (strcmp(vObjectName(curvo), VCEventProp) &&
-             strcmp(vObjectName(curvo), VCTodoProp));
-
-    if (strcmp(vObjectName(curvo), VCEventProp) == 0) {
-      kdDebug(5800) << "VCalFormat::createDropTodo(): Got event instead of todo." << endl;
-    } else if (strcmp(vObjectName(curvo), VCTodoProp) == 0) {
-      event = VTodoToEvent(curvo);
-    } else {
-      kdDebug(5800) << "VCalFormat::createDropTodo(): Unknown event type in drop." << endl;
+    QPtrList<Todo> todos = cal.todos();
+    if ( !todos.isEmpty() ) {
+      Todo *todo = new Todo( *todos.first() );
+      return todo;
     }
-    // get rid of temporary VObject
-    deleteVObject(vcal);
   }
 
-  return event;
+  return 0;
 }
 
 
@@ -189,10 +138,9 @@ Event *DndFactory::pasteEvent(const QDate &newDate, const QTime *newTime)
 
   QClipboard *cb = QApplication::clipboard();
 
-  if (!ICalDrag::decode(cb->data(),&cal)) {
-    kdDebug(5800) << "An error has occurred parsing the contents of the clipboard."
-                     "You can only paste a valid iCalendar into " << application()
-                  << endl;
+  if ( !ICalDrag::decode( cb->data(), &cal ) &&
+       !VCalDrag::decode( cb->data(), &cal ) ) {
+    kdDebug(5800) << "Can't parse clipboard" << endl;
     return 0;
   }
 
@@ -201,12 +149,7 @@ Event *DndFactory::pasteEvent(const QDate &newDate, const QTime *newTime)
   if ( ev ) {
     anEvent = new Event( *ev );
 
-    // if we pasted an event that was the result of a copy in our
-    // own calendar, now we have duplicate UID strings.  Need to generate
-    // a new one for this new event.
-    QString uidStr = createUniqueId();
-    if ( mCalendar->event( anEvent->uid() ) )
-      anEvent->setUid( uidStr );
+    anEvent->recreate();
 
     int daysOffset = anEvent->dtEnd().date().dayOfYear() -
       anEvent->dtStart().date().dayOfYear();
