@@ -650,23 +650,23 @@ bool KNComposer::hasValidData()
   }
 
   if (n_eeds8Bit && (c_harset.lower()=="us-ascii")) {
-    KMessageBox::sorry(this, i18n("Your message contains characters that aren't included\nin the \"us-ascii\" character set. Please choose\na suitable character set in the \"Options\" menu."));
+    KMessageBox::sorry(this, i18n("Your message contains characters which are not included\nin the \"us-ascii\" character set; please choose\na suitable character set from the \"Options\" menu."));
     return false;
   }
 
   if (empty) {
-    KMessageBox::sorry(this, i18n("You can't post an empty message."));
+    KMessageBox::sorry(this, i18n("You cannot post an empty message."));
     return false;
   }
 
   if ((textLines>1)&&(notQuoted==1)) {
     if (hasAttributionLine)
-      if (!(KMessageBox::warningYesNo( this, i18n("Your article seems to consist entirely of quoted text.\nDo you want to re-edit the article or send it anyway?"),
+      if (!(KMessageBox::warningYesNo( this, i18n("Your article seems to consist entirely of quoted text;\ndo you want to re-edit the article or send it anyway?"),
                                        QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
         return false;
   } else {
     if (notQuoted==0) {
-      KMessageBox::sorry(this, i18n("You can't post an article consisting\n"
+      KMessageBox::sorry(this, i18n("You cannot post an article consisting\n"
 			      "entirely of quoted text."));
       return false;
     }
@@ -686,7 +686,7 @@ bool KNComposer::hasValidData()
       return false;
   } else
     if (sigLength>4)
-       KMessageBox::information(this, i18n("Your signature exceeds the widely accepted limit of 4 lines.\nPlease consider shortening your signature.\nOtherwise, you will probably annoy your readers"),
+       KMessageBox::information(this, i18n("Your signature exceeds the widely-accepted limit of 4 lines:\nplease consider shortening your signature;\notherwise, you will probably annoy your readers."),
                                 QString::null,"longSignatureWarning");
 
   // check if article can be signed
@@ -706,9 +706,9 @@ bool KNComposer::hasValidData()
     // the article can only be signed if we have a key
     if (signingKey.isEmpty()) {
           if ( KMessageBox::warningContinueCancel( this,
-                   i18n("You haven't configured your preferred "
-                        "signing key yet.\n"
-                        "Please specify it in the global "
+                   i18n("You have not configured your preferred "
+                        "signing key yet;\n"
+                        "please specify it in the global "
                         "identity configuration,\n"
                         "in the account properties or in the "
                         "group properties.\n"
@@ -1155,7 +1155,7 @@ void KNComposer::slotToggleDoMail()
 {
   if (a_ctDoMail->isChecked()) {
     if (a_uthorDislikesMailCopies) {
-      if (!(KMessageBox::warningContinueCancel(this, i18n("The poster doesn't want a mail copy of your reply (Mail-Copies-To: nobody).\nPlease respect his request."),
+      if (!(KMessageBox::warningContinueCancel(this, i18n("The poster does not want a mail copy of your reply (Mail-Copies-To: nobody);\nplease respect their request."),
                                                QString::null, i18n("&Send Copy")) == KMessageBox::Continue)) {
         a_ctDoMail->setChecked(false); //revert
         return;

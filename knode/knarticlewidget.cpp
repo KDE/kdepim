@@ -1205,7 +1205,7 @@ void KNArticleWidget::createHtmlPage()
           html += i18n( "Message was signed with unknown key 0x%1." )
                   .arg( signerKey );
           html += "<br />";
-          html += i18n( "The validity of the signature can't be verified." );
+          html += i18n( "The validity of the signature cannot be verified." );
         }
         else {
           // determine the validity of the key

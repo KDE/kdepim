@@ -1911,7 +1911,7 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   connect(e_ditBtn, SIGNAL(clicked()), SLOT(slotEditBtnClicked()));
   xgbL->addWidget(e_ditBtn, 3,1);
 
-  i_ncUaCB=new QCheckBox(i18n("Don't add the \"&User-Agent\" identification header"), xgb);
+  i_ncUaCB=new QCheckBox(i18n("Do not add the \"&User-Agent\" identification header"), xgb);
   xgbL->addMultiCellWidget(i_ncUaCB, 5,5, 0,1);
 
   xgbL->setRowStretch(4,1);
@@ -2288,7 +2288,7 @@ KNConfig::CleanupWidget::CleanupWidget(Cleanup *d, QWidget *p, const char *n) : 
   groupsL->addWidget(u_nreadDaysL,4,0);
   groupsL->addWidget(u_nreadDays,4,1,Qt::AlignRight);
 
-  u_navailableCB=new QCheckBox(i18n("&Remove articles that aren't available on the server"), groupsB);
+  u_navailableCB=new QCheckBox(i18n("&Remove articles that are not available on the server"), groupsB);
   groupsL->addMultiCellWidget(u_navailableCB, 5,5, 0,1);
 
   t_hrCB=new QCheckBox(i18n("Preser&ve threads"), groupsB);

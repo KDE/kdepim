@@ -459,7 +459,7 @@ void KNNntpClient::doFetchArticle()
     if ((code == 430) || (code == 423))  // 430 no such article found || 423 no such article number in this group
       job->setErrorString(
              errorPrefix + getCurrentLine() +
-             i18n("<br><br>The article you requested isn't available on your news server.<br>You can try to get it from <a href=\"http://groups.google.com/groups?q=msgid:%1&ic=1\">groups.google.com</a>.")
+             i18n("<br><br>The article you requested is not available on your news server;<br>you could try to get it from <a href=\"http://groups.google.com/groups?q=msgid:%1&ic=1\">groups.google.com</a>.")
                   .arg(target->messageID()->as7BitString(false)));
     return;
   }
