@@ -74,6 +74,7 @@
 #include "cryptplugwrapper.h"
 
 #include <kdebug.h>
+#include <klocale.h>
 
 #include <dlfcn.h>
 
@@ -135,7 +136,106 @@ void StructuringInfoWrapper::freeMe()
 
 /* some multi purpose functions ******************************************/
 
+QString CryptPlugWrapper::errorIdToText( int errId, bool & isPassphraseError ) {
+  /* The error numbers used by GPGME.  */
+  /*
+    typedef enum
+    {
+      GPGME_EOF                = -1,
+      GPGME_No_Error           = 0,
+      GPGME_General_Error      = 1,
+      GPGME_Out_Of_Core        = 2,
+      GPGME_Invalid_Value      = 3,
+      GPGME_Busy               = 4,
+      GPGME_No_Request         = 5,
+      GPGME_Exec_Error         = 6,
+      GPGME_Too_Many_Procs     = 7,
+      GPGME_Pipe_Error         = 8,
+      GPGME_No_Recipients      = 9,
+      GPGME_No_Data            = 10,
+      GPGME_Conflict           = 11,
+      GPGME_Not_Implemented    = 12,
+      GPGME_Read_Error         = 13,
+      GPGME_Write_Error        = 14,
+      GPGME_Invalid_Type       = 15,
+      GPGME_Invalid_Mode       = 16,
+      GPGME_File_Error         = 17,  // errno is set in this case.
+      GPGME_Decryption_Failed  = 18,
+      GPGME_No_Passphrase      = 19,
+      GPGME_Canceled           = 20,
+      GPGME_Invalid_Key        = 21,
+      GPGME_Invalid_Engine     = 22,
+      GPGME_Invalid_Recipients = 23
+    }
+  */
 
+  /*
+    NOTE:
+    The following hack *must* be changed into something
+    using an extra enum specified in the CryptPlug API
+    *and* the file error number (case 17) must be taken
+    into account.                     (khz, 2002/27/06)
+  */
+
+  isPassphraseError = false;
+  switch( errId ){
+  case /*GPGME_EOF                = */-1:
+    return(i18n("End of File reached during operation."));
+  case /*GPGME_No_Error           = */0:
+    return(i18n("No error."));
+  case /*GPGME_General_Error      = */1:
+    return(i18n("General error."));
+  case /*GPGME_Out_Of_Core        = */2:
+    return(i18n("Out of core!"));
+  case /*GPGME_Invalid_Value      = */3:
+    return(i18n("Invalid value."));
+  case /*GPGME_Busy               = */4:
+    return(i18n("Engine is busy."));
+  case /*GPGME_No_Request         = */5:
+    return(i18n("No request."));
+  case /*GPGME_Exec_Error         = */6:
+    return(i18n("Execution error."));
+  case /*GPGME_Too_Many_Procs     = */7:
+    return(i18n("Too many processes."));
+  case /*GPGME_Pipe_Error         = */8:
+    return(i18n("Pipe error."));
+  case /*GPGME_No_Recipients      = */9:
+    return(i18n("No recipients."));
+  case /*GPGME_No_Data            = */10:
+    return(i18n("No data."));
+  case /*GPGME_Conflict           = */11:
+    return(i18n("Conflict."));
+  case /*GPGME_Not_Implemented    = */12:
+    return(i18n("Not implemented."));
+  case /*GPGME_Read_Error         = */13:
+    return(i18n("Read error."));
+  case /*GPGME_Write_Error        = */14:
+    return(i18n("Write error."));
+  case /*GPGME_Invalid_Type       = */15:
+    return(i18n("Invalid type."));
+  case /*GPGME_Invalid_Mode       = */16:
+    return(i18n("Invalid mode."));
+  case /*GPGME_File_Error         = */17:  // errno is set in this case.
+    return(i18n("File error."));
+  case /*GPGME_Decryption_Failed  = */18:
+    return(i18n("Decryption failed."));
+  case /*GPGME_No_Passphrase      = */19:
+    isPassphraseError = true;
+    return(i18n("No passphrase."));
+  case /*GPGME_Canceled           = */20:
+    isPassphraseError = true;
+    return(i18n("Canceled."));
+  case /*GPGME_Invalid_Key        = */21:
+    isPassphraseError = true; // ### ???
+    return(i18n("Invalid key."));
+  case /*GPGME_Invalid_Engine     = */22:
+    return(i18n("Invalid engine."));
+  case /*GPGME_Invalid_Recipients = */23:
+    return(i18n("Invalid recipients."));
+  default:
+    return(i18n("Unknown error."));
+  }
+}
 
 bool CryptPlugWrapper::wasDLError( const char* funcName )
 {

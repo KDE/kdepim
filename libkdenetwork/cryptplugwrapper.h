@@ -424,6 +424,7 @@ class CryptPlugWrapper : public QObject
     Q_OBJECT
 
 public:
+    static QString errorIdToText( int errId, bool & isPassphraseError );
 
     /*! \ingroup groupGeneral
 
