@@ -102,7 +102,7 @@ public:
 	bool isDeleted() const { return fAttrs & dlpRecAttrDeleted ; } ;
 	void makeSecret() { fAttrs |= dlpRecAttrSecret; } ;
 	void makeDeleted() { fAttrs |= dlpRecAttrDeleted ; } ;
-      bool isModified() const { return fAttrs & dlpDBFlagAppInfoDirty; }
+      bool isModified() const { return fAttrs & dlpRecAttrDirty; }
         
     };
 
@@ -114,6 +114,9 @@ public:
 
 
 // $Log$
+// Revision 1.11  2001/04/30 20:48:10  stern
+// Added comments
+//
 // Revision 1.10  2001/04/16 13:48:35  adridg
 // --enable-final cleanup and #warning reduction
 //
