@@ -95,8 +95,8 @@ KNFilterSettings::KNFilterSettings(KNFilterManager *fm, QWidget *p)
   topL->setRowStretch(5,1);
   topL->setRowStretch(11,1);
 
-  active = SmallIcon("filter");
-  disabled = UserIcon("fltrgrey");
+  active = SmallIcon("filter",16);
+  disabled = SmallIcon("filter",16,KIcon::DisabledState);
 
   fiManager->startConfig(this);
 
