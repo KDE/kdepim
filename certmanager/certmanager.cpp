@@ -469,9 +469,14 @@ void CertManager::slotKeyListResult( const GpgME::KeyListResult & res ) {
     showKeyListError( this, res.error() );
   else if ( res.isTruncated() )
     KMessageBox::information( this,
-			      i18n("The server returned truncated output;\n"
-				   "please use a more-specific search string "
-				   "to get all results.") );
+			      i18n("The query result has been truncated.\n"
+				   "Either the local or a remote limit on "
+				   "the maximum number of returned hits has "
+				   "been exceeded.\n"
+				   "You can try to increase the local limit "
+				   "in the configuration dialog, but if one "
+				   "of the configured servers is the limiting "
+				   "factor, you have to refine your search.") );
 
   mLineEditAction->setEnabled( true );
   mComboAction->setEnabled( true );
