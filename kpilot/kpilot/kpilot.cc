@@ -1133,9 +1133,7 @@ KPilotInstaller::slotSyncDone(KProcess*)
 static KCmdLineOptions kpilotoptions[] =
 {
 	{ "setup", I18N_NOOP("Setup the Pilot device and other parameters"),0L },
-#ifdef ENABLE_CMD_CS
 	{ "cs", I18N_NOOP("Run conduit setup"),0L },
-#endif
 #ifdef DEBUG
 	{ "debug <level>", I18N_NOOP("Set debug level to <level> (try 1023)"),"0" },
 #endif
@@ -1147,6 +1145,8 @@ static KCmdLineOptions kpilotoptions[] =
 
 // "Regular" mode == 0
 // setup mode == 's'
+// setup forced by config change == 'S'
+// conduit setup == 'c'
 //
 // This is only changed by the --setup flag --
 // kpilot still does a setup the first time it is run.
@@ -1186,9 +1186,7 @@ int main(int argc, char** argv)
 	debug_level=atoi(p->getOption("debug"));
 #endif
 	if (p->isSet("setup")) { run_mode='s'; } 
-#ifdef ENABLE_CMD_CS
 	if (p->isSet("cs")) { run_mode='c'; }
-#endif
 
 	KApplication a(true,true);
 
@@ -1196,10 +1194,9 @@ int main(int argc, char** argv)
 	(void)KPilotLink::getDebugLevel(c);
 	if (KPilotLink::getConfigVersion(c)<KPilotLink::ConfigurationVersion)
 	{
-		run_mode='s';
+		run_mode='S';
 	}
 
-#ifdef ENABLE_CMD_CS
 	if (run_mode=='c')
 	{
 		CConduitSetup *cs = new CConduitSetup(0L);
@@ -1213,9 +1210,8 @@ int main(int argc, char** argv)
 			return 0;
 		}
 	}
-#endif
 
-	if (run_mode=='s')
+	if ((run_mode=='s') || (run_mode=='S'))
 	{
 #ifdef DEBUG
 		if (debug_level & UI_MAJOR)
@@ -1227,10 +1223,22 @@ int main(int argc, char** argv)
 #endif
 
 		KPilotOptions* options = new KPilotOptions(0L);
-		options->exec();
-		// gsetupDialog uses result 0 for cancel
-		//
-		if (!options->result()) return 0;
+		int r = options->exec();
+
+		if (run_mode=='s')
+		{
+			if (r)
+			{
+				return 1;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
+		if (r) return 1;
+			
 
 		// The options dialog may have changed the group
 		// while reading or writing settings (still a
@@ -1262,6 +1270,11 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.35  2001/02/08 13:17:19  adridg
+// Fixed crash when conduits run during a backup and exit after the
+// end of that backup (because the event loop is blocked by the backup
+// itself). Added better debugging error exit message (no i18n needed).
+//
 // Revision 1.34  2001/02/08 08:13:44  habenich
 // exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
 //
