@@ -303,6 +303,16 @@ KolabWizard::~KolabWizard()
 {
 }
 
+QString KolabWizard::validate()
+{
+  if( mServerEdit->text().isEmpty() ||
+      mUserEdit->text().isEmpty() ||
+      mRealNameEdit->text().isEmpty() ||
+      mPasswordEdit->text().isEmpty() )
+    return i18n( "Please fill in all fields." );
+  return QString::null;
+}
+
 void KolabWizard::usrReadConfig()
 {
   mServerEdit->setText( KolabConfig::self()->server() );

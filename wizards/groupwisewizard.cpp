@@ -29,6 +29,7 @@
 #include "kresources/groupwise/kcal_resourcegroupwise.h"
 
 #include <libkcal/resourcecalendar.h>
+#include <libemailfunctions/email.h>
 
 #include <klineedit.h>
 #include <klocale.h>
@@ -304,7 +305,7 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
 
 
   mEmailPage = createWizardPage( i18n("Mail") );
-  
+
   topLayout = new QGridLayout( mEmailPage );
   topLayout->setSpacing( spacingHint() );
 
@@ -319,10 +320,10 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
 
   QGridLayout *accountLayout= new QGridLayout( mEmailWidget );
   accountLayout->setSpacing( spacingHint() );
-  
+
   label = new QLabel( i18n("Email address:"), mEmailWidget );
   accountLayout->addWidget( label, 0, 0 );
-  
+
   mEmailEdit = new KLineEdit( mEmailWidget );
   accountLayout->addWidget( mEmailEdit, 0, 1 );
 
@@ -336,7 +337,7 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
 
   connect( this, SIGNAL( aboutToShowPage( QWidget * ) ),
     SLOT( slotAboutToShowPage( QWidget * ) ) );
-  
+
 
   setupRulesPage();
   setupChangesPage();
@@ -346,6 +347,24 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
 
 GroupwiseWizard::~GroupwiseWizard()
 {
+}
+
+QString GroupwiseWizard::validate()
+{
+  if( mServerEdit->text().isEmpty() ||
+      mPortEdit->text().isEmpty() ||
+      mUserEdit->text().isEmpty() ||
+      mPasswordEdit->text().isEmpty() )
+    return i18n( "Please fill in all fields." );
+
+  if ( mEmailBox->isChecked() ) {
+    if( !KPIM::isValidSimpleEmailAddress( mEmailEdit->text() ) )
+      return i18n("Invalid email address entered.");
+    if( mFullNameEdit->text().isEmpty() )
+      return i18n( "Please fill in all fields." );
+  }
+
+  return QString::null;
 }
 
 void GroupwiseWizard::usrReadConfig()

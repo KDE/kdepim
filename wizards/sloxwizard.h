@@ -32,6 +32,7 @@ class KDE_EXPORT SloxWizard : public KConfigWizard
     SloxWizard();
     ~SloxWizard();
 
+    QString validate();
     void usrReadConfig();
     void usrWriteConfig();
 

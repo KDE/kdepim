@@ -35,6 +35,7 @@ class KDE_EXPORT KolabWizard : public KConfigWizard
     KolabWizard();
     ~KolabWizard();
 
+    QString validate();
     void usrReadConfig();
     void usrWriteConfig();
 

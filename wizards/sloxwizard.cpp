@@ -42,7 +42,7 @@ QString sloxUrl()
 
   if ( SloxConfig::self()->useHttps() ) url = "https://";
   else url = "http://";
-  
+
   url += SloxConfig::self()->server();
 
   return url;
@@ -72,7 +72,7 @@ class CreateSloxKcalResource : public KConfigPropagator::Change
       r->setReloadInterval( 20 );
       m.add( r );
       m.writeConfig();
-      
+
       SloxConfig::self()->setKcalResource( r->identifier() );
     }
 };
@@ -259,6 +259,15 @@ SloxWizard::SloxWizard() : KConfigWizard( new SloxPropagator )
 
 SloxWizard::~SloxWizard()
 {
+}
+
+QString SloxWizard::validate()
+{
+  if( mServerEdit->text().isEmpty() ||
+      mUserEdit->text().isEmpty() ||
+      mPasswordEdit->text().isEmpty() )
+    return i18n( "Please fill in all fields." );
+  return QString::null;
 }
 
 void SloxWizard::usrReadConfig()

@@ -35,6 +35,7 @@ class KDE_EXPORT GroupwiseWizard : public KConfigWizard
     GroupwiseWizard();
     ~GroupwiseWizard();
 
+    QString validate();
     void usrReadConfig();
     void usrWriteConfig();
 
@@ -48,7 +49,7 @@ class KDE_EXPORT GroupwiseWizard : public KConfigWizard
     KLineEdit *mPasswordEdit;
     QCheckBox *mSavePasswordCheck;
     QCheckBox *mSecureCheck;
-    
+
     QFrame *mEmailPage;
     QGroupBox *mEmailBox;
     QWidget *mEmailWidget;
