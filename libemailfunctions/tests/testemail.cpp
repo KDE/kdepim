@@ -74,6 +74,8 @@ static QString emailTestParseResultToString( EmailParseResult errorCode )
     return "UnexpectedEnd";
   } else if( errorCode == UnopenedAngleAddr ) {
     return "UnopenedAngleAddr";
+  } else if( errorCode == DisallowedChar ) {
+    return "DisallowedChar";
   }
   return "unknown errror code";
 }
@@ -259,6 +261,9 @@ int main(int argc, char *argv[])
 
   // BUG 99657
   checkIsValidEmailAddress( "matt@jongel.fibbel.com", "AddressOk" );
+
+  // BUG 98720
+  checkIsValidEmailAddress( "mailto:@mydomain", "DisallowedChar" );
 
   // checks for "pure" email addresses in the form of xxx@yyy.tld
   checkIsValidSimpleEmailAddress( "matt@fruitsalad.org", "true" );
