@@ -22,6 +22,7 @@
 #include "hexprinter.h"
 
 
+// FIXME: add a caption to the printingdialog
 CHexPrinter::CHexPrinter( void )
   : KPrinter()
 {
