@@ -53,3 +53,42 @@ QValueList<Kontainer> KSyncEntry::ids(const QString &type )const
         id = it.data();
     return id;
 }
+QString KSyncEntry::name()
+{
+    return QString::fromLatin1("KSyncEntry");
+}
+void KSyncEntry::setName( const QString& )
+{
+}
+QString KSyncEntry::id()
+{
+    return QString::null;
+}
+void KSyncEntry::setId( const QString& )
+{
+
+}
+QString KSyncEntry::oldId()
+{
+    return QString::null;
+}
+void KSyncEntry::setOldId( const QString& )
+{
+
+}
+QString KSyncEntry::timestamp()
+{
+    return QString::null;
+}
+void KSyncEntry::setTimestamp( const QString& )
+{
+
+}
+bool KSyncEntry::equals( KSyncEntry* )
+{
+    return false;
+}
+KSyncEntry* KSyncEntry::clone()
+{
+    return 0l;
+}

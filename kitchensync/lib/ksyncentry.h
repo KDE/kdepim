@@ -57,7 +57,7 @@ class KSyncEntry
     /**
      * Return a string describing the Type of the SyncEntry (Mail,iCalendar...)
      */
-    virtual QString type() = 0;
+    virtual QString type() { return QString::fromLatin1("KSyncEntry"); };
 
     /**  syncMode() will return the SYNC_MODE either SYNC_NORMAL or SYNC_META
      *
@@ -77,24 +77,24 @@ class KSyncEntry
       Return a string describing this entry. This is presented to the user as
       identifier for the entry, when user interaction is required.
     */
-    virtual QString name() = 0;
+    virtual QString name();
     /**
       Set the name
     */
-    virtual void setName(const QString & ) = 0;
+    virtual void setName(const QString & );
     /**
       Returns a unique id. This is used to uniquely identify the entry. Two
       entries having the same id are considered to be two variants of the same
       entry. No two entries of the same @ref KSyncee data set must have the same
       id.
     */
-    virtual QString id() = 0;
-    virtual void setId(const QString & ) = 0;
+    virtual QString id();
+    virtual void setId(const QString & );
     /** When merged/synced this will carry the old id
 
     */
-    virtual QString oldId() = 0;
-    virtual void setOldId(const QString &) = 0;
+    virtual QString oldId();
+    virtual void setOldId(const QString &);
     /**
       Return a time stamp representing the time of the last change. This is only
       used to compare, if an entry has changed or not. It is not used to define
@@ -104,8 +104,8 @@ class KSyncEntry
       has to be different.
       It's should be the mtime of the file where the KSyncEntry is from.
     */
-    virtual QString timestamp() = 0;
-    virtual void setTimestamp(const QString &) = 0;
+    virtual QString timestamp() ;
+    virtual void setTimestamp(const QString &);
     /**
       Return, if the two entries are equal. Two entries are considered to be
       equal, if they contain exactly the same information, including the same id
@@ -115,11 +115,11 @@ class KSyncEntry
     /** If a KSyncEntry equals with another
 
     */
-    virtual bool equals(KSyncEntry *) = 0;
+    virtual bool equals(KSyncEntry *);
     /** Create a copy of the KSyncEntry
 
     */
-    virtual KSyncEntry* clone() = 0;
+    virtual KSyncEntry* clone();
     /**
        A KSyncEntry is able to store the relative ids
        @param  type The type of the id for example todo, kalendar...

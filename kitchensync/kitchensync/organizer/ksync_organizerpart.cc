@@ -14,6 +14,7 @@
 #include <kparts/genericfactory.h>
 #include <kparts/componentfactory.h>
 
+#include <libkcal/icalformat.h>
 #include <libkcal/calendarlocal.h>
 
 #include "organizerbase.h"
@@ -21,6 +22,8 @@
 #include "ksync_organizerpart.h"
 #include <kalendarsyncentry.h>
 #include <qptrlist.h>
+
+#include <ksync_sync.h>
 
 typedef KParts::GenericFactory< KitchenSync::OrganizerPart> OrganizerPartFactory;
 K_EXPORT_COMPONENT_FACTORY( liborganizerpart, OrganizerPartFactory );
@@ -130,35 +133,65 @@ void OrganizerPart::processEntry( const QPtrList<KSyncEntry>& in,
     QPtrList<KAlendarSyncEntry> our;
     QPtrListIterator<KSyncEntry> it( in );
     KSyncEntry *entry;
-    KAlendarSyncEntry* entry2;
+    KAlendarSyncEntry* entry2 = 0;
     while ( (entry = it.current() ) != 0 ) {
         ++it;
         kdDebug() << entry->type() << endl;
         if ( entry->type() == QString::fromLatin1("KAlendarSyncEntry") ) {
             kdDebug() << "Found our type" << endl;
             our.append(  (KAlendarSyncEntry*) entry );
-            out.append(  entry->clone() );
-            entry2 = (KAlendarSyncEntry*) entry;
+            //out.append(  entry->clone() );
+            entry2 = (KAlendarSyncEntry*) entry->clone() ;
         }
     }
+    if (entry2 == 0 )
+        return;
     // now load
     KAlendarSyncEntry* met = meta();
 
     // sync
+    SyncManager manager( this,  "SyncManager");
+    QPtrList<KSyncEntry> one;
+    one.append( entry2 );
+
+    QPtrList<KSyncEntry> two;
+    two.append( met );
+    SyncReturn ret =  manager.sync( SYNC_INTERACTIVE,  one, two );
     QDateTime time = QDateTime::currentDateTime();
     // write back if meta
+    two = ret.synced();
+    KAlendarSyncEntry *calendar=0;
 
+    for ( entry = two.first(); entry != 0; entry = two.next() ) {
+        if ( entry->type() == QString::fromLatin1("KAlendarSyncEntry") ) {
+            calendar = (KAlendarSyncEntry*)entry;
+            break;
+        }
+    }
+    if ( calendar == 0 )
+        return;
     // store date time
     Profile prof = core()->currentProfile();
     Kapabilities cap = prof.caps();
+    KCal::ICalFormat *form = new KCal::ICalFormat(calendar->calendar() );
     if ( cap.isMetaSyncingEnabled() ) {
         m_conf->setGroup( prof.name() );
         m_conf->writeEntry("time", time );
         QString metaPath = m_conf->readEntry("metaPath" );
-        met->calendar()->save( QDir::homeDirPath() + "/.kitchensync/meta/"+ metaPath + "/cal.vcf");
+        calendar->calendar()->save( QDir::homeDirPath() + "/.kitchensync/meta/"+ metaPath + "/cal.vcf",  form);
         dump("Opie",  entry2);
         dump("KDE",  met );
     }
+    KURL url(m_path );
+    QString newPath;
+    if ( !url.isLocalFile() ) {
+        ;
+    }else{
+        newPath = url.path();
+    }
+    calendar->calendar()->save( newPath, form );
+    delete form;
+    out.append( calendar );
 }
 
 KAlendarSyncEntry* OrganizerPart::meta()

@@ -21,6 +21,14 @@ namespace {
             clone.append( (KCal::Event*)dummy->clone()  );
         }
     }
+    void cloneList(const QPtrList<KCal::Todo>& old,  QPtrList<KCal::Todo> &clone ) {
+        KCal::Todo* dummy;
+        QPtrListIterator<KCal::Todo> it( old );
+        for ( ; it.current(); ++it ) {
+            dummy = it.current();
+            clone.append( (KCal::Todo*)dummy->clone() );
+        }
+    }
 };
 
 SyncKalendar::SyncKalendar( QObject *obj, const char *name,  const QStringList & )
@@ -36,29 +44,18 @@ SyncKalendar::~SyncKalendar()
 // FIXME only 1 Entry at a time
 // FIXME normal mode don't just copy like stupid
 SyncReturn SyncKalendar::sync( int mode,
-                               const QPtrList<KSyncEntry> &in,
-                               const QPtrList<KSyncEntry> &out )
+                               KSyncEntry *in,
+                               KSyncEntry * out )
 {
     m_mode = mode;
-    QPtrListIterator<KSyncEntry> itIn( in );
-    QPtrListIterator<KSyncEntry> outIt( out );
-    KAlendarSyncEntry* entry1=0;
-    KAlendarSyncEntry* entry2=0;
-    KSyncEntry* entry;
-    for ( ; itIn.current(); ++itIn ) {
-        entry = itIn.current();
-        if ( entry->type() == QString::fromLatin1("KAlendarSyncEntry") ) {
-            entry1 = (KAlendarSyncEntry*) entry;
-            break;
-        }
-    }
-    for ( ; outIt.current(); ++outIt ) {
-        entry = outIt.current();
-        if ( entry->type() == QString::fromLatin1("KAlendarSyncEntry") ) {
-            entry2 = (KAlendarSyncEntry*) entry;
-            break;
-        }
-    }
+    if ( in->type() != QString::fromLatin1("KAlendarSyncEntry") )
+        return SyncReturn();
+    if ( out->type() != QString::fromLatin1("KAlendarSyncEntry") )
+        return SyncReturn();
+
+    KAlendarSyncEntry* entry1= (KAlendarSyncEntry*) in;
+    KAlendarSyncEntry* entry2= (KAlendarSyncEntry*) out;
+
     kdDebug() << "Entry1 " << entry1->syncMode() << endl;
     kdDebug() << "Entry2 " << entry2->syncMode() << endl;
     KCal::CalendarLocal *cal = new KCal::CalendarLocal();
@@ -79,14 +76,22 @@ SyncReturn SyncKalendar::sync( int mode,
             syncNormal( entry1, entry2 );
             syncTodo( entry1, entry2 );
         }else {
+
             syncMetaEvent( entry1, entry2 );
             syncMetaTodo( entry1,  entry2 );
         }
     }
+    QPtrList<KSyncEntry> synced;
+    QPtrList<KSyncEntry> in2;
+    QPtrList<KSyncEntry> out2;
+    synced.append( m_entry );
+    SyncReturn ret( synced,  in2, out2 );
+    return ret;
+
 }
 void SyncKalendar::syncAsync( int mode,
-                              const QPtrList<KSyncEntry> &in,
-                              const QPtrList<KSyncEntry> &out )
+                              KSyncEntry *in,
+                              KSyncEntry *out )
 {
 
 }
@@ -168,6 +173,7 @@ void SyncKalendar::syncMetaEvent( KAlendarSyncEntry* entry1,  KAlendarSyncEntry 
             if ( dummy2->uid() == dummy->uid() ) { // modified on Opie deleted on desktop
                 // FIXME deconflict
                 found = true;
+                blackIds1 << dummy->uid();
                 m_entry->calendar()->addEvent( (KCal::Event*) dummy->clone() );
                 rem2.remove( dummy2 );
                 delete dummy2;
@@ -211,10 +217,147 @@ void SyncKalendar::syncMetaEvent( KAlendarSyncEntry* entry1,  KAlendarSyncEntry 
         if (!blackIds1.contains( dummy->uid() ) )
             m_entry->calendar()->addEvent( (KCal::Event*) dummy->clone() );
     }
+    list1.setAutoDelete( TRUE );
+    list2.setAutoDelete( TRUE );
+    mod1.setAutoDelete( TRUE );
+    mod2.setAutoDelete( TRUE );
+    rem1.setAutoDelete( TRUE );
+    rem2.setAutoDelete( TRUE );
+    list1.clear();
+    list2.clear();
+    mod1.clear();
+    mod2.clear();
+    rem1.clear();
+    rem2.clear();
 }
 void SyncKalendar::syncMetaTodo( KAlendarSyncEntry* entry1,  KAlendarSyncEntry* entry2 )
 {
+    blackIds2.clear();
+    KCal::Todo* dummy;
+    QPtrList<KCal::Todo> dummyList = entry1->calendar()->getTodoList();
+    QPtrList<KCal::Todo> list1;
+    cloneList( dummyList,  list1 );
+    dummyList.clear();
 
+    QPtrList<KCal::Todo> list2;
+    dummyList = entry2->calendar()->getTodoList();
+    cloneList( dummyList,  list2 );
+    dummyList.clear();
+
+    QPtrList<KCal::Todo> added1;
+    dummyList = entry1->added()->getTodoList();
+    cloneList( dummyList,  added1 );
+    dummyList.clear();
+
+    QPtrList<KCal::Todo> added2;
+    dummyList = entry2->added()->getTodoList();
+    cloneList( dummyList,  added2 );
+    dummyList.clear();
+
+    QPtrList<KCal::Todo> mod1;
+    dummyList = entry1->modified()->getTodoList();
+    cloneList( dummyList,  mod1 );
+    dummyList.clear();
+
+    QPtrList<KCal::Todo> mod2;
+    dummyList = entry2->modified()->getTodoList();
+    cloneList( dummyList,  mod2 );
+    dummyList.clear();
+
+    QPtrList<KCal::Todo> rem1;
+    dummyList = entry1->removed()->getTodoList();
+    cloneList( dummyList,  rem1 );
+    dummyList.clear();
+
+    QPtrList<KCal::Todo> rem2;
+    dummyList = entry2->removed()->getTodoList();
+    cloneList( dummyList,  rem2 );
+
+    // ok same as above
+    // first added
+    // the modified
+    // then fill the black list
+    // then add the remaining apps
+    syncAdded( added1,  added2 );
+    syncAdded( added2,  added1 );
+    added1.setAutoDelete( TRUE );
+    added2.setAutoDelete( TRUE );
+    added1.clear();
+    added2.clear();
+
+    // modified and removed
+    KCal::Todo *dummy2;
+    bool found;
+    for ( dummy = mod1.first(); dummy != 0; dummy = mod1.next() ) {
+        found  = false;
+        for ( dummy2 = mod2.first(); dummy2 != 0; dummy2 = mod2.next() ) {
+            if ( dummy2->uid() == dummy->uid() ) { // modified on both conflict resolve
+                found = true;
+                m_entry->calendar()->addTodo( (KCal::Todo*) dummy->clone() );
+                blackIds2 << dummy->uid();
+                mod2.remove( dummy2 );
+                delete dummy2;
+                break;
+            }
+        }
+        for ( dummy2 = rem2.first(); dummy2 != 0; dummy2 = rem2.next() ) {
+            if (dummy2->uid() == dummy->uid() ) {
+                found = true;
+                blackIds2 << dummy->uid();
+                m_entry->calendar()->addTodo( (KCal::Todo*) dummy->clone() );
+                rem2.remove( dummy2 );
+                delete dummy2;
+                break;
+            }
+            if (!found ) {
+                m_entry->calendar()->addEvent( (KCal::Event*) dummy->clone() );
+                blackIds2 << dummy->uid();
+            }
+        }
+    }
+ // ok now the 2nd modified it could be only deleted
+    for ( dummy = mod2.first(); dummy != 0; dummy = mod2.next() ) {
+        found = false;
+        for ( dummy2 = rem1.first(); dummy2 != 0; dummy2 = rem1.next() ) {
+            if ( dummy2->uid() == dummy->uid() ) {
+                found = true;
+                m_entry->calendar()->addTodo( (KCal::Todo*)dummy->clone() );
+                blackIds2 << dummy->uid();
+                rem1.remove( dummy2 );
+                delete dummy2;
+                break;
+            }
+        }
+        if (!found ) {
+                blackIds2 << dummy->uid();
+                m_entry->calendar()->addTodo( (KCal::Todo*) dummy->clone() );
+        }
+    }
+    // removed now
+    for (dummy = rem1.first(); dummy != 0; dummy = rem1.next() ) {
+        blackIds2 << dummy->uid();
+    }
+    for (dummy = rem2.first(); dummy!= 0; dummy = rem2.next() ) {
+        blackIds2 << dummy->uid();
+    }
+    // now copy from list1 to m_entry->calendar() if uid is not on blackList
+    for ( dummy = list1.first(); dummy != 0; dummy= list1.next() ) {
+        if (!blackIds2.contains( dummy->uid() ) )
+            m_entry->calendar()->addTodo( (KCal::Todo*) dummy->clone() );
+    }
+    // now clean up the lists
+    list1.setAutoDelete( TRUE );
+    list2.setAutoDelete( TRUE );
+    mod1.setAutoDelete( TRUE );
+    mod2.setAutoDelete( TRUE );
+    rem1.setAutoDelete( TRUE );
+    rem2.setAutoDelete( TRUE );
+    list1.clear();
+    list2.clear();
+    mod1.clear();
+    mod2.clear();
+    rem2.clear();
+    rem1.clear();
 }
 // get all events assign new id if necessary
 // this is plain stupid but take all Events from entry 1 and all from entry2
@@ -227,18 +370,22 @@ void SyncKalendar::syncNormal( KAlendarSyncEntry* entry1,  KAlendarSyncEntry* en
 {
     QPtrList<KCal::Event> eventsOne = entry1->calendar()->getAllEvents();
     QPtrList<KCal::Event> eventsTwo = entry2->calendar()->getAllEvents();
-    KCal::Event *one;
-    KCal::Event *two;
+    KCal::Event *one=0;
+    KCal::Event *two=0;
     QPtrListIterator<KCal::Event> oneIt( eventsOne );
     QPtrListIterator<KCal::Event> twoIt( eventsTwo );
     // first go through entry1 and then through entry2
     for ( ; oneIt.current(); ++oneIt ) {
         one = oneIt.current();
+        kdDebug() << "ADD one " << one->uid() << endl;
         if ( one->uid().startsWith("Konnector-") ) { // really new one
             QString id = KCal::CalFormat::createUniqueId();
+            kdDebug() << "UID " << one->uid() << endl;
             m_entry->insertId( "event", one->uid(),  id );
             //one->setUid( id );
             KCal::Event* clone = (KCal::Event*) one->clone();
+            if ( clone == 0 )
+                kdDebug() << "Clone == 0 "<< endl;
             clone->setUid( id );
             m_entry->calendar()->addEvent( clone );
             continue;
@@ -310,11 +457,15 @@ void SyncKalendar::syncTodo( KAlendarSyncEntry* entry1,  KAlendarSyncEntry* entr
     // first go through entry1 and then through entry2
     for ( ; oneIt.current(); ++oneIt ) {
         one = oneIt.current();
+        kdDebug() << "Adding todo " << one->uid();
         if ( one->uid().startsWith("Konnector-") ) { // really new one
+            kdDebug() << "UID Todo " << one->uid();
             QString id = KCal::CalFormat::createUniqueId();
             m_entry->insertId( "todo", one->uid(),  id );
             //one->setUid( id );
             KCal::Todo* clone = (KCal::Todo*) one->clone();
+            if ( clone == 0 )
+                kdDebug() << "Clone == 0 "<< endl;
             clone->setUid( id );
             m_entry->calendar()->addTodo( clone );
             continue;
@@ -336,8 +487,8 @@ void SyncKalendar::syncTodo( KAlendarSyncEntry* entry1,  KAlendarSyncEntry* entr
                     m_entry->calendar()->addTodo( (KCal::Todo*) two->clone() );
                     break;
                 case 10:
-                    m_entry->calendar()->addEvent( (KCal::Event*) one->clone() );
-                    m_entry->calendar()->addEvent( (KCal::Event*) two->clone() );
+                    m_entry->calendar()->addTodo( (KCal::Todo*) one->clone() );
+                    m_entry->calendar()->addTodo( (KCal::Todo*) two->clone() );
                     break;
                 case SYNC_INTERACTIVE:
                 default: {
@@ -360,6 +511,7 @@ void SyncKalendar::syncTodo( KAlendarSyncEntry* entry1,  KAlendarSyncEntry* entr
         if (!found )
             m_entry->calendar()->addTodo( (KCal::Todo*) one->clone() );
     }
+    // All duplicated entries are resolved by now
     for (; twoIt.current(); ++twoIt ) {
         bool found = false;
         two = twoIt.current();
@@ -392,5 +544,21 @@ void SyncKalendar::syncAdded( const QPtrList<KCal::Event> &added,  const QPtrLis
         }
         blackIds1 << dummy->uid();
         m_entry->calendar()->addEvent( clone );
+    }
+}
+void SyncKalendar::syncAdded( const QPtrList<KCal::Todo> &added,  const QPtrList<KCal::Todo> &/*other*/ ) {
+    QPtrListIterator<KCal::Todo> it( added );
+    KCal::Todo *dummy;
+    KCal::Todo *clone;
+    for ( ;it.current(); ++it ) {
+        dummy = it.current();
+        clone = (KCal::Todo*) dummy->clone();
+        if ( dummy->uid().startsWith("Konnector-") ) {
+            QString id = KCal::CalFormat::createUniqueId();
+            m_entry->insertId("todo",  dummy->uid(),  id );
+            clone->setUid( id );
+        }
+        blackIds2 << clone->uid();
+        m_entry->calendar()->addTodo( clone );
     }
 }

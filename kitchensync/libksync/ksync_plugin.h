@@ -13,10 +13,10 @@ namespace KitchenSync {
     public:
         SyncPlugin(QObject* obj, const char* name = 0);
         virtual ~SyncPlugin();
-        virtual SyncReturn sync( int mode,  const QPtrList<KSyncEntry> &in,
-                                 const QPtrList<KSyncEntry> &out ) = 0;
-        virtual void syncAsync( int mode,  const QPtrList<KSyncEntry> &in,
-                                const QPtrList<KSyncEntry> &out ) = 0;
+        virtual SyncReturn sync( int mode,  KSyncEntry *in,
+                                 KSyncEntry* out ) = 0;
+        virtual void syncAsync( int mode,  KSyncEntry *in,
+                                KSyncEntry *out ) = 0;
     signals:
         void done( const SyncReturn& );
 
