@@ -53,7 +53,7 @@ SyncEntry *SyncUiKde::deconflict( SyncEntry *syncEntry, SyncEntry *targetEntry )
   text += i18n( "Entry 1: '%1' from source '%2'\n" ).arg( syncEntry->name() )
           .arg( syncEntry->syncee()->source() );
   text += i18n( "Entry 2: '%1' from source '%2'\n" ).arg( targetEntry->name() )
-          .arg( syncEntry->syncee()->source() );
+          .arg( targetEntry->syncee()->source() );
 
   int result = KMessageBox::questionYesNoCancel( mParent,text,
                                                  i18n("Resolve Conflict"),
