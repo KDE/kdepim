@@ -42,8 +42,8 @@ public:
 	virtual bool exec();
 
 public slots:
-	void syncPCToPalm();
-	void syncPalmToPC();
+	void syncHHfromPC();
+	void syncPCfromHH();
 
 protected:
 	void readConfig();

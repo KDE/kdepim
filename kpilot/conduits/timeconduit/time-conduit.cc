@@ -46,10 +46,10 @@ const char *id_conduit_time =
 	"$Id$";
 }
 
- 
- 
+
+
 TimeConduit::TimeConduit(KPilotDeviceLink * o,
-	const char *n, 
+	const char *n,
 	const QStringList & a) :
 	ConduitAction(o, n, a)
 {
@@ -85,15 +85,15 @@ void TimeConduit::readConfig()
 
 	switch (TimeConduitSettings::direction())
 	{
-		case TimeConduitSettings::eSetPCfromHH:
+		case TimeConduitSettings::eSetHHfromPC:
 			emit logMessage(i18n("Setting the clock on the handheld"));
 //			fHandle->addSyncLogEntry(i18n("Setting the clock on the handheld"));
-			syncPCToPalm();
+			syncHHfromPC();
 			break;
-		case TimeConduitSettings::eSetHHfromPC:
+		case TimeConduitSettings::eSetPCfromHH:
 			emit logMessage(i18n("Setting the clock on the PC from the time on the handheld"));
 //			fHandle->addSyncLogEntry(i18n("Setting the clock on the PC from the time on the handheld"));
-			syncPalmToPC();
+			syncPCfromHH();
 			break;
 		default:
 			emit logError(i18n("Unknown setting for time synchronization."));
@@ -104,7 +104,7 @@ void TimeConduit::readConfig()
 	return true;
 }
 
-void TimeConduit::syncPalmToPC()
+void TimeConduit::syncPCfromHH()
 {
 	FUNCTIONSETUP;
 	QDateTime pdaTime=fHandle->getTime();
@@ -117,16 +117,16 @@ void TimeConduit::syncPalmToPC()
 
 
 
-void TimeConduit::syncPCToPalm()
+void TimeConduit::syncHHfromPC()
 {
 	FUNCTIONSETUP;
 	time_t ltime;
 	time(&ltime);
 	QDateTime time=QDateTime::currentDateTime();
-	
+
 	long int major=fHandle->majorVersion(), minor=fHandle->minorVersion();
-	
-	if (major==3 && (minor==25 || minor==30)) 
+
+	if (major==3 && (minor==25 || minor==30))
 	{
 		emit logMessage(i18n("PalmOS 3.25 and 3.3 do not support setting the system time. Skipping the time conduit..."));
 		return;
