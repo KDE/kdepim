@@ -261,7 +261,7 @@ void CertificateInfoWidgetImpl::startCertificateDump() {
   QObject::connect( proc, SIGNAL( processExited(KProcess*) ),
                     this, SLOT( slotDumpProcessExited(KProcess*) ) );
 
-  if ( !proc->start( KProcess::NotifyOnExit ) ) {
+  if ( !proc->start( KProcess::NotifyOnExit, true /*stderr too*/ ) ) {
     QString wmsg = i18n("Failed to execute gpgsm:\n%1").arg( i18n( "program not found" ) );
     dumpView->setText( wmsg );
   }
