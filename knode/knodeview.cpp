@@ -179,7 +179,7 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   new KNpgp();
 
   //-------------------------------- <GUI again> -------------------------------
-  connect(s_coreManager, SIGNAL(changedRules()), SLOT(slotGrpReorganize()));
+  connect(s_coreManager, SIGNAL(changedRules()), SLOT(slotReScore()));
   //-------------------------------- </GUI again> ------------------------------
 
   //-------------------------------- </CORE> -----------------------------------
