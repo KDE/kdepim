@@ -38,12 +38,15 @@ libkaddressbookpart_la_SOURCES = \
 
 kaddressbook_METASOURCES = AUTO
 
+kaddressbookincludedir = $(includedir)/kaddressbook
+kaddressbookinclude_HEADERS = extensionwidget.h kabcore.h xxportobject.h
+
 noinst_HEADERS = \
  addresseditwidget.h addresseeconfig.h \
  addresseeeditordialog.h addresseeeditorwidget.h addresseeutil.h \
  addviewdialog.h configurewidget.h emaileditwidget.h extensionmanager.h filter.h \
  filtereditdialog.h filterselectionwidget.h geowidget.h imagewidget.h \
- incsearchwidget.h jumpbuttonbar.h kabcore.h kabprefs.h \
+ incsearchwidget.h jumpbuttonbar.h kabprefs.h \
  kaddressbook_part.h kaddressbookmain.h kaddressbookview.h keywidget.h \
  ldapsearchdialog.h nameeditdialog.h phoneeditwidget.h secrecywidget.h \
  soundwidget.h typecombo.h undo.h undocmds.h viewconfigurefieldspage.h \

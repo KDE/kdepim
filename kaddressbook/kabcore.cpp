@@ -490,6 +490,10 @@ void KABCore::setModified( bool modified )
 {
   mModified = modified;
   mActionSave->setEnabled( mModified );
+
+  if ( modified )
+    mJumpButtonBar->recreateButtons();
+
   mViewManager->refreshView();
 }
 

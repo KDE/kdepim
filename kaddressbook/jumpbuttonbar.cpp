@@ -111,8 +111,14 @@ void JumpButtonBar::recreateButtons()
   for ( it = ab->begin(); it != ab->end(); ++it ) {
     KABC::Field *field = 0;
     field = mCore->currentSearchField();
-    if ( field && !field->value( *it ).isEmpty() )
-      character = field->value( *it )[ 0 ];
+    if ( field ) {
+      setEnabled( true );
+      if ( !field->value( *it ).isEmpty() )
+        character = field->value( *it )[ 0 ];
+    } else {
+      setEnabled( false );
+      return;
+    }
 
     if ( !character.isEmpty() && !mCharacters.contains( character ) )
       mCharacters.append( character );

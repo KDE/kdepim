@@ -27,10 +27,9 @@
 #include <qobject.h>
 
 #include <kabc/addresseelist.h>
+#include <kaddressbook/kabcore.h>
 #include <klibloader.h>
 #include <kxmlguiclient.h>
-
-#include "kabcore.h"
 
 class XXPortObject : public QObject, virtual public KXMLGUIClient
 {

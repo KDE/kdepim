@@ -302,6 +302,9 @@ class KABCore : public QWidget
     KAction *mActionCategories;
     KToggleAction *mActionJumpBar;
     KToggleAction *mActionDetails;
+
+    class KABCorePrivate;
+    KABCorePrivate *d;
 };
 
 #endif

@@ -78,6 +78,9 @@ class ExtensionWidget : public QWidget
 
   private:
     KABCore *mCore;
+
+    class ExtensionWidgetPrivate;
+    ExtensionWidgetPrivate *d;
 };
 
 class ExtensionFactory : public KLibFactory
