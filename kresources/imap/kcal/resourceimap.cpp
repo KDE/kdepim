@@ -68,7 +68,7 @@ ResourceIMAP::~ResourceIMAP()
 bool ResourceIMAP::doOpen()
 {
   // Get the config file
-  QString configFile = locateLocal( "config", "kresources/imaprc" );
+  QString configFile = locateLocal( "config", "kresources/imap/kcalrc" );
   KConfig config( configFile );
 
   // Read the calendar entries
