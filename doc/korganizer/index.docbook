@@ -155,7 +155,7 @@ hour in the main panel.</para></step>
 <guilabel>Attendees</guilabel>, and <guilabel>Recurrence</guilabel> to move
 around.</para></step>
 
-<step><para>Click on <guibutton><accel>O</accel>K</guibutton> to save the
+<step><para>Click on <guibutton>OK</guibutton> to save the
 event.</para></step>
 </procedure>
 </sect1>
@@ -751,14 +751,15 @@ among the <link linkend="reference-action-buttons">Action Buttons</link>,
 <sect2 id="entering-data-to-do-attendees">
 <title><guilabel>Attendees</guilabel> tab</title>
 
-<para>Some tasks may require more people. You can list those people here. Get
-more information in the <link linkend="reference-windows-attendees">Attendees
-section</link> of the Windows reference.</para>
+<para>Some tasks may require more people. You can list those people
+here. Find more information in the <link
+linkend="reference-windows-attendees">Attendees section</link> of the
+Windows reference.</para>
 
-<para>When you want to confirm, call off or revert the entered data, choose
-among the <link linkend="reference-action-buttons">Action Buttons</link>,
-<guibutton>OK</guibutton>, <guibutton>Apply</guibutton> and
-<guibutton>Cancel</guibutton>.</para>
+<para>When you want to confirm, call off or revert the entered data,
+choose among the <link linkend="reference-action-buttons">Action
+Buttons</link>, <guibutton>OK</guibutton>,
+<guibutton>Apply</guibutton> and <guibutton>Cancel</guibutton>.</para>
 
 </sect2>
 </sect1>
@@ -787,57 +788,74 @@ you checked the <guilabel>Recurring event</guilabel> checkbox.
 <chapter id="group-scheduling">
 <title>Group Scheduling</title>
 
-<para> Currently &korganizer; can only schedule events. It's using the
-IMIP protocol for group scheduling. IMIP is a standard used by many other
-clients too, for example Outlook, Lotus Notes and Evolution. This means that
-you can share events with other users using one of these clients.</para>
+<para> Currently &korganizer; can only schedule events using the
+IMIP-protocol for group scheduling. IMIP is a standard used by many
+other clients too. For example &Microsoft;
+<application>Outlook</application>, Lotus
+<application>Notes</application> and
+<application>Evolution</application>. This means that you can share
+events with other users using one of these clients.</para>
 
 <sect1 id="as-organizer">
-<title>Acting in Group Scheduling as Organizer</title>
+<title>Acting as Organizer in Group Scheduling</title>
 
-<para>In day and week views a little icon showing a tux is placed in the
-event if you are the organizer of an group scheduling event.</para>
+<para>In day and week view a little icon showing one
+<guiicon>tux</guiicon> is placed in the event, if you are the
+organizer of an group scheduling event.</para>
 
 <sect2 id="publish">
 <title>Publishing an Event</title>
 
-<para>If you simply want to send some other people an event, then click on
-<guimenuitem>publish</guimenuitem>
-in the schedule menu when the event is marked. Then a dialog appears, asking
-you for the emails you want to send this event.
-</para>
-<para>Publishing events does not expect an answer from the receivers.</para>
+<para>If you simply want to send some other people an event, then
+click <guimenuitem>publish</guimenuitem> in the
+<guimenu>schedule</guimenu> menu, when the event is marked. Then a
+dialog appears, asking you for the email addresses you want to send
+this event.</para>
+
+<para>Publishing events does not request an answer from the
+attendees.</para>
+
 </sect2>
 
 <sect2 id="request">
 <title>Organizing an Event</title>
-<para>Make a normal event, and add some attendees to the event. Then click on
+
+<para>Make a normal event, and add some attendees to the event. Then
+click on
 <menuchoice><guimenu>Schedule</guimenu><guimenuitem>Request</guimenuitem>
 </menuchoice>. If you send your events through the <link
 linkend="reference-windows-outgoing">outbox</link>, you have to press
-<guibutton>Send Messages</guibutton>. Then you should get answers from the
-attendees in your <link linkend="reference-windows-incoming">inbox</link>.
-</para>
+<guibutton>Send Messages</guibutton>. Then you should get answers from
+the attendees in your <link
+linkend="reference-windows-incoming">inbox</link>.</para>
+
 </sect2>
 
 <sect2 id="cancel">
-<title>Cancel an Event</title>
-<para>To cancel an event you have to the organizer. Then simply mark the event,
-and press <menuchoice><guimenu>Schedule</guimenu>
-<guimenuitem>Cancel</guimenuitem></menuchoice>. This will send a cancel-message
-to all attendees. So if you use the <link linkend="reference-windows-outgoing">
-outbox</link>, you have to press <guibutton>Send Messages</guibutton>. Then you
-should get answers from the attendees in your <link
+<title>Cancel an Event</title> 
+
+<para>To cancel an event you have to be
+the organizer. Then simply select the event, and press
+<menuchoice><guimenu>Schedule</guimenu>
+<guimenuitem>Cancel</guimenuitem></menuchoice>. This will send a
+cancel-message to all attendees. So if you use the <link
+linkend="reference-windows-outgoing">outbox</link>, you have to press the
+<guibutton>Send Messages</guibutton>. Then you should get answers from
+the attendees in your <link
 linkend="reference-windows-incoming">inbox</link>.</para>
 </sect2>
 </sect1>
 
 <sect1 id="as-attendee">
-<title>Akting in Group Scheduling as Attendee</title>
-<para>In day- and weekview a little icon showing three tux is placed in the
-event, if you are the organizer of an groupscheduling event.</para>
+<title>Being the Attendee in a Group Scheduled Event</title>
+
+<para>In day and week views, a little icon showing <guiicon>three tux
+penguins</guiicon> is placed in the event, if you are the organizer of
+an groupscheduling event.</para>
+
 <sect2 id="answer">
 <title>Answering an Event-Request</title>
+
 <para>If you have an event-request in your <link
 linkend="reference-windows-incoming">inbox</link> you can either press
 <guibutton>Reject</guibutton> to ignore the request, or press
@@ -852,10 +870,15 @@ and then send back your proposal by pressing <menuchoice><guimenu>Schedule
 </sect2>
 
 <sect2 id="refresh">
-<title>Get the latest version of an Event</title>
-<para>To get the latest version of an grouscheduling-event, mark the event, and
-press <menuchoice><guimenu>Schedule</guimenu><guimenuitem>Refresh</guimenuitem>
-</menuchoice>. The organizer will then send you back the latest version.</para>
+
+<title>Get the Latest Version of an Event</title> 
+
+<para>To get the latest version of an groupscheduling event, select
+the event, and press
+<menuchoice><guimenu>Schedule</guimenu><guimenuitem>Refresh</guimenuitem>
+</menuchoice>. &korganizer; will then send you back the latest
+version.</para>
+
 </sect2>
 </sect1>
 
@@ -866,7 +889,7 @@ press <menuchoice><guimenu>Schedule</guimenu><guimenuitem>Refresh</guimenuitem>
 <title>Examples</title>
 
 <sect1 id="examples-entering-event">
-<title>Entering New Event</title>
+<title>Entering a New Event</title>
 
 <para>In this example, you'll enter an event. You need to arrange a meeting on
 <emphasis>February 12, 2001</emphasis> regarding launch of your new
