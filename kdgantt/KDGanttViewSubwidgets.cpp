@@ -822,8 +822,7 @@ void  KDTimeHeaderWidget::preparePopupMenu()
 
 QString  KDTimeHeaderWidget::getToolTipText(QPoint p)
 {
-    QString s = getDateTimeForIndex( p.x()).toString();
-    return s;
+    return KGlobal::locale()->formatDateTime(getDateTimeForIndex(p.x()));
 }
 void KDTimeHeaderWidget::addTickRight( int num )
 {
