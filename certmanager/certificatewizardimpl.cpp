@@ -151,10 +151,9 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent,  const char* name
 
     // Allow to select remote URLs
     storeUR->setMode( KFile::File );
-    // Bug in kdelibs-3.2's kfilefiltercombo.cpp: the '/' breaks the filter (no *.p10 file appears)
-    //const QString filter = QString("*.p10|") + i18n("S/MIME Certification Request (*.p10)").replace( "/", "\\/" );
-    const QString filter = QString("*.p10|") + i18n("SMIME Certification Request (*.p10)");
-    storeUR->setFilter( filter );
+    storeUR->setFilter( "application/pkcs10" );
+    connect( storeUR, SIGNAL( urlSelected( const QString& ) ),
+             this, SLOT( slotURLSelected( const QString& ) ) );
 
     const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
     caEmailED->setText( config.readEntry( "CAEmailAddress" ) );
@@ -408,8 +407,22 @@ QString CertificateWizardImpl::caEMailAddress() const {
   return caEmailED->text().stripWhiteSpace();
 }
 
-QString CertificateWizardImpl::saveFileUrl() const {
-  return storeUR->url().stripWhiteSpace();
+void CertificateWizardImpl::slotURLSelected( const QString& _url )
+{
+  KURL url = KURL::fromPathOrURL( _url.stripWhiteSpace() );
+#if ! KDE_IS_VERSION(3,2,90)
+  // The application/pkcs10 mimetype didn't have a native extension,
+  // so the filedialog didn't have the checkbox for auto-adding it.
+  QString fileName = url.fileName();
+  int pos = fileName.findRev( '.' );
+  if ( pos < 0 ) // no extension
+    url.setFileName( fileName + ".p10" );
+#endif
+  storeUR->setURL( url.prettyURL() );
+}
+
+KURL CertificateWizardImpl::saveFileUrl() const {
+  return KURL::fromPathOrURL( storeUR->url().stripWhiteSpace() );
 }
 
 void CertificateWizardImpl::showPage( QWidget * page )
@@ -483,7 +496,7 @@ void CertificateWizardImpl::accept()
     sendCertificate( caEMailAddress(), _keyData );
   } else {
     // Save in file/URL
-    KURL url = KURL::fromPathOrURL( saveFileUrl() );
+    KURL url = saveFileUrl();
     bool overwrite = false;
     if ( KIO::NetAccess::exists( url, false /*dest*/, this ) ) {
       if ( KMessageBox::Cancel == KMessageBox::warningContinueCancel(

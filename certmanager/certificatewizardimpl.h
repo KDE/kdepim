@@ -37,6 +37,7 @@
 #include <qcstring.h>
 #include <qvaluevector.h>
 #include <qlineedit.h>
+#include <kurl.h>
 
 namespace GpgME {
   class KeyGenerationResult;
@@ -55,7 +56,7 @@ public:
 
     bool sendToCA() const;
     QString caEMailAddress() const;
-    QString saveFileUrl() const;
+    KURL saveFileUrl() const;
 
     typedef QPair<QString, QLineEdit*> StringLEPair;
     typedef QValueVector< StringLEPair > AttrPairList;
@@ -69,6 +70,7 @@ private slots:
     void slotResult( const GpgME::KeyGenerationResult & res, const QByteArray & keyData );
     void slotSetValuesFromWhoAmI();
     void slotEnablePersonalDataPageExit();
+    void slotURLSelected( const QString& );
 
     void slotHelpClicked();
 
