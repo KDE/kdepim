@@ -76,6 +76,45 @@ class CreateEGroupwareKabcResource : public KConfigPropagator::Change
     }
 };
 
+// TODO: fix the i18n strings after freeze...
+class ChangeEGroupwareKabcResource : public KConfigPropagator::Change
+{
+  public:
+    ChangeEGroupwareKabcResource( const QString &identifier )
+      : KConfigPropagator::Change( i18n("Create eGroupware Addressbook Resource") ),
+        mIdentifier( identifier )
+    {
+    }
+
+    void apply()
+    {
+      kdDebug() << "Change eGroupware Addressbook Resource" << endl;
+
+      KRES::Manager<KABC::Resource> manager( "contact" );
+      manager.readConfig();
+
+      KRES::Manager<KABC::Resource>::Iterator it;
+      for ( it = manager.begin(); it != manager.end(); ++it ) {
+        if ( (*it)->identifier() == mIdentifier ) {
+          KABC::ResourceXMLRPC *resource = static_cast<KABC::ResourceXMLRPC*>( *it );
+
+          resource->setURL( createURL( EGroupwareConfig::self()->server(),
+                                       EGroupwareConfig::self()->useSSLConnection() ) );
+          resource->setDomain( EGroupwareConfig::self()->domain() );
+          resource->setUser( EGroupwareConfig::self()->user() );
+          resource->setPassword( EGroupwareConfig::self()->password() );
+
+          manager.change( resource );
+          manager.writeConfig();
+          return;
+        }
+      }
+    }
+
+  private:
+    QString mIdentifier;
+};
+
 class CreateEGroupwareKcalResource : public KConfigPropagator::Change
 {
   public:
@@ -100,6 +139,44 @@ class CreateEGroupwareKcalResource : public KConfigPropagator::Change
       manager.add( resource );
       manager.writeConfig();
     }
+};
+
+class ChangeEGroupwareKcalResource : public KConfigPropagator::Change
+{
+  public:
+    ChangeEGroupwareKcalResource( const QString &identifier )
+      : KConfigPropagator::Change( i18n( "Create eGroupware Calendar Resource" ) ),
+        mIdentifier( identifier )
+    {
+    }
+
+    void apply()
+    {
+      kdDebug() << "Change eGroupware Calendar Resource" << endl;
+
+      KCal::CalendarResourceManager manager( "calendar" );
+      manager.readConfig();
+
+      KCal::CalendarResourceManager::Iterator it;
+      for ( it = manager.begin(); it != manager.end(); ++it ) {
+        if ( (*it)->identifier() == mIdentifier ) {
+          KCal::ResourceXMLRPC *resource = static_cast<KCal::ResourceXMLRPC*>( *it );
+
+          resource->setURL( createURL( EGroupwareConfig::self()->server(),
+                                       EGroupwareConfig::self()->useSSLConnection() ) );
+          resource->setDomain( EGroupwareConfig::self()->domain() );
+          resource->setUser( EGroupwareConfig::self()->user() );
+          resource->setPassword( EGroupwareConfig::self()->password() );
+
+          manager.change( resource );
+          manager.writeConfig();
+          return;
+        }
+      }
+    }
+
+  private:
+    QString mIdentifier;
 };
 
 class CreateEGroupwareKnotesResource : public KConfigPropagator::Change
@@ -130,6 +207,44 @@ class CreateEGroupwareKnotesResource : public KConfigPropagator::Change
     }
 };
 
+class ChangeEGroupwareKnotesResource : public KConfigPropagator::Change
+{
+  public:
+    ChangeEGroupwareKnotesResource( const QString &identifier )
+      : KConfigPropagator::Change( i18n("Create eGroupware Notes Resource") ),
+        mIdentifier( identifier )
+    {
+    }
+
+    void apply()
+    {
+      kdDebug() << "Change eGroupware Notes Resource" << endl;
+
+      KRES::Manager<ResourceNotes> manager( "notes" );
+      manager.readConfig();
+
+      KRES::Manager<ResourceNotes>::Iterator it;
+      for ( it = manager.begin(); it != manager.end(); ++it ) {
+        if ( (*it)->identifier() == mIdentifier ) {
+          KNotes::ResourceXMLRPC *resource = static_cast<KNotes::ResourceXMLRPC*>( *it );
+
+          resource->setURL( createURL( EGroupwareConfig::self()->server(),
+                                       EGroupwareConfig::self()->useSSLConnection() ) );
+          resource->setDomain( EGroupwareConfig::self()->domain() );
+          resource->setUser( EGroupwareConfig::self()->user() );
+          resource->setPassword( EGroupwareConfig::self()->password() );
+
+          manager.change( resource );
+          manager.writeConfig();
+          return;
+        }
+      }
+    }
+
+  private:
+    QString mIdentifier;
+};
+
 class EGroupwarePropagator : public KConfigPropagator
 {
   public:
@@ -149,6 +264,8 @@ class EGroupwarePropagator : public KConfigPropagator
       }
       if ( kcalIt == kcalManager.end() ) {
         changes.append( new CreateEGroupwareKcalResource );
+      } else {
+        changes.append( new ChangeEGroupwareKcalResource( (*kcalIt)->identifier() ) );
       }
 
       KRES::Manager<KABC::Resource> kabcManager( "contact" );
@@ -159,6 +276,8 @@ class EGroupwarePropagator : public KConfigPropagator
       }
       if ( kabcIt == kabcManager.end() ) {
         changes.append( new CreateEGroupwareKabcResource );
+      } else {
+        changes.append( new ChangeEGroupwareKabcResource( (*kabcIt)->identifier() ) );
       }
 
       KRES::Manager<ResourceNotes> knotesManager( "notes" );
@@ -169,6 +288,8 @@ class EGroupwarePropagator : public KConfigPropagator
       }
       if ( knotesIt == knotesManager.end() ) {
         changes.append( new CreateEGroupwareKnotesResource );
+      } else {
+        changes.append( new ChangeEGroupwareKnotesResource( (*knotesIt)->identifier() ) );
       }
     }
 };
