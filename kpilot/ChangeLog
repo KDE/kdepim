@@ -33,7 +33,20 @@ TODO LIST (Ignore the file TODO)
 * Merge between HEAD and BRANCH (again).
 * Fix the NULL conduit's tooltip - OR - make it actually do what
   the current tooltip says (resetSyncFlags() should be enough).
-  
+
+2003-3-23  Adriaan de Groot
+* More merging .. conduits today:
+* null/ There's a single string change, "Failure" -> "failure".
+* expense/ knotes/ Nothing changed - except the Makefile.am, 
+  which breaks things in HEAD.
+* malconduit/ "" -> QString() for QString cleanness. Some authors
+  should have been credits. There's still a spelling fix string
+  change in HEAD. Lots of spacing updates.
+
+2003-3-21  Adriaan de Groot
+* Heh, noone ever noticed the "Edit Toolbars" menu item called the
+  "Edit Keyboard Shortcuts" dialog.
+
 2003-3-20  Adriaan de Groot
 * Merging between BRANCH and HEAD.
 * options.h [BRANCH] Upped the version number again.
