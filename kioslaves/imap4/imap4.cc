@@ -341,7 +341,7 @@ IMAP4Protocol::get (const KURL & _url)
         while (!(res = parseLoop()));
         if (res == -1) break;
 
-        mailHeader *lastone = NULL;
+        mailHeader *lastone = 0;
         imapCache *cache = getLastHandled ();
         if (cache)
           lastone = cache->getHeader ();
@@ -2261,8 +2261,10 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
   }
   if (retVal == ITYPE_MSG)
   {
-    if (_section.find ("BODY.PEEK[", 0, false) != -1 ||
-        _section.find ("BODY[", 0, false) != -1)
+    if ( (_section.find ("BODY.PEEK[", 0, false) != -1 ||
+          _section.find ("BODY[", 0, false) != -1) &&
+         _section.find(".MIME") == -1 &&
+         _section.find(".HEADER") == -1 )
       retVal = ITYPE_ATTACH;
   }
   if ( _hierarchyDelimiter.isEmpty() &&
