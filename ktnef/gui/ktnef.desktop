@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=TNEF File Viewer
+Name[ar]=عارض لملفات TNEF
 Name[bg]=Преглед на файлове TNEF
 Name[bs]=Preglednik TNEF datoteka
 Name[ca]=Visor fitxer TNEF
@@ -41,6 +42,7 @@ Icon=ktnef
 Type=Application
 DocPath=ktnef/index.html
 Comment=A viewer/extractor for TNEF files
+Comment[ar]=عارض و مستخلص لملفات TNEF
 Comment[bg]=Програма за преглед и извличане на файлове TNEF
 Comment[bs]=Preglednik/ekstraktor za TNEF datoteke
 Comment[ca]=Un visor/extractor per a fitxers TNEF
