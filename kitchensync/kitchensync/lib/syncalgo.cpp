@@ -184,10 +184,47 @@ void PIMSyncAlg::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
             }
             /* entry removed and other unchanged or removed too */
             else if ( entry->wasRemoved() &&
-                       ( other->wasRemoved() || other->state() == SyncEntry::Undefined ) ) {
-                kdDebug(5231) << "Removed and either removed or unchanged too " << endl;
+                      other->wasRemoved() ) {
+                kdDebug(5231) << "Removed and removed too " << endl;
                 // no need for merge
+                informBothDeleted( entry, other );
                 target->replaceEntry( other, entry->clone() );
+             /* entry removed and other undefined confirmDelete */
+            }else if ( entry->wasRemoved() &&
+                       other->state() == SyncEntry::Undefined ) {
+                /* if confirmed that is fairly easy */
+                if (confirmDelete(entry, other) )
+                    target->replaceEntry( other, entry->clone() );
+                /*
+                 * aye aye how can we do this
+                 * first of all we need to remove the modified flag
+                 * then we need to set the support to 0 on the syncee
+                 * and call a mergeWith
+                 * then we reset the BitArray
+                 */
+                else{
+                    QBitArray ar = entry->syncee()->bitArray();
+                    QBitArray oth;
+                    oth.fill( false, ar.size() );
+                    entry->syncee()->setSupports( oth );
+                    /* refill the object with life */
+                    entry->mergeWith( other );
+
+                    /*
+                     * This is specefic to two Syncees
+                     * if!over we set the other to Modifed
+                     * so the original(other) one will replace the former deleted one
+                     * if we're on override there will be no second call
+                     */
+                    if (!over ) {
+                        entry->setState( SyncEntry::Undefined );
+                        other->setState( SyncEntry::Modified);
+                    }else
+                        entry->setState( SyncEntry::Modified);
+
+                    /* restore */
+                    entry->syncee()->setSupports( ar );
+                }
             }
             /* entry was removed and other changed */
             else if ( entry->wasRemoved() &&

@@ -3,6 +3,12 @@
 
 /**
  * $Log$
+ * Revision 1.2  2002/07/17 15:16:54  zecke
+ * API addition to Syncee ( firstSync ) not discussed yet
+ * make the Syncee use the new call
+ * put plugins back  into the Makefile but removed phone from there
+ * cause it wasn't ported yet
+ *
  * Revision 1.1  2002/07/15 20:15:19  zecke
  * Ported OpieDesktopSyncEntry
  *
@@ -93,6 +99,8 @@ Syncee* OpieDesktopSyncee::clone() {
     OpieDesktopSyncee* syncee = new OpieDesktopSyncee();
     syncee->setSyncMode( syncMode() );
     syncee->setFirstSync( firstSync() );
+    syncee->setSupports( bitArray() );
+    syncee->setSource( source() );
     OpieDesktopSyncEntry* entry;
     for ( entry = mList.first(); entry != 0; entry =mList.next() ) {
         syncee->addEntry( entry->clone() );

@@ -30,6 +30,7 @@ AddressBook::~AddressBook(){
 KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName )
 {
     KSync::AddressBookSyncee *syncee = new KSync::AddressBookSyncee();
+    syncee->setSource( "Opie");
     if( device() )
 	syncee->setSupports( device()->supports( Device::Addressbook ) );
 
@@ -42,8 +43,8 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName )
     QDomDocument doc("mydocument" );
     if( !doc.setContent( &file ) ){
 	file.close();
-        //delete syncee; same as above...
-	return syncee;
+        delete syncee;
+	return 0;
     }
 
 

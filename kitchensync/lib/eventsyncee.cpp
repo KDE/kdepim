@@ -23,7 +23,7 @@ namespace{
     void mergeDtEnd( KCal::Event* const dest, const KCal::Event* src) {
         dest->setDtEnd( src->dtEnd() );
     }
-    MergeEvent* map() {
+    MergeEvent* mapEve() {
         if (!mergeMap ) {
             deleter.setObject( mergeMap, new MergeEvent );
             mergeMap->add( EventSyncee::DtEnd, mergeDtEnd );
@@ -40,7 +40,7 @@ bool EventSyncEntry::mergeWith( SyncEntry* entry ) {
 
     for (uint i = 0; i< da.size() && i < hier.size(); i++ ) {
         if (da[i] && !hier[i] )
-            map()->invoke(i, incidence(), toEv->incidence() );
+            mapEve()->invoke(i, incidence(), toEv->incidence() );
     }
 
     return true;
@@ -53,6 +53,8 @@ Syncee* EventSyncee::clone() {
     EventSyncee* temp = new EventSyncee();
     temp->setSyncMode( syncMode() );
     temp->setFirstSync( firstSync() );
+    temp->setSupports( bitArray() );
+    temp->setSource( source() );
     EventSyncEntry* entry;
     for ( entry = mList.first(); entry != 0; entry = mList.next() ) {
         temp->addEntry( entry->clone() );

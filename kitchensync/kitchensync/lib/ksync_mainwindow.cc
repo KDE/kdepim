@@ -57,6 +57,7 @@
 #include <error.h>
 #include <progress.h>
 
+#include "syncconfig.h"
 #include "ksync_configpart.h"
 #include "ksync_configuredialog.h"
 #include "manipulatorpart.h"
@@ -400,7 +401,7 @@ void KSyncMainWindow::updateEdited( const KonnectorProfile::ValueList& list ){
     KonnectorProfile::ValueList::ConstIterator it;
     for( it = list.begin(); it != list.end(); ++it ){
 	m_konnector->setCapabilities( (*it).udi(), (*it).kapabilities() );
-    
+
     }
 }
 
@@ -579,10 +580,14 @@ void KSyncMainWindow::switchProfile( KonnectorProfile& prof ) {
 }
 /*
  * configure current loaded
+ * we will hack our SyncAlgo configurator into  that
+ * that widget
  */
 void KSyncMainWindow::slotConfigCur() {
     ConfigureDialog *dlg = new ConfigureDialog(this);
     ManipulatorPart *part = 0l;
+    SyncConfig* conf = new SyncConfig( currentProfile().confirmDelete(), currentProfile().confirmSync() );
+    dlg->addWidget( conf, i18n("Configure Synchronisation"), new QPixmap() );
 
     for (part = m_parts.first(); part != 0; part = m_parts.next() ) {
         if( part->configIsVisible() )
@@ -591,6 +596,12 @@ void KSyncMainWindow::slotConfigCur() {
                            part->pixmap() );
     }
     if (dlg->exec()) {
+        Profile prof =  currentProfile();
+        prof.setConfirmSync( conf->confirmSync() );
+        prof.setConfirmDelete( conf->confirmDelete() );
+        profileManager()->replaceProfile( prof );
+        profileManager()->setCurrentProfile( prof );
+
         for (part = m_parts.first(); part != 0; part = m_parts.next() ) {
             part->slotConfigOk();
         }
@@ -641,7 +652,7 @@ void KSyncMainWindow::initKonnectorList() {
     m_konAct->setItems( lst );
 }
 SyncUi* KSyncMainWindow::syncUi() {
-    m_syncUi = new SyncUiKde(this);
+    m_syncUi = new SyncUiKde(this, currentProfile().confirmDelete(), TRUE);
     return m_syncUi;
 }
 SyncAlgorithm* KSyncMainWindow::syncAlgorithm() {

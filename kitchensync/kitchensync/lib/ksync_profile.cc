@@ -29,6 +29,12 @@ QString Profile::uid() const {
 QString Profile::pixmap() const {
     return m_pixmap;
 }
+bool Profile::confirmDelete()const {
+    return m_confirmDelete;
+}
+bool Profile::confirmSync()const {
+    return m_confirmSync;
+}
 void Profile::setName( const QString& name ) {
     m_name = name;
 }
@@ -53,6 +59,12 @@ void Profile::setPaths(const QMap<QString, QString>& map ) {
 void Profile::setPath( const QString& partName,  const QString& path ) {
     m_map.replace( partName, path );
 }
+void Profile::setConfirmSync( bool b ) {
+    m_confirmSync = b;
+}
+void Profile::setConfirmDelete( bool b ) {
+    m_confirmDelete = b;
+}
 QString Profile::path( const QString& partName) const {
     QMap<QString, QString>::ConstIterator it;
     QString path;
@@ -64,11 +76,15 @@ QString Profile::path( const QString& partName) const {
 }
 Profile &Profile::operator=( const Profile &prof )
 {
+    if (&prof == this ) return *this;
+
     m_name = prof.m_name;
     m_uid = prof.m_uid;
     m_pixmap = prof.m_pixmap;
     m_list = prof.m_list;
     m_map = prof.m_map;
+    m_confirmSync = prof.m_confirmSync;
+    m_confirmDelete = prof.m_confirmDelete;
     return *this;
 }
 

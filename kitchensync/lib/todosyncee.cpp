@@ -70,7 +70,7 @@ namespace{
     void mergeComp( Todo* const, const Todo* const );
     void mergePer( Todo* const, const Todo* const );
 
-    MergeTodo* map() {
+    MergeTodo* mapTo() {
         if (!mergeMap ) {
             deleter.setObject( mergeMap, new MergeTodo );
 
@@ -92,7 +92,7 @@ bool TodoSyncEntry::mergeWith( SyncEntry* entry ) {
     QBitArray hier = syncee()->bitArray();
     for ( uint i = 0; i < da.size() && i < hier.size() ; i++ ) {
         if (da[i] && !hier[i] ) {
-            map()->invoke(i, mTodo, toEn->mTodo );
+            mapTo()->invoke(i, mTodo, toEn->mTodo );
         }
     }
 
@@ -110,6 +110,8 @@ Syncee* TodoSyncee::clone() {
     TodoSyncee* temp = new TodoSyncee();
     temp->setSyncMode( syncMode() );
     temp->setFirstSync( firstSync() );
+    temp->setSupports( bitArray() );
+    temp->setSource( source() );
     TodoSyncEntry* entry;
     for ( entry = mList.first(); entry != 0; entry = mList.next() ) {
         temp->addEntry( entry->clone() );

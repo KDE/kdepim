@@ -37,6 +37,18 @@ namespace KSync {
            provide a more useful implementation to @ref KSyncer.
         */
         virtual SyncEntry* deconflict( SyncEntry *syncEntry, SyncEntry *target);
+
+        /**
+         * @short Confirm delete
+         * Confirm if the SyncEntry should be deleted. It gets called if one
+         * side was unchanged and the other deleted
+         */
+        virtual bool confirmDelete( SyncEntry* syncEntry, SyncEntry* target );
+
+        /**
+         * Inform the user that both items where deleted
+         */
+        virtual void informBothDeleted( SyncEntry* syncEntry, SyncEntry* target );
     };
 
 };

@@ -65,6 +65,8 @@ void ProfileFileManager::saveOne( KConfig* conf,  const Profile& prof ) {
     conf->setGroup( prof.uid() );
     conf->writeEntry("Name", prof.name() );
     conf->writeEntry("Pixmap", prof.pixmap() );
+    conf->writeEntry("ConfirmDelete", prof.confirmDelete() );
+    conf->writeEntry("ConfirmSync", prof.confirmSync() );
 
     QMap<QString,QString> paths = prof.paths();
     QMap<QString,QString>::Iterator pathIt;
@@ -93,6 +95,8 @@ Profile ProfileFileManager::readOne(KConfig *conf) {
     prof.setUid( conf->group() );
     prof.setName( conf->readEntry("Name") );
     prof.setPixmap( conf->readEntry("Pixmap") );
+    prof.setConfirmSync( conf->readBoolEntry("ConfirmSync",  true) );
+    prof.setConfirmDelete( conf->readBoolEntry("ConfirmDelete", true) );
 
     QStringList locationPath = conf->readListEntry("LocationPath");
     QStringList::Iterator it;

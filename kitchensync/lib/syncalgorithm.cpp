@@ -15,3 +15,14 @@ SyncEntry* SyncAlgorithm::deconflict( SyncEntry* syncEntry,  SyncEntry* target )
 
     return entry;
 }
+bool SyncAlgorithm::confirmDelete( SyncEntry* syncEntry, SyncEntry* target ) {
+    bool ret = true;
+    if (mUI)
+        ret = mUI->confirmDelete( syncEntry, target );
+
+    return ret;
+}
+void SyncAlgorithm::informBothDeleted( SyncEntry* entry, SyncEntry* target ) {
+    if (mUI)
+        mUI->informBothDeleted( entry, target );
+}

@@ -420,6 +420,19 @@ class Syncee
 
 
     /**
+     * set the source of this Syncee. The string may
+     * be represented by the conflict resolver
+     */
+    void setSource( const QString& src );
+
+    /**
+     * returns the source of this syncee
+     * or QString::null if not set
+     */
+    QString source()const;
+
+
+    /**
      * convience function to figure
      * if a specefic attribute is supported
      */
@@ -442,6 +455,7 @@ class Syncee
     QString mFilename;
     KSimpleConfig *mStatusLog;
     QBitArray mSupport;
+    QString mName;
     class SynceePrivate;
     SynceePrivate* d;
 };

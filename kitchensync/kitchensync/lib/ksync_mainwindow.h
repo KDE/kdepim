@@ -69,7 +69,7 @@ namespace KSync {
     class KSyncMainWindow : public KParts::MainWindow {
        Q_OBJECT
     public:
-    
+
 	/**
 	 * The KSyncMainWindow C'tor
 	 * @param widget parent widget
@@ -85,12 +85,12 @@ namespace KSync {
 	 * @return the parent for KPart widgets
 	 */
         QWidget* widgetStack();
-	
+
 	/**
 	 * @return the SystemTray of KitchenSync
 	 */
         KSyncSystemTray *tray();
-	
+
 	/**
 	 * @return the KitchenSync KonnectorManager
 	 */
@@ -101,29 +101,29 @@ namespace KSync {
 	 * @deprecated
 	 */
         QString  currentId()const;
-	
+
 	/**
 	 * REMOVE
 	 * @deprecated
 	 */
         QMap<QString,QString> ids()const;
-	
+
 	/**
 	 * @return the currently enabled Profile
 	 */
         Profile currentProfile()const;
-	
+
 	/**
 	 * @return access to the profilemanager
 	 * @FIXME make const pointer to const object
 	 */
         ProfileManager *profileManager()const;
-	
+
 	/**
-	 * @return the current KonnectorProfile	
+	 * @return the current KonnectorProfile
 	 */
         KonnectorProfile konnectorProfile() const;
-	
+
 	/**
 	 * @return the KonnectorProfileManager
 	 * @FIXME make const pointer to const object
@@ -134,17 +134,16 @@ namespace KSync {
 	 * @return a SyncUi
 	 */
         SyncUi* syncUi();
-	
+
 	/**
-	 * @return the prefered syncAlgorithm of KitchenSync	 
+	 * @return the prefered syncAlgorithm of KitchenSync
 	 */
         SyncAlgorithm* syncAlgorithm();
-	
+
 	/**
 	 * @return the all loaded ManipulatorParts
 	 */
         const QPtrList<ManipulatorPart> parts()const;
-
 
     private:
         virtual void initActions();
@@ -156,7 +155,7 @@ namespace KSync {
                            KonnectorProfile::ValueList& items );
         void loadUnloaded( const KonnectorProfile::ValueList& toLoad,
                            KonnectorProfile::ValueList& items );
-	void updateEdited( const KonnectorProfile::ValueList& edited );			
+	void updateEdited( const KonnectorProfile::ValueList& edited );
 
 
     signals:
@@ -166,33 +165,33 @@ namespace KSync {
 	 * @param oldProfile the previously enabled profile
 	 */
         void profileChanged(const Profile& oldProfile   );
-	
+
 	/**
 	 * This signal gets emitted whenever the Profile
 	 * is changed.
 	 * @param udi The old UDI of the previously enabled profile
 	 */
         void konnectorChanged( const UDI& udi);
-	
+
 	/**
 	 * This signals gets emitted on KonnectorProfile switch.
 	 * @param oldProf the old Profile
 	 */
         void konnectorChanged( const KonnectorProfile& oldProf );
-	
+
 	/**
 	 * signal emitted when progress from the konnectorProgress arrived
 	 * @param udi The UDI of the KonnectorPlugin
 	 * @param prog The Progress
 	 */
         void konnectorProgress( const UDI& udi , const Progress& prog);
-	
+
 	/**
 	 * @param UDI the UDI of the KonnectorPlugin
 	 * @param err the error
 	 */
         void konnectorError( const UDI&, const Error& err);
-	
+
 	/**
 	 * This signal gets emitted when the KonnectorManager
 	 * downloaded a list of files
@@ -200,42 +199,42 @@ namespace KSync {
 	 * @param lst The downloaded Syncee
 	 */
         void konnectorDownloaded( const UDI& udi, Syncee::PtrList lst);
-	
+
 	/**
 	 * Whenever the currently activated parts changed
 	 * @param newPart the newly activated part
 	 */
         void partChanged( ManipulatorPart* newPart );
-	
+
 	/**
 	 * progress coming from one part
 	 * @param part where the progress comes from, 0 if from MainWindow
 	 * @param prog The progress
 	 */
         void partProgress( ManipulatorPart* part, const Progress& prog);
-	
+
 	/**
 	 * error coming from one part
 	 * @param part where the error comes from, 0 if from MainWindow
 	 * @param err The error
 	 */
         void partError( ManipulatorPart* part, const Error& error);
-	
+
 	/**
 	 * emitted when ever sync starts
 	 */
         void startSync();
-	
+
 	/**
 	 * emitted when a part is asked to sync
 	 */
         void startSync(ManipulatorPart*);
-	
+
 	/**
 	 * emitted when done with syncing
 	 */
         void doneSync();
-	
+
 	/**
 	 * emitted when one part is done with syncing
 	 */

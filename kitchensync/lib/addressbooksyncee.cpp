@@ -118,7 +118,7 @@ namespace {
     void mergeEmails    ( KABC::Addressee&, const KABC::Addressee& );
 
 
-    MergeMap* map() {
+    MergeMap* mergeMappi() {
         if (!mergeMap ) {
             deleter.setObject( mergeMap,  new MergeMap );
             mergeMap->insert(AddressBookSyncee::FamilyName, mergeFamily );
@@ -180,7 +180,7 @@ bool AddressBookSyncEntry::mergeWith( SyncEntry* ent) {
     QBitArray da   = entry->syncee()->bitArray();
     kdDebug(5228) << "Hier count " << hier.size() << " Da count "<< da.size() << endl;
     MergeMap::Iterator it;
-    MergeMap* ma = map();
+    MergeMap* ma = mergeMappi();
     for (uint i = 0; i < da.size() && i < hier.size(); i++ ) {
         /*
          * If da supports [i] and this entry does
@@ -298,6 +298,7 @@ Syncee* AddressBookSyncee::clone() {
     clone->setSyncMode( syncMode() );
     clone->setFirstSync( firstSync() );
     clone->setSupports( bitArray() );
+    clone->setSource( source() );
     for ( entry = mEntries.first(); entry != 0; entry = mEntries.next() ) {
         cloneE = entry->clone();
         clone->addEntry( cloneE ); // mSyncee gets updatet

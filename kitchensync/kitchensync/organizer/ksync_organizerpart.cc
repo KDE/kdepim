@@ -12,6 +12,8 @@
 #include <kdebug.h>
 #include <kglobal.h>
 #include <kiconloader.h>
+#include <kstdguiitem.h>
+#include <kmessagebox.h>
 #include <kparts/genericfactory.h>
 #include <kparts/componentfactory.h>
 
@@ -177,16 +179,34 @@ void OrganizerPart::sync( const Syncee::PtrList& in,
     /* 6.  sync */
     Syncer sync( core()->syncUi(), core()->syncAlgorithm() );
     if (evSyncee ) {
+        events->setSource( i18n("Organizer") );
         sync.addSyncee(evSyncee);
         sync.addSyncee(events);
         sync.sync();
         sync.clear();
     }
     if (toSyncee ) {
+        todos->setSource( i18n("Todolist") );
         sync.addSyncee( toSyncee );
         sync.addSyncee( todos );
         sync.sync();
         sync.clear();
+    }
+
+    if ( confirmBeforeWriting() ) {
+        switch ( KMessageBox::questionYesNo(0, i18n("Do you want to write back todolist and calendar?"), i18n("Save"),
+                                            KStdGuiItem::save(), KStdGuiItem::dontSave() ) ) {
+        case KMessageBox::No:{
+            delete todos;
+            delete events;
+            done();
+            return;
+
+            break;
+        }
+        default:
+            break;
+        }
     }
 
     /* 7. write back meta */

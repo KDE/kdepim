@@ -231,6 +231,12 @@ bool Syncee::isSupported( uint attr )const {
         return false;
     return mSupport.testBit( attr );
 }
+void Syncee::setSource( const QString& str ) {
+    mName = str;
+}
+QString Syncee::source()const {
+    return mName;
+}
 ////////////// Syncer //////////////////////
 Syncer::Syncer(SyncUi *ui,  SyncAlgorithm *iface)
 {

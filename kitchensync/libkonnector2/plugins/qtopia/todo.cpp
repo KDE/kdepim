@@ -116,30 +116,35 @@ KCal::Todo* ToDo::dom2todo( QDomElement e ) {
 KSync::TodoSyncee* ToDo::toKDE( const QString &fileName )
 {
     KSync::TodoSyncee* syncee = new KSync::TodoSyncee();
+    syncee->setSource( "Opie");
     if( device() )
 	syncee->setSupports( device()->supports( Device::Todolist ) );
 
     QFile file( fileName );
-    if ( file.open( IO_ReadOnly ) ) {
-        QDomDocument doc("mydocument");
-        if ( doc.setContent( &file ) ){
-            QDomElement docElem = doc.documentElement();
-            KCal::Todo *todo;
-            QDomNode n = docElem.firstChild();
-            while (!n.isNull() ) {
-                QDomElement e = n.toElement();
-                if (!e.isNull() ) {
-                    if ( e.tagName() == "Task" ) {
-                        todo = dom2todo( e );
-                        KSync::TodoSyncEntry* entry;
-                        entry = new KSync::TodoSyncEntry( todo );
-                        syncee->addEntry( entry );
-                    } // if name == "Task"
-                } // e.isNull
-                n = n.nextSibling();
-            } // n.isNull
-        } // setContent
-    } // off open
+    if ( !file.open( IO_ReadOnly ) ) {
+        return syncee;
+    }
+    QDomDocument doc("mydocument");
+    if ( !doc.setContent( &file ) ){
+        delete syncee;
+        return 0;
+    }
+
+    QDomElement docElem = doc.documentElement();
+    KCal::Todo *todo;
+    QDomNode n = docElem.firstChild();
+    while (!n.isNull() ) {
+        QDomElement e = n.toElement();
+        if (!e.isNull() ) {
+            if ( e.tagName() == "Task" ) {
+                todo = dom2todo( e );
+                KSync::TodoSyncEntry* entry;
+                entry = new KSync::TodoSyncEntry( todo );
+                syncee->addEntry( entry );
+            } // if name == "Task"
+        } // e.isNull
+        n = n.nextSibling();
+    } // n.isNull
     return syncee;
 }
 KTempFile* ToDo::fromKDE( KSync::TodoSyncee* syncee )

@@ -187,48 +187,48 @@ KSync::EventSyncee* DateBook::toKDE( const QString& fileName )
 {
 //    kdDebug(5229) << "To KDE " << endl;
     KSync::EventSyncee* syncee = new KSync::EventSyncee();
+    syncee->setSource( "Opie");
     if( device() )
 	syncee->setSupports( device()->supports( Device::Calendar ) );
 
     QFile file( fileName );
-    if ( file.open( IO_ReadOnly ) ) {
-        //kdDebug(5229) << "file open" << endl;
-        QDomDocument doc("mydocument");
-        if ( doc.setContent( &file ) ) {
-//            kdDebug(5229) << "setContent" << endl;
-            QDomElement docElem = doc.documentElement();
-//            kdDebug(5229) << "TagName docElem " << docElem.tagName() << endl;
-            QDomNode n = docElem.firstChild();
-            QString dummy;
-            while (!n.isNull() ) {
-                QDomElement el = n.toElement();
-                if (!el.isNull() ) {
-//                    kdDebug(5229) << "e " << el.tagName() << endl;
-//                    kdDebug(5229) << "e.isNull not" << endl;
+    if ( !file.open( IO_ReadOnly ) ) {
+        return syncee;
+    }
+    QDomDocument doc("mydocument");
+    if ( !doc.setContent( &file ) ) {
+        delete syncee;
+        return 0;
+    }
 
-                    if ( el.tagName() == "events") {
+    QDomElement docElem = doc.documentElement();
+    QDomNode n = docElem.firstChild();
+    QString dummy;
+    while (!n.isNull() ) {
+        QDomElement el = n.toElement();
+        if (!el.isNull() ) {
 
-                        QDomNode no = el.firstChild();
-                        while (!no.isNull() ) {
-                            QDomElement e = no.toElement();
+            if ( el.tagName() == "events") {
 
-                            if (!e.isNull() ) {
-                                if (e.tagName() == "event") {
-                                    KCal::Event* event = toEvent( e );
-                                    if (event != 0 ) {
-                                        KSync::EventSyncEntry* entry;
-                                        entry = new KSync::EventSyncEntry( event );
-                                        syncee->addEntry( entry );
-                                    }
-                                }
+                QDomNode no = el.firstChild();
+                while (!no.isNull() ) {
+                    QDomElement e = no.toElement();
+
+                    if (!e.isNull() ) {
+                        if (e.tagName() == "event") {
+                            KCal::Event* event = toEvent( e );
+                            if (event != 0 ) {
+                                KSync::EventSyncEntry* entry;
+                                entry = new KSync::EventSyncEntry( event );
+                                syncee->addEntry( entry );
                             }
-                            no = no.nextSibling();
                         }
                     }
-                    n = n.nextSibling();
-                }// n.isNULL
+                    no = no.nextSibling();
+                }
             }
-        }
+            n = n.nextSibling();
+        }// n.isNULL
     }
     return syncee;
 }

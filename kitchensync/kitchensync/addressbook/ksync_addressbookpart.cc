@@ -9,6 +9,8 @@
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <kglobal.h>
+#include <kmessagebox.h>
+#include <kstdguiitem.h>
 #include <kstandarddirs.h>
 #include <ksimpleconfig.h>
 #include <kurlrequester.h>
@@ -118,6 +120,7 @@ void AddressBookPart::sync( const Syncee::PtrList& in,
         done();
         return;
     }
+    ourbook->setSource( i18n("KDE Addressbook") );
 
     /* 5. */
     if (met)
@@ -129,6 +132,21 @@ void AddressBookPart::sync( const Syncee::PtrList& in,
     sync.addSyncee( aBook );
     sync.addSyncee( ourbook );
     sync.sync();
+
+    if ( confirmBeforeWriting() ) {
+        switch ( KMessageBox::questionYesNo(0, i18n("Do you want to write back addressbook?"), i18n("Save"),
+                                            KStdGuiItem::save(), KStdGuiItem::dontSave() ) ) {
+        case KMessageBox::No:{
+            delete ourbook;
+            done();
+            return;
+
+            break;
+        }
+        default:
+            break;
+        }
+    }
 
     /* 7. KABC seems broken so we do meta from save*/
 /*    if (met)

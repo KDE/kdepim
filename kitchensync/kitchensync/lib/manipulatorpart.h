@@ -84,12 +84,12 @@ namespace KSync {
 
 
         /**
-	 * @return the progress made 0-100	 
+	 * @return the progress made 0-100
 	 */
         virtual int syncProgress()const;
-        
+
 	/**
-	 * the sync status 
+	 * the sync status
 	 */
         virtual int syncStatus()const;
 
@@ -97,32 +97,32 @@ namespace KSync {
 	 * @return a user translatable string
 	 */
         virtual QString name()const = 0;
-	
+
 	/**
 	 * @return a short description
 	 */
         virtual QString description()const = 0;
-	
+
 	/**
 	 * @return a pixmap for this part
 	 */
         virtual QPixmap *pixmap() = 0;
-	
+
 	/**
 	 * return a iconName
 	 */
         virtual QString iconName() const = 0;
 
 	/**
-	 * if the partIsVisible 
+	 * if the partIsVisible
 	 */
         virtual bool partIsVisible()const;
-	
+
 	/**
 	 * if the config part is visible
 	 */
         virtual bool configIsVisible()const;
-	
+
 	/**
 	 * @return if the part canSync data :)
 	 */
@@ -143,7 +143,13 @@ namespace KSync {
 	 */
         virtual void sync( const Syncee::PtrList& in, Syncee::PtrList& out );
     protected:
-    
+
+        /**
+         * See if the user wants to be asked before writing
+         * the Syncees back.
+         */
+        bool confirmBeforeWriting()const;
+
 	/**
 	 * @return access to the shell
 	 */
@@ -171,7 +177,7 @@ namespace KSync {
 	/**
 	 * Connect to the PartChange signal
 	 * @see MainWindow for the slot signature
-	 */ 	
+	 */
         /* ManipulatorPart* old,ManipulatorPart* ne */
         void connectPartChange( const char* slot);
 

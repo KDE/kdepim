@@ -39,6 +39,8 @@ namespace KSync {
     protected:
 
         SyncEntry *deconflict( SyncEntry* syncEntry,  SyncEntry *target);
+        bool confirmDelete( SyncEntry* syncEntry, SyncEntry* target );
+        void informBothDeleted( SyncEntry* syncEntry, SyncEntry* target );
 
     private:
         class SyncAlgorithmPrivate;

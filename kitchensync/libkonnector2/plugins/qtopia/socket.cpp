@@ -440,6 +440,7 @@ void QtopiaSocket::readAddressbook() {
 
     if (!syncee ) {
         KIO::NetAccess::removeTempFile( tempfile );
+         emit error( i18n("Can not read the addressbook file. It is corrupted!") );
         return;
     }
 
@@ -481,6 +482,7 @@ void QtopiaSocket::readDatebook() {
     }
     if (!syncee ) {
         KIO::NetAccess::removeTempFile( tempfile );
+        emit error( i18n("Can not read the datebook file. It is corrupted!") );
         return;
     }
 
@@ -520,6 +522,7 @@ void QtopiaSocket::readTodoList() {
 
     if (!syncee ) {
         KIO::NetAccess::removeTempFile( tempfile );
+         emit error( i18n("Can not read the todolist file. It is corrupted!") );
         return;
     }
 

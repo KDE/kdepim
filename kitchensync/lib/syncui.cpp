@@ -24,3 +24,11 @@ SyncEntry *SyncUi::deconflict(SyncEntry *syncEntry, SyncEntry *targetEntry)
 
   return 0;
 }
+bool SyncUi::confirmDelete( SyncEntry* entry, SyncEntry* target ) {
+    kdDebug(5231) << "Entry with name " << target->name() << " was deleted " << endl;
+    kdDebug(5231) << "From " << target->syncee()->source() << endl;
+    return true;
+}
+void SyncUi::informBothDeleted( SyncEntry* entry, SyncEntry* other ) {
+    kdDebug(5231) << "Entry with uid " << entry->id() << "was deleted on both sides " << endl;
+}

@@ -56,6 +56,18 @@ namespace KSync {
         QString pixmap() const;
 
         /**
+         * @return if the write back should be confirmed by
+         * the user
+         */
+        bool confirmSync()const;
+
+        /**
+         * @return if the deletion of Entries should be confirmed
+         * by the user
+         */
+        bool confirmDelete()const;
+
+        /**
          * set the name
 	 * @param name the name of the Profile
          */
@@ -72,7 +84,7 @@ namespace KSync {
 	 * @param pix The pixmap
          */
         void setPixmap( const QString& pix);
-	
+
         /**
          * @return the ManipulatorParts to be loaded for
          * the profile
@@ -110,6 +122,16 @@ namespace KSync {
         PathMap paths() const;
 
         /**
+         * set if the user wants to confirm sync
+         */
+        void setConfirmSync( bool );
+
+        /**
+         * set if the user wants to confirm deletions
+         */
+        void setConfirmDelete( bool );
+
+        /**
          * copy operator;
          */
         Profile &operator=(const Profile & );
@@ -120,6 +142,8 @@ namespace KSync {
         QString m_pixmap;
         ManPartService::ValueList m_list;
         PathMap m_map;
+        bool m_confirmSync   : 1;
+        bool m_confirmDelete : 1;
     };
 
 };

@@ -142,4 +142,7 @@ void ManipulatorPart::connectDoneSync( const char* slot ) {
     connect( core(), SIGNAL(doneSync() ),
              this, slot );
 }
+bool ManipulatorPart::confirmBeforeWriting()const {
+    return core()->currentProfile().confirmSync();
+}
 #include "manipulatorpart.moc"
