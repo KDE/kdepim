@@ -257,6 +257,9 @@ int main(int argc, char *argv[])
   // Some more insane tests but still valid so they must work
   checkIsValidEmailAddress( "Matt Douhan <\"m@att\"@jongel.com>", "AddressOk" );
 
+  // BUG 99657
+  checkIsValidEmailAddress( "matt@jongel.fibbel.com", "AddressOk" );
+
   // checks for "pure" email addresses in the form of xxx@yyy.tld
   checkIsValidSimpleEmailAddress( "matt@fruitsalad.org", "true" );
   checkIsValidSimpleEmailAddress( QString::fromUtf8("test@täst.invalid"), "true" );
