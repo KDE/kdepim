@@ -123,6 +123,9 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, bool post, bool mail)
   KNHeaders::FollowUpTo *fup2=a->followUpTo(false);
   if(fup2 && !fup2->isEmpty()) {
     if(fup2->as7BitString(false).upper()=="POSTER") { //Followup-To: poster
+      if (post)         // warn the user
+        KMessageBox::information(knGlobals.topWidget,i18n("The author has requested a reply by e-mail instead\nof a followup to the newsgroup (Followup-To: poster)"),
+                                 QString::null,"followupToPosterWarning");
       art->setDoPost(false);
       art->setDoMail(true);
     }

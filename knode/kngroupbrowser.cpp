@@ -386,6 +386,8 @@ void KNGroupBrowser::CheckItem::stateChange(bool s)
 KNGroupBrowser::GroupItem::GroupItem(QListView *v, const KNGroupInfo &gi)
  : QListViewItem(v, gi.name), info(gi)
 {
+  if (gi.status == KNGroup::moderated)
+    setText(0,gi.name+" (m)");
 }
 
 

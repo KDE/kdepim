@@ -26,11 +26,13 @@
 #include <kglobal.h>
 #include <kdatepik.h>
 #include <klocale.h>
+#include <kmessagebox.h>
 
 #include "utilities.h"
 #include "kngroupmanager.h"
 #include "knnntpaccount.h"
 #include "kngroupdialog.h"
+#include "knglobals.h"
 
 
 KNGroupDialog::KNGroupDialog(QWidget *parent, KNNntpAccount *a) :
@@ -126,12 +128,18 @@ void KNGroupDialog::toSubscribe(QSortedList<KNGroupInfo> *l)
   l->clear();
   l->setAutoDelete(true);
 
+  bool moderated=false;
   QListViewItemIterator it(subView);
   for(; it.current(); ++it) {
     info = new KNGroupInfo();
     *info = ((static_cast<GroupItem*>(it.current()))->info);
     l->append(info);
+    if (info->status==KNGroup::moderated)
+      moderated=true;
   }
+  if (moderated)   // warn the user
+     KMessageBox::information(knGlobals.topWidget,i18n("You have subscribed to a moderated newsgroup.\nYour articles will not appear in the group immediatly,\nthey have to go through a moderation process."),
+                              QString::null,"subscribeModeratedWarning");
 }
 
 
@@ -141,7 +149,7 @@ void KNGroupDialog::toUnsubscribe(QStringList *l)
   l->clear();
   QListViewItemIterator it(unsubView);
   for(; it.current(); ++it)
-    l->append(it.current()->text(0));
+    l->append(((static_cast<GroupItem*>(it.current()))->info).name);
 }
 
 

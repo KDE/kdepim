@@ -945,8 +945,7 @@ void KNComposer::slotGroupsBtnClicked()
   if(id==-1)
     a_rticle->setServerId(nntp->id());
 
-  QCString grps=v_iew->g_roups->text().latin1();
-  KNGroupSelectDialog *dlg=new KNGroupSelectDialog(this, nntp, grps);
+  KNGroupSelectDialog *dlg=new KNGroupSelectDialog(this, nntp, v_iew->g_roups->text());
 
   connect(dlg, SIGNAL(loadList(KNNntpAccount*)),
     knGlobals.grpManager, SLOT(slotLoadGroupList(KNNntpAccount*)));

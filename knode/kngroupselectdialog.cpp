@@ -20,6 +20,7 @@
 #include <qheader.h>
 
 #include <klocale.h>
+#include <kmessagebox.h>
 
 #include "utilities.h"
 #include "knstringsplitter.h"
@@ -27,7 +28,7 @@
 #include "kngroupmanager.h"
 
 
-KNGroupSelectDialog::KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, QCString &act) :
+KNGroupSelectDialog::KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, const QString &act) :
   KNGroupBrowser(parent, i18n("Select Destinations"), a)
 {
   selView=new QListView(page);
@@ -37,21 +38,11 @@ KNGroupSelectDialog::KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, QCSt
   rightLabel->setText(i18n("Groups for this article:"));
   subCB->setChecked(true);
 
-  if(!act.isEmpty()) {
-    KNStringSplitter split;
-     QListViewItem *it;
-    split.init(act, ",");
-    bool splitOk;
-
-    if(!(splitOk=split.first())) {
-      it=new QListViewItem(selView, QString(act));
-    }
-    else {
-      do {
-        it=new QListViewItem(selView, QString(split.string()));
-        splitOk=split.next();
-      } while(splitOk);
-    }
+  KNGroupInfo info;
+  QStringList actGroups = QStringList::split(',',act);
+  for ( QStringList::Iterator it = actGroups.begin(); it != actGroups.end(); ++it ) {
+    info.name = *it;
+    new GroupItem(selView, info);
   }
 
   connect(selView, SIGNAL(selectionChanged(QListViewItem*)),
@@ -99,14 +90,23 @@ QString KNGroupSelectDialog::selectedGroups()
 {
   QString ret;
   QListViewItemIterator it(selView);
-
+  bool moderated=false;
+  int count=0;
   bool isFirst=true;
+
   for(; it.current(); ++it) {
     if(!isFirst)
       ret+=",";
-    ret+=it.current()->text(0);
+    ret+=(static_cast<GroupItem*>(it.current()))->info.name;
     isFirst=false;
+    count++;
+    if ((static_cast<GroupItem*>(it.current()))->info.status == KNGroup::moderated)
+      moderated=true;
   }
+
+  if (moderated && (count>=2))   // warn the user
+     KMessageBox::information(parentWidget(),i18n("You are crossposting to a moderated newsgroup.\nPlease be aware that your article will not appear in any group\nuntil it has been approved by the moderators of the moderated group."),
+                              QString::null,"crosspostModeratedWarning");
 
   return ret;
 }

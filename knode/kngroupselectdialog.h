@@ -25,7 +25,7 @@ class KNGroupSelectDialog : public KNGroupBrowser {
   Q_OBJECT
 
   public:
-    KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, QCString &act);
+    KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, const QString &act);
     ~KNGroupSelectDialog();
     
     QString selectedGroups();
@@ -34,7 +34,7 @@ class KNGroupSelectDialog : public KNGroupBrowser {
   protected:
     void updateItemState(CheckItem *it);
     QListView *selView;
-  
+
   protected slots:
     void slotItemSelected(QListViewItem *it);
     void slotSelectionChanged();                     // deactivates the button when a root item is selected
