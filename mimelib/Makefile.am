@@ -63,4 +63,4 @@ check_PROGRAMS = test_boyermor
 TESTS=$(check_PROGRAMS)
 
 test_boyermor_SOURCES = test_boyermor.cpp
-test_boyermor_LDADD = libmimelib.la
+test_boyermor_LDADD = libmimelib.la $(LIBSOCKET)
