@@ -24,14 +24,6 @@ KCalendarSystemGregorian::~KCalendarSystemGregorian()
 {
 }
 
-QString KCalendarSystemGregorian::monthName(const QDate& date, bool shortName)
-{
-  kdDebug(5400) << "Gregorian month..." << endl;
-  QString q = KGlobal::locale()->monthName(date.month(), shortName) ;
-
-  return q;
-}
-
 QString KCalendarSystemGregorian::formatDate(const QDate& date)
 {
   kdDebug(5400) << "Gregorian format date..." << endl;
@@ -66,9 +58,9 @@ void KCalendarSystemGregorian::nextMonthDate(QDate& temp)
 void KCalendarSystemGregorian::previousMonthDate(QDate& temp)
 {
   kdDebug(5400) << "Gregorian previous month date..." << endl;
-  
+
   int day = temp.day();
-  
+
   if(temp.month()==1) {
     temp.setYMD(temp.year()-1, 12, 1);
   } else {
@@ -115,11 +107,19 @@ int KCalendarSystemGregorian::monthsInYear( int )
   return 12;
 }
 
-QString KCalendarSystemGregorian::monthName(int month)
+QString KCalendarSystemGregorian::monthName(int month, bool shortName)
 {
   kdDebug(5400) << "Gregorian getMonthName" << endl;
 
-  return KGlobal::locale()->monthName(month, false);
+  return KGlobal::locale()->monthName(month, shortName);
+}
+
+QString KCalendarSystemGregorian::monthName(const QDate& date, bool shortName)
+{
+  kdDebug(5400) << "Gregorian month..." << endl;
+  QString q = KGlobal::locale()->monthName(date.month(), shortName) ;
+
+  return q;
 }
 
 
@@ -146,7 +146,7 @@ void KCalendarSystemGregorian::constructDateInYear(QDate& date, int year)
 }
 
 
-QDate KCalendarSystemGregorian::parseDate(QString text)
+QDate KCalendarSystemGregorian::parseDate(const QString& text)
 {
   kdDebug(5400) << "Gregorian parseDate" << endl;
   return KGlobal::locale()->readDate(text);

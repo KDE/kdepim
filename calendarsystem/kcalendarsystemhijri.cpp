@@ -25,18 +25,6 @@ KCalendarSystemHijri::~KCalendarSystemHijri()
 {
 }
 
-QString KCalendarSystemHijri::monthName(const QDate& date, bool shortName)
-{
-  kdDebug(5400) << "Arabic month..." <<  endl;
-  // firstly, get hijri date from gregorian one
-  SDATE  *sd;
-  sd = hdate(date.year(), date.month(), date.day());
-  if ( shortName )
-  	return QString(hmnameshort[sd->mon-1]);
-  else 
-  	return QString(hmname[sd->mon-1]);
-}
-
 int KCalendarSystemHijri::year(const QDate& date)
 {
   kdDebug(5400) << "Arabic year..." <<  endl;
@@ -169,11 +157,26 @@ int KCalendarSystemHijri::monthsInYear( int )
   return 12;
 }
 
-QString KCalendarSystemHijri::monthName(int month)
+QString KCalendarSystemHijri::monthName(int month, bool shortName)
 {
   kdDebug(5400) << "Arabic getMonthName " << hmname[month-1] <<endl;
-  //return KGlobal::locale()->monthName(month, false);
-  return QString(hmname[month-1]);
+  //return KGlobal::locale()->monthName(month, shortName);
+  if ( shortName )
+  	return QString(hmnameshort[month-1]);
+  else
+  	return QString(hmname[month-1]);
+}
+
+QString KCalendarSystemHijri::monthName(const QDate& date, bool shortName)
+{
+  kdDebug(5400) << "Arabic month..." <<  endl;
+  // firstly, get hijri date from gregorian one
+  SDATE  *sd;
+  sd = hdate(date.year(), date.month(), date.day());
+  if ( shortName )
+  	return QString(hmnameshort[sd->mon-1]);
+  else
+  	return QString(hmname[sd->mon-1]);
 }
 
 void KCalendarSystemHijri::constructDateInMonth(QDate& date, int month)
@@ -218,7 +221,7 @@ void KCalendarSystemHijri::constructDateInYear(QDate& date, int year)
   date.setYMD(gd->year, gd->mon, gd->day);
 }
 
-QDate KCalendarSystemHijri::parseDate(QString text)
+QDate KCalendarSystemHijri::parseDate(const QString& text)
 {
   kdDebug(5400) << "Hijri parseDate" << endl;
   // entered values belong to hijri date...
@@ -263,9 +266,9 @@ int KCalendarSystemHijri::dayOfTheWeek(const QDate& date)
   SDATE  *sd;
   // firstly, we get hijri date from actual gregorian date
   sd = hdate(date.year(), date.month(), date.day());
-  if( sd->dw == 0 ) 
+  if( sd->dw == 0 )
 	return 7;
-  else 
+  else
 	return (sd->dw);
 }
 
@@ -346,13 +349,13 @@ int KCalendarSystemHijri::numberOfDayInYear(const QDate& date)
   SDATE *sd;
   // firstly, we get hijri date from actual gregorian date
   sd = hdate(date.year(), date.month(), date.day());
-  
+
   int day = 0;
-  
+
   for(int c = 1; c < sd->mon; c++)
     day+=hndays(c, sd->year);
   day+=sd->day;
-  
+
   return day;
 }
 
