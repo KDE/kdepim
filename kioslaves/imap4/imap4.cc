@@ -32,7 +32,8 @@
  *   - RFC 2195 - IMAP/POP AUTHorize Extension for Simple Challenge/Response
  *            - September 1997 (CRAM-MD5 authentication method)
  *   - RFC 2104 - HMAC: Keyed-Hashing for Message Authentication - February 1997
- *   .
+ *   - RFC 2086 - IMAP4 ACL extension - January 1997
+ *
  * Supported URLs:
  *   - imap://server/ - Prompt for user/pass, list all folders in home directory
  *   - imap://user:pass@server/ - Uses LOGIN to log in
@@ -40,7 +41,7 @@
  *   - imap://server/folder/ - List messages in folder
  *
  * @note API notes:
- *   Not recieving the required write access for a folder means
+ *   Not receiving the required write access for a folder means
  *       ERR_CANNOT_OPEN_FOR_WRITING.
  *  ERR_DOES_NOT_EXIST is reserved for folders.
  */
