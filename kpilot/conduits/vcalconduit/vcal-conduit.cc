@@ -477,7 +477,12 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 		else recur->setWeekly(freq,dayArray,endDate);
 		}
 		break;
-	case repeatMonthlyByDay:
+	case repeatMonthlyByDay: {
+		// Palm: Day=0(sun)-6(sat); week=0-4, 4=last week; pos=week*7+day
+		// libkcal: day=bit0(mon)-bit6(sun); week=-5to-1(from end) and 1-5 (from beginning)
+		// Palm->PC: w=pos/7
+		// week: if w=4 -> week=-1, else week=w+1;
+		// day: day=(pos-1)%7 (rotate by one day!)
 		if (repeatsForever)
 		{
 			recur->setMonthly(Recurrence_t::rMonthlyPos,freq,-1);
@@ -487,9 +492,13 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 			recur->setMonthly(Recurrence_t::rMonthlyPos,freq,endDate);
 		}
 
-		dayArray.setBit((dateEntry->getRepeatDay()-1) % 7);
-		recur->addMonthlyPos(( (dateEntry->getRepeatDay()-1) / 7) + 1, dayArray);
-		break;
+		int day=dateEntry->getRepeatDay();
+		int week=day/7;
+		// week=4 means last, otherwise convert to 0-based
+		if (week==4) week=-1; else week++;
+		dayArray.setBit((day+6) % 7);
+		recur->addMonthlyPos(week, dayArray);
+		break;}
 	case repeatMonthlyByDate:
 		if (repeatsForever)
 		{
@@ -593,6 +602,11 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 		dateEntry->setRepeatDays(dayArrayPalm);
 		break;
 	case KCal::Recurrence::rMonthlyPos:
+		// Palm: Day=0(sun)-6(sat); week=0-4, 4=last week; pos=week*7+day
+		// libkcal: day=bit0(mon)-bit6(sun); week=-5to-1(from end) and 1-5 (from beginning)
+		// PC->Palm: pos=week*7+day
+		//  week: if w=-1 -> week=4, else week=w-1
+		//  day: day=(daybit+1)%7  (rotate because of the different offset)
 		dateEntry->setRepeatType(repeatMonthlyByDay);
 		if (r->monthPositions().count()>0)
 		{
@@ -604,7 +618,12 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 			// this is quite clumsy, but I haven't found a better way...
 			for (int j=0; j<7; j++)
 				if (dayArray[j]) pos=j;
-			dateEntry->setRepeatDay(static_cast<DayOfMonthType>(7*(mp->rPos-1) + pos));
+			int week=mp->rPos;
+			if (mp->negative) week*=-1;
+			int day=(pos+1) % 7; // rotate because of different offset
+			// turn to 0-based and include starting from end of month
+			if (week==-1) week=4; else week--;
+			dateEntry->setRepeatDay(static_cast<DayOfMonthType>(7*week + day));
 		}
 		break;
 	case KCal::Recurrence::rMonthlyDay:
