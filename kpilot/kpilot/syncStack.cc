@@ -148,7 +148,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	if (fMode & ActionQueue::FlagLocal)
 		l.append(CSL1("--local"));
 	// do a full sync also when changing PCs
-	if ( (fMode & ActionQueue::FlagFull) || 
+	if ( (fMode & ActionQueue::FlagFull) ||
 	     (fHandle->getPilotUser()->getLastSyncPC()!=(unsigned long)gethostid() ) )
 		l.append(CSL1("--full"));
 	if (fMode & ActionQueue::FlagHHToPC)
@@ -160,7 +160,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	if ((fMode & (ActionQueue::FlagHHToPC | ActionQueue::FlagPCToHH)) ==
 		(ActionQueue::FlagHHToPC | ActionQueue::FlagPCToHH))
 	{
-		kdWarning() << k_funcinfo 
+		kdWarning() << k_funcinfo
 			<< ": Both HHtoPC and PCtoHH set in conduit "
 			<< fDesktopName
 			<< endl;
@@ -204,7 +204,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	}
 
 	logMessage(conduitFlags);
-	
+
 	// Handle the syncDone signal properly & unload the conduit.
 	QObject::connect(fConduit,SIGNAL(syncDone(SyncAction *)),
 		this,SLOT(execDone(SyncAction *)));
@@ -239,33 +239,6 @@ void ConduitProxy::execDone(SyncAction *p)
 	emit syncDone(this);
 }
 
-#if 0
-ActionQueue::ActionQueue(KPilotDeviceLink *d,
-	const QStringList &conduits,
-	const QString &dir,
-	const QStringList &files) :
-	SyncAction(d,"ActionQueue"),
-	fReady(false),
-	fInstallerDir(dir),
-	fInstallerFiles(files),
-	fConduits(conduits)
-{
-	FUNCTIONSETUP;
-
-#ifdef DEBUG
-	if (!conduits.count())
-	{
-		DEBUGCONDUIT << fname << ": No conduits." << endl;
-	}
-	else
-	{
-		DEBUGCONDUIT << fname << ": Conduits : " << conduits.join(CSL1(" + ")) << endl;
-	}
-#endif
-
-	kdWarning() << "SyncStack usage is deprecated." << endl;
-}
-#endif
 
 ActionQueue::ActionQueue(KPilotDeviceLink *d) :
 	SyncAction(d,"ActionQueue"),
@@ -280,61 +253,6 @@ ActionQueue::~ActionQueue()
 	FUNCTIONSETUP;
 }
 
-#if 0
-void ActionQueue::prepare(int m)
-{
-	FUNCTIONSETUP;
-
-#ifdef DEBUG
-	DEBUGDAEMON << fname
-		<< ": Using sync mode " << m
-		<< endl;
-#endif
-
-	switch ( m & (Test | Backup | Restore | HotSync))
-	{
-	case Test:
-	case Backup:
-	case Restore:
-	case HotSync:
-		fReady=true;
-		break;
-	default:
-		kdWarning() << k_funcinfo
-			<< ": Strange sync mode " << m << " set. Aborting."
-			<< endl;
-		return;
-	}
-
-	queueInit(m);
-	if (m & WithConduits)
-		queueConduits(fConduits,m);
-
-	switch ( m & (Test | Backup | Restore | HotSync))
-	{
-	case Test:
-		addAction(new TestLink(fHandle));
-		break;
-	case Backup:
-		addAction(new BackupAction(fHandle));
-		break;
-	case Restore:
-		addAction(new RestoreAction(fHandle));
-		break;
-	case HotSync:
-		break;
-	default:
-		// We already checked for this case!
-		fReady=false;
-		return;
-	}
-
-	if (m & WithInstaller)
-		queueInstaller(fInstallerDir,fInstallerFiles);
-
-	queueCleanup();
-}
-#endif
 
 void ActionQueue::queueInit(int m)
 {
@@ -367,7 +285,7 @@ void ActionQueue::queueConduits(const QStringList &l,int m)
 #endif
 			continue;
 		}
-		
+
 #ifdef DEBUG
 		DEBUGDAEMON << fname
 			<< ": Creating proxy with mode=" << m << endl;
