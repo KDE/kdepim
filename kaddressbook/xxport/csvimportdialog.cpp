@@ -29,6 +29,7 @@
 #include <qpushbutton.h>
 #include <qradiobutton.h>
 #include <qtable.h>
+#include <qtextcodec.h>
 #include <qtooltip.h>
 
 #include <kapplication.h>
@@ -46,6 +47,8 @@
 #include "dateparser.h"
 
 #include "csvimportdialog.h"
+
+enum { Local = 0, Guess = 1, Latin1 = 2, Uni = 3, MSBug = 4, Codec = 5 };
 
 CSVImportDialog::CSVImportDialog( KABC::AddressBook *ab, QWidget *parent,
                                   const char * name )
@@ -116,6 +119,8 @@ CSVImportDialog::CSVImportDialog( KABC::AddressBook *ab, QWidget *parent,
   for ( it = fields.begin(); it != fields.end(); ++it, ++count )
     mTypeMap.insert( (*it)->label(), count );
 
+  reloadCodecs();
+
   connect( mDelimiterBox, SIGNAL( clicked( int ) ),
            this, SLOT( delimiterClicked( int ) ) );
   connect( mDelimiterEdit, SIGNAL( returnPressed() ),
@@ -128,6 +133,8 @@ CSVImportDialog::CSVImportDialog( KABC::AddressBook *ab, QWidget *parent,
            this, SLOT( textquoteSelected( const QString& ) ) );
   connect( mIgnoreDuplicates, SIGNAL( stateChanged( int ) ),
            this, SLOT( ignoreDuplicatesChanged( int ) ) );
+  connect( mCodecCombo, SIGNAL( activated( const QString& ) ),
+           this, SLOT( codecChanged() ) );
 
   connect( mUrlRequester, SIGNAL( returnPressed( const QString& ) ),
            this, SLOT( setFile( const QString& ) ) );
@@ -145,6 +152,7 @@ CSVImportDialog::CSVImportDialog( KABC::AddressBook *ab, QWidget *parent,
 
 CSVImportDialog::~CSVImportDialog()
 {
+  mCodecs.clear();
 }
 
 KABC::AddresseeList CSVImportDialog::contacts() const
@@ -376,7 +384,7 @@ void CSVImportDialog::initGUI()
   mDelimiterBox->layout()->setMargin( marginHint() );
   QGridLayout *delimiterLayout = new QGridLayout( mDelimiterBox->layout() );
   delimiterLayout->setAlignment( Qt::AlignTop );
-  layout->addMultiCellWidget( mDelimiterBox, 1, 3, 0, 0 );
+  layout->addMultiCellWidget( mDelimiterBox, 1, 4, 0, 0 );
 
   mRadioComma = new QRadioButton( i18n( "Comma" ), mDelimiterBox );
   mRadioComma->setChecked( true );
@@ -430,10 +438,13 @@ void CSVImportDialog::initGUI()
   mIgnoreDuplicates->setText( i18n( "Ignore duplicate delimiters" ) );
   layout->addMultiCellWidget( mIgnoreDuplicates, 3, 3, 2, 4 );
 
+  mCodecCombo = new QComboBox( mPage );
+  layout->addMultiCellWidget( mCodecCombo, 4, 4, 2, 4 );
+
   mTable = new QTable( 0, 0, mPage );
   mTable->setSelectionMode( QTable::NoSelection );
   mTable->horizontalHeader()->hide();
-  layout->addMultiCellWidget( mTable, 4, 4, 0, 4 );
+  layout->addMultiCellWidget( mTable, 5, 5, 0, 4 );
 
   setButtonText( User1, i18n( "Apply Template" ) );
   setButtonText( User2, i18n( "Save Template" ) );
@@ -473,7 +484,24 @@ void CSVImportDialog::fillTable()
   mData = QString( mFileArray );
 
   QTextStream inputStream( mData, IO_ReadOnly );
-  inputStream.setEncoding( QTextStream::Locale );
+
+  // find the current codec
+  int code = mCodecCombo->currentItem();
+  if ( code >= Codec )
+    inputStream.setCodec( mCodecs.at( code - Codec ) );
+  else if ( code == Uni )
+    inputStream.setEncoding( QTextStream::Unicode );
+  else if ( code == MSBug )
+    inputStream.setEncoding( QTextStream::UnicodeReverse );
+  else if ( code == Latin1 )
+    inputStream.setEncoding( QTextStream::Latin1 );
+  else if ( code == Guess ) {
+    QTextCodec* codec = QTextCodec::codecForContent( mFileArray.data(), mFileArray.size() );
+    if ( codec ) {
+      KMessageBox::information( this, i18n( "Using codec '%1'" ).arg( codec->name() ), i18n( "Encoding" ) );
+      inputStream.setCodec( codec );
+    }
+  }
 
   int maxColumn = 0;
   while ( !inputStream.atEnd() ) {
@@ -616,6 +644,26 @@ void CSVImportDialog::fillComboBox()
   mComboLine->clear();
   for ( int row = 1; row < mTable->numRows() + 1; ++row )
     mComboLine->insertItem( QString::number( row ), row - 1 );
+}
+
+void CSVImportDialog::reloadCodecs()
+{
+  mCodecCombo->clear();
+
+  mCodecs.clear();
+
+  QTextCodec *codec;
+  for ( int i = 0; ( codec = QTextCodec::codecForIndex( i ) ); i++ )
+    mCodecs.append( codec );
+
+  mCodecCombo->insertItem( i18n( "Local (%1)" ).arg( QTextCodec::codecForLocale()->name() ), Local );
+  mCodecCombo->insertItem( i18n( "[guess]" ), Guess );
+  mCodecCombo->insertItem( i18n( "Latin1" ), Latin1 );
+  mCodecCombo->insertItem( i18n( "Unicode" ), Uni );
+  mCodecCombo->insertItem( i18n( "Microsoft Unicode" ), MSBug );
+
+	for ( uint i = 0; i < mCodecs.count(); i++ )
+    mCodecCombo->insertItem( mCodecs.at( i )->name(), Codec + i );
 }
 
 void CSVImportDialog::setText( int row, int col, const QString& text )
@@ -883,6 +931,11 @@ void CSVImportDialog::urlChanged( const QString &file )
   enableButtonOK( state );
   actionButton( User1 )->setEnabled( state );
   actionButton( User2 )->setEnabled( state );
+}
+
+void CSVImportDialog::codecChanged()
+{
+  fillTable();
 }
 
 #include <csvimportdialog.moc>

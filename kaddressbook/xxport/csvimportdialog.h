@@ -61,6 +61,7 @@ class CSVImportDialog : public KDialogBase
     void ignoreDuplicatesChanged( int );
     void setFile( const QString& );
     void urlChanged( const QString& );
+    void codecChanged();
 
     void applyTemplate();
     void saveTemplate();
@@ -89,6 +90,7 @@ class CSVImportDialog : public KDialogBase
     QComboBox* mComboLine;
     QComboBox* mComboQuote;
     QCheckBox* mIgnoreDuplicates;
+    QComboBox* mCodecCombo;
     QWidget* mPage;
     KURLRequester* mUrlRequester;
 
@@ -101,6 +103,10 @@ class CSVImportDialog : public KDialogBase
     QString getText( int row, int col );
     uint posToType( int pos ) const;
     int typeToPos( uint type ) const;
+
+    void reloadCodecs();
+    QTextCodec *currentCodec();
+    QPtrList<QTextCodec> mCodecs;
 
     bool mAdjustRows;
     int mStartLine;
