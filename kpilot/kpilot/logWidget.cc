@@ -174,7 +174,7 @@ LogWidget::LogWidget(QWidget * parent) :
 
 		QPixmap splash(splashPath);
 		QPainter painter(&splash);
-		painter.setPen(QColor(255, 0, 0));
+		painter.setPen(QColor(0, 255, 0));
 
 		// This latin1() is ok; KPILOT_VERSION is a #define
 		// of a constant string.
@@ -190,17 +190,17 @@ LogWidget::LogWidget(QWidget * parent) :
 #endif
 
 		painter.fillRect(splash.width() -  28 - textWidth,
-			splash.height() - 6 - textHeight - textHeight ,
+			splash.height() - 6 - textHeight,
 			textWidth + 6,
 			textHeight + 4,
 			black);
 		painter.drawText(splash.width() -  25 - textWidth,
-			splash.height() - 8 - textHeight,
+			splash.height() - 8,
 			QString::fromLatin1(KPILOT_VERSION));
 		fSplash = new QLabel(this);
 		fSplash->setPixmap(splash);
 		fSplash->setAlignment(AlignCenter);
-		QTimer::singleShot(3000,this,SLOT(hideSplash()));
+		QTimer::singleShot(30000,this,SLOT(hideSplash()));
 		grid->addMultiCellWidget(fSplash,1,3,1,2);
 		grid->addColSpacing(0,10);
 		grid->setColStretch(1,50);
