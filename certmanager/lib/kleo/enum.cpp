@@ -52,7 +52,7 @@ static const struct {
     I18N_NOOP("S/MIME"),
     "s/mime" },
   { Kleo::SMIMEOpaqueFormat,
-    I18N_NOOP("S/MIME Opaque"),
+    I18N_NOOP("S/MIME opaque"),
     "s/mime opaque" },
 };
 static const unsigned int numCryptoMessageFormats
