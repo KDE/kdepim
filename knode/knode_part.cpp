@@ -39,6 +39,7 @@
 #include <kiconloader.h>
 #include <kdebug.h>
 #include <kstatusbar.h>
+#include <krsqueezedtextlabel.h>
 
 #include <qlayout.h>
 
@@ -81,8 +82,8 @@ KNodePart::KNodePart(QWidget *parentWidget, const char *widgetName,
                                 "KNodeSidebar" );
 
   KParts::StatusBarExtension* statusBar = new KParts::StatusBarExtension(this);
-  statusBar->addStatusBarItem(mainWidget->statusBarLabelFilter(), 2, false);
-  statusBar->addStatusBarItem(mainWidget->statusBarLabelGroup(), 3, false);
+  statusBar->addStatusBarItem(mainWidget->statusBarLabelFilter(), 10, false);
+  statusBar->addStatusBarItem(mainWidget->statusBarLabelGroup(), 15, false);
 
   setXMLFile( "knodeui.rc" );
 }

@@ -28,6 +28,7 @@
 #include <kapplication.h>
 
 #include "broadcaststatus.h"
+#include "krsqueezedtextlabel.h"
 #include "progressdialog.h"
 #include "statusbarprogresswidget.h"
 
@@ -98,8 +99,8 @@ bool KNMainWindow::queryClose()
   return m_mainWidget->queryClose();
 }
 
-void KNMainWindow::setupStatusBar() {
-  
+void KNMainWindow::setupStatusBar()
+{
   mProgressDialog = new KPIM::ProgressDialog( statusBar(), this );
   mProgressDialog->hide();
 
@@ -108,14 +109,15 @@ void KNMainWindow::setupStatusBar() {
 
   statusBar()->addWidget( mLittleProgress, 0 , true );
 
-  statusBar()->insertItem("", 1, 2);
-  statusBar()->setItemAlignment(1, AlignLeft | AlignVCenter);
+  mStatusMsgLabel = new KRSqueezedTextLabel( QString::null, statusBar() );
+  mStatusMsgLabel->setAlignment( AlignLeft | AlignVCenter );
+  statusBar()->addWidget( mStatusMsgLabel, 2 );
   statusBar()->addWidget(m_mainWidget->statusBarLabelFilter(), 2);
   statusBar()->addWidget(m_mainWidget->statusBarLabelGroup(), 3);
 }
 
 void KNMainWindow::slotShowStatusMsg( const QString &msg ) {
-  statusBar()->changeItem( msg, 1 );
+  mStatusMsgLabel->setText( msg );
 }
 
 #include "knode.moc"

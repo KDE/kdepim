@@ -33,6 +33,7 @@
 #include <kapplication.h>
 
 #include "broadcaststatus.h"
+#include "krsqueezedtextlabel.h"
 #include "recentaddresses.h"
 using KPIM::BroadcastStatus;
 using KRecentAddress::RecentAddresses;
@@ -305,9 +306,9 @@ void KNMainWidget::initStatusBar()
   //statusbar
   KMainWindow *mainWin = dynamic_cast<KMainWindow*>(topLevelWidget());
   KStatusBar *sb =  mainWin ? mainWin->statusBar() : 0;
-  s_tatusFilter = new KStatusBarLabel( QString::null, SB_FILTER, sb );
+  s_tatusFilter = new KRSqueezedTextLabel( QString::null, sb );
   s_tatusFilter->setAlignment( AlignLeft | AlignVCenter );
-  s_tatusGroup = new KStatusBarLabel( QString::null, SB_GROUP, sb );
+  s_tatusGroup = new KRSqueezedTextLabel( QString::null, sb );
   s_tatusGroup->setAlignment( AlignLeft | AlignVCenter );
 }
 
@@ -320,20 +321,12 @@ void KNMainWidget::setStatusMsg(const QString& text, int id)
   if ( !bar )
     return;
   bar->clear();
-  if (text.isEmpty() && (id==SB_MAIN))
+  if (text.isEmpty() && (id==SB_MAIN)) {
     if (knGlobals.netAccess()->currentMsg().isEmpty())
       BroadcastStatus::instance()->setStatusMsg(i18n(" Ready"));
     else
       BroadcastStatus::instance()->setStatusMsg(knGlobals.netAccess()->currentMsg());
-  else if ( id == SB_GROUP ) {
-    int statusWidth = s_tatusGroup->width();
-    QString mtext = text;
-    while (!mtext.isEmpty() && fontMetrics().width( mtext ) >= statusWidth) {
-      mtext.truncate( mtext.length() - 1);
-    }
-    s_tatusGroup->setText( mtext );
-  }
-  else {
+  } else {
     switch(id) {
       case SB_MAIN:
         BroadcastStatus::instance()->setStatusMsg(text); break;

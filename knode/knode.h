@@ -2,7 +2,7 @@
     knode.h
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -35,6 +35,7 @@ namespace KPIM {
 }
 using KPIM::StatusbarProgressWidget;
 using KPIM::ProgressDialog;
+class KRSqueezedTextLabel;
 
 class KNMainWidget;
 class KNHeaderView;
@@ -61,6 +62,7 @@ private:
   KNMainWidget *m_mainWidget;
   StatusbarProgressWidget *mLittleProgress;
   ProgressDialog *mProgressDialog;
+  KRSqueezedTextLabel *mStatusMsgLabel;
 private slots:
   void slotShowStatusMsg( const QString& );
 };
