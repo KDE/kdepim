@@ -36,10 +36,11 @@
 
 #include "keyfiltermanager.h"
 #include "kconfigbasedkeyfilter.h"
+#include <cryptplugfactory.h>
 
-#include <kapplication.h>
 #include <kconfig.h>
 
+#include <qapplication.h>
 #include <qregexp.h>
 #include <qstringlist.h>
 #include <qvaluevector.h>
@@ -58,7 +59,7 @@ struct Kleo::KeyFilterManager::Private {
     std::for_each( filters.begin(), filters.end(), Delete<KeyFilter>() );
     filters.clear();
   }
-    
+
   QValueVector<KeyFilter*> filters;
 };
 
@@ -67,11 +68,12 @@ Kleo::KeyFilterManager * Kleo::KeyFilterManager::mSelf = 0;
 Kleo::KeyFilterManager::KeyFilterManager( QObject * parent, const char * name )
   : QObject( parent, name ), d( 0 )
 {
+  mSelf = this;
   d = new Private();
+  // ### DF: doesn't a KStaticDeleter work more reliably?
   if ( qApp )
     connect( qApp, SIGNAL(aboutToQuit()), SLOT(deleteLater()) );
   reload();
-  mSelf = this;
 }
 
 Kleo::KeyFilterManager::~KeyFilterManager() {
@@ -94,14 +96,14 @@ const Kleo::KeyFilter * Kleo::KeyFilterManager::filterMatching( const GpgME::Key
   return 0;
 }
 
-inline bool by_increasing_specificity( const Kleo::KeyFilter * left, const Kleo::KeyFilter * right ) {
+static inline bool by_increasing_specificity( const Kleo::KeyFilter * left, const Kleo::KeyFilter * right ) {
   return left->specificity() > right->specificity();
 }
 
 void Kleo::KeyFilterManager::reload() {
   d->clear();
 
-  KConfig * config = kapp->config(); // FIXME: use Kleo::config() once it's there
+  KConfig * config = Kleo::CryptPlugFactory::instance()->configObject();
   if ( !config )
     return;
   const QStringList groups = config->groupList().grep( QRegExp( "^Key Filter #\\d+$" ) );
