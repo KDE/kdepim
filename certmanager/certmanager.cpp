@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "certmanager.h"
 
 #include "certbox.h"
