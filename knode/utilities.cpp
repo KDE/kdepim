@@ -17,9 +17,11 @@
 #include <qlayout.h>
 #include <qregexp.h>
 #include <qapplication.h>
+#include <qcursor.h>
 
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kglobalsettings.h>
 #include <kdebug.h>
 #include <kio/netaccess.h>
 #include <ktempfile.h>
@@ -314,7 +316,7 @@ void KNHelper::restoreWindowSize(const QString &name, QWidget *d, const QSize &d
   QSize s=c->readSizeEntry(name,&defaultSize);
 
   if(s.isValid()) {
-    QSize max = QApplication::desktop()->size();
+    QRect max = KGlobalSettings::desktopGeometry(QCursor::pos());
     if ( s.width() > max.width() ) s.setWidth( max.width()-5 );
     if ( s.height() > max.height() ) s.setHeight( max.height()-5 );
     d->resize(s);

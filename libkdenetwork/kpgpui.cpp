@@ -1442,11 +1442,11 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
                    + marginHint()
                    + 2;
   // don't make the dialog too large
-  int screenNum = QApplication::desktop()->screenNumber( this );
-  int screenWidth = QApplication::desktop()->screen(screenNum)->width();
+  QRect desk = KGlobalSettings::desktopGeometry(this);
+  int screenWidth = desk.width();
   if( dialogWidth > 3*screenWidth/4 )
     dialogWidth = 3*screenWidth/4;
-  int screenHeight = QApplication::desktop()->screen(screenNum)->height();
+  int screenHeight = desk.height();
   if( dialogHeight > 7*screenHeight/8 )
     dialogHeight = 7*screenHeight/8;
 
