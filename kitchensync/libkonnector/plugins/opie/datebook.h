@@ -18,6 +18,8 @@ namespace OpieHelper {
         ~DateBook();
         QPtrList<KCal::Event> toKDE( const QString & fileName );
         QByteArray fromKDE( KAlendarSyncEntry* entry );
+    private:
+        QString event2string( KCal::Event *event );
     };
 };
 #endif

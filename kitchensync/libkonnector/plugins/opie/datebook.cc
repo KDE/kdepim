@@ -1,13 +1,33 @@
 
 #include <qbitarray.h>
+#include <qbuffer.h>
 #include <qdom.h>
 #include <qfile.h>
+#include <qtextstream.h>
 
 #include <kalendarsyncentry.h>
 
 #include "datebook.h"
 
 using namespace OpieHelper;
+
+namespace {
+// from TT
+int week ( const QDate &start ) {
+    int stop = start.day();
+    int sentinel = start.dayOfWeek();
+    int dayOfWeek = QDate( start.year(),  start.month(),  1 ).dayOfWeek();
+    int week = 1;
+    for ( int i = 1; i < stop; i++ ) {
+        if ( dayOfWeek++ == sentinel )
+            week++;
+        if ( dayOfWeek > 7 )
+            dayOfWeek = 0;
+    }
+    return week;
+}
+
+};
 
 DateBook::DateBook( CategoryEdit* edit,
                     KonnectorUIDHelper* helper,
@@ -91,18 +111,19 @@ QPtrList<KCal::Event> DateBook::toKDE( const QString& fileName )
                             bits.fill( false );
                             if ( Monday & days )
                                 bits.setBit( 0 );
-                            else if ( Tuesday & days )
+                            if ( Tuesday & days )
                                 bits.setBit( 1 );
-                            else if ( Wednesday & days )
+                            if ( Wednesday & days )
                                 bits.setBit( 2 );
-                            else if ( Thursday & days )
+                            if ( Thursday & days )
                                 bits.setBit( 3 );
-                            else if ( Friday & days )
+                            if ( Friday & days )
                                 bits.setBit( 4 );
-                            else if ( Saturday & days )
+                            if ( Saturday & days )
                                 bits.setBit( 5 );
-                            else if ( Sunday & days )
+                            if ( Sunday & days )
                                 bits.setBit( 6 );
+
                             if ( hasEnd ) {
                                 start = e.attribute("enddt");
                                 rec->setWeekly( freq,  bits, fromUTC( (time_t) start.toLong() ).date() );
@@ -161,5 +182,112 @@ QPtrList<KCal::Event> DateBook::toKDE( const QString& fileName )
 }
 QByteArray DateBook::fromKDE( KAlendarSyncEntry* entry )
 {
+    m_kde2opie.clear();
+    QValueList<Kontainer> newIds = entry->ids( "event");
+    for ( QValueList<Kontainer>::ConstIterator idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
+        m_helper->addId("event",  (*idIt).first(),  (*idIt).second() );
+    }
+    QByteArray array;
+    QBuffer buffer( array );
+    if ( buffer.open(IO_WriteOnly ) ) {
+        QTextStream stream( &buffer );
+        stream.setEncoding( QTextStream::UnicodeUTF8 );
+        stream <<"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
+        stream << "<!DOCTYPE DATEBOOK><DATEBOOK>" << endl;
+        QPtrList<KCal::Event> list = entry->calendar()->getAllEvents();
+        KCal::Event *event;
+        for ( event = list.first(); event != 0; event = list.next() ) {
+            stream << event2string( event ) << endl;
+        }
+        stream << "<events>" << endl;
+        stream << "</events>" << endl;
+        stream << "</DATEBOOK>" << endl;
 
+    }
+    m_helper->replaceIds( "event",  m_kde2opie );
+    return array;
+}
+QString DateBook::event2string( KCal::Event *event )
+{
+    QString str;
+    str.append( "<event ");
+    str.append( "description=\"" +event->summary()  + "\" ");
+    str.append( "location=\"" + event->location() + "\" ");
+    str.append( "categories=\"" +  categoriesToNumber( event->categories() ) + "\" ");
+    str.append( "uid=\"" +  konnectorId("event",  event->uid() ) + "\" ");
+    str.append( "start=\"" + QString::number( toUTC( event->dtStart() ) ) + "\" ");
+    str.append( "end=\"" +  QString::number(  toUTC( event->dtEnd() ) ) + "\" ");
+    str.append( "note=\"" + event->description() + "\" "); //use escapeString copied from TT
+    if ( event->doesFloat() )
+        str.append( "type=\"AllDay\" ");
+    // recurrence
+    KCal::Recurrence *rec = event->recurrence();
+    if ( rec->doesRecur() ) {
+        QString type;
+        switch( rec->doesRecur() ) {
+        case KCal::Recurrence::rDaily :{
+            type = "Daily";
+            break;
+        }
+        case KCal::Recurrence::rWeekly :{
+            type = "Weekly";
+            char day = 0; // signed
+            QBitArray array = rec->days();
+            if ( array.testBit(0 ) ) day |= Monday;
+            if ( array.testBit(1 ) ) day |= Tuesday;
+            if ( array.testBit(2 ) ) day |= Wednesday;
+            if ( array.testBit(3 ) ) day |= Thursday;
+            if ( array.testBit(4 ) ) day |= Friday;
+            if ( array.testBit(5 ) ) day |= Saturday;
+            if ( array.testBit(6 ) ) day |= Sunday;
+            str.append( "rweekdays=\"" + QString::number(static_cast<int> (day) ) + "\" ");
+            break;
+        }
+        case KCal::Recurrence::rMonthlyPos :{
+            str.append( "rposition=\"" + QString::number( week( event->dtStart().date() ) )  + "\" ");
+            type = "MonthlyDay";
+            break;
+        }
+        case KCal::Recurrence::rMonthlyDay :{
+            type = "MonthlyDate";
+
+            break;
+        }
+        case KCal::Recurrence::rYearlyDay :{
+            type = "Yearly";
+            break;
+        }
+        case KCal::Recurrence::rNone : // fall through
+        default :
+            break;
+        }
+        str.append( "rtype=\"" + type + "\" ");
+        str.append( "rfreq=\"" + QString::number( rec->frequency() ) + "\" ");
+        if ( rec->duration() == -1 || rec->duration() != 0 )
+            str.append( "rhasenddate=\"0\" ");
+        else if ( rec->duration() == 0 ) {
+            str.append( "rhasenddate=\"1\" ");
+            str.append( "enddt=\"" + QString::number( toUTC(rec->endDate() ) ) + "\" ");
+        }
+        str.append( "created=\"" + QString::number( toUTC(rec->recurStart() ) ) + "\" ");
+
+
+    }
+    // alarm
+    KCal::Alarm *al = event->alarms().first();
+    if ( al != 0 ) {
+        int sec = al->offset().asSeconds();
+        sec = sec > 0 ? sec % 60 : sec % -60; // as minutes now
+        str.append( "alarm=\"" +QString::number( sec )  + "\" ");
+        QString sound = al->audioFile();
+        if ( sound != "loud" && sound != "silent" ) {
+            if ( sound.isEmpty() )
+                sound = QString::fromLatin1("silent");
+            else
+                sound = QString::fromLatin1("loud");
+        }
+        str.append( "sound=\"" +  sound + "\" ");
+    }
+    str.append( " />" );
+    return str;
 }
