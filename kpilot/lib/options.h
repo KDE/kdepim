@@ -33,7 +33,10 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-
+// the hex edit widget is in cvs now, so we can enable it globally.
+// I still leave this flag here so one can always easily disable 
+// the generic DB viewer, which uses the widget.
+#define USE_KHEXEDIT
 
 // #define QT_NO_ASCII_CAST		(1)
 // #define QT_NO_CAST_ASCII		(1)

@@ -7,13 +7,6 @@
 ### $Id$
 ###
 
-
-### Uncomment the next two lines if you have the KHE::KHexEdit widget
-### and want to use it in the generic DB editor. Otherwise a dummy widget
-### will be shown instead
-KDE_CXXFLAGS = -DUSE_KHEXEDIT -DDEBUG
-KDE_CXXFLAGS = -DUSE_KHEXEDIT
-
 SUBDIRS = Icons
 
 ### Fairly large changes to allow enable final and make life easier for
