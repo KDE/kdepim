@@ -3,18 +3,15 @@
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif 
+#endif
 
 #include <qwidget.h>
 #include <qlistview.h>
 #include <qstring.h>
 #include <qdialog.h>
-#include <qpixmap.h>
 #include <qtabdialog.h>
-#include <qfileinfo.h>
 #include <qstringlist.h>
 #include <qvaluelist.h>
-#include <qtooltip.h>
 
 #include "undo.h"
 #include "kaddressbookview.h"
@@ -47,14 +44,14 @@ friend class ContactListView;
     KAddressBookTableView( KABC::AddressBook *ab, QWidget *parent,
                            const char *name = 0 );
     virtual ~KAddressBookTableView();
-  
+
     virtual void refresh(QString uid = QString::null);
     virtual QStringList selectedUids();
     virtual void setSelected(QString uid = QString::null, bool selected = false);
     virtual void readConfig(KConfig *config);
     virtual void writeConfig(KConfig *config);
     virtual QString type() const { return "Table"; }
-  
+
   public slots:
     virtual void reconstructListView();
 
@@ -62,12 +59,12 @@ friend class ContactListView;
     /** Called whenever the user selects an addressee in the list view.
     */
     void addresseeSelected();
-  
+
     /** Called whenever the user executes an addressee. In terms of the
     * list view, this is probably a double click
     */
     void addresseeExecuted(QListViewItem*);
- 
+
   private:
     QVBoxLayout *mainLayout;
     ContactListView *mListView;

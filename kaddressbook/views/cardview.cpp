@@ -487,9 +487,7 @@ void CardViewItem::repaintCard()
 void CardViewItem::setCaption(const QString &caption)
 {
   d->mCaption = caption;
-
-  if (mView)
-    mView->repaintItem(this);
+  repaintCard();
 }
 
 QString CardViewItem::fieldValue(const QString &label)
@@ -635,7 +633,9 @@ CardView::CardView(QWidget *parent, const char *name)
 
 CardView::~CardView()
 {
-  delete d;
+    delete d->mFm;
+    delete d->mBFm;
+    delete d;
 }
 
 void CardView::insertItem(CardViewItem *item)
@@ -1229,9 +1229,8 @@ void CardView::mouseDoubleClickEvent(QMouseEvent *e)
 
   if (item && !KGlobalSettings::singleClick())
   {
-    emit executed(item);
+      emit executed(item);
   }
-
   emit doubleClicked(item);
 }
 
@@ -1616,7 +1615,7 @@ void CardView::drawRubberBands( int pos )
 }
 
 
-int CardView::itemWidth()
+int CardView::itemWidth()const
 {
   return d->mItemWidth;
 }
@@ -1662,7 +1661,7 @@ void CardView::setSeparatorWidth( int width )
   setLayoutDirty( true ); // hmm, actually I could just adjust the x'es...
 }
 
-int CardView::maxFieldLines()
+int CardView::maxFieldLines()const
 {
   return d->mMaxFieldLines;
 }

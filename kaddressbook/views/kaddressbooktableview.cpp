@@ -11,6 +11,7 @@
 #include <qdragobject.h>
 #include <qevent.h>
 #include <qurl.h>
+#include <qpixmap.h>
 
 #include <kabc/addressbook.h>
 #include <kapplication.h>
@@ -42,7 +43,7 @@ class TableViewFactory : public ViewFactory
     }
 
     QString type() const { return "Table"; }
-    
+
     QString description() const { return i18n( "A listing of contacts in a table. Each cell of "
                                   "the table holds a field of the contact." ); }
 
@@ -65,7 +66,7 @@ KAddressBookTableView::KAddressBookTableView( KABC::AddressBook *ab,
   : KAddressBookView( ab, parent, name )
 {
   mainLayout = new QVBoxLayout( viewWidget(), 2 );
-  
+
   // The list view will be created when the config is read.
   mListView = 0;
 }
@@ -92,7 +93,7 @@ void KAddressBookTableView::reconstructListView()
     }
 
   mListView = new ContactListView( this, addressBook(), viewWidget() );
-  
+
   // Add the columns
   KABC::Field::List fieldList = fields();
   KABC::Field::List::ConstIterator it;
@@ -102,7 +103,7 @@ void KAddressBookTableView::reconstructListView()
       mListView->addColumn( (*it)->label() );
       mListView->setColumnWidthMode(c++, QListView::Manual);
   }
- 
+
   connect(mListView, SIGNAL(selectionChanged()),
           this, SLOT(addresseeSelected()));
   connect(mListView, SIGNAL(startAddresseeDrag()), this,
@@ -115,9 +116,9 @@ void KAddressBookTableView::reconstructListView()
   else
     connect(mListView, SIGNAL(doubleClicked(QListViewItem*)),
           this, SLOT(addresseeExecuted(QListViewItem*)));
-          
+
   refresh();
-  
+
   mListView->setSorting( 0, true );
   mainLayout->addWidget( mListView );
   mainLayout->activate();
@@ -136,43 +137,43 @@ void KAddressBookTableView::readConfig(KConfig *config)
   QString group = config->group();
 
   KAddressBookView::readConfig(config);
-  
+
   // The config could have changed the fields, so we need to reconstruct
   // the listview.
   reconstructListView();
 
   // reconstructListView modifies config-group
   config->setGroup( group );
-  
+
   // Set the list view options
   mListView->setAlternateBackgroundEnabled(config->readBoolEntry("ABackground",
                                                                  true));
   mListView->setSingleLineEnabled(config->readBoolEntry("SingleLine", false));
   mListView->setToolTipsEnabled(config->readBoolEntry("ToolTips", true));
-  
+
   if (config->readBoolEntry("Background", false))
     mListView->setBackgroundPixmap(config->readEntry("BackgroundName"));
-  
+
   // Restore the layout of the listview
   mListView->restoreLayout(config, config->group());
 }
 
 void KAddressBookTableView::refresh(QString uid)
 {
-  // For now just repopulate. In reality this method should 
+  // For now just repopulate. In reality this method should
   // check the value of uid, and if valid iterate through
   // the listview to find the entry, then tell it to refresh.
 
   if (uid == QString::null) {
     // Clear the list view
     mListView->clear();
-    
+
     KABC::Addressee::List addresseeList = addressees();
     KABC::Addressee::List::Iterator it;
     for (it = addresseeList.begin(); it != addresseeList.end(); ++it ) {
       new ContactListViewItem(*it, mListView, addressBook(), fields());
     }
-        
+
     // Sometimes the background pixmap gets messed up when we add lots
     // of items.
     mListView->repaint();
@@ -198,8 +199,8 @@ QStringList KAddressBookTableView::selectedUids()
     QStringList uidList;
     QListViewItem *item;
     ContactListViewItem *ceItem;
-    
-    for(item = mListView->firstChild(); item; item = item->itemBelow()) 
+
+    for(item = mListView->firstChild(); item; item = item->itemBelow())
     {
         if (mListView->isSelected( item ))
         {
@@ -208,7 +209,7 @@ QStringList KAddressBookTableView::selectedUids()
                 uidList << ceItem->addressee().uid();
         }
     }
-    
+
     return uidList;
 }
 
@@ -216,7 +217,7 @@ void KAddressBookTableView::setSelected(QString uid, bool selected)
 {
     QListViewItem *item;
     ContactListViewItem *ceItem;
-    
+
     if (uid == QString::null)
     {
         mListView->selectAll(selected);
@@ -229,7 +230,7 @@ void KAddressBookTableView::setSelected(QString uid, bool selected)
             if ((ceItem != 0L) && (ceItem->addressee().uid() == uid))
             {
                 mListView->setSelected(item, selected);
-                
+
                 if (selected)
                     mListView->ensureItemVisible(item);
             }
@@ -245,18 +246,18 @@ void KAddressBookTableView::addresseeSelected()
     // selected last.
     QListViewItem *item;
     bool found =false;
-    for (item = mListView->firstChild(); item && !found; 
+    for (item = mListView->firstChild(); item && !found;
          item = item->nextSibling())
     {
         if (item->isSelected())
         {
             found = true;
-            ContactListViewItem *ceItem 
+            ContactListViewItem *ceItem
                  = dynamic_cast<ContactListViewItem*>(item);
              emit selected(ceItem->addressee().uid());
         }
     }
-    
+
     if (!found)
         emit selected(QString::null);
 }
@@ -265,9 +266,9 @@ void KAddressBookTableView::addresseeExecuted(QListViewItem *item)
 {
     if (item)
     {
-        ContactListViewItem *ceItem 
+        ContactListViewItem *ceItem
                = dynamic_cast<ContactListViewItem*>(item);
-               
+
        if (ceItem)
        {
            emit executed(ceItem->addressee().uid());
