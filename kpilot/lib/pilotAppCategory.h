@@ -66,9 +66,9 @@ public:
 	{} ;
 
 	PilotAppCategory(PilotRecord* rec) : 
-		fAttrs(rec->getAttrib()), 
-		fId(rec->getID()), 
-		fCategory(rec->getCat()) 
+		fAttrs((rec)?rec->getAttrib():0), 
+		fId((rec)?rec->getID():0), 
+		fCategory((rec)?rec->getCat():0) 
 	{} ;
 
 	PilotAppCategory(const PilotAppCategory &copyFrom) :
@@ -120,6 +120,9 @@ public:
 
 
 // $Log$
+// Revision 1.1  2001/10/10 22:01:24  adridg
+// Moved from ../kpilot/, shared files
+//
 // Revision 1.14  2001/09/29 16:26:18  adridg
 // The big layout change
 //
