@@ -27,7 +27,7 @@ namespace KCal {
 
 class KDE_EXPORT ResourceBloggingConfig : public ResourceGroupwareBaseConfig
 {
-  Q_OBJECT;
+  Q_OBJECT
   public:
     ResourceBloggingConfig( QWidget *parent = 0, const char *name = 0 );
 
