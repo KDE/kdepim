@@ -39,10 +39,8 @@ class KNFetchArticleManager : public QObject, public KNArticleManager  {
   Q_OBJECT
   
   public:
-    KNFetchArticleManager(KNListView *v, KNFilterManager* fiManager, QObject * parent=0, const char * name=0);
+    KNFetchArticleManager(KNListView *v, KNFilterManager* fiManager, KActionCollection* actColl, QObject * parent=0, const char * name=0);
     ~KNFetchArticleManager();
-    
-    const KActionCollection& actions()      { return actionCollection; }
     
     void readOptions();
     void saveOptions();
@@ -95,7 +93,7 @@ class KNFetchArticleManager : public QObject, public KNArticleManager  {
             *actMarkRead, *actMarkUnread, *actOwnWindow,  *actSearch, *actThreadRead,
             *actThreadUnread, *actThreadSetScore, *actThreadWatch,*actThreadIgnore;
     KToggleAction *actShowThreads;
-    KActionCollection actionCollection;
+    KActionCollection *actionCollection;
           
   public slots:
     void slotFilterChanged(KNArticleFilter *f);

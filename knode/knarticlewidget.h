@@ -44,7 +44,7 @@ class KNArticleWidget : public QTextBrowser  {
     enum browserType { BTkonqueror=0 , BTnetscape=1 };
     enum anchorType { ATurl, ATauthor, ATreference, ATattachment, ATunknown };
 
-    KNArticleWidget(QWidget *parent=0, const char *name=0 );
+    KNArticleWidget(KActionCollection* actColl, QWidget *parent=0, const char *name=0 );
     ~KNArticleWidget();
 
 //=======================================
@@ -58,8 +58,6 @@ class KNArticleWidget : public QTextBrowser  {
     static void toggleFullHeaders();
     static bool fullHeaders();
 //=======================================
-
-    const KActionCollection& actions()      { return actionCollection; }
 
     bool scrollingDownPossible();       // needed for "read-through"
     void scrollDown();
@@ -98,7 +96,7 @@ class KNArticleWidget : public QTextBrowser  {
 
     KPopupMenu *urlPopup, *attPopup;
     KAction *actSave, *actPrint, *actSelAll, *actCopy;
-    KActionCollection actionCollection;
+    KActionCollection *actionCollection;
 
     static bool showSig, fullHdrs, inlineAtt, openAtt, altAsAtt;
     static QString hexColors[4];
@@ -106,7 +104,6 @@ class KNArticleWidget : public QTextBrowser  {
     static QFont htmlFont;
     static browserType browser;
     static QList<KNArticleWidget> instances;
-
 
   protected slots:
     void slotSave();

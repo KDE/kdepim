@@ -40,8 +40,8 @@
 #include "knfoldermanager.h"
 
 
-KNFolderManager::KNFolderManager(KNSavedArticleManager *a, KNListView *v,  QObject * parent, const char * name)
-  : QObject(parent, name), view(v), aManager(a), lastId(3), c_ount(3)
+KNFolderManager::KNFolderManager(KNSavedArticleManager *a, KNListView *v, KActionCollection* actColl, QObject * parent, const char * name)
+  : QObject(parent, name), view(v), aManager(a), lastId(3), c_ount(3), actionCollection(actColl)
 {
   fList=new QList<KNFolder>;
   fList->setAutoDelete(true);
@@ -50,9 +50,9 @@ KNFolderManager::KNFolderManager(KNSavedArticleManager *a, KNListView *v,  QObje
   showListItems();
     
   actCompactFolder = new KAction(i18n("&Compact Folder"), "wizard", 0, this, SLOT(slotCompactFolder()),
-                                 &actionCollection, "folder_compact");
+                                 actionCollection, "folder_compact");
   actEmptyFolder = new KAction(i18n("&Empty Folder"), 0, this, SLOT(slotEmptyFolder()),
-                               &actionCollection, "folder_empty");
+                               actionCollection, "folder_empty");
 
   setCurrentFolder(0);  
 }

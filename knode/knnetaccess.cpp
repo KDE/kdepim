@@ -35,8 +35,8 @@
 #include "knnetaccess.h"
 
 
-KNNetAccess::KNNetAccess(QObject *parent, const char *name )
-: QObject(parent,name), currentNntpJob(0L), currentSmtpJob(0L)
+KNNetAccess::KNNetAccess(KActionCollection* actColl, QObject *parent, const char *name )
+: QObject(parent,name), currentNntpJob(0L), currentSmtpJob(0L), actionCollection(actColl)
 {
   if((pipe(nntpInPipe)==-1)||
      (pipe(nntpOutPipe)==-1)||
@@ -78,7 +78,7 @@ KNNetAccess::KNNetAccess(QObject *parent, const char *name )
   smtpJobQueue.setAutoDelete(false);    
   
   actNetStop = new KAction(i18n("Stop &Network"),"stop",0, this, SLOT(slotCancelAllJobs()),
-                           &actionCollection, "net_stop");
+                           actionCollection, "net_stop");
   actNetStop->setEnabled(false);
 }
 

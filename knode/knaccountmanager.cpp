@@ -41,8 +41,8 @@
 #include "knaccountmanager.h"
 
 
-KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * parent, const char * name)
-  : QObject(parent, name), gManager(gm), view(v)
+KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, KActionCollection* actColl, QObject * parent, const char * name)
+  : QObject(parent, name), gManager(gm), view(v), actionCollection(actColl)
 {
   accList=new QList<KNNntpAccount>;
   accList->setAutoDelete(true);
@@ -53,15 +53,15 @@ KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * 
   loadAccounts();
   
   actProperties = new KAction(i18n("&Properties..."), 0, this, SLOT(slotProperties()),
-                              &actionCollection, "account_properties");
+                              actionCollection, "account_properties");
   actSubscribe = new KAction(i18n("&Subscribe to Newsgroups..."),"news_subscribe", 0, this, SLOT(slotSubscribe()),
-                             &actionCollection, "account_subscribe");
+                             actionCollection, "account_subscribe");
   actLoadHdrs = new KAction(i18n("&Get New Articles"), "mail_get", 0, this, SLOT(slotLoadHdrs()),
-                            &actionCollection, "account_dnlHeaders");
+                            actionCollection, "account_dnlHeaders");
   actDelete = new KAction(i18n("&Delete"), 0, this, SLOT(slotDelete()),
-                          &actionCollection, "account_delete");
+                          actionCollection, "account_delete");
   actPostNewArticle = new KAction(i18n("&Post new article"), "filenew", Key_P , this, SLOT(slotPostNewArticle()),
-                                  &actionCollection, "article_postNew");
+                                  actionCollection, "article_postNew");
   
   setCurrentAccount(0);
 }

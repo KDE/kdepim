@@ -45,11 +45,9 @@ class KNSavedArticleManager : public QObject, public KNArticleManager  {
   Q_OBJECT  
 
   public:
-    KNSavedArticleManager(KNListView *v, KNAccountManager *am, QObject * parent=0, const char * name=0);
+    KNSavedArticleManager(KNListView *v, KNAccountManager *am, KActionCollection* actColl, QObject * parent=0, const char * name=0);
     ~KNSavedArticleManager();
-    
-    const KActionCollection& actions()    { return actionCollection; }    
-    
+
     void readConfig();
     void setStandardFolders(KNFolder *d, KNFolder *o, KNFolder *s);
     void setFolder(KNFolder *f);
@@ -112,7 +110,7 @@ class KNSavedArticleManager : public QObject, public KNArticleManager  {
     KNAccountManager *accM;
     QList<KNComposer> *comList;
     KAction *actSendOutbox, *actEdit, *actDelete, *actSendNow, *actSendLater;
-    KActionCollection actionCollection;   
+    KActionCollection *actionCollection;
         
   protected slots:
     void slotComposerDone(KNComposer *com);

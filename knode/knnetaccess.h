@@ -39,11 +39,9 @@ class KNNetAccess : public QObject  {
 
   public:
 
-    KNNetAccess(QObject *parent=0, const char *name=0);
+    KNNetAccess(KActionCollection* actColl, QObject *parent=0, const char *name=0);
     ~KNNetAccess();
-    
-    const KActionCollection& actions()    { return actionCollection; }  
-    
+
     void addJob(KNJobData *job);
     void stopJobsNntp(int type);         // type==0 => all jobs
     void stopJobsSmtp(int type);         // type==0 => all jobs
@@ -69,7 +67,7 @@ class KNNetAccess : public QObject  {
     int nntpInPipe[2], nntpOutPipe[2], smtpInPipe[2], smtpOutPipe[2];
     QSocketNotifier *nntpNotifier,*smtpNotifier;
     KAction* actNetStop;
-    KActionCollection actionCollection;
+    KActionCollection *actionCollection;
   
   protected slots:
     void slotThreadSignal(int i);

@@ -64,11 +64,9 @@ class KNFilterManager : public QObject
   Q_OBJECT
 
   public:
-    KNFilterManager(QObject * parent=0, const char * name=0);
+    KNFilterManager(KActionCollection* actColl, QObject * parent=0, const char * name=0);
     ~KNFilterManager();
     
-    const KActionCollection& actions()      { return actionCollection; }
-
     void readOptions();
     void saveOptions();
 
@@ -98,7 +96,7 @@ class KNFilterManager : public QObject
     KNArticleFilter *currFilter;
     KNFilterSelectAction *actFilter;
     QValueList<int> menuOrder;  
-    KActionCollection actionCollection;
+    KActionCollection *actionCollection;
     bool isAGroup, commitNeeded;
   
   protected slots:

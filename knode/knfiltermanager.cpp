@@ -128,12 +128,12 @@ void KNFilterSelectAction::slotMenuActivated(int id)
 
 
 
-KNFilterManager::KNFilterManager( QObject * parent, const char * name)
- : QObject(parent,name), fset(0), currFilter(0), isAGroup(false)
+KNFilterManager::KNFilterManager(KActionCollection* actColl, QObject * parent, const char * name)
+ : QObject(parent,name), fset(0), currFilter(0), actionCollection(actColl), isAGroup(false)
 {
   fList.setAutoDelete(true);
 
-  actFilter = new KNFilterSelectAction(i18n("&Filter"), "filter", 0 , &actionCollection, "view_Filter");
+  actFilter = new KNFilterSelectAction(i18n("&Filter"), "filter", 0 , actionCollection, "view_Filter");
   connect(actFilter, SIGNAL(activated(int)), this,  SLOT(slotMenuActivated(int)));
   actFilter->setEnabled(false);
 

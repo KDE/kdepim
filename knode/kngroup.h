@@ -67,6 +67,7 @@ class KNGroup : public KNArticleCollection  {
     int statThrWithNew();
     int statThrWithUnread();
     bool locked()                       { return l_ocked; }
+    int loading()                       { return l_oading; }
     
     //set
     void setGroupname(const QCString &s)  { g_roupname=s; }
@@ -81,6 +82,7 @@ class KNGroup : public KNArticleCollection  {
     void setMaxFetch(int i)               { m_axFetch=i; }
     void setUser(KNUserEntry *u)          { u_ser=u; }
     void setLocked(bool l)                { l_ocked=l; }
+    void setLoading(int i)                { l_oading=i; }
                 
   protected:
     void sortHdrs(int cnt);
@@ -90,7 +92,7 @@ class KNGroup : public KNArticleCollection  {
     QCString g_roupname, d_escription;
     KNUserEntry *u_ser;
     bool l_ocked;
-    
+    int l_oading;
     
     class dynData {
       

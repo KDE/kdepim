@@ -191,8 +191,8 @@ QSortedList<KNGroupInfo>* KNGroupListData::extractList()
 //===============================================================================
 
 
-KNGroupManager::KNGroupManager(KNFetchArticleManager *a, QObject * parent, const char * name)
-  : QObject(parent,name), aManager(a)
+KNGroupManager::KNGroupManager(KNFetchArticleManager *a, KActionCollection* actColl, QObject * parent, const char * name)
+  : QObject(parent,name), aManager(a), actionCollection(actColl)
 {
   gList=new QList<KNGroup>;
   gList->setAutoDelete(true);
@@ -200,15 +200,15 @@ KNGroupManager::KNGroupManager(KNFetchArticleManager *a, QObject * parent, const
   readConfig(); 
   
   actProperties = new KAction(i18n("&Properties..."), 0, this, SLOT(slotProperties()),
-                              &actionCollection, "group_properties");
+                              actionCollection, "group_properties");
   actLoadHdrs = new KAction(i18n("&Get New Articles"), "mail_get" , 0, this, SLOT(slotLoadHdrs()),
-                            &actionCollection, "group_dnlHeaders");
+                            actionCollection, "group_dnlHeaders");
   actExpire = new KAction(i18n("E&xpire Now"), "wizard", 0, this, SLOT(slotExpire()),
-                          &actionCollection, "group_expire");
+                          actionCollection, "group_expire");
   actResort = new KAction(i18n("Res&ort"), 0, this, SLOT(slotResort()),
-                          &actionCollection, "group_resort");
+                          actionCollection, "group_resort");
   actUnsubscribe = new KAction(i18n("&Unsubscribe"), 0, this, SLOT(slotUnsubscribe()),
-                               &actionCollection, "group_unsubscribe");     
+                               actionCollection, "group_unsubscribe");
   
   setCurrentGroup(0);
 }
@@ -334,6 +334,8 @@ void KNGroupManager::expireAll(KNPurgeProgressDialog *dlg)
   }
 
   for(KNGroup *var=gList->first(); var; var=gList->next()) {
+    if((var->locked()) || (var->loading()>0))
+      continue;
     if(dlg) {
       dlg->setInfo(var->groupname());
       kapp->processEvents();
@@ -415,7 +417,7 @@ void KNGroupManager::unsubscribeGroup(KNGroup *g)
   if(!g) g=c_urrentGroup;
   if(!g) return;
 
-  if(g->locked()) {
+  if((g->locked()) || (g->loading()>0)) {
     KMessageBox::sorry(knGlobals.topWidget, QString(i18n("The group \"%1\" is being updated currently.\nIt is not possible to unsubscribe it at the moment.")).arg(g->groupname()));
     return;
   }
@@ -472,6 +474,11 @@ void KNGroupManager::expireGroupNow(KNGroup *g)
 {
   if(!g) g=c_urrentGroup;
   if(!g) return;
+
+  if((g->locked()) || (g->loading()>0)) {
+    // add error message after 2.0!!!!!!!!!
+    return;
+  }
 
   KNArticleWindow::closeAllWindowsForCollection(g);
 

@@ -35,8 +35,8 @@
 #include "knodeview.h"
 
 
-KNodeView::KNodeView(QWidget *parent, const char * name)
-  : QSplitter(parent,name), longView(true), notAFolder(true)
+KNodeView::KNodeView(KActionCollection* actColl, QWidget *parent, const char * name)
+  : QSplitter(parent,name), longView(true), actionCollection(actColl), notAFolder(true)
 {
   setOpaqueResize(true);
   colFocus=new KNFocusWidget(this,"colFocus");
@@ -53,7 +53,7 @@ KNodeView::KNodeView(QWidget *parent, const char * name)
   secSplitter->setResizeMode(hdrFocus, QSplitter::KeepSize);
 
   artFocus=new KNFocusWidget(secSplitter,"artFocus");
-  artView=new KNArticleWidget(artFocus,"artView");
+  artView=new KNArticleWidget(actionCollection, artFocus,"artView");
   artFocus->setWidget(artView);
   
   initCollectionView();
@@ -62,7 +62,7 @@ KNodeView::KNodeView(QWidget *parent, const char * name)
   setTabOrder(hdrView, artView);
   setTabOrder(artView, collectionView);
 
-  actSortSelect = new KSelectAction(i18n("&Sort"), 0, &actionCollection, "view_Sort");
+  actSortSelect = new KSelectAction(i18n("&Sort"), 0, actionCollection, "view_Sort");
   connect(actSortSelect, SIGNAL(activated(int)), this, SLOT(slotSortMenuSelect(int)));
   connect(hdrView, SIGNAL(sortingChanged(int)), this, SLOT(slotSortHdrSelect(int)));
   QStringList items;
@@ -73,24 +73,22 @@ KNodeView::KNodeView(QWidget *parent, const char * name)
   actSortSelect->setItems(items);
     
   actNextArt = new KAction(i18n("&Next article"), "next", Key_N , this, SLOT(slotNextArticle()),
-                           &actionCollection, "go_nextArticle");
+                           actionCollection, "go_nextArticle");
   actPrevArt = new KAction(i18n("&Previous article"), "previous", Key_B , this, SLOT(slotPrevArticle()),
-                           &actionCollection, "go_prevArticle");
+                           actionCollection, "go_prevArticle");
   actNextUnreadArt = new KAction(i18n("Next unread &article"), "1rightarrow", ALT+Key_Space , this, SLOT(slotNextUnreadArticle()),
-                                 &actionCollection, "go_nextUnreadArticle");
+                                 actionCollection, "go_nextUnreadArticle");
   actReadThrough = new KAction(i18n("Read &through articles"), Key_Space , this, SLOT(slotReadThrough()),
-                               &actionCollection, "go_readThrough");
+                               actionCollection, "go_readThrough");
   actNextUnreadThread =  new KAction(i18n("Next unread &thread"),"2rightarrow", CTRL+Key_Space , this, SLOT(slotNextUnreadThread()),
-                                     &actionCollection, "go_nextUnreadThread");
+                                     actionCollection, "go_nextUnreadThread");
   actNextGroup = new KAction(i18n("Ne&xt group"), "down", Key_Plus , this, SLOT(slotNextGroup()),
-                             &actionCollection, "go_nextGroup");
+                             actionCollection, "go_nextGroup");
   actPrevGroup = new KAction(i18n("Pre&vious group"), "up", Key_Minus , this, SLOT(slotPrevGroup()),
-                             &actionCollection, "go_prevGroup");
+                             actionCollection, "go_prevGroup");
   actToggleThread = new KAction(i18n("&Toggle Subthread"), Key_T, this, SLOT(slotToggleThread()),
-                                &actionCollection, "thread_toggle");
+                                actionCollection, "thread_toggle");
   actToggleThread->setEnabled(false);
-
-  actionCollection += artView->actions();
 
   readOptions();
 

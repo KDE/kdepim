@@ -19,7 +19,8 @@
 #include "knfetcharticle.h"
 
 
-KNFetchArticle::KNFetchArticle() : t_hreaded(true), i_dRef(-1), l_ines(-1), thrLevel(0), s_core(50),  newFups(0), unrFups(0)
+KNFetchArticle::KNFetchArticle(KNGroup *grp)
+ : g_roup(grp), t_hreaded(true), i_dRef(-1), l_ines(-1), thrLevel(0), s_core(50),  newFups(0), unrFups(0)
 {
   flags.fill(false,8);
 }

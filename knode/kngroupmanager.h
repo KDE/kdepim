@@ -82,12 +82,10 @@ class KNGroupManager : public QObject {
   Q_OBJECT
       
   public:
-    KNGroupManager(KNFetchArticleManager *a, QObject * parent=0, const char * name=0);
+    KNGroupManager(KNFetchArticleManager *a, KActionCollection* actColl, QObject * parent=0, const char * name=0);
     ~KNGroupManager();
-    
-    const KActionCollection& actions()    { return actionCollection; }  
-    
-    void readConfig();    
+
+    void readConfig();
     void loadGroups(KNNntpAccount *a);
     void getSubscribed(KNNntpAccount *a, QStrList* l);
     void getGroupsOfAccount(KNNntpAccount *a, QList<KNGroup> *l);   
@@ -125,7 +123,7 @@ class KNGroupManager : public QObject {
     int defaultMaxFetch;
     bool a_utoCheck;
     KAction *actProperties, *actLoadHdrs, *actExpire, *actResort, *actUnsubscribe;
-    KActionCollection actionCollection;
+    KActionCollection *actionCollection;
         
   protected slots:  
     void slotProperties()                 { showGroupProperties(); }

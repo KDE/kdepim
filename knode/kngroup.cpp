@@ -39,7 +39,7 @@
 
 KNGroup::KNGroup(KNCollection *p)
   : KNArticleCollection(p), n_ewCount(0), r_eadCount(0),
-    l_astNr(0), m_axFetch(0), u_ser(0), l_ocked(false)
+    l_astNr(0), m_axFetch(0), u_ser(0), l_ocked(false), l_oading(0)
 {
 }
 
@@ -193,7 +193,7 @@ bool KNGroup::loadHdrs()
         }
         
         split.init(buff, "\t");
-        art=new KNFetchArticle();
+        art=new KNFetchArticle(this);
         split.first();
         art->setMessageId(split.string());
     
@@ -330,7 +330,7 @@ void KNGroup::insortNewHeaders(QStrList *hdrs)
     split.init(line, "\t");
       
     //new Header-Object
-    art=new KNFetchArticle();
+    art=new KNFetchArticle(this);
     art->setNew(true);
     //art->setFetchTime(fTimeT);
         

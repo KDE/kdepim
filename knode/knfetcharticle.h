@@ -22,11 +22,13 @@
 #include <qbitarray.h>
 #include "knarticle.h"
 
+class KNGroup;
+
 
 class KNFetchArticle : public KNArticle  {
   
   public:
-    KNFetchArticle();
+    KNFetchArticle(KNGroup *grp);
     ~KNFetchArticle();
         
     void parse();
@@ -39,6 +41,7 @@ class KNFetchArticle : public KNArticle  {
     void updateListItem();
         
     //get
+    KNGroup* group()                        { return g_roup; }
     articleStatus status()                  { return AStemp; }
     articleType type()                      { return ATfetch; }
     virtual const QCString& messageId()     { return m_Id; }
@@ -90,6 +93,7 @@ class KNFetchArticle : public KNArticle  {
   
         
   protected:
+    KNGroup *g_roup;
     bool t_hreaded;
     QCString m_Id, f_rom, e_mail;
     int i_dRef, l_ines;

@@ -48,8 +48,8 @@
 #include "knglobals.h"
 
 
-KNFetchArticleManager::KNFetchArticleManager(KNListView *v, KNFilterManager* fiManager, QObject * parent, const char * name)
-  : QObject(parent, name), KNArticleManager(v), g_roup(0), c_urrent(0), n_ext(0), tOut(3000), sDlg(0)
+KNFetchArticleManager::KNFetchArticleManager(KNListView *v, KNFilterManager* fiManager, KActionCollection* actColl, QObject * parent, const char * name)
+  : QObject(parent, name), KNArticleManager(v), g_roup(0), c_urrent(0), n_ext(0), tOut(3000), sDlg(0), actionCollection(actColl)
 {
   connect(fiManager, SIGNAL(filterChanged(KNArticleFilter*)), this, SLOT(slotFilterChanged(KNArticleFilter*)));
   f_ilter = fiManager->currentFilter();
@@ -61,60 +61,60 @@ KNFetchArticleManager::KNFetchArticleManager(KNListView *v, KNFilterManager* fiM
   readOptions();
 
   actShowThreads = new KToggleAction(i18n("Show T&hreads"), 0 , this, SLOT(slotToggleShowThreads()),
-                                     &actionCollection, "view_showThreads");
+                                     actionCollection, "view_showThreads");
   actShowThreads->setChecked(t_hreaded);
   actShowThreads->setEnabled(false);
   actExpandAll = new KAction(i18n("&Expand all threads"), 0 , this, SLOT(slotThreadsExpand()),
-                             &actionCollection, "view_ExpandAll");
+                             actionCollection, "view_ExpandAll");
   actExpandAll->setEnabled(false);
   actCollapseAll = new KAction(i18n("&Collapse all threads"), 0 , this, SLOT(slotThreadsCollapse()),
-                               &actionCollection, "view_CollapseAll");
+                               actionCollection, "view_CollapseAll");
   actCollapseAll->setEnabled(false);
   actRefresh = new KAction(i18n("&Refresh List"),"reload", KStdAccel::key(KStdAccel::Reload), this, SLOT(slotRefresh()),
-                           &actionCollection, "view_Refresh");
+                           actionCollection, "view_Refresh");
   actRefresh->setEnabled(false);
   actAllRead = new KAction(i18n("Mark all as &read"), "goto", 0, this, SLOT(slotAllRead()),
-                           &actionCollection, "group_allRead");
+                           actionCollection, "group_allRead");
   actAllRead->setEnabled(false);
   actAllUnread = new KAction(i18n("Mark all as u&nread"), 0, this, SLOT(slotAllUnread()),
-                             &actionCollection, "group_allUnread");
+                             actionCollection, "group_allUnread");
   actAllUnread->setEnabled(false);
   actPostReply = new KAction(i18n("Post &reply"),"message_reply", Key_R , this, SLOT(slotReply()),
-                             &actionCollection, "article_postReply");
+                             actionCollection, "article_postReply");
   actPostReply->setEnabled(false);
 
   actMailReply = new KAction(i18n("&Mail reply"),"mail_reply", Key_A , this, SLOT(slotRemail()),
-                             &actionCollection, "article_mailReply");
+                             actionCollection, "article_mailReply");
   actMailReply->setEnabled(false);
   actForward = new KAction(i18n("&Forward"),"mail_forward", Key_F , this, SLOT(slotForward()),
-                           &actionCollection, "article_forward");
+                           actionCollection, "article_forward");
   actForward->setEnabled(false);
   actMarkRead = new KAction(i18n("M&ark as read"), Key_D , this, SLOT(slotMarkRead()),
-                            &actionCollection, "article_read");
+                            actionCollection, "article_read");
   actMarkRead->setEnabled(false);
   actMarkUnread = new KAction(i18n("Mar&k as unread"), Key_U , this, SLOT(slotMarkUnread()),
-                              &actionCollection, "article_unread");
+                              actionCollection, "article_unread");
   actMarkUnread->setEnabled(false);
   actThreadRead = new KAction(i18n("Mark thread as r&ead"), CTRL+Key_D , this, SLOT(slotThreadRead()),
-                              &actionCollection, "thread_read");
+                              actionCollection, "thread_read");
   actThreadRead->setEnabled(false);
   actThreadUnread = new KAction(i18n("Mark thread as u&nread"), CTRL+Key_U , this, SLOT(slotThreadUnread()),
-                                &actionCollection, "thread_unread");
+                                actionCollection, "thread_unread");
   actThreadUnread->setEnabled(false);
   actThreadSetScore = new KAction(i18n("Set &Score..."), "rotate", Key_S , this, SLOT(slotThreadScore()),
-                                  &actionCollection, "thread_setScore");
+                                  actionCollection, "thread_setScore");
   actThreadSetScore->setEnabled(false);
   actThreadWatch = new KAction(i18n("&Watch"), "top", Key_W , this, SLOT(slotThreadWatch()),
-                               &actionCollection, "thread_watch");
+                               actionCollection, "thread_watch");
   actThreadWatch->setEnabled(false);
   actThreadIgnore = new KAction(i18n("&Ignore"), "bottom", Key_I , this, SLOT(slotThreadIgnore()),
-                                &actionCollection, "thread_ignore");
+                                actionCollection, "thread_ignore");
   actThreadIgnore->setEnabled(false);
   actOwnWindow = new KAction(i18n("&Open in own window"), "viewmag+", Key_O , this, SLOT(slotOwnWindow()),
-                             &actionCollection, "article_ownWindow");
+                             actionCollection, "article_ownWindow");
   actOwnWindow->setEnabled(false);
   actSearch = new KAction(i18n("&Search..."),"find" , Key_F4 , this, SLOT(slotSearch()),
-                          &actionCollection, "article_search");
+                          actionCollection, "article_search");
   actSearch->setEnabled(false);
 }
 

@@ -199,8 +199,8 @@ bool KNArticleWidget::fullHeaders()
 
 
 
-KNArticleWidget::KNArticleWidget(QWidget *parent, const char *name )
-    : QTextBrowser(parent, name), a_rticle(0), c_oll(0), att(0), h_tmlDone(false)
+KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, const char *name )
+    : QTextBrowser(parent, name), a_rticle(0), c_oll(0), att(0), h_tmlDone(false), actionCollection(actColl)
 {
   instances.append(this);
 
@@ -225,13 +225,13 @@ KNArticleWidget::KNArticleWidget(QWidget *parent, const char *name )
   attPopup->insertItem(i18n("Save"), PUP_SAVE);
 
   //actions
-  actSave = KStdAction::save(this, SLOT(slotSave()), &actionCollection);
+  actSave = KStdAction::save(this, SLOT(slotSave()), actionCollection);
   actSave->setEnabled(false);
-  actPrint = KStdAction::print(this, SLOT(slotPrint()), &actionCollection);
+  actPrint = KStdAction::print(this, SLOT(slotPrint()), actionCollection);
   actPrint->setEnabled(false);
-  actSelAll =  KStdAction::selectAll(this, SLOT(slotSelectAll()), &actionCollection);
+  actSelAll =  KStdAction::selectAll(this, SLOT(slotSelectAll()), actionCollection);
   actSelAll->setEnabled(false);
-  actCopy = KStdAction::copy(this, SLOT(copy()), &actionCollection);
+  actCopy = KStdAction::copy(this, SLOT(copy()), actionCollection);
   actCopy->setEnabled(false);
 
   applyConfig();

@@ -33,11 +33,9 @@ class KNAccountManager : public QObject
   Q_OBJECT
   
   public:
-    KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * parent=0, const char * name=0);
+    KNAccountManager(KNGroupManager *gm, KNListView *v, KActionCollection* actColl, QObject * parent=0, const char * name=0);
     ~KNAccountManager();
     
-    const KActionCollection& actions()      { return actionCollection; }
-      
     void readConfig();
     void saveYourself();
     void setCurrentAccount(KNNntpAccount *a);
@@ -67,7 +65,7 @@ class KNAccountManager : public QObject
     
     KNListView *view;   
     KAction *actProperties, *actSubscribe, *actLoadHdrs, *actDelete, *actPostNewArticle;
-    KActionCollection actionCollection;
+    KActionCollection *actionCollection;
         
   protected slots:  
     void slotProperties();

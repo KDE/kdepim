@@ -166,31 +166,31 @@ KNodeApp::KNodeApp()
   initStatusBar();
 
   //init Net
-  NAcc=new KNNetAccess();
+  NAcc=new KNNetAccess(actionCollection());
   knGlobals.netAccess = NAcc;
 
   //init filter manager
-  FiManager=new KNFilterManager();
+  FiManager=new KNFilterManager(actionCollection());
   knGlobals.fiManager = FiManager;
 
   //init Fetch-Article Manager
-  FAManager=new KNFetchArticleManager(view->hdrView, FiManager);
+  FAManager=new KNFetchArticleManager(view->hdrView, FiManager, actionCollection());
   knGlobals.fArtManager = FAManager;
 
   //init Group Manager
-  GManager=new KNGroupManager(FAManager);
+  GManager=new KNGroupManager(FAManager, actionCollection());
   knGlobals.gManager = GManager;
 
   //init Account Manager
-  AManager=new KNAccountManager(GManager, view->collectionView);
+  AManager=new KNAccountManager(GManager, view->collectionView, actionCollection());
   knGlobals.accManager = AManager;
 
   //init Saved-Article Manager
-  SAManager=new KNSavedArticleManager(view->hdrView, AManager);
+  SAManager=new KNSavedArticleManager(view->hdrView, AManager, actionCollection());
   knGlobals.sArtManager = SAManager;
 
   //init Folder Manager
-  FoManager=new KNFolderManager(SAManager, view->collectionView);
+  FoManager=new KNFolderManager(SAManager, view->collectionView, actionCollection());
   knGlobals.foManager = FoManager;
 
   // all components that provide actions are created, now
@@ -373,7 +373,7 @@ void KNodeApp::initView()
 {
   KNArticleWidget::readOptions();
   KNViewHeader::loadAll();
-  view = new KNodeView(this,"knodeView");
+  view = new KNodeView(actionCollection(),this,"knodeView");
   setCentralWidget(view);
 
   connect(view->collectionView, SIGNAL(clicked(QListViewItem *)),
@@ -439,16 +439,6 @@ void KNodeApp::initActions()
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
   KStdAction::preferences(this, SLOT(slotSettings()), actionCollection());
-
-  // add all external actions...
-  *actionCollection() += AManager->actions();
-  *actionCollection() += FoManager->actions();
-  *actionCollection() += GManager->actions();
-  *actionCollection() += FAManager->actions();
-  *actionCollection() += SAManager->actions();
-  *actionCollection() += FiManager->actions();
-  *actionCollection() += NAcc->actions();
-  *actionCollection() += view->actions();
 
   createGUI("knodeui.rc");
 }

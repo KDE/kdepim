@@ -54,12 +54,10 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col)
     setCaption(art->subject());
   //setIcon(UserIcon("posting"));
 
-  artW=new KNArticleWidget(this);
+  artW=new KNArticleWidget(actionCollection(),this);
   artW->setData(art, col);
   setCentralWidget(artW);
   connect(artW, SIGNAL(articleLoaded()), SLOT(slotArticleLoaded()));
-
-  *actionCollection() += artW->actions();        // include the actions of the article widget
 
   // file menu
   KStdAction::close(this, SLOT(slotFileClose()),actionCollection());

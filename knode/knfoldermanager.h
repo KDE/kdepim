@@ -34,11 +34,9 @@ class KNFolderManager : public QObject
   
   public:
     enum stFolder { SFdrafts=0, SFoutbox=1, SFsent=2 };
-    KNFolderManager(KNSavedArticleManager *a, KNListView *v, QObject * parent=0, const char * name=0);
+    KNFolderManager(KNSavedArticleManager *a, KNListView *v, KActionCollection* actColl, QObject * parent=0, const char * name=0);
     ~KNFolderManager();
-    
-    const KActionCollection& actions()    { return actionCollection; }  
-    
+
     int count()                           { return c_ount; }
     KNFolder* currentFolder()             { return c_urrentFolder; }
     bool hasCurrentFolder()               { return (c_urrentFolder!=0); }
@@ -67,7 +65,7 @@ class KNFolderManager : public QObject
     KNSavedArticleManager *aManager;
     int lastId, c_ount;
     KAction *actCompactFolder, *actEmptyFolder;
-    KActionCollection actionCollection;
+    KActionCollection *actionCollection;
     
   protected slots:  
     void slotCompactFolder()              { compactFolder(); }

@@ -36,11 +36,9 @@ class KNodeView : public QSplitter
   
   public:
       
-    KNodeView(QWidget *parent=0,const char * name=0);
+    KNodeView(KActionCollection* actColl, QWidget *parent=0,const char * name=0);
     ~KNodeView();
-    
-    const KActionCollection& actions()      { return actionCollection; }    
-    
+
     void readOptions();
     void saveOptions();
 
@@ -66,7 +64,7 @@ class KNodeView : public QSplitter
     KSelectAction *actSortSelect;
     KAction *actNextArt, *actPrevArt, *actNextUnreadArt, *actReadThrough, *actNextUnreadThread,
             *actNextGroup, *actPrevGroup, *actToggleThread;
-    KActionCollection actionCollection;
+    KActionCollection *actionCollection;
     bool notAFolder;
 
   protected slots:
