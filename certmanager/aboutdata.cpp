@@ -50,11 +50,15 @@ static const about_data authors[] = {
   { "Kalle Dalheimer", I18N_NOOP("Original Author"), "kalle@kde.org", 0 },
   { "Jesper Petersen", I18N_NOOP("Original Author"), "blackie@kde.org", 0 },
 };
+ 
 
 static const about_data credits[] = {
   { "David Faure",
     I18N_NOOP("Backend configuration framework, KIO integration"),
     "faure@kde.org", 0 },
+  { "Michel Boyer de la Giroday",
+    I18N_NOOP("Key-state dependant colors and fonts in the key list"),
+    "michel@klaralvdalens-datakonsult.se", 0 },
   { "Daniel Molkentin",
     I18N_NOOP("Certificate Wizard KIOSK integration, infrastructure"),
     "molkentin@kde.org", 0 },

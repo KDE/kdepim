@@ -347,7 +347,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
   connect( mHideInvalidKeys, SIGNAL(toggled(bool)), SLOT(slotSearch()) );
   connect( mStartSearchTimer, SIGNAL(timeout()), SLOT(slotFilter()) );
 
-  mKeyListView = new KeyListView( new ColumnStrategy( mKeyUsage ), page, "mKeyListView" );
+  mKeyListView = new KeyListView( new ColumnStrategy( mKeyUsage ), 0, page, "mKeyListView" );
   mKeyListView->setResizeMode( QListView::LastColumn );
   mKeyListView->setRootIsDecorated( true );
   mKeyListView->setShowSortIndicator( true );

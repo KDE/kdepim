@@ -37,7 +37,11 @@
 
 #include <gpgmepp/key.h>
 
+class QPainter;
+class QColorGroup;
 class QToolTip;
+class QFont;
+class QColor;
 
 namespace Kleo {
 
@@ -74,6 +78,8 @@ namespace Kleo {
     QString key( int col, bool ascending ) const { return KListViewItem::key( col, ascending ); }
     /*! \reimp */
     int rtti() const { return RTTI; }
+    /*! \reimp */
+    void paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment );
 
   private:
     GpgME::Key mKey;
@@ -104,6 +110,8 @@ namespace Kleo {
     int compare( QListViewItem * other, int col, bool ascending ) const;
     /*! \reimp */
     int rtti() const { return RTTI; }
+    /*! \reimp */
+    void paintCell( QPainter *p, const QColorGroup &cg,int column, int width, int alignment );
 
   private:
     GpgME::Subkey mSubkey;
@@ -134,6 +142,8 @@ namespace Kleo {
     int compare( QListViewItem * other, int col, bool ascending ) const;
     /*! \reimp */
     int rtti() const { return RTTI; }
+    /*! \reimp */
+    void paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment );
 
   private:
     GpgME::UserID mUserID;
@@ -164,6 +174,8 @@ namespace Kleo {
     int compare( QListViewItem * other, int col, bool ascending ) const;
     /*! \reimp */
     int rtti() const { return RTTI; }
+    /*! \reimp */
+    void paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment );
 
   private:
     GpgME::UserID::Signature mSignature;
@@ -174,11 +186,17 @@ namespace Kleo {
     Q_OBJECT
   public:
     class ColumnStrategy;
+    class DisplayStrategy;
+    
 
-    KeyListView( const ColumnStrategy * strategy, QWidget * parent=0, const char * name=0, WFlags f=0 );
+    KeyListView( const ColumnStrategy * strategy,
+		 const DisplayStrategy * display=0,
+		 QWidget * parent=0, const char * name=0, WFlags f=0 );
+
     ~KeyListView();
 
     const ColumnStrategy * columnStrategy() const { return mColumnStrategy; }
+    const DisplayStrategy * displayStrategy() const { return mDisplayStrategy; }
 
   signals:
     void doubleClicked( Kleo::KeyListViewItem*, const QPoint&, int );
@@ -211,6 +229,7 @@ namespace Kleo {
 
   private:
     const ColumnStrategy * mColumnStrategy;
+    const DisplayStrategy * mDisplayStrategy;
     QToolTip * mItemToolTip;
     class Private;
     Private * d;
@@ -242,6 +261,26 @@ namespace Kleo {
     virtual QString signatureToolTip( const GpgME::UserID::Signature & sig, int column ) const;
     virtual const QPixmap * signaturePixmap( const GpgME::UserID::Signature &, int ) const { return 0; }
     virtual int signatureCompare( const GpgME::UserID::Signature & sig1, const GpgME::UserID::Signature & sig2, const int column ) const;
+  };
+
+  class KeyListView::DisplayStrategy { 
+  public:
+    virtual ~DisplayStrategy();
+    //font
+    virtual QFont keyFont( const GpgME::Key &, const QFont & ) const; 
+    virtual QFont subkeyFont( const GpgME::Subkey &, const QFont & ) const; 
+    virtual QFont useridFont( const GpgME::UserID &, const QFont &  ) const; 
+    virtual QFont signatureFont( const GpgME::UserID::Signature & , const QFont & ) const; 
+    //foreground
+    virtual QColor keyForeground( const GpgME::Key & , const QColor & ) const;
+    virtual QColor subkeyForeground( const GpgME::Subkey &, const QColor &  ) const;
+    virtual QColor useridForeground( const GpgME::UserID &, const QColor &  ) const;
+    virtual QColor signatureForeground( const GpgME::UserID::Signature &, const QColor &  ) const;
+    //backeground
+    virtual QColor keyBackground( const GpgME::Key &, const QColor &  ) const;
+    virtual QColor subkeyBackground( const GpgME::Subkey &, const QColor &  ) const;
+    virtual QColor useridBackground( const GpgME::UserID &, const QColor & ) const;
+    virtual QColor signatureBackground( const GpgME::UserID::Signature &, const QColor &  ) const;
   };
 
 }

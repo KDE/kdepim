@@ -44,6 +44,9 @@
 #include <qheader.h>
 #include <qpoint.h>
 #include <qptrlist.h>
+#include <qpainter.h>
+#include <qfont.h>
+#include <qcolor.h>
 
 namespace {
 
@@ -112,10 +115,10 @@ static const struct {
 static const int numSignalReplacements = sizeof signalReplacements / sizeof *signalReplacements;
 
 
-Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy,
-				QWidget * parent, const char * name, WFlags f )
+Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const DisplayStrategy * displayStrategy, QWidget * parent, const char * name, WFlags f )
   : KListView( parent, name ),
     mColumnStrategy( columnStrategy ),
+    mDisplayStrategy ( displayStrategy  ),
     mItemToolTip( 0 )
 {
   setWFlags( f );
@@ -145,6 +148,7 @@ Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy,
 
 Kleo::KeyListView::~KeyListView() {
   delete mColumnStrategy; mColumnStrategy = 0;
+  delete mDisplayStrategy; mDisplayStrategy = 0;
   delete mItemToolTip; mItemToolTip = 0;
 }
 
@@ -245,6 +249,24 @@ int Kleo::KeyListViewItem::compare( QListViewItem * item, int col, bool ascendin
   return listView()->columnStrategy()->compare( this->key(), that->key(), col );
 }
 
+void Kleo::KeyListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment ) {
+  const KeyListView::DisplayStrategy * ds = listView() ? listView()->displayStrategy() : 0 ;
+  if ( !ds ) {
+    KListViewItem::paintCell( p, cg, column, width, alignment );
+    return;
+  }
+  const QColor fg = ds->keyForeground( key(), cg.text() );
+  const QColor bg = ds->keyBackground( key(), cg.base() );
+  const QFont f = ds->keyFont( key(), p->font() );
+
+  QColorGroup _cg = cg;
+  p->setFont( f );
+  _cg.setColor( QColorGroup::Text, fg );
+  _cg.setColor( QColorGroup::Base, bg );
+
+  KListViewItem::paintCell( p, _cg, column, width, alignment );
+}
+
 //
 //
 // SubkeyKeyListViewItem
@@ -303,6 +325,25 @@ int Kleo::SubkeyKeyListViewItem::compare( QListViewItem * item, int col, bool as
   SubkeyKeyListViewItem * that = static_cast<SubkeyKeyListViewItem*>( item );
   return listView()->columnStrategy()->subkeyCompare( this->subkey(), that->subkey(), col );
 }
+
+void Kleo::SubkeyKeyListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment ) {
+  const KeyListView::DisplayStrategy * ds = listView() ? listView()->displayStrategy() : 0 ;
+  if ( !ds ) {
+    KListViewItem::paintCell( p, cg, column, width, alignment );
+    return;
+  }
+  const QColor fg = ds->subkeyForeground( subkey(), cg.text() );
+  const QColor bg = ds->subkeyBackground( subkey(), cg.base() );
+  const QFont f = ds->subkeyFont( subkey(), p->font() );
+
+  QColorGroup _cg = cg;
+  p->setFont( f );
+  _cg.setColor( QColorGroup::Text, fg );
+  _cg.setColor( QColorGroup::Base, bg );
+
+  KListViewItem::paintCell( p, _cg, column, width, alignment );
+}
+
 
 //
 //
@@ -363,6 +404,26 @@ int Kleo::UserIDKeyListViewItem::compare( QListViewItem * item, int col, bool as
   return listView()->columnStrategy()->userIDCompare( this->userID(), that->userID(), col );
 }
 
+
+void Kleo::UserIDKeyListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment ) {
+  const KeyListView::DisplayStrategy * ds = listView() ? listView()->displayStrategy() : 0 ;
+  if ( !ds ) {
+    KListViewItem::paintCell( p, cg, column, width, alignment );
+    return;
+  }
+  const QColor fg = ds->useridForeground( userID(), cg.text() );
+  const QColor bg = ds->useridBackground( userID(), cg.base() );
+  const QFont f = ds->useridFont( userID(), p->font() );
+
+  QColorGroup _cg = cg;
+  p->setFont( f );
+  _cg.setColor( QColorGroup::Text, fg );
+  _cg.setColor( QColorGroup::Base, bg );
+
+  KListViewItem::paintCell( p, _cg, column, width, alignment );
+}
+
+
 //
 //
 // SignatureKeyListViewItem
@@ -422,6 +483,25 @@ int Kleo::SignatureKeyListViewItem::compare( QListViewItem * item, int col, bool
   return listView()->columnStrategy()->signatureCompare( this->signature(), that->signature(), col );
 }
 
+void Kleo::SignatureKeyListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment ) {
+  const KeyListView::DisplayStrategy * ds = listView() ? listView()->displayStrategy() : 0 ;
+  if ( !ds ) {
+    KListViewItem::paintCell( p, cg, column, width, alignment );
+    return;
+  }
+  const QColor fg = ds->signatureForeground( signature(), cg.text() );
+  const QColor bg = ds->signatureBackground( signature(), cg.base() );
+  const QFont f = ds->signatureFont( signature(), p->font() );
+
+  QColorGroup _cg = cg;
+  p->setFont( f );
+  _cg.setColor( QColorGroup::Text, fg );
+  _cg.setColor( QColorGroup::Base, bg );
+
+  KListViewItem::paintCell( p, _cg, column, width, alignment );
+}
+
+
 //
 //
 // ColumnStrategy
@@ -465,6 +545,67 @@ QString Kleo::KeyListView::ColumnStrategy::userIDToolTip( const GpgME::UserID & 
 QString Kleo::KeyListView::ColumnStrategy::signatureToolTip( const GpgME::UserID::Signature & sig, int col ) const {
   return signatureText( sig, col );
 }
+
+//
+//
+// DisplayStrategy
+//
+//
+
+Kleo::KeyListView::DisplayStrategy::~DisplayStrategy() {}
+
+
+//font
+QFont Kleo::KeyListView::DisplayStrategy::keyFont( const GpgME::Key &, const QFont & font ) const {
+  return font;
+}
+
+QFont Kleo::KeyListView::DisplayStrategy::subkeyFont( const GpgME::Subkey &, const QFont & font ) const {
+  return font;
+}
+
+QFont Kleo::KeyListView::DisplayStrategy::useridFont( const GpgME::UserID &, const QFont & font ) const {
+  return font;
+}
+
+QFont Kleo::KeyListView::DisplayStrategy::signatureFont( const GpgME::UserID::Signature &, const QFont & font ) const {
+  return font;
+}
+
+//foreground
+QColor Kleo::KeyListView::DisplayStrategy::keyForeground( const GpgME::Key &, const QColor & fg )const {
+  return fg;
+}
+
+QColor Kleo::KeyListView::DisplayStrategy::subkeyForeground( const GpgME::Subkey &, const QColor & fg ) const {
+  return fg;
+}
+
+QColor Kleo::KeyListView::DisplayStrategy::useridForeground( const GpgME::UserID &, const QColor & fg ) const {
+  return fg;
+}
+
+QColor Kleo::KeyListView::DisplayStrategy::signatureForeground( const GpgME::UserID::Signature &, const QColor & fg ) const {
+  return fg;
+}
+
+//background
+QColor Kleo::KeyListView::DisplayStrategy::keyBackground( const GpgME::Key &, const QColor & bg )const {
+  return bg;
+}
+
+QColor Kleo::KeyListView::DisplayStrategy::subkeyBackground( const GpgME::Subkey &, const QColor & bg ) const {
+  return bg;
+}
+
+QColor Kleo::KeyListView::DisplayStrategy::useridBackground( const GpgME::UserID &, const QColor & bg ) const {
+  return bg;
+}
+
+QColor Kleo::KeyListView::DisplayStrategy::signatureBackground( const GpgME::UserID::Signature &, const QColor & bg ) const {
+  return bg;
+}
+
 
 //
 //

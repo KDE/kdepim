@@ -89,6 +89,18 @@
 #include <assert.h>
 
 namespace {
+  //PENDING Michel (testing my code) 
+  class DisplayStrategy : public Kleo::KeyListView::DisplayStrategy{
+  public:
+    ~DisplayStrategy() {}
+
+    QColor keyForeground( const GpgME::Key & key , const QColor & c ) const {
+      return key.canCertify() ? Qt::red : c ;
+    }
+  };
+  
+  // end of PENDING
+
   class ColumnStrategy : public Kleo::KeyListView::ColumnStrategy {
   public:
     ~ColumnStrategy() {}
@@ -147,7 +159,7 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
   setAutoSaveSettings();
 
   // Main Window --------------------------------------------------
-  mKeyListView = new Kleo::KeyListView( new ColumnStrategy(), this, "mKeyListView" );
+  mKeyListView = new Kleo::KeyListView( new ColumnStrategy(), new DisplayStrategy(), this, "mKeyListView" );
   mKeyListView->setSelectionMode( QListView::Extended );
   setCentralWidget( mKeyListView );
 
@@ -391,7 +403,7 @@ void CertManager::slotKeyListResult( const GpgME::KeyListResult & res ) {
 
 /**
   This slot is invoked when the user selects "New certificate"
- */
+*/
 void CertManager::newCertificate()
 {
   CertificateWizardImpl wizard( this );

@@ -93,7 +93,7 @@ namespace {
 }
 
 CertListView::CertListView( QWidget * parent, const char * name, WFlags f )
-  : Kleo::KeyListView( new TestColumnStrategy(), parent, name, f )
+  : Kleo::KeyListView( new TestColumnStrategy(), 0, parent, name, f )
 {
 
 }
