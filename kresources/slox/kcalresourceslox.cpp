@@ -148,7 +148,7 @@ void KCalResourceSlox::writeConfig( KConfig *config )
 
 bool KCalResourceSlox::doLoad()
 {
-  kdDebug() << "KCalResourceSlox::load() " << int( this ) << endl;
+  kdDebug() << "KCalResourceSlox::load() " << long( this ) << endl;
 
   if ( mLoadEventsJob || mLoadTodosJob ) {
     kdWarning() << "KCalResourceSlox::load(): download still in progress."
@@ -796,7 +796,7 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
 
 void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
 {
-  kdDebug() << "KCalResourceSlox::slotLoadEventsResult() " << int( this ) << endl;
+  kdDebug() << "KCalResourceSlox::slotLoadEventsResult() " << long( this ) << endl;
 
   if ( job->error() ) {
     loadError( job->errorString() );
