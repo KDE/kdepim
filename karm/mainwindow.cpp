@@ -137,7 +137,7 @@ void MainWindow::hideOnClose( bool hide )
 }
 
 /**
- * Calculate the sum of the session time and the total time for all leaf tasks and put it in the statusbar.
+ * Calculate the sum of the session time and the total time for all toplevel tasks and put it in the statusbar.
  */
 
 void MainWindow::updateTime( long sessionDiff, long totalDiff )

@@ -139,6 +139,10 @@ void TaskView::loadFromKCalFormat( const QString& file, int loadMask )
     buildAndPositionTasks( todoList );
   }
 
+  // Calculate totals for the statusbar (from toplevel tasks only)
+  for ( QListViewItem* child = firstChild(); child; child = child->nextSibling() )
+      emit sessionTimeChanged( 0, static_cast<Task *>(child)->totalTime() );
+
   setSelected(firstChild(), true);
   setCurrentItem(firstChild());
 
@@ -188,7 +192,6 @@ void TaskView::buildTask( KCal::Incidence* event, QDict<Task>& map )
 {
   Task* task = new Task( event, this );
   map.insert( event->uid(), task );
-  emit( sessionTimeChanged( 0, task->totalTime() ) );
   setRootIsDecorated(true);
   task->setOpen(true);
   updateTrackers( task, task->getDesktops() );
@@ -269,7 +272,7 @@ void TaskView::loadFromFileFormat()
     else {
       Task *parent = stack.top();
       task = new Task(name, minutes, 0, desktops, parent);
-      emit( sessionTimeChanged( 0, minutes ) );
+      //emit( sessionTimeChanged( 0, minutes ) );
       setRootIsDecorated(true);
       parent->setOpen(true);
     }
@@ -285,11 +288,9 @@ void TaskView::loadFromFileFormat()
   setCurrentItem(firstChild());
 
   applyTrackers();
-
-  //emit( sessionTimeChanged() );
 }
 
-void TaskView::applyTrackers() 
+void TaskView::applyTrackers()
 {
   TaskVector &tv = desktopTracker[kWinModule.currentDesktop()-1];
   TaskVector::iterator tit = tv.begin();
@@ -375,7 +376,7 @@ bool TaskView::parseLine(QString line, long *time, QString *name, int *level, De
 
   index = rest.find('\t'); // check for optional desktops string
   if (index >= 0) {
-    *name = rest.left(index);    
+    *name = rest.left(index);
     QString deskLine = rest.remove(0,index+1);
 
     // now transform the ds string (e.g. "3", or "1,4,5") into
@@ -388,7 +389,7 @@ bool TaskView::parseLine(QString line, long *time, QString *name, int *level, De
       d = ds.toInt(&ok);
       if (!ok)
 	return false;
-      
+
       desktops->push_back(d);
       deskLine.remove(0,commaIdx+1);
       commaIdx = deskLine.find(',');
@@ -402,7 +403,7 @@ bool TaskView::parseLine(QString line, long *time, QString *name, int *level, De
     desktops->push_back(d);
   }
   else {
-    *name = rest.remove(0,index+1);  
+    *name = rest.remove(0,index+1);
   }
 
   *time = timeStr.toLong(&ok);
@@ -523,7 +524,7 @@ void TaskView::startTimerFor(Task* item)
     emit updateButtons();
     if ( activeTasks.count() == 1 )
         emit timerActive();
-    
+
     emit tasksChanged( activeTasks);
   }
 }
@@ -547,11 +548,11 @@ void TaskView::resetSessionTimeForAllTasks()
     Task * task = (Task *) item.current();
     long sessionTime = task->sessionTime();
     long totalTime   = task->totalTime();
-		long newTotal = totalTime - sessionTime;
-		long totalDiff = totalTime - newTotal;
+    long newTotal = totalTime - sessionTime;
+    long totalDiff = totalTime - newTotal;
     task->setSessionTime(0);
     task->setTotalTime( newTotal );
-		sessionTimeChanged( -sessionTime, -totalDiff );
+    sessionTimeChanged( -sessionTime, -totalDiff );
   }
 }
 
@@ -605,9 +606,9 @@ void TaskView::addTimeToActiveTasks(int minutes)
     QListViewItem *item = task;
     while (item) {
       ((Task *) item)->incrementTime(minutes);
-      emit( sessionTimeChanged( minutes, minutes ) );
       item = item->parent();
     }
+    emit( sessionTimeChanged( minutes, minutes ) );
   }
 }
 
@@ -640,7 +641,7 @@ void TaskView::newTask(QString caption, QListViewItem *parent)
     updateParents( (QListViewItem *) task, totalDiff, sessionDiff );
     setCurrentItem(task);
     setSelected(task, true);
-    emit( sessionTimeChanged( sessionDiff, totalDiff ) );
+    // done by updateParents: emit( sessionTimeChanged( sessionDiff, totalDiff ) );
   }
   delete dialog;
 }
@@ -691,9 +692,10 @@ void TaskView::editTask()
 
     task->setDesktopList(desktopList);
 
-    if( sessionDiff || totalDiff ) {
-      emit sessionTimeChanged( sessionDiff, totalDiff );
-    }
+    // done by updateParents
+    //if( sessionDiff || totalDiff ) {
+    //  emit sessionTimeChanged( sessionDiff, totalDiff );
+    //}
 
     // Update the parents for this task.
     updateParents( (QListViewItem *) task, totalDiff, sessionDiff );
@@ -708,12 +710,14 @@ void TaskView::updateParents( QListViewItem* task, long totalDiff, long sessionD
 {
   QListViewItem *item = task->parent();
   while (item) {
-    Task *parrentTask = (Task *) item;
-    parrentTask->setTotalTime(parrentTask->totalTime()+totalDiff);
-    parrentTask->setSessionTime(parrentTask->sessionTime()+sessionDiff);
+    Task *parentTask = (Task *) item;
+    parentTask->setTotalTime(parentTask->totalTime()+totalDiff);
+    parentTask->setSessionTime(parentTask->sessionTime()+sessionDiff);
     item = item->parent();
-    sessionTimeChanged( sessionDiff, totalDiff );
   }
+  // only toplevel tasks directly contribute to the statusbar
+  // (otherwise subtasks would contribute twice)
+  sessionTimeChanged( sessionDiff, totalDiff );
 }
 
 void TaskView::deleteTask()
@@ -755,7 +759,7 @@ void TaskView::deleteTask()
     long sessionTime = item->sessionTime();
     long totalTime   = item->totalTime();
     updateParents( item, -totalTime, -sessionTime );
-    
+
     DesktopListType desktopList;
     updateTrackers(item, desktopList); // remove from tracker list
 
@@ -772,7 +776,6 @@ void TaskView::deleteTask()
     if (!anyChilds) {
       setRootIsDecorated(false);
     }
-    emit( sessionTimeChanged( -sessionTime, -totalTime ) );
   }
 }
 
