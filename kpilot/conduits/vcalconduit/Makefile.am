@@ -38,3 +38,9 @@ libvcalconduit_shared_la_SOURCES = korganizerConduit.ui \
 	vcal-setup.cc \
 	vcal-conduitbase.cc
 
+## Weird fake target
+dummy.cc :
+	echo "static int dummy_int = 0;" > dummy.cc
+
+korganizerConduit.moc.lo : dummy.cc
+	$(LIBTOOL) --silent --mode=compile $(CXX) -o korganizerConduit.moc.o -c dummy.cc
