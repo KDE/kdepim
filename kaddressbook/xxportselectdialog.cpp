@@ -195,8 +195,7 @@ void XXPortSelectDialog::initGUI()
   mUseWholeBook->setChecked( true );
   QWhatsThis::add( mUseWholeBook, i18n( "Export the entire address book" ) );
   groupLayout->addWidget( mUseWholeBook, 0, 0 );
-
-  mUseSelection = new QRadioButton( i18n( "&Selected contacts" ), mButtonGroup );
+  mUseSelection = new QRadioButton( i18n("&Selected contact", "&Selected contacts (%n selected)", mCore->selectedUIDs().count() ), mButtonGroup );
   QWhatsThis::add( mUseSelection, i18n( "Only export contacts selected in KAddressBook.\n"
                                         "This option is disabled if no contacts are selected." ) );
   groupLayout->addWidget( mUseSelection, 1, 0 );

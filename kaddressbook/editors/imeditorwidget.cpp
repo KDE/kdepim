@@ -149,7 +149,7 @@ IMEditorWidget::IMEditorWidget(QWidget *parent, const QString &preferredIM, cons
 	connect( mWidget->lvAddresses, SIGNAL( selectionChanged() ), SLOT( slotUpdateButtons() ) );
 
 	connect( mWidget->lvAddresses, SIGNAL( doubleClicked ( QListViewItem *, const QPoint &, int ) ),SLOT( slotEdit() ) );
-
+	setHelp("managing-contacts-im-addresses");
 	mWidget->btnEdit->setEnabled( false );
 	mWidget->btnDelete->setEnabled( false );
 	mWidget->btnSetStandard->setEnabled( false );
