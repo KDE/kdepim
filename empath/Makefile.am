@@ -59,7 +59,6 @@ empath_SOURCES = \
 	EmpathMailboxLocal.cpp \
 	EmpathMailboxMMDF.cpp \
 	EmpathMailboxMaildir.cpp \
-	EmpathMaildirIndex.cpp \
 	EmpathMailboxMbox.cpp \
 	EmpathMailboxNameDialog.cpp \
 	EmpathMailboxPOP3.cpp \
@@ -151,7 +150,6 @@ noinst_HEADERS = \
 	EmpathMailboxLocal.h \
 	EmpathMailboxMMDF.h \
 	EmpathMailboxMaildir.h \
-	EmpathMaildirIndex.h \
 	EmpathMailboxMbox.h \
 	EmpathMailboxNameDialog.h \
 	EmpathMailboxPOP3.h \

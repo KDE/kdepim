@@ -34,7 +34,7 @@ class RMessageComponent {
 		virtual ~RMessageComponent();
 
 		RMessageComponent & operator = (const QCString & s)
-		{ strRep_ = s; }
+		{ strRep_ = s; return *this; }
 		
 		RMessageComponent & operator = (const RMessageComponent & m);
 

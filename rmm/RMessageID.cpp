@@ -90,6 +90,7 @@ operator << (QDataStream & s, const RMessageID & mid)
 {
 	s << mid.localPart_;
 	s << mid.domain_;
+	return s;
 }
 	
 	const QCString &

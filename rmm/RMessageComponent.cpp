@@ -43,5 +43,6 @@ RMessageComponent::operator = (const RMessageComponent & m)
 {
 	rmmDebug("operator =");
 	strRep_ = m.strRep_;
+	return *this;
 }
 

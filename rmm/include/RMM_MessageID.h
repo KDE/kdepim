@@ -61,8 +61,8 @@ class RMessageID : public RHeaderBody {
 
 	private:
 
-		QCString domain_;
 		QCString localPart_;
+		QCString domain_;
 };
 
 #endif //RMESSAGEID_H

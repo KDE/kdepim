@@ -301,119 +301,119 @@ REnvelope::get(HeaderType h, T t)
 	RText &
 REnvelope::approved()
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderApproved, t);
 }
 
 	RAddressList &
 REnvelope::bcc()
 {
-	RAddressList * t;
+	RAddressList * t = 0;
 	return *get(HeaderBcc, t);
 }
 
 	RMailboxList &
 REnvelope::cc() 
 {
-	RMailboxList * t;
+	RMailboxList * t = 0;
 	return *get(HeaderCc, t);
 }
 
 	RText &
 REnvelope::comments() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderComments, t);
 }
 
 	RText &
 REnvelope::contentDescription() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderContentDescription, t);
 }
 
 	RDispositionType &
 REnvelope::contentDisposition() 
 {
-	RDispositionType * t;
+	RDispositionType * t = 0;
 	return *get(HeaderContentDisposition, t);
 }
 
 	RMessageID &
 REnvelope::contentID() 
 {
-	RMessageID * t;
+	RMessageID * t = 0;
 	return *get(HeaderContentID, t);
 }
 
 	RText &
 REnvelope::contentMD5() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderContentMD5, t);
 }
 
 	RText &
 REnvelope::contentType() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderContentType, t);
 }
 
 	RText &
 REnvelope::control() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderControl, t);
 }
 
 	RText &
 REnvelope::contentTransferEncoding() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderContentTransferEncoding, t);
 }
 
 	RDateTime &
 REnvelope::date() 
 {
-	RDateTime * t;
+	RDateTime * t = 0;
 	return *get(HeaderDate, t);
 }
 
 	RText &
 REnvelope::distribution() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderDistribution, t);
 }
 
 	RText &
 REnvelope::encrypted() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderEncrypted, t);
 }
 
 	RDateTime &
 REnvelope::expires() 
 {
-	RDateTime * t;
+	RDateTime * t = 0;
 	return *get(HeaderExpires, t);
 }
 
 	RText &
 REnvelope::followupTo() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderFollowupTo, t);
 }
 
 	RMailboxList &
 REnvelope::from() 
 {
-	RMailboxList * t;
+	RMailboxList * t = 0;
 	return *get(HeaderFrom, t);
 }
 
@@ -421,7 +421,8 @@ REnvelope::from()
 REnvelope::inReplyTo() 
 {
 	rmmDebug("inReplyTo() called");
-	RText * t = get(HeaderInReplyTo, t);
+	RText * t = 0;
+	t = get(HeaderInReplyTo, t);
 	rmmDebug("Returning from inReplyTo()");
 	return *t;
 }
@@ -429,168 +430,168 @@ REnvelope::inReplyTo()
 	RText &
 REnvelope::keywords() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderKeywords, t);
 }
 
 	RText &
 REnvelope::lines() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderLines, t);
 }
 
 	RMessageID &
 REnvelope::messageID() 
 {
-	RMessageID * t;
+	RMessageID * t = 0;
 	return *get(HeaderMessageID, t);
 }
 
 	RText &
 REnvelope::mimeVersion() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderMimeVersion, t);
 }
 
 	RText &
 REnvelope::newsgroups() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderNewsgroups, t);
 }
 
 	RText &
 REnvelope::organization() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderOrganization, t);
 }
 
 	RText &
 REnvelope::path() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderPath, t);
 }
 
 	RText &
 REnvelope::received() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderReceived, t);
 }
 
 	RText &
 REnvelope::references() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderReferences, t);
 }
 
 	RAddressList &
 REnvelope::replyTo() 
 {
-	RAddressList * t;
+	RAddressList * t = 0;
 	return *get(HeaderReplyTo, t);
 }
 
 	RAddressList &
 REnvelope::resentBcc() 
 {
-	RAddressList * t;
+	RAddressList * t = 0;
 	return *get(HeaderResentBcc, t);
 }
 
 	RAddressList &
 REnvelope::resentCc() 
 {
-	RAddressList * t;
+	RAddressList * t = 0;
 	return *get(HeaderResentCc, t);
 }
 
 	RDateTime &
 REnvelope::resentDate() 
 {
-	RDateTime * t;
+	RDateTime * t = 0;
 	return *get(HeaderResentDate, t);
 }
 
 	RMailboxList &
 REnvelope::resentFrom() 
 {
-	RMailboxList * t;
+	RMailboxList * t = 0;
 	return *get(HeaderResentFrom, t);
 }
 
 	RMessageID &
 REnvelope::resentMessageID() 
 {
-	RMessageID * t;
+	RMessageID * t = 0;
 	return *get(HeaderResentMessageID, t);
 }
 
 	RAddressList &
 REnvelope::resentReplyTo() 
 {
-	RAddressList * t;
+	RAddressList * t = 0;
 	return *get(HeaderResentReplyTo, t);
 }
 
 	RMailbox &
 REnvelope::resentSender() 
 {
-	RMailbox * t;
+	RMailbox * t = 0;
 	return *get(HeaderResentSender, t);
 }
 
 	RAddressList &
 REnvelope::resentTo() 
 {
-	RAddressList * t;
+	RAddressList * t = 0;
 	return *get(HeaderResentTo, t);
 }
 
 	RText &
 REnvelope::returnPath() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderReturnPath, t);
 }
 
 	RMailbox &
 REnvelope::sender() 
 {
-	RMailbox * t;
+	RMailbox * t = 0;
 	return *get(HeaderSender, t);
 }
 
 	RText &
 REnvelope::subject() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderSubject, t);
 }
 
 	RText &
 REnvelope::summary() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderSummary, t);
 }
 
 	RAddressList &
 REnvelope::to() 
 {
-	RAddressList * t;
+	RAddressList * t = 0;
 	return *get(HeaderTo, t);
 }
 
 	RText &
 REnvelope::xref() 
 {
-	RText * t;
+	RText * t = 0;
 	return *get(HeaderXref, t);
 }
 
