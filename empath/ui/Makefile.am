@@ -1,6 +1,6 @@
 KDE_CXXFLAGS = $(USE_RTTI)
 
-INCLUDES= $(all_includes) -I$(top_srcdir)/empath/rmm/include/ -I$(top_srcdir)/empath/lib/
+INCLUDES= $(all_includes) -I$(top_srcdir)/rmm/ -I$(top_srcdir)/empath/lib/
 
 noinst_LIBRARIES = libempathui.a
 

@@ -1,10 +1,6 @@
 #ifndef VIEWOPTIONS_H 
 #define VIEWOPTIONS_H 
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif 
-
 #include <qdialog.h>
 #include <qstring.h>
 #include <qcolor.h>

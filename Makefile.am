@@ -1,6 +1,8 @@
 ## kdebase/Makefile.am
 ## (C) 1997 Stephan Kulow
 
+SUBDIRS = ldif vCard rmm kab2 abbrowser empath
+
 AUTOMAKE_OPTIONS = foreign 1.4
 SUBDIRS = $(TOPSUBDIRS)
 DISTCLEANFILES = inst-apps

@@ -1,10 +1,6 @@
 #ifndef SELECTFIELDS_H 
 #define SELECTFIELDS_H 
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif 
-
 #include <qdialog.h>
 #include <qstringlist.h>
 #include <qwidget.h>

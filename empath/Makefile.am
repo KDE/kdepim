@@ -1,6 +1,7 @@
 KDE_CXXFLAGS = $(USE_RTTI)
 APPSDIR = $(kde_appsdir)/Internet
-INCLUDES= $(all_includes) -I$(top_srcdir)/empath/lib/ -I$(top_srcdir)/empath/ui/
+INCLUDES= $(all_includes) \
+	-I$(top_srcdir)/empath/lib/ -I$(top_srcdir)/empath/ui/ -I$(top_srcdir)/rmm/
 SUBDIRS = pics import lib ui
 
 bin_PROGRAMS = empath
@@ -8,7 +9,7 @@ bin_PROGRAMS = empath
 empath_SOURCES = main.cpp
 
 empath_LDADD = \
-	./ui/libempathui.a ./lib/libempath.a -lrmm \
+	./ui/libempathui.a ./lib/libempath.a -L$(top_srcdir)/rmm/ -lrmm \
 	$(LIB_KIO) $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE)
 
 empath_LDFLAGS = $(all_libraries) $(KDE_RPATH)
