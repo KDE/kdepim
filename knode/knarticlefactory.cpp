@@ -570,6 +570,10 @@ void KNArticleFactory::edit(KNLocalArticle *a)
     }
   }
 
+  //load article body
+  if(!a->hasContent())
+    knGlobals.artManager->loadArticle(a);
+
   //open composer
   com=new KNComposer(a, QString::null, id->getSignature());
   c_ompList.append(com);
