@@ -44,7 +44,15 @@ class CalendarResources : public Calendar
     /** constructs a new calendar, with variables initialized to sane values. */
     CalendarResources( const QString &timeZoneId );
     virtual ~CalendarResources();
-  
+
+    /**
+      Return ResourceManager used by this calendar.
+    */
+    KRES::ResourceManager<ResourceCalendar> *resourceManager() const
+    {
+      return mManager;
+    }
+
     /** clears out the current calendar, freeing all used memory etc. etc. */
     void close();
 
@@ -145,7 +153,6 @@ class CalendarResources : public Calendar
   private:
     void init();
 
-    QPtrList<ResourceCalendar> mResources;
     ResourceCalendar* mStandard;
     bool mOpen;
 

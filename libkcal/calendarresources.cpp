@@ -62,28 +62,26 @@ void CalendarResources::init()
   kdDebug(5800) << "CalendarResources::init" << endl;
 
   mManager = new KRES::ResourceManager<ResourceCalendar>( "calendar" );
-  mResources = mManager->resources( true ); // get active resources;
 
-  if ( mResources.count() == 0 ) {
+  if ( mManager->isEmpty() ) {
     QString fileName = locateLocal( "data", "kcal/std.ics" );
     ResourceCalendar *defaultResource = new ResourceLocal( fileName );
     defaultResource->setResourceName( i18n("Default calendar resource") );
     
     mManager->add( defaultResource );
     mManager->setStandardResource( defaultResource );
-
-    mResources.append( defaultResource );
   }
 
-  mStandard = mManager->standardResource();
-  if ( !mStandard )
-    kdDebug() << "FIXME: We don't have a standard resource. Adding events isn't going to work" << endl;
+  if ( !mManager->standardResource() ) {
+    kdDebug() << "FIXME: We don't have a standard resource. "
+              << "Adding events isn't going to work" << endl;
+  }
 
   // Open all active resources
-  ResourceCalendar *resource;
-  for ( resource = mResources.first(); resource; resource = mResources.next() ) {
-    kdDebug(5800) << "Opening resource " + resource->resourceName() << endl;
-    bool result = resource->open();
+  KRES::ResourceManager<ResourceCalendar>::Iterator it;
+  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+    kdDebug(5800) << "Opening resource " + (*it)->resourceName() << endl;
+    bool result = (*it)->open();
     // Really should remove resource if open not successful
   }
 
@@ -105,10 +103,9 @@ void CalendarResources::close()
   kdDebug(5800) << "CalendarResources::close" << endl;
 
   if ( mOpen ) {
-    ResourceCalendar *resource;
-    for ( resource = mResources.first(); resource;
-          resource = mResources.next() ) {
-      resource->close();
+    KRES::ResourceManager<ResourceCalendar>::Iterator it;
+    for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+      (*it)->close();
     }
 
     setModified( false );
@@ -121,10 +118,9 @@ void CalendarResources::sync()
   kdDebug(5800) << "CalendarResources::sync()" << endl;
 
   if ( mOpen ) {
-    ResourceCalendar *resource;
-    for ( resource = mResources.first(); resource;
-          resource = mResources.next() ) {
-      resource->sync();
+    KRES::ResourceManager<ResourceCalendar>::Iterator it;
+    for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+      (*it)->sync();
     }
 
     setModified( false );
@@ -148,9 +144,10 @@ void CalendarResources::deleteEvent(Event *event)
 {
   kdDebug(5800) << "CalendarResources::deleteEvent" << endl;
 
-  ResourceCalendar *resource;
-  for ( resource = mResources.first(); resource; resource = mResources.next() ) 
-    resource->deleteEvent( event );
+  KRES::ResourceManager<ResourceCalendar>::Iterator it;
+  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+    (*it)->deleteEvent( event );
+  }
 
   setModified( true );
 }
@@ -160,9 +157,9 @@ Event *CalendarResources::event( const QString &uid )
 {
 //  kdDebug(5800) << "CalendarResources::event(): " << uid << endl;
 
-  ResourceCalendar *resource;
-  for ( resource = mResources.first(); resource; resource = mResources.next() ) {
-    Event* event = resource->event( uid );
+  KRES::ResourceManager<ResourceCalendar>::Iterator it;
+  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+    Event* event = (*it)->event( uid );
     if ( event ) return event;
   }
 
@@ -187,9 +184,10 @@ void CalendarResources::deleteTodo(Todo *todo)
 {
   kdDebug(5800) << "CalendarResources::deleteTodo" << endl;
 
-  ResourceCalendar *resource;
-  for ( resource = mResources.first(); resource; resource = mResources.next() ) 
-    resource->deleteTodo( todo );
+  KRES::ResourceManager<ResourceCalendar>::Iterator it;
+  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+    (*it)->deleteTodo( todo );
+  }
 
   setModified( true );
 }
@@ -200,13 +198,11 @@ QPtrList<Todo> CalendarResources::rawTodos() const
 
   QPtrList<Todo> result;
 
-  ResourceCalendar *resource;
-  QPtrListIterator<ResourceCalendar> it( mResources );
-  while ( ( resource = it.current() ) != 0 ) {
-    ++it;
-    kdDebug(5800) << "Getting raw todos from " << resource->resourceName() << endl;
-    QPtrList<Todo> todos = resource->rawTodos();
-    Todo* todo;
+  KRES::ResourceManager<ResourceCalendar>::Iterator it;
+  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+    kdDebug(5800) << "Getting raw todos from " << (*it)->resourceName() << endl;
+    QPtrList<Todo> todos = (*it)->rawTodos();
+    Todo *todo;
     for ( todo = todos.first(); todo; todo = todos.next() ) {
       kdDebug(5800) << "Adding todo to result" << endl;
       result.append( todo );
@@ -220,9 +216,9 @@ Todo *CalendarResources::todo( const QString &uid )
 {
   kdDebug(5800) << "CalendarResources::todo(uid)" << endl;
 
-  ResourceCalendar *resource;
-  for ( resource = mResources.first(); resource; resource = mResources.next() ) {
-    Todo* todo = resource->todo( uid );
+  KRES::ResourceManager<ResourceCalendar>::Iterator it;
+  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+    Todo *todo = (*it)->todo( uid );
     if ( todo ) return todo;
   }
 
@@ -236,9 +232,9 @@ QPtrList<Todo> CalendarResources::todos( const QDate &date )
 
   QPtrList<Todo> result;
 
-  ResourceCalendar *resource;
-  for ( resource = mResources.first(); resource; resource = mResources.next() ) {
-    QPtrList<Todo> todos = resource->todos( date );
+  KRES::ResourceManager<ResourceCalendar>::Iterator it;
+  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+    QPtrList<Todo> todos = (*it)->todos( date );
     Todo* todo;
     for ( todo = todos.first(); todo; todo = todos.next() )
       result.append( todo );
@@ -252,9 +248,10 @@ int CalendarResources::numEvents(const QDate &qd)
   kdDebug(5800) << "CalendarResources::numEvents" << endl;
 
   int count = 0;
-  ResourceCalendar *resource;
-  for ( resource = mResources.first(); resource; resource = mResources.next() ) 
-    count += resource->numEvents( qd );
+  KRES::ResourceManager<ResourceCalendar>::Iterator it;
+  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+    count += (*it)->numEvents( qd );
+  }
   return count;
 }
 
@@ -264,9 +261,9 @@ Alarm::List CalendarResources::alarmsTo( const QDateTime &to )
   kdDebug(5800) << "CalendarResources::alarmsTo" << endl;
 
   Alarm::List result;
-  ResourceCalendar *resource;
-  for ( resource = mResources.first(); resource; resource = mResources.next() ) {
-    Alarm::List list = resource->alarmsTo( to );
+  KRES::ResourceManager<ResourceCalendar>::Iterator it;
+  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+    Alarm::List list = (*it)->alarmsTo( to );
     Alarm::List::iterator it;
     for ( it = list.begin(); it != list.end(); ++it )
       result.append( *it );
@@ -279,9 +276,9 @@ Alarm::List CalendarResources::alarms( const QDateTime &from, const QDateTime &t
   kdDebug(5800) << "CalendarResources::alarms(" << from.toString() << " - " << to.toString() << ")\n";
 
   Alarm::List result;
-  ResourceCalendar *resource;
-  for ( resource = mResources.first(); resource; resource = mResources.next() ) {
-    Alarm::List list = resource->alarms( from, to );
+  KRES::ResourceManager<ResourceCalendar>::Iterator it;
+  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+    Alarm::List list = (*it)->alarms( from, to );
     Alarm::List::iterator it;
     for ( it = list.begin(); it != list.end(); ++it )
       result.append( *it );
@@ -299,10 +296,10 @@ QPtrList<Event> CalendarResources::rawEventsForDate(const QDate &qd, bool sorted
   // kdDebug(5800) << "CalendarResources::rawEventsForDate" << endl;
 
   QPtrList<Event> result;
-  ResourceCalendar *resource;
-  for ( resource = mResources.first(); resource; resource = mResources.next() ) {
+  KRES::ResourceManager<ResourceCalendar>::Iterator it;
+  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
     // kdDebug() << "Getting events from " << resource->resourceName() << endl;
-    QPtrList<Event> list = resource->rawEventsForDate( qd, sorted );
+    QPtrList<Event> list = (*it)->rawEventsForDate( qd, sorted );
     if ( sorted ) {
       Event* item;
       uint insertionPoint = 0;
@@ -328,9 +325,9 @@ QPtrList<Event> CalendarResources::rawEvents( const QDate &start, const QDate &e
   kdDebug(5800) << "CalendarResources::rawEvents(start,end,inclusive)" << endl;
 
   QPtrList<Event> result;
-  ResourceCalendar *resource;
-  for ( resource = mResources.first(); resource; resource = mResources.next() ) {
-    QPtrList<Event> list = resource->rawEvents( start, end, inclusive );
+  KRES::ResourceManager<ResourceCalendar>::Iterator it;
+  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+    QPtrList<Event> list = (*it)->rawEvents( start, end, inclusive );
     Event* item;
     for ( item = list.first(); item; item = list.next() ) {
       result.append( item );
@@ -344,9 +341,9 @@ QPtrList<Event> CalendarResources::rawEventsForDate(const QDateTime &qdt)
   kdDebug(5800) << "CalendarResources::rawEventsForDate(qdt)" << endl;
 
   QPtrList<Event> result;
-  ResourceCalendar *resource;
-  for ( resource = mResources.first(); resource; resource = mResources.next() ) {
-    QPtrList<Event> list = resource->rawEventsForDate( qdt );
+  KRES::ResourceManager<ResourceCalendar>::Iterator it;
+  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+    QPtrList<Event> list = (*it)->rawEventsForDate( qdt );
     Event* item;
     for ( item = list.first(); item; item = list.next() ) {
       result.append( item );
@@ -360,9 +357,9 @@ QPtrList<Event> CalendarResources::rawEvents()
   kdDebug(5800) << "CalendarResources::rawEvents()" << endl;
 
   QPtrList<Event> result;
-  ResourceCalendar *resource;
-  for ( resource = mResources.first(); resource; resource = mResources.next() ) {
-    QPtrList<Event> list = resource->rawEvents();
+  KRES::ResourceManager<ResourceCalendar>::Iterator it;
+  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+    QPtrList<Event> list = (*it)->rawEvents();
     Event* item;
     for ( item = list.first(); item; item = list.next() ) {
       result.append( item );
@@ -398,9 +395,9 @@ Journal *CalendarResources::journal(const QDate &date)
     Journal* journal = mStandard->journal( date );
     if ( journal ) return journal;
   } 
-  ResourceCalendar *resource;
-  for ( resource = mResources.first(); resource; resource = mResources.next() ) {
-    Journal* journal = resource->journal( date );
+  KRES::ResourceManager<ResourceCalendar>::Iterator it;
+  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+    Journal* journal = (*it)->journal( date );
     if ( journal ) return journal;
   }
 
@@ -411,9 +408,9 @@ Journal *CalendarResources::journal(const QString &uid)
 {
   kdDebug(5800) << "CalendarResources::journal(uid)" << endl;
 
-  ResourceCalendar *resource;
-  for ( resource = mResources.first(); resource; resource = mResources.next() ) {
-    Journal* journal = resource->journal( uid );
+  KRES::ResourceManager<ResourceCalendar>::Iterator it;
+  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+    Journal* journal = (*it)->journal( uid );
     if ( journal ) return journal;
   }
 
@@ -426,9 +423,9 @@ QPtrList<Journal> CalendarResources::journals()
   kdDebug(5800) << "CalendarResources::journals()" << endl;
 
   QPtrList<Journal> result;
-  ResourceCalendar *resource;
-  for ( resource = mResources.first(); resource; resource = mResources.next() ) {
-    QPtrList<Journal> list = resource->journals();
+  KRES::ResourceManager<ResourceCalendar>::Iterator it;
+  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+    QPtrList<Journal> list = (*it)->journals();
     Journal* item;
     for ( item = list.first(); item; item = list.next() ) {
       result.append( item );
