@@ -1,9 +1,7 @@
-noinst_LTLIBRARIES = libprinter.la
-
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kaddressbook \
            -I$(top_srcdir)/kaddressbook/details $(all_includes) 
 
-libprinter_la_METASOURCES = AUTO
+noinst_LTLIBRARIES = libprinter.la
 
 libprinter_la_SOURCES = \
 	detailledstyle.cpp  \
@@ -27,6 +25,7 @@ EXTRA_DIST = \
 	selectionpage.cpp selectionpage.h \
 	stylepage.cpp stylepage.h
 
-preview_DATA = detailed-style.png mike-style.png ringbinder-style.png
+libprinter_la_METASOURCES = AUTO
 
 previewdir = $(kde_datadir)/kaddressbook/printing
+preview_DATA = detailed-style.png mike-style.png ringbinder-style.png
