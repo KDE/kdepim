@@ -100,9 +100,9 @@ void OverviewWidget::setLogo(QPixmap image0) {
 
 NewProgress::NewProgress( QPixmap &icon,
 			  QString text,
-			  QWidget* parent = 0,
-			  const char* name = 0,
-			  WFlags fl = 0) : QWidget(parent, name, fl) {
+			  QWidget* parent,
+			  const char* name,
+			  WFlags fl) : QWidget(parent, name, fl) {
 
     progressItemPix = new QLabel( this, "progressItemPix" );
     progressItemPix->setGeometry( QRect ( 20, 0, 20, 20) );
