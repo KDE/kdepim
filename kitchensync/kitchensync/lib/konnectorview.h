@@ -34,11 +34,16 @@ class KonnectorView : public QWidget
 
   public:
     KonnectorView( QWidget *parent, const char *name = 0 );
-    
+
+    //@{
+    void setSelectedKonnectors(const QStringList&);
+    QStringList selectedKonnectorsList()const;
+    //@}
+
     Konnector::List selectedKonnectors();
 
     void updateKonnectorList();
-    
+
   private:
     KListView *mKonnectorList;
 };
