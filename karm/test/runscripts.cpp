@@ -75,8 +75,12 @@ int runscripts
   {
     s->addArgument( interpreter );
     s->addArgument( path + QDir::separator() + fi->fileName().latin1() );
-    ++it;
+
+    // Thorsten's xautomation tests run with user interaction by default.
+    if ( interpreter == "sh" ) s->addArgument( "--batch" );
+
     rval = s->run();
+    ++it;
   }
   delete s;
   s = 0;
