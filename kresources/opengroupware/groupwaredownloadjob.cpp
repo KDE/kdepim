@@ -49,6 +49,8 @@ GroupwareDownloadJob::GroupwareDownloadJob( GroupwareDataAdaptor *adaptor )
 
 void GroupwareDownloadJob::run()
 {
+  kdDebug() << "GroupwareDownloadJob::run()" << endl;
+
   mFoldersForDownload = adaptor()->folderLister()->activeFolderIds();
 
   mItemsForDownload.clear();

@@ -154,7 +154,7 @@ bool ResourceOpenGroupware::asyncLoad()
 
   mDownloadJob = new KPIM::GroupwareDownloadJob( mAdaptor );
   connect( mDownloadJob, SIGNAL( result( KPIM::GroupwareJob * ) ),
-    SLOT( slotJobResult( KPIM::GroupwareJob * ) ) );
+    SLOT( slotDownloadJobResult( KPIM::GroupwareJob * ) ) );
 
   return true;
 }
