@@ -350,9 +350,9 @@ class KScoringManager : public QObject
   void save();
 
   //--------------- Properties
-  virtual bool canScores() { return true; }
-  virtual bool canNotes() { return true; }
-  virtual bool canColors() { return false; }
+  virtual bool canScores() const { return true; }
+  virtual bool canNotes() const { return true; }
+  virtual bool canColors() const { return false; }
   virtual bool hasFeature(int);
 
  signals:
