@@ -28,7 +28,7 @@ class KConfig;
 namespace KSPlucker {
 class PluckerConfig 
 {
-    template<class> friend class ::KStaticDeleter;
+    friend class ::KStaticDeleter<PluckerConfig>;
     PluckerConfig();
     ~PluckerConfig();
 public:
