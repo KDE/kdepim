@@ -1,4 +1,5 @@
 debian/tmp/usr/include/kde/libkcal
+debian/tmp/usr/lib/libkcal.a
 debian/tmp/usr/lib/libkcal.la
 debian/tmp/usr/lib/libkcal.so
 debian/tmp/usr/lib/libkcal_imap.a

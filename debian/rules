@@ -12,7 +12,8 @@ DEB_KDE_APIDOX := yes
 DEB_CONFIGURE_EXTRA_FLAGS := --enable-shared --enable-static
 
 post-patches:: debian/stamp-libtool-update debian/stamp-karm-doc-uu \
-	debian/stamp-kontact-icons-uu
+	debian/stamp-kontact-doc-uu debian/stamp-kontact-icons-uu \
+	debian/stamp-kpilot-splash-uu
 
 debian/stamp-libtool-update:
 	cp -f /usr/share/libtool/libtool.m4 admin/libtool.m4.in
@@ -25,11 +26,23 @@ debian/stamp-karm-doc-uu:
 	fi
 	touch debian/stamp-karm-doc-uu
 
+debian/stamp-kontact-doc-uu:
+	if test -f debian/patches/kontact_doc.tar.gz.uu; then \
+		uudecode -o - debian/patches/kontact_doc.tar.gz.uu | tar xfz -; \
+	fi
+	touch debian/stamp-kontact-doc-uu
+
 debian/stamp-kontact-icons-uu:
 	if test -f debian/patches/kontact_icons.tar.gz.uu; then \
 		uudecode -o - debian/patches/kontact_icons.tar.gz.uu | tar xfz -; \
 	fi
 	touch debian/stamp-kontact-icons-uu
+
+debian/stamp-kpilot-splash-uu:
+	if test -f debian/patches/kpilot_splash.tar.gz.uu; then \
+		uudecode -o - debian/patches/kpilot_splash.tar.gz.uu | tar xfz -; \
+	fi
+	touch debian/stamp-kpilot-splash-uu
 
 common-build-arch:: debian/stamp-man-pages
 debian/stamp-man-pages:
@@ -42,14 +55,17 @@ debian/stamp-man-pages:
 
 clean::
 	rm -f debian/man/*.1
-	if test -f debian/patches/karm_doc.tar.gz.uu; then \
-		rm -f `uudecode -o - debian/patches/karm_doc.tar.gz.uu | tar tfz -`; \
-	fi
-	if test -f debian/patches/kontact_icons.tar.gz.uu; then \
-		rm -f `uudecode -o - debian/patches/kontact_icons.tar.gz.uu | tar tfz -`; \
-	fi
+	for tgzuu in debian/patches/karm_doc.tar.gz.uu \
+		debian/patches/kontact_doc.tar.gz.uu \
+		debian/patches/kontact_icons.tar.gz.uu \
+		debian/patches/kpilot_splash.tar.gz.uu; do \
+		if test -f $$tgzuu; then \
+			rm -f `uudecode -o - $$tgzuu | tar tfz -`; \
+		fi; \
+	done
+	rm -f debian/stamp-karm-doc-uu debian/stamp-kontact-doc-uu \
+		debian/stamp-kontact-icons-uu debian/stamp-kpilot-splash-uu
 	rm -f debian/stamp-libtool-update debian/stamp-man-pages
-	rm -f debian/stamp-karm-doc-uu debian/stamp-kontact-icons-uu
 	rm -f admin/libtool.m4.in admin/ltmain.sh
 
 DEB_INSTALL_DOCS_ALL :=

@@ -3,7 +3,7 @@ Section: kde
 Priority: optional
 Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
 Uploaders: Christopher L Cheney <ccheney@debian.org>, Daniel Schepler <schepler@debian.org>
-Build-Depends: autoconf, automake1.8, bison, byacc, debhelper (>> 4.2.0), docbook-to-man, flex, gawk, gettext, kdelibs4-dev (>> 4:3.2.92), libbluetooth1-dev, libgnokii2-dev (>= 0.6.3-3), libgpgme11-dev, liblockdev1-dev, libmal-dev, libpisock-dev, libreadline4-dev, libtool, sharutils, texinfo
+Build-Depends: autoconf, automake1.8, bison, byacc, cdbs, debhelper (>> 4.2.0), docbook-to-man, flex, gawk, gettext, kdelibs4-dev (>> 4:3.2.92), libbluetooth1-dev, libgnokii2-dev (>= 0.6.3-3), libgpgme11-dev, liblockdev1-dev, libmal-dev, libpisock-dev, libreadline4-dev, libtool, sharutils, texinfo
 Build-Depends-Indep: doxygen, qt3-doc, kdelibs4-doc
 Standards-Version: 3.6.1.0
 
@@ -33,6 +33,7 @@ Description: KDE Personal Information Management [development]
 Package: kdepim-doc
 Section: doc
 Architecture: all
+Suggests: www-browser, doc-base
 Description: KDE Personal Information Management library documentation
  KDE core library documentation. You need this documentation to develop KDE PIM
  applications.
@@ -42,7 +43,7 @@ Description: KDE Personal Information Management library documentation
 Package: kdepim-doc-html
 Section: doc
 Architecture: all
-Suggests: www-browser
+Suggests: www-browser, doc-base
 Description: KDE PIM documentation in HTML format
  By default the Personal Information Management applications provided with
  KDE only provide their documentation in KDE docbook format, which can only

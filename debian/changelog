@@ -1,4 +1,4 @@
-kdepim (4:3.2.92-1) experimental; urgency=low
+kdepim (4:3.2.92+3.3.0rc1-1) experimental; urgency=low
 
   * New upstream release.
     + New packages: kdepim-wizards, kitchensync, libkleopatra0[-dev],
@@ -18,7 +18,7 @@ kdepim (4:3.2.92-1) experimental; urgency=low
   * Add doc-base files for kdepim-doc and kdepim-doc-html.
   * Write new manual pages for all binaries.
 
- -- Daniel Schepler <schepler@debian.org>  Sat,  7 Aug 2004 22:48:04 -0700
+ -- Daniel Schepler <schepler@debian.org>  Sat,  7 Aug 2004 23:20:22 -0700
 
 kdepim (4:3.2.3-1) unstable; urgency=high
 

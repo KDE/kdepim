@@ -95,7 +95,6 @@ binary-install/$(DEB_SOURCE_PACKAGE)-doc-html::
 	  mkdir -p $(CURDIR)/debian/$(DEB_SOURCE_PACKAGE)-doc-html/usr/share/doc/kde/HTML/en/$$pkg; \
 	  cd $(CURDIR)/debian/$(DEB_SOURCE_PACKAGE)-doc-html/usr/share/doc/kde/HTML/en/$$pkg; \
 	  meinproc $(CURDIR)/debian/tmp/usr/share/doc/kde/HTML/en/$$pkg/index.docbook; \
-	fi; \
 	done
 
 endif

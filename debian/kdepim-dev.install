@@ -30,10 +30,13 @@ debian/tmp/usr/lib/libkabc_slox.so
 debian/tmp/usr/lib/libkabc_xmlrpc.a
 debian/tmp/usr/lib/libkabc_xmlrpc.la
 debian/tmp/usr/lib/libkabc_xmlrpc.so
+debian/tmp/usr/lib/libkabinterfaces.a
 debian/tmp/usr/lib/libkabinterfaces.la
 debian/tmp/usr/lib/libkabinterfaces.so
+debian/tmp/usr/lib/libkaddressbook.a
 debian/tmp/usr/lib/libkaddressbook.la
 debian/tmp/usr/lib/libkaddressbook.so
+debian/tmp/usr/lib/libkalarmd.a
 debian/tmp/usr/lib/libkalarmd.la
 debian/tmp/usr/lib/libkalarmd.so
 debian/tmp/usr/lib/libkdenetwork.a
@@ -60,6 +63,7 @@ debian/tmp/usr/lib/libknotes_xmlrpc.so
 debian/tmp/usr/lib/libkonnector.a
 debian/tmp/usr/lib/libkonnector.la
 debian/tmp/usr/lib/libkonnector.so
+debian/tmp/usr/lib/libkontact.a
 debian/tmp/usr/lib/libkontact.la
 debian/tmp/usr/lib/libkontact.so
 debian/tmp/usr/lib/libkorganizer.a
