@@ -30,9 +30,7 @@ static const char *pilotMemo_id =
 
 #include "options.h"
 
-// #include <iostream>
-// #include <pi-memo.h>
-// #include <klocale.h>
+#include <qtextcodec.h>
 
 #include "pilotMemo.h"
 
@@ -51,7 +49,6 @@ void PilotMemo::unpack(const void *text, int firstTime)
 	if (!firstTime && fText)
 	{
 		delete fText;
-		delete fTitle;
 	}
 
 	fSize = strlen((const char *) text) + 1;
@@ -63,10 +60,11 @@ void PilotMemo::unpack(const void *text, int firstTime)
 
 	while (fText[memoTitleLen] && (fText[memoTitleLen] != '\n'))
 		memoTitleLen++;
-	fTitle = new char[memoTitleLen + 1];
-
-	strncpy(fTitle, fText, memoTitleLen);
-	fTitle[memoTitleLen] = 0;
+	// Null-terminate for a moment so that toUnicode() works.
+	char c = fText[memoTitleLen];
+	fText[memoTitleLen]=0;
+	fTitle = codec()->toUnicode(fText);
+	fText[memoTitleLen]=c;
 }
 
 // The indirection just to make the base class happy
@@ -112,41 +110,14 @@ QString PilotMemo::shortTitle() const
 QString PilotMemo::sensibleTitle() const
 {
 	FUNCTIONSETUP;
-	const char *s = getTitle();
+	QString s = getTitle();
 
-	if (s && *s)
+	if (!s.isEmpty())
 	{
-		return QString(s);
+		return s;
 	}
 	else
 	{
 		return QString(i18n("[unknown]"));
 	}
 }
-
-
-// $Log$
-// Revision 1.2  2002/08/20 21:18:31  adridg
-// License change in lib/ to allow plugins -- which use the interfaces and
-// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
-// allow the use of libmal which is MPL.
-//
-// Revision 1.1  2001/10/10 21:47:14  adridg
-// Shared files moved from ../kpilot/ and polished
-//
-// Revision 1.10  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.9  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.8  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.7  2001/02/07 14:21:54  brianj
-// Changed all include definitions for libpisock headers
-// to use include path, which is defined in Makefile.
-//
-// Revision 1.6  2001/02/05 20:58:48  adridg
-// Fixed copyright headers for source releases. No code changed
-//

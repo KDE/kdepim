@@ -42,6 +42,8 @@
 #include "config.h"
 #endif
 
+// #define QT_NO_ASCII_CAST		(1)
+
 #ifndef QT_VERSION
 #include <qglobal.h>
 #endif
@@ -51,7 +53,7 @@
 #endif
 
 #ifndef KDE_VERSION
-#include <kapplication.h>
+#include <kdeversion.h>
 #endif
 
 #if KDE_VERSION > 289
@@ -74,12 +76,16 @@
 #define DEBUGFUNC	kdDebug()
 #endif
 
+// For ostream
 #include <iostream>
+// For QString, and everything else needs it anyway.
 #include <qstring.h>
-#include <qstrlist.h>
+// Dunno, really. Probably because everything needs it.
 #include <klocale.h>
+// For the debug stuff.
 #include <kdebug.h>
 
+using namespace std;
 
 using namespace std;
 
@@ -225,5 +231,11 @@ kndbgstream& operator << (kndbgstream&,const QSize &);
 
 #define TODO_I18N(a) a
 
+
+// This marks strings that need to be i18n()ed in future,
+// but cannot be done now due to message freeze.
+//
+//
+#define TODO_I18N(a)	QString::fromLatin1(a)
 
 #endif

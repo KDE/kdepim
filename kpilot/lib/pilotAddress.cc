@@ -51,7 +51,7 @@ PilotAddress::PilotAddress(struct AddressAppInfo &appInfo,
 	fAppInfo(appInfo),
 	fAddressInfo()
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	if (rec) unpack_Address(&fAddressInfo, (unsigned char *) rec->getData(), rec->getLen());
 	(void) pilotadress_id;
 }
@@ -60,7 +60,7 @@ PilotAddress::PilotAddress(struct AddressAppInfo &appInfo) :
 	PilotAppCategory(),
 	fAppInfo(appInfo)
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	reset();
 
 	// assign the phoneLabel so it doesn't appear in the pilot as
@@ -77,20 +77,20 @@ PilotAddress::PilotAddress(const PilotAddress & copyFrom) :
 	fAppInfo(copyFrom.fAppInfo), 
 	fAddressInfo()
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	_copyAddressInfo(copyFrom.fAddressInfo);
 }
 
 PilotAddress & PilotAddress::operator = (const PilotAddress & copyFrom)
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	PilotAppCategory::operator = (copyFrom);
 	_copyAddressInfo(copyFrom.fAddressInfo);
 	return *this;
 }
 
 bool PilotAddress::operator==(const PilotAddress &compareTo) {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	// call == of PilotAppCategory to compare the Pilot ID, the category and the attributes. 
 	if (! (dynamic_cast<PilotAppCategory*>(this))->operator==(compareTo) ) return false;
 	
@@ -108,7 +108,7 @@ bool PilotAddress::operator==(const PilotAddress &compareTo) {
 
 void PilotAddress::_copyAddressInfo(const struct Address &copyFrom)
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	fAddressInfo.showPhone = copyFrom.showPhone;
 
 	for (int labelLp = 0; labelLp < 5; labelLp++)
@@ -130,13 +130,13 @@ void PilotAddress::_copyAddressInfo(const struct Address &copyFrom)
 
 PilotAddress::~PilotAddress()
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	free_Address(&fAddressInfo);
 }
 
 bool PilotAddress::setCategory(const char *label)
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	for (int catId = 0; catId < 16; catId++)
 	{
 		QString aCat = fAppInfo.category.name[catId];
@@ -161,7 +161,7 @@ bool PilotAddress::setCategory(const char *label)
 
 int PilotAddress::_getNextEmptyPhoneSlot() const
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	for (int phoneSlot = entryPhone1; phoneSlot <= entryPhone5;
 		phoneSlot++)
 	{
@@ -176,7 +176,7 @@ int PilotAddress::_getNextEmptyPhoneSlot() const
 void PilotAddress::setPhoneField(EPhoneType type, const char *field,
 	bool overflowCustom)
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	// first look to see if the type is already assigned to a fieldSlot
 	//QString typeStr(_typeToStr(type));
 	//int appPhoneLabelNum = _getAppPhoneLabelNum(typeStr);
@@ -210,7 +210,7 @@ void PilotAddress::setPhoneField(EPhoneType type, const char *field,
 
 int PilotAddress::_findPhoneFieldSlot(int appTypeNum) const
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	for (int index = 0; index < 5; index++)
 	{
 		if (fAddressInfo.phoneLabel[index] == appTypeNum)
@@ -222,7 +222,7 @@ int PilotAddress::_findPhoneFieldSlot(int appTypeNum) const
 
 const char *PilotAddress::getPhoneField(EPhoneType type, bool checkCustom4) const
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	// given the type, need to find which slot is associated with it
 	//QString typeToStr(_typeToStr(type));
 	//int appTypeNum = _getAppPhoneLabelNum(typeToStr);
@@ -262,7 +262,7 @@ const char *PilotAddress::getPhoneField(EPhoneType type, bool checkCustom4) cons
 
 int PilotAddress::_getAppPhoneLabelNum(const QString & phoneType) const
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	for (int index = 0; index < 8; index++)
 	{
 		if (phoneType == fAppInfo.phoneLabels[index])
@@ -274,7 +274,7 @@ int PilotAddress::_getAppPhoneLabelNum(const QString & phoneType) const
 
 void PilotAddress::setShownPhone(EPhoneType type)
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	int appPhoneLabelNum = (int) type;
 	int fieldSlot = _findPhoneFieldSlot(appPhoneLabelNum);
 
@@ -292,7 +292,7 @@ void PilotAddress::setShownPhone(EPhoneType type)
 
 void PilotAddress::setField(int field, const char *text)
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	// This will have either been created with unpack_Address, and/or will
 	// be released with free_Address, so use malloc/free here:
 	if (fAddressInfo.entry[field])
@@ -311,7 +311,7 @@ void PilotAddress::setField(int field, const char *text)
 
 void *PilotAddress::pack(void *buf, int *len)
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(4);
 	int i;
 
 	i = pack_Address(&fAddressInfo, (unsigned char *) buf, *len);
@@ -319,70 +319,3 @@ void *PilotAddress::pack(void *buf, int *len)
 	return buf;
 }
 
-// $Log$
-// Revision 1.5  2002/12/08 14:09:24  waba
-// Some cleanup
-//
-// Revision 1.4  2002/08/20 21:18:31  adridg
-// License change in lib/ to allow plugins -- which use the interfaces and
-// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
-// allow the use of libmal which is MPL.
-//
-// Revision 1.3  2002/06/30 22:21:05  kainhofe
-// some more checks for NULL strings
-//
-// Revision 1.2  2002/06/30 14:49:53  kainhofe
-// added a function idList, some minor bug fixes
-//
-// Revision 1.1  2001/10/10 22:01:24  adridg
-// Moved from ../kpilot/, shared files
-//
-// Revision 1.21  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.20  2001/05/07 22:14:47  stern
-// Fixed phone localization bug
-//
-// Revision 1.19  2001/05/07 19:26:41  adridg
-// Possible fix for abbrowser phone label corruption
-//
-// Revision 1.18  2001/04/16 13:54:17  adridg
-// --enable-final file inclusion fixups
-//
-// Revision 1.17  2001/04/13 22:13:38  stern
-// Added setShownPhoneField method
-//
-// Revision 1.16  2001/04/11 16:45:03  stern
-// Fixed bug in copying an address
-//
-// Revision 1.15  2001/04/11 11:02:37  leitner
-// A void function must not return anything. Also there was an uninitialize
-// variable being used.
-//
-// Revision 1.14  2001/04/04 21:20:32  stern
-// Added support for category information and copy constructors
-//
-// Revision 1.13  2001/04/02 21:56:22  stern
-// Fixed bugs in getPhoneField and setPhoneField methods
-//
-// Revision 1.12  2001/03/29 21:40:55  stern
-// Added APP_BUFFER_SIZE to pilotAddress
-//
-// Revision 1.11  2001/03/19 23:12:39  stern
-// Made changes necessary for upcoming abbrowser conduit.
-//
-// Mainly, I added two public methods to PilotAddress that allow for easier
-// setting and getting of phone fields.
-//
-// I also have added some documentation throughout as I have tried to figure
-// out how everything works.
-//
-// Revision 1.10  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.9  2001/02/08 08:13:44  habenich
-// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
-//
-// Revision 1.8  2001/02/05 20:58:48  adridg
-// Fixed copyright headers for source releases. No code changed
-//

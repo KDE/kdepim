@@ -95,7 +95,7 @@ protected:
 	KConfig *fConfig;
 	PilotDatabase *fDatabase,*fLocalDatabase;
 
-	bool openDatabases(const char *dbName, bool*retrieved=0L);
+	bool openDatabases(const QString &dbName, bool*retrieved=0L);
 	
 private:
 	bool fTest;	// Do some kind of test run on the pilot
@@ -182,31 +182,5 @@ public:
 * } ;
 * </pre>
 */
-
-// $Log$
-// Revision 1.7  2002/06/08 16:33:43  kainhofe
-// openDatabases fetches the database from the palm if it doesn't exist. openDatabases has an additional (optional) parameter (bool*) retrieved which is set to true if the database had to be downloaded from the handheld
-//
-// Revision 1.6  2002/05/19 15:01:50  adridg
-// Patches for the KNotes conduit
-//
-// Revision 1.5  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.4.2.1  2002/05/09 22:29:33  adridg
-// Various small things not important for the release
-//
-// Revision 1.4  2002/01/21 23:14:03  adridg
-// Old code removed; extra abstractions added; utility extended
-//
-// Revision 1.3  2001/12/28 12:55:24  adridg
-// Fixed email addresses; added isBackup() to interface
-//
-// Revision 1.2  2001/10/17 08:46:08  adridg
-// Minor cleanups
-//
-// Revision 1.1  2001/10/08 21:56:02  adridg
-// Start of making a separate KPilot lib
-//
 
 #endif

@@ -28,12 +28,7 @@
 */
 #include "options.h"
 
-#include "pilotSerialDatabase.h"
-
-#include <ctime>
-#include <iostream>
-
-#include <qfile.h>
+#include <time.h>
 
 #include <pi-dlp.h>
 
@@ -337,50 +332,3 @@ int PilotSerialDatabase::deleteDatabase()
 }
 
 
-// $Log$
-// Revision 1.8  2002/12/31 00:32:15  kainhofe
-// Added function deleteDatabase to the Pilot*Database classes
-//
-// Revision 1.7  2002/12/13 16:26:09  kainhofe
-// Added default args to readNextModifiedRec, and findDatabase, new functions: deleteRecord and createDatabase
-//
-// Revision 1.6  2002/12/08 14:09:24  waba
-// Some cleanup
-//
-// Revision 1.5  2002/08/20 21:18:31  adridg
-// License change in lib/ to allow plugins -- which use the interfaces and
-// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
-// allow the use of libmal which is MPL.
-//
-// Revision 1.4  2002/06/30 14:49:53  kainhofe
-// added a function idList, some minor bug fixes
-//
-// Revision 1.3  2002/06/07 07:13:25  adridg
-// Make VCal conduit use base-class fDatabase and fLocalDatabase (hack).
-// Extend *Database classes with dbPathName() for consistency.
-//
-// Revision 1.2  2002/05/22 20:40:13  adridg
-// Renaming for sensibility
-//
-// Revision 1.1  2001/10/10 22:01:24  adridg
-// Moved from ../kpilot/, shared files
-//
-// Revision 1.13  2001/09/16 13:37:48  adridg
-// Large-scale restructuring
-//
-// Revision 1.12  2001/04/16 13:54:17  adridg
-// --enable-final file inclusion fixups
-//
-// Revision 1.11  2001/03/27 23:54:43  stern
-// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
-//
-// Revision 1.10  2001/03/27 11:10:39  leitner
-// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
-// #ifdef DEBUG because qstringExpand etc. were not defined.
-//
-// Revision 1.9  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.8  2001/02/05 20:58:48  adridg
-// Fixed copyright headers for source releases. No code changed
-//

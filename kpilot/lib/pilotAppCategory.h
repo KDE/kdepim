@@ -4,7 +4,13 @@
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
-** See the .cc file for an explanation of what this file is for.
+** The class PilotAppCategory is the base class for "interpretations"
+** of a PilotRecord. This is where the records change from a collction
+** of bits to something with meaning. Subclasses of PilotAppCategory
+** give specific meaning to records from specific databases.
+**
+** Almost everything is inline; as a crufty hack, the non-inline
+** part of this class lives in pilotRecord.cc.
 */
 
 /*
@@ -30,7 +36,11 @@
 
 // #include <pi-macros.h>
 
+#include <qstring.h>
+
 #include "pilotRecord.h"
+
+class QTextCodec;
 
 class PilotAppCategory
 {
@@ -120,56 +130,14 @@ public:
 	void makeSecret() { fAttrs |= dlpRecAttrSecret; } ;
 	void makeDeleted() { fAttrs |= dlpRecAttrDeleted ; } ;
 	bool isModified() const { return fAttrs & dlpRecAttrDirty; }
+
+protected:
+	static QTextCodec *pilotCodec;
+public:
+	static QTextCodec *codec() 
+		{ if (pilotCodec) return pilotCodec; else return createCodec(0L); } ;
+	static QTextCodec *createCodec(const char *);
+	static QTextCodec *setupPilotCodec(const QString &);
 };
 
-
-
-// $Log$
-// Revision 1.3  2002/08/20 21:18:31  adridg
-// License change in lib/ to allow plugins -- which use the interfaces and
-// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
-// allow the use of libmal which is MPL.
-//
-// Revision 1.2  2002/06/30 15:49:58  kainhofe
-// Some checks for null pointers
-//
-// Revision 1.1  2001/10/10 22:01:24  adridg
-// Moved from ../kpilot/, shared files
-//
-// Revision 1.14  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.13  2001/06/11 07:35:19  adridg
-// Cleanup before the freeze
-//
-// Revision 1.12  2001/05/01 06:03:20  stern
-// Fixed bug in isModified method
-//
-// Revision 1.11  2001/04/30 20:48:10  stern
-// Added comments
-//
-// Revision 1.10  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.9  2001/04/04 21:19:38  stern
-// Added copy constructor and equals operator
-//
-// Revision 1.8  2001/03/30 17:11:31  stern
-// Took out LocalDB for mode and added DatabaseSource enum in BaseConduit.  This the user can set the source for backup and sync
-//
-// Revision 1.7  2001/03/19 23:12:39  stern
-// Made changes necessary for upcoming abbrowser conduit.
-//
-// Mainly, I added two public methods to PilotAddress that allow for easier
-// setting and getting of phone fields.
-//
-// I also have added some documentation throughout as I have tried to figure
-// out how everything works.
-//
-// Revision 1.6  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.5  2001/02/06 08:05:20  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//
 #endif

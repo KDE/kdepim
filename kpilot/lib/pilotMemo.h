@@ -41,11 +41,11 @@ public:
 	PilotMemo(void *buf) : PilotAppCategory() { unpack(buf, 1); }
 	PilotMemo(void *buf, int attr, recordid_t id, int category)
 		: PilotAppCategory(attr, id, category) { unpack(buf, 1); }
-	~PilotMemo() { if (fText) delete fText; if (fTitle) delete fTitle;}
+	~PilotMemo() { if (fText) delete fText; }
 
 	const char *text(void) const { return fText; }
 	void setText(const char* text) { unpack(text, 0); }
-	const char* getTitle(void) const { return fTitle; }
+	QString getTitle(void) const { return fTitle; }
 	PilotRecord* pack() { return PilotAppCategory::pack(); }
 
 	typedef enum { MAX_MEMO_LEN=8192 } Constants ;
@@ -71,29 +71,9 @@ protected:
 private:
 	char *fText;
 	int fSize;
-	char* fTitle;
+	QString fTitle;
 
 	void *internalPack(unsigned char *);
 };
 
-
-
-
-
-// $Log$
-// Revision 1.1  2001/10/10 21:47:14  adridg
-// Shared files moved from ../kpilot/ and polished
-//
-// Revision 1.10  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.9  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.8  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.7  2001/02/06 08:05:20  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//
 #endif

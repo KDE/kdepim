@@ -33,6 +33,8 @@ static const char *options_id =
 #include "options.h"
 
 
+#include <iostream>
+
 #include <qsize.h>
 
 #include <kconfig.h>

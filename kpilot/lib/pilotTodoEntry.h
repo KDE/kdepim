@@ -111,33 +111,3 @@ private:
 #warning "File doubly included"
 #endif
 #endif
-
-
-// $Log$
-// Revision 1.4  2002/07/23 18:30:57  kainhofe
-// a void caused compilation problems under gcc 3.1
-//
-// Revision 1.3  2002/07/09 22:46:51  kainhofe
-// todo entries now also use categories. Categories aren't successfully synced yet, but the infrastructure is there
-//
-// Revision 1.2  2001/12/28 12:55:24  adridg
-// Fixed email addresses; added isBackup() to interface
-//
-// Revision 1.1  2001/12/27 23:08:30  adridg
-// Restored some deleted wrapper files
-//
-// Revision 1.9  2001/05/24 10:31:38  adridg
-// Philipp Hullmann's extensive memory-leak hunting patches
-//
-// Revision 1.8  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.7  2001/04/01 17:32:06  adridg
-// Fiddling around with date properties
-//
-// Revision 1.6  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.5  2001/02/06 08:05:20  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//

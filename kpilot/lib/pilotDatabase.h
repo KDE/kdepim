@@ -34,6 +34,7 @@
 #endif
 
 #include <qobject.h>
+#include <qvaluelist.h>
 
 // Handle all time.h variations properly.
 // Required because pi-macros.h sometimes forgets it.
@@ -142,62 +143,4 @@ private:
 	bool fDBOpen;
 };
 
-
-
-// $Log$
-// Revision 1.10  2002/12/13 16:26:09  kainhofe
-// Added default args to readNextModifiedRec, and findDatabase, new functions: deleteRecord and createDatabase
-//
-// Revision 1.9  2002/11/27 21:29:07  adridg
-// See larger ChangeLog entry
-//
-// Revision 1.8  2002/08/20 21:18:31  adridg
-// License change in lib/ to allow plugins -- which use the interfaces and
-// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
-// allow the use of libmal which is MPL.
-//
-// Revision 1.7  2002/06/30 14:49:53  kainhofe
-// added a function idList, some minor bug fixes
-//
-// Revision 1.6  2002/06/07 07:13:25  adridg
-// Make VCal conduit use base-class fDatabase and fLocalDatabase (hack).
-// Extend *Database classes with dbPathName() for consistency.
-//
-// Revision 1.5  2002/05/22 20:40:13  adridg
-// Renaming for sensibility
-//
-// Revision 1.4  2002/01/17 16:24:10  adridg
-// Compile fixes on Solaris
-//
-// Revision 1.3  2002/01/08 01:25:48  cschumac
-// Compile fixes.
-//
-// Revision 1.2  2001/10/17 08:46:08  adridg
-// Minor cleanups
-//
-// Revision 1.1  2001/10/10 21:47:14  adridg
-// Shared files moved from ../kpilot/ and polished
-//
-// Revision 1.10  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.9  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.8  2001/03/27 23:54:43  stern
-// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
-//
-// Revision 1.7  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.6  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.5  2001/02/07 14:21:49  brianj
-// Changed all include definitions for libpisock headers
-// to use include path, which is defined in Makefile.
-//
-// Revision 1.4  2001/02/06 08:05:20  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//
 #endif

@@ -39,6 +39,7 @@
 #include <qdir.h>
 
 #include <dcopclient.h>
+#include <kapplication.h>
 
 #include "pilotSerialDatabase.h"
 #include "pilotLocalDatabase.h"
@@ -206,7 +207,7 @@ bool ConduitAction::openDatabases_(const char *dbName,const char *localPath)
 	return (fDatabase && fLocalDatabase);
 }
 
-bool ConduitAction::openDatabases(const char *dbName, bool*retrieved)
+bool ConduitAction::openDatabases(const QString &dbName, bool*retrieved)
 {
 	/*
 	** We should look into the --local flag passed
@@ -214,7 +215,7 @@ bool ConduitAction::openDatabases(const char *dbName, bool*retrieved)
 	** that is implemented ..
 	*/
 	
-	return openDatabases_(dbName, retrieved);
+	return openDatabases_(dbName.latin1(), retrieved);
 }
 
 int PluginUtility::findHandle(const QStringList &a)
@@ -230,13 +231,19 @@ int PluginUtility::findHandle(const QStringList &a)
 			QString s = (*i).mid(7);
 			if (s.isEmpty()) continue;
 
-			handle = atoi((const char *)s);
+			handle = s.toInt();
 #ifdef DEBUG
 			DEBUGCONDUIT << fname
 				<< ": Got handle "
 				<< handle
 				<< endl;
 #endif
+			if (handle<1)
+			{
+				kdWarning() << k_funcinfo
+					<< ": Improbable handle value found."
+					<< endl;
+			}
 			return handle;
 		}
 	}
@@ -263,48 +270,3 @@ bool PluginUtility::isModal(const QStringList &a)
 	QCStringList apps = dcop->registeredApplications();
 	return apps.contains(n);
 }
-
-// $Log$
-// Revision 1.12  2002/07/05 00:15:22  kainhofe
-// Added KPilotDeviceLink::tickle(), Changelog update, compile fixes
-//
-// Revision 1.11  2002/06/30 14:49:53  kainhofe
-// added a function idList, some minor bug fixes
-//
-// Revision 1.10  2002/06/08 16:33:43  kainhofe
-// openDatabases fetches the database from the palm if it doesn't exist. openDatabases has an additional (optional) parameter (bool*) retrieved which is set to true if the database had to be downloaded from the handheld
-//
-// Revision 1.9  2002/05/22 20:42:09  adridg
-// Additional support for testing instrumentation
-//
-// Revision 1.8  2002/05/19 15:01:49  adridg
-// Patches for the KNotes conduit
-//
-// Revision 1.7  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.6.2.2  2002/05/09 22:29:33  adridg
-// Various small things not important for the release
-//
-// Revision 1.6.2.1  2002/04/09 21:51:50  adridg
-// Extra debugging, pilot-link 0.10.1 still needs workaround
-//
-// Revision 1.6  2002/02/02 20:53:53  leitner
-// removed re-definition of default arg.
-//
-// Revision 1.5  2002/01/21 23:14:03  adridg
-// Old code removed; extra abstractions added; utility extended
-//
-// Revision 1.4  2002/01/18 12:47:21  adridg
-// CVS_SILENT: More compile fixes
-//
-// Revision 1.3  2001/12/28 12:55:24  adridg
-// Fixed email addresses; added isBackup() to interface
-//
-// Revision 1.2  2001/10/17 08:46:08  adridg
-// Minor cleanups
-//
-// Revision 1.1  2001/10/08 21:56:02  adridg
-// Start of making a separate KPilot lib
-//
-

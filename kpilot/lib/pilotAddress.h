@@ -177,48 +177,4 @@ private:
 
 
 
-
-// $Log$
-// Revision 1.2  2002/06/30 14:49:53  kainhofe
-// added a function idList, some minor bug fixes
-//
-// Revision 1.1  2001/10/10 22:01:24  adridg
-// Moved from ../kpilot/, shared files
-//
-// Revision 1.15  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.14  2001/05/07 22:14:47  stern
-// Fixed phone localization bug
-//
-// Revision 1.13  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.12  2001/04/13 22:13:38  stern
-// Added setShownPhoneField method
-//
-// Revision 1.11  2001/04/04 21:20:32  stern
-// Added support for category information and copy constructors
-//
-// Revision 1.10  2001/04/02 21:56:22  stern
-// Fixed bugs in getPhoneField and setPhoneField methods
-//
-// Revision 1.9  2001/03/29 21:40:55  stern
-// Added APP_BUFFER_SIZE to pilotAddress
-//
-// Revision 1.8  2001/03/19 23:12:39  stern
-// Made changes necessary for upcoming abbrowser conduit.
-//
-// Mainly, I added two public methods to PilotAddress that allow for easier
-// setting and getting of phone fields.
-//
-// I also have added some documentation throughout as I have tried to figure
-// out how everything works.
-//
-// Revision 1.7  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.6  2001/02/06 08:05:20  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//
 #endif

@@ -65,12 +65,3 @@ PilotDatabase::PilotDatabase(QObject *o,const char *n) :
 	}
 #endif
 }
-
-
-// $Log$
-// Revision 1.2  2001/10/11 10:13:27  cschumac
-// Compile fixes.
-//
-// Revision 1.1  2001/10/10 21:47:14  adridg
-// Shared files moved from ../kpilot/ and polished
-//

@@ -50,6 +50,8 @@ static const char *kpilotlink_id = "$Id$";
 #include <fcntl.h>
 #include <errno.h>
 
+#include <iostream>
+
 #include <qdir.h>
 #include <qtimer.h>
 #include <qdatetime.h>
@@ -97,6 +99,7 @@ KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
 	fRetries(0),
 	fOpenTimer(0L),
 	fSocketNotifier(0L),
+	fSocketNotifierActive(false),
 	fPilotMasterSocket(-1),
 	fCurrentPilotSocket(-1)
 {
@@ -137,6 +140,7 @@ void KPilotDeviceLink::close()
 
 	KPILOT_DELETE(fOpenTimer);
 	KPILOT_DELETE(fSocketNotifier);
+	fSocketNotifierActive=false;
 #ifdef DEBUG
 	DEBUGDAEMON << fname
 		<< ": Closing sockets "
@@ -343,6 +347,7 @@ bool KPilotDeviceLink::open()
 			QSocketNotifier::Read, this);
 		QObject::connect(fSocketNotifier, SIGNAL(activated(int)),
 			this, SLOT(acceptDevice()));
+		fSocketNotifierActive=true;
 		return true;
 	}
 	else
@@ -427,9 +432,17 @@ void KPilotDeviceLink::acceptDevice()
 
 	int ret;
 
+	if (!fSocketNotifierActive) 
+	{
+		kdWarning() << k_funcinfo << ": Accidentally in acceptDevice()"
+			<< endl;
+		return;
+	}
+
 	if (fSocketNotifier)
 	{
-		fSocketNotifier->setEnabled(false);
+		// fSocketNotifier->setEnabled(false);
+		fSocketNotifierActive=false;
 	}
 
 #ifdef DEBUG
@@ -465,6 +478,7 @@ void KPilotDeviceLink::acceptDevice()
 		emit logError(i18n("Can't accept Pilot (%1)").arg(s));
 
 		fStatus = PilotLinkError;
+		close();
 		return;
 	}
 
@@ -474,49 +488,13 @@ void KPilotDeviceLink::acceptDevice()
 		kdError() << k_funcinfo
 			<< ": Already connected or unable to connect!"
 			<< endl;
+		emit logError(TODO_I18N("Can't accept Pilot (%1)")
+			.arg(TODO_I18N("already connected")));
+		close();
 		return;
 	}
 
 	emit logProgress(QString::null, 30);
-
-	fPilotUser = new KPilotUser;
-
-	/* Ask the pilot who it is.  And see if it's who we think it is. */
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": Reading user info @"
-		<< (int) fPilotUser << endl;
-	DEBUGDAEMON << fname << ": Buffer @"
-		<< (int) fPilotUser->pilotUser() << endl;
-#endif
-
-	dlp_ReadUserInfo(fCurrentPilotSocket, fPilotUser->pilotUser());
-	fPilotUser->boundsCheck();
-
-#ifdef DEBUG
-	DEBUGDAEMON << fname
-		<< ": Read user name " << fPilotUser->getUserName() << endl;
-#endif
-
-	emit logProgress(i18n("Checking last PC..."), 60);
-
-	/* Tell user (via Pilot) that we are starting things up */
-	if ((ret=dlp_OpenConduit(fCurrentPilotSocket)) < 0)
-	{
-		kdWarning() << k_funcinfo
-			<< ": dlp_OpenConduit returned " << ret << endl;
-
-#if 0
-		fStatus = SyncDone;
-		emit logMessage(i18n
-			("Exiting on cancel. All data not restored."));
-		return;
-#endif
-		emit logError(i18n("Could not read user information from the Pilot. "
-			"Perhaps you have a password set on the device?"));
-	}
-	fStatus = AcceptedDevice;
-
-	emit logProgress(QString::null,70);
 
 	struct SysInfo sys_info;
 	if (dlp_ReadSysInfo(fCurrentPilotSocket,&sys_info) < 0)
@@ -539,6 +517,45 @@ void KPilotDeviceLink::acceptDevice()
 			<< endl;
 	}
 #endif
+	
+	emit logProgress(QString::null, 60);
+	fPilotUser = new KPilotUser;
+
+	/* Ask the pilot who it is.  And see if it's who we think it is. */
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Reading user info @"
+		<< (int) fPilotUser << endl;
+	DEBUGDAEMON << fname << ": Buffer @"
+		<< (int) fPilotUser->pilotUser() << endl;
+#endif
+
+	dlp_ReadUserInfo(fCurrentPilotSocket, fPilotUser->pilotUser());
+	fPilotUser->boundsCheck();
+
+#ifdef DEBUG
+	DEBUGDAEMON << fname
+		<< ": Read user name " << fPilotUser->getUserName() << endl;
+#endif
+
+	emit logProgress(i18n("Checking last PC..."), 90);
+
+	/* Tell user (via Pilot) that we are starting things up */
+	if ((ret=dlp_OpenConduit(fCurrentPilotSocket)) < 0)
+	{
+		DEBUGDAEMON << k_funcinfo
+			<< ": dlp_OpenConduit returned " << ret << endl;
+
+#if 0
+		fStatus = SyncDone;
+		emit logMessage(i18n
+			("Exiting on cancel. All data not restored."));
+		return;
+#endif
+		emit logError(i18n("Could not read user information from the Pilot. "
+			"Perhaps you have a password set on the device?"));
+	}
+	fStatus = AcceptedDevice;
+
 
 	emit logProgress(QString::null, 100);
 	emit deviceReady();
@@ -615,7 +632,7 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 }
 
 
-void KPilotDeviceLink::addSyncLogEntry(const QString & entry, bool suppress)
+void KPilotDeviceLink::addSyncLogEntry(const QString & entry, bool log)
 {
 	FUNCTIONSETUP;
 
@@ -627,7 +644,7 @@ void KPilotDeviceLink::addSyncLogEntry(const QString & entry, bool suppress)
 	
 	dlp_AddSyncLogEntry(fCurrentPilotSocket,
 		const_cast < char *>(t.latin1()));
-	if (!suppress)
+	if (log)
 	{
 		emit logMessage(entry);
 	}
@@ -821,131 +838,3 @@ bool operator < (const db & a, const db & b) {
 	return a.maxblock < b.maxblock;
 }
 
-// $Log$
-// Revision 1.28  2003/01/06 13:38:13  kainhofe
-// Optional argument to installFiles to not delete the local pdb files after installing to the handheld
-//
-// Revision 1.27  2002/12/13 16:26:09  kainhofe
-// Added default args to readNextModifiedRec, and findDatabase, new functions: deleteRecord and createDatabase
-//
-// Revision 1.26  2002/09/03 06:52:03  adridg
-// Everyone ships pilot-link 0.9.5, must include support
-//
-// Revision 1.25  2002/08/31 22:35:46  mhunter
-// CVS_SILENT Corrected typographical errors
-//
-// Revision 1.24  2002/08/30 22:24:55  adridg
-// - Improved logging, connected the right signals now
-// - Try to handle dlp_ReadUserInfo failures sensibly
-// - Trying to sort out failures reading the database list.
-//
-// Revision 1.23  2002/08/24 21:27:32  adridg
-// Lots of small stuff to remove warnings
-//
-// Revision 1.22  2002/08/23 22:03:21  adridg
-// See ChangeLog - exec() becomes bool, debugging added
-//
-// Revision 1.21  2002/08/21 17:20:47  adridg
-// Detect and complain about common permissions errors
-//
-// Revision 1.20  2002/08/20 21:18:31  adridg
-// License change in lib/ to allow plugins -- which use the interfaces and
-// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
-// allow the use of libmal which is MPL.
-//
-// Revision 1.19  2002/08/12 13:23:03  kainhofe
-// used long instead of unsigned long for dpl_ReadFeature. Fixed.
-//
-// Revision 1.18  2002/07/30 17:17:48  kainhofe
-// added majorVersion, minorVersion and ROMversion functions
-//
-// Revision 1.17  2002/07/25 22:11:22  kainhofe
-// time sync conduit
-//
-// Revision 1.16  2002/07/25 19:02:20  kainhofe
-// Added functions to get/set the time on the handheld
-//
-// Revision 1.15  2002/07/20 22:08:19  mhunter
-// Hot-Sync -> HotSync
-//
-// Revision 1.14  2002/07/05 00:15:22  kainhofe
-// Added KPilotDeviceLink::tickle(), Changelog update, compile fixes
-//
-// Revision 1.13  2002/05/18 23:28:19  adridg
-// Compile fixes
-//
-// Revision 1.12  2002/05/15 20:16:20  kainhofe
-// Wrongfully had a constant where 0 needed to be...
-//
-// Revision 1.11  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.10  2002/05/03 17:21:51  kainhofe
-// Added a method findDatabase to KPilotDeviceLink to look up a single db on the palm
-//
-// Revision 1.9  2002/04/20 13:03:31  binner
-// CVS_SILENT Capitalisation fixes.
-//
-// Revision 1.8.2.3  2002/05/01 21:37:30  kainhofe
-// Added a function findDatabase to get the DBInfo for a given database
-//
-// Revision 1.8.2.2  2002/04/09 21:51:50  adridg
-// Extra debugging, pilot-link 0.10.1 still needs workaround
-//
-// Revision 1.8.2.1  2002/04/04 20:28:28  adridg
-// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
-// when using PILOT_VERSION. kpilotTest defaults to list, like the options
-// promise. Always do old-style USB sync (also works with serial devices)
-// and runs conduits only for HotSync. KPilot now as it should have been
-// for the 3.0 release.
-//
-// Revision 1.8  2002/02/10 22:21:33  adridg
-// Handle pilot-link 0.10.1; spit 'n polish; m505 now supported?
-//
-// Revision 1.7  2002/02/02 11:46:03  adridg
-// Abstracting away pilot-link stuff
-//
-// Revision 1.6  2002/01/25 21:43:13  adridg
-// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
-//
-// Revision 1.5  2002/01/21 23:14:03  adridg
-// Old code removed; extra abstractions added; utility extended
-//
-// Revision 1.4  2002/01/18 16:28:57  adridg
-// CVS_SILENT: Less compile warnings
-//
-// Revision 1.3  2001/12/29 15:45:28  adridg
-// Lots of little changes for the syncstack
-//
-// Revision 1.2  2001/10/08 22:25:41  adridg
-// Moved to libkpilot and lib-based conduits
-//
-// Revision 1.1  2001/10/08 21:56:02  adridg
-// Start of making a separate KPilot lib
-//
-// Revision 1.60  2001/09/30 19:51:56  adridg
-// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
-//
-// Revision 1.59  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.58  2001/09/24 22:20:28  adridg
-// Made exec() pure virtual for SyncActions
-//
-// Revision 1.57  2001/09/24 19:46:17  adridg
-// Made exec() pure virtual for SyncActions, since that makes more sense than having an empty default action.
-//
-// Revision 1.56  2001/09/23 18:24:59  adridg
-// New syncing architecture
-//
-// Revision 1.55  2001/09/16 12:24:54  adridg
-// Added sensible subclasses of KPilotLink, some USB support added.
-//
-// Revision 1.54  2001/09/06 22:04:27  adridg
-// Enforce singleton-ness & retry pi_bind()
-//
-// Revision 1.53  2001/09/05 21:53:51  adridg
-// Major cleanup and architectural changes. New applications kpilotTest
-// and kpilotConfig are not installed by default but can be used to test
-// the codebase. Note that nothing else will actually compile right now.
-//

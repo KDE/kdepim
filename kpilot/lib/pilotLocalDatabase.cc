@@ -34,6 +34,7 @@ static const char *pilotlocaldatabase_id =
 
 #include <stdio.h>
 #include <unistd.h>
+
 #include <iostream>
 
 #include <qstring.h>
@@ -630,79 +631,3 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 		*fPathBase = s;
 	}
 }
-
-// $Log$
-// Revision 1.12  2002/12/31 13:22:07  mueller
-// CVS_SILENT fixincludes
-//
-// Revision 1.11  2002/12/31 00:32:15  kainhofe
-// Added function deleteDatabase to the Pilot*Database classes
-//
-// Revision 1.10  2002/12/15 13:17:34  kainhofe
-// cardno is not needed for local databases
-//
-// Revision 1.9  2002/12/15 13:16:24  kainhofe
-// Added argument to pilotLocalDatabase's constructor, which specifies whether the default path should be used to search for the database if it cannot be found in the given path.
-//
-// Revision 1.8  2002/12/13 16:26:09  kainhofe
-// Added default args to readNextModifiedRec, and findDatabase, new functions: deleteRecord and createDatabase
-//
-// Revision 1.7  2002/08/20 21:18:31  adridg
-// License change in lib/ to allow plugins -- which use the interfaces and
-// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
-// allow the use of libmal which is MPL.
-//
-// Revision 1.6  2002/06/30 14:49:53  kainhofe
-// added a function idList, some minor bug fixes
-//
-// Revision 1.5  2002/06/12 21:40:59  helio
-// Fixed debug message
-//
-// Revision 1.4  2002/05/22 20:40:13  adridg
-// Renaming for sensibility
-//
-// Revision 1.3  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.2.2.2  2002/05/07 13:38:43  adridg
-// Additional debugging to track down mis-set paths
-//
-// Revision 1.2.2.1  2002/04/11 12:48:23  adridg
-// Handle special case where no Pilot user name is set properly
-//
-// Revision 1.2  2002/01/21 23:14:03  adridg
-// Old code removed; extra abstractions added; utility extended
-//
-// Revision 1.1  2001/10/10 22:01:24  adridg
-// Moved from ../kpilot/, shared files
-//
-// Revision 1.17  2001/09/30 19:51:56  adridg
-// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
-//
-// Revision 1.16  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.15  2001/09/24 10:43:19  cschumac
-// Compile fixes.
-//
-// Revision 1.14  2001/04/16 13:54:17  adridg
-// --enable-final file inclusion fixups
-//
-// Revision 1.13  2001/03/29 21:41:49  stern
-// Added local database support in the command line for conduits
-//
-// Revision 1.12  2001/03/27 23:54:43  stern
-// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
-//
-// Revision 1.11  2001/02/27 15:40:48  adridg
-// Use QCString and QFile::encodeName where appropriate
-//
-// Revision 1.10  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.9  2001/02/08 08:13:44  habenich
-// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
-//
-// Revision 1.8  2001/02/05 20:58:48  adridg
-// Fixed copyright headers for source releases. No code changed
-//
