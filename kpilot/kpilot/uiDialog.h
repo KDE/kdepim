@@ -54,13 +54,16 @@ protected:
 
 	QWidget *widget() const { return fMainWidget; } ;
 	QTabWidget *tabWidget() const { return fP; } ;
-	void setTabWidget(QTabWidget *w) { fP=w; } ;
+	void setTabWidget(QTabWidget *w);
 
 private:
 	QWidget *fMainWidget;
 	QTabWidget *fP;
 } ;
 
-// $Log:$
+// $Log$
+// Revision 1.1  2001/09/23 18:34:12  adridg
+// New dialog base class for .ui files
+//
 
 #endif

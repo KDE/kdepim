@@ -34,6 +34,7 @@
 #include <qcheckbox.h>
 #include <qradiobutton.h>
 #include <qlineedit.h>
+#include <qtabwidget.h>
 
 #include "kpilotConfig.h"
 
@@ -46,7 +47,10 @@ KPilotConfigDialog::KPilotConfigDialog(QWidget *w,const char *n,bool m) :
 	FUNCTIONSETUP;
 
 	fConfigWidget = new KPilotConfigWidget(widget());
+	fConfigWidget->tabWidget->adjustSize();
+	fConfigWidget->resize(fConfigWidget->tabWidget->size());
 	setTabWidget(fConfigWidget->tabWidget);
+
 	disableUnusedOptions();
 	readConfig();
 

@@ -136,6 +136,14 @@ void UIDialog::addAboutPage(bool includeabout)
 	tabWidget()->addTab(w,i18n("About"));
 }
 
+void UIDialog::setTabWidget(QTabWidget *w)
+{
+	FUNCTIONSETUP;
+
+	widget()->resize(w->size());
+	fP=w;
+}
+
 /* slot */ void UIDialog::showAbout()
 {
 	KAboutApplication *kap=new KAboutApplication(this);
@@ -155,4 +163,7 @@ void UIDialog::addAboutPage(bool includeabout)
 }
 
 
-// $Log: $
+// $Log$
+// Revision 1.1  2001/09/23 18:34:12  adridg
+// New dialog base class for .ui files
+//
