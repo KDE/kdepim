@@ -468,7 +468,8 @@ void AddressEditDialog::saveAddress( KABC::Address &addr )
       (*it).setType( (*it).type() & ~( KABC::Address::Pref ) );
   
     addr.setType( addr.type() | KABC::Address::Pref );
-  }
+  } else
+    addr.setType( addr.type() & ~( KABC::Address::Pref ) );
 }
 
 void AddressEditDialog::fillCountryCombo()
