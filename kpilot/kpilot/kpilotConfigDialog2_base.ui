@@ -41,17 +41,17 @@
         <widget class="QComboBox" row="0" column="1">
             <item>
                 <property name="text">
-                    <string>Hot Sync</string>
+                    <string>HotSync</string>
                 </property>
             </item>
             <item>
                 <property name="text">
-                    <string>Fast Sync</string>
+                    <string>FastSync</string>
                 </property>
             </item>
             <item>
                 <property name="text">
-                    <string>Full Sync</string>
+                    <string>FullSync</string>
                 </property>
             </item>
             <item>
