@@ -92,7 +92,7 @@ class Recurrence
     bool recurReadOnly() const  { return mRecurReadOnly; }
 
     /** Set the calendar file version for backwards compatibility.
-     * @var version is the KOrganizer/libkcal version, e.g. 220 for KDE 2.2.0.
+     * @param version is the KOrganizer/libkcal version, e.g. 220 for KDE 2.2.0.
      * Specify version = 0 to cancel compatibility mode.
      */
     void setCompatVersion(int version = 0);
@@ -111,28 +111,28 @@ class Recurrence
 
     /** Returns a list of the times on the specified date at which the
      * recurrence will occur.
-     * @var date the date for which to find the recurrence times.
+     * @param date the date for which to find the recurrence times.
      */
     QValueList<QTime> recurTimesOn(const QDate &date) const;
 
     /** Returns the date of the next recurrence, after the specified date.
-     * @var preDate the date after which to find the recurrence.
-     * @var last if non-null, *last is set to true if the next recurrence is the
+     * @param preDate the date after which to find the recurrence.
+     * @param last if non-null, *last is set to true if the next recurrence is the
      * last recurrence, else false.
      * Reply = date of next recurrence, or invalid date if none.
      */
     QDate getNextDate(const QDate& preDate, bool* last = 0) const;
     /** Returns the date and time of the next recurrence, after the specified date/time.
      * If the recurrence has no time, the next date after the specified date is returned.
-     * @var preDate the date/time after which to find the recurrence.
-     * @var last if non-null, *last is set to true if the next recurrence is the
+     * @param preDateTime the date/time after which to find the recurrence.
+     * @param last if non-null, *last is set to true if the next recurrence is the
      * last recurrence, else false.
      * Reply = date/time of next recurrence, or invalid date if none.
      */
     QDateTime getNextDateTime(const QDateTime& preDateTime, bool* last = 0) const;
     /** Returns the date of the last previous recurrence, before the specified date.
-     * @var afterDate the date before which to find the recurrence.
-     * @var last if non-null, *last is set to true if the previous recurrence is the
+     * @param afterDate the date before which to find the recurrence.
+     * @param last if non-null, *last is set to true if the previous recurrence is the
      * last recurrence, else false.
      * Reply = date of previous recurrence, or invalid date if none.
      */
@@ -140,8 +140,8 @@ class Recurrence
     /** Returns the date and time of the last previous recurrence, before the specified date/time.
      * If a time later than 00:00:00 is specified and the recurrence has no time, 00:00:00 on
      * the specified date is returned if that date recurs.
-     * @var afterDate the date/time before which to find the recurrence.
-     * @var last if non-null, *last is set to true if the previous recurrence is the
+     * @param afterDateTime the date/time before which to find the recurrence.
+     * @param last if non-null, *last is set to true if the previous recurrence is the
      * last recurrence, else false.
      * Reply = date/time of previous recurrence, or invalid date if none.
      */
@@ -161,13 +161,13 @@ class Recurrence
 
     /** Returns the date of the last recurrence.
      * An invalid date is returned if the recurrence has no end.
-     * @var result if non-null, *result is updated to true if successful,
+     * @param result if non-null, *result is updated to true if successful,
      * or false if there is no recurrence.
      */
     QDate endDate(bool* result = 0) const;
     /** Returns the date and time of the last recurrence.
      * An invalid date is returned if the recurrence has no end.
-     * @var result if non-null, *result is updated to true if successful,
+     * @param result if non-null, *result is updated to true if successful,
      * or false if there is no recurrence.
      */
     QDateTime endDateTime(bool* result = 0) const;
@@ -176,50 +176,50 @@ class Recurrence
     QString endDateStr(bool shortfmt=true) const;
 
     /** Sets an event to recur minutely.
-     * @var _rFreq the frequency to recur, e.g. 2 is every other minute
-     * @var duration the number of times the event is to occur, or -1 to recur indefinitely.
+     * @param _rFreq the frequency to recur, e.g. 2 is every other minute
+     * @param duration the number of times the event is to occur, or -1 to recur indefinitely.
      */
     void setMinutely(int _rFreq, int duration);
     /** Sets an event to recur minutely.
-     * @var _rFreq the frequency to recur, e.g. 2 is every other minute
-     * @var endDateTime the ending date/time after which to stop recurring
+     * @param _rFreq the frequency to recur, e.g. 2 is every other minute
+     * @param endDateTime the ending date/time after which to stop recurring
      */
     void setMinutely(int _rFreq, const QDateTime &endDateTime);
 
     /** Sets an event to recur hourly.
-     * @var _rFreq the frequency to recur, e.g. 2 is every other hour
-     * @var duration the number of times the event is to occur, or -1 to recur indefinitely.
+     * @param _rFreq the frequency to recur, e.g. 2 is every other hour
+     * @param duration the number of times the event is to occur, or -1 to recur indefinitely.
      */
     void setHourly(int _rFreq, int duration);
     /** Sets an event to recur hourly.
-     * @var _rFreq the frequency to recur, e.g. 2 is every other hour
-     * @var endDateTime the ending date/time after which to stop recurring
+     * @param _rFreq the frequency to recur, e.g. 2 is every other hour
+     * @param endDateTime the ending date/time after which to stop recurring
      */
     void setHourly(int _rFreq, const QDateTime &endDateTime);
 
     /** Sets an event to recur daily.
-     * @var _rFreq the frequency to recur, e.g. 2 is every other day
-     * @var duration the number of times the event is to occur, or -1 to recur indefinitely.
+     * @param _rFreq the frequency to recur, e.g. 2 is every other day
+     * @param duration the number of times the event is to occur, or -1 to recur indefinitely.
      */
     void setDaily(int _rFreq, int duration);
     /** Sets an event to recur daily.
-     * @var _rFreq the frequency to recur, e.g. 2 is every other day
-     * @var endDate the ending date after which to stop recurring
+     * @param _rFreq the frequency to recur, e.g. 2 is every other day
+     * @param endDate the ending date after which to stop recurring
      */
     void setDaily(int _rFreq, const QDate &endDate);
 
     /** Sets an event to recur weekly.
-     * @var _rFreq the frequency to recur, e.g. every other week etc.
-     * @var _rDays a 7 bit array indicating which days on which to recur (bit 0 = Monday).
-     * @var duration the number of times the event is to occur, or -1 to recur indefinitely.
-     * @var weekStart the first day of the week (Monday=1 .. Sunday=7, default is Monday).
+     * @param _rFreq the frequency to recur, e.g. every other week etc.
+     * @param _rDays a 7 bit array indicating which days on which to recur (bit 0 = Monday).
+     * @param duration the number of times the event is to occur, or -1 to recur indefinitely.
+     * @param weekStart the first day of the week (Monday=1 .. Sunday=7, default is Monday).
      */
     void setWeekly(int _rFreq, const QBitArray &_rDays, int duration, int weekStart = 1);
     /** Sets an event to recur weekly.
-     * @var _rFreq the frequency to recur, e.g. every other week etc.
-     * @var _rDays a 7 bit array indicating which days on which to recur (bit 0 = Monday).
-     * @var endDate the date on which to stop recurring.
-     * @var weekStart the first day of the week (Monday=1 .. Sunday=7, default is Monday).
+     * @param _rFreq the frequency to recur, e.g. every other week etc.
+     * @param _rDays a 7 bit array indicating which days on which to recur (bit 0 = Monday).
+     * @param endDate the date on which to stop recurring.
+     * @param weekStart the first day of the week (Monday=1 .. Sunday=7, default is Monday).
      */
     void setWeekly(int _rFreq, const QBitArray &_rDays, const QDate &endDate, int weekStart = 1);
     /** Returns the first day of the week. Monday=1 .. Sunday=7. */
@@ -228,24 +228,24 @@ class Recurrence
     const QBitArray &days() const;
 
     /** Sets an event to recur monthly.
-     * @var type rMonthlyPos or rMonthlyDay
-     * @var _rFreq the frequency to recur, e.g. 3 for every third month.
-     * @var duration the number of times the event is to occur, or -1 to recur indefinitely.
+     * @param type rMonthlyPos or rMonthlyDay
+     * @param _rFreq the frequency to recur, e.g. 3 for every third month.
+     * @param duration the number of times the event is to occur, or -1 to recur indefinitely.
      */
     void setMonthly(short type, int _rFreq, int duration);
     /** same as above, but with ending date not number of recurrences */
     void setMonthly(short type, int _rFreq, const QDate &endDate);
     /** Adds a position to the recursMonthlyPos recurrence rule, if it is
      * set.
-     * @var _rPos the position in the month for the recurrence, with valid
+     * @param _rPos the position in the month for the recurrence, with valid
      * values being 1-5 (5 weeks max in a month).
-     * @var _rDays the days for the position to recur on (bit 0 = Monday).
+     * @param _rDays the days for the position to recur on (bit 0 = Monday).
      * Example: _rPos = 2, and bits 0 and 2 are set in _rDays:
      * the rule is to repeat every 2nd Monday and Wednesday in the month.
      */
     void addMonthlyPos(short _rPos, const QBitArray &_rDays);
     /** Adds a position the the recursMonthlyDay list.
-     * @var _rDay the date in the month to recur.
+     * @param _rDay the date in the month to recur.
      */
     void addMonthlyDay(short _rDay);
     /** Returns list of day positions in months. */
@@ -254,9 +254,9 @@ class Recurrence
     const QPtrList<int> &monthDays() const;
 
     /** Sets an event to recur yearly.
-     * @var type rYearlyMonth, rYearlyPos or rYearlyDay
-     * @var freq the frequency to recur, e.g. 3 for every third year.
-     * @var duration the number of times the event is to occur, or -1 to recur indefinitely.
+     * @param type rYearlyMonth, rYearlyPos or rYearlyDay
+     * @param freq the frequency to recur, e.g. 3 for every third year.
+     * @param duration the number of times the event is to occur, or -1 to recur indefinitely.
      */
     void setYearly(int type, int freq, int duration);
     /** Sets an event to recur yearly ending at \a endDate. */
@@ -264,18 +264,19 @@ class Recurrence
     /** Sets an event to recur yearly on a set of months, on the same day of the
      * month as the event start date.
      * The months must be specified by calling addYearlyNum().
-     * @var type the way recurrences of February 29th are to be handled in non-leap years.
-     * @var freq the frequency to recur, e.g. 3 for every third year.
-     * @var duration the number of times the event is to occur, or -1 to recur indefinitely.
+     * @param type the way recurrences of February 29th are to be handled in non-leap years.
+     * @param freq the frequency to recur, e.g. 3 for every third year.
+     * @param duration the number of times the event is to occur, or -1 to recur indefinitely.
      */
     void setYearlyByDate(Feb29Type type, int freq, int duration);
     /** Sets an event to recur yearly ending at \a endDate. */
     void setYearlyByDate(Feb29Type type, int freq, const QDate &endDate);
     /** Sets an event to recur yearly of a set of months, on the specified day of the month.
      * The months must be specified by calling addYearlyNum().
-     * @var type the way recurrences of February 29th are to be handled in non-leap years.
-     * @var freq the frequency to recur, e.g. 3 for every third year.
-     * @var duration the number of times the event is to occur, or -1 to recur indefinitely.
+     * @param day the day of the month for the event
+     * @param type the way recurrences of February 29th are to be handled in non-leap years.
+     * @param freq the frequency to recur, e.g. 3 for every third year.
+     * @param duration the number of times the event is to occur, or -1 to recur indefinitely.
      */
     void setYearlyByDate(int day, Feb29Type type, int freq, int duration);
     /** Sets an event to recur yearly ending at \a endDate. */
