@@ -82,11 +82,18 @@ class BaseWidget : public QWidget {
     bool dirty()const            { return d_irty; }
     void setDirty(bool b)   { d_irty=b; }
 
-    virtual void apply() {}
+    virtual void load() {}
+    virtual void save() {}
+    virtual void defaults() {}
+
+  signals:
+    void changed(bool);
 
   protected:
     bool d_irty;
 
+  protected slots:
+    void slotEmitChanged() { emit changed( true ); }
 };
 
 
@@ -165,7 +172,8 @@ class IdentityWidget : public BaseWidget {
     IdentityWidget(Identity *d, QWidget *p=0, const char *n=0);
     ~IdentityWidget();
 
-    void apply();
+    void load();
+    void save();
 
   protected:
     QLabel          *f_ileName;
@@ -205,6 +213,7 @@ class NntpAccountListWidget : public BaseWidget {
     NntpAccountListWidget(QWidget *p=0, const char *n=0);
     ~NntpAccountListWidget();
 
+    void load();
 
   protected:
     class LBoxItem : public KNListBoxItem {
@@ -287,7 +296,8 @@ Q_OBJECT
     SmtpAccountWidget(QWidget *p=0, const char *n=0);
     ~SmtpAccountWidget();
 
-    void apply();
+    void load();
+    void save();
 
   protected slots:
     void useExternalMailerToggled(bool b);
@@ -393,7 +403,8 @@ class AppearanceWidget : public BaseWidget {
     AppearanceWidget(Appearance *d, QWidget *p=0, const char *n=0);
     ~AppearanceWidget();
 
-    void apply();
+    void load();
+    void save();
 
     //===================================================================================
     // code taken from KMail, Copyright (C) 2000 Espen Sand, espen@kde.org
@@ -524,7 +535,8 @@ class ReadNewsGeneralWidget : public BaseWidget {
     ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidget *p=0, const char *n=0);
     ~ReadNewsGeneralWidget();
 
-    void apply();
+    void load();
+    void save();
 
   protected:
     QCheckBox   *a_utoCB,
@@ -580,7 +592,8 @@ class ReadNewsNavigationWidget : public BaseWidget {
     ReadNewsNavigationWidget(ReadNewsNavigation *d, QWidget *p=0, const char *n=0);
     ~ReadNewsNavigationWidget();
 
-    void apply();
+    void load();
+    void save();
 
   protected:
     QCheckBox   *e_muKMailCB,
@@ -653,7 +666,8 @@ class ReadNewsViewerWidget : public BaseWidget {
     ReadNewsViewerWidget(ReadNewsViewer *d, QWidget *p=0, const char *n=0);
     ~ReadNewsViewerWidget();
 
-    void apply();
+    void load();
+    void save();
 
   protected:
     QCheckBox   *d_ecoCB,
@@ -713,7 +727,8 @@ class DisplayedHeadersWidget : public BaseWidget {
     DisplayedHeadersWidget(DisplayedHeaders *d, QWidget *p=0, const char *n=0);
     ~DisplayedHeadersWidget();
 
-    void apply();
+    void load();
+    void save();
 
   protected:
 
@@ -802,7 +817,8 @@ class ScoringWidget : public BaseWidget {
     ScoringWidget(Scoring *d, QWidget *p=0, const char *n=0);
     ~ScoringWidget();
 
-    void apply();
+    void load();
+    void save();
 
   private:
     KScoringEditorWidget *ksc;
@@ -821,7 +837,8 @@ class FilterListWidget : public BaseWidget {
     FilterListWidget(QWidget *p=0, const char *n=0);
     ~FilterListWidget();
 
-    void apply();
+    void load();
+    void save();
 
     void addItem(KNArticleFilter *f);
     void removeItem(KNArticleFilter *f);
@@ -948,7 +965,8 @@ class PostNewsTechnicalWidget : public BaseWidget {
     PostNewsTechnicalWidget(PostNewsTechnical *d, QWidget *p=0, const char *n=0);
     ~PostNewsTechnicalWidget();
 
-    void apply();
+    void load();
+    void save();
 
   protected:
     QComboBox   *c_harset,
@@ -1037,7 +1055,8 @@ class PostNewsComposerWidget : public BaseWidget {
     PostNewsComposerWidget(PostNewsComposer *d, QWidget *p=0, const char *n=0);
     ~PostNewsComposerWidget();
 
-    void apply();
+    void load();
+    void save();
 
   protected:
     KIntSpinBox *m_axLen;
@@ -1064,7 +1083,7 @@ class PostNewsSpellingWidget : public BaseWidget {
     PostNewsSpellingWidget(QWidget *p=0, const char *n=0);
     ~PostNewsSpellingWidget();
 
-    void apply();
+    void save();
 
   protected:
      KSpellConfig *c_onf;
@@ -1080,7 +1099,9 @@ class PrivacyWidget : public BaseWidget {
   public:
     PrivacyWidget(QWidget *p=0, const char *n=0);
     ~PrivacyWidget();
-    void apply();   // overrides BaseWidget::apply()
+
+    void load();
+    void save();
 
   protected:
     Kpgp::Config *c_onf;
@@ -1132,7 +1153,8 @@ class CleanupWidget : public BaseWidget {
     CleanupWidget(Cleanup *d, QWidget *p=0, const char *n=0);
     ~CleanupWidget();
 
-    void apply();
+    void load();
+    void save();
 
   protected:
     QCheckBox   *f_olderCB,

@@ -221,7 +221,7 @@ KNConfigDialog::~KNConfigDialog()
 void KNConfigDialog::slotApply()
 {
   for(KNConfig::BaseWidget *w=w_idgets.first(); w; w=w_idgets.next())
-    w->apply();
+    w->save();
 
   m_anager->syncConfig();
 

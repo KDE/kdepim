@@ -164,7 +164,7 @@ void KNGroupPropDlg::slotOk()
     n_ickChanged=true;
   }
 
-  i_dWidget->apply();
+  i_dWidget->save();
 
   g_rp->setUseCharset(u_seCharset->isChecked());
   g_rp->setDefaultCharset(c_harset->currentText().latin1());
