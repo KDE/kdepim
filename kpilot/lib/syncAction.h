@@ -69,9 +69,29 @@ protected:
 	* emit syncDone(); if processing does not start
 	* normally (ie. exec() returns false) then the
 	* environment will deal with syncDone().
+	*
+	* It is probably not a good idea to emit syncDone(this);
+	* within exec(). You certainly need to return true in
+	* that case. It's probably better wrt. the growth of the 
+	* stack and possible deletion of the SyncAction object
+	* before exec() returns into execConduit() to use
+	* delayDone(); return true; instead.
 	*/
 	virtual bool exec() = 0;
 
+	/*
+	* Use
+	*	delayDone();
+	* 	return true;
+	* within exec() if you finish processing successfully
+	* and immediately. This delays the syncDone() signal
+	* until the main event loop is reached again.
+	*/
+private slots:
+	void slotDelayDone();
+protected:
+	void delayDone();
+	
 public slots:
 	/**
 	* This just calls exec() and deals with the 
@@ -165,6 +185,9 @@ protected:
 
 
 // $Log$
+// Revision 1.6  2002/08/23 22:03:21  adridg
+// See ChangeLog - exec() becomes bool, debugging added
+//
 // Revision 1.5  2002/08/20 21:18:31  adridg
 // License change in lib/ to allow plugins -- which use the interfaces and
 // definitions in lib/ -- to use non-GPL'ed libraries, in particular to

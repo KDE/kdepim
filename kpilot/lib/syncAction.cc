@@ -102,6 +102,16 @@ SyncAction::SyncAction(KPilotDeviceLink  *p,
 	}
 }
 
+/* slot */ void SyncAction::slotDelayDone()
+{
+	emit syncDone(this);
+}
+
+void SyncAction::delayDone()
+{
+	QTimer::singleShot(0,this,SLOT(slotDelayDone()));
+}
+
 InteractiveAction::InteractiveAction(KPilotDeviceLink *p,
 	QWidget * visibleparent,
 	const char *name) :
@@ -282,6 +292,9 @@ int InteractiveAction::questionYesNo(const QString & text,
 }
 
 // $Log$
+// Revision 1.9  2002/12/31 13:22:07  mueller
+// CVS_SILENT fixincludes
+//
 // Revision 1.8  2002/08/25 19:39:28  adridg
 // Add testing instruments for exec() returning false
 //
