@@ -225,7 +225,7 @@ your default identity and for all other identities that have no own
 way of sending messages. You can use different ways of sending
 messages for different identities by selecting the <guilabel>Special
 transport</guilabel> checkbox in the <guilabel>Advanced</guilabel>
-tab of the <guilabel>Identity</guilabel> section.</para>
+tab of the <guilabel>Identities</guilabel> section.</para>
 
 <para>A description of the other options can be found
 in the <link linkend="configure-network-sending">Configuration</link>
@@ -244,7 +244,7 @@ you want to use a local mailbox file, please see the <link linkend="faq-file-loc
 about file locking</link>.</para>
         
 <para>You will then be presented with
-the <guilabel>Add account</guilabel> window. First, fill in the
+the <guilabel>Add Account</guilabel> window. First, fill in the
 <guilabel>Name</guilabel> field to name your account. You can choose any name
 you like.  <guilabel>Login</guilabel>, <guilabel>Password</guilabel>, and
 <guilabel>Host</guilabel> should be filled in with the appropriate information
@@ -437,7 +437,7 @@ between ascending/descending.</para>
 <term>Message pane (lower right pane)</term>
 <listitem>
 <para>This pane displays the currently selected message. Attachments appear
-at the bottom of the message, either as icons or in a separate part of the pane,
+at the bottom of the message, either as icons or embedded in the message,
 depending on <menuchoice><guimenu>View</guimenu>
 <guimenuitem>Attachments</guimenuitem></menuchoice>.
 You can scroll through the message page by page
@@ -557,7 +557,9 @@ a different completion mode.</para>
 
 <para>Whenever you want to add more than one
 recipient in one of the fields, use a comma to separate each address
-from the next one. You may need to specify fully qualified addresses
+from the next one. 
+<!-- fixme: there's now a setting for this: -->
+You may need to specify fully qualified addresses
 (&ie; <userinput>user@domain.com</userinput>) even for local
 users, depending on your system configuration.</para>
 
@@ -621,6 +623,7 @@ method for your file from the list of encoding options (normally, the default
 value works fine). Check the <guilabel>Suggest automatic display</guilabel> option 
 if you want to suggest to the recipient the automatic (inline) display of this part 
 in the message preview, instead of the default icon view.</para>
+<!-- fixme: depends on the receiver's client -->
 
 <para><application>PGP</application>/<application>GnuPG</application> keys may also 
 be attached to your message by using the appropriate options in the
@@ -677,19 +680,19 @@ mail. </para>
 <listitem>
 <para>Where messages are put while they are waiting to be delivered. Note that
 you should not drag and drop messages here to send them, use the <guiicon>Send</guiicon>
-icon in the composer window instead.</para>
+icon in the composer window instead.<!-- fixme 3.2: has this been 'fixed'? --></para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>sent-mail:</guilabel></term>
 <listitem>
-<para>Contains copies of all messages that you have moved to trash. </para>
+<para>Contains copies of all messages that you have sent.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>trash:</guilabel></term>
 <listitem>
-<para>Contains all messages that you have deleted.</para>
+<para>Contains all messages that you have moved to trash.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -1120,6 +1123,7 @@ even this command will work (within its limits):
 <userinput><command>uudecode</command> <option>-o</option>
 <parameter>$(mktemp kmail-uudecoded.XXXXXX)</parameter> &amp;&amp;
 <command>echo</command> <parameter>$'\a'</parameter></userinput></para></tip>
+<!-- fixme: is this uudecode tip useless now?? -->
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -1278,7 +1282,7 @@ they are greater than</guilabel> box. Once you did that, you can specify a size
 which is used as a threshold. Messages exceeding this size will be
 checked against the filter rules you defined. If no filter rule
 matches, they will be shown in a confirmation dialog and you can
-decide what to do with them. The default size for filtering is 50000
+decide what to do with them. The default size for filtering is 50,000
 Bytes. This is a good value as the overhead is kept to a minimum.
 Every message that is looked at by the filter causes additional
 traffic because the header of the message is downloaded twice. The
@@ -1435,7 +1439,7 @@ output. This output is often different between different versions of
 <application>PGP</application>, so it is important that you test if encryption
 really works with your setup before you start using it seriously. &kmail; might
 <emphasis>not</emphasis> warn you if something fails. You better enable 
-<guilabel>Show ciphered/signed text
+<guilabel>Show signed/encrypted text
 after composing</guilabel>.  </para></warning>
 
 <para>To setup and use <application>PGP</application> support in &kmail; it is
@@ -1470,7 +1474,7 @@ has no internal support for <application>pgp</application>'s key generation at
 this time. The identity (normally your name followed by your email address
 within brackets, such as <userinput>John Doe
 &lt;john@example.com&gt;</userinput>) and your passphrase are important for the
-co-operation between &kmail; and <application>pgp</application>.</para>
+co-operation between &kmail; and <application>PGP</application>.</para>
 
 </sect2>
 
@@ -1836,7 +1840,7 @@ rare cases.</para></note>
 <varlistentry>
 <term><guilabel>BCC address</guilabel></term>
 <listitem>
-<para>Optionally enter an addresses to which blind copies of your messages
+<para>Optionally enter an address to which blind copies of your messages
 should be sent to.</para>
 </listitem>
 </varlistentry>
@@ -1933,11 +1937,11 @@ traditional way on Unix is to read the text from a file called
 be shared between several programs, so you get the same
 signature in each mail program you use.</para>
 
-<para>To read the text from a flat text file you select
+<para>To read the text from a text file you select
 <guilabel>Obtain signature text from file</guilabel>. Enter the
 filename in the <guilabel>Specify file</guilabel> edit field or hit
 the button to the right of it to browse your filesystem. If you want
-to edit the file, hit the <guilabel>Edit file</guilabel>
+to edit the file, hit the <guilabel>Edit File</guilabel>
 button.</para>
 
 <para>&kmail; can also read the signature text from the output of a
@@ -1948,8 +1952,8 @@ every message. Everything the program prints onto
 text.</para>
 
 <para>To read the text from the output of a command you select
-<guilabel>Obtain signature text from output of
-command</guilabel>. Enter the command (preferably with full path) in
+<guilabel>Obtain signature text from Output of
+Command</guilabel>. Enter the command (preferably with full path) in
 the <guilabel>Specify command</guilabel> edit field or hit the button
 to the right of it to browse your filesystem.</para>
 
@@ -2107,7 +2111,7 @@ the differences between the layouts.</para>
 the MIME tree will be shown: the MIME tree is a part of the main window that
 lets you access all attachments of a message. <guilabel>Never</guilabel> will
 disable the MIME tree (note that you can still access attachments as icons),
-<guilabel>Always will</guilabel> show a MIME tree even if the message does not
+<guilabel>Always</guilabel> will show a MIME tree even if the message does not
 have an attachment. <guilabel>Smart</guilabel> will display the MIME tree
 only if it makes sense, &ie; if the current message has at least one attachment.</para>
 
@@ -2125,7 +2129,7 @@ that has been signed will have a small <guiicon>Signed</guiicon> icon in front
 of the subject, every message that has been encrypted will have a small
 <guiicon>Encrypted</guiicon> icon in front of the subject. Note that you have
 to select a message once before these icons will appear, until then only
-questions mark will be displayed.</para>
+question marks will be displayed.</para>
 
 <para><guilabel>Thread list of message headers</guilabel> will put all the messages 
 in the header pane in a kind of tree list, so that the replies to a message are 
@@ -2408,8 +2412,7 @@ option is selected.</para>
 <term><guilabel>Expire old messages</guilabel></term>
 <listitem>
 <para>Delete old messages from folders, according to the rules in
-each folder's <link linkend="folders-properties-window">Properties dialog</link> 
-(the default is not to delete old messages at all).</para>
+each folder's <link linkend="folders-properties-window">Properties dialog</link>.</para>
 </listitem>
 </varlistentry>
 
@@ -4890,7 +4893,7 @@ class="directory">[...]/Mail/Mail/math.university.edu</filename>);
 you will need to copy files from each of them if you want everything to
 be accessible under &kmail;.</para>
 
-<para>If you have no subfolders, just copy all of the &Netscape;
+<para>If you have no sub folders, just copy all of the &Netscape;
 files to <filename class="directory">~/Mail</filename>, make sure
 that they are writable (only by your user, of course), and restart
 &kmail;: all of the messages will now appear in &kmail; folders.
@@ -4902,8 +4905,8 @@ folder has a corresponding <filename>.msf</filename> file, and if you
 do not get rid of them you will have a bunch of spurious empty
 folders.)</para>
 
-<para>If you were using subfolders under &Netscape; (&eg; a main
-folder called <replaceable>Work</replaceable> with subfolders called
+<para>If you were using sub folders under &Netscape; (&eg; a main
+folder called <replaceable>Work</replaceable> with sub folders called
 <replaceable>Jim</replaceable> and <replaceable>Nancy</replaceable>),
 there are additional steps required. First, create the main folder
 (<replaceable>Work</replaceable>) in &kmail; and create a temporary
@@ -4914,14 +4917,14 @@ or the default <replaceable>unnamed</replaceable>, for example. Once
 a child folder has been requested, &kmail; creates a hidden directory
 in <filename class="directory">~/Mail</filename> called (in this
 example) <filename class="directory">.Work.directory</filename>. You
-can then copy your &Netscape; subfolder files
+can then copy your &Netscape; sub folder files
 (<replaceable>Jim</replaceable> and <replaceable>Nancy</replaceable>)
 into <filename class="directory">~/Mail/.Work.directory</filename>,
 and restart &kmail;; the child folders will appear under the main
 folder <replaceable>Work</replaceable>. Of course, this procedure may
-be extended for sub-subfolders, to any depth. (You can remove the
+be extended for sub-sub folders, to any depth. (You can remove the
 temporary child folders afterwards, unless it amuses you to have a
-<replaceable>Work</replaceable> subfolder called
+<replaceable>Work</replaceable> sub folder called
 <replaceable>dummy</replaceable>.)</para>
 
 </listitem>
