@@ -18,6 +18,7 @@ QUICK NOTES ON WHAT'S NEW IN THIS RELEASE:
     - Don't restrict maximum size of search dialog (#54912).
     - Make cancel button of template selection dialog work (#54852).
     - Don't break sorting when changing todos by context menu (#53680).
+    - Update views on changes of todos directly in the todo list (#43162).
 
 * Official 3.1 release (January 2003)
 
