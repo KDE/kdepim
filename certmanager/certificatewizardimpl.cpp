@@ -200,7 +200,7 @@ CertificateWizardImpl::~CertificateWizardImpl()
 static const char * oidForAttributeName( const QString & attr ) {
   QCString attrUtf8 = attr.utf8();
   for ( unsigned int i = 0 ; i < numOidMaps ; ++i )
-    if ( qstricmp( attrUtf8, oidmap[i].name ) )
+    if ( qstricmp( attrUtf8, oidmap[i].name ) == 0 )
       return oidmap[i].oid;
   return 0;
 }
