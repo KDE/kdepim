@@ -31,6 +31,7 @@ static int runscripts
 ( const QString &interpreter, const QString &extension, const QString &path );
 
 const QString dots = ".................................................."; 
+const QString not_a_test_filename_prefix = "__";
 
 // Read srcdir from Makefile (for builddir != srcdir).
 QString srcdir()
@@ -77,7 +78,7 @@ int runscripts
   while ( !rval && ( fi = it.current() ) != 0 ) 
   {
     // Don't run scripts that are shared routines.
-    if ( ! fi->fileName().startsWith( "__" ) ) 
+    if ( ! fi->fileName().startsWith( not_a_test_filename_prefix ) ) 
     {
       s->addArgument( interpreter );
       s->addArgument( path + QDir::separator() + fi->fileName().latin1() );
@@ -91,6 +92,9 @@ int runscripts
       kdDebug() << "runscripts: " << fi->fileName() 
         << " " << dots.left( dots.length() - fi->fileName().length() )
         << " " << ( ! rval ? "PASS" : "FAIL" ) << endl;
+
+      // Don't abort if one test files--run them all
+      if ( rval ) rval = 0;
 
       delete s;
       s = new Script( dir );
