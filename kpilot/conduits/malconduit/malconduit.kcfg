@@ -34,7 +34,7 @@
     <entry name="ProxyUser" key="Proxy User" type="String">
         <default></default>
     </entry>
-    <entry name="ProxyPassword" key="Proxy Password" type="String">
+    <entry name="ProxyPassword" key="Proxy Password" type="Password">
         <default></default>
     </entry>
     <entry name="MALServer" key="MAL Server" type="String">

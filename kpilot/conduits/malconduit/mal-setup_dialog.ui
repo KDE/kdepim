@@ -316,7 +316,7 @@
                                     <cstring>proxyPassword</cstring>
                                 </property>
                                 <property name="echoMode">
-                                    <enum>Normal</enum>
+                                    <enum>Password</enum>
                                 </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>If your proxy requires authentication, enter your password here.</string>
