@@ -5,7 +5,7 @@
 
 METASOURCES = AUTO
 
-INCLUDES = $(all_includes) $(PISOCK_INCLUDE)
+INCLUDES = $(PISOCK_INCLUDE) $(all_includes)
 
 ### If you must get debugging output on a platform where
 ### the libs are built without debugging support, define
