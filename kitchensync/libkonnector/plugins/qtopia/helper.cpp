@@ -94,25 +94,28 @@ KTempFile* Base::file() {
 }
 QString Base::categoriesToNumber( const QStringList &list, const QString &app )
 {
+    kdDebug() << "categoriesToNumber " << list.join(";") << endl;
     QString dummy;
     QValueList<OpieCategories>::ConstIterator catIt;
     QValueList<OpieCategories> categories = m_edit->categories();
     bool found = false;
     for ( QStringList::ConstIterator listIt = list.begin(); listIt != list.end(); ++listIt ) {
+        found  = false;
         for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
             if ( (*catIt).name() == (*listIt) ) { // the same name
-	        kdDebug(5224) << "Found " << (*listIt) << endl;
+	        kdDebug(5226) << "Found " << (*listIt) << endl;
                 found= true;
                 dummy.append( (*catIt).id() + ";");
             }
         }
         if ( !found ){
-	 kdDebug(5224) << "Not Found category " << (*listIt) << endl;
+	 kdDebug(5226) << "Not Found category " << (*listIt) << endl;
          dummy.append( QString::number(m_edit->addCategory( app, (*listIt) ) ) + ";" );  // generate a new category
 	}
     }
     if ( !dummy.isEmpty() )
         dummy.remove(dummy.length() -1,  1 ); //remove the last ;
+
     return dummy;
 }
 QStringList Base::categoriesToNumberList( const QStringList &list, const QString &app )

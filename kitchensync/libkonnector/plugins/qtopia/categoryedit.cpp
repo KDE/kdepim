@@ -127,17 +127,17 @@ QString CategoryEdit::categoryById( const QString &id,  const QString &app )cons
     QString category;
     QString fallback;
     for( it = m_categories.begin(); it != m_categories.end(); ++it ){
-//	kdDebug(5226) << "it :" << (*it).id() << "id:" << id << "ende"<<endl;
+        kdDebug(5226) << "it :" << (*it).id() << "id:" << id << "ende"<<endl;
 	if( id.stripWhiteSpace() == (*it).id().stripWhiteSpace() ){
 	    if( app == (*it).app() ){
-	    //kdDebug(5226) << "found category" << endl;
+                kdDebug(5226) << "found category" << endl;
                 category = (*it).name();
                 break;
             }else{
                 fallback = (*it).name();
             }
         }
-    //kdDebug(5226) << "CategoryById: " << category << endl;
+    kdDebug(5226) << "CategoryById: " << category << endl;
     }
     return category.isEmpty() ? fallback : category;
 }

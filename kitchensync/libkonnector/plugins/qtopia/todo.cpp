@@ -41,6 +41,8 @@ KCal::Todo* ToDo::dom2todo( QDomElement e ) {
         categories.append(m_edit->categoryById(list[i], "Todo List") );
     }
     if (!categories.isEmpty() ) {
+        kdDebug(5226) << "List " << list.join(";") << endl;
+        kdDebug(5226) << "TransLated " << categories.join(";") << endl;
         todo->setCategories( categories );
     }
 
@@ -64,11 +66,11 @@ KCal::Todo* ToDo::dom2todo( QDomElement e ) {
 
     /* !0 */
     if ( Int ) {
+        kdDebug(5227) << "Calling not completed " << endl;
         todo->setCompleted( false );
         todo->setPercentComplete( e.attribute("Progress").toInt() );
-    }
-    todo->setPercentComplete( e.attribute("Progress").toInt() );
-    todo->setCompleted(Int );
+    }else
+        todo->setCompleted(Int );
 
 
 
