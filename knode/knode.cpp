@@ -540,10 +540,12 @@ void KNodeApp::initActions()
   actSetShowAllHdrs->setChecked(KNArticleWidget::fullHeaders());
   actSetFilters = new KSelectAction(i18n("&Filter"), "filter", 0 , actionCollection(), "settings_Filter");
   actSetSort = new KSelectAction(i18n("&Sort"), 0 , actionCollection(), "settings_Sort");
-  actSetSort->popupMenu()->insertItem(i18n("By &Subject"), 0);
-  actSetSort->popupMenu()->insertItem(i18n("By S&ender"), 1);
-  actSetSort->popupMenu()->insertItem(i18n("By S&core"), 2);
-  actSetSort->popupMenu()->insertItem(i18n("By &Date"), 3);
+  QStringList items;
+  items += i18n("By &Subject");
+  items += i18n("By S&ender");
+  items += i18n("By S&core");
+  items += i18n("By &Date");
+  actSetSort->setItems(items);
   connect(actSetSort, SIGNAL(activated (int)), this, SLOT(slotViewSort (int)));
 
   createGUI( "knodeui.rc" );
