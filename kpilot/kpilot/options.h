@@ -108,7 +108,8 @@
 // defined above. Use the areas *_AREA in calls to kdWarning() or
 // kdError() to make sure the right output is generated.
 
-
+#include <kdebug.h>
+#include <qstringlist.h>
 
 
 // (Old-style) Debug level is set to some bit pattern; if any 
@@ -131,7 +132,6 @@ extern const char *debug_spaces;
 				<< "(" << __FILE__ << ":" << \
 				__LINE__ << ")\n"; }
 
-class kdbgstream;
 class KConfig;
 
 // Next all kinds of specialty debugging functions,
@@ -201,6 +201,9 @@ extern const int fname;
 
 
 // $Log$
+// Revision 1.28  2001/06/13 22:51:38  cschumac
+// Minor fixes reviewed on the mailing list.
+//
 // Revision 1.27  2001/05/24 10:31:38  adridg
 // Philipp Hullmann's extensive memory-leak hunting patches
 //
