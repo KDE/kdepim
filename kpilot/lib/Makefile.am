@@ -23,7 +23,7 @@ libkpilot_la_SOURCES = options.cc uiDialog.cc plugin.cc syncAction.cc \
 	pilotMemo.cc pilotAddress.cc \
 	pilotDateEntry.cc pilotTodoEntry.cc
 
-libkpilot_la_LIBADD = $(KDE_EXTRA_RPATH) $(LIBPISOCK)
+libkpilot_la_LIBADD = $(USER_LDFLAGS) $(LIBPISOCK) $(KDE_EXTRA_RPATH)
 
 oldincludedir = $(includedir)/kpilot
 oldinclude_HEADERS = kpilotlink.h uiDialog.h plugin.h syncAction.h \
