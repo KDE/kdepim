@@ -110,7 +110,7 @@ using namespace std;
 #define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
 #endif
 
-#define KPILOT_VERSION	"4.3.6 (3_1_BRANCH)"
+#define KPILOT_VERSION	"4.3.7 (BRANCH)"
 
 // * KPilot debugging code looks like:
 //
@@ -230,10 +230,6 @@ QString charExpansion(const char *);
 // with constant strings.
 //
 //
-#ifdef QT_NO_CAST_ASCII
 #define CSL1(a)		QString::fromLatin1(a "")
-#else
-#define CSL1(a)		a
-#endif
 
 #endif
