@@ -120,16 +120,25 @@ bool FileStorage::save()
 {
   if ( mFileName.isEmpty() ) return false;
 
-  bool success;
+  CalFormat *format = 0;
+  if ( mSaveFormat ) format = mSaveFormat;
+  else format = new ICalFormat;
 
-  if ( mSaveFormat ) {
-    success = mSaveFormat->save( calendar(), mFileName);
+  bool success = format->save( calendar(), mFileName );
+
+  if ( success ) {
+    calendar()->setModified( false );
   } else {
-    ICalFormat iCal;
-    success = iCal.save( calendar(), mFileName);
+    if ( !format->exception() ) {
+      kdDebug() << "FileStorage::save(): Error. There should be set an expection."
+                << endl;
+    } else {
+      kdDebug() << "FileStorage::save(): " << format->exception()->message()
+                << endl;
+    }
   }
 
-  if ( success ) calendar()->setModified( false );
+  if ( !mSaveFormat ) delete format;
 
   return success;
 }
