@@ -58,7 +58,7 @@ ExpenseWidgetSetup::ExpenseWidgetSetup(QWidget *w, const char *n,
 	fConfigWidget->tabWidget->adjustSize();
 	fConfigWidget->resize(fConfigWidget->tabWidget->size());
 
-#ifdef DEBUG
+#if defined(DEBUG) && !defined(NDEBUG)
 	DEBUGCONDUIT << fname
 		<< "Size of tabw="
 		<< fConfigWidget->tabWidget->size()
@@ -273,6 +273,9 @@ void ExpenseWidgetSetup::slotDBPolicyChanged()
 }
 
 // $Log$
+// Revision 1.9  2001/12/18 07:40:49  adridg
+// Enable conduit's config & back out danimo's work
+//
 // Revision 1.8  2001/12/08 16:29:41  mlaurent
 // Fix compilation.
 // Dirk could you recreate a tarball for kde3.0beta1
@@ -305,6 +308,9 @@ void ExpenseWidgetSetup::slotDBPolicyChanged()
 //
 
 // $Log$
+// Revision 1.9  2001/12/18 07:40:49  adridg
+// Enable conduit's config & back out danimo's work
+//
 // Revision 1.3  2001/12/13 21:35:12  adridg
 // Gave all conduits a config dialog
 //
@@ -322,6 +328,9 @@ void ExpenseWidgetSetup::slotDBPolicyChanged()
 //
 
 // $Log$
+// Revision 1.9  2001/12/18 07:40:49  adridg
+// Enable conduit's config & back out danimo's work
+//
 //
 // Revision 1.2  2001/03/14 16:56:02  molnarc
 //
