@@ -289,7 +289,12 @@ void KSyncMainWindow::slotSync( const QString &udi,
 void KSyncMainWindow::slotStateChanged( const QString &udi,
                                         bool connected )
 {
-
+    kdDebug() << "State changed" << connected << endl;
+    if ( !connected )
+        statusBar()->message(i18n("Not connected") );
+    else
+        statusBar()->message(i18n("Connected") );
+    statusBar()->show();
 }
 void KSyncMainWindow::slotKonnectorError( const QString& udi,
                                           int error,
