@@ -785,8 +785,8 @@ int main( int argc, char *argv[] )
   if ( create + view + add + change + del > 1 ) {
     cout << i18n(
       "Only 1 operation mode "
-      "(view, add, change, delete,create)"
-      "permitted at a time"
+      "(view, add, change, delete, create) "
+      "permitted at any one time"
       ).local8Bit() << endl;
     return 1;
   }
