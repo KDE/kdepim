@@ -35,16 +35,24 @@
 
 #include <gpgmepp/interfaces/progressprovider.h>
 
+#include <qcstring.h>
+
 namespace GpgME {
   class Error;
   class Context;
+  class Data;
 }
 
 namespace Kleo {
   class Job;
 }
 
+namespace QGpgME {
+  class QByteArrayDataProvider;
+}
+
 class QString;
+class QStringList;
 
 namespace Kleo {
 
@@ -72,6 +80,13 @@ namespace Kleo {
     virtual void doOperationDoneEvent( const GpgME::Error & e ) = 0;
     /*! Hooks up mCtx to be managed by the event loop interactor */
     void hookupContextToEventLoopInteractor();
+    /*! Fills mPatterns from the stringlist */
+    void setPatterns( const QStringList & sl, bool allowEmpty=false );
+    /*! Creates an empty GpgME::Data/QGpgME::QByteArrayDataProvider pair */
+    void createOutData();
+    /*! Creates a GpgME::Data/QGpgME::QByteArrayDataProvider pair,
+      filled with the contents of \a in */
+    void createInData( const QByteArray & in );
     /*! Call this to implement a slotOperationDoneEvent() */
     void doSlotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
 
@@ -92,6 +107,10 @@ namespace Kleo {
     Kleo::Job * mThis;
     GpgME::Context * mCtx;
     const char* * mPatterns; // use if you want, but it's deleted by this class' dtor!
+    GpgME::Data * mInData;
+    QGpgME::QByteArrayDataProvider * mInDataDataProvider;
+    GpgME::Data * mOutData;
+    QGpgME::QByteArrayDataProvider * mOutDataDataProvider;
   };
 
 }

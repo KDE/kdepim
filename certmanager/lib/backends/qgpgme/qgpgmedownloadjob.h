@@ -35,24 +35,17 @@
 
 #include <kleo/downloadjob.h>
 
-#include <gpgmepp/interfaces/progressprovider.h>
-
-#include <qcstring.h>
+#include "qgpgmejob.h"
 
 namespace GpgME {
   class Error;
   class Context;
-  class Data;
-}
-
-namespace QGpgME {
-  class QByteArrayDataProvider;
 }
 
 namespace Kleo {
 
-  class QGpgMEDownloadJob : public DownloadJob, public GpgME::ProgressProvider {
-    Q_OBJECT
+  class QGpgMEDownloadJob : public DownloadJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
   public:
     QGpgMEDownloadJob( GpgME::Context * context );
     ~QGpgMEDownloadJob();
@@ -60,20 +53,13 @@ namespace Kleo {
     /*! \reimp from DownloadJob */
     GpgME::Error start( const QStringList & fingerprints );
 
+  private:
+    void doOperationDoneEvent( const GpgME::Error & e );
+
   private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
-    /*! \reimp from Job */
-    void slotCancel();
-
-  private:
-    /*! \reimp from GpgME::ProgressProvider */
-    void showProgress( const char * what, int type, int current, int total );
-
-  private:
-    GpgME::Context * mCtx;
-    const char* * mPatterns;
-    QGpgME::QByteArrayDataProvider * mKeyDataDataProvider;
-    GpgME::Data * mKeyData;
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+    }
   };
 
 }

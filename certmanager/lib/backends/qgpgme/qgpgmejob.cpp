@@ -40,18 +40,26 @@
 #include <kleo/job.h>
 
 #include <qgpgme/eventloopinteractor.h>
+#include <qgpgme/dataprovider.h>
 
 #include <gpgmepp/context.h>
+#include <gpgmepp/data.h>
 
 #include <qstring.h>
+#include <qstringlist.h>
 
 #include <assert.h>
+#include <string.h>
 
 Kleo::QGpgMEJob::QGpgMEJob( Kleo::Job * _this, GpgME::Context * context )
   : GpgME::ProgressProvider(),
     mThis( _this ),
     mCtx( context ),
-    mPatterns( 0 )
+    mPatterns( 0 ),
+    mInData( 0 ),
+    mInDataDataProvider( 0 ),
+    mOutData( 0 ),
+    mOutDataDataProvider( 0 )
 {
   assert( context );
 }
@@ -62,6 +70,10 @@ Kleo::QGpgMEJob::~QGpgMEJob() {
     for ( const char* * it = mPatterns ; *it ; ++it )
       free( (void*)*it );
   delete[] mPatterns; mPatterns = 0;
+  delete mInData; mInData = 0;
+  delete mInDataDataProvider; mInDataDataProvider = 0;
+  delete mOutData; mOutData = 0;
+  delete mOutDataDataProvider; mOutDataDataProvider = 0;
 }
 
 void Kleo::QGpgMEJob::hookupContextToEventLoopInteractor() {
@@ -70,6 +82,32 @@ void Kleo::QGpgMEJob::hookupContextToEventLoopInteractor() {
 		    SIGNAL(operationDoneEventSignal(GpgME::Context*,const GpgME::Error&)),
 		    mThis, SLOT(slotOperationDoneEvent(GpgME::Context*,const GpgME::Error&)) );
   mCtx->setProgressProvider( this );
+}
+
+void Kleo::QGpgMEJob::setPatterns( const QStringList & sl, bool allowEmpty ) {
+  // create a new null-terminated C array of char* from patterns:
+  mPatterns = new const char*[ sl.size() + 1 ];
+  const char* * pat_it = mPatterns;
+  for ( QStringList::const_iterator it = sl.begin() ; it != sl.end() ; ++it ) {
+    if ( (*it).isNull() )
+      continue;
+    if ( (*it).isEmpty() && !allowEmpty )
+      continue;
+    *pat_it++ = strdup( (*it).utf8().data() );
+  }
+  *pat_it++ = 0;
+}
+
+void Kleo::QGpgMEJob::createInData( const QByteArray & in ) {
+  mInDataDataProvider = new QGpgME::QByteArrayDataProvider( in );
+  mInData = new GpgME::Data( mInDataDataProvider );
+  assert( !mInData->isNull() );
+}
+
+void Kleo::QGpgMEJob::createOutData() {
+  mOutDataDataProvider = new QGpgME::QByteArrayDataProvider();
+  mOutData = new GpgME::Data( mOutDataDataProvider );
+  assert( !mOutData->isNull() );
 }
 
 void Kleo::QGpgMEJob::doSlotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {

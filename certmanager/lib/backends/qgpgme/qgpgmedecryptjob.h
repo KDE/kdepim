@@ -35,24 +35,19 @@
 
 #include <kleo/decryptjob.h>
 
-#include <gpgmepp/interfaces/progressprovider.h>
+#include "qgpgmejob.h"
 
 #include <qcstring.h>
 
 namespace GpgME {
   class Error;
   class Context;
-  class Data;
-}
-
-namespace QGpgME {
-  class QByteArrayDataProvider;
 }
 
 namespace Kleo {
 
-  class QGpgMEDecryptJob : public DecryptJob, public GpgME::ProgressProvider {
-    Q_OBJECT
+  class QGpgMEDecryptJob : public DecryptJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
   public:
     QGpgMEDecryptJob( GpgME::Context * context );
     ~QGpgMEDecryptJob();
@@ -65,21 +60,13 @@ namespace Kleo {
 				  QByteArray & plainText );
 
   private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
-    /*! \reimp from Job */
-    void slotCancel();
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+    }
 
   private:
-    /*! \reimp from GpgME::ProgressProvider */
-    void showProgress( const char * what, int type, int current, int total );
+    void doOperationDoneEvent( const GpgME::Error & e );
     void setup( const QByteArray & cipherText );
-
-  private:
-    GpgME::Context * mCtx;
-    QGpgME::QByteArrayDataProvider * mPlainTextDataProvider;
-    GpgME::Data * mPlainText;
-    QGpgME::QByteArrayDataProvider * mCipherTextDataProvider;
-    GpgME::Data * mCipherText;
   };
 
 }
