@@ -77,18 +77,16 @@ EmpathMailboxMaildir::mark(const EmpathURL & message, MessageStatus msgStat)
 	void
 EmpathMailboxMaildir::syncIndex(const EmpathURL & url)
 {
+	empathDebug("syncIndex(" + url.asString() + ") called");
 	EmpathMaildirListIterator it(boxList_);
 	
-	for (; it.current(); ++it)
-		if (it.current()->path() == url.folderPath())
+	for (; it.current(); ++it) {
+		empathDebug("Looking at \"" + it.current()->path() + "\"");
+		if (it.current()->url() == url)
 			it.current()->sync(url);
+	}
 }
 	
-	void
-EmpathMailboxMaildir::s_checkNewMail()
-{
-}
-
 	void
 EmpathMailboxMaildir::_setupDefaultFolders()
 {
@@ -103,35 +101,35 @@ EmpathMailboxMaildir::_setupDefaultFolders()
 	CHECK_PTR(folder_inbox);
 		
 	EmpathMaildir * box_inbox =
-		new EmpathMaildir(path_, folder_inbox);
+		new EmpathMaildir(path_, urlInbox);
 	CHECK_PTR(box_inbox);
 	
 	EmpathFolder * folder_outbox = new EmpathFolder(urlOutbox);
 	CHECK_PTR(folder_outbox);
 	
 	EmpathMaildir * box_outbox =
-		new EmpathMaildir(path_, folder_outbox);
+		new EmpathMaildir(path_, urlOutbox);
 	CHECK_PTR(box_outbox);
 	
 	EmpathFolder * folder_drafts = new EmpathFolder(urlDrafts);
 	CHECK_PTR(folder_drafts);
 	
 	EmpathMaildir * box_drafts =
-		new EmpathMaildir(path_, folder_drafts);
+		new EmpathMaildir(path_, urlDrafts);
 	CHECK_PTR(box_drafts);
 	
 	EmpathFolder * folder_sent = new EmpathFolder(urlSent);
 	CHECK_PTR(folder_sent);
 	
 	EmpathMaildir * box_sent =
-		new EmpathMaildir(path_, folder_sent);
+		new EmpathMaildir(path_, urlSent);
 	CHECK_PTR(box_sent);
 	
 	EmpathFolder * folder_trash = new EmpathFolder(urlTrash);
 	CHECK_PTR(folder_trash);
 	
 	EmpathMaildir * box_trash =
-		new EmpathMaildir(path_, folder_trash);
+		new EmpathMaildir(path_, urlTrash);
 	CHECK_PTR(box_trash);
 	
 	folderList_.append(folder_trash);
@@ -150,7 +148,7 @@ EmpathMailboxMaildir::_setupDefaultFolders()
 }
 	
 	bool
-EmpathMailboxMaildir::writeMessage(EmpathFolder * parentFolder, const RMessage & m)
+EmpathMailboxMaildir::writeMessage(const EmpathURL & folder, const RMessage & m)
 {
 	empathDebug("writeMessage called with message " + QString().setNum(m.id()));
 	// FIXME: Write writeNewMail method !
@@ -219,7 +217,7 @@ EmpathMailboxMaildir::readConfig()
 
 		folderList_.append(f);
 		
-		EmpathMaildir * m = new EmpathMaildir(path_, f);
+		EmpathMaildir * m = new EmpathMaildir(path_, url);
 		CHECK_PTR(m);
 		
 		boxList_.append(m);
@@ -236,12 +234,12 @@ EmpathMailboxMaildir::getMail()
 }
 
 	void
-EmpathMailboxMaildir::checkNewMail()
+EmpathMailboxMaildir::s_checkNewMail()
 {
 }
 	
 	void
-EmpathMailboxMaildir::getNewMail()
+EmpathMailboxMaildir::s_getNewMail()
 {
 }
 
@@ -312,7 +310,7 @@ EmpathMailboxMaildir::_box(const EmpathURL & id)
 	EmpathMaildirListIterator it(boxList_);
 	
 	for (; it.current(); ++it)
-		if (it.current()->path() == id.folderPath())
+		if (it.current()->url() == id)
 			return it.current();
 	
 	return 0;
@@ -325,7 +323,7 @@ EmpathMailboxMaildir::addFolder(const EmpathURL & id)
 	EmpathFolder * f = new EmpathFolder(id);
 	CHECK_PTR(f);
 	
-	EmpathMaildir * m = new EmpathMaildir(path_, f);
+	EmpathMaildir * m = new EmpathMaildir(path_, id);
 	CHECK_PTR(m);
 	
 	folderList_.append(f);

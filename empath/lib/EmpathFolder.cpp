@@ -102,11 +102,11 @@ EmpathFolder::messageDescription(const RMessageID & id) const
 }
 
 	RMessage *
-EmpathFolder::message(const RMessageID & id)
+EmpathFolder::message(const EmpathURL & url)
 {
 	EmpathMailbox * m = empath->mailbox(url_);
 	if (m == 0) return 0;
-	return m->message(EmpathURL(url_.asString() + "/" + QString(id.asString())));
+	return m->message(url);
 }
 
 	void
@@ -124,7 +124,7 @@ EmpathFolder::update()
 EmpathFolder::writeMessage(const RMessage & message)
 {
 	EmpathMailbox * m = empath->mailbox(url_);
-	return (m != 0 && m->writeMessage(this, message));
+	return (m != 0 && m->writeMessage(url_, message));
 }
 
 	EmpathFolder *

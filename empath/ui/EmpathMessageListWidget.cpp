@@ -234,75 +234,6 @@ EmpathMessageListWidget::addItem(EmpathIndexRecord * item)
 }
 /*
 	void
-EmpathMessageListWidget::append(EmpathMessageListItem * item)
-{
-	QListIterator<EmpathMessageListItem> parentIt(threadItemList_);
-
-	EmpathMessageListItem * parentItem = 0;
-			
-	// See if our item has a parent in the list
-	for (; parentIt.current(); ++parentIt) {
-		
-		empathDebug("Looking at item with id " + parentIt.current()->messageID());
-		
-		if (parentIt.current()->messageID() == item->msgDesc()->parentID()) {
-			parentItem = (EmpathMessageListItem *)parentIt.current();
-			break;
-		}
-	}
-
-	EmpathMessageListItem * i;
-	
-	if (parentItem != 0) {
-		empathDebug("Adding item with parent as list item");
-		i = new EmpathMessageListItem(parentItem, item->msgDesc());
-		i->setPixmap(0, px_unread_unmarked);
-	} else {
-		empathDebug("Adding item with parent as list itself");
-		i = new EmpathMessageListItem( this, item->msgDesc());
-		i->setPixmap(0, px_unread_unmarked);
-	}
-}
-
-// We have the top item, #1
-//
-// 1
-// `--2
-// |  `--3
-// |  |
-// |  `--4
-// |
-// `--5
-//
-// So ... if there's a first child, call this function with that as initialItem
-//
-// if there's a next sibling, call this function with that sibling
-// 
-// add this item, return
-//
-// This will do:
-//
-// start at 1
-// has first child - 2
-// 		start at 2
-// 		has first child - 3
-// 			start at 3
-// 			has no first child
-// 			has next sibling - 4
-// 				start at 4
-// 				no first child, no next sibling
-// 				add 4, return
-// 			add 3, return
-// 		has sibling - 5
-// 			start at 5
-// 			no child, no sibling
-// 			add 5, return
-// 		return
-// 	no sibling
-// 	add 1, return
-// 
-
-	void
 EmpathMessageListWidget::getDescendants(
 		EmpathMessageListItem * initialItem,
 		QList<EmpathMessageListItem> * itemList)
@@ -321,12 +252,16 @@ EmpathMessageListWidget::getDescendants(
 
 	itemList->append(initialItem);
 }
-*/	
-	EmpathIndexRecord *
+*/
+	EmpathURL
 EmpathMessageListWidget::firstSelectedMessage() const
 {
-	if (currentItem() == 0) return 0;
-	return ((EmpathMessageListItem *)currentItem())->msgDesc();
+	EmpathURL u("orphaned");
+	if (currentItem() == 0) return u;
+	EmpathMessageListItem * item = (EmpathMessageListItem *)currentItem();
+	// FIXME we want id of message from item.
+	u = EmpathURL(url_.mailboxName(), url_.folderPath(), QString::null);
+	return u;
 }
 
 // Message menu slots
@@ -343,8 +278,11 @@ EmpathMessageListWidget::s_messageReply()
 {
 	empathDebug("s_messageReply called");
 	
+	EmpathFolder * f(empath->folder(url_));
+	if (f == 0) return;
+
 	RMessage * message(
-		currentFolder_->message(firstSelectedMessage()->messageID()));
+		f->message(firstSelectedMessage()));
 	
 	empath->reply(message);
 	empathDebug("Blah !");
@@ -401,11 +339,11 @@ EmpathMessageListWidget::s_messageSaveAs()
 	}
 	empathDebug("Opened " + saveFilePath + " OK");
 	
-	RMessageID id = firstSelectedMessage()->messageID();
+	EmpathFolder * folder(empath->folder(url_));
+	if (folder == 0) return;
 	
-	empathDebug("Using message " + id.asString());
-
-	HeapPtr<RMessage> message(currentFolder_->message(id));
+	RMessage * message(folder->message(firstSelectedMessage()));
+	if (message == 0) return;
 	
 	QString s =
 		message->asString();
@@ -426,6 +364,7 @@ EmpathMessageListWidget::s_messageSaveAs()
 		if (f.writeBlock(outStr, outStr.length()) != outStr.length()) {
 			// Warn user file not written.
 			KMsgBox(this, "Empath", i18n("Sorry I couldn't write the file successfully. Please try another file."), KMsgBox::EXCLAMATION, i18n("OK"));
+			delete message; message = 0;
 			return;
 		}
 		qApp->processEvents();
@@ -434,6 +373,7 @@ EmpathMessageListWidget::s_messageSaveAs()
 	f.close();
 	
 	KMsgBox(this, "Empath", i18n("Message saved to") + QString(" ") + saveFilePath + QString(" ") + i18n("OK"), KMsgBox::INFORMATION, i18n("OK"));
+	delete message; message = 0;
 }
 
 	void
@@ -462,16 +402,14 @@ EmpathMessageListWidget::s_messageView()
 {
 	empathDebug("s_messageView called");
 	
-	RMessageID id = firstSelectedMessage()->messageID();
-	
-	empathDebug("Using message " + id.asString());
-	
-	RMessage * message(currentFolder_->message(id));
-	
 	EmpathMessageViewWindow * messageViewWindow =
-		new EmpathMessageViewWindow(message, i18n("Empath: Message view"));
-
-	empathDebug("finished s_messageView()");
+		new EmpathMessageViewWindow(
+			firstSelectedMessage(),
+			i18n("Empath: Message View"));
+	
+	CHECK_PTR(messageViewWindow);
+	
+	messageViewWindow->show();
 }
 
 	void
@@ -479,21 +417,12 @@ EmpathMessageListWidget::s_messageViewSource()
 {
 	empathDebug("s_messageViewSource called");
 	
-	RMessageID id = firstSelectedMessage()->messageID();
-	
-	empathDebug("Using message " + id.asString());
-	
-	RMessage * message(currentFolder_->message(id));
-	
-	QString s =
-		message->asString();
-	
-	EmpathMessageSourceView * sourceView = new EmpathMessageSourceView(s, 0);
+	EmpathMessageSourceView * sourceView =
+		new EmpathMessageSourceView(firstSelectedMessage(), 0);
+
 	CHECK_PTR(sourceView);
 
 	sourceView->show();
-	
-	delete message;
 }
 
 	void
@@ -517,24 +446,8 @@ EmpathMessageListWidget::s_currentChanged(QListViewItem *)
 {
 	empathDebug("Current message changed - updating message widget");
 	
-	RMessageID id = firstSelectedMessage()->messageID();
-	
-	empathDebug("Using message " + id.asString());
-	
-	RMessage * message = currentFolder_->message(id);
-	
-	if (message == 0) {
-		empathDebug("Couldn't get data !");
-		return;
-	}
-	
-	empathDebug("Message data:\n" + message->asString());
-	
-//	empathDebug("emitting(currentChanged(" + QString().setNum(message->id()) + ")");
-	
-	if (wantScreenUpdates_) {
-		emit(changeView(message));
-	}
+	if (wantScreenUpdates_)
+		emit(changeView(firstSelectedMessage()));
 }
 
 	void
@@ -562,12 +475,6 @@ EmpathMessageListWidget::setStatus(
 	return;
 }
 
-	EmpathFolder *
-EmpathMessageListWidget::currentFolder()
-{
-	return currentFolder_;
-}
-
 	void
 EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 {
@@ -580,18 +487,18 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 	
 	url_ = url;
 	
-	currentFolder_ = empath->folder(url);
-	if (currentFolder_ == 0) return;
+	EmpathFolder * f = empath->folder(url_);
+	if (f == 0) return;
 	
 	clear();
 	
-	currentFolder_->messageList().sync();
+	f->messageList().sync();
 
 	empathDebug("Adding " +
-		QString().setNum(currentFolder_->messageList().count()) +
+		QString().setNum(f->messageCount()) +
 			" messages to visual list");
 	
-	EmpathIndexIterator it(currentFolder_->messageList());
+	EmpathIndexIterator it(f->messageList());
 
 	// Start by putting everything into our list. This takes care of sorting so
 	// hopefully threading will be simpler.

@@ -31,12 +31,12 @@
 #include "EmpathMenuMaker.h"
 
 EmpathMessageViewWindow::EmpathMessageViewWindow(
-		RMessage * message, const char * name)
+		const EmpathURL & url, const char * name)
 	:	KTMainWindow(name)
 {
 	empathDebug("ctor");
 	
-	messageView_ = new EmpathMessageViewWidget(message, this, "messageView");
+	messageView_ = new EmpathMessageViewWidget(url, this, "messageView");
 	CHECK_PTR(messageView_);
 	
 	menu = menuBar();
@@ -51,9 +51,7 @@ EmpathMessageViewWindow::EmpathMessageViewWindow(
 	
 	empathDebug("Finished setup");
 	
-	QString title =
-		QString("Empath: ") +
-		QString(message->envelope().subject().asString());
+	QString title = "Empath: Message View";
 	
 	setCaption(title);
 	

@@ -56,10 +56,10 @@ class EmpathMessageListWidget : public QListView
 				EmpathMessageListItem * initialItem, const RMessageID & msgId);
 		
 		void addItem(EmpathIndexRecord * item);
-		EmpathIndexRecord * firstSelectedMessage() const;
+		EmpathURL firstSelectedMessage() const;
 		
 		void setSignalUpdates(bool yn);
-		EmpathFolder * currentFolder();
+		const EmpathURL & currentFolder() { return url_; }
 		
 	protected slots:
 	
@@ -83,8 +83,7 @@ class EmpathMessageListWidget : public QListView
 	
 	signals:
 		
-		void currentChanged(RMessage *);
-		void changeView(RMessage *);
+		void changeView(const EmpathURL &);
 		
 	private:
 
@@ -108,7 +107,6 @@ class EmpathMessageListWidget : public QListView
 		
 		void setStatus(EmpathMessageListItem * item, MessageStatus status);
 
-		EmpathFolder * currentFolder_;
 		EmpathURL url_;
 
 		int lastHeaderClicked_;

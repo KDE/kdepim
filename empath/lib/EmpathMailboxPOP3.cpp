@@ -626,7 +626,7 @@ EmpathMailboxPOP3::getMail()
 }
 
 	void
-EmpathMailboxPOP3::checkNewMail()
+EmpathMailboxPOP3::s_checkNewMail()
 {
 	/*
 	empathDebug("checkNewMail()");
@@ -636,7 +636,7 @@ EmpathMailboxPOP3::checkNewMail()
 }
 
 	void
-EmpathMailboxPOP3::getNewMail()
+EmpathMailboxPOP3::s_getNewMail()
 {
 	/*
 	empathDebug("getNewMail()");
@@ -968,7 +968,7 @@ EmpathMailboxPOP3::_log(QCString text)
 }
 
 	bool
-EmpathMailboxPOP3::writeMessage(EmpathFolder * parentFolder, const RMessage &)
+EmpathMailboxPOP3::writeMessage(const EmpathURL & folder, const RMessage &)
 {
 	/*
 	empathDebug("writeMessage() called");

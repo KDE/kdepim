@@ -376,8 +376,8 @@ EmpathAccountsSettingsDialog::updateMailboxList()
 	
 		empathDebug("Reading timer value from mailbox");	
 
-		if (m->usesTimer())
-			timerInterval = QString().setNum(m->timerInterval());
+		if (m->checkMail())
+			timerInterval = QString().setNum(m->checkMailInterval());
 		
 		QString accType;
 		

@@ -51,10 +51,6 @@ class EmpathMailboxMaildir : public EmpathMailbox
 		
 #include "EmpathMailboxAbstract.h"
 
-	public slots:
-
-		void s_checkNewMail();
-		
 	private:
 	
 		EmpathMaildir *			_box(const EmpathURL & id);

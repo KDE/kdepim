@@ -42,10 +42,12 @@ class EmpathMaildir
 		EmpathMaildir()
 		{ empathDebug("default ctor"); }
 
-		EmpathMaildir(const QString & basePath, EmpathFolder * f);
+		EmpathMaildir(const QString & basePath, const EmpathURL & url);
 		virtual ~EmpathMaildir();
 		
-		const QString & path() const { return path_; }
+		const QString &		basePath()	const { return basePath_; }
+		const EmpathURL &	url()		const { return url_; }
+		const QString &		path()		const { return path_; }
 		
 		void		mark(const EmpathURL & message, MessageStatus msgStat);
 		
@@ -76,11 +78,14 @@ class EmpathMaildir
 		
 		// Order dependency
 		Q_UINT32	seq_;
-		EmpathFolder * folder_;
 		QString		path_;
+		QString		basePath_;
+		EmpathURL	url_;
 		// End order dependency
 		
 		QDir d;
+		
+		QDateTime	mtime_;
 };
 
 typedef QList<EmpathMaildir> EmpathMaildirList;

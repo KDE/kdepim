@@ -133,7 +133,7 @@ EmpathMailboxList::getNewMail()
 	QListIterator<EmpathMailbox> it(*this);
 
 	for (; it.current(); ++it) {
-		it.current()->getNewMail();
+		it.current()->s_getNewMail();
 	}
 }
 

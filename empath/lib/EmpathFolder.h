@@ -55,13 +55,16 @@ class EmpathFolder : public QObject
 		EmpathFolder * parent() const;
 	
 		void setPixmap(const QPixmap &);
-		QPixmap pixmap() const { return pixmap_; }
 		
-		QString name() const { return name_; }
-		EmpathURL url() const { return url_; }
+		const QPixmap &		pixmap()	const { return pixmap_;	}
+		const QString &		name()		const { return name_;	}
+		const EmpathURL &	url()		const { return url_;	}
 		
-		Q_UINT32 messageCount() const { return messageList_.count(); }
-		Q_UINT32 unreadMessageCount() const { return messageList_.countUnread(); }
+		Q_UINT32	messageCount()			const
+		{ return messageList_.count(); }
+		
+		Q_UINT32	unreadMessageCount()	const
+		{ return messageList_.countUnread(); }
 		
 		uID id() const { return id_; }
 
@@ -79,10 +82,11 @@ class EmpathFolder : public QObject
 		void update();
 
 		/**
-		 * This message is allocated with new. It is your responsibility to delete
-		 * it.
+		 * @short Attempt to get the message 
+		 * This message is allocated with new. It is your responsibility to
+		 * delete it.
 		 */
-		RMessage * message(const RMessageID & msgID);
+		RMessage * message(const EmpathURL & url);
 		
 	signals:
 

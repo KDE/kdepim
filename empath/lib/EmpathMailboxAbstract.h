@@ -31,7 +31,7 @@ virtual bool newMail() const;
 virtual void saveConfig();
 virtual void readConfig();
 		
-virtual bool writeMessage(EmpathFolder * parentFolder, const RMessage &);
+virtual bool writeMessage(const EmpathURL & folder, const RMessage &);
 		
 virtual Q_UINT32				sizeOfMessage		(const EmpathURL &);
 virtual QString					plainBodyOfMessage	(const EmpathURL &);
@@ -47,8 +47,8 @@ virtual void init();
 		
 public slots:
 
-virtual void checkNewMail();
-virtual void getNewMail();
+virtual void s_checkNewMail();
+virtual void s_getNewMail();
 
 private: // Just to make sure we don't accidentally make lots of public slots.
 // End pure virtual methods

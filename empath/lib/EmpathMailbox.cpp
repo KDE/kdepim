@@ -41,25 +41,6 @@ EmpathMailbox::~EmpathMailbox()
 }
 
 	void
-EmpathMailbox::setID(Q_UINT32 id)
-{
-	id_ = id;
-	canonName_ = "Mailbox_" + QString().setNum(id);
-}
-
-	bool
-EmpathMailbox::newMailReady() const
-{
-	return (newMessagesCount_ != 0);
-}
-
-	Q_UINT32
-EmpathMailbox::newMails() const
-{
-	return newMessagesCount_;
-}
-
-	void
 EmpathMailbox::setCheckMail(bool yn)
 {
 	empathDebug(QString("Setting check mail to ") + (yn ? "true" : "false"));
@@ -87,52 +68,10 @@ EmpathMailbox::setCheckMailInterval(Q_UINT32 checkMailInterval)
 	}
 }
 
-	bool
-EmpathMailbox::checkMail() const
-{
-	return checkMail_;
-}
-
-	Q_UINT32
-EmpathMailbox::checkMailInterval() const
-{
-	return checkMailInterval_;
-}
-
-	Q_UINT32
-EmpathMailbox::id() const
-{
-	return id_;
-}
-
 	void
 EmpathMailbox::setName(const QString & name) 
 {
 	url_.setMailboxName(name);
-}
-
-	AccountType
-EmpathMailbox::type() const
-{
-	return type_;
-}
-
-	bool
-EmpathMailbox::usesTimer() const
-{
-	return checkMail_;
-}
-
-	Q_UINT32
-EmpathMailbox::timerInterval() const
-{
-	return checkMailInterval_;
-}
-
-	const EmpathFolderList &
-EmpathMailbox::folderList() const
-{
-	return folderList_;
 }
 
 	Q_UINT32
@@ -165,19 +104,6 @@ EmpathMailbox::unreadMessageCount() const
 	return c;
 }
 
-	const QPixmap &
-EmpathMailbox::pixmap() const
-{
-	return pixmap_;
-}
-
-	void
-EmpathMailbox::update(EmpathFolder * f)
-{
-	empathDebug("update(" + f->name() + ") called");
-	emit(countUpdated((int)unreadMessageCount(), (int)messageCount()));
-}
-
 	void
 EmpathMailbox::s_countUpdated(EmpathFolder * f, int unread, int read)
 {
@@ -185,14 +111,18 @@ EmpathMailbox::s_countUpdated(EmpathFolder * f, int unread, int read)
 }
 
 	EmpathFolder *
-EmpathMailbox::folder(const QString & folderPath)
+EmpathMailbox::folder(const EmpathURL & url)
 {
-	empathDebug("folder(" + folderPath + ") called");
+	empathDebug("folder(" + url.folderPath() + ") called");
 	EmpathFolderListIterator it(folderList_);
 	
-	for (; it.current(); ++it)
-		if (it.current()->url().folderPath() == folderPath)
+	for (; it.current(); ++it) {
+		empathDebug("Looking at \"" + it.current()->url().asString() + "\"");
+		if (it.current()->url().folderPath() == url.folderPath()) {
+			empathDebug("... found !");
 			return it.current();
+		}
+	}
 	
 	return 0;
 }

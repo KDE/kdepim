@@ -46,27 +46,34 @@ class EmpathIndexRecord
 				const QString & subject,
 				const RMailbox & sender,
 				const RDateTime & date,
-				int status,
+				MessageStatus status,
 				Q_UINT32 size,
 				const RMessageID & messageID,
 				const RMessageID & parentMessageID);
 
 		~EmpathIndexRecord();
+		
+		friend QDataStream &
+			operator << (QDataStream &, const EmpathIndexRecord &);
+		
+		friend QDataStream &
+			operator >> (QDataStream &, EmpathIndexRecord &);
 
 		const char * className() { return "EmpathIndexRecord"; }
 
-		const QString & 	id()						const;
-		const QString &		subject()					const;
-		const RMailbox &	sender()					const;
-		const RDateTime &	date()						const;
-		QString				niceDate(bool twelveHour)	const;
-		MessageStatus		status()					const;
-		Q_UINT32			size()						const;
-		bool				hasParent()					const;
-		const RMessageID &	messageID()					const;
-		const RMessageID &	parentID()					const;
+		const QString & 	id()		const { return id_;					}
+		const QString &		subject()	const { return subject_;			}
+		const RMailbox &	sender()	const { return sender_;				}
+		const RDateTime &	date()		const { return date_;				}
+		MessageStatus		status()	const { return status_;				}
+		Q_UINT32			size()		const { return size_;				}
+		const RMessageID &	messageID()	const { return messageId_;			}
+		const RMessageID &	parentID()	const { return parentMessageId_;	}
 
-		void setStatus(int status);
+		bool				hasParent()	const;
+		QString				niceDate(bool twelveHour)	const;
+
+		void setStatus(MessageStatus s) { status_ = s; }
 		
 	private:
 		
@@ -75,11 +82,10 @@ class EmpathIndexRecord
 		QString 			subject_;
 		RMailbox 			sender_;
 		RDateTime			date_;
-		int					status_;
+		MessageStatus		status_;
 		Q_UINT32			size_;
 		RMessageID			messageId_;
 		RMessageID			parentMessageId_;
-		bool				hasParent_;
 };
 
 #endif

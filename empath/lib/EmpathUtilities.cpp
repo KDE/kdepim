@@ -31,7 +31,6 @@
 
 // Local includes
 #include "EmpathUtilities.h"
-#include "Empath.h"
 
 	QString
 token(const char * str, const char * delim, Q_UINT32 pos)

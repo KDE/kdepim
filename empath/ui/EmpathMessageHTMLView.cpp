@@ -59,16 +59,14 @@ static char * replaceTagsBody[] = {
 };
 
 EmpathMessageHTMLWidget::EmpathMessageHTMLWidget(
-		RMessage * message,
-		const QString &	 _pixDir,
-		QWidget			* _parent,
-		const char		* _name)
-	:	KHTMLWidget(_parent, _name)
+		const EmpathURL &	url,
+		QWidget			*	_parent,
+		const char		*	_name)
+	:	KHTMLWidget(_parent, _name),
+		url_(url)
 {
 	empathDebug("ctor");
 	
-	message_ = message;
-
 	KConfig * c = kapp->getConfig();
 	c->setGroup(GROUP_DISPLAY);
 	QString iconSet = c->readEntry(KEY_ICON_SET);
@@ -103,22 +101,16 @@ EmpathMessageHTMLWidget::~EmpathMessageHTMLWidget()
 }
 
 	void
-EmpathMessageHTMLWidget::setMessage(RMessage * message)
+EmpathMessageHTMLWidget::setMessage(const EmpathURL & url)
 {
-	if (message_ != 0) {
-		delete message_;
-		message_ = 0;
-	}
-	
-	empathDebug("setting message to " + message->envelope().messageID().asString());
-	message_ = message;
+	url_ = url;
 }
 
 	void
 EmpathMessageHTMLWidget::go()
 {
-	empathDebug("go() called .. message id we're working on is: " +
-			QString().setNum(message_->id()));
+	empathDebug("go() called .. message we're working on is \"" +
+			url_.asString() + "\"");
 
 	setCursor(waitCursor);
 
@@ -163,8 +155,16 @@ EmpathMessageHTMLWidget::go()
 	htmlTemplate.replace(QRegExp("@_TT_"), "<PRE>");
 	htmlTemplate.replace(QRegExp("@_TTEND_"), "</PRE>");
 	
-	QCString messageHeaders = message_->envelope().asString();
-	QCString messageBody = message_->body().asString();
+	RMessage * message(empath->message(url_));
+	if (message == 0) {
+		empathDebug("Can't load message from \"" + url_.asString() + "\"");
+		return;
+	}
+	
+	message->parse(); message->assemble();
+	
+	QCString messageHeaders = message->envelope().asString();
+	QCString messageBody = message->body().asString();
 	
 	// Markup and place headers of the message in the template.
 	replaceHeaderTagsByData(messageHeaders, htmlTemplate);

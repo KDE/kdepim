@@ -44,13 +44,11 @@ class EmpathMessageViewWidget : public QWidget
 	public:
 		
 		EmpathMessageViewWidget(
-				RMessage * message,
+				const EmpathURL & url,
 				QWidget * parent = 0L,
 				const char * name = 0L);
 		
 		~EmpathMessageViewWidget();
-		
-		void setMessage(RMessage * message);
 		
 		/**
 		 * Tell the internal widget to start parsing
@@ -61,12 +59,13 @@ class EmpathMessageViewWidget : public QWidget
 	public slots:
 
 		void s_print();
+		void s_setMessage(const EmpathURL &);
 
 	protected slots:
 		
 		void s_docChanged();
-		void hScrollbarSetValue(int);
-		void vScrollbarSetValue(int);
+		void s_hScrollbarSetValue(int);
+		void s_vScrollbarSetValue(int);
 		void s_URLSelected(const char *, int);
 
 	private:
@@ -75,7 +74,7 @@ class EmpathMessageViewWidget : public QWidget
 		QGridLayout				* mainLayout_;
 		QScrollBar				* verticalScrollBar_;
 		QScrollBar				* horizontalScrollBar_;
-		RMessage				* message_;
+		EmpathURL				url_;
 		int						scrollbarSize_;
 };
 

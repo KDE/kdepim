@@ -41,11 +41,11 @@ EmpathMailboxIMAP4::getMail()
 }
 
 	void
-EmpathMailboxIMAP4::getNewMail()
+EmpathMailboxIMAP4::s_getNewMail()
 {
 }
 	void
-EmpathMailboxIMAP4::checkNewMail()
+EmpathMailboxIMAP4::s_checkNewMail()
 {
 }
 
@@ -280,7 +280,7 @@ EmpathMailboxIMAP4::retrieveIfHave()
 }
 
 	bool
-EmpathMailboxIMAP4::writeMessage(EmpathFolder * parentFolder, const RMessage &)
+EmpathMailboxIMAP4::writeMessage(const EmpathURL & folder, const RMessage &)
 {
 	return false;
 }

@@ -31,12 +31,12 @@
 
 // Local includes
 #include "EmpathDefines.h"
+#include "EmpathURL.h"
 
 class EmpathFolderWidget;
 class EmpathMessageViewWidget;
 class EmpathMessageListWidget;
 class EmpathStatusWidget;
-class RMessage;
 
 class EmpathMainWidget : public QWidget
 {
@@ -51,7 +51,7 @@ class EmpathMainWidget : public QWidget
 		
 	protected slots:
 		
-		void s_displayMessage(RMessage *);
+		void s_displayMessage(const EmpathURL &);
 		void s_folderWidgetSizeChange(int, int, int);
 		void resizeEvent(QResizeEvent * e);
 

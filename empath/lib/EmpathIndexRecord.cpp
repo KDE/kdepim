@@ -34,7 +34,7 @@ EmpathIndexRecord::EmpathIndexRecord()
 		subject_(""),
 		sender_(""),
 		date_(""),
-		status_(0),
+		status_(MessageStatus(0)),
 		size_(0),
 		messageId_(""),
 		parentMessageId_("")
@@ -44,14 +44,14 @@ EmpathIndexRecord::EmpathIndexRecord()
 
 
 EmpathIndexRecord::EmpathIndexRecord(
-		const QString & id,
-		const QString & subject,
-		const RMailbox & sender,
-		const RDateTime & date,
-		int status,
-		Q_UINT32 size,
-		const RMessageID & messageId,
-		const RMessageID & parentMessageId)
+		const QString &		id,
+		const QString &		subject,
+		const RMailbox &	sender,
+		const RDateTime &	date,
+		MessageStatus		status,
+		Q_UINT32			size,
+		const RMessageID &	messageId,
+		const RMessageID &	parentMessageId)
 	:	id_(id),
 		subject_(subject),
 		sender_(sender),
@@ -71,64 +71,10 @@ EmpathIndexRecord::~EmpathIndexRecord()
 	empathDebug("dtor");
 }
 
-	const QString &
-EmpathIndexRecord::id() const
-{
-	return id_;
-}
-
-	const QString &
-EmpathIndexRecord::subject() const
-{
-	return subject_;
-}
-
-	const RMailbox &
-EmpathIndexRecord::sender() const
-{
-	return sender_;
-}
-
-	const RDateTime &
-EmpathIndexRecord::date() const
-{
-	return date_;
-}
-
-	MessageStatus
-EmpathIndexRecord::status() const
-{
-	return (MessageStatus)status_;
-}
-
-	Q_UINT32
-EmpathIndexRecord::size() const
-{
-	return size_;
-}
-
-	const RMessageID &
-EmpathIndexRecord::messageID() const
-{
-	return messageId_;
-}
-
-	const RMessageID &
-EmpathIndexRecord::parentID() const
-{
-	return parentMessageId_;
-}
-
 	bool
 EmpathIndexRecord::hasParent() const
 {
 	return !parentMessageId_.asString().isEmpty();
-}
-
-	void
-EmpathIndexRecord::setStatus(int status)
-{
-	status_ = status;
 }
 
 	QString
@@ -217,5 +163,39 @@ EmpathIndexRecord::niceDate(bool twelveHour) const
 	}
 
 	return dts;
+}
+
+	QDataStream &
+operator << (QDataStream & s, const EmpathIndexRecord & rec)
+{
+	s	<< rec.id_
+		<< rec.subject_
+		<< rec.sender_
+		<< rec.date_
+		<< (unsigned int)rec.status_
+		<< rec.size_
+		<< rec.messageId_
+		<< rec.parentMessageId_;
+
+	return s;
+}
+
+	QDataStream &
+operator >> (QDataStream & s, EmpathIndexRecord & rec)
+{
+	unsigned int i;
+
+	s	>> rec.id_
+		>> rec.subject_
+		>> rec.sender_
+		>> rec.date_
+		>> i
+		>> rec.size_
+		>> rec.messageId_
+		>> rec.parentMessageId_;
+
+	rec.status_ = (MessageStatus)i;
+	
+	return s;
 }
 

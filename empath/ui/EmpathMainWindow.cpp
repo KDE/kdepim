@@ -512,20 +512,19 @@ EmpathMainWindow::s_messageSaveAs()
 {
 	empathDebug("s_messageSaveAs called");
 	
-	EmpathIndexRecord * m = messageListWidget_->firstSelectedMessage();
-
-	if (m == 0) {
+	RMessage * message = _getFirstSelectedMessage();
+	
+	if (message == 0) {
 		KMsgBox(this, "Empath", i18n("Please select a message first"), KMsgBox::EXCLAMATION, i18n("OK"));
 		return;
 	}
 
-	HeapPtr<RMessage> message(_getFirstSelectedMessage());
-	
 	QString saveFilePath = KFileDialog::getSaveFileName("", "", this, i18n("Empath: Save Message"));
 	empathDebug(saveFilePath);
 	
 	if (saveFilePath == "") {
 		empathDebug("No filename given");
+		delete message; message = 0;
 		return;
 	}
 	
@@ -534,6 +533,7 @@ EmpathMainWindow::s_messageSaveAs()
 		// Warn user file cannot be opened.
 		empathDebug("Couldn't open file for writing");
 		KMsgBox(this, "Empath", i18n("Sorry I can't write to that file. Please try another filename."), KMsgBox::EXCLAMATION, i18n("OK"));
+		delete message; message = 0;
 		return;
 	}
 	empathDebug("Opened " + saveFilePath + " OK");
@@ -556,6 +556,7 @@ EmpathMainWindow::s_messageSaveAs()
 		if (f.writeBlock(outStr, outStr.length()) != (signed)outStr.length()) {
 			// Warn user file not written.
 			KMsgBox(this, "Empath", i18n("Sorry I couldn't write the file successfully. Please try another file."), KMsgBox::EXCLAMATION, i18n("OK"));
+			delete message; message = 0;
 			return;
 		}
 		qApp->processEvents();
@@ -564,6 +565,7 @@ EmpathMainWindow::s_messageSaveAs()
 	f.close();
 	
 	KMsgBox(this, "Empath", i18n("Message saved to") + QString(" ") + saveFilePath + QString(" ") + i18n("OK"), KMsgBox::INFORMATION, i18n("OK"));
+	delete message; message = 0;
 }
 
 	void
@@ -571,13 +573,12 @@ EmpathMainWindow::s_messageCopyTo()
 {
 	empathDebug("s_messageCopyTo called");
 
-	EmpathIndexRecord * m(messageListWidget_->firstSelectedMessage());
-	if (m == 0) {
+	RMessage * message(_getFirstSelectedMessage());
+	
+	if (message == 0) {
 		KMsgBox(this, "Empath", i18n("Please select a message first"), KMsgBox::EXCLAMATION, i18n("OK"));
 		return;
 	}
-	
-	HeapPtr<RMessage> message(_getFirstSelectedMessage());
 	
 	EmpathFolderChooserDialog * fcd =
 		new EmpathFolderChooserDialog((QWidget *)0L, "fcd");
@@ -586,9 +587,14 @@ EmpathMainWindow::s_messageCopyTo()
 
 	EmpathFolder * copyFolder = fcd->selectedFolder();
 
-	if (copyFolder == 0) return;
+	if (copyFolder == 0) {
+		empathDebug("No folder selected for copy");
+		delete message; message = 0;
+		return;
+	}
 
 	copyFolder->writeMessage(*message);
+	delete message; message = 0;
 }
 
 	void
@@ -596,14 +602,12 @@ EmpathMainWindow::s_messageMoveTo()
 {
 	empathDebug("s_messageMoveTo called");
 
-	EmpathIndexRecord * m(messageListWidget_->firstSelectedMessage());
+	RMessage * message(_getFirstSelectedMessage());
 	
-	if (m == 0) {
+	if (message == 0) {
 		KMsgBox(this, "Empath", i18n("Please select a message first"), KMsgBox::EXCLAMATION, i18n("OK"));
 		return;
 	}
-	
-	HeapPtr<RMessage> message(_getFirstSelectedMessage());
 	
 	EmpathFolderChooserDialog * fcd =
 		new EmpathFolderChooserDialog((QWidget *)0L, "fcd");
@@ -612,11 +616,16 @@ EmpathMainWindow::s_messageMoveTo()
 
 	EmpathFolder * copyFolder = fcd->selectedFolder();
 
-	if (copyFolder == 0) return;
+	if (copyFolder == 0) {
+		empathDebug("No folder selected for move");
+		delete message; message = 0;
+		return;
+	}
 
 	if (copyFolder->writeMessage(*message)) {
 		// FIXME: Remove message from its parent folder.
 	}
+	delete message; message = 0;
 }
 
 	void
@@ -638,21 +647,13 @@ EmpathMainWindow::s_messageView()
 {
 	empathDebug("s_messageView called");
 	
-	EmpathIndexRecord * m(messageListWidget_->firstSelectedMessage());
-
-	if (m == 0) {
-		KMsgBox(this, "Empath", i18n("Please select a message to view first"), KMsgBox::EXCLAMATION, i18n("OK"));
-		return;
-	}
-
-	RMessage * message = _getFirstSelectedMessage();
-	
 	EmpathMessageViewWindow * messageViewWindow =
-		new EmpathMessageViewWindow(message, "Empath");
+		new EmpathMessageViewWindow(
+			messageListWidget_->firstSelectedMessage(), "Empath");
+
 	CHECK_PTR(messageViewWindow);
 
 	messageViewWindow->show();
-
 }
 
 	void
@@ -660,23 +661,13 @@ EmpathMainWindow::s_messageViewSource()
 {
 	empathDebug("s_messageViewSource called");
 	
-	EmpathIndexRecord * m(messageListWidget_->firstSelectedMessage());
+	EmpathMessageSourceView * sourceView =
+		new EmpathMessageSourceView(
+			messageListWidget_->firstSelectedMessage(), 0);
 
-	if (m == 0) {
-		KMsgBox(this, "Empath", i18n("Please select a message to view first"), KMsgBox::EXCLAMATION, i18n("OK"));
-		return;
-	}
-
-	RMessage * message = _getFirstSelectedMessage();
-	
-	QString s = message->asString();
-	
-	EmpathMessageSourceView * sourceView = new EmpathMessageSourceView(s, 0);
 	CHECK_PTR(sourceView);
 
 	sourceView->show();
-	
-	delete message;
 }
 
 	void
@@ -800,13 +791,6 @@ EmpathMainWindow::s_dumpWidgetList()
 	RMessage *
 EmpathMainWindow::_getFirstSelectedMessage() const
 {
-	EmpathIndexRecord * m(messageListWidget_->firstSelectedMessage());
-	
-	return empath->message(
-		EmpathURL
-		(	messageListWidget_->currentFolder()->url().asString() +
-			QString(m->messageID().asString())
-		)
-	);
+	return empath->message(messageListWidget_->firstSelectedMessage());
 }
 

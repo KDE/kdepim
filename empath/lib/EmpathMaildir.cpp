@@ -29,6 +29,7 @@
 #include <qregexp.h>
 #include <qdatetime.h>
 #include <qapplication.h>
+#include <qstringlist.h>
 
 // KDE includes
 #include <kapp.h>
@@ -40,12 +41,13 @@
 #include "Empath.h"
 #include "EmpathMailbox.h"
 
-EmpathMaildir::EmpathMaildir(const QString & basePath, EmpathFolder * f)
+EmpathMaildir::EmpathMaildir(const QString & basePath, const EmpathURL & url)
 	:	seq_(0),
-		folder_(f),
-		path_(basePath + "/" + f->url().folderPath())
+		url_(url),
+		basePath_(basePath)
 {
 	empathDebug("ctor - path_ == " + path_);
+	path_ = basePath + url.folderPath();
 	_init();
 }
 
@@ -57,7 +59,48 @@ EmpathMaildir::~EmpathMaildir()
 	void
 EmpathMaildir::sync(const EmpathURL & url)
 {
+	empathDebug("sync(" + url.asString() + ") called");
+	
+	_markNewMailAsSeen();
+	
+	EmpathFolder * f(empath->folder(url));
+	
+	if (f == 0) {
+		empathDebug("sync: Couldn't find folder !");
+		return;
+	}
+	
+	QFileInfo fi(path_);
+	
+	if (fi.lastModified() <= mtime_) {
+		empathDebug("sync: Not modified");
+		return;
+	}
+	
+	QDir d(path_,
+		QString::null, QDir::Name | QDir::IgnoreCase,
+		QDir::NoSymLinks | QDir::Files);
 
+	QStringList fileList(d.entryList());
+	
+	QStringList::ConstIterator it(fileList.begin());
+	
+	QString s;
+	QRegExp re_flags(":2,[A-Za-z]*$");
+	
+	for (; it != fileList.end(); ++it) {
+	
+		s = *it;
+		s.replace(re_flags, QString::null);
+		
+		if (!f->messageList()[s]) {
+			// New file to add.
+			
+			empathDebug("New message in index");
+		}
+	}
+	
+	empathDebug("sync done");
 }
 
 	void
@@ -516,5 +559,4 @@ EmpathMaildir::_generateFlagsString(MessageStatus s)
 	
 	return flags;
 }
-
 

@@ -370,7 +370,7 @@ Empath::folder(const EmpathURL & url)
 	
 	if (m == 0) return 0;
 
-	return m->folder(url.folderPath());
+	return m->folder(url);
 }
 
 	bool

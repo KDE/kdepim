@@ -33,6 +33,7 @@
 // Local includes
 #include <RMM_Message.h>
 #include "EmpathDefines.h"
+#include "EmpathURL.h"
 
 class EmpathMessageHTMLWidget : public KHTMLWidget
 {
@@ -41,10 +42,9 @@ class EmpathMessageHTMLWidget : public KHTMLWidget
 	public:
 		
 		EmpathMessageHTMLWidget(
-				RMessage * message,
-				const QString & _pixDir,
-				QWidget * _parent = 0,
-				const char * _name = 0);
+				const EmpathURL & url,
+				QWidget		* _parent	= 0,
+				const char	* _name		= 0);
 		
 		~EmpathMessageHTMLWidget();
 		
@@ -53,7 +53,7 @@ class EmpathMessageHTMLWidget : public KHTMLWidget
 		 */
 		void go();
 		void toHTML(QCString &);
-		void setMessage(RMessage *);
+		void setMessage(const EmpathURL &);
 //		void s_imageRequest(KHTMLWidget * view, const char *url);
 
 	protected slots:
@@ -61,7 +61,7 @@ class EmpathMessageHTMLWidget : public KHTMLWidget
 
 	private:
 		
-		RMessage * message_;
+		EmpathURL url_;
 		
 		bool	loadTemplate(const QString & filename);
 

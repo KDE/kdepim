@@ -32,14 +32,13 @@
 #include "EmpathUtilities.h"
 	
 EmpathMessageViewWidget::EmpathMessageViewWidget(
-		RMessage * message,
+		const EmpathURL & url,
 		QWidget *parent,
 		const char *name)
-	:	QWidget(parent, name)
+	:	QWidget(parent, name),
+		url_(url)
 {
 	empathDebug("ctor");
-	
-	message_ = message;
 	
 	mainLayout_ = new QGridLayout(this, 2, 2, 0, 0);
 	CHECK_PTR(mainLayout_);
@@ -52,8 +51,7 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
 	
 	empathDebug("Creating HTML widget");
 	
-	messageWidget_ = new EmpathMessageHTMLWidget(message_,
-			empathDir() + "/pics/", this, "messageWidget");
+	messageWidget_ = new EmpathMessageHTMLWidget(url_, this, "messageWidget");
 	
 	CHECK_PTR(messageWidget_);
 	
@@ -75,10 +73,10 @@ EmpathMessageViewWidget::EmpathMessageViewWidget(
 	mainLayout_->addWidget(horizontalScrollBar_,	1, 0);
 	
 	QObject::connect(messageWidget_, SIGNAL(scrollVert(int)),
-			SLOT(vScrollbarSetValue(int)));
+			SLOT(s_vScrollbarSetValue(int)));
 	
 	QObject::connect(messageWidget_, SIGNAL(scrollHorz(int)),
-			SLOT(hScrollbarSetValue(int)));
+			SLOT(s_hScrollbarSetValue(int)));
 	
 	QObject::connect(verticalScrollBar_, SIGNAL(valueChanged(int)),
 			messageWidget_, SLOT(slotScrollVert(int)));
@@ -154,23 +152,22 @@ EmpathMessageViewWidget::s_docChanged()
 }
 
 	void
-EmpathMessageViewWidget::setMessage(RMessage * message)
+EmpathMessageViewWidget::s_setMessage(const EmpathURL & url)
 {
-	empathDebug("setMessage() called with message id = " +
-		message->envelope().messageID().asString());
-	message_ = message;
-	messageWidget_->setMessage(message);
+	empathDebug("setMessage() called with \"" + url.asString() + "\"");
+	url_ = url;
+	messageWidget_->setMessage(url);
 }
 
 	void
-EmpathMessageViewWidget::vScrollbarSetValue(int val)
+EmpathMessageViewWidget::s_vScrollbarSetValue(int val)
 {
 	empathDebug("vScrollbarSetValue(" + QString().setNum(val) + ") called");
 	verticalScrollBar_->setValue(val);
 }
 
 	void
-EmpathMessageViewWidget::hScrollbarSetValue(int val)
+EmpathMessageViewWidget::s_hScrollbarSetValue(int val)
 {
 	empathDebug("hScrollbarSetValue(" + QString().setNum(val) + ") called");
 	horizontalScrollBar_->setValue(val);

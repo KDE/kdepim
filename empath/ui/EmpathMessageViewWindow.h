@@ -32,6 +32,7 @@
 // Local includes
 #include <RMM_Message.h>
 #include "EmpathDefines.h"
+#include "EmpathURL.h"
 
 class EmpathMessageViewWidget;
 
@@ -41,7 +42,7 @@ class EmpathMessageViewWindow : public KTMainWindow
 
 	public:
 		
-		EmpathMessageViewWindow(RMessage * message, const char * name = 0L);
+		EmpathMessageViewWindow(const EmpathURL & url, const char * name = 0L);
 		~EmpathMessageViewWindow();
 
 	protected slots:

@@ -50,7 +50,7 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent, const char * name = 0)
 	CHECK_PTR(messageListWidget_);
 
 	messageViewWidget_ =
-		new EmpathMessageViewWidget((RMessage *)0,
+		new EmpathMessageViewWidget(EmpathURL(),
 				vSplit, "messageViewWidget");
 	CHECK_PTR(messageViewWidget_);
 
@@ -60,8 +60,8 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent, const char * name = 0)
 	QObject::connect(folderWidget_, SIGNAL(showFolder(const EmpathURL &)),
 			messageListWidget_, SLOT(s_showFolder(const EmpathURL &)));
 	
-	QObject::connect(messageListWidget_, SIGNAL(changeView(RMessage *)),
-			this, SLOT(s_displayMessage(RMessage *)));
+	QObject::connect(messageListWidget_, SIGNAL(changeView(const EmpathURL &)),
+			this, SLOT(s_displayMessage(const EmpathURL &)));
 	
 	QObject::connect(folderWidget_->header(), SIGNAL(sizeChange(int, int, int)),
 			this, SLOT(s_folderWidgetSizeChange(int, int, int)));
@@ -105,24 +105,11 @@ EmpathMainWidget::messageViewWidget()
 }
 
 	void
-EmpathMainWidget::s_displayMessage(RMessage * message)
+EmpathMainWidget::s_displayMessage(const EmpathURL & url)
 {
-	empathDebug("s_displayMessage() called");
-	
-	if (message == 0) {
-		empathDebug("But the message is 0 ! The mailbox didn't pass it.");
-		return;
-	}
-	
-	empathDebug("Message data:\n" + message->asString());
-
-	message->parse(); message->assemble();
-	empathDebug("s_displayMessage: calling messageViewWidget->setMessage(" +
-			message->envelope().messageID().asString() + ")");
-	messageViewWidget_->setMessage(message);
+	messageViewWidget_->s_setMessage(url);
 	messageViewWidget_->go();
 }
-
 
 	void
 EmpathMainWidget::s_folderWidgetSizeChange(int a, int b, int c)

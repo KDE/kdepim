@@ -318,7 +318,7 @@ EmpathFolderWidget::s_mailboxCheck()
 	
 	if (m == 0) return;
 
-	m->checkNewMail();
+	m->s_checkNewMail();
 }
 
 	void
