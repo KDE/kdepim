@@ -42,13 +42,13 @@ class AlarmDaemonIface : virtual public DCOPObject
     virtual ASYNC reloadMsgCal(const QCString& appname, const QString& urlString) = 0;
     virtual ASYNC removeCal(const QString& urlString) = 0;
     virtual ASYNC resetMsgCal(const QCString& appname, const QString& urlString) = 0;
-    virtual ASYNC registerApp(const QCString& appName, const QString& appTitle,
+    virtual bool  registerApp(const QCString& appName, const QString& appTitle,
                               const QCString& dcopObject, int notificationType,
                               bool displayCalendarName) = 0;
-    virtual ASYNC reregisterApp(const QCString& appName, const QString& appTitle,
+    virtual bool  reregisterApp(const QCString& appName, const QString& appTitle,
                               const QCString& dcopObject, int notificationType,
                               bool displayCalendarName) = 0;
-    virtual ASYNC registerGui(const QCString& appName, const QCString& dcopObject) = 0;
+    virtual bool  registerGui(const QCString& appName, const QCString& dcopObject) = 0;
     virtual ASYNC readConfig() = 0;
     virtual ASYNC quit() = 0;
 

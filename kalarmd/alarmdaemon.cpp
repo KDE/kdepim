@@ -231,43 +231,41 @@ void AlarmDaemon::removeCal_(const QString& urlString)
  * DCOP call to add an application to the list of client applications,
  * and add it to the config file.
  */
-void AlarmDaemon::registerApp_(const QCString& appName, const QString& appTitle,
+bool AlarmDaemon::registerApp_(const QCString& appName, const QString& appTitle,
                               const QCString& dcopObject, int notificationType,
                               bool displayCalendarName, bool reregister)
 {
   kdDebug(5900) << "AlarmDaemon::registerApp_(" << appName << ", " << appTitle << ", "
                 <<  dcopObject << ", " << notificationType << ", " << reregister << ")" << endl;
-  if (!appName.isEmpty())
-  {
-    if (KStandardDirs::findExe(appName).isNull())
-      kdError() << "AlarmDaemon::registerApp(): app not found\n";
-    else
-    {
-      ClientInfo c = getClientInfo(appName);
-      if (c.isValid())
-      {
-        // The application is already in the clients list.
-        if (!reregister) {
-          // Mark all its calendar files as unregistered and remove it from the list.
-          for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next())
-          {
-            if (cal->appName() == appName)
-              cal->setUnregistered( true );
-          }
-        }
-        removeClientInfo(appName);
-      }
-      ClientInfo cinfo(appName, appTitle, dcopObject, notificationType,
-                        displayCalendarName);
-      mClients.append(cinfo);
-
-      writeConfigClient(appName, cinfo);
-
-      enableAutoStart(true);
-      notifyGui(CHANGE_CLIENT);
-      setTimerStatus();
-    }
+  if (appName.isEmpty())
+    return false;
+  if (KStandardDirs::findExe(appName).isNull()) {
+    kdError() << "AlarmDaemon::registerApp(): app not found\n";
+    return false;
   }
+  ClientInfo c = getClientInfo(appName);
+  if (c.isValid())
+  {
+    // The application is already in the clients list.
+    if (!reregister) {
+      // Mark all its calendar files as unregistered and remove it from the list.
+      for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next())
+      {
+        if (cal->appName() == appName)
+          cal->setUnregistered( true );
+      }
+    }
+    removeClientInfo(appName);
+  }
+  ClientInfo cinfo(appName, appTitle, dcopObject, notificationType, displayCalendarName);
+  mClients.append(cinfo);
+
+  writeConfigClient(appName, cinfo);
+
+  enableAutoStart(true);
+  notifyGui(CHANGE_CLIENT);
+  setTimerStatus();
+  return true;
 }
 
 /*
@@ -593,22 +591,22 @@ void AlarmDaemon::setTimerStatus()
  * DCOP call to add an application to the list of GUI applications,
  * and add it to the config file.
  */
-void AlarmDaemon::registerGui(const QCString& appName, const QCString& dcopObject)
+bool AlarmDaemon::registerGui(const QCString& appName, const QCString& dcopObject)
 {
   kdDebug(5900) << "AlarmDaemon::registerGui(" << appName << ")\n";
-  if (!appName.isEmpty())
-  {
-    const GuiInfo* g = getGuiInfo(appName);
-    if (g)
-      mGuis.remove(appName);   // the application is already in the GUI list
-    mGuis.insert(appName, GuiInfo(dcopObject));
+  if (appName.isEmpty())
+    return false;
+  const GuiInfo* g = getGuiInfo(appName);
+  if (g)
+    mGuis.remove(appName);   // the application is already in the GUI list
+  mGuis.insert(appName, GuiInfo(dcopObject));
 
-    writeConfigClientGui(appName, dcopObject);
+  writeConfigClientGui(appName, dcopObject);
 
-    for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next()) {
-      notifyGuiCalStatus(cal);
-    }
+  for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next()) {
+    notifyGuiCalStatus(cal);
   }
+  return true;
 }
 
 /*
