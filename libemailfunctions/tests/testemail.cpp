@@ -225,9 +225,12 @@ int main(int argc, char *argv[])
   checkIsValidSimpleEmailAddress( QString::fromUtf8("test@täst.invalid"), "true" );
   // non-ASCII char as first char of IDN
   checkIsValidSimpleEmailAddress( QString::fromUtf8("i_want@øl.invalid"), "true" );
+  checkIsValidSimpleEmailAddress( "matt@[123.123.123.123]", "true" );
 
   // check if the pure email address is wrong
   checkIsValidSimpleEmailAddress( "mattfruitsalad.org", "false" );
+  checkIsValidSimpleEmailAddress( "matt@[123.123.123.123", "false" );
+  checkIsValidSimpleEmailAddress( "matt@123.123.123.123]", "false" );
 
   printf("\nTest OK !\n");
 
