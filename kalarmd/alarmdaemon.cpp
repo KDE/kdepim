@@ -451,7 +451,6 @@ bool AlarmDaemon::checkAlarms( ADCalendarBase* cal )
 void AlarmDaemon::checkEventAlarms(const Event& event, QValueList<QDateTime>& alarmtimes)
 {
   alarmtimes.clear();
-  const Alarm* alarm;
   QDateTime now = QDateTime::currentDateTime();
   Alarm::List alarms = event.alarms();
   Alarm::List::ConstIterator it;
