@@ -44,7 +44,7 @@ void FilterLDIF::import(FilterInfo *info) {
    QWidget *parent = info->parent();
 
    QString filename = KFileDialog::getOpenFileName( QDir::homeDirPath(), 
-		   	"*.ldif *.LDIF *.Ldif", parent);
+		   	"*.[lL][dD][iI][fF]|LDIF file (*.ldif)", parent);
    if (filename.isEmpty()) {
      info->alert(i18n("No Addressbook chosen"));
      return;

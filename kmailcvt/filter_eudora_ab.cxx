@@ -39,7 +39,7 @@ void FilterEudoraAb::import(FilterInfo *info)
 
   if (!openAddressBook(info)) return;
 
-  file=KFileDialog::getOpenFileName(QDir::homeDirPath() ,"*.[tT][xX][tT]",parent);
+  file=KFileDialog::getOpenFileName(QDir::homeDirPath() ,"*.[tT][xX][tT]|Eudora Light Addressbook (*.txt)",parent);
   if (file.length()==0) 
   {
     info->alert(i18n("No address book chosen"));
