@@ -1,8 +1,8 @@
 #ifndef _KPILOT_PILOTCARD_H
 #define _KPILOT_PILOTCARD_H
-/* pilotUser.h			KPilot
+/* pilotCard.h			KPilot
 **
-** Copyright (C) 2003 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This class is a wrapper around pilot-link's CardInfo structure
 */

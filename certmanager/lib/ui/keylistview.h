@@ -44,6 +44,21 @@ class QColor;
 
 namespace Kleo {
 
+  // work around moc parser bug...
+#define TEMPLATE_TYPENAME(T) template <typename T>
+  TEMPLATE_TYPENAME(T)
+  inline T * lvi_cast( QListViewItem * item ) {
+    return item && (item->rtti() & T::RTTI_MASK) == T::RTTI
+      ? static_cast<T*>( item ) : 0 ;
+  }
+
+  TEMPLATE_TYPENAME(T)
+  inline const T * lvi_cast( const QListViewItem * item ) {
+    return item && (item->rtti() & T::RTTI_MASK) == T::RTTI
+      ? static_cast<const T*>( item ) : 0 ;
+  }
+#undef TEMPLATE_TYPENAME
+
   class KeyListView;
 
   class KeyListViewItem : public QListViewItem {
@@ -52,6 +67,7 @@ namespace Kleo {
     KeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::Key & key );
     KeyListViewItem( KeyListViewItem * parent, const GpgME::Key & key );
     KeyListViewItem( KeyListViewItem * parent, KeyListViewItem * after, const GpgME::Key & key );
+    ~KeyListViewItem();
 
     void setKey( const GpgME::Key & key );
     const GpgME::Key & key() const { return mKey; }
@@ -75,6 +91,10 @@ namespace Kleo {
     int rtti() const { return RTTI; }
     /*! \reimp */
     void paintCell( QPainter * p, const QColorGroup & cg, int column, int width, int alignment );
+    /*! \reimp */
+    void insertItem( QListViewItem * item );
+    /*! \reimp */
+    void takeItem( QListViewItem * item );
 
   private:
     GpgME::Key mKey;
@@ -179,6 +199,7 @@ namespace Kleo {
 
   class KeyListView : public KListView {
     Q_OBJECT
+    friend class KeyListViewItem;
   public:
     class ColumnStrategy;
     class DisplayStrategy;
@@ -199,6 +220,8 @@ namespace Kleo {
     void flushKeys() { slotUpdateTimeout(); }
 
     bool hasSelection() const;
+
+    KeyListViewItem * itemByFingerprint( const QCString & ) const;
 
   signals:
     void doubleClicked( Kleo::KeyListViewItem*, const QPoint&, int );
@@ -229,13 +252,17 @@ namespace Kleo {
     KeyListViewItem * firstChild() const;
     /*! \reimp */
     void clear();
+    /*! \reimp */
+    void insertItem( QListViewItem * );
+    /*! \reimp */
+    void takeItem( QListViewItem * );
 
   private:
     void doHierarchicalInsert( const GpgME::Key & );
     void gatherScattered();
     void scatterGathered( QListViewItem * );
-    void refillFingerprintDictionary();
-    KeyListViewItem * parentFor( const QCString & ) const;
+    void registerItem( KeyListViewItem * );
+    void deregisterItem( const KeyListViewItem * );
 
   private:
     const ColumnStrategy * mColumnStrategy;

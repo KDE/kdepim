@@ -2,8 +2,7 @@
 #define _KPILOT_DBSELECTIONDIALOG_H
 /* dbSelectionDialog.h                 KPilot
 **
-** Copyright (C) 2003 by Dan Pilone
-** Created by Reinhold Kainhofer
+** Copyright (C) 2003 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines a dialog box that lets the
 ** user select a set of databases (e.g. which databases

@@ -92,7 +92,7 @@ GpgME::KeyListResult Kleo::HierarchicalKeyListJob::exec( const QStringList &, bo
 void Kleo::HierarchicalKeyListJob::slotNextKey( const GpgME::Key & key ) {
   if ( const char * chain_id = key.chainID() )
     mNextSet.insert( chain_id );
-  if ( const char * fpr = key.subkey(0).fingerprint() )
+  if ( const char * fpr = key.primaryFingerprint() )
     if ( mSentSet.find( fpr ) == mSentSet.end() ) {
       mSentSet.insert( fpr );
       emit nextKey( key );

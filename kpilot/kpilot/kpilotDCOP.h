@@ -3,6 +3,7 @@
 /* kpilotDCOP.h			KPilotDaemon
 **
 ** Copyright (C) 2000 by Adriaan de Groot
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines the DCOP interface for KPilot.
 */
@@ -61,6 +62,7 @@ k_dcop:
 	* the configure dialog.
 	*/
 	virtual ASYNC configure() = 0;
+	virtual ASYNC configureWizard() = 0;
 
 	/**
 	* Report KPilot's state back to the daemon.

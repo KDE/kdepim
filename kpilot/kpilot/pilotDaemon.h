@@ -3,6 +3,7 @@
 /* pilotDaemon.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** See the .cc file for an explanation of what this file is for.
 */
@@ -35,10 +36,12 @@
 #include "syncAction.h"
 #include "pilotDaemonDCOP.h"
 
-class PilotDaemon;
 class QPixmap;
 class QTimer;
 class KAboutApplication;
+class QPopupMenu;
+
+class PilotDaemon;
 class ActionQueue;
 class FileInstaller;
 class LoggerDCOP_stub;
@@ -65,6 +68,10 @@ public:
 
 protected:
 	void setupWidget();
+	/**
+	* Menu of sync types.
+	*/
+	QPopupMenu *fSyncTypeMenu;
 
 protected slots:
 	void slotShowAbout();
@@ -111,6 +118,7 @@ private:
 	* Timer for blinking.
 	*/
 	QTimer *fBlinkTimer;
+
 } ;
 
 class PilotDaemon : public QObject, virtual public PilotDaemonDCOP
@@ -147,7 +155,7 @@ public:
 	* setting in the config file)
 	*/
 	void showTray();
-	void addInstallFiles(const QStringList &);
+	virtual void addInstallFiles(const QStringList &);
 
 	// The next few functions are the DCOP interface.
 	// Some are also slots.
@@ -161,6 +169,7 @@ public:
 	virtual int nextSyncType() const;
 	virtual ASYNC quitNow();
 	virtual ASYNC reloadSettings();
+	virtual ASYNC setTempDevice(QString d);
 
 	virtual void stopListening();
 	virtual void startListening();
@@ -253,6 +262,7 @@ private:
 	LoggerDCOP_stub *fLogStub;
 	LoggerDCOP_stub *fLogFileStub;
 	KPilotDCOP_stub *fKPilotStub;
+	QString fTempDevice;
 };
 
 

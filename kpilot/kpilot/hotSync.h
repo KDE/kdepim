@@ -3,6 +3,7 @@
 /* hotSync.h                            KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines SyncActions, which are used to perform some specific
 ** task during a HotSync. Conduits are not included here, nor are
@@ -86,6 +87,7 @@ private:
 	bool fFullBackup;
 	QStringList fNoBackupDBs;
 	QValueList<unsigned long> fNoBackupCreators;
+	QStringList mDeviceDBs;
 } ;
 
 class FileInstallAction : public SyncAction
@@ -93,8 +95,7 @@ class FileInstallAction : public SyncAction
 Q_OBJECT
 public:
 	FileInstallAction(KPilotDeviceLink *,
-		const QString &fileDir,
-		const QStringList &fileNames);
+		const QString &fileDir);
 	virtual ~FileInstallAction();
 
 	virtual QString statusString() const;
@@ -110,6 +111,10 @@ private:
 	QTimer *fTimer;
 	QString fDir;
 	QStringList fList;
+
+	// TODO: not const because it calls logError(), which is
+	// non-const (but might be - can signals be const, anyway?)
+	bool resourceOK(const QString &, const QString &) /* const */ ;
 } ;
 
 class CleanupAction : public SyncAction

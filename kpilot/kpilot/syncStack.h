@@ -3,6 +3,7 @@
 /* syncStack.h                        KPilot
 **
 ** Copyright (C) 1998-2001,2003 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This defines the "ActionQueue", which is the sequence of actions
 ** that will occur during a HotSync. There's also two fairly
@@ -56,44 +57,6 @@
 *
 */
 
-/*
-* The constructor with lots of parameters is DEPRECATED.
-*
-* The @p config parameter is passed on to conduit actions that may be in the queue.
-*
-* @p conduits is a list of .desktop filenames (without the extension); for each conduit,
-* a ConduitProxy action is created, which loads the conduit and runs the SyncAction
-* from that conduit.
-*
-* For FileInstallers, pass in the list of filenames and the directory in @p installDir
-* and @p installFiles.
-*
-* When you create an ActionQueue, pass in all the necessary conduit- and filenames.
-* You cannot change them later. You must also call prepare() to add all the items
-* to the queue; ie.
-*
-* ActionQueue s(p,c,QStringList(),"/tmp","foo.prc");
-*
-* Creates a queue with some information set, but without any actions in it.
-* Next, call prepare() or somesuch:
-*
-* s.prepareSync();
-*
-* This will add a buch of "standard" actions to the queue for a HotSync, ie. a
-* welcome message action, user check, the conduits (if any; none were specified in the
-* constructor above), a file install action (which will try to install /tmp/foo.prc) and
-* some cleanup actions.
-*
-*
-* Alternatively, you can use addAction() to fill up the stack yourself.
-*/
-
-/**
-* The constructor with one parameter is preferred. You can
-* call the public member functions to enqueue actions in
-* several standard ways.
-*/
-
 class ActionQueue : public SyncAction
 {
 Q_OBJECT
@@ -125,25 +88,23 @@ protected:
 
 public:
 	/**
-	* Call these queue*() functions to append
-	* standard functional blocks. They're pretty
-	* much mutually exclusive with the prepare*()
-	* functions above.
-	*
-	* You should at least call queueInit() and
-	* queueCleanup() to add the welcome and cleanup
-	* actions to the queue (unless you do that
-	* yourself.)
+	* Call these queue*() functions to append standard functional
+	* blocks. You should at least call queueInit() and
+	* queueCleanup() to add the welcome and cleanup actions to
+	* the queue (unless you do that yourself.)
 	*
 	* For queueInit, @p checkUser causes a CheckUser action to
 	*    be queued automatically.
 	* For queueConduits, whatever is relevant for the conduits
 	*   can be used, usually things in the FlagMask and ActionMask.
+	*   The list of conduits in @p conduits is queued automatically.
+	* For queueInstaller, the directory @p dir is used as a source
+	*   of files to install (checked at exec() time).
 	*/
 
 	void queueInit(bool checkUser = false);
 	void queueConduits(const QStringList &conduits,SyncAction::SyncMode e, bool local=false);
-	void queueInstaller(const QString &dir,const QStringList &files);
+	void queueInstaller(const QString &dir);
 	void queueCleanup();
 
 
@@ -163,8 +124,6 @@ protected slots:
 */
 class WelcomeAction : public SyncAction
 {
-Q_OBJECT
-
 public:
 	WelcomeAction(KPilotDeviceLink *);
 
@@ -179,14 +138,28 @@ protected:
 */
 class SorryAction : public SyncAction
 {
-Q_OBJECT
-
 public:
 	SorryAction(KPilotDeviceLink *, const QString &s=QString::null);
 
 protected:
 	virtual bool exec();
 	QString fMessage;
+} ;
+
+/**
+* This conduit isn't really a conduit -- it just makes a quick
+* backup copy of all the pdbs in the standard DBBackup/ directory,
+* so that in case something goes horribly wrong we still have the
+* state from before this sync started, cq. the state after the
+* last sync.
+*/
+class LocalBackupAction : public SyncAction
+{
+public:
+	LocalBackupAction(KPilotDeviceLink *, const QString &);
+protected:
+	virtual bool exec();
+	QString fDir;
 } ;
 
 /**

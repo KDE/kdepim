@@ -2,7 +2,8 @@
     This file is part of libkcal.
 
     Copyright (c) 1998 Preston Brown
-    Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2001,2003,2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -32,6 +33,8 @@
 #include "event.h"
 #include "todo.h"
 #include "journal.h"
+#include "kcalversion.h"
+#include "person.h"
 
 #define _TIME_ZONE "-0500" /* hardcoded, overridden in config file. */
 
@@ -81,19 +84,11 @@ class Calendar : public QObject, public CustomProperties,
     /**
       Return the owner of the calendar's full name.
     */
-    const QString &getOwner() const;
+    const Person &getOwner() const;
     /**
       Set the owner of the calendar. Should be owner's full name.
     */
-    void setOwner( const QString &os );
-    /**
-      Return the email address of the calendar owner.
-    */
-    const QString &getEmail();
-    /**
-      Set the email address of the calendar owner.
-    */
-    void setEmail( const QString & );
+    void setOwner( const Person &owner );
   
     /**
       Set time zone id (see /usr/share/zoneinfo/zone.tab for list of legal
@@ -135,6 +130,11 @@ class Calendar : public QObject, public CustomProperties,
       Return unfiltered list of all incidences of this calendar.
     */
     virtual Incidence::List rawIncidences();
+    
+    /** 
+      Return a list of all categories used in this calendar.
+    */
+    QStringList incidenceCategories();
 
     /**
       Adds a Event to this calendar object.
@@ -156,7 +156,7 @@ class Calendar : public QObject, public CustomProperties,
       date specified. useful for dayView, etc. etc.
       The calendar filter is applied.
     */
-    Event::List events( const QDate &date, bool sorted = false);
+    Event::List events( const QDate &date, bool sorted = false );
     /**
       Get events, which occur on the given date.
       The calendar filter is applied.
@@ -267,13 +267,21 @@ class Calendar : public QObject, public CustomProperties,
 
     class Observer {
       public:
-        virtual void calendarModified( bool, Calendar * ) = 0;
+        virtual void calendarModified( bool, Calendar * ) {};
+
+        virtual void calendarIncidenceAdded( Incidence * ) {}
+        virtual void calendarIncidenceChanged( Incidence * ) {}
+        virtual void calendarIncidenceDeleted( Incidence * ) {}
     };
   
     void registerObserver( Observer * );
     void unregisterObserver( Observer * );
 
     void setModified( bool );
+    /**
+      Return whether the calendar was modified since opening / saving
+     */
+    bool isModified() const { return mModified; }
 
     /**
       Set product id returned by loadedProductId(). This function is only
@@ -313,6 +321,11 @@ class Calendar : public QObject, public CustomProperties,
 
   protected:
     /**
+      The observer interface. So far not implemented.
+    */
+    void incidenceUpdated( IncidenceBase * );
+  public:
+    /**
       Get unfiltered events, which occur on the given date.
     */
     virtual Event::List rawEventsForDate( const QDateTime &qdt ) = 0;
@@ -327,16 +340,22 @@ class Calendar : public QObject, public CustomProperties,
     */
     virtual Event::List rawEvents( const QDate &start, const QDate &end,
                                    bool inclusive = false ) = 0;
+  protected:
     /**
       let the subclasses of KCal::Calendar set the time zone
     */
     virtual void doSetTimeZoneId( const QString & ) {}
 
+    void notifyIncidenceAdded( Incidence * );
+    void notifyIncidenceChanged( Incidence * );
+    void notifyIncidenceDeleted( Incidence * );
+
+    void setObserversEnabled( bool enabled );
+
   private:
     void init();
   
-    QString mOwner;        // who the calendar belongs to
-    QString mOwnerEmail;   // email address of the owner
+    Person mOwner;         // who the calendar belongs to
     int mTimeZone;         // timezone OFFSET from GMT (MINUTES)
     bool mLocalTime;       // use local time, not UTC or a time zone
 
@@ -345,8 +364,9 @@ class Calendar : public QObject, public CustomProperties,
     
     QString mTimeZoneId;
 
-    Observer *mObserver;
+    QPtrList<Observer> mObservers;
     bool mNewObserver;
+    bool mObserversEnabled;
     
     bool mModified;
 

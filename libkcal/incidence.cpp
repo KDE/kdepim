@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -31,7 +32,7 @@ using namespace KCal;
 Incidence::Incidence() :
   IncidenceBase(),
   mRelatedTo(0), mStatus(StatusNone), mSecrecy(SecrecyPublic),
-  mPriority(3), mRecurrence(0)
+  mPriority(5), mRecurrence(0)
 {
   recreate();
 
@@ -53,7 +54,6 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
 //  Incidence::List mRelations;    Incidence::List mRelations;
   mExDates = i.mExDates;
   mExDateTimes = i.mExDateTimes;
-  mAttachments = i.mAttachments;
   mResources = i.mResources;
   mStatusString = i.mStatusString;
   mStatus = i.mStatus;
@@ -61,6 +61,9 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
   mPriority = i.mPriority;
   mLocation = i.mLocation;
 
+  // Alarms and Attachments are stored in ListBase<...>, which is a QValueList<...*>.
+  // We need to really duplicate the objects stored therein, otherwise deleting
+  // i will also delete all attachments from this object (setAutoDelete...)
   Alarm::List::ConstIterator it;
   for( it = i.mAlarms.begin(); it != i.mAlarms.end(); ++it ) {
     Alarm *b = new Alarm( **it );
@@ -68,6 +71,13 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
     mAlarms.append( b );
   }
   mAlarms.setAutoDelete(true);
+
+  Attachment::List::ConstIterator it1;
+  for ( it1 = i.mAttachments.begin(); it1 != i.mAttachments.end(); ++it1 ) {
+    Attachment *a = new Attachment( **it1 );
+    mAttachments.append( a );
+  }
+  mAttachments.setAutoDelete( true );
 
   if (i.mRecurrence)
     mRecurrence = new Recurrence( *(i.mRecurrence), this );
@@ -151,6 +161,8 @@ void Incidence::recreate()
   setRevision(0);
 
   setLastModified(QDateTime::currentDateTime());
+  setPilotId( 0 );
+  setSyncStatus( SYNCNONE );
 }
 
 void Incidence::setReadOnly( bool readOnly )
@@ -187,7 +199,7 @@ int Incidence::revision() const
 void Incidence::setDtStart(const QDateTime &dtStart)
 {
   if (mRecurrence)
-    mRecurrence->setRecurStart( dtStart);
+    mRecurrence->setRecurStart( dtStart );
   IncidenceBase::setDtStart( dtStart );
 }
 
@@ -246,15 +258,16 @@ QStringList Incidence::categories() const
   return mCategories;
 }
 
-QString Incidence::categoriesStr()
+QString Incidence::categoriesStr() const
 {
   return mCategories.join(",");
 }
 
 void Incidence::setRelatedToUid(const QString &relatedToUid)
 {
-  if (mReadOnly) return;
+  if ( mReadOnly || mRelatedToUid == relatedToUid ) return;
   mRelatedToUid = relatedToUid;
+  updated();
 }
 
 QString Incidence::relatedToUid() const
@@ -268,7 +281,11 @@ void Incidence::setRelatedTo(Incidence *relatedTo)
   if(mRelatedTo)
     mRelatedTo->removeRelation(this);
   mRelatedTo = relatedTo;
-  if (mRelatedTo) mRelatedTo->addRelation(this);
+  if (mRelatedTo) {
+    mRelatedTo->addRelation(this);
+    if ( mRelatedTo->uid() != mRelatedToUid )
+      setRelatedToUid( mRelatedTo->uid() );
+  }
 }
 
 Incidence *Incidence::relatedTo() const
@@ -285,7 +302,6 @@ void Incidence::addRelation( Incidence *event )
 {
   if ( mRelations.find( event ) == mRelations.end() ) {
     mRelations.append( event );
-    updated();
   }
 }
 
@@ -567,7 +583,7 @@ Recurrence *Incidence::recurrence() const
   {
     const_cast<KCal::Incidence*>(this)->mRecurrence = new Recurrence(const_cast<KCal::Incidence*>(this));
     mRecurrence->setRecurReadOnly(mReadOnly);
-    mRecurrence->setRecurStart(dtStart());
+    mRecurrence->setRecurStart(IncidenceBase::dtStart());
   }
 
   return mRecurrence;

@@ -2,7 +2,8 @@
     This file is part of libkcal.
 
     Copyright (c) 1998 Preston Brown
-    Copyright (c) 2000-2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2000-2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -50,8 +51,8 @@ Calendar::Calendar( const QString &timeZoneId )
 
 void Calendar::init()
 {
-  mObserver = 0;
   mNewObserver = false;
+  mObserversEnabled = true;
 
   mModified = false;
 
@@ -65,8 +66,7 @@ void Calendar::init()
 //  srandom(time(0));
 
   // user information...
-  setOwner(i18n("Unknown Name"));
-  setEmail(i18n("unknown@nowhere"));
+  setOwner( Person( i18n("Unknown Name"), i18n("unknown@nowhere") ) );
 
 #if 0
   tmpStr = KOPrefs::instance()->mTimeZone;
@@ -111,18 +111,14 @@ Calendar::~Calendar()
   delete mDefaultFilter;
 }
 
-const QString &Calendar::getOwner() const
+const Person &Calendar::getOwner() const
 {
   return mOwner;
 }
 
-void Calendar::setOwner(const QString &os)
+void Calendar::setOwner( const Person &owner )
 {
-  int i;
-  mOwner = os;
-  i = mOwner.find(',');
-  if (i != -1)
-    mOwner = mOwner.left(i);
+  mOwner = owner;
 
   setModified( true );
 }
@@ -155,26 +151,35 @@ bool Calendar::isLocalTime() const
   return mLocalTime;
 }
 
-const QString &Calendar::getEmail()
-{
-  return mOwnerEmail;
-}
-
-void Calendar::setEmail(const QString &e)
-{
-  mOwnerEmail = e;
-
-  setModified( true );
-}
-
 void Calendar::setFilter(CalFilter *filter)
 {
-  mFilter = filter;
+  if ( filter ) {
+    mFilter = filter;
+  } else {
+    mFilter = mDefaultFilter; 
+  }
 }
 
 CalFilter *Calendar::filter()
 {
   return mFilter;
+}
+
+QStringList Calendar::incidenceCategories()
+{
+  Incidence::List rawInc( rawIncidences() );
+  QStringList categories, thisCats;
+  // TODO: For now just iterate over all incidences. In the future, 
+  // the list of categories should be built when reading the file.
+  for ( Incidence::List::ConstIterator i = rawInc.constBegin(); i != rawInc.constEnd(); ++i ) {
+    thisCats = (*i)->categories();
+    for ( QStringList::ConstIterator si = thisCats.constBegin(); si != thisCats.constEnd(); ++si ) {
+      if ( categories.find( *si ) == categories.end() ) {
+        categories.append( *si );
+      }
+    }
+  }
+  return categories;
 }
 
 Incidence::List Calendar::incidences( const QDate &qdt )
@@ -236,8 +241,13 @@ bool Calendar::addIncidence(Incidence *i)
 
 bool Calendar::deleteIncidence( Incidence *i )
 {
-  Incidence::DeleteVisitor<Calendar> v( this );
-  return i->accept( v );
+  if ( beginChange( i ) ) {
+    Incidence::DeleteVisitor<Calendar> v( this );
+    bool result = i->accept( v );
+    endChange( i );
+    return result;
+  } else
+    return false;    
 }
 
 Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
@@ -252,9 +262,19 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
   if ( single ) {
     recur->unsetRecurs();
   } else {
-    // TODO_RK: Adjust the recurrence for the future incidences. In particular
+    // Adjust the recurrence for the future incidences. In particular
     // adjust the "end after n occurences" rules! "No end date" and "end by ..."
     // don't need to be modified.
+    int duration = recur->duration();
+    if ( duration > 0 ) {
+      int doneduration = recur->durationTo( date.addDays(-1) );
+      if ( doneduration >= duration ) {
+        kdDebug(5850) << "The dissociated event already occured more often that it was supposed to ever occur. ERROR!" << endl;
+        recur->unsetRecurs();
+      } else {
+        recur->setDuration( duration - doneduration );
+      }
+    }
   }
   // Adjust the date of the incidence
   if ( incidence->type() == "Event" ) {
@@ -270,7 +290,7 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
     if ( td->hasDueDate() ) {
       QDateTime due( td->dtDue() );
       daysTo = due.date().daysTo( date ) ;
-      td->setDtDue( due.addDays( daysTo ) );
+      td->setDtDue( due.addDays( daysTo ), true );
       haveOffset = true;
     }
     if ( td->hasStartDate() ) {
@@ -285,8 +305,10 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
       incidence->addExDate( date );
     } else {
       recur = incidence->recurrence();
-      // TODO_RK: Make sure the recurrence of the past events ends at the corresponding day
-      // recur->???
+      if ( recur ) {
+        // Make sure the recurrence of the past events ends at the corresponding day
+        recur->setEndDate( date.addDays(-1) );
+      }
     }
   } else {
     delete newInc;
@@ -324,31 +346,31 @@ Todo::List Calendar::todos( const QDate &date )
 
 // When this is called, the todo have already been added to the calendar.
 // This method is only about linking related todos
-void Calendar::setupRelations( Incidence *incidence )
+void Calendar::setupRelations( Incidence *forincidence )
 {
-  QString uid = incidence->uid();
+  QString uid = forincidence->uid();
 
   // First, go over the list of orphans and see if this is their parent
   while( Incidence* i = mOrphans[ uid ] ) {
     mOrphans.remove( uid );
-    i->setRelatedTo( incidence );
-    incidence->addRelation( i );
+    i->setRelatedTo( forincidence );
+    forincidence->addRelation( i );
     mOrphanUids.remove( i->uid() );
   }
 
   // Now see about this incidences parent
-  if( !incidence->relatedTo() && !incidence->relatedToUid().isEmpty() ) {
+  if( !forincidence->relatedTo() && !forincidence->relatedToUid().isEmpty() ) {
     // This incidence has a uid it is related to, but is not registered to it yet
     // Try to find it
-    Incidence* parent = this->incidence( incidence->relatedToUid() );
+    Incidence* parent = incidence( forincidence->relatedToUid() );
     if( parent ) {
       // Found it
-      incidence->setRelatedTo( parent );
-      parent->addRelation( incidence );
+      forincidence->setRelatedTo( parent );
+      parent->addRelation( forincidence );
     } else {
       // Not found, put this in the mOrphans list
-      mOrphans.insert( incidence->relatedToUid(), incidence );
-      mOrphanUids.insert( incidence->uid(), incidence );
+      mOrphans.insert( forincidence->relatedToUid(), forincidence );
+      mOrphanUids.insert( forincidence->uid(), forincidence );
     }
   }
 }
@@ -385,32 +407,83 @@ void Calendar::removeRelations( Incidence *incidence )
     if( !( incidence->relatedTo() != 0 && mOrphans.remove( incidence->relatedTo()->uid() ) ) ) {
       // Removing wasn't that easy
       for( QDictIterator<Incidence> it( mOrphans ); it.current(); ++it ) {
-	if( it.current()->uid() == uid ) {
-	  mOrphans.remove( it.currentKey() );
-	  break;
-	}
+        if( it.current()->uid() == uid ) {
+          mOrphans.remove( it.currentKey() );
+          break;
+        }
       }
     }
 }
 
 void Calendar::registerObserver( Observer *observer )
 {
-  // FIXME: Support more than one observer
-  mObserver = observer;
+  if( !mObservers.contains( observer ) ) mObservers.append( observer );
   mNewObserver = true;
 }
 
 void Calendar::unregisterObserver( Observer *observer )
 {
-  if ( mObserver == observer ) mObserver = 0;
+  mObservers.remove( observer );
 }
 
 void Calendar::setModified( bool modified )
 {
   if ( modified != mModified || mNewObserver ) {
     mNewObserver = false;
-    if ( mObserver ) mObserver->calendarModified( modified, this );
+    Observer *observer;
+    for( observer = mObservers.first(); observer;
+         observer = mObservers.next() ) {
+      observer->calendarModified( modified, this );
+    }
     mModified = modified;
+  }
+}
+
+void Calendar::incidenceUpdated( IncidenceBase *incidence )
+{
+//  kdDebug(5800) << "CalendarResources::incidenceUpdated( IncidenceBase * ): Not yet implemented\n";
+  incidence->setSyncStatus( Event::SYNCMOD );
+  incidence->setLastModified( QDateTime::currentDateTime() );
+  // we should probably update the revision number here,
+  // or internally in the Event itself when certain things change.
+  // need to verify with ical documentation.
+
+  // The static_cast is ok as the CalendarLocal only observes Incidence objects
+  notifyIncidenceChanged( static_cast<Incidence *>( incidence ) );
+
+  setModified( true );
+}
+
+void Calendar::notifyIncidenceAdded( Incidence *i )
+{
+  if ( !mObserversEnabled ) return;
+
+  Observer *observer;
+  for( observer = mObservers.first(); observer;
+       observer = mObservers.next() ) {
+    observer->calendarIncidenceAdded( i );
+  }
+}
+
+void Calendar::notifyIncidenceChanged( Incidence *i )
+{
+  if ( !mObserversEnabled ) return;
+
+  Observer *observer;
+  for( observer = mObservers.first(); observer;
+       observer = mObservers.next() ) {
+    observer->calendarIncidenceChanged( i );
+  }
+}
+
+void Calendar::notifyIncidenceDeleted( Incidence *i )
+{
+  if ( !mObserversEnabled ) return;
+
+  Observer *observer;
+  for( observer = mObservers.first(); observer;
+       observer = mObservers.next() ) {
+    observer->calendarIncidenceDeleted( i );
   }
 }
 
@@ -450,6 +523,11 @@ bool Calendar::beginChange( Incidence * )
 bool Calendar::endChange( Incidence * )
 {
   return true;
+}
+
+void Calendar::setObserversEnabled( bool enabled )
+{
+  mObserversEnabled = enabled;
 }
 
 #include "calendar.moc"

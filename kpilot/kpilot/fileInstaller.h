@@ -1,6 +1,7 @@
 /* fileInstaller.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is a class that does "the work" of adding and deleting
 ** files in the pending_install directory of KPilot. It is used
@@ -21,7 +22,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -57,7 +58,7 @@ public:
 	*/
 	const QString &dir() const { return fDirName; } ;
 	const QStringList fileNames() const ;
-	
+
 
 
 protected:
@@ -66,7 +67,7 @@ protected:
 public slots:
 	void copyCompleted();
 	void setEnabled(bool);
-	
+
 signals:
 	void filesChanged();
 private:
@@ -75,8 +76,4 @@ private:
 	bool enabled;
 } ;
 
-#else
-#ifdef DEBUG
-#warning "File doubly included"
-#endif
 #endif

@@ -2,8 +2,7 @@
 #define _KPILOT_CONFIGWIZARD_H
 /* kpilotConfigWizard.h                 KPilot
 **
-** Copyright (C) 2004 by Dan Pilone
-** Written 2004 by Reinhold Kainhofer
+** Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines kpilot's configuration wizard
 */
@@ -53,6 +52,7 @@ protected:
 	ConfigWizard_base3 *page3;
 
 	Mode fMode;
+	QStringList mDBs;
 } ;
 
 #endif

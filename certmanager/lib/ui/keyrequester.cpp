@@ -90,6 +90,23 @@ Kleo::KeyRequester::KeyRequester( unsigned int allowedKeys, bool multipleKeys,
     mJobs( 0 ),
     d( 0 )
 {
+  init();
+}
+
+Kleo::KeyRequester::KeyRequester( QWidget * parent, const char * name )
+  : QWidget( parent, name ),
+    mOpenPGPBackend( 0 ),
+    mSMIMEBackend( 0 ),
+    mMulti( false ),
+    mKeyUsage( 0 ),
+    mJobs( 0 ),
+    d( 0 )
+{
+  init();
+}
+
+void Kleo::KeyRequester::init()
+{
   QHBoxLayout * hlay = new QHBoxLayout( this, 0, KDialog::spacingHint() );
 
   // the label where the key id is to be displayed:
@@ -155,14 +172,14 @@ QString Kleo::KeyRequester::fingerprint() const {
   if ( mKeys.empty() )
     return QString::null;
   else
-    return mKeys.front().subkey(0).fingerprint();
+    return mKeys.front().primaryFingerprint();
 }
 
 QStringList Kleo::KeyRequester::fingerprints() const {
   QStringList result;
   for ( std::vector<GpgME::Key>::const_iterator it = mKeys.begin() ; it != mKeys.end() ; ++it )
     if ( !it->isNull() )
-      if ( const char * fpr = it->subkey(0).fingerprint() )
+      if ( const char * fpr = it->primaryFingerprint() )
 	result.push_back( fpr );
   return result;
 }
@@ -188,7 +205,7 @@ void Kleo::KeyRequester::updateKeys() {
   for ( std::vector<GpgME::Key>::const_iterator it = mKeys.begin() ; it != mKeys.end() ; ++it ) {
     if ( it->isNull() )
       continue;
-    const QString fpr = it->subkey(0).fingerprint();
+    const QString fpr = it->primaryFingerprint();
     labelTexts.push_back( fpr.right(8) );
     toolTipText += fpr.right(8) + ": ";
     if ( const char * uid = it->userID(0).id() )
@@ -206,6 +223,8 @@ void Kleo::KeyRequester::updateKeys() {
   QToolTip::add( mLabel, toolTipText );
 }
 
+#ifndef __KLEO_UI_SHOW_KEY_LIST_ERROR_H__
+#define __KLEO_UI_SHOW_KEY_LIST_ERROR_H__
 static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
   assert( err );
   const QString msg = i18n( "<qt><p>An error occurred while fetching "
@@ -215,6 +234,7 @@ static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
 
   KMessageBox::error( parent, msg, i18n( "Key Listing Failed" ) );
 }
+#endif // __KLEO_UI_SHOW_KEY_LIST_ERROR_H__
 
 void Kleo::KeyRequester::startKeyListJob( const QStringList & fingerprints ) {
   if ( !mSMIMEBackend && !mOpenPGPBackend )
@@ -313,16 +333,20 @@ void Kleo::KeyRequester::slotDialogButtonClicked() {
     ? new KeySelectionDialog( mDialogCaption, mDialogMessage, mInitialQuery, mKeyUsage, mMulti )
     : new KeySelectionDialog( mDialogCaption, mDialogCaption, mKeys, mKeyUsage, mMulti ) ;
 
-  if ( dlg->exec() == QDialog::Accepted )
+  if ( dlg->exec() == QDialog::Accepted ) {
     if ( mMulti )
       setKeys( dlg->selectedKeys() );
     else
       setKey( dlg->selectedKey() );
+    emit changed();
+  }
 
   delete dlg;
 }
 
 void Kleo::KeyRequester::slotEraseButtonClicked() {
+  if ( !mKeys.empty() )
+    emit changed();
   mKeys.clear();
   updateKeys();
 }

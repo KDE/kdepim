@@ -97,8 +97,8 @@ namespace {
 			  headerRect.width(), itemRect.height() );
 
     QString tipStr;
-    if ( ( item->rtti() & Kleo::KeyListViewItem::RTTI_MASK ) == Kleo::KeyListViewItem::RTTI )
-      tipStr = static_cast<const Kleo::KeyListViewItem*>( item )->toolTip( col );
+    if ( const Kleo::KeyListViewItem * klvi = Kleo::lvi_cast<Kleo::KeyListViewItem>( item ) )
+      tipStr = klvi->toolTip( col );
     else
       tipStr = item->text( col ) ;
 
@@ -173,20 +173,40 @@ Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const Dis
 
 Kleo::KeyListView::~KeyListView() {
   d->updateTimer->stop();
+  // need to clear here, since in ~QListView, our children won't have
+  // a valid listView() pointing to us anymore, and their dtors try to
+  // unregister from us.
+  clear();
+  assert( d->itemMap.size() == 0 );
+  // need to delete the tooltip ourselves, as ~QToolTip isn't virtual :o
   delete d->itemToolTip; d->itemToolTip = 0;
   delete d; d = 0;
   delete mColumnStrategy; mColumnStrategy = 0;
   delete mDisplayStrategy; mDisplayStrategy = 0;
 }
 
+void Kleo::KeyListView::insertItem( QListViewItem * qlvi ) {
+  //qDebug( "Kleo::KeyListView::insertItem( %p )", qlvi );
+  KListView::insertItem( qlvi );
+  if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( qlvi ) )
+    registerItem( item );
+}
+
+void Kleo::KeyListView::takeItem( QListViewItem * qlvi ) {
+  //qDebug( "Kleo::KeyListView::takeItem( %p )", qlvi );
+  if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( qlvi ) )
+    deregisterItem( item );
+  KListView::takeItem( qlvi );
+}
+
+
 void Kleo::KeyListView::setHierarchical( bool hier ) {
   if ( hier == mHierarchical )
     return;
   mHierarchical = hier;
-  if ( hier ) {
-    refillFingerprintDictionary();
+  if ( hier )
     gatherScattered();
-  } else
+  else
     scatterGathered( firstChild() );
 }
 
@@ -223,18 +243,40 @@ void Kleo::KeyListView::slotUpdateTimeout() {
 
 void Kleo::KeyListView::clear() {
   d->updateTimer->stop();
-  d->itemMap.clear();
   d->keyBuffer.clear();
   KListView::clear();
 }
 
+void Kleo::KeyListView::registerItem( KeyListViewItem * item ) {
+  //qDebug( "registerItem( %p )", item );
+  if ( !item )
+    return;
+  const QCString fpr = item->key().primaryFingerprint();
+  if ( !fpr.isEmpty() )
+    d->itemMap.insert( std::make_pair( fpr, item ) );
+}
+
+void Kleo::KeyListView::deregisterItem( const KeyListViewItem * item ) {
+  //qDebug( "deregisterItem( KeyLVI: %p )", item );
+  if ( !item )
+    return;
+  std::map<QCString,KeyListViewItem*>::iterator it
+    = d->itemMap.find( item->key().primaryFingerprint() );
+  if ( it == d->itemMap.end() )
+    return;
+  Q_ASSERT( it->second == item );
+  if ( it->second != item )
+    return;
+  d->itemMap.erase( it );
+}
+
 void Kleo::KeyListView::doHierarchicalInsert( const GpgME::Key & key ) {
-  const QCString fpr = key.subkey(0).fingerprint();
+  const QCString fpr = key.primaryFingerprint();
   if ( fpr.isEmpty() )
     return;
   KeyListViewItem * item = 0;
   if ( !key.isRoot() )
-    if ( KeyListViewItem * parent = parentFor( key.chainID() ) ) {
+    if ( KeyListViewItem * parent = itemByFingerprint( key.chainID() ) ) {
       item = new KeyListViewItem( parent, key );
       parent->setOpen( true );
     }
@@ -251,8 +293,9 @@ void Kleo::KeyListView::gatherScattered() {
     item = item->nextSibling();
     if ( cur->key().isRoot() )
       continue;
-    if ( KeyListViewItem * parent = parentFor( cur->key().chainID() ) ) {
+    if ( KeyListViewItem * parent = itemByFingerprint( cur->key().chainID() ) ) {
       // found a new parent...
+      // ### todo: optimize by suppressing removing/adding the item to the itemMap...
       takeItem( cur );
       parent->insertItem( cur );
       parent->setOpen( true );
@@ -269,6 +312,7 @@ void Kleo::KeyListView::scatterGathered( QListViewItem * start ) {
     scatterGathered( cur->firstChild() );
     assert( cur->childCount() == 0 );
 
+    // ### todo: optimize by suppressing removing/adding the item to the itemMap...
     if ( cur->parent() )
       cur->parent()->takeItem( cur );
     else
@@ -277,17 +321,7 @@ void Kleo::KeyListView::scatterGathered( QListViewItem * start ) {
   }
 }
 
-void Kleo::KeyListView::refillFingerprintDictionary() {
-  d->itemMap.clear();
-  for ( QListViewItemIterator it( this ) ; it.current() ; ++it )
-    if ( ( it.current()->rtti() & KeyListViewItem::RTTI_MASK ) == KeyListViewItem::RTTI ) {
-      KeyListViewItem * item = static_cast<KeyListViewItem*>( it.current() );
-      if ( const char * fpr = item->key().subkey(0).fingerprint() )
-	d->itemMap.insert( std::make_pair( QCString( fpr ), item ) );
-    }
-}
-
-Kleo::KeyListViewItem * Kleo::KeyListView::parentFor( const QCString & s ) const {
+Kleo::KeyListViewItem * Kleo::KeyListView::itemByFingerprint( const QCString & s ) const {
   if ( s.isEmpty() )
     return 0;
   const std::map<QCString,KeyListViewItem*>::const_iterator it = d->itemMap.find( s );
@@ -298,40 +332,35 @@ Kleo::KeyListViewItem * Kleo::KeyListView::parentFor( const QCString & s ) const
   
 
 void Kleo::KeyListView::slotRefreshKey( const GpgME::Key & key ) {
-  const char * fpr = key.subkey(0).fingerprint();
+  const char * fpr = key.primaryFingerprint();
   if ( !fpr )
     return;
-  for ( QListViewItemIterator it( this ) ; it.current() ; ++it )
-    if ( ( it.current()->rtti() & KeyListViewItem::RTTI_MASK ) == KeyListViewItem::RTTI ) {
-      KeyListViewItem * item = static_cast<KeyListViewItem*>( it.current() );
-      if ( qstrcmp( fpr, item->key().subkey(0).fingerprint() ) == 0 ) {
-	item->setKey ( key );
-	return;
-      }
-    }
-  // none found -> add it
-  slotAddKey( key );
+  if ( KeyListViewItem * item = itemByFingerprint( fpr ) )
+    item->setKey ( key );
+  else
+    // none found -> add it
+    slotAddKey( key );
 }
 
 // slots for the emission of covariant signals:
 
 void Kleo::KeyListView::slotEmitDoubleClicked( QListViewItem * item, const QPoint & p, int col ) {
-  if ( !item || ( item->rtti() & KeyListViewItem::RTTI_MASK ) == KeyListViewItem::RTTI )
+  if ( !item || lvi_cast<KeyListViewItem>( item ) )
     emit doubleClicked( static_cast<KeyListViewItem*>( item ), p, col );
 }
 
 void Kleo::KeyListView::slotEmitReturnPressed( QListViewItem * item ) {
-  if ( !item || ( item->rtti() & KeyListViewItem::RTTI_MASK ) == KeyListViewItem::RTTI )
+  if ( !item || lvi_cast<KeyListViewItem>( item ) )
     emit returnPressed( static_cast<KeyListViewItem*>( item ) );
 }
 
 void Kleo::KeyListView::slotEmitSelectionChanged( QListViewItem * item ) {
-  if ( !item || ( item->rtti() & KeyListViewItem::RTTI_MASK ) == KeyListViewItem::RTTI )
+  if ( !item || lvi_cast<KeyListViewItem>( item ) )
     emit selectionChanged( static_cast<KeyListViewItem*>( item ) );
 }
 
 void Kleo::KeyListView::slotEmitContextMenu( KListView*, QListViewItem * item, const QPoint & p ) {
-  if ( !item || ( item->rtti() & KeyListViewItem::RTTI_MASK ) == KeyListViewItem::RTTI )
+  if ( !item || lvi_cast<KeyListViewItem>( item ) )
     emit contextMenu( static_cast<KeyListViewItem*>( item ), p );
 }
 
@@ -365,14 +394,35 @@ Kleo::KeyListViewItem::KeyListViewItem( KeyListViewItem * parent, KeyListViewIte
   setKey( key );
 }
 
+Kleo::KeyListViewItem::~KeyListViewItem() {
+  // delete the children first... When children are deleted in the
+  // QLVI dtor, they don't have listView() anymore, thus they don't
+  // call deregister( this ), leading to stale entries in the
+  // itemMap...
+  while ( QListViewItem * item = firstChild() )
+    delete item;
+  // better do this here, too, since deletion is top-down and thus
+  // we're deleted when our parent item is no longer a
+  // KeyListViewItem, but a mere QListViewItem, so our takeItem()
+  // overload is gone by that time...
+  if ( KeyListView * lv = listView() )
+    lv->deregisterItem( this );
+}
+
 void Kleo::KeyListViewItem::setKey( const GpgME::Key & key ) {
+  KeyListView * lv = listView();
+  if ( lv )
+    lv->deregisterItem( this );
   mKey = key;
+  if ( lv )
+    lv->registerItem( this );
+
   // the ColumnStrategy operations might be very slow, so cache their
   // result here, where we're non-const :)
-  const Kleo::KeyListView::ColumnStrategy * cs = listView() ? listView()->columnStrategy() : 0 ;
+  const Kleo::KeyListView::ColumnStrategy * cs = lv ? lv->columnStrategy() : 0 ;
   if ( !cs )
     return;
-  const int numCols = listView() ? listView()->columns() : 0 ;
+  const int numCols = lv ? lv->columns() : 0 ;
   for ( int i = 0 ; i < numCols ; ++i ) {
     setText( i, cs->text( key, i ) );
     if ( const QPixmap * pix = cs->pixmap( key, i ) )
@@ -411,6 +461,21 @@ void Kleo::KeyListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int
 
   QListViewItem::paintCell( p, _cg, column, width, alignment );
 }
+
+void Kleo::KeyListViewItem::insertItem( QListViewItem * qlvi ) {
+  //qDebug( "Kleo::KeyListViewItem::insertItem( %p )", qlvi );
+  QListViewItem::insertItem( qlvi );
+  if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( qlvi ) )
+    listView()->registerItem( item );
+}
+
+void Kleo::KeyListViewItem::takeItem( QListViewItem * qlvi ) {
+  //qDebug( "Kleo::KeyListViewItem::takeItem( %p )", qlvi );
+  if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( qlvi ) )
+    listView()->deregisterItem( item );
+  QListViewItem::takeItem( qlvi );
+}
+
 
 //
 //
@@ -777,9 +842,9 @@ Kleo::KeyListViewItem * Kleo::KeyListView::selectedItem() const {
 
 static void selectedItems( QPtrList<Kleo::KeyListViewItem> & result, QListViewItem * start ) {
   for ( QListViewItem * item = start ; item ; item = item->nextSibling() ) {
-    if ( item->isSelected() &&
-	 ( item->rtti() & Kleo::KeyListViewItem::RTTI_MASK ) == Kleo::KeyListViewItem::RTTI )
-      result.append( static_cast<Kleo::KeyListViewItem*>( item ) );
+    if ( item->isSelected() )
+      if ( Kleo::KeyListViewItem * i = Kleo::lvi_cast<Kleo::KeyListViewItem>( item ) )
+	result.append( i );
     selectedItems( result, item->firstChild() );
   }
 }

@@ -3,6 +3,7 @@
 /* kpilotConfig.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This class concentrates all the configuration
 ** information for the various parts of KPilot.
