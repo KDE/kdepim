@@ -29,7 +29,7 @@
 namespace KSync {
 
 class LocalKonnectorConfig : public KRES::ConfigWidget
-{ 
+{
     Q_OBJECT
   public:
     LocalKonnectorConfig( QWidget *parent );
@@ -37,6 +37,10 @@ class LocalKonnectorConfig : public KRES::ConfigWidget
 
     void loadSettings( KRES::Resource *resource );
     void saveSettings( KRES::Resource *resource );
+
+  protected slots:
+    void selectAddressBookResource();
+    void selectCalendarResource();
 
   private:
     KURLRequester *mCalendarFile;

@@ -55,8 +55,10 @@ LocalKonnector::LocalKonnector( const KConfig *config )
     mBookmarkFile = config->readPathEntry( "BookmarkFile" );
   }
 
+  mAddressBookSyncee =	new AddressBookSyncee( &mAddressBook );
+  
   mSyncees.append( new CalendarSyncee( &mCalendar ) );
-  mSyncees.append( new AddressBookSyncee( &mAddressBook ) );
+  mSyncees.append( mAddressBookSyncee );
   mSyncees.append( new BookmarkSyncee( &mBookmarkManager ) );
 
   mAddressBookResourceFile = new KABC::ResourceFile( mAddressBookFile );
@@ -104,6 +106,12 @@ bool LocalKonnector::readSyncees()
 
   mAddressBookResourceFile->setFileName( mAddressBookFile );
   if ( !mAddressBook.load() ) return false;
+  
+  KABC::AddressBook::Iterator it;
+  for ( it = mAddressBook.begin(); it != mAddressBook.end(); ++it ) {
+    KSync::AddressBookSyncEntry entry( *it );
+    mAddressBookSyncee->addEntry( &entry );
+  }
 
   // TODO: Read Bookmarks
 
