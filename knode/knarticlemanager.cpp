@@ -101,20 +101,26 @@ void KNArticleManager::saveArticleToFile(KNArticle *a)
 
 QString KNArticleManager::saveContentToTemp(KNMimeContent *c)
 {
-  QString fName;
+  QString path;
 	QCString tmp;
 	DwString data;
 	QFile f;
 	
-	fName="/tmp/"+KApplication::randomString(10);
-	fName+=c->ctName();
-	tempFiles.append(fName);
-	f.setName(fName);
+	tmp=c->headerLine("X-KNode-Tempfile");
+	if(!tmp.isEmpty()) {
+	  path=QString(tmp);
+	  return path;
+	}
+	path="/tmp/"+KApplication::randomString(10);
+	path+=c->ctName();
+	tempFiles.append(path);
+	f.setName(path);
  	if(f.open(IO_WriteOnly)) {
  		data=c->decodedData();
  		f.writeBlock(data.data(), data.size());
  		f.close();
- 	  return fName;
+ 	  c->setHeader(KNArticleBase::HTxkntempfile, path.local8Bit());
+ 	  return path;
  	}
  	else {
  	  displayExternalFileError();

@@ -106,106 +106,22 @@ void KNMimeContent::clear()
 
 void KNMimeContent::parse()
 {
-	QCString tmp, mT, ct;
-	int pos1=0;
+	QCString tmp;
 	KNMimeContent *mCT=0, *uuContent=0;
 	QStrList *part;
 	bool mainContentFound=false;
 	contentCategory cat=CCmain;
 		
-	
-	//======================= parse Header ===========================
-	
-	tmp=headerLine("Content-Type");
-	if(!mInfo) mInfo=new KNMimeInfo();
-	
-	if(!tmp.isEmpty()) {
-		
-		pos1=tmp.find(';');
-		if(pos1!=-1) {
-			mT=tmp.left(pos1);
-		}
-		else mT=tmp;
-		
-		if(mT.find("text", 0, false)!=-1) 							mInfo->setCTMediaType(MTtext);
-		else if(mT.find("image", 0, false)!=-1) 				mInfo->setCTMediaType(MTimage);
-		else if(mT.find("audio", 0, false)!=-1)      		mInfo->setCTMediaType(MTaudio);
-		else if(mT.find("video", 0, false)!=-1)      		mInfo->setCTMediaType(MTvideo);
-		else if(mT.find("multipart", 0, false)!=-1)			mInfo->setCTMediaType(MTmultipart);
-		else if(mT.find("message", 0, false)!=-1)    		mInfo->setCTMediaType(MTmessage);
-		else 																						mInfo->setCTMediaType(MTapplication);																						
-	
-		switch(mInfo->ctMediaType()) {
-	
-			case MTtext:
-				if(mT.find("/plain", 0, false)!=-1)							mInfo->setCTSubType(STplain);
-				else if(mT.find("/html", 0, false)!=-1)					mInfo->setCTSubType(SThtml);
-				else if(mT.find("/enriched", 0, false)!=-1)			mInfo->setCTSubType(STenriched);
-			break;
-	
-			case MTimage:
-				if(mT.find("/gif", 0, false)!=-1)								mInfo->setCTSubType(STgif);
-				else if(mT.find("/jpeg", 0, false)!=-1)					mInfo->setCTSubType(STjpeg);
-			break;
-	
-			case MTaudio:
-				if(mT.find("/basic", 0, false)!=-1)							mInfo->setCTSubType(STbasic);
-			break;
-	
-			case MTvideo:
-				if(mT.find("/mpeg", 0, false)!=-1)								mInfo->setCTSubType(STmpeg);
-			break;
-			
-			case MTapplication:
-				if(mT.find("/postscript", 0, false)!=-1)					mInfo->setCTSubType(STPostScript);
-				else if(mT.find("/octet-stream", 0, false)!=-1)		mInfo->setCTSubType(SToctetStream);
-			break;
-	
-			case MTmultipart:
-				if(mT.find("/alternative", 0, false)!=-1)				mInfo->setCTSubType(STalternative);
-				else if(mT.find("/parallel", 0, false)!=-1)			mInfo->setCTSubType(STparallel);
-				else if(mT.find("/digest", 0, false)!=-1)  			mInfo->setCTSubType(STdigest);
-				else																						mInfo->setCTSubType(STmixed);
-			break;
-	
-			case MTmessage:
-				if(mT.find("/rfc822", 0, false)!=-1)							mInfo->setCTSubType(STrfc822);
-				else if(mT.find("/partial", 0, false)!=-1)				mInfo->setCTSubType(STpartial);
-				else if(mT.find("/external-body", 0, false)!=-1)	mInfo->setCTSubType(STexternalBody);
-			break;
-	
-			default: 																				mInfo->setCTSubType(SToctetStream);
-		}
-	}
-	
-	tmp=headerLine("Content-Transfer-Encoding");
-	if(tmp.isEmpty()) 																	mInfo->setCTEncoding(ECsevenBit);
-	else if(strcasecmp(tmp,"7bit")==0)          				mInfo->setCTEncoding(ECsevenBit);
-	else if(strcasecmp(tmp,"8bit")==0)          				mInfo->setCTEncoding(ECeightBit);
-	else if(strcasecmp(tmp,"quoted-printable")==0)   	 	mInfo->setCTEncoding(ECquotedPrintable);
-	else if(strcasecmp(tmp,"base64")==0)          			mInfo->setCTEncoding(ECbase64);
-	else if(strcasecmp(tmp,"x-uuencode")==0)          	mInfo->setCTEncoding(ECuuencode);
-	else           																			mInfo->setCTEncoding(ECbinary);
-	
-	if(mInfo->ctEncoding()==ECsevenBit || mInfo->ctEncoding()==ECeightBit)
-		mInfo->setIsReadable(true);
-	else mInfo->setIsReadable(false);
-		
-	tmp=headerLine("Content-Disposition");
-	if(tmp.isEmpty())																		mInfo->setCTDisposition(DPinline);
-	else if(strcasecmp(tmp,"inline")==0)          			mInfo->setCTDisposition(DPinline);
-  else                                                mInfo->setCTDisposition(DPattached);
+	//parse Header
+	mimeInfo()->parse(this);
 
-
-
-  //========================== parse Body ===========================
-
+  //parse Body
   if(b_ody && mInfo->ctMediaType()==MTmultipart) {
   	mInfo->setCTCategory(CCcontainer);
   	if(mInfo->ctSubType()==STalternative) cat=CCalternative;
   	else cat=CCattachement;
   	
-  	tmp=ctParam("boundary");
+  	tmp=mInfo->getCTParameter("boundary");
   	if(!tmp.isEmpty()) {
   		if(!ct_List) {
   			ct_List=new QList<KNMimeContent>;
@@ -291,7 +207,41 @@ void KNMimeContent::parse()
 
 
 
-void  KNMimeContent::prepareForDisplay()
+void KNMimeContent::assemble()
+{
+  QCString tmp;
+  KNMimeInfo *i=mimeInfo();
+
+  if(this->type()!=ATmimeContent) {
+    tmp="1.0";
+    setHeader(HTmimeVersion, tmp, false);
+  }
+  else {
+    tmp=i->contentDisposition();
+    if(!tmp.isEmpty())
+      setHeader(HTdisposition, tmp, false);
+  }
+
+  tmp=i->contentTransferEncoding();
+  if(!tmp.isEmpty())
+    setHeader(HTencoding, tmp, false);
+
+  tmp=i->contentType();
+  if(!tmp.isEmpty())
+    setHeader(HTcontentType, tmp, false);
+}
+
+
+
+KNMimeInfo* KNMimeContent::mimeInfo()
+{
+  if(!mInfo) mInfo=new KNMimeInfo();
+  return mInfo;
+}
+
+
+
+void KNMimeContent::prepareForDisplay()
 {
 	
 	if(mInfo->isReadable()) return;
@@ -331,12 +281,12 @@ void KNMimeContent::prepareHtml()
 	if(!b_ody) return;
 	QCString tmp;
 	int pos=0;
-	
+		
 	for(char *line=b_ody->first(); line; line=b_ody->next()) {
 		tmp=line;
-		pos=tmp.find("<body>", 0, false);
+		pos=tmp.find("<html>", 0, false);
 		if(pos!=-1) {
-			tmp.remove(0, pos+6);
+			tmp.remove(pos, pos+6);
 		  pos=b_ody->at();
 		  b_ody->remove();
 		  if(!tmp.isEmpty()) b_ody->insert(pos, tmp);
@@ -347,14 +297,15 @@ void KNMimeContent::prepareHtml()
 	}
 	for(char *line=b_ody->next(); line; line=b_ody->next()) {	
 		tmp=line;
-		pos=tmp.find("</body>");
+		pos=tmp.find("</html>", 0, false);
 		if(pos!=-1) {
 			tmp.remove(pos, tmp.length()-pos);
 			pos=b_ody->at();
 			b_ody->remove();
 			if(!tmp.isEmpty()) b_ody->insert(pos, tmp);
 			line=b_ody->next();
-			while(b_ody->remove());
+			if(line)
+			  while(b_ody->remove());
 			break;
 		}
 	}
@@ -389,74 +340,23 @@ void KNMimeContent::attachements(QList<KNMimeContent> *dst, bool incAlternatives
 			  var->attachements(dst, incAlternatives);
 	  }
 	}
-	
-	/*if(this->type()!=ATmimeContent) {
-		for(KNMimeContent *var=dst->first(); var; var=dst->next()) {
-			if(var->isBodyContent()) {
-				dst->removeRef(var);
-				break;
-			}
-		}
-	}*/ 	
-}
-
-
-const QCString KNMimeContent::ctParam(const char* name)
-{
-	QCString cT, ret;
-	int pos1=0, pos2=0;
-	//char *line;
-	cT=headerLine("Content-Type");
-	qDebug("Content-Type: %s", cT.data());
-	if(!cT.isEmpty()) {
-		pos1=cT.find(name);
-		if(pos1!=-1) {
-			pos2=cT.find(';', pos1);
-			if (pos2==-1) pos2=cT.length();
-			pos1+=strlen(name)+1;
-			ret=cT.mid(pos1, pos2-pos1);
-			removeQuots(ret);
-		}
-	}
-	
-	/*if(ret.isEmpty()) {
-		for(line=h_ead->first(); line; line=h_ead->next())
-			if(strncasecmp(line, "Content-Type",12)==0) break;
-		line=h_ead->next();
-		if(line) {
-			cT=line;
-			if(!cT.isEmpty()) {
-				pos1=cT.find(name);
-				if(pos1!=-1) {
-					pos2=cT.find(';', pos1);
-					if (pos2==-1) pos2=cT.length();
-					pos1+=strlen(name)+1;
-					ret=cT.mid(pos1, pos2-pos1);
-					removeQuots(ret);
-				}
-			}
-		}
-	}*/
-	
-	return ret;
 }
 
 
 
-const QCString& KNMimeContent::ctCharset()
+QCString KNMimeContent::ctCharset()
 {
-	static QCString ret;
-	ret=ctParam("charset").upper();
+	QCString ret;
+	ret=mimeInfo()->getCTParameter("charset").upper();
 	if(ret.isEmpty()) ret="US-ASCII";
 	return ret;
 }
 
 
 
-const QCString& KNMimeContent::ctMimeType()
+QCString KNMimeContent::ctMimeType()
 {
-	static QCString ret;
-	QCString tmp;
+	QCString ret, tmp;
 	int pos1=0;
 	
 	tmp=headerLine("Content-Type");
@@ -471,13 +371,12 @@ const QCString& KNMimeContent::ctMimeType()
 
 
 
-const QCString& KNMimeContent::ctName()
+QCString KNMimeContent::ctName()
 {
-	static QCString ret;
-	QCString tmp;
+	QCString ret, tmp;
 	int pos1=0 , pos2=0;
 	
-	ret=ctParam("name");
+	ret=mimeInfo()->getCTParameter("name");
 	if(ret.isEmpty()) {
 		tmp=headerLine("Content-Disposition");
 		if(tmp.isEmpty()) ret=i18n("unknown").local8Bit();
@@ -493,15 +392,14 @@ const QCString& KNMimeContent::ctName()
 			if(ret.isEmpty()) ret=i18n("unknown").local8Bit();
 		}	
 	}
-	qDebug("KNMimeContent::ctName() : name=\"%s\"", ret.data());
 	return ret;
 }
 
 
 
-const QCString& KNMimeContent::ctDescription()
+QCString KNMimeContent::ctDescription()
 {
-	static QCString ret;
+	QCString ret;
 	ret=headerLine("Content-Description");
 	if(ret.isEmpty()) ret=i18n("none").local8Bit();
 	return ret;
@@ -509,7 +407,7 @@ const QCString& KNMimeContent::ctDescription()
 
 
 
-void KNMimeContent::addHeaderLine(const char *line, bool encode=false)
+void KNMimeContent::addHeaderLine(const char *line, bool encode)
 {
 	if(h_ead) {
 		if(encode) h_ead->append(encodeRFC1522String(line));
@@ -519,7 +417,7 @@ void KNMimeContent::addHeaderLine(const char *line, bool encode=false)
 
 
 
-void KNMimeContent::setHeader(const char *name, const char *value, bool encode)
+void KNMimeContent::setHeader(const char *name, const QCString &value, bool encode)
 {
 	int at;
 	QCString line(128);
@@ -539,7 +437,7 @@ void KNMimeContent::setHeader(const char *name, const char *value, bool encode)
 
 
 
-void KNMimeContent::setHeader(headerType t, const char *v, bool encode)
+void KNMimeContent::setHeader(headerType t, const QCString &value, bool encode)
 {
 	char *line;
 	int insPos=-1;
@@ -561,8 +459,8 @@ void KNMimeContent::setHeader(headerType t, const char *v, bool encode)
 	}
 	
 	hdr=headerTypeToString(t)+": ";
-	if(!allow8bit && encode) hdr+=encodeRFC1522String(v);
-	else hdr+=v;
+	if(!allow8bit && encode) hdr+=encodeRFC1522String(value);
+	else hdr+=value;
 	if(insPos==-1) h_ead->append(hdr);
 	else h_ead->insert(insPos, hdr);		
 }
@@ -697,7 +595,7 @@ DwString KNMimeContent::encodedData()
 		}	
 	}
 	else if(ct_List) {
-		boundary=ctParam("boundary");
+		boundary=mimeInfo()->getCTParameter("boundary");
 		for(KNMimeContent *con=ct_List->first(); con; con=ct_List->next()) {
 	  	data+="--";
 	  	data+=boundary.data();
@@ -718,19 +616,21 @@ DwString KNMimeContent::encodedData()
 void KNMimeContent::toStream(QTextStream &ts)
 {
 	char *line;
-	QCString boundary, decodedText;
+	QCString boundary, decodedText, tmp;
 	
 	if(b_ody==0 && ct_List!=0) {
-		boundary=ctParam("boundary");
+		boundary=mimeInfo()->getCTParameter("boundary");
 		if(boundary.isEmpty()) {
-			qDebug("KNMimeContent::toStream() : no boundary available !!");
-			// create and set boundary
-			return; //debug
+			qDebug("KNMimeContent::toStream() : no boundary found - creating new one!!");
+			boundary=multiPartBoundary();
+			tmp="boundary=\""+boundary+"\"";
+			mimeInfo()->addCTParameter(tmp);
 		}
 	}	
 	
 	for(line=h_ead->first(); line; line=h_ead->next())
-	  ts << line << '\n';
+	  if(strncasecmp(line, "X-KNode-Tempfile", 16)==0) continue; //temporary path is not saved
+	  else ts << line << '\n';
 	
 	ts << '\n';
 	

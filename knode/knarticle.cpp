@@ -50,17 +50,20 @@ void KNArticle::clear()
 
 void KNArticle::parse()
 {
+	QCString tmp;
 	if(s_ubject.isEmpty()) s_ubject=decodeRFC1522String(headerLine("Subject"));
 	
 	if(t_imeT==0) {
-		QCString d=headerLine("Date");
-		if(!d.isEmpty()) parseDate(d);
+		tmp=headerLine("Date");
+		if(!tmp.isEmpty()) parseDate(tmp);
 	}	
-	/*if(l_ines==-1) {
-		QCString tmp=headerLine("Lines");
-		if(tmp.isEmpty()) l_ines=0;
-		else l_ines=tmp.toInt();
-	}*/			
+	
+	if(r_eferences.isEmpty()) {
+	  tmp=headerLine("References");
+	  if(!tmp.isEmpty())
+	    r_eferences.setLine(tmp);
+	}
+	
 	KNMimeContent::parse();
 }
 
@@ -72,6 +75,27 @@ void KNArticle::parseDate(const QCString &s)
 	dt.FromString(s.data());
 	dt.Parse();
 	t_imeT=dt.AsUnixTime();
+}
+
+
+
+void KNArticle::assemble()
+{
+  DwDateTime dt;
+  QCString tmp;
+
+  dt.FromUnixTime(t_imeT);
+  dt.Assemble();
+
+  KNMimeContent::assemble();
+
+  if(!r_eferences.isEmpty())
+    setHeader(HTreferences, r_eferences.line(), false);
+
+  tmp=dt.AsString().c_str();
+  setHeader(HTdate, tmp, false);
+
+  setHeader(HTsubject, s_ubject, !allow8bit);
 }
 
 

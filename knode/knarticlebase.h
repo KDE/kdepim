@@ -34,15 +34,16 @@ class KNArticleBase {
 							
 	  enum mediaType    { 	MTtext, MTimage, MTaudio,
 	  									 		MTvideo, MTapplication,
-	  											MTmultipart, MTmessage };
+	  											MTmultipart, MTmessage, MTcustom };
 	
 	  enum subType			{ 	STplain, SThtml, STenriched, 										
 	  											STgif, STjpeg,             									
 	  											STbasic,                 										
 	  											STmpeg,                   									
 	  											STPostScript, SToctetStream,   								
-                    	  	STmixed, STalternative, STparallel, STdigest, STxuupart,
-                    	  	STrfc822, STpartial, STexternalBody };
+                    	  	STmixed, STalternative, STparallel, STdigest,
+                    	  	STrfc822, STpartial, STexternalBody,
+                    	  	STcustom };
 
     enum encoding			{ 	ECsevenBit=0, ECeightBit=1, ECquotedPrintable=2,
     											ECbinary=3, ECbase64=4, ECuuencode=5 };
@@ -58,7 +59,7 @@ class KNArticleBase {
    												HTdate=70, HTreferences=75, HTlines=80, HTorga=85,
 													HTmimeVersion=90, HTcontentType=100, HTencoding=110,
 													HTdisposition=120, HTuserAgent=140,
-													HTxknstatus=150, HTunknown=200 }; 									
+													HTxknstatus=150, HTxkntempfile=160, HTunknown=200 }; 									
 
 		enum controlType {		CTcancel=0, CTunknown=1 };
 		
@@ -72,6 +73,7 @@ class KNArticleBase {
 		static void setAllow8bitHeaders(bool b)	{ allow8bit=b; }	
 		
 		static QCString uniqueString();
+		static QCString multiPartBoundary();
 		                	                	
 		static QCString decodeQuotedPrintable(const QCString str);
 		static QCString encodeQuotedPrintable(const QCString str);
@@ -85,6 +87,9 @@ class KNArticleBase {
 		
 		static bool stripCRLF(char *str);
 		static void removeQuots(QCString &str);
+		
+		static QCString articleStatusToString(articleStatus s);
+		static int stringToArticleStatus(const char *s);
 		
 		static QCString headerTypeToString(headerType t);
 		static int stringToHeaderType(const char *s);                	
@@ -151,6 +156,29 @@ class KNArticleBase {
 				QStrList *src, *text, *bin;
 				QCString fName, mimeType;
 		};
+		
+		class ReferenceLine {
+		
+		  public:
+		    ReferenceLine();
+		    ~ReferenceLine();
+		
+		    void setLine(const QCString &l)     { l_ine=l; }
+		    void append(const QCString &r);
+		    void clear()                        { l_ine.resize(0); }
+		    		
+		    const QCString& line()              { return l_ine; }
+		    QCString first();
+		    QCString next();
+		    QCString at(int i);
+		    int count();
+		    bool isEmpty()                      { return ( l_ine.isEmpty() ); }
+		
+		  protected:
+		    QCString l_ine;
+		    int pos;
+		};
+		
 };
 
 

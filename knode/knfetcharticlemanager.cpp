@@ -423,7 +423,7 @@ void KNFetchArticleManager::referenceClicked(int refNr, KNArticleWidget *aw,int 
 	
 	grp=(KNGroup*)aw->collection();
 	art=(KNFetchArticle*)aw->article();
-	ref=grp->byMessageId(art->reference(refNr));
+	ref=grp->byMessageId(art->references().at(refNr));
 	if(btn==4) {
 		win=new KNArticleWindow();
 		win->show();

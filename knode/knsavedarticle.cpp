@@ -46,20 +46,31 @@ void KNSavedArticle::parse()
 	if(s_tatus==ASunknown) {
 		tmp=headerLine("X-KNode-Status");
 		if(tmp.isEmpty()) s_tatus=ASsaved;
-		else {
-			if(tmp=="toPost") s_tatus=AStoPost;
-			else if(tmp=="toMail") s_tatus=AStoMail;
-			else if(tmp=="posted") s_tatus=ASposted;
-			else if(tmp=="mailed") s_tatus=ASmailed;
-			else if(tmp=="canceled") s_tatus=AScanceled;
-			else s_tatus=ASsaved;
-		}
+		else s_tatus=(articleStatus)stringToArticleStatus(tmp.data());
 	}
 	if(d_estination.isEmpty()) {
 		if((this->isMail())) d_estination=headerLine("To");
 		else d_estination=headerLine("Newsgroups");
 	}
 	KNArticle::parse();
+}
+
+
+
+void KNSavedArticle::assemble()
+{
+  QCString tmp;
+
+  KNArticle::assemble();
+
+  tmp=articleStatusToString(s_tatus);
+  setHeader(HTxknstatus, tmp);
+
+  if(isMail())
+    setHeader(HTto, d_estination, !allow8bit);
+  else
+    setHeader(HTnewsgroups, d_estination, false);
+
 }
 
 

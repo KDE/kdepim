@@ -31,7 +31,6 @@ class KNFetchArticle : public KNArticle  {
 				
 		void parse();
 		void parseFrom(const QCString &f);
-		void parseReferences(const QCString &s);
 		void clear();
 		void initListItem();
 	  void updateListItem();
@@ -40,12 +39,12 @@ class KNFetchArticle : public KNArticle  {
 		articleStatus status()									{ return AStemp; }
 		articleType type()											{ return ATfetch; }
 		virtual const QCString& messageId()			{ return m_Id; }
-		virtual const QCString& fromName()				{ return f_rom; }
+		virtual const QCString& fromName()			{ return f_rom; }
 		virtual const QCString& fromEmail()			{ return e_mail;}
-		const QCString& reference(int i)					{ return r_eferences[i]; }
+		
 		int lines()															{ return l_ines; }
 		int idRef()															{ return i_dRef; }
-		time_t fetchTime()												{ return fTimeT; }
+		time_t fetchTime()											{ return fTimeT; }
 		unsigned short threadingLevel()					{ return thrLevel; }
 		unsigned short score()									{ return s_core; }
 		unsigned short newFollowUps()						{ return newFups; }
@@ -58,14 +57,12 @@ class KNFetchArticle : public KNArticle  {
 		bool hasNewFollowUps()									{ return (newFups > 0); }
 		bool hasUnreadFollowUps()								{ return (unrFups > 0); }
 		bool hasChanged()												{ return flags.at(5); }
-		bool hasReferences() 										{ return (!r_eferences[0].isEmpty()); }
 		bool locked()														{ return flags.at(6); }
 				
 		//set
-		void setMessageId(const QCString &s)							{ m_Id=s; }
+		void setMessageId(const QCString &s)						{ m_Id=s; }
 		void setFromName(const QCString &s)          		{ f_rom=s; }
 		void setFromEmail(const QCString &s)         		{ e_mail=s; }
-		void setReference(int i, const QCString &s)  		{ r_eferences[i]=s; }
 		void setLines(int i)														{ l_ines=i; }
 		void setIdRef(int v)														{ i_dRef=v; }
 		void setFetchTime(time_t v)											{ fTimeT=v; }
@@ -87,7 +84,7 @@ class KNFetchArticle : public KNArticle  {
 	
 				
 	protected:
-		QCString m_Id, f_rom, e_mail, r_eferences[5];
+		QCString m_Id, f_rom, e_mail;
 		int i_dRef, l_ines;
 		unsigned short thrLevel, s_core, newFups, unrFups;
 		time_t fTimeT;

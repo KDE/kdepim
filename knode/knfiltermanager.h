@@ -31,7 +31,6 @@
 
 class KNFilterSettings;
 
-
 class KNFilterSelectAction : public KAction
 {
   Q_OBJECT

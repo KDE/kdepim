@@ -35,6 +35,7 @@ class KNMimeContent : public KNArticleBase  {
 	
 	  void initContent();
 		virtual void parse();
+		virtual void assemble();
 		virtual void clear();
 		void clearAttachements()				{ if(ct_List) ct_List->clear(); }		
 		void clearHead()								{ if(h_ead) h_ead->clear(); }		
@@ -44,17 +45,16 @@ class KNMimeContent : public KNArticleBase  {
 		
 		//get
 		virtual articleType type()			{ return ATmimeContent; }
-		KNMimeInfo* mimeInfo()					{ return mInfo; }
+		KNMimeInfo* mimeInfo();					
 		bool isMultipart()							{ return mInfo->ctMediaType()==MTmultipart; }
 		bool hasContent()								{ return ((h_ead!=0) && (!h_ead->isEmpty())); }
 		bool isMainContent()            { return (mInfo->ctCategory()==CCmain); }
 		KNMimeContent* mainContent();
 		void attachements(QList<KNMimeContent> *dst, bool incAlternatives=false);
-		const QCString ctParam(const char* name);
-		const QCString& ctCharset();
-		const QCString& ctMimeType();
-		const QCString& ctName();
-		const QCString& ctDescription();
+		QCString ctCharset();
+		QCString ctMimeType();
+		QCString ctName();
+		QCString ctDescription();
 		QCString headerLine(const char* name);				
 		char* firstHeaderLine()								{ if(h_ead) return h_ead->first();
 																						else return 0; }
@@ -73,8 +73,8 @@ class KNMimeContent : public KNArticleBase  {
 		void setData(QStrList *data, bool crfl=true);
 		void addBodyLine(const char* line) 	{ if(b_ody) b_ody->append(line); }
 		void addHeaderLine(const char *line, bool encode=false);
-		void setHeader(const char* name, const char *value, bool encode=false);
-		void setHeader(headerType t, const char *v, bool encode=false);
+		void setHeader(const char* name, const QCString &value, bool encode=false);
+		void setHeader(headerType t, const QCString &value, bool encode=false);
 		bool removeHeader(const char* name);
 			
 						

@@ -32,21 +32,23 @@ class KNArticle : public KNMimeContent  {
 				
 		virtual void parse();
 		void parseDate(const QCString &s);
+		virtual void assemble();
 		virtual void clear();
 		virtual void updateListItem()=0;		
 		
 		//get
 		virtual articleStatus status()=0;
 		int id()																{ return i_d; }
-		time_t timeT()														{ return t_imeT; }
+		time_t timeT()													{ return t_imeT; }
 		bool hasData()													{ return (!s_ubject.isEmpty()); }
-		virtual bool hasReferences()						{ return false; }
+		bool hasReferences()						        { return (!r_eferences.isEmpty()); }
 		virtual int age();
 		virtual int lines();						
 		virtual const QCString& subject()				{ return s_ubject; }
 		virtual const QCString& fromName();
 		virtual const QCString& fromEmail();
 		const QCString& replyToEmail();
+		ReferenceLine& references()             { return r_eferences; }
 		const char* timeString();
 		bool hasSubject()												{ return (!s_ubject.isEmpty()); }
 		virtual bool isNew()										{ return false; }	
@@ -63,6 +65,7 @@ class KNArticle : public KNMimeContent  {
 				
 	protected:
 		QCString s_ubject;
+		ReferenceLine r_eferences;
 		char* t_imeString;
 		
 		int i_d;

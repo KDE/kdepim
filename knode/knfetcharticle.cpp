@@ -45,8 +45,7 @@ void KNFetchArticle::clear()
 	m_Id.resize(0);
 	f_rom.resize(0);
 	e_mail.resize(0);
-	
-	for(int i=0; i<5; i++) r_eferences[i].resize(0);
+		
 	KNArticle::clear();
 }
 
@@ -55,8 +54,7 @@ void KNFetchArticle::clear()
 void KNFetchArticle::parse()
 {
 	if(f_rom.isEmpty()) parseFrom(headerLine("From"));
-	if(r_eferences[0].isEmpty()) parseReferences(headerLine("References"));
-	if(m_Id.isEmpty()) m_Id=headerLine("Message-ID").copy();
+	if(m_Id.isEmpty()) m_Id=headerLine("Message-ID");
 	KNArticle::parse();
 }
 
@@ -80,7 +78,7 @@ void KNFetchArticle::parseFrom(const QCString &s)
 
 
 
-void KNFetchArticle::parseReferences(const QCString &s)
+/*void KNFetchArticle::parseReferences(const QCString &s)
 {
 	int RefNr=0;
 	KNStringSplitter refs;
@@ -107,7 +105,7 @@ void KNFetchArticle::parseReferences(const QCString &s)
 			}
 		}
 	}	
-}
+}*/
 
 
 

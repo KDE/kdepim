@@ -56,6 +56,15 @@ QCString KNArticleBase::uniqueString()
 
 
 
+QCString KNArticleBase::multiPartBoundary()
+{
+  QCString ret;
+  ret="nextPart"+uniqueString();
+  return ret;
+}
+
+
+
 // THIS PART IS TAKEN FROM KMAIL : START
 
 QCString KNArticleBase::decodeQuotedPrintable(const QCString aStr)
@@ -292,30 +301,65 @@ void KNArticleBase::removeQuots(QCString &str)
 
 
 
+QCString KNArticleBase::articleStatusToString(articleStatus s)
+{
+  QCString ret;
+
+  switch(s) {
+    case AStoPost:    ret="toPost";     break;
+    case AStoMail:    ret="toMail";     break;
+    case ASposted:    ret="posted";     break;
+    case ASmailed:    ret="mailed";     break;
+    case AScanceled:  ret="canceled";   break;
+    default:          ret="saved";
+  };
+
+  return ret;
+}
+
+
+
+
+int KNArticleBase::stringToArticleStatus(const char *s)
+{
+  int ret;
+  if(strcasecmp(s, "toPost")==0)        ret=AStoPost;
+	else if(strcasecmp(s, "toMail")==0)   ret=AStoMail;
+	else if(strcasecmp(s,"posted")==0)    ret=ASposted;
+	else if(strcasecmp(s,"mailed")==0)    ret=ASmailed;
+	else if(strcasecmp(s,"canceled")==0)  ret=AScanceled;
+	else                                  ret=ASsaved;
+	
+	return ret;
+}
+
+
+
 QCString KNArticleBase::headerTypeToString(headerType t)
 {
 	QCString s;
 	
 	switch(t) {
-		case HTmessageId: 		s="Message-ID"; break;
-		case HTfrom:					s="From"; break;
-		case HTsubject:				s="Subject"; break;
-		case HTcontrol:				s="Control"; break;
-		case HTto:						s="To"; break;
-		case HTnewsgroups:		s="Newsgroups"; break;
-		case HTfup2:					s="Followup-To2"; break;
-		case HTreplyTo:				s="Reply-To"; break;
-		case HTdate:          s="Date"; break;
-		case HTreferences:		s="References"; break;
-		case HTlines:         s="Lines"; break;
-		case HTorga:         	s="Organization"; break;
-		case HTmimeVersion:   s="Mime-Version"; break;
-		case HTcontentType:   s="Content-Type"; break;
-		case HTencoding:      s="Content-Transfer-Encoding"; break;
-		case HTdisposition:   s="Content-Disposition"; break;
-		case HTuserAgent:   	s="User-Agent"; break;
-		case HTxknstatus:     s="X-KNode-Status"; break;
-		default:              s="X-Unknown"; break;
+		case HTmessageId: 		s="Message-ID";                 break;
+		case HTfrom:					s="From";                       break;
+		case HTsubject:				s="Subject";                    break;
+		case HTcontrol:				s="Control";                    break;
+		case HTto:						s="To";                         break;
+		case HTnewsgroups:		s="Newsgroups";                 break;
+		case HTfup2:					s="Followup-To2";               break;
+		case HTreplyTo:				s="Reply-To";                   break;
+		case HTdate:          s="Date";                       break;
+		case HTreferences:		s="References";                 break;
+		case HTlines:         s="Lines";                      break;
+		case HTorga:         	s="Organization";               break;
+		case HTmimeVersion:   s="Mime-Version";               break;
+		case HTcontentType:   s="Content-Type";               break;
+		case HTencoding:      s="Content-Transfer-Encoding";  break;
+		case HTdisposition:   s="Content-Disposition";        break;
+		case HTuserAgent:   	s="User-Agent";                 break;
+		case HTxknstatus:     s="X-KNode-Status";             break;
+		case HTxkntempfile:   s="X-KNode-Tempfile";           break;
+		default:              s="X-Unknown";                  break;
 	}
 	return s;
 }
@@ -344,6 +388,7 @@ int KNArticleBase::stringToHeaderType(const char *s)
 	else if(strncasecmp(s, "Content-Disposition", 19)==0)           t=HTdisposition;
 	else if(strncasecmp(s, "User-Agent", 10)==0)                    t=HTuserAgent;
 	else if(strncasecmp(s, "X-KNode-Status", 14)==0)                t=HTxknstatus;
+	else if(strncasecmp(s, "X-KNode-Tempfile", 16)==0)              t=HTxkntempfile;
 	else                                                            t=HTunknown;
 	
 	return t;
@@ -604,4 +649,95 @@ void KNArticleBase::UUParser::parse()
       else                                mimeType="application/octet-stream";
     }
   }
+}
+
+
+
+//===================================================================================
+
+
+KNArticleBase::ReferenceLine::ReferenceLine()
+{
+  pos=-1;
+}
+
+
+
+KNArticleBase::ReferenceLine::~ReferenceLine()
+{
+}
+
+
+
+void KNArticleBase::ReferenceLine::append(const QCString &r)
+{
+  l_ine+=" "+r;
+}
+
+
+
+QCString KNArticleBase::ReferenceLine::first()
+{
+  pos=-1;
+  return next();
+}
+
+
+
+QCString KNArticleBase::ReferenceLine::next()
+{
+  int pos1, pos2;
+  QCString ret;
+
+  if(pos!=0) {
+    pos2=l_ine.findRev('>', pos);
+    pos=0;
+    if(pos2!=-1) {
+      pos1=l_ine.findRev('<', pos2);
+      if(pos1!=-1) {
+        ret=l_ine.mid(pos1, pos2-pos1+1);
+        pos=pos1;
+      }
+    }
+  }
+  //qDebug("KNArticleBase::ReferenceLine::next() : ret = %s", ret.data());
+  return ret;
+}
+
+
+
+QCString KNArticleBase::ReferenceLine::at(int i)
+{
+  QCString ret;
+  int cnt=0, pos1=0, pos2=0;
+
+  while(pos1!=-1 && cnt < i+1) {
+    pos2=pos1-1;
+    pos1=l_ine.findRev('<', pos2);
+    cnt++;
+  }
+
+  if(pos1!=-1) {
+    pos2=l_ine.find('>', pos1);
+    if(pos2!=-1)
+      ret=l_ine.mid(pos1, pos2-pos1+1);
+  }
+
+ //qDebug("KNArticleBase::ReferenceLine::at() : ret = %s", ret.data());
+ return ret;
+}
+
+
+
+int KNArticleBase::ReferenceLine::count()
+{
+  int cnt1=0, cnt2=0;
+  char *dataPtr=l_ine.data();
+  for(unsigned int i=0; i<l_ine.length(); i++) {
+    if(dataPtr[i]=='<') cnt1++;
+    else if(dataPtr[i]=='>') cnt2++;
+  }
+
+  if(cnt1<cnt2) return cnt1;
+  else return cnt2;
 }

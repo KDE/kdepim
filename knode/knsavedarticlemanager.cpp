@@ -217,7 +217,7 @@ void KNSavedArticleManager::reply(KNArticle *a, KNGroup *g)
 		tmp=a->headerLine("References");
 		if(tmp.isEmpty()) tmp=a->headerLine("Message-Id");
 		else tmp+=" "+a->headerLine("Message-Id");
-		art->setHeader(KNArticleBase::HTreferences, tmp);
+		art->references().setLine(tmp);
 	}
 	
 		
@@ -494,6 +494,20 @@ KNSavedArticle* KNSavedArticleManager::newArticle(KNNntpAccount *acc)
 	else a=new KNSavedArticle(KNArticleBase::AStoMail);
 	a->initContent();
 	if(genMId) a->setHeader(KNArticleBase::HTmessageId, mid);
+	
+	//x-headers
+	QString dir(KGlobal::dirs()->saveLocation("appdata"));
+	if (dir==QString::null)
+		displayInternalFileError();
+	else {
+		KNFile f(dir+"xheaders");
+		if(f.open(IO_ReadOnly)) {
+			while(!f.atEnd())
+				a->addHeaderLine(f.readLine(), true);		
+			f.close();
+		}		
+	}
+	
 	return a;	
 }
 
@@ -561,79 +575,49 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
 		return false;
 	}
 	
-	dt.Assemble();
+	//set and assemble data
 	if(c->textChanged()) c->bodyContent(art);
 	art->setSubject(c->subject());
 	art->setDestination(c->destination());
 	art->setTimeT(dt.AsUnixTime());
   art->mimeInfo()->setIsReadable(true);
+	art->mimeInfo()->setCTEncoding(enc);
+	art->mimeInfo()->setCTMediaType(KNArticleBase::MTtext);
+	art->mimeInfo()->setCTSubType(KNArticleBase::STplain);	
+	tmp="charset=\""+charset+"\"";
+	art->mimeInfo()->addCTParameter(tmp);
+	art->assemble();
 	
+	
+	//set additional headers
 	if(!art->isMail()) {
 		g=xTop->gManager()->group(art->firstDestination(), getAccount(art));
 		if(g) guser=g->user();
 	}
 	
-	//x-headers
-	QString dir(KGlobal::dirs()->saveLocation("appdata"));
-	if (dir==QString::null)
-		displayInternalFileError();
-	else {
-		KNFile f(dir+"xheaders");
-		if(f.open(IO_ReadOnly)) {
-			while(!f.atEnd())
-				art->addHeaderLine(f.readLine(), true);		
-			f.close();
-		}		
-	}
+	//UserAgent
 	art->setHeader(KNArticleBase::HTuserAgent, "KNode " KNODE_VERSION);
-	if(art->isMail())
-		art->setHeader(KNArticleBase::HTxknstatus, "toMail");
-	else
-		art->setHeader(KNArticleBase::HTxknstatus, "toPost");
-		
-	//mime
-	switch(enc) {
-		case KNArticleBase::ECeightBit:
-			tmp="8bit";
-		break;
-		case KNArticleBase::ECquotedPrintable:
-			tmp="quoted-printable";
-		break;
-		default :
-			tmp="7bit";
-		 	enc=KNArticleBase::ECsevenBit;
-		break;
-	}
-	art->setHeader(KNArticleBase::HTencoding, tmp);
-	art->mimeInfo()->setCTEncoding(enc);
-	tmp="text/plain; charset=\""+charset+"\"";
-	art->setHeader(KNArticleBase::HTcontentType, tmp);
-	art->mimeInfo()->setCTMediaType(KNArticleBase::MTtext);
-	art->mimeInfo()->setCTSubType(KNArticleBase::STplain);	
-	art->setHeader(KNArticleBase::HTmimeVersion, "1.0");
 	
-	//orga
+	//Organization
 	if(guser && guser->hasOrga()) usr=guser;
 	else usr=defaultUser;
 	if(usr->hasOrga()) art->setHeader(KNArticleBase::HTorga, usr->orga(), true);
 	else art->removeHeader("Organization");
 	
-	//date and lines
+	//Lines
 	tmp.sprintf("%d", c->lines());
 	art->setHeader(KNArticleBase::HTlines, tmp);
-	art->setTimeT(dt.AsUnixTime());
-	art->setHeader(KNArticleBase::HTdate, dt.AsString().c_str());                                             	
-	
-	
-	//groups, to, fup2, reply-to
+		
+	//Fup2
 	if(art->isMail())
-		art->setHeader(KNArticleBase::HTto, art->destination());
+		art->removeHeader("Followup-To");
 	else {
 		tmp=c->followUp2();
 		if(!tmp.isEmpty()) art->setHeader(KNArticleBase::HTfup2, tmp);
 		else art->removeHeader("Followup-To");
-		art->setHeader(KNArticleBase::HTnewsgroups, art->destination());
 	}
+
+	//Reply-To
   if(guser && guser->hasReplyTo())
 		usr=guser;
 	else
@@ -643,8 +627,7 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
 	else
 		art->removeHeader("Reply-To");
 	
-	//subject, from
-	art->setHeader(KNArticleBase::HTsubject, art->subject(), true);
+	//From
 	if(guser && guser->hasName()) usr=guser;
 	else usr=defaultUser;
 	tmp=usr->name().copy()+" <";

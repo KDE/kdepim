@@ -91,7 +91,7 @@ void KNReadGenSettings::init()
 	KConfig *conf=CONF();
 	
 	conf->setGroup("READNEWS");
-	maxFetch->setValue(conf->readNumEntry("MaxFetch", 300));
+	maxFetch->setValue(conf->readNumEntry("maxFetch", 300));
 	markCB->setChecked(conf->readBoolEntry("autoMark", true));
 	markSecs->setValue(conf->readNumEntry("markSecs", 5));
 	sigCB->setChecked(conf->readBoolEntry("showSig", true));
@@ -112,7 +112,7 @@ void KNReadGenSettings::apply()
 	conf->writeEntry("autoCheck", autoCB->isChecked());
 	conf->writeEntry("showSig",sigCB->isChecked());
 	conf->writeEntry("totalExpand",expCB->isChecked());
-	conf->writeEntry("MaxFetch", maxFetch->value());
+	conf->writeEntry("maxFetch", maxFetch->value());
 	conf->writeEntry("autoMark", markCB->isChecked());
 	conf->writeEntry("markSecs", markSecs->value());
 	conf->writeEntry("inlineAtt", inlineCB->isChecked());

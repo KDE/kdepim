@@ -29,6 +29,8 @@
 #include "kngrouppropdlg.h"
 #include "knnntpaccount.h"
 
+#define SORT_DEPTH 5
+
 KNGroup::KNGroup(KNCollection *p) : KNArticleCollection(p)
 {
 	n_ewCount=0;
@@ -171,7 +173,7 @@ bool KNGroup::loadHdrs()
 					art->setFromName(art->fromEmail());
 				}
 		  		
-				split.init(f.readLine(), ";");
+				/*split.init(f.readLine(), ";");
 			
 				bool isRef=split.first();	
 		
@@ -184,7 +186,10 @@ bool KNGroup::loadHdrs()
 						isRef=split.next();
 						RefNr++;
 					}
-				}
+				}*/
+				
+				buff=f.readLine();
+				if(!buff.isEmpty()) art->references().setLine(buff.copy());
 		  		
 							
 				buff=f.readLine();
@@ -318,7 +323,7 @@ void KNGroup::insortNewHeaders(QStrList *hdrs)
 		//References
 		split.next();
 		if(!split.string().isEmpty())
-			art->parseReferences(split.string());
+			art->references().setLine(split.string().copy());
 		
 		//Lines
 		split.next();
@@ -377,13 +382,9 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
 			else
 			  ts << "0\n";
 					
-			if(art->hasReferences()) {
-			  ts <<  art->reference(0) << ';';
-				for(int i=1; i<5; i++ )
-					if(!art->reference(i).isNull())
-					  ts <<  art->reference(i) << ';';
-				ts << '\n';
-			} else
+			if(art->hasReferences())
+			  ts << art->references().line() << "\n";
+			else
 			  ts << "0\n";
 		
 			ts << art->id() << ' ';
@@ -643,33 +644,36 @@ int KNGroup::findRef(KNFetchArticle *a, int from, int to, bool reverse)
 	bool found=false;
 	int foundID=-1, idx=0;
 	short refNr=0;
-		
+	QCString ref;
+	ref=a->references().first();	
+	
 	if(!reverse){
 		
-		while(!found && !a->reference(refNr).isNull()) {
+		while(!found && !ref.isNull() && refNr < SORT_DEPTH) {
 			for(idx=from; idx<to; idx++) {
-				if(at(idx)->messageId()==a->reference(refNr)) {
+				if(at(idx)->messageId()==ref) {
 					found=true;
 					foundID=at(idx)->id();
 					a->setThreadingLevel(refNr+1);
 					break;
 				}
 			}
-			if(++refNr==5) break;
+			++refNr;
+			ref=a->references().next();
 		}
 	}
 	else {
-		while(!found && !a->reference(refNr).isNull()) {
+		while(!found && !ref.isNull() && refNr < SORT_DEPTH) {
 			for(idx=to; idx>=from; idx--) {
-				
-				if(at(idx)->messageId()==a->reference(refNr)){
+				if(at(idx)->messageId()==ref){
 					found=true;
 					foundID=at(idx)->id();
 					a->setThreadingLevel(refNr+1);
 					break;
 				}
 			}
-			if(++refNr==5) break;
+			++refNr;
+			ref=a->references().next();
 		}
 	}
 			

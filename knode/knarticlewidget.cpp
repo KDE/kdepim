@@ -503,9 +503,8 @@ bool KNArticleWidget::inlinePossible(KNMimeContent *c)
 {
   bool ret;
   ret= (  c->mimeInfo()->ctMediaType()==KNArticleBase::MTtext &&
-          c->mimeInfo()->ctSubType()==KNArticleBase::STplain ) ||
-          /*( c->mimeInfo()->ctSubType()==KNArticleBase::STplain ||
-            c->mimeInfo()->ctSubType()==KNArticleBase::SThtml ) ) ||*/
+         ( c->mimeInfo()->ctSubType()==KNArticleBase::STplain ||
+           c->mimeInfo()->ctSubType()==KNArticleBase::SThtml ) ) ||
           c->mimeInfo()->ctMediaType()==KNArticleBase::MTimage;
   return ret;
 }
@@ -578,7 +577,7 @@ void KNArticleWidget::createHtmlPage()
 									.arg(hexColors[BK_COL]).arg(hexColors[TXT_COL]).arg(hexColors[LNK_COL]));
 									
  	QString buffer,hLine;									
-	int rowCount=0,pos;
+	int rowCount=0, pos, refCnt=0;
 																			
  	if(fullHdrs) { 	
 		for(char *h=a_rticle->firstHeaderLine(); h; h=a_rticle->nextHeaderLine()) {
@@ -639,10 +638,10 @@ void KNArticleWidget::createHtmlPage()
 	buffer=QString("<tr><td colspan=3 bgcolor=\"%1\" width=\"100%\">").arg(hexColors[FG_COL]);
 	
 	if(a_rticle->type()==KNArticleBase::ATfetch && a_rticle->hasReferences()) {
+		refCnt=a_rticle->references().count();
 		buffer += QString("<b>%1&nbsp;</b>").arg(i18n("References:"));
-		for(int refCnt=0; refCnt<5; refCnt++)
-			if(!((KNFetchArticle*)a_rticle)->reference(refCnt).isEmpty())
-				buffer += QString("<a href=\"news:Ref.%1\">%2</a>&nbsp;").arg(refCnt).arg(refCnt+1);
+		for(int refNr=0; refNr < refCnt; refNr++)
+		  buffer += QString("<a href=\"news:Ref.%1\">%2</a>&nbsp;").arg(refNr).arg(refNr+1);
 	}	else
 		buffer+=i18n("no references");
 	buffer+="</td></tr>\n";
@@ -688,8 +687,10 @@ void KNArticleWidget::createHtmlPage()
 	if(body) {
   	if(body->mimeInfo()->ctSubType()==KNArticleBase::SThtml) {
   		body->prepareHtml();
-  		for(char* l=body->firstBodyLine(); l; l=body->nextBodyLine())
+  		for(char* l=body->firstBodyLine(); l; l=body->nextBodyLine()) {
+  		  qDebug("KNArticleWidget::createHtmlPage() : HTML-Line = %s", l);
   			buffer+=l;
+  		}
   	}
   	else {
 			char firstChar;
@@ -751,20 +752,29 @@ void KNArticleWidget::createHtmlPage()
   			buffer+=QString("<tr><td align=center><a href=\"news:Att.%1\">%2</a></td><td align=center>%3</td><td align=center>%4</td></tr>")
   						.arg(attCnt).arg(var->ctName()).arg(var->ctMimeType()).arg(var->ctDescription());
   			if(inlineAtt && inlinePossible(var)) {
+  			  buffer+="<tr><td colspan=3>";
   			  if(var->mimeInfo()->ctMediaType()==KNArticleBase::MTimage) {
   			    path=KNArticleManager::saveContentToTemp(var);
   			    if(!path.isEmpty()) {
-  			      buffer+=QString("<tr><td colspan=3><img src=\"file:%1\"></td></tr>").arg(path);
+  			      buffer+=QString("<img src=\"file:%1\">").arg(path);
   			    }
   			  }
   			  else if(var->mimeInfo()->ctMediaType()==KNArticleBase::MTtext) {
-  			    buffer+="<tr><td colspan=3><pre>";
-  			    for(char *line=var->firstBodyLine(); line; line=var->nextBodyLine()) {
-  			      buffer+=line;
-  			      buffer+"\n";
+  			    if(var->mimeInfo()->ctSubType()==KNArticleBase::STplain) {
+  			      buffer+="<pre>";
+  			      for(char *line=var->firstBodyLine(); line; line=var->nextBodyLine()) {
+  			        buffer+=line;
+  			        buffer+"\n";
+  			      }
+  			      buffer+="</pre>";
   			    }
-  			    buffer+="</pre></td></tr>";
-  			  }
+  			    else if(var->mimeInfo()->ctSubType()==KNArticleBase::SThtml) {
+  			      var->prepareHtml();
+  			      for(char *line=var->firstBodyLine(); line; line=var->nextBodyLine())
+  			        buffer+=line;
+  			    }
+   			  }
+          buffer+="</td></tr>";			
   			}
   			attCnt++;
   		}

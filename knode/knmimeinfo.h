@@ -21,20 +21,28 @@
 
 #include "knarticlebase.h"
 
+class KNMimeContent;
 class KNMimeInfo : public KNArticleBase{
 	
 	public:
 		KNMimeInfo();
 		~KNMimeInfo();
 	
+		//parse
+		void parse(KNMimeContent *c);
+		
 		//get
-		mediaType ctMediaType()				{ return c_tMType; }
-		subType ctSubType()						{ return c_tSType; }
-		encoding ctEncoding()					{ return c_tEncoding; }
-		disposition ctDisposition()		{ return c_tDisposition; }
-		contentCategory ctCategory()  { return c_tCategory; }
-		bool isReadable()							{ return i_sReadable; }
-				
+		mediaType ctMediaType()				  { return c_tMType; }
+		subType ctSubType()						  { return c_tSType; }
+		encoding ctEncoding()					  { return c_tEncoding; }
+		disposition ctDisposition()		  { return c_tDisposition; }
+		contentCategory ctCategory()    { return c_tCategory; }
+		bool isReadable()							  { return i_sReadable; }
+		const QCString& contentType();
+		QCString contentTransferEncoding();
+		QCString contentDisposition();
+		QCString getCTParameter(const char *param);
+						
 		//set
 		void setCTMediaType(mediaType mt)					{ c_tMType=mt; }
 		void setCTSubType(subType st)							{ c_tSType=st; }
@@ -42,15 +50,19 @@ class KNMimeInfo : public KNArticleBase{
 		void setCTDisposition(disposition dp)			{ c_tDisposition=dp; }
 		void setCTCategory(contentCategory c)     { c_tCategory=c; }
 		void setIsReadable(bool i)								{ i_sReadable=i; }
+		void setCustomMimeType(const QCString &m);
+		void addCTParameter(const QCString &s);
 		
 		
 	protected:
+	 	QCString assembleMimeType();
 	 	mediaType 		    c_tMType;
 	  subType    		    c_tSType;
 	  encoding			    c_tEncoding;
 	  disposition       c_tDisposition;
 	  contentCategory   c_tCategory;
 	  bool 					    i_sReadable;
+	  QCString          c_ontentType;
 		
 		
 };

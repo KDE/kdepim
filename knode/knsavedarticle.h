@@ -29,6 +29,7 @@ class KNSavedArticle : public KNArticle  {
 		~KNSavedArticle();
 		
 		void parse();
+		void assemble();
 		void clear();
 		void updateListItem();
 				
