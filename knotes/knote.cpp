@@ -216,9 +216,6 @@ KNote::KNote( KXMLGUIBuilder* builder, QDomDocument buildDoc, const QString& fil
 KNote::~KNote()
 {
     emit sigKilled( m_label->text() );
-
-    delete m_menu;
-    delete m_edit_menu;
 }
 
 
@@ -495,7 +492,11 @@ void KNote::slotPrint() const
 
         QTextDocument* textDoc = new QTextDocument( 0 );
         textDoc->setFormatter( new QTextFormatterBreakWords );
-        textDoc->setDefaultFont( font );        // only needed for the pointsize
+#if QT_VERSION > 304
+        textDoc->setDefaultFormat( font, Qt::black );        // only needed for the pointsize
+#else
+	textDoc->setDefaultFont( font );        // only needed for the pointsize
+#endif
         textDoc->setUnderlineLinks( true );
         textDoc->setStyleSheet( m_editor->styleSheet() );
         textDoc->setMimeSourceFactory( m_editor->mimeSourceFactory() );

@@ -83,10 +83,7 @@ noinst_HEADERS = komonthview.h \
 tip_DATA = tips
 tipdir = $(kde_datadir)/korganizer
 
-datadir = $(kde_bindir)
-data_SCRIPTS = ical2vcal korganizerIn
-
-kde_conf_DATA = korganizerrc
+kde_bin_SCRIPTS = ical2vcal korganizerIn
 
 kdelnkdir = $(kde_appsdir)/Applications
 kdelnk_DATA = korganizer.desktop

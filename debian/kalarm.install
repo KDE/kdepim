@@ -1,0 +1,10 @@
+debian/tmp/usr/bin/kalarm
+debian/tmp/usr/share/applnk/Applications/kalarm.desktop
+debian/tmp/usr/share/apps/kalarm
+debian/tmp/usr/share/autostart/kalarm.tray.desktop
+debian/tmp/usr/share/doc/kde/HTML/en/kalarm
+debian/tmp/usr/share/icons/hicolor/16x16/actions/kalarm.png
+debian/tmp/usr/share/icons/hicolor/16x16/apps/kalarm.png
+debian/tmp/usr/share/icons/hicolor/22x22/actions/kalarm.png
+debian/tmp/usr/share/icons/hicolor/32x32/apps/kalarm.png
+debian/tmp/usr/share/icons/hicolor/48x48/apps/kalarm.png

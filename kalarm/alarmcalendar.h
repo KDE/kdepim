@@ -42,7 +42,6 @@ class AlarmCalendar
 		bool                  isOpen() const                      { return !!calendar; }
 		void                  getURL() const;
 		const QString         urlString() const                   { getURL();  return url.url(); }
-		static const QString& getDefaultTimeZoneID();
 	private:
 		CalendarLocal*        calendar;
 		KURL                  url;         // URL of calendar file
@@ -51,6 +50,7 @@ class AlarmCalendar
 
 		bool                  create();
 		bool                  save(const QString& tempFile);
+		bool                  isKAlarmVersion057_UTC() const;
 };
 
 #endif // ALARMCALENDAR_H

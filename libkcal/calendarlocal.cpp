@@ -122,6 +122,7 @@ bool CalendarLocal::save(const QString &fileName,CalFormat *format)
   if (format) {
     success = format->save(fileName);
   } else {
+    if ( !mFormat ) mFormat = new ICalFormat( this );
     success = mFormat->save(fileName);
   }
 
@@ -420,7 +421,7 @@ Alarm::List CalendarLocal::alarms( const QDateTime &from, const QDateTime &to )
   // Check all recurring events.
   Event *e;
   for( e = mRecursList.first(); e; e = mRecursList.next() ) {
-    appendAlarms( alarms, e, from, to );
+    appendRecurringAlarms( alarms, e, from, to );
   }
 
   // Check all todos.
@@ -438,10 +439,36 @@ void CalendarLocal::appendAlarms( Alarm::List &alarms, Incidence *incidence,
   QPtrList<Alarm> alarmList = incidence->alarms();
   Alarm *alarm;
   for( alarm = alarmList.first(); alarm; alarm = alarmList.next() ) {  
+    kdDebug(5800) << "CalendarLocal::appendAlarms() '" << incidence->summary()
+                  << "': " << alarm->time().toString() << " - " << alarm->enabled() << endl;
     if ( alarm->enabled() ) {
 //      kdDebug(5800) << "CalendarLocal::appendAlarms() '" << incidence->summary()
 //                    << "': " << alarm->time().toString() << endl;
       if ( alarm->time() >= from && alarm->time() <= to ) {
+        alarms.append( alarm );
+      }
+    }
+  }
+}
+
+void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms, Incidence *incidence,
+                                  const QDateTime &from, const QDateTime &to )
+{
+  QPtrList<Alarm> alarmList = incidence->alarms();
+  Alarm *alarm;
+  QDateTime qdt;
+  for( alarm = alarmList.first(); alarm; alarm = alarmList.next() ) {
+    if (incidence->recursOn(from.date())) {
+      qdt.setTime(alarm->time().time());
+      qdt.setDate(from.date());
+    }
+    else qdt = alarm->time();
+    kdDebug(5800) << "CalendarLocal::appendAlarms() '" << incidence->summary()
+                  << "': " << qdt.toString() << " - " << alarm->enabled() << endl;
+    if ( alarm->enabled() ) {
+//      kdDebug(5800) << "CalendarLocal::appendAlarms() '" << incidence->summary()
+//                    << "': " << alarm->time().toString() << endl;
+      if ( qdt >= from && qdt <= to ) {
         alarms.append( alarm );
       }
     }

@@ -227,18 +227,16 @@ void KODayMatrix::updateView(QDate actdate)
 
 
     // if events are set for the day then remember to draw it bold
-    int numEvents = 0;
     QPtrList<Event> eventlist = mCalendar->getEventsForDate(days[i]);
     Event *event;
+    int numEvents = eventlist.count();
 
     for(event=eventlist.first();event != 0;event=eventlist.next()) {
       ushort recurType = event->recurrence()->doesRecur();
 
-      if ((recurType == Recurrence::rNone) ||
-          (recurType == Recurrence::rDaily && KOPrefs::instance()->mDailyRecur) ||
-          (recurType == Recurrence::rWeekly && KOPrefs::instance()->mWeeklyRecur)) {
-        numEvents++;
-        break;
+      if ((recurType == Recurrence::rDaily && !KOPrefs::instance()->mDailyRecur) ||
+          (recurType == Recurrence::rWeekly && !KOPrefs::instance()->mWeeklyRecur)) {
+        numEvents--;
       }
     }
     events[i] = numEvents;
@@ -281,7 +279,8 @@ QString KODayMatrix::getHolidayLabel(int offset)
 
 int KODayMatrix::getDayIndexFrom(int x, int y)
 {
-  return 7*(y/daysize.height()) + x/daysize.width();
+  return 7*(y/daysize.height()) + (QApplication::reverseLayout() ? 
+            6 - x/daysize.width() : x/daysize.width());
 }
 
 // ----------------------------------------------------------------------------
@@ -450,6 +449,7 @@ void KODayMatrix::paintEvent(QPaintEvent * pevent)
   int dwidth = daysize.width();
   int row,col;
   int selw, selh;
+  bool isRTL = QApplication::reverseLayout();
 
   // draw background and topleft frame
   p.fillRect(pevent->rect(), mDefaultBackColor);
@@ -465,10 +465,12 @@ void KODayMatrix::paintEvent(QPaintEvent * pevent)
 
     if (row == mSelEnd/7) {
       // Single row selection
-      p.fillRect(col*dwidth, row*dheight, (mSelEnd-mSelStart+1)*dwidth, dheight, selcol);
+      p.fillRect(isRTL ? (7 - (mSelEnd-mSelStart+1) - col)*dwidth : col*dwidth,
+                  row*dheight, (mSelEnd-mSelStart+1)*dwidth, dheight, selcol);
     } else {
       // draw first row to the right
-      p.fillRect(col*dwidth, row*dheight, (7-col)*dwidth, dheight, selcol);
+      p.fillRect(isRTL ? 0 : col*dwidth, row*dheight, (7-col)*dwidth,
+                 dheight, selcol);
       // draw full block till last line
       selh = mSelEnd/7-row;
       if (selh > 1) {
@@ -476,7 +478,8 @@ void KODayMatrix::paintEvent(QPaintEvent * pevent)
       }
       // draw last block from left to mSelEnd
       selw = mSelEnd-7*(mSelEnd/7)+1;
-      p.fillRect(0, (row+selh)*dheight, selw*dwidth, dheight, selcol);
+      p.fillRect(isRTL ? (7-selw)*dwidth : 0, (row+selh)*dheight,
+                 selw*dwidth, dheight, selcol);
     }
   }
 
@@ -486,7 +489,7 @@ void KODayMatrix::paintEvent(QPaintEvent * pevent)
   QPen tmppen;
   for(int i = 0; i < NUMDAYS; i++) {
     row = i/7;
-    col = i-row*7;
+    col = isRTL ? 6-(i-row*7) : i-row*7;
 
     // if it is the first day of a month switch color from normal to shaded and vice versa
     if (days[i].day() == 1) {

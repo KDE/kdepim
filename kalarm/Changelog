@@ -1,5 +1,12 @@
 KAlarm
 
+=== Version 0.5.8--- 5 Aug 2002 ===
+Adjust wrong summer times stored by version 0.5.7 (KDE 3.0.0).
+Display KAlarm handbook when Help clicked in configuration dialog.
+Make Close button on message window not the default button to reduce chance
+  of accidental acknowledgement.
+Fix session restoration often not occurring at login.
+
 === Version 0.5.7--- 17 Mar 2002 ===
 Show system tray icon on deferring command line-initiated message (run-in-
     system-tray mode).
@@ -13,7 +20,7 @@ Fix crash in some circumstances on changing run mode to run-on-demand.
 Fix crash on clicking KAlarm icon in command line-initiated message window.
 Fix crash on deferring alarm in command line-initiated message window.
 Fix duplication of repeat-at-login alarms at login.
-Fix error displaying text file messages (KDE 3).
+Fix error displaying text file messages.
 
 === Version 0.5.4--- 7 Feb 2002 ===
 Fix extra window being displayed in session restoration.

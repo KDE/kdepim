@@ -1,0 +1,13 @@
+debian/tmp/usr/include/kde
+debian/tmp/usr/lib/kde3/libabbrowserconduit.so
+debian/tmp/usr/lib/kde3/libexpenseconduit.so
+debian/tmp/usr/lib/kde3/libknotesconduit.so
+debian/tmp/usr/lib/kde3/libnullconduit.so
+debian/tmp/usr/lib/kde3/libpopmailconduit.so
+debian/tmp/usr/lib/kde3/libtodoconduit.so
+debian/tmp/usr/lib/kde3/libvcalconduit.so
+debian/tmp/usr/lib/libkalarmd.so
+debian/tmp/usr/lib/libkcal.so
+debian/tmp/usr/lib/libkgantt.so
+debian/tmp/usr/lib/libkorganizer.so
+debian/tmp/usr/lib/libkpilot.so
