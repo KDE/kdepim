@@ -229,13 +229,20 @@ CheckUser::~CheckUser()
 	return true;
 }
 
+class RestoreInfo
+{
+public:
+	struct db DBInfo;
+	QString path;
+} ;
+
 class RestoreAction::RestoreActionPrivate
 {
 public:
 	QString fDatabaseDir;
-	QValueList < struct db >fDBList;
+	QValueList<RestoreInfo *> fDBList;
 	QTimer fTimer;
-	int fDBIndex;
+	QValueList<RestoreInfo *>::ConstIterator fDBIterator;
 };
 
 
@@ -276,7 +283,8 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 	{
 		emit logError(i18n("Restore <i>not</i> performed."));
 
-		addSyncLogEntry(i18n("Restore not performed."));
+		addSyncLogEntry(i18n("Canceled by user.") + CSL1(" ") + 
+			i18n("Restore not performed."));
 		emit syncDone(this);
 
 		return true;
@@ -291,6 +299,8 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 			<< ": Restore directory "
 			<< dirname << " does not exist." << endl;
 		fActionStatus = Error;
+		addSyncLogEntry(i18n("Restore directory does not exist.") +
+			CSL1(" ") + i18n("Restore not performed."));
 		return false;
 	}
 
@@ -299,7 +309,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 	for (unsigned int i = 0; i < dir.count(); i++)
 	{
 		QString s;
-		struct db dbi;
+		RestoreInfo *dbi;
 		struct DBInfo info;
 		struct pi_file *f;
 
@@ -310,36 +320,34 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 			<< ": Adding " << s << " to restore list." << endl;
 #endif
 
-		strlcpy(dbi.name, QFile::encodeName(dirname + s), sizeof(dbi.name));
-
-		f = pi_file_open(dbi.name);
+		f = pi_file_open(QFile::encodeName(dirname + s));
 		if (!f)
 		{
 			kdWarning() << k_funcinfo
-				<< ": Can't open " << dbi.name << endl;
+				<< ": Can't open " << s << endl;
+			logMessage(i18n("File `%1' can not be read.").arg(s));
 			continue;
 		}
 
 		if (!pi_file_get_info(f, &info))
 		{
-			dbi.creator = info.creator;
-			dbi.type = info.type;
-			dbi.flags = info.flags;
-			dbi.maxblock = 0;
-
+			dbi = new RestoreInfo;
+			memcpy(&dbi->DBInfo,&info,sizeof(struct DBInfo));
+			dbi->path = dirname + s;
 			fP->fDBList.append(dbi);
 		}
 		else
 		{
 			kdWarning() << k_funcinfo
-				<< ": Can't open " << dbi.name << endl;
+				<< ": Can't open " << s << endl;
+			logMessage(i18n("File `%1' can not be read.").arg(s));
 		}
 
 		pi_file_close(f);
 		f = 0L;
 	}
 
-	fP->fDBIndex = 0;
+	fP->fDBIndex = fP->fDBList::begin();
 	fActionStatus = GettingFileInfo;
 
 	QObject::connect(&(fP->fTimer), SIGNAL(timeout()),
@@ -354,72 +362,19 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 	FUNCTIONSETUP;
 
 	Q_ASSERT(fActionStatus == GettingFileInfo);
-	Q_ASSERT((unsigned) fP->fDBIndex < fP->fDBList.count());
 
-	struct db &dbi = fP->fDBList[fP->fDBIndex];
-	pi_file *f;
+	QObject::disconnect(&(fP->fTimer), SIGNAL(timeout()),
+		this, SLOT(getNextFileInfo()));
+	fP->fTimer.stop();
 
-	fP->fDBIndex++;
+	qBubbleSort(fP->fDBList);
 
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": Getting info on " << dbi.name << endl;
-#endif
+	fP->fDBIndex = fP->fDBList::begin();
+	fActionStatus = InstallingFiles;
 
-	f = pi_file_open(dbi.name);
-	if (!f)
-	{
-		kdWarning() << k_funcinfo
-			<< ": Can't open " << dbi.name << endl;
-		goto nextFile;
-	}
-
-	int max;
-
-	pi_file_get_entries(f, &max);
-
-	for (int i = 0; i < max; i++)
-	{
-		PI_SIZE_T size;
-
-		if (dbi.flags & dlpDBFlagResource)
-		{
-			pi_file_read_resource(f, i, 0, &size, 0, 0);
-		}
-		else
-		{
-			pi_file_read_record(f, i, 0, &size, 0, 0, 0);
-		}
-
-		if (size > dbi.maxblock)
-		{
-			dbi.maxblock = size;
-		}
-	}
-
-#ifdef DEBUG
-	DEBUGDAEMON << fname
-		<< ": Read " << max << " entries for this database." << endl;
-#endif
-
-nextFile:
-	if (f)
-		pi_file_close(f);
-
-	if ((unsigned) fP->fDBIndex >= fP->fDBList.count())
-	{
-		QObject::disconnect(&(fP->fTimer), SIGNAL(timeout()),
-			this, SLOT(getNextFileInfo()));
-		fP->fTimer.stop();
-
-		qBubbleSort(fP->fDBList);
-
-		fP->fDBIndex = 0;
-		fActionStatus = InstallingFiles;
-
-		QObject::connect(&(fP->fTimer), SIGNAL(timeout()),
-			this, SLOT(installNextFile()));
-		fP->fTimer.start(0, false);
-	}
+	QObject::connect(&(fP->fTimer), SIGNAL(timeout()),
+		this, SLOT(installNextFile()));
+	fP->fTimer.start(0, false);
 }
 
 /* slot */ void RestoreAction::installNextFile()
@@ -427,48 +382,51 @@ nextFile:
 	FUNCTIONSETUP;
 
 	Q_ASSERT(fActionStatus == InstallingFiles);
-	Q_ASSERT((unsigned) fP->fDBIndex < fP->fDBList.count());
 
-	struct db &dbi = fP->fDBList[fP->fDBIndex];
+	const RestoreInfo *dbi = 0L;
 
-	fP->fDBIndex++;
-
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": Trying to install " << dbi.name << endl;
-#endif
-
-	if ((unsigned) fP->fDBIndex >= fP->fDBList.count() - 1)
+	if (fP->fDBIterator == fP->fDBList.end())
 	{
 		QObject::disconnect(&(fP->fTimer), SIGNAL(timeout()),
 			this, SLOT(getNextFileInfo()));
 		fP->fTimer.stop();
 
 		fActionStatus = Done;
+		addSyncLogEntry(i18n("OK."));
+		delayDone();
+		return;
 	}
+
+	dbi = *fP->fDBIterator;
+	++(fP->fDBIterator);
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Trying to install " << dbi->path << endl;
+#endif
 
 	if (openConduit() < 0)
 	{
 		kdWarning() << k_funcinfo
 			<< ": Restore apparently canceled." << endl;
+		logMessage(i18n("Restore incomplete."));
 		fActionStatus = Done;
 		emit syncDone(this);
 
 		return;
 	}
 
-	QFileInfo databaseInfo(QString::fromLatin1(dbi.name));
+	QFileInfo databaseInfo(dbi->path));
 	addSyncLogEntry(databaseInfo.fileName());
 	emit logProgress(i18n("Restoring %1...").arg(databaseInfo.fileName()),
 		(100*fP->fDBIndex) / (fP->fDBList.count()+1)) ;
 
-	pi_file *f =
-		pi_file_open( /* const_cast <
-		char *>((const char *)QFile::encodeName */ (dbi.name));
+	pi_file *f = pi_file_open( QFile::encodeName(dbi->path) );
 	if (!f)
 	{
 		kdWarning() << k_funcinfo
 			<< ": Can't open "
-			<< dbi.name << " for restore." << endl;
+			<< dbi->path << " for restore." << endl;
+		logError(i18n("Cannot open file `%1' for restore.")
+			.arg(databaseInfo.fileName()));
 		return;
 	}
 
@@ -476,16 +434,11 @@ nextFile:
 	{
 		kdWarning() << k_funcinfo
 			<< ": Couldn't  restore " << dbi.name << endl;
+		logError(i18n("Cannot restore file `%1'.")
+			.arg(databaseInfo.fileName()));
 	}
 
 	pi_file_close(f);
-
-
-	if (fActionStatus == Done)
-	{
-		addSyncLogEntry(i18n("OK."));
-		emit syncDone(this);
-	}
 }
 
 /* virtual */ QString RestoreAction::statusString() const
