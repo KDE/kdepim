@@ -11,7 +11,7 @@ KPilot's settings.!</comment>
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>386</width>
+            <width>593</width>
             <height>310</height>
         </rect>
     </property>
@@ -260,7 +260,7 @@ This may be useful for systems where KPilot is started by the USB daemon.&lt;/qt
                     <widget class="QComboBox" row="2" column="1">
                         <item>
                             <property name="text">
-                                <string>Ask user</string>
+                                <string>Ask User</string>
                             </property>
                         </item>
                         <item>
@@ -270,22 +270,22 @@ This may be useful for systems where KPilot is started by the USB daemon.&lt;/qt
                         </item>
                         <item>
                             <property name="text">
-                                <string>Handheld overrides</string>
+                                <string>Handheld Overrides</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>PC overrides</string>
+                                <string>PC Overrides</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Values from last sync (if possible)</string>
+                                <string>Values From Last Sync (if possible)</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Use both entries</string>
+                                <string>Use Both Entries</string>
                             </property>
                         </item>
                         <property name="name">

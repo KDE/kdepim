@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>348</width>
-            <height>286</height>
+            <width>433</width>
+            <height>345</height>
         </rect>
     </property>
     <property name="caption">
@@ -312,7 +312,7 @@
                 </size>
             </property>
             <property name="text">
-                <string>Item Text:</string>
+                <string>Item text:</string>
             </property>
             <property name="textFormat">
                 <enum>PlainText</enum>

@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>544</width>
-            <height>346</height>
+            <width>798</width>
+            <height>407</height>
         </rect>
     </property>
     <property name="caption">
@@ -34,7 +34,7 @@
                 </font>
             </property>
             <property name="title">
-                <string>Letter groups</string>
+                <string>Letter Groups</string>
             </property>
             <grid>
                 <property name="name">
@@ -153,7 +153,7 @@
                         <cstring>sblabel</cstring>
                     </property>
                     <property name="text">
-                        <string>Min. number of empty fields</string>
+                        <string>Min. number of empty fields:</string>
                     </property>
                     <property name="whatsThis" stdset="0">
                         <string>If you often add contacts to your printout manually before entering them into the KDE addressbook, you should set this option to a value greater than 0: it determines how many empty address fields must be printed; if this many do not fit onto the page, another page with empty fields only will be printed.</string>
@@ -174,7 +174,7 @@
                 <cstring>GroupBox2</cstring>
             </property>
             <property name="title">
-                <string>Print contact's information</string>
+                <string>Print Contact's Information</string>
             </property>
             <vbox>
                 <property name="name">

@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>335</width>
-            <height>326</height>
+            <width>459</width>
+            <height>348</height>
         </rect>
     </property>
     <property name="caption">
@@ -68,7 +68,7 @@
                         <cstring>fKeepBoth</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;Keep both</string>
+                        <string>&amp;Keep Both</string>
                     </property>
                 </widget>
                 <widget class="QPushButton" row="1" column="0" rowspan="1" colspan="2">
@@ -76,7 +76,7 @@
                         <cstring>fBackupValues</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;Last sync values</string>
+                        <string>&amp;Last Sync Values</string>
                     </property>
                 </widget>
                 <widget class="QPushButton" row="0" column="2" rowspan="1" colspan="2">
@@ -84,7 +84,7 @@
                         <cstring>fPalmValues</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;Handheld values</string>
+                        <string>&amp;Handheld Values</string>
                     </property>
                 </widget>
                 <widget class="QPushButton" row="0" column="0" rowspan="1" colspan="2">
@@ -92,7 +92,7 @@
                         <cstring>fPCValues</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;PC values</string>
+                        <string>&amp;PC Values</string>
                     </property>
                 </widget>
             </grid>

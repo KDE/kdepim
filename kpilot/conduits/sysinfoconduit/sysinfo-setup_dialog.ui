@@ -10,7 +10,7 @@
             <x>0</x>
             <y>0</y>
             <width>330</width>
-            <height>200</height>
+            <height>232</height>
         </rect>
     </property>
     <property name="caption">
@@ -79,7 +79,7 @@
                             <cstring>fOutputType</cstring>
                         </property>
                         <property name="title">
-                            <string>Type of output</string>
+                            <string>Type of Output</string>
                         </property>
                         <grid>
                             <property name="name">

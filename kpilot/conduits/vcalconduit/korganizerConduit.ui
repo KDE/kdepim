@@ -9,7 +9,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>453</width>
+            <width>593</width>
             <height>209</height>
         </rect>
     </property>
@@ -190,12 +190,12 @@ be saved in the calendar on the PC.</string>
                     <widget class="QComboBox" row="0" column="1">
                         <item>
                             <property name="text">
-                                <string>Use KPilot's global setting</string>
+                                <string>Use KPilot's Global Setting</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Ask user</string>
+                                <string>Ask User</string>
                             </property>
                         </item>
                         <item>
@@ -205,22 +205,22 @@ be saved in the calendar on the PC.</string>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Handheld overrides</string>
+                                <string>Handheld Overrides</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>PC overrides</string>
+                                <string>PC Overrides</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Values from last sync (if possible)</string>
+                                <string>Values From Last Sync (if possible)</string>
                             </property>
                         </item>
                         <item>
                             <property name="text">
-                                <string>Use both entries</string>
+                                <string>Use Both Entries</string>
                             </property>
                         </item>
                         <property name="name">

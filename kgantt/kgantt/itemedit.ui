@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>294</width>
-            <height>337</height>
+            <width>569</width>
+            <height>431</height>
         </rect>
     </property>
     <property name="caption">
@@ -48,7 +48,7 @@
                 </size>
             </property>
             <property name="text">
-                <string>Item Text:</string>
+                <string>Item text:</string>
             </property>
             <property name="alignment">
                 <set>AlignBottom|AlignLeft</set>

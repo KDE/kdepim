@@ -9,8 +9,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>419</width>
-            <height>230</height>
+            <width>680</width>
+            <height>266</height>
         </rect>
     </property>
     <property name="sizePolicy">
@@ -87,7 +87,7 @@
                             <cstring>fSyncDirection</cstring>
                         </property>
                         <property name="title">
-                            <string>Synchronization Mode:</string>
+                            <string>Synchronization Mode</string>
                         </property>
                         <grid>
                             <property name="name">
@@ -487,7 +487,7 @@
                             <cstring>fAlwaysUseResolution</cstring>
                         </property>
                         <property name="text">
-                            <string>&amp;Always show resolution dialog, even when there are no conflicts.</string>
+                            <string>&amp;Always show resolution dialog, even when there are no conflicts</string>
                         </property>
                     </widget>
                     <spacer>

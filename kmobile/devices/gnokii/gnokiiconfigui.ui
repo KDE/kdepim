@@ -8,12 +8,12 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>397</width>
+            <width>471</width>
             <height>308</height>
         </rect>
     </property>
     <property name="caption">
-        <string>Configure Gnokii mobile device</string>
+        <string>Configure Gnokii Mobile Device</string>
     </property>
     <property name="sizeGripEnabled">
         <bool>true</bool>
@@ -220,7 +220,7 @@
                                 <cstring>textLabel1</cstring>
                             </property>
                             <property name="text">
-                                <string>Connection</string>
+                                <string>Connection:</string>
                             </property>
                         </widget>
                         <widget class="QLabel" row="0" column="0">
@@ -236,7 +236,7 @@
                                 </sizepolicy>
                             </property>
                             <property name="text">
-                                <string>Phone Model:</string>
+                                <string>Phone model:</string>
                             </property>
                         </widget>
                         <widget class="QLabel" row="2" column="0">
@@ -244,7 +244,7 @@
                                 <cstring>textLabel1_3</cstring>
                             </property>
                             <property name="text">
-                                <string>Port</string>
+                                <string>Port:</string>
                             </property>
                         </widget>
                         <widget class="QLabel" row="3" column="0">
@@ -252,7 +252,7 @@
                                 <cstring>textLabelBaudRate</cstring>
                             </property>
                             <property name="text">
-                                <string>Baudrate</string>
+                                <string>Baudrate:</string>
                             </property>
                         </widget>
                     </grid>

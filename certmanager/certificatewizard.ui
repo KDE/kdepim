@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>438</width>
-            <height>375</height>
+            <width>809</width>
+            <height>469</height>
         </rect>
     </property>
     <property name="caption">
@@ -248,7 +248,7 @@ The certificates will be generated in a decentralized manner. Please contact you
                             <cstring>storeInFileRB</cstring>
                         </property>
                         <property name="text">
-                            <string>&amp;Store in a file</string>
+                            <string>&amp;Store in a file:</string>
                         </property>
                     </widget>
                     <widget class="QRadioButton" row="1" column="0">
@@ -256,7 +256,7 @@ The certificates will be generated in a decentralized manner. Please contact you
                             <cstring>sendToCARB</cstring>
                         </property>
                         <property name="text">
-                            <string>Send to CA as an &amp;email message</string>
+                            <string>Send to CA as an &amp;email message:</string>
                         </property>
                         <property name="checked">
                             <bool>true</bool>

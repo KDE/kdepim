@@ -8,7 +8,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>590</width>
+            <width>623</width>
             <height>415</height>
         </rect>
     </property>
@@ -90,22 +90,6 @@
             </widget>
             <widget class="QLabel">
                 <property name="name">
-                    <cstring>TextLabel3</cstring>
-                </property>
-                <property name="geometry">
-                    <rect>
-                        <x>11</x>
-                        <y>21</y>
-                        <width>88</width>
-                        <height>16</height>
-                    </rect>
-                </property>
-                <property name="text">
-                    <string>Manufacturer:</string>
-                </property>
-            </widget>
-            <widget class="QLabel">
-                <property name="name">
                     <cstring>mManufacturerLabel</cstring>
                 </property>
                 <property name="geometry">
@@ -168,6 +152,22 @@
                     <string>x</string>
                 </property>
             </widget>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>TextLabel3</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>11</x>
+                        <y>21</y>
+                        <width>88</width>
+                        <height>16</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>Manufacturer:</string>
+                </property>
+            </widget>
         </widget>
         <widget class="QLayoutWidget" row="3" column="0" rowspan="1" colspan="2">
             <property name="name">
@@ -217,7 +217,7 @@
                 <cstring>groupBox4</cstring>
             </property>
             <property name="title">
-                <string>Mobile phone book</string>
+                <string>Mobile Phone Book</string>
             </property>
             <grid>
                 <property name="name">
@@ -323,7 +323,7 @@
                 <cstring>groupBox3</cstring>
             </property>
             <property name="title">
-                <string>KDE address book</string>
+                <string>KDE Address Book</string>
             </property>
             <grid>
                 <property name="name">
