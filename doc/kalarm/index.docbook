@@ -179,7 +179,7 @@ displayed.</para>
 <para>If you want the alarm to be repeated, enter in the
 <guilabel>Repetition</guilabel> group box the number of repetitions
 (after the initial display) and the interval (in hours and minutes, in
-the range 1 minute to 99 hours) between repetitions. Check the
+the range 1 minute to 99 hours) between repetitions. Check
 <guilabel>Repeat at login</guilabel> if you want the alarm to be
 displayed whenever you log in, in addition to its other scheduled
 times. (Note that an alarm repeated at login will also be displayed
