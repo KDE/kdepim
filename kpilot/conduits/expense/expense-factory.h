@@ -56,13 +56,13 @@ private:
 	KInstance *fInstance;
 	static KAboutData *fAbout;
 	static const char *fGroup;
-} ;
+};
 
 extern "C"
 {
 
 void *init_libexpenseconduit();
 
-} ;
+}
 
 #endif
