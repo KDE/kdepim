@@ -225,8 +225,8 @@ QString KNViewHeader::translatedName()
 {
   // major hack alert !!!
   if (!n_ame.isEmpty()) {
-    if (i18n(n_ame.local8Bit())!=n_ame.local8Bit().data())    // try to guess if this english or not
-      return i18n(n_ame.local8Bit());
+    if (i18n("it's not very important to translate this",n_ame.local8Bit())!=n_ame.local8Bit().data())    // try to guess if this english or not
+      return i18n("it's not very important to translate this",n_ame.local8Bit());
     else
       return n_ame;
   } else
@@ -239,17 +239,18 @@ QString KNViewHeader::translatedName()
 void KNViewHeader::setTranslatedName(const QString &s)
 {
   bool retranslated = false;
-  for (const char *c=predef[0];(*c)!=0;c++)   // ok, first the standard header names
-    if (s==i18n(c)) {
-      n_ame = c;
+  for (const char **c=predef;(*c)!=0;c++) {  // ok, first the standard header names
+    if (s==i18n("it's not very important to translate this",*c)) {
+      n_ame = QString::fromLatin1(*c);
       retranslated = true;
       break;
     }
+  }
 
   if (!retranslated) {
-    for (const char *c=disp[0];(*c)!=0;c++)   // now our standard display names
-      if (s==i18n(c)) {
-        n_ame = c;
+    for (const char **c=disp;(*c)!=0;c++)   // now our standard display names
+      if (s==i18n("it's not very important to translate this",*c)) {
+        n_ame = QString::fromLatin1(*c);
         retranslated = true;
         break;
       }

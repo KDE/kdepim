@@ -201,7 +201,7 @@ KNReadHdrSettings::HdrItem* KNReadHdrSettings::generateItem(KNViewHeader *h)
 {
   QString text;
   if(h->hasName()) {
-    text=h->name();
+    text=h->translatedName();
     text+=": <";
   } else
     text="<";

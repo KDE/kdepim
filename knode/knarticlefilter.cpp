@@ -241,8 +241,8 @@ QString KNArticleFilter::translatedName()
 {
   // major hack alert !!!
   if (!n_ame.isEmpty()) {
-    if (i18n(n_ame.local8Bit())!=n_ame.local8Bit().data())    // try to guess if this english or not
-      return i18n(n_ame.local8Bit());
+    if (i18n("default filter name",n_ame.local8Bit())!=n_ame.local8Bit().data())    // try to guess if this english or not
+      return i18n("default filter name",n_ame.local8Bit());
     else
       return n_ame;
   } else
@@ -255,9 +255,9 @@ QString KNArticleFilter::translatedName()
 void KNArticleFilter::setTranslatedName(const QString &s)
 {
   bool retranslated = false;
-  for (const char *c=defFil[0];(*c)!=0;c++)   // ok, try if it matches any of the standard filter names
-    if (s==i18n(c)) {
-      n_ame = c;
+  for (const char **c=defFil;(*c)!=0;c++)   // ok, try if it matches any of the standard filter names
+    if (s==i18n("default filter name",*c)) {
+      n_ame = QString::fromLatin1(*c);
       retranslated = true;
       break;
     }
