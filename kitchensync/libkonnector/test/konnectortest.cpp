@@ -34,14 +34,14 @@ int main(int argc, char *argv[] )
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
   KApplication a;
 
-  KSync::Konnector *konnector = new KSync::Konnector(0,0);
+  KSync::KonnectorManager *konnector = new KSync::KonnectorManager(0,0);
   KSync::Device::ValueList device;
   device = konnector->query();
-  for(Device::ValueList::Iterator it = device.begin(); it != device.end(); ++it ){
+  for(KSync::Device::ValueList::Iterator it = device.begin(); it != device.end(); ++it ){
     kdDebug(5201) << "KDevice: " <<  (*it).identify() << endl;
     QString outp = konnector->registerKonnector( (*it) );
-    kdDebug(5202) << "UID " <<  outp;
-    Kapabilities caps = konnector->capabilities( outp );
+    kdDebug(5202) << "UID " <<  outp << endl;
+    KSync::Kapabilities caps = konnector->capabilities( outp );
     caps.setUser("ich" );
     caps.setPassword("doesntmatter");
 //    QHostAddress adr;
@@ -49,7 +49,7 @@ int main(int argc, char *argv[] )
     caps.setDestIP( "192.168.0.10" );
     caps.setMetaSyncingEnabled( true );
     konnector->setCapabilities( outp, caps );
-    konnector->startSync( outp );
+//    konnector->startSync( outp );
     if(outp.isEmpty() ){
       kdDebug(5202) << "couldn't load" << endl;
     }
