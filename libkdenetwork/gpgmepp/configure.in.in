@@ -83,6 +83,7 @@ dnl END inline of gpgme.m4
 
 # The minimum required gpgme version is 0.4.5.
 # It was the first useable one for C++ (class keyword) and KDE (largefile support).
+# If you change this minimum version here, update also configure.in.bot
 
 kdepim_needs_gpgme_copy=""
 KDEPIM_PATH_GPGME(0.4.5,[
