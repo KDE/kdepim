@@ -46,7 +46,7 @@
                         <cstring>fBackupOnly</cstring>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;&lt;p&gt;Enter here the databases types you wish to exclude from the backup operation. Use this setting if backing up some databases crashes the handheld, or if you do not want a backup of some databases (like AvantGo pages).&lt;/p&gt;&lt;p&gt;Entries with square brackets [] are &lt;i&gt;creator codes&lt;/i&gt; like &lt;tt&gt;[lnch]&lt;/tt&gt; and can exclude a whole range of databases. Entries without the brackets list database names, and may include shell-style wildcards, like &lt;tt&gt;*_a68k&lt;/tt&gt;.&lt;/p&gt;&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;&lt;p&gt;Enter the databases types you wish to exclude from the backup operation here. Use this setting if backing up some databases crashes the handheld, or if you do not want a backup of some databases (like AvantGo pages).&lt;/p&gt;&lt;p&gt;Entries with square brackets [] are &lt;i&gt;creator codes&lt;/i&gt; like &lt;tt&gt;[lnch]&lt;/tt&gt; and can exclude a whole range of databases. Entries without the brackets list database names, and may include shell-style wildcards, like &lt;tt&gt;*_a68k&lt;/tt&gt;.&lt;/p&gt;&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QLabel" row="1" column="0">
@@ -60,7 +60,7 @@
                         <cstring>fSkipDB</cstring>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;&lt;p&gt;Enter here the databases types you wish to exclude from the restore operation, even if they exist in the set of backup databases on the handheld (like AvantGo pages). If you still want to install an ignored database to the handheld, you can always manually install it to the handheld.&lt;/p&gt;&lt;p&gt;Entries with square brackets [] are &lt;i&gt;creator codes&lt;/i&gt; like &lt;tt&gt;[lnch]&lt;/tt&gt; and can exclude a whole range of databases. Entries without the brackets list database names, and may include shell-style wildcards, like &lt;tt&gt;*_a68k&lt;/tt&gt;.&lt;/p&gt;&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;&lt;p&gt;Enter the databases types you wish to exclude from the restore operation here (like AvantGo databases). They will be skipped even if they exist in the set of backup databases on the handheld. If you still want to install an ignored database to the handheld, you can always manually install it to the handheld.&lt;/p&gt;&lt;p&gt;Entries with square brackets [] are &lt;i&gt;creator codes&lt;/i&gt; like &lt;tt&gt;[lnch]&lt;/tt&gt; and can exclude a whole range of databases. Entries without the brackets list database names, and may include shell-style wildcards, like &lt;tt&gt;*_a68k&lt;/tt&gt;.&lt;/p&gt;&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QLineEdit" row="0" column="1">
@@ -68,7 +68,7 @@
                         <cstring>fBackupOnly</cstring>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;&lt;p&gt;Enter here the databases types you wish to exclude from the backup operation. Use this setting if backing up some databases crashes the handheld, or if you do not want a backup of some databases (like AvantGo pages).&lt;/p&gt;&lt;p&gt;Entries with square brackets [] are &lt;i&gt;creator codes&lt;/i&gt; like &lt;tt&gt;[lnch]&lt;/tt&gt; and can exclude a whole range of databases. Entries without the brackets list database names, and may include shell-style wildcards, like &lt;tt&gt;*_a68k&lt;/tt&gt;.&lt;/p&gt;&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;&lt;p&gt;Enter the databases types you wish to exclude from the backup operation here. Use this setting if backing up some databases crashes the handheld, or if you do not want a backup of some databases (like AvantGo pages).&lt;/p&gt;&lt;p&gt;Entries with square brackets [] are &lt;i&gt;creator codes&lt;/i&gt; like &lt;tt&gt;[lnch]&lt;/tt&gt; and can exclude a whole range of databases. Entries without the brackets list database names, and may include shell-style wildcards, like &lt;tt&gt;*_a68k&lt;/tt&gt;.&lt;/p&gt;&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QLineEdit" row="1" column="1">
@@ -76,7 +76,7 @@
                         <cstring>fSkipDB</cstring>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;&lt;p&gt;Enter here the databases types you wish to exclude from the restore operation, even if they exist in the set of backup databases on the handheld (like AvantGo pages). If you still want to install an ignored database to the handheld, you can always manually install it to the handheld.&lt;/p&gt;&lt;p&gt;Entries with square brackets [] are &lt;i&gt;creator codes&lt;/i&gt; like &lt;tt&gt;[lnch]&lt;/tt&gt; and can exclude a whole range of databases. Entries without the brackets list database names, and may include shell-style wildcards, like &lt;tt&gt;*_a68k&lt;/tt&gt;.&lt;/p&gt;&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;&lt;p&gt;Enter the databases types you wish to exclude from the restore operation here (like AvantGo databases). They will be skipped even if they exist in the set of backup databases on the handheld. If you still want to install an ignored database to the handheld, you can always manually install it to the handheld.&lt;/p&gt;&lt;p&gt;Entries with square brackets [] are &lt;i&gt;creator codes&lt;/i&gt; like &lt;tt&gt;[lnch]&lt;/tt&gt; and can exclude a whole range of databases. Entries without the brackets list database names, and may include shell-style wildcards, like &lt;tt&gt;*_a68k&lt;/tt&gt;.&lt;/p&gt;&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QPushButton" row="0" column="2">

@@ -32,7 +32,7 @@
                 <cstring>fPilotDevice</cstring>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>&lt;qt&gt;Enter here the device the Pilot is attached to, for a serial or USB port. You can also use &lt;i&gt;/dev/pilot&lt;/i&gt;, and make that a symlink to the correct device. You need write permission to successfully synchronize with the handheld.&lt;/qt&gt;</string>
+                <string>&lt;qt&gt;Enter the device the Pilot is attached to (for instance a serial or USB port) here. You can also use &lt;i&gt;/dev/pilot&lt;/i&gt;, and make that a symlink to the correct device. You need write permission to successfully synchronize with the handheld.&lt;/qt&gt;</string>
             </property>
         </widget>
         <widget class="QLineEdit" row="0" column="1" rowspan="1" colspan="2">
@@ -40,7 +40,7 @@
                 <cstring>fPilotDevice</cstring>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>&lt;qt&gt;Enter here the device the Pilot is attached to, for a serial or USB port. You can also use &lt;i&gt;/dev/pilot&lt;/i&gt;, and make that a symlink to the correct device. You need write permission to successfully synchronize with the handheld.&lt;/qt&gt;</string>
+                <string>&lt;qt&gt;Enter the device the Pilot is attached to (for instance a serial or USB port) here.  You can also use &lt;i&gt;/dev/pilot&lt;/i&gt;, and make that a symlink to the correct device. You need write permission to successfully synchronize with the handheld.&lt;/qt&gt;</string>
             </property>
         </widget>
         <widget class="QLabel" row="1" column="0">
@@ -54,7 +54,7 @@
                 <cstring>fPilotSpeed</cstring>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>&lt;qt&gt;Select here the speed of the serial connection to your handheld. This has no meaning for USB devices. For an older model, choose 9600. Newer models may be able to handle speeds up to the maximum listed, 115200. You can experiment with the connection speed: the manual suggests starting at a speed of 19200 and trying faster speeds to see if they work.&lt;/qt&gt;</string>
+                <string>&lt;qt&gt;Select the speed of the serial connection to your handheld here. This has no meaning for USB devices. For an older model, choose 9600. Newer models may be able to handle speeds up to the maximum listed, 115200. You can experiment with the connection speed: the manual suggests starting at a speed of 19200 and trying faster speeds to see if they work.&lt;/qt&gt;</string>
             </property>
         </widget>
         <widget class="QComboBox" row="1" column="1">
@@ -87,7 +87,7 @@
                 <cstring>fPilotSpeed</cstring>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>&lt;qt&gt;Select here the speed of the serial connection to your handheld. This has no meaning for USB devices. For an older model, choose 9600. Newer models may be able to handle speeds up to the maximum listed, 115200. You can experiment with the connection speed: the manual suggests starting at a speed of 19200 and trying faster speeds to see if they work.&lt;/qt&gt;</string>
+                <string>&lt;qt&gt;Select the speed of the serial connection to your handheld here. This has no meaning for USB devices. For an older model, choose 9600. Newer models may be able to handle speeds up to the maximum listed, 115200. You can experiment with the connection speed: the manual suggests starting at a speed of 19200 and trying faster speeds to see if they work.&lt;/qt&gt;</string>
             </property>
         </widget>
         <widget class="QLabel" row="2" column="0">
@@ -101,7 +101,7 @@
                 <cstring>fPilotEncoding</cstring>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>&lt;qt&gt;PalmOS devices are available in many different languages. If your device uses a different encoding than ISO-latin1 (ISO8859-1), select here the correct encoding, in order to display special characters correctly.&lt;/qt&gt;</string>
+                <string>&lt;qt&gt;PalmOS devices are available in many different languages. If your device uses a different encoding than ISO-latin1 (ISO8859-1), select the correct encoding here, in order to display special characters correctly.&lt;/qt&gt;</string>
             </property>
         </widget>
         <widget class="QComboBox" row="2" column="1" rowspan="1" colspan="2">
@@ -112,7 +112,7 @@
                 <bool>true</bool>
             </property>
             <property name="whatsThis" stdset="0">
-                <string>&lt;qt&gt;PalmOS devices are available in many different languages. If your device uses a different encoding than ISO-latin1 (ISO8859-1), select here the correct encoding, in order to display special characters correctly.&lt;/qt&gt;</string>
+                <string>&lt;qt&gt;PalmOS devices are available in many different languages. If your device uses a different encoding than ISO-latin1 (ISO8859-1), select the correct encoding here, in order to display special characters correctly.&lt;/qt&gt;</string>
             </property>
         </widget>
         <widget class="QLabel" row="3" column="0">

@@ -76,7 +76,7 @@ Network: This has not been tested by any of the KPilot developers themselves (ha
                         <cstring>fDeviceName</cstring>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Enter here the device the Pilot is attached to, for a serial or USB port. You can also use &lt;i&gt;/dev/pilot&lt;/i&gt;, and make that a symlink to the correct device. Use the button below to automatically detect the device. You need write permission to successfully synchronize with the handheld.&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;Enter the device the Pilot is attached to (for instance a serial or USB port) here. You can also use &lt;i&gt;/dev/pilot&lt;/i&gt;, and make that a symlink to the correct device. Use the button below to automatically detect the device. You need write permission to successfully synchronize with the handheld.&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QPushButton" row="2" column="0" rowspan="1" colspan="2">
@@ -98,7 +98,7 @@ Network: This has not been tested by any of the KPilot developers themselves (ha
                         <string>/dev/pilot</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Enter here the device the Pilot is attached to, for a serial or USB port. You can also use &lt;i&gt;/dev/pilot&lt;/i&gt;, and make that a symlink to the correct device. Use the button below to automatically detect the device. You need write permission to successfully synchronize with the handheld.&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;Enter the device the Pilot is attached to (for instance a serial or USB port) here. You can also use &lt;i&gt;/dev/pilot&lt;/i&gt;, and make that a symlink to the correct device. Use the button below to automatically detect the device. You need write permission to successfully synchronize with the handheld.&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QLineEdit" row="0" column="1">
