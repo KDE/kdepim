@@ -37,3 +37,6 @@ multisynkdatadir = $(kde_datadir)/multisynk
 multisynkdata_DATA = multisynkui.rc multisynk_part.rc
 
 METASOURCES = AUTO
+
+messages: rc.cpp
+	$(XGETTEXT) *.cpp *.h -o $(podir)/multisynk.pot
