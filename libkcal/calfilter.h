@@ -42,7 +42,7 @@ class CalFilter
     CalFilter( const QString &name );
     /** Destruct filter. */
     ~CalFilter();
-    
+
     /**
       Set name of filter.
     */
@@ -51,31 +51,31 @@ class CalFilter
       Return name of filter.
     */
     QString name() const { return mName; }
-    
+
     /**
       Apply filter to eventlist, all events not matching filter criterias are
       removed from the list.
     */
     void apply( Event::List *eventlist );
-    
+
     /**
       Apply filter to todolist, all todos not matching filter criterias are
       removed from the list.
     */
     void apply( Todo::List *todolist );
-    
+
     /**
       Apply filter to todolist, all todos not matching filter criterias are
       removed from the list.
     */
     void apply( Journal::List *journallist);
-    
+
     /**
       Apply filter criteria on the specified incidence. Return true, if event passes
       criteria, otherwise return false.
     */
     bool filterIncidence( Incidence * );
-    
+
     /**
       Enable or disable filter.
     */
@@ -97,9 +97,10 @@ class CalFilter
       See related functions.
     */
     QStringList categoryList();
-    
-    enum { HideRecurring = 1, HideCompleted = 2, ShowCategories = 4 };
-    
+
+    enum { HideRecurring = 1, HideCompleted = 2, ShowCategories = 4,
+           HideInactiveTodos = 8 };
+
     /**
       Set criteria, which have to be fulfilled by events passing the filter.
     */
@@ -108,14 +109,14 @@ class CalFilter
       Get inclusive filter criteria.
     */
     int criteria();
-    
+
   private:
     QString mName;
 
     int mCriteria;
-    
+
     bool mEnabled;
-    
+
     QStringList mCategoryList;
 
     class Private;

@@ -96,15 +96,23 @@ bool CalFilter::filterIncidence(Incidence *incidence)
 
   if ( !mEnabled ) return true;
 
-  if ( (mCriteria & HideCompleted) && (incidence->type() == "Todo") ) {
-     if ( (static_cast<Todo *>(incidence))->isCompleted() ) 
-       return false;
+  Todo *todo = dynamic_cast<Todo *>(incidence);
+  if( todo ) {
+    if ( (mCriteria & HideCompleted) && todo->isCompleted() )
+      return false;
+
+    if( ( mCriteria & HideInactiveTodos ) &&
+        ( todo->hasStartDate() &&
+          QDateTime::currentDateTime() < todo->dtStart() ||
+          todo->isCompleted() ) )
+      return false;
   }
-  
+
+
   if (mCriteria & HideRecurring) {
     if (incidence->doesRecur()) return false;
   }
-  
+
   if (mCriteria & ShowCategories) {
     for (QStringList::Iterator it = mCategoryList.begin();
          it != mCategoryList.end(); ++it ) {
@@ -130,9 +138,9 @@ bool CalFilter::filterIncidence(Incidence *incidence)
     }
     return true;
   }
-    
+
 //  kdDebug(5800) << "CalFilter::filterIncidence(): passed" << endl;
-  
+
   return true;
 }
 
