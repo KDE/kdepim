@@ -59,12 +59,12 @@ void KIO_Count::count( KKioDrop *drop )
 {
 	if( _new_mailurls )
 		return; //A counting is pending, so no new one is started.
-		
+
 	delete _kurl;
 	delete _metadata;
 	delete _protocol;
 	_kio = drop;
-	
+
 	/*
 	 * Saving current settings: all actions are asynchroon, so if someone
 	 * use slow servers, settings could been changed before this class is
@@ -74,7 +74,7 @@ void KIO_Count::count( KKioDrop *drop )
 	_kurl = new KURL( *_kio->_kurl );
 	_metadata = new KIO::MetaData( *_kio->_metadata );
 	_protocol = _kio->_protocol->clone();
-	
+
 	KURL kurl = *_kurl;
 	KIO::MetaData metadata = *_metadata;
 
@@ -82,10 +82,10 @@ void KIO_Count::count( KKioDrop *drop )
 	if( _protocol->connectionBased( ) )
 	{
 		_protocol->recheckConnectKURL( kurl, metadata );
-		
+
 		if( kurl.port() == 0 )
 			kurl.setPort( _protocol->defaultPort() );
-			
+
 		if( ! ( _slave = KIO::Scheduler::getConnectedSlave( kurl, metadata ) ) ) //Forcing reload
 		{
 			kdWarning() << i18n( "Not able to open a kio slave for %1." ).arg( _protocol->configName() ) << endl;
@@ -95,11 +95,11 @@ void KIO_Count::count( KKioDrop *drop )
 			//delete _new_mailurls; _new_mailurls = 0; //No connection pending
 			return;
 		}
-		
+
 		connect( _slave, SIGNAL( error( int, const QString& ) ), _kio, SLOT( slotConnectionError( int, const QString& ) ) );
 		connect( _slave, SIGNAL( warning( const QString& ) ), _kio, SLOT( slotConnectionWarning( const QString& ) ) );
 		connect( _slave, SIGNAL( infoMessage( const QString& ) ), _kio, SLOT( slotConnectionInfoMessage( const QString& ) ) );
-		
+
 		/*
 		 * _protocol->recheckConnectKURL could have change kurl and metadata in order to have the right
 		 * settings to connect. But some other functions assumed unmodified settings,
@@ -113,23 +113,23 @@ void KIO_Count::count( KKioDrop *drop )
 		_slave = 0; //Prevent disconnecting not-existing slave
 	}
 
-	/* Blocking this function: no new counts can be started from now */	
+	/* Blocking this function: no new counts can be started from now */
 	_new_mailurls = new QValueList< KKioDrop::FileInfo >;
-	
+
 	_protocol->recheckKURL( kurl, metadata );
-	
+
 	if( kurl.port() == 0 )
 		kurl.setPort( _protocol->defaultPort() );
-	
-	kdDebug() << "KIO::listDir( " << kurl << ", false )" << endl;
+
+	kdDebug() << "KIO::listDir( " << kurl.prettyURL() << ", false )" << endl;
 	//Making job to fetch file-list
 	_job = KIO::listDir( kurl, false );
 	_job->addMetaData( metadata );
-	
+
 	connect( _job, SIGNAL( result( KIO::Job* ) ), this, SLOT( result( KIO::Job* ) ) );
 	connect( _job, SIGNAL( entries( KIO::Job*, const KIO::UDSEntryList& ) ),
 	         this, SLOT( entries( KIO::Job*, const KIO::UDSEntryList& ) ) );
-	
+
 	if( _protocol->connectionBased() )
 		KIO::Scheduler::assignJobToSlave( _slave, _job );
 	else
@@ -140,25 +140,25 @@ void KIO_Count::stopActiveCount()
 {
 	if( !_new_mailurls )
 		return;
-	
+
 	disconnect( _job, SIGNAL( result( KIO::Job* ) ), this, SLOT( result( KIO::Job* ) ) );
 	disconnect( _job, SIGNAL( entries( KIO::Job*, const KIO::UDSEntryList& ) ),
 	            this, SLOT( entries( KIO::Job*, const KIO::UDSEntryList& ) ) );
-	
+
 	KIO::Scheduler::cancelJob( _job );
-	
+
 	if( _slave )
 	{
 		//Slave seems to be disconnected by canceling the last job of the slave
 		//KIO::Scheduler::disconnectSlave( _slave );
 		_slave = 0;
 	}
-	
+
 	//Deletings settings
 	delete _kurl; _kurl = 0;
 	delete _metadata; _metadata = 0;
 	delete _protocol; _protocol = 0;
-	
+
 	delete _new_mailurls; _new_mailurls = 0;
 }
 
@@ -168,15 +168,15 @@ void KIO_Count::showPassive( const QString& id )
 	KIO::MetaData metadata = *_kio->_metadata;
 	kurl = id;
 	//KIO::Slave *slave = 0;
-	
+
 	_kio->_protocol->readSubjectKURL( kurl, metadata );
 	if( kurl.port() == 0 )
 		kurl.setPort( _kio->_protocol->defaultPort() );
-	
+
 	KIO_Single_Subject *subject = new KIO_Single_Subject( this, id.latin1(), kurl, metadata, _kio->_protocol, _slave, id, 0 );
-	
+
 	_subjects_pending++;
-	
+
 	connect( subject, SIGNAL( readSubject( KornMailSubject* ) ), this, SLOT( addtoPassivePopup( KornMailSubject* ) ) );
         connect( subject, SIGNAL( finished( KIO_Single_Subject* ) ), this, SLOT( deleteSingleSubject( KIO_Single_Subject* ) ) );
 }
@@ -207,7 +207,7 @@ void KIO_Count::result( KIO::Job* job )
 	//job should be the latest job; elsewise: print an error.
 	if( job != _job )
 		kdError() << i18n( "Got unknown job; something must be wrong..." ) << endl;
-	
+
 	//look of an error occured. If there is, print the error.
 	//This could be very useful by resolving bugs.
 	if( job->error() )
@@ -216,17 +216,17 @@ void KIO_Count::result( KIO::Job* job )
 		_valid = false;
 		_kio->emitValidChanged();
 	}
-		
+
 	disconnect( job, SIGNAL( result( KIO::Job* ) ), this, SLOT( result( KIO::Job* ) ) );
 	disconnect( job, SIGNAL( entries( KIO::Job*, const KIO::UDSEntryList& ) ),
 	            this, SLOT( entries( KIO::Job*, const KIO::UDSEntryList& ) ) );
-		    
+
 	disconnectSlave();
-	
+
 	//Deletings settings
 	delete _kurl; _kurl = 0;
 	delete _metadata; _metadata = 0;
-	
+
 	kdDebug() << "name = " << name() << endl;
 	kdDebug() << _kio->_mailurls->count() << " != " << _new_mailurls->count() << endl;
 	if( _kio->_mailurls->count() != _new_mailurls->count() )
@@ -239,7 +239,7 @@ void KIO_Count::result( KIO::Job* job )
 		*_kio->_mailurls = *_new_mailurls;
 	}
 	delete _new_mailurls; _new_mailurls = 0;
-	
+
 	_valid = true;
 	_kio->emitValidChanged();
 	_kio->emitRechecked();
@@ -254,14 +254,14 @@ void KIO_Count::entries( KIO::Job* job, const KIO::UDSEntryList &list )
 	KIO::MetaData metadata;
 	KURL kurl;
 	bool isFile;
-		
+
 	//job should be the latest job
 	if( job != _job )
 		kdError() << i18n( "Got unknown job; something must be wrong..." ) << endl;
-		
+
 	for( QValueListConstIterator<KKioDrop::FileInfo> it = _kio->_mailurls->begin(); it != _kio->_mailurls->end(); ++it )
 		old_list.append( (*it).name );
-	
+
 	for ( it1 = list.begin() ; it1 != list.end() ; it1++ )
 	{
 		/*
@@ -272,7 +272,7 @@ void KIO_Count::entries( KIO::Job* job, const KIO::UDSEntryList &list )
 		KKioDrop::FileInfo fileinfo;
 		fileinfo.name = QString::null;
 		fileinfo.size = 0;
-		
+
 		for ( it2 = (*it1).begin() ; it2 != (*it1).end() ; it2++ )
 		{
 			if( (*it2).m_uds == KIO::UDS_FILE_TYPE &&
@@ -311,11 +311,11 @@ void KIO_Count::addtoPassivePopup( KornMailSubject* subject )
 		_popup_subjects = new SortedMailSubject;
 		_popup_subjects->setAutoDelete( true );
 	}
-	
+
 	_popup_subjects->inSort( subject );
 	if( _popup_subjects->count() > 5 )
 		_popup_subjects->removeFirst(); //Overhead: subject is downloaded
-	
+
 	_subjects_pending--;
 	_total_new_messages++;
 	if( _subjects_pending == 0 )
