@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Type=Service
-Name=KPilot Expenses Conduit
+Name=Expenses
 Name[af]=Kpilot Uitgawes Pad
 Name[ar]=أنبوب Kpilot Expenses
 Name[az]=KPilot Xərclər Conduit
@@ -37,7 +37,7 @@ Name[sk]=Spojka pre KPilot Výdaje
 Name[sl]=Veznik s stroški za KPilot
 Name[sr]=KPilot-ов провод за трошкове
 Name[sv]=Utgiftskanal för Kpilot
-Name[ta]=Kபைலட் செலவுகள் கான்டிட் 
+Name[ta]=கேபைலட் செலவுகள் காப்புக்குழாய்
 Name[tr]=KPilot Harcamalar Conduit
 Name[uk]=Акведук KPilot Expenses
 Name[vi]=Truyền dẫn phí tổn KPilot 
