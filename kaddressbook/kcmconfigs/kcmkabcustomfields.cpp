@@ -288,9 +288,9 @@ void KCMKabCustomFields::initGUI()
 
   hbox = new QHBoxLayout( layout, KDialog::spacingHint() );
 
-  QString cwHowto = i18n("<qt><p>This section allows for adding your own GUI"
+  QString cwHowto = i18n("<qt><p>This section allows you to add your own GUI"
                          "  Elements ('<i>Widgets</i>') to store your own values"
-                         " into the addressbook. Proceed like described below:</p>"
+                         " into the address book. Proceed as described below:</p>"
                          "<ol>"
                          "<li>Click on '<i>Open with Qt Designer</i>'"
                          "<li>In the dialog, select '<i>Widget</i>', then click <i>OK</i>"
@@ -298,11 +298,11 @@ void KCMKabCustomFields::initGUI()
                          "<li>Save the file in the directory proposed by Qt Designer"
                          "<li>Close Qt Designer"
                          "</ol>"
-                         "<p>In case you already have a designer file (*.ui) around"
-                         " somewhere on your harddisk, simply choose '<i>Import Page</i>'</p>"
+                         "<p>In case you already have a designer file (*.ui) located"
+                         " somewhere on your hard disk, simply choose '<i>Import Page</i>'</p>"
                          "<p><b>Important:</b> The name of each input widget you place within"
-                         " the form has to start with '<i>X_</i>', so if you want the widget to"
-                         " correspond to your custom Entry '<i>X-Foo</i>', set the widgets"
+                         " the form must start with '<i>X_</i>'; so if you want the widget to"
+                         " correspond to your custom entry '<i>X-Foo</i>', set the widget's"
                          " <i>name</i> property to '<i>X_Foo</i>'.</p></qt>"
                          "<p><b>Important:</b> The widget will edit custom fields with an"
                          " application name of KADDRESSBOOK.  To change the application name"
