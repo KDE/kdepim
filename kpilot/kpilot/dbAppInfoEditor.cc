@@ -33,8 +33,11 @@
 #include <kmessagebox.h>
 
 #include "dbAppInfoEditor.h"
+//#include <khexedit/khexedit.h>
+//#include <khexedit/kwrappingrobuffer.h>
+#include "ownkhexedit.h"
 
-#include "hexviewwidget.h"
+using namespace KHE;
 
 /*************************************************
 **************************************************/
@@ -43,9 +46,8 @@ DBAppInfoEditor::DBAppInfoEditor(unsigned char*appInfoData, int *l, QWidget *par
  : KDialogBase(parent, "AppBlock Editor",false,i18n("Edit AppInfo Block"),
               Ok|Cancel), appInfo(appInfoData), len(l)
 {
-//	CHexBuffer*buff=new CHexBuffer();
-//	fAppInfoEdit=new CHexViewWidget(this, "fAppInfoEdit", 0L);
-	fAppInfoEdit=new QTextEdit(this);
+	KHE::KWrappingROBuffer*buf=new KWrappingROBuffer((char*)appInfoData, *l);
+	fAppInfoEdit=new KHexEdit(buf, this);
 	setMainWidget(fAppInfoEdit);
 	fillWidgets();
 }
@@ -69,11 +71,6 @@ void DBAppInfoEditor::slotOk()
 void DBAppInfoEditor::fillWidgets()
 {
 	// FUNCTIONSETUP
-	//CHexBuffer*fBuff=new CHexBuffer();
-	//CHexBuffer*fBuff=fHexEdit->hexBuffer();
-	//fBuff->assign((char*)appBlock, len);
-	//fHexEdit->setBuffer(fBuff);
-	// TODO:  Set the value of the CHexViewWidget from the buffer...
 }
 
 

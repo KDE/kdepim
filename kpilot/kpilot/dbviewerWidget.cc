@@ -1,7 +1,7 @@
 /* dbViewerWidget.cc		KPilot
 **
 ** Copyright (C) 2003 by Dan Pilone.
-**	Authored by Adriaan de Groot
+**	Written 2003 by Reinhold Kainhofer and Adriaan de Groot
 **
 ** This is the generic DB viewer widget.
 */
@@ -57,11 +57,6 @@
 #include "dbAppInfoEditor.h"
 #include "kpilotConfig.h"
 
-#include "hexviewwidget.h"
-#include "hexbuffer.h"
-
-
-
 
 
 
@@ -106,12 +101,6 @@ void GenericDBWidget::setupWidget()
 	fRecordList->setResizeMode( KListView::LastColumn );
 	fRecordList->setFullWidth( TRUE );
 	fRecordList->setItemsMovable( FALSE );
-
-/*	CHexBuffer*fHexBuff=new CHexBuffer();
-	fHexEdit=new CHexViewWidget( this, "HexEdit", fHexBuff );
-	fHexEdit->newFile("/local/home/reinhold/libgtkhtml1.1-dev_1.1.10-0.ximian.3_i386.deb");
-	fHexEdit->initFile();
-	g2->addMultiCellWidget(fHexEdit, 0,0,0,2);*/
 
 	fAddRecord = new KPushButton( i18n("&Add"), this );
 	g2->addWidget( fAddRecord, 1, 0 );
@@ -385,6 +374,7 @@ void GenericDBWidget::slotShowAppInfo()
 void GenericDBWidget::slotShowDBInfo()
 {
 	FUNCTIONSETUP;
+	if (!fDB) return;
 	DBInfo db=fDB->getDBInfo();
 	DBFlagsEditor*dlg=new DBFlagsEditor(&db, this);
 	if (dlg->exec())

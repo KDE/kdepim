@@ -30,11 +30,21 @@
 
 #include "options.h"
 #include <kdialogbase.h>
+#include <qwidget.h>
 
-class PilotRecord;
-class QLineEdit;
+class QVBoxLayout;
+class QHBoxLayout;
+class QGridLayout;
+namespace KHE {
+class KHexEdit;
+}
+class QButtonGroup;
 class QCheckBox;
-class CHexViewWidget;
+class QLabel;
+class QLineEdit;
+
+class DBRecordEditorBase;
+class PilotRecord;
 
 /**
 @author Reinhold Kainhofer
@@ -45,17 +55,30 @@ Q_OBJECT
 public:
 	DBRecordEditor(PilotRecord*r=0L, int n=-1, QWidget *parent = 0);
 	~DBRecordEditor();
-protected:
+	
+	QLabel* fRecordIndexLabel;
+	QLabel* fRecordIDLabel;
 	QLineEdit* fRecordIndex;
 	QLineEdit* fRecordID;
+	QButtonGroup* fFlagsGroup;
 	QCheckBox* fDirty;
 	QCheckBox* fDeleted;
 	QCheckBox* fBusy;
 	QCheckBox* fSecret;
 	QCheckBox* fArchived;
-	CHexViewWidget* fRecordData;
+	KHE::KHexEdit* fRecordData;
+	
 protected:
-	void createWidgets();
+	QGridLayout* DBRecordEditorBaseLayout;
+	QGridLayout* fFlagsGroupLayout;
+
+protected:
+//	DBRecordEditorBase*fWidget;
+	QWidget*fWidget;
+protected slots:
+    virtual void languageChange();
+protected:
+	void initWidgets();
 	void fillWidgets();
 	PilotRecord*rec;
 	int nr;

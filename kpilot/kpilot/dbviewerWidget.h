@@ -3,7 +3,7 @@
 /* dbViewerWidget.h		KPilot
 **
 ** Copyright (C) 2003 by Dan Pilone.
-**	Authored by Adriaan de Groot
+**	Written 2003 by Reinhold Kainhofer and Adriaan de Groot
 **
 ** This is the generic DB viewer widget.
 */
@@ -38,7 +38,6 @@ class KComboBox;
 class PilotLocalDatabase;
 class PilotRecord;
 class KListView;
-//class CHexViewWidget;
 
 class GenericDBWidget : public PilotComponent
 {
@@ -84,7 +83,6 @@ private:
 	PilotLocalDatabase*fDB;
 	QString currentDB;
 	QPtrList<PilotRecord>   fRecList;
-//	CHexViewWidget*fHexEdit;
 };
 
 
