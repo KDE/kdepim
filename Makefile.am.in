@@ -28,6 +28,7 @@ COMPILE_BEFORE_wizards = libkdepim korganizer kaddressbook kmail
 COMPILE_BEFORE_korn = libkdenetwork
 COMPILE_BEFORE_kitchensync = libkdepim
 COMPILE_AFTER_libemailfunctions = libkcal libkpimidentities kmail korganizer
+COMPILE_AFTER_libkholidays = korganizer kontact
 
 AUTOMAKE_OPTIONS = foreign 1.5
 DISTCLEANFILES = inst-apps
