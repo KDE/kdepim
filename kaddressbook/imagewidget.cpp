@@ -86,11 +86,19 @@ ImageWidget::ImageWidget( QWidget *parent, const char *name )
            SIGNAL( changed() ) );
   connect( mPhotoUrl, SIGNAL( urlSelected( const QString& ) ),
            SLOT( loadPhoto() ) );
+  connect( mPhotoUrl, SIGNAL( urlSelected( const QString& ) ),
+           SIGNAL( changed() ) );
+  connect( mUsePhotoUrl, SIGNAL( toggled( bool ) ),
+           SIGNAL( changed() ) );
 
   connect( mLogoUrl, SIGNAL( textChanged( const QString& ) ),
            SIGNAL( changed() ) );
   connect( mLogoUrl, SIGNAL( urlSelected( const QString& ) ),
            SLOT( loadLogo() ) );
+  connect( mLogoUrl, SIGNAL( urlSelected( const QString& ) ),
+           SIGNAL( changed() ) );
+  connect( mUseLogoUrl, SIGNAL( toggled( bool ) ),
+           SIGNAL( changed() ) );
 
   KAcceleratorManager::manage( this );
 }
@@ -104,13 +112,13 @@ void ImageWidget::setPhoto( const KABC::Picture &photo )
   bool blocked = signalsBlocked();
   blockSignals( true );
 
-  if ( photo.isIntern() )
+  if ( photo.isIntern() ) {
     mPhotoLabel->setPixmap( photo.data() );
-  else {
-    mPhotoLabel->setPixmap( KGlobal::iconLoader()->loadIcon( "penguin",
-                           KIcon::Desktop, 128 ) );
+    mUsePhotoUrl->setChecked( false );
+  } else {
     mPhotoUrl->setURL( photo.url() );
     mUsePhotoUrl->setChecked( true );
+    loadPhoto();
   }
 
   blockSignals( blocked );
@@ -124,7 +132,7 @@ KABC::Picture ImageWidget::photo() const
     photo.setUrl( mPhotoUrl->url() );
   else {
     QPixmap *px = mPhotoLabel->pixmap();
-    if ( px && !mPhotoUrl->url().isEmpty() )
+    if ( px )
       photo.setData( px->convertToImage() );
   }
 
@@ -136,13 +144,13 @@ void ImageWidget::setLogo( const KABC::Picture &logo )
   bool blocked = signalsBlocked();
   blockSignals( true );
 
-  if ( logo.isIntern() )
+  if ( logo.isIntern() ) {
     mLogoLabel->setPixmap( logo.data() );
-  else {
-    mLogoLabel->setPixmap( KGlobal::iconLoader()->loadIcon( "penguin",
-                           KIcon::Desktop, 128 ) );
+    mUseLogoUrl->setChecked( false );
+  } else {
     mLogoUrl->setURL( logo.url() );
     mUseLogoUrl->setChecked( true );
+    loadLogo();
   }
 
   blockSignals( blocked );
@@ -156,7 +164,7 @@ KABC::Picture ImageWidget::logo() const
     logo.setUrl( mLogoUrl->url() );
   else {
     QPixmap *px = mLogoLabel->pixmap();
-    if ( px && !mLogoUrl->url().isEmpty() )
+    if ( px )
       logo.setData( px->convertToImage() );
   }
 

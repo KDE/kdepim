@@ -257,6 +257,7 @@ void KAddressBookIconView::setSelected(QString uid, bool selected)
              if ((aItem) && (aItem->addressee().uid() == uid))
              {
                  mIconView->setSelected(aItem, selected);
+                 mIconView->ensureItemVisible( aItem );
                  found = true;
              }
          }
