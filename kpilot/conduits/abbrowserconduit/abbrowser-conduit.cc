@@ -326,10 +326,17 @@ bool AbbrowserConduit::_saveAddressBook()
 	{
 		if (abChanged) {
 			res=aBook->save(ticket);
+      ticket = 0;
+/*
+      Activate in KDE 4.0
+
 			if (res) { 
 				aBook->releaseSaveTicket(ticket);
 				ticket=0;
-			} else { aBook->cleanUp(); }
+      }
+*/
+      if (!res )
+			  aBook->cleanUp();
 		}
 		else
 		{
