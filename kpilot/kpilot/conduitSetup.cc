@@ -6,6 +6,9 @@
 ** install and activate conduits.
 */
 
+// THIS FILE IS TOTALLY DEPRECATED. IT IS NOT USED
+// IN THE MAIN PART OF KPILOT'S CODE.
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by

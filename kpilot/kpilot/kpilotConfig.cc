@@ -312,7 +312,9 @@ BoolProperty_(UseKeyField, "UseKeyField", false)
 	set##a(p->text()); } \
 	void  KPilotConfigSettings::set##a(const QString &s) { \
 	writeEntry(key,s); }
-	StringProperty_(PilotDevice, "PilotDevice", "/dev/pilot")
+
+
+StringProperty_(PilotDevice, "PilotDevice", "/dev/pilot")
 
 
 StringProperty_(User, "UserName", QString::null)

@@ -128,7 +128,7 @@ int PilotComponent::findSelectedCategory(QComboBox * fCatList,
 
 		currentCatID = 0;
 		while (strcmp(info->name[currentCatID],
-				selectedCategory.local8Bit()) &&
+				selectedCategory.latin1()) &&
 			(currentCatID < MAX_CATEGORIES))
 		{
 #ifdef DEBUG
