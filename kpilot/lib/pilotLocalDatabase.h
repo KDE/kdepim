@@ -46,6 +46,10 @@ public:
 	/** Opens the local database */
 	PilotLocalDatabase( const QString& path, const QString& name,
 		QObject *p=0L,const char *n=0L);
+	PilotLocalDatabase(const QString &name,
+		QObject *p=0L,const char *n=0L);
+
+
 	virtual ~PilotLocalDatabase();
 
 	// Reads the application block info
@@ -103,11 +107,25 @@ private:
 	int         fCurrentRecord;
 	PilotRecord* fRecords[10000]; // Current max records in DB.. hope it's enough
 	int         fPendingRec; // Temp index for the record about to get an ID.
+
+
+	/**
+	* For databases opened by name only (constructor 2 -- which is the
+	* preferred one, too) try this path first before the default path.
+	* Set statically so it's shared for all local databases.
+	*/
+public:
+	static void setDBPath(const QString &);
+private:
+	static QString *fPathBase;
 };
 
 
 
 // $Log$
+// Revision 1.1  2001/10/10 22:01:24  adridg
+// Moved from ../kpilot/, shared files
+//
 // Revision 1.11  2001/09/29 16:26:18  adridg
 // The big layout change
 //

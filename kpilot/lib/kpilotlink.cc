@@ -497,6 +497,11 @@ void KPilotDeviceLink::addSyncLogEntry(const QString & entry, bool suppress)
 	}
 }
 
+int KPilotDeviceLink::openConduit()
+{
+	return dlp_OpenConduit(fCurrentPilotSocket);
+}
+
 QString KPilotDeviceLink::deviceTypeString(int i) const
 {
 	FUNCTIONSETUP;
@@ -555,6 +560,9 @@ QString KPilotDeviceLink::statusString() const
 
 
 // $Log$
+// Revision 1.4  2002/01/18 16:28:57  adridg
+// CVS_SILENT: Less compile warnings
+//
 // Revision 1.3  2001/12/29 15:45:28  adridg
 // Lots of little changes for the syncstack
 //

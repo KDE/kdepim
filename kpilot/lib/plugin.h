@@ -93,6 +93,7 @@ protected:
 
 	KConfig *fConfig;
 
+
 private:
 	bool fTest;
 	bool fBackup;
@@ -103,6 +104,16 @@ class PluginUtility
 public:
 	static int findHandle(const QStringList &);
 	static bool isModal(const QStringList &a);
+
+	/**
+	* This function attempts to detect whether or not the given
+	* application is running. If it is, true is returned, otherwise
+	* false.
+	*
+	* The current approach is to ask the DCOP server if the application
+	* has registered.
+	*/
+	static bool isRunning(const QCString &appName);
 } ;
 
 /**
@@ -153,6 +164,9 @@ public:
 */
 
 // $Log$
+// Revision 1.3  2001/12/28 12:55:24  adridg
+// Fixed email addresses; added isBackup() to interface
+//
 // Revision 1.2  2001/10/17 08:46:08  adridg
 // Minor cleanups
 //

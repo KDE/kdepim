@@ -289,45 +289,23 @@ public:
 
 protected:
 	KPilotUser  *fPilotUser;
-} ;
 
-// #if 0
-// class SyncAction : public QObject
-// {
-// Q_OBJECT
-// 
-// public:
-// 	SyncAction(KPilotDeviceLink *p,
-// 		QObject *parent=0L,
-// 		const char *name=0L);
-// 
-// 	typedef enum { Error=-1 } Status;
-// 
-// 	int status() const { return fStatus; } ;
-// 	virtual QString statusString() const;
-// 
-// public slots:
-// 	virtual void exec() = 0;
-// 
-// signals:
-// 	void syncDone(SyncAction *);
-// 	void logMessage(const QString &);
-// 	void logError(const QString &);
-// 	void logProgress(const QString &,int);
-// 
-// protected:
-// 	KPilotDeviceLink *fHandle;
-// 	int fStatus;
-// 
-// 	int pilotSocket() const { return fHandle->pilotSocket(); } ;
-// 	void addSyncLogEntry(const QString &e,bool suppress=false) 
-// 		{ fHandle->addSyncLogEntry(e,suppress); }
-// } ;
-// #endif
+/*
+** Actions intended just to abstract away the pilot-link library interface.
+*/
+protected:
+	/**
+	* Notify the Pilot user which conduit is running now. 
+	*/
+	int openConduit();
+} ;
 
 
 
 // $Log$
+// Revision 1.1  2001/10/08 21:56:02  adridg
+// Start of making a separate KPilot lib
+//
 // Revision 1.34  2001/09/29 16:26:18  adridg
 // The big layout change
 //

@@ -66,6 +66,7 @@ public:
   
   PilotRecord* pack() { return PilotAppCategory::pack(); }
   
+  bool isEvent() const { return fAppointmentInfo.event; }
   int getEvent() const { return fAppointmentInfo.event; }
   void setEvent(int event) { fAppointmentInfo.event = event; }
   
@@ -150,6 +151,9 @@ private:
 
 
 // $Log$
+// Revision 1.2  2001/12/28 12:55:24  adridg
+// Fixed email addresses; added isBackup() to interface
+//
 // Revision 1.1  2001/12/27 23:08:30  adridg
 // Restored some deleted wrapper files
 //

@@ -41,6 +41,8 @@ static const char *pilotlocaldatabase_id =
 #include <qregexp.h>
 
 #include <kdebug.h>
+#include <kglobal.h>
+#include <kstddirs.h>
 
 
 #include "pilotLocalDatabase.h"
@@ -63,6 +65,33 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 
 	/* NOTREACHED */
 	(void) pilotlocaldatabase_id;
+}
+
+PilotLocalDatabase::PilotLocalDatabase(const QString & dbName,
+	QObject *p, const char *n) :
+	PilotDatabase(p,n),
+	fPathName(QString::null),
+	fDBName(dbName),
+	fAppInfo(0L), 
+	fAppLen(0), 
+	fNumRecords(0), 
+	fCurrentRecord(0), 
+	fPendingRec(-1)
+{
+	FUNCTIONSETUP;
+
+	if (fPathBase && !fPathBase->isEmpty())
+	{
+		fPathName = *fPathBase;
+	}
+	else
+	{
+		fPathName = KGlobal::dirs()->saveLocation("data",
+			QString("kpilot/DBBackup/"));
+	}
+
+	fixupDBName();
+	openDatabase();
 }
 
 
@@ -423,7 +452,26 @@ void PilotLocalDatabase::closeDatabase()
 }
 
 
+QString *PilotLocalDatabase::fPathBase = 0L;
+
+void PilotLocalDatabase::setDBPath(const QString &s)
+{
+	FUNCTIONSETUP;
+
+	if (!fPathBase)
+	{
+		fPathBase = new QString(s);
+	}
+	else
+	{
+		*fPathBase = s;
+	}
+}
+
 // $Log$
+// Revision 1.1  2001/10/10 22:01:24  adridg
+// Moved from ../kpilot/, shared files
+//
 // Revision 1.17  2001/09/30 19:51:56  adridg
 // Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
 //

@@ -36,6 +36,8 @@
 
 #include <qstringlist.h>
 
+#include <dcopclient.h>
+
 #include "plugin.moc"
 
 
@@ -109,7 +111,19 @@ bool PluginUtility::isModal(const QStringList &a)
 	return a.contains("modal");
 }
 
+/* static */ bool PluginUtility::isRunning(const QCString &n)
+{
+	FUNCTIONSETUP;
+
+	DCOPClient *dcop = KApplication::kApplication()->dcopClient();
+	QCStringList apps = dcop->registeredApplications();
+	return apps.contains(n);
+}
+
 // $Log$
+// Revision 1.4  2002/01/18 12:47:21  adridg
+// CVS_SILENT: More compile fixes
+//
 // Revision 1.3  2001/12/28 12:55:24  adridg
 // Fixed email addresses; added isBackup() to interface
 //
