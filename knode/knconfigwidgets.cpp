@@ -34,6 +34,8 @@
 #include <kpgpui.h>
 #include <kurlcompletion.h>
 #include <kiconloader.h>
+#include <kpushbutton.h>
+#include <kstdguiitem.h>
 
 #include "knaccountmanager.h"
 #include "kngroupmanager.h"
@@ -731,7 +733,7 @@ KNConfig::AppearanceWidget::AppearanceWidget(Appearance *d, QWidget *p, const ch
   connect(c_olChngBtn, SIGNAL(clicked()), this, SLOT(slotColChangeBtnClicked()));
   topL->addWidget(c_olChngBtn,1,1);
 
-  c_olDefBtn=new QPushButton(i18n("&Defaults"), this);
+  c_olDefBtn=new KPushButton(KStdGuiItem::defaults(), this);
   connect(c_olDefBtn, SIGNAL(clicked()), this, SLOT(slotColDefaultBtnClicked()));
   topL->addWidget(c_olDefBtn,2,1);
 
