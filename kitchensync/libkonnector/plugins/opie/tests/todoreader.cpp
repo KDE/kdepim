@@ -101,13 +101,27 @@ int main(int argc, char *argv[] )
       QPtrList<KSync::SyncEntry> changed = syncee->added() ;
       KSync::SyncEntry* entry;
       kdDebug() << "Added ---------------------------" << endl;
-      for (entry = syncee->firstEntry(); entry != 0; entry = syncee->nextEntry() ) {
+      for (entry = changed.first(); entry != 0; entry =changed.next() ) {
           kdDebug() << "Id " << entry->id() << endl;
           kdDebug() << "Name" << entry->name() << endl;
           kdDebug() << "State " << entry->state() << endl;
           kdDebug() << "------ " << endl;
       }
-
-
+      kdDebug() << "Modified--------------------" << endl;
+      changed = syncee->modified();
+      for (entry = changed.first(); entry != 0; entry =changed.next() ) {
+          kdDebug() << "Id " << entry->id() << endl;
+          kdDebug() << "Name" << entry->name() << endl;
+          kdDebug() << "State " << entry->state() << endl;
+          kdDebug() << "------ " << endl;
+      }
+      kdDebug() << "Removed---------------------" << endl;
+      changed = syncee->removed();
+      for (entry = changed.first(); entry != 0; entry =changed.next() ) {
+          kdDebug() << "Id " << entry->id() << endl;
+          kdDebug() << "Name" << entry->name() << endl;
+          kdDebug() << "State " << entry->state() << endl;
+          kdDebug() << "------ " << endl;
+      }
   };
 }
