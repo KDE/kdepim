@@ -32,9 +32,8 @@
 #include <string.h>
 #include <time.h>
 
-#ifndef _PILOT_DLP_H_
 #include <pi-dlp.h>
-#endif
+#include <pi-version.h>
 
 class KPilotSysInfo
 {
@@ -58,6 +57,26 @@ public:
         const unsigned long getLocale() const {return fSysInfo.locale;}
         void setLocale(unsigned long newval)  {fSysInfo.locale=newval;}
 
+#if (PILOT_LINK_VERSION * 1000 + PILOT_LINK_MAJOR * 10 + PILOT_LINK_MINOR) < 100
+// Older pilot-link versions < 0.11.x don't have prodID, but name instead, 
+// and they also do not have the *Version members.
+	const int getProductIDLength() const { return fSysInfo.nameLength; }
+	const char* getProductID() const     { return fSysInfo.name; }
+	void setProductID(char* prodid)
+	{
+		::memset(&fSysInfo.name, 0, sizeof(fSysInfo.name));
+		::strncpy(fSysInfo.name, prodid, sizeof(fSysInfo.name)-1);
+		boundsCheck();
+		fSysInfo.nameLength = ::strlen(fSysInfo.name);
+	}
+
+        const unsigned short getMajorVersion() const {return 0;}
+        const unsigned short getMinorVersion() const {return 0;}
+        const unsigned short getCompatMajorVersion() const {return 0;}
+        const unsigned short getCompatMinorVersion() const {return 0;}
+        const unsigned short getMaxRecSize() const {return 0;}
+#else
+// Newer pilot-link versions have these fields, so use them:
 	const int getProductIDLength() const { return fSysInfo.prodIDLength; }
 	const char* getProductID() const     { return fSysInfo.prodID; }
 	void setProductID(char* prodid)
@@ -73,6 +92,8 @@ public:
         const unsigned short getCompatMajorVersion() const {return fSysInfo.compatMajorVersion;}
         const unsigned short getCompatMinorVersion() const {return fSysInfo.compatMinorVersion;}
         const unsigned short getMaxRecSize() const {return fSysInfo.maxRecSize;}
+#endif
+
 private:
 	struct SysInfo fSysInfo;
 };
