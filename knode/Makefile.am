@@ -66,5 +66,5 @@ KDE_ICON = AUTO
 
 EXTRA_DIST = KNode.desktop
 
-messages:
+messages: rc.cpp
 	$(XGETTEXT) *.cpp *.h -o $(podir)/knode.pot
