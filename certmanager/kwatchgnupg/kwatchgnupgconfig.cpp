@@ -68,7 +68,7 @@ static int log_level_to_int( const QString& loglevel )
 
 KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
   : KDialogBase( Plain, i18n("Configure KWatchGnuPG"),
-		 Apply|Ok|Cancel, Ok, parent, name )
+		 Ok|Cancel, Ok, parent, name )
 {
   // tmp vars:
   QWidget * w;
