@@ -59,7 +59,7 @@ part_DATA = kaddressbook_part.rc
 
 messages: rc.cpp
 	$(EXTRACTRC) *.rc *.ui */*.ui >> rc.cpp
-	$(XGETTEXT) *.h *.cpp */*.cpp -o $(podir)/kaddressbook.pot
+	$(XGETTEXT) *.h *.cpp */*.cpp */*.h -o $(podir)/kaddressbook.pot
 
 srcdoc:
 	$(mkinstalldirs) $(SRCDOC_DEST)
