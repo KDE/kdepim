@@ -21,9 +21,9 @@
 #include <kmessagebox.h>
 
 #include "task.h"
-#include "karm.h"
-#include "adddlg.h"
-#include "idle.h"
+#include "taskview.h"
+#include "addtaskdialog.h"
+#include "idletimedetector.h"
 #include "preferences.h"
 #include "kdebug.h"
 #include "listviewiterator.h"
@@ -32,7 +32,7 @@
 
 #define T_LINESIZE 1023
 
-Karm::Karm( QWidget *parent, const char *name )
+TaskView::TaskView( QWidget *parent, const char *name )
   : QListView( parent, name )
 {
   _preferences = Preferences::instance();
@@ -48,15 +48,15 @@ Karm::Karm( QWidget *parent, const char *name )
   // set up the minuteTimer
   _minuteTimer = new QTimer(this);
   connect(_minuteTimer, SIGNAL(timeout()), this, SLOT(minuteUpdate()));
-  _minuteTimer->start(1000 * secsPerMinutes);
+  _minuteTimer->start(1000 * secsPerMinute);
 
   // Set up the idle detection.
-  _idleTimer = new IdleTimer(_preferences->idlenessTimeout());
-  connect(_idleTimer, SIGNAL(extractTime(int)), this, SLOT(extractTime(int)));
-  connect(_idleTimer, SIGNAL(stopAllTimers()), this, SLOT(stopAllTimers()));
-  connect(_preferences, SIGNAL(idlenessTimeout(int)), _idleTimer, SLOT(setMaxIdle(int)));
-  connect(_preferences, SIGNAL(detectIdleness(bool)), _idleTimer, SLOT(toggleOverAllIdleDetection(bool)));
-  if (!_idleTimer->isIdleDetectionPossible())
+  _idleTimeDetector = new IdleTimeDetector(_preferences->idlenessTimeout());
+  connect(_idleTimeDetector, SIGNAL(extractTime(int)), this, SLOT(extractTime(int)));
+  connect(_idleTimeDetector, SIGNAL(stopAllTimers()), this, SLOT(stopAllTimers()));
+  connect(_preferences, SIGNAL(idlenessTimeout(int)), _idleTimeDetector, SLOT(setMaxIdle(int)));
+  connect(_preferences, SIGNAL(detectIdleness(bool)), _idleTimeDetector, SLOT(toggleOverAllIdleDetection(bool)));
+  if (!_idleTimeDetector->isIdleDetectionPossible())
     _preferences->disableIdleDetection();
 
   // Setup auto save timer
@@ -72,12 +72,12 @@ Karm::Karm( QWidget *parent, const char *name )
   lastDesktop = kWinModule.currentDesktop()-1;
 }
 
-Karm::~Karm()
+TaskView::~TaskView()
 {
   save();
 }
 
-void Karm::handleDesktopChange(int desktop)
+void TaskView::handleDesktopChange(int desktop)
 {
   desktop--; // desktopTracker starts with 0 for desktop 1
   // start all tasks setup for running on desktop
@@ -99,7 +99,7 @@ void Karm::handleDesktopChange(int desktop)
   emit updateButtons();
 }
 
-void Karm::load()
+void TaskView::load()
 {
   QFile f(_preferences->saveFile());
 
@@ -165,7 +165,7 @@ void Karm::load()
   //emit( sessionTimeChanged() );
 }
 
-void Karm::applyTrackers() 
+void TaskView::applyTrackers() 
 {
   TaskVector &tv = desktopTracker[kWinModule.currentDesktop()-1];
   TaskVector::iterator tit = tv.begin();
@@ -175,7 +175,7 @@ void Karm::applyTrackers()
   }
 }
 
-void Karm::updateTrackers(Task *task, DesktopListType desktopList)
+void TaskView::updateTrackers(Task *task, DesktopListType desktopList)
 {
   // if no desktop is marked, disable auto tracking for this task
   if (desktopList.size()==0) {
@@ -211,7 +211,7 @@ void Karm::updateTrackers(Task *task, DesktopListType desktopList)
   }
 }
 
-void Karm::printTrackers() {
+void TaskView::printTrackers() {
   TaskVector::iterator it;
   for (int i=0; i<16; i++) {
     TaskVector& start = desktopTracker[i];
@@ -222,7 +222,7 @@ void Karm::printTrackers() {
   }
 }
 
-bool Karm::parseLine(QString line, long *time, QString *name, int *level, DesktopListType* desktops)
+bool TaskView::parseLine(QString line, long *time, QString *name, int *level, DesktopListType* desktops)
 {
   if (line.find('#') == 0) {
     // A comment line
@@ -296,7 +296,7 @@ bool Karm::parseLine(QString line, long *time, QString *name, int *level, Deskto
   return true;
 }
 
-void Karm::save()
+void TaskView::save()
 {
   QFile f(_preferences->saveFile());
 
@@ -306,7 +306,7 @@ void Karm::save()
     KMessageBox::error(0, msg );
     return;
   }
-  const char * comment = "# Karm save data\n";
+  const char * comment = "# TaskView save data\n";
 
   f.writeBlock(comment, strlen(comment));  //comment
   f.flush();
@@ -318,7 +318,7 @@ void Karm::save()
   f.close();
 }
 
-void Karm::writeTaskToFile(QTextStream *strm, QListViewItem *item, int level)
+void TaskView::writeTaskToFile(QTextStream *strm, QListViewItem *item, int level)
 {
   Task * task = (Task *) item;
   //lukas: correct version for non-latin1 users
@@ -343,15 +343,15 @@ void Karm::writeTaskToFile(QTextStream *strm, QListViewItem *item, int level)
   }
 }
 
-void Karm::startCurrentTimer()
+void TaskView::startCurrentTimer()
 {
   startTimerFor((Task *) currentItem());
 }
 
-void Karm::startTimerFor(Task* item)
+void TaskView::startTimerFor(Task* item)
 {
   if (item != 0 && activeTasks.findRef(item) == -1) {
-    _idleTimer->startIdleDetection();
+    _idleTimeDetector->startIdleDetection();
     item->setRunning(true);
     activeTasks.append(item);
     emit updateButtons();
@@ -362,19 +362,19 @@ void Karm::startTimerFor(Task* item)
   }
 }
 
-void Karm::stopAllTimers()
+void TaskView::stopAllTimers()
 {
   for(unsigned int i=0; i<activeTasks.count();i++) {
     activeTasks.at(i)->setRunning(false);
   }
-  _idleTimer->stopIdleDetection();
+  _idleTimeDetector->stopIdleDetection();
   activeTasks.clear();
   emit updateButtons();
   emit timerInactive();
   emit tasksChanged( activeTasks);
 }
 
-void Karm::resetSessionTimeForAllTasks()
+void TaskView::resetSessionTimeForAllTasks()
 {
   QListViewItemIterator item( firstChild());
   for ( ; item.current(); ++item ) {
@@ -389,13 +389,13 @@ void Karm::resetSessionTimeForAllTasks()
   }
 }
 
-void Karm::stopTimerFor(Task* item)
+void TaskView::stopTimerFor(Task* item)
 {
   if (item != 0 && activeTasks.findRef(item) != -1) {
     activeTasks.removeRef(item);
     item->setRunning(false);
     if (activeTasks.count()== 0) {
-      _idleTimer->stopIdleDetection();
+      _idleTimeDetector->stopIdleDetection();
       emit timerInactive();
     }
     emit updateButtons();
@@ -403,13 +403,13 @@ void Karm::stopTimerFor(Task* item)
     emit tasksChanged( activeTasks);
 }
 
-void Karm::stopCurrentTimer()
+void TaskView::stopCurrentTimer()
 {
   stopTimerFor((Task *) currentItem());
 }
 
 
-void Karm::changeTimer(QListViewItem *)
+void TaskView::changeTimer(QListViewItem *)
 {
   Task *item = ((Task *) currentItem());
   if (item != 0 && activeTasks.findRef(item) == -1) {
@@ -427,12 +427,12 @@ void Karm::changeTimer(QListViewItem *)
   }
 }
 
-void Karm::minuteUpdate()
+void TaskView::minuteUpdate()
 {
   addTimeToActiveTasks(1);
 }
 
-void Karm::addTimeToActiveTasks(int minutes)
+void TaskView::addTimeToActiveTasks(int minutes)
 {
   for(unsigned int i=0; i<activeTasks.count();i++) {
     Task *task = activeTasks.at(i);
@@ -445,12 +445,12 @@ void Karm::addTimeToActiveTasks(int minutes)
   }
 }
 
-void Karm::newTask()
+void TaskView::newTask()
 {
   newTask(i18n("New Task"), 0);
 }
 
-void Karm::newTask(QString caption, QListViewItem *parent)
+void TaskView::newTask(QString caption, QListViewItem *parent)
 {
   AddTaskDialog *dialog = new AddTaskDialog(caption, false);
   int result = dialog->exec();
@@ -479,7 +479,7 @@ void Karm::newTask(QString caption, QListViewItem *parent)
   delete dialog;
 }
 
-void Karm::newSubTask()
+void TaskView::newSubTask()
 {
   QListViewItem *item = currentItem();
   if(!item)
@@ -490,7 +490,7 @@ void Karm::newSubTask()
   setRootIsDecorated(true);
 }
 
-void Karm::editTask()
+void TaskView::editTask()
 {
   Task *task = (Task *) currentItem();
   if (!task)
@@ -538,7 +538,7 @@ void Karm::editTask()
   delete dialog;
 }
 
-void Karm::updateParents( QListViewItem* task, long totalDiff, long sessionDiff )
+void TaskView::updateParents( QListViewItem* task, long totalDiff, long sessionDiff )
 {
   QListViewItem *item = task->parent();
   while (item) {
@@ -550,7 +550,7 @@ void Karm::updateParents( QListViewItem* task, long totalDiff, long sessionDiff 
   }
 }
 
-void Karm::deleteTask()
+void TaskView::deleteTask()
 {
   Task *item = ((Task *) currentItem());
   if (item == 0) {
@@ -581,7 +581,7 @@ void Karm::deleteTask()
 
     // Stop idle detection if no more counters is running
     if (activeTasks.count() == 0) {
-      _idleTimer->stopIdleDetection();
+      _idleTimeDetector->stopIdleDetection();
       emit timerInactive();
     }
     emit tasksChanged( activeTasks );
@@ -610,7 +610,7 @@ void Karm::deleteTask()
   }
 }
 
-void Karm::stopChildCounters(Task *item)
+void TaskView::stopChildCounters(Task *item)
 {
   for (QListViewItem *child=item->firstChild(); child; child=child->nextSibling()) {
     stopChildCounters((Task *)child);
@@ -619,16 +619,16 @@ void Karm::stopChildCounters(Task *item)
 }
 
 
-void Karm::extractTime(int minutes)
+void TaskView::extractTime(int minutes)
 {
   addTimeToActiveTasks(-minutes);
 }
 
-void Karm::autoSaveChanged(bool on)
+void TaskView::autoSaveChanged(bool on)
 {
   if (on) {
     if (!_autoSaveTimer->isActive()) {
-      _autoSaveTimer->start(_preferences->autoSavePeriod()*1000*secsPerMinutes);
+      _autoSaveTimer->start(_preferences->autoSavePeriod()*1000*secsPerMinute);
     }
   }
   else {
@@ -638,9 +638,9 @@ void Karm::autoSaveChanged(bool on)
   }
 }
 
-void Karm::autoSavePeriodChanged(int /*minutes*/)
+void TaskView::autoSavePeriodChanged(int /*minutes*/)
 {
   autoSaveChanged(_preferences->autoSave());
 }
 
-#include "karm.moc"
+#include "taskview.moc"

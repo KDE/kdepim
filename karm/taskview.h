@@ -15,7 +15,7 @@ class KMenuBar;
 class KToolBar;
 class QListBox;
 class AddTaskDialog;
-class IdleTimer;
+class IdleTimeDetector;
 class QTimer;
 class Preferences;
 class Task;
@@ -27,12 +27,12 @@ typedef std::vector<Task*> TaskVector;
  * Container and interface for the tasks.
  */
 
-class Karm : public QListView
+class TaskView : public QListView
 {
     Q_OBJECT
 
 private: // member variables
-    IdleTimer *_idleTimer;
+    IdleTimeDetector *_idleTimeDetector;
     QTimer *_minuteTimer;
     QTimer *_autoSaveTimer;
 
@@ -49,8 +49,8 @@ private: // member variables
     int desktopCount;
 
 public:
-    Karm( QWidget *parent = 0, const char *name = 0 );
-    virtual ~Karm();
+    TaskView( QWidget *parent = 0, const char *name = 0 );
+    virtual ~TaskView();
     static QString formatTime(long minutes);
     void printTrackers();
 
@@ -105,7 +105,7 @@ protected slots:
     void addTimeToActiveTasks(int minutes);
 };
 
-inline QString Karm::formatTime( long minutes )
+inline QString TaskView::formatTime( long minutes )
 {
     QString time;
     time.sprintf("%ld:%02ld", minutes / 60, labs(minutes % 60));
