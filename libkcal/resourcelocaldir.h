@@ -86,7 +86,7 @@ class ResourceLocalDir : public ResourceCached
     bool deleteIncidenceFile(Incidence *incidence);
 
     KURL mURL;
-    ICalFormat mFormat;
+//     ICalFormat mFormat;
 
     KDirWatch mDirWatch;
     
