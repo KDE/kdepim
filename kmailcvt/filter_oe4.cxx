@@ -41,7 +41,6 @@ FilterOE4::FilterOE4() : Filter(i18n("Import Folders From Outlook Express 4"),
       "cancel this import function (the next dialog will allow you to do "
       "that) and rename the existing KMail folders.</p>"))
 {
-  CAP=i18n("Import Outlook Express 4");
 }
 
 FilterOE4::~FilterOE4()
@@ -72,7 +71,7 @@ void FilterOE4::import(FilterInfo *info)
      {
        QString msg;
        msg=i18n("Can't open directory %1").arg(choosen);
-       info->alert(CAP,msg);
+       info->alert(name(),msg);
      }
      else 
      {
@@ -91,7 +90,7 @@ void FilterOE4::import(FilterInfo *info)
        }
        if (N==0) 
        {
-         info->alert(CAP,i18n("No '.mbx' folders found!"));
+         info->alert(name(),i18n("No '.mbx' folders found!"));
        }
        rewinddir(d);
 
@@ -144,7 +143,7 @@ void FilterOE4::import(FilterInfo *info)
          info->overall();
          info->overall(100.0);
 
-         info->alert(CAP,i18n("All '.mbx' folders are imported"));
+         info->alert(name() ,i18n("All '.mbx' folders are imported"));
        }
      }
    }

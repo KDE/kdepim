@@ -27,9 +27,6 @@ class FilterOE4 : public Filter
    ~FilterOE4();
 
     void import(FilterInfo *info);
-  private:
-   QString CAP;
-
 };
 
 #endif

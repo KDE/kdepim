@@ -27,8 +27,6 @@ class FilterOE5 : public Filter
    ~FilterOE5();
   public:
     void import(FilterInfo *info);
-  private:
-    QString CAP;
 };
 
 #endif

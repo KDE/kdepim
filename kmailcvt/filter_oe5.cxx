@@ -42,8 +42,7 @@ FilterOE5::FilterOE5() : Filter(i18n("Import Folders From Outlook Express 5/6"),
       "folder names, but they will be preceded with 'OE5-'. If this causes "
       "problems for you (you have KMail folders beginning with 'OE5-'), "
       "cancel this import function (the next dialog will allow you to do "
-      "that) and rename the existing KMail folders.</p>")),
-      CAP(i18n("Import Outlook Express 5/6"))
+      "that) and rename the existing KMail folders.</p>"))
 {
 }
 
@@ -66,14 +65,14 @@ void FilterOE5::import(FilterInfo *info)
   QDir dir(chosen);
   if (!dir.isReadable())
   {
-    info->alert(CAP, i18n("Can't open directory %1").arg(chosen));
+    info->alert(name(), i18n("Can't open directory %1").arg(chosen));
     return;
   }
 
   QStringList folders = dir.entryList("*.[dD][bB][xX]", QDir::Files);
   if (folders.isEmpty())
   {
-    info->alert(CAP,i18n("No '.dbx' folders found!"));
+    info->alert(name(),i18n("No '.dbx' folders found!"));
     return;
   }
 
@@ -94,7 +93,7 @@ void FilterOE5::import(FilterInfo *info)
   info->log(i18n("done."));
   info->current();info->current(100.0);
   info->overall();info->overall(100.0);
-  info->alert(CAP,i18n("All '.dbx' folders are imported"));
+  info->alert(name(),i18n("All '.dbx' folders are imported"));
 
   kmailStop(info);
 }
