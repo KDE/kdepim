@@ -97,7 +97,10 @@ FreeBusyCache *Scheduler::freeBusyCache() const
   return d->mFreeBusyCache;
 }
 
-bool Scheduler::acceptTransaction(IncidenceBase *incidence,Method method,ScheduleMessage::Status status)
+bool Scheduler::acceptTransaction( IncidenceBase *incidence,
+                                   Method method,
+                                   ScheduleMessage::Status status,
+                                   const QString &attendee )
 {
   kdDebug(5800) << "Scheduler::acceptTransaction, method="
                 << methodName( method ) << endl;
@@ -106,7 +109,7 @@ bool Scheduler::acceptTransaction(IncidenceBase *incidence,Method method,Schedul
     case Publish:
       return acceptPublish(incidence, status, method);
     case Request:
-      return acceptRequest(incidence, status);
+      return acceptRequest( incidence, status, attendee );
     case Add:
       return acceptAdd(incidence, status);
     case Cancel:
@@ -218,7 +221,9 @@ bool Scheduler::acceptPublish( IncidenceBase *incidence,
   }
 }
 
-bool Scheduler::acceptRequest(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
+bool Scheduler::acceptRequest( IncidenceBase *incidence, 
+                               ScheduleMessage::Status /* status */,
+                               const QString &attendee )
 {
   Incidence *inc = static_cast<Incidence *>(incidence);
   if (inc->type()=="FreeBusy") {

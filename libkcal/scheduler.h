@@ -134,10 +134,12 @@ class Scheduler
       Accept transaction. The incidence argument specifies the iCal compoennt
       on which the transaction acts. The status is the result of processing a
       iTIP message with the current calendar and specifies the action to be
-      taken for this incidence.
+      taken for this incidence. The attendee is the email address of the person
+      on who's behalf this transaction is to be performed.
     */
     bool acceptTransaction( IncidenceBase *, Method method,
-                            ScheduleMessage::Status status );
+                            ScheduleMessage::Status status,
+                            const QString& attendee = QString::null );
 
     /**
       Return a machine-readable name for a iTIP method.
@@ -167,7 +169,8 @@ class Scheduler
   protected:
     bool acceptPublish( IncidenceBase *, ScheduleMessage::Status status,
                         Method method );
-    bool acceptRequest( IncidenceBase *, ScheduleMessage::Status status );
+    bool acceptRequest( IncidenceBase *, ScheduleMessage::Status status,
+                        const QString & attendee );
     bool acceptAdd( IncidenceBase *, ScheduleMessage::Status status );
     bool acceptCancel( IncidenceBase *, ScheduleMessage::Status status );
     bool acceptDeclineCounter( IncidenceBase *,
