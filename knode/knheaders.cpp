@@ -893,12 +893,12 @@ QCString KNHeaders::ContentType::getParameter(const char *name)
   int pos1=0, pos2=0;
   pos1=p_arams.find(name, 0, false);
   if(pos1!=-1) {
-    if( (pos2=p_arams.find(';', pos1))==-1 );
+    if( (pos2=p_arams.find(';', pos1))==-1 )
       pos2=p_arams.length();
     pos1+=strlen(name)+1;
     ret=p_arams.mid(pos1, pos2-pos1);
     KNMimeBase::removeQuots(ret);
-    kdDebug(5003) << "KNHeaders::ContentType::getParameter() : " << name << " = " << ret << endl;
+    //kdDebug(5003) << "KNHeaders::ContentType::getParameter() : " << name << " = " << ret << endl;
   }
   return ret;
 }

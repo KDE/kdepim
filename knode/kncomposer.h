@@ -199,9 +199,7 @@ class KNComposer::Editor : public KEdit {
   public:
     Editor(QWidget *parent=0, char *name=0);
     ~Editor();
-
     QString textLine(int line) const;
-    QString text() const;
 
   protected:
     bool eventFilter(QObject*, QEvent* e);

@@ -290,7 +290,11 @@ void KNComposer::applyChanges()
     a_rticle->addContent(text, true);
   }
 
-  text->fromUnicodeString(v_iew->e_dit->text());
+  QString tmp="";
+  for(int i=0; i < v_iew->e_dit->numLines(); i++)
+    tmp+=v_iew->e_dit->textLine(i)+"\n";
+
+  text->fromUnicodeString(tmp);
 
   //text is set and all attached contents have been assembled => now set lines
   a_rticle->lines()->setNumberOfLines(a_rticle->lineCount());
@@ -1100,20 +1104,6 @@ KNComposer::Editor::~Editor()
 QString KNComposer::Editor::textLine(int line) const
 {
   QString temp=KEdit::textLine(line);
-  QString replacement;
-  int tabPos;
-
-  while((tabPos=temp.find('\t'))!=-1) {
-    replacement.fill(QChar(' '), 8-(tabPos%8));
-    temp.replace(tabPos, 1, replacement);
-  }
-  return temp;
-}
-
-
-QString KNComposer::Editor::text() const
-{
-  QString temp=KEdit::text();
   QString replacement;
   int tabPos;
 
