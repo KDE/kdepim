@@ -1,0 +1,15 @@
+.TH EGROUPWAREWIZARD 1
+.SH NAME
+egroupwarewizard \- KDE eGroupware Wizard
+.SH SYNOPSIS
+.B egroupwarewizard
+.I [Qt-options] [KDE-options] [options]
+.SH DESCRIPTION
+.B egroupwarewizard
+is a front end to configure eGroupware servers.
+.SH PROGRAM OPTIONS
+.TP
+.B --verbose
+Verbose output.
+.so kdeopt.man
+
