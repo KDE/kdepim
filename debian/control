@@ -232,3 +232,9 @@ Conflicts: libmimelib-dev
 Description: KDE network mime library (development files)
  This library is used by several KDE applications to handle mime types.
 
+Package: kresources-egroupware
+Section: misc
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Connectors to the eGroupware server
+ for KAddressBook and KOrganizer

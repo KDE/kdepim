@@ -1,0 +1,9 @@
+debian/tmp/usr/lib/libkabc_xmlrpc.la
+debian/tmp/usr/lib/libkabc_xmlrpc.so.*
+debian/tmp/usr/include/kde/kabc/kabc_resourcexmlrpc.h
+debian/tmp/usr/lib/kde3/kabc_xmlrpc.la
+debian/tmp/usr/lib/kde3/kabc_xmlrpc.so
+debian/tmp/usr/lib/kde3/kcal_xmlrpc.la
+debian/tmp/usr/lib/kde3/kcal_xmlrpc.so
+debian/tmp/usr/share/services/kresources/kcal/kcal_xmlrpc.desktop
+debian/tmp/usr/share/services/kresources/kabc/kabc_xmlrpc.desktop
