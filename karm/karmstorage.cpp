@@ -601,11 +601,13 @@ QString KarmStorage::exportcsvFile( TaskView *taskview,
   }
   
   // save, either locally or remote
-  if (rc.url.isLocalFile())
+  if ((rc.url.isLocalFile()) or (!rc.url.url().contains("/")))
   {    
-    QFile f( rc.url.path() );
+    QString filename=rc.url.path();
+    if (filename.isEmpty()) filename=rc.url.url();
+    QFile f( filename );
     if( !f.open( IO_WriteOnly ) ) {
-        err = i18n( "Could not open \"%1\"." ).arg( rc.url.path() );
+        err = i18n( "Could not open \"%1\"." ).arg( filename );
     }
     if (!err)
     {
@@ -929,11 +931,14 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
   // above taken from timekard.cpp
   
   // save, either locally or remote
-  if (rc.url.isLocalFile())
+  
+  if ((rc.url.isLocalFile()) or (!rc.url.url().contains("/")))
   {    
-    QFile f( rc.url.path() );
+    QString filename=rc.url.path();
+    if (filename.isEmpty()) filename=rc.url.url();
+    QFile f( filename );
     if( !f.open( IO_WriteOnly ) ) {
-        err = i18n( "Could not open \"%1\"." ).arg( rc.url.path() );
+        err = i18n( "Could not open \"%1\"." ).arg( filename );
     }
     if (!err)
     {
