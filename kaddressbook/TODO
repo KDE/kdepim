@@ -39,7 +39,7 @@ Improvements (things that just need to be improved/rewritten)
 - Move the Filter and Incremental search tools to toolbars
 - Move detailed view from a separate view to a common widget in the view
     manager
-- Rename the 'sync' button to 'Save'
+- Rename the 'sync' button to 'Save' - DONE
 
 
 Fixes (things that used to work and are now broken)
