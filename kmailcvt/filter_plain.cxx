@@ -57,7 +57,9 @@ void FilterPlain::import(FilterInfo *info)
    for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
       info->setFrom(*mailFile);
       info->setTo(dir.dirName());
-      addMessage(info, "PLAIN-" + dir.dirName(), dir.filePath(*mailFile));
+      info->setCurrent(0);
+      if( ! addMessage(info, "PLAIN-" + dir.dirName(), dir.filePath(*mailFile)) ) info->addLog( i18n("Couldn't import %1").arg( *mailFile ) );
+      info->setCurrent(100);
       info->setOverall(100 * ++currentFile/ totalFiles);
       if ( info->shouldTerminate() ) return;
    }
