@@ -12,11 +12,12 @@ class OverviewWidget;
 
 class OverviewPart : public ActionPart
 {
-    Q_OBJECT
+  Q_OBJECT
+
   public:
     OverviewPart( QWidget *parent, const char *name,
-	          QObject *object=0, const char *name2 = 0, // make GenericFactory loading possible
-	          const QStringList & = QStringList() );
+	                QObject *object = 0, const char *name2 = 0,
+                  const QStringList & = QStringList() );
     virtual ~OverviewPart();
 
     static KAboutData *createAboutData();
