@@ -1,18 +1,32 @@
-// gsetupDialog.h
-//
-// Copyright (C) 2000 Adriaan de Groot
-//
-// This file is distributed under the Gnu General Public Licence (GPL).
-// The GPL should have been included with this file in a file called
-// COPYING.
-//
-// This is the KDE2 version of gsetupDialog.h, intended for KPilot 4.
-// It should still compile under KDE1, though. Major changes have been
-// made in the types of functions (const char * -> const QString &) as
-// well as the implementation of some functions.
-//
-// $Id$
+/* gsetupDialog.h			KPilot
+**
+** Copyright (C) 2000-2001 by Dan Pilone
+**
+** This is a base class for setup dialogs, which provides some
+** utility functions. It assumes that every setup dialog is a
+** tabbed dialog with an About page.
+*/
 
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** MA 02139, USA.
+*/
+
+/*
+** Bug reports and questions can be sent to adridg@cs.kun.nl
+*/
 
 #ifndef _GSETUPDIALOG_H
 #define _GSETUPDIALOG_H
@@ -307,8 +321,12 @@ private:
 
 	int fConfigVersion;
 } ;
+#endif /* _GSETUPDIALOG_H */
 
 // $Log$
+// Revision 1.5  2001/01/30 14:00:34  habenich
+// added surrounding #ifndef's
+//
 // Revision 1.4  2000/11/10 08:32:33  adridg
 // Fixed spurious config new() and delete()
 //
@@ -321,7 +339,3 @@ private:
 // Revision 1.4  2000/07/16 12:17:16  adridg
 // Moved partway to KDE2
 //
-
-
-#endif /* _GSETUPDIALOG_H */
-

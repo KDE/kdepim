@@ -1,17 +1,32 @@
-// conduitApp.h
-//
-// Copyright (C) 1998-2000 Dan Pilone
-//
-// This file is distributed under the Gnu General Public Licence (GPL).
-// The GPL should have been included with this file in a file called
-// COPYING. 
-//
-// This is conduitApp.h for KPilot 4 / KDE2. It turns out to be
-// impossible to have one .h file for both KDE1 and KDE2 -- there
-// are problems with moc.
-//
-// $Revision$
+/* conduitApp.h			KPilot
+**
+** Copyright (C) 1998-2001 by Dan Pilone
+**
+** This file defines what a conduit application is. It resembles
+** a KApplication in the sense that you create one, give it a
+** conduit object, and call exec() and be done with it.
+*/
 
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** MA 02139, USA.
+*/
+
+/*
+** Bug reports and questions can be sent to adridg@cs.kun.nl
+*/
 
 #ifndef __CONDUIT_APP_H
 #define __CONDUIT_APP_H
@@ -112,12 +127,14 @@ private:
 
 	bool setupDCOP();
 } ;
+#endif
 
 // $Log$
+// Revision 1.11  2000/12/31 16:44:00  adridg
+// Patched up the debugging stuff again
+//
 // Revision 1.10  2000/12/22 07:47:04  adridg
 // Added DCOP support to conduitApp. Breaks binary compatibility.
 //
 // Revision 1.9  2000/10/29 22:11:06  adridg
 // Added debug-merge feature to conduits
-//
-#endif

@@ -1,15 +1,32 @@
-// kpilotLink.h
-//
-// Copyright (C) 1998,1999,2000 Dan Pilone
-//
-// This file is distributed under the Gnu General Public Licence (GPL).
-// The GPL should have been included with this file in a file called
-// COPYING. 
-//
-// This is the version of kpilotLink.h for KDE2 / KPilot 4.
-//
-//
+/* kpilotlink.h			KPilot
+**
+** Copyright (C) 1998-2001 by Dan Pilone
+**
+** This is a horrible class that implements three different
+** functionalities and that should be split up as soon as 2.1 
+** is released. See the .cc file for more.
+*/
 
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** MA 02139, USA.
+*/
+
+/*
+** Bug reports and questions can be sent to adridg@cs.kun.nl
+*/
 
 #ifndef __KPILOT_LINK
 #define __KPILOT_LINK
@@ -353,3 +370,6 @@ signals:
 };
 
 #endif
+
+
+// $Log:$
