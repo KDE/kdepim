@@ -56,6 +56,7 @@ class AddressBookClient
      * @return true if the entity existed, false if not.
      */
     bool remove(const QString &);
+  // FIXME: unremove ?;
     /**
      * @short Replace an entity.
      * 

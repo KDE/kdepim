@@ -16,7 +16,8 @@ QString   Entity::timeStr_;
 QString   Entity::pidStr_;
 
 Entity::Entity(const QString & name)
-  : name_(name),
+  : QObject(),
+    name_(name),
     type_(EntityTypeEntity),
     dirty_(false),
     seq_(SEQ++)
@@ -27,7 +28,8 @@ Entity::Entity(const QString & name)
 
 
 Entity::Entity(const QString & name, EntityType type)
-  : name_(name),
+  : QObject(),
+    name_(name),
     type_(type),
     dirty_(false),
     seq_(SEQ++)
@@ -62,6 +64,12 @@ Entity::_generateID()
   }
 }
 
+  void
+Entity::replace(const QString & key, const QByteArray &)
+{
+}
+
+
   bool
 Entity::write(const QCString & key, backendWrite * writer)
 {
@@ -90,6 +98,16 @@ Entity::read(const QCString & key, backendRead * reader)
   load(str);
   
   return true;
+}
+
+  Field *
+Entity::find(const QString & fieldName)
+{
+  FieldList::Iterator it(fields_.begin());
+  for (; it != fields_.end(); ++it)
+    if ((*it).name() == fieldName)
+      return &(*it);
+  return 0;
 }
 
   void

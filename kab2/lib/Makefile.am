@@ -2,6 +2,8 @@ INCLUDES = $(all_includes)
 
 lib_LTLIBRARIES = libkab2.la
 
+libkab2_la_METASOURCES = USE_AUTOMOC
+
 AM_CXXFLAGS = -rdynamic
 libkab2_la_LIBADD = -ldl
 libkab2_la_SOURCES = \

@@ -1,6 +1,7 @@
 #ifndef KAB_ENTITY_H
 #define KAB_ENTITY_H
 
+#include <qobject.h>
 #include <qstring.h>
 #include <qdatastream.h>
 
@@ -11,8 +12,10 @@
 namespace KAB
 {
 
-class Entity
+class Entity : public QObject
 {
+  Q_OBJECT
+    
   public:
     
     /**
@@ -49,7 +52,8 @@ class Entity
      * Copy ctor.
      */
     Entity(const Entity & e)
-      : id_     (e.id_    ),
+      : QObject(),
+        id_     (e.id_    ),
         name_   (e.name_  ),
         fields_ (e.fields_),
         dirty_  (e.dirty_ ),
@@ -136,6 +140,23 @@ class Entity
       fields_.append(Field(n, v, t, s));
     }
 
+    /**
+     * Add a new field. This function is provided for convenience and differs
+     * from the above only in the arguments it accepts.
+     */
+    void add(
+      const QString & n,
+      const QString & v,
+      const QString & t = QString::null,
+      const QString & s = QString::null)
+    {
+      touch();
+      QByteArray a;
+      a.assign(v.data(), v.length());
+      fields_.append(Field(n, a, t, s));
+    }
+
+
 
     /**
      * Remove the field with the specified name.
@@ -159,27 +180,23 @@ class Entity
      */
     bool remove(const Field & f)
     {
-      return remove(f.name());
+      bool ok = remove(f.name());
+      if (ok) touch();
+      return ok;
     }
   
     /**
      * Find the field with the given name.
      *
-     * f is set to the found field, if found.
-     * 
-     * @return true if the field was found, else false.
+     * @return a pointer to a field if found, else 0.
      */
-    bool field(const QString & fieldName, Field & f)
-    {
-      FieldList::ConstIterator it;
-      
-      for (it = fields_.begin(); it != fields_.end(); ++it)
-        if ((*it).name() == fieldName) {
-          f = *it;
-          return true;
-        }
+    Field * find(const QString & fieldName);
 
-      return false;
+    void replace(const QString & fieldName, const QByteArray & data);
+    void replace(const QString & fieldName, const QString & data) {
+      QByteArray a;
+      a.assign(data.data(), data.length());
+      replace(fieldName, a);
     }
 
     /**
@@ -225,6 +242,7 @@ class Entity
     void  touch()
     {
       dirty_ = true;
+      emit(changed());
     }
     
     /**
@@ -267,6 +285,10 @@ class Entity
      * @internal
      */
     FieldList fields_;
+
+  signals:
+
+    void changed();
   
   private:
     
