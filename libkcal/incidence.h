@@ -51,7 +51,7 @@ class Incidence : public QObject
       calendar components. It allows to add functions, which operate on the concrete
       types of calendar components, without changing the calendar component classes.
     */
-    class Visitor  
+    class Visitor
     {
       public:
         /** Destruct Incidence::Visitor */
@@ -72,7 +72,7 @@ class Incidence : public QObject
           on an Journal object.
         */
         virtual bool visit(Journal *) { return false; }
-    
+
       protected:
         /** Constructor is protected to prevent direct creation of visitor base class. */
         Visitor() {}
@@ -89,16 +89,16 @@ class Incidence : public QObject
       Accept IncidenceVisitor. This function has to be overridden by all child classes.
     */
     virtual bool accept(Visitor &) { return false; }
-    
+
     virtual Incidence *clone() = 0;
-    
+
     /**
       Recreate event. The event is made a new unique event, but already stored
       event information is preserved. Sets uniquie id, creation date, last
       modification date and revision number.
     */
     void recreate();
-    
+
     /** sets the event to be read only or not */
     void setReadOnly(bool readonly);
     /** returns the event's read only status */
@@ -235,7 +235,7 @@ class Incidence : public QObject
     void setPilotId(int id);
     /** Return Pilot Id. */
     int pilotId() const;
-    
+
     /** pilot syncronization states */
     enum { SYNCNONE = 0, SYNCMOD = 1, SYNCDEL = 3 };
     /** Set synchronisation satus. */
@@ -262,9 +262,9 @@ class Incidence : public QObject
     /** get the event's priority */
     int priority() const;
 
-    /** Return the alarm object associated with this incidence or 0 if there is none. */
+    /** Return the alarm object associated with this incidence. If there is none, returns an appropriate (non-0) object. */
     Alarm *alarm() const;
-    /** Return the recurrence rule associated with this incidence or 0 if there is none. */
+    /** Return the recurrence rule associated with this incidence. If there is none, returns an appropriate (non-0) object. */
     Recurrence *recurrence() const;
 
   signals:
@@ -290,12 +290,12 @@ class Incidence : public QObject
     QString mDescription;
     QString mSummary;
     QStringList mCategories;
-    Incidence *mRelatedTo;      
-    QString mRelatedToVUID;   
+    Incidence *mRelatedTo;
+    QString mRelatedToVUID;
     QPtrList<Incidence> mRelations;
     QDateList mExDates;
     QStringList mAttachments;
-    QStringList mResources;  
+    QStringList mResources;
 
     int mSecrecy;
     int mPriority;                        // 1 = highest, 2 = less, etc.
@@ -308,7 +308,7 @@ class Incidence : public QObject
 
     int mDuration;
     bool mHasDuration;
-  
+
     Alarm *mAlarm;
     Recurrence *mRecurrence;
 };
