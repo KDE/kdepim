@@ -36,10 +36,10 @@ cvs-local:
 	cp admin/config.sub admin/config.guess libical ;\
 	cp admin/install-sh admin/mkinstalldirs admin/missing admin/lt* libical ;\
 	cd  libical && \
-        $(ACLOCAL) && \
-        $(AUTOHEADER) && \
-        $(AUTOMAKE) && \
-        $(AUTOCONF)
+        $${ACLOCAL:-aclocal} && \
+        $${AUTOHEADER:-autoheader} && \
+        $${AUTOMAKE:-automake} && \
+        $${AUTOCONF:-autoconf}
 
 cvs-dist-local:
 	@cd  libical && $(AUTOMAKE) -i && $(AUTOCONF)
