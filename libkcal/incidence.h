@@ -231,6 +231,10 @@ class Incidence : public IncidenceBase
     Attachment::List attachments() const;
     /** find a list of attachments with this mime type */
     Attachment::List attachments(const QString& mime) const;
+    /**
+      Remove and delete all attachments.
+    */
+    void clearAttachments();
 
     /** sets the event's status the value specified.  See the enumeration
      * above for possible values. */

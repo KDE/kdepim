@@ -403,6 +403,11 @@ Attachment::List Incidence::attachments(const QString& mime) const
   return attachments;
 }
 
+void Incidence::clearAttachments()
+{
+  mAttachments.clear();
+}
+
 void Incidence::setResources(const QStringList &resources)
 {
   if (mReadOnly) return;
