@@ -165,7 +165,7 @@ on.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Title Font: Click to Change</guilabel>
+<term><guilabel>Title Font: Click to Change</guilabel></term>
 <listitem><para>You can change the font used for the title of your
 notes.</para>
 
@@ -329,7 +329,7 @@ bar.</para></step>
 <para>What happens next depends on how you configured the Print action in the
 <guilabel>Preferences...</guilabel> dialog.</para> -->
 
-<para>A standard &kdeprint; dialog will open.</para>
+<para>A standard &kde; print dialog will open.</para>
 
 </sect1>
 
