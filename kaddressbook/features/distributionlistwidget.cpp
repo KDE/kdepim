@@ -154,11 +154,10 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
   connect( mRemoveContactButton, SIGNAL( clicked() ), SLOT( removeContact() ) );
 
   mManager = new KABC::DistributionListManager( core->addressBook() );
-  mManager->load();
 
   connect( KABC::DistributionListWatcher::self(), SIGNAL( changed() ),
            this, SLOT( updateNameCombo() ) );
-  connect( KABC::StdAddressBook::self( true ), SIGNAL( addressBookChanged(AddressBook*) ),
+  connect( core->addressBook(), SIGNAL( addressBookChanged( AddressBook* ) ),
            this, SLOT( updateNameCombo() ) );
 
   updateNameCombo();
@@ -339,6 +338,8 @@ void DistributionListWidget::updateContactView()
 
 void DistributionListWidget::updateNameCombo()
 {
+  mManager->load();
+
   int pos = mNameCombo->currentItem();
   mNameCombo->clear();
   mNameCombo->insertStringList( mManager->listNames() );
