@@ -179,7 +179,7 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 			return;
 		}
 		dbinfo=fDB->getDBInfo();
-		display.append(i18n("<B>Database:</B> %1, %2 records<BR>").arg(dbname).arg(fDB->recordCount()));
+		display.append(i18n("<B>Database:</B> %1, %2 records<BR>").arg(dbinfo.name).arg(fDB->recordCount()));
 		char buff[5];
 		set_long(buff, dbinfo.type);
 		buff[4]='\0';
@@ -348,22 +348,22 @@ void GenericDBWidget::slotDeleteRecord()
 		rec->makeDeleted();
 		writeRecord(rec);
 		// fRecordList->triggerUpdate();
+		KPILOT_DELETE(currRecItem);
 	}
-	KPILOT_DELETE(currRecItem);
 }
 
 void GenericDBWidget::slotShowAppInfo()
 {
 	FUNCTIONSETUP;
 	if (!fDB) return;
-	unsigned char*appBlock=new unsigned char[0xFFFF];
-	int len=fDB->readAppBlock(appBlock, 0xFFFF);
-	DBAppInfoEditor*dlg=new DBAppInfoEditor(appBlock, &len, this);
+	char*appBlock=new char[0xFFFF];
+	int len=fDB->readAppBlock((unsigned char*)appBlock, 0xFFFF);
+	DBAppInfoEditor*dlg=new DBAppInfoEditor(appBlock, len, this);
 	if (dlg->exec())
 	{
-		fDB->writeAppBlock(appBlock, len);
+		fDB->writeAppBlock( (unsigned char*)(dlg->appInfo), dlg->len );
 
-		KPilotConfigSettings&c=KPilotConfig::getConfig();
+		KPilotConfigSettings &c=KPilotConfig::getConfig();
 		c.setDatabaseGroup().addAppBlockChangedDatabase(getCurrentDB());
 		c.sync();
 	}

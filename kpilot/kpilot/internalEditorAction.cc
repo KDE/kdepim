@@ -46,9 +46,11 @@
 #include <pilotMemo.h>
 #include <pilotDateEntry.h>
 #include <pilotTodoEntry.h>
-#include "ownkhexedit.h"
 
+#ifdef USE_KHEXEDIT
+#include "khexedit/byteseditinterface.h"
 using namespace KHE;
+#endif
 
 InternalEditorAction::InternalEditorAction(KPilotDeviceLink * p, int) :
 	SyncAction(p, "internalSync")
@@ -228,8 +230,6 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
  	layout->addItem( new QSpacerItem( 20, 10, QSizePolicy::Minimum,
 		QSizePolicy::Fixed ), 1, 0 );
 
-	KHE::KWrappingROBuffer*localbuf=0L, *serialbuf=0L;
-
 	if (knownDB)
 	{
 		label=new QLabel(i18n("Entry in KPilot"), page);
@@ -248,24 +248,66 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 	}
 	else
 	{
+#ifdef USE_KHEXEDIT
 		label=new QLabel(i18n("Entry in KPilot"), page);
 		layout->addMultiCellWidget( label, 2,2,0,1);
 
-		localbuf=new KWrappingROBuffer(localrec->getData(), localrec->getLen());
-		KHexEdit*hexEdit = new KHE::KHexEdit( localbuf, page );
+		// directly display the record's data:
+		QWidget *hexEdit = KHE::createBytesEditWidget( page, "LocalBufferEdit" );
+		if( hexEdit )
+		{
+			KHE::BytesEditInterface* hexEditIf = KHE::bytesEditInterface( hexEdit );
+			Q_ASSERT( hexEditIf ); // This should not fail!
+			if( hexEditIf )
+			{
+				hexEditIf->setData( localrec->getData(), localrec->getLen() );
+// 					Do we need the following call at all???
+//				hexEditIf->setMaxDataSize( localrec->getLen() );
+				hexEditIf->setReadOnly( true );
+			}
+		}
+		else
+		{
+			QLabel*tmpW = new QLabel( i18n("To view and edit the record data, please install a hex editor (e.g. khexedit from kdeutils)."), page );
+			tmpW->setBackgroundMode( Qt::PaletteMid );
+			tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter | Qt::WordBreak);
+			tmpW->setFrameShape( QFrame::Panel );
+			tmpW->setFrameShadow( QFrame::Sunken );
+			hexEdit = tmpW;
+		}
 		layout->addMultiCellWidget( hexEdit, 3,3,0,1);
 
 		label=new QLabel(i18n("Entry on Handheld"), page);
 		layout->addMultiCellWidget( label, 4,4,0,1);
 
-		serialbuf=new KWrappingROBuffer(serialrec->getData(), serialrec->getLen());
-		hexEdit = new KHE::KHexEdit( serialbuf, page );
+		// directly display the record's data:
+		hexEdit = KHE::createBytesEditWidget( page, "SerialBufferEdit" );
+		if( hexEdit )
+		{
+			KHE::BytesEditInterface* hexEditIf = KHE::bytesEditInterface( hexEdit );
+			Q_ASSERT( hexEditIf ); // This should not fail!
+			if( hexEditIf )
+			{
+				hexEditIf->setData( serialrec->getData(), serialrec->getLen() );
+// 					Do we need the following call at all???
+//				hexEditIf->setMaxDataSize( serialrec->getLen() );
+				hexEditIf->setReadOnly( true );
+			}
+		}
+		else
+		{
+			QLabel*tmpW = new QLabel( i18n("To view and edit the record data, please install a hex editor (e.g. khexedit from kdeutils)."), page );
+			tmpW->setBackgroundMode( Qt::PaletteMid );
+			tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter | Qt::WordBreak);
+			tmpW->setFrameShape( QFrame::Panel );
+			tmpW->setFrameShadow( QFrame::Sunken );
+			hexEdit = tmpW;
+		}
 		layout->addMultiCellWidget( hexEdit, 5,5,0,1);
+#endif
 	}
 
 	int res=resdlg->exec();
-	KPILOT_DELETE(localbuf);
-	KPILOT_DELETE(serialbuf);
 	KPILOT_DELETE(resdlg);
 
 	return res==KDialogBase::Accepted;

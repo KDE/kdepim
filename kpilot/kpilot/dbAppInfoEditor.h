@@ -31,23 +31,19 @@
 #include "options.h"
 #include <kdialogbase.h>
 
-namespace KHE {
-	class KHexEdit;
-}
-
 class QWidget;
 
 class DBAppInfoEditor : public KDialogBase
 {
 Q_OBJECT
 public:
-	DBAppInfoEditor(unsigned char*appInfoData, int *l=0L, QWidget *parent = 0);
+	DBAppInfoEditor(char*appInfoData, int l, QWidget *parent = 0);
 	~DBAppInfoEditor();
+	char*appInfo;
+	int len;
 protected:
 	void fillWidgets();
-	KHE::KHexEdit*fAppInfoEdit;
-	unsigned char*appInfo;
-	int *len;
+	QWidget*fAppInfoEdit;
 protected slots:
 	virtual void slotOk();
 };

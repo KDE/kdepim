@@ -29,26 +29,52 @@
 #include "options.h"
 
 #include <qtextedit.h>
+#include <qlabel.h>
 #include <kdialogbase.h>
 #include <kmessagebox.h>
 
 #include "dbAppInfoEditor.h"
-//#include <khexedit/khexedit.h>
-//#include <khexedit/kwrappingrobuffer.h>
-#include "ownkhexedit.h"
 
+#ifdef USE_KHEXEDIT
+#include <khexedit/byteseditinterface.h>
 using namespace KHE;
+#endif
+
 
 /*************************************************
 **************************************************/
 
-DBAppInfoEditor::DBAppInfoEditor(unsigned char*appInfoData, int *l, QWidget *parent)
+DBAppInfoEditor::DBAppInfoEditor(char*appInfoData, int l, QWidget *parent)
  : KDialogBase(parent, "AppBlock Editor",false,i18n("Edit AppInfo Block"),
               Ok|Cancel), appInfo(appInfoData), len(l)
 {
-	KHE::KWrappingROBuffer*buf=new KWrappingROBuffer((char*)appInfoData, *l);
-	fAppInfoEdit=new KHexEdit(buf, this);
-	setMainWidget(fAppInfoEdit);
+#ifdef USE_KHEXEDIT
+	fAppInfoEdit = KHE::createBytesEditWidget( this, "fAppInfoEdit" );
+	if( fAppInfoEdit )
+	{
+		 // fetch the editor interface
+		KHE::BytesEditInterface* fAppInfoEditIf = KHE::bytesEditInterface( fAppInfoEdit );
+		Q_ASSERT( fAppInfoEditIf ); // This should not fail!
+		if( fAppInfoEditIf )
+		{
+			fAppInfoEditIf->setData( (char*)appInfoData, l );
+			fAppInfoEditIf->setMaxDataSize( l );
+			// TODO_RK: Make the app info editable. I need to find a way 
+			// to sync the appInfoBlock to the handheld
+			fAppInfoEditIf->setReadOnly( true );
+		}
+	}
+	else
+	{
+		QLabel*tmpW = new QLabel( i18n("To view the Application info block data, please install a hex editor (e.g. khexedit from kdeutils)."), this );
+		tmpW->setBackgroundMode( Qt::PaletteMid );
+		tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter | Qt::WordBreak);
+		tmpW->setFrameShape( QFrame::Panel );
+		tmpW->setFrameShadow( QFrame::Sunken );
+		fAppInfoEdit = tmpW;
+	}
+	setMainWidget( fAppInfoEdit );
+#endif
 	fillWidgets();
 }
 
@@ -59,11 +85,21 @@ DBAppInfoEditor::~DBAppInfoEditor()
 
 void DBAppInfoEditor::slotOk()
 {
-	if (KMessageBox::questionYesNo(this, i18n("Changing the AppInfo block might corrupt the whole database. \n\nReally assign the new AppInfo block?"), i18n("Changing AppInfo Block"))==KMessageBox::Yes)
+	if (KMessageBox::questionYesNo(this, i18n("Changing the AppInfo block "
+		"might corrupt the whole database. \n\nReally assign the new AppInfo "
+		"block?"), i18n("Changing AppInfo Block"))==KMessageBox::Yes)
 	{
 		// TODO: Copy the data over
 		// TODO: set the length
 		// (*len)=..;
+/*
+#ifdef USE_KHEXEDIT
+		len = fAppInfoEdit->dataSize();
+		appInfo = fAppInfoEdit->data();
+		// don't delete the buffer. It will be used in the database!
+		fAppInfoEdit->setAutoDelete( false );
+#endif
+*/
 		KDialogBase::slotOk();
 	}
 }

@@ -45,16 +45,18 @@
 #include "dbRecordEditor.h"
 //#include "dbRecordEditor_base.h"
 
-//#include <khexedit/khexedit.h>
-//#include <khexedit/kwrappingrobuffer.h>
-#include "ownkhexedit.h"
-
+#ifdef USE_KHEXEDIT
+#include <khexedit/byteseditinterface.h>
+#include <khexedit/hexcolumninterface.h>
+#include <khexedit/textcolumninterface.h>
 using namespace KHE;
+#endif
+
 
 
 DBRecordEditor::DBRecordEditor(PilotRecord*r, int n, QWidget *parent)
- : KDialogBase(parent, "RecordEditor",false,i18n("Edit Record..."),
-              Ok|Cancel), rec(r), nr(n)
+	: KDialogBase(parent, "RecordEditor",false,i18n("Edit Record..."),
+				Ok|Cancel), rec(r), nr(n)
 {
 //	fWidget=new DBRecordEditorBase(this);
 	fWidget=new QWidget(this);
@@ -64,7 +66,7 @@ DBRecordEditor::DBRecordEditor(PilotRecord*r, int n, QWidget *parent)
 	fillWidgets();
 }
 
-
+ 
 DBRecordEditor::~DBRecordEditor()
 {
 }
@@ -72,6 +74,7 @@ DBRecordEditor::~DBRecordEditor()
 
 void DBRecordEditor::slotOk()
 {
+	FUNCTIONSETUP;
 	if (KMessageBox::questionYesNo(this, i18n("Changing the record data and flags might corrupt the whole record, or even make the database unusable. Do not change the values unless you are absolutely sure you know what you are doing.\n\nReally assign these new flags?"), i18n("Changing record"))==KMessageBox::Yes)
 	{
 		int att=rec->getAttrib();
@@ -83,9 +86,20 @@ void DBRecordEditor::slotOk()
 		setFlag(fArchived, dlpRecAttrArchived);
 		rec->setAttrib(att);
 #undef setFlag
-		// TODO: Copy the data from the hex edit to the record
-//	KHE::KWrappingROBuffer*buff=fWidget->fAppInfoEdit->hexBuffer();
-//		if (buff) rec->setData(buff->data(), buff->size());
+
+#ifdef USE_KHEXEDIT
+		if ( fRecordDataIf->isModified() )
+		{
+#ifdef DEBUG
+			DEBUGKPILOT << "record data changed, new Length of record: " << 
+				fRecordDataIf->dataSize() << endl;
+#endif
+			// take over data
+			fRecordDataIf->setAutoDelete( false );
+			rec->setData( fRecordDataIf->data(), fRecordDataIf->dataSize() );
+		}
+#endif
+
 		KDialogBase::slotOk();
 	}
 }
@@ -97,78 +111,109 @@ void DBRecordEditor::slotCancel()
 
 void DBRecordEditor::languageChange()
 {
-    setCaption( tr2i18n( "Form1" ) );
-    fRecordIndexLabel->setText( tr2i18n( "Record index:" ) );
-    fRecordIDLabel->setText( tr2i18n( "Record ID:" ) );
-    fRecordIndex->setText( tr2i18n( "1" ) );
-    fRecordID->setText( tr2i18n( "1" ) );
-    fFlagsGroup->setTitle( tr2i18n( "Flags" ) );
-    fDirty->setText( tr2i18n( "&Dirty" ) );
-    fDeleted->setText( tr2i18n( "De&leted" ) );
-    fBusy->setText( tr2i18n( "&Busy" ) );
-    fSecret->setText( tr2i18n( "&Secret" ) );
-    fArchived->setText( tr2i18n( "&Archived" ) );
+	setCaption( tr2i18n( "Form1" ) );
+	fRecordIndexLabel->setText( tr2i18n( "Record index:" ) );
+	fRecordIDLabel->setText( tr2i18n( "Record ID:" ) );
+	fRecordIndex->setText( tr2i18n( "1" ) );
+	fRecordID->setText( tr2i18n( "1" ) );
+	fFlagsGroup->setTitle( tr2i18n( "Flags" ) );
+	fDirty->setText( tr2i18n( "&Dirty" ) );
+	fDeleted->setText( tr2i18n( "De&leted" ) );
+	fBusy->setText( tr2i18n( "&Busy" ) );
+	fSecret->setText( tr2i18n( "&Secret" ) );
+	fArchived->setText( tr2i18n( "&Archived" ) );
 }
 
 void DBRecordEditor::initWidgets()
 {
 	// FUNCTIONSETUP
 
-    DBRecordEditorBaseLayout = new QGridLayout( fWidget, 1, 1, 11, 6, "DBRecordEditorBaseLayout");
+	DBRecordEditorBaseLayout = new QGridLayout( fWidget, 1, 1, 11, 6, "DBRecordEditorBaseLayout");
 
-    fRecordIndexLabel = new QLabel( fWidget, "fRecordIndexLabel" );
+	fRecordIndexLabel = new QLabel( fWidget, "fRecordIndexLabel" );
+	DBRecordEditorBaseLayout->addWidget( fRecordIndexLabel, 0, 0 );
 
-    DBRecordEditorBaseLayout->addWidget( fRecordIndexLabel, 0, 0 );
+	fRecordIDLabel = new QLabel( fWidget, "fRecordIDLabel" );
+	DBRecordEditorBaseLayout->addWidget( fRecordIDLabel, 0, 2 );
 
-    fRecordIDLabel = new QLabel( fWidget, "fRecordIDLabel" );
+	fRecordIndex = new QLineEdit( fWidget, "fRecordIndex" );
+	fRecordIndex->setReadOnly( TRUE );
 
-    DBRecordEditorBaseLayout->addWidget( fRecordIDLabel, 0, 2 );
+	DBRecordEditorBaseLayout->addWidget( fRecordIndex, 0, 1 );
 
-    fRecordIndex = new QLineEdit( fWidget, "fRecordIndex" );
-    fRecordIndex->setReadOnly( TRUE );
+	fRecordID = new QLineEdit( fWidget, "fRecordID" );
+	fRecordID->setReadOnly( TRUE );
 
-    DBRecordEditorBaseLayout->addWidget( fRecordIndex, 0, 1 );
+	DBRecordEditorBaseLayout->addWidget( fRecordID, 0, 3 );
 
-    fRecordID = new QLineEdit( fWidget, "fRecordID" );
-    fRecordID->setReadOnly( TRUE );
+	fFlagsGroup = new QButtonGroup( fWidget, "fFlagsGroup" );
+	fFlagsGroup->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5,
+		(QSizePolicy::SizeType)4, 0, 0, fFlagsGroup->sizePolicy().hasHeightForWidth() ) );
+	fFlagsGroup->setColumnLayout(0, Qt::Vertical );
+	fFlagsGroup->layout()->setSpacing( 6 );
+	fFlagsGroup->layout()->setMargin( 11 );
+	fFlagsGroupLayout = new QGridLayout( fFlagsGroup->layout() );
+	fFlagsGroupLayout->setAlignment( Qt::AlignTop );
 
-    DBRecordEditorBaseLayout->addWidget( fRecordID, 0, 3 );
+	fDirty = new QCheckBox( fFlagsGroup, "fDirty" );
+	fFlagsGroupLayout->addWidget( fDirty, 0, 0 );
 
-    fFlagsGroup = new QButtonGroup( fWidget, "fFlagsGroup" );
-    fFlagsGroup->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5, (QSizePolicy::SizeType)4, 0, 0, fFlagsGroup->sizePolicy().hasHeightForWidth() ) );
-    fFlagsGroup->setColumnLayout(0, Qt::Vertical );
-    fFlagsGroup->layout()->setSpacing( 6 );
-    fFlagsGroup->layout()->setMargin( 11 );
-    fFlagsGroupLayout = new QGridLayout( fFlagsGroup->layout() );
-    fFlagsGroupLayout->setAlignment( Qt::AlignTop );
+	fDeleted = new QCheckBox( fFlagsGroup, "fDeleted" );
+	fFlagsGroupLayout->addWidget( fDeleted, 1, 0 );
 
-    fDirty = new QCheckBox( fFlagsGroup, "fDirty" );
+	fBusy = new QCheckBox( fFlagsGroup, "fBusy" );
+	fFlagsGroupLayout->addWidget( fBusy, 0, 1 );
 
-    fFlagsGroupLayout->addWidget( fDirty, 0, 0 );
+	fSecret = new QCheckBox( fFlagsGroup, "fSecret" );
+	fFlagsGroupLayout->addMultiCellWidget( fSecret, 1, 1, 1, 2 );
 
-    fDeleted = new QCheckBox( fFlagsGroup, "fDeleted" );
+	fArchived = new QCheckBox( fFlagsGroup, "fArchived" );
+	fFlagsGroupLayout->addWidget( fArchived, 0, 2 );
 
-    fFlagsGroupLayout->addWidget( fDeleted, 1, 0 );
+	DBRecordEditorBaseLayout->addMultiCellWidget( fFlagsGroup, 1, 1, 0, 3 );
 
-    fBusy = new QCheckBox( fFlagsGroup, "fBusy" );
+#ifdef USE_KHEXEDIT
+	fRecordData = KHE::createBytesEditWidget( fWidget, "fRecordData" );
+	if( fRecordData )
+	{
+		// fetch the editor interface
+		fRecordDataIf = KHE::bytesEditInterface( fRecordData );
+		Q_ASSERT( fRecordDataIf ); // This should not fail!
 
-    fFlagsGroupLayout->addWidget( fBusy, 0, 1 );
+		KHE::HexColumnInterface *HexColumn = hexColumnInterface( fRecordData );
+		if( HexColumn )
+		{
+			HexColumn->setNoOfBytesPerLine( 16 );
+			HexColumn->setResizeStyle( KHE::HexColumnInterface::LockGrouping );
+//			HexColumn->setCoding( HexColumnInterface::HexadecimalCoding );
+//			HexColumn->setByteSpacingWidth( 2 );
+			HexColumn->setNoOfGroupedBytes( 4 );
+			HexColumn->setGroupSpacingWidth( 8 );
+		}
 
-    fSecret = new QCheckBox( fFlagsGroup, "fSecret" );
+		KHE::TextColumnInterface *TextColumn = textColumnInterface( fRecordData );
+		if( TextColumn )
+		{
+			TextColumn->setShowUnprintable( false );
+//			TextColumn->setSubstituteChar( '*' );
+		}
+	}
+	else
+	{
+		QLabel*tmpW = new QLabel( i18n("To view and edit the record data, please install a hex editor (e.g. kbytesedit from kdeutils)."), fWidget );
+		tmpW->setBackgroundMode( Qt::PaletteMid );
+		tmpW->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter | Qt::WordBreak);
+		tmpW->setFrameShape( QFrame::Panel );
+		tmpW->setFrameShadow( QFrame::Sunken );
+		fRecordData = tmpW;
+		fRecordDataIf = 0;
+	}
+ 
+	DBRecordEditorBaseLayout->addMultiCellWidget( fRecordData, 2, 2, 0, 3 );
+#endif
 
-    fFlagsGroupLayout->addMultiCellWidget( fSecret, 1, 1, 1, 2 );
-
-    fArchived = new QCheckBox( fFlagsGroup, "fArchived" );
-
-    fFlagsGroupLayout->addWidget( fArchived, 0, 2 );
-
-    DBRecordEditorBaseLayout->addMultiCellWidget( fFlagsGroup, 1, 1, 0, 3 );
-
-    fRecordData = new KHE::KHexEdit( 0L, fWidget, "fRecordData" );
-
-    DBRecordEditorBaseLayout->addMultiCellWidget( fRecordData, 2, 2, 0, 3 );
-    languageChange();
-    resize( QSize(600, 561).expandedTo(minimumSizeHint()) );
+	languageChange();
+	resize( QSize(600, 561).expandedTo(minimumSizeHint()) );
 }
 
 void DBRecordEditor::fillWidgets()
@@ -185,8 +230,20 @@ void DBRecordEditor::fillWidgets()
 	fSecret->setChecked(att & dlpRecAttrSecret);
 	fArchived->setChecked(att & dlpRecAttrArchived);
 
-	KHE::KWrappingROBuffer*buf=new KWrappingROBuffer(rec->getData(), rec->getLen());
-	fRecordData->setDataBuffer(buf);
+#ifdef USE_KHEXEDIT
+	if( fRecordDataIf )
+	{
+		int len = rec->getLen();
+		char* buffer = new char[len];
+		memcpy( buffer, rec->getData(), len );
+		fRecordDataIf->setData( buffer, len );
+		fRecordDataIf->setMaxDataSize( 4096 );
+		fRecordDataIf->setReadOnly( false );
+		// Here we set auto delete to true. Only if we 
+		// really take over the data, set it to false.
+		fRecordDataIf->setAutoDelete( true ); 
+	}
+#endif
 }
 
 
