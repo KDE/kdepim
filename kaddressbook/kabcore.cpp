@@ -1068,7 +1068,7 @@ void KABCore::initActions()
                         this, SLOT( openLDAPDialog() ), actionCollection(), "ldap_lookup" );
   action->setWhatsThis( i18n( "Search for contacts on a LDAP server<p>You will be presented with a dialog, where you can search for contacts and select the ones you want to add to your local address book." ) );
 
-  mActionWhoAmI = new KAction( i18n( "Set 'Who Am I'" ), "personal", 0, this,
+  mActionWhoAmI = new KAction( i18n( "Set as personal contact data" ), "personal", 0, this,
                                SLOT( setWhoAmI() ), actionCollection(),
                                "edit_set_personal" );
   mActionWhoAmI->setWhatsThis( i18n( "Set the personal contact<p>The data of this contact will be used in many other KDE applications, so you do not have to input your personal data several times." ) );
