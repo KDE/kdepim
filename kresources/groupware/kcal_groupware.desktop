@@ -1,6 +1,18 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Groupware Server
+Name[bg]=Сървър Groupware
+Name[br]=Servijer strollant
+Name[es]=Servidor de Groupware
+Name[et]=Grupitöö server
+Name[fr]=Serveur de travail collaboratif
+Name[nl]=Groupware-server
+Name[pt]=Servidor de Groupware
+Name[pt_BR]=Servidor de Groupware
+Name[ru]=Сервер Groupware
+Name[sv]=Grupprogramserver
+Name[tr]=Groupware Sunucu
+Name[uk]=Сервер Groupware
 X-KDE-Library=kcal_groupware
 Type=Service
 ServiceTypes=KResources/Plugin

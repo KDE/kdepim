@@ -1,5 +1,15 @@
 [Desktop Entry]
 Type=Service
 Name=Plucker Part
+Name[es]=Parte Plucker
+Name[et]=Pluckeri komponent
+Name[fr]=Composant Plucker
+Name[nl]=Plucker part
+Name[pt]=Componente Plucker
+Name[pt_BR]=Componente Plucker
+Name[ru]=Компонент Plucker
+Name[sv]=Plockningsdel
+Name[tr]=Plucker Bölümü
+Name[uk]=Коипонент Plucker
 ServiceTypes=KitchenSync/ActionPart
 X-KDE-Library=libksync_pluckerpart

@@ -7,10 +7,13 @@ X-KDE-InstantMessagingKABCField=messaging/msn
 Comment=MSN Messenger
 Comment[bg]=Протокол MSN
 Comment[fr]=Messagerie MSN
+Comment[ja]=MSN メッセンジャー
 Comment[ta]=MSN மெசஞ்சர்
 Comment[xx]=xxMSN Messengerxx
 Name=MSN Messenger
 Name[bg]=MSN
+Name[cy]=Negesydd MSN
+Name[ja]=MSN メッセンジャー
 Name[ta]=MSN மெசஞ்சர்
 Name[xx]=xxMSN Messengerxx
 

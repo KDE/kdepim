@@ -2,6 +2,13 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KitchenSync Konnectors
+Name[bg]=Конектори KitchenSync
+Name[et]=KitchenSynci Konnectorid
+Name[pt]=Conectores KitchenSync
+Name[pt_BR]=Conectores KitchenSync
+Name[ru]=Коннекторы KitchenSync
+Name[sv]=Kitchensync-anslutningar
+Name[uk]=Конектори KitchenSync
 Type=Service
 ServiceTypes=KResources/Manager
 
