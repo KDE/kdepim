@@ -29,6 +29,7 @@
 
 #include <kdebug.h>
 #include <kiconloader.h>
+#include <klocale.h>
 #include <kplugininfo.h>
 
 #include "imaddresswidget.h"
@@ -44,7 +45,7 @@ IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> pro
 	mProtocols = protocols;
 	populateProtocols();
 	cmbProtocol->setCurrentItem( mProtocols.findIndex( protocol ) );
-	cmbContext->setCurrentItem( (int)context );
+	/*cmbContext->setCurrentItem( (int)context );*/
 	edtAddress->setText( address );
 }
 
@@ -57,7 +58,7 @@ KPluginInfo * IMAddressWidget::protocol()
 IMContext IMAddressWidget::context()
 {
 	IMContext context = Any;
-	if ( cmbContext->currentItem() )
+/*	if ( cmbContext->currentItem() )
 	{
 		
 		int contextIndex = cmbContext->currentItem();
@@ -74,6 +75,7 @@ IMContext IMAddressWidget::context()
 			break;
 		}
 	}
+	*/
 	return context;
 }
 

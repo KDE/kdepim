@@ -38,6 +38,11 @@ class KPluginInfo;
 
 enum IMContext { Any, Home, Work };
 
+/* Note regarding Context:
+ * It wasn not possible to get an idea of Context into Kopete in time for KDE 3.3,
+ * so it has been removed from the UI and functionally disabled in the code.
+ */
+
 /**
  * The widget we add to KAddressbook's contact editor dialog
  */
@@ -86,7 +91,7 @@ class IMEditorWidget : public KAB::ContactEditorWidget
 class IMAddressLVI : public KListViewItem
 {
 	public:
-		IMAddressLVI( KListView *parent, KPluginInfo * protocol, QString address, IMContext context );
+		IMAddressLVI( KListView *parent, KPluginInfo * protocol, QString address, IMContext context = Any );
 		void setAddress( const QString &address );
 		void setProtocol( KPluginInfo * protocol );
 		void setContext( IMContext context );

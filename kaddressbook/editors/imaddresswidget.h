@@ -33,11 +33,19 @@
 
 class KPluginInfo;
 
+/* Note regarding Context:
+ * It wasn not possible to get an idea of Context into Kopete in time for KDE 3.3,
+ * so it has been removed from the UI and functionally disabled in the code.
+ */
+
+/**
+ * A widget for editing an instant messaging address
+ */
 class IMAddressWidget : public IMAddressBase
 {
 public:
 	IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols);
-	IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols, KPluginInfo *protocol, const QString& address, const IMContext& context );
+	IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols, KPluginInfo *protocol, const QString& address, const IMContext& context = Any );
 	KPluginInfo * protocol();
 	IMContext context();
 	QString address();

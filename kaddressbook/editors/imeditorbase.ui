@@ -42,17 +42,6 @@
                     <bool>true</bool>
                 </property>
             </column>
-            <column>
-                <property name="text">
-                    <string>Context</string>
-                </property>
-                <property name="clickable">
-                    <bool>true</bool>
-                </property>
-                <property name="resizable">
-                    <bool>true</bool>
-                </property>
-            </column>
             <property name="name">
                 <cstring>lvAddresses</cstring>
             </property>
@@ -112,25 +101,15 @@
                         </size>
                     </property>
                 </spacer>
-                <widget class="KPushButton">
-                    <property name="name">
-                        <cstring>btnUp</cstring>
-                    </property>
-                    <property name="text">
-                        <string></string>
-                    </property>
-                </widget>
-                <widget class="KPushButton">
-                    <property name="name">
-                        <cstring>btnDown</cstring>
-                    </property>
-                    <property name="text">
-                        <string></string>
-                    </property>
-                </widget>
             </vbox>
         </widget>
     </hbox>
 </widget>
 <layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>klistview.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+</includehints>
 </UI>

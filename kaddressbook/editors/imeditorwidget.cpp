@@ -82,7 +82,7 @@ void IMAddressLVI::setContext( IMContext context )
 {
 	mContext = context;
 	// set context
-	switch ( context )
+/*	switch ( context )
 	{
 	case Home:
 		setText( 2, i18n( "Home" ) );
@@ -94,6 +94,7 @@ void IMAddressLVI::setContext( IMContext context )
 		setText( 2, i18n( "Any" ) );
 		break;
 	}
+*/
 }
 
 void IMAddressLVI::setProtocol( KPluginInfo *protocol )
@@ -140,8 +141,8 @@ IMEditorWidget::IMEditorWidget( KABC::AddressBook *ab, QWidget *parent, const ch
 	mWidget->btnEdit->setEnabled( false );
 	mWidget->btnDelete->setEnabled( false );
 	// Disabled pending implementation
-	mWidget->btnUp->setEnabled( false );
-	mWidget->btnDown->setEnabled( false );
+	//mWidget->btnUp->setEnabled( false );
+	//mWidget->btnDown->setEnabled( false );
 
 	mProtocols = KPluginInfo::fromServices( KTrader::self()->query( QString::fromLatin1( "KABC/IMProtocol" ) ) );
 	//kdDebug ( 5720 ) << " found " << mProtocols.count() << " protocols " << endl;
@@ -248,7 +249,7 @@ void IMEditorWidget::slotAdd()
 	if ( addDialog->exec() == QDialog::Accepted )
 	{
 		// add the new item
-		new IMAddressLVI( mWidget->lvAddresses, addressWid->protocol(), addressWid->address(), addressWid->context() );
+		new IMAddressLVI( mWidget->lvAddresses, addressWid->protocol(), addressWid->address() /*, addressWid->context() */ );
 		if ( mChangedProtocols.find( addressWid->protocol() ) == mChangedProtocols.end() )
 			mChangedProtocols.append( addressWid->protocol() );
 		mWidget->lvAddresses->sort();
