@@ -314,7 +314,7 @@ Todo *CalendarResources::todo( const QString &uid )
 
 QPtrList<Todo> CalendarResources::todos( const QDate &date )
 {
-  kdDebug(5800) << "CalendarResources::todos(date)" << endl;
+//  kdDebug(5800) << "CalendarResources::todos(date)" << endl;
 
   QPtrList<Todo> result;
 
