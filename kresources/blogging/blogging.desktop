@@ -1,7 +1,16 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Journals as Blogs on a Server
-Name[xx]=xxJournals as Blogs on a Serverxx
+Name[da]=Journaler som www-blogger på en server
+Name[es]=Diarios, como bitácoras en un servidor
+Name[et]=Žurnaalid veebilogidena serveril
+Name[nl]=Journalen als blogs op een server
+Name[pt]=Diários como 'Blogs' num Servidor
+Name[pt_BR]=Diários como 'Blogs' num Servidor
+Name[ru]=Журналы (блоги) на сервере
+Name[sv]=Journaler som webbloggar på en server
+Name[tr]=Bir sunucu üzerinde Blog'ları günlükler
+Name[uk]=Журнали як веб-щоденники на сервері
 X-KDE-Library=kcal_blogging
 Type=Service
 ServiceTypes=KResources/Plugin
