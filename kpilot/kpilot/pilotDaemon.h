@@ -165,6 +165,7 @@ public:
 	virtual QString logFileName();
 	virtual QString userName();
 	virtual QString pilotDevice();
+	virtual bool killDaemonOnExit();
 
 protected:
 	DaemonStatus fDaemonStatus;

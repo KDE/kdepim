@@ -673,10 +673,12 @@ QDateTime PilotDaemon::lastSyncDate()
 {
 	return KPilotSettings::lastSyncTime();
 }
+
 QStringList PilotDaemon::configuredConduitList()
 {
 	return KPilotSettings::installedConduits();
 }
+
 QString PilotDaemon::logFileName()
 {
 	return KPilotSettings::logFileName();
@@ -689,6 +691,11 @@ QString PilotDaemon::userName()
 QString PilotDaemon::pilotDevice()
 {
 	return KPilotSettings::pilotDevice();
+}
+
+bool PilotDaemon::killDaemonOnExit()
+{
+	return KPilotSettings::killDaemonAtExit();
 }
 
 static bool isKDesktopLockRunning()
