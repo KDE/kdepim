@@ -334,7 +334,7 @@ void MobileGui::writePhonebook()
 	// an explicit ATCommand for deletion and save time & battery
 	// energy.
 	uint theIndex = entry->mIndex.toUInt();
-	mPBIndexOccupied[ theIndex ] = false;
+	mPBIndexOccupied[ theIndex - mPBStartIndex ] = false;
       }
   }
 
@@ -355,14 +355,13 @@ void MobileGui::writePhonebook()
       
       
       if ( entry->mToBeUpdated ) {
-        tmp.setNum( entry->mIndex.toUInt() + mPBStartIndex - 1 );
-        id = "+cpbw=" + tmp;
+        id = "+cpbw=" + entry->mIndex;
       } else {
         int index = firstFreeIndex();
 	
 	
 	mPBIndexOccupied[ index ] = true;
-        id = "+cpbw=" + tmp.setNum( index + mPBStartIndex - 1 );
+        id = "+cpbw=" + tmp.setNum( index + mPBStartIndex );
       }
       mLastWriteId = id;
       entry->mToBeUpdated = false;
@@ -401,11 +400,10 @@ void MobileGui::writePhonebook()
       uint theIndex = entry->mIndex.toUInt();
       
       
-      if ( !mPBIndexOccupied[ theIndex ] ) {
+      if ( !mPBIndexOccupied[ theIndex - mPBStartIndex ] ) {
         // Index of item to be deleted still is 0, so that index position
 	// wasn't reused. We must delete it explicitly.
-	QString tmp = "";
-	QString id = "+cpbw=" + tmp.setNum( theIndex + mPBStartIndex - 1 );
+	QString id = "+cpbw=" + entry->mIndex;
 	
 	
 	mLastWriteId = id;
@@ -997,8 +995,8 @@ void MobileGui::processResult( ATCommand *command )
     mPBLength = command->resultField( 2 ).toUInt();
 
     // Allocate and initialize memory for the buckets of indices
-    mPBIndexOccupied.resize( mPBLength + 1, false );
-    for ( unsigned int i = 0; i <= mPBLength; i++ )
+    mPBIndexOccupied.resize( mPBLength, false );
+    for ( unsigned int i = 0; i < mPBLength; i++ )
       mPBIndexOccupied[ i ] = false;
   } else
   if ( command->id() == "+cpbr=" ) {
@@ -1075,11 +1073,11 @@ int MobileGui::firstFreeIndex()
   if ( mPBIndexOccupied.capacity() == 0 )
     return 0;
 
-  for ( i = 1; i <= mPBLength; i++ )
+  for ( i = 1; i < mPBLength; i++ )
     if ( !mPBIndexOccupied[ i ] )
       break;
 
-  if ( i <= mPBLength )
+  if ( i < mPBLength )
     return i;
 
   return 0;
@@ -1153,7 +1151,7 @@ void MobileGui::fillPhonebook( ATCommand *cmd )
       SyncEntryMobile *phoneEntry = new SyncEntryMobile( true, dequote( index ),
                                                          dequote( phone ),
 							 dequote( name ) );
-      mPBIndexOccupied[ index.toUInt() ] = true;
+      mPBIndexOccupied[ index.toUInt() - mPBStartIndex ] = true;
       mSyncer->mMobileEntries.append( phoneEntry );
     }
     fields = list->next();

@@ -1,5 +1,15 @@
-Kandy 0.5
----------
+Kandy 0.5.1 (18.11.2004)
+------------------------
+
++ Support of user-defined baud rates via setting in serial device configuration
+  dialog.
+
++ Full support for SIM phone books starting with an entry != 1 and having an
+  arbitrary number of entries.
+
+
+Kandy 0.5 (16.11.2004)
+----------------------
 
 + Kandy now supports different types of phone numbers associated with KAB
   addressees. A config dialog was added where the user can specify whether
