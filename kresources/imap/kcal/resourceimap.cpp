@@ -122,7 +122,7 @@ bool ResourceIMAP::loadAllEvents()
       Incidence* i = parseIncidence( *it );
       if ( i ) {
         if ( i->type() == "Event" ) {
-          addEvent( static_cast<Event*>( i ) );
+          addEvent( static_cast<Event*>( i ), *itR );
           changed = true;
         } else {
           kdDebug(5650) << "Unknown incidence type " << i->type();
