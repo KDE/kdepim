@@ -1,6 +1,6 @@
 # $Id$
 
-SUBDIRS=
+SUBDIRS = tests
 
 METASOURCES = AUTO
 
@@ -14,12 +14,12 @@ INCLUDES = -I$(top_srcdir)/korganizer/interfaces \
 
 noinst_LTLIBRARIES = libkpimexchangecalendar.la
 
-libkpimexchangecalendar_la_SOURCES = exchangecalendar.cpp
+libkpimexchangecalendar_la_SOURCES = exchangecalendar.cpp dateset.cpp
 #libexchangecalendar_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 1:0:0 -module
 #libexchangecalendar_la_LIBADD = $(LIB_KIO) $(top_builddir)/libkcal/libkcal.la \
 #    $(top_builddir)/libkpimexchange/libkpimexchange.la
 
 kdepimincludedir = $(includedir)/kdepim
 kdepiminclude_HEADERS = exchangecalendar.h
-#noinst_HEADERS = exchangecalendar.h 
+noinst_HEADERS = dateset.h
 
