@@ -73,11 +73,11 @@ public:
 	static const char *version();
 
 
-	typedef enum RetrievalMode { 
+	enum RetrievalMode { 
 		RECV_NONE=0, 
 		RECV_POP=1, 
 		RECV_UNIX=2 } ;
-	typedef enum SendMode { 
+	enum SendMode { 
 		SEND_NONE=0,
 		SEND_SENDMAIL=7,
 		SEND_KMAIL=8,
@@ -160,6 +160,9 @@ private:
 
 
 // $Log$
+// Revision 1.12  2001/04/26 19:20:17  adridg
+// Respect KMail's outboxFolder setting
+//
 // Revision 1.11  2001/04/23 21:18:36  adridg
 // Some i18n() fixups and KMail sending
 //
