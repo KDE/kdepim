@@ -42,9 +42,9 @@
 // debug areas.
 //
 //
-#define KPILOTUIDEBUG	kdDebug(5010)
-#define KPILOTDBDEBUG	kdDebug(5011)
-#define KPILOTSCDEBUG	kdDebug(5012)
+#define DEBUGKPILOT	kdDebug(5510)
+#define DEBUGDAEMON	kdDebug(5511)
+#define DEBUGCONDUIT	kdDebug(5512)
 
 
 // These are three-bit fields, basically we're defining
@@ -78,7 +78,7 @@ extern int debug_level;
 #define EFUNCTIONSETUP	static const char *fname=__FUNCTION__; \
 			if (debug_level & DEBUG_FUNCTIONS) { kdDebug() << \
 			fname << tabs+(strlen(fname)>>3) \
-				<< "(" << __FILE__ << ':' << \
+				<< "(" << __FILE__ << ":" << \
 				__LINE__ << ")\n"; } 
 #define FUNCTIONSETUP	EFUNCTIONSETUP
 
