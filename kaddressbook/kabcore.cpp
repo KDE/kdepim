@@ -48,6 +48,7 @@
 #include <kstandarddirs.h>
 #include <ktempfile.h>
 #include <kxmlguiclient.h>
+#include <kstdguiitem.h>
 #include <libkdepim/addresseeview.h>
 #include <libkdepim/categoryeditdialog.h>
 #include <libkdepim/categoryselectdialog.h>
@@ -149,7 +150,7 @@ void KABCore::restoreSettings()
   bool state = KABPrefs::instance()->mJumpButtonBarVisible;
   mActionJumpBar->setChecked( state );
   setJumpButtonBarVisible( state );
-  
+
   state = KABPrefs::instance()->mDetailsPageVisible;
   mActionDetails->setChecked( state );
   setDetailsVisible( state );
@@ -891,7 +892,7 @@ void KABCore::initActions()
   mActionMail->setWhatsThis( i18n( "Send a mail to all selected contacts." ) );
   action->setWhatsThis( i18n( "Print a special number of contacts." ) );
 
-  mActionSave = new KAction( i18n( "&Save" ), "filesave", CTRL+Key_S, this,
+  mActionSave = new KAction(  KStdGuiItem::save().text(), "filesave", CTRL+Key_S, this,
                              SLOT( save() ), actionCollection(), "file_sync" );
   mActionSave->setWhatsThis( i18n( "Save all changes of the address book to the storage backend." ) );
 
@@ -936,7 +937,7 @@ void KABCore::initActions()
                                       actionCollection(), "options_show_jump_bar" );
   mActionJumpBar->setWhatsThis( i18n( "Toggle whether the jump button bar shall be visible." ) );
   connect( mActionJumpBar, SIGNAL( toggled( bool ) ), SLOT( setJumpButtonBarVisible( bool ) ) );
-  
+
   mActionDetails = new KToggleAction( i18n( "Show Details" ), 0, 0,
                                       actionCollection(), "options_show_details" );
   mActionDetails->setWhatsThis( i18n( "Toggle whether the details page shall be visible." ) );
@@ -1045,7 +1046,7 @@ void KABCore::editCategories()
     connect( mCategoryEditDialog, SIGNAL( categoryConfigChanged() ),
              SLOT( setCategories() ) );
   }
-  
+
   mCategoryEditDialog->show();
   mCategoryEditDialog->raise();
 }
