@@ -40,6 +40,8 @@
 #include <RMM_Header.h>
 #include <RMM_Defines.h>
 #include <RMM_MessageComponent.h>
+#include <RMM_ContentType.h>
+#include <RMM_Cte.h>
 
 class REnvelope : public RMessageComponent
 {
@@ -83,9 +85,9 @@ class REnvelope : public RMessageComponent
 		RDispositionType &	contentDisposition();
 		RMessageID &		contentID();
 		RText &				contentMD5();
-		RText &				contentType();
+		RContentType &		contentType();
 		RText &				control();
-		RText &				contentTransferEncoding();
+		RCte &				contentTransferEncoding();
 		RDateTime &			date();
 		RText &				distribution();
 		RText &				encrypted();

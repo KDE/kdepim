@@ -60,6 +60,7 @@ EmpathMaildir::~EmpathMaildir()
 EmpathMaildir::sync(const EmpathURL & url)
 {
 	empathDebug("sync(" + url.asString() + ") called");
+	QTime realBegin(QTime::currentTime());
 	
 	// First make sure any new mail that has arrived goes into cur.
 	_markNewMailAsSeen();
@@ -102,8 +103,16 @@ EmpathMaildir::sync(const EmpathURL & url)
 	QString s;
 	QRegExp re_flags(":2,[A-Za-z]*$");
 	
+	QTime begin(QTime::currentTime());
+	
 	for (; it != fileList.end(); ++it) {
 	
+		QTime now(QTime::currentTime());
+		if (now.msecsTo(begin) > 100) {
+			kapp->processEvents();
+			begin = now;
+		}
+		
 		s = *it;
 		
 		// Remove the flags from the end of the filename.
@@ -140,6 +149,8 @@ EmpathMaildir::sync(const EmpathURL & url)
 		}
 	}
 	
+	kapp->processEvents();
+	
 	// Now go through the index, looking for untagged records.
 	// Anything that wasn't tagged is no longer in the dir, and has been
 	// deleted or moved. We therefore remove it from the index.
@@ -156,6 +167,9 @@ EmpathMaildir::sync(const EmpathURL & url)
 		}
 	
 	_writeIndex();
+	QTime end(QTime::currentTime());
+	empathDebug("sync took " +
+		QString().setNum(realBegin.msecsTo(QTime::currentTime())) + " ms");
 	empathDebug("sync done");
 }
 
@@ -622,6 +636,9 @@ EmpathMaildir::_generateFlagsString(RMM::MessageStatus s)
 EmpathMaildir::_readIndex()
 {
 	empathDebug("_readIndex() called");
+	QTime realBegin(QTime::currentTime());
+	QTime begin(realBegin);
+	QTime now;
 
 	QFile indexFile(path_ + "/.empathIndex");
 	
@@ -645,6 +662,12 @@ EmpathMaildir::_readIndex()
 	EmpathIndexRecord * r;
 	
 	while (!indexStream.eof()) {
+		
+		now = QTime::currentTime();
+		if (begin.msecsTo(now) > 100) {
+			begin = now;
+			kapp->processEvents();
+		}
 
 		r = new EmpathIndexRecord;
 		indexStream >> *r;
@@ -676,6 +699,8 @@ EmpathMaildir::_readIndex()
 	
 	QFileInfo fi(path_ + "/cur/");
 	mtime_ = fi.lastModified();
+	empathDebug("readIndex took " +
+		QString().setNum(realBegin.msecsTo(QTime::currentTime())) + " ms");
 }
 
 	void

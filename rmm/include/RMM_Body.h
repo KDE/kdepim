@@ -52,23 +52,30 @@ class RBody : public QList<RBodyPart>, public RMessageComponent {
 		void assemble();
 		void createDefault();
 
-		QCString		firstPlainBodyPart() { return ""; }
+		QCString	firstPlainBodyPart() { return ""; }
 		int			numberOfParts() const;
 		void		addPart(RBodyPart * bp);
 		void		removePart(RBodyPart * part);
 		RBodyPart	* part(int index);
+		
+		void		setBoundary(const QString & s)			{ boundary_ = s; }
+		void		setContentType(const RContentType & t)	{ contentType_ = t;}
+		void		setCTE(const RCte & t)					{ cte_ = t; }
+		void 		setMultiPart(bool b)					{ isMultiPart_ = b;}
 
 		const char * className() const { return "RBody"; }
 
 	private:
 
+		bool				isMultiPart_;
+
 		QList<RBodyPart>	partList_;
 		
 		QCString 			strRep_;
 
-		QCString				boundary_;
-		QCString				preamble_;
-		QCString				epilogue_;
+		QCString			boundary_;
+		QCString			preamble_;
+		QCString			epilogue_;
 		
 		RContentType		contentType_;
 		RCte				cte_;

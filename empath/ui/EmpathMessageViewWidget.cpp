@@ -22,7 +22,6 @@
 #include <qstrlist.h>
 
 // KDE includes
-#include <kfm.h>
 #include <klocale.h>
 
 // Local includes
@@ -198,9 +197,9 @@ EmpathMessageViewWidget::s_URLSelected(const char * url, int button)
 
 		// It's an URL we don't handle. Pass to a KFM.
 
-		KFM *kfm = new KFM();
-		kfm->openURL(fixedURL);
-		delete kfm;
+//		KFM *kfm = new KFM();
+//		kfm->openURL(fixedURL);
+//		delete kfm;
 	}
 }
 

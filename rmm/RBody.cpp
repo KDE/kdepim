@@ -90,6 +90,17 @@ RBody::operator = (const RBody & body)
 RBody::parse()
 {
 	rmmDebug("parse() called");
+	
+	// If we're not a multipart message, leave here.
+	if (!isMultiPart_) return;
+	
+	// So, dear message, you are of multiple parts. Let's see what you're made
+	// of.
+	
+	partList_.clear();
+	
+	
+	
 }
 
 	void

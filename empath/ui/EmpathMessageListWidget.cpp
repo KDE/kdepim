@@ -22,6 +22,7 @@
 #include <qheader.h>
 #include <qstring.h>
 #include <qfile.h>
+#include <qdatetime.h>
 
 // KDE includes
 #include <klocale.h>
@@ -163,30 +164,19 @@ EmpathMessageListWidget::addItem(const EmpathIndexRecord & item)
 {
 	// Put the item into the master list.
 	empathDebug("addItem called");
-	empathDebug("InSorting into list");
-	
-	RMailbox	sender		(item.sender());
-	RDateTime	date		(item.date());
-	RMessageID	messageID	(item.messageID());
-	RMessageID	parentID	(item.parentID());
-	
-	sender.assemble();
-	date.assemble();
-	messageID.assemble();
-	parentID.assemble();
-	
+#if 0	
 	QListIterator<EmpathMessageListItem> it(threadItemList_);
 	bool needToClearOut = false;
 	
 	for (; it.current(); ++it) {
-		if (it.current()->parentID() == messageID) {
+		if (it.current()->parentID() == item.messageID()) {
 			// This item is a parent of one in list
 			empathDebug("Should clear out!");
 			needToClearOut = true;
 			break;
 		}
 	}
-	
+#endif
 	EmpathMessageListItem * newItem;
 	
 	// TODO: If the item is a parent of an item in our list, remove the tree
@@ -199,17 +189,16 @@ EmpathMessageListWidget::addItem(const EmpathIndexRecord & item)
 	// clock is set wrongly. It remains to be seen how far out of sync the world's
 	// clocks are and how quickly people can reply to messages.
 	
-	if (! parentID.asString().isEmpty() &&
-		!(parentID.asString() == "<@>") &&
-		! messageID.asString().isEmpty()) {
+	if (! item.parentID().localPart().isEmpty() &&
+		! item.messageID().localPart().isEmpty()) {
 		// Child of other item
 		empathDebug("Message has parentID, looking for parent");
-		empathDebug("MESSAGE ID: \"" + messageID.asString() + "\"");
-		empathDebug("PARENT  ID: \"" + parentID.asString() + "\"");
+//		empathDebug("MESSAGE ID: \"" + messageID.asString() + "\"");
+//		empathDebug("PARENT  ID: \"" + parentID.asString() + "\"");
 		
 		EmpathMessageListItem * parentItem = 0;
 		
-		parentItem = this->find(parentID);
+		parentItem = this->find(item.parentID());
 
 		if (parentItem == 0) {
 			
@@ -229,7 +218,10 @@ EmpathMessageListWidget::addItem(const EmpathIndexRecord & item)
 	} else {
 		// Root item
 		empathDebug("Message is root item");
+		QTime begin(QTime::currentTime());
 		newItem = new EmpathMessageListItem(this, item);
+		empathDebug("Creation of message list item took " +
+			QString().setNum(begin.msecsTo(QTime::currentTime())) + " ms");
 		CHECK_PTR(newItem);
 		empathDebug("Created OK");
 	}
@@ -524,8 +516,21 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 	
 	QListIterator<EmpathIndexRecord> mit(masterList_);
 	
-	for (; mit.current(); ++mit)
+	setUpdatesEnabled(false);
+	QTime begin(QTime::currentTime());
+	QTime now;
+	for (; mit.current(); ++mit) {
+		now = QTime::currentTime();
+		if (begin.msecsTo(now) > 100) {
+			setUpdatesEnabled(true);
+			update();
+			begin = now;
+			kapp->processEvents();
+			setUpdatesEnabled(false);
+		}
 		addItem(*mit.current());
+	}
+	setUpdatesEnabled(true);
 }
 
 	void

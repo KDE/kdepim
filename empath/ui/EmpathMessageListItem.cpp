@@ -77,24 +77,38 @@ EmpathMessageListItem::_init()
 	
 	QString sizeStr;
 	
-	if (size_ < 1024)
-		sizeStr.sprintf("%8i bytes", size_);
-	else
-		if (size_ < 1048576)
-			sizeStr.sprintf("%8.2f Kb", size_ / 1024.0);
-	else
-		sizeStr.sprintf("%8.2f Mb", size_ / 1048576.0);
-
-	setText(4, sizeStr);
+	// Why does using floats not work ?
+	// Anyway, this should handle up to 9999 Mb (nearly 10G).
+	// I hope that 10G mail messages won't exist during my lifetime ;)
+	if (size_ < 1024) {
+		sizeStr = "%1 bytes";
+		sizeStr = sizeStr.arg((unsigned int)(size_), 4);
+		setText(4, sizeStr);
+	} else {
+		if (size_ < 1048576) {
+			sizeStr = "%1 Kb";
+			sizeStr = sizeStr.arg((unsigned int)(size_ / 1024.0), 4);
+			setText(4, sizeStr);
+		} else {
+			sizeStr = "%1 Mb";
+			sizeStr = sizeStr.arg((unsigned int)(size_ / 1048576.0), 4);
+			setText(4, sizeStr);
+		}
+	}
 	
-	if (sender_.phrase().isEmpty())
+	if (sender_.phrase().isEmpty()) {
+		sender_.assemble();
 		setText(1, sender_.asString());
+	}
 		
 	else {
 
 		QString s = sender_.phrase();
-		if (s.left(1)	== "\"") s.remove(0, 1);
-		if (s.right(1)	== "\"") s.remove(s.length(), 1);
+		if (s.left(1) == "\"") {
+			s.remove(0, 1);
+			if (s.right(1)	== "\"")
+				s.remove(s.length(), 1);
+		}
 		setText(1, s);
 	}
 }

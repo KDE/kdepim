@@ -108,10 +108,40 @@ RMessage::parse()
 	
 	envelope_.set(strRep_.left(endOfHeaders));
 	envelope_.parse();
-	
+
+	// Now see if there's a Content-Type header in the envelope.
+	// If there is, we might be looking at a multipart message.
+	if (envelope_.has(RMM::HeaderContentType)) {
+		
+		// It has the header.
+		RContentType contentType(envelope_.contentType());
+		
+		// If the header say multipart, we'll need to know the boundary.
+		if (contentType.type() == "multipart") {
+		
+			RParameterListIterator it(contentType.parameterList());
+			
+			for (; it.current(); ++it) {
+			
+				if (it.current()->attribute() == "boundary") {
+				
+					// We've found the boundary.
+					// The body needs the boundary, so it knows where to split.
+					// It also needs the content type header, so it knows what
+					// subtype the contentType has.
+					// It also needs the content-transfer-encoding, so that it
+					// can decode where necessary.
+					body_.setBoundary(it.current()->value());
+					body_.setContentType(contentType);
+					body_.setCTE(envelope_.contentTransferEncoding());
+					body_.setMultiPart(true);
+					break;
+				}
+			}
+		}
+	}
 
 	body_.set(strRep_.right(strRep_.length() - endOfHeaders));
-
 	body_.parse();
 }
 

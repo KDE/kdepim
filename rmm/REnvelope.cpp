@@ -24,54 +24,6 @@
 #include <RMM_Envelope.h>
 #include <RMM_Enum.h>
 
-
-char * headerNames[] = {
-        "Approved",
-        "Bcc",
-        "Cc",
-        "Comments",
-        "Content-Description",
-        "Content-Disposition",
-        "Content-ID",
-        "Content-MD5",
-        "Content-Type",
-        "Control",
-        "Content-Transfer-Encoding",
-        "Date",
-        "Distribution",
-        "Encrypted",
-        "Expires",
-        "Followup-To",
-        "From",
-        "In-Reply-To",
-        "Keywords",
-        "Lines",
-        "Message-ID",
-        "Mime-Version",
-        "Newsgroups",
-        "Organization",
-        "Path",
-        "Received",
-        "References",
-        "Reply-To",
-        "Resent-Bcc",
-        "Resent-Cc",
-        "Resent-Date",
-        "Resent-From",
-        "Resent-MessageID",
-        "Resent-ReplyTo",
-        "Resent-Sender",
-        "Resent-To",
-        "Return-Path",
-        "Sender",
-        "Subject",
-        "Summary",
-        "To",
-        "Xref",
-        "" // HeaderUnknown
-};
-
-
 REnvelope::REnvelope()
 {
 	rmmDebug("ctor");
@@ -190,9 +142,9 @@ REnvelope::assemble()
 	void
 REnvelope::_createDefault(RMM::HeaderType t)
 {
-	rmmDebug("Creating default of type " + QCString(headerNames[t]));
+	rmmDebug("Creating default of type " + QString(RMM::headerNames[t]));
 	RHeader * h = new RHeader;
-	h->setName(headerNames[t]);
+	h->setName(RMM::headerNames[t]);
 
 	RHeaderBody * b;
 	switch (RMM::headerTypesTable[t]) {
@@ -279,7 +231,7 @@ template <class T>
 	T
 REnvelope::get(RMM::HeaderType h, T t)
 {
-	rmmDebug("get " + QCString(headerNames[h]));
+	rmmDebug("get " + QCString(RMM::headerNames[h]));
 	// See if we can find this header in the list.
 
 	RHeaderListIterator it(headerList_);
@@ -402,10 +354,10 @@ REnvelope::contentMD5()
 	return *get(RMM::HeaderContentMD5, t);
 }
 
-	RText &
+	RContentType &
 REnvelope::contentType()
 {
-	RText * t = 0;
+	RContentType * t = 0;
 	return *get(RMM::HeaderContentType, t);
 }
 
@@ -416,10 +368,10 @@ REnvelope::control()
 	return *get(RMM::HeaderControl, t);
 }
 
-	RText &
+	RCte &
 REnvelope::contentTransferEncoding()
 {
-	RText * t = 0;
+	RCte * t = 0;
 	return *get(RMM::HeaderContentTransferEncoding, t);
 }
 
