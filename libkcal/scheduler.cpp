@@ -367,7 +367,7 @@ bool Scheduler::acceptFreeBusy(IncidenceBase *incidence, Method method)
     from = attendee->email();
   }
 
-  if ( !d->mFreeBusyCache->storeFreeBusy( freebusy, from ) ) return false;
+  if ( !d->mFreeBusyCache->saveFreeBusy( freebusy, from ) ) return false;
 
   deleteTransaction(incidence);
   return true;

@@ -31,9 +31,14 @@ class FreeBusyCache
 {
   public:
     /**
-      Store freebusy information belonging to email.
+      Save freebusy information belonging to an email.
     */
-    virtual bool storeFreeBusy( FreeBusy *, const QString &email ) = 0;
+    virtual bool saveFreeBusy( FreeBusy *, const QString &email ) = 0;
+
+    /**
+      Load freebusy information belonging to an email.
+    */
+    virtual FreeBusy *loadFreeBusy( const QString &email ) = 0;
 };
 
 }
