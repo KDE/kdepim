@@ -150,6 +150,7 @@ Syncee* AddressBookSyncee::clone() {
     SyncEntry* cloneE;
     AddressBookSyncee* clone = new AddressBookSyncee();
     clone->setSyncMode( syncMode() );
+    clone->setFirstSync( firstSync() );
     for ( entry = mEntries.first(); entry != 0; entry = mEntries.next() ) {
         cloneE = entry->clone();
         clone->addEntry( cloneE ); // mSyncee gets updatet

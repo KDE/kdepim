@@ -3,6 +3,9 @@
 
 /**
  * $Log$
+ * Revision 1.1  2002/07/15 20:15:19  zecke
+ * Ported OpieDesktopSyncEntry
+ *
  */
 
 
@@ -89,6 +92,7 @@ QString OpieDesktopSyncee::type() const {
 Syncee* OpieDesktopSyncee::clone() {
     OpieDesktopSyncee* syncee = new OpieDesktopSyncee();
     syncee->setSyncMode( syncMode() );
+    syncee->setFirstSync( firstSync() );
     OpieDesktopSyncEntry* entry;
     for ( entry = mList.first(); entry != 0; entry =mList.next() ) {
         syncee->addEntry( entry->clone() );

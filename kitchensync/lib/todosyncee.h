@@ -12,7 +12,7 @@ namespace KSync {
         TodoSyncEntry( KCal::Todo* );
         TodoSyncEntry( const TodoSyncEntry& );
         ~TodoSyncEntry();
-        KCal::Todo* todo()const;
+        KCal::Todo* todo();
 
         QString type() const;
         QString name();

@@ -34,10 +34,10 @@ int main(int argc, char *argv[] )
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
   KApplication a;
 
-  Konnector *konnector = new Konnector(0,0);
-  KDevice::List device;
+  KSync::Konnector *konnector = new KSync::Konnector(0,0);
+  KSync::Device::ValueList device;
   device = konnector->query();
-  for(KDevice::List::Iterator it = device.begin(); it != device.end(); ++it ){
+  for(Device::ValueList::Iterator it = device.begin(); it != device.end(); ++it ){
     kdDebug(5201) << "KDevice: " <<  (*it).identify() << endl;
     QString outp = konnector->registerKonnector( (*it) );
     kdDebug(5202) << "UID " <<  outp;

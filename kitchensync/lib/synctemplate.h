@@ -26,6 +26,7 @@ namespace KSync {
         Syncee* clone() {
             SyncTemplate* temp = new SyncTemplate();
             temp->setSyncMode( syncMode() );
+	    temp->setFirstSync( firstSync() );
             Entry* entry;
             for ( entry = mList.first(); entry != 0; entry = mList.next() ) {
                 temp->addEntry( entry->clone() );

@@ -61,7 +61,7 @@ Syncee *SyncEntry::syncee()
 Syncee::Syncee() :
   mStatusLog(0)
 {
-    mSyncMode = FirstSync;
+    mSyncMode = MetaLess;
 }
 
 
@@ -159,7 +159,12 @@ int Syncee::syncMode() const {
 void Syncee::setSyncMode( int mode ) {
     mSyncMode = mode;
 }
-
+bool Syncee::firstSync() const {
+    return mFirstSync;
+}
+void Syncee::setFirstSync( bool first ) {
+    mFirstSync = first;
+}
 void Syncee::insertId( const QString &type,
                           const QString &konnectorId,
                           const QString &kdeId )

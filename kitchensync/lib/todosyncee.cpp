@@ -24,7 +24,7 @@ TodoSyncEntry::TodoSyncEntry( const TodoSyncEntry& entry)
 TodoSyncEntry::~TodoSyncEntry() {
     delete mTodo;
 }
-KCal::Todo* TodoSyncEntry::todo() const {
+KCal::Todo* TodoSyncEntry::todo()  {
     return mTodo;
 }
 QString TodoSyncEntry::type() const {

@@ -172,7 +172,8 @@ class SyncEntry
 class Syncee
 {
   public:
-    enum SyncMode { FirstSync=0, MetaLess=1, MetaMode=2 };
+    typedef QPtrList<Syncee> PtrList;
+    enum SyncMode { MetaLess=0, MetaMode=2 };
 
     Syncee();
     virtual ~Syncee();
@@ -291,8 +292,17 @@ class Syncee
     /**
      * Sets the syncMode of this Syncee
      */
-    virtual void setSyncMode( int mode = FirstSync );
+    virtual void setSyncMode( int mode = MetaLess );
 
+    /**
+     * set if it's syncing for the first time
+     */
+    virtual void setFirstSync( bool firstSync = true );
+
+    /**
+     * if is syncing for the first time
+     */
+    virtual bool firstSync() const;
 
     /**
      * For Meta Syncing you easily know what was changed
@@ -366,6 +376,7 @@ class Syncee
   private:
     QMap<QString,  Kontainer::ValueList > mMaps;
     int mSyncMode;
+    bool mFirstSync : 1;
     QString mFilename;
     KSimpleConfig *mStatusLog;
     class SynceePrivate;
