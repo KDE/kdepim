@@ -1,4 +1,4 @@
-#include <qstack.h>
+#include <qptrstack.h>
 #include <sys/types.h>
 #include <dirent.h>
 #include <stdlib.h>
@@ -29,8 +29,8 @@ Karm::Karm( QWidget *parent, const char *name )
   : QListView( parent, name )
 {
   _preferences = Preferences::instance();
-  
-	connect(this, SIGNAL(doubleClicked(QListViewItem *)), 
+
+	connect(this, SIGNAL(doubleClicked(QListViewItem *)),
           this, SLOT(changeTimer(QListViewItem *)));
 
 	addColumn(i18n("Task Name"));
@@ -51,11 +51,11 @@ Karm::Karm( QWidget *parent, const char *name )
   connect(_preferences, SIGNAL(detectIdleness(bool)), _idleTimer, SLOT(toggleOverAllIdleDetection(bool)));
   if (!_idleTimer->isIdleDetectionPossible())
     _preferences->disableIdleDetection();
-  
+
   // Setup auto save timer
   _autoSaveTimer = new QTimer(this);
   connect(_preferences, SIGNAL(autoSave(bool)), this, SLOT(autoSaveChanged(bool)));
-  connect(_preferences, SIGNAL(autoSavePeriod(int)), 
+  connect(_preferences, SIGNAL(autoSavePeriod(int)),
           this, SLOT(autoSavePeriodChanged(int)));
   connect(_autoSaveTimer, SIGNAL(timeout()), this, SLOT(save()));
 }
@@ -69,7 +69,7 @@ void Karm::load()
 {
   QFile f(_preferences->saveFile());
 
-  if( !f.exists() ) 
+  if( !f.exists() )
     return;
 
   if( !f.open( IO_ReadOnly ) )
@@ -77,33 +77,33 @@ void Karm::load()
 
   QString line;
 
-  QStack<Task> stack;
+  QPtrStack<Task> stack;
   Task *task;
-  
+
   QTextStream stream(&f);
-  
+
   while( !stream.atEnd() ) {
-    //lukas: this breaks for non-latin1 chars!!!  
-    //if ( file.readLine( line, T_LINESIZE ) == 0 )	
+    //lukas: this breaks for non-latin1 chars!!!
+    //if ( file.readLine( line, T_LINESIZE ) == 0 )
     //	break;
-    
+
     line = stream.readLine();
-    
+
     if (line.isNull())
 	break;
 
     long minutes;
     int level;
     QString name;
-    
+
     if (!parseLine(line, &minutes, &name, &level))
       continue;
-    
+
     unsigned int stackLevel = stack.count();
     for (unsigned int i = level; i<=stackLevel ; i++) {
       stack.pop();
     }
-    
+
     if (level == 1) {
       task = new Task(name, minutes, 0, this);
     }
@@ -127,7 +127,7 @@ bool Karm::parseLine(QString line, long *time, QString *name, int *level)
     // A comment line
     return false;
   }
-		
+
   int index = line.find('\t');
   if (index == -1) {
     // This doesn't seem like a valid record
@@ -136,7 +136,7 @@ bool Karm::parseLine(QString line, long *time, QString *name, int *level)
 
   QString levelStr = line.left(index);
   QString rest = line.remove(0,index+1);
-  
+
   index = rest.find('\t');
   if (index == -1) {
     // This doesn't seem like a valid record
@@ -145,10 +145,10 @@ bool Karm::parseLine(QString line, long *time, QString *name, int *level)
 
   QString timeStr = rest.left(index);
   *name = rest.remove(0,index+1);
-		
+
   bool ok;
   *time = timeStr.toLong(&ok);
-		
+
   if (!ok) {
     // the time field was not a number
     return false;
@@ -173,7 +173,7 @@ void Karm::save()
     return;
  }
  const char * comment = "# Karm save data\n";
- 
+
  f.writeBlock(comment, strlen(comment));  //comment
  f.flush();
 
@@ -210,7 +210,7 @@ void Karm::startTimer()
   }
 }
 
-void Karm::stopAllTimers() 
+void Karm::stopAllTimers()
 {
   for(unsigned int i=0; i<activeTasks.count();i++) {
     activeTasks.at(i)->setRunning(false);
@@ -232,8 +232,8 @@ void Karm::stopCurrentTimer()
   if (item != 0 && activeTasks.findRef(item) != -1) {
     activeTasks.removeRef(item);
     item->setRunning(false);
-    if (activeTasks.count()== 0) 
-      _idleTimer->stopIdleDetection();    
+    if (activeTasks.count()== 0)
+      _idleTimer->stopIdleDetection();
   }
 }
 
@@ -262,7 +262,7 @@ void Karm::minuteUpdate()
     emit(timerTick());
 }
 
-void Karm::addTimeToActiveTasks(int minutes) 
+void Karm::addTimeToActiveTasks(int minutes)
 {
   for(unsigned int i=0; i<activeTasks.count();i++) {
     Task *task = activeTasks.at(i);
@@ -322,15 +322,15 @@ void Karm::editTask()
   AddTaskDialog *dialog = new AddTaskDialog(i18n("Edit Task"), true);
   dialog->setTask(task->name(),
                   task->totalTime(),
-                  task->sessionTime());  
+                  task->sessionTime());
 	int result = dialog->exec();
   if (result == QDialog::Accepted) {
-    QString taskName = i18n("Unnamed Task");   
+    QString taskName = i18n("Unnamed Task");
     if (!dialog->taskName().isEmpty()) {
       taskName = dialog->taskName();
     }
     task->setName(taskName);
-    
+
     // update session time as well if the time was changed
 		long total, session, totalDiff, sessionDiff;
 		dialog->status( &total, &totalDiff, &session, &sessionDiff );
@@ -365,7 +365,7 @@ void Karm::deleteTask()
     KMessageBox::information(0,i18n("No task selected"));
     return;
   }
-	
+
   int response;
   if (item->childCount() == 0) {
     response = KMessageBox::questionYesNo(0,
@@ -416,7 +416,7 @@ void Karm::stopChildCounters(Task *item)
 }
 
 
-void Karm::extractTime(int minutes) 
+void Karm::extractTime(int minutes)
 {
   addTimeToActiveTasks(-minutes);
   emit(sessionTimeChanged(-minutes));
@@ -436,7 +436,7 @@ void Karm::autoSaveChanged(bool on)
   }
 }
 
-void Karm::autoSavePeriodChanged(int /*minutes*/) 
+void Karm::autoSavePeriodChanged(int /*minutes*/)
 {
   autoSaveChanged(_preferences->autoSave());
 }
