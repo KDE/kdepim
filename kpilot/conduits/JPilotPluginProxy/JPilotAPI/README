@@ -1,0 +1,2 @@
+All code in this directory was copied from the JPilot source code (Version 0.98). JPilotAPI.c and JPilotAPI.h contain various functions copied from the JPilot source because I couln't include the whole header/source file that contains the corresponding functions/definitions. All other files are taken as are from JPilot.
+18.5.2002      Reinhold Kainhofer
