@@ -2458,7 +2458,7 @@ VObject* Parse_MIME_FromFileName(const char *fname)
 	}
     else {
 	char msg[255];
-	sprintf(msg, "can't open file '%s' for reading\n", fname);
+	snprintf(msg, sizeof(msg), "can't open file '%s' for reading\n", fname);
 	mime_error_(msg);
 	return 0;
 	}
@@ -2482,7 +2482,7 @@ static void mime_error(char *s)
     {
     char msg[256];
     if (mimeErrorHandler) {
-	sprintf(msg,"%s at line %d", s, mime_lineNum);
+	snprintf(msg, sizeof(msg), "%s at line %d", s, mime_lineNum);
 	mimeErrorHandler(msg);
 	}
     }

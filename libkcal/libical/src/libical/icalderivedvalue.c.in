@@ -39,7 +39,7 @@
 #include "icalvalueimpl.h"
 
 #include <stdlib.h> /* for malloc */
-#include <stdio.h> /* for sprintf */
+#include <stdio.h> /* for snprintf */
 #include <string.h> /* For memset, others */
 #include <stddef.h> /* For offsetof() macro */
 #include <errno.h>

@@ -195,7 +195,7 @@ icalcomponent* icalmime_parse(char* (*get_string)(char *s, size_t size,
 	    minor = parts[i].header.minor_text;
 	}
 	
-	sprintf(mimetype,"%s/%s",major,minor);
+	snprintf(mimetype,sizeof(mimetype),"%s/%s",major,minor);
 
 	comp = icalcomponent_new(ICAL_XLICMIMEPART_COMPONENT);
 

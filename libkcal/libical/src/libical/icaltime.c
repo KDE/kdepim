@@ -341,13 +341,13 @@ struct icaltimetype icaltime_from_string(const char* str)
 }
 #endif
 
-char ctime_str[20];
+static char ctime_str[28];
 char* icaltime_as_ctime(struct icaltimetype t)
 {
     time_t tt;
  
     tt = icaltime_as_timet(t);
-    sprintf(ctime_str,"%s",ctime(&tt));
+    snprintf(ctime_str,sizeof(ctime_str),"%s",ctime(&tt));
 
     ctime_str[strlen(ctime_str)-1] = 0;
 
@@ -355,7 +355,7 @@ char* icaltime_as_ctime(struct icaltimetype t)
 }
 
 
-short days_in_month[] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
+static const short days_in_month[] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
 
 short icaltime_days_in_month(short month,short year)
 {

@@ -1181,13 +1181,13 @@ static void writeValue(OFile *fp, VObject *o, unsigned long size)
 	    }
 	case VCVT_UINT: {
 	    char buf[16];
-	    sprintf(buf,"%u", INTEGER_VALUE_OF(o));
+	    snprintf(buf,sizeof(buf),"%u", INTEGER_VALUE_OF(o));
 	    appendsOFile(fp,buf);
 	    break;
 	    }
 	case VCVT_ULONG: {
 	    char buf[16];
-	    sprintf(buf,"%lu", LONG_VALUE_OF(o));
+	    snprintf(buf,sizeof(buf),"%lu", LONG_VALUE_OF(o));
 	    appendsOFile(fp,buf);
 	    break;
 	    }

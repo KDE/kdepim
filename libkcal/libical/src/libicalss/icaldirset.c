@@ -259,7 +259,7 @@ int icaldirset_next_uid_number(icaldirset* store)
 
     icalerror_check_arg_rz( (store!=0), "store");
 
-    sprintf(filename,"%s/%s",impl->dir,"SEQUENCE");
+    snprintf(filename,sizeof(filename),"%s/%s",impl->dir,"SEQUENCE");
 
     /* Create the file if it does not exist.*/
     if (stat(filename,&sbuf) == -1 || !S_ISREG(sbuf.st_mode)){
@@ -321,7 +321,7 @@ icalerrorenum icaldirset_next_cluster(icaldirset* store)
 	return ICAL_NO_ERROR;
     }
 	    
-    sprintf(path,"%s/%s",impl->dir,(char*)pvl_data(impl->directory_iterator));
+    snprintf(path,sizeof(path),"%s/%s",impl->dir,(char*)pvl_data(impl->directory_iterator));
 
     icalfileset_free(impl->cluster);
 
@@ -345,7 +345,7 @@ void icaldirset_add_uid(icaldirset* store, icaldirset* comp)
 	
 	uname(&unamebuf);
 	
-	sprintf(uidstring,"%d-%s",(int)getpid(),unamebuf.nodename);
+	snprintf(uidstring,sizeof(uidstring),"%d-%s",(int)getpid(),unamebuf.nodename);
 	
 	uid = icalproperty_new_uid(uidstring);
 	icalcomponent_add_property(comp,uid);

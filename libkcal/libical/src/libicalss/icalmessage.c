@@ -158,7 +158,7 @@ icalcomponent *icalmessage_new_reply_base(icalcomponent* c,
 
     icalcomponent_add_property(reply,icalproperty_new_version("2.0"));
     
-    sprintf(tmp,
+    snprintf(tmp,sizeof(tmp),
            "-//SoftwareStudio//NONSGML %s %s //EN",PACKAGE,VERSION);
     icalcomponent_add_property(reply,icalproperty_new_prodid(tmp));
 
