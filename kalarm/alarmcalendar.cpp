@@ -22,6 +22,9 @@
 #include <unistd.h>
 #include <time.h>
 
+#include <qfile.h>
+#include <qstring.h>
+
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
@@ -32,6 +35,10 @@
 #include <ktempfile.h>
 #include <dcopclient.h>
 #include <kdebug.h>
+
+extern "C" {
+#include <ical.h>
+}
 
 #include <libkcal/vcaldrag.h>
 #include <libkcal/vcalformat.h>
@@ -161,6 +168,16 @@ int AlarmCalendar::load()
 	if (!localFile.isEmpty())
 		KIO::NetAccess::removeTempFile(localFile);
 	localFile = tmpFile;
+
+	// Check whether the calendar was written by the KDE 3.0.0 version of KAlarm 0.5.7.
+	// If so, summer times need adjustment since they were stored wrongly.
+	if (isKAlarmVersion057_UTC())
+	{
+		// KAlarm version 0.5.7 - check whether times are stored in UTC, in which
+		// case it is the KDE 3.0.0 version which needs adjustment of summer times.
+		kdDebug(5950) << "AlarmCalendar::load(): KAlarm version 0.5.7 UTC\n";
+		KAlarmEvent::convertKCalEvents();  // convert event times for when calendar is saved
+	}
 	return 1;
 }
 
@@ -240,24 +257,51 @@ void AlarmCalendar::deleteEvent(const QString& eventID)
 }
 
 /******************************************************************************
-* Find the default system time zone ID.
-*/
-const QString& AlarmCalendar::getDefaultTimeZoneID()
+ * Check whether the calendar file has its times stored as UTC times,
+ * indicating that it was written by the KDE 3.0.0 version of KAlarm 0.5.7.
+ * Reply = true if times are stored in UTC
+ *       = false if the calendar is a vCalendar, times are not UTC, or any error occurred.
+ */
+bool AlarmCalendar::isKAlarmVersion057_UTC() const
 {
-	static QString zoneID;
-	char zonefilebuf[100];
-	int  len = readlink("/etc/localtime", zonefilebuf, 100);
-	if (len > 0 && len < 100)
+	// Read the calendar file into a QString
+	QFile file(localFile);
+	if (!file.open(IO_ReadOnly))
+		return false;
+	QTextStream ts(&file);
+	ts.setEncoding(QTextStream::UnicodeUTF8);
+	QString text = ts.read();
+	file.close();
+
+	// Extract the CREATED property for the first VEVENT from the calendar
+	bool result = false;
+	icalcomponent* calendar = icalcomponent_new_from_string(text.local8Bit().data());
+	if (calendar)
 	{
-		zonefilebuf[len] = '\0';
-		zoneID = zonefilebuf;
-		zoneID = zoneID.mid(zoneID.find("zoneinfo/") + 9);
+		if (icalcomponent_isa(calendar) == ICAL_VCALENDAR_COMPONENT)
+		{
+			icalproperty *p = icalcomponent_get_first_property(calendar,ICAL_PRODID_PROPERTY);
+			if (p)
+			{
+				QString prodid = QString::fromLocal8Bit(icalproperty_get_prodid(p));
+				if (prodid.find(" KAlarm 0.5.7/") >= 0)
+				{
+					// The calendar was created by KAlarm 0.5.7
+					icalcomponent* c = icalcomponent_get_first_component(calendar, ICAL_VEVENT_COMPONENT);
+					if (c)
+					{
+						icalproperty* p = icalcomponent_get_first_property(c, ICAL_CREATED_PROPERTY);
+						if (p)
+						{
+							struct icaltimetype datetime = icalproperty_get_created(p);
+							if (datetime.is_utc)
+								result = true;
+						}
+					}
+				}
+			}
+		}
+		icalcomponent_free(calendar);
 	}
-	else
-	{
-		tzset();
-		zoneID = tzname[0];
-	}
-	kdDebug(5950) << "AlarmCalendar::getDefaultTimeZoneID(): " << zoneID << endl;
-	return zoneID;
+	return result;
 }

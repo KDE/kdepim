@@ -19,12 +19,14 @@
  */
 
 #include <stdlib.h>
+#include <time.h>
 #include <ctype.h>
 #include <qcolor.h>
 #include <kdebug.h>
 
 #include "kalarm.h"
 #include "kalarmapp.h"
+#include "alarmcalendar.h"
 #include "msgevent.h"
 using namespace KCal;
 
@@ -333,6 +335,35 @@ void KAlarmEvent::removeAlarm(int alarmID)
 	{
 	   mRepeatAtLogin = false;
 	   --mAlarmCount;
+	}
+}
+
+/******************************************************************************
+ * The calendar was written by the KDE 3.0.0 version of KAlarm 0.5.7.
+ * Adjust wrongly stored summer times (summer time was ignored when converting
+ * to UTC).
+ */
+void KAlarmEvent::convertKCalEvents()
+{
+	kdDebug(5950) << "KAlarmEvent::convertKCalEvents()\n";
+	QDateTime dt0(QDate(1970,1,1), QTime(0,0,0));
+
+	QPtrList<Event> events = theApp()->getCalendar().getAllEvents();
+	for (Event* event = events.first();  event;  event = events.next())
+	{
+		QPtrList<Alarm> alarms = event->alarms();
+		for (QPtrListIterator<Alarm> ia(alarms);  ia.current();  ++ia)
+		{
+			Alarm* alarm = ia.current();
+			QDateTime dt = alarm->time();
+			time_t t = dt0.secsTo(dt);
+			struct tm* dtm = localtime(&t);
+			if (dtm->tm_isdst)
+			{
+				dt.addSecs(-3600);
+				alarm->setTime(dt);
+			}
+		}
 	}
 }
 
