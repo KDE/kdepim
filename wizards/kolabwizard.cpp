@@ -48,7 +48,8 @@ class CreateImapResource : public KConfigPropagator::Change
 
       KCal::CalendarResourceManager m( "calendar" );
       m.readConfig();
-      KCal::ResourceIMAP *r = new KCal::ResourceIMAP( "FIXME" );
+      QString server = KolabConfig::self()->server();
+      KCal::ResourceIMAP *r = new KCal::ResourceIMAP( server );
       r->setResourceName( i18n("Kolab") );
       m.add( r );
       m.writeConfig();
