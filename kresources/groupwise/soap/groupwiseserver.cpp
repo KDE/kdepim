@@ -578,8 +578,7 @@ bool GroupwiseServer::readCalendar( KCal::Calendar *calendar, KCal::ResourceGrou
   return true;
 }
 
-bool GroupwiseServer::readFreeBusy( const QString &displayName,
-  const QString &email, const QString &uuid,
+bool GroupwiseServer::readFreeBusy( const QString &email, 
   const QDate &start, const QDate &end, KCal::FreeBusy *freeBusy )
 {
   kdDebug() << "GroupwiseServer::readFreeBusy()" << endl;
@@ -588,9 +587,7 @@ bool GroupwiseServer::readFreeBusy( const QString &displayName,
 
   // Setup input data
   ns1__FreeBusyUser user;
-  user.displayName = displayName.utf8();
   user.email = email.utf8();
-  user.uuid = uuid.utf8();  
 
   std::vector<class ns1__FreeBusyUser * > users;
   users.push_back( &user );

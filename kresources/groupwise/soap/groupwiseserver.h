@@ -75,8 +75,7 @@ class GroupwiseServer : public QObject
     bool changeAddressee( const KABC::Addressee& );
     bool removeAddressee( const KABC::Addressee& );
 
-    bool readFreeBusy( const QString &displayName, const QString &email,
-      const QString &uuid, const QDate &start,
+    bool readFreeBusy( const QString &email, const QDate &start,
       const QDate &end, KCal::FreeBusy * );
 
     bool dumpData();
