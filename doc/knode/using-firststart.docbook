@@ -1521,7 +1521,7 @@ then insert the following introductionary line.</para>
 <sect3> 
 <title><guilabel>Rewrap quoted text automatically</guilabel></title> 
 
-<para>When this is checked, the quoted text is wwrappedat the correct
+<para>When this is checked, the quoted text is wrapped at the correct
 border value. So, every new line is in the correct quoting
 level.</para> 
 
@@ -1605,7 +1605,7 @@ editing articles.</para>
 <sect2>
 <title><guilabel>Spelling</guilabel></title>
 
-<para>Here you can configure the bbehaviorof the spell
+<para>Here you can configure the behavior of the spell
 checker.</para>
 
 <sect3>
@@ -1622,7 +1622,7 @@ be automatically accepted as a new word.</para>
 errors</guilabel></title>
 
 <para>Here you can toggle if two known words that run together and are
-unknown if they run together should be tthreatenas an error or
+unknown if they run together should be threatens an error or
 not.</para>
 
 </sect3>
@@ -1754,7 +1754,7 @@ documentation to handle expiring the articles on the server &mdash;
 <sect3> 
 <title><guilabel>Expire old articles automatically</guilabel></title> 
 
-<para>When this option is active, all ssubscribedgroups are checked for
+<para>When this option is active, all subscribed groups are checked for
 old articles in the time interval set here. The old articles are
 deleted at this time.</para>
 
@@ -1817,7 +1817,7 @@ the dicussion is ended.</para>
 <caution> 
 <para>&knode; can not predict, if there is a reply, after the set
 conditions are fulfilled. You have to find your own settings for
-this. Some newgroups have days between rreplies others only hours. Use
+this. Some newsgroups have days between replies others only hours. Use
 your own judgement.</para> 
 </caution> 
 </sect3> 
