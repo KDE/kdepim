@@ -21,29 +21,27 @@
 #include <kconfig.h>
 #include <klineeditdlg.h>
 
-#include "kandyview.h"
-#include "kandyview.moc"
-
 #include "modem.h"
 #include "cmdpropertiesdialog.h"
 #include "commanditem.h"
 #include "atcommand.h"
-#include "mobilegui.h"
 #include "commandscheduler.h"
 #include "kandyprefs.h"
 
-KandyView::KandyView(QWidget *parent)
-    : KandyView_base(parent),
-      DCOPObject("KandyIface"),
-      mMobileGui(0)
+#include "kandyview.h"
+#include "kandyview.moc"
+
+KandyView::KandyView(CommandScheduler *scheduler,QWidget *parent)
+    : KandyView_base(parent)
 {
   mModified = false;
+  mScheduler = scheduler;
 
   connect (mInput,SIGNAL(returnPressed()),SLOT(processLastLine()));
 
-  initModem();
+  connect(mScheduler->modem(),SIGNAL(gotLine(const char *)),
+          SLOT(appendOutput(const char *)));
 
-  mScheduler = new CommandScheduler(mModem,this);
   connect(mScheduler,SIGNAL(result(const QString &)),
           mResultView,SLOT(setText(const QString &)));
   connect(mScheduler,SIGNAL(commandProcessed(ATCommand *)),
@@ -54,50 +52,6 @@ KandyView::~KandyView()
 {
 }
 
-void KandyView::initModem()
-{
-  mModem = new Modem(this);
-
-  kdDebug() << "Opening serial Device: "
-            << KandyPrefs::instance()->mSerialDevice
-            << endl;
-
-  mModem->setDevice(KandyPrefs::instance()->mSerialDevice);
-  mModem->setSpeed(19200);
-  mModem->setData(8);
-  mModem->setParity('N');
-  mModem->setStop(1);
-
-  if (!mModem->open()) {
-    KMessageBox::sorry(this,
-        i18n("Cannot open modem device %1.")
-        .arg(KandyPrefs::instance()->mSerialDevice), i18n("Modem Error"));
-    return;
-  }
-
-#if 0
-  if (!mModem->dsrOn()) {
-    KMessageBox::sorry(this, i18n("Modem is off."), i18n("Modem Error"));
-    mModem->close();
-    return;
-  }
-  if (!mModem->ctsOn()) {
-    KMessageBox::sorry(this, i18n("Modem is busy."), i18n("Modem Error"));
-    mModem->close();
-    return;
-  }
-#endif
-
-  connect(mModem,SIGNAL(gotLine(const char *)),
-          SLOT(appendOutput(const char *)));
-
-#if 0
-  mModem->writeLine("");
-  usleep(250000);
-  mModem->flush();
-  mModem->writeLine("ATZ");
-#endif
-}
 
 void KandyView::print(QPainter *, int, int)
 {
@@ -107,9 +61,11 @@ void KandyView::print(QPainter *, int, int)
 
 void KandyView::importPhonebook()
 {
+#if 0
   createMobileGui();
   connect (mMobileGui,SIGNAL(phonebookRead()),mMobileGui,SLOT(writeKab()));
   mMobileGui->readPhonebook();
+#endif
 }
 
 void KandyView::slotSetTitle(const QString& title)
@@ -160,6 +116,7 @@ void KandyView::addCommand()
 
   if (result == QDialog::Accepted) {
     new CommandItem(mCommandList,cmd);
+    mScheduler->commandSet()->addCommand(cmd);
     setModified();
   } else {
     delete cmd;
@@ -210,8 +167,9 @@ void KandyView::executeCommand()
 
 void KandyView::deleteCommand()
 {
-  QListViewItem *item = mCommandList->currentItem();
+  CommandItem *item = dynamic_cast<CommandItem *>(mCommandList->currentItem());
   if (item) {
+    mScheduler->commandSet()->deleteCommand(item->command());
     delete item;
     setModified();
   }
@@ -219,27 +177,14 @@ void KandyView::deleteCommand()
 
 bool KandyView::loadFile(const QString& filename)
 {
-//  kdDebug() << "KandyView::loadFile(): " << filename << endl;
-
-  QDomDocument doc("Kandy");
-  QFile f(filename);
-  if (!f.open(IO_ReadOnly))
-    return false;
-  if (!doc.setContent(&f)) {
-    f.close();
-    return false;
-  }
-  f.close();
-
   mCommandList->clear();
 
-  QDomNodeList commands = doc.elementsByTagName("command");
-  for(uint i=0;i<commands.count();++i) {
-    QDomElement c = commands.item(i).toElement();
-    if (!c.isNull()) {
-      CommandItem *cmdItem = new CommandItem(mCommandList,new ATCommand);
-      cmdItem->load(&c);
-    }
+  if (!mScheduler->loadProfile(filename)) return false;
+
+  QList<ATCommand> *cmds = mScheduler->commandSet()->commandList();
+
+  for(uint i=0;i<cmds->count();++i) {
+    new CommandItem(mCommandList,cmds->at(i));
   }
 
   KConfig *config = KGlobal::config();
@@ -253,21 +198,7 @@ bool KandyView::loadFile(const QString& filename)
 
 bool KandyView::saveFile(const QString& filename)
 {
-  QDomDocument doc("Kandy");
-  QDomElement set = doc.createElement("commandset");
-  doc.appendChild(set);
-
-  CommandItem *item = (CommandItem *)(mCommandList->firstChild());
-  while (item) {
-    item->save(&doc,&set);
-    item = (CommandItem *)(item->nextSibling());
-  }
-  
-  QFile xmlfile(filename);
-  if (!xmlfile.open(IO_WriteOnly)) return false;
-  QTextStream ts(&xmlfile);
-  doc.documentElement().save(ts,2);
-  xmlfile.close();
+  if (!mScheduler->saveProfile(filename)) return false;
 
   KConfig *config = KGlobal::config();
   config->setGroup("General");
@@ -289,37 +220,4 @@ void KandyView::setModified(bool modified)
 bool KandyView::isModified()
 {
   return mModified;
-}
-
-void KandyView::createMobileGui()
-{
-  if (!mMobileGui) {
-    mMobileGui = new MobileGui(mScheduler,this);
-    connect(mMobileGui,SIGNAL(sendCommand(const QString &)),
-            SLOT(executeCommandId(const QString &)));
-    mMobileGui->readModelInformation();
-    mMobileGui->refreshStatus();
-  }
-}
-
-void KandyView::showMobileGui()
-{
-  createMobileGui();
-  mMobileGui->show();
-  mMobileGui->raise();
-}
-
-// This function really belongs to the CommandScheduler. But we need a way to
-// handle the list of commands independently of the GUI before we can move it.
-void KandyView::executeCommandId(const QString &id)
-{
-  CommandItem *item = (CommandItem *)(mCommandList->firstChild());
-  while (item) {
-    if (item->command()->id() == id) {
-      mScheduler->execute(item->command());
-      return;
-    }
-    item = (CommandItem *)(item->nextSibling());
-  }
-  kdDebug() << "executeCommandId: Id '" << id << "' not found" << endl;
 }

@@ -9,7 +9,8 @@ class KandyIface : virtual public DCOPObject
   public:
 
   k_dcop:
-    virtual void importPhonebook() = 0;
+    virtual void syncPhonebooks() = 0;
+    virtual void exit() = 0;
 };
 
 #endif // KANDYIFACE_H

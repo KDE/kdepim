@@ -1,11 +1,12 @@
 // $Id$
 
-#include "commandscheduler.h"
+#include <kdebug.h>
+#include <klocale.h>
 
 #include "modem.h"
 
-#include <kdebug.h>
-#include <klocale.h>
+#include "commandscheduler.h"
+#include "commandscheduler.moc"
 
 CommandScheduler::CommandScheduler(Modem *modem,QObject *parent,
                                    const char *name) :
@@ -18,6 +19,11 @@ CommandScheduler::CommandScheduler(Modem *modem,QObject *parent,
 
 void CommandScheduler::execute(ATCommand *command)
 {
+  if (!mModem->isOpen()) {
+    kdDebug() << "Warning! Modem not open." << endl;
+    return;
+  }
+
   mCommandQueue.append(command);
 
 //  if (mCommandQueue.count() == 1) sendCommand(command->cmdString());
@@ -32,6 +38,19 @@ void CommandScheduler::execute(const QString &command)
   execute(cmd);
 }
 
+void CommandScheduler::executeId(const QString &id)
+{
+  QList<ATCommand> *cmds = mCommandSet.commandList();
+
+  for(uint i=0;i<cmds->count();++i) {
+    if (cmds->at(i)->id() == id) {
+      execute(cmds->at(i));
+      return;
+    }
+  }
+  kdDebug() << "CommandScheduler::executeId(): Id '" << id << "' not found" << endl;
+}
+
 void CommandScheduler::sendCommand(const QString &command)
 {
   if (command.isEmpty()) {
@@ -39,6 +58,8 @@ void CommandScheduler::sendCommand(const QString &command)
               << endl;
     return;
   }
+
+//  kdDebug() << "CommandScheduler:sendCommand(): " << command.latin1() << endl;
 
   mModem->writeLine(command.latin1());
 }
@@ -50,14 +71,10 @@ void CommandScheduler::processOutput(const char *line)
   ATCommand *cmd = mCommandQueue.first();
   if (l == "OK") {
     mState = WAITING;
-    if (!cmd->autoDelete()) {
-      cmd->setResultString(mResult);
-      emit commandProcessed(cmd);
-      nextCommand();
-    } else {
-      emit result(mResult);
-      nextCommand();
-    }
+    emit result(mResult);
+    cmd->setResultString(mResult);
+    emit commandProcessed(cmd);
+    nextCommand();
   } else if (l == "ERROR") {
     mState = WAITING;
     emit result(i18n("Error"));
@@ -80,7 +97,22 @@ void CommandScheduler::nextCommand()
   if (mCommandQueue.first()->autoDelete()) delete mCommandQueue.first();
   mCommandQueue.removeFirst();
   if (mCommandQueue.count() > 0) {
-    sendCommand(mCommandQueue.first()->cmdString());
+    sendCommand(mCommandQueue.first()->cmd());
   }
 }
-#include "commandscheduler.moc"
+
+bool CommandScheduler::loadProfile(const QString& filename)
+{
+  mCommandSet.clear();
+
+  if (!mCommandSet.loadFile(filename)) return false;
+
+  return true;
+}
+
+bool CommandScheduler::saveProfile(const QString& filename)
+{
+  if (!mCommandSet.saveFile(filename)) return false;
+
+  return true;
+}

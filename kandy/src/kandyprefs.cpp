@@ -20,6 +20,15 @@ KandyPrefs::KandyPrefs() :
   
   addPrefsItem(new KPrefsItemString("Serial Device",
                                     &mSerialDevice,"/dev/ttyS1"));
+  addPrefsItem(new KPrefsItemBool("StartupModem",&mStartupModem,
+                                  false));
+                                  
+  KPrefsItem::setCurrentGroup("Windows");
+                                  
+  addPrefsItem(new KPrefsItemBool("StartupTerminalWin",&mStartupTerminalWin,
+                                  false));
+  addPrefsItem(new KPrefsItemBool("StartupMobileWin",&mStartupMobileWin,
+                                  true));
 }
 
 KandyPrefs::~KandyPrefs()

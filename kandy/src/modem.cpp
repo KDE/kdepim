@@ -76,6 +76,8 @@
 
 Modem::Modem(QObject *parent, const char *name) : QObject(parent, name)
 {
+  mOpen = false;
+
 	timer = new QTimer(this, "modemtimer");
 	CHECK_PTR(timer);
 	connect(timer, SIGNAL(timeout()), SLOT(timerDone()));
@@ -240,6 +242,8 @@ bool Modem::open()
 	CHECK_PTR(sn);
 	connect(sn, SIGNAL(activated(int)), SLOT(readChar(int)));
 
+        mOpen = true;
+
 	return true;
 }
 
@@ -261,6 +265,8 @@ void Modem::close()
 	xreset();
 
 	unlockDevice();
+
+  mOpen = false;
 }
 
 

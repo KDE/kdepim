@@ -11,7 +11,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>648</width>
+            <width>644</width>
             <height>441</height>
         </rect>
     </property>
@@ -34,56 +34,7 @@
             <name>spacing</name>
             <number>6</number>
         </property>
-        <widget row="0"  column="0"  rowspan="1"  colspan="2" >
-            <class>QListView</class>
-            <column>
-                <property>
-                    <name>text</name>
-                    <string>Name</string>
-                </property>
-                <property>
-                    <name>clickable</name>
-                    <bool>true</bool>
-                </property>
-                <property>
-                    <name>resizeable</name>
-                    <bool>true</bool>
-                </property>
-            </column>
-            <column>
-                <property>
-                    <name>text</name>
-                    <string>Command</string>
-                </property>
-                <property>
-                    <name>clickable</name>
-                    <bool>true</bool>
-                </property>
-                <property>
-                    <name>resizeable</name>
-                    <bool>true</bool>
-                </property>
-            </column>
-            <column>
-                <property>
-                    <name>text</name>
-                    <string>Hex</string>
-                </property>
-                <property>
-                    <name>clickable</name>
-                    <bool>true</bool>
-                </property>
-                <property>
-                    <name>resizeable</name>
-                    <bool>true</bool>
-                </property>
-            </column>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>mCommandList</cstring>
-            </property>
-        </widget>
-        <widget row="0"  column="3"  rowspan="5"  colspan="1" >
+        <widget row="0"  column="3"  rowspan="3"  colspan="1" >
             <class>QLayoutWidget</class>
             <property stdset="1">
                 <name>name</name>
@@ -116,21 +67,21 @@
                         <cstring>mResultView</cstring>
                     </property>
                     <property stdset="1">
-                        <name>readOnly</name>
-                        <bool>true</bool>
+                        <name>frameShape</name>
+                        <enum>Box</enum>
                     </property>
                     <property stdset="1">
                         <name>frameShadow</name>
                         <enum>Plain</enum>
                     </property>
                     <property stdset="1">
-                        <name>frameShape</name>
-                        <enum>Box</enum>
+                        <name>readOnly</name>
+                        <bool>true</bool>
                     </property>
                 </widget>
             </vbox>
         </widget>
-        <widget row="0"  column="2"  rowspan="5"  colspan="1" >
+        <widget row="0"  column="2"  rowspan="3"  colspan="1" >
             <class>QLayoutWidget</class>
             <property stdset="1">
                 <name>name</name>
@@ -187,7 +138,7 @@
                 </widget>
             </vbox>
         </widget>
-        <widget row="1"  column="1" >
+        <widget row="1"  column="0" >
             <class>QPushButton</class>
             <property stdset="1">
                 <name>name</name>
@@ -198,7 +149,7 @@
                 <string>Add</string>
             </property>
         </widget>
-        <widget row="2"  column="1" >
+        <widget row="1"  column="1" >
             <class>QPushButton</class>
             <property stdset="1">
                 <name>name</name>
@@ -209,7 +160,7 @@
                 <string>Edit</string>
             </property>
         </widget>
-        <widget row="3"  column="1" >
+        <widget row="2"  column="0" >
             <class>QPushButton</class>
             <property stdset="1">
                 <name>name</name>
@@ -220,7 +171,7 @@
                 <string>Delete</string>
             </property>
         </widget>
-        <widget row="4"  column="1" >
+        <widget row="2"  column="1" >
             <class>QPushButton</class>
             <property stdset="1">
                 <name>name</name>
@@ -231,36 +182,57 @@
                 <string>Execute</string>
             </property>
         </widget>
-        <widget row="1"  column="0"  rowspan="4"  colspan="1" >
-            <class>QPushButton</class>
+        <widget row="0"  column="0"  rowspan="1"  colspan="2" >
+            <class>QListView</class>
+            <column>
+                <property>
+                    <name>text</name>
+                    <string>Name</string>
+                </property>
+                <property>
+                    <name>clickable</name>
+                    <bool>true</bool>
+                </property>
+                <property>
+                    <name>resizeable</name>
+                    <bool>true</bool>
+                </property>
+            </column>
+            <column>
+                <property>
+                    <name>text</name>
+                    <string>Command</string>
+                </property>
+                <property>
+                    <name>clickable</name>
+                    <bool>true</bool>
+                </property>
+                <property>
+                    <name>resizeable</name>
+                    <bool>true</bool>
+                </property>
+            </column>
+            <column>
+                <property>
+                    <name>text</name>
+                    <string>Hex</string>
+                </property>
+                <property>
+                    <name>clickable</name>
+                    <bool>true</bool>
+                </property>
+                <property>
+                    <name>resizeable</name>
+                    <bool>true</bool>
+                </property>
+            </column>
             <property stdset="1">
                 <name>name</name>
-                <cstring>PushButton5</cstring>
-            </property>
-            <property stdset="1">
-                <name>text</name>
-                <string></string>
-            </property>
-            <property stdset="1">
-                <name>pixmap</name>
-                <pixmap>image0</pixmap>
-            </property>
-            <property stdset="1">
-                <name>sizePolicy</name>
-                <sizepolicy>
-                    <hsizetype>3</hsizetype>
-                    <vsizetype>3</vsizetype>
-                </sizepolicy>
+                <cstring>mCommandList</cstring>
             </property>
         </widget>
     </grid>
 </widget>
-<images>
-    <image>
-        <name>image0</name>
-        <data format="XPM.GZ" length="4766">789c8d97d9721a591286effd140ae79d63225b1450404ccc0592256b17da6c591d739114855684006dd031ef3effc9a58cec96a37d5c527ce4397fe55a25fef8b472dedb5ff9f4c787d9a33c5e172bc5954c573e0d9e46a3f99ffffdcf5f1f3ed6b315fcaf353b2bd9c77f7df878f4b852ac1c8cefcb044c005acdb01a89654d390fe6e0dced97ca826576495ccb6bf96aa17c155c533b6d24cef22cafa95dd6952513b76f26aee7f5d8ffac2c75c98c0f94cb7ae9f679b0db4f1337f246e6f6fb8af57ef414ecfbc7ceb9f34d70ddf8abb234c4cf5f2b978db26efc92b89935436fa19c3743ef4c592ade572e9b92d9f95767f75f2689f3ace27be33cf44f94f1cfce8bc69f97b9b8bf7bcea5732a2eb5b256662ca572d98a7c6abdda592be2b95596b6eb533fd8ed23e5b22dce1cdc347e48dcc9da7e7fd1fc74f24edc5ff3db914ee6fe2f9c5d9f3bca65a76c9b5dfd975c32b38bea8b48e8dd397bbd6456b1ed7f0d6e987f57cee2fa53e532ec72edecf9140a6e1a6b7efa9944fddac1ae5f0ff6fd63e7c8c755c5763f0ef6fb7783ed3cf594f3b05316ecfa4fc67dcf07b5827dff76b0efd779ea0bec36afcd8aedfe45b0ef1f3a47fd2b76ffb694cb7ee46f14ecf64367cf0769ff15593ff2d509f6fbf59d23de5ab0d959e7a9c82bfb5ab0eb7f332edc7ffaa22c45e46310ec7a0de7e88fd560b7eb3c1565d87911ecfa13678f874f833d1ebddf202b623ebbc1bebf1eec7a85b3c7c7bbc1ee8f9dcf2bfb3cd8ed3bc6038f97a7c16ed7e7c7402afb6bb0db27ce11bfcedba0acf8d2d9e79db51fcbacb2bf546cfd20ce11ef38d8f73f576cf66de788479f7f651e4c7715dbfe917119fe97155b3df3e0dcec3adfa554fb87159bde9373c433a8d8ecc7c1a647cd8acd6efe95d5f97ec5e64f23d8cf5f546ce70be7c8cf56b0efa78a6dbf3e4f8759b57f56b1d9bf067bfc47c12dd3fb5eb1edbf758efceaf3779897518ff58acdfe25d8fca1f360d7d3791cca30f2fb39d8fdd908367fb817dc36ae556ce7379d73d3a74b67298db5df8765653f0eee58bcebcefefce7fd60b3f361c576fe2858ccbe5ab19d3f0fee9bfdc0b9343bed049b9d762b36fb2cb8b0f3df2b36fbe7e081d92f2ab6fbe7c1a5d9db159bbd153c54fbd1e37b8b6979bdb7eb3d0d163dd7e7820758250ff9523fb9fa671abaf79a6ff8161a7758d73ce27b1ef3034f78faab47bf6a60cf1dcff851156e70f5f9091a237ee6177ee5392fb8cb6bbfd380c280d7f9336ff026ae2fbc852846eac7b67ab2c3bbbc072d7a4f030aebf06093f7f900eb907b7cc4c74b0a2738bdc3a75039fba1b2ac0185affc0d0ae7fc9d2f70ad72cd3592428635814a97ebdcc06a86ca0f0dcda329e4dce236778879448458b6e1c73d09f5a130e71d2ab84e032a69687979a331431e0ee1418b2ee98aaee9866ee90e75451434a27b1ad3037cd8a5094db8018dd23c090df5e296a634532f5af4484ff44c2f5c4265cc637aa53978c127946259c08f3568683c4b1a37bc4eeb34a3cf2917d078a60d7a8217f7c865068d4df098a75450179e7c81c6166dffa4b18eb54f3bb40b9d19edd106136de2fc36fae281f6c1577490cea32e0bcdc721f57e68785fceb8474758c75ca393d48f740a0d5d74a6fc15d99cf01ebcf896f241bda45269f4b53b8fe81ceb3b5df0319d924681eb15ab8b589ef1b3401cabe8d533aad19032aa2f6914587d6ad0053529471eb7c303d473828a76d342554f35170368a0b6d4a2f692c635fc788237694287f8f98c397df0ceeca237e758bb50e82217ab50e9240d61a1258da14ee70057c9ddf4b7b44ea969cc3506cb6603e7b7a48f7c6e49812f11cb1a239fac7b11ba9581e6e1c4bde8c28339cea71e5fa497ab0c3592deb2865ca6d3c8011634f631510f3aa33b785ecce141cac41e328939c1d933b9426f248dbaf0921fdbc983d491384b72adb3e551a43c2013abc826722937b0df9a02b57fd456551e74361181dc26159ced42a34e9a0bf502132f77b05dc9486b524f957dd3a753dcf744b3d0c0be7b1963ba8a544d9cd65a40e14126e8b4adf042a63f69a4d8bbe9a2aea478d08ff0a2d029ddd37af652b7ca8c9bb49daa8a6c3c2e6ba8ca9ef6d25c559e526fcb1855e8a7c990e7d44df8e425295845e4f5edec278d547fbd92ff7ba89fbc7dbfd00332d5d428521cafe6c5cfcf423c1116c96f78d44893258ff8ea364f0b3db3d0aeea5196e2c09ac6d3fd9767f229266180d891c1b4045f5ff09573a4796c4917ae210aebadf7df0d98c72dc4dfc7ef1253b1a5a787f0a0453d28d43513ddf7df0dae82fbc1e7615a78da35c1388bcf524fd5658a3cfcf61d15ef4aad5d2f45af19b4bba76a26dbdadbfdefbeb3ad121abb2d7994f5bf7ffbffd3bf1d64ed377f3bfcefdf1ffe0f9dc49a52</data>
-    </image>
-</images>
 <connections>
     <connection>
         <sender>mButtonExecute</sender>
@@ -279,12 +251,6 @@
         <signal>doubleClicked(QListViewItem*)</signal>
         <receiver>KandyView_base</receiver>
         <slot>executeCommand()</slot>
-    </connection>
-    <connection>
-        <sender>PushButton5</sender>
-        <signal>clicked()</signal>
-        <receiver>KandyView_base</receiver>
-        <slot>showMobileGui()</slot>
     </connection>
     <connection>
         <sender>mButtonAdd</sender>
@@ -309,7 +275,6 @@
     <tabstop>mInput</tabstop>
     <tabstop>mResultView</tabstop>
     <tabstop>mOutput</tabstop>
-    <tabstop>PushButton5</tabstop>
     <tabstop>mButtonAdd</tabstop>
     <tabstop>mButtonEdit</tabstop>
     <tabstop>mButtonDelete</tabstop>

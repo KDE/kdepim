@@ -10,7 +10,7 @@ ATParameter::ATParameter()
   mUserInput = false;
 }
 
-ATParameter::ATParameter(const QString &name,const QString &value,
+ATParameter::ATParameter(const QString &value,const QString &name,
                          bool userInput)
 {
   mName = name;
@@ -77,6 +77,7 @@ void ATCommand::setCmdString(const QString &cmdString)
 
   mId = cmdString;
   if (mId.startsWith("at")) mId = mId.mid(2);
+  else mCmdString.prepend("at");
   
 //  kdDebug() << "ATCommand: Id: " << mId << endl;
 }
@@ -244,21 +245,21 @@ QString ATCommand::processOutput()
 
 void ATCommand::extractParameters()
 {
-  kdDebug() << "Arg String: " << cmdString() << endl;
+//  kdDebug() << "Arg String: " << cmdString() << endl;
   
   int pos = cmdString().find("=");
   if (pos < 0) return;
   
   QString paraString = cmdString().mid(pos+1);
-  kdDebug() << "Para String: " << paraString << endl;
+//  kdDebug() << "Para String: " << paraString << endl;
   QStringList paraList = QStringList::split(",",paraString);
   
   QStringList::ConstIterator it = paraList.begin();
   QStringList::ConstIterator end = paraList.end();
   int argNum = 1;
   while(it != end) {
-    addParameter(new ATParameter(i18n("Arg %1").arg(QString::number(argNum++)),
-                                 *it,false));
+    addParameter(new ATParameter(*it,i18n("Arg %1").arg(QString::number(argNum++)),
+                                 false));
     ++it;
   }
 }

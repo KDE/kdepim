@@ -6,6 +6,7 @@
 #include <qlist.h>
 
 #include "atcommand.h"
+#include "commandset.h"
 
 class Modem;
 
@@ -16,6 +17,13 @@ class CommandScheduler : public QObject {
 
     void execute(const QString &command);
     void execute(ATCommand *command);
+    void executeId(const QString &id);
+
+    Modem *modem() { return mModem; }
+    CommandSet *commandSet() { return &mCommandSet; }
+
+    bool loadProfile(const QString& filename);
+    bool saveProfile(const QString& filename);
 
   signals:
     void result(const QString &);
@@ -29,7 +37,9 @@ class CommandScheduler : public QObject {
     void nextCommand();
 
   private:
-    Modem *mModem;  
+    Modem *mModem;
+    
+    CommandSet mCommandSet;
 
     ATCommand *mLastCommand;
 

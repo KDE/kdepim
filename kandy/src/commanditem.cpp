@@ -18,7 +18,6 @@ CommandItem::CommandItem(QListView *listView,ATCommand *command)
 
 CommandItem::~CommandItem()
 {
-  delete mCommand;
 }
 
 ATCommand *CommandItem::command()

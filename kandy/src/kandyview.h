@@ -2,7 +2,6 @@
 #define KANDYVIEW_H
 
 #include <qwidget.h>
-#include <kandyiface.h>
 
 #include "kandyview_base.h"
 
@@ -32,14 +31,14 @@ class CmdPropertiesDialog;
  * @author Cornelius Schumacher <schumacher@kde.org>
  * @version 0.1
  */
-class KandyView : public KandyView_base, virtual public KandyIface
+class KandyView : public KandyView_base
 {
     Q_OBJECT
   public:
 	/**
 	 * Default constructor
 	 */
-    KandyView(QWidget *parent);
+    KandyView(CommandScheduler *,QWidget *parent);
 
 	/**
 	 * Destructor
@@ -69,8 +68,6 @@ class KandyView : public KandyView_base, virtual public KandyIface
     void deleteCommand();
     void editCommand();
 
-    void showMobileGui();
-
   signals:
     /**
      * Use this signal to change the content of the statusbar
@@ -93,20 +90,12 @@ class KandyView : public KandyView_base, virtual public KandyIface
     void slotSetTitle(const QString& title);
     void processLastLine();
 
-    void executeCommandId(const QString &id);
-
   private:
-    void initModem();
-    void createMobileGui();
-
-    MobileGui *mMobileGui;
-
     QString mLastInput;
 
-    Modem *mModem;
     CommandScheduler *mScheduler;
 
-    bool mModified;    
+    bool mModified;
 };
 
 #endif // KANDYVIEW_H

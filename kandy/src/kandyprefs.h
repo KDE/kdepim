@@ -33,6 +33,9 @@ class KandyPrefs : public KPrefs
   public:
     // preferences data
     QString mSerialDevice;
+    bool mStartupModem;
+    bool mStartupTerminalWin;
+    bool mStartupMobileWin;
 };
 
 #endif

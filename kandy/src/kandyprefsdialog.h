@@ -28,6 +28,7 @@ class KandyPrefsDialog : public KPrefsDialog
 
   protected:
     void setupSerialTab();
+    void setupWindowsTab();
 };
 
 #endif

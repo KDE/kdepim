@@ -57,6 +57,8 @@ public:
 	bool open();
 	void close();
 
+        bool isOpen() { return mOpen; }
+
 	void flush();
 
 	bool lockDevice();
@@ -80,6 +82,8 @@ private slots:
 	void readXChar(int);
 
 private:
+  bool mOpen;
+
 	void init();
 	void xreset();
 

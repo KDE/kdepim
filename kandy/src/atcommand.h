@@ -9,7 +9,8 @@
 class ATParameter {
   public:
     ATParameter();
-    ATParameter(const QString &name,const QString &value,bool userInput);
+    ATParameter(const QString &value,const QString &name="",
+                bool userInput=false);
     
     void setName(const QString &name) { mName = name; }
     QString name() const { return mName; }
@@ -27,6 +28,7 @@ class ATParameter {
 /**
   This class provides an abstraction of an AT command.
 */
+// TODO: emit a signal, when the command was executed.
 class ATCommand {
   public:
     ATCommand();

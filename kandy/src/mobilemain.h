@@ -1,5 +1,5 @@
-#ifndef KANDY_H
-#define KANDY_H
+#ifndef MOBILEMAIN_H
+#define MOBILEMAIN_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -8,50 +8,41 @@
 #include <kapp.h>
 #include <kmainwindow.h>
  
-#include "kandyview.h"
-
-class QPrinter;
-
 class KToggleAction;
 
-class KandyPrefsDialog;
+class CommandScheduler;
 
 /**
- * This class serves as the main window for Kandy.  It handles the
+ * This class serves as the main window for MobileMain.  It handles the
  * menus, toolbars, and status bars.
  *
  * @short Main window class
  * @author Cornelius Schumacher <schumacher@kde.org>
  * @version 0.1
  */
-class Kandy : public KMainWindow
+class MobileMain : public KMainWindow
 {
     Q_OBJECT
   public:
     /**
      * Default Constructor
      */
-    Kandy(CommandScheduler *);
+    MobileMain(CommandScheduler *);
 
     /**
      * Default Destructor
      */
-    virtual ~Kandy();
-
-    /**
-     * Use this method to load whatever file/URL you have
-     */
-    void load(const QString& url);
-    void save(const QString& url);
+    virtual ~MobileMain();
 
   public slots:
-    void setTitle();
-
-    void modemConnect();
+    void setConnected(bool);
 
   signals:
-    void showMobileWin();
-    void connectStateChanged(bool);
+    void showTerminalWin();
+    void showPreferencesWin();
+
+    void modemConnect();
+    void modemDisconnect();
 
   protected:
     /**
@@ -78,41 +69,26 @@ class Kandy : public KMainWindow
 
 
   private slots:
-    void fileOpen();
-    void fileSave();
-    void fileSaveAs();
-    void filePrint();
+    void showTerminal();
     void optionsShowToolbar();
     void optionsShowStatusbar();
     void optionsConfigureKeys();
     void optionsConfigureToolbars();
     void optionsPreferences();
-    void modemDisconnect();
-    void showMobileGui();
 
-    void changeStatusbar(const QString& text);
+    void showStatusMessage(const QString& text);
+    void showTransientStatusMessage(const QString& text);
     void changeCaption(const QString& text);
 
 
   private:
-    void setupAccel();
     void setupActions();
 
   private:
-    CommandScheduler *mScheduler;
+    MobileGui *mView;
   
-    KandyView *mView;
-
-    QPrinter   *mPrinter;
-
-    KToggleAction *mToolbarAction;
-    KToggleAction *mStatusbarAction;
-    KAction *mConnectAction;
-    KAction *mDisconnectAction;
-    
-    QString mFilename;
-
-    KandyPrefsDialog *mPreferencesDialog;
+    KToggleAction *m_toolbarAction;
+    KToggleAction *m_statusbarAction;
 };
 
-#endif // KANDY_H
+#endif // MOBILEMAIN_H

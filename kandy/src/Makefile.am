@@ -24,8 +24,9 @@ kandy_SOURCES =	main.cpp kandy.cpp \
 		kandyiface.skel \
                 modem.cpp kandyview_base.ui \
                 atcommand.cpp commanditem.cpp mobilegui_base.ui mobilegui.cpp \
-                commandscheduler.cpp \
-                kprefs.cpp kprefsdialog.cpp kandyprefs.cpp kandyprefsdialog.cpp
+                commandscheduler.cpp commandset.cpp \
+                kprefs.cpp kprefsdialog.cpp kandyprefs.cpp kandyprefsdialog.cpp \
+                mobilemain.cpp
 
 # these are the headers for your project
 noinst_HEADERS   = kandy.h kandyview.h modem.h atcommand.h \
@@ -50,4 +51,4 @@ kdelnk_DATA = kandy.desktop
 
 # this is where the XML-GUI resource file goes
 rcdir = $(kde_datadir)/kandy
-rc_DATA = kandyui.rc
+rc_DATA = kandyui.rc kandymobileui.rc
