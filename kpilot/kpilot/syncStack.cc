@@ -31,6 +31,7 @@
 static const char *syncStack_id = "$Id$";
 
 #include <unistd.h>
+#include <assert.h>
 
 #include <qtimer.h>
 #include <qfile.h>
