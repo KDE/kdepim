@@ -1,6 +1,6 @@
 /*
     This file is part of KAddressbook.
-    Copyright (c) 2003 - 2003 Helge Deller <deller@kde.org>
+    Copyright (c) 2003 Helge Deller <deller@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,16 +28,10 @@
     Gnokii homepage is at: http://www.gnokii.org
 
     TODO:
-	- handle callergroup value (Friend, VIP, Family, ...)
-	- export to phone
+	- handle callergroup value (Friend, VIP, Family, ...) better
 	- modal mode (show dialog during up/download)
-	- stripWhiteSpace() -> simplifyWhiteSpace() 
-	- NDEBUG
-	- TabBar
-	- SIM-Karte nicht beschreiben...
-	- Handy entdecken und melden
-	- IMEI nummer in Eintrag speichern
-	- Zeit/Datumsfeld auswerten
+	- automatically detect mobile phone
+	- we do not yet write back to SIM memory (for security reasons)
 */
 
 #include "config.h"
@@ -55,6 +49,18 @@ extern "C" {
 #include "gnokii_xxport.h"
 
 #define APP "GNOKII_XXPORT"
+
+#if 1 // !defined(NDEBUG)
+ #define GNOKII_DEBUG(x)	do { kdWarning() << (x); } while (0)
+#else
+ #define GNOKII_DEBUG(x)	do { } while (0)
+#endif
+#define GNOKII_CHECK_ERROR(error) \
+	do { \
+		if (error) \
+			kdError() << QString("ERROR %1: %2\n").arg(error).arg(gn_error_print(error));\
+	} while (0)
+
 
 class GNOKIIXXPortFactory : public XXPortFactory
 {
@@ -86,9 +92,17 @@ GNOKIIXXPort::GNOKIIXXPort( KABC::AddressBook *ab, QWidget *parent, const char *
 #ifdef HAVE_GNOKII_H
 static char *BinDir;
 static char *lockfile = NULL;
+static char model[GN_MODEL_MAX_LENGTH+1], revision[GN_REVISION_MAX_LENGTH+1], imei[GN_IMEI_MAX_LENGTH+1];
+static QString PhoneProductId;
 
 static struct gn_statemachine state;
 static gn_data data;
+
+static void busterminate(void)
+{
+	gn_sm_functions(GN_OP_Terminate, NULL, &state);
+	if (lockfile) gn_device_unlock(lockfile);
+}
 
 static QString businit(void)
 {
@@ -111,21 +125,51 @@ static QString businit(void)
 	}
 
 	// Initialise the code for the GSM interface.
+	int old_dcd = state.config.require_dcd; // work-around for older gnokii versions
+	state.config.require_dcd = false;
 	error = gn_gsm_initialise(&state);
+	GNOKII_CHECK_ERROR(error);
+	state.config.require_dcd = old_dcd;
 	if (error != GN_ERR_NONE) {
-		return i18n("Telephone interface init failed: %1").arg(gn_error_print(error));
+		busterminate();
+		return i18n("Mobile phone interface initialisation failed:\n%1").arg(gn_error_print(error));
 	}
+
+	// model
+	gn_data_clear(&data);
+	data.model = model;
+	model[0] = 0;
+	error = gn_sm_functions(GN_OP_GetModel, &data, &state);
+	GNOKII_CHECK_ERROR(error);
+	if (model[0] == 0)
+		strcpy(model, i18n("unknown"));
+	data.model = NULL;
+
+	// revision
+	data.revision = revision;
+	revision[0] = 0;
+	error = gn_sm_functions(GN_OP_GetRevision, &data, &state);
+	GNOKII_CHECK_ERROR(error);
+	data.revision = NULL;
+
+	// imei	
+	data.imei = imei;
+	imei[0] = 0;
+	error = gn_sm_functions(GN_OP_GetImei, &data, &state);
+	GNOKII_CHECK_ERROR(error);
+	data.imei = NULL;
+
+	GNOKII_DEBUG( QString("Found mobile phone: Model: %1, Revision: %2, IMEI: %3\n")
+				.arg(model).arg(revision).arg(imei) ); 
+
+	PhoneProductId = QString("%1-%2-%3-%4").arg(APP).arg(model).arg(revision).arg(imei);
 
 	return QString::null;
 }
 
-static void busterminate(void)
-{
-	gn_sm_functions(GN_OP_Terminate, NULL, &state);
-	if (lockfile) gn_device_unlock(lockfile);
-}
 
-static gn_error phone_memory_entries( gn_memory_type memtype, gn_memory_status *memstat )
+// get number of entries in this phone memory type (internal/SIM-card)
+static gn_error read_phone_memstat( gn_memory_type memtype, gn_memory_status *memstat )
 {
 	gn_error error;
 
@@ -134,6 +178,7 @@ static gn_error phone_memory_entries( gn_memory_type memtype, gn_memory_status *
 	memstat->memory_type = memtype;
 	data.memory_status = memstat;
 	error = gn_sm_functions(GN_OP_GetMemoryStatus, &data, &state);
+	GNOKII_CHECK_ERROR(error);
 	if (error != GN_ERR_NONE) {
 		switch (memtype) {
 		  case GN_MT_SM:
@@ -148,43 +193,55 @@ static gn_error phone_memory_entries( gn_memory_type memtype, gn_memory_status *
 			break;
 		}
 	}
+	GNOKII_DEBUG( QString("\n\nMobile phone memory status: Type: %1, used=%2, free=%3, total=%4\n\n")
+					.arg(memtype).arg(memstat->used).arg(memstat->free).arg(memstat->used+memstat->free) );
 	return error;
 }
 
 
+// read phone entry #index from memory #memtype
+static gn_error read_phone_entry( int index, gn_memory_type memtype, gn_phonebook_entry *entry )
+{
+	gn_error error;
+	entry->memory_type = memtype;
+	entry->location = index;
+	data.phonebook_entry = entry;
+	error = gn_sm_functions(GN_OP_ReadPhonebook, &data, &state);
+	GNOKII_CHECK_ERROR(error);
+	return error;
+}
+
+static bool phone_entry_empty( int index, gn_memory_type memtype )
+{
+	gn_phonebook_entry entry;
+	gn_error error;
+	error = read_phone_entry( index, memtype, &entry );
+	if (error == GN_ERR_EMPTYLOCATION)
+		return true;
+	if (error == GN_ERR_NONE && entry.empty)
+		return true;
+	return false;
+}
+
+// read and evaluate all phone entries
 static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memtype, KABC::AddresseeList *addrList )
 {
   gn_error error;
-  gn_memory_status memstat;
   
   // get number of entries in this phone memory type (internal/SIM-card)
-  error = phone_memory_entries(memtype, &memstat);
-
-  if (error != GN_ERR_NONE)
-	return error;
-
-  kdWarning() << QString("Memory-Type: %1, used=%2, free=%3\n")
-			.arg(memtypestr).arg(memstat.used).arg(memstat.free);
+  gn_memory_status memstat;
+  error = read_phone_memstat(memtype, &memstat);
 
   gn_phonebook_entry entry;
   QStringList addrlist;
   KABC::Address *addr;
-  QString s;
+  QString s, country;
 
   int num_read = 0;
 
   for (int i = 1; i <= (memstat.used + memstat.free); i++) {
-	entry.memory_type = memtype;
-	entry.location = i;
+	error = read_phone_entry( i, memtype, &entry );
 
-// TODO:
-	if (i>=70)
-		return GN_ERR_NONE;		// FIXME !!
-
-	data.phonebook_entry = &entry;
-	error = gn_sm_functions(GN_OP_ReadPhonebook, &data, &state);
-	if (error)
-		kdWarning() << QString("ERROR %1: %2\n").arg(error).arg(gn_error_print(error));
 	if (error == GN_ERR_EMPTYLOCATION)
 		continue;
 	if (error == GN_ERR_INVALIDLOCATION)
@@ -192,39 +249,44 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 	if (error == GN_ERR_INVALIDMEMORYTYPE)
 		break;
 	if (error == GN_ERR_NONE) {
-		kdWarning() << QString("%1: %2, num=%3, location=%4, group=%5, count=%6\n").arg(i).arg(entry.name)
-			.arg(entry.number).arg(entry.location).arg(entry.caller_group).arg(entry.subentries_count);
+		GNOKII_DEBUG(QString("%1: %2, num=%3, location=%4, group=%5, count=%6\n").arg(i).arg(entry.name)
+			.arg(entry.number).arg(entry.location).arg(entry.caller_group).arg(entry.subentries_count));
 		KABC::Addressee *a = new KABC::Addressee();
 		
 		// try to split Name into FamilyName and GivenName
-		s = QString(entry.name).stripWhiteSpace();
+		s = QString(entry.name).simplifyWhiteSpace();
 		if (s.find(',')!=-1) {
 		  addrlist = QStringList::split(',', s);
 		  if (addrlist.count()==2) {
-			a->setFamilyName(addrlist[0].stripWhiteSpace());
-			a->setGivenName(addrlist[1].stripWhiteSpace());
+			a->setFamilyName(addrlist[0].simplifyWhiteSpace());
+			a->setGivenName(addrlist[1].simplifyWhiteSpace());
 		  } else
 			a->setGivenName(s);
 		} else {
 		  addrlist = QStringList::split(' ', s);
 		  if (addrlist.count()==2) {
-			a->setFamilyName(addrlist[1].stripWhiteSpace());
-			a->setGivenName(addrlist[0].stripWhiteSpace());
+			a->setFamilyName(addrlist[1].simplifyWhiteSpace());
+			a->setGivenName(addrlist[0].simplifyWhiteSpace());
 		  } else
 			a->setGivenName(s);
 		}
 
 		a->insertCustom(APP, "X_GSM_CALLERGROUP", s.setNum(entry.caller_group));
-		a->insertCustom(APP, "X_GSM_STORE_AT:", QString("%1%2").arg(memtypestr).arg(entry.location));
+		a->insertCustom(APP, "X_GSM_STORE_AT", QString("%1%2").arg(memtypestr).arg(entry.location));
+
+		// set ProductId
+		a->setProductId(PhoneProductId);
 
 		// evaluate timestamp (ignore timezone)
 		QDate date;
+		QDateTime datetime;
 		if (entry.date.year<1998)
-			date = QDate(2002, 1, 1);	// default: 1. Jan. 2002
+			date = QDate::currentDate();
 		else
 			date = QDate(entry.date.year, entry.date.month, entry.date.day);
-		QDateTime datetime( date, QTime(entry.date.hour, entry.date.minute, entry.date.second) );
-		kdWarning() << QString(" date=%1\n").arg(datetime.toString());
+		datetime = QDateTime( date, QTime(entry.date.hour, entry.date.minute, entry.date.second) );
+		GNOKII_DEBUG(QString(" date=%1\n").arg(datetime.toString()));
+		a->setRevision(datetime);
 
 		if (!entry.subentries_count)
 		  a->insertPhoneNumber(KABC::PhoneNumber(entry.number, KABC::PhoneNumber::Work | KABC::PhoneNumber::Pref));
@@ -232,10 +294,10 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 		/* scan sub-entries */
 		if (entry.subentries_count)
 		 for (int n=0; n<entry.subentries_count; n++) {
-		  QString s = QString(entry.subentries[n].data.number).stripWhiteSpace();
-		  kdWarning() << QString(" Subentry#%1, entry_type=%2, number_type=%3, number=%4\n")
+		  QString s = QString(entry.subentries[n].data.number).simplifyWhiteSpace();
+		  GNOKII_DEBUG(QString(" Subentry#%1, entry_type=%2, number_type=%3, number=%4\n")
 				.arg(n).arg(entry.subentries[n].entry_type)
-				.arg(entry.subentries[n].number_type).arg(s); 
+				.arg(entry.subentries[n].number_type).arg(s));
 		  if (s.isEmpty())
 			continue;
 		  switch(entry.subentries[n].entry_type) {
@@ -249,16 +311,20 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 			addrlist = QStringList::split(',', s, true);
 			addr = new KABC::Address(KABC::Address::Work);
 			switch (addrlist.count()) {
-			 case 4:	addr->setStreet(addrlist[0].stripWhiteSpace());
-						addr->setLocality(addrlist[1].stripWhiteSpace());
-						addr->setPostalCode(addrlist[2].stripWhiteSpace());
-						addr->setCountry(i18n(addrlist[3].stripWhiteSpace()));
+			 case 4:	addr->setStreet(addrlist[0].simplifyWhiteSpace());
+						addr->setLocality(addrlist[1].simplifyWhiteSpace());
+						addr->setPostalCode(addrlist[2].simplifyWhiteSpace());
+						country = addrlist[3].simplifyWhiteSpace();
+						if (!country.isEmpty())
+							addr->setCountry(i18n(country));
 						break;
-			 case 3:	addr->setLocality(addrlist[0].stripWhiteSpace());
-						addr->setPostalCode(addrlist[1].stripWhiteSpace());
-						addr->setCountry(i18n(addrlist[2].stripWhiteSpace()));
+			 case 3:	addr->setLocality(addrlist[0].simplifyWhiteSpace());
+						addr->setPostalCode(addrlist[1].simplifyWhiteSpace());
+						country = addrlist[2].simplifyWhiteSpace();
+						if (!country.isEmpty())
+							addr->setCountry(i18n(country));
 						break;
-			 default:	addr->setStreet(s.stripWhiteSpace());
+			 default:	addr->setStreet(s.simplifyWhiteSpace());
 			}
 			a->insertAddress(*addr);
 			delete addr;
@@ -289,8 +355,8 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 			a->insertCategory(s);
 			break;
 		   default:
-			kdWarning() << QString(" Not handled id=%1, entry=%2\n")
-				.arg(entry.subentries[n].entry_type).arg(s);
+			GNOKII_DEBUG(QString(" Not handled id=%1, entry=%2\n")
+				.arg(entry.subentries[n].entry_type).arg(s));
 			break;
 		  } // switch()
 		} // if(subentry)
@@ -303,12 +369,14 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 		else
 			continue; // no, we are still missing some.
 	}
-	kdWarning() << QString("GNOKII Error: %1\n").arg(gn_error_print(error));
+	GNOKII_CHECK_ERROR(error);
   }
 
   return GN_ERR_NONE;
 }
 #endif
+
+
 
 KABC::AddresseeList GNOKIIXXPort::importContacts( const QString& ) const
 {
@@ -327,12 +395,12 @@ KABC::AddresseeList GNOKIIXXPort::importContacts( const QString& ) const
 		return addrList;
 	}
 
-	kdWarning() << "GNOKII import filter started.\n";
+	GNOKII_DEBUG("GNOKII import filter started.\n");
   
 	read_phone_entries("ME", GN_MT_ME, &addrList); // internal phone memory
 	read_phone_entries("SM", GN_MT_SM, &addrList); // SIM card
 
-	kdWarning() << "GNOKII import filter finished.\n";
+	GNOKII_DEBUG("GNOKII import filter finished.\n");
 
 	busterminate();
 
@@ -342,29 +410,31 @@ KABC::AddresseeList GNOKIIXXPort::importContacts( const QString& ) const
 }
 
 
-/* export */
+// export to phone
 
 #ifdef HAVE_GNOKII_H
 
-QString makeValidPhone( const QString &number )
+static QString makeValidPhone( const QString &number )
 {
-	// allowed chars: 0-9, *, #, p, w
+	// allowed chars: 0-9, *, #, p, w, +
 	QString num = number.simplifyWhiteSpace();
-	num = num.replace( ' ', QString::null );
-	num = num.replace( '-', QString::null );
+	QString allowed("+0123456789*#pw");
+	for (unsigned int i=num.length(); i>=1; i--) 
+		if (allowed.find(num[i-1])==-1)
+			num.remove(i-1,1);
 	if (num.isEmpty())
-		num = "0000";	// TODO
+		num = "0";
 	return num;
 }
 
-gn_error gnokii_xxport_write2phone( int phone_location, gn_memory_type memtype, 
+static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type memtype, 
 			const KABC::Addressee *addr)
 {
 	gn_phonebook_entry entry;
 	QString s;
 
 	memset(&entry, 0, sizeof(entry));
-	strncpy(entry.name, (QString("AA-")+addr->realName()).latin1(), sizeof(entry.name)-1);
+	strncpy(entry.name, addr->realName().latin1(), sizeof(entry.name)-1);
 	s = addr->phoneNumber(KABC::PhoneNumber::Pref).number();
 	if (s.isEmpty())
 		s = addr->phoneNumber(KABC::PhoneNumber::Work).number();
@@ -372,15 +442,31 @@ gn_error gnokii_xxport_write2phone( int phone_location, gn_memory_type memtype,
 		s = addr->phoneNumber(KABC::PhoneNumber::Home).number();
 	if (s.isEmpty())
 		s = addr->phoneNumber(KABC::PhoneNumber::Cell).number();
+	if (s.isEmpty() && addr->phoneNumbers().count()>0)
+		s = (*addr->phoneNumbers().at(0)).number();
 	s = makeValidPhone(s);
 	strncpy(entry.number, s.latin1(), sizeof(entry.number)-1);
 	entry.memory_type = memtype;
-	entry.caller_group = 5;	// "X_GSM_CALLERGROUP"
+	QString cg = addr->custom(APP, "X_GSM_CALLERGROUP");
+	if (cg.isEmpty())
+		entry.caller_group = 5;		// default group
+	else
+		entry.caller_group = cg.toInt();
 	entry.location = phone_location;
-	// entry.date
+	
+	// set date/revision
+	QDateTime datetime = addr->revision();
+	QDate date(datetime.date());
+	QTime time(datetime.time());
+	entry.date.year = date.year();
+	entry.date.month = date.month();
+	entry.date.day = date.day();
+	entry.date.hour = time.hour();
+	entry.date.minute = time.minute();
+	entry.date.second = time.second();
 
-	kdWarning() << QString("Write #%1: name=%2, number=%3\n").arg(phone_location)
-					.arg(entry.name).arg(entry.number);
+	GNOKII_DEBUG(QString("Write #%1: name=%2, number=%3\n").arg(phone_location)
+					.arg(entry.name).arg(entry.number));
 
 	const KABC::Address homeAddr = addr->address(KABC::Address::Home);
 	const KABC::Address workAddr = addr->address(KABC::Address::Work);
@@ -426,7 +512,7 @@ gn_error gnokii_xxport_write2phone( int phone_location, gn_memory_type memtype,
 	for (unsigned int n=0; n<emails.count(); n++) {
 		if (entry.subentries_count >= GN_PHONEBOOK_SUBENTRIES_MAX_NUMBER)
 			break; // Phonebook full
-		s = emails[n].stripWhiteSpace();
+		s = emails[n].simplifyWhiteSpace();
 		if (s.isEmpty()) continue;
 		subentry->entry_type  = GN_PHONEBOOK_ENTRY_Email;
 		strncpy(subentry->data.number, s.latin1(), sizeof(subentry->data.number)-1);
@@ -457,19 +543,33 @@ gn_error gnokii_xxport_write2phone( int phone_location, gn_memory_type memtype,
 		subentry++;
 	}
 
-	// debug
+	// debug output
 	for (int st=0; st<entry.subentries_count; st++) {
 		gn_phonebook_subentry *subentry = &entry.subentries[st];
-		kdWarning() << QString(" SubTel #%1: entry_type=%2, number_type=%3, number=%4\n")
+		GNOKII_DEBUG(QString(" SubTel #%1: entry_type=%2, number_type=%3, number=%4\n")
 						.arg(st).arg(subentry->entry_type)
-						.arg(subentry->number_type).arg(subentry->data.number);
+						.arg(subentry->number_type).arg(subentry->data.number));
 	}
 
 	data.phonebook_entry = &entry;
 	gn_error error = gn_sm_functions(GN_OP_WritePhonebook, &data, &state);
-	if (error)
-		kdWarning() << QString("ERROR %1: %2\n").arg(error).arg(gn_error_print(error));
+	GNOKII_CHECK_ERROR(error);
 
+	return error;
+}
+
+
+static gn_error xxport_phone_delete_entry( int phone_location, gn_memory_type memtype )
+{
+	gn_phonebook_entry entry;
+	memset(&entry, 0, sizeof(entry));
+	entry.empty = 1;
+	entry.memory_type = memtype;
+	entry.location = phone_location;
+	data.phonebook_entry = &entry;
+	GNOKII_DEBUG(QString("Deleting entry %1\n").arg(phone_location));
+	gn_error error = gn_sm_functions(GN_OP_WritePhonebook, &data, &state);
+	GNOKII_CHECK_ERROR(error);
 	return error;
 }
 
@@ -485,9 +585,9 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 
 #else
 
-	// TODO:
-	KMessageBox::information(parentWidget(), i18n("Export to phone not yet implemented.\n"));
-	return true;
+	KABC::AddresseeList::ConstIterator it;
+
+	gn_error error;
 
 	QString errStr = businit();
 	if (!errStr.isEmpty()) {
@@ -495,25 +595,99 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 		return false;
 	}
 
-	kdWarning() << "GNOKII export filter started.\n";
+	GNOKII_DEBUG("GNOKII export filter started.\n");
 
-	int no = 70;
-	gn_error error;
+	const gn_memory_type memtype = GN_MT_ME;	// internal phone memory
 
-	KABC::AddresseeList::ConstIterator it;
+	int phone_count;	// num entries in phone
+	bool overwrite_phone_entries = false;
+	int phone_entry_no;
+	bool entry_empty;
+
+	// get number of entries in this phone memory
+	gn_memory_status memstat;
+	error = read_phone_memstat(memtype, &memstat);
+	if (error != GN_ERR_NONE)
+		goto finish;
+	phone_count = memstat.used;
+
+	if (memstat.free >= (int) list.count()) {
+		if (KMessageBox::No == KMessageBox::questionYesNo(parentWidget(),
+			i18n("The selected phonebook entries can either be added to the mobile phonebook or they "
+				 "can replace existing phonebook entries.\n\n"
+				 "Do you want to just add the new entries ?"),
+			i18n("Export to mobile phone") ) )
+			overwrite_phone_entries = true;
+	}
+	
+	if (overwrite_phone_entries) {
+	  if (KMessageBox::Continue != KMessageBox::warningContinueCancel(parentWidget(),
+			i18n("During the export now all your existing phonebook entries in the mobile phone "
+				 "will be deleted and replaced with the new entries.\n"
+				 "Do you really want to continue ?"),
+			i18n("Export to mobile phone") ) )
+		goto finish;
+	}
+
+	// Now run the loop...
+	phone_entry_no = 1;
 	for ( it = list.begin(); it != list.end(); ++it ) {
 		const KABC::Addressee *addr = &(*it);
 		if (addr->isEmpty())
 			continue;
+		// don't write back SIM-card entries !
+		if (addr->custom(APP, "X_GSM_STORE_AT").startsWith("SM"))
+			continue;
 
-		error = gnokii_xxport_write2phone( no, GN_MT_ME, addr);
+try_next_phone_entry:
+		// End of phone memory reached ?
+		if (phone_entry_no > (memstat.used + memstat.free))
+			break;
+
+		GNOKII_DEBUG(QString("Try to write entry '%1' at phone_entry_no=%2, phone_count=%3\n")
+				.arg(addr->realName()).arg(phone_entry_no).arg(phone_count));
+
+		error = GN_ERR_NONE;
+
+		// is this phone entry empty ?
+		entry_empty = phone_entry_empty(phone_entry_no, memtype);
+		if (overwrite_phone_entries) {
+			// overwrite this phonebook entry ...
+			if (!entry_empty)
+				phone_count--;
+			error = xxport_phone_write_entry( phone_entry_no, memtype, addr);
+			phone_entry_no++;
+		} else {
+			// add this phonebook entry if possible ...
+			if (entry_empty) {
+				error = xxport_phone_write_entry( phone_entry_no, memtype, addr);
+				phone_entry_no++;
+			} else {
+				phone_entry_no++;
+				goto try_next_phone_entry;
+			}
+		}
+
 		if (error != GN_ERR_NONE)
 			break;
-		no++;
 
 	} // for()
 
-	kdWarning() << "GNOKII export filter finished.\n";
+	// if we wanted to overwrite all entries, make sure, that we also
+	// delete all remaining entries in the mobile phone.
+	while (overwrite_phone_entries && error==GN_ERR_NONE && phone_count>0) {
+		if (phone_entry_no > (memstat.used + memstat.free))
+			break;
+		entry_empty = phone_entry_empty(phone_entry_no, memtype);
+		if (!entry_empty) {
+			error = xxport_phone_delete_entry(phone_entry_no, memtype);
+			phone_count--;
+		}
+		phone_entry_no++;
+	}
+
+finish:
+	GNOKII_DEBUG("GNOKII export filter finished.\n");
 
 	busterminate();
 
@@ -524,3 +698,4 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 
 #include "gnokii_xxport.moc"
 /* vim: set sts=4 ts=4 sw=4: */
+
