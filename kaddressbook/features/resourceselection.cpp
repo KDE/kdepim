@@ -139,7 +139,7 @@ void ResourceSelection::add()
 
   if ( dlg.exec() ) {
     core()->addressBook()->addResource( resource );
-    core()->addressBook()->asyncLoad();
+    resource->asyncLoad();
 
     mLastResource = resource->identifier();
     updateView();
@@ -159,7 +159,7 @@ void ResourceSelection::edit()
 
   if ( dlg.exec() ) {
     mManager->change( item->resource() );
-    core()->addressBook()->asyncLoad();
+    item->resource()->asyncLoad();
 
     mLastResource = item->resource()->identifier();
     updateView();
@@ -182,7 +182,7 @@ void ResourceSelection::remove()
   mLastResource = item->resource()->identifier();
 
   core()->addressBook()->removeResource( item->resource() );
-  core()->addressBook()->asyncLoad();
+  core()->addressBook()->emitAddressBookChanged();
 
   updateView();
 }
@@ -205,7 +205,13 @@ void ResourceSelection::currentChanged( QListViewItem *item )
     resource->setActive( resItem->isOn() );
 
     mManager->change( resource );
-    core()->addressBook()->asyncLoad();
+
+    if ( resItem->checked() ) {
+      if ( !resource->isOpen() )
+        resource->open();
+
+      resource->asyncLoad();
+    }
 
     mLastResource = resource->identifier();
     updateView();
