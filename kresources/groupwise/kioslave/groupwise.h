@@ -27,7 +27,10 @@ class Groupwise : public KIO::SlaveBase
   public:
     void get( const KURL &url );
     Groupwise( const QCString &pool, const QCString &app );
-  
+
+  protected:
+    void debugMessage( const QString & );
+    void errorMessage( const QString & );  
 };
 
 #endif

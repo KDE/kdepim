@@ -20,12 +20,16 @@
 
 #include "groupwise.h"
 
+#include "groupwiseserver.h"
+
 #include <libkcal/freebusy.h>
 #include <libkcal/icalformat.h>
 #include <libkcal/scheduler.h>
 
 #include <kinstance.h>
 #include <kdebug.h>
+#include <klocale.h>
+
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -51,6 +55,11 @@ int kdemain( int argc, char **argv )
   return 0;
 }
 
+Groupwise::Groupwise( const QCString &pool, const QCString &app )
+: SlaveBase( "groupwise", pool, app )
+{
+}
+
 void Groupwise::get( const KURL &url )
 {
   kdDebug(7000) << "Groupwise::get()" << endl;
@@ -61,30 +70,93 @@ void Groupwise::get( const KURL &url )
   kdDebug(7000) << " Protocol: " << url.protocol() << endl;
   kdDebug(7000) << " Filename: " << url.filename() << endl;
   #endif
-  
+
   mimeType( "text/plain" );
 
-  KCal::FreeBusy *fb = new KCal::FreeBusy;
-  
-  QDateTime start = QDateTime( QDate( 2004, 9, 27 ), QTime( 10, 0 ) );
-  QDateTime end = QDateTime( QDate( 2004, 9, 27 ), QTime( 11, 0 ) );
-  
-  fb->addPeriod( start, end );
+  QString path = url.path();
+  debugMessage( "Path: " + path );
 
-  KCal::ICalFormat format;
+  if ( !path.startsWith( "/freebusy/" ) ) {
+    QString error = i18n("Unknown path. Known path is '/freebusy/'.");
+    errorMessage( error );
+  } else {
+    QString file = url.filename();
+    if ( file.right( 4 ) != ".ifb" ) {
+      QString error = i18n("Illegal filename. File has to have '.ifb' suffix.");
+      errorMessage( error );
+    } else {
+      QString email = file.left( file.length() - 4 );
+      debugMessage( "Email: " + email );
 
-  QString ical = format.createScheduleMessage( fb, KCal::Scheduler::Publish );
- 
-  data( ical.utf8() );
-  
-  finished();
+      QString u = "http://" + url.host() + ":";
+      if ( url.port() ) u += QString::number( url.port() );
+      else u += "7181";
+      u += "/soap";
+
+      QString user = url.user();
+      QString pass = url.pass();
+
+      debugMessage( "URL: " + u );
+      debugMessage( "User: " + user );
+      debugMessage( "Password: " + pass );
+
+      KCal::FreeBusy *fb = new KCal::FreeBusy;
+
+      if ( user.isEmpty() || pass.isEmpty() ) {
+        errorMessage( i18n("Need username and password.") );
+      } else {
+        GroupwiseServer server( u, user, pass, 0 );
+
+        // FIXME: Read range from configuration or URL parameters.
+        QDate start = QDate::currentDate().addDays( -3 );
+        QDate end = QDate::currentDate().addDays( 60 );
+
+        fb->setDtStart( start );
+        fb->setDtEnd( end );
+
+        kdDebug() << "Login" << endl;
+
+        if ( !server.login() ) {
+          errorMessage( i18n("Unable to login.") );
+        } else {
+          kdDebug() << "Read free/busy" << endl;
+          if ( !server.readFreeBusy( email, start, end, fb ) ) {
+            errorMessage( i18n("Unable to read free/busy data.") );
+          }
+          kdDebug() << "Read free/busy" << endl;
+          server.logout();
+        }
+      }
+
+      QDateTime s = QDateTime( QDate( 2004, 9, 27 ), QTime( 10, 0 ) );
+      QDateTime e = QDateTime( QDate( 2004, 9, 27 ), QTime( 11, 0 ) );
+
+      fb->addPeriod( s, e );
+
+      KCal::ICalFormat format;
+
+      QString ical = format.createScheduleMessage( fb, KCal::Scheduler::Publish );
+
+      data( ical.utf8() );
+
+      finished();
+    }
+  }  
   
   kdDebug(7000) << "GroupwiseCgiProtocol::get() done" << endl;
 }
 
-Groupwise::Groupwise( const QCString &pool, const QCString &app )
-: SlaveBase( "groupwise", pool, app )
+void Groupwise::errorMessage( const QString &msg )
 {
+  error( KIO::ERR_SLAVE_DEFINED, msg );
 }
 
+void Groupwise::debugMessage( const QString &msg )
+{
+#if 0
+  data( ( msg + "\n" ).utf8() );
+#else
+  Q_UNUSED( msg );
+#endif
+}
 
