@@ -39,16 +39,16 @@
 </affiliation>
 </author>
 
-<othercredit role="developer">
-<firstname> Christian</firstname> <surname> Thurner</surname>
-<contrib> Developer and maintainer</contrib>
-<affiliation> <address> <email>cthurner@freepage.de</email> </address> </affiliation>
-</othercredit>
-
 <othercredit role="developer" >
 <firstname> Christian</firstname> <surname> Gebauer</surname>
+<contrib> Developer and maintainer</contrib>
+<affiliation> <address> <email>gebauer@kde.org</email> </address> </affiliation>
+</othercredit>
+
+<othercredit role="developer">
+<firstname> Christian</firstname> <surname> Thurner</surname>
 <contrib> Developer</contrib>
-<affiliation> <address> <email>gebauer@bigfoot.com</email> </address> </affiliation>
+<affiliation> <address> <email>cthurner@web.de</email> </address> </affiliation>
 </othercredit>
 
 <othercredit role="developer">
@@ -58,9 +58,21 @@
 </othercredit>
 
 <othercredit role="developer">
-<firstname> Matthias Kalle</firstname> <surname> Dalheimer</surname>
+<firstname> Mark</firstname> <surname> Mutz</surname>
 <contrib> Developer</contrib>
-<affiliation> <address> <email>kalle@kde.org</email> </address> </affiliation>
+<affiliation> <address> <email>mutz@kde.org</email> </address> </affiliation>
+</othercredit>
+
+<othercredit role="developer">
+<firstname> Roberto</firstname> <surname> Teixeira</surname>
+<contrib> Developer</contrib>
+<affiliation> <address> <email>roberto@kde.org</email> </address> </affiliation>
+</othercredit>
+
+<othercredit role="developer">
+<firstname> Mathias</firstname> <surname> Waack</surname>
+<contrib> Developer</contrib>
+<affiliation> <address> <email>mathias@atoll-net.de</email> </address> </affiliation>
 </othercredit>
 
 </authorgroup>

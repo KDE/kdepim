@@ -3,22 +3,27 @@
 
 <para>&knode;</para>
 
-<para>Program Copyright 1999,2000,2001 Christian Thurner
-<email>cthurner@freepage.de</email>.</para>
+<para>Program Copyright 1999,2000,2001,2002 KNode developers</para>
 
 <itemizedlist> 
 <title>Developers</title>
 <listitem> 
-<para>Christian Thurner <email>cthurner@freepage.de</email></para>
-</listitem> 
-<listitem> 
-<para>Christian Gebauer <email>gebauer@bigfoot.com</email></para> 
+<para>Christian Gebauer <email>gebauer@kde.org</email></para> 
 </listitem>
+<listitem> 
+<para>Christian Thurner <email>cthurner@web.de</email></para>
+</listitem> 
 <listitem>
 <para>Dirk Mueller <email>mueller@kde.org</email></para> 
 </listitem>
 <listitem>
-<para>Matthias Kalle Dalheimer <email>kalle@kde.org</email></para>
+<para>Mark Mutz <email>mutz@kde.org</email></para> 
+</listitem>
+<listitem>
+<para>Roberto Teixeira <email>roberto@kde.org</email></para> 
+</listitem>
+<listitem>
+<para>Mathias Waack <email>mathias@atoll-net.de</email></para>
 </listitem>
 </itemizedlist>
 
