@@ -25,7 +25,7 @@
 #include "merger.h"
 
 namespace KSync {
-class AddressBookMerger : public Merger 
+class KDE_EXPORT AddressBookMerger : public Merger 
 {
 public:
     enum Supports {

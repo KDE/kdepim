@@ -38,7 +38,7 @@ namespace KSync {
 class Engine;
 }
 
-class MainWidget : public QWidget
+class KDE_EXPORT MainWidget : public QWidget
 {
   Q_OBJECT
 

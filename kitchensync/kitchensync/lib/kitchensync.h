@@ -52,7 +52,7 @@ class Engine;
   It's the MainWindow of the application. It'll load all parts
   and do the basic communication between all parts
 */
-class KitchenSync : public Core
+class KDE_EXPORT KitchenSync : public Core
 {
     Q_OBJECT
   public:

@@ -23,13 +23,14 @@
 
 #include <qiconset.h>
 #include <qstring.h>
+#include <kdepimmacros.h>
 
 namespace KSync {
 
 /**
  * Some informations about a konnector....
  */
-class KonnectorInfo
+class KDE_EXPORT KonnectorInfo
 {
   public:
     KonnectorInfo( const QString& name = QString::null,

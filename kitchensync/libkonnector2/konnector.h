@@ -49,7 +49,7 @@ class KonnectorInfo;
   further processing within KDE, e.g. for syncing or being accessed by a
   kioslave.
 */
-class Konnector : public KRES::Resource
+class KDE_EXPORT Konnector : public KRES::Resource
 {
   Q_OBJECT
 

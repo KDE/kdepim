@@ -24,8 +24,9 @@
 #include <qpair.h>
 #include <qvaluelist.h>
 #include <qstring.h>
+#include <kdepimmacros.h>
 
-class Kontainer : public QPair<QString, QString>
+class KDE_EXPORT Kontainer : public QPair<QString, QString>
 {
   public:
   /**

@@ -27,7 +27,7 @@ namespace KSync {
 
 class SyncEntry;
 
-class SyncUiKde : public SyncUi
+class KDE_EXPORT SyncUiKde : public SyncUi
 {
   public:
     SyncUiKde( QWidget *parent, bool confirmDelete, bool inform = false );

@@ -33,7 +33,7 @@ namespace KSync {
  * the list of plugins to be loaded on activation,
  * a list of where to read data from....
  */
-class Profile
+class KDE_EXPORT Profile
 {
   public:
     typedef QMap<QString,  QString> PathMap;

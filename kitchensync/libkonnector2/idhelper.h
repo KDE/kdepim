@@ -33,7 +33,7 @@ class KConfig;
  * uids. This makes finding ids later more easy
  */
 namespace KSync {
-    class KonnectorUIDHelper {
+    class KDE_EXPORT KonnectorUIDHelper {
     public:
         // the full path to the dir where the file is stored
         /**

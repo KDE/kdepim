@@ -39,7 +39,7 @@ namespace KSync
 class Konnector;
 class KonnectorInfo;
 
-class KonnectorManager : public QObject, public KRES::Manager<Konnector>
+class KDE_EXPORT KonnectorManager : public QObject, public KRES::Manager<Konnector>
 {
   Q_OBJECT
   friend class KStaticDeleter<KonnectorManager>;

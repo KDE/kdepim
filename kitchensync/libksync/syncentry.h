@@ -24,6 +24,7 @@
 
 #include <qstring.h>
 #include <qptrlist.h>
+#include <kdepimmacros.h>
 
 namespace KPIM {
 class DiffAlgo;
@@ -45,7 +46,7 @@ class Syncee;
 
   SyncEntry objects are collected by a @see Syncee objects.
 */
-class SyncEntry
+class KDE_EXPORT SyncEntry
 {
   public:
     typedef QPtrList<SyncEntry> PtrList;

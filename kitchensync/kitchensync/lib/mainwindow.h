@@ -43,7 +43,7 @@ class KonnectorBar;
 class KitchenSync;
 class ActionManager;
 
-class MainWindow : public KParts::MainWindow
+class KDE_EXPORT MainWindow : public KParts::MainWindow
 {
     Q_OBJECT
   public:

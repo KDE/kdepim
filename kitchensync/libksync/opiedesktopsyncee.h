@@ -36,7 +36,7 @@ namespace KSync {
   This is done through the Syncee transportation
   and syncing layer.
 */
-class OpieDesktopSyncEntry  : public SyncEntry
+class KDE_EXPORT OpieDesktopSyncEntry  : public SyncEntry
 {
   public:
     typedef QPtrList<OpieDesktopSyncEntry> PtrList;
@@ -72,7 +72,7 @@ class OpieDesktopSyncEntry  : public SyncEntry
     QString mSize;
 };
 
-class OpieDesktopSyncee : public Syncee
+class KDE_EXPORT OpieDesktopSyncee : public Syncee
 {
   public:
     OpieDesktopSyncee( Merger* m= 0);

@@ -27,7 +27,7 @@
 
 using namespace KCal;
 
-class CalendarSyncEntry : public KSyncEntry
+class KDE_EXPORT CalendarSyncEntry : public KSyncEntry
 {
   public:
     CalendarSyncEntry(Incidence *);

@@ -43,7 +43,7 @@ namespace KSync{
  * setSynceeType
  *
  */
-class Merger 
+class KDE_EXPORT Merger 
 {
  public:
     Merger();

@@ -44,7 +44,7 @@ class KitchenSync;
  * It's the MainWindow of the application. It'll load all parts
  * and do the basic communication between all parts
  */
-class ActionManager
+class KDE_EXPORT ActionManager
 {
   public:
     ActionManager( KActionCollection * );

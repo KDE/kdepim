@@ -27,6 +27,7 @@
 #include <addressbooksyncee.h>
 #include <bookmarksyncee.h>
 #include <calendarsyncee.h>
+#include <kdepimmacros.h>
 
 class KConfig;
 
@@ -36,7 +37,7 @@ namespace KSync {
  * A small helper class to map a string (timestamp,md5sum) from and to a uid
  * and save this map on permanent storage like KConfig.
  */
-class SyncHistoryMap 
+class KDE_EXPORT SyncHistoryMap 
 {
 public:
   typedef QMap<QString, QString> Map;

@@ -23,7 +23,7 @@
 
 #include <qstring.h>
 #include <qptrlist.h>
-#include <kdemacros.h>
+#include <kdepimmacros.h>
 
 class KSimpleConfig;
 
@@ -41,7 +41,7 @@ class KSyncee;
   
   KSyncEntry objects are collected by @ref KSyncee objects.
 */
-class KSyncEntry
+class KDE_EXPORT KSyncEntry
 {
   public:
     KSyncEntry();

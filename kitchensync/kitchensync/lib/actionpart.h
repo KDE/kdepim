@@ -60,7 +60,7 @@ enum SyncStatus { SYNC_START=0, SYNC_PROGRESS=1,  SYNC_DONE=2,  SYNC_FAIL };
   The ActionPart is loaded into the KitchenSync Shell. Each ActionPart has to
   provide a QWidget and can provide a config dialog.
 */
-class ActionPart : public KParts::Part
+class KDE_EXPORT ActionPart : public KParts::Part
 {
     Q_OBJECT
   public:

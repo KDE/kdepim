@@ -34,7 +34,7 @@ namespace KSync {
   Basically the UnknownSyncEntry either holds the
   fileName and the tempName or the ByteArray.
 */
-class UnknownSyncEntry : public SyncEntry
+class KDE_EXPORT UnknownSyncEntry : public SyncEntry
 {
   public:
     /**
@@ -121,7 +121,7 @@ class UnknownSyncEntry : public SyncEntry
     UnknownSyncEntryPrivate *d;
 };
 
-class UnknownSyncee : public Syncee
+class KDE_EXPORT UnknownSyncee : public Syncee
 {
   public:
     UnknownSyncee( Merger* m = 0);

@@ -26,7 +26,7 @@
 
 namespace KSync{
 class CalendarSyncEntry;
-class CalendarMerger : public Merger 
+class KDE_EXPORT CalendarMerger : public Merger 
 {
 public:
     /**

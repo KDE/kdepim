@@ -35,7 +35,7 @@ class UnknownSyncee;
 /**
   This class provides a list of Syncees.
 */
-class SynceeList : public QValueList<Syncee *>
+class KDE_EXPORT SynceeList : public QValueList<Syncee *>
 {
   public:
     SynceeList();

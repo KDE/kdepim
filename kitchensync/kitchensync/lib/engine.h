@@ -25,6 +25,7 @@
 
 #include <qobject.h>
 #include <qptrlist.h>
+#include <kdepimmacros.h>
 
 namespace KSync {
 
@@ -36,7 +37,7 @@ class ActionPart;
   reading and writing of Syncees by the Konnectors and triggers the actions of
   the ActionParts in the correct sequence.
 */
-class Engine : public QObject
+class KDE_EXPORT Engine : public QObject
 {
    Q_OBJECT
   public:

@@ -28,7 +28,7 @@
 namespace KSync
 {
 
-class KonnectorView : public QWidget
+class KDE_EXPORT KonnectorView : public QWidget
 {
   Q_OBJECT
 

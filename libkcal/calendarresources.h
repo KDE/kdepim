@@ -39,7 +39,7 @@ class CalFormat;
 /**
   This class provides a calendar composed of several calendar resources.
 */
-class CalendarResources : public Calendar,
+class LIBKCAL_EXPORT CalendarResources : public Calendar,
                           public KRES::ManagerObserver<ResourceCalendar>
 {
     Q_OBJECT

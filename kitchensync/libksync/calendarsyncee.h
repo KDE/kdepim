@@ -28,7 +28,7 @@
 
 namespace KSync {
 class CalendarMerger;
-class CalendarSyncEntry : public SyncEntry
+class KDE_EXPORT CalendarSyncEntry : public SyncEntry
 {
   public:
     CalendarSyncEntry( Syncee* parent );
@@ -56,7 +56,7 @@ class CalendarSyncEntry : public SyncEntry
   This class provides an implementation of the @see KSyncee interface for KSync.
   It provides syncing of iCalendar files.
 */
-class CalendarSyncee : public Syncee
+class KDE_EXPORT CalendarSyncee : public Syncee
 {
   public:
     CalendarSyncee( KCal::Calendar*, CalendarMerger* merger = 0);

@@ -27,6 +27,7 @@
 
 #include "exceptions.h"
 #include "event.h"
+#include "libkcal_export.h"
 
 namespace KCal {
 
@@ -39,7 +40,7 @@ class Calendar;
 
   @short Class providing in interface to a calendar format
 */
-class CalFormat
+class LIBKCAL_EXPORT CalFormat
 {
   public:
     /** Constructs a new format. */

@@ -40,7 +40,7 @@ class ActionManager;
 
 }
 
-class KitchenSyncPart: public KParts::ReadOnlyPart
+class KDE_EXPORT KitchenSyncPart: public KParts::ReadOnlyPart
 {
     Q_OBJECT
   public:

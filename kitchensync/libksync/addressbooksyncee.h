@@ -30,7 +30,7 @@
 namespace KSync {
 
 class AddressBookMerger;
-class AddressBookSyncEntry : public SyncEntry
+class KDE_EXPORT AddressBookSyncEntry : public SyncEntry
 {
     friend class AddressBookMerger;
     friend class AddressBookSyncee;
@@ -68,7 +68,7 @@ class AddressBookSyncEntry : public SyncEntry
   This class provides an implementation of the @see KSyncee interface for KSync.
   It provides syncing of AddressBook files.
 */
-class AddressBookSyncee : public Syncee
+class KDE_EXPORT AddressBookSyncee : public Syncee
 {
   public:
 

@@ -30,6 +30,7 @@
 
 #include <kontainer.h>
 #include <syncentry.h>
+#include <kdepimmacros.h>
 
 class KSimpleConfig;
 
@@ -67,7 +68,7 @@ class Merger;
   @see Merger
   @ref Syncer operates on Syncee objects.
 */
-class Syncee
+class KDE_EXPORT Syncee
 {
   public:
     /**

@@ -24,6 +24,7 @@
 
 #include <qstring.h>
 #include <qptrlist.h>
+#include <kdepimmacros.h>
 
 namespace KSync {
 
@@ -51,7 +52,7 @@ class Syncee;
   For conflict resolution, a user interface is needed. This has to be a subclass
   of @ref SyncUi and is provided, when constructing a Syncer instance.
 */
-class Syncer
+class KDE_EXPORT Syncer
 {
   public:
     /**

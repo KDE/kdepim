@@ -32,7 +32,7 @@ class KBookmarkManager;
 
 namespace KSync {
 
-class BookmarkSyncEntry : public SyncEntry
+class KDE_EXPORT BookmarkSyncEntry : public SyncEntry
 {
     friend class BookmarkSyncee;
   public:
@@ -58,7 +58,7 @@ class BookmarkSyncEntry : public SyncEntry
   This class provides an implementation of the Syncee interface for libksync. It
   provides syncing of bookmark files as used by Konqueror.
 */
-class BookmarkSyncee : public Syncee
+class KDE_EXPORT BookmarkSyncee : public Syncee
 {
   public:
     BookmarkSyncee(Merger * m= 0);

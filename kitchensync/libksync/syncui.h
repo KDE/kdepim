@@ -22,6 +22,8 @@
 #ifndef KSYNC_SYNCUI_H
 #define KSYNC_SYNCUI_H
 
+#include <kdepimmacros.h>
+
 namespace KSync {
 
 class SyncEntry;
@@ -41,7 +43,7 @@ class SyncEntry;
    conflict resolution, is the most common implementation, there might also be
    use for a non-GUI or even non-interactive user interface.
 */
-class SyncUi
+class KDE_EXPORT SyncUi
 {
   public:
     SyncUi();
