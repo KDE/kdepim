@@ -144,8 +144,8 @@ class PhoneBookItem : public QCheckListItem {
  */
 MobileGui::MobileGui(CommandScheduler *scheduler,QWidget* parent,
                      const char* name,WFlags fl)
-    : MobileGui_base(parent,name,fl),
-      DCOPObject("KandyIface")
+    : DCOPObject("KandyIface"),
+      MobileGui_base(parent,name,fl)
 {
   mSyncing = false;
   mScheduler = scheduler;
