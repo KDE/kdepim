@@ -413,12 +413,23 @@ void PilotDaemon::showTray()
 	}
 
 	KPilotConfigSettings & config = KPilotConfig::getConfig();
+	// config.reparseConfiguration();
 
 	getPilotSpeed(config);
 
 	fPilotDevice = config.getPilotDevice();
 	fPilotType = KPilotDeviceLink::None;
 	int t = config.getPilotType();
+
+#ifdef DEBUG
+	DEBUGDAEMON << fname
+		<< ": Got configuration "
+		<< fPilotDevice
+		<< " ("
+		<< fPilotType
+		<< ")"
+		<< endl;
+#endif
 
 	switch (t)
 	{
@@ -823,6 +834,7 @@ int main(int argc, char **argv)
 	//
 	{
 		KPilotConfigSettings & c = KPilotConfig::getConfig();
+		c.setReadOnly(true);
 
 		if (c.getVersion() < KPilotConfig::ConfigurationVersion)
 		{
@@ -865,6 +877,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.59.2.2  2002/04/16 19:41:05  adridg
+// Make default sync a HotSync instead of Test
+//
 // Revision 1.59.2.1  2002/04/04 20:28:28  adridg
 // Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
 // when using PILOT_VERSION. kpilotTest defaults to list, like the options

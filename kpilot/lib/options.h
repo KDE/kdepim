@@ -109,7 +109,7 @@
 #define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
 #endif
 
-#define KPILOT_VERSION	"4.3.0b"
+#define KPILOT_VERSION	"4.3.0c"
 
 #ifdef DEBUG
 // * KPilot debugging code looks like:
@@ -204,6 +204,9 @@ extern const int fname;
 
 
 // $Log$
+// Revision 1.9  2002/02/02 20:53:10  leitner
+// __LINE__ is an integer and not a string and thus, requires the quotes
+//
 // Revision 1.8  2002/02/02 11:46:03  adridg
 // Abstracting away pilot-link stuff
 //

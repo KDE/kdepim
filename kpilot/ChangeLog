@@ -1,5 +1,22 @@
+KPilot Developer's notes for april 28st 2002
+============================================
+
+Hopefully we'll have merged the HEAD version of the vcal conduit --
+by Reinhold K. -- with branch so that it actually works. 
+
+
+
 KPilot Developer's notes for april 21st 2002
 ============================================
+
+A week when I should have been working on KPilot, and I've been
+working on the build system instead. Reinhold K. has hinted that
+he's making tremendous progress on the vcal conduit, which is a good thing.
+
+2002-04-20  Adriaan de Groot
+* Closed a few bugs that I could verify are resolved. Other conduit-
+  related bugs remain open even if I suspect they're done, since I
+  haven't actually physically tested them.
 
 2002-04-16  Adriaan de Groot
 * Finally committed all of David B's patches and things. [HEAD]

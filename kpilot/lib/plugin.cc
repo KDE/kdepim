@@ -38,7 +38,11 @@
 
 #include <dcopclient.h>
 
+#include "pilotSerialDatabase.h"
+#include "pilotLocalDatabase.h"
+
 #include "plugin.moc"
+
 
 
 
@@ -63,7 +67,9 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	SyncAction(p,name),
 	fConfig(0L),
 	fTest(args.contains("test")),
-	fBackup(args.contains("backup"))
+	fBackup(args.contains("backup")),
+	fDatabase(0L),
+	fLocalDatabase(0L)
 {
 	FUNCTIONSETUP;
 
@@ -81,6 +87,42 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 {
 	FUNCTIONSETUP;
 }
+
+bool ConduitAction::openDatabases(const char *name)
+{
+	FUNCTIONSETUP;
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Trying to open database "
+		<< name << endl;
+#endif
+
+	fDatabase = new PilotSerialDatabase(pilotSocket(),
+		name,this,name);
+
+	if (!fDatabase)
+	{
+		kdWarning() << k_funcinfo
+			<< ": Could not open database \""
+			<< name
+			<< "\" on the pilot."
+			<< endl;
+	}
+
+	fLocalDatabase = new PilotLocalDatabase(name);
+
+	if (!fLocalDatabase)
+	{
+		kdWarning() << k_funcinfo
+			<< ": Could not open local copy of database \""
+			<< name
+			<< "\"" << endl;
+	}
+
+	return (fDatabase && fLocalDatabase);
+}
+
 
 int PluginUtility::findHandle(const QStringList &a)
 {
@@ -130,6 +172,9 @@ bool PluginUtility::isModal(const QStringList &a)
 }
 
 // $Log$
+// Revision 1.6.2.1  2002/04/09 21:51:50  adridg
+// Extra debugging, pilot-link 0.10.1 still needs workaround
+//
 // Revision 1.6  2002/02/02 20:53:53  leitner
 // removed re-definition of default arg.
 //
