@@ -48,7 +48,7 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2000-12-14</date>
+<date>2004-10-17</date>
 <releaseinfo>0.05.00</releaseinfo>
 
 <abstract><para>This handbook describes how to use &kjots; 0.5, a small
@@ -156,7 +156,7 @@ can be removed using <menuchoice><guimenu>File</guimenu>
 
 <tip><para>If you need to insert the current date and time while you are 
 writing a note, you can use  <keycombo action="simul">&Ctrl;<keycap>I
-</keycap></keycombo></para></tip>
+</keycap></keycombo>.</para></tip>
 
 <para>So that you can get to the page you want to see, pages can (and
 should) be given a name. This can be done in the way you are used to: 
@@ -172,7 +172,7 @@ the selected text will instantly become the title of the page.</para>
 <tip><para>If you want fast access to a particular page, you 
 can assign a keyboard shortcut to that page. Go to <menuchoice>
 <guimenu>Settings</guimenu><guimenuitem>Configure Shortcuts...
-</guimenuitem></menuchoice></para></tip>
+</guimenuitem></menuchoice>.</para></tip>
 </sect1>
 </chapter>
 
@@ -191,7 +191,7 @@ can assign a keyboard shortcut to that page. Go to <menuchoice>
 <guimenu>File</guimenu>
 <guimenuitem>New Page...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Creates</action> a new Page</para></listitem>
+<listitem><para><action>Creates</action> a new Page.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -202,7 +202,7 @@ can assign a keyboard shortcut to that page. Go to <menuchoice>
 <guimenu>File</guimenu>
 <guimenuitem>New Book...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Creates</action> a new Book</para></listitem>
+<listitem><para><action>Creates</action> a new Book.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -258,7 +258,7 @@ or a html file.</para></listitem>
 <guimenu>File</guimenu>
 <guimenuitem>Quit</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Quits</action> &kjots;</para></listitem>
+<listitem><para><action>Quits</action> &kjots;.</para></listitem>
 </varlistentry>
 </variablelist>
 </sect1>
@@ -392,7 +392,7 @@ current page.</para></listitem>
 <guimenuitem>Add bookmark</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Adds</action> the current page to the list of
-bookmarks. See <link linkend="kjots-books">Using Books</link>
+bookmarks. See <link linkend="kjots-books">Using Books</link>.
 </para></listitem>
 </varlistentry>
 
