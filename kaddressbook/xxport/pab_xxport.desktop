@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+X-KDE-Library=libkaddrbk_pab_xxport
+Name=KAB MS Personal Addressbook XXPort Plugin
+Comment=Plugin to import MS Personal Address Books
+Type=Service
+ServiceTypes=KAddressBook/XXPort

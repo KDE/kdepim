@@ -3,14 +3,15 @@ INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kaddressbook $(all_includes)
 kde_module_LTLIBRARIES = libkaddrbk_csv_xxport.la libkaddrbk_vcard_xxport.la \
 	libkaddrbk_kde2_xxport.la libkaddrbk_bookmark_xxport.la \
 	libkaddrbk_eudora_xxport.la libkaddrbk_ldif_xxport.la \
-	libkaddrbk_gnokii_xxport.la libkaddrbk_opera_xxport.la
+	libkaddrbk_gnokii_xxport.la libkaddrbk_opera_xxport.la \
+	libkaddrbk_pab_xxport.la 
 
 noinst_HEADERS = importdialog.h
 
 servicedir  = $(kde_servicesdir)/kaddressbook
 service_DATA = csv_xxport.desktop vcard_xxport.desktop kde2_xxport.desktop \
 	bookmark_xxport.desktop eudora_xxport.desktop ldif_xxport.desktop \
-	gnokii_xxport.desktop opera_xxport.desktop
+	gnokii_xxport.desktop opera_xxport.desktop pab_xxport.desktop
 
 METASOURCES = AUTO
 AM_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries)
@@ -41,7 +42,10 @@ libkaddrbk_gnokii_xxport_la_LIBADD = $(XPMLIB) $(LIB_GNOKII) $(top_builddir)/kad
 libkaddrbk_opera_xxport_la_SOURCES = opera_xxport.cpp
 libkaddrbk_opera_xxport_la_LIBADD = $(XPMLIB) $(LIB_GNOKII) $(top_builddir)/kaddressbook/libkaddressbook.la
 
+libkaddrbk_pab_xxport_la_SOURCES = pab_xxport.cpp pab_mapihd.cpp pab_pablib.cpp
+libkaddrbk_pab_xxport_la_LIBADD = $(top_builddir)/kaddressbook/libkaddressbook.la
+
 rc_DATA = csv_xxportui.rc vcard_xxportui.rc kde2_xxportui.rc \
 	bookmark_xxportui.rc eudora_xxportui.rc ldif_xxportui.rc \
-	gnokii_xxportui.rc opera_xxportui.rc
+	gnokii_xxportui.rc opera_xxportui.rc pab_xxportui.rc
 rcdir = $(kde_datadir)/kaddressbook
