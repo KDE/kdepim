@@ -43,7 +43,8 @@ namespace KCal {
 /**
   This class provides a calendar stored on an IMAP-server via kmail
 */
-  class ResourceIMAP : public ResourceCalendar, public IncidenceBase::Observer, virtual public DCOPObject
+class ResourceIMAP : public ResourceCalendar, public IncidenceBase::Observer,
+                     virtual public DCOPObject
 {
   Q_OBJECT
   K_DCOP
@@ -154,7 +155,6 @@ namespace KCal {
     bool doOpen();
 
   protected:
-
     /** Notification function of IncidenceBase::Observer. */
     virtual void incidenceUpdated( IncidenceBase *i ) { update( i ); }
     /** Append alarms of incidence in interval to list of alarms. */

@@ -66,8 +66,8 @@ ResourceIMAP::ResourceIMAP( const KConfig* config )
   // Make the connection to KMail ready
   mKMailIcalIfaceStub = 0;
   kapp->dcopClient()->setNotifications( true );
-  connect( kapp->dcopClient(), SIGNAL( applicationRemoved( const QCString&)),
-	   this, SLOT( unregisteredFromDCOP( const QCString& )) );
+  connect( kapp->dcopClient(), SIGNAL( applicationRemoved( const QCString& ) ),
+           this, SLOT( unregisteredFromDCOP( const QCString& ) ) );
 }
 
 void ResourceIMAP::writeConfig( KConfig* config )
@@ -98,7 +98,7 @@ ResourceIMAP::~ResourceIMAP()
 
 bool ResourceIMAP::getIncidenceList( QStringList& lst, const QString& type )
 {
-  if( !connectToKMail() ) {
+  if ( !connectToKMail() ) {
     kdError() << "DCOP error during incidences(QString)\n";
     return false;
   }
@@ -119,7 +119,8 @@ bool ResourceIMAP::doOpen()
 
 bool ResourceIMAP::load()
 {
-  kdDebug(5800) << "Loading resource " << resourceName() << " on " << mServer << endl;
+  kdDebug(5800) << "Loading resource " << resourceName() << " on "
+                << mServer << endl;
 
   // Load each resource. Note: It's intentional to use & instead of &&
   // so we try all three, even if the first failed
@@ -130,7 +131,7 @@ bool ResourceIMAP::loadAllEvents()
 {
   // Get the list of events
   QStringList lst;
-  if( !getIncidenceList( lst, "Calendar" ) )
+  if ( !getIncidenceList( lst, "Calendar" ) )
     // The get failed
     return false;
 
@@ -138,15 +139,15 @@ bool ResourceIMAP::loadAllEvents()
   mCalendar.deleteAllEvents();
 
   // Populate the calendar with the new events
-  for( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+  for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
     Incidence* i = parseIncidence( *it );
-    if( i ) {
-      if( i->type() == "Event" ) {
-	mCalendar.addEvent(static_cast<Event*>(i));
-	i->registerObserver( this );
+    if ( i ) {
+      if ( i->type() == "Event" ) {
+        mCalendar.addEvent(static_cast<Event*>(i));
+        i->registerObserver( this );
       } else {
-	kdDebug() << "Unknown incidence type " << i->type();
-	delete i;
+        kdDebug() << "Unknown incidence type " << i->type();
+        delete i;
       }
     }
   }
@@ -158,7 +159,7 @@ bool ResourceIMAP::loadAllTasks()
 {
   // Get the list of todos
   QStringList lst;
-  if( !getIncidenceList( lst, "Task" ) )
+  if ( !getIncidenceList( lst, "Task" ) )
     // The get failed
     return false;
 
@@ -166,15 +167,15 @@ bool ResourceIMAP::loadAllTasks()
   mCalendar.deleteAllTodos();
 
   // Populate the calendar with the new todos
-  for( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+  for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
     Incidence* i = parseIncidence( *it );
-    if( i ) {
-      if( i->type() == "Todo" ) {
-	mCalendar.addTodo(static_cast<Todo*>(i));
-	i->registerObserver( this );
+    if ( i ) {
+      if ( i->type() == "Todo" ) {
+        mCalendar.addTodo(static_cast<Todo*>(i));
+        i->registerObserver( this );
       } else {
-	kdDebug() << "Unknown incidence type " << i->type();
-	delete i;
+        kdDebug() << "Unknown incidence type " << i->type();
+        delete i;
       }
     }
   }
@@ -186,7 +187,7 @@ bool ResourceIMAP::loadAllJournals()
 {
   // Get the list of journals
   QStringList lst;
-  if( !getIncidenceList( lst, "Journal" ) )
+  if ( !getIncidenceList( lst, "Journal" ) )
     // The get failed
     return false;
 
@@ -194,15 +195,15 @@ bool ResourceIMAP::loadAllJournals()
   mCalendar.deleteAllJournals();
 
   // Populate the calendar with the new journals
-  for( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+  for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
     Incidence* i = parseIncidence( *it );
-    if( i ) {
-      if( i->type() == "Journal" ) {
-	mCalendar.addJournal(static_cast<Journal*>(i));
-	i->registerObserver( this );
+    if ( i ) {
+      if ( i->type() == "Journal" ) {
+        mCalendar.addJournal(static_cast<Journal*>(i));
+        i->registerObserver( this );
       } else {
-	kdDebug() << "Unknown incidence type " << i->type();
-	delete i;
+        kdDebug() << "Unknown incidence type " << i->type();
+        delete i;
       }
     }
   }
@@ -224,11 +225,11 @@ bool ResourceIMAP::addEvent(Event *anEvent)
   kdDebug(5800) << "ResourceIMAP::addEvent" << endl;
   mCalendar.addEvent(anEvent);
   anEvent->registerObserver( this );
-  
-  if( mSilent ) return true;
+
+  if ( mSilent ) return true;
 
   // Call kmail ...
-  if( !connectToKMail() ) {
+  if ( !connectToKMail() ) {
     kdError() << "DCOP error during addIncidence(QString)\n";
     return false;
   }
@@ -252,9 +253,10 @@ void ResourceIMAP::deleteEvent(Event *event)
   kdDebug(5800) << "ResourceIMAP::deleteEvent" << endl;
 
   // Call kmail ...
-  if( !mSilent ) {
-    if( !connectToKMail() ) {
-      kdError() << "DCOP error during ResourceIMAP::deleteIncidence(QString)\n";
+  if ( !mSilent ) {
+    if ( !connectToKMail() ) {
+      kdError() << "DCOP error during "
+                << "ResourceIMAP::deleteIncidence(QString)\n";
     } else {
       mCurrentUID = event->uid();
       mKMailIcalIfaceStub->deleteIncidence( "Calendar", mCurrentUID );
@@ -277,7 +279,7 @@ Event *ResourceIMAP::event( const QString &uid )
 
 // taking a QDate, this function will look for an eventlist in the dict
 // with that date attached -
-QPtrList<Event> ResourceIMAP::rawEventsForDate(const QDate &qd, bool sorted)
+QPtrList<Event> ResourceIMAP::rawEventsForDate( const QDate &qd, bool sorted )
 {
   return mCalendar.rawEventsForDate( qd, sorted );
 }
@@ -308,9 +310,9 @@ bool ResourceIMAP::addTodo(Todo *todo)
   mCalendar.addTodo(todo);
   todo->registerObserver( this );
 
-  if( mSilent ) return true;
+  if ( mSilent ) return true;
 
-  if( !connectToKMail() ) {
+  if ( !connectToKMail() ) {
     kdError() << "DCOP error during addTodo(QString)\n";
     return false;
   }
@@ -331,8 +333,8 @@ bool ResourceIMAP::addTodo(Todo *todo)
 void ResourceIMAP::deleteTodo(Todo *todo)
 {
   // call kmail ...
-  if( !mSilent ) {
-    if( !connectToKMail() ) {
+  if ( !mSilent ) {
+    if ( !connectToKMail() ) {
       kdError() << "DCOP error during ResourceIMAP::deleteTodo(QString)\n";
     } else {
       mCurrentUID = todo->uid();
@@ -368,14 +370,15 @@ QPtrList<Todo> ResourceIMAP::todos( const QDate &date )
 
 bool ResourceIMAP::addJournal(Journal *journal)
 {
-  // kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
+  // kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString()
+  //               << endl;
   mCalendar.addJournal(journal);
   journal->registerObserver( this );
 
-  if( mSilent ) return true;
+  if ( mSilent ) return true;
 
   // call kmail ..
-  if( !connectToKMail() ) {
+  if ( !connectToKMail() ) {
     kdError() << "DCOP error during addTodo(QString)\n";
     return false;
   }
@@ -395,8 +398,8 @@ bool ResourceIMAP::addJournal(Journal *journal)
 
 void ResourceIMAP::deleteJournal(Journal *journal)
 {
-  if( !mSilent ) {
-    if( !connectToKMail() ) {
+  if ( !mSilent ) {
+    if ( !connectToKMail() ) {
       kdError() << "DCOP error during ResourceIMAP::deleteJournal(QString)\n";
     } else {
       mCurrentUID = journal->uid();
@@ -444,15 +447,15 @@ Alarm::List ResourceIMAP::alarms( const QDateTime &from, const QDateTime &to )
 // after changes are made to an event, this should be called.
 void ResourceIMAP::update(IncidenceBase *incidencebase)
 {
-  if( !connectToKMail() ) {
+  if ( !connectToKMail() ) {
     kdError() << "DCOP error during ResourceIMAP::update(QString)\n";
     return;
   }
 
   QString type = incidencebase->type();
   if ( type == "Event" ) type = "Calendar";
-  else if( type == "Todo" ) type = "Task";
-  else if( type != "Journal" ) return;
+  else if ( type == "Todo" ) type = "Task";
+  else if ( type != "Journal" ) return;
 
   incidencebase->setSyncStatus(Event::SYNCMOD);
   incidencebase->setLastModified(QDateTime::currentDateTime());
@@ -462,7 +465,8 @@ void ResourceIMAP::update(IncidenceBase *incidencebase)
 
   // Delete the old one and add the new version
   mCurrentUID = incidencebase->uid();
-  QString vCal = mFormat.createScheduleMessage( incidencebase, Scheduler::Request );
+  QString vCal = mFormat.createScheduleMessage( incidencebase,
+                                                Scheduler::Request );
   mKMailIcalIfaceStub->deleteIncidence( type, mCurrentUID );
   mKMailIcalIfaceStub->addIncidence( "Journal", mCurrentUID, vCal );
   mCurrentUID = QString::null;
@@ -480,14 +484,15 @@ KCal::Incidence* ResourceIMAP::parseIncidence( const QString& str )
 
 bool ResourceIMAP::addIncidence( const QString& type, const QString& ical )
 {
-  // kdDebug() << "ResourceIMAP::addIncidence( " << type << ", " << /*ical*/"..." << " )" << endl;
+  // kdDebug() << "ResourceIMAP::addIncidence( " << type << ", "
+  //           << /*ical*/"..." << " )" << endl;
   Incidence* i = parseIncidence( ical );
-  if( !i ) return false;
+  if ( !i ) return false;
   // Ignore events that come from us
-  if( !mCurrentUID.isNull() && mCurrentUID == i->uid() ) return true;
+  if ( !mCurrentUID.isNull() && mCurrentUID == i->uid() ) return true;
 
-  if( type == "Calendar" ) {
-    if( i && i->type() == "Event" ) {
+  if ( type == "Calendar" ) {
+    if ( i && i->type() == "Event" ) {
       mSilent = true;
       addEvent( static_cast<Event*>(i) );
       mSilent = false;
@@ -499,18 +504,19 @@ bool ResourceIMAP::addIncidence( const QString& type, const QString& ical )
 
 void ResourceIMAP::deleteIncidence( const QString& type, const QString& uid )
 {
-  // kdDebug() << "ResourceIMAP::deleteIncidence( " << type << ", " << uid << " )" << endl;
+  // kdDebug() << "ResourceIMAP::deleteIncidence( " << type << ", " << uid
+  //           << " )" << endl;
   // Ignore events that come from us
-  if( !mCurrentUID.isNull() && mCurrentUID == uid ) return;
+  if ( !mCurrentUID.isNull() && mCurrentUID == uid ) return;
 
   mSilent = true;
-  if( type == "Calendar" ) {
+  if ( type == "Calendar" ) {
     Event* e = event(uid);
     deleteEvent(e);
-  } else if( type == "Task" ) {
+  } else if ( type == "Task" ) {
     Todo* t = todo(uid);
     deleteTodo(t);
-  } else if( type == "Journal" ) {
+  } else if ( type == "Journal" ) {
     Journal* j = journal(uid);
     deleteJournal(j);
   }
@@ -519,9 +525,9 @@ void ResourceIMAP::deleteIncidence( const QString& type, const QString& uid )
 
 void ResourceIMAP::slotRefresh( const QString& type )
 {
-  if( type == "Calendar" )
+  if ( type == "Calendar" )
     loadAllEvents();
-  else if( type == "Task" )
+  else if ( type == "Task" )
     loadAllTasks();
   else
     kdDebug(5800) << "ResourceIMAP::slotRefresh called with wrong type " << type << endl;
@@ -529,31 +535,32 @@ void ResourceIMAP::slotRefresh( const QString& type )
 
 bool ResourceIMAP::connectToKMail() const
 {
-  if( !mKMailIcalIfaceStub ) {
+  if ( !mKMailIcalIfaceStub ) {
     QString error;
     QCString dcopService;
-    int result = KDCOPServiceStarter::self()->findServiceFor( "DCOP/ResourceBackend/IMAP",
-							      QString::null, QString::null,
-							      &error, &dcopService );
+    int result = KDCOPServiceStarter::self()->
+      findServiceFor( "DCOP/ResourceBackend/IMAP", QString::null,
+                      QString::null, &error, &dcopService );
     if ( result != 0 ) {
       kdDebug(5800) << "Couldn't connect to the IMAP resource backend\n";
       // TODO: You might want to show "error" (if not empty) here, using e.g. KMessageBox
       return false;
     }
 
-    mKMailIcalIfaceStub = new KMailICalIface_stub( kapp->dcopClient(), dcopService,
-						   dcopObjectId );
+    mKMailIcalIfaceStub = new KMailICalIface_stub( kapp->dcopClient(),
+                                                   dcopService, dcopObjectId );
 
     // Attach to the KMail signals
-    if( !connectKMailSignal( "incidenceAdded(QString,QString)",
-			     "addIncidence(QString,QString)" ) ) {
+    if ( !connectKMailSignal( "incidenceAdded(QString,QString)",
+                              "addIncidence(QString,QString)" ) ) {
       kdError() << "DCOP connection to incidenceAdded failed" << endl;
     }
-    if( !connectKMailSignal( "incidenceDeleted(QString,QString)",
-			     "deleteIncidence(QString,QString)" ) ) {
+    if ( !connectKMailSignal( "incidenceDeleted(QString,QString)",
+                              "deleteIncidence(QString,QString)" ) ) {
       kdError() << "DCOP connection to incidenceDeleted failed" << endl;
     }
-    if( !connectKMailSignal( "signalRefresh(QString)", "slotRefresh(QString)" ) ) {
+    if ( !connectKMailSignal( "signalRefresh(QString)",
+                              "slotRefresh(QString)" ) ) {
       kdError() << "DCOP connection to signalRefresh failed" << endl;
     }
   }
@@ -561,16 +568,17 @@ bool ResourceIMAP::connectToKMail() const
   return ( mKMailIcalIfaceStub != 0 );
 }
 
-bool ResourceIMAP::connectKMailSignal( const QCString& signal, const QCString& method ) const
+bool ResourceIMAP::connectKMailSignal( const QCString& signal,
+                                       const QCString& method ) const
 {
   ResourceIMAP* _this = const_cast<ResourceIMAP*>( this );
-  return _this->connectDCOPSignal( "kmail", dcopObjectId, signal, method, false );
+  return _this->connectDCOPSignal( "kmail", dcopObjectId, signal, method,
+                                   false );
 }
 
 void ResourceIMAP::unregisteredFromDCOP( const QCString& appId )
 {
-  if ( mKMailIcalIfaceStub && mKMailIcalIfaceStub->app() == appId )
-  {
+  if ( mKMailIcalIfaceStub && mKMailIcalIfaceStub->app() == appId ) {
     // Delete the stub so that the next time we need the addressbook,
     // we'll know that we need to start a new one.
     delete mKMailIcalIfaceStub;
