@@ -57,14 +57,23 @@ QString ErrorFormat::message()
     case LoadError:
       message = i18n("Load Error");
       break;
-    case ParseError:
-      message = i18n("Parse Error");
+    case SaveError:
+      message = i18n("Save Error");
+      break;
+    case ParseErrorIcal:
+      message = i18n("Parse Error in libical");
+      break;
+    case ParseErrorKcal:
+      message = i18n("Parse Error in libkcal");
+      break;
+    case NoCalendar:
+      message = i18n("No calendar component found.");
       break;
     case CalVersion1:
-      message = i18n("vCalendar Version 1.0 detected");
+      message = i18n("vCalendar Version 1.0 detected.");
       break;
     case CalVersion2:
-      message = i18n("iCalendar Version 2.0 detected");
+      message = i18n("iCalendar Version 2.0 detected.");
       break;
     case Restriction:
       message = i18n("Restriction violation");

@@ -20,8 +20,6 @@
 
 // $Id$
 
-#include "config.h"
-
 #include <qdatetime.h>
 #include <qstring.h>
 #include <qptrlist.h>
@@ -30,8 +28,6 @@
 #include <qfile.h>
 
 #include <kdebug.h>
-//#include <kmessagebox.h>
-//#include <kiconloader.h>
 #include <klocale.h>
 
 extern "C" {
@@ -65,57 +61,56 @@ ICalFormat::~ICalFormat()
 
 bool ICalFormat::load(const QString &fileName)
 {
-  clearException();
-
   kdDebug() << "ICalFormat::load() " << fileName << endl;
 
-  icalfileset *fs = icalfileset_new(QFile::encodeName(fileName));
+  clearException();
 
-  if (!fs) {
+  QFile file( fileName );
+  if (!file.open( IO_ReadOnly ) ) {
     kdDebug() << "ICalFormat::load() load error" << endl;
     setException(new ErrorFormat(ErrorFormat::LoadError));
     return false;
   }
+  QTextStream ts( &file );
+  QString text = ts.read();
+  file.close();
 
   // Get first VCALENDAR component.
   // TODO: Handle more than one VCALENDAR or non-VCALENDAR top components
   icalcomponent *calendar;
-  calendar = icalfileset_get_first_component(fs);
 
-  while(calendar) {
-    if (icalcomponent_isa(calendar) == ICAL_VCALENDAR_COMPONENT) break;
-    calendar = icalfileset_get_next_component(fs);
-  }
-
+  calendar = icalcomponent_new_from_string( const_cast<char *>(text.latin1()));
+  //  kdDebug() << "Error: " << icalerror_perror() << endl;
   if (!calendar) {
-    kdDebug() << "ICalFormat::load(): No VCALENDAR component found" << endl;
-    icalfileset_free(fs);
+    kdDebug() << "ICalFormat::load() parse error" << endl;
+    setException(new ErrorFormat(ErrorFormat::ParseErrorIcal));
     return false;
   }
 
-//  kdDebug() << "Error: " << icalerror_perror() << endl;
+  if (icalcomponent_isa(calendar) != ICAL_VCALENDAR_COMPONENT) {
+    kdDebug() << "ICalFormat::load(): No VCALENDAR component found" << endl;
+    setException(new ErrorFormat(ErrorFormat::NoCalendar));
+    return false;
+  }
 
-  // put all vobjects into their proper places
-  bool success = mImpl->populate(calendar);
+  // put all objects into their proper places
+  if (!mImpl->populate(calendar)) {
+    kdDebug() << "ICalFormat::load(): Could not populate calendar" << endl;
+    setException(new ErrorFormat(ErrorFormat::ParseErrorKcal));
+    return false;
+  }
 
-  icalfileset_free(fs);
-
-  return success;
+  return true;
 }
 
 
 bool ICalFormat::save(const QString &fileName)
 {
-  kdDebug() << "ICalFormat::save()" << endl;
+  kdDebug() << "ICalFormat::save(): " << fileName << endl;
 
-  // Remove file. icalfileset does not seem to do this.
-  QFile::remove(fileName);
-
-  // Create iCalendar file
-  icalfileset *fs = icalfileset_new(QFile::encodeName(fileName));
+  clearException();
 
   icalcomponent *calendar = mImpl->createCalendarComponent();
-  icalfileset_add_component(fs,calendar);
   
   icalcomponent *component;
 
@@ -143,15 +138,24 @@ bool ICalFormat::save(const QString &fileName)
     icalcomponent_add_component(calendar,component);
   }
 
-//  kdDebug() << "Now writing iCalendar file" << endl;
+  // TODO: write backup file
 
-  // Write out iCalendar file
-  icalfileset_mark(fs);
-//  kdDebug() << "Now writing iCalendar file..1" << endl;
-  icalfileset_commit(fs);
-//  kdDebug() << "Now writing iCalendar file..2" << endl;
-  icalfileset_free(fs);
-//  kdDebug() << "Now writing iCalendar file..3" << endl;
+  QFile file( fileName );
+  if (!file.open( IO_WriteOnly ) ) {
+    setException(new ErrorFormat(ErrorFormat::SaveError,
+                 i18n("Could not open file ´%1´").arg(fileName)));
+    return false;    
+  }
+  QTextStream ts( &file );
+  char *text = icalcomponent_as_ical_string( calendar );
+  if (!text) {
+    setException(new ErrorFormat(ErrorFormat::SaveError,
+                 i18n("libical error")));
+    file.close();
+    return false;
+  }
+  ts << QString::fromLatin1(text);
+  file.close();
 
   return true;
 }

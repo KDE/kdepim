@@ -52,7 +52,10 @@ class Exception {
 /** Calendar format related error class */
 class ErrorFormat : public Exception {
   public:
-    enum ErrorCodeFormat { LoadError,ParseError,CalVersion1,CalVersion2,
+    enum ErrorCodeFormat { LoadError, SaveError,
+                           ParseErrorIcal, ParseErrorKcal,
+                           NoCalendar,
+                           CalVersion1,CalVersion2,
                            CalVersionUnknown,
                            Restriction };
   
