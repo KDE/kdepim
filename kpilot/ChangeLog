@@ -1,6 +1,10 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-06-27 Joern Ahrens
+* Filled the notepad conduit with life. The notepads are saved as png 
+  files in a configurable directory.
+
 2004-06-16  Adriaan de Groot
 * Disposed of foolish file installer bug. Updated tarballs on website
   before fixing it, so now we're stuck :) Looked at 71122 again,
