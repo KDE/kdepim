@@ -400,6 +400,7 @@ void PilotDaemon::showTray()
 		break;
 	}
 
+	// TODO: Is this bunch of calls really necessary to reload the settings???
 	delete KPilotSettings::self();
 	KPilotSettings::self()->config()->reparseConfiguration();
 	KPilotSettings::self()->readConfig();
