@@ -84,7 +84,13 @@ public:
  */
   void load( QTextStream &t );
 
+  /** If loading contact entry from Kab Address::Entry, set this to true.
+   *  This allows the ContactEntry class to know whether this is being
+   *  modified by the user or is just loading up on creation.
+   */
+  void setLoading(bool v) { fLoading = v; }
 
+  bool isLoading() const { return fLoading; }
   /**
    * Needed for DCOP serialization.
  */
@@ -98,13 +104,13 @@ public:
 /**
  * Inserts a new key/value pair 
  */
-  void insert( const QString &key, const QString *value );
+  void insert( const QString &key, const QString *value);
 
 /**
  * Updates the value associated with a key. The old value
  * will be deleted.
  */
-  void replace( const QString &key, const QString *value );  
+  void replace( const QString &key, const QString *value);
 
   /** Same as replace() above except the arguments that it excepts
    */
@@ -289,6 +295,8 @@ private:
 
   QDict<QString> dict; // This unfortunately doesn't make a good base class
   // It's not derived from QOBject and the majority of methods are not virtual
+
+  bool fLoading;
 };
 
 QDataStream &operator<<(QDataStream &out, const QDict<ContactEntry> &entries);

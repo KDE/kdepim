@@ -17,13 +17,13 @@
 ////////////////////////
 // ContactEntry methods
 
-ContactEntry::ContactEntry() 
+ContactEntry::ContactEntry() : QObject(), dict(), fLoading(false)
 {
   dict.setAutoDelete( true );
 }
 
 ContactEntry::ContactEntry( const ContactEntry &r )
-  : QObject()
+      : QObject(), fLoading(false)
     {
   QDictIterator<QString> it( r.dict );
   
@@ -198,41 +198,66 @@ bool ContactEntry::isNew() const
 
 void ContactEntry::_setModified()
     {
-    if (!isNew())
+    if (!isNew() && !isLoading())
 	setModified(true);
     }
 
-void ContactEntry::insert( const QString &key, const QString *item )
+void ContactEntry::insert( const QString &key, const QString *item)
+			  
 {
+ bool internal = false; 
+ if (key[0] == '.')
+     internal = true;
+ 
   if (item && (*item == ""))
     return;
   dict.insert( key, item );
-  _setModified();
+  if (!internal && !fLoading)
+      {
+      //qDebug("ContactEntry::insert %s=%s int=%d", key.latin1(), item->latin1(),
+      //(int) internal); 
+      _setModified();
+      }
   emit changed();
 }
 
-void ContactEntry::replace( const QString &key, const QString *item )
+void ContactEntry::replace( const QString &key, const QString *item)
 {
+ bool internal = false; 
+ if (key[0] == '.')
+     internal = true;
   QString *current = dict.find( key );
   if (item) {
     if (current) {
       if (*item != *current) {
-	if (*item == "")
+      
+      if (*item == "")
 	  dict.remove( key ); // temporary?
-	else
+      else
 	  dict.replace( key, item );
-	_setModified();
-	emit changed();
+      if (!internal && !fLoading)
+	  {
+	  //qDebug("ContactEntry::replace %s=%s int=%d", key.latin1(),
+	  // item->latin1(), (int) internal);  
+	  _setModified();
+	  }
+      emit changed();
       }
     }
     else { // (item && !current)
-      dict.replace( key, item );
-      _setModified();
-      emit changed();
+    
+    dict.replace( key, item );
+    if (!internal && !fLoading)
+	{
+	_setModified();
+	//qDebug("ContactEntry::replace %s=%s int=%d", key.latin1(),
+	// item->latin1(), (int) internal);
+	}
+    emit changed();
     }
   }
-  else
-    qDebug("ContactEntry::replace( const QString, const QString* ) passed null item");
+  //else
+  //qDebug("ContactEntry::replace( const QString, const QString* ) passed null item");
   /*
   if (item && (*item == ""))
     dict.remove( key );
@@ -330,7 +355,11 @@ void ContactEntry::debug()
 
 void ContactEntry::setModified(bool v)
     {
-    replaceValue("X-CUSTOM-KPILOT-MODIFIED", QString::number((int)v));
+    int val = 0;
+    if (v)
+	val = 1;
+    replaceValue("X-CUSTOM-KPILOT-MODIFIED", QString::number(val));
+    //qDebug("\tContactEntry::setModified %d", val);
     }
 
 bool ContactEntry::isModified() const

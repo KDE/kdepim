@@ -130,6 +130,7 @@ ContactEntry* ContactEntryList::KabEntryToContactEntry( AddressBook::Entry entry
 {
   ContactEntry *ce = new ContactEntry();
 
+  ce->setLoading(true);
   // Guess some values based on KAB fields (may be overidden)
   AddressBook::Entry::Address ad;
   if ((entry.noOfAddresses() > 0) &&
@@ -217,7 +218,8 @@ ContactEntry* ContactEntryList::KabEntryToContactEntry( AddressBook::Entry entry
     ce->replace( "X-BusinessAddressStreet", new QString( ad.address )); 
     ce->replace( "X-BusinessAddressPostalCode", new QString( ad.zip )); 
   }
-
+  //ce->setModified(false);  // in future, delete this; here to fix old bug...
+  ce->setLoading(false);
   return ce;
 }
 
