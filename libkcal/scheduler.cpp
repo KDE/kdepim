@@ -151,26 +151,31 @@ bool Scheduler::acceptPublish(IncidenceBase *incidence,ScheduleMessage::Status s
 
 bool Scheduler::acceptRequest(IncidenceBase *incidence,ScheduleMessage::Status status)
 {
-    Incidence *inc = static_cast<Incidence *>(incidence);
+  Incidence *inc = static_cast<Incidence *>(incidence);
+  if (inc->type()=="FreeBusy") {
+    // reply to this request is handled in korganizer's incomingdialog
+    return true;
+  } else {
     switch (status) {
-    case ScheduleMessage::Obsolete:
-      return true;
-    case ScheduleMessage::RequestNew:
-      mCalendar->addIncidence(inc);
-      deleteTransaction(incidence);
-      return true;
-    case ScheduleMessage::RequestUpdate:
-      Event *even;
-      even = mCalendar->event(incidence->uid());
-      if (even) {
-        mCalendar->deleteEvent(even);
-      }
-      mCalendar->addIncidence(inc);
-      deleteTransaction(incidence);
-      return true;
-    default:
-      return false;
+      case ScheduleMessage::Obsolete:
+        return true;
+      case ScheduleMessage::RequestNew:
+        mCalendar->addIncidence(inc);
+        deleteTransaction(incidence);
+        return true;
+      case ScheduleMessage::RequestUpdate:
+        Event *even;
+        even = mCalendar->event(incidence->uid());
+        if (even) {
+          mCalendar->deleteEvent(even);
+        }
+        mCalendar->addIncidence(inc);
+        deleteTransaction(incidence);
+        return true;
+      default:
+        return false;
     }
+  }
   deleteTransaction(incidence);
   return false;
 }
