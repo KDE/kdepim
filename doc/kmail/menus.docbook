@@ -808,7 +808,10 @@ header fields (<literal>Redirect-From</literal>, <literal>Redirect-Date</literal
 delivered. This is nearly exactly the message you get from a mail relay if the
 user does not exist. This option was originally added to reply to spam,
 but as spam today comes almost only from faked email addresses, it should not be
-used on spam.</para> 
+used on spam. The same is true for messages that contain a virus:
+some <acronym>ISP</acronym>s check if an outgoing message contains
+a virus. Bouncing messages containing a virus is a very bad idea, you could end 
+up disconnected by your <acronym>ISP</acronym>.</para> 
 </listitem>
 </varlistentry>
 
