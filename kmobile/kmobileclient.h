@@ -6,8 +6,9 @@
 #define _KMOBILECLIENT_H_
 
 #include <dcopclient.h>
+#include <kdepimmacros.h>
 
-class KMobileClient : public DCOPClient
+class KDE_EXPORT KMobileClient : public DCOPClient
 {
     Q_OBJECT
 public:

@@ -9,6 +9,7 @@
 
 #include "kmobileiface.h"
 
+#include <kdepimmacros.h>
 class KConfig;
 class KMobileItem;
 
@@ -19,7 +20,7 @@ class KMobileItem;
  * @author Helge Deller <deller@kde.org>
  * @version 0.1
  */
-class KMobileView : public QIconView, public kmobileIface
+class KDE_EXPORT KMobileView : public QIconView, public kmobileIface
 {
     Q_OBJECT
 public:

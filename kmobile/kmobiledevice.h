@@ -24,6 +24,7 @@
 #include <qstringlist.h>
 #include <qmutex.h>
 
+#include <kdepimmacros.h>
 #include <klibloader.h>
 
 #include <kabc/addressee.h>
@@ -59,7 +60,7 @@ class KConfig;
  * @author Helge Deller <deller@kde.org>
  */
 
-class KMobileDevice : public KLibFactory
+class KDE_EXPORT KMobileDevice : public KLibFactory
 {
 Q_OBJECT
     friend class KMobileView;

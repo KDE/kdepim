@@ -1,4 +1,4 @@
-INCLUDES= $(all_includes)
+INCLUDES= -I$(top_srcdir)/libkdepim $(all_includes)
 
 lib_LTLIBRARIES = libkmime.la
 

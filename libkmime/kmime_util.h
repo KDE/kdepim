@@ -21,6 +21,7 @@
 #include "qcstring.h"
 #include "qvaluelist.h"
 #include "time.h"
+#include <kdepimmacros.h>
 
 typedef QValueList<QCString> QCStringList;
 
@@ -164,7 +165,7 @@ namespace KMime {
       @param str us-ascii string to work on.
       @param forceQuotes if @p true, always add quote characters.
   */
-  extern void addQuotes(QCString &str, bool forceQuotes);
+  extern KDE_EXPORT void addQuotes(QCString &str, bool forceQuotes);
 
 
   /**
