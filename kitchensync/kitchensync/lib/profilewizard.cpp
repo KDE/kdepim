@@ -27,6 +27,7 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <klistview.h>
+#include <kmessagebox.h>
 
 #include <qlayout.h>
 #include <qlabel.h>
@@ -128,6 +129,15 @@ ManPartService::ValueList ProfileWizard::selectedManParts()
     if ( item->isOn() ) manparts.append( item->manpart() );
   }
   return manparts;
+}
+
+void ProfileWizard::slotOk()
+{
+  if ( mNameEdit->text().isEmpty() ) {
+    KMessageBox::sorry( this, i18n("Profile name can not be empty.") );
+  } else {
+    accept();
+  }
 }
 
 #include "profilewizard.moc"

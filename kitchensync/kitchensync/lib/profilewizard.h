@@ -44,6 +44,9 @@ class ProfileWizard : public KDialogBase
 
     ManPartService::ValueList selectedManParts();
 
+  protected:
+    void slotOk();
+
   private:
     void initUI();
     void initPartList( const ManPartService::ValueList & );
