@@ -158,9 +158,9 @@ class Empath : public QObject
          * @return A pointer to an RMM::RMessage, unless the message can't
          * be found, when it returns 0.
          */
-        RMM::RMessage   * message(const EmpathURL &);
+        RMM::RMessage   * message(const EmpathURL &, const QString &);
 
-        void finishedWithMessage(const EmpathURL &);
+        void finishedWithMessage(const EmpathURL &, const QString &);
 
         /**
          * Gets a pointer to the folder specified in the url, or 0.
@@ -210,8 +210,7 @@ class Empath : public QObject
          * Generate an unique filename
          */
         QString generateUnique();
-
-        void cacheMessage(const EmpathURL &, RMM::RMessage *);
+        void cacheMessage(const EmpathURL &, RMM::RMessage *, const QString &);
         
     protected:
 

@@ -124,18 +124,20 @@ EmpathMatcher::load(const QString & parentName, Q_UINT32 id)
     bool
 EmpathMatcher::match(const EmpathURL & id)
 {
+    // FIXME FIXME FIXME FIXME FIXME !!!
+    QString xinfo;
 
     switch (type_) {
         
         case Size:
             {
-                RMM::RMessage * m(empath->message(id));
+                RMM::RMessage * m(empath->message(id, xinfo));
                 if (m == 0)
                     return false;
                 
                 Q_UINT32 sizeOfMessage = m->size();
 
-                empath->finishedWithMessage(id);
+                empath->finishedWithMessage(id, xinfo);
 
                 empathDebug("size of message is " +
                     QString().setNum(sizeOfMessage));
@@ -147,12 +149,12 @@ EmpathMatcher::match(const EmpathURL & id)
             
         case BodyExpr:
             {
-                RMM::RMessage * m(empath->message(id));
+                RMM::RMessage * m(empath->message(id, xinfo));
                 
                 if (m == 0)
                     return false;
                 
-                empath->finishedWithMessage(id);
+                empath->finishedWithMessage(id, xinfo);
 
                 QString s; // FIXME -- = m->firstPlainBodyPart ?
                 
@@ -164,13 +166,13 @@ EmpathMatcher::match(const EmpathURL & id)
             
         case HeaderExpr:
             {
-                RMM::RMessage * m(empath->message(id));
+                RMM::RMessage * m(empath->message(id, xinfo));
                 
                 if (m == 0)
                     return false;
                 
                 QString s = m->envelope().asString();
-                empath->finishedWithMessage(id);
+                empath->finishedWithMessage(id, xinfo);
 
                 QRegExp r(matchExpr_);
                 if (!r.isValid()) return false;
@@ -180,13 +182,13 @@ EmpathMatcher::match(const EmpathURL & id)
             
         case HasAttachments:    
             {
-                RMM::RMessage * m(empath->message(id));
+                RMM::RMessage * m(empath->message(id, xinfo));
                 if (m == 0)
                     return false;
                 
                 bool ok = m->type() == RMM::RBodyPart::Mime;
 
-                empath->finishedWithMessage(id);
+                empath->finishedWithMessage(id, xinfo);
 
                 return ok;
             }

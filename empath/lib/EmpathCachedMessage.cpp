@@ -20,11 +20,10 @@
 
 #include "EmpathCachedMessage.h"
 
-EmpathCachedMessage::EmpathCachedMessage(RMM::RMessage * m)
-    :   message_(m),
-        refCount_(1)
+EmpathCachedMessage::EmpathCachedMessage(RMM::RMessage * m, const QString & r)
+    :   message_(m)
 {
-    // Empty.
+    ref(r);
 }
 
 EmpathCachedMessage::~EmpathCachedMessage()
@@ -34,27 +33,22 @@ EmpathCachedMessage::~EmpathCachedMessage()
 }
 
     RMM::RMessage *
-EmpathCachedMessage::message()
+EmpathCachedMessage::message(const QString & r)
 {
+    references_.remove(r);
     return message_;
 }
 
     unsigned int
 EmpathCachedMessage::refCount() const
 {
-    return refCount_;
+    return references_.count();
 }
 
     void
-EmpathCachedMessage::ref()
+EmpathCachedMessage::ref(const QString & r)
 {
-    ++refCount_;
-}
-
-    void
-EmpathCachedMessage::deref()
-{
-    --refCount_;
+    references_.append(r);
 }
 
 

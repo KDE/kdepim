@@ -143,34 +143,42 @@ Empath::updateOutgoingServer()
 }
 
     RMM::RMessage *
-Empath::message(const EmpathURL & source)
+Empath::message(const EmpathURL & source, const QString & xinfo)
 {
     empathDebug("message(" + source.asString() + ") called");
     
     // Try and get the message from the cache.
-    
-    RMM::RMessage * message(cache_[source.asString()]->message());
-    
-    if (message == 0) {
+
+    EmpathCachedMessage * cached = cache_[source.asString()];
+
+    if (cached == 0) {
+        empathDebug("Message \"" + source.asString() + "\" not in cache !");
+        return 0;
+    }
+
+    if (cached->message(xinfo) == 0) {
         empathDebug("Message \"" + source.asString() + "\" not in cache !");
         return 0;
     }
     
-    return message;
+    return cached->message(xinfo);
 }
 
     void
-Empath::finishedWithMessage(const EmpathURL & url)
+Empath::finishedWithMessage(const EmpathURL & url, const QString & xinfo)
 {
+    empathDebug(url.asString()); 
     EmpathCachedMessage * m = cache_[url.asString()];
 
-    if (m == 0)
+    if (m == 0) {
+        empathDebug("It wasn't in the cache anyways");
         return;
+    }
 
-    m->deref();
-    
-    if (m->refCount() == 0)
+    if (m->refCount() == 0) {
+        empathDebug("Refcount has dropped to 0. Deleting.");
         cache_.remove(url.asString());
+    }
 }
 
     EmpathMailbox *
@@ -364,14 +372,21 @@ Empath::generateUnique()
 }
 
     void
-Empath::cacheMessage(const EmpathURL & url, RMM::RMessage * m)
+Empath::cacheMessage
+    (const EmpathURL & url, RMM::RMessage * m, const QString & xinfo)
 {
     EmpathCachedMessage * cached = cache_[url.asString()];
 
-    if (cached == 0)
-        cache_.insert(url.asString(), new EmpathCachedMessage(m));
-    else 
-        cached->ref();
+    if (cached == 0) {
+
+        empathDebug("Not in cache. Adding");
+        cache_.insert(url.asString(), new EmpathCachedMessage(m, xinfo));
+
+    } else {
+
+        empathDebug("Already in cache. Referencing");
+        cached->ref(xinfo);
+    }
 }
 
     void
@@ -505,7 +520,7 @@ Empath::s_messageReadyForSave(
         return;
     }
     
-    RMM::RMessage * m = message(url);
+    RMM::RMessage * m = message(url, xinfo);
     
     if (m == 0) {
         empathDebug("Couldn't get message that supposedly retrieved");
@@ -513,6 +528,8 @@ Empath::s_messageReadyForSave(
     }
     
     QString s(m->asString());
+
+    finishedWithMessage(url, xinfo);
   
     unsigned int blockSize = 1024; // 1k blocks
     

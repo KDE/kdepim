@@ -41,13 +41,17 @@
 #include <RMM_Message.h>
 #include <RMM_BodyPart.h>
 #include <RMM_ContentType.h>
-    
+
+unsigned int EmpathMessageViewWidget::id_ = 0;
+
 EmpathMessageViewWidget::EmpathMessageViewWidget
     (const EmpathURL & url, QWidget *parent)
     :   QWidget(parent, "MessageViewWidget"),
         url_(url),
         viewingSource_(false)
 {
+    ++id_;
+
     structureWidget_ =
         new EmpathMessageStructureWidget(0, "structureWidget");
     
@@ -83,12 +87,14 @@ EmpathMessageViewWidget::EmpathMessageViewWidget
 EmpathMessageViewWidget::s_retrieveComplete(
     bool b, const EmpathURL & url, QString xinfo)
 {
-    if ((b == false) || (xinfo != "view"))
+    empathDebug("My id is: `view" + QString().setNum(id_));
+    empathDebug("Given id: " + xinfo);
+    if ((b == false) || (xinfo != "view" + QString().setNum(id_)))
         return;
 
     url_ = url;
 
-    RMM::RMessage * m(empath->message(url_));
+    RMM::RMessage * m(empath->message(url_, xinfo));
     
     if (m == 0) {
         empathDebug("Couldn't get supposedly retrieved message from \"" +
@@ -98,7 +104,7 @@ EmpathMessageViewWidget::s_retrieveComplete(
     
     RMM::RBodyPart message(m->decode());
 
-    empath->finishedWithMessage(url);
+    empath->finishedWithMessage(url, xinfo);
     
     structureWidget_->setMessage(message);
     
@@ -225,8 +231,9 @@ EmpathMessageViewWidget::~EmpathMessageViewWidget()
     void
 EmpathMessageViewWidget::s_setMessage(const EmpathURL & url)
 {
+    empathDebug("");
     url_ = url;
-    empath->retrieve(url_, "view");
+    empath->retrieve(url_, "view" + QString().setNum(id_));
 }
 
     void
@@ -270,6 +277,7 @@ EmpathMessageViewWidget::s_partChanged(RMM::RBodyPart * part)
     void
 EmpathMessageViewWidget::s_switchView()
 {
+#if 0
     if (viewingSource_) {
         
         empathDebug("Doing normal view");
@@ -281,7 +289,7 @@ EmpathMessageViewWidget::s_switchView()
         empathDebug("Doing source view");
         viewingSource_ = true;
     
-        RMM::RMessage * m(empath->message(url_));
+        RMM::RMessage * m(empath->message(url_, xinfo));
     
         if (m == 0) {
             empathDebug("Can't load message from \"" + url_.asString() + "\"");
@@ -293,6 +301,7 @@ EmpathMessageViewWidget::s_switchView()
         empath->finishedWithMessage(url_);
         showText(s, false);
     }
+#endif
 }
 
     void

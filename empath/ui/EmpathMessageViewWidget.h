@@ -77,6 +77,8 @@ class EmpathMessageViewWidget : public QWidget
 
         EmpathURL   url_;
         bool        viewingSource_;
+
+        static unsigned int id_;
 };
 
 #endif

@@ -41,14 +41,16 @@
 #include "EmpathUtilities.h"
 
 EmpathFolder::EmpathFolder()
-    :    QObject()
+    :   QObject(),
+        container_(false)
 {
     pixmapName_ = "folder-normal";
 }
 
 EmpathFolder::EmpathFolder(const EmpathURL & url)
     :   QObject(),
-        url_(url)
+        url_(url),
+        container_(false)
 {
     index_ = new EmpathIndex(url);
 	

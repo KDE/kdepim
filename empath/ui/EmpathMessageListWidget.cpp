@@ -365,10 +365,8 @@ EmpathMessageListWidget::s_messageFilter()
     void
 EmpathMessageListWidget::s_messageView()
 {
-    EmpathMessageViewWindow * messageViewWindow =
-        new EmpathMessageViewWindow(firstSelectedMessage());
-    
-    messageViewWindow->show();
+    empathDebug("");
+    new EmpathMessageViewWindow(firstSelectedMessage());
 }
 
     void
@@ -484,6 +482,7 @@ EmpathMessageListWidget::setStatus(
     void
 EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 {
+    empathDebug(url.asString());
     if (url_ == url) {
         emit(showing());
         return;

@@ -208,6 +208,7 @@ EmpathComposeWidget::_spawnExternalEditor(const QCString & text)
     void
 EmpathComposeWidget::_reply(bool toAll)
 {
+#if 0
     RMM::RMessage * m(empath->message(url_));
     if (m == 0) return;
     
@@ -332,11 +333,13 @@ EmpathComposeWidget::_reply(bool toAll)
     }
 
     editorWidget_->setFocus();
+#endif
 }
 
     void
 EmpathComposeWidget::_forward()
 {
+#if 0
     empathDebug("Forwarding");
     
     RMM::RMessage * m(empath->message(url_));
@@ -357,6 +360,7 @@ EmpathComposeWidget::_forward()
             _set("Subject", s);
         else
             _set("Subject", "Fwd: " + s);
+#endif
 }
 
     void
@@ -601,6 +605,7 @@ EmpathComposeWidget::_body()
     QCString
 EmpathComposeWidget::_referenceHeaders()
 {
+#if 0
     QCString s;
 
     if (composeType_ != Empath::ComposeReply    &&
@@ -661,6 +666,7 @@ EmpathComposeWidget::_referenceHeaders()
     s += "\n";
     
     return s;
+#endif
 }
     
     QCString

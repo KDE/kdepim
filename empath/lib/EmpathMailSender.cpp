@@ -162,7 +162,7 @@ EmpathMailSender::operationComplete(
             // retrieved.
         }
 
-        RMM::RMessage * m(empath->message(url));
+        RMM::RMessage * m(empath->message(url, xinfo));
  
         if (m == 0) {
         
@@ -177,7 +177,7 @@ EmpathMailSender::operationComplete(
     
         RMM::RMessage message(*m);
     
-        empath->finishedWithMessage(url);
+        empath->finishedWithMessage(url, xinfo);
 
         sendOne(message, url.messageID());
 

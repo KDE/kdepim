@@ -388,7 +388,7 @@ EmpathMailboxMaildir::_retrieve(
     RMM::RMessage * message = m->message(url.messageID());
 
     if (message != 0)
-        empath->cacheMessage(url, message);
+        empath->cacheMessage(url, message, xinfo);
     
     emit(retrieveComplete((message != 0), url, xxinfo, xinfo));
 }
@@ -407,7 +407,7 @@ EmpathMailboxMaildir::_retrieve(
     RMM::RMessage * message = m->message(from.messageID());
 
     if (message != 0)
-        empath->cacheMessage(from, message);
+        empath->cacheMessage(from, message, xinfo);
     
     emit(retrieveComplete((message != 0), from, to, xxinfo, xinfo));
 }

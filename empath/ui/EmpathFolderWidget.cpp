@@ -217,8 +217,12 @@ EmpathFolderWidget::s_linkChanged(QListViewItem * item)
         EmpathFolder * f = empath->folder(i->url());
         if (f == 0)
             return;
-        if (!f->isContainer())
+        if (f->isContainer()) {
+            empathDebug("Is container folder. Not showing");
+        } else {
+            empathDebug("Showing...");
             emit(showFolder(i->url()));
+        }
     }
 }    
 
