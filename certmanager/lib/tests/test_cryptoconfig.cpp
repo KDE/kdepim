@@ -189,9 +189,7 @@ int main( int argc, char** argv ) {
       QString val = entry->stringValue();
       cout << "Log-file: " << val.local8Bit() << endl;
 
-      // Test setting the option directly, then querying again
-      //system( "echo 'log-file:\"/tmp/test%3a%e5ä' | gpgconf --change-options dirmngr" );
-      // Now let's do it with the C++ API instead
+      // Test setting the option, sync'ing, then querying again
       entry->setStringValue( "/tmp/test:%e5ä" );
       assert( entry->isDirty() );
       config->sync( true );
@@ -207,8 +205,7 @@ int main( int argc, char** argv ) {
       assert( entry );
       assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_Path );
       cout << "Log-file: " << entry->stringValue().local8Bit() << endl;
-      // This is what it should be, but gpgconf escapes wrongly the arguments (aegypten issue90)
-      //assert( entry->stringValue() == "/tmp/test:%e5ä" ); // (or even with %e5 decoded)
+      assert( entry->stringValue() == "/tmp/test:%e5ä" ); // (or even with %e5 decoded)
 
       // Reset old value
 #if 0
@@ -228,8 +225,6 @@ int main( int argc, char** argv ) {
     else
       cout << "Entry dirmngr/Debug/log-file not found" << endl;
   }
-
-  // TODO setting options
 
   cout << "Done." << endl;
 }
