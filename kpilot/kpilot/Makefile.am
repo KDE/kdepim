@@ -38,7 +38,7 @@ kpilot_SOURCES	= kpilot.cc \
 	options.cc
 
 kpilotDaemon_SOURCES = pilotDaemon.cc \
-	kpilotConfig.cc kpilotlink.cc \
+	kpilotConfig.cc kpilotlink.cc hotSync.cc \
 	fileInstaller.cc \
 	messageDialog.cc \
 	pilotDaemonDCOP.skel \

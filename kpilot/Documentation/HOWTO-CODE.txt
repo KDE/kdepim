@@ -76,7 +76,7 @@ up compilation just a little bit.] -- This paragraph has become
 irrelevant since I found out that sensible C compilers (ie. gcc)
 have support to handle multiple inclusion efficiently, without even
 opening a header file more than once. It *does* mean that the #ifndef
-needs to move to the top of the .f, but that's no real problem.
+needs to move to the top of the .h file, but that's no real problem.
 
 
 
