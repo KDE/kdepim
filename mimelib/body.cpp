@@ -147,6 +147,31 @@ int DwBodyParser::Parse()
     return kParseSuccess;
 }
 
+// checks whether [cur,end[ matches -*[\r\t ]*(\n|$)
+static bool isOnlyWhiteSpaceOrDashesUntilEndOfLine( const char * cur, const char * end ) {
+  bool dashesStillAllowed = true;
+
+  while ( cur < end )
+    switch( *cur ) {
+    case ' ':
+    case '\t':
+    case '\r':
+      dashesStillAllowed = false;
+      ++cur;
+      continue;
+    case '\n':
+      return true;
+    case '-':
+      if ( !dashesStillAllowed )
+	return false;
+      ++cur;
+      continue;
+    default:
+      return false;
+    }
+  // end of buffer is ok, too:
+  return true;
+}
 
 int DwBodyParser::FindBoundary(size_t aStartPos, size_t* aBoundaryStart,
     size_t* aBoundaryEnd, size_t* aIsFinal) const
@@ -196,7 +221,8 @@ int DwBodyParser::FindBoundary(size_t aStartPos, size_t* aBoundaryStart,
         if (buf[pos] == '\n'
             && buf[pos+1] == '-'
             && buf[pos+2] == '-'
-            && strncmp(&buf[pos+3], mBoundary.data(), blen) == 0) {
+            && strncmp(&buf[pos+3], mBoundary.data(), blen) == 0
+	    && isOnlyWhiteSpaceOrDashesUntilEndOfLine( buf + pos + blen + 3, buf + endPos ) ) {
 
             *aBoundaryStart = pos;
             pos += blen + 3;
@@ -208,7 +234,8 @@ int DwBodyParser::FindBoundary(size_t aStartPos, size_t* aBoundaryStart,
             && buf[pos+2] == '-'
             && pos+blen+3 < endPos
             && buf[pos+3] == '-'
-            && strncmp(&buf[pos+4], mBoundary.data(), blen) == 0) {
+            && strncmp(&buf[pos+4], mBoundary.data(), blen) == 0
+	    && isOnlyWhiteSpaceOrDashesUntilEndOfLine( buf + pos + blen + 3, buf + endPos ) ) {
 
             *aBoundaryStart = pos;
             pos += blen + 4;
