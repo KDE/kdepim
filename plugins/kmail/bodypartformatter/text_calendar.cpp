@@ -507,16 +507,6 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
     bool mail( Incidence* incidence, KMail::Callback& callback ) const
     {
-      // This workaround is disabled for now
-#if 0
-      // This is ugly, but Outlook will only understand the reply if
-      // the From: header is the same as the To: header of the
-      // invitation message.
-      KConfigGroup options( KMKernel::config(), "Groupware" );
-      if( options.readBoolEntry( "LegacyMangleFromToHeaders", true ) )
-          msgNew->setFrom( callback.receiver() );
-#endif
-
       ICalFormat format;
       QString msg = format.createScheduleMessage( incidence,
                                                   Scheduler::Reply );
