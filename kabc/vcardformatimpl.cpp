@@ -99,26 +99,11 @@ bool VCardFormatImpl::load( AddressBook *addressBook, const QString &fileName )
           break;
 
         case EntityN:
-          {
-            QStringList str = QStringList::split( ";", readTextValue( cl ) );
-            QStringList::ConstIterator it = str.begin();
-            if ( it != str.end() ) {
-              a.setFamilyName( *it++ );
-            }
-            if ( it != str.end() ) {
-              a.setGivenName( *it++ );
-            }
-            if ( it != str.end() ) {
-              a.setAdditionalName( *it++ );
-            }
-            if ( it != str.end() ) {
-              a.setPrefix( *it++ );
-            }
-            if ( it != str.end() ) {
-              a.setSuffix( *it );
-            }
-          }
+          readNValue( cl, a );
           break;
+
+        case EntityAddress:
+          a.insertAddress( readAddressValue( cl ) );
 
         case EntityTelephone:
           {
@@ -126,11 +111,13 @@ bool VCardFormatImpl::load( AddressBook *addressBook, const QString &fileName )
             ParamList paramList = cl->paramList();
             PhoneNumber::Type type = PhoneNumber::Home;
             if (paramList.count() > 0 ) {
-              QCString typeString = paramList.first()->asString();
-              if ( typeString == "home" ) {
-                type = PhoneNumber::Home;
-              } else if( typeString == "work" ) {
-                type = PhoneNumber::Office;
+              Param *p = paramList.first();
+              if (p->name() == "TYPE") {
+                if ( p->value() == "home" ) {
+                  type = PhoneNumber::Home;
+                } else if( p->value() == "work" ) {
+                  type = PhoneNumber::Office;
+                }
               }
             }
             a.insertPhoneNumber( PhoneNumber( QString::fromUtf8( value->asString() ), type ) );
@@ -169,10 +156,7 @@ bool VCardFormatImpl::save( AddressBook *addressBook, const QString &fileName )
     addTextValue( v, EntityEmail, (*it).email() );
     addTextValue( v, EntityURL, (*it).url().url() );
 
-    value = (*it).familyName() + ";" + (*it).givenName() + ";" +
-            (*it).additionalName() + ";" + (*it).prefix() + ";" +
-            (*it).suffix();
-    addTextValue( v, EntityN, value );
+    addNValue( v, *it );
 
     addTextValue( v, EntityNickname, (*it).nickName() );
 //    addTextValue( v, EntityLabel, (*it).label() );
@@ -184,7 +168,11 @@ bool VCardFormatImpl::save( AddressBook *addressBook, const QString &fileName )
     addTextValue( v, EntityProductID, (*it).productId() );
     addTextValue( v, EntitySortString, (*it).sortString() );
 
-    
+    Address::List addresses = (*it).addresses();
+    Address::List::ConstIterator it3;
+    for( it3 = addresses.begin(); it3 != addresses.end(); ++it3 ) {
+      addAddressValue( v, *it3 );
+    }
 
     cl.clear();
     QStringList phoneNumberList;    
@@ -211,7 +199,7 @@ bool VCardFormatImpl::save( AddressBook *addressBook, const QString &fileName )
             paramValue = "fax";
             break;
         }
-        p.append( new TelParam( paramValue.utf8() ) );
+        p.append( new Param( "TYPE=" + paramValue.utf8() ) );
         cl.setParamList( p );
         v->add(cl);
       }
@@ -242,6 +230,95 @@ void VCardFormatImpl::addTextValue( VCard *v, EntityType type, const QString &tx
   cl.setName(EntityTypeToParamName( type ) );
   cl.setValue( new TextValue( txt.utf8() ) );
   v->add(cl);
+}
+
+void VCardFormatImpl::addAddressValue( VCard *vcard, const Address &a )
+{
+  kdDebug() << "VCardFormatImpl::addAddressValue() " << endl;
+  a.dump();
+
+  ContentLine cl;
+  cl.setName(EntityTypeToParamName( EntityAddress ) );
+
+  AdrValue *v = new AdrValue;
+  v->setPOBox( a.postOfficeBox().utf8() );
+  v->setExtAddress( a.extended().utf8() );
+  v->setStreet( a.street().utf8() );
+  v->setLocality( a.locality().utf8() );
+  v->setRegion( a.region().utf8() );
+  v->setPostCode( a.postalCode().utf8() );
+  v->setCountryName( a.country().utf8() );
+  cl.setValue( v );
+
+  ParamList params;
+  if ( a.type() & Address::Dom ) params.append( new Param( "TYPE", "dom" ) );
+  if ( a.type() & Address::Intl ) params.append( new Param( "TYPE", "intl" ) );
+  if ( a.type() & Address::Parcel ) params.append( new Param( "TYPE", "parcel" ) );
+  if ( a.type() & Address::Postal ) params.append( new Param( "TYPE", "postal" ) );
+  if ( a.type() & Address::Work ) params.append( new Param( "TYPE", "work" ) );
+  if ( a.type() & Address::Home ) params.append( new Param( "TYPE", "home" ) );
+  if ( a.type() & Address::Pref ) params.append( new Param( "TYPE", "pref" ) );
+  cl.setParamList( params );
+
+  vcard->add(cl);
+
+  kdDebug() << "VCardFormatImpl::addAddressValue() done" << endl;
+}
+
+Address VCardFormatImpl::readAddressValue( ContentLine *cl )
+{
+  Address a;
+  AdrValue *v = (AdrValue *)cl->value();
+  a.setPostOfficeBox( QString::fromUtf8( v->poBox() ) );
+  a.setExtended( QString::fromUtf8( v->extAddress() ) );
+  a.setStreet( QString::fromUtf8( v->street() ) );
+  a.setLocality( QString::fromUtf8( v->locality() ) );
+  a.setRegion( QString::fromUtf8( v->region() ) );
+  a.setPostalCode( QString::fromUtf8( v->postCode() ) );
+  a.setCountry( QString::fromUtf8( v->countryName() ) );
+
+  int type = 0;
+  ParamList params = cl->paramList();
+  ParamListIterator it( params );
+  for( ; it.current(); ++it ) {
+    if ( (*it)->name() == "TYPE" ) {
+      if ( (*it)->value() == "dom" ) type |= Address::Dom;
+      else if ( (*it)->value() == "intl" ) type |= Address::Intl;
+      else if ( (*it)->value() == "parcel" ) type |= Address::Parcel;
+      else if ( (*it)->value() == "postal" ) type |= Address::Postal;
+      else if ( (*it)->value() == "work" ) type |= Address::Work;
+      else if ( (*it)->value() == "home" ) type |= Address::Home;
+      else if ( (*it)->value() == "pref" ) type |= Address::Pref;
+    }
+  }
+  a.setType( type );
+
+  return a;
+}
+
+void VCardFormatImpl::addNValue( VCard *vcard, const Addressee &a )
+{
+  ContentLine cl;
+  cl.setName(EntityTypeToParamName( EntityN ) );
+  NValue *v = new NValue;
+  v->setFamily( a.familyName().utf8() );
+  v->setGiven( a.givenName().utf8() );
+  v->setMiddle( a.additionalName().utf8() );
+  v->setPrefix( a.prefix().utf8() );
+  v->setSuffix( a.suffix().utf8() );
+  
+  cl.setValue( v );
+  vcard->add(cl);
+}
+
+void VCardFormatImpl::readNValue( ContentLine *cl, Addressee &a )
+{
+  NValue *v = (NValue *)cl->value();
+  a.setFamilyName( QString::fromUtf8( v->family() ) );
+  a.setGivenName( QString::fromUtf8( v->given() ) );
+  a.setAdditionalName( QString::fromUtf8( v->middle() ) );
+  a.setPrefix( QString::fromUtf8( v->prefix() ) );
+  a.setSuffix( QString::fromUtf8( v->suffix() ) );
 }
 
 QString VCardFormatImpl::readTextValue( ContentLine *cl )

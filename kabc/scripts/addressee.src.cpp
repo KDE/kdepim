@@ -89,6 +89,12 @@ void Addressee::dump() const
   }
   kdDebug() << "  }" << endl;
 
+  Address::List a = addresses();
+  Address::List::ConstIterator it2;
+  for( it2 = a.begin(); it2 != a.end(); ++it2 ) {
+    (*it2).dump();
+  }
+
   kdDebug() << "}" << endl;
 }
 
@@ -99,12 +105,25 @@ void Addressee::insertAddress( const Address &address )
 
   Address::List::Iterator it;
   for( it = mData->addresses.begin(); it != mData->addresses.end(); ++it ) {
-    if ( (*it).type() == address.type() ) {
+    if ( (*it).id() == address.id() ) {
       *it = address;
       return;
     }
   }
-  mData->addresses.append( address );  
+  mData->addresses.append( address );
+}
+
+void Addressee::removeAddress( const Address &address )
+{
+  detach();
+
+  Address::List::Iterator it;
+  for( it = mData->addresses.begin(); it != mData->addresses.end(); ++it ) {
+    if ( (*it).id() == address.id() ) {
+      mData->addresses.remove( it );
+      return;
+    }
+  }
 }
 
 Address Addressee::address( int type ) const
@@ -121,4 +140,15 @@ Address Addressee::address( int type ) const
 Address::List Addressee::addresses() const
 {
   return mData->addresses;
+}
+
+Address Addressee::findAddress( const Address &a ) const
+{
+  Address::List::ConstIterator it;
+  for( it = mData->addresses.begin(); it != mData->addresses.end(); ++it ) {
+    if ( (*it).id() == a.id() ) {
+      return *it;
+    }
+  }
+  return Address();
 }

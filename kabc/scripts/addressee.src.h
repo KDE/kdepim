@@ -43,8 +43,11 @@ class Addressee
     PhoneNumber::List phoneNumbers() const;
     
     void insertAddress( const Address &address );
+    void removeAddress( const Address &address );
     Address address( int type ) const;
     Address::List addresses() const;
+
+    Address findAddress( const Address &address ) const;
 
     void dump() const;
   

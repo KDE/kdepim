@@ -16,6 +16,9 @@ class Address
     enum { Dom = 1, Intl = 2, Postal = 4, Parcel = 8, Home = 16, Work = 32,
            Pref = 64 };
 
+    void setId( const QString & );
+    QString id() const;
+
     void setType( int );
     int type() const;
 
@@ -42,8 +45,11 @@ class Address
 
     void setLabel( const QString & );
     QString label() const;
+
+    void dump() const;
   
   private:
+    QString mId;
     int mType;
   
     QString mPostOfficeBox;

@@ -1,3 +1,6 @@
+#include <kapplication.h>
+#include <kdebug.h>
+
 #include "address.h"
 
 using namespace KABC;
@@ -5,6 +8,17 @@ using namespace KABC;
 Address::Address() :
   mType( 0 )
 {
+  mId = KApplication::randomString( 10 );
+}
+
+void Address::setId( const QString &id )
+{
+  mId = id;
+}
+
+QString Address::id() const
+{
+  return mId;
 }
 
 void Address::setType( int type )
@@ -102,4 +116,15 @@ void Address::setLabel( const QString &s )
 QString Address::label() const
 {
   return mLabel;
+}
+
+void Address::dump() const
+{
+  kdDebug() << "  Address {" << endl;
+  kdDebug() << "    Id: " << id() << endl;
+  kdDebug() << "    Extended: " << extended() << endl;
+  kdDebug() << "    Street: " << street() << endl;
+  kdDebug() << "    Postal Code: " << postalCode() << endl;
+  kdDebug() << "    Locality: " << locality() << endl;
+  kdDebug() << "  }" << endl;
 }

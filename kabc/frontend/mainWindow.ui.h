@@ -22,25 +22,21 @@ class AddresseeItem : public QListViewItem
       QListViewItem( parent, a.name() ), mAddressee( a ) {}
       
     void setAddressee( const Addressee &a ) { mAddressee = a; }
-    Addressee addressee() { return mAddressee; }
+    Addressee &addressee() { return mAddressee; }
     
   private:
     Addressee mAddressee;
 };
 
-void MainWindow::updateAddressee( QListViewItem *item )
+void MainWindow::init()
 {
-  AddresseeItem *addresseeItem = dynamic_cast<AddresseeItem *>( item );
-  if ( !addresseeItem ) return;
-    
-  if (mCurrentItem ) {
-    Addressee a = writeAddressee( mCurrentItem->addressee() );
-    mCurrentItem->setAddressee( a );
-    mAddressBook->insertAddressee( a );
-  }   
-  mCurrentItem = addresseeItem;
-    
-  readAddressee( addresseeItem->addressee() );
+  mAddressBook = new KABC::AddressBook;
+  mCurrentItem = 0;
+}
+
+void MainWindow::destroy()
+{
+  delete mAddressBook;
 }
 
 void MainWindow::fileSave()
@@ -68,9 +64,10 @@ void MainWindow::fileOpen()
   QString fileName = QFileDialog::getOpenFileName();
     
   if ( !mAddressBook->load( fileName ) ) return;
-    
+   
   mAddresseeList->clear();
   mCurrentItem = 0;
+  mCurrentAddress = QString::null;
   readAddressee( Addressee() );
     
   KABC::AddressBook::Iterator it;
@@ -79,45 +76,28 @@ void MainWindow::fileOpen()
   }
 }
 
-void MainWindow::init()
+void MainWindow::updateAddressee( QListViewItem *item )
 {
-  mAddressBook = new KABC::AddressBook;
-  mCurrentItem = 0;
-}
-
-void MainWindow::removeEntry()
-{
-  AddresseeItem *item = dynamic_cast<AddresseeItem *>(mAddresseeList->selectedItem());
-  if ( item ) {
-    mAddressBook->removeAddressee( item->addressee() );
-    delete item;
-    mCurrentItem = 0;
+  AddresseeItem *addresseeItem = dynamic_cast<AddresseeItem *>( item );
+  if ( !addresseeItem ) return;
+    
+  if (mCurrentItem ) {
+    writeAddress( mCurrentAddress );  
+    Addressee a = writeAddressee( mCurrentItem->addressee() );
+    mCurrentItem->setAddressee( a );
+    mAddressBook->insertAddressee( a );
   }
+  mCurrentItem = addresseeItem;
+
+  readAddressee( addresseeItem->addressee() );
+  updateAddress( mAddressIdCombo->currentItem() );
 }
 
-void MainWindow::newEntry()
-{
-  bool ok = false;
-  QString name = QInputDialog::getText( i18n("New Address Book Entry"),
-                                        i18n("Please enter name."),
-                                        QLineEdit::Normal, QString::null, &ok,
-                                        this );
-  if ( !ok || name.isEmpty() ) return;
-  
-  Addressee a;
-  a.setName( name );
-  mAddressBook->insertAddressee( a );
-  
-  new AddresseeItem( mAddresseeList, a );
-}
-
-void MainWindow::destroy()
-{
-  delete mAddressBook;
-}
 
 void MainWindow::readAddressee( const KABC::Addressee &a )
 {
+    kdDebug() << "MainWindow::readAddressee(): " << a.name() << endl;  
+    
   mNameEdit->setText( a.name() );
   mEmailEdit->setText( a.email() );
   PhoneNumber::List pl = a.phoneNumbers();
@@ -143,6 +123,16 @@ void MainWindow::readAddressee( const KABC::Addressee &a )
   mOrganizationEdit->setText( a.organization() );
   mNoteEdit->setText( a.note() );
 //  mLabelEdit->setText( a.label() );
+  
+  Address::List addresses = a.addresses();
+  mAddressIdCombo->clear();
+  Address::List::ConstIterator it;
+  for( it = addresses.begin(); it != addresses.end(); ++it ) {
+    mAddressIdCombo->insertItem( (*it).id() );
+  }
+  if ( mAddressIdCombo->count() > 0 ) mCurrentAddress = mAddressIdCombo->currentText();
+  else mCurrentAddress = QString::null;
+  readAddress( mCurrentAddress );
 }
 
 KABC::Addressee MainWindow::writeAddressee( const KABC::Addressee &addressee )
@@ -178,4 +168,156 @@ KABC::Addressee MainWindow::writeAddressee( const KABC::Addressee &addressee )
   a.dump();
     
   return a;
+}
+
+void MainWindow::newEntry()
+{
+  bool ok = false;
+  QString name = QInputDialog::getText( i18n("New Address Book Entry"),
+                                        i18n("Please enter name."),
+                                        QLineEdit::Normal, QString::null, &ok,
+                                        this );
+  if ( !ok || name.isEmpty() ) return;
+  
+  Addressee a;
+  a.setName( name );
+  mAddressBook->insertAddressee( a );
+  
+  new AddresseeItem( mAddresseeList, a );
+}
+
+void MainWindow::removeEntry()
+{
+  AddresseeItem *item = dynamic_cast<AddresseeItem *>(mAddresseeList->selectedItem());
+  if ( item ) {
+    mAddressBook->removeAddressee( item->addressee() );
+    delete item;
+    mCurrentItem = 0;
+  }
+}
+
+
+void MainWindow::updateAddress( int id )
+{
+  if( !mCurrentItem ) return;
+  
+  writeAddress( mCurrentAddress );
+  if ( mAddressIdCombo->count()  > 0 ) {
+    mCurrentAddress = mAddressIdCombo->text( id );
+  } else {
+    mCurrentAddress = QString::null;
+  }
+  readAddress( mCurrentAddress );
+}
+
+KABC::Address MainWindow::writeAddress( const KABC::Address &address )
+{
+  Address a( address );
+  
+  a.setPostOfficeBox( mAddressPostOfficeBoxEdit->text() );
+  a.setExtended( mAddressExtendedEdit->text() );
+  a.setStreet( mAddressStreetEdit->text() );
+  a.setLocality( mAddressLocalityEdit->text() );
+  a.setRegion( mAddressRegionEdit->text() );
+  a.setLabel( mAddressLabelEdit->text() );
+  a.setPostalCode( mAddressPostalCodeEdit->text() );
+  a.setCountry( mAddressCountryEdit->text() );
+  
+  int type = 0;
+  if ( mAddressDomCheck->isChecked() ) type |= Address::Dom;
+  if ( mAddressIntlCheck->isChecked() ) type |= Address::Intl;
+  if ( mAddressParcelCheck->isChecked() ) type |= Address::Parcel;
+  if ( mAddressPostalCheck->isChecked() ) type |= Address::Postal;
+  if ( mAddressHomeCheck->isChecked() ) type |= Address::Home;
+  if ( mAddressPrefCheck->isChecked() ) type |= Address::Pref;
+  if ( mAddressWorkCheck->isChecked() ) type |= Address::Work;
+  a.setType( type );
+  
+  return a;
+}
+
+void MainWindow::writeAddress( const QString &id )
+{
+  if ( !mCurrentItem ) return;
+ 
+  if ( id.isEmpty() ) return;
+ 
+  Address address;
+  address.setId( id );
+  address = writeAddress( address );
+ 
+  mCurrentItem->addressee().insertAddress( address );
+}
+
+void MainWindow::readAddress( const KABC::Address &a )
+{
+  mAddressPostOfficeBoxEdit->setText( a.postOfficeBox() );
+  mAddressExtendedEdit->setText( a.extended() );
+  mAddressStreetEdit->setText( a.street() );
+  mAddressLocalityEdit->setText( a.locality() );
+  mAddressRegionEdit->setText( a.region() );
+  mAddressLabelEdit->setText( a.label() );
+  mAddressPostalCodeEdit->setText( a.postalCode() );
+  mAddressCountryEdit->setText( a.country() );
+  
+  int type = a.type();
+  if ( type & Address::Dom ) mAddressDomCheck->setChecked( true );
+  else mAddressDomCheck->setChecked( false );
+  if ( type & Address::Intl ) mAddressIntlCheck->setChecked( true );
+  else mAddressIntlCheck->setChecked( false );
+  if ( type & Address::Parcel ) mAddressParcelCheck->setChecked( true );
+  else mAddressParcelCheck->setChecked( false );
+  if ( type & Address::Postal ) mAddressPostalCheck->setChecked( true );
+  else mAddressPostalCheck->setChecked( false );
+  if ( type & Address::Home ) mAddressHomeCheck->setChecked( true );
+  else mAddressHomeCheck->setChecked( false );
+  if ( type & Address::Pref ) mAddressPrefCheck->setChecked( true );
+  else mAddressPrefCheck->setChecked( false );
+  if ( type & Address::Work ) mAddressWorkCheck->setChecked( true );
+  else mAddressWorkCheck->setChecked( false );
+}
+
+void MainWindow::readAddress( const QString &id )
+{
+  if ( !mCurrentItem || id.isEmpty() ) {
+    readAddress( Address() );
+    return;
+  }
+
+  Address address;
+  address.setId( id );
+  
+  address = mCurrentItem->addressee().findAddress( address );
+  readAddress( address );
+}
+
+
+void MainWindow::newAddress()
+{
+  if( !mCurrentItem ) return;
+  
+  Address address;
+  mCurrentItem->addressee().insertAddress( address );
+  
+  mAddressIdCombo->insertItem( address.id() );
+}
+
+void MainWindow::removeAddress()
+{
+  if ( !mCurrentItem ) return;
+  
+  QString id = mAddressIdCombo->currentText();
+  if ( id.isEmpty() ) return;
+ 	 
+  Address address;
+  address.setId( id );
+  mCurrentItem->addressee().removeAddress( address );
+  
+  readAddressee( mCurrentItem->addressee() );
+}
+
+
+void MainWindow::dumpAddressBook()
+{
+  mAddressBook->dump();
 }

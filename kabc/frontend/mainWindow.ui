@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>596</width>
-            <height>621</height>
+            <width>614</width>
+            <height>613</height>
         </rect>
     </property>
     <property name="caption">
@@ -259,7 +259,7 @@
                         </property>
                     </widget>
                     <spacer row="12" column="1">
-                        <property name="name">
+                        <property name="name" stdset="0">
                             <cstring>Spacer1</cstring>
                         </property>
                         <property name="orientation">
@@ -307,12 +307,101 @@
                     <property name="spacing">
                         <number>6</number>
                     </property>
-                    <widget class="QTextEdit" row="2" column="0" rowspan="1" colspan="2">
+                    <widget class="QLabel" row="0" column="0">
                         <property name="name">
-                            <cstring>mLabelEdit</cstring>
+                            <cstring>TextLabel16</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Id</string>
                         </property>
                     </widget>
-                    <widget class="QLabel" row="1" column="0" rowspan="1" colspan="2">
+                    <widget class="QLabel" row="2" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>TextLabel1_4</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Post Office Box</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="3" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>TextLabel2_2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Extended</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="4" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>TextLabel3_3</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Street</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="5" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>TextLabel4_2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Locality</string>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="2" column="2" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>mAddressPostOfficeBoxEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="3" column="2" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>mAddressExtendedEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="4" column="2" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>mAddressStreetEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="5" column="2" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>mAddressLocalityEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="6" column="2" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>mAddressRegionEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="6" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>TextLabel5_2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Region</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="8" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>TextLabel7_2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Country</string>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="7" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>TextLabel6_2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Postal Code</string>
+                        </property>
+                    </widget>
+                    <widget class="QTextEdit" row="10" column="0" rowspan="1" colspan="5">
+                        <property name="name">
+                            <cstring>mAddressLabelEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="9" column="0" rowspan="1" colspan="2">
                         <property name="name">
                             <cstring>TextLabel13</cstring>
                         </property>
@@ -320,27 +409,110 @@
                             <string>Label:</string>
                         </property>
                     </widget>
-                    <widget class="QLabel" row="0" column="0">
+                    <widget class="QLineEdit" row="7" column="2" rowspan="1" colspan="3">
                         <property name="name">
-                            <cstring>TextLabel16</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Type</string>
+                            <cstring>mAddressPostalCodeEdit</cstring>
                         </property>
                     </widget>
-                    <widget class="QComboBox" row="0" column="1">
-                        <item>
-                            <property name="text">
-                                <string>Home</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                                <string>Work</string>
-                            </property>
-                        </item>
+                    <widget class="QLineEdit" row="8" column="2" rowspan="1" colspan="3">
                         <property name="name">
-                            <cstring>ComboBox2</cstring>
+                            <cstring>mAddressCountryEdit</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QButtonGroup" row="1" column="0" rowspan="1" colspan="5">
+                        <property name="name">
+                            <cstring>ButtonGroup1</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Type</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <property name="margin">
+                                <number>11</number>
+                            </property>
+                            <property name="spacing">
+                                <number>6</number>
+                            </property>
+                            <widget class="QCheckBox" row="0" column="3">
+                                <property name="name">
+                                    <cstring>mAddressDomCheck</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Dom</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox" row="1" column="3">
+                                <property name="name">
+                                    <cstring>mAddressIntlCheck</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Intl</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox" row="0" column="2">
+                                <property name="name">
+                                    <cstring>mAddressParcelCheck</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Parcel</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox" row="1" column="2">
+                                <property name="name">
+                                    <cstring>mAddressPostalCheck</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Postal</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox" row="0" column="1">
+                                <property name="name">
+                                    <cstring>mAddressHomeCheck</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Home</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox" row="0" column="0">
+                                <property name="name">
+                                    <cstring>mAddressPrefCheck</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Pref</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox" row="1" column="1">
+                                <property name="name">
+                                    <cstring>mAddressWorkCheck</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Work</string>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
+                    <widget class="QPushButton" row="0" column="4">
+                        <property name="name">
+                            <cstring>PushButton1</cstring>
+                        </property>
+                        <property name="text">
+                            <string>New</string>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton" row="0" column="3">
+                        <property name="name">
+                            <cstring>PushButton2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Remove</string>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox" row="0" column="1" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>mAddressIdCombo</cstring>
                         </property>
                     </widget>
                 </grid>
@@ -426,6 +598,8 @@
     <item text="File" name="PopupMenu">
         <action name="open"/>
         <action name="save"/>
+        <separator/>
+        <action name="dump"/>
     </item>
     <item text="Addressee" name="PopupMenu_2">
         <action name="addressee_new"/>
@@ -507,6 +681,20 @@
             <string>Remove Addressee</string>
         </property>
     </action>
+    <action>
+        <property name="name">
+            <cstring>dump</cstring>
+        </property>
+        <property name="text">
+            <string>Dump</string>
+        </property>
+        <property name="menuText">
+            <string>Dump</string>
+        </property>
+        <property name="toolTip">
+            <string>Dump Addressbook</string>
+        </property>
+    </action>
 </actions>
 <images>
     <image name="image0">
@@ -547,6 +735,30 @@
         <receiver>MainWindow</receiver>
         <slot>newEntry()</slot>
     </connection>
+    <connection>
+        <sender>PushButton1</sender>
+        <signal>clicked()</signal>
+        <receiver>MainWindow</receiver>
+        <slot>newAddress()</slot>
+    </connection>
+    <connection>
+        <sender>PushButton2</sender>
+        <signal>pressed()</signal>
+        <receiver>MainWindow</receiver>
+        <slot>removeAddress()</slot>
+    </connection>
+    <connection>
+        <sender>mAddressIdCombo</sender>
+        <signal>activated(int)</signal>
+        <receiver>MainWindow</receiver>
+        <slot>updateAddress(int)</slot>
+    </connection>
+    <connection>
+        <sender>dump</sender>
+        <signal>activated()</signal>
+        <receiver>MainWindow</receiver>
+        <slot>dumpAddressBook()</slot>
+    </connection>
 </connections>
 <includes>
     <include location="global" impldecl="in declaration">addressbook.h</include>
@@ -556,19 +768,28 @@
     <forward>class AddresseeItem</forward>
 </forwards>
 <variables>
-    <variable>KABC::AddressBook *mAddressBook</variable>
     <variable>AddresseeItem *mCurrentItem</variable>
+    <variable>KABC::AddressBook *mAddressBook</variable>
+    <variable>QString mCurrentAddress</variable>
 </variables>
 <slots>
-    <slot>updateAddressee( QListViewItem * item )</slot>
+    <slot>init()</slot>
+    <slot>destroy()</slot>
     <slot>fileSave()</slot>
     <slot>fileOpen()</slot>
-    <slot>init()</slot>
-    <slot>removeEntry()</slot>
-    <slot>newEntry()</slot>
-    <slot>destroy()</slot>
+    <slot>updateAddressee( QListViewItem * item )</slot>
     <slot>readAddressee( const KABC::Addressee &amp; a )</slot>
     <slot returnType="KABC::Addressee">writeAddressee( const KABC::Addressee &amp; addressee )</slot>
+    <slot>newEntry()</slot>
+    <slot>removeEntry()</slot>
+    <slot>updateAddress( int id )</slot>
+    <slot returnType="KABC::Address">writeAddress( const KABC::Address &amp; address )</slot>
+    <slot>writeAddress( const QString &amp; id )</slot>
+    <slot>readAddress( const KABC::Address &amp; a )</slot>
+    <slot>readAddress( const QString &amp; id )</slot>
+    <slot>newAddress()</slot>
+    <slot>removeAddress()</slot>
+    <slot>dumpAddressBook()</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

@@ -4,6 +4,8 @@
 #include <qstring.h>
 
 #include "format.h"
+#include "address.h"
+#include "addressee.h"
 
 #include <VCard.h>
 
@@ -19,6 +21,12 @@ class VCardFormatImpl {
   protected:
     void addTextValue (VCARD::VCard *, VCARD::EntityType, const QString & );
     QString readTextValue( VCARD::ContentLine * );
+    
+    void addAddressValue( VCARD::VCard *, const Address & );
+    Address readAddressValue( VCARD::ContentLine * );
+
+    void addNValue( VCARD::VCard *, const Addressee & );
+    void readNValue( VCARD::ContentLine *, Addressee & );
 };
 
 }
