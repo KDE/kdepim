@@ -160,7 +160,7 @@ static bool requirementsAreMet( const CertificateWizardImpl::AttrPairList & list
 #ifndef NDEBUG
     kdbgstream s = kdDebug();
 #else
-    kndbgstream s = kdDebug():
+    kndbgstream s = kdDebug();
 #endif
     s << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\": ";
     if ( key.endsWith("!") && le->text().stripWhiteSpace().isEmpty() ) {
