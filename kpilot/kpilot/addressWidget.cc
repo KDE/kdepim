@@ -19,7 +19,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -591,7 +591,7 @@ void AddressWidget::slotShowAddress(int which)
 
 	QString par = CSL1("<p>");
 	QString ps = CSL1("</p>");
-	
+
 	// title + name
 	text += par;
 	if (!addr->getField(entryTitle).isEmpty())
@@ -728,6 +728,7 @@ void AddressWidget::writeAddress(PilotAddress * which,
 	PilotRecord *pilotRec = which->pack();
 
 	myDB->writeRecord(pilotRec);
+	markDBDirty("AddressDB");
 	delete pilotRec;
 
 	// Clean up in the case that we allocated our own DB.

@@ -494,6 +494,7 @@ void MemoWidget::writeMemo(PilotMemo * which)
 	PilotRecord *pilotRec = which->pack();
 
 	memoDB->writeRecord(pilotRec);
+	markDBDirty("MemoDB");
 	delete pilotRec;
 	delete memoDB;
 }
