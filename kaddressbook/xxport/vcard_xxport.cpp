@@ -117,7 +117,7 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
     url = XXPortManager::importURL;
 
   if ( url.isEmpty() )
-    return KABC::AddresseeList();
+    return addrList;
 
   QString caption( i18n( "vCard Import Failed" ) );
   if ( KIO::NetAccess::download( url, fileName ) ) {

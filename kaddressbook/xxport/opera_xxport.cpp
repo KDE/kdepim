@@ -62,13 +62,12 @@ OperaXXPort::OperaXXPort( KABC::AddressBook *ab, QWidget *parent, const char *na
 
 KABC::AddresseeList OperaXXPort::importContacts( const QString& ) const
 {
-  QString source = QDir::homeDirPath() + "/.opera/contacts.adr";
-	
-  QFile file( source );
-	
+  KABC::AddresseeList addrList;
+
   // sanity checks
+  QFile file( QDir::homeDirPath() + "/.opera/contacts.adr" );
   if ( !file.open( IO_ReadOnly ) )
-    return KABC::AddresseeList();
+    return addrList;
 
   QTextStream stream( &file );
   stream.setEncoding( QTextStream::UnicodeUTF8 );
@@ -76,7 +75,6 @@ KABC::AddresseeList OperaXXPort::importContacts( const QString& ) const
   bool parseContact = false;
   KABC::Addressee *addr = 0L;
 	
-  KABC::AddresseeList addrList;
   while ( !stream.atEnd() ) {
     line = stream.readLine();
     line = line.stripWhiteSpace();
