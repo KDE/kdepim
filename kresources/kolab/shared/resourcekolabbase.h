@@ -36,11 +36,11 @@
 
 #include <qstring.h>
 #include <qmap.h>
+#include <qstringlist.h>
 
 #include "subresource.h"
 
 class QCString;
-class QStringList;
 class KURL;
 
 namespace Kolab {
@@ -116,17 +116,15 @@ protected:
                            Q_UINT32 sernum,
                            const QString& filename ) const;
 
-  /// Add a new incidence. The list of attachments are URLs.
-  bool kmailAddIncidence( const QString& resource, const QString& xml,
-                          const QStringList& attachments );
-
   /// Delete an incidence.
   bool kmailDeleteIncidence( const QString& resource, Q_UINT32 sernum );
 
   /// Update an incidence. The list of attachments are URLs.
-  bool kmailUpdate( const QString& resource, Q_UINT32 sernum,
-                    const QString& xml, const QStringList& attachments,
-                    const QStringList& deletedAttachments );
+  /// The parameter sernum is updated with the right KMail serial number
+  bool kmailUpdate( const QString& resource, Q_UINT32& sernum,
+                    const QString& xml,
+                    const QStringList& attachments = QStringList(),
+                    const QStringList& deletedAttachments = QStringList() );
 
   /// Get the full path of the config file.
   QString configFile( const QString& type ) const;
