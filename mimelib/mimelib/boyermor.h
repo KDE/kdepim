@@ -53,10 +53,13 @@ public:
     
     DwBoyerMoore(const char* aCstr);
     DwBoyerMoore(const DwString& aStr);
+    DwBoyerMoore(const DwBoyerMoore& other);
     //. Constructs a {\tt DwBoyerMoore} object for searching for a particular
     //. string.
 
     virtual ~DwBoyerMoore();
+
+    const DwBoyerMoore & operator=( const DwBoyerMoore & other );
 
     void Assign(const char* aCstr);
     void Assign(const DwString& aStr);

@@ -44,17 +44,30 @@ DwBoyerMoore::DwBoyerMoore(const DwString& aStr)
     _Assign(aStr.data(), aStr.length());
 }
 
+DwBoyerMoore::DwBoyerMoore(const DwBoyerMoore & other)
+  : mPat( 0 )
+{
+    _Assign(other.mPat, other.mPatLen);
+}
+
 
 DwBoyerMoore::~DwBoyerMoore()
 {
-  delete[] mPat; mPat = 0;
+    delete[] mPat; mPat = 0;
+}
+
+const DwBoyerMoore & DwBoyerMoore::operator=( const DwBoyerMoore & other )
+{
+    if (this != &other)
+        _Assign(other.mPat, other.mPatLen);
+    return *this;
 }
 
 
 void DwBoyerMoore::Assign(const char* aCstr)
 {
     size_t len = strlen(aCstr);
-	_Assign(aCstr, len);
+    _Assign(aCstr, len);
 }
 
 
