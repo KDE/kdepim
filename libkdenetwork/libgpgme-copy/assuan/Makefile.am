@@ -51,3 +51,7 @@ libassuan_la_COMPILE_FIRST=assuan-errors.c
 
 assuan-errors.c : $(srcdir)/assuan.h
 	$(srcdir)/mkerrors < $(srcdir)/assuan.h > assuan-errors.c
+
+CLEANFILES=assuan-errors.c
+
+
