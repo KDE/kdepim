@@ -22,7 +22,7 @@
         <widget class="QListView">
             <column>
                 <property name="text">
-                    <string>Key categories</string>
+                    <string>Key Categories</string>
                 </property>
                 <property name="clickable">
                     <bool>true</bool>
@@ -134,7 +134,7 @@
                         <bool>false</bool>
                     </property>
                     <property name="text">
-                        <string>Default appearance</string>
+                        <string>Default Appearance</string>
                     </property>
                     <property name="accel">
                         <string></string>

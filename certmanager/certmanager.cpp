@@ -302,7 +302,7 @@ void CertManager::createActions() {
   mLineEditAction->plug( _toolbar );
 
   QStringList lst;
-  lst << i18n("in local certificates") << i18n("in external certificates");
+  lst << i18n("In Local Certificates") << i18n("In External Certificates");
   mComboAction = new ComboAction( lst, actionCollection(), this, SLOT( slotToggleRemote(int) ),
                                   "location_combo_action");
   mComboAction->plug( _toolbar );
