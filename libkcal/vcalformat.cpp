@@ -134,7 +134,7 @@ bool VCalFormat::fromString( Calendar *calendar, const QString &text )
   // TODO: Factor out VCalFormat::fromString()
 
   QCString data = text.utf8();
-  
+
   if ( !data.size() ) return false;
 
   VObject *vcal = Parse_MIME( data.data(), data.size());
@@ -326,13 +326,13 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
       addPropValue(a, VCRunTimeProp, tmpStr.local8Bit());
       addPropValue(a, VCRepeatCountProp, "1");
       addPropValue(a, VCDisplayStringProp, "beep!");
-      if (!alarm->audioFile().isEmpty()) {
+      if (alarm->type() == Alarm::Audio) {
         a = addProp(vtodo, VCAAlarmProp);
         addPropValue(a, VCRunTimeProp, tmpStr.local8Bit());
         addPropValue(a, VCRepeatCountProp, "1");
         addPropValue(a, VCAudioContentProp, QFile::encodeName(alarm->audioFile()));
       }
-      if (!alarm->programFile().isEmpty()) {
+      else if (alarm->type() == Alarm::Procedure) {
         a = addProp(vtodo, VCPAlarmProp);
         addPropValue(a, VCRunTimeProp, tmpStr.local8Bit());
         addPropValue(a, VCRepeatCountProp, "1");
@@ -341,11 +341,13 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
     }
   }
 
-  // pilot sync stuff
-  tmpStr.sprintf("%i",anEvent->pilotId());
-  addPropValue(vtodo, KPilotIdProp, tmpStr.local8Bit());
-  tmpStr.sprintf("%i",anEvent->syncStatus());
-  addPropValue(vtodo, KPilotStatusProp, tmpStr.local8Bit());
+  if (anEvent->pilotId()) {
+    // pilot sync stuff
+    tmpStr.sprintf("%i",anEvent->pilotId());
+    addPropValue(vtodo, KPilotIdProp, tmpStr.local8Bit());
+    tmpStr.sprintf("%i",anEvent->syncStatus());
+    addPropValue(vtodo, KPilotStatusProp, tmpStr.local8Bit());
+  }
 
   return vtodo;
 }
@@ -601,13 +603,13 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
       addPropValue(a, VCRunTimeProp, tmpStr.local8Bit());
       addPropValue(a, VCRepeatCountProp, "1");
       addPropValue(a, VCDisplayStringProp, "beep!");
-      if (!alarm->audioFile().isEmpty()) {
+      if (alarm->type() == Alarm::Audio) {
         a = addProp(vevent, VCAAlarmProp);
         addPropValue(a, VCRunTimeProp, tmpStr.local8Bit());
         addPropValue(a, VCRepeatCountProp, "1");
         addPropValue(a, VCAudioContentProp, QFile::encodeName(alarm->audioFile()));
       }
-      if (!alarm->programFile().isEmpty()) {
+      if (alarm->type() == Alarm::Procedure) {
         a = addProp(vevent, VCPAlarmProp);
         addPropValue(a, VCRunTimeProp, tmpStr.local8Bit());
         addPropValue(a, VCRepeatCountProp, "1");
@@ -630,11 +632,13 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
 	         anEvent->relatedTo()->uid().local8Bit());
   }
 
-  // pilot sync stuff
-  tmpStr.sprintf("%i",anEvent->pilotId());
-  addPropValue(vevent, KPilotIdProp, tmpStr.local8Bit());
-  tmpStr.sprintf("%i",anEvent->syncStatus());
-  addPropValue(vevent, KPilotStatusProp, tmpStr.local8Bit());
+  if (anEvent->pilotId()) {
+    // pilot sync stuff
+    tmpStr.sprintf("%i",anEvent->pilotId());
+    addPropValue(vevent, KPilotIdProp, tmpStr.local8Bit());
+    tmpStr.sprintf("%i",anEvent->syncStatus());
+    addPropValue(vevent, KPilotStatusProp, tmpStr.local8Bit());
+  }
 
   return vevent;
 }
@@ -790,14 +794,14 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
     if ((vo = isAPropertyOf(vtodo, VCPAlarmProp))) {
       if ((a = isAPropertyOf(vo, VCProcedureNameProp))) {
 	s = fakeCString(vObjectUStringZValue(a));
-	alarm->setProgramFile(QFile::decodeName(s));
+	alarm->setProcedureAlarm(QFile::decodeName(s));
 	deleteStr(s);
       }
     }
     if ((vo = isAPropertyOf(vtodo, VCAAlarmProp))) {
       if ((a = isAPropertyOf(vo, VCAudioContentProp))) {
 	s = fakeCString(vObjectUStringZValue(a));
-	alarm->setAudioFile(QFile::decodeName(s));
+	alarm->setAudioAlarm(QFile::decodeName(s));
 	deleteStr(s);
       }
     }
@@ -1316,14 +1320,14 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
     if ((vo = isAPropertyOf(vevent, VCPAlarmProp))) {
       if ((a = isAPropertyOf(vo, VCProcedureNameProp))) {
 	s = fakeCString(vObjectUStringZValue(a));
-	alarm->setProgramFile(QFile::decodeName(s));
+	alarm->setProcedureAlarm(QFile::decodeName(s));
 	deleteStr(s);
       }
     }
     if ((vo = isAPropertyOf(vevent, VCAAlarmProp))) {
       if ((a = isAPropertyOf(vo, VCAudioContentProp))) {
 	s = fakeCString(vObjectUStringZValue(a));
-	alarm->setAudioFile(QFile::decodeName(s));
+	alarm->setAudioAlarm(QFile::decodeName(s));
 	deleteStr(s);
       }
     }

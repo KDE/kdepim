@@ -643,42 +643,58 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
   icalproperty_action action;
   icalattachtype *attach = 0;
 
-  if (!alarm->programFile().isEmpty()) {
-    action = ICAL_ACTION_PROCEDURE;
-    attach = icalattachtype_new();
-    icalattachtype_set_url(attach,QFile::encodeName(alarm->programFile()).data());
-    icalcomponent_add_property(a,icalproperty_new_attach(attach));
-    icalattachtype_free(attach);
-  } else if (!alarm->audioFile().isEmpty()) {
-    action = ICAL_ACTION_AUDIO;
-    attach = icalattachtype_new();
-    icalattachtype_set_url(attach,QFile::encodeName( alarm->audioFile() ).data());
-    icalcomponent_add_property(a,icalproperty_new_attach(attach));
-    icalattachtype_free(attach);
-  } else if (alarm->mailAddresses().count() > 0) {
-    action = ICAL_ACTION_EMAIL;
-    QValueList<Person> addresses = alarm->mailAddresses();
-    for (QValueList<Person>::Iterator ad = addresses.begin();  ad != addresses.end();  ++ad) {
-      icalproperty *p = icalproperty_new_attendee("MAILTO:" + (*ad).email().utf8());
-      if (!(*ad).name().isEmpty()) {
-        icalproperty_add_parameter(p,icalparameter_new_cn((*ad).name().utf8()));
+  switch (alarm->type()) {
+    case Alarm::Procedure:
+      action = ICAL_ACTION_PROCEDURE;
+      attach = icalattachtype_new();
+      icalattachtype_set_url(attach,QFile::encodeName(alarm->programFile()).data());
+      icalcomponent_add_property(a,icalproperty_new_attach(attach));
+      icalattachtype_free(attach);
+      if (!alarm->programArguments().isEmpty()) {
+        icalcomponent_add_property(a,icalproperty_new_description(alarm->programArguments().utf8()));
       }
-      icalcomponent_add_property(a,p);
-    }
-    icalcomponent_add_property(a,icalproperty_new_summary(alarm->mailSubject().utf8()));
-    icalcomponent_add_property(a,icalproperty_new_description(alarm->text().utf8()));
-    QStringList attachments = alarm->mailAttachments();
-    if (attachments.count() > 0) {
-      for (QStringList::Iterator at = attachments.begin();  at != attachments.end();  ++at) {
+      break;
+    case Alarm::Audio:
+      action = ICAL_ACTION_AUDIO;
+      if (!alarm->audioFile().isEmpty()) {
         attach = icalattachtype_new();
-        icalattachtype_set_url(attach,QFile::encodeName( *at ).data());
+        icalattachtype_set_url(attach,QFile::encodeName( alarm->audioFile() ).data());
         icalcomponent_add_property(a,icalproperty_new_attach(attach));
         icalattachtype_free(attach);
       }
+      break;
+    case Alarm::Email: {
+      action = ICAL_ACTION_EMAIL;
+      QValueList<Person> addresses = alarm->mailAddresses();
+      for (QValueList<Person>::Iterator ad = addresses.begin();  ad != addresses.end();  ++ad) {
+        icalproperty *p = icalproperty_new_attendee("MAILTO:" + (*ad).email().utf8());
+        if (!(*ad).name().isEmpty()) {
+          icalproperty_add_parameter(p,icalparameter_new_cn((*ad).name().utf8()));
+        }
+        icalcomponent_add_property(a,p);
+      }
+      icalcomponent_add_property(a,icalproperty_new_summary(alarm->mailSubject().utf8()));
+      icalcomponent_add_property(a,icalproperty_new_description(alarm->text().utf8()));
+      QStringList attachments = alarm->mailAttachments();
+      if (attachments.count() > 0) {
+        for (QStringList::Iterator at = attachments.begin();  at != attachments.end();  ++at) {
+          attach = icalattachtype_new();
+          icalattachtype_set_url(attach,QFile::encodeName( *at ).data());
+          icalcomponent_add_property(a,icalproperty_new_attach(attach));
+          icalattachtype_free(attach);
+        }
+      }
+      break;
     }
-  } else {
-    action = ICAL_ACTION_DISPLAY;
-    icalcomponent_add_property(a,icalproperty_new_description(alarm->text().utf8()));
+    case Alarm::Display:
+      action = ICAL_ACTION_DISPLAY;
+      icalcomponent_add_property(a,icalproperty_new_description(alarm->text().utf8()));
+      break;
+    case Alarm::Invalid:
+    default:
+      kdDebug(5800) << "Unknown type of alarm" << endl;
+      action = ICAL_ACTION_NONE;
+      break;
   }
   icalcomponent_add_property(a,icalproperty_new_action(action));
 
@@ -1424,25 +1440,34 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
   ialarm->setRepeatCount(0);
   ialarm->setEnabled(true);
 
-  icalproperty *p = icalcomponent_get_first_property(alarm,ICAL_ANY_PROPERTY);
+  // Determine the alarm's action type
+  icalproperty *p = icalcomponent_get_first_property(alarm,ICAL_ACTION_PROPERTY);
+  if ( !p ) {
+    kdDebug(5800) << "Unknown type of alarm" << endl;
+    return;
+  }
 
-  icaltriggertype trigger;
-  icalattachtype *attach;
-  icaldurationtype duration;
+  icalproperty_action action = icalproperty_get_action(p);
+  Alarm::Type type = Alarm::Display;
+  switch ( action ) {
+    case ICAL_ACTION_DISPLAY:   type = Alarm::Display;  break;
+    case ICAL_ACTION_AUDIO:     type = Alarm::Audio;  break;
+    case ICAL_ACTION_PROCEDURE: type = Alarm::Procedure;  break;
+    case ICAL_ACTION_EMAIL:     type = Alarm::Email;  break;
+    default:
+      kdDebug(5800) << "Unknown type of alarm" << endl;
+      return;
+  }
+  ialarm->setType(type);
 
-  icalproperty_action action = ICAL_ACTION_NONE;
-
+  p = icalcomponent_get_first_property(alarm,ICAL_ANY_PROPERTY);
   while (p) {
     icalproperty_kind kind = icalproperty_isa(p);
 
     switch (kind) {
 
-      case ICAL_ACTION_PROPERTY:
-        action = icalproperty_get_action(p);
-        break;
-
-      case ICAL_TRIGGER_PROPERTY:
-        trigger = icalproperty_get_trigger(p);
+      case ICAL_TRIGGER_PROPERTY: {
+        icaltriggertype trigger = icalproperty_get_trigger(p);
         if (icaltime_is_null_time(trigger.time)) {
           if (icaldurationtype_is_null_duration(trigger.duration)) {
             kdDebug(5800) << "ICalFormatImpl::readAlarm(): Trigger has no time and no duration." << endl;
@@ -1453,21 +1478,34 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
           ialarm->setTime(readICalDateTime(trigger.time));
         }
         break;
-
-      case ICAL_DURATION_PROPERTY:
-        duration = icalproperty_get_duration(p);
+      }
+      case ICAL_DURATION_PROPERTY: {
+        icaldurationtype duration = icalproperty_get_duration(p);
         ialarm->setSnoozeTime(icaldurationtype_as_int(duration)/60);
         break;
-
+      }
       case ICAL_REPEAT_PROPERTY:
         ialarm->setRepeatCount(icalproperty_get_repeat(p));
         break;
 
       // Only in DISPLAY and EMAIL and PROCEDURE alarms
-      case ICAL_DESCRIPTION_PROPERTY:
-        ialarm->setText(QString::fromUtf8(icalproperty_get_description(p)));
+      case ICAL_DESCRIPTION_PROPERTY: {
+        QString description = QString::fromUtf8(icalproperty_get_description(p));
+        switch ( action ) {
+          case ICAL_ACTION_DISPLAY:
+            ialarm->setText( description );
+            break;
+          case ICAL_ACTION_PROCEDURE:
+            ialarm->setProgramArguments( description );
+            break;
+          case ICAL_ACTION_EMAIL:
+            ialarm->setMailText( description );
+            break;
+          default:
+            break;
+        }
         break;
-
+      }
       // Only in EMAIL alarm
       case ICAL_SUMMARY_PROPERTY:
         ialarm->setMailSubject(QString::fromUtf8(icalproperty_get_summary(p)));
@@ -1484,33 +1522,30 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
         ialarm->addMailAddress(Person(name, email));
         break;
       }
+      // Only in AUDIO and EMAIL and PROCEDURE alarms
+      case ICAL_ATTACH_PROPERTY: {
+        icalattachtype *attach = icalproperty_get_attach(p);
+        QString url = QFile::decodeName(icalattachtype_get_url(attach));
+        switch ( action ) {
+          case ICAL_ACTION_AUDIO:
+            ialarm->setAudioFile( url );
+            break;
+          case ICAL_ACTION_PROCEDURE:
+            ialarm->setProgramFile( url );
+            break;
+          case ICAL_ACTION_EMAIL:
+            ialarm->addMailAttachment( url );
+            break;
+          default:
+            break;
+        }
+        break;
+      }
       default:
         break;
     }
 
     p = icalcomponent_get_next_property(alarm,ICAL_ANY_PROPERTY);
-  }
-
-  // Now that the alarm action has been determined, process attachments
-  p = icalcomponent_get_first_property(alarm,ICAL_ATTACH_PROPERTY);
-  while ( p ) {
-    attach = icalproperty_get_attach(p);
-    QString url = QFile::decodeName(icalattachtype_get_url(attach));
-    switch ( action ) {
-      case ICAL_ACTION_AUDIO:
-        ialarm->setAudioFile( url );
-        break;
-      case ICAL_ACTION_PROCEDURE:
-        ialarm->setProgramFile( url );
-        break;
-      case ICAL_ACTION_EMAIL:
-        ialarm->addMailAttachment( url );
-        break;
-      default:
-        break;
-    }
-
-    p = icalcomponent_get_next_property(alarm,ICAL_ATTACH_PROPERTY);
   }
 
   // custom properties
