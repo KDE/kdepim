@@ -128,9 +128,34 @@ void setupDialog::commitChanges()
 {
 	FUNCTIONSETUP;
 	QListIterator<setupDialogPage> i(pages);
+	int r;
 
 	KConfig *config=CONFIG;
 	config->setGroup(groupName());
+
+#if 0
+	r=0;
+	for (i.toFirst(); i.current(); ++i)
+	{
+		// in case pages change it (which they shouldn't)
+		// set the group back to the dialog's group.
+		//
+		//
+		config->setGroup(groupName()); 
+		r|=i.current()->validateChanges(config);
+		if (r)
+		{
+			kdDebug() << ": Tab page "
+				<< i.current()->tabName()
+				<< " failed validation."
+				<< endl;
+		}
+	}
+	if (r)
+	{
+		kdDebug() << ": Validation failed." << endl;
+	}
+#endif
 
 	if (fConfigVersion)
 	{
@@ -145,6 +170,7 @@ void setupDialog::commitChanges()
 		//
 		config->setGroup(groupName()); 
 		i.current()->commitChanges(config);
+		config->sync();
 	}
 
 	config->sync();

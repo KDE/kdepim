@@ -20,11 +20,12 @@ static char *id="$Id$";
 //
 //		Remaining questions are marked with QADE.
 
-#include <kfiledialog.h>
-#include <iostream.h>
-#include <pi-macros.h>
 #include <string.h>
 #include <stdlib.h>
+#include <iostream.h>
+#include <time.h>
+#include <pi-macros.h>
+
 
 #include <qlist.h>
 #include <qlistbox.h>
@@ -34,6 +35,7 @@ static char *id="$Id$";
 
 #include <kapp.h>
 #include <kmessagebox.h>
+#include <kfiledialog.h>
 #include <kdebug.h>
 
 #include "strToken.h"
