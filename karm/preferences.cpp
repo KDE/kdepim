@@ -299,7 +299,27 @@ void Preferences::save()
       _displayColumnV[3]);
 
   config.sync();
+}
 
+// HACK: this entire config dialog should be upgraded to KConfigXT
+bool Preferences::readBoolEntry( const QString& key )
+{
+  KConfig &config = *KGlobal::config();
+  return config.readBoolEntry ( key, true );
+}
+
+void Preferences::writeEntry( const QString &key, bool value)
+{
+  KConfig &config = *KGlobal::config();
+  config.writeEntry( key, value );
+  config.sync();
+}
+
+void Preferences::deleteEntry( const QString &key )
+{
+  KConfig &config = *KGlobal::config();
+  config.deleteEntry( key );
+  config.sync();
 }
 
 #include "preferences.moc"

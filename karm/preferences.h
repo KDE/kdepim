@@ -33,6 +33,9 @@ class Preferences :public KDialogBase
     QString userRealName() const;
 
     void emitSignals();
+    bool readBoolEntry( const QString& uid );
+    void writeEntry( const QString &key, bool value );
+    void deleteEntry( const QString &key );
 
   public slots:
     void showDialog();

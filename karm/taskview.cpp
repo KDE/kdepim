@@ -39,6 +39,13 @@ TaskView::TaskView(QWidget *parent, const char *name):KListView(parent,name)
   connect(this, SIGNAL( doubleClicked( QListViewItem * )),
           this, SLOT( changeTimer( QListViewItem * )));
 
+  connect(this, SIGNAL( delete( QListViewItem * )),
+          this, SLOT( deleteItemState( QListViewItem * )));
+  connect( this, SIGNAL( expanded( QListViewItem * ) ),
+           this, SLOT( itemStateChanged( QListViewItem * ) ) );
+  connect( this, SIGNAL( collapsed( QListViewItem * ) ),
+           this, SLOT( itemStateChanged( QListViewItem * ) ) );
+
   // setup default values
   previousColumnWidths[0] = previousColumnWidths[1]
   = previousColumnWidths[2] = previousColumnWidths[3] = HIDDEN_COLUMN;
@@ -124,27 +131,60 @@ Task* TaskView::item_at_index(int i)
 
 void TaskView::load()
 {
+  _isloading = true;
   QString err = _storage->load(this, _preferences);
 
   if (!err.isEmpty())
   {
     KMessageBox::error(this, err);
+    _isloading = false;
     return;
   }
 
   // Register tasks with desktop tracker
-  int task_idx = 0;
-  for (Task* task = item_at_index(task_idx);
-      task;
-      task = item_at_index(++task_idx))
-  {
-    _desktopTracker->registerForDesktops( task, task->getDesktops() );
-  }
+  int i = 0;
+  for ( Task* t = item_at_index(i); t; t = item_at_index(++i) )
+    _desktopTracker->registerForDesktops( t, t->getDesktops() );
+
+  restoreItemState( first_child() );
 
   setSelected(first_child(), true);
   setCurrentItem(first_child());
   _desktopTracker->startTracking();
+  _isloading = false;
 }
+
+void TaskView::restoreItemState( QListViewItem *item )
+{
+  while( item ) 
+  {
+    Task *t = (Task *)item;
+    t->setOpen( _preferences->readBoolEntry( t->uid() ) );
+    if( item->childCount() > 0 ) restoreItemState( item->firstChild() );
+    item = item->nextSibling();
+  }
+}
+
+void TaskView::itemStateChanged( QListViewItem *item )
+{
+  if ( !item || _isloading ) return;
+  Task *t = (Task *)item;
+  kdDebug(5970) << "TaskView::itemStateChanged()" 
+    << " uid=" << t->uid() << " state=" << t->isOpen()
+    << endl;
+  if( _preferences ) _preferences->writeEntry( t->uid(), t->isOpen() );
+}
+
+void TaskView::deleteItemState( QListViewItem *item )
+{
+  if ( !item ) return;
+  Task *t = (Task *)item;
+  kdDebug(5970) << "TaskView:deleteItemState()" 
+    << " uid=" << t->uid() << endl;
+  if( _preferences ) _preferences->deleteEntry( t->uid() );
+}
+
+
 
 void TaskView::closeStorage() { _storage->close(); }
 

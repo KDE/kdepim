@@ -158,6 +158,7 @@ class TaskView : public KListView
     QPtrList<Task> activeTasks;
     int previousColumnWidths[4];
     DesktopTracker* _desktopTracker;
+    bool _isloading;
 
     //KCal::CalendarLocal _calendar;
     KarmStorage * _storage;
@@ -166,11 +167,14 @@ class TaskView : public KListView
     void updateParents( Task* task, long totalDiff, long sesssionDiff);
     void deleteChildTasks( Task *item );
     void addTimeToActiveTasks( int minutes, bool save_data = true );
+    void restoreItemState( QListViewItem *item );
 
   protected slots:
     void autoSaveChanged( bool );
     void autoSavePeriodChanged( int period );
     void minuteUpdate();
+    void itemStateChanged( QListViewItem *item );
+    void deleteItemState( QListViewItem *item );
 };
 
 #endif // KARM_TASK_VIEW
