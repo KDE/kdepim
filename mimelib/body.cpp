@@ -125,22 +125,22 @@ int DwBodyParser::Parse()
         //       By doing so we can safely parse some buggy MS Outlook
         //       clients' messages.                      (khz, 12.06.2002)
         start = pos;
-        
+
         if (result == kParseFail) {
             isFinal = true;
             len = mString.length() - pos;
         } else {
             len = boundaryStart - pos;
         }
-        
+
         AddPart(start, len);
-        
+
         if (result == kParseFail) {
             pos = mString.length();
         } else {
             pos = boundaryEnd;
         }
-        
+
         if (isFinal) {
             break;
         }
@@ -563,6 +563,12 @@ void DwBody::AddBodyPart(DwBodyPart* aPart)
     SetModified();
 }
 
+void DwBody::RemoveBodyPart(DwBodyPart* aPart)
+{
+    _RemoveBodyPart(aPart);
+    SetModified();
+}
+
 
 DwMessage* DwBody::Message() const
 {
@@ -589,6 +595,26 @@ void DwBody::_AddBodyPart(DwBodyPart* aPart)
         part = part->Next();
     }
     part->SetNext(aPart);
+}
+
+void DwBody::_RemoveBodyPart(DwBodyPart* aPart)
+{
+    if ( aPart->Parent() != this )
+        return; // caller error
+    if ( !mFirstBodyPart )
+        return; // impossible
+    if ( mFirstBodyPart == aPart ) {
+        mFirstBodyPart = mFirstBodyPart->Next();
+        return;
+    }
+    DwBodyPart* part = mFirstBodyPart;
+    while (part->Next()) {
+        if ( part->Next() == aPart ) {
+            part->SetNext(aPart->Next());
+            break;
+        }
+        part = part->Next();
+    }
 }
 
 

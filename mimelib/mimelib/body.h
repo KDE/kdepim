@@ -180,6 +180,11 @@ public:
     //. added to a {\tt DwBody} object's list will be deleted by the
     //. {\tt DwBody} object's destructor.
 
+    void RemoveBodyPart(DwBodyPart* aPart);
+    //. For a multipart {\tt DwBody}, this member function removes a
+    //. {\tt DwBodyPart} object from the list. The caller is responsible
+    //. for deleting the bodypart afterwards!
+
     DwMessage* Message() const;
     //. For a {\tt DwBody} with content type of message, this member function
     //. returns the {\tt DwMessage} encapsulated in it.
@@ -229,6 +234,11 @@ protected:
     void _AddBodyPart(DwBodyPart*);
     //. Adds a body part to a multipart body.  This function differs
     //. from {\tt AddBodyPart} in that it does not set the is-modified
+    //. flag.
+
+    void _RemoveBodyPart(DwBodyPart*);
+    //. Removes a body part from a multipart body.  This function differs
+    //. from {\tt RemoveBodyPart} in that it does not set the is-modified
     //. flag.
 
     void _SetMessage(DwMessage*);
