@@ -161,16 +161,13 @@ bool OpenGroupware::doLoad()
 
   QDomDocument props = WebdavHandler::createAllPropsRequest();
 
-  url.setProtocol( "webdav" );
-  url.setPath ( "/zidestore/dav/till/" );
-
   kdDebug(7000) << "getCalendar: " << url.prettyURL() << endl;
   kdDebug(7000) << "props: " << props.toString() << endl;
 
   mListEventsJob = KIO::davPropFind( url, props, "0", false );
 
   connect( mListEventsJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotJobResult( KIO::Job * ) ) );
+           SLOT( slotListJobResult( KIO::Job * ) ) );
   connect( mListEventsJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
            SLOT( slotJobData( KIO::Job *, const QByteArray & ) ) );
 

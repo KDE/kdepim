@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Groupware Server
+Name=OpenGroupware.org
 X-KDE-Library=kcal_opengroupware
 Type=Service
 ServiceTypes=KResources/Plugin
