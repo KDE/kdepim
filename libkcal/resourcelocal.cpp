@@ -107,6 +107,8 @@ void ResourceLocal::writeConfig( KConfig* config )
 
 void ResourceLocal::init()
 {
+  setType( "file" );
+
   mOpen = false;
 
   connect( &mDirWatch, SIGNAL( dirty( const QString & ) ),

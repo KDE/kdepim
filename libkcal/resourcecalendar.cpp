@@ -32,8 +32,6 @@ using namespace KCal;
 ResourceCalendar::ResourceCalendar( const KConfig *config )
     : KRES::Resource( config )
 {
-  // TODO: Let the creator of the resource specify the type
-  setType( "file" );
 }
 
 ResourceCalendar::~ResourceCalendar()
