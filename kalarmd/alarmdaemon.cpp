@@ -451,7 +451,6 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
         return false;
       }
 
-#if KDE_VERSION >= 290
       if (client.notificationType == ClientInfo::DCOP_SIMPLE_NOTIFY) {
         Event *event = calendar->getEvent( eventID );
         if (!event) return false;
@@ -470,7 +469,6 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
         }
         return true;
       }
-#endif
 
       if (!kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>(calendar->appName())))
       {
