@@ -40,11 +40,12 @@
 #include <kabc/stdaddressbook.h>
 
 
+#include <kapplication.h>
 #include "kroupware.h"
 #include "kpilotConfig.h"
 
 static const char *kroupware_id =
-	"$Id:$";
+	"$Id$";
 	
 KroupwareSync::KroupwareSync(bool pre,int parts,KPilotDeviceLink *p) :
 	SyncAction(p,pre ? "KroupwarePreSync" : "KroupwarePostSync"),

@@ -32,9 +32,11 @@
 
 #include <pi-dlp.h>
 
+#include <qfile.h>
 #include <klocale.h>
 #include <kdebug.h>
 
+#include "pilotSerialDatabase.h"
 
 static const char *pilotSerialDatabase_id =
 	"$Id$";
