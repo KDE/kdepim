@@ -1,7 +1,6 @@
 /* todoWidget.cc			KPilot
 **
-** Copyright (C) 2003 by Dan Pilone
-** Written 2003 by Reinhold Kainhofer
+** Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines the todoWidget, that part of KPilot that
 ** displays todo records from the Pilot.

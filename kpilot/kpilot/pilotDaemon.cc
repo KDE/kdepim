@@ -2,6 +2,7 @@
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 ** Copyright (C) 2001-2004 by Adriaan de Groot
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is the KPilot Daemon, which does the actual communication with
 ** the Pilot and with the conduits.

@@ -1,6 +1,7 @@
 /* dbViewerWidget.cc		KPilot
 **
 ** Copyright (C) 2003 by Dan Pilone.
+** Copyright (C) 2003 Reinhold Kainhofer <reinhold@kainhofer.com>
 **	Written 2003 by Reinhold Kainhofer and Adriaan de Groot
 **
 ** This is the generic DB viewer widget.

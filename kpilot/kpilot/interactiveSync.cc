@@ -1,6 +1,7 @@
 /* interactiveSync.cc                   KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file specializes SyncAction to a kind that can have interaction
 ** with the user without the Sync timing out.

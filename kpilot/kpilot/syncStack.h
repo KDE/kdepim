@@ -3,6 +3,7 @@
 /* syncStack.h                        KPilot
 **
 ** Copyright (C) 1998-2001,2003 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This defines the "ActionQueue", which is the sequence of actions
 ** that will occur during a HotSync. There's also two fairly

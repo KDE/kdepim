@@ -1,6 +1,7 @@
 /* addressWidget.cc			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003 Reinhold Kainhofer <reinhold@kainhofer.com>
 ** Copyright (C) 2004 by Adriaan de Groot
 **
 ** This file defines the addressWidget, that part of KPilot that

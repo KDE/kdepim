@@ -1,7 +1,6 @@
 /* conduitConfigDialog.cc                KPilot
 **
-** Copyright (C) 2004 by Dan Pilone
-** Written 2004 by Reinhold Kainhofer
+** Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines a .ui-based configuration dialog for conduits.
 */

@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2001 by Dan Pilone
 ** Copyright (C) 2002-2004 by Adriaan de Groot
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines the base class of all KPilot conduit plugins configuration
 ** dialogs. This is necessary so that we have a fixed API to talk to from

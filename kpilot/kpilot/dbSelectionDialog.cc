@@ -1,7 +1,6 @@
 /* dbSelectionDialog.cc                KPilot
 **
-** Copyright (C) 2003 by Dan Pilone
-** Created 2003 by Reinhold Kainhofer
+** Copyright (C) 2003 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines a dialog box that lets the
 ** user select a set of databases (e.g. which databases

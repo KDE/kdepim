@@ -2,6 +2,7 @@
 **
 ** Copyright (C) 2001 by Dan Pilone
 ** Copyright (C) 2002-2004 by Adriaan de Groot
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines a .ui-based configuration dialog for conduits.
 */

@@ -3,6 +3,7 @@
 /* pilotDaemonDCOP.h			KPilotDaemon
 **
 ** Copyright (C) 2000 by Adriaan de Groot
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines the DCOP interface for
 ** the KPilotDaemon. The daemon has *two* interfaces:

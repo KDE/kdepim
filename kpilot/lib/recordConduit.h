@@ -6,7 +6,7 @@
 ** Based on the addressbook conduit:
 ** Copyright (C) 2000,2001 by Dan Pilone
 ** Copyright (C) 2000 Gregory Stern
-** Copyright (C) 2002-2003 by Reinhold Kainhofer
+** Copyright (C) 2002-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 */
 

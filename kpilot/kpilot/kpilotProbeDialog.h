@@ -2,8 +2,7 @@
 #define _KPILOT_PROBEDIALOG_H
 /* kpilotConfigWizard.h                 KPilot
 **
-** Copyright (C) 2004 by Dan Pilone
-** Written 2004 by Reinhold Kainhofer
+** Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines kpilot's configuration wizard
 */
@@ -30,8 +29,6 @@
 */
 
 #include "kdialogbase.h"
-//#include <qmap.h>
-//#include <qvaluelist.h>
 
 class KPilotDeviceLink;
 class QLabel;

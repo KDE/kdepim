@@ -2,8 +2,7 @@
 #define _KPILOT_DBRECORDEDITOR_H
 /* dbRecordEditor.h                 KPilot
 **
-** Copyright (C) 2003 by Dan Pilone
-** Written 2003 by Reinhold Kainhofer
+** Copyright (C) 2003 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 */
 

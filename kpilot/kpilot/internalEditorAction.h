@@ -2,8 +2,7 @@
 #define _INTERNALEDITORACTION_H_
 /* internalEditorAction.h                            KPilot
 **
-** Copyright (C) 2003 by Dan Pilone
-** Writtenn 2003 by Reinhold Kainhofer
+** Copyright (C) 2003 Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 */
 
