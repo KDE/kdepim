@@ -20,7 +20,6 @@
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <ksimpleconfig.h>
-#include <kdebug.h>
 
 #include "utilities.h"
 #include "knglobals.h"
