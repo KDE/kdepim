@@ -927,17 +927,6 @@ previous command.</para>
 
 </sect2>
 
-<sect2 id="command-line-nosplash">
-<title>Splash-related Arguments</title>
-
-<para>It is also possible to disable the Kontact splash screen on startup by typing:</para>
-
-<para>
-<prompt>&percnt;</prompt> <command>kontact --nosplash</command>
-</para>
-
-</sect2>
-
 </sect1>
 
 </chapter>
