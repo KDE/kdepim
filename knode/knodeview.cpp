@@ -1024,6 +1024,8 @@ void KNodeView::slotGrpSetAllUnread()
 void KNodeView::slotFolCompact()
 {
   kdDebug(5003) << "KNodeView::slotFolCompact()" << endl;
+  if(s_electedFolder)
+    f_olManager->compactFolder(s_electedFolder);
 }
 
 

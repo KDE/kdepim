@@ -103,47 +103,23 @@ KNFolder* KNFolderManager::folder(int i)
 }
 
 
-void KNFolderManager::newFolder(KNFolder *p)
+void KNFolderManager::newFolder(KNFolder *)
 {
 }
 
 
-void KNFolderManager::deleteFolder(KNFolder *f)
+void KNFolderManager::deleteFolder(KNFolder *)
 {
 }
 
 
-void KNFolderManager::removeFolder(KNFolder *f)
+void KNFolderManager::removeFolder(KNFolder *)
 {
 }
 
 
-void emptyFolder(KNFolder *f)
+void KNFolderManager::showProperties(KNFolder *)
 {
-  /*if(!f) f=c_urrentFolder;
-  if(!f) return;
-  if(KMessageBox::questionYesNo(knGlobals.topWidget,i18n("Really empty this folder?"))==KMessageBox::Yes) {
-    aManager->deleteComposersForFolder(f);
-    f->deleteAll();
-    if(f==c_urrentFolder) {
-      aManager->setCurrentArticle(0);
-      KNArticleWidget::mainWidget()->showBlankPage();
-    }
-  }*/
-}
-
-
-void KNFolderManager::showProperties(KNFolder *f)
-{
-}
-
-
-void KNFolderManager::compactAll(KNCleanUp *cup)
-{
-  for(KNFolder *f=f_List.first(); f; f=f_List.next()) {
-    if(f->lockedArticles()==0)
-      cup->appendCollection(f);
-  }
 }
 
 
@@ -165,11 +141,20 @@ int KNFolderManager::unsentForAccount(int accId)
 
 void KNFolderManager::compactFolder(KNFolder *f)
 {
+  if(!f)
+    return;
+
+  KNCleanUp cup(knGlobals.cfgManager->cleanup());
+  cup.compactFolder(f);
 }
 
 
-void KNFolderManager::compactAll(KNCleanupProgress *prg)
+void KNFolderManager::compactAll(KNCleanUp *cup)
 {
+  for(KNFolder *f=f_List.first(); f; f=f_List.next()) {
+    if(f->lockedArticles()==0)
+      cup->appendCollection(f);
+  }
 }
 
 

@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
 
   KNApplication app;
   return app.exec();
-#elif
+#else
   KApplication app(argc, argv, "knode");
 	KNMainWindow *mainWin=new KNMainWindow();
 	mainWin->show();

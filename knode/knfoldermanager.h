@@ -52,14 +52,13 @@ class KNFolderManager
     void removeFolder(KNFolder *f);
     void emptyFolder(KNFolder *f);
     void showProperties(KNFolder *f);
-    void compactAll(KNCleanUp *cup);
 
     //unsent articles
     int unsentForAccount(int accId);
 
     //compacting
     void compactFolder(KNFolder *f);
-    void compactAll(KNCleanupProgress *prg);
+    void compactAll(KNCleanUp *cup);
 
     //synchronization
     void syncFolders();   

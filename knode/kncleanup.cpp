@@ -39,6 +39,7 @@
 #include "knarticlewidget.h"
 
 
+
 KNCleanUp::KNCleanUp(KNConfig::Cleanup *cfg) :  d_lg(0) , c_onfig(cfg)
 {
   c_olList.setAutoDelete(false);
@@ -89,7 +90,6 @@ void KNCleanUp::reset()
 void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
 {
   int expDays=0, idRef=0, foundId=-1, delCnt=0, leftCnt=0, newCnt=0;
-  QDate today=QDate::currentDate();
   KNRemoteArticle *art, *ref;
 
   if(!g->loadHdrs()) return;
@@ -174,40 +174,43 @@ void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
 
 void KNCleanUp::compactFolder(KNFolder *f)
 {
-  /*KNLocalArticle *art;
-
-  if(!f->loadHdrs()) return;
-
+  KNLocalArticle *art;
   QDir dir(f->path());
+
   if(!dir.exists())
     return;
 
-  QString oldName(QString("folder%1.mbox").arg(f->id()));
-  KNFile oldFile(f->path()+oldName);
-  QString newName(QString("folder%1.mbox.new").arg(f->id()));
-  KNFile newFile(f->path()+newName);
+  if(!f->loadHdrs())
+    return;
 
-  if( (oldFile.open(IO_ReadOnly)) && (newFile.open(IO_WriteOnly)) ) {
-    QTextStream ts(&newFile);
+  f->closeFiles();
+  QFileInfo info(f->m_boxFile);
+  QString oldName=info.fileName();
+  QString newName=oldName+".new";
+  KNFile newMBoxFile(info.dirPath(true)+"/"+newName);
+
+  if( (f->m_boxFile.open(IO_ReadOnly)) && (newMBoxFile.open(IO_WriteOnly)) ) {
+    QTextStream ts(&newMBoxFile);
     for(int idx=0; idx<f->length(); idx++) {
       art=f->at(idx);
-      if(oldFile.at(art->startOffset())) {
+      if(f->m_boxFile.at(art->startOffset())) {
         ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";
-        art->setStartOffset(newFile.at());
-        while(oldFile.at() < art->endOffset())
-          ts << oldFile.readLineWnewLine();
-        art->setEndOffset(newFile.at());
-        newFile.putch('\n');
+        art->setStartOffset(newMBoxFile.at());
+        while(f->m_boxFile.at() < art->endOffset())
+          ts << f->m_boxFile.readLineWnewLine();
+        art->setEndOffset(newMBoxFile.at());
+        newMBoxFile.putch('\n');
       }
     }
-    newFile.close();
-    oldFile.close();
-    f->syncDynamicData(true);
+
+    f->syncIndex(true);
     f->saveInfo();
+    newMBoxFile.close();
+    f->closeFiles();
 
     dir.remove(oldName);
-    dir.rename(newName,oldName);
-  }*/
+    dir.rename(newName, oldName);
+  }
 }
 
 
