@@ -120,6 +120,8 @@ public:
 		{ if (isDBOpen()) return fAppLen; else return -1; } ;
 	char *appInfo() { return fAppInfo; } ;
 
+	struct DBInfo getDBInfo() const { return fDBInfo; }
+
 protected:
 	// Changes any forward slashes to underscores
 	void fixupDBName();
