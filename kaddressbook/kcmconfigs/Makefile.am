@@ -1,4 +1,4 @@
-INCLUDES= -I$(srcdir)/.. $(all_includes)
+INCLUDES= -I$(srcdir)/.. -I$(top_srcdir) $(all_includes)
 
 kde_module_LTLIBRARIES = kcm_kabconfig.la kcm_kabldapconfig.la
 
