@@ -27,27 +27,34 @@
 #include <kandyiface.h>
 
 #include "mobilegui_base.h"
+#include "kandyprefs.h"
+#include "qvaluevector.h"
+
 
 class CommandScheduler;
 class ATCommand;
 class AddressSyncer;
 
+
 class MobileGui : public MobileGui_base, virtual public KandyIface
 { 
-    Q_OBJECT
+  Q_OBJECT
+
   public:
-    MobileGui(CommandScheduler *,QWidget* parent=0,const char* name=0,
-              WFlags fl=0);
+    MobileGui( CommandScheduler *, KandyPrefs *kprefs, QWidget* parent=0,
+               const char* name=0, WFlags fl=0 );
     ~MobileGui();
 
     void exit();
 
   signals:
-    void sendCommand(const QString &);
+    void sendCommand( const QString & );
     void phonebookRead();
 
-    void statusMessage(const QString &);
-    void transientStatusMessage(const QString &);
+    void statusMessage( const QString & );
+    void transientStatusMessage( const QString & );
+    void connectModem();
+    void disconnectModem();
 
   public slots:
     void readModelInformation();
@@ -57,30 +64,72 @@ class MobileGui : public MobileGui_base, virtual public KandyIface
     void writePhonebook();
     void readKabc();
     void writeKabc();
+    void setClock();
     void mergePhonebooks();
     void syncPhonebooks();
+    void termAddOutput( const char *line );
+    void toggleConnection();
+    void deleteMobPhonebook();
 
   protected slots:
-    void processResult(ATCommand *);
+    void processResult( ATCommand * );
 
   private:
-    void fillPhonebook(ATCommand *);
-    QString quote(const QString &);
-    QString dequote(const QString &);
-  
+    /* Links to related classes */
+    CommandScheduler *mScheduler;
+    AddressSyncer *mSyncer;
+    KandyPrefs *mPrefs;
+    QWidget *mparent;
+    
+    /* String Formatting Routines */
+    QString quote( const QString & );
+    QString dequote( const QString & );
+    void formatPBName( QString *, QString );
+    QString noSpaces( const QString & );
+    int firstFreeIndex();
+    QString string2GSM( const QString & );
+    QString GSM2String( const QString & );
+    QString decodeSuffix( const QString & );
+    QString stripWhiteSpaces( const QString & );
+
+    /* Routines for GUI updates  */
     void updateKabBook();
     void updateMobileBook();
-    void updateCommonBook();
-  
-    CommandScheduler *mScheduler;
+    void disconnectGUI();
     
-    AddressSyncer *mSyncer;
-    
+    /* Phone specific items */
+    QString mMobManufacturer;
+    QString mMobModel;
+    unsigned int mPBLength;
+    unsigned int mPBNameLength;
+    QValueVector<bool> mPBIndexOccupied;
+    bool mMobHasFD;
+    bool mMobHasLD;
+    bool mMobHasME;
+    bool mMobHasMT;
+    bool mMobHasTA;
+    bool mMobHasOW;
+    bool mMobHasMC;
+    bool mMobHasRC;
+
+    /* Routines and Flags for asynchronous control flow */
     QString mLastWriteId;
-    QString mSyncReadId;
-    QString mSyncWriteId;
-    
-    bool mSyncing;
+    bool mComingFromToggleConnection;
+    bool mComingFromReadPhonebook;
+    bool mComingFromSyncPhonebooks;
+    bool mComingFromExit;
+    void writePhonebookPostProcessing();
+
+    /* Routines and elements for current state of phone books */
+    enum ABState { UNLOADED, LOADED, MODIFIED };
+    ABState mKabState, mMobState;
+    void setKabState( ABState );
+    void warnKabState( ABState );
+    void setMobState( ABState );
+    bool warnMobState( ABState );
+
+    /* Misc */
+    void fillPhonebook( ATCommand * );
 };
 
 #endif // MOBILEGUI_H
