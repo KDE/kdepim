@@ -87,26 +87,12 @@ void KNArticleWidget::readConfig()
 
 
 
-bool KNArticleWidget::scrollingDownPossible()
-{
-  return ((view->contentsY()+view->visibleHeight())<view->contentsHeight());
-}
-
-
-
-void KNArticleWidget::scrollDown()
-{
-  int offs = (view->visibleHeight() < 30) ? view->visibleHeight() : 30;
-  view->scrollBy( 0, view->visibleHeight()-offs);
-}
-
-
-
 void KNArticleWidget::updateInstances()
 {
 	for(KNArticleWidget *i=instances.first(); i; i=instances.next())
 		i->applyConfig();
 }
+
 
 
 KNArticleWidget* KNArticleWidget::find(KNArticle *a)
@@ -176,7 +162,6 @@ KNArticleWidget::KNArticleWidget(QWidget *parent, const char *name )
 	
 	connect(part()->browserExtension(),SIGNAL(openURLRequest(const KURL &,const KParts::URLArgs &)),
 					this,SLOT(slotURLRequest(const KURL &,const KParts::URLArgs &)));
-	//connect(this,SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()));
 	connect(p_art, SIGNAL(popupMenu(const QString&, const QPoint&)),
 	        this, SLOT(slotPopup(const QString&, const QPoint&)));
 	instances.append(this);	
@@ -205,6 +190,42 @@ KNArticleWidget::~KNArticleWidget()
 	delete urlPopup;
 }
 
+
+bool KNArticleWidget::scrollingDownPossible()
+{
+  return ((view->contentsY()+view->visibleHeight())<view->contentsHeight());
+}
+
+
+
+void KNArticleWidget::scrollDown()
+{
+  int offs = (view->visibleHeight() < 30) ? view->visibleHeight() : 30;
+  view->scrollBy( 0, view->visibleHeight()-offs);
+}
+
+
+void KNArticleWidget::print()
+{
+  KAction *print = p_art->actionCollection()->action( "printFrame" );
+  if (print)
+    print->activate();
+}
+
+
+void KNArticleWidget::copySelection()
+{
+  if (p_art->hasSelection())
+		QApplication::clipboard()->setText(p_art->selectedText());
+}
+
+
+void KNArticleWidget::findText()
+{
+  KAction *find = p_art->actionCollection()->action( "find" );
+  if (find)
+    find->activate();
+}
 
 
 void KNArticleWidget::focusInEvent(QFocusEvent *e)
@@ -345,7 +366,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
 			
 			case 'h' :	
 				if((parseURLs)&&
-					 (line[idx+1].latin1()=='t')) {   // don't do all the stuff with every 'h'					
+					 (line[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'h'					
 					regExp="^http://[^\\s<>()\"|]+";
 					if (regExp.match(line,idx,&matchLen)!=-1) {
 						result+=QString("<a href=\"%1\">%2</a>").arg(line.mid(idx,matchLen)).arg(line.mid(idx,matchLen));
@@ -358,7 +379,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
 			
 			case 'w' :
 				if((parseURLs)&&
-					 (line[idx+1].latin1()=='w')) {   // don't do all the stuff with every 'w'					
+					 (line[idx+1].latin1()=='w')) {   // don't do all the stuff for every 'w'					
 					regExp="^www\\.[^\\s<>()\"|]+\\.[^\\s<>()\"|]+";
 					if (regExp.match(line,idx,&matchLen)!=-1) {
 						result+=QString("<a href=\"http://%1\">%2</a>").arg(line.mid(idx,matchLen)).arg(line.mid(idx,matchLen));
@@ -371,7 +392,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
 			
 			case 'f' :
 				if((parseURLs)&&
-					 (line[idx+1].latin1()=='t')) {   // don't do all the stuff with every 'f'					
+					 (line[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'f'					
 					regExp="^ftp://[^\\s<>()\"|]+";
 					if (regExp.match(line,idx,&matchLen)!=-1) {
 						result+=QString("<a href=\"%1\">%2</a>").arg(line.mid(idx,matchLen)).arg(line.mid(idx,matchLen));
@@ -756,15 +777,6 @@ void KNArticleWidget::createHtmlPage()
 	p->end();
 	h_tmlDone=true;
 }	
-
-
-
-void KNArticleWidget::slotSelectionChanged()
-{
-//	if (hasSelection())
-//		QApplication::clipboard()->setText(selectedText());
-}
-
 
 
 void KNArticleWidget::slotPopup(const QString &url, const QPoint &p)

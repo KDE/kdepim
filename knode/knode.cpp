@@ -300,7 +300,9 @@ void KNodeApp::fetchArticleDisplayed(bool b)
 	static bool status=true;
 	
 	if(status!=b) {
-    messageDisplayed(b);
+   	actFileSave->setEnabled(b);
+   	actFilePrint->setEnabled(b);
+   	actEditFind->setEnabled(b);
     actArtPostReply->setEnabled(b);
     actArtMailReply->setEnabled(b);
     actArtForward->setEnabled(b);
@@ -355,24 +357,14 @@ void KNodeApp::savedArticleDisplayed(bool b)
 	static bool status=true;
 
 	if(status!=b) {
+   	actFileSave->setEnabled(b);
+   	actFilePrint->setEnabled(b);
+   	actEditFind->setEnabled(b);
   	actArtCancel->setEnabled(b);
 		status=b;
 	}	
 }
 
-
-void KNodeApp::messageDisplayed(bool b)
-{
-  static bool status=true;
-
-  if(status!=b) {
-   	actFileSave->setEnabled(b);
-  	actFilePrint->setEnabled(b);
-  	actEditFind->setEnabled(b);
-  	actEditFindNext->setEnabled(b);
-    status=b;
-  }
-}
 
 
 //============================ INIT && UPDATE ============================
@@ -430,7 +422,7 @@ void KNodeApp::initActions()
 {
   // file menu
   actFileSave = KStdAction::save(this, SLOT(slotFileSave()),actionCollection());
-  actFilePrint = KStdAction::print(this, SLOT(slotFilePrint()),actionCollection());
+  actFilePrint = KStdAction::print(view->artView, SLOT(print()),actionCollection());
   actNetSendPending = new KAction(i18n("Sen&d pending messages"), 0, this, SLOT(slotNetSendPending()),
                                   actionCollection(), "net_sendPending");
   actNetStop = new KAction(i18n("Stop &Network"),"cancel",0, this, SLOT(slotNetStop()),
@@ -438,9 +430,10 @@ void KNodeApp::initActions()
   KStdAction::quit(this, SLOT(slotFileQuit()),actionCollection());
 
   // edit menu
-  actEditCopy = KStdAction::copy(this, SLOT(slotEditCopy()),actionCollection());
-  actEditFind = KStdAction::find(this, SLOT(slotEditFind()),actionCollection());
-  actEditFindNext = KStdAction::findNext(this, SLOT(slotEditFindNext()),actionCollection());
+  actEditCopy = KStdAction::copy(view->artView, SLOT(copySelection()),actionCollection());
+  actEditCopy->setEnabled(false);
+  connect(view->artView->part(),SIGNAL(selectionChanged()),this,SLOT(slotSelectionChanged()));
+  actEditFind = KStdAction::find(view->artView, SLOT(findText()),actionCollection());
 
   // account menu
   actAccProperties = new KAction(i18n("&Properties..."), 0, this, SLOT(slotAccProperties()),
@@ -717,13 +710,6 @@ void KNodeApp::slotFileSave()
 }
 
 
-void KNodeApp::slotFilePrint()
-{
-  #warning FIXME print not implemented
-  //	view->artView->print();
-}
-
-
 void KNodeApp::slotNetSendPending()
 {
   SAManager->sendOutbox();
@@ -743,27 +729,6 @@ void KNodeApp::slotFileQuit()
 }
 
 	
-//======== EDIT MENU =================  	
-
-
-void KNodeApp::slotEditCopy()
-{
-  #warning FIXME: stub  (copy current selection to the clipboard)
-}
-
-	
-void KNodeApp::slotEditFind()
-{
-  #warning FIXME: stub  (initiate search in the html widget)
-}
-  	
-
-void KNodeApp::slotEditFindNext()
-{
-  #warning FIXME: stub  (continue search in the html widget)
-}
-
- 	
 //======== ACCOUNT MENU =================  	
   	  	
   	
@@ -1217,10 +1182,13 @@ void KNodeApp::slotCollectionPopup(QListViewItem *it, const QPoint &p, int c)
 }
 
 
+void KNodeApp::slotSelectionChanged()
+{
+  actEditCopy->setEnabled(view->artView->part()->hasSelection());		
+}
 
-//========================================================================
+
 //================================ OTHERS ================================
-//========================================================================
 
 
 void KNodeApp::cleanup()

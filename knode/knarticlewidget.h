@@ -68,6 +68,11 @@ class KNArticleWidget : public QVBox  {
 		bool htmlDone()										{ return h_tmlDone; }
     KHTMLPart* part() const           { return p_art; }
 
+  public slots:
+    void print();
+    void copySelection();
+    void findText();
+
   protected:
 		void focusInEvent(QFocusEvent *e);
 		void focusOutEvent(QFocusEvent *e);
@@ -94,7 +99,6 @@ class KNArticleWidget : public QVBox  {
 			
 	protected slots:
 		void slotURLRequest (const KURL &url, const KParts::URLArgs &args);
-		void slotSelectionChanged();
 		void slotPopup(const QString &url, const QPoint &p);
 		
 	signals:

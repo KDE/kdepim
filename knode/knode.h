@@ -90,7 +90,6 @@ class KNodeApp : public KTMainWindow
     void folderDisplayed(bool b);
     void savedArticleSelected(bool b);
     void savedArticleDisplayed(bool b);
-    void messageDisplayed(bool b);
 
     //Member-Access
     KNAccountManager* accManager()				{ return AManager; }
@@ -120,8 +119,7 @@ class KNodeApp : public KTMainWindow
     bool queryExit();
 
 	  //actions
-    KAction  *actFileSave, *actFilePrint, *actNetSendPending, *actNetStop,
-             *actEditCopy, *actEditFind, *actEditFindNext,
+    KAction  *actFileSave, *actFilePrint, *actNetSendPending, *actNetStop, *actEditCopy, *actEditFind,
              *actAccProperties, *actAccSubscribeGrps, *actAccLoadHdrs, *actAccDelete,
              *actGrpProperties, *actGrpLoadHdrs, *actGrpExpire, *actGrpResort, *actGrpAllRead,
              *actGrpAllUnread, *actGrpUnsubscribe, *actFolderCompact, *actFolderEmpty,
@@ -157,15 +155,10 @@ class KNodeApp : public KTMainWindow
 
   	//action-slots	  	
   	void slotFileSave();                // file menu
-  	void slotFilePrint();
   	void slotNetSendPending();
   	void slotNetStop();
   	void slotFileQuit();
-
-  	void slotEditCopy();                // edit menu
-  	void slotEditFind();
-  	void slotEditFindNext();
-  	  	
+ 	  	
   	void slotAccProperties();           // account menu
   	void slotAccSubscribeGrps();
   	void slotAccLoadHdrs();
@@ -228,6 +221,7 @@ class KNodeApp : public KTMainWindow
   	void slotSortingChanged(int newCol);
   	void slotArticlePopup(QListViewItem *it, const QPoint &p, int c);
   	void slotCollectionPopup(QListViewItem *it, const QPoint &p, int c);
+		void slotSelectionChanged();
 };
 
 #endif // KNODE_H

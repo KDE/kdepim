@@ -43,7 +43,7 @@ class KNodeView : public QSplitter
  		void sepPos(QValueList<int> &vert, QValueList<int> &horz);
  		void setSepPos(const QValueList<int> &vert, const QValueList<int> &horz);				
 
- 		bool isZoomed()	{ return is_Zoomed; }
+ 		bool isZoomed()	    { return is_Zoomed; }
  		void toggleZoom();
  		
  		void headersSize(QStrList *lst);
@@ -58,8 +58,7 @@ class KNodeView : public QSplitter
  		void nextGroup();
  		void prevGroup();
  		 		
- 		void toggleThread();
- 		
+ 		void toggleThread(); 		
  		
   protected:
  		void initCollectionView();
