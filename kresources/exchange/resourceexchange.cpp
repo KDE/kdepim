@@ -65,11 +65,10 @@ public:
 };
 
 ResourceExchange::ResourceExchange( const KConfig *config )
-  : ResourceCalendar( config )
+  : ResourceCalendar( config ), mCache(0), mDates(0)
 {
   mLock = new KABC::LockNull( true );
 
-  mCache = 0;
   mTimeZoneId = QString::fromLatin1( "UTC" );
 
   kdDebug() << "Creating ResourceExchange" << endl;
@@ -292,7 +291,10 @@ Event *ResourceExchange::event( const QString &uid )
   kdDebug(5800) << "ResourceExchange::event(): " << uid << endl;
 
   // FIXME: Look in exchange server for uid!
-  return mCache->event( uid );
+  Event *event = 0;
+  if ( mCache ) 
+	event = mCache->event( uid );
+  return event;
 }
 
 void ResourceExchange::subscribeEvents( const QDate &start, const QDate &end )
@@ -354,28 +356,43 @@ void ResourceExchange::deleteTodo(Todo *todo)
 
 Todo::List ResourceExchange::rawTodos()
 {
-  return mCache->rawTodos();
+  Todo::List list;
+  if ( mCache )
+	list = mCache->rawTodos();
+  return list;
 }
 
 Todo *ResourceExchange::todo( const QString &uid )
 {
-  return mCache->todo( uid );
+  if ( !mCache )
+	return 0;
+  else
+	return mCache->todo( uid );
 }
 
 Todo::List ResourceExchange::rawTodosForDate( const QDate &date )
 {
-  return mCache->rawTodosForDate( date );
+  Todo::List list;
+  if ( mCache )
+	list = mCache->rawTodosForDate( date );
+  return list;
 }
 
 Alarm::List ResourceExchange::alarmsTo( const QDateTime &to )
 {
-  return mCache->alarmsTo( to );
+  Alarm::List list;
+  if ( mCache )
+	list = mCache->alarmsTo( to );
+  return list;
 }
 
 Alarm::List ResourceExchange::alarms( const QDateTime &from, const QDateTime &to )
 {
   kdDebug(5800) << "ResourceExchange::alarms(" << from.toString() << " - " << to.toString() << ")\n";
-  return mCache->alarms( from, to );
+  Alarm::List list;
+  if ( mCache )
+  	list = mCache->alarms( from, to );
+  return list;
 }
 
 /****************************** PROTECTED METHODS ****************************/
@@ -413,10 +430,9 @@ Event::List ResourceExchange::rawEventsForDate( const QDate &qd, bool sorted )
   QDateTime now = QDateTime::currentDateTime();
   // kdDebug() << "Now is " << now.toString() << endl;
   // kdDebug() << "mDates: " << mDates << endl;
-  // kdDebug() << "mDates->contains(qd) is " << mDates->contains( qd ) << endl;
   QDate start = QDate( qd.year(), qd.month(), 1 ); // First day of month
-  if ( !mDates->contains( start ) ||
-      (*mCacheDates)[start].secsTo( now ) > mCachedSeconds ) {
+  if ( mDates && ( !mDates->contains( start ) ||
+                   (*mCacheDates)[start].secsTo( now ) > mCachedSeconds ) ) {
     QDate end = start.addMonths( 1 ).addDays( -1 ); // Last day of month
     // Get events that occur in this period from the cache
     Event::List oldEvents = mCache->rawEvents( start, end, false );
@@ -433,7 +449,9 @@ Event::List ResourceExchange::rawEventsForDate( const QDate &qd, bool sorted )
   }
 
   // Events are safely in the cache now, return them from cache
-  Event::List events = mCache->rawEventsForDate( qd, sorted );
+  Event::List events;
+  if ( mCache ) 
+	events = mCache->rawEventsForDate( qd, sorted );
   // kdDebug() << "Found " << events.count() << " events." << endl;
   return events;
 }
