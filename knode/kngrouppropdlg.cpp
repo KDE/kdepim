@@ -39,20 +39,40 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
   // General tab ===============================================
 
   QWidget *page = addPage(i18n("&General"));
-  QGridLayout *pageL=new QGridLayout(page,  4, 2, 5,5);
+  QVBoxLayout *pageL = new QVBoxLayout(page, 3);
 
-  // nickname
-  n_ick=new QLineEdit(page);
+  // settings
+  QGroupBox *gb=new QGroupBox(i18n("Settings"), page);
+  pageL->addWidget(gb);
+  QGridLayout *grpL=new QGridLayout(gb, 3, 3, 15, 5);
+
+  grpL->addRowSpacing(0, fontMetrics().lineSpacing()-9);
+
+  n_ick=new QLineEdit(gb);
   if (g_rp->hasName())
     n_ick->setText(g_rp->name());
-  QLabel *l=new QLabel(n_ick, i18n("&Nickname:"), page);
-  pageL->addWidget(l,0,0);
-  pageL->addWidget(n_ick,0,1);
+  QLabel *l=new QLabel(n_ick, i18n("&Nickname:"), gb);
+  grpL->addWidget(l,1,0);
+  grpL->addMultiCellWidget(n_ick,1,1,1,2);
+
+  u_seCharset=new QCheckBox(i18n("&Use different default charset:"), gb);
+  u_seCharset->setChecked(g_rp->useCharset());
+  grpL->addMultiCellWidget(u_seCharset,2,2,0,1);
+
+  c_harset=new QComboBox(false, gb);
+  c_harset->insertStringList(knGlobals.cfgManager->postNewsTechnical()->composerCharsets());
+  c_harset->setCurrentItem(knGlobals.cfgManager->postNewsTechnical()->indexForCharset(g_rp->defaultCharset()));
+  c_harset->setEnabled(g_rp->useCharset());
+  connect(u_seCharset, SIGNAL(toggled(bool)), c_harset, SLOT(setEnabled(bool)));
+  grpL->addWidget(c_harset, 2,2);
+
+  grpL->setColStretch(1,1);
+  grpL->setColStretch(2,2);
 
   // group name & description
-  QGroupBox *gb=new QGroupBox(i18n("Description"), page);
-  pageL->addMultiCellWidget(gb,1,1,0,1);
-  QGridLayout *grpL=new QGridLayout(gb, 4, 3, 15, 5);
+  gb=new QGroupBox(i18n("Description"), page);
+  pageL->addWidget(gb);
+  grpL=new QGridLayout(gb, 4, 3, 15, 5);
 
   grpL->addRowSpacing(0, fontMetrics().lineSpacing()-9);
 
@@ -87,7 +107,7 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
 
   // statistics
   gb=new QGroupBox(i18n("Statistics"), page);
-  pageL->addMultiCellWidget(gb,2,2,0,1);
+  pageL->addWidget(gb);
   grpL=new QGridLayout(gb, 6, 3, 15, 5);
 
   grpL->addRowSpacing(0, fontMetrics().lineSpacing()-9);
@@ -119,31 +139,11 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
 
   grpL->addColSpacing(1,20);
   grpL->setColStretch(2,1);
-    
-  pageL->setRowStretch(3,2);
 
+  pageL->addStretch(1);
+    
   // Specfic Identity tab =========================================
   i_dWidget=new KNConfig::IdentityWidget(g_rp->identity(), addVBoxPage(i18n("&Identity")));
-
-
-  // Specific Settings tab ========================================
-  page=addPage(i18n("Se&ttings"));
-  pageL=new QGridLayout(page, 2,2, 5,5);
-
-  u_seCharset=new QCheckBox(i18n("&Use different default charset:"), page);
-  u_seCharset->setChecked(g_rp->useCharset());
-  pageL->addWidget(u_seCharset, 0,0);
-
-  c_harset=new QComboBox(false, page);
-  c_harset->insertStringList(knGlobals.cfgManager->postNewsTechnical()->composerCharsets());
-  c_harset->setCurrentItem(knGlobals.cfgManager->postNewsTechnical()->indexForCharset(g_rp->defaultCharset()));
-
-  c_harset->setEnabled(g_rp->useCharset());
-  connect(u_seCharset, SIGNAL(toggled(bool)), c_harset, SLOT(setEnabled(bool)));
-  pageL->addWidget(c_harset, 0,1);
-
-  pageL->setRowStretch(1,1);
-
 
   restoreWindowSize("groupPropDLG", this, sizeHint());
 }
