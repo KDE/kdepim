@@ -27,7 +27,7 @@
 using namespace KSync;
 
 SyncEntry::SyncEntry( Syncee *sync )
-  : mSyncee( sync )
+  : mSyncee( sync ), mDontSync( false )
 {
   mState = Undefined;
   mSyncState = Undefined;
@@ -39,6 +39,7 @@ SyncEntry::SyncEntry( const SyncEntry &ent )
   mState = ent.mState;
   mSyncee = ent.mSyncee;
   mSyncState = ent.mSyncState;
+  mDontSync = ent.mDontSync;
 }
 
 SyncEntry::~SyncEntry()
@@ -109,4 +110,14 @@ void SyncEntry::setId( const QString& )
 bool SyncEntry::mergeWith( SyncEntry * )
 {
   return false;
+}
+
+void SyncEntry::setDontSync( bool dontSync )
+{
+  mDontSync = dontSync;
+}
+
+bool SyncEntry::dontSync() const
+{
+  return mDontSync;
 }

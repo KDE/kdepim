@@ -182,10 +182,18 @@ class SyncEntry
     */
     virtual bool mergeWith( SyncEntry * );
 
+    /**
+      Set if the entry should be synced or not.
+    */
+    void setDontSync( bool );
+
+    bool dontSync() const;
+
   private:
     int mState;
     int mSyncState;
     Syncee *mSyncee;
+    bool mDontSync;
 
     class SyncEntryPrivate;
     SyncEntryPrivate *d;
