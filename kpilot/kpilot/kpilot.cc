@@ -136,6 +136,7 @@ KPilotInstaller::~KPilotInstaller()
 	delete fDaemonStub;
 #ifdef DEBUG
 	PilotRecord::allocationInfo();
+	(void) PilotDatabase::count();
 #endif
 }
 

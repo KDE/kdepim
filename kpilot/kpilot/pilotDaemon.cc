@@ -59,6 +59,7 @@ static const char *pilotdaemon_id =
 
 #include "fileInstaller.h"
 #include "pilotUser.h"
+#include "pilotDatabase.h"
 
 #include "hotSync.h"
 #include "interactiveSync.h"
@@ -291,6 +292,8 @@ PilotDaemon::~PilotDaemon()
 	KPILOT_DELETE(fPilotLink);
 	KPILOT_DELETE(fSyncStack);
 	KPILOT_DELETE(fInstaller);
+
+	(void) PilotDatabase::count();
 }
 
 void PilotDaemon::addInstallFiles(const QStringList &l)
@@ -948,6 +951,7 @@ static void queueConduits(ActionQueue *fSyncStack,
 		<< syncTypeString(fNextSyncType)
 		<< " (" << fNextSyncType << ")" << endl;
 	DEBUGDAEMON << fname << ": Status is " << shortStatusString() << endl;
+	(void) PilotDatabase::count();
 #endif
 
 
@@ -1133,6 +1137,8 @@ launch:
 
 	fPostSyncAction = None;
 	requestRegularSyncNext();
+
+	(void) PilotDatabase::count();
 
 	updateTrayStatus();
 }
