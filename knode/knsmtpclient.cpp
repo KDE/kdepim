@@ -17,9 +17,12 @@
 
 #include <unistd.h>
 
+#include <klocale.h>
+
 #include "knsavedarticle.h"
 #include "knjobdata.h"
 #include "knsmtpclient.h"
+
 
 KNSmtpClient::KNSmtpClient(int NfdPipeIn, int NfdPipeOut, QObject *parent, const char *name)
 : KNProtocolClient(NfdPipeIn,NfdPipeOut,parent,name)
@@ -79,6 +82,9 @@ void KNSmtpClient::doMail()
 
 bool KNSmtpClient::openConnection()
 {
+  QString oldPrefix = errorPrefix;
+  errorPrefix=i18n("Unable to connect.\nThe following error ocurred:\n");
+
 	if (!KNProtocolClient::openConnection())
 		return false;
 		
@@ -106,6 +112,7 @@ bool KNSmtpClient::openConnection()
 		
 	progressValue = 70;
 	
+	errorPrefix = oldPrefix;
 	return true;
 }
 

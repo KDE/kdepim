@@ -223,6 +223,9 @@ void KNNntpClient::doPostArticle()
 
 bool KNNntpClient::openConnection()
 {
+  QString oldPrefix = errorPrefix;
+  errorPrefix=i18n("Unable to connect.\nThe following error ocurred:\n");
+
 	if (!KNProtocolClient::openConnection())
 		return false;
 		
@@ -242,13 +245,17 @@ bool KNNntpClient::openConnection()
 	if (!sendCommand("MODE READER",rep))
 		return false;
 
-	if ((rep!=200)&&(rep!=201)) { // 200 Hello, you can post
-	  handleErrors();             // 201 Hello, you can't post
-	  return false;
-	}
+  if (rep==500) {
+    qDebug("\"MODE READER\" command not recognized.");
+  } else
+    if ((rep!=200)&&(rep!=201)) { // 200 Hello, you can post
+      handleErrors();             // 201 Hello, you can't post
+      return false;
+    }
 	
 	progressValue = 70;
 	
+	errorPrefix = oldPrefix;
 	return true;
 }
 

@@ -410,7 +410,7 @@ bool KNProtocolClient::checkNextResponse(int code)
 void KNProtocolClient::handleErrors()
 {
   if (errorPrefix.isEmpty())
-    job->setErrorString(i18n("An error occoured:\n"));
+    job->setErrorString(i18n("An error occured:\n%1").arg(thisLine));
   else
     job->setErrorString(errorPrefix + thisLine);
 
