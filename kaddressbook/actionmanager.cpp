@@ -369,9 +369,8 @@ void ActionManager::filtersEdited()
 {
   QString current = mActionSelectFilter->currentText();
 
-  QStringList items;
-  items.append( i18n( "None" ) );
-  items += mViewManager->filterNames();
+  QStringList items( mViewManager->filterNames() );
+  items.prepend( i18n( "None" ) );
 
   mActionSelectFilter->setItems( items );
   currentFilterChanged( current );

@@ -264,9 +264,12 @@ void GeoDialog::geoMapChanged()
 
 void GeoDialog::cityInputChanged()
 {
-  GeoData data = mGeoDataMap[ mCityCombo->currentText() ];
-  mLatitude = data.latitude;
-  mLongitude = data.longitude;
+  if ( mCityCombo->currentItem() != 0 ) {
+    GeoData data = mGeoDataMap[ mCityCombo->currentText() ];
+    mLatitude = data.latitude;
+    mLongitude = data.longitude;
+  } else
+    mLatitude = mLongitude = 0;
 
   updateInputs();
 }
@@ -319,7 +322,9 @@ void GeoDialog::updateInputs()
 
   int pos = nearestCity( mLongitude, mLatitude );
   if ( pos != -1 )
-    mCityCombo->setCurrentItem( pos );
+    mCityCombo->setCurrentItem( pos + 1 );
+  else
+    mCityCombo->setCurrentItem( 0 );
 
   mCityCombo->blockSignals( false );
   mLatDegrees->blockSignals( false );
@@ -376,7 +381,9 @@ void GeoDialog::loadCityList()
         }
       }
     }
-    mCityCombo->insertStringList( mGeoDataMap.keys() );
+    QStringList items( mGeoDataMap.keys() );
+    items.prepend( i18n( "Undefined" ) );
+    mCityCombo->insertStringList( items );
 
     file.close();
   }
