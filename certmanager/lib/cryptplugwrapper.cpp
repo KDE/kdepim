@@ -261,7 +261,7 @@ public:
           for( itDN = dn.begin(); itDN != dn.end(); ++itDN ){
             if( (*itOrder) == (*itDN).first ){
               dnNew << *itDN;
-              //kdDebug() << QString((*itDN).first) <<" = " << QString((*itDN).second) << endl;;
+              //kdDebug(5150) << QString((*itDN).first) <<" = " << QString((*itDN).second) << endl;;
             }
           }
         }
@@ -1048,7 +1048,7 @@ bool CryptPlugWrapper::initialize( InitStatus* initStatus, QString* errorMsg )
     /* make sure we have a lib name */
     if ( _libName.isEmpty() ) {
       _initStatus = InitStatus_NoLibName;
-      kdDebug() << "No library name was given.\n" << endl;
+      kdDebug(5150) << "No library name was given.\n" << endl;
     } else {
       if ( _libName.contains( "smime" ) ) {
 	_cp = new SMIMECryptPlug();
@@ -1063,12 +1063,12 @@ bool CryptPlugWrapper::initialize( InitStatus* initStatus, QString* errorMsg )
 
       if ( !_cp ) {
 	_initStatus = InitStatus_LoadError;
-	kdDebug() << "Couldn't create '" << _libName.latin1() << "'" << endl;
+	kdDebug(5150) << "Couldn't create '" << _libName.latin1() << "'" << endl;
       } else {
 	/* now call the init function */
 	if( !_cp->initialize() ) {
 	  _initStatus = InitStatus_InitError;
-	  kdDebug() << "Error while executing function 'initialize'.\n" << endl;
+	  kdDebug(5150) << "Error while executing function 'initialize'.\n" << endl;
 	  _lastError = i18n("Error while initializing plugin \"%1\"").arg( _libName );
 	  if ( errorMsg )
 	    *errorMsg = _lastError;
@@ -1321,7 +1321,7 @@ CryptPlugWrapper::CertificateInfoList CryptPlugWrapper::listKeys( const QString&
                                  &info,
                                  dnBeautifier.attrOrderChar(),
                                  dnBeautifier.unknownAttrsHandlingChar() ) != 0 ) {
-        kdDebug() << "error" << endl;
+        kdDebug(5150) << "error" << endl;
         break;
       }
       if ( !info )
@@ -1332,11 +1332,11 @@ CryptPlugWrapper::CertificateInfoList CryptPlugWrapper::listKeys( const QString&
         cpwinfo.userid << QString::fromUtf8( *ptr );
       cpwinfo.userid_0_org = QString::fromUtf8( info->userid_0_org );
 
-      kdDebug() << "CryptPlugWrapper got " << cpwinfo.userid[0] << endl;
+      kdDebug(5150) << "CryptPlugWrapper got " << cpwinfo.userid[0] << endl;
       cpwinfo.serial = QString::fromUtf8( info->serial );
-      kdDebug() << "fpr=" << info->fingerprint << endl;
+      kdDebug(5150) << "fpr=" << info->fingerprint << endl;
       cpwinfo.fingerprint = QString::fromUtf8( info->fingerprint );
-      kdDebug() << "Done getting fpr" << endl;
+      kdDebug(5150) << "Done getting fpr" << endl;
 
       cpwinfo.issuer_org   = QString::fromUtf8( info->issuer_org );
       cpwinfo.issuer_reord = QString::fromUtf8( info->issuer_reord );
@@ -1356,7 +1356,7 @@ CryptPlugWrapper::CertificateInfoList CryptPlugWrapper::listKeys( const QString&
       cpwinfo.disabled = info->disabled;
 
       for ( CryptPlug::DnPair * a = info->dnarray ; a && a->key&& a->value ; ++a )
-        //kdDebug() << "CryptPlugWrapper::listKeys() " << a->key << " = " << a->value << endl;
+        //kdDebug(5150) << "CryptPlugWrapper::listKeys() " << a->key << " = " << a->value << endl;
         cpwinfo.dn.push_back( qMakePair( QString::fromUtf8( a->key ), QString::fromUtf8( a->value ) ) );
       
       //cpwinfo.dn = dnBeautifier.reorder( cpwinfo.dn );
@@ -1380,7 +1380,7 @@ GpgME::ImportResult CryptPlugWrapper::importCertificate( const char* data, size_
 }
 
 Kleo::KeyListJob * CryptPlugWrapper::keyListJob( bool remote, bool includeSigs ) const {
-  kdWarning( includeSigs ) << "CryptPlugWrapper::keyListJob(): includeSigs not yet implemented!" << endl;
+  kdWarning( 5150, includeSigs ) << "CryptPlugWrapper::keyListJob(): includeSigs not yet implemented!" << endl;
 
   if ( !_cp )
     return 0;

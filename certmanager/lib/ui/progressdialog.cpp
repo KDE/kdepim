@@ -75,8 +75,8 @@ void Kleo::ProgressDialog::setMinimumDuration( int ms ) {
 }
 
 void Kleo::ProgressDialog::slotProgress( const QString & what, int type, int current, int total ) {
-  kdDebug() << "Kleo::ProgressDialog::slotProgress( \"" << what << "\", "
-	    << type << ", " << current << ", " << total << " )" << endl;
+  kdDebug(5150) << "Kleo::ProgressDialog::slotProgress( \"" << what << "\", "
+		<< type << ", " << current << ", " << total << " )" << endl;
   if ( mBaseText.isEmpty() )
     setLabelText( what );
   else if ( what.isEmpty() )
@@ -87,7 +87,7 @@ void Kleo::ProgressDialog::slotProgress( const QString & what, int type, int cur
 }
 
 void Kleo::ProgressDialog::slotDone() {
-  kdDebug() << "Kleo::ProgressDialog::slotDone()" << endl;
+  kdDebug(5150) << "Kleo::ProgressDialog::slotDone()" << endl;
   hide();
   deleteLater();
 }

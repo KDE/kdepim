@@ -202,7 +202,7 @@ void Kleo::CryptPlugFactory::loadFromConfig( KConfig * config ) {
       continue;
     }
 
-    kdDebug( 5100 ) << "Loaded crypto plugin " << name
+    kdDebug( 5150 ) << "Loaded crypto plugin " << name
 		    << " at location " << location << endl;
     mCryptPlugWrapperList->append( newWrapper );
 

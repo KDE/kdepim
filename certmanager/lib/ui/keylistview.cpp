@@ -66,7 +66,7 @@ Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy,
   setWFlags( f );
 
   if ( !columnStrategy ) {
-    kdWarning() << "Kleo::KeyListView: need a column strategy to work with!" << endl;
+    kdWarning(5150) << "Kleo::KeyListView: need a column strategy to work with!" << endl;
     return;
   }
 
