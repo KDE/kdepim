@@ -169,8 +169,8 @@ public:
 
 	DeviceType deviceType() const { return fDeviceType; } ;
 	QString deviceTypeString(int i) const;
-	bool isTransient() const 
-	{ 
+	bool isTransient() const
+	{
 		return (fDeviceType==OldStyleUSB) ||
 			(fDeviceType==DevFSUSB);
 	}
@@ -217,6 +217,13 @@ protected:
 	* pilot-link library initialisation.
 	*/
 	bool open();
+	
+	/**
+	* Check for device permissions and existence, emitting
+	* warnings for weird situations. This is primarily intended
+	* to inform the user.
+	*/
+	void checkDevice();
 
 signals:
 	/**
@@ -358,6 +365,11 @@ bool operator < ( const struct db &, const struct db &) ;
 
 
 // $Log$
+// Revision 1.11  2002/08/20 21:18:31  adridg
+// License change in lib/ to allow plugins -- which use the interfaces and
+// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
+// allow the use of libmal which is MPL.
+//
 // Revision 1.10  2002/08/12 13:23:03  kainhofe
 // used long instead of unsigned long for dpl_ReadFeature. Fixed.
 //

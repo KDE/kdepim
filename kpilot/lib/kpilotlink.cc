@@ -178,6 +178,9 @@ void KPilotDeviceLink::reset()
 
 	close();
 
+	checkDevice();
+
+	// Timer already deleted by close() call.
 	fOpenTimer = new QTimer(this);
 	QObject::connect(fOpenTimer, SIGNAL(timeout()),
 		this, SLOT(openDevice()));
@@ -185,6 +188,34 @@ void KPilotDeviceLink::reset()
 
 	fStatus = WaitingForDevice;
 }
+
+void KPilotDeviceLink::checkDevice()
+{
+	// If the device exists yet doesn't have the right
+	// permissions, complain and then continue anyway.
+	//
+	QFileInfo fi(fPilotPath);
+	if (fi.exists())
+	{
+		// If it exists, it ought to be RW already.
+		//
+		if (!(fi.isReadable() && fi.isWritable()))
+		{
+			emit logError(i18n("Pilot device %1 is not read-write.")
+				.arg(fPilotPath));
+		}
+	}
+	else
+	{
+		// It doesn't exist, mention this in the log
+		// (relevant as long as we use only one device type)
+		//
+		emit logError(i18n("Pilot device %1 doesn't exist. "
+			"Assuming the device uses DevFS.")
+				.arg(fPilotPath));
+	}
+}
+
 
 void KPilotDeviceLink::openDevice()
 {
@@ -751,6 +782,11 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.20  2002/08/20 21:18:31  adridg
+// License change in lib/ to allow plugins -- which use the interfaces and
+// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
+// allow the use of libmal which is MPL.
+//
 // Revision 1.19  2002/08/12 13:23:03  kainhofe
 // used long instead of unsigned long for dpl_ReadFeature. Fixed.
 //
