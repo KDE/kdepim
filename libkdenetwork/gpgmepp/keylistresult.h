@@ -39,11 +39,19 @@ namespace GpgME {
 
     const KeyListResult & operator=( const KeyListResult & other );
 
+    const KeyListResult & operator+=( const KeyListResult & other ) {
+      mergeWith( other );
+      return *this;
+    }
+
+    void mergeWith( const KeyListResult & other );
+
     bool isNull() const;
 
     bool isTruncated() const;
 
   private:
+    void detach();
     class Private;
     Private * d;
   };

@@ -33,6 +33,7 @@
 class GpgME::KeyListResult::Private : public GpgME::Shared {
 public:
   Private( const _gpgme_op_keylist_result & r ) : Shared(), res( r ) {}
+  Private( const Private & other ) : Shared(), res( other.res ) {}
 
   _gpgme_op_keylist_result res;
 };
@@ -56,7 +57,30 @@ GpgME::KeyListResult::KeyListResult( const Error & error, const _gpgme_op_keylis
   d->ref();
 }
 
-make_standard_stuff(KeyListResult)
+make_standard_stuff(KeyListResult);
+
+void GpgME::KeyListResult::detach() {
+  if ( isNull() || d->refCount() <= 1 )
+    return;
+  d->unref();
+  d = new Private( *d );
+}
+
+void GpgME::KeyListResult::mergeWith( const KeyListResult & other ) {
+  if ( other.isNull() )
+    return;
+  if ( isNull() ) { // just assign
+    operator=( other );
+    return;
+  }
+  // merge the truncated flag (try to keep detaching to a minimum):
+  if ( other.d->res.truncated && !d->res.truncated ) {
+    detach();
+    d->res.truncated = true;
+  }
+  if ( !error() ) // only merge the error when there was none yet.
+    Result::operator=( other );
+}
 
 bool GpgME::KeyListResult::isTruncated() const {
   return d && d->res.truncated;
