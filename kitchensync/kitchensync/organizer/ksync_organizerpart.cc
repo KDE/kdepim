@@ -152,7 +152,8 @@ void OrganizerPart::processEntry( const KSyncEntry::List& in,
         return;
     // now load
     KAlendarSyncEntry* met = meta();
-
+    dump("Opie",  entry2);
+    dump("KDE",  met );
     // sync
     SyncManager manager( this,  "SyncManager");
     KSyncEntry::List one;
@@ -169,7 +170,7 @@ void OrganizerPart::processEntry( const KSyncEntry::List& in,
     KAlendarSyncEntry *calendar=0;
 
     for ( entry = two.first(); entry != 0; entry = two.next() ) {
-        if ( entry->type() == QString::fromLatin1("KalendarSyncEntry") ) {
+        if ( entry->type() == QString::fromLatin1("KAlendarSyncEntry") ) {
             calendar = (KAlendarSyncEntry*)entry;
             break;
         }
@@ -187,8 +188,6 @@ void OrganizerPart::processEntry( const KSyncEntry::List& in,
         calendar->calendar()->save( QDir::homeDirPath() + "/.kitchensync/meta/"+ metaPath + "/cal.vcf",  form);
         kdDebug() << "Dumping Opie " << endl;
         kdDebug() << "Sync mode == " << entry2->syncMode() << " first sync = " << entry2->firstSync() << endl;
-        dump("Opie",  entry2);
-        dump("KDE",  met );
     }
     KURL url(m_path );
     QString newPath;
