@@ -21,7 +21,7 @@
             <cstring>unnamed</cstring>
         </property>
         <property name="margin">
-            <number>11</number>
+            <number>0</number>
         </property>
         <property name="spacing">
             <number>6</number>
@@ -121,5 +121,5 @@
 <slots>
     <slot access="private">slotDefault()</slot>
 </slots>
-<layoutdefaults spacing="6" margin="11"/>
+<layoutdefaults spacing="6" margin="0"/>
 </UI>
