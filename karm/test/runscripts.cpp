@@ -83,6 +83,7 @@ int runscripts
 
       // Thorsten's xautomation tests run with user interaction by default.
       if ( interpreter == "sh" ) s->addArgument( "--batch" );
+      if ( interpreter == "php" ) s->addArgument( "--batch" );
 
       rval = s->run();
       delete s;
@@ -107,6 +108,8 @@ int main( int, char** )
   if ( !rval ) rval = runscripts( "sh", "*.sh *.Sh *.SH *.sH", path );
 
   if ( !rval ) rval = runscripts( "perl", "*.pl *.Pl *.PL *.pL", path );
+
+  if ( !rval ) rval = runscripts( "php", "*.php *.php3 *.php4 *.php5", path );
 
   return rval;
 }

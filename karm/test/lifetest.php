@@ -95,7 +95,7 @@ if ($argv[1]=="--batch")
     $process = proc_open("karm", $descriptorspec, $pipes);
      
     while ((strpos($line,"karm: KarmStorage::save : wrote 0 tasks to") === false) and ($line<>"libkcal: ResourceLocal::reload()\n")) $line=fgets($pipes[2]);
-    echo "karm is saving... we can start\n";
+    echo "karm is saving, we can start\n";
     
     
     system("sleep 1");
@@ -183,7 +183,7 @@ if ($argv[1]=="--batch")
     
     $ics=fopen("/tmp/karmtest.ics","r");
     for ($i=1; $i<=13; $i++) $line=fgets($ics); 
-    if ($line<>"SUMMARY:example 1\n") $err+="iCal file content was wrong";
+    if ($line<>"SUMMARY:example 1\n") $err.="iCal file content was wrong";
     fclose($ics);
     system ("sleep 1");
   }
