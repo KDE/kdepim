@@ -23,6 +23,9 @@ namespace OpieHelper {
     private:
         QStringList attributes()const;
         QDate fromString( const QString& );
+        // from OConversion
+        QDate dateFromString( const QString& );
+        QString dateToString( const QDate& );
     private:
         enum Fields {
             Uid = 0,

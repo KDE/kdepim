@@ -63,7 +63,7 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName, ExtraMap&
 			adr.setSuffix(el.attribute("Suffix") );
 			adr.setNickName(el.attribute("Nickname" ) );
 
-                        QDate date = fromString(el.attribute("Birthday") );
+                        QDate date = dateFromString(el.attribute("Birthday") );
                         if (date.isValid() )
                             adr.setBirthday( date );
 
@@ -133,7 +133,7 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName, ExtraMap&
 
 			adr.setNickName( el.attribute("Nickname") );
 			adr.setNote( el.attribute("Notes") );
-                     
+
 		        /* extra block to let memory cleared... */
 			{
 			QStringList categories = QStringList::split(";", el.attribute("Categories" ) );
@@ -150,12 +150,24 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName, ExtraMap&
 			    }
 			}
 			}
-			
+
                         adr.insertCustom("KADDRESSBOOK", "X-Department",  el.attribute("Department") );
 			adr.insertCustom("opie", "HomeWebPage", el.attribute("HomeWebPage") );
 			adr.insertCustom("KADDRESSBOOK", "X-SpouseName", el.attribute("Spouse") );
 			adr.insertCustom("opie", "Gender", el.attribute("Gender") );
-			adr.insertCustom("KADDRESSBOOK", "X-Anniversary", el.attribute("Anniversary") );
+
+                        /*
+                         * Anniversary block
+                         * KADDRESSBOOK what it as ISO DATE string
+                         * and we either have it in Opie old or Qtopia1.6 format
+                         * So from String to Date and this Date will be exported to ISO Date again
+                         */
+                        {
+                            QDate ann = dateFromString( el.attribute("Anniversary") );
+                            if (ann.isValid() ) {
+                                adr.insertCustom("KADDRESSBOOK", "X-Anniversary", ann.toString( Qt::ISODate) );
+                            }
+                        }
 			adr.insertCustom("opie", "Children", el.attribute("Children") );
 			adr.insertCustom("KADDRESSBOOK", "X-Office", el.attribute("Office") );
 			adr.insertCustom("KADDRESSBOOK", "X-Profession", el.attribute("Profession") );
@@ -269,9 +281,18 @@ KTempFile* AddressBook::fromKDE( KSync::AddressBookSyncee *syncee, ExtraMap& map
             *stream << "Gender=\"" << escape( ab.custom( "opie",  "Gender") ) << "\" ";
 
             if ( ab.birthday().date().isValid() )
-                *stream << "Birthday=\"" << escape( ab.birthday().date().toString("dd.MM.yyyy") ) << "\" ";
+                *stream << "Birthday=\"" << escape( dateToString(ab.birthday().date() ) ) << "\" ";
 
-            *stream << "Anniversary=\"" << escape( ab.custom( "KADDRESSBOOK",  "X-Anniversary" ) ) << "\" ";
+            /*
+             * Anniversary block again
+             * Go from ISO -> QDate -> toString and then escape
+             */
+            {
+                QDate ann = QDate::fromString( ab.custom("KADDRESSBOOK", "X-Anniversary"), Qt::ISODate );
+                if (ann.isValid() ) {
+                    *stream << "Anniversary=\"" << escape( dateToString( ann )  ) << "\" ";
+                }
+            }
             *stream << "Nickname=\"" << escape( ab.nickName() ) << "\" ";
             *stream << "Children=\"" << escape( ab.custom("opie", "Children" ) ) << "\" ";
             *stream << "Notes=\"" << escape( ab.note() ) << "\" ";
@@ -348,13 +369,69 @@ QDate AddressBook::fromString( const QString &datestr )
     int monthPos = datestr.find('.');
     int yearPos = datestr.find('.', monthPos+1 );
     if ( monthPos == -1 || yearPos == -1 ) {
-	qDebug("fromString didn't find . in str = %s; mpos = %d ypos = %d", datestr.latin1(), monthPos, yearPos );
 	return QDate();
     }
     int d = datestr.left( monthPos ).toInt();
     int m = datestr.mid( monthPos+1, yearPos - monthPos - 1 ).toInt();
     int y = datestr.mid( yearPos+1 ).toInt();
     QDate date ( y,m,d );
-    //qDebug("TimeConversion::fromString ymd = %s => %d %d %d; mpos = %d ypos = %d", datestr.latin1(), y, m, d, monthPos, yearPos);
+
+
+    return date;
+}
+
+
+QString AddressBook::dateToString( const QDate &d )
+{
+    if ( d.isNull() || !d.isValid() )
+        return QString::null;
+
+    // ISO format in year, month, day (YYYYMMDD); e.g. 20021231
+    QString year = QString::number( d.year() );
+    QString month = QString::number( d.month() );
+    month = month.rightJustify( 2, '0' );
+    QString day = QString::number( d.day() );
+    day = day.rightJustify( 2, '0' );
+
+    QString str = year + month + day;
+
+    return str;
+}
+
+QDate AddressBook::dateFromString( const QString& s )
+{
+    QDate date;
+
+    if ( s.isEmpty() )
+        return date;
+
+    // Be backward compatible to old Opie format:
+    // Try to load old format. If it fails, try new ISO-Format!
+    date = fromString ( s );
+    if ( date.isValid() )
+        return date;
+
+    // Read ISO-Format (YYYYMMDD)
+    int year = s.mid(0, 4).toInt();
+    int month = s.mid(4,2).toInt();
+    int day = s.mid(6,2).toInt();
+
+    // do some quick sanity checking
+    if ( year < 1900 || year > 3000 )
+        return date;
+
+    if ( month < 0 || month > 12 )
+        return date;
+
+    if ( day < 0 || day > 31 )
+        return date;
+
+
+    date.setYMD( year, month, day );
+
+    if ( !date.isValid() )
+        return QDate();
+
+
     return date;
 }
