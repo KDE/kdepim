@@ -896,7 +896,11 @@ void KABCore::slotEditorDestroyed( const QString &uid )
 
   KABC::Addressee addr = mAddressBook->findByUid( uid );
 
+  QApplication::setOverrideCursor( Qt::waitCursor );
+
   KABLock::self( mAddressBook )->unlock( addr.resource() );
+
+  QApplication::restoreOverrideCursor();
 }
 
 void KABCore::initGUI()
