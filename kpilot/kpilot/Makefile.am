@@ -35,3 +35,4 @@ apps_DATA = kpilot.desktop kpilotdaemon.desktop
 
 messages:
 	$(XGETTEXT) $(kpilot_SOURCES) -o $(podir)/kpilot.pot
+

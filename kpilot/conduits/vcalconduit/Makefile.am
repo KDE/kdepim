@@ -43,14 +43,6 @@ noinst_HEADERS = vcal-conduit.h vcal-setup.h
 # just to make sure, automake makes them 
 BUILTSOURCES = vcal-setup.moc
 
-# if you "make distclean", this files get removed. If you want to remove
-# them while "make clean", use CLEANFILES
-DISTCLEANFILES = $(BUILTSOURCES)
-
-# make messages.po. Move this one to ../po/ and "make merge" in po
-messages:
-	$(XGETTEXT) -C -ktranslate $(kpilot_SOURCES)
-
 # just install datas here. Use install-exec-data for scripts and etc.
 # the binary itself is already installed from automake
 # use mkinstalldirs, not "install -d"

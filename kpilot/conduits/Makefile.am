@@ -23,6 +23,3 @@ SUBDIRS = null vcalconduit todoconduit popmail
 # them while "make clean", use CLEANFILES
 DISTCLEANFILES = $(BUILTSOURCES)
 
-# make messages.po. Move this one to ../po/ and "make merge" in po
-messages:
-	$(XGETTEXT) -C -ktranslate $(kpilot_SOURCES)
