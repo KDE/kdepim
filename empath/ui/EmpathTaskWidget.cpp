@@ -119,6 +119,8 @@ EmpathTaskWidget::s_addTask(EmpathTask * t)
 	itemHeight_ = (newItem->minimumSizeHint().height());
 	newItem->move(0, ((itemList_.count() - 1) * itemHeight_) + 20);
 	newItem->setFixedWidth(width());
+	newItem->s_setMax(t->max());
+	newItem->s_setPos(t->pos());
 	newItem->show();
 	
 	setFixedHeight(itemList_.count() * itemHeight_ + 20);
@@ -185,10 +187,7 @@ EmpathTaskItem::s_done()
 EmpathTaskItem::s_inc()
 {
 	empathDebug("s_inc() called");
-	++pos_;
-	progressMeter_->setProgress((int)((pos_/(float)max_) * 100));
-	empathDebug("Progress now: " + QString().setNum(progressMeter_->progress()));
-	empathDebug("Progress now: " + QString().setNum((int)((pos_/(float)max_) * 100)));
+	progressMeter_->setProgress(++pos_);
 	kapp->processEvents();
 }
 
@@ -204,8 +203,7 @@ EmpathTaskItem::s_setMax(int max)
 EmpathTaskItem::s_setPos(int pos)
 {
 	empathDebug("s_setPos() called");
-	pos_ = pos;
-	progressMeter_->setProgress((int)((pos_/(float)max_) * 100));
+	progressMeter_->setProgress(pos_);
 	kapp->processEvents();
 }
 

@@ -46,6 +46,7 @@ EmpathTask::~EmpathTask()
 EmpathTask::setMax(int i)
 {
 	empathDebug("setMax() called");
+	max_ = i;
 	emit(maxChanged(i));
 }
 
@@ -53,6 +54,7 @@ EmpathTask::setMax(int i)
 EmpathTask::setPos(int i)
 {
 	empathDebug("setPos() called");
+	pos_ = i;
 	emit(posChanged(i));
 }
 

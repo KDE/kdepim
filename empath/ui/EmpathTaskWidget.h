@@ -49,7 +49,7 @@ class EmpathTaskItem : public QWidget
 		
 		QSize minimumSizeHint() const;
 		
-	protected slots:
+	public slots:
 		
 		void s_done();
 		void s_inc();

@@ -42,6 +42,9 @@ class EmpathTask : public QObject
 		void doneOne();
 		void done();
 		
+		int max() { return max_; }
+		int pos() { return pos_; }
+		
 		bool isDone() { return done_; }
 		
 		QString name() { return name_; }
