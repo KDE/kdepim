@@ -122,7 +122,7 @@ if($opt_c){
 
   # print out the value to string map
 
-  print "static struct icalvalue_kind_map value_map[]={\n"; 
+  print "struct icalvalue_kind_map value_map[]={\n"; 
 
   foreach $value  (keys %h) {
 

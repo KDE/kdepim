@@ -121,7 +121,7 @@ if ($opt_c){
   print "    {ICAL_VALUE_NONE,ICAL_NO_VALUE}\n};\n\n";
   
   #Create the parameter Name map
-  print "static struct icalparameter_kind_map parameter_map[] = { \n";
+  print "struct icalparameter_kind_map parameter_map[] = { \n";
 
   foreach $param (sort keys %params) {
     
@@ -141,7 +141,7 @@ if ($opt_c){
   
   # Create the parameter value map
 
-  print "static struct icalparameter_map icalparameter_map[] = {\n";
+  print "struct icalparameter_map icalparameter_map[] = {\n";
   print "{ICAL_ANY_PARAMETER,0,\"\"},\n";
 
   foreach $param (sort keys %params) {
