@@ -74,15 +74,15 @@
 #include <kdepimmacros.h>
 
 #if (QT_VERSION < 0x030200)
-#error "This is KPilot for KDE3.2 and won't compile with Qt < 3.2.0"
+#error "This is KPilot for KDE3.3 and won't compile with Qt < 3.2.0"
 #endif
 
 #ifndef KDE_VERSION
 #include <kdeversion.h>
 #endif
 
-#if !(KDE_IS_VERSION(3,2,0))
-#error "This is KPilot for KDE 3.2 and won't compile with KDE < 3.2.0"
+#if !(KDE_IS_VERSION(3,3,0))
+#error "This is KPilot for KDE 3.3 and won't compile with KDE < 3.3.0"
 #endif
 
 
@@ -223,7 +223,7 @@ inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d)
 #define FUNCTIONSETUPL(a)
 #endif
 
-#define KPILOT_VERSION	"4.4.7 (Delfzijl)"
+#define KPILOT_VERSION	"4.5.0 (baby)"
 
 
 // Function to expand newlines in rich text to <br>\n
