@@ -640,6 +640,46 @@ void KNArticleManager::setAllRead(bool r)
 }
 
 
+void KNArticleManager::setAllRead(int lastcount, bool r)
+{
+  if(!g_roup)
+    return;
+
+  int groupLength=g_roup->length();
+  int newCount=g_roup->newCount();
+  int readCount=g_roup->readCount();
+
+  if(lastcount>groupLength)
+    lastcount=groupLength;
+
+  KNRemoteArticle *a;
+  for(int i=groupLength-lastcount; i<groupLength; i++) {
+    a=g_roup->at(i);
+    if(a->getReadFlag()!=r) {
+      a->setRead(r);
+      a->setChanged(true);
+      if(!r) {
+        readCount--;
+        if (a->isNew() && !a->isIgnored())
+          newCount++;
+      }
+      else {
+        readCount++;
+        if (a->isNew() && !a->isIgnored())
+          newCount--;
+      }
+    }
+  }
+
+  g_roup->updateThreadInfo();
+  g_roup->setReadCount(readCount);
+  g_roup->setNewCount(newCount);
+
+  g_roup->updateListItem();
+  showHdrs(true);
+}
+
+
 void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPosts)
 {
   if(l.isEmpty())

@@ -81,6 +81,7 @@ class KNArticleManager : public QObject, public KNJobConsumer {
 
     //article handling
     void setAllRead(bool r=true);
+    void setAllRead(int lastcount, bool r=true);
     void setRead(KNRemoteArticle::List &l, bool r=true, bool handleXPosts=true);
 
     // returns false if the changes were reverted (i.e. ignored articles->neutral articles)

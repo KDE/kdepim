@@ -202,7 +202,8 @@ class KNMainWindow : public KDockMainWindow
               *a_ctGrpReorganize,
               *a_ctGrpUnsubscribe,
               *a_ctGrpSetAllRead,
-              *a_ctGrpSetAllUnread;
+              *a_ctGrpSetAllUnread,
+              *a_ctGrpSetUnread;
 
     //collection-view - folder
     KAction   *a_ctFolNew,
@@ -289,6 +290,7 @@ class KNMainWindow : public KDockMainWindow
     void slotGrpUnsubscribe();
     void slotGrpSetAllRead();
     void slotGrpSetAllUnread();
+    void slotGrpSetUnread();
 
     void slotFolNew();
     void slotFolNewChild();

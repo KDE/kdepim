@@ -15,6 +15,7 @@
 */
 
 #include <qhbox.h>
+#include <qinputdialog.h>
 
 #include <kaccel.h>
 #include <kconfig.h>
@@ -609,6 +610,8 @@ void KNMainWindow::initActions()
                               SLOT(slotGrpSetAllRead()), actionCollection(), "group_allRead");
   a_ctGrpSetAllUnread       = new KAction(i18n("Mark All as U&nread"), 0, this,
                               SLOT(slotGrpSetAllUnread()), actionCollection(), "group_allUnread");
+  a_ctGrpSetUnread          = new KAction(i18n("Mark Last as U&nread..."), 0, this,
+                              SLOT(slotGrpSetUnread()), actionCollection(), "group_unread");
 
   //collection-view - folder
   a_ctFolNew                = new KAction(i18n("&New Folder"), "folder_new", 0, this,
@@ -1208,6 +1211,7 @@ void KNMainWindow::slotCollectionSelected(QListViewItem *i)
     a_ctGrpUnsubscribe->setEnabled(enabled);
     a_ctGrpSetAllRead->setEnabled(enabled);
     a_ctGrpSetAllUnread->setEnabled(enabled);
+    a_ctGrpSetUnread->setEnabled(enabled);
     a_ctArtFilter->setEnabled(enabled);
     a_ctArtFilterKeyb->setEnabled(enabled);
     a_ctArtRefreshList->setEnabled(enabled);
@@ -1735,6 +1739,18 @@ void KNMainWindow::slotGrpSetAllUnread()
   a_rtManager->setAllRead(false);
 }
 
+void KNMainWindow::slotGrpSetUnread()
+{
+  kdDebug(5003) << "KNMainWindow::slotGrpSetUnread()" << endl;
+  int groupLength=g_rpManager->currentGroup()->length();
+
+  bool ok = FALSE;
+  int res = QInputDialog::getInteger(
+                i18n( "Mark Last as Unread" ),
+                i18n( "Enter how many articles should be marked unread:" ), groupLength, 1, groupLength, 1, &ok, this );
+  if ( ok )
+    a_rtManager->setAllRead(res, false);
+}
 
 void KNMainWindow::slotFolNew()
 {

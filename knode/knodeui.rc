@@ -62,6 +62,7 @@
     <Separator/>
     <Action name="group_allRead"/>
     <Action name="group_allUnread"/>
+    <Action name="group_unread"/>
     <Separator/>
     <Action name="group_properties"/>
     <Action name="group_unsubscribe"/>
@@ -155,6 +156,7 @@
   <Action name="group_expire"/>
   <Action name="group_allRead"/>
   <Action name="group_allUnread"/>
+  <Action name="group_unread"/>
   <Separator/>
   <Action name="group_rename"/>
   <Action name="group_properties"/>
