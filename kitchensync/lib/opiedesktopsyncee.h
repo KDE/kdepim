@@ -7,12 +7,17 @@
 
 /**
  * $Log$
+ * Revision 1.1  2002/07/15 20:15:19  zecke
+ * Ported OpieDesktopSyncEntry
+ *
  */
 
 #include <qstringlist.h>
 #include <qstring.h>
 
 #include "syncer.h"
+
+#include "synctemplate.h"
 
 namespace KSync {
     /**
