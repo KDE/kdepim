@@ -72,7 +72,6 @@ private slots:
 
     void slotHelpClicked();
 
-    void slotUploadDataReq( KIO::Job*, QByteArray& );
     void slotUploadResult( KIO::Job* );
 
 private:
@@ -82,9 +81,6 @@ private:
 private:
     AttrPairList _attrPairList;
     QByteArray _keyData;
-
-    KIO::Job* mUploadJob;
-    int mUploadOffset;
 };
 
 #endif // CERTIFICATEWIZARDIMPL_H

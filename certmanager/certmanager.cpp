@@ -40,6 +40,7 @@
 #include "certificateinfowidgetimpl.h"
 #include "crlview.h"
 #include "customactions.h"
+#include "storedtransferjob.h"
 
 // libkleopatra
 #include <cryptplugwrapper.h>
@@ -405,20 +406,10 @@ void CertManager::slotImportCertFromFile( const KURL & certURL )
   // Prevent two simultaneous imports
   updateImportActions( false );
 
-  KIO::TransferJob* importJob = KIO::get( certURL );
+  // Download the cert
+  KIOext::StoredTransferJob* importJob = KIOext::storedGet( certURL );
   importJob->setWindow( this );
-  connect( importJob, SIGNAL(data(KIO::Job*,const QByteArray&)),
-           SLOT(slotImportData(KIO::Job*,const QByteArray&)) );
   connect( importJob, SIGNAL(result(KIO::Job*)), SLOT(slotImportResult(KIO::Job*)) );
-}
-
-void CertManager::slotImportData( KIO::Job*, const QByteArray& data ) {
-  // check for end-of-data marker:
-  if ( data.size() == 0 )
-    return;
-  unsigned int oldSize = mImportData.size();
-  mImportData.resize( oldSize + data.size(), QGArray::SpeedOptim );
-  memcpy( mImportData.data() + oldSize, data.data(), data.size() );
 }
 
 void CertManager::slotImportResult( KIO::Job* job )
@@ -426,10 +417,9 @@ void CertManager::slotImportResult( KIO::Job* job )
   if ( job->error() ) {
     job->showErrorDialog();
     updateImportActions( true );
-    mImportData.resize( 0 );
     return;
   }
-  startCertificateImport( mImportData );
+  startCertificateImport( static_cast<KIOext::StoredTransferJob *>( job )->data() );
   updateImportActions( true );
 }
 
@@ -484,17 +474,16 @@ void CertManager::startCertificateImport( const QByteArray & keyData ) {
   connect( job, SIGNAL(result(const GpgME::ImportResult&)),
 	   SLOT(slotCertificateImportResult(const GpgME::ImportResult&)) );
 
+  kdDebug() << "Importing certificate. keyData size:" << keyData.size() << endl;
   const GpgME::Error err = job->start( keyData );
   if ( err ) {
     showCertificateImportError( this, err );
-    mImportData.resize( 0 );
   }
   else
     (void)new Kleo::ProgressDialog( job, i18n("Importing Certificate"), this );
 }
 
 void CertManager::slotCertificateImportResult( const GpgME::ImportResult & res ) {
-  mImportData.resize( 0 );
   if ( res.error() ) {
     showCertificateImportError( this, res.error() );
     return;

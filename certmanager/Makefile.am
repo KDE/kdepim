@@ -12,7 +12,7 @@ kgpgcertmanager_SOURCES = \
 	main.cpp certmanager.cpp \
 	certificatewizard.ui certificatewizardimpl.cpp \
 	certificateinfowidget.ui certificateinfowidgetimpl.cpp \
-	crlview.cpp
+	crlview.cpp storedtransferjob.cpp
 
 METASOURCES = AUTO
 

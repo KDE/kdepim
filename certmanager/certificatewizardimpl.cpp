@@ -35,6 +35,7 @@
 #endif
 
 #include "certificatewizardimpl.h"
+#include "storedtransferjob.h"
 
 // libkleopatra
 #include <kleo/oidmap.h>
@@ -274,7 +275,7 @@ void CertificateWizardImpl::slotGenerateCertificate()
 
 void CertificateWizardImpl::slotResult( const GpgME::KeyGenerationResult & res,
 					const QByteArray & keyData ) {
-    kdDebug() << "keyData.size(): " << keyData.size() << endl;
+    //kdDebug() << "keyData.size(): " << keyData.size() << endl;
     _keyData = keyData;
 
     if ( res.error() ) {
@@ -477,43 +478,12 @@ void CertificateWizardImpl::accept()
       overwrite = true;
     }
 
-    // Inspired from KMKernel::byteArrayToRemoteFile
-    mUploadJob = KIO::put( url, -1, overwrite, false /*resume*/ );
-    connect( mUploadJob, SIGNAL( dataReq( KIO::Job*, QByteArray& ) ),
-             this, SLOT( slotUploadDataReq( KIO::Job*, QByteArray& ) ) );
-    connect( mUploadJob, SIGNAL( result( KIO::Job* ) ),
+    KIO::Job* uploadJob = KIOext::put( _keyData, url, -1, overwrite, false /*resume*/ );
+    uploadJob->setWindow( this );
+    connect( uploadJob, SIGNAL( result( KIO::Job* ) ),
              this, SLOT( slotUploadResult( KIO::Job* ) ) );
-    mUploadOffset = 0;
     // Can't press finish again during the upload
     setFinishEnabled( finishPage, false );
-  }
-}
-
-/**
-   This slot is invoked by the KIO job used in newCertificate
-   to save/upload the certificate, to request more data.
-*/
-void CertificateWizardImpl::slotUploadDataReq( KIO::Job* job, QByteArray& data )
-{
-  Q_ASSERT( job == mUploadJob );
-  if ( job != mUploadJob )
-    return;
-
-  // send the data in 64 KB chunks
-  const int MAX_CHUNK_SIZE = 64*1024;
-  int remainingBytes = _keyData.size() - mUploadOffset;
-  if( remainingBytes > MAX_CHUNK_SIZE ) {
-    // send MAX_CHUNK_SIZE bytes to the receiver (deep copy)
-    data.duplicate( _keyData.data() + mUploadOffset, MAX_CHUNK_SIZE );
-    mUploadOffset += MAX_CHUNK_SIZE;
-    //kdDebug() << "Sending " << MAX_CHUNK_SIZE << " bytes ("
-    //                << remainingBytes - MAX_CHUNK_SIZE << " bytes remain)\n";
-  } else {
-    // send the remaining bytes to the receiver (deep copy)
-    data.duplicate( _keyData.data() + mUploadOffset, remainingBytes );
-    _keyData = QByteArray();
-    mUploadOffset = 0;
-    //kdDebug() << "Sending " << remainingBytes << " bytes\n";
   }
 }
 
@@ -523,10 +493,6 @@ void CertificateWizardImpl::slotUploadDataReq( KIO::Job* job, QByteArray& data )
 */
 void CertificateWizardImpl::slotUploadResult( KIO::Job* job )
 {
-  Q_ASSERT( job == mUploadJob );
-  if ( job != mUploadJob )
-    return;
-
   if ( job->error() ) {
     job->showErrorDialog();
     setFinishEnabled( finishPage, true );

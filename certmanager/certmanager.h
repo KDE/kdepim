@@ -93,7 +93,6 @@ private slots:
 
     void slotImportCertFromFile();
     void slotImportCertFromFile( const KURL & filename );
-    void slotImportData( KIO::Job*,const QByteArray& );
     void slotImportResult( KIO::Job* );
 
     void slotCertificateImportResult( const GpgME::ImportResult & result );
@@ -145,7 +144,6 @@ private:
     KAction * mImportCertFromFileAction;
     KAction * mImportCRLFromFileAction;
 
-    QByteArray mImportData;
     QString mImportCRLTempFile;
     bool     mRemote;
     bool     mDirMngrFound;
