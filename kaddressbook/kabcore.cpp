@@ -332,7 +332,7 @@ void KABCore::setContactSelected( const QString &uid )
   mActionStoreAddresseeIn->setEnabled( selected );
   mActionMail->setEnabled( selected );
   mActionMailVCard->setEnabled( selected );
-  mActionChat->setEnabled( selected );
+  mActionChat->setEnabled( selected && mKIMProxy && mKIMProxy->initialize() );
   mActionWhoAmI->setEnabled( selected );
   mActionCategories->setEnabled( selected );
   mActionMerge->setEnabled( selected );
