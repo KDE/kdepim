@@ -14,11 +14,11 @@ kde_module_LTLIBRARIES = libtodoconduit.la libvcalconduit.la
 
 libtodoconduit_la_SOURCES = todo-factory.cc korganizertodoConduit.ui \
 	vcalBase.cc todo-setup.cc todo-conduit.cc
-libtodoconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib
+libtodoconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib -L../../../libkcal
 libtodoconduit_la_LIBADD = -lkpilot -lkcal
 
 libvcalconduit_la_SOURCES = vcal-factory.cc korganizerConduit.ui \
 	vcalBase.cc vcal-setup.cc vcal-conduit.cc
-libvcalconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib
+libvcalconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib -L../../../libkcal
 libvcalconduit_la_LIBADD = -lkpilot -lkcal
 
