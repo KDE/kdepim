@@ -187,7 +187,8 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
       }else if( bInQuotesOutsideOfEmail ){
         if( cQuotes == c )
           bInQuotesOutsideOfEmail = false;
-        name.prepend( c );
+        else
+          name.prepend( c );
       }else{
         // found the start of this addressee ?
         if( ',' == c )
@@ -196,7 +197,8 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
         if( iMailStart ){
           if( cQuotes == c )
             bInQuotesOutsideOfEmail = true; // end of quoted text found
-          name.prepend( c );
+          else
+            name.prepend( c );
         }else{
           switch( c ){
             case '<':
@@ -241,7 +243,8 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
       }else if( bInQuotesOutsideOfEmail ){
         if( cQuotes == c )
           bInQuotesOutsideOfEmail = false;
-        name.append( c );
+        else
+          name.append( c );
       }else{
         // found the end of this addressee ?
         if( ',' == c )
@@ -250,7 +253,8 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
         if( iMailEnd ){
           if( cQuotes == c )
             bInQuotesOutsideOfEmail = true; // start of quoted text found
-          name.append( c );
+          else
+            name.append( c );
         }else{
           switch( c ){
             case '>':
