@@ -188,7 +188,7 @@ PilotRecord *PilotSerialDatabase::readNextRecInCategory(int category)
 }
 
 // Reads the next record from database that has the dirty flag set.
-PilotRecord *PilotSerialDatabase::readNextModifiedRec()
+PilotRecord *PilotSerialDatabase::readNextModifiedRec(int *ind)
 {
 	FUNCTIONSETUP;
 	char *buffer[0xffff];
@@ -203,6 +203,7 @@ PilotRecord *PilotSerialDatabase::readNextModifiedRec()
 	if (dlp_ReadNextModifiedRec(fDBSocket, getDBHandle(), (void *) buffer,
 			&id, &index, &size, &attr, &category) >= 0)
 	{
+		if (ind) *ind=index;
 		return new PilotRecord(buffer, size, attr, category, id);
 	}
 	return 0L;
@@ -229,6 +230,19 @@ recordid_t PilotSerialDatabase::writeRecord(PilotRecord * newRecord)
 		newRecord->setID(newid);
 	return newid;
 }
+
+// Deletes a record with the given recordid_t from the database, or all records, if all is set to true. The recordid_t will be ignored in this case
+int PilotSerialDatabase::deleteRecord(recordid_t id, bool all)
+{
+	FUNCTIONSETUP;
+	if (isDBOpen() == false)
+	{
+		kdError() << k_funcinfo <<": DB not open"<<endl;
+		return -1;
+	}
+	return dlp_DeleteRecord(fDBSocket, getDBHandle(), all?1:0, id);
+}
+
 
 // Resets all records in the database to not dirty.
 int PilotSerialDatabase::resetSyncFlags()
@@ -283,6 +297,28 @@ void PilotSerialDatabase::openDatabase()
 	setDBOpen(true);
 }
 
+bool PilotSerialDatabase::createDatabase(long creator, long type, int cardno, int flags, int version)
+{
+	FUNCTIONSETUP;
+	int db;
+
+	// if the database is already open, we cannot create it again. How about completely resetting it? (i.e. deleting it and the createing it again)
+	if (isDBOpen()) return true;
+	// The latin1 seems ok, database names are latin1.
+	int res=dlp_CreateDB(fDBSocket,
+		creator, type, cardno, flags, version,
+		getDBName().latin1(), &db);
+	if (res<0) {
+		kdError() <<k_funcinfo
+			<< i18n("Cannot create database %1 on the handheld").arg(getDBName())<<endl;
+		return false;
+	}
+	// TODO: Do I have to open it explicitely???
+	setDBHandle(db);
+	setDBOpen(true);
+	return true;
+}
+
 void PilotSerialDatabase::closeDatabase()
 {
 	FUNCTIONSETUP;
@@ -291,3 +327,14 @@ void PilotSerialDatabase::closeDatabase()
 	dlp_CloseDB(fDBSocket, getDBHandle());
 	setDBOpen(false);
 }
+
+int PilotSerialDatabase::deleteDatabase()
+{
+	FUNCTIONSETUP;
+
+	if (isDBOpen()) closeDatabase();
+
+	return dlp_DeleteDB(fDBSocket, 0, fDBName.latin1());
+}
+
+

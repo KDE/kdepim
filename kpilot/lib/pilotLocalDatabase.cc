@@ -50,7 +50,7 @@ static const char *pilotlocaldatabase_id =
 #include "pilotLocalDatabase.h"
 
 PilotLocalDatabase::PilotLocalDatabase(const QString & path,
-	const QString & dbName,
+	const QString & dbName, bool useDefaultPath,
 	QObject *p, const char *n) :
 	PilotDatabase(p,n),
 	fPathName(path),
@@ -65,7 +65,7 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 	fixupDBName();
 	openDatabase();
 
-	if (!isDBOpen())
+	if (!isDBOpen() && useDefaultPath)
 	{
 		if (fPathBase && !fPathBase->isEmpty())
 		{
@@ -78,6 +78,8 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 		}
 		fixupDBName();
 		openDatabase();
+		if (!isDBOpen())
+			fPathName=path;
 	}
 
 	/* NOTREACHED */
@@ -137,6 +139,68 @@ void PilotLocalDatabase::fixupDBName()
 	fDBName = fDBName.replace('/', CSL1("_"));
 #endif
 }
+
+bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags, int version) 
+{
+	FUNCTIONSETUP;
+	
+	// if the database is already open, we cannot create it again. How about completely resetting it? (i.e. deleting it and the createing it again)
+	if (isDBOpen()) {
+#ifdef DEBUG
+		DEBUGCONDUIT<<"Database "<<fDBName<<" already open. Cannot recreate it."<<endl;
+#endif
+		return true;
+	}
+
+#ifdef DEBUG
+	DEBUGCONDUIT<<"Creating database "<<fDBName<<endl;
+#endif
+	
+	// Database names seem to be latin1.
+	memcpy(&fDBInfo.name[0], fDBName.latin1(), 34*sizeof(char));
+	fDBInfo.creator=creator;
+	fDBInfo.type=type;
+	fDBInfo.more=0;
+	fDBInfo.flags=flags;
+	fDBInfo.miscFlags=0;
+	fDBInfo.version=version;
+	fDBInfo.modnum=0;
+	fDBInfo.index=0;
+	fDBInfo.createDate=(QDateTime::currentDateTime()).toTime_t();
+	fDBInfo.modifyDate=(QDateTime::currentDateTime()).toTime_t();
+	fDBInfo.backupDate=(QDateTime::currentDateTime()).toTime_t();
+	
+	delete[] fAppInfo;
+	fAppInfo=0L;
+	fAppLen=0;
+	
+	for (int i=0; i<fNumRecords; i++) {
+		KPILOT_DELETE(fRecords[i]);
+		fRecords[i]=NULL;
+	}
+	fNumRecords=0;
+	fCurrentRecord=0;
+	fPendingRec=0;
+	
+	// TODO: Do I have to open it explicitely???
+	setDBOpen(true);
+	return true;
+}
+
+int PilotLocalDatabase::deleteDatabase()
+{
+	FUNCTIONSETUP;
+	if (isDBOpen()) closeDatabase();
+	
+	QString dbpath=dbPathName();
+	QFile fl(dbpath);
+	if (QFile::remove(dbPathName())) 
+		return 0; 
+	else 
+		return -1;
+}
+
+
 
 // Reads the application block info
 int PilotLocalDatabase::readAppBlock(unsigned char *buffer, int)
@@ -259,7 +323,7 @@ PilotRecord *PilotLocalDatabase::readNextRecInCategory(int category)
 }
 
 // Reads the next record from database that has the dirty flag set.
-PilotRecord *PilotLocalDatabase::readNextModifiedRec()
+PilotRecord *PilotLocalDatabase::readNextModifiedRec(int *ind)
 {
 	FUNCTIONSETUP;
 
@@ -277,6 +341,7 @@ PilotRecord *PilotLocalDatabase::readNextModifiedRec()
 	if (fCurrentRecord == fNumRecords)
 		return 0L;
 	PilotRecord *newRecord = new PilotRecord(fRecords[fCurrentRecord]);
+	if (ind) *ind=fCurrentRecord;
 
 	fPendingRec = fCurrentRecord;	// Record which one needs the new id
 	fCurrentRecord++;	// so we skip it next time
@@ -349,6 +414,52 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 	fRecords[fNumRecords++] = new PilotRecord(newRecord);
 	return newRecord->getID();
 }
+
+// Deletes a record with the given recordid_t from the database, or all records, if all is set to true. The recordid_t will be ignored in this case
+int PilotLocalDatabase::deleteRecord(recordid_t id, bool all) 
+{
+	FUNCTIONSETUP;
+	if (isDBOpen() == false)
+	{
+		kdError() << k_funcinfo <<": DB not open"<<endl;
+		return -1;
+	}
+	
+	if (all) 
+	{
+		for (int i=0; i<fNumRecords; i++) 
+		{
+			delete fRecords[i];
+			fRecords[i]=0L;
+		}
+		fNumRecords=0;
+		fCurrentRecord=0;
+		fPendingRec=0;
+		return 0;
+	}
+	else
+	{
+		int i=0;
+		while ( (i<fNumRecords) && (fRecords[i]->getID()!=id) ) 
+			i++;
+		if (fRecords[i]->getID() == id)
+		{
+			delete fRecords[i];
+			for (int j=i+1; j<fNumRecords; j++)
+			{
+				fRecords[j-1]=fRecords[j];
+			}
+			fNumRecords--;
+		}
+		else
+		{
+			// Record with this id does not exist!
+			return -1;
+		}
+	}
+	return 0;
+}
+
 
 // Resets all records in the database to not dirty.
 int PilotLocalDatabase::resetSyncFlags()

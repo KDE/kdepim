@@ -57,9 +57,11 @@ public:
 	/** Reads the next record from database in category 'category' */
 	virtual PilotRecord* readNextRecInCategory(int category);
 	/** Reads the next record from database that has the dirty flag set. */
-	virtual PilotRecord* readNextModifiedRec();
+	virtual PilotRecord* readNextModifiedRec(int *ind=NULL);
 	/** Writes a new record to database (if 'id' == 0, one will be assigned to newRecord) */
 	virtual recordid_t writeRecord(PilotRecord* newRecordb);
+	/** Deletes a record with the given recordid_t from the database, or all records, if all is set to true. The recordid_t will be ignored in this case */
+	virtual int deleteRecord(recordid_t id, bool all=false);
 	/** Resets all records in the database to not dirty. */
 	virtual int resetSyncFlags();
 	/** Resets next record index to beginning */
@@ -69,7 +71,11 @@ public:
 
 	virtual QString dbPathName() const;
 
-	const QString getDBName() { return fDBName; }
+	/** Deletes the database (by name, as given in the constructor and stored in the fDBName field). */
+	virtual int deleteDatabase();
+	/** Creates the database with the given creator, type and flags on the given card (default is RAM). If the database already exists, this function does nothing. */
+	virtual bool createDatabase(long creator=0, long type=0, int cardno=0, int flags=0, int version=0);
+	QString getDBName() { return fDBName; }
 
 protected:
 	virtual void openDatabase();

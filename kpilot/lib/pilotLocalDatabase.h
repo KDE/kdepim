@@ -43,8 +43,18 @@
 class PilotLocalDatabase : public PilotDatabase
 {
 public:
-	/** Opens the local database */
-	PilotLocalDatabase( const QString& path, const QString& name,
+	/**
+	* Opens the local database. If the database cannot be found at the
+	* given position, a default path is used ($KDEHOME/share/apps/kpilot/DBBackup)
+	* and if the file is found there, it is opened. In some cases this should
+	* not be done, so the parameter useDefaultPath controls this behavior.
+	* If it is set to true, the default path is used if the file cannot be
+	* found in the explicitely given location. If it is set to false and
+	* the database cannot be found, no database is opened. It can then be
+	* created explicitely at the specified location.
+	*/
+	PilotLocalDatabase( const QString& path,
+		const QString& name, bool useDefaultPath=true,
 		QObject *p=0L,const char *n=0L);
 	PilotLocalDatabase(const QString &name,
 		QObject *p=0L,const char *n=0L);
@@ -52,11 +62,15 @@ public:
 
 	virtual ~PilotLocalDatabase();
 
+	/** Creates the database with the given creator, type and flags on the given card (default is RAM). If the database already exists, this function does nothing. */
+	virtual bool createDatabase(long creator=0, long type=0, int cardno=0, int flags=0, int version=0);
+	/** Deletes the database (by name, as given in the constructor and stored in the fDBName field. ) */
+	virtual int deleteDatabase();
 	// Reads the application block info
 	virtual int readAppBlock(unsigned char* buffer, int maxLen);
 	// Writes the application block info.
-	virtual int writeAppBlock(unsigned char* buffer, int len);  
-	// returns the number of records in the database 
+	virtual int writeAppBlock(unsigned char* buffer, int len);
+	// returns the number of records in the database
 	virtual int recordCount();
 	// Returns a QValueList of all record ids in the database.
 	virtual QValueList<recordid_t> idList();
@@ -67,9 +81,11 @@ public:
 	// Reads the next record from database in category 'category'
 	virtual PilotRecord* readNextRecInCategory(int category);
 	// Reads the next record from database that has the dirty flag set.
-	virtual PilotRecord* readNextModifiedRec();
+	virtual PilotRecord* readNextModifiedRec(int *ind=NULL);
 	// Writes a new record to database (if 'id' == 0, one will be assigned to newRecord)
 	virtual recordid_t writeRecord(PilotRecord* newRecord);
+	/** Deletes a record with the given recordid_t from the database, or all records, if all is set to true. The recordid_t will be ignored in this case */
+	virtual int deleteRecord(recordid_t id, bool all=false);
 	// Resets all records in the database to not dirty.
 	virtual int resetSyncFlags();
 	// Resets next record index to beginning
