@@ -35,8 +35,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2002-06-29</date>
-<releaseinfo>0.07.01</releaseinfo>
+<date>2002-08-02</date>
+<releaseinfo>0.07.04</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm/reminder message, and command, scheduler for &kde;.</para>
@@ -305,6 +305,11 @@ scheduled.</para>
 <note><para>An alarm can only be triggered while you are logged in,
 and while both X and the <application>alarm daemon</application> are
 running.</para></note>
+
+<para>The <guilabel>Confirm acknowledgement</guilabel> checkbox lets
+you specify whether you will be prompted for confirmation when you
+close the alarm message window. This may be used as an extra safeguard
+against accidental acknowledgement of alarms.</para>
 
 <para>Check the <guilabel>Sound</guilabel> checkbox if you want an
 audible alarm to sound when the alarm message is displayed. By default
@@ -688,6 +693,10 @@ triggering date-only alarms, &ie; ones for which the <guilabel>Any
 time</guilabel> option was selected. On the date when they are due,
 such alarms will be output at the earliest opportunity during the
 24 hours starting from the start-of-day time.</para>
+</listitem>
+
+<listitem><para>Specify whether you should be prompted for
+confirmation each time you delete an alarm.</para>
 </listitem>
 
 <listitem><para>Set the default font and background colour to use for
