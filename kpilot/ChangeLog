@@ -1,6 +1,21 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-04-05  Adriaan de Groot
+* Work on the Kontact plugin for KPilot, make daemon's installedConduits
+  DCOP call return human-readable names instead of internal stuff.
+
+2004-04-04  Adriaan de Groot
+* Split out the general settings pages so that no tab widgets are
+  needed. JÃ¶rn's title patch for those pages made the tabs weird
+  anyway, and now things are consistent, at least. We could move
+  the backup page to "Actions", if we want.
+
+2004-04-01  Adriaan de Groot
+* Happy birthday to Mira, who has now managed to watch a whole
+  year of KPilot development, and has learned to sit up and say
+  "aya!" appreciatively when Daddy fixes a bug. Or something.
+
 2004-03-28  Adriaan de Groot
 * Added a "reset daemon" button. Added whatsthis help to toolbar.
 * Added a "suppress confirm" option to the notes conduit, partly
@@ -9,7 +24,7 @@
   testing 71122 as long as possible.
 
 2004-03-26  Adriaan de Groot
-* Another day, another fix from Jörn.
+* Another day, another fix from JÃ¶rn.
 * Backported the fix for backup settings being ignored from Sebastian V.
   (Actually, just used his original patch, which didn't use kcfgXT.
 * Prevent sync when screen locked, as a security measure.
@@ -19,7 +34,7 @@
 * 71122 has been top of the list for over a week - not getting around to
   it at all. Fixes elsewhere; working on getting a Linux machine up and
   running to be able to run POSE with a null-modem pseudo-device.
-* Another patch from Jörn; arr, it's a learning experience!
+* Another patch from JÃ¶rn; arr, it's a learning experience!
 * Removed logging weirdness in the fileinstall action.
 
 2004-03-19  Adriaan de Groot
@@ -49,10 +64,10 @@
   conduit, fixed up the code that was left, reduced the size of the
   setup dialog, and ended up with something that actually works again.
   Fixed bugs  60579 and 77948.
-* Yet another patch from Jörn, added him to credits, too.
+* Yet another patch from JÃ¶rn, added him to credits, too.
 
 2004-03-15  Adriaan de Groot
-* Patches from David Mott and Jörn Ahrens today. Excellent!
+* Patches from David Mott and JÃ¶rn Ahrens today. Excellent!
 * Worked on the docs and website some.
 
 2004-03-14  Reinhold Kainhofer
@@ -70,7 +85,7 @@
 * Added configuration widget to perl conduit.
 
 2004-03-12  Adriaan de Groot
-* Received patches from Jörn Ahrens and Sebastian Voitzsch for
+* Received patches from JÃ¶rn Ahrens and Sebastian Voitzsch for
   various issues. Thanks guys! It's contributions like this that
   really inspire me to keep working on KPilot. Reinhold and I can't
   do everything by ourselves.
@@ -144,7 +159,7 @@
 
 2004-01-16  Adriaan de Groot
 * De-tabified ChangeLog again.
-* Updated version. Hope that \374 makes sense (it's a ü).
+* Updated version. Hope that \374 makes sense (it's a Ã¼).
 * Added explanation for "Actions" page in config. Ditto for "Conduits".
   Prevent user from collapsing the tree.
 * Fixup layout for popmail conduit when including it in the config dialog.
