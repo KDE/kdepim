@@ -97,17 +97,20 @@ void Kleo::HierarchicalKeyListJob::slotCancel() {
 void Kleo::HierarchicalKeyListJob::slotResult( const GpgME::KeyListResult & res ) {
   mJob = 0;
   mIntermediateResult.mergeWith( res );
-  std::set<QString> s;
+  std::set<QString> tmp;
   std::set_difference( mNextSet.begin(), mNextSet.end(),
 		       mScheduledSet.begin(), mScheduledSet.end(),
-		       std::inserter( s, s.begin() ) );
-  if ( mIntermediateResult.error() || s.empty() ) {
+		       std::inserter( tmp, tmp.begin() ) );
+  mNextSet.clear();
+  std::set_difference( tmp.begin(), tmp.end(),
+		       mSentSet.begin(), mSentSet.end(),
+		       std::inserter( mNextSet, mNextSet.begin() ) );
+  if ( mIntermediateResult.error() || mNextSet.empty() ) {
     emit done();
     emit result( mIntermediateResult );
     deleteLater();
     return;
   }
-  mNextSet = s;
   if ( const GpgME::Error error = startAJob() ) { // error starting the job for next keys
     mIntermediateResult.mergeWith( GpgME::KeyListResult( error ) );
     emit done();
