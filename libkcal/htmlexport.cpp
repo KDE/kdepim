@@ -55,8 +55,8 @@ HtmlExport::HtmlExport( Calendar *calendar ) :
   mExcludePrivateEventEnabled( false ),
   mExcludeConfidentialEventEnabled( false )
 {
-  mTitle = I18N_NOOP("KOrganizer Calendar");
-  mTitleTodo = I18N_NOOP("KOrganizer To-Do List");
+  mTitle = i18n("KOrganizer Calendar");
+  mTitleTodo = i18n("KOrganizer To-Do List");
   mCreditName = "KOrganizer";
   mCreditURL = "http://korganizer.kde.org";
 }
