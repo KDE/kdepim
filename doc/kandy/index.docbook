@@ -291,7 +291,7 @@ Watts <email>lauri@kde.org</email>.</para>
 
 </sect1>
 
-<sect1 id="amor-requirements">
+<sect1 id="kandy-requirements">
 <title>Requirements</title>
 
 <para>You will need to have the kdelibs package installed in order to
@@ -311,7 +311,7 @@ be found at the same location as the kdepim package.</para>
 
 <para>Compiling and installing the required kdelibs package follows the
 same process.  If you encounter any problems compiling or installing
-&amor;, help may be obtained from the <ulink
+&kandy;, help may be obtained from the <ulink
 url="http://www.kde.org/mailinglists.html">&kde; mailing lists </ulink>
 or from the Usenet newsgroup: comp.windows.x.kde.</para>
 </sect1>
@@ -327,8 +327,8 @@ or from the Usenet newsgroup: comp.windows.x.kde.</para>
 <interfacename>KandyIface</interfacename> with the following functions:
 <function>syncPhonebook()</function> syncs the mobile phone book book
 with the &kde; address book. This is equivalent to pressing the
-<guibutton>Sync</guibutton> button in the Mobile <function>Interface
-Window. exit()</function> closes &kandy;.</para>
+<guibutton>Sync</guibutton> button in the Mobile Interface
+Window. <function>exit()</function> closes &kandy;.</para>
 
 </sect1>
 
