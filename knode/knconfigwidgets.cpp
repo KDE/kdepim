@@ -181,8 +181,11 @@ void KNConfig::IdentityWidget::slotSigningKeyChange()
   if ( !(pgp = Kpgp::Module::getKpgp()) )
     return;
 
-  QCString keyID = pgp->selectDefaultKey();
-
+  QCString keyID = s_igningKey->text().local8Bit();
+  keyID = pgp->selectSecretKey( i18n("Your OpenPGP Key"),
+                                i18n("Select the OpenPGP key which should be "
+                                     "used for signing articles."),
+                                keyID );
   if ( !keyID.isEmpty() )
     s_igningKey->setText( keyID );
 }
