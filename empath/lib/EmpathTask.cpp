@@ -73,6 +73,7 @@ EmpathTask::doneOne()
 EmpathTask::done()
 {
     empathDebug("");
+    killTimers();
     done_ = true;
     emit(finished());
     kapp->processEvents();
