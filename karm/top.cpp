@@ -17,6 +17,7 @@
 #include <kconfig.h>
 #include <kaccel.h>
 #include <kapp.h>
+#include <kdockwindow.h>
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <klocale.h>
@@ -29,7 +30,6 @@
 #include "kaccelmenuwatch.h"
 #include "karm.h"
 #include "print.h"
-#include "docking.h"
 #include "preferences.h"
 #include <kstatusbar.h>
 
@@ -66,8 +66,9 @@ KarmWindow::KarmWindow()
   // we want to add a task.
   _karm->load();
 
-  DockWidget *dockWidget = new DockWidget(this,"doc widget");
-  dockWidget->show();
+  KDockWindow *dockWindow = new KDockWindow(this,"doc widget");
+  dockWindow->setPixmap( SmallIcon( QString::fromLatin1( "karm" ) ) );
+  dockWindow->show();
 }
 
 void KarmWindow::save() 
