@@ -41,6 +41,7 @@ public:
   KNMainWindow( QWidget* parentWidget=0 );
   ~KNMainWindow();
   void openURL( const KURL& );
+
 public slots:
   void slotConfToolbar();
   void slotNewToolbarConfig();

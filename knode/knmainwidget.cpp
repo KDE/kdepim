@@ -59,8 +59,10 @@ using KRecentAddress::RecentAddresses;
 
 KNGlobals knGlobals;
 
-KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* parent, const char* name  )
-  : KDockArea( parent, name ), b_lockui( false ), m_GUIClient( client ),
+KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* parent,
+                            const char* name  )
+  : DCOPObject("KNodeIface"), KDockArea( parent, name ),
+    b_lockui( false ), m_GUIClient( client ),
     b_popupInitialized( false )
 {
   knGlobals.top=this;
@@ -2328,5 +2330,130 @@ void KNMainWidget::slotReparented()
   if ( c_olView->parent() != c_olDock )
     c_olDock->undock();
 }
+
+////////////////////////////////////////////////////////////////////////
+//////////////////////// DCOP implementation
+// Move to the next article
+void KNMainWidget::nextArticle()
+{
+  slotNavNextArt();
+}
+
+// Move to the previous article
+void KNMainWidget::previousArticle()
+{
+  slotNavPrevArt();
+}
+
+// Move to the next unread article
+void KNMainWidget::nextUnreadArticle()
+{
+  slotNavNextUnreadArt();
+}
+
+// Move to the next unread thread
+void KNMainWidget::nextUnreadThread()
+{
+  slotNavNextUnreadThread();
+}
+
+// Move to the next group
+void KNMainWidget::nextGroup()
+{
+  slotNavNextGroup();
+}
+
+// Move to the previous group
+void KNMainWidget::previousGroup()
+{
+  slotNavPrevGroup();
+}
+
+void KNMainWidget::fetchHeaders()
+{
+  // Simply call the slot
+  slotAccGetNewHdrs();
+}
+
+// Open the editor to post a new article in the selected group
+void KNMainWidget::postArticle()
+{
+  slotAccPostNewArticle();
+}
+
+// Fetch the new headers in the selected groups
+void KNMainWidget::fetchHeadersInCurrentGroup()
+{
+  slotGrpGetNewHdrs();
+}
+
+// Expire the articles in the current group
+void KNMainWidget::expireArticlesInCurrentGroup()
+{
+  slotGrpExpire();
+}
+
+// Mark all the articles in the current group as read
+void KNMainWidget::markAllAsRead()
+{
+  slotGrpSetAllRead();
+}
+
+// Mark all the articles in the current group as unread
+void KNMainWidget::markAllAsUnread()
+{
+  slotGrpSetAllUnread();
+}
+
+// Mark the current article as read
+void KNMainWidget::markAsRead()
+{
+  slotArtSetArtRead();
+}
+
+// Mark the current article as unread
+void KNMainWidget::markAsUnread()
+{
+  slotArtSetArtUnread();
+}
+
+// Mark the current thread as read
+void KNMainWidget::markThreadAsRead()
+{
+  slotArtSetThreadRead();
+}
+
+// Mark the current thread as unread
+void KNMainWidget::markThreadAsUnread()
+{
+  slotArtSetThreadUnread();
+}
+
+// Send the pending articles
+void KNMainWidget::sendPendingMessages()
+{
+  slotArtSendOutbox();
+}
+
+// Delete the current article
+void KNMainWidget::deleteArticle()
+{
+  slotArtDelete();
+}
+
+// Send the current article
+void KNMainWidget::sendNow()
+{
+  slotArtSendNow();
+}
+
+// Edit the current article
+void KNMainWidget::editArticle()
+{
+  slotArtEdit();
+}
+
+//////////////////////// end DCOP implementation
+////////////////////////////////////////////////////////////////////////
 
 #include "knmainwidget.moc"

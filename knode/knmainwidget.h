@@ -15,6 +15,8 @@
 #ifndef KNMAINWIDGET_H
 #define KNMAINWIDGET_H
 
+#include "knodeiface.h"
+
 #include <kdockwidget.h>
 #include <kdialogbase.h>
 #include "resource.h"
@@ -54,7 +56,7 @@ class KNLocalArticle;
 class KNRemoteArticle;
 class KActionCollection;
 
-class KNMainWidget : public KDockArea
+class KNMainWidget : public KDockArea, virtual public KNodeIface
 {
   Q_OBJECT
 public:
@@ -89,6 +91,58 @@ public:
   KNListView*       collectionView()const  { return c_olView; }
   KNListView*       headerView()const      { return h_drView; }
   KNArticleWidget*  articleView()const     { return a_rtView; }
+  public: //The dcop interface
+  // Implementation of KNodeIface
+  /* Navigation */
+  // Move to the next article
+  virtual void nextArticle();
+  // Move to the previous article
+  virtual void previousArticle();
+  // Move to the next unread article
+  virtual void nextUnreadArticle();
+  // Move to the next unread thread
+  virtual void nextUnreadThread();
+  // Move to the next group
+  virtual void nextGroup();
+  // Move to the previous group
+  virtual void previousGroup();
+
+  /* Group options */
+  // Open the editor to post a new article in the selected group
+  virtual void postArticle();
+  // Fetch the new headers in the selected groups
+  virtual void fetchHeadersInCurrentGroup();
+  // Expire the articles in the current group
+  virtual void expireArticlesInCurrentGroup();
+  // Mark all the articles in the current group as read
+  virtual void markAllAsRead();
+  // Mark all the articles in the current group as unread
+  virtual void markAllAsUnread();
+
+  /* Header view */
+  // Mark the current article as read
+  virtual void markAsRead();
+  // Mark the current article as unread
+  virtual void markAsUnread();
+  // Mark the current thread as read
+  virtual void markThreadAsRead();
+  // Mark the current thread as unread
+  virtual void markThreadAsUnread();
+
+  /* Articles */
+
+  // Send the pending articles
+  virtual void sendPendingMessages();
+  // Delete the current article
+  virtual void deleteArticle();
+  // Send the current article
+  virtual void sendNow();
+  // Edit the current article
+  virtual void editArticle();
+  /// Fetch all the new article headers
+  virtual void fetchHeaders();
+
+  //end dcop interface
 signals:
   void signalCaptionChangeRequest( const QString& );
 
