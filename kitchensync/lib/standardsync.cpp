@@ -30,27 +30,31 @@ using namespace KSync;
 
 void StandardSync::syncToTarget( Syncee *source, Syncee *target, bool override )
 {
-  kdDebug(5200) << "StandardSync::syncToTarget(): from: "
+  kdDebug(5250) << "StandardSync::syncToTarget(): from: "
                 << source->identifier()
                 << " to: " << target->identifier() << "  override: "
                 << override  << endl;
 
   SyncEntry *sourceEntry = source->firstEntry();
   while ( sourceEntry ) {
+    kdDebug(5250) << "SYNC: sourceEntry: " << sourceEntry->id() << endl;
     SyncEntry *targetEntry = target->findEntry( sourceEntry->id() );
     if ( targetEntry ) {
       // Entry already exists in target
       if ( sourceEntry->equals( targetEntry ) ) {
         // Entries are equal, no action required
+        kdDebug(5250) << "SYNC: equal" << endl;
       } else {
         // Entries are different, resolve conflict
         if ( override ) {
           // Force override
           target->replaceEntry( targetEntry, sourceEntry );
+          kdDebug(5250) << "SYNC: replace" << endl;
         } else {
           if ( source->hasChanged( sourceEntry ) &&
                target->hasChanged( targetEntry ) ) {
             // Both entries have changed
+            kdDebug(5250) << "SYNC: Both have changed" << endl;
             SyncEntry *result = deconflict( sourceEntry, targetEntry );
             if ( result == sourceEntry ) {
               target->replaceEntry( targetEntry, sourceEntry );
@@ -59,15 +63,18 @@ void StandardSync::syncToTarget( Syncee *source, Syncee *target, bool override )
                       !target->hasChanged( targetEntry ) ) {
             // take source entry
             target->replaceEntry( targetEntry, sourceEntry );
+            kdDebug(5250) << "SYNC: Take source entry." << endl;
           } else if ( !source->hasChanged( sourceEntry ) &&
                       target->hasChanged( targetEntry ) ) {
             // take target entry, no action required
+            kdDebug(5250) << "SYNC: Take target entry." << endl;
           }
         }
       }
     } else {
       // New entry
       target->addEntry( sourceEntry );
+      kdDebug(5250) << "SYNC: New entry." << endl;
     }
 
     sourceEntry = source->nextEntry();
