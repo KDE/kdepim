@@ -339,7 +339,7 @@ int PilotDaemon::getPilotSpeed(KConfig& config)
 		kdDebug() << fname
 			<< ": Speed set to "
 			<< speedname << " ("
-			<< speed << ')'
+			<< speed << ")"
 			<< endl;
 	}
 #endif
@@ -1335,6 +1335,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.38  2001/05/25 16:06:52  adridg
+// DEBUG breakage
+//
 // Revision 1.37  2001/04/16 13:54:17  adridg
 // --enable-final file inclusion fixups
 //
