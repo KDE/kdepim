@@ -35,31 +35,31 @@
 #include "modem.h"
 #include "kandy.h"
 #include "mobilemain.h"
+#include "mobilegui.h"
 #include "commandscheduler.h"
 #include "kandyprefs.h"
 
 static const char description[] =
-    I18N_NOOP("Communicating with your mobile phone");
+    I18N_NOOP("Communicating with your mobile phone.");
 
-static const char version[] = "0.3";
+static const char version[] = "0.5";
 
 static KCmdLineOptions options[] =
 {
-   { "terminal", I18N_NOOP("Show terminal window"), 0 },
-   { "mobilegui", I18N_NOOP("Show mobile GUI"), 0 },
-   { "nogui", I18N_NOOP("Do not show GUI"), 0 },
-   { "+[profile]", I18N_NOOP("Filename of command profile file"), 0 },
+   { "terminal", I18N_NOOP("Show terminal window."), 0 },
+   { "mobilegui", I18N_NOOP("Show mobile GUI."), 0 },
+   { "nogui", I18N_NOOP("Don't show GUI."), 0 },
+   { "+[profile]", I18N_NOOP("Filename of command profile file."), 0 },
    KCmdLineLastOption // End of options.
 };
 
 void initModem(Modem *modem)
 {
-  kdDebug(5960) << "Opening serial Device: "
+  kdDebug() << "Opening serial Device: "
             << KandyPrefs::serialDevice()
             << endl;
 
-  modem->setDevice(KandyPrefs::serialDevice());
-  modem->setSpeed(19200);
+  modem->setSpeed(115200);
   modem->setData(8);
   modem->setParity('N');
   modem->setStop(1);
@@ -89,8 +89,9 @@ int main(int argc, char **argv)
 {
   KAboutData about("kandy", I18N_NOOP("Kandy"), version, description,
                    KAboutData::License_GPL, "(C) 2001 Cornelius Schumacher",0,
-                   "http://kandy.kde.org");
+                   "http://kandy.kde.org/");
   about.addAuthor( "Cornelius Schumacher", 0, "schumacher@kde.org" );
+  about.addAuthor( "Heiko Falk", 0, "hf2@ls12.cs.uni-dortmund.de" );
   KCmdLineArgs::init(argc,argv,&about);
   KCmdLineArgs::addCmdLineOptions(options);
 
@@ -100,7 +101,7 @@ int main(int argc, char **argv)
   // register ourselves as a dcop client
   app.dcopClient()->registerAs(app.name(),false);
 
-  Modem *modem = new Modem;
+  Modem *modem = new Modem(KandyPrefs::self());
   CommandScheduler *scheduler = new CommandScheduler(modem);
 
   // see if we are starting with session management
@@ -112,7 +113,8 @@ int main(int argc, char **argv)
     // no session.. just start up normally
     Kandy *k = new Kandy(scheduler);
 
-    MobileMain *m = new MobileMain(scheduler);
+    MobileMain *m = new MobileMain(scheduler, KandyPrefs::self());
+    
     if (!args->isSet("gui")) {
     } else {
       if (KandyPrefs::startupTerminalWin() ||
@@ -137,17 +139,19 @@ int main(int argc, char **argv)
     QObject::connect(m,SIGNAL(showTerminalWin()),k,SLOT(show()));
     QObject::connect(m,SIGNAL(showPreferencesWin()),
                      k,SLOT(optionsPreferences()));
-    QObject::connect(m,SIGNAL(modemConnect()),k,SLOT(modemConnect()));
-    QObject::connect(m,SIGNAL(modemDisconnect()),k,SLOT(modemDisconnect()));
-    QObject::connect(k,SIGNAL(connectStateChanged(bool)),
-                     m,SLOT(setConnected(bool)));
+
+    QObject::connect( m->view(), SIGNAL( connectModem() ), k,
+                      SLOT( modemConnect() ) );
+    QObject::connect( m->view(), SIGNAL( disconnectModem() ), k,
+                      SLOT( modemDisconnect() ) );
 
     QObject::connect( modem, SIGNAL( errorMessage( const QString & ) ),
                       k, SLOT( showErrorMessage( const QString & ) ) );
 
-    initModem(modem);
+    initModem( modem );
 
-    if (KandyPrefs::startupModem()) k->modemConnect();
+    if ( KandyPrefs::startupModem() )
+      m->view()->toggleConnection();
   }
 
   return app.exec();
