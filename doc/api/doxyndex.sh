@@ -34,7 +34,8 @@ for i in "Main Page/index" \
 	"Class List/annotated" \
 	"File List/files" \
 	"Namespace Members/namespacemembers" \
-	"Class Members/functions"
+	"Class Members/functions" \
+	"Related Pages/pages"
 do
 	NAME=`dirname "$i"`
 	FILE=`basename "$i"`
@@ -48,7 +49,7 @@ fi
 # Get the list of global Menu entries.
 GMENU=`cat "$1"/subdirs | tr -d '\n'`
 
-PMENU=`grep '<!-- pmenu' "$WRKDIR/index.html" | sed -e 's+.*pmenu *++' -e 's+ *-->++' | awk '{ c=split($0,a,"/"); for (j=1; j<=c; j++) { printf " / <a href=\""; if (j==c) { printf("."); } for (k=j; k<c; k++) { printf "../"; } if (j<c) { printf("../html/"); } printf "\">%s</a>\n" , a[j]; } }' | tr -d '\n'`
+PMENU=`grep '<!-- pmenu' "$WRKDIR/index.html" | sed -e 's+.*pmenu *++' -e 's+ *-->++' | awk '{ c=split($0,a,"/"); for (j=1; j<=c; j++) { printf " / <a href=\""; if (j==c) { printf("."); } for (k=j; k<c; k++) { printf "../"; } if (j<c) { printf("../html/index.html"); } printf "\">%s</a>\n" , a[j]; } }' | tr -d '\n'`
 
 # Now substitute in the MENU in every file. This depends
 # on HTML_HEADER (ie. header.html) containing the <!-- menu --> comment.  

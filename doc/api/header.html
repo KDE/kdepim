@@ -17,38 +17,8 @@
 
   <link rel="shortcut icon" href="http://pim.kde.org/favicon.ico" />
 
-<!-- Get cookie code from Scott Andrew (.com) -->
-<script language="javascript">
-<!--
-function getCookie(name) {
-  var dc = document.cookie;
-  var prefix = name + "=";
-  var begin = dc.indexOf("; " + prefix);
-  if (begin == -1) {
-    begin = dc.indexOf(prefix);
-    if (begin != 0) return null;
-  } else
-    begin += 2;
-  var end = document.cookie.indexOf(";", begin);
-  if (end == -1)
-    end = dc.length;
-  return unescape(dc.substring(begin + prefix.length, end));
-}
 
-var sitestyle = getCookie("sitestyle");
-if (!sitestyle)
-  sitestyle = getCookie("site_style");
-if (!sitestyle)
-  sitestyle = "pim";
-document.write("<link href=\"http://pim.kde.org/css/new_" + sitestyle + ".css\" rel=\"stylesheet\" media=\"screen\" type=\"text/css\">");
--->
-</script>
-
-
-  <link rel="alternate stylesheet" media="screen" type="text/css" title="Default: KDE PIM" href="http://pim.kde.org/css/new_pim.css" />
-  <link rel="alternate stylesheet" media="screen" type="text/css" title="Black and White" href="http://pim.kde.org/css/new_blackwhite.css" />
-  <link rel="alternate stylesheet" media="screen" type="text/css" title="Orange" href="http://pim.kde.org/css/new_orange.css" />
-  <link rel="alternate stylesheet" media="screen" type="text/css" title="Blue Mellow" href="http://pim.kde.org/css/new_bluemellow.css" />
+  <link rel="stylesheet" media="screen" type="text/css" title="Default: KDE PIM" href="http://pim.kde.org/css/new_pim.css" />
   <link rel="stylesheet" media="print" type="text/css" href="/media/styles/print.css" />
 
 <style type="text/css">
@@ -68,27 +38,28 @@ td.mdname { font-weight: bold; color: #602020;  }
 
 <body>
 
-<div id="header">
-<span style="display:none;"><a href="#main" accesskey="2">Skip to Content</a> |</span>
-<div style="float:right; text-align: right; margin: 0px 2em 0px 0px; padding: 0px;">
-	<a href="http://www.kde.org/contact/" accesskey="10" title="Contact information for all areas of KDE">Contact Us</a>
+<div id="nav_header_bg">
+<div id="nav_header">
+<a href="./"><img id="nav_header_logo" alt="Personal Information Management"
+src="http://www.kde.org/media/images/kde_gear_64.png" border="0" /></a>
+<div id="nav_header_title">Personal Information Management</div>
 </div>
-<span>
-<a href="http://pim.kde.org/welcome.php">pim.kde.org</a>
-| <a href="http://www.kde.org/">kde.org</a>
-</span>
+<div id="nav_header_sections_right">
+<a href="/family/" accesskey="3" title="An overview of the pim.KDE.org w
+eb pages">Sitemap</a> ::
+<a href="<php print $site_root ?>contact.php" accesskey="10" title="Cont
+act information for all areas of KDE">Contact Us</a>
 </div>
-
-<div id="logo">
-<div class="image"></div>
-</div>
-
-<div id="locationcell">
-<a href="http://pim.kde.org/welcome.php">KDE PIM</a>
+<div id="nav_header_sections_left">
+Location: <a href="http://pim.kde.org/welcome.php">KDE PIM</a>
  / <a href="http://pim.kde.org/development/">Developers</a>
  / <a href="@topdir@">API Docs</a>
 <!-- pmenu $projectname -->
 </div>
+<div style="clear:both; height:1px;">&nbsp;</div>
+</div>
+
+
 
 
 <div>

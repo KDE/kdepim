@@ -138,7 +138,7 @@ apidox-am-tree:
 			if test "x$$subdir" != "x."; then \
 				if grep '^include .*Doxyfile.am' $(srcdir)/$$subdir/Makefile.am > /dev/null ; then \
 					echo "Making apidox index in $$subdir"; \
-					echo "<li><!-- $(PARENT)/$$subdir -->$(PARENTINDENT)<a href=\"@topdir@$(PARENT)/$$subdir/html\">$$subdir</a></li>" >> $(top_builddir)/apidocs/subdirs ; \
+					echo "<li><!-- $(PARENT)/$$subdir -->$(PARENTINDENT)<a href=\"@topdir@$(PARENT)/$$subdir/html/index.html\">$$subdir</a></li>" >> $(top_builddir)/apidocs/subdirs ; \
 					(cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) apidox-am-tree PARENT="$(PARENT)/$$subdir" PARENTINDENT='\&nbsp;\&nbsp;$(PARENTINDENT)' ) || exit 1; \
 				fi ; \
 			fi ; \
