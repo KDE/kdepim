@@ -48,39 +48,39 @@ KonsoleKalendarExports::~KonsoleKalendarExports()
 
 bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts, Event *event ){
 
-  if( m_firstEntry == true || 
+  if( m_firstEntry == true ||
       m_lastDate.day() != event->dtStart().date().day() ||
       m_lastDate.month() != event->dtStart().date().month() ||
       m_lastDate.year() != event->dtStart().date().year() ){
-	  
-	  
-    m_firstEntry=false;	  
+
+
+    m_firstEntry=false;
     int len = event->dtStartStr().length();
     QString date = event->dtStartStr();
     date.truncate( len - 5 );
-    *ts << I18N_NOOP("Date:") << "\t" <<  date.local8Bit() << endl;
+    *ts << I18N_NOOP("Date:") << "\t" <<  date << endl;
     m_lastDate = event->dtStart().date();
-	  
+
   }
 
   if ( !event->doesFloat() ) {
     *ts << "\t";
-    *ts <<  event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
+    *ts <<  event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) );
     *ts << " - ";
-    *ts << event->dtEndStr().remove(0, (event->dtEndStr().find(' ', 0, false) + 1) ).local8Bit();
+    *ts << event->dtEndStr().remove(0, (event->dtEndStr().find(' ', 0, false) + 1) );
   }
 
 
   *ts << endl << I18N_NOOP("Summary:") << endl;
-  *ts << "\t" << event->summary().local8Bit() << endl;
-  *ts << I18N_NOOP("Description:") << endl;  
+  *ts << "\t" << event->summary() << endl;
+  *ts << I18N_NOOP("Description:") << endl;
   if( !event->description().isEmpty() ) {
-    *ts << "\t" << event->description().local8Bit() << endl;
+    *ts << "\t" << event->description() << endl;
   } else {
-    *ts << "\t" << I18N_NOOP("(no description available)") << endl;  
+    *ts << "\t" << I18N_NOOP("(no description available)") << endl;
   }
-  *ts << I18N_NOOP("UID:") << endl;  
-  *ts << "\t" << event->uid().local8Bit() << endl;
+  *ts << I18N_NOOP("UID:") << endl;
+  *ts << "\t" << event->uid() << endl;
   *ts << "----------------------------------" << endl;
 
   return true;
@@ -102,29 +102,10 @@ bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts, Event *event ){
   }
 
   QString rdelim = "\\" + delim;
-  *ts << delim << event->summary().replace(delim,rdelim).local8Bit();
-  *ts << delim << event->description().replace(delim,rdelim).local8Bit();
-  *ts << delim << event->uid().local8Bit();
+  *ts << delim << event->summary().replace(delim,rdelim);
+  *ts << delim << event->description().replace(delim,rdelim);
+  *ts << delim << event->uid();
   *ts << endl;
 
   return true;
 }
-
-// Old function for printing out as keyword:<tab>value
-//bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts, Event *event ){
-//
-//  if ( !event->doesFloat() ) {
-//    *ts <<  event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
-//    *ts << "\t";
-//    *ts << event->dtEndStr().remove(0, (event->dtEndStr().find(' ', 0, false) + 1) ).local8Bit();
-// }
-//
-//  *ts << "\t" << I18N_NOOP("Summary:");
-//  *ts << "\t\"" << event->summary().local8Bit() << "\"";
-//  *ts << "\t" << I18N_NOOP("Description:");
-//  *ts << "\t\"" << event->description().local8Bit() << "\"";
-//  *ts << "\t" << I18N_NOOP("UID:");
-//  *ts << "\t" << event->uid().local8Bit() << endl;
-//
-//  return true;
-//}
