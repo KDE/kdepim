@@ -49,18 +49,18 @@ LocalKonnectorConfig::LocalKonnectorConfig( QWidget *parent )
   topLayout->addWidget( mCalendarFile );
 
   QPushButton *button =
-      new QPushButton( i18n("Select from existing resources..."), this );
+      new QPushButton( i18n("Select From Existing Resources..."), this );
   connect( button, SIGNAL( clicked() ), SLOT( selectCalendarResource() ) );
   topLayout->addWidget( button );
 
   topLayout->addSpacing( 4 );
 
   topLayout->addWidget( new QLabel( i18n("Address book file:"), this ) );
-  
+
   mAddressBookFile = new KURLRequester( this );
   topLayout->addWidget( mAddressBookFile );
 
-  button = new QPushButton( i18n("Select from existing resources..."), this );
+  button = new QPushButton( i18n("Select From Existing Resources..."), this );
   connect( button, SIGNAL( clicked() ), SLOT( selectAddressBookResource() ) );
   topLayout->addWidget( button );
 }
@@ -101,12 +101,12 @@ void LocalKonnectorConfig::selectAddressBookResource()
       files.append( r->fileName() );
     }
   }
-  
+
   if ( files.isEmpty() ) {
     KMessageBox::sorry( this, i18n("No file resources found.") );
   } else {
     QString file = KInputDialog::getItem( i18n("Select File"),
-        i18n("Please select an addressbook file."), files, 0, false, 0, this );
+        i18n("Please select an addressbook file:"), files, 0, false, 0, this );
     if ( !file.isEmpty() ) {
       mAddressBookFile->lineEdit()->setText( file );
     }
@@ -127,12 +127,12 @@ void LocalKonnectorConfig::selectCalendarResource()
       files.append( r->fileName() );
     }
   }
-  
+
   if ( files.isEmpty() ) {
     KMessageBox::sorry( this, i18n("No file resources found.") );
   } else {
     QString file = KInputDialog::getItem( i18n("Select File"),
-        i18n("Please select a calendar file."), files, 0, false, 0, this );
+        i18n("Please select a calendar file:"), files, 0, false, 0, this );
     if ( !file.isEmpty() ) {
       mCalendarFile->lineEdit()->setText( file );
     }

@@ -117,7 +117,7 @@ void QtopiaConfig::initUI()
   m_cmbUser->setEditable( true );
   m_cmbUser->insertItem( "root");
 
-  m_lblPass = new QLabel( i18n("Password"), this );
+  m_lblPass = new QLabel( i18n("Password:"), this );
 
   m_cmbPass = new QComboBox(this);
   m_cmbPass->setEditable( true );
@@ -135,7 +135,7 @@ void QtopiaConfig::initUI()
   m_cmbIP->insertItem("1.1.1.1", 0);
   m_cmbIP->insertItem("192.168.129.201", 1);
 
-  m_lblDev = new QLabel( i18n("Distribution"), this );
+  m_lblDev = new QLabel( i18n("Distribution:"), this );
 
   m_cmbDev = new QComboBox(this);
   m_cmbDev->insertItem("Sharp Zaurus ROM");
