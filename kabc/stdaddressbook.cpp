@@ -9,6 +9,8 @@ AddressBook *StdAddressBook::mSelf = 0;
 
 AddressBook *StdAddressBook::self()
 {
+  kdDebug() << "StdAddressBook::self()" << endl;
+
   if ( !mSelf ) {
     mSelf = new StdAddressBook;
   }
@@ -28,7 +30,7 @@ bool StdAddressBook::save()
 
 StdAddressBook::StdAddressBook()
 {
-  self()->load( locateLocal( "data", "kabc/std.vcf" ) );
+  load( locateLocal( "data", "kabc/std.vcf" ) );
 }
 
 StdAddressBook::~StdAddressBook()

@@ -23,6 +23,8 @@ struct AddresseeData : public KShared
 
   PhoneNumber::List phoneNumbers;
   Address::List addresses;
+  QStringList emails;
+  QStringList categories;
 };
 
 
@@ -38,16 +40,28 @@ class Addressee
     Addressee &operator=( const Addressee & );
 
     --DECLARATIONS--
+    void insertEmail( const QString &email, bool prefered=false );
+    void removeEmail( const QString &email );
+    QString preferredEmail() const;
+    QStringList emails() const;
+    
     void insertPhoneNumber( const PhoneNumber &phoneNumber );
-    PhoneNumber phoneNumber( PhoneNumber::Type ) const;
+    void removePhoneNumber( const PhoneNumber &phoneNumber );
+    PhoneNumber phoneNumber( int type ) const;
     PhoneNumber::List phoneNumbers() const;
+    PhoneNumber findPhoneNumber( const QString &id ) const;
     
     void insertAddress( const Address &address );
     void removeAddress( const Address &address );
     Address address( int type ) const;
     Address::List addresses() const;
+    Address findAddress( const QString &id ) const;
 
-    Address findAddress( const Address &address ) const;
+    void insertCategory( const QString & );
+    void removeCategory( const QString & );
+    bool hasCategory( const QString & ) const;
+    void setCategories( const QStringList & );
+    QStringList categories() const;
 
     void dump() const;
   

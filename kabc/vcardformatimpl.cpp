@@ -47,7 +47,7 @@ bool VCardFormatImpl::load( AddressBook *addressBook, const QString &fileName )
           break;
 
         case EntityEmail:
-          a.setEmail( readTextValue( cl ) );
+          a.insertEmail( readTextValue( cl ) );
           break;
 
         case EntityName:
@@ -104,29 +104,20 @@ bool VCardFormatImpl::load( AddressBook *addressBook, const QString &fileName )
 
         case EntityAddress:
           a.insertAddress( readAddressValue( cl ) );
+          break;
 
         case EntityTelephone:
-          {
-            TelValue *value = (TelValue *)cl->value();
-            ParamList paramList = cl->paramList();
-            PhoneNumber::Type type = PhoneNumber::Home;
-            if (paramList.count() > 0 ) {
-              Param *p = paramList.first();
-              if (p->name() == "TYPE") {
-                if ( p->value() == "home" ) {
-                  type = PhoneNumber::Home;
-                } else if( p->value() == "work" ) {
-                  type = PhoneNumber::Office;
-                }
-              }
-            }
-            a.insertPhoneNumber( PhoneNumber( QString::fromUtf8( value->asString() ), type ) );
-          }
+          a.insertPhoneNumber( readTelephoneValue( cl ) );
+          break;
+
+        case EntityCategories:
+          a.setCategories( QStringList::split( ",", readTextValue( cl ) ) );
           break;
           
         default:
           kdDebug() << "VCardFormat::load(): Unsupported entity: "
                     << int( type ) << endl;
+          break;
       }
     }
   
@@ -153,7 +144,13 @@ bool VCardFormatImpl::save( AddressBook *addressBook, const QString &fileName )
     addTextValue( v, EntityName, (*it).name() );
     addTextValue( v, EntityUID, (*it).uid() );
     addTextValue( v, EntityFullName, (*it).formattedName() );
-    addTextValue( v, EntityEmail, (*it).email() );
+    
+    QStringList emails = (*it).emails();
+    QStringList::ConstIterator it4;
+    for( it4 = emails.begin(); it4 != emails.end(); ++it4 ) {
+      addTextValue( v, EntityEmail, *it4 );
+    }
+
     addTextValue( v, EntityURL, (*it).url().url() );
 
     addNValue( v, *it );
@@ -174,36 +171,13 @@ bool VCardFormatImpl::save( AddressBook *addressBook, const QString &fileName )
       addAddressValue( v, *it3 );
     }
 
-    cl.clear();
-    QStringList phoneNumberList;    
     PhoneNumber::List phoneNumbers = (*it).phoneNumbers();
-    if ( phoneNumbers.count() > 0 ) {
-      PhoneNumber::List::ConstIterator it2;
-      for( it2 = phoneNumbers.begin(); it2 != phoneNumbers.end(); ++it2 ) {
-        cl.setName(EntityTypeToParamName(EntityTelephone));
-        cl.setValue(new TelValue( (*it2).number().utf8() ));
-        ParamList p;
-        QString paramValue;
-        switch( (*it2).type() ) {
-          default:
-          case PhoneNumber::Home:
-            paramValue = "home";
-            break;
-          case PhoneNumber::Office:
-            paramValue = "work";
-            break;
-          case PhoneNumber::Mobile:
-            paramValue = "cell";
-            break;
-          case PhoneNumber::Fax:
-            paramValue = "fax";
-            break;
-        }
-        p.append( new Param( "TYPE=" + paramValue.utf8() ) );
-        cl.setParamList( p );
-        v->add(cl);
-      }
+    PhoneNumber::List::ConstIterator it2;
+    for( it2 = phoneNumbers.begin(); it2 != phoneNumbers.end(); ++it2 ) {
+      addTelephoneValue( v, *it2 );
     }
+
+    addTextValue( v, EntityCategories, (*it).categories().join(",") );
 
     vcardlist.append( v );
   }
@@ -319,6 +293,64 @@ void VCardFormatImpl::readNValue( ContentLine *cl, Addressee &a )
   a.setAdditionalName( QString::fromUtf8( v->middle() ) );
   a.setPrefix( QString::fromUtf8( v->prefix() ) );
   a.setSuffix( QString::fromUtf8( v->suffix() ) );
+}
+
+void VCardFormatImpl::addTelephoneValue( VCard *v, const PhoneNumber &p )
+{
+  ContentLine cl;
+  cl.setName(EntityTypeToParamName(EntityTelephone));
+  cl.setValue(new TelValue( p.number().utf8() ));
+
+  ParamList params;
+  if( p.type() & PhoneNumber::Home ) params.append( new Param( "TYPE", "home" ) );
+  if( p.type() & PhoneNumber::Work ) params.append( new Param( "TYPE", "work" ) );
+  if( p.type() & PhoneNumber::Msg ) params.append( new Param( "TYPE", "msg" ) );
+  if( p.type() & PhoneNumber::Pref ) params.append( new Param( "TYPE", "pref" ) );
+  if( p.type() & PhoneNumber::Voice ) params.append( new Param( "TYPE", "voice" ) );
+  if( p.type() & PhoneNumber::Fax ) params.append( new Param( "TYPE", "fax" ) );
+  if( p.type() & PhoneNumber::Cell ) params.append( new Param( "TYPE", "cell" ) );
+  if( p.type() & PhoneNumber::Video ) params.append( new Param( "TYPE", "video" ) );
+  if( p.type() & PhoneNumber::Bbs ) params.append( new Param( "TYPE", "bbs" ) );
+  if( p.type() & PhoneNumber::Modem ) params.append( new Param( "TYPE", "modem" ) );
+  if( p.type() & PhoneNumber::Car ) params.append( new Param( "TYPE", "car" ) );
+  if( p.type() & PhoneNumber::Isdn ) params.append( new Param( "TYPE", "isdn" ) );
+  if( p.type() & PhoneNumber::Pcs ) params.append( new Param( "TYPE", "pcs" ) );
+  if( p.type() & PhoneNumber::Pager ) params.append( new Param( "TYPE", "pager" ) );
+  cl.setParamList( params );
+
+  v->add(cl);
+}
+
+PhoneNumber VCardFormatImpl::readTelephoneValue( ContentLine *cl )
+{
+  PhoneNumber p;
+  TelValue *value = (TelValue *)cl->value();
+  p.setNumber( QString::fromUtf8( value->asString() ) );
+
+  int type = 0;
+  ParamList params = cl->paramList();
+  ParamListIterator it( params );
+  for( ; it.current(); ++it ) {
+    if ( (*it)->name() == "TYPE" ) {
+      if ( (*it)->value() == "home" ) type |= PhoneNumber::Home;
+      else if ( (*it)->value() == "work" ) type |= PhoneNumber::Work;
+      else if ( (*it)->value() == "msg" ) type |= PhoneNumber::Msg;
+      else if ( (*it)->value() == "pref" ) type |= PhoneNumber::Pref;
+      else if ( (*it)->value() == "voice" ) type |= PhoneNumber::Voice;
+      else if ( (*it)->value() == "fax" ) type |= PhoneNumber::Fax;
+      else if ( (*it)->value() == "cell" ) type |= PhoneNumber::Cell;
+      else if ( (*it)->value() == "video" ) type |= PhoneNumber::Video;
+      else if ( (*it)->value() == "bbs" ) type |= PhoneNumber::Bbs;
+      else if ( (*it)->value() == "modem" ) type |= PhoneNumber::Modem;
+      else if ( (*it)->value() == "car" ) type |= PhoneNumber::Car;
+      else if ( (*it)->value() == "isdn" ) type |= PhoneNumber::Isdn;
+      else if ( (*it)->value() == "pcs" ) type |= PhoneNumber::Pcs;
+      else if ( (*it)->value() == "pager" ) type |= PhoneNumber::Pager;
+    }
+  }
+  p.setType( type );
+
+  return p;
 }
 
 QString VCardFormatImpl::readTextValue( ContentLine *cl )

@@ -69,19 +69,6 @@ QString Addressee::name() const
 }
 
 
-void Addressee::setEmail( const QString &email )
-{
-  if ( email == mData->email ) return;
-  detach();
-  mData->email = email;
-}
-
-QString Addressee::email() const
-{
-  return mData->email;
-}
-
-
 void Addressee::setFormattedName( const QString &formattedName )
 {
   if ( formattedName == mData->formattedName ) return;
@@ -264,19 +251,6 @@ QString Addressee::organization() const
 }
 
 
-void Addressee::setCategories( const QStringList &categories )
-{
-  if ( categories == mData->categories ) return;
-  detach();
-  mData->categories = categories;
-}
-
-QStringList Addressee::categories() const
-{
-  return mData->categories;
-}
-
-
 void Addressee::setNote( const QString &note )
 {
   if ( note == mData->note ) return;
@@ -343,13 +317,53 @@ KURL Addressee::url() const
 
 
 
+void Addressee::insertEmail( const QString &email, bool preferred )
+{
+  detach();
+
+  QStringList::Iterator it = mData->emails.find( email );
+
+  if ( it != mData->emails.end() ) {
+    if ( !preferred || it == mData->emails.begin() ) return;
+    mData->emails.remove( it );
+    mData->emails.prepend( email );
+  } else {
+    if ( preferred ) {
+      mData->emails.prepend( email );
+    } else {
+      mData->emails.append( email );
+    }
+  }
+}
+
+void Addressee::removeEmail( const QString &email )
+{
+  detach();
+
+  QStringList::Iterator it = mData->emails.find( email );
+  if ( it == mData->emails.end() ) return;
+
+  mData->emails.remove( it );
+}
+
+QString Addressee::preferredEmail() const
+{
+  if ( mData->emails.count() == 0 ) return QString::null;
+  else return mData->emails.first();
+}
+
+QStringList Addressee::emails() const
+{
+  return mData->emails;
+}
+
 void Addressee::insertPhoneNumber( const PhoneNumber &phoneNumber )
 {
   detach();
 
   PhoneNumber::List::Iterator it;
   for( it = mData->phoneNumbers.begin(); it != mData->phoneNumbers.end(); ++it ) {
-    if ( (*it).type() == phoneNumber.type() ) {
+    if ( (*it).id() == phoneNumber.id() ) {
       *it = phoneNumber;
       return;
     }
@@ -357,11 +371,24 @@ void Addressee::insertPhoneNumber( const PhoneNumber &phoneNumber )
   mData->phoneNumbers.append( phoneNumber );
 }
 
-PhoneNumber Addressee::phoneNumber( PhoneNumber::Type type ) const
+void Addressee::removePhoneNumber( const PhoneNumber &phoneNumber )
+{
+  detach();
+
+  PhoneNumber::List::Iterator it;
+  for( it = mData->phoneNumbers.begin(); it != mData->phoneNumbers.end(); ++it ) {
+    if ( (*it).id() == phoneNumber.id() ) {
+      mData->phoneNumbers.remove( it );
+      return;
+    }
+  }
+}
+
+PhoneNumber Addressee::phoneNumber( int type ) const
 {
   PhoneNumber::List::ConstIterator it;
   for( it = mData->phoneNumbers.begin(); it != mData->phoneNumbers.end(); ++it ) {
-    if ( (*it).type() == type ) {
+    if ( (*it).type() & type ) {
       return *it;
     }
   }
@@ -373,13 +400,24 @@ PhoneNumber::List Addressee::phoneNumbers() const
   return mData->phoneNumbers;
 }
 
+PhoneNumber Addressee::findPhoneNumber( const QString &id ) const
+{
+  PhoneNumber::List::ConstIterator it;
+  for( it = mData->phoneNumbers.begin(); it != mData->phoneNumbers.end(); ++it ) {
+    if ( (*it).id() == id ) {
+      return *it;
+    }
+  }
+  return PhoneNumber();
+}
+
+
 void Addressee::dump() const
 {
   kdDebug() << "Addressee {" << endl;
 
   kdDebug() << "  Uid: '" << uid() << "'" << endl;
   kdDebug() << "  Name: '" << name() << "'" << endl;
-  kdDebug() << "  Email: '" << email() << "'" << endl;
   kdDebug() << "  FormattedName: '" << formattedName() << "'" << endl;
   kdDebug() << "  FamilyName: '" << familyName() << "'" << endl;
   kdDebug() << "  GivenName: '" << givenName() << "'" << endl;
@@ -394,7 +432,6 @@ void Addressee::dump() const
   kdDebug() << "  Title: '" << title() << "'" << endl;
   kdDebug() << "  Role: '" << role() << "'" << endl;
   kdDebug() << "  Organization: '" << organization() << "'" << endl;
-  kdDebug() << "  Categories: '" << categories().join(",") << "'" << endl;
   kdDebug() << "  Note: '" << note() << "'" << endl;
   kdDebug() << "  ProductId: '" << productId() << "'" << endl;
   kdDebug() << "  Revision: '" << revision().toString() << "'" << endl;
@@ -450,7 +487,7 @@ Address Addressee::address( int type ) const
 {
   Address::List::ConstIterator it;
   for( it = mData->addresses.begin(); it != mData->addresses.end(); ++it ) {
-    if ( (*it).type() == type ) {
+    if ( (*it).type() & type ) {
       return *it;
     }
   }
@@ -462,13 +499,49 @@ Address::List Addressee::addresses() const
   return mData->addresses;
 }
 
-Address Addressee::findAddress( const Address &a ) const
+Address Addressee::findAddress( const QString &id ) const
 {
   Address::List::ConstIterator it;
   for( it = mData->addresses.begin(); it != mData->addresses.end(); ++it ) {
-    if ( (*it).id() == a.id() ) {
+    if ( (*it).id() == id ) {
       return *it;
     }
   }
   return Address();
+}
+
+void Addressee::insertCategory( const QString &c )
+{
+  detach();
+
+  if ( mData->categories.contains( c ) ) return;
+
+  mData->categories.append( c );
+}
+
+void Addressee::removeCategory( const QString &c )
+{
+  detach();
+
+  QStringList::Iterator it = mData->categories.find( c );
+  if ( it == mData->categories.end() ) return;
+
+  mData->categories.remove( it );
+}
+
+bool Addressee::hasCategory( const QString &c ) const
+{
+  return ( mData->categories.find( c ) != mData->categories.end() );
+}
+
+void Addressee::setCategories( const QStringList &c )
+{
+  detach();
+
+  mData->categories = c;
+}
+
+QStringList Addressee::categories() const
+{
+  return mData->categories;
 }

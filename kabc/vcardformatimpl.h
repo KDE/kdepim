@@ -25,6 +25,9 @@ class VCardFormatImpl {
     void addAddressValue( VCARD::VCard *, const Address & );
     Address readAddressValue( VCARD::ContentLine * );
 
+    void addTelephoneValue( VCARD::VCard *, const PhoneNumber & );
+    PhoneNumber readTelephoneValue( VCARD::ContentLine * );
+
     void addNValue( VCARD::VCard *, const Addressee & );
     void readNValue( VCARD::ContentLine *, Addressee & );
 };

@@ -14,6 +14,12 @@ libkabc_la_SOURCES = \
 
 METASOURCES = AUTO
 
+bin_PROGRAMS = kab2kabc
+
+kab2kabc_LD_FLAGS = $(all_libraries) $(KDE_RPATH)
+kab2kabc_LDADD = libkabc.la $(LIB_KAB)
+kab2kabc_SOURCES = kab2kabc.cpp
+
 check_PROGRAMS = testkabc
 
 testkabc_LDFLAGS = $(all_libraries) $(KDE_RPATH)

@@ -1,6 +1,5 @@
 QString uid
 QString name
-QString email
 
 QString formattedName
 
@@ -31,7 +30,6 @@ QString role
 #Agent agent
 QString organization
 
-QStringList categories .join(",")
 QString note
 
 QString productId

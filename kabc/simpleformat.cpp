@@ -24,7 +24,8 @@ bool SimpleFormat::load( AddressBook *addressBook, const QString &fileName )
     a.setUid( *it );
     a.setName( cfg.readEntry( "name" ) );
     a.setFormattedName( cfg.readEntry( "formattedName" ) );
-    a.setEmail( cfg.readEntry( "email" ) );
+    a.insertEmail( cfg.readEntry( "email" ) );
+#if 0
     QStringList phoneNumbers = cfg.readListEntry( "phonenumbers" );
     QStringList::ConstIterator it2;
     for( it2 = phoneNumbers.begin(); it2 != phoneNumbers.end(); ++it2 ) {
@@ -33,6 +34,7 @@ bool SimpleFormat::load( AddressBook *addressBook, const QString &fileName )
       n.setType( PhoneNumber::Type((*it2).toInt()));
       a.insertPhoneNumber( n );
     }
+#endif
     addressBook->insertAddressee( a );
   }
 
@@ -52,9 +54,10 @@ bool SimpleFormat::save( AddressBook *addressBook, const QString &fileName )
     cfg.setGroup( (*it).uid() );
     cfg.writeEntry( "name", (*it).name() );
     cfg.writeEntry( "formattedName", (*it).formattedName() );
-    cfg.writeEntry( "email", (*it).email() );
+    cfg.writeEntry( "email", (*it).preferredEmail() );
 
-    QStringList phoneNumberList;    
+#if 0
+    QStringList phoneNumberList;
     PhoneNumber::List phoneNumbers = (*it).phoneNumbers();
     PhoneNumber::List::ConstIterator it2;
     for( it2 = phoneNumbers.begin(); it2 != phoneNumbers.end(); ++it2 ) {
@@ -63,6 +66,7 @@ bool SimpleFormat::save( AddressBook *addressBook, const QString &fileName )
       phoneNumberList.append( QString::number( int((*it2).type()) ) );
     }
     cfg.writeEntry( "phonenumbers", phoneNumberList );
+#endif
   }
 
   return true;

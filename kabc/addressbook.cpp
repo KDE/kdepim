@@ -131,7 +131,7 @@ Addressee::List AddressBook::findByEmail( const QString &email )
 
   Iterator it;
   for ( it = begin(); it != end(); ++it ) {
-    if ( email == (*it).email() ) {
+    if ( email == (*it).preferredEmail() ) {
       results.append( *it );
     }
   }

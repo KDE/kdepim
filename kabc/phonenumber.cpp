@@ -1,3 +1,5 @@
+#include <kapplication.h>
+
 #include "phonenumber.h"
 
 using namespace KABC;
@@ -5,15 +7,33 @@ using namespace KABC;
 PhoneNumber::PhoneNumber() :
   mType( Home )
 {
+  init();
 }
 
-PhoneNumber::PhoneNumber( const QString &number, Type type ) :
+PhoneNumber::PhoneNumber( const QString &number, int type ) :
   mType( type ), mNumber( number )
 {
+  init();
 }
 
 PhoneNumber::~PhoneNumber()
 {
+}
+
+void PhoneNumber::init()
+{
+  mId = KApplication::randomString(8);
+}
+
+
+void PhoneNumber::setId( const QString &id )
+{
+  mId = id;
+}
+
+QString PhoneNumber::id() const
+{
+  return mId;
 }
 
 void PhoneNumber::setNumber( const QString &number )
@@ -26,12 +46,12 @@ QString PhoneNumber::number() const
   return mNumber;
 }
 
-void PhoneNumber::setType( PhoneNumber::Type type )
+void PhoneNumber::setType( int type )
 {
   mType = type;
 }
 
-PhoneNumber::Type PhoneNumber::type() const
+int PhoneNumber::type() const
 {
   return mType;
 }

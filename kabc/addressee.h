@@ -22,7 +22,6 @@ struct AddresseeData : public KShared
 {
   QString uid;
   QString name;
-  QString email;
   QString formattedName;
   QString familyName;
   QString givenName;
@@ -37,7 +36,6 @@ struct AddresseeData : public KShared
   QString title;
   QString role;
   QString organization;
-  QStringList categories;
   QString note;
   QString productId;
   QDateTime revision;
@@ -46,6 +44,8 @@ struct AddresseeData : public KShared
 
   PhoneNumber::List phoneNumbers;
   Address::List addresses;
+  QStringList emails;
+  QStringList categories;
 };
 
 
@@ -65,9 +65,6 @@ class Addressee
 
     void setName( const QString &name );
     QString name() const;
-
-    void setEmail( const QString &email );
-    QString email() const;
 
     void setFormattedName( const QString &formattedName );
     QString formattedName() const;
@@ -111,9 +108,6 @@ class Addressee
     void setOrganization( const QString &organization );
     QString organization() const;
 
-    void setCategories( const QStringList &categories );
-    QStringList categories() const;
-
     void setNote( const QString &note );
     QString note() const;
 
@@ -129,16 +123,28 @@ class Addressee
     void setUrl( const KURL &url );
     KURL url() const;
 
+    void insertEmail( const QString &email, bool prefered=false );
+    void removeEmail( const QString &email );
+    QString preferredEmail() const;
+    QStringList emails() const;
+    
     void insertPhoneNumber( const PhoneNumber &phoneNumber );
-    PhoneNumber phoneNumber( PhoneNumber::Type ) const;
+    void removePhoneNumber( const PhoneNumber &phoneNumber );
+    PhoneNumber phoneNumber( int type ) const;
     PhoneNumber::List phoneNumbers() const;
+    PhoneNumber findPhoneNumber( const QString &id ) const;
     
     void insertAddress( const Address &address );
     void removeAddress( const Address &address );
     Address address( int type ) const;
     Address::List addresses() const;
+    Address findAddress( const QString &id ) const;
 
-    Address findAddress( const Address &address ) const;
+    void insertCategory( const QString & );
+    void removeCategory( const QString & );
+    bool hasCategory( const QString & ) const;
+    void setCategories( const QStringList & );
+    QStringList categories() const;
 
     void dump() const;
   
