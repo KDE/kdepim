@@ -288,6 +288,7 @@ void Kleo::DirectoryServicesWidget::slotMoveUp()
   swapItems( item, above );
   x500LV->setCurrentItem( above );
   x500LV->setSelected( above, true );
+  emit changed();
 }
 
 void Kleo::DirectoryServicesWidget::slotMoveDown()
@@ -299,6 +300,7 @@ void Kleo::DirectoryServicesWidget::slotMoveDown()
   swapItems( item, below );
   x500LV->setCurrentItem( below );
   x500LV->setSelected( below, true );
+  emit changed();
 }
 
 #include "directoryserviceswidget.moc"
