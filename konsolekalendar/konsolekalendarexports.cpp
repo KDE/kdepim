@@ -1,8 +1,8 @@
 /***************************************************************************
-        konsolekalendaradd.cpp  -  description
+        konsolekalendarexports.cpp  -  description
            -------------------
     begin                : Sun May 25 2003
-    copyright            : (C) 2002 by Tuukka Pasanen
+    copyright            : (C) 2003 by Tuukka Pasanen
     copyright            : (C) 2003 by Allen Winter
     email                : illuusio@mailcity.com
  ***************************************************************************/

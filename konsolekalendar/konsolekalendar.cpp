@@ -88,9 +88,10 @@ bool KonsoleKalendar::createCalendar()
     kdDebug() << "konsolekalendar.cpp::createCalendar() | Creating calendar file: " << m_variables.getCalendarFile() << endl;
 
     CalendarLocal newCalendar;
-    newCalendar.save( m_variables.getCalendarFile() );
-    newCalendar.close();
-    return true;
+    if( newCalendar.save( m_variables.getCalendarFile() ) ) {
+      newCalendar.close();
+      return true;
+    }
   }
   
   return false;
@@ -103,13 +104,16 @@ void KonsoleKalendar::showInstance()
     cout << i18n("View Events <Dry Run>:").local8Bit() << endl;
     m_variables.printSpecs("view");
   } else {
+    kdDebug() << "konsolekalendar.cpp::showInstance() | get raw events list" << endl;
+
     Event::List *eventList;
 
     if( m_variables.getExportType() != HTML ) {
 
       eventList = new Event::List ( m_Calendar->rawEvents( m_variables.getStartDateTime().date(),
-                                    m_variables.getEndDateTime().date(), false ) );
-      
+							   m_variables.getEndDateTime().date(),
+							   false ) );
+
       printEventList ( eventList );
 
       delete eventList;
