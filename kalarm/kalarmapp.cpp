@@ -123,8 +123,8 @@ KAlarmApp::KAlarmApp()
 	 *  3) A user-specific one which contains details of alarms which are currently
 	 *     being displayed to that user and which have not yet been acknowledged.
 	 */
-	QRegExp vcsRegExp = QString::fromLatin1("\\.vcs$");
-	QString ical      = QString::fromLatin1(".ics");
+	QRegExp vcsRegExp(QString::fromLatin1("\\.vcs$"));
+	QString ical = QString::fromLatin1(".ics");
 	QString displayCal = locateLocal("appdata", DISPLAY_CALENDAR);
 	QString activeKey = QString::fromLatin1("Calendar");
 	QString activeCal = config->readPathEntry(activeKey, locateLocal("appdata", ACTIVE_CALENDAR));
@@ -1840,9 +1840,9 @@ bool KAlarmApp::initCheck(bool calendarOnly)
 
 	if (!calendarOnly)
 	{
+		setUpDcop();              // we're now ready to handle DCOP calls, so set up handlers
 		if (startdaemon)
 			startDaemon();          // make sure the alarm daemon is running
-		setUpDcop();              // we're now ready to handle DCOP calls, so set up handlers
 	}
 	return true;
 }
