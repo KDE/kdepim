@@ -25,14 +25,14 @@ Task::Task( const QString& taskName, long minutes, long sessionTime,
             DesktopList desktops, TaskView *parent)
   : QObject(), QListViewItem(parent)
 {
-  init(taskName, minutes, sessionTime, desktops);
+  init(taskName, minutes, sessionTime, desktops, 0);
 }
 
 Task::Task( const QString& taskName, long minutes, long sessionTime,
             DesktopList desktops, Task *parent)
   : QObject(), QListViewItem(parent)
 {
-  init(taskName, minutes, sessionTime, desktops);
+  init(taskName, minutes, sessionTime, desktops, 0);
 }
 
 Task::Task( KCal::Todo* todo, TaskView* parent )
@@ -41,14 +41,15 @@ Task::Task( KCal::Todo* todo, TaskView* parent )
   long minutes = 0;
   QString name;
   long sessionTime = 0;
+  int percent_complete = 0;
   DesktopList desktops;
 
-  parseIncidence( todo, minutes, sessionTime, name, desktops );
-  init( name, minutes, sessionTime, desktops );
+  parseIncidence(todo, minutes, sessionTime, name, desktops, percent_complete);
+  init(name, minutes, sessionTime, desktops, percent_complete);
 }
 
 void Task::init( const QString& taskName, long minutes, long sessionTime,
-                 DesktopList desktops)
+                 DesktopList desktops, int percent_complete)
 {
   // If our parent is the taskview then connect our totalTimesChanged
   // signal to its receiver
@@ -84,7 +85,7 @@ void Task::init( const QString& taskName, long minutes, long sessionTime,
   connect(_timer, SIGNAL(timeout()), this, SLOT(updateActiveIcon()));
   setPixmap(1, UserIcon(QString::fromLatin1("empty-watch.xpm")));
   _currentPic = 0;
-  _percentcomplete = 0;
+  _percentcomplete = percent_complete;
 
   update();
   changeParentTotalTimes( _sessionTime, _time);
@@ -315,15 +316,17 @@ KCal::Todo* Task::asTodo(KCal::Todo* todo) const
 }
 
 bool Task::parseIncidence( KCal::Incidence* incident, long& minutes,
-    long& sessionMinutes, QString& name, DesktopList& desktops )
+    long& sessionMinutes, QString& name, DesktopList& desktops, 
+    int& percent_complete )
 {
-  bool ok = false;
+  bool ok;
 
   name = incident->summary();
   _uid = incident->uid();
 
   _comment = incident->description();
 
+  ok = false;
   minutes = incident->customProperty( kapp->instanceName(),
       QCString( "totalTaskTime" )).toInt( &ok );
   if ( !ok )
@@ -349,6 +352,8 @@ bool Task::parseIncidence( KCal::Incidence* incident, long& minutes,
       desktops.push_back( desktopInt );
     }
   }
+
+  percent_complete = static_cast<KCal::Todo*>(incident)->percentComplete();
 
   //kdDebug() << "Task::parseIncidence: "
   //  << name << ", Minutes: " << minutes

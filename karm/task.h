@@ -179,7 +179,8 @@ class Task : public QObject, public QListViewItem
     //@}
 
     bool parseIncidence(KCal::Incidence*, long& minutes, 
-        long& sessionMinutes, QString& name, DesktopList& desktops);
+        long& sessionMinutes, QString& name, DesktopList& desktops, 
+        int& percent_complete);
 
     /**
      *  Load the todo passed in with this tasks info.
@@ -245,7 +246,7 @@ class Task : public QObject, public QListViewItem
 
     /** initialize a task */
     void init( const QString& taskame, long minutes, long sessionTime, 
-               DesktopList desktops);
+               DesktopList desktops, int percent_complete);
 
 
     QString _name;
