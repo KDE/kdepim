@@ -57,6 +57,7 @@ k_dcop:
 	virtual ASYNC requestSync(int) = 0;
 	virtual ASYNC requestFastSyncNext() = 0;
 	virtual ASYNC requestRegularSyncNext() = 0;
+	virtual int nextSyncType() const = 0;
 
 	/**
 	* Functions for the KPilot UI, indicating what the daemon
@@ -74,6 +75,9 @@ k_dcop:
 
 
 // $Log$
+// Revision 1.12  2002/05/14 22:57:40  adridg
+// Merge from _BRANCH
+//
 // Revision 1.11.2.1  2002/04/04 20:28:28  adridg
 // Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
 // when using PILOT_VERSION. kpilotTest defaults to list, like the options

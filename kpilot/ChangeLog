@@ -1,3 +1,14 @@
+KPilot Developer's notes for june 30th, 2002
+============================================
+
+Moving on past 3.0.2 and trying to sort things out.
+
+2002-06-24  Adriaan de Groot
+* The config file the daemon allocates is read-only. This is inconvenient
+  when conduits want to save data in the config file. Backed that out,
+  am now worried about what happens when you leave the KPilot UI running
+  during a sync, since both applications have a RW copy of the config file.
+
 KPilot Developer's notes for june 9th, 2002
 ===========================================
 

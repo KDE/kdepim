@@ -140,6 +140,7 @@ public:
 	virtual ASYNC requestSync(int);
 	virtual ASYNC requestFastSyncNext();
 	virtual ASYNC requestRegularSyncNext();
+	virtual int nextSyncType() const;
 	virtual ASYNC quitNow();
 	virtual ASYNC reloadSettings();
 
@@ -214,6 +215,9 @@ private:
 
 
 // $Log$
+// Revision 1.34  2002/06/08 09:17:07  adridg
+// Added tooltip for daemon
+//
 // Revision 1.33  2002/02/02 11:46:02  adridg
 // Abstracting away pilot-link stuff
 //

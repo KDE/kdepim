@@ -277,7 +277,7 @@ void KPilotInstaller::setupWidget()
 	setMinimumSize(500, 405);
 
 
-	fManagingWidget = new KJanusWidget(this,"mainWIdget",
+	fManagingWidget = new KJanusWidget(this,"mainWidget",
 		KJanusWidget::IconList);
 	fManagingWidget->setMinimumSize(500, 330);
 	fManagingWidget->show();
@@ -622,7 +622,10 @@ void KPilotInstaller::slotConfigureKPilot()
 	// Display the (modal) options page.
 	//
 	//
+	int rememberedSync = getDaemon().nextSyncType();
+	getDaemon().requestSync(0);
 
+	KPilotConfig::getConfig().reparseConfiguration();
 	KPilotConfigDialog *options = new KPilotConfigDialog(this,
 		"configDialog", true);
 
@@ -630,6 +633,7 @@ void KPilotInstaller::slotConfigureKPilot()
 	{
 		kdError() << k_funcinfo
 			<< ": Can't allocate KPilotOptions object" << endl;
+		getDaemon().requestSync(rememberedSync);
 		return;
 	}
 
@@ -660,9 +664,9 @@ void KPilotInstaller::slotConfigureKPilot()
 		}
 	}
 
-	delete options;
+	KPILOT_DELETE(options);
+	getDaemon().requestSync(rememberedSync);
 
-	options = 0L;
 #ifdef DEBUG
 	DEBUGKPILOT << fname << ": Done with options." << endl;
 #endif
@@ -870,6 +874,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.75  2002/05/14 22:57:40  adridg
+// Merge from _BRANCH
+//
 // Revision 1.74.2.1  2002/04/14 22:26:12  adridg
 // New TODO's for HEAD; cosmetic bugfix in logWidget; rectify misleading debug output when KPilot starts the daemon itself.
 //

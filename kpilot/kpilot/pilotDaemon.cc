@@ -612,8 +612,13 @@ bool PilotDaemon::setupPilotLink()
 #endif
 
 	fNextSyncType = mode;
-	
+
 	updateTrayStatus();
+}
+
+/* DCOP */ int PilotDaemon::nextSyncType() const
+{
+	return fNextSyncType;
 }
 
 QString PilotDaemon::syncTypeString(int i) const
@@ -860,7 +865,7 @@ int main(int argc, char **argv)
 	//
 	{
 		KPilotConfigSettings & c = KPilotConfig::getConfig();
-		c.setReadOnly(true);
+		c.setReadOnly(false);
 
 		if (c.getVersion() < KPilotConfig::ConfigurationVersion)
 		{
@@ -903,6 +908,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.61  2002/06/08 09:17:07  adridg
+// Added tooltip for daemon
+//
 // Revision 1.60  2002/05/14 22:57:40  adridg
 // Merge from _BRANCH
 //
