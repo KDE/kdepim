@@ -973,40 +973,40 @@ void KNMimeContent::addContent(KNMimeContent *c, bool prepend)
     c_ontents=new List();
     c_ontents->setAutoDelete(true);
 
-    if(!b_ody.isEmpty()) { // there is a body => we convert it to a content
-      KNMimeContent *main=new KNMimeContent();
+    // first we convert the body to a content
+    KNMimeContent *main=new KNMimeContent();
 
-      //the Mime-Headers are needed, so we move them to the new content
-      if(h_eaders) {
+    //the Mime-Headers are needed, so we move them to the new content
+    if(h_eaders) {
 
-        main->h_eaders=new KNHeaders::List();
-        main->h_eaders->setAutoDelete(true);
+      main->h_eaders=new KNHeaders::List();
+      main->h_eaders->setAutoDelete(true);
 
-        KNHeaders::List srcHdrs=(*h_eaders);
-        srcHdrs.setAutoDelete(false);
-        int idx=0;
-        for(KNHeaders::Base *h=srcHdrs.first(); h; h=srcHdrs.next()) {
-          if(h->isMimeHeader()) {
-            //remove from this content
-            idx=h_eaders->findRef(h);
-            h_eaders->take(idx);
-            //append to new content
-            main->h_eaders->append(h);
-          }
+      KNHeaders::List srcHdrs=(*h_eaders);
+      srcHdrs.setAutoDelete(false);
+      int idx=0;
+      for(KNHeaders::Base *h=srcHdrs.first(); h; h=srcHdrs.next()) {
+        if(h->isMimeHeader()) {
+          //remove from this content
+          idx=h_eaders->findRef(h);
+          h_eaders->take(idx);
+          //append to new content
+          main->h_eaders->append(h);
         }
       }
-
-      //"main" is now part of a multipart/mixed message
-      main->contentType()->setCategory(KNHeaders::CCmixedPart);
-
-      //the head of "main" is empty, so we assemble it
-      main->assemble();
-
-      //now we can copy the body and append the new content;
-      main->b_ody=b_ody.copy();
-      c_ontents->append(main);
-      b_ody.resize(0); //not longer needed
     }
+
+    //"main" is now part of a multipart/mixed message
+    main->contentType()->setCategory(KNHeaders::CCmixedPart);
+
+    //the head of "main" is empty, so we assemble it
+    main->assemble();
+
+    //now we can copy the body and append the new content;
+    main->b_ody=b_ody.copy();
+    c_ontents->append(main);
+    b_ody.resize(0); //not longer needed
+
 
     //finally we have to convert this article to "multipart/mixed"
     KNHeaders::ContentType *ct=contentType();
