@@ -170,6 +170,7 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 				{
 					break;
 				}
+				currentCatID++;
 			}
 		}
 
@@ -262,6 +263,10 @@ CategoryAll:
 
 
 // $Log$
+// Revision 1.14  2001/03/27 11:10:39  leitner
+// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
+// #ifdef DEBUG because qstringExpand etc. were not defined.
+//
 // Revision 1.13  2001/03/24 15:59:22  adridg
 // Some populateCategories changes for bug #22112
 //
