@@ -1,7 +1,7 @@
 bin_PROGRAMS = ksync
 ksync_SOURCES = ksyncview.cpp ksync.cpp main.cpp 
-ksync_LDADD   =  $(LIB_KIO)
-ksync_LDFLAGS = ../lib/libksync.la $(all_libraries) $(KDE_RPATH)
+ksync_LDADD   = ../lib/libksync.la $(LIB_KIO)
+ksync_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 EXTRA_DIST = main.cpp ksync.cpp ksync.h ksyncdoc.cpp ksyncdoc.h ksyncview.cpp ksyncview.h ksyncui.rc ksync.desktop lo32-app-ksync.png lo16-app-ksync.png 
 
