@@ -274,7 +274,7 @@ bool KNComposer::hasValidData()
   }
   if (longLine)
     return  (KMessageBox::warningYesNo( this, i18n("Your article contains lines longer than 80 characters.\nDo you want to re-edit the article or send it anyway?"),
-                                              QString::null, i18n("&Send"),i18n("&Edit")) == KMessageBox::Yes);
+                                              QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes);
   return true;
 }
 

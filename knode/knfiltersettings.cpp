@@ -60,7 +60,7 @@ KNFilterSettings::KNFilterSettings(KNFilterManager *fm, QWidget *p)
   connect(delBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
   topL->addWidget(delBtn,2,1);
 
-  editBtn=new QPushButton(i18n("&Edit"), this);
+  editBtn=new QPushButton(i18n("modify something","&Edit"), this);
   connect(editBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
   topL->addWidget(editBtn,3,1);
 

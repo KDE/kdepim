@@ -68,7 +68,7 @@ KNAccNewsSettings::KNAccNewsSettings(QWidget *p, KNAccountManager *am, KNGroupMa
   connect(delBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
   topL->addWidget(delBtn, 1,1);
   
-  editBtn=new QPushButton(i18n("&Edit"), this);
+  editBtn=new QPushButton(i18n("modify something","&Edit"), this);
   connect(editBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
   topL->addWidget(editBtn, 2,1);
 

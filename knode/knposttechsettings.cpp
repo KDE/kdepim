@@ -111,7 +111,7 @@ KNPostTechSettings::KNPostTechSettings(QWidget *p) : KNSettingsWidget(p)
   connect(delBtn, SIGNAL(clicked()), SLOT(slotDelBtnClicked()));
   xgbL->addWidget(delBtn, 2,1);
 
-  editBtn=new QPushButton(i18n("&Edit"), xgb);
+  editBtn=new QPushButton(i18n("modify something","&Edit"), xgb);
   connect(editBtn, SIGNAL(clicked()), SLOT(slotEditBtnClicked()));
   xgbL->addWidget(editBtn, 3,1);
 
