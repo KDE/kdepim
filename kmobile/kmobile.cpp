@@ -183,7 +183,7 @@ void KMobile::readProperties(KConfig *config)
     // the app is being restored.  read in here whatever you wrote
     // in 'saveProperties'
 
-    QString url = config->readEntry("lastURL");
+    QString url = config->readPathEntry("lastURL");
 }
 
 void KMobile::optionsShowToolbar()

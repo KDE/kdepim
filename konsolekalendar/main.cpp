@@ -346,7 +346,7 @@ int main(int argc, char *argv[])
     KConfig cfg( locate( "config", "korganizerrc" ) );
 
     cfg.setGroup("General");
-    KURL url( cfg.readEntry("Active Calendar") );
+    KURL url( cfg.readPathEntry("Active Calendar") );
     if ( url.isLocalFile() )
     {
       KalendarFile = url.path();

@@ -52,7 +52,7 @@ bool KDropManager::readOldConfig( KConfigBase& config, const QString & group )
   QString type;
   QString grp;
   QString defAudio = config.readEntry(fu("audio"));
-  QString defCmd = config.readEntry(fu("command"));
+  QString defCmd = config.readPathEntry(fu("command"));
 
   int defPoll = KPollableDrop::DefaultPoll;
 
@@ -77,7 +77,7 @@ bool KDropManager::readOldConfig( KConfigBase& config, const QString & group )
     drop->setCaption(config.readEntry(fu("Name"), i18n("MBOX Monitor")));
 
     drop->setNewMailCmd(config.readEntry(fu("audio"), defAudio));
-    drop->setClickCmd(config.readEntry(fu("command"), defCmd));
+    drop->setClickCmd(config.readPathEntry(fu("command"), defCmd));
     drop->setFreq(config.readNumEntry(fu("polltime"), defPoll));
   }
 

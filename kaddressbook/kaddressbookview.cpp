@@ -55,7 +55,7 @@ void KAddressBookView::readConfig( KConfig *config )
     mFieldList = KABC::Field::defaultFields();
   
   mDefaultFilterType = (DefaultFilterType)config->readNumEntry( "DefaultFilterType", 1 );
-  mDefaultFilterName = config->readEntry( "DefaultFilterName", QString::null );
+  mDefaultFilterName = config->readEntry( "DefaultFilterName" );
 }
 
 void KAddressBookView::writeConfig( KConfig* )

@@ -81,7 +81,7 @@ bool KExternDrop::readConfigGroup( const KConfigBase& cfg )
 {
 	KMailDrop::readConfigGroup( cfg );
 
-	_command = cfg.readEntry(fu(CmdCfgKey));
+	_command = cfg.readPathEntry(fu(CmdCfgKey));
 
 	return true;
 }
@@ -90,7 +90,7 @@ bool KExternDrop::writeConfigGroup( KConfigBase& cfg ) const
 {
 	KMailDrop::writeConfigGroup( cfg );
 
-	cfg.writeEntry(fu(CmdCfgKey), _command);
+	cfg.writePathEntry(fu(CmdCfgKey), _command);
 
 	return true;
 }

@@ -63,7 +63,7 @@ void KNConfig::Identity::loadConfig(KConfigBase *c)
   s_igningKey = c->readEntry("SigningKey").local8Bit();
   u_seSigFile=c->readBoolEntry("UseSigFile",false);
   u_seSigGenerator=c->readBoolEntry("UseSigGenerator",false);
-  s_igPath=c->readEntry("sigFile");
+  s_igPath=c->readPathEntry("sigFile");
   s_igText=c->readEntry("sigText");
 }
 
@@ -78,7 +78,7 @@ void KNConfig::Identity::saveConfig(KConfigBase *c)
   c->writeEntry("SigningKey", QString(s_igningKey));
   c->writeEntry("UseSigFile", u_seSigFile);
   c->writeEntry("UseSigGenerator",u_seSigGenerator);
-  c->writeEntry("sigFile", s_igPath);
+  c->writePathEntry("sigFile", s_igPath);
   c->writeEntry("sigText", s_igText);
   c->sync();
 }
@@ -733,7 +733,7 @@ KNConfig::ReadNewsViewer::ReadNewsViewer()
     b_rowser = BTother;
   else
     b_rowser = BTdefault;
-  b_rowserCommand=conf->readEntry("BrowserCommand","netscape %u");
+  b_rowserCommand=conf->readPathEntry("BrowserCommand","netscape %u");
 }
 
 
@@ -777,7 +777,7 @@ void KNConfig::ReadNewsViewer::save()
     case BTother: conf->writeEntry("Browser","Other");
                   break;
   }
-  conf->writeEntry("BrowserCommand", b_rowserCommand);
+  conf->writePathEntry("BrowserCommand", b_rowserCommand);
   conf->sync();
   d_irty = false;
 }

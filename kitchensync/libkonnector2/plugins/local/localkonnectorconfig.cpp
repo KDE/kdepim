@@ -36,8 +36,8 @@ LocalKonnectorConfig::LocalKonnectorConfig( QWidget *parent )
   QBoxLayout *topLayout = new QVBoxLayout( this );
   
   KConfig cfg( "localkonnectorrc" );
-  QString calendarFile = cfg.readEntry( "CalendarFile" );
-  QString addressBookFile = cfg.readEntry( "AddressBookFile" );
+  QString calendarFile = cfg.readPathEntry( "CalendarFile" );
+  QString addressBookFile = cfg.readPathEntry( "AddressBookFile" );
   
   mCalendarFile = new KURLRequester( calendarFile, this );
   topLayout->addWidget( mCalendarFile );
@@ -57,8 +57,8 @@ LocalKonnectorConfig::~LocalKonnectorConfig()
 void LocalKonnectorConfig::writeSettings()
 {
   KConfig cfg( "localkonnectorrc" );
-  cfg.writeEntry( "CalendarFile", mCalendarFile->url() );
-  cfg.writeEntry( "AddressBookFile", mAddressBookFile->url() );
+  cfg.writePathEntry( "CalendarFile", mCalendarFile->url() );
+  cfg.writePathEntry( "AddressBookFile", mAddressBookFile->url() );
 }
 
 #include "localkonnectorconfig.moc"

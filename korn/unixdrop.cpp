@@ -522,7 +522,7 @@ bool KUnixDrop::readConfigGroup ( const KConfigBase& cfg )
 {
 	KPollableDrop::readConfigGroup( cfg );
 
-	QString box = cfg.readEntry(fu(FileConfigKey));
+	QString box = cfg.readPathEntry(fu(FileConfigKey));
 
 	if( box.isEmpty() ) {
 		qWarning( "KUnixDrop::readConfigGroup: no file for '%s'.",
@@ -542,7 +542,7 @@ bool KUnixDrop::writeConfigGroup ( KConfigBase& cfg ) const
 {
 	KPollableDrop::writeConfigGroup( cfg );
 
-	cfg.writeEntry(fu(FileConfigKey), _file );
+	cfg.writePathEntry(fu(FileConfigKey), _file );
 
 	return true;
 }

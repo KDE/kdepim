@@ -301,14 +301,14 @@ void Preferences::load()
   config.setGroup( QString::fromLatin1("Saving") );
   _fileFormat     = config.readEntry( QString::fromLatin1("file format"),
                                       QString::fromLatin1("karmdata"));
-  _saveFileV      = config.readEntry( QString::fromLatin1("kcal file"),
+  _saveFileV      = config.readPathEntry( QString::fromLatin1("kcal file"),
                                       locateLocal( "appdata",
                                                    QString::fromLatin1( "karmdata.ics")));
-  _legacySaveFileV = config.readEntry( QString::fromLatin1("file"),
+  _legacySaveFileV= config.readPathEntry( QString::fromLatin1("file"),
                                       locateLocal( "appdata",
                                                    QString::fromLatin1("karmdata.txt")));
-  _doTimeLoggingV  = config.readBoolEntry( QString::fromLatin1("time logging"), false);
-  _timeLogV       = config.readEntry( QString::fromLatin1("time log file"),
+  _doTimeLoggingV = config.readBoolEntry( QString::fromLatin1("time logging"), false);
+  _timeLogV       = config.readPathEntry( QString::fromLatin1("time log file"),
                                       locateLocal( "appdata",
                                                    QString::fromLatin1("karmlog.txt")));
   _doAutoSaveV    = config.readBoolEntry( QString::fromLatin1("auto save"), true);
@@ -334,10 +334,10 @@ void Preferences::save()
 
   config.setGroup( QString::fromLatin1("Saving"));
   config.writeEntry( QString::fromLatin1("file format"), QString::fromLatin1("karm_kcal_2"));
-  config.writeEntry( QString::fromLatin1("file"), _legacySaveFileV);
-  config.writeEntry( QString::fromLatin1("kcal file"), _saveFileV);
+  config.writePathEntry( QString::fromLatin1("file"), _legacySaveFileV);
+  config.writePathEntry( QString::fromLatin1("kcal file"), _saveFileV);
   config.writeEntry( QString::fromLatin1("time logging"), _doTimeLoggingV);
-  config.writeEntry( QString::fromLatin1("time log file"), _timeLogV);
+  config.writePathEntry( QString::fromLatin1("time log file"), _timeLogV);
   config.writeEntry( QString::fromLatin1("auto save"), _doAutoSaveV);
   config.writeEntry( QString::fromLatin1("auto save period"), _autoSaveValueV);
   config.writeEntry( QString::fromLatin1("hide on close"), _hideOnCloseV);

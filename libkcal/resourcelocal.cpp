@@ -61,7 +61,7 @@ ResourceLocal::ResourceLocal( const KConfig* config )
   : ResourceCached( config )
 {
   if ( config ) {
-    QString url = config->readEntry( "CalendarURL" );
+    QString url = config->readPathEntry( "CalendarURL" );
     mURL = KURL( url );
 
     QString format = config->readEntry( "Format" );
@@ -93,7 +93,7 @@ void ResourceLocal::writeConfig( KConfig* config )
   kdDebug() << "ResourceLocal::writeConfig()" << endl;
 
   ResourceCalendar::writeConfig( config );
-  config->writeEntry( "CalendarURL", mURL.prettyURL() );
+  config->writePathEntry( "CalendarURL", mURL.prettyURL() );
   QString typeID = typeid( *mFormat ).name();
   
   if ( typeid( *mFormat ) == typeid( ICalFormat ) )

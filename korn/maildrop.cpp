@@ -66,8 +66,8 @@ void KMailDrop::forceCountZero()
 bool KMailDrop::readConfigGroup(const KConfigBase & c)
 {
   _caption    = c.readEntry(fu(CaptionConfigKey));
-  _clickCmd   = c.readEntry(fu(ClickConfigKey));
-  _nMailCmd   = c.readEntry(fu(NewMailConfigKey));
+  _clickCmd   = c.readPathEntry(fu(ClickConfigKey));
+  _nMailCmd   = c.readPathEntry(fu(NewMailConfigKey));
   _style      = Style(c.readUnsignedNumEntry(fu(DisplayStyleConfigKey), Plain));
   _bgColour   = c.readColorEntry(fu(BgColourConfigKey), &QApplication::palette().active().background());
   _fgColour   = c.readColorEntry(fu(FgColourConfigKey), &QApplication::palette().active().text());
@@ -85,8 +85,8 @@ bool KMailDrop::writeConfigGroup(KConfigBase & c) const
 {
   c.writeEntry(fu(TypeConfigKey),         type());
   c.writeEntry(fu(CaptionConfigKey),      caption());
-  c.writeEntry(fu(ClickConfigKey),        clickCmd());
-  c.writeEntry(fu(NewMailConfigKey),      newMailCmd());
+  c.writePathEntry(fu(ClickConfigKey),        clickCmd());
+  c.writePathEntry(fu(NewMailConfigKey),      newMailCmd());
   c.writeEntry(fu(DisplayStyleConfigKey), _style);
   c.writeEntry(fu(BgColourConfigKey),     _bgColour);
   c.writeEntry(fu(FgColourConfigKey),     _fgColour);

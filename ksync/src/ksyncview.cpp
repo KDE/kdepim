@@ -295,7 +295,7 @@ void KSyncView::readTypeConfig(KConfig *config)
 {
   QString typeString = mTypeCombo->text(mCurrentType);
 
-  QStringList sources = config->readListEntry("Sources_" + typeString);
+  QStringList sources = config->readPathListEntry("Sources_" + typeString);
 
   mSourceListView->clear();
   QStringList::ConstIterator it = sources.begin();
@@ -304,7 +304,7 @@ void KSyncView::readTypeConfig(KConfig *config)
     ++it;
   }
 
-  mTargetReq->setURL(config->readEntry("Target_" + typeString));
+  mTargetReq->setURL(config->readPathEntry("Target_" + typeString));
 }
 
 void KSyncView::writeConfig(KConfig *config)
@@ -325,8 +325,8 @@ void KSyncView::writeTypeConfig(KConfig *config)
 
   QString typeString = mTypeCombo->text(mCurrentType);
 
-  config->writeEntry("Sources_" + typeString,sources);
-  config->writeEntry("Target_" + typeString,mTargetReq->url());
+  config->writePathEntry("Sources_" + typeString,sources);
+  config->writePathEntry("Target_" + typeString,mTargetReq->url());
 
   config->sync();
 }

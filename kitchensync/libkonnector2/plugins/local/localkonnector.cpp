@@ -41,8 +41,8 @@ LocalKonnector::LocalKonnector( QObject* obj, const char* name,const QStringList
     : Konnector( obj, name ), mConfigWidget( 0 )
 {
   KConfig cfg( "localkonnectorrc" );
-  mCalendarFile = cfg.readEntry( "CalendarFile" );
-  mAddressBookFile = cfg.readEntry( "AddressBookFile" );
+  mCalendarFile = cfg.readPathEntry( "CalendarFile" );
+  mAddressBookFile = cfg.readPathEntry( "AddressBookFile" );
 }
 
 LocalKonnector::~LocalKonnector()

@@ -124,7 +124,7 @@ void KSync::saveProperties(KConfig *)
   else
   {
     KURL url=doc->URL();	
-    _cfg->writeEntry("filename", url.url());
+    _cfg->writePathEntry("filename", url.url());
     _cfg->writeEntry("modified", doc->isModified());
     QString tempname = kapp->tempSaveName(url.url());
     QString tempurl= KURL::encode_string(tempname);
@@ -138,7 +138,7 @@ void KSync::saveProperties(KConfig *)
 void KSync::readProperties(KConfig *)
 {
 #if 0
-  QString filename = _cfg->readEntry("filename", "");
+  QString filename = _cfg->readPathEntry("filename");
   KURL url(filename);
   bool modified = _cfg->readBoolEntry("modified", false);
   if(modified)
