@@ -72,7 +72,5 @@ AC_ARG_PROGRAM
 
 KDE_CREATE_SUBDIRSLIST
 
-KDE_CHECK_MICO()
-
 dnl this will be replaced by Makefile.am
 AC_OUTPUT()
