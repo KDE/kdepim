@@ -250,7 +250,7 @@ void ResourceXMLRPC::updateContact( const Addressee& addr )
   QMap<QString, QVariant> args;
   writeContact( addr, args );
 
-  args.insert( "id", idMapper().remoteId( addr.uid() ) );
+  args.insert( "id", idMapper().remoteId( addr.uid() ).toInt() );
   mServer->call( AddContactCommand, args,
                  this, SLOT( updateContactFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( updateContactFault( int, const QString&, const QVariant& ) ),
@@ -259,7 +259,7 @@ void ResourceXMLRPC::updateContact( const Addressee& addr )
 
 void ResourceXMLRPC::deleteContact( const Addressee& addr )
 {
-  mServer->call( DeleteContactCommand, idMapper().remoteId( addr.uid() ),
+  mServer->call( DeleteContactCommand, idMapper().remoteId( addr.uid() ).toInt(),
                  this, SLOT( deleteContactFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( deleteContactFault( int, const QString&, const QVariant& ) ),
                  QVariant( addr.uid() ) );
