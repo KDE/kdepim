@@ -38,6 +38,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <knotifyclient.h>
+#include <kglobalsettings.h>
 #include <kconfig.h>
 #include "mkdatepicker.h"
 #include "mkdatetbl.h"
@@ -745,16 +746,7 @@ void
 KPopupFrame::popup(const QPoint &pos)
 {
   // Make sure the whole popup is visible.
-  KConfig gc("kdeglobals", false, false);
-  gc.setGroup("Windows");
-  QRect d;
-  if (QApplication::desktop()->isVirtualDesktop() &&
-      gc.readBoolEntry("XineramaEnabled", true) &&
-      gc.readBoolEntry("XineramaPlacementEnabled", true)) {
-    d = QApplication::desktop()->screenGeometry(QApplication::desktop()->screenNumber(pos));
-  } else {
-    d = QApplication::desktop()->geometry();
-  }
+  QRect d = KGlobalSettings::desktopGeometry(pos);
 
   int x = pos.x();
   int y = pos.y();

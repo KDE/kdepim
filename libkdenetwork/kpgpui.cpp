@@ -43,6 +43,7 @@
 #include <kprogress.h>
 #include <kapplication.h>
 #include <kwin.h>
+#include <kglobalsettings.h>
 
 #include "kpgp.h"
 #include "kpgpui.h"
@@ -1599,16 +1600,7 @@ void CipherTextDialog::setMinimumSize()
 
   int textWidth = mEditBox->contentsWidth() + 30;
 
-  KConfig gc("kdeglobals", false, false);
-  gc.setGroup("Windows");
-  int maxWidth;
-  if (QApplication::desktop()->isVirtualDesktop() &&
-      gc.readBoolEntry("XineramaEnabled", true) &&
-      gc.readBoolEntry("XineramaPlacementEnabled", true)) {
-    maxWidth = QApplication::desktop()->screenGeometry(QApplication::desktop()->screenNumber(parentWidget())).width()-100;
-  } else {
-    maxWidth = QApplication::desktop()->geometry().width()-100;
-  }
+  int maxWidth = KGlobalSettings::desktopGeometry(parentWidget()).width()-100;
 
   mEditBox->setMinimumWidth( QMIN( textWidth, maxWidth ) );
 }
