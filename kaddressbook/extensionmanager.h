@@ -33,7 +33,7 @@ namespace KAB {
 class Core;
 }
 
-class KSelectAction;
+class QSignalMapper;
 
 class ExtensionData
 {
@@ -82,6 +82,7 @@ class ExtensionManager : public QHBox
 
   private slots:
     void setActiveExtension( int id );
+    void createActions();
 
   private:
     void createExtensionWidgets();
@@ -90,7 +91,8 @@ class ExtensionManager : public QHBox
 
     KAB::ExtensionWidget *mCurrentExtensionWidget;
     ExtensionData::List mExtensionList;
-    KSelectAction *mActionExtensions;
+    QSignalMapper *mMapper;    
+    QPtrList<KAction> mActionList;
 };
 
 #endif

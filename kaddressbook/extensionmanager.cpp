@@ -27,6 +27,9 @@
 #include <klocale.h>
 #include <ktrader.h>
 
+#include <qsignalmapper.h>
+#include <qtimer.h>
+
 #include "addresseeeditorwidget.h"
 #include "simpleaddresseeeditor.h"
 #include "core.h"
@@ -36,16 +39,12 @@
 
 ExtensionManager::ExtensionManager( KAB::Core *core, QWidget *parent,
                                     const char *name )
-  : QHBox( parent, name ), mCore( core ), mCurrentExtensionWidget( 0 )
+  : QHBox( parent, name ), mCore( core ), mCurrentExtensionWidget( 0 ),
+    mMapper( 0 )
 {
-  mActionExtensions = new KSelectAction( i18n( "Show Extension Bar" ), 0,
-                                         mCore->actionCollection(),
-                                         "options_show_extensions" );
-
-  connect( mActionExtensions, SIGNAL( activated( int ) ),
-           SLOT( setActiveExtension( int ) ) );
-
   createExtensionWidgets();
+
+  QTimer::singleShot( 0, this, SLOT( createActions() ) );
 }
 
 ExtensionManager::~ExtensionManager()
@@ -57,19 +56,26 @@ void ExtensionManager::restoreSettings()
   for ( uint index = 0; index < mExtensionList.size(); ++index ) {
     ExtensionData data = mExtensionList[ index ];
     if ( data.identifier == KABPrefs::instance()->currentExtension() ) {
-      mActionExtensions->setCurrentItem( index );
+      KToggleAction *action = static_cast<KToggleAction*>( mActionList.at( index ) );
+      if ( action )
+        action->setChecked( true );
       setActiveExtension( index );
       return;
     }
   }
 
-  mActionExtensions->setCurrentItem( 0 );
+  if ( mActionList.first() )
+    static_cast<KToggleAction*>( mActionList.first() )->setChecked( true );
   setActiveExtension( 0 );
 }
 
 void ExtensionManager::saveSettings()
 {
-  uint index = mActionExtensions->currentItem();
+  KAction *action;
+  uint index = 0;
+  for ( action = mActionList.first(); action; action = mActionList.next(), index++ )
+    if ( static_cast<KToggleAction*>( action )->isChecked() )
+      break;
 
   Q_ASSERT( index < mExtensionList.size() );
 
@@ -118,6 +124,39 @@ void ExtensionManager::setActiveExtension( int id )
   }
 }
 
+void ExtensionManager::createActions()
+{
+  mCore->guiClient()->unplugActionList( "extensions_list" );
+  mActionList.setAutoDelete( true );
+  mActionList.clear();
+  mActionList.setAutoDelete( false );
+
+  delete mMapper;
+  mMapper = new QSignalMapper( this, "SignalMapper" );
+  connect( mMapper, SIGNAL( mapped( int ) ),
+           this, SLOT( setActiveExtension( int ) ) );
+
+  int actionCounter = 0;
+  ExtensionData::List::ConstIterator it;
+  for ( it = mExtensionList.begin(); it != mExtensionList.end(); ++it ) {
+    ExtensionData data = *it;
+    KToggleAction *action = new KToggleAction( data.title, 0, mMapper, SLOT( map() ),
+                                               mCore->actionCollection(),
+                                               QString( data.identifier + "_extension" ).latin1() );
+    action->setExclusiveGroup( "extensions" );
+    mMapper->setMapping( action, actionCounter++ );
+    mActionList.append( action );
+
+    if ( data.widget == mCurrentExtensionWidget )
+      action->setChecked( true );
+  }
+
+  mCore->guiClient()->plugActionList( "extensions_list", mActionList );
+
+  if ( mCurrentExtensionWidget == 0 && mActionList.first() )
+    static_cast<KToggleAction*>( mActionList.first() )->setChecked( true );
+}
+
 void ExtensionManager::createExtensionWidgets()
 {
   // clean up
@@ -159,8 +198,8 @@ void ExtensionManager::createExtensionWidgets()
   // load the other extensions
   const KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/Extension",
     QString( "[X-KDE-KAddressBook-ExtensionPluginVersion] == %1" ).arg( KAB_EXTENSIONWIDGET_PLUGIN_VERSION ) );
-  KTrader::OfferList::ConstIterator it;
 
+  KTrader::OfferList::ConstIterator it;
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {
     KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().latin1() );
     if ( !factory ) {
@@ -189,12 +228,9 @@ void ExtensionManager::createExtensionWidgets()
     }
   }
 
-  QStringList extensionTitles;
-  for ( dataIt = mExtensionList.begin(); dataIt != mExtensionList.end(); ++dataIt )
-    extensionTitles.append( (*dataIt).title );
-
-  mActionExtensions->setItems( extensionTitles );
   mCurrentExtensionWidget = 0;
+
+  createActions();
 }
 
 #include "extensionmanager.moc"

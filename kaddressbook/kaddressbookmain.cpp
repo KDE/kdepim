@@ -156,7 +156,7 @@ void KAddressBookMain::configureToolbars()
 
 void KAddressBookMain::newToolbarConfig()
 {
-  createGUI();
+  createGUI( "kaddressbookui.rc", false );
   applyMainWindowSettings( KGlobal::config(), "MainWindow" );
 }
 
