@@ -38,23 +38,38 @@
 #include <qstring.h>
 #include <qdatetime.h>
 
-/*
- * Our export types
- */
-#define   NONE                     0
-#define   TEXT_KONSOLEKALENDAR     1
-#define   TEXT_SHORT               2
-#define   HTML                     3
-#define   XHTML                    4
-#define   XML                      5
-#define   CSV                      6
-#define   VCARD                    7
-
-
 namespace KCal {
 
-  class KonsoleKalendarVariables
-  {
+/*
+ * Incidence Types
+ */
+enum IncidenceType {
+  IncidenceTypeNone,
+  IncidenceTypeEvent,
+  IncidenceTypeTodo,
+  IncidenceTypeJournal,
+  IncidenceTypeAll
+};
+
+/*
+ * Export Types
+ */
+enum ExportType {
+  ExportTypeNone,
+  ExportTypeText,  //The default
+  ExportTypeTextShort,
+  ExportTypeHTML,
+  ExportTypeXHTML,
+  ExportTypeXML,
+  ExportTypeCSV,
+  ExportTypeVCard
+};
+
+/**
+   This class provides all the variables for the program.
+*/
+class KonsoleKalendarVariables
+{
   public:
     KonsoleKalendarVariables();
     ~KonsoleKalendarVariables();
@@ -69,22 +84,36 @@ namespace KCal {
                    QString location,
                    bool floating );
     /**
-     * New way to add events
+     * New way to add todo
      */
     void addTodo( QDateTime start,
+                  QDateTime due,
                   QString summary,
                   QString description,
                   QString location );
+
     /**
      * Get events
      */
     Event::List *getEvent();
-     
+
      /**
      * Get todo
      */
     Todo::List *getTodo();
-    
+
+    /**
+     * Set Incidence Type
+     * @param incidenceType incidence type
+     */
+    void setIncidenceType( IncidenceType incidenceType );
+
+    /**
+     * Get Incidence Type
+     * @return IncidenceType
+     */
+    IncidenceType getIncidenceType();
+
     /**
      * Sets start date
      * @param start start date
@@ -164,19 +193,17 @@ namespace KCal {
 
     /**
      * Should we show only next activity and exit?
-     * @param next true or false
      */
     bool isNext();
 
     /**
      * Should program be more verbose?
-     * @param be verbose true or false
+     * @param verbose a flag to set verbosity
      */
     void setVerbose( bool verbose );
 
     /**
      * Should program be more verbose?
-     * @return true it should and false it shoulndn't
      */
     bool isVerbose();
 
@@ -236,7 +263,7 @@ namespace KCal {
 
     /**
      * Add location information
-     * @param where should this event happen
+     * @param location location where the event occurs
      */
     void setLocation( QString location );
 
@@ -256,7 +283,7 @@ namespace KCal {
      * Add summary
      * @param summary summary
      */
-    void setSummary( QString description );
+    void setSummary( QString summary );
 
     /**
      * Get summary
@@ -321,12 +348,12 @@ namespace KCal {
     /**
      * Set export type that'll we use
      */
-    void setExportType( int export_type );
+    void setExportType( ExportType exportType );
 
     /**
      * what export type konsolekalendar will use
      */
-    int getExportType();
+    ExportType getExportType();
 
     /**
      * Do we use CalendarResources or LocalCalendar
@@ -362,33 +389,33 @@ namespace KCal {
     /**
      * Set how many day should be seen
      */
-    
+
     void setDaysCount( int count );
-    
+
     /**
      * Is there some cound of days should be seen
-     */    
+     */
     bool isDaysCount();
-    
+
     /**
      * Get how many day should be seen
-     */    
-     
+     */
+
     int getDaysCount();
-  
+
     /**
      * Set parsing string
      */
-    
+
     void setParseString( QString parsedtring );
-  
+
     /**
      * Set parsing string
      */
-    
+
     QString getParseString( );
-    
-      
+
+
     bool isParseString();
 
   private:
@@ -410,6 +437,7 @@ namespace KCal {
     QString m_export_file;
     QString m_UID;
     QString m_parseString;
+    IncidenceType m_incidenceType;
     bool m_bSummary;
     bool m_bNext;
     bool m_bVerbose;
@@ -422,7 +450,7 @@ namespace KCal {
     bool m_bIsUID;
     bool m_bParseString;
     int str_length;
-    int m_export_type;
+    ExportType m_exportType;
     int m_daysCount;
     QString m_exportFile;
     bool m_bIsExportFile;
@@ -434,7 +462,7 @@ namespace KCal {
     CalendarLocal *m_calendarLocal;
     Event::List m_eventList;
     Todo::List m_todoList;
-  };
+};
 
 }
 

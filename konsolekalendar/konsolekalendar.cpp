@@ -107,7 +107,6 @@ bool KonsoleKalendar::showInstance()
   bool status = true;
   QFile f;
   QString title;
-  Event::List *eventList;
   Event *event;
 
   if ( m_variables->isDryRun() ) {
@@ -119,6 +118,7 @@ bool KonsoleKalendar::showInstance()
     kdDebug() << "konsolekalendar.cpp::showInstance() | "
               << "open export file"
               << endl;
+
 
     if ( m_variables->isExportFile() ) {
       f.setName( m_variables->getExportFile() );
@@ -146,24 +146,25 @@ bool KonsoleKalendar::showInstance()
 
       QTextStream ts( &f );
 
-      if ( m_variables->getExportType() != HTML ) {
+      if ( m_variables->getExportType() != ExportTypeHTML ) {
 
 	if ( m_variables->getAll() ) {
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
                     << "view all events sorted list"
                     << endl;
 
-	  Event::List sortedList = allEventsSorted();
+	  Event::List sortedList = m_variables->getCalendar()->
+                                   events( EventSortStartAscending );
 
-	  QDate dt, firstdate, lastdate;
-	  firstdate = sortedList.first()->dtStart().date();
-	  lastdate = sortedList.last()->dtStart().date();
-	  for ( dt=firstdate;
+          QDate dt, firstdate, lastdate;
+          firstdate = sortedList.first()->dtStart().date();
+          lastdate = sortedList.last()->dtStart().date();
+          for ( dt=firstdate;
                 dt<=lastdate && status != false;
                 dt=dt.addDays(1) ) {
-	    Event::List events = m_variables->getCalendar()->events( dt, true );
-	    status = printEventList( &ts, &events, dt );
-	  }
+            Event::List events = m_variables->getCalendar()->events( dt, true );
+            status = printEventList( &ts, &events, dt );
+          }
 
 	} else if ( m_variables->isUID() ) {
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
@@ -200,7 +201,7 @@ bool KonsoleKalendar::showInstance()
           }
 	} else {
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
-                    << "view raw events within date range list"
+                    << "view events within date range list"
                     << endl;
 
 	  QDate dt;
@@ -214,16 +215,13 @@ bool KonsoleKalendar::showInstance()
       } else {
 	QDate firstdate, lastdate;
 	if ( m_variables->getAll() ) {
-	  // TODO: this is broken since the date on last() may not be last date
-          // (this is the case for me)
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
                     << "HTML view all events sorted list"
                     << endl;
-	  eventList =
-            new Event::List ( m_variables->getCalendar()->rawEvents() );
-	  firstdate = eventList->first()->dtStart().date();
-	  lastdate = eventList->last()->dtStart().date();
-	  delete eventList;
+          Event::List sortedList = Event::List ( m_variables->getCalendar()->
+                                                 events( EventSortStartAscending ) );
+	  firstdate = sortedList.first()->dtStart().date();
+	  lastdate = sortedList.last()->dtStart().date();
 	} else if ( m_variables->isUID() ) {
 	  // TODO
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
@@ -233,7 +231,7 @@ bool KonsoleKalendar::showInstance()
 	  return( false );
 	} else {
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
-                    << "HTML view raw events within date range list"
+                    << "HTML view events within date range list"
                     << endl;
 	  firstdate = m_variables->getStartDateTime().date();
 	  lastdate = m_variables->getEndDateTime().date();
@@ -289,7 +287,7 @@ bool KonsoleKalendar::showInstance()
 bool KonsoleKalendar::printEventList( QTextStream *ts,
                                       Event::List *eventList, QDate date )
 {
-  
+
   bool status = true;
 
   if ( eventList->count() ) {
@@ -304,7 +302,7 @@ bool KonsoleKalendar::printEventList( QTextStream *ts,
       status = printEvent( ts, singleEvent, date );
     }
   }
-  
+
   return( status );
 }
 
@@ -317,23 +315,23 @@ bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt )
   QString floating = "location %location, summary %summary\r\n";
   QString sameday = "time is %starttime, location %location, summary %summary\r\n";
   QString newday = "date is %startdate, time is %starttime, location %location, summary %summary\r\n";
-  
+
   QMap<QString, QString> macros;
-  
-  
+
+
   macros["startdate"] = KGlobal::locale()->formatDate( event->dtStart().date() );
   macros["enddate"] = KGlobal::locale()->formatDate( event->dtEnd().date() );
-  
+
   if ( !event->doesFloat() ) {
    macros["starttime"] = KGlobal::locale()->formatTime( event->dtStart().time() );
    macros["endtime"] = KGlobal::locale()->formatTime( event->dtEnd().time() );
   } // if
-  
+
   macros["summary"] = event->summary();
   macros["description"] = event->description();
   macros["location"] = event->location();
   macros["UID"] = event->uid();
-  
+
   if ( event->doesFloat() ) {
         output = KMacroExpander::expandMacros( floating, macros, '%' );
   } else {
@@ -343,26 +341,26 @@ bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt )
         output = KMacroExpander::expandMacros( sameday, macros, '%' );
       }
   }
-  
+
   *ts << output ;
-    
-  
+
+
   /* TODO
-   * Left for backup (IF EVERYTHING GOES WRONG) 
+   * Left for backup (IF EVERYTHING GOES WRONG)
    *
    *
   if ( event )
   {
     switch ( m_variables->getExportType() ) {
 
-    case CSV:
+    case ExportTypeCSV:
       kdDebug() << "konsolekalendar.cpp::printEvent() | "
                 << "CSV export"
                 << endl;
       status = exports.exportAsCSV( ts, event, dt );
       break;
 
-    case TEXT_SHORT:
+    case ExportTypeShort:
       kdDebug()
         << "konsolekalendar.cpp::printEvent() | "
         << "TEXT-SHORT export"
@@ -374,11 +372,11 @@ bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt )
       status = exports.exportAsTxtShort( ts, event, dt, sameDay );
       break;
 
-    case HTML:
+    case ExportTypeHTML:
       // this is handled separately for now
       break;
 
-    default:// Default ExportType is TEXT_KONSOLEKALENDAR
+    default:// Default ExportType is ExportTypeText
       kdDebug() << "konsolekalendar.cpp::printEvent() | "
                 << "TEXT export"
                 << endl;
@@ -437,7 +435,7 @@ bool KonsoleKalendar::isEvent( QDateTime startdate,
   bool found = false;
 
   Event::List eventList( m_variables->getCalendar()->
-			 rawEventsForDate( startdate.date(), true ));
+                         events( startdate.date(), true ));
   for ( it =  eventList.begin(); it != eventList.end(); ++it ) {
     event = *it;
     if ( event->dtEnd()==enddate && event->summary()==summary ) {
@@ -446,26 +444,6 @@ bool KonsoleKalendar::isEvent( QDateTime startdate,
     }
   }
   return found;
-}
-
-Event::List KonsoleKalendar::allEventsSorted()
-{
-  Event::List *eventList =
-    new Event::List ( m_variables->getCalendar()->rawEvents( ) );
-
-  // Sort based on Event Starting DateTime
-  Event::List::ConstIterator it;
-  Event::List eventListSorted;
-  Event::List::Iterator sortIt;
-  for ( it = eventList->begin(); it != eventList->end(); ++it ) {
-    sortIt = eventListSorted.begin();
-    while ( sortIt != eventListSorted.end() &&
-            (*it)->dtStart() >= (*sortIt)->dtStart() ) {
-      ++sortIt;
-    }
-    eventListSorted.insert( sortIt, *it );
-  }
-  return ( eventListSorted );
 }
 
 void KonsoleKalendar::printSpecs()

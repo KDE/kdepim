@@ -83,12 +83,14 @@ static KCmdLineOptions options[] =
     I18N_NOOP( "Print what would have been done, but do not execute" ), 0 },
   { "file <calendar-file>",
     I18N_NOOP( "Specify which calendar you want to use" ), 0 },
+  { "type <event | todo | journal | all>",
+    I18N_NOOP( "Specify which incidence type you want to use" ), 0 },
 
   { ":",
     I18N_NOOP( "Major operation modes:" ), 0 },
   { "view",
     I18N_NOOP( "  Print calendar events in specified export format" ), 0 },
-    { "add",
+  { "add",
     I18N_NOOP( "  Insert an event into the calendar" ), 0 },
   { "change",
     I18N_NOOP( "  Modify an existing calendar event" ), 0 },
@@ -222,7 +224,6 @@ int main( int argc, char *argv[] )
   KonsoleKalendarVariables variables;
   KonsoleKalendarEpoch epochs;
 
-  variables.setExportType( NONE );
   variables.setFloating( false ); // by default, new events do NOT float
 
   if ( args->isSet( "verbose" ) ) {
@@ -250,24 +251,52 @@ int main( int argc, char *argv[] )
   }
 
   /*
+   *  Switch on Incidence type
+   *
+   */
+  variables.setIncidenceType( IncidenceTypeEvent );
+  if ( args->isSet( "type" ) ) {
+    option = args->getOption( "type" );
+    if ( option.upper() == "EVENT" ) {
+      kdDebug() << "main | incidence-type | Events (default)" << endl;
+      variables.setIncidenceType( IncidenceTypeEvent );
+    } else if ( option.upper() == "TODO" ) {
+      kdDebug() << "main | incidence-type | Todos" << endl;;
+      variables.setIncidenceType( IncidenceTypeTodo );
+    } else if ( option.upper() == "JOURNAL" ) {
+      kdDebug() << "main | incidence-type | Journals" << endl;
+      variables.setIncidenceType( IncidenceTypeJournal );
+    } else if ( option.upper() == "ALL" ) {
+      kdDebug() << "main | incidence-type | All Types" << endl;
+      variables.setIncidenceType( IncidenceTypeAll );
+    } else {
+      cout << i18n( "Invalid Incidence Type Specified: %1" ).
+        arg( option ).local8Bit()
+           << endl;
+      return 1;
+    }
+  }
+
+  /*
    *  Switch on exporting
    *
    */
+  variables.setExportType( ExportTypeText );
   if ( args->isSet( "export-type" ) ) {
     option = args->getOption( "export-type" );
 
     if ( option.upper() == "HTML" ) {
       kdDebug() << "main | export-type | Export to HTML" << endl;
-      variables.setExportType( HTML );
+      variables.setExportType( ExportTypeHTML );
     } else if ( option.upper() == "CSV" ) {
       kdDebug() << "main | export-type | Export to CSV" << endl;
-      variables.setExportType( CSV );
+      variables.setExportType( ExportTypeCSV );
     } else if ( option.upper() == "TEXT" ) {
       kdDebug() << "main | export-type | Export to TEXT (default)" << endl;
-      variables.setExportType( TEXT_KONSOLEKALENDAR );
+      variables.setExportType( ExportTypeText );
     } else if ( option.upper() == "SHORT" ) {
       kdDebug() << "main | export-type | Export to TEXT-SHORT" << endl;
-      variables.setExportType( TEXT_SHORT );
+      variables.setExportType( ExportTypeTextShort );
     } else {
       cout << i18n( "Invalid Export Type Specified: %1" ).
         arg( option ).local8Bit()
@@ -278,8 +307,8 @@ int main( int argc, char *argv[] )
 
   /*
    * If we like to use new Parsing system
-   */ 
-  
+   */
+
   if ( args->isSet( "parse-string" ) ) {
     option = args->getOption( "parse-string" );
 
@@ -290,10 +319,10 @@ int main( int argc, char *argv[] )
 
     variables.setParseString( option );
   }
-  
+
   //testing purposes only!!
   //exit(0);
-  
+
   /*
    *  Switch on export file name
    *
