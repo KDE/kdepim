@@ -110,6 +110,10 @@ private:
 	QTimer *fTimer;
 	QString fDir;
 	QStringList fList;
+
+	// TODO: not const because it calls logError(), which is
+	// non-const (but might be - can signals be const, anyway?)
+	bool resourceOK(const QString &, const QString &) /* const */ ;
 } ;
 
 class CleanupAction : public SyncAction

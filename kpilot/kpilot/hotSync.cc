@@ -605,23 +605,16 @@ FileInstallAction::~FileInstallAction()
 
 	QString m = i18n("Installing %1").arg(fileName);
 	emit logProgress(m,(100 * fDBIndex) / (fList.count()+1));
-	m+=QString::fromLatin1("\n");
+	m+=CSL1("\n");
 	emit addSyncLogEntry(m,false /* Don't print in KPilot's log. */ );
 
 	struct pi_file *f = 0L;
 
+	// Check DB is ok, return false after warning user
+	if (!resourceOK(fileName,filePath)) goto nextFile;
+
 	f = pi_file_open(const_cast <char *>
 		((const char *) QFile::encodeName(filePath)));
-
-	if (!f)
-	{
-		kdWarning() << k_funcinfo
-			<< ": Unable to open file." << endl;
-
-		emit logError(i18n("Unable to open file &quot;%1&quot;.").
-			arg(fileName));
-		goto nextFile;
-	}
 
 	if (pi_file_install(f, pilotSocket(), 0) < 0)
 	{
@@ -641,8 +634,58 @@ nextFile:
 	if (f) pi_file_close(f);
 	if (fDBIndex == -1)
 	{
-		emit syncDone(this);
+		fTimer->stop();
+		delayDone();
+		// emit syncDone(this);
 	}
+}
+
+// Check that the given file path is a good resource
+// file - in particular that the resource name is ok.
+bool FileInstallAction::resourceOK(const QString &fileName, const QString &filePath)
+{
+	FUNCTIONSETUP;
+
+	if (!QFile::exists(filePath))
+	{
+		emit logError(i18n("Unable to open file &quot;%1&quot;.").
+			arg(fileName));
+		return false;
+	}
+
+	struct pi_file *f = pi_file_open(const_cast <char *>
+		((const char *) QFile::encodeName(filePath)));
+
+	if (!f)
+	{
+		emit logError(i18n("Unable to open file &quot;%1&quot;.").
+			arg(fileName));
+		return false;
+	}
+
+	struct DBInfo info;
+	if (pi_file_get_info(f,&info) < 0)
+	{
+		emit logError(i18n("Unable to read file &quot;%1&quot;.").
+			arg(fileName));
+		return false;
+	}
+
+	// Looks like strlen, but we can't be sure of a NUL
+	// termination.
+	info.name[sizeof(info.name)-1]=0;
+	bool r = (strlen(info.name) < 32);
+	pi_file_close(f);
+
+	if (!r)
+	{
+		emit logError(i18n("The database in &quot;%1&quot; has a "
+			"resource name that is longer than 31 characters. "
+			"This suggests a bug in the tool used to create the database. "
+			"KPilot cannot install this database.").arg(fileName));
+	}
+
+	return r;
 }
 
 /* virtual */ QString FileInstallAction::statusString() const
