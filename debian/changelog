@@ -1,3 +1,9 @@
+kdepim (4:2.2.0-1) unstable; urgency=low
+ 
+  * new upstream version 2.2
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Mon, 30 Jul 2001 00:01:00 -0700
+
 kdepim (4:2.2.0-0beta1-5) unstable; urgency=low
  
   * Sync with upstream
