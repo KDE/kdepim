@@ -157,8 +157,10 @@ void PIMSyncAlg::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
     kdDebug() << "For All" << endl;
     SyncEntry* entry;
     SyncEntry* other;
+    SyncEntry* result;
     /* for all modified and deleted*/
     for ( entry = entries.first(); entry; entry = entries.next() ) {
+        result = 0;
         other = target->findEntry( entry->id()  );
         if (other ) { // exists, should always do
 	    kdDebug() << "Entry 1 " << entry->name() << endl;
@@ -181,7 +183,7 @@ void PIMSyncAlg::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
                 kdDebug() << "Entry wasRemoved and other wasModified override is "
                           << over << endl;
                 if (!over)
-                    SyncEntry *result = deconflict(entry,other);
+                    result = deconflict(entry,other);
                 if (result == entry || over) {
                     target->replaceEntry(other,entry->clone() );
                 }
@@ -193,7 +195,7 @@ void PIMSyncAlg::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
                 kdDebug() << "Equals " << entry->equals( other ) << endl;
 
                 if (!over )
-                    SyncEntry *result = deconflict(entry,other);
+                    result = deconflict(entry,other);
 
                 if (result == entry || over) {
                     target->replaceEntry(other,entry->clone() );
