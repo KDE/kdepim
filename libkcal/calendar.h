@@ -3,7 +3,6 @@
 
     Copyright (c) 1998 Preston Brown
     Copyright (c) 2001,2003,2004 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -34,7 +33,6 @@
 #include "todo.h"
 #include "journal.h"
 #include "kcalversion.h"
-#include "person.h"
 
 #define _TIME_ZONE "-0500" /* hardcoded, overridden in config file. */
 
@@ -84,12 +82,20 @@ class Calendar : public QObject, public CustomProperties,
     /**
       Return the owner of the calendar's full name.
     */
-    const Person &getOwner() const;
+    const QString &getOwner() const;
     /**
       Set the owner of the calendar. Should be owner's full name.
     */
-    void setOwner( const Person &owner );
-  
+    void setOwner( const QString &os );
+    /**
+      Return the email address of the calendar owner.
+    */
+    const QString &getEmail();
+    /**
+      Set the email address of the calendar owner.
+    */
+    void setEmail( const QString & );
+
     /**
       Set time zone id (see /usr/share/zoneinfo/zone.tab for list of legal
       values).
@@ -107,19 +113,19 @@ class Calendar : public QObject, public CustomProperties,
       Return whether local time is being used.
     */
     bool isLocalTime() const;
-  
+
     /**
       Add an incidence to calendar.
-      
+
       @return true on success, false on error.
     */
-    virtual bool addIncidence( Incidence * );  
+    virtual bool addIncidence( Incidence * );
     /**
       Delete an incidence from calendar.
-      
+
       @return true on success, false on error.
     */
-    virtual bool deleteIncidence( Incidence * );  
+    virtual bool deleteIncidence( Incidence * );
     /**
       Return filtered list of all incidences of this calendar.
     */
@@ -130,8 +136,8 @@ class Calendar : public QObject, public CustomProperties,
       Return unfiltered list of all incidences of this calendar.
     */
     virtual Incidence::List rawIncidences();
-    
-    /** 
+
+    /**
       Return a list of all categories used in this calendar.
     */
     QStringList incidenceCategories();
@@ -139,7 +145,7 @@ class Calendar : public QObject, public CustomProperties,
     /**
       Adds a Event to this calendar object.
       @param anEvent a pointer to the event to add
-      
+
       @return true on success, false on error.
     */
     virtual bool addEvent( Event *anEvent ) = 0;
@@ -180,7 +186,7 @@ class Calendar : public QObject, public CustomProperties,
 
     /**
       Add a todo to the todolist.
-      
+
       @return true on success, false on error.
     */
     virtual bool addTodo( Todo *todo ) = 0;
@@ -212,7 +218,7 @@ class Calendar : public QObject, public CustomProperties,
 
     /**
       Add a Journal entry to calendar.
-      
+
       @return true on success, false on error.
     */
     virtual bool addJournal( Journal * ) = 0;
@@ -241,6 +247,12 @@ class Calendar : public QObject, public CustomProperties,
     Incidence *incidence( const QString &UID );
 
     /**
+      Searches all events and todos for an incidence with this
+      scheduling ID. Returns a pointer or null.
+    */
+    Incidence *incidenceFromSchedulingID( const QString &UID );
+
+    /**
       Setup relations for an incidence.
     */
     virtual void setupRelations( Incidence * );
@@ -248,7 +260,7 @@ class Calendar : public QObject, public CustomProperties,
       Remove all relations to an incidence
     */
     virtual void removeRelations( Incidence * );
-    
+
     /**
       Set calendar filter, which filters events for the events() functions.
       The Filter object is owned by the caller.
@@ -258,7 +270,7 @@ class Calendar : public QObject, public CustomProperties,
       Return calendar filter.
     */
     CalFilter *filter();
-      
+
     /**
       Return all alarms, which ocur in the given time interval.
     */
@@ -273,15 +285,11 @@ class Calendar : public QObject, public CustomProperties,
         virtual void calendarIncidenceChanged( Incidence * ) {}
         virtual void calendarIncidenceDeleted( Incidence * ) {}
     };
-  
+
     void registerObserver( Observer * );
     void unregisterObserver( Observer * );
 
     void setModified( bool );
-    /**
-      Return whether the calendar was modified since opening / saving
-     */
-    bool isModified() const { return mModified; }
 
     /**
       Set product id returned by loadedProductId(). This function is only
@@ -304,11 +312,11 @@ class Calendar : public QObject, public CustomProperties,
     virtual bool beginChange( Incidence * );
     virtual bool endChange( Incidence * );
 
-    /** 
+    /**
       Dissociate an incidence from a recurring incidence. By default, only one
       single event for the given date will be dissociated and returned.
       If single == false, the recurrence will be split at date, the
-      old incidence will have its recurrence ending at date and the 
+      old incidence will have its recurrence ending at date and the
       new incidence (return value) will have all recurrences past the date.
     */
     Incidence *dissociateOccurrence( Incidence *incidence, QDate date,
@@ -319,11 +327,6 @@ class Calendar : public QObject, public CustomProperties,
     void calendarSaved();
     void calendarLoaded();
 
-  protected:
-    /**
-      The observer interface. So far not implemented.
-    */
-    void incidenceUpdated( IncidenceBase * );
   public:
     /**
       Get unfiltered events, which occur on the given date.
@@ -333,7 +336,7 @@ class Calendar : public QObject, public CustomProperties,
       Get unfiltered events, which occur on the given date.
     */
     virtual Event::List rawEventsForDate( const QDate &date,
-                                          bool sorted = false ) = 0;  
+                                          bool sorted = false ) = 0;
     /**
       Get events in a range of dates. If inclusive is set to true, only events
       are returned, which are completely included in the range.
@@ -354,20 +357,21 @@ class Calendar : public QObject, public CustomProperties,
 
   private:
     void init();
-  
-    Person mOwner;         // who the calendar belongs to
+
+    QString mOwner;        // who the calendar belongs to
+    QString mOwnerEmail;   // email address of the owner
     int mTimeZone;         // timezone OFFSET from GMT (MINUTES)
     bool mLocalTime;       // use local time, not UTC or a time zone
 
     CalFilter *mFilter;
     CalFilter *mDefaultFilter;
-    
+
     QString mTimeZoneId;
 
     QPtrList<Observer> mObservers;
     bool mNewObserver;
     bool mObserversEnabled;
-    
+
     bool mModified;
 
     QString mLoadedProductId;
@@ -379,7 +383,7 @@ class Calendar : public QObject, public CustomProperties,
     class Private;
     Private *d;
 };
-  
+
 }
 
 #endif

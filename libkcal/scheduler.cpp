@@ -2,7 +2,6 @@
     This file is part of libkcal.
 
     Copyright (c) 2001,2004 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -50,7 +49,8 @@ QString ScheduleMessage::statusName(ScheduleMessage::Status status)
 {
   switch (status) {
     case PublishUpdate:
-      return i18n("Updated Publish");
+// TODO: Add string when i18n freeze is over.
+//      return i18n("Updated Publish");
     case PublishNew:
       return i18n("Publish");
     case Obsolete:
@@ -120,7 +120,8 @@ bool Scheduler::acceptTransaction(IncidenceBase *incidence,Method method,Schedul
     case Counter:
       return acceptCounter(incidence, status);
     default:
-      break;
+      deleteTransaction(incidence);
+      return false;
   }
   deleteTransaction(incidence);
   return false;
@@ -179,69 +180,74 @@ bool Scheduler::deleteTransaction(IncidenceBase *)
   return true;
 }
 
-bool Scheduler::acceptPublish( IncidenceBase *newIncBase,
+bool Scheduler::acceptPublish( IncidenceBase *incidence,
                                ScheduleMessage::Status status, Method method )
 {
-  if( newIncBase->type() == "FreeBusy" ) {
-    return acceptFreeBusy( newIncBase, method );
+  if( incidence->type() == "FreeBusy" ) {
+    return acceptFreeBusy( incidence, method );
   }
-  
-  bool res = false;
   kdDebug(5800) << "Scheduler::acceptPublish, status="
             << ScheduleMessage::statusName( status ) << endl;
-  Incidence *newInc = static_cast<Incidence *>( newIncBase );
-  Incidence *calInc = mCalendar->incidence( newIncBase->uid() );
+  Incidence *inc = static_cast<Incidence *>( incidence );
+  Event *even = mCalendar->event( incidence->uid() );
   switch ( status ) {
     case ScheduleMessage::Unknown:
     case ScheduleMessage::PublishNew:
     case ScheduleMessage::PublishUpdate:
-      res = true;
-      if ( calInc ) {
-        if ( (newInc->revision() > calInc->revision()) ||
-             (newInc->revision() == calInc->revision() &&
-               newInc->lastModified() > calInc->lastModified() ) ) {
-          mCalendar->deleteIncidence( calInc );
-        } else
-          res = false;
+      if ( even ) {
+      	if ( even->revision() <= inc->revision() ) {
+	  if ( even->revision() == inc->revision() &&
+	      even->lastModified() > inc->lastModified() ) {
+	    deleteTransaction( incidence );
+	    return false;
+	  }
+	  mCalendar->deleteEvent( even );
+	} else {
+	  deleteTransaction( incidence );
+	  return false;
+	}
       }
-      if ( res )
-        mCalendar->addIncidence( newInc );
-      break;
+      mCalendar->addIncidence( inc );
+      deleteTransaction( incidence );
+      return true;
     case ScheduleMessage::Obsolete:
-      res = true;
-      break;
+      return true;
     default:
-      break;
+      deleteTransaction( incidence );
+      return false;
   }
-  deleteTransaction( newIncBase );
-  return res;
 }
 
-bool Scheduler::acceptRequest(IncidenceBase *newIncBase, ScheduleMessage::Status /* status */)
+bool Scheduler::acceptRequest(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
 {
-  if (newIncBase->type()=="FreeBusy") {
+  Incidence *inc = static_cast<Incidence *>(incidence);
+  if (inc->type()=="FreeBusy") {
     // reply to this request is handled in korganizer's incomingdialog
     return true;
   }
-  Incidence *newInc = dynamic_cast<Incidence *>( newIncBase );
-  if ( newInc ) {
-    bool res = true;
-    Incidence *exInc = mCalendar->incidence( newIncBase->uid() );
-    if ( exInc ) {
-      res = false;
-      if ( (newInc->revision() > exInc->revision()) ||
-           (newInc->revision() == exInc->revision() &&
-             newInc->lastModified()>exInc->lastModified()) ) {
-        mCalendar->deleteIncidence( exInc );
-        res = true;
+
+  Incidence* i = mCalendar->incidenceFromSchedulingID( inc->uid() );
+  if ( i ) {
+    if ( i->revision()<=inc->revision() ) {
+      if ( i->revision()==inc->revision() &&
+           i->lastModified()>inc->lastModified()) {
+        deleteTransaction(incidence);
+        return false;
       }
+      mCalendar->deleteIncidence( i );
+    } else {
+      deleteTransaction(incidence);
+      return false;
     }
-    if ( res )
-      mCalendar->addIncidence(newInc);
-    deleteTransaction( newIncBase );
-    return res;
   }
-  return false;
+
+  // Move the uid to be the schedulingID and make a unique UID
+  inc->setSchedulingID( inc->uid() );
+  inc->setUid( CalFormat::createUniqueId() );
+
+  mCalendar->addIncidence(inc);
+  deleteTransaction(incidence);
+  return true;
 }
 
 bool Scheduler::acceptAdd(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
@@ -253,10 +259,16 @@ bool Scheduler::acceptAdd(IncidenceBase *incidence,ScheduleMessage::Status /* st
 bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
 {
   bool ret = false;
-  Incidence *inc = mCalendar->incidence( incidence->uid() );
-  if ( inc ) {
-    mCalendar->deleteIncidence( inc );
+  Event *even = mCalendar->event(incidence->uid());
+  if (even) {
+    mCalendar->deleteEvent(even);
     ret = true;
+  } else {
+    Todo *todo = mCalendar->todo(incidence->uid());
+    if (todo) {
+      mCalendar->deleteTodo(todo);
+      ret = true;
+    }
   }
   deleteTransaction(incidence);
   return ret;
@@ -299,7 +311,7 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
           //update attendee-info
           kdDebug(5800) << "Scheduler::acceptTransaction update attendee" << endl;
           attEv->setStatus(attIn->status());
-          attEv->setRSVP(false);
+	  attEv->setRSVP(false);
           ret = true;
         }
       }
@@ -312,7 +324,8 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
       else if ( to )
         to->updated();
     }
-  }
+  } else
+    kdError(5800) << "No incidence for scheduling\n";
   if (ret) deleteTransaction(incidence);
   return ret;
 }

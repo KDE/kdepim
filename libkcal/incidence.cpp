@@ -1,7 +1,6 @@
 /*
     This file is part of libkcal.
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -32,7 +31,7 @@ using namespace KCal;
 Incidence::Incidence() :
   IncidenceBase(),
   mRelatedTo(0), mStatus(StatusNone), mSecrecy(SecrecyPublic),
-  mPriority(5), mRecurrence(0)
+  mPriority(3), mRecurrence(0)
 {
   recreate();
 
@@ -83,6 +82,8 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
     mRecurrence = new Recurrence( *(i.mRecurrence), this );
   else
     mRecurrence = 0;
+
+  mSchedulingID = i.mSchedulingID;
 }
 
 Incidence::~Incidence()
@@ -148,7 +149,8 @@ bool Incidence::operator==( const Incidence& i2 ) const
         ( mStatus == StatusNone || stringCompare( mStatusString, i2.mStatusString ) ) &&
         secrecy() == i2.secrecy() &&
         priority() == i2.priority() &&
-        stringCompare( location(), i2.location() );
+        stringCompare( location(), i2.location() ) &&
+        stringCompare( schedulingID(), i2.schedulingID() );
 }
 
 
@@ -157,6 +159,7 @@ void Incidence::recreate()
   setCreated(QDateTime::currentDateTime());
 
   setUid(CalFormat::createUniqueId());
+  setSchedulingID( QString::null );
 
   setRevision(0);
 
@@ -583,7 +586,7 @@ Recurrence *Incidence::recurrence() const
   {
     const_cast<KCal::Incidence*>(this)->mRecurrence = new Recurrence(const_cast<KCal::Incidence*>(this));
     mRecurrence->setRecurReadOnly(mReadOnly);
-    mRecurrence->setRecurStart(IncidenceBase::dtStart());
+    mRecurrence->setRecurStart(dtStart());
   }
 
   return mRecurrence;
@@ -605,4 +608,17 @@ ushort Incidence::doesRecur() const
 {
   if ( mRecurrence ) return mRecurrence->doesRecur();
   else return Recurrence::rNone;
+}
+
+void Incidence::setSchedulingID( const QString& sid )
+{
+  mSchedulingID = sid;
+}
+
+QString Incidence::schedulingID() const
+{
+  if ( mSchedulingID.isNull() )
+    // Nothing set, so use the normal uid
+    return uid();
+  return mSchedulingID;
 }
