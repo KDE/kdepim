@@ -31,12 +31,12 @@
 
 #include <klocale.h>
 
-extern int debug_level;
-extern const char *tabs;
-
-void usage(const char *banner, struct option *longOptions);
+#define DEBUG
 
 
+
+
+#ifdef DEBUG
 // These are three-bit fields, basically we're defining
 // 1<<n; 3<<n; 7<<n for some n.
 //
@@ -61,6 +61,26 @@ void usage(const char *banner, struct option *longOptions);
 			fname << tabs+(strlen(fname)>>3) \
 				<< "(" << __FILE__ << ':' << \
 				__LINE__ << ")\n"; } 
+
+// Debug level is set to some bit pattern; if any 
+// bit in one of the debug masks (SYNC_MAJOR, for
+// instance) is set print the messages corresponding
+// to that debug level.
+//
+//
+extern int debug_level;
+extern const char *tabs;		// for indentation purposes in debug
+
+class kdbgstream;
+class KConfig;
+
+// Next all kinds of specialty debugging functions,
+// added in an ad-hoc fashion.
+//
+//
+void listConfig(kdbgstream&,KConfig&);
+#endif
+
 
 // Some layout macros
 //

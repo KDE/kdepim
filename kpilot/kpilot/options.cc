@@ -10,34 +10,45 @@
 static const char *id="$Id$";
 
 #include <stream.h>
-#include <getopt.h>
-#include <unistd.h>
+#include <kconfig.h>
+#include <kdebug.h>
 #include "options.h"
 
+#ifdef DEBUG
 // The daemon also has a debug level
 //
 //
 int debug_level=0;
 const char *tabs="\t\t\t\t\t\t";
 
-void usage(const char *banner, struct option *longOptions)
+static void listConfig(kdbgstream& s,KConfig &c)
 {
-	int i;
+	FUNCTIONSETUP;
 
-	cerr << banner ;
+	QMap<QString,QString> m ;
+	QStringList l = c.groupList();
+	QStringList::Iterator i;
 
-	cerr << "Accepted options are:\n";
-
-	for (i=0; longOptions[i].name; i++)
+	s << fname << ": Listing groups in config file" << endl ;
+	for (i=l.begin(); i!=l.end(); ++i)
 	{
-		cerr << "\t--" <<
-			longOptions[i].name;
+		s << fname 
+			<< ": "
+			<< *i
+			<< endl;
 
-		if (longOptions[i].val>' ')
+		m = c.entryMap(*i);
+		QMap<QString,QString>::ConstIterator j;
+
+		for (j=m.begin(); j!=m.end(); ++j)
 		{
-			cerr << " (-" << (char)longOptions[i].val << ')' ;
+			s << fname
+				<< ": "
+				<< j.key()
+				<< "="
+				<< j.data()
+				<< endl;
 		}
-		cerr << '\n';
 	}
 }
-
+#endif
