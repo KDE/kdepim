@@ -98,6 +98,8 @@ class KPilotInstaller : public KTMainWindow
 protected:
 	int testSocket(KSocket *);
 
+	void readConfig(KConfig&);
+
 private:
       void initIcons();
       void initMenu();
