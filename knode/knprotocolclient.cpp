@@ -364,12 +364,13 @@ bool KNProtocolClient::getNextLine()
     inputEnd[0] = 0;  // terminate *char
 
     byteCount += received;
-    if (predictedLines != -1)
-      progressValue = 100 + (doneLines*900/predictedLines);
-
-    sendSignal(TSprogressUpdate);
 
   } while (!(nextLine = strstr(thisLine,"\r\n")));
+
+  if (predictedLines != -1)
+    progressValue = 100 + (doneLines*900/predictedLines);
+  sendSignal(TSprogressUpdate);
+
   nextLine[0] = 0;  // terminate string
   nextLine[1] = 0;
   nextLine+=2;
@@ -674,10 +675,10 @@ bool KNProtocolClient::sendStr(const QCString &str)
       todo -= ret;
     }
     byteCount += ret;
-    if (predictedLines != -1)
-      progressValue = 100 + (doneLines/predictedLines)*900;
-    sendSignal(TSprogressUpdate);
   }
+  if (predictedLines != -1)
+    progressValue = 100 + (doneLines/predictedLines)*900;
+  sendSignal(TSprogressUpdate);
   return true;
 }
 

@@ -94,9 +94,11 @@ void KNProgress::disableProgressBar()
 void KNProgress::setProgressBar(int value,const QString& text)
 {
   setFormat(text);
-  if (value>1000)
-    value = 1000;
-  setValue(value);
+  if (value>1000) {
+    setValue(1000);
+    update();       // circumvent the optimization of setValue
+  } else
+    setValue(value);
 }
 
 
