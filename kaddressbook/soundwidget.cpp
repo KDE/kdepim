@@ -50,7 +50,7 @@ SoundWidget::SoundWidget( KABC::AddressBook *ab, QWidget *parent, const char *na
   label->setAlignment( Qt::AlignTop );
   topLayout->addMultiCellWidget( label, 0, 1, 0, 0 );
 
-  mPlayButton = new QPushButton( i18n( "Play..." ), this );
+  mPlayButton = new QPushButton( i18n( "Play" ), this );
   mPlayButton->setEnabled( false );
   topLayout->addWidget( mPlayButton, 0, 1 );
 
