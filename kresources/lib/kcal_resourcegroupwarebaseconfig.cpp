@@ -73,7 +73,7 @@ ResourceGroupwareBaseConfig::ResourceGroupwareBaseConfig( QWidget* parent,
   mainLayout->addMultiCellWidget( mFolderConfig, 4, 4, 0, 1 );
 
   QHBox *hBox = new QHBox( this );
-  mCacheSettingsButton = new KPushButton( i18n("Configure cache settings..."), hBox );
+  mCacheSettingsButton = new KPushButton( i18n("Configure Cache Settings..."), hBox );
   mainLayout->addMultiCellWidget( hBox, 5, 5, 0, 1 );
   connect( mCacheSettingsButton, SIGNAL( clicked() ),
            SLOT( showCacheSettings() ) );

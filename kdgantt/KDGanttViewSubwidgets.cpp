@@ -787,7 +787,7 @@ void  KDTimeHeaderWidget::preparePopupMenu()
     myPopupMenu->setItemVisible ( 4, flagShowYear );
     myPopupMenu->setItemVisible ( 5, flagShowGrid);
     myPopupMenu->setItemVisible ( 30, flagShowPrint );
-    myPopupMenu->changeItem( 1, i18n("Zoom ") + "(" +QString::number( zoomFactor(), 'f',3) +")" );
+    myPopupMenu->changeItem( 1, i18n("Zoom (%1)").arg( QString::number( zoomFactor(), 'f',3) ) );
     int i = 0;
     int id;
     while ( ( id = scalePopupMenu->idAt( i++ )) >= 0 ) {

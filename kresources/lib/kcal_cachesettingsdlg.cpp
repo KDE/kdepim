@@ -39,7 +39,7 @@
 using namespace KCal;
 
 CacheSettingsDialog::CacheSettingsDialog( QWidget* parent, const char* name )
-    : KDialogBase( parent, name, true, i18n("Resource Cache settings"), KDialogBase::Close )
+    : KDialogBase( parent, name, true, i18n("Resource Cache Settings"), KDialogBase::Close )
 {
   QWidget *mainWidget = new QWidget( this );
   setMainWidget( mainWidget );

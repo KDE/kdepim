@@ -104,27 +104,27 @@ void FolderListView::showPopupMenu( FolderListItem *i, const QPoint &globalPos )
   m.insertSeparator();
 
   if ( ( folder.type & KPIM::FolderLister::Event ) && (mTypes.contains( Event ) ) ) {
-    id = m.insertItem( i18n("Default for new &events"), this, SLOT(slotPopupHandler(int)), 0, Event );
+    id = m.insertItem( i18n("Default for New &Events"), this, SLOT(slotPopupHandler(int)), 0, Event );
     m.setItemChecked( id, i->isDefault( Event ) );
   }
   if ( ( folder.type & KPIM::FolderLister::Todo ) && (mTypes.contains( Todo ) ) ) {
-    id = m.insertItem( i18n("Default for new &todos"), this, SLOT(slotPopupHandler(int)), 0, Todo );
+    id = m.insertItem( i18n("Default for New &Todos"), this, SLOT(slotPopupHandler(int)), 0, Todo );
     m.setItemChecked( id, i->isDefault( Todo ) );
   }
   if ( ( folder.type & KPIM::FolderLister::Journal ) && (mTypes.contains( Journal ) ) ) {
-    id = m.insertItem( i18n("Default for new &journals"), this, SLOT(slotPopupHandler(int)), 0, Journal );
+    id = m.insertItem( i18n("Default for New &Journals"), this, SLOT(slotPopupHandler(int)), 0, Journal );
     m.setItemChecked( id, i->isDefault( Journal ) );
   }
   if ( ( folder.type & KPIM::FolderLister::Contact ) && (mTypes.contains( Contact ) ) ) {
-    id = m.insertItem( i18n("Default for new &contacts"), this, SLOT(slotPopupHandler(int)), 0, Contact );
+    id = m.insertItem( i18n("Default for New &Contacts"), this, SLOT(slotPopupHandler(int)), 0, Contact );
     m.setItemChecked( id, i->isDefault( Contact ) );
   }
   if ( ( folder.type == KPIM::FolderLister::All ) && (mTypes.contains( All ) ) ) {
-    id = m.insertItem( i18n("Default for all new &items"), this, SLOT(slotPopupHandler(int)), 0, All );
+    id = m.insertItem( i18n("Default for All New &Items"), this, SLOT(slotPopupHandler(int)), 0, All );
     m.setItemChecked( id, i->isDefault( All ) );
   }
   if ( ( folder.type == KPIM::FolderLister::Unknown ) && (mTypes.contains( Unknown ) ) ) {
-    id = m.insertItem( i18n("Default for &unknown new items"), this, SLOT(slotPopupHandler(int)), 0, Unknown );
+    id = m.insertItem( i18n("Default for &Unknown New Items"), this, SLOT(slotPopupHandler(int)), 0, Unknown );
     m.setItemChecked( id, i->isDefault( Unknown ) );
   }
 
