@@ -43,6 +43,9 @@ static const char *pilotlocaldatabase_id="$Id$";
 #ifndef QFILE_H
 #include <qfile.h>
 #endif
+#ifndef QREGEXP_H
+#include <qregexp.h>
+#endif
 
 #ifndef _KDEBUG_H
 #include <kdebug.h>
@@ -404,6 +407,9 @@ void PilotLocalDatabase::closeDatabase()
 
 
 // $Log$
+// Revision 1.14  2001/04/16 13:54:17  adridg
+// --enable-final file inclusion fixups
+//
 // Revision 1.13  2001/03/29 21:41:49  stern
 // Added local database support in the command line for conduits
 //

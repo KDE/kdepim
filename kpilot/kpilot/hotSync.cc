@@ -32,6 +32,8 @@ static const char *hotsync_id = "$Id$";
 
 #include "options.h"
 
+#include <time.h>
+
 #include <pi-file.h>
 
 #include <qtimer.h>
@@ -40,6 +42,7 @@ static const char *hotsync_id = "$Id$";
 #include <qdir.h>
 #include <qvaluelist.h>
 #include <qtl.h>
+#include <qregexp.h>
 
 #include <kglobal.h>
 #include <kstddirs.h>

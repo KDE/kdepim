@@ -37,6 +37,7 @@ static const char *popmail_conduit_id=
 	"$Id$";
 
 #include <qsocket.h>
+#include <qregexp.h>
 
 #include "options.h"
 
@@ -2005,6 +2006,13 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.27  2001/07/04 08:53:37  cschumac
+// - Added explicitDomainName text widget to setup dialog
+// - Changed the support for the explicit domain name a little
+//   (added a few more debug lines)
+// - Changed expected response to EHLO to "^250" instead of "Hello", to
+//   fix some people's protocol-correct but unexpected SMTP server reply.
+//
 // Revision 1.26  2001/05/25 16:06:52  adridg
 // DEBUG breakage
 //

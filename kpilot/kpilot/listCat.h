@@ -30,6 +30,8 @@
 #ifndef LISTCAT_H
 #define LISTCAT_H
 
+#include <qstringlist.h>
+
 #include <klistview.h>
 
 /**
@@ -198,6 +200,9 @@ private:
 
 
 // $Log$
+// Revision 1.4  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.3  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

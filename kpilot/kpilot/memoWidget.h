@@ -28,8 +28,8 @@
 #ifndef _KPILOT_MEMOWIDGET_H
 #define _KPILOT_MEMOWIDGET_H
 
-#ifndef QMLINED_H
-#include <qmlined.h>
+#ifndef QMULTILINEEDIT_H
+#include <qmultilineedit.h>
 #endif
 
 #ifndef QCOMBOBOX_H
@@ -111,6 +111,9 @@ private:
 
 
 // $Log$
+// Revision 1.15  2001/09/06 22:33:43  adridg
+// Cruft cleanup
+//
 // Revision 1.14  2001/06/11 07:35:19  adridg
 // Cleanup before the freeze
 //

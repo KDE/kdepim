@@ -33,6 +33,7 @@ static const char *test_id="$Id$";
 #include "options.h"
 
 #include <stdlib.h>
+#include <time.h>
 
 #include <iostream.h>
 
@@ -135,6 +136,9 @@ int main(int argc, char **argv)
 }
 
 // $Log$
+// Revision 1.5  2001/09/23 21:42:35  adridg
+// Factored out debugging options
+//
 // Revision 1.4  2001/09/23 18:28:52  adridg
 // Adjusted tests to new .ui and config
 //
