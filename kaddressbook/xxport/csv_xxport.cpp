@@ -105,6 +105,7 @@ KABC::AddresseeList CSVXXPort::importContacts( const QString& ) const
 void CSVXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
 {
   QTextStream t( fp );
+  t.setEncoding( QTextStream::Locale );
 
   KABC::AddresseeList::ConstIterator iter;
   KABC::Field::List fields = addressBook()->fields();
