@@ -508,6 +508,7 @@ void KSyncMainWindow::slotSync( const QString &udi,
     else{
         emit partProgress( 0, Progress(i18n("Error could not start syncing with the parts.") ) );
         delete m_partsIt;
+        m_partsIt = 0;
         m_konnector->write( udi, lis );
         m_isSyncing = false;
     }
@@ -737,6 +738,7 @@ void KSyncMainWindow::slotPartSyncStatus( ManipulatorPart* par, int err) {
         m_inSyncee.setAutoDelete( true );
         m_inSyncee.clear();
         delete m_partsIt;
+        m_partsIt = 0;
         kdDebug(5210) << "Going to write back " << m_outSyncee.count() << endl;
         m_konnector->write( konnectorProfile().udi(), m_outSyncee );
         m_outSyncee.setAutoDelete( false );
