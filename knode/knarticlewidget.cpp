@@ -1453,6 +1453,7 @@ void KNArticleWidget::slotViewSource()
       KNRemoteArticle *a=new KNRemoteArticle(g); //we need "g" to access the nntp-account
       a->messageID(true)->from7BitString(a_rticle->messageID()->as7BitString(false));
       a->lines(true)->from7BitString(a_rticle->lines(true)->as7BitString(false));
+      a->setArticleNumber(static_cast<KNRemoteArticle*>(a_rticle)->articleNumber());
       emitJob( new KNJobData(KNJobData::JTfetchSource, this, g->account(), a));
     }
   }
