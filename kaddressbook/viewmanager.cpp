@@ -796,6 +796,8 @@ void ViewManager::loadExtensions()
   }
 
   emit extensionsReloaded();
+
+  mIncSearchWidget->setFocus();
 }
 
 #include "viewmanager.moc"

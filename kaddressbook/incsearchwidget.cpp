@@ -61,6 +61,8 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
            SLOT( announceDoSearch() ) );
   connect( mFieldCombo, SIGNAL( activated( const QString& ) ),
            SLOT( announceFieldChanged() ) );
+
+  setFocusProxy( mSearchText );
 }
 
 IncSearchWidget::~IncSearchWidget()
