@@ -65,6 +65,8 @@ ContentLine::ContentLine()
 
 ContentLine::ContentLine(const ContentLine & x)
 	:	Entity(x),
+                group_ (x.group_),
+                name_ (x.name_),
 		paramList_	(x.paramList_),
 		value_(x.value_)
 {
@@ -239,3 +241,11 @@ ContentLine::_assemble()
 		strRep_ += ":" + value_->asString();
 }
 
+	void
+ContentLine::clear()
+{
+	group_.truncate(0);
+	name_.truncate(0);
+	paramList_.clear();
+	value_ = 0;
+}

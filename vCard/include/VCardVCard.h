@@ -18,8 +18,8 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef  VCARD_H
-#define  VCARD_H
+#ifndef  VCARD_VCARD_H
+#define  VCARD_VCARD_H
 
 #include <qstring.h>
 #include <qlist.h>
@@ -51,7 +51,7 @@ class VCard : public Entity
 	
 	private:
 
-	QCString				group_;
+	QCString		group_;
 	QList<ContentLine>	contentLineList_;
 };
 

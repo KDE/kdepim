@@ -1,26 +1,12 @@
-#include <VCardAdrParam.h>
-#include <VCardAdrValue.h>
-#include <VCardAgentParam.h>
-#include <VCardContentLine.h>
-#include <VCardDateValue.h>
-#include <VCardEmailParam.h>
-#include <VCardEntity.h>
-#include <VCardImgValue.h>
-#include <VCardLangValue.h>
-#include <VCardNValue.h>
-#include <VCardParam.h>
-#include <VCardPhoneNumberValue.h>
-#include <VCardSourceParam.h>
-#include <VCardTelParam.h>
-#include <VCardTextValue.h>
-#include <VCardURIValue.h>
-#include <VCardVCard.h>
-#include <VCardVCardEntity.h>
 #include <iostream>
+#include <stdlib.h>
+
 #include <qfile.h>
 #include <qtextstream.h>
 
-main(int argc, char * argv[])
+#include <VCard.h>
+
+int main(int argc, char * argv[])
 {
 	if (argc != 2) {
 		cerr << "Usage: " << argv[0] << " <filename>" << endl;
@@ -44,6 +30,10 @@ main(int argc, char * argv[])
 	using namespace VCARD; 
 
 	// Iterate through all vCards in the file.
+
+        cout << "--------- begin ----------" << endl;
+        cout << str.data();
+        cout << "---------  end  ----------" << endl;
 
 	VCardEntity e(str);
 	

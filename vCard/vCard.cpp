@@ -17,8 +17,6 @@
 #include "NValue.cpp"
 #include "OrgValue.cpp"
 #include "Param.cpp"
-#include "ParamName.cpp"
-#include "ParamValue.cpp"
 #include "PhoneNumberValue.cpp"
 #include "RToken.cpp"
 #include "SoundValue.cpp"

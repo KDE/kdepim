@@ -42,7 +42,7 @@ class ContentLine : public Entity
 	ParamList	paramList()	{ parse(); return paramList_;	}
 	ParamType	paramType()	{ parse(); return paramType_;	}
 	ValueType	valueType()	{ parse(); return valueType_;	}
-	EntityType	entityType(){ parse(); return entityType_;	}
+	EntityType	entityType()	{ parse(); return entityType_;	}
 	
 	void setGroup		(const QCString & s)
 	{ group_ = s; assembled_ = false; }
@@ -50,17 +50,19 @@ class ContentLine : public Entity
 	void setName		(const QCString & s)
 	{ name_ = s; assembled_ = false; }
 	
-	void setValue		(const QCString	& s)
-	{ *value_ = s; assembled_ = false; }
+	void setValue		(Value *s)
+	{ value_ = s; assembled_ = false; }
 	
 	void setParamList	(const ParamList & l)
 	{ paramList_ = l; assembled_ = false; }
+
+	void clear		();
 	
 	private:
 		
 		QCString		group_;
 		QCString		name_;
-		QList<Param>	paramList_;
+		QList<Param>		paramList_;
 		Value			* value_;
 		
 		ParamType		paramType_;

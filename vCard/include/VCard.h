@@ -1,60 +1,42 @@
-/*
-	libvcard - vCard parsing library for vCard version 3.0
-	
-	Copyright (C) 1999 Rik Hemsley rik@kde.org
-	
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+#ifndef VCARD_H
+#define VCARD_H
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
-
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*/
-
-#ifndef  VCARD_H
-#define  VCARD_H
-
-#include <qstring.h>
-#include <qlist.h>
-
-#include <VCardEnum.h>
-#include <Entity.h>
-#include <ContentLine.h>
-
-namespace VCARD
-{
-
-class VCard : public Entity
-{
-
-#include "VCard-generated.h"
-	
-	bool has(EntityType);
-	bool has(const QCString &);
-	
-	void add(const ContentLine &);
-	void add(const QCString &);
-	
-	ContentLine * contentLine(EntityType);
-	ContentLine * contentLine(const QCString &);
-	
-	QCString group() { parse(); return group_; }
-	
-	QList<ContentLine>	contentLineList() { parse(); return contentLineList_; }
-	
-	private:
-
-	QCString				group_;
-	QList<ContentLine>	contentLineList_;
-};
-
-}
+#include "VCardAdrParam.h"
+#include "VCardAdrValue.h"
+#include "VCardAgentParam.h"
+#include "VCardAgentValue.h"
+#include "VCardClassValue.h"
+#include "VCardContentLine.h"
+#include "VCardDateParam.h"
+#include "VCardDateValue.h"
+#include "VCardDefines.h"
+#include "VCardEmailParam.h"
+#include "VCardEntity.h"
+#include "VCardEnum.h"
+#include "VCardFloatValue.h"
+#include "VCardGroup.h"
+#include "VCardImageParam.h"
+#include "VCardImageValue.h"
+#include "VCardImgValue.h"
+#include "VCardLangValue.h"
+#include "VCardNValue.h"
+#include "VCardOrgValue.h"
+#include "VCardParam.h"
+#include "VCardPhoneNumberValue.h"
+#include "VCardRToken.h"
+#include "VCardSoundValue.h"
+#include "VCardSourceParam.h"
+#include "VCardTelParam.h"
+#include "VCardTelValue.h"
+#include "VCardTextBinParam.h"
+#include "VCardTextBinValue.h"
+#include "VCardTextListValue.h"
+#include "VCardTextParam.h"
+#include "VCardTextValue.h"
+#include "VCardURIValue.h"
+#include "VCardUTCValue.h"
+#include "VCardVCard.h"
+#include "VCardVCardEntity.h"
+#include "VCardValue.h"
 
 #endif

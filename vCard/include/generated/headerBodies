@@ -5,6 +5,7 @@ ContentLine Entity
 DateParam Param
 DateValue Value
 EmailParam Param
+Group Entity
 ImageParam Param
 ImageValue Value
 LangValue Value

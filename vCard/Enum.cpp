@@ -219,6 +219,13 @@ VCARD::EntityTypeToValueType(EntityType e)
 	return t;
 }
 
+	QCString
+VCARD::EntityTypeToParamName(EntityType e)
+{
+	if ( e > EntityUnknown ) e = EntityUnknown;
+	return paramNames[ int( e ) ];
+}
+
 	EntityType
 VCARD::ParamNameToEntityType(const QCString & s)
 {
