@@ -162,7 +162,7 @@ void BoxContainerItem::runCommand( const QString& cmd )
 {
 	KProcess *process = new KProcess;
 	process->setUseShell( true );
-	*process << KProcess::quote( cmd );
+	*process << cmd;
 	connect( process, SIGNAL( processExited (KProcess *) ), this, SLOT( processExited( KProcess * ) ) );
 	process->start();
 }

@@ -49,7 +49,7 @@ private:
 	int _fields;
 	int _urlfields;
 		
-	void showHide( int fieldvalue, QLabel *label, QWidget* edit, KURLRequester* url, const QString& labelText );
+	void showHide( int fieldvalue, QLabel *label, QWidget* edit, KURLRequester* url, const QString& labelText, QWidget *& previous );
 	
 	QString encrypt( const QString& ) const;
 	QString decrypt( const QString& ) const;

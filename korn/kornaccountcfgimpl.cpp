@@ -157,6 +157,7 @@ void KornAccountCfgImpl::slotCancel()
 void KornAccountCfgImpl::slotProtocolChanged( const QString& proto )
 {
 	KIO_Protocol *protocol = Protocols::getProto( proto );
+	QWidget *previousWidget = 0; //For TAB-sequence
 	if( protocol == 0 )
 		return; //ERROR: protocol not found
 	
@@ -164,13 +165,13 @@ void KornAccountCfgImpl::slotProtocolChanged( const QString& proto )
 	_urlfields = protocol->urlFields();
 	
 	//Hide show the different boxes
-	showHide( KIO_Protocol::server, lbServer, (QWidget*)edServer, urlServer, protocol->serverName() );
-	showHide( KIO_Protocol::port, lbPort, (QWidget*)edPort, urlPort, protocol->portName() );
-	showHide( KIO_Protocol::username, lbUsername, (QWidget*)edUsername, urlUsername, protocol->usernameName() );
-	showHide( KIO_Protocol::mailbox, lbMailbox, (QWidget*)edMailbox, urlMailbox, protocol->mailboxName() );
-	showHide( KIO_Protocol::password, 0, chPassword, 0, QString::null );
-	showHide( KIO_Protocol::password, lbPassword, (QWidget*)edPassword, 0, protocol->passwordName() );
-	showHide( KIO_Protocol::auth, lbAuth, (QWidget*)cbAuth, 0, protocol->authName() );
+	showHide( KIO_Protocol::server, lbServer, (QWidget*)edServer, urlServer, protocol->serverName(), previousWidget );
+	showHide( KIO_Protocol::port, lbPort, (QWidget*)edPort, urlPort, protocol->portName(), previousWidget );
+	showHide( KIO_Protocol::username, lbUsername, (QWidget*)edUsername, urlUsername, protocol->usernameName(), previousWidget );
+	showHide( KIO_Protocol::mailbox, lbMailbox, (QWidget*)edMailbox, urlMailbox, protocol->mailboxName(), previousWidget );
+	showHide( KIO_Protocol::password, 0, chPassword, 0, QString::null, previousWidget );
+	showHide( KIO_Protocol::password, lbPassword, (QWidget*)edPassword, 0, protocol->passwordName(), previousWidget );
+	showHide( KIO_Protocol::auth, lbAuth, (QWidget*)cbAuth, 0, protocol->authName(), previousWidget );
 	chPassword->setText( protocol->savePasswordName() );
 	
 	//Filling authlist
@@ -185,7 +186,7 @@ void KornAccountCfgImpl::slotProtocolChanged( const QString& proto )
 }
 
 void KornAccountCfgImpl::showHide( int fieldvalue, QLabel *label, QWidget* edit, KURLRequester* url,
-                                   const QString& labelText )
+                                   const QString& labelText, QWidget *& previous )
 {
 	if( _fields & fieldvalue )
 	{
@@ -195,7 +196,12 @@ void KornAccountCfgImpl::showHide( int fieldvalue, QLabel *label, QWidget* edit,
 			label->setText( labelText );
 		}
 		if( edit )
+		{
 			edit->show();
+			if( previous )
+				setTabOrder( previous, edit );
+			previous = edit;
+		}
 		if( url )
 			url->hide();
 	} else if( _urlfields & fieldvalue )
@@ -208,7 +214,12 @@ void KornAccountCfgImpl::showHide( int fieldvalue, QLabel *label, QWidget* edit,
 		if( edit )
 			edit->hide();
 		if( url )
+		{
 			url->show();
+			if( previous )
+				setTabOrder( previous, url );
+			previous = url;
+		}
 	} else {
 		if( label )
 		{

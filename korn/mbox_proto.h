@@ -45,7 +45,8 @@ public:
 		
 	virtual QString mailboxName() const { return i18n( "File:" ); }
 	
-	virtual void recheckKURL( KURL &, KIO::MetaData & ) { }
+	virtual void recheckKURL( KURL &, KIO::MetaData & md )
+		{ md.insert( "onlynew", "" ); md.insert( "savetime", "" ); }
 	virtual void readSubjectKURL( KURL &, KIO::MetaData & ) { }
 	virtual void deleteMailKURL( KURL &, KIO::MetaData & )  { }
 	virtual void readMailKURL( KURL &, KIO::MetaData & )    { }
