@@ -30,6 +30,7 @@ libicalss_la_SOURCES =		\
 	icalcstpclient.c        \
 	icalcstpserver.c        \
 	icalcstp.c		
+libicalss_la_COMPILE_FIRST = ../libical/ical.h
 
 COMBINEDHEADERS = \
         $(srcdir)/icalgauge.h \
