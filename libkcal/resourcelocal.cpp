@@ -88,7 +88,7 @@ ResourceLocal::ResourceLocal( const QString& fileName )
 
 void ResourceLocal::writeConfig( KConfig* config )
 {
-  kdDebug() << "ResourceLocal::writeConfig()" << endl;
+  kdDebug(5800) << "ResourceLocal::writeConfig()" << endl;
 
   ResourceCalendar::writeConfig( config );
   config->writePathEntry( "CalendarURL", mURL.prettyURL() );
@@ -99,7 +99,7 @@ void ResourceLocal::writeConfig( KConfig* config )
   else if ( typeid( *mFormat ) == typeid( VCalFormat ) ) // if ( typeID == "ICalFormat" )
     config->writeEntry( "Format", "vcal" );
   else
-    kdDebug() << "ERROR: Unknown format type" << endl;
+    kdDebug(5800) << "ERROR: Unknown format type" << endl;
 }
 
 void ResourceLocal::init()

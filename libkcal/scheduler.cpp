@@ -186,7 +186,7 @@ bool Scheduler::acceptPublish( IncidenceBase *incidence,
   if( incidence->type() == "FreeBusy" ) {
     return acceptFreeBusy( incidence, method );
   }
-  kdDebug() << "Scheduler::acceptPublish, status="
+  kdDebug(5800) << "Scheduler::acceptPublish, status="
             << ScheduleMessage::statusName( status ) << endl;
   Incidence *inc = static_cast<Incidence *>( incidence );
   Event *even = mCalendar->event( incidence->uid() );
@@ -356,7 +356,7 @@ bool Scheduler::acceptFreeBusy(IncidenceBase *incidence, Method method)
 
   FreeBusy *freebusy = static_cast<FreeBusy *>(incidence);
 
-  kdDebug() << "acceptFreeBusy:: freeBusyDirName: " << freeBusyDir() << endl;
+  kdDebug(5800) << "acceptFreeBusy:: freeBusyDirName: " << freeBusyDir() << endl;
 
   QString from;
   if(method == Scheduler::Publish) {

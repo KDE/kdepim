@@ -42,7 +42,7 @@ CommandScheduler::CommandScheduler(Modem *modem,QObject *parent,
 void CommandScheduler::execute(ATCommand *command)
 {
   if (!mModem->isOpen()) {
-    kdDebug() << "Warning! Modem not open." << endl;
+    kdDebug(5960) << "Warning! Modem not open." << endl;
     return;
   }
 
@@ -70,18 +70,18 @@ void CommandScheduler::executeId(const QString &id)
       return;
     }
   }
-  kdDebug() << "CommandScheduler::executeId(): Id '" << id << "' not found" << endl;
+  kdDebug(5960) << "CommandScheduler::executeId(): Id '" << id << "' not found" << endl;
 }
 
 void CommandScheduler::sendCommand(const QString &command)
 {
   if (command.isEmpty()) {
-    kdDebug() << "CommandScheduler::sendCommand(): Warning! Empty command."
+    kdDebug(5960) << "CommandScheduler::sendCommand(): Warning! Empty command."
               << endl;
     return;
   }
 
-  kdDebug() << "CommandScheduler:sendCommand(): " << command << endl;
+  kdDebug(5960) << "CommandScheduler:sendCommand(): " << command << endl;
 
   mModem->writeLine(command.latin1());
 }

@@ -107,7 +107,7 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
 
   KSaveFile file( fileName );
   if ( file.status() != 0 ) {
-    kdDebug() << "ICalFormat::save() errno: " << strerror( file.status() )
+    kdDebug(5800) << "ICalFormat::save() errno: " << strerror( file.status() )
               << endl;
     setException( new ErrorFormat( ErrorFormat::SaveError,
                   i18n( "Error saving to '%1'." ).arg( fileName ) ) );

@@ -60,7 +60,7 @@ ICalDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
 
 Event *DndFactory::createDrop(QDropEvent *de)
 {
-  kdDebug() << "DndFactory::createDrop()" << endl;
+  kdDebug(5800) << "DndFactory::createDrop()" << endl;
 
   CalendarLocal cal( mCalendar->timeZoneId() );
 
@@ -137,7 +137,7 @@ bool DndFactory::copyTodo( Todo *selectedTodo )
 
 Incidence *DndFactory::pasteIncidence(const QDate &newDate, const QTime *newTime)
 {
-//  kdDebug() << "DnDFactory::pasteEvent()" << endl;
+//  kdDebug(5800) << "DnDFactory::pasteEvent()" << endl;
 
   CalendarLocal cal( mCalendar->timeZoneId() );
 

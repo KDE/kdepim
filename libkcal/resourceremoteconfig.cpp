@@ -71,7 +71,7 @@ void ResourceRemoteConfig::loadSettings( KRES::Resource *resource )
   if ( res ) {
     mDownloadUrl->setURL( res->downloadUrl().url() );
     mUploadUrl->setURL( res->uploadUrl().url() );
-    kdDebug() << "ANOTER RELOAD POLICY: " << res->reloadPolicy() << endl;
+    kdDebug(5800) << "ANOTER RELOAD POLICY: " << res->reloadPolicy() << endl;
     mReloadGroup->setButton( res->reloadPolicy() );
   } else {
     kdError(5700) << "ResourceRemoteConfig::loadSettings(): no ResourceRemote, cast failed" << endl;

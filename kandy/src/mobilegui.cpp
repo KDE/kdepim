@@ -204,12 +204,12 @@ void MobileGui::readPhonebook()
 
 void MobileGui::writePhonebook()
 {
-  kdDebug() << "MobileGui::writePhonebook" << endl;
+  kdDebug(5960) << "MobileGui::writePhonebook" << endl;
 
   for(uint i=0;i<mSyncer->mMobileEntries.count();++i) {
     SyncEntryMobile *entry = mSyncer->mMobileEntries.at(i);
 
-//    kdDebug() << "Writing " << entry->mIndex << " " << entry->mName
+//    kdDebug(5960) << "Writing " << entry->mIndex << " " << entry->mName
 //              << " " << entry->mPhone << endl;
 
     QString id = "+cpbw=" + entry->mIndex;
@@ -220,8 +220,8 @@ void MobileGui::writePhonebook()
     cmd->addParameter(new ATParameter(entry->mType));
     cmd->addParameter(new ATParameter(quote(entry->mName)));
 
-    kdDebug() << "  " << cmd->cmd() << endl;
-    kdDebug() << "  id: " << cmd->id() << endl;
+    kdDebug(5960) << "  " << cmd->cmd() << endl;
+    kdDebug(5960) << "  id: " << cmd->id() << endl;
     
     mScheduler->execute(cmd);
   }
@@ -231,7 +231,7 @@ void MobileGui::writePhonebook()
 
 void MobileGui::readKabc()
 {
-  kdDebug() << "MobileGui::readKabc()" << endl;
+  kdDebug(5960) << "MobileGui::readKabc()" << endl;
 
   mSyncer->mKabEntries.clear();
 
@@ -283,14 +283,14 @@ void MobileGui::readKabc()
 
 void MobileGui::writeKabc()
 {
-  kdDebug() << "MobileGui::writeKabc()" << endl;
+  kdDebug(5960) << "MobileGui::writeKabc()" << endl;
 
   KABC::AddressBook *addressBook = KABC::StdAddressBook::self();
 
   KABC::Ticket *ticket = addressBook->requestSaveTicket();
 
   if ( !ticket ) {
-    kdDebug() << "Error! No ticket to save." << endl;
+    kdDebug(5960) << "Error! No ticket to save." << endl;
     return;
   }
 
@@ -370,9 +370,9 @@ void MobileGui::processResult(ATCommand *command)
 
 void MobileGui::fillPhonebook(ATCommand *cmd)
 {
-  kdDebug() << "MobileGui::fillPhonebook()" << endl;
+  kdDebug(5960) << "MobileGui::fillPhonebook()" << endl;
 
-//  kdDebug() << "--- " << cmd->resultString() << endl;
+//  kdDebug(5960) << "--- " << cmd->resultString() << endl;
 
   mSyncer->mMobileEntries.clear();
     
@@ -381,7 +381,7 @@ void MobileGui::fillPhonebook(ATCommand *cmd)
   QStringList *fields = list->first();
   while(fields) {
     if (fields->count() != 4) {
-      kdDebug() << "Error! Unexpected number of address fields." << endl;
+      kdDebug(5960) << "Error! Unexpected number of address fields." << endl;
     } else {
       QString index = (*fields)[0];
       QString phone = (*fields)[1];
@@ -445,7 +445,7 @@ void MobileGui::savePhonebook()
 
 void MobileGui::mergePhonebooks()
 {
-  kdDebug() << "MobileGui::mergePhonebooks()" << endl;
+  kdDebug(5960) << "MobileGui::mergePhonebooks()" << endl;
 
   // Update selection state from GUI.
   PhoneBookItem *item = (PhoneBookItem *)mKabBook->firstChild();
@@ -461,7 +461,7 @@ void MobileGui::mergePhonebooks()
 
   mSyncer->mCommonEntries.clear();
 
-//  kdDebug() << " Insert kab list" << endl;
+//  kdDebug(5960) << " Insert kab list" << endl;
 
   // Put Kab list into common list
   for(uint i=0;i<mSyncer->mKabEntries.count();++i) {
@@ -470,12 +470,12 @@ void MobileGui::mergePhonebooks()
     }
   }
 
-//  kdDebug() << " Insert mobile list" << endl;
+//  kdDebug(5960) << " Insert mobile list" << endl;
 
   // Put mobile list into common list. Merge equivalent entries.
   for(uint i=0;i<mSyncer->mMobileEntries.count();++i) {
     SyncEntryMobile *mobileEntry = mSyncer->mMobileEntries.at(i);
-//    kdDebug() << "--- Inserting " << mobileEntry->mName << endl;
+//    kdDebug(5960) << "--- Inserting " << mobileEntry->mName << endl;
   
     uint j=0;
     for(;j<mSyncer->mCommonEntries.count();++j) {
@@ -496,7 +496,7 @@ void MobileGui::mergePhonebooks()
     }
   }
   
-//  kdDebug() << " Resolve conflicts" << endl;
+//  kdDebug(5960) << " Resolve conflicts" << endl;
 
   // Resolve conflicts
   bool kabUpdated = false;
@@ -538,7 +538,7 @@ void MobileGui::mergePhonebooks()
     }
   }
 
-//  kdDebug() << " Create new entries" << endl;
+//  kdDebug(5960) << " Create new entries" << endl;
 
   // Create new entries
   for(uint i=0;i<mSyncer->mCommonEntries.count();++i) {
@@ -547,7 +547,7 @@ void MobileGui::mergePhonebooks()
     SyncEntryMobile *mobileEntry = entry->mMobileEntry;
 
     if (kabEntry && !mobileEntry) {
-      kdDebug() << "Creating mobile entry for " << kabEntry->mPhone << endl;
+      kdDebug(5960) << "Creating mobile entry for " << kabEntry->mPhone << endl;
       // Create mobile entry
       // The type should be generated here.
       // The values should be checked for validity.
@@ -587,13 +587,13 @@ void MobileGui::mergePhonebooks()
     }
   }
 
-//  kdDebug() << "Update gui" << endl;
+//  kdDebug(5960) << "Update gui" << endl;
 
   // Update kab and mobile entries
   if (kabUpdated) updateKabBook();
   if (mobileUpdated) updateMobileBook();
 
-  kdDebug() << "MobileGui::mergePhonebooks() done." << endl;
+  kdDebug(5960) << "MobileGui::mergePhonebooks() done." << endl;
 }
 
 void MobileGui::syncPhonebooks()

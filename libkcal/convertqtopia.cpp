@@ -89,8 +89,8 @@ int main(int argc,char **argv)
   QString outputFile;
   if ( args->isSet("output") ) outputFile = args->getOption( "output" );
 
-  kdDebug() << "Input File: '" << inputFile << "'" << endl;
-  kdDebug() << "Output File: '" << outputFile << "'" << endl;
+  kdDebug(5800) << "Input File: '" << inputFile << "'" << endl;
+  kdDebug(5800) << "Output File: '" << outputFile << "'" << endl;
 
   if ( sourceQtopia ) {
     CalendarLocal cal;

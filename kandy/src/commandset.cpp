@@ -53,7 +53,7 @@ void CommandSet::deleteCommand(ATCommand *command)
 
 bool CommandSet::loadFile(const QString& filename)
 {
-//  kdDebug() << "CommandSet::loadFile(): " << filename << endl;
+//  kdDebug(5960) << "CommandSet::loadFile(): " << filename << endl;
 
   QDomDocument doc("Kandy");
   QFile f(filename);
@@ -80,7 +80,7 @@ bool CommandSet::loadFile(const QString& filename)
 
 bool CommandSet::saveFile(const QString& filename)
 {
-  kdDebug() << "CommandSet::saveFile(): " << filename << endl;
+  kdDebug(5960) << "CommandSet::saveFile(): " << filename << endl;
 
   QDomDocument doc("Kandy");
   QDomElement set = doc.createElement("commandset");
@@ -92,7 +92,7 @@ bool CommandSet::saveFile(const QString& filename)
   
   QFile xmlfile(filename);
   if (!xmlfile.open(IO_WriteOnly)) {
-    kdDebug() << "Error opening file for write." << endl;
+    kdDebug(5960) << "Error opening file for write." << endl;
     return false;
   }
   QTextStream ts(&xmlfile);

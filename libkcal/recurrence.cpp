@@ -3406,14 +3406,14 @@ QDate Recurrence::getLastDateInYear(const QDate &latestDate) const
 
 void Recurrence::dump() const
 {
-  kdDebug() << "Recurrence::dump():" << endl;
+  kdDebug(5800) << "Recurrence::dump():" << endl;
 
-  kdDebug() << "  type: " << recurs << endl;
+  kdDebug(5800) << "  type: " << recurs << endl;
   
-  kdDebug() << "  rDays: " << endl;
+  kdDebug(5800) << "  rDays: " << endl;
   int i;
   for( i = 0; i < 7; ++i ) {
-    kdDebug() << "    " << i << ": "
+    kdDebug(5800) << "    " << i << ": "
               << ( rDays.testBit( i ) ? "true" : "false" ) << endl;
   }
 }

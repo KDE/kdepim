@@ -36,7 +36,7 @@ FreeBusy::FreeBusy(const QDateTime &start, const QDateTime &end)
 
 FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime &end )
 {
-  kdDebug() << "FreeBusy::FreeBusy" << endl;
+  kdDebug(5800) << "FreeBusy::FreeBusy" << endl;
   mCalendar = calendar;
 
   setDtStart(start);

@@ -101,7 +101,7 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
 
   // Load new file
   _icalfile = preferences->iCalFile();
-  kdDebug() << "KarmStorage::load - loading " << _icalfile << endl;
+  kdDebug(5970) << "KarmStorage::load - loading " << _icalfile << endl;
   _calendar.setEmail( settings.getSetting( KEMailSettings::EmailAddress ) );
   _calendar.setOwner( settings.getSetting( KEMailSettings::RealName ) );
   if (!_calendar.load(_icalfile))
@@ -118,7 +118,7 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
     // Build dictionary to look up Task object from Todo uid.  Each task is a
     // QListViewItem, and is initially added with the view as the parent.
     todoList = _calendar.rawTodos();
-    kdDebug() << "KarmStorage::load "
+    kdDebug(5970) << "KarmStorage::load "
       << "rawTodo count (includes completed todos) ="
       << todoList.count() << endl;
     for( todo = todoList.begin(); todo != todoList.end(); ++todo )
@@ -174,7 +174,7 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
       }
     }
 
-    kdDebug() << "KarmStorage::load - loaded " << view->count()
+    kdDebug(5970) << "KarmStorage::load - loaded " << view->count()
       << " tasks from " << _icalfile << endl;
   }
 
@@ -192,7 +192,7 @@ void KarmStorage::save(TaskView* taskview)
 
   _calendar.save(_icalfile);
 
-  kdDebug()
+  kdDebug(5970)
     << "KarmStorage::save : wrote "
     << taskview->count() << " tasks to " << _icalfile << endl;
 }
@@ -246,7 +246,7 @@ QString KarmStorage::loadFromFlatFile(TaskView* taskview,
 {
   QString err;
 
-  kdDebug()
+  kdDebug(5970)
     << "KarmStorage::loadFromFlatFile: " << filename << endl;
 
   QFile f(filename);
@@ -275,7 +275,7 @@ QString KarmStorage::loadFromFlatFile(TaskView* taskview,
       //   break;
 
       line = stream.readLine();
-      kdDebug() << "DEBUG: line: " << line << "\n";
+      kdDebug(5970) << "DEBUG: line: " << line << "\n";
 
       if (line.isNull())
         break;
@@ -293,14 +293,14 @@ QString KarmStorage::loadFromFlatFile(TaskView* taskview,
       }
 
       if (level == 1) {
-        kdDebug() << "KarmStorage::loadFromFlatFile - toplevel task: "
+        kdDebug(5970) << "KarmStorage::loadFromFlatFile - toplevel task: "
           << name << " min: " << minutes << "\n";
         task = new Task(name, minutes, 0, desktopList, taskview);
         task->setUid(addTask(task, 0));
       }
       else {
         Task *parent = stack.top();
-        kdDebug() << "KarmStorage::loadFromFlatFile - task: " << name
+        kdDebug(5970) << "KarmStorage::loadFromFlatFile - task: " << name
             << " min: " << minutes << " parent" << parent->name() << "\n";
         task = new Task(name, minutes, 0, desktopList, parent);
 
@@ -463,7 +463,7 @@ bool KarmStorage::removeTask(Task* task)
       i != eventList.end();
       ++i)
   {
-    //kdDebug() << "KarmStorage::removeTask: "
+    //kdDebug(5970) << "KarmStorage::removeTask: "
     //  << (*i)->uid() << " - relatedToUid() "
     //  << (*i)->relatedToUid()
     //  << ", relatedTo() = " << (*i)->relatedTo() <<endl;
@@ -627,7 +627,7 @@ QValueList<HistoryEvent> KarmStorage::getHistory(const QDate& from,
             // Something is screwy with the ics file, as this KArm history event
             // does not have a todo related to it.  Could have been deleted
             // manually?  We'll continue with report on with report ...
-            kdDebug() << "KarmStorage::getHistory(): "
+            kdDebug(5970) << "KarmStorage::getHistory(): "
               << "The event " << (*event)->uid()
               << " is not related to a todo.  Dropped." << endl;
         }
@@ -665,7 +665,7 @@ void KarmStorage::saveToFileFormat()
     writeTaskToFile(&stream, child, 1);
 
   f.close();
-  kdDebug() << "Saved data to file " << f.name() << endl;
+  kdDebug(5970) << "Saved data to file " << f.name() << endl;
 }
 void KarmStorage::writeTaskToFile( QTextStream *strm, Task *task,
                                 int level)

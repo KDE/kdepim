@@ -128,7 +128,7 @@ bool ResourceKABC::doOpen()
 
 bool ResourceKABC::load()
 {
-  kdDebug() << "ResourceKABC::load()" << endl;
+  kdDebug(5800) << "ResourceKABC::load()" << endl;
 
   if ( !mOpen ) return true;
 
@@ -145,7 +145,7 @@ bool ResourceKABC::load()
 
     QDateTime birthdate = (*it).birthday().date();
     if ( birthdate.isValid() ) {
-      kdDebug() << "found a birthday " << birthdate.toString() << endl;
+      kdDebug(5800) << "found a birthday " << birthdate.toString() << endl;
 
       QString name = (*it).nickName();
       if (name.isEmpty()) name = (*it).realName();
@@ -183,7 +183,7 @@ bool ResourceKABC::load()
 
       ev->setReadOnly( true );
       mCalendar.addEvent(ev);
-      kdDebug() << "imported " << birthdate.toString() << endl;
+      kdDebug(5800) << "imported " << birthdate.toString() << endl;
     }
 
 		QString anniversary_string = (*it).custom( "KADDRESSBOOK", "X-Anniversary" );
@@ -216,7 +216,7 @@ bool ResourceKABC::load()
 
   for ( addrIt = anniversaries.begin(); addrIt != anniversaries.end(); ++addrIt ) {
     QDateTime anniversary = QDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
-    kdDebug() << "found a anniversary " << anniversary.toString() << endl;
+    kdDebug(5800) << "found a anniversary " << anniversary.toString() << endl;
 
     QString name = (*addrIt).nickName();
     QString spouseName = (*addrIt).custom( "KADDRESSBOOK", "X-SpousesName" );
@@ -261,7 +261,7 @@ bool ResourceKABC::load()
 
     ev->setReadOnly( true );
     mCalendar.addEvent(ev);
-    kdDebug() << "imported " << anniversary.toString() << endl;
+    kdDebug(5800) << "imported " << anniversary.toString() << endl;
   }
 
   emit resourceChanged( this );

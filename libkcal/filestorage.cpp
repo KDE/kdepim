@@ -130,10 +130,10 @@ bool FileStorage::save()
     calendar()->setModified( false );
   } else {
     if ( !format->exception() ) {
-      kdDebug() << "FileStorage::save(): Error. There should be set an expection."
+      kdDebug(5800) << "FileStorage::save(): Error. There should be set an expection."
                 << endl;
     } else {
-      kdDebug() << "FileStorage::save(): " << format->exception()->message()
+      kdDebug(5800) << "FileStorage::save(): " << format->exception()->message()
                 << endl;
     }
   }

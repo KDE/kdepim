@@ -907,7 +907,7 @@ void CardView::drawContents(QPainter *p, int clipx, int clipy,
  if (d->mLayoutDirty)
    calcLayout();
 
-  //kdDebug() << "CardView::drawContents: " << clipx << ", " << clipy
+  //kdDebug(5720) << "CardView::drawContents: " << clipx << ", " << clipy
   //          << ", " << clipw << ", " << cliph << endl;
 
   QColorGroup cg = viewport()->palette().active(); // allow setting costum colors in the viewport pale
@@ -930,7 +930,7 @@ void CardView::drawContents(QPainter *p, int clipx, int clipy,
 
     if (clipRect.intersects(cardRect) || clipRect.contains(cardRect))
     {
-      //kdDebug() << "\trepainting card at: " << cardRect.x() << ", "
+      //kdDebug(5720) << "\trepainting card at: " << cardRect.x() << ", "
       //          << cardRect.y() << endl;
 
       // Tell the card to paint
@@ -967,7 +967,7 @@ void CardView::resizeEvent(QResizeEvent *e)
 
 void CardView::calcLayout()
 {
-  //kdDebug() << "CardView::calcLayout:" << endl;
+  //kdDebug(5720) << "CardView::calcLayout:" << endl;
 
   // Start in the upper left corner and layout all the
   // cars using their height and width
@@ -1166,7 +1166,7 @@ void CardView::contentsMousePressEvent(QMouseEvent *e)
       b = d->mItemList.findRef( other );
       from = a < b ? a : b;
       to = a > b ? a : b;
-      //kdDebug()<<"selecting items "<<from<<" - "<<to<<" ( "<<s<<" )"<<endl;
+      //kdDebug(5720)<<"selecting items "<<from<<" - "<<to<<" ( "<<s<<" )"<<endl;
       CardViewItem *aItem;
       for ( ; from <= to; from++ )
       {
@@ -1484,7 +1484,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
           blockSignals(b);
         }
 
-        //kdDebug()<<"selecting items "<<from<<" - "<<to<<" ( "<<s<<" )"<<endl;
+        //kdDebug(5720)<<"selecting items "<<from<<" - "<<to<<" ( "<<s<<" )"<<endl;
         CardViewItem *item;
         for ( ; from <= to; from++ )
         {
@@ -1598,7 +1598,7 @@ void CardView::tryShowFullText()
   {
     // query it for a value to display
     //QString s = item ? item->caption() : "(no item)";
-    //kdDebug()<<"MOUSE REST: "<<s<<endl;
+    //kdDebug(5720)<<"MOUSE REST: "<<s<<endl;
     QPoint ipos = cpos - itemRect( item ).topLeft();
     item->showFullString( ipos, d->mTip );
   }

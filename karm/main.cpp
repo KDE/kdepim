@@ -14,7 +14,7 @@ namespace
 
   void cleanup( int )
   {
-    kdDebug() << i18n("Just caught a software interrupt.") << endl;
+    kdDebug(5970) << i18n("Just caught a software interrupt.") << endl;
     kapp->exit();
   }
 }

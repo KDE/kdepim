@@ -72,7 +72,7 @@ void Task::init( const QString& taskName, long minutes, long sessionTime,
     }
   }
 
-  //kdDebug() << "Task::init(" << taskName << ", " << minutes << ", "
+  //kdDebug(5970) << "Task::init(" << taskName << ", " << minutes << ", "
   //  << sessionTime << ", desktops)" << endl;
 
   _name = taskName.stripWhiteSpace();
@@ -127,7 +127,7 @@ bool Task::isRunning() const
 
 void Task::setName( const QString& name, KarmStorage* storage )
 {
-  kdDebug() << "Task:setName: " << name << endl;
+  kdDebug(5970) << "Task:setName: " << name << endl;
 
   QString oldname = _name;
   if ( oldname != name ) {
@@ -139,7 +139,7 @@ void Task::setName( const QString& name, KarmStorage* storage )
 
 void Task::setPercentComplete(const int percent, KarmStorage *storage)
 {
-  kdDebug() << "Task::setPercentComplete(" << percent << ", storage): "
+  kdDebug(5970) << "Task::setPercentComplete(" << percent << ", storage): "
     << _uid << endl;
 
   if (isRunning()) setRunning(false, storage);
@@ -193,7 +193,7 @@ void Task::changeTimes( long minutesSession, long minutes, bool do_logging,
   if( minutesSession != 0 || minutes != 0) {
     _sessionTime += minutesSession;
 
-    //kdDebug()
+    //kdDebug(5970)
     //  << "Task::changeTimes: " << name()
     //  << ", _sessionTime = " << minutesSession << endl;
 
@@ -209,7 +209,7 @@ void Task::changeTimes( long minutesSession, long minutes, bool do_logging,
 
 void Task::changeTotalTimes( long minutesSession, long minutes )
 {
-  //kdDebug()
+  //kdDebug(5970)
   //  << "Task::changeTotalTimes(" << minutesSession << ", "
   //  << minutes << ") for " << name() << endl;
 
@@ -232,7 +232,7 @@ void Task::resetTimes()
 
 void Task::changeParentTotalTimes( long minutesSession, long minutes )
 {
-  //kdDebug()
+  //kdDebug(5970)
   //  << "Task::changeParentTotalTimes(" << minutesSession << ", "
   //  << minutes << ") for " << name() << endl;
 
@@ -244,7 +244,7 @@ void Task::changeParentTotalTimes( long minutesSession, long minutes )
 
 bool Task::remove( QPtrList<Task>& activeTasks, KarmStorage* storage)
 {
-  kdDebug() << "Task::remove: " << _name << endl;
+  kdDebug(5970) << "Task::remove: " << _name << endl;
 
   bool ok = true;
 
@@ -354,7 +354,7 @@ bool Task::parseIncidence( KCal::Incidence* incident, long& minutes,
 
   percent_complete = static_cast<KCal::Todo*>(incident)->percentComplete();
 
-  //kdDebug() << "Task::parseIncidence: "
+  //kdDebug(5970) << "Task::parseIncidence: "
   //  << name << ", Minutes: " << minutes
   //  <<  ", desktop: " << desktopList << endl;
 
@@ -378,7 +378,7 @@ QString Task::getDesktopStr() const
 
 void Task::cut()
 {
-  //kdDebug() << "Task::cut - " << name() << endl;
+  //kdDebug(5970) << "Task::cut - " << name() << endl;
   changeParentTotalTimes( -_totalSessionTime, -_totalTime);
   if ( ! parent())
     listView()->takeItem(this);

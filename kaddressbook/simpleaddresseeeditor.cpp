@@ -90,8 +90,8 @@ void SimpleAddresseeEditor::load()
 {
   kdDebug(5720) << "SimpleAddresseeEditor::load()" << endl;
 
-  kdDebug() << "ASSEMBLED NAME: " << mAddressee.assembledName() << endl;
-  kdDebug() << "EMAIL NAME: " << mAddressee.preferredEmail() << endl;
+  kdDebug(5720) << "ASSEMBLED NAME: " << mAddressee.assembledName() << endl;
+  kdDebug(5720) << "EMAIL NAME: " << mAddressee.preferredEmail() << endl;
 
   mBlockModified = true;
 

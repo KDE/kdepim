@@ -78,7 +78,7 @@ void ATCommand::construct()
 
 ATCommand::~ATCommand()
 {
-//  kdDebug() << "~ATCommand: " << cmdString() << endl;
+//  kdDebug(5960) << "~ATCommand: " << cmdString() << endl;
 }
 
 
@@ -101,7 +101,7 @@ void ATCommand::setCmdString(const QString &cmdString)
   if (mId.startsWith("at")) mId = mId.mid(2);
   else mCmdString.prepend("at");
   
-//  kdDebug() << "ATCommand: Id: " << mId << endl;
+//  kdDebug(5960) << "ATCommand: Id: " << mId << endl;
 }
 
 QString ATCommand::cmdString()
@@ -113,12 +113,12 @@ QString ATCommand::cmd()
 {
   if (mParameters.count() > 0) {
     QString cmd = cmdString().left(cmdString().find("=") + 1);
-//    kdDebug() << "--1-cmd: " << cmd << endl;
+//    kdDebug(5960) << "--1-cmd: " << cmd << endl;
     for(uint i=0;i<mParameters.count();++i) {
       cmd += mParameters.at(i)->value();
       if (i < mParameters.count() - 1) cmd += ",";
     }
-//    kdDebug() << "--2-cmd: " << cmd << endl;
+//    kdDebug(5960) << "--2-cmd: " << cmd << endl;
     return cmd;
   } else {
     return cmdString();
@@ -174,7 +174,7 @@ void ATCommand::setResultFields(QString fieldsString)
 /*  
   for (QStringList::Iterator it = mResultFields.begin();
        it != mResultFields.end(); ++it ) {
-    kdDebug() << " --- " << *it << endl;
+    kdDebug(5960) << " --- " << *it << endl;
   }
 */
   
@@ -193,7 +193,7 @@ QString ATCommand::resultField(int index)
 
   QStringList::Iterator it = resultFields->at(index);
   if (it == resultFields->end()) {
-    kdDebug() << "ATCommand::resultField: index " << index << " out of range."
+    kdDebug(5960) << "ATCommand::resultField: index " << index << " out of range."
               << endl;
     return "";
   }
@@ -225,7 +225,7 @@ QPtrList<ATParameter> ATCommand::parameters()
 void ATCommand::setParameter(int index,const QString &value)
 {
   if (mParameters.count() <= (unsigned int)index) {
-    kdDebug() << "ATCommand " << cmdName() << " has no Parameter " << index
+    kdDebug(5960) << "ATCommand " << cmdName() << " has no Parameter " << index
               << endl;
     return;
   }
@@ -267,13 +267,13 @@ QString ATCommand::processOutput()
 
 void ATCommand::extractParameters()
 {
-//  kdDebug() << "Arg String: " << cmdString() << endl;
+//  kdDebug(5960) << "Arg String: " << cmdString() << endl;
   
   int pos = cmdString().find("=");
   if (pos < 0) return;
   
   QString paraString = cmdString().mid(pos+1);
-//  kdDebug() << "Para String: " << paraString << endl;
+//  kdDebug(5960) << "Para String: " << paraString << endl;
   QStringList paraList = QStringList::split(",",paraString);
   
   QStringList::ConstIterator it = paraList.begin();

@@ -106,7 +106,7 @@ void MainWindow::slotSelectionChanged()
 
 void MainWindow::save()
 {
-  kdDebug() << i18n("Saving time data to disk.") << endl;
+  kdDebug(5970) << i18n("Saving time data to disk.") << endl;
   _taskView->save();
   saveGeometry();
 }
@@ -119,7 +119,7 @@ void MainWindow::quit()
 
 MainWindow::~MainWindow()
 {
-  kdDebug() << i18n("MainWindow::~MainWindows: Quitting karm.") << endl;
+  kdDebug(5970) << i18n("MainWindow::~MainWindows: Quitting karm.") << endl;
   _taskView->stopAllTimers();
   save();
 }

@@ -40,7 +40,7 @@ ResourceCalendar::~ResourceCalendar()
 
 void ResourceCalendar::writeConfig( KConfig* config )
 {
-  kdDebug() << "ResourceCalendar::writeConfig()" << endl;
+  kdDebug(5800) << "ResourceCalendar::writeConfig()" << endl;
 
   KRES::Resource::writeConfig( config );
 }

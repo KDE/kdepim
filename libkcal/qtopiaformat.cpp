@@ -124,7 +124,7 @@ class QtopiaParser : public QXmlDefaultHandler
 
         QString alarmStr = attributes.value( "alarm" );
         if ( !alarmStr.isEmpty() ) {
-          kdDebug() << "Alarm: " << alarmStr << endl;
+          kdDebug(5800) << "Alarm: " << alarmStr << endl;
           Alarm *alarm = new Alarm( event );
           alarm->setType( Alarm::Display );
           alarm->setEnabled( true );
@@ -188,21 +188,21 @@ class QtopiaParser : public QXmlDefaultHandler
 
     bool warning ( const QXmlParseException &exception )
     {
-      kdDebug() << "WARNING" << endl;
+      kdDebug(5800) << "WARNING" << endl;
       printException( exception );
       return true;
     }
  
     bool error ( const QXmlParseException &exception )
     {
-      kdDebug() << "ERROR" << endl;
+      kdDebug(5800) << "ERROR" << endl;
       printException( exception );
       return false;
     }
  
     bool fatalError ( const QXmlParseException &exception )
     {
-      kdDebug() << "FATALERROR" << endl;
+      kdDebug(5800) << "FATALERROR" << endl;
       printException( exception );
       return false;
     }
@@ -310,7 +310,7 @@ bool QtopiaFormat::save( Calendar *calendar, const QString &fileName )
 
 bool QtopiaFormat::fromString( Calendar *, const QString & )
 {
-  kdDebug() << "QtopiaFormat::fromString() not yet implemented." << endl;
+  kdDebug(5800) << "QtopiaFormat::fromString() not yet implemented." << endl;
   return false;
 }
 

@@ -419,7 +419,7 @@ void Modem::writeChar(const char c)
 
 void Modem::writeLine(const char *line)
 {
-  kdDebug() << "Modem::writeLine(): " << line << endl;
+  kdDebug(5960) << "Modem::writeLine(): " << line << endl;
 
 	write(fd, (const void *)line, strlen(line));
 	writeChar('\r');

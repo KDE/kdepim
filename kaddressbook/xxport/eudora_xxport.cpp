@@ -114,7 +114,7 @@ KABC::AddresseeList EudoraXXPort::importContacts( const QString& ) const
       tmp = get( line, "address" ).stripWhiteSpace();
       if ( !tmp.isEmpty() ) {
         KABC::Address addr;
-        kdDebug() << tmp << endl; // dump complete address
+        kdDebug(5720) << tmp << endl; // dump complete address
         addr.setLabel( tmp );
         a->insertAddress( addr );
       }

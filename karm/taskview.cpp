@@ -154,7 +154,7 @@ void TaskView::load()
 
 void TaskView::loadFromFlatFile()
 {
-  kdDebug() << "TaskView::loadFromFlatFile()" << endl;
+  kdDebug(5970) << "TaskView::loadFromFlatFile()" << endl;
 
   //KFileDialog::getSaveFileName("icalout.ics",i18n("*.ics|ICalendars"),this);
 
@@ -492,13 +492,13 @@ void TaskView::deleteTask(bool markingascomplete)
     }
     else
     {
-      //kdDebug() << "TaskView::deleteTask - 1" << endl;
+      //kdDebug(5970) << "TaskView::deleteTask - 1" << endl;
       task->remove(activeTasks, _storage);
-      //kdDebug() << "TaskView::deleteTask - 2" << endl;
+      //kdDebug(5970) << "TaskView::deleteTask - 2" << endl;
       task->removeFromView();
-      //kdDebug() << "TaskView::deleteTask - 3" << endl;
+      //kdDebug(5970) << "TaskView::deleteTask - 3" << endl;
       save();
-      //kdDebug() << "TaskView::deleteTask - 4" << endl;
+      //kdDebug(5970) << "TaskView::deleteTask - 4" << endl;
     }
 
     // remove root decoration if there is no more children.
@@ -592,7 +592,7 @@ void TaskView::deletingTask(Task* deletedTask)
 
 void TaskView::iCalFileChanged(QString file)
 {
-  kdDebug() << "TaskView:iCalFileChanged: " << file << endl;
+  kdDebug(5970) << "TaskView:iCalFileChanged: " << file << endl;
   load();
 }
 
@@ -605,10 +605,10 @@ QValueList<HistoryEvent> TaskView::getHistory(const QDate& from,
 void TaskView::markTaskAsComplete()
 {
   if (current_item())
-    kdDebug() << "TaskView::markTaskAsComplete: "
+    kdDebug(5970) << "TaskView::markTaskAsComplete: "
       << current_item()->uid() << endl;
   else
-    kdDebug() << "TaskView::markTaskAsComplete: null current_item()" << endl;
+    kdDebug(5970) << "TaskView::markTaskAsComplete: null current_item()" << endl;
 
   bool markingascomplete = true;
   deleteTask(markingascomplete);

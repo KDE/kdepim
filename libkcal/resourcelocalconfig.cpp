@@ -65,13 +65,13 @@ void ResourceLocalConfig::loadSettings( KRES::Resource *resource )
   ResourceLocal* res = static_cast<ResourceLocal*>( resource );
   if ( res ) {
     mURL->setURL( res->mURL.prettyURL() );
-    kdDebug() << "Format typeid().name(): " << typeid( res->mFormat ).name() << endl;
+    kdDebug(5800) << "Format typeid().name(): " << typeid( res->mFormat ).name() << endl;
     if ( typeid( *(res->mFormat) ) == typeid( ICalFormat ) )
       formatGroup->setButton( 0 );
     else if ( typeid( *(res->mFormat) ) == typeid( VCalFormat ) )
       formatGroup->setButton( 1 );
     else 
-      kdDebug() << "ERROR: ResourceLocalConfig::loadSettings(): Unknown format type" << endl;
+      kdDebug(5800) << "ERROR: ResourceLocalConfig::loadSettings(): Unknown format type" << endl;
   } else
     kdDebug(5700) << "ERROR: ResourceLocalConfig::loadSettings(): no ResourceLocal, cast failed" << endl;
 }

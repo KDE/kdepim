@@ -54,7 +54,7 @@ static KCmdLineOptions options[] =
 
 void initModem(Modem *modem)
 {
-  kdDebug() << "Opening serial Device: "
+  kdDebug(5960) << "Opening serial Device: "
             << KandyPrefs::serialDevice()
             << endl;
 

@@ -177,7 +177,7 @@ void KandyView::processLastLine()
   if ( para > 0 ) {
     mLastInput = mInput->text( para - 1 );
 
-    kdDebug() << "processLastLine(): " << mLastInput << endl;
+    kdDebug(5960) << "processLastLine(): " << mLastInput << endl;
 
     mScheduler->execute(mLastInput);
   }
@@ -185,7 +185,7 @@ void KandyView::processLastLine()
 
 void KandyView::appendOutput(const char *line)
 {
-//  kdDebug() << "OUT: " << line << endl;
+//  kdDebug(5960) << "OUT: " << line << endl;
   mOutput->append(line);
   mOutput->setCursorPosition(mOutput->paragraphs()-1,0);
 }
@@ -193,12 +193,12 @@ void KandyView::appendOutput(const char *line)
 void KandyView::setResult(ATCommand *command)
 {
   if (command == 0) {
-    kdDebug() << "KandyView::setResult(): Error! No command." << endl;
+    kdDebug(5960) << "KandyView::setResult(): Error! No command." << endl;
     mResultView->setText(i18n("Error"));
     return;
   }
   
-//  kdDebug() << "KandyView::setResult(): " << endl << mResult << endl
+//  kdDebug(5960) << "KandyView::setResult(): " << endl << mResult << endl
 //            << mLastCommand->processOutput(mResult) << endl;
   
   mResultView->setText(command->cmdName() + ":\n" + command->processOutput());
@@ -256,7 +256,7 @@ void KandyView::executeCommand()
         p->setValue(value);
       }
     }
-    kdDebug() << "KandyView::executeCommand(): " << cmd->cmd() << endl;
+    kdDebug(5960) << "KandyView::executeCommand(): " << cmd->cmd() << endl;
     mScheduler->execute(cmd);
   }
 }

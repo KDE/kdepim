@@ -111,7 +111,7 @@ void ResourceRemote::readConfig( const KConfig *config )
 
 void ResourceRemote::writeConfig( KConfig *config )
 {
-  kdDebug() << "ResourceRemote::writeConfig()" << endl;
+  kdDebug(5800) << "ResourceRemote::writeConfig()" << endl;
 
   ResourceCalendar::writeConfig( config );
 
@@ -154,7 +154,7 @@ int ResourceRemote::reloadPolicy() const
 QString ResourceRemote::cacheFile()
 {
   QString file = locateLocal( "cache", "kcal/kresources/" + identifier() );
-  kdDebug() << "ResourceRemote::cacheFile(): " << file << endl;
+  kdDebug(5800) << "ResourceRemote::cacheFile(): " << file << endl;
   return file;
 }
 
@@ -169,7 +169,7 @@ bool ResourceRemote::doOpen()
 
 bool ResourceRemote::load()
 {
-  kdDebug() << "ResourceRemote::load()" << endl;
+  kdDebug(5800) << "ResourceRemote::load()" << endl;
 
   if ( !mOpen ) return true;
 
@@ -200,7 +200,7 @@ void ResourceRemote::slotLoadJobResult( KIO::Job *job )
   if ( job->error() ) {
     job->showErrorDialog( 0 );
   } else {
-    kdDebug() << "ResourceRemote::slotLoadJobResult() success" << endl;
+    kdDebug(5800) << "ResourceRemote::slotLoadJobResult() success" << endl;
 
     mCalendar.close();
     mCalendar.load( cacheFile() );
@@ -215,7 +215,7 @@ void ResourceRemote::slotLoadJobResult( KIO::Job *job )
 
 bool ResourceRemote::save()
 {
-  kdDebug() << "ResourceRemote::save()" << endl;
+  kdDebug(5800) << "ResourceRemote::save()" << endl;
 
   if ( !mOpen ) return true;
 
@@ -254,7 +254,7 @@ void ResourceRemote::slotSaveJobResult( KIO::Job *job )
   if ( job->error() ) {
     job->showErrorDialog( 0 );
   } else {
-    kdDebug() << "ResourceRemote::slotSaveJobResult() success" << endl;
+    kdDebug(5800) << "ResourceRemote::slotSaveJobResult() success" << endl;
   }
   
   mUploadJob = 0;

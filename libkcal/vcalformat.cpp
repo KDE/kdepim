@@ -1492,7 +1492,7 @@ void VCalFormat::populate(VObject *vcal)
   if ((curVO = isAPropertyOf(vcal, ICMethodProp)) != 0) {
     char *methodType = 0;
     methodType = fakeCString(vObjectUStringZValue(curVO));
-    kdDebug() << "This calendar is an iTIP transaction of type '"
+    kdDebug(5800) << "This calendar is an iTIP transaction of type '"
               << methodType << "'" << endl;
     delete methodType;
   }
@@ -1501,7 +1501,7 @@ void VCalFormat::populate(VObject *vcal)
   if ((curVO = isAPropertyOf(vcal, VCProdIdProp)) != 0) {
     char *s = fakeCString(vObjectUStringZValue(curVO));
     if (strcmp(productId().local8Bit(), s) != 0)
-      kdDebug() << "This vCalendar file was not created by KOrganizer "
+      kdDebug(5800) << "This vCalendar file was not created by KOrganizer "
                    "or any other product we support. Loading anyway..." << endl;
     mLoadedProductId = s;
     deleteStr(s);
@@ -1511,7 +1511,7 @@ void VCalFormat::populate(VObject *vcal)
   if ((curVO = isAPropertyOf(vcal, VCVersionProp)) != 0) {
     char *s = fakeCString(vObjectUStringZValue(curVO));
     if (strcmp(_VCAL_VERSION, s) != 0)
-      kdDebug() << "This vCalendar file has version " << s
+      kdDebug(5800) << "This vCalendar file has version " << s
                 << "We only support " << _VCAL_VERSION << endl;
     deleteStr(s);
   }
@@ -1579,7 +1579,7 @@ void VCalFormat::populate(VObject *vcal)
       // signal/slot get connected.
       if (anEvent) {
       	if ( !anEvent->dtStart().isValid() || !anEvent->dtEnd().isValid() ) {
-	  kdDebug() << "VCalFormat::populate(): Event has invalid dates."
+	  kdDebug(5800) << "VCalFormat::populate(): Event has invalid dates."
 	            << endl;
 	} else {
           mCalendar->addEvent(anEvent);

@@ -75,7 +75,7 @@ void ResourceLocalDir::readConfig( const KConfig *config )
 
 void ResourceLocalDir::writeConfig( KConfig *config )
 {
-  kdDebug() << "ResourceLocalDir::writeConfig()" << endl;
+  kdDebug(5800) << "ResourceLocalDir::writeConfig()" << endl;
 
   ResourceCalendar::writeConfig( config );
 
@@ -120,7 +120,7 @@ bool ResourceLocalDir::doOpen()
 
 bool ResourceLocalDir::load()
 {
-  kdDebug() << "ResourceLocalDir::load()" << endl;
+  kdDebug(5800) << "ResourceLocalDir::load()" << endl;
 
   if ( !mOpen ) return true;
 
@@ -128,7 +128,7 @@ bool ResourceLocalDir::load()
 
   QString dirName = mURL.path();
 
-  kdDebug() << "ResourceLocalDir::load(): '" << dirName << "'" << endl;
+  kdDebug(5800) << "ResourceLocalDir::load(): '" << dirName << "'" << endl;
 
   QDir dir( dirName );
 
@@ -140,7 +140,7 @@ bool ResourceLocalDir::load()
       continue;
 
     QString fileName = dirName + "/" + *it;
-    kdDebug() << " read '" << fileName << "'" << endl;
+    kdDebug(5800) << " read '" << fileName << "'" << endl;
     CalendarLocal cal( mCalendar.timeZoneId() );
     cal.load( fileName );
     Incidence::List incidences = cal.rawIncidences();
@@ -153,7 +153,7 @@ bool ResourceLocalDir::load()
 
 bool ResourceLocalDir::save()
 {
-  kdDebug() << "ResourceLocalDir::save()" << endl;
+  kdDebug(5800) << "ResourceLocalDir::save()" << endl;
 
   if ( !mOpen ) return true;
 
@@ -163,7 +163,7 @@ bool ResourceLocalDir::save()
   for( it = incidences.begin(); it != incidences.end(); ++it ) {
     Incidence *i = *it;
     QString fileName = mURL.path() + "/" + i->uid();
-    kdDebug() << "writing '" << fileName << "'" << endl;
+    kdDebug(5800) << "writing '" << fileName << "'" << endl;
 
     CalendarLocal cal( mCalendar.timeZoneId() );
     cal.addIncidence( i->clone() );
@@ -180,11 +180,11 @@ KABC::Lock *ResourceLocalDir::lock()
 
 void ResourceLocalDir::reload( const QString &file )
 {
-  kdDebug() << "ResourceLocalDir::reload()" << endl;
+  kdDebug(5800) << "ResourceLocalDir::reload()" << endl;
 
   if ( !mOpen ) return;
 
-  kdDebug() << "  File: '" << file << "'" << endl;
+  kdDebug(5800) << "  File: '" << file << "'" << endl;
 
   mCalendar.close();
   load();

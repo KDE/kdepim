@@ -2297,7 +2297,7 @@ KActionCollection* KNMainWidget::actionCollection() const
 
 KXMLGUIFactory* KNMainWidget::factory() const
 {
-  kdDebug()<<"m_guiclient is "<< m_GUIClient
+  kdDebug(5003)<<"m_guiclient is "<< m_GUIClient
            <<", the factory is " << m_GUIClient->factory() <<endl;
   return m_GUIClient->factory();
 }

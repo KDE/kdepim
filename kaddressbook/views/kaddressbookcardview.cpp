@@ -355,7 +355,7 @@ void KAddressBookCardView::addresseeExecuted(CardViewItem *item)
     AddresseeCardViewItem *aItem = dynamic_cast<AddresseeCardViewItem*>(item);
     if (aItem)
     {
-      //kdDebug()<<"... even has a valid item:)"<<endl;
+      //kdDebug(5720)<<"... even has a valid item:)"<<endl;
       emit executed(aItem->addressee().uid());
     }
 }
