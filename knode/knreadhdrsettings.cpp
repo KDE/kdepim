@@ -90,6 +90,8 @@ KNReadHdrSettings::ConfDialog::ConfDialog(KNViewHeader *header, QWidget *parent,
 
   setFixedHeight(sizeHint().height());
   restoreWindowSize("accReadHdrPropDLG", this, sizeHint());
+
+  setHelp("anc-knode-headers");
 }
 
 

@@ -62,6 +62,8 @@ KNGroupDialog::KNGroupDialog(QWidget *parent, KNNntpAccount *a) :
   connect(arrowBtn2, SIGNAL(clicked()), this, SLOT(slotArrowBtn2()));
 
   restoreWindowSize("groupDlg", this, QSize(662,393));  // optimized for 800x600
+
+  setHelp("anc-fetch-group-list");
 }
 
 

@@ -1166,6 +1166,8 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg(QWidget *p, KNAttac
     this, SLOT(slotMimeTypeTextChanged(const QString&)));
 
   restoreWindowSize("attProperties", this, QSize(300,250));
+
+  setHelp("anc-knode-editor-advanced");
 }
 
 

@@ -151,6 +151,8 @@ KNSettingsDialog::KNSettingsDialog(QWidget *parent, const char *name)
   widgets.append(new KNCleanupSettings(frame));
 
   restoreWindowSize("settingsDlg", this, QSize(508,424));
+
+  setHelp("anc-setting-your-identity");
 }
 
 

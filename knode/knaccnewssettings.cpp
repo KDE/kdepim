@@ -289,8 +289,9 @@ KNAccNewsConfDialog::KNAccNewsConfDialog(KNNntpAccount *a, QWidget *parent, cons
   topL->setColStretch(2, 1);
 
   setFixedHeight(sizeHint().height());
-
   restoreWindowSize("accNewsPropDLG", this, sizeHint());
+
+  setHelp("anc-setting-the-news-account");
 }
 
 
