@@ -10,8 +10,7 @@
 
 
 #include <qcolor.h>
-#include <qwindowsstyle.h> 
-#include <qcdestyle.h>
+#include <qstylefactory.h>
 #include <qscrollview.h> 
 
 
@@ -38,7 +37,9 @@ KGantt::KGantt(KGanttItem* toplevelitem,
   setBackgroundColor(QColor(white));
 
   _splitter = new QSplitter(this);
-  _splitter->setStyle(new QCDEStyle());
+  QStyle *cdestyle=QStyleFactory::create("CDE");
+  if(cdestyle)
+	  _splitter->setStyle(cdestyle);
 
   QPalette pal1(_splitter->palette());
   QPalette pal(_splitter->palette());
