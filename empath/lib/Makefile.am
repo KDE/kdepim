@@ -1,11 +1,9 @@
-KDE_CXXFLAGS = $(USE_RTTI)
-
 INCLUDES = -I$(top_srcdir)/rmm/ $(all_includes)
 
 lib_LTLIBRARIES = libempathkernel.la
 
 libempathkernel_la_LDFLAGS = $(all_libraries)
-libempathkernel_la_LIBADD = $(LIB_KDECORE)
+libempathkernel_la_LIBADD = $(LIB_KDECORE) $(LIBQPTHREAD) $(LIBPTHREAD)
 
 METASOURCES = AUTO
 

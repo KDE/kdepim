@@ -321,7 +321,8 @@ EmpathFolderWidget::s_newFolder()
     if (currentItem() != 0)
         setOpen(currentItem(), true);
 
-    empath->createFolder(newFolderURL);
+    // TODO: Notice when it's done.
+    empath->createFolder(newFolderURL, this);
 }
 
     void
@@ -339,8 +340,9 @@ EmpathFolderWidget::s_removeFolder()
             i18n("Remove"),
             i18n("Cancel"));
 
+    // TODO: Notice when it's done.
     if (c == KMessageBox::Yes)
-        empath->removeFolder(popupMenuOver->url());
+        empath->removeFolder(popupMenuOver->url(), this);
 }
 
     void

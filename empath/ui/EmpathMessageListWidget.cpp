@@ -455,26 +455,31 @@ EmpathMessageListWidget::s_messageSaveAs()
     void
 EmpathMessageListWidget::s_messageCopyTo()
 {
-    // STUB
+    empathDebug("STUB");
+}
+
+    void
+EmpathMessageListWidget::s_messageMoveTo()
+{
+    empathDebug("STUB");
 }
 
     void
 EmpathMessageListWidget::s_messagePrint()
 {
-    // STUB
+    empathDebug("STUB");
 }
 
     void
 EmpathMessageListWidget::s_messageFilter()
 {
-    // STUB
+    empathDebug("STUB");
 }
 
     void
 EmpathMessageListWidget::s_messageView()
 {
-    empathDebug("");
-    new EmpathMessageViewWindow(firstSelectedMessage());
+    (void)new EmpathMessageViewWindow(firstSelectedMessage());
 }
 
     void
@@ -646,51 +651,107 @@ EmpathMessageListWidget::_initActions()
 {
     actionCollection_ = new QActionCollection(this, "actionCollection");
 
-    ac_goPrevious_ = new KAction(i18n("&Previous"), QIconSet(BarIcon("prev")), CTRL+Key_P, 
-                    this, SLOT(s_goPrevious()), actionCollection(), "goPrevious");
-    ac_goNext_ = new KAction(i18n("&Next"), QIconSet(BarIcon("next")), CTRL+Key_N,
-                    this, SLOT(s_goNext()), actionCollection(), "goNext");
-    ac_goNextUnread_ = new KAction(i18n("Next &Unread"), QIconSet(BarIcon("down")), 0, 
-                    this, SLOT(s_goNextUnread()), actionCollection(), "goNextUnread");
-    
-    ac_messageTag_ = new KToggleAction(i18n("Tag"), QIconSet(px_xMx_), 0, 
-                    this, SLOT(s_messageMark()), actionCollection(), "messageTag");
-    ac_messageMarkRead_ = new KToggleAction(i18n("&Mark as read"), QIconSet(px_Sxx_), 0, 
-                    this, SLOT(s_messageMarkRead()), actionCollection(), "messageMarkRead");
-    ac_messageMarkReplied_ = new KToggleAction(i18n("Mark as replied"), QIconSet(px_xxR_), 0, 
-                    this, SLOT(s_messageMarkReplied()), actionCollection(), "messageMarkReplied");
-                    
-    ac_messageMarkMany_ = new KAction(i18n("Mark..."), 0, 
-                    this, SLOT(s_messageMarkMany()), actionCollection(), "messageMarkMany");
-                   
-    ac_messageView_ = new KAction(i18n("&View"), empathIconSet("view"), 0, 
-                    this, SLOT(s_messageView()), actionCollection(), "messageView");
-    ac_messageCompose_ = new KAction(i18n("&Compose"), empathIconSet("compose"), Key_M, 
-                    this, SLOT(s_messageCompose()), actionCollection(), "messageCompose");
-    ac_messageReply_ = new KAction(i18n("&Reply"), empathIconSet("reply"), Key_R,
-                    this, SLOT(s_messageReply()), actionCollection(), "messageReply");
-    ac_messageReply_->setEnabled(false);
-    ac_messageReplyAll_ = new KAction(i18n("Reply to &All"), empathIconSet("reply"), Key_G,
-                    this, SLOT(s_messageReplyAll()), actionCollection(), "messageReplyAll");
-    ac_messageForward_ = new KAction(i18n("&Forward"), empathIconSet("forward"), Key_F,
-                    this, SLOT(s_messageForward()), actionCollection(), "messageForward");
-    ac_messageDelete_ = new KAction(i18n("&Delete"), empathIconSet("delete"), Key_D,
-                    this, SLOT(s_messageDelete()), actionCollection(), "messageDelete");
-    ac_messageSaveAs_ = new KAction(i18n("Save &As..."), empathIconSet("save"), 0,
-                    this, SLOT(s_messageSaveAs()), actionCollection(), "messageSaveAs");
-    ac_messageCopyTo_ = new KAction(i18n("&Copy To..."), empathIconSet("copy"), Key_C,
-                    this, SLOT(s_messageCopyTo()), actionCollection(), "messageCopyTo");
-    ac_messageMoveTo_ = new KAction(i18n("&Move To..."), empathIconSet("save"), 0,
-                    this, SLOT(s_messageMoveTo()), actionCollection(), "messageMoveTo");
-    ac_messagePrint_ = new KAction(i18n("&Print"), empathIconSet("print"), 0,
-                    this, SLOT(s_messagePrint()), actionCollection(), "messagePrint");
-    ac_messageFilter_ = new KAction(i18n("&Filter"), empathIconSet("filter"), 0,
-                    this, SLOT(s_messageFilter()), actionCollection(), "messageFilter");
+    ac_goPrevious_ =
+        new KAction(i18n("&Previous"), QIconSet(BarIcon("prev")), CTRL+Key_P,
+            this, SLOT(s_goPrevious()), actionCollection(),
+            "goPrevious");
 
-    ac_threadExpand_ = new KAction(i18n("&Expand"), 0,
-                    this, SLOT(s_threadExpand()), actionCollection(), "threadExpand");
-    ac_threadCollapse_ = new KAction(i18n("&Collapse"), 0,
-                    this, SLOT(s_threadCollapse()), actionCollection(), "threadCollapse");
+    ac_goNext_ =
+        new KAction(i18n("&Next"), QIconSet(BarIcon("next")), CTRL+Key_N,
+            this, SLOT(s_goNext()), actionCollection(),
+            "goNext");
+
+    ac_goNextUnread_ =
+        new KAction(i18n("Next &Unread"), QIconSet(BarIcon("down")), 0, 
+            this, SLOT(s_goNextUnread()), actionCollection(),
+            "goNextUnread");
+    
+    ac_messageTag_ =
+        new KToggleAction(i18n("Tag"), QIconSet(px_xMx_), 0, 
+            this, SLOT(s_messageMark()), actionCollection(),
+            "messageTag");
+
+    ac_messageMarkRead_ =
+        new KToggleAction(i18n("&Mark as read"), QIconSet(px_Sxx_), 0, 
+            this, SLOT(s_messageMarkRead()), actionCollection(),
+            "messageMarkRead");
+
+    ac_messageMarkReplied_ =
+        new KToggleAction(i18n("Mark as replied"), QIconSet(px_xxR_), 0, 
+            this, SLOT(s_messageMarkReplied()), actionCollection(),
+            "messageMarkReplied");
+                    
+    ac_messageMarkMany_ =
+        new KAction(i18n("Mark..."), 0, 
+            this, SLOT(s_messageMarkMany()), actionCollection(),
+            "messageMarkMany");
+                   
+    ac_messageView_ =
+        new KAction(i18n("&View"), empathIconSet("view"), 0, 
+            this, SLOT(s_messageView()), actionCollection(),
+            "messageView");
+
+    ac_messageCompose_ =
+        new KAction(i18n("&Compose"), empathIconSet("compose"), Key_M, 
+            this, SLOT(s_messageCompose()), actionCollection(),
+            "messageCompose");
+
+    ac_messageReply_ =
+        new KAction(i18n("&Reply"), empathIconSet("reply"), Key_R,
+            this, SLOT(s_messageReply()), actionCollection(),
+            "messageReply");
+
+    ac_messageReply_->setEnabled(false);
+
+    ac_messageReplyAll_ =
+        new KAction(i18n("Reply to &All"), empathIconSet("reply"), Key_G,
+            this, SLOT(s_messageReplyAll()), actionCollection(),
+            "messageReplyAll");
+
+    ac_messageForward_ =
+        new KAction(i18n("&Forward"), empathIconSet("forward"), Key_F,
+            this, SLOT(s_messageForward()), actionCollection(),
+            "messageForward");
+
+    ac_messageDelete_ =
+        new KAction(i18n("&Delete"), empathIconSet("delete"), Key_D,
+            this, SLOT(s_messageDelete()), actionCollection(),
+            "messageDelete");
+
+    ac_messageSaveAs_ =
+        new KAction(i18n("Save &As..."), empathIconSet("save"), 0,
+            this, SLOT(s_messageSaveAs()), actionCollection(),
+            "messageSaveAs");
+
+    ac_messageCopyTo_ =
+        new KAction(i18n("&Copy To..."), empathIconSet("copy"), Key_C,
+            this, SLOT(s_messageCopyTo()), actionCollection(),
+            "messageCopyTo");
+
+    ac_messageMoveTo_ =
+        new KAction(i18n("&Move To..."), empathIconSet("save"), 0,
+            this, SLOT(s_messageMoveTo()), actionCollection(),
+            "messageMoveTo");
+
+    ac_messagePrint_ =
+        new KAction(i18n("&Print"), empathIconSet("print"), 0,
+            this, SLOT(s_messagePrint()), actionCollection(),
+            "messagePrint");
+
+    ac_messageFilter_ =
+        new KAction(i18n("&Filter"), empathIconSet("filter"), 0,
+            this, SLOT(s_messageFilter()), actionCollection(),
+            "messageFilter");
+
+    ac_threadExpand_ =
+        new KAction(i18n("&Expand"), 0,
+            this, SLOT(s_threadExpand()), actionCollection(),
+            "threadExpand");
+
+    ac_threadCollapse_ =
+        new KAction(i18n("&Collapse"), 0,
+            this, SLOT(s_threadCollapse()), actionCollection(),
+            "threadCollapse");
 }
 
     void

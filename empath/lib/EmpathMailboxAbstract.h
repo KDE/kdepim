@@ -45,6 +45,34 @@ loadConfig();
         
     virtual void
 sync(const EmpathURL &);
+
+    virtual RMM::RMessage
+retrieveMessage(const EmpathURL &);
+
+    virtual QString
+writeMessage(RMM::RMessage &, const EmpathURL & folder);
+
+    virtual bool
+removeMessage(const EmpathURL & url);
+        
+    virtual EmpathSuccessMap
+removeMessage(const EmpathURL & folder, const QStringList & messageIDList);
+
+    virtual bool
+markMessage(const EmpathURL & url, RMM::MessageStatus);
+
+    virtual EmpathSuccessMap
+markMessage(
+    const EmpathURL & folder,
+    const QStringList & messageIDList,
+    RMM::MessageStatus
+);
+
+    virtual bool
+createFolder(const EmpathURL & url);
+
+    virtual bool
+removeFolder(const EmpathURL & url);
         
 public slots:
 

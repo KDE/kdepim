@@ -299,46 +299,72 @@ class Empath : public QObject
         ///////////////////////////////////////////////////////////////////
         // Async methods.
         
-        EmpathJobID createFolder(const EmpathURL &);
-        EmpathJobID removeFolder(const EmpathURL &);
-
         void saveMessage(const EmpathURL &, QWidget *);
+        
+        EmpathJobID createFolder(const EmpathURL &, QObject * = 0L);
+        EmpathJobID removeFolder(const EmpathURL &, QObject * = 0L);
         
         /**
          * Ask for a message to be copied from one folder to another.
          */
-        EmpathJobID copy(const EmpathURL & src, const EmpathURL & dest);
+        EmpathJobID copy(
+            const EmpathURL & src,
+            const EmpathURL & dest,
+            QObject * = 0L
+        );
          
         /**
          * Ask for a message to be moved from one folder to another.
          */
-        EmpathJobID move(const EmpathURL & src, const EmpathURL & dest);
+        EmpathJobID move(
+            const EmpathURL & src,
+            const EmpathURL & dest,
+            QObject * = 0L
+        );
         
         /**
          * Ask for a message to be retrieved.
          */
-        EmpathJobID retrieve(const EmpathURL & messageURL);
+        EmpathJobID retrieve(
+            const EmpathURL & messageURL,
+            QObject * = 0L
+        );
         
         /**
          * Write a new message to the specified folder.
          */
-        EmpathJobID write(RMM::RMessage & msg, const EmpathURL & folder);
+        EmpathJobID write(
+            RMM::RMessage & msg,
+            const EmpathURL & folder,
+            QObject * = 0L
+        );
         
         /**
          * Remove given message.
          */
-        EmpathJobID remove(const EmpathURL & messageURL);
+        EmpathJobID remove(
+            const EmpathURL & messageURL,
+            QObject * = 0L
+        );
         
         /**
          * Remove messages. The mailbox and folder are given in the URL.
          * The QStringList is used to pass the message ids.
          */
-        EmpathJobID remove(const EmpathURL & folder, const QStringList & ids);
+        EmpathJobID remove(
+            const EmpathURL & folder,
+            const QStringList & ids,
+            QObject * = 0L
+        );
        
         /**
          * Mark a message with a particular status (Read, Marked, ...)
          */
-        EmpathJobID mark(const EmpathURL & messageURL, RMM::MessageStatus);
+        EmpathJobID mark(
+            const EmpathURL & messageURL,
+            RMM::MessageStatus,
+            QObject * = 0L
+        );
         
         /**
          * Mark many messages with a particular status.
@@ -348,7 +374,8 @@ class Empath : public QObject
         EmpathJobID mark(
             const EmpathURL & folder,
             const QStringList & ids,
-            RMM::MessageStatus
+            RMM::MessageStatus,
+            QObject * = 0L
         );
 
         //////////////////////////////////////////////////////////////////

@@ -234,4 +234,101 @@ EmpathFolder::setContainer(bool b)
     container_ = b;
 }
 
+    RMM::RMessage
+EmpathFolder::retrieveMessage(const QString & id)
+{
+    RMM::RMessage retval;
+
+    EmpathMailbox * m = empath->mailbox(url_);
+    
+    if (m == 0) {
+        empathDebug("Can't find my mailbox !");
+        return retval;
+    }
+
+    EmpathURL url(url_);
+    url.setMessageID(id);
+ 
+    retval = m->retrieveMessage(url);
+    return retval;
+}
+
+    QString
+EmpathFolder::writeMessage(RMM::RMessage & message)
+{
+    EmpathMailbox * m = empath->mailbox(url_);
+    
+    if (m == 0) {
+        empathDebug("Can't find my mailbox !");
+        return QString::null;
+    }
+ 
+    return m->writeMessage(message, url_);
+}
+
+    bool
+EmpathFolder::removeMessage(const QString & id)
+{
+    EmpathMailbox * m = empath->mailbox(url_);
+    
+    if (m == 0) {
+        empathDebug("Can't find my mailbox !");
+        return false;
+    }
+
+    EmpathURL url(url_);
+    url.setMessageID(id);
+ 
+    return m->removeMessage(url);
+}
+
+    EmpathSuccessMap
+EmpathFolder::removeMessage(const QStringList & idList)
+{
+    EmpathSuccessMap retval;
+
+    EmpathMailbox * m = empath->mailbox(url_);
+    
+    if (m == 0) {
+        empathDebug("Can't find my mailbox !");
+        return retval;
+    }
+ 
+    retval = m->removeMessage(url_, idList);
+    return retval;
+}
+
+    bool
+EmpathFolder::markMessage(const QString & id, RMM::MessageStatus status)
+{
+    EmpathMailbox * m = empath->mailbox(url_);
+    
+    if (m == 0) {
+        empathDebug("Can't find my mailbox !");
+        return false;
+    }
+    
+    EmpathURL url(url_);
+    url.setMessageID(id);
+ 
+    return m->markMessage(url, status);
+}
+
+    EmpathSuccessMap
+EmpathFolder::markMessage(const QStringList & idList, RMM::MessageStatus stat)
+{
+    EmpathSuccessMap retval;
+
+    EmpathMailbox * m = empath->mailbox(url_);
+    
+    if (m == 0) {
+        empathDebug("Can't find my mailbox !");
+        return retval;
+    }
+ 
+    retval = m->markMessage(url_, idList, stat);
+    return retval;
+}
+
+
 // vim:ts=4:sw=4:tw=78

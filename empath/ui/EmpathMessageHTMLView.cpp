@@ -72,6 +72,7 @@ EmpathMessageHTMLWidget::~EmpathMessageHTMLWidget()
     void
 EmpathMessageHTMLWidget::show(const QString & xml)
 {
+    empathDebug("");
     if (xml.isNull()) {
         empathDebug("xml is empty");
         setText(i18n("<i>No text to display</i>"));

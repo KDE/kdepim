@@ -70,146 +70,6 @@ EmpathMailboxMaildir::init()
     loadConfig();
 }
 
-#if 0
-    void
-EmpathMailboxMaildir::_runJob(EmpathJobInfo & jobInfo)
-{
-    switch (jobInfo.type()) {
-
-        case RetrieveMessage:
-            {
-                EmpathMaildir * m = _box(jobInfo.from());
-                
-                if (m == 0) {
-                    jobInfo.done(false);
-                    return;
-                }
-                
-                RMM::RMessage message = m->message(jobInfo.from().messageID());
-
-                if (!!message)
-                    empath->cacheMessage(jobInfo.from(), message);
-                
-                jobInfo.done(!!message);
-            }
-            break;
-            
-        case WriteMessage:
-            {
-                EmpathMaildir * box = _box(jobInfo.from());
-
-                if (box == 0) {
-                    jobInfo.done(false);
-                    return;
-                }
-
-                RMM::RMessage msg(jobInfo.message());
-                QString s = box->writeMessage(msg);
-
-                jobInfo.setMessageID(s);
-                jobInfo.done(!s.isEmpty());
-            }
-            break;
-
-        case MarkMessage:
-            {
-                empathDebug("Marking...");
-                // Mark a list of messages with status flag[s].
-
-                EmpathMaildir * m = _box(jobInfo.from());
-                
-                if (m == 0) {
-
-                    empathDebug("Can't access maildir");
-                    
-                    QStringList idList = jobInfo.IDList();
-
-                    QStringList::ConstIterator it;
-                    
-                    for (it = idList.begin(); it != idList.end(); ++it)
-                        jobInfo.setSuccess(*it, false);
-                    
-                    jobInfo.done(false);
-
-                    return;
-                }
-
-                jobInfo.setSuccessMap(
-                    m->mark(jobInfo.IDList(), jobInfo.status()));
-                
-                jobInfo.done(true);
-
-            }
-            break;
-
-        case RemoveMessage:
-            {
-                // Mark a list of messages with status flag[s].
-
-                EmpathMaildir * m = _box(jobInfo.from());
-                
-                if (m == 0) {
-                    
-                    QStringList::ConstIterator it(jobInfo.IDList().begin());
-                    
-                    for (; it != jobInfo.IDList().end(); ++it)
-                        jobInfo.setSuccess(*it, false);
-
-                    jobInfo.done(false);
-                    
-                    return;
-                }
-
-                jobInfo.setSuccessMap(m->removeMessage(jobInfo.IDList()));
-
-                jobInfo.done(true);
-            }
-            break;
-
-        case CreateFolder:
-            {
-                folderList_.insert(
-                    jobInfo.from().folderPath(),
-                    new EmpathFolder(jobInfo.from()));
-                
-                EmpathMaildir * m = new EmpathMaildir(path_, jobInfo.from());
-                boxList_.append(m);
-                m->init();
-                
-                jobInfo.done(true);
-            }
-            break;
-
-        case RemoveFolder:
-            {
-                bool ok =
-                    _recursiveRemove(path_ + "/" + jobInfo.from().folderPath());
-
-                if (!ok) {
-                    empathDebug("!ok");
-                    jobInfo.done(false);
-                    return;
-                }
-
-                loadConfig();
-
-                jobInfo.done(true);
-            }
-            break;
-
-        case CopyMessage:
-        case MoveMessage:
-            empathDebug("Derived classes don't handle copy / move.");
-            empathDebug("The intelligence behind this is in EmpathMailbox.");
-            break;
-
-        default:
-            empathDebug("Invalid job info");
-            break;
-    }
-}
-#endif
-
     void
 EmpathMailboxMaildir::sync(const EmpathURL & url)
 {
@@ -477,5 +337,115 @@ EmpathMailboxMaildir::_recursiveRemove(const QString & dir)
 
     return removedDirOK;
 }
+
+    RMM::RMessage
+EmpathMailboxMaildir::retrieveMessage(const EmpathURL & url)
+{
+    RMM::RMessage retval;
+
+    EmpathMaildir * box = _box(url);
+
+    if (box == 0)
+        return retval;
+
+    retval = box->message(url.messageID());
+
+    return retval;
+}
+
+    QString
+EmpathMailboxMaildir::writeMessage(
+    RMM::RMessage & message,
+    const EmpathURL & folder
+)
+{
+    EmpathMaildir * box = _box(folder);
+
+    if (box == 0)
+        return QString::null;
+
+    return box->writeMessage(message);
+}
+
+    bool
+EmpathMailboxMaildir::removeMessage(const EmpathURL & url)
+{
+    return removeMessage(url, url.messageID())[url.messageID()];
+}
+        
+    EmpathSuccessMap
+EmpathMailboxMaildir::removeMessage(
+    const EmpathURL & folder,
+    const QStringList & messageIDList)
+{
+    EmpathSuccessMap retval;
+
+    EmpathMaildir * box = _box(folder);
+
+    if (box == 0)
+        return retval;
+
+    retval = box->removeMessage(messageIDList);
+
+    return retval;
+}
+
+    bool
+EmpathMailboxMaildir::markMessage(const EmpathURL & url, RMM::MessageStatus s)
+{
+    return (markMessage(url, url.messageID(), s))[url.messageID()];
+}
+
+    EmpathSuccessMap
+EmpathMailboxMaildir::markMessage(
+    const EmpathURL & folder,
+    const QStringList & messageIDList,
+    RMM::MessageStatus status)
+{
+    EmpathSuccessMap retval;
+
+    EmpathMaildir * box = _box(folder);
+
+    if (box == 0)
+        return retval;
+
+    retval = box->mark(messageIDList, status);
+
+    return retval;
+}
+
+    bool
+EmpathMailboxMaildir::createFolder(const EmpathURL & url)
+{
+    EmpathMaildir * m = new EmpathMaildir(path_, url);
+
+    if (!m->createdOK()) {
+
+        delete m;
+        m = 0;
+        return false;
+    }
+
+    folderList_.insert(url.folderPath(), new EmpathFolder(url.folderPath()));
+    
+    boxList_.append(m);
+    m->init();
+
+    return true;
+}
+
+    bool
+EmpathMailboxMaildir::removeFolder(const EmpathURL & url)
+{
+    bool ok = _recursiveRemove(path_ + "/" + url.folderPath());
+
+    if (!ok)
+        return false;
+
+    loadConfig();
+
+    return true;
+}
+ 
 
 // vim:ts=4:sw=4:tw=78

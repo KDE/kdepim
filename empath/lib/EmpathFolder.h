@@ -32,6 +32,7 @@
 #include <qstring.h>
 
 // Local includes
+#include "RMM_Message.h"
 #include "EmpathURL.h"
 #include "EmpathIndexRecord.h"
 
@@ -75,6 +76,30 @@ class EmpathFolder : public QObject
          * Pointer to parent folder, or 0 if this is a toplevel folder.
          */
         EmpathFolder * parent() const;
+
+        /**
+         */
+        QString writeMessage(RMM::RMessage &);
+
+        /**
+         */
+        RMM::RMessage retrieveMessage(const QString & messageID);
+
+        /**
+         */
+        bool removeMessage(const QString & id);
+
+        /**
+         */
+        EmpathSuccessMap removeMessage(const QStringList & idList);
+
+        /**
+         */
+        bool markMessage(const QString & id,RMM::MessageStatus);
+        
+        /**
+         */
+        EmpathSuccessMap markMessage(const QStringList &, RMM::MessageStatus);
 
         /**
          * Set the name of a pixmap to use in the GUI.

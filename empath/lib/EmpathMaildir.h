@@ -57,13 +57,9 @@ class EmpathMaildir : public QObject
         
     public:
         
-        EmpathMaildir()
-            :    QObject()
-        {
-            empathDebug("default ctor");
-        }
-
         EmpathMaildir(const QString & basePath, const EmpathURL & url);
+
+        bool createdOK() const { return createdOK_; }
 
         virtual ~EmpathMaildir();
         
@@ -73,13 +69,13 @@ class EmpathMaildir : public QObject
         const EmpathURL & url() const       { return url_; }
         const QString & path() const        { return path_; }
         
-        QMap<QString, bool> mark(const QStringList &, RMM::MessageStatus);
+        EmpathSuccessMap mark(const QStringList &, RMM::MessageStatus);
         
         QString writeMessage(RMM::RMessage);
         
         RMM::RMessage message(const QString &);
         
-        QMap<QString, bool> removeMessage (const QStringList &);
+        EmpathSuccessMap removeMessage (const QStringList &);
         
         void sync(bool force = false);
         
@@ -89,6 +85,8 @@ class EmpathMaildir : public QObject
         
     private:
         
+        EmpathMaildir();
+
         bool        _removeMessage(const QString & id);
         bool        _mark(const QString & id, RMM::MessageStatus msgStat);
         QString     _write(RMM::RMessage);
@@ -107,6 +105,8 @@ class EmpathMaildir : public QObject
         QStringList tagList_;
         
         QTimer       timer_;
+
+        bool createdOK_;
 
         // Order dependency
         QString      path_;

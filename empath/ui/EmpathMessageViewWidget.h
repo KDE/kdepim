@@ -69,7 +69,7 @@ class EmpathMessageViewWidget : public QWidget
         
         void s_URLSelected(QString, int);
         void s_clipClicked();
-        void s_retrieveComplete(EmpathRetrieveJob);
+        void s_retrieveJobFinished(EmpathRetrieveJob);
 
     private:
         
@@ -79,8 +79,6 @@ class EmpathMessageViewWidget : public QWidget
 
         EmpathURL   url_;
         bool        viewingSource_;
-
-        EmpathJobID requestID_;
 };
 
 #endif

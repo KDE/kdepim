@@ -47,9 +47,9 @@
 EmpathComposer::EmpathComposer()
     :   QObject()
 {
-//    QObject::connect(
-//        empath->jobScheduler(), SIGNAL(retrieveComplete(EmpathRetrieveJob)),
-//        this,                   SLOT(s_retrieveJobComplete(EmpathRetrieveJob)));
+    QObject::connect(
+        this,   SIGNAL(composeFormComplete(EmpathComposeForm)),
+        empath, SIGNAL(newComposer(EmpathComposeForm)));
 }
 
 EmpathComposer::~EmpathComposer()
@@ -159,7 +159,7 @@ EmpathComposer::newComposeForm(ComposeType t, const EmpathURL & url)
 
     composeForm.setComposeType(t);
     
-    jobList_.insert(empath->retrieve(url), composeForm); 
+    jobList_.insert(empath->retrieve(url, this), composeForm); 
 }
 
     void

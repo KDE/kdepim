@@ -75,7 +75,8 @@ EmpathIndexRecord::EmpathIndexRecord(const QString & id, RMM::RMessage & m)
         parentMessageId_    (m.envelope().parentMessageId()),
         tagged_             (false)
 {
-    // Empty.
+    if (!subject_)
+        subject_ = QString::fromUtf8("");
 }
 
 EmpathIndexRecord::EmpathIndexRecord(
@@ -98,7 +99,8 @@ EmpathIndexRecord::EmpathIndexRecord(
         parentMessageId_    (parentMessageId),
         tagged_             (false)
 {
-    // Empty.
+    if (!subject_)
+        subject_ = QString::fromUtf8("");
 }
 
     EmpathIndexRecord &
@@ -168,11 +170,6 @@ EmpathIndexRecord::niceDate(bool twelveHour)
     QDataStream &
 operator << (QDataStream & s, EmpathIndexRecord & rec)
 {
-    if (rec.id_.isEmpty() || rec.subject_.isEmpty()) {
-        qDebug("Writing this record would crash Qt");
-        return s;
-    }
-
     s   << rec.id_;
 
     s   << (Q_UINT8)rec.tagged_;
@@ -212,6 +209,9 @@ operator >> (QDataStream & s, EmpathIndexRecord & rec)
         >> rec.size_
         >> rec.messageId_
         >> rec.parentMessageId_;
+
+    if (rec.subject_.isNull())
+        rec.subject_ = QString::fromUtf8("");
 
     rec.status_ = (RMM::MessageStatus)statusAsInt;
     rec.tagged_ = (bool)taggedAsInt;

@@ -55,6 +55,10 @@ Introduction
   This doesn't work well with an OO design, so an RAddress is a little smart -
   it know whether it's a Mailbox or a Group.
 
+  Note: librmm implements the design pattern 'Proxy'. Actually, it's a
+  bit different, but basically it doesn't create/parse until absolutely
+  necessary.
+
 -------------------------------------------------------------------------------
 Qt collections
 -------------------------------------------------------------------------------
@@ -144,48 +148,48 @@ General operations
 
   Remember to check the pointer isn't 0.
 
+  Note: The class 'Empath' implements the design pattern 'Facade'.
+
 ...............................................................................
 Asynchronous Operations
 ...............................................................................
 
   To avoid stalling of the interface, Empath supports doing many operations in
-  the background. This makes user code more complex, but that's tough.
+  the background.
 
   If you're writing code for Empath and you want a message - say you want
   to save it to a file, you must:
 
-  Connect the following signal to a slot in your object:
-  
-  empath->jobComplete(EmpathJobInfo &)
+  Ask Empath to retrieve the message and pass it a pointer to 'this' to
+  be notified when the job is complete.
 
-  Ask Empath to retrieve the message:
+  empath->retrieve(EmpathURL("empath://Inbox/a_message_id"), this);
 
-  empath->retrieve(const EmpathURL &, QString extraInfo);
+  You must provide the right slot to receive the signal.
+  The slot names are in EmpathJobScheduler.cpp.
+  In the future, I might allow passing SLOT(mySlotName(EmpathSomethingJob))
+  to allow you to choose your own name for your slot.
 
-  Note: 'extraInfo' is used to identify your object. If you're a widget that
-  displays message, you'd probably use 'displayWidget:id' where 'id' is unique
-  to your particular instance. See EmpathMessageViewWidget for an example.
+  When Empath calls the slot you connected to jobComplete(), you
+  can pick up data/info from the job.
 
-  When Empath calls the slot you connected to jobComplete(), check that
-  the `xinfo' string in the EmpathJobInfo object you are passed matches
-  that which you sent. Ask for the message data. You need the extraInfo
-  (`xinfo') string here to identify yourself.
-
-  RMM::RMessage * m = empath->message(url, extraInfo);
-
-  Once you are finished using the message, you must tell Empath that you don't
-  want it any more. This allows Empath to remove it from its cache. If you
-  don't tell Empath that you've finished with it, it will remain in the cache
-  and can be retrieved at a later time, if you still want to access it.
-
-  empath->finishedWithMessage(url, extraInfo);
+  MyObject::s_retrieveJobComplete(EmpathRetrieveJob job) {
+    RMM::RMessage m = job.message();
+    // Check if message is ok using either:
+    // if (job.success())
+    // OR
+    // if (!message.isNull())
+  }
 
   Other operations are also asynchronous. For example, you can do:
 
   empath->remove(const EmpathURL &);
 
-  If you don't care if the message is removed or not, simply don't connect
-  to, or ignore, the signal Empath::jobComplete(...).
+  If you don't care if the message is removed or not, simply don't pass
+  'this' as the last parameter.
+
+  Note: The 'Job' system in Empath is an implementation of the
+  design pattern 'Command' (also known as 'Action' or 'Transaction'.)
 
 -------------------------------------------------------------------------------
 Composing
@@ -200,14 +204,16 @@ Filtering
 Introduction
 ...............................................................................
 
-  All automatic operations are done by filters. Please forget what you believe
-  about filters. In Empath, a filter is not just for matching a message and
-  moving it to a folder. Empath's filters basically do all the work.
+  All automatic operations are done by filters.
 
   When an EmpathMailbox notices that a new message is available, it doesn't do
   anything with it. It tells Empath that the message has arrived. Empath lets
   the filter mechanism know. The filter mechanism is basically a list of
   EmpathFilter.
+
+  Note: The Empath filter system (specifically, the matching of messages
+  performed by EmpathMatcher objects) implements the 'Chain of Responsibility'
+  design pattern.
 
 ...............................................................................
 What is a filter ?

@@ -51,8 +51,7 @@ EmpathMessageViewWidget::EmpathMessageViewWidget
     (const EmpathURL & url, QWidget *parent)
     :   QWidget(parent, "MessageViewWidget"),
         url_(url),
-        viewingSource_(false),
-        requestID_(-1)
+        viewingSource_(false)
 {
     structureWidget_ =
         new EmpathMessageStructureWidget(0, "structureWidget");
@@ -70,14 +69,6 @@ EmpathMessageViewWidget::EmpathMessageViewWidget
         headerViewWidget_,  SIGNAL(clipClicked()),
         this,               SLOT(s_clipClicked()));
     
-//    QObject::connect(messageWidget_, SIGNAL(URLSelected(QString, int)),
-//            SLOT(s_URLSelected(QString, int)));
-
-    // FIXME
-//    QObject::connect(
-//        empath->jobScheduler(), SIGNAL(jobComplete(EmpathRetrieveJob)),
-//        this,   SLOT(s_jobComplete(EmpathRetrieveJob)));
-    
     QObject::connect(
         structureWidget_,    SIGNAL(partChanged(RMM::RBodyPart)),
         this,                SLOT(s_partChanged(RMM::RBodyPart)));
@@ -91,21 +82,17 @@ EmpathMessageViewWidget::EmpathMessageViewWidget
 }
 
     void
-EmpathMessageViewWidget::s_retrieveComplete(EmpathRetrieveJob j)
+EmpathMessageViewWidget::s_retrieveJobFinished(EmpathRetrieveJob j)
 {
-    if (requestID_ != j.id())
-        return;
-
     if (!j.success())
         return;
 
     url_ = j.url();
 
-    RMM::RMessage m(empath->message(j.url()));
+    RMM::RMessage m(j.message());
     
     if (!m) {
-        empathDebug("Couldn't get supposedly retrieved message from \"" +
-            j.url().asString() + "\"");
+        empathDebug("Couldn't get supposedly retrieved message from job");
         return;
     }
 
@@ -166,19 +153,19 @@ EmpathMessageViewWidget::s_retrieveComplete(EmpathRetrieveJob j)
                 empathDebug("   Type of this part is \"" + t.type() + "\"");
                 empathDebug("SubType of this part is \"" + t.subType() + "\"");
 
-                if (!stricmp(t.type(), "text")) {
+                if (0 == stricmp(t.type(), "text")) {
                     
-                    if (!stricmp(t.subType(), "html")) {
+                    if (0 == stricmp(t.subType(), "html")) {
 
-                        empathDebug("Using this part as body");
+                        empathDebug("Using this HTML part as body");
 
                         s = QString::fromUtf8(it.current()->asString());
                         messageWidget_->show(s);
                         return;
     
-                    } else if (!stricmp(t.subType(), "plain")) {
+                    } else if (0 == stricmp(t.subType(), "plain")) {
                     
-                        empathDebug("Using this part as body");
+                        empathDebug("Using this plaintext part as body");
 
                         s = QString::fromUtf8(it.current()
                             ->asXML(quote1, quote2));
@@ -208,7 +195,7 @@ EmpathMessageViewWidget::s_retrieveComplete(EmpathRetrieveJob j)
     void
 EmpathMessageViewWidget::s_print()
 {
-    // STUB
+    empathDebug("STUB");
 }
 
 EmpathMessageViewWidget::~EmpathMessageViewWidget()
@@ -220,7 +207,7 @@ EmpathMessageViewWidget::~EmpathMessageViewWidget()
 EmpathMessageViewWidget::s_setMessage(const EmpathURL & url)
 {
     url_ = url;
-    requestID_ = empath->retrieve(url_);
+    empath->retrieve(url_, this);
 }
 
     void
@@ -329,6 +316,6 @@ EmpathMessageViewWidget::s_showText(const QString & s)
     void
 EmpathMessageViewWidget::s_switchView()
 {
-  // STUB
+    empathDebug("STUB");
 }
 

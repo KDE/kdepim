@@ -94,6 +94,26 @@ class EmpathMailbox : public QObject
          * Synchronise the index for the folder specified in the url.
          */
         virtual void sync(const EmpathURL &) = 0;
+
+        virtual RMM::RMessage retrieveMessage(const EmpathURL & url) = 0;
+
+        virtual QString writeMessage(RMM::RMessage &, const EmpathURL & f) = 0;
+        
+        virtual bool removeMessage(const EmpathURL & url) = 0;
+        
+        virtual EmpathSuccessMap removeMessage(
+            const EmpathURL & folder,
+            const QStringList & messageIDList) = 0;
+
+        virtual bool markMessage(const EmpathURL & url, RMM::MessageStatus) = 0;
+
+        virtual EmpathSuccessMap markMessage(
+            const EmpathURL & folder,
+            const QStringList & messageIDList,
+            RMM::MessageStatus) = 0;
+
+        virtual bool createFolder(const EmpathURL & url) = 0;
+        virtual bool removeFolder(const EmpathURL & url) = 0;
        
     public slots:
 

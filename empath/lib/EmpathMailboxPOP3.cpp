@@ -292,7 +292,73 @@ EmpathMailboxPOP3::s_jobData(int, const char * data, int)
     }
 }
 
+    RMM::RMessage
+EmpathMailboxPOP3::retrieveMessage(const EmpathURL & url)
+{
+    // STUB
+    RMM::RMessage retval;
+    return retval;
+}
 
+    QString
+EmpathMailboxPOP3::writeMessage(
+    RMM::RMessage & message,
+    const EmpathURL & folder
+)
+{
+    // We don't do this.
+    return QString::null;
+}
+
+    bool
+EmpathMailboxPOP3::removeMessage(const EmpathURL & url)
+{
+    // STUB
+    return false;
+}
+        
+    EmpathSuccessMap
+EmpathMailboxPOP3::removeMessage(
+    const EmpathURL & folder,
+    const QStringList & messageIDList)
+{
+    // STUB
+    EmpathSuccessMap retval;
+    return retval;
+}
+
+    bool
+EmpathMailboxPOP3::markMessage(const EmpathURL & url, RMM::MessageStatus s)
+{
+    // We don't do this.
+    return false;
+}
+
+    EmpathSuccessMap
+EmpathMailboxPOP3::markMessage(
+    const EmpathURL & folder,
+    const QStringList & messageIDList,
+    RMM::MessageStatus status)
+{
+    // We don't do this.
+    EmpathSuccessMap retval;
+    return retval;
+}
+
+    bool
+EmpathMailboxPOP3::createFolder(const EmpathURL & url)
+{
+    // We don't do this.
+    return false;
+}
+
+    bool
+EmpathMailboxPOP3::removeFolder(const EmpathURL & url)
+{
+    // We don't do this.
+    return false;
+}
+ 
 //////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////// CONFIG ///////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////

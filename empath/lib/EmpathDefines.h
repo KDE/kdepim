@@ -24,6 +24,7 @@
 #define EMPATHDEFINES_H
 
 #include <qstring.h>
+#include <qmap.h>
 
 #if (!defined NDEBUG) && (defined __GNUG__)
 
@@ -45,7 +46,8 @@
 
 #endif
 
-typedef unsigned int EmpathJobID;
+typedef int EmpathJobID;
+typedef QMap<QString, bool> EmpathSuccessMap;
 
 #endif // included this file
 

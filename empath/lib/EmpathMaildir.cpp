@@ -60,6 +60,8 @@ EmpathMaildir::EmpathMaildir(const QString & basePath, const EmpathURL & url)
 {
     path_ = basePath + "/" + url.folderPath();
     
+    createdOK_ = _checkDirs();
+    
     QObject::connect(&timer_, SIGNAL(timeout()),
         this, SLOT(s_timerBeeped()));
     
@@ -102,11 +104,11 @@ EmpathMaildir::sync(bool force)
     f->setIndexInitialised();
 }
 
-    QMap<QString, bool>
+    EmpathSuccessMap
 EmpathMaildir::mark(const QStringList & l, RMM::MessageStatus msgStat)
 {
     empathDebug("Number to mark: " + QString::number(l.count()));
-    QMap<QString, bool> successMap;
+    EmpathSuccessMap successMap;
     
     EmpathTask * t = new EmpathTask (i18n("Marking messages"));
     t->setMax(l.count());
@@ -131,20 +133,23 @@ EmpathMaildir::writeMessage(RMM::RMessage m)
     RMM::RMessage
 EmpathMaildir::message(const QString & id)
 {
+    RMM::RMessage retval;
+
     QCString s = _messageData(id);
     
     if (s.isEmpty()) {
         empathDebug("Couldn't load data for \"" + id + "\"");
-        return RMM::RMessage();
+        return retval;
     }
     
-    return RMM::RMessage(s);
+    retval = RMM::RMessage(s);
+    return retval;
 }
 
-    QMap<QString, bool>
+    EmpathSuccessMap
 EmpathMaildir::removeMessage(const QStringList & l)
 {
-    QMap<QString, bool> successMap;
+    EmpathSuccessMap successMap;
 
     EmpathTask * t = new EmpathTask(i18n("Removing messages"));
 
@@ -169,7 +174,7 @@ EmpathMaildir::removeMessage(const QStringList & l)
     bool
 EmpathMaildir::_removeMessage(const QString & id)
 {
-    QDir d(path_ + "/cur/", id + "*");
+    QDir d(path_ + "/cur/", id + "*", QDir::Unsorted);
 
     if (d.count() != 1) return false;
     
@@ -189,7 +194,7 @@ EmpathMaildir::_removeMessage(const QString & id)
 EmpathMaildir::_mark(const QString & id, RMM::MessageStatus msgStat)
 {
     empathDebug("");
-    QDir d(path_ + "/cur/", id + "*");
+    QDir d(path_ + "/cur/", id + "*", QDir::Unsorted);
  
     QString statusFlags;
 
@@ -249,7 +254,7 @@ EmpathMaildir::_messageData(const QString & filename, bool isFullName)
         // We need to locate the actual file, by looking for the basename
         // with the flags section appended.
         
-        QDir cur(path_ + "/cur/", filename + "*");
+        QDir cur(path_ + "/cur/", filename + "*", QDir::Unsorted);
         
         if (cur.count() == 0) {
             empathDebug("Can't match the filename, giving up.");
@@ -416,7 +421,6 @@ EmpathMaildir::_checkDirs()
         return false;
     }
     
-    kapp->processEvents();
     return true;
 }
 

@@ -12,11 +12,13 @@ INCLUDES = -I$(srcdir)/lib -I$(srcdir)/ui -I$(top_srcdir)/rmm $(all_includes)
 lib_LTLIBRARIES = libempath.la
 
 libempath_la_SOURCES = main.cpp
-libempath_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module
+libempath_la_LDFLAGS = \
+    $(LIBQPTHREAD) $(all_libraries) -version-info 1:0:0 -module
+
 libempath_la_LIBADD = \
 	$(top_builddir)/empath/lib/libempathkernel.la \
 	$(top_builddir)/empath/ui/libempathui.la \
-  $(top_builddir)/rmm/librmm.la
+    $(top_builddir)/rmm/librmm.la
 
 #############################################################################
 # Compile as a binary
@@ -25,11 +27,12 @@ libempath_la_LIBADD = \
 bin_PROGRAMS = empath
 
 empath_SOURCES = main.cpp
-empath_LDFLAGS = $(KDE_RPATH) $(all_libraries)
+empath_LDFLAGS = \
+    $(KDE_RPATH) $(LIBQPTHREAD) $(all_libraries)
 empath_LDADD = \
 	$(top_builddir)/empath/lib/libempathkernel.la \
 	$(top_builddir)/empath/ui/libempathui.la \
-  $(top_builddir)/rmm/librmm.la
+    $(top_builddir)/rmm/librmm.la
 
 #############################################################################
 # i18n

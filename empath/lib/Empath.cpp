@@ -58,6 +58,12 @@
 #include "EmpathTask.h"
 #include "EmpathJob.h"
 #include "EmpathJobScheduler.h"
+#include "config.h"
+
+#ifdef USE_QPTHREAD
+#include <qpthr/qp.h>
+#endif
+
 
 Empath * Empath::EMPATH = 0;
 
@@ -71,20 +77,21 @@ Empath::start()
     void
 Empath::shutdown()
 {
-    delete mailSender_;
-    mailSender_ = 0;
-    delete composer_;
-    composer_ = 0;
-
     delete this;
 }
 
 Empath::Empath()
     :   QObject((QObject *)0L, "Empath"),
-        mailSender_(0),
-        seq_(0)
+        mailSender_     (0L),
+        composer_       (0L),
+        jobScheduler_   (0L),
+        seq_            (0)
 {
     EMPATH = this;
+
+#ifdef USE_QPTHREAD
+    (void)new QpInit;
+#endif
     
     using namespace EmpathConfig;
 
@@ -100,14 +107,12 @@ Empath::Empath()
     KGlobal::dirs()->addResourceType("indices", "share/apps/empath/indices");
     KGlobal::dirs()->addResourceType("cache",   "share/apps/empath/cache");
 
-    updateOutgoingServer(); // Must initialise the pointer.
-    
-    composer_ = new EmpathComposer;
-    jobScheduler_ = new EmpathJobScheduler;
-
-    QObject::connect(
-        composer_, SIGNAL(composeFormComplete(EmpathComposeForm)),
-        SIGNAL(newComposer(EmpathComposeForm)));
+    // Order of creation is important here.
+    // TODO: Replace with code inside jobScheduler() that check for
+    // allocation and allocate if not existing.
+    updateOutgoingServer();
+    jobScheduler_   = new EmpathJobScheduler;
+    composer_       = new EmpathComposer;
 }
 
     void
@@ -118,12 +123,6 @@ Empath::init()
     
     _saveHostName();
     _setStartTime();
- 
-    KConfig * c = KGlobal::config();
-
-    using namespace EmpathConfig;
-    
-    c->setGroup(GROUP_FOLDERS);
 
     QString s(i18n("Local"));
 
@@ -133,6 +132,12 @@ Empath::init()
     drafts_ .setMailboxName(s);
     trash_  .setMailboxName(s);
     
+    KConfig * c = KGlobal::config();
+
+    using namespace EmpathConfig;
+
+    c->setGroup(GROUP_FOLDERS);
+
     inbox_  .setFolderPath  (c->readEntry(FOLDER_INBOX,   i18n("Inbox")));
     outbox_ .setFolderPath  (c->readEntry(FOLDER_OUTBOX,  i18n("Outbox")));
     sent_   .setFolderPath  (c->readEntry(FOLDER_SENT,    i18n("Sent")));
@@ -147,6 +152,12 @@ Empath::init()
 
 Empath::~Empath()
 {
+    delete mailSender_;
+    mailSender_ = 0L;
+
+    delete composer_;
+    composer_   = 0L;
+
     using namespace EmpathConfig;
 
     delete DFLT_Q_1;
@@ -154,7 +165,7 @@ Empath::~Empath()
     delete DFLT_LINK;
     delete DFLT_NEW;
 
-    DFLT_Q_1 = DFLT_Q_2 = DFLT_LINK = DFLT_NEW = 0;
+    DFLT_Q_1 = DFLT_Q_2 = DFLT_LINK = DFLT_NEW = 0L;
 }
 
     void
@@ -169,7 +180,7 @@ Empath::s_saveConfig()
 Empath::updateOutgoingServer()
 {
     delete mailSender_;
-    mailSender_ = 0;
+    mailSender_ = 0L;
     
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_GENERAL);
@@ -193,8 +204,6 @@ Empath::updateOutgoingServer()
             mailSender_ = new EmpathMailSenderSendmail;
             break;
     }
-
-    CHECK_PTR(mailSender_);
 
     mailSender_->loadConfig();
 }
@@ -224,62 +233,6 @@ Empath::message(const EmpathURL & source)
     return cached->message();
 }
 
-    EmpathMailbox *
-Empath::mailbox(const EmpathURL & url)
-{
-    return mailboxList_[url.mailboxName()];
-}
-
-    EmpathFolder *
-Empath::folder(const EmpathURL & url)
-{
-    EmpathMailbox * m = mailbox(url);
-
-    if (m == 0)
-        return 0;
-
-    return m->folder(url);
-}
-
-// Private methods follow
-
-    void
-Empath::_setStartTime()
-{
-    struct timeval timeVal;
-    struct timezone timeZone;
-    
-    gettimeofday(&timeVal, &timeZone);
-    startupSeconds_ = timeVal.tv_sec;
-    startupSecondsStr_.setNum(startupSeconds_);
-}
-    void
-Empath::_saveHostName()
-{
-    struct utsname utsName;
-    if (uname(&utsName) == 0)
-        hostName_ = utsName.nodename;
-}
-
-    QString
-Empath::generateUnique()
-{
-    QString unique;
-
-    unique =
-        startupSecondsStr_ +
-        '.' +
-        pidStr_ +
-        '_' +
-        QString().setNum(seq_) +
-        '.' +
-        hostName_;
-
-    ++seq_;
-
-    return unique;
-}
-
     void
 Empath::cacheMessage(const EmpathURL & url, RMM::RMessage m)
 {
@@ -298,47 +251,127 @@ Empath::cacheMessage(const EmpathURL & url, RMM::RMessage m)
     }
 }
 
-// Inline (later on, when we're not adjusting them) methods follow
+    QString
+Empath::generateUnique()
+{
+    QString unique =
+        startupSecondsStr_ +
+        '.' +
+        pidStr_ +
+        '_' +
+        QString().setNum(seq_) +
+        '.' +
+        hostName_;
+
+    ++seq_;
+
+    return unique;
+}
+
+    EmpathMailbox *
+Empath::mailbox(const EmpathURL & url)
+{ return mailboxList_[url.mailboxName()]; }
+
+    EmpathFolder *
+Empath::folder(const EmpathURL & url)
+{ EmpathMailbox * m = mailbox(url); return (m == 0 ? 0 : m->folder(url)); }
 
     EmpathJobID
-Empath::copy(const EmpathURL & from, const EmpathURL & to)
-{ return jobScheduler_->enqueue(new EmpathCopyJob(from, to)); }
+Empath::copy(
+    const EmpathURL & from,
+    const EmpathURL & to,
+    QObject * o
+)
+{
+    return jobScheduler_->newCopyJob(from, to, o);
+}
 
     EmpathJobID
-Empath::move(const EmpathURL & from, const EmpathURL & to)
-{ return jobScheduler_->enqueue(new EmpathMoveJob(from, to)); }
+Empath::move(
+    const EmpathURL & from,
+    const EmpathURL & to,
+    QObject * o
+)
+{
+    return jobScheduler_->newMoveJob(from, to, o);
+}
 
     EmpathJobID
-Empath::retrieve(const EmpathURL & url)
-{ return jobScheduler_->enqueue(new EmpathRetrieveJob(url)); }
+Empath::retrieve(
+    const EmpathURL & url,
+    QObject * o
+)
+{
+    return jobScheduler_->newRetrieveJob(url, o);
+}
 
     EmpathJobID
-Empath::write(RMM::RMessage & msg, const EmpathURL & folder)
-{ return jobScheduler_->enqueue(new EmpathWriteJob(msg, folder)); }
+Empath::write(
+    RMM::RMessage & msg,
+    const EmpathURL & folder,
+    QObject * o
+)
+{
+    return jobScheduler_->newWriteJob(msg, folder, o);
+}
 
     EmpathJobID
-Empath::remove(const EmpathURL & url)
-{ return jobScheduler_->enqueue(new EmpathRemoveJob(url)); }
+Empath::remove(
+    const EmpathURL & url,
+    QObject * o
+)
+{
+    return jobScheduler_->newRemoveJob(url, o);
+}
 
     EmpathJobID
-Empath::remove(const EmpathURL & folder, const QStringList & messageIDList)
-{ return jobScheduler_->enqueue(new EmpathRemoveJob(folder, messageIDList)); }
+Empath::remove(
+    const EmpathURL & folder,
+    const QStringList & messageIDList,
+    QObject * o
+)
+{
+    return jobScheduler_->newRemoveJob(folder, messageIDList, o);
+}
 
     EmpathJobID
-Empath::mark(const EmpathURL & url, RMM::MessageStatus status)
-{ return jobScheduler_->enqueue(new EmpathMarkJob(url, status)); }
+Empath::mark(
+    const EmpathURL & url,
+    RMM::MessageStatus status,
+    QObject * o
+)
+{
+    return jobScheduler_->newMarkJob(url, status, o);
+}
 
     EmpathJobID
-Empath::mark(const EmpathURL & f, const QStringList & l, RMM::MessageStatus s)
-{ return jobScheduler_->enqueue(new EmpathMarkJob(f, l, s)); }
+Empath::mark(
+    const EmpathURL & f,
+    const QStringList & l,
+    RMM::MessageStatus s,
+    QObject * o
+)
+{
+    return jobScheduler_->newMarkJob(f, l, s, o);
+}
 
     EmpathJobID
-Empath::createFolder(const EmpathURL & url)
-{ return jobScheduler_->enqueue(new EmpathCreateFolderJob(url)); }
+Empath::createFolder(
+    const EmpathURL & url,
+    QObject * o
+) 
+{
+    return jobScheduler_->newCreateFolderJob(url, o);
+}
 
     EmpathJobID
-Empath::removeFolder(const EmpathURL & url)
-{ return jobScheduler_->enqueue(new EmpathRemoveFolderJob(url)); }
+Empath::removeFolder(
+    const EmpathURL & url,
+    QObject * o
+)
+{
+    return jobScheduler_->newRemoveFolderJob(url, o);
+}
 
     void
 Empath::send(RMM::RMessage & m)
@@ -447,5 +480,25 @@ Empath::trash() const
     EmpathViewFactory &
 Empath::viewFactory()
 { return viewFactory_; } 
+
+// Private methods follow
+
+    void
+Empath::_setStartTime()
+{
+    struct timeval timeVal;
+    struct timezone timeZone;
+    
+    gettimeofday(&timeVal, &timeZone);
+    startupSeconds_ = timeVal.tv_sec;
+    startupSecondsStr_.setNum(startupSeconds_);
+}
+    void
+Empath::_saveHostName()
+{
+    struct utsname utsName;
+    if (uname(&utsName) == 0)
+        hostName_ = utsName.nodename;
+}
 
 // vim:ts=4:sw=4:tw=78

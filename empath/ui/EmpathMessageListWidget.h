@@ -136,6 +136,7 @@ class EmpathMessageListWidget : public EmpathListView
         void s_messageBounce();
         void s_messageSaveAs();
         void s_messageCopyTo();
+        void s_messageMoveTo();
         void s_messagePrint();
         void s_messageFilter();
 
