@@ -466,13 +466,21 @@ void KABCore::mergeContacts()
   KABC::Addressee addr = KABTools::mergeContacts( list );
 
   KABC::Addressee::List::Iterator it = list.begin();
+  KABC::Addressee origAddr = *it;
+  QStringList uids;
   ++it;
   while ( it != list.end() ) {
-    mAddressBook->removeAddressee( *it );
+    uids.append( (*it).uid() );
     ++it;
   }
 
-  mAddressBook->insertAddressee( addr );
+  PwDeleteCommand *command = new PwDeleteCommand( mAddressBook, uids );
+  UndoStack::instance()->push( command );
+  RedoStack::instance()->clear();
+
+  PwEditCommand *editCommand = new PwEditCommand( mAddressBook, origAddr, addr );
+  UndoStack::instance()->push( editCommand );
+  RedoStack::instance()->clear();
 
   mSearchManager->reload();
 }
