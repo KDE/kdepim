@@ -33,6 +33,7 @@ Comment[sv]=lista med e-postmeddelanden
 Comment[ta]=Á¢ý«ïºø ¾¸Åø ÀðÊÂø
 Comment[tr]=e-posta mesaj listesi
 Comment[uk]=список повідомленнь електронної пошти
+Comment[zh_TW.Big5]=電子郵件訊息列表
 Name=EmpathMessageListWidget
 Name[cs]=Seznam emailů Empath
 Name[de]=Empath-Nachrichenliste

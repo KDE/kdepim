@@ -33,6 +33,7 @@ Comment[sv]=visare för e-postmeddelanden
 Comment[ta]=Á¢ý«ïºø ¾¸Åø À¡÷¨ÅÂ¡Ç÷
 Comment[tr]=e-posta görüntüleyicisi
 Comment[uk]=переглядач повідомленнь електронної пошти
+Comment[zh_TW.Big5]=電子郵件訊息檢視器
 Name=EmpathMessageViewWidget
 Name[cs]=Prohlížeč emailů Empath
 Name[de]=Empath-Nachrichtenmodul

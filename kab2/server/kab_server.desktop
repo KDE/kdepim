@@ -36,6 +36,7 @@ Comment[sv]=KDE Adressbok
 Comment[ta]=KDE 
 Comment[tr]=KDE Adres defteri
 Comment[uk]=Адресна книга KDE
+Comment[zh_TW.Big5]=KDE 通訊錄
 Name=Addressbook
 Name[ca]=Llibre d'adreces
 Name[cs]=Kniha adres
@@ -69,5 +70,6 @@ Name[sv]=Adressbok
 Name[ta]=Ó¸ÅÃ¢Òò¾¸õ
 Name[tr]=Adres Defteri
 Name[uk]=Адресна книга
+Name[zh_TW.Big5]=通訊錄
 X-KDE-ServiceType=Addressbook/Server
 

@@ -34,6 +34,7 @@ Comment[sv]=mime-typ
 Comment[ta]=¨Áõ Å¨¸
 Comment[tr]=mime türü
 Comment[uk]=тип MIME
+Comment[zh_TW.Big5]=mime 類型
 DefaultApp=
 Icon=kpilprc.xpm
 Type=MimeType
