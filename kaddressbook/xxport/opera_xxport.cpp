@@ -114,7 +114,7 @@ KABC::AddresseeList OperaXXPort::importContacts( const QString& ) const
         addr->insertPhoneNumber( KABC::PhoneNumber( value, 
                               KABC::PhoneNumber::Fax | KABC::PhoneNumber::Home ) );
       else if ( key == QString::fromLatin1( "postaladdress" ) ) {
-        KABC::Address address;
+        KABC::Address address( KABC::Address::Home );
         address.setLabel( value.replace( QRegExp( "\x02\x02" ), "\n" ) );
         addr->insertAddress( address );
       } else if ( key == QString::fromLatin1( "description" ) )
