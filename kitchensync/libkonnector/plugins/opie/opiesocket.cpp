@@ -31,6 +31,9 @@
 #include "datebook.h"
 #include "todo.h"
 #include "addressbook.h"
+#include "metatodo.h"
+#include "metaevent.h"
+#include "metaaddress.h"
 
 class OpieSocket::OpieSocketPrivate{
 public:
@@ -41,6 +44,7 @@ public:
     bool startSync:1;
     bool isSyncing:1;
     bool isConnecting:1;
+    bool first:1;
     QString src;
     QString dest;
     QSocket *socket;
@@ -73,6 +77,7 @@ OpieSocket::OpieSocket(QObject *obj, const char *name )
     d->meta = false;
     d->helper = 0;
     d->edit = 0;
+    d->first= false;
 }
 OpieSocket::~OpieSocket()
 {
@@ -249,6 +254,7 @@ void OpieSocket::write(QPtrList<KSyncEntry> lis)
             // Events + Todo
             if ( d->meta ) { // save the bytearray
                 kdDebug(5202) << "TodoList Meta Informations" << endl;
+                kdDebug(5202) << "Partner Id " << d->partnerId << endl;
                 QFile aFile(QDir::homeDirPath()+ "/.kitchensync/meta/" + d->partnerId + "/todolist.xml" );
                 if ( aFile.open(IO_WriteOnly) ) {
                     aFile.writeBlock(todos);
@@ -457,49 +463,9 @@ void OpieSocket::manageCall(const QString &line )
             d->edit = new OpieHelper::CategoryEdit( tmpFileName );
 	    KIO::NetAccess::removeTempFile( tmpFileName );
 
-	    url.setPath(d->path + "/Applications/addressbook/addressbook.xml" );
-	    tmpFileName = QString::null;
-	    //tmpFileName = "/home/ich/addressbook.xml";
-            kdDebug(5202) << "Fetching addressbook " << endl;
-	    KIO::NetAccess::download( url, tmpFileName );
-	    KIO::UDSEntry uds;
-	    KIO::NetAccess::stat( url, uds );
-	    KFileItem item(  uds, url );
-            kdDebug(5202 ) << "------------------TIMESTAMP---------------"<< endl;
-            kdDebug(5202 ) << "------------------TIMESTAMP---------------"<< endl;
-            kdDebug(5202 ) << "------------------TIMESTAMP---------------"<< endl;
-            kdDebug(5202)  << item.timeString() << endl;
-            OpieHelper::AddressBook book( d->edit,  d->helper,  d->meta );
-            d->m_sync.append( book.toKDE( tmpFileName ) );
-	    KIO::NetAccess::removeTempFile( tmpFileName );
 
-            // Calendar
-	    QString todo;
-            kdDebug(5202) << "Fetching todolist" << endl;
-	    url.setPath(d->path + "/Applications/todolist/todolist.xml" );
-	    KIO::NetAccess::download(url, todo );
-            kdDebug(5202) << "Fetching calendar" << endl;
-	    url.setPath(d->path + "/Applications/datebook/datebook.xml" );
-	    KIO::NetAccess::download(url, tmpFileName );
-
-            KAlendarSyncEntry *calEntry = new KAlendarSyncEntry();
-            KCal::CalendarLocal *calLoc = new KCal::CalendarLocal();
-            calEntry->setCalendar( calLoc );
-            OpieHelper::ToDo todoDB( d->edit, d->helper,  d->meta );
-            OpieHelper::DateBook dateDB( d->edit, d->helper,  d->meta );
-            QPtrList<KCal::Todo> todoList = todoDB.toKDE( todo );
-            QPtrList<KCal::Event> dateList = dateDB.toKDE( tmpFileName );
-            KCal::Todo* todoEvent;
-            KCal::Event * dateEvent;
-            for ( todoEvent = todoList.first(); todoEvent != 0; todoEvent = todoList.next() ) {
-                calLoc->addTodo( todoEvent );
-            }
-            for (dateEvent = dateList.first(); dateEvent != 0; dateEvent = dateList.next() ) {
-                calLoc->addEvent( dateEvent );
-            }
-            d->m_sync.append( calEntry );
-            KIO::NetAccess::removeTempFile( tmpFileName );
-	    KIO::NetAccess::removeTempFile( todo );
+            doAddressbook();
+            doCal();
 	    // done with fetching
             // come back to the normal mode
             // emit signal
@@ -512,6 +478,21 @@ void OpieSocket::manageCall(const QString &line )
             // ok we're now in sync mode let's see if we know this guy
             // if meta mode let's see where the corresponding meta dir is
             // $KDEHOME/share/apps/kitchensync/metadata/konnector-id
+            QString tmpFileName;
+	    KURL url;
+	    url.setProtocol("ftp" );
+	    url.setUser( d->user );
+	    url.setPass( d->pass );
+	    url.setHost( d->dest );
+	    url.setPort( 4242 );
+	    url.setPath(d->path + "/Settings/Categories.xml" );
+	    //tmpFileName = QString::fromLatin1("/home/ich/categories.xml")
+            kdDebug(5202) << "Fetching categories" << endl;;
+	    KIO::NetAccess::download( url, tmpFileName );
+            delete d->edit;
+            d->edit = new OpieHelper::CategoryEdit( tmpFileName );
+	    KIO::NetAccess::removeTempFile( tmpFileName );
+
             if ( d->meta ) {
                 QString file;
                 KURL url;
@@ -524,6 +505,7 @@ void OpieSocket::manageCall(const QString &line )
                 if ( !KIO::NetAccess::download( url,  file ) ) {
                     newPartner();
                     QDir dir;
+                    dir.mkdir(QDir::homeDirPath() + "/.kitchensync");
                     dir.mkdir(QDir::homeDirPath() + "/.kitchensync/meta");
                     dir.mkdir(QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId );
                 }else{
@@ -532,7 +514,8 @@ void OpieSocket::manageCall(const QString &line )
                 }
                 delete d->helper;
                 d->helper = new KonnectorUIDHelper(QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId);
-            }
+            }else
+                d->first = false;
 	    kdDebug(5202) << "desktops entries" << endl;
 	    stream << "call QPE/System getAllDocLinks()\r\n";
 	    d->getMode = d->ABOOK;
@@ -544,8 +527,10 @@ void OpieSocket::manageCall(const QString &line )
 // generate a id and store it on the device
 void OpieSocket::newPartner()
 {
+    d->first = true;
     d->partnerId = randomString( 10 );
     kdDebug(5202) << "New Sync  " << d->partnerId << endl;
+    // fixme use KTempFile
     QString fileN = QString::fromLatin1("/tmp/opiekonnector-") + d->partnerId;
     QFile file( fileN );
     if ( file.open( IO_WriteOnly ) ) {
@@ -565,13 +550,14 @@ void OpieSocket::newPartner()
 }
 void OpieSocket::readPartner( const QString &fileName )
 {
+    d->first= false;
     QFile file( fileName );
     if ( file.open(IO_ReadOnly ) ) {
         QTextStream stream ( &file );
         QString string;
         stream >> string;
         if ( string.left( 5 ) == QString::fromLatin1("opie-") )
-            d->partnerId = string.mid( 6 );
+            d->partnerId = string.mid( 5 );
     }
     kdDebug(5202) << "Known Partner " << d->partnerId << endl;
 }
@@ -617,4 +603,137 @@ void OpieSocket::writeCategory()
         url.setPath( d->path + "/Settings/Categories.xml" );
         KIO::NetAccess::upload( fileName + "/categories.xml",  url );
     }
+}
+void OpieSocket::doCal()
+{
+ // Calendar
+    QString todo,  tmpFileName;
+    KURL url;
+    url.setProtocol("ftp" );
+    url.setUser( d->user );
+    url.setPass( d->pass );
+    url.setHost( d->dest );
+    url.setPort( 4242 );
+
+    kdDebug(5202) << "Fetching todolist" << endl;
+    url.setPath(d->path + "/Applications/todolist/todolist.xml" );
+    KIO::NetAccess::download(url, todo );
+    kdDebug(5202) << "Fetching calendar" << endl;
+    url.setPath(d->path + "/Applications/datebook/datebook.xml" );
+    KIO::NetAccess::download(url, tmpFileName );
+
+    KAlendarSyncEntry *calEntry = new KAlendarSyncEntry();
+    KCal::CalendarLocal *calLoc = new KCal::CalendarLocal();
+    calEntry->setCalendar( calLoc );
+
+    OpieHelper::ToDo todoDB( d->edit, d->helper,  d->meta );
+    OpieHelper::DateBook dateDB( d->edit, d->helper,  d->meta );
+    QPtrList<KCal::Todo> todoList = todoDB.toKDE( todo );
+    QPtrList<KCal::Event> dateList = dateDB.toKDE( tmpFileName );
+    calEntry->setSyncMode( KSyncEntry::SYNC_NORMAL );
+    // in meta mode we need meta information
+    if ( d->meta ) {
+        kdDebug(5202) << "Calendar Meta Gathering "<< d->partnerId << endl;
+        calEntry->setSyncMode( KSyncEntry::SYNC_META );
+        calEntry->setFirstSync( d->first );
+        QPtrList<KCal::Todo> todoOld  = todoDB.toKDE( QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId + "/todolist.xml"  );
+        kdDebug(5202) << todoOld.isEmpty() << endl;
+        QPtrList<KCal::Event> eventOld = dateDB.toKDE(QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId + "/datebook.xml" );
+        kdDebug(5202) <<  eventOld.isEmpty() << endl;
+        OpieHelper::MetaTodo metaT;
+        OpieHelper::MetaTodoReturn metaTR = metaT.doMeta( todoList,  todoOld );
+        OpieHelper::MetaEvent metaE;
+        OpieHelper::MetaEventReturn metaER = metaE.doMeta( dateList,  eventOld );
+
+        KCal::CalendarLocal *calMod = new KCal::CalendarLocal();
+        QPtrList<KCal::Todo> todos = metaTR.modified();
+        QPtrList<KCal::Event> events = metaER.modified();
+        KCal::Todo* todo;
+        KCal::Event* event;
+        for ( todo = todos.first(); todo !=0; todo = todos.next() )
+            calMod->addTodo( todo );
+        for ( event = events.first(); event != 0; event = events.next() )
+            calMod->addEvent( event );
+        calEntry->setModified( calMod );
+
+        calMod = new KCal::CalendarLocal();
+        todos = metaTR.added();
+        events = metaER.added();
+        for ( todo = todos.first(); todo !=0; todo = todos.next() )
+            calMod->addTodo( todo );
+        for ( event = events.first(); event != 0; event = events.next() )
+            calMod->addEvent( event );
+        calEntry->setAdded( calMod );
+
+        calMod = new KCal::CalendarLocal();
+        todos = metaTR.removed();
+        events = metaER.removed();
+        for ( todo = todos.first(); todo != 0; todo = todos.next() )
+            calMod->addTodo( todo );
+        for ( event = events.first(); event != 0; event = events.next() )
+            calMod->addEvent( event );
+        calEntry->setRemoved( calMod );
+    }
+    KCal::Todo* todoEvent;
+    KCal::Event * dateEvent;
+
+
+    for ( todoEvent = todoList.first(); todoEvent != 0; todoEvent = todoList.next() ) {
+        calLoc->addTodo( todoEvent );
+    }
+    for (dateEvent = dateList.first(); dateEvent != 0; dateEvent = dateList.next() ) {
+        calLoc->addEvent( dateEvent );
+    }
+    d->m_sync.append( calEntry );
+    KIO::NetAccess::removeTempFile( tmpFileName );
+    KIO::NetAccess::removeTempFile( todo );
+
+}
+void OpieSocket::doAddressbook()
+{
+    KURL url;
+    url.setProtocol("ftp" );
+    url.setUser( d->user );
+    url.setPass( d->pass );
+    url.setHost( d->dest );
+    url.setPort( 4242 );
+    url.setPath(d->path + "/Applications/addressbook/addressbook.xml" );
+    QString tmpFileName;
+    //tmpFileName = "/home/ich/addressbook.xml";
+    kdDebug(5202) << "Fetching addressbook " << endl;
+    KIO::NetAccess::download( url, tmpFileName );
+    KIO::UDSEntry uds;
+    KIO::NetAccess::stat( url, uds );
+    KFileItem item(  uds, url );
+    kdDebug(5202 ) << "------------------TIMESTAMP---------------"<< endl;
+    kdDebug(5202 ) << "------------------TIMESTAMP---------------"<< endl;
+    kdDebug(5202 ) << "------------------TIMESTAMP---------------"<< endl;
+    kdDebug(5202)  << item.timeString() << endl;
+    OpieHelper::AddressBook book( d->edit,  d->helper,  d->meta );
+    KAddressbookSyncEntry *entry = book.toKDE( tmpFileName );
+    if ( d->meta ) {
+        entry->setSyncMode( KSyncEntry::SYNC_META );
+        entry->setFirstSync( d->first );
+        KAddressbookSyncEntry* old = book.toKDE(QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId + "/addressbook.xml" );
+        if ( old != 0 && old->addressbook() != 0 ) {
+            OpieHelper::MetaAddress adr;
+            QValueList<KABC::Addressee> newE;
+            KABC::AddressBook::Iterator it;
+            for ( it = entry->addressbook()->begin(); it != entry->addressbook()->end(); ++it ) {
+                newE.append( (*it) );
+            }
+            QValueList<KABC::Addressee> oldE;
+            for ( it = old->addressbook()->begin(); it != old->addressbook()->end(); ++it ) {
+                oldE.append( (*it) );
+            }
+            OpieHelper::MetaAddressReturn adrRet=  adr.doMeta( newE,  oldE);
+            entry->setModified( adrRet.modified() );
+            entry->setAdded( adrRet.added() );
+            entry->setDeleted( adrRet.removed() );
+            delete old;
+        }
+    }else
+        entry->setSyncMode( KSyncEntry::SYNC_NORMAL );
+    d->m_sync.append( entry  );
+    KIO::NetAccess::removeTempFile( tmpFileName );
 }

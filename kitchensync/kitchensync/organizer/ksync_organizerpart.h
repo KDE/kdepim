@@ -6,8 +6,12 @@
 
 #include <manipulatorpart.h>
 
-class KAboutData;
+#include "organizerbase.h"
 
+class KAboutData;
+class KConfig;
+class KAlendarSyncEntry;
+//class OrganizerDialogBase;
 namespace KitchenSync {
 
   class OrganizerPart : public ManipulatorPart {
@@ -28,10 +32,18 @@ namespace KitchenSync {
     bool partIsVisible()const { return false; };
     QWidget* widget();
     QWidget* configWidget();
+    void processEntry( const QPtrList<KSyncEntry>&,  QPtrList<KSyncEntry>& );
+  public:
+      void slotConfigOk();
   private:
+    KAlendarSyncEntry* meta();
     QPixmap m_pixmap;
     QWidget *m_widget;
-    QWidget *m_config;
+    OrganizerDialogBase *m_config;
+    bool m_evo:1;
+    bool m_configured;
+    QString m_path;
+    KConfig *m_conf;
   };
 };
 

@@ -40,6 +40,8 @@ signals:
   void stateChanged( bool );
 
  private:
+    void doAddressbook();
+    void doCal();
     void writeCategory();
     void newPartner();
     void readPartner( const QString & );

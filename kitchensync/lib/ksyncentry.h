@@ -67,6 +67,12 @@ class KSyncEntry
      * setSyncMode() sets the syncMode of this KSyncEntry
      */
     void setSyncMode(int mode ) { m_mode = mode; };
+
+    bool firstSync()const { return m_first; };
+    /**
+     * default is true. This only relevant in meta sync mode
+     */
+    void setFirstSync(bool sync ) { m_first = sync; };
     /**
       Return a string describing this entry. This is presented to the user as
       identifier for the entry, when user interaction is required.
@@ -131,7 +137,7 @@ class KSyncEntry
      * @param type The type for the ids to returned
      * @return the ids as QValueList
      */
-    QValueList<Kontainer > ids(const QString &type )const;
+    QValueList<Kontainer> ids(const QString &type )const;
 
     /**
      * @return all ids
@@ -142,6 +148,7 @@ class KSyncEntry
     class KSyncEntryPrivate;
     KSyncEntryPrivate *d;
     int m_mode;
+    bool m_first:1;
 };
 
 #endif

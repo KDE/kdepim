@@ -23,7 +23,8 @@
 
 KSyncEntry::KSyncEntry()
 {
-
+    m_mode = SYNC_NORMAL;
+    m_first = true;
 }
 KSyncEntry::~KSyncEntry()
 {

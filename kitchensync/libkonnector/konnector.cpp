@@ -154,6 +154,7 @@ void Konnector::retrieveFile(const QString &udi, const QString &file )
 }
 void Konnector::write( const QString &udi, QPtrList<KSyncEntry> entry)
 {
+    kdDebug() << "write " << endl;
   KonnectorPlugin *plugin = pluginByUDI( udi );
   if( plugin == 0)
     return;
@@ -297,4 +298,11 @@ void Konnector::slotChanged(const QString& i,  bool b)
     kdDebug(5201) << "Konnector state changed" << endl;
     emit stateChanged( i,  b );
 }
+QString Konnector::metaId( const QString& udi ) const
+{
+    KonnectorPlugin *plugin = pluginByUDI( udi );
+    if( plugin == 0l)
+        return QString::null;
 
+    return plugin->metaId();
+}

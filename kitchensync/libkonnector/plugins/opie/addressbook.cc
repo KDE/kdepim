@@ -214,7 +214,7 @@ QByteArray AddressBook::fromKDE( KAddressbookSyncEntry *entry )
             stream << "Assistant=\"" << (*it).custom( "opie",  "Assistant") << "\" ";
             stream << "Manager=\"" << (*it).custom( "opie",  "Manager" ) << "\" ";
 
-            KABC::Address home( KABC::Address::Home );
+            KABC::Address home = (*it).address( KABC::Address::Home );
             stream << "HomeStreet=\"" << home.street() << "\" ";
             stream << "HomeCity=\"" << home.locality() << "\" ";
             stream << "HomeState=\"" << home.region() << "\" ";

@@ -1,0 +1,181 @@
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<class>AddressBookConfigBase</class>
+<author>zecke</author>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>AddressBookConfig</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>600</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Addressbook Config Dialog</string>
+    </property>
+    <widget class="QLayoutWidget">
+        <property name="name">
+            <cstring>Layout3</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>400</width>
+                <height>120</height>
+            </rect>
+        </property>
+        <vbox>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <property name="margin">
+                <number>0</number>
+            </property>
+            <property name="spacing">
+                <number>6</number>
+            </property>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>lblHelp</cstring>
+                </property>
+                <property name="text">
+                    <string>Please choose the path to the addressbook to sync with.</string>
+                </property>
+                <property name="textFormat">
+                    <enum>RichText</enum>
+                </property>
+                <property name="alignment">
+                    <set>WordBreak|AlignTop|AlignLeft</set>
+                </property>
+            </widget>
+            <widget class="QCheckBox">
+                <property name="name">
+                    <cstring>ckbEvolution</cstring>
+                </property>
+                <property name="text">
+                    <string>Synchronize with Ximina Evolution</string>
+                </property>
+            </widget>
+            <widget class="QLayoutWidget">
+                <property name="name">
+                    <cstring>Layout1</cstring>
+                </property>
+                <hbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>0</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>lblPath</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Path</string>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit">
+                        <property name="name">
+                            <cstring>lnePath</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QToolButton">
+                        <property name="name">
+                            <cstring>btnBrowse</cstring>
+                        </property>
+                        <property name="text">
+                            <string>...</string>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton">
+                        <property name="name">
+                            <cstring>phbDefault</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Default</string>
+                        </property>
+                    </widget>
+                </hbox>
+            </widget>
+            <spacer>
+                <property name="name" stdset="0">
+                    <cstring>Spacer1</cstring>
+                </property>
+                <property name="orientation">
+                    <enum>Vertical</enum>
+                </property>
+                <property name="sizeType">
+                    <enum>Expanding</enum>
+                </property>
+                <property name="sizeHint">
+                    <size>
+                        <width>20</width>
+                        <height>20</height>
+                    </size>
+                </property>
+            </spacer>
+        </vbox>
+    </widget>
+</widget>
+<connections>
+    <connection>
+        <sender>ckbEvolution</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>AddressBookConfig</receiver>
+        <slot>slotEvolution(bool)</slot>
+    </connection>
+    <connection>
+        <sender>phbDefault</sender>
+        <signal>clicked()</signal>
+        <receiver>AddressBookConfig</receiver>
+        <slot>slotDefault()</slot>
+    </connection>
+    <connection>
+        <sender>btnBrowse</sender>
+        <signal>clicked()</signal>
+        <receiver>AddressBookConfig</receiver>
+        <slot>slotBrowse()</slot>
+    </connection>
+    <connection>
+        <sender>ckbEvolution</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>btnBrowse</receiver>
+        <slot>setDisabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>ckbEvolution</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>lblPath</receiver>
+        <slot>setDisabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>ckbEvolution</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>lnePath</receiver>
+        <slot>setDisabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>ckbEvolution</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>phbDefault</receiver>
+        <slot>setDisabled(bool)</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="local" impldecl="in implementation">addressbookbase.ui.h</include>
+</includes>
+<slots>
+    <slot access="private">slotBrowse()</slot>
+    <slot access="private">slotDefault()</slot>
+    <slot access="private">slotEvolution( bool )</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

@@ -1,5 +1,5 @@
 
-SUBDIRS = lib overview organizer 
+SUBDIRS = lib overview organizer addressbook
 
 INCLUDES = -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/kitchensync/kitchensync/lib $(all_includes)
 

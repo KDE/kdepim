@@ -22,14 +22,17 @@
 KAddressbookSyncEntry::KAddressbookSyncEntry()
 {
     m_addressb = 0;
-    m_del = 0;
-    m_add = 0;
-    m_mod = 0;
+//    m_del = 0;
+//    m_add = 0;
+//    m_mod = 0;
     setSyncMode(SYNC_NORMAL );
 }
 KAddressbookSyncEntry::~KAddressbookSyncEntry()
 {
     delete m_addressb;
+//    delete m_del;
+//    delete m_add;
+//    delete m_mod;
 }
 
 KAddressbookSyncEntry::KAddressbookSyncEntry(KABC::AddressBook *adr )
@@ -105,18 +108,21 @@ KSyncEntry* KAddressbookSyncEntry::clone()
   for(KABC::AddressBook::Iterator it = m_addressb->begin(); it != m_addressb->end(); ++it ){
     adr->insertAddressee((*it) );
   }
+  entry->setModified( modified() );
+  entry->setAdded( added() );
+  entry->setDeleted( deleted() );
   // FIXME cloning of others add, mod, ...
   return entry;
 }
-void KAddressbookSyncEntry::setModified(KABC::AddressBook* entry)
+void KAddressbookSyncEntry::setModified( const QValueList<KABC::Addressee>& entry)
 {
     m_mod = entry;
 }
-void KAddressbookSyncEntry::setAdded(KABC::AddressBook* entry)
+void KAddressbookSyncEntry::setAdded(const QValueList<KABC::Addressee>& entry)
 {
     m_add = entry;
 }
-void KAddressbookSyncEntry::setDeleted(KABC::AddressBook* entry)
+void KAddressbookSyncEntry::setDeleted(const QValueList<KABC::Addressee>& entry)
 {
     m_del = entry;
 }

@@ -57,6 +57,8 @@ OpieHelperClass* OpieHelperClass::self()
 
 void OpieHelperClass::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntry> *entry, OpieHelper::CategoryEdit *edit )
 {
+    if ( edit == 0)
+        kdDebug(5202) << "TO OPIEDEKSTOP Entry == 0 " << endl;
     QString string ( str );
     string.remove(0, 35 );
     string.replace(QRegExp("&amp;"), "&" );

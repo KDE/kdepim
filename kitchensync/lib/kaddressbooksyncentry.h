@@ -20,6 +20,9 @@
 #ifndef kaddressbooksyncentry_h
 #define kaddressbooksyncentry_h
 
+#include <qvaluelist.h>
+
+#include <kabc/addressee.h>
 #include <kabc/addressbook.h>
 #include "ksyncentry.h"
 
@@ -45,14 +48,14 @@ class KAddressbookSyncEntry : public KSyncEntry{
     void setAddressbook(KABC::AddressBook *adr );
     virtual QString type() { return QString::fromLatin1("KAddressbookSyncEntry" ); };
 
-    KABC::AddressBook* modified() { return m_mod; };
-    void setModified( KABC::AddressBook* );
+    QValueList<KABC::Addressee>  modified() { return m_mod; };
+    void setModified( const QValueList<KABC::Addressee>& );
 
-    KABC::AddressBook* added() { return m_add; };
-    void setAdded( KABC::AddressBook* );
+    QValueList<KABC::Addressee> added() { return m_add; };
+    void setAdded( const QValueList<KABC::Addressee>& );
 
-    KABC::AddressBook* deleted() { return m_del; }
-    void setDeleted( KABC::AddressBook* );
+    QValueList<KABC::Addressee> deleted() { return m_del; }
+    void setDeleted( const QValueList<KABC::Addressee>& );
 
     virtual QString name();
     virtual void setName(const QString & );
@@ -67,9 +70,9 @@ class KAddressbookSyncEntry : public KSyncEntry{
     virtual KSyncEntry* clone();
   private:
     KABC::AddressBook* m_addressb;
-    KABC::AddressBook* m_mod;
-    KABC::AddressBook* m_del;
-    KABC::AddressBook* m_add;
+    QValueList<KABC::Addressee> m_mod;
+    QValueList<KABC::Addressee> m_del;
+    QValueList<KABC::Addressee> m_add;
     class AddressbookSyncEntryPrivate;
     AddressbookSyncEntryPrivate *d;
     QString m_name;

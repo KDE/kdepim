@@ -33,7 +33,7 @@
 */
 
 
-
+#include <kdebug.h>
 #include <qobject.h>
 #include <qwidget.h>
 
@@ -46,9 +46,12 @@ using namespace KitchenSync;
 ManipulatorPart::ManipulatorPart(QWidget *parent, const char *name )
   : KParts::Part(parent, name )
 {
+    kdDebug() << "M_Window " << endl;
     m_window = 0;
-    if ( parent && parent->inherits("KSyncMainWindow") ) {
-        m_window = dynamic_cast<KSyncMainWindow*>(parent);
+
+    if ( parent && parent->inherits("KitchenSync::KSyncMainWindow") ) {
+        kdDebug() << "Cast " << endl;
+        m_window = static_cast<KSyncMainWindow*>(parent);
     }
 }
 

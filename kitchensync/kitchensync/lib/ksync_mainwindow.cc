@@ -340,7 +340,7 @@ void KSyncMainWindow::setupKonnector( const KDevice& udi,  const QString &id )
     Kapabilities cap;
     KConfig* conf = kapp->config();
     conf->setGroup("Opie-Konnector");
-    QString name = conf->readEntry("name");
+    QString name = conf->readEntry("name",  "Opie StandardProfile");
     if ( !name.isEmpty() ) { // we already configured
         cap.setSrcIP( conf->readEntry("srcIP") );
         cap.setDestIP( conf->readEntry("destIP") );

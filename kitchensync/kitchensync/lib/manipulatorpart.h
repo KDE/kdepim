@@ -47,7 +47,7 @@
 
 #include <ksyncentry.h>
 //#include "ksync_mainwindow.h"
-
+#include "ksync_profile.h"
 
 namespace KitchenSync {
     class KSyncMainWindow;
@@ -90,6 +90,7 @@ namespace KitchenSync {
         virtual void slotSyncPartActivated( ManipulatorPart */*part*/ ) { };
         virtual void slotConfigOk() { };
         virtual void slotKonnectorChanged( const QString &/*udi*/ ) { };
+        virtual void slotProfileChanged( const Profile& ) { };
     private:
         KSyncMainWindow *m_window;
     };

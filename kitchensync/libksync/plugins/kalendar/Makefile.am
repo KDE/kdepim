@@ -16,19 +16,19 @@
 #    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 #    Boston, MA 02111-1307, USA.
 
-SUBDIRS = tests
+#SUBDIRS = tests
 
-lib_LTLIBRARIES = libopiekonnector.la
+lib_LTLIBRARIES = libkitchensynckalendar.la
 
-INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/libkcal $(all_includes)
+INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/kitchensync/libksync -I$(top_srcdir)/libkcal $(all_includes)
 
-libopiekonnector_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/kitchensync/lib -I../../   $(all_includes)
-libopiekonnector_la_LIBDADD = ../../libkonnector.la ../../../libksyncentries.la
-libopiekonnector_la_LDFLAGS = $(all_libraries)  $(KDE_RPATH) -module 
-libopiekonnector_la_SOURCES = opiekonnector.cpp opiesocket.cpp 	opiecategories.cpp opiehelper.cpp todo.cc categoryedit.cc helper.cc addressbook.cc datebook.cc metatodo.cc metaevent.cc metaaddress.cc
+libkitchensynckalendar_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/kitchensync/lib -I../../   $(all_includes)
+libkitchensynckalendar_la_LIBDADD =  ../../../libksyncentries.la ../../libkitchensync.la
+libkitchensynckalendar_la_LDFLAGS = $(all_libraries)  $(KDE_RPATH) -module 
+libkitchensynckalendar_la_SOURCES = sync.cc
 
-opiedatadir = $(kde_datadir)/kitchensync
-opiedata_DATA = opie.desktop
+#opiedatadir = $(kde_datadir)/kitchensync
+#opiedata_DATA = opie.desktop
 
 METASOURCES = AUTO
 

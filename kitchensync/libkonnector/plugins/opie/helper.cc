@@ -117,6 +117,11 @@ QString Base::konnectorId( const QString &appName,  const QString &uid )
     }else if ( m_helper) {
         id =  m_helper->konnectorId( appName,  uid );
         //                        konnector kde
+        if (id.isEmpty() ) { // generate new id
+            ;
+        }else if ( uid.startsWith( "Konnector-" ) ) { // not converted
+            id =  uid.mid( 10 );
+        }
         m_kde2opie.append( Kontainer( id,     uid ) );
     }
 

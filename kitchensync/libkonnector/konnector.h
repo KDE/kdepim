@@ -100,8 +100,9 @@ public:
     QByteArray file( const QString &udi, const QString &path );
 
     /**
-     * This will synchronus fetch data and tries to convert
-     * it to known KSyncEntry derived class. If not able to convert
+     * This willfetch data and tries to convert
+     * it to a known KSyncEntry derived class. If not able to convert
+     * it will return a KUnknownSyncEntry
      *
      * @param udi the ID of the Konnector plugin
      * @param path The path where to fetch data from
@@ -133,6 +134,7 @@ public:
      */
     QIconSet iconSet(const QString& udi )const;
     QString id(const QString& udi )const;
+    QString metaId( const QString& udi )const;
 public slots:
     /**
      * this will write a List of KSyncEntry

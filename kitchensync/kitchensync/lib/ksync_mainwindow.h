@@ -36,6 +36,7 @@
 #include <qptrlist.h>
 #include <qmap.h>
 
+#include <kdebug.h>
 #include <kparts/mainwindow.h>
 
 
@@ -62,6 +63,7 @@ namespace KitchenSync {
         Konnector*  konnector();
         QString  currentId()const;
         QMap<QString,QString> ids()const;
+        Profile currentProfile()const { kdDebug()<< "Copy profile" << endl; return m_profile; }
     private:
         virtual void initActions();
         void saveCurrentProfile();
