@@ -94,11 +94,16 @@ void SearchManager::doSearch( const QString &pattern, KABC::Field *field, Type t
 {
   if ( pattern.isEmpty() ) {
     mContacts = list;
+// Don't delete the contacts. There are addressbooks with more than 100 entres
+// and there doesn't seem to be a way to get the deleted contacts back with
+// another search
+#if 0
     if ( mLimitContactDisplay && mContacts.count() > 100 ) { // show only 100 contacts
       KABC::Addressee::List::Iterator it = mContacts.at( 100 );
       while ( it != mContacts.end() )
         it = mContacts.remove( it );
     }
+#endif
 
     return;
   }
