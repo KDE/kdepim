@@ -64,6 +64,7 @@ void ResourceSlox::init( const KURL &url,
 
   setType( "slox" );
 
+  mDownloadJob = 0;
   mURL = url;
   mUser = user;
   mPassword = password;
@@ -116,6 +117,12 @@ bool ResourceSlox::load()
 bool ResourceSlox::asyncLoad()
 {
   kdDebug() << "KABC::ResourceSlox::asyncLoad()" << endl;
+
+  if ( mDownloadJob ) {
+    kdWarning() << "KABC::ResourceSlox::asyncLoad(): Loading still in progress."
+                << endl;
+    return false;
+  }
 
   QString url = mURL.url() + "/servlet/webdav.contacts/";
 
