@@ -75,7 +75,7 @@ KABC::AddresseeList OperaXXPort::importContacts( const QString& ) const
   bool parseContact = false;
   KABC::Addressee addr;
 
-  QRegExp seperator( "\x02\x02" );
+  QRegExp separator( "\x02\x02" );
 
   while ( !stream.atEnd() ) {
     line = stream.readLine();
@@ -98,7 +98,7 @@ KABC::AddresseeList OperaXXPort::importContacts( const QString& ) const
       if ( key == QString::fromLatin1( "name" ) )
         addr.setNameFromString( value );
       else if ( key == QString::fromLatin1( "mail" ) ) {
-        QStringList emails = QStringList::split( seperator, value );
+        QStringList emails = QStringList::split( separator, value );
 
         QStringList::Iterator it = emails.begin();
         bool preferred = true;
@@ -113,10 +113,10 @@ KABC::AddresseeList OperaXXPort::importContacts( const QString& ) const
                               KABC::PhoneNumber::Fax | KABC::PhoneNumber::Home ) );
       else if ( key == QString::fromLatin1( "postaladdress" ) ) {
         KABC::Address address( KABC::Address::Home );
-        address.setLabel( value.replace( seperator, "\n" ) );
+        address.setLabel( value.replace( separator, "\n" ) );
         addr.insertAddress( address );
       } else if ( key == QString::fromLatin1( "description" ) )
-        addr.setNote( value.replace( seperator, "\n" ) );
+        addr.setNote( value.replace( separator, "\n" ) );
       else if ( key == QString::fromLatin1( "url" ) )
         addr.setUrl( value );
       else if ( key == QString::fromLatin1( "pictureurl" ) ) {
