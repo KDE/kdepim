@@ -43,12 +43,10 @@ class IncidenceConverter : public GWConverter
     bool convertToCalendarItem( KCal::Incidence*, ns1__CalendarItem* );
     bool convertFromCalendarItem( ns1__CalendarItem*, KCal::Incidence* );
 
-/*
-    time_t qDateTimeToGW( const QDateTime& );
-    time_t qDateTimeToGW( const QDateTime&, const QString& );
-    QDateTime gwToQDateTime( time_t );
-    QDateTime gwToQDateTime( time_t, const QString& );
-*/
+    void getItemDescription( ns1__CalendarItem*, KCal::Incidence* );
+    void setItemDescription( KCal::Incidence*, ns1__CalendarItem* );
+
+    void getAttendees( ns1__CalendarItem*, KCal::Incidence* );
 
     QString mTimezone;
 };

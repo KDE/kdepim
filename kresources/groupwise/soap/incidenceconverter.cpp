@@ -20,6 +20,7 @@
 
 #include "incidenceconverter.h"
 
+#include <kmdcodec.h>
 #include <libkdepim/kpimprefs.h>
 
 #include <kdebug.h>
@@ -218,6 +219,8 @@ bool IncidenceConverter::convertToCalendarItem( KCal::Incidence* incidence, ns1_
   if ( incidence->dtStart().isValid() )
     item->startDate = qDateTimeToChar( incidence->dtStart(), mTimezone );
 
+  setItemDescription( incidence, item );
+
   return true;
 }
 
@@ -239,6 +242,9 @@ bool IncidenceConverter::convertFromCalendarItem( ns1__CalendarItem* item, KCal:
 
   if ( item->startDate != 0 )
     incidence->setDtStart( charToQDateTime( item->startDate, mTimezone ) );
+
+  getItemDescription( item, incidence );
+  getAttendees( item, incidence );
 /*
   if ( item->rdate && item->rdate->date ) {
     std::vector<xsd__date>* dateList = item->rdate->date;
@@ -258,46 +264,66 @@ bool IncidenceConverter::convertFromCalendarItem( ns1__CalendarItem* item, KCal:
   return true;
 }
 
-#if 0
-time_t IncidenceConverter::qDateTimeToGW( const QDateTime &dt )
+void IncidenceConverter::getItemDescription( ns1__CalendarItem *item, KCal::Incidence *incidence )
 {
-  time_t ticks = -dt.secsTo( QDateTime( QDate( 1970, 1, 1 ), QTime( 0, 0 ) ) );
+  if ( item->message && item->message->part ) {
 
-  return ticks;
+    std::vector<ns1__MessagePart*> *parts = item->message->part;
+    std::vector<ns1__MessagePart*>::const_iterator it = parts->begin();
+
+    for ( ; it != parts->end(); ++it ) {
+      xsd__base64Binary data = (*it)->__item;
+
+      // text/plain should be the description
+      if ( stringToQString( (*it)->contentType ) == "text/plain" ) {
+        QString description = QString::fromUtf8( (char*)data.__ptr, data.__size );
+        incidence->setDescription( description );
+        return;
+      }
+    }
+  }
 }
 
-time_t IncidenceConverter::qDateTimeToGW( const QDateTime &dt,
-                                          const QString &timeZoneId )
+void IncidenceConverter::setItemDescription( KCal::Incidence *incidence, ns1__CalendarItem *item )
 {
-  kdDebug() << "IncidenceConverter::qDateTimeToGW() " << timeZoneId << endl;
+// We disabled it for now, since the server doesn't follow the specifications yet :(
 
-  kdDebug() << "  QDateTime: " << dt.toString() << endl;
+/*
+  if ( !incidence->description().isEmpty() ) {
+    ns1__MessageBody *message = soap_new_ns1__MessageBody( soap(), -1 );
+    message->part = soap_new_std__vectorTemplateOfPointerTons1__MessagePart( soap(), -1 );
 
-  QDateTime utc = KPimPrefs::localTimeToUtc( dt, timeZoneId );
+    ns1__MessagePart *part = soap_new_ns1__MessagePart( soap(), -1 );
 
-  kdDebug() << "  QDateTime UTC: " << utc.toString() << endl;
+    xsd__base64Binary data;
+    data.__ptr = (unsigned char*)qStringToChar( incidence->description().utf8() );
+    data.__size = incidence->description().utf8().length();
 
-  time_t ticks = -utc.secsTo( QDateTime( QDate( 1970, 1, 1 ), QTime( 0, 0 ) ) );
+    part->__item = data;
+    part->contentId = "";
+    part->contentType = "text/plain";
+    part->length = KCodecs::base64Encode( incidence->description().utf8() ).length();
 
-  kdDebug() << "  Ticks: " << ticks << endl;
+    message->part->push_back( part );
 
-  return ticks;
+    item->message = message;
+  } else */
+    item->message = 0;
 }
 
-QDateTime IncidenceConverter::gwToQDateTime( time_t ticks )
+void IncidenceConverter::getAttendees( ns1__CalendarItem *item, KCal::Incidence *incidence )
 {
-  QDateTime dt;
-  dt.setTime_t( ticks, Qt::UTC );
+  if ( item->distribution && item->distribution->recipients &&
+       item->distribution->recipients->recipient ) {
+    std::vector<ns1__Recipient*> *recipients = item->distribution->recipients->recipient;
+    std::vector<ns1__Recipient*>::const_iterator it;
 
-  return dt;
+    for ( it = recipients->begin(); it != recipients->end(); ++it ) {
+      ns1__Recipient *recipient = *it;
+      KCal::Attendee *attendee = new KCal::Attendee( stringToQString( recipient->displayName ),
+                                                     stringToQString( recipient->email ) );
+
+      incidence->addAttendee( attendee );
+    }
+  }
 }
-
-QDateTime IncidenceConverter::gwToQDateTime( time_t ticks,
-                                             const QString &timeZoneId )
-{
-  QDateTime dt;
-  dt.setTime_t( ticks, Qt::UTC );
-
-  return KPimPrefs::utcToLocalTime( dt, timeZoneId );
-}
-#endif
