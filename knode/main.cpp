@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
   KUniqueApplication::addCmdLineOptions();
 
   if (!KNApplication::start())
-    exit(0);
+    return 0;
 
   KNApplication app;
 
