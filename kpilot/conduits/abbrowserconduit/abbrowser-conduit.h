@@ -30,23 +30,27 @@
 */
 
 
-#include <qmap.h>
-
 #include <kabc/addressbook.h>
-#include <kabc/addressee.h>
-#include <kabc/address.h>
-
 #include <pilotAddress.h>
 #include <plugin.h>
-#include <kcrash.h>
 
 
 #define SYNCNONE 0
 #define SYNCMOD 1
 #define SYNCDEL 3
 
-using namespace KABC;
 class ResolutionTable;
+//class PilotAddress;
+namespace KABC 
+{
+class Addressee;
+class Address;
+class PhoneNumber;
+//class AddressBook;
+class Ticket;
+}
+
+using namespace KABC;
 
 typedef QValueList<recordid_t> RecordIDList;
 
