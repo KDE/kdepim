@@ -534,6 +534,7 @@ void Recurrence::addMonthlyPos_(short _rPos, const QBitArray &_rDays)
     tmpPos->negative = true;
   }
   tmpPos->rDays = _rDays;
+  tmpPos->rDays.detach();
   rMonthPositions.append(tmpPos);
 
 #ifdef LIBKCAL_BACK_COMPAT
@@ -1890,12 +1891,12 @@ int Recurrence::yearlyPosCalcToDate(const QDate& enddate, YearlyPosData& data) c
     // Check what remains of the start year
     for (QPtrListIterator<int> im(rYearNums); im.current(); ++im) {
       if (*im.current() >= data.month) {
+        data.month = *im.current();
         if (data.yearMonth() > endYearMonth)
           return countGone;
         // Check what remains of the start month
         bool lastMonth = (data.yearMonth() == endYearMonth);
         if (lastMonth || data.day > 1 || data.varies) {
-          data.month = *im.current();
           days = data.dayList();
           if (lastMonth || data.day > 1) {
             for (id = days->begin();  id != days->end();  ++id) {
@@ -1976,76 +1977,124 @@ int Recurrence::yearlyPosCalcNextAfter(QDate& enddate, YearlyPosData& data) cons
   int  countGone = 0;
   int endYear  = enddate.year();
   int endMonth = enddate.month();
-  if (enddate.day() < data.day && --endMonth == 0) {
+  int endDay   = enddate.day();
+  if (endDay < data.day && --endMonth == 0) {
     endMonth = 12;
     --endYear;
   }
+  int endYearMonth = endYear*12 + endMonth;
   QValueList<int>::ConstIterator id;
   const QValueList<int>* days;
-// TODO: complete this
-/*
-  if (data.month > 1) {
-    // Check what remains of the start year
-    for (im = mons->begin();  im != mons->end();  ++im) {
-      if (*im >= data.month) {
-        ++countGone;
-        if (data.year == endYear && *im > endMonth) {
-          data.month = *im;
-          goto ex;
-        }
-        if (--countTogo == 0)
-          return 0;
-      }
-    }
-    data.month = 1;
-    data.year += rFreq;
-  }
 
   if (data.varies) {
-    // The number of recurrences is different on leap years,
-    // so check year-by-year.
-    while (data.year <= endYear) {
-      mons = data.monthList();
-      if (data.year == endYear && mons->last() > endMonth)
-        break;
-      uint n = mons->count();
-      if (n >= countTogo)
-        break;
-      countTogo -= n;
-      countGone += n;
+    // The number of recurrences varies from year to year.
+    for ( ; ; ) {
+      // Check the next year
+      for (QPtrListIterator<int> im(rYearNums); im.current(); ++im) {
+        if (*im.current() >= data.month) {
+          // Check the next month
+          data.month = *im.current();
+          int ended = data.yearMonth() - endYearMonth;
+          days = data.dayList();
+          if (ended >= 0 || data.day > 1) {
+            // This is the start or end month, so check each day
+            for (id = days->begin();  id != days->end();  ++id) {
+              if (*id >= data.day) {
+                ++countGone;
+                if (ended > 0 || (ended == 0 && *id > endDay)) {
+                  data.day = *id;
+                  goto ex;
+                }
+                if (--countTogo == 0)
+                  return 0;
+              }
+            }
+          } else {
+            // Skip the whole month
+            uint n = days->count();
+            if (n >= countTogo)
+              return 0;
+            countGone += n;
+          }
+          data.day = 1;      // we've checked the start month now
+        }
+      }
+      data.month = 1;        // we've checked the start year now
       data.year += rFreq;
     }
-    mons = data.monthList();
   } else {
-    // The number of recurrences is the same every year,
-    // so skip the year-by-year check.
+    // The number of recurrences is the same every year.
+    if (data.month > 1 || data.day > 1) {
+      // Check what remains of the start year
+      for (QPtrListIterator<int> im(rYearNums); im.current(); ++im) {
+        if (*im.current() >= data.month) {
+          // Check what remains of the start month
+          data.month = *im.current();
+          int ended = data.yearMonth() - endYearMonth;
+          if (ended >= 0 || data.day > 1) {
+            // This is the start or end month, so check each day
+            days = data.dayList();
+            for (id = days->begin();  id != days->end();  ++id) {
+              if (*id >= data.day) {
+                ++countGone;
+                if (ended > 0 || (ended == 0 && *id > endDay)) {
+                  data.day = *id;
+                  goto ex;
+                }
+                if (--countTogo == 0)
+                  return 0;
+              }
+            }
+            data.day = 1;      // we've checked the start month now
+          } else {
+            // Skip the whole month.
+            if (static_cast<uint>(data.daysPerMonth) >= countTogo)
+              return 0;
+            countGone += data.daysPerMonth;
+          }
+        }
+      }
+      data.year += rFreq;
+    }
     // Skip the remaining whole years to at least endYear.
-    int monthsPerYear = mons->count();
     int recurYears = (endYear - data.year + rFreq - 1) / rFreq;
     if ((endYear - data.year)%rFreq == 0
-    &&  mons->last() <= endMonth)
+    &&  *rYearNums.getLast() <= endMonth)
       ++recurYears;    // required year is after endYear
     if (recurYears) {
-      int n = recurYears * monthsPerYear;
+      int n = recurYears * data.count;
       if (static_cast<uint>(n) > countTogo)
         return 0;     // reached end of recurrence
       countTogo -= n;
       countGone += n;
       data.year += recurYears * rFreq;
     }
-  }
 
-  // Check the last year in the recurrence
-  for (im = mons->begin();  im != mons->end();  ++im) {
-    ++countGone;
-    if (data.year > endYear || *im > endMonth) {
-      data.month = *im;
-      break;
+    // Check the last year in the recurrence
+    for (QPtrListIterator<int> im(rYearNums); im.current(); ++im) {
+      data.month = *im.current();
+      int ended = data.yearMonth() - endYearMonth;
+      if (ended >= 0) {
+        // This is the end month, so check each day
+        days = data.dayList();
+        for (id = days->begin();  id != days->end();  ++id) {
+          ++countGone;
+          if (ended > 0 || (ended == 0 && *id > endDay)) {
+            data.day = *id;
+            goto ex;
+          }
+          if (--countTogo == 0)
+            return 0;
+        }
+      } else {
+        // Skip the whole month.
+        if (static_cast<uint>(data.daysPerMonth) >= countTogo)
+          return 0;
+        countGone += data.daysPerMonth;
+      }
     }
-    if (--countTogo == 0)
-      return 0;
   }
-ex:*/
+ex:
   enddate = data.date();
   return countGone;
 }
@@ -2323,7 +2372,6 @@ int Recurrence::countMonthlyPosDays() const
   Q_UINT8 positive[5] = { 0, 0, 0, 0, 0 };
   Q_UINT8 negative[4] = { 0, 0, 0, 0 };
   for (QPtrListIterator<rMonthPos> pos(rMonthPositions); pos.current(); ++pos) {
-    int n = 0;
     int weeknum = pos.current()->rPos;
     Q_UINT8* wk;
     if (pos.current()->negative) {
