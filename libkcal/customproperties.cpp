@@ -67,7 +67,7 @@ void CustomProperties::removeNonKDECustomProperty(const QCString &name)
 {
   QMap<QCString, QString>::Iterator it = mProperties.find(name);
   if (it != mProperties.end())
-    mProperties.erase(it);
+    mProperties.remove(it);
 }
 
 QString CustomProperties::nonKDECustomProperty(const QCString &name) const
