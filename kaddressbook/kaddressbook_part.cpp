@@ -90,7 +90,7 @@ KAboutData *KAddressbookPart::createAboutData()
   KAboutData *about = new KAboutData( "kaddressbook", I18N_NOOP( "KAddressBook" ),
                                       "3.1", I18N_NOOP( "The KDE Address Book" ),
                                       KAboutData::License_BSD,
-                                      I18N_NOOP( "(c) 1997-2002, The KDE PIM Team" ) );
+                                      I18N_NOOP( "(c) 1997-2003, The KDE PIM Team" ) );
   about->addAuthor( "Tobias Koenig", I18N_NOOP( "Current maintainer" ), "tokoe@kde.org" );
   about->addAuthor( "Don Sanders", I18N_NOOP( "Original author" ) );
   about->addAuthor( "Cornelius Schumacher",
