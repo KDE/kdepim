@@ -1,29 +1,29 @@
-/***********************************************************************************
- *   main.cpp                                                                      *
- *                                                                                 *
- *   KonsoleKalendar is a command line interface to KDE calendars                  *
- *   Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>               *
- *   Copyright (C) 2003-2004  Allen Winter <awinterz@users.sourceforge.net>        * 
- *                                                                                 *
- *   This program is free software; you can redistribute it and/or modify          *
- *   it under the terms of the GNU General Public License as published by          * 
- *   the Free Software Foundation; either version 2 of the License, or             *
- *   (at your option) any later version.                                           *
- *                                                                                 *
- *   This program is distributed in the hope that it will be useful,               * 
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of                *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the                  *
- *   GNU General Public License for more details.                                  *
- *                                                                                 * 
- *    You should have received a copy of the GNU General Public License            *
- *   along with this program; if not, write to the Free Software                   *
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.   *
- *                                                                                 *
- *   As a special exception, permission is given to link this program              * 
- *   with any edition of Qt, and distribute the resulting executable,              *
- *   without including the source code for Qt in the source distribution.          *
- *                                                                                 *
- ***********************************************************************************/
+/*******************************************************************************
+ * main.cpp                                                                    *
+ *                                                                             *
+ * KonsoleKalendar is a command line interface to KDE calendars                *
+ * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>             *
+ * Copyright (C) 2003-2004  Allen Winter <awinterz@users.sourceforge.net>      *
+ *                                                                             *
+ * This program is free software; you can redistribute it and/or modify        *
+ * it under the terms of the GNU General Public License as published by        *
+ * the Free Software Foundation; either version 2 of the License, or           *
+ * (at your option) any later version.                                         *
+ *                                                                             *
+ * This program is distributed in the hope that it will be useful,             *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of              *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the                *
+ * GNU General Public License for more details.                                *
+ *                                                                             *
+ * You should have received a copy of the GNU General Public License           *
+ * along with this program; if not, write to the Free Software                 *
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. *
+ *                                                                             *
+ * As a special exception, permission is given to link this program            *
+ * with any edition of Qt, and distribute the resulting executable,            *
+ * without including the source code for Qt in the source distribution.        *
+ *                                                                             *
+ ******************************************************************************/
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -47,12 +47,10 @@
 #include <kconfig.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
-#include <kurl.h>
 
 #include <libkcal/calformat.h>
 #include <libkcal/calendarresources.h>
 #include <libkcal/resourcelocal.h>
-#include <libkcal/resourceremote.h>
 
 #include <qdatetime.h>
 #include <qfile.h>
@@ -217,7 +215,6 @@ int main( int argc, char *argv[] )
   bool create = false;
   bool calendarFile = false;
   bool importFile = false;
-  bool remote = true;
 
   QString option;
 
@@ -632,38 +629,14 @@ int main( int argc, char *argv[] )
     calendarFile = true;
     option = args->getOption( "file" );
     variables.setCalendarFile( option );
-    bool exists = false;
-    
-    KURL url( variables.getCalendarFile() );
-     
-      // Sorry about this hack.. I just need to get this working
-      // So we can get along!
-      // TODO: howto check if this isn't there;)
-      // TODO: make it work with URLs in next round!!
-      
-     if( !url.isLocalFile() ){
-      kdDebug() << "main | Remote calendar | "
-                << "We have remote calendar?"
-                << endl;       
-       exists = true; 
-       remote = true;
-     
-     } else {
-      
-      kdDebug() << "main | Local calendar | "
-                << "We have local calendar?"
-                << endl;
 
-      remote = false;       
-    
     /*
      * All modes need to know if the calendar file exists
      * This must be done before we get to opening biz
      */
-     exists = QFile::exists( variables.getCalendarFile() );
-    } 
-    
-    if ( create && !remote) {
+    bool exists = QFile::exists( variables.getCalendarFile() );
+
+    if ( create ) {
 
       kdDebug() << "main | createcalendar | "
                 << "check if calendar file already exists"
@@ -686,9 +659,6 @@ int main( int argc, char *argv[] )
              << endl;
         return 1;
       }
-    } else if ( create && remote ) {
-       cout << i18n( "Creation of remote calendars is currently not supported." ).local8Bit()
-       << endl; 
     }
 
     if ( ! exists ) {
@@ -702,42 +672,16 @@ int main( int argc, char *argv[] )
   }
 
   CalendarResources *calendarResource = NULL;
-  //CalendarLocal *localCalendar = NULL;
-  KCal::ResourceCalendar *calendar = 0;
+  CalendarLocal *localCalendar = NULL;
+
   /*
    * Should we use local calendar or resource?
    */
   variables.setTimeZoneId();
-    
-  if ( args->isSet( "file" ) && !remote ) {
-    
-    kdDebug() << "main | Open resource | "
-              << "Local calendar"
-              << endl;
-    
-    calendar = new KCal::ResourceLocal( variables.getCalendarFile() );
-    calendar->setTimeZoneId( variables.getTimeZoneId() );
-    
-    //calendar = new CalendarLocal( variables.getTimeZoneId() );
-    //calendar->load( variables.getCalendarFile() );
-    
-    calendar->load();
-    
-    variables.setCalendar( calendar  );
-  } else if( args->isSet( "file" ) && remote ) {
-    
-    kdDebug() << "main | Open resource | "
-              << "Remote calendar"
-              << endl;
-      
-    // TODO: only one URL.. i know..
-    KURL url( variables.getCalendarFile() );
-    calendar =  new KCal::ResourceRemote( url );      
-    calendar->setTimeZoneId( variables.getTimeZoneId() );
-    calendar->load();
-    
-    variables.setCalendar( calendar  );
- 
+  if ( args->isSet( "file" ) ) {
+    localCalendar = new CalendarLocal( variables.getTimeZoneId() );
+    localCalendar->load( variables.getCalendarFile() );
+    variables.setCalendar( localCalendar  );
   } else {
     calendarResource = new CalendarResources( variables.getTimeZoneId() );
     calendarResource->readConfig();
@@ -987,8 +931,8 @@ int main( int argc, char *argv[] )
   delete konsolekalendar;
 
   if ( calendarFile ) {
-    calendar->close();
-    delete calendar;
+    localCalendar->close();
+    delete localCalendar;
   } else {
     calendarResource->close();
     delete calendarResource;

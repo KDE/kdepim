@@ -1,29 +1,29 @@
-/***********************************************************************************
- *   konsolekalendar.cpp                                                           *
- *                                                                                 *
- *   KonsoleKalendar is a command line interface to KDE calendars                  *
- *   Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>               *
- *   Copyright (C) 2003-2004  Allen Winter <awinterz@users.sourceforge.net>        * 
- *                                                                                 *
- *   This program is free software; you can redistribute it and/or modify          *
- *   it under the terms of the GNU General Public License as published by          * 
- *   the Free Software Foundation; either version 2 of the License, or             *
- *   (at your option) any later version.                                           *
- *                                                                                 *
- *   This program is distributed in the hope that it will be useful,               * 
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of                *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the                  *
- *   GNU General Public License for more details.                                  *
- *                                                                                 * 
- *    You should have received a copy of the GNU General Public License            *
- *   along with this program; if not, write to the Free Software                   *
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.   *
- *                                                                                 *
- *   As a special exception, permission is given to link this program              * 
- *   with any edition of Qt, and distribute the resulting executable,              *
- *   without including the source code for Qt in the source distribution.          *
- *                                                                                 *
- ***********************************************************************************/
+/*******************************************************************************
+ * konsolekalendar.cpp                                                         *
+ *                                                                             *
+ * KonsoleKalendar is a command line interface to KDE calendars                *
+ * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>             *
+ * Copyright (C) 2003-2004  Allen Winter <awinterz@users.sourceforge.net>      *
+ *                                                                             *
+ * This program is free software; you can redistribute it and/or modify        *
+ * it under the terms of the GNU General Public License as published by        *
+ * the Free Software Foundation; either version 2 of the License, or           *
+ * (at your option) any later version.                                         *
+ *                                                                             *
+ * This program is distributed in the hope that it will be useful,             *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of              *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the                *
+ * GNU General Public License for more details.                                *
+ *                                                                             *
+ * You should have received a copy of the GNU General Public License           *
+ * along with this program; if not, write to the Free Software                 *
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. *
+ *                                                                             *
+ * As a special exception, permission is given to link this program            *
+ * with any edition of Qt, and distribute the resulting executable,            *
+ * without including the source code for Qt in the source distribution.        *
+ *                                                                             *
+ ******************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -160,10 +160,8 @@ bool KonsoleKalendar::showInstance()
 	  for ( dt=firstdate;
                 dt<=lastdate && status != false;
                 dt=dt.addDays(1) ) {
-	    /*Event::List events;
-	    events = m_variables->getCalendar()->events( dt, true );
-	    
-	    status = printEventList( &ts, &events, dt );*/
+	    Event::List events = m_variables->getCalendar()->events( dt, true );
+	    status = printEventList( &ts, &events, dt );
 	  }
 
 	} else if ( m_variables->isUID() ) {
@@ -188,10 +186,9 @@ bool KonsoleKalendar::showInstance()
 	  for ( dt=m_variables->getStartDateTime().date();
                 dt<=datetime.date() && status != false;
                 dt=dt.addDays(1) ) {
-	    //Event::List events = m_variables->getCalendar()->events( dt, true );
-	    Event::List events = m_variables->getCalendar()->rawEventsForDate( dt, true );
+	    Event::List events = m_variables->getCalendar()->events( dt, true );
 	    status = printEventList( &ts, &events, dt );
-             
+
 	    // when we get next event we exit..
 	    if ( events.count() ) {
 	      kdDebug() << "konsolekalendar.cpp::showInstance() | "
@@ -209,11 +206,7 @@ bool KonsoleKalendar::showInstance()
 	  for ( dt=m_variables->getStartDateTime().date();
                 dt<=m_variables->getEndDateTime().date() && status != false;
                 dt=dt.addDays(1) ) {
-	   kdDebug() << "PING" << endl;	    
-	    
-	    Event::List events = m_variables->getCalendar()->rawEventsForDate( dt, true );
-	   
-	  kdDebug() << "PING 2" << endl;	    
+	    Event::List events = m_variables->getCalendar()->events( dt, true );
 	    status = printEventList( &ts, &events, dt );
 	  }
 	}
@@ -247,9 +240,9 @@ bool KonsoleKalendar::showInstance()
 
         KCal::HtmlExport *Export;
         if ( !m_variables->isCalendarResources() ) {
-	  //Export = new HtmlExport( m_variables->getCalendar() );
+          Export = new HtmlExport( m_variables->getCalendar() );
         } else {
-          //Export = new HtmlExport( m_variables->getCalendarResources() );
+          Export = new HtmlExport( m_variables->getCalendarResources() );
         }
 
 	title = "Appointments for " + firstdate.toString(Qt::TextDate);
