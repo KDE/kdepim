@@ -349,8 +349,8 @@ ExpenseConduit::doSync()
 			{
 			DEBUGCONDUIT << fname << " " << proc.pid() << " still running" << endl;
 			}
-		DEBUGCONDUIT << fname << proc.args() << endl;
-		DEBUGCONDUIT << fname << sqlcmd << endl;
+		// DEBUGCONDUIT << fname << proc.args() << endl;
+		// DEBUGCONDUIT << fname << sqlcmd << endl;
 	}
 
 	if (mDBType=="2")
@@ -359,8 +359,8 @@ ExpenseConduit::doSync()
 	}
 
 // Now let's read records
-
-	while ((rec=readRecordByIndex(index++)))
+	while ((rec=readNextModifiedRecord()))
+// 	while ((rec=readRecordByIndex(index++)))
         {
                 if (rec->isDeleted())
                 {
@@ -469,14 +469,12 @@ ExpenseConduit::doSync()
 			char sqlcmd[400];
 			sprintf(sqlcmd,"echo \"%s\"|psql -h %s -U %s -c \"INSERT INTO \"%s\" (\"fldTdate\", \"fldAmount\", \"fldPType\", \"fldVName\", \"fldEType\", \"fldLocation\", \"fldAttendees\", \"fldNotes\") VALUES ('%s', '%s', '%s',
  '%s', '%s', '%s', '%s', '%s');\" %s",mDBpasswd.latin1(),mDBsrv.latin1(),mDBlogin.latin1(),mDBtable.latin1(),dtstng,e.amount,epmsg,e.vendor,etmsg,e.city,amesg,nmsg,mDBnm.latin1());
-			DEBUGCONDUIT << fname << " " << sqlcmd << endl;
+			// DEBUGCONDUIT << fname << " " << sqlcmd << endl;
+		        //	DEBUGCONDUIT << fname << " " << proc.args() << endl;
 			proc.clearArguments();
 			proc << sqlcmd;
-			syscall=proc.start(KShellProcess::Block, KShellProcess::NoCommunication);
-			while (proc.isRunning())
-			{
-			DEBUGCONDUIT << fname << " " << proc.pid() << " still running" << endl;
-			}
+			proc.start(KShellProcess::Block, KShellProcess::NoCommunication);
+			DEBUGCONDUIT << fname << " " << proc.pid() << " finished OK " << endl;
 			DEBUGCONDUIT << fname << " " << syscall << endl;
 			}
 
@@ -491,6 +489,7 @@ ExpenseConduit::doSync()
 		}
 	DEBUGCONDUIT << fname << " Records: " << recordcount << endl;
 	}
+	proc.kill();
 }
 
 
@@ -524,6 +523,10 @@ ExpenseConduit::doTest()
 }
 
 // $Log$
+// Revision 1.10  2001/03/23 14:30:55  molnarc
+//
+// Now it actually writes to a postrgres db. (Not the right way yet but that is still in progress).
+//
 // Revision 1.9  2001/03/18 02:00:42  molnarc
 //
 // Added connect code for postgres and mysql. Just wondering if anyone
