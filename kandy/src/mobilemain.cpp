@@ -22,6 +22,7 @@
 #include "mobilegui.h"
 
 #include "mobilemain.h"
+#include <kstatusbar.h>
 #include "mobilemain.moc"
 
 MobileMain::MobileMain(CommandScheduler *scheduler)

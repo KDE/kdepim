@@ -31,6 +31,7 @@
 #include "print.h"
 #include "docking.h"
 #include "preferences.h"
+#include <kstatusbar.h>
 
 KarmWindow::KarmWindow()
   : KMainWindow(0),

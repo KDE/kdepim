@@ -38,6 +38,7 @@
 #include "adddlg.h"
 #include "karm.h"
 #include "ktimewidget.h"
+#include <qpushbutton.h>
 
 
 AddTaskDialog::AddTaskDialog(QString caption, bool editDlg)

@@ -38,6 +38,7 @@
 #include "modem.h"
 
 #include "kandy.h"
+#include <kstatusbar.h>
 #include "kandy.moc"
 
 Kandy::Kandy(CommandScheduler *scheduler)
