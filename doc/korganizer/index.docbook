@@ -1,14 +1,16 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V3.1//EN" [
 <!ENTITY k   "<application>KOrganizer</application>">
+<!ENTITY kappname "&k;" >
 <!ENTITY sli    "slider">
 <!ENTITY dir    "directory">
 <!ENTITY ab     SYSTEM "ab.inc"> 
 <!ENTITY % addindex "IGNORE">
+<!ENTITY % ents PUBLIC "-//KDE//ENTITIES Application-Variable Entities V1.0//EN">
+  %ents;
 <![ %addindex; [ <!ENTITY kdedocindex SYSTEM "docindex.docbook"> ]]>
 ]>
 
 <!-- kdoctemplate v0.8 October 1 1999 -->
-
 
 <book id="korganizer" lang="en">
 
@@ -20,13 +22,41 @@
 <author>
 <firstname>Milos</firstname>
 <surname>Prudek</surname>
+<affiliation><address><email>milos.prudek@worldonline.cz</email></address>
+</affiliation>
 </author>
+
+<othercredit>
+<firstname>Cornelius</firstname>
+<surname>Schumacher</surname>
+<affiliation><address><email>schumacher@kde.org</email></address></affiliation>
+<contrib>Developer</contrib>
+</othercredit>
+
+<othercredit>
+<firstname>Preston</firstname>
+<surname>Brown</surname>
+<affiliation><address><email>pbrown@kde.org</email></address></affiliation>
+<contrib>Developer</contrib>
+</othercredit>
+
+<othercredit>
+<firstname>Lauri</firstname>
+<surname>Watts</surname>
+<affiliation><address><email>vampyr@atconnex.net</email></address></affiliation>
+<contrib>Reviewer</contrib>
+</othercredit>
 </authorgroup>
 
+<copyright>
+<year>2000</year>
+<holder>Milos Prudek</holder>
+</copyright>
 
+<legalnotice>&FDLNotice;</legalnotice>
 
 <keywordset>
-<keyword>KDE</keyword>
+<Keyword>KDE</keyword>
 <keyword>KOrganizer</keyword>
 <keyword>kdepim</keyword>
 <keyword>manager</keyword>
@@ -37,9 +67,8 @@
 
 </keywordset>
 
-<date>08/08/2000</date>
-<releaseinfo>1.93.00</releaseinfo>
-
+<date>12/08/2000</date>
+<releaseinfo>0.1</releaseinfo>
 
 <revhistory>
 <revision>
@@ -49,31 +78,37 @@
 
 <revremark>
 
-Initial release. Documentation version numbering: First number group represents program version, and second number group represents documentation version. Thus korganizer-1.91-20000621-0.1 means "Documentation v.0.1 for Korganizer 1.91-20000621".
+Initial release. Documentation version numbering: First number group represents
+program version, and second number group represents documentation version. Thus
+korganizer-1.91-20000621-0.1 means "Documentation v.0.1 for Korganizer
+1.91-20000621".
 
-Text surrounded by ### are remarks for my own internal use. Text surrounded by @@@ are my questions for the Korganizer authors. Please include all your comments inside those @@@ characters. Thanks!
+Text surrounded by ### are remarks for my own internal use. Text surrounded by
+@@@ are my questions for the Korganizer authors. Please include all your
+comments inside those @@@ characters. Thanks!
 
-CONTENT OF THIS RELEASE: All chapters except "Other Functions", "Questions and Answers", "HOWTO" and "Glossary" are finished; all intended material is there, but I haven't done a "second reading"; therefore I will probably shuffle the order of sections, and as much as 30% may get rewritten. Critical remarks from the KOrganizer authors are most welcome! All hyperlinks are working. 
+CONTENT OF THIS RELEASE: All chapters except "Other Functions", "Questions and
+Answers", "HOWTO" and "Glossary" are finished; all intended material is there,
+but I haven't done a "second reading"; therefore I will probably shuffle the
+order of sections, and as much as 30% may get rewritten. Critical remarks from
+the KOrganizer authors are most welcome! All hyperlinks are working.
 
 </revremark>
 </revision>
-
-
 
 <revision>
 <revnumber>0.2</revnumber>
 <date>12.7.2000</date>
 <authorinitials>M.P.</authorinitials>
 
-<revremark>
-All answers of the authors were used. Some answers were kept while adding more details for clarification, the rest was deleted.
-New material written: Glossary entry for Group scheduling features, Five minute course, Hotkey reference, Command line reference, Main features list.
-Most footnotes converted to tips, and menu reference chapter converted to standard KDE docbook convention as suggested by Mike McBride (thanks, Mike, you were quite right!)
-New Examples chapter.
-Many little enhancements.
-</revremark>
+<revremark>All answers of the authors were used. Some answers were kept while
+adding more details for clarification, the rest was deleted.  New material
+written: Glossary entry for Group scheduling features, Five minute course,
+Hotkey reference, Command line reference, Main features list.  Most footnotes
+converted to tips, and menu reference chapter converted to standard KDE docbook
+convention as suggested by Mike McBride (thanks, Mike, you were quite right!)
+New Examples chapter.  Many little enhancements.</revremark>
 </revision>
-
 
 <revision>
 <revnumber>0.3</revnumber>
@@ -88,61 +123,55 @@ Many little enhancements.
 - Palm Sync
 - More glossary terms?
 - Change guilabel tags to guimenuitem.
-
 </revremark>
 </revision>
 
-
-
-
-
-
 </revhistory>
-
-
 
 <!-- Abstract about this handbook -->
 
-<abstract>
-<para>
-&k; is an easy to use personal information manager (PIM). You can schedule appointments, events, and to-do tasks. &k; will remind you about pending tasks, and help you keep your schedule. 
-</para>
-<para><emphasis>This is a beta version of &k; Handbook. Please <ulink url="mailto:milos.prudek@worldonline.cz">mail me</ulink> your comments and ideas, they will be very welcome and appreciated!</emphasis></para>
+<abstract><para>&k; is an easy to use personal information manager
+(<abbrev>PIM</abbrev>). You can schedule appointments, events, and to-do
+tasks. &k; will remind you about pending tasks, and help you keep your
+schedule. </para>
+
 </abstract>
 
 </bookinfo>
 
-
-
 <chapter id="introduction">
 <title>Introduction</title>
 
-<para>&k; is a personal information manager (PIM). You can schedule appointments, events, and to-do tasks. &k; will remind you about pending tasks, and help you keep your schedule.</para>
+<para>&k; is a personal information manager (<abbrev>PIM</abbrev>). You can
+schedule appointments, events, and to-do tasks. &k; will remind you about
+pending tasks, and help you keep your schedule.</para>
+
 <para>Main features of &k;:</para>
-<para><itemizedlist>
+
+<itemizedlist>
 <listitem><para>To-Do's and Events supported</para></listitem>
-<listitem><para>Easy editing and change from one type of event to another</para></listitem> 
+<listitem><para>Easy editing and change from one type of event to
+another</para></listitem>
 <listitem><para>Categories assignment to events</para></listitem>
-<listitem><para>Category color highlighting</para></listitem> 
+<listitem><para>Category color highlighting</para></listitem>
 <listitem><para>Multiple calendars open support</para></listitem>
 <listitem><para>Reschedule by drag-and-drop</para></listitem>
-<listitem><para>Numerous options for generating repeated events</para></listitem>
-<listitem><para>Emerging group scheduling support</para></listitem> 
-<listitem><para>vCalendar open standard native support</para></listitem> 
+<listitem><para>Numerous options for generating repeated
+events</para></listitem>
+<listitem><para>Emerging group scheduling support</para></listitem>
+<listitem><para>vCalendar open standard native support</para></listitem>
 <listitem><para>Calendar merging and import</para></listitem>
 <listitem><para>Full Palm Pilot synchronization</para></listitem>
 <listitem><para>Drag-and-drop between open calendars</para></listitem>
-<listitem><para>Embedding collaboration with Konqueror</para></listitem> 
+<listitem><para>Embedding collaboration with Konqueror</para></listitem>
 <listitem><para>Customizable icon sets</para></listitem>
 <listitem><para>Drag-and-drop tool panels</para></listitem>
 <listitem><para>Command line parameters</para></listitem> 
-</itemizedlist></para>
+</itemizedlist>
 
-<para>
-Now take a <link linkend="five-minute-course">Five-minute fly-over course</link> of &k;, or delve into <link linkend="installation">reference documentation</link>!</para>
-
-<!-- Note that the revhistory tags apply to the documentation version and not to
-the app version. That is why we use an ItemizedList here. -->
+<para>Now take a <link linkend="five-minute-course">Five-minute fly-over
+course</link> of &k;, or delve into <link linkend="installation">reference
+documentation</link>!</para>
 
 <sect1 id="korg-revhistory">
 <title>&k; Revision History</title>
@@ -154,364 +183,695 @@ the app version. That is why we use an ItemizedList here. -->
 </sect1>
 </chapter>
 
-
 <chapter id="five-minute-course">
-<title>Five-minute Fly-over Course of &k; (for the experienced and for the impatient)</title>
+<title>Five-minute Fly-over Course of &k; (for the experienced and for the
+impatient)</title>
 
-<para>Pressed for time? Let's kick you started with a fast, hands-on overview of &k;!</para>
-<para>If you ever worked with a personal information program before, you'll be right at home with &k;. You can enter new events, reschedule existing events, assign categories to your events, devise new categories, enter and modify lists of attendees and their roles, email event invitations automatically and exchange data with other &k; calendars.</para>
-<para>This course assumes that you know how to work with KDE, and that you prefer to explore on your own. Only the basic functions of &k; are covered here.</para> 
-<sect1 id="course.entering-events">
+<para>Pressed for time? Let's kick you started with a fast, hands-on overview of
+&k;!</para>
+
+<para>If you ever worked with a personal information program before, you'll be
+right at home with &k;. You can enter new events, reschedule existing events,
+assign categories to your events, devise new categories, enter and modify lists
+of attendees and their roles, email event invitations automatically and exchange
+data with other &k; calendars.</para>
+
+<para>This course assumes that you know how to work with KDE, and that you
+prefer to explore on your own. Only the basic functions of &k; are covered
+here.</para> 
+
+<sect1 id="course-entering-events">
 <title>Entering events</title> 
-<para>
-<itemizedlist>
-<listitem><para>Click on the desired date in the Date Navigator.</para></listitem>
-<listitem><para>Click on <guiicon><inlinegraphic fileref="i_view_day.png"></inlinegraphic></guiicon>.</para></listitem> 
-<listitem><para>Double-click the desired hour in the main panel.</para></listitem> 
-<listitem><para>Enter event details. Use tabs Generel, Details and Recurrence to move around.</para></listitem>
-<listitem><para>Click on <guilabel>OK</guilabel> to save the event.</para></listitem> 
-</itemizedlist>
-</para>
+
+<procedure>
+<step><para>Click on the desired date in the Date
+Navigator.</para></step>
+<step><para>Click on <guiicon><inlinegraphic
+fileref="i_view_day.png"></inlinegraphic></guiicon>.</para></step>
+<step><para>Double-click the desired hour in the main
+panel.</para></step>
+<step><para>Enter event details. Use tabs <guilabel>General</guilabel>,
+<guilabel>Details</guilabel> and <guilabel>Recurrence</guilabel> to move
+around.</para></step>
+<step><para>Click on <guibutton>OK</guibutton> to save the event.</para></step>
+</procedure>
+
 </sect1>
-<sect1 id="course.entering-todos">
+<sect1 id="course-entering-todos">
 <title>Entering To-Do's</title>
-<para>
 
-<itemizedlist>
-<listitem><para>Click on the desired date in the Date Navigator.</para></listitem>
-<listitem><para>Click on <guilabel>Actions -> New To-Do</guilabel></para></listitem> 
-<listitem><para>Enter To-Do details. Use tabs Generel and Details to move around.</para></listitem>
-<listitem><para>Click on <guilabel>OK</guilabel> to save the To-Do.</para></listitem> 
-</itemizedlist>
+<procedure>
+<step><para>Click on the desired date in the Date Navigator.</para></step>
+<step><para>Click on <guilabel>Actions -> New To-Do</guilabel></para></step> 
+<step><para>Enter To-Do details. Use tabs Generel and Details to move
+around.</para></step>
+<step><para>Click on <guilabel>OK</guilabel> to save the To-Do.</para></step>
+</procedure>
 
-
-</para>
 </sect1>
 
-<sect1 id="course.event-types">
+<sect1 id="course-event-types">
 <title>Event Types</title>
+
 <para>There are two types of entries in &k;:</para>
 
 <itemizedlist>
-<listitem><para><emphasis>Events</emphasis> start and finish at distinct date. You can also specify distinct start and finish times, but you don't have to. While business meetings, personal anniversaries and cinema visits are examples of carefully planned events with exact time scheduling, a holiday is an event that takes several days and thus there is no need to specify exact start and finish times.</para></listitem> 
-<listitem><para>To-Do's are events that must take place no later than a certain date, but they can also take place sooner.</para></listitem>
+<listitem><para><emphasis>Events</emphasis> start and finish at distinct
+date. You can also specify distinct start and finish times, but you don't have
+to. While business meetings, personal anniversaries and cinema visits are
+examples of carefully planned events with exact time scheduling, a holiday is an
+event that takes several days and thus there is no need to specify exact start
+and finish times.</para></listitem>
+<listitem><para><emphasis>To-Do's</emphasis> are events that must take place no later than a certain
+date, but they can also take place sooner.</para></listitem>
 </itemizedlist>
 
-<para>Naturally, what began as a To-Do may later require exact timing. Say it is July 1 and you need to go to a hairdresser withing a week. On July 3 you talk to your hairdresser and agree on an exact time. Thus the original To-Do becomes similar to an appointment. </para>
-<para>&k; makes adding exact time to a To-Do very easy. If you uncheck the <guilabel>No time associated</guilabel> checkbox<footnote><para>The <guilabel>No time associated</guilabel> checkbox only appears when the <guilabel>No due date</guilabel> is unchecked.</para> </footnote> and enter the appropriate time, your To-Do becomes very similar to an event (but without recurrence tab, which is natural, since a to-do task is supposed to be a one-time only event).</para>
+<para>Naturally, what began as a To-Do may later require exact timing. Say it is
+July 1 and you need to go to a hairdresser withing a week. On July 3 you talk to
+your hairdresser and agree on an exact time. Thus the original To-Do becomes
+similar to an appointment. </para>
 
+<para>&k; makes adding exact time to a To-Do very easy. If you uncheck the
+<guilabel>No time associated</guilabel> checkbox<footnote><para>The <guilabel>No
+time associated</guilabel> checkbox only appears when the <guilabel>No due
+date</guilabel> is unchecked.</para> </footnote> and enter the appropriate time,
+your To-Do becomes very similar to an event (but without recurrence tab, which
+is natural, since a to-do task is supposed to be a one-time only event).</para>
 
 </sect1>
 
-
-
-
-<sect1 id="course.rescheduling-events">
+<sect1 id="course-rescheduling-events">
 <title>Rescheduling events</title>
+
 <para>Rescheduling events is a simple drag-and-drop operation:</para>
-<itemizedlist>
-<listitem><para>Using Date Navigator go to the event that you want to reschedule.</para></listitem>
-<listitem><para>Drag and drop the event to the new date and time location.</para></listitem>  
-</itemizedlist>
-<para>You should choose an appropriate view before beginning this operation. Only the Day, Workweek and Week view show individual hours and are suitable for rescheduling exactly-timed events (appointments), while the Month view only shows days. Therefore the Month view is most suitable for long-time events like holidays.</para> 
-<para>If you wish to reschedule more precisely, double-click the event and change the start and end time using the pulldown menus that divide the day into quarter hours. If that is not enough precision, you can enter the desired time directly.</para> 
+
+<procedure>
+<step><para>Using Date Navigator go to the event that you want to
+reschedule.</para></step>
+<step><para>Drag and drop the event to the new date and time
+location.</para></step>  
+</procedure>
+
+<para>You should choose an appropriate view before beginning this
+operation. Only the Day, Workweek and Week view show individual hours and are
+suitable for rescheduling exactly-timed events (appointments), while the Month
+view only shows days. Therefore the Month view is most suitable for long-time
+events like holidays.</para> 
+
+<para>If you wish to reschedule more precisely, double-click the event and
+change the start and end time using the pulldown menus that divide the day into
+quarter hours. If that is not enough precision, you can enter the desired time
+directly.</para> 
+
 </sect1> 
 
-
-<sect1 id="course.rescheduling-todos">
+<sect1 id="course-rescheduling-todos">
 <title>Rescheduling To-Do's</title>
+
 <para>To reschedule a To-Do, double click the To-Do in the To-Do panel.</para>
-<para>Alternatively, if the main panel holds List View or To-Do View, you can locate and double-click the To-Do there.</para> 
+
+<para>Alternatively, if the main panel holds List View or To-Do View, you can
+locate and double-click the To-Do there.</para> 
+
 </sect1> 
 
-
-<sect1 id="course.conclusion">
+<sect1 id="course-conclusion">
 <title>Conclusion</title>
-<para>This five-minute course covered only the basic operation of &k;. Now you should go on and read the rest of this manual to unleash the full power of &k;'s capabilities. But if you don't feel like it, you should at least skip through the <link linkend="faq">FAQ</link>.</para>
+
+<para>This five-minute course covered only the basic operation of &k;. Now you
+should go on and read the rest of this manual to unleash the full power of &k;'s
+capabilities. But if you don't feel like it, you should at least skip through
+the <link linkend="faq">FAQ</link>.</para>
+
 </sect1> 
-
-
-
-
-
-
-
-
-
-
 
 </chapter>
 
 <chapter id="installation">
 <title>Installation</title>
 
-
-
 <sect1 id="getting-korg">
 <title>How to obtain &k;</title>
 
-<para>
-&k; is part of the KDE project
-<ulink url="http://www.kde.org">http://www.kde.org</ulink>.
+<para>&k; is part of the KDE project<ulink
+url="http://www.kde.org">http://www.kde.org</ulink>.
 &k; can be found in the kdepim package on
 <ulink url="ftp://ftp.kde.org/pub/kde/">ftp://ftp.kde.org/pub/kde/</ulink>, the
-main ftp site of the KDE project.
-</para>
-<para>
-Click the Applications menu of the main menu to see if &k; is already installed on your system. If &k; is not there,  either it is not installed, or perhaps the administrator of your system has moved it to some other place.
-</para>
-<para>&k; homepage is at <ulink url="http://devel-home.kde.org/~korganiz">http://devel-home.kde.org/~korganiz</ulink></para>
+main ftp site of the KDE project.</para>
+
+<para>Click the Applications menu of the main menu to see if &k; is already
+installed on your system. If &k; is not there,  either it is not installed, or
+perhaps the administrator of your system has moved it to some other
+place. </para>
+
+<para>&k; homepage is at <ulink
+url="http://devel-home.kde.org/~korganiz">http://devel-home.kde.org/~korganiz</ulink></para>
+
 </sect1>
-
-
 
 <sect1 id="requirements">
 <title>Requirements</title>
 
+<para>&k; requires KDE 2.0. It requires total of 1650 kB (binary files: 600kB,
+neccessary libraries: 800 kB, main resources 200 kB, and miscellaneous data 50
+kB) in your KDE2 system directory. Your calendars will require additional space
+in your home directory.</para>
 
-<para>&k; requires KDE 2.0. It requires total of 1650 kB (binary files: 600kB, neccessary libraries: 800 kB, main resources 200 kB, and miscellaneous data 50 kB) in your KDE2 system directory. Your calendars will require additional space in your home directory.</para>
-<para>&k; needs about 5 Megabytes of memory to run, but this may vary depending on your platform and the size of your calendar(s).</para>
+<para>&k; needs about 5 Megabytes of memory to run, but this may vary depending
+on your platform and the size of your calendar(s).</para>
 
-<para>
-All required libraries are part of standard KDE libraries (kdelibs). KDE base package (kdebase) must also be installed to change localisation preferences like date and time formats. &k; itself is in the kdepim package. All packages can be found on <ulink url="http://www.kde.org">KDE home page.</ulink>.</para>
-
-<para>&k; homepage is at <ulink url="http://devel-home.kde.org/~korganiz">http://devel-home.kde.org/~korganiz</ulink></para>
+<para>All required libraries are part of standard KDE libraries (kdelibs). KDE
+base package (kdebase) must also be installed to change localisation preferences
+like date and time formats. &k; itself is in the kdepim package. All packages
+can be found on <ulink url="http://www.kde.org">KDE home page.</ulink>.</para>
 
 </sect1>
-
-
 
 <sect1 id="compilation">
 <title>Compilation and installation</title>
 
-<para>If &k; is not installed and if you are the administrator of your system, your best bet is to use a precompiled binary file. 
+<para>If &k; is not installed and if you are the administrator of your system,
+your best bet is to use a precompiled binary file. </para>
+
 <itemizedlist>
-<listitem><para>If your system understands rpm binary package format, you should get a file "kdepim2.i386.rpm" or similar. The correct installation command is: rpm -i kdepim2.i386.rpm, and the correct upgrade command is: rpm -U kdepim2.i386.rpm</para></listitem>
-<listitem><para>If your system uses different binary package format, you need to read the instructions that came with your system.</para></listitem>
-<listitem><para>If you cannot obtain precompiled binary package, you have to compile &k; yourself from a source file. Find a file "kdepim2.tar.gz" or similar, unpack it in a new directory, and enter "./configure;make install" in that directory.</para></listitem> 
+<listitem><para>If your system understands <abbrev>rpm</abbrev> binary package
+format, you should get a file "<filename>kdepim2.i386.rpm</filename>" or
+similar. The correct installation command is: <command>rpm <option>-i
+<replaceable>kdepim2.i386.rpm</replaceable></option></command>, and the correct
+upgrade command is: <command>rpm <option>-U
+<replaceable>kdepim2.i386.rpm</replaceable></option></command></para></listitem>
+<listitem><para>If your system uses different binary package format, you need to
+read the instructions that came with your system.</para></listitem>
+
+<listitem><para>If you cannot obtain precompiled binary package, you have to
+compile &k; yourself from a source file. Find a file
+"<filename>kdepim2.tar.gz</filename>" or similar, unpack it in a new directory,
+and enter the following:</para>
+
+<screen width="40">
+<prompt>%</prompt> <userinput>./configure</userinput>
+<prompt>%</prompt> <userinput>make</userinput>
+<prompt>%</prompt> <userinput>make install</userinput>
+</screen>
+</listitem>
+
 </itemizedlist>
-</para>
-<para>Since kdepim uses autoconf and automake you should have not trouble compiling it.
-Should you run into problems please report them to the <ulink url="http://lists.kde.org">KDE mailing lists</ulink>.</para>
+
+<para>Since &k; uses <application>autoconf</application> and
+<application>automake</application> you should have not trouble compiling
+it. Should you run into problems please report them to the <ulink
+ url="http://lists.kde.org">KDE mailing lists</ulink>.</para>
 
 </sect1>
 
 </chapter>
-
 
 <chapter id="config">
 <title>Configuration </title>
 
+<para>You can change &k;'s behavior if you wish. To display configuration
+window, click on Settings -> Preferences. You can get more information in the
+<link linkend="reference-windows-preferences"><guilabel>Preferences</guilabel>
+window description</link>.</para>
 
-<para>You can change &k;'s behavior if you wish. To display configuration window, click on Settings -> Preferences. You can get more information in the <link linkend="reference.windows.preferences">Preferences window description</link>.</para>
-<para>You can also modify the toolbar. Click on Settings -> Configure toolbars and read detailed description in <xref linkend="reference.windows.config-toolbars">.</para>
-<para>You can also drag both toolbars around the screen. Point your mouse over the toolbar handle and drag the toolbar to a new place on your screen.</para>
-<para>Localisation information like date and time formats can be configured from KDE Control Center (kcontrol) within the Personalization -> Country & Language module. KOrganizer has to be restarted for changes done in  KDE Control Center to take effect.</para> 
+<para>You can also modify the toolbar. Click on
+<menuchoice><guisubmenu>Settings</guisubmenu><guimenuitem>Configure
+toolbars</guimenuitem></menuchoice> and read detailed description in <xref
+ linkend="reference-windows-config-toolbars">.</para>
 
-
+<para>You can also drag both toolbars around the screen. Point your mouse over
+the toolbar handle and drag the toolbar to a new place on your screen.</para>
+<para>Localisation information like date and time formats can be configured from
+<application>KDE Control Center</application>
+(<application>kcontrol</application>) within the
+<menuchoice><guimenu>Personalization</guimenu><guimenuitem>Country &
+Language</guimenuitem></menuchoice> module. &k; has to be restarted for changes
+done in <application>KDE Control Center</application> to take effect.</para>
+    
 </chapter>
-
-
 
 <chapter id="entering-data">
 <title>Entering Data</title>
 
-<sect1 id="entering-data.events">
+<sect1 id="entering-data-events">
 <title>Events</title>
-<para>Events are future appointments, like business meetings, personal anniversaries and cinema visits. Events can also take several days, like holidays.</para>
-<para>Entering new event is very easy. Just click on <guilabel>Actions -> New Event</guilabel>. A window with General, Details and Recurrence tabs appears. </para> 
 
-<para>If you wish you can use a different way to start a new event:
+<para>Events are future appointments, like business meetings, personal
+anniversaries and cinema visits. Events can also take several days, like
+holidays.</para> 
 
-<itemizedlist>
-<listitem><para>Use Date Navigator to go to the event date.</para></listitem>
-<listitem><para>Use the View toolbar to choose the desired view icon (or select the desired view from the View menu). Since your event starts at a particular time, you should choose a view that displays hours of the day. You may choose Day View, Work Week View or Week View (the Month view is more suitable for To-Do tasks, described below).</para></listitem> 
-<listitem><para>In the main panel, double-click on the time and date when your event starts. </para></listitem> 
-<listitem><para>A window with General, Details and Recurrence tabs appears. Enter your data as described below.</para></listitem> 
-</itemizedlist>
+<para>Entering new event is very easy. Just click on
+<menuchoice><guimenu>Actions</guimenu> <guimenuitem>New
+Event</guimenuitem></menuchoice>. A window with <guilabel>General</guilabel>,
+<guilabel>Attendees</guilabel> and <guilabel>Recurrence</guilabel> tabs
+appears. </para>
 
-</para>
+<para>If you wish you can use a different way to start a new event:</para>
 
-<sect2 id="entering-data.events.general">
+<procedure>
+<step><para>Use Date Navigator to go to the event date.</para></step>
+<step><para>Use the View toolbar to choose the desired view icon (or select the
+desired view from the View menu). Since your event starts at a particular time,
+you should choose a view that displays hours of the day. You may choose Day
+View, Work Week View or Week View (the Month view is more suitable for To-Do
+tasks, described below).</para></step>
+<step><para>In the main panel, double-click on the time and date when your
+event starts. </para></step>
+<step><para>A window with <guilabel>General</guilabel>,
+<guilabel>Details</guilabel> and <guilabel>Recurrence</guilabel> tabs
+appears. Enter your data as described below.</para></step> 
+</procedure>
+
+<sect2 id="entering-data-events-general">
 <title>General tab</title>
 
-<para>This is a thorough description of the individual event window fields and widgets. Not all fields have to be filled in; some can be left empty. Read the <xref linkend="entering-data.required-fields"> for details. And if you prefer to learn by example, there's one in <xref linkend="examples.entering-event">.</para>
+<para>This is a thorough description of the individual event window fields and
+widgets. Not all fields have to be filled in, some can be left empty. Read the
+<xref linkend="entering-data-required-fields"> for details. And
+if you prefer to learn by example, there's one in <xref
+linkend="examples-entering-event">.</para>
 
-<para><emphasis>Owner:</emphasis> Please note that your name is displayed above the <guilabel>Summary</guilabel> field. This means that the task is owned by you. While initially this name is the same as Full Name (specified in KDE Control Center, in Personalisation -> E-mail), you can change it in Settings -> Preferences -> Personal -> Your name. </para>
-
-<para><emphasis>Summary:</emphasis> Enter short description of the task into the <guilabel>Summary</guilabel> field.</para>
-
-<para><emphasis>Start Date and End Date:</emphasis> &k; suggested Start and End dates of your event. Events are expected to start and end on the same date. Change as needed. Change those times as desired. Enter the dates directly or use the Calendar Widget. Choose time from half-hour intervals, or enter the desired time directly into the time fields.</para>
-
-<para><emphasis>No time associated:</emphasis> Check the <guilabel>No time associated</guilabel> if your event is not scheduled on an exact time. <tip><para>Most events are scheduled to an exact time. If your event does not need specific time, perhaps it belongs to <link linkend="entering-data.to-do">To-Do tasks</link></para></tip></para>
-
-<para><emphasis>Start Time and End Time:</emphasis> These fields only appear if the <guilabel>No time associated</guilabel> checkbox is not checked. Change the suggested times as desired. Enter the times directly or use the menu to choose time from half-hour intervals.</para>
-
-<para><emphasis>Recurring event:</emphasis> Check the <guilabel>Recurring event</guilabel> checkbox if this event happens regularly. You can later specify the exact schedule in the <link linkend="entering-data.events.recurrence">Recurrence tab window</link>.</para>
-
-<para><emphasis>Reminder:</emphasis> Check the <guilabel>Reminder</guilabel> checkbox if &k; should remind you about an event. &k; can also run specific program at that time.
-<tip><para>Make sure, however, that you have sufficient rights to run that program; if you do not, the program will not run.</para></tip>
-Choose how many minutes, hours or days before the event you want to be reminded. Click on the Note symbol to choose the alarm sound. Click on the Running Man icon to browse to a program that should run at the alarm time.</para>
-
-<para><emphasis>Show Time As:</emphasis> The duration of the event may be shown as Busy or Free in your schedule. Choose it from the <guilabel>Show Time As</guilabel> menu.</para><para>Check the <guilabel>Private</guilabel> box to keep the event private. Currently, this checkbox has no real effect. However, when group scheduling features of &k; are completed, private tasks will only be visible to you. The checkbox may also have an effect when the calendar file is loaded in another calendar understanding the vCalendar format.</para>
-
-<para><emphasis>Details:</emphasis> Enter a long description of the event in the large rectangle. You can write as many details as you wish here. <footnote id="long-description-examples"><para>If the event is, say, planned general repair of your car, you can list all items that need repairing. Later on you can print this list and hand it over to the serviceman. If the event is shopping, you should list the goods that you need to buy. Print the event and take it to the shop with you.</para></footnote></para>
-
-<para><emphasis>Categories:</emphasis> You can assign several categories to the event. Get more information in <xref linkend="reference.windows.categories">.</para>
+<variablelist>
+<varlistentry>
+<term><guilabel>Owner</guilabel>:</term>
+<listitem><para>Please note that your name is displayed above the
+<guilabel>Summary</guilabel> field. This means that the task is owned by
+you. While initially this name is the same as Full Name (specified in
+<application>KDE Control Center</application>, in
+<menuchoice><guimenu>Personalisation</guimenu>
+<guimenuitem>E-mail</guimenuitem></menuchoice>), you can change it in
+<menuchoice> <guimenu>Settings</guimenu> <guisubmenu>Preferences</guisubmenu>
+<guimenuitem>Personal</guimenuitem> </menuchoice>, <guilabel>Your
+name</guilabel>. </para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Summary</guilabel>:</term>
+<listitem><para>Enter a short description of the task into the
+<guilabel>Summary</guilabel> field.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Start Date</guilabel> and <guilabel>End Date</guilabel>:</term>
+<listitem><para>&k; suggested Start and End dates of your event. Events are
+expected to start and end on the same date. Change as needed. Change those times
+as desired. Enter the dates directly or use the Calendar Widget. Choose time
+from half-hour intervals, or enter the desired time directly into the time
+fields.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>No time associated</guilabel>:</term>
+<listitem><para>Check the <guilabel>No time associated</guilabel> checkbox if
+your event is not scheduled on an exact time.</para>
+<tip><para>Most events are scheduled to an exact time. If your event does not
+need specific time, perhaps it belongs to <link linkend="entering-data-to-do">To-Do
+tasks</link></para></tip></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Start Time</guilabel> and <guilabel>End Time</guilabel>:</term>
+<listitem><para>These fields only appear if the <guilabel>No time
+associated</guilabel> checkbox is not checked. Change the suggested times as
+desired. Enter the times directly or use the menu to choose time from half-hour
+intervals.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Recurring event</guilabel>:</term>
+<listitem><para>Check the <guilabel>Recurring event</guilabel> checkbox if this
+event happens regularly. You can later specify the exact schedule in the <link
+linkend="entering-data-events-recurrence">Recurrence tab
+window</link>.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Reminder</guilabel>:</term>
+<listitem><para>Check the <guilabel>Reminder</guilabel> checkbox if &k; should
+remind you about an event. &k; can also run specific program at that
+time.</para>
+<tip><para>Make sure, however, that you have sufficient rights to run that
+program. If you do not, the program will not run.</para></tip>
+<para>Choose how many minutes, hours or days before the event you want to be
+reminded. Click on the <guiicon>Musical Note</guiicon> symbol to choose the
+alarm sound. Click on the <guiicon>Running Man</guiicon> icon to browse to a
+program that should run at the alarm time.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Show Time As</guilabel>:</term>
+<listitem><para>The duration of the event may be shown as Busy or Free in your
+schedule. Choose it from the <guilabel>Show Time As</guilabel>
+menu.</para><para>Check the <guilabel>Private</guilabel> box to keep the event
+private. Currently, this checkbox has no real effect. However, when group
+scheduling features of &k; are completed, private tasks will only be visible to
+you. The checkbox may also have an effect when the calendar file is loaded in
+another calendar understanding the vCalendar format.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term>Details</term>
+<listitem><para>Enter a long description of the event in the large
+rectangle. You can write as many details as you wish
+here. <footnote id="long-description-examples"><para>If the event is, say,
+planned general repair of your car, you can list all items that need
+repairing. Later on you can print this list and hand it over to the
+serviceman. If the event is shopping, you should list the goods that you need to
+buy. Print the event and take it to the shop with
+you.</para></footnote></para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Categories</guilabel>:</term>
+<listitem><para>You can assign several categories to the event. Get more
+information in <xref linkend="reference-windows-categories">.</para></listitem>
+</varlistentry>
+</variablelist>
 
 &ab;
 </sect2>
 
-
-
-<sect2 id="entering-data.events.attendees">
+<sect2 id="entering-data-events-attendees">
 <title>Attendees tab</title>
-<para>Some tasks may require more people. You can list those people here. Get more information in <xref linkend="reference.windows.details"></para> 
+
+<para>Some tasks may require more people. You can list those people here. Get
+more information in <xref linkend="reference-windows-attendees"></para> 
+
 &ab;
 </sect2>
 
-
-<sect2 id="entering-data.events.recurrence">
+<sect2 id="entering-data-events-recurrence">
 <title>Recurrence tab</title>
 
-<para>Some events take place regularly. You can specify exact scheduling here.</para>
+<para>Some events take place regularly. You can specify exact scheduling
+here.</para>
 
-<warning><para>Make sure that the <guilabel>Recurring Event</guilabel> checkbox in <link linkend="entering-data.events.general">General tab window</link> is checked. If it is not, you will see a message "This event does not reccur" in the middle of the Recurrence tab window.</para></warning>
+<warning><para>Make sure that the <guilabel>Recurring Event</guilabel> checkbox
+in <link linkend="entering-data-events-general">General tab window</link> is
+checked. If it is not, you will see a message "This event does not reccur" in
+the middle of the <guilabel>Recurrence</guilabel> tab window.</para></warning>
 
+<para>The <guilabel>Recurrence</guilabel> tab window is divided into four
+groups: <guilabel>Appointment Time</guilabel>, <guilabel>Recurrence
+Rule</guilabel>, <guilabel>Recurrence Range</guilabel>, and
+<guilabel>Exceptions</guilabel>.</para>
 
-<para>The Recurrence tab window is divided into four groups: event Time, Recurrence Rule, Recurrence Range, and Exceptions.</para>
-
-<sect3 id="recurrence.event-time">
+<sect3 id="recurrence-event-time">
 <title>Appointment Time</title>
-<para>This is just a copy of the <link linkend="entering-data.events.general">General tab window</link> time specification. Changes that you make here will be displayed in the General tab window and vice versa. Note the automatically calculated duration time to the right.</para>
+<para>This is just a copy of the <link
+linkend="entering-data-events-general">General tab window</link> time
+specification. Changes that you make here will be displayed in the
+<guilabel>General</guilabel> tab window and vice versa. Note the automatically
+calculated duration time to the right.</para>
+
 </sect3>
 
-
-<sect3 id="recurrence.recurrence-rule">
+<sect3 id="recurrence-recurrence-rule">
 <title>Recurrence Rule</title>
-<para>Choose if you want to repeat this appoitnment daily, weekly, monthly or yearly. More detailed options are as follows:</para>
 
-<itemizedlist>
+<para>Choose if you want to repeat this appointnment daily, weekly, monthly or
+yearly. More detailed options are as follows:</para>
 
-<listitem><para><emphasis>Daily:</emphasis> Specify whether the event occurs every day (1), every other day (2) and so on.</para></listitem>
-
-<listitem><para><emphasis>Weekly:</emphasis> Specify whether the event occurs every week (1), every other week (2) and so on. Also specify the days (Sunday ... Monday) on which the event occurs. </para></listitem>
-
-<listitem><para><emphasis>Monthly:</emphasis> You can either have the event occur on the same day of the month, or in a specific week on a specific day of the week.  You need to choose this.  By default, &k; assumes you want to repeat on the same calendar day of the month (for instance the 15th).  You can also adjust the period, so you can repeat monthly,tri-monthly and so on.  </para></listitem>
-
-<listitem><para><emphasis>Yearly:</emphasis> This is similar to Monthly.  You need to choose whether or not you are indicating a calendar day of the year (i.e., the 250th day of the year) - "Recur on this day", or this day of the month in a particular month of the year - "Recur in the month of" .  By default, &k; assumes you mean the actual day of the year.  You can adjust the period to reflect events that to ccur bi-annually, every four years, and so on.</para></listitem>
-
-</itemizedlist>
+<variablelist>
+<varlistentry>
+<term><guilabel>Daily</guilabel>:</term>
+<listitem><para>Specify whether the event occurs every day (1), every other day
+(2) and so on.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Weekly</guilabel>:</term>
+<listitem><para>Specify whether the event occurs every week (1), every other
+week (2) and so on. Also specify the days (Sunday ... Monday) on which the event
+occurs. </para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Monthly</guilabel>:</term>
+<listitem><para>You can either have the event occur on the same day of the
+month, or in a specific week on a specific day of the week.  You need to choose
+this.  By default, &k; assumes you want to repeat on the same calendar day of
+the month (for instance the 15th).  You can also adjust the period, so you can
+repeat monthly,tri-monthly and so on.  </para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Yearly</guilabel>:</term>
+<listitem><para>This is similar to Monthly.  You need to choose whether or not
+you are indicating a calendar day of the year (<abbrev>i.e.</abbrev>, the 250th
+day of the year), "<guilabel>Recur on this day</guilabel>", or this day of the
+month in a particular month of the year - "<guilabel>Recur in the month
+of</guilabel>".  By default, &k; assumes you mean the actual day of the year.
+You can adjust the period to reflect events that to ccur bi-annually, every four
+years, and so on.</para></listitem> 
+</varlistentry>
+</variablelist>
 
 </sect3>
 
-<sect3 id="recurrence.recurrence-range">
+<sect3 id="recurrence-recurrence-range">
 <title>Recurrence Range</title>
-<para>By default, events which repeat will do so forever; there is no ``end'' to the repetition.  This may or may not be desirable, so you are provided with two ways of terminating the repetition: either by giving an ending date, or by specifying a total number of recurrences.  In this area, you can choose the method that is suitable for this event.
-</para>
+
+<para>By default, events which repeat will do so forever; there is no "end" to
+the repetition.  This may or may not be desirable, so you are provided with two
+ways of terminating the repetition: either by giving an ending date, or by
+specifying a total number of recurrences.  In this area, you can choose the
+method that is suitable for this event.</para>
+
 </sect3>
-<sect3 id="recurrence.exceptions">
+
+<sect3 id="recurrence-exceptions">
 <title>Exceptions</title>
-<para>
-You may have a very nice recurrence rule set up, but realize that there are a few exceptions.  If you set up your college class schedule for instance, you may want to make exceptions for holidays and the like.  In this area, you can add, change, and delete dates from the list of exceptions (i.e. times when even if the recurrence rule matches, the event will <emphasis>not be scheduled</emphasis>).  Pick a date with the date selector, and press <guilabel>Add</guilabel> to include it. For removing dates, highlight them in the box on the right side, and then click <guilabel>Delete</guilabel>.
-</para>
+
+<para>You may have a very nice recurrence rule set up, but realize that there
+are a few exceptions.  If you set up your college class schedule for instance,
+you may want to make exceptions for holidays and the like.  In this area, you
+can add, change, and delete dates from the list of exceptions
+(<abbrev>i.e.</abbrev> times when even if the recurrence rule matches, the event
+will <emphasis>not be scheduled</emphasis>).  Pick a date with the date
+selector, and press <guibutton>Add</guibutton> to include it. For removing
+dates, highlight them in the box on the right side, and then click
+<guibutton>Delete</guibutton>.</para>
+
 &ab;
+
 </sect3>
 </sect2>
 </sect1>
 
-<sect1 id="entering-data.to-do">
+<sect1 id="entering-data-to-do">
 <title>To-Do</title>
-<para>
-The To-Do list is a place for you to write down notes to yourself about things that you need to do.
-To-Do entries are tasks that do not have to be scheduled. There are short-term and long-term tasks. For instance you should go to a hairdresser within a week, and you should sell your old car within a year. You do not want an alarm go off at a particular time, you just want to have a list of things that you must do, and dates when they must be finished at the latest (date due).
-</para>
-<para>To enter a new To-Do, click on <guilabel>Actions ->New To-Do</guilabel>. A window with General and Details tabs appears.</para>
 
-<para>If you wish you can use a different way to start a new event:
+<para>The To-Do list is a place for you to write down notes to yourself about
+things that you need to do.  To-Do entries are tasks that do not have to be
+scheduled. There are short-term and long-term tasks. For instance you should go
+to a hairdresser within a week, and you should sell your old car within a
+year. You do not want an alarm go off at a particular time, you just want to
+have a list of things that you must do, and dates when they must be finished at
+the latest (date due).</para>
+
+<para>To enter a new To-Do, click on <menuchoice><guimenu>Actions</guimenu>
+<guimenuitem>New To-Do</guimenuitem></menuchoice>. A window with General and
+Details tabs appears.</para>
+
+<para>If you wish you can use a different way to start a new event:</para>
 
 <itemizedlist>
-<listitem><para>Use Date Navigator to go to the due date of your To-Do task. <note><para>A due date is simply the date when your task must be finished. For instance, if your To-Do task is that you must return your books to the library by 16th November, that date is called "the To-Do task due date".</para> </note></para></listitem>
-<listitem><para>Use the View toolbar to choose the desired view icon (or select the desired view from the View menu). Since your To-Do normally does not start at a particular time, you should choose a view that displays as many days as possible, like the Month view. You may choose other views of course, as appropriate.</para></listitem> 
-<listitem><para>In the main panel, double-click on the due date of your To-Do task.</para></listitem> 
-<listitem><para>A window with General and Details tabs appears. Enter your data as described below.</para></listitem> 
+<listitem><para>Use Date Navigator to go to the due date of your To-Do
+task.</para>
+<note><para>A due date is simply the date when your task must be finished. For
+instance, if your To-Do task is that you must return your books to the library
+by 16th November, that date is called "the To-Do task due date".</para>
+</note></listitem>
+<listitem><para>Use the View toolbar to choose the desired view icon (or select
+the desired view from the View menu). Since your To-Do normally does not start
+at a particular time, you should choose a view that displays as many days as
+possible, like the Month view. You may choose other views of course, as
+appropriate.</para></listitem> 
+<listitem><para>In the main panel, double-click on the due date of your To-Do
+task.</para></listitem> 
+<listitem><para>A window with General and Details tabs appears. Enter your data
+as described below.</para></listitem> 
 </itemizedlist>
-</para>
-<sect2 id="entering-data.to-do.general">
+
+<sect2 id="entering-data-to-do-general">
 <title>General tab</title>
 
-<itemizedlist>
-<listitem><para><emphasis>Owner:</emphasis> Please note that your name is displayed above the <guilabel>Summary</guilabel> field. This means that the task is owned by you. While initially this name is the same as Full Name (specified in KDE Control Center, in Personalisation -> E-mail), you can change it in Settings -> Preferences -> Personal -> Your name.</para></listitem>
-<listitem><para><emphasis>Summary:</emphasis> Enter short description of the task into the <guilabel>Summary</guilabel> field.</para></listitem>
-<listitem><para>Uncheck <guilabel>No due date</guilabel> if your task should be finished at a certain datem, and give that date in the <guilabel>Due date</guilabel> field.</para></listitem>
-<listitem><para>Similarly, uncheck <guilabel>No time associated</guilabel> if your task should be finished at a certain time, and give that time in the field provided.
-<tip><para>The date and time are initially hidden, because To-Do tasks do not have the character of a fixed event. Some of them do not need a due date at all. Most of them certainly do not need the exact time of fulfillment. If your task requires exact time, maybe it actually belongs to <link linkend="entering-data.events">events</link>.</para></tip>
-</para></listitem>
+<variablelist>
+<varlistentry>
+<term><guilabel>Owner</guilabel>:</term>
+<listitem><para>Please note that your name is displayed above the
+<guilabel>Summary</guilabel> field. This means that the task is owned by
+you. While initially this name is the same as Full Name (specified in
+<application>KDE Control Center</application>, in
+<menuchoice><guimenu>Personalisation</guimenu> <guimenuitem>E-mail</guimenuitem>
+</menuchoice>), you can change it in <menuchoice><guimenu>Settings</guimenu>
+<guisubmenu>Preferences</guisubmenu> <guisubmenu>Personal</guisubmenu>
+<guimenuitem>Your name</guimenuitem></menuchoice>.</para></listitem>
+</varlistentry>
 
-<listitem><para>Leave the <guilabel>Completed</guilabel> checkbox unchecked. Later on, when you finish your task, you can check this and your task will be displayed as completed.</para></listitem>
-<listitem><para>Assign a priority to your task. Highest priority tasks are at the top of the To-Do list.</para></listitem>
-<listitem><para>Enter a long description of the task in the large rectangle. If you enter at the end of the description a # character followed by a few characters (like #002), this appears in the todo view in the column SortID. This can be used to order the todos in an user-definable way.<footnoteref linkend="long-description-examples"></para></listitem>
-<listitem><para>You can assign several categories to the task. Get more information in <xref linkend="reference.windows.categories">.</para> </listitem>
-<listitem><para>Check the <guilabel>Private</guilabel> box to keep the To-Do task private. Currently, this checkbox has no real effect. However, when group scheduling features of &k; are completed, private tasks will only be visible to you. The checkbox may also have an effect when the calendar file is loaded in another calendar understanding the vCalendar format.</para></listitem>
-</itemizedlist>
+<varlistentry>
+<term><guilabel>Summary</guilabel>:</term>
+<listitem><para>Enter short description of the
+task into the <guilabel>Summary</guilabel> field.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>No due date</guilabel></term>
+<listitem><para>Uncheck <guilabel>No due date</guilabel> if your task should be
+finished at a certain datem, and give that date in the <guilabel>Due
+date</guilabel> field.</para></listitem> 
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>No time associated</guilabel></term>
+<listitem><para>Similarly, uncheck <guilabel>No time associated</guilabel> if
+your task should be finished at a certain time, and give that time in the field
+provided.</para>
+<tip><para>The date and time are initially hidden, because To-Do
+tasks do not have the character of a fixed event. Some of them do not need a due
+date at all. Most of them certainly do not need the exact time of
+fulfillment. If your task requires exact time, maybe it actually belongs to <link
+linkend="entering-data-events">events</link>.</para></tip> </listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Completed</guilabel></term>
+<listitem><para>Leave the <guilabel>Completed</guilabel> checkbox
+unchecked. Later on, when you finish your task, you can check this and your task
+will be displayed as completed.</para></listitem> 
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Priority</guilabel></term>
+<listitem><para>Assign a priority to your task. Highest priority tasks are at
+the top of the To-Do list.</para></listitem> 
+</varlistentry>
+
+<varlistentry>
+<term>Description</term>
+<listitem><para>Enter a long description of the task in
+the large rectangle. If you enter at the end of the description a # character
+followed by a few characters (like #002), this appears in the todo view in the
+column SortID. This can be used to order the todos in an user-definable
+way.<footnoteref linkend="long-description-examples"></para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Category</guilabel></term>
+<listitem><para>You can assign several categories to the task. Get more
+information in <xref linkend="reference-windows-categories">.</para> </listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Private</guilabel></term>
+<listitem><para>Check the <guilabel>Private</guilabel> box to keep the To-Do
+task private. Currently, this checkbox has no real effect. However, when group
+scheduling features of &k; are completed, private tasks will only be visible to
+you. The checkbox may also have an effect when the calendar file is loaded in
+another calendar understanding the vCalendar format.</para></listitem>
+</varlistentry>
+</variablelist>
+
 &ab;
+
 </sect2>
 
 
-<sect2 id="entering-data.to-do.details">
+<sect2 id="entering-data-to-do-details">
 <title>Details tab</title>
 
-<para>Some tasks may require more people. You can list those people here. Get more information in <xref linkend="reference.windows.details"></para> 
+<para>Some tasks may require more people. You can list those people here. Get
+more information in <xref linkend="reference-windows-attendees"></para> 
+
 &ab; 
+
 </sect2>
 </sect1>
 
 
-<sect1 id="entering-data.required-fields">
+<sect1 id="entering-data-required-fields">
 <title>Required fields</title>
-<para>This is an overview of what fields are required and what fields can be empty when entering events:</para>
+<para>This is an overview of what fields are required and what fields can be
+empty when entering events:</para>
+
 <itemizedlist>
-<listitem><para>In General Tab, you should at least fill the Summary field and the description(the large rectangle), even though neither is mandatory. If you check the <guilabel>Reminder</guilabel> checkbox, you should also specify the time, and either the sound to be played or the program to be run.</para></listitem> 
+<listitem><para>In General Tab, you should at least fill the Summary field and
+the description(the large rectangle), even though neither is mandatory. If you
+check the <guilabel>Reminder</guilabel> checkbox, you should also specify the
+time, and either the sound to be played or the program to be
+run.</para></listitem>
 <listitem><para>The Details Tab may be left completely empty.</para></listitem> 
-<listitem><para>The Recurrence tab must only be filled if you checked the <guilabel>Recurring event</guilabel> checkbox.</para></listitem> 
+<listitem><para>The Recurrence tab must only be filled if you checked the
+<guilabel>Recurring event</guilabel> checkbox.</para></listitem>
 </itemizedlist>
 </sect1> 
 
 </chapter>
 
-
 <chapter id="examples">
 <title>Examples</title> 
-<sect1 id="examples.entering-event">
-<title>Entering New Event</title>
-<para>In this example, you'll enter an event. You need to arrange a meeting on <emphasis>February 12, 2001</emphasis> regarding launch of your new Product. Your boss <emphasis>Joan Holden</emphasis> will be the event chairwoman <emphasis>owner</emphasis>, and you, Jack Smith, will be the event <emphasis>organizer</emphasis>. There'll be two more <emphasis>attendees</emphasis> (participants): <emphasis>Peter Krzinski</emphasis> and <emphasis>Kirsten Friese</emphasis>. Joan gave you the program of the meeting. The appointment will start at <emphasis>12am</emphasis> and end at <emphasis>1pm </emphasis>. The same appointment should be scheduled <emphasis>(recurred)</emphasis> each Monday.</para>
-<para>Using the Date Navigator go to February 12, 2001.</para>
-<para>Click on <menuchoice><guimenu>Actions</guimenu><guimenuitem>New Event</guimenuitem></menuchoice></para>
-<para>Enter suitable summary. It's important to choose the right brief description, because this is the only field that can be searched. We suggest that you enter "Product launch event".</para>
-<para>Enter the detailed event program into the largest rectangle area. For the sake of this simple example, enter "Introduction, The Plan, Conclusion".</para>
-<para>Check the <guilabel>Recurring event</guilabel> checkbox.</para>
-<para>Click on the <guilabel>Recurrence</guilabel> tab.</para>
 
-<note><para>Most work has been done for you automatically. &k; defaults to weekly recurring. Also note that <guilabel>No ending date</guilabel> is chosen. This means that this event will be repeated each Monday (starting, of course, on Monday February 12, 2001) until the end of time (that is, until you delete it). </para></note>
-<para>Since everything is all right here, click on the <guilabel>Details</guilabel> tab.</para>
+<sect1 id="examples-entering-event">
+
+<title>Entering New Event</title>
+
+<para>In this example, you'll enter an event. You need to arrange a meeting on
+<emphasis>February 12, 2001</emphasis> regarding launch of your new
+Product. Your boss <emphasis>Joan Holden</emphasis> will be the event chairwoman
+<emphasis>owner</emphasis>, and you, Jack Smith, will be the event
+<emphasis>organizer</emphasis>. There'll be two more
+<emphasis>attendees</emphasis> (participants): <emphasis>Peter
+Krzinski</emphasis> and <emphasis>Kirsten Friese</emphasis>. Joan gave you the
+program of the meeting. The appointment will start at <emphasis>12am</emphasis>
+and end at <emphasis>1pm </emphasis>. The same appointment should be scheduled
+<emphasis>(recurred)</emphasis> each Monday.</para>
+
+<procedure>
+<step><para>Using the Date Navigator go to February 12, 2001.</para></step>
+<step><para>Click on <menuchoice><guimenu>Actions</guimenu><guimenuitem>New
+Event</guimenuitem></menuchoice></para></step>
+<step><para>Enter suitable summary. It's important to choose the right brief
+description, because this is the only field that can be searched. We suggest
+that you enter "<userinput>Product launch event</userinput>".</para></step>
+<step><para>Enter the detailed event program into the largest rectangle
+area. For the sake of this simple example, enter "<userinput>Introduction, The
+Plan, Conclusion</userinput>".</para></step>
+<step><para>Check the <guilabel>Recurring event</guilabel>
+checkbox.</para></step>
+<step><para>Click on the <guilabel>Recurrence</guilabel> tab.</para>
+<note><para>Most work has been done for you automatically. &k; defaults to
+weekly recurring. Also note that <guilabel>No ending date</guilabel> is
+chosen. This means that this event will be repeated each Monday (starting, of
+course, on Monday February 12, 2001) until the end of time (that is, until you
+delete it). </para></note></step>
+<step><para>Since everything is all right here, click on the
+<guilabel>Details</guilabel> tab.</para>
 <para>In the Details tab you should do the following:</para>
 
-<itemizedlist>
-<listitem><para>In <guilabel>Attendee Name</guilabel> field, enter <emphasis>Jack Smith</emphasis>.</para></listitem> 
-<listitem><para>Choose <emphasis>Organizer</emphasis> as the role, and change the <guilabel>Need Action</guilabel> item to <guilabel>Accepted</guilabel>. Uncheck the <guilabel>Request Response</guilabel> checkbox.</para></listitem> 
-<listitem><para>Click <guilabel>Add</guilabel>.</para></listitem> 
-<listitem><para>In <guilabel>Attendee Name</guilabel> field, enter <emphasis>Joan Holden</emphasis>. In <guilabel>Email Address</guilabel> field, enter jholden@thiscompany.com.</para></listitem> 
-<listitem><para>Choose <emphasis>Owner</emphasis> as the role.</para></listitem> 
-<listitem><para>Click <guilabel>Add</guilabel>.</para></listitem> 
-<listitem><para>In <guilabel>Attendee Name</guilabel> field, enter <emphasis>Peter Krzinski</emphasis>. In <guilabel>Email Address</guilabel> field, enter pkrzinski@thiscompany.com.</para></listitem> 
-<listitem><para>Click <guilabel>Add</guilabel>.</para></listitem> 
-<listitem><para>In <guilabel>Attendee Name</guilabel> field, enter <emphasis>Kirsten Friese</emphasis>. In <guilabel>Email Address</guilabel> field, enter kfriese@thiscompany.com.</para></listitem> 
-<listitem><para>Click <guilabel>Add</guilabel>.</para></listitem> 
-</itemizedlist>
+<substeps>
+<step><para>In <guilabel>Attendee Name</guilabel> field, enter <userinput>Jack
+Smith</userinput>.</para></step> 
+<step><para>Choose <userinput>Organizer</userinput> as the
+<guilabel>role</guilabel>, and change the <guilabel>Need Action</guilabel> item
+to <guilabel>Accepted</guilabel>. Uncheck the <guilabel>Request
+Response</guilabel> checkbox.</para></step>  
+<step><para>Click <guibutton>Add</guibutton>.</para></step> 
+<step><para>In <guilabel>Attendee Name</guilabel> field, enter <userinput>Joan
+Holden</userinput>. In <guilabel>Email Address</guilabel> field, enter
+<userinput>jholden@thiscompany.com</userinput>.</para></step> 
+<step><para>Choose <emphasis>Owner</emphasis> as the
+<guilabel>Role</guilabel>.</para></step> 
+<step><para>Click <guibutton>Add</guibutton>.</para></step> 
+<step><para>In <guilabel>Attendee Name</guilabel> field, enter <userinput>Peter
+Krzinski</userinput>. In <guilabel>Email Address</guilabel> field, enter
+<userinput>pkrzinski@thiscompany.com</userinput>.</para></step> 
+<step><para>Click <guibutton>Add</guibutton>.</para></step> 
+<step><para>In <guilabel>Attendee Name</guilabel> field, enter
+<userinput>Kirsten Friese</userinput>. In <guilabel>Email Address</guilabel>
+field, enter <userinput>kfriese@thiscompany.com</userinput>.</para></step> 
+<step><para>Click <guilabel>Add</guilabel>.</para></step> 
+</substeps>
+</step>
+<step><para>Back on the <guilabel>General</guilabel> tab, click the
+<guibutton>Categories</guibutton> button.</para></step>
+<step><para>Choose <guilabel>Appointment</guilabel> in the Avaliable Categories. Click
+the <guibutton>Add>></guibutton> button. Then click the <guibutton>OK</guibutton>
+button.</para></step>
+<step><para>You'll be back in the main event entry window. Review the event setup by
+clicking on the <guilabel>General</guilabel>, <guilabel>Details</guilabel>, and
+<guilabel>Recurrence</guilabel> tabs. If you are satisfied, click
+<guibutton>OK</guibutton>.</para></step>
+</procedure>
 
-<para>Click the <guilabel>Categories</guilabel> button.</para>
-<para>Choose <guilabel>Appointment</guilabel> in the Avaliable Categories. Click the <guilabel>Add>></guilabel> button. Then click the <guilabel>OK</guilabel> button.</para>
-<para>You'll be back in the main event entry window. Review the event setup by clicking on the <guilabel>General</guilabel>, <guilabel>Details</guilabel>, and <guilabel>Recurrence</guilabel> tabs. If you are satisfied, click <guilabel>OK</guilabel>.</para>
 <para>Congratulations, you've scheduled your first event!</para>
 </sect1> 
 
@@ -521,219 +881,421 @@ To-Do entries are tasks that do not have to be scheduled. There are short-term a
 <chapter id="reference">
 <title>Reference</title>
 
-<sect1 id="reference.windows">
+<sect1 id="reference-windows">
 <title>Windows</title>
-<para>
-This section contains description of the following windows:
-</para>
+
+<para>This section contains description of the following windows:</para>
+
 <itemizedlist>
-<listitem><para><emphasis>Categories tab window</emphasis> that is part of both <link linkend="entering-data.events">Event</link> and <link linkend="entering-data.to-do">To-Do</link> entry window.</para></listitem>  
-<listitem><para><emphasis>Details tab window</emphasis> that is part of both <link linkend="entering-data.events">Event</link> and <link linkend="entering-data.to-do">To-Do</link> entry window.</para></listitem>  
-<listitem><para><emphasis>Configure toolbars window</emphasis> that is accessed by clicking <guilabel>Settings -> Configure toolbars</guilabel> menu item.</para></listitem>  
-<listitem><para><emphasis>Preferences window</emphasis> that is accessed by clicking <guilabel>Settings -> Preferences</guilabel> menu item.</para></listitem>  
+<listitem><para><guilabel>Categories</guilabel> tab window that is part of both
+<link linkend="entering-data-events">Event</link> and <link
+linkend="entering-data-to-do">To-Do</link> entry window.</para></listitem>
+<listitem><para><guilabel>Details</guilabel> tab window that is part of both
+<link linkend="entering-data-events">Event</link> and <link
+linkend="entering-data-to-do">To-Do</link> entry window.</para></listitem>
+<listitem><para><guilabel>Configure toolbars</guilabel> window that is accessed
+by clicking <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
+toolbars</guimenuitem></menuchoice> menu item.</para></listitem>
+<listitem><para><guilabel>Preferences</guilabel> window that is accessed by
+clicking <menuchoice><guimenu>Settings</guimenu>
+<guimenuitem>Preferences</guimenuitem> </menuchoice> menu
+item.</para></listitem>
 </itemizedlist>
 
-
-
-<sect2 id="reference.windows.categories">
+<sect2 id="reference-windows-categories">
 <title>Categories</title>
 
-<para>
-You can assign several categories to the task. Click on <guilabel>Categories</guilabel> button. Click on the <guilabel>Add>></guilabel> to assign suitable categories to the task. You can also a add new category in the <guilabel>New Category</guilabel> field.</para>
-<para>The first category that you assign to the task is special. It defines the color of the event in the agenda view. Thus Meeting will get grey color while Holiday will be displayed in red. The colors can be configured in the <guilabel>Settings -> preferences</guilabel> dialog. Other categories that your assign to the task have no special meaning. The Find dialog ignores categories.
-<tip><para>For instance your language lesson at work belongs to both Business and Education categories, while the anniversary of your marriage belongs to either Personal or Special Occassion - it's your choice.</para></tip>
-</para>
-<para>Check the <guilabel>Private</guilabel> box to keep the To-Do task private. Currently, this checkbox has no real effect. However, when group scheduling features of &k; are completed, private tasks will only be visible to you. The checkbox may also have an effect when the calendar file is loaded in another calendar understanding the vCalendar format.</para>
-</sect2>
+<para>You can assign several categories to the task. Click on
+<guibutton>Categories</guibutton> button. Click on the <guibutton>Add>></guibutton>
+to assign suitable categories to the task. You can also a add new category in
+the <guilabel>New Category</guilabel> field.</para>
 
+<para>The first category that you assign to the task is special. It defines the
+color of the event in the agenda view. Thus Meeting will get grey color while
+Holiday will be displayed in red. The colors can be configured in the
+<menuchoice><guimenu>Settings</guimenu> <guimenuitem>Preferences</guimenuitem>
+</menuchoice> dialog. Other categories that your assign to the task have no
+special meaning. The <guilabel>Find</guilabel> dialog ignores categories.</para>
 
-<sect2 id="reference.windows.details">
-<title>Details</title>
+<tip><para>For instance your language lesson at work belongs to both Business
+and Education categories, while the anniversary of your marriage belongs to
+either Personal or Special Occasion - it's your choice.</para></tip>
 
-<itemizedlist>
-<listitem><para><emphasis>Attendee Name field:</emphasis> Fill in the <guilabel>Attendee Name</guilabel> and <guilabel>Email address</guilabel> fields.</para></listitem>
-<listitem><para><emphasis>Role menu:</emphasis> Choose the role of the attendee (Attendee, Organizer, Owner, Delegate). The role is a simple reminder of what is the role of this attendee. It can be used for sorting (see below).</para></listitem>
-<listitem><para><emphasis>Status menu:</emphasis> Choose the status of the attendee (Needs Action, Accepted, Sent, Tentative, Confirmed, Declined, Completed, Delegated). The status, which is displayed in the details list window gives you quick overview of what should be done to make the event successfull. It can be used for sorting (see below).</para></listitem>
-<listitem><para><emphasis>Require Response checkbox:</emphasis> Check the <guilabel>Require Response</guilabel> button if this attendee should respond to your schedule plan. Consequently the attendee will be emailed with the event schedule information. A small envelope will appear in the details list to indicate this. This feature will be more useful when full group scheduling is implemented.</para></listitem>
-<listitem><para><emphasis>Add button:</emphasis> Click on <guilabel>Add</guilabel> button to add the attendee to the list.</para></listitem>
-<listitem><para>Repeat the above procedure for all attendees.</para></listitem>
-<listitem><para><emphasis>Address Book:</emphasis> If the attendee is in you Address Book, you do not have to remember his email address. Just click on the <guilabel>Address Book...</guilabel> button and choose the attendee from the list. Please note that this is the standard KDE address book, which is also used by KMail and can also be called as a separate application (kab).</para></listitem>
-<listitem><para><emphasis>Sorting:</emphasis> Please note that you can change the order of attendees. Click on any of the column headings (Name, Email, Role, Status, RSVP) to sort the list according to that column.</para></listitem>
-<listitem><para><emphasis>Changing the Status:</emphasis> As the attendees send you feedback (they confirm, decline, delegate the event), you will need to edit the status and perhaps other information. First select the attendee from the list (click on his/her line). Attendee name, e-mail and other data will appear in the appropriate fields.Now edit the information and change the status as needed. When finished, click on the <guilabel>Modify</guilabel> button to save your changes.</para></listitem>
-</itemizedlist>
+<para>Check the <guilabel>Private</guilabel> box to keep the To-Do task
+private. Currently, this checkbox has no real effect. However, when group
+scheduling features of &k; are completed, private tasks will only be visible to
+you. The checkbox may also have an effect when the calendar file is loaded in
+another calendar understanding the vCalendar format.</para>
 
 </sect2>
 
+<sect2 id="reference-windows-attendees">
+<title>Attendees</title>
 
-<sect2 id="reference.windows.config-toolbars">
+<variablelist>
+<varlistentry>
+<term><guilabel>Attendee Name</guilabel> field:</term>
+<listitem><para>Fill in the <guilabel>Attendee Name</guilabel> and
+<guilabel>Email address</guilabel> fields.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Role</guilabel> menu:</term>
+<listitem><para>Choose the role of the attendee (Attendee, Organizer, Owner,
+Delegate). The role is a simple reminder of what is the role of this
+attendee. It can be used for sorting (see below).</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Status</guilabel> menu</term>
+<listitem><para>Choose the status of the attendee (Needs Action, Accepted, Sent,
+Tentative, Confirmed, Declined, Completed, Delegated). The status, which is
+displayed in the details list window gives you quick overview of what should be
+done to make the event successfull. It can be used for sorting (see
+below).</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Require Response</guilabel> checkbox:</term>
+<listitem><para>Check the <guilabel>Require Response</guilabel> button if this
+attendee should respond to your schedule plan. Consequently the attendee will be
+emailed with the event schedule information. A small envelope will appear in the
+details list to indicate this. This feature will be more useful when full group
+scheduling is implemented.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guibutton>Add</guibutton> button:</term>
+<listitem><para>Click on <guibutton>Add</guibutton> button to add the attendee
+to the list.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guibutton>Address Book</guibutton>:</term>
+<listitem><para>If the attendee is in your Address Book, you do not have to
+remember his email address. Just click on the <guibutton>Address
+Book...</guibutton> button and choose the attendee from the list. Please note
+that this is the standard KDE address book, which is also used by
+<abbrev>KMail</abbrev> and can also be called as a separate application
+(<application>kab</application>).</para></listitem>
+</varlistentry>
+</variablelist>
+
+<para>Repeat the above procedure for all attendees.</para>
+
+<variablelist>
+<varlistentry>
+<term>Sorting:</term>
+<listitem><para>Please note that you can change the order of attendees. Click on
+any of the column headings (Name, Email, Role, Status, RSVP) to sort the list
+according to that column.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term>Changing the Status:</term>
+<listitem><para>As the attendees send you feedback (they confirm, decline,
+delegate the event), you will need to edit the status and perhaps other
+information. First select the attendee from the list (click on his/her
+line). Attendee name, e-mail and other data will appear in the appropriate
+fields.Now edit the information and change the status as needed. When finished,
+click on the <guibutton>Modify</guibutton> button to save your
+changes.</para></listitem>
+</varlistentry>
+</variablelist>
+
+</sect2>
+
+<sect2 id="reference-windows-config-toolbars">
 <title>Configure toolbars</title>
-<para>&k; has two toolbars: a Main toolbar (with New, Open, Print, Cut, Copy, Paste, Goto Today, New Event and Mail Event icons, and with actions specific to &k;, like Find and Print preview) and a View toolbar (for selecting between List view, Day view, Workday view, Week view, and Month view). You can customize these toolbars in various ways: you can add new icons, change the icon size, change toolbar position and add text description to the icons.</para>
-<para>Although the text below describes how you can change the toolbar location in the <guilabel>Settings -> Configure toolbars...</guilabel> menu, there is another and perhaps easier way to move the toolbars around the screen. You can simply drag the toolbar by the handle on the left border of each toolbar, and drop it whenever you wish. Also look at other easy <link linkend="other-features.drag-and-drop">drag-and-drop operations</link>.</para>
-<sect3 id="config-toolbars.choose-toolbar">
+
+<para>&k; has two toolbars: a Main toolbar (with <guiicon>New</guiicon>,
+<guiicon>Open</guiicon>, <guiicon>Print</guiicon>, <guiicon>Cut</guiicon>,
+<guiicon>Copy</guiicon>, <guiicon>Paste</guiicon>, <guiicon>Goto
+Today</guiicon>, <guiicon>New Event</guiicon> and <guiicon>Mail Event</guiicon>
+icons, and with actions specific to &k;, like <guiicon>Find</guiicon> and
+<guiicon>Print preview</guiicon>) and a View toolbar (for selecting between
+<guiicon>List view</guiicon>, <guiicon>Day view</guiicon>, <guiicon>Workday
+view</guiicon>, <guiicon>Week view</guiicon>, and <guiicon>Month
+view</guiicon>). You can customize these toolbars in various ways: you can add
+new icons, change the icon size, change toolbar position and add text
+description to the icons.</para>
+
+<para>Although the text below describes how you can change the toolbar location
+in the <menuchoice><guimenu>Settings</guimenu> <guimenuitem>Configure
+toolbars...</guimenuitem></menuchoice> menu, there is another and perhaps easier
+way to move the toolbars around the screen. You can simply drag the toolbar by
+the handle on the left border of each toolbar, and drop it whenever you
+wish. Also look at other easy <link
+linkend="other-features-drag-and-drop">drag-and-drop operations</link>.</para>
+
+<sect3 id="config-toolbars-choose-toolbar">
 <title>Choosing the toolbar</title>
-<para>First you need to choose the toolbar that you want to modify. All actions apply to the toolbar that is selected at the top of the window.
-</para>
+
+<para>First you need to choose the toolbar that you want to modify. All actions
+apply to the toolbar that is selected at the top of the window.</para>
+
 </sect3>
-<sect3 id="config-toolbars.available-actions">
+
+<sect3 id="config-toolbars-available-actions">
 <title>Available actions</title>
-<para>
-There are two rectangles below the toolbar title: <guilabel>Available actions</guilabel> and <guilabel>Current actions</guilabel>. Using the left and right arrows (located between the rectangles) you can add icons from the Available actions group to the Current actions group. The toolbar will have every icon that is in the Current action rectangle.
-</para>
-<tip><para>Remember that less icons may be better, because the screen is less cluttered and therefore looks cleaner. For instance if you always cut and paste with the keyboard hotkeys, you do not need the Cut, Copy and Paste icons.</para></tip>
+
+<para>There are two rectangles below the toolbar title: <guilabel>Available
+actions</guilabel> and <guilabel>Current actions</guilabel>. Using the left and
+right arrows (located between the rectangles) you can add icons from the
+Available actions group to the Current actions group. The toolbar will have
+every icon that is in the Current action rectangle.</para>
+
+<tip><para>Remember that less icons may be better, because the screen is less
+cluttered and therefore looks cleaner. For instance if you always cut and paste
+with the keyboard hotkeys, you do not need the <guiicon>Cut</guiicon>,
+<guiicon>Copy</guiicon> and <guiicon>Paste</guiicon> icons.</para></tip>
+
 </sect3>
 
-<sect3 id="config-toolbars.text-position">
+<sect3 id="config-toolbars-text-position">
 <title>Text position</title>
-<para>Initially, icons do not have any text assigned. You may prefer having text under each icon, or text aside each icon. You can also have plain texts without any icons.</para>
+
+<para>Initially, icons do not have any text assigned. You may prefer having text
+under each icon, or text aside each icon. You can also have plain texts without
+any icons.</para>
+
 </sect3>
 
-<sect3 id="config-toolbars.toolbar-position">
+<sect3 id="config-toolbars-toolbar-position">
 <title>Toolbar position</title>
-<para>You can have the toolbar at the top, bottom, left or right side. If you choose Floating position, the toolbar will be displayed outsite the main &k; panel and you can move it around. If you choose Flat, the toolbar will collapse into a tiny rectangle. You can later click on that rectangle and the toolbar will appear again.</para> 
+
+<para>You can have the toolbar at the top, bottom, left or right side. If you
+choose Floating position, the toolbar will be displayed outsite the main &k;
+panel and you can move it around. If you choose Flat, the toolbar will collapse
+into a tiny rectangle. You can later click on that rectangle and the toolbar
+will appear again.</para> 
+
 </sect3>
 
-<sect3 id="config-toolbars.icon-size">
+<sect3 id="config-toolbars-icon-size">
 <title>Icon size</title>
-<para>You can change the size of the icons. Make your choice between small, medium and large icons.</para> 
-</sect3>
 
+<para>You can change the size of the icons. Make your choice between small,
+medium and large icons.</para> 
+
+</sect3>
 </sect2>
-<sect2 id="reference.windows.preferences">
+
+<sect2 id="reference-windows-preferences">
 <title>Preferences</title>
-<para>The options dialog lets you configure a number of different
-areas of &k;.</para> 
 
-<sect3 id="preferences.personal">
+<para>The options dialog lets you configure a number of different areas of
+&k;.</para> 
+
+<sect3 id="preferences-personal">
 <title>Personal</title>
-<para>The personal options relate to your personal identity, and other miscellaneous things that don't fall under any of the other general categories.</para>
 
-<itemizedlist>
-<listitem><para><guilabel>Your Name</guilabel> initially contains the Full Name from Personalization -> E-mail in KDE Control Center, but you can of course type in a different name. This name will be displayed as <emphasis>Owner</> in To-Do tasks and Events.</para></listitem>
-<listitem><para><guilabel>Email address</guilabel> will be used to identify the owner of the calendar. When another person opens your calendar or events, he/she will not be able to modify it, because it will be read-only.</para></listitem>
-<listitem><para><guilabel>Additional</guilabel> information about yourself. Currently this field is unused, so you may safely ignore it.</para></listitem>
-<listitem><para>When you check the <guilabel>Send Bcc to owner when mailing events</guilabel>, you will get a copy of all e-mail messages that &k; sends at your request to the event attendees.</para></listitem> 
-<listitem><para>When <guilabel>Auto-save calendar</guilabel> is checked, calendar is saved automatically when you exit &k;, without asking. Furthermore, the calendar is saved periodically as you work to prevent the loss of valuable data. You can also specify the save interval in minutes.</para></listitem>
-<listitem><para>When you check <guilabel>Confirm Deletes</guilabel>, &k; will ask you to confim each deletion. If this is not checked, &k; will never ask before deleting events.</para></listitem>  
-<listitem><para><guilabel>Holidays</guilabel> menu defines public holidays automatically according to the chosen country. Public holidays and weekends are displayed in red color.</para></listitem>
+<para>The personal options relate to your personal identity, and other
+miscellaneous things that don't fall under any of the other general
+categories.</para>
 
-</itemizedlist>
+<variablelist>
+<varlistentry>
+<term><guilabel>Your Name</guilabel></term>
+<listitem><para>This initially contains the Full Name from
+<menuchoice><guimenu>Personalization</guimenu>
+<guimenuitem>E-mail</guimenuitem></menuchoice> in <application>KDE Control
+Center</application>, but you can of course type in a different name. This name
+will be displayed as <guilabel>Owner</guilabel> in To-Do tasks and
+Events.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Email address</guilabel></term>
+<listitem><para><guilabel>Email address</guilabel> will be used to identify the
+owner of the calendar. When another person opens your calendar or events, he/she
+will not be able to modify it, because it will be read-only.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Additional</guilabel></term>
+<listitem><para><guilabel>Additional</guilabel> information about
+yourself. Currently this field is unused, so you may safely ignore
+it.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Send BCC to owner when mailing events</guilabel></term>
+<listitem><para>When you check the <guilabel>Send Bcc to owner when mailing
+events</guilabel>, you will get a copy of all e-mail messages that &k; sends at
+your request to the event attendees.</para></listitem> 
+</varlistentry>
+<varlistentry>
+<term><guilabel>Auto-save calendar</guilabel></term>
+<listitem><para>When <guilabel>Auto-save calendar</guilabel> is checked,
+calendar is saved automatically when you exit &k;, without asking. Furthermore,
+the calendar is saved periodically as you work to prevent the loss of valuable
+data. You can also specify the save interval in minutes.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Confirm Deletes</guilabel></term>
+<listitem><para>When you check <guilabel>Confirm Deletes</guilabel>, &k; will
+ask you to confim each deletion. If this is not checked, &k; will never ask
+before deleting events.</para></listitem>  
+</varlistentry>
+<varlistentry>
+<term><guilabel>Holidays</guilabel></term>
+<listitem><para><guilabel>Holidays</guilabel> menu defines public holidays
+automatically according to the chosen country. Public holidays and weekends are
+displayed in red color.</para></listitem>
+</varlistentry>
+</variablelist>
 
 </sect3>
 
-<sect3 id="preferences.time-and-date">
+<sect3 id="preferences-time-and-date">
 <title>Time & Date</title>
-<para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Time Zone</guilabel></term>
+<listitem><para><guilabel>Time Zone</guilabel> specifies your time zone in hours
+offset from <abbrev>UTC</abbrev> (<abbrev>GMT</abbrev>).  For the
+<abbrev>US</abbrev> East Coast, that means -0500 when Daylight Savings are not
+in effect, and -0400 when they are.  &k; will automatically adjust for daylight
+savings.  </para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Default Appointment Time</guilabel>:</term>
+<listitem><para>When you choose <link
+linkend="entering-data-events"><guimenuitem>New Event</guimenuitem></link> from
+the <link linkend="actions-new-event"><guimenu>Action</guimenu> Menu</link>, or
+create an event in some other manner such that &k; cannot guess when you would
+like your event to start, &k; will put this hour in the start time editor as the
+default value.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Default duration time of new appointment</guilabel>:</term>
+<listitem><para>When you choose <link linkend="entering-data-events"><guimenuitem>New
+Event</guimenuitem></link> from the <link
+linkend="actions-new-event"><guimenu>Action Menu</guimenu></link>, or create an
+event in some other manner such that &k; cannot guess the duration of your
+event, &k; will use this as the default value.  </para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Default Alarm Time</guilabel>:</term>
+<listitem><para>In <guilabel>Default Alarm Time</guilabel> you decide how long
+before the actual event's scheduled time will alarm activate.</para></listitem>
+</varlistentry>
+</variablelist>
+
+
+</sect3>
+
+<sect3 id="preferences-fonts">
+<title><guilabel>Fonts</guilabel></title>
 
 <itemizedlist>
-
-<listitem><para><guilabel>Time Zone</guilabel> specifies your time zone in hours offset from UTC (GMT).  For the US East Coast, that means -0500 when Daylight Savings are not in effect, and -0400 when they are.  &k; will automatically adjust for daylight savings.  </para></listitem>
-
-
-<listitem><para><guilabel>Default Appointment Time</guilabel>: when you choose <link linkend="entering-data.events">New Event</link> from the <link linkend="actions.new-event">Action Menu</link>, or create an event in some other manner such that &k; cannot guess when you would like your event to start, &k; will put this hour in the start time editor as the default value.</para></listitem>
-
-<listitem><para><guilabel>Default duration time of new appointment</guilabel>: when you choose <link linkend="entering-data.events">New Event</link> from the <link linkend="actions.new-event">Action Menu</link>, or create an event in some other manner such that &k; cannot guess the duration of your event, &k; will use this as the default value.  </para></listitem>
-
-<listitem><para>In <guilabel>Default Alarm Time</guilabel> you decide how long before the actual event's scheduled time will alarm activate.</para></listitem>
-</itemizedlist>
-
-</para>
-</sect3>
-
-<sect3 id="preferences.fonts">
-<title>Fonts</title>
-
-<itemizedlist>
-
-<listitem><para>Click the <guilabel>Time Bar Font</guilabel> button to choose Font, Font style and Size for the time bar.</para></listitem>
-
-<listitem><para>Click the <guilabel>Month</guilabel> button to choose Font, Font style and Size for the Month View.</para></listitem>
-
-<listitem><para>Click the <guilabel>Week</guilabel> button to choose Font, Font style and Size for the Day View, Week View and Work Week View.</para></listitem>
-
+<listitem><para>Click the <guilabel>Time Bar Font</guilabel> button to choose
+Font, Font style and Size for the time bar.</para></listitem>
+<listitem><para>Click the <guilabel>Month</guilabel> button to choose Font, Font
+style and Size for the Month View.</para></listitem>
+<listitem><para>Click the <guilabel>Week</guilabel> button to choose Font, Font
+style and Size for the Day View, Week View and Work Week View.</para></listitem>
 </itemizedlist>
 
 </sect3>
 
-
-<sect3 id="preferences.colors">
-<title>Colors</title>
-<para>
-Choose the color used for holidays, for highlighting, and for specific event categories. You can choose different color for each category. Of course too much colors may be confusing, so use common sense.
-</para>
-<para>You can also choose a default event color and agenda view background color.</para>
+<sect3 id="preferences-colors">
+<title><guilabel>Colors</guilabel></title>
+<para>Choose the color used for holidays, for highlighting, and for specific
+event categories. You can choose different color for each category. Of course
+too much colors may be confusing, so use common sense. </para>
+<para>You can also choose a default event color and agenda view background
+color.</para>
 </sect3>
 
+<sect3 id="preferences-views">
+<title><guilabel>Views</guilabel></title>
 
+<variablelist>
+<varlistentry>
+<term><guilabel>Day Begins At</guilabel>:</term>
+<listitem><para><guilabel>Day Begins At</guilabel> is the hour that &k; will
+display at the top. You can of course scroll to an earlier hour, but the
+<guilabel>Day Begins At</guilabel> should be the earliest time that you use for
+event. It could be the time when you usually get up, or the time when you start
+working.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Show events that recur daily in Date Navigator</guilabel>:</term>
+<listitem><para>If the <guilabel>Show events that recur daily in Date
+Navigator</guilabel> checkbox is checked, the days containing daily recuring
+events are shown in bold typeface in the Date Navigator.</para></listitem> 
+</varlistentry>
+<varlistentry>
+<term><guilabel>Show events that recur weekly in Date
+Navigator</guilabel>:</term>
+<listitem><para>If the <guilabel>Show events that recur weekly in Date
+Navigator</guilabel> checkbox is checked, the days containing weekly recuring
+events are shown in bold typeface in the Date Navigator.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Enable ToolTips displaying summary</guilabel>:</term>
+<listitem><para>If your summary for an event is longer than would fit in the
+current View, the remaining characters are not displayed. Check <guilabel>Enable
+ToolTips displaying summary</guilabel> if you want the full summary displayed
+when the mouse pointer remains over the appointment for a few
+seconds.</para></listitem> 
+</varlistentry>
+</variablelist>
 
-
-<sect3 id="preferences.views">
-<title>Views</title>
-
-<itemizedlist>
-<listitem><para>
-<guilabel>Day Begins At</guilabel> is the hour that &k; will display at the top. You can of course scroll to an earlier hour, but the <guilabel>Day Begins At</guilabel> should be the earliest time that you use for event. It could be the time when you usually get up, or the time when you start working.
-</para></listitem>
-<listitem><para>If the <guilabel>Show events that recur daily in Date Navigator</guilabel> checkbox is checked, the days containing daily recuring events are shown in bold typeface in the Date Navigator.</para></listitem> 
-<listitem><para>If the <guilabel>Show events that recur weekly in Date Navigator</guilabel> checkbox is checked, the days containing weekly recuring events are shown in bold typeface in the Date Navigator.</para></listitem>
-<listitem><para>If your summary for an event is longer than would fit in the current View, the remaining characters are not displayed. Check <guilabel>Enable ToolTips displaying summary</guilabel> if you want the full summary displayed when the mouse pointer remains over the appointment for a few seconds.</para></listitem> 
-</itemizedlist>
 </sect3>
 
+<sect3 id="preferences-printing">
+<title><guilabel>Printing</guilabel></title>
 
-<sect3 id="preferences.printing">
-<title>Printing</title>
+<variablelist>
+<varlistentry>
+<term><guilabel>Printer Name</guilabel>:</term>
+<listitem><para>Select the appropriate <guilabel>Printer Name</guilabel> which
+you want to use for printing in &k;.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Paper Orientation</guilabel>:</term>
+<listitem><para><guilabel>Paper Orientation</guilabel> specifies the orientation
+of the printounts. Portait is vertical printing (more tall than wide), Landscape
+is horizontal (more wide than tall).</para></listitem> 
+</varlistentry>
+<varlistentry>
+<term><guilabel>Preview Program</guilabel>:</term>
+<listitem><para><guilabel>Preview Program</guilabel> field tells &k; what
+program you want to use when you choose Print Preview from the <link
+linkend="file-print-preview">File Menu</link>. Typically you will want to use
+<application>kghostview</application>, <application>ghostview</application>, or
+<application>gv</application> here.</para> <para>To be able to use the <link
+linkend="file-print-preview">Print preview...</link> feature, you need a program
+that can accept printing output of &k; and display it on the screen. Since &k;
+uses the PostScript language to talk to your printer, you need a program that
+understands PostScript and that can show it on your screen. Historically, the
+best results have been achieved with <application>gv</application>, but
+KDE-specific program <application>kghostview</application> is quite mature and
+therefore is the default. You may of course specify
+<application>gv</application> if you wish, or any other PostScript-to-screen
+software.</para></listitem>
+</varlistentry>
+</variablelist>
 
-<itemizedlist>
-
-<listitem><para>Select the appropriate <guilabel>Printer Name</guilabel> which you want to use for printing in &k;.</para></listitem> 
-
-<listitem><para><guilabel>Paper Orientation</guilabel> specifies the orientation of the printounts. Portait is vertical printing (more tall than wide), Landscape is horizontal (more wide than tall).</para></listitem> 
-
-<listitem>
-<para><guilabel>Preview Program</guilabel> field tells &k; what program you want to use when you choose Print Preview from the <link linkend="file.print-preview">File Menu</link>. Typically you will want to use kghostview, ghostview, or gv here.</para>
-<para>To be able to use the <link linkend="file.print-preview">Print preview...</link> feature, you need a program that can accept printing output of &k; and display it on the screen. Since &k; uses the PostScript language to talk to your printer, you need a program that understands PostScript and that can show it on your screen. Historically, the best results have been achieved with <emphasis>gv</emphasis>, but KDE-specific program <emphasis>kghostview</emphasis> is quite mature and therefore is the default. You may of course specify gv if you wish, or any other PostScript-to-screen software.</para> 
-</listitem>
-</itemizedlist>
 </sect3>
-
 
 </sect2>
-
-
 
 </sect1>
 
-
-
- 
-<sect1 id="reference.menus">
+<sect1 id="reference-menus">
 <title>Menus</title>
-<para>
-When KOrganizer starts, the main &k; window appears. The window has several components: a menubar, a toolbar, a month calendar, a main panel with the current "view" of events, and a tasklist. The calendar initially displays today's date.
-</para>
-<para>
-The menus provide access to all the common operations that can be performed on the calendar, including saving, loading, adding and deleting events, printing and other operations.
-</para>
+<para>When KOrganizer starts, the main &k; window appears. The window has
+several components: a menubar, a toolbar, a month calendar, a main panel with
+the current "view" of events, and a tasklist. The calendar initially displays
+today's date.</para>
 
-<sect2 id="reference.menus.file">
+<para>The menus provide access to all the common operations that can be
+	  performed on the calendar, including saving, loading, adding and
+deleting events, printing and other operations.</para>
+
+<sect2 id="reference-menus-file">
 <title>File</title>
 <para>The <guilabel>File</guilabel> menu provides access to functions involving the
 entire calendar.</para>
 
-
-
-
-
-
-
-
-
-
-
-
-
 <variablelist>
-<varlistentry id="file.new">
+<varlistentry id="file-new">
 <term><menuchoice>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>n</keycap></keycombo>
@@ -741,24 +1303,25 @@ entire calendar.</para>
 <guimenu>File</guimenu>
 <guimenuitem>New</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action>
-Choose <guimenuitem>New Window</guimenuitem> or click <guiicon><inlinegraphic fileref="i_file_new.png"></inlinegraphic></guiicon> opens another main window. This window initially contains unnamed calendar. You can use the new window to:
-
-<msgtext>
+<listitem><para>Choosing <guimenuitem>New Window</guimenuitem> or click
+<guiicon><inlinegraphic fileref="i_file_new.png"></inlinegraphic></guiicon>
+<action>opens another main window</action>. This window initially contains
+unnamed calendar. You can use the new window to:</para>
 <itemizedlist>
-<listitem><para>open the same calendar twice (click on File -> Open and choose the same calendar as in the original window)</para></listitem>
-<listitem><para>have two different calendars open at the same time (click on File -> Open and choose a different calendar). </para></listitem> 
-<listitem><para>create a new calendar (click on File -> Save to give your new calendar a filename and to save it).</para></listitem>
+<listitem><para>open the same calendar twice (click on
+<menuchoice><guimenu>File</guimenu> <guimenuitem>Open</guimenuitem></menuchoice>
+and choose the same calendar as in the original window)</para></listitem>
+<listitem><para>have two different calendars open at the same time (click on
+<menuchoice><guimenu>File</guimenu> <guimenuitem>Open</guimenuitem></menuchoice>
+and choose a different calendar). </para></listitem>
+<listitem><para>create a new calendar (click on
+<menuchoice><guimenu>File</guimenu><guimenuitem>Save</guimenuitem></menuchoice>
+to give your new calendar a filename and to save it).</para></listitem>
 </itemizedlist>
-</msgtext>
-
-</action>
-</para></listitem>
+</listitem>
 </varlistentry>
 
-
-<varlistentry id="file.open">
+<varlistentry id="file-open">
 <term><menuchoice>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>o</keycap></keycombo>
@@ -766,27 +1329,24 @@ Choose <guimenuitem>New Window</guimenuitem> or click <guiicon><inlinegraphic fi
 <guimenu>File</guimenu>
 <guimenuitem>Open</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action>Choosing <guimenuitem>Open</guimenuitem> or clicking <guiicon><inlinegraphic fileref="i_file_open.png"></inlinegraphic></guiicon> opens a file dialog allowing you to select a new vCalendar
-to load.  If you have made changes to the current calendar, you will
-be given the option of saving them before loading a new one.</action>
-</para></listitem>
+<listitem><para> Choosing <guimenuitem>Open</guimenuitem> or clicking
+<guiicon><inlinegraphic fileref="i_file_open.png"></inlinegraphic></guiicon>
+<action>opens a file dialog allowing you to select a new vCalendar to
+load</action>.  If you have made changes to the current calendar, you will be
+given the option of saving them before loading a new one.</para></listitem>
 </varlistentry>
 
-<varlistentry id="file.open-recent">
+<varlistentry id="file-open-recent">
 <term><menuchoice>
 <guimenu>File</guimenu>
 <guimenuitem>Open Recent</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action>
-<guilabel>Open Recent</guilabel> Provides a list of recently opened calendars for
-quick access, allowing you to bypass the file dialog entirely.
-</action>
-</para></listitem>
+<listitem><para><guilabel>Open Recent</guilabel> <action>Provides a list of
+recently opened calendars for quick access, allowing you to bypass the file
+dialog entirely.</action> </para></listitem>
 </varlistentry>
 
-<varlistentry id="file.save">
+<varlistentry id="file-save">
 <term><menuchoice>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>s</keycap></keycombo>
@@ -794,26 +1354,26 @@ quick access, allowing you to bypass the file dialog entirely.
 <guimenu>File</guimenu>
 <guimenuitem>Save</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action>
-When you choose <guimenuitem>Save</guimenuitem> or click <guiicon><inlinegraphic fileref="i_file_save.png"></inlinegraphic></guiicon>, &k; saves the calendar to disk, and makes sure all changes that you made will be remembered.  If the calendar has no name, Save will behave like <guilabel>Save As</guilabel>.
-</action>
-</para></listitem>
+<listitem><para>When you choose <guimenuitem>Save</guimenuitem> or click
+<guiicon><inlinegraphic fileref="i_file_save.png"></inlinegraphic></guiicon>,
+&k; <action>saves the calendar to disk</action>, and makes sure all changes that
+you made will be remembered.  If the calendar has no name, Save will behave like
+<guimenuitem>Save As</guimenuitem>.</para></listitem>
 </varlistentry>
 
-<varlistentry id="file.save-as">
+<varlistentry id="file-save-as">
 <term><menuchoice>
 <guimenu>File</guimenu>
 <guimenuitem>Save As...</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action>
-<guilabel>Save As</guilabel> Displays a file dialog in which you may choose a different name for your calendar than the one currently assigned to it. This is useful if you have made changes to a calendar that you want to save, but also want to keep separate from your ``regular'' calendar.
-</action>
-</para></listitem>
+<listitem><para><guilabel>Save As</guilabel> <action>Displays a file dialog in
+which you may choose a different name for your calendar than the one currently
+assigned to it</action>. This is useful if you have made changes to a calendar
+that you want to save, but also want to keep separate from your "regular"
+calendar.</para></listitem>
 </varlistentry>
 
-<varlistentry id="file.close">
+<varlistentry id="file-close">
 <term><menuchoice>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>w</keycap></keycombo>
@@ -821,12 +1381,13 @@ When you choose <guimenuitem>Save</guimenuitem> or click <guiicon><inlinegraphic
 <guimenu>File</guimenu>
 <guimenuitem>Close</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action>Choosing <guimenuitem>Close</guimenuitem> or clicking <guiicon><inlinegraphic fileref="i_file_close.png"></inlinegraphic></guiicon> closes the current calendar. The window itself will remain open, and may be reused to open another calendar.</action>
-</para></listitem>
+<listitem><para>Choosing <guimenuitem>Close</guimenuitem> or clicking
+<guiicon><inlinegraphic fileref="i_file_close.png"></inlinegraphic></guiicon>
+<action>closes the current calendar</action>. The window itself will remain
+open, and may be reused to open another calendar.</para></listitem>
 </varlistentry>
 
-<varlistentry id="file.print">
+<varlistentry id="file-print">
 <term><menuchoice>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>p</keycap></keycombo>
@@ -834,132 +1395,137 @@ When you choose <guimenuitem>Save</guimenuitem> or click <guiicon><inlinegraphic
 <guimenu>File</guimenu>
 <guimenuitem>Print</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action>Choose <guimenuitem>Print</guimenuitem> or click <guiicon><inlinegraphic fileref="i_file_print.png"></inlinegraphic></guiicon> to print the current calendar. You can specify the range of dates to be printed (either manually or with Calendar Widget) and the View Type (Day, Week, Month or To-Do).</action>
-</para></listitem>
+<listitem><para>Choose <guimenuitem>Print</guimenuitem> or click
+<guiicon><inlinegraphic fileref="i_file_print.png"></inlinegraphic></guiicon> to
+<action>print the current calendar</action>. You can specify the range of dates
+to be printed (either manually or with Calendar Widget) and the View Type (Day,
+Week, Month or To-Do).</para></listitem>
 </varlistentry>
 
-<varlistentry id="file.print-preview">
+<varlistentry id="file-print-preview">
 <term><menuchoice>
 <guimenu>File</guimenu>
 <guimenuitem>Print Preview</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action>If you choose <guimenuitem>Print Preview</guimenuitem> or click <guiicon><inlinegraphic fileref="i_file_print_preview.png"></inlinegraphic></guiicon>, the current calendar will be printed on your screen, instead of on your printer. Use this feature to check if the printout will be correct before you start printing.</action>
-</para>
-<para>You can specify the range of dates to be printed (either manually or with Calendar Widget) and the View Type (Day, Week, Month or To-Do).
-</para> 
-<para>You can choose the program that you use to preview output in the <link linkend="preferences.printing">Printing Preferences</link> dialog.
-</para></listitem>
+
+<listitem><para>If you choose <guimenuitem>Print Preview</guimenuitem> or click
+<guiicon><inlinegraphic
+fileref="i_file_print_preview.png"></inlinegraphic></guiicon>, <action>the
+current calendar will be printed on your screen</action>, instead of on your
+printer. Use this feature to check if the printout will be correct before you
+start printing.</para>
+<para>You can specify the range of dates to be printed (either manually or with
+Calendar Widget) and the View Type (Day, Week, Month or To-Do). </para> 
+<para>You can choose the program that you use to preview output in the <link 
+linkend="preferences-printing">Printing Preferences</link>
+dialog.</para></listitem>
 </varlistentry>
 
-<varlistentry id="file.print-setup">
+<varlistentry id="file-print-setup">
 <term><menuchoice>
 <guimenu>File</guimenu>
 <guimenuitem>Print Setup</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><guilabel>Print Setup</guilabel> Brings up the print setup dialog. You can set up the look of your printed output.  See the section on <link linkend="preferences.printing">Printing Preferences</link> for more information.</action>
-</para></listitem>
+<listitem><para><guilabel>Print Setup</guilabel> <action>Brings up the print
+setup dialog</action>. You can set up the look of your printed output.  See the
+section on <link linkend="preferences-printing">Printing Preferences</link> for
+more information.</para></listitem>
 </varlistentry>
 
-<varlistentry id="file.import-ical">
+<varlistentry id="file-import-ical">
 <term><menuchoice>
 <guimenu>File</guimenu>
 <guimenuitem>Import From Ical</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><guilabel>Import From Ical</guilabel>If you have used ical, a popular but older calendar program for unix, you may wish to import your events, events, and todo items directly to KOrganizer.
-This action will read the .calendar file from your home directory and merge any entries it contains into your current calendar.  If any errors or suspicious things occur during the process, you will be notified via a message box.</action>
-</para></listitem>
+<listitem><para><guilabel>Import From Ical</guilabel> If you have used ical, a
+popular but older calendar program for unix, you may wish to <action>import your
+events, events, and todo items directly to &k;</action>.</para>
+<para>This action will read the <filename>.calendar</filename> file from your
+home directory and merge any entries it contains into your current calendar.  If
+any errors or suspicious things occur during the process, you will be notified
+via a message box.</para></listitem>
 </varlistentry>
 
-<varlistentry id="file.merge">
+<varlistentry id="file-merge">
 <term><menuchoice>
 <guimenu>File</guimenu>
 <guimenuitem>Merge</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><guilabel>Merge Calendar</guilabel> If you have a different vCalendar file somewhere, and you would like to include its contents into your own calendar, choose this option.  A good time to do this would be if you received a vCalendar with a few entries via e-mail, for instance.</action>
-</para>
-<para>Detailed description of the merge operation is in <link linkend="other-features.merging-data"></link> 
-</para></listitem> 
+<listitem><para><guilabel>Merge Calendar</guilabel> If you have a different
+vCalendar file somewhere, and you would like to <action>include its contents
+into your own calendar</action>, choose this option.  A good time to do this
+would be if you received a vCalendar with a few entries via e-mail, for
+instance.</para>
+<para>Detailed description of the merge operation is in <link
+linkend="other-features-merging-data"></link> </para></listitem> 
 </varlistentry>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-<varlistentry id="file.archive-old">
+<varlistentry id="file-archive-old">
 <term><menuchoice>
 <guimenu>File</guimenu>
 <guimenuitem>Archive Old Entries</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-
-<action>
-From time to time you should delete your old events.
-<msgtext>
-<tip><para>Contemporary computers have ample storage space. However, if you synchronize your &k; calendar with a limited-memory machine like the Palm device, you will find archiving useful. The performance of KOrganizer can also become worse when there are many events.</para></tip>
-
-<itemizedlist>
-<listitem><para>Click the <guilabel>Archive Old Entries</guilabel>.</para></listitem>
-<listitem><para>Fill in the date in <guilabel>Appointments older than</guilabel> field or use the Calendar Widget to choose the date. </para></listitem>
-<listitem><para>If you have chosen archiving, you must also provide a filename for the archive in the <guilabel>Archive File</guilabel> field. If you want to re-use an older archive file, click on the <guilabel>Browse</guilabel> button and find an existing archive. It will be overwritten, therefore make sure that you do not need the original data or that you have a backup copy.</para></listitem>
-</itemizedlist>
-</msgtext>
-</action></para></listitem>
+<listitem><para><action>From time to time you should delete your old
+events.</action></para>
+<tip><para>Contemporary computers have ample storage space. However, if you
+synchronize your &k; calendar with a limited-memory machine like the Palm
+device, you will find archiving useful. The performance of &k; can also
+become worse when there are many events.</para></tip>
+<procedure>
+<step><para>Click the <guilabel>Archive Old Entries</guilabel>.</para></step>
+<step><para>Fill in the date in <guilabel>Appointments older than</guilabel>
+field or use the Calendar Widget to choose the date. </para></step>
+<step><para>If you have chosen archiving, you must also provide a filename for
+the archive in the <guilabel>Archive File</guilabel> field. If you want to
+re-use an older archive file, click on the <guibutton>Browse</guibutton> button
+and find an existing archive. It will be overwritten, therefore make sure that
+you do not need the original data or that you have a backup copy.</para></step>
+</procedure>
+</listitem>
 </varlistentry>
 
-
-<varlistentry id="file.export-as-web">
+<varlistentry id="file-export-as-web">
 <term><menuchoice>
 <guimenu>File</guimenu>
 <guimenuitem>Export as web page...</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><msgtext>
-
-<para>You can export your calendar or a part of it as a HTML file, suitable for publishing on the World Wide Web.
-
-<itemizedlist>
-<listitem>
-<para>Click the <guilabel>Export as web page...</guilabel>.You will get a window with three tabs: General, To-Do, and Advanced.</para></listitem>
-<listitem>
-<para>General tab: Specify the date range that you want published. Enter dates manually or use the Calendar Widget.</para>
-<para>Choose the View type: Event List, To-Do List or Both.</para>
-<para>Specify the web output file in the <guilabel>Output file</guilabel> field. If you want to overwrite an existing web file, click on the Browse button to find it.</para>
+<listitem><para>You can <action>export your calendar</action> or a part of it as a
+<abbrev>HTML</abbrev> file, suitable for publishing on the World Wide
+Web.</para>  
+<procedure>
+<step><para>Click the <guimenuitem>Export as web page...</guimenuitem>.You will
+get a window with three tabs: <guilabel>General</guilabel>,
+<guilabel>To-Do</guilabel>, and <guilabel>Advanced</guilabel>.</para></step>
+<step>
+<substeps>
+<step><para><guilabel>General</guilabel> tab: Specify the date range that you want
+published. Enter dates manually or use the Calendar Widget.</para></step>
+<step><para>Choose the View type: Event List, To-Do List or Both.</para></step>
+<step><para>Specify the web output file in the <guilabel>Output file</guilabel>
+field. If you want to overwrite an existing web file, click on the Browse button
+to find it.</para></step></substeps>
+</step>
+<step><para><guilabel>To-Do</guilabel> tab: specify if you want to list Due
+Dates and Attendees.</para></step>
+</procedure>
 </listitem>
-<listitem><para>To-Do tab: specify if you want to list Due Dates and Attendees.</para></listitem>
-</itemizedlist>
-</para>
-</msgtext></action></para></listitem>
 </varlistentry>
 
-
-<varlistentry id="file.make-active">
+<varlistentry id="file-make-active">
 <term><menuchoice>
 <guimenu>File</guimenu>
 <guimenuitem>Make active</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><msgtext>
-<para>If you opened more than one calendar, only one calendar can display alarms; only one calendar can be active. Click on the <guilabel>Make active</guilabel> menu item to activate the current calendar window.</para>
-<para>The active calendar is loaded as default calendar when starting KOrganizer. In other words, if you work with more than one calendar, you should make your main calendar active.</para>
-</msgtext></action></para></listitem>
+<listitem><para>If you opened more than one calendar, only one calendar can
+display alarms; only one calendar can be active. Click on the <guimenuitem>Make
+active</guimenuitem> menu item to <action>activate the current calendar
+window.</action></para>
+<para>The active calendar is loaded as default calendar when starting &k;. In
+other words, if you work with more than one calendar, you should make your main
+calendar active.</para></listitem>
 </varlistentry>
 
-
-<varlistentry id="file.quit">
+<varlistentry id="file-quit">
 <term><menuchoice>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>q</keycap></keycombo>
@@ -967,27 +1533,28 @@ From time to time you should delete your old events.
 <guimenu>File</guimenu>
 <guimenuitem>Quit</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><msgtext>
-<para>When you choose <guimenuitem>Quit</guimenuitem> or click <guiicon><inlinegraphic fileref="i_file_quit.png"></inlinegraphic></guiicon>, the current calendar window will quit, prompting you to save if the current calendar has been modified but not yet saved.</para>
-<para>This has no effect on other calendar windows which may be opened. You have to quit each calendar window individually.</para> 
-</msgtext></action></para></listitem>
+<listitem><para>When you choose <guimenuitem>Quit</guimenuitem> or click
+<guiicon><inlinegraphic fileref="i_file_quit.png"></inlinegraphic></guiicon>,
+<action>the current calendar window will quit, prompting you to save if the current
+calendar has been modified but not yet saved.</action></para>
+<para>This has no effect on other calendar windows which may be opened. You have
+to quit each calendar window individually.</para></listitem>
 </varlistentry>
-
-
 </variablelist>
 
 </sect2>
 
-
-
-<sect2 id="reference.menus.edit">
-<title>Edit</title>
-<para>With the <guilabel>Edit</guilabel> menu you can edit and search events and To-Do entries.</para
-<para>Cut, Copy, and Paste buttons behave in the same fashion as in other KDE applications. With Find button you can find event and to-do entries accross the current calendar.</para>
+<sect2 id="reference-menus-edit">
+<title><guimenu>Edit</guimenu></title>
+<para>With the <guimenu>Edit</guimenu> menu you can edit and search events and
+To-Do entries.</para <para><guimenuitem>Cut</guimenuitem>,
+<guimenuitem>Copy</guimenuitem>, and <guimenuitem>Paste</guimenuitem> menu items
+behave in the same fashion as in other KDE applications. With
+<guimenuitem>Find</guimenuitem> menu item you can find event and to-do entries
+accross the current calendar.</para>
 
 <variablelist>
-<varlistentry id="edit.cut">
+<varlistentry id="edit-cut">
 <term><menuchoice>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>x</keycap></keycombo>
@@ -995,12 +1562,12 @@ From time to time you should delete your old events.
 <guimenu>Edit</guimenu>
 <guimenuitem>Cut</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><guilabel>Cut</guilabel> cuts the currently selected event(s) to the clipboard, removing them from your calendar.</action>
-</para></listitem>
+<listitem><para><guimenuitem>Cut</guimenuitem> <action>cuts the currently selected
+event(s) to the clipboard, removing them from your
+calendar.</action></para></listitem>
 </varlistentry>
 
-<varlistentry id="edit.copy">
+<varlistentry id="edit-copy">
 <term><menuchoice>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>c</keycap></keycombo>
@@ -1008,12 +1575,12 @@ From time to time you should delete your old events.
 <guimenu>Edit</guimenu>
 <guimenuitem>Copy</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><guilabel>Copy</guilabel> copies the currently selected event(s) to the clipboard, leaving them untouched in your calendar.</action>
-</para></listitem>
+<listitem><para><action><guimenuitem>Copy</guimenuitem> copies the currently
+selected event(s) to the clipboard, leaving them untouched in your
+calendar.</action></para></listitem>
 </varlistentry>
 
-<varlistentry id="edit.paste">
+<varlistentry id="edit-paste">
 <term><menuchoice>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>v</keycap></keycombo>
@@ -1021,14 +1588,20 @@ From time to time you should delete your old events.
 <guimenu>Edit</guimenu>
 <guimenuitem>Paste</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><msgtext>
-<para><guilabel>Paste</guilabel> inserts the contents of the clipboard into your calendar. The clipboard must contain a valid vCalendar, provided either by a previous Cut/Copy operation or from a selection made outside of &k;.  You will be warned if the contents of the clipboard cannot be understood.<tip><para>However, you can safely use Ctrl-C and Ctrl-V hotkeys to copy text data from any outside application to a &k; Edit Event window and vice versa. </para></tip></para>
-</msgtext></action>
-</para></listitem> 
+<listitem><para><guilabel>Paste</guilabel> <action>inserts the contents of the
+clipboard into your calendar</action>. The clipboard must contain a valid
+vCalendar, provided either by a previous Cut/Copy operation or from a selection
+made outside of &k;.  You will be warned if the contents of the clipboard cannot
+be understood.</para>
+<tip><para>However, you can safely use
+<keycombo><keycap>Ctrl</keycap><keycap>C</keycap></keycombo> and
+<keycombo><keycap>Ctrl</keycap><keycap>V</keycap></keycombo> hotkeys to copy
+text data from any outside application to a &k; Edit Event window and vice
+versa. </para></tip>
+</listitem> 
 </varlistentry>
 
-<varlistentry id="edit.find">
+<varlistentry id="edit-find">
 <term><menuchoice>
 <shortcut>
 <keycombo><keycap>Ctrl</keycap><keycap>f</keycap></keycombo>
@@ -1036,377 +1609,467 @@ From time to time you should delete your old events.
 <guimenu>Edit</guimenu>
 <guimenuitem>Find</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><msgtext>
-<para>Choose <guimenuitem>Find</guimenuitem> from the <guimenu>Edit</guimenu> or click <guiicon><inlinegraphic fileref="i_edit_find.png"></inlinegraphic></guiicon> to find an event according to it's summary description. The Find will only search in the summary field. <tip><para>You can use wildcards if you do not remember the exact summary. If you don't know single character of the summary, put ? instead of the missing character. If you don't know more characters, use *. For instance if you know that the summary has <emphasis>work</> in the middle, you would write <emphasis>*work*</> in the Find dialog. &k; will locate summary entries like "Must go to work", "Wine workshop" and similar. Letter case is ignored.</para></tip></para>
-<para>The result of the Find operation is a list of events with the specified summary description. The columns shown in the list are the same as the <link linkend="view.list-view">List View</link> columns.</para>
-<para>This resulting list is active. You can double-click on a line to display or edit the event details. Get more information about these details in <xref linkend="entering-data.events"> and <xref linkend="entering-data.to-do">.</para>
-</msgtext></action></para></listitem>
+<listitem><para>Choose <guimenuitem>Find</guimenuitem> from the
+<guimenu>Edit</guimenu> or click <guiicon><inlinegraphic
+fileref="i_edit_find.png"></inlinegraphic></guiicon> to <action>find an event
+according to it's summary description</action>. The Find will only search in the
+summary field.</para>
+
+<tip><para>You can use wildcards if you do not remember the exact summary. If
+you don't know single character of the summary, put <replaceable>?</replaceable>
+instead of the missing character. If you don't know more characters, use
+<replaceable>*</replaceable>. For instance if you know that the summary has
+<emphasis>work</emphasis> in the middle, you would write
+<emphasis>*work*</emphasis> in the Find dialog. &k; will locate summary entries
+like "Must go to work", "Wine workshop" and similar. Letter case is
+ignored.</para></tip>
+
+<para>The result of the Find operation is a list of events with the specified
+summary description. The columns shown in the list are the same as the <link
+linkend="view-list-view">List View</link> columns.</para>
+
+<para>This resulting list is active. You can double-click on a line to display
+or edit the event details. Get more information about these details in <link
+linkend="entering-data-events">FIX THIS</link> and <link
+linkend="entering-data-to-do">FIX THIS</link>.</para></listitem>
 </varlistentry>
 
 </variablelist>
 </sect2>
 
+<sect2 id="reference-menus-view">
+<title><guimenu>View</guimenu></title>
 
-<sect2 id="reference.menus.view">
-<title>View</title>
-<para>
-There are several different ``views'' available for displaying your list of events, including a ``list'' view, a ``day'' view, a ``week'' view, and a ``month'' view.  &k; is smart enough to remember in between sessions what the last active view was, and the next time it is started, it will display that view.
-</para>
-<para>
-In general, each view will provide a way of displaying your events and events constrained to a particular time period or style of display.  Click on any event to select it for further action.  Right-click an appointment to bring up a menu with options such as <guilabel>edit</guilabel>, <guilabel>delete</guilabel>, and so on.  You can also use the <guilabel>Action</guilabel> menu to perform similar operations.
-</para>
+<para>There are several different ``views'' available for displaying your list
+of events, including a ``list'' view, a ``day'' view, a ``week'' view, and a
+``month'' view.  &k; is smart enough to remember in between sessions what the
+last active view was, and the next time it is started, it will display that
+view.</para>
+
+<para>In general, each view will provide a way of displaying your events and
+events constrained to a particular time period or style of display.  Click on
+any event to select it for further action.  Right-click an appointment to bring
+up a menu with options such as <guimenuitem>edit</guimenuitem>,
+<guimenuitem>delete</guimenuitem>, and so on.  You can also use the
+<guimenuitem>Action</guimenuitem> menu to perform similar operations.</para>
 
 <variablelist>
-<varlistentry id="view.list-view">
+<varlistentry id="view-list-view">
 <term><menuchoice>
 <guimenu>View</guimenu>
 <guimenuitem>List</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><msgtext>
-<para>
-To change the display to the List view, choose <guimenuitem>List</guimenuitem> from the <guimenu>View</guimenu> or click <guiicon><inlinegraphic fileref="i_view_list.png"></inlinegraphic></guiicon>.
-</para>
-<para>
-This view displays all your events for the day as a list. Events are displayed one per line.  The first column of the appointment will have a bell icon displayed in it if an alarm is set for the appointment.  The second column will display a chasing-arrows icon if the appointment repeats multiple times.  Holding the mouse over the arrows icon will bring up a tooltip with more detailed recurrence information. The third column displays start and end time information, and the fourth column gives a summary of the appointment.
-</para>
-<para>
-The list view is good for displaying many events on a single day in a compact fashion.  It is also useful if your events are spread out over a long time period that would not be displayed completely on the screen when using one of the other views.
-</para>
-</msgtext></action>
-</para></listitem>
+<listitem><para>To <action>change the display to the List view</action>, choose
+<guimenuitem>List</guimenuitem> from the <guimenu>View</guimenu> or click
+<guiicon><inlinegraphic
+fileref="i_view_list.png"></inlinegraphic></guiicon>.</para>
+<para>This view displays all your events for the day as a list. Events are
+displayed one per line.  The first column of the appointment will have a bell
+icon displayed in it if an alarm is set for the appointment.  The second column
+will display a chasing-arrows icon if the appointment repeats multiple times.
+Holding the mouse over the arrows icon will bring up a tooltip with more
+detailed recurrence information. The third column displays start and end time
+information, and the fourth column gives a summary of the appointment.</para>
+<para>The list view is good for displaying many events on a single day in a
+compact fashion.  It is also useful if your events are spread out over a long
+time period that would not be displayed completely on the screen when using one
+of the other views.</para></listitem>
 </varlistentry>
 
-<varlistentry id="view.day-view">
+<varlistentry id="view-day-view">
 <term><menuchoice>
 <guimenu>View</guimenu>
 <guimenuitem>Day</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><msgtext>
-<para>
-To change to the Day view, choose <guimenuitem>Day</guimenuitem> from the <guimenu>View</guimenu> menu or click <guiicon><inlinegraphic fileref="i_view_day.png"></inlinegraphic></guiicon>.
-</para>
-<para>
-This view presents your event for a single day, sorted chronologically. You can also see the length of each event.  Time is indicated on the left side of the view.  A scrollbar on the right is provided when the whole day cannot be displayed on a single screen (which is the usual case).  Each rectangle in the view represents an individual appointment, and displays the appointment's start and end time and summary. A bell icon is displayed if an alarm is set for the appointment.  A chasing-arrows icon is displayed if the appointment repeats multiple times. Holding the mouse over the arrows icon will bring up a tooltip with more detailed recurrence information</para>
-<para>Since the Day View cannot contain the whole day on most screens, you can scroll up and down to see the whole day. However there is a useful hint that tells you if there is any currently invisible event above or below your current position; It is a small down-pointing or up-pointing arrow at the bottom, respectively at the top of the main panel.</para>
-<para>Any event can be resized with your mouse. Simply move the mouse pointer near the top or bottom edge of the event, and drag the edge up or down. This way you can visually modify the starting and ending time of your event. This also works in the Week and Work Week views. In other words, it is possible to change start and end times with the mouse by just moving the upper or lower border of the event to the new time.</para>
-<para>Any event can be rescheduled with your mouse. Move the mouse pointer over the event, and drag it to a new time location. This also works in the Week and Work Week views.</para>
-<para> 
-Events can be moved to other, presently non-visible dates. Move the mouse pointer over the event, and drag it to the Date Navigator on the left side.
-</para>
+<listitem><para>To <action>change to the Day view</action>, choose
+<guimenuitem>Day</guimenuitem> from the <guimenu>View</guimenu> menu or click
+<guiicon><inlinegraphic
+fileref="i_view_day.png"></inlinegraphic></guiicon>.</para>
 
-<tip><para>
-There is a useful shortcut for adding events: double-click on any open region of time, and &k; will automatically create an event with default duration (which is customizable in the preferences dialog). You can immediately edit the description.  The events ``snap'' to half-hour increments, rounding off to the closest half hour from where you clicked.
-</para></tip> 
-</msgtext></action>
-</para></listitem>
+<para>This view presents your event for a single day, sorted
+chronologically. You can also see the length of each event.  Time is indicated
+on the left side of the view.  A scrollbar on the right is provided when the
+whole day cannot be displayed on a single screen (which is the usual case).
+Each rectangle in the view represents an individual appointment, and displays
+the appointment's start and end time and summary. A bell icon is displayed if an
+alarm is set for the appointment.  A chasing-arrows icon is displayed if the
+appointment repeats multiple times. Holding the mouse over the arrows icon will
+bring up a tooltip with more detailed recurrence information</para>
+
+<para>Since the Day View cannot contain the whole day on most screens, you can
+scroll up and down to see the whole day. However there is a useful hint that
+tells you if there is any currently invisible event above or below your current
+position; It is a small down-pointing or up-pointing arrow at the bottom,
+respectively at the top of the main panel.</para>
+
+<para>Any event can be resized with your mouse. Simply move the mouse pointer
+near the top or bottom edge of the event, and drag the edge up or down. This way
+you can visually modify the starting and ending time of your event. This also
+works in the Week and Work Week views. In other words, it is possible to change
+start and end times with the mouse by just moving the upper or lower border of
+the event to the new time.</para>
+
+
+<para>Any event can be rescheduled with your mouse. Move the mouse pointer over
+the event, and drag it to a new time location. This also works in the Week and
+Work Week views.</para>
+
+<para> Events can be moved to other, presently non-visible dates. Move the mouse
+pointer over the event, and drag it to the Date Navigator on the left
+side.</para>
+
+<tip><para>There is a useful shortcut for adding events: double-click on any
+open region of time, and &k; will automatically create an event with default
+duration (which is customizable in the preferences dialog). You can immediately
+edit the description.  The events ``snap'' to half-hour increments, rounding off
+to the closest half hour from where you clicked.</para></tip>
+
+</listitem>
 </varlistentry>
 
-<varlistentry id="view.workweek-view">
+<varlistentry id="view-workweek-view">
 <term><menuchoice>
 <guimenu>View</guimenu>
 <guimenuitem>Work Week</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action>
-<msgtext><para>To change the display to the Work Week view, chosse <guimenuitem>Work Week</guimenuitem> from the <guimenu>View</guimenu> menu or click <guiicon><inlinegraphic fileref="i_view_work_week.png"></inlinegraphic></guiicon>.</para>
-<para>This is the same as the week view, except only the working days of the week are shown.</para>
-</msgtext></action> 
-</para></listitem>
+<listitem><para>To <action>change the display to the Work Week view</action>,
+choose <guimenuitem>Work Week</guimenuitem> from the <guimenu>View</guimenu>
+menu or click <guiicon><inlinegraphic
+fileref="i_view_work_week.png"></inlinegraphic></guiicon>.</para>
+
+<para>This is the same as the week view, except only the working days of the
+week are shown.</para></listitem>
+
 </varlistentry>
 
-<varlistentry id="view.week-view">
+<varlistentry id="view-week-view">
 <term><menuchoice>
 <guimenu>View</guimenu>
 <guimenuitem>Week</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><msgtext>
-<para>To change the display to the Week view, chosse <guimenuitem>Week</guimenuitem> from the <guimenu>View</guimenu> menu or click <guiicon><inlinegraphic fileref="i_view_week.png"></inlinegraphic></guiicon>.</para>
-<para>The week view provides a view similar to the day view. Events for seven days are shown next to each other.  All of the functions available for the day view are available in the week view, too.  See the <link linkend="view.day-view">Day View section</link> for further information.</para>
-</msgtext></action> 
-</para></listitem>
+<listitem><para>To change the display to the Week view, chosse
+<guimenuitem>Week</guimenuitem> from the <guimenu>View</guimenu> menu or click
+<guiicon><inlinegraphic
+fileref="i_view_week.png"></inlinegraphic></guiicon>.</para>
+
+<para>The week view provides a view similar to the day view. Events for seven
+days are shown next to each other.  All of the functions available for the day
+view are available in the week view, too.  See the <link
+linkend="view-day-view">Day View section</link> for further
+information.</para></listitem>
+
 </varlistentry>
 
-<varlistentry id="view.month-view">
+<varlistentry id="view-month-view">
 <term><menuchoice>
 <guimenu>View</guimenu>
 <guimenuitem>Month</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><msgtext>
-<para>To change the display to the Month view, chosse <guimenuitem>Month</guimenuitem> from the <guimenu>View</guimenu> menu or click <guiicon><inlinegraphic fileref=""></inlinegraphic></guiicon>.</para>
-<para>
-The month view shows all the events for the current month in a familar calendar layout. Each day contains all of the events that can fit in the area provided (maximizing the window will enable you to see more appointments).  Information on repeating and alarm status is indicated through bell and chasing arrows icons, just like in other views.
-</para>
-<para>
-You can navigate inside the month view using a set of buttons along the right side of the screen.  By pressing the appropriate upwards-facing button, you can navigate to the past by week, month, or even year. The downwards-facing buttons will navigate to the future.
-</para>
-</msgtext></action>
-</para></listitem>
+
+<listitem><para>To <action>change the display to the Month view</Action>, choose
+<guimenuitem>Month</guimenuitem> from the <guimenu>View</guimenu> menu or click
+<guiicon><inlinegraphic fileref=""></inlinegraphic></guiicon>.</para>
+
+<para>The month view shows all the events for the current month in a familar
+calendar layout. Each day contains all of the events that can fit in the area
+provided (maximizing the window will enable you to see more appointments).
+Information on repeating and alarm status is indicated through bell and chasing
+arrows icons, just like in other views.</para>
+
+<para>You can navigate inside the month view using a set of buttons along the
+right side of the screen.  By pressing the appropriate upwards-facing button,
+you can navigate to the past by week, month, or even year. The downwards-facing
+buttons will navigate to the future.</para></listitem>
 </varlistentry>
 
-<varlistentry id="view.todo-view">
+<varlistentry id="view-todo-view">
 <term><menuchoice>
 <guimenu>View</guimenu>
 <guimenuitem>To-do list</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><msgtext>
-<para> 
-To change the display to the To-Do view, choose <guimenuitem>To-do list</guimenuitem> from the <guimenu>View</guimenu> menu or click <guiicon><inlinegraphic fileref="i_view_todo_list.png"></inlinegraphic></guiicon>.
-</para>
-<para>The todo list provides a place for you to jot down quick (or long-term) notes to yourself about things that you need to do. The to-do list always appears right below the Date Navigator. You can also display it in the main panel if you click on the <guilabel>To-Do View</guilabel> icon or if you choose <guilabel>View -> To-Do list</guilabel>.</para>
-<para>You can give your to-do task a "date due", in other words a date when the to-do should be finished. </para>
-<para>You can also assign priorities to to-do events, and they will appear sorted in order of priority.  The lower the number, the higher the priority, except that zero (0) is defined as ``no priority.''
-</para>
-<para>To make a new todo entry, right click in the todo box.  You will
-get a menu with the option to create a new entry.  If you clicked on
-an already existing todo, you will more choices: you can Show the summary, Edit the task details, Delete the task altogether, or you can create a sub-todo. You could for example make a large to-do task like building a house, and make sub-tasks like choosing the right building site, hiring an architect, hiring workers and finally arranging a party for your friends.</para>
-<para>When you choose <guilabel>New Todo</guilabel>, a new todo will
-be created and you will be able to enter all neccessary <link linkend="entering-data.to-do">information</link>.</para>
-<para>Click on any to-do task in the list to highlight it. If you click on the thick-line box on the left of the task description, you will change the "completed" status of the task. If you double-click the task description, you will be able to edit all the details of this to-do task.</para>
-<para>You may also pick <guilabel>Purge Completed</guilabel> from the right mouse
-button menu to delete all todo entries that you have marked completed. This is handy for quick cleanup.</para>
-<para>To-do tasks can also dragged around with the mouse to rearrange the hierarchy or to exchange to-do tasks with other calendar windows. You can also read an <link linkend="other-features.drag-and-drop">overview</link> of all available drag-and-drop operations.</para>
-</msgtext></action>
-</para></listitem>
+<listitem><para>To <action>change the display to the To-Do view</action>, choose
+<guimenuitem>To-do list</guimenuitem> from the <guimenu>View</guimenu> menu or
+click <guiicon><inlinegraphic
+fileref="i_view_todo_list.png"></inlinegraphic></guiicon>.</para>
+
+<para>The todo list provides a place for you to jot down quick (or long-term)
+notes to yourself about things that you need to do. The to-do list always
+appears right below the Date Navigator. You can also display it in the main
+panel if you click on the <guilabel>To-Do View</guilabel> icon or if you choose
+<guilabel>View -> To-Do list</guilabel>.</para>
+
+<para>You can give your to-do task a "date due", in other words a date when the
+to-do should be finished. </para>
+
+<para>You can also assign priorities to to-do events, and they will appear
+sorted in order of priority.  The lower the number, the higher the priority,
+except that zero (0) is defined as ``no priority.''</para>
+
+<para>To make a new todo entry, <mousebutton>right</mousebutton> click in the
+todo box.  You will get a menu with the option to create a new entry.  If you clicked on
+an already existing todo, you will more choices: you can <guimenuitem>Show the
+summary</guimenuitem>, <guimenuitem>Edit the task details</guimenuitem>,
+<guimenuitem>Delete the task</guimenuitem> altogether, or you can create a
+sub-todo. You could for example make a large to-do task like building a house,
+and make sub-tasks like choosing the right building site, hiring an architect,
+hiring workers and finally arranging a party for your friends.</para>
+
+<para>When you choose <guimenuitem>New Todo</guimenuitem>, a new todo will
+be created and you will be able to enter all neccessary <link
+linkend="entering-data-to-do">information</link>.</para>
+
+<para>Click on any to-do task in the list to highlight it. If you click on the
+thick-line box on the left of the task description, you will change the
+"completed" status of the task. If you double-click the task description, you
+will be able to edit all the details of this to-do task.</para>
+
+<para>You may also pick <guimenuitem>Purge Completed</guimenuitem> from the
+<mousebutton>right</mousebutton> mouse button menu to delete all todo entries
+that you have marked completed. This is handy for quick cleanup.</para>
+
+<para>To-do tasks can also dragged around with the mouse to rearrange the
+hierarchy or to exchange to-do tasks with other calendar windows. You can also
+read an <link linkend="other-features-drag-and-drop">overview</link> of all
+available drag-and-drop operations.</para></listitem>
+
 </varlistentry>
 
-<varlistentry id="view.update">
+<varlistentry id="view-update">
 <term><menuchoice>
 <guimenu>View</guimenu>
 <guimenuitem>Update</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action>Updates or refreshes the currently displayed view.</action> 
-</para></listitem>
+<listitem><para><action>Updates or refreshes the currently displayed
+view.</action></para></listitem>
 </varlistentry>
-
 </variablelist>
 
 </sect2>
 
-
-
-<sect2 id="reference.menus.go">
+<sect2 id="reference-menus-go">
 <title>Go</title>
 <variablelist>
-<varlistentry id="go.previous-day">
+<varlistentry id="go-previous-day">
 <term><menuchoice>
 <guimenu>Go</guimenu>
 <guimenuitem>Previous Day</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action>Choose <guimenuitem>Go Backward</guimenuitem> from the <guimenu>Go</guimenu> menu, or click <guiicon><inlinegraphic fileref="i_go_backward.png"></inlinegraphic></guiicon>  to go to the previous day.
-</action>
-</para></listitem>
+<listitem><para>Choose <guimenuitem>Go Backward</guimenuitem> from the
+<guimenu>Go</guimenu> menu, or click <guiicon><inlinegraphic
+fileref="i_go_backward.png"></inlinegraphic></guiicon> to <action>go to the
+previous day.</action></para></listitem>
 </varlistentry>
 
-<varlistentry id="go.next-day">
+<varlistentry id="go-next-day">
 <term><menuchoice>
 <guimenu>Go</guimenu>
 <guimenuitem>Next Day</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action>Choose <guimenuitem>Go Forward</guimenuitem> from the <guimenu>Go</guimenu> menu, or click <guiicon><inlinegraphic fileref="i_go_forward.png"></inlinegraphic></guiicon>  to go to the next day.
-</action>
-</para></listitem>
+<listitem><para>Choose <guimenuitem>Go Forward</guimenuitem> from the
+<guimenu>Go</guimenu> menu, or click <guiicon><inlinegraphic
+fileref="i_go_forward.png"></inlinegraphic></guiicon> to <action>go to the next
+day.</action></para></listitem>
 </varlistentry>
 
-<varlistentry id="go.goto-today">
+<varlistentry id="go-goto-today">
 <term><menuchoice>
 <guimenu>Go</guimenu>
 <guimenuitem>Go to Today</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action>Choose <guimenuitem>Go to Today</guimenuitem> from the <guimenu>Go</guimenu> menu, or click <guiicon><inlinegraphic fileref="i_go_to_today.png"></inlinegraphic></guiicon>  to go to the next day.
-</action>
-</para></listitem>
+<listitem><para>Choose <guimenuitem>Go to Today</guimenuitem> from the
+<guimenu>Go</guimenu> menu, or click <guiicon><inlinegraphic
+fileref="i_go_to_today.png"></inlinegraphic></guiicon> to <action>go to
+today.</action></para></listitem>
 </varlistentry>
 
 </variablelist>
 </sect2>
 
-
-<sect2 id="reference.menus.actions">
+<sect2 id="reference-menus-actions">
 <title>Actions</title>
 
 <variablelist>
-<varlistentry id="actions.new-event">
+<varlistentry id="actions-new-event">
 <term><menuchoice>
 <guimenu>Actions</guimenu>
 <guimenuitem>New Event</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><msgtext>
-<para>
-Choose <guilabel>New Event</guilabel> to start writing a new event. Initially the appointment window will have current time and date.</para>
-<para>Read detailed description of the event window in <xref linkend="entering-data.events"></para>
-</msgtext></action></para></listitem>
+
+<listitem><para>Choose <guimenuitem>New Event</guimenuitem> to <action>start writing a
+new event</action>. Initially the appointment window will have current time and
+date.</para>
+
+<para>Read detailed description of the event window in <link 
+linkend="entering-data-events">FIXTHIS</link></para></listitem>
+
 </varlistentry>
 
-<varlistentry id="actions.new-todo">
+<varlistentry id="actions-new-todo">
 <term><menuchoice>
 <guimenu>Actions</guimenu>
 <guimenuitem>New To-do</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><msgtext>
-<para>
-Choose <guilabel>New To-Do</guilabel> to start writing a new To-Do task. Initially the task has no Due date, but you can specify one.</para>
-<para>Read detailed description of the event window in <xref linkend="entering-data.events"></para> 
-<para>To-Do screen is quite similar to the event screen, except there is no recurrence tab window. To-Do tasks are supposed to be one-time only.</para>
-</msgtext></action></para></listitem>
+
+<listitem><para>Choose <guimenuitem>New To-Do</guimenuitem> to <action>start
+writing a new To-Do task</action>. Initially the task has no Due date, but you
+can specify one.</para>
+
+<para>Read detailed description of the event window in <xref
+linkend="entering-data-events"></para>
+
+<para>To-Do screen is quite similar to the event screen, except there is no
+recurrence tab window. To-Do tasks are supposed to be one-time
+only.</para></listitem>
+
 </varlistentry>
 
-<varlistentry id="actions.delete-event">
+<varlistentry id="actions-delete-event">
 <term><menuchoice>
 <guimenu>Actions</guimenu>
 <guimenuitem>Delete Event</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><msgtext>
-<para>
-Choose <guilabel>Delete Appointment</guilabel> to remove currently selected event or To-Do task. You will be asked for confirmation.</para>
-<para>However, if the <guilabel>Settings -> Preferences -> Personal -> Confirm Deletes</guilabel> checkbox is <emphasis>not</emphasis> checked, you will not be prompted for confirmation, and the event will be deleted immediately.</para>
-</msgtext></action></para></listitem>
+
+<listitem><para>Choose <guimenuitem>Delete Appointment</guimenuitem> to <action>remove
+currently selected event or To-Do task</action>. You will be asked for
+confirmation.</para>
+
+<para>However, if the <menuchoice><guimenu>Settings</guimenu>
+<guisubmenu>Preferences</guisubmenu>
+<guisubmenu>Personal</guisubmenu></menuchoice> <guilabel>Confirm
+Deletes</guilabel> checkbox is <emphasis>not</emphasis> checked, you will not be
+prompted for confirmation, and the event will be deleted
+immediately.</para></listitem>
+
 </varlistentry>
 
-<varlistentry id="actions.mail-event">
+<varlistentry id="actions-mail-event">
 <term><menuchoice>
 <guimenu>Actions</guimenu>
 <guimenuitem>Mail Appointment</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action>Choose <guilabel>Mail Appointment</guilabel> to mail the currently selected event to it's attendees.</action></para></listitem>
+<listitem><para>Choose <guimenuitem>Mail Appointment</guimenuitem> to
+<action>mail the currently selected event to it's
+attendees.</action></para></listitem>
 </varlistentry>
 
 </variablelist>
 
 </sect2>
 
-
-<sect2 id="reference.menus.settings">
+<sect2 id="reference-menus-settings">
 <title>Settings</title>
 
 <variablelist>
 
-
-<varlistentry id="settings.show-toolbar">
+<varlistentry id="settings-show-toolbar">
 <term><menuchoice>
 <guimenu>Settings</guimenu>
 <guimenuitem>Show Toolbar</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action>Click on this to enable or disable the toolbar.</action>
-</para></listitem>
+<listitem><para>Click on this to <action>enable or disable the
+toolbar.</action></para></listitem>
 </varlistentry>
 
-
-<varlistentry id="settings.configure-toolbars">
+<varlistentry id="settings-configure-toolbars">
 <term><menuchoice>
 <guimenu>Settings</guimenu>
 <guimenuitem>Configure Toolbars...</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><msgtext><para>Click on this to display the <link linkend="reference.windows.config-toolbars">Toolbar Configuration Window</link>.</para>
-</msgtext></action></para></listitem>
+<listitem><para>Click on this to <action>display the <link
+linkend="reference-windows-config-toolbars"><guilabel>Toolbar
+Configuration</guilabel> Window</link></action>.</para></listitem>
 </varlistentry>
 
-
-<varlistentry id="settings.preferences">
+<varlistentry id="settings-preferences">
 <term><menuchoice>
 <guimenu>Settings</guimenu>
 <guimenuitem>Preferences</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><msgtext>
-<para>Choose <guimenuitem>Preferences</guimenuitem> from the <guimenu>Settings</guimenu> menu or click <guiicon><inlinegraphic fileref="i_settings_prefs.png"></inlinegraphic></guiicon> to display <link linkend="reference.windows.preferences">Preferences window</link>.</para>
-</msgtext></action></para></listitem>
+<listitem><para>Choose <guimenuitem>Preferences</guimenuitem> from the
+<guimenu>Settings</guimenu> menu or click <guiicon><inlinegraphic
+fileref="i_settings_prefs.png"></inlinegraphic></guiicon> to <action>display
+<link linkend="reference-windows-preferences">Preferences
+window</link>.</action></para></listitem>
 </varlistentry>
-
 
 </variablelist>
 </sect2>
 
-
-<sect2 id="reference.menus.help">
+<sect2 id="reference-menus-help">
 <title>Help</title>
 
 <variablelist>
 
-<varlistentry id="help.contents">
+<varlistentry id="help-contents">
 <term><menuchoice>
 <guimenu>Help</guimenu>
 <guimenuitem>Contents</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><msgtext>
-<para>Choose <guimenuitem>Contents</guimenuitem> from the <guimenu>Help</guimenu> or click <guiicon><inlinegraphic fileref="i_help_contents.png"></inlinegraphic></guiicon> to display help pages for &k; which you are right now reading.</para>
-</msgtext></action> </para></listitem>
+<listitem><para>Choose <guimenuitem>Contents</guimenuitem> from the
+<guimenu>Help</guimenu> or click <guiicon><inlinegraphic
+fileref="i_help_contents.png"></inlinegraphic></guiicon> to display help pages
+for &k; which you are right now reading.</para></listitem>
 </varlistentry>
 
-
-<varlistentry id="help.report-bug">
+<varlistentry id="help-report-bug">
 <term><menuchoice>
 <guimenu>Help</guimenu>
 <guimenuitem>Report Bug</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><msgtext>
-<para>
-Choose <guilabel>Report Bug</guilabel> if you believe that you have discovered a bug in &k;. A bug reporting window will be shown. Decide how annoying is the bug, and indicate it on <guilabel>Severity</guilabel> buttons. The KDE Team welcomes your bug reports, for they contribute significantly to improving the KDE environment.</para>
-<para>You can also ask the &k; authors to add additional features to the program. Just choose <guilabel>Wishlist</guilabel> as the Severity, and enter your wish. We are honestly looking forward to receiving your ideas.</para>
-</msgtext></action></para></listitem>
+
+<listitem><para>Choose <guimenuitem>Report Bug</guimenuitem> if you believe that
+you have discovered a bug in &k;. A bug reporting window will be shown. Decide
+how annoying is the bug, and indicate it on <guilabel>Severity</guilabel>
+buttons. The KDE Team welcomes your bug reports, for they contribute
+significantly to improving the KDE environment.</para>
+
+<para>You can also ask the &k; authors to add additional features to the
+program. Just choose <guilabel>Wishlist</guilabel> as the Severity, and enter
+your wish. We are honestly looking forward to receiving your
+ideas.</para></listitem>
+
 </varlistentry>
 
-<varlistentry id="help.about-korganizer">
+<varlistentry id="help-about-korganizer">
 <term><menuchoice>
 <guimenu>Help</guimenu>
 <guimenuitem>About KOrganizer</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><msgtext>
-<para>
-Choose <guilabel>About KOrganizer</guilabel> to display copyright information about &k;, and the author list.
-</para>
-</msgtext></action></para></listitem>
+<listitem><para>Choose <guilabel>About KOrganizer</guilabel> to <action>display
+copyright information about &k;, and the author list.</action></para></listitem>
+
 </varlistentry>
 
-<varlistentry id="help.about-kde">
+<varlistentry id="help-about-kde">
 <term><menuchoice>
 <guimenu>Help</guimenu>
 <guimenuitem>About KDE</guimenuitem>
 </menuchoice></term>
-<listitem><para>
-<action><msgtext>
-<para>Choose <guilabel>About KDE</guilabel> to display copyright information about the KDE environment.</para>
-</msgtext></action></para></listitem>
+<listitem><para>Choose <guilabel>About KDE</guilabel> to <action>display
+copyright information about the KDE environment.</action></para></listitem>
 </varlistentry>
 
 </variablelist>
 
 </sect2>
 
-
 </sect1>
 
-<sect1 id="reference.icons">
+<sect1 id="reference-icons">
 <title>Icons</title> 
-<para>NOT YET WRITTEN.</para> 
+<para>Not yet documented</para> 
 </sect1>
 
-<sect1 id="reference.hotkey">
+<sect1 id="reference-hotkey">
 <title>HotKeys</title>
-<para>This is a reference to all hotkeys and their corresponding description in the handbook.</para>
+<para>This is a reference to all hotkeys and their corresponding description in
+the handbook.</para>
 
-<sect2 id="reference.hotkey.sortalpha">
+<sect2 id="reference-hotkey-sortalpha">
 <title>Hotkeys sorted alphabetically</title> 
+
 <informaltable frame=all>
-<tgroup cols="2" align="left" colsep="1" rowsep="1">
+<tgroup cols="2">
 <colspec colname="hotkey">
 <colspec colname="desc">
 <thead>
@@ -1417,60 +2080,85 @@ Choose <guilabel>About KOrganizer</guilabel> to display copyright information ab
 </thead>
 <tbody>
 <row>
-  <entry>Ctrl-C</entry>
-  <entry><link linkend="edit.copy">Edit -> Copy</link> equivalent; copy the selection to clipboard.</entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>C</keycap></keycombo></entry>
+  <entry><link
+  linkend="edit-copy"><menuchoice><guimenu>Edit</guimenu>
+  <guimenuitem>Copy</guimenuitem> </menuchoice></link>
+  equivalent; copy the selection to clipboard.</entry>
+
 </row>
 <row>
-  <entry>Ctrl-F</entry>
-  <entry><link linkend="edit.find">Edit -> Find</link> equivalent; Find data in current calendar.</entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>F</keycap></keycombo></entry>
+  <entry><link linkend="edit-find"><menuchoice><guimenu>Edit</guimenu>
+  <guimenuitem>Find</guimenuitem></menuchoice></link> equivalent; Find data in
+  current calendar.</entry>
 </row>
 <row>
-  <entry>F1</entry>
-  <entry><link linkend="help.contents">Help -> Contents</link> equivalent; help for &k;.</entry>
+  <entry><keycap>F1</keycap></entry>
+  <entry><link linkend="help-contents"><menuchoice><guimenu>Help</guimenu>
+  <guimenuitem>Contents</guimenuitem></menuchoice></link> equivalent; help for
+  &k;.</entry>
 </row>
 <row>
-  <entry>Ctrl-N</entry>
-  <entry><link linkend="file.new">File -> New</link> equivalent; create and open new calendar.</entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>N</keycap></keycombo></entry>
+  <entry><link linkend="file-new"><menuchoice><guimenu>File</guimenu>
+  <guimenuitem>New</guimenuitem></menuchoice></link> equivalent; create and open
+  new calendar.</entry>
 </row>
 <row>
-  <entry>Ctrl-O</entry>
-  <entry><link linkend="file.open">File -> Open</link> equivalent; open a calendar file in the current window.</entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>O</keycap></keycombo></entry>
+  <entry><link linkend="file-open"><menuchoice><guimenu>File</guimenu>
+  <guimenuitem>Open</guimenuitem></menuchoice></link> equivalent; open a
+  calendar file in the current window.</entry>
 </row>
 <row>
-  <entry>Ctrl-P</entry>
-  <entry><link linkend="file.print">File -> Print</link> equivalent; print current calendar.</entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>P</keycap></keycombo></entry>
+  <entry><link linkend="file-print"><menuchoice><guimenu>File</guimenu>
+  <guimenuitem>Print</guimenuitem></menuchoice></link> equivalent; print current
+  calendar.</entry>
 </row>
 <row>
-  <entry>Ctrl-Q</entry>
-  <entry><link linkend="file.quit">File -> Quit</link> equivalent; quit current calendar. </entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>Q</keycap></keycombo></entry>
+  <entry><link 
+  linkend="file-quit"><menuchoice><guimenu>File</guimenu>
+  <guimenuitem>Quit</guimenuitem></menuchoice></link>   equivalent; quit current
+  calendar. </entry> 
 </row>
 <row>
-  <entry>Ctrl-S</entry>
-  <entry><link linkend="file.save">File -> Save</link> equivalent; save current calendar.</entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>S</keycap></keycombo></entry>
+  <entry><link linkend="file-save"><menuchoice><guimenu>File</guimenu>
+  <guimenuitem>Save</guimenuitem></menuchoice></link> equivalent; save current
+  calendar.</entry>
 </row>
 <row>
-  <entry>Ctrl-V</entry>
-  <entry><link linkend="edit.paste">Edit -> Paste</link> equivalent; paste data from clipboard.</entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>V</keycap></keycombo></entry>
+  <entry><link
+  linkend="edit-paste"><menuchoice><guimenu>Edit</guimenu>
+  <guimenuitem>Paste</guimenuitem></menuchoice></link> equivalent; paste data
+  from clipboard.</entry>
 </row>
 <row>
-  <entry>Ctrl-W</entry>
-  <entry><link linkend="file.close">File -> Close</link> equivalent; close current calendar.</entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>W</keycap></keycombo></entry>
+  <entry><link linkend="file-close"><menuchoice><guimenu>File</guimenu>
+  <guimenuitem>Close</guimenuitem></menuchoice></link> equivalent; close current
+  calendar.</entry>
 </row>
 <row>
-  <entry>Ctrl-X</entry>
-  <entry><link linkend="edit.cut">Edit -> Cut</link> equivalent; cut the selection to the clipboard.</entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>X</keycap></keycombo></entry>
+  <entry><link linkend="edit-cut"><menuchoice><guimenu>Edit</guimenu>
+  <guimenuitem>Cut</guimenuitem></menuchoice></link> equivalent; cut the
+  selection to the clipboard.</entry>
 </row>
 </tbody></tgroup>
 </informaltable>
 
 </sect2> 
 
-
-
-<sect2 id="reference.hotkey.sortbyfunc">
+<sect2 id="reference-hotkey-sortbyfunc">
 <title>Hotkeys sorted by function</title> 
-<informaltable frame=all>
-<tgroup cols="2" align="left" colsep="1" rowsep="1">
+
+<informaltable>
+<tgroup cols="2">
 <colspec colname="desc">
 <colspec colname="hotkey">
 <thead>
@@ -1481,209 +2169,291 @@ Choose <guilabel>About KOrganizer</guilabel> to display copyright information ab
 </thead>
 <tbody>
 <row>
-  <entry><emphasis>Close:</emphasis> <link linkend="file.close">File -> Close</link> equivalent; close current calendar.</entry>
-  <entry>Ctrl-W</entry>
+  <entry><action>Close:</action> <link
+  linkend="file-close"><menuchoice><guimenu>File</guimenu>
+  <guimenuitem>Close</guimenuitem></menuchoice></link> equivalent; close current
+  calendar.</entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>W</keycap></keycombo></entry>
 </row>
 <row>
-  <entry><emphasis>Copy:</emphasis> <link linkend="edit.copy">Edit -> Copy</link> equivalent; copy the selection to clipboard.</entry>
-  <entry>Ctrl-C</entry>
+  <entry><action>Copy:</action> <link
+  linkend="edit-copy"><menuchoice><guimenu>Edit</guimenu>
+  <guimenuitem>Copy</guimenuitem></menuchoice></link> equivalent; copy the
+  selection to clipboard.</entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>C</keycap></keycombo></entry>
 </row>
 <row>
-  <entry><emphasis>Cut:</emphasis> <link linkend="edit.cut">Edit -> Cut</link> equivalent; cut the selection to the clipboard.</entry>
-  <entry>Ctrl-X</entry>
+  <entry><action>Cut:</action> <link
+  linkend="edit-cut"><menuchoice><guimenu>Edit</guimenu>
+  <guimenuitem>Cut</guimenuitem></menuchoice></link> equivalent; cut the
+  selection to the clipboard.</entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>X</keycap></keycombo></entry>
 </row>
 <row>
-  <entry><emphasis>Find:</emphasis> <link linkend="edit.find">Edit -> Find</link> equivalent; Find data in current calendar.</entry>
-  <entry>Ctrl-F</entry>
+  <entry><action>Find:</action> <link
+  linkend="edit-find"><menuchoice><guimenu>Edit</guimenu>
+  <guimenuitem>Find</guimenuitem></menuchoice></link> equivalent; Find data in
+  current calendar.</entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>F</keycap></keycombo></entry>
 </row>
 <row>
-  <entry><emphasis>Help:</emphasis> <link linkend="help.contents">Help -> Contents</link> equivalent; help for &k;.</entry>
-  <entry>F1</entry>
+  <entry><action>Help:</action> <link
+  linkend="help-contents"><menuchoice><guimenu>Help</guimenu>
+  <guimenuitem>Contents</guimenuitem></menuchoice></link> equivalent; help for
+  &k;.</entry>
+  <entry><keycap>F1</keycap></entry>
 </row>
 <row>
-  <entry><emphasis>New:</emphasis> <link linkend="file.new">File -> New</link> equivalent; create and open new calendar.</entry>
-  <entry>Ctrl-N</entry>
+  <entry><action>New:</action> <link
+  linkend="file-new"><menuchoice><guimenu>File</guimenu>
+  <guimenuitem>New</guimenuitem></menuchoice></link> equivalent; create and open
+  new calendar.</entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>N</keycap></keycombo></entry>
 </row>
 <row>
-  <entry><emphasis>Open:</emphasis> <link linkend="file.open">File -> Open</link> equivalent; open a calendar file in the current window.</entry>
-  <entry>Ctrl-O</entry>
+  <entry><action>Open:</action> <link
+  linkend="file-open"><menuchoice><guimenu>File</guimenu>
+  <guimenuitem>Open</guimenuitem></menuchoice></link> equivalent; open a
+  calendar file in the current window.</entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>O</keycap></keycombo></entry>
 </row>
 <row>
-  <entry><emphasis>Paste:</emphasis> <link linkend="edit.paste">Edit -> Paste</link> equivalent; paste data from clipboard.</entry>
-  <entry>Ctrl-V</entry>
+  <entry><action>Paste:</action> <link
+  linkend="edit-paste"><menuchoice><guimenu>Edit</guimenu>
+  <guimenuitem>Paste</guimenuitem></menuchoice></link> equivalent; paste data
+  from clipboard.</entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>V</keycap></keycombo></entry>
 </row>
 <row>
-  <entry><emphasis>Print:</emphasis> <link linkend="file.print">File -> Print</link> equivalent; print current calendar.</entry>
-  <entry>Ctrl-P</entry>
+  <entry><action>Print:</action> <link
+  linkend="file-print"><menuchoice><guimenu>File</guimenu>
+  <guimenuitem>Print</guimenuitem></menuchoice></link> equivalent; print current
+  calendar.</entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>P</keycap></keycombo></entry>
 </row>
 <row>
-  <entry><emphasis>Quit:</emphasis> <link linkend="file.quit">File -> Quit</link> equivalent; quit current calendar. </entry>
-  <entry>Ctrl-Q</entry>
+  <entry><action>Quit:</action> <link
+  linkend="file-quit"><menuchoice><guimenu>File</guimenu>
+  <guimenuitem>Quit</guimenuitem> </menuchoice></link> equivalent; quit current
+  calendar. </entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>Q</keycap></keycombo></entry>
 </row>
 <row>
-  <entry><emphasis>Save:</emphasis> <link linkend="file.save">File -> Save</link> equivalent; save current calendar.</entry>
-  <entry>Ctrl-S</entry>
+  <entry><action>Save:</action> <link
+  linkend="file-save"><menuchoice><guimenu>File</guimenu>
+  <guimenuitem>Save</guimenuitem></menuchoice></link> equivalent; save current
+  calendar.</entry>
+  <entry><keycombo><keycap>Ctrl</keycap><keycap>S</keycap></keycombo></entry>
 </row>
 </tbody></tgroup>
 
 </informaltable>
 
 </sect2> 
-
 
 </sect1>
 
-
-
-<sect1 id="reference.action-buttons">
+<sect1 id="reference-action-buttons">
 <title>Action Buttons</title>
-<para>Many windows contain buttons Default, Delete, OK, Apply, and Cancel. With these buttons you will decide whether the data that you entered into the window will be saved or forgotten.</para> 
+
+<para>Many windows contain buttons <guibutton>Default</guibutton>,
+<guibutton>Delete</guibutton>, <guibutton>OK</guibutton>,
+<guibutton>Apply</guibutton>, and <guibutton>Cancel</guibutton>. With these
+buttons you will decide whether the data that you entered into the window will
+be saved or forgotten.</para>
+ 
 <itemizedlist>
 
-<listitem><para>If you click the <guilabel>Default</guilabel> button, changes you have made will be forgotten, and all choices will be returned to their default values.</para></listitem> 
-
-<listitem><para>Click on <guilabel>Delete</guilabel> to copmpletely remove the event or event that you are editing from the calendar.</para></listitem> 
-<listitem><para>When you click the <guilabel>OK</guilabel> button, your changes will be remembered and &k; will close the window.</para></listitem> 
-<listitem><para>When you click the <guilabel>Apply</guilabel> button, your changes will be remembered, and the window will remain onscreen for further editing.</para></listitem> 
-<listitem><para>If you click the <guilabel>Cancel</guilabel> button, your editing will be forgotten, and &k; will close the window.</para></listitem> 
+<listitem><para>If you click the <guibutton>Default</guibutton> button, changes
+you have made will be forgotten, and all choices will be returned to their
+default values.</para></listitem> 
+<listitem><para>Click on <guibutton>Delete</guibutton> to copmpletely remove the
+event or event that you are editing from the calendar.</para></listitem> 
+<listitem><para>When you click the <guibutton>OK</guibutton> button, your
+changes will be remembered and &k; will close the window.</para></listitem> 
+<listitem><para>When you click the <guibutton>Apply</guibutton> button, your
+changes will be remembered, and the window will remain onscreen for further
+editing.</para></listitem> 
+<listitem><para>If you click the <guibutton>Cancel</guibutton> button, your editing will be forgotten, and &k; will close the window.</para></listitem> 
 </itemizedlist>
 
-
 </sect1>
-
-
 
 <sect1 id="vcalendar-format">
 <title>VCalendar Format</title> 
-<para>
 
-&k; is the first free PIM for Unix which implements the vCalendar protocol for personal data interchange. This vendor-independent, open standard allows different programs and devices to share/synchronize event and calendar information without proprietary standards. The data is stored in ASCII and is easily human-readable. While some Windows programs have implemented a limited import/export ability from their native formats to vCalendar, &k;'s native file format on disk is vCalendar, so it bypasses this middle-step entirely. It also allows you to easily access your data without the program itself, in the spirit of other UNIX programs. 
-</para> 
+<para>&k; is the first free <acronym>PIM</acronym> for Unix which implements the
+vCalendar protocol for personal data interchange. This vendor-independent, open
+standard allows different programs and devices to share/synchronize event and
+calendar information without proprietary standards. The data is stored in
+<abbrev>ASCII</abbrev> and is easily human-readable. While some Windows programs
+have implemented a limited import/export ability from their native formats to
+vCalendar, &k;'s native file format on disk is vCalendar, so it bypasses this
+middle-step entirely. It also allows you to easily access your data without the
+program itself, in the spirit of other UNIX programs. </para> 
+
 </sect1>
-
-
 
 </chapter>
 
-
-
-
 <chapter id="other-features">
 <title>Other Features</title>
-<para>In this chapter, you'll read about other useful features of &k;: the parameters you can specify on the command line (when invoking &k; from a shell), what tricks you can do with a click of your mouse, what interaction between &k; and Konqueror is possible.</para>
-<para>You'll also learn about merging and importing data, and about synchronizing with your Palm Pilot or compatible hanheld computer.</para> 
-<sect1 id="other-features.commandline-options">
+
+<para>In this chapter, you'll read about other useful features of &k;: the
+parameters you can specify on the command line (when invoking &k; from a shell),
+what tricks you can do with a click of your mouse, what interaction between &k;
+and <application>Konqueror</application> is possible.</para>
+
+<para>You'll also learn about merging and importing data, and about
+synchronizing with your Palm Pilot or compatible hanheld computer.</para> 
+
+<sect1 id="other-features-commandline-options">
 <title>Command Line</title>
-<para>Power users, curious what features a complex, GUI-oriented program like &k; may offer will be satisfied here.</para>
-<para>While &k; supports the full score of options that are common to all KDE2 environment programs, it also supports two options of its own: it can list the events for the current day, and it can show the list of events for a specified number of days.</para>
-<informaltable>
-<tgroup cols="2" align="left" colsep="1" rowsep="1">
-<thead>
-<row>
-  <entry>Option</entry>
-  <entry>Description</entry>
-</row>
-</thead>
-<tbody>
-<row>
-  <entry>--help</entry>
-  <entry>Shows a brief options help text.</entry>
-</row>
-<row>
-  <entry>--help-qt</entry>
-  <entry>Shows numerous generic Qt-specific options @@@hopefully described elsewhere and IMHO out of scope of this document. CS: I agree, but don't know where they are described. @@@</entry>
-</row>
-<row>
-  <entry>--help-kde</entry>
-  <entry>Shows numerous generic KDE-specific options @@@just like above. @@@</entry>
-</row>
-<row>
-  <entry>--author</entry>
-  <entry>Shows the names and email addresses of &k; authors.</entry>
-</row>
-<row>
-  <entry>-V, --version</entry>
-  <entry>Shows the running versions of the Qt library , KDE environment and &k;.</entry>
-</row>
-<row>
-  <entry>-l, --list</entry>
-  <entry>Lists the events for the current day.</entry>
-</row>
-<row>
-  <entry>-s, --show &lt;numdays&#62;</entry>
-  <entry>Shows the list of events for a specified number of days</entry>
-</row>
-</tbody></tgroup>
-</informaltable> 
+
+<para>Power users, curious what features a complex,
+<abbrev>GUI</abbrev>-oriented program like &k; may offer will be satisfied
+here.</para>
+
+<para>While &k; supports the full score of options that are common to all KDE2
+environment programs, it also supports two options of its own: it can list the
+events for the current day, and it can show the list of events for a specified
+number of days.</para>
+
+
+<variablelist>
+<varlistentry>
+<term><command>korganizer <option>--help</option></command></term>
+<listitem><para>Shows a brief options help text.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><command>korganizer <option>--help-qt</option></command></term>
+<listitem><para>This lists the options available for changing the way
+&k; interacts with Qt.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><command>korganizer <option>--help-kde</option></command></term>
+<listitem><para>This lists the options available for changing the way
+&k; interacts with KDE.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><command>korganizer <option>--help-all</option></command></term>
+<listitem><para>This lists all of the command line options.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><command>korganizer <option>--author</option></command></term>
+<listitem><para>Lists the names and addresses of &k's authors in the terminal
+window</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><command>korganizer <option>--version</option></command></term>
+<listitem><para>Lists version information for Qt, KDE, and &k;. Also available through <command>korganizer <option>-V</option></command> </para></listitem>
+</varlistentry>
+<varlistentry>
+<term><command>korganizer <option>-l</option></command> or <command>korganizer
+<option>--list</option></command></term>
+<listitem><para>Lists the events for the current day</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><command>korganizer
+<option>-s<replaceable>&lt;numdays&gt;</replaceable></option></command> or
+<command>korganizer <option>--show &lt;numdays&gt;</option></command></term>
+<listitem><para>Shows the list of events for a specified number of
+days</para></listitem>
+</varlistentry>
+</variablelist>
+
 </sect1>
 
-
-<sect1 id="other-features.drag-and-drop">
+<sect1 id="other-features-drag-and-drop">
 <title>Drag and Drop Operations</title>
-<para>&k; can be easily controlled with your mouse. The supported drag-and-drop operations are detailed below.</para>
+
+<para>&k; can be easily controlled with your mouse. The supported drag-and-drop
+operations are detailed below.</para>
+
 <itemizedlist>
-<listitem><para>Any event can be resized with your mouse. Simply move the mouse pointer near the top or bottom edge of the event, and drag the edge up or down. This way you can visually modify the starting and ending time of your appointment. This works in the Day, Week and Work Week views.</para></listitem> 
-<listitem><para>Any event can be rescheduled with your mouse. Move the mouse pointer over the event, and drag it to a new time location. This works in the Day, Week and Work Week views.</para></listitem>
-<listitem><para>Events can be copied to other, presently non-visible dates. Move the mouse pointer over the event, and drag it to the Date Navigator on the left side of the current calendar, or to the Date Navigator of a different calendar.<tip><para>However, you cannot drag from agenda view in one calendar to agenda view in other calendar.</para></tip</para></listitem> 
-<listitem><para>Toolbars can be dragged on the screen. Move the mouse pointer over the tollbar's handle, and drag it to a new location on your screen.</para></listitem>
+<listitem><para>Any event can be resized with your mouse. Simply move the mouse
+pointer near the top or bottom edge of the event, and drag the edge up or
+down. This way you can visually modify the starting and ending time of your
+appointment. This works in the Day, Week and Work Week views.</para></listitem> 
+<listitem><para>Any event can be rescheduled with your mouse. Move the mouse
+pointer over the event, and drag it to a new time location. This works in the
+Day, Week and Work Week views.</para></listitem>
+<listitem><para>Events can be copied to other, presently non-visible dates. Move
+the mouse pointer over the event, and drag it to the Date Navigator on the left
+side of the current calendar, or to the Date Navigator of a different
+calendar.</para>
+<tip><para>However, you cannot drag from agenda view in one calendar to
+agenda view in other calendar.</para></tip></listitem> 
+<listitem><para>Toolbars can be dragged on the screen. Move the mouse pointer
+over the tollbar's handle, and drag it to a new location on your
+screen.</para></listitem>
 
 </itemizedlist>
 
 </sect1>
 
 
-<sect1 id="other-features.konqueror-interaction">
-<title>Konqueror-interaction</title>
-<para>Konqueror recognizes the VCalendar format used by &k;. If you use Konqueror to navigate to your calendar, it will be displayed <emphasis>inside</emphasis> Konqueror as a live object. You will be able to perform most operations with your calendar inside Konqueror; you will not need to start &k;. In technical jargon, this is described as "embedding VCalendar as KPart inside Konqueror".</para>
+<sect1 id="other-features-konqueror-interaction">
+<title><application>Konqueror</application> interaction</title>
+
+<para><application>Konqueror</application> recognizes the VCalendar format used
+by &k;. If you use <application>Konqueror</application> to navigate to your
+calendar, it will be displayed <emphasis>inside</emphasis>
+<application>Konqueror</application> as a live object. You will be able to
+perform most operations with your calendar inside
+<application>Konqueror</application>; you will not need to start &k;. In
+technical jargon, this is described as "embedding VCalendar as KPart inside
+<application>Konqueror</application>".</para>
+
 </sect1>
 
-<sect1 id="other-features.merging-data">
+<sect1 id="other-features-merging-data">
 <title>Merging Data</title>
+
 <para>### To be written ###</para>
 </sect1>
 
-<sect1 id="other-features.import">
+<sect1 id="other-features-import">
 <title>Import</title>
+
 <para>### to be written... ###</para>
 </sect1>
 
-<sect1 id="other-features.palm-sync">
+<sect1 id="other-features-palm-sync">
 <title>Palm Synchronization</title>
 <para>### to be written... ###</para>
 </sect1>
 
-
 </chapter>
-
-
-
 
 <chapter id="faq">
 <title>Questions and Answers</title>
-<para></para>
 
 <qandaset>
 <qandaentry>
 <question>
-<para>Can I import my old Ical data??</para>
+<para>Can I import my old <application>Ical</application> data??</para>
 </question>
 <answer>
-<para>Sure! Follow the instructions in <link linkend="file.import-ical">Import From Ical section</link>.</para>
+<para>Sure! Follow the instructions in <link linkend="file-import-ical">Import
+From <application>Ical</application> section</link>.</para>
 </answer>
 </qandaentry>
 <qandaentry>
 <question>
-<para>Can I import data from Microsoft Outlook?</para>
+<para>Can I import data from <application>Microsoft Outlook</application>?</para>
 </question>
 <answer>
-<para>Yes you can, but you must first tell Outlook to export it's data to vCalendar format. Then you must copy this data to your home directory, click <guilabel>File -> Open</guilabel>, navigate to the file and double-click it.</para>
+<para>Yes you can, but you must first tell <application>Outlook</application> to
+export it's data to vCalendar format. Then you must copy this data to your home
+directory, click <menuchoice><guimenu>File</guimenu>
+<guimenuitem>Open</guimenuitem></menuchoice>, navigate to the file and
+double-click it.</para>
 </answer>
 </qandaentry>
 </qandaset>
 
 </chapter>
-
-
 
 <glossary id="glossary">
 <title>Glossary</title> 
@@ -1692,7 +2462,11 @@ Choose <guilabel>About KOrganizer</guilabel> to display copyright information ab
 <glossterm>Calendar Widget</glossterm>
 <glossdef>
 
-<para>A tool for choosing the date inside certain entry windows, like event editing window. It is displayed as a small button to the right of the date field. When you click the button, you will see a month calendar. Use the arrows to go to a desired date, or click on the month name or year number to go directly to the desired month or year.</para>
+<para>A tool for choosing the date inside certain entry windows, like event
+editing window. It is displayed as a small button to the right of the date
+field. When you click the button, you will see a month calendar. Use the arrows
+to go to a desired date, or click on the month name or year number to go
+directly to the desired month or year.</para>
 
 </glossdef>
 </glossentry>
@@ -1702,41 +2476,70 @@ Choose <guilabel>About KOrganizer</guilabel> to display copyright information ab
 <glossterm>Date Navigator</glossterm>
 <glossdef>
 
-<para>The calendar that is in the upper-left corner of the &k; window. It is the main way provided to navigate among dates, and to select from them. The single-arrow icons move forwards and backwards in time by increments of a month, while the double-arrows allow moving by years at a time. Today's date will be outlined with a small box. Dates which have events scheduled on them will be bold. If you want to select a date, simply click on it. Hold down the Control key and click the dates if you wish to select multiple neighbor dates at once. The dates will be displayed in the main panel.</para>
-<para>Recuring events are not always displayed. You can forbid the display of recuring appointments in the Date Navigator. Get more information in <xref linkend="preferences.views">.</para> 
+<para>The calendar that is in the upper-left corner of the &k; window. It is the
+main way provided to navigate among dates, and to select from them. The
+single-arrow icons move forwards and backwards in time by increments of a month,
+while the double-arrows allow moving by years at a time. Today's date will be
+outlined with a small box. Dates which have events scheduled on them will be
+bold. If you want to select a date, simply click on it. Hold down the Control
+key and click the dates if you wish to select multiple neighbor dates at
+once. The dates will be displayed in the main panel.</para>
+
+<para>Recuring events are not always displayed. You can forbid the display of
+recuring appointments in the Date Navigator. Get more information in <xref
+ linkend="preferences-views">.</para> 
 
 </glossdef>
 </glossentry>
-
-
 
 <glossentry>
 <glossterm>Due Date</glossterm>
 <glossdef>
-<para>A due date is simply the date when your task must be finished. For instance, if your To-Do task is that you must return your books to the library by 16th November, that date is called "the To-Do task due date"</para>
+
+<para>A due date is simply the date when your task must be finished. For
+instance, if your To-Do task is that you must return your books to the library
+by 16th November, that date is called "the To-Do task due date"</para>
+
 </glossdef>
 </glossentry>
-
 
 <glossentry>
 <glossterm>Group scheduling features</glossterm>
 <glossdef>
-<para>These features are planned for the future versions of &k;. Group scheduling will facilitate member roles (attendee, owner, organizer), time conflict resolution, event reminder distribution, response collection and evaluation. In other words, you will be able to appoint attendees, invite them automatically, and see who accepted or refused attending the appointment.</para>
-<para>Currently, group scheduling features are not working. However, hooks exist in the calendar data structures for these features. <guilabel>Private</guilabel> checkbox, <guilabel>Require response</guilabel> checkbox and <guilabel>E-mail</guilabel> field will then be fully employed. These controls are described in more detail in <xref linkend="entering-data">, in <xref linkend="reference.windows.details">, and in <xref linkend="preferences.personal"></para> 
+
+<para>These features are planned for the future versions of &k;. Group
+scheduling will facilitate member roles (attendee, owner, organizer), time
+conflict resolution, event reminder distribution, response collection and
+evaluation. In other words, you will be able to appoint attendees, invite them
+automatically, and see who accepted or refused attending the appointment.</para>
+
+<para>Currently, group scheduling features are not working. However, hooks exist
+in the calendar data structures for these features. <guilabel>Private</guilabel>
+checkbox, <guilabel>Require response</guilabel> checkbox and
+<guilabel>E-mail</guilabel> field will then be fully employed. These controls
+are described in more detail in <xref linkend="entering-data">, in <xref
+linkend="reference-windows-attendees">, and in <xref
+linkend="preferences-personal"></para>
+
 </glossdef>
 </glossentry>
 
 <glossentry>
 <glossterm>Main panel</glossterm>
 <glossdef>
-<para>Normally the largest part of the screen, to the right of the Date Navigator. It displays the View of the day, workdays, week or month, the List View or the To-Do View.</para>
-<para>The right mouse button can be used in the List view and To-Do view only. It displays a local menu. The left mouse button can be used in any view.</para>
+
+<para>Normally the largest part of the screen, to the right of the Date
+Navigator. It displays the View of the day, workdays, week or month, the List
+View or the To-Do View.</para>
+
+<para>The <mousebutton>right</mousebutton> mouse button can be used in the List
+view and To-Do view only. It displays a local menu. The left mouse button can be
+used in any view.</para>
+
 </glossdef>
 </glossentry>
 
-
 </glossary>
-
 
 <chapter id="credits">
 
@@ -1745,18 +2548,14 @@ contributors here. The license for your software should then be included below
 the credits with a reference to the appropriate license file included in the KDE
 distribution. -->
 
-
-
 <title>Credits and License</title>
 
-<para>
-&k;
-</para>
+<para>&k;</para>
 <para>
 Program copyright 2000, The KDE Developers
 </para>
-<para>
-Contributors:
+<para>Contributors:</para>
+
 <itemizedlist>
 <listitem><para>Cornelius Schumacher <email>schumacher@kde.org</email></para>
 </listitem>
@@ -1764,31 +2563,22 @@ Contributors:
 </listitem>
 
 </itemizedlist>
-</para>
 
-<para>
-Documentation copyright 2000 Milos Prudek
-</para>
-<para>&k; homepage is at <ulink url="http://devel-home.kde.org/~korganiz">http://devel-home.kde.org/~korganiz</ulink></para>
-<para>
-Translations done by:
-<itemizedlist>
-<listitem>
-<para></para>
-</listitem>
-</itemizedlist>
-</para>
+<para>Documentation copyright 2000 Milos Prudek
+<email>milos.purdel@worldonline.cz</email></para>
 
-<!-- For URL links to common stuff like the one below,
-always use paths like "common/gpl-licence".
-In this path, "common" will be a symbolic link built at "make install" time.
-This link will normally point to $KDEDIR/share/doc/HTML/en/common,
-where "en" should be replaced with the current language. -->
 
-<para>
-This program is licensed under the terms of the
-<ulink url="common/gpl-licence.html">GNU GPL</ulink>.
-</para>
+<para>&k; homepage is at <ulink
+url="http://devel-home.kde.org/~korganiz">http://devel-home.kde.org/~korganiz</ulink></para>
+
+
+
+&license-links;
+
+<para>This is a beta version of &k; Handbook. Please email me at
+<email>milos.prudel@worldonline.cz</email> with your comments and ideas, they
+will be very welcome and appreciated!</para>
+
 </chapter>
 
 <![ %addindex; [ &kdedocindex; ]]>
