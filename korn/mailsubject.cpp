@@ -1,6 +1,7 @@
 #include"mailsubject.h"
 
 #include<kdebug.h>
+#include <klocale.h>
 #include <qdatetime.h>
 
 KornMailSubject::KornMailSubject() : _id(0), _size(-1), _date(-1), _fullMessage(false)
@@ -44,7 +45,7 @@ QString KornMailSubject::toString() const
 {
 	QDateTime date;
 	date.setTime_t(_date);
-	return QString("KornMailSubject, Id: ") + (_id?_id->toString():QString("NULL")) + ", Subject: " + QString(_subject.utf8())
-		+ ", Sender: " + QString(_sender.utf8()) + ", Size: " + QString::number(_size)
-		+ ", Date: " + date.toString(Qt::ISODate);
+	return QString("KornMailSubject, Id: ") + (_id?_id->toString():QString("NULL")) + ", " + i18n("Subject:") + " " + QString(_subject.utf8())
+		+ ", " + i18n("Sender:") + " " + QString(_sender.utf8()) + ", " + i18n("Size:") + " " + QString::number(_size)
+		+ ", " + i18n("Date:") + " " + date.toString(Qt::ISODate);
 }

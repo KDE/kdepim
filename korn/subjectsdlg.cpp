@@ -56,10 +56,10 @@ KornSubjectsDlg::KornSubjectsDlg( QWidget *parent )
 	// Two box layouts hol dthem.
 	QWidget * page = new QWidget( this );
 	setMainWidget(page);
-	invertSelButton = new KPushButton("&Invert Selection", page);
-	clearSelButton = new KPushButton("&Remove Selection", page);
-	deleteButton = new KPushButton("&Delete", page);
-	showButton = new KPushButton("&Show", page);
+	invertSelButton = new KPushButton(i18n("&Invert Selection"), page);
+	clearSelButton = new KPushButton(i18n("&Remove Selection"), page);
+	deleteButton = new KPushButton(i18n("&Delete"), page);
+	showButton = new KPushButton(i18n("&Show"), page);
 	deleteButton->setEnabled(false);
 	showButton->setEnabled(false);
 	QVBoxLayout * topLayout = new QVBoxLayout( page, 0, spacingHint() );
@@ -75,10 +75,10 @@ KornSubjectsDlg::KornSubjectsDlg( QWidget *parent )
 
 	// feed the list view with its colums
 	_list->setSelectionMode(QListView::Multi);
-	_list->addColumn("From");
-	_list->addColumn("Subject");
-	_list->addColumn("Date");
-	_list->addColumn("Size (Bytes)");
+	_list->addColumn(i18n("From"));
+	_list->addColumn(i18n("Subject"));
+	_list->addColumn(i18n("Date"));
+	_list->addColumn(i18n("Size (Bytes)"));
 
 	// column 3 contains a number (change alignment)
 	_list->setColumnAlignment(3, Qt::AlignRight);
@@ -150,10 +150,10 @@ void KornSubjectsDlg::deleteMessage()
 	QPtrList<QListViewItem> messages = _list->selectedItems();
 	if (!messages.count())
 		return;
-	QString confirmation = "Do you really want to delete one message?";
+	QString confirmation = i18n("Do you really want to delete one message?");
 	if (messages.count() > 1)
-		confirmation = "Do you really want to delete " + QString::number(messages.count()) + " messages?";
-	if (KMessageBox::questionYesNo(this, confirmation, "Confirmation") != KMessageBox::Yes)
+		confirmation = i18n("Do you really want to delete %1 messages?").arg(messages.count());
+	if (KMessageBox::questionYesNo(this, confirmation, i18n("Confirmation")) != KMessageBox::Yes)
 		return;
 
 	// Collect ids of teh messages to delete
@@ -167,7 +167,7 @@ void KornSubjectsDlg::deleteMessage()
 		// Create progress dialog
 		QProgressDialog progress(this, "bla", TRUE);
 		progress.setMinimumDuration(0);
-		progress.setLabelText("Deleting Mails. Please wait...");
+		progress.setLabelText(i18n("Deleting mails. Please wait..."));
 
 		// Initially show it
 		progress.setTotalSteps(1000);
@@ -246,7 +246,7 @@ bool KornSubjectsDlg::reload()
 		// Create progress dialog
 		QProgressDialog progress(this, "bla", TRUE);
 		progress.setMinimumDuration(0);
-		progress.setLabelText("Loading subjects. Please wait...");
+		progress.setLabelText(i18n("Loading subjects. Please wait..."));
 
 		// Initially show it
 		progress.setTotalSteps(1000);
@@ -290,7 +290,7 @@ void KornSubjectsDlg::showSubjectsDlg(KMailDrop *mailDrop)
 {
 	// store the mail box during the lifetime of the dialog
 	_mailDrop = mailDrop;
-	setCaption("Mails in Box: " + _mailDrop->caption());
+	setCaption(i18n("Mails in Box: ") + _mailDrop->caption());
 
 	// load the subjects
 	if (reload())
