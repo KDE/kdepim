@@ -315,7 +315,7 @@ void KNGroupBrowser::slotFilter(const QString &txt)
   bool notCheckNew = !newCB->isChecked();
   bool notCheckStr = (filtertxt.isEmpty());
 
-  bool isRegexp = filtertxt.contains(QRegExp("[^a-z0-9\\-.]"));
+  bool isRegexp = filtertxt.contains(QRegExp("[^a-z0-9\\-\\+.]"));
 
   bool doIncrementalUpdate = (!isRegexp && incrementalFilter && (filtertxt.left(lastFilter.length())==lastFilter));
 
