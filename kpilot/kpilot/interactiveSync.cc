@@ -147,18 +147,13 @@ CheckUser::~CheckUser()
 			{
 #ifdef DEBUG
 				DEBUGDAEMON << fname
-					<< ": Setting user name in pilot"
-					<< endl;
+					<< ": Setting user name in pilot to "
+					<< guiUserName << endl;
 #endif
 
-				const char *l1 = PilotAppCategory::codec()->fromUnicode(guiUserName);
+				QCString l1 = PilotAppCategory::codec()->fromUnicode(guiUserName);
 
-#ifdef DEBUG
-				DEBUGDAEMON << fname
-					<< ": Setting to " << l1 << endl;
-#endif
-
-				fHandle->getPilotUser()->setUserName(l1);
+				fHandle->getPilotUser()->setUserName(l1.data());
 				pilotUserName=guiUserName;
 			}
 		}
@@ -204,10 +199,10 @@ CheckUser::~CheckUser()
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
-		<< ": User name set to <"
+		<< ": User name set to gui<"
 		<< guiUserName
-		<< ">"
-		<< endl;
+		<< "> hh<"
+		<< fHandle->getPilotUser()->getUserName() << ">" << endl;
 #endif
 
 	KPilotSettings::writeConfig();

@@ -968,7 +968,7 @@ void KPilotDeviceLink::finishSync()
 
 	
 #ifdef DEBUG	
-	DEBUGDAEMON << fname << ": Writing username " << getPilotUser()->pilotUser() << endl;
+	DEBUGDAEMON << fname << ": Writing username " << getPilotUser()->getUserName() << endl;
 #endif
 	dlp_WriteUserInfo(pilotSocket(),getPilotUser()->pilotUser());
 	addSyncLogEntry(i18n("End of HotSync\n"));
