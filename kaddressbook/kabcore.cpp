@@ -26,6 +26,7 @@
 #include <qfile.h>
 #include <qlayout.h>
 #include <qregexp.h>
+#include <qstatusbar.h>
 #include <qvbox.h>
 
 #include <kabc/addresseelist.h>
@@ -51,11 +52,11 @@
 #include <kstandarddirs.h>
 #include <ktempfile.h>
 #include <kxmlguiclient.h>
+#include <libkdepim/addresseeview.h>
 #include <libkdepim/categoryselectdialog.h>
 
 #include "addresseeutil.h"
 #include "addresseeeditordialog.h"
-#include "details/detailsviewcontainer.h"
 #include "extensionmanager.h"
 #include "filterselectionwidget.h"
 #include "incsearchwidget.h"
@@ -73,7 +74,7 @@
 
 KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
                   const char *name )
-  : KAB::Core( client, parent, name ), mViewManager( 0 ),
+  : KAB::Core( client, parent, name ), mStatusBar( 0 ), mViewManager( 0 ),
     mExtensionManager( 0 ), mConfigureDialog( 0 ), mLdapSearchDialog( 0 ),
     mReadWrite( readWrite ), mModified( false )
 {
@@ -129,10 +130,8 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
   connect( mIncSearchWidget, SIGNAL( fieldChanged() ),
            mJumpButtonBar, SLOT( updateButtons() ) );
 
-  connect( mDetails, SIGNAL( sendEmail( const QString& ) ),
-           SLOT( sendMail( const QString& ) ) );
-  connect( mDetails, SIGNAL( browse( const QString& ) ),
-           SLOT( browse( const QString& ) ) );
+  connect( mDetails, SIGNAL( highlightedMessage( const QString& ) ),
+           SLOT( detailsHighlighted( const QString& ) ) );
 
   mAddressBookService = new KAddressBookService( this );
 
@@ -265,6 +264,16 @@ KAboutData *KABCore::createAboutData()
                     "hansen@kde.org" );
 
   return about;
+}
+
+void KABCore::setStatusBar( QStatusBar *statusBar )
+{
+  mStatusBar = statusBar;
+}
+
+QStatusBar *KABCore::statusBar() const
+{
+  return mStatusBar;
 }
 
 void KABCore::setContactSelected( const QString &uid )
@@ -840,6 +849,12 @@ void KABCore::print()
   wizard.exec();
 }
 
+void KABCore::detailsHighlighted( const QString &msg )
+{
+  if ( statusBar() )
+    statusBar()->message( msg );
+}
+
 void KABCore::configurationChanged()
 {
   mExtensionManager->reconfigure();
@@ -894,7 +909,7 @@ void KABCore::initGUI()
   mExtensionBarSplitter = new QSplitter( mDetailsSplitter );
   mExtensionBarSplitter->setOrientation( Qt::Vertical );
 
-  mDetails = new ViewContainer( mDetailsSplitter );
+  mDetails = new KPIM::AddresseeView( mDetailsSplitter );
 
   mViewManager = new ViewManager( this, mExtensionBarSplitter );
   mViewManager->setFilterSelectionWidget( mFilterSelectionWidget );

@@ -1,12 +1,13 @@
-SUBDIRS = interfaces details printing . views features kcmconfigs xxport pics csv-templates \
+SUBDIRS = interfaces printing . views features kcmconfigs xxport pics csv-templates \
           thumbnailcreator
 SRCDOC_DEST = $(kde_htmldir)/en/kaddressbook
 
 
-INCLUDES= -I$(top_srcdir)/kaddressbook/interfaces -I$(top_srcdir)/kaddressbook/details \
-          -I$(top_srcdir)/kaddressbook/features -I$(top_srcdir)/kaddressbook/printing \
-          -I$(top_srcdir)/kaddressbook/views -I$(top_srcdir)/kaddressbook/printing \
-          -I$(top_srcdir)/kaddressbook/details -I$(top_srcdir) $(all_includes) 
+INCLUDES= -I$(top_srcdir)/kaddressbook/interfaces \
+          -I$(top_srcdir)/kaddressbook/features \
+          -I$(top_srcdir)/kaddressbook/views \
+          -I$(top_srcdir)/kaddressbook/printing \
+          -I$(top_srcdir) $(all_includes) 
 
 bin_PROGRAMS = kaddressbook
 
@@ -39,8 +40,7 @@ libkaddressbook_la_SOURCES = addresseeconfig.cpp addresseeeditordialog.cpp \
     viewconfigurewidget.cpp undo.cpp undocmds.cpp viewmanager.cpp \
     xxportmanager.cpp xxportselectdialog.cpp
 libkaddressbook_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
-libkaddressbook_la_LIBADD = $(top_builddir)/kaddressbook/details/libdetails.la \
-                            $(top_builddir)/kaddressbook/printing/libprinter.la \
+libkaddressbook_la_LIBADD = $(top_builddir)/kaddressbook/printing/libprinter.la \
                             $(top_builddir)/kaddressbook/interfaces/libkabinterfaces.la \
                             $(top_builddir)/libkdepim/libkdepim.la \
                             $(LIB_KABC) $(LIB_KHTML) libkabcommon.la -lkdeprint

@@ -36,6 +36,10 @@ class AddressBook;
 class Ticket;
 }
 
+namespace KPIM {
+class AddresseeView;
+}
+
 namespace KSettings {
 class Dialog;
 }
@@ -48,6 +52,7 @@ class KToggleAction;
 class KXMLGUIClient;
 
 class QSplitter;
+class QStatusBar;
 
 class AddresseeEditorDialog;
 class ExtensionManager;
@@ -56,7 +61,6 @@ class IncSearchWidget;
 class JumpButtonBar;
 class KAddressBookService;
 class LDAPSearchDialog;
-class ViewContainer;
 class ViewManager;
 class XXPortManager;
 
@@ -124,6 +128,10 @@ class KABCore : public KAB::Core
     QWidget *widget() const;
 
     static KAboutData *createAboutData();
+
+    void setStatusBar( QStatusBar *statusBar );
+
+    QStatusBar *statusBar() const;
 
   public slots:
     /**
@@ -298,6 +306,8 @@ class KABCore : public KAB::Core
      */
     void print();
 
+    void detailsHighlighted( const QString& );
+
   signals:
     void contactSelected( const QString &name );
     void contactSelected( const QPixmap &pixmap );
@@ -324,6 +334,7 @@ class KABCore : public KAB::Core
 
     QWidget *mWidget;
     KABC::AddressBook *mAddressBook;
+    QStatusBar *mStatusBar;
 
     ViewManager *mViewManager;
     ExtensionManager *mExtensionManager;
@@ -332,7 +343,7 @@ class KABCore : public KAB::Core
     JumpButtonBar *mJumpButtonBar;
     FilterSelectionWidget *mFilterSelectionWidget;
     IncSearchWidget *mIncSearchWidget;
-    ViewContainer *mDetails;
+    KPIM::AddresseeView *mDetails;
     QSplitter *mDetailsSplitter;
     QSplitter *mExtensionBarSplitter;
 

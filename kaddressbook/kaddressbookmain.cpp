@@ -44,6 +44,7 @@ KAddressBookMain::KAddressBookMain()
   setCentralWidget( mCore->widget() );
 
   statusBar()->show();
+  mCore->setStatusBar( statusBar() );
 
   setStandardToolBarMenuEnabled(true);
   
