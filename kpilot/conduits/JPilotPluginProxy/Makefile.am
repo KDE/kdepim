@@ -1,6 +1,8 @@
+### Makefile for JPilot Plugin conduits. 
+### 	conduits/JPilotPluginProxy
 ###
-### Makefile for JPilot Plugin conduits. These two conduits share most code,
-### so it seems logical to put them in one place.
+### This conduit is deprecated while we figure out how to put
+### JPilot widgets into the Qt3 event loop.
 ###
 
 INCLUDES= -I$(top_srcdir)/kpilot/lib $(GLIB_INCLUDE) $(GTK_INCLUDE) $(all_includes)
@@ -13,7 +15,8 @@ service_DATA = JPilotPluginProxy.desktop
 
 kde_module_LTLIBRARIES = libJPilotProxy.la
 
-libJPilotProxy_la_SOURCES = ConduitDialog.ui JPilotProxy-conduit.cc JPilotProxy-factory.cc JPilotProxy-setup.cc jplugin.cpp
-libJPilotProxy_la_LDFLAGS = $(KDE_RPATH) -L../../lib -Wl,-export-dynamic
-libJPilotProxy_la_LIBADD = -lkpilot -lgtk -lgdbm -lgdk
+libJPilotProxy_la_SOURCES = ConduitDialog.ui JPilotProxy-conduit.cc \
+	JPilotProxy-factory.cc JPilotProxy-setup.cc jplugin.cpp
+libJPilotProxy_la_LDFLAGS = $(KDE_RPATH) $(KDE_PLUGIN) $(all_libraries) -Wl,-export-dynamic
+libJPilotProxy_la_LIBADD = ../../lib/libkpilot.la -lgtk -lgdbm -lgdk
 

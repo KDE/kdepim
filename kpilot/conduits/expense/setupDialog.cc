@@ -18,8 +18,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -61,11 +61,15 @@ ExpenseWidgetSetup::ExpenseWidgetSetup(QWidget *w, const char *n,
 #if defined(DEBUG) && !defined(NDEBUG)
 	DEBUGCONDUIT << fname
 		<< "Size of tabw="
-		<< fConfigWidget->tabWidget->size()
+		<< fConfigWidget->tabWidget->size().width()
+		<< ","
+		<< fConfigWidget->tabWidget->size().height()
 		<< endl;
 	DEBUGCONDUIT << fname
 		<< "Size of conw="
-		<< fConfigWidget->size()
+		<< fConfigWidget->size().width()
+		<< ","
+		<< fConfigWidget->size().height()
 		<< endl;
 #endif
 
@@ -209,7 +213,7 @@ void ExpenseWidgetSetup::slotCSVBrowse()
 {
         FUNCTIONSETUP;
 
-	QString fileName = KFileDialog::getOpenFileName(0L, "*.csv");
+	QString fileName = KFileDialog::getOpenFileName(QString::null, CSL1("*.csv"));
 	if(fileName.isNull()) return;
 	fConfigWidget->fCSVFilename->setText(fileName);
 }
@@ -276,63 +280,3 @@ void ExpenseWidgetSetup::slotDBPolicyChanged()
 			<< endl;
 	}
 }
-
-// $Log$
-// Revision 1.11  2002/03/14 08:15:17  lukas
-// the connect from the Browse button to the slot was missing...
-//
-//
-// Index: ./conduits/expense/setupDialog.cc
-// ===================================================================
-// RCS file: /home/kde/kdepim/kpilot/conduits/expense/setupDialog.cc,v
-// retrieving revision 1.10
-// diff -u -r1.10 setupDialog.cc
-// --- ./conduits/expense/setupDialog.cc   2002/01/02 12:14:09     1.10
-// +++ ./conduits/expense/setupDialog.cc   2002/03/14 08:13:56
-// @@ -73,6 +73,9 @@
-//                 this,SLOT(slotDBPolicyChanged()));
-//         QObject::connect(fConfigWidget->fRotatePolicy,SIGNAL(clicked(int)),
-//                 this,SLOT(slotRotatePolicyChanged()));
-// +
-// +       QObject::connect(fConfigWidget->fCSVBrowse,SIGNAL(clicked()),
-// +               this,SLOT(slotCSVBrowse()));
-//
-//         QSize s = fConfigWidget->size() + QSize(SPACING,SPACING);
-//         fConfigWidget->resize(s);
-//
-// Revision 1.10  2002/01/02 12:14:09  bero
-// Fix build with -DNDEBUG
-//
-// Revision 1.9  2001/12/18 07:40:49  adridg
-// Enable conduit's config & back out danimo's work
-//
-// Revision 1.8  2001/12/08 16:29:41  mlaurent
-// Fix compilation.
-// Dirk could you recreate a tarball for kde3.0beta1
-// we can't compile it without these fix.
-// Thanks
-//
-// Revision 1.7  2001/12/02 22:03:07  adridg
-// Expense conduit finally works
-//
-// Revision 1.6  2001/11/25 22:03:44  adridg
-// Port expense conduit to new arch. Doesn't compile yet.
-//
-// Revision 1.5  2001/10/10 17:01:15  mueller
-// CVS_SILENT: fixincludes
-//
-// Revision 1.4  2001/03/27 11:10:38  leitner
-// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
-// #ifdef DEBUG because qstringExpand etc. were not defined.
-//
-// Revision 1.3  2001/03/24 16:10:11  adridg
-// Minor beautification
-//
-// Revision 1.2  2001/03/14 16:56:02  molnarc
-//
-// CJM - Added browse button on csv export tab.
-// CJM - Added database export tab and required information.
-//
-// Revision 1.1  2001/03/04 21:47:04  adridg
-// New expense conduit, non-functional but it compiles
-//

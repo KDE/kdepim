@@ -17,17 +17,18 @@
 ** (at your option) any later version.
 **
 ** This program is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** but WITHOUT ANY WARRANTY; without even the implied warranty of 
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ** GNU General Public License for more details.
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** MA 02111-1307, USA.
 */
 
 /*
-** Bug reports and questions can be sent to groot@kde.org
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 static const char *popmail_conduit_id=
@@ -42,8 +43,8 @@ static const char *popmail_conduit_id=
 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/utsname.h>
 #include <ctype.h>
-#include <iostream.h>
 
 #include <unistd.h>
 #include <errno.h>
@@ -57,6 +58,7 @@ static const char *popmail_conduit_id=
 
 #include <qdir.h>
 #include <qtextstream.h>
+#include <qtextcodec.h>
 
 #include <kapplication.h>
 #include <kmessagebox.h>
@@ -66,7 +68,7 @@ static const char *popmail_conduit_id=
 #include <dcopclient.h>
 #include <ktempfile.h>
 
-#include "pilotRecord.h"
+#include "pilotAppCategory.h"
 #include "pilotSerialDatabase.h"
 
 #include "passworddialog.h"
@@ -148,8 +150,8 @@ void showResponseResult(int const ret,
 		//
 		if (buffer && buffer[0])
 		{
-			msg.append("\n");
-			msg.append(buffer);
+			msg.append(CSL1("\n"));
+			msg.append(QString::fromLocal8Bit(buffer));
 #ifdef DEBUG
 			DEBUGCONDUIT << func
 				<< ": " << buffer
@@ -276,7 +278,9 @@ PopMailConduit::PopMailConduit(KPilotDeviceLink *d,
 	ConduitAction(d,n,l)
 {
 	FUNCTIONSETUP;
-	(void) popmail_conduit_id;
+#ifdef DEBUG
+	DEBUGCONDUIT<<popmail_conduit_id<<endl;
+#endif
 }
 
 PopMailConduit::~PopMailConduit()
@@ -292,7 +296,7 @@ PopMailConduit::doSync()
 	int mode=0;
 	int sent_count=0,received_count=0;
 
-	addSyncLogEntry("Mail ");
+	addSyncLogEntry(CSL1("Mail "));
 
 	mode=fConfig->readNumEntry(PopmailConduitFactory::syncOutgoing);
 #ifdef DEBUG
@@ -324,32 +328,33 @@ PopMailConduit::doSync()
 	//
 	if ((sent_count>0) || (received_count>0))
 	{
+		// TODO: i18n this stuff.
 		char buffer[128];
 		if ((sent_count>0) && (received_count>0))
 		{
 			sprintf(buffer,"[ Sent %d message%c",
 				sent_count,(sent_count>1) ? 's' : 0);
-			addSyncLogEntry(buffer);
+			addSyncLogEntry(QString::fromLatin1(buffer));
 			sprintf(buffer,", Receved %d message%c",
 				received_count,(received_count>1) ? 's' : 0);
-			addSyncLogEntry(buffer);
+			addSyncLogEntry(QString::fromLatin1(buffer));
 		}
 		if ((sent_count>0) && !(received_count>0))
 		{
 			sprintf(buffer,"[ Sent %d message%c",
 				sent_count,(sent_count>1) ? 's' : 0);
-			addSyncLogEntry(buffer);
+			addSyncLogEntry(QString::fromLatin1(buffer));
 		}
 		if (!(sent_count>0) && (received_count>0))
 		{
 			sprintf(buffer,"[ Received %d message%c",
 				received_count,(received_count>1) ? 's' : 0);
-			addSyncLogEntry(buffer);
+			addSyncLogEntry(QString::fromLatin1(buffer));
 		}
 		
-		addSyncLogEntry(" ] ");
+		addSyncLogEntry(QString::fromLatin1(" ] "));
 	}
-	addSyncLogEntry("OK\n");
+	addSyncLogEntry(CSL1("OK\n"));
 }
 
 
@@ -425,7 +430,7 @@ int PopMailConduit::retrieveIncoming(int mode)
 // SMTP Transfer Method (only sending)
 //
 // Additional changes by Michael Kropfberger
-// Cleanup and fixing by Marko Grönroos <magi@iki.fi>, 2001
+// Cleanup and fixing by Marko Grnroos <magi@iki.fi>, 2001
 //
 
 // Helper function to get the Fully Qualified Domain Name
@@ -437,7 +442,7 @@ QString getFQDomainName (const KConfig& config)
 
 	// Has the user given an explicit domain name?
 	int useExplicitDomainName = 0;
-	if (!config.readEntry("explicitDomainName", "").isEmpty())
+	if (!config.readEntry("explicitDomainName", QString::null).isEmpty())
 		useExplicitDomainName = 1;
 
 	// Or was it given in the MAILDOMAIN environment variable?
@@ -445,7 +450,7 @@ QString getFQDomainName (const KConfig& config)
 		useExplicitDomainName = 2;
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": EDN=" << config.readEntry("explicitDomainName", "") << endl;
+	DEBUGCONDUIT << fname << ": EDN=" << config.readEntry("explicitDomainName", QString::null) << endl;
 	DEBUGCONDUIT << fname << ": useEDN=" << useExplicitDomainName << endl;
 #endif
 
@@ -457,14 +462,14 @@ QString getFQDomainName (const KConfig& config)
 		} else {
 			// Use explicitly configured FQDN.
 			// The domain name can also be the name of an environment variable.
-			fqDomainName = config.readEntry("explicitDomainName", "$MAILDOMAIN");
+			fqDomainName = config.readEntry("explicitDomainName", CSL1("$MAILDOMAIN"));
 #ifdef DEBUG
 			DEBUGCONDUIT << fname << ": got from config" << endl;
 #endif
 		}
 
 		// Get FQDN from environment, from given variable.
-		if (fqDomainName.left(1) == "$") {
+		if (fqDomainName.left(1) == CSL1("$")) {
 			QString envVar = fqDomainName.mid (1);
 			char* envDomain = getenv (envVar.latin1());
 			if (envDomain) {
@@ -533,9 +538,9 @@ QString getFQDomainName (const KConfig& config)
 
 // Extracts email address from: "Firstname Lastname <mailbox@domain.tld>"
 QString extractAddress (const QString& address) {
-	int pos = address.find (QRegExp ("<.+>"));
+	int pos = address.find (QRegExp (CSL1("<.+>")));
 	if (pos != -1) {
-		return address.mid (pos+1, address.find (">", pos)-pos-1);
+		return address.mid (pos+1, address.find (CSL1(">"), pos)-pos-1);
 	} else
 		return address;
 }
@@ -624,7 +629,7 @@ int PopMailConduit::sendViaSMTP ()
 	QTextOStream	logStream (&logBuffer);		// Log stream, use with: log << stuff;
 
 	// Read user-defined parameters
-	smtpSrv = fConfig->readEntry ("SMTPServer", "localhost");
+	smtpSrv = fConfig->readEntry ("SMTPServer", CSL1("localhost"));
 	smtpPort = fConfig->readNumEntry ("SMTPPort", 25);
 
 	//
@@ -674,16 +679,16 @@ int PopMailConduit::sendViaSMTP ()
 	ret = getResponse (&kSocket, recvBuffer.data(), recvBuffer.size());
 
 	// Receive server handshake initiation
-	if (ret<0 || QString(recvBuffer).find("220") == -1) {
+	if (ret<0 || QString(recvBuffer).find(CSL1("220")) == -1) {
 		showMessage (i18n("SMTP server failed to announce itself")+
-					 "\n\n"+logBuffer);
+					 CSL1("\n\n")+logBuffer);
 		return -1;
 	}
 
 	// Send EHLO, expect "250- ... Hello"
 	sendBuffer.sprintf ("EHLO %s\r\n", domainName.latin1());
 	if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
-						 QRegExp("^250"),
+						 QRegExp(CSL1("^250")),
 						 i18n("Couldn't EHLO to SMTP server")))
 		return -1;
 
@@ -719,12 +724,12 @@ int PopMailConduit::sendViaSMTP ()
 		// Send "MAIL FROM: <...>", with the user-defined sender address
 		QString sender = fConfig->readEntry("EmailAddress");
 		QString fromAddress = extractAddress (sender);
-		fromAddress.replace (QRegExp("\\s"), ""); // Remove whitespaces
+		fromAddress.replace (QRegExp(CSL1("\\s")), QString::null); // Remove whitespaces
 
 		// Send MAIL and receive response, expecting 250
         sendBuffer.sprintf ("MAIL FROM: <%s>\r\n", fromAddress.latin1());
 		if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
-							 QRegExp("^250"),
+							 QRegExp(CSL1("^250")),
 							 i18n("Couldn't start sending new mail.")))
 		{
 			return handledCount;
@@ -740,7 +745,7 @@ int PopMailConduit::sendViaSMTP ()
 			recipients += QCString(",") + QCString (theMail.cc);
 		if (QCString(theMail.bcc).length()>1)
 			recipients += QCString(",") + QCString (theMail.bcc);
-		recipients.replace (QRegExp("\\s"), ""); // Remove whitespaces
+		recipients.replace (QRegExp(CSL1("\\s")), ""); // Remove whitespaces
 
 		// Send to all recipients
 		int rpos=0;
@@ -760,7 +765,7 @@ int PopMailConduit::sendViaSMTP ()
 			// Send "RCPT TO: <...>", expect 25*
 			sendBuffer.sprintf ("RCPT TO: <%s>\r\n", recipient.data());
 			if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
-								 QRegExp("^25"),
+								 QRegExp(CSL1("^25")),
 								 i18n("The recipient doesn't exist!")))
 				return handledCount;
 		}
@@ -768,7 +773,7 @@ int PopMailConduit::sendViaSMTP ()
 		// Send "DATA",
 		sendBuffer.sprintf("DATA\r\n");
 		if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
-							 QRegExp("^354"),
+							 QRegExp(CSL1("^354")),
 							 i18n("Unable to start writing mail body\n")))
             return handledCount;
 
@@ -778,7 +783,7 @@ int PopMailConduit::sendViaSMTP ()
 
 		// Send message body
 		if (theMail.body) {
-			sendBuffer = QString::fromLatin1 (theMail.body)+"\r\n";
+			sendBuffer = QString::fromLatin1 (theMail.body)+CSL1("\r\n");
 			write (kSocket.socket(), sendBuffer.latin1(), sendBuffer.length());
 		}
 
@@ -802,7 +807,7 @@ int PopMailConduit::sendViaSMTP ()
 	    // Send end-of-mail
 		sendBuffer.sprintf(".\r\n");
 		if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
-							 QRegExp("^250"),
+							 QRegExp(CSL1("^250")),
 							 i18n("Unable to send message")))
             return -1;
 
@@ -818,7 +823,7 @@ int PopMailConduit::sendViaSMTP ()
 
 	sendBuffer.sprintf("QUIT\r\n");
 	sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
-					 QRegExp("^221"),
+					 QRegExp(CSL1("^221")),
 					 i18n("QUIT command to SMTP server failed.\n"));
 
 	return handledCount;
@@ -884,8 +889,8 @@ int PopMailConduit::sendViaSendmail()
 	  sendf = popen(sendmailCmd.latin1(), "w");
 	  if(!sendf)
 	    {
- 	      KMessageBox::error(0L, "Cannot talk to sendmail!",
-				   "Error Sending Mail");
+ 	      KMessageBox::error(0L, CSL1("Cannot talk to sendmail!"),
+				   CSL1("Error Sending Mail"));
 		kdWarning() << k_funcinfo
 			<< ": Could not start sendmail." << endl;
 		kdWarning() << k_funcinfo << ": " << count
@@ -893,8 +898,9 @@ int PopMailConduit::sendViaSendmail()
 			<< endl ;
 	      return -1;
 	    }
-	  currentDest = "Mailing: ";
-	  currentDest += theMail.to;
+	  // TODO: Is currentDest used at all?
+	  currentDest = CSL1("Mailing: ");
+	  currentDest += PilotAppCategory::codec()->toUnicode(theMail.to);
 	  writeMessageToFile(sendf, theMail);
 	  pclose(sendf);
 	  // Mark it as filed...
@@ -929,9 +935,18 @@ QString PopMailConduit::getKMailOutbox() const
 	// suggested by Don Sanders. It must be
 	// kept up-to-date with what KMail does.
 	//
-	KSimpleConfig c("kmailrc",true);
+	// TODO: Completely broken since KMail disposed of this
+	// setting in KDE 3.0. No idea how to fix short of i18n("outbox").
+	KSimpleConfig c(CSL1("kmailrc"),true);
 	c.setGroup("General");
-	return c.readEntry("outboxFolder","outbox");
+
+	QString outbox = c.readEntry("outboxFolder",QString::null);
+	if (outbox.isEmpty())
+	{
+		KConfigGroupSaver gs(fConfig,PopmailConduitFactory::group);
+		outbox = fConfig->readEntry("outboxFolder");
+	}
+	return outbox;
 }
 
 /*
@@ -1558,7 +1573,8 @@ int PopMailConduit::doPopQuery()
 	//
 	// [ The standard says otherwise ]
 	//
-	QString msg(buffer+offset);
+	// Surely POP3 speaks latin1?
+	QString msg(QString::fromLatin1(buffer+offset));
 	if (msg.find( fConfig->readEntry("PopUser")) != -1) // with username
 	{
 		sscanf(buffer+offset, "%*s %*s %*s %d %*s", &msgcount);
@@ -1957,7 +1973,7 @@ int PopMailConduit::doUnixStyle()
 	KConfigGroupSaver cfgs(fConfig,PopmailConduitFactory::group);
 
 	fDatabase=new PilotSerialDatabase(pilotSocket(),
-		"MailDB",this,"MailDB");
+		CSL1("MailDB"),this,"MailDB");
 
 	if (!fDatabase || !fDatabase->isDBOpen())
 	{
@@ -1983,103 +1999,3 @@ int PopMailConduit::doUnixStyle()
 	emit syncDone(this);
 	return true;
 }
-
-
-// $Log$
-// Revision 1.43  2002/08/23 22:59:30  kainhofe
-// Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
-//
-// Revision 1.42  2002/08/23 22:03:20  adridg
-// See ChangeLog - exec() becomes bool, debugging added
-//
-// Revision 1.41  2002/07/20 22:15:56  mhunter
-// Corrected typographical errors
-//
-// Revision 1.40  2002/05/15 16:58:02  gioele
-// kapp.h -> kapplication.h
-//
-// Revision 1.39  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.38.2.1  2002/04/13 22:16:56  adridg
-// Administrative, better config checking, use PISOCK_INCLUDE and PISOCK_LIB in compiles, minor code cleanup in popmail
-//
-// Revision 1.38  2002/02/23 20:57:40  adridg
-// #ifdef DEBUG stuff
-//
-// Revision 1.37  2002/02/10 22:21:33  adridg
-// Handle pilot-link 0.10.1; spit 'n polish; m505 now supported?
-//
-// Revision 1.36  2002/01/26 15:00:57  adridg
-// Compile fixes and more
-//
-// Revision 1.35  2002/01/23 10:14:51  adridg
-// CVS_SILENT: Compile fix on RH72
-//
-// Revision 1.34  2002/01/20 06:46:22  waba
-// Messagebox changes.
-//
-// Revision 1.33  2002/01/17 16:24:10  adridg
-// Compile fixes on Solaris
-//
-// Revision 1.32  2002/01/08 01:25:03  cschumac
-// Compile fixes.
-//
-// Revision 1.31  2001/12/31 09:24:45  adridg
-// Cleanup, various fixes for runtime loading
-//
-// Revision 1.30  2001/12/28 13:01:16  adridg
-// Add SyncAction
-//
-// Revision 1.29  2001/10/10 17:01:15  mueller
-// CVS_SILENT: fixincludes
-//
-// Revision 1.28  2001/09/24 10:43:19  cschumac
-// Compile fixes.
-//
-// Revision 1.27  2001/07/04 08:53:37  cschumac
-// - Added explicitDomainName text widget to setup dialog
-// - Changed the support for the explicit domain name a little
-//   (added a few more debug lines)
-// - Changed expected response to EHLO to "^250" instead of "Hello", to
-//   fix some people's protocol-correct but unexpected SMTP server reply.
-//
-// Revision 1.26  2001/05/25 16:06:52  adridg
-// DEBUG breakage
-//
-// Revision 1.25  2001/05/17 08:12:06  adridg
-// Nasty POP3 retrieval bug fixed (Jay Summett)
-//
-// Revision 1.24  2001/05/08 10:53:50  adridg
-// Moved leitner's __osf__ patches
-//
-// Revision 1.23  2001/05/07 20:03:12  adridg
-// Major SMTP fixups by Marko
-//
-// Revision 1.22  2001/05/03 06:37:21  leitner
-// getdomainname is void under Tru64
-//
-// Revision 1.21  2001/04/26 19:20:17  adridg
-// Respect KMail's outboxFolder setting
-//
-// Revision 1.20  2001/04/23 21:08:42  adridg
-// Extra debugging for bug #24522
-//
-// Revision 1.19  2001/03/09 09:46:14  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.18  2001/03/06 12:13:32  adridg
-// Fixed Solaris compilation problems (again?)
-//
-// Revision 1.17  2001/03/05 23:57:53  adridg
-// Added KPILOT_VERSION
-//
-// Revision 1.16  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.15  2001/02/09 15:59:28  habenich
-// replaced "char *id" with "char *<filename>_id", because of --enable-final in configure
-//
-// Revision 1.14  2001/02/07 15:46:31  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
-//

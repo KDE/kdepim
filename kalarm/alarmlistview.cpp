@@ -363,5 +363,5 @@ QString AlarmListWhatsThis::text(const QPoint& pt)
 		}
 	}
 	return i18n("List of scheduled alarms");
-};
+}
 

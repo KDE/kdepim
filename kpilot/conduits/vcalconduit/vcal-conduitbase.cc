@@ -22,8 +22,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -35,20 +35,20 @@ static const char *vcalconduitbase_id = "$Id$";
 #include <options.h>
 #include <unistd.h>
 
+// Qt includes
 #include <qdatetime.h>
 #include <qtimer.h>
 
-#include <pilotUser.h>
+// KDE includes
 #include <kconfig.h>
 #include <kmessagebox.h>
-
-#include <calendar.h>
-#include <calendarlocal.h>
-#include <incidence.h>
 #include <kstandarddirs.h>
 #include <ksimpleconfig.h>
 
-
+// libkcal includes
+#include "libkcal/calendar.h"
+#include "libkcal/calendarlocal.h"
+#include "libkcal/incidence.h"
 /*
 ** KDE 2.2 uses class KORecurrence in a different header file.
 */
@@ -58,15 +58,17 @@ static const char *vcalconduitbase_id = "$Id$";
 #define DateList_t QDateList
 #define DateListIterator_t QDateListIterator
 #else
-#include <recurrence.h>
+#include "libkcal/recurrence.h"
 #define Recurrence_t KCal::Recurrence
 #define DateList_t KCal::DateList
 #define DateListIterator_t KCal::DateList::ConstIterator
 #endif
 
-#include <pilotSerialDatabase.h>
-#include <pilotLocalDatabase.h>
-#include <pilotDateEntry.h>
+// kpilot includes
+#include "pilotSerialDatabase.h"
+#include "pilotLocalDatabase.h"
+#include "pilotDateEntry.h"
+#include "pilotUser.h"
 
 #include "vcal-factorybase.h"
 #include "vcal-conduitbase.moc"
@@ -138,7 +140,9 @@ VCalConduitBase::VCalConduitBase(KPilotDeviceLink *d,
 	fP(0L)
 {
 	FUNCTIONSETUP;
-	(void) vcalconduitbase_id;
+#ifdef DEBUG
+	DEBUGCONDUIT<<vcalconduitbase_id<<endl;
+#endif
 }
 
 
@@ -180,7 +184,7 @@ VCalConduitBase::~VCalConduitBase()
 	   time is later than the last sync time). This handles (-,N),(-,M)
 		a) if it does not have a pilotID, add it to the palm and backupDB, store the PalmID
 		b) if it has a valid pilotID, update the Palm record and the backup
-	3) finally, deleteRecord goes through all records (which don't have the deleted flag) of the backup db
+	3) finally, dheleteRecord goes through all records (which don't have the deleted flag) of the backup db
 	   and if one does not exist in the Calendar, it was deleted there, so delete it from the Palm, too.
 		This handles the last remaining case of (-,D)
 
@@ -208,8 +212,9 @@ there are two special cases: a full and a first sync.
 /* virtual */ bool VCalConduitBase::exec()
 {
 	FUNCTIONSETUP;
+	DEBUGCONDUIT << vcalconduitbase_id << endl;
 
-	KPilotUser*usr;
+	KPilotUser *usr;
 
 	if (!fConfig)
 	{
@@ -222,11 +227,30 @@ there are two special cases: a full and a first sync.
 	if (PluginUtility::isRunning("korganizer") ||
 		PluginUtility::isRunning("alarmd"))
 	{
-		addSyncLogEntry(i18n("KOrganizer is running, can't update datebook."));
+		emit logError(i18n("KOrganizer is running, can't update datebook."));
 		return false;
 	}
 
 	readConfig();
+
+	if (fCalendarFile.isEmpty())
+	{
+		kdWarning() << k_funcinfo
+			<< ": No calendar file set." << endl;
+		return false;
+	}
+
+#ifdef DEBUG
+	if (isTest())
+	{
+		DEBUGCONDUIT << fname
+			<< ": Running conduit test. Using calendar "
+			<< fCalendarFile << endl;
+		doTest();
+		delayDone();
+		return true;
+	}
+#endif
 
 	// don't do a first sync by default in any case, only when explicitely requested, or the backup
 	// database or the alendar are empty.
@@ -295,7 +319,7 @@ error:
 {
 	FUNCTIONSETUP;
 
-	KConfig korgcfg( locate( "config", "korganizerrc" ) );
+	KConfig korgcfg( locate( "config", CSL1("korganizerrc") ) );
 	// this part taken from adcalendarbase.cpp:
 	korgcfg.setGroup( "Time & Date" );
 	QString tz(korgcfg.readEntry( "TimeZoneId" ) );
@@ -358,7 +382,7 @@ void VCalConduitBase::syncPalmRecToPC()
 		r = fDatabase->readNextModifiedRec();
 	}
 	PilotRecord *s = 0L;
-
+	
 	if (!r)
 	{
 		fP->updateIncidences();
@@ -377,6 +401,8 @@ void VCalConduitBase::syncPalmRecToPC()
 	// let subclasses do something with the record before we try to sync
 	preRecord(r);
 
+//	DEBUGCONDUIT<<fname<<": Event: "<<e->dtStart()<<" until "<<e->dtEnd()<<endl;
+//	DEBUGCONDUIT<<fname<<": Time: "<<e->dtStart()<<" until "<<e->dtEnd()<<endl;
 	bool archiveRecord=(r->isArchived());
 
 	s = fLocalDatabase->readRecordById(r->getID());
@@ -446,10 +472,17 @@ void VCalConduitBase::syncPCRecToPalm()
 	preIncidence(e);
 
 	// find the corresponding index on the palm and sync. If there is none, create it.
-	int ix=e->pilotId();
+	recordid_t ix=e->pilotId();
 #ifdef DEBUG
 		DEBUGCONDUIT<<fname<<": found PC entry with pilotID "<<ix<<endl;
 		DEBUGCONDUIT<<fname<<": Description: "<<e->summary()<<endl;
+		DEBUGCONDUIT<<fname<<": Time: "
+			<< e->dtStart().toString()
+#if KDE_VERSION > 0x030180
+			<< " until "
+			<< e->dtEnd()
+#endif
+			<< endl;
 #endif
 	PilotRecord *s=0L;
 	if (ix>0 && (s=fDatabase->readRecordById(ix)))
@@ -726,116 +759,4 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 		KPILOT_DELETE(r);
 	}
 }
-
-
-// $Log$
-// Revision 1.21  2002/08/23 22:59:30  kainhofe
-// Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
-//
-// Revision 1.20  2002/08/23 22:03:21  adridg
-// See ChangeLog - exec() becomes bool, debugging added
-//
-// Revision 1.19  2002/08/21 17:36:17  adridg
-// Tell the user which calendar file is being used
-//
-// Revision 1.18  2002/08/15 21:51:00  kainhofe
-// Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
-//
-// Revision 1.17  2002/08/15 10:47:56  kainhofe
-// Finished categories syncing for the todo conduit
-//
-// Revision 1.16  2002/07/25 21:58:57  kainhofe
-// QString::arg error
-//
-// Revision 1.15  2002/07/23 00:45:18  kainhofe
-// Fixed several bugs with recurrences.
-//
-// Revision 1.14  2002/07/09 22:38:04  kainhofe
-// Implemented a first (not-yet-functional) version of the category sync
-//
-// Revision 1.13  2002/07/05 00:00:00  kainhofe
-// Add deleted record only if archived are supposed to be synced
-//
-// Revision 1.12  2002/06/12 22:11:17  kainhofe
-// Proper cleanup, libkcal still has some problems marking records modified on loading
-//
-// Revision 1.11  2002/06/09 21:08:06  kainhofe
-// Use the openDatabases() function and the fDatabase/fLocalDatabase instead of our own fCurrentDatabase/fBackupDatabase
-//
-// Revision 1.10  2002/06/07 07:13:24  adridg
-// Make VCal conduit use base-class fDatabase and fLocalDatabase (hack).
-// Extend *Database classes with dbPathName() for consistency.
-//
-// Revision 1.9  2002/06/07 06:37:15  adridg
-// Be safer on cleanup to avoid crash
-//
-// Revision 1.8  2002/05/18 13:08:57  kainhofe
-// dirty flag is now cleared, conflict resolution shows the correct item title and asks the correct question
-//
-// Revision 1.7  2002/05/16 13:06:48  mhunter
-// Corrected typographical errors and Palm -> Pilot for consistency
-//
-// Revision 1.6  2002/05/15 22:57:39  kainhofe
-// if the backup db does not exist, it is now correctly retrieved correctly from the palm
-//
-// Revision 1.5  2002/05/14 23:07:49  kainhofe
-// Added the conflict resolution code. the Palm and PC precedence is currently swapped, and will be improved in the next few days, anyway...
-//
-// Revision 1.4  2002/05/03 19:19:57  kainhofe
-// Local timezone from KOrganizer is now used for the sync
-//
-// Revision 1.1.2.4  2002/05/03 19:08:52  kainhofe
-// Local timezone from KOrganizer is now used for the sync
-//
-// Revision 1.1.2.3  2002/05/01 21:11:49  kainhofe
-// Reworked the settings dialog, added various different sync options
-//
-// Revision 1.1.2.2  2002/04/28 20:20:03  kainhofe
-// calendar and backup databases are now created if they didn't exist
-//
-// Revision 1.1.2.1  2002/04/28 12:58:54  kainhofe
-// Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
-//
-// Revision 1.62  2002/04/21 17:39:01  kainhofe
-// recurrences without enddate work now
-//
-// Revision 1.61  2002/04/21 17:07:12  kainhofe
-// Fixed some memory leaks, old alarms and exceptions are deleted before new are added, Alarms are now correct
-//
-// Revision 1.60  2002/04/20 18:05:50  kainhofe
-// No duplicates any more in the calendar
-//
-// Revision 1.59  2002/04/20 17:38:02  kainhofe
-// recurrence now correctly written to the palm, no longer crashes
-//
-// Revision 1.58  2002/04/20 14:21:26  kainhofe
-// Alarms are now written to the palm. Some bug fixes, extensive testing. Exceptions still crash the palm ;-(((
-//
-// Revision 1.57  2002/04/19 19:34:11  kainhofe
-// didn't compile
-//
-// Revision 1.56  2002/04/19 19:10:29  kainhofe
-// added some comments describin the sync logic, deactivated the sync again (forgot it when I commited last time)
-//
-// Revision 1.55  2002/04/17 20:47:04  kainhofe
-// Implemented the alarm sync
-//
-// Revision 1.54  2002/04/17 00:28:11  kainhofe
-// Removed a few #ifdef DEBUG clauses I had inserted for debugging purposes
-//
-// Revision 1.53  2002/04/16 23:40:36  kainhofe
-// Exceptions no longer crash the daemon, recurrences are correct now, end date is set correctly. Problems: All events are off 1 day, lots of duplicates, exceptions are duplicate, too.
-//
-// Revision 1.52  2002/04/14 22:18:16  kainhofe
-// Implemented the second part of the sync (PC=>Palm), but disabled it, because it corrupts the Palm datebook
-//
-// Revision 1.51  2002/02/23 20:57:41  adridg
-// #ifdef DEBUG stuff
-//
-// Revision 1.50  2002/01/26 15:01:02  adridg
-// Compile fixes and more
-//
-// Revision 1.49  2002/01/25 21:43:12  adridg
-// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
-//
 

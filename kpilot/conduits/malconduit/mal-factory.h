@@ -20,8 +20,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 **
 **
 ** Specific permission is granted for this code to be linked to libmal
@@ -81,8 +81,4 @@ void *init_libtimeconduit();
 
 } ;
 
-// $Log$
-// Revision 1.1  2002/08/15 23:07:37  kainhofe
-// First official version of the malconduit
-//
 #endif

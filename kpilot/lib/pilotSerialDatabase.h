@@ -20,8 +20,8 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** MA 02111-1307, USA.
 */
 
 /*
@@ -38,7 +38,7 @@
 class PilotSerialDatabase : public PilotDatabase
 {
 public:
-	PilotSerialDatabase(int linksocket, const char* dbName,
+	PilotSerialDatabase(int linksocket, const QString &dbName,
 		QObject * = 0L, const char * = 0L);
 	virtual ~PilotSerialDatabase();
 
@@ -56,10 +56,20 @@ public:
 	virtual PilotRecord* readRecordByIndex(int index);
 	/** Reads the next record from database in category 'category' */
 	virtual PilotRecord* readNextRecInCategory(int category);
-	/** Reads the next record from database that has the dirty flag set. */
-	virtual PilotRecord* readNextModifiedRec();
+	/** 
+	* Reads the next record from database that has the dirty flag set. 
+	* ind (if a valid pointer is given) will receive the index of the 
+	* returned record. 
+	*/
+	virtual PilotRecord* readNextModifiedRec(int *ind=NULL);
 	/** Writes a new record to database (if 'id' == 0, one will be assigned to newRecord) */
 	virtual recordid_t writeRecord(PilotRecord* newRecordb);
+	/** 
+	* Deletes a record with the given recordid_t from the database, 
+	* or all records, if all is set to true. The recordid_t will be 
+	* ignored in this case. Return value is negative on error, 0 otherwise.
+	*/
+	virtual int deleteRecord(recordid_t id, bool all=false);
 	/** Resets all records in the database to not dirty. */
 	virtual int resetSyncFlags();
 	/** Resets next record index to beginning */
@@ -69,7 +79,11 @@ public:
 
 	virtual QString dbPathName() const;
 
-	const char *getDBName() { return fDBName; }
+	/** Deletes the database (by name, as given in the constructor and stored in the fDBName field). */
+	virtual int deleteDatabase();
+	/** Creates the database with the given creator, type and flags on the given card (default is RAM). If the database already exists, this function does nothing. */
+	virtual bool createDatabase(long creator=0, long type=0, int cardno=0, int flags=0, int version=0);
+	QString getDBName() { return fDBName; }
 
 protected:
 	virtual void openDatabase();
@@ -80,44 +94,9 @@ protected:
 private:
 	void setDBHandle(int handle) { fDBHandle = handle; }
 
-	char*       fDBName;
+	QString     fDBName;
 	int         fDBHandle;
 	int         fDBSocket;
 };
 
-
-
-// $Log$
-// Revision 1.4  2002/06/30 14:49:53  kainhofe
-// added a function idList, some minor bug fixes
-//
-// Revision 1.3  2002/06/07 07:13:25  adridg
-// Make VCal conduit use base-class fDatabase and fLocalDatabase (hack).
-// Extend *Database classes with dbPathName() for consistency.
-//
-// Revision 1.2  2002/05/22 20:40:13  adridg
-// Renaming for sensibility
-//
-// Revision 1.1  2001/10/10 22:01:24  adridg
-// Moved from ../kpilot/, shared files
-//
-// Revision 1.9  2001/09/16 13:37:48  adridg
-// Large-scale restructuring
-//
-// Revision 1.8  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.7  2001/03/27 23:54:43  stern
-// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
-//
-// Revision 1.6  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.5  2001/02/07 14:21:59  brianj
-// Changed all include definitions for libpisock headers
-// to use include path, which is defined in Makefile.
-//
-// Revision 1.4  2001/02/06 08:05:20  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//
 #endif

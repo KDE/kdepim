@@ -24,12 +24,12 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
-** Bug reports and questions can be sent to groot@kde.org
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 
@@ -147,29 +147,4 @@ private:
 	RetrievalMode fMode;
 } ;
 
-
-
-
 #endif
-
-
-// $Log$
-// Revision 1.11  2001/12/13 21:35:33  adridg
-// Gave all conduits a config dialog
-//
-// Revision 1.10  2001/10/31 23:47:12  adridg
-// CVS_SILENT: Ongoing conduits ports
-//
-// Revision 1.9  2001/07/04 08:53:37  cschumac
-// - Added explicitDomainName text widget to setup dialog
-// - Changed the support for the explicit domain name a little
-//   (added a few more debug lines)
-// - Changed expected response to EHLO to "^250" instead of "Hello", to
-//   fix some people's protocol-correct but unexpected SMTP server reply.
-//
-// Revision 1.8  2001/04/23 21:18:43  adridg
-// Some i18n() fixups and KMail sending
-//
-// Revision 1.7  2001/02/07 15:46:31  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
-//

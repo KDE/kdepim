@@ -17,31 +17,28 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 **
 **
 ** Specific permission is granted for this code to be linked to libmal
 ** (this is necessary because the libmal license is not GPL-compatible).
 */
  
+/*
+** Bug reports and questions can be sent to kde-pim@kde.org
+*/
+ 
 
 
 
 #include "options.h"
-//#include <unistd.h>
-//#include <time.h>
 
-//#include <qtimer.h>
-
-//#include <kglobal.h>
-//#include <kmessagebox.h>
 #include <kconfig.h>
 #include <kdebug.h>
 
 #include "mal-factory.h"
 #include "mal-conduit.moc"
-//#include "malsync/libmal.h"
 #include <libmal.h>
 
 
@@ -90,7 +87,9 @@ MALConduit::MALConduit(KPilotDeviceLink * o,
 	register_printStatusHook(malconduit_logf);
 	register_printErrorHook(malconduit_logf);
 	conduitInstance=this;
-	(void) MAL_conduit_id;
+#ifdef DEBUG
+	DEBUGCONDUIT<<MAL_conduit_id<<endl;
+#endif
 }
 
 
@@ -111,23 +110,23 @@ void MALConduit::readConfig()
 #ifdef DEBUG
 	DEBUGCONDUIT<<"Last sync was "<<fLastSync.toString()<<endl;
 #endif
-	
-	eSyncTime=fConfig->readNumEntry(MALConduitFactory::syncTime(), 0);
-	
+
+	eSyncTime=(eSyncTimeEnum) fConfig->readNumEntry(MALConduitFactory::syncTime(), (int) eEverySync );
+
 	// Proxy settings
-	eProxyType=fConfig->readNumEntry(MALConduitFactory::proxyType(), 0);
-	fProxyServer=fConfig->readEntry(MALConduitFactory::proxyServer(), "");
+	eProxyType=(eProxyTypeEnum) fConfig->readNumEntry(MALConduitFactory::proxyType(), (int) eProxyNone );
+	fProxyServer=fConfig->readEntry(MALConduitFactory::proxyServer(), QString::null);
 	
 	fProxyPort=fConfig->readNumEntry(MALConduitFactory::proxyPort(), 0);
-	fProxyUser=fConfig->readEntry(MALConduitFactory::proxyUser(), "");
-	fProxyPassword=fConfig->readEntry(MALConduitFactory::proxyPassword(), "");
+	fProxyUser=fConfig->readEntry(MALConduitFactory::proxyUser(), QString::null);
+	fProxyPassword=fConfig->readEntry(MALConduitFactory::proxyPassword(), QString::null);
 
 	// MAL Server settings (not yet possible!!!)
 	fMALServer=fConfig->readEntry(MALConduitFactory::malServer(), "sync.avantgo.com");
 	fMALPort=fConfig->readNumEntry(MALConduitFactory::malPort(), 0);
 	
-	fMALUser=fConfig->readEntry(MALConduitFactory::malUser(), "");
-	fMALPassword=fConfig->readEntry(MALConduitFactory::malPassword(), "");
+	fMALUser=fConfig->readEntry(MALConduitFactory::malUser(), QString::null);
+	fMALPassword=fConfig->readEntry(MALConduitFactory::malPassword(), QString::null);
 }
 
 
@@ -191,32 +190,33 @@ bool MALConduit::skip()
 		return true;
 	}
 	
+	
 	// Set all proxy settings
 	switch (eProxyType) 
 	{
 		case eProxyHTTP:
 			if (fProxyServer.isEmpty()) break;
 #ifdef DEBUG
-			DEBUGCONDUIT<<" Using HTTP proxy server \""<<fProxyServer<<"\", Port "<<fProxyPort<<", User "<<fProxyUser<<", Password "<<( (fProxyPassword.isEmpty())?QString("not "):QString(""))<<"set"<<endl;
+			DEBUGCONDUIT<<" Using HTTP proxy server \""<<fProxyServer<<"\", Port "<<fProxyPort<<", User "<<fProxyUser<<", Password "<<( (fProxyPassword.isEmpty())?QString("not "):QString())<<"set"<<endl;
 #endif
-			setHttpProxy(fProxyServer.latin1());
-			if (fProxyPort>0 && fProxyPort<65536) setHttpProxyPort( fProxyPort );
-			else setHttpProxyPort(80);
-			
-			if (!fProxyUser.isEmpty()) 
-			{
-				setProxyUsername( fProxyUser.latin1() );
-				if (!fProxyPassword.isEmpty()) setProxyPassword( fProxyPassword.latin1() );
-			}
-			break;
-		case eProxySOCKS:
-#ifdef DEBUG
-			DEBUGCONDUIT<<" Using SOCKS proxy server \""<<fProxyServer<<"\",  Port "<<fProxyPort<<", User "<<fProxyUser<<", Password "<<( (fProxyPassword.isEmpty())?QString("not "):QString("") )<<"set"<<endl;
-#endif
-			setSocksProxy( fProxyServer.latin1() );
-			if (fProxyPort>0 && fProxyPort<65536) setSocksProxyPort( fProxyPort );
-			else setSocksProxyPort(1080);
-			break; 
+				setHttpProxy(const_cast<char *>(fProxyServer.latin1()));
+  			if (fProxyPort>0 && fProxyPort<65536) setHttpProxyPort( fProxyPort );
+  			else setHttpProxyPort(80);
+  			
+  			if (!fProxyUser.isEmpty()) 
+  			{
+					setProxyUsername( const_cast<char *>(fProxyUser.latin1()) );
+					if (!fProxyPassword.isEmpty()) setProxyPassword( const_cast<char *>(fProxyPassword.latin1()) );
+  			}
+  			break;
+  		case eProxySOCKS:
+  #ifdef DEBUG
+  			DEBUGCONDUIT<<" Using SOCKS proxy server \""<<fProxyServer<<"\",  Port "<<fProxyPort<<", User "<<fProxyUser<<", Password "<<( (fProxyPassword.isEmpty())?QString("not "):QString() )<<"set"<<endl;
+  #endif
+ 			setSocksProxy( const_cast<char *>(fProxyServer.latin1()) );
+  			if (fProxyPort>0 && fProxyPort<65536) setSocksProxyPort( fProxyPort );
+  			else setSocksProxyPort(1080);
+  			break; 
 		default:
 			break;
 	}
@@ -242,24 +242,3 @@ void MALConduit::printLogMessage(QString msg)
 	FUNCTIONSETUP;
 	emit logMessage(msg);
 }
-
-
-// $Log$
-// Revision 1.5  2002/08/24 18:02:58  kainhofe
-// Skipping the malconduit doesn't lock up kpilotDaemon any more...
-//
-// Revision 1.4  2002/08/23 22:59:29  kainhofe
-// Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
-//
-// Revision 1.3  2002/08/23 22:33:48  kainhofe
-// Added a license exception to be able to legally link to libmal
-//
-// Revision 1.2  2002/08/17 22:31:20  mhunter
-// CVS_SILENT Corrected typographical errors
-//
-// When replying, please CC me - I'm not subscribed
-//
-// Revision 1.1  2002/08/15 23:07:37  kainhofe
-// First official version of the malconduit
-//
-

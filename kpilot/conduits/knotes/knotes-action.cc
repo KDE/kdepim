@@ -18,8 +18,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
  
 /*
@@ -59,7 +59,7 @@ public:
 	int memo() const { return memoId; } ;
 	int note() const { return noteId; } ;
 	bool valid() const { return (noteId>0) && (memoId>0); } ;
-	QString toString() const { return QString("<%1,%2>").arg(noteId).arg(memoId); } ;
+	QString toString() const { return CSL1("<%1,%2>").arg(noteId).arg(memoId); } ;
 
 	static NoteAndMemo findNote(const QValueList<NoteAndMemo> &,int note);
 	static NoteAndMemo findMemo(const QValueList<NoteAndMemo> &,int memo);
@@ -138,7 +138,7 @@ public:
 
 KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	const char *n, const QStringList &a) :
-	ConduitAction(o,n,a),
+	ConduitAction(o,!n ? "knotes-conduit" : n,a),
 	fP(new KNotesActionPrivate)
 {
 	FUNCTIONSETUP;
@@ -191,7 +191,8 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 
 	fP->fNotes = fP->fKNotes->notes();
 
-	openDatabases("MemoDB");
+	// Database names seem to be latin1
+	openDatabases(QString::fromLatin1("MemoDB"));
 
 	if (isTest())
 	{
@@ -232,7 +233,7 @@ void KNotesAction::listNotes()
 			<< i.key()
 			<< "->"
 			<< i.data()
-			<< (fP->fKNotes->isNew("kpilot",i.key()) ?
+			<< (fP->fKNotes->isNew(CSL1("kpilot"),i.key()) ?
 				" (new)" : "" )
 			<< endl;
 #endif
@@ -244,6 +245,12 @@ void KNotesAction::listNotes()
 
 /* slot */ void KNotesAction::process()
 {
+	FUNCTIONSETUP;
+#ifdef DEBUG
+	DEBUGCONDUIT << fname 
+		<< ": Now in state " << fStatus << endl;
+#endif
+
 	switch(fStatus)
 	{
 	case Init:
@@ -358,12 +365,12 @@ bool KNotesAction::modifyNoteOnPilot()
 		}
 		else
 		{
-			addSyncLogEntry("No memos were changed.");
+			addSyncLogEntry(TODO_I18N("No memos were changed."));
 		}
 		return true;
 	}
 
-	if (fP->fKNotes->isModified("kpilot",fP->fIndex.key()))
+	if (fP->fKNotes->isModified(CSL1("kpilot"),fP->fIndex.key()))
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
@@ -380,11 +387,10 @@ bool KNotesAction::modifyNoteOnPilot()
 
 		if (nm.valid())
 		{
-			QString text = fP->fIndex.data() + "\n" ;
+			QString text = fP->fIndex.data() + CSL1("\n") ;
 			text.append(fP->fKNotes->text(fP->fIndex.key()));
 
-			const char *c = text.latin1();
-			PilotMemo *a = new PilotMemo((void *)(const_cast<char *>(c)));
+			PilotMemo *a = new PilotMemo(text);
 			PilotRecord *r = a->pack();
 			r->setID(nm.memo());
 
@@ -427,12 +433,12 @@ bool KNotesAction::addNewNoteToPilot()
 		}
 		else
 		{
-			addSyncLogEntry("No memos were added.");
+			addSyncLogEntry(TODO_I18N("No memos were added."));
 		}
 		return true;
 	}
 
-	if (fP->fKNotes->isNew("kpilot",fP->fIndex.key()))
+	if (fP->fKNotes->isNew(CSL1("kpilot"),fP->fIndex.key()))
 	{
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
@@ -444,11 +450,10 @@ bool KNotesAction::addNewNoteToPilot()
 			<< endl;
 #endif
 
-		QString text = fP->fIndex.data() + "\n" ;
+		QString text = fP->fIndex.data() + CSL1("\n") ;
 		text.append(fP->fKNotes->text(fP->fIndex.key()));
 
-		const char *c = text.latin1();
-		PilotMemo *a = new PilotMemo((void *)(const_cast<char *>(c)));
+		PilotMemo *a = new PilotMemo(text);
 		PilotRecord *r = a->pack();
 
 		int newid = fDatabase->writeRecord(r);
@@ -479,7 +484,7 @@ bool KNotesAction::syncMemoToKNotes()
 		}
 		else
 		{
-			addSyncLogEntry("No memos added to KNotes.");
+			addSyncLogEntry(TODO_I18N("No memos added to KNotes."));
 		}
 		return true;
 	}
@@ -560,7 +565,7 @@ void KNotesAction::cleanupMemos()
 	FUNCTIONSETUP;
 
 	// Tell KNotes we're up-to-date
-	fP->fKNotes->sync("kpilot");
+	fP->fKNotes->sync(CSL1("kpilot"));
 
 	if (fConfig)
 	{
@@ -599,7 +604,7 @@ void KNotesAction::cleanupMemos()
 	fDatabase->cleanup();
 	fDatabase->resetSyncFlags();
 
-	addSyncLogEntry("]\n");
+	addSyncLogEntry(CSL1("]\n"));
 }
 
 
@@ -607,74 +612,13 @@ void KNotesAction::cleanupMemos()
 {
 	switch(fStatus)
 	{
-	case Init : return QString("Init");
+	case Init : return CSL1("Init");
 	case NewNotesToPilot :
-		return QString("NewNotesToPilot key=%1")
+		return CSL1("NewNotesToPilot key=%1")
 			.arg(fP->fIndex.key());
 	case Done :
-		return QString("Done");
+		return CSL1("Done");
 	default :
-		return QString("Unknown (%1)").arg(fStatus);
+		return CSL1("Unknown (%1)").arg(fStatus);
 	}
 }
-
-
-// $Log$
-// Revision 1.13  2002/08/23 22:03:20  adridg
-// See ChangeLog - exec() becomes bool, debugging added
-//
-// Revision 1.12  2002/05/23 17:08:32  adridg
-// Some compile fixes for non-debug mode, and KNotes syncing fixes
-//
-// Revision 1.11  2002/05/23 08:01:29  adridg
-// Try to sync KNotes->Pilot
-//
-// Revision 1.10  2002/05/19 15:01:49  adridg
-// Patches for the KNotes conduit
-//
-// Revision 1.9  2002/05/15 17:15:33  gioele
-// kapp.h -> kapplication.h
-// I have removed KDE_VERSION checks because all that files included "options.h"
-// which #includes <kapplication.h> (which is present also in KDE_2).
-// BTW you can't have KDE_VERSION defined if you do not include
-// - <kapplication.h>: KDE3 + KDE2 compatible
-// - <kdeversion.h>: KDE3 only compatible
-//
-// Revision 1.8  2002/02/23 20:57:40  adridg
-// #ifdef DEBUG stuff
-//
-// Revision 1.7  2002/01/20 22:42:43  adridg
-// CVS_SILENT: Administrative
-//
-// Revision 1.6  2001/12/31 09:24:25  adridg
-// Cleanup, various fixes for runtime loading
-//
-// Revision 1.5  2001/12/20 22:55:44  adridg
-// Making conduits save their configuration and doing syncs
-//
-// Revision 1.4  2001/12/02 22:08:24  adridg
-// CVS_SILENT: I forget
-//
-// Revision 1.3  2001/10/31 23:46:51  adridg
-// CVS_SILENT: Ongoing conduits ports
-//
-// Revision 1.2  2001/10/29 09:45:19  cschumac
-// Make it compile.
-//
-// Revision 1.1  2001/10/16 21:44:53  adridg
-// Split up some files, added behavior
-//
-// Revision 1.4  2001/10/10 22:39:49  adridg
-// Some UI/Credits/About page patches
-//
-// Revision 1.3  2001/10/10 21:42:09  adridg
-// Actually do part of a sync now
-//
-// Revision 1.2  2001/10/10 13:40:07  cschumac
-// Compile fixes.
-//
-// Revision 1.1  2001/10/08 22:27:42  adridg
-// New ui, moved to lib-based conduit
-//
-//
-

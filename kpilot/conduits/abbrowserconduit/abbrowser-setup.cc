@@ -18,8 +18,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
  
 /*
@@ -27,18 +27,16 @@
 */
 
 #include "options.h"
+#include "abbrowser-setup.moc"
 
 #include <qtabwidget.h>
 #include <qcheckbox.h>
 #include <qcombobox.h>
 
-#include <kapplication.h>
 #include <kconfig.h>
 
 #include "kaddressbookConduit.h"
-
 #include "abbrowser-factory.h"
-#include "abbrowser-setup.moc"
 
 
 AbbrowserWidgetSetup::AbbrowserWidgetSetup(QWidget *w, const char *n,
@@ -104,33 +102,10 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 		fConfig->readNumEntry(AbbrowserConduitFactory::streetType(),0));
 	fConfigWidget->fFax->setCurrentItem(
 		fConfig->readNumEntry(AbbrowserConduitFactory::faxType(),0));
-	fConfigWidget->fConflictStrategy->setCurrentItem(
+	fConfigWidget->fSyncMode->setCurrentItem(
 		fConfig->readNumEntry(AbbrowserConduitFactory::syncMode(),0));
 	fConfigWidget->fFirstTimeSync->setChecked(
 		fConfig->readBoolEntry(AbbrowserConduitFactory::firstSync(),false));
 	fConfigWidget->fOtherPhone->setCurrentItem(
 		fConfig->readNumEntry(AbbrowserConduitFactory::otherField(),0));
 }
-
-
-// $Log$
-// Revision 1.5  2002/06/30 16:23:23  kainhofe
-// Started rewriting the addressbook conduit to use libkabc instead of direct dcop communication with abbrowser. Palm->PC is enabled (but still creates duplicate addresses), the rest is completely untested and thus disabled for now
-//
-// Revision 1.4  2002/05/15 17:15:32  gioele
-// kapp.h -> kapplication.h
-// I have removed KDE_VERSION checks because all that files included "options.h"
-// which #includes <kapplication.h> (which is present also in KDE_2).
-// BTW you can't have KDE_VERSION defined if you do not include
-// - <kapplication.h>: KDE3 + KDE2 compatible
-// - <kdeversion.h>: KDE3 only compatible
-//
-// Revision 1.3  2002/04/16 18:22:12  adridg
-// Wishlist fix from David B: handle formatted names when syncing
-//
-// Revision 1.2  2001/12/20 22:55:21  adridg
-// Making conduits save their configuration and doing syncs
-//
-// Revision 1.1  2001/10/31 23:54:45  adridg
-// CVS_SILENT: Ongoing conduits ports
-//

@@ -1,3 +1,9 @@
+### Makefile for the KNotes Conduit
+### 	conduits/knotes
+###
+### The expense conduit is Copyright (C) 2002 by Adriaan de Groot
+
+
 INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 
 METASOURCES = AUTO
@@ -12,6 +18,6 @@ libknotesconduit_la_SOURCES = knotes-factory.cc \
 	knotes-setup.cc knotes-action.cc \
 	setup_base.ui \
 	KNotesIface.stub
-libknotesconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib
-libknotesconduit_la_LIBADD = ../../lib/libkpilot.la
+libknotesconduit_la_LDFLAGS = $(KDE_RPATH) $(KDE_PLUGIN) $(all_libraries)
+libknotesconduit_la_LIBADD = ../../lib/libkpilot.la $(LIB_KDEUI)
 

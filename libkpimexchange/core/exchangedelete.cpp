@@ -96,12 +96,11 @@ void ExchangeDelete::slotFindUidResult( KIO::Job * job )
   // Found the appointment's URL
   QString href = hrefElement.text();
   KURL url(href);
-  url.setProtocol("webdav");
 
-  startDelete( url );  
+  startDelete( toDAV( url ) );  
 }  
 
-void ExchangeDelete::startDelete( KURL& url )
+void ExchangeDelete::startDelete( const KURL& url )
 {
   KIO::SimpleJob* job = KIO::file_delete( url, false ); // no GUI
   job->setWindow( mWindow );

@@ -19,8 +19,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -32,14 +32,18 @@ static const char *vcalconduit_id = "$Id$";
 #include <options.h>
 #include <unistd.h>
 
+// Qt includes
 #include <qdatetime.h>
 #include <qtimer.h>
 
-#include <pilotUser.h>
+// KDE includes
 #include <kconfig.h>
 
-#include <calendarlocal.h>
-//#include <event.h>
+// libkcal includes
+#include "libkcal/calendarlocal.h"
+
+// kpilot includes
+#include "pilotUser.h"
 
 
 /*
@@ -51,14 +55,14 @@ static const char *vcalconduit_id = "$Id$";
 #define DateList_t QDateList
 #define DateListIterator_t QDateListIterator
 #else
-#include <recurrence.h>
+#include "libkcal/recurrence.h"
 #define Recurrence_t KCal::Recurrence
 #define DateList_t KCal::DateList
 #define DateListIterator_t KCal::DateList::ConstIterator
 #endif
 
-#include <pilotSerialDatabase.h>
-#include <pilotLocalDatabase.h>
+#include "pilotSerialDatabase.h"
+#include "pilotLocalDatabase.h"
 //#include <pilotDateEntry.h>
 
 //#include "vcal-conduitbase.h"
@@ -165,7 +169,9 @@ VCalConduit::VCalConduit(KPilotDeviceLink *d,
 	const QStringList &a) : VCalConduitBase(d,n,a)
 {
 	FUNCTIONSETUP;
-	(void) vcalconduit_id;
+#ifdef DEBUG
+	DEBUGCONDUIT<<vcalconduit_id<<endl;
+#endif
 }
 
 
@@ -182,7 +188,7 @@ const QString VCalConduit::getTitle(PilotAppCategory*de)
 {
 	PilotDateEntry*d=dynamic_cast<PilotDateEntry*>(de);
 	if (d) return QString(d->getDescription());
-	return "";
+	return QString::null;
 }
 
 
@@ -219,7 +225,9 @@ PilotRecord*VCalConduit::recordFromIncidence(PilotDateEntry*de, const KCal::Even
 	setExceptions(de, e);
 	de->setDescription(e->summary());
 	de->setNote(e->description());
-DEBUGCONDUIT<<"-------- "<<e->summary()<<endl;
+#ifdef DEBUG
+	DEBUGCONDUIT<<"-------- "<<e->summary()<<endl;
+#endif
 	return de->pack();
 }
 
@@ -419,7 +427,7 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 	Recurrence_t *recur = event->recurrence();
 	int freq = dateEntry->getRepeatFrequency();
 	bool repeatsForever = dateEntry->getRepeatForever();
-	QDate endDate;
+	QDate endDate, evt;
 
 	if (!repeatsForever)
 	{
@@ -469,7 +477,12 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 		else recur->setWeekly(freq,dayArray,endDate);
 		}
 		break;
-	case repeatMonthlyByDay:
+	case repeatMonthlyByDay: {
+		// Palm: Day=0(sun)-6(sat); week=0-4, 4=last week; pos=week*7+day
+		// libkcal: day=bit0(mon)-bit6(sun); week=-5to-1(from end) and 1-5 (from beginning)
+		// Palm->PC: w=pos/7
+		// week: if w=4 -> week=-1, else week=w+1;
+		// day: day=(pos-1)%7 (rotate by one day!)
 		if (repeatsForever)
 		{
 			recur->setMonthly(Recurrence_t::rMonthlyPos,freq,-1);
@@ -479,9 +492,13 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 			recur->setMonthly(Recurrence_t::rMonthlyPos,freq,endDate);
 		}
 
-		dayArray.setBit((dateEntry->getRepeatDay()-1) % 7);
-		recur->addMonthlyPos(( (dateEntry->getRepeatDay()-1) / 7) + 1, dayArray);
-		break;
+		int day=dateEntry->getRepeatDay();
+		int week=day/7;
+		// week=4 means last, otherwise convert to 0-based
+		if (week==4) week=-1; else week++;
+		dayArray.setBit((day+6) % 7);
+		recur->addMonthlyPos(week, dayArray);
+		break;}
 	case repeatMonthlyByDate:
 		if (repeatsForever)
 		{
@@ -496,25 +513,16 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 	case repeatYearly:
 		if (repeatsForever)
 		{
-			recur->setYearly(Recurrence_t::rYearlyDay,freq,-1);
+			recur->setYearly(Recurrence_t::rYearlyMonth,freq,-1);
 		}
 		else
 		{
-			recur->setYearly(Recurrence_t::rYearlyDay,freq,endDate);
-		}
-		recur->addYearlyNum( readTm(dateEntry->getEventStart()).date().dayOfYear() );
-/*		if (repeatsForever)
-		{
-			recur->setYearly(Recurrence_t::rYearlyPos,freq,-1);
-		}
-		else
-		{
-			recur->setYearly(Recurrence_t::rYearlyPos,freq,endDate);
+			recur->setYearly(Recurrence_t::rYearlyMonth,freq,endDate);
 		}
 		evt=readTm(dateEntry->getEventStart()).date();
 		recur->addYearlyNum( evt.month() );
-		dayArray.setBit((evt.day()-1) % 7);
-		recur->addYearlyMonthPos( ( (evt.day()-1) / 7) + 1, dayArray );*/
+//		dayArray.setBit((evt.day()-1) % 7);
+//		recur->addYearlyMonthPos( ( (evt.day()-1) / 7) + 1, dayArray );
 		break;
 	case repeatNone:
 	default :
@@ -594,9 +602,14 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 		dateEntry->setRepeatDays(dayArrayPalm);
 		break;
 	case KCal::Recurrence::rMonthlyPos:
+		// Palm: Day=0(sun)-6(sat); week=0-4, 4=last week; pos=week*7+day
+		// libkcal: day=bit0(mon)-bit6(sun); week=-5to-1(from end) and 1-5 (from beginning)
+		// PC->Palm: pos=week*7+day
+		//  week: if w=-1 -> week=4, else week=w-1
+		//  day: day=(daybit+1)%7  (rotate because of the different offset)
 		dateEntry->setRepeatType(repeatMonthlyByDay);
 		if (r->monthPositions().count()>0)
-		{ 
+		{
 			// Only take the first monthly position, as the palm allows only one
 			QPtrList<KCal::Recurrence::rMonthPos> mps=r->monthPositions();
 			const KCal::Recurrence::rMonthPos*mp=mps.first();
@@ -605,7 +618,12 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 			// this is quite clumsy, but I haven't found a better way...
 			for (int j=0; j<7; j++)
 				if (dayArray[j]) pos=j;
-			dateEntry->setRepeatDay(static_cast<DayOfMonthType>(7*(mp->rPos-1) + pos));
+			int week=mp->rPos;
+			if (mp->negative) week*=-1;
+			int day=(pos+1) % 7; // rotate because of different offset
+			// turn to 0-based and include starting from end of month
+			if (week==-1) week=4; else week--;
+			dateEntry->setRepeatDay(static_cast<DayOfMonthType>(7*week + day));
 		}
 		break;
 	case KCal::Recurrence::rMonthlyDay:
@@ -613,6 +631,8 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 //TODO: is this needed?		dateEntry->setRepeatDay(static_cast<DayOfMonthType>(startDt.day()));
 		break;
 	case KCal::Recurrence::rYearlyDay:
+	case KCal::Recurrence::rYearlyPos:
+	case KCal::Recurrence::rYearlyMonth:
 		dateEntry->setRepeatType(repeatYearly);
 		break;
 	case KCal::Recurrence::rNone:
@@ -704,94 +724,30 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 	dateEntry->setExceptions(ex_List);
 }
 
-// $Log$
-// Revision 1.77  2002/08/24 18:06:51  kainhofe
-// First sync no longer generates duplicates, addIncidence checks if a similar entry already exists
-//
-// Revision 1.76  2002/08/23 11:13:28  adridg
-// Trying to be KDE 3.0.x compatible is hopeless
-//
-// Revision 1.75  2002/08/21 10:40:56  adridg
-// Whoops, bad assumptions on the version number in HEAD
-//
-// Revision 1.74  2002/08/20 20:49:11  adridg
-// Make sure the HEAD code compiles under KDE 3.0.x too, wrt. libkcal changes
-//
-// Revision 1.73  2002/08/15 10:47:56  kainhofe
-// Finished categories syncing for the todo conduit
-//
-// Revision 1.72  2002/07/28 17:27:54  cschumac
-// Move file loading/saving code from CalendarLocal to own class.
-//
-// Revision 1.71  2002/07/24 20:08:53  kainhofe
-// fixed yearly recurrences
-//
-// Revision 1.70  2002/07/23 00:45:18  kainhofe
-// Fixed several bugs with recurrences.
-//
-// Revision 1.69  2002/07/20 18:17:04  cschumac
-// Renamed Calendar::getAllEvents() to Calendar::events().
-// Removed get prefix from Calendar functions returning events.
-// Finally we now have a consistent naming scheme in Calendar.
-//
-// Revision 1.68  2002/06/12 22:11:17  kainhofe
-// Proper cleanup, libkcal still has some problems marking records modified on loading
-//
-// Revision 1.67  2002/05/18 13:08:56  kainhofe
-// dirty flag is now cleared, conflict resolution shows the correct item title and asks the correct question
-//
-// Revision 1.66  2002/05/14 23:07:49  kainhofe
-// Added the conflict resolution code. the Palm and PC precedence is currently swapped, and will be improved in the next few days, anyway...
-//
-// Revision 1.65  2002/05/01 21:18:23  kainhofe
-// Reworked the settings dialog, added various different sync options
-//
-// Revision 1.51.2.3  2002/04/28 12:58:54  kainhofe
-// Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
-//
-// Revision 1.63  2002/04/22 22:51:51  kainhofe
-// Added the first version of the todo conduit, fixed a check for a null pointer in the datebook conduit
-//
-// Revision 1.62  2002/04/21 17:39:01  kainhofe
-// recurrences without enddate work now
-//
-// Revision 1.61  2002/04/21 17:07:12  kainhofe
-// Fixed some memory leaks, old alarms and exceptions are deleted before new are added, Alarms are now correct
-//
-// Revision 1.60  2002/04/20 18:05:50  kainhofe
-// No duplicates any more in the calendar
-//
-// Revision 1.59  2002/04/20 17:38:02  kainhofe
-// recurrence now correctly written to the palm, no longer crashes
-//
-// Revision 1.58  2002/04/20 14:21:26  kainhofe
-// Alarms are now written to the palm. Some bug fixes, extensive testing. Exceptions still crash the palm ;-(((
-//
-// Revision 1.57  2002/04/19 19:34:11  kainhofe
-// didn't compile
-//
-// Revision 1.56  2002/04/19 19:10:29  kainhofe
-// added some comments describin the sync logic, deactivated the sync again (forgot it when I commited last time)
-//
-// Revision 1.55  2002/04/17 20:47:04  kainhofe
-// Implemented the alarm sync
-//
-// Revision 1.54  2002/04/17 00:28:11  kainhofe
-// Removed a few #ifdef DEBUG clauses I had inserted for debugging purposes
-//
-// Revision 1.53  2002/04/16 23:40:36  kainhofe
-// Exceptions no longer crash the daemon, recurrences are correct now, end date is set correctly. Problems: All events are off 1 day, lots of duplicates, exceptions are duplicate, too.
-//
-// Revision 1.52  2002/04/14 22:18:16  kainhofe
-// Implemented the second part of the sync (PC=>Palm), but disabled it, because it corrupts the Palm datebook
-//
-// Revision 1.51  2002/02/23 20:57:41  adridg
-// #ifdef DEBUG stuff
-//
-// Revision 1.50  2002/01/26 15:01:02  adridg
-// Compile fixes and more
-//
-// Revision 1.49  2002/01/25 21:43:12  adridg
-// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
-//
+void VCalConduit::doTest()
+{
+	FUNCTIONSETUP;
+	bool full = false;
+// Use bool ConduitAction::openDatabases_(const QString &dbName,const QString &localPath)
+
+	openDatabases(dbname());
+	openCalendar();
+
+	int pilotindex = 0;
+	PilotRecord *r  = 0L;
+	int recordCount = 0;
+	while ((r = fDatabase->readRecordByIndex(pilotindex++)))
+	{
+		addRecord(r);
+		recordCount++;
+	}
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Added " << recordCount << " records." << endl;
+#endif
+
+	fP->updateIncidences();
+	cleanup();
+}
 

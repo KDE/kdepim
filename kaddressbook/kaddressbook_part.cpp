@@ -41,7 +41,7 @@
 #include "kaddressbook_part.h"
 
 typedef KParts::GenericFactory< KAddressbookPart > KAddressbookFactory;
-K_EXPORT_COMPONENT_FACTORY( libkaddressbookpart, KAddressbookFactory );
+K_EXPORT_COMPONENT_FACTORY( libkaddressbookpart, KAddressbookFactory )
 
 KAddressbookPart::KAddressbookPart(QWidget *parentWidget, const char *widgetName,
                                QObject *parent, const char *name, const QStringList &) :
@@ -86,7 +86,7 @@ KAddressbookPart::~KAddressbookPart()
 KAboutData *KAddressbookPart::createAboutData()
 {
   KAboutData *about = new KAboutData("kaddressbook", I18N_NOOP("KAddressBook"),
-                                     "3.1beta1", I18N_NOOP("The KDE Address Book"),
+                                     "3.1", I18N_NOOP("The KDE Address Book"),
                                      KAboutData::License_BSD,
                                      I18N_NOOP("(c) 1997-2002, The KDE PIM Team"));
   about->addAuthor("Tobias Koenig", I18N_NOOP("Current maintainer"), "tokoe@kde.org");

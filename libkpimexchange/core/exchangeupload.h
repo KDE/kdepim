@@ -49,7 +49,7 @@ class ExchangeUpload : public QObject {
 
   private:
     void tryExist();
-    void startUpload( KURL& url );
+    void startUpload( const KURL& url );
     void findUid( QString const& uid );
     
     ExchangeAccount* mAccount;

@@ -21,8 +21,8 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -62,32 +62,5 @@ protected:
 		const char* classname = "QObject",
 		const QStringList &args = QStringList() )=0;
 } ;
-
-
-// $Log$
-// Revision 1.1.2.2  2002/05/01 21:11:49  kainhofe
-// Reworked the settings dialog, added various different sync options
-//
-// Revision 1.1.2.1  2002/04/28 12:58:54  kainhofe
-// Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
-//
-// Revision 1.6  2002/04/20 14:21:26  kainhofe
-// Alarms are now written to the palm. Some bug fixes, extensive testing. Exceptions still crash the palm ;-(((
-//
-// Revision 1.5  2002/04/19 19:34:11  kainhofe
-// didn't compile
-//
-// Revision 1.4  2002/01/25 21:43:12  adridg
-// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
-//
-// Revision 1.3  2001/12/28 12:56:46  adridg
-// Added SyncAction, it may actually do something now.
-//
-// Revision 1.2  2001/12/27 16:43:36  adridg
-// Fixup configuration
-//
-// Revision 1.1  2001/12/13 21:40:40  adridg
-// New files for move to .so
-//
 
 #endif

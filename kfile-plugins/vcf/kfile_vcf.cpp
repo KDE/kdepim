@@ -40,7 +40,7 @@ typedef unsigned short uint32_t;
 
 typedef KGenericFactory<KVcfPlugin> VcfFactory;
 
-K_EXPORT_COMPONENT_FACTORY(kfile_vcf, VcfFactory( "kfile_vcf" ));
+K_EXPORT_COMPONENT_FACTORY(kfile_vcf, VcfFactory( "kfile_vcf" ))
 
 KVcfPlugin::KVcfPlugin(QObject *parent, const char *name,
                        const QStringList &args)

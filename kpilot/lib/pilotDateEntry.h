@@ -1,3 +1,5 @@
+#ifndef _KPILOT_PILOTDATEENTRY_H
+#define _KPILOT_PILOTDATEENTRY_H
 /* pilotDateEntry.h	-*- C++ -*-	KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
@@ -18,15 +20,13 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** MA 02111-1307, USA.
 */
 
 /*
-** Bug reports and questions can be sent to groot@kde.org
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#ifndef _KPILOT_PILOTDATEENTRY_H
-#define _KPILOT_PILOTDATEENTRY_H
 
 #include <time.h>
 #include <string.h>
@@ -119,12 +119,20 @@ public:
   const struct tm *getExceptions() const { return fAppointmentInfo.exception; }
   void setExceptions(struct tm *e);
 
-  void  setDescription(const char* desc);
-  const char* getDescription() const { return fAppointmentInfo.description; }
+	void setDescription(const QString &);
+	QString getDescription() const;
+	
+	void setNote(const QString &);
+	QString getNote() const;
+	
+protected:
+	void  setDescriptionP(const char* desc, int l=-1);
+	const char* getDescriptionP() const { return fAppointmentInfo.description; }
 
-  void  setNote(const char* note);
-  const char* getNote() const { return fAppointmentInfo.note; }
+	void  setNoteP(const char* note, int l=-1);
+	const char* getNoteP() const { return fAppointmentInfo.note; }
 
+public:
   bool isMultiDay() const {
     return ((fAppointmentInfo.repeatType == repeatDaily) &&
             (fAppointmentInfo.repeatFrequency == 1) &&
@@ -149,47 +157,3 @@ private:
 #warning "File doubly included"
 #endif
 #endif
-
-
-
-// $Log$
-// Revision 1.6  2002/07/23 00:49:18  kainhofe
-// Fixed several bugs with recurrences.
-//
-// Revision 1.5  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.4  2002/04/16 23:42:27  kainhofe
-// setExceptions now deletes the old exceptions array to prevent memory leaks
-//
-// Revision 1.3.2.1  2002/04/28 16:10:15  kainhofe
-// Checks for null pointer before accessing it. Exceptions are deleted before the new are set.
-//
-// Revision 1.3  2002/01/21 23:14:03  adridg
-// Old code removed; extra abstractions added; utility extended
-//
-// Revision 1.2  2001/12/28 12:55:24  adridg
-// Fixed email addresses; added isBackup() to interface
-//
-// Revision 1.1  2001/12/27 23:08:30  adridg
-// Restored some deleted wrapper files
-//
-// Revision 1.11  2001/06/18 19:51:40  cschumac
-// Fixed todo and datebook conduits to cope with KOrganizers iCalendar format.
-// They use libkcal now.
-//
-// Revision 1.10  2001/05/24 10:31:38  adridg
-// Philipp Hullmann's extensive memory-leak hunting patches
-//
-// Revision 1.9  2001/04/16 13:48:35  adridg
-// --enable-final cleanup and #warning reduction
-//
-// Revision 1.8  2001/04/01 17:32:06  adridg
-// Fiddling around with date properties
-//
-// Revision 1.7  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.6  2001/02/06 08:05:20  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//

@@ -153,6 +153,7 @@ void FeatureDistributionList::updateGUI()
     mPbListRename->setEnabled( true );
     mPbListRemove->setEnabled( true );
     mLvAddressees->setEnabled( true );
+    mLvAddressees->clear();
     KABC::DistributionList::Entry::List entries = list->entries();
     KABC::DistributionList::Entry::List::ConstIterator it;
     for( it = entries.begin(); it != entries.end(); ++it ) {
