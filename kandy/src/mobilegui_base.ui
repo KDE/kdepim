@@ -68,7 +68,7 @@
                         <cstring>TextLabel1_2</cstring>
                     </property>
                     <property name="text">
-                        <string>KDE Address Book</string>
+                        <string>KDE address book:</string>
                     </property>
                 </widget>
                 <widget class="QListView">
@@ -141,7 +141,7 @@
                         <cstring>TextLabel3_3</cstring>
                     </property>
                     <property name="text">
-                        <string>Mobile Phone Book</string>
+                        <string>Mobile phone book:</string>
                     </property>
                 </widget>
                 <widget class="QListView">
