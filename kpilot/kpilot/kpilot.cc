@@ -769,16 +769,27 @@ KPilotInstaller::slotDaemonStatus(KSocket* daemon)
 			//
 			//
 			KConfig& c = KPilotLink::getConfig();
+
+			// Either doFastSync() or doHotSync() sets up
+			// fLinkCommand to actually contain the bytes
+			// that we need to respond.
+			//
+			//
 			if (c.readBoolEntry("PreferFastSync",false))
 			{
+				getPilotLink()->setFastSyncRequired(true);
 				doFastSync();
+				fStatusBar->changeItem(
+					i18n("FastSync in progress..."), 0);
 			}
 			else
 			{
+				getPilotLink()->setFastSyncRequired(false);
 				doHotSync();
+				fStatusBar->changeItem(
+					i18n("HotSync in progress..."), 0);
 			}
 		}
-		fStatusBar->changeItem(i18n("Hot-Sync in progress..."), 0);
 
 		// This block writes some stuff to the link and
 		// therefore requires its own ofstream object.
@@ -790,7 +801,7 @@ KPilotInstaller::slotDaemonStatus(KSocket* daemon)
 		}
 		break;
 	case CStatusMessages::SYNC_COMPLETED :
-		fStatusBar->changeItem(i18n("Hot-Sync complete."), 0);
+		fStatusBar->changeItem(i18n("HotSync complete."), 0);
 		fLinkCommand[0] = 0L;
 		for(fPilotComponentList.first(); 
 			fPilotComponentList.current(); 
@@ -1267,3 +1278,5 @@ int main(int argc, char** argv)
 	return a.exec();
 }
 
+
+// $Log: $

@@ -6,6 +6,8 @@ Calgary, so no KPilot news from me till february. Done this week:
 
 * Built POSE, the Palm Emulator, so this may help in testing
   stuff for the OS versions that I don't actually have.
+  POSE is a real $#*%^ to build, but I can now actually use my
+  PalmV on-screen (with a PalmIII skin, which is kinda weird).
 * Replaced the addressEditor widget with something less stone-age.
 * Added a nifty feature so that you can edit one address in two
   windows and they keep semi-in-sync. abbrowser doesn't have this
@@ -27,6 +29,13 @@ Calgary, so no KPilot news from me till february. Done this week:
   	production:	NDEBUG defined, DEBUG undefined, TEST_DEBUG undefined
   	test nodebug:	NDEBUG defined, DEBUG undefined, TEST_DEBUG defined
   	testing:	NDEBUG undefined, DEBUG defined, TEST_DEBUG defined
+
+* Actually KPilotLink::doFullBackup wasn't all that bad. Still, all the
+  code needs going-over for i18n yuckiness. doFullRestore() was worse;
+  also fixed up directory yuckiness.
+  
+  Note to self: text for user is i18n()ed, kdDebug() &c. is in 
+  english ('cause Dan or I have to read it :) )
   
 
 Other stuff:
@@ -34,6 +43,24 @@ Other stuff:
 * It's a HotSync and a Pilot. I'll change strings in the source as
   I come across them. As for conjugations: I HotSynced, it HotSyncs.
 
+Todo:
+
+* Should just use the KPilotLink::config object to store all kinds
+  of user settings instead of copying them from the config file to
+  local variables, since this is just asking for inconsistency.
+* Close bug 16457.html in some way.
+* Finish integrating Heiko's patches
+* More vcal work
+* Clean up more of the butt-ugly parts of the code base (less of this now!)
+* Tell the KOrganizer docs people about KPilot
+* KPilot is an i18n nightmare
+  - The const char *s in the pilot databases can be addressed most
+    easily, I think.
+  - get rid of most of the strcpy, strcat, etc. But not all!
+    We're stuck with pilot-link, after all.
+* The password dialog in the popmail conduit is probably a very bad idea
+  I think kdesud should come into play here. Anyway, a KMail conduit would
+  be much cooler and safer. Sigh.
 
 KPilot Developer's notes for december 30th 2000
 ===============================================

@@ -131,7 +131,16 @@ private:
   void saveProperties(KConfig&);
   void sendRecord(PilotRecord* rec);
   bool quit() { return fQuit; }
-  KPilotLink* getPilotLink() { return fPilotLink; }
+
+#ifdef DEBUG
+	// The debugging version of getPilotLink also warns
+	// in case of bad link &c.
+	//
+	//
+	KPilotLink *getPilotLink();
+#else
+	KPilotLink* getPilotLink() { return fPilotLink; }
+#endif
 
   KProcess* fMonitorProcess;
   KSocket* fCurrentSocket;
@@ -167,3 +176,6 @@ private slots:
 
 	void slotRunKPilot();
 };
+
+
+// $Log:$

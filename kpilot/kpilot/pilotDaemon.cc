@@ -167,9 +167,21 @@ void PilotDaemonTray::changeIcon(IconShape i)
 	switch(i)
 	{
 	case Normal:
+		if (icon.isNull())
+		{
+			kdWarning() << __FUNCTION__
+				<< ": Regular icon is NULL!"
+				<< endl;
+		}
 		setPixmap(icon);
 		break;
 	case Busy:
+		if (busyicon.isNull())
+		{
+			kdWarning() << __FUNCTION__
+				<< ": Busy icon is NULL!"
+				<< endl;
+		}
 		setPixmap(busyicon);
 		break;
 	default :
@@ -388,7 +400,7 @@ PilotDaemon::setupConnections()
 	return;
 
 ErrConn:
-	kdDebug() << fname
+	kdError() << fname
 		<< ": Error creating socket for daemon: "
 		<< strerror(e)
 		<< endl;
@@ -423,6 +435,29 @@ PilotDaemon::setupSubProcesses()
 	}
 }
 
+#ifdef DEBUG
+KPilotLink *PilotDaemon::getPilotLink()
+{
+	FUNCTIONSETUP;
+
+	if (fPilotLink)
+	{
+		DEBUGKPILOT << fname
+			<< ": Returning Pilot Link @"
+			<< (int) fPilotLink
+			<< endl;
+
+		return fPilotLink;
+	}
+	else
+	{
+		kdWarning() << __FUNCTION__
+			<< ": No Pilot Link!"
+			<< endl;
+		return 0;
+	}
+}
+#endif
 
 void PilotDaemon::killMonitor(bool finishsync)
 {
@@ -459,7 +494,14 @@ PilotDaemon::startHotSync()
 	FUNCTIONSETUP;
 
 
-	if (tray) tray->changeIcon(PilotDaemonTray::Busy);
+	if (tray) 
+	{
+		DEBUGKPILOT << fname
+			<< ": Changing tray icon."
+			<< endl;
+
+		tray->changeIcon(PilotDaemonTray::Busy);
+	}
 
   // We need to send the SYNC_STARTING message after the sync
   // has already begun so that if KPilot is running it doesn't start
@@ -657,10 +699,16 @@ PilotDaemon::slotCommandReceived(KSocket*)
       getPilotLink()->doFullRestore();
       break;
     case KPilotLink::HotSync:
+	getPilotLink()->setFastSyncRequired(false);
+    case KPilotLink::FastSync:
       if(getPilotLink()->slowSyncRequired())
+      {
 	getPilotLink()->doFullBackup();
+	}
       else
+      {
 	getPilotLink()->quickHotSync();
+	}
       break;
     case KPilotLink::InstallFile:
       getPilotLink()->installFiles(KGlobal::dirs()->saveLocation("data", QString("kpilot/pending_install/")));
@@ -1088,6 +1136,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.22  2001/01/02 15:02:59  bero
+// Fix build
+//
 // Revision 1.21  2000/12/31 16:44:00  adridg
 // Patched up the debugging stuff again
 //

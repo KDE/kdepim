@@ -60,12 +60,9 @@ static const char *id="$Id$";
 
 #include "kpilotlink.moc"
 
-#define LOCALCONFIG	QString("/home/adridg/.kde/share/config")
-#define LOCALKDE	QString("/home/adridg/.kde")
-
 KPilotLink* KPilotLink::fKPilotLink = 0L;
 
-const QString KPilotLink::BACKUP_DIR = "/share/apps/kpilot/DBBackup/";
+// const QString KPilotLink::BACKUP_DIR = "/share/apps/kpilot/DBBackup/";
 
 
 
@@ -84,10 +81,8 @@ const QString KPilotLink::BACKUP_DIR = "/share/apps/kpilot/DBBackup/";
 
 	if (!config)	return 0;
 	else		return getConfigVersion(*config);
-#ifdef DEBUG
 	/* NOTREACHED */
 	(void) id;
-#endif
 }
 
 /* static */ int KPilotLink::getConfigVersion(KConfig& config)
@@ -165,7 +160,9 @@ void KPilotLink::readConfig()
 KPilotLink::KPilotLink()
   : 
 	fConduitRunStatus(None),
-	fConnected(false), fCurrentPilotSocket(-1), fSlowSyncRequired(false),
+	fConnected(false), fCurrentPilotSocket(-1), 
+	fSlowSyncRequired(false),
+	fFastSyncRequired(false),
     fOwningWidget(0L), fStatusBar(0L), fProgressDialog(0L), fConduitSocket(0L),
     fCurrentDB(0L), fNextDBIndex(0), fConduitProcess(0L), fMessageDialog(0L)
 {
@@ -179,7 +176,9 @@ KPilotLink::KPilotLink()
 KPilotLink::KPilotLink(QWidget* owner, KStatusBar* statusBar,
 		       const QString &devicePath) :
 	fConduitRunStatus(None),
-  fConnected(false), fCurrentPilotSocket(-1), fSlowSyncRequired(false),
+	fConnected(false), fCurrentPilotSocket(-1), 
+	fSlowSyncRequired(false),
+	fFastSyncRequired(false),
     fOwningWidget(owner), fStatusBar(statusBar), fProgressDialog(0L),
     fConduitSocket(0L), fCurrentDB(0L), fNextDBIndex(0), fConduitProcess(0L),
     fMessageDialog(0L)
@@ -212,7 +211,7 @@ KPilotLink::~KPilotLink()
 
 
 void
-KPilotLink::initPilotSocket(const QString& devicePath)
+KPilotLink::initPilotSocket(const QString& devicePath, bool inetconnection)
 {
 	FUNCTIONSETUP;
 
@@ -460,6 +459,10 @@ KPilotLink::slotConduitRead(KSocket* cSocket)
 	//
 	if (!fCurrentDB)
 	{
+		kdWarning() << __FUNCTION__
+			<< ": There is no open database."
+			<< endl;
+
 		writeResponse(cSocket,CStatusMessages::NO_SUCH_RECORD);
 		return;
 	}
@@ -1156,22 +1159,19 @@ KPilotLink::startHotSync()
 
   if (getConnected() || (getPilotMasterSocket() == -1))
     {
-      cout << "KPilotLink::connect() Error - Already connected or unable to connect!" << endl;
+	kdError() << __FUNCTION__
+		<<": Already connected or unable to connect!" 
+		<< endl;
       return;
     }
 
-  // I should really set these up...
-  //   signal(SIGHUP, SigHandler);
-  //   signal(SIGINT, SigHandler);
-  //   signal(SIGSEGV, SigHandler);
-    
   createNewProgressBar(i18n("Waiting to Sync"), 
 		       i18n("Reading user information..."), 
 		       0, 10, 0);
   updateProgressBar(0);
 
   // BAD HACK!
-  for(int i = 0; i < 100000; i++);
+	sleep(1);
     
   ret = pi_listen(getPilotMasterSocket(),1);
   if(ret == -1) 
@@ -1311,6 +1311,10 @@ int KPilotLink::findNextDB(DBInfo *info)
       if(dlp_ReadDBList(getCurrentPilotSocket(), 0, 0x80, 
 			fNextDBIndex, info) < 0)
 	{
+		setSlowSyncRequired(false);
+		KConfig& config = getConfig();
+		setFastSyncRequired(
+			config.readBoolEntry("PreferFastSync",false));
 	  fMessageDialog->hide();
 	  emit(databaseSyncComplete());
 	  return 0;
@@ -1389,6 +1393,18 @@ KPilotLink::syncNextDB()
 	}
 #endif
 
+	// If we want a FastSync, skip all DBs without conduits.
+	//
+	if (fFastSyncRequired)
+	{
+		DEBUGKPILOT << fname
+			<< ": Skipping database "
+			<< info.name
+			<< " during FastSync."
+			<< endl;
+		goto nextDB;
+	}
+
       message=i18n("Syncing: %1 ...").arg(info.name);
       fMessageDialog->setMessage(message);
       addSyncLogEntry(message.local8Bit());
@@ -1406,7 +1422,7 @@ KPilotLink::syncNextDB()
 	}
 #endif
       if (findDisposition(skip,&info)) goto nextDB;
-      if (findDisposition(backupOnly,&info)) 
+      if (findDisposition(backupOnly,&info) && !fFastSyncRequired) 
 	{
 	  if (!createLocalDatabase(&info))
 	    {
@@ -1707,6 +1723,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 }
 
 // $Log$
+// Revision 1.27  2001/01/01 18:05:35  adridg
+// i18n stuff in Backup and Restore
+//
 // Revision 1.26  2000/12/31 16:44:00  adridg
 // Patched up the debugging stuff again
 //

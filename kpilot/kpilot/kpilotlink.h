@@ -130,7 +130,10 @@ public:
    * Returns the whether the widget should do a full or partial backup.  Mostly obsolete now
    * that conduits are being used.
    */
-  bool slowSyncRequired() { return fSlowSyncRequired; }
+  bool slowSyncRequired() const { return fSlowSyncRequired; }
+
+  void setFastSyncRequired(bool yesno) { fFastSyncRequired = yesno; } 
+  bool fastSyncRequired() const { return fFastSyncRequired; } 
   
   /**
    * Backups all databases to BACKUP_DIR/username
@@ -316,11 +319,12 @@ private:
 
   int compare(struct db* d1, struct db* d2); // Compares two database infos..
   void initConduitSocket();         // Sets up fConduitSocket
-  void initPilotSocket(const QString& devicePath);
+  void initPilotSocket(const QString& devicePath, bool inetconnection=false);
 
   int         fPilotMasterSocket;   // This is the master one created with the class
   int         fCurrentPilotSocket;  // This changes with each connect()/disconnect()
   bool        fSlowSyncRequired;
+	bool fFastSyncRequired;
   QWidget*    fOwningWidget;
   KStatusBar* fStatusBar;           // Optional
   QDialog*    fProgressDialog;
