@@ -224,7 +224,7 @@ void ResourceExchange::slotMonitorError( int errorCode, const QString& moreInfo 
 
 bool ResourceExchange::addEvent(Event *anEvent)
 {
-    if( !mCache )
+  if( !mCache )
         return false;
   kdDebug() << "ResourceExchange::addEvent" << endl;
 
@@ -241,7 +241,7 @@ bool ResourceExchange::addEvent(Event *anEvent)
   return true;
 }
 
-void ResourceExchange::uploadEvent( Event* event )
+void ResourceExchange::uploadEvent( Event *event )
 {
   mClient->uploadSynchronous( event );
 }
@@ -269,7 +269,7 @@ Event *ResourceExchange::event( const QString &uid )
   return mCache->event( uid );
 }
 
-void ResourceExchange::subscribeEvents( const QDate& start, const QDate& end )
+void ResourceExchange::subscribeEvents( const QDate &start, const QDate &end )
 {
   kdDebug(5800) << "ResourceExchange::subscribeEvents()" << endl;
   // FIXME: possible race condition if several subscribe events are run close
@@ -355,7 +355,7 @@ Alarm::List ResourceExchange::alarms( const QDateTime &from, const QDateTime &to
 /****************************** PROTECTED METHODS ****************************/
 
 // after changes are made to an event, this should be called.
-void ResourceExchange::update(IncidenceBase *incidence)
+void ResourceExchange::update( IncidenceBase *incidence )
 {
   Event* event = dynamic_cast<Event *>( incidence );
   if ( event ) {
