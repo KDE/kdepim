@@ -18,7 +18,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
@@ -26,6 +26,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 #include "resolutionDialog.h"
+#include "resolutionDialog.moc"
 
 #include <qlayout.h>
 #include <qradiobutton.h>
@@ -37,15 +38,15 @@
 #include <kdialogbase.h>
 #include <kpilotlink.h>
 
-ResolutionDlg::ResolutionDlg( QWidget* parent, KPilotDeviceLink*fH, QString caption, QString Text, QStringList lst, QString remember) : 
+ResolutionDlg::ResolutionDlg( QWidget* parent, KPilotDeviceLink*fH, QString caption, QString Text, QStringList lst, QString remember) :
 	KDialogBase( parent, "resolutiondlg", true, caption, Ok|Cancel, Ok, true ), ResolutionButtonGroup(0L), rememberCheck(0L), tickleTimer(0L), fHandle(fH)
 {
 	QWidget *page = new QWidget( this );
 	setMainWidget(page);
 
 	setSizeGripEnabled( TRUE );
-	QGridLayout* topLayout = new QGridLayout( page, 5, 3, 11, 6, "MyDialogLayout"); 
-	
+	QGridLayout* topLayout = new QGridLayout( page, 5, 3, 11, 6, "MyDialogLayout");
+
 	QLabel* label = new QLabel(Text, page, "TextLabel1" );
 //	TextLabel1->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)2, (QSizePolicy::SizeType)5, 0, 0, TextLabel1->sizePolicy().hasHeightForWidth() ) );
 	label->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)5, (QSizePolicy::SizeType)1, 0, 0, label->sizePolicy().hasHeightForWidth() ) );
@@ -65,7 +66,7 @@ ResolutionDlg::ResolutionDlg( QWidget* parent, KPilotDeviceLink*fH, QString capt
 
 //	QLineEdit* ed=new QLineEdit(page);
 //	topLayout->addMultiCellWidget( ed, 1,1, 2,3);
-	
+
 
 	spacer = new QSpacerItem( 0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding );
 	topLayout->addItem( spacer, 2, 1 );
@@ -86,12 +87,12 @@ ResolutionDlg::ResolutionDlg( QWidget* parent, KPilotDeviceLink*fH, QString capt
 //	setTabOrder( buttonCancel, buttonHelp );
 	adjustSize();
 	resize(size());
-	
-	
-	if (fHandle) 
+
+
+	if (fHandle)
 		tickleTimer=new QTimer(this, "TickleTimer");
 
-	if (tickleTimer) 
+	if (tickleTimer)
 	{
 		connect( tickleTimer, SIGNAL(timeout()), this, SLOT(_tickle()) );
 		tickleTimer->start( 10000 ); // tickle the palm every 10 seconds to prevent a timeout until the sync is really finished.
@@ -99,13 +100,13 @@ ResolutionDlg::ResolutionDlg( QWidget* parent, KPilotDeviceLink*fH, QString capt
 
 }
 
-void ResolutionDlg::_tickle() 
+void ResolutionDlg::_tickle()
 {
 	if (fHandle)
 		fHandle->tickle();
 }
 
-/*  
+/*
  *  Destroys the object and frees any allocated resources
  */
 ResolutionDlg::~ResolutionDlg()
