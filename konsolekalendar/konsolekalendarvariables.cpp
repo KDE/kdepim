@@ -1,26 +1,25 @@
-/********************************************************************************
- *   konsolekalendarvariables.cpp                                               *
- *                                                                              *
- *   KonsoleKalendar is console frontend to calendar                            *
- *   Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>            *
- *   Copyright (C) 2003-2004  Allen Winter                                      *
- *                                                                              *
- *   This library is free software; you can redistribute it and/or              *
- *   modify it under the terms of the GNU Lesser General Public                 *
- *   License as published by the Free Software Foundation; either               *
- *   version 2.1 of the License, or (at your option) any later version.         *
- *                                                                              *
- *   This library is distributed in the hope that it will be useful,            *
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of             *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU          *
- *   Lesser General Public License for more details.                            *
- *                                                                              *
- *   You should have received a copy of the GNU Lesser General Public           *
- *   License along with this library; if not, write to the Free Software        *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA  *
- *                                                                              *
- ********************************************************************************/
-
+/*******************************************************************************
+ *   konsolekalendarvariables.cpp                                              *
+ *                                                                             *
+ *   KonsoleKalendar is a command line interface to KDE calendars              *
+ *   Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>           *
+ *   Copyright (C) 2003-2004  Allen Winter <awinterz@users.sourceforge.net>    *
+ *                                                                             *
+ *   This library is free software; you can redistribute it and/or             *
+ *   modify it under the terms of the GNU Lesser General Public                *
+ *   License as published by the Free Software Foundation; either              *
+ *   version 2.1 of the License, or (at your option) any later version.        *
+ *                                                                             *
+ *   This library is distributed in the hope that it will be useful,           *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU         *
+ *   Lesser General Public License for more details.                           *
+ *                                                                             *
+ *   You should have received a copy of the GNU Lesser General Public          *
+ *   License along with this library; if not, write to the Free Software       *
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA *
+ *                                                                             *
+ ******************************************************************************/
 
 #include <klocale.h>
 #include <kdebug.h>
@@ -28,7 +27,6 @@
 #include <kconfig.h>
 #include <kstandarddirs.h>
 #include <kglobalsettings.h>
-
 
 #include <qdatetime.h>
 #include <qstring.h>
@@ -39,8 +37,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <time.h>
-
-
 
 #include "konsolekalendarvariables.h"
 
@@ -84,11 +80,17 @@ void KonsoleKalendarVariables::setTimeZoneId()
     zonefilebuf[len] = '\0';
     zone = zonefilebuf;
     zone = zone.mid(zone.find("zoneinfo/") + 9);
-    kdDebug() << "konsolekalendarvariables.cpp::setTimeZoneId() | system timezone from /etc/localtime is " << zone << endl;
+    kdDebug() << "konsolekalendarvariables.cpp::setTimeZoneId() | "
+              << "system timezone from /etc/localtime is "
+              << zone
+              << endl;
   } else {
     tzset();
     zone = tzname[0];
-    kdDebug() << "konsolekalendarvariables.cpp::setTimeZoneId() | system timezone from tzset() is " << zone << endl;
+    kdDebug() << "konsolekalendarvariables.cpp::setTimeZoneId() | "
+              << "system timezone from tzset() is "
+              << zone
+              << endl;
   }
 
   // Read TimeZoneId from korganizerrc. This will override the system default
@@ -97,7 +99,10 @@ void KonsoleKalendarVariables::setTimeZoneId()
   QString tz(korgcfg.readEntry( "TimeZoneId" ) );
   if ( ! tz.isEmpty() ) {
     zone = tz;
-    kdDebug() << "konsolekalendarvariables.cpp::setTimeZoneId() | timezone from korganizerrc is " << zone << endl;
+    kdDebug() << "konsolekalendarvariables.cpp::setTimeZoneId() | "
+              << "timezone from korganizerrc is "
+              << zone
+              << endl;
   }
 
   m_bIsTimeZoneId = true;
@@ -116,7 +121,7 @@ bool KonsoleKalendarVariables::isTimeZoneId()
 
 KonsoleKalendarVariables::~KonsoleKalendarVariables()
 {
- // delete m_resource;
+  // delete m_resource;
 }
 
 void KonsoleKalendarVariables::setUID(QString uid)
@@ -217,7 +222,6 @@ QString KonsoleKalendarVariables::getImportFile()
   return m_import;
 }
 
-
 void KonsoleKalendarVariables::setCalendar( CalendarLocal *calendar )
 {
   m_calendarLocal = calendar;
@@ -227,18 +231,6 @@ CalendarLocal *KonsoleKalendarVariables::getCalendar()
 {
   return m_calendarLocal;
 }
-
-
-/*void KonsoleKalendarVariables::setExportFile( QString export_file )
-{
-  m_export_file = export_file;
-}
-
-QString KonsoleKalendarVariables::getExportFile()
-{
-  return m_export_file;
-}*/
-
 
 void KonsoleKalendarVariables::setExportType( int export_type )
 {
@@ -283,9 +275,8 @@ bool KonsoleKalendarVariables::getAll()
 
 void KonsoleKalendarVariables::setDefault( bool def )
 {
- m_bIsDefault = def;
+  m_bIsDefault = def;
 }
-
 
 bool KonsoleKalendarVariables::isDefault()
 {
@@ -350,53 +341,63 @@ bool KonsoleKalendarVariables::getFloating()
   return m_bFloating;
 }
 
-void KonsoleKalendarVariables::setDaysCount( int count ){
+void KonsoleKalendarVariables::setDaysCount( int count ) {
   m_daysCount = count;
   m_bDaysCount = true;
 }
 
-int KonsoleKalendarVariables::getDaysCount(){
+int KonsoleKalendarVariables::getDaysCount() {
   return m_daysCount;
 }
 
-bool KonsoleKalendarVariables::isDaysCount(){
+bool KonsoleKalendarVariables::isDaysCount() {
   return m_bDaysCount;
 }
 
-bool KonsoleKalendarVariables::addCalendarResources( ResourceCalendar *resource )
+bool KonsoleKalendarVariables::addCalendarResources(ResourceCalendar *resource)
 {
- if ( m_resource ) {
-   // In current state we support only one calendar
-   // that's a fact and we have to live with that!
-   kdDebug() << "konsolekalendarvariables.cpp::addCalendarResources() | Add to calendar resource!" << endl;
+  if ( m_resource ) {
+    // In current state we support only one calendar
+    // that's a fact and we have to live with that!
+    kdDebug() << "konsolekalendarvariables.cpp::addCalendarResources() | "
+              << "Add to calendar resource!"
+              << endl;
 
-   CalendarResourceManager::ActiveIterator it;
-   CalendarResourceManager *manager = getCalendarResourceManager();
-   QString fileName = NULL;
+    CalendarResourceManager::ActiveIterator it;
+    CalendarResourceManager *manager = getCalendarResourceManager();
+    QString fileName = NULL;
 
-   for ( it = manager->activeBegin(); it != manager->activeEnd(); ++it ) {
-       kdDebug() << "Resource name: " + (*it)->resourceName() << endl;
+    for ( it = manager->activeBegin(); it != manager->activeEnd(); ++it ) {
+      kdDebug() << "Resource name: " + (*it)->resourceName()
+                << endl;
 
-       if( !strcmp( (*it)->resourceName().local8Bit(), getCalendarFile().local8Bit() ) ){
-	kdDebug() << "konsolekalendarvariables.cpp::addCalendarResources() | We allready have this resource" << endl;
+      if ( !strcmp( (*it)->resourceName().local8Bit(),
+                    getCalendarFile().local8Bit() ) ) {
+	kdDebug() << "konsolekalendarvariables.cpp::addCalendarResources() | "
+                  << "We allready have this resource"
+                  << endl;
         return true;
-       }
+      }
 
-   }
+    }
 
-   manager->add( resource );
+    manager->add( resource );
 
-   if( isDefault() ) {
-    kdDebug() << "konsolekalendarvariables.cpp::addCalendarResources() | Make it default" << endl;
-    manager->setStandardResource( resource );
-   }
+    if ( isDefault() ) {
+      kdDebug() << "konsolekalendarvariables.cpp::addCalendarResources() | "
+                << "Make it default"
+                << endl;
+      manager->setStandardResource( resource );
+    }
 
- } else {
-  kdDebug() << "konsolekalendarvariables.cpp::addCalendarResources() | Cannot add to calendar resources (Not created!)" << endl;
-  return false;
- }
+  } else {
+    kdDebug() << "konsolekalendarvariables.cpp::addCalendarResources() | "
+              << "Cannot add to calendar resources (Not created!)"
+              << endl;
+    return false;
+  }
 
-return true;
+  return true;
 }
 
 bool KonsoleKalendarVariables::isCalendarResources()
@@ -404,7 +405,7 @@ bool KonsoleKalendarVariables::isCalendarResources()
   return m_bIsCalendarResources;
 }
 
-void KonsoleKalendarVariables::setCalendarResources( CalendarResources *resource )
+void KonsoleKalendarVariables::setCalendarResources(CalendarResources *resource)
 {
   m_resource = resource;
   setCalendar( ((CalendarLocal *)m_resource) );
@@ -413,9 +414,8 @@ void KonsoleKalendarVariables::setCalendarResources( CalendarResources *resource
 
 CalendarResources *KonsoleKalendarVariables::getCalendarResources()
 {
- return m_resource;
+  return m_resource;
 }
-
 
 CalendarResourceManager *KonsoleKalendarVariables::getCalendarResourceManager( )
 {
@@ -425,35 +425,40 @@ CalendarResourceManager *KonsoleKalendarVariables::getCalendarResourceManager( )
 bool KonsoleKalendarVariables::loadCalendarResources( KConfig *config )
 {
 
-	if ( m_resource ) {
+  if ( m_resource ) {
+    kdDebug() << "konsolekalendarvariables.cpp::loadCalendarResources() | "
+              << "loading resources"
+              << endl;
 
-	      kdDebug() << "konsolekalendarvariables.cpp::loadCalendarResources() | loading resources" << endl;
+    CalendarResourceManager *manager = m_resource->resourceManager();
 
-		  CalendarResourceManager *manager = m_resource->resourceManager();
+    if ( manager->isEmpty() == true ) {
 
-		      if ( manager->isEmpty() == true ) {
+      config->setGroup("General");
+      QString fileName = config->readPathEntry( "Active Calendar" );
 
-			            config->setGroup("General");
-			            QString fileName = config->readPathEntry( "Active Calendar" );
+      QString resourceName;
+      if ( fileName.isEmpty() ) {
+        fileName = locateLocal( "appdata", "std.ics" );
+        resourceName = i18n("Default KOrganizer resource");
+      } else {
+        resourceName = i18n("Active Calendar");
+      }
 
-			            QString resourceName;
-			            if ( fileName.isEmpty() ) {
-					            fileName = locateLocal( "appdata", "std.ics" );
-					            resourceName = i18n("Default KOrganizer resource");
-				    } else {
-					            resourceName = i18n("Active Calendar");
-				    }
+      kdDebug() << "konsolekalendarvariables.cpp::loadCalendarResources() | "
+                << "Using as default resource: '"
+                << fileName
+                << "'"
+                << endl;
 
-			            kdDebug() << "konsolekalendarvariables.cpp::loadCalendarResources() | Using as default resource: '" << fileName << "'" << endl;
+      ResourceCalendar *defaultResource = new ResourceLocal( fileName );
+      //defaultResource->setTimeZoneId);
+      defaultResource->setResourceName( resourceName );
 
-			      ResourceCalendar *defaultResource = new ResourceLocal( fileName );
-			      //defaultResource->setTimeZoneId);
-			      defaultResource->setResourceName( resourceName );
+      manager->add( defaultResource );
+      manager->setStandardResource( defaultResource );
+    }
+  }
 
-			      manager->add( defaultResource );
-			      manager->setStandardResource( defaultResource );
-		      }
-	  }
-
-	  return true;
+  return true;
 }

@@ -1,25 +1,25 @@
-/********************************************************************************
- *   konsolekalendar.h                                                          *
- *                                                                              *
- *   KonsoleKalendar is console frontend to calendar                            *
- *   Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>            * 
- *   Copyright (C) 2003-2004  Allen Winter                                      *
- *                                                                              *
- *   This library is free software; you can redistribute it and/or              * 
- *   modify it under the terms of the GNU Lesser General Public                 *
- *   License as published by the Free Software Foundation; either               *
- *   version 2.1 of the License, or (at your option) any later version.         *
- *                                                                              *
- *   This library is distributed in the hope that it will be useful,            * 
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of             *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU          *
- *   Lesser General Public License for more details.                            *
- *                                                                              *
- *   You should have received a copy of the GNU Lesser General Public           *
- *   License along with this library; if not, write to the Free Software        *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA  * 
- *                                                                              *
- ********************************************************************************/
+/*******************************************************************************
+ *   konsolekalendar.h                                                         *
+ *                                                                             *
+ *   KonsoleKalendar is a command line interface to KDE calendars              *
+ *   Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>           *
+ *   Copyright (C) 2003-2004  Allen Winter <awinterz@users.sourceforge.net>    *
+ *                                                                             *
+ *   This library is free software; you can redistribute it and/or             *
+ *   modify it under the terms of the GNU Lesser General Public                *
+ *   License as published by the Free Software Foundation; either              *
+ *   version 2.1 of the License, or (at your option) any later version.        *
+ *                                                                             *
+ *   This library is distributed in the hope that it will be useful,           *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU         *
+ *   Lesser General Public License for more details.                           *
+ *                                                                             *
+ *   You should have received a copy of the GNU Lesser General Public          *
+ *   License along with this library; if not, write to the Free Software       *
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA *
+ *                                                                             *
+ ******************************************************************************/
 
 #ifndef _KONSOLEKALENDAR_H
 #define _KONSOLEKALENDAR_H
@@ -40,79 +40,72 @@ namespace KCal {
 /**
  * KonsoleKalendar is the base class of the project
  */
-class KonsoleKalendar
-{
+  class KonsoleKalendar
+  {
   public:
     KonsoleKalendar(KonsoleKalendarVariables *variables);
     ~KonsoleKalendar();
 
-   /**
-    * Visualisez what we need
-    */
+    /**
+     * Visualisez what we need
+     */
     bool showInstance();
 
-   /**
-    * Imports calendar file
-    */
+    /**
+     * Imports calendar file
+     */
+    bool importCalendar();
 
-   bool importCalendar();
+    /**
+     * Add event to calendar
+     */
+    bool addEvent();
 
-   /**
-    * Add event to calendar
-    */
-   bool addEvent();
+    /**
+     * Change event
+     */
+    bool changeEvent();
 
-   /**
-    * Change event
-    */
+    /**
+     * Delete event
+     */
+    bool deleteEvent();
 
-   bool changeEvent();
+    /**
+     * Detect if event already exists
+     *
+     * @param  startdate Starting date
+     * @param  enddate   Ending date
+     * @param  summary   Which summary event should have have
+     */
+    bool isEvent( QDateTime startdate, QDateTime enddate, QString summary );
 
-   /**
-    * Delete event
-    */
-
-   bool deleteEvent();
-
-   /**
-    * Detect if event already exists
-    *
-    * @param  startdate Starting date
-    * @param  enddate   Ending date
-    * @param  summary   Which summary event should have have
-    */
-
-   bool isEvent( QDateTime startdate, QDateTime enddate, QString summary );
-
-   /**
-    * Creates calendar file (If it doesn't exists)
-    */
-
-   bool createCalendar();
+    /**
+     * Creates calendar file (If it doesn't exists)
+     */
+    bool createCalendar();
 
   private:
 
-   /**
-    * Print event specs for dryrun and verbose options
-    */
-   void printSpecs();
+    /**
+     * Print event specs for dryrun and verbose options
+     */
+    void printSpecs();
 
-   /**
-    * Prints event list in many formats
-    *
-    * @param eventlist which event we should print
-    * @param dt is the date to use when printing the event (for recurring events)
-    */
-
+    /**
+     * Prints event list in many formats
+     *
+     * @param eventlist which event we should print
+     * @param dt is the date to use when printing the event for recurring events
+     */
     bool printEventList( QTextStream *ts, Event::List *eventList, QDate dt );
 
-   /**
-    * Prints a single event in many formats
-    *
-    * @param event which we should print
-    * @param dt is the date to use when printing the event (for recurring events)
-    */
-
+    /**
+     * Prints a single event in many formats
+     *
+     * @param event which we should print
+     * @param dt is the date to use when printing the event for recurring events
+     */
     bool printEvent( QTextStream *ts, Event *event, QDate dt );
 
     /**
@@ -121,21 +114,22 @@ class KonsoleKalendar
      */
     Event::List allEventsSorted();
 
-   /**
-    * Variables that changes stuff in programm
-    */
+    /**
+     * Variables that changes stuff in programm
+     */
     KonsoleKalendarVariables *m_variables;
 
-   /**
-    * Calendar file itself
-    */
+    /**
+     * Calendar file itself
+     */
     ResourceCalendar *m_Calendar;
+
     /**
      * This is usefull if we like to have same day events to same system
-     */ 
-    QDate m_saveDate; 
-     
-};
+     */
+    QDate m_saveDate;
+
+  };
 
 }
 #endif

@@ -804,6 +804,7 @@ int main( int argc, char *argv[] )
    ***************************************************************************/
 
   // In add mode, make a check for floating events
+  //TODO: is this needed for change mode too?
   if ( add ) {
 
     // The event does NOT float if time, end-time, or epoch times are specified
