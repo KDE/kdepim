@@ -1,1 +1,4 @@
 #
+kandy: binary-without-manpage kandy
+kandy: binary-without-manpage kandy_client
+kandy: menu-item-contains-unknown-tag kderemove /usr/lib/menu/kandy:7

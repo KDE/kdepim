@@ -7,3 +7,4 @@ kpilot: binary-without-manpage pilotListener
 kpilot: binary-without-manpage popmail_conduit
 kpilot: binary-without-manpage todoconduit
 kpilot: binary-without-manpage vcalconduit
+kpilot: binary-without-manpage conduitExpense
