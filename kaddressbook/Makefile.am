@@ -12,7 +12,7 @@ INCLUDES= -I$(top_srcdir)/kaddressbook/interfaces \
 
 bin_PROGRAMS = kaddressbook
 
-kaddressbook_SOURCES = main.cpp
+kaddressbook_SOURCES = main.cpp kaddressbookmain.cpp 
 kaddressbook_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kaddressbook_LDADD = libkaddressbook.la
 
@@ -34,7 +34,7 @@ libkaddressbook_la_SOURCES = addresseeconfig.cpp addresseeeditordialog.cpp \
     addviewdialog.cpp emaileditwidget.cpp extensionmanager.cpp \
     filter.cpp filtereditdialog.cpp filterselectionwidget.cpp geowidget.cpp \
     imagewidget.cpp incsearchwidget.cpp jumpbuttonbar.cpp kabcore.cpp kablock.cpp \
-    kaddressbookiface.skel kaddressbookmain.cpp kaddressbookservice.cpp \
+    kaddressbookiface.skel kaddressbookservice.cpp \
     kaddressbookview.cpp keywidget.cpp ldapsearchdialog.cpp nameeditdialog.cpp \
     phoneeditwidget.cpp secrecywidget.cpp soundwidget.cpp \
     viewconfigurefieldspage.cpp viewconfigurefilterpage.cpp \
@@ -58,7 +58,7 @@ noinst_HEADERS = \
     addviewdialog.h emaileditwidget.h extensionmanager.h filter.h \
     filtereditdialog.h filterselectionwidget.h geowidget.h imagewidget.h \
     incsearchwidget.h jumpbuttonbar.h kablock.h kabprefs.h kaddressbook_part.h \
-    kaddressbookmain.h kaddressbookservice.h kaddressbookview.h keywidget.h \
+    kaddressbookservice.h kaddressbookview.h keywidget.h \
     ldapsearchdialog.h nameeditdialog.h phoneeditwidget.h secrecywidget.h \
     soundwidget.h typecombo.h undo.h undocmds.h viewconfigurefieldspage.h \
     viewconfigurefilterpage.h viewconfigurewidget.h viewmanager.h xxportmanager.h \
