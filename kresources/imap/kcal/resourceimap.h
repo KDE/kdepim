@@ -19,21 +19,16 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
+
 #ifndef KCAL_RESOURCEIMAP_H
 #define KCAL_RESOURCEIMAP_H
 
-#include <qptrlist.h>
-#include <qstring.h>
-#include <qdatetime.h>
-
-#include <kconfig.h>
-
-#include <libkcal/incidence.h>
 #include <libkcal/icalformat.h>
 #include <libkcal/calendarlocal.h>
+#include <libkcal/resourcecalendar.h>
 
-#include "resourcecalendar.h"
 #include <resourceimapshared.h>
+
 
 namespace KCal {
 
@@ -178,6 +173,8 @@ protected:
   virtual void deleteIncidence( const QString& type, const QString& uid );
   virtual void slotRefresh( const QString& type );
 
+  virtual void doClose();
+
 private:
   void init();
 
@@ -196,7 +193,7 @@ private:
   CalendarLocal mCalendar;
 
   // The list of subresources
-  QStringList mEventResources, mTaskResources, mJournalResources;
+  QMap<QString, bool> mEventResources, mTaskResources, mJournalResources;
   // Mapping from uid to resource
   QMap<QString, QString> mUidmap;
 };

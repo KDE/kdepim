@@ -20,23 +20,9 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include <kdebug.h>
-#include <klocale.h>
-
-#include <libkcal/vcaldrag.h>
-#include <libkcal/vcalformat.h>
-#include <libkcal/exceptions.h>
-#include <libkcal/incidence.h>
-#include <libkcal/event.h>
-#include <libkcal/todo.h>
-#include <libkcal/journal.h>
-
 #include <kabc/locknull.h>
+#include <kstandarddirs.h>
 
-#include <kresources/configwidget.h>
-#include <kresources/resource.h>
-
-#include "resourceimapconfig.h"
 #include "resourceimap.h"
 
 using namespace KCal;
@@ -81,11 +67,63 @@ ResourceIMAP::~ResourceIMAP()
 
 bool ResourceIMAP::doOpen()
 {
+  // Get the config file
+  QString configFile = locateLocal( "config", "kresources/imaprc" );
+  KConfig config( configFile );
+
+  // Read the calendar entries
+  QStringList resources;
+  if ( !kmailSubresources( resources, "Calendar" ) )
+    return false;
+  config.setGroup( "Calendar" );
+  QStringList::ConstIterator it;
+  mEventResources.clear();
+  for ( it = resources.begin(); it != resources.end(); ++it )
+    mEventResources[ *it ] = config.readBoolEntry( *it, true );
+
+  // Read the task entries
+  if ( !kmailSubresources( resources, "Task" ) )
+    return false;
+  config.setGroup( "Task" );
+  mTaskResources.clear();
+  for ( it = resources.begin(); it != resources.end(); ++it )
+    mTaskResources[ *it ] = config.readBoolEntry( *it, true );
+
+  // Read the journal entries
+  if ( !kmailSubresources( resources, "Journal" ) )
+    return false;
+  config.setGroup( "Journal" );
+  mJournalResources.clear();
+  for ( it = resources.begin(); it != resources.end(); ++it )
+    mJournalResources[ *it ] = config.readBoolEntry( *it, true );
+
   return true;
+}
+
+void ResourceIMAP::doClose()
+{
+  // Get the config file
+  QString configFile = locateLocal( "config", "kresources/imap/kcalrc" );
+  KConfig config( configFile );
+
+  config.setGroup( "Calendar" );
+  QMap<QString, bool>::ConstIterator it;
+  for ( it = mEventResources.begin(); it != mEventResources.end(); ++it )
+    config.writeEntry( it.key(), it.data() );
+
+  config.setGroup( "Task" );
+  for ( it = mTaskResources.begin(); it != mTaskResources.end(); ++it )
+    config.writeEntry( it.key(), it.data() );
+
+  config.setGroup( "Journal" );
+  for ( it = mJournalResources.begin(); it != mJournalResources.end(); ++it )
+    config.writeEntry( it.key(), it.data() );
 }
 
 bool ResourceIMAP::load()
 {
+  mUidmap.clear();
+
   // Load each resource. Note: It's intentional to use & instead of &&
   // so we try all three, even if the first failed
   return loadAllEvents() & loadAllTasks() & loadAllJournals();
@@ -93,25 +131,20 @@ bool ResourceIMAP::load()
 
 bool ResourceIMAP::loadAllEvents()
 {
-  bool changed = false;
-
-  // Get the list of resources
-  QStringList resources;
-  if ( !kmailSubresources( resources, "Calendar" ) )
-    return false;
-
   // We get a fresh list of events, so clean out the old ones
   mCalendar.deleteAllEvents();
-  mEventResources = resources;
-  mUidmap.clear();
 
   bool silent = mSilent;
   mSilent = true;
-  QStringList::ConstIterator itR;
-  for ( itR = resources.begin(); itR != resources.end(); ++itR ) {
+  QMap<QString, bool>::ConstIterator itR;
+  for ( itR = mEventResources.begin(); itR != mEventResources.end(); ++itR ) {
+    if ( !itR.data() )
+      // This resource is disabled
+      continue;
+
     // Get the list of events
     QStringList lst;
-    if ( !kmailIncidences( lst, "Calendar", *itR ) ) {
+    if ( !kmailIncidences( lst, "Calendar", itR.key() ) ) {
       // The get failed
       mSilent = silent;
       return false;
@@ -122,8 +155,7 @@ bool ResourceIMAP::loadAllEvents()
       Incidence* i = parseIncidence( *it );
       if ( i ) {
         if ( i->type() == "Event" ) {
-          addEvent( static_cast<Event*>( i ), *itR );
-          changed = true;
+          addEvent( static_cast<Event*>( i ), itR.key() );
         } else {
           kdDebug(5650) << "Unknown incidence type " << i->type();
           delete i;
@@ -134,29 +166,26 @@ bool ResourceIMAP::loadAllEvents()
   }
   mSilent = silent;
 
-  if ( changed )
-    emit resourceChanged( this );
-
+  emit resourceChanged( this );
   return true;
 }
 
 bool ResourceIMAP::loadAllTasks()
 {
-  bool changed = false;
-
-  // Get the list of resources
-  QStringList resources;
-  if ( !kmailSubresources( resources, "Task" ) )
-    return false;
-
   // We get a fresh list of todos, so clean out the old ones
   mCalendar.deleteAllTodos();
 
-  QStringList::ConstIterator itR;
-  for ( itR = resources.begin(); itR != resources.end(); ++itR ) {
+  bool silent = mSilent;
+  mSilent = true;
+  QMap<QString, bool>::ConstIterator itR;
+  for ( itR = mTaskResources.begin(); itR != mTaskResources.end(); ++itR ) {
+    if ( !itR.data() )
+      // This resource is disabled
+      continue;
+
     // Get the list of todos
     QStringList lst;
-    if ( !kmailIncidences( lst, "Task", *itR ) )
+    if ( !kmailIncidences( lst, "Task", itR.key() ) )
       // The get failed
       return false;
 
@@ -165,9 +194,7 @@ bool ResourceIMAP::loadAllTasks()
       Incidence* i = parseIncidence( *it );
       if ( i ) {
         if ( i->type() == "Todo" ) {
-          mCalendar.addTodo(static_cast<Todo*>(i));
-          i->registerObserver( this );
-          changed = true;
+          addTodo( static_cast<Todo*>( i )/*, itR.key()*/ );
         } else {
           kdDebug() << "Unknown incidence type " << i->type();
           delete i;
@@ -175,30 +202,28 @@ bool ResourceIMAP::loadAllTasks()
       }
     }
   }
+  mSilent = silent;
 
-  if ( changed )
-    emit resourceChanged( this );
-
+  emit resourceChanged( this );
   return true;
 }
 
 bool ResourceIMAP::loadAllJournals()
 {
-  bool changed = false;
-
-  // Get the list of resources
-  QStringList resources;
-  if ( !kmailSubresources( resources, "Journal" ) )
-    return false;
-
   // We get a fresh list of journals, so clean out the old ones
   mCalendar.deleteAllJournals();
 
-  QStringList::ConstIterator itR;
-  for ( itR = resources.begin(); itR != resources.end(); ++itR ) {
+  bool silent = mSilent;
+  mSilent = true;
+  QMap<QString, bool>::ConstIterator itR;
+  for ( itR=mJournalResources.begin(); itR!=mJournalResources.end(); ++itR ) {
+    if ( !itR.data() )
+      // This resource is disabled
+      continue;
+
     // Get the list of journals
     QStringList lst;
-    if ( !kmailIncidences( lst, "Journal", *itR ) )
+    if ( !kmailIncidences( lst, "Journal", itR.key() ) )
       // The get failed
       return false;
 
@@ -207,9 +232,7 @@ bool ResourceIMAP::loadAllJournals()
       Incidence* i = parseIncidence( *it );
       if ( i ) {
         if ( i->type() == "Journal" ) {
-          mCalendar.addJournal(static_cast<Journal*>(i));
-          i->registerObserver( this );
-          changed = true;
+          addJournal( static_cast<Journal*>( i )/*, itR.key()*/ );
         } else {
           kdDebug() << "Unknown incidence type " << i->type();
           delete i;
@@ -217,10 +240,9 @@ bool ResourceIMAP::loadAllJournals()
       }
     }
   }
+  mSilent = silent;
 
-  if ( changed )
-    emit resourceChanged( this );
-
+  emit resourceChanged( this );
   return true;
 }
 
@@ -562,6 +584,23 @@ QStringList ResourceIMAP::subresources() const
 void ResourceIMAP::setSubresourceActive( const QString& subresource,
                                          bool active )
 {
+  // Get the config file
+  QString configFile = locateLocal( "config", "kresources/imaprc" );
+  KConfig config( configFile );
+
+  if ( mEventResources.contains( subresource ) ) {
+    config.setGroup( "Calendar" );
+    config.writeEntry( subresource, active );
+    slotRefresh( "Calendar" );
+  } else if ( mTaskResources.contains( subresource ) ) {
+    config.setGroup( "Task" );
+    config.writeEntry( subresource, active );
+    slotRefresh( "Task" );
+  } else if ( mJournalResources.contains( subresource ) ) {
+    config.setGroup( "Journal" );
+    config.writeEntry( subresource, active );
+    slotRefresh( "Journal" );
+  }
 }
 
 void ResourceIMAP::subresourceAdded( const QString& type, const QString& )
