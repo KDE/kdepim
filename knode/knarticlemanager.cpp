@@ -63,7 +63,7 @@ QFile* KNSaveHelper::getFile()
     return 0;
 
   lastPath = url.url(-1);
-  lastPath.truncate(lastPath.length()-url.filename().length());
+  lastPath.truncate(lastPath.length()-url.fileName().length());
 
   if (url.isLocalFile()) {
     file = new QFile(url.path());

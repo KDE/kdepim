@@ -19,7 +19,7 @@
 #include "knfetcharticle.h"
 
 
-KNFetchArticle::KNFetchArticle() : i_dRef(-1), l_ines(-1), thrLevel(0), s_core(50),  newFups(0), unrFups(0)
+KNFetchArticle::KNFetchArticle() : t_hreaded(true), i_dRef(-1), l_ines(-1), thrLevel(0), s_core(50),  newFups(0), unrFups(0)
 {
   flags.fill(false,8);
 }
@@ -101,7 +101,7 @@ void KNFetchArticle::updateListItem()
   
   i_tem->setText(2, QString("%1").arg(s_core,3));
   
-  i_tem->setExpandable(hasFollowUps());
+  i_tem->setExpandable(t_hreaded && hasFollowUps());
 }
 
 

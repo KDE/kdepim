@@ -32,6 +32,9 @@ class KNFetchArticle : public KNArticle  {
     void parse();
     void parseFrom(const QCString &f);
     void clear();
+
+    // listview item handling
+    void setThreadMode(bool threaded)       { t_hreaded = threaded; }
     void initListItem();
     void updateListItem();
         
@@ -87,6 +90,7 @@ class KNFetchArticle : public KNArticle  {
   
         
   protected:
+    bool t_hreaded;
     QCString m_Id, f_rom, e_mail;
     int i_dRef, l_ines;
     unsigned short thrLevel, s_core, newFups, unrFups;

@@ -164,19 +164,23 @@ void KNFetchArticleManager::showHdrs(bool clear)
 
   for (int i=0; i<g_roup->length(); i++){
     art=g_roup->at(i);
-    if( ( !art->listItem() && art->filterResult() ) &&
-        ( art->idRef()==0 || !g_roup->byId(art->idRef())->filterResult() ) ) {
-
-      art->setListItem(new KNHdrViewItem(view));
-      art->initListItem();
+    art->setThreadMode(t_hreaded);
+    if (t_hreaded) {
+      if( ( !art->listItem() && art->filterResult() ) &&
+          ( art->idRef()==0 || !g_roup->byId(art->idRef())->filterResult() ) ) {
+        art->setListItem(new KNHdrViewItem(view));
+        art->initListItem();
+      }
+      else if(art->listItem())
+        art->updateListItem();
+    } else {
+      if(!art->listItem() && art->filterResult()) {
+        art->setListItem(new KNHdrViewItem(view));
+        art->initListItem();
+      }
+      else if(art->listItem())
+        art->updateListItem();
     }
-    else if(art->listItem())
-      art->updateListItem();
-
-
-      /*if(t_hreaded) createThread(art);
-      else createHdrItem(art);
-    }*/
   }
 
   if(view->firstChild())
@@ -450,6 +454,7 @@ void KNFetchArticleManager::showError(KNArticle *a, const QString &error)
 void KNFetchArticleManager::createHdrItem(KNFetchArticle *a)
 {
   a->setListItem(new KNHdrViewItem(view));
+  a->setThreadMode(t_hreaded);
   a->initListItem();
 }
 
@@ -473,6 +478,7 @@ void KNFetchArticleManager::createThread(KNFetchArticle *a)
   } else
     a->setListItem(new KNHdrViewItem(view));
 
+  a->setThreadMode(t_hreaded);
   a->initListItem();
 }
 
@@ -554,6 +560,7 @@ void KNFetchArticleManager::slotItemExpanded(QListViewItem *p)
 
       if(art->idRef()==topId) {
         art->setListItem(new KNHdrViewItem(hdrItem));
+        art->setThreadMode(t_hreaded);
         art->initListItem();
       }
       else if(totalExpand) {

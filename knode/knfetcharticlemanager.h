@@ -56,7 +56,7 @@ class KNFetchArticleManager : public QObject, public KNArticleManager  {
     void showHdrs(bool clear=true);
     void expandAllThreads(bool e);
     void setThreaded(bool t)        { t_hreaded=t; }
-    void toggleThreaded()           { t_hreaded=!t_hreaded; showHdrs(); }
+    void toggleThreaded()           { t_hreaded=!t_hreaded; showHdrs(true); }
     bool threaded() const { return t_hreaded; }
         
     void setCurrentArticle(KNFetchArticle *a);
