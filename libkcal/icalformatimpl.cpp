@@ -483,7 +483,7 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
       for (tmpDay = tmpDays.first();
 	   tmpDay;
 	   tmpDay = tmpDays.next()) {
-        r.by_month_day[index++] = icalrecurrencetype_day_position(*tmpDay);
+        r.by_month_day[index++] = icalrecurrencetype_day_position(*tmpDay*8);//*tmpDay);
       }
 //      r.by_day[index] = ICAL_RECURRENCE_ARRAY_MAX;
 #if 0
