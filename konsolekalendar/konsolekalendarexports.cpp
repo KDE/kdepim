@@ -93,9 +93,9 @@ bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts, Event *event ){
   QString delim = ",";  //one day maybe the delim character can be an option??
 
   if ( !event->doesFloat() ) {
-    *ts <<          event->dtStart().date().toString("yyyy:M:d");
+    *ts <<          event->dtStart().date().toString("yyyy-M-d");
     *ts << delim << event->dtStart().time().toString("hh:mm");
-    *ts << delim << event->dtEnd().date().toString("yyyy:M:d");
+    *ts << delim << event->dtEnd().date().toString("yyyy-M-d");
     *ts << delim << event->dtEnd().time().toString("hh:mm");
   } else {
     *ts << ",,,";
