@@ -9,7 +9,8 @@ X-KDE-Library=kabconfig
 X-KDE-FactoryName=kabconfig
 X-KDE-HasReadOnlyMode=false
 X-KDE-ParentApp=kaddressbook
-X-KDE-ParentComponents=kaddressbook,kaddressbookpart
+X-KDE-ParentComponents=kaddressbook,kontact_kaddressbookplugin
+X-KDE-CfgDlgHierarchy=KAB
 
 Name=Address Book
 Name[ar]=دفتر العناوين
@@ -38,7 +39,6 @@ Name[sr]=Адресар
 Name[sv]=Adressbok
 Name[ta]=Ó¸ÅÃ¢ô Òò¾¸õ
 Name[tr]=Adres Defteri
-Name[uk]=Адресна книга
 Name[xx]=xxAddress Bookxx
 Name[zh_CN]=地址簿
 Comment=Configure the address book

@@ -8,7 +8,8 @@ X-KDE-ModuleType=Library
 X-KDE-Library=kabldapconfig
 X-KDE-FactoryName=kabldapconfig
 X-KDE-ParentApp=kaddressbook
-X-KDE-ParentComponents=kaddressbook,kaddressbookpart
+X-KDE-ParentComponents=kaddressbook,kontact_kaddressbookplugin
+X-KDE-CfgDlgHierarchy=KAB
 
 Name=LDAP Lookup
 Name[ca]=Recerca LDAP
