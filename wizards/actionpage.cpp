@@ -191,7 +191,7 @@ void ActionPage::reloadConnections()
   mConnectionInfoList = mServerType->connectionInfo();
   ServerType::ConnectionInfoList::ConstIterator it;
   for ( it = mConnectionInfoList.begin(); it != mConnectionInfoList.end(); ++it ) {
-    QString name = (*it).name + " " + ((*it).active ? i18n( "(active)" ) : "(passive)");
+    QString name = (*it).name + " " + ((*it).active ? i18n( "(active)" ) : "(inactive)");
     mConnectionBox->insertItem( ((*it).active ? connected : disconnected) , name );
   }
 
