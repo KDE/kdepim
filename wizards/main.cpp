@@ -2,6 +2,7 @@
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kglobal.h>
+#include <klocale.h>
 
 #include "groupwarewizard.h"
 
