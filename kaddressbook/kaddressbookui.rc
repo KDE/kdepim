@@ -96,12 +96,4 @@
     <Action name="edit_delete"/>
   </ToolBar>
 
-  <ToolBar name="viewToolBar" noMerge="1"><text>View Toolbar</text>
-    <Action name="view_add"/>
-    <Action name="view_modify"/>
-    <Action name="view_delete"/>
-    <Separator/>
-    <Action name="view_refresh"/>
-  </ToolBar>
-
 </kpartgui>
