@@ -40,7 +40,7 @@
  *
  */
 
-	static char *
+	static const char *
 B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 // the mime base64 disctionary used for decoding
