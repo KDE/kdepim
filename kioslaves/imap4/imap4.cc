@@ -156,6 +156,7 @@ IMAP4Protocol::get (const KURL & _url)
   QString aBox, aSequence, aType, aSection, aValidity, aDelimiter;
   enum IMAP_TYPE aEnum =
     parseURL (_url, aBox, aSection, aType, aSequence, aValidity, aDelimiter);
+  mimeType (getMimeType(aEnum));
 
   if (aSequence == "0:0" && getState() == ISTATE_SELECT)
   {
