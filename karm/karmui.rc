@@ -9,6 +9,7 @@
       <text>Import/Export</text>
       <Action name="import_flatfile" />
       <Action name="export_csvfile" />
+      <Action name="export_csvhistory" />
     </Menu>
     <Action name="clip_totals" />
     <Action name="clip_history" />

@@ -237,6 +237,28 @@ void TaskView::exportcsvFile()
   }
 }
 
+void TaskView::exportcsvHistory()
+{
+  kdDebug(5970) << "TaskView::exportcsvHistory()" << endl;
+
+  PrintDialog *dialog = new PrintDialog();
+  if (dialog->exec()== QDialog::Accepted)
+  {
+    QString fileName (
+            KFileDialog::getOpenFileName(QString::null, QString::null, 0));
+    if ( !fileName.isEmpty() ) 
+    {
+        QString err = _storage->exportActivityReport (
+                this, fileName, dialog->from(), dialog->to() );
+        if ( !err.isEmpty() )
+        {
+            KMessageBox::error(this, err);
+            return;
+        }
+    }
+  }
+}
+
 void TaskView::scheduleSave()
 {
     _manualSaveTimer->start( 10, true /*single-shot*/ );

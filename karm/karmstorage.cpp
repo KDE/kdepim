@@ -644,11 +644,14 @@ void KarmStorage::addComment(const Task* task, const QString& comment)
     ( _calendar->resourceManager()->standardResource() );
 }
 
-void KarmStorage::printTaskHistory(const Task *task, 
-    const QMap<QString,long>& taskdaytotals, 
-    QMap<QString,long>& daytotals, 
-    const QDate& from,
-    const QDate& to, const int level, QString& s)
+void KarmStorage::printTaskHistory (
+        const Task                *task, 
+        const QMap<QString,long>& taskdaytotals, 
+        QMap<QString,long>&       daytotals, 
+        const QDate&              from,
+        const QDate&              to, 
+        const int                 level, 
+        QString&                  s)
 // to>=from is precondition
 {
   QString delim = i18n( "," );           
@@ -675,11 +678,11 @@ void KarmStorage::printTaskHistory(const Task *task,
     if (taskdaytotals.contains(daytaskkey))
     {
       s += QString::fromLatin1("%1")
-        .arg(formatTime(taskdaytotals[daytaskkey]/60));
+        .arg(formatTime(taskdaytotals[daytaskkey]/60, true));
       sum += taskdaytotals[daytaskkey];  // in seconds
-      
+
       if (daytotals.contains(daykey))
-        daytotals.replace(daykey, daytotals[daykey] + taskdaytotals[daytaskkey]);
+        daytotals.replace(daykey, daytotals[daykey]+taskdaytotals[daytaskkey]);
       else
         daytotals.insert(daykey, taskdaytotals[daytaskkey]);
     }
@@ -689,7 +692,7 @@ void KarmStorage::printTaskHistory(const Task *task,
   }
 
   // Total for task this week
-  s += QString::fromLatin1("%1").arg(formatTime(sum/60));
+  s += QString::fromLatin1("%1").arg(formatTime(sum/60, true));
 
   // Task name
   for ( int i = level + 1; i > 0; i-- ) s += delim;
@@ -741,9 +744,10 @@ QString KarmStorage::exportActivityReport
   QDate dayheading;
 
   // parameter-plausi
-  if (from>to) 
+  if ( from > to ) 
   {
-    err = QString::fromLatin1("'to' has to be a date later than or equal to 'from'.");
+    err = QString::fromLatin1 (
+            "'to' has to be a date later than or equal to 'from'.");
   }
  
   // header
@@ -784,10 +788,11 @@ QString KarmStorage::exportActivityReport
   }
         
   // day headings
-  dayheading=from;
-  while (dayheading<=to)
+  dayheading = from;
+  while ( dayheading <= to )
   {
-    retval += dayheading.toString(QString::fromLatin1("yyyyMMdd"));
+    // Use ISO 8601 format for date.
+    retval += dayheading.toString(QString::fromLatin1("yyyy-MM-dd"));
     retval += delim;
     dayheading=dayheading.addDays(1);
   }
@@ -820,7 +825,7 @@ QString KarmStorage::exportActivityReport
       if (daytotals.contains(daykey))
       {
         retval += QString::fromLatin1("%1")
-            .arg(formatTime(daytotals[daykey]/60));
+            .arg(formatTime(daytotals[daykey]/60, true));
         sum += daytotals[daykey];  // in seconds
       }
       retval += delim;
@@ -828,7 +833,7 @@ QString KarmStorage::exportActivityReport
     }
         
     retval += QString::fromLatin1("%1%2%3")
-        .arg(formatTime(sum/60))
+        .arg(formatTime(sum/60, true))
         .arg(delim)
         .arg(i18n("Total"));
   }
