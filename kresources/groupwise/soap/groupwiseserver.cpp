@@ -628,7 +628,7 @@ bool GroupwiseServer::addIncidence( KCal::Incidence *incidence,
 
   incidence->setCustomProperty( "GWRESOURCE", "UID",
                                 QString::fromUtf8( response.id.c_str() ) );
-  resource->setRemoteUid( incidence->uid(),
+  resource->idMapper().setRemoteId( incidence->uid(),
     QString::fromUtf8( response.id.c_str() ) );
 
   return true;

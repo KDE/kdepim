@@ -230,9 +230,9 @@ void ResourceGroupwise::slotJobResult( KIO::Job *job )
 //        kdDebug() << "INCIDENCE: " << (*it)->summary() << endl;
         Incidence *i = (*it)->clone();
         QString remote = (*it)->uid();
-        QString local = localUid( remote );
+        QString local = idMapper().localId( remote );
         if ( local.isEmpty() ) {
-          setRemoteUid( i->uid(), remote );
+          idMapper().setRemoteId( i->uid(), remote );
         } else {
           i->setUid( local );
         }

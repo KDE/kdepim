@@ -217,7 +217,7 @@ bool ResourceGroupwise::asyncSave( Ticket* )
   for ( it = addedList.begin(); it != addedList.end(); ++it ) {
     if ( mServer->insertAddressee( mPrefs->writeAddressBook(), *it ) ) {
       clearChange( *it );
-      setRemoteUid( (*it).uid(), (*it).custom( "GWRESOURCE", "UID" ) );
+      idMapper().setRemoteId( (*it).uid(), (*it).custom( "GWRESOURCE", "UID" ) );
     }
   }
 

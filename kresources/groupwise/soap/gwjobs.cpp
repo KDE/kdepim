@@ -137,9 +137,9 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
 
         QString remoteUid = converter.stringToQString( (*it)->id );
 
-        KABC::Addressee oldAddressee = mResource->findByUid( mResource->localUid( remoteUid ) );
+        KABC::Addressee oldAddressee = mResource->findByUid( mResource->idMapper().localId( remoteUid ) );
         if ( oldAddressee.isEmpty() ) // new addressee
-          mResource->setRemoteUid( addr.uid(), remoteUid );
+          mResource->idMapper().setRemoteId( addr.uid(), remoteUid );
         else {
           addr.setUid( oldAddressee.uid() );
           mResource->removeAddressee( oldAddressee );
@@ -271,9 +271,9 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
 
         if ( mResource ) {
           QString remoteUid = conv.stringToQString( (*it)->id );
-          QString localUid = mResource->localUid( remoteUid );
+          QString localUid = mResource->idMapper().localId( remoteUid );
           if ( localUid.isEmpty() ) {
-            mResource->setRemoteUid( i->uid(), remoteUid );
+            mResource->idMapper().setRemoteId( i->uid(), remoteUid );
           } else {
             i->setUid( localUid );
           }
@@ -282,12 +282,12 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id )
 // Disable uid mapping as long as we load the whole calendar anyway.
 #if 0
         QString remoteUid = conv.stringToQString( (*it)->id );
-        KCal::Incidence *oldIncidence = mResource->event( mResource->localUid( remoteUid ) );
+        KCal::Incidence *oldIncidence = mResource->event( mResource->idMapper().localId( remoteUid ) );
         if ( !oldIncidence )
-          oldIncidence = mResource->todo( mResource->localUid( remoteUid ) );
+          oldIncidence = mResource->todo( mResource->idMapper().localId( remoteUid ) );
 
         if ( !oldIncidence ) { // new incidence
-          mResource->setRemoteUid( i->uid(), remoteUid );
+          mResource->idMapper().setRemoteId( i->uid(), remoteUid );
         } else {
           i->setUid( oldIncidence->uid() );
           mResource->deleteIncidence( oldIncidence );
