@@ -96,6 +96,11 @@ kdbgstream & operator << (kdbgstream & o, const QSize & s)
 	return o;
 }
 
+kndbgstream & operator << (kndbgstream & o, const QSize & s)
+{
+	return o;
+}
+
 static KCmdLineOptions debug_options_[] = {
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
 	{0, 0, 0}
@@ -108,6 +113,9 @@ int const fname = ((int) options_id);
 
 
 // $Log$
+// Revision 1.4  2002/02/02 11:46:03  adridg
+// Abstracting away pilot-link stuff
+//
 // Revision 1.3  2002/01/18 10:08:00  adridg
 // CVS_SILENT: Fixing my compile fixes again
 //

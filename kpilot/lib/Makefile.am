@@ -12,6 +12,7 @@ INCLUDES = $(all_includes) $(PISOCK_INCLUDE)
 ### DEBUG_CERR. Define DEBUG to get debugging support anywhere.
 ###
 ### KDE_CXXFLAGS=-DDEBUG -DDEBUG_CERR
+KDE_CXXFLAGS=-DNDEBUG -UDEBUG
 
 lib_LTLIBRARIES = libkpilot.la
 

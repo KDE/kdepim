@@ -174,6 +174,7 @@ QString charExpansion(const char *);
 class QSize;
 ostream& operator << (ostream&,const QSize &) ;
 kdbgstream& operator << (kdbgstream&,const QSize &);
+kndbgstream& operator << (kndbgstream&,const QSize &);
 
 // class QStringList;
 // ostream& operator <<(ostream&,const QStringList &);
@@ -197,6 +198,9 @@ kdbgstream& operator << (kdbgstream&,const QSize &);
 
 
 // $Log$
+// Revision 1.12  2002/05/22 20:55:17  adridg
+// Allow debug and non-debug code to mix a little
+//
 // Revision 1.11  2002/05/15 17:15:33  gioele
 // kapp.h -> kapplication.h
 // I have removed KDE_VERSION checks because all that files included "options.h"

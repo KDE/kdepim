@@ -59,7 +59,7 @@ public:
 	int memo() const { return memoId; } ;
 	int note() const { return noteId; } ;
 	bool valid() const { return (noteId>0) && (memoId>0); } ;
-
+	QString toString() const { return QString("<%1,%2>").arg(noteId).arg(memoId); } ;
 
 	static NoteAndMemo findNote(const QValueList<NoteAndMemo> &,int note);
 	static NoteAndMemo findMemo(const QValueList<NoteAndMemo> &,int memo);
@@ -175,7 +175,7 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	fP->fKNotes = new KNotesIface_stub("knotes","KNotesIface");
 
 	fP->fNotes = fP->fKNotes->notes();
-	
+
 	openDatabases("MemoDB");
 
 	if (isTest())
@@ -322,6 +322,8 @@ void KNotesAction::getAppInfo()
 
 	resetIndexes();
 	fStatus=ModifiedNotesToPilot;
+	
+	addSyncLogEntry(i18n("[KNotes conduit: "));
 }
 
 
@@ -337,17 +339,12 @@ bool KNotesAction::modifyNoteOnPilot()
 				"Modified %n memos.",
 				fP->fCounter));
 		}
+		else
+		{
+			addSyncLogEntry("No memos were changed.");
+		}
 		return true;
 	}
-
-#ifdef DEBUG
-	DEBUGCONDUIT << fname
-		<< ": Checking note "
-		<< fP->fIndex.key()
-		<< " with name "
-		<< fP->fIndex.data()
-		<< endl;
-#endif
 
 	if (fP->fKNotes->isModified("kpilot",fP->fIndex.key()))
 	{
@@ -411,6 +408,10 @@ bool KNotesAction::addNewNoteToPilot()
 				"Added %n new memos.",
 				fP->fCounter));
 		}
+		else
+		{
+			addSyncLogEntry("No memos were added.");
+		}
 		return true;
 	}
 
@@ -454,11 +455,30 @@ bool KNotesAction::syncMemoToKNotes()
 	PilotRecord *rec = fDatabase->readNextModifiedRec();
 	if (!rec)
 	{
+		if (fP->fCounter)
+		{
+			addSyncLogEntry(i18n("Added one memo to KNotes.",
+				"Added %n memos to KNotes.",fP->fCounter));
+		}
+		else
+		{
+			addSyncLogEntry("No memos added to KNotes.");
+		}
 		return true;
 	}
 
+	fP->fCounter++;
+
 	PilotMemo *memo = new PilotMemo(rec);
 	NoteAndMemo m = NoteAndMemo::findMemo(fP->fIdList,memo->id());
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": Looking at memo " 
+		<< memo->id()
+		<< " which was found "
+		<< m.toString()
+		<< endl;
+#endif
 
 	if (m.valid())
 	{
@@ -468,11 +488,27 @@ bool KNotesAction::syncMemoToKNotes()
 		//
 		if (memo->isDeleted())
 		{
+#ifdef DEBUG
+			DEBUGCONDUIT << fname << ": It's been deleted." << endl;
+#endif
 			fP->fKNotes->killNote(m.note());
 		}
 		else
 		{
-			fP->fKNotes->setName(m.note(),memo->shortTitle());
+#ifdef DEBUG
+			DEBUGCONDUIT << fname << ": It's just modified." << endl;
+			DEBUGCONDUIT << fname << ": <"
+				<< fP->fNotes[m.note()]
+				<< "> <"
+				<< memo->shortTitle()
+				<< ">"
+				<< endl;
+#endif
+			if (fP->fNotes[m.note()] != memo->shortTitle())
+			{
+				// Name changed. KNotes might complain though.
+				fP->fKNotes->setName(m.note(),memo->shortTitle());
+			}
 			fP->fKNotes->setText(m.note(),memo->text());
 		}
 	}
@@ -480,12 +516,18 @@ bool KNotesAction::syncMemoToKNotes()
 	{
 		if (memo->isDeleted())
 		{
+#ifdef DEBUG
+			DEBUGCONDUIT << fname << ": It's new and deleted." << endl;
+#endif
 			// Do nothing, it's new and deleted at the same time
 		}
 		else
 		{
 			int i = fP->fKNotes->newNote(memo->shortTitle(),memo->text());
 			fP->fIdList.append(NoteAndMemo(i,memo->id()));
+#ifdef DEBUG
+			DEBUGCONDUIT << fname << ": It's new with knote id " << i << endl;
+#endif
 		}
 	}
 
@@ -506,7 +548,7 @@ void KNotesAction::cleanupMemos()
 	if (fConfig)
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname 
+		DEBUGCONDUIT << fname
 			<< ": Writing "
 			<< fP->fIdList.count()
 			<< " pairs to the config file."
@@ -533,11 +575,14 @@ void KNotesAction::cleanupMemos()
 
 		fConfig->writeEntry(noteIdsKey,notes);
 		fConfig->writeEntry(memoIdsKey,memos);
+		fConfig->sync();
 	}
 
 	fStatus=Done;
 	fDatabase->cleanup();
 	fDatabase->resetSyncFlags();
+
+	addSyncLogEntry("]\n");
 }
 
 
@@ -558,6 +603,9 @@ void KNotesAction::cleanupMemos()
 
 
 // $Log$
+// Revision 1.11  2002/05/23 08:01:29  adridg
+// Try to sync KNotes->Pilot
+//
 // Revision 1.10  2002/05/19 15:01:49  adridg
 // Patches for the KNotes conduit
 //
