@@ -3,3 +3,7 @@ debian/tmp/usr/share/applnk/Internet/More/KOrn.desktop
 debian/tmp/usr/share/icons/crystalsvg/16x16/apps/korn.png
 debian/tmp/usr/share/icons/crystalsvg/32x32/apps/korn.png
 debian/tmp/usr/share/icons/crystalsvg/48x48/apps/korn.png
+debian/tmp/usr/share/doc/kde/HTML/en/korn/index.docbook
+debian/tmp/usr/share/doc/kde/HTML/en/korn/index.cache.bz2
+debian/tmp/usr/share/doc/kde/HTML/en/korn/common
+

@@ -6,6 +6,8 @@ debian/tmp/usr/lib/libkorganizer.la
 debian/tmp/usr/lib/libkorganizer.so.*
 debian/tmp/usr/lib/libkpimexchange.la
 debian/tmp/usr/lib/libkpimexchange.so.*
+debian/tmp/usr/lib/kde3/libkorganizerpart.so
+debian/tmp/usr/lib/kde3/libkorganizerpart.la
 debian/tmp/usr/lib/kde3/libkorg_birthdays.la
 debian/tmp/usr/lib/kde3/libkorg_birthdays.so
 debian/tmp/usr/lib/kde3/libkorg_datenums.la

@@ -2,3 +2,6 @@ debian/tmp/usr/bin/kgpgcertmanager
 debian/tmp/usr/share/apps/kconf_update/kpgp-3.1-upgrade-address-data.pl
 debian/tmp/usr/share/apps/kconf_update/kpgp.upd
 debian/tmp/usr/share/apps/kgpgcertmanager/kgpgcertmanagerui.rc
+debian/tmp/usr/share/doc/kde/HTML/en/kgpgcertmanager/index.docbook
+debian/tmp/usr/share/doc/kde/HTML/en/kgpgcertmanager/index.cache.bz2
+debian/tmp/usr/share/doc/kde/HTML/en/kgpgcertmanager/common

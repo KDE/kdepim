@@ -1,0 +1,4 @@
+debian/tmp/usr/include/kde/kaddressbook/extensionwidget.h
+debian/tmp/usr/include/kde/kaddressbook/kabcore.h
+debian/tmp/usr/include/kde/kaddressbook/xxportobject.h
+debian/tmp/usr/lib/libkaddressbook.so

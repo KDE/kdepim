@@ -1,4 +1,7 @@
 debian/tmp/usr/bin/kontact
+debian/tmp/usr/lib/libkontact.la
+debian/tmp/usr/lib/libkontact.so
+debian/tmp/usr/lib/libkontact.so.1
 debian/tmp/usr/lib/kde3/libkpkaddressbookplugin.la
 debian/tmp/usr/lib/kde3/libkpkaddressbookplugin.so
 debian/tmp/usr/lib/kde3/libkpkmailplugin.la
@@ -7,12 +10,17 @@ debian/tmp/usr/lib/kde3/libkpknotesplugin.la
 debian/tmp/usr/lib/kde3/libkpknotesplugin.so
 debian/tmp/usr/lib/kde3/libkpkorganizerplugin.la
 debian/tmp/usr/lib/kde3/libkpkorganizerplugin.so
+debian/tmp/usr/lib/kde3/libkpsummaryplugin.so
+debian/tmp/usr/lib/kde3/libkpsummaryplugin.la
+debian/tmp/usr/lib/kde3/libkpweatherplugin.so
+debian/tmp/usr/lib/kde3/libkpweatherplugin.la
 debian/tmp/usr/lib/kde3/kcm_kontact.la
 debian/tmp/usr/lib/kde3/kcm_kontact.so
 debian/tmp/usr/lib/libkpinterfaces.la
 debian/tmp/usr/lib/libkpinterfaces.so
 debian/tmp/usr/lib/libkpinterfaces.so.1
 debian/tmp/usr/lib/libkpinterfaces.so.1.0.0
+debian/tmp/usr/share/applnk/PIM/kontactconfig.desktop
 debian/tmp/usr/share/applnk/Applications/Kontact.desktop
 debian/tmp/usr/share/apps/kontact/kontactui.rc
 debian/tmp/usr/share/apps/kontact/pics/splash.png
@@ -20,6 +28,8 @@ debian/tmp/usr/share/apps/kpkaddressbookplugin/kpkaddressbookplugin.rc
 debian/tmp/usr/share/apps/kpkmailplugin/kpkmailplugin.rc
 debian/tmp/usr/share/apps/kpknotesplugin/kpknotesplugin.rc
 debian/tmp/usr/share/apps/kpkorganizerplugin/kpkorganizerplugin.rc
+debian/tmp/usr/share/apps/kpsummaryplugin/kpsummaryplugin.rc
+debian/tmp/usr/share/apps/summaryviewpart/summarypartui.rc
 debian/tmp/usr/share/icons/crystalsvg/16x16/apps/kontact.png
 debian/tmp/usr/share/icons/crystalsvg/32x32/apps/kontact.png
 debian/tmp/usr/share/icons/crystalsvg/48x48/apps/kontact.png
@@ -28,4 +38,5 @@ debian/tmp/usr/share/services/kpkmailplugin.desktop
 debian/tmp/usr/share/services/kpknotesplugin.desktop
 debian/tmp/usr/share/services/kpkorganizerplugin.desktop
 debian/tmp/usr/share/servicetypes/kontactplugin.desktop
-
+debian/tmp/usr/share/services/kpsummaryplugin.desktop
+debian/tmp/usr/share/services/kpweatherplugin.desktop

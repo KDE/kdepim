@@ -26,6 +26,13 @@ Depends: ${shlibs:Depends}
 Description: KDE NG addressbook application
  KDE next generation addressbook application.
 
+Package: kaddressbook-dev
+Section: devel
+Architecture: any
+Depends: kaddressbook (= ${Source-Version})
+Description: KDE NG addressbook application (development files)
+ KDE next generation addressbook application.
+
 Package: kalarm
 Section: utils
 Architecture: any
@@ -233,3 +240,17 @@ Architecture: any
 Depends: ${shlibs:Depends}
 Description: library to display and manage Gantt diagrams
  library to display and manage Gantt diagrams
+
+Package: kitchensync
+Section: kde
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KDE Sync framework  
+ Kitchensync provides connectors to all kinds of mobile
+ devices and the interfaces to certain KDE components.
+
+Package: kitchensync-dev
+Section: devel
+Architecture: any
+Depends: kitchensync (=${Source-Version})
+Description: KDE Sync framework (development files)

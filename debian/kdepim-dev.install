@@ -25,3 +25,4 @@ debian/tmp/usr/lib/libknewstuff.so
 debian/tmp/usr/lib/libksync.so
 debian/tmp/usr/lib/libktnef.la
 debian/tmp/usr/lib/libktnef.so
+debian/tmp/usr/lib/libkdgantt.so

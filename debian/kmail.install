@@ -44,3 +44,4 @@ debian/tmp/usr/share/icons/crystalsvg/48x48/apps/kmail.png
 debian/tmp/usr/share/icons/crystalsvg/64x64/apps/kmail.png
 debian/tmp/usr/share/icons/crystalsvg/128x128/apps/kmail.png
 debian/tmp/usr/share/services/sieve.protocol
+debian/tmp/usr/share/servicetypes/dcopmail.desktop

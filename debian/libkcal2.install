@@ -6,7 +6,14 @@ debian/tmp/usr/lib/kde3/kcal_imap.la
 debian/tmp/usr/lib/kde3/kcal_imap.so
 debian/tmp/usr/lib/kde3/kcal_kabc.la
 debian/tmp/usr/lib/kde3/kcal_kabc.so
+debian/tmp/usr/lib/kde3/kcal_localdir.la
+debian/tmp/usr/lib/kde3/kcal_localdir.so
 debian/tmp/usr/lib/kde3/resourcecalendarexchange.la
 debian/tmp/usr/lib/kde3/resourcecalendarexchange.so
 debian/tmp/usr/share/apps/kresources/calendar/exchange.desktop
+debian/tmp/usr/share/services/kresources/kcal/local.desktop
+debian/tmp/usr/share/services/kresources/kcal/localdir.desktop
+debian/tmp/usr/share/services/kresources/kcal/remote.desktop
+debian/tmp/usr/share/services/kresources/kcal/kabc.desktop
+debian/tmp/usr/share/services/kresources/kcal/imap.desktop
 debian/tmp/usr/share/servicetypes/dcopcalendar.desktop
