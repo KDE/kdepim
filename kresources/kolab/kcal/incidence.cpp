@@ -556,7 +556,7 @@ void Incidence::setRecurrence( KCal::Recurrence* recur )
         if ( arr.testBit( idx ) )
           mRecurrence.days.append( s_weekDayName[idx] );
       mRecurrence.dayNumber = QString::number( monthPos.rPos );
-    mRecurrence.dayNumber = QString::number( *recur->yearNums().getFirst() );
+      //mRecurrence.dayNumber = QString::number( *recur->yearNums().getFirst() );
       // Not handled: monthPos.negative (nth days before end of month)
     }
     break;
@@ -743,15 +743,15 @@ void Incidence::saveTo( KCal::Incidence* incidence )
                                 -1 );
         for ( int i = 0; i < 12; ++i )
           if ( s_monthName[ i ] == mRecurrence.month )
-            recur->addYearlyNum( i );
+            recur->addYearlyNum( i+1 );
       } else if ( mRecurrence.type == "yearday" ) {
         recur->setYearly( KCal::Recurrence::rYearlyDay, mRecurrence.interval, -1 );
         recur->addYearlyNum( mRecurrence.dayNumber.toInt() );
       } else if ( mRecurrence.type == "weekday" ) {
-	recur->setYearly( KCal::Recurrence::rYearlyPos, mRecurrence.interval, -1 );
+        recur->setYearly( KCal::Recurrence::rYearlyPos, mRecurrence.interval, -1 );
         for ( int i = 0; i < 12; ++i )
           if ( s_monthName[ i ] == mRecurrence.month )
-            recur->addYearlyNum( i );
+            recur->addYearlyNum( i+1 );
         recur->addMonthlyPos( mRecurrence.dayNumber.toInt(), daysListToBitArray( mRecurrence.days ) );
       } else kdWarning() << "Unhandled yearly recurrence type " << mRecurrence.type << endl;
     } else kdWarning() << "Unhandled recurrence cycle " << mRecurrence.cycle << endl;
