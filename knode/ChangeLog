@@ -7,6 +7,7 @@ changes between 0.3.3 and 0.4
 - improved keyboard handling in the configuration dialog
 - the interpretation of text format tags can now be disabled
 - support for other webbrowsers (Mozilla, Opera, user-defined)
+- added a context menu for the article pane
 - improvements for the composer:
   + switching from news article to mail and back on the fly
   + paste as quotation
@@ -16,7 +17,13 @@ changes between 0.3.3 and 0.4
   + status bar
   + it's now possible to get the original text if
     the automatic rewrap has gone wrong
+  + the user can determine which part of the original
+    message is quoted by selecting this part before hitting reply
   + implemented a lot of sanity checks.
+- changed the way the draft folder works, articles
+  can now be saved as draft without any sanity checks,
+  but they have to be edited in the composer again
+  before the are sent.
 - '>' instead of '> ' as quote prefix for quote levels >= 2
 - code cleanups
 

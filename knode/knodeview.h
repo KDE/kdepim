@@ -206,7 +206,7 @@ class KNodeView : public QSplitter
     KAction *a_ctArtSendOutbox,
             *a_ctArtDelete,
             *a_ctArtSendNow,
-            *a_ctArtSendLater;
+            *a_ctArtEdit;
 
     //network
     KAction *a_ctNetCancel;
@@ -259,7 +259,7 @@ class KNodeView : public QSplitter
 		void slotArtSendOutbox();
     void slotArtDelete();
     void slotArtSendNow();
-    void slotArtSendLater();
+    void slotArtEdit();
 
     void slotNetCancel();
 

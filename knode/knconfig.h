@@ -484,12 +484,14 @@ class ReadNewsGeneralWidget : public BaseWidget {
                 *m_axFetch;
     QComboBox   *b_rowser;
     QLineEdit   *b_rowserCommand;
+    QPushButton *c_hooseBrowser;
 
     ReadNewsGeneral *d_ata;
 
   protected slots:
     void slotMarkReadToggled(bool);
     void slotBrowserTypeChanged(int);
+    void slotChooseBrowser();
 
 };
 

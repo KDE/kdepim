@@ -52,6 +52,7 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
     void scrollDown();
 
     void applyConfig();
+    void setBodyPopup(QPopupMenu *popup)  { b_odyPopup = popup; };
 
     void setArticle(KNArticle *a);
 		void createHtmlPage();
@@ -89,6 +90,7 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
    	QTimer *t_imer;
     	
     KPopupMenu *u_rlPopup, *a_ttPopup;
+    QPopupMenu *b_odyPopup;
 
 
   //-------------------------- <Actions> ---------------------------
@@ -103,8 +105,7 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
             *a_ctRemail,
             *a_ctForward,
             *a_ctCancel,
-            *a_ctSupersede,
-            *a_ctEdit;
+            *a_ctSupersede;
     KToggleAction *a_ctToggleFullHdrs, *a_ctToggleRot13;
 
 
@@ -117,7 +118,6 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
     void slotForward();
     void slotCancel();
     void slotSupersede();
-    void slotEdit();
     void slotToggleFullHdrs();
     void slotToggleRot13();
 

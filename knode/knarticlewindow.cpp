@@ -40,6 +40,15 @@ void KNArticleWindow::closeAllWindowsForCollection(KNArticleCollection *col)
 }
 
 
+void KNArticleWindow::closeAllWindowsForArticle(KNArticle *art)
+{
+  QList<KNArticleWindow> list=instances;
+  for(KNArticleWindow *i=list.first(); i; i=list.next())
+    if(i->artW->article()==art)
+      i->close();
+}
+
+
 //==================================================================================
 
 KNArticleWindow::KNArticleWindow(KNArticle *art)
@@ -49,16 +58,13 @@ KNArticleWindow::KNArticleWindow(KNArticle *art)
 
   if(art)
     setCaption(art->subject()->asUnicodeString());
-  //setIcon(UserIcon("posting"));
 
   artW=new KNArticleWidget(actionCollection(),this);
   artW->setArticle(art);
   setCentralWidget(artW);
 
-
   // file menu
   KStdAction::close(this, SLOT(slotFileClose()),actionCollection());
-
 
   // settings menu
   a_ctShowToolbar = KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
@@ -67,6 +73,9 @@ KNArticleWindow::KNArticleWindow(KNArticle *art)
   KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
 
   createGUI("knreaderui.rc");
+  QPopupMenu *pop = static_cast<QPopupMenu *>(factory()->container("body_popup", this));
+  if (!pop) pop = new QPopupMenu(this);
+  artW->setBodyPopup(pop);
 
   KConfig *conf = KGlobal::config();
   conf->setGroup("articleWindow_options");
@@ -111,6 +120,9 @@ void KNArticleWindow::slotConfToolbar()
   KEditToolbar *dlg = new KEditToolbar(guiFactory(),this);
   if (dlg->exec()) {
     createGUI("knreaderui.rc");
+    QPopupMenu *pop = static_cast<QPopupMenu *>(factory()->container("body_popup", this));
+    if (!pop) pop = new QPopupMenu(this);
+    artW->setBodyPopup(pop);
   }
   delete dlg;
 }

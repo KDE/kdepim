@@ -203,7 +203,7 @@ KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n
   topL->addMultiCellWidget(l_box, 0,4, 0,0);
 
   // info box
-  QGroupBox *gb = new QGroupBox(2,Qt::Horizontal,QString::null,this);
+  QGroupBox *gb = new QGroupBox(2,Qt::Vertical,QString::null,this);
   topL->addWidget(gb,5,0);
 
   s_erverInfo = new QLabel(gb);
@@ -832,7 +832,7 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   connect(m_arkCB, SIGNAL(toggled(bool)), SLOT(slotMarkReadToggled(bool)));
   m_arkSecs->setSuffix(i18n(" sec"));
   e_xpThrCB=new QCheckBox(i18n("Show &whole thread on expanding"), vgb);
-  s_igCB=new QCheckBox(i18n("Show &signature"), vgb);
+  s_igCB=new QCheckBox(i18n("Show sig&nature"), vgb);
   f_ormatCB=new QCheckBox(i18n("Interpret te&xt format tags"), vgb);
 
   i_nlineCB=new QCheckBox(i18n("Show attachments &inline if possible"), agb);
@@ -847,12 +847,14 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   connect(b_rowser, SIGNAL(activated(int)), SLOT(slotBrowserTypeChanged(int)));
   l3=new QLabel(b_rowser, i18n("Open &links with"), bgb);
   b_rowserCommand = new QLineEdit(bgb);
+  c_hooseBrowser= new QPushButton(i18n("Choo&se..."),bgb);
+  connect(c_hooseBrowser, SIGNAL(clicked()), SLOT(slotChooseBrowser()));
 
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
   QGridLayout *mgbL=new QGridLayout(mgb, 4,2, 8,5);
   QVBoxLayout *vgbL=new QVBoxLayout(vgb, 8, 5);
   QVBoxLayout *agbL=new QVBoxLayout(agb, 8, 5);
-  QGridLayout *bgbL=new QGridLayout(bgb, 3,2, 8,5);
+  QGridLayout *bgbL=new QGridLayout(bgb, 3,3, 8,5);
 
   topL->addWidget(mgb);
   topL->addWidget(vgb);
@@ -876,8 +878,10 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   agbL->addWidget(a_ltAttCB);
   bgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
   bgbL->addWidget(l3, 1,0);
-  bgbL->addWidget(b_rowser, 1,1);
+  bgbL->addMultiCellWidget(b_rowser,1,1,1,2);
   bgbL->addMultiCellWidget(b_rowserCommand,2,2,0,1);
+  bgbL->addWidget(c_hooseBrowser,2,2);
+  bgbL->setColStretch(1,1);
   topL->setResizeMode(QLayout::Minimum);
 
   //init
@@ -886,6 +890,7 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   b_rowser->setCurrentItem((int)(d->b_rowser));
   b_rowserCommand->setText(d->b_rowserCommand);
   b_rowserCommand->setEnabled(d->b_rowser==ReadNewsGeneral::BTother);
+  c_hooseBrowser->setEnabled(d->b_rowser==ReadNewsGeneral::BTother);
   i_nlineCB->setChecked(d->i_nlineAtt);
   o_penAttCB->setChecked(d->o_penAtt);
   a_ltAttCB->setChecked(d->s_howAlts);
@@ -933,8 +938,24 @@ void KNConfig::ReadNewsGeneralWidget::slotMarkReadToggled(bool b)
 
 void KNConfig::ReadNewsGeneralWidget::slotBrowserTypeChanged(int i)
 {
-  b_rowserCommand->setEnabled((ReadNewsGeneral::browserType)(i)==ReadNewsGeneral::BTother);
+  bool enabled=((ReadNewsGeneral::browserType)(i)==ReadNewsGeneral::BTother);
+  b_rowserCommand->setEnabled(enabled);
+  c_hooseBrowser->setEnabled(enabled);
 }
+
+
+void KNConfig::ReadNewsGeneralWidget::slotChooseBrowser()
+{
+  QString path=b_rowserCommand->text().simplifyWhiteSpace();
+  if (path.right(3) == " %u")
+    path.truncate(path.length()-3);
+
+  path=KFileDialog::getOpenFileName(path, QString::null, this, i18n("Choose Browser"));
+
+  if (!path.isEmpty())
+    b_rowserCommand->setText(path+" %u");
+}
+
 
 //=============================================================================================
 

@@ -322,8 +322,9 @@ void KNArticleManager::showHdrs(bool clear)
     v_iew->setCurrentItem(currentArt->listItem());
     v_iew->ensureItemVisible(currentArt->listItem());
   }
-  else if(v_iew->firstChild()) {
-    v_iew->setCurrentItem(v_iew->firstChild());
+  else {
+    if(v_iew->firstChild())
+      v_iew->setCurrentItem(v_iew->firstChild());
     knGlobals.view->articleView()->setArticle(0);
   }
 

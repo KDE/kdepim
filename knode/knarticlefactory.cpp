@@ -992,13 +992,8 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
     break;
 
     case KNComposer::CRsave :
-      delCom=com->hasValidData();
-      if(delCom) {
-        com->applyChanges();
-        saveArticles(&lst, f_olManager->drafts());
-      }
-      else
-        com->setDoneSuccess(false);
+      com->applyChanges();
+      saveArticles(&lst, f_olManager->drafts());
     break;
 
     case KNComposer::CRdelAsk:

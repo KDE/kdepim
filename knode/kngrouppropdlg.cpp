@@ -40,11 +40,11 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
   QGridLayout *pageL=new QGridLayout(page,  4, 2, 5,5);
 
   // nickname
-  QLabel *l=new QLabel(i18n("Nickname:"), page);
-  pageL->addWidget(l,0,0);
   n_ick=new QLineEdit(page);
   if (g_rp->hasName())
     n_ick->setText(g_rp->name());
+  QLabel *l=new QLabel(n_ick, i18n("&Nickname:"), page);
+  pageL->addWidget(l,0,0);
   pageL->addWidget(n_ick,0,1);
 
   // group name & description
@@ -125,10 +125,10 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
 
 
   // Specific Settings tab ========================================
-  page=addPage(i18n("&Settings"));
+  page=addPage(i18n("Se&ttings"));
   pageL=new QGridLayout(page, 2,2, 5,5);
 
-  u_seCharset=new QCheckBox(i18n("use different default charset:"), page);
+  u_seCharset=new QCheckBox(i18n("&Use different default charset:"), page);
   u_seCharset->setChecked(g_rp->useCharset());
   pageL->addWidget(u_seCharset, 0,0);
 

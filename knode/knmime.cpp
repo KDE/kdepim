@@ -1332,10 +1332,12 @@ void KNArticle::assemble()
     h_ead+=h->as7BitString()+"\n";
 
   //From
-  h_ead+=from()->as7BitString()+"\n";
+  if( (h=from(false))!=0 )
+  h_ead+=h->as7BitString()+"\n";
 
   //Subject
-  h_ead+=subject()->as7BitString()+"\n";
+  if( (h=subject(false))!=0 )
+  h_ead+=h->as7BitString()+"\n";
 
   //To
   if( (h=to(false))!=0 )
@@ -1354,14 +1356,16 @@ void KNArticle::assemble()
       h_ead+=h->as7BitString()+"\n";
 
   //Date
-  h_ead+=date()->as7BitString()+"\n";
+  if( (h=date(false))!=0 )
+  h_ead+=h->as7BitString()+"\n";
 
   //References
   if( (h=references(false))!=0 )
     h_ead+=h->as7BitString()+"\n";
 
   //Lines
-  h_ead+=lines()->as7BitString()+"\n";
+  if( (h=lines(false))!=0 )
+  h_ead+=h->as7BitString()+"\n";
 
   //Organization
   if( (h=organization(false))!=0 )

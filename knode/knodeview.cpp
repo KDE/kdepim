@@ -451,7 +451,7 @@ void KNodeView::initActions()
 	
 	a_ctArtFilter             = new KNFilterSelectAction(i18n("&Filter"), "filter",
 	                            a_ctions, "view_Filter");
-	a_ctArtSearch             = new KAction(i18n("&Search..."),"find" , Key_F4 , this,
+	a_ctArtSearch             = new KAction(i18n("&Search Articles..."),"find" , Key_F4 , this,
 	                            SLOT(slotArtSearch()), a_ctions, "article_search");
 	a_ctArtRefreshList        = new KAction(i18n("&Refresh List"),"reload", KStdAccel::key(KStdAccel::Reload), this,
 	                            SLOT(slotArtRefreshList()), a_ctions, "view_Refresh");
@@ -491,8 +491,8 @@ void KNodeView::initActions()
                               SLOT(slotArtDelete()), a_ctions, "article_delete");
   a_ctArtSendNow            = new KAction(i18n("Send &now"),"mail_send", 0 , this,
                               SLOT(slotArtSendNow()), a_ctions, "article_sendNow");
-  a_ctArtSendLater          = new KAction(i18n("Send &later"), "queue", 0 , this,
-                              SLOT(slotArtSendLater()), a_ctions, "article_sendLater");
+  a_ctArtEdit               = new KAction(i18n("edit article","&Edit..."), "signature", Key_E , this,
+                              SLOT(slotArtEdit()), a_ctions, "article_edit");
 
   //network
   a_ctNetCancel             = new KAction(i18n("Stop &Network"),"stop",0, this,
@@ -506,19 +506,23 @@ void KNodeView::initActions()
 void KNodeView::initPopups(KNMainWindow *w)
 {
   a_ccPopup = static_cast<QPopupMenu *>(w->factory()->container("account_popup", w));
-  if (!a_ccPopup) a_ccPopup = new QPopupMenu();
+  if (!a_ccPopup) a_ccPopup = new QPopupMenu(w);
 
   g_roupPopup = static_cast<QPopupMenu *>(w->factory()->container("group_popup", w));
-  if (!g_roupPopup) g_roupPopup = new QPopupMenu();
+  if (!g_roupPopup) g_roupPopup = new QPopupMenu(w);
 
   f_olderPopup = static_cast<QPopupMenu *>(w->factory()->container("folder_popup", w));
-  if (!f_olderPopup) f_olderPopup = new QPopupMenu();
+  if (!f_olderPopup) f_olderPopup = new QPopupMenu(w);
 
   r_emotePopup = static_cast<QPopupMenu *>(w->factory()->container("remote_popup", w));
-  if (!r_emotePopup) r_emotePopup = new QPopupMenu();
+  if (!r_emotePopup) r_emotePopup = new QPopupMenu(w);
 
   l_ocalPopup = static_cast<QPopupMenu *>(w->factory()->container("local_popup", w));
-  if (!l_ocalPopup) l_ocalPopup = new QPopupMenu();
+  if (!l_ocalPopup) l_ocalPopup = new QPopupMenu(w);
+
+  QPopupMenu *pop = static_cast<QPopupMenu *>(w->factory()->container("body_popup", w));
+  if (!pop) pop = new QPopupMenu(w);
+  a_rtView->setBodyPopup(pop);
 }
 
 
@@ -563,15 +567,16 @@ void KNodeView::slotArticleSelected(QListViewItem *i)
   	a_ctArtSetThreadScore->setEnabled(enabled);
   	a_ctArtToggleIgnored->setEnabled(enabled);
   	a_ctArtToggleWatched->setEnabled(enabled);
-  	a_ctArtOpenNewWindow->setEnabled(enabled);
   }
 
+ 	a_ctArtOpenNewWindow->setEnabled( s_electedArticle && (f_olManager->currentFolder()!=f_olManager->outbox())
+ 	                                                   && (f_olManager->currentFolder()!=f_olManager->drafts()));
+
   enabled=( s_electedArticle && s_electedArticle->type()==KNMimeBase::ATlocal );
-  if(a_ctArtDelete->isEnabled() != enabled) {
-    a_ctArtDelete->setEnabled(enabled);
-    a_ctArtSendNow->setEnabled(enabled);
-    a_ctArtSendLater->setEnabled(enabled);
-  }
+  a_ctArtDelete->setEnabled(enabled);
+  a_ctArtSendNow->setEnabled(enabled && (f_olManager->currentFolder()==f_olManager->outbox()));
+  a_ctArtEdit->setEnabled(enabled && ((f_olManager->currentFolder()==f_olManager->outbox())||
+                                      (f_olManager->currentFolder()==f_olManager->drafts())));
 }
 
 
@@ -582,12 +587,12 @@ void KNodeView::slotArticleDoubleClicked(QListViewItem *it)
 
   KNArticle *art=(static_cast<KNHdrViewItem*>(it))->art;
 
-  if(art->type()==KNMimeBase::ATremote) {
+  if ((art->type()==KNMimeBase::ATlocal) && ((f_olManager->currentFolder()==f_olManager->outbox())||
+                                             (f_olManager->currentFolder()==f_olManager->drafts()))) {
+    a_rtFactory->edit( static_cast<KNLocalArticle*>(art) );
+  } else {
     KNArticleWindow *w=new KNArticleWindow(art);
     w->show();
-  }
-  else if(art->type()==KNMimeBase::ATlocal) {
-    a_rtFactory->edit( static_cast<KNLocalArticle*>(art) );
   }
 }
 
@@ -688,7 +693,6 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
     a_ctFolEmpty->setEnabled(enabled);
     //a_ctFolProperties->setEnabled( (s_electedFolder) );
   }
-
 }
 
 
@@ -820,10 +824,7 @@ void KNodeView::slotNavNextUnreadArt()
   }
   else
     slotNavNextGroup();
-
 }
-
-
 
 
 void KNodeView::slotNavNextUnreadThread()
@@ -872,9 +873,7 @@ void KNodeView::slotNavNextUnreadThread()
   }
   else
     slotNavNextGroup();
-
 }
-
 
 
 void KNodeView::slotNavNextGroup()
@@ -905,7 +904,6 @@ void KNodeView::slotNavNextGroup()
     c_olView->setSelected(next, true);
   }
 }
-
 
 
 void KNodeView::slotNavPrevGroup()
@@ -1303,17 +1301,12 @@ void KNodeView::slotArtSendNow()
 }
 
 
-void KNodeView::slotArtSendLater()
+void KNodeView::slotArtEdit()
 {
-  kdDebug(5003) << "KNodeView::slotArtSendLater()" << endl;
+  kdDebug(5003) << "KNodeVew::slotArtEdit()" << endl;
 
-  KNLocalArticle::List lst;
-  for(QListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
-    if(i->isSelected())
-      lst.append( static_cast<KNLocalArticle*> ((static_cast<KNHdrViewItem*>(i))->art) );
-
-  if(!lst.isEmpty())
-    a_rtFactory->sendArticles(&lst, false);
+  if (s_electedArticle && s_electedArticle->type()==KNMimeBase::ATlocal)
+    a_rtFactory->edit(static_cast<KNLocalArticle*>(s_electedArticle));
 }
 
 

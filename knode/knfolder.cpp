@@ -32,6 +32,7 @@
 #include "knarticlefactory.h"
 #include "knfolder.h"
 #include "knarticlewidget.h"
+#include "knarticlewindow.h"
 
 KNFolder::KNFolder(int id, const QString &name, KNCollection *parent)
   : KNArticleCollection(parent) , i_d(id), i_ndexDirty(false)
@@ -385,6 +386,7 @@ void KNFolder::removeArticles(KNLocalArticle::List *l, bool del)
 
     //update
     knGlobals.artFactory->deleteComposerForArticle(a);
+    KNArticleWindow::closeAllWindowsForArticle(a);
     KNArticleWidget::articleRemoved(a);
     delete a->listItem();
 
@@ -414,6 +416,7 @@ void KNFolder::deleteAll()
   for(int idx=0; idx<len; idx++) {
     a=at(idx);
     knGlobals.artFactory->deleteComposerForArticle(a);
+    KNArticleWindow::closeAllWindowsForArticle(a);
     KNArticleWidget::articleRemoved(a);
   }
 

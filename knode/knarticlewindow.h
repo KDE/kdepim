@@ -30,11 +30,12 @@ class KNArticleWindow : public KMainWindow  {
   Q_OBJECT
   
   public:
-    KNArticleWindow(KNArticle *art=0);
+    KNArticleWindow(KNArticle *art);
     ~KNArticleWindow();
     KNArticleWidget* artWidget()        { return artW; }
 
     static void closeAllWindowsForCollection(KNArticleCollection *col);
+    static void closeAllWindowsForArticle(KNArticle *art);
       
   protected:
     KNArticleWidget *artW;

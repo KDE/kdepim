@@ -42,6 +42,7 @@
 #include "knarticlewidget.h"
 #include "knglobals.h"
 #include "knarticlemanager.h"
+#include "knfoldermanager.h"
 #include "knarticlefactory.h"
 #include "knconfigmanager.h"
 #include "kngroup.h"
@@ -89,6 +90,7 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
 
   //actions
   a_ctSave              = KStdAction::save(this, SLOT(slotSave()), a_ctions);
+  a_ctSave->setText("&Save...");
   a_ctPrint             = KStdAction::print(this, SLOT(slotPrint()), a_ctions);
   a_ctSelAll            = KStdAction::selectAll(this, SLOT(slotSelectAll()), a_ctions);
   a_ctCopy              = KStdAction::copy(this, SLOT(copy()), a_ctions);
@@ -102,10 +104,8 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
                           SLOT(slotForward()), a_ctions, "article_forward");
   a_ctCancel            = new KAction(i18n("article","&Cancel"), 0 , this,
                           SLOT(slotCancel()), a_ctions, "article_cancel");
-  a_ctSupersede         = new KAction(i18n("S&upersede"), 0 , this,
+  a_ctSupersede         = new KAction(i18n("S&upersede..."), 0 , this,
                           SLOT(slotSupersede()), a_ctions, "article_supersede");
-  a_ctEdit              = new KAction(i18n("edit article","&Edit"), "signature", Key_E , this,
-                          SLOT(slotEdit()), a_ctions, "article_edit");
   a_ctToggleFullHdrs    = new KToggleAction(i18n("Show &all headers"), "text_block", 0 , this,
                           SLOT(slotToggleFullHdrs()), a_ctions, "view_showAllHdrs");
   a_ctToggleRot13       = new KToggleAction(i18n("&Unscramble (Rot 13)"), "decrypted", 0 , this,
@@ -190,9 +190,11 @@ void KNArticleWidget::viewportMousePressEvent(QMouseEvent *e)
   QString a=QTextBrowser::anchorAt(e->pos());
   if(!a.isEmpty() && (e->button()==RightButton || e->button()==MidButton))
     anchorClicked(a, e->button(), &(e->globalPos()));
+  else
+    if (e->button()==RightButton)
+      b_odyPopup->popup(e->globalPos());
 
   QTextBrowser::viewportMousePressEvent(e);
-
 }
 
 
@@ -201,12 +203,13 @@ void KNArticleWidget::viewportMouseReleaseEvent(QMouseEvent *e)
 {
   QTextBrowser::viewportMouseReleaseEvent(e);
 
-  if(hasSelectedText() && !selectedText().isEmpty()) {
-    copy();
-    a_ctCopy->setEnabled(true);
+  if (e->button()==LeftButton) {
+    if(hasSelectedText() && !selectedText().isEmpty()) {
+      copy();
+      a_ctCopy->setEnabled(true);
+    } else
+      a_ctCopy->setEnabled(false);
   }
-  else
-    a_ctCopy->setEnabled(false);
 }
 
 
@@ -460,7 +463,6 @@ void KNArticleWidget::showBlankPage()
   a_ctRemail->setEnabled(false);
   a_ctForward->setEnabled(false);
   a_ctCancel->setEnabled(false);
-  a_ctEdit->setEnabled(false);
   a_ctSupersede->setEnabled(false);
   a_ctToggleFullHdrs->setEnabled(false);
   a_ctToggleRot13->setEnabled(false);
@@ -489,7 +491,6 @@ void KNArticleWidget::showErrorMessage(const QString &s)
   a_ctForward->setEnabled(false);
   a_ctCancel->setEnabled(false);
   a_ctSupersede->setEnabled(false);
-  a_ctEdit->setEnabled(false);
   a_ctToggleFullHdrs->setEnabled(false);
   a_ctToggleRot13->setEnabled(false);
 }
@@ -544,14 +545,12 @@ void KNArticleWidget::processJob(KNJobData *j)
 	KNRemoteArticle *a=static_cast<KNRemoteArticle*>(j->data());
 	
 	if(j->canceled()) {
-	  if(a_rticle==a)
-	    showBlankPage();
+	  articleChanged(a);	
 	}
 	else {
     if(j->success()) {
   	  a->updateListItem();
-  	  if(a_rticle==a)
-  	    createHtmlPage();
+  	  articleChanged(a);
   	}
   	else if(a_rticle==a)
   	  showErrorMessage(j->errorString());
@@ -702,6 +701,8 @@ void KNArticleWidget::createHtmlPage()
     h_tmlDone=true;
 
     //enable actions
+    a_ctReply->setEnabled(a_rticle->type()==KNMimeBase::ATremote);
+    a_ctRemail->setEnabled(a_rticle->type()==KNMimeBase::ATremote);
     a_ctSave->setEnabled(true);
     a_ctPrint->setEnabled(true);
     a_ctSelAll->setEnabled(true);
@@ -830,17 +831,17 @@ void KNArticleWidget::createHtmlPage()
   a_ctReply->setEnabled(a_rticle->type()==KNMimeBase::ATremote);
   a_ctRemail->setEnabled(a_rticle->type()==KNMimeBase::ATremote);
   a_ctForward->setEnabled(true);
-  a_ctCancel->setEnabled(true);
-  a_ctSupersede->setEnabled(true);
-  a_ctEdit->setEnabled(a_rticle->type()==KNMimeBase::ATlocal);
-
+ 	a_ctCancel->setEnabled( (knGlobals.folManager->currentFolder()!=knGlobals.folManager->outbox())
+ 	                         && (knGlobals.folManager->currentFolder()!=knGlobals.folManager->drafts()));
+ 	a_ctSupersede->setEnabled( (knGlobals.folManager->currentFolder()!=knGlobals.folManager->outbox())
+ 	                            && (knGlobals.folManager->currentFolder()!=knGlobals.folManager->drafts()));
+ 	                          	
   a_ctToggleFullHdrs->setEnabled(true);
   a_ctToggleRot13->setEnabled(true);
 
   //start automark-timer
   if(a_rticle->type()==KNMimeBase::ATremote && rng->autoMark())
     t_imer->start( (rng->autoMarkSeconds()*1000), true);
-
 }
 
 
@@ -947,7 +948,6 @@ void KNArticleWidget::slotSave()
 }
 
 
-
 void KNArticleWidget::slotPrint()
 {
   kdDebug(5003) << "KNArticleWidget::slotPrint()" << endl;
@@ -1031,14 +1031,12 @@ void KNArticleWidget::slotPrint()
 }
 
 
-
 void KNArticleWidget::slotSelectAll()
 {
   kdDebug(5003) << "KNArticleWidget::slotSelectAll()" << endl;
   selectAll();
   a_ctCopy->setEnabled(true);
 }
-
 
 
 void KNArticleWidget::slotReply()
@@ -1049,14 +1047,12 @@ void KNArticleWidget::slotReply()
 }
 
 
-
 void KNArticleWidget::slotRemail()
 {
   kdDebug(5003) << "KNArticleWidget::slotRemail()" << endl;
   if(a_rticle && a_rticle->type()==KNMimeBase::ATremote)
     knGlobals.artFactory->createReply(static_cast<KNRemoteArticle*>(a_rticle), selectedText(), false, true);
 }
-
 
 
 void KNArticleWidget::slotForward()
@@ -1066,13 +1062,11 @@ void KNArticleWidget::slotForward()
 }
 
 
-
 void KNArticleWidget::slotCancel()
 {
   kdDebug(5003) << "KNArticleWidget::slotCancel()" << endl;
   knGlobals.artFactory->createCancel(a_rticle);
 }
-
 
 
 void KNArticleWidget::slotSupersede()
@@ -1082,19 +1076,10 @@ void KNArticleWidget::slotSupersede()
 }
 
 
-void KNArticleWidget::slotEdit()
-{
-  kdDebug(5003) << "KNArticleWidget::slotEdit()" << endl;
-  if(a_rticle && a_rticle->type()==KNMimeBase::ATlocal)
-    knGlobals.artFactory->edit(static_cast<KNLocalArticle*>(a_rticle));
-}
-
-
 void KNArticleWidget::slotToggleFullHdrs()
 {
   kdDebug(5003) << "KNArticleWidget::slotToggleFullHdrs()" << endl;
   f_ullHdrs=!f_ullHdrs;
-//  a_ctToggleFullHdrs->setChecked(f_ullHdrs);
   updateContents();
 }
 
