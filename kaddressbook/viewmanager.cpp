@@ -362,6 +362,11 @@ void ViewManager::deleteView()
   if (KMessageBox::questionYesNo(this, text, caption) == KMessageBox::Yes)
   {
     mViewNameList.remove(mActiveView->name());
+
+    // remove the view from the config file
+    KConfig *config = kapp->config();
+    config->deleteGroup( mActiveView->name() );
+
     mViewDict.remove(mActiveView->name());
     mActiveView = 0;
 
