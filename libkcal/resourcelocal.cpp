@@ -48,15 +48,6 @@
 
 using namespace KCal;
 
-extern "C"
-{
-  void *init_libkcal()
-  {
-    return new KRES::PluginFactory<ResourceLocal,ResourceLocalConfig>();
-  }
-}
-
-
 ResourceLocal::ResourceLocal( const KConfig* config )
   : ResourceCached( config )
 {

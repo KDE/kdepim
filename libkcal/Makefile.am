@@ -27,18 +27,24 @@ libkcal_la_SOURCES = \
         filestorage.cpp \
         compat.cpp \
 	resourcecalendar.cpp resourcelocal.cpp resourcelocalconfig.cpp \
-	calendarresources.cpp \
+	resourcelocaldir.cpp resourcelocaldirconfig.cpp \
+        resourceremote.cpp resourceremoteconfig.cpp \
+        calendarresources.cpp \
         qtopiaformat.cpp \
 	resourcecached.cpp \
         htmlexport.cpp calendarnull.cpp
 
-kde_module_LTLIBRARIES = kcal_localdir.la kcal_remote.la kcal_kabc.la
+kde_module_LTLIBRARIES = kcal_local.la kcal_localdir.la kcal_remote.la kcal_kabc.la
 
-kcal_localdir_la_SOURCES = resourcelocaldir.cpp resourcelocaldirconfig.cpp
+kcal_local_la_SOURCES = resourcelocal_plugin.cpp
+kcal_local_la_LDFLAGS = -module $(KDE_PLUGIN)
+kcal_local_la_LIBADD  = libkcal.la
+
+kcal_localdir_la_SOURCES = resourcelocaldir_plugin.cpp
 kcal_localdir_la_LDFLAGS = -module $(KDE_PLUGIN)
 kcal_localdir_la_LIBADD  = libkcal.la
 
-kcal_remote_la_SOURCES = resourceremote.cpp resourceremoteconfig.cpp
+kcal_remote_la_SOURCES = resourceremote_plugin.cpp
 kcal_remote_la_LDFLAGS = -module $(KDE_PLUGIN)
 kcal_remote_la_LIBADD  = libkcal.la
 

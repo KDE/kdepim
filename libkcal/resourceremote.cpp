@@ -50,15 +50,6 @@
 
 using namespace KCal;
 
-extern "C"
-{
-  void *init_kcal_remote()
-  {
-    return new KRES::PluginFactory<ResourceRemote,ResourceRemoteConfig>();
-  }
-}
-
-
 ResourceRemote::ResourceRemote( const KConfig* config )
   : ResourceCached( config )
 {
