@@ -42,6 +42,8 @@
 #include <gpgmepp/context.h>
 #include <gpgmepp/keylistresult.h>
 
+#include <kmessagebox.h>
+
 #include <qstringlist.h>
 
 #include <stdlib.h>
@@ -76,6 +78,7 @@ GpgME::Error Kleo::QGpgMEKeyListJob::start( const QStringList & patterns, bool s
 
   if ( err )
     deleteLater();
+  mResult = GpgME::KeyListResult( 0, err );
   return err;
 }
 
@@ -89,7 +92,7 @@ GpgME::KeyListResult Kleo::QGpgMEKeyListJob::exec( const QStringList & patterns,
     while ( !err );
     keys.pop_back();
   }
-  return mCtx->endKeyListing();
+  return mResult = mCtx->endKeyListing();
 }
 
 void Kleo::QGpgMEKeyListJob::slotNextKeyEvent( GpgME::Context * context, const GpgME::Key & key ) {
@@ -98,7 +101,17 @@ void Kleo::QGpgMEKeyListJob::slotNextKeyEvent( GpgME::Context * context, const G
 }
 
 void Kleo::QGpgMEKeyListJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->keyListResult() );
+  emit result( mResult = mCtx->keyListResult() );
+}
+
+void Kleo::QGpgMEKeyListJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
+  if ( !mResult.error() || mResult.error().isCanceled() )
+    return;
+  const QString msg = i18n( "<qt><p>An error occurred while fetching "
+			    "the keys from the backend:</p>"
+			    "<p><b>%1</b></p></qt>" )
+    .arg( QString::fromLocal8Bit( mResult.error().asString() ) );
+  KMessageBox::error( parent, msg, caption );
 }
 
 #include "qgpgmekeylistjob.moc"

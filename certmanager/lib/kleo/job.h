@@ -34,8 +34,8 @@
 #define __KLEO_JOB_H__
 
 #include <qobject.h>
+#include <qstring.h>
 
-class QString;
 class QWidget;
 
 namespace Kleo {
@@ -64,7 +64,7 @@ namespace Kleo {
   public:
     ~Job();
 
-    virtual void showErrorDialog( QWidget * parent=0 ) const;
+    virtual void showErrorDialog( QWidget * parent=0, const QString & caption=QString::null ) const;
 
   public slots:
     virtual void slotCancel() = 0;

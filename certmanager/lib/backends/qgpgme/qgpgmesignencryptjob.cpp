@@ -109,7 +109,7 @@ void Kleo::QGpgMESignEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
 	       mOutDataDataProvider->data() );
 }
 
-void Kleo::QGpgMESignEncryptJob::showErrorDialog( QWidget * parent ) const {
+void Kleo::QGpgMESignEncryptJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
   if ( !mResult.first.error() && !mResult.second.error() )
     return;
   if ( mResult.first.error().isCanceled() || mResult.second.error().isCanceled() )
@@ -117,7 +117,7 @@ void Kleo::QGpgMESignEncryptJob::showErrorDialog( QWidget * parent ) const {
   const QString msg = mResult.first.error()
     ? i18n("Signing failed: %1" ).arg( QString::fromLocal8Bit( mResult.first.error().asString() ) )
     : i18n("Encryption failed: %1").arg( QString::fromLocal8Bit( mResult.second.error().asString() ) ) ;
-  KMessageBox::error( parent, msg );
+  KMessageBox::error( parent, msg, caption );
 }
 
 #include "qgpgmesignencryptjob.moc"
