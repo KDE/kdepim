@@ -98,26 +98,26 @@ namespace KSync {
 
     // add the functions to the map
     template <class T, class U> MergeBase<T, U>::MergeBase() {
-        map.insert( U::Organizer,  Cal::mergeOrg<T> );
-        map.insert( U::ReadOnly,  Cal::mergeRead<T> );
-        map.insert( U::DtStart,  Cal::mergedtStart<T> );
-        map.insert( U::Duration,  Cal::mergeDur<T> );
-        map.insert( U::Float,  Cal::mergeFloat<T> );
-        map.insert( U::Attendee,  Cal::mergeAttend<T> );
-        map.insert( U::CreatedDate,   Cal::mergeCreated<T> );
-        map.insert( U::Revision,  Cal::mergeRev<T> );
-        map.insert( U::Description,  Cal::mergeDes<T> );
-        map.insert( U::Summary,  Cal::mergeSum<T> );
-        map.insert( U::Category, Cal::mergeCat<T> );
-        map.insert( U::Relations,  Cal::mergeRel<T> );
-        map.insert( U::ExDates,  Cal::mergeExDates<T> );
-        map.insert( U::Attachments,  Cal::mergeAtt<T> );
-        map.insert( U::Secrecy,  Cal::mergeSec<T> );
-        map.insert( U::Resources,  Cal::mergeRes<T> );
-        map.insert( U::Priority,  Cal::mergePrio<T> );
-        map.insert( U::Alarms,  Cal::mergeAlarm<T> );
-        map.insert( U::Recurrence,  Cal::mergeRecur<T> );
-        map.insert( U::Location,  Cal::mergeLoc<T> );
+        map.insert( U::Organizer,  Cal::mergeOrg );
+        map.insert( U::ReadOnly,  Cal::mergeRead );
+        map.insert( U::DtStart,  Cal::mergedtStart );
+        map.insert( U::Duration,  Cal::mergeDur );
+        map.insert( U::Float,  Cal::mergeFloat );
+        map.insert( U::Attendee,  Cal::mergeAttend );
+        map.insert( U::CreatedDate,   Cal::mergeCreated );
+        map.insert( U::Revision,  Cal::mergeRev );
+        map.insert( U::Description,  Cal::mergeDes );
+        map.insert( U::Summary,  Cal::mergeSum );
+        map.insert( U::Category, Cal::mergeCat );
+        map.insert( U::Relations,  Cal::mergeRel );
+        map.insert( U::ExDates,  Cal::mergeExDates );
+        map.insert( U::Attachments,  Cal::mergeAtt );
+        map.insert( U::Secrecy,  Cal::mergeSec );
+        map.insert( U::Resources,  Cal::mergeRes );
+        map.insert( U::Priority,  Cal::mergePrio );
+        map.insert( U::Alarms,  Cal::mergeAlarm );
+        map.insert( U::Recurrence,  Cal::mergeRecur );
+        map.insert( U::Location,  Cal::mergeLoc );
     }
     template <class T,  class U> MergeBase<T, U>::~MergeBase() {
     }
