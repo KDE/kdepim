@@ -161,7 +161,10 @@ namespace {
     ColumnStrategy( unsigned int keyUsage );
 
     QString title( int col ) const;
+    int width( int col, const QFontMetrics & fm ) const;
+
     QString text( const GpgME::Key & key, int col ) const;
+    QString toolTip( const GpgME::Key & key, int col ) const;
     const QPixmap * pixmap( const GpgME::Key & key, int col ) const;
 
   private:
@@ -189,13 +192,23 @@ namespace {
     }
   }
 
+  int ColumnStrategy::width( int col, const QFontMetrics & fm ) const {
+    if ( col == 0 ) {
+      static const char hexchars[] = "0123456789ABCDEF";
+      int maxWidth = 0;
+      for ( unsigned int i = 0 ; i < 16 ; ++i )
+	maxWidth = kMax( fm.width( QChar( hexchars[i] ) ), maxWidth );
+      return 8 * maxWidth + 2 * mKeyGoodPix.width();
+    }
+    return Kleo::KeyListView::ColumnStrategy::width( col, fm );
+  }
+
   QString ColumnStrategy::text( const GpgME::Key & key, int col ) const {
     switch ( col ) {
     case 0:
       {
-	const GpgME::Subkey subkey = key.subkey(0);
-	if ( subkey.fingerprint() )
-	  return QString::fromUtf8( subkey.fingerprint() ).right( 8 );
+	if ( key.shortKeyID() )
+	  return QString::fromUtf8( key.shortKeyID() );
 	else
 	  return i18n("<unknown>");
       }
@@ -211,6 +224,22 @@ namespace {
       break;
     default: return QString::null;
     }
+  }
+
+  QString ColumnStrategy::toolTip( const GpgME::Key & key, int ) const {
+    const char * uid = key.userID(0).id();
+    const char * fpr = key.subkey(0).fingerprint();
+    const char * issuer = key.issuerName();
+    if ( key.protocol() == GpgME::Context::OpenPGP )
+      return i18n( "OpenPGP key for %1\n"
+		   "Fingerprint: %2" ).arg( uid ? QString::fromUtf8( uid ) : i18n("unknown"),
+					    fpr ? QString::fromLatin1( fpr ) : i18n("unknown") );
+    else
+      return i18n( "S/MIME key for %1\n"
+		   "Fingerprint: %2\n"
+		   "Issuer: %3" ).arg( uid ? Kleo::DN( uid ).prettyDN() : i18n("unknown"),
+				       fpr ? QString::fromLatin1( fpr ) : i18n("unknown"),
+				       issuer ? Kleo::DN( issuer ).prettyDN() : i18n("unknown") );
   }
 
   const QPixmap * ColumnStrategy::pixmap( const GpgME::Key & key, int col ) const {
