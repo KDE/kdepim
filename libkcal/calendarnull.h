@@ -53,7 +53,7 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
     /**
        Constructor.
     */
-    CalendarNull() {}
+    CalendarNull( const QString &timeZoneId );
 
     /**
        Destructor.

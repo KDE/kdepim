@@ -157,7 +157,7 @@ class LIBKCAL_EXPORT CalendarResources :
        @param family is any QString representing a unique name.
     */
     CalendarResources(
-      const QString &timeZoneId = QString::fromLatin1( "UTC" ),
+      const QString &timeZoneId,
       const QString &family = QString::fromLatin1( "calendar" ) );
 
     /**

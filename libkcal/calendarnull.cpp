@@ -28,11 +28,15 @@
 
 using namespace KCal;
 
+CalendarNull::CalendarNull( const QString &timeZoneId )
+  : Calendar( timeZoneId )
+{}
+
 CalendarNull *CalendarNull::mSelf = 0;
 
 CalendarNull *CalendarNull::self()
 {
-  if ( !mSelf ) mSelf = new CalendarNull();
+  if ( !mSelf ) mSelf = new CalendarNull( QString::fromLatin1( "UTC" ) );
 
   return mSelf;
 }

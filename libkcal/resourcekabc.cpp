@@ -63,9 +63,9 @@ extern "C"
   }
 }
 
-
 ResourceKABC::ResourceKABC( const KConfig* config )
-  : ResourceCalendar( config ), mAlarmDays( 1 ), mAlarm( false )
+  : ResourceCalendar( config ), mCalendar( QString::fromLatin1( "UTC" ) ),
+    mAlarmDays( 1 ), mAlarm( false )
 {
   if ( config ) {
     readConfig( config );
@@ -74,8 +74,9 @@ ResourceKABC::ResourceKABC( const KConfig* config )
   init();
 }
 
-ResourceKABC::ResourceKABC( )
-  : ResourceCalendar( 0 ), mAlarmDays( 1 ), mAlarm( false )
+ResourceKABC::ResourceKABC()
+  : ResourceCalendar( 0 ), mCalendar( QString::fromLatin1( "UTC" ) ),
+    mAlarmDays( 1 ), mAlarm( false )
 {
   init();
 }

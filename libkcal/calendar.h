@@ -185,7 +185,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
        Do Not pass an empty timeZoneId string as this may cause unintended
        consequences when storing Incidences into the Calendar.
     */
-    Calendar( const QString &timeZoneId = QString::fromLatin1( "UTC" ) );
+    Calendar( const QString &timeZoneId );
 
     /**
        Destructor

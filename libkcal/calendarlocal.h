@@ -39,7 +39,7 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
     /**
       Constructs a new calendar, with variables initialized to sane values.
     */
-    CalendarLocal( const QString &timeZoneId = QString::fromLatin1( "UTC" ) );
+    CalendarLocal( const QString &timeZoneId );
     ~CalendarLocal();
 
     /**
