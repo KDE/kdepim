@@ -160,7 +160,9 @@ ns1__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
     contact->addressList = 0;
 
   // IM addresses
-  contact->imList = 0;
+  {
+    contact->imList = convertImAddresses( addr );
+  }
 
   // Office information
   {
@@ -316,6 +318,31 @@ KABC::Addressee ContactConverter::convertFromContact( ns1__Contact* contact )
       addr.setUrl( KURL( stringToQString( info->website ) ) );
   }
 
+  // IM addresses
+  if ( contact->imList ) {
+    // put all the im addresses on the same service into the same qstringlist
+    QMap<QString, QStringList> addressMap;
+    std::vector<ns1__ImAddress*> *list = contact->imList->im;
+    std::vector<ns1__ImAddress*>::const_iterator it;
+    for ( it = list->begin(); it != list->end(); ++it ) {
+      QStringList addressesForService = addressMap[ stringToQString( (*it)->service ) ];
+      addressesForService.append( stringToQString( (*it)->address ) );
+      addressMap.insert( stringToQString( (*it)->service ), addressesForService );
+    }
+
+    // then construct a custom field from each qstringlist
+    QMap<QString, QStringList>::Iterator addrIt;
+    for ( addrIt = addressMap.begin(); addrIt != addressMap.end(); ++addrIt )
+    {
+      QString protocol = addrIt.key();
+      QStringList addresses = addrIt.data();
+      kdDebug() << "got IM addresses for '" << protocol << "' : " << addresses << endl;
+      // TODO: map protocol to KDE's set of known protocol names (need to know the set of services in use elsewhere)
+      addr.insertCustom( QString::fromLatin1("messaging/%1").arg( protocol ),
+                          QString::fromLatin1( "All" ),
+                          addresses.join( QChar( 0xE000 ) ) );
+    }
+  }
   return addr;
 }
 
@@ -453,4 +480,69 @@ ns1__PostalAddress* ContactConverter::convertPostalAddress( const KABC::Address 
   }
 
   return postalAddress;
+}
+
+ns1__ImAddressList* ContactConverter::convertImAddresses( const KABC::Addressee& addr )
+{
+  //return 0;
+  /* TODO: use IM address dedicated functions in KDE 4.0.
+  Change semantics so that convertToContact pulls each 
+  IM address out of the addressee and passes it to this
+  function, which converts one at a time. */
+  kdDebug() << k_funcinfo << endl;
+  ns1__ImAddressList* imList = soap_new_ns1__ImAddressList( soap(), -1 );
+  std::vector<class ns1__ImAddress*> *list = soap_new_std__vectorTemplateOfPointerTons1__ImAddress( soap(), -1 );
+
+  // for each custom
+  // if it contains IM addresses
+  // extract each one and add it to imList
+
+  const QStringList customs = addr.customs();
+  QStringList::ConstIterator it;
+  bool isSet = false;
+  for ( it = customs.begin(); it != customs.end(); ++it ) {
+    QString app, name, value;
+    splitField( *it, app, name, value );
+
+    if ( app.startsWith( QString::fromLatin1( "messaging/" ) ) && name == QString::fromLatin1( "All" ) ) {
+      // get the protocol for this field
+      QString protocol = app.section( '/', 1, 1 );
+      if ( !protocol.isEmpty() ) {
+        QStringList addresses = QStringList::split( QChar( 0xE000 ), value );
+        QStringList::iterator end = addresses.end();
+        // extract each address for this protocol, and create an ns1__ImAddress for it, and append it to list.
+        for ( QStringList::ConstIterator it = addresses.begin(); it != end; ++it ) {
+          ns1__ImAddress* address = soap_new_ns1__ImAddress( soap(), -1 );
+          address->service.append( protocol.utf8() );
+          address->address.append( (*it).utf8() );
+          address->type.append( "all" );
+          kdDebug() << "adding: service: " << protocol << " address: " << *it << " type: all" << endl;
+          list->push_back( address );
+        }
+      }
+    }
+  }
+  imList->im = list;
+  if ( list->size() > 0 )
+    return imList;
+  else
+  {
+    delete imList;
+    return 0;
+  }
+}
+
+void ContactConverter::splitField( const QString &str, QString &app, QString &name, QString &value )
+{
+  int colon = str.find( ':' );
+  if ( colon != -1 ) {
+    QString tmp = str.left( colon );
+    value = str.mid( colon + 1 );
+
+    int dash = tmp.find( '-' );
+    if ( dash != -1 ) {
+      app = tmp.left( dash );
+      name = tmp.mid( dash + 1 );
+    }
+  }
 }

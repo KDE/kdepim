@@ -39,6 +39,12 @@ class ContactConverter : public GWConverter
 
     KABC::Address convertPostalAddress( ns1__PostalAddress* ) const;
     ns1__PostalAddress* convertPostalAddress( const KABC::Address& );
+    /* we convert all IM addresses in the addressee at once,
+    because multiple values per IM system are stored in a custom field each
+    which is a different structure to that used for phone numbers, email addresses etc */
+    ns1__ImAddressList* convertImAddresses( const KABC::Addressee& );
+    // splits up an arbitrary custom field
+    void splitField( const QString &str, QString &app, QString &name, QString &value );
 };
 
 #endif
