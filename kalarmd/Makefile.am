@@ -29,7 +29,6 @@ METASOURCES = AUTO
 autostart_DATA = kalarmd.autostart.desktop
 autostartdir = $(prefix)/share/autostart
 
-app_DATA = kalarmd.desktop
-appdir = $(kde_appsdir)/.hidden
+kde_services_DATA = kalarmd.desktop
 
 include ../admin/Doxyfile.am
