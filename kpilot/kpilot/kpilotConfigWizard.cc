@@ -119,7 +119,7 @@ void ConfigWizard::accept()
 			// TODO: Once the Evolution abook resource is finished, enable it...
 			conduits.remove("abbrowser_conduit");
 			// TODO: settings for conduits
-			KMessageBox::information(this, i18n("KPilot cannot yet synchronize the addressbook with Evolution, so the addressbook conduit was disabled.\nWhen syncing the calendar or todo list using KPilot, please quit Evolution before the sync, otherwise you will loose data."), i18n("Restrictions with Evolution"));
+			KMessageBox::information(this, i18n("KPilot cannot yet synchronize the addressbook with Evolution, so the addressbook conduit was disabled.\nWhen syncing the calendar or todo list using KPilot please quit Evolution before the sync, otherwise you will lose data."), i18n("Restrictions with Evolution"));
 			break;
 		case eAppKontact:
 			applicationName=i18n("KDE's PIM suite", "Kontact");
