@@ -51,6 +51,11 @@ public:
 	void addFiles(QStringList&);
 	void addFile(const QString&);
 
+	/**
+	* Returns information about this installer. Note particularly
+	* that fileNames() returns only filenames, not paths. In particular,
+	* you'll need to prepend dir()+"/" to get pathnames.
+	*/
 	const QString &dir() const { return fDirName; } ;
 	const QStringList fileNames() const ;
 	
@@ -76,6 +81,9 @@ private:
 #endif
 
 // $Log$
+// Revision 1.5  2001/09/29 16:26:18  adridg
+// The big layout change
+//
 // Revision 1.4  2001/04/16 13:48:35  adridg
 // --enable-final cleanup and #warning reduction
 //
