@@ -1038,7 +1038,7 @@ QString CryptPlugWrapper::updateURL() const
 }
 
 bool CryptPlugWrapper::alwaysEncryptToSelf() {
-  return mAlwaysEncryptToSelf;
+  return true;
 }
 
 
