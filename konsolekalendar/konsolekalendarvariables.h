@@ -21,6 +21,11 @@
 #include <qdatetime.h>
 #include <qstring.h>
 
+#include "calendarlocal.h"
+#include "event.h"
+
+namespace KCal {
+
 class KonsoleKalendarVariables
 {
   public:
@@ -55,7 +60,19 @@ class KonsoleKalendarVariables
     
     QDate parseDate( QString string );
     QTime parseTime( QString str );
+ 
+    /*
+     * Set calendar file for global use
+     */
 
+   void setCalendar( CalendarLocal *calendar );
+   
+   /*
+    * Get global calendar 
+    */
+
+   CalendarLocal *getCalendar();
+   
   private:
     int findNumber(const QString &str, int &pos, int &startpos);
     char findSeparator(const QString &str, int &pos, int &seppos);
@@ -64,14 +81,19 @@ class KonsoleKalendarVariables
     QDateTime m_date;
     bool m_bIsDate;
     QDateTime m_startDate;
-    bool m_bIsStartDate;
     QDateTime m_endDate;
+    bool m_bIsStartDate;
     QString m_calendar;
     bool m_bIsEndDate;
     bool m_bNext;
     bool m_bVerbose;
     bool m_bAll;
     int str_length;
+    // We can use this from everywhere
+    CalendarLocal *m_caledarLocal;
+   
 };
+
+}
 
 #endif

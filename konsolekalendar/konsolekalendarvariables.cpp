@@ -24,6 +24,9 @@
 #include <iostream>
 #include <stdio.h>
 
+using namespace KCal;
+using namespace std;
+
 KonsoleKalendarVariables::KonsoleKalendarVariables()
 {
   m_bIsDate = false;
@@ -113,6 +116,16 @@ void KonsoleKalendarVariables::setCalendarFile(QString calendar)
 QString KonsoleKalendarVariables::getCalendarFile()
 {
   return m_calendar;
+}
+
+void KonsoleKalendarVariables::setCalendar( CalendarLocal *calendar )
+{
+	m_caledarLocal = calendar;
+}
+
+CalendarLocal *KonsoleKalendarVariables::getCalendar()
+{
+	return m_caledarLocal;
 }
 
 bool KonsoleKalendarVariables::isAll()
