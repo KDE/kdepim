@@ -47,24 +47,24 @@ class KMailConnection;
 
 /**
   This class provides the kmail connectivity for IMAP resources.
-  
+
   The main methods are:
-  
+
   fromKMail...() : calls made _by_ KMail to add/delete data representation in the resource.
-  
+
   kmail...()     : calls _into_ KMail made by the resource.
-  
+
   e.g. fromKMailAddIncidence() is called by KMail
        when a new iCard is there after an IMAP sync.
-       
+
        By calling fromKMailAddIncidence() KMail notifies
        the resource about the new incidence, so in the
        addressbook a new address will appear like magic.
-  
+
   e.g. kmailAddIncidence() is called by the resource when
        iCard must be stored by KMail because the user has added
        an address in the addressbook.
-       
+
        By calling kmailAddIncidence() the resource causes
        KMail to store the new address in the (IMAP) folder.
 */
@@ -84,7 +84,8 @@ public:
   virtual void slotRefresh( const QString& type,
                             const QString& resource ) = 0;
   virtual void fromKMailAddSubresource( const QString& type,
-                                        const QString& resource ) = 0;
+                                        const QString& resource,
+                                        bool writable ) = 0;
   virtual void fromKMailDelSubresource( const QString& type,
                                         const QString& resource ) = 0;
 

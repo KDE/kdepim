@@ -139,7 +139,13 @@ void KMailConnection::fromKMailAddSubresource( const QString& type,
 {
 //   kdDebug(5650) << "KMailConnection::subresourceAdded( " << type << ", "
 //                 << resource << " )\n";
-  mResource->fromKMailAddSubresource( type, resource );
+  bool writable = true;
+
+  // TODO: This should be told by KMail right away
+  if ( connectToKMail() )
+    writable = mKMailIcalIfaceStub->isWritableFolder( type, resource );
+
+  mResource->fromKMailAddSubresource( type, resource, writable );
 }
 
 void KMailConnection::fromKMailDelSubresource( const QString& type,
