@@ -133,6 +133,12 @@ tab of the <guilabel>Identities</guilabel> section.</para>
 in the <link linkend="configure-network-sending">Configuration</link>
 chapter.</para>
 
+
+<sect3 id="sending-mail-kolab">
+<title>Kolab2 server</title>
+
+<para>When configuring a <guilabel>SMTP</guilabel> account with a <guilabel>Kolab2</guilabel> server Host, you need to check the <guilabel>Server requires authentification</guilabel> option and to fill in your <guilabel>Kolab2</guilabel> user's email address and password in the <guilabel>Login</guilabel> and <guilabel>Password</guilabel> fields. Select then the <guilabel>Security</guilabel> tab and click on the <guibutton>Check What the Server Supports</guibutton> for automated setup of your <guilabel>Security</guilabel> configuration. The default should be <guilabel>TLS/PLAIN</guilabel>. The <guilabel>Kolab2</guilabel> server supports  <guilabel>SSL/PLAIN</guilabel> as well. Those settings may of course be configured manually.</para>
+</sect3>
 </sect2>
 
 <sect2 id="receiving-mail">
@@ -154,6 +160,15 @@ from your <acronym>ISP</acronym> or system administrator. You should not
 need to change the <guilabel>Port</guilabel> setting (the default for POP3 is
 <userinput>110</userinput>, the default for <acronym>IMAP</acronym> is
 <userinput>143</userinput>).</para>
+
+<sect3 id="receiving-mail-kolab">
+<title>Kolab2 server</title>
+<para>
+select <guilabel>Disconnected IMAP</guilabel> when choosing your <guilabel>Account Type</guilabel>. Fill in the <guilabel>Login</guilabel> and <guilabel>Password</guilabel> fields with respectively your user email address and password on the <guilabel>Kolab2</guilabel> server. In the <guilabel>Security</guilabel> section click on the <guilabel>Check What the Server Support</guilabel> button for automated set-up of your <guilabel>Security</guilabel> configuration. The default should be <guilabel>TLS/PLAIN</guilabel>. The <guilabel>Kolab2</guilabel> server supports <guilabel>SSL/PLAIN</guilabel> as well. Those settings may of course be configured manually.</para>
+<para>
+If you want to use the <guilabel>"Out of Office" Replies</guilabel> functionality of the <guilabel>Kolab2</guilabel> server, set-up the <guilabel>Filtering</guilabel> section of you <guilabel>DIMAP</guilabel> account by checking the <guilabel>Server supports Sieve</guilabel> option as well as <guilabel>Reuse host and login configuration</guilabel>, <guilabel>Managesieve port</guilabel> should be set to 2000 as default. 
+</para>
+</sect3>
         
 <sect3 id="receiving-mail-imap">
 <title>Options only relevant to <acronym>IMAP</acronym></title>
