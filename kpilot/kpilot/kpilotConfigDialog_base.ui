@@ -249,6 +249,12 @@ KPilot's settings. Use Qt2 designer only!</comment>
                         <property name="sizeType">
                             <enum>Expanding</enum>
                         </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>0</width>
+                                <height>20</height>
+                            </size>
+                        </property>
                     </spacer>
                 </vbox>
             </widget>
@@ -336,6 +342,12 @@ KPilot's settings. Use Qt2 designer only!</comment>
                         </property>
                         <property name="sizeType">
                             <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>0</width>
+                                <height>20</height>
+                            </size>
                         </property>
                     </spacer>
                 </grid>
@@ -429,6 +441,12 @@ KPilot's settings. Use Qt2 designer only!</comment>
                         <property name="sizeType">
                             <enum>Expanding</enum>
                         </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>0</width>
+                                <height>20</height>
+                            </size>
+                        </property>
                     </spacer>
                 </grid>
             </widget>
@@ -439,7 +457,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                 <attribute name="title">
                     <string>Sync</string>
                 </attribute>
-                <grid>
+                <vbox>
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
@@ -449,7 +467,7 @@ KPilot's settings. Use Qt2 designer only!</comment>
                     <property name="spacing">
                         <number>6</number>
                     </property>
-                    <widget class="QGroupBox" row="0" column="0">
+                    <widget class="QGroupBox">
                         <property name="name">
                             <cstring>GroupBox29</cstring>
                         </property>
@@ -521,6 +539,25 @@ KPilot's settings. Use Qt2 designer only!</comment>
                         </widget>
                         <widget class="QCheckBox">
                             <property name="name">
+                                <cstring>fOverwriteRemote</cstring>
+                            </property>
+                            <property name="geometry">
+                                <rect>
+                                    <x>11</x>
+                                    <y>38</y>
+                                    <width>538</width>
+                                    <height>21</height>
+                                </rect>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Local overrides Pilot</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>We really don't know what this does.</string>
+                            </property>
+                        </widget>
+                        <widget class="QCheckBox">
+                            <property name="name">
                                 <cstring>fSyncFiles</cstring>
                             </property>
                             <property name="geometry">
@@ -544,27 +581,33 @@ KPilot's settings. Use Qt2 designer only!</comment>
                                 <string>&lt;qt&gt;Install files that have been dragged onto KPilot or the KPilot daemon on the Pilot.&lt;/qt&gt;</string>
                             </property>
                         </widget>
-                        <widget class="QCheckBox">
-                            <property name="name">
-                                <cstring>fOverwriteRemote</cstring>
-                            </property>
-                            <property name="geometry">
-                                <rect>
-                                    <x>11</x>
-                                    <y>38</y>
-                                    <width>538</width>
-                                    <height>21</height>
-                                </rect>
-                            </property>
-                            <property name="text">
-                                <string>&amp;Local overrides Pilot</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>We really don't know what this does.</string>
-                            </property>
-                        </widget>
                     </widget>
-                    <spacer row="1" column="0">
+                    <spacer>
+                        <property name="name">
+                            <cstring>Spacer5</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>0</width>
+                                <height>21</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>fSyncWithKMail</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Sync with KMail ( with Kroupware enabled )</string>
+                        </property>
+                    </widget>
+                    <spacer>
                         <property name="name">
                             <cstring>Spacer1</cstring>
                         </property>
@@ -574,8 +617,14 @@ KPilot's settings. Use Qt2 designer only!</comment>
                         <property name="sizeType">
                             <enum>Expanding</enum>
                         </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>0</width>
+                                <height>20</height>
+                            </size>
+                        </property>
                     </spacer>
-                </grid>
+                </vbox>
             </widget>
         </widget>
     </hbox>

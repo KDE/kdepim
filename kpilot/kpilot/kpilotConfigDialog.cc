@@ -107,6 +107,7 @@ void KPilotConfigDialog::readConfig()
 	(void) c.getSkip(fConfigWidget->fSkipDB);
 
 	(void) c.getSyncFiles(fConfigWidget->fSyncFiles);
+	(void) c.getSyncWithKMail(fConfigWidget->fSyncWithKMail);
 
 	c.setAddressGroup();
 	(void) c.getUseKeyField(fConfigWidget->fUseKeyField);
@@ -163,6 +164,7 @@ void KPilotConfigDialog::readConfig()
 
 	// Sync page
 	c.setSyncFiles(fConfigWidget->fSyncFiles);
+	c.setSyncWithKMail(fConfigWidget->fSyncWithKMail);
 
 	// Address page
 	c.setAddressGroup();
@@ -171,7 +173,6 @@ void KPilotConfigDialog::readConfig()
 	c.resetGroup();
 
 	KPilotConfig::updateConfigVersion();
-
 	c.sync();
 }
 
@@ -226,6 +227,12 @@ void KPilotConfigDialog::setAddressDisplay(int i)
 }
 
 // $Log$
+// Revision 1.7.2.1  2002/10/11 09:16:24  rogowski
+// Implemented syncing of kpilot with kmail(only todos and calendars up to now). To enable syncing, choose in the sync config tab the option >sync with kmail<. But be careful with doing this with important data on your pilot: There are still bugs in kmail eating your data!
+//
+// Revision 1.7  2002/05/18 23:28:19  adridg
+// Compile fixes
+//
 // Revision 1.6  2001/11/11 22:20:23  adridg
 // Add workaround for pilot-link limitation <= 0.9.5
 //

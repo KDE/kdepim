@@ -68,7 +68,7 @@ static const char *kpilotconfig_id =
 // (increase) this number.
 //
 //
-/* static */ const int KPilotConfig::ConfigurationVersion = 402;
+/* static */ const int KPilotConfig::ConfigurationVersion = 403;
 
 /* static */ int KPilotConfig::getConfigVersion(KConfig * config)
 {
@@ -302,6 +302,7 @@ BoolProperty_(KillDaemonOnExit, "StopDaemonAtExit", false)
 BoolProperty_(StartDaemonAtLogin, "StartDaemonAtLogin", true)
 BoolProperty_(ShowSecrets, "ShowSecrets", false)
 BoolProperty_(SyncFiles, "SyncFiles", true)
+BoolProperty_(SyncWithKMail, "SyncWithKMail", false)
 BoolProperty_(UseKeyField, "UseKeyField", false)
 
 
@@ -365,6 +366,12 @@ void KPilotConfigSettings::setDatabaseConduit(const QString & database,
 
 
 // $Log$
+// Revision 1.12.4.1  2002/10/11 09:16:24  rogowski
+// Implemented syncing of kpilot with kmail(only todos and calendars up to now). To enable syncing, choose in the sync config tab the option >sync with kmail<. But be careful with doing this with important data on your pilot: There are still bugs in kmail eating your data!
+//
+// Revision 1.12  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.11  2001/10/02 17:48:50  adridg
 // No debugging when not debugging
 //

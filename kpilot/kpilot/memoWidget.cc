@@ -484,7 +484,7 @@ void MemoWidget::updateWidget()
 	fTextWidget->clear();
 
 	slotUpdateButtons();
-	
+
 	lastSelectedMemo=-1;
 }
 
@@ -794,8 +794,14 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &m
 }
 
 // $Log$
-// Revision 1.49  2002/11/18 07:16:57  mlaurent
-// Fix crash when item selected is null
+// Revision 1.48.2.3  2002/11/29 11:12:10  thorsen
+// Merged from head
+//
+// Revision 1.48.2.2  2002/11/24 11:44:07  mutz
+// merged from HEAD; doesn't compile for me, but then HEAD doesn't either (missing pi-{file,version,...}.h includes)
+//
+// Revision 1.48.2.1  2002/10/14 21:20:35  rogowski
+// Added syncing with addressbook of kmail. Fixed some bugs.
 //
 // Revision 1.48  2002/07/20 22:08:19  mhunter
 // Hot-Sync -> HotSync

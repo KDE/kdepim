@@ -94,6 +94,7 @@ public:
 
 	BoolProperty(ShowSecrets)
 	BoolProperty(SyncFiles)
+	BoolProperty(SyncWithKMail)
 	StringProperty(BackupOnly)
 	StringProperty(Skip)
 
@@ -203,6 +204,12 @@ protected:
 
 
 // $Log$
+// Revision 1.9.4.1  2002/10/11 09:16:24  rogowski
+// Implemented syncing of kpilot with kmail(only todos and calendars up to now). To enable syncing, choose in the sync config tab the option >sync with kmail<. But be careful with doing this with important data on your pilot: There are still bugs in kmail eating your data!
+//
+// Revision 1.9  2001/10/08 22:20:18  adridg
+// Changeover to libkpilot, prepare for lib-based conduits
+//
 // Revision 1.8  2001/09/29 16:26:18  adridg
 // The big layout change
 //

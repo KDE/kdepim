@@ -184,7 +184,6 @@ void LogWidget::addMessage(const QString & s)
 
 	if (s.isEmpty()) return;
 	if (!fLog) return;
-
 	QString t;
 
 	if (fShowTime)
@@ -204,6 +203,7 @@ void LogWidget::addMessage(const QString & s)
 //#endif
 	fLog->setText(fLog->text() + t);
 	fLog->contentsHeight();
+	fLog->verticalScrollBar()->setValue(fLog->verticalScrollBar()->maxValue() );
 }
 
 void LogWidget::addError(const QString & s)
@@ -360,6 +360,15 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.26.2.3  2002/11/29 11:12:10  thorsen
+// Merged from head
+//
+// Revision 1.26.2.2  2002/11/24 11:44:07  mutz
+// merged from HEAD; doesn't compile for me, but then HEAD doesn't either (missing pi-{file,version,...}.h includes)
+//
+// Revision 1.26.2.1  2002/10/14 21:20:35  rogowski
+// Added syncing with addressbook of kmail. Fixed some bugs.
+//
 // Revision 1.28  2002/10/11 19:56:11  rnolden
 // ooops
 //

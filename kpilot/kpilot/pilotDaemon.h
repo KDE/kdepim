@@ -176,8 +176,16 @@ private:
 	int fNextSyncType;
 
 	SyncStack *fSyncStack;
+	// KMail related stuff
+	bool _syncWithKMail;
 
-
+	void cleanupConfig();
+	void start_syncCal_TodosWithKMail( bool cal, bool todos);
+	void start_syncAddWithKMail();
+	void start_syncNotesWithKMail();
+	void end_syncCal_TodosWithKMail( bool cal, bool todos);
+	void end_syncAddWithKMail();
+	void end_syncNotesWithKMail();
 	/**
 	* This is a pointer to the (optional) docked
 	* system tray icon for the daemon.
@@ -212,7 +220,7 @@ protected slots:
 protected:
 	LoggerDCOP_stub &getLogger() { return *fLogStub; } ;
 	KPilotDCOP_stub &getKPilot() { return *fKPilotStub; } ;
-	
+
 private:
 	LoggerDCOP_stub *fLogStub;
 	KPilotDCOP_stub *fKPilotStub;
@@ -220,6 +228,15 @@ private:
 
 
 // $Log$
+// Revision 1.36.2.3  2002/11/29 11:12:10  thorsen
+// Merged from head
+//
+// Revision 1.36.2.2  2002/10/14 21:20:35  rogowski
+// Added syncing with addressbook of kmail. Fixed some bugs.
+//
+// Revision 1.36.2.1  2002/10/11 09:16:24  rogowski
+// Implemented syncing of kpilot with kmail(only todos and calendars up to now). To enable syncing, choose in the sync config tab the option >sync with kmail<. But be careful with doing this with important data on your pilot: There are still bugs in kmail eating your data!
+//
 // Revision 1.36  2002/08/15 21:51:00  kainhofe
 // Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
 //

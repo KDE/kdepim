@@ -51,79 +51,38 @@ static const char *pilotdaemon_id =
 #include <signal.h>
 #include <errno.h>
 
-#ifndef QDIR_H
 #include <qdir.h>
-#endif
-#ifndef QLIST_H
 #include <qlist.h>
-#endif
-#ifndef QCURSOR_H
 #include <qcursor.h>
-#endif
-#ifndef QDRAGOBJECT_H
 #include <qdragobject.h>
-#endif
 #include <qstack.h>
 #include <qtimer.h>
 #include <qtooltip.h>
 
-
-#ifndef _KUNIQUEAPP_H
 #include <kuniqueapp.h>
-#endif
-#ifndef _KABOUTDATA_H
 #include <kaboutdata.h>
-#endif
-#ifndef _KABOUTAPPLICATION_H
 #include <kaboutapplication.h>
-#endif
-#ifndef _KCMDLINEARGS_H
 #include <kcmdlineargs.h>
-#endif
-#ifndef _KWIN_H
 #include <kwin.h>
-#endif
-#ifndef _KSIMPLECONFIG_H
 #include <ksimpleconfig.h>
-#endif
-#ifndef _KURL_H
 #include <kurl.h>
-#endif
-#ifndef _KSOCK_H
 #include <ksock.h>
-#endif
-#ifndef _KMESSAGEBOX_H
 #include <kmessagebox.h>
-#endif
-#ifndef _KSTDDIRS_H
 #include <kstddirs.h>
-#endif
-#ifndef _KPOPUPMENU_H
 #include <kpopupmenu.h>
-#endif
-#ifndef _KICONLOADER_H
 #include <kiconloader.h>
-#endif
-#ifndef _KIO_NETACCESS_H
 #include <kio/netaccess.h>
-#endif
-#ifndef _KDEBUG_H
 #include <kdebug.h>
-#endif
-#ifndef _KPROCESS_H
+#include <ktempfile.h>
 #include <kprocess.h>
-#endif
-#ifndef _DCOPCLIENT_H
 #include <dcopclient.h>
-#endif
 
+#include <kabc/addressbook.h>
+#include <kabc/addressee.h>
+#include <kabc/stdaddressbook.h>
 
-#ifndef _KPILOT_FILEINSTALLER_H
 #include "fileInstaller.h"
-#endif
-#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
-#endif
 
 #include "syncStack.h"
 
@@ -658,6 +617,115 @@ QString PilotDaemon::syncTypeString(int i) const
 	}
 }
 
+void PilotDaemon::cleanupConfig()
+{
+  // tempfile check in case app has terminated during sync
+  KPilotConfigSettings &c = KPilotConfig::getConfig();
+  c.setGroup("todoOptions");
+  if ( c.hasKey( "CalFileBackup") ) {
+    QString fn = c.readEntry( "CalFileBackup" , QString::null );
+    if ( fn != "empty" ) {
+      c.writeEntry( "CalFile" ,fn );
+      c.writeEntry( "CalFileBackup" , "empty" );
+    } 
+  }
+  c.setGroup("vcalOptions");
+  if ( c.hasKey( "CalFileBackup") ) {
+    QString fn = c.readEntry( "CalFileBackup" , QString::null );
+    if ( fn != "empty" ) {
+      c.writeEntry( "CalFile" ,fn );
+      c.writeEntry( "CalFileBackup" , "empty" );
+    } 
+  } 
+  c.setGroup("Abbrowser-conduit");
+  c.writeEntry( "KMailTempFile" , "empty" );
+  c.sync();
+}
+
+void PilotDaemon::start_syncCal_TodosWithKMail( bool cal, bool todos )
+{
+  if ( !cal && ! todos )
+    return;
+  KPilotConfigSettings &c = KPilotConfig::getConfig();
+  DCOPClient *client = kapp->dcopClient();
+  KTempFile  tempfile;
+  QString filename = tempfile.name();
+  QByteArray  data, reply_data;  
+  QCString reply_type;
+  QDataStream arg(data, IO_WriteOnly);
+  arg << filename;
+  if (!client->call( "kmail" ,
+		     "KOrganizerSyncIface",
+		     "pullSyncData(QString)",
+		     data,     
+		     reply_type,
+		     reply_data)) {
+    logMessage("Calling KMail over DCOP failed!" );
+    logMessage("Not syncing Calendars with KMail");
+    logMessage("Not syncing Todos with KMail");
+  }
+  else {
+    logMessage("Calling Cal/Todo over DCOP succeeded");
+    // now prepare for syncing
+    _syncWithKMail = true;
+    if ( todos ) {
+      logMessage( "Syncing todos with KMail" );
+      c.setGroup("todoOptions");
+      QString fn = c.readEntry( "CalFile" , QString::null );
+      c.writeEntry( "CalFileBackup" ,fn );
+      c.writeEntry( "CalFile" ,filename );
+    }
+    else
+      logMessage( "Not syncing todos with KMail" );
+    if ( cal ) {
+      logMessage( "Syncing calendar with KMail" );
+      c.setGroup("vcalOptions");
+      QString fn = c.readEntry( "CalFile" , QString::null );
+      c.writeEntry( "CalFileBackup" ,fn );
+      c.writeEntry( "CalFile" ,filename );
+    }
+    else
+      logMessage( "Not syncing calendar with KMail" );
+  }
+  c.sync();
+}
+#include <kabc/stdaddressbook.h>
+
+void PilotDaemon::start_syncAddWithKMail()
+{
+  logMessage( "Syncing Addresses with KMail" );
+  DCOPClient *client = kapp->dcopClient();
+  KTempFile  tempfile;
+  QString filename = tempfile.name();
+  QByteArray  data, reply_data;  
+  QCString reply_type;
+  QString name  = KABC::StdAddressBook::fileName();
+  logMessage( name );
+  QDataStream arg(data, IO_WriteOnly);
+  arg << filename;
+  if (!client->call( "kmail" ,
+		     "KMailIface",
+		     "requestAddresses(QString)",
+		     data,     
+		     reply_type,
+		     reply_data)) {
+    logMessage("Calling KMail over DCOP failed!" );
+    logMessage("Not syncing Addresses with KMail");
+  }
+  else {
+    KPilotConfigSettings &c = KPilotConfig::getConfig();
+    logMessage("Calling addresses over DCOP succeeded");
+    c.setGroup("Abbrowser-conduit");
+    c.writeEntry( "KMailTempFile" , filename );
+    c.sync();
+  }
+}
+void PilotDaemon::start_syncNotesWithKMail()
+{
+  logMessage( "Syncing Notes with Mail" );
+  logMessage( "Syncing Notes-sorry not implemented" );
+}
+
 /* slot */ void PilotDaemon::startHotSync()
 {
 	FUNCTIONSETUP;
@@ -694,7 +762,59 @@ QString PilotDaemon::syncTypeString(int i) const
 		conduits = c.getInstalledConduits();
 		installFiles = c.getSyncFiles();
 	}
+	_syncWithKMail = false;
+	// KMail stuff ++++++++++++++++++++++++++++++++++++++
 
+	cleanupConfig();
+	c.setGroup(QString::null);
+	if ( c.getSyncWithKMail() ) {
+	 
+	  QCString kmdcop;
+	  QString error;
+	  QString mess;
+	  int pid;
+	  logMessage("Syncing with KMail(Kroupware) enabled");
+	  logMessage("Try to start KMail...");
+	  if (KApplication::startServiceByDesktopName("kmail",
+						      QString::null, 
+						      &error, 
+						      &kmdcop, 
+						      &pid
+						      ))
+	  {
+	    logMessage("Cannot start KMail - Error was:");
+	    logMessage( error );
+	    logMessage("Continue with normal syncing");
+	  }
+	else
+	  {
+	    mess.sprintf("Started KMail with pid %d ", pid );
+	    logMessage( mess );
+	    logMessage("Try to call KMail via DCOP...");
+	    // wait until kmail is up
+	    sleep(1);
+	    // try DCOP connection to KMail
+	    bool cal = (conduits.findIndex( "vcal-conduit" ) >= 0 );
+	    bool todos = ( conduits.findIndex( "todo-conduit" ) >= 0 );
+	    start_syncCal_TodosWithKMail( cal, todos );
+	    if ( conduits.findIndex( "knotes-conduit" ) >= 0 ) {
+	      start_syncNotesWithKMail();
+	    }
+	    else
+	      logMessage( "Not syncing Notes with KMail" );
+	    if ( conduits.findIndex( "abbrowser_conduit" ) >= 0){
+	      start_syncAddWithKMail();
+	    }
+	    else
+	      logMessage( "Not syncingAddress with KMail" );
+	  }
+	} else {
+	  logMessage("Syncing with KMail(Kroupware) disabled");
+	}
+
+	c.setGroup(QString::null);
+	c.sync();
+	//KMail stuff end ----------------------------------
 	fSyncStack = new SyncStack(fPilotLink,
 		&KPilotConfig::getConfig(),
 		conduits,
@@ -779,10 +899,109 @@ QString PilotDaemon::syncTypeString(int i) const
 	getLogger().logProgress(s, i);
 	if (!s.isEmpty()) updateTrayStatus(s);
 }
-
+void PilotDaemon::end_syncCal_TodosWithKMail( bool cal, bool todos)
+{
+ if ( !cal && ! todos )
+    return;
+ QString filename = "";
+ KPilotConfigSettings &c = KPilotConfig::getConfig();
+ if ( todos ) {
+   logMessage( "Rewriting Todos to KMail..." );
+   c.setGroup("todoOptions");
+   filename = c.readEntry( "CalFile" , QString::null );
+   c.writeEntry( "CalFile" ,c.readEntry( "CalFileBackup", QString::null ) );
+   c.writeEntry( "CalFileBackup" ,"empty");
+ }
+ if ( cal ) {
+   logMessage( "Rewriting Calendar to KMail" );
+   c.setGroup("vcalOptions");
+   filename = c.readEntry( "CalFile" , QString::null );
+   QString tf = c.readEntry( "CalFileBackup", QString::null ) ;
+   c.writeEntry( "CalFile" , tf  );
+   c.writeEntry( "CalFileBackup" ,"empty");
+ }
+ c.sync(); 
+ if ( filename != "" ) {
+   logMessage("Try to call KMail via DCOP to finish sync...");
+   // try DCOP connection to KMail
+   DCOPClient *client = kapp->dcopClient();
+   QByteArray  data, reply_data;  
+   QCString reply_type;
+   QDataStream arg(data, IO_WriteOnly);
+   arg << filename;
+   if (!client->call( "kmail" /*"korganizer" kmdcop */,
+		      "KOrganizerSyncIface",
+		      "pushSyncData(QString)",
+		      data,     
+		      reply_type,
+		      reply_data)) {
+     logMessage("Calling KMail over DCOP failed!" );
+     logMessage("Sync is not complete");
+     logMessage("Data from Palm stored in file:");
+     logMessage(filename);
+   } else {
+     logMessage("Calling over DCOP succeeded");
+     logMessage("Sync to KMail has finished sucessfully");
+   }
+   QFile::remove( filename );
+ }
+}
+void PilotDaemon::end_syncAddWithKMail()
+{
+  logMessage( "Syncing KMail with Addresses " );
+  DCOPClient *client = kapp->dcopClient();
+  KPilotConfigSettings &c = KPilotConfig::getConfig();
+  c.setGroup("Abbrowser-conduit");
+  QString filename = c.readEntry( "KMailTempFile" );
+  c.writeEntry( "KMailTempFile" , "empty" );
+  c.sync();
+  QByteArray  data, reply_data;  
+  QCString reply_type;
+  QDataStream arg(data, IO_WriteOnly);
+  arg << filename;
+  arg << QStringList();
+  if (!client->call( "kmail" ,
+		     "KMailIface",
+		     "storeAddresses(QString, QStringList)",
+		     data,     
+		     reply_type,
+		     reply_data)) {
+    logMessage("Calling KMail over DCOP failed!" );
+    logMessage("Not syncing Addresses with KMail");
+  }
+  else {  
+    logMessage("Calling  store addresses over DCOP succeeded");
+  }
+  //QFile::remove( filename );
+}
+void PilotDaemon::end_syncNotesWithKMail()
+{
+  logMessage( "Syncing KMail with Notes" );
+  logMessage( "Syncing Notes-sorry not implemented" );
+}
 /* slot */ void PilotDaemon::endHotSync()
 {
 	FUNCTIONSETUP;
+
+	// KMail stuff ++++++++++++++++++++++++++++++++++
+	if ( _syncWithKMail ) {
+	  KPilotConfigSettings &c = KPilotConfig::getConfig();
+	  QStringList conduits ;
+	  conduits = c.getInstalledConduits();
+	  QString filename = "";
+	  bool cal = ( conduits.findIndex( "vcal-conduit" ) >= 0 );
+	  bool todos = ( conduits.findIndex( "todo-conduit" ) >= 0 );
+	  end_syncCal_TodosWithKMail( cal, todos);
+	  if ( conduits.findIndex( "knotes-conduit" ) >= 0 ) {
+	    end_syncNotesWithKMail();
+	  }
+	  if ( conduits.findIndex( "abbrowser_conduit" ) >= 0){
+	    end_syncAddWithKMail();
+	  }
+	  c.sync();
+	}
+	_syncWithKMail = false;
+	// KMail stuff -----------------------------------
 
 	if (fTray)
 	{
@@ -944,6 +1163,15 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.66.2.3  2002/11/29 11:12:10  thorsen
+// Merged from head
+//
+// Revision 1.66.2.2  2002/10/14 21:20:35  rogowski
+// Added syncing with addressbook of kmail. Fixed some bugs.
+//
+// Revision 1.66.2.1  2002/10/11 09:16:24  rogowski
+// Implemented syncing of kpilot with kmail(only todos and calendars up to now). To enable syncing, choose in the sync config tab the option >sync with kmail<. But be careful with doing this with important data on your pilot: There are still bugs in kmail eating your data!
+//
 // Revision 1.66  2002/08/30 22:24:55  adridg
 // - Improved logging, connected the right signals now
 // - Try to handle dlp_ReadUserInfo failures sensibly
