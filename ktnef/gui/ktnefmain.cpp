@@ -22,6 +22,7 @@
 #include <ktnef/ktnefproperty.h>
 #include <ktnef/ktnefmessage.h>
 #include "attachpropertydialog.h"
+#include "messagepropertydialog.h"
 
 #include <qpopupmenu.h>
 #include <klistview.h>
@@ -41,6 +42,7 @@
 #include <kstdaction.h>
 #include <kdialogbase.h>
 #include <ktempfile.h>
+#include <kdebug.h>
 #ifdef KDE_NO_COMPAT
 #undef KDE_NO_COMPAT
 #endif
@@ -173,8 +175,14 @@ void KTNEFMain::viewFile()
 	KURL		url("file:"+extractTemp(attach));
 	QString		mimename(attach->mimeTag());
 
-	if (mimename.isEmpty())
+	if (mimename.isEmpty() || mimename == "application/octet-stream")
+	{
+		kdDebug() << "No mime type found in attachment object, trying to guess..." << endl;
 		mimename = KMimeType::findByURL(url, 0, true)->name();
+		kdDebug() << "Detected mime type: " << mimename << endl;
+	}
+	else
+		kdDebug() << "Mime type from attachment object: " << mimename << endl;
 
 	KRun::runURL(url, mimename);
 }
@@ -353,14 +361,7 @@ void KTNEFMain::slotNewToolbarConfig()
 
 void KTNEFMain::slotShowMessageProperties()
 {
-	KDialogBase dlg( this, 0, true, i18n( "Message Properties" ),
-			KDialogBase::Close, KDialogBase::Close );
-	QListView *lv = new KListView( &dlg );
-	lv->addColumn( i18n( "Name" ) );
-	lv->addColumn( i18n( "Value" ) );
-	lv->setAllColumnsShowFocus( true );
-	dlg.setMainWidget( lv );
-	formatPropertySet( parser_->message(), lv );
+	MessagePropertyDialog dlg( this, parser_->message() );
 	dlg.exec();
 }
 
@@ -389,7 +390,7 @@ void KTNEFMain::slotSaveMessageText()
 		}
 		else
 			QMessageBox::critical( this, i18n( "Error" ),
-					i18n( "Unable to save message text, check file permissions." ),
+					i18n( "Unable to open file for writing, check file permissions." ),
 					QMessageBox::Ok|QMessageBox::Default, 0);
 	}
 }

@@ -17,6 +17,7 @@
 
 #include "ktnefview.h"
 #include <ktnef/ktnefattach.h>
+#include "attachpropertydialog.h"
 
 #include <qheader.h>
 #include <qpixmap.h>
@@ -42,17 +43,13 @@ Attachment::Attachment(QListView *parent, KTNEFAttach *attach)
 {
 	setText(2, QString::number( attach_->size() ));
 	if (!attach_->fileName().isEmpty()) setText(0, attach_->fileName());
-	KMimeType::Ptr	mimeType;
-	if (attach_->mimeTag().isEmpty())
-	{
-		mimeType = KMimeType::findByURL(KURL("file:/"+(attach_->fileName().isEmpty() ? attach_->name() : attach_->fileName())));
-		// no mime type was given in the TNEF file, set it to the one found here
-		attach->setMimeTag(mimeType->name());
-	}
-	else
-		mimeType = KMimeType::mimeType(attach_->mimeTag());
+	KMimeType::Ptr	mimeType = KMimeType::mimeType( attach_->mimeTag() );
 	setText(1, mimeType->comment());
-	setPixmap(0, mimeType->pixmap(KIcon::Small));
+	QPixmap pix = loadRenderingPixmap( attach, parent->colorGroup().base() );
+	if ( !pix.isNull() )
+		setPixmap( 0, pix );
+	else
+		setPixmap(0, mimeType->pixmap(KIcon::Small));
 }
 
 Attachment::~Attachment()

@@ -20,6 +20,7 @@
 
 #include "attachpropertydialogbase.h"
 #include <qmap.h>
+#include <qpixmap.h>
 
 class KTNEFAttach;
 class KTNEFProperty;
@@ -34,9 +35,17 @@ public:
 	~AttachPropertyDialog();
 
 	void setAttachment(KTNEFAttach *attach);
+
+protected slots:
+	void saveClicked();
+
+private:
+	KTNEFAttach *m_attach;
 };
 
-void formatProperties( const QMap<int,KTNEFProperty*>&, QListView*, QListViewItem* );
+void formatProperties( const QMap<int,KTNEFProperty*>&, QListView*, QListViewItem*, const QString& = "prop" );
 void formatPropertySet( KTNEFPropertySet*, QListView* );
+void saveProperty( QListView*, KTNEFPropertySet*, QWidget* );
+QPixmap loadRenderingPixmap( KTNEFPropertySet*, const QColor& );
 
 #endif

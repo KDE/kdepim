@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>282</width>
-            <height>284</height>
+            <width>376</width>
+            <height>426</height>
         </rect>
     </property>
     <property name="caption">
@@ -25,50 +25,6 @@
         <property name="spacing">
             <number>6</number>
         </property>
-        <widget class="QLayoutWidget" row="8" column="0" rowspan="1" colspan="3">
-            <property name="name">
-                <cstring>Layout7</cstring>
-            </property>
-            <hbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <property name="margin">
-                    <number>0</number>
-                </property>
-                <property name="spacing">
-                    <number>6</number>
-                </property>
-                <spacer>
-                    <property name="name">
-                        <cstring>Spacer1</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Horizontal</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>20</width>
-                            <height>20</height>
-                        </size>
-                    </property>
-                </spacer>
-                <widget class="QPushButton">
-                    <property name="name">
-                        <cstring>close_</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Close</string>
-                    </property>
-                    <property name="default">
-                        <bool>true</bool>
-                    </property>
-                </widget>
-            </hbox>
-        </widget>
         <widget class="QLabel" row="1" column="1" rowspan="1" colspan="2">
             <property name="name">
                 <cstring>display_</cstring>
@@ -256,6 +212,52 @@
                 <enum>AllColumns</enum>
             </property>
         </widget>
+        <widget class="QLayoutWidget" row="8" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>layout2</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <spacer>
+                    <property name="name">
+                        <cstring>Spacer1</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>150</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>save_</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Save</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>close_</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Close</string>
+                    </property>
+                    <property name="default">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
     </grid>
 </widget>
 <connections>
@@ -265,7 +267,16 @@
         <receiver>AttachPropertyDialogBase</receiver>
         <slot>accept()</slot>
     </connection>
+    <connection>
+        <sender>save_</sender>
+        <signal>clicked()</signal>
+        <receiver>AttachPropertyDialogBase</receiver>
+        <slot>saveClicked()</slot>
+    </connection>
 </connections>
+<slots>
+    <slot access="protected">saveClicked()</slot>
+</slots>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
     <includehint>klistview.h</includehint>
