@@ -2,18 +2,21 @@
 <kpartgui name="kaddressbook" version="10">
 
   <MenuBar>
-    <Menu name="file"><text>&amp;File</text>
-      <Action name="file_mail_vcard" append="mail_merge"/>
+    <Menu name="file" noMerge="1"><text>&amp;File</text>
       <Action name="file_new_contact"/>
       <Action name="file_properties"/>
       <Separator/>
       <Action name="file_sync"/>
-
       <Menu name="file_import"><text>&amp;Import</text>
       </Menu>
-
       <Menu name="file_export"><text>&amp;Export</text>
       </Menu>
+      <Separator/>
+      <Action name="file_print"/>
+      <Action name="file_mail"/>
+      <Action name="file_mail_vcard"/>
+      <Separator/>
+      <Action name="file_quit"/>
     </Menu>
 
     <Menu name="edit"><text>&amp;Edit</text>
@@ -64,11 +67,11 @@
   </Menu>
 
   <ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
-    <Action name="file_sync" />
-    <Action name="file_print" />
-    <Separator/>
     <Action name="file_new_contact"/>
     <Action name="file_properties"/>
+    <Separator/>
+    <Action name="file_sync" />
+    <Action name="file_print" />
     <Separator/>
     <Action name="file_mail"/>
     <Separator/>
