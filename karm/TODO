@@ -1,3 +1,5 @@
+$Id:  $
+
 * times can be negative - does that make any sense?
 * one can adjust subtask *and* task times which has the effect that times
   won't add up any more - does that make sense?
@@ -10,6 +12,10 @@
 * mainwindow: move tray signals into tray.cpp
 * formatTime has nothing to do in TaskView?
 * "#ifndef header"s are inconsistent
+* mainwindow.cpp: before loading view, check whether the file exists
+  and if not, create a blank one and ask wheter we want to add a task.
+* add mouse double-click action (start new timer, stop old) to "Configure
+  Shortcuts" dialog.
 * Willi:
 --------
   * If one starts karm and installs some desktop tracking tasks nothing

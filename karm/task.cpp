@@ -16,14 +16,16 @@
 
 QPtrVector<QPixmap> *Task::icons = 0;
 
-Task::Task(const QString& taskName, long minutes, long sessionTime, DesktopListType desktops, QListView *parent)
-	: QObject(), QListViewItem(parent)
+Task::Task( const QString& taskName, long minutes, long sessionTime,
+            DesktopListType desktops, QListView *parent)
+  : QObject(), QListViewItem(parent)
 {
   init(taskName, minutes, sessionTime, desktops);
 };
 
-Task::Task(const QString& taskName, long minutes, long sessionTime, DesktopListType desktops, QListViewItem *parent)
-  :QObject(), QListViewItem(parent)
+Task::Task( const QString& taskName, long minutes, long sessionTime,
+            DesktopListType desktops, QListViewItem *parent)
+  : QObject(), QListViewItem(parent)
 {
   init(taskName, minutes, sessionTime, desktops);
 }
@@ -40,7 +42,8 @@ Task::Task( KCal::Incidence* event, QListView* parent )
   init( name, minutes, sessionTime, desktops );
 }
 
-void Task::init(const QString& taskName, long minutes, long sessionTime, DesktopListType desktops)
+void Task::init( const QString& taskName, long minutes, long sessionTime,
+                 DesktopListType desktops)
 {
   if (icons == 0) {
     icons = new QPtrVector<QPixmap>(8);
@@ -95,23 +98,27 @@ bool Task::isRunning() const
 
 void Task::setName( const QString& name )
 {
+  QString oldname = _name;
   _name = name;
+  _logging->rename( this, oldname );
   update();
 }
 
 void Task::setTotalTime ( long minutes )
 {
+  long oldtime = _totalTime;
   _totalTime = minutes;
   noNegativeTimes();
-  _logging->newTotalTime( this, _totalTime );
+  _logging->newTotalTime( this, _totalTime, (_totalTime - oldtime) );
   update();
 }
 
 void Task::setSessionTime ( long minutes )
 {
+  long oldtime = _sessionTime;
   _sessionTime = minutes;
   noNegativeTimes();
-  _logging->newSessionTime( this, _sessionTime );
+  _logging->newSessionTime( this, _sessionTime, (_sessionTime - oldtime) );
   update();
 }
 
@@ -166,39 +173,54 @@ KCal::Event* Task::asEvent( int level )
   QDateTime current = QDateTime::currentDateTime();
   event->setDtStart( current );
   event->setDtEnd( current.addSecs( totalTimeInSeconds() ) );
-  event->setCustomProperty( kapp->instanceName(), QCString( "durationInMinutes" ), QString::number( totalTime() ) );
-  event->setCustomProperty( kapp->instanceName(), QCString( "desktopList" ), getDesktopStr() );
-  event->setCustomProperty( kapp->instanceName(), QCString( "level" ), QString::number( level ) );
+  event->setCustomProperty( kapp->instanceName(),
+                            QCString( "durationInMinutes" ),
+                            QString::number( totalTime() ) );
+  event->setCustomProperty( kapp->instanceName(),
+                            QCString( "desktopList" ),
+                            getDesktopStr() );
+  event->setCustomProperty( kapp->instanceName(),
+                            QCString( "level" ),
+                            QString::number( level ) );
   KEMailSettings settings;
   event->setOrganizer( settings.getSetting( KEMailSettings::RealName ) );
   return event;
 }
 
-bool Task::parseIncidence( KCal::Incidence* event, long& minutes, QString& name, int& level, DesktopListType& desktops )
+bool Task::parseIncidence( KCal::Incidence* event, long& minutes, QString& name,
+                           int& level, DesktopListType& desktops )
 {
   bool ok = false;
 
   name = event->summary();
 
-  minutes = event->customProperty( kapp->instanceName(), QCString( "durationInMinutes" ) ).toInt( &ok );
+  minutes = event->customProperty( kapp->instanceName(),
+                                   QCString( "durationInMinutes" )
+                                 ).toInt( &ok );
   if ( !ok )
     minutes = 0;
 
-  level = event->customProperty( kapp->instanceName(), QCString( "level" ) ).toInt( &ok );
+  level = event->customProperty( kapp->instanceName(), QCString( "level" )
+                               ).toInt( &ok );
   if ( !ok )
     level = 0;
 
-  QString desktopList = event->customProperty( kapp->instanceName(), QCString( "desktopList" ) );
-  QStringList desktopStrList = QStringList::split( QString::fromLatin1( "\\," ), desktopList );
+  QString desktopList = event->customProperty( kapp->instanceName(),
+                                               QCString( "desktopList" ) );
+  QStringList desktopStrList = QStringList::split( QString::fromLatin1( "\\," ),
+                                                   desktopList );
   desktops.clear();
-  for ( QStringList::iterator iter = desktopStrList.begin(); iter != desktopStrList.end(); ++iter ) {
+  for ( QStringList::iterator iter = desktopStrList.begin();
+        iter != desktopStrList.end();
+        ++iter ) {
     int desktopInt = (*iter).toInt( &ok );
     if ( ok ) {
       desktops.push_back( desktopInt );
     }
   }
 
-  kdDebug() << "Parsed event: Name: " << name << ", Minutes: " << minutes << ", level: " << level << ", desktop: " << desktopList << endl;
+  kdDebug() << "Parsed event: Name: " << name << ", Minutes: " << minutes
+            << ", level: " << level << ", desktop: " << desktopList << endl;
 
   return true;
 }
@@ -209,7 +231,9 @@ QString Task::getDesktopStr() const
     return QString();
 
   QString desktopstr;
-  for ( DesktopListType::const_iterator iter = _desktops.begin(); iter != _desktops.end(); ++iter ) {
+  for ( DesktopListType::const_iterator iter = _desktops.begin();
+        iter != _desktops.end();
+        ++iter ) {
     desktopstr += QString::number( *iter ) + QString::fromLatin1( "," );
   }
   desktopstr.remove( desktopstr.length() - 1, 1 );

@@ -8,73 +8,178 @@
 #include <qregexp.h>
 #include <iostream>
 
-#define LOG_START				1
-#define LOG_STOP				2
-#define LOG_NEW_TOTAL_TIME		3
-#define LOG_NEW_SESSION_TIME	4
+#define QS(c) QString::fromLatin1(c)
 
+//
+//                            L O G    E V E N T S
+//
+QString KarmLogEvent::escapeXML( QString string )
+{
+  QString result = QString(string);
+  result.replace( QRegExp(QS("&")),  QS("&amp;")  );
+  result.replace( QRegExp(QS("<")),  QS("&lt;")   );
+  result.replace( QRegExp(QS(">")),  QS("&gt;")   );
+  result.replace( QRegExp(QS("'")),  QS("&apos;") );
+  result.replace( QRegExp(QS("\"")), QS("&quot;") );
+  // protect also our task-separator
+  result.replace( QRegExp(QS("/")),  QS("&slash;") );
+
+  return result;
+}
+
+// Common LogEvent stuff
+//
+void KarmLogEvent::loadCommonFields( Task *task)
+{
+  eventTime =  QDateTime::currentDateTime();
+  
+  QListViewItem *item = task;
+  fullName = escapeXML(task->name());
+  while( ( item = item->parent() ) )
+  {
+    fullName = escapeXML(((Task *)item)->name()) + fullName.prepend('/');
+  }
+}
+
+// Start LogEvent
+//
+StartLogEvent::StartLogEvent( Task *task )
+{
+  loadCommonFields(task);
+}
+
+QString StartLogEvent::toXML()
+{
+  return   QS("<starting")
+         + QS(" date=\"") + eventTime.toString() + QS("\"")
+         + QS(" task=\"") + fullName + QS("\"")
+         + QS(" />\n");
+}
+
+// Stop LogEvent
+//
+StopLogEvent::StopLogEvent( Task *task )
+{
+  loadCommonFields(task);
+}
+
+QString StopLogEvent::toXML()
+{
+  return   QS("<stopping")
+         + QS(" date=\"") + eventTime.toString()+ QS("\"")
+         + QS(" task=\"") + fullName + QS("\"")
+         + QS(" />\n");
+}
+
+// Rename LogEvent
+//
+RenameLogEvent::RenameLogEvent( Task *task, QString& old )
+{
+  loadCommonFields(task);
+  oldName = old;
+}
+
+QString RenameLogEvent::toXML()
+{
+  return   QS("<renaming")
+         + QS(" date=\"") + eventTime.toString() + QS("\"")
+         + QS(" task=\"") + fullName + QS("\"")
+         + QS(" old_name=\"") + oldName + QS("\"")
+         + QS(" />\n");
+}
+
+// Set Session Time LogEvent
+// 
+SessionTimeLogEvent::SessionTimeLogEvent( Task *task, long total, long change)
+{
+  loadCommonFields(task);
+  delta = change;
+  newTotal = total;
+}
+
+QString SessionTimeLogEvent::toXML()
+{
+  return   QS("<new_session_time")
+         + QS(" date=\"") + QString(eventTime.toString()) + QS("\"")
+         + QS(" task=\"") + fullName + QS("\"")
+         + QS(" new_total=\"") + newTotal + QS("\"")
+         + QS(" change=\"") + delta + QS("\"")
+         + QS(" />\n");
+}
+
+// Set Total Time LogEvent
+// 
+TotalTimeLogEvent::TotalTimeLogEvent( Task *task, long total, long change)
+{
+  loadCommonFields(task);
+  delta = change;
+  newTotal = total;
+}
+
+QString TotalTimeLogEvent::toXML()
+{
+        cout << "pre\n";
+  return   QS("<new_total_time")
+         + QS(" date=\"") + QString(eventTime.toString()) + QS("\"")
+         + QS(" task=\"") + fullName + QS("\"")
+         + QS(" new_total=\"") + newTotal + QS("\"")
+         + QS(" change=\"") + delta + QS("\"")
+         + QS(" />\n");
+}
+
+//
+//                              L O G G I N G
+//
 Logging *Logging::_instance = 0;
 
 Logging::Logging()
 {
-	_preferences = Preferences::instance();
+  _preferences = Preferences::instance();
 }
 
-void Logging::start( Task * task)
+void Logging::start( Task *task)
 {
-	log(task, LOG_START);
+  KarmLogEvent* event = new StartLogEvent(task);
+  log(event);
 }
 
-void Logging::stop( Task * task)
+void Logging::stop( Task *task)
 {
-	log(task, LOG_STOP);
+  KarmLogEvent* event = new StopLogEvent(task);
+  log(event);
 }
 
-// when time is reset...
-void Logging::newTotalTime( Task * task, long minutes)
+void Logging::newTotalTime( Task *task, long minutes, long change)
 {
-	log(task, LOG_NEW_TOTAL_TIME, minutes);
-}
-void Logging::newSessionTime( Task * task, long minutes)
-{
-	log(task, LOG_NEW_SESSION_TIME, minutes);
+  KarmLogEvent* event = new TotalTimeLogEvent(task, minutes, change);
+  log(event);
 }
 
-void Logging::log( Task * task, short type, long minutes)
+void Logging::newSessionTime( Task *task, long minutes, long change)
 {
+  KarmLogEvent* event = new SessionTimeLogEvent(task, minutes, change);
+  log(event);
+}
 
-	if(_preferences->timeLogging()) {
-		QFile f(_preferences->timeLog());
+void Logging::rename( Task *task, QString& oldName)
+{
+  KarmLogEvent* event = new RenameLogEvent(task, oldName);
+  log(event);
+}
 
-		if ( f.open( IO_WriteOnly | IO_Append) ) {
-			QTextStream out( &f );        // use a text stream
+void Logging::log( KarmLogEvent* event)
+{
+  if(_preferences->timeLogging()) {
+    QFile f(_preferences->timeLog());
 
-			if( type == LOG_START) {
-				out << "<starting         ";
-			} else if( type == LOG_STOP ) {
-				out << "<stopping         ";
-			} else if( type == LOG_NEW_TOTAL_TIME) {
-				out << "<new_total_time   ";
-			} else if( type == LOG_NEW_SESSION_TIME) {
-				out << "<new_session_time ";
-			} else {
-				std::cerr << "Programming error!";
-			}
-
-			out << "task=\"" << constructTaskName(task) << "\" "
-			    << "date=\"" << QDateTime::currentDateTime().toString() << "\" ";
-			  
-			if ( type == LOG_NEW_TOTAL_TIME || type == LOG_NEW_SESSION_TIME) {
-				out << "new_total=\"" << minutes  << "\" ";
-			}
-			
-			out << "/>\n";
-
-			f.close();
-		} else {
-			std::cerr << "Couldn't write to time-log file";
-		}
-	}
+    if ( f.open( IO_WriteOnly | IO_Append) ) {
+      QTextStream out( &f );        // use a text stream
+      out << event->toXML();
+      f.close();
+    } else {
+      std::cerr << "Couldn't write to time-log file";
+    }
+  }
 }
 
 Logging *Logging::instance()
@@ -85,36 +190,8 @@ Logging *Logging::instance()
   return _instance;
 }
 
-QString Logging::constructTaskName(Task *task)
+
+Logging::~Logging()
 {
-	QListViewItem *item = task;
-	
-	QString name = escapeXML(task->name());
-	
-	while( ( item = item->parent() ) )
-	{
-		name = escapeXML(((Task *)item)->name()) + name.prepend('/');
-	}
-
-	return name;
 }
 
-// why the hell do I need to do this?!?
-#define QS(c) QString::fromLatin1(c)
-
-QString Logging::escapeXML( QString string)
-{
-	QString result = QString(string);
-	result.replace( QRegExp(QS("&")),  QS("&amp;")  );
-	result.replace( QRegExp(QS("<")),  QS("&lt;")   );
-	result.replace( QRegExp(QS(">")),  QS("&gt;")   );
-	result.replace( QRegExp(QS("'")),  QS("&apos;") );
-	result.replace( QRegExp(QS("\"")), QS("&quot;") );
-	// protect also our task-separator
-	result.replace( QRegExp(QS("/")),  QS("&slash;") );
-
-	return result;
-}
-
-Logging::~Logging() {
-}
