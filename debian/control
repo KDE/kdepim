@@ -15,7 +15,7 @@ Description: KDE Personal Information Management metapackage
 Package: kdepim-dev
 Section: devel
 Architecture: any
-Depends: kaddressbook (= ${Source-Version}), kalarmd (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), kdepim-libs (= ${Source-Version}) 
+Depends: kaddressbook (= ${Source-Version}), kalarmd (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), kontact (= ${Source-Version}), kdepim-libs (= ${Source-Version}) 
 Description: KDE Personal Information Management (development files)
  This package contains development files needed to compile kdepim applications.
 
@@ -88,7 +88,7 @@ Section: mail
 Architecture: any
 Depends: ${shlibs:Depends}, kdebase-kio-plugins
 Suggests: gnupg
-Provides: mail-reader
+Provides: mail-reader, imap-client
 Description: KDE Email client
  Mail Client based on QT and KDE
  .

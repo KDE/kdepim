@@ -905,6 +905,9 @@ void KMForwardCommand::execute()
         if (!msg->subject().contains("(fwd)"))
           msgPartText += " (fwd)";
         msgPartText += "\n\n";
+        // remove headers that shouldn't be forwarded
+        msg->removePrivateHeaderFields();
+        msg->removeHeaderField("BCC");
         // set the part
         msgPartText += msg->headerAsString();
         msgPartText += "\n";
@@ -1014,6 +1017,9 @@ void KMForwardAttachedCommand::execute()
 
   // iterate through all the messages to be forwarded
   for (KMMessage *msg = msgList.first(); msg; msg = msgList.next()) {
+    // remove headers that shouldn't be forwarded
+    msg->removePrivateHeaderFields();
+    msg->removeHeaderField("BCC");
     // set the part
     KMMessagePart *msgPart = new KMMessagePart;
     msgPart->setTypeStr("message");

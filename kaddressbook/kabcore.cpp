@@ -253,7 +253,7 @@ QWidget *KABCore::widget() const
 KAboutData *KABCore::createAboutData()
 {
   KAboutData *about = new KAboutData( "kaddressbook", I18N_NOOP( "KAddressBook" ),
-                                      "3.1", I18N_NOOP( "The KDE Address Book" ),
+                                      "3.2", I18N_NOOP( "The KDE Address Book" ),
                                       KAboutData::License_GPL_V2,
                                       I18N_NOOP( "(c) 1997-2003, The KDE PIM Team" ) );
   about->addAuthor( "Tobias Koenig", I18N_NOOP( "Current maintainer" ), "tokoe@kde.org" );
@@ -493,7 +493,7 @@ void KABCore::incrementalSearch( const QString& text, bool search )
   mViewManager->setSelected( QString::null, false );
 
   if ( !text.isEmpty() ) {
-    KABC::Field *field = ( search ? mIncSearchWidget->currentField() : 
+    KABC::Field *field = ( search ? mIncSearchWidget->currentField() :
                                     mViewManager->currentSortField() );
 
 #if KDE_VERSION >= 319
@@ -744,10 +744,21 @@ void KABCore::extensionModified( const KABC::Addressee::List &list )
 {
   if ( list.count() != 0 ) {
     KABC::Addressee::List::ConstIterator it;
-    for ( it = list.begin(); it != list.end(); ++it )
-      mAddressBook->insertAddressee( *it );
+    for ( it = list.begin(); it != list.end(); ++it ) {
+      Command *command = 0;
 
-    setModified();
+      // check if it exists already
+      KABC::Addressee origAddr = mAddressBook->findByUid( (*it).uid() );
+      if ( origAddr.isEmpty() )
+        command = new PwNewCommand( mAddressBook, *it );
+      else
+        command = new PwEditCommand( mAddressBook, origAddr, *it );
+
+      UndoStack::instance()->push( command );
+      RedoStack::instance()->clear();
+    }
+
+    setModified( true );
   }
 
   if ( list.count() == 0 )
