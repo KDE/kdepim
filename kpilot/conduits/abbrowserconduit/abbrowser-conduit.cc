@@ -122,11 +122,21 @@ bool AbbrowserConduit::_startAbbrowser()
     FUNCTIONSETUP;
 
     bool alreadyRunning = true;
+    bool foundAbbrowser = false;
     QByteArray sendData;
     QByteArray replyData;
     QCString replyTypeStr;
-    if (!fDcop->call("abbrowser", "AbBrowserIface", "interfaces()",
-		       sendData, replyTypeStr, replyData))
+
+	/**
+	* It's ugly to use defines, I know, but anything else is silly
+	* ie. functions have too much overhead. It's undeffed below.
+	*/
+#define PING_ABBROWSER (fDcop->call("abbrowser", \
+		"AbBrowserIface", \
+		"interfaces()",  \
+		sendData, replyTypeStr, replyData))
+    foundAbbrowser = PING_ABBROWSER ;
+    if (!foundAbbrowser)
 	{
 	// abbrowser not running, start it
 	KURL::List noargs;
@@ -134,16 +144,27 @@ bool AbbrowserConduit::_startAbbrowser()
 	
 	kdDebug() << fname << "Waiting to run abbrowser" << endl;
 	alreadyRunning = false;
-	sleep(5000);
 	}
 
-    if (!fDcop->call("abbrowser", "AbBrowserIface", "interfaces()",
-		       sendData, replyTypeStr, replyData))
+	// Now check every second if abbrowser is already running,
+	// while keeping the Pilot awake.
+	//
+	//
+	for (i=0; !foundAbbrowser && (i<20); i++)
+	{
+		sleep(1);
+		kapp->processEvents();
+		tickle();
+		foundAbbrowser = PING_ABBROWSER;
+	}
+
+    if (!foundAbbrowser)
 	{
 	kdDebug() << fname << " unable to connect to abbrowser through dcop; autostart failed" << endl;
 	KApplication::kApplication()->exit(BaseConduit::PeerApplicationMissing);
 	}
     return alreadyRunning;
+#undef PING_ABBROWSER
     }
 
 void AbbrowserConduit::_stopAbbrowser(bool abAlreadyRunning)

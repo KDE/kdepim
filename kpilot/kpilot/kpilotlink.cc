@@ -154,6 +154,8 @@ KPilotLink::KPilotLink()
     fCurrentDB(0L), fNextDBIndex(0), fConduitProcess(0L), fMessageDialog(0L),
 	fStatus(Normal)
 {
+	initTickle();
+
 	fKPilotLink = this;
 	readConfig();
 
@@ -172,6 +174,8 @@ KPilotLink::KPilotLink(QWidget* owner, KStatusBar* statusBar,
     fMessageDialog(0L),
 	fStatus(Normal)
 {
+	initTickle();
+
   fKPilotLink = this;
 	readConfig();
   initPilotSocket(devicePath);
@@ -182,6 +186,12 @@ KPilotLink::KPilotLink(QWidget* owner, KStatusBar* statusBar,
 
 KPilotLink::~KPilotLink()
 {
+	if (fTimer)
+	{
+		delete fTimer;
+		fTimer=0;
+	}
+
 	if(fMessageDialog)
 	{
 		delete fMessageDialog;
@@ -968,7 +978,7 @@ KPilotLink::doFullBackup()
 	fMessageDialog->setMessage(i18n("Starting HotSync."));
 	fMessageDialog->show();
 	showMessage(i18n("Backing up Pilot..."));
-	addSyncLogEntry("Backing up all data...");
+	addSyncLogEntry(i18n("Backing up all data...").latin1());
 
 	for(;;)
 	{
@@ -1725,16 +1735,70 @@ void KPilotLink::checkPilotUser()
 }
 
 
+/* Tickle support */
 
-#if 0
-PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
+void KPilotLink::initTickle()
 {
-  QString pathName = KGlobal::dirs()->saveLocation("data", QString("kpilot/DBBackup/") + getPilotUser().getUserName() + "/");
-  return new PilotLocalDatabase(pathName.latin1(), database.latin1());
+	fTimer=0L;
+	fTickleCount=0;
+	setTickleTimeout();
 }
-#endif
+
+void KPilotLink::startTickle()
+{
+	fTickleCount=0;
+	if (!fTimer)
+	{
+		fTimer=new QTimer(this);
+	}
+
+	if (fTimer->isActive())
+	{
+		fTimer->stop();
+	}
+
+	QObject::connect(fTimer,SIGNAL(timeout()),this,SLOT(tickle()));
+	fTimer->start(1000,false);
+}
+
+void KPilotLink::stopTickle()
+{
+	if (fTimer)
+	{
+		fTimer->stop();
+	}
+}
+
+void KPilotLink::tickle()
+{
+	fTickleCount++;
+
+	// Note that if fTickleTimeout == 0 then this
+	// test will never be true until unsigned wraps
+	// around, which is 2^32 seconds, which is a long time.
+	//
+	// This is intentional.
+	//
+	//
+	if (fTickleCount==fTickleTimeout)
+	{
+		emit timeout();
+	}
+	else
+	{
+		if (pi_tickle(getCurrentPilotSocket()))
+		{
+			kdWarning() << __FUNCTION__
+				<< "Couldn't tickle Pilot!"
+				<< endl;
+		}
+	}
+}
 
 // $Log$
+// Revision 1.48  2001/04/29 00:36:13  stern
+// Fixed mismatched brackes in switch
+//
 // Revision 1.47  2001/04/29 00:34:24  stern
 // Fixed mismatched brackes in switch
 //

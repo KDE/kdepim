@@ -279,6 +279,46 @@ public:
 	bool syncDatabase(DBInfo* database);
 
 
+/* START Tickle Support */
+
+public:
+	/**
+	* These are methods and slots intended to keep the Pilot awake while 
+	* something lengthy -- like starting an application -- is going on. 
+	*
+	* Passing a timeout of 0 to setTickleTimeout() indicates no timeout.
+	* Use this with care, as it will keep the Pilot awake forever
+	* without finishing the sync unless stopTickle() is called.
+	*/
+	void setTickleTimeout(unsigned seconds = 30) { fTickleTimeout=2*seconds; } ;
+
+public slots:
+	/**
+	* Start and stop tickle are used to tickle the Pilot every-so-often
+	* while you're doing other work. Note that this uses QTimer, so you
+	* will need an event loop, ie. during for(unsigned i=1; i; i++) foo();
+	* this will not help. Ideal for keeping the Pilot awake during user
+	* interaction, though.
+	*/
+	void startTickle();
+	void stopTickle();
+	void tickle();
+
+signals:
+	void timeout();
+
+private:
+	void initTickle();
+
+	// The tickletimeout and ticklecount here count in half-seconds,
+	// which is also why it says "2*seconds" above.
+	//
+	//
+	QTimer *fTimer;
+	unsigned fTickleTimeout, fTickleCount;
+
+/* END   Tickle Support */
+
 private:
 	/**
 	* For initializing the link: read the configuration
@@ -496,6 +536,9 @@ signals:
 #endif
 
 // $Log$
+// Revision 1.25  2001/04/26 21:59:00  adridg
+// CVS_SILENT B0rkage with previous commit
+//
 // Revision 1.24  2001/04/26 19:25:24  adridg
 // Real change in addSyncLogEntry; muchos reformatting
 //
