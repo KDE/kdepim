@@ -22,7 +22,7 @@ libkcal_la_SOURCES = \
         calfilter.cpp \
         person.cpp period.cpp duration.cpp \
         dndfactory.cpp \
-        filestorage.cpp calendarimap.cpp \
+        filestorage.cpp \
         compat.cpp \
 	resourcecalendar.cpp resourcelocal.cpp resourcelocalconfig.cpp \
 	calendarresources.cpp
