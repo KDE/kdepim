@@ -35,9 +35,17 @@ FloatValue::FloatValue()
 {
 }
 
+FloatValue::FloatValue(float f)
+	:	Value	(),
+		value_	(f)
+{
+	parsed_ = true;
+}
+
 FloatValue::FloatValue(const FloatValue & x)
 	:	Value(x)
 {
+	value_ = x.value_;
 }
 
 FloatValue::FloatValue(const QCString & s)
@@ -49,6 +57,9 @@ FloatValue::FloatValue(const QCString & s)
 FloatValue::operator = (FloatValue & x)
 {
 	if (*this == x) return *this;
+	
+	x.parse();
+	value_ = x.value_;
 
 	Value::operator = (x);
 	return *this;
@@ -65,7 +76,7 @@ FloatValue::operator = (const QCString & s)
 FloatValue::operator == (FloatValue & x)
 {
 	x.parse();
-	return false;
+	return (value_ == x.value_);
 }
 
 FloatValue::~FloatValue()
@@ -75,11 +86,39 @@ FloatValue::~FloatValue()
 	void
 FloatValue::_parse()
 {
+	bool negative;
+	
+	if (strRep_[0] == '-' || strRep_[1] == '+') {
+		
+		if (strRep_[0] == '-')
+			negative = true;
+		
+		strRep_.remove(0, 1);
+	}
+	
+	value_ = strRep_.toFloat();
+	if (negative)
+		value_ = -value_;
 }
 
 	void
 FloatValue::_assemble()
 {
+	strRep_ = QCString().setNum(value_);
+}
+
+	float
+FloatValue::value()
+{
+	parse();
+	return value_;
+}
+
+	void
+FloatValue::setValue(float f)
+{
+	parsed_ = true;
+	value_ = f;
 }
 
 

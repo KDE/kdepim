@@ -63,8 +63,7 @@ TextValue::operator = (const QCString & s)
 	bool
 TextValue::operator == (TextValue & x)
 {
-	x.parse();
-	return false;
+	return strRep_ = x.strRep_;
 }
 
 TextValue::~TextValue()

@@ -26,6 +26,7 @@
 #define  VCARDENTITY_H
 
 #include <qlist.h>
+#include <qcstring.h>
 
 #include <Entity.h>
 #include <VCard.h>
@@ -38,7 +39,11 @@ class VCardEntity : public Entity
 
 #include "VCardEntity-generated.h"
 	
-	QList<VCard>	vCardList_;
+	const QList<VCard> & cardList();
+	
+	void setCardList(const QList<VCard> &);
+	
+	QList<VCard>	cardList_;
 };
 
 }

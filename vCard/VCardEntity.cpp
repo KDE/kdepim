@@ -22,6 +22,10 @@
 # pragma implementation "VCardEntity.h"
 #endif
 
+#include <qregexp.h>
+
+#include <VCardDefines.h>
+
 #include <VCardEntity.h>
 
 #include <Entity.h>
@@ -74,11 +78,48 @@ VCardEntity::~VCardEntity()
 	void
 VCardEntity::_parse()
 {
+	vDebug("parse");
+	QCString s(strRep_);
+	
+	int i = s.find(QRegExp("BEGIN:VCARD"));
+	
+	while (i != -1) {
+		
+		i = s.find(QRegExp("BEGIN:VCARD"), 11);
+		
+		QCString cardStr(s.left(i));
+		
+		VCard * v = new VCard(cardStr);
+		
+		cardList_.append(v);
+		
+		v->parse();
+		
+		s.remove(0, i);
+	}
 }
 
 	void
 VCardEntity::_assemble()
 {
+	QListIterator<VCard> it(cardList_);
+	
+	for (; it.current(); ++it)
+		strRep_ += it.current()->asString() + "\r\n"; // One CRLF for luck.
+}
+
+	const QList<VCard> &
+VCardEntity::cardList()
+{
+	parse();
+	return cardList_;
+}
+
+	void
+VCardEntity::setCardList(const QList<VCard> & l)
+{
+	parse();
+	cardList_ = l;
 }
 
 }

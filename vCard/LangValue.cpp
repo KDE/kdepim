@@ -22,6 +22,8 @@
 # pragma implementation "LangValue.h"
 #endif
 
+#include <RToken.h>
+
 #include <LangValue.h>
 
 #include <Value.h>
@@ -74,11 +76,55 @@ LangValue::~LangValue()
 	void
 LangValue::_parse()
 {
+	QStrList l;
+	RTokenise(strRep_, "-", l);
+	
+	if (l.count() == 0) return;
+	
+	primary_ = l.at(0);
+	
+	l.remove(0u);
+	
+	subtags_ = l;
 }
 
 	void
 LangValue::_assemble()
 {
+	strRep_ = primary_;
+	
+	QStrListIterator it(subtags_);
+	
+	for (; it.current(); ++it)
+		strRep_ += QCString('-') + it.current();
+}
+
+	QCString
+LangValue::primary()
+{
+	parse();
+	return primary_;
+}
+	
+	QStrList
+LangValue::subtags()
+{
+	parse();
+	return subtags_;
+}
+	
+	void
+LangValue::setPrimary(const QCString & s)
+{
+	parse();
+	primary_ = s;
+}
+
+	void
+LangValue::setSubTags(const QStrList & l)
+{
+	parse();
+	subtags_ = l;
 }
 
 }

@@ -25,6 +25,9 @@
 #ifndef  LANGVALUE_H
 #define  LANGVALUE_H
 
+#include <qcstring.h>
+#include <qstrlist.h>
+
 #include <Value.h>
 
 namespace VCARD
@@ -33,6 +36,15 @@ namespace VCARD
 class LangValue : public Value
 {
 #include "LangValue-generated.h"
+	
+	QCString primary();
+	QStrList subtags();
+	
+	void setPrimary(const QCString &);	
+	void setSubTags(const QStrList &);
+	
+	QCString primary_;
+	QStrList subtags_;
 };
 
 }

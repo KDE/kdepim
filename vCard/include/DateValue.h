@@ -26,6 +26,7 @@
 #define  DATEVALUE_H
 
 #include <qcstring.h>
+#include <qdatetime.h>
 
 #include <Value.h>
 
@@ -34,10 +35,62 @@ namespace VCARD
 
 class DateValue : public Value
 {
-	
 #include "DateValue-generated.h"
 	
+	DateValue(
+		unsigned int	year,
+		unsigned int	month,
+		unsigned int	day,
+		unsigned int	hour = 0,
+		unsigned int	minute = 0,
+		unsigned int	second = 0,
+		double			secFrac = 0,
+		bool			zonePositive = true,
+		unsigned int	zoneHour = 0,
+		unsigned int	zoneMinute = 0);
+
+	DateValue(const QDate &);
+	DateValue(const QDateTime &);
+	
+	bool hasTime();
+	
+	unsigned int	year();
+	unsigned int	month();
+	unsigned int	day();
+	unsigned int	hour();
+	unsigned int	minute();
+	unsigned int	second();
+	double			secondFraction();
+	bool			zonePositive();
+	unsigned int	zoneHour();
+	unsigned int	zoneMinute();
+	
+	void setYear			(unsigned int);
+	void setMonth			(unsigned int);
+	void setDay				(unsigned int);
+	void setHour			(unsigned int);
+	void setMinute			(unsigned int);
+	void setSecond			(unsigned int);
+	void setSecondFraction	(double);
+	void setZonePositive	(bool);
+	void setZoneHour		(unsigned int);
+	void setZoneMinute		(unsigned int);
+	
+	QDate qdate();
+	QTime qtime();
+	QDateTime qdt();
+	
 	private:
+		
+		unsigned int	year_, month_, day_,
+						hour_, minute_, second_,
+						zoneHour_, zoneMinute_;
+						
+		double secFrac_;
+
+		bool zonePositive_;
+		
+		bool hasTime_;
 };
 
 }

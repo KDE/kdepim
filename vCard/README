@@ -1,6 +1,9 @@
-Beginnings of a vCard 3.0 parser based on the same principles as rmm uses.
+libvcard (C) 1999 Rik Hemsley <rik@kde.org>
+Written for the KDE project.
 
-Will end up allocating lots of objects for large amounts of cards, but I don't
-think that this will be too much of a problem. It's small and blindingly fast,
-and not finished yet :)
+This software is licensed under the GPL.
+
+A vCard 3.0 parser based on the same principles that librmm (from Empath) uses.
+
+It's small and blindingly fast. (137k with example program, stripped). Sue me.
 

@@ -65,18 +65,21 @@ namespace VCARD
 {
 
 ContentLine::ContentLine()
-	:	Entity()
+	:	Entity(),
+		value_(0)
 {
 }
 
 ContentLine::ContentLine(const ContentLine & x)
 	:	Entity(x),
-		paramList_	(x.paramList_)
+		paramList_	(x.paramList_),
+		value_(x.value_)
 {
 }
 
 ContentLine::ContentLine(const QCString & s)
-	:	Entity(s)
+	:	Entity(s),
+		value_(0)
 {
 }
 
@@ -86,6 +89,7 @@ ContentLine::operator = (ContentLine & x)
 	if (*this == x) return *this;
 	
 	paramList_ = x.paramList();
+	value_ = x.value_;
 
 	Entity::operator = (x);
 	return *this;
@@ -95,6 +99,8 @@ ContentLine::operator = (ContentLine & x)
 ContentLine::operator = (const QCString & s)
 {
 	Entity::operator = (s);
+	delete value_;
+	value_ = 0;
 	return *this;
 }
 
@@ -113,6 +119,8 @@ ContentLine::operator == (ContentLine & x)
 
 ContentLine::~ContentLine()
 {
+	delete value_;
+	value_ = 0;
 }
 
 	void
@@ -219,6 +227,7 @@ ContentLine::_parse()
 	void
 ContentLine::_assemble()
 {
+	vDebug("Assemble - my name is \"" + name_ + "\"");
 	strRep_.truncate(0);
 	
 	if (!group_.isEmpty())
@@ -226,12 +235,15 @@ ContentLine::_assemble()
 	
 	strRep_ += name_;
 
+	vDebug("Adding parameters");
 	ParamListIterator it(paramList_);
 	
 	for (; it.current(); ++it)
 		strRep_ += ";" + it.current()->asString();
 	
-	strRep_ += ":" + value_->asString();
+	vDebug("Adding value");
+	if (value_ != 0)
+		strRep_ += ":" + value_->asString();
 }
 
 }

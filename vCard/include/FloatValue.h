@@ -37,7 +37,14 @@ class FloatValue : public Value
 	
 #include "FloatValue-generated.h"
 	
+	FloatValue(float);
+	
+	float value();
+	void setValue(float);
+	
 	private:
+		
+		float value_;
 };
 
 }

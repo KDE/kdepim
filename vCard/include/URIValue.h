@@ -33,6 +33,19 @@ namespace VCARD
 class URIValue : public Value
 {
 #include "URIValue-generated.h"
+
+	URIValue(const QCString & scheme, const QCString & schemeSpecificPart);
+	
+	QCString scheme();
+	QCString schemeSpecificPart();
+	
+	void setScheme				(const QCString &);
+	void setSchemeSpecificPart	(const QCString &);
+	
+	private:
+	
+		QCString scheme_;
+		QCString schemeSpecificPart_;
 };
 
 }
