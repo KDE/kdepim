@@ -4,7 +4,7 @@ INCLUDES = -I$(top_srcdir)/librmm -I$(top_srcdir)/empath/lib $(all_includes)
 
 lib_LTLIBRARIES = libEmpathMessageViewWidget.la
 
-libEmpathMessageViewWidget_la_LDFLAGS = $(all_libraries) $(KDE_MODULE)
+libEmpathMessageViewWidget_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
 
 libEmpathMessageViewWidget_la_LIBADD = \
 	$(LIB_KPARTS) \
