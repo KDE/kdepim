@@ -47,7 +47,7 @@ protected:
 	virtual bool exec();           // From ConduitAction
 	virtual bool event(QEvent *e); // From QObject
 
-	PerlThread *fThread;
+	PerlThread *fThread;           // A QThread subclass for the interpreter
 };
 
 #endif

@@ -75,7 +75,7 @@ PerlConduit::PerlConduit(KPilotDeviceLink *d,
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGCONDUIT<<perl_conduit_id<<endl;
+	DEBUGCONDUIT << perl_conduit_id << endl;
 #endif
 	fConduitName=i18n("Perl");
 
