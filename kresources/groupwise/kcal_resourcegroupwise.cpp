@@ -86,7 +86,10 @@ void ResourceGroupwise::init()
 void ResourceGroupwise::initGroupwise()
 {
   mServer = new GroupwiseServer( mPrefs->url(), mPrefs->user(),
-                                 mPrefs->password() );
+                                 mPrefs->password(), this );
+
+  connect( mServer, SIGNAL( readCalendarFinished() ),
+           this, SLOT( loadFinished() ) );
 }
 
 GroupwisePrefs *ResourceGroupwise::prefs()
@@ -116,13 +119,7 @@ void ResourceGroupwise::writeConfig( KConfig *config )
 
 bool ResourceGroupwise::doOpen()
 {
-#if 1
-  return true;
-#else
-  if ( !mServer ) return false;
-
   return mServer->login();
-#endif
 }
 
 void ResourceGroupwise::doClose()
@@ -139,8 +136,6 @@ bool ResourceGroupwise::doLoad()
     return false;
   }
 
-  if ( !mServer->login() ) return false;
-
   disableChangeNotification();
 
   mCalendar.close();
@@ -148,9 +143,15 @@ bool ResourceGroupwise::doLoad()
 
   mServer->readCalendar( &mCalendar );
 
+  return true;
+}
+
+void ResourceGroupwise::loadFinished()
+{
   enableChangeNotification();
 
-  return true;
+  emit resourceLoaded( this );
+  emit resourceChanged( this );
 }
 
 bool ResourceGroupwise::doSave()

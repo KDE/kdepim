@@ -32,7 +32,8 @@ class GroupwisePrefs;
 
 class ResourceGroupwise : public Resource
 {
-    Q_OBJECT
+  Q_OBJECT
+
   public:
     ResourceGroupwise( const KConfig * );
     ResourceGroupwise( const KURL &url,
@@ -63,6 +64,9 @@ class ResourceGroupwise : public Resource
   protected:
     void init();
     void initGroupwise();
+
+  private slots:
+    void loadFinished( const KABC::Addressee::List& );
 
   private:
     GroupwisePrefs *mPrefs;

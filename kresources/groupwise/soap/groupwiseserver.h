@@ -21,11 +21,15 @@
 #ifndef GROUPWISESERVER_H
 #define GROUPWISESERVER_H
 
+#include <qobject.h>
 #include <qstring.h>
+#include <qthread.h>
 
 #include <string>
 
 #include <kabc/addressee.h>
+
+#include "gwjobs.h"
 
 namespace KCal {
 class Calendar;
@@ -40,11 +44,13 @@ class ns1__Appointment;
 class ns1__Mail;
 class ns1__Task;
 
-class GroupwiseServer
+class GroupwiseServer : public QObject
 {
+  Q_OBJECT
+
   public:
     GroupwiseServer( const QString &host, const QString &user,
-                     const QString &password );
+                     const QString &password, QObject *parent );
     ~GroupwiseServer();
 
     bool login();
@@ -56,7 +62,9 @@ class GroupwiseServer
     bool deleteIncidence( KCal::Incidence * );
 
     QMap<QString, QString> addressBookList();
-    bool readAddressBooks( const QStringList &addrBookIds, KABC::Addressee::List& );
+
+    bool readAddressBooks( const QStringList &addrBookIds );
+
     bool insertAddressee( const QString &addrBookId, KABC::Addressee& );
     bool removeAddressee( const KABC::Addressee& );
 
@@ -67,10 +75,14 @@ class GroupwiseServer
 
     bool getCategoryList();
 
-  protected:
-    bool readCalendarFolder( std::string id, KCal::Calendar *cal );
-    bool readAddressBook( std::string &id, KABC::Addressee::List &addresseeList );
+  signals:
+    void readAddressBooksFinished( const KABC::Addressee::List& );
+    void readCalendarFinished();
 
+  protected slots:
+    void slotReadAddressBooksFinished();
+
+  protected:
     void dumpCalendarFolder( const std::string &id );
 
     void dumpFolder( ns1__Folder * );
@@ -85,10 +97,11 @@ class GroupwiseServer
     QString mPassword;
 
     std::string mSession;
-
     std::string mCalendarFolder;
     
     struct soap *mSoap;
+    KPIM::ThreadWeaver::Weaver *mWeaver;
+    ReadAddressBooksJob *mReadAddressBooksJob;
 };
 
 #endif

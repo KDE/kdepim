@@ -38,7 +38,8 @@ class GroupwisePrefs;
 */
 class ResourceGroupwise : public ResourceCached
 {
-    Q_OBJECT
+  Q_OBJECT
+
   public:
     ResourceGroupwise();
   
@@ -63,6 +64,9 @@ class ResourceGroupwise : public ResourceCached
     void initGroupwise();
 
     bool confirmSave();
+
+  protected slots:
+    void loadFinished();
 
   private:
     GroupwisePrefs *mPrefs;

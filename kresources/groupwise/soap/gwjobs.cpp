@@ -1,0 +1,207 @@
+/*
+    This file is part of KDE.
+
+    Copyright (c) 2004 Tobias Koenig <tokoe@kde.org>
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
+
+#include <libkcal/calendar.h>
+#include <libkcal/incidence.h>
+
+#include <kabc/addressee.h>
+
+#include <kdebug.h>
+
+#include <qtimer.h>
+
+#include "contactconverter.h"
+#include "incidenceconverter.h"
+
+#include "soapH.h"
+
+#include "gwjobs.h"
+
+GWJob::GWJob( Type type, struct soap *soap, const QString &url,
+              const std::string &session, QObject *parent )
+  : Job( parent, "GWJob" ),
+    mType( type ), mSoap( soap ), mUrl( url ), mSession( session )
+{
+}
+
+GWJob::~GWJob()
+{
+}
+
+void GWJob::processEvent( KPIM::ThreadWeaver::Event *event )
+{
+  KPIM::ThreadWeaver::Job::processEvent( event );
+  if ( event->action() == KPIM::ThreadWeaver::Event::JobFinished )
+    deleteLater();
+}
+
+ReadAddressBooksJob::ReadAddressBooksJob( struct soap *soap, const QString &url,
+                                          const std::string &session, QObject *parent )
+  : GWJob( ReadAddressBooks, soap, url, session, parent )
+{
+}
+
+void ReadAddressBooksJob::setAddressBookIds( const QStringList &ids )
+{
+  mAddressBookIds = ids;
+}
+
+void ReadAddressBooksJob::run()
+{
+  mAddresseeList.clear();
+
+  mSoap->header->ns1__session = mSession;
+  _ns1__getAddressBookListResponse addressBookListResponse;
+  soap_call___ns4__getAddressBookListRequest( mSoap, mUrl.latin1(),
+                                              NULL, "", &addressBookListResponse );
+  soap_print_fault( mSoap, stderr );
+
+  if ( addressBookListResponse.books ) {
+    std::vector<class ns1__AddressBook * > *addressBooks = addressBookListResponse.books->book;
+    std::vector<class ns1__AddressBook * >::const_iterator it;
+    for ( it = addressBooks->begin(); it != addressBooks->end(); ++it ) {
+      if ( mAddressBookIds.find( GWConverter::stringToQString( (*it)->id ) ) != mAddressBookIds.end() )
+        readAddressBook( (*it)->id );
+    }
+  }
+}
+
+void ReadAddressBooksJob::readAddressBook( std::string &id )
+{
+  _ns1__getItemsRequest itemsRequest;
+  itemsRequest.container = id;
+  itemsRequest.filter = 0;
+  itemsRequest.items = 0;
+
+  mSoap->header->ns1__session = mSession;
+  _ns1__getItemsResponse itemsResponse;
+  soap_call___ns6__getItemsRequest( mSoap, mUrl.latin1(), 0,
+                                    &itemsRequest, &itemsResponse );
+
+  std::vector<class ns1__Item * > *items = itemsResponse.items->item;
+  if ( items ) {
+    ContactConverter converter( mSoap );
+
+    std::vector<class ns1__Item * >::const_iterator it;
+    for ( it = items->begin(); it != items->end(); ++it ) {
+      _ns1__getItemRequest itemRequest;
+      itemRequest.id = (*it)->id;
+      itemRequest.view = 0;
+
+      mSoap->header->ns1__session = mSession;
+      _ns1__getItemResponse itemResponse;
+      soap_call___ns5__getItemRequest( mSoap, mUrl.latin1(), 0,
+                                       &itemRequest, &itemResponse );
+
+      ns1__Item *item = itemResponse.item;
+      ns1__Contact *contact = dynamic_cast<ns1__Contact *>( item );
+
+      KABC::Addressee addr = converter.convertFromContact( contact );
+      if ( !addr.isEmpty() ) {
+        addr.insertCustom( "GWRESOURCE", "CONTAINER", converter.stringToQString( id ) );
+        mAddresseeList.append( addr );
+      }
+    }
+  }
+}
+
+ReadCalendarJob::ReadCalendarJob( struct soap *soap, const QString &url,
+                                  const std::string &session, QObject *parent )
+  : GWJob( ReadCalendar, soap, url, session, parent )
+{
+}
+
+void ReadCalendarJob::setCalendar( KCal::Calendar *calendar )
+{
+  mCalendar = calendar;
+}
+
+void ReadCalendarJob::setCalendarFolder( std::string *calendarFolder )
+{
+  mCalendarFolder = calendarFolder;
+}
+
+void ReadCalendarJob::run()
+{
+  mSoap->header->ns1__session = mSession;
+  _ns1__getFolderListRequest folderListReq;
+  folderListReq.parent = "folders";
+  folderListReq.recurse = true;
+  _ns1__getFolderListResponse folderListRes;
+  soap_call___ns7__getFolderListRequest( mSoap, mUrl.latin1(), 0,
+                                         &folderListReq,
+                                         &folderListRes );
+
+  if ( folderListRes.folders ) {
+    std::vector<class ns1__Folder * > *folders = folderListRes.folders->folder;
+    if ( folders ) {
+      std::vector<class ns1__Folder * >::const_iterator it;
+      for ( it = folders->begin(); it != folders->end(); ++it ) {
+        if ( (*it)->type && *((*it)->type) == "Calendar" ) {
+          readCalendarFolder( (*it)->id );
+          (*mCalendarFolder) = (*it)->id;
+        }
+      }
+    }
+  }
+}
+
+void ReadCalendarJob::readCalendarFolder( const std::string &id )
+{
+  _ns1__getItemsRequest itemsRequest;
+
+  itemsRequest.container = id;
+  itemsRequest.view = "recipients message recipientStatus";
+
+  itemsRequest.filter = 0;
+  itemsRequest.items = 0;
+
+  mSoap->header->ns1__session = mSession;
+  _ns1__getItemsResponse itemsResponse;
+  soap_call___ns6__getItemsRequest( mSoap, mUrl.latin1(), 0,
+                                    &itemsRequest,
+                                    &itemsResponse );
+  soap_print_fault(mSoap, stderr);
+
+  std::vector<class ns1__Item * > *items = itemsResponse.items->item;
+
+  if ( items ) {
+    IncidenceConverter conv( mSoap );
+  
+    std::vector<class ns1__Item * >::const_iterator it;
+    for( it = items->begin(); it != items->end(); ++it ) {
+      ns1__Appointment *a = dynamic_cast<ns1__Appointment *>( *it );
+      KCal::Incidence *i = 0;
+      if ( a ) {
+        i = conv.convertFromAppointment( a );
+      } else {
+        ns1__Task *t = dynamic_cast<ns1__Task *>( *it );
+        if ( t ) {
+          i = conv.convertFromTask( t );
+        }
+      }
+      if ( i ) {
+        i->setCustomProperty( "GWRESOURCE", "CONTAINER",
+                              conv.stringToQString( id ) );
+        mCalendar->addIncidence( i );
+      }
+    }
+  }
+}

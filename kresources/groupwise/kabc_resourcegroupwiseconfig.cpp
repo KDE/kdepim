@@ -135,7 +135,7 @@ void ResourceGroupwiseConfig::updateAddressBookList()
 {
   GroupwiseServer server( mResource->prefs()->url(),
                           mResource->prefs()->user(),
-                          mResource->prefs()->password() );
+                          mResource->prefs()->password(), this );
 
   server.login();
   mAddressBookList = server.addressBookList();

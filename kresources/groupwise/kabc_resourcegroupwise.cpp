@@ -76,7 +76,10 @@ void ResourceGroupwise::init()
 void ResourceGroupwise::initGroupwise()
 {
   mServer = new GroupwiseServer( mPrefs->url(), mPrefs->user(),
-                                 mPrefs->password() );
+                                 mPrefs->password(), this );
+
+  connect( mServer, SIGNAL( readAddressBooksFinished( const KABC::Addressee::List& ) ),
+           this, SLOT( loadFinished( const KABC::Addressee::List& ) ) );
 }
 
 ResourceGroupwise::~ResourceGroupwise()
@@ -130,45 +133,18 @@ void ResourceGroupwise::doClose()
 
 bool ResourceGroupwise::load()
 {
-  kdDebug() << "KABC::ResourceGroupwise::load()" << endl;
-
-#if 0
-  return asyncLoad();
-#else
-  kdDebug() << "KABC::ResourceGroupwise::load() is a nop." << endl;
-
   mAddrMap.clear();
 
-  KABC::Addressee::List addresses;
-  mServer->readAddressBooks( mPrefs->readAddressBooks(), addresses );
-
-  KABC::Addressee::List::Iterator it;
-  for ( it = addresses.begin(); it != addresses.end(); ++it ) {
-    KABC::Addressee addr = (*it);
-    addr.setChanged( false );
-    addr.setResource( this );
-    mAddrMap.insert( addr.uid(), addr );
-  }
+  mServer->readAddressBooks( mPrefs->readAddressBooks() );
 
   return true;
-#endif
 }
 
 bool ResourceGroupwise::asyncLoad()
 {
-  kdDebug() << "KABC::ResourceGroupwise::asyncLoad()" << endl;
+  mAddrMap.clear();
 
-#if 0
-  if ( mDownloadJob ) {
-    kdWarning() << "KABC::ResourceGroupwise::asyncLoad(): Loading still in progress."
-                << endl;
-    return false;
-  }
-#endif
-
-  load();
-
-  emit loadingFinished( this );
+  mServer->readAddressBooks( mPrefs->readAddressBooks() );
 
   return true;
 }
@@ -195,6 +171,19 @@ void ResourceGroupwise::removeAddressee( const Addressee& addr )
 {
   if ( mServer->removeAddressee( addr ) )
     mAddrMap.remove( addr.uid() );
+}
+
+void ResourceGroupwise::loadFinished( const KABC::Addressee::List &addresses )
+{
+  KABC::Addressee::List::ConstIterator it;
+  for ( it = addresses.begin(); it != addresses.end(); ++it ) {
+    KABC::Addressee addr = (*it);
+    addr.setChanged( false );
+    addr.setResource( this );
+    mAddrMap.insert( addr.uid(), addr );
+  }
+
+  emit loadingFinished( this );
 }
 
 #include "kabc_resourcegroupwise.moc"

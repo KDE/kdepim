@@ -25,6 +25,7 @@
 
 #include <libkcal/calendar.h>
 #include <libkcal/incidence.h>
+#include <libkdepim/weaverlogger.h>
 
 #include <kabc/addressee.h>
 
@@ -37,16 +38,24 @@
 #include "groupwiseserver.h"
 
 GroupwiseServer::GroupwiseServer( const QString &host, const QString &user,
-                                  const QString &password )
-  : mUrl( "http://" + host + ":7181/soap/" ), mUser( user ), mPassword( password )
+                                  const QString &password, QObject *parent )
+  : QObject( parent, "GroupwiseServer" ),
+    mUrl( "http://" + host + ":7181/soap/" ), mUser( user ), mPassword( password )
 {
   mSoap = new soap;
+
+  mWeaver = new KPIM::ThreadWeaver::Weaver( this );
+  KPIM::ThreadWeaver::WeaverThreadLogger *weaverLogger = new KPIM::ThreadWeaver::WeaverThreadLogger( this );
+  weaverLogger->attach( mWeaver );
 }
 
 GroupwiseServer::~GroupwiseServer()
 {
   delete mSoap;
   mSoap = 0;
+
+  delete mWeaver;
+  mWeaver = 0;
 }
 
 bool GroupwiseServer::login()
@@ -65,14 +74,16 @@ bool GroupwiseServer::login()
 
   cout << "Login" << endl;
 
-  soap_call___ns2__loginRequest(mSoap, mUrl.latin1(), NULL, &loginReq, &loginResp );
-//    soap.header = &header;
-//    soap.header = (struct SOAP_ENV__Header*)malloc(sizeof(struct SOAP_ENV__Header));
-  soap_print_fault(mSoap, stderr);
+  int result = soap_call___ns2__loginRequest(mSoap, mUrl.latin1(), NULL, &loginReq, &loginResp );
+
+  if ( result != 0 ) {
+    soap_print_fault( mSoap, stderr );
+    return false;
+  }
+
   std::cout << "Session ID: " << loginResp.session.c_str() << std::endl;
 
   mSession = loginResp.session;
-
   mSoap->header = new( SOAP_ENV__Header );
 
   return true;
@@ -339,67 +350,24 @@ QMap<QString, QString> GroupwiseServer::addressBookList()
   return map;
 }
 
-bool GroupwiseServer::readAddressBooks( const QStringList &addrBookIds, KABC::Addressee::List &addresseeList )
+bool GroupwiseServer::readAddressBooks( const QStringList &addrBookIds )
 {
-  mSoap->header->ns1__session = mSession;
-  _ns1__getAddressBookListResponse addressBookListResponse;
-  soap_call___ns4__getAddressBookListRequest( mSoap, mUrl.latin1(),
-                                              NULL, "", &addressBookListResponse );
-  soap_print_fault( mSoap, stderr );
+  mReadAddressBooksJob = new ReadAddressBooksJob( mSoap, mUrl, mSession, this );
+  mReadAddressBooksJob->setAddressBookIds( addrBookIds );
 
-  if ( addressBookListResponse.books ) {
-    std::vector<class ns1__AddressBook * > *addressBooks = addressBookListResponse.books->book;
-    std::vector<class ns1__AddressBook * >::const_iterator it;
-    for ( it = addressBooks->begin(); it != addressBooks->end(); ++it ) {
-      if ( addrBookIds.find( GWConverter::stringToQString( (*it)->id ) ) != addrBookIds.end() )
-        readAddressBook( (*it)->id, addresseeList );
-    }
-  }
+  connect( mReadAddressBooksJob, SIGNAL( done() ),
+           this, SLOT( slotReadAddressBooksFinished() ) );
+
+  mWeaver->enqueue( mReadAddressBooksJob );
 
   return true;
 }
 
-bool GroupwiseServer::readAddressBook( std::string &id, KABC::Addressee::List &addresseeList )
+void GroupwiseServer::slotReadAddressBooksFinished()
 {
-  _ns1__getItemsRequest itemsRequest;
-  itemsRequest.container = id;
-  itemsRequest.filter = 0;
-  itemsRequest.items = 0;
-
-  mSoap->header->ns1__session = mSession;
-  _ns1__getItemsResponse itemsResponse;
-  soap_call___ns6__getItemsRequest( mSoap, mUrl.latin1(), 0,
-                                    &itemsRequest, &itemsResponse );
-
-  std::vector<class ns1__Item * > *items = itemsResponse.items->item;
-  if ( items ) {
-    ContactConverter converter( mSoap );
-
-    std::vector<class ns1__Item * >::const_iterator it;
-    for ( it = items->begin(); it != items->end(); ++it ) {
-      _ns1__getItemRequest itemRequest;
-      itemRequest.id = (*it)->id;
-      itemRequest.view = 0;
-
-      mSoap->header->ns1__session = mSession;
-      _ns1__getItemResponse itemResponse;
-      soap_call___ns5__getItemRequest( mSoap, mUrl.latin1(), 0,
-                                       &itemRequest, &itemResponse );
-
-      ns1__Item *item = itemResponse.item;
-      ns1__Contact *contact = dynamic_cast<ns1__Contact *>( item );
-
-      KABC::Addressee addr = converter.convertFromContact( contact );
-      if ( !addr.isEmpty() ) {
-        addr.insertCustom( "GWRESOURCE", "CONTAINER", converter.stringToQString( id ) );
-        addresseeList.append( addr );
-      }
-    }
-  }
-
-  return true;
+  qDebug( "slotReadAddressBooksFinished" );
+  emit readAddressBooksFinished( mReadAddressBooksJob->addresseeList() );
 }
-
 
 bool GroupwiseServer::addIncidence( KCal::Incidence *incidence )
 {
@@ -594,79 +562,18 @@ bool GroupwiseServer::removeAddressee( const KABC::Addressee &addr )
   return true;
 }
 
-bool GroupwiseServer::readCalendar( KCal::Calendar *cal )
+bool GroupwiseServer::readCalendar( KCal::Calendar *calendar )
 {
-  mSoap->header->ns1__session = mSession;
-  _ns1__getFolderListRequest folderListReq;
-  folderListReq.parent = "folders";
-  folderListReq.recurse = true;
-  _ns1__getFolderListResponse folderListRes;
-  soap_call___ns7__getFolderListRequest( mSoap, mUrl.latin1(), 0,
-                                         &folderListReq,
-                                         &folderListRes );
+  ReadCalendarJob *job = new ReadCalendarJob( mSoap, mUrl, mSession, this );
+  job->setCalendar( calendar );
+  job->setCalendarFolder( &mCalendarFolder );
 
-  if ( folderListRes.folders ) {
-    std::vector<class ns1__Folder * > *folders = folderListRes.folders->folder;
-    if ( folders ) {
-      std::vector<class ns1__Folder * >::const_iterator it;
-      for ( it = folders->begin(); it != folders->end(); ++it ) {
-#if 0
-        cout << "FOLDER" << endl;
-        dumpFolder( *it );
-#endif
-        if ( (*it)->type && *((*it)->type) == "Calendar" ) {
-          readCalendarFolder( (*it)->id, cal );
-          mCalendarFolder = (*it)->id;
-        }
-      }
-    }
-  }
+  connect( job, SIGNAL( done() ),
+           this, SIGNAL( readCalendarFinished() ) );
+
+  mWeaver->enqueue( job );
 
   return true;
 }
 
-bool GroupwiseServer::readCalendarFolder( std::string id, KCal::Calendar *cal )
-{
-  _ns1__getItemsRequest itemsRequest;
-
-  itemsRequest.container = id;
-  itemsRequest.view = "recipients message recipientStatus";
-
-  itemsRequest.filter = 0;
-  itemsRequest.items = 0;
-//  itemsRequest.count = 5;
-
-  mSoap->header->ns1__session = mSession;
-  _ns1__getItemsResponse itemsResponse;
-  soap_call___ns6__getItemsRequest( mSoap, mUrl.latin1(), 0,
-                                    &itemsRequest,
-                                    &itemsResponse );
-  soap_print_fault(mSoap, stderr);
-
-  std::vector<class ns1__Item * > *items = itemsResponse.items->item;
-
-  if ( items ) {
-    IncidenceConverter conv( mSoap );
-  
-    std::vector<class ns1__Item * >::const_iterator it;
-    for( it = items->begin(); it != items->end(); ++it ) {
-      ns1__Appointment *a = dynamic_cast<ns1__Appointment *>( *it );
-      KCal::Incidence *i = 0;
-      if ( a ) {
-        i = conv.convertFromAppointment( a );
-      } else {
-        ns1__Task *t = dynamic_cast<ns1__Task *>( *it );
-        if ( t ) {
-          i = conv.convertFromTask( t );
-        }
-      }
-      if ( i ) {
-        i->setCustomProperty( "GWRESOURCE", "CONTAINER",
-                              conv.stringToQString( id ) );
-        cal->addIncidence( i );
-      }
-    }
-  }
-
-  return true;
-}
+#include "groupwiseserver.moc"
