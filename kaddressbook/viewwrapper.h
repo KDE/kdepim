@@ -62,7 +62,7 @@ class ViewWrapper
     */
     virtual KAddressBookView *createView(KABC::AddressBook *doc,
                                          QWidget *parent, 
-                                         const char *name) = 0;
+                                         const char *name = 0) = 0;
                                  
     /** Creates a config dialog for the view type. The default 
     * implementation will return a ViewConfigDialog. This default
@@ -76,7 +76,7 @@ class ViewWrapper
                                                      const QString &viewName,
                                                      KABC::AddressBook *doc,
                                                      QWidget *parent,
-                                                     const char *name); 
+                                                     const char *name = 0); 
 };
 
 #endif

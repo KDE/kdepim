@@ -39,7 +39,7 @@ class JumpButtonBar : public QVBox
   Q_OBJECT
   
   public:
-    JumpButtonBar(QWidget *parent, const char *name);
+    JumpButtonBar( QWidget *parent, const char *name = 0 );
     ~JumpButtonBar();
     
     QSizePolicy sizePolicy() const { return QSizePolicy(QSizePolicy::Maximum,

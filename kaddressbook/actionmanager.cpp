@@ -201,10 +201,10 @@ void ActionManager::initReadOnlyActions()
                                          0, mACollection,
                                          "options_show_features" );
 
-    mActionFeatures->setItems( mViewManager->featureList() );
+    mActionFeatures->setItems( mViewManager->featureBarWidgetList() );
 
     connect( mActionFeatures, SIGNAL( activated( int ) ),
-             mViewManager, SLOT( showFeatures( int ) ) );
+             mViewManager, SLOT( showFeatureBarWidget( int ) ) );
 
     mActionJumpBar = new KToggleAction(i18n("Show Jump Bar"), "next", 0,
                                        this, SLOT(quickToolsAction()),
@@ -336,7 +336,7 @@ void ActionManager::slotViewSelected()
 void ActionManager::quickToolsAction()
 {
     mViewManager->setJumpButtonBarVisible(mActionJumpBar->isChecked());
-    mViewManager->showFeatures(mActionFeatures->currentItem());
+    mViewManager->showFeatureBarWidget(mActionFeatures->currentItem());
     mViewManager->setDetailsVisible(mActionDetails->isChecked());
 }
 

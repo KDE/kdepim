@@ -84,10 +84,8 @@ class ContactItem : public QListViewItem
     QString mEmail;
 };
 
-DistributionListWidget::DistributionListWidget( KABC::AddressBook *ab,
-                                                ViewManager *vm,
-                                                QWidget *parent )
-  : FeatureBarWidget( ab, vm, parent ), mManager( 0 )
+DistributionListWidget::DistributionListWidget( ViewManager *vm, QWidget *parent )
+  : FeatureBarWidget( vm, parent ), mManager( 0 )
 {
   QGridLayout *topLayout = new QGridLayout( this, 3, 4, KDialog::marginHint(),
                                             KDialog::spacingHint() );

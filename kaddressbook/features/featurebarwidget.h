@@ -35,8 +35,7 @@ class FeatureBarWidget : public QWidget
   Q_OBJECT
   
   public:
-    FeatureBarWidget( KABC::AddressBook *ab, ViewManager *vm, QWidget *parent,
-                      const char *name = 0 );
+    FeatureBarWidget( ViewManager *vm, QWidget *parent, const char *name = 0 );
     ~FeatureBarWidget();
 
     KABC::AddressBook *addressBook() const;
@@ -77,7 +76,6 @@ class FeatureBarWidget : public QWidget
     void modified( KABC::Addressee::List );
 
   private:
-    KABC::AddressBook *mAddressBook;
     ViewManager *mViewManager;
 };
 

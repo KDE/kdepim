@@ -23,9 +23,9 @@
 
 #include "featurebarwidget.h"
 
-FeatureBarWidget::FeatureBarWidget( KABC::AddressBook *ab, ViewManager *vm,
-                                    QWidget *parent, const char *name )
-  : QWidget( parent, name ), mAddressBook( ab ), mViewManager( vm )
+FeatureBarWidget::FeatureBarWidget( ViewManager *vm, QWidget *parent,
+                                    const char *name )
+  : QWidget( parent, name ), mViewManager( vm )
 {
 }
 
@@ -35,7 +35,7 @@ FeatureBarWidget::~FeatureBarWidget()
 
 KABC::AddressBook *FeatureBarWidget::addressBook() const
 {
-  return mAddressBook;
+  return mViewManager->addressBook();
 }
 
 ViewManager *FeatureBarWidget::viewManager() const
@@ -55,7 +55,7 @@ KABC::Addressee::List FeatureBarWidget::selectedAddressees()
   QStringList uids = mViewManager->selectedUids();
   QStringList::Iterator it;
   for ( it = uids.begin(); it != uids.end(); ++it )
-    list.append( mAddressBook->findByUid( *it ) );
+    list.append( addressBook()->findByUid( *it ) );
 
   return list;
 }

@@ -59,10 +59,9 @@
 
 #include "addresseeeditorwidget.h"
 
-AddresseeEditorWidget::AddresseeEditorWidget( KABC::AddressBook *ab,
-                                              ViewManager *vm, QWidget *parent, 
+AddresseeEditorWidget::AddresseeEditorWidget( ViewManager *vm, QWidget *parent, 
                                               const char *name )
-  : FeatureBarWidget( ab, vm, parent, name )
+  : FeatureBarWidget( vm, parent, name )
 {
   initGUI();
   mCategoryDialog = 0;

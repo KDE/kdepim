@@ -43,7 +43,7 @@ class AddViewDialog : public KDialogBase
     
   public:
     AddViewDialog(QDict<ViewWrapper> *viewWrapperDict, 
-                  QWidget *parent, const char *name);
+                  QWidget *parent, const char *name = 0);
     ~AddViewDialog();
     
     QString viewName();

@@ -45,7 +45,7 @@ class DistributionListWidget : public FeatureBarWidget
     Q_OBJECT
 
   public:
-    DistributionListWidget( KABC::AddressBook *, ViewManager *, QWidget *parent );
+    DistributionListWidget( ViewManager*, QWidget *parent );
     virtual ~DistributionListWidget();
 
     void addresseeSelectionChanged();

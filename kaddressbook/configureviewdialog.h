@@ -46,7 +46,7 @@ class ConfigureViewDialog : public KDialogBase
     
   public:
     ConfigureViewDialog(const QString &viewName, KABC::AddressBook *document,
-                        QWidget *parent, const char *name);
+                        QWidget *parent, const char *name = 0);
     virtual ~ConfigureViewDialog();
     
     /** Reads the configuration from the config object and sets the values

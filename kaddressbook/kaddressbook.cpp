@@ -193,7 +193,7 @@ AddresseeEditorDialog *KAddressBook::createAddresseeEditorDialog( QWidget *paren
                                                                   const char *name )
 {
   AddresseeEditorDialog *dialog =
-          new AddresseeEditorDialog( mDocument, mViewManager, parent,
+          new AddresseeEditorDialog( mViewManager, parent,
                                      name ? name : "editorDialog" );
 
   connect(dialog, SIGNAL(addresseeModified(const KABC::Addressee &)),

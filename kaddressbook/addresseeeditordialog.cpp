@@ -31,8 +31,7 @@
 #include "addresseeeditorwidget.h"
 #include "viewmanager.h"
 
-AddresseeEditorDialog::AddresseeEditorDialog( KABC::AddressBook *ab,
-                                              ViewManager *vm, QWidget *parent,
+AddresseeEditorDialog::AddresseeEditorDialog( ViewManager *vm, QWidget *parent,
                                               const char *name )
   : KDialogBase(KDialogBase::Plain, i18n("Edit Contact"), 
                 KDialogBase::Ok | KDialogBase::Cancel | KDialogBase::Apply,
@@ -42,7 +41,7 @@ AddresseeEditorDialog::AddresseeEditorDialog( KABC::AddressBook *ab,
   
   QVBoxLayout *layout = new QVBoxLayout(page);
 
-  mEditorWidget = new AddresseeEditorWidget( ab, vm, page );
+  mEditorWidget = new AddresseeEditorWidget( vm, page );
   connect( mEditorWidget, SIGNAL( modified( KABC::Addressee::List ) ),
            SLOT( widgetModified() ) );
   layout->addWidget( mEditorWidget );
@@ -52,7 +51,7 @@ AddresseeEditorDialog::AddresseeEditorDialog( KABC::AddressBook *ab,
 
 AddresseeEditorDialog::~AddresseeEditorDialog()
 {
-  kdDebug() << "~AddresseeEditorDialog()" << endl;
+  kdDebug(5720) << "~AddresseeEditorDialog()" << endl;
 
   emit editorDestroyed( mEditorWidget->addressee().uid() );
 }

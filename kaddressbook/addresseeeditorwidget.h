@@ -59,8 +59,7 @@ class AddresseeEditorWidget : public FeatureBarWidget
   Q_OBJECT
   
   public:
-    AddresseeEditorWidget( KABC::AddressBook *, ViewManager *, QWidget *parent,
-                           const char *name = 0 );
+    AddresseeEditorWidget( ViewManager *, QWidget *parent, const char *name = 0 );
     ~AddresseeEditorWidget();  
 
     void setAddressee( const KABC::Addressee& );
