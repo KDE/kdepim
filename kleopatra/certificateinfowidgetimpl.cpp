@@ -113,6 +113,7 @@ void CertificateInfoWidgetImpl::setCert( const CryptPlugWrapper::CertificateInfo
   QString issuer = info.issuer;
   QStringList items;
   items << info.userid[0];
+  bool root_found = false;
   while( true ) {
     bool found = false;
     CryptPlugWrapper::CertificateInfo info;
@@ -130,11 +131,16 @@ void CertificateInfoWidgetImpl::setCert( const CryptPlugWrapper::CertificateInfo
       // FIXME(steffen): Use real DN comparison
       if( info.userid[0] == info.issuer ) {
 	// Root item
+	root_found = true;
 	break;
       } 
     } else break;
   }
   item = 0;
+  if( !root_found ) {
+    if( items.count() > 0 ) items.prepend( QString::fromUtf8("Root certificate not found (%1)").arg( issuer ) );
+    else items.prepend( "Root certificate not found" );
+  }
   for( QStringList::Iterator it = items.begin(); it != items.end(); ++it ) {
     if( item ) item = new QListViewItem( item, (*it) );
     else item = new QListViewItem( pathView, (*it) );
