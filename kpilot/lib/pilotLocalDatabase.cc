@@ -287,12 +287,25 @@ PilotRecord *PilotLocalDatabase::readRecordById(recordid_t id)
 		DEBUGKPILOT << fDBName << ": DB not open!" << endl;
 		return 0L;
 	}
+
+#ifdef SHADOW_LOCAL_DB
+	int shadowcount = 0;
+	for (fRecordIndex = fRecordList.begin(); fRecordIndex != fRecordList.end(); ++fRecordIndex)
+	{
+		if ((*fRecordIndex)->id() == id) break;
+		++shadowcount;
+	}
+#endif
+
 	for (i = 0; i < fNumRecords; i++)
 	{
 		if (fRecords[i]->getID() == id)
 		{
+#ifdef SHADOW_LOCAL_DB
+			assert( shadowcount == i );
+			assert( fRecords[i] == (fRecordIndex) );
+#endif
 			PilotRecord *newRecord = new PilotRecord(fRecords[i]);
-
 			return newRecord;
 		}
 	}
@@ -309,8 +322,15 @@ PilotRecord *PilotLocalDatabase::readRecordByIndex(int index)
 		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
 	}
-	if (index >= fNumRecords)
+#ifdef SHADOW_LOCAL_DB
+	assert((unsigned) recordCount() == fRecordList.count());
+#endif
+	if (index >= recordCount())
 		return 0L;
+#ifdef SHADOW_LOCAL_DB
+	fRecordIndex = fRecordList.at(index);
+	assert(fRecords[index] == *fRecordIndex);
+#endif
 	PilotRecord *newRecord = new PilotRecord(fRecords[index]);
 
 	return newRecord;
@@ -326,11 +346,32 @@ PilotRecord *PilotLocalDatabase::readNextRecInCategory(int category)
 		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
 	}
+#ifdef SHADOW_LOCAL_DB
+	while ( (fRecordIndex != fRecordList.end()) &&
+		((*fRecordIndex)->category() != category) )
+	{
+		++fRecordIndex;
+	}
+#endif
+
 	while ((fCurrentRecord < fNumRecords)
 		&& (fRecords[fCurrentRecord]->getCat() != category))
 	{
 		fCurrentRecord++;
 	}
+
+#ifdef SHADOW_LOCAL_DB
+	if (fRecordIndex == fRecordList.end())
+	{
+		assert(fCurrentRecord == fNumRecords);
+	}
+	else
+	{
+		assert(*fRecordIndex == fRecords[fCurrentRecord]);
+	}
+	++fRecordIndex;
+#endif
+
 	if (fCurrentRecord == fNumRecords)
 		return 0L;
 	PilotRecord *newRecord = new PilotRecord(fRecords[fCurrentRecord]);
@@ -349,12 +390,30 @@ PilotRecord *PilotLocalDatabase::readNextModifiedRec(int *ind)
 		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
 	}
+#ifdef SHADOW_LOCAL_DB
+	while ( (fRecordIndex != fRecordList.end() ) &&
+		!((*fRecordIndex)->isDirty()) &&
+		((*fRecordIndex)->id() > 0) )
+	{
+		++fRecordIndex;
+	}
+#endif
 	// Should this also check for deleted?
 	while ((fCurrentRecord < fNumRecords)
-		&& !(fRecords[fCurrentRecord]->getAttrib() & dlpRecAttrDirty)  && (fRecords[fCurrentRecord]->getID()>0 ))
+		&& !(fRecords[fCurrentRecord]->getAttrib() & dlpRecAttrDirty)  && (fRecords[fCurrentRecord]->id()>0 ))
 	{
 		fCurrentRecord++;
 	}
+#ifdef SHADOW_LOCAL_DB
+	if (fCurrentRecord == fNumRecords)
+	{
+		assert(fRecordIndex == fRecordList.end());
+	}
+	else
+	{
+		assert((*fRecordIndex) == fRecords[fCurrentRecord]);
+	}
+#endif
 	if (fCurrentRecord == fNumRecords)
 		return 0L;
 	PilotRecord *newRecord = new PilotRecord(fRecords[fCurrentRecord]);
