@@ -165,6 +165,8 @@ KABCore::~KABCore()
   saveSettings();
   KABPrefs::instance()->writeConfig();
 
+  mAddressBook->disconnect();
+
   mAddressBook = 0;
   KABC::StdAddressBook::close();
 }
