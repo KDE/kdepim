@@ -6,7 +6,6 @@
 
 */
 
-#include <qdragobject.h>
 #include <qlineedit.h>
 #include <qprinter.h>
 #include <qprintdialog.h>
@@ -31,6 +30,7 @@
 #include <kstdaccel.h>
 #include <kaction.h>
 #include <kstdaction.h>
+#include <kurldrag.h>
 
 #include "kandyprefsdialog.h"
 #include "commandscheduler.h"
@@ -153,7 +153,7 @@ void Kandy::dragEnterEvent(QDragEnterEvent *event)
     KMainWindow::dragEnterEvent(event);
 
     // accept uri drops only
-//    event->accept(QUriDrag::canDecode(event));
+//    event->accept(KURLDrag::canDecode(event));
 }
 
 void Kandy::dropEvent(QDropEvent *event)
@@ -165,17 +165,19 @@ void Kandy::dropEvent(QDropEvent *event)
     // do nothing
     KMainWindow::dropEvent(event);
 /*
-    QStrList uri;
+    KURL::List list;
 
     // see if we can decode a URI.. if not, just ignore it
-    if (QUriDrag::decode(event, uri))
+    if (KURLDrag::decode(event, list) && !list.isEmpty())
     {
         // okay, we have a URI.. process it
-        QString url, target;
-        url = uri.first();
+        const KURL &url = uri.first();
 
-        // load in the file
-        load(url);
+        if (url.isLocalFile())
+        {
+           // load in the file
+           load(url.path());
+        }
     }
 */
 }

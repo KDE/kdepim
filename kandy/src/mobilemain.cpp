@@ -1,8 +1,6 @@
 // $Id$
 // Copyright (C) 2001 Cornelius Schumacher <schumacher@kde.org>
 
-#include <qdragobject.h>
-
 #include <kglobal.h>
 #include <klocale.h>
 #include <kiconloader.h>
@@ -14,6 +12,7 @@
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <kedittoolbar.h>
+#include <kurldrag.h>
 
 #include <kstdaccel.h>
 #include <kaction.h>
@@ -92,7 +91,7 @@ void MobileMain::dragEnterEvent(QDragEnterEvent *event)
     KMainWindow::dragEnterEvent(event);
 
     // accept uri drops only
-//    event->accept(QUriDrag::canDecode(event));
+//    event->accept(KURLDrag::canDecode(event));
 }
 
 void MobileMain::dropEvent(QDropEvent *event)
@@ -104,17 +103,18 @@ void MobileMain::dropEvent(QDropEvent *event)
     // do nothing
     KMainWindow::dropEvent(event);
 /*
-    QStrList uri;
+    KURL::List list;
 
     // see if we can decode a URI.. if not, just ignore it
-    if (QUriDrag::decode(event, uri))
+    if (KURLDrag::decode(event, list) && !list.isEmpty())
     {
-        // okay, we have a URI.. process it
-        QString url, target;
-        url = uri.first();
+        const KURL &url = uri.first();
 
-        // load in the file
-        load(url);
+        if (url.isLocalFile())
+        {
+            // load in the file
+            load(url.path());
+        }
     }
 */
 }
