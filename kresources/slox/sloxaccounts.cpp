@@ -137,10 +137,9 @@ void SloxAccounts::slotResult( KIO::Job *job )
 
 QString SloxAccounts::cacheFile() const
 {
-  QString url = mBaseUrl.url();
-  url.replace( "/", "_" );
+  QString host = mBaseUrl.host();
 
-  QString file = locateLocal( "cache", "slox/accounts_" + url );
+  QString file = locateLocal( "cache", "slox/accounts_" + host );
 
   kdDebug() << "SloxAccounts::cacheFile(): " << file << endl;
 
