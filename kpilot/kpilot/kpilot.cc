@@ -66,7 +66,7 @@ static const char *id="$Id$";
 
 
 KPilotInstaller::KPilotInstaller()
-  : KTMainWindow(), fMenuBar(0L), fStatusBar(0L), fToolBar(0L),
+  : KMainWindow(0), fMenuBar(0L), fStatusBar(0L), fToolBar(0L),
     fQuitAfterCopyComplete(false), fManagingWidget(0L), fPilotLink(0L),
     fPilotCommandSocket(0L), fPilotStatusSocket(0L), fKillDaemonOnExit(false)
 {
@@ -166,7 +166,7 @@ KPilotInstaller::setupWidget()
     fManagingWidget = new QWidget(this);
     fManagingWidget->setMinimumSize(500,330);
     fManagingWidget->show();
-    setView(fManagingWidget, FALSE);
+    setCentralWidget(fManagingWidget);
     }
 
 void
@@ -204,10 +204,9 @@ KPilotInstaller::initStatusBar()
 	welcomeMessage+=version(0);
 	welcomeMessage+=')';
 
-	fStatusBar = new KStatusBar(this, "statusbar");
+	fStatusBar = statusBar();
 	fStatusBar->insertItem(welcomeMessage,0);
 	fStatusBar->show();
-	setStatusBar(fStatusBar);
 }
 
 // These are XPM files disguised as .h files
@@ -913,13 +912,12 @@ KPilotInstaller::initMenu()
 
 	KPopupMenu *theHelpMenu = helpMenu();
     
-    this->fMenuBar = new KMenuBar(this);
-    this->fMenuBar->insertItem(i18n("&File"), fileMenu);
-    this->fMenuBar->insertItem(i18n("&Conduits"), conduitMenu);
-    this->fMenuBar->insertSeparator();
-    this->fMenuBar->insertItem(i18n("&Help"), theHelpMenu);
-    this->fMenuBar->show();
-    setMenu(this->fMenuBar);
+	fMenuBar = menuBar();
+	fMenuBar->insertItem(i18n("&File"), fileMenu);
+	fMenuBar->insertItem(i18n("&Conduits"), conduitMenu);
+	fMenuBar->insertSeparator();
+	fMenuBar->insertItem(i18n("&Help"), theHelpMenu);
+	fMenuBar->show();
     }
 
 void
@@ -1280,6 +1278,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.29  2001/01/06 13:21:53  adridg
+// Updated version number
+//
 // Revision 1.28  2001/01/03 00:02:45  adridg
 // Added Heiko's FastSync
 //

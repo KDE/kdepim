@@ -21,7 +21,7 @@
 
 #include <kapp.h>
 #include <klocale.h>
-#include <ktmainwindow.h>
+#include <kmainwindow.h>
 #include <kprogress.h>
 #include <kprocess.h>
 
@@ -36,7 +36,7 @@ class QComboBox;
 
 
 
-class KPilotInstaller : public KTMainWindow
+class KPilotInstaller : public KMainWindow
     {
     Q_OBJECT
 
