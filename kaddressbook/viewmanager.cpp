@@ -500,8 +500,12 @@ void ViewManager::setActiveFilter( int index )
 
   if ( ( index - 1 ) < 0 )
     currentFilter = Filter();
+  else if ( ( index - 1 ) < 1 ) {
+    currentFilter = Filter();
+    currentFilter.setMatchRule(Filter::NotMatching);
+  }
   else
-    currentFilter = mFilterList[ index - 1 ];
+    currentFilter = mFilterList[ index - 2 ];
 
   // Check if we have a view. Since the filter combo is created before
   // the view, this slot could be called before there is a valid view.
@@ -530,6 +534,7 @@ void ViewManager::configureFilters()
 QStringList ViewManager::filterNames() const
 {
   QStringList names( i18n( "None" ) );
+  names.append( i18n( "Unfiled" ) );
 
   Filter::List::ConstIterator it;
   for ( it = mFilterList.begin(); it != mFilterList.end(); ++it )

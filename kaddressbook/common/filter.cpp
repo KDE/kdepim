@@ -30,13 +30,13 @@
 
 Filter::Filter()
   : mName( QString::null ), mMatchRule( Matching ), mEnabled( true ),
-    mInternal( false )
+    mInternal( false ), mIsEmpty( true )
 {
 }
 
 Filter::Filter( const QString &name )
   : mName( name ), mMatchRule( Matching ), mEnabled( true ),
-    mInternal( false )
+    mInternal( false ), mIsEmpty( false )
 {
 }
 
@@ -47,6 +47,8 @@ Filter::~Filter()
 void Filter::setName( const QString &name )
 {
   mName = name;
+
+  mIsEmpty = false;
 }
 
 const QString &Filter::name() const
@@ -76,8 +78,16 @@ bool Filter::filterAddressee( const KABC::Addressee &a )
   iter = mCategoryList.begin();
   // empty filter always matches
 
-  if ( iter == mCategoryList.end() )
-    return true;
+  if ( iter == mCategoryList.end() ) {
+    if( mMatchRule == Matching )
+      return true;
+    else {
+      if ( a.categories().empty() )
+        return true;
+      else
+        return false;
+    }
+  }
 
   for ( ; iter != mCategoryList.end(); ++iter ) {
     if ( a.hasCategory( *iter ) )
@@ -90,6 +100,8 @@ bool Filter::filterAddressee( const KABC::Addressee &a )
 void Filter::setEnabled( bool on )
 {
   mEnabled = on;
+
+  mIsEmpty = false;
 }
 
 bool Filter::isEnabled() const
@@ -100,6 +112,8 @@ bool Filter::isEnabled() const
 void Filter::setCategories( const QStringList &list )
 {
   mCategoryList = list;
+
+  mIsEmpty = false;
 }
 
 const QStringList &Filter::categories() const
@@ -121,6 +135,8 @@ void Filter::restore( KConfig *config )
   mEnabled = config->readBoolEntry( "Enabled", true );
   mCategoryList = config->readListEntry( "Categories" );
   mMatchRule = (MatchRule)config->readNumEntry( "MatchRule", Matching );
+
+  mIsEmpty = false;
 }
 
 void Filter::save( KConfig *config, const QString &baseGroup, Filter::List &list )
@@ -178,6 +194,7 @@ Filter::List Filter::restore( KConfig *config, const QString &baseGroup )
     filter.mCategoryList = *it;
     filter.mMatchRule = Matching;
     filter.mInternal = true;
+    filter.mIsEmpty = false;
     list.append( filter );
   }
 
@@ -187,6 +204,8 @@ Filter::List Filter::restore( KConfig *config, const QString &baseGroup )
 void Filter::setMatchRule( MatchRule rule )
 {
   mMatchRule = rule;
+
+  mIsEmpty = false;
 }
 
 Filter::MatchRule Filter::matchRule() const
@@ -196,5 +215,5 @@ Filter::MatchRule Filter::matchRule() const
 
 bool Filter::isEmpty() const
 {
-  return mCategoryList.isEmpty();
+  return mIsEmpty;
 }

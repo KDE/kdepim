@@ -154,6 +154,7 @@ class Filter
     MatchRule mMatchRule;
     bool mEnabled;
     bool mInternal;
+    bool mIsEmpty;
 };
 
 #endif
