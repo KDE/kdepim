@@ -174,11 +174,11 @@ class IncidenceBase : public CustomProperties
     /**
       Set Pilot Id.
     */
-    void setPilotId( int id );
+    void setPilotId( unsigned long id );
     /**
       Return Pilot Id.
     */
-    int pilotId() const;
+    unsigned long pilotId() const;
 
     /**
       Register observer. The observer is notified when the observed object
@@ -213,7 +213,7 @@ class IncidenceBase : public CustomProperties
     bool mHasDuration;
 
     // PILOT SYNCHRONIZATION STUFF
-    int mPilotId;                         // unique id for pilot sync
+    unsigned long mPilotId;                         // unique id for pilot sync
     int mSyncStatus;                      // status (for sync)
 
     QPtrList<Observer> mObservers;

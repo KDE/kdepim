@@ -335,14 +335,14 @@ int IncidenceBase::syncStatus() const
   return mSyncStatus;
 }
 
-void IncidenceBase::setPilotId( int id )
+void IncidenceBase::setPilotId( unsigned long id )
 {
   if (mReadOnly) return;
 
   mPilotId = id;
 }
 
-int IncidenceBase::pilotId() const
+unsigned long IncidenceBase::pilotId() const
 {
   return mPilotId;
 }
