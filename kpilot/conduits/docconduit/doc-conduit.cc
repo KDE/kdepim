@@ -356,6 +356,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 		}
 		
 		// Now calculate the md5 checksum of the PC text and write it to the config file
+		if (res)
 		{
 			KMD5 docmd5;
 			QFile txtfile(docconverter.txtFilename());
