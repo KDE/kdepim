@@ -48,7 +48,7 @@ typedef KParts::GenericFactory< KSync::Debugger> DebuggerFactory;
 K_EXPORT_COMPONENT_FACTORY( libksync_debugger, DebuggerFactory );
 
 using namespace KCal;
-using namespace KSync ;
+using namespace KSync;
 
 Debugger::Debugger( QWidget *parent, const char *name,
                     QObject *, const char *,const QStringList & )
