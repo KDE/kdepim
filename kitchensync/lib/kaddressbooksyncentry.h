@@ -39,16 +39,17 @@ class KAddressbookSyncEntry : public KSyncEntry{
     virtual QString oldId();
     virtual void setOldId(const QString & );
 
-    virtual QDateTime timestamp();
-    virtual void setTimestamp(const QDateTime & );
+    virtual QString timestamp();
+    virtual void setTimestamp(const QString & );
     virtual bool equals(KSyncEntry * );
+    virtual KSyncEntry* clone() { return 0l; }
   private:
     KABC::AddressBook* m_addressb;
     class AddressbookSyncEntryPrivate;
     AddressbookSyncEntryPrivate *d;
     QString m_name;
     QString m_oldId;
-    QDateTime m_time;
+    QString m_time;
 };
 
 #endif

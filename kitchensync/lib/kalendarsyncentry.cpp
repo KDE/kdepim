@@ -63,11 +63,11 @@ void KAlendarSyncEntry::setOldId(const QString &oldId )
 {
   this->m_oldId = oldId;
 }
-QDateTime KAlendarSyncEntry::timestamp()
+QString KAlendarSyncEntry::timestamp()
 {
   return m_time;
 }
-void KAlendarSyncEntry::setTimestamp(const QDateTime &time)
+void KAlendarSyncEntry::setTimestamp(const QString &time)
 {
   m_time = time;
 }
@@ -79,7 +79,7 @@ void KAlendarSyncEntry::setCalendar(KCal::CalendarLocal *cal )
 {
   m_calendar = cal;
 }
-bool KAlendarSyncEntry::equals(KAlendarSyncEntry *sync )
+bool KAlendarSyncEntry::equals(KSyncEntry *sync )
 {
   return false;
 }

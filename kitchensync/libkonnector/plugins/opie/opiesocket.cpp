@@ -9,6 +9,7 @@
 #include <qsocket.h>
 #include <kdebug.h>
 #include <kio/netaccess.h>
+#include <kfileitem.h>
 #include <kurl.h>
 #include <qregexp.h>
 
@@ -285,18 +286,25 @@ void OpieSocket::manageCall(const QString &line )
 	    KIO::NetAccess::download( url, tmpFileName );
 	    parseCategory(tmpFileName);
 	    KIO::NetAccess::removeTempFile( tmpFileName );
+
 	    url.setPath(d->path + "/Applications/addressbook/addressbook.xml" );
 	    tmpFileName = QString::null;
 	    //tmpFileName = "/home/ich/addressbook.xml";
 	    KIO::NetAccess::download( url, tmpFileName );
-	    OpieHelper::self()->toAddressbook(QString::null, tmpFileName, &d->m_sync, d->m_categories  );
+	    KIO::UDSEntry uds;
+	    KIO::NetAccess::stat( url, uds );
+	    KFileItem item(  uds, url );
+	    OpieHelper::self()->toAddressbook(item.timeString() , tmpFileName, &d->m_sync, d->m_categories  );
 	    KIO::NetAccess::removeTempFile( tmpFileName );
+
 	    QString todo;
 	    url.setPath(d->path + "/Applications/todolist/todolist.xml" );
 	    KIO::NetAccess::download(url, todo );
 	    url.setPath(d->path + "/Applications/datebook/datebook.xml" );
 	    KIO::NetAccess::download(url, tmpFileName );
-	    OpieHelper::self()->toCalendar(QString::null, todo, tmpFileName, &d->m_sync, d->m_categories );
+	    OpieHelper::self()->toCalendar(QString::null, todo, 
+					   tmpFileName, &d->m_sync,
+					   d->m_categories );
 	    KIO::NetAccess::removeTempFile( tmpFileName );
 	    KIO::NetAccess::removeTempFile( todo );
 	    // done with fetching

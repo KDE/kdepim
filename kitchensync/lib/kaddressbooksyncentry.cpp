@@ -73,12 +73,12 @@ void KAddressbookSyncEntry::setOldId(const QString &id )
 }
 
 
-QDateTime KAddressbookSyncEntry::timestamp()
+QString KAddressbookSyncEntry::timestamp()
 {
     return m_time;
 }
 
-void KAddressbookSyncEntry::setTimestamp(const QDateTime &time )
+void KAddressbookSyncEntry::setTimestamp(const QString &time )
 {
     m_time = time;
 }

@@ -34,7 +34,7 @@ public:
   QString id;
   QString oldId;
   QString fileName;
-  QDateTime time;
+  QString time;
   QByteArray byteArray;
 };
 
@@ -42,7 +42,7 @@ public:
 KUnknownSyncEntry::KUnknownSyncEntry()
 {
   d = new KUnknownSyncEntryPrivate;
-  d->time = QDateTime::currentDateTime();
+  d->time = QDate::currentDate().toString();
 }
 KUnknownSyncEntry::KUnknownSyncEntry(const QString &name, const QString &id, const QString &fileName)
 {
@@ -50,7 +50,7 @@ KUnknownSyncEntry::KUnknownSyncEntry(const QString &name, const QString &id, con
   d->name = name;
   d->id = id;
   d->fileName = fileName;
-  d->time = QDateTime::currentDateTime();
+  d->time = QDate::currentDate().toString() ;
 }
 KUnknownSyncEntry::~KUnknownSyncEntry()
 {
@@ -80,11 +80,11 @@ void KUnknownSyncEntry::setOldId(const QString &oldId )
 {
   d->oldId = oldId;
 }
-QDateTime KUnknownSyncEntry::timestamp()
+QString KUnknownSyncEntry::timestamp()
 {
   return d->time;
 }
-void KUnknownSyncEntry::setTimestamp(const QDateTime &time)
+void KUnknownSyncEntry::setTimestamp(const QString &time)
 {
   d->time = time;
 

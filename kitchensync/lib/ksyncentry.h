@@ -71,16 +71,16 @@ class KSyncEntry
       entries. If the user has changed the entry in one data set the timestamp
       has to be different.
     */
-    virtual QDateTime timestamp() = 0;
-    virtual void setTimestamp(const QDateTime &) = 0;
+    virtual QString timestamp() = 0;
+    virtual void setTimestamp(const QString &) = 0;
     /**
       Return, if the two entries are equal. Two entries are considered to be
       equal, if they contain exactly the same information, including the same id
       and timestamp.
     */
     // FIXME
-    //virtual bool equals(KSyncEntry *) = 0;
-    //virtual KSyncEntry* clone() /*= 0*/;
+    virtual bool equals(KSyncEntry *) = 0;
+    virtual KSyncEntry* clone() = 0;
 
 };
 

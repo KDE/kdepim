@@ -40,9 +40,10 @@ class OpieDesktopSyncEntry : public KSyncEntry{
     virtual QString oldId();
     virtual void setOldId(const QString & );
 
-    virtual QDateTime timestamp();
-    virtual void setTimestamp(const QDateTime & );
-    virtual bool equals(OpieDesktopSyncEntry * );
+    virtual QString timestamp();
+    virtual void setTimestamp(const QString & );
+    virtual bool equals(KSyncEntry * );
+    virtual KSyncEntry* clone() { return 0l; }
 
  private:
     QString m_name;

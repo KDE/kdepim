@@ -29,7 +29,9 @@ KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
   wid->setBackgroundColor(Qt::darkRed );
   m_bar->setMaximumWidth(100 );
   m_bar->setMinimumWidth(100 );
-  
+
+  m_parts.setAutoDelete( true );
+  initPlugins();  
 };
 
 KSyncMainWindow::~KSyncMainWindow()
@@ -47,7 +49,25 @@ void KSyncMainWindow::initActions()
   (void)new KAction( i18n("Configure Kitchensync") , 0, this, SLOT (slotConfigure() ),
 		     actionCollection(), "configure" );
 }
+void KSyncMainWindow::initPlugins()
+{
+  /* KTrader::OfferList offers = KTrader::self()->query(QString::fromLatin1("KitchenSync/Manipulator"),
+						     QString::null);
 
+  for (KTrader::OfferList::ConstIterator it = offers.begin(); it != offers.end(); ++it)
+    {
+      ManipulatorPart *plugin = KParts::ComponentFactory
+	::createInstanceFromService<ManipulatorPart>(*it, this);
+      if (!plugin)
+	continue;
+      addModPart( plugin );
+    } 
+  */
+}
+void KSyncMainWindow::addModPart()
+{
+
+}
 void KSyncMainWindow::slotSync() {
 }
 

@@ -1,6 +1,8 @@
 
-
+#include <qptrlist.h>
 #include <kparts/mainwindow.h>
+
+#include <manipulatorpart.h>
 
 class PartBar;
 class QHBox;
@@ -16,10 +18,13 @@ namespace KitchenSync {
 
     private:
       virtual void initActions();
+      void addModPart( ManipulatorPart * );
       PartBar *m_bar;
       QHBox *m_lay;
+      QPtrList<ManipulatorPart> m_parts;
       
     private slots:
+      void initPlugins();
       void slotSync();
       void slotBackup();
       void slotRestore();

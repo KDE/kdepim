@@ -38,14 +38,17 @@ class KUnknownSyncEntry : public KSyncEntry
   virtual void setId( const QString & );
   virtual QString oldId();
   virtual void setOldId(const QString &);
-  virtual QDateTime timestamp();
-  virtual void setTimestamp(const QDateTime & );
+  virtual QString timestamp();
+  virtual void setTimestamp(const QString & );
 
   virtual bool equals(KUnknownSyncEntry * );
   QByteArray byteArray() const;
   void setByteArray(const QByteArray &byteArray);
   void setSrcFileName(const QString &fileName );
   QString fileName() const;
+
+  virtual bool equals(KSyncEntry *) { return false; }
+  virtual KSyncEntry* clone() { return 0l; }
 
  private:
   class KUnknownSyncEntryPrivate;

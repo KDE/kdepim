@@ -40,14 +40,15 @@ class KAlendarSyncEntry : public KSyncEntry
   virtual void setId(const QString &id);
   virtual QString oldId();
   virtual void setOldId(const QString &oldId);
-  virtual QDateTime timestamp();
-  virtual void setTimestamp(const QDateTime & );
-  virtual bool equals(KAlendarSyncEntry * );
+  virtual QString timestamp();
+  virtual void setTimestamp(const QString & );
+  virtual bool equals(KSyncEntry * );
+  virtual KSyncEntry* clone() { return 0l; }
 
  private:
   QString m_name;
   QString m_oldId;
-  QDateTime m_time;
+  QString m_time;
   KCal::CalendarLocal *m_calendar;
   class KAlendarSyncEntryPrivate;
   KAlendarSyncEntryPrivate *d;

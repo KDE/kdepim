@@ -186,8 +186,8 @@ void OpieHelper::toOpieDesktopEntry( const QString &str, QPtrList<KSyncEntry> *e
   if( !file2.open(IO_ReadOnly ) ){
     return;
   }
-  QDomDocument doc("mydocument" );
-  if( !doc.setContent( &file2 ) ){
+  QDomDocument doc2("mydocument" );
+  if( !doc2.setContent( &file2 ) ){
     file2.close();
   }else{
     // start reading

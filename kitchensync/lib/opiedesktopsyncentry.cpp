@@ -53,19 +53,21 @@ void OpieDesktopSyncEntry::setOldId(const QString & )
 
 }
 
-QDateTime OpieDesktopSyncEntry::timestamp()
+QString OpieDesktopSyncEntry::timestamp()
 {
-    return QDateTime::currentDateTime();
+    return QDate::currentDate().toString();
 }
-void OpieDesktopSyncEntry::setTimestamp(const QDateTime & )
+void OpieDesktopSyncEntry::setTimestamp(const QString & )
 {
     
 }
-bool OpieDesktopSyncEntry::equals(OpieDesktopSyncEntry *entry )
+bool OpieDesktopSyncEntry::equals(KSyncEntry *entr )
 {
-    if( m_name == entry->m_name && m_id == entry->m_id && m_category == entry->m_category && m_file == entry->m_file)
-	return true;
-
+    if( entr->type() == QString::fromLatin1("OpieDesktopEntry") ){
+    OpieDesktopSyncEntry *entry = (OpieDesktopSyncEntry*)entr;
+	if( m_name == entry->m_name && m_id == entry->m_id && m_category == entry->m_category && m_file == entry->m_file)
+	    return true;
+    }	
     return false;
 }
 
