@@ -25,6 +25,7 @@
 #define XXPORTSELECTDIALOG_H
 
 #include <kabc/addresseelist.h>
+#include <kabc/field.h>
 #include <kdialogbase.h>
 
 #include "filter.h"
@@ -36,13 +37,15 @@ class QListViewItem;
 class QRadioButton;
 
 class KABCore;
+class KComboBox;
 
 class XXPortSelectDialog : public KDialogBase
 {
   Q_OBJECT
 
   public:
-    XXPortSelectDialog( KABCore *core, QWidget* parent, const char* name = 0 );
+    XXPortSelectDialog( KABCore *core, bool sort, QWidget* parent,
+                        const char* name = 0 );
 
     KABC::AddresseeList contacts();
 
@@ -62,9 +65,14 @@ class XXPortSelectDialog : public KDialogBase
     QComboBox* mFiltersCombo;
     QListView* mCategoriesView;
 
+    KComboBox *mFieldCombo;
+    KComboBox *mSortTypeCombo;
+
     KABCore *mCore;
     KABC::AddresseeList mAddresseeList;
     Filter::List mFilters;
+    KABC::Field::List mFields;
+    bool mUseSorting;
 };
 
 #endif

@@ -24,6 +24,7 @@
 
 #include <kabc/addressbook.h>
 #include <kapplication.h>
+#include <kcombobox.h>
 #include <klocale.h>
 
 #include <qbuttongroup.h>
@@ -42,10 +43,11 @@
 
 #include "xxportselectdialog.h"
 
-XXPortSelectDialog::XXPortSelectDialog( KABCore *core, QWidget* parent,
-                                        const char* name )
+XXPortSelectDialog::XXPortSelectDialog( KABCore *core, bool sort,
+                                        QWidget* parent, const char* name )
     : KDialogBase( Plain, i18n( "Choose which contacts to export" ), Ok | Cancel,
-                   Ok, parent, name, true, true ), mCore( core )
+                   Ok, parent, name, true, true ), mCore( core ),
+      mUseSorting( sort )
 {
   initGUI();
 
@@ -72,6 +74,14 @@ XXPortSelectDialog::XXPortSelectDialog( KABCore *core, QWidget* parent,
   mUseCategories->setEnabled( categories.count() > 0 );
 
   mUseSelection->setEnabled( mCore->selectedUIDs().count() != 0 );
+
+  mSortTypeCombo->insertItem( i18n( "Ascending" ) );
+  mSortTypeCombo->insertItem( i18n( "Descending" ) );
+
+  mFields = mCore->addressBook()->fields( KABC::Field::All );
+  KABC::Field::List::Iterator fieldIt;
+  for ( fieldIt = mFields.begin(); fieldIt != mFields.end(); ++fieldIt )
+    mFieldCombo->insertItem( (*fieldIt)->label() );
 }
 
 KABC::AddresseeList XXPortSelectDialog::contacts()
@@ -117,6 +127,13 @@ KABC::AddresseeList XXPortSelectDialog::contacts()
       list.append( *it );
   }
 
+  if ( mUseSorting ) {
+    list.setReverseSorting( mSortTypeCombo->currentItem() == 1 );
+    uint pos = mFieldCombo->currentItem();
+    if ( pos < mFields.count() )
+      list.sortByField( mFields[ pos ] );
+  }
+
   return list;
 }
 
@@ -154,8 +171,7 @@ void XXPortSelectDialog::initGUI()
   QLabel *label = new QLabel( i18n( "Which contacts do you want to export?" ), page );
   topLayout->addWidget( label );
 
-  mButtonGroup = new QButtonGroup( page );
-  mButtonGroup->setFrameShape( QButtonGroup::NoFrame );
+  mButtonGroup = new QButtonGroup( i18n( "Selection:" ), page );
   mButtonGroup->setColumnLayout( 0, Qt::Vertical );
   mButtonGroup->layout()->setSpacing( KDialog::spacingHint() );
   mButtonGroup->layout()->setMargin( KDialog::marginHint() );
@@ -194,6 +210,29 @@ void XXPortSelectDialog::initGUI()
   groupLayout->addWidget( mCategoriesView, 3, 1 );
 
   topLayout->addWidget( mButtonGroup );
+
+  QButtonGroup *sortingGroup = new QButtonGroup( i18n( "Sorting:" ), page );
+  sortingGroup->setColumnLayout( 0, Qt::Vertical );
+  QGridLayout *sortLayout = new QGridLayout( sortingGroup->layout(), 2, 2,
+                                             KDialog::spacingHint() );
+  sortLayout->setAlignment( Qt::AlignTop );
+
+  label = new QLabel( i18n( "Criterion:" ), sortingGroup );
+  sortLayout->addWidget( label, 0, 0 );
+  
+  mFieldCombo = new KComboBox( false, sortingGroup );
+  sortLayout->addWidget( mFieldCombo, 0, 1 );
+
+  label = new QLabel( i18n( "Order:" ), sortingGroup );
+  sortLayout->addWidget( label, 1, 0 );
+
+  mSortTypeCombo = new KComboBox( false, sortingGroup );
+  sortLayout->addWidget( mSortTypeCombo, 1, 1 );
+
+  topLayout->addWidget( sortingGroup );
+
+  if ( !mUseSorting )
+    sortingGroup->hide();
 }
 
 #include "xxportselectdialog.moc"

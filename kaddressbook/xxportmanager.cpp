@@ -96,7 +96,7 @@ void XXPortManager::slotExport( const QString &identifier, const QString &data )
   }
 
   KABC::AddresseeList addrList;
-  XXPortSelectDialog dlg( mCore, mCore );
+  XXPortSelectDialog dlg( mCore, obj->requiresSorting(), mCore );
   if ( dlg.exec() )
     addrList = dlg.contacts();
   else
