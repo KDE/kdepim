@@ -36,7 +36,7 @@
 #include <kconfig.h>
 #include <kdialog.h>
 
-#include "alarmdaemonctrl.h"
+#include "alarmdaemoniface_stub.h"
 #include "alarmdaemonctrl.moc"
 
 extern "C" {
@@ -115,6 +115,11 @@ void AlarmDaemonCtrl::save()
   config.setGroup("General");
   config.writeEntry( "Autostart", mAutoStartCheck->isChecked() );
   config.writeEntry( "CheckInterval", mIntervalSpin->value() );
+  config.sync();
+
+  // Notify the alarm daemon that the settings have changed
+  AlarmDaemonIface_stub s("kalarmd", "ad");
+  s.readConfig();
 
   emit changed(false);
 }

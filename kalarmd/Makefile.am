@@ -46,7 +46,7 @@ korgac_SOURCES = korgacmain.cpp alarmdialog.cpp \
 
 kde_module_LTLIBRARIES = libkcm_alarmdaemonctrl.la
 
-libkcm_alarmdaemonctrl_la_SOURCES = alarmdaemonctrl.cpp
+libkcm_alarmdaemonctrl_la_SOURCES = alarmdaemonctrl.cpp alarmdaemoniface.stub
 libkcm_alarmdaemonctrl_la_LDFLAGS = -module -avoid-version $(all_libraries) -no-undefined
 libkcm_alarmdaemonctrl_la_LIBADD = $(LIB_KDEUI)
 
