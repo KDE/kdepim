@@ -1,3 +1,5 @@
+KDE_OPTIONS = nofinal
+
 SUBDIRS = interfaces printing . views features editors kcmconfigs xxport pics csv-templates \
           thumbnailcreator
 SRCDOC_DEST = $(kde_htmldir)/en/kaddressbook
