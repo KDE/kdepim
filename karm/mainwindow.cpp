@@ -191,8 +191,7 @@ void MainWindow::startNewSession()
 
 void MainWindow::resetAllTimes()
 {
-  // TODO:
-  // _taskView->resetTimeForAllTasks();
+  _taskView->resetTimeForAllTasks();
 }
 
 void MainWindow::makeMenus()

@@ -135,7 +135,7 @@ void Task::changeTimes( long minutesSession, long minutes, bool do_logging )
     _time += minutes;
     if ( do_logging )
       _logging->changeTimes( this, minutesSession, minutes);
-      
+
     noNegativeTimes();
     changeTotalTimes( minutesSession, minutes );
   }
@@ -148,6 +148,16 @@ void Task::changeTotalTimes( long minutesSession, long minutes )
   noNegativeTimes();
   update();
   changeParentTotalTimes( minutesSession, minutes );
+}
+
+void Task::resetTimes()
+{
+  _totalSessionTime -= _sessionTime;
+  _totalTime -= _time;
+  changeParentTotalTimes( -_sessionTime, -_time);
+  _sessionTime = 0;
+  _time = 0;
+  update();
 }
 
 void Task::changeParentTotalTimes( long minutesSession, long minutes )

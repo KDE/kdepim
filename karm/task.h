@@ -89,6 +89,11 @@ class Task : public QObject, public QListViewItem
        */
       void changeTotalTimes( long minutesSession, long minutes );
 
+      /**
+       * Reset all times to 0
+       */
+      void resetTimes();
+
       /*@{ returns the times accumulated by the task
        * @return total time in minutes
        */

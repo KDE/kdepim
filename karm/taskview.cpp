@@ -43,6 +43,10 @@ TaskView::TaskView( QWidget *parent, const char *name )
   connect(this, SIGNAL( doubleClicked( QListViewItem * )),
           this, SLOT( changeTimer( QListViewItem * )));
 
+  // setup default values
+  previousColumnWidths[0] = previousColumnWidths[1]
+  = previousColumnWidths[2] = previousColumnWidths[3] = HIDDEN_COLUMN;
+
   addColumn( i18n("Task Name") );
   addColumn( i18n("Session Time") );
   addColumn( i18n("Time") );
@@ -83,10 +87,6 @@ TaskView::TaskView( QWidget *parent, const char *name )
   connect( _preferences, SIGNAL( autoSavePeriod(int) ),
            this, SLOT( autoSavePeriodChanged(int) ));
   connect( _autoSaveTimer, SIGNAL( timeout() ), this, SLOT( save() ));
-
-  // setup default values
-  previousColumnWidths[0] = previousColumnWidths[1]
-  = previousColumnWidths[2] = previousColumnWidths[3] = HIDDEN_COLUMN;
 
   // Connect desktop tracker events to task starting/stopping
   _desktopTracker = new DesktopTracker();
@@ -537,6 +537,15 @@ void TaskView::startNewSession()
   for ( ; item.current(); ++item ) {
     Task * task = (Task *) item.current();
     task->startNewSession();
+  }
+}
+
+void TaskView::resetTimeForAllTasks()
+{
+  QListViewItemIterator item( firstChild());
+  for ( ; item.current(); ++item ) {
+    Task * task = (Task *) item.current();
+    task->resetTimes();
   }
 }
 
