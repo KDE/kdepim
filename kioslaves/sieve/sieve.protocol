@@ -20,6 +20,7 @@ Description[et]=Sieve e-kirjade filtreerimise protokolli IO-moodul
 Description[fr]=Un ioslave pour le protocole de filtrage de messagerie Sieve
 Description[it]=Un ioslave per il protocollo di filtraggio posta Sieve
 Description[nl]=Een ioslave voor het Sieve-mailfilterprotocol
+Description[pl]=Wtyczka protokołu filtrowania poczty Sieve
 Description[pt]=Um 'ioslave' para o protocolo de filtragem de correio Sieve
 Description[pt_BR]=Um IO-Slave para o protocolo de filtragem de email Sieve
 Description[ru]=Канал протокола фильтра почты Sieve

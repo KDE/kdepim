@@ -1,6 +1,25 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Novell GroupWise Server
+Name[bg]=Сървър Novell GroupWise
+Name[br]=Servijer Novell GroupWise
+Name[ca]=Servidor Novell GroupWise
+Name[cs]=Novell GroupWise server
+Name[da]=Novell GroupWise server
+Name[es]=Servidor de Novell GroupWise
+Name[et]=Novelli GroupWise server
+Name[fr]=Serveur de travail collaboratif GroupWise de Novell
+Name[ga]=Freastalaí Novell GroupWise
+Name[it]=Server Novell GroupWise
+Name[nl]=Novell GroupWise-server
+Name[pl]=Serwer Novell GroupWise
+Name[pt]=Servidor Novell GroupWise
+Name[pt_BR]=Servidor GroupWise da Novell
+Name[ru]=Сервер Novell GroupWise
+Name[sl]=Strežnik Novell GroupWise
+Name[sv]=Novell Groupwise-server
+Name[uk]=Сервер Novell GroupWise
+Name[zh_CN]=Novell GroupWise 服务器
 X-KDE-Library=kabc_groupwise
 Type=Service
 ServiceTypes=KResources/Plugin
