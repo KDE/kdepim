@@ -29,6 +29,7 @@
 
 #include <kabc/vcardconverter.h>
 #include <libkcal/icalformat.h>
+#include <libkdepim/kabcresourcenull.h>
 
 #include <konnectorinfo.h>
 #include <kapabilities.h>
@@ -57,6 +58,8 @@ RemoteKonnector::RemoteKonnector( const KConfig *config )
     mAddressBookUrl = config->readPathEntry( "AddressBookUrl" );
     mBookmarkUrl = config->readPathEntry( "BookmarkUrl" );
   }
+
+  mAddressBook.addResource( new KABC::ResourceNull() );
 
   mAddressBookSyncee =	new AddressBookSyncee( &mAddressBook );
   mAddressBookSyncee->setSource( i18n( "Remote" ) );
@@ -258,7 +261,7 @@ bool RemoteKonnector::writeSyncees()
 
     VCardConverter v;
     AddressBook::ConstIterator it;
-    for( mAddressBook.begin(); it != mAddressBook.end(); ++it ) {
+    for ( it = mAddressBook.begin(); it != mAddressBook.end(); ++it ) {
       mAddressBookData.append( v.createVCard( *it ) );
     }
 
