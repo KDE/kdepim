@@ -22,16 +22,16 @@
 
 #include <qstring.h>
 #include <qclipboard.h>
-#include <qpopupmenu.h>
 #include <qfileinfo.h>
 #include <qdir.h>
 #include <qprinter.h>
 #include <qpaintdevicemetrics.h>
 #include <qstylesheet.h>
 
+#include <kglobalsettings.h>
+#include <kpopupmenu.h>
 #include <kdebug.h>
 #include <kcursor.h>
-#include <kcharsets.h>
 #include <kmessagebox.h>
 #include <kglobal.h>
 #include <klocale.h>
@@ -94,17 +94,32 @@ void KNArticleWidget::readOptions()
   altAsAtt=c->readBoolEntry("showAlts", false);
   browser=(browserType)(c->readNumEntry("Browser", 0));
   
-  htmlFont=knGlobals.appManager->font(KNAppManager::article);
-
-  txtCol=knGlobals.appManager->color(KNAppManager::normalText);
-  bgCol=knGlobals.appManager->color(KNAppManager::background);
-  lnkCol=knGlobals.appManager->color(KNAppManager::url);
+  if (knGlobals.appManager->useFonts())
+    htmlFont=knGlobals.appManager->font(KNAppManager::article);
+  else
+    htmlFont=KGlobalSettings::generalFont();
 
   QColor col;
-  col=knGlobals.appManager->color(KNAppManager::header);
+
+  if (knGlobals.appManager->useColors()) {
+    txtCol=knGlobals.appManager->color(KNAppManager::normalText);
+    bgCol=knGlobals.appManager->color(KNAppManager::background);
+    lnkCol=knGlobals.appManager->color(KNAppManager::url);
+    col=knGlobals.appManager->color(KNAppManager::header);
+  } else {
+    txtCol = kapp->palette().active().text();
+    bgCol = kapp->palette().active().base();
+    lnkCol = KGlobalSettings::linkColor();
+    col = kapp->palette().active().background();
+  }
+
   hexColors[0]= QString("#%1%2%3").arg(col.red(),2,16).arg(col.green(),2,16).arg(col.blue(),2,16);
+
   for(int i=3; i<6; i++) {
-    col=knGlobals.appManager->color(i);
+    if (knGlobals.appManager->useColors())
+      col=knGlobals.appManager->color(i);
+    else
+      col=kapp->palette().active().text();
     hexColors[i-2]= QString("#%1%2%3").arg(col.red(),2,16).arg(col.green(),2,16).arg(col.blue(),2,16);
   }
 }
@@ -202,10 +217,10 @@ KNArticleWidget::KNArticleWidget(QWidget *parent, const char *name )
   setFocusPolicy(QWidget::WheelFocus);
 
   //popups
-  urlPopup=new QPopupMenu();
+  urlPopup=new KPopupMenu();
   urlPopup->insertItem(i18n("Open URL"), PUP_OPEN);
   urlPopup->insertItem(i18n("Copy to clipboard"), PUP_COPYURL);
-  attPopup=new QPopupMenu();
+  attPopup=new KPopupMenu();
   attPopup->insertItem(i18n("Open"), PUP_OPEN);
   attPopup->insertItem(i18n("Save"), PUP_SAVE);
 
@@ -215,7 +230,9 @@ KNArticleWidget::KNArticleWidget(QWidget *parent, const char *name )
   actPrint = KStdAction::print(this, SLOT(slotPrint()), &actionCollection);
   actPrint->setEnabled(false);
   actSelAll =  KStdAction::selectAll(this, SLOT(slotSelectAll()), &actionCollection);
+  actSelAll->setEnabled(false);
   actCopy = KStdAction::copy(this, SLOT(copy()), &actionCollection);
+  actCopy->setEnabled(false);
 
   applyConfig();
 }
@@ -270,30 +287,12 @@ void KNArticleWidget::keyPressEvent(QKeyEvent *e)
   int offs = (visibleHeight() < 30) ? visibleHeight() : 30;
     
   switch(e->key()) {
-    case Key_Up:
-      scrollBy( 0, -10 );
-      break;
-    case Key_Down:
-      scrollBy( 0, 10 );
-      break;      
-    case Key_Left:
-      scrollBy( -10, 0 );
-      break;
-    case Key_Right:
-      scrollBy( 10, 0 );
-      break;            
     case Key_Prior:
       scrollBy( 0, -visibleHeight()+offs);
       break;
     case Key_Next:
       scrollBy( 0, visibleHeight()-offs);
       break;
-    case Key_Home :
-      scrollBy(0,-contentsY());
-      break;
-    case Key_End:
-      scrollBy(0,contentsHeight());
-      break;      
     default:
       QTextBrowser::keyPressEvent(e);
   }
@@ -329,9 +328,6 @@ void KNArticleWidget::viewportMouseReleaseEvent(QMouseEvent *e)
 
 void KNArticleWidget::applyConfig()
 {
-  QFont fnt(htmlFont);
-  setFont(fnt);
-
   QColorGroup pcg(paperColorGroup());
   pcg.setColor(QColorGroup::Base, bgCol);
   pcg.setColor(QColorGroup::Text, txtCol);
@@ -536,6 +532,7 @@ void KNArticleWidget::showBlankPage()
 
 void KNArticleWidget::showErrorMessage(const QString &s)
 {
+  setFont(htmlFont);  // switch back from possible obscure charsets
 
   QString msg="<qt>"+i18n("<b><font size=+1 color=red>An error occured!</font></b><hr><br>");
   msg+=toHtmlString(s, false, false)+"</qt>";
@@ -575,7 +572,7 @@ void KNArticleWidget::createHtmlPage()
   kdDebug(5003) << "KNArticleWidget::createHtmlPage()" << endl;
 
   if(!a_rticle || !a_rticle->hasContent()) {
-    kdDebug("KNArticleWidget::createHtmlPage() : nothing to display - returning");
+    kdDebug(5003) << "KNArticleWidget::createHtmlPage() : nothing to display - returning" << endl;
     showBlankPage();
     return;
   }
@@ -841,18 +838,18 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
         knGlobals.sArtManager->mailToClicked(this);
       break;
       case ATreference:
-        kdDebug(5003) << "KNArticleWidget::anchorClicked() : reference " << target.latin1() << endl;
+        kdDebug(5003) << "KNArticleWidget::anchorClicked() : reference " << target << endl;
         knGlobals.fArtManager->referenceClicked(target.toInt(), this, 0);
       break;
       case ATattachment:
-        kdDebug(5003) << "KNArticleWidget::anchorClicked() : attachment " << target.latin1() << endl;
+        kdDebug(5003) << "KNArticleWidget::anchorClicked() : attachment " << target << endl;
         if(openAtt)
           openAttachment(target.toInt());
         else
           saveAttachment(target.toInt());
       break;
       case ATurl:
-        kdDebug(5003) << "KNArticleWidget::anchorClicked() : url " << target.latin1() << endl;;
+        kdDebug(5003) << "KNArticleWidget::anchorClicked() : url " << target << endl;;
         openURL(target);
       break;
       default:
@@ -863,7 +860,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
   else {
 
     if(type==ATattachment) {
-      kdDebug(5003) << "KNArticleWidget::anchorClicked() : popup for attachment " << target.latin1() << endl;
+      kdDebug(5003) << "KNArticleWidget::anchorClicked() : popup for attachment " << target << endl;
       switch(attPopup->exec(*p)) {
         case PUP_OPEN:
           openAttachment(target.toInt());
@@ -875,7 +872,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
     }
 
     else if(type==ATurl) {
-      kdDebug(5003) << "KNArticleWidget::anchorClicked() : popup for url " << target.latin1() << endl;
+      kdDebug(5003) << "KNArticleWidget::anchorClicked() : popup for url " << target << endl;
       switch(urlPopup->exec(*p)) {
         case PUP_OPEN:
           openURL(target);
@@ -901,7 +898,7 @@ void KNArticleWidget::slotPrint()
 {
   QPrinter *printer=new QPrinter();
 
-  if(printer->setup()) {
+  if(printer->setup(this)) {
 
 
     QPaintDeviceMetrics metrics(printer);

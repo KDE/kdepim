@@ -66,9 +66,7 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, const
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
   KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
 
-  createGUI("knreaderui.rc",false);
-  //guiFactory()->addClient(artW->part());
-  conserveMemory();
+  createGUI("knreaderui.rc");
 
   restoreWindowSize("reader", this, QSize(500,400));
 }

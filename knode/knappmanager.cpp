@@ -52,7 +52,7 @@ void KNAppManager::readOptions()
   colors.append(c->readColorEntry("backgroundColor",&defCol));
   colorNames.append(i18n("Background"));
 
-  defCol = kapp->palette().active().midlight();
+  defCol = kapp->palette().active().background();
   colors.append(c->readColorEntry("headerColor",&defCol));
   colorNames.append(i18n("Header Decoration"));
 
@@ -75,10 +75,6 @@ void KNAppManager::readOptions()
   defCol = KGlobalSettings::linkColor();
   colors.append(c->readColorEntry("URLColor",&defCol));
   colorNames.append(i18n("Link"));
-
-  defCol = KGlobalSettings::visitedLinkColor();
-  colors.append(c->readColorEntry("followedURLColor",&defCol));
-  colorNames.append(i18n("Followed Link"));
 
   defCol = kapp->palette().disabled().text();
   colors.append(c->readColorEntry("readArticleColor",&defCol));
@@ -119,7 +115,6 @@ void KNAppManager::saveOptions()
   c->writeEntry("quote2Color", colors[Quoted2]);
   c->writeEntry("quote3Color", colors[Quoted3]);
   c->writeEntry("URLColor", colors[url]);
-  c->writeEntry("followedURLColor", colors[followedUrl]);
   c->writeEntry("readArticleColor", colors[readArticle]);
 
   c->writeEntry("customFonts", u_seFonts);

@@ -28,10 +28,9 @@
 
 #include <kaction.h>
 
-class QPopupMenu;
 class QScrollView;
 
-class KHTMLPart;
+class KPopupMenu;
 
 class KNArticle;
 class KNArticleCollection;
@@ -97,7 +96,7 @@ class KNArticleWidget : public QTextBrowser  {
     QList<KNMimeContent> *att;
     bool h_tmlDone;
 
-    QPopupMenu *urlPopup, *attPopup;
+    KPopupMenu *urlPopup, *attPopup;
     KAction *actSave, *actPrint, *actSelAll, *actCopy;
     KActionCollection actionCollection;
 

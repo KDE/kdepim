@@ -238,7 +238,7 @@ void KNodeView::updateAppearance()
     collectionView->setPalette(p);
     hdrView->setPalette(p);
   } else {
-    QPalette p = collectionView->palette();
+    QPalette p = palette();
     collectionView->setPalette(p);
     hdrView->setPalette(p);
   }
@@ -278,6 +278,8 @@ void KNodeView::initHdrView()
 void KNodeView::paletteChange ( const QPalette & )
 {
   updateAppearance();
+  KNArticleWidget::readOptions();
+  KNArticleWidget::updateInstances();
 }
 
 
@@ -285,6 +287,9 @@ void KNodeView::paletteChange ( const QPalette & )
 void KNodeView::fontChange ( const QFont & )
 {
   updateAppearance();
+  KNArticleWidget::readOptions();
+  KNArticleWidget::updateInstances();
+
 }
 
 

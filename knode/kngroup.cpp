@@ -484,7 +484,7 @@ void KNGroup::syncDynamicData()
     if (dir == QString::null)
       return;
     
-    QFile f(dir+QString(g_roupname)+".dynamic");          
+    QFile f(dir+QString::fromLatin1(g_roupname)+".dynamic");
         
     if(f.open(IO_ReadWrite)) {
       
@@ -507,7 +507,7 @@ void KNGroup::syncDynamicData()
       
       f.close();
 
-      kdDebug(5003) << n_ame << " => updated " << cnt << " entries of dynamic data" << endl;
+      kdDebug(5003) << g_roupname << " => updated " << cnt << " entries of dynamic data" << endl;
 
       r_eadCount=readCnt;
     }

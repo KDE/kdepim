@@ -373,9 +373,7 @@ void KNodeApp::initActions()
   *actionCollection() += NAcc->actions();
   *actionCollection() += view->actions();
 
-  createGUI("knodeui.rc",false);
-  //guiFactory()->addClient(view->artView->part());
-  conserveMemory();
+  createGUI("knodeui.rc");
 }
 
 
@@ -497,10 +495,7 @@ void KNodeApp::slotConfToolbar()
   KEditToolbar *dlg = new KEditToolbar(guiFactory(),this);
 
   if (dlg->exec()) {
-    //guiFactory()->removeClient(view->artView->part());
-    createGUI("knodeui.rc",false);
-    //guiFactory()->addClient(view->artView->part());
-    conserveMemory();
+    createGUI("knodeui.rc");
     initPopups();
   }
 

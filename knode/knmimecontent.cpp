@@ -1073,7 +1073,7 @@ QString KNContentCodec::toUnicode(const char *aStr)
     uc=c_odec->toUnicode(aStr, strlen(aStr));
   else {
     kdDebug(5003) << "KNContentCodec::toUnicode() : no codec available!! => Text is not converted" << endl;
-    uc=aStr; //take the text "as is" and hope the best ;-)
+    uc=QString::fromLatin1(aStr); //take the text "as is" and hope the best ;-)
   }
 
   return uc;

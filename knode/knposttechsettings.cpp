@@ -27,7 +27,6 @@
 #include <qlineedit.h>
 
 #include <kstddirs.h>
-#include <kcharsets.h>
 #include <kconfig.h>
 #include <kseparator.h>
 #include <klocale.h>
@@ -138,8 +137,7 @@ void KNPostTechSettings::init()
   KConfig *conf=KGlobal::config();
 
   conf->setGroup("POSTNEWS");
-  KCharsets *c = KGlobal::charsets();
-  QString tmp=conf->readEntry("Charset",c->name(c->charsetForLocale())).upper();
+  QString tmp=conf->readEntry("Charset","ISO-8859-1").upper();  // we should use charsetForLocale, but it has the wrong format
   for(int i=0; i < charset->count(); i++)
     if(charset->text(i) == tmp) {
       charset->setCurrentItem(i);

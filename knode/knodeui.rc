@@ -1,9 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="KNode" version="7">
-
-<ActionProperties>
-<Action name="options_configure" icon="configure"/>
-</ActionProperties>
+<kpartgui name="KNode" version="8">
 
 <MenuBar>
   <Menu noMerge="1" name="file"><text>&amp;File</text>
@@ -14,6 +10,10 @@
     <Action name="net_stop"/>
     <Separator/>
     <Action name="file_quit"/>
+  </Menu>
+  <Menu noMerge="1" name="edit"><text>&amp;Edit</text>
+    <Action name="edit_copy"/>
+    <Action name="edit_select_all"/>
   </Menu>
   <Menu noMerge="1" name="view"><text>&amp;View</text>
     <Action name="view_showThreads"/>
