@@ -13,7 +13,9 @@ noinst_LTLIBRARIES = libkpimexchangecore.la
 
 libkpimexchangecore_la_SOURCES = exchangeclient.cpp exchangeaccount.cpp \
  			   exchangedownload.cpp exchangeupload.cpp exchangedelete.cpp \
-			   exchangemonitor.cpp utils.cpp exchangeprogress.cpp 
+			   utils.cpp exchangeprogress.cpp
+                           # exchangemonitor.cpp 
+                           
 #libkpimexchange_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 1:0:0 -module
 #libkpimexchange_la_LIBADD = $(LIB_KIO) $(top_builddir)/libkcal/libkcal.la
 
