@@ -430,3 +430,36 @@ EmpathInterface::process(
     return retval;
 }
 
+
+QCString EmpathInterface::functions()
+{
+    return DCOPObject::functions() 
+ + 
+	"inboxURL();"
+	"outboxURL();"
+	"sentURL();"
+	"draftsURL();"
+	"trashURL();"
+	"message(QString);"
+	"queue(QByteArray);"
+	"send(QByteArray);"
+	"sendQueued();"
+	"checkMail();"
+	"compose(QString);"
+	"reply(QString);"
+	"replyAll(QString);"
+	"forward(QString);"
+	"bounce(QString);"
+	"createFolder(QString);"
+	"removeFolder(QString);"
+	"copy(QString,QString);"
+	"move(QString,QString);"
+	"retrieve(QString);"
+	"write(QByteArray,QString);"
+	"remove(QString);"
+	"remove(QString,QStringList);"
+	"mark(QString,int);"
+	"mark(QString,QStringList,int);"
+	;
+}
+
