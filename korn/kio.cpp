@@ -274,7 +274,7 @@ QValueVector<KornMailSubject> * KKioDrop::doReadSubjects(bool * )
 
 bool KKioDrop::canReadMail( )
 {
-	return (_protocol!=0?_protocol->canDeleteMail():false);
+	return (_protocol!=0?_protocol->canReadMail():false);
 }
 
 bool KKioDrop::deleteMails(QPtrList<const KornMailId> * ids, bool * /*stop*/)
@@ -285,7 +285,7 @@ bool KKioDrop::deleteMails(QPtrList<const KornMailId> * ids, bool * /*stop*/)
 
 bool KKioDrop::canDeleteMails ()
 {
-	return (_protocol!=0?_protocol->canReadMail():false);
+	return (_protocol!=0?_protocol->canDeleteMail():false);
 }
 
 QString KKioDrop::readMail(const KornMailId * item, bool * )
