@@ -4,7 +4,7 @@ It was downloaded via cvs from cvs.kde.org
 
 Copyright:
 
-All programs in this package are released under GPL
+All programs in this package are released under GPL or the LGPL
 
 ***
     Requires the Qt widget libraries, available at no cost at
@@ -26,3 +26,4 @@ All programs in this package are released under GPL
     along with this program; if not, write to the Free Software
     Foundation, Inc.
 
+You can find the full licenses in /usr/share/common-licenses/
