@@ -1,14 +1,21 @@
 ** KPILOT CHANGELOG **
 ======================
 
+
 2004-06-27 Joern Ahrens
-* Filled the notepad conduit with life. The notepads are saved as png 
+* Filled the notepad conduit with life. The notepads are saved as png
   files in a configurable directory.
+
+2004-06-21  Adriaan de Groot
+* Disable editor buttons when 'internal editors' is disabled (Carlos)
+  and fix up the tooltips when they are disabled. Also update some
+  copyright lines. Work on the docs.
 
 2004-06-16  Adriaan de Groot
 * Disposed of foolish file installer bug. Updated tarballs on website
   before fixing it, so now we're stuck :) Looked at 71122 again,
   testing with my m500.
+* Corrected finaly layout problems in some conduit config pages.
 
 2004-06-10  Adriaan de Groot
 * Much delay in getting back to work on KPilot, even after a new mobo
