@@ -740,7 +740,7 @@ void KABCore::save()
     if ( ticket ) {
       if ( !mAddressBook->save( ticket ) ) {
         KMessageBox::error( mWidget,
-                            i18n( "<qt>Unable to save address book <b>%1</b></qt>." ).arg( it.current()->resourceName() ) );
+                            i18n( "<qt>Unable to save address book <b>%1</b>.</qt>" ).arg( it.current()->resourceName() ) );
         mAddressBook->releaseSaveTicket( ticket );
       } else {
         setModified( false );
