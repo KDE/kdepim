@@ -5361,7 +5361,7 @@ void KMEdit::contentsDragEnterEvent(QDragEnterEvent *e)
     if (e->provides(MailListDrag::format()))
         e->accept(true);
     else
-        return KEdit::dragEnterEvent(e);
+        KEdit::dragEnterEvent(e);
 }
 
 void KMEdit::contentsDragMoveEvent(QDragMoveEvent *e)
@@ -5369,7 +5369,7 @@ void KMEdit::contentsDragMoveEvent(QDragMoveEvent *e)
     if (e->provides(MailListDrag::format()))
         e->accept();
     else
-        return KEdit::dragMoveEvent(e);
+        KEdit::dragMoveEvent(e);
 }
 
 void KMEdit::keyPressEvent( QKeyEvent* e )
