@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>08/01/2001</date>
+<date>10/01/2001</date>
 <releaseinfo>1.2</releaseinfo>
 
 <abstract>
@@ -644,13 +644,14 @@ on the Check Mail icon for some time to get a list of accounts.</para>
 
 <sect1 id="secpgp">
 <!-- This section is from Andreas Gungl, 2000-05-21 -->
-<title>Pretty Good Privacy / PGP</title>
+<title>Pretty Good Privacy (PGP) / GNU Privacy Guard (GnuPG)</title>
 
 <para>This is a short introduction on how to setup &kmail;'s pgp support. It will
 give some hints on the use of pgp too. It's written for people who are
 beginners in this area. If you are familiar with the use of pgp, you
-can skip most of the steps. (Note that working with GnuPG is generally
-the same, but some command line parameters may be different.)</para>
+can skip most of the steps. Working with GnuPG is generally
+similar, but some command line parameters may be different. Please
+also check out the <link linkend="pgpfaq">FAQ item about pgp</link>.</para>
 
 <warning><para>You can encrypt your messages sent with
 &kmail;, but this does not mean that the attachments are encrypted. You have to encrypt
@@ -677,7 +678,7 @@ should know about are discussed there.</para>
 <para>Now let's start.</para>
 
 <sect2 id="secpgppreconditions">
-<title>PGP Preconditions</title>
+<title>Preconditions</title>
 
 <para>&kmail; expects that your PGP binary is called <command>pgp</command>.
 In case of GnuPG, it expects the binary to be called <command>gpg</command>. If that's
@@ -712,6 +713,10 @@ send an encrypted message to somebody, then you can't read this message any long
 composed and encrypted it. Turn this option on to keep sent encrypted messages
 readable for you too. You can then read the plain text of this messages in the
 <guilabel>sent-mail</guilabel> folder.</para>
+
+<para><guilabel>Encryption tool</guilabel>: Here you can choose if you want to
+use GnuPG or PGP. Of course the program you select has to be installed on
+your system. It is also important to select the correct version.</para>
 
 <para>On the <guilabel>Composer</guilabel> tab you can also check the
 <guilabel>Automatically sign messages using PGP</guilabel> option. This means that all your
@@ -888,6 +893,17 @@ icon in the composer window for every mail if necessary.</para>
 <para><guilabel>Word wrap at column</guilabel>
 lets you turn word wrapping on and off in the <guilabel>Composer window</guilabel> and lets you set the
 column at which words will be wrapped.</para>
+
+</sect1>
+
+
+<sect1 id="mimetab">
+<title>Mime Headers Tab</title>
+
+<para>The <guilabel>Mime Headers</guilabel> section lets you define fields that
+&kmail; will use for its outgoing message headers. You can both invent new fields
+and overwrite existing ones. This feature is probably only useful for
+advanced users.</para>
 
 </sect1>
 
@@ -1254,7 +1270,16 @@ the <guilabel>Message pane</guilabel>.</para>
 <varlistentry>
 <term>Create...</term>
 <listitem>
-<para>Opens the New Folder dialog which lets you create a new folder.</para>
+<para>Opens the <guilabel>Create Folder</guilabel> dialog which lets you create a new folder.
+	You can make this new folder a sub folder if you choose a parent folder
+	using the <guilabel>File under</guilabel> selection. If you're going to use 
+	this folder for a mailing list you may want to add the mailing list address
+	in the the <guilabel>Associated Mailing List</guilabel> tab. You can then
+	use the <menuchoice><guimenu>Message</guimenu><guimenuitem>Reply list...</guimenuitem></menuchoice>
+	menu item. It will open a reply with the mailing list address in the <guilabel>To:</guilabel>
+	field (i.e. it will ignore the <token>Reply-To</token> of the message). 
+	You can also click the <mousebutton>middle</mousebutton> mousebutton in the Folders pane
+	to post to a mailing list that is associated with that folder.</para>
 </listitem>
 </varlistentry>
 
@@ -1954,12 +1979,50 @@ the following entry:
 </qandaentry>
 
 <qandaentry>
+ <question><para>Does &kmail; support <acronym>APOP</acronym>?</para></question>
+ <answer><para>Yes, <acronym>APOP</acronym> is used automatically if it's
+ available. There's currently no feedback if it's used, and no way to check.</para></answer>
+</qandaentry>
+
+<qandaentry>
  <question><para>Can I use &kmail; and procmail?</para></question>
  <answer><para>Yes, but it's important to do it the right way or you might lose mail.
  Do <emphasis>not</emphasis> let procmail sort the mail to <filename class="directory">~/Mail</filename>,
  but to some other directory which you then access by &kmail; as a <guilabel>Local Mailbox</guilabel>.
  I.e. you have to add another account in the <guilabel>Network</guilabel> tab of the
  Configuration dialog. Also see the FAQ about lockfiles.</para></answer>
+</qandaentry>
+
+<qandaentry id="pgpfaq">
+ <question><para>What should I know if I want to use PGP/GnuPG with &kmail;?</para></question>
+ <answer><para>&kmail; provides a simple and easy to use interface for basic functions of these
+ programs. Still you should understand how these programs work and what might make them
+ insecure. Important issues:</para>
+ <itemizedlist>
+	 <listitem><para>You <emphasis>really</emphasis> should test if encryption works before you use it. &kmail; relies
+	  on PGP/GnuPG's error strings, which often change between different versions.</para></listitem>
+	 <listitem><para>Trusting a foreign public key without checking it is no good idea.</para></listitem>
+	 <listitem><para>As most other mail clients, &kmail; can encrypt your messages,
+	  but <emphasis>not</emphasis> your attachments. You have to encrypt them manually before 
+	  you attach them.</para></listitem>
+	 <listitem><para>There's a bug in &kmail; 1.1.99 (which comes with KDE 2.0 and 2.0.1) that
+	  makes PGP not work if you use a different language than English. You can work around
+	  it this way (&kmail; will still use your favourite language):</para>
+	  <itemizedlist>
+	   <listitem><para>Rename <filename>/usr/bin/kmail</filename> to <filename>/usr/bin/kmail.original</filename></para></listitem>
+	   <listitem><para>Install in <filename class="directory">/usr/bin</filename> the following shell script, calling it 
+		<filename>kmail</filename> and making sure it is owned by "root" and has 755 permissions (rwxr-xr-x):</para>
+<screen>
+#!/bin/bash
+LANGUAGE=en
+export LANGUAGE
+kmail.original $*
+</screen></listitem>
+	  </itemizedlist>
+	  </listitem>
+	 <listitem><para>&kmail; is <emphasis>not</emphasis> able to use different keys for multiple identities.</para></listitem>
+ </itemizedlist>
+ </answer>
 </qandaentry>
 
 <qandaentry>
@@ -2018,37 +2081,6 @@ too. This will remove all the messages in the trash folder whenever you exit &km
 </qandaentry>
 
 <qandaentry>
- <question><para><anchor id="pgp">What should I know if I want to use PGP/GnuPG with &kmail;?</para></question>
- <answer><para>&kmail; provides a simple and easy to use interface for basic functions of these
- programs. Still you should understand how these programs work and what might make them
- insecure. Important issues:</para>
- <itemizedlist>
-	 <listitem><para>You <emphasis>really</emphasis> should test if encryption works before you use it. &kmail; relies
-	  on PGP/GnuPG's error strings, which often change between different versions.</para></listitem>
-	 <listitem><para>Trusting a foreign public key without checking it is no good idea.</para></listitem>
-	 <listitem><para>As most other mail clients, &kmail; can encrypt your messages,
-	  but <emphasis>not</emphasis> your attachments. You have to encrypt them manually before 
-	  you attach them.</para></listitem>
-	 <listitem><para>There's a bug in &kmail; 1.1.99 (which comes with KDE 2.0 and 2.0.1) that
-	  makes PGP not work if you use a different language than English. You can work around
-	  it this way (&kmail; will still use your favourite language):</para>
-	  <itemizedlist>
-	   <listitem><para>Rename <filename>/usr/bin/kmail</filename> to <filename>/usr/bin/kmail.original</filename></para></listitem>
-	   <listitem><para>Install in <filename class="directory">/usr/bin</filename> the following shell script, calling it 
-		<filename>kmail</filename> and making sure it is owned by "root" and has 755 permissions (rwxr-xr-x):</para>
-<screen>
-#!/bin/bash
-LANGUAGE=en
-export LANGUAGE
-kmail.original $*
-</screen></listitem>
-	  </itemizedlist>
-	  </listitem>
- </itemizedlist>
- </answer>
-</qandaentry>
-
-<qandaentry>
  <question><para>Which version of &kmail; supports which version of PGP/GnuPG?</para></question>
  <answer><para>&kmail; 1.0.x: The unpatched version supports only PGP (version 2.x and 5.x). &kmail;
 will prefer version 5.x if both versions are installed. There is no
@@ -2079,86 +2111,49 @@ advantage of using ssh is that your password will be sent encrypted to the
 
 <qandaentry>
  <question><para>Does &kmail; lock the folders it uses?</para></question>
- <answer><para>&kmail;'s file locking implementation uses the fcntl system calls by default.
-This has problems in situations where your mail account folders are mounted
-over <acronym>nfs</acronym>. There is a new hidden option where you can change the locking
-implementation for local mail accounts.  This will enable you to use a local
-mail account which is mounted over nfs.</para>
-
-<para>To avoid the risk of losing mail when using a local account it is necessary
-to ensure that &kmail; uses the same type of locking as your mail delivery
-agent.</para>
+ <answer><para>&kmail; does not lock the files in <filename class="directory">~/Mail</filename>.
+ To avoid the risk of losing mail <emphasis>if using a local account</emphasis> it is necessary
+ to ensure that &kmail; uses the same type of locking as your mail delivery
+ agent.</para>
 
 <para>There are five different locking options you can use:</para>
 <itemizedlist>
-	<listitem><para>procmail_lockfile</para></listitem>
-	<listitem><para>mutt_dotlock</para></listitem>
-	<listitem><para>mutt_dotlock_privileged</para></listitem>
-	<listitem><para>fcntl</para></listitem>
-	<listitem><para>none</para></listitem>
+	<listitem><para><guilabel>Mutt dotlock (recommended)</guilabel></para></listitem>
+	<listitem><para><guilabel>Mutt dotlock privileged</guilabel></para></listitem>
+	<listitem><para><guilabel>Procmail lockfile</guilabel></para></listitem>
+	<listitem><para><guilabel>FCNTL</guilabel> (default)</para></listitem>
+	<listitem><para><guilabel>none (use with care)</guilabel></para></listitem>
 </itemizedlist>
 
-<para>procmail_lockfile will use a small utility that comes with procmail called
-lockfile.  You can use this if your mail folder is in a directory where you
-have write permissions.  This will not work on your /var/spool/mail/user file
-in most cases.  It will create .lock files on your account when &kmail; is
-checking for new mail.  Please note that this will only work if procmail is
-installed on your system.</para>
+<para><guilabel>Mutt dotlock</guilabel> and <guilabel>Mutt dotlock
+privileged</guilabel> will both use a small utility that comes with mutt
+called <command>mutt_dotlock</command>. <guilabel>Mutt dotlock</guilabel>
+can be used in the same way as the <guilabel>Procmail lockfile</guilabel>
+option, with the same limitation with regards to the <filename
+class="directory">/var/spool/mail/</filename> folders. However, the
+<guilabel>Mutt dotlock privileged</guilabel> option can create lock files
+in the <filename class="directory">/var/spool/mail</filename> directory. 
+<command>mutt_dotlock</command> is a setgid program and this option will
+run it in setgid mode. Please note that these options will only work if
+mutt is installed on your system.</para>
 
-<para><token>mutt_dotlock</token> and <token>mutt_dotlock_privileged</token> will both use a small utility that
-comes with mutt called <command>mutt_dotlock</command>. <command>mutt_dotlock</command> can be used in the same
-way as the <token>procmail_lockfile</token> option, with the same limitation with regards to
-the <filename class="directory">/var/spool/mail/</filename> folders.  However, the <token>mutt_dotlock_privileged</token> option
-can create lock files in the <filename class="directory">/var/spool/mail</filename> directory. 
-<command>mutt_dotlock</command> is a
-setgid program and this option will run <command>mutt_dotlock</command> in setgid mode. Please
-note that these options will only work if mutt is installed on your system.</para>
+<para><guilabel>Procmail lockfile</guilabel> will use a small utility that
+comes with procmail called <command>lockfile</command>. You can use this
+if your mail folder is in a directory where you have write permissions. 
+This will not work on your <filename
+class="directory">/var/spool/mail/user</filename> file in most cases.  It
+will create <filename>.lock</filename> files on your account when &kmail;
+is checking for new mail. Please note that this will only work if procmail
+is installed on your system.</para>
 
-<para><token>fcntl</token>: the default option will use the fcntl system call.</para>
+<para><guilabel>FCNTL</guilabel>: the default option will use the
+<function>fcntl()</function> system call.</para>
 
-<para>If you don't want to use any locking, the <token>none</token> option is what you want.
-However, there are risks of losing mail when no locking is used.</para>
+<para>If you don't want to use any locking, the <guilabel>none</guilabel>
+option is what you want. However, there are risks of losing mail when no
+locking is used.</para>
 
-<para>In your <filename>kmailrc</filename>, there are group sections for each of your mail accounts.
-These will typically look like:</para>
-
-<screen>[Account 1]
-Folder=inbox
-Location=/net/ns/home/wynnw/.newmail
-Name=Work
-Type=local
-check-exclude=false
-check-interval=10
-precommand=</screen>
-
-<para>To change the account to use the locking mechanism you want, change it to:</para>
-
-<screen>[Account 1]
-Folder=inbox
-Location=/net/ns/home/wynnw/.newmail
-Name=Work
-Type=local
-check-exclude=false
-check-interval=10
-precommand=
-LockType=&lt;value&gt;</screen>
-
-<para>where &lt;value&gt; is <token>procmail_lockfile</token>, <token>mutt_dotlock</token>,
-<token>mutt_dotlock_privileged</token>, <token>fcntl</token> or <token>none</token>. 
-So an actual working account group would look like:</para>
-
-<screen>[Account 1]
-Folder=inbox
-Location=/net/ns/home/wynnw/.newmail
-Name=Work
-Type=local
-check-exclude=false
-check-interval=10
-precommand=
-LockType=mutt_dotlock</screen>
-
-<para>Please make the changes exactly as you see them here - case sensitivity is
-very important, as is spelling.</para></answer>
+</answer>
 </qandaentry>
 
 <qandaentry>
