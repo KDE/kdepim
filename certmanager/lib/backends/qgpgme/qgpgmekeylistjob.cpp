@@ -43,6 +43,7 @@
 #include <gpgmepp/keylistresult.h>
 
 #include <kmessagebox.h>
+#include <klocale.h>
 
 #include <qstringlist.h>
 
