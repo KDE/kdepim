@@ -520,10 +520,12 @@ void VCalConduitBase::cleanup()
 {
 	FUNCTIONSETUP;
 
+	if (fCurrentDatabase) fCurrentDatabase->resetSyncFlags();
+	if (fBackupDatabase) fBackupDatabase->resetSyncFlags();
 	KPILOT_DELETE(fCurrentDatabase);
 	KPILOT_DELETE(fBackupDatabase);
 
-	fCalendar->save(fCalendarFile);
+	if (fCalendar) fCalendar->save(fCalendarFile);
 	KPILOT_DELETE(fCalendar);
 	KPILOT_DELETE(fP);
 
@@ -658,6 +660,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.1.2.4  2002/05/03 19:08:52  kainhofe
+// Local timezone from KOrganizer is now used for the sync
+//
 // Revision 1.1.2.3  2002/05/01 21:11:49  kainhofe
 // Reworked the settings dialog, added various different sync options
 //
