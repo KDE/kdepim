@@ -151,6 +151,7 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
     mImportCertFromFileAction( 0 ),
     mImportCRLFromFileAction( 0 ),
     mRemote( remote ),
+    mNextFindRemote( false ),
     mDirMngrFound( false )
 {
   createStatusBar();
@@ -257,6 +258,9 @@ void CertManager::createActions() {
   mViewCertDetailsAction = new KAction( i18n("View Certificate Details..."), 0, 0,
                                         this, SLOT(slotViewDetails()), actionCollection(),
                                         "view_certificate_details" );
+  mDownloadCertificateAction = new KAction( i18n( "Download Certificate"), 0, 0,
+                                        this, SLOT(slotDownloadCertificate()), actionCollection(),
+                                        "download_certificate" );
 
   const QString dirmngr = KStandardDirs::findExe( "gpgsm" );
   mDirMngrFound = !dirmngr.isEmpty();
@@ -278,7 +282,7 @@ void CertManager::createActions() {
   QStringList lst;
   lst << i18n("in local certificates") << i18n("in external certificates");
   mComboAction = new ComboAction( lst, actionCollection(), this, SLOT( slotToggleRemote(int) ),
-		       "location_combo_action");
+                                  "location_combo_action");
   mComboAction->plug( _toolbar );
 
   mFindAction = new KAction( i18n("Find"), "find", 0, this, SLOT(slotStartCertificateListing()),
@@ -307,7 +311,7 @@ void CertManager::slotShowConfigurationDialog() {
 }
 
 void CertManager::slotToggleRemote( int idx ) {
-  mRemote = idx != 0;
+  mNextFindRemote = idx != 0;
 }
 
 
@@ -362,6 +366,7 @@ static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
 
 void CertManager::slotStartCertificateListing()
 {
+  mRemote = mNextFindRemote;
   mLineEditAction->setEnabled( false );
   mComboAction->setEnabled( false );
   mFindAction->setEnabled( false );
@@ -496,6 +501,15 @@ static void showCertificateDownloadError( QWidget * parent, const GpgME::Error &
   KMessageBox::error( parent, msg, i18n( "Certificate Download Failed" ) );
 }
 
+void CertManager::slotDownloadCertificate() {
+  QPtrList<Kleo::KeyListViewItem> items = mKeyListView->selectedItems();
+  for ( QPtrListIterator<Kleo::KeyListViewItem> it( items ) ; it.current() ; ++it )
+    if ( !it.current()->key().isNull() )
+      if ( const char * fpr = it.current()->key().subkey(0).fingerprint() )
+        slotStartCertificateDownload( fpr );
+}
+
+// Called from slotDownloadCertificate and from the certificate-details widget
 void CertManager::slotStartCertificateDownload( const QString & fingerprint ) {
   if ( fingerprint.isEmpty() )
     return;
@@ -790,6 +804,7 @@ void CertManager::slotSelectionChanged()
   mRevokeCertificateAction->setEnabled( b );
   mExtendCertificateAction->setEnabled( b );
 #endif
+  mDownloadCertificateAction->setEnabled( b && mRemote );
 }
 
 void CertManager::slotExportCertificate() {

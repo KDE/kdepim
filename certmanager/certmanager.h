@@ -121,6 +121,7 @@ private slots:
     void slotViewDetails();
     void slotViewDetails( Kleo::KeyListViewItem * item );
     void slotSelectionChanged();
+    void slotDownloadCertificate();
 
     void slotEditKeybindings();
     void slotShowConfigurationDialog();
@@ -159,9 +160,11 @@ private:
     KAction * mRevokeCertificateAction;
     KAction * mExtendCertificateAction;
     KAction * mExportSecretKeyAction;
+    KAction * mDownloadCertificateAction;
 
     QString mImportCRLTempFile;
-    bool     mRemote;
+    bool     mNextFindRemote; // state of the combo, i.e. whether the next find action will be remote
+    bool     mRemote; // whether the currently displayed items are from a remote listing
     bool     mDirMngrFound;
 };
 
