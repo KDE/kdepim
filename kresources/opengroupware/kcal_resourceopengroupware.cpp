@@ -259,7 +259,7 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
         download = true;
       } else {
         // kdDebug(7000) << "Locally present " << endl;
-        /* locallypresent, let's check if it's newer than what we have */
+        /* locally present, let's check if it's newer than what we have */
         const QString &oldFingerprint = idMapper().fingerprint( i->uid() );
         if ( oldFingerprint != newFingerprint ) {
           // kdDebug(7000) << "Fingerprint changed old: " << oldFingerprint << " new: " << newFingerprint << endl;
