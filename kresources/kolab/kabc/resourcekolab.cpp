@@ -98,7 +98,7 @@ void KABC::ResourceKolab::loadSubResourceConfig( KConfig& config,
   bool active = group.readBoolEntry( "Active", true );
   int completionWeight = group.readNumEntry( "CompletionWeight", 80 );
   mSubResources.insert( name, Kolab::SubResource( active, writable, label,
-                                               completionWeight ) );
+                                                  completionWeight ) );
 }
 
 bool KABC::ResourceKolab::doOpen()
@@ -417,7 +417,8 @@ void KABC::ResourceKolab::fromKMailRefresh( const QString& type,
 void KABC::ResourceKolab::fromKMailAddSubresource( const QString& type,
                                                    const QString& subResource,
                                                    const QString& /*label*/,
-                                                   bool writable )
+                                                   bool writable,
+                                                   bool )
 {
   if( type != s_kmailContentsType ) return;
 

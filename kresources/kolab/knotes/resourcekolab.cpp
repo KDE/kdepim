@@ -279,7 +279,8 @@ void ResourceKolab::fromKMailRefresh( const QString& type,
 void ResourceKolab::fromKMailAddSubresource( const QString& type,
                                              const QString& subResource,
                                              const QString&,
-                                             bool writable )
+                                             bool writable, 
+                                             bool /*alarmRelevant*/ )
 {
   if ( type != kmailContentsType )
     // Not ours

@@ -102,7 +102,8 @@ public:
 
   /// Listen to KMail changes in the amount of sub resources
   void fromKMailAddSubresource( const QString& type, const QString& subResource,
-                                const QString& label, bool writable );
+                                const QString& label, bool writable,
+                                bool alarmRelevant );
   void fromKMailDelSubresource( const QString& type, const QString& subResource );
 
   void fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
@@ -125,7 +126,13 @@ public:
 signals:
   void useGlobalMode();
 protected slots:
-   void slotEmitResourceChanged();
+  void slotEmitResourceChanged();
+protected:
+  /** 
+   * Return list of alarms which are relevant for the current user. These
+   * are the ones coming from folders which the user has "Administer" rights
+   * for, as per ACL */
+  KCal::Alarm::List relevantAlarms( const KCal::Alarm::List &alarms );
 
 private:
   void removeIncidences( const QCString& incidenceType );
@@ -157,7 +164,7 @@ private:
                      Kolab::ResourceMap& map );
   void loadSubResourceConfig( KConfig& config, const QString& name,
                               const QString& label, bool writable,
-                              Kolab::ResourceMap& subResource );
+                              bool alarmRelevant, Kolab::ResourceMap& subResource );
   bool loadSubResource( const QString& subResource, const char* mimetype );
 
   QString configFile() const {
