@@ -193,9 +193,6 @@
                     <property name="text">
                         <string>Phone numbers</string>
                     </property>
-                    <property name="accel">
-                        <string></string>
-                    </property>
                     <property name="checked">
                         <bool>true</bool>
                     </property>
