@@ -53,6 +53,8 @@ KPilotTestLink::KPilotTestLink(const QString &p) :
 {
 	FUNCTIONSETUP;
 
+	ASSERT(fTestLink==0L);
+
 	fTestLink = this;
 
 	connect(this,SIGNAL(deviceReady()),
@@ -156,4 +158,9 @@ int main(int argc, char **argv)
 	(void) test_id;
 }
 
-// $Log:$
+// $Log$
+// Revision 1.1  2001/09/05 21:53:51  adridg
+// Major cleanup and architectural changes. New applications kpilotTest
+// and kpilotConfig are not installed by default but can be used to test
+// the codebase. Note that nothing else will actually compile right now.
+//
