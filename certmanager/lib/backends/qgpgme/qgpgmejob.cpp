@@ -271,7 +271,9 @@ char * Kleo::QGpgMEJob::getPassphrase( const char * useridHint, const char * /*d
   }
   msg += "<br/>";
   msg += i18n( "For information on how to set up gpg-agent, see %1" )
-         .arg( "http://kmail.kde.org/kmail-pgpmime-howto.html" ) + "<br/>";
+         .arg( "http://kmail.kde.org/kmail-pgpmime-howto.html" );
+  msg += "<br/><br/>";
+  msg += i18n( "Enter passphrase:" );
   Kleo::PassphraseDialog dlg( msg, i18n("Passphrase Dialog") );
   if ( dlg.exec() != QDialog::Accepted ) {
     canceled = true;
