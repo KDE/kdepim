@@ -7,7 +7,7 @@ In this file:
 What you find here
 ------------------
 
-Anything relating to the KDE-PIM project.
+Anything relating to the KDE-PIM project. See also http://pim.kde.org.
 
 The KDE-PIM project aims to bring together those who wish to help design,
 implement, test, etc. anything that's to do with personal information
@@ -24,8 +24,14 @@ What it is
 * korganizer: a calendar-of-events and todo-list manager
 * kpilot: to sync with your PalmPilot
 * kalarm: gui for setting up personal alarm/reminder messages
-* kalarmd: personal alarm/reminder messages daemon
+* kalarmd: personal alarm/reminder messages daemon, shared by korganizer and
+           kalarm.
+* kaplan: A shell for the PIM apps, still experimental.
+* karm: Time tracker.
+* kitchensync: Synchronisation framework, still under heavy development.
+* kfile-plugins: vCard KFIleItem plugin.
 * knotes: yellow notes application
+* konsolecalendar: Command line tool for accessing calendar files.
 
 The following apps are not compiled by default:
 
@@ -36,12 +42,14 @@ The following apps are not compiled by default:
 
 There is also quite an amount of infrastructure in this package:
 
+* calendarsystem: library for handling of non-gregorian calendar systems 
 * ldif: a parser for LDIF, the LDAP Information Interchange Format
 * libdif: dito, one of them is superfluous
 * libical: a basic iCalendar protocol implementation, see RFCs 2245,2246
 * libimap: IMAP handling
 * libkcal: C++ api for the iCalendar and vCalendar formats
 * librmm: an Internet mail message parser (RFC 822 -> Class hierarchy)
+* kabc/frontend: A GUI frontend for libkabc, not intended for end users.
 * kgantt: lib to display and manage Gantt diagrams
 * ksync: library for syncing collections of data entries
 
