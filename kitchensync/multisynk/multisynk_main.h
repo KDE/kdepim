@@ -19,58 +19,29 @@
     Boston, MA 02111-1307, USA.
 */
 
-#ifndef KSYNC_MAINWINDOW_H
-#define KSYNC_MAINWINDOW_H
+#ifndef MULTISYNK_MAIN_H
+#define MULTISYNK_MAIN_H
 
 #include <kmainwindow.h>
 
-#include <syncer.h>
+class MainWidget;
 
-class KAction;
-class KonnectorPairManager;
-class KonnectorPairView;
-class LogDialog;
-
-namespace KSync {
-class Engine;
-}
-
-namespace KPIM {
-class StatusbarProgressWidget;
-class ProgressDialog;
-}
-
-using KPIM::StatusbarProgressWidget;
-using KPIM::ProgressDialog;
-
+/**
+  This class serves as the main window for MultiSynk. It handles the
+  menus, toolbars, and status bars.
+ */
 class MainWindow : public KMainWindow
 {
   Q_OBJECT
 
   public:
-    MainWindow( QWidget *widget = 0, const char *name = 0 );
-    ~MainWindow();
-
-  private slots:
-    void addPair();
-    void editPair();
-    void deletePair();
-    void showLog();
-    void startSync();
-    void syncDone();
-    void konnectorPairSelected( bool );
+    MainWindow();
+    virtual ~MainWindow();
 
   private:
-    void initGUI();
+    void initActions();
 
-    KonnectorPairManager *mManager;
-    KonnectorPairView *mView;
-    KSync::Engine *mEngine;
-    LogDialog *mLogDialog;
-
-    KAction *mEditAction;
-    KAction *mDeleteAction;
-    KAction *mSyncAction;
+    MainWidget *mWidget;
 };
 
 #endif

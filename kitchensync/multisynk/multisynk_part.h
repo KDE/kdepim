@@ -19,40 +19,32 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include <kdebug.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
-#include <kuniqueapplication.h>
-#include <stdlib.h>
+#ifndef MULTISYNK_PART_H
+#define MULTISYNK_PART_H
 
-#include "mainwidget.h"
+#include <kparts/event.h>
+#include <kparts/factory.h>
+#include <libkdepim/part.h>
 
-#include "multisynk_main.h"
+class KAboutData;
 
-static KCmdLineOptions options[] =
+class MultiSynkPart: public KPIM::Part
 {
-  KCmdLineLastOption
+  Q_OBJECT
+
+  public:
+    MultiSynkPart( QWidget *parentWidget, const char *widgetName,
+                   QObject *parent, const char *name, const QStringList& );
+    virtual ~MultiSynkPart();
+
+    static KAboutData *createAboutData();
+
+    virtual void exit();
+    virtual bool openURL( const KURL &url );
+
+  protected:
+    virtual bool openFile();
+    virtual void guiActivateEvent( KParts::GUIActivateEvent* );
 };
 
-int main( int argc, char **argv )
-{
-  KAboutData *about = MainWidget::aboutData();
-
-  KCmdLineArgs::init( argc, argv, about );
-  KCmdLineArgs::addCmdLineOptions( options );
-  KUniqueApplication::addCmdLineOptions();
-
-  KUniqueApplication::addCmdLineOptions();
-
-  if( !KUniqueApplication::start() ) {
-    kdDebug() << "multisynk already runs." << endl;
-    exit( 0 );
-  };
-
-  KUniqueApplication app;
-
-  MainWindow *mainWindow = new MainWindow;
-  mainWindow->show();
-
-  app.exec();
-}
+#endif

@@ -19,14 +19,15 @@
     Boston, MA 02111-1307, USA.
 */
 
+#include <qlayout.h>
+
+#include <kaboutdata.h>
 #include <kaction.h>
 #include <klistview.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kstatusbar.h>
 #include <kstdaction.h>
-#include <libkdepim/progressdialog.h>
-#include <libkdepim/statusbarprogresswidget.h>
+#include <kxmlguiclient.h>
 
 #include "engine.h"
 #include "konnectorpairview.h"
@@ -34,10 +35,10 @@
 #include "logdialog.h"
 #include "paireditordialog.h"
 
-#include "mainwindow.h"
+#include "mainwidget.h"
 
-MainWindow::MainWindow( QWidget *widget, const char *name )
-  : KMainWindow( widget, name )
+MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *widget, const char *name )
+  : QWidget( widget, name ), mGUIClient( guiClient )
 {
   mManager = new KonnectorPairManager( this );
   mManager->load();
@@ -55,7 +56,7 @@ MainWindow::MainWindow( QWidget *widget, const char *name )
   mView->refresh();
 }
 
-MainWindow::~MainWindow()
+MainWidget::~MainWidget()
 {
   mManager->save();
 
@@ -66,7 +67,23 @@ MainWindow::~MainWindow()
   mEngine = 0;
 }
 
-void MainWindow::addPair()
+KActionCollection *MainWidget::actionCollection() const
+{
+  return mGUIClient->actionCollection();
+}
+
+KAboutData *MainWidget::aboutData()
+{
+  KAboutData *about = new KAboutData( "multisynk", I18N_NOOP( "MultiSynK" ),
+                                      "0.1", I18N_NOOP( "The KDE Syncing Application" ),
+                                      KAboutData::License_GPL_V2,
+                                      I18N_NOOP( "(c) 2004, The KDE PIM Team" ) );
+  about->addAuthor( "Tobias Koenig", I18N_NOOP( "Current maintainer" ), "tokoe@kde.org" );
+
+  return about;
+}
+
+void MainWidget::addPair()
 {
   PairEditorDialog dlg( this );
 
@@ -79,7 +96,7 @@ void MainWindow::addPair()
     delete pair;
 }
 
-void MainWindow::editPair()
+void MainWidget::editPair()
 {
   QString uid = mView->selectedPair();
 
@@ -99,7 +116,7 @@ void MainWindow::editPair()
     mManager->change( dlg.pair() );
 }
 
-void MainWindow::deletePair()
+void MainWidget::deletePair()
 {
   QString uid = mView->selectedPair();
 
@@ -112,13 +129,13 @@ void MainWindow::deletePair()
   }
 }
 
-void MainWindow::showLog()
+void MainWidget::showLog()
 {
   mLogDialog->show();
   mLogDialog->raise();
 }
 
-void MainWindow::startSync()
+void MainWidget::startSync()
 {
   QString uid = mView->selectedPair();
 
@@ -141,7 +158,7 @@ void MainWindow::startSync()
   mEngine->go( pair );
 }
 
-void MainWindow::syncDone()
+void MainWidget::syncDone()
 {
   QString uid = mView->selectedPair();
 
@@ -164,20 +181,19 @@ void MainWindow::syncDone()
               this, SLOT( syncDone() ) );
 }
 
-void MainWindow::konnectorPairSelected( bool state )
+void MainWidget::konnectorPairSelected( bool state )
 {
   mEditAction->setEnabled( state );
   mDeleteAction->setEnabled( state );
   mSyncAction->setEnabled( state );
 }
 
-void MainWindow::initGUI()
+void MainWidget::initGUI()
 {
+  QVBoxLayout *layout = new QVBoxLayout( this );
+
   mView = new KonnectorPairView( mManager, this );
-
-  setCentralWidget( mView );
-
-  KStdAction::quit( this, SLOT( close() ), actionCollection() );
+  layout->addWidget( mView );
 
   new KAction( i18n( "New..." ), "filenew", 0, this, SLOT( addPair() ),
                actionCollection(), "new" );
@@ -195,11 +211,6 @@ void MainWindow::initGUI()
   mSyncAction = new KAction( i18n( "Sync..." ), "hotsync", 0, this,
                              SLOT( startSync() ), actionCollection(), "sync" );
   mSyncAction->setEnabled( false );
-
-  setXMLFile( "multisynkui.rc" );
-  createGUI( 0 );
-
-  setAutoSaveSettings();
 }
 
-#include "mainwindow.moc"
+#include "mainwidget.moc"

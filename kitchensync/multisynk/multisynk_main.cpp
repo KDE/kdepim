@@ -19,40 +19,40 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include <kdebug.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
-#include <kuniqueapplication.h>
-#include <stdlib.h>
+#include <klocale.h>
+#include <kstdaction.h>
 
 #include "mainwidget.h"
 
 #include "multisynk_main.h"
 
-static KCmdLineOptions options[] =
+MainWindow::MainWindow()
+  : KMainWindow( 0 )
 {
-  KCmdLineLastOption
-};
+  setWFlags( getWFlags() | WGroupLeader );
 
-int main( int argc, char **argv )
-{
-  KAboutData *about = MainWidget::aboutData();
+  setCaption( i18n( "PIM Synchronization" ) );
 
-  KCmdLineArgs::init( argc, argv, about );
-  KCmdLineArgs::addCmdLineOptions( options );
-  KUniqueApplication::addCmdLineOptions();
+  mWidget = new MainWidget( this, this, "MainWidget" );
 
-  KUniqueApplication::addCmdLineOptions();
+  setCentralWidget( mWidget );
 
-  if( !KUniqueApplication::start() ) {
-    kdDebug() << "multisynk already runs." << endl;
-    exit( 0 );
-  };
+  initActions();
 
-  KUniqueApplication app;
+  createGUI( "multisynkui.rc", false );
+  createGUI( 0 );
 
-  MainWindow *mainWindow = new MainWindow;
-  mainWindow->show();
-
-  app.exec();
+  resize( 400, 300 ); // initial size
+  setAutoSaveSettings();
 }
+
+MainWindow::~MainWindow()
+{
+}
+
+void MainWindow::initActions()
+{
+  KStdAction::quit( this, SLOT( close() ), actionCollection() );
+}
+
+#include "multisynk_main.moc"
