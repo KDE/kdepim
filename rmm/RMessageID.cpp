@@ -46,8 +46,8 @@ RMessageID::operator == (RMessageID & msgID)
     msgID.parse();
 
     return (
-        localPart_    == msgID.localPart_ &&
-        domain_        == msgID.domain_);
+        localPart_  == msgID.localPart_ &&
+        domain_     == msgID.domain_);
 }
 
     RMessageID &
@@ -126,13 +126,11 @@ RMessageID::_parse()
     
     int atPos = strRep_.find('@');
     
-    if (atPos == -1) {
-        parsed_ = true;
+    if (atPos == -1)
         return;
-    }
     
-    localPart_    = strRep_.left(atPos);
-    domain_        = strRep_.right(strRep_.length() - atPos - 1);
+    localPart_  = strRep_.left(atPos);
+    domain_     = strRep_.right(strRep_.length() - atPos - 1);
     
     if (localPart_.at(0) == '<')
         localPart_.remove(0, 1);

@@ -38,7 +38,6 @@ RAddressList::operator = (const RAddressList & al)
     list_ = al.list_;
     RHeaderBody::operator = (al);
 
-    assembled_    = false;
     return *this;
 }
     
@@ -53,7 +52,7 @@ RAddressList::operator = (const QCString & s)
 RAddressList::operator == (RAddressList & al)
 {
     parse();
-    // TODO
+    rmmDebug("STUB");
     return false;
 }
         

@@ -5,6 +5,8 @@
 * Implementing parsing of 'group'
   - A 'Group' is a special kind of address. An 'Address' may be
     either a Mailbox or a Group. See RFC822 for details.
+    (Note: All necessary RFCs can be found here:
+     http://www.cis.ohio-state.edu/hypertext/information/rfc.html)
 
 * Make it easier to construct messages.
 
