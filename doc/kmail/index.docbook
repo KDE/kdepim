@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>05/09/2000</date>
+<date>11/09/2000</date>
 <releaseinfo>1.01.90</releaseinfo>
 
 <abstract>
@@ -191,10 +191,12 @@ should be filled in with the appropriate
 information from your <acronym>ISP</acronym> or System Administrator. Again, you should not need to
 change the <guilabel>Port</guilabel> setting.</para>
 
+<!--
 <para>With <guilabel>Use SSL for secure mail download</guilabel>
 you can encrypt the messages you are fetching on their way from your mailserver
 to your computer - but only if your mailserver supports that. Please understand
 that this does not encrypt your mails on their normal way through the Internet.</para>
+-->
 
 <para>If you select <guilabel>Store POP password in configuration file</guilabel>
 &kmail; will remember your password so you won't have to type it every time you
@@ -1773,7 +1775,7 @@ Mailreader window</link>.
 <chapter id="faq">
 <title>Frequently Asked Questions (FAQ)</title>
 
-<qandaset>
+<qandaset id="faqset">
 
 <qandaentry>
  <question><para>Does &kmail; support <acronym>IMAP</acronym>?</para></question>
