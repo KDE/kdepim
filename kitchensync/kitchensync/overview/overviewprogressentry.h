@@ -39,12 +39,12 @@ class OverViewProgressEntry : public QWidget
   public:
     OverViewProgressEntry( QWidget* parent, const char* name );
     ~OverViewProgressEntry();
-	
-    void setText( QString );
+
+    void setText( const QString& );
     void setProgress( int );
-    void setPixmap( QPixmap );
+    void setPixmap( const QPixmap& );
     QString name();
-	
+
   private:
     QString m_name;
     QLabel* m_textLabel;

@@ -59,7 +59,7 @@ OverViewProgressEntry::~OverViewProgressEntry()
 {
 }
 
-void OverViewProgressEntry::setText( QString text )
+void OverViewProgressEntry::setText( const QString &text )
 {
   m_textLabel->setText( text );
   m_name = text;
@@ -80,7 +80,7 @@ void OverViewProgressEntry::setProgress( int status )
   }
 }
 
-void OverViewProgressEntry::setPixmap( QPixmap pixmap )
+void OverViewProgressEntry::setPixmap( const QPixmap &pixmap )
 {
   QImage test = pixmap.convertToImage();
   m_pixmapLabel->setPixmap( test.smoothScale( 16, 16, QImage::ScaleMin ) );
