@@ -139,8 +139,7 @@ protected:
 	static QTextCodec *pilotCodec;
 public:
 	static QTextCodec *codec()
-		{ if (pilotCodec) return pilotCodec; else return createCodec(0L); } ;
-	static QTextCodec *createCodec(const char *);
+		{ if (pilotCodec) return pilotCodec; else return setupPilotCodec(QString::null); } ;
 	static QTextCodec *setupPilotCodec(const QString &);
 	static QString codecName();
 };
