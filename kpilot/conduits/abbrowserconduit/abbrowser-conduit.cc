@@ -400,7 +400,7 @@ void AbbrowserConduit::showPilotAddress(const PilotAddress & pilotAddress)
 
 
 
-/* virtual */ void AbbrowserConduit::exec()
+/* virtual */ bool AbbrowserConduit::exec()
 {
 	FUNCTIONSETUP;
 
@@ -1842,6 +1842,11 @@ KABC::Addressee AbbrowserConduit::_findMatch(const PilotAddress & pilotAddress) 
 
 
 // $Log$
+// Revision 1.47  2002/08/25 13:28:28  mhunter
+// CVS_SILENT Corrected typographical errors
+//
+// When replying, please CC me - I'm not subscribed
+//
 // Revision 1.46  2002/08/23 22:59:29  kainhofe
 // Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
 //
