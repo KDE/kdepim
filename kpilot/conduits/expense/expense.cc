@@ -404,30 +404,30 @@ void ExpenseConduit::dumpPostgresTable()
 	// Remove for final creates a dump of table.
 	//
 	//
-	char sqlcmd[300];
-	KShellProcess *shproc = new KShellProcess;
-	sprintf(sqlcmd,"echo \"%s\"|psql -h %s -U %s -c \"select * from %s;\" %s >testpg.txt",
-		fDBpasswd.latin1(),
-		fDBsrv.latin1(),
-		fDBlogin.latin1(),
-		fDBtable.latin1(),fDBnm.latin1());
-	shproc->clearArguments();
-	(*shproc) << sqlcmd;
-	shproc->start(KShellProcess::Block, KShellProcess::NoCommunication);
-	while (shproc->isRunning())
-	{
-		DEBUGCONDUIT << fname << " " << shproc->pid() << " still running" << endl;
-		sleep(1);
-	}
-	delete shproc;
+	QString query = QString("select * from \"%1\";").arg(fDBtable);
+	
+	QString cmd = "echo ";
+	cmd += KShellProcess::quote(fDBpasswd);
+	cmd += "|psql -h ";
+	cmd += KShellProcess::quote(fDBsrv);
+	cmd += " -U ";
+	cmd += KShellProcess::quote(fDBlogin);
+	cmd += " -c ";
+	cmd += KShellProcess::quote(query);
+	cmd += " ";
+	cmd += KShellProcess::quote(fDBnm);
+	cmd += " > ~/testpg.txt";
+
+	KShellProcess shproc;
+	shproc.clearArguments();
+	shproc << cmd;
+	shproc.start(KShellProcess::Block, KShellProcess::NoCommunication);
 #endif
 }
 
 void ExpenseConduit::postgresOutput(Expense *e)
 {
 	FUNCTIONSETUP;
-
-	KShellProcess *shproc=0L;
 
         // int recordcount=0;
 	// int index=0;
@@ -448,23 +448,31 @@ void ExpenseConduit::postgresOutput(Expense *e)
 	const char* amesg=tmpatt2.latin1();
 	const char* etmsg=get_entry_type(e->type);
 	const char* epmsg=get_pay_type(e->payment);
-	char sqlcmd[400];
 
-	sprintf(sqlcmd,"echo \"%s\"|psql -h %s -U %s -c "
-		"\"INSERT INTO \"%s\" (\"fldTdate\", \"fldAmount\", \"fldPType\", "
+	QString query;
+	query.sprintf(
+		"INSERT INTO \"%s\" (\"fldTdate\", \"fldAmount\", \"fldPType\", "
 		"\"fldVName\", \"fldEType\", \"fldLocation\", \"fldAttendees\", "
-		"\"fldNotes\") VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');\" %s",
-		fDBpasswd.latin1(),fDBsrv.latin1(),
-		fDBlogin.latin1(),fDBtable.latin1(),
+		"\"fldNotes\") VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');",
+		fDBtable.latin1(),
 		dtstng,
-		e->amount,epmsg,e->vendor,etmsg,e->city,amesg,nmsg,fDBnm.latin1());
+		e->amount,epmsg,e->vendor,etmsg,e->city,amesg,nmsg);
 
-	shproc = new KShellProcess;
-	shproc->clearArguments();
-	(*shproc) << sqlcmd;
-	shproc->start(KShellProcess::Block, KShellProcess::NoCommunication);
+	QString cmd = "echo ";
+	cmd += KShellProcess::quote(fDBpasswd);
+	cmd += "|psql -h ";
+	cmd += KShellProcess::quote(fDBsrv);
+	cmd += " -U ";
+	cmd += KShellProcess::quote(fDBlogin);
+	cmd += " -c ";
+	cmd += KShellProcess::quote(query);
+	cmd += " ";
+	cmd += KShellProcess::quote(fDBnm);
 
-	KPILOT_DELETE(shproc);
+	KShellProcess shproc;
+	shproc.clearArguments();
+	shproc << cmd;
+	shproc.start(KShellProcess::Block, KShellProcess::NoCommunication);
 }
 
 void ExpenseConduit::cleanup()
@@ -478,6 +486,9 @@ void ExpenseConduit::cleanup()
 
 
 // $Log$
+// Revision 1.24  2002/08/24 21:27:32  adridg
+// Lots of small stuff to remove warnings
+//
 // Revision 1.23  2002/08/23 22:03:20  adridg
 // See ChangeLog - exec() becomes bool, debugging added
 //
