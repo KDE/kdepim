@@ -71,12 +71,12 @@ int main(int argc, char *argv[])
   KAboutData aboutData(
       "konsolekalendar",               // internal program name
       I18N_NOOP( "KonsoleKalendar" ),  // displayable program name.
-      "0.6",                           // version string
+      "0.8",                           // version string
       description,                     // short porgram description
       KAboutData::License_GPL,         // license type
       "(c) 2002-2003, Tuukka Pasanen", // copyright statement
       0,                               // any free form text
-      0,                               // program home page address
+      "http://pim.kde.org",            // program home page address
       "illuusio@mailcity.com"          // bug report email address
       );
 
@@ -93,6 +93,8 @@ int main(int argc, char *argv[])
       0                                // home page or relevant link
       );
 
+
+      
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
@@ -133,33 +135,32 @@ int main(int argc, char *argv[])
   if ( args->isSet("verbose") ) {
      variables.setVerbose(true);
   }
-
+                                                 
   /*
    *
    *  Switch on export list
    */
   if ( args->isSet("export-list") ) {
-     cout << i18n("\nKonsoleKalendar supports these export formats:\n  Text\n  HTML (not working yet)\n  CSV (not working yet)").local8Bit() << endl;
+     cout << i18n("\nKonsoleKalendar supports these export formats:\n  Text\n Text-Organizer\n  HTML (not working yet)\n  CSV (not working yet)").local8Bit() << endl;
      return(0);
   }
 
   /*
    *  Switch on exporting
    *
-   */
+   */                                                                     
   // TODO: Just playing around.  This isn't real code.
   if ( args->isSet("export-type") ) {
      option = args->getOption("export-type");
+
      if ( option.upper() == "HTML" ) {
-	kdDebug() << "main.cpp::int main(int argc, char *argv[] | Export to HTML" << endl;
-	// TODO: export to html
+       kdDebug() << "main.cpp::int main(int argc, char *argv[] | Export to HTML" << endl;
      } else if (option.upper() == "CSV" ) {
-	kdDebug() << "main.cpp::int main(int argc, char *argv[] | Export to CSV" << endl;
-	// TODO: export to txt
-     } else if (option.upper() == "TXT" ) {
-	kdDebug() << "main.cpp::int main(int argc, char *argv[] | Export to TXT" << endl;
-	// TODO: export to txt
+       kdDebug() << "main.cpp::int main(int argc, char *argv[] | Export to CSV" << endl;
+     } else {
+       kdDebug() << "main.cpp::int main(int argc, char *argv[] | Export to TXT" << endl;
      }
+
   }
 
 
