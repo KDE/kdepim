@@ -122,7 +122,8 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     bool inlinePossible(KMime::Content *c);
     void setSource(const QString &s); // reimplemented from QTextBrowser
     void anchorClicked(const QString &a, ButtonState button=LeftButton, const QPoint *p=0);
-
+    //return true if we found exec
+    bool findExec( const QString & exec);
     KNArticle *a_rticle;
     QPtrList<KMime::Content> *a_tt;
     QMimeSourceFactory *f_actory;

@@ -54,6 +54,7 @@
 #include "knpgp.h"
 #include "knode.h"
 #include <kpopupmenu.h>
+#include <kstandarddirs.h>
 
 #define PUP_OPEN    1000
 #define PUP_SAVE    2000
@@ -199,7 +200,7 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
 
   //config
   r_ot13=false;
-  a_ctToggleRot13->setChecked(false);   
+  a_ctToggleRot13->setChecked(false);
   applyConfig();
 }
 
@@ -396,7 +397,7 @@ void KNArticleWidget::applyConfig()
   KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
   KNConfig::ReadNewsViewer *rnv=knGlobals.cfgManager->readNewsViewer();
 
-  QFont f=(a_ctToggleFixedFont->isChecked()? app->articleFixedFont():app->articleFont());  
+  QFont f=(a_ctToggleFixedFont->isChecked()? app->articleFixedFont():app->articleFont());
 
   //custom tags <articlefont>, <bodyblock>, <txt_attachment>
   QStyleSheetItem *style;
@@ -432,8 +433,8 @@ void KNArticleWidget::applyConfig()
   style->setFontSize(f.pointSize());
   style->setFontUnderline(f.underline());
   style->setFontWeight(f.weight());
-  style->setFontItalic(f.italic());  
-  
+  style->setFontItalic(f.italic());
+
   setPaper( QBrush( app->backgroundColor() ) );
 
   QPalette newPalette(palette());
@@ -442,7 +443,7 @@ void KNArticleWidget::applyConfig()
   newColorGroup.setColor(QColorGroup::Link, app->linkColor());
   newPalette.setActive(newColorGroup);
   newColorGroup = newPalette.inactive();
-  newColorGroup.setColor(QColorGroup::Text, app->textColor());  
+  newColorGroup.setColor(QColorGroup::Text, app->textColor());
   newColorGroup.setColor(QColorGroup::Link, app->linkColor());
   newPalette.setInactive(newColorGroup);
   setPalette(newPalette);
@@ -450,7 +451,7 @@ void KNArticleWidget::applyConfig()
   if(!knGlobals.cfgManager->readNewsGeneral()->autoMark())
     t_imer->stop();
 
-  emuKMail = ((this==knGlobals.artWidget) && knGlobals.cfgManager->readNewsNavigation()->emulateKMail());  
+  emuKMail = ((this==knGlobals.artWidget) && knGlobals.cfgManager->readNewsNavigation()->emulateKMail());
   updateContents();
 }
 
@@ -583,7 +584,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
                 matchLen--;
               else
                 break;
-            }            
+            }
             result+=QString::fromLatin1("<a href=\"http://") + text.mid(idx,matchLen) +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
@@ -609,7 +610,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
                 matchLen--;
               else
                 break;
-            }            
+            }
             result+=QString::fromLatin1("<a href=\"") + text.mid(idx,matchLen) +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
@@ -620,7 +621,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
             regExp.setPattern("ftp\\.[^\\s<>\\(\\)\"\\[\\]\\{\\}]+\\.[^\\s<>\\(\\)\"\\[\\]\\{\\}]+");
             if (regExp.search(text,idx)==(int)idx) {
               matchLen = regExp.matchedLength();
-              
+
               while (true) {
                 if (text[idx+matchLen-1]=='.')   // remove trailing dot
                   matchLen--;
@@ -630,7 +631,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
                   matchLen--;
                 else
                   break;
-              }              
+              }
 
               result+=QString::fromLatin1("<a href=\"ftp://") + text.mid(idx,matchLen) +
                       QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
@@ -649,7 +650,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
           regExp.setPattern("news:[^\\s<>\\(\\)\"\\[\\]\\{\\}]+");
           if (regExp.search(text,idx)==(int)idx) {
             matchLen = regExp.matchedLength();
-            
+
             while (true) {
               if (text[idx+matchLen-1]=='.')   // remove trailing dot
                 matchLen--;
@@ -660,13 +661,13 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
               else
                 break;
             }
-            
+
             // encode the given url, because a "news:foo" link has a different meaning than "news://foo",
             // and QTextBrowser merges both cases
             enc = text.mid(idx,matchLen);
             QUrl::encode(enc);
             enc.replace(QRegExp("/"), "%2F");
-  
+
             result+=QString::fromLatin1("<a href=\"news://") + enc +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
             idx+=matchLen-1;
@@ -683,7 +684,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
           regExp.setPattern("mailto:[^\\s<>\\(\\)\"\\[\\]\\{\\}]+");
           if (regExp.search(text,idx)==(int)idx) {
             matchLen = regExp.matchedLength();
-            
+
             while (true) {
               if (text[idx+matchLen-1]=='.')   // remove trailing dot
                 matchLen--;
@@ -693,7 +694,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
                 matchLen--;
               else
                 break;
-            }            
+            }
 
             result+=QString::fromLatin1("<a href=\"") + text.mid(idx,matchLen) +
                     QString::fromLatin1("\">") + text.mid(idx,matchLen) + QString::fromLatin1("</a>");
@@ -742,56 +743,79 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
   return result;
 }
 
+bool KNArticleWidget::findExec( const QString & exec)
+{
+    QString path = QString::fromLocal8Bit(getenv("PATH")) + QString::fromLatin1(":/usr/sbin");
+    QString exe = KStandardDirs::findExe( exec, path );
+    if ( exe.isEmpty())
+    {
+        KMessageBox::error( this,  i18n("%1 no found").arg(exec ));
+        return false;
+    }
+    return true;
+}
 
 void KNArticleWidget::openURL(const QString &url)
 {
-  if(url.isEmpty()) return;
+    if(url.isEmpty()) return;
 
-  if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTdefault)
-    (void) new KRun(url);
-  if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTkonq)
-    kapp->invokeBrowser(url);
-  else if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTnetscape){
-    KProcess proc;
-    proc << "netscape";
+    if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTdefault)
+        (void) new KRun(url);
+    if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTkonq)
+        kapp->invokeBrowser(url);
+    else if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTnetscape){
+        QString exec("netscape");
+        if ( findExec( exec))
+        {
+            KProcess proc;
+            proc << exec;
 
-    struct stat info;      // QFileInfo is unable to handle netscape's broken symlink
-    if (lstat((QDir::homeDirPath()+"/.netscape/lock").local8Bit(),&info)==0)
-      proc << "-remote" << QString("openURL(%1)").arg(url);
-    else
-      proc << url;
+            struct stat info;      // QFileInfo is unable to handle netscape's broken symlink
+            if (lstat((QDir::homeDirPath()+"/.netscape/lock").local8Bit(),&info)==0)
+                proc << "-remote" << QString("openURL(%1)").arg(url);
+            else
+                proc << url;
 
-    proc.start(KProcess::DontCare);
-  }
-  else if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTmozilla){
-    KProcess proc;
-    proc << "mozilla";
-    proc << url;
-    proc.start(KProcess::DontCare);
-  }
-  else if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTopera){
-    KProcess proc;
-    proc << "opera";
-    proc << QString("-page=%1").arg(url);
-    proc << url;
-    proc.start(KProcess::DontCare);
-  } else {
-    KProcess proc;
-
-    QStringList command = QStringList::split(' ',knGlobals.cfgManager->readNewsViewer()->browserCommand());
-    bool urlAdded=false;
-    for ( QStringList::Iterator it = command.begin(); it != command.end(); ++it ) {
-      if ((*it).contains("%u")) {
-        (*it).replace(QRegExp("%u"),url);
-        urlAdded=true;
-      }
-      proc << (*it);
+            proc.start(KProcess::DontCare);
+        }
     }
-    if(!urlAdded)    // no %u in the browser command
-      proc << url;
+    else if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTmozilla){
+        QString exec("mozilla");
+        if ( findExec( exec))
+        {
+            KProcess proc;
+            proc << exec;
+            proc << url;
+            proc.start(KProcess::DontCare);
+        }
+    }
+    else if (knGlobals.cfgManager->readNewsViewer()->browser()==KNConfig::ReadNewsViewer::BTopera){
+        QString exec("opera");
+        if ( findExec( exec))
+        {
+            KProcess proc;
+            proc << exec;
+            proc << QString("-page=%1").arg(url);
+            proc << url;
+            proc.start(KProcess::DontCare);
+        }
+    } else {
+        KProcess proc;
 
-    proc.start(KProcess::DontCare);
-  }
+        QStringList command = QStringList::split(' ',knGlobals.cfgManager->readNewsViewer()->browserCommand());
+        bool urlAdded=false;
+        for ( QStringList::Iterator it = command.begin(); it != command.end(); ++it ) {
+            if ((*it).contains("%u")) {
+                (*it).replace(QRegExp("%u"),url);
+                urlAdded=true;
+            }
+            proc << (*it);
+        }
+        if(!urlAdded)    // no %u in the browser command
+            proc << url;
+
+        proc.start(KProcess::DontCare);
+    }
 }
 
 
@@ -829,7 +853,7 @@ void KNArticleWidget::showBlankPage()
   delete f_actory;                          // purge old image data
   f_actory = new QMimeSourceFactory();
   setMimeSourceFactory(f_actory);
-  
+
   // restore background color, might have been changed by html article
   setPaper(QBrush(knGlobals.cfgManager->appearance()->backgroundColor()));
 
@@ -866,7 +890,7 @@ void KNArticleWidget::showErrorMessage(const QString &s)
   delete f_actory;                          // purge old image data
   f_actory = new QMimeSourceFactory();
   setMimeSourceFactory(f_actory);
-  
+
   // restore background color, might have been changed by html article
   setPaper(QBrush(knGlobals.cfgManager->appearance()->backgroundColor()));
 
@@ -915,17 +939,17 @@ void KNArticleWidget::updateContents()
 
 
 void KNArticleWidget::setArticle(KNArticle *a)
-{ 
+{
   if(a_rticle && a_rticle->isOrphant())
     delete a_rticle; //don't leak orphant articles
 
   a_rticle=a;
   h_tmlDone=false;
   r_ot13=false;
-  a_ctToggleRot13->setChecked(false);      
+  a_ctToggleRot13->setChecked(false);
 
   t_imer->stop();
-    
+
   if(!a)
     showBlankPage();
   else {
@@ -1014,7 +1038,7 @@ void KNArticleWidget::createHtmlPage()
   delete f_actory;                          // purge old image data
   f_actory = new QMimeSourceFactory();
   setMimeSourceFactory(f_actory);
-  
+
   // restore background color, might have been changed by html article
   setPaper(QBrush(app->backgroundColor()));
 
@@ -1255,7 +1279,7 @@ void KNArticleWidget::createHtmlPage()
     a_ctSetCharset->setEnabled(true);
     a_ctSetCharsetKeyb->setEnabled(true);
     a_ctViewSource->setEnabled(true);
-        
+
     //start automark-timer
     if(a_rticle->type()==KMime::Base::ATremote && knGlobals.cfgManager->readNewsGeneral()->autoMark())
       t_imer->start( (knGlobals.cfgManager->readNewsGeneral()->autoMarkSeconds()*1000), true);
@@ -1380,7 +1404,7 @@ void KNArticleWidget::createHtmlPage()
   //----------------------------------  </Attachments> ---------------------------------
 
   //display html
-  html+="</qt>";  
+  html+="</qt>";
   clear();
   setText(html);
   h_tmlDone=true;
@@ -1465,7 +1489,7 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
       type=ATunknown;
     }
   }
-  
+
   if (target.endsWith("/"))
     target.truncate(target.length()-1);
 
