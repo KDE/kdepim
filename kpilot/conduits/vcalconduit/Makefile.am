@@ -1,3 +1,13 @@
+###
+### Makefile for vcal and todo conduits. These two conduits share most code,
+### so it seems logical to put them in one place.
+###
+
+###
+### Build the VCC library first.
+###
+SUBDIRS = versit
+
 INCLUDES= @all_includes@ -I$(LIBPISOCK_PATH) \
 	-I$(top_srcdir)/kpilot -I$(top_srcdir)/kpilot/kpilot -Iversit
 METASOURCES = AUTO
