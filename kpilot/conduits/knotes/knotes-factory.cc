@@ -52,6 +52,9 @@ void *init_conduit_knotes()
 	return new KNotesConduitFactory;
 }
 
+long version_conduit_knotes = KPILOT_PLUGIN_API;
+const char *id_conduit_knotes = "$Id:$";
+
 }
 
 

@@ -43,6 +43,7 @@
 #include <kapplication.h>
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
+#include <klibloader.h>
 
 #include "pilotSerialDatabase.h"
 #include "pilotLocalDatabase.h"
@@ -366,4 +367,28 @@ bool PluginUtility::isModal(const QStringList &a)
 	QCStringList apps = dcop->registeredApplications();
 	return apps.contains(n);
 }
+
+
+/* static */ long PluginUtility::pluginVersion(const KLibrary *lib)
+{
+	QString symbol("version_");
+	symbol.append(lib->name());
+
+	if (!lib->hasSymbol(symbol.latin1())) return 0;
+
+	long *p = (long *)(lib->symbol(symbol.latin1()));
+	return *p;
+}
+
+
+/* static */ QString PluginUtility::pluginVersionString(const KLibrary *lib)
+{
+	QString symbol("id_");
+	symbol.append(lib->name());
+
+	if (!lib->hasSymbol(symbol.latin1())) return QString::null;
+
+	return QString::fromLatin1(*((const char **)(lib->symbol(symbol.latin1()))));
+}
+
 

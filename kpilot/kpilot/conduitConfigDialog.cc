@@ -193,7 +193,7 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 {
 	QWidget *w = 0L; // For spacing purposes only.
 	QHBox *btns = 0L;
-	
+
 	QHBoxLayout *mainLayout = new QHBoxLayout(this);
 	mainLayout->setSpacing(10);
 
@@ -295,7 +295,7 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const char *n,
 	fConduitList->setTreeStepSize(10);
 	// fConduitList->removeColumn(CONDUIT_COMMENT);
 	fillLists();
-	
+
 	fConduitList->resize(fConduitList->sizeHint());
 	fConduitList->setMinimumSize(fConduitList->sizeHint());
 	fConduitList->setColumnWidth(0, fConduitList->sizeHint().width());
@@ -462,6 +462,12 @@ void ConduitConfigWidget::fillLists()
 	}
 }
 
+static void dumpConduitInfo(const KLibrary *lib)
+{
+	DEBUGKPILOT << "Plugin version = " << PluginUtility::pluginVersion(lib) << endl;
+	DEBUGKPILOT << "Plugin id      =" << PluginUtility::pluginVersionString(lib) << endl;
+}
+
 void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 {
 	FUNCTIONSETUP;
@@ -557,6 +563,8 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 			warnNoLibrary(p);
 			return;
 		}
+
+		dumpConduitInfo(KLibLoader::self()->library(library));
 
 		QStringList a;
 		a.append(CSL1("modal"));
@@ -673,7 +681,7 @@ void ConduitConfigWidget::selected(QListViewItem *p)
 		<< size().width() << "x"
 		<< size().height() << endl;
 #endif
-	
+
 	// set the dialog title to the selected item
 	QListViewItem *pParent = p->parent();
 	QString title;

@@ -39,11 +39,12 @@
 #include "syncAction.h"
 
 class PilotDatabase;
+class KLibrary;
+
+#define KPILOT_PLUGIN_API	(20040319)
 
 /**
-* The first three classes here: ConduitConfigBase, ConduitConfig
-* and ConduitConfigImplementation - are for configuration purposes
-* and reflect two different styles of configuration.
+* The first classe here: ConduitConfigBase is for configuration purposes.
 *
 * ConduitConfigBase: this is an object (with a widget!) that is embedded
 * in a dialog. This is the currently preferred form for configuration,
@@ -245,6 +246,13 @@ public:
 	* has registered.
 	*/
 	static bool isRunning(const QCString &appName);
+
+	/**
+	* Check a given library for its version, returning 0 if no
+	* version symbol is found.
+	*/
+	static long pluginVersion(const KLibrary *);
+	static QString pluginVersionString(const KLibrary *);
 } ;
 
 /**
@@ -292,6 +300,23 @@ public:
 * 	static KAboutData *fAbout;
 * } ;
 * </pre>
+*
+*
+*
+* The implementation of a conduit needs an init_conduit_name() function,
+* just like any KLibLoader library that uses factories.
+*
+* The createObject() function needs to support at least two creation
+* calls: "ConduitConfigBase" and "SyncAction".
+* "ConduitConfigBase" should return a subclass of ConduitConfigBase,
+* "SyncAction" a subclass of SyncAction.
+*
+* Finally, a conduit should have a symbol version_conduit_name,
+* that returns a long; much like the init_conduit_name() function. This
+* should return the version of the plugin API (KPILOT_PLUGIN_VERSION)
+* the conduit was compiled against. Additionally, a plugin may have a
+* id_conduit_name, which should be a const char *.
+*
 */
 
 #endif
