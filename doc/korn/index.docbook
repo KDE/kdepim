@@ -63,7 +63,7 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2002-02-05</date>
+<date>2003-11-09</date>
 <releaseinfo>0.03.00</releaseinfo>
 
 <copyright>
@@ -74,7 +74,7 @@
 <legalnotice>&FDLNotice;</legalnotice>
 
 <abstract><para>This Documentation describes &korn; Version
-0.0.1</para></abstract>
+0.2</para></abstract>
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -156,7 +156,9 @@ and the contents of the window will contain the options you specified in the
 and clicking <guimenuitem>Modify...</guimenuitem>). On the other hand, selecting
 <guilabel>Docked</guilabel> will dock &korn; into the &kicker; panel.</para>
 
-<para>The option <guilabel>Vertical</guilabel> is not yet implemented.</para>
+<para>The option <guilabel>Vertical</guilabel> is similar to
+<guilabel>Horizontal</guilabel>, except the accounts stack
+vertically.</para>
 
 </sect1>
 <sect1 id="the-new-dialog">
