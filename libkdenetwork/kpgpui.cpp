@@ -154,11 +154,14 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
   mpOptionsGroupBox->layout()->setSpacing( KDialog::spacingHint() );
   storePass = new QCheckBox( i18n("&Keep passphrase in memory"),
                              mpOptionsGroupBox );
-  msg = i18n( "<qt><p>When this option is enabled, the passphrase of "
-	      "your private key will be remembered by the application "
-	      "as long as the application is running. Thus you will only "
-	      "have to enter the passphrase once. Be aware that this could "
-	      "be a potential security risk.</p></qt>" );
+  msg = i18n( "<qt><p>When this option is enabled, the passphrase of your "
+	      "private key will be remembered by the application as long "
+	      "as the application is running. Thus you will only  have to "
+	      "enter the passphrase once. Be aware that this could be a "
+	      "security risk. If you leave your computer, others "
+	      "can use it to send signed emails and/or read your encrypted "
+	      "emails. If you do a core dump, the content of your RAM will "
+	      "be saved onto disk, including your passphrase.</p></qt>" );
   QWhatsThis::add( storePass, msg );
   if( encrypt ) {
     encToSelf = new QCheckBox( i18n("Always encr&ypt to self"),
