@@ -329,17 +329,10 @@ void AddressWidget::updateWidget()
 		if ((currentCatID == -1) ||
 			(fAddressList.current()->getCat() == currentCatID))
 		{
-			// Title is dynamically allocated
-			// by createTitle; older comments
-			// suggest that that storage space is
-			// freed by the listbox, so we'll leave it
-			// that way.
-			//
-			//
-			char *title = createTitle(fAddressList.current(),
+			QString title = createTitle(fAddressList.current(),
 				addressDisplayMode);
 
-			if (title)
+			if (!title.isEmpty())
 			{
 				PilotListItem *p = new PilotListItem(title,
 					listIndex,
@@ -770,6 +763,9 @@ void AddressWidget::writeAddress(PilotAddress * which,
 }
 
 // $Log$
+// Revision 1.47  2002/02/10 22:21:33  adridg
+// Handle pilot-link 0.10.1; spit 'n polish; m505 now supported?
+//
 // Revision 1.46  2002/01/25 21:43:12  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //
