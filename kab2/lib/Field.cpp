@@ -21,186 +21,189 @@
 // Local includes
 #include "Field.h"
 
-Field::Field()
+namespace KAB
 {
-  // Empty.
-}
+  Field::Field()
+  {
+    // Empty.
+  }
 
-Field::Field(const QDomElement & e)
-{
-  name_ = e.tagName();
+  Field::Field(const QDomElement & e)
+  {
+    name_ = e.tagName();
 
-  // TODO: Get type and subtype from addressbook format.
+    // TODO: Get type and subtype from addressbook format.
 
-  if
-    (
-     (type_.isEmpty()     || (type_ == "text")      ) &&
-     (subType_.isEmpty()  || (subType_ == "UCS-2")  )
-    )
+    if
+      (
+       (type_.isEmpty()     || (type_ == "text")      ) &&
+       (subType_.isEmpty()  || (subType_ == "UCS-2")  )
+      )
+    {
+      QDataStream str(value_, IO_WriteOnly);
+      str << e.text();
+    }
+    else
+    {
+  //  value_ = decode it !
+    }
+  }
+
+  Field::Field(const QString & name)
+    : name_(name)
+  {
+    // Empty.
+  }
+
+  Field::Field(const QString & name, const QString & value)
+    : name_(name)
+  {
+    setValue(value);
+  }
+
+
+  Field::~Field()
+  {
+    // Empty.
+  }
+
+  Field::Field(const Field & f)
+    : name_     (f.name_),
+      type_     (f.type_),
+      subType_  (f.subType_),
+      value_    (f.value_)
+  {
+    // Empty.
+  }
+
+    Field &
+  Field::operator = (const Field & f)
+  {
+    if (this == &f) // Avoid a = a.
+      return *this;
+
+    name_     = f.name_;
+    type_     = f.type_;
+    subType_  = f.subType_;
+    value_    = f.value_;
+
+    return *this;
+  }
+
+    bool
+  Field::operator == (const Field & f) const
+  {
+    return
+      ( name_     == f.name_    &&
+        type_     == f.type_    &&
+        subType_  == f.subType_ &&
+        value_    == f.value_   );
+  }
+
+    bool
+  Field::isNull() const
+  {
+    return name_.isNull();
+  }
+
+    QString
+  Field::name() const
+  {
+    return name_;
+  }
+
+    QString
+  Field::type() const
+  {
+    return type_;
+  }
+
+    QString
+  Field::subType() const
+  {
+    return subType_;
+  }
+
+    QByteArray
+  Field::value() const
+  {
+    return value_;
+  }
+
+    QString
+  Field::stringValue() const
+  {
+    QString ret;
+
+    if
+      (
+       (type_.isEmpty()     || (type_ == "text")      ) &&
+       (subType_.isEmpty()  || (subType_ == "UCS-2")  )
+      )
+    {
+      QDataStream str(value_, IO_ReadOnly);
+      str >> ret;
+    }
+
+    return ret;
+  }
+
+    void
+  Field::setName(const QString & s)
+  {
+    name_ = s;
+  }
+
+    void
+  Field::setType(const QString & s)
+  {
+    type_ = s;
+  }
+
+    void
+  Field::setSubType(const QString & s)
+  {
+    subType_ = s;
+  }
+
+    void
+  Field::setValue(const QByteArray & a)
+  {
+    value_ = a;
+  }
+
+    void
+  Field::setValue(const QString & s)
   {
     QDataStream str(value_, IO_WriteOnly);
-    str << e.text();
+    str << s;
   }
-  else
+
+    void
+  Field::insertInDomTree(QDomNode & parent, QDomDocument & parentDoc) const
   {
-//  value_ = decode it !
+    QDomElement e = parentDoc.createElement(name_);
+
+    // FIXME - need to encode other data types !
+    e.appendChild(parentDoc.createTextNode(stringValue()));
+
+    parent.appendChild(e);
   }
-}
 
-Field::Field(const QString & name)
-  : name_(name)
-{
-  // Empty.
-}
-
-Field::Field(const QString & name, const QString & value)
-  : name_(name)
-{
-  setValue(value);
-}
-
-
-Field::~Field()
-{
-  // Empty.
-}
-
-Field::Field(const Field & f)
-  : name_     (f.name_),
-    type_     (f.type_),
-    subType_  (f.subType_),
-    value_    (f.value_)
-{
-  // Empty.
-}
-
-  Field &
-Field::operator = (const Field & f)
-{
-  if (this == &f) // Avoid a = a.
-    return *this;
-
-  name_     = f.name_;
-  type_     = f.type_;
-  subType_  = f.subType_;
-  value_    = f.value_;
-
-  return *this;
-}
-
-  bool
-Field::operator == (const Field & f) const
-{
-  return
-    ( name_     == f.name_    &&
-      type_     == f.type_    &&
-      subType_  == f.subType_ &&
-      value_    == f.value_   );
-}
-
-  bool
-Field::isNull() const
-{
-  return name_.isNull();
-}
-
-  QString
-Field::name() const
-{
-  return name_;
-}
-
-  QString
-Field::type() const
-{
-  return type_;
-}
-
-  QString
-Field::subType() const
-{
-  return subType_;
-}
-
-  QByteArray
-Field::value() const
-{
-  return value_;
-}
-
-  QString
-Field::stringValue() const
-{
-  QString ret;
-
-  if
-    (
-     (type_.isEmpty()     || (type_ == "text")      ) &&
-     (subType_.isEmpty()  || (subType_ == "UCS-2")  )
-    )
+    QDataStream &
+  operator << (QDataStream & str, const Field & f)
   {
-    QDataStream str(value_, IO_ReadOnly);
-    str >> ret;
+    str << f.name_ << f.type_ << f.subType_ << f.value_;
+
+    return str;
   }
 
-  return ret;
-}
+    QDataStream &
+  operator >> (QDataStream & str, Field & f)
+  {
+    str >> f.name_ >> f.type_ >> f.subType_ >> f.value_;
 
-  void
-Field::setName(const QString & s)
-{
-  name_ = s;
-}
-
-  void
-Field::setType(const QString & s)
-{
-  type_ = s;
-}
-
-  void
-Field::setSubType(const QString & s)
-{
-  subType_ = s;
-}
-
-  void
-Field::setValue(const QByteArray & a)
-{
-  value_ = a;
-}
-
-  void
-Field::setValue(const QString & s)
-{
-  QDataStream str(value_, IO_WriteOnly);
-  str << s;
-}
-
-  void
-Field::insertInDomTree(QDomNode & parent, QDomDocument & parentDoc) const
-{
-  QDomElement e = parentDoc.createElement(name_);
-
-  // FIXME - need to encode other data types !
-  e.appendChild(parentDoc.createTextNode(stringValue()));
-
-  parent.appendChild(e);
-}
-
-  QDataStream &
-operator << (QDataStream & str, const Field & f)
-{
-  str << f.name_ << f.type_ << f.subType_ << f.value_;
-
-  return str;
-}
-
-  QDataStream &
-operator >> (QDataStream & str, Field & f)
-{
-  str >> f.name_ >> f.type_ >> f.subType_ >> f.value_;
-
-  return str;
+    return str;
+  }
 }
 

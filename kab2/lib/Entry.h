@@ -32,55 +32,62 @@
 // Local includes
 #include "Field.h"
 
-class Entry
+namespace KAB
 {
-  public:
+  class Entry
+  {
+    public:
 
-    Entry();
-    Entry(const QDomElement &);
-    Entry(const Entry &);
-    virtual ~Entry();
+      Entry();
+      Entry(const QDomElement &);
+      Entry(const Entry &);
+      virtual ~Entry();
 
-    Entry & operator = (const Entry &);
-    bool operator == (const Entry &) const;
+      Entry & operator = (const Entry &);
+      bool operator == (const Entry &) const;
 
-    void insertInDomTree(QDomNode & parent, QDomDocument & parentDoc) const;
+      void insertInDomTree(QDomNode & parent, QDomDocument & parentDoc) const;
 
-    virtual QString id() const;
-    virtual void setID(const QString &);
+      virtual QString id() const;
 
-    virtual void addField(const Field &);
-    virtual bool removeField(const QString & name);
-    
-    virtual Field     field(const QString & name) const;
-    virtual FieldList fieldList() const;
-    
-    virtual void addMember(const QString & id);
-    virtual bool removeMember(const QString & id);
+      virtual void addField(const Field &);
+      virtual bool removeField(const QString & name);
 
-    virtual QStringList memberList() const;
+      virtual Field     field(const QString & name) const;
+      virtual FieldList fieldList() const;
 
-    virtual bool contains(const QString & fieldName) const;
+      virtual void addMember(const QString & id);
+      virtual bool removeMember(const QString & id);
 
-    void replace(const QString & name, const QByteArray & value);
-    void replace(const QString & name, const QString & value);
+      virtual QStringList memberList() const;
 
-    void touch();
+      virtual bool contains(const QString & fieldName) const;
 
-    friend QDataStream & operator << (QDataStream &, const Entry &);
-    friend QDataStream & operator >> (QDataStream &, Entry &);
+      void replace(const QString & name, const QByteArray & value);
+      void replace(const QString & name, const QString & value);
 
-    bool isNull() const;
+      void touch();
 
-  private:
+      friend QDataStream & operator << (QDataStream &, const Entry &);
+      friend QDataStream & operator >> (QDataStream &, Entry &);
 
-    bool dirty_;
+      bool isNull() const;
 
-    QString id_;
-    FieldList fieldList_;
-    QStringList memberList_;
-};
+    private:
 
-typedef QValueList<Entry> EntryList;
+      void _init();
+
+      static unsigned long ID_;
+      static QString * uniqueStart_;
+
+      bool dirty_;
+
+      QString id_;
+      FieldList fieldList_;
+      QStringList memberList_;
+  };
+
+  typedef QValueList<Entry> EntryList;
+}
 
 #endif

@@ -19,8 +19,12 @@
 
 #include "test.h"
 
+#include "ResultReceiver.h"
+
 TestMainWindow::TestMainWindow()
-  : KMainWindow()
+  : KMainWindow(),
+    abStub_(0),
+    resultReceiver_(0)
 {
   QWidget * w = new QWidget(this);
 
@@ -49,6 +53,7 @@ TestMainWindow::TestMainWindow()
      SLOT(slotSetAddressBook(const QString &))
     );
 
+
   QTimer::singleShot(0, this, SLOT(slotLoad()));
 }
 
@@ -76,57 +81,133 @@ TestMainWindow::slotSetAddressBook(const QString & name)
 {
   addressBookListView_->clear();
 
-  KAddressBookInterface_stub ab("KAddressBookServer", name.utf8().data());
+  delete resultReceiver_;
+  delete abStub_;
 
-  QListViewItem * abItem =
-    new QListViewItem(addressBookListView_, ab.name());
+  abStub_ =
+    new KAddressBookInterface_stub("KAddressBookServer", name.utf8().data());
 
-  QStringList el(ab.entryList());
+  resultReceiver_ = new ResultReceiver(name, this, "I'm a receiver");
 
-  for (QStringList::ConstIterator eit(el.begin()); eit != el.end(); ++eit)
+  connect
+    (
+     resultReceiver_,
+     SIGNAL(entryComplete(int, Entry)),
+     this,
+     SLOT(slotEntryComplete(int, Entry))
+    );
+
+  connect
+    (
+     resultReceiver_,
+     SIGNAL(entryListComplete(int, QStringList)),
+     this,
+     SLOT(slotEntryListComplete(int, QStringList))
+    );
+
+  abItem_ = new QListViewItem(addressBookListView_, abStub_->name());
+
+  abStub_->entryList();
+}
+
+  void
+TestMainWindow::slotEntryComplete(int, Entry e)
+{
+  qDebug("slotEntryComplete");
+
+  if (e.isNull())
   {
-    QString entryID = *eit;
+    qDebug("Entry not found");
+    return;
+  }
+  else
+  {
+    qDebug("Entry found. id == `%s'", e.id().ascii());
+  }
 
-    Entry e(ab.entry(entryID));
+  qDebug("Creating entry item");
+  QListViewItem * entryItem = new QListViewItem(abItem_, e.id());
 
-    if (e.isNull())
-    {
-      qDebug("Entry not found");
-      continue;
-    }
+  FieldList fl(e.fieldList());
 
-    QListViewItem * entryItem = new QListViewItem(abItem, e.id());
+  qDebug("Creating field items");
+  for (FieldList::ConstIterator fit(fl.begin()); fit != fl.end(); ++fit)
+  {
+    Field f(*fit);
 
-    FieldList fl(e.fieldList());
+    QListViewItem * fieldItem = new QListViewItem(entryItem, f.name());
 
-    for (FieldList::ConstIterator fit(fl.begin()); fit != fl.end(); ++fit)
-    {
-      Field f(*fit);
+    QByteArray val(f.value());
 
-      QListViewItem * fieldItem = new QListViewItem(entryItem, f.name());
-
-      QByteArray val(f.value());
-
-      if
-        (
-         (f.type().isEmpty() || (f.type() == "text")) &&
-         (f.subType().isEmpty() || (f.subType() == "UCS-2"))
-        )
-        {
-          QString s;
-          QDataStream str(val, IO_ReadOnly);
-          str >> s;
-          fieldItem->setText(1, s);
-          fieldItem->setText(2, "text");
-          fieldItem->setText(3, "UCS-2");
-        }
-      else
+    if
+      (
+       (f.type().isEmpty() || (f.type() == "text")) &&
+       (f.subType().isEmpty() || (f.subType() == "UCS-2"))
+      )
       {
-        fieldItem->setText(1, "Can't display");
-        fieldItem->setText(2, f.type());
-        fieldItem->setText(3, f.subType());
+        QString s;
+        QDataStream str(val, IO_ReadOnly);
+        str >> s;
+        fieldItem->setText(1, s);
+        fieldItem->setText(2, "text");
+        fieldItem->setText(3, "UCS-2");
       }
+    else
+    {
+      fieldItem->setText(1, "Can't display");
+      fieldItem->setText(2, f.type());
+      fieldItem->setText(3, f.subType());
     }
+  }
+  qDebug("slotEntryComplete: done");
+}
+
+  void
+TestMainWindow::slotInsertComplete(int, QString)
+{
+  qDebug("slotInsertComplete");
+}
+
+  void
+TestMainWindow::slotRemoveComplete(int, bool)
+{
+  qDebug("slotRemoveComplete");
+}
+
+  void
+TestMainWindow::slotReplaceComplete(int, bool)
+{
+  qDebug("slotReplaceComplete");
+}
+
+  void
+TestMainWindow::slotContainsComplete(int, bool)
+{
+  qDebug("slotContainsComplete");
+}
+
+  void
+TestMainWindow::slotEntryListComplete(int, QStringList l)
+{
+  qDebug("slotEntryListComplete");
+
+  qDebug("There are %d entries", l.count());
+
+  entryList_ = l;
+
+  QTimer::singleShot(0, this, SLOT(slotReadEntryList()));
+}
+
+  void
+TestMainWindow::slotReadEntryList()
+{
+  QStringList::ConstIterator it(entryList_.begin());
+
+  for (; it != entryList_.end(); ++it)
+  {
+    qDebug("Asking for entry `%s'", (*it).ascii());
+    abStub_->entry(*it);
+    qDebug("Asked for entry `%s'", (*it).ascii());
   }
 }
 

@@ -36,8 +36,6 @@ KAddressBookServerInterface::KAddressBookServerInterface()
 
   QString filenameForDefaultBook = locateLocal("addressbook", "default/");
 
-  qDebug("filenameForDefaultBook == `%s'", filenameForDefaultBook.ascii());
-
 	KAddressBookInterface * ab =
     new KAddressBookInterface("default", "file:" + filenameForDefaultBook);
 

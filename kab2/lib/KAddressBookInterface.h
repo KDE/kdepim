@@ -25,12 +25,18 @@
 #include <qstringlist.h>
 #include <dcopobject.h>
 
-#include <Entry.h>
+#include "Entry.h"
 
 class KAddressBookBackend;
 
-class KAddressBookInterface : virtual public DCOPObject
+namespace KAB
 {
+  class Command;
+}
+
+class KAddressBookInterface : public QObject, virtual public DCOPObject
+{
+  Q_OBJECT
   K_DCOP
 
   public:
@@ -42,20 +48,40 @@ class KAddressBookInterface : virtual public DCOPObject
 
     virtual QString name();
     virtual QString path();
-    virtual Entry   entry(QString);
-    virtual QString insert(Entry);
-    virtual bool    remove(QString);
-    virtual bool    replace(Entry);
-    virtual bool    contains(QString);
 
-    virtual QStringList entryList();
+    // These functions start 'jobs'. The return value is an id for
+    // the job. You will receive a DCOP signal when the job is complete.
+
+    virtual int entry(QString);
+    virtual int insert(KAB::Entry);
+    virtual int remove(QString);
+    virtual int replace(KAB::Entry);
+    virtual int contains(QString);
+    virtual int entryList();
+
+    // DCOP signals emitted when jobs complete:
+
+    // entryComplete      (int jobID, Entry)
+    // insertComplete     (int jobID, bool)
+    // removeComplete     (int jobID, bool)
+    // replaceComplete    (int jobID, bool)
+    // containsComplete   (int jobID, bool)
+    // entryListComplete  (int jobID, QStringList)
+
+  protected slots:
+
+    void slotCommandComplete(KAB::Command *);
 
   private:
+
+    static int ID_;
 
     QString name_;
     QString path_;
 
     KAddressBookBackend * backend_;
+
+    int _queueCommand(KAB::Command *);
 };
 
 #endif

@@ -4,6 +4,8 @@ METASOURCES                 = AUTO
 libKAddressBook_la_SOURCES  = \
   Entry.cpp \
   Field.cpp \
+  FormatDefinition.cpp \
+  Job.cpp \
   KAddressBookInterface.cpp \
   KAddressBookInterface.skel \
   KAddressBookInterface.stub \

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kab_format>
+
+<kab-definition name="kab1">
+
+<field name="URL"             unique="true"   mimetype="text/uri"         />
+<field name="additionalName"  unique="true"   mimetype="text/UCS-2"       />
+<field name="address"         unique="true"   mimetype="text/UCS-2"       />
+<field name="birthday"        unique="true"   mimetype="date/ISO-8601"    />
+<field name="comment"         unique="true"   mimetype="text/UCS-2"       />
+<field name="deliveryLabel"   unique="true"   mimetype="text/UCS-2"       />
+<field name="email"           unique="true"   mimetype="address/rfc-822"  />
+<field name="email2"          unique="true"   mimetype="address/rfc-822"  />
+<field name="email3"          unique="true"   mimetype="address/rfc-822"  />
+<field name="emails"          unique="true"   mimetype="address/rfc-822"  list="true"/>
+
+</kab-definition>

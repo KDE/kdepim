@@ -2,7 +2,7 @@ INCLUDES = -I$(top_srcdir)/kab2/lib -I$(top_srcdir)/kab2/server $(all_includes)
 
 bin_PROGRAMS = test addentries testparser
 
-test_SOURCES        = test.cpp
+test_SOURCES        = test.cpp ResultReceiver.cpp ResultReceiver.skel
 addentries_SOURCES  = addentries.cpp
 testparser_SOURCES  = testparser.cpp
 

@@ -25,6 +25,7 @@
 #include <klibloader.h>
 
 #include "KAddressBookBackend.h"
+#include "Entry.h"
 
 class KAddressBookFileBackendFactory : public KLibFactory
 {
@@ -62,27 +63,18 @@ class KAddressBookFileBackend : public KAddressBookBackend
 
     virtual ~KAddressBookFileBackend();
 
-    virtual bool        contains(QString) const;
-    virtual Entry       entry(QString)    const;
-    virtual QStringList entryList()       const;
-
-    virtual QString     insert(Entry);
-    virtual bool        remove(QString);
-    virtual bool        replace(Entry);
+    virtual void runCommand(KAB::Command * c);
 
   private:
 
     bool      _checkDirs();
     void      _initIndex();
 
-    Entry     _readEntry(const QString & filename) const;
-    bool      _writeEntry(const Entry &);
-    bool      _removeEntry(const QString & id);
-
-    QString   _generateUniqueID();
+    KAB::Entry  _readEntry(const QString & filename) const;
+    bool        _writeEntry(const KAB::Entry &);
+    bool        _removeEntry(const QString & id);
 
     QStringList index_;
-    QString uniquePartOne_;
 };
 
 #endif

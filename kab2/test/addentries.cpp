@@ -43,35 +43,13 @@ main(int argc, char ** argv)
     return 1;
   }
 
+  bool createOK = server.create("cvs accounts", "/tmp/cvs_accounts.kab", 
+      QFileInfo("test_kab_definition").absFilePath());
+
+  if (!createOK)
   {
-    QByteArray args, retVal;
-    QCString retType;
-
-    QDataStream inStr(args, IO_WriteOnly);
-
-    inStr << QString("cvs accounts") << QString("/tmp/cvs_accounts.kab") <<
-      QFileInfo("test_kab_definition").absFilePath();
-
-    bool ok =
-      client->call
-      (
-       "KAddressBookServer",
-       "KAddressBookServer",
-       "create(QString,QString,QString)",
-       args,
-       retType,
-       retVal
-      );
-
-    if (!ok)
-      qFatal("Can't call create()");
-
-    QDataStream outStr(retVal, IO_ReadOnly);
-
-    outStr >> ok;
-
-    if (!ok)
-      qFatal("Can't create addressbook");
+    qWarning("Can't create a new addressbook");
+    return 1;
   }
 
   KAddressBookInterface_stub * ab =

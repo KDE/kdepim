@@ -19,10 +19,6 @@
 */
 
 // System includes
-#include <stdlib.h>
-#include <sys/time.h>
-#include <sys/stat.h>
-#include <sys/utsname.h>
 #include <unistd.h>
 #include <iostream.h>
 
@@ -37,6 +33,7 @@
 
 // Local includes
 #include "KAddressBookFileBackend.h"
+#include "Command.h"
 #include "Entry.h"
 #include "Field.h"
 
@@ -77,8 +74,6 @@ extern "C"
   }
 }
 
-int KAddressBookFileBackendUniqueEntryID = 0;
-
 KAddressBookFileBackend::KAddressBookFileBackend
 (
  QString id,
@@ -88,20 +83,6 @@ KAddressBookFileBackend::KAddressBookFileBackend
 )
   : KAddressBookBackend(id, KURL(path).path(), parent, name)
 {
-  struct utsname utsName;
-
-  if (uname(&utsName) == 0)
-    uniquePartOne_ = utsName.nodename;
-  else
-    uniquePartOne_ = "localhost";
-
-  struct timeval timeVal;
-  struct timezone timeZone;
-  gettimeofday(&timeVal, &timeZone);
-
-  uniquePartOne_ += "_" + QString().setNum(timeVal.tv_sec);
-  uniquePartOne_ += "_" + QString().setNum(getpid());
-
   bool dirsOk = _checkDirs();
 
   if (!dirsOk)
@@ -119,76 +100,135 @@ KAddressBookFileBackend::~KAddressBookFileBackend()
 {
 }
 
-  Entry
-KAddressBookFileBackend::entry(QString id) const
+  void
+KAddressBookFileBackend::runCommand(KAB::Command * baseCommand)
 {
-  Entry e;
+  qDebug("KAddressBookFileBackend::runCommand()");
 
-  if (!index_.contains(id))
-    return e;
+  switch (baseCommand->type())
+  {
+    case KAB::CommandTypeEntry:
+      {
+        qDebug("CommandTypeEntry");
 
-  for (QStringList::ConstIterator it(index_.begin()); it != index_.end(); ++it)
+        KAB::CommandEntry * c(static_cast<KAB::CommandEntry *>(baseCommand));
 
-    if (*it == id)
-    {
-      Entry loaded = _readEntry(*it);
+        qDebug("Doing index.find()");
 
-      if (!loaded.isNull())
-        e = loaded;
+        QStringList::Iterator it(index_.find(c->entryID()));
+
+        if (index_.end() == it)
+        {
+          qDebug("**** KAddressBookFileBackend: can't find entry");
+          c->setEntry(KAB::Entry());
+        }
+        else
+        {
+          KAB::Entry e(_readEntry(*it));
+
+          if (e.isNull())
+          {
+            qDebug("**** KAddressBookFileBackend: entry read is null!");
+          }
+          else
+          {
+            qDebug("**** KAddressBookFileBackend: entry is ok at this end");
+          }
+          c->setEntry(e);
+        }
+
+        emit(commandComplete(c));
+      }
+      break;
+
+    case KAB::CommandTypeContains:
+      qDebug("CommandTypeContains");
+      {
+        KAB::CommandContains * c =
+          static_cast<KAB::CommandContains *>(baseCommand);
+
+        c->setContains(index_.contains(c->entryID()));
+
+        emit(commandComplete(c));
+      }
+      break;
+
+    case KAB::CommandTypeInsert:
+      qDebug("CommandTypeInsert");
+      {
+        KAB::CommandInsert * c =
+          static_cast<KAB::CommandInsert *>(baseCommand);
+
+        bool ok = _writeEntry(c->entry());
+
+        if (!ok)
+          c->setSuccess(false);
+
+        else
+        {
+          index_.append(c->entry().id());
+          c->setSuccess(true);
+        }
+
+        emit(commandComplete(c));
+      }
+      break;
+
+    case KAB::CommandTypeRemove:
+      qDebug("CommandTypeRemove");
+      {
+        KAB::CommandRemove * c =
+          static_cast<KAB::CommandRemove *>(baseCommand);
+
+        if (!index_.contains(c->entryID()))
+          c->setSuccess(false);
+
+        else
+        {
+          index_.remove(c->entryID());
+          _removeEntry(c->entryID());
+          c->setSuccess(true);
+        }
+
+        emit(commandComplete(c));
+      }
+      break;
+
+    case KAB::CommandTypeReplace:
+      qDebug("CommandTypeReplace");
+      {
+        KAB::CommandReplace * c =
+          static_cast<KAB::CommandReplace *>(baseCommand);
+
+        qDebug("STUB");
+
+        c->setSuccess(false);
+
+        emit(commandComplete(c));
+      }
+      break;
+
+    case KAB::CommandTypeEntryList:
+      qDebug("CommandTypeEntryList");
+      {
+        KAB::CommandEntryList * c =
+          static_cast<KAB::CommandEntryList *>(baseCommand);
+
+        qDebug("Setting entry list to index, which has %d entries", index_.count());
+        c->setEntryList(index_);
+
+        qDebug("Completed entry list");
+        qDebug("Emitting commandComplete");
+        emit(commandComplete(c));
+      }
+      break;
+
+    default:
+
+      qDebug("Unknown command type");
 
       break;
-    }
-
-  return e;
-}
-
-  bool
-KAddressBookFileBackend::contains(QString id) const
-{
-  return index_.contains(id);
-}
-
-  QString
-KAddressBookFileBackend::insert(Entry e)
-{
-  e.setID(_generateUniqueID());
-
-  index_.append(e.id());
-  
-  bool ok = _writeEntry(e);
-
-  if (!ok)
-    return QString::null;
-
-  return e.id();
-}
-
-  bool
-KAddressBookFileBackend::remove(QString id)
-{
-  if (!index_.contains(id))
-    return false;
-
-  index_.remove(id);
-
-  _removeEntry(id);
-  
-  return true;
-}
-
-  bool
-KAddressBookFileBackend::replace(Entry /* e */)
-{
-#warning STUB needs implementing
-	return false;
-  //return index_.contains(e.id());
-}
-
-  QString
-KAddressBookFileBackend::_generateUniqueID()
-{
-  return uniquePartOne_ + "_" +
-    QString().setNum(KAddressBookFileBackendUniqueEntryID++);
+  }
 }
 
   bool
@@ -234,7 +274,7 @@ KAddressBookFileBackend::_initIndex()
 }
 
   bool
-KAddressBookFileBackend::_writeEntry(const Entry & e)
+KAddressBookFileBackend::_writeEntry(const KAB::Entry & e)
 {
   qDebug("KAddressBook::_writeEntry()");
   QString filename = path() + "/tmp" + e.id();
@@ -288,15 +328,7 @@ KAddressBookFileBackend::_writeEntry(const Entry & e)
   return true;
 }
 
-  QStringList
-KAddressBookFileBackend::entryList() const
-{
-  return
-    QDir(path() + "/entries").entryList
-    (QDir::Files | QDir::NoSymLinks | QDir::Readable, QDir::Unsorted);
-}
-
-  Entry
+KAB::Entry
 KAddressBookFileBackend::_readEntry(const QString & id) const
 {
   QString filename = path() + "/entries/" + id;
@@ -304,12 +336,12 @@ KAddressBookFileBackend::_readEntry(const QString & id) const
 
   if (!f.exists()) {
     qDebug("File `" + filename + "' does not exist");
-    return Entry();
+    return KAB::Entry();
   }
   
   if (!f.open(IO_ReadOnly)) {
     qDebug("Couldn't open `" + filename + "' for reading");
-    return Entry();
+    return KAB::Entry();
   }
   
   QDomDocument doc;
@@ -317,7 +349,7 @@ KAddressBookFileBackend::_readEntry(const QString & id) const
   if (!doc.setContent(&f))
   {
     qDebug("Couldn't set content to `" + filename + "'");
-    return Entry();
+    return KAB::Entry();
   }
 
   QDomElement docElem = doc.documentElement();
@@ -325,16 +357,16 @@ KAddressBookFileBackend::_readEntry(const QString & id) const
   if (docElem.isNull())
   {
     qDebug("Can't parse file `" + filename + "'");
-    return Entry();
+    return KAB::Entry();
   }
 
   if (docElem.tagName() != "kab:entry")
   {
     qDebug("Can't parse file `" + filename + "'");
-    return Entry();
+    return KAB::Entry();
   }
 
-  return Entry(docElem);
+  return KAB::Entry(docElem);
 }
 
   bool

@@ -24,9 +24,13 @@ main(int argc, char ** argv)
 
   qDebug("Parsing succeded");
 
-  FormatSpec spec = reader.spec();
+  FormatDefinition def = reader.definition();
 
-  for (FormatSpec::ConstIterator it(spec.begin()); it != spec.end(); ++it)
+  QValueList<FieldFormat> l(def.fieldFormatList());
+
+  QValueList<FieldFormat>::ConstIterator it;
+
+  for (it = l.begin(); it != l.end(); ++it)
   {
     FieldFormat ff(*it);
 

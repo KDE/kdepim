@@ -1,33 +1,36 @@
 #ifndef DEFINITION_READER_H
 #define DEFINITION_READER_H
 
-#include "FormatSpec.h"
+#include "FormatDefinition.h"
 
-class DefinitionReader
+namespace KAB
 {
-  public:
+  class DefinitionReader
+  {
+    public:
 
-    DefinitionReader(const QString & filename);
+      DefinitionReader(const QString & filename);
 
-    virtual ~DefinitionReader();
+      virtual ~DefinitionReader();
 
-    void parse();
+      void parse();
 
-    bool success() const
-    {
-      return success_;
-    }
+      bool success() const
+      {
+        return success_;
+      }
 
-    FormatSpec spec() const
-    {
-      return spec_;
-    }
+      FormatDefinition definition() const
+      {
+        return def_;
+      }
 
-  private:
+    private:
 
-    QString filename_;
-    bool success_;
-    FormatSpec spec_;
-};
+      QString filename_;
+      bool success_;
+      FormatDefinition def_;
+  };
+}
 
 #endif

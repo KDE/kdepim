@@ -22,13 +22,17 @@
 #include <kurl.h>
 #include <klibloader.h>
 #include <kdebug.h>
+#include <kdatastream.h>
+#include <kapp.h>
+#include <dcopclient.h>
 
 // Local includes
 #include "KAddressBookInterface.h"
 #include "KAddressBookBackend.h"
-#include "Field.h"
+#include "Command.h"
 
 int KABUniqueEntryID = 0;
+int KAddressBookInterface::ID_ = 0;
 
 KAddressBookInterface::KAddressBookInterface(QString name, QString path)
   : DCOPObject(name.utf8()),
@@ -68,6 +72,14 @@ KAddressBookInterface::KAddressBookInterface(QString name, QString path)
   }
 
   backend_ = static_cast<KAddressBookBackend *>(obj);
+
+  connect
+    (
+     backend_,
+     SIGNAL(commandComplete(KAB::Command *)), 
+     this, 
+     SLOT(slotCommandComplete(KAB::Command *))
+    );
 }
 
 KAddressBookInterface::~KAddressBookInterface()
@@ -86,81 +98,141 @@ KAddressBookInterface::name()
 	return name_;
 }
 
-  Entry
+  int
 KAddressBookInterface::entry(QString id)
 {
-  if (0 == backend_)
-  {
-    return Entry();
-  }
-  else
-  {
-    return backend_->entry(id);
-  }
+  return _queueCommand(new KAB::CommandEntry(id));
 }
 
-  QStringList
+  int
 KAddressBookInterface::entryList()
 {
-  if (0 == backend_)
-  {
-    return QStringList();
-  }
-  else
-  {
-    return backend_->entryList();
-  }
+  return _queueCommand(new KAB::CommandEntryList);
 }
 
-  bool
+  int
 KAddressBookInterface::contains(QString id)
 {
-  if (0 == backend_)
-  {
-    return false;
-  }
-  else
-  {
-    return backend_->contains(id);
-  }
+  return _queueCommand(new KAB::CommandContains(id));
 }
 
-  QString
-KAddressBookInterface::insert(Entry e)
+  int
+KAddressBookInterface::insert(KAB::Entry e)
 {
-  if (0 == backend_)
-  {
-    return QString::null;
-  }
-  else
-  {
-    return backend_->insert(e);
-  }
+  return _queueCommand(new KAB::CommandInsert(e));
 }
 
-  bool
+  int
 KAddressBookInterface::remove(QString id)
 {
-  if (0 == backend_)
-  {
-    return false;
-  }
-  else
-  {
-    return backend_->remove(id);
-  }
+  return _queueCommand(new KAB::CommandRemove(id));
 }
 
-  bool
-KAddressBookInterface::replace(Entry e)
+  int
+KAddressBookInterface::replace(KAB::Entry e)
+{
+  return _queueCommand(new KAB::CommandReplace(e));
+}
+
+  int
+KAddressBookInterface::_queueCommand(KAB::Command * c)
 {
   if (0 == backend_)
+    return -1;
+
+  int id = ID_++;
+
+  c->setID(id);
+
+  backend_->queueCommand(c);
+
+  return id;
+}
+
+  void
+KAddressBookInterface::slotCommandComplete(KAB::Command * baseCommand)
+{
+  qDebug("KAddressBookInterface::slotCommandComplete()");
+  QByteArray params;
+  QDataStream str(params, IO_WriteOnly);
+  QCString function;
+
+  switch (baseCommand->type())
   {
-    return false;
+    case KAB::CommandTypeEntry:
+      {
+        KAB::CommandEntry * c =
+          static_cast<KAB::CommandEntry *>(baseCommand);
+
+        str << c->id() << c->entry();
+
+        function = "entryComplete(int,Entry)";
+      }
+      break;
+
+    case KAB::CommandTypeContains:
+      {
+        KAB::CommandContains * c =
+          static_cast<KAB::CommandContains *>(baseCommand);
+
+        str << c->id() << c->contains();
+
+        function = "containsComplete(int,bool)";
+      }
+      break;
+
+    case KAB::CommandTypeInsert:
+      {
+        KAB::CommandInsert * c =
+          static_cast<KAB::CommandInsert *>(baseCommand);
+
+        str << c->id() << c->success();
+
+        function = "insertComplete(int,bool)";
+      }
+      break;
+
+    case KAB::CommandTypeRemove:
+      {
+        KAB::CommandRemove * c =
+          static_cast<KAB::CommandRemove *>(baseCommand);
+
+        str << c->id() << c->success();
+
+        function = "removeComplete(int,bool)";
+      }
+      break;
+
+    case KAB::CommandTypeReplace:
+      {
+        KAB::CommandReplace * c =
+          static_cast<KAB::CommandReplace *>(baseCommand);
+
+        str << c->id() << c->success();
+
+        function = "replaceComplete(int,bool)";
+      }
+      break;
+
+    case KAB::CommandTypeEntryList:
+      {
+        KAB::CommandEntryList * c =
+          static_cast<KAB::CommandEntryList *>(baseCommand);
+
+        str << c->id() << c->entryList();
+
+        function = "entryListComplete(int,QStringList)";
+      }
+      break;
+
+    default:
+
+      qDebug("Unknown command type");
+      return;
+      break;
   }
-  else
-  {
-    return backend_->replace(e);
-  }
+
+  qDebug("emitting dcop signal with signature `%s'", function.data());
+  emitDCOPSignal(function, params);
 }
 

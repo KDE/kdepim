@@ -21,10 +21,16 @@
 #ifndef KADDRESSBOOK_FILE_BACKEND_H
 #define KADDRESSBOOK_FILE_BACKEND_H
 
+// LDAP includes
+#include <lber.h>
+#include <ldap.h>
+
 // KDE includes
 #include <klibloader.h>
 
 #include "KAddressBookBackend.h"
+
+class QTimer;
 
 class KAddressBookLDAPBackendFactory : public KLibFactory
 {
@@ -62,15 +68,21 @@ class KAddressBookLDAPBackend : public KAddressBookBackend
 
     virtual ~KAddressBookLDAPBackend();
 
-    virtual bool        contains(QString) const;
-    virtual Entry       entry(QString)    const;
-    virtual QStringList entryList()       const;
+    virtual void runCommand(KAB::Command * c);
 
-    virtual QString     insert(Entry);
-    virtual bool        remove(QString);
-    virtual bool        replace(Entry);
+  protected slots:
+
+    void slotPoll();
 
   private:
+
+    QTimer * pollTimer_;
+
+    int expectedMessage_;
+
+    LDAP * client_;
+
+    KAB::Command * currentCommand_;
 };
 
 #endif

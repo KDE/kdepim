@@ -22,11 +22,15 @@
 #define KADDRESSBOOK_BACKEND_H
 
 #include <qobject.h>
+#include <qqueue.h>
 
 #include <qstring.h>
 #include <qstringlist.h>
 
-#include <Entry.h>
+namespace KAB
+{
+  class Command;
+}
 
 class KAddressBookBackend : public QObject
 {
@@ -49,23 +53,32 @@ class KAddressBookBackend : public QObject
     QString id() const;
     QString path() const;
 
-    virtual bool        contains(QString) const = 0;
-    virtual Entry       entry(QString)    const = 0;
-    virtual QStringList entryList()       const = 0;
-    virtual QString     insert(Entry)           = 0;
-    virtual bool        remove(QString)         = 0;
-    virtual bool        replace(Entry)          = 0;
+    virtual void runCommand(KAB::Command *) = 0;
+    void queueCommand(KAB::Command *);
 
   protected:
 
     void setInitSuccess();
 
+  protected slots:
+
+    void slotCommandComplete(KAB::Command *);
+
+  signals:
+
+    void commandComplete(KAB::Command *);
+
   private:
+
+    void _runQueue();
 
     QString id_;
     QString path_;
 
     bool initSuccess_;
+    bool locked_;
+
+    QQueue<KAB::Command> commandQueue_;
 };
 
 #endif

@@ -27,48 +27,51 @@
 #include <qdict.h>
 #include <qdom.h>
 
-typedef QDict<QString> StringDict;
-typedef QDictIterator<QString> StringDictIterator;
-
-class Field
+namespace KAB
 {
-  public:
-    
-    Field();
-    Field(const QDomElement &);
-    Field(const QString & name);
-    Field(const QString & name, const QString & value);
-    Field(const Field &);
-    virtual ~Field();
+  typedef QDict<QString> StringDict;
+  typedef QDictIterator<QString> StringDictIterator;
 
-    Field & operator = (const Field &);
-    bool operator == (const Field &) const;
-    
-    void insertInDomTree(QDomNode & parent, QDomDocument & parentDoc) const;
+  class Field
+  {
+    public:
 
-    virtual QString     name()    const;
-    virtual QString     type()    const;
-    virtual QString     subType() const;
-    virtual QByteArray  value()   const;
-    virtual QString     stringValue() const;
+      Field();
+      Field(const QDomElement &);
+      Field(const QString & name);
+      Field(const QString & name, const QString & value);
+      Field(const Field &);
+      virtual ~Field();
 
-    virtual void setName    (const QString &);
-    virtual void setType    (const QString &);
-    virtual void setSubType (const QString &);
-    virtual void setValue   (const QByteArray &);
-    virtual void setValue   (const QString &);
-    
-    friend QDataStream & operator << (QDataStream &, const Field &);
-    friend QDataStream & operator >> (QDataStream &, Field &);
+      Field & operator = (const Field &);
+      bool operator == (const Field &) const;
 
-    bool isNull() const;
+      void insertInDomTree(QDomNode & parent, QDomDocument & parentDoc) const;
 
-  private:
+      virtual QString     name()    const;
+      virtual QString     type()    const;
+      virtual QString     subType() const;
+      virtual QByteArray  value()   const;
+      virtual QString     stringValue() const;
 
-    QString name_, type_, subType_;
-    QByteArray value_;
-};
+      virtual void setName    (const QString &);
+      virtual void setType    (const QString &);
+      virtual void setSubType (const QString &);
+      virtual void setValue   (const QByteArray &);
+      virtual void setValue   (const QString &);
 
-typedef QValueList<Field> FieldList;
+      friend QDataStream & operator << (QDataStream &, const Field &);
+      friend QDataStream & operator >> (QDataStream &, Field &);
+
+      bool isNull() const;
+
+    private:
+
+      QString name_, type_, subType_;
+      QByteArray value_;
+  };
+
+  typedef QValueList<Field> FieldList;
+}
 
 #endif
