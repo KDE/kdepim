@@ -1,0 +1,177 @@
+GENERAL Properties (for all types):
+===================================
+
+WebDAV property                              |  Incidence:: method
+---------------------------------------------+----------------------  
+DAV:contentclass                             |  "urn:content-classes:appointment" / :task / :message
+DAV:getcontenttype                           |  "message/rfc822"
+http://schemas.microsoft.com/mapi/proptag/0x001A001F      | "IPM.Appointment" / .Task / .Journal/.Post
+http://schemas.microsoft.com/exchange/outlookmessageclass | "IPM.Appointment"
+DAV:getetag                                  |  FINGERPRINT
+DAV:href                                     |  CUSTOM
+DAV:creationdate                             |  created()
+DAV:getlastmodified                          |  lastModified()
+DAV:isreadonly                               |  isReadOnly()
+http://schemas.microsoft.com/repl/repl-uid   |  schedulingID()
+                                             |  
+DAV:uid                                      |  uid()
+urn:schemas:mailheader:subject               |  summary()
+urn:schemas:httpmail:subject                 |  summary() (welches der beiden?)
+urn:schemas:httpmail:textdescription         |  description()
+urn:schemas:httpmail:date                    |  ? (datestamp, no method in libkcal!)
+DAV:comment                                  |  comments()
+                                             |  
+urn:schemas-microsoft-com:office:office#Keywords | categories()
+                                             |  
+http://schemas.microsoft.com/exchange/sensitivity |  secrecy()
+urn:schemas:httpmail:priority                |  priority()
+                                             |  
+urn:schemas:httpmail:from                    |  organizer()
+urn:schemas:httpmail:to                      |  attendees(), required
+urn:schemas:httpmail:cc                      |  attendees(), optional
+                                             |  resources ???
+                                             |  
+urn:schemas:httpmail:hasattachment           |  attachments() ???
+
+
+
+
+Event:
+======
+See 
+-) http://msdn.microsoft.com/library/default.asp?url=/library/en-us/e2k3/e2k3/_exch2k_urn_content-classes_appointment.asp
+-) http://msdn.microsoft.com/library/default.asp?url=/library/en-us/e2k3/e2k3/_cdo_schema_dav.asp
+-) http://msdn.microsoft.com/library/default.asp?url=/library/en-us/e2k3/e2k3/_cdo_schema_httpmail.asp
+
+h="http://schemas.microsoft.com/mapi/id/{00062002-0000-0000-C000-000000000046}/"
+
+
+WebDAV property                              |  Incidence:: method
+---------------------------------------------+----------------------  
+urn:schemas:calendar:created                 |  created()  ?, siehe DAV:creationdate
+urn:schemas:calendar:lastmodified            |  lastModified() ?, siehe DAV:getlastmodified
+urn:schemas:calendar:dtstamp                 |   ??
+urn:schemas:calendar:sequence                |  revision()
+                                             |  
+urn:schemas:calendar:location                |  location()
+                                             |  
+//urn:schemas:calendar:organizer               |  organizer()
+//urn:schemas:calendar:method                  |  ??
+//urn:schemas:calendar:responserequested       |  ??
+//urn:schemas:calendar:meetingstatus           |  ??
+//urn:schemas:calendar:replytime               |  ??
+
+urn:schemas:calendar:busystatus              |  status()
+urn:schemas:calendar:transparent             |  transparency(): Event::Transparent, Event::Opaque
+                                             |  
+urn:schemas:calendar:timezone                |  ??
+urn:schemas:calendar:alldayevent             |  doesFloat()
+urn:schemas:calendar:dtstart                 |  dtStart()
+urn:schemas:calendar:dtend                   |  dtEnd()
+urn:schemas:calendar:duration                |  duration()
+                                             |  
+urn:schemas:calendar:rrule                   |  recurrence(), doesRecur()
+urn:schemas:calendar:rdate                   |  --
+urn:schemas:calendar:exrule                  |  --
+urn:schemas:calendar:exdate                  |  recurrence()->exDates(), recurrence()->exDateTimes()
+urn:schemas:calendar:recurrenceid            |  recurrenceId() ?? (protected?)
+urn:schemas:calendar:instancetype            |   ??
+                                             |  
+urn:schemas:calendar:reminderoffset          |  alarms()
+                                             |  
+urn:schemas:calendar:resources               |  resources()
+                                             |  
+?                                            |  custom items?
+
+
+No correspondence:
+==================
+urn:schemas:calendar:timezoneid
+urn:schemas:calendar:geolatitude
+urn:schemas:calendar:geolongitude
+urn:schemas:calendar:contacturl
+urn:schemas:calendar:descriptionurl
+urn:schemas:calendar:locationurl
+urn:schemas:httpmail:htmldescription
+urn:schemas:httpmail:priority
+urn:schemas:calendar:recurrenceidrange
+urn:schemas:contacts:billinginformation
+http://schemas.microsoft.com/exchange/companies
+http://schemas.microsoft.com/exchange/mileage
+urn:schemas:httpmail:normalizedsubject
+DAV:displayname
+DAV:id
+
+
+Incidence::pilotId()
+Incidence::syncStatus()
+Incidence::relatedToUid()
+
+
+
+
+
+Task:
+=====
+For the mapping of the MAPI properties and the hex codes to access them via
+WebDAV, see http://www.cdolive.com/cdo10.htm
+
+h1="http://schemas.microsoft.com/mapi/id/{00062003-0000-0000-C000-000000000046}/"  (CdoPropSetID2)
+h2="http://schemas.microsoft.com/mapi/id/{00062008-0000-0000-C000-000000000046}/"  (CdoPropSetID4)
+b='urn:uuid:c2f41010-65b3-11d1-a29f-00aa00c14882/'
+oder:
+b="urn:schemas-microsoft-com:datatypes"
+
+
+WebDAV property                              |  Incidence:: method
+---------------------------------------------+----------------------  
+?? --------------------------                |  revision()
+-----------------------------                |  location()
+-----------------------------                |  status()
+-----------------------------                |  doesFloat()
+                                             |  
+h1:0x00008104 b:dt="dateTime.tz"             |  dtStart() (or h2:0x00008516), z.B. 2003-09-11T18:45:00.00Z
+h1:0x00008105 b:dt="dateTime.tz"             |  dtDue() (or h2:0x00008517)
+h1:0x00008106                                |  duration()
+                                             |  
+h1:0x0000811C b:dt="boolean"                 |  isCompleted() (0/1)
+h1:0x00008102 b:dt='float'                   |  percentComplete(), 0.0-1.0
+h1:0x0000810f b:dt="dateTime.tz"             |  completed()
+-----------------------------                |  hasCompletedDate()
+                                             |  
+h1:0x00008126 b:dt="boolean"                 |  doesRecur()
+-----------------------------                |  recurrence()
+-----------------------------                |  recurrence()->exDates(), recurrence()->exDateTimes()
+-----------------------------                |  recurrenceId() ?? (protected?)
+                                             |  
+h2:0x00008503 b:dt="boolean" (reminder set: 0/1) |  alarms()
+h2:0x00008502 b:dt="dateTime.tz"             |  ?  (reminder date/time)
+h2:0x0000851E                                |  ReminderPlaySound
+h2:0x0000851F                                |  ReminderSoundFile
+                                             |  
+h1:0x00008101 b:dt='int'                     |  status:  0_Open, 1_InProgress, 2_Completed, 3_WaitingForSomeoneElse, 4_Deferred
+                                             |  
+
+
+No correspondence:
+==================
+Incidence::pilotId()
+Incidence::syncStatus()
+Incidence::relatedToUid()
+Incidence::custom()
+
+h1:0x00008103    TeamTask (b:dt="boolean")
+h1:0x00008110    ActualWork: In minutes
+h1:0x00008111    TotalWork: In minutes
+h1:0x00008129    assignment
+
+
+Journal:
+========
+
+#define E2K_NS_OUTLOOK_JOURNAL		E2K_NS_MAPI_ID "{0006200A-0000-0000-C000-000000000046}/"
+
+WebDAV property                                           |  Journal:: method
+----------------------------------------------------------+---------------------------------
+urn:schemas:httpmail:importance                           |  ?
+urn:schemas:httpmail:date                                 |  dtStart()

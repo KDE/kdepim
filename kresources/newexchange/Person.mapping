@@ -1,0 +1,184 @@
+http://msdn.microsoft.com/library/default.asp?url=/library/en-us/e2k3/e2k3/_cdo_schema_contacts_c.asp
+http://msdn.microsoft.com/library/default.asp?url=/library/en-us/e2k3/e2k3/_exch2k_urn_content-classes_person.asp
+
+/* KDE4: addressee does not have any creation or modification date :-(( */
+/* KDE4: read-only not supported by libkabc */
+
+WebDAV property                              |  Addressee:: method
+---------------------------------------------+----------------------    
+DAV:contentclass                             |  "urn:content-classes:appointment"
+http://schemas.microsoft.com/exchange/outlookmessageclass | "IPM.Contact"
+DAV:getetag                                  |  FINGERPRINT
+DAV:href                                     |  CUSTOM
+DAV:creationdate                             |  created()
+DAV:getlastmodified                          |  lastModified()
+DAV:isreadonly                               |  isReadOnly()
+//urn:schemas:calendar:dtstamp                 |   ??
+//urn:schemas:calendar:sequence                |  revision()
+//http://schemas.microsoft.com/repl/uid        |  schedulingID()
+
+urn:schemas:contacts:cn                      |  uid()
+urn:schemas:contacts:uid                     |  uid()
+                                             |  
+urn:schemas:contacts:fileas (niceName)       |  formattedName()
+//urn:schemas:contacts:cn                    |  formattedName()
+urn:schemas:contacts:givenName               |  givenName()
+urn:schemas:contacts:initials                |  -
+urn:schemas:contacts:middlename              |  additionalName()
+urn:schemas:contacts:namesuffix              |  suffix()
+urn:schemas:contacts:personaltitle           |  prefix()
+urn:schemas:contacts:sn (surname)            |  familyName()
+                                             |  
+urn:schemas:contacts:title                   |  role() / title()
+                                             |  
+urn:schemas:contacts:o (org.)                |  organization()
+urn:schemas:contacts:department              |  custom( "KADDRESSBOOK", "X-Department" )
+urn:schemas:contacts:roomnumber              |  custom( "KADDRESSBOOK", "X-Office" )
+urn:schemas:contacts:profession              |  custom( "KADDRESSBOOK", "X-Profession" )
+urn:schemas:contacts:manager                 |  custom( "KADDRESSBOOK", "X-ManagersName" )
+urn:schemas:contacts:secretarycn             |  custom( "KADDRESSBOOK", "X-AssistantsName" )
+                                             |  
+urn:schemas:contacts:email1                  |  emails();
+urn:schemas:contacts:email2                  |   -"-
+urn:schemas:contacts:email3                  |   -"-
+                                             | 
+urn:schemas:contacts:personalHomePage        |  -
+urn:schemas:contacts:businesshomepage        |  url()
+                                             |  
+urn:schemas:calendar:fburl                   |  KCal::FreeBusyUrlStore::self()->readUrl( addr.preferredEmail() )
+                                             |  
+urn:schemas-microsoft-com:office:office#Keywords |  categories()
+                                             | 
+DAV:sensitivity                              |  secrecy()
+                                             | 
+urn:schemas:contacts:telephoneNumber         |  phoneNumber( Home )
+urn:schemas:contacts:telephonenumber2        |  phoneNumber( Home )
+urn:schemas:contacts:officetelephonenumber   |  phoneNumber( Work )
+urn:schemas:contacts:office2telephonenumber  |  phoneNumber( Work )
+urn:schemas:contacts:secretaryphone          |  phoneNumber( Work )
+urn:schemas:contacts:organizationmainphone   |  phoneNumber( Work )
+urn:schemas:contacts:otherTelephone          |  phoneNumber( )
+urn:schemas:contacts:homePhone               |  phoneNumber( Home )
+urn:schemas:contacts:homephone2              |  phoneNumber( Home )
+urn:schemas:contacts:mobile                  |  phoneNumber( Cell | Pref )
+urn:schemas:contacts:othermobile             |  phoneNumber( Cell )
+urn:schemas:contacts:facsimiletelephonenumber|  phoneNumber( Fax )
+urn:schemas:contacts:homefax                 |  phoneNumber( Fax | Home )
+urn:schemas:contacts:otherfax                |  phoneNumber( Fax | Work)
+urn:schemas:contacts:pager                   |  phoneNumber( Pager | Work )
+urn:schemas:contacts:otherpager              |  phoneNumber( Pager )
+urn:schemas:contacts:internationalisdnnumber |
+  (isdn number)                              |  phoneNumber( Isdn )
+urn:schemas:contacts:callbackphone           |  phoneNumber( Msg )
+urn:schemas:contacts:telexnumber             |  phoneNumber( Bbs )
+urn:schemas:contacts:ttytddphone             |  phoneNumber( Pcs )
+                                             |  
+                                             |  
+// work address:                             |  
+urn:schemas:contacts:workaddress             |  address(Work|Pref).
+urn:schemas:contacts:street                  |  address(Work|Pref).street()
+urn:schemas:contacts:postofficebox           |  address(Work|Pref).postOfficeBox()
+urn:schemas:contacts:l (city)                |  address(Work|Pref).locality()
+urn:schemas:contacts:postalcode              |  address(Work|Pref).postalCode()
+urn:schemas:contacts:st (work state)         |  address(Work|Pref).region()
+urn:schemas:contacts:co  (full ctry/region)  |  address(Work|Pref).country()
+urn:schemas:contacts:c  (ctry/region abbrev.)|  address(Work|Pref).countryCode()
+                                             |  
+// home address:                             |  
+urn:schemas:contacts:homepostaladdress       |  address(Home).
+urn:schemas:contacts:homeStreet              |  address(Home).street()
+urn:schemas:contacts:homepostofficebox       |  address(Home).postOfficeBox()
+urn:schemas:contacts:homeCity                |  address(Home).locality()
+urn:schemas:contacts:homePostalCode          |  address(Home).postalCode()
+urn:schemas:contacts:homeState               |  address(Home).region()
+urn:schemas:contacts:homeCountry             |  address(Home).country()
+urn:schemas:contacts:homeCountrycode         |  address(Home).countryCode()
+                                             |  
+// mailing address:                          |  
+urn:schemas:contacts:mailingpostaladdress    |  address(Postal).
+urn:schemas:contacts:mailingstreet           |  address(Postal).street()
+urn:schemas:contacts:mailingpostofficebox    |  address(Postal).postOfficeBox()
+urn:schemas:contacts:mailingcity             |  address(Postal).locality()
+urn:schemas:contacts:mailingpostalcode       |  address(Postal).postalCode()
+urn:schemas:contacts:mailingstate            |  address(Postal).region()
+urn:schemas:contacts:mailingcountry          |  address(Postal).country()
+urn:schemas:contacts:mailingcountrycode      |  address(Postal).countryCode()
+                                             |  
+// other address:                            |  
+urn:schemas:contacts:otherpostaladdress      |  address().
+urn:schemas:contacts:otherstreet             |  address().street()
+urn:schemas:contacts:otherpostofficebox      |  address().postOfficeBox()
+urn:schemas:contacts:othercity               |  address().locality()
+urn:schemas:contacts:otherpostalcode         |  address().postalCode()
+urn:schemas:contacts:otherstate              |  address().region()
+urn:schemas:contacts:othercountry            |  address().country()
+urn:schemas:contacts:othercountrycode        |  address().countryCode()
+                                             |  
+                                             |  
+urn:schemas:contacts:nickname                |  nickName()
+urn:schemas:contacts:spousecn                |  custom( "KADDRESSBOOK", "X-SpousesName" )
+                                             |  
+urn:schemas:contacts:bday                    |  birthday()
+urn:schemas:contacts:weddinganniversary      |  custom( "KADDRESSBOOK", "X-Anniversary" )
+                                             |  
+?                                            |  timeZone()
+                                             |  
+urn:schemas:calendar:geolatitude             |  geo()
+urn:schemas:calendar:geolongitude            |  geo()
+urn:schemas:contacts:mapurl                  |  -
+urn:schemas:contacts:location                |  -
+                                             |  
+urn:schemas:httpmail:textdescription         |  note()
+                                             |  
+urn:schemas:contacts:usercertificate         |  keys()
+                                             |  
+-                                            |  custom( app, name )
+                                             |
+// http://schemas.microsoft.com/mapi/id/{00062004-0000-0000-C000-000000000046}/0x00008025  |  Journal
+// http://schemas.microsoft.com/mapi/id/{00062004-0000-0000-C000-000000000046}/0x00008056  |  NetMeeting
+http://schemas.microsoft.com/mapi/id/{00062004-0000-0000-C000-000000000046}/0x00008062  |  IM Address
+
+
+
+KABC::Addressee method not used:
+logo()
+photo()
+sound()
+agent()
+revision()
+productId()
+mailer()
+
+
+KABC::Address methods not used:
+id()
+type()
+extended ()
+
+
+  Not used:
+urn:schemas:contacts:computernetworkname
+urn:schemas:contacts:customerid
+urn:schemas:contacts:dn
+urn:schemas:contacts:employeenumber
+urn:schemas:contacts:fileasid
+urn:schemas:contacts:ftpsite
+urn:schemas:contacts:gender
+urn:schemas:contacts:governmentid
+urn:schemas:contacts:hobbies
+urn:schemas:contacts:homelatitude
+urn:schemas:contacts:homelongitude
+urn:schemas:contacts:hometimezone
+urn:schemas:contacts:language
+urn:schemas:contacts:mailingaddressid
+urn:schemas:contacts:othertimezone
+urn:schemas:contacts:proxyaddresses
+urn:schemas:contacts:referredby
+urn:schemas:contacts:secretaryurl
+urn:schemas:contacts:sourceurl
+urn:schemas:httpmail:hasattachment
+urn:schemas:httpmail:htmldescription
+urn:schemas:httpmail:outbox
+urn:schemas:httpmail:subject
+urn:schemas:mailheader:subject
+
