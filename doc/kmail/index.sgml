@@ -10,7 +10,7 @@
 
 <title>The KMail Handbook
 <author>Markus Wuebben, <tt/markus.wuebben@kde.org/
-<date>Alpha, 10 Sept 1997
+<date>March 5th 1998
 <abstract>This Handbook describes ALPHA KMail
 
 <!-- Table of contents -->
@@ -35,17 +35,9 @@ We hope you will enjoy this Mailer,
 <p>
 <sect1>How to obtain KMail
 <p>
-KMail is a base application of the KDE project <url url="http://www.kde.org">.
+KMail is a part of the KDE project <url url="http://www.kde.org">.
 KMail can be found on <url url="ftp://ftp.kde.org/pub/kde/">, the main ftp site
-of the KDE project, in the kdebase distribution.
-
-<sect1>Requirements
-<p>
-In order to successfully compile KMail, you need the latest versions of 
-<tt> kdesupport</tt> and <tt> kdelibs</tt>. You will also need
-<tt>automake</tt> and <tt>autoconf</tt>. All required libraries & apps can be 
-found on <url url="ftp://ftp.kde.org/pub/kde/">. 
-
+of the KDE project, in the kdenetwork distribution.
 
 
 <sect1>Compilation and installation
@@ -54,7 +46,6 @@ found on <url url="ftp://ftp.kde.org/pub/kde/">.
 In order to compile and install KMail on your system, type the following in the base 
 directory of the KMail distribution:
 <tscreen><verb>
-% make -f Makefile.cvs
 % ./configure
 % make
 % make install
@@ -64,22 +55,41 @@ directory of the KMail distribution:
 Since KMail uses <tt>autoconf</tt> you should have not trouble compiling it.
 Should you run into problems please report them to the <sf/KDE/ mailing lists.
 
-<sect>Fundamentals
+<sect>How to get started...
+<p>
+This will be a very short introduction to kmail and its usage so you can start
+working with it right away! For more in depth information see the Features section.
+
+<sect1> KMail's first invokation....
+<p>
+Invoking kmail for the first time it will create a Directory and some files
+in your home directory. 
+This is the "~/Mail" directory which holds the initial folders (outbox,sent-mail,trash 
+& inbox).
+<p>
+<sect2> Ok,looks good...what now?
 <p>
 The main screen is devided into 3 parts:<p>
 1. The folder widget (upper left widget).<p>
 2. The mail header widget (upper right widget).<p>
 3. The reader widget (lower widget).<p>
 Clicking a folder will open it and display the messages in the header widget.
+Most likely there won't be any messages visible on kmail's first start.
 Clicking one of the headers will make the message appear in the reader widget.
 
+<sect2> Setting up kmail
 <p>
+Please select "Settings" from the "File" - menu. In this Tabdialog you now have to 
+enter some initial information so kmail can work correctly. In addition you can  
+specify some preferences to adjust kmail to your needs.
+
+<p>
+<sect> Features and Details
 <sect1>Folders and Accounts
 <p>
-KMail allows you to have multiple folders and accounts. The philosophy is that you have certain accounts connected to certain folders so if you open a folder and try to get new mail it will automatically open the connection to the bouned account. You can easily create, modify & delete folders and accounts via the menubar items.
+KMail allows you to have multiple folders and accounts. The philosophy is that you have certain accounts connected to certain folders. You can easily create, modify & delete folders and accounts via the menubar items.
 <p>
-<sect>Features
-<p>
+
 <sect1>Drag and Drop
 <p>
 KMail makes use of the KDE Drag and Drop protocol. This means that you can darg
