@@ -130,7 +130,6 @@ ConduitTip::~ConduitTip()
 }
 
 // Page numbers in the widget stack
-#define INTRO            (0)
 #define OLD_CONDUIT      (1)
 #define BROKEN_CONDUIT   (2)
 #define INTERNAL_CONDUIT (3)
@@ -194,21 +193,16 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 	// Right hand column
 	fStack = new QWidgetStack(spl,"RightPart");
 
-	// Zero'th page in stack
-	addDescriptionPage(fStack,INTRO,
-		i18n("<qt>This is KPilot's configuration. "
-		"You can enable an actions or conduit by clicking on its checkbox. "
-		"Checked conduits will be run during a HotSync. "
-		"Select a conduit to configure it. "
-		"General settings can be changed as well."
-		"</qt>"),false);
-
 	// First page in stack (right hand column)
 	addDescriptionPage(fStack,BROKEN_CONDUIT,
 		i18n("<qt>This conduit appears to be broken and cannot "
 		"be configured.</qt>"),false);
 
 	// Second page, now with layout in a single column
+	//
+	//
+	// Probably deprecated.
+	//
 	btns = addDescriptionPage(fStack,OLD_CONDUIT,
 		i18n("<qt>This is an old-style conduit.</qt>"),true);
 	w = new QWidget(btns);
@@ -241,14 +235,20 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 	//
 	// TODO: add wizard-startup buttons here.
 	btns = addDescriptionPage(fStack,GENERAL_EXPLN,
-		i18n("<qt>The <i>general</i> portion of KPilot's setup "
+		i18n("<qt><p>The <i>general</i> portion of KPilot's setup "
 		"contains settings for your hardware and the way KPilot "
 		"should display your data. The HotSync settings are "
-		"various esoteric things.</qt>"),true);
+		"various esoteric things.</p>"
+		"<p>You can enable an action or conduit by clicking on its checkbox. "
+		"Checked conduits will be run during a HotSync. "
+		"Select a conduit to configure it.</p>"
+		"</qt>"),true);
 	w = new QWidget(btns);
 	btns->setStretchFactor(w,50);
-	(void) new QPushButton(i18n("Configuration Wizard"),btns);
-	(void) new QPushButton(i18n("Kontact Wizard"),btns);
+	fConfigureWizard = new QPushButton(i18n("Configuration Wizard"),btns);
+	w = new QWidget(btns);
+	btns->setStretchFactor(w,10);
+	fConfigureKontact = new QPushButton(i18n("Kontact Wizard"),btns);
 	w = new QWidget(btns);
 	btns->setStretchFactor(w,50);
 
@@ -263,6 +263,7 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const char *n,
 	ConduitConfigWidgetBase(parent,n),
 	fConfigure(0L),
 	fCurrentConduit(0L),
+	fGeneralPage(0L),
 	fCurrentConfig(0L),
 	fCurrentOldStyle(0L)
 {
@@ -282,26 +283,27 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const char *n,
 	QObject::connect(fConduitList,
 		SIGNAL(selectionChanged(QListViewItem *)),
 		this,SLOT(selected(QListViewItem *)));
-	QObject::connect(fConfigureButton,
-		SIGNAL(clicked()),
-		this,SLOT(configure()));
 	QObject::connect(fConduitList,
 		SIGNAL(clicked(QListViewItem*)),
 		this, SLOT(conduitsChanged(QListViewItem*)));
 
-	selected(0L);
-	// adjustSize();
-	fStack->raiseWidget(INTRO);
+	// Deprecated?
+	QObject::connect(fConfigureButton,
+		SIGNAL(clicked()),
+		this,SLOT(configure()));
+
+	QObject::connect(fConfigureWizard,SIGNAL(clicked()),
+		this,SLOT(configureWizard()));
+	QObject::connect(fConfigureKontact,SIGNAL(clicked()),
+		this,SLOT(configureKontact()));
+
+	fGeneralPage->setSelected(true);
+	fConduitList->setCurrentItem(fGeneralPage);
+	selected(fGeneralPage);
 
 	(void) new ConduitTip(fConduitList);
 	setButtons(Apply);
 
-/*	QObject::connect(this,SIGNAL(sizeChanged()),
-		h,SLOT(adjustSize()));
-	QObject::connect(this,SIGNAL(sizeChanged()),
-		this,SLOT(adjustSize()));
-*/
-//	load()
 	(void) conduitconfigdialog_id;
 }
 
@@ -326,6 +328,7 @@ void ConduitConfigWidget::fillLists()
 	conduits = new QListViewItem(fConduitList, i18n("Conduits"));
 	actions = new QListViewItem(fConduitList, i18n("Actions"));
 	general = new QListViewItem( fConduitList, i18n("General Setup" ) );
+	fGeneralPage = general;
 
 	// Give them identifiers so they can be handled specially when selected.
 	conduits->setText(CONDUIT_LIBRARY,CSL1("expln_conduits"));
@@ -447,7 +450,7 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 			<< ": Executed NULL conduit?"
 			<< endl;
 #endif
-		fStack->raiseWidget(INTRO);
+		fStack->raiseWidget(GENERAL_EXPLN);
 		return;
 	}
 
@@ -809,5 +812,21 @@ void ConduitConfigWidget::conduitsChanged(QListViewItem*item)
 void ConduitConfigWidget::reopenItem(QListViewItem *i)
 {
 	i->setOpen(true);
+}
+
+void ConduitConfigWidget::configureWizard()
+{
+	FUNCTIONSETUP;
+	KMessageBox::sorry(this,
+		i18n("Sorry, this configuration wizard is still unimplemented."),
+		i18n("Unimplemented feature."));
+}
+
+void ConduitConfigWidget::configureKontact()
+{
+	FUNCTIONSETUP;
+	KMessageBox::sorry(this,
+		i18n("Sorry, this configuration wizard is still unimplemented."),
+		i18n("Unimplemented feature."));
 }
 

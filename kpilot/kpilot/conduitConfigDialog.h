@@ -7,7 +7,7 @@
 ** This file defines a dialog that uses the .ui-defined widget for
 ** configuring conduits.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 ** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -54,6 +54,7 @@ public:
 	QWidgetStack *fStack;
 	QLabel *fOldStyleLabel;
 	QPushButton *fConfigureButton;
+	QPushButton *fConfigureWizard,*fConfigureKontact;
 } ;
 
 class ConduitConfigWidget : public ConduitConfigWidgetBase
@@ -82,7 +83,7 @@ public:
 	*/
 	bool release();
 	bool validate() {return release(); }
-	
+
 public slots:
 	virtual void save();
 	virtual void load();
@@ -94,14 +95,18 @@ signals:
 	void sizeChanged();
 
 protected slots:
-	void selected(QListViewItem *);
 	void configure();
+	void configureWizard();
+	void configureKontact();
+
+	void selected(QListViewItem *);
 	void conduitsChanged(QListViewItem*);
 	void reopenItem(QListViewItem *);
 
 private:
 	QPushButton *fConfigure;
 	QListViewItem *fCurrentConduit;
+	QListViewItem *fGeneralPage;
 	ConduitConfigBase *fCurrentConfig;
 	ConduitConfig *fCurrentOldStyle;
 } ;
