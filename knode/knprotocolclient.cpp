@@ -1,9 +1,9 @@
 /***************************************************************************
                           knprotocolclient.cpp  -  description
                              -------------------
-
     copyright            : (C) 2000 by Christian Gebauer
     email                : gebauer@bigfoot.com
+    version              : $Id$
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,23 +15,23 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "config.h"
+#include <config.h>
 
-#ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
-#endif
 #include <sys/socket.h>
 #include <sys/time.h>
+
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <netdb.h>
-#include <fcntl.h>
-#include <stdio.h>
+
 #include <errno.h>
+#include <fcntl.h>
+#include <netdb.h>
+#include <pthread.h>
+#include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <pthread.h>
 
 #ifndef MSG_NOSIGNAL
 /* bloody glibc 2.0 doesn't define MSG_NOSIGNAL */
@@ -66,7 +66,7 @@ KNProtocolClient::~KNProtocolClient()
 
 void* KNProtocolClient::startThread(void* pseudoThis)
 {
-  KNProtocolClient* newthis = (KNProtocolClient*) (pseudoThis);
+  KNProtocolClient *newthis = static_cast<KNProtocolClient*>(pseudoThis);
 
   if (0!=pthread_setcanceltype(PTHREAD_CANCEL_ENABLE,NULL))
     qWarning("pthread_setcanceltype failed!");
