@@ -4,6 +4,9 @@
 #include <qvariant.h>
 #include <qscrollview.h>
 #include <qwidget.h>
+#include <qptrlist.h>
+
+#include <manipulatorpart.h>
 
 class QVBoxLayout; 
 class QHBoxLayout; 
@@ -17,11 +20,7 @@ namespace KitchenSync{
   class OverviewWidget : public QWidget
     { 
       Q_OBJECT
-	
-	public:
-      OverviewWidget( QWidget* parent = 0, const char* name = 0, WFlags fl = 0 );
-      ~OverviewWidget();
-      
+	     
     private:
       QFrame* Line;
       /**
@@ -39,25 +38,41 @@ namespace KitchenSync{
       void showProgressPart();
       
     public:
+      OverviewWidget( QWidget* parent = 0, const char* name = 0, WFlags fl = 0 );
+      ~OverviewWidget();
+      
+      
+    public:
       void setDeviceName(QString);
       void setNameField(QString);
       void setLogo(QPixmap);
-      
+      /**
+       * Prints the list of possible syncable features
+       */
+      void showList(QPtrList<ManipulatorPart>);
     };
   
   class NewProgress : public QWidget {
     Q_OBJECT
-    
+
+     private:
+    QLabel* progressItemPix;
+    QLabel* progressLabel;
+    QLabel* statusLabel;
+
       public:
     NewProgress( QPixmap &icon, 
 		 QString text, 
-		 bool progress,
 		 QWidget* parent = 0,
 		 const char* name = 0,
 		 WFlags fl = 0) ; 
+    ~NewProgress();
     
-    QLabel* progressItemPix;
-    QLabel* progressLabel;
+  public: 
+    void setProgressItemPix(QPixmap);
+    void setProgressLabel(QString);
+    void setStatusLabel(QPixmap);
+    
 };
   
 };

@@ -12,11 +12,14 @@
 #include <qscrollview.h>
 #include <qwidget.h>
 #include <qmovie.h>
+#include <qptrlist.h>
 #include <qvbox.h>
 
 #include <klocale.h>
 #include <kglobal.h>
 #include <kicontheme.h>
+
+#include <manipulatorpart.h>
 
 using namespace KitchenSync;
 
@@ -61,9 +64,23 @@ OverviewWidget::OverviewWidget( QWidget* parent,  const char* name, WFlags fl )
   sv->setFrameShape(QFrame::NoFrame);
   
   sv->show();
-  showProgressPart();
 }
 
+void OverviewWidget::showList(QPtrList<ManipulatorPart> list) {
+  
+  QVBox* progressLayout = new QVBox( sv->viewport() );
+  
+  ManipulatorPart* currentPart;
+  for (currentPart = list.first(); currentPart != 0; currentPart = list.next()) {
+    
+    QPixmap *image = currentPart->pixmap();
+    QString text = currentPart->name();
+    
+    NewProgress *test = new NewProgress(*image, text, progressLayout);
+    
+    sv->addChild(test);
+  }
+}
 
 void OverviewWidget::setDeviceName(QString name) {
   deviceName->setText( i18n("<h2> %1 </h2>").arg(name) );
@@ -78,32 +95,38 @@ void OverviewWidget::setLogo(QPixmap image0) {
 }
 
 
-void OverviewWidget::showProgressPart() {
-  QPixmap image0( "../kitchensync.png"  );
-
-  QVBox* progressLayout = new QVBox( sv->viewport() );
-
-  progressLayout->setBackgroundColor(Qt::red );
-  NewProgress *test = new NewProgress(image0, "test",0, progressLayout);
-
-  sv->addChild(progressLayout);
-}
-
 NewProgress::NewProgress( QPixmap &icon, 
 			  QString text, 
-			  bool progress,
 			  QWidget* parent = 0,
 			  const char* name = 0,
 			  WFlags fl = 0) : QWidget(parent, name, fl) {
   
   progressItemPix = new QLabel( this, "progressItemPix" );
   progressItemPix->setGeometry( QRect ( 20, 0, 20, 20) );
+  progressItemPix->setPixmap( icon );
   
   progressLabel = new QLabel( this, "progressLabel" );
-  progressLabel->setGeometry( QRect( 20, 0, 440, 20 ) ); 
-  progressLabel->setText( i18n( "Progress" ) );
+  progressLabel->setGeometry( QRect( 50, 0, 440, 20 ) ); 
+  progressLabel->setText( i18n( "<b> %1 <b>" ).arg(text) );
   progressLabel->setAlignment( int( QLabel::AlignTop | QLabel::AlignLeft ) );
   
+  statusLabel = new QLabel ( this, "statusLabel" );
+  statusLabel->setGeometry( QRect ( 20, 0, 20, 20) );
+}
+
+void NewProgress::setProgressItemPix(QPixmap image) {
+  progressItemPix->setPixmap( image );
+}
+
+void NewProgress::setProgressLabel(QString text) {
+  progressLabel->setText( i18n(text) );
+}
+
+void NewProgress::setStatusLabel(QPixmap image) {
+  progressItemPix->setPixmap( image );
+}
+
+NewProgress::~NewProgress() {
 }
 
 OverviewWidget::~OverviewWidget() {
