@@ -42,7 +42,6 @@ class QSocketNotifier;
 class KPilotUser;
 class SyncAction;
 
-
 class SyncAction : public QObject
 {
 Q_OBJECT
@@ -50,7 +49,8 @@ Q_OBJECT
 public:
 	SyncAction(KPilotDeviceLink *p,
 		const char *name=0L);
-
+	~SyncAction();
+	
 	typedef enum { Error=-1 } Status;
 
 	int status() const { return fActionStatus; } ;
@@ -84,7 +84,7 @@ signals:
 	void logMessage(const QString &);
 	void logError(const QString &);
 	void logProgress(const QString &,int);
-
+	
 	/**
 	* It might not be safe to emit syncDone() from exec().
 	* So instead, call delayDone() to wait for the main event
@@ -96,6 +96,7 @@ signals:
 	*/
 protected slots:
 	void delayedDoneSlot();
+	
 protected:
 	bool delayDone();
 
@@ -141,7 +142,33 @@ public:
 		eDelete,
 		eCROffset=-1
 	};
-} ;
+	
+protected:
+	QTimer *fTickleTimer;
+	unsigned fTickleCount,fTickleTimeout;
+
+	/**
+	* Call startTickle() some time before showing a dialog to the
+	* user (we're assuming a local event loop here) so that while
+	* the dialog is up and the user is thinking, the pilot stays
+	* awake. Afterwards, call stopTickle().
+	*
+	* The parameter to startTickle indicates the timeout, in
+	* seconds, before signal timeout is emitted. You can connect
+	* to that, again, to take down the user interface part if the
+	* user isn't reacting.
+	*/
+	void startTickle(unsigned count=0);
+	void stopTickle();
+protected slots:
+	/**
+	* Called whenever the tickle state is on, uses dlp_tickle()
+	* or something like that to prevent the pilot from timing out.
+	*/
+	void tickle();
+signals:
+	void timeout();
+};
 
 
 
@@ -163,34 +190,9 @@ public:
 	//
 	// virtual void exec()=0;
 
-protected slots:
-	/**
-	* Called whenever the tickle state is on, uses dlp_tickle()
-	* or something like that to prevent the pilot from timing out.
-	*/
-	void tickle();
-
-signals:
-	void timeout();
 
 protected:
 	QWidget *fParent;
-	QTimer *fTickleTimer;
-	unsigned fTickleCount,fTickleTimeout;
-
-	/**
-	* Call startTickle() some time before showing a dialog to the
-	* user (we're assuming a local event loop here) so that while
-	* the dialog is up and the user is thinking, the pilot stays
-	* awake. Afterwards, call stopTickle().
-	*
-	* The parameter to startTickle indicates the timeout, in
-	* seconds, before signal timeout is emitted. You can connect
-	* to that, again, to take down the user interface part if the
-	* user isn't reacting.
-	*/
-	void startTickle(unsigned count=0);
-	void stopTickle();
 
 	/**
 	* Ask a yes-no question of the user. This has a timeout so that

@@ -3,8 +3,11 @@
 
 2004-06-29 Joern Ahrens
 * Corrected the behavior of the configuration dialog, when the 
-  screensaver option is changed. Ahh, got Adriaans m100, now I'm 
-  able to test without destroying my data on the palm. Thanks Adriaan !
+  screensaver option is changed. 
+* Moved the tickle code from InteractiveAction to SyncAction. 
+  Now it can be used in ConduitAction subclasses as well.
+* Ahh, got Adriaans m100, now I'm able to test without destroying 
+  my data on the palm. Thanks Adriaan !
 
 2004-06-27 Joern Ahrens
 * Filled the notepad conduit with life. The notepads are saved as png

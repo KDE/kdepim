@@ -64,10 +64,18 @@ static const char *syncAction_id =
 SyncAction::SyncAction(KPilotDeviceLink  *p,
 	const char *name) :
 	QObject(p, name),
-	fHandle(p)
+	fHandle(p),
+	fTickleTimer(0L),
+	fTickleCount(0),
+	fTickleTimeout(0)
 {
 	FUNCTIONSETUP;
 	(void) syncAction_id;
+}
+
+SyncAction::~SyncAction()
+{
+	KPILOT_DELETE(fTickleTimer);
 }
 
 /* virtual */ QString SyncAction::statusString() const
@@ -129,27 +137,7 @@ bool SyncAction::delayDone()
 	return i18n("Unknown sync mode");
 }
 
-InteractiveAction::InteractiveAction(KPilotDeviceLink *p,
-	QWidget * visibleparent,
-	const char *name) :
-	SyncAction(p, name),
-	fParent(visibleparent),
-	fTickleTimer(0L),
-	fTickleCount(0),
-	fTickleTimeout(0)
-{
-	FUNCTIONSETUP;
-}
-
-InteractiveAction::~InteractiveAction()
-{
-	FUNCTIONSETUP;
-
-	KPILOT_DELETE(fTickleTimer);
-}
-
-
-void InteractiveAction::startTickle(unsigned timeout)
+void SyncAction::startTickle(unsigned timeout)
 {
 	FUNCTIONSETUP;
 	fTickleTimeout = timeout;
@@ -168,7 +156,7 @@ void InteractiveAction::startTickle(unsigned timeout)
 	fTickleTimer->start(1000, false);
 }
 
-void InteractiveAction::stopTickle()
+void SyncAction::stopTickle()
 {
 	FUNCTIONSETUP;
 	if (fTickleTimer)
@@ -177,7 +165,7 @@ void InteractiveAction::stopTickle()
 	}
 }
 
-void InteractiveAction::tickle()
+void SyncAction::tickle()
 {
 	FUNCTIONSETUP;
 	fTickleCount++;
@@ -201,6 +189,21 @@ void InteractiveAction::tickle()
 				<< "Couldn't tickle Pilot!" << endl;
 		}
 	}
+}
+
+
+InteractiveAction::InteractiveAction(KPilotDeviceLink *p,
+	QWidget * visibleparent,
+	const char *name) :
+	SyncAction(p, name),
+	fParent(visibleparent)
+{
+	FUNCTIONSETUP;
+}
+
+InteractiveAction::~InteractiveAction()
+{
+	FUNCTIONSETUP;
 }
 
 int InteractiveAction::questionYesNo(const QString & text,
