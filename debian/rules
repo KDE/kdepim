@@ -7,11 +7,6 @@
 export DH_COMPAT=3
 tmp = $(shell pwd)/debian/korganizer
 ARCH = $(shell dpkg-architecture -qDEB_BUILD_ARCH)
-ifeq ($(ARCH),alpha)
-  COMPILER_FLAGS=CXX=g++-3.0 CC=gcc-3.0 CFLAGS=-mieee CXXFLAGS=-mieee
-else
-  COMPILER_FLAGS=CXX=g++ CC=gcc
-endif
 ifeq ($(ARCH),i386)
   OBJPRELINK=--enable-objprelink
 endif
@@ -28,7 +23,6 @@ build-stamp:
 	if test ! -f configure; then \
 	  $(MAKE) -f admin/Makefile.common ;\
 	fi
-	$(COMPILER_FLAGS) \
 	./configure $(configkdepim) $(OBJPRELINK)
 	$(MAKE)
 	touch build-stamp
