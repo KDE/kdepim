@@ -479,62 +479,6 @@ missed alarms by selecting
 
 </sect2>
 
-<sect2 id="preferences">
-<title>Configuring default options</title>
-
-<para>To set default options for &kalarm;, select
-<menuchoice><guimenu>Settings</guimenu>
-<guimenuitem>Configure &kalarm;...</guimenuitem></menuchoice>.
-This displays the configuration dialog. Here, you can:</para>
-
-<itemizedlist>
-<listitem><para>Specify &kalarm;'s run mode. You can choose either to
-run it continuously in the &kde; system tray, or to run it only on
-demand. This selection does not affect the display of alarms when they
-become due, since it is the <application>alarm daemon</application>
-and not &kalarm; which monitors the alarm list. Running &kalarm; in
-the system tray makes the application more accessible and displays an
-alarm-enabled indication, but running an application continuously does
-consume some system resources. So if system performance is of concern,
-the <quote>on-demand</quote> option may be preferable.</para>
-
-<para>When running in <quote>on-demand</quote> mode, the system tray
-icon can still be displayed. The main difference in operation between
-the two modes is the effect of closing the system tray icon: in
-<quote>on-demand</quote> mode, closing it has no effect on any
-&kalarm; windows, while in <quote>continuous</quote> mode, closing it
-also closes all &kalarm; main windows.</para>
-</listitem>
-
-<listitem><para>If you specified that &kalarm; should run in
-<quote>continuous</quote> mode, you can disable all alarms due for
-display while &kalarm; is not running.</para>
-</listitem>
-
-<listitem><para>Specify that the &kalarm; system tray icon should be
-displayed at &kde; session login.</para>
-</listitem>
-
-<listitem><para>Set the frequency at which the &kalarm; system tray
-icon is updated to reflect whether alarms are currently being
-monitored. This involves checking whether the <application>alarm
-daemon</application> is running.</para>
-</listitem>
-
-<listitem><para>Set the start-of-day time for the purposes of
-triggering date-only alarms, &ie; ones for which the <guilabel>Any
-time</guilabel> option was selected. On the date when they are due,
-such alarms will be output at the earliest opportunity during the
-24 hours starting from the start-of-day time.</para>
-</listitem>
-
-<listitem><para>Set the default font and background colour to use for
-alarm message display.</para>
-</listitem>
-</itemizedlist>
-
-</sect2>
-
 <sect2>
 <title>Configuring the <application>alarm daemon</application></title>
 
@@ -694,6 +638,62 @@ alarms while not running</guilabel> in the Preferences dialog).</para>
 </listitem>
 </varlistentry>
 </variablelist>
+
+</sect1>
+
+<sect1 id="preferences">
+<title>Configuring default options</title>
+
+<para>To set default options for &kalarm;, select
+<menuchoice><guimenu>Settings</guimenu>
+<guimenuitem>Configure &kalarm;...</guimenuitem></menuchoice>.
+This displays the configuration dialog. Here, you can:</para>
+
+<itemizedlist>
+<listitem><para>Specify &kalarm;'s run mode. You can choose either to
+run it continuously in the &kde; system tray, or to run it only on
+demand. This selection does not affect the display of alarms when they
+become due, since it is the <application>alarm daemon</application>
+and not &kalarm; which monitors the alarm list. Running &kalarm; in
+the system tray makes the application more accessible and displays an
+alarm-enabled indication, but running an application continuously does
+consume some system resources. So if system performance is of concern,
+the <quote>on-demand</quote> option may be preferable.</para>
+
+<para>When running in <quote>on-demand</quote> mode, the system tray
+icon can still be displayed. The main difference in operation between
+the two modes is the effect of closing the system tray icon: in
+<quote>on-demand</quote> mode, closing it has no effect on any
+&kalarm; windows, while in <quote>continuous</quote> mode, closing it
+also closes all &kalarm; main windows.</para>
+</listitem>
+
+<listitem><para>If you specified that &kalarm; should run in
+<quote>continuous</quote> mode, you can disable all alarms due for
+display while &kalarm; is not running.</para>
+</listitem>
+
+<listitem><para>Specify that the &kalarm; system tray icon should be
+displayed at &kde; session login.</para>
+</listitem>
+
+<listitem><para>Set the frequency at which the &kalarm; system tray
+icon is updated to reflect whether alarms are currently being
+monitored. This involves checking whether the <application>alarm
+daemon</application> is running.</para>
+</listitem>
+
+<listitem><para>Set the start-of-day time for the purposes of
+triggering date-only alarms, &ie; ones for which the <guilabel>Any
+time</guilabel> option was selected. On the date when they are due,
+such alarms will be output at the earliest opportunity during the
+24 hours starting from the start-of-day time.</para>
+</listitem>
+
+<listitem><para>Set the default font and background colour to use for
+alarm message display.</para>
+</listitem>
+</itemizedlist>
 
 </sect1>
 
