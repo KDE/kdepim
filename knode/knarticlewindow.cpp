@@ -53,10 +53,10 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, const
   actPostReply = new KAction(i18n("Post &reply"),"reply", Key_R , this, SLOT(slotArtReply()),
                              actionCollection(), "article_postReply");
   actPostReply->setEnabled(false);
-  actMailReply = new KAction(i18n("&Mail reply"),"remail", Key_A , this, SLOT(slotArtRemail()),
+  actMailReply = new KAction(i18n("&Mail reply"),"mail_reply", Key_A , this, SLOT(slotArtRemail()),
                              actionCollection(), "article_mailReply");
   actMailReply->setEnabled(false);
-  actForward = new KAction(i18n("&Forward"),"fwd", Key_F , this, SLOT(slotArtForward()),
+  actForward = new KAction(i18n("&Forward"), "mail_forward", Key_F , this, SLOT(slotArtForward()),
                            actionCollection(), "article_forward");
   actForward->setEnabled(false);
   actCancel = new KAction(i18n("article","&Cancel"), 0 , this, SLOT(slotArtCancel()),
