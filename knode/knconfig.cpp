@@ -310,7 +310,7 @@ QColor KNConfig::Appearance::backgroundColor()
   if(u_seColors)
     return c_olors[background];
   else
-    return kapp->palette().active().base();
+    return defaultColor( background );
 }
 
 
@@ -319,7 +319,7 @@ QColor KNConfig::Appearance::alternateBackgroundColor()
   if(u_seColors)
     return c_olors[alternateBackground];
   else
-    return KGlobalSettings::alternateBackgroundColor();
+    return defaultColor( alternateBackground );
 }
 
 
@@ -328,7 +328,7 @@ QColor KNConfig::Appearance::textColor()
   if(u_seColors)
     return c_olors[normalText];
   else
-    return kapp->palette().active().text();
+    return defaultColor( normalText );
 }
 
 
@@ -337,7 +337,7 @@ QColor KNConfig::Appearance::quoteColor1()
   if(u_seColors)
     return c_olors[quoted1];
   else
-    return kapp->palette().active().text();
+    return defaultColor( quoted1 );
 }
 
 
@@ -346,7 +346,7 @@ QColor KNConfig::Appearance::quoteColor2()
   if(u_seColors)
     return c_olors[quoted2];
   else
-    return kapp->palette().active().text();
+    return defaultColor( quoted2 );
 }
 
 
@@ -355,7 +355,7 @@ QColor KNConfig::Appearance::quoteColor3()
   if(u_seColors)
     return c_olors[quoted3];
   else
-    return kapp->palette().active().text();
+    return defaultColor( quoted3 );
 }
 
 
@@ -364,7 +364,7 @@ QColor KNConfig::Appearance::linkColor()
   if(u_seColors)
     return c_olors[url];
   else
-    return KGlobalSettings::linkColor();
+    return defaultColor( url );
 
 }
 
@@ -374,7 +374,7 @@ QColor KNConfig::Appearance::headerDecoColor()
   if(u_seColors)
     return c_olors[header];
   else
-    return kapp->palette().active().background();
+    return defaultColor( header );
 }
 
 
@@ -383,7 +383,7 @@ QColor KNConfig::Appearance::unreadThreadColor()
   if(u_seColors)
     return c_olors[unreadThread];
   else
-    return kapp->palette().active().text();
+    return defaultColor( unreadThread );
 }
 
 
@@ -392,7 +392,7 @@ QColor KNConfig::Appearance::readThreadColor()
   if(u_seColors)
     return c_olors[readThread];
   else
-    return kapp->palette().disabled().text();
+    return defaultColor( readThread );
 }
 
 
@@ -401,7 +401,7 @@ QColor KNConfig::Appearance::unreadArticleColor()
   if(u_seColors)
     return c_olors[unreadArticle];
   else
-    return QColor(183,154,11);
+    return defaultColor( unreadArticle );
 }
 
 
@@ -410,7 +410,7 @@ QColor KNConfig::Appearance::readArticleColor()
   if(u_seColors)
     return c_olors[readArticle];
   else
-    return QColor(136,136,136);
+    return defaultColor( readArticle );
 }
 
 
@@ -419,7 +419,7 @@ QFont KNConfig::Appearance::articleFont()
   if(u_seFonts)
     return f_onts[article];
   else
-    return KGlobalSettings::generalFont();
+    return defaultFont( article );
 }
 
 
@@ -428,7 +428,7 @@ QFont KNConfig::Appearance::articleFixedFont()
   if(u_seFonts)
     return f_onts[articleFixed];
   else
-    return KGlobalSettings::fixedFont();
+    return defaultFont( articleFixed );
 }
 
 
@@ -437,7 +437,7 @@ QFont KNConfig::Appearance::composerFont()
   if(u_seFonts)
     return f_onts[composer];
   else
-    return KGlobalSettings::fixedFont();
+    return defaultFont( composer );
 }
 
 
@@ -446,7 +446,7 @@ QFont KNConfig::Appearance::groupListFont()
   if(u_seFonts)
     return f_onts[groupList];
   else
-    return KGlobalSettings::generalFont();
+    return defaultFont( groupList );
 }
 
 
@@ -455,7 +455,7 @@ QFont KNConfig::Appearance::articleListFont()
   if(u_seFonts)
     return f_onts[articleList];
   else
-    return KGlobalSettings::generalFont();
+    return defaultFont( articleList );
 }
 
 
@@ -479,45 +479,35 @@ QColor KNConfig::Appearance::defaultColor(int i)
 
     case background:
       return kapp->palette().active().base();
-    break;
 
     case alternateBackground:
       return KGlobalSettings::alternateBackgroundColor();
 
     case header:
       return kapp->palette().active().background();
-    break;
 
-  case quoted1:
+    case quoted1:
       return QColor( 0x00, 0x80, 0x00 );
-      break;
     case quoted2:
-        return QColor( 0x00, 0x70, 0x00 );
-        break;
+      return QColor( 0x00, 0x70, 0x00 );
     case quoted3:
-        return QColor( 0x00, 0x60, 0x00 );
-        break;
+      return QColor( 0x00, 0x60, 0x00 );
 
     case normalText:
     case unreadThread:
       return kapp->palette().active().text();
-    break;
 
     case url:
       return KGlobalSettings::linkColor();
-    break;
 
     case readThread:
       return kapp->palette().disabled().text();
-    break;
 
     case unreadArticle:
-      return kapp->palette().active().text();
-    break;
+      return QColor( 183, 154, 11 );
 
     case readArticle:
-      return kapp->palette().inactive().text();
-      break;
+      return QColor( 136, 136, 136 );
   }
 
   return kapp->palette().disabled().text();
@@ -526,10 +516,10 @@ QColor KNConfig::Appearance::defaultColor(int i)
 
 QFont KNConfig::Appearance::defaultFont(int i)
 {
-  if (i == 1 || i == 2)
+  if ( i == articleFixed || i == composer )
     return KGlobalSettings::fixedFont();
   else
-  return KGlobalSettings::generalFont();
+    return KGlobalSettings::generalFont();
 }
 
 
