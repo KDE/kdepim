@@ -5,7 +5,7 @@ TESTTODO="testtodo"
 
 # Start with clean environment
 # If runscripts sees output on stderr, it thinks script failed.
-DCOPID=`dcop | grep karm` 2>/dev/null
+DCOPID=`dcop | grep karm 2>/dev/null`
 if [ -n $DCOPID ]; then dcop $DCOPID KarmDCOPIface quit; fi;
 if [ -e $TESTFILE ]; then rm $TESTFILE; fi
 
