@@ -724,7 +724,7 @@ for alarms becoming due. When it determines that an alarm is due, it
 tells &kalarm; to display it, or to cancel it if it is late and late
 display was not selected for that alarm message.</para>
 
-<para>Under &kde3;3, the alarm daemon may also be used by other
+<para>Under &kde;3, the alarm daemon may also be used by other
 applications, including KOrganizer.</para>
 
 <para>The alarm daemon runs in the background, with no user interface.
