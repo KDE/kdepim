@@ -62,8 +62,9 @@ SyncerPart::SyncerPart( QWidget *parent, const char *name,
   m_pixmap = KGlobal::iconLoader()->loadIcon( "package_toys", KIcon::Desktop,
                                               48 );
 
+  /* confirm delete will be changed later */
   mSyncUi = new SyncUiKde( parent, true, true );
-  
+
   mCalendarSyncer.setSyncUi( mSyncUi );
   mAddressBookSyncer.setSyncUi( mSyncUi );
 }
@@ -118,7 +119,7 @@ QWidget *SyncerPart::widget()
     QBoxLayout *topLayout = new QVBoxLayout( m_widget );
     topLayout->setSpacing( KDialog::spacingHint() );
 
-    
+
     QBoxLayout *konnectorLayout = new QHBoxLayout( topLayout );
 
     mKonnectorView = new KonnectorView( m_widget );
@@ -163,6 +164,9 @@ void SyncerPart::executeAction()
 
   mCalendarSyncer.clear();
   mAddressBookSyncer.clear();
+
+  /* set confirmDelete according user preference */
+  mSyncUi->setConfirmDelete( core()->currentProfile().confirmDelete() );
 
   Konnector::List konnectors = core()->engine()->konnectors();
   Konnector *k;

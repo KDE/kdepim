@@ -38,6 +38,7 @@ class QTextView;
 
 namespace KSync {
 
+class SyncUiKde;
 class KonnectorView;
 
 class SyncerPart : public ActionPart
@@ -80,7 +81,7 @@ class SyncerPart : public ActionPart
     Syncer mCalendarSyncer;
     Syncer mAddressBookSyncer;
 
-    SyncUi *mSyncUi;
+    SyncUiKde *mSyncUi;
 };
 
 }
