@@ -98,6 +98,8 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
 
     bool showFullHdrs()               { return f_ullHdrs; }
     void setShowFullHdrs(bool b=true);
+    bool useFixedFont()               { return u_seFixedFont; }
+    void setUseFixedFont(bool b=true);
     void updateContents();
 
     KNArticle* article()                { return a_rticle; }
@@ -124,7 +126,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     KNArticle *a_rticle;
     QList<KNMimeContent> *a_tt;
     QMimeSourceFactory *f_actory;
-    bool h_tmlDone, f_ullHdrs, r_ot13;
+    bool h_tmlDone, f_ullHdrs, r_ot13,  u_seFixedFont;
     QTimer *t_imer;
     QCString o_verrideCS;
     bool f_orceCS;
@@ -150,7 +152,8 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
             *a_ctViewSource;
 
     KToggleAction *a_ctToggleFullHdrs,
-                  *a_ctToggleRot13;
+                  *a_ctToggleRot13,
+                  *a_ctToggleFixedFont;
     KSelectAction *a_ctSetCharset;
 
   protected slots:
@@ -165,6 +168,7 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     void slotVerify();
     void slotToggleFullHdrs();
     void slotToggleRot13();
+    void slotToggleFixedFont();
     void slotSetCharset(const QString&);
     void slotSetCharsetKeyboard();
     void slotViewSource();

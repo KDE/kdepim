@@ -284,7 +284,7 @@ Q_OBJECT
 class Appearance : public Base {
 
 #define COL_CNT 13
-#define FNT_CNT 4
+#define FNT_CNT 5
 #define HEX_CNT 4
 #define ICON_CNT 17
 
@@ -297,7 +297,7 @@ class Appearance : public Base {
 
     enum HexIndex     { quoted1Hex=0, quoted2Hex=1, quoted3Hex=2, headerHex=3 };
 
-    enum FontIndex    { article=0, composer=1, groupList=2, articleList=3 };
+    enum FontIndex    { article=0, articleFixed=1, composer=2, groupList=3, articleList=4 };
 
     enum IconIndex    { greyBall=0,       redBall=1,      greyBallChkd=2,
                         redBallChkd=3,    newFups=4,      eyes=5,
@@ -333,6 +333,7 @@ class Appearance : public Base {
     bool useFontsForAllCS()              { return u_seFontsForAllCS; }
 
     QFont articleFont();
+    QFont articleFixedFont();
     QFont composerFont();
     QFont groupListFont();
     QFont articleListFont();

@@ -246,9 +246,14 @@ KNConfig::Appearance::Appearance()
   f_onts[article]=c->readFontEntry("articleFont",&defFont);
   f_ontNames[article]=i18n("Article Body");
 
+  defFont=KGlobalSettings::fixedFont();
+  f_onts[articleFixed]=c->readFontEntry("articleFixedFont",&defFont);
+  f_ontNames[articleFixed]=i18n("Article Body (Fixed)");
+
   f_onts[composer]=c->readFontEntry("composerFont",&defFont);
   f_ontNames[composer]=i18n("Composer");
 
+  defFont=KGlobalSettings::generalFont();
   f_onts[groupList]=c->readFontEntry("groupListFont",&defFont);
   f_ontNames[groupList]=i18n("Group List");
 
@@ -306,6 +311,7 @@ void KNConfig::Appearance::save()
   c->writeEntry("useFontsForAllCS", u_seFontsForAllCS);
   c->writeEntry("customFonts", u_seFonts);
   c->writeEntry("articleFont", f_onts[article]);
+  c->writeEntry("articleFixedFont", f_onts[articleFixed]);
   c->writeEntry("composerFont", f_onts[composer]);
   c->writeEntry("groupListFont", f_onts[groupList]);
   c->writeEntry("articleListFont", f_onts[articleList]);
@@ -441,12 +447,21 @@ QFont KNConfig::Appearance::articleFont()
 }
 
 
+QFont KNConfig::Appearance::articleFixedFont()
+{
+  if(u_seFonts)
+    return f_onts[articleFixed];
+  else
+    return KGlobalSettings::fixedFont();
+}
+
+
 QFont KNConfig::Appearance::composerFont()
 {
   if(u_seFonts)
     return f_onts[composer];
   else
-    return KGlobalSettings::generalFont();
+    return KGlobalSettings::fixedFont();
 }
 
 

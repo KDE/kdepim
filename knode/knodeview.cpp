@@ -317,6 +317,7 @@ void KNodeView::readOptions()
   a_rtManager->setShowThreads( conf->readBoolEntry("showThreads", true) );
   a_ctArtToggleShowThreads->setChecked( a_rtManager->showThreads() );
   a_rtView->setShowFullHdrs( conf->readBoolEntry("fullHdrs", false) );
+  a_rtView->setUseFixedFont( conf->readBoolEntry("articleBodyFixedFont", false) );
 }
 
 
@@ -364,6 +365,7 @@ void KNodeView::saveOptions()
 
   conf->writeEntry("showThreads", a_rtManager->showThreads());
   conf->writeEntry("fullHdrs", a_rtView->showFullHdrs());
+  conf->writeEntry("articleBodyFixedFont", a_rtView->useFixedFont());
 }
 
 
@@ -1024,6 +1026,8 @@ void KNodeView::slotArticleMMB(QListViewItem *item)
     } else {
       if (!KNArticleWindow::raiseWindowForArticle(art)) {
         KNArticleWindow *w=new KNArticleWindow(art);
+        w->artWidget()->setShowFullHdrs(a_rtView->showFullHdrs());
+        w->artWidget()->setUseFixedFont(a_rtView->useFixedFont());
         w->show();
       }
     }
@@ -1666,6 +1670,8 @@ void KNodeView::slotArtOpenNewWindow()
   if(a_rtView->article()) {
     if (!KNArticleWindow::raiseWindowForArticle(a_rtView->article())) {
       KNArticleWindow *win=new KNArticleWindow(a_rtView->article());
+      win->artWidget()->setShowFullHdrs(a_rtView->showFullHdrs());
+      win->artWidget()->setUseFixedFont(a_rtView->useFixedFont());
       win->show();
     }
   }
@@ -1753,6 +1759,8 @@ void KNodeView::slotFetchArticleWithID()
         KNRemoteArticle *a=new KNRemoteArticle(g_rpManager->currentGroup());
         a->messageID()->from7BitString(id.latin1());
         KNArticleWindow *awin=new KNArticleWindow(a);
+        awin->artWidget()->setShowFullHdrs(a_rtView->showFullHdrs());
+        awin->artWidget()->setUseFixedFont(a_rtView->useFixedFont());
         awin->show();
       }
     }

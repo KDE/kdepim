@@ -81,7 +81,7 @@ KNSourceViewWindow::KNSourceViewWindow(const QString &htmlCode)
   pcg.setColor(QColorGroup::Text, app->textColor());
   setPaperColorGroup(pcg);
   setLinkColor(app->linkColor());
-  setFont(knGlobals.cfgManager->appearance()->articleFont());
+  setFont(knGlobals.cfgManager->appearance()->articleFixedFont());
 
   QStyleSheetItem *style;
   style=new QStyleSheetItem(styleSheet(), "txt");
@@ -180,6 +180,8 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
                           SLOT(slotToggleFullHdrs()), a_ctions, "view_showAllHdrs");
   a_ctToggleRot13       = new KToggleAction(i18n("&Unscramble (Rot 13)"), "decrypted", 0 , this,
                           SLOT(slotToggleRot13()), a_ctions, "view_rot13");
+  a_ctToggleFixedFont   = new KToggleAction(i18n("U&se Fixed Font"),  Key_X , this,
+                          SLOT(slotToggleFixedFont()), a_ctions, "view_useFixedFont");
   a_ctViewSource        = new KAction(i18n("&View Source"),  0 , this,
                           SLOT(slotViewSource()), a_ctions, "article_viewSource");
 
@@ -206,6 +208,8 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
   a_ctToggleFullHdrs->setChecked(f_ullHdrs);
   r_ot13=false;
   a_ctToggleRot13->setChecked(false);
+  u_seFixedFont=false;
+  a_ctToggleFixedFont->setChecked(false);
   applyConfig();
 }
 
@@ -695,7 +699,8 @@ void KNArticleWidget::showBlankPage()
 
 void KNArticleWidget::showErrorMessage(const QString &s)
 {
-  setFont(knGlobals.cfgManager->appearance()->articleFont());  // switch back from possible obscure charsets
+  setFont(u_seFixedFont? knGlobals.cfgManager->appearance()->articleFixedFont()
+                         : knGlobals.cfgManager->appearance()->articleFont());  // switch back from possible obscure charsets
 
   delete f_actory;                          // purge old image data
   f_actory = new QMimeSourceFactory();
@@ -740,6 +745,14 @@ void KNArticleWidget::setShowFullHdrs(bool b)
 {
   f_ullHdrs=b;
   a_ctToggleFullHdrs->setChecked(b);
+  updateContents();
+}
+
+
+void KNArticleWidget::setUseFixedFont(bool b)
+{
+  u_seFixedFont = b;
+  a_ctToggleFixedFont->setChecked(b);
   updateContents();
 }
 
@@ -921,17 +934,17 @@ void KNArticleWidget::createHtmlPage()
               .arg(i18n("Unknown charset! Default charset is used instead."));
 
       kdDebug(5003) << "KNArticleWidget::createHtmlPage() : unknown charset = " << text->contentType()->charset() << " not available!" << endl;
-      setFont(app->articleFont());
+      setFont(u_seFixedFont? app->articleFixedFont():app->articleFont());
     }
     else {
-      QFont f=app->articleFont();
+      QFont f=(u_seFixedFont? app->articleFixedFont():app->articleFont());
       if (!app->useFontsForAllCS())
         KGlobal::charsets()->setQFont(f, KGlobal::charsets()->charsetForEncoding(text->contentType()->charset()));
       setFont(f);
     }
   }
   else
-    setFont(app->articleFont());
+    setFont(u_seFixedFont? app->articleFixedFont():app->articleFont());
 
   //kdDebug(5003) << "KNArticleWidget::createHtmlPage() : font-family = " << font().family() << endl;
   //kdDebug(5003) << "KNArticleWidget::createHtmlPage() : font-charset = " << (int)(font().charSet()) << endl;
@@ -1244,6 +1257,8 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
           if(a) {
             //article found in KNGroup
             awin=new KNArticleWindow(a);
+            awin->artWidget()->setShowFullHdrs(showFullHdrs());
+            awin->artWidget()->setUseFixedFont(useFixedFont());
             awin->show();
           }
           else {
@@ -1252,6 +1267,8 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
             a=new KNRemoteArticle(g); //we need "g" to access the nntp-account
             a->messageID()->from7BitString(target.latin1());
             awin=new KNArticleWindow(a);
+            awin->artWidget()->setShowFullHdrs(showFullHdrs());
+            awin->artWidget()->setUseFixedFont(useFixedFont());
             awin->show();
           }
         }
@@ -1458,6 +1475,13 @@ void KNArticleWidget::slotToggleFullHdrs()
 void KNArticleWidget::slotToggleRot13()
 {
   r_ot13=!r_ot13;
+  updateContents();
+}
+
+
+void KNArticleWidget::slotToggleFixedFont()
+{
+  u_seFixedFont=!u_seFixedFont;
   updateContents();
 }
 
