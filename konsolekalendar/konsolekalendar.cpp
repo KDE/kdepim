@@ -117,8 +117,7 @@ bool KonsoleKalendar::showInstance()
       kdDebug() << "konsolekalendar.cpp::showInstance() | opened successful" << endl;
 
       if( m_variables->isVerbose() ) {
-// TODO: put back after string freeze
-//	cout << i18n("View Event <Verbose>:").local8Bit() << endl;
+	cout << i18n("View Event <Verbose>:").local8Bit() << endl;
 	printSpecs();
       }
 
@@ -134,7 +133,9 @@ bool KonsoleKalendar::showInstance()
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | view events by uid list" << endl;
 	  event = m_variables->getCalendar()->event( m_variables->getUID() );
 	  status = printEvent ( &ts, event );
-	} else {
+	} else if( m_variables->isNext() ) {
+	  kdDebug() << "konsolekalendar.cpp::showInstance() | Show next activity in calendar" << endl;
+        } else {
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | view raw events within date range list" << endl;
 	  eventList = new Event::List ( m_variables->getCalendar()->rawEvents( 
 					  m_variables->getStartDateTime().date(),

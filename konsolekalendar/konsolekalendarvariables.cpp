@@ -279,6 +279,21 @@ bool KonsoleKalendarVariables::getFloating()
   return m_bFloating;
 }
 
+void KonsoleKalendarVariables::setDaysCount( int count ){
+  m_daysCount = count;
+  m_bDaysCount = true;
+}
+
+int KonsoleKalendarVariables::getDaysCount(){
+  return m_daysCount;
+}
+
+bool KonsoleKalendarVariables::isDaysCount(){
+  return m_bDaysCount;
+}
+
+
+
 bool KonsoleKalendarVariables::addCalendarResources( ResourceCalendar *resource )
 {
  if ( m_resource ) {
