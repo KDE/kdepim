@@ -65,52 +65,6 @@ Preferences::Preferences() : KDialogBase(KDialogBase::Tabbed, i18n("Preferences"
     connect(_doIdleDetectionW, SIGNAL(clicked()), this, SLOT(idleDetectCheckBoxChanged()));
 }
 
-#if 0
-Preferences::Preferences() : KDialogBase(KDialogBase::Tabbed, i18n("Preferences"),
-                                         KDialogBase::Ok | KDialogBase::Cancel,
-                                         KDialogBase::Ok)
-{
-  //----------------------------------------------------------------------
-  // Saving
-  //----------------------------------------------------------------------
-  QVBox *autoSaveMenu = addVBoxPage(i18n("Saving"));
-
-  _doAutoSaveW = new QCheckBox(i18n("Automatically save tasks"), autoSaveMenu, "_doAutoSaveW");
-  QHBox *box3 = new QHBox(autoSaveMenu);
-  _saveFileLabelW = new QLabel(i18n("File to save time information to:"), box3, "save label");
-  _saveFileW = new KURLRequester(box3, "_saveFileW");
-  QHBox *box2 = new QHBox(autoSaveMenu);
-  _autoSaveLabelW = new QLabel(i18n("Minutes between each auto save:"), box2, "_autoSaveLabelW");
-  _autoSaveValueW = new QSpinBox(1, 60*24, 1, box2, "_autoSaveValueW");
-  connect(_doAutoSaveW, SIGNAL(clicked()), this, SLOT(autoSaveCheckBoxChanged()));
-
-   _doTimeLogingW = new QCheckBox(i18n("Do time logging"), autoSaveMenu, "_doTimeLogingW");
-   connect(_doTimeLogingW, SIGNAL(clicked()), this, SLOT(timeLogingCheckBoxChanged()));
-   QHBox *box4 = new QHBox(autoSaveMenu);
-   _timeLogingLabelW = new QLabel(i18n("File to log the times to:"), box4, "save label");
-   _timeLogW = new KURLRequester(box4, "_timeLogW");
-
-  QHBox *box5 = new QHBox(autoSaveMenu);
-  _hideOnCloseW = new QCheckBox ( i18n("Hide taskbar icon and application instead of quitting"),
-                                  box5, "_hideOnCloseW");
-  connect(_hideOnCloseW, SIGNAL(clicked()), this, SLOT(hideOnCloseCheckBoxChanged()));
-
-  //----------------------------------------------------------------------
-  // Idle Detection Setup
-  //----------------------------------------------------------------------
-  idleMenu = addVBoxPage(i18n("Idle Detection"));
-
-  _doIdleDetectionW = new QCheckBox(i18n("Try to detect idleness"),
-                                   idleMenu,"_doIdleDetectionW");
-  connect(_doIdleDetectionW, SIGNAL(clicked()),
-          this, SLOT(idleDetectCheckBoxChanged()));
-
-  QHBox *box1 = new QHBox(idleMenu);
-  _idleDetectLabelW = new QLabel(i18n("Minutes before informing about idleness:"), box1);
-  _idleDetectValueW = new QSpinBox(1,60*24, 1, box1, "_idleDetectValueW");
-}
-#endif
-
 Preferences *Preferences::instance()
 {
   if (_instance == 0) {
@@ -122,7 +76,6 @@ Preferences *Preferences::instance()
 
 void Preferences::disableIdleDetection()
 {
-  // idleMenu->setEnabled(false);
   _doIdleDetectionW->setEnabled(false);
   _idleDetectLabelW->setEnabled(false);
 }
@@ -150,6 +103,8 @@ void Preferences::showDialog()
   _hideOnCloseW->setChecked(_hideOnCloseV);
   _promptDeleteW->setChecked(_promptDeleteV);
 
+  // adapt visibility of preference items according
+  // to settings
   idleDetectCheckBoxChanged();
   timeLogingCheckBoxChanged();
   hideOnCloseCheckBoxChanged();
