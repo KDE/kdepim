@@ -1,0 +1,157 @@
+/*
+    This file is part of the Kolab resource.
+
+    Copyright (c) 2004 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.
+*/
+
+#include "resourcekolab.h"
+#include "kmailconnection.h"
+
+#include <klocale.h>
+#include <kstandarddirs.h>
+#include <kinputdialog.h>
+#include <kurl.h>
+#include <ktempfile.h>
+#include <qtextstream.h>
+
+using namespace ResourceKolab;
+
+
+ResourceKolabBase::ResourceKolabBase( const QCString& objId )
+  : mSilent( false )
+{
+  mConnection = new KMailConnection( this, objId );
+}
+
+ResourceKolabBase::~ResourceKolabBase()
+{
+  delete mConnection;
+}
+
+
+bool ResourceKolabBase::kmailSubresources( QMap<QString, bool>& lst,
+                                           const QString& annotation ) const
+{
+  return mConnection->kmailSubresources( lst, annotation );
+}
+
+bool ResourceKolabBase::kmailIncidences( QMap<QString, QString>& lst,
+                                         const QString& mimetype,
+                                         const QString& resource ) const
+{
+  return mConnection->kmailIncidences( lst, mimetype, resource );
+}
+
+bool ResourceKolabBase::kmailGetAttachment( KURL& url, const QString& resource,
+                                            const QString& sernum,
+                                            const QString& filename ) const
+{
+  return mConnection->kmailGetAttachment( url, resource, sernum, filename );
+}
+
+bool ResourceKolabBase::kmailAddIncidence( const QString& resource,
+                                           const QString& xml,
+                                           const QStringList& attachments )
+{
+  return kmailUpdate( resource, QString::null, xml, attachments,
+                      QStringList() );
+}
+
+bool ResourceKolabBase::kmailDeleteIncidence( const QString& resource,
+                                              const QString& sernum )
+{
+  return mSilent || mConnection->kmailDeleteIncidence( resource, sernum );
+}
+
+bool ResourceKolabBase::kmailUpdate( const QString& resource,
+                                     const QString& sernum,
+                                     const QString& xml,
+                                     const QStringList& attachments,
+                                     const QStringList& deletedAttachments )
+{
+  if ( mSilent )
+    return true;
+
+  // Save the xml file. Will be deleted at the end of this method
+  KTempFile file;
+  file.setAutoDelete( true );
+  QTextStream* stream = file.textStream();
+  stream->setEncoding( QTextStream::UnicodeUTF8 );
+  *stream << xml;
+  file.close();
+
+  // Add the xml file as an attachment
+  QStringList a = attachments;
+  KURL url;
+  url.setPath( file.name() );
+  url.setFileEncoding( "UTF-8" );
+  a.prepend( url.url() );
+
+  return mConnection->kmailUpdate( resource, sernum, a, deletedAttachments );
+}
+
+QString ResourceKolabBase::configFile( const QString& type ) const
+{
+  return locateLocal( "config",
+                      QString( "kresources/kolab/%1rc" ).arg( type ) );
+}
+
+bool ResourceKolabBase::connectToKMail() const
+{
+  return mConnection->connectToKMail();
+}
+
+QString ResourceKolabBase::findWritableResource( const QMap<QString, bool>& resources,
+                                                 const QString& type )
+{
+  QStringList possible;
+  QMap<QString, bool>::ConstIterator it;
+  for ( it = resources.begin(); it != resources.end(); ++it )
+    if ( it.data() )
+      // Writable possibility
+      possible << it.key();
+  return findWritableResource( possible, type );
+}
+
+QString ResourceKolabBase::findWritableResource( const QStringList& resources,
+                                                 const QString& type )
+{
+  QStringList possible;
+  QStringList::ConstIterator it;
+  for ( it = resources.begin(); it != resources.end(); ++it ) {
+    // Ask KMail if this one is writable
+
+// TODO: This is done some other way
+//    if ( kmailIsWritableFolder( type, *it ) )
+      // Writable possibility
+      possible << *it;
+  }
+
+  if ( possible.isEmpty() )
+    // None found!!
+    return QString::null;
+  if ( possible.count() == 1 )
+    // Just one found
+    return possible[ 0 ];
+
+  // Several found, ask the user
+  return KInputDialog::getItem( i18n( "Select Resource Folder" ),
+                                i18n( "You have more than one writable resource folder. "
+                                      "Please select the one you want to write to." ),
+                                possible );
+}
