@@ -53,6 +53,7 @@
 #include "manipulatorpart.h"
 #include "partbar.h"
 
+#include "konnectordialog.h"
 #include "ksync_mainwindow.h"
 
 
@@ -190,6 +191,9 @@ void KSyncMainWindow::slotRestore() {
 }
 
 void KSyncMainWindow::slotConfigure() {
+    KonnectorProfile::ValueList lst;
+    KonnectorDialog dlg(lst,  m_konnector);
+    dlg.exec();
     /*
   ConfigureDialog *dlg = new ConfigureDialog(this);
   ManipulatorPart *part = 0l;

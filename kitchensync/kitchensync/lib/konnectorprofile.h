@@ -5,6 +5,7 @@
 #include <qstring.h>
 #include <qvaluelist.h>
 
+#include <kapabilities.h>
 #include <kdevice.h>
 
 
@@ -32,22 +33,29 @@ namespace KSync {
         QString icon()const;
         Device device()const;
         QString udi() const;
+        Kapabilities kapabilities() const;
+        bool wasLoaded()const;
 
         void setUid( const QString& );
         void setName( const QString& name );
         void setIcon( const QString& icon );
         void setDevice( const Device& dev );
         void setUdi( const QString& udi );
+        void setKapabilities( const Kapabilities& );
 
         void saveToConfig( KConfig* )const;
         void loadFromConfig( KConfig* );
 
     private:
+        void saveKaps( KConfig* )const;
+        Kapabilities readKaps( KConfig* );
+        bool m_wasLoaded :1;
         QString m_name;
         QString m_icon;
         Device m_dev;
         QString m_uid;
         QString m_udi;
+        Kapabilities m_caps;
         class KonnectorProfilePrivate;
         KonnectorProfilePrivate *d;
     };
