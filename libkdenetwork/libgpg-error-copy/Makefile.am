@@ -74,7 +74,7 @@ mkerrcodes: mkerrcodes.c mkerrcodes.h
 	$(CC) -I. -I$(srcdir) -o $@ $(srcdir)/mkerrcodes.c
 
 code-from-errno.h: mkerrcodes
-	./$< | $(AWK) -f $(srcdir)/mkerrcodes2.awk >$@
+	./mkerrcodes | $(AWK) -f $(srcdir)/mkerrcodes2.awk > $@
 
 gpg-error.h: mkheader.awk \
                  err-sources.h.in err-codes.h.in errnos.in gpg-error.h.in
