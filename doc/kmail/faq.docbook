@@ -18,8 +18,8 @@
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2002-10-03</date>
-<releaseinfo>1.5</releaseinfo>
+<date>2004-07-14</date>
+<releaseinfo>1.7</releaseinfo>
 </chapterinfo>
 
 <title>Frequently Asked Questions (&FAQ;)</title>
@@ -103,8 +103,8 @@ ultimate ownertrust: it is no longer implicitly done for you.</para>
 <qandaentry>
 <question><para>Where does &kmail; save my settings and my mail?</para></question>
 <answer>
-<para>All &kmail; settings are stored in <filename>$<envar>KDEHOME</envar>/share/config/kmailrc</filename>,
-where $<envar>KDEHOME</envar> is typically <filename class="directory">~/.kde</filename>; your mail is saved in <filename class="directory">~/Mail</filename>. Note that some of the files are hidden: remember to also copy those if you
+<para>Most &kmail; settings are stored in <filename>$<envar>KDEHOME</envar>/share/config/kmailrc</filename>,
+where $<envar>KDEHOME</envar> is typically <filename class="directory">~/.kde</filename>; the identities are stored in <filename>$<envar>KDEHOME</envar>/share/config/emailidentities</filename> and your mail is saved in <filename class="directory">~/Mail</filename>. Note that some of the files are hidden: remember to also copy those if you
 want to backup or archive your mails.</para>
 </answer>
 </qandaentry>
@@ -198,7 +198,10 @@ Some other headers might also be changed.</para>
 <qandaentry>
 <question><para>How can I make &kmail; check for new messages at startup?</para></question>
 <answer>
-<para>Start &kmail; with <command>kmail <option>--check</option></command>.</para>
+<para>If &kmail; should always check for new messages at startup then
+enable <guilabel>Check mail on startup</guilabel> on the
+<link linkend="configure-network-receiving">Network configuration page</link>.
+Otherwise start &kmail; with <command>kmail <option>--check</option></command>.</para>
 </answer>
 </qandaentry>
 
@@ -230,7 +233,7 @@ select <menuchoice><guimenu>Help</guimenu><guimenuitem>&kmail; Introduction</gui
 <para>Exit &kmail;, make a backup of <filename>~/.kde/share/config/kmailrc</filename>,
 then open it with an editor and add &eg; <userinput>folders=/home/username/.mail</userinput>
 to the <quote>[General]</quote> section. Then move all your existing folders (including
-the hidden index files) to the new location. The next time you start &kmail; it will use
+the hidden index files) to the new location. The next time you start &kmail; will use
 <filename class="directory">/home/username/.mail</filename> instead of
 <filename class="directory">/home/username/Mail</filename>. Note that &kmail;
 will lose its filters if you change the mail folder's location but forget
@@ -280,9 +283,11 @@ this separator, &kmail; will automatically add it.</para>
 
 <qandaentry>
 <question><para>&kmail; fetches the same messages over and over again.</para></question>
-<answer><para>This happens if you have <guilabel>Delete messages from server after fetching</guilabel>
-deselected and your POP3 server does not support the UIDL command. There is currently
-no workaround besides selecting <guilabel>Delete messages from server after fetching</guilabel>.
+<answer><para>This happens if you have enabled
+<guilabel>Leave fetched messages on the server</guilabel>
+and your POP3 server does not support the UIDL command. There is currently
+no workaround besides disabling 
+<guilabel>Leave fetched messages on the server</guilabel>.
 A more detailed explanation can be found 
 <ulink url="http://lists.kde.org/?l=kmail&amp;m=99220697415300&amp;w=2">in this
 mailing list post</ulink>.</para></answer>
@@ -298,18 +303,6 @@ of software.</para>
 <para><warning><para>However, you should not run &kmail; while another email client is already
 accessing the files in <filename class="directory">~/Mail</filename>; if you try to do so,
 you might lose messages. Note that you should make backups of your messages anyway.</para></warning></para>
-</answer>
-</qandaentry>
-
-<qandaentry>
-<question><para>My mbox folders keep growing even when I delete
-messages.</para></question>
-<answer><para>
-To really remove deleted messages from disk, you have to compact
-your folders using <menuchoice><guimenu>File</guimenu><guimenuitem>Compact all 
-folders</guimenuitem></menuchoice> (by default this will also happen every time you exit
-&kmail; - note that it does not work when leaving &kmail; via &kde;'s session
-management).</para>
 </answer>
 </qandaentry>
 
@@ -366,7 +359,9 @@ and the mailing list address will be set in the <guilabel>To:</guilabel> field.
 of the SMTP configuration dialog.
 To use <quote>SMTP after POP3</quote> you have to collect all your messages in the
 <guilabel>outbox</guilabel> and send them just after you have fetched new mail.
-<!-- fixme: how to make it more simple? -->
+You can make &kmail; send the queued messages automatically with the
+<guilabel>Send messages in outbox folder</guilabel> option on the 
+<link linkend="configure-network-sending">Network configuration page</link>.
 </para></answer>
 </qandaentry>
 
@@ -495,19 +490,22 @@ used.</para>
 If you want to leave all messages on the server: open up the
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kmail;...</guimenuitem>
 </menuchoice> window. Click on the <guilabel>Network</guilabel> page. Select your
-account from the account list and click the <guilabel>Modify...</guilabel>
-button. This dialog contains the <guilabel>Delete messages from server after fetching</guilabel>
-setting which you must deselect.</para></answer>
+account from the account list and click the <guibutton>Modify...</guibutton>
+button. This dialog contains the <guilabel>Leave fetched messages on the server</guilabel>
+setting which you must enable.</para></answer>
 </qandaentry>
 
 <qandaentry>
 <question><para>How do I automatically insert a text footer within my
 messages?</para></question>
-<answer><para>The text footer is called a signature file. Select
+<answer><para>The text footer is also called a signature (not to be confused
+with a cryptographic signature). Select
 <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Configure &kmail;...</guimenuitem></menuchoice>
 Look in the <guilabel>Identity</guilabel> page for the <guilabel>Signature</guilabel>
-tab and add your signature there.</para></answer> 
+tab and add your signature there. Then go to the <guilabel>General</guilabel> 
+tab on the <guilabel>Composer</guilabel> page and enable 
+<xref linkend="configure-composer-general-append-signature"/></para></answer> 
 </qandaentry>
 
 <qandaentry>
