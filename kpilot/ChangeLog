@@ -1,3 +1,22 @@
+KPilot Developer's notes for march 24th 2001
+============================================
+
+KDE 2.1.1! With bugfixes and translation fixes! So only some of the
+bugfixes listed under march 10th have made it into there. On the
+western front though, we have:
+
+* Chris Molnar has started work on DB integration for the expense conduit,
+  so that you can actually do something useful with it. The CSV export seems
+  to be done, too. Thanks Chris!
+* Greg Stern has pretty much finished the abbrowser conduit (which a *lot*
+  of people have wanted for a long time). It hasn't been committed yet, but
+  will be soon.
+* The memo viewer has been very slightly beautified.
+* Some work for bugs #22112 and #21908, fixing deficiencies in the todo-
+  conduit and in selecting categories under other locales. This isn't 
+  done yet, though -- some attempts have been checking into CVS for testing.
+
+
 KPilot Developer's notes for march 10th 2001
 ============================================
 
