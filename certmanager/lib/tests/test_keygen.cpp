@@ -35,7 +35,7 @@
 
 #include "test_keygen.h"
 
-#include <kleo/keylister.h>
+#include <kleo/keylistjob.h>
 #include <kleo/keygenerationjob.h>
 
 #include <cryptplugwrapper.h>
