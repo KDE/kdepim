@@ -42,7 +42,6 @@
 #include <klocale.h>
 
 #include "filtereditdialog.h"
-#include "filtereditwidget.h"
 #include "kabprefs.h"
 
 FilterEditDialog::FilterEditDialog( QWidget *parent, const char *name )
@@ -217,6 +216,8 @@ void FilterDialog::edit()
 void FilterDialog::remove()
 {
   mFilterList.remove( mFilterList.at( mFilterListBox->currentItem() ) );
+
+  selectionChanged( 0 );
 
   refresh();
 }
