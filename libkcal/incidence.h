@@ -147,7 +147,7 @@ class Incidence : public IncidenceBase
 
     /**
       Set readonly state of incidence.
-      
+
       @param readonly If true, the incidence is set to readonly, if false the
                       incidence is set to readwrite.
     */
@@ -220,7 +220,7 @@ class Incidence : public IncidenceBase
     /**
       Return categories as a comma separated string.
     */
-    QString categoriesStr();
+    QString categoriesStr() const;
 
     /**
       Point at some other event to which the event relates. This function should
@@ -310,7 +310,7 @@ class Incidence : public IncidenceBase
       Return list of all associated attachments.
     */
     Attachment::List attachments() const;
-    /** 
+    /**
       Find a list of attachments with this mime type.
     */
     Attachment::List attachments( const QString &mime ) const;
@@ -336,7 +336,7 @@ class Incidence : public IncidenceBase
       Return list of all available secrecy states as list of translated strings.
     */
     static QStringList secrecyList();
-    /** 
+    /**
       Return human-readable translated name of secrecy class.
     */
     static QString secrecyName( int );
@@ -441,7 +441,7 @@ class Incidence : public IncidenceBase
       Return the event's/todo's location. Do _not_ use it with journal.
     */
     QString location() const;
-    
+
   private:
     int mRevision;
 
@@ -465,7 +465,7 @@ class Incidence : public IncidenceBase
 
     Alarm::List mAlarms;
     Recurrence *mRecurrence;
-    
+
     QString mLocation;
 
     class Private;

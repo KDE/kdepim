@@ -246,7 +246,7 @@ QStringList Incidence::categories() const
   return mCategories;
 }
 
-QString Incidence::categoriesStr()
+QString Incidence::categoriesStr() const
 {
   return mCategories.join(",");
 }
