@@ -96,6 +96,11 @@ DOCWidgetSetup::~DOCWidgetSetup()
 	fConfig->writeEntry(DOCConduitFactory::fSyncDirection,
 		fConfigWidget->fSyncDirection->id(fConfigWidget->
 			fSyncDirection->selected()));
+	fConfig->writeEntry(DOCConduitFactory::fIgnoreBmkChanges, 
+		fConfigWidget->fNoConversionOfBmksOnly->isChecked());
+	fConfig->writeEntry(DOCConduitFactory::fLocalSync, 
+		fConfigWidget->fLocalSync->isChecked());
+	
 	fConfig->sync();
 }
 
@@ -128,8 +133,16 @@ DOCWidgetSetup::~DOCWidgetSetup()
 		readBoolEntry(DOCConduitFactory::fCompress, true));
 	fConfigWidget->fSyncDirection->setButton(fConfig->
 		readNumEntry(DOCConduitFactory::fSyncDirection, 0));
+
+	fConfigWidget->fNoConversionOfBmksOnly->setChecked(
+		fConfig->readBoolEntry(DOCConduitFactory::fIgnoreBmkChanges, false));
+	fConfigWidget->fLocalSync->setChecked(
+		fConfig->readBoolEntry(DOCConduitFactory::fLocalSync, false));
 }
 
 
 // $Log$
+// Revision 1.1  2002/12/13 16:29:53  kainhofe
+// New PalmDOC conduit to syncronize text files with doc databases (AportisDoc, TealReader, etc) on the handheld
+//
 //

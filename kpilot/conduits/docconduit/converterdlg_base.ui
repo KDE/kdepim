@@ -1,5 +1,5 @@
 <!DOCTYPE UI><UI version="3.1" stdsetdef="1">
-<class>DOCWidget</class>
+<class>PalmDOCDialog</class>
 <author>Reinhold Kainhofer</author>
 <widget class="QWidget">
     <property name="name">
@@ -9,8 +9,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>413</width>
-            <height>404</height>
+            <width>451</width>
+            <height>467</height>
         </rect>
     </property>
     <property name="caption">

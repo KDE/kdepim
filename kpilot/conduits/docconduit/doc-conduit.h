@@ -30,16 +30,33 @@ class docDBInfo;
 
 #include "doc-factory.h"
 
+class docSyncInfo;
+typedef QValueList<docSyncInfo> syncInfoList;
 
-class DOCConduit:public ConduitAction {
-Q_OBJECT
-protected:
-	enum eSyncDirectionEnum {
+typedef enum eSyncDirectionEnum {
+		eSyncNone,
 		eSyncAll,
 		eSyncPDAToPC,
 		eSyncPCToPDA,
-		eSyncNone
-	} eSyncDirection;
+		eSyncDelete,
+		eSyncConflict
+	};
+typedef enum eTextStatus {
+	eStatNone=0,
+	eStatNew=1,
+	eStatChanged=2,
+	eStatBookmarksChanged=4,
+	eStatDeleted=8,
+	eStatDoesntExist=16
+	};
+
+
+QString dirToString(eSyncDirectionEnum dir);
+
+class DOCConduit:public ConduitAction {
+Q_OBJECT
+public:
+	eSyncDirectionEnum eSyncDirection;
 
 public:
 	DOCConduit(KPilotDeviceLink * o,
@@ -60,10 +77,14 @@ protected:
 		return get_long(DOCConduitFactory::dbDOCcreator);
 	}
 
-	bool needsSync(DBInfo dbinfo, enum eSyncDirectionEnum & dir);
 public slots:
+/** syncNextDB walks through all PalmDoc databases on the handheld and decides if they are supposed to be synced to the PC. 
+ * syncNextDB and syncNextDOC fist build the list of all PalmDoc texts, and then the method syncDatabases does the actual sync. */
 	void syncNextDB();
 	void syncNextDOC();
+	void checkPDBFiles();
+	void resolve();
+	void syncDatabases();
 	void cleanup();
 
  private:
@@ -73,20 +94,28 @@ public slots:
     */
 	void readConfig();
 
+	/** 
+	* Check if the database needs to be synced at all.
+	*/
+	bool needsSync(docSyncInfo &sinfo);
 	 /**
     * If necessary, copy the database from the palm to a local dir. 
     * Also initialize the docDBInfo that will be passed to the docconverter
     */
-	PilotDatabase *preSyncAction(DBInfo &dbinfo, eSyncDirectionEnum direction) const;
+	PilotDatabase *preSyncAction(docSyncInfo &sinfo) const;
 
-	bool doSync(DBInfo&dbinfo, eSyncDirectionEnum dir);
+	bool doSync(docSyncInfo &sinfo);
 	 /**
     * Clean up after the sync. The bool parameter res tells 
     * the function if the  conversion was successful or not
     */
-	bool postSyncAction(PilotDatabase * dbinfo, eSyncDirectionEnum direction, bool res = true);
+	bool postSyncAction(PilotDatabase * dbinfo, docSyncInfo &sinfo, bool res = true);
 
 	bool textChanged(QString docfn);
+	/** Opens the databse with name dbname. For a local sync, this will be a 
+	 *  PilotLocalDatabase, otherwise it will be a database on the serial device 
+	 *  (i.e. an object of class PilotSerialDatabase) */
+	PilotDatabase*openDOCDatabase(QString dbname);
 
 
 	QString fDOCDir, fPDBDir;
@@ -95,22 +124,39 @@ public slots:
 		eResNone,
 		ePDAOverride,
 		ePCOverride,
-		ePCOverrideOnBookmarkChange,
+//		ePCOverrideOnBookmarkChange,
 		eResAsk
 	} eConflictResolution;
 	int fBookmarks;
-	bool fCompress;
-	QStringList dbnames;
-	QString docfilename, pdbfilename;
+	bool fCompress, fIgnoreBmkChangesOnly, fLocalSync;
+	QStringList fDBListSynced;
+	QStringList fDBNames;
+	syncInfoList fSyncInfoList;
+	syncInfoList::Iterator fSyncInfoListIterator;
+//	QString docfilename, pdbfilename;
 	long int dbnr;
 
 	QStringList docnames;
 	QStringList::Iterator dociterator;
 };
 
+class docSyncInfo 
+{
+public:
+	docSyncInfo(QString hhDB=QString(), QString docfn=QString(), QString pdbfn=QString(), eSyncDirectionEnum dir=eSyncNone)
+		{handheldDB=hhDB; docfilename=docfn; pdbfilename=pdbfn; direction=dir; fPCStatus=eStatNone; fPalmStatus=eStatNone;};
+	~docSyncInfo(){};
+	QString handheldDB, docfilename, pdbfilename;
+	DBInfo dbinfo;
+	eSyncDirectionEnum direction;
+	eTextStatus fPCStatus, fPalmStatus;
+};
 
 
 
 // $Log$
+// Revision 1.1  2002/12/13 16:29:53  kainhofe
+// New PalmDOC conduit to syncronize text files with doc databases (AportisDoc, TealReader, etc) on the handheld
+//
 //
 #endif

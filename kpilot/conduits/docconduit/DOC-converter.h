@@ -24,6 +24,10 @@
 #define DOC_COMPRESSED 2
 
 
+#define BMK_SUFFIX ".bmk"
+#define PDBBMK_SUFFIX ".bm"
+
+
 class PilotLocalDatabase;
 class PilotSerialDatabase;
 class PilotDatabase;
@@ -74,14 +78,15 @@ class docMatchBookmark:public docBookmark {
 
 class docRegExpBookmark:public docMatchBookmark {
  public:
-	docRegExpBookmark():docMatchBookmark() { };
-	docRegExpBookmark(QString regexp,
-		int options=0):docMatchBookmark(regexp, options) { };;
+	docRegExpBookmark():docMatchBookmark() { capSubexpression=-1;};
+	docRegExpBookmark(QString regexp, int cap=0,
+		int options=0):docMatchBookmark(regexp, options) {capSubexpression=cap; };;
 	docRegExpBookmark(QString pattrn, QString bmkname,
-		int options=0):docMatchBookmark(pattrn, bmkname, options) { };
+		int options=0):docMatchBookmark(pattrn, bmkname, options) { capSubexpression=-1; };
 	virtual ~ docRegExpBookmark() { };
 
 	virtual int findMatches(QString, bmkList &fBookmarks);
+	int capSubexpression;
 };
 
 
@@ -168,8 +173,10 @@ signals:
 
 
 
-
 // $Log$
+// Revision 1.2  2002/12/15 13:48:45  kainhofe
+// Several bugfixes. Bookmark files work now, compression is done right
+//
 // Revision 1.1  2002/12/13 16:29:53  kainhofe
 // New PalmDOC conduit to syncronize text files with doc databases (AportisDoc, TealReader, etc) on the handheld
 //
