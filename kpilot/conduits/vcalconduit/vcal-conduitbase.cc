@@ -248,7 +248,8 @@ error:
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": Using calendar file " << fCalendarFile << endl;
 	DEBUGCONDUIT << "fCalendarType="<<fCalendarType<<endl;
-	DEBUGCONDUIT << "eCalendarLocal would be "<<eCalendarLocal<<", eCalendarResources would be "<<eCalendarResource<<endl;
+	DEBUGCONDUIT << "eCalendarLocal would be "<<eCalendarLocal<<
+			", eCalendarResources would be "<<eCalendarResource<<endl;
 #endif
 
 	switch(fCalendarType)
@@ -262,7 +263,9 @@ error:
 #ifdef DEBUG
 				DEBUGCONDUIT<<"empty calendar file name, cannot open"<<endl;
 #endif
-				emit logError(i18n("You selected to sync with the a iCalendar file, but did not give a filename. Please select a valid file name in the conduit's configuration dialog"));
+				emit logError(i18n("You selected to sync with the a iCalendar file, "
+						"but did not give a filename. Please select a valid file name in "
+						"the conduit's configuration dialog"));
 				return false;
 			}
 //			fCalendar = new KCal::CalendarLocal(tz);
@@ -283,16 +286,20 @@ error:
 			if (!dynamic_cast<KCal::CalendarLocal*>(fCalendar)->load(fCalendarFile) )
 			{
 #ifdef DEBUG
-				DEBUGCONDUIT << "calendar file "<<fCalendarFile<<" could not be opened. Will create a new one"<<endl;
+				DEBUGCONDUIT << "calendar file "<<fCalendarFile<<
+						" could not be opened. Will create a new one"<<endl;
 #endif
-				// Try to create an empty file. if that fails, no vallid file name was given.
+				// Try to create empty file. if it fails, no valid file name was given.
 				QFile fl(fCalendarFile);
 				if (!fl.open(IO_WriteOnly | IO_Append))
 				{
 #ifdef DEBUG
 					DEBUGCONDUIT<<"Invalid calendar file name "<<fCalendarFile<<endl;
 #endif
-					emit logError(i18n("You chose to sync with the file \"%1\", which cannot be opened or created. Please make sure to supply a valid file name in the conduit's configuration dialog. Aborting the conduit.").arg(fCalendarFile));
+					emit logError(i18n("You chose to sync with the file \"%1\", which "
+							"cannot be opened or created. Please make sure to supply a "
+							"valid file name in the conduit's configuration dialog. "
+							"Aborting the conduit.").arg(fCalendarFile));
 					return false;
 				}
 				fl.close();
