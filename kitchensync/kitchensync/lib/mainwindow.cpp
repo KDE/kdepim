@@ -244,7 +244,7 @@ void KSyncMainWindow::initSystray( void )
 void KSyncMainWindow::slotSync()
 {
     emit partProgress( 0, Progress(i18n("Trying to push sync") ) );
-    KonnectorProfile prof = konnectorProfile();
+    KonnectorProfile prof = currentKonnectorProfile();
     if ( !prof.konnector() ) {
         emit partError( 0, MainProgress::noKonnector() );
         return;
@@ -280,7 +280,7 @@ void KSyncMainWindow::slotBackup()
       return;
     }
 
-    KonnectorProfile prof = konnectorProfile();
+    KonnectorProfile prof = currentKonnectorProfile();
     if ( !prof.konnector() ) {
         emit partError(0, MainProgress::noKonnector() );
         return;
@@ -302,7 +302,7 @@ void KSyncMainWindow::slotRestore()
     if (path.isEmpty() )
       return;
 
-    KonnectorProfile prof = konnectorProfile();
+    KonnectorProfile prof = currentKonnectorProfile();
     if ( !prof.konnector() ) {
         emit partError(0, MainProgress::noKonnector() );
         return;
@@ -503,7 +503,7 @@ ProfileManager* KSyncMainWindow::profileManager() const
     return m_prof;
 }
 
-KonnectorProfile KSyncMainWindow::konnectorProfile() const
+KonnectorProfile KSyncMainWindow::currentKonnectorProfile() const
 {
     return m_konprof->current();
 }
@@ -519,7 +519,7 @@ KonnectorProfileManager* KSyncMainWindow::konnectorProfileManager() const
 // it asynchronus
 void KSyncMainWindow::slotSync( Konnector *konnector, Syncee::PtrList lis)
 {
-    if ( konnector != konnectorProfile().konnector() ) {
+    if ( konnector != currentKonnectorProfile().konnector() ) {
         emit partError( 0, Error(i18n("A Konnector wanted to sync but it's not the current one") ) );
         m_konnectorManager->write( konnector, lis );
         return;
@@ -738,7 +738,7 @@ void KSyncMainWindow::slotKonnectorProg( Konnector *konnector,
      * see if it's the current Konnector and then look for errors
      * and success
      */
-    if ( konnector != konnectorProfile().konnector() ) {
+    if ( konnector != currentKonnectorProfile().konnector() ) {
         switch( prog.code() ) {
         case Progress::Connected:
             m_konBar->setState( true );
@@ -758,7 +758,7 @@ void KSyncMainWindow::slotKonnectorProg( Konnector *konnector,
 void KSyncMainWindow::slotKonnectorErr( Konnector *konnector,
                                         const Error & prog )
 {
-    if ( konnector == konnectorProfile().konnector() ) {
+    if ( konnector == currentKonnectorProfile().konnector() ) {
         switch( prog.code() ) {
           case Error::ConnectionLost: // fall through
           case Error::CouldNotConnect:
@@ -818,7 +818,8 @@ void KSyncMainWindow::slotPartSyncStatus( ManipulatorPart* par, int err )
         delete m_partsIt;
         m_partsIt = 0;
         kdDebug(5210) << "Going to write back " << m_outSyncee.count() << endl;
-        m_konnectorManager->write( konnectorProfile().konnector(), m_outSyncee );
+        m_konnectorManager->write( currentKonnectorProfile().konnector(),
+                                   m_outSyncee );
         m_outSyncee.setAutoDelete( false );
         m_outSyncee.clear();
         // now we only wait for the done
@@ -834,7 +835,7 @@ void KSyncMainWindow::slotKonnectorBar( bool b )
 {
     kdDebug(5210) << "slotKonnectorBar " << b << endl;
 
-    Konnector *k = konnectorProfile().konnector();
+    Konnector *k = currentKonnectorProfile().konnector();
     if ( b ) {
         if ( k->isConnected() ) {
             kdDebug(5210) << "Going to connect " << endl;

@@ -131,13 +131,13 @@ void OverviewPart::slotKonnectorError( Konnector *k, const Error& prog)
 void OverviewPart::slotProfileChanged(const Profile& )
 {
     m_widget->setProfile( core()->currentProfile() );
-    slotKonnectorChanged( core()->konnectorProfile().konnector() );
+    slotKonnectorChanged( core()->currentKonnectorProfile().konnector() );
     kdDebug(5210) << "Profile changed " << endl;
 }
 
 void OverviewPart::slotKonnectorChanged( Konnector * )
 {
-    KonnectorProfile prof = core()->konnectorProfile();
+    KonnectorProfile prof = core()->currentKonnectorProfile();
     QPixmap pix = DesktopIcon( prof.konnector()->info().iconName(), KIcon::User );
     m_widget->setProfile( prof.name(), pix );
     kdDebug(5210) << "Konnector Changed " << endl;

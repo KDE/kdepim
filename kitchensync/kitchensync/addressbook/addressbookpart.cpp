@@ -76,7 +76,7 @@ void AddressBookPart::sync( const Syncee::PtrList& in,
     kdDebug(5228) << "processEntry in AddressBookPart aye" << endl;
     /* 1. */
     Profile prof = core()->currentProfile();
-    KonnectorProfile kon = core()->konnectorProfile();
+    KonnectorProfile kon = core()->currentKonnectorProfile();
 
     /* 2. */
     QString meta = kon.uid() + "/" + prof.uid() + "addressbook.rc";
@@ -229,7 +229,7 @@ void AddressBookPart::writeMeta( KABC::AddressBook* book, const QString& path ) 
     if (!QFile::exists( str ) ) {
         kdDebug(5228) << "Path does not exist " << endl;
 	kdDebug(5228) << "Path = " << str << endl;
-        KonnectorProfile kon = core()->konnectorProfile();
+        KonnectorProfile kon = core()->currentKonnectorProfile();
         QDir dir;
         dir.mkdir( dir.homeDirPath() + "/.kitchensync");
         dir.mkdir( dir.homeDirPath() + "/.kitchensync/meta");

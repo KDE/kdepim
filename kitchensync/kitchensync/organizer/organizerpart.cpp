@@ -122,7 +122,7 @@ void OrganizerPart::sync( const Syncee::PtrList& in,
 
     /* 1. is fairly easy */
     Profile prof = core()->currentProfile();
-    KonnectorProfile kon = core()->konnectorProfile();
+    KonnectorProfile kon = core()->currentKonnectorProfile();
 
     /* 2. too */
     QString path = prof.path( "OrganizerPart"  );
@@ -364,7 +364,7 @@ void OrganizerPart::writeMeta( EventSyncee* evSyncee,
     QString str = QDir::homeDirPath();
     str += "/.kitchensync/meta/konnector-" + path;
     if (!QFile::exists( str ) ) {
-        KonnectorProfile kon = core()->konnectorProfile();
+        KonnectorProfile kon = core()->currentKonnectorProfile();
         QDir dir;
         dir.mkdir( QDir::homeDirPath() + "/.kitchensync");
         dir.mkdir( QDir::homeDirPath() + "/.kitchensync/meta");

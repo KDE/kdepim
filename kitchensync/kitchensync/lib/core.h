@@ -71,7 +71,7 @@ class Core : public KParts::MainWindow
     /**
      * @return the current KonnectorProfile
      */
-    virtual KonnectorProfile konnectorProfile() const = 0;
+    virtual KonnectorProfile currentKonnectorProfile() const = 0;
 
     /**
      * @return the KonnectorProfileManager

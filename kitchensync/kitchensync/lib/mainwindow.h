@@ -107,7 +107,7 @@ class KSyncMainWindow : public Core
     /**
      * @return the current KonnectorProfile
      */
-    KonnectorProfile konnectorProfile() const;
+    KonnectorProfile currentKonnectorProfile() const;
 
     /**
      * @return the KonnectorProfileManager
