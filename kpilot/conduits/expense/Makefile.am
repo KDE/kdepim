@@ -16,5 +16,5 @@ libexpenseconduit_la_SOURCES = expenseConduit.ui setupDialog.cc \
 libexpenseconduit_la_LDFLAGS = $(KDE_PLUGIN) $(all_libraries)
 libexpenseconduit_la_LIBADD  = ../../lib/libkpilot.la $(LIB_KIO)
 
-# this option you can leave out. Just, if you use "make dist", you need it
+## this option you can leave out. Just, if you use "make dist", you need it
 noinst_HEADERS = expense.h setupDialog.h 
