@@ -12,7 +12,7 @@ class KPrefsDialog;
 class QCheckBox;
 class QLabel;
 class QSpinBox;
-
+class QLineEdit;
 class KPrefsWid
 {
   public:

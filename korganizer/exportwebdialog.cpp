@@ -27,6 +27,8 @@
 #include <kstddirs.h>
 #include <kconfig.h>
 #include <kglobal.h>
+#include <kurlrequester.h>
+#include "klineedit.h"
 
 #include "calendar.h"
 #include "kdateedit.h"
@@ -91,13 +93,10 @@ void ExportWebDialog::setupGeneralPage()
   new QLabel(i18n("Output File:"),destGroup);
 
   QHBox *outputFileLayout = new QHBox(destGroup);
-  mOutputFileEdit = new QLineEdit(KOPrefs::instance()->mHtmlExportFile,
+  mOutputFileEdit = new KURLRequester(KOPrefs::instance()->mHtmlExportFile,
                                   outputFileLayout);
-  QPushButton *browseButton = new QPushButton(i18n("Browse"),outputFileLayout);
-  QObject::connect(browseButton, SIGNAL(clicked()),
-                   this, SLOT(browseOutputFile()));
-  connect(mOutputFileEdit, SIGNAL(textChanged ( const QString & )),this,SLOT(slotOutputFileChanged(const QString &)));
-  enableButton(KDialogBase::User1,!mOutputFileEdit->text().isEmpty());
+  connect(mOutputFileEdit->lineEdit(), SIGNAL(textChanged ( const QString & )),this,SLOT(slotOutputFileChanged(const QString &)));
+  enableButton(KDialogBase::User1,!mOutputFileEdit->lineEdit()->text().isEmpty());
   topLayout->addStretch(1);
 }
 
@@ -159,14 +158,6 @@ void ExportWebDialog::setupAdvancedPage()
   topLayout->addStretch(1);
 }
 
-void ExportWebDialog::browseOutputFile()
-{
-//  kdDebug() << "ExportWebDialog::browseOutputFile()" << endl;
-
-  KURL u = KFileDialog::getSaveURL();
-  if(!u.isEmpty()) mOutputFileEdit->setText(u.prettyURL());
-}
-
 void ExportWebDialog::exportWebPage()
 {
   mExport->setMonthViewEnabled(mCbMonth->isChecked());
@@ -179,9 +170,9 @@ void ExportWebDialog::exportWebPage()
   mExport->setDueDateEnabled(mCbDueDates->isChecked());
   mExport->setDateRange(mFromDate->getDate(),mToDate->getDate());
 
-  KURL dest(mOutputFileEdit->text());
+  KURL dest(mOutputFileEdit->lineEdit()->text());
   // Remember destination.
-  KOPrefs::instance()->mHtmlExportFile = mOutputFileEdit->text();
+  KOPrefs::instance()->mHtmlExportFile = mOutputFileEdit->lineEdit()->text();
 
   mDataAvailable = true;
 

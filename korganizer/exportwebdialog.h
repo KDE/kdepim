@@ -18,7 +18,7 @@ using namespace KCal;
 class KDateEdit;
 class QRadioButton;
 class QCheckBox;
-class QLineEdit;
+class KURLRequester;
 class QTextStream;
 class KConfig;
 class HtmlExport;
@@ -32,8 +32,6 @@ class ExportWebDialog : public KDialogBase
 
   public slots:
     void exportWebPage();
-
-    void browseOutputFile();
 
     void slotResult(KIO::Job *);
     void slotDataReq(KIO::Job *,QByteArray &data);
@@ -71,7 +69,7 @@ class ExportWebDialog : public KDialogBase
     QCheckBox *mCbAttendeesTodo;
     QCheckBox *mCbAttendeesEvent;
     QCheckBox *mCbHtmlFragment;
-    QLineEdit *mOutputFileEdit;
+    KURLRequester *mOutputFileEdit;
 
     bool mDataAvailable;
 };
