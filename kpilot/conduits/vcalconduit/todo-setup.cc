@@ -128,20 +128,7 @@ void ToDoWidgetSetup::slotBrowseCalendar()
 {
 	FUNCTIONSETUP;
 
-	QString fileName = KFileDialog::getOpenFileName("::calendar", "*.vcs *ics|ICalendars",this);
+	QString fileName = KFileDialog::getOpenFileName(CSL1("::calendar"), CSL1("*.vcs *ics|ICalendars"),this);
 	if(fileName.isNull()) return;
 	fConfigWidget->fCalendarFile->setText(fileName);
 }
-
-// $Log$
-// Revision 1.5  2002/01/01 02:30:26  molnarc
-//
-// include <qpushbutton.h>
-//
-// Revision 1.4  2001/12/28 12:56:46  adridg
-// Added SyncAction, it may actually do something now.
-//
-// Revision 1.1  2001/12/13 21:40:40  adridg
-// New files for move to .so
-//
-

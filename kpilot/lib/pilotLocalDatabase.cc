@@ -34,15 +34,17 @@ static const char *pilotlocaldatabase_id =
 
 #include <stdio.h>
 #include <unistd.h>
-#include <iostream.h>
+
+#include <iostream>
 
 #include <qstring.h>
 #include <qfile.h>
 #include <qregexp.h>
+#include <qdatetime.h> 
 
 #include <kdebug.h>
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 
 
 #include "pilotLocalDatabase.h"
@@ -72,7 +74,7 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 		else
 		{
 			fPathName = KGlobal::dirs()->saveLocation("data",
-				QString("kpilot/DBBackup/"));
+				CSL1("kpilot/DBBackup/"));
 		}
 		fixupDBName();
 		openDatabase();
@@ -102,7 +104,7 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & dbName,
 	else
 	{
 		fPathName = KGlobal::dirs()->saveLocation("data",
-			QString("kpilot/DBBackup/"));
+			CSL1("kpilot/DBBackup/"));
 	}
 
 	fixupDBName();
@@ -127,7 +129,13 @@ PilotLocalDatabase::~PilotLocalDatabase()
 void PilotLocalDatabase::fixupDBName()
 {
 	FUNCTIONSETUP;
-	fDBName = fDBName.replace(QRegExp("/"), "_");
+#if QT_VERSION < 0x30100
+	fDBName = fDBName.replace(QRegExp(CSL1("/")),CSL1("_"));
+#else
+	// Actually, I don't know if this char-replace
+	// is more efficient than the QString one.
+	fDBName = fDBName.replace('/', CSL1("_"));
+#endif
 }
 
 // Reads the application block info
@@ -411,10 +419,11 @@ QString PilotLocalDatabase::dbPathName() const
 {
 	FUNCTIONSETUP;
 	QString tempName(fPathName);
-
-	if (!tempName.endsWith("/")) tempName += "/";
+	QString slash = CSL1("/");
+	
+	if (!tempName.endsWith(slash)) tempName += slash;
 	tempName += getDBName();
-	tempName += ".pdb";
+	tempName += CSL1(".pdb");
 	return tempName;
 }
 
@@ -461,16 +470,24 @@ void PilotLocalDatabase::closeDatabase()
 	pi_file *dbFile;
 	int i;
 
-	if (isDBOpen() == false)
+	if (isDBOpen() == false) 
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT<<"Database "<<fDBName<<" is not open. Cannot close and write it"<<endl;
+#endif
 		return;
+	}
 
 	QString tempName_ = dbPathName();
-	QString newName_ = tempName_ + ".bak";
+	QString newName_ = tempName_ + CSL1(".bak");
 	QCString tempName = QFile::encodeName(tempName_);
 	QCString newName = QFile::encodeName(newName_);
 
 	dbFile = pi_file_create(const_cast < char *>((const char *)newName),
 		&fDBInfo);
+#ifdef DEBUG
+	DEBUGCONDUIT<<"Created temp file "<<newName<<" for the database file "<<dbPathName()<<endl;
+#endif
 
 	pi_file_set_app_info(dbFile, fAppInfo, fAppLen);
 	for (i = 0; i < fNumRecords; i++)
@@ -512,59 +529,3 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 		*fPathBase = s;
 	}
 }
-
-// $Log$
-// Revision 1.6  2002/06/30 14:49:53  kainhofe
-// added a function idList, some minor bug fixes
-//
-// Revision 1.5  2002/06/12 21:40:59  helio
-// Fixed debug message
-//
-// Revision 1.4  2002/05/22 20:40:13  adridg
-// Renaming for sensibility
-//
-// Revision 1.3  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.2.2.2  2002/05/07 13:38:43  adridg
-// Additional debugging to track down mis-set paths
-//
-// Revision 1.2.2.1  2002/04/11 12:48:23  adridg
-// Handle special case where no Pilot user name is set properly
-//
-// Revision 1.2  2002/01/21 23:14:03  adridg
-// Old code removed; extra abstractions added; utility extended
-//
-// Revision 1.1  2001/10/10 22:01:24  adridg
-// Moved from ../kpilot/, shared files
-//
-// Revision 1.17  2001/09/30 19:51:56  adridg
-// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
-//
-// Revision 1.16  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.15  2001/09/24 10:43:19  cschumac
-// Compile fixes.
-//
-// Revision 1.14  2001/04/16 13:54:17  adridg
-// --enable-final file inclusion fixups
-//
-// Revision 1.13  2001/03/29 21:41:49  stern
-// Added local database support in the command line for conduits
-//
-// Revision 1.12  2001/03/27 23:54:43  stern
-// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
-//
-// Revision 1.11  2001/02/27 15:40:48  adridg
-// Use QCString and QFile::encodeName where appropriate
-//
-// Revision 1.10  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.9  2001/02/08 08:13:44  habenich
-// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
-//
-// Revision 1.8  2001/02/05 20:58:48  adridg
-// Fixed copyright headers for source releases. No code changed
-//

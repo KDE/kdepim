@@ -120,42 +120,4 @@ protected:
 	virtual bool exec();
 } ;
 
-// $Log$
-// Revision 1.8  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.7.2.1  2002/04/04 20:28:28  adridg
-// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
-// when using PILOT_VERSION. kpilotTest defaults to list, like the options
-// promise. Always do old-style USB sync (also works with serial devices)
-// and runs conduits only for HotSync. KPilot now as it should have been
-// for the 3.0 release.
-//
-// Revision 1.7  2002/01/25 21:43:12  adridg
-// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
-//
-// Revision 1.6  2001/12/29 15:45:02  adridg
-// Lots of little changes for the syncstack
-//
-// Revision 1.5  2001/10/08 22:20:18  adridg
-// Changeover to libkpilot, prepare for lib-based conduits
-//
-// Revision 1.4  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.3  2001/09/24 22:17:41  adridg
-// () Removed lots of commented out code from previous incarnations.
-// () Added a cleanup action.
-// () Removed a heap-corruption bug caused by using QStringList & and
-//    then deleting what it points to in FileInstallAction.
-// () Removed deadlock when last file to install couldn't be read.
-// () Moved RestoreAction to interactiveSync.{h,cc}, since I feel it
-//    needs to ask "Are you sure?" at the very least.
-//
-// Revision 1.2  2001/09/23 18:24:59  adridg
-// New syncing architecture
-//
-// Revision 1.1  2001/09/16 13:43:18  adridg
-// Subclasses for hotSyncing
-//
 #endif

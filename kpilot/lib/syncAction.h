@@ -74,7 +74,7 @@ protected:
 
 public slots:
 	/**
-	* This just calls exec() and deals with the 
+	* This just calls exec() and deals with the
 	* return code.
 	*/
 	void execConduit();
@@ -85,12 +85,26 @@ signals:
 	void logError(const QString &);
 	void logProgress(const QString &,int);
 
+	/**
+	* It might not be safe to emit syncDone() from exec().
+	* So instead, call delayDone() to wait for the main event
+	* loop to return if you manage to do all processing
+	* immediately.
+	*
+	* delayDone() returns true, so that return delayDone();
+	* is a sensible final statement in exec().
+	*/
+protected slots:
+	void delayedDoneSlot();
+protected:
+	bool delayDone();
+
 protected:
 	KPilotDeviceLink *fHandle;
 	int fStatus;
 
-	void addSyncLogEntry(const QString &e,bool suppress=false)
-		{ fHandle->addSyncLogEntry(e,suppress); } ;
+	void addSyncLogEntry(const QString &e,bool log=true)
+		{ fHandle->addSyncLogEntry(e,log); } ;
 	int pilotSocket() const { return fHandle->pilotSocket(); } ;
 
 	int openConduit() { return fHandle->openConduit(); } ;
@@ -162,25 +176,5 @@ protected:
 		const QString &key = QString::null,
 		unsigned timeout = 20000);
 } ;
-
-
-// $Log$
-// Revision 1.5  2002/08/20 21:18:31  adridg
-// License change in lib/ to allow plugins -- which use the interfaces and
-// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
-// allow the use of libmal which is MPL.
-//
-// Revision 1.4  2002/01/21 23:14:03  adridg
-// Old code removed; extra abstractions added; utility extended
-//
-// Revision 1.3  2001/12/29 15:49:22  adridg
-// SyncStack changes
-//
-// Revision 1.2  2001/10/10 13:40:07  cschumac
-// Compile fixes.
-//
-// Revision 1.1  2001/10/08 21:56:02  adridg
-// Start of making a separate KPilot lib
-//
 
 #endif

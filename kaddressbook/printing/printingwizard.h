@@ -18,7 +18,7 @@
 #ifndef PRINTINGWIZARD_H
 #define PRINTINGWIZARD_H
 
-#include <qlist.h>
+#include <qptrlist.h>
 #include <qstringlist.h>
 
 #include "../kaddressbookprinter.h"

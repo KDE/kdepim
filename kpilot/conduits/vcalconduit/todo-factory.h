@@ -64,12 +64,4 @@ void *init_libtodoconduit();
 
 } ;
 
-// $Log$
-// Revision 1.2  2001/12/27 16:43:36  adridg
-// Fixup configuration
-//
-// Revision 1.1  2001/12/13 21:40:40  adridg
-// New files for move to .so
-//
-
 #endif

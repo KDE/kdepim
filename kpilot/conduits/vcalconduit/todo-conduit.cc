@@ -39,13 +39,15 @@ static const char *TodoConduit_id = "$Id$";
 
 #include <qdatetime.h>
 #include <qtimer.h>
+#include <qtextcodec.h>
 
-#include <pilotUser.h>
 #include <kconfig.h>
 
-#include <calendarlocal.h>
-#include <todo.h>
+// libkcal includes
+#include "libkcal/calendarlocal.h"
+#include "libkcal/todo.h"
 
+#include "pilotUser.h"
 
 /*
 ** KDE 2.2 uses class KORecurrence in a different header file.
@@ -58,8 +60,8 @@ static const char *TodoConduit_id = "$Id$";
 #define DateListIterator_t KCal::DateList::ConstIterator
 #endif
 
-#include <pilotSerialDatabase.h>
-#include <pilotLocalDatabase.h>
+#include "pilotSerialDatabase.h"
+#include "pilotLocalDatabase.h"
 //#include <pilotTodoEntry.h>
 
 //#include "vcal-conduitbase.h"
@@ -177,7 +179,9 @@ TodoConduit::TodoConduit(KPilotDeviceLink *d,
 	const QStringList &a) : VCalConduitBase(d,n,a)
 {
 	FUNCTIONSETUP;
-	(void) TodoConduit_id;
+#ifdef DEBUG
+	DEBUGCONDUIT<<TodoConduit_id<<endl;
+#endif
 }
 
 
@@ -221,7 +225,7 @@ const QString TodoConduit::getTitle(PilotAppCategory*de)
 {
 	PilotTodoEntry*d=dynamic_cast<PilotTodoEntry*>(de);
 	if (d) return QString(d->getDescription());
-	return "";
+	return QString::null;
 }
 
 
@@ -325,7 +329,7 @@ void TodoConduit::setCategory(PilotTodoEntry*de, const KCal::Todo*todo)
 	de->setCat(_getCat(de->getCat(), todo->categories()));
 #ifdef DEBUG
 	DEBUGCONDUIT<<"old Category="<<de->getCat()<<", new cat will be "<<_getCat(de->getCat(), todo->categories())<<endl;
-	DEBUGCONDUIT<<"Available Categories: "<<todo->categories().join(" - ")<<endl;
+	DEBUGCONDUIT<<"Available Categories: "<<todo->categories().join(CSL1(" - "))<<endl;
 #endif
 }
 
@@ -339,12 +343,14 @@ int TodoConduit::_getCat(int cat, const QStringList cats) const
 {
 	FUNCTIONSETUP;
 	int j;
-	if (cats.contains(fTodoAppInfo.category.name[cat])) 
+	if (cats.contains(PilotAppCategory::codec()->toUnicode(fTodoAppInfo.category.name[cat]))) 
 		return cat;
 	for ( QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it ) {
 		for (j=1; j<=15; j++) 
 		{
-			if (!(*it).isEmpty() && ! (*it).compare( fTodoAppInfo.category.name[j] ) ) 
+			if (!(*it).isEmpty() && 
+				! (*it).compare( PilotAppCategory::codec()->toUnicode(
+					fTodoAppInfo.category.name[j]) ) ) 
 			{
 				return j;
 			}
@@ -426,57 +432,13 @@ void TodoConduit::setCategory(KCal::Todo *e, const PilotTodoEntry *de)
 		// palm categories can be set on the desktop, all others will be deleted from the desktop entry!
 		for (int j=1; j<=15; j++) 
 		{
-			cats.remove(fTodoAppInfo.category.name[j]);
+			cats.remove(PilotAppCategory::codec()->toUnicode(fTodoAppInfo.category.name[j]));
 		}
 	}
 	int cat=de->getCat();
 	if (0<cat && cat<=15) 
 	{
-		cats.append( fTodoAppInfo.category.name[cat] );
+		cats.append( PilotAppCategory::codec()->toUnicode(fTodoAppInfo.category.name[cat]) );
 	}
 	e->setCategories(cats);
 }
-
-
-// $Log$
-// Revision 1.23  2002/08/23 11:13:28  adridg
-// Trying to be KDE 3.0.x compatible is hopeless
-//
-// Revision 1.22  2002/08/21 10:40:56  adridg
-// Whoops, bad assumptions on the version number in HEAD
-//
-// Revision 1.21  2002/08/20 20:49:11  adridg
-// Make sure the HEAD code compiles under KDE 3.0.x too, wrt. libkcal changes
-//
-// Revision 1.20  2002/08/15 10:47:56  kainhofe
-// Finished categories syncing for the todo conduit
-//
-// Revision 1.19  2002/07/28 17:27:54  cschumac
-// Move file loading/saving code from CalendarLocal to own class.
-//
-// Revision 1.18  2002/07/23 00:45:18  kainhofe
-// Fixed several bugs with recurrences.
-//
-// Revision 1.17  2002/07/20 17:40:34  cschumac
-// Renamed Calendar::getTodoList() to Calendar::todos().
-// Removed get prefix from Calendar functions returning todos.
-//
-// Revision 1.16  2002/07/09 22:38:04  kainhofe
-// Implemented a first (not-yet-functional) version of the category sync
-//
-// Revision 1.15  2002/06/12 22:11:17  kainhofe
-// Proper cleanup, libkcal still has some problems marking records modified on loading
-//
-// Revision 1.14  2002/05/14 23:07:49  kainhofe
-// Added the conflict resolution code. the Palm and PC precedence is currently swapped, and will be improved in the next few days, anyway...
-//
-// Revision 1.13  2002/05/01 21:18:23  kainhofe
-// Reworked the settings dialog, added various different sync options
-//
-// Revision 1.10.2.1  2002/04/28 12:58:54  kainhofe
-// Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
-//
-// Revision 1.11  2002/04/22 22:51:51  kainhofe
-// Added the first version of the todo conduit, fixed a check for a null pointer in the datebook conduit
-//
-

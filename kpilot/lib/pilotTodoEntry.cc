@@ -23,17 +23,16 @@
 */
 
 /*
-** Bug reports and questions can be sent to groot@kde.org
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
+#include "options.h"
+
 #include <stdlib.h>
 
-#ifndef _KDEBUG_H_
-#include <kdebug.h>
-#endif
+#include <qtextcodec.h>
 
-#ifndef _KPILOT_OPTIONS_H
-#include "options.h"
-#endif
+#include <kdebug.h>
+
 
 #include "pilotTodoEntry.h"
 
@@ -69,8 +68,8 @@ PilotTodoEntry::PilotTodoEntry(const PilotTodoEntry & e):PilotAppCategory(e), fA
 	fTodoInfo.description = 0L;
 	fTodoInfo.note = 0L;
 
-	setDescription(e.fTodoInfo.description);
-	setNote(e.fTodoInfo.note);
+	setDescriptionP(e.getDescriptionP());
+	setNoteP(e.getNoteP());
 
 }				// end of copy constructor
 
@@ -87,20 +86,20 @@ PilotTodoEntry & PilotTodoEntry::operator = (const PilotTodoEntry & e)
 		fTodoInfo.description = 0L;
 		fTodoInfo.note = 0L;
 
-		setDescription(e.fTodoInfo.description);
-		setNote(e.fTodoInfo.note);
+		setDescriptionP(e.getDescriptionP());
+		setNoteP(e.getNoteP());
 
 	}
 
 	return *this;
 }				// end of assignment operator
 
-bool PilotTodoEntry::setCategory(const char *label)
+bool PilotTodoEntry::setCategory(const QString &label)
 {
 	FUNCTIONSETUP;
 	for (int catId = 0; catId < 16; catId++)
 	{
-		QString aCat = fAppInfo.category.name[catId];
+		QString aCat = codec()->toUnicode(fAppInfo.category.name[catId]);
 
 		if (label == aCat)
 		{
@@ -111,13 +110,19 @@ bool PilotTodoEntry::setCategory(const char *label)
 			// if empty, then no more labels; add it 
 		if (aCat.isEmpty())
 		{
-			qstrncpy(fAppInfo.category.name[catId], label, 16);
+			qstrncpy(fAppInfo.category.name[catId], 
+				codec()->fromUnicode(label), 16);
 			setCat(catId);
 			return true;
 		}
 	}
 	// if got here, the category slots were full
 	return false;
+}
+
+QString PilotTodoEntry::getCategoryLabel() const
+{
+	return codec()->toUnicode(fAppInfo.category.name[getCat()]);
 }
 
 void *PilotTodoEntry::pack(void *buf, int *len)
@@ -129,13 +134,19 @@ void *PilotTodoEntry::pack(void *buf, int *len)
 	return buf;
 }
 
-void PilotTodoEntry::setDescription(const char *desc)
+void PilotTodoEntry::setDescription(const QString &desc)
+{
+	setDescriptionP(codec()->fromUnicode(desc),desc.length());
+}
+
+void PilotTodoEntry::setDescriptionP(const char *desc, int len)
 {
 	KPILOT_FREE(fTodoInfo.description);
-	if (desc)
+	if (desc && *desc)
 	{
-	  if (::strlen(desc) > 0) {
-		fTodoInfo.description = (char *)::malloc(::strlen(desc) + 1);
+		if (-1 == len) len=::strlen(desc);
+
+		fTodoInfo.description = (char *)::malloc(len + 1);
 		if (fTodoInfo.description)
 		{
 			::strcpy(fTodoInfo.description, desc);
@@ -146,8 +157,6 @@ void PilotTodoEntry::setDescription(const char *desc)
 				<< ": malloc() failed, description not set"
 				<< endl;
 		}
-	  } else
-		fTodoInfo.description = 0L;
 	}
 	else
 	{
@@ -155,13 +164,23 @@ void PilotTodoEntry::setDescription(const char *desc)
 	}
 }
 
-void PilotTodoEntry::setNote(const char *note)
+QString PilotTodoEntry::getDescription() const
+{
+	return codec()->toUnicode(getDescriptionP());
+}
+
+void PilotTodoEntry::setNote(const QString &note)
+{
+	setNoteP(codec()->fromUnicode(note),note.length());
+}
+
+void PilotTodoEntry::setNoteP(const char *note, int len)
 {
 	KPILOT_FREE(fTodoInfo.note);
-	if (note)
+	if (note && *note)
 	  {
-	    if (::strlen(note) > 0) {
-		fTodoInfo.note = (char *)::malloc(::strlen(note) + 1);
+	    if (-1 == len) len=::strlen(note);
+		fTodoInfo.note = (char *)::malloc(len + 1);
 		if (fTodoInfo.note)
 		{
 		    ::strcpy(fTodoInfo.note, note);
@@ -171,8 +190,6 @@ void PilotTodoEntry::setNote(const char *note)
 			kdError(LIBPILOTDB_AREA) << __FUNCTION__
 				<< ": malloc() failed, note not set" << endl;
 		}
-	    } else
-	      fTodoInfo.note = 0;
 	}
 	else
 	{
@@ -180,39 +197,8 @@ void PilotTodoEntry::setNote(const char *note)
 	}
 }
 
+QString PilotTodoEntry::getNote() const
+{
+	return codec()->toUnicode(getNoteP());
+}
 
-
-// $Log$
-// Revision 1.6  2002/07/23 18:30:57  kainhofe
-// a void caused compilation problems under gcc 3.1
-//
-// Revision 1.5  2002/07/09 22:46:51  kainhofe
-// todo entries now also use categories. Categories aren't successfully synced yet, but the infrastructure is there
-//
-// Revision 1.4  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.3  2002/04/14 22:19:31  kainhofe
-// Added checks for ==NULL in the constructor
-//
-// Revision 1.2  2001/12/28 12:55:24  adridg
-// Fixed email addresses; added isBackup() to interface
-//
-// Revision 1.1  2001/12/27 23:08:30  adridg
-// Restored some deleted wrapper files
-//
-// Revision 1.9  2001/06/05 22:50:56  adridg
-// Avoid allocating empty notes and descriptions
-//
-// Revision 1.8  2001/05/24 10:31:38  adridg
-// Philipp Hullmann's extensive memory-leak hunting patches
-//
-// Revision 1.7  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.6  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.5  2001/02/05 20:58:48  adridg
-// Fixed copyright headers for source releases. No code changed
-//

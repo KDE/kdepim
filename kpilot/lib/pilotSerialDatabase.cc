@@ -19,7 +19,7 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
 
@@ -29,13 +29,13 @@
 #include "options.h"
 
 #include <time.h>
-#include <iostream.h>
 
 #include <pi-dlp.h>
 
+#include <qfile.h>
+
 #include <klocale.h>
 #include <kdebug.h>
-
 
 #include "pilotSerialDatabase.h"
 
@@ -43,17 +43,16 @@ static const char *pilotSerialDatabase_id =
 	"$Id$";
 
 PilotSerialDatabase::PilotSerialDatabase(int linksocket,
-	const char *dbName,
+	const QString &dbName,
 	QObject *p,const char *n) :
 	PilotDatabase(p,n),
-	fDBName(0L), 
+	fDBName(QString::null),
 	fDBHandle(-1),
 	fDBSocket(linksocket)
 {
 	FUNCTIONSETUP;
-	fDBName = new char[strlen(dbName) + 1];
+	fDBName = dbName;
 
-	strcpy(fDBName, dbName);
 	openDatabase();
 
 	/* NOTREACHED */
@@ -64,12 +63,11 @@ PilotSerialDatabase::~PilotSerialDatabase()
 {
 	FUNCTIONSETUP;
 	closeDatabase();
-	delete[]fDBName;
 }
 
 QString PilotSerialDatabase::dbPathName() const
 {
-	QString s("Pilot:");
+	QString s = CSL1("Pilot:");
 	s.append(fDBName);
 	return s;
 }
@@ -99,28 +97,32 @@ int PilotSerialDatabase::writeAppBlock(unsigned char *buffer, int len)
 	return dlp_WriteAppBlock(fDBSocket, getDBHandle(), buffer, len);
 }
 
-	// returns the number of records in the database 
+	// returns the number of records in the database
 int PilotSerialDatabase::recordCount()
 {
 	int idlen;
-	if (isDBOpen() ) return dlp_ReadOpenDBInfo(fDBSocket, getDBHandle(), &idlen);
+	// dlp_ReadOpenDBInfo returns the number of bytes read and sets idlen to the # of recs
+	if (isDBOpen() && dlp_ReadOpenDBInfo(fDBSocket, getDBHandle(), &idlen)>0)
+	{
+		return idlen;
+	}
 	else return -1;
 }
 
 
-// Returns a QValueList of all record ids in the database. 
+// Returns a QValueList of all record ids in the database.
 QValueList<recordid_t> PilotSerialDatabase::idList()
 {
 	QValueList<recordid_t> idlist;
 	int idlen=recordCount();
 	if (idlen<=0) return idlist;
-	
+
 	recordid_t *idarr=new recordid_t[idlen];
 	int idlenread;
-	dlp_ReadRecordIDList (fDBSocket, getDBHandle(), 0, 0, idlen, idarr, &idlenread); 
-	
+	dlp_ReadRecordIDList (fDBSocket, getDBHandle(), 0, 0, idlen, idarr, &idlenread);
+
 	// now create the QValue list from the idarr:
-	for (idlen=0; idlen<idlenread; idlen++) 
+	for (idlen=0; idlen<idlenread; idlen++)
 	{
 		idlist.append(idarr[idlen]);
 	}
@@ -200,7 +202,9 @@ PilotRecord *PilotSerialDatabase::readNextModifiedRec()
 	}
 	if (dlp_ReadNextModifiedRec(fDBSocket, getDBHandle(), (void *) buffer,
 			&id, &index, &size, &attr, &category) >= 0)
+	{
 		return new PilotRecord(buffer, size, attr, category, id);
+	}
 	return 0L;
 }
 
@@ -267,8 +271,8 @@ void PilotSerialDatabase::openDatabase()
 	FUNCTIONSETUP;
 	int db;
 
-	if (dlp_OpenDB(fDBSocket, 0, dlpOpenReadWrite, 
-		const_cast<char *>(getDBName()), &db) < 0)
+	if (dlp_OpenDB(fDBSocket, 0, dlpOpenReadWrite,
+		QFile::encodeName(getDBName()).data(), &db) < 0)
 	{
 		kdError() << k_funcinfo
 			<< i18n("Cannot open database")
@@ -287,38 +291,3 @@ void PilotSerialDatabase::closeDatabase()
 	dlp_CloseDB(fDBSocket, getDBHandle());
 	setDBOpen(false);
 }
-
-
-// $Log$
-// Revision 1.4  2002/06/30 14:49:53  kainhofe
-// added a function idList, some minor bug fixes
-//
-// Revision 1.3  2002/06/07 07:13:25  adridg
-// Make VCal conduit use base-class fDatabase and fLocalDatabase (hack).
-// Extend *Database classes with dbPathName() for consistency.
-//
-// Revision 1.2  2002/05/22 20:40:13  adridg
-// Renaming for sensibility
-//
-// Revision 1.1  2001/10/10 22:01:24  adridg
-// Moved from ../kpilot/, shared files
-//
-// Revision 1.13  2001/09/16 13:37:48  adridg
-// Large-scale restructuring
-//
-// Revision 1.12  2001/04/16 13:54:17  adridg
-// --enable-final file inclusion fixups
-//
-// Revision 1.11  2001/03/27 23:54:43  stern
-// Broke baseConduit functionality out into PilotConduitDatabase and added support for local mode in BaseConduit
-//
-// Revision 1.10  2001/03/27 11:10:39  leitner
-// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
-// #ifdef DEBUG because qstringExpand etc. were not defined.
-//
-// Revision 1.9  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.8  2001/02/05 20:58:48  adridg
-// Fixed copyright headers for source releases. No code changed
-//

@@ -25,17 +25,17 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#include "resolutionDialog.h"
+
+#include "options.h"
 #include "resolutionDialog.moc"
 
-#include <qlayout.h>
-#include <qradiobutton.h>
-#include <qvbuttongroup.h>
-#include <qlabel.h>
 #include <qcheckbox.h>
 #include <qtimer.h>
+#include <qlayout.h>
+#include <qvbuttongroup.h>
+#include <qlabel.h>
+#include <qradiobutton.h>
 
-#include <kdialogbase.h>
 #include <kpilotlink.h>
 
 ResolutionDlg::ResolutionDlg( QWidget* parent, KPilotDeviceLink*fH, QString caption, QString Text, QStringList lst, QString remember) :

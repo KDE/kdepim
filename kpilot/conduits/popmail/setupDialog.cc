@@ -27,7 +27,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to groot@kde.org
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 // This is an old trick so you can determine what revisions
 // make up a binary distribution.
@@ -42,73 +42,24 @@ static const char *setupDialog_id=
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdlib.h>
-#include <iostream.h>
 
 #include <qwhatsthis.h>
-
-#ifndef _KCONFIG_H
-#include <kconfig.h>
-#endif
-
-#ifndef _KAPP_H
-#include <kapplication.h>
-#endif
-
-#ifndef _KLOCALE_H
-#include <klocale.h>
-#endif
-
-#ifndef _KSTDDIRS_H
-#include <kstddirs.h>
-#endif
-
-#ifndef _KDEBUG_H
-#include <kdebug.h>
-#endif
-
-
-
-#ifndef QLABEL_H
 #include <qlabel.h>
-#endif
-
-#ifndef QCHKBOX_H
-#include <qchkbox.h>
-#endif
-
-#ifndef QLINED_H
-#include <qlined.h>
-#endif
-
-#ifndef QDIR_H
+#include <qcheckbox.h>
+#include <qlineedit.h>
 #include <qdir.h>
-#endif
-
-#ifndef QFILEDLG_H
-#include <qfiledlg.h>
-#endif
-
-#ifndef QBTTNGRP_H
-#include <qbttngrp.h>
-#endif
-
-#ifndef QPUSHBUTTON_H
+#include <qbuttongroup.h>
 #include <qpushbutton.h>
-#endif
-
-#ifndef QRADIOBT_H
-#include <qradiobt.h>
-#endif
-
-#ifndef QLAYOUT_H
+#include <qradiobutton.h>
 #include <qlayout.h>
-#endif
-
-#ifndef QVBUTTONGROUP_H
 #include <qvbuttongroup.h>
-#endif
 
-#include "kfiledialog.h"
+#include <kconfig.h>
+#include <kapplication.h>
+#include <klocale.h>
+#include <kstddirs.h>
+#include <kdebug.h>
+#include <kfiledialog.h>
 
 #include "popmail-factory.h"
 #include "setupDialog.moc"
@@ -227,13 +178,13 @@ PopMailSendPage::PopMailSendPage(QWidget *parent) :
 
 void PopMailSendPage::readSettings(KConfig &config)
 {
-	fEmailFrom->setText(config.readEntry("EmailAddress", "$USER"));
-	fSignature->setText(config.readEntry("Signature", ""));
+	fEmailFrom->setText(config.readEntry("EmailAddress", CSL1("$USER")));
+	fSignature->setText(config.readEntry("Signature", QString::null));
 	fSendmailCmd->setText(config.readEntry("SendmailCmd",
-		"/usr/lib/sendmail -t -i"));
-	fSMTPServer->setText(config.readEntry("SMTPServer", "mail"));
-	fSMTPPort->setText(config.readEntry("SMTPPort", "25"));
-	fFirewallFQDN->setText(config.readEntry("explicitDomainName", "$MAILDOMAIN"));
+		CSL1("/usr/lib/sendmail -t -i")));
+	fSMTPServer->setText(config.readEntry("SMTPServer", CSL1("mail")));
+	fSMTPPort->setText(QString::number(config.readNumEntry("SMTPPort", 25)));
+	fFirewallFQDN->setText(config.readEntry("explicitDomainName", CSL1("$MAILDOMAIN")));
 	fKMailSendImmediate->setChecked(config.readBoolEntry("SendImmediate",
 		true));
 	setMode(SendMode(config.readNumEntry(PopmailConduitFactory::syncOutgoing,SEND_NONE)));
@@ -345,7 +296,7 @@ void PopMailSendPage::browseSignature()
 		filename=QFileInfo( filename ).dirPath();
 	}
 
-	filename = KFileDialog::getOpenFileName(filename,"*");
+	filename = KFileDialog::getOpenFileName(filename,CSL1("*"));
 
 #ifdef DEBUG
 	{
@@ -475,24 +426,24 @@ void PopMailReceivePage::readSettings(KConfig &config)
 		u=getenv("HOME");
 		if (u==0L)
 		{
-			defaultMailbox="mbox";
+			defaultMailbox=CSL1("mbox");
 		}
 		else
 		{
-			defaultMailbox=QString(u)+QString("mbox");
+			defaultMailbox=QString::fromLocal8Bit(u)+CSL1("mbox");
 		}
 	}
 	else
 	{
-		defaultMailbox=QString("/var/spool/mail/")+QString(u);
+		defaultMailbox=CSL1("/var/spool/mail/")+QString::fromLocal8Bit(u);
 	}
 
 	fMailbox->setText(config.readEntry("UNIX Mailbox",defaultMailbox));
-	fPopServer->setText(config.readEntry("PopServer", "pop"));
-	fPopPort->setText(config.readEntry("PopPort", "110"));
-	fPopUser->setText(config.readEntry("PopUser", "$USER"));
+	fPopServer->setText(config.readEntry("PopServer", CSL1("pop")));
+	fPopPort->setText(config.readEntry("PopPort", CSL1("110")));
+	fPopUser->setText(config.readEntry("PopUser", CSL1("$USER")));
 	fLeaveMail->setChecked(config.readNumEntry("LeaveMail", 1));
-	fPopPass->setText(config.readEntry("PopPass", ""));
+	fPopPass->setText(config.readEntry("PopPass", QString::null));
 	fPopPass->setEnabled(config.readNumEntry("StorePass", 0));
 	fStorePass->setChecked(config.readNumEntry("StorePass", 0));
 	setMode(RetrievalMode(
@@ -515,9 +466,9 @@ void PopMailReceivePage::readSettings(KConfig &config)
 	//
 	if(fStorePass->isChecked())
 	{
-		chmod(KGlobal::dirs()->findResource("config", "kpilotrc")
+		chmod(KGlobal::dirs()->findResource("config", CSL1("kpilotrc"))
 			.latin1(), 0600);
-		config.writeEntry("PopPass", fPopPass->text().latin1());
+		config.writeEntry("PopPass", fPopPass->text());
 	}
 	else
 	{
@@ -605,7 +556,7 @@ void PopMailReceivePage::setMode(RetrievalMode m)
 		filename=QFileInfo( filename ).dirPath();
 	}
 
-	filename = KFileDialog::getOpenFileName(filename,"*");
+	filename = KFileDialog::getOpenFileName(filename,CSL1("*"));
 
 #ifdef DEBUG
 	{
@@ -675,69 +626,3 @@ PopMailOptions::setupWidget()
 #endif
 
 
-// $Log$
-// Revision 1.30  2002/08/01 16:05:03  binner
-// CVS_SILENT Style guide fix
-//
-// Revision 1.29  2002/07/11 13:27:28  mhunter
-// Corrected typographical errors
-//
-// Revision 1.28  2002/07/03 13:24:39  binner
-// CVS_SILENT Style guide fix
-//
-// Revision 1.27  2002/07/03 12:22:07  binner
-// CVS_SILENT Style guide fixes
-//
-// Revision 1.26  2002/05/15 16:58:02  gioele
-// kapp.h -> kapplication.h
-//
-// Revision 1.25  2002/02/23 20:57:40  adridg
-// #ifdef DEBUG stuff
-//
-// Revision 1.24  2002/01/25 21:43:12  adridg
-// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
-//
-// Revision 1.23  2002/01/20 06:46:22  waba
-// Messagebox changes.
-//
-// Revision 1.22  2001/12/31 09:35:23  adridg
-// Sanitizing __FUNCTION__ and cerr
-//
-// Revision 1.21  2001/12/28 13:01:16  adridg
-// Add SyncAction
-//
-// Revision 1.20  2001/12/13 21:35:33  adridg
-// Gave all conduits a config dialog
-//
-// Revision 1.19  2001/07/04 08:53:37  cschumac
-// - Added explicitDomainName text widget to setup dialog
-// - Changed the support for the explicit domain name a little
-//   (added a few more debug lines)
-// - Changed expected response to EHLO to "^250" instead of "Hello", to
-//   fix some people's protocol-correct but unexpected SMTP server reply.
-//
-// Revision 1.18  2001/05/25 16:06:52  adridg
-// DEBUG breakage
-//
-// Revision 1.17  2001/04/23 21:18:36  adridg
-// Some i18n() fixups and KMail sending
-//
-// Revision 1.16  2001/03/27 11:10:39  leitner
-// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
-// #ifdef DEBUG because qstringExpand etc. were not defined.
-//
-// Revision 1.15  2001/03/09 09:46:14  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.14  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.13  2001/02/09 15:59:28  habenich
-// replaced "char *id" with "char *<filename>_id", because of --enable-final in configure
-//
-// Revision 1.12  2001/02/07 15:46:31  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
-//
-// Revision 1.11  2001/01/03 00:05:13  adridg
-// Administrative
-//

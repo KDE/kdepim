@@ -225,16 +225,3 @@ void KPilotConfigDialog::setAddressDisplay(int i)
 	}
 }
 
-// $Log$
-// Revision 1.6  2001/11/11 22:20:23  adridg
-// Add workaround for pilot-link limitation <= 0.9.5
-//
-// Revision 1.5  2001/10/08 22:20:18  adridg
-// Changeover to libkpilot, prepare for lib-based conduits
-//
-// Revision 1.4  2001/09/30 19:51:56  adridg
-// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
-//
-// Revision 1.3  2001/09/29 16:26:18  adridg
-// The big layout change
-//

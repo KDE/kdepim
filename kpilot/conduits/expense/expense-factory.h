@@ -65,12 +65,4 @@ void *init_libexpenseconduit();
 
 } ;
 
-// $Log$
-// Revision 1.2  2001/12/13 21:35:12  adridg
-// Gave all conduits a config dialog
-//
-// Revision 1.1  2001/11/18 16:55:51  adridg
-// Moving expenses conduit to new arch.
-//
-
 #endif

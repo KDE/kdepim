@@ -29,7 +29,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to groot@kde.org
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
 // This is an old trick so you can determine what revisions
@@ -45,14 +45,14 @@ static const char *passworddialog_id="$Id$";
 #include <string.h>
 #include <stdio.h>
 
-#include <qapp.h>
-#include <qpushbt.h>
+#include <qapplication.h>
+#include <qpushbutton.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qdialog.h>
 #include <qaccel.h>
-#include <qmsgbox.h>
-#include <qchkbox.h>
+#include <qmessagebox.h>
+#include <qcheckbox.h>
 
 #include "passworddialog.h"
 #include "passworddialog.moc"
@@ -136,21 +136,3 @@ const char * PasswordDialog::password()
    else
       return "";
 }
-
-
-
-
-
-// $Log$
-// Revision 1.10  2002/05/15 16:58:02  gioele
-// kapp.h -> kapplication.h
-//
-// Revision 1.9  2001/12/28 13:01:16  adridg
-// Add SyncAction
-//
-// Revision 1.8  2001/02/09 15:59:28  habenich
-// replaced "char *id" with "char *<filename>_id", because of --enable-final in configure
-//
-// Revision 1.7  2001/02/07 15:46:31  adridg
-// Updated copyright headers for source release. Added CVS log. No code change.
-//

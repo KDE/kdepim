@@ -121,23 +121,4 @@ private:
 	QString fDBPath;
 } ;
 
-
-
-
-// $Log$
-// Revision 1.12  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.11  2001/09/16 13:37:48  adridg
-// Large-scale restructuring
-//
-// Revision 1.10  2001/09/05 21:53:51  adridg
-// Major cleanup and architectural changes. New applications kpilotTest
-// and kpilotConfig are not installed by default but can be used to test
-// the codebase. Note that nothing else will actually compile right now.
-//
-//
-// Revision 1.5  2001/02/06 08:05:20  adridg
-// Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
-//
 #endif

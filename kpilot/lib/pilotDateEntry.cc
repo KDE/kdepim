@@ -23,17 +23,17 @@
 */
 
 /*
-** Bug reports and questions can be sent to groot@kde.org
+** Bug reports and questions can be sent to kde-pim@kde.org
 */
+
+#include "options.h"
 
 #include <stdlib.h>
 
+#include <qtextcodec.h>
+
 #ifndef _KDEBUG_H_
 #include <kdebug.h>
-#endif
-
-#ifndef _KPILOT_OPTIONS_H
-#include "options.h"
 #endif
 
 #include "pilotDateEntry.h"
@@ -105,8 +105,8 @@ PilotDateEntry::PilotDateEntry(const PilotDateEntry & e):PilotAppCategory(e)
 	fAppointmentInfo.note = 0L;
 
 	_copyExceptions(e);
-	setDescription(e.fAppointmentInfo.description);
-	setNote(e.fAppointmentInfo.note);
+	setDescriptionP(e.fAppointmentInfo.description);
+	setNoteP(e.fAppointmentInfo.note);
 }
 
 
@@ -132,8 +132,8 @@ PilotDateEntry & PilotDateEntry::operator = (const PilotDateEntry & e)
 		fAppointmentInfo.note = 0L;
 
 		_copyExceptions(e);
-		setDescription(e.fAppointmentInfo.description);
-		setNote(e.fAppointmentInfo.note);
+		setDescriptionP(e.fAppointmentInfo.description);
+		setNoteP(e.fAppointmentInfo.note);
 	}
 
 	return *this;
@@ -161,19 +161,19 @@ void PilotDateEntry::setExceptions(struct tm *e) {
 }
 
 
-void PilotDateEntry::setDescription(const char *desc)
+void PilotDateEntry::setDescriptionP(const char *desc, int l)
 {
 	FUNCTIONSETUP;
 	KPILOT_FREE(fAppointmentInfo.description);
 
-	if (desc)
+	if (desc && *desc)
 	{
-	  if (::strlen(desc) > 0) {
+		if (-1 == l) l=::strlen(desc);
 		fAppointmentInfo.description =
-			(char *) malloc(strlen(desc) + 1);
+			(char *) ::malloc(l + 1);
 		if (fAppointmentInfo.description)
 		{
-			strcpy(fAppointmentInfo.description, desc);
+			::strcpy(fAppointmentInfo.description, desc);
 		}
 		else
 		{
@@ -181,8 +181,6 @@ void PilotDateEntry::setDescription(const char *desc)
 				<< ": malloc() failed, description not set"
 				<< endl;
 		}
-	  } else
-	    fAppointmentInfo.description = 0L;
 	}
 	else
 	{
@@ -190,15 +188,15 @@ void PilotDateEntry::setDescription(const char *desc)
 	}
 }
 
-void PilotDateEntry::setNote(const char *note)
+void PilotDateEntry::setNoteP(const char *note, int l)
 {
 	FUNCTIONSETUP;
 	KPILOT_FREE(fAppointmentInfo.note);
 
-	if (note)
+	if (note && *note)
 	{
-	  if (::strlen(note) > 0) {
-		fAppointmentInfo.note = (char *)::malloc(strlen(note) + 1);
+		if (-1 == l) l=::strlen(note);
+		fAppointmentInfo.note = (char *)::malloc(l + 1);
 		if (fAppointmentInfo.note)
 		{
 			strcpy(fAppointmentInfo.note, note);
@@ -208,8 +206,6 @@ void PilotDateEntry::setNote(const char *note)
 			kdError(LIBPILOTDB_AREA) << __FUNCTION__
 				<< ": malloc() failed, note not set" << endl;
 		}
-	  } else
-	    fAppointmentInfo.note = 0L;
 	}
 	else
 	{
@@ -217,33 +213,23 @@ void PilotDateEntry::setNote(const char *note)
 	}
 }
 
+void PilotDateEntry::setNote(const QString &s)
+{
+	setNoteP(codec()->fromUnicode(s),s.length());
+}
 
+void PilotDateEntry::setDescription(const QString &s)
+{
+	setDescriptionP(codec()->fromUnicode(s),s.length());
+}
 
-// $Log$
-// Revision 1.5  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.4  2002/04/16 23:42:27  kainhofe
-// setExceptions now deletes the old exceptions array to prevent memory leaks
-//
-// Revision 1.3  2002/04/14 22:19:31  kainhofe
-// Added checks for ==NULL in the constructor
-//
-// Revision 1.2  2001/12/28 12:55:24  adridg
-// Fixed email addresses; added isBackup() to interface
-//
-// Revision 1.1  2001/12/27 23:08:30  adridg
-// Restored some deleted wrapper files
-//
-// Revision 1.8  2001/06/05 22:50:56  adridg
-// Avoid allocating empty notes and descriptions
-//
-// Revision 1.7  2001/05/24 10:31:38  adridg
-// Philipp Hullmann's extensive memory-leak hunting patches
-//
-// Revision 1.6  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.5  2001/02/05 20:58:48  adridg
-// Fixed copyright headers for source releases. No code changed
-//
+QString PilotDateEntry::getNote() const
+{
+	return codec()->toUnicode(getNoteP());
+}
+
+QString PilotDateEntry::getDescription() const
+{
+	return codec()->toUnicode(getDescriptionP());
+}
+

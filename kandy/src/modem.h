@@ -35,7 +35,7 @@
 #include <qobject.h>
 #include <qstring.h>
 #include <qtimer.h>
-#include <qsocknot.h>
+#include <qsocketnotifier.h>
 
 
 

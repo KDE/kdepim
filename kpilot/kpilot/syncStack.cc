@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
-** This defines the "SyncStack", which is the pile of actions
+** This defines the "ActionQueue", which is the pile of actions
 ** that will occur during a HotSync.
 */
 
@@ -31,6 +31,7 @@
 static const char *syncStack_id = "$Id$";
 
 #include <qtimer.h>
+#include <qfile.h>
 
 #include <kservice.h>
 #include <kservicetype.h>
@@ -57,7 +58,8 @@ WelcomeAction::WelcomeAction(KPilotDeviceLink *p) :
 {
 	FUNCTIONSETUP;
 
-	addSyncLogEntry(i18n("KPilot %1 HotSync starting...\n").arg(KPILOT_VERSION));
+	addSyncLogEntry(i18n("KPilot %1 HotSync starting...\n")
+		.arg(QString::fromLatin1(KPILOT_VERSION)));
 	emit syncDone(this);
 	return true;
 }
@@ -65,7 +67,7 @@ WelcomeAction::WelcomeAction(KPilotDeviceLink *p) :
 ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	const QString &name,
 	int m) :
-	ConduitAction(p,name),
+	ConduitAction(p,name.latin1()),
 	fDesktopName(name),
 	fMode(m)
 {
@@ -101,7 +103,8 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 #endif
 
 	fLibraryName = o->library();
-	KLibFactory *factory = KLibLoader::self()->factory(o->library());
+	KLibFactory *factory = KLibLoader::self()->factory(
+		QFile::encodeName(o->library()));
 	if (!factory)
 	{
 		kdWarning() << k_funcinfo
@@ -114,25 +117,25 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	}
 
 	QStringList l;
-	switch(fMode && SyncStack::ActionMask)
+	switch(fMode && ActionQueue::ActionMask)
 	{
-	case SyncStack::Backup :
-		l.append("--backup");
+	case ActionQueue::Backup :
+		l.append(CSL1("--backup"));
 		break;
 	default:
 		;
 	}
-	if (fMode & SyncStack::FlagTest)
+	if (fMode & ActionQueue::FlagTest)
 	{
-		l.append("--test");
+		l.append(CSL1("--test"));
 	}
-	if (fMode & SyncStack::FlagLocal)
+	if (fMode & ActionQueue::FlagLocal)
 	{
-		l.append("--local");
+		l.append(CSL1("--local"));
 	}
 
 
-	QObject *object = factory->create(fHandle,0L,"SyncAction",l);
+	QObject *object = factory->create(fHandle,name(),"SyncAction",l);
 
 	if (!object)
 	{
@@ -194,12 +197,12 @@ void ConduitProxy::execDone(SyncAction *p)
 	emit syncDone(this);
 }
 
-SyncStack::SyncStack(KPilotDeviceLink *d,
+ActionQueue::ActionQueue(KPilotDeviceLink *d,
 	KConfig *config,
 	const QStringList &conduits,
 	const QString &dir,
 	const QStringList &files) :
-	SyncAction(d,"SyncStack"),
+	SyncAction(d,"ActionQueue"),
 	fReady(false),
 	fConfig(config),
 	fInstallerDir(dir),
@@ -209,16 +212,34 @@ SyncStack::SyncStack(KPilotDeviceLink *d,
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Conduits : " << conduits.join(" + ") << endl;
+	if (!conduits.count())
+	{
+		DEBUGCONDUIT << fname << ": No conduits." << endl;
+	}
+	else
+	{
+		DEBUGCONDUIT << fname << ": Conduits : " << conduits.join(CSL1(" + ")) << endl;
+	}
 #endif
+
+	kdWarning() << "SyncStack usage is deprecated." << endl;
 }
 
-SyncStack::~SyncStack()
+ActionQueue::ActionQueue(KPilotDeviceLink *d) :
+	SyncAction(d,"ActionQueue"),
+	fReady(false),
+	fConfig(0L)
+	// The string lists have default constructors
 {
 	FUNCTIONSETUP;
 }
 
-void SyncStack::prepare(int m)
+ActionQueue::~ActionQueue()
+{
+	FUNCTIONSETUP;
+}
+
+void ActionQueue::prepare(int m)
 {
 	FUNCTIONSETUP;
 
@@ -227,7 +248,7 @@ void SyncStack::prepare(int m)
 		<< ": Using sync mode " << m
 		<< endl;
 #endif
-
+	
 	switch ( m & (Test | Backup | Restore | HotSync))
 	{
 	case Test:
@@ -243,13 +264,10 @@ void SyncStack::prepare(int m)
 		return;
 	}
 
-	addAction(new CleanupAction(fHandle));
-
-	if (m & WithInstaller)
-	{
-		addAction(new FileInstallAction(fHandle,fInstallerDir,fInstallerFiles));
-	}
-
+	queueInit(m);
+	if (m & WithConduits)
+		queueConduits(fConfig,fConduits,m);
+	
 	switch ( m & (Test | Backup | Restore | HotSync))
 	{
 	case Test:
@@ -269,33 +287,58 @@ void SyncStack::prepare(int m)
 		return;
 	}
 
-	// Add conduits here ...
-	//
-	//
-	for (QStringList::ConstIterator it = fConduits.begin();
-		it != fConduits.end();
-		++it)
-	{
-		ConduitProxy *cp =new ConduitProxy(fHandle,*it,m);
-		cp->setConfig(fConfig);
-		addAction(cp);
-	}
+	if (m & WithInstaller)
+		queueInstaller(fInstallerDir,fInstallerFiles);
+
+	queueCleanup();
+}
+
+void ActionQueue::queueInit(int m)
+{
+	FUNCTIONSETUP;
+
+	addAction(new WelcomeAction(fHandle));
 
 	if (m & WithUserCheck)
 	{
 		addAction(new CheckUser(fHandle));
 	}
-
-	addAction(new WelcomeAction(fHandle));
 }
 
-bool SyncStack::exec()
+void ActionQueue::queueConduits(KConfig *config,const QStringList &l,int m)
+{
+	FUNCTIONSETUP;
+
+	// Add conduits here ...
+	//
+	//
+	for (QStringList::ConstIterator it = l.begin();
+		it != l.end();
+		++it)
+	{
+		ConduitProxy *cp = new ConduitProxy(fHandle,*it,m);
+		cp->setConfig(config);
+		addAction(cp);
+	}
+}
+
+void ActionQueue::queueInstaller(const QString &dir, const QStringList &files)
+{
+	addAction(new FileInstallAction(fHandle,dir,files));
+}
+
+void ActionQueue::queueCleanup()
+{
+	addAction(new CleanupAction(fHandle));
+}
+
+bool ActionQueue::exec()
 {
 	actionCompleted(0L);
 	return true;
 }
 
-void SyncStack::actionCompleted(SyncAction *b)
+void ActionQueue::actionCompleted(SyncAction *b)
 {
 	FUNCTIONSETUP;
 
@@ -345,39 +388,3 @@ void SyncStack::actionCompleted(SyncAction *b)
 	QTimer::singleShot(0,a,SLOT(execConduit()));
 }
 
-// $Log$
-// Revision 1.8  2002/08/23 22:03:21  adridg
-// See ChangeLog - exec() becomes bool, debugging added
-//
-// Revision 1.7  2002/05/19 15:01:49  adridg
-// Patches for the KNotes conduit
-//
-// Revision 1.6  2002/05/18 23:28:19  adridg
-// Compile fixes
-//
-// Revision 1.5  2002/05/14 22:57:40  adridg
-// Merge from _BRANCH
-//
-// Revision 1.4  2002/04/20 13:03:31  binner
-// CVS_SILENT Capitalisation fixes.
-//
-// Revision 1.3.2.2  2002/04/13 11:33:38  adridg
-// Make test mode for conduits independent of test mode for hotsync (needed to make kpilotTest sane)
-//
-// Revision 1.3.2.1  2002/04/04 20:28:28  adridg
-// Fixing undefined-symbol crash in vcal. Fixed FD leak. Compile fixes
-// when using PILOT_VERSION. kpilotTest defaults to list, like the options
-// promise. Always do old-style USB sync (also works with serial devices)
-// and runs conduits only for HotSync. KPilot now as it should have been
-// for the 3.0 release.
-//
-// Revision 1.3  2002/02/02 11:46:02  adridg
-// Abstracting away pilot-link stuff
-//
-// Revision 1.2  2002/01/25 21:43:13  adridg
-// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
-//
-// Revision 1.1  2001/12/29 15:41:36  adridg
-// Added unified sync-action handling for kpilotTest and daemon
-//
-//

@@ -18,8 +18,8 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
-** MA 02139, USA.
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+** MA 02111-1307, USA.
 */
 
 /*
@@ -49,7 +49,7 @@ static const char *syncAction_id =
 
 #include <kdialogbase.h>
 #include <kglobal.h>
-#include <kstddirs.h>
+#include <kstandarddirs.h>
 #include <kconfig.h>
 
 #if KDE_VERSION < 300
@@ -73,7 +73,7 @@ SyncAction::SyncAction(KPilotDeviceLink  *p,
 /* virtual */ QString SyncAction::statusString() const
 {
 	FUNCTIONSETUP;
-	QString s("status=");
+	QString s = CSL1("status=");
 
 	s.append(QString::number(status()));
 	return s;
@@ -84,7 +84,7 @@ SyncAction::SyncAction(KPilotDeviceLink  *p,
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname 
+	DEBUGCONDUIT << fname
 		<< ": Running conduit " << name() << endl;
 #endif
 
@@ -97,9 +97,20 @@ SyncAction::SyncAction(KPilotDeviceLink  *p,
 	if (!r)
 	{
 		emit logError(i18n("The conduit %1 could not be executed.")
-			.arg(name()));
-		emit syncDone(this);
+			.arg(QString::fromLatin1(name())));
+		delayDone();
 	}
+}
+
+/* slot */ void SyncAction::delayedDoneSlot()
+{
+	emit syncDone(this);
+}
+
+bool SyncAction::delayDone()
+{
+	QTimer::singleShot(0,this,SLOT(delayedDoneSlot()));
+	return true;
 }
 
 InteractiveAction::InteractiveAction(KPilotDeviceLink *p,
@@ -107,8 +118,8 @@ InteractiveAction::InteractiveAction(KPilotDeviceLink *p,
 	const char *name) :
 	SyncAction(p, name),
 	fParent(visibleparent),
-	fTickleTimer(0L), 
-	fTickleCount(0), 
+	fTickleTimer(0L),
+	fTickleCount(0),
 	fTickleTimeout(0)
 {
 	FUNCTIONSETUP;
@@ -191,11 +202,11 @@ int InteractiveAction::questionYesNo(const QString & text,
 	{
 		QString prev = config->readEntry(key).lower();
 
-		if (prev == "yes")
+		if (prev == CSL1("yes"))
 		{
 			return KDialogBase::Yes;
 		}
-		else if (prev == "no")
+		else if (prev == CSL1("no"))
 		{
 			return KDialogBase::No;
 		}
@@ -280,33 +291,3 @@ int InteractiveAction::questionYesNo(const QString & text,
 	delete dialog;
 	return result;
 }
-
-// $Log$
-// Revision 1.7  2002/08/24 21:27:32  adridg
-// Lots of small stuff to remove warnings
-//
-// Revision 1.6  2002/08/23 22:03:21  adridg
-// See ChangeLog - exec() becomes bool, debugging added
-//
-// Revision 1.5  2002/08/20 21:18:31  adridg
-// License change in lib/ to allow plugins -- which use the interfaces and
-// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
-// allow the use of libmal which is MPL.
-//
-// Revision 1.4  2002/05/15 17:15:33  gioele
-// kapp.h -> kapplication.h
-// I have removed KDE_VERSION checks because all that files included "options.h"
-// which #includes <kapplication.h> (which is present also in KDE_2).
-// BTW you can't have KDE_VERSION defined if you do not include
-// - <kapplication.h>: KDE3 + KDE2 compatible
-// - <kdeversion.h>: KDE3 only compatible
-//
-// Revision 1.3  2001/12/29 15:49:22  adridg
-// SyncStack changes
-//
-// Revision 1.2  2001/10/10 13:40:07  cschumac
-// Compile fixes.
-//
-// Revision 1.1  2001/10/08 21:56:02  adridg
-// Start of making a separate KPilot lib
-//

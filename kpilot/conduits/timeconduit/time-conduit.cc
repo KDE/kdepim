@@ -1,34 +1,36 @@
-// Time-conduit.cc
-//
-// Copyright (C) 2002 by Reinhold Kainhofer
-//
-// This file is distributed under the Gnu General Public Licence (GPL).
-// The GPL should have been included with this file in a file called
-// COPYING. 
-//
-//
- 
+/* time-conduit.cc                           KPilot
+**
+** Copyright (C) 2002-2003 by Reinhold Kainhofer
+**
+*/
 
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
+** MA 02139, USA.
+*/
 
+/*
+** Bug reports and questions can be sent to kde-pim@kde.org.
+*/
 
 #include "options.h"
 
-// Only include what we really need:
-// First UNIX system stuff, then std C++,
-// then Qt, then KDE, then local includes.
-//
-//
-//#include <unistd.h>
 #include <time.h>
 
-//#include <qtimer.h>
-
-//#include <kglobal.h>
-//#include <kmessagebox.h>
 #include <kconfig.h>
 #include <kdebug.h>
-
-//#include <pilotUser.h>
 
 #include "time-factory.h"
 #include "time-conduit.moc"
@@ -49,7 +51,9 @@ TimeConduit::TimeConduit(KPilotDeviceLink * o,
 	fDirection(0)
 {
 	FUNCTIONSETUP;
-	(void) Time_conduit_id;
+#ifdef DEBUG
+	DEBUGCONDUIT<<Time_conduit_id<<endl;
+#endif
 }
 
 
@@ -137,20 +141,3 @@ void TimeConduit::syncPCToPalm()
 	DEBUGCONDUIT<<fname<<": synced time "<<time.toString()<<" to the handheld"<<endl;
 #endif
 }
-
-// $Log$
-// Revision 1.7  2002/08/15 21:51:00  kainhofe
-// Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
-//
-// Revision 1.6  2002/08/12 09:48:11  kainhofe
-// better log message
-//
-// Revision 1.5  2002/07/31 06:43:41  kainhofe
-// typographical errors
-//
-// Revision 1.4  2002/07/31 06:40:30  kainhofe
-// skip conduit for PalmOS 3.25 and 3.3, which don't support setting the time
-//
-// Revision 1.2  2002/07/25 21:58:11  kainhofe
-// compile error
-//

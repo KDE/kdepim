@@ -6,6 +6,9 @@
 ** install and activate conduits.
 */
 
+// THIS FILE IS TOTALLY DEPRECATED. IT IS NOT USED
+// IN THE MAIN PART OF KPILOT'S CODE.
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -32,7 +35,6 @@
 
 #include <stdio.h>
 #include <unistd.h>
-#include <iostream.h>
 
 #ifndef QDIR_H
 #include <qdir.h>
@@ -284,7 +286,7 @@ void CConduitSetup::conduitExecuted(QListViewItem * p)
 	conduitSetup = new KProcess;
 	*conduitSetup << execPath << "--setup";
 	*conduitSetup << "-geometry"
-		<< QString("+%1+%2").arg(x() + 20).arg(y() + 20);
+		<< CSL1("+%1+%2").arg(x() + 20).arg(y() + 20);
 #ifdef DEBUG
 	if (debug_level)
 	{
@@ -340,7 +342,7 @@ void CConduitSetup::fillLists()
 		KPilotConfig::getConfig().setConduitGroup().
 		getInstalledConduits();
 	KServiceTypeProfile::OfferList offers =
-		KServiceTypeProfile::offers("KPilotConduit");
+		KServiceTypeProfile::offers(CSL1("KPilotConduit"));
 
 #ifdef DEBUG
 	{
@@ -478,11 +480,11 @@ void CConduitSetup::writeInstalledConduits()
 
 
 
-		currentConduit += " --info";
+		currentConduit += CSL1(" --info");
 #ifdef DEBUG
 		if (debug_level)
 		{
-			currentConduit += " --debug ";
+			currentConduit += CSL1(" --debug ");
 			currentConduit += QString().setNum(debug_level);
 		}
 
@@ -509,6 +511,8 @@ void CConduitSetup::writeInstalledConduits()
 				"author to correct it.").arg(p->
 				text(CONDUIT_NAME));
 
+			// Might not be correct in a caption,
+			// but this file is deprecated anyway.
 			KMessageBox::error(this, tmpMessage,
 				i18n("Conduit Error."));
 		}
@@ -524,7 +528,7 @@ void CConduitSetup::writeInstalledConduits()
 		else
 		{
 			QStringList l = QStringList::split(QChar(','),
-				QString(dbName));
+				QString(QString::fromLatin1(dbName)));
 
 			QStringList::Iterator i;
 			const QString & m = p->text(CONDUIT_DESKTOP);
@@ -613,54 +617,3 @@ void CConduitSetup::warnSetupRunning()
 }
 
 
-// $Log$
-// Revision 1.33  2002/05/15 17:15:33  gioele
-// kapp.h -> kapplication.h
-// I have removed KDE_VERSION checks because all that files included "options.h"
-// which #includes <kapplication.h> (which is present also in KDE_2).
-// BTW you can't have KDE_VERSION defined if you do not include
-// - <kapplication.h>: KDE3 + KDE2 compatible
-// - <kdeversion.h>: KDE3 only compatible
-//
-// Revision 1.32  2002/04/20 13:03:31  binner
-// CVS_SILENT Capitalisation fixes.
-//
-// Revision 1.31  2002/01/25 21:43:12  adridg
-// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
-//
-// Revision 1.30  2001/09/30 23:02:13  adridg
-// Add support for multi-line comments in conduit configurator and add it to kpilotConfig
-//
-// Revision 1.29  2001/09/30 19:51:56  adridg
-// Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
-//
-// Revision 1.28  2001/09/30 16:59:54  adridg
-// Implemented actions with buttons
-//
-// Revision 1.27  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.26  2001/09/23 18:25:50  adridg
-// New config architecture
-//
-// Revision 1.25  2001/05/25 16:06:52  adridg
-// DEBUG breakage
-//
-// Revision 1.24  2001/04/23 21:30:20  adridg
-// Betteer support of missing conduit executables
-//
-// Revision 1.23  2001/04/23 06:30:38  adridg
-// XML UI updates
-//
-// Revision 1.22  2001/04/16 13:54:17  adridg
-// --enable-final file inclusion fixups
-//
-// Revision 1.21  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.20  2001/02/08 08:13:44  habenich
-// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
-//
-// Revision 1.19  2001/02/05 20:55:07  adridg
-// Fixed copyright headers for source releases. No code changed
-//

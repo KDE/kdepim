@@ -283,7 +283,7 @@ int icalssutil_is_rescheduled(icalcomponent* a,icalcomponent* b)
 	p1 = icalcomponent_get_first_property(i1,kind_array[i]);
 	p2 = icalcomponent_get_first_property(i2,kind_array[i]);
 	
-	if( (p1!=0)^(p1!=0) ){
+	if( (p1!=0)^(p2!=0) ){
 	    /* Return true if the property exists in one component and not
 	       the other */
 	    return 1;

@@ -4,9 +4,9 @@
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
-** This is a horrible class that implements three different
-** functionalities and that should be split up as soon as 2.1 
-** is released. See the .cc file for more.
+** Encapsulates all the communication with the pilot. Also
+** does daemon-like polling of the Pilot. Interesting status
+** changes are signalled.
 */
 
 /*
@@ -233,6 +233,7 @@ protected:
 	enum { OpenMessage=1, OpenFailMessage=2 } ;
 	int messages;
 	int messagesMask;
+	static const int messagesType;
 	
 	void shouldPrint(int,const QString &);
 
@@ -269,6 +270,7 @@ private:
 	*/
 	QTimer *fOpenTimer;
 	QSocketNotifier *fSocketNotifier;
+	bool fSocketNotifierActive;
 
 	/**
 	* Pilot-link library handles for the device once it's opened.
@@ -288,17 +290,17 @@ signals:
 ** File installation.
 */
 public:
-	int installFiles(const QStringList &);
+	int installFiles(const QStringList &, const bool deleteFiles=true);
 protected:
-	bool installFile(const QString &);
+	bool installFile(const QString &, const bool deleteFile=true);
 
  	/**
  	* Write a log entry to the pilot. Note that the library
  	* function takes a char *, not const char * (which is
  	* highly dubious). Causes signal logEntry(const char *)
- 	* to be emitted.
+ 	* to be emitted if @p log is true.
  	*/
- 	void addSyncLogEntry(const QString &entry,bool suppress=false);
+ 	void addSyncLogEntry(const QString &entry,bool log=true);
 
 signals:
  	/**
@@ -338,7 +340,8 @@ protected:
 	int openConduit();
 public:
 	int getNextDatabase(int index,struct DBInfo *);
-	int findDatabase(char*name, struct DBInfo*);
+	int findDatabase(const char *name, struct DBInfo*, 
+		int index=0, long type=0, long creator=0);
 
 	/**
 	* Retrieve the database indicated by DBInfo *db into the
@@ -374,67 +377,4 @@ public:
 
 bool operator < ( const struct db &, const struct db &) ;
 
-
-// $Log$
-// Revision 1.12  2002/08/21 17:20:47  adridg
-// Detect and complain about common permissions errors
-//
-// Revision 1.11  2002/08/20 21:18:31  adridg
-// License change in lib/ to allow plugins -- which use the interfaces and
-// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
-// allow the use of libmal which is MPL.
-//
-// Revision 1.10  2002/08/12 13:23:03  kainhofe
-// used long instead of unsigned long for dpl_ReadFeature. Fixed.
-//
-// Revision 1.9  2002/07/30 17:17:48  kainhofe
-// added majorVersion, minorVersion and ROMversion functions
-//
-// Revision 1.8  2002/07/25 22:11:22  kainhofe
-// time sync conduit
-//
-// Revision 1.7  2002/07/25 19:02:20  kainhofe
-// Added functions to get/set the time on the handheld
-//
-// Revision 1.6  2002/07/05 00:15:22  kainhofe
-// Added KPilotDeviceLink::tickle(), Changelog update, compile fixes
-//
-// Revision 1.5  2002/05/03 17:21:51  kainhofe
-// Added a method findDatabase to KPilotDeviceLink to look up a single db on the palm
-//
-// Revision 1.4  2002/04/07 20:19:48  cschumac
-// Compile fixes.
-//
-// Revision 1.3  2002/02/02 11:46:03  adridg
-// Abstracting away pilot-link stuff
-//
-// Revision 1.2  2002/01/21 23:14:03  adridg
-// Old code removed; extra abstractions added; utility extended
-//
-// Revision 1.1  2001/10/08 21:56:02  adridg
-// Start of making a separate KPilot lib
-//
-// Revision 1.34  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.33  2001/09/24 19:46:17  adridg
-// Made exec() pure virtual for SyncActions, since that makes more sense than having an empty default action.
-//
-// Revision 1.32  2001/09/23 18:24:59  adridg
-// New syncing architecture
-//
-// Revision 1.31  2001/09/16 12:24:54  adridg
-// Added sensible subclasses of KPilotLink, some USB support added.
-//
-// Revision 1.30  2001/09/07 20:46:40  adridg
-// Cleaned up some methods
-//
-// Revision 1.29  2001/09/06 22:04:27  adridg
-// Enforce singleton-ness & retry pi_bind()
-//
-// Revision 1.28  2001/09/05 21:53:51  adridg
-// Major cleanup and architectural changes. New applications kpilotTest
-// and kpilotConfig are not installed by default but can be used to test
-// the codebase. Note that nothing else will actually compile right now.
-//
 #endif

@@ -30,9 +30,7 @@ static const char *pilotMemo_id =
 
 #include "options.h"
 
-// #include <iostream.h>
-// #include <pi-memo.h>
-// #include <klocale.h>
+#include <qtextcodec.h>
 
 #include "pilotMemo.h"
 
@@ -45,48 +43,41 @@ PilotMemo::PilotMemo(PilotRecord * rec) : PilotAppCategory(rec)
 	(void) pilotMemo_id;
 }
 
-void PilotMemo::unpack(const void *text, int firstTime)
+void PilotMemo::unpack(const void *text, int /* firstTime */)
 {
 	FUNCTIONSETUP;
-	if (!firstTime && fText)
-	{
-		delete fText;
-		delete fTitle;
-	}
 
-	fSize = strlen((const char *) text) + 1;
-	fText = new char[fSize];
-
-	(void) strcpy(fText, (const char *) text);
-
-	int memoTitleLen = 0;
-
-	while (fText[memoTitleLen] && (fText[memoTitleLen] != '\n'))
-		memoTitleLen++;
-	fTitle = new char[memoTitleLen + 1];
-
-	strncpy(fTitle, fText, memoTitleLen);
-	fTitle[memoTitleLen] = 0;
+	fText = codec()->toUnicode((const char *)text);
 }
 
 // The indirection just to make the base class happy
 void *PilotMemo::internalPack(unsigned char *buf)
 {
 	FUNCTIONSETUP;
-	return strcpy((char *) buf, fText);
+	QCString s = codec()->fromUnicode(fText);
+	return strcpy((char *) buf, (const char *)s);
 }
 
 void *PilotMemo::pack(void *buf, int *len)
 {
 	FUNCTIONSETUP;
-	if (*len < fSize)
+	if (((unsigned)*len) < fText.length())
 		return NULL;
 
-	*len = fSize;
+	*len = fText.length();
 
 	return internalPack((unsigned char *) buf);
 }
 
+
+QString PilotMemo::getTitle() const
+{
+	if (fText.isEmpty()) return QString::null;
+	
+	int memoTitleLen = fText.find('\n');
+	if (-1 == memoTitleLen) memoTitleLen=fText.length();
+	return fText.left(memoTitleLen);
+}
 
 QString PilotMemo::shortTitle() const
 {
@@ -104,7 +95,7 @@ QString PilotMemo::shortTitle() const
 		t.truncate(spaceIndex);
 	}
 
-	t += "...";
+	t += CSL1("...");
 
 	return t;
 }
@@ -112,36 +103,14 @@ QString PilotMemo::shortTitle() const
 QString PilotMemo::sensibleTitle() const
 {
 	FUNCTIONSETUP;
-	const char *s = getTitle();
+	QString s = getTitle();
 
-	if (s && *s)
+	if (!s.isEmpty())
 	{
-		return QString(s);
+		return s;
 	}
 	else
 	{
 		return QString(i18n("[unknown]"));
 	}
 }
-
-
-// $Log$
-// Revision 1.1  2001/10/10 21:47:14  adridg
-// Shared files moved from ../kpilot/ and polished
-//
-// Revision 1.10  2001/09/29 16:26:18  adridg
-// The big layout change
-//
-// Revision 1.9  2001/03/09 09:46:15  adridg
-// Large-scale #include cleanup
-//
-// Revision 1.8  2001/02/24 14:08:13  adridg
-// Massive code cleanup, split KPilotLink
-//
-// Revision 1.7  2001/02/07 14:21:54  brianj
-// Changed all include definitions for libpisock headers
-// to use include path, which is defined in Makefile.
-//
-// Revision 1.6  2001/02/05 20:58:48  adridg
-// Fixed copyright headers for source releases. No code changed
-//
