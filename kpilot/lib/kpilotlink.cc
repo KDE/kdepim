@@ -406,7 +406,6 @@ void KPilotDeviceLink::acceptDevice()
 
 	emit logProgress(QString::null, 100);
 
-	addSyncLogEntry("Sync started with KPilot-v" KPILOT_VERSION "\n");
 	emit deviceReady();
 }
 
@@ -477,8 +476,19 @@ bool KPilotDeviceLink::installFile(const QString & f)
 void KPilotDeviceLink::addSyncLogEntry(const QString & entry, bool suppress)
 {
 	FUNCTIONSETUP;
+
+	QString t(entry);
+
+#if defined(PILOT_LINK_VERSION) && defined(PILOT_LINK_MAJOR) && defined(PILOT_LINK_MINOR)
+#if (PILOT_LINK_VERSION * 100 + PILOT_LINK_MAJOR * 10 + PILOT_LINK_MINOR) < 100 
+	t.append("X");
+#endif
+#else
+	// Assume that if not defined, it's a (very) old version.
+	t.append("X");
+#endif
 	dlp_AddSyncLogEntry(fCurrentPilotSocket,
-		const_cast < char *>(entry.latin1()));
+		const_cast < char *>(t.latin1()));
 	if (!suppress)
 	{
 		emit logMessage(entry);
@@ -543,6 +553,9 @@ QString KPilotDeviceLink::statusString() const
 
 
 // $Log$
+// Revision 1.2  2001/10/08 22:25:41  adridg
+// Moved to libkpilot and lib-based conduits
+//
 // Revision 1.1  2001/10/08 21:56:02  adridg
 // Start of making a separate KPilot lib
 //

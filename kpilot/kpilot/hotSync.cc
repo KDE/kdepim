@@ -54,7 +54,7 @@ static const char *hotsync_id =
 
 #include "hotSync.moc"
 
-TestLink::TestLink(KPilotDeviceLink * p) : 
+TestLink::TestLink(KPilotDeviceLink * p) :
 	SyncAction(p, "testLink")
 {
 	FUNCTIONSETUP;
@@ -71,7 +71,7 @@ TestLink::TestLink(KPilotDeviceLink * p) :
 	int count = 0;
 	struct DBInfo db;
 
-	addSyncLogEntry(i18n("Performing a TestSync."));
+	addSyncLogEntry(i18n("Testing.\n"));
 
 	while ((i = dlp_ReadDBList(pilotSocket(), 0, dlpDBListRAM,
 				dbindex, &db)) > 0)
@@ -83,6 +83,9 @@ TestLink::TestLink(KPilotDeviceLink * p) :
 		DEBUGKPILOT << fname << ": Read database " << db.name << endl;
 #endif
 
+		// Let the Pilot User know what's happening
+		dlp_OpenConduit(pilotSocket());
+		// Let the KDE User know what's happening
 		emit logMessage(i18n("Syncing database %1...").arg(db.name));
 
 		kapp->processEvents();
@@ -189,18 +192,20 @@ BackupAction::BackupAction(KPilotDeviceLink * p) :
 
 	fDBIndex = info.index + 1;
 
-	addSyncLogEntry(i18n("Backing up: %1").arg(info.name));
+	QString s = i18n("Backing up: %1").arg(info.name);
+	addSyncLogEntry(s);
+	emit logMessage(s);
 
 	if (!createLocalDatabase(&info))
 	{
 		kdError() << k_funcinfo
 			<< ": Couldn't create local database for "
 			<< info.name << endl;
-		addSyncLogEntry(i18n("Backup of %1 failed.").arg(info.name));
+		addSyncLogEntry(i18n("Backup of %1 failed.\n").arg(info.name));
 	}
 	else
 	{
-		addSyncLogEntry(i18n("OK"));
+		addSyncLogEntry(i18n(" .. OK\n"));
 	}
 }
 
@@ -320,7 +325,7 @@ FileInstallAction::FileInstallAction(KPilotDeviceLink * p,
 	const QStringList & l) :
 	SyncAction(p, "fileInstall"),
 	fDir(d), 
-	fList(l), 
+	fList(l),
 	fDBIndex(-1), 
 	fTimer(0L)
 {
@@ -478,395 +483,6 @@ nextFile:
 }
 
 #if 0
-// Something for readConfig of subclasses:
-
-
-void KPilotDeviceLink::initConduitSocket()
-{
-	FUNCTIONSETUP;
-
-	fConduitSocket = new KServerSocket(KPILOTLINK_PORT);
-	connect(fConduitSocket, SIGNAL(accepted(KSocket *)),
-		this, SLOT(slotConduitConnected(KSocket *)));
-}
-
-PilotRecord *KPilotDeviceLink::readRecord(KSocket * theSocket)
-{
-	FUNCTIONSETUP;
-	int len, attrib, cat;
-	recordid_t uid;
-	char *data;
-	PilotRecord *newRecord;
-
-	read(theSocket->socket(), &len, sizeof(int));	// REC_DATA tag
-	read(theSocket->socket(), &len, sizeof(int));
-	read(theSocket->socket(), &attrib, sizeof(int));
-	read(theSocket->socket(), &cat, sizeof(int));
-
-	read(theSocket->socket(), &uid, sizeof(recordid_t));
-	data = new char[len];
-
-	read(theSocket->socket(), data, len);
-	newRecord = new PilotRecord((void *) data, len, attrib, cat, uid);
-	delete[]data;
-	return newRecord;
-}
-
-void KPilotDeviceLink::writeRecord(KSocket * theSocket, PilotRecord * rec)
-{
-	FUNCTIONSETUP;
-	int len = rec->getLen();
-	int attrib = rec->getAttrib();
-	int cat = rec->getCat();
-	recordid_t uid = rec->getID();
-	char *data = rec->getData();
-
-	CStatusMessages::write(theSocket->socket(),
-		CStatusMessages::REC_DATA);
-	write(theSocket->socket(), &len, sizeof(int));
-	write(theSocket->socket(), &attrib, sizeof(int));
-	write(theSocket->socket(), &cat, sizeof(int));
-
-	write(theSocket->socket(), &uid, sizeof(recordid_t));
-	write(theSocket->socket(), data, len);
-}
-
-int KPilotDeviceLink::writeResponse(KSocket * k,
-	CStatusMessages::LinkMessages m)
-{
-	FUNCTIONSETUP;
-	// I have a bad feeling about using pointers
-	// to parameters passed to me, so I'm going 
-	// to copy the value parameter to a local (stack)
-	// variable and use a pointer to that variable.
-	//
-	//
-	int i = (int) m;
-
-	return write(k->socket(), &i, sizeof(int));
-}
-
-void KPilotDeviceLink::slotConduitDone(KProcess * p)
-{
-	FUNCTIONSETUP;
-
-	if (!p || !fConduitProcess)
-	{
-		kdWarning() << k_funcinfo
-			<< ": Called without a running conduit and process!"
-			<< endl;
-		return;
-	}
-
-	if (p != fConduitProcess)
-	{
-		kdWarning() << k_funcinfo
-			<< ": Process with id "
-			<< p->pid()
-			<< " exited while waiting on "
-			<< fConduitProcess->pid() << endl;
-	}
-	else
-	{
-#ifdef DEBUG
-		DEBUGDAEMON << fname
-			<< ": Conduit process with pid "
-			<< p->pid() << " exited" << endl;
-#endif
-	}
-
-	if (fConduitRunStatus != Done)
-	{
-		kdWarning() << k_funcinfo
-			<< ": It seems that a conduit has crashed." << endl;
-
-		// Force a resume even though the conduit never ran.
-		//
-		//
-		resumeDB();
-	}
-}
-
-void KPilotDeviceLink::slotConduitRead(KSocket * cSocket)
-{
-	FUNCTIONSETUP;
-	int message;
-	PilotRecord *tmpRec = 0L;
-
-	read(cSocket->socket(), &message, sizeof(int));
-
-
-	// This one message doesn't require a database to be open.
-	//
-	//
-	if (message == CStatusMessages::LOG_MESSAGE)
-	{
-		int i;
-		char *s;
-		read(cSocket->socket(), &i, sizeof(int));
-		s = new char[i + 1];
-
-		memset(s, 0, i);
-		read(cSocket->socket(), s, i);
-		s[i] = 0;
-#ifdef DEBUG
-		DEBUGDB << fname << ": Message length "
-			<< i << " => " << s << endl;
-#endif
-		addSyncLogEntry(s);
-		delete s;
-
-		return;
-	}
-
-	// The remaining messages all require a databse.
-	//
-	//
-	if (!fCurrentDB)
-	{
-		kdWarning() << k_funcinfo
-			<< ": There is no open database." << endl;
-
-		writeResponse(cSocket, CStatusMessages::NO_SUCH_RECORD);
-		return;
-	}
-
-	switch (message)
-	{
-	case CStatusMessages::READ_APP_INFO:
-	{
-		unsigned char *buf = new unsigned char[BUFSIZ];
-		int appLen = fCurrentDB->readAppBlock(buf, BUFSIZ);
-		write(cSocket->socket(), &appLen, sizeof(int));
-
-		write(cSocket->socket(), buf, appLen);
-		delete buf;
-
-		break;
-	}
-	case CStatusMessages::WRITE_RECORD:
-	{
-		tmpRec = readRecord(cSocket);
-		fCurrentDB->writeRecord(tmpRec);
-		CStatusMessages::write(cSocket->socket(),
-			CStatusMessages::NEW_RECORD_ID);
-		recordid_t tmpID = tmpRec->getID();
-
-		write(cSocket->socket(), &tmpID, sizeof(recordid_t));
-		delete tmpRec;
-	}
-		break;
-	case CStatusMessages::NEXT_MODIFIED_REC:
-	{
-		tmpRec = fCurrentDB->readNextModifiedRec();
-		if (tmpRec)
-		{
-			writeRecord(cSocket, tmpRec);
-			delete tmpRec;
-		}
-		else
-		{
-			CStatusMessages::write(cSocket->socket(),
-				CStatusMessages::NO_SUCH_RECORD);
-		}
-	}
-		break;
-	case CStatusMessages::NEXT_REC_IN_CAT:
-	{
-		int cat;
-		read(cSocket->socket(), &cat, sizeof(int));
-
-		tmpRec = fCurrentDB->readNextRecInCategory(cat);
-		if (tmpRec)
-		{
-			writeRecord(cSocket, tmpRec);
-			delete tmpRec;
-		}
-		else
-			CStatusMessages::write(cSocket->socket(),
-				CStatusMessages::NO_SUCH_RECORD);
-	}
-		break;
-	case CStatusMessages::READ_REC_BY_INDEX:
-	{
-		int index;
-		read(cSocket->socket(), &index, sizeof(int));
-
-		tmpRec = fCurrentDB->readRecordByIndex(index);
-		if (tmpRec)
-		{
-			writeRecord(cSocket, tmpRec);
-			delete tmpRec;
-		}
-		else
-		{
-			CStatusMessages::write(cSocket->socket(),
-				CStatusMessages::NO_SUCH_RECORD);
-		}
-	}
-		break;
-	case CStatusMessages::READ_REC_BY_ID:
-	{
-		recordid_t id;
-
-		read(cSocket->socket(), &id, sizeof(recordid_t));
-		tmpRec = fCurrentDB->readRecordById(id);
-		if (tmpRec)
-		{
-			writeRecord(cSocket, tmpRec);
-			delete tmpRec;
-		}
-		else
-			CStatusMessages::write(cSocket->socket(),
-				CStatusMessages::NO_SUCH_RECORD);
-	}
-		break;
-	default:
-		kdWarning() << k_funcinfo << ": Unknown status message "
-			<< message << endl;
-	}
-}
-
-void KPilotDeviceLink::slotConduitClosed(KSocket * theSocket)
-{
-	FUNCTIONSETUP;
-
-	if (fConduitRunStatus != Connected)
-	{
-		kdWarning() << k_funcinfo
-			<< ": Strange -- unconnected conduit closed" << endl;
-	}
-
-	if (theSocket != fCurrentConduitSocket)
-	{
-		kdWarning() << k_funcinfo
-			<< ": Strange -- different socket closed" << endl;
-	}
-
-	disconnect(theSocket, SIGNAL(readEvent(KSocket *)),
-		this, SLOT(slotConduitRead(KSocket *)));
-	disconnect(theSocket, SIGNAL(closeEvent(KSocket *)),
-		this, SLOT(slotConduitClosed(KSocket *)));
-	delete theSocket;
-
-	fConduitRunStatus = Done;
-	fCurrentConduitSocket = 0L;
-	resumeDB();
-}
-
-void KPilotDeviceLink::resumeDB()
-{
-	FUNCTIONSETUP;
-	if (!fCurrentDB)
-	{
-		kdWarning() << k_funcinfo
-			<< ": resumeDB called after the end of a sync."
-			<< endl;
-		return;
-	}
-
-	if (fCurrentDB)
-		delete fCurrentDB;
-
-	fCurrentDB = 0L;
-
-	// Get our backup copy.
-	if (slowSyncRequired())	// We are in the middle of backing up, continue
-	{
-		doConduitBackup();
-	}
-	else			// We are just doing a normal sync, so go for it.
-	{
-		syncDatabase(&fCurrentDBInfo);
-		// Start up the next one
-		syncNextDB();
-	}
-}
-
-QString KPilotDeviceLink::registeredConduit(const QString & dbName) const
-{
-	FUNCTIONSETUP;
-
-	KConfig & config = KPilotConfig::getConfig("Database Names");
-
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": Looking for " << dbName << endl;
-#endif
-
-	QString result = config.readEntry(dbName);
-
-	if (result.isNull())
-	{
-#ifdef DEBUG
-		DEBUGDAEMON << fname << ": Not found." << endl;
-#endif
-
-		return result;
-	}
-
-	config.setGroup("Conduit Names");
-	QStringList installed = config.readListEntry("InstalledConduits");
-
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": Found conduit " << result << endl;
-	DEBUGDAEMON << fname << ": Installed Conduits are" << endl;
-
-	kdbgstream s = kdDebug(DAEMON_AREA);
-
-	listStrList(s, installed);
-#endif
-
-	if (!installed.contains(result))
-	{
-#ifdef DEBUG
-		DEBUGDAEMON << fname << ": Conduit not installed." << endl;
-#endif
-		return QString::null;
-	}
-
-	KService::Ptr conduit = KService::serviceByDesktopName(result);
-	if (!conduit)
-	{
-#ifdef DEBUG
-		DEBUGDAEMON << fname << ": No service for this conduit" <<
-			endl;
-#endif
-		return QString::null;
-	}
-	else
-	{
-#ifdef DEBUG
-		DEBUGDAEMON << fname << ": Found service with exec="
-			<< conduit->exec() << endl;
-#endif
-		return conduit->exec();
-	}
-
-	// NOTREACHED
-	return QString::null;
-}
-
-
-void KPilotDeviceLink::slotConduitConnected(KSocket * theSocket)
-{
-	FUNCTIONSETUP;
-
-	connect(theSocket, SIGNAL(readEvent(KSocket *)),
-		this, SLOT(slotConduitRead(KSocket *)));
-	connect(theSocket, SIGNAL(closeEvent(KSocket *)),
-		this, SLOT(slotConduitClosed(KSocket *)));
-	theSocket->enableRead(true);
-
-	fConduitRunStatus = Connected;
-	fCurrentConduitSocket = theSocket;
-}
-
-// Requires the text is displayed in item 0
-void KPilotDeviceLink::showMessage(const QString & message)
-{
-	FUNCTIONSETUP;
-	emit logMessage(message);
-}
 
 int KPilotDeviceLink::compare(struct db *d1, struct db *d2)
 {
@@ -1632,6 +1248,9 @@ void CleanupAction::exec()
 
 
 // $Log$
+// Revision 1.10  2001/10/08 22:20:18  adridg
+// Changeover to libkpilot, prepare for lib-based conduits
+//
 // Revision 1.9  2001/09/30 19:51:56  adridg
 // Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
 //

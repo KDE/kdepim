@@ -105,7 +105,7 @@ CheckUser::~CheckUser()
 				"Should KPilot set them to a default value "
 				"(<i>%1</i>)?</qt>").arg(defaultUserName);
 
-			if (questionYesNo(q, i18n("User Unknown")) ==
+			if (questionYesNo(q, i18n("User Unknown") /* ,"askUserNone" */) ==
 				KDialogBase::Yes)
 			{
 				config.setUser(defaultUserName);
@@ -121,7 +121,7 @@ CheckUser::~CheckUser()
 				"KPilot use this user name in future?").
 				arg(pilotUserName);
 
-			if (questionYesNo(q, i18n("User Unknown")) ==
+			if (questionYesNo(q, i18n("User Unknown") /* ,"askUserSome" */ ) ==
 				KDialogBase::Yes)
 			{
 				config.setUser(pilotUserName);
@@ -137,7 +137,7 @@ CheckUser::~CheckUser()
 				"Should KPilot's user name be set in the "
 				"Pilot as well?").arg(guiUserName);
 
-			if (questionYesNo(q, i18n("User Unknown")) ==
+			if (questionYesNo(q, i18n("User Unknown") /* ,"askUserSome" */) ==
 				KDialogBase::Yes)
 			{
 #ifdef DEBUG
@@ -170,7 +170,7 @@ CheckUser::~CheckUser()
 					arg(guiUserName);
 
 				int r = questionYesNo(q,
-					i18n("User Mismatch"));
+					i18n("User Mismatch") /* ,"askUserDiff" */);
 				if (r == KDialogBase::Yes)
 				{
 					config.setUser(pilotUserName);
@@ -182,7 +182,7 @@ CheckUser::~CheckUser()
 	emit syncDone(this);
 }
 
-class RestoreAction::RestoreActionPrivate 
+class RestoreAction::RestoreActionPrivate
 {
 public:
 	QString fDatabaseDir;
@@ -468,6 +468,9 @@ nextFile:
 
 
 // $Log$
+// Revision 1.6  2001/10/08 22:20:18  adridg
+// Changeover to libkpilot, prepare for lib-based conduits
+//
 // Revision 1.5  2001/09/30 19:51:56  adridg
 // Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
 //

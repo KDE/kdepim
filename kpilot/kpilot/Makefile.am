@@ -26,7 +26,8 @@ INCLUDES= $(all_includes)  -I$(top_srcdir)/kpilot/lib
 ### you want any debugging at all.
 ###
 ### KDE_CXXFLAGS =-DDEBUG -DDEBUG_CERR -O3
-
+KDE_CXXFLAGS =-DDEBUG -DDEBUG_CERR 
+ 
 ###
 ### Non-automake variables
 ###
@@ -45,13 +46,14 @@ kpilot_SOURCES	= \
 kpilotDaemon_SOURCES = \
 	pilotDaemonDCOP.skel kpilotDCOP.stub \
 	pilotDaemon.cc kpilotConfig.cc \
-	hotSync.cc interactiveSync.cc \
+	hotSync.cc interactiveSync.cc syncStack.cc \
 	fileInstaller.cc
 
 kpilotTest_SOURCES = kpilotConfig.cc \
 	logWidget.cc pilotComponent.cc \
 	hotSync.cc interactiveSync.cc \
 	kpilotDCOP.skel \
+	syncStack.cc \
 	main-test.cc
 
 kpilotConfig_SOURCES = kpilotConfig.cc \

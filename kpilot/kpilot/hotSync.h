@@ -39,6 +39,7 @@ class QTimer;
 
 #include "syncAction.h"
 
+
 class TestLink : public SyncAction
 {
 Q_OBJECT
@@ -62,7 +63,7 @@ public:
 		FullBackup,
 		BackupIncomplete,
 		BackupEnded,
-		BackupComplete 
+		BackupComplete
 		} ;
 	virtual QString statusString() const;
 
@@ -118,6 +119,9 @@ public:
 } ;
 
 // $Log$
+// Revision 1.5  2001/10/08 22:20:18  adridg
+// Changeover to libkpilot, prepare for lib-based conduits
+//
 // Revision 1.4  2001/09/29 16:26:18  adridg
 // The big layout change
 //
