@@ -89,6 +89,9 @@ static KCmdLineOptions kpilotoptions[] = {
 	{ "PCtoHH",
 		I18N_NOOP("Copy Desktop to Pilot."),
 		0 } ,
+	{ "bug-timeout",
+		I18N_NOOP("Run conduit specially designed to timeout."),
+		0 } ,
 #ifdef DEBUG
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
 #endif
@@ -98,6 +101,50 @@ static KCmdLineOptions kpilotoptions[] = {
 
 static LogWidget *logWidget = 0L;
 static QPushButton *resetButton = 0L;
+
+
+
+/**
+*** Conduits - sync actions - for testing specific scenarios.
+**/
+
+class TimeoutAction : public SyncAction
+{
+public:
+	TimeoutAction(KPilotDeviceLink *p) ;
+protected:
+	virtual bool exec();
+} ;
+
+TimeoutAction::TimeoutAction(KPilotDeviceLink *p) :
+	SyncAction(p)
+{
+	FUNCTIONSETUP;
+}
+
+bool TimeoutAction::exec()
+{
+	FUNCTIONSETUP;
+
+	for (int i = 0; i<3; i++)
+	{
+		logMessage( CSL1("Hup two %1").arg(i) );
+		fHandle->tickle();
+		qApp->processEvents();
+		sleep(1);
+	}
+
+	logMessage( CSL1("Now sleeping 65") );
+	qApp->processEvents();
+	sleep(65);
+	return delayDone();
+}
+
+
+
+
+
+
 
 void createLogWidget()
 {
@@ -184,6 +231,12 @@ int syncTest(KCmdLineArgs *p)
 	{
 		syncStack->queueInit(0);
 		syncStack->addAction(new RestoreAction(deviceLink));
+	}
+	else if (p->isSet("bug-timeout"))
+	{
+		syncStack->queueInit();
+		syncStack->addAction( new TimeoutAction(deviceLink) );
+		syncStack->addAction( new TimeoutAction(deviceLink) );
 	}
 	else
 	{
@@ -303,7 +356,10 @@ int main(int argc, char **argv)
 	KPilotConfig::getDebugLevel(p);
 #endif
 
-	if (p->isSet("backup") || p->isSet("restore") || p->isSet("list"))
+	if ( p->isSet("backup") ||
+		p->isSet("restore") ||
+		p->isSet("list") ||
+		p->isSet("bug-timeout") )
 	{
 		return syncTest(p);
 	}
