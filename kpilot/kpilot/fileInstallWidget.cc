@@ -152,11 +152,11 @@ void FileInstallWidget::slotAddFile()
 {
 	FUNCTIONSETUP;
 
-	QString fileName = KFileDialog::getOpenFileName();
+	QStringList fileNames = KFileDialog::getOpenFileNames();
 
-	if (!fileName.isEmpty())
+	for (QStringList::Iterator fileName = fileNames.begin(); fileName != fileNames.end(); ++fileName)
 	{
-		fInstaller->addFile(fileName);
+		fInstaller->addFile(*fileName);
 	}
 }
 
