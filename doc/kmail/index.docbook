@@ -33,7 +33,7 @@
 
 	</abstract>
 
-	<date>2000-05-22</date>
+	<date>2000-05-23</date>
 
 	<releaseinfo><!-- information about this particular version --></releaseinfo>
 
@@ -596,12 +596,11 @@ submenu to select the account to use to check your mail.</para>
 <!-- This section is from Andreas Gungl, 2000-05-21 -->
 <title>Pretty Good Privacy / PGP</title>
 
-<!-- TODO: what about gnupg? -->
-
 <para>This is a short introduction on how to setup KMail's pgp support. It will
 give some hints on the use of pgp too. It's written for people, who are
 beginners in this area. If you are familiar with the use of pgp, you
-can skip most of the steps.</para>
+can skip most of the steps. (Note that working with GnuPG is generally
+the same, but some command line parameters may be different.)</para>
 
 <para>To setup and use pgp support in KMail it is necessary to have pgp installed
 and set up properly. Of course we cannot give you a full introduction of
@@ -1142,10 +1141,10 @@ folder is the trash folder, the messages are permanently deleted.</para>
 </varlistentry>
 
 <varlistentry>
-<term>Don't thread messages <!-- fixme: wording up to date? --></term>
+<term>(Don't) thread messages</term>
 <listitem>
-<para>This will show the messages in the <emphasis remap="bf">Header pane</emphasis>
-in a simple list, not in a tree-like list.</para>
+<para>Show the messages in the <emphasis remap="bf">Header pane</emphasis>
+in a simple list or in a tree-like list.</para>
 </listitem>
 </varlistentry>
 
@@ -1232,14 +1231,19 @@ will be forwarded, too.</para>
 <varlistentry>
 <term>Redirect... (E)</term>
 <listitem>
-<para>fixme</para>
+<para>Works like forward, except that the message stays the same (even
+the <emphasis remap="bf">From</emphasis> field, but "(redirected)" is added to the
+<emphasis remap="bf">Subject</emphasis>). The user who redirected the message is added in
+special header fields (Redirect-From, Redirect-Date, Redirect-To, etc).</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term>Bounce...</term>
 <listitem>
-<para>fixme</para>
+<para>Sends the message back to the sender with a notice that
+it cannot be delivered. This is nearly exactly the message you get from
+a mail relay if the user does not exist.</para>
 </listitem>
 </varlistentry>
 
@@ -1380,7 +1384,7 @@ the Message pane.</para>
 </listitem>
 </varlistentry>
 
-<!-- fixme: what's this -->
+<!-- fixme: what's this? -->
 
 <varlistentry>
 <term>Report Bug...</term>
@@ -1568,16 +1572,18 @@ use it for the first time.</para>
 <varlistentry>
 <term>Confirm Delivery</term>
 <listitem>
-<para>If you choose this option, you will receive a confirmation email once your message is
-successfully delivered to its destination mail server. (fixme: only if supported?!)</para>
+<para>If you choose this option, you request a confirmation email once your message is
+successfully delivered to its destination mail server. This has to be supported
+on the receiver's side in order to work.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term>Confirm Read</term>
 <listitem>
-<para>If you choose this option, you will receive a confirmation email once your message is
-downloaded and read by its recipient. fixme: does this work?</para>
+<para>If you choose this option, you request a confirmation email once your message is
+downloaded and read by its recipient. This has to be supported and enabled
+by the receiver's mail client in order to work.</para>
 </listitem>
 </varlistentry>
 
@@ -1596,9 +1602,7 @@ downloaded and read by its recipient. fixme: does this work?</para>
 <varlistentry>
 <term>Append Signature</term>
 <listitem>
-<para>Appends the contents of your signature file to the end of the message.
-<!-- fixme: doesn't work?!?! -->
-</para>
+<para>Appends the contents of your signature file to the end of the message.</para>
 </listitem>
 </varlistentry>
 
