@@ -43,8 +43,8 @@ KAddressBookView::KAddressBookView( KAB::Core *core, QWidget *parent,
 {
   initGUI();
 
-  connect( SearchManager::self(), SIGNAL( contactsUpdated() ),
-           this, SLOT( updateView() ) );
+  connect( mCore->searchManager(), SIGNAL( contactsUpdated() ),
+           SLOT( updateView() ) );
 }
 
 KAddressBookView::~KAddressBookView()
@@ -104,7 +104,7 @@ QString KAddressBookView::selectedEmails()
 KABC::Addressee::List KAddressBookView::addressees()
 {
   KABC::Addressee::List addresseeList;
-  KABC::Addressee::List contacts = SearchManager::self()->contacts();
+  KABC::Addressee::List contacts = mCore->searchManager()->contacts();
 
   KABC::Addressee::List::Iterator it;
   for ( it = contacts.begin(); it != contacts.end(); ++it ) {
@@ -172,7 +172,7 @@ void KAddressBookView::updateView()
 {
   refresh();
 
-  KABC::Addressee::List contacts = SearchManager::self()->contacts();
+  KABC::Addressee::List contacts = mCore->searchManager()->contacts();
   if ( contacts.count() > 0 )
     setSelected( contacts.first().uid(), true );
   else {

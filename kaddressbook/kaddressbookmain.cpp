@@ -31,12 +31,12 @@
 
 #include "kaddressbookmain.h"
 
-KAddressBookMain::KAddressBookMain()
+KAddressBookMain::KAddressBookMain( const QString &file )
   : DCOPObject( "KAddressBookIface" ), KMainWindow( 0 )
 {
   setCaption( i18n( "Address Book Browser" ) );
 
-  mCore = new KABCore( this, true, this );
+  mCore = new KABCore( this, true, this, file );
   mCore->restoreSettings();
 
   initActions();

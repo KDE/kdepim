@@ -46,6 +46,7 @@ libkaddressbook_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
 libkaddressbook_la_LIBADD = $(top_builddir)/kaddressbook/printing/libprinter.la \
                             $(top_builddir)/kaddressbook/interfaces/libkabinterfaces.la \
                             $(top_builddir)/libkdepim/libkdepim.la \
+                            -lkabc_file \
                             $(LIB_KABC) $(LIB_KHTML) libkabcommon.la -lkdeprint -lqui
 libkaddressbook_la_COMPILE_FIRST = $(top_srcdir)/libkdepim/categoryselectdialog.h \
                                    $(top_srcdir)/libkdepim/categoryeditdialog.h

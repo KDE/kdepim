@@ -34,6 +34,7 @@
 #include <kabc/resource.h>
 #include <kabc/stdaddressbook.h>
 #include <kabc/vcardconverter.h>
+#include <kabc/resourcefile.h>
 #include <kaboutdata.h>
 #include <kaccelmanager.h>
 #include <kapplication.h>
@@ -75,7 +76,7 @@
 #include "kabcore.h"
 
 KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
-                  const char *name )
+                  const QString &file, const char *name )
   : KAB::Core( client, parent, name ), mStatusBar( 0 ), mViewManager( 0 ),
     mExtensionManager( 0 ), mCategorySelectDialog( 0 ), mCategoryEditDialog( 0 ),
     mLdapSearchDialog( 0 ), mReadWrite( readWrite ), mModified( false )
@@ -84,7 +85,16 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 
   mIsPart = !parent->isA( "KAddressBookMain" );
 
-  mAddressBook = KABC::StdAddressBook::self( true );
+  if ( file.isEmpty() ) {
+    mAddressBook = KABC::StdAddressBook::self( true );
+  } else {
+    kdDebug() << "KABCore(): document '" << file << "'" << endl;
+    mAddressBook = new KABC::AddressBook;
+    mAddressBook->addResource( new KABC::ResourceFile( file ) );
+    if ( !mAddressBook->load() ) {
+      KMessageBox::error( parent, i18n("Unable to load '%1'.").arg( file ) );
+    }
+  }
   mAddressBook->setErrorHandler( new KABC::GuiErrorHandler( mWidget ) );
 
   mAddressBook->addCustomField( i18n( "Department" ), KABC::Field::Organization,
@@ -103,6 +113,8 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
                                 "X-IMAddress", "KADDRESSBOOK" );
   mAddressBook->addCustomField( i18n( "Anniversary" ), KABC::Field::Personal,
                                 "X-Anniversary", "KADDRESSBOOK" );
+
+  mSearchManager = new KAB::SearchManager( mAddressBook, parent );
 
   initGUI();
 
@@ -139,7 +151,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 
   mAddressBookService = new KAddressBookService( this );
 
-  SearchManager::self()->reload();
+  mSearchManager->reload();
 
   setModified( false );
 
@@ -480,7 +492,7 @@ void KABCore::mergeContacts()
 
   mAddressBook->insertAddressee( addr );
 
-  SearchManager::self()->reload();
+  mSearchManager->reload();
 }
 
 void KABCore::setWhoAmI()
@@ -499,12 +511,12 @@ void KABCore::setWhoAmI()
 
 void KABCore::incrementalTextSearch( const QString& text )
 {
-  SearchManager::self()->search( text, mIncSearchWidget->currentField() );
+  mSearchManager->search( text, mIncSearchWidget->currentField() );
 }
 
 void KABCore::incrementalJumpButtonSearch( const QStringList& characters )
 {
-  SearchManager::self()->setJumpButtonFilter( characters, mViewManager->currentSortField() );
+  mSearchManager->setJumpButtonFilter( characters, mViewManager->currentSortField() );
 }
 
 void KABCore::setModified()
@@ -767,9 +779,9 @@ void KABCore::openLDAPDialog()
 
   if ( !mLdapSearchDialog ) {
     mLdapSearchDialog = new LDAPSearchDialog( mAddressBook, mWidget );
-    connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ), SearchManager::self(),
+    connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ), mSearchManager,
             SLOT( reload() ) );
-    connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ), this,
+    connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ),
             SLOT( setModified() ) );
   } else
     mLdapSearchDialog->restoreSettings();
@@ -815,14 +827,14 @@ void KABCore::detailsHighlighted( const QString &msg )
 void KABCore::configurationChanged()
 {
   mExtensionManager->reconfigure();
-  SearchManager::self()->reconfigure();
+  mSearchManager->reconfigure();
   mViewManager->refreshView();
 }
 
 void KABCore::addressBookChanged()
 {
   mJumpButtonBar->updateButtons();
-  SearchManager::self()->reload();
+  mSearchManager->reload();
 }
 
 AddresseeEditorDialog *KABCore::createAddresseeEditorDialog( QWidget *parent,

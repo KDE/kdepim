@@ -42,6 +42,8 @@ class KURL;
 
 namespace KAB {
 
+class SearchManager;
+
 class Core : public QObject
 {
   Q_OBJECT
@@ -98,6 +100,8 @@ class Core : public QObject
       @param uids The uids of the contacts, which shall be deleted.
      */
     virtual void deleteContacts( const QStringList &uids ) = 0;
+
+    virtual SearchManager *searchManager() const = 0;
 
   public slots:
     /**

@@ -26,15 +26,7 @@
 
 #include "searchmanager.h"
 
-SearchManager *SearchManager::mSelf = 0;
-
-SearchManager *SearchManager::self()
-{
-  if ( !mSelf )
-    mSelf = new SearchManager( KABC::StdAddressBook::self(), 0, "SearchManager" );
-
-  return mSelf;
-}
+using namespace KAB;
 
 SearchManager::SearchManager( KABC::AddressBook *ab,
                               QObject *parent, const char *name )

@@ -68,14 +68,13 @@ typedef struct {
   int counter;
 } ResourceMapEntry;
 
-
 class KABCore : public KAB::Core
 {
   Q_OBJECT
 
   public:
     KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
-             const char *name = 0 );
+             const QString &file = QString::null, const char *name = 0 );
     ~KABCore();
 
     /**
@@ -131,6 +130,8 @@ class KABCore : public KAB::Core
     void setStatusBar( QStatusBar *statusBar );
 
     QStatusBar *statusBar() const;
+
+    KAB::SearchManager *searchManager() const { return mSearchManager; }
 
   public slots:
     /**
@@ -385,6 +386,8 @@ class KABCore : public KAB::Core
     KToggleAction *mActionDetails;
 
     KAddressBookService *mAddressBookService;
+
+    KAB::SearchManager *mSearchManager;
 
     class KABCorePrivate;
     KABCorePrivate *d;

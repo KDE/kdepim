@@ -28,6 +28,8 @@
 
 #include <kabc/stdaddressbook.h>
 
+namespace KAB {
+
 class SearchManager : public QObject
 {
   Q_OBJECT
@@ -40,10 +42,8 @@ class SearchManager : public QObject
       Equals
     };
 
-    /**
-      Returns the global search manager.
-     */
-    static SearchManager* self();
+    SearchManager( KABC::AddressBook *ab,
+                   QObject *parent, const char *name = 0 );
 
     /**
       This method takes a pattern and searches for a match of the specified 
@@ -76,15 +76,10 @@ class SearchManager : public QObject
     void reload();
 
   private:
-    SearchManager( KABC::AddressBook *ab,
-                   QObject *parent, const char *name = 0 );
-
     void doSearch( const QString&, KABC::Field*, Type, const KABC::Addressee::List& );
 
     KABC::Addressee::List mContacts;
     KABC::AddressBook *mAddressBook;
-
-    static SearchManager *mSelf;
 
     QString mLastPattern;
     KABC::Field *mLastField;
@@ -95,5 +90,7 @@ class SearchManager : public QObject
     
     bool mLimitContactDisplay;
 };
+
+}
 
 #endif

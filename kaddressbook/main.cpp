@@ -73,11 +73,18 @@ int KAddressBookApp::newInstance()
         // otherwise, leave the window like it is (hidden or shown)
         KStartupInfo::appStarted();
     } else {
-      if ( !mMainWin ) {
-        mMainWin = new KAddressBookMain;
-        setMainWidget( mMainWin );
+      QString file;
+      if ( args->isSet( "document" ) ) {
+         file = args->getOption( "document" );
       }
-      mMainWin->show();
+      if ( !mMainWin ) {
+        mMainWin = new KAddressBookMain( file );
+        setMainWidget( mMainWin );
+        mMainWin->show();
+      } else {
+        KAddressBookMain *m = new KAddressBookMain( file );
+        m->show();
+      }
     }
 
     mMainWin->handleCommandLine();
