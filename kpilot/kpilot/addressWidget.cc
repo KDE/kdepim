@@ -144,7 +144,7 @@ int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig& config)
 		if (!(pilotRec->isDeleted()) && 
 			(!(pilotRec->isSecret()) || showSecrets))
 		{
-			address = new PilotAddress(pilotRec);
+			address = new PilotAddress(fAddressAppInfo, pilotRec);
 			if (address == 0L)
 			{
 				kdWarning() << __FUNCTION__ << ": Couldn't allocate "
@@ -191,6 +191,25 @@ AddressWidget::initialize()
 		appLen = addressDB->readAppBlock(buffer, BUFFERSIZE);
 		unpack_AddressAppInfo(&fAddressAppInfo, buffer, appLen);
 
+		/* GDS: I needed this to learn; will comment out
+		 * once abbrowser-conduit is done
+		qDebug("AddressWidget::initialize() fAddressAppInfo");
+		// GDS: want to understand the fAddressAppInfo structure..
+		int lp=0;
+		for (int lp=0;lp < 19+3;lp++)
+		    qDebug("\tlabel[%d] = %s", lp,
+			   fAddressAppInfo.labels[lp]);
+		for (lp=0;lp < 8;lp++)
+		    qDebug("\tphoneLabels[%d] = %s", lp,
+			   fAddressAppInfo.phoneLabels[lp]);
+
+		qDebug("phoneLabel[entryPhone1] = %s",
+		       fAddressAppInfo.phoneLabels[entryPhone1]);
+		qDebug("phoneLabel[entryPhone2] = %s",
+		       fAddressAppInfo.phoneLabels[entryPhone2]);
+		qDebug("phoneLabel[entryPhone3] = %s",
+		       fAddressAppInfo.phoneLabels[entryPhone3]);
+		*/
 		populateCategories(fCatList,&fAddressAppInfo.category);
 		getAllAddresses(addressDB,config);
 
@@ -705,7 +724,7 @@ AddressWidget::slotImportAddressList()
 	}
  	if(currentAddress == 0L)
  	    {
- 	    currentAddress = new PilotAddress();
+ 	    currentAddress = new PilotAddress(fAddressAppInfo);
  	    fAddressList.append(currentAddress);
  	    }
  	setFieldBySymbol(currentAddress, nextToken, nextField);
@@ -795,7 +814,7 @@ AddressWidget::setFieldBySymbol(PilotAddress* rec, const char* symbol, const cha
 #endif
 }
 
-char*
+const char*
 AddressWidget::getFieldBySymbol(PilotAddress* rec, const char* symbol)
     {
     	FUNCTIONSETUP;
@@ -932,6 +951,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.30  2001/03/11 10:50:38  adridg
+// Make address editor reflect real field names
+//
 // Revision 1.29  2001/03/04 20:54:19  adridg
 // Minor simplification
 //

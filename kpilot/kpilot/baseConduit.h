@@ -47,7 +47,33 @@
 
 class QWidget;
 class KSocket;
+/** @brief Base class for all conduits.
+ *
+ *  A conduit is a seperate application that handles syncing with a
+ *  palm pilot database.
 
+ *  Any seperate application in the palm pilot is a database.
+ *  So the calender is a database, the address book is a database,
+ *  the memos, etc.  Each database is composed of records.
+ *  Each record needs to be unpacked to extract it's information.
+ *
+ *  The unix library pilot-link provides the ability to unpack the records
+ *  into structures.  The KPilot library contains some classes that
+ *  wrap the structures into classes, such as PilotAddress.  It is
+ *  recommended for any new conduit, that the unpacked record gets wrapped
+ *  into a class, such as PilotAddress.
+ *
+ *  GSQA:
+ *
+ *  Need docs on conduit interaction with KConfig.  How does each conduit
+ *  make it's own prefs?
+ *
+ *  How is a conduit registered.  What class handles the conduit regestration.
+ *
+ *  GSQA: What is the relationship between KPilotLink and BaseConduit.
+ *        Right now getConfig() exists in KPilotLink as a static.  Can
+ *        / should we move it to BaseConduit?
+ */
 class BaseConduit : public QObject
 {
   Q_OBJECT
@@ -78,10 +104,12 @@ public:
   virtual ~BaseConduit();
 
   /**
-   *  This will be called to do the actual hotsync.  Users should override this to 
-   * do a normal hotsync with the pilot.  In other words, check to see what's been
-   * modified on the pilot, copy it to the program, then check to see what's been modified
-   * in the program and copy it to the pilot.
+   *  This will be called to do the actual hotsync.  Users should override
+   *  this to do a normal hotsync with the pilot.
+   *
+   *  In other words, check to see what's been modified on the pilot,
+   *  copy it to the program, then check to see what's been modified in the
+   *  program and copy it to the pilot.
    *
    * @see readNextModifiedRecord
    */
@@ -110,20 +138,20 @@ public:
    */
   virtual const char* dbInfo() { return "<none>"; }
 
-	/**
-	* Run a test on this conduit, with full debugging turned on.
-	* This may be reimplemented in some conduits to do actual
-	* tests.
-	*/
-	virtual void doTest() { } ;
-
-	/**
-	 * Returns an icon for the window manager
-	 * when the conduit is in "setup" mode.
-	 */
-	 virtual QPixmap icon() const;
-
-	const eConduitMode getMode() const { return fMode; } ;
+  /**
+   * Run a test on this conduit, with full debugging turned on.
+   * This may be reimplemented in some conduits to do actual
+   * tests.
+   */
+  virtual void doTest() { } ;
+  
+  /**
+   * Returns an icon for the window manager
+   * when the conduit is in "setup" mode.
+   */
+  virtual QPixmap icon() const;
+  
+  const eConduitMode getMode() const { return fMode; } 
 
 protected:
 
@@ -151,7 +179,11 @@ protected:
    */
   PilotRecord* readRecordById(recordid_t id);
 
-	int readAppInfo(unsigned char *buffer);
+  /** Call this function to read the application specific information,
+   *  i.e. AddressAppInfo.  There should be a pilot library function
+   *  to unpack from the buffer into the application struct
+   */
+  int readAppInfo(unsigned char *buffer);
 
   /**
    * Writes a record to the current database.  If rec->getID() == 0,
@@ -217,6 +249,9 @@ private:
 
 
 // $Log$
+// Revision 1.18  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.17  2001/03/04 21:59:30  adridg
 // Possible missed #include leading to incomplete types
 //

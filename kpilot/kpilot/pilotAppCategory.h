@@ -88,7 +88,8 @@ public:
 	bool isDeleted() const { return fAttrs & dlpRecAttrDeleted ; } ;
 	void makeSecret() { fAttrs |= dlpRecAttrSecret; } ;
 	void makeDeleted() { fAttrs |= dlpRecAttrDeleted ; } ;
-    	
+      bool isModified() const { return fAttrs & dlpDBFlagAppInfoDirty; }
+        
     };
 
 #else
@@ -97,6 +98,9 @@ public:
 
 
 // $Log$
+// Revision 1.6  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.5  2001/02/06 08:05:20  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //

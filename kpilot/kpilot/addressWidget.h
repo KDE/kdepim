@@ -75,7 +75,7 @@ signals:
 	void recordChanged(PilotAddress *);
 
     protected:
-      char* getFieldBySymbol(PilotAddress* rec, const char* symbol);
+      const char* getFieldBySymbol(PilotAddress* rec, const char* symbol);
       void setFieldBySymbol(PilotAddress* rec, const char* symbol, const char* text);
       PilotAddress* findAddress(const char* text, const char* symbol);
  protected slots:
@@ -119,6 +119,9 @@ public:
 
 
 // $Log$
+// Revision 1.12  2001/03/09 09:46:15  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.11  2001/03/04 11:22:12  adridg
 // In response to bug 21392, replaced fixed-length lookup table by a subclass
 // of QListBoxItem inserted into list box. This subclass carries data to

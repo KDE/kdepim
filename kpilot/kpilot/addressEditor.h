@@ -61,6 +61,7 @@ private:
 	bool fDeleteOnCancel;
 
 	PilotAddress* fAddress;
+        const struct AddressAppInfo *fAppInfo;
 	QLineEdit *fCustom4Field;
 	QLineEdit *fCustom3Field;
 	QLineEdit *fCustom2Field;
@@ -85,6 +86,9 @@ private:
 
 
 // $Log$
+// Revision 1.7  2001/03/11 10:50:40  adridg
+// Make address editor reflect real field names
+//
 // Revision 1.6  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

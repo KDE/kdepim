@@ -51,7 +51,8 @@ AddressEditor::AddressEditor(PilotAddress *p,
 		name,
 		false /* non-modal */),
 	fDeleteOnCancel(p == 0L),
-	fAddress(p)
+	fAddress(p),
+	fAppInfo(appInfo)
 {
 	FUNCTIONSETUP;
 
@@ -89,7 +90,7 @@ void AddressEditor::fillFields()
 
 	if(fAddress == 0L)
 	{
-		fAddress = new PilotAddress();
+		fAddress = new PilotAddress(*fAppInfo);
 		fDeleteOnCancel = true;
 	}
 
@@ -222,6 +223,9 @@ void AddressEditor::initLayout(const struct AddressAppInfo *addressInfo)
 }
 
 // $Log$
+// Revision 1.4  2001/03/11 10:50:40  adridg
+// Make address editor reflect real field names
+//
 // Revision 1.3  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //
