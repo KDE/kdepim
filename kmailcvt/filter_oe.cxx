@@ -46,7 +46,7 @@ Filter(	i18n("Import Outlook Express Emails"),
     i18n("<p><b>New Outlook Express 4/5/6 import filter</b></p>"
       "<p>This is a new Outlook Express import filter, which fully supports versions 4 to 6.</p>"
       "<p>Outlook Express generally stores its mailboxes in C:\\Windows\\Application Data\\Identities\\<profilename>\\Microsoft\\Outlook Express</p>"
-      "<p><b>Note:</b> Emails will be imported into folders named after the file they came from, prefixed with either OE4 or OE5</p>"
+      "<p><b>Note:</b> Emails will be imported into folders named after the file they came from, prefixed with OE-</p>"
       ))
 {
 }
