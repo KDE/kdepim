@@ -2,10 +2,11 @@ INCLUDES = -I$(top_srcdir)/libkcal $(all_includes)
 
 LDFLAGS = $(KDE_RPATH)
 
-check_PROGRAMS = testincidence
+check_PROGRAMS = testincidence testcalendar
 
 METASOURCES = AUTO
 
 LDADD = ../libkcal.la
 
 testincidence_SOURCES = testincidence.cpp
+testcalendar_SOURCES = testcalendar.cpp
