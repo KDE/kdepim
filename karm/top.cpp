@@ -203,7 +203,7 @@ void KarmWindow::makeMenus()
                                    "reset_session_time");
   actionStart = new KAction(i18n("&Start"), QString::fromLatin1("1rightarrow"),
                             Key_S ,_karm,
-                            SLOT(startTimer()),actionCollection(),"start");
+                            SLOT(changeTimer()),actionCollection(),"start");
   actionStop = new KAction(i18n("S&top"), QString::fromLatin1("stop"),
                            Key_Escape,_karm,
                            SLOT(stopCurrentTimer()),actionCollection(),"stop");

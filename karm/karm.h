@@ -59,7 +59,7 @@ public slots:
     void stopCurrentTimer();
     void stopAllTimers();
     void startTimer();
-    void changeTimer(QListViewItem *);
+    void changeTimer(QListViewItem * = 0);
     void newTask();
     void newTask(QString caption, QListViewItem *parent);
     void newSubTask();
