@@ -54,6 +54,7 @@
 #include "addresseeeditordialog.h"
 #include "details/detailsviewcontainer.h"
 #include "extensionmanager.h"
+#include "filterselectionwidget.h"
 #include "incsearchwidget.h"
 #include "jumpbuttonbar.h"
 #include "kabprefs.h"
@@ -868,32 +869,42 @@ void KABCore::slotEditorDestroyed( const QString &uid )
 
 void KABCore::initGUI()
 {
-  QHBoxLayout *topLayout = new QHBoxLayout( this );
+  QVBoxLayout *topLayout = new QVBoxLayout( this );
   topLayout->setSpacing( KDialogBase::spacingHint() );
+  QHBoxLayout *hbox = new QHBoxLayout( topLayout, KDialog::spacingHint() );
 
-  mExtensionBarSplitter = new QSplitter( this );
-  mExtensionBarSplitter->setOrientation( Qt::Vertical );
-
-  mDetailsSplitter = new QSplitter( mExtensionBarSplitter );
-
-  QVBox *viewSpace = new QVBox( mDetailsSplitter );
-  mIncSearchWidget = new IncSearchWidget( viewSpace );
+  mIncSearchWidget = new IncSearchWidget( this );
   connect( mIncSearchWidget, SIGNAL( doSearch( const QString& ) ),
            SLOT( incrementalSearch( const QString& ) ) );
 
-  mViewManager = new ViewManager( this, viewSpace );
-  viewSpace->setStretchFactor( mViewManager, 1 );
+  mFilterSelectionWidget = new FilterSelectionWidget( this );
+  hbox->addWidget( mIncSearchWidget );
+  hbox->addWidget( mFilterSelectionWidget );
+
+  hbox = new QHBoxLayout( topLayout, KDialog::spacingHint() );
+
+  mDetailsSplitter = new QSplitter( this );
+  hbox->addWidget( mDetailsSplitter );
+
+  mExtensionBarSplitter = new QSplitter( mDetailsSplitter );
+  mExtensionBarSplitter->setOrientation( Qt::Vertical );
 
   mDetails = new ViewContainer( mDetailsSplitter );
 
-  mJumpButtonBar = new JumpButtonBar( this, this );
+  mViewManager = new ViewManager( this, mExtensionBarSplitter );
+  mViewManager->setFilterSelectionWidget( mFilterSelectionWidget );
+
+  connect( mFilterSelectionWidget, SIGNAL( filterActivated( int ) ),
+           mViewManager, SLOT( setActiveFilter( int ) ) );
 
   mExtensionManager = new ExtensionManager( this, mExtensionBarSplitter );
 
-  topLayout->addWidget( mExtensionBarSplitter );
-  topLayout->setStretchFactor( mExtensionBarSplitter, 100 );
-  topLayout->addWidget( mJumpButtonBar );
-  topLayout->setStretchFactor( mJumpButtonBar, 1 );
+  mJumpButtonBar = new JumpButtonBar( this, this );
+
+  hbox->addWidget( mJumpButtonBar );
+  hbox->setStretchFactor( mJumpButtonBar, 1 );
+
+  topLayout->setStretchFactor( hbox, 1 );
 
   mXXPortManager = new XXPortManager( this, this );
 

@@ -24,6 +24,7 @@
 #include <qlabel.h>
 
 #include <kcombobox.h>
+#include <kdialog.h>
 #include <klocale.h>
 
 #include "filterselectionwidget.h"
@@ -31,10 +32,13 @@
 FilterSelectionWidget::FilterSelectionWidget( QWidget *parent, const char *name )
   : QHBox( parent, name )
 {
+  setSpacing( KDialog::spacingHint() );
+
   new QLabel( i18n( "Filter:" ), this );
   
   mFilterCombo = new KComboBox( this );
-  connect( mFilterCombo, SIGNAL( activated( int ) ), SLOT( activated( int ) ) );
+  connect( mFilterCombo, SIGNAL( activated( int ) ),
+           this, SIGNAL( filterActivated( int ) ) );
 }
 
 FilterSelectionWidget::~FilterSelectionWidget()
@@ -43,7 +47,7 @@ FilterSelectionWidget::~FilterSelectionWidget()
 
 int FilterSelectionWidget::currentItem() const
 {
-  return mFilterCombo->currentItem() - 1;
+  return mFilterCombo->currentItem();
 }
 
 void FilterSelectionWidget::setCurrentItem( int index )
@@ -51,38 +55,10 @@ void FilterSelectionWidget::setCurrentItem( int index )
   mFilterCombo->setCurrentItem( index );
 }
 
-unsigned int FilterSelectionWidget::count() const
-{
-  return mFilterCombo->count();
-}
-
-QString FilterSelectionWidget::text( int index ) const
-{
-  return mFilterCombo->text( index );
-}
-
-void FilterSelectionWidget::setFilterNames( const QStringList &names )
+void FilterSelectionWidget::setItems( const QStringList &names )
 {
   mFilterCombo->clear();
-  mFilterCombo->insertItem( i18n( "None" ) );
   mFilterCombo->insertStringList( names );
-
-  emit filterActivated( -1 );
-}
-
-QString FilterSelectionWidget::currentFilterName() const
-{
-  return mFilterCombo->currentText();
-}
-   
-void FilterSelectionWidget::setCurrentFilterName( const QString &name )
-{
-  mFilterCombo->setCurrentText( name );
-}
-
-void FilterSelectionWidget::activated( int index )
-{
-  emit filterActivated( index - 1 );
 }
 
 #include "filterselectionwidget.moc"

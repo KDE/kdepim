@@ -45,6 +45,7 @@ class QSplitter;
 
 class AddresseeEditorDialog;
 class ExtensionManager;
+class FilterSelectionWidget;
 class IncSearchWidget;
 class JumpButtonBar;
 class KAddressBookService;
@@ -303,6 +304,7 @@ class KABCore : public QWidget
     XXPortManager *mXXPortManager;
 
     JumpButtonBar *mJumpButtonBar;
+    FilterSelectionWidget *mFilterSelectionWidget;
     IncSearchWidget *mIncSearchWidget;
     ViewContainer *mDetails;
     QSplitter *mDetailsSplitter;

@@ -41,13 +41,15 @@
 #include "addviewdialog.h"
 #include "addresseeutil.h"
 #include "filtereditdialog.h"
+#include "filterselectionwidget.h"
 #include "kabcore.h"
 #include "kabprefs.h"
 
 #include "viewmanager.h"
 
 ViewManager::ViewManager( KABCore *core, QWidget *parent, const char *name )
-  : QWidget( parent, name ), mCore( core ), mActiveView( 0 )
+  : QWidget( parent, name ), mCore( core ), mActiveView( 0 ),
+    mFilterSelectionWidget( 0 )
 {
   initGUI();
   initActions();
@@ -72,9 +74,8 @@ void ViewManager::restoreSettings()
 
   // Filter
   mFilterList = Filter::restore( mCore->config(), "Filter" );
-  mActionSelectFilter->setItems( filterNames() );
-
-  mActionSelectFilter->setCurrentItem( KABPrefs::instance()->mCurrentFilter );
+  mFilterSelectionWidget->setItems( filterNames() );
+  mFilterSelectionWidget->setCurrentItem( KABPrefs::instance()->mCurrentFilter );
 
   // Tell the views to reread their config, since they may have
   // been modified by global settings
@@ -98,7 +99,7 @@ void ViewManager::saveSettings()
   }
 
   Filter::save( mCore->config(), "Filter", mFilterList );
-  KABPrefs::instance()->mCurrentFilter = mActionSelectFilter->currentItem();
+  KABPrefs::instance()->mCurrentFilter = mFilterSelectionWidget->currentItem();
 
   // write the view name list
   KABPrefs::instance()->mViewNames = mViewNameList;
@@ -135,6 +136,11 @@ KABC::Addressee::List ViewManager::selectedAddressees() const
   }
 
   return list;
+}
+
+void ViewManager::setFilterSelectionWidget( FilterSelectionWidget *wdg )
+{
+  mFilterSelectionWidget = wdg;
 }
 
 void ViewManager::setSelected( const QString &uid, bool selected )
@@ -202,13 +208,13 @@ void ViewManager::setActiveView( const QString &name )
     // box, the activated slot will be called, which will push
     // the filter to the view and refresh it.
     if ( view->defaultFilterType() == KAddressBookView::None ) {
-      mActionSelectFilter->setCurrentItem( 0 );
+      mFilterSelectionWidget->setCurrentItem( 0 );
       setActiveFilter( 0 );
     } else if ( view->defaultFilterType() == KAddressBookView::Active ) {
-      setActiveFilter( mActionSelectFilter->currentItem() );
+      setActiveFilter( mFilterSelectionWidget->currentItem() );
     } else {
       uint pos = filterPosition( view->defaultFilterName() );
-      mActionSelectFilter->setCurrentItem( pos );
+      mFilterSelectionWidget->setCurrentItem( pos );
       setActiveFilter( pos );
     }
 
@@ -256,13 +262,13 @@ void ViewManager::editView()
       // box, the activated slot will be called, which will push
       // the filter to the view and refresh it.
       if ( mActiveView->defaultFilterType() == KAddressBookView::None ) {
-        mActionSelectFilter->setCurrentItem( 0 );
+        mFilterSelectionWidget->setCurrentItem( 0 );
         setActiveFilter( 0 );
       } else if ( mActiveView->defaultFilterType() == KAddressBookView::Active ) {
-        setActiveFilter( mActionSelectFilter->currentItem() );
+        setActiveFilter( mFilterSelectionWidget->currentItem() );
       } else {
         uint pos = filterPosition( mActiveView->defaultFilterName() );
-        mActionSelectFilter->setCurrentItem( pos );
+        mFilterSelectionWidget->setCurrentItem( pos );
         setActiveFilter( pos );
       }
 
@@ -457,9 +463,9 @@ void ViewManager::configureFilters()
   if ( dlg.exec() )
     mFilterList = dlg.filters();
 
-  uint pos = mActionSelectFilter->currentItem();
-  mActionSelectFilter->setItems( filterNames() );
-  mActionSelectFilter->setCurrentItem( pos );
+  uint pos = mFilterSelectionWidget->currentItem();
+  mFilterSelectionWidget->setItems( filterNames() );
+  mFilterSelectionWidget->setCurrentItem( pos );
   setActiveFilter( pos );
 }
 
@@ -521,15 +527,6 @@ void ViewManager::initActions()
                SLOT( configureFilters() ), mCore->actionCollection(),
                "options_edit_filters" );
   action->setWhatsThis( i18n( "Edit the contact filters<p>You will be presented with a dialog, where you can add, remove and edit filters." ) );
-
-  mActionSelectFilter = new KSelectAction( i18n( "Select Filter" ), 0,
-                                           mCore->actionCollection(),
-                                           "select_filter" );
-#if KDE_VERSION >= 309
-  mActionSelectFilter->setMenuAccelsEnabled( false );
-#endif
-  connect( mActionSelectFilter, SIGNAL( activated( int ) ),
-           SLOT( setActiveFilter( int ) ) );
 }
 
 void ViewManager::initGUI()

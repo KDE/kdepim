@@ -41,22 +41,13 @@ class FilterSelectionWidget : public QHBox
     FilterSelectionWidget( QWidget *parent, const char *name = 0 );
     ~FilterSelectionWidget();
 
-    void setFilterNames( const QStringList &names );
+    void setItems( const QStringList &names );
 
     int currentItem() const;
     void setCurrentItem( int index );
     
-    QString text( int index ) const;
-    unsigned int count() const;
-    
-    QString currentFilterName() const;
-    void setCurrentFilterName( const QString &name );
-    
   signals:
     void filterActivated( int );
-    
-  protected slots:
-    void activated( int );
     
   private:
     KComboBox *mFilterCombo;

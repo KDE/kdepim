@@ -35,6 +35,8 @@ class KABCore;
 class KAction;
 class KSelectAction;
 
+class FilterSelectionWidget;
+
 namespace KABC { class AddressBook; }
 
 /**
@@ -61,6 +63,8 @@ class ViewManager : public QWidget
     QStringList selectedUids() const;
     QStringList selectedEmails() const;
     KABC::Addressee::List selectedAddressees() const;
+
+    void setFilterSelectionWidget( FilterSelectionWidget *wdg );
 
   public slots:
     void setSelected( const QString &uid = QString::null, bool selected = true );
@@ -133,8 +137,9 @@ class ViewManager : public QWidget
     KAddressBookView *mActiveView;
 
     KAction *mActionDeleteView;
-    KSelectAction *mActionSelectFilter;
     KSelectAction *mActionSelectView;
+
+    FilterSelectionWidget *mFilterSelectionWidget;
 };
 
 #endif
