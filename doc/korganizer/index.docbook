@@ -1655,47 +1655,62 @@ automatically.</para>
 <listitem>
 <para><guilabel>Server URL</guilabel></para>
 <para>Enter the URL for the server on which your Free/Busy information shall be published. Ask the server administrator for this information.</para>
-<para><guilabel>Kolab2 server example of URL:</guilabel><userinput> webdavs://kolab2.com/freebusy/joe@kolab2.com.ifb</userinput></para>  
+<para><guilabel>Kolab2 server example:</guilabel><userinput> webdavs://kolab2.com/freebusy/joe@kolab2.com.ifb</userinput></para>  
 </listitem>
 <listitem><para><guilabel>Username</guilabel></para>
 <para>Enter the login information relative to your account on the server</para>
 <para><guilabel>Kolab2 server specificity:</guilabel> Registered your UID (Unique IDentifier), by default your UID would be similar to your email address on the <guilabel>Kolab2 server</guilabel> but it may also be different. In the last case enter your UID. Ask about your UID to the server administrator if you dont know it.</para>
 </listitem>
 <listitem><para><guilabel>Password</guilabel></para>
-<para>Enter here your password.</para>
+<para>Enter here your password (server login password).</para>
 </listitem>
 <listitem><para>
 <guilabel>Remember password</guilabel></para>
 <para>Check this option if you want KOrganizer to remember your password and skip asking you each time it upload your Free/Busy information.</para>
-<note>
+<warning>
 <para>
 It is not recommended to store your password in the configuration file for security reasons
 </para>
-</note> 
+</warning> 
 </listitem>
 </itemizedlist>
 </listitem>
 </varlistentry>
-<!--
 <varlistentry>
 <term><guilabel>Retrieve Tab</guilabel></term>
 <listitem>
 <itemizedlist>
-<listitem><para><guilabel>Retrieve other peoples' free/busy</guilabel></para>
-	<para>Test test test</para>
+<listitem><para><guilabel>Retrieve other peoples' free/busy information automatically</guilabel></para>
+<para>Automate the process for retrieving other users free/busy. Fill in the server information section below to trigger this option.</para>
 </listitem>
-<listitem><para><guilabel>Server URL</guilabel></para></listitem>
-<listitem><para><guilabel>Username</guilabel></para></listitem>
-<listitem><para><guilabel>Password</guilabel></para></listitem>
-<listitem><para><guilabel>Remember password</guilabel></para></listitem>
+<listitem><para><guilabel>Use full email address for retrieval</guilabel></para>
+<para>This setting lets you change the name of the file which will be fetched from the server. If you check this option, it will download a free/busy file called <userinput>user@domain.ifb</userinput>, else it will fetch <userinput>user.ifb</userinput>. Ask the server Administrator if you are not sure about how to configure this option.</para>
+<para><guilabel>Kolab2 server specificity:</guilabel> If you are configuring KOrganiser as a component to a <guilabel>KDE Kolab client (Kontact/Kolab)</guilabel> you have to check this option.</para>
+</listitem>
+<listitem><para><guilabel>Server URL</guilabel></para>
+<para>Enter the URL for the server on which your Free/Busy information shall be fetched. Ask the server administrator for this information.</para>
+<para><guilabel>Kolab2 server example:</guilabel><userinput> webdavs://kolab2.com/freebusy/</userinput></para>
+</listitem>
+<listitem><para><guilabel>Username</guilabel></para>
+<para>Enter the login information relative to your account on the server</para>
+<para><guilabel>Kolab2 server specificity:</guilabel> Registered your UID (Unique IDentifier), by default your UID would be similar to your email address on the <guilabel>Kolab2 server</guilabel> but it may also be different. In the last case enter your UID. Ask about your UID to the server administrator if you dont know it.</para>
+</listitem>
+<listitem><para><guilabel>Password</guilabel></para>
+<para>Enter here your password (server login password).</para>
+</listitem>
+<listitem><para><guilabel>Remember password</guilabel></para>
+<para>Check this option if you want KOrganizer to remember your password and skip asking you each time it fetches the free/busy files.</para>
+<warning>
+<para>
+It is not recommended to store your password in the configuration file for security reasons
+</para>
+</warning>
+</listitem>
 </itemizedlist>
 </listitem>
 </varlistentry>
--->
 </variablelist>
-
 </sect3>
-
 </sect2>
 
 
