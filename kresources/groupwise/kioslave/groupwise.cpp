@@ -190,6 +190,7 @@ void Groupwise::getFreeBusy( const KURL &url )
     fb->addPeriod( s, e );
 #endif
 
+    // FIXME: This does not take into account the time zone!
     KCal::ICalFormat format;
 
     QString ical = format.createScheduleMessage( fb, KCal::Scheduler::Publish );

@@ -182,6 +182,7 @@ void ResourceGroupware::slotJobResult( KIO::Job *job )
 
     clearCache();
 
+     // FIXME: This does not take into account the time zone!
     CalendarLocal calendar;
     ICalFormat ical;
     if ( !ical.fromString( &calendar, mJobData ) ) {

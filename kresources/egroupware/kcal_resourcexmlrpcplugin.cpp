@@ -27,8 +27,9 @@
 using namespace KCal;
 
 typedef KRES::PluginFactory<ResourceXMLRPC, ResourceXMLRPCConfig> XMLRPCFactory;
+
 // FIXME: Use K_EXPORT_COMPONENT_FACTORY( kcal_xmlrpc, XMLRPCFactory ); here
-// Problem: How can I insert the catalogue then?
+// Problem: How to insert the catalogue!
 extern "C"
 {
   void *init_kcal_xmlrpc()

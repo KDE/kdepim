@@ -162,6 +162,7 @@ KCal::Journal* ResourceKolab::addNote( const QString& data, const QString& subre
                              Q_UINT32 sernum, const QString &mimetype )
 {
   KCal::Journal* journal = 0;
+    // FIXME: This does not take into account the time zone!
   KCal::ICalFormat formatter;
   if ( mimetype == attachmentMimeType )
     journal = Note::xmlToJournal( data );
