@@ -31,12 +31,9 @@ KCal::Todo* ToDo::dom2todo( QDomElement e, ExtraMap& extra,const QStringList& ls
 
     QString cat;
     for ( uint i = 0; i < list.count(); i++ ) {
-        kdDebug(5227)<< list[i]
-                     << " Category "
-                     << m_edit->categoryById( list[i],  "Todo List")
-                     << endl;
         cat = m_edit->categoryById( list[i], "Todo List");
-        if (!cat.isEmpty() )
+	/* only if cat is not empty and not already added */
+        if (!cat.isEmpty() && !categories.contains( cat) )
             categories.append(cat );
     }
     if (!categories.isEmpty() ) {

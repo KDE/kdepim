@@ -133,14 +133,24 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName, ExtraMap&
 
 			adr.setNickName( el.attribute("Nickname") );
 			adr.setNote( el.attribute("Notes") );
-
+                     
+		        /* extra block to let memory cleared... */
+			{
 			QStringList categories = QStringList::split(";", el.attribute("Categories" ) );
                         QString cat;
+			QStringList added;
 			for(uint i=0; i < categories.count(); i++ ){
                             cat = m_edit->categoryById(categories[i], "Contacts"  );
-                            if (!cat.isEmpty() )
+			    /* if name is not empty and we did not add the cat
+			     * try to repair broken files
+			     */
+                            if (!cat.isEmpty() && !added.contains(cat) ){
                                 adr.insertCategory( cat );
+				added << cat;
+			    }
 			}
+			}
+			
                         adr.insertCustom("KADDRESSBOOK", "X-Department",  el.attribute("Department") );
 			adr.insertCustom("opie", "HomeWebPage", el.attribute("HomeWebPage") );
 			adr.insertCustom("KADDRESSBOOK", "X-SpouseName", el.attribute("Spouse") );

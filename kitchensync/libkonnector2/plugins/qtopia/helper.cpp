@@ -113,7 +113,7 @@ QString Base::categoriesToNumber( const QStringList &list, const QString &app )
 {
     kdDebug(5226) << "categoriesToNumber " << list.join(";") << endl;
  startover:
-    QString dummy;
+    QStringList dummy;
     QValueList<OpieCategories>::ConstIterator catIt;
     QValueList<OpieCategories> categories = m_edit->categories();
     bool found = false;
@@ -123,10 +123,14 @@ QString Base::categoriesToNumber( const QStringList &list, const QString &app )
 
         found  = false;
         for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
-            if ( (*catIt).name() == (*listIt)  ) { // the same name
+	    /*
+	     * We currently do not take app into account
+	     * if name matches and the id isn't already in dummy we'll add it
+	     */
+            if ( (*catIt).name() == (*listIt) && !dummy.contains(( *catIt).id() )  ) { // the same name
 	        kdDebug(5226) << "Found " << (*listIt) << endl;
                 found= true;
-                dummy.append( (*catIt).id() + ";");
+                dummy << (*catIt).id();
             }
         }
         /* if not found and the category is not empty
@@ -141,10 +145,8 @@ QString Base::categoriesToNumber( const QStringList &list, const QString &app )
             goto startover;
 	}
     }
-    if ( !dummy.isEmpty() )
-        dummy.remove(dummy.length() -1,  1 ); //remove the last ;
 
-    return dummy;
+    return dummy.join(";");
 }
 QString Base::konnectorId( const QString &appName,  const QString &uid )
 {

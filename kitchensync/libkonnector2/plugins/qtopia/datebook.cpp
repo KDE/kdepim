@@ -43,17 +43,23 @@ DateBook::~DateBook(){
  */
 KCal::Event* DateBook::toEvent( QDomElement e, ExtraMap& extraMap, const QStringList& lst) {
     KCal::Event* event = new KCal::Event();
+    
+    /* Category block */
+    {
     QStringList list = QStringList::split(";",  e.attribute("categories") );
     QStringList categories;
 
     QString cat;
     for ( uint i = 0; i < list.count(); i++ ) {
         cat = m_edit->categoryById(list[i], "Calendar");
-        if (!cat.isEmpty() )
+	/* only add if name not empty and was not added before */
+        if (!cat.isEmpty() && !categories.contains(cat) )
             categories.append(cat );
     }
     if (!categories.isEmpty() ) {
         event->setCategories( categories );
+    }
+    
     }
 
     event->setSummary( e.attribute("description") );
