@@ -328,7 +328,7 @@ void filter_pmail::importUnixMailFolder(const char *file)
       // Look for separator
       if (temp &&                                             // when we wrote to outfile
          (strncmp(line,MSG_SEPERATOR_START, msgSepLen)==0 &&  // quick compar
-         regexp.match(line) >= 0))                            // slower regexp
+         regexp.search(line) >= 0))                            // slower regexp
       {
          fclose(temp);
          kmailMessage((filterInfo *) inf, (char *)folder.latin1(), tempname, added);
