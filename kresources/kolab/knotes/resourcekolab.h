@@ -37,8 +37,8 @@
 #include <resourcenotes.h>
 #include <libkcal/incidencebase.h>
 #include <libkcal/calendarlocal.h>
-#include <resourcekolabbase.h>
-#include <subresource.h>
+#include "../shared/resourcekolabbase.h"
+#include "../shared/subresource.h"
 
 
 namespace Kolab {

@@ -36,13 +36,13 @@
 
 #include <libkcal/calendarlocal.h>
 #include <libkcal/resourcecalendar.h>
-#include <resourcekolabbase.h>
+#include "../shared/resourcekolabbase.h"
 
-namespace Kolab {
+namespace KCal {
 
 class ResourceKolab : public KCal::ResourceCalendar,
                       public KCal::IncidenceBase::Observer,
-                      public ResourceKolabBase
+                      public Kolab::ResourceKolabBase
 {
   Q_OBJECT
 
@@ -134,28 +134,28 @@ private:
   bool loadAllTodos();
   bool loadAllJournals();
 
-  bool doLoadAll( ResourceMap& map, const char* mimetype );
+  bool doLoadAll( Kolab::ResourceMap& map, const char* mimetype );
 
   /// Reimplemented from IncidenceBase::Observer to know when an incidence was changed
   void incidenceUpdated( KCal::IncidenceBase* );
 
   bool openResource( KConfig& config, const char* contentType,
-                     ResourceMap& map );
+                     Kolab::ResourceMap& map );
   void loadSubResourceConfig( KConfig& config, const QString& name,
-                              bool writable, ResourceMap& subResource );
+                              bool writable, Kolab::ResourceMap& subResource );
   bool loadSubResource( const QString& subResource, const char* mimetype );
 
   QString configFile() const {
     return ResourceKolabBase::configFile( "kcal" );
   }
 
-  ResourceMap* subResourceMap( const QString& contentsType );
+  Kolab::ResourceMap* subResourceMap( const QString& contentsType );
 
 
   KCal::CalendarLocal mCalendar;
 
   // The list of subresources
-  ResourceMap mEventSubResources, mTodoSubResources, mJournalSubResources;
+  Kolab::ResourceMap mEventSubResources, mTodoSubResources, mJournalSubResources;
 
   bool mOpen; // If the resource is open, this is true
 };

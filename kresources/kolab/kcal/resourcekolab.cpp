@@ -38,6 +38,7 @@
 
 #include <kabc/locknull.h>
 
+using namespace KCal;
 using namespace Kolab;
 
 
@@ -238,13 +239,13 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
   QString xml;
   if ( type == "Calendar" ) {
     mimetype = eventAttachmentMimeType;
-    xml = Event::eventToXML( static_cast<KCal::Event *>(incidencebase) );
+    xml = Kolab::Event::eventToXML( static_cast<KCal::Event *>(incidencebase) );
   } else if ( type == "Task" ) {
     mimetype = todoAttachmentMimeType;
-    xml = Task::taskToXML( static_cast<KCal::Todo *>(incidencebase) );
+    xml = Kolab::Task::taskToXML( static_cast<KCal::Todo *>(incidencebase) );
   } else if ( type == "Journal" ) {
     mimetype = journalAttachmentMimeType;
-    xml = Journal::journalToXML( static_cast<KCal::Journal *>(incidencebase ) );
+    xml = Kolab::Journal::journalToXML( static_cast<KCal::Journal *>(incidencebase ) );
   } else {
     kdWarning(5006) << "Can't happen: unhandled type=" << type << endl;
   }
@@ -280,7 +281,7 @@ bool ResourceKolab::addEvent( KCal::Event* event )
 void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
                               Q_UINT32 sernum )
 {
-  KCal::Event* event = Event::xmlToEvent( xml );
+  KCal::Event* event = Kolab::Event::xmlToEvent( xml );
   Q_ASSERT( event );
   if( event && !mUidMap.contains( event->uid() ) )
     addEvent( event, subresource, sernum );
@@ -300,7 +301,7 @@ bool ResourceKolab::addEvent( KCal::Event* event, const QString& _subresource,
   Q_ASSERT( !subResource.isEmpty() );
 
   if ( !mSilent ) {
-    QString xml = Event::eventToXML( event );
+    QString xml = Kolab::Event::eventToXML( event );
     kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
 
     if( !kmailUpdate( subResource, sernum, xml, eventAttachmentMimeType,
@@ -365,7 +366,7 @@ bool ResourceKolab::addTodo( KCal::Todo* todo )
 void ResourceKolab::addTodo( const QString& xml, const QString& subresource,
                              Q_UINT32 sernum )
 {
-  KCal::Todo* todo = Task::xmlToTask( xml );
+  KCal::Todo* todo = Kolab::Task::xmlToTask( xml );
   Q_ASSERT( todo );
   if( todo && !mUidMap.contains( todo->uid() ) )
     addTodo( todo, subresource, sernum );
@@ -385,7 +386,7 @@ bool ResourceKolab::addTodo( KCal::Todo* todo, const QString& _subresource,
   Q_ASSERT( !subResource.isEmpty() );
 
   if ( !mSilent ) {
-    QString xml = Task::taskToXML( todo );
+    QString xml = Kolab::Task::taskToXML( todo );
     kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
 
     if( !kmailUpdate( subResource, sernum, xml, todoAttachmentMimeType,
@@ -437,7 +438,7 @@ bool ResourceKolab::addJournal( KCal::Journal* journal )
 void ResourceKolab::addJournal( const QString& xml, const QString& subresource,
                                 Q_UINT32 sernum )
 {
-  KCal::Journal* journal = Journal::xmlToJournal( xml );
+  KCal::Journal* journal = Kolab::Journal::xmlToJournal( xml );
   Q_ASSERT( journal );
   if( journal && !mUidMap.contains( journal->uid() ) )
     addJournal( journal, subresource, sernum );
@@ -457,7 +458,7 @@ bool ResourceKolab::addJournal( KCal::Journal* journal,
   Q_ASSERT( !subResource.isEmpty() );
 
   if ( !mSilent ) {
-    QString xml = Journal::journalToXML( journal );
+    QString xml = Kolab::Journal::journalToXML( journal );
     kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
 
     if( !kmailUpdate( subResource, sernum, xml, journalAttachmentMimeType,
@@ -673,7 +674,7 @@ KABC::Lock* ResourceKolab::lock()
 }
 
 
-ResourceMap* Kolab::ResourceKolab::subResourceMap( const QString& contentsType )
+Kolab::ResourceMap* ResourceKolab::subResourceMap( const QString& contentsType )
 {
   if ( contentsType == kmailCalendarContentsType ) {
     return &mEventSubResources;

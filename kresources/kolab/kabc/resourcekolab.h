@@ -35,8 +35,8 @@
 
 #include <libkdepim/resourceabc.h>
 #include <dcopobject.h>
-#include <resourcekolabbase.h>
-#include <subresource.h>
+#include "../shared/resourcekolabbase.h"
+#include "../shared/subresource.h"
 
 namespace KABC {
 
