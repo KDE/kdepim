@@ -714,7 +714,7 @@ KNConfig::ReadNewsViewer::ReadNewsViewer()
   f_ullHdrs=conf->readBoolEntry("fullHdrs", false);
   u_seFixedFont=conf->readBoolEntry("articleBodyFixedFont", false);
   QString s = conf->readEntry("Browser","Default");
-  if (s=="konqueror")
+  if (s=="Konqueror")
     b_rowser = BTkonq;
   else if (s=="Netscape")
     b_rowser = BTnetscape;
