@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2000, 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2000-2003 Cornelius Schumacher <schumacher@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,8 +21,8 @@
     with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
 */
-#ifndef HTMLEXPORT_H
-#define HTMLEXPORT_H
+#ifndef KCAL_HTMLEXPORT_H
+#define KCAL_HTMLEXPORT_H
 
 #include <qstring.h>
 #include <qdatetime.h>
@@ -37,45 +38,29 @@ namespace KCal {
 /**
   This class provides the functions to export a calendar as a HTML page.
 */
-class HtmlExport {
+class HtmlExport
+{
   public:
-    /** Create new HTML exporter for calendar */
-    HtmlExport(Calendar *calendar) :
-        mCalendar(calendar),
-        mMonthViewEnabled(true),mEventsEnabled(false),mTodosEnabled(true),
-        mCategoriesTodoEnabled(false),mAttendeesTodoEnabled(false),
-        mCategoriesEventEnabled(false),mAttendeesEventEnabled(false),
-        mDueDateEnabled(false),
-        mExcludePrivateTodoEnabled(false),
-        mExcludeConfidentialTodoEnabled(false),
-        mExcludePrivateEventEnabled(false),
-        mExcludeConfidentialEventEnabled(false),
-        mTitle(), mTitleTodo(),
-        mName(), mEmail(),
-        mCreditName(), mCreditURL() {
-      
-      mTitle = I18N_NOOP("KOrganizer Calendar");
-      mTitleTodo = I18N_NOOP("KOrganizer To-Do List");
-      mCreditName = "KOrganizer";
-      mCreditURL = "http://korganizer.kde.org";
-    }
-
-    virtual ~HtmlExport() {};
+    /**
+      Create new HTML exporter for calendar.
+    */
+    HtmlExport( Calendar *calendar );
+    virtual ~HtmlExport() {}
 
     /**
-      writes out the calendar in HTML format.
+      Writes out the calendar in HTML format.
     */
-    bool save(const QString &fileName);
+    bool save( const QString &fileName );
 
     /**
-      writes out calendar to file. The QFile has to already be opened for writing.
+      Writes out calendar to text stream.
     */
-    bool save(QTextStream *);
+    bool save( QTextStream * );
 
-    void setTitle( QString title ) {mTitle = title; }
+    void setTitle( QString title ) { mTitle = title; }
     QString title() { return mTitle; }
 
-    void setTitleTodo( QString title ) {mTitleTodo = title; }
+    void setTitleTodo( QString title ) { mTitleTodo = title; }
     QString titleTodo() { return mTitleTodo; }
 
     void setFullName( QString name ) { mName = name; }
@@ -84,7 +69,7 @@ class HtmlExport {
     void setEmail( QString email ) { mEmail = email; }
     QString email() { return mEmail; }
 
-    void setCredit( QString name, QString url ) {mCreditName = name; mCreditURL = url; }
+    void setCredit( QString name, QString url ) { mCreditName = name; mCreditURL = url; }
     QString creditName() { return mCreditName; }
     QString creditURL() { return mCreditURL; }
 
@@ -131,10 +116,9 @@ class HtmlExport {
     void setStyleSheet( const QString & );
     QString styleSheet();
 
-    void addHoliday( QDate date, QString name);
+    void addHoliday( QDate date, QString name );
 
   protected:
-
     void createHtmlMonthView (QTextStream *ts);
     void createHtmlEventList (QTextStream *ts);
     void createHtmlTodoList (QTextStream *ts);
@@ -178,6 +162,9 @@ class HtmlExport {
     QString mCreditName;
     QString mCreditURL;
     QMap<QDate,QString> mHolidayMap;
+
+    class Private;
+    Private *d;
 };
 
 }

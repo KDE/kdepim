@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -17,14 +18,10 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef JOURNAL_H
-#define JOURNAL_H
-//
-// Journal component, representing a VJOURNAL object
-//
+#ifndef KCAL_JOURNAL_H
+#define KCAL_JOURNAL_H
 
 #include "incidence.h"
-
 
 namespace KCal {
 
@@ -43,7 +40,14 @@ class Journal : public Incidence
 
     QCString type() const { return "Journal"; }
     
+    /**
+      Return copy of this Journal. The caller owns the returned object.
+    */
     Journal *clone();
+
+  private:
+    class Private;
+    Private *d;
 };
 
 }

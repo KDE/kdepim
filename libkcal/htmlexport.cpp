@@ -1,5 +1,6 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 2000, 2001 Cornelius Schumacher <schumacher@kde.org>
 
     This program is free software; you can redistribute it and/or modify
@@ -42,6 +43,23 @@
 #include "htmlexport.h"
 
 using namespace KCal;
+
+HtmlExport::HtmlExport( Calendar *calendar ) :
+  mCalendar( calendar ),
+  mMonthViewEnabled( true ), mEventsEnabled( false ), mTodosEnabled( true ),
+  mCategoriesTodoEnabled( false ), mAttendeesTodoEnabled( false ),
+  mCategoriesEventEnabled( false ), mAttendeesEventEnabled( false ),
+  mDueDateEnabled( false ),
+  mExcludePrivateTodoEnabled( false ),
+  mExcludeConfidentialTodoEnabled( false ),
+  mExcludePrivateEventEnabled( false ),
+  mExcludeConfidentialEventEnabled( false )
+{
+  mTitle = I18N_NOOP("KOrganizer Calendar");
+  mTitleTodo = I18N_NOOP("KOrganizer To-Do List");
+  mCreditName = "KOrganizer";
+  mCreditURL = "http://korganizer.kde.org";
+}
 
 bool HtmlExport::save(const QString &fileName)
 {

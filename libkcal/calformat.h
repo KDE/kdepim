@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -17,8 +18,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef _CALFORMAT_H
-#define _CALFORMAT_H
+#ifndef KCAL_CALFORMAT_H
+#define KCAL_CALFORMAT_H
 
 #include <qstring.h>
 #include <qdatetime.h>
@@ -38,7 +39,8 @@ class Calendar;
 
   @short Class providing in interface to a calendar format
 */
-class CalFormat {
+class CalFormat
+{
   public:
     /** Constructs a new format. */
     CalFormat();
@@ -104,6 +106,9 @@ class CalFormat {
 
     static QString mApplication;      // name of application for unique ID strings
     static QString mProductId;        // PRODID string to write to calendar files
+
+    class Private;
+    Private *d;
 };
 
 }

@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -17,8 +18,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef ICALFORMAT_H
-#define ICALFORMAT_H
+#ifndef KCAL_ICALFORMAT_H
+#define KCAL_ICALFORMAT_H
 
 #include <qstring.h>
 
@@ -37,9 +38,9 @@ class ICalFormatImpl;
 
   @short iCalendar format implementation
 */
-class ICalFormat : public CalFormat {
+class ICalFormat : public CalFormat
+{
   public:
-    /** Create new iCalendar format. */
     ICalFormat();
     virtual ~ICalFormat();
 
@@ -47,16 +48,17 @@ class ICalFormat : public CalFormat {
       Loads a calendar on disk in iCalendar format into calendar.
       Returns true if successful, else returns false. Provides more error
       information by exception().
+
       @param calendar Calendar object to be filled.
       @param fileName The name of the calendar file on disk.
     */
     bool load( Calendar * calendar, const QString &fileName );
     /**
       Writes out the calendar to disk in iCalendar format. Returns true if
-     successful and false on error.
+      successful and false on error.
      
-     @param calendar The Calendar object to be written.
-     @param fileName The name of the calendar file on disk.
+      @param calendar The Calendar object to be written.
+      @param fileName The name of the calendar file on disk.
     */
     bool save( Calendar * calendar, const QString &fileName );
 
@@ -90,14 +92,26 @@ class ICalFormat : public CalFormat {
     */
     bool fromString ( Recurrence *, const QString& );
   
-    /** Create a scheduling message for event @p e using method @p m */
+    /**
+      Create a scheduling message for event @p e using method @p m.
+    */
     QString createScheduleMessage(IncidenceBase *e,Scheduler::Method m);
-    /** Parse scheduling message provided as string @p s */
+    /**
+      Parse scheduling message provided as string @p s.
+    */
     ScheduleMessage *parseScheduleMessage( Calendar *, const QString &s);
     
-    /** Set id of used time zone and whether this time zone is UTC or not. */
+    /**
+      Set id of used time zone and whether this time zone is UTC or not.
+    */
     void setTimeZone( const QString &id, bool utc );
+    /**
+      Return id string of timezone used.
+    */
     QString timeZoneId() const;
+    /**
+      Return true if timezone used is UTC, otherwise return false.
+    */
     bool utc() const;
 
   private:
@@ -105,6 +119,9 @@ class ICalFormat : public CalFormat {
 
     QString mTimeZoneId;
     bool mUtc;
+
+    class Private;
+    Private *d;
 };
 
 }

@@ -34,6 +34,17 @@ libkcal_la_SOURCES = \
 	resourcecached.cpp \
         htmlexport.cpp calendarnull.cpp
 
+libkcalincludedir = $(includedir)/libkcal
+libkcalinclude_HEADERS = alarm.h attachment.h attendee.h calendar.h \
+  calendarlocal.h calendarnull.h calendarresources.h calfilter.h calformat.h \
+  calstorage.h compat.h customproperties.h dndfactory.h duration.h event.h \
+  exceptions.h filestorage.h freebusy.h htmlexport.h icaldrag.h icalformat.h \
+  incidencebase.h incidence.h journal.h listbase.h period.h person.h \
+  qtopiaformat.h recurrence.h resourcecached.h resourcecalendar.h \
+  resourcelocalconfig.h resourcelocaldirconfig.h resourcelocaldir.h \
+  resourcelocal.h resourceremoteconfig.h resourceremote.h scheduler.h \
+  todo.h vcaldrag.h vcalformat.h
+
 kde_module_LTLIBRARIES = kcal_local.la kcal_localdir.la kcal_remote.la kcal_kabc.la
 
 kcal_local_la_SOURCES = resourcelocal_plugin.cpp

@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2002,2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -45,6 +46,9 @@ class CalStorage
 
   private:
     Calendar *mCalendar;
+
+    class Private;
+    Private *d;
 };
 
 }

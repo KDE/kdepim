@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -26,6 +27,10 @@
 
 namespace KCal {
 
+/**
+  This class represents a period of time. The period can be defined by either a
+  start time and an end time or by a start time and a duration.
+*/
 class Period
 {
   public:
@@ -33,8 +38,8 @@ class Period
     Period( const QDateTime &start, const QDateTime &end );
     Period( const QDateTime &start, const Duration &duration );
 
-    QDateTime start()const;
-    QDateTime end()const;
+    QDateTime start() const;
+    QDateTime end() const;
     Duration duration();
 
     bool hasDuration()const;
@@ -44,6 +49,9 @@ class Period
     QDateTime mEnd;
 
     bool mHasDuration;
+
+    class Private;
+    Private *d;
 };
 
 }

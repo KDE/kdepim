@@ -19,7 +19,6 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-
 #ifndef KCAL_RESOURCEREMOTECONFIG_H
 #define KCAL_RESOURCEREMOTECONFIG_H
 
@@ -32,21 +31,29 @@
 
 namespace KCal {
 
+/**
+  Configuration widget for remote resource.
+  
+  @see ResourceRemote
+*/
 class ResourceRemoteConfig : public KRES::ConfigWidget
 { 
     Q_OBJECT
   public:
-    ResourceRemoteConfig( QWidget* parent = 0, const char* name = 0 );
+    ResourceRemoteConfig( QWidget *parent = 0, const char *name = 0 );
 
   public slots:
-    virtual void loadSettings( KRES::Resource *resource);
+    virtual void loadSettings( KRES::Resource *resource );
     virtual void saveSettings( KRES::Resource *resource );
 
   private:
-    KURLRequester* mDownloadUrl;
-    KURLRequester* mUploadUrl;
+    KURLRequester *mDownloadUrl;
+    KURLRequester *mUploadUrl;
 
     QButtonGroup *mReloadGroup;
+
+    class Private;
+    Private *d;
 };
 
 }

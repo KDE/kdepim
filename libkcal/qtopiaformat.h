@@ -18,8 +18,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef QTOPIAFORMAT_H
-#define QTOPIAFORMAT_H
+#ifndef KCAL_QTOPIAFORMAT_H
+#define KCAL_QTOPIAFORMAT_H
 
 #include <qstring.h>
 
@@ -32,9 +32,9 @@ namespace KCal {
 /**
   This class implements the calendar format used by Qtopia.
 */
-class QtopiaFormat : public CalFormat {
+class QtopiaFormat : public CalFormat
+{
   public:
-    /** Create new iCalendar format. */
     QtopiaFormat();
     virtual ~QtopiaFormat();
 
@@ -45,6 +45,8 @@ class QtopiaFormat : public CalFormat {
     QString toString( Calendar * );
 
   private:
+    class Private;
+    Private *d;
 };
 
 }

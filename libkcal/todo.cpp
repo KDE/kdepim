@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -28,8 +29,6 @@ using namespace KCal;
 
 Todo::Todo()
 {
-//  mStatus = TENTATIVE;
-
   mHasDueDate = false;
   mHasStartDate = false;
 
@@ -136,79 +135,6 @@ void Todo::setHasStartDate(bool f)
   updated();
 }
 
-#if 0
-void Todo::setStatus(const QString &statStr)
-{
-  if (mReadOnly) return;
-  QString ss(statStr.upper());
-
-  if (ss == "X-ACTION")
-    mStatus = NEEDS_ACTION;
-  else if (ss == "NEEDS ACTION")
-    mStatus = NEEDS_ACTION;
-  else if (ss == "ACCEPTED")
-    mStatus = ACCEPTED;
-  else if (ss == "SENT")
-    mStatus = SENT;
-  else if (ss == "TENTATIVE")
-    mStatus = TENTATIVE;
-  else if (ss == "CONFIRMED")
-    mStatus = CONFIRMED;
-  else if (ss == "DECLINED")
-    mStatus = DECLINED;
-  else if (ss == "COMPLETED")
-    mStatus = COMPLETED;
-  else if (ss == "DELEGATED")
-    mStatus = DELEGATED;
-  else
-    kdDebug(5800) << "error setting status, unknown status!" << endl;
-
-  updated();
-}
-
-void Todo::setStatus(int status)
-{
-  if (mReadOnly) return;
-  mStatus = status;
-  updated();
-}
-
-int Todo::status() const
-{
-  return mStatus;
-}
-
-QString Todo::statusStr() const
-{
-  switch(mStatus) {
-  case NEEDS_ACTION:
-    return QString("NEEDS ACTION");
-    break;
-  case ACCEPTED:
-    return QString("ACCEPTED");
-    break;
-  case SENT:
-    return QString("SENT");
-    break;
-  case TENTATIVE:
-    return QString("TENTATIVE");
-    break;
-  case CONFIRMED:
-    return QString("CONFIRMED");
-    break;
-  case DECLINED:
-    return QString("DECLINED");
-    break;
-  case COMPLETED:
-    return QString("COMPLETED");
-    break;
-  case DELEGATED:
-    return QString("DELEGATED");
-    break;
-  }
-  return QString("");
-}
-#endif
 
 bool Todo::isCompleted() const
 {

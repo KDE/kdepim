@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -18,8 +19,8 @@
     Boston, MA 02111-1307, USA.
 */
 
-#ifndef _ATTENDEE_H
-#define _ATTENDEE_H
+#ifndef KCAL_ATTENDEE_H
+#define KCAL_ATTENDEE_H
 
 #include <qstring.h>
 
@@ -91,9 +92,12 @@ class Attendee : public Person
 
     // used to tell whether we have need to mail this person or not.
     bool mFlag;
+
+    class Private;
+    Private *d;
 };
 
-    bool operator==( const Attendee& a1, const Attendee& a2 );
+bool operator==( const Attendee& a1, const Attendee& a2 );
 
 }
 

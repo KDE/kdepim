@@ -154,7 +154,7 @@ void Incidence::setReadOnly( bool readOnly )
     mRecurrence->setRecurReadOnly(readOnly);
 }
 
-void Incidence::setCreated(QDateTime created)
+void Incidence::setCreated( const QDateTime &created )
 {
   if (mReadOnly) return;
   mCreated = created;
@@ -165,7 +165,7 @@ QDateTime Incidence::created() const
   return mCreated;
 }
 
-void Incidence::setRevision(int rev)
+void Incidence::setRevision( int rev )
 {
   if (mReadOnly) return;
   mRevision = rev;

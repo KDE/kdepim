@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -24,7 +25,7 @@
 // Exception classes of libkcal.
 //
 // We don't use actual C++ exceptions right now. These classes are currently
-// returned by an error function, but we can build upon them, when we start
+// returned by an error function, but we can build upon them, if we start
 // to use C++ exceptions.
 
 #include <qstring.h>
@@ -32,24 +33,36 @@
 namespace KCal {
 
 /**
-  KOrganizer exceptions base class. This is currently used as a fancy kind of error code not as an
-  C++ exception.
+  KOrganizer exceptions base class. This is currently used as a fancy kind of
+  error code not as an C++ exception.
 */
-class Exception {
+class Exception
+{
   public:
-    /** Construct exception with descriptive message \a message. */
-    Exception(const QString &message=QString::null);
+    /**
+      Construct exception with descriptive message \a message.
+    */
+    Exception( const QString &message = QString::null );
     virtual ~Exception();
 
-    /** Return descriptive message of exception. */    
+    /**
+      Return descriptive message of exception.
+    */    
     virtual QString message();
     
   protected:
     QString mMessage;
+
+  private:
+    class Private;
+    Private *d;
 };
 
-/** Calendar format related error class */
-class ErrorFormat : public Exception {
+/**
+  Calendar format related error class.
+*/
+class ErrorFormat : public Exception
+{
   public:
     enum ErrorCodeFormat { LoadError, SaveError,
                            ParseErrorIcal, ParseErrorKcal,
@@ -58,16 +71,25 @@ class ErrorFormat : public Exception {
                            CalVersionUnknown,
                            Restriction };
   
-    /** Create format error exception. */
-    ErrorFormat(ErrorCodeFormat code,const QString &message = QString::null);
+    /**
+      Create format error exception.
+    */
+    ErrorFormat( ErrorCodeFormat code, const QString &message = QString::null );
     
-    /** Return format error message. */
+    /**
+      Return format error message.
+    */
     QString message();
-    /** Return format error code. */
+    /**
+      Return format error code.
+    */
     ErrorCodeFormat errorCode();
     
   private:
     ErrorCodeFormat mCode;
+
+    class Private;
+    Private *d;
 };
 
 }

@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -17,9 +18,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-
-#ifndef _CALFILTER_H
-#define _CALFILTER_H
+#ifndef KCAL_CALFILTER_H
+#define KCAL_CALFILTER_H
 
 #include <qstring.h>
 #include <qptrlist.h>
@@ -32,7 +32,8 @@ namespace KCal {
 /**
   Filter for calendar objects.
 */
-class CalFilter {
+class CalFilter
+{
   public:
     /** Construct filter. */
     CalFilter();
@@ -121,8 +122,11 @@ class CalFilter {
     bool mEnabled;
     
     QStringList mCategoryList;
+
+    class Private;
+    Private *d;
 };
 
 }
 
-#endif /*  _CALFILTER_H  */
+#endif

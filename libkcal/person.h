@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -24,6 +25,9 @@
 
 namespace KCal {
 
+/**
+  This class represents a person. A person has a name and an email address.
+*/
 class Person
 {
   public:
@@ -42,9 +46,13 @@ class Person
   private:
     QString mName;
     QString mEmail;
+
+    class Private;
+    Private *d;
 };
 
-    bool operator==( const Person& p1, const Person& p2 );
+bool operator==( const Person& p1, const Person& p2 );
+
 }
 
 #endif

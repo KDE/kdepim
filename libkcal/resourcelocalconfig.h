@@ -19,7 +19,6 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-
 #ifndef KCAL_RESOURCELOCALCONFIG_H
 #define KCAL_RESOURCELOCALCONFIG_H
 
@@ -32,22 +31,29 @@
 
 namespace KCal {
 
+/**
+  Configuration widget for local file resource.
+  
+  @see ResourceLocal
+*/
 class ResourceLocalConfig : public KRES::ConfigWidget
 { 
-  Q_OBJECT
+    Q_OBJECT
+  public:
+    ResourceLocalConfig( QWidget* parent = 0, const char* name = 0 );
 
-public:
-  ResourceLocalConfig( QWidget* parent = 0, const char* name = 0 );
+  public slots:
+    virtual void loadSettings( KRES::Resource *resource);
+    virtual void saveSettings( KRES::Resource *resource );
 
-public slots:
-  virtual void loadSettings( KRES::Resource *resource);
-  virtual void saveSettings( KRES::Resource *resource );
+  private:
+    KURLRequester *mURL;
+    QButtonGroup *formatGroup;
+    QRadioButton *icalButton;
+    QRadioButton *vcalButton;
 
-private:
-  KURLRequester* mURL;
-  QButtonGroup* formatGroup;
-  QRadioButton* icalButton;
-  QRadioButton* vcalButton;
+    class Private;
+    Private *d;
 };
 
 }

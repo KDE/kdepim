@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,9 +20,6 @@
 */
 #ifndef KCAL_FREEBUSY_H
 #define KCAL_FREEBUSY_H
-//
-// FreeBusy - information about free/busy times
-//
 
 #include <qdatetime.h>
 #include <qvaluelist.h>
@@ -41,9 +39,10 @@ class FreeBusy : public IncidenceBase
 {
   public:
     FreeBusy();
-    FreeBusy(const QDateTime &start, const QDateTime &end);
-    FreeBusy(Calendar *calendar, const QDateTime &start, const QDateTime &end);
-    FreeBusy(QValueList<Period> busyPeriods);
+    FreeBusy( const QDateTime &start, const QDateTime &end );
+    FreeBusy( Calendar *calendar, const QDateTime &start,
+              const QDateTime &end );
+    FreeBusy( QValueList<Period> busyPeriods );
 
     ~FreeBusy();
     
@@ -54,17 +53,19 @@ class FreeBusy : public IncidenceBase
 
     QValueList<Period> busyPeriods() const;
 
-    void addPeriod(const QDateTime &start, const QDateTime &end);
+    void addPeriod( const QDateTime &start, const QDateTime &end );
     void sortList();
     
   private:
-
     //This is used for creating a freebusy object for the current user
-    bool addLocalPeriod(const QDateTime &start, const QDateTime &end);
+    bool addLocalPeriod( const QDateTime &start, const QDateTime &end );
 
     QDateTime mDtEnd;
     QValueList<Period> mBusyPeriods;
     Calendar *mCalendar;
+
+    class Private;
+    Private *d;
 };
 
 }

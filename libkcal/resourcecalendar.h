@@ -1,7 +1,8 @@
 /*
-    This file is part of libkdepim.
+    This file is part of libkcal.
+
     Copyright (c) 1998 Preston Brown
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2002 Jan-Pascal van Best <janpascal@vanbest.org>
 
     This library is free software; you can redistribute it and/or
@@ -43,7 +44,11 @@ namespace KCal {
 class CalFormat;
 
 /**
-  @internal
+  This class provides the interfaces for a calendar resource. It makes use of
+  the kresources framework.
+
+  \warning This code is still under heavy development. Don't expect source or
+  binary compatibility in future versions.
 */
 class ResourceCalendar : public KRES::Resource
 { 
@@ -85,30 +90,36 @@ class ResourceCalendar : public KRES::Resource
     */
     virtual bool save() = 0;
 
+    /**
+      Return true if a save operation is still in progress, otherwise return
+      false.
+    */
     virtual bool isSaving() { return false; }
 
+    /**
+      Return object for locking the resource.
+    */
     virtual KABC::Lock *lock() = 0;
 
+    /**
+      Add incidence to resource.
+    */
     virtual bool addIncidence( Incidence * );
 
-    /** Add Event to calendar. */
-    virtual bool addEvent(Event *anEvent) = 0;
+    /**
+      Add event to resource.
+    */
+    virtual bool addEvent( Event *event ) = 0;
 
-    /** deletes an event from this calendar. */
-    virtual void deleteEvent(Event *) = 0;
-
-    /** deletes a journal from this calendar. */
-    virtual void deleteJournal(Journal *) = 0;
-
-    /** signals that an event has been changed by the app */
-    // virtual void eventChanged(Event *) = 0;
-
-    /** Synchronous functions */
+    /**
+      Delete event from this resource.
+    */
+    virtual void deleteEvent( Event * ) = 0;
 
     /**
       Retrieves an event on the basis of the unique string ID.
     */
-    virtual Event *event(const QString &UniqueStr) = 0;
+    virtual Event *event( const QString &uid ) = 0;
 
     /**
       Return unfiltered list of all events in calendar. Use with care,
@@ -120,7 +131,8 @@ class ResourceCalendar : public KRES::Resource
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
     */
-    virtual Event::List rawEventsForDate( const QDate &date, bool sorted = false ) = 0;
+    virtual Event::List rawEventsForDate( const QDate &date,
+                                          bool sorted = false ) = 0;
 
     /**
       Get unfiltered events for date \a qdt.
@@ -132,46 +144,22 @@ class ResourceCalendar : public KRES::Resource
       only events are returned, which are completely included in the range.
     */
     virtual Event::List rawEvents( const QDate &start, const QDate &end,
-                               bool inclusive = false ) = 0;
-
-    /** Asynchronous functions */
-
-    /**
-      Request events for the given period (inclusive). This will result
-      in one or more eventsAdded() signals and, in the longer term, also
-      possibly in eventsModified() and eventsDeleted() signals.
-    */
-    // should be pure virtual
-//    virtual void subscribeEvents( const QDate& start, const QDate& end ) {};
-
-    /**
-      Stop receiving event signals for the given period (inclusive). After this call,
-      the calendar resource will no longer send eventsAdded, eventsModified or
-      eventsDeleted signals for events falling completely in this period. The resource
-      MAY delete the Events objects. The application MUST NOT dereference pointers 
-      to the relevant Events after this call.
-    */
-    // should be pure virtual
-//    virtual void unsubscribeEvents( const QDate& start, const QDate& end ) {};
+                                   bool inclusive = false ) = 0;
 
   signals:
-    // Maybe: make one signal, with bools or a flag for "is deleted" and "is new"?
-    /** These Events are added to the calendar, or they are in the calendar
-     * and I haven't yet told you about them
-     */
-    void eventsAdded( Event::List& events );
     /**
-     * The Events in events have been modified
-     */
-    void eventsModified( Event::List& events );
-    /**
-     * The Events in events have been deleted. Do not reference these
-     * events after this call.
-     */
-    void eventsDeleted( Event::List& events );
-
+      This signal is emitted when the data in the resource has changed.
+    */
     void resourceChanged( ResourceCalendar * );
+    /**
+      This signal is emitted when loading data into the resource has been
+      finished.
+    */
     void resourceLoaded( ResourceCalendar * );
+    /**
+      This signal is emitted when saving the data of the resource has been
+      finished.
+    */    
     void resourceSaved( ResourceCalendar * );
 
   public:
@@ -184,8 +172,9 @@ class ResourceCalendar : public KRES::Resource
     */
     virtual void deleteTodo( Todo * ) = 0;
     /**
-      Searches todolist for an event with this unique string identifier,
-      returns a pointer or null.
+      Searches todolist for an event with this unique id.
+
+      @return pointer to todo or 0 if todo wasn't found
     */
     virtual Todo *todo( const QString &uid ) = 0;
     /**
@@ -198,41 +187,62 @@ class ResourceCalendar : public KRES::Resource
     virtual Todo::List todos( const QDate &date ) = 0;
 
 
-    /** Add a Journal entry to calendar */
-    virtual bool addJournal(Journal *) = 0;
+    /**
+      Add a Journal entry to resource.
+    */
+    virtual bool addJournal( Journal * ) = 0;
 
-    /** Remove a Journal entry from calendar */
-    // virtual void deleteJournal(Journal *) = 0;
+    /**
+      Remove a Journal entry from calendar.
+    */
+    virtual void deleteJournal( Journal * ) = 0;
 
-    /** Return Journal for given date */
-    virtual Journal *journal(const QDate &) = 0;
+    /**
+      Return Journal for given date.
+    */
+    virtual Journal *journal( const QDate & ) = 0;
 
-    /** Return Journal with given UID */
-    virtual Journal *journal(const QString &UID) = 0;
+    /**
+      Return Journal with given unique id.
+    */
+    virtual Journal *journal( const QString &uid ) = 0;
 
-    /** Return list of all Journals stored in calendar */
+    /**
+      Return list of all Journals stored in calendar.
+    */
     virtual Journal::List journals() = 0;
 
 
-    /** Return all alarms, which ocur in the given time interval. */
-    virtual Alarm::List alarms( const QDateTime &from, const QDateTime &to ) = 0;
+    /**
+      Return all alarms, which ocur in the given time interval.
+    */
+    virtual Alarm::List alarms( const QDateTime &from,
+                                const QDateTime &to ) = 0;
 
-    /** Return all alarms, which ocur before given date. */
+    /**
+      Return all alarms, which ocur before given date.
+    */
     virtual Alarm::List alarmsTo( const QDateTime &to ) = 0;
-    
 
-    /** this method should be called whenever a Event is modified directly
-     * via it's pointer.  It makes sure that the calendar is internally
-     * consistent. */
-    virtual void update(IncidenceBase *incidence) = 0;
+
+    /**
+      This method should be called whenever a Event is modified directly
+      via it's pointer. It makes sure that the resource is internally
+      consistent.
+    */
+    virtual void update( IncidenceBase *incidence ) = 0;
 
     /** Returns a list of all incideces */
     Incidence::List rawIncidences();
-    
+
+    /**
+      Set time zone id used by this resource, e.g. "Europe/Berlin".
+    */    
     virtual void setTimeZoneId( const QString &tzid ) = 0;
 
-  protected:
-
+  private:
+    class Private;
+    Private *d;
 };
 
 typedef KRES::Manager<ResourceCalendar> CalendarResourceManager;

@@ -1,7 +1,7 @@
 /*
     This file is part of libkcal.
 
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -18,8 +18,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef ICALFORMATIMPL_H
-#define ICALFORMATIMPL_H
+#ifndef KCAL_ICALFORMATIMPL_H
+#define KCAL_ICALFORMATIMPL_H
 
 #include <qstring.h>
 #include <qdict.h>
@@ -37,9 +37,12 @@ namespace KCal {
 class Compat;
 
 /**
+  @internal
+
   This class provides the libical dependent functions for ICalFormat.
 */
-class ICalFormatImpl {
+class ICalFormatImpl
+{
   public:
     /** Create new iCal format for calendar object */
     ICalFormatImpl( ICalFormat *parent );
@@ -107,6 +110,9 @@ class ICalFormatImpl {
     static const int mSecondsPerMinute;
 
     Compat *mCompat;
+
+    class Private;
+    Private *d;
 };
 
 }

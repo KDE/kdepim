@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -17,12 +18,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-
-#ifndef EVENT_H
-#define EVENT_H
-//
-// Event component, representing a VEVENT object
-//
+#ifndef KCAL_EVENT_H
+#define KCAL_EVENT_H
 
 #include "incidence.h"
 
@@ -34,52 +31,92 @@ namespace KCal {
 class Event : public Incidence
 {
   public:
+    /**
+      Transparency of event.
+      
+      Opaque      - event appears in free/busy time
+      Transparent - event doesn't appear in free/busy time
+    */
     enum Transparency { Opaque, Transparent };
 
     typedef ListBase<Event> List;
 
     Event();
-    Event(const Event &);
+    Event( const Event & );
     ~Event();
-    bool operator==( const Event& ) const;
+    bool operator==( const Event & ) const;
 
     QCString type() const { return "Event"; }
 
+    /**
+      Return copy of this Event. The caller owns the returned objet.
+    */
     Event *clone();
 
-    /** for setting an event's ending date/time with a QDateTime. */
+    /**
+      Set end date and time.
+    */
     void setDtEnd(const QDateTime &dtEnd);
-    /** Return the event's ending date/time as a QDateTime. */
+    /**
+      Return end date and time.
+    */
     virtual QDateTime dtEnd() const;
-    /** returns an event's end time as a string formatted according to the
-     users locale settings */
+    /**
+      Return end time as string formatted according to the users locale
+      settings.
+    */
     QString dtEndTimeStr() const;
-    /** returns an event's end date as a string formatted according to the
-     users locale settings */
-    QString dtEndDateStr(bool shortfmt=true) const;
-    /** returns an event's end date and time as a string formatted according
-     to the users locale settings */
+    /**
+      Return end date as string formatted according to the users locale
+      settings.
+      
+      @param shortfmt if true return string in short format, if false return
+                      long format
+    */
+    QString dtEndDateStr( bool shortfmt = true ) const;
+    /**
+      Return end date and time as string formatted according to the users locale
+      settings.
+    */
     QString dtEndStr() const;
+
+    /**
+      Set whether the event has an end date/time.
+    */
     void setHasEndDate(bool);
-    /** Return whether the event has an end date/time. */
+    /**
+      Return whether the event has an end date/time.
+    */
     bool hasEndDate() const;
 
-    /** Return true if the event spans multiple days, otherwise return false. */
+    /**
+      Return true if the event spans multiple days, otherwise return false.
+    */
     bool isMultiDay() const;
 
-    /** set the event's time transparency level. */
-    void setTransparency(Transparency transparency);
-    /** get the event's time transparency level. */
+    /**
+      Set the event's time transparency level.
+    */
+    void setTransparency( Transparency transparency );
+    /**
+      Return the event's time transparency level.
+    */
     Transparency transparency() const;
 
-    void setDuration(int seconds);
+    /**
+      Set duration of this event.
+    */
+    void setDuration( int seconds );
 
   private:
-    bool accept(Visitor &v) { return v.visit(this); }
+    bool accept( Visitor &v ) { return v.visit( this ); }
 
     QDateTime mDtEnd;
     bool mHasEndDate;
     Transparency mTransparency;
+
+    class Private;
+    Private *d;
 };
 
 }

@@ -28,25 +28,27 @@
 namespace KCal {
 
 /**
- * This class represents information related to an attachment.
- */
+  This class represents information related to an attachment.
+*/
 class Attachment
 {
   public:
     typedef ListBase<Attachment> List;
 
     /**
-     * Create a Reference to some URI.
-     * @param uri the uri this attachment refers to
-     * @param mime the mime type of the resource being linked to
-     */
+      Create a Reference to some URI.
+      
+      @param uri the uri this attachment refers to
+      @param mime the mime type of the resource being linked to
+    */
     Attachment( const QString &uri, const QString &mime = QString::null );
 
     /**
-     * Create a binary attachment.
-     * @param base64 the attachment in base64 format
-     * @param mime the mime type of the attachment
-     */
+      Create a binary attachment.
+     
+      @param base64 the attachment in base64 format
+      @param mime the mime type of the attachment
+    */
     Attachment( const char *base64, const QString &mime = QString::null );
 
     /* The VALUE parameter in Cal */
@@ -66,6 +68,9 @@ class Attachment
     QString mMimeType;
     QString mData;
     bool mBinary;
+
+    class Private;
+    Private *d;
 };
 
 }

@@ -1,7 +1,8 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 1998 Preston Brown
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2002 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
@@ -56,8 +57,8 @@ class Recurrence
       bool negative;
     };
 
-    Recurrence(Incidence *parent, int compatVersion = 0);
-    Recurrence(const Recurrence&, Incidence *parent);
+    Recurrence( Incidence *parent, int compatVersion = 0 );
+    Recurrence( const Recurrence&, Incidence *parent );
     ~Recurrence();
 
     bool operator==( const Recurrence& ) const;
@@ -80,11 +81,9 @@ class Recurrence
      * or according to whether a time is specified in setRecurStart(). */
     void setFloats(bool f);
     /** 
-        Returns whether the recurrence has no time, just a date.
-     */
-    bool doesFloat() const    {
-        return mFloats;
-    }
+      Returns whether the recurrence has no time, just a date.
+    */
+    bool doesFloat() const { return mFloats; }
 
     /** Set if recurrence is read-only or can be changed. */
     void setRecurReadOnly(bool readOnly) { mRecurReadOnly = readOnly; }
@@ -408,6 +407,9 @@ class Recurrence
     int   mCompatDuration;               // original 'rDuration' in old calendar format, or 0
 
     Incidence *mParent;
+
+    class Private;
+    Private *d;
 };
 
 }

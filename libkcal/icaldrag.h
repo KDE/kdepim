@@ -1,7 +1,8 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 1998 Preston Brown
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,26 +20,38 @@
     Boston, MA 02111-1307, USA.
 */
 
-#ifndef ICALDRAG_H
-#define ICALDRAG_H
+#ifndef KCAL_ICALDRAG_H
+#define KCAL_ICALDRAG_H
 
 #include <qdragobject.h>
 #include "calendar.h"
 
 namespace KCal {
 
-/** iCalendar drag&drop class. */
+/**
+  iCalendar drag&drop class.
+*/
 class ICalDrag : public QStoredDrag
 {
   public:
-    /** Create a drag&drop object for iCalendar component \a ical. */
+    /**
+      Create a drag&drop object for iCalendar component \a ical.
+    */
     ICalDrag( Calendar *cal, QWidget *parent = 0, const char *name = 0 );
     ~ICalDrag() {};
 
-    /** Return, if drag&drop object can be decode to iCalendar. */
+    /**
+      Return, if drag&drop object can be decode to iCalendar.
+    */
     static bool canDecode( QMimeSource * );
-    /** Decode drag&drop object to iCalendar component \a cal. */
+    /**
+      Decode drag&drop object to iCalendar component \a cal.
+    */
     static bool decode( QMimeSource *e, Calendar *cal );
+
+  private:
+    class Private;
+    Private *d;
 };
 
 }

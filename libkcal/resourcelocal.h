@@ -38,7 +38,7 @@
 namespace KCal {
 
 /**
-  This class provides a calendar stored as a local file.
+  This class provides a calendar resource stored as a local file.
 */
 class ResourceLocal : public ResourceCached
 {
@@ -47,7 +47,13 @@ class ResourceLocal : public ResourceCached
     friend class ResourceLocalConfig;
 
   public:
+    /**
+      Create resource from configuration information stored in a KConfig object.
+    */
     ResourceLocal( const KConfig * );
+    /**
+      Create resource for file named @a fileName.
+    */
     ResourceLocal( const QString& fileName );
     virtual ~ResourceLocal();
 
@@ -70,22 +76,27 @@ class ResourceLocal : public ResourceCached
     /** clears out the current calendar, freeing all used memory etc. etc. */
     void doClose();
 
-    /** this method should be called whenever a Event is modified directly
-     * via it's pointer.  It makes sure that the calendar is internally
-     * consistent. */
-    virtual void update(IncidenceBase *incidence);
+    /**
+      This method should be called whenever a Event is modified directly
+      via it's pointer. It makes sure that the calendar is internally
+      consistent.
+    */
+    virtual void update( IncidenceBase *incidence );
  
   private:
     void init();
 
     KURL mURL;
-    CalFormat* mFormat;
+    CalFormat *mFormat;
 
     bool mOpen;
 
     KDirWatch mDirWatch;
 
     KABC::Lock *mLock;
+
+    class Private;
+    Private *d;
 };
 
 }

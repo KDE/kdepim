@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,9 +20,6 @@
 */
 #ifndef INCIDENCE_H
 #define INCIDENCE_H
-//
-// Incidence - base class of calendaring components
-//
 
 #include <qdatetime.h>
 #include <qstringlist.h>
@@ -120,10 +118,10 @@ class Incidence : public IncidenceBase
     typedef ListBase<Incidence> List;
 
     Incidence();
-    Incidence(const Incidence &);
+    Incidence( const Incidence & );
     ~Incidence();
 
-    bool operator==( const Incidence& ) const;
+    bool operator==( const Incidence & ) const;
 
     /**
       Accept IncidenceVisitor. A class taking part in the visitor mechanism has to
@@ -134,8 +132,17 @@ class Incidence : public IncidenceBase
     */
     virtual bool accept(Visitor &) { return false; }
 
+    /**
+      Return copy of this object. The returned object is owned by the caller.
+    */
     virtual Incidence *clone() = 0;
 
+    /**
+      Set readonly state of incidence.
+      
+      @param readonly If true, the incidence is set to readonly, if false the
+                      incidence is set to readwrite.
+    */
     void setReadOnly( bool );
 
     /**
@@ -145,139 +152,242 @@ class Incidence : public IncidenceBase
     */
     void recreate();
 
-    /** set creation date */
-    void setCreated(QDateTime);
-    /** return time and date of cration. */
+    /**
+      Set creation date.
+    */
+    void setCreated( const QDateTime & );
+    /**
+      Return time and date of creation.
+    */
     QDateTime created() const;
 
-    /** set the number of revisions this event has seen */
-    void setRevision(int rev);
-    /** return the number of revisions this event has seen */
+    /**
+      Set the number of revisions this event has seen.
+    */
+    void setRevision( int rev );
+    /**
+      Return the number of revisions this event has seen.
+    */
     int revision() const;
 
-    /** Set starting date/time. */
-    virtual void setDtStart(const QDateTime &dtStart);
-    /** Return the incidence's ending date/time as a QDateTime. */
+    /**
+      Set starting date/time.
+    */
+    virtual void setDtStart( const QDateTime &dtStart );
+    /**
+      Return the incidence's ending date/time as a QDateTime.
+    */
     virtual QDateTime dtEnd() const  { return QDateTime(); }
 
-    /** sets the event's lengthy description. */
-    void setDescription(const QString &description);
-    /** returns a reference to the event's description. */
+    /**
+      Set the long description.
+    */
+    void setDescription( const QString &description );
+    /**
+      Return long description.
+    */
     QString description() const;
 
-    /** sets the event's short summary. */
-    void setSummary(const QString &summary);
-    /** returns a reference to the event's summary. */
+    /**
+      Set short summary.
+    */
+    void setSummary( const QString &summary );
+    /**
+      Return short summary.
+    */
     QString summary() const;
 
-    /** set event's applicable categories */
-    void setCategories(const QStringList &categories);
-    /** set event's categories based on a comma delimited string */
+    /**
+      Set categories.
+    */
+    void setCategories( const QStringList &categories );
+    /**
+      Set categories based on a comma delimited string.
+    */
     void setCategories(const QString &catStr);
-    /** return categories in a list */
+    /**
+      Return categories as a list of strings.
+    */
     QStringList categories() const;
-    /** return categories as a comma separated string */
+    /**
+      Return categories as a comma separated string.
+    */
     QString categoriesStr();
 
-    /** point at some other event to which the event relates. This function should
-     *  only be used when constructing a calendar before the related Event
-     *  exists. */
+    /**
+      Point at some other event to which the event relates. This function should
+      only be used when constructing a calendar before the related Incidence
+      exists.
+    */
     void setRelatedToUid(const QString &);
-    /** what event does this one relate to? This function should
-     *  only be used when constructing a calendar before the related Event
-     *  exists. */
+    /**
+      What event does this one relate to? This function should
+      only be used when constructing a calendar before the related Incidence
+      exists.
+    */
     QString relatedToUid() const;
-    /** point at some other event to which the event relates */
+    /**
+      Point at some other event to which the event relates
+    */
     void setRelatedTo(Incidence *relatedTo);
-    /** what event does this one relate to? */
+    /**
+      What event does this one relate to?
+    */
     Incidence *relatedTo() const;
-    /** All events that are related to this event */
+    /**
+      All events that are related to this event.
+    */
     Incidence::List relations() const;
-    /** Add an event which is related to this event */
+    /**
+      Add an event which is related to this event.
+    */
     void addRelation(Incidence *);
-    /** Remove event that is related to this event */
+    /**
+      Remove event that is related to this event.
+    */
     void removeRelation(Incidence *);
 
-    /** returns the list of dates which are exceptions to the recurrence rule */
+    /**
+      Returns the list of dates which are exceptions to the recurrence rule.
+    */
     DateList exDates() const;
-    /** returns the list of date/times which are exceptions to the recurrence rule */
+    /**
+      Returns the list of date/times which are exceptions to the recurrence
+      rule.
+    */
     DateTimeList exDateTimes() const;
-    /** Sets the list of dates which are exceptions to the recurrence rule.
-      * This does not affect the date-time exception list. */
-    void setExDates(const DateList &_exDates);
-    void setExDates(const char *dates);
-    /** Sets the list of date/times which are exceptions to the recurrence rule.
-     * This does not affect the date-only exception list. */
-    void setExDateTimes(const DateTimeList &exDateTimes);
-    /** Add a date to the list of exceptions of the recurrence rule. */
-    void addExDate(const QDate &date);
-    /** Add a date/time to the list of exceptions of the recurrence rule. */
-    void addExDateTime(const QDateTime &dateTime);
+    /**
+      Sets the list of dates which are exceptions to the recurrence rule.
+      This does not affect the date-time exception list.
+    */
+    void setExDates( const DateList &exDates );
+    /**
+      Sets the list of date/times which are exceptions to the recurrence rule.
+     This does not affect the date-only exception list.
+    */
+    void setExDateTimes( const DateTimeList &exDateTimes );
+    /**
+      Add a date to the list of exceptions of the recurrence rule.
+    */
+    void addExDate( const QDate &date );
+    /**
+      Add a date/time to the list of exceptions of the recurrence rule.
+    */
+    void addExDateTime( const QDateTime &dateTime );
 
-    /** returns true if there is an exception for this date in the recurrence
-     rule set, or false otherwise. Does not check the date/time exception list. */
-    bool isException(const QDate &qd) const;
-    /** returns true if there is an exception for this date/time in the recurrence
-     * rule set, or false otherwise. Does not check the date-only exception list. */
-    bool isException(const QDateTime &qdt) const;
+    /**
+      Returns true if there is an exception for this date in the recurrence
+      rule set, or false otherwise. Does not check the date/time exception list.
+    */
+    bool isException( const QDate &qd ) const;
+    /**
+      Returns true if there is an exception for this date/time in the recurrence
+      rule set, or false otherwise. Does not check the date-only exception list.
+    */
+    bool isException( const QDateTime &qdt ) const;
 
-    /** add attachment to this event */
-    void addAttachment(Attachment *attachment);
-    /** remove and delete a specific attachment */
-    void deleteAttachment(Attachment *attachment);
-    /** remove and delete all attachments with this mime type */
-    void deleteAttachments(const QString& mime);
-    /** return list of all associated attachments */
+    /**
+      Add attachment.
+    */
+    void addAttachment( Attachment *attachment );
+    /**
+      Remove and delete a specific attachment.
+    */
+    void deleteAttachment( Attachment *attachment );
+    /**
+      Remove and delete all attachments with this mime type.
+    */
+    void deleteAttachments( const QString &mime );
+    /**
+      Return list of all associated attachments.
+    */
     Attachment::List attachments() const;
-    /** find a list of attachments with this mime type */
-    Attachment::List attachments(const QString& mime) const;
+    /** 
+      Find a list of attachments with this mime type.
+    */
+    Attachment::List attachments( const QString &mime ) const;
     /**
       Remove and delete all attachments.
     */
     void clearAttachments();
 
-    /** sets the event's status the value specified.  See the enumeration
-     * above for possible values. */
-    void setSecrecy(int);
-    /** return the event's secrecy. */
+    /**
+      Sets secrecy status. This can be Public, Private or Confidential. See
+      separate enum.
+    */
+    void setSecrecy( int );
+    /**
+      Return the event's secrecy.
+    */
     int secrecy() const;
-    /** return the event's secrecy in string format. */
+    /**
+      Return secrecy as translated string.
+    */
     QString secrecyStr() const;
-    /** return list of all availbale secrecy classes */
+    /**
+      Return list of all available secrecy states as list of translated strings.
+    */
     static QStringList secrecyList();
-    /** return human-readable name of secrecy class */
-    static QString secrecyName(int);
+    /** 
+      Return human-readable translated name of secrecy class.
+    */
+    static QString secrecyName( int );
 
-    /** returns TRUE if the date specified is one on which the event will
-     * recur. */
-    bool recursOn(const QDate &qd) const;
-    /** returns true if the date/time specified is one on which the event will
-     * recur. */
-    bool recursAt(const QDateTime &qdt) const;
+    /**
+      Returns true if the date specified is one on which the incidence will
+      recur.
+    */
+    bool recursOn( const QDate &qd ) const;
+    /**
+      Returns true if the date/time specified is one on which the incidence will
+      recur.
+    */
+    bool recursAt( const QDateTime &qdt ) const;
 
     // VEVENT and VTODO, but not VJOURNAL (move to EventBase class?):
 
-    /** set resources used, such as Office, Car, etc. */
-    void setResources(const QStringList &resources);
-    /** return list of current resources */
+    /**
+      Set resources used, such as Office, Car, etc.
+    */
+    void setResources( const QStringList &resources );
+    /**
+      Return list of current resources.
+    */
     QStringList resources() const;
 
-    /** set the event's priority, 0 is undefined, 1 highest (decreasing order) */
-    void setPriority(int priority);
-    /** get the event's priority */
+    /**
+      Set the incidences priority, 0 is undefined, 1 highest (decreasing order).
+    */
+    void setPriority( int priority );
+    /**
+      Return priority. The priority is a number between 1 and 5. 1 is highest
+      priority.
+    */
     int priority() const;
 
-    /** All alarms that are associated with this incidence */
+    /**
+      All alarms that are associated with this incidence.
+    */
     const Alarm::List &alarms() const;
-    /** Create a new alarm which is associated with this incidence */
+    /**
+      Create a new alarm which is associated with this incidence.
+    */
     Alarm *newAlarm();
-    /** Add an alarm which is associated with this incidence */
+    /**
+      Add an alarm which is associated with this incidence.
+    */
     void addAlarm( Alarm * );
-    /** Remove an alarm that is associated with this incidence */
+    /**
+      Remove an alarm that is associated with this incidence.
+    */
     void removeAlarm( Alarm * );
-    /** Remove all alarms that are associated with this incidence */
+    /**
+      Remove all alarms that are associated with this incidence.
+    */
     void clearAlarms();
-    /** return whether any alarm associated with this incidence is enabled */
+    /**
+      Return whether any alarm associated with this incidence is enabled.
+    */
     bool isAlarmEnabled() const;
 
     /**
@@ -291,9 +401,13 @@ class Incidence : public IncidenceBase
     */
     ushort doesRecur() const;
 
-    /** set the event's/todo's location. Do _not_ use it with journal */
+    /**
+      Set the event's/todo's location. Do _not_ use it with journal.
+    */
     void setLocation(const QString &location);
-    /** return the event's/todo's location. Do _not_ use it with journal */
+    /**
+      Return the event's/todo's location. Do _not_ use it with journal.
+    */
     QString location() const;
     
   private:
@@ -319,6 +433,9 @@ class Incidence : public IncidenceBase
     Recurrence *mRecurrence;
     
     QString mLocation;
+
+    class Private;
+    Private *d;
 };
 
 }

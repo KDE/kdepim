@@ -43,9 +43,13 @@ class ResourceCached : public ResourceCalendar
     ResourceCached( const KConfig * );
     virtual ~ResourceCached();
 
-    /** Add Event to calendar. */
+    /**
+      Add event to calendar.
+    */
     bool addEvent(Event *anEvent);
-    /** deletes an event from this calendar. */
+    /**
+      Deletes an event from this calendar.
+    */
     void deleteEvent(Event *);
 
     /**
@@ -55,7 +59,7 @@ class ResourceCached : public ResourceCalendar
     /**
       Return filtered list of all events in calendar.
     */
-//    Event::List events();
+    Event::List events();
     /**
       Return unfiltered list of all events in calendar.
     */
@@ -98,27 +102,48 @@ class ResourceCached : public ResourceCalendar
       Returns list of todos due on the specified date.
     */
     Todo::List todos( const QDate &date );
-    /** Add a Journal entry to calendar */
-    virtual bool addJournal(Journal *);
-    /** Remove a Journal from the calendar */
-    virtual void deleteJournal(Journal *);
-    /** Return Journal for given date */
-    virtual Journal *journal(const QDate &);
-    /** Return Journal with given UID */
-    virtual Journal *journal(const QString &UID);
-    /** Return list of all Journals stored in calendar */
+    /**
+      Add a Journal entry to calendar
+    */
+    virtual bool addJournal( Journal * );
+    /**
+      Remove a Journal from the calendar
+    */
+    virtual void deleteJournal( Journal * );
+    /**
+      Return Journal for given date.
+    */
+    virtual Journal *journal( const QDate & );
+    /**
+      Return Journal with given unique id.
+    */
+    virtual Journal *journal( const QString &uid );
+    /**
+      Return list of all Journals stored in calendar
+    */
     Journal::List journals();
 
-    /** Return all alarms, which ocur in the given time interval. */
+    /**
+      Return all alarms, which ocur in the given time interval.
+    */
     Alarm::List alarms( const QDateTime &from, const QDateTime &to );
 
-    /** Return all alarms, which ocur before given date. */
+    /**
+      Return all alarms, which ocur before given date.
+    */
     Alarm::List alarmsTo( const QDateTime &to );
 
+    /**
+      Set id of timezone, e.g. "Europe/Berlin"
+    */
     void setTimeZoneId( const QString& tzid );
   
   protected:
     CalendarLocal mCalendar;
+
+  private:
+    class Private;
+    Private *d;
 };
 
 }

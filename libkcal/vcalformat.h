@@ -1,7 +1,8 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 1998 Preston Brown
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -18,9 +19,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-
-#ifndef _VCALFORMAT_H
-#define _VCALFORMAT_H
+#ifndef KCAL_VCALFORMAT_H
+#define KCAL_VCALFORMAT_H
 
 #include "calformat.h"
 
@@ -40,21 +40,27 @@ namespace KCal {
 
   @short vCalendar format implementation
 */
-class VCalFormat : public CalFormat {
+class VCalFormat : public CalFormat
+{
   public:
     VCalFormat();
     virtual ~VCalFormat();
 
-   /** loads a calendar on disk in vCalendar format into the current calendar.
-     * any information already present is lost. Returns TRUE if successful,
-     * else returns FALSE.
-     * @param fileName the name of the calendar on disk.
-     */
-    bool load(Calendar *,const QString &fileName);
-    /** writes out the calendar to disk in vCalendar format. Returns true if
-     * successful and false on error.
-     * @param fileName the name of the file
-     */
+    /**
+      Loads a calendar on disk in vCalendar format into the given calendar.
+
+      @param calendar Calendar object the loaded data is stored into.
+      @param fileName Name of the vCalendar file on disk.
+      @return true on success, otherwise false  
+    */
+    bool load( Calendar *calendar, const QString &fileName );
+    /**
+      Writes out the given calendar to disk in vCalendar format.
+
+      @param calendar Calendar object holding data to be written
+      @param fileName the name of the file
+      @return true on success, otherwise false  
+    */
     bool save(Calendar *,const QString &fileName);
   
     /**
@@ -104,6 +110,9 @@ class VCalFormat : public CalFormat {
   
     Event::List mEventsRelate;           // events with relations
     Todo::List mTodosRelate;             // todos with relations
+
+    class Private;
+    Private *d;
 };
 
 }

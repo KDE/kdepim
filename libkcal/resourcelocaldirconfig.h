@@ -32,21 +32,31 @@
 
 namespace KCal {
 
+/**
+  \internal
+  
+  Configuration widget for local dir resource.
+  
+  @see ResourceLocalDir
+*/
 class ResourceLocalDirConfig : public KRES::ConfigWidget
 { 
     Q_OBJECT
   public:
-    ResourceLocalDirConfig( QWidget* parent = 0, const char* name = 0 );
+    ResourceLocalDirConfig( QWidget *parent = 0, const char *name = 0 );
 
   public slots:
     virtual void loadSettings( KRES::Resource *resource);
     virtual void saveSettings( KRES::Resource *resource );
 
   private:
-    KURLRequester* mURL;
-    QButtonGroup* formatGroup;
-    QRadioButton* icalButton;
-    QRadioButton* vcalButton;
+    KURLRequester *mURL;
+    QButtonGroup *formatGroup;
+    QRadioButton *icalButton;
+    QRadioButton *vcalButton;
+
+    class Private;
+    Private *d;
 };
 
 }

@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -17,11 +18,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef IMIPSCHEDULER_H
-#define IMIPSCHEDULER_H
-//
-// iMIP implementation of iTIP methods
-//
+#ifndef KCAL_IMIPSCHEDULER_H
+#define KCAL_IMIPSCHEDULER_H
 
 #include <qptrlist.h>
 
@@ -30,20 +28,27 @@
 namespace KCal {
 
 /*
+  \internal
+
   This class implements the iTIP interface using the email interface specified
   as iMIP.
 */
-class IMIPScheduler : public Scheduler {
+class IMIPScheduler : public Scheduler
+{
   public:
-    IMIPScheduler(Calendar *);
+    IMIPScheduler( Calendar * );
     virtual ~IMIPScheduler();
     
     bool publish (IncidenceBase *incidence,const QString &recipients);
     bool performTransaction(IncidenceBase *incidence,Method method);
     QPtrList<ScheduleMessage> retrieveTransactions();
+
+  private:
+    class Private;
+    Private *d;
 };
 
 }
 
-#endif  // IMIPSCHEDULER_H
+#endif
 

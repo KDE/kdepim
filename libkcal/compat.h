@@ -1,5 +1,6 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -28,12 +29,18 @@ namespace KCal {
 class Incidence;
 class Compat;
 
+/**
+  Factory for creating the right Compat object.
+*/
 class CompatFactory
 {
   public:
     static Compat *createCompat( const QString &productId );
 };
 
+/**
+  This class provides compatibility to older (broken) versions of KOrganizer.
+*/
 class Compat
 {
   public:
@@ -44,24 +51,40 @@ class Compat
     virtual void fixEmptySummary( Incidence * );
     virtual void fixFloatingEnd( QDate & ) {}
     virtual bool useTimeZoneShift() { return true; }
+
+  private:
+    class Private;
+    Private *d;
 };
 
 class CompatPre32 : public Compat
 {
   public:
     virtual void fixRecurrence( Incidence * );
+
+  private:
+    class Private;
+    Private *d;
 };
 
 class CompatPre31 : public CompatPre32
 {
   public:
     virtual void fixFloatingEnd( QDate & );
+
+  private:
+    class Private;
+    Private *d;
 };
 
 class Compat32PrereleaseVersions : public Compat
 {
   public:
     virtual bool useTimeZoneShift() { return false; }
+
+  private:
+    class Private;
+    Private *d;
 };
 
 }

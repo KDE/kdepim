@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2002,2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -35,13 +36,13 @@ class FileStorage : public CalStorage
     virtual ~FileStorage();
 
     void setFileName( const QString &mFileName );
-    QString fileName()const;
+    QString fileName() const;
 
     /**
       FileStorage takes ownership of format object.
     */
     void setSaveFormat( CalFormat * );
-    CalFormat *saveFormat()const;
+    CalFormat *saveFormat() const;
 
     bool open();
     bool load();
@@ -51,6 +52,9 @@ class FileStorage : public CalStorage
   private:
     QString mFileName;
     CalFormat *mSaveFormat;
+
+    class Private;
+    Private *d;
 };
 
 }

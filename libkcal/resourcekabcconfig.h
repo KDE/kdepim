@@ -32,6 +32,11 @@
 
 namespace KCal {
 
+/**
+  Configuration widget for birtday/anniversaries resource.
+  
+  @see ResourceKABC
+*/
 class ResourceKABCConfig : public KRES::ConfigWidget
 {
     Q_OBJECT
@@ -49,6 +54,9 @@ class ResourceKABCConfig : public KRES::ConfigWidget
     QCheckBox *mAlarm;
     KRestrictedLine *mAlarmTimeEdit;
     QLabel *mALabel;
+
+    class Private;
+    Private *d;
 };
 
 }

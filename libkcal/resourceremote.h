@@ -52,14 +52,28 @@ class ResourceRemote : public ResourceCached
     friend class ResourceRemoteConfig;
 
   public:
+    /**
+      Reload policy.
+      
+      @see setReloadPolicy(), reloadPolicy()
+    */
     enum { ReloadNever, ReloadOnStartup, ReloadOnceADay, ReloadAlways };
   
+    /**
+      Create resource from configuration information stored in KConfig object.
+    */
     ResourceRemote( const KConfig * );
+    /**
+      Create remote resource.
+      
+      @param downloadUrl URL used to download iCalendar file
+      @param uploadUrl   URL used to upload iCalendar file
+    */
     ResourceRemote( const KURL &downloadUrl, const KURL &uploadUrl = KURL() );
     virtual ~ResourceRemote();
 
     void readConfig( const KConfig *config );
-    void writeConfig( KConfig* config );
+    void writeConfig( KConfig *config );
 
     void setDownloadUrl( const KURL & );
     KURL downloadUrl() const;
@@ -67,9 +81,25 @@ class ResourceRemote : public ResourceCached
     void setUploadUrl( const KURL & );
     KURL uploadUrl() const;
 
-    void setReloadPolicy( int );
+    /**
+      Set reload policy. This controls when the remote file is downloaded.
+
+      ReloadNever     never reload
+      ReloadOnStartup reload when resource is loaded
+      ReloadOnceADay  reload once a day
+      ReloadAlways    reload whenever the resource is accessed
+    */
+    void setReloadPolicy( int policy );
+    /**
+      Return reload policy.
+      
+      @see setReloadPolicy()
+    */
     int reloadPolicy() const;
 
+    /**
+      Return name of file used as cache for remote file.
+    */
     QString cacheFile();
 
     bool load();
@@ -113,6 +143,9 @@ class ResourceRemote : public ResourceCached
     KIO::FileCopyJob *mUploadJob;
     
     KABC::Lock *mLock;
+
+    class Private;
+    Private *d;
 };
 
 }

@@ -237,7 +237,7 @@ Attendee *IncidenceBase::attendeeByMail( const QString &email )
 }
 
 Attendee *IncidenceBase::attendeeByMails( const QStringList &emails,
-                                          const QString& email)
+                                          const QString &email)
 {
   QStringList mails = emails;
   if ( !email.isEmpty() ) mails.append( email );

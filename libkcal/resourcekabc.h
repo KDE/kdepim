@@ -41,7 +41,7 @@ class Job;
 namespace KCal {
 
 /**
-  This class provides a calendar stored as a remote file.
+  Resource providing birthdays and anniversaries as events.
 */
 class ResourceKABC : public ResourceCalendar
 {
@@ -102,7 +102,7 @@ class ResourceKABC : public ResourceCalendar
       only events are returned, which are completely included in the range.
     */
     Event::List rawEvents( const QDate &start, const QDate &end,
-                               bool inclusive = false );
+                           bool inclusive = false );
 
 
     /*
@@ -181,6 +181,9 @@ class ResourceKABC : public ResourceCalendar
     KABC::AddressBook *mAddressbook;
     
     KABC::Lock *mLock;
+
+    class Private;
+    Private *d;
 };
 
 }

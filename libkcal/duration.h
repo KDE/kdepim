@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -24,6 +25,9 @@
 
 namespace KCal {
 
+/**
+  This class represents a duration.
+*/
 class Duration
 {
   public:
@@ -37,11 +41,16 @@ class Duration
 
   private:
     int mSeconds;
+
+    class Private;
+    Private *d;
 };
 
-    bool operator==( const Duration&, const Duration& );
-    inline bool operator!=( const Duration &d1, const Duration &d2 )
-                { return !operator==( d1, d2 ); }
+bool operator==( const Duration&, const Duration& );
+inline bool operator!=( const Duration &d1, const Duration &d2 )
+{
+  return !operator==( d1, d2 );
+}
 
 }
 

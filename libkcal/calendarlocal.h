@@ -213,6 +213,9 @@ class CalendarLocal : public Calendar
     Event::List mEventList;
     Todo::List mTodoList;
     Journal::List mJournalList;
+
+    class Private;
+    Private *d;
 };
 
 }

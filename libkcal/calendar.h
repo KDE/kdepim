@@ -338,6 +338,9 @@ class Calendar : public QObject, public CustomProperties,
     // This list is used to put together related todos
     QDict<Incidence> mOrphans;
     QDict<Incidence> mOrphanUids;
+
+    class Private;
+    Private *d;
 };
   
 }

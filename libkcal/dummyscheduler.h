@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,19 +20,19 @@
 */
 #ifndef DUMMYSCHEDULER_H
 #define DUMMYSCHEDULER_H
-//
-// Dummy implementation of iTIP methods
-//
 
 #include "scheduler.h"
 
 namespace KCal {
 
 /**
+  \internal
+
   This class implements the iTIP interface as a primitive local version for
   testing. It uses a file dummyscheduler.store as inbox/outbox.
 */
-class DummyScheduler : public Scheduler {
+class DummyScheduler : public Scheduler
+{
   public:
     DummyScheduler(Calendar *);
     virtual ~DummyScheduler();
@@ -45,9 +46,13 @@ class DummyScheduler : public Scheduler {
   
   protected:
     bool saveMessage(const QString &);
+
+  private:
+    class Private;
+    Private *d;
 };
 
 }
 
-#endif  // DUMMYSCHEDULER_H
+#endif
 

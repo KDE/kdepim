@@ -85,6 +85,9 @@ class CalendarNull : public Calendar
 
   private:
     static CalendarNull *mSelf;
+
+    class Private;
+    Private *d;
 };
   
 }

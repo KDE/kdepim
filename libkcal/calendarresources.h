@@ -1,7 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 1998 Preston Brown
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -65,6 +65,10 @@ class CalendarResources : public Calendar,
           : DestinationPolicy( manager ) {}
 
         ResourceCalendar *destination( Incidence * );
+
+      private:
+        class Private;
+        Private *d;
     };
 
     class AskDestinationPolicy : public DestinationPolicy
@@ -78,6 +82,9 @@ class CalendarResources : public Calendar,
 
       private:
         QWidget *mParent;
+
+        class Private;
+        Private *d;
     };
 
     class Ticket
@@ -90,6 +97,9 @@ class CalendarResources : public Calendar,
         Ticket( ResourceCalendar *r ) : mResource( r ) {}
     
         ResourceCalendar *mResource;
+
+        class Private;
+        Private *d;
     };
 
     /** constructs a new calendar that uses the ResourceManager for "calendar" */
@@ -272,6 +282,9 @@ class CalendarResources : public Calendar,
 
     QMap<ResourceCalendar *, Ticket *> mTickets;
     QMap<ResourceCalendar *, int> mChangeCounts;
+
+    class Private;
+    Private *d;
 };
 
 }

@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -17,11 +18,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef TODO_H
-#define TODO_H
-//
-// Todo component, representing a VTODO object
-//
+#ifndef KCAL_TODO_H
+#define KCAL_TODO_H
 
 #include "incidence.h"
 
@@ -36,55 +34,78 @@ class Todo : public Incidence
     typedef ListBase<Todo> List;
 
     Todo();
-    Todo(const Todo &);
+    Todo( const Todo & );
     ~Todo();
     bool operator==( const Todo& ) const;
 
     QCString type() const { return "Todo"; }
 
-    /** Return an exact copy of this todo. */
+    /**
+      Return an exact copy of this todo. The returned object is owned by the
+      caller.
+    */
     Todo *clone();
 
-    /** for setting the todo's due date/time with a QDateTime. */
+    /**
+      Set due date and time.
+    */
     void setDtDue(const QDateTime &dtDue);
-    /** returns an event's Due date/time as a QDateTime. */
+    /**
+      Return due date and time.
+    */
     QDateTime dtDue() const;
-    /** returns an event's due time as a string formatted according to the
-     users locale settings */
+    /**
+      Return due time as string formatted according to the users locale
+      settings.
+    */
     QString dtDueTimeStr() const;
-    /** returns an event's due date as a string formatted according to the
-     users locale settings */
-    QString dtDueDateStr(bool shortfmt=true) const;
-    /** returns an event's due date and time as a string formatted according
-     to the users locale settings */
+    /**
+      Return due date as string formatted according to the users locale
+      settings.
+      
+      @param shortfmt If set to true, use short date format, if set to false use
+                      long format.
+    */
+    QString dtDueDateStr( bool shortfmt = true ) const;
+    /**
+      Return due date and time as string formatted according to the users locale
+      settings.
+    */
     QString dtDueStr() const;
 
-    /** returns TRUE or FALSE depending on whether the todo has a due date */
+    /**
+      Return true if the todo has a due date, otherwise return false.
+    */
     bool hasDueDate() const;
-    /** sets the event's hasDueDate value. */
-    void setHasDueDate(bool f);
+    /**
+      Set if the todo has a due date.
+      
+      @param hasDueDate true if todo has a due date, otherwise false
+    */
+    void setHasDueDate( bool hasDueDate );
 
-    /** returns TRUE or FALSE depending on whether the todo has a start date */
+    /**
+      Return true if the todo has a start date, otherwise return false.
+    */
     bool hasStartDate() const;
-    /** sets the event's hasStartDate value. */
-    void setHasStartDate(bool f);
+    /**
+      Set if the todo has a start date.
+      
+      @param hasDueDate true if todo has a start date, otherwise false
+    */
+    void setHasStartDate( bool hasStartDate );
 
-    /** sets the event's status to the string specified.  The string
-     * must be a recognized value for the status field, i.e. a string
-     * equivalent of the possible status enumerations previously described. */
-//    void setStatus(const QString &statStr);
-    /** sets the event's status to the value specified.  See the enumeration
-     * above for possible values. */
-//    void setStatus(int);
-    /** return the event's status. */
-//    int status() const;
-    /** return the event's status in string format. */
-//    QString statusStr() const;
-
-    /** return, if this todo is completed */
+    /**
+      Return true if the todo is 100% completed, otherwise return false.
+    */
     bool isCompleted() const;
-    /** set completed state of this todo */
-    void setCompleted(bool);
+    /**
+      Set completed state.
+      
+      @param completed If true set completed state to 100%, if false set
+                       completed state to 0%.
+    */
+    void setCompleted( bool completed );
     
     /**
       Return how many percent of the task are completed. Returns a value
@@ -95,31 +116,43 @@ class Todo : public Incidence
       Set how many percent of the task are completed. Valid values are in the
       range from 0 to 100.
     */
-    void setPercentComplete(int);
+    void setPercentComplete( int );
 
-    /** return date and time when todo was completed */
+    /**
+      Return date and time when todo was completed.
+    */
     QDateTime completed() const;
+    /**
+      Return string contaiting date and time when the todo was completed
+      formatted according to the users locale settings.
+    */
     QString completedStr() const;
-    /** set date and time of completion */
-    void setCompleted(const QDateTime &completed);
+    /**
+      Set date and time of completion.
+    */
+    void setCompleted( const QDateTime &completed );
 
-    /** Return true, if todo has a date associated with completion */
+    /**
+      Return true, if todo has a date associated with completion, otherwise
+      return false.
+    */
     bool hasCompletedDate() const;
     
   private:
-    bool accept(Visitor &v) { return v.visit(this); }
+    bool accept(Visitor &v) { return v.visit( this ); }
 
-    QDateTime mDtDue;                     // due date of todo
+    QDateTime mDtDue;                    // due date of todo
 
     bool mHasDueDate;                    // if todo has associated due date
     bool mHasStartDate;                  // if todo has associated start date
-
-//    int  mStatus;                         // confirmed/delegated/tentative/etc
 
     QDateTime mCompleted;
     bool mHasCompletedDate;
 
     int mPercentComplete;
+
+    class Private;
+    Private *d;
 };
 
 }
