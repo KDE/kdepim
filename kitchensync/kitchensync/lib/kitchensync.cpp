@@ -84,19 +84,11 @@ kdbgstream operator<<( kdbgstream str, const Notify& no )
 KitchenSync::KitchenSync( ActionManager *actionManager, QWidget *parent )
   : Core( parent ), mActionManager( actionManager ), m_profileManager( 0 )
 {
+
+
   m_syncUi = 0;
-
   m_partsIt = 0;
-
   m_isSyncing = false;
-
-#if 0
-  initActions();
-  setXMLFile("ksyncgui.rc");
-  setInstance( KGlobal::instance() );
-
-  createGUI( 0 );
-#endif
 
   QBoxLayout *topLayout = new QHBoxLayout( this );
 
@@ -133,14 +125,21 @@ KitchenSync::KitchenSync( ActionManager *actionManager, QWidget *parent )
            mEngine, SLOT( slotSynceesWritten( Konnector * ) ) );
   connect( m, SIGNAL( synceeWriteError( Konnector * ) ),
            mEngine, SLOT( slotSynceeWriteError( Konnector * ) ) );
+
+  connect( mEngine, SIGNAL(doneSync()),
+           this, SIGNAL(doneSync()));
 }
 
 KitchenSync::~KitchenSync()
 {
   writeProfileConfig();
-
   m_profileManager->save();
 
+  /*
+   * delete the parts before the currentProfile() so Parts
+   * can safe on destruction
+   */
+  m_parts.clear();
   delete m_profileManager;
 }
 
@@ -397,7 +396,7 @@ void KitchenSync::configureCurrentProfile()
     for (part = m_parts.first(); part != 0; part = m_parts.next() ) {
         if( part->configIsVisible() )
             dlg->addWidget(part->configWidget(),
-                           part->name(),
+                           part->title(),
                            part->pixmap() );
     }
     if (dlg->exec()) {
