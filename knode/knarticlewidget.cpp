@@ -80,7 +80,12 @@ KNSourceViewWindow::KNSourceViewWindow(const QString &htmlCode)
   browser->setLinkColor(app->linkColor());
   browser->setFont(knGlobals.cfgManager->appearance()->articleFont());
 
-  browser->setText(htmlCode);
+  QStyleSheetItem *style;
+  style=new QStyleSheetItem(browser->styleSheet(), "txt");
+  style->setDisplayMode(QStyleSheetItem::DisplayBlock);
+  style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpacePre);
+
+  browser->setText(QString("<qt><txt>%1</txt></qt>").arg(htmlCode));
   restoreWindowSize("sourceWindow", this, QSize(500,300));
   show();
 }
@@ -101,15 +106,19 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
   i_nstances.append(this);
   setNotifyClick( true );
 
-  //custom tags <bodyblock> , <headerblock>
+  //custom tags <bodyblock> , <headerblock>, <txt_attachment>
   QStyleSheetItem *style;
   style=new QStyleSheetItem(styleSheet(), "bodyblock");
   style->setDisplayMode(QStyleSheetItem::DisplayBlock);
   style->setMargin(QStyleSheetItem::MarginAll, 5);
+  style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpacePre);
   style=new QStyleSheetItem(styleSheet(), "headerblock");
   style->setDisplayMode(QStyleSheetItem::DisplayBlock);
   style->setMargin(QStyleSheetItem::MarginLeft, 10);
   style->setMargin(QStyleSheetItem::MarginVertical, 2);
+  style=new QStyleSheetItem(styleSheet(), "txt_attachment");
+  style->setDisplayMode(QStyleSheetItem::DisplayBlock);
+  style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpacePre);
 
   setFocusPolicy(QWidget::WheelFocus);
 
@@ -303,7 +312,6 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
   QRegExp regExp;
   uint len=line.length();
   int matchLen;
-  bool forceNBSP=false; //use "&nbsp;" for spaces => workaround for a bug in QTextBrowser
 
   if (allowRot13 && r_ot13)
     text = rot13(line);
@@ -324,26 +332,8 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case '>' :  lastReplacement=idx; result+="&gt;"; break;
       case '&' :  lastReplacement=idx; result+="&amp;"; break;
       case '"' :  lastReplacement=idx; result+="&quot;"; break;
-      case '\t':  lastReplacement=idx; result+="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; break;   // tab == 8 spaces
+      case '\t':  lastReplacement=idx; result+="        "; break;   // tab == 8 spaces
       
-      case 32 :
-        if(text[idx+1].latin1()==32)  {
-          while(text[idx].latin1()==32) {
-            result+="&nbsp;";
-            idx++;
-
-          }
-          idx--;
-          forceNBSP=true; // force &nbsp; for the rest of this line
-        } else
-          if(idx==0 || forceNBSP) {
-            result+="&nbsp;";
-            forceNBSP=true; // force &nbsp; for the rest of this line
-          }
-          else result+=' ';
-        lastReplacement=idx;
-        break;
-
       case '@' :            // email-addresses or message-ids
         if (parseURLs) {
           uint startIdx = idx;
@@ -720,9 +710,9 @@ void KNArticleWidget::processJob(KNJobData *j)
     if (!j->canceled()) {
       QString html;
       if (!j->success())
-        html= "<qt>"+i18n("<b><font size=+1 color=red>An error occured!</font></b><hr><br>")+j->errorString()+"</qt>";
+        html= i18n("<b><font size=+1 color=red>An error occured!</font></b><hr><br>")+j->errorString();
       else
-        html= QString("<qt>%1<br>%2</qt>").arg(toHtmlString(a->head(),false,false)).arg(toHtmlString(a->body(),false,false));
+        html= QString("%1<br>%2").arg(toHtmlString(a->head(),false,false)).arg(toHtmlString(a->body(),false,false));
 
       new KNSourceViewWindow(html);
     }
@@ -1009,8 +999,7 @@ void KNArticleWidget::createHtmlPage()
             if(ct->isHTMLText())
               html+=tmp;
             else
-              //html+="<pre>"+toHtmlString(tmp,true,false,true)+"</pre>";
-              html+="<pre>"+tmp+"</pre>";
+              html+="<txt_attachment>"+toHtmlString(tmp,true)+"</txt_attachment>";
           }
           html+="</td></tr>";
         }
@@ -1380,7 +1369,7 @@ void KNArticleWidget::slotViewSource()
 {
   kdDebug(5003) << "KNArticleWidget::slotViewSource()" << endl;
   if (a_rticle && a_rticle->type()==KNMimeBase::ATlocal && a_rticle->hasContent()) {
-    new KNSourceViewWindow(QString("<qt>%1</qt>").arg(toHtmlString(a_rticle->encodedContent(false),false,false)));
+    new KNSourceViewWindow(toHtmlString(a_rticle->encodedContent(false),false,false));
   } else {
     if (a_rticle && a_rticle->type()==KNMimeBase::ATremote) {
       KNGroup *g=static_cast<KNGroup*>(a_rticle->collection());
