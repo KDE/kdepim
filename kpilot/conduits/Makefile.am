@@ -21,3 +21,13 @@ SUBDIRS = \
           timeconduit \
           sysinfoconduit \
           $(MAL_SUBDIR) $(ABC_SUBDIR)
+
+###
+### Subdirs you might have for experimental purposes:
+###
+###	null        - a conduit that just logs a single message
+###	perlconduit - fires off a perl interpreter in a thread.
+###                   Possibly useful for plucker.
+###
+
+
