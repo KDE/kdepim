@@ -331,7 +331,10 @@ void Incidence::saveTo( KCal::Incidence* incidence )
 
   // TODO: Alarm and recurrence
 
-  incidence->setDtStart( startDate() );
+  QDateTime start = startDate();
+  incidence->setDtStart( start );
+  incidence->setFloats( start.time().isNull() );
+
   incidence->setSummary( summary() );
   incidence->setLocation( location() );
   incidence->setOrganizer( organizer().displayName + "<"
