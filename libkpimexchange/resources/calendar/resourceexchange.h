@@ -53,6 +53,8 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
 
     virtual void writeConfig( KConfig* config );
 
+    virtual bool load();
+
     /**
      Writes calendar to storage. Writes calendar to disk file,
      writes updates to server, whatever.

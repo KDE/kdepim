@@ -151,6 +151,11 @@ void ResourceExchange::doClose()
 //  setModified( false );
 }
 
+bool ResourceExchange::load()
+{
+  return true;
+}
+
 bool ResourceExchange::sync()
 {
   return true;
