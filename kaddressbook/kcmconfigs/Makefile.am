@@ -1,4 +1,4 @@
-INCLUDES= -I$(top_srcdir)/kaddressbook -I$(top_srcdir)/kaddressbook/interfaces \
+INCLUDES= -I$(top_builddir)/kaddressbook -I$(top_srcdir)/kaddressbook -I$(top_srcdir)/kaddressbook/interfaces \
           -I$(top_srcdir) $(all_includes)
 
 kde_module_LTLIBRARIES = kcm_kabconfig.la kcm_kabldapconfig.la \
