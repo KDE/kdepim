@@ -71,14 +71,16 @@ struct AddressesDialog::AddressesDialogPrivate {
 };
 // privates end
 
-AddresseeViewItem::AddresseeViewItem( AddresseeViewItem *parent, const KABC::Addressee& addr )
-  : QObject(0), KListViewItem( parent, addr.realName(), addr.preferredEmail() )
+AddresseeViewItem::AddresseeViewItem( AddresseeViewItem *parent, const KABC::Addressee& addr,
+                                      int emailIndex )
+  : QObject( 0 ), KListViewItem( parent, addr.realName(),
+                               ( emailIndex == 0 ? addr.preferredEmail() : addr.emails()[ emailIndex ] ) )
 {
   d = new AddresseeViewItemPrivate;
   d->address = addr;
   d->category = Entry;
 
-  if ( text(0).stripWhiteSpace().isEmpty() )
+  if ( text( 0 ).stripWhiteSpace().isEmpty() )
     setText( 0, addr.preferredEmail() );
 
   if ( addr.photo().url().isEmpty() ) {
@@ -525,7 +527,7 @@ AddressesDialog::selectedAddressSelected( AddresseeViewItem* item, bool selected
   else
   {
     selectedSelectedAddresses.remove(item);
-  } 
+  }
   if ( selected ) {
     AddresseeViewItem* child = static_cast<AddresseeViewItem*>(item->firstChild());
     while (child) {
@@ -548,8 +550,6 @@ AddressesDialog::initConnections()
            SLOT(addSelectedBCC())  );
   connect( d->ui->mSaveAs, SIGNAL(clicked()),
            SLOT(saveAs())  );
-  connect( d->ui->mAddressBook, SIGNAL(clicked()),
-           SLOT(launchAddressBook())  );
   connect( d->ui->mRemoveButton, SIGNAL(clicked()),
            SLOT(removeEntry()) );
   connect( d->ui->mAvailableView, SIGNAL(selectionChanged()),
@@ -569,24 +569,36 @@ AddressesDialog::initConnections()
 }
 
 void
-AddressesDialog::addAddresseeToAvailable( const KABC::Addressee& addr, AddresseeViewItem* defaultParent )
+AddressesDialog::addAddresseeToAvailable( const KABC::Addressee& addr, AddresseeViewItem* defaultParent, bool useCategory )
 {
   if ( addr.preferredEmail().isEmpty() )
     return;
 
-  QStringList categories = addr.categories();
+  if ( useCategory ) {
+    QStringList categories = addr.categories();
 
-  for ( QStringList::Iterator it = categories.begin(); it != categories.end(); ++it ) {
-    if ( !d->groupDict[ *it ] ) {  //we don't have the category yet
-      AddresseeViewItem* category = new AddresseeViewItem( d->ui->mAvailableView, *it );
-      d->groupDict.insert( *it,  category );
+    for ( QStringList::Iterator it = categories.begin(); it != categories.end(); ++it ) {
+      if ( !d->groupDict[ *it ] ) {  //we don't have the category yet
+        AddresseeViewItem* category = new AddresseeViewItem( d->ui->mAvailableView, *it );
+        d->groupDict.insert( *it,  category );
+      }
+
+      for ( uint i = 0; i < addr.emails().count(); ++i ) {
+        AddresseeViewItem* addressee = new AddresseeViewItem( d->groupDict[ *it ], addr, i );
+        connect(addressee, SIGNAL(addressSelected(AddresseeViewItem*, bool)),
+                this, SLOT(availableAddressSelected(AddresseeViewItem*, bool)));
+      }
     }
-    AddresseeViewItem* addressee = new AddresseeViewItem( d->groupDict[ *it ], addr );
-    connect(addressee, SIGNAL(addressSelected(AddresseeViewItem*, bool)),
-            this, SLOT(availableAddressSelected(AddresseeViewItem*, bool)));
   }
 
-  if ( defaultParent && categories.isEmpty() ) { // only non-categorized items here
+  bool noCategory = false;
+  if ( useCategory ) {
+    if ( addr.categories().isEmpty() )
+      noCategory = true;
+  } else
+    noCategory = true;
+
+  if ( defaultParent && noCategory ) { // only non-categorized items here
     AddresseeViewItem* addressee = new AddresseeViewItem( defaultParent, addr );
     connect(addressee, SIGNAL(addressSelected(AddresseeViewItem*, bool)),
             this, SLOT(availableAddressSelected(AddresseeViewItem*, bool)));
@@ -748,7 +760,7 @@ void AddressesDialog::unmapSelectedAddress(AddresseeViewItem* item)
     selectedToAvailableMapping.remove( item );
     selectedToAvailableMapping.remove( correspondingItem );
   }
-    
+
   AddresseeViewItem* child = static_cast<AddresseeViewItem*>(item->firstChild());
   while (child)
   {
@@ -810,7 +822,7 @@ AddressesDialog::removeEntry()
 void
 AddressesDialog::saveAs()
 {
-  KABC::DistributionListManager manager( KABC::StdAddressBook::self() );
+  KABC::DistributionListManager manager( KABC::StdAddressBook::self( true ) );
   manager.load();
 
   if ( !d->ui->mSelectedView->firstChild() ) {
@@ -952,7 +964,7 @@ AddressesDialog::allDistributionLists( AddresseeViewItem* parent ) const
 void
 AddressesDialog::addDistributionLists()
 {
-  KABC::DistributionListManager manager( KABC::StdAddressBook::self() );
+  KABC::DistributionListManager manager( KABC::StdAddressBook::self( true ) );
   manager.load();
 
   QStringList distLists = manager.listNames();
@@ -973,7 +985,7 @@ AddressesDialog::addDistributionLists()
 
     KABC::DistributionList::Entry::List::Iterator itemIt;
     for ( itemIt = entries.begin(); itemIt != entries.end(); ++itemIt )
-      addAddresseeToAvailable( (*itemIt).addressee, item );
+      addAddresseeToAvailable( (*itemIt).addressee, item, false );
   }
 }
 

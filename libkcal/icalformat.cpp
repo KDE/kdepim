@@ -376,14 +376,23 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   }
 
   if (!incidence) {
+    c = icalcomponent_get_first_component(message,ICAL_VJOURNAL_COMPONENT);
+    if (c) {
+      incidence = mImpl->readJournal(c);
+    }
+  }
+	
+  if (!incidence) {
     c = icalcomponent_get_first_component(message,ICAL_VFREEBUSY_COMPONENT);
     if (c) {
       incidence = mImpl->readFreeBusy(c);
     }
   }
+	
+	
 
   if (!incidence) {
-    kdDebug(5800) << "ICalFormat:parseScheduleMessage: object is not a freebusy, event or todo" << endl;
+    kdDebug(5800) << "ICalFormat:parseScheduleMessage: object is not a freebusy, event, todo or journal" << endl;
     return 0;
   }
 
@@ -434,9 +443,10 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
 
   icalcomponent *calendarComponent = mImpl->createCalendarComponent(cal);
 
-  Incidence *existingIncidence = cal->event(incidence->uid());
+  Incidence *existingIncidence = cal->incidence(incidence->uid());
   if (existingIncidence) {
     // TODO: check, if cast is required, or if it can be done by virtual funcs.
+    // TODO: Use a visitor for this!
     if (existingIncidence->type() == "Todo") {
       Todo *todo = static_cast<Todo *>(existingIncidence);
       icalcomponent_add_component(calendarComponent,
