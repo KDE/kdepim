@@ -127,6 +127,8 @@ void KNCollectionView::readConfig()
   setAlternateBackground( app->backgroundColor() );
   // FIXME: make this configurable
   mPaintInfo.colUnread = QColor( "blue" );
+  mPaintInfo.colFore = app->textColor();
+  mPaintInfo.colBack = app->backgroundColor();
 }
 
 
