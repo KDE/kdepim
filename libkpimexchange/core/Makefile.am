@@ -9,7 +9,7 @@ INCLUDES = -I$(top_srcdir)/korganizer/interfaces -I$(top_srcdir) \
     -I$(top_builddir)/libical/src/libical -I$(top_builddir)/libical/src/libicalss \
     $(all_includes)
 
-#     -I$(top_srcdir)/libkdepim/resources -I$(top_srcdir)/libkdepim/resources/calendar \
+#     -I$(top_srcdir)/libkdepim/resources -I$(top_srcdir)/libkdepim/resources/calendar
 
 noinst_LTLIBRARIES = libkpimexchangecore.la
 
