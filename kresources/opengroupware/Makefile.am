@@ -38,8 +38,7 @@ kabc_opengroupware_la_SOURCES = kabc_resourceopengroupware_plugin.cpp
 kabc_opengroupware_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
 kabc_opengroupware_la_LIBADD = libkabc_opengroupware.la
 
-kcal_resourceopengroupware_plugin.cpp: kcal_opengroupwareprefsbase.h
-kabc_resourceopengroupware_plugin.cpp: kcal_opengroupwareprefsbase.h
+kcal_resourceopengroupware_plugin.lo: kcal_opengroupwareprefsbase.h
 
 kcal_servicedir = $(kde_servicesdir)/kresources/kcal
 kcal_service_DATA = kcal_opengroupware.desktop
