@@ -202,7 +202,7 @@ void History::EntryEdit::undo()
 void History::EntryEdit::redo()
 {
   Incidence *incidence = mCalendar->incidence( mOldIncidence->uid() );
-  if( Incidence )
+  if( incidence )
 	  mCalendar->deleteIncidence( incidence );
   mCalendar->addIncidence( mNewIncidence->clone() );
 }
