@@ -30,7 +30,7 @@ using namespace KCal;
 
 IncidenceBase::IncidenceBase() :
   mReadOnly(false), mFloats(true), mDuration(0), mHasDuration(false),
-  mPilotId(0), mSyncStatus(SYNCMOD), mObserver(0)
+  mPilotId(0), mSyncStatus(SYNCMOD)
 {
   setUid(CalFormat::createUniqueId());
 
@@ -57,7 +57,7 @@ IncidenceBase::IncidenceBase(const IncidenceBase &i) :
 
   // The copied object is a new one, so it isn't observed by the observer
   // of the original object.
-  mObserver = 0;
+  mObservers.clear();
   
   mAttendees.setAutoDelete( true );
 }
@@ -316,12 +316,20 @@ int IncidenceBase::pilotId() const
 
 void IncidenceBase::registerObserver( IncidenceBase::Observer *observer )
 {
-  mObserver = observer;
+  if( !mObservers.contains(observer) ) mObservers.append( observer );
+}
+
+void IncidenceBase::unRegisterObserver( IncidenceBase::Observer *observer )
+{
+  mObservers.remove( observer );
 }
 
 void IncidenceBase::updated()
 {
-  if ( mObserver ) {
-    mObserver->incidenceUpdated( this );
+  QPtrListIterator<Observer> it(mObservers);
+  while( it.current() ) {
+    Observer *o = it.current();
+    ++it;
+    o->incidenceUpdated( this );
   }
 }

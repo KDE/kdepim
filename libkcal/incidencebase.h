@@ -127,7 +127,7 @@ class IncidenceBase : public CustomProperties
     int pilotId() const;
 
     void registerObserver( Observer * );
-
+    void unRegisterObserver( Observer * );
     void updated();
 
   protected:
@@ -150,7 +150,7 @@ class IncidenceBase : public CustomProperties
     int mPilotId;                         // unique id for pilot sync
     int mSyncStatus;                      // status (for sync)
     
-    Observer *mObserver;
+    QPtrList<Observer> mObservers;
 };
 
 bool operator==( const IncidenceBase&, const IncidenceBase& );
