@@ -202,12 +202,12 @@ void KNArticleManager::showHdrs(bool clear)
 
     if(f_ilter)
       f_ilter->doFilter(g_roup);
-    else    
+    else
       for(int i=0; i<g_roup->length(); i++) {
         art=g_roup->at(i);
         art->setFilterResult(true);
         art->setFiltered(true);
-        ref=(art->idRef()!=0) ? g_roup->byId(art->idRef()) : 0;        
+        ref=(art->idRef()!=0) ? g_roup->byId(art->idRef()) : 0;
         art->setDisplayedReference(ref);
         if(ref)
           ref->setVisibleFollowUps(true);
@@ -572,8 +572,9 @@ bool KNArticleManager::deleteArticles(KNLocalArticle::List &l, bool ask)
       else
         lst << a->subject()->asUnicodeString();
     }
-    if( KMessageBox::No == KMessageBox::questionYesNoList(
-      knGlobals.topWidget, i18n("Do you really want to delete these articles?"), lst) )
+    if( KMessageBox::Cancel == KMessageBox::warningContinueCancelList(
+      knGlobals.topWidget, i18n("Do you really want to delete these articles?"), lst,
+        i18n("Delete Articles"), KGuiItem(i18n("&Delete"),"editdelete")) )
       return false;
   }
 
