@@ -31,11 +31,6 @@
 
 #include <klocale.h>
 
-#define DEBUG
-
-
-
-
 #ifdef DEBUG
 // These are three-bit fields, basically we're defining
 // 1<<n; 3<<n; 7<<n for some n.
