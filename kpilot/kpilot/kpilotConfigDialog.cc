@@ -90,6 +90,8 @@ DeviceConfigPage::DeviceConfigPage(QWidget * w, const char *n ) : ConduitConfigB
 	CM(fUserName, SIGNAL(textChanged(const QString &)));
 #undef CM
 
+	fConduitName = i18n("Device");
+
 	(void) kpilotconfigdialog_id;
 }
 
@@ -206,6 +208,8 @@ SyncConfigPage::SyncConfigPage(QWidget * w, const char *n ) : ConduitConfigBase(
 	CM(fFullBackupCheck, SIGNAL(toggled(bool)));
 	CM(fConflictResolution, SIGNAL(activated(int)));
 #undef CM
+
+	fConfigName = i18n("HotSync");
 }
 
 void SyncConfigPage::load()
@@ -265,6 +269,8 @@ BackupConfigPage::BackupConfigPage(QWidget * w, const char *n ) : ConduitConfigB
 	CM(fBackupOnly, SIGNAL(textChanged(const QString &)));
 	CM(fSkipDB, SIGNAL(textChanged(const QString &)));
 #undef CM
+
+	fConduitName = i18n("Backup");
 }
 
 void BackupConfigPage::load()
@@ -347,6 +353,8 @@ ViewersConfigPage::ViewersConfigPage(QWidget * w, const char *n ) : ConduitConfi
 	CM(fAddressGroup, SIGNAL(clicked(int)));
 	CM(fUseKeyField, SIGNAL(toggled(bool)));
 #undef CM
+
+	fConduitName = i18n("Viewers");
 }
 
 void ViewersConfigPage::load()
@@ -396,13 +404,9 @@ StartExitConfigPage::StartExitConfigPage(QWidget * w, const char *n ) : ConduitC
 	CM(fKillDaemonOnExit, SIGNAL(toggled(bool)));
 	CM(fDockDaemon, SIGNAL(toggled(bool)));
 	CM(fQuitAfterSync, SIGNAL(toggled(bool)));
-#if 0
-	CM(fInternalEditors, SIGNAL(toggled(bool)));
-	CM(fUseSecret, SIGNAL(toggled(bool)));
-	CM(fAddressGroup, SIGNAL(clicked(int)));
-	CM(fUseKeyField, SIGNAL(toggled(bool)));
-#endif
 #undef CM
+
+	fConduitName = i18n("Startup and Exit");
 }
 
 void StartExitConfigPage::load()
@@ -414,13 +418,6 @@ void StartExitConfigPage::load()
 	fConfigWidget->fDockDaemon->setChecked(KPilotSettings::dockDaemon());
 	fConfigWidget->fKillDaemonOnExit->setChecked(KPilotSettings::killDaemonAtExit());
 	fConfigWidget->fQuitAfterSync->setChecked(KPilotSettings::quitAfterSync());
-#if 0
-	/* Viewers tab */
-	fConfigWidget->fInternalEditors->setChecked(KPilotSettings::internalEditors());
-	fConfigWidget->fUseSecret->setChecked(KPilotSettings::showSecrets());
-	fConfigWidget->fAddressGroup->setButton(KPilotSettings::addressDisplayMode());
-	fConfigWidget->fUseKeyField->setChecked(KPilotSettings::useKeyField());
-#endif
 	unmodified();
 }
 
@@ -432,14 +429,6 @@ void StartExitConfigPage::load()
 	KPilotSettings::setDockDaemon(fConfigWidget->fDockDaemon->isChecked());
 	KPilotSettings::setKillDaemonAtExit(fConfigWidget->fKillDaemonOnExit->isChecked());
 	KPilotSettings::setQuitAfterSync(fConfigWidget->fQuitAfterSync->isChecked());
-#if 0
-	/* Viewers tab */
-	KPilotSettings::setInternalEditors( fConfigWidget->fInternalEditors->isChecked());
-	KPilotSettings::setShowSecrets(fConfigWidget->fUseSecret->isChecked());
-	KPilotSettings::setAddressDisplayMode(fConfigWidget->fAddressGroup->id(
-		fConfigWidget->fAddressGroup->selected()));
-	KPilotSettings::setUseKeyField(fConfigWidget->fUseKeyField->isChecked());
-#endif
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::self()->writeConfig();
 	unmodified();
