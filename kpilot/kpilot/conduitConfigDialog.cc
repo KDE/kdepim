@@ -201,6 +201,7 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 	// Create the left hand column
 	// v = new QVBox( spl );
 	fConduitList = new QListView(spl,"ConduitList");
+	spl->setResizeMode(fConduitList, QSplitter::KeepSize);
 	fConduitList->addColumn(i18n("Conduit"));
 
 	// Right hand column
@@ -282,9 +283,12 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const char *n,
 	fConduitList->setTreeStepSize(10);
 	// fConduitList->removeColumn(CONDUIT_COMMENT);
 	fillLists();
-
+	
 	fConduitList->resize(fConduitList->sizeHint());
 	fConduitList->setMinimumSize(fConduitList->sizeHint());
+	// -4 to avoid scrollbars
+	fConduitList->setColumnWidth(0, fConduitList->sizeHint().width()-4);
+	fConduitList->setResizeMode(QListView::AllColumns);
 
 	fStack->resize(fStack->sizeHint()+QSize(10,40));
 	fStack->setMinimumSize(fStack->sizeHint()+QSize(10,40));
@@ -832,4 +836,5 @@ void ConduitConfigWidget::configureWizard()
 		load();
 	}
 }
+
 
