@@ -15,14 +15,47 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <stdlib.h>
+#include <iostream>
+
+#include <qdatetime.h>
+
+#include <kdebug.h>
+#include <klocale.h>
+
+#include "calendarlocal.h"
+#include "calendar.h"
+#include "event.h"
+
 #include "konsolekalendaradd.h"
 
+using namespace KCal;
+using namespace std;
 
-KonsoleKalendarAdd::KonsoleKalendarAdd()
+KonsoleKalendarAdd::KonsoleKalendarAdd( KonsoleKalendarVariables *variables )
 {
+	m_variables = variables;
+
 }
 
 KonsoleKalendarAdd::~KonsoleKalendarAdd()
 {
+
 }
 
+/**
+ * Adds event to Calendar 
+ */
+
+bool KonsoleKalendarAdd::addEvent()
+{
+	Event event;
+	
+	event.setDtStart( m_variables->getStartDate() );
+	event.setDtEnd( m_variables->getStartDate() );
+	
+	
+	
+	
+	return true;
+}

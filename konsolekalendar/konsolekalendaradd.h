@@ -18,15 +18,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <qdatetime.h>
-#include <qstring.h>
+#include "konsolekalendarvariables.h"
 
 class KonsoleKalendarAdd
 {
-  public:
-    KonsoleKalendarAdd();
+public:
+    KonsoleKalendarAdd( KonsoleKalendarVariables *variables );
     ~KonsoleKalendarAdd();
 
+   bool addEvent();
+   
+private:
+   KonsoleKalendarVariables *m_variables;
+   
 };
 
 #endif
