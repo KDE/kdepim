@@ -392,7 +392,7 @@ void ConduitConfigWidget::fillLists()
 	CE(i18n("Startup and Exit"), i18n("Behavior at startup and exit."), CSL1("general_startexit") );
 	CE(i18n("Viewers"), i18n("Viewer settings."), CSL1("general_view") );
 	CE(i18n("Backup"),i18n("Special settings for backup."),CSL1("general_backup"));
-	CE(i18n("HotSync",i18n("Special behavior during HotSync."),CSL1("general_sync"));
+	CE(i18n("HotSync"),i18n("Special behavior during HotSync."),CSL1("general_sync"));
 	CE(i18n("Device"),i18n("Hardware settings and startup and exit options."),CSL1("general_setup"));
 
 #undef CE

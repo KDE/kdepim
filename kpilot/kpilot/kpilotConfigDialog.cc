@@ -209,7 +209,7 @@ SyncConfigPage::SyncConfigPage(QWidget * w, const char *n ) : ConduitConfigBase(
 	CM(fConflictResolution, SIGNAL(activated(int)));
 #undef CM
 
-	fConfigName = i18n("HotSync");
+	fConduitName = i18n("HotSync");
 }
 
 void SyncConfigPage::load()
