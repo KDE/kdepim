@@ -92,7 +92,7 @@
 // of bool.
 //-----------------------------------------------------------------------------
 
-#define DW_NO_BOOL
+//#define DW_NO_BOOL
 
 #if defined(DW_NO_BOOL)
 
