@@ -47,6 +47,7 @@
 #include "kabprefs.h"
 #include "printprogress.h"
 #include "printstyle.h"
+#include "printsortmode.h"
 
 #include "printingwizard.h"
 
@@ -200,7 +201,14 @@ void PrintingWizard::print()
     }
 
     list.setReverseSorting( !mStylePage->sortAscending() );
+
+#if KDE_IS_VERSION(3,3,91)
+    qDebug("printsortmode");
+    PrintSortMode sortMode( mStylePage->sortField() );
+    list.sortByMode( &sortMode );
+#else
     list.sortByField( mStylePage->sortField() );
+#endif
   }
 
   kdDebug(5720) << "PrintingWizardImpl::print: printing "

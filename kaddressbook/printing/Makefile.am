@@ -15,7 +15,8 @@ libprinter_la_SOURCES = \
 	printstyle.cpp \
 	rbs_appearance.ui \
 	selectionpage.cpp \
-	stylepage.cpp
+	stylepage.cpp \
+  printsortmode.cpp
 libprinter_la_COMPILE_FIRST = $(top_builddir)/kaddressbook/common/kabprefs_base.h
 
 EXTRA_DIST = \
