@@ -191,6 +191,8 @@ void TodoConduit::doSync()
      exit(ConduitMisconfigured);
    }
 
+   DEBUGCONDUIT << fname << ": Pilot -> Desktop" << endl;
+
    rec = readNextModifiedRecord();
 
    // get only MODIFIED entries from Pilot, compared with the above (doBackup),
@@ -220,6 +222,7 @@ void TodoConduit::doSync()
    // now, all the stuff that was modified/new on the pilot should be
    // added to the todoendar.  We now need to add stuff to the pilot
    // that is modified/new in the todoendar (the opposite).	  
+   DEBUGCONDUIT << fname << ": Desktop -> Pilot" << endl;
    doLocalSync();
 
    // now we save the todoendar.
@@ -274,23 +277,34 @@ void TodoConduit::updateVObject(PilotRecord *rec)
   // otherwise, the vObject hasn't been touched.  Updated it with the
   // info from the PilotRec.
   
-  // END TIME //
-  vo = isAPropertyOf(vtodo, VCDTendProp);
-  if (todoEntry.getIndefinite()) { 
-    // there is no end date
-    if (vo)
-      addProp(vo, KPilotSkipProp);
+	// DUE DATE //
+	vo = isAPropertyOf(vtodo, VCDueProp);
+	if (todoEntry.getIndefinite()) 
+	{ 
+		// there is no due date, remove it if already present.
+		//
+		//
+		if (vo)
+		{
+			addProp(vo, KPilotSkipProp);
+		}
     
-    DEBUGCONDUIT << fname
-		 << ": Todo-item with no end date."
-		 << endl;
-  } else {
-    if (vo)
-      setDateProperty(vo, todoEntry.getDueDate_p());
-    else
-      addDateProperty(vtodo, VCDTendProp,
-		      todoEntry.getDueDate_p());
-  }
+		DEBUGCONDUIT << fname
+			<< ": Todo-item with no end date."
+			<< endl;
+	} 
+	else 
+	{
+		if (vo)
+		{
+			setDateProperty(vo, todoEntry.getDueDate_p());
+		}
+		else
+		{
+			addDateProperty(vtodo, VCDueProp,
+				todoEntry.getDueDate_p());
+		}
+	}
   
   // PRIORITY //
   vo = isAPropertyOf(vtodo, VCPriorityProp);
@@ -376,14 +390,16 @@ void TodoConduit::doLocalSync()
 	// update it from the vObject.
 	
 	// END TIME (DUE DATE) //
-	if ((vo = isAPropertyOf(vtodo, VCDTendProp)) != 0L) {
+	if ((vo = isAPropertyOf(vtodo, VCDueProp)) != 0L) {
 	  char *s = fakeCString(vObjectUStringZValue(vo));
 	  struct tm due = ISOToTm(QString(s));
+	  DEBUGCONDUIT << fname <<  ": Due Date: " << s << endl;
 	  deleteStr(s);
 	  todoEntry->setDueDate(due);
 	  todoEntry->setIndefinite(0);
 	} else {
 	  // indefinite event
+	  DEBUGCONDUIT << fname << ": Indefinite event.\n";
 	  todoEntry->setIndefinite(1);
 	}
 
@@ -455,9 +471,9 @@ void TodoConduit::doLocalSync()
 			<< "error! writeRecord returned a pilotID <= 0!"
 			<< endl;
 	}
-       }
-     }
-	setNumProperty(vtodo, KPilotStatusProp, 0);
+      }
+      setNumProperty(vtodo, KPilotStatusProp, 0);
+    }
    }
    // anything that is left on the pilot but that is not found in the
    // todo list has to be deleted.  We know this because we have added
@@ -541,6 +557,9 @@ QWidget* TodoConduit::aboutAndSetup()
 }
 
 // $Log$
+// Revision 1.3  2001/04/23 21:26:02  adridg
+// Some testing and i18n() fixups, 8-bit char fixes
+//
 // Revision 1.2  2001/04/23 06:29:30  adridg
 // Patches for bug #23385 and probably #23289
 //
