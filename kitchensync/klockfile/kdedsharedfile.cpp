@@ -109,20 +109,19 @@ bool KShareFileModule::readShareFile(const QString &fileName )
 }
 bool KShareFileModule::readUnshareFile(const QString &fileName )
 {
- bool val=false;
-  d->mutex.lock();
-  if(d->m_objects.contains(fileName ) ){  
-    d->m_it = d->m_objects.find(fileName );
-    if(!d->m_it.data().writeLock ){
-      d->m_it.data().readShares--;
-      if( d->m_it.data().readShares < 0 ){ // no locks anymore
-	d->m_it.data().readShares = 0;
-      }
-      val = true;
+    bool val=false;
+    d->mutex.lock();
+    if(d->m_objects.contains(fileName ) ){
+        d->m_it = d->m_objects.find(fileName );
+        if(!d->m_it.data().writeLock ){
+            if ( d->m_it.data().readShares > 0 )
+                d->m_it.data().readShares--;
+            val = true;
+        }
     }
-  }
-  d->mutex.unlock();
-  return val;
+    d->mutex.unlock();
+
+    return val;
 }
 bool KShareFileModule::writeLockFile(const QString &fileName )
 {

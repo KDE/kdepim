@@ -1,6 +1,6 @@
 /* This file is part of the KDE libraries
     Copyright (C) 2002 Holger Freyther <freyher@kde.org>
-		  
+
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
     License version 2 as published by the Free Software Foundation.
@@ -38,8 +38,8 @@ KSharedFileDevice::~KSharedFileDevice()
 {
 
 }
-/** First look if the user want's to open ReadOnly 
- *  and WriteOnly/WriteRead. Then we'll 
+/** First look if the user want's to open ReadOnly
+ *  and WriteOnly/WriteRead. Then we'll
  */
 bool KSharedFileDevice::open( int mode )
 {
@@ -110,6 +110,7 @@ bool KSharedFileDevice::open( int mode )
       return false;
     }
   }
+  return false;
 }
 void KSharedFileDevice::close(  )
 {
