@@ -23,7 +23,9 @@ is divided into three panes:
 <DL>
 <DT><B>Folders Pane (upper left pane)</B><DD><P>This pane contains a list of your message folders. (other email programs call them 
 mailboxes) To select a folder, simply click on it. The messages contained in the folder
-will now appear in the Headers Pane. See the 
+will now appear in the Headers Pane. The folders can be displayed in both a short view, which takes up only
+a small portion of the left side of the screen, and a long view, which takes up the entire left side of the
+screen but is able to show more mailboxes. See the 
 <A HREF="#sec-Folders">Folders Section</A> 
 for more information about how to use folders.  
 <P>
@@ -40,8 +42,8 @@ the message page by page using the PAGE UP and PAGE DOWN keys, or line by line u
 down arrow keys. You can also use the following key shortcuts to skip through your 
 messages without having to use the mouse:
 <UL>
-<LI>N - Next message</LI>
-<LI>P - Previous message</LI>
+<LI>N or the left arrow key - Next message</LI>
+<LI>P or the right arrow key - Previous message</LI>
 <LI>+ - Next unread message</LI>
 <LI>- - Previous unread message</LI>
 </UL>
@@ -73,8 +75,8 @@ file and you have <B>Automatically Append Signature</B> checked in the <B>Compos
 <H3>Composing a Message</H3>
 
 <P>To write your message, fill in the appropriate fields in the <B>Composer</B> window.  There are a variety of
-shortcuts to help you with writing you messages.  The ellipses buttons next to the <B>To:</B>, 
-<B>cc:</B>, and <B>Bcc:</B> fields will call up the addressbook so that you can select addresses 
+shortcuts to help you with writing you messages.  The ellipses buttons next to the <B>To:</B>,
+<B>cc:</B>, and <B>Bcc:</B> fields will call up the addressbook so that you can select addresses
 from there instead of trying to remember them. When you are finished with your message, hit the Send
 button (the envelope) to queue or send the message.
 <P>
@@ -107,9 +109,10 @@ the ispell spelling checker.
 <H2><A NAME="sec-Folders"></A> <A NAME="ss3.3">3.3 Message Folders</A>
 </H2>
 
-<P>Message Folders are used to organize your email messages. When you first start Kmail the 
-inbox, outbox, sent-mail, and trash folders are created. These folders each have special 
-functions:
+<P>Message Folders are used to organize your email messages. By default, all message folders are stored in 
+the directory <CODE>Mail</CODE>, which is created in your home directory. When you first 
+start Kmail the inbox, outbox, sent-mail, and trash folders are created. 
+These folders each have special functions:
 <P>
 <UL>
 <LI><B>inbox:</B> where Kmail puts your new messages when you ask it to check your mail. </LI>
@@ -118,10 +121,9 @@ functions:
 <LI><B>trash:</B> contains all messages that you have deleted.</LI>
 </UL>
 <P>
-<P>You may find that the standard folders are fine for your needs. However, if you
-receive a large number of messages a day, you will probably need folders to help you organize 
-your messages. To create a new folder, select <B>Folder | Create...</B> A
-window will then prompt you for the name of the folder and allow you to associate or
+<P>You may find that the standard folders are fine for your needs. Eventually, though, you will probably 
+need folders to help you organize your messages. To create a new folder, select <B>Folder | Create...</B> 
+A window will then prompt you for the name of the folder and allow you to associate or
 disassociate the folder with certain accounts. If you ever need to change the settings for a folder,
 select the folder you wish to modify in the Folders Pane and select <B>Folder | Modify...</B> 
 Kmail will then prompt you for the changes you wish to make to the selected folder.
@@ -218,9 +220,9 @@ your account settings. See the
 <A HREF="index-4.html#sec-Customizing">Customizing Kmail</A> section for more 
 information on the settings in the <B>Network</B> tab.
 <P>To check mail from a particular account, use the <B>Check Mail in...</B> submenu to select the account
-to use to check your mail. It not currently possible to tell which account is active, so if you have
-created multiple accounts, use the <B>Check Mail in...</B> submenu instead of the <B>Check Mail</B>
-menu item.
+to use to check your mail. It is not currently possible to tell which account is
+active, so if you have created multiple accounts, use the <B>Check Mail
+in...</B> submenu instead of the <B>Check Mail</B> menu item.
 <P>
 <P>
 <H2><A NAME="sec-PGP"></A> <A NAME="ss3.7">3.7 Pretty good privacy </A>

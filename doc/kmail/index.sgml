@@ -7,9 +7,9 @@
 <!-- Title information -->
 
 <title>The Kmail Handbook
-<author>David Rugge, Markus Wuebben
-<date>January 23, 1999
-<abstract>This documentation was last updated for Kmail version 1.0.11. 
+<author>David Rugge
+<date>February 4, 1999
+<abstract>This documentation was last updated for Kmail version 1.0.14. 
 Please make any comments and additions to the authors.
 </abstract>
 
@@ -29,8 +29,8 @@ without sacrificing power.
 If you have never set up an email client on a Unix system before, we suggest that you read through 
 the <ref id="sec-GettingStarted" name="Getting Started"> section first so that your setup goes smoothly.
 <p>
-Bug reports & suggestions should go to one of the <ref id="sec-Developers" name="developers">.
-<p>
+Bug reports and suggestions should go to one of the <ref id="sec-Developers"
+name="developers">. <p>
 We hope you will enjoy Kmail!
 <p>
 
@@ -117,7 +117,9 @@ is divided into three panes:
 <tag>Folders Pane (upper left pane)</tag>
 This pane contains a list of your message folders. (other email programs call them 
 mailboxes) To select a folder, simply click on it. The messages contained in the folder
-will now appear in the Headers Pane. See the <ref id="sec-Folders" name="Folders Section"> 
+will now appear in the Headers Pane. The folders can be displayed in both a short view, which takes up only
+a small portion of the left side of the screen, and a long view, which takes up the entire left side of the
+screen but is able to show more mailboxes. See the <ref id="sec-Folders" name="Folders Section"> 
 for more information about how to use folders.  
 <p>
 <tag>Headers Pane (upper right pane)</tag>
@@ -135,8 +137,8 @@ the message page by page using the PAGE UP and PAGE DOWN keys, or line by line u
 down arrow keys. You can also use the following key shortcuts to skip through your 
 messages without having to use the mouse:
 <itemize>
-<item>N - Next message
-<item>P - Previous message
+<item>N or the left arrow key - Next message
+<item>P or the right arrow key - Previous message
 <item>+ - Next unread message
 <item>- - Previous unread message
 </itemize>
@@ -168,8 +170,8 @@ file and you have <bf>Automatically Append Signature</bf> checked in the <bf>Com
 <sect2>Composing a Message
 <p>
 To write your message, fill in the appropriate fields in the <bf>Composer</bf> window.  There are a variety of
-shortcuts to help you with writing you messages.  The ellipses buttons next to the <bf>To:</bf>, 
-<bf>cc:</bf>, and <bf>Bcc:</bf> fields will call up the addressbook so that you can select addresses 
+shortcuts to help you with writing you messages.  The ellipses buttons next to the <bf>To:</bf>,
+<bf>cc:</bf>, and <bf>Bcc:</bf> fields will call up the addressbook so that you can select addresses
 from there instead of trying to remember them. When you are finished with your message, hit the Send
 button (the envelope) to queue or send the message.
 
@@ -204,9 +206,10 @@ the ispell spelling checker.
 
 <sect1>Message Folders<label id="sec-Folders">
 <p>
-Message Folders are used to organize your email messages. When you first start Kmail the 
-inbox, outbox, sent-mail, and trash folders are created. These folders each have special 
-functions:
+Message Folders are used to organize your email messages. By default, all message folders are stored in 
+the directory <tt>Mail</tt>, which is created in your home directory. When you first 
+start Kmail the inbox, outbox, sent-mail, and trash folders are created. 
+These folders each have special functions:
 
 <itemize>
 <item><bf>inbox:</bf> where Kmail puts your new messages when you ask it to check your mail. 
@@ -216,10 +219,9 @@ functions:
 </itemize>
 
 <p>
-You may find that the standard folders are fine for your needs. However, if you
-receive a large number of messages a day, you will probably need folders to help you organize 
-your messages. To create a new folder, select <bf>Folder | Create...</bf> A
-window will then prompt you for the name of the folder and allow you to associate or
+You may find that the standard folders are fine for your needs. Eventually, though, you will probably 
+need folders to help you organize your messages. To create a new folder, select <bf>Folder | Create...</bf> 
+A window will then prompt you for the name of the folder and allow you to associate or
 disassociate the folder with certain accounts. If you ever need to change the settings for a folder,
 select the folder you wish to modify in the Folders Pane and select <bf>Folder | Modify...</bf> 
 Kmail will then prompt you for the changes you wish to make to the selected folder.
@@ -324,9 +326,9 @@ your account settings. See the <ref id="sec-Customizing" name="Customizing Kmail
 information on the settings in the <bf>Network</bf> tab.
 <p>
 To check mail from a particular account, use the <bf>Check Mail in...</bf> submenu to select the account
-to use to check your mail. It not currently possible to tell which account is active, so if you have
-created multiple accounts, use the <bf>Check Mail in...</bf> submenu instead of the <bf>Check Mail</bf>
-menu item.
+to use to check your mail. It is not currently possible to tell which account is
+active, so if you have created multiple accounts, use the <bf>Check Mail
+in...</bf> submenu instead of the <bf>Check Mail</bf> menu item.
 <p>
  
 <sect1>Pretty good privacy <label id="sec-PGP">
@@ -376,19 +378,24 @@ not need to change the <bf>Port</bf> setting.
 <p>
 To set up an account so you can receive mail, press the <bf>Add...</bf> button in the
 <bf>Incoming Mail</bf> section. You will then be prompted for the type of account.
-Most users should select <bf>POP3</bf>. (IMAP accounts are not supported) After
-pressing <bf>OK</bf> you will be presented with the <bf>Configure Account</bf>
-window. First, fill in the <bf>Name</bf> field to name your account. <bf>Login</bf>,
+Most users should select <bf>POP3</bf> unless you have a setup where some other
+program is already retrieving your mail into a mail file. After pressing
+<bf>OK</bf> you will be presented with the <bf>Configure Account</bf> window.
+First, fill in the <bf>Name</bf> field to name your account. <bf>Login</bf>,
 <bf>Password</bf>, and <bf>Host</bf> should be filled in with the appropriate
 information from your ISP or System Administrator. Again, you should not need to
-change the <bf>Port</bf> setting. Select <bf>Delete mail from server</bf> if
-you don't want to leave your mail on the server. Finally, you can set the default box to received your new
-messages.
-<p>  
+change the <bf>Port</bf> setting. Select <bf>Delete mail from server</bf> if you
+don't want to leave your mail on the server. Finally, you can set the default
+box to received your new messages. <p>
+
 <sect1>Appearance Tab
 <p>
-This tab lets you change the type and size of the display fonts in the <bf>Main</bf> and <bf>Composer</bf> windows.
+The <bf>Fonts</bf> section allows you to change the type and size of the display fonts in the <bf>Main</bf> 
+and <bf>Composer</bf> windows. 
 <p>
+The <bf>Layout</bf> section lets you toggle the long folder list on and off.  The long folder list lists
+folders all the way down the left side of the screen, which lets you see many more folders than in the
+default view, but it takes away some space for viewing the text of your message. 
 <sect1>Composer Tab
 <p>
 The <bf>Phrases</bf> section lets you define the automatically generated lines added to message replies, forwarded
@@ -569,11 +576,11 @@ Removes the selected folder.
 <sect2>Message menu
 <p>
 <descrip>
-<tag>Next (N)</tag>
+<tag>Next (N or the left arrow key</tag>
 Selects the next message in the Headers pane.<p>
 <tag>Next Unread (+)</tag>
 Selects the next unread message in the Headers pane.<p>
-<tag>Previous (P)</tag>
+<tag>Previous (P or the right arrow key)</tag>
 Selects the previous message in the Headers pane.<p>
 <tag>Previous Unread (-)</tag>
 Selects the previous unread message in the Headers pane.<p>
@@ -773,16 +780,22 @@ Modify button. This dialog contains the "Delete mail from server" setting which 
 The text footer is called a signature file. What you need to do is open up a text editor (like kedit) and type in what you want to appear
 in the footer. Save the file under a name like signature or footer. Go into Kmail and select <bf>File |
 Settings...</bf> Look in the "Identity" tab
-for the "signature file" field. Click on the ellipses button and select the file you just created. 
-Now Kmail will automatically insert that file in any message you write. 
+for the "signature file" field. Click on the ellipses button and select the file you just created.
+Now Kmail will automatically insert that file in any message you write.
 <p>
-<sect1>Why doesn't word wrap work in the Composer window?
+<sect1>Why does Kmail keep asking me for the location of my signature file? I
+don't have/want one!
 <p>
+Kmail will ask you the location of your signature file if you have checked the
+option <bf>Automatically Append Signature</bf> in the <bf>Composer</bf> tab of
+the <bf>Settings</bf> dialog, but have not specified a signature file in the
+<bf>Identity</bf> tab. You should either specify a signature file or uncheck
+<bf>Automatically Append Signature</bf>.
+
+<sect1>Why doesn't word wrap work in the
+Composer window? <p>
 The word wrap setting is probably turned off. Word wrap can be toggled on and off in the 
 <bf>Composer</bf> tab of the <bf>Settings</bf> dialog box.
-
-
-
 
 <sect>Epilogue
 <p>
@@ -793,21 +806,27 @@ Stefan Taferner <htmlurl url="mailto:taferner@alpin.or.at" name="&lt;taferner@al
 <p>
 Markus Wuebben <htmlurl url="mailto:markus.wuebben@kde.org" name="&lt;markus.wuebben@kde.org&gt;">
 <p>
+<sect2>Contributors
+<p>
+<itemize>
+<item>Juraj Bednar <htmlurl url="mailto:bednar@isternet.sk" name="&lt;bednar@isternet.sk&gt;">
+<item>Lars Knoll <htmlurl url="mailto:knoll@mpi-hd.mpg.de" name="&lt;knoll@mpi-hd.mpg.de&gt;">
+<item>Harri Porten <htmlurl url="mailto:porten@kde.org" name="&lt;porten@kde.org&gt;">
+<item>Mario Weilguni <htmlurl url="mailto:mweilguni@kde.org" name="&lt;mweilguni@kde.org&gt;">
+</itemize>
 
-<bf>Based on the work of:</bf><p>
-
+<sect2>Based on the work of
+<p>
 Lynx <htmlurl url="mailto:lynx@topaz.hknet.com" name="&lt;lynx@topaz.hknet.com&gt;">
 <p>
-
 Stephen Meyer <htmlurl url="mailto:Stephan.Meyer@pobox.com" name="&lt;Stephan.Meyer@pobox.com&gt;">
 <p>
 
 <sect1>Documentation
 <p>
-<p>
 David Rugge <htmlurl url="mailto:davidrugge@mindspring.com" name="&lt;davidrugge@mindspring.com&gt">
 <p>
-Markus Wuebben <htmlurl url="mailto:markus.wuebben@kde.org" name="&lt;markus.wuebben@kde.org&gt;">
+Original documemtation by Markus Wuebben <htmlurl url="mailto:markus.wuebben@kde.org" name="&lt;markus.wuebben@kde.org&gt;">
 <p>
 Robert Williams - Editor <htmlurl url="mailto:rwilliams@kde.org" 
 name="&lt;rwilliams@kde.org&gt;">
@@ -818,4 +837,26 @@ KDE FAQ.
 Thanks to Michael Elkins <htmlurl url="mailto:me@cs.hmc.edu" name="&lt;me@cs.hmc.edu&gt;"> for his
 excellent description of the different Unix mail formats in the Mutt documentation.
 <p>
+
+<sect1>Copyright
+<p>
+Kmail is copyright 1998-1999 Stefan Taferner.
+<p>
+The Kmail documentation is copyright 1999 David Rugge.
+<p>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+<p>
+This program is distributed in the hope that they will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+<p>
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+<p>
+
 </article>
