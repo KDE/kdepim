@@ -241,6 +241,7 @@ class ViewManager : public QWidget
     
     /** Import a VCard that has been dragged  */
     void importVCard(const QString &, bool);
+
   private:
     /** Create a view wrapper for each type of view we know about
     */

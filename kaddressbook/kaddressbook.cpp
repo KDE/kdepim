@@ -326,43 +326,38 @@ void KAddressBook::importCSV()
 
 void KAddressBook::importVCardSimple()
 {
-kdDebug() << "KAddressBook::importVCardSimple" << endl;
-importVCard(QString::null,true);
+  importVCard( QString::null, true );
 }
 
 
-void KAddressBook::importVCard(const QString &file = QString::null, bool showDialog = true)
+void KAddressBook::importVCard( const QString &file, bool showDialog )
 {
+  QString fileName; 
 
- QString fileName; 
-
-  if (file )
+  if ( file )
     fileName = file;
   else 
-    fileName = KFileDialog::getOpenFileName(QString::null,
+    fileName = KFileDialog::getOpenFileName( QString::null,
                                                   "*.vcf|vCards", 0,
-                                                  i18n("Select vCard to Import"));
+                                                  i18n( "Select vCard to Import" ) );
     
-    
-  if (fileName.isEmpty()) {
-    
+  if ( !fileName.isEmpty() ) {
     KABC::VCardConverter converter;
     KABC::Addressee a;
-    QFile file(fileName);
+    QFile file( fileName );
 
     file.open( IO_ReadOnly );
     QByteArray rawData = file.readAll();
     QString data = QString::fromLatin1( rawData.data(), rawData.size() + 1 );
     bool ok = false;
     
-    if ( data.contains( "VERSION:3.0" ) ) {
+    if ( data.contains( "\r\nVERSION:3.0\r\n" ) ) {
       ok = converter.vCardToAddressee( data, a, KABC::VCardConverter::v3_0 );
-      kdDebug() << "version 3.0" << endl;
-    } else if ( data.contains( "VERSION:2.1" ) ) {
+    } else if ( data.contains( "\r\nVERSION:2.1\r\n" ) ) {
       ok = converter.vCardToAddressee( data, a, KABC::VCardConverter::v2_1 );
-      kdDebug() << "version 2.1" << endl;
     }
-    if (!a.isEmpty() && ok) {
+
+    if ( !a.isEmpty() && ok ) {
       // Add it to the document, then let the user edit it. We use a
       // PwNewCommand so the user can undo it.
       PwNewCommand *command = new PwNewCommand(mDocument, a);
@@ -371,13 +366,14 @@ void KAddressBook::importVCard(const QString &file = QString::null, bool showDia
 
       mViewManager->refresh();
 
-      if (showDialog)
-        editAddressee(a.uid());
-    } else {
-      QString text = i18n("The selected file does not appear to be a valid vCard. "
-                          "Please check the file and try again.");
+      if ( showDialog )
+        editAddressee( a.uid() );
 
-      KMessageBox::sorry(this, text, i18n("vCard Import Failed"));
+    } else {
+      QString text = i18n( "The selected file does not appear to be a valid vCard. "
+                           "Please check the file and try again." );
+
+      KMessageBox::sorry( this, text, i18n( "vCard Import Failed" ) );
     }
   }
 }
