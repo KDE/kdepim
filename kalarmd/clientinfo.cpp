@@ -34,7 +34,6 @@ ClientInfo::ClientInfo(const QCString &_appName, const QString& titl,
     displayCalName(disp),
     waitForRegistration(wait),
     menuIndex(0),
-    status(UNKNOWN),
     mValid( true )
 {
   setNotificationType(notifyType);

@@ -47,8 +47,6 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     void    calendarLoaded( ADCalendarBase *, bool success );
     void    checkAlarmsSlot();
     void    checkAlarms();
-    void    slotCheckSelectedAlarms();
-    void    slotNotifyGui();
 
   private:
     // DCOP interface
@@ -70,13 +68,13 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     void    registerApp(const QCString& appName, const QString& appTitle,
                         const QCString& dcopObject, int notificationType,
                         bool displayCalendarName)
-                       { registerApp_(appName, appTitle, dcopObject,
-                                      notificationType, displayCalendarName, false); }
+                       { registerApp_(appName, appTitle, dcopObject, notificationType,
+                                      displayCalendarName, false); }
     void    reregisterApp(const QCString& appName, const QString& appTitle,
                         const QCString& dcopObject, int notificationType,
                         bool displayCalendarName)
-                       { registerApp_(appName, appTitle, dcopObject,
-                                      notificationType, displayCalendarName, true); }
+                       { registerApp_(appName, appTitle, dcopObject, notificationType,
+                                      displayCalendarName, true); }
     void    registerGui(const QCString& appName, const QCString& dcopObject);
     void    readConfig();
     void    quit();
@@ -104,7 +102,6 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     void        resetMsgCal_(const QCString& appname, const QString& urlString);
     void        removeCal_(const QString& urlString);
     bool        checkAlarms(ADCalendarBase*);
-    void        checkAlarmsLater(ADCalendarBase*);
     void        checkAlarms(const QCString& appName);
     void        checkEventAlarms(const Event& event, QValueList<QDateTime>& alarmtimes);
     bool        notifyEvent(ADCalendarBase*, const QString& eventID);
