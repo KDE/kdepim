@@ -61,7 +61,7 @@ sub fudge_data {
 # Create the property map data
 if($opt_c){
 
-  print "static struct icalproperty_map property_map[] = {\n";
+  print "struct icalproperty_map property_map[] = {\n";
   
   foreach $prop (sort keys %propmap) {
     
@@ -82,7 +82,7 @@ if($opt_c){
   print "{ICAL_${uc}_PROPERTY,\"\",ICAL_NO_VALUE}};\n\n";
 
 
-  print "static struct icalproperty_enum_map enum_map[] = {\n";
+  print "struct icalproperty_enum_map enum_map[] = {\n";
 
   $idx = 10000;
 
