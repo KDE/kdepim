@@ -136,7 +136,7 @@ KNConfigDialog::KNConfigDialog(KNConfigManager *m, QWidget *p, const char *n)
   w_idgets.append(new KNConfig::SmtpAccountWidget(frame));
 
   // Appearance
-  frame = addHBoxPage(QString(" ")+i18n("Appearance"), i18n("Customize Visual Appearance"), BarIcon("appearance"));
+  frame = addHBoxPage(QString(" ")+i18n("Appearance"), i18n("Customize Visual Appearance"), BarIcon("looknfeel"));
   w_idgets.append(new KNConfig::AppearanceWidget(m->appearance(), frame));
 
   // Read News / General
