@@ -271,7 +271,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 				"(<i>%1</i>)? This will erase any information "
 				"you currently have on your Pilot.</qt>").
 			arg(dirname),
-			i18n("Restore Pilot")) != KDialogBase::Yes)
+			i18n("Restore Pilot")) != KMessageBox::Yes)
 	{
 		emit logError(i18n("Restore <i>not</i> performed."));
 
