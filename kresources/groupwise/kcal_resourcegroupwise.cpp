@@ -77,11 +77,11 @@ void ResourceGroupwise::init()
 {
   mDownloadJob = 0;
   mProgress = 0;
-  
+
   mIsShowingError = false;
 
   mPrefs = new GroupwisePrefsBase();
-  
+
   setType( "groupwise" );
 
   enableChangeNotification();
@@ -186,7 +186,7 @@ void ResourceGroupwise::slotJobResult( KIO::Job *job )
     clearCache();
 
     // FIXME: This does not take into account the time zone!
-    CalendarLocal calendar;
+    CalendarLocal calendar( QString::fromLatin1("UTC") );
     ICalFormat ical;
     if ( !ical.fromString( &calendar, mJobData ) ) {
       loadError( i18n("Error parsing calendar data.") );
@@ -237,7 +237,7 @@ bool ResourceGroupwise::doSave()
     kdDebug() << "No changes" << endl;
     return true;
   }
-  
+
   if ( !confirmSave() ) return false;
 
   GroupwiseServer server( mPrefs->url(), mPrefs->user(), mPrefs->password(),

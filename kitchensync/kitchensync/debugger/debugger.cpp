@@ -75,7 +75,8 @@ class CustomComboBox : public QComboBox
 
 Debugger::Debugger( QWidget *parent, const char *name,
                     QObject *, const char *,const QStringList & )
-  : ActionPart( parent, name ), m_widget( 0 )
+  : ActionPart( parent, name ), m_widget( 0 ),
+    mCalendar( QString::fromLatin1( "UTC" ) )
 {
   m_pixmap = KGlobal::iconLoader()->loadIcon("package_settings", KIcon::Desktop, 48 );
 

@@ -230,7 +230,7 @@ bool GroupDavGlobals::interpretCalendarDownloadItemsJob( KCal::CalendarAdaptor *
 kdDebug(5800) << "GroupDavGlobals::interpretCalendarDownloadItemsJob, iCalendar=" << endl;
 kdDebug(5800) << jobData << endl;
   if ( !adaptor || !job ) return false;
-  KCal::CalendarLocal calendar;
+  KCal::CalendarLocal calendar( QString::fromLatin1("UTC") );
   KCal::ICalFormat ical;
   calendar.setTimeZoneId( adaptor->resource()->timeZoneId() );
   KCal::Incidence::List incidences;

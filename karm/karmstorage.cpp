@@ -65,7 +65,7 @@
 
 using namespace std;
 
-KarmStorage *KarmStorage::_instance = 0;    
+KarmStorage *KarmStorage::_instance = 0;
 static long linenr;  // how many lines written by printTaskHistory so far
 
 
@@ -112,7 +112,7 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
   }
 
   if ( _calendar) closeStorage(view);
-  else _calendar = new KCal::CalendarResources();
+  else _calendar = new KCal::CalendarResources( QString::fromLatin1("UTC") );
 
   // Create local file resource and add to resources
   _icalfile = preferences->iCalFile();
@@ -144,8 +144,8 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
   KCal::Person owner = _calendar->getOwner();
   if ( owner.isEmpty() )
   {
-    _calendar->setOwner( KCal::Person( 
-          settings.getSetting( KEMailSettings::RealName ), 
+    _calendar->setOwner( KCal::Person(
+          settings.getSetting( KEMailSettings::RealName ),
           settings.getSetting( KEMailSettings::EmailAddress ) ) );
   }
 
@@ -219,7 +219,7 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
 
   return err;
 }
- 
+
 QString KarmStorage::buildTaskView(KCal::ResourceCalendar *rc, TaskView *view)
 // makes *view contain the tasks out of *rc.
 {
@@ -227,10 +227,10 @@ QString KarmStorage::buildTaskView(KCal::ResourceCalendar *rc, TaskView *view)
   KCal::Todo::List todoList;
   KCal::Todo::List::ConstIterator todo;
   QDict< Task > map;
-  
+
   // 1. delete old tasks
   while (view->item_at_index(0)) view->item_at_index(0)->cut();
-  
+
   // 1. insert tasks form rc into taskview
   // 1.1. Build dictionary to look up Task object from Todo uid.  Each task is a
   // QListViewItem, and is initially added with the view as the parent.
@@ -296,10 +296,10 @@ QString KarmStorage::save(TaskView* taskview)
     writeTaskAsTodo(task, 1, parents );
   }
 
-  if ( !_calendar->save( 
+  if ( !_calendar->save(
         _calendar->requestSaveTicket( _calendar->resourceManager()->standardResource() )
         )
-      ) 
+      )
   {
     err="Could not save";
   }
@@ -539,17 +539,17 @@ void KarmStorage::adjustFromLegacyFileFormat(Task* task)
 //----------------------------------------------------------------------------
 // Routines that handle Comma-Separated Values export file format.
 //
-QString KarmStorage::exportcsvFile( TaskView *taskview, 
+QString KarmStorage::exportcsvFile( TaskView *taskview,
                                     const ReportCriteria &rc )
 {
   QString delim = rc.delimiter;
   QString dquote = rc.quote;
   QString double_dquote = dquote + dquote;
   bool to_quote = true;
-  
+
   QString err;
   Task* task;
-  int maxdepth=0; 
+  int maxdepth=0;
 
   kdDebug(5970)
     << "KarmStorage::exportcsvFile: " << rc.url << endl;
@@ -565,21 +565,21 @@ QString KarmStorage::exportcsvFile( TaskView *taskview,
   QSize dialogsize;
   dialogsize.setWidth(width);
   dialog.setInitialSize( dialogsize, true );
-   
+
   if ( taskview->count() > 1 ) dialog.show();
-    
+
   QString retval;
 
   // Find max task depth
   int tasknr = 0;
   while ( tasknr < taskview->count() && !dialog.wasCancelled() )
-  { 
+  {
     dialog.progressBar()->advance( 1 );
-    if ( tasknr % 15 == 0 ) kapp->processEvents(); // repainting is slow 
-    if ( taskview->item_at_index(tasknr)->depth() > maxdepth ) 
-      maxdepth = taskview->item_at_index(tasknr)->depth(); 
+    if ( tasknr % 15 == 0 ) kapp->processEvents(); // repainting is slow
+    if ( taskview->item_at_index(tasknr)->depth() > maxdepth )
+      maxdepth = taskview->item_at_index(tasknr)->depth();
     tasknr++;
-  } 
+  }
 
   // Export to file
   tasknr = 0;
@@ -591,10 +591,10 @@ QString KarmStorage::exportcsvFile( TaskView *taskview,
 
     // indent the task in the csv-file:
     for ( int i=0; i < task->depth(); ++i ) retval += delim;
-      
+
     /*
     // CSV compliance
-    // Surround the field with quotes if the field contains 
+    // Surround the field with quotes if the field contains
     // a comma (delim) or a double quote
     if (task->name().contains(delim) || task->name().contains(dquote))
       to_quote = TRUE;
@@ -602,19 +602,19 @@ QString KarmStorage::exportcsvFile( TaskView *taskview,
       to_quote = FALSE;
     */
     to_quote = true;
-      
+
     if (to_quote)
       retval += dquote;
-        
-    // Double quotes replaced by a pair of consecutive double quotes 
+
+    // Double quotes replaced by a pair of consecutive double quotes
     retval += task->name().replace( dquote, double_dquote );
-      
+
     if (to_quote)
       retval += dquote;
-      
+
     // maybe other tasks are more indented, so to align the columns:
     for ( int i = 0; i < maxdepth - task->depth(); ++i ) retval += delim;
-      
+
     retval += delim + formatTime( task->sessionTime(),
                                    rc.decimalMinutes )
            + delim + formatTime( task->time(),
@@ -626,10 +626,10 @@ QString KarmStorage::exportcsvFile( TaskView *taskview,
            + "\n";
     tasknr++;
   }
-  
+
   // save, either locally or remote
   if ((rc.url.isLocalFile()) || (!rc.url.url().contains("/")))
-  {    
+  {
     QString filename=rc.url.path();
     if (filename.isEmpty()) filename=rc.url.url();
     QFile f( filename );
@@ -647,16 +647,16 @@ QString KarmStorage::exportcsvFile( TaskView *taskview,
   else // use remote file
   {
     KTempFile tmpFile;
-    if ( tmpFile.status() != 0 ) err = QString::fromLatin1( "Unable to get temporary file" ); 
+    if ( tmpFile.status() != 0 ) err = QString::fromLatin1( "Unable to get temporary file" );
     else
     {
       QTextStream *stream=tmpFile.textStream();
       *stream << retval;
-      tmpFile.close(); 
+      tmpFile.close();
       if (!KIO::NetAccess::upload( tmpFile.name(), rc.url, 0 )) err=QString::fromLatin1("Could not upload");
     }
   }
-  
+
   return err;
 }
 
@@ -728,7 +728,7 @@ void KarmStorage::addComment(const Task* task, const QString& comment)
   // transition to using the addComment method, we need this second param.
   QString s = comment;
 
-  // TODO: Use libkcal comments 
+  // TODO: Use libkcal comments
   // todo->addComment(comment);
   // temporary
   todo->setDescription(task->comment());
@@ -738,17 +738,17 @@ void KarmStorage::addComment(const Task* task, const QString& comment)
 }
 
 long KarmStorage::printTaskHistory (
-        const Task               *task, 
-        const QMap<QString,long> &taskdaytotals, 
-        QMap<QString,long>       &daytotals, 
+        const Task               *task,
+        const QMap<QString,long> &taskdaytotals,
+        QMap<QString,long>       &daytotals,
         const QDate              &from,
-        const QDate              &to, 
+        const QDate              &to,
         const int                level,
 	vector <QString>         &matrix,
         const ReportCriteria     &rc)
 // to>=from is precondition
 {
-  long ownline=linenr++; // the how many-th instance of this function is this 
+  long ownline=linenr++; // the how many-th instance of this function is this
   long colrectot=0;      // colum where to write the task's total recursive time
   vector <QString> cell; // each line of the matrix is stored in an array of cells, one containing the recursive total
   long add;              // total recursive time of all subtasks
@@ -791,29 +791,29 @@ long KarmStorage::printTaskHistory (
     day = day.addDays(1);
   }
 
-  // Total for task 
+  // Total for task
   cell.push_back(QString::fromLatin1("%1").arg(formatTime(sum/60, rc.decimalMinutes)));
-  
+
   // room for the recursive total time (that cannot be calculated now)
   cell.push_back(delim);
   colrectot = cell.size();
   cell.push_back("???");
   cell.push_back(delim);
-  
+
   // Task name
   for ( int i = level + 1; i > 0; i-- ) cell.push_back(delim);
 
   /*
   // CSV compliance
-  // Surround the field with quotes if the field contains 
+  // Surround the field with quotes if the field contains
   // a comma (delim) or a double quote
   to_quote = task->name().contains(delim) || task->name().contains(dquote);
   */
-  to_quote = true; 
+  to_quote = true;
   if ( to_quote) cell.push_back(dquote);
 
 
-  // Double quotes replaced by a pair of consecutive double quotes 
+  // Double quotes replaced by a pair of consecutive double quotes
   cell.push_back(task->name().replace( dquote, double_dquote ));
 
   if ( to_quote) cell.push_back(dquote);
@@ -847,21 +847,21 @@ QString KarmStorage::report( TaskView *taskview, const ReportCriteria &rc )
 }
 
 // export history report as csv, all tasks X all dates in one block
-QString KarmStorage::exportcsvHistory ( TaskView      *taskview, 
-                                            const QDate   &from, 
+QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
+                                            const QDate   &from,
                                             const QDate   &to,
                                             const ReportCriteria &rc)
 {
   QString delim = rc.delimiter;
   const QString cr = QString::fromLatin1("\n");
   QString err;
-  
+
   // below taken from timekard.cpp
   QString retval;
   QString taskhdr, totalhdr;
   QString line, buf;
   long sum;
-  
+
   QValueList<HistoryEvent> events;
   QValueList<HistoryEvent>::iterator event;
   QMap<QString, long> taskdaytotals;
@@ -871,12 +871,12 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
   QDate dayheading;
 
   // parameter-plausi
-  if ( from > to ) 
+  if ( from > to )
   {
     err = QString::fromLatin1 (
             "'to' has to be a date later than or equal to 'from'.");
   }
- 
+
   // header
   retval += i18n("Task History\n");
   retval += i18n("From %1 to %2")
@@ -891,7 +891,7 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
   events = taskview->getHistory(from, to);
   taskdaytotals.clear();
   daytotals.clear();
- 
+
   // Build lookup dictionary used to output data in table cells.  keys are
   // in this format: YYYYMMDD_NNNNNN, where Y = year, M = month, d = day and
   // NNNNN = the VTODO uid.  The value is the total seconds logged against
@@ -903,14 +903,14 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
     daytaskkey = QString(QString::fromLatin1("%1_%2"))
         .arg(daykey)
         .arg((*event).todoUid());
-        
+
     if (taskdaytotals.contains(daytaskkey))
-        taskdaytotals.replace(daytaskkey, 
+        taskdaytotals.replace(daytaskkey,
                 taskdaytotals[daytaskkey] + (*event).duration());
     else
         taskdaytotals.insert(daytaskkey, (*event).duration());
   }
-        
+
   // day headings
   dayheading = from;
   while ( dayheading <= to )
@@ -923,7 +923,7 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
   retval += i18n("Sum") + delim + i18n("Total Sum") + delim + i18n("Task Hierarchy");
   retval += cr;
   retval += line;
-        
+
   // the tasks
   vector <QString> matrix;
   linenr=0;
@@ -934,30 +934,30 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
   }
   else
   {
-    if ( rc.allTasks ) 
+    if ( rc.allTasks )
     {
       for ( Task* task= taskview->item_at_index(0);
             task; task= task->nextSibling() )
       {
-        printTaskHistory( task, taskdaytotals, daytotals, from, to, 0, 
+        printTaskHistory( task, taskdaytotals, daytotals, from, to, 0,
                           matrix, rc );
       }
     }
     else
     {
-      printTaskHistory( taskview->current_item(), taskdaytotals, daytotals, 
+      printTaskHistory( taskview->current_item(), taskdaytotals, daytotals,
                         from, to, 0, matrix, rc );
     }
     for (unsigned int i=0; i<matrix.size(); i++) retval+=matrix[i];
     retval += line;
-        
+
     // totals
     sum = 0;
     day = from;
     while (day<=to)
     {
       daykey = day.toString(QString::fromLatin1("yyyyMMdd"));
-        
+
       if (daytotals.contains(daykey))
       {
         retval += QString::fromLatin1("%1")
@@ -967,7 +967,7 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
       retval += delim;
       day = day.addDays(1);
     }
-        
+
     retval += QString::fromLatin1("%1%2%3%4")
         .arg( formatTime( sum/60, rc.decimalMinutes ) )
         .arg( delim ).arg( delim )
@@ -975,11 +975,11 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
   }
 
   // above taken from timekard.cpp
-  
+
   // save, either locally or remote
-  
+
   if ((rc.url.isLocalFile()) || (!rc.url.url().contains("/")))
-  {    
+  {
     QString filename=rc.url.path();
     if (filename.isEmpty()) filename=rc.url.url();
     QFile f( filename );
@@ -997,12 +997,12 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
   else // use remote file
   {
     KTempFile tmpFile;
-    if ( tmpFile.status() != 0 ) err = QString::fromLatin1( "Unable to get temporary file" ); 
+    if ( tmpFile.status() != 0 ) err = QString::fromLatin1( "Unable to get temporary file" );
     else
     {
       QTextStream *stream=tmpFile.textStream();
       *stream << retval;
-      tmpFile.close(); 
+      tmpFile.close();
       if (!KIO::NetAccess::upload( tmpFile.name(), rc.url, 0 )) err=QString::fromLatin1("Could not upload");
     }
   }
@@ -1148,7 +1148,7 @@ bool KarmStorage::remoteResource( const QString& file ) const
 {
   QString f = file.lower();
   bool rval = f.startsWith( "http://" ) || f.startsWith( "ftp://" );
-  
+
   kdDebug(5970) << "KarmStorage::remoteResource( " << file << " ) returns " << rval  << endl;
   return rval;
 }

@@ -79,7 +79,7 @@ bool KonsoleKalendar::importCalendar()
 bool KonsoleKalendar::createCalendar()
 {
   bool status = false;
-  CalendarLocal newCalendar;
+  CalendarLocal newCalendar( QString::fromLatin1("UTC") );
 
   if ( m_variables->isDryRun() ) {
     cout << i18n( "Create Calendar <Dry Run>: %1" ).

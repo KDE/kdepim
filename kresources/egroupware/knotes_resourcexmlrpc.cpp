@@ -50,7 +50,8 @@ static const QString DeleteNoteCommand = "infolog.boinfolog.delete";
 static const QString LoadNoteCategoriesCommand = "infolog.boinfolog.categories";
 
 ResourceXMLRPC::ResourceXMLRPC( const KConfig* config )
-  : ResourceNotes( config ), mServer( 0 )
+  : ResourceNotes( config ),  mCalendar( QString::fromLatin1("UTC") ),
+    mServer( 0 )
 {
   init();
 
@@ -61,7 +62,8 @@ ResourceXMLRPC::ResourceXMLRPC( const KConfig* config )
 }
 
 ResourceXMLRPC::ResourceXMLRPC( )
-  : ResourceNotes( 0 ), mServer( 0 )
+  : ResourceNotes( 0 ), mCalendar( QString::fromLatin1("UTC") ),
+    mServer( 0 )
 {
   init();
 

@@ -60,7 +60,7 @@ bool CalendarSyncEntry::equals(KSyncEntry *entry)
 
 CalendarSyncee::CalendarSyncee()
 {
-  mCalendar = new CalendarLocal;
+  mCalendar = new CalendarLocal( QString::fromLatin1( "UTC" ) );
 
   mEntries.setAutoDelete(true);
 }
@@ -149,5 +149,5 @@ CalendarSyncEntry *CalendarSyncee::createEntry(Incidence *incidence)
     return entry;
   } else {
     return 0;
-  }  
+  }
 }
