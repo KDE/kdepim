@@ -17,6 +17,11 @@
 
 */
 
+#include <qptrlist.h>
+#include <todo.h>
+#include <event.h>
+#include <journal.h>
+
 #include "kalendarsyncentry.h"
 
 KAlendarSyncEntry::KAlendarSyncEntry()
@@ -82,4 +87,31 @@ void KAlendarSyncEntry::setCalendar(KCal::CalendarLocal *cal )
 bool KAlendarSyncEntry::equals(KSyncEntry *sync )
 {
   return false;
+}
+KSyncEntry* KAlendarSyncEntry::clone()
+{
+  KAlendarSyncEntry *entry = new KAlendarSyncEntry();
+  KCal::CalendarLocal *cal = new KCal::CalendarLocal();
+  entry->setCalendar( cal );
+  entry->m_name = m_name;
+  entry->m_oldId = m_oldId;
+  entry->m_time = m_time;
+
+  QPtrList<KCal::Event> events  = m_calendar->getAllEvents();
+  KCal::Event *e;
+  for(e = events.first(); e != 0; e = events.next() ){
+    cal->addEvent((KCal::Event*)e->clone() );
+  };
+  QPtrList<KCal::Todo> todos = m_calendar->getTodoList();
+  KCal::Todo *t;
+  for(t = todos.first(); t != 0; t = todos.next() ){
+    cal->addTodo( (KCal::Todo*)t->clone() );
+  };
+
+  QPtrList<KCal::Journal> journal = m_calendar->journalList();
+  KCal::Journal *j;
+  for(j = journal.first(); j !=0; j = journal.next() ){
+    cal->addJournal((KCal::Journal*)j->clone()  );
+  }
+  return entry;
 }

@@ -42,7 +42,7 @@ class KAddressbookSyncEntry : public KSyncEntry{
     virtual QString timestamp();
     virtual void setTimestamp(const QString & );
     virtual bool equals(KSyncEntry * );
-    virtual KSyncEntry* clone() { return 0l; }
+    virtual KSyncEntry* clone();
   private:
     KABC::AddressBook* m_addressb;
     class AddressbookSyncEntryPrivate;

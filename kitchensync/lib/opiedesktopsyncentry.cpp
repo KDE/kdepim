@@ -71,3 +71,15 @@ bool OpieDesktopSyncEntry::equals(KSyncEntry *entr )
     return false;
 }
 
+KSyncEntry* OpieDesktopSyncEntry::clone()
+{
+  OpieDesktopSyncEntry *entry = new OpieDesktopSyncEntry();
+  entry->m_name = m_name;
+  entry->m_file = m_file;
+  entry->m_id = m_id;
+  entry->m_category = m_category;
+  entry->m_type = m_type;
+  entry->m_size = m_size;
+
+  return entry;
+};

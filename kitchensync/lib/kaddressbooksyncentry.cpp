@@ -89,7 +89,19 @@ bool KAddressbookSyncEntry::equals(KSyncEntry *other )
 	return true;
     return false;
 }
-
+KSyncEntry* KAddressbookSyncEntry::clone()
+{
+  KAddressbookSyncEntry *entry = new KAddressbookSyncEntry();
+  entry->m_name = m_name;
+  entry->m_oldId = m_oldId;
+  entry->m_time = m_time;
+  KABC::AddressBook *adr = new KABC::AddressBook();
+  entry->setAddressbook( adr );
+  for(KABC::AddressBook::Iterator it = m_addressb->begin(); it != m_addressb->end(); ++it ){
+    adr->insertAddressee((*it) );
+  } 
+  return entry;
+}
 
 
 

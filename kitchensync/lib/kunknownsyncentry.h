@@ -48,7 +48,7 @@ class KUnknownSyncEntry : public KSyncEntry
   QString fileName() const;
 
   virtual bool equals(KSyncEntry *) { return false; }
-  virtual KSyncEntry* clone() { return 0l; }
+  virtual KSyncEntry* clone();
 
  private:
   class KUnknownSyncEntryPrivate;

@@ -112,3 +112,14 @@ QString KUnknownSyncEntry::fileName() const
 {
   return d->fileName;
 }
+KSyncEntry* KUnknownSyncEntry::clone()
+{
+  KUnknownSyncEntry *entry = new KUnknownSyncEntry;
+  entry->d->name = d->name;
+  entry->d->id = d->id;
+  entry->d->oldId = d->oldId;
+  entry->d->fileName = d->fileName;
+  entry->d->time = d->time;
+  entry->d->byteArray = d->byteArray;
+  return entry;
+};
