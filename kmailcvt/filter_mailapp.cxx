@@ -28,6 +28,10 @@
 
 #include "filter_mailapp.hxx"
 
+#ifndef MAX_LINE
+#define MAX_LINE 4096
+#endif
+
 FilterMailApp::FilterMailApp() :
 Filter(	i18n("Import From OS X Mail"),
     "Chris Howells<br /><br />Filter accelerated by Danny Kukawka )",

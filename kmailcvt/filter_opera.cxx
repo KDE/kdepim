@@ -25,6 +25,10 @@
 
 #include "filter_opera.hxx"
 
+#ifndef MAX_LINE
+#define MAX_LINE 4096
+#endif
+
 FilterOpera::FilterOpera() :
 Filter(	i18n("Import Opera Emails"),
     "Danny Kukawka",

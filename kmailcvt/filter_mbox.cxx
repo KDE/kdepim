@@ -23,7 +23,7 @@
 #include <kdebug.h>
 
 #ifndef MAX_LINE
-#define MAX_LINE 8192
+#define MAX_LINE 4096
 #endif
 
 #include "filter_mbox.hxx"
