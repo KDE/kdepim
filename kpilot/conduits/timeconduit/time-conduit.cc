@@ -95,7 +95,7 @@ void TimeConduit::readConfig()
 			syncPalmToPC();
 			break;
 		default:
-			emit logError(i18n("Unknown setting for time syncronization."));
+			emit logError(i18n("Unknown setting for time synchronization."));
 			kdWarning() << k_funcinfo << ": unknown sync direction "<<fDirection<<endl;
 			emit syncDone(this);
 			return;
@@ -140,6 +140,9 @@ void TimeConduit::syncPCToPalm()
 }
 
 // $Log$
+// Revision 1.4  2002/07/31 06:40:30  kainhofe
+// skip conduit for PalmOS 3.25 and 3.3, which don't support setting the time
+//
 // Revision 1.2  2002/07/25 21:58:11  kainhofe
 // compile error
 //
