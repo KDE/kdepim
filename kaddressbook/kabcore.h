@@ -144,6 +144,13 @@ class KABCore : public QWidget
     void deleteContacts();
 
     /**
+      Deletes given contacts from the address book.
+
+      @param uids The uids of the contacts, which shall be deleted.
+     */
+    void deleteContacts( const QStringList &uids );
+
+    /**
       Copys the selected contacts into clipboard for later pasting.
      */
     void copyContacts();
@@ -157,6 +164,13 @@ class KABCore : public QWidget
       Paste contacts from clipboard into the address book.
      */
     void pasteContacts();
+
+    /**
+      Paste given contacts into the address book.
+
+      @param list The list of addressee, which shall be pasted.
+     */
+    void pasteContacts( KABC::Addressee::List &list );
 
     /**
       Sets the whoAmI contact, that is used by many other programs to
@@ -294,8 +308,6 @@ class KABCore : public QWidget
     bool mReadWrite;
     bool mModified;
     bool mIsPart;
-
-    KConfig *mConfig;
 
     KAction *mActionPaste;
     KAction *mActionCut;

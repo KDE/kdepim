@@ -135,14 +135,12 @@ void KABConfigWidget::restoreSettings()
 
 void KABConfigWidget::saveSettings()
 {
-  kdDebug() << "KABConfigWidget::save()" << endl;
-
   KABPrefs::instance()->mAutomaticNameParsing = mNameParsing->isChecked();
   KABPrefs::instance()->mHonorSingleClick = mViewsSingleClickBox->isChecked();
-  KABPrefs::instance()->writeConfig();
   mAddresseeWidget->saveSettings();
 
   saveExtensionSettings();
+  KABPrefs::instance()->writeConfig();
 
   emit changed( false );
 }
@@ -162,10 +160,7 @@ void KABConfigWidget::modified()
 
 void KABConfigWidget::restoreExtensionSettings()
 {
-  KConfig config( "kaddressbookrc" );
-  config.setGroup( "Extensions_General" );
-
-  QStringList activeExtensions = config.readListEntry( "activeExtensions" );
+  QStringList activeExtensions = KABPrefs::instance()->mActiveExtensions;
 
   mExtensionView->clear();
 
@@ -184,10 +179,6 @@ void KABConfigWidget::restoreExtensionSettings()
 
 void KABConfigWidget::saveExtensionSettings()
 {
-  KConfig config( "kaddressbookrc" );
-  config.deleteGroup( "Extensions_General" );
-  config.setGroup( "Extensions_General" );
-
   QStringList activeExtensions;
 
   QPtrList<QListViewItem> list;
@@ -201,8 +192,7 @@ void KABConfigWidget::saveExtensionSettings()
     ++it;
   }
 
-  config.writeEntry( "activeExtensions", activeExtensions );
-  config.sync();
+  KABPrefs::instance()->mActiveExtensions = activeExtensions;
 }
 
 void KABConfigWidget::configureExtension()

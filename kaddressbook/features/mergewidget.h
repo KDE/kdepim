@@ -1,6 +1,6 @@
 /*                                                                      
     This file is part of KAddressBook.                                  
-    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
+    Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>                   
                                                                         
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,52 +19,53 @@
     As a special exception, permission is given to link this program    
     with any edition of Qt, and distribute the resulting executable,    
     without including the source code for Qt in the source distribution.
-*/                                       
+*/                                                                      
 
-#ifndef KABPREFS_H
-#define KABPREFS_H
+#ifndef MERGEWIDGET_H
+#define MERGEWIDGET_H
 
-#include <qstringlist.h>
+#include <kdialogbase.h>
+#include <klistview.h>
 
-#include <libkdepim/kpimprefs.h>
+#include "extensionwidget.h"
 
-class KConfig;
+class QListView;
 
-class KABPrefs : public KPimPrefs
+class KABCore;
+
+namespace KABC {
+class AddressBook;
+}
+
+class MergeWidget : public ExtensionWidget
 {
+    Q_OBJECT
+
   public:
-    ~KABPrefs();
+    MergeWidget( KABCore*, QWidget *parent, const char *name = 0 );
+    virtual ~MergeWidget();
 
-    static KABPrefs *instance();
-    
-    // General
-    bool mHonorSingleClick;
-    bool mAutomaticNameParsing;
-    int mCurrentIncSearchField;
+    void contactsSelectionChanged();
 
-    // GUI
-    bool mJumpButtonBarVisible;
-    bool mDetailsPageVisible;
-    QValueList<int> mExtensionsSplitter;
-    QValueList<int> mDetailsSplitter;
+    QString title() const;
+    QString identifier() const;
 
-    // Extensions stuff
-    int mCurrentExtension;
-    QStringList mActiveExtensions;
+  private slots:
+    void mergeAndRemove();
+    void merge();
 
-    // Views stuff
-    QString mCurrentView;
-    QStringList mViewNames;
+    void selectionContactViewChanged();
 
-    // Filter
-    int mCurrentFilter;
-
-    void setCategoryDefaults();
-    
   private:
-    KABPrefs();
-    
-    static KABPrefs *sInstance;
+    void updateView();
+    void doMerge( const KABC::Addressee &addr );
+
+    KListView *mContactView;
+    QPushButton *mMergeAndRemoveButton;
+    QPushButton *mMergeButton;
+
+    KABC::Addressee mMasterAddressee;
+    bool mBlockUpdate;
 };
 
 #endif

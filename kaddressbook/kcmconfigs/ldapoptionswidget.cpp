@@ -42,22 +42,30 @@ class LDAPServer
 {
   public:
     LDAPServer() : mPort( 389 ) {}
-    LDAPServer( const QString &host, int port, const QString &baseDN )
-      : mHost( host ), mPort( port ), mBaseDN( baseDN )
+    LDAPServer( const QString &host, int port, const QString &baseDN,
+                const QString &bindDN, const QString &pwdBindDN )
+      : mHost( host ), mPort( port ), mBaseDN( baseDN ), mBindDN( bindDN ),
+        mPwdBindDN( pwdBindDN )
     { }
 
     QString host() const { return mHost; }
     int port() const { return mPort; }
     QString baseDN() const { return mBaseDN; }
+    QString bindDN() const { return mBindDN; }
+    QString pwdBindDN() const { return mPwdBindDN; }
 
     void setHost( const QString &host ) { mHost = host; }
     void setPort( int port ) { mPort = port; }
     void setBaseDN( const QString &baseDN ) {  mBaseDN = baseDN; }
+    void setBindDN( const QString &bindDN ) {  mBindDN = bindDN; }
+    void setPwdBindDN( const QString &pwdBindDN ) {  mPwdBindDN = pwdBindDN; }
 
   private:
     QString mHost;
     int mPort;
     QString mBaseDN;
+    QString mBindDN;
+    QString mPwdBindDN;
 };
 
 class LDAPItem : public QCheckListItem
@@ -112,7 +120,8 @@ void LDAPOptionsWidget::slotAddHost()
   AddHostDialog dlg( this );
 
   if ( dlg.exec() && !dlg.host().isEmpty() ) {
-    LDAPServer server( dlg.host(), dlg.port(), dlg.baseDN() );
+    LDAPServer server( dlg.host(), dlg.port(), dlg.baseDN(),
+                       dlg.bindDN(), dlg.pwdBindDN() );
     new LDAPItem( mHostListView, server );
 
     emit changed( true );
@@ -131,9 +140,12 @@ void LDAPOptionsWidget::slotEditHost()
   dlg.setHost( item->server().host() );
   dlg.setPort( item->server().port() );
   dlg.setBaseDN( item->server().baseDN() );
+  dlg.setBindDN( item->server().bindDN() );
+  dlg.setPwdBindDN( item->server().pwdBindDN() );
 
   if ( dlg.exec() && !dlg.host().isEmpty() ) {
-    LDAPServer server( dlg.host(), dlg.port(), dlg.baseDN() );
+    LDAPServer server( dlg.host(), dlg.port(), dlg.baseDN(),
+                       dlg.bindDN(), dlg.pwdBindDN() );
     item->setServer( server );
 
     emit changed( true );
@@ -167,6 +179,8 @@ void LDAPOptionsWidget::restoreSettings()
     server.setHost( config->readEntry( QString( "SelectedHost%1").arg( i ) ) );
     server.setPort( config->readUnsignedNumEntry( QString( "SelectedPort%1" ).arg( i ) ) );
     server.setBaseDN( config->readEntry( QString( "SelectedBase%1" ).arg( i ) ) );
+    server.setBindDN( config->readEntry( QString( "SelectedBind%1" ).arg( i ) ) );
+    server.setPwdBindDN( config->readEntry( QString( "SelectedPwdBind%1" ).arg( i ) ) );
 
     LDAPItem *item = new LDAPItem( mHostListView, server );
     item->setOn( true );
@@ -178,6 +192,9 @@ void LDAPOptionsWidget::restoreSettings()
     server.setHost( config->readEntry( QString( "Host%1" ).arg( i ) ) );
     server.setPort( config->readUnsignedNumEntry( QString( "Port%1" ).arg( i ) ) );
     server.setBaseDN( config->readEntry( QString( "Base%1" ).arg( i ) ) );
+    server.setBindDN( config->readEntry( QString( "Bind%1" ).arg( i ) ) );
+    server.setPwdBindDN( config->readEntry( QString( "PwdBind%1" ).arg( i ) ) );
+
     new LDAPItem( mHostListView, server );
   }
 
@@ -203,11 +220,15 @@ void LDAPOptionsWidget::saveSettings()
       config->writeEntry( QString( "SelectedHost%1" ).arg( selected ), server.host() );
       config->writeEntry( QString( "SelectedPort%1" ).arg( selected ), server.port() );
       config->writeEntry( QString( "SelectedBase%1" ).arg( selected ), server.baseDN() );
+      config->writeEntry( QString( "SelectedBind%1" ).arg( selected ), server.bindDN() );
+      config->writeEntry( QString( "SelectedPwdBind%1" ).arg( selected ), server.pwdBindDN() );
       selected++;
     } else {
       config->writeEntry( QString( "Host%1" ).arg( selected ), server.host() );
       config->writeEntry( QString( "Port%1" ).arg( selected ), server.port() );
       config->writeEntry( QString( "Base%1" ).arg( selected ), server.baseDN() );
+      config->writeEntry( QString( "Bind%1" ).arg( selected ), server.bindDN() );
+      config->writeEntry( QString( "PwdBind%1" ).arg( selected ), server.pwdBindDN() );
       unselected++;
     }
   }

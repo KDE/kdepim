@@ -26,7 +26,8 @@
 
 #include <kdialogbase.h>
 
-class QLineEdit;
+class KLineEdit;
+
 class QPushButton;
 class QSpinBox;
 
@@ -41,10 +42,14 @@ class AddHostDialog : public KDialogBase
     void setHost( const QString &host );
     void setPort( int port );
     void setBaseDN( const QString &baseDN );
+    void setBindDN( const QString &bindDN );
+    void setPwdBindDN( const QString &pwdBindDN );
 
     QString host() const;
     int port() const;
     QString baseDN() const;
+    QString bindDN() const;
+    QString pwdBindDN() const;
 
   signals:
     void changed( bool );
@@ -53,9 +58,11 @@ class AddHostDialog : public KDialogBase
     void slotHostEditChanged( const QString& );
 
   private:
-    QLineEdit* mHostEdit;
+    KLineEdit* mHostEdit;
     QSpinBox* mPortSpinBox;
-    QLineEdit* mBaseEdit;
+    KLineEdit* mBaseEdit;
+    KLineEdit* mBindEdit;
+    KLineEdit* mPwdBindEdit;
 };
 
 #endif // ADDHOSTDIALOG_H

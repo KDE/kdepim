@@ -23,12 +23,13 @@
 
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qlineedit.h>
 #include <qpushbutton.h>
 #include <qspinbox.h>
 #include <qtooltip.h>
 
+#include <kaccelmanager.h>
 #include <kbuttonbox.h>
+#include <klineedit.h>
 #include <klocale.h>
 
 #include "addhostdialog.h"
@@ -38,14 +39,14 @@ AddHostDialog::AddHostDialog( QWidget* parent,  const char* name )
 {
   QWidget *page = plainPage();
 
-  QGridLayout *layout = new QGridLayout( page, 3, 3, marginHint(), spacingHint() );
+  QGridLayout *layout = new QGridLayout( page, 3, 5, marginHint(), spacingHint() );
 
-  mHostEdit = new QLineEdit( page );
+  mHostEdit = new KLineEdit( page );
   layout->addMultiCellWidget( mHostEdit, 0, 0, 1, 2 );
   connect( mHostEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( slotHostEditChanged( const QString& ) ) );
 
-  QLabel *label = new QLabel( i18n( "&Host:" ), page );
+  QLabel *label = new QLabel( i18n( "Host:" ), page );
   label->setBuddy( mHostEdit );
   layout->addWidget( label, 0, 0 );
 
@@ -54,22 +55,40 @@ AddHostDialog::AddHostDialog( QWidget* parent,  const char* name )
   mPortSpinBox->setValue( 389 );
   layout->addWidget( mPortSpinBox, 1, 1 );
 
-  label = new QLabel( i18n( "&Port:" ), page );
+  label = new QLabel( i18n( "Port:" ), page );
   QToolTip::add( label, i18n( "The port number of the directory server if it is using a non-standard port (389 is the standard)" ) );
   label->setBuddy( mPortSpinBox );
   layout->addWidget( label, 1, 0 );
 
-  mBaseEdit = new QLineEdit( page );
+  mBaseEdit = new KLineEdit( page );
   layout->addMultiCellWidget( mBaseEdit, 2, 2, 1, 2 );
 
-  label = new QLabel( i18n( "&Base DN:" ), page );
+  label = new QLabel( i18n( "Base DN:" ), page );
   QToolTip::add( label, i18n( "The base DN used for searching" ) );
   label->setBuddy( mBaseEdit );
   layout->addWidget( label, 2, 0 );
 
+  mBindEdit = new KLineEdit( page );
+  layout->addMultiCellWidget( mBindEdit, 3, 3, 1, 2 );
+
+  label = new QLabel( i18n( "Bind DN:" ), page );
+  QToolTip::add( label, i18n( "The bind DN used for searching" ) );
+  label->setBuddy( mBindEdit );
+  layout->addWidget( label, 3, 0 );
+
+  mPwdBindEdit = new KLineEdit( page );
+  layout->addMultiCellWidget( mPwdBindEdit, 4, 4, 1, 2 );
+
+  label = new QLabel( i18n( "Password:" ), page );
+  QToolTip::add( label, i18n( "The password used for searching" ) );
+  label->setBuddy( mPwdBindEdit );
+  layout->addWidget( label, 4, 0 );
+
   resize( QSize( 380, 150 ).expandedTo( sizeHint() ) );
   enableButtonOK( !mHostEdit->text().isEmpty());
   mHostEdit->setFocus();
+
+  KAcceleratorManager::manage( this );
 }
 
 AddHostDialog::~AddHostDialog()
@@ -96,6 +115,16 @@ void AddHostDialog::setBaseDN( const QString &baseDN )
   mBaseEdit->setText( baseDN );
 }
 
+void AddHostDialog::setBindDN( const QString &bindDN )
+{
+  mBindEdit->setText( bindDN );
+}
+
+void AddHostDialog::setPwdBindDN( const QString &pwdBindDN )
+{
+  mPwdBindEdit->setText( pwdBindDN );
+}
+
 QString AddHostDialog::host() const
 {
   return mHostEdit->text().stripWhiteSpace();
@@ -109,6 +138,16 @@ int AddHostDialog::port() const
 QString AddHostDialog::baseDN() const
 {
   return mBaseEdit->text().stripWhiteSpace();
+}
+
+QString AddHostDialog::bindDN() const
+{
+  return mBindEdit->text().stripWhiteSpace();
+}
+
+QString AddHostDialog::pwdBindDN() const
+{
+  return mPwdBindEdit->text().stripWhiteSpace();
 }
 
 #include "addhostdialog.moc"

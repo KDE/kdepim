@@ -38,6 +38,25 @@ KABPrefs::KABPrefs()
 
   KPrefs::setCurrentGroup( "General" );
   addItemBool( "AutomaticNameParsing", mAutomaticNameParsing, true );
+  addItemInt( "CurrentIncSearchField", mCurrentIncSearchField, 0 );
+
+  KPrefs::setCurrentGroup( "MainWindow" );
+  addItemBool( "JumpButtonBarVisible", mJumpButtonBarVisible, false );
+  addItemBool( "DetailsPageVisible", mDetailsPageVisible, true );
+  addItemIntList( "ExtensionsSplitter", mExtensionsSplitter );
+  addItemIntList( "DetailsSplitter", mDetailsSplitter );
+
+  KPrefs::setCurrentGroup( "Extensions_General" );
+  addItemInt( "CurrentExtension", mCurrentExtension, 0 );
+  addItemStringList( "ActiveExtensions", mActiveExtensions );
+
+  KPrefs::setCurrentGroup( "Views" );
+  QString defaultView = i18n( "Default Table View" );
+  addItemString( "CurrentView", mCurrentView, defaultView );
+  addItemStringList( "ViewNames", mViewNames, defaultView );
+
+  KPrefs::setCurrentGroup( "Filters" );
+  addItemInt( "CurrentFilter", mCurrentFilter, 0 );
 }
 
 KABPrefs::~KABPrefs()

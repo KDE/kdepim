@@ -60,6 +60,7 @@ class ViewManager : public QWidget
 
     QStringList selectedUids() const;
     QStringList selectedEmails() const;
+    KABC::Addressee::List selectedAddressees() const;
 
   public slots:
     void setSelected( const QString &uid = QString::null, bool selected = true );

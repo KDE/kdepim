@@ -27,8 +27,9 @@
 #include <klocale.h>
 #include <ktrader.h>
 
-#include "kabcore.h"
 #include "addresseeeditorwidget.h"
+#include "kabcore.h"
+#include "kabprefs.h"
 
 #include "extensionmanager.h"
 
@@ -52,16 +53,13 @@ ExtensionManager::~ExtensionManager()
 
 void ExtensionManager::restoreSettings()
 {
-  KConfigGroupSaver saver( mCore->config(), "MainWindow" );
-  mActionExtensions->setCurrentItem( mCore->config()->readNumEntry( "Extensions", 0 ) );
-
+  mActionExtensions->setCurrentItem( KABPrefs::instance()->mCurrentExtension );
   setActiveExtension( mActionExtensions->currentItem() );
 }
 
 void ExtensionManager::saveSettings()
 {
-  KConfigGroupSaver saver( mCore->config(), "MainWindow" );
-  mCore->config()->writeEntry( "Extensions", mActionExtensions->currentItem() );
+  KABPrefs::instance()->mCurrentExtension = mActionExtensions->currentItem();
 }
 
 void ExtensionManager::reconfigure()
@@ -125,9 +123,7 @@ void ExtensionManager::createExtensionWidgets()
   extensionNames.append( wdg->title() );
 
   // load the other extensions
-  KConfig *config = mCore->config();
-  KConfigGroupSaver saver( config, "Extensions_General" );
-  QStringList activeExtensions = config->readListEntry( "activeExtensions" );
+  QStringList activeExtensions = KABPrefs::instance()->mActiveExtensions;
 
   KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/Extension" );
   KTrader::OfferList::ConstIterator it;

@@ -42,6 +42,7 @@
 #include "addresseeutil.h"
 #include "filtereditdialog.h"
 #include "kabcore.h"
+#include "kabprefs.h"
 
 #include "viewmanager.h"
 
@@ -64,25 +65,16 @@ ViewManager::~ViewManager()
 
 void ViewManager::restoreSettings()
 {
-  KConfigGroupSaver viewSaver( mCore->config(), "Views" );
-  mViewNameList = mCore->config()->readListEntry( "Names" );
-  QString activeViewName = mCore->config()->readEntry( "Active" );
-
-  if ( mViewNameList.size() == 0 )  // Add a default
-    mViewNameList.append( i18n( "Default Table View" ) );
+  mViewNameList = KABPrefs::instance()->mViewNames;
+  QString activeViewName = KABPrefs::instance()->mCurrentView;
 
   mActionSelectView->setItems( mViewNameList );
 
   // Filter
   mFilterList = Filter::restore( mCore->config(), "Filter" );
-
   mActionSelectFilter->setItems( filterNames() );
 
-  KConfigGroupSaver filterSaver( mCore->config(), "Filter" );
-  if ( mCore->config()->hasKey( "Active" ) ) {
-    uint pos = mCore->config()->readNumEntry( "Active", 0 );
-    mActionSelectFilter->setCurrentItem( pos );
-  }
+  mActionSelectFilter->setCurrentItem( KABPrefs::instance()->mCurrentFilter );
 
   // Tell the views to reread their config, since they may have
   // been modified by global settings
@@ -93,6 +85,8 @@ void ViewManager::restoreSettings()
   }
 
   setActiveView( activeViewName );
+
+  mActionDeleteView->setEnabled( mViewNameList.count() > 1 );
 }
 
 void ViewManager::saveSettings()
@@ -104,28 +98,43 @@ void ViewManager::saveSettings()
   }
 
   Filter::save( mCore->config(), "Filter", mFilterList );
-  KConfigGroupSaver filterSaver( mCore->config(), "Filter" );
-  mCore->config()->writeEntry( "Active", mActionSelectFilter->currentItem() );
+  KABPrefs::instance()->mCurrentFilter = mActionSelectFilter->currentItem();
 
   // write the view name list
-  KConfigGroupSaver viewSaver( mCore->config(), "Views" );
-  mCore->config()->writeEntry( "Names", mViewNameList );
-  mCore->config()->writeEntry( "Active", mActiveView->name() );
+  KABPrefs::instance()->mViewNames = mViewNameList;
+  KABPrefs::instance()->mCurrentView = mActiveView->name();
 }
 
 QStringList ViewManager::selectedUids() const
 {
-    if ( mActiveView )
-        return mActiveView->selectedUids();
-    else
-        return QStringList();
+  if ( mActiveView )
+    return mActiveView->selectedUids();
+  else
+    return QStringList();
 }
 
 QStringList ViewManager::selectedEmails() const
 {
-    if ( mActiveView )
-        return mActiveView->selectedEmails();
-    else return QStringList();
+  if ( mActiveView )
+    return mActiveView->selectedEmails();
+  else
+    return QStringList();
+}
+
+KABC::Addressee::List ViewManager::selectedAddressees() const
+{
+  KABC::Addressee::List list;
+  if ( mActiveView ) {
+    QStringList uids = mActiveView->selectedUids();
+    QStringList::Iterator it;
+    for ( it = uids.begin(); it != uids.end(); ++it ) {
+      KABC::Addressee addr = mCore->addressBook()->findByUid( *it );
+      if ( !addr.isEmpty() )
+        list.append( addr );
+    }
+  }
+
+  return list;
 }
 
 void ViewManager::setSelected( const QString &uid, bool selected )
@@ -284,7 +293,7 @@ void ViewManager::deleteView()
       mActionSelectView->setCurrentItem( 0 );
       setActiveView( mViewNameList[ 0 ] );
     }
-    mActionDeleteView->setEnabled( mViewNameList.count() > 0 );
+    mActionDeleteView->setEnabled( mViewNameList.count() > 1 );
   }
 }
 
@@ -325,7 +334,7 @@ void ViewManager::addView()
 
     editView();
 
-    mActionDeleteView->setEnabled( mViewNameList.count() > 0 );
+    mActionDeleteView->setEnabled( mViewNameList.count() > 1 );
   }
 }
 

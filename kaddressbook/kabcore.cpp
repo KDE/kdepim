@@ -69,7 +69,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
                   const char *name )
   : QWidget( parent, name ), mGUIClient( client ), mViewManager( 0 ),
     mExtensionManager( 0 ), mConfigureDialog( 0 ), mLdapSearchDialog( 0 ),
-    mReadWrite( readWrite ), mModified( false ), mConfig( 0 )
+    mReadWrite( readWrite ), mModified( false )
 {
   mIsPart = !parent->inherits( "KAddressBookMain" );
 
@@ -132,32 +132,30 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 KABCore::~KABCore()
 {
   saveSettings();
+  KABPrefs::instance()->writeConfig();
+
   mAddressBook = 0;
   KABC::StdAddressBook::close();
 }
 
 void KABCore::restoreSettings()
 {
-  KConfigGroupSaver saver( config(), "MainWindow" );
-
-  bool state = config()->readBoolEntry( "JumpBar", false );
+  bool state = KABPrefs::instance()->mJumpButtonBarVisible;
   mActionJumpBar->setChecked( state );
   setJumpButtonBarVisible( state );
   
-  state = config()->readBoolEntry( "Details", true );
+  state = KABPrefs::instance()->mDetailsPageVisible;
   mActionDetails->setChecked( state );
   setDetailsVisible( state );
 
-  QValueList<int> splitterSize;
-  KConfigGroupSaver splitterSaver( config(), "Splitter" );
-  splitterSize = config()->readIntListEntry( "ExtensionsSplitter" );
+  QValueList<int> splitterSize = KABPrefs::instance()->mExtensionsSplitter;
   if ( splitterSize.count() == 0 ) {
     splitterSize.append( width() / 2 );
     splitterSize.append( width() / 2 );
   }
   mExtensionBarSplitter->setSizes( splitterSize );
 
-  splitterSize = config()->readIntListEntry( "DetailsSplitter" );
+  splitterSize = KABPrefs::instance()->mDetailsSplitter;
   if ( splitterSize.count() == 0 ) {
     splitterSize.append( height() / 2 );
     splitterSize.append( height() / 2 );
@@ -167,24 +165,21 @@ void KABCore::restoreSettings()
   mViewManager->restoreSettings();
   mExtensionManager->restoreSettings();
 
-  mIncSearchWidget->setCurrentItem( config()->readNumEntry( "IncSearchField", 0 ) );
+  mIncSearchWidget->setCurrentItem( KABPrefs::instance()->mCurrentIncSearchField );
 }
 
 void KABCore::saveSettings()
 {
-  KConfigGroupSaver saver( config(), "MainWindow" );
-  config()->writeEntry( "JumpBar", mActionJumpBar->isChecked() );
-  config()->writeEntry( "Details", mActionDetails->isChecked() );
-  config()->sync();
+  KABPrefs::instance()->mJumpButtonBarVisible = mActionJumpBar->isChecked();
+  KABPrefs::instance()->mDetailsPageVisible = mActionDetails->isChecked();
 
-  KConfigGroupSaver splitterSaver( config(), "Splitter" );
-  config()->writeEntry( "ExtensionsSplitter", mExtensionBarSplitter->sizes() );
-  config()->writeEntry( "DetailsSplitter", mDetailsSplitter->sizes() );
+  KABPrefs::instance()->mExtensionsSplitter = mExtensionBarSplitter->sizes();
+  KABPrefs::instance()->mDetailsSplitter = mDetailsSplitter->sizes();
 
   mExtensionManager->saveSettings();
   mViewManager->saveSettings();
 
-  config()->writeEntry( "IncSearchField", mIncSearchWidget->currentItem() );
+  KABPrefs::instance()->mCurrentIncSearchField = mIncSearchWidget->currentItem();
 }
 
 KABC::AddressBook *KABCore::addressBook() const
@@ -194,10 +189,7 @@ KABC::AddressBook *KABCore::addressBook() const
 
 KConfig *KABCore::config()
 {
-  static KConfig *mConfig = 0;
-  if ( !mConfig )
-    mConfig = new KConfig( locateLocal( "config", "kaddressbookrc" ) );
-  return mConfig;
+  return KABPrefs::instance()->config();
 }
 
 KActionCollection *KABCore::actionCollection() const
@@ -364,8 +356,13 @@ void KABCore::deleteContacts()
 {
   QStringList uidList = mViewManager->selectedUids();
 
-  if ( uidList.size() > 0 ) {
-    PwDeleteCommand *command = new PwDeleteCommand( mAddressBook, uidList );
+  deleteContacts( uidList );
+}
+
+void KABCore::deleteContacts( const QStringList &uids )
+{
+  if ( uids.count() > 0 ) {
+    PwDeleteCommand *command = new PwDeleteCommand( mAddressBook, uids );
     UndoStack::instance()->push( command );
     RedoStack::instance()->clear();
 
@@ -377,12 +374,7 @@ void KABCore::deleteContacts()
 
 void KABCore::copyContacts()
 {
-  QStringList uidList = mViewManager->selectedUids();
-  KABC::Addressee::List addrList;
-
-  QStringList::Iterator it;
-  for ( it = uidList.begin(); it != uidList.end(); ++it )
-    addrList.append( mAddressBook->findByUid( *it ) );
+  KABC::Addressee::List addrList = mViewManager->selectedAddressees();
 
   QString clipText = AddresseeUtil::addresseesToClipboard( addrList );
 
@@ -411,14 +403,15 @@ void KABCore::pasteContacts()
 
   KABC::Addressee::List list = AddresseeUtil::clipboardToAddressees( cb->text() );
 
-  QStringList uids;
+  pasteContacts( list );
+}
 
+void KABCore::pasteContacts( KABC::Addressee::List &list )
+{
   KABC::Resource *resource = requestResource( this );
   KABC::Addressee::List::Iterator it;
-  for ( it = list.begin(); it != list.end(); ++it ) {
+  for ( it = list.begin(); it != list.end(); ++it )
     (*it).setResource( resource );
-    uids.append( (*it).assembledName() );
-  }
 
   PwPasteCommand *command = new PwPasteCommand( this, list );
   UndoStack::instance()->push( command );
@@ -429,17 +422,16 @@ void KABCore::pasteContacts()
 
 void KABCore::setWhoAmI()
 {
-  QStringList uidList = mViewManager->selectedUids();
+  KABC::Addressee::List addrList = mViewManager->selectedAddressees();
 
-  if ( uidList.count() > 1 ) {
+  if ( addrList.count() > 1 ) {
     KMessageBox::sorry( this, i18n( "Please select only one contact." ) );
     return;
   }
 
   QString text( i18n( "<qt>Do you really want to use <b>%1</b> as your new personal contact?</qt>" ) );
-  KABC::Addressee addr = mAddressBook->findByUid( uidList[ 0 ] );
-  if ( KMessageBox::questionYesNo( this, text.arg( addr.assembledName() ) ) == KMessageBox::Yes )
-    static_cast<KABC::StdAddressBook*>( KABC::StdAddressBook::self() )->setWhoAmI( addr );
+  if ( KMessageBox::questionYesNo( this, text.arg( addrList[ 0 ].assembledName() ) ) == KMessageBox::Yes )
+    static_cast<KABC::StdAddressBook*>( KABC::StdAddressBook::self() )->setWhoAmI( addrList[ 0 ] );
 }
 
 void KABCore::setCategories()
