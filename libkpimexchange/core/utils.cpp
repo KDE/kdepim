@@ -26,7 +26,7 @@ extern "C" {
 
 #include "utils.h"
 
-/** In a document doc with node node, add an element with name ns and tagname tag. Return the new element 
+/** In a document doc with node node, add an element with name ns and tagname tag. Return the new element
  */
 QDomElement addElement( QDomDocument& doc, QDomNode& node, const QString& ns, const QString& tag )
 {
@@ -72,7 +72,7 @@ KURL toDAV( const KURL& url ) {
   KURL result( url );
   if ( result.protocol() == "http" )
     result.setProtocol( "webdav" );
-  else if ( result.protocol() = "https" )
+  else if ( result.protocol() == "https" )
     result.setProtocol( "webdavs" );
   return result;
 }
@@ -81,7 +81,7 @@ KURL* toDAV( const KURL* url ) {
   KURL* result = new KURL( *url );
   if ( result->protocol() == "http" )
      result->setProtocol( "webdav" );
-  else if (  result->protocol() = "https" )
+  else if (  result->protocol() == "https" )
      result->setProtocol( "webdavs" );
   return result;
 }
