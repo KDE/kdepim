@@ -111,6 +111,8 @@ class QtopiaSocket : public QObject
     QString partnerIdPath() const;
     void readTimeZones();
 
+    void sendCommand( const QString& cmd );
+
     /* download relative from the home dir */
     bool downloadFile( const QString &str, QString &newDest );
     int m_flushedApps;

@@ -285,16 +285,14 @@ void QtopiaSocket::write( SynceeList list )
 
 
     /* trigger reload for apps on pda */
-    QTextStream stream( d->socket );
-    stream << "call QPE/Application/datebook reload()" << endl;
-    stream << "call QPE/Application/addressbook reload()" << endl;
-    stream << "call QPE/Application/todolist reload()" << endl;
+    sendCommand( "call QPE/Application/datebook reload()" );
+    sendCommand( "call QPE/Application/addressbook reload()" );
+    sendCommand( "call QPE/Application/todolist reload()" );
 
     /*
      * tell Opie/Qtopia that we're ready
      */
-    //QTextStream stream( d->socket );
-    stream << "call QPE/System stopSync()" << endl;
+    sendCommand( "call QPE/System stopSync()" );
     d->isSyncing = false;
 
     /*
@@ -337,8 +335,7 @@ void QtopiaSocket::slotClosed()
 void QtopiaSocket::slotNOOP()
 {
     if (!d->socket ) return;
-    QTextStream stream( d->socket );
-    stream << "NOOP" << endl;
+    sendCommand( "NOOP" );
 }
 
 void QtopiaSocket::process()
@@ -346,6 +343,7 @@ void QtopiaSocket::process()
     while ( d->socket->canReadLine() ) {
         QTextStream stream( d->socket );
         QString line = d->socket->readLine();
+        kdDebug() << "100O " << line << endl;
         //kdDebug(5225) << line << endl;
         //kdDebug(5225) << d->mode << endl;
         switch( d->mode ) {
@@ -374,8 +372,7 @@ void QtopiaSocket::slotStartSync()
 {
     emit prog( Progress( i18n("Starting to sync now") ) );
     d->startSync = false;
-    QTextStream stream( d->socket );
-    stream << "call QPE/System sendHandshakeInfo()" << endl;
+    sendCommand( "call QPE/System sendHandshakeInfo()" );
     d->getMode = d->Handshake;
     d->mode = d->Call;
 }
@@ -608,7 +605,6 @@ void QtopiaSocket::readTodoList()
 
 void QtopiaSocket::start( const QString& line )
 {
-    QTextStream stream( d->socket );
     if ( line.left(3) != QString::fromLatin1("220") ) {
         emit error( Error(i18n("The device returned bogus data. giving up now.") ) );
         // something went wrong
@@ -621,16 +617,16 @@ void QtopiaSocket::start( const QString& line )
          * parse the uuid
          * here if not zaurus
          */
-	if( d->device->distribution() == OpieHelper::Device::Zaurus ){
-	    d->partnerId = d->device->meta();
-	} else {
+        if( d->device->distribution() == OpieHelper::Device::Zaurus ){
+            d->partnerId = d->device->meta();
+        } else {
             QStringList list = QStringList::split(";", line );
-    	    QString uid = list[1];
+            QString uid = list[1];
             uid = uid.mid(11, uid.length()-12 );
-	    d->partnerId = uid;
+	          d->partnerId = uid;
         }
-    	initFiles();
-        stream << "USER " << d->device->user() << endl;
+        initFiles();
+        sendCommand( "USER " + d->device->user() );
         d->mode = d->User;
     }
 }
@@ -639,7 +635,6 @@ void QtopiaSocket::user( const QString &line )
 {
     emit prog( StdProgress::connected() );
 //    emit prog( StdProgress::authentication() );
-    QTextStream stream( d->socket );
     if ( line.left(3) != QString::fromLatin1("331") ) {
         emit error( StdError::wrongUser( d->device->user() ) );
         // wrong user name
@@ -648,7 +643,7 @@ void QtopiaSocket::user( const QString &line )
         d->connected    = false;
         d->isConnecting = false;
     } else{
-        stream << "PASS " << d->device->password() << endl;
+        sendCommand( "PASS " + d->device->password() );
         d->mode = d->Pass;
     }
 }
@@ -730,9 +725,8 @@ void QtopiaSocket::flush( const QString& _line )
         /*
          * now we can progress during sync
          */
-        QTextStream stream( d->socket );
         d->getMode  = d->ABook;
-        stream << "call QPE/System getAllDocLinks()" << endl;
+        sendCommand( "call QPE/System getAllDocLinks()" );
         m_flushedApps = 0;
     }
 }
@@ -749,12 +743,11 @@ void QtopiaSocket::noop( const QString & )
 
 void QtopiaSocket::handshake( const QString &line )
 {
-    QTextStream stream( d->socket );
     QStringList list = QStringList::split( QString::fromLatin1(" "), line );
     d->path = list[3];
     if (!d->path.isEmpty() ) {
         d->getMode = d->Desktops;
-        stream << "call QPE/System startSync(QString) KitchenSync" << endl;
+        sendCommand( "call QPE/System startSync(QString) KitchenSync" );
     }
 }
 
@@ -791,10 +784,9 @@ void QtopiaSocket::initSync( const QString& )
     readTimeZones();
 
     /* flush the data on pda side to make sure to get the latest version */
-    QTextStream stream( d->socket );
-    stream << "call QPE/Application/datebook flush()" << endl;
-    stream << "call QPE/Application/addressbook flush()" << endl;
-    stream << "call QPE/Application/todolist flush()" << endl;
+    sendCommand( "call QPE/Application/datebook flush()" );
+    sendCommand( "call QPE/Application/addressbook flush()" );
+    sendCommand( "call QPE/Application/todolist flush()" );
     d->getMode  = d->Flush;
 }
 
@@ -851,6 +843,17 @@ bool QtopiaSocket::downloadFile( const QString& str, QString& dest )
 void QtopiaSocket::download( const QString& res )
 {
   Q_UNUSED( res );
+}
+
+void QtopiaSocket::sendCommand( const QString& cmd )
+{
+  if ( !d->socket )
+    kdError() << "No socket available" << endl;
+
+  kdDebug() << "100I: " << cmd << endl;
+
+  QTextStream stream( d->socket );
+  stream << cmd << endl;
 }
 
 namespace {
