@@ -3,9 +3,9 @@
 
 OpieCategories::OpieCategories()
 {
-    m_id = 0;
+    
 }
-OpieCategories::OpieCategories(int id, const QString &name, const QString &app )
+OpieCategories::OpieCategories(const QString &id, const QString &name, const QString &app )
 {
     m_name = name;
     m_id = id;
@@ -15,6 +15,18 @@ OpieCategories::OpieCategories(const OpieCategories &op )
 {
     (*this) = op;
 }
+QString OpieCategories::id() const
+{
+    return m_id;
+}
+QString OpieCategories::name() const
+{
+    return m_name;
+}
+QString OpieCategories::app() const
+{
+
+}
 OpieCategories &OpieCategories::operator=(const OpieCategories &op )
 {
     m_name = op.m_name;
@@ -22,3 +34,7 @@ OpieCategories &OpieCategories::operator=(const OpieCategories &op )
     m_id = op.m_id;
     return (*this);
 }
+
+
+
+

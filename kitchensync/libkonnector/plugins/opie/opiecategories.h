@@ -5,17 +5,17 @@ class OpieCategories {
  public:
     friend class OpieSocket;
     OpieCategories();
-    OpieCategories(int id, const QString &name, const QString &app );
+    OpieCategories(const QString &id, const QString &name, const QString &app );
     OpieCategories(const OpieCategories & );
     OpieCategories &operator=(const OpieCategories & );
-    int id();
-    QString name();
-    QString app();
+    QString id()const;
+    QString name()const;
+    QString app()const;
 
  private:
     class OpieCategoriesPrivate;
     OpieCategoriesPrivate *d;
     QString m_name;
     QString m_app;
-    int m_id;
+    QString m_id;
 };

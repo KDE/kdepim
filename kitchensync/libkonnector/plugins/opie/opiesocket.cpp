@@ -83,6 +83,7 @@ void OpieSocket::startUp() // start the connection
     d->connected = false;
     d->startSync = false;
     d->isConnecting = true;
+    d->m_categories.clear();
     d->socket->connectToHost(d->dest.toString(), 4243 );
 }
 bool OpieSocket::startSync()
@@ -310,16 +311,25 @@ void OpieSocket::parseCategory(const QString &tempFile )
     QDomElement docElem = doc.documentElement();
     QDomNode n = docElem.firstChild();
     kdDebug() << "NodeName: " << docElem.nodeName() << endl;
-    while( !n.isNull() ) {
-	QDomElement e = n.toElement(); // try to convert the node to an element.
-	if( !e.isNull() ) { // the node was really an element.
-	    kdDebug() << e.tagName() << endl;
+    if( docElem.nodeName() == QString::fromLatin1("Categories") ){
+	kdDebug() << "Category" << endl;
+	while( !n.isNull() ) {
+	    QDomElement e = n.toElement(); // try to convert the node to an element.
+	    if( !e.isNull() ) { // the node was really an element.
+		kdDebug() << "tag name" << e.tagName() << endl;
+              
+		QString id = e.attribute("id" );
+		QString app = e.attribute("app" );
+		QString name = e.attribute("name");
+		OpieCategories category( id, name, app );
+		kdDebug() << "Cat " << id << " " << app << " " << name << endl;
+		d->m_categories.append( category );
+	    }
+	    n = n.nextSibling();
 	}
-	n = n.nextSibling();
     }
+
 }
-
-
 
 
 
