@@ -209,7 +209,14 @@ SyncStack::SyncStack(KPilotDeviceLink *d,
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Conduits : " << conduits.join(" + ") << endl;
+	if (!conduits.count())
+	{
+		DEBUGCONDUIT << fname << ": No conduits." << endl;
+	}
+	else
+	{
+		DEBUGCONDUIT << fname << ": Conduits : " << conduits.join(" + ") << endl;
+	}
 #endif
 }
 
@@ -346,6 +353,9 @@ void SyncStack::actionCompleted(SyncAction *b)
 }
 
 // $Log$
+// Revision 1.9  2002/08/24 21:27:32  adridg
+// Lots of small stuff to remove warnings
+//
 // Revision 1.8  2002/08/23 22:03:21  adridg
 // See ChangeLog - exec() becomes bool, debugging added
 //

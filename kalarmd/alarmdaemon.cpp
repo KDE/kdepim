@@ -36,6 +36,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <ksimpleconfig.h>
+#include <kprocess.h>
 #include <kio/netaccess.h>
 #include <dcopclient.h>
 
@@ -53,7 +54,7 @@ const int LOGIN_DELAY( 5 );
 
 AlarmDaemon::AlarmDaemon(QObject *parent, const char *name)
   : QObject(parent, name), DCOPObject(name),
-    mSessionStartTimer(0L),
+    mSessionStartTimer(0),
     mEnabled( true )
 {
   kdDebug(5900) << "AlarmDaemon::AlarmDaemon()" << endl;
@@ -491,26 +492,25 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
       }
 
       // Start the client application
-      QString execStr = locate("exe", calendar->appName());
-      if (execStr.isEmpty()) {
+      KProcess p;
+      QString cmd = locate("exe", calendar->appName());
+      if (cmd.isEmpty()) {
         kdDebug(5900) << "AlarmDaemon::notifyEvent(): '"
                       << calendar->appName() << "' not found" << endl;
         return true;
       }
+      p << cmd;
       if (client.notificationType == ClientInfo::COMMAND_LINE_NOTIFY)
       {
         // Use the command line to tell the client about the alarm
-        execStr += " --handleEvent ";
-        execStr += eventID;
-        execStr += " --calendarURL ";
-        execStr += calendar->urlString();
-        system(QFile::encodeName(execStr));
+        p << "--handleEvent" << eventID << "--calendarURL" << calendar->urlString();
+        p.start(KProcess::Block);
         kdDebug(5900) << "AlarmDaemon::notifyEvent(): used command line" << endl;
         return true;
       }
-      system(QFile::encodeName(execStr));
+      p.start(KProcess::Block);
       kdDebug(5900) << "AlarmDaemon::notifyEvent(): started "
-                    << QFile::encodeName(execStr) << endl;
+                    << cmd << endl;
     }
 
     if (client.notificationType == ClientInfo::DCOP_SIMPLE_NOTIFY)
@@ -553,8 +553,10 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
 
 /*
  * Called by the timer to check whether session startup is complete.
- * If so, it checks which clients are already running and notifies
- * any which have registered of any pending alarms.
+ * If so, it checks which clients are already running and allows
+ * notification of alarms to them. It also allows alarm notification
+ * to clients which are not currently running but which allow the alarm
+ * daemon to start them in order to notify them.
  * (Ideally checking for session startup would be done using a signal
  * from ksmserver, but until such a signal is available, we can check
  * whether ksplash is still running.)
@@ -567,15 +569,16 @@ void AlarmDaemon::checkIfSessionStarted()
     kdDebug(5900) << "AlarmDaemon::checkIfSessionStarted(): startup complete\n";
     delete mSessionStartTimer;
 
-    // Notify clients which are not yet running of pending alarms
     for (ClientList::Iterator client = mClients.begin();  client != mClients.end();  ++client)
     {
-      if (kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>((*client).appName))) {
+      if ((*client).notificationType == ClientInfo::DCOP_NOTIFY
+      ||  (*client).notificationType == ClientInfo::COMMAND_LINE_NOTIFY
+      ||  kapp->dcopClient()->isApplicationRegistered(static_cast<const char*>((*client).appName))) {
         (*client).waitForRegistration = false;
       }
     }
 
-    mSessionStartTimer = 0L;    // indicate that session startup is complete
+    mSessionStartTimer = 0;    // indicate that session startup is complete
   }
 }
 
@@ -679,7 +682,7 @@ const AlarmDaemon::GuiInfo* AlarmDaemon::getGuiInfo(const QCString& appName) con
     if (g != mGuis.end())
       return &g.data();
   }
-  return 0L;
+  return 0;
 }
 
 void AlarmDaemon::dumpAlarms()

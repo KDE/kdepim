@@ -221,6 +221,7 @@ void KAddressBook::save()
     			"not using it. ");
 
     KMessageBox::error(this, text, i18n("Unable to Save"));
+    return;
   }
 
   emit modified(false);
@@ -531,14 +532,22 @@ void KAddressBook::slotOpenLDAPDialog()
 {
   if( !mLdapSearchDialog ) {
     mLdapSearchDialog = new LDAPSearchDialogImpl( mDocument, this);
-    connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ), mViewManager,
-            SLOT( refresh() ) );
+    connect( mLdapSearchDialog, SIGNAL( addresseesAdded() ),
+	     this, SLOT( slotLDAPRefresh() ) );
   } else
     mLdapSearchDialog->rereadConfig();
 
   if( mLdapSearchDialog->isOK() )
     mLdapSearchDialog->exec();
 }
+
+// This slot is used by the LDAP dialog to make sure we refresh the view
+void KAddressBook::slotLDAPRefresh()
+{
+  emit modified(true);
+  mViewManager->refresh();
+}
+
 
 void KAddressBook::print()
 {

@@ -269,6 +269,7 @@ private:
 	*/
 	QTimer *fOpenTimer;
 	QSocketNotifier *fSocketNotifier;
+	bool fSocketNotifierActive;
 
 	/**
 	* Pilot-link library handles for the device once it's opened.
@@ -296,9 +297,9 @@ protected:
  	* Write a log entry to the pilot. Note that the library
  	* function takes a char *, not const char * (which is
  	* highly dubious). Causes signal logEntry(const char *)
- 	* to be emitted.
+ 	* to be emitted if @p log is true.
  	*/
- 	void addSyncLogEntry(const QString &entry,bool suppress=false);
+ 	void addSyncLogEntry(const QString &entry,bool log=true);
 
 signals:
  	/**
@@ -376,6 +377,11 @@ bool operator < ( const struct db &, const struct db &) ;
 
 
 // $Log$
+// Revision 1.13  2002/08/30 22:24:55  adridg
+// - Improved logging, connected the right signals now
+// - Try to handle dlp_ReadUserInfo failures sensibly
+// - Trying to sort out failures reading the database list.
+//
 // Revision 1.12  2002/08/21 17:20:47  adridg
 // Detect and complain about common permissions errors
 //

@@ -29,7 +29,6 @@
 #include "options.h"
 
 #include <time.h>
-#include <iostream.h>
 
 #include <pi-dlp.h>
 
@@ -103,7 +102,11 @@ int PilotSerialDatabase::writeAppBlock(unsigned char *buffer, int len)
 int PilotSerialDatabase::recordCount()
 {
 	int idlen;
-	if (isDBOpen() ) return dlp_ReadOpenDBInfo(fDBSocket, getDBHandle(), &idlen);
+	// dlp_ReadOpenDBInfo returns the number of bytes read and sets idlen to the # of recs
+	if (isDBOpen() && dlp_ReadOpenDBInfo(fDBSocket, getDBHandle(), &idlen)>0)
+	{
+		return idlen;
+	}
 	else return -1;
 }
 
@@ -290,6 +293,14 @@ void PilotSerialDatabase::closeDatabase()
 
 
 // $Log$
+// Revision 1.5.4.1  2002/12/20 19:56:09  kainhofe
+// Some bugfixes
+//
+// Revision 1.5  2002/08/20 21:18:31  adridg
+// License change in lib/ to allow plugins -- which use the interfaces and
+// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
+// allow the use of libmal which is MPL.
+//
 // Revision 1.4  2002/06/30 14:49:53  kainhofe
 // added a function idList, some minor bug fixes
 //

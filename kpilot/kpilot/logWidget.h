@@ -33,7 +33,7 @@
 #include "pilotComponent.h"
 
 class QLabel;
-class QTextView;
+class QTextEdit;
 class QHBox;
 class KProgress;
 
@@ -79,7 +79,7 @@ private:
 	bool saveFile(const QString &);
 
 private:
-	QTextView *fLog;
+	QTextEdit *fLog;
 	bool fShowTime;
 	QLabel *fSplash;
 	QLabel *fLabel;
@@ -88,6 +88,9 @@ private:
 } ;
 
 // $Log$
+// Revision 1.9  2002/08/15 21:51:00  kainhofe
+// Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
+//
 // Revision 1.8  2002/05/23 20:19:40  adridg
 // Add support for extra buttons to the logwidget; use it for reset in kpilottest
 //

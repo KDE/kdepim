@@ -27,6 +27,8 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org.
 */
 
+#include <config.h>
+
 static const char *interactivesync_id =
 	"$Id$";
 
@@ -283,7 +285,12 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 			<< ": Adding " << s << " to restore list." << endl;
 #endif
 
-		qstrcpy(dbi.name, QFile::encodeName(dirname + s));
+		memset(dbi.name,0,sizeof(dbi.name));
+#if KDE_VERSION < 310
+		strncpy(dbi.name, QFile::encodeName(dirname + s), sizeof(dbi.name));
+#else
+		strlcpy(dbi.name, QFile::encodeName(dirname + s), sizeof(dbi.name));
+#endif
 
 		f = pi_file_open(dbi.name);
 		if (!f)
@@ -484,6 +491,12 @@ nextFile:
 
 
 // $Log$
+// Revision 1.14.4.1  2002/12/12 13:27:17  lunakl
+// strcpy -> strlcpy
+//
+// Revision 1.14  2002/08/23 22:03:21  adridg
+// See ChangeLog - exec() becomes bool, debugging added
+//
 // Revision 1.13  2002/05/15 17:15:33  gioele
 // kapp.h -> kapplication.h
 // I have removed KDE_VERSION checks because all that files included "options.h"

@@ -37,14 +37,14 @@ static const char *kpilot_id =
 
 
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <dirent.h>
-#include <iostream.h>
 #include <fstream.h>
 #include <fcntl.h>
-#include <sys/stat.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <errno.h>
+
 
 #ifndef QFILE_H
 #include <qfile.h>
@@ -876,6 +876,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.80  2002/08/24 21:27:32  adridg
+// Lots of small stuff to remove warnings
+//
 // Revision 1.79  2002/08/15 21:51:00  kainhofe
 // Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
 //

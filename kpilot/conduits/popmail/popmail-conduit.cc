@@ -42,8 +42,8 @@ static const char *popmail_conduit_id=
 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/utsname.h>
 #include <ctype.h>
-#include <iostream.h>
 
 #include <unistd.h>
 #include <errno.h>
@@ -425,7 +425,7 @@ int PopMailConduit::retrieveIncoming(int mode)
 // SMTP Transfer Method (only sending)
 //
 // Additional changes by Michael Kropfberger
-// Cleanup and fixing by Marko Grönroos <magi@iki.fi>, 2001
+// Cleanup and fixing by Marko Grnroos <magi@iki.fi>, 2001
 //
 
 // Helper function to get the Fully Qualified Domain Name
@@ -931,7 +931,14 @@ QString PopMailConduit::getKMailOutbox() const
 	//
 	KSimpleConfig c("kmailrc",true);
 	c.setGroup("General");
-	return c.readEntry("outboxFolder","outbox");
+
+	QString outbox = c.readEntry("outboxFolder",QString::null);
+	if (outbox.isEmpty())
+	{
+		KConfigGroupSaver gs(fConfig,PopmailConduitFactory::group);
+		outbox = fConfig->readEntry("outboxFolder");
+	}
+	return outbox;
 }
 
 /*
@@ -1986,6 +1993,17 @@ int PopMailConduit::doUnixStyle()
 
 
 // $Log$
+// Revision 1.44.4.2  2003/01/10 19:10:59  adridg
+// Work around KMail changing it's config files
+//
+// Revision 1.44.4.1  2003/01/08 23:09:52  adridg
+// COmpile fix from Bausi; seems to work on BSD too.
+//
+// Revision 1.44  2002/08/25 13:28:28  mhunter
+// CVS_SILENT Corrected typographical errors
+//
+// When replying, please CC me - I'm not subscribed
+//
 // Revision 1.43  2002/08/23 22:59:30  kainhofe
 // Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
 //

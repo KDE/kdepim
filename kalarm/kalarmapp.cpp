@@ -649,7 +649,11 @@ void KAlarmApp::displayMainWindow()
 	else
 	{
 		// There is already a main window, so make it the active window
-		win->showNormal();
+		if (!win->isVisible())
+		{
+			win->hide();        // in case it's on a different desktop
+			win->showNormal();
+		}
 		win->raise();
 		win->setActiveWindow();
 	}

@@ -33,7 +33,7 @@ static const char *logw_id =
 
 #include <qfile.h>
 #include <qlayout.h>
-#include <qtextview.h>
+#include <qtextedit.h>
 #include <qwhatsthis.h>
 #include <qdatetime.h>
 #include <qlabel.h>
@@ -58,6 +58,13 @@ static const char *logw_id =
 
 #include "logWidget.moc"
 
+#if QT_VERSION < 0x030100
+#define TE_EOL "<br/>"
+#else
+#define TE_EOL "\n"
+#endif
+
+
 LogWidget::LogWidget(QWidget * parent) :
 	PilotComponent(parent, "component_log", QString::null),
 	DCOPObject("KPilotIface"),
@@ -80,7 +87,14 @@ LogWidget::LogWidget(QWidget * parent) :
 	grid->setRowStretch(1, 50);
 	grid->setColStretch(2, 50);
 
-	fLog = new QTextView(this);
+	fLog = new QTextEdit(this);
+	fLog->setReadOnly(true);
+#if QT_VERSION < 0x030100
+	/* nothing, use AutoText */
+#else
+	fLog->setTextFormat(Qt::LogText);
+#endif
+	
 	QWhatsThis::add(fLog, i18n("<qt>This lists all the messages received "
 			"during the current HotSync</qt>"));
 	grid->addMultiCellWidget(fLog, 1, 1,1,2);
@@ -88,8 +102,8 @@ LogWidget::LogWidget(QWidget * parent) :
 
 	QString initialText ;
 
-	initialText.append(QString("<b>Version:</b> KPilot %1<br/>").arg(KPILOT_VERSION));
-	initialText.append(QString("<b>Version:</b> pilot-link %1.%2.%3%4<br><br>")
+	initialText.append(QString("<b>Version:</b> KPilot %1" TE_EOL).arg(KPILOT_VERSION));
+	initialText.append(QString("<b>Version:</b> pilot-link %1.%2.%3%4" TE_EOL)
 		.arg(PILOT_LINK_VERSION)
 		.arg(PILOT_LINK_MAJOR)
 		.arg(PILOT_LINK_MINOR)
@@ -99,11 +113,20 @@ LogWidget::LogWidget(QWidget * parent) :
 		.arg(QString())
 #endif
 		);
+#ifdef KDE_VERSION_STRING
+	initialText.append(QString("<b>Version:</b> KDE %1" TE_EOL).arg(KDE_VERSION_STRING));
+#endif
+#ifdef QT_VERSION_STR
+	initialText.append(QString("<b>Version:</b> Qt %1" TE_EOL).arg(QT_VERSION_STR));
+#endif
 
+	initialText.append(TE_EOL);
 	initialText.append(i18n("<qt><B>HotSync Log</B></qt>"));
+	initialText.append(TE_EOL);
 
 
 	fLog->setText(initialText);
+	fLog->scrollToBottom();
 
 	QHBox *h = new QHBox(this);
 	h->setSpacing(SPACING);
@@ -195,24 +218,24 @@ void LogWidget::addMessage(const QString & s)
 	}
 
 	t.append(s);
-	t.append("<br>");
-
-//#ifdef KDE2
-//	fLog->setText(t);
-//#else
-//	fLog->append(t);
-//#endif
+	
+#if QT_VERSION < 0x030100
+	t.append(TE_EOL);
 	fLog->setText(fLog->text() + t);
-	fLog->contentsHeight();
+	fLog->scrollToBottom();
+#else
+	fLog->append(t);
+#endif
 }
 
 void LogWidget::addError(const QString & s)
 {
 	FUNCTIONSETUP;
 
+	if (s.isEmpty()) return;
+	
 	kdWarning() << "KPilot error: " << s << endl;
 
-	if (s.isEmpty()) return;
 	if (!fLog) return;
 
 	QString t;
@@ -228,7 +251,7 @@ void LogWidget::addProgress(const QString &s,int i)
 {
 	FUNCTIONSETUP;
 
-	logMessage(s);
+	if (!s.isEmpty()) logMessage(s);
 
 	if ((i >= 0) && (i <= 100))
 	{
@@ -360,6 +383,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.28  2002/10/11 19:56:11  rnolden
+// ooops
+//
 // Revision 1.27  2002/10/11 19:09:31  rnolden
 // fix scrolling of the log messages so the user can actually see what's going on without scrolling down
 //

@@ -35,7 +35,6 @@
 // then Qt, then KDE, then local includes.
 //
 //
-#include <iostream.h>
 #ifndef QDIR_H
 #include <qdir.h>
 #endif
@@ -877,6 +876,9 @@ KNotesConduit::doTest()
 }
 
 // $Log$
+// Revision 1.20  2002/02/23 20:57:40  adridg
+// #ifdef DEBUG stuff
+//
 // Revision 1.19  2001/12/28 13:03:29  adridg
 // Fixup some email addresses, random lil' things
 //
