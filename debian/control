@@ -88,7 +88,7 @@ Section: mail
 Architecture: any
 Depends: ${shlibs:Depends}, kdebase-kio-plugins
 Suggests: gnupg
-Provides: mail-reader
+Provides: mail-reader, imap-client
 Description: KDE Email client
  Mail Client based on QT and KDE
  .
