@@ -145,7 +145,7 @@ PopMailSendPage::PopMailSendPage(QWidget *parent) :
 	//
 	// Sending mail options.
 	//
-	currentLabel = new QLabel(i18n("Email Address: "),
+	currentLabel = new QLabel(i18n("Email address: "),
 			    this);
 
 	fEmailFrom = new QLineEdit(this);
@@ -154,7 +154,7 @@ PopMailSendPage::PopMailSendPage(QWidget *parent) :
 	grid->addWidget(currentLabel,1,0);
 	grid->addWidget(fEmailFrom,1,1);
 
-	currentLabel = new QLabel(i18n("Signature File: "),
+	currentLabel = new QLabel(i18n("Signature file: "),
 			    this);
 	currentLabel->adjustSize();
 
@@ -171,7 +171,7 @@ PopMailSendPage::PopMailSendPage(QWidget *parent) :
 	grid->addWidget(fSignature,2,1);
 	grid->addWidget(fSignatureBrowse,2,2);
 
-	currentLabel = new QLabel(i18n("Sendmail Command:"), this);
+	currentLabel = new QLabel(i18n("Sendmail command:"), this);
 	currentLabel->adjustSize();
 
 	fSendmailCmd = new QLineEdit(this);
@@ -180,7 +180,7 @@ PopMailSendPage::PopMailSendPage(QWidget *parent) :
 	grid->addWidget(currentLabel,4,0);
 	grid->addWidget(fSendmailCmd,4,1);
 
-	currentLabel = new QLabel(i18n("SMTP Server:"), this);
+	currentLabel = new QLabel(i18n("SMTP server:"), this);
 	currentLabel->adjustSize();
 
 	fSMTPServer = new QLineEdit(this);
@@ -189,7 +189,7 @@ PopMailSendPage::PopMailSendPage(QWidget *parent) :
 	grid->addWidget(currentLabel,6,0);
 	grid->addWidget(fSMTPServer,6,1);
 
-	currentLabel = new QLabel(i18n("SMTP Port:"), this);
+	currentLabel = new QLabel(i18n("SMTP port:"), this);
 	currentLabel->adjustSize();
 
 	fSMTPPort = new QLineEdit(this);
@@ -388,7 +388,7 @@ PopMailReceivePage::PopMailReceivePage(QWidget *parent) :
 
 	grid->addMultiCellWidget(methodGroup,0,0,0,2);
 
-	currentLabel = new QLabel(i18n("UNIX Mailbox:"),this);
+	currentLabel = new QLabel(i18n("UNIX mailbox:"),this);
 	currentLabel->adjustSize();
 
 	fMailbox=new QLineEdit(this);
@@ -409,7 +409,7 @@ PopMailReceivePage::PopMailReceivePage(QWidget *parent) :
 	// Receiving mail options.
 	//
 
-	currentLabel = new QLabel(i18n("POP Server:"), this);
+	currentLabel = new QLabel(i18n("POP server:"), this);
 	currentLabel->adjustSize();
 
 	fPopServer = new QLineEdit(this);
@@ -418,7 +418,7 @@ PopMailReceivePage::PopMailReceivePage(QWidget *parent) :
 	grid->addWidget(currentLabel,3,0);
 	grid->addWidget(fPopServer,3,1);
 
-	currentLabel = new QLabel(i18n("POP Port:"), this);
+	currentLabel = new QLabel(i18n("POP port:"), this);
 	currentLabel->adjustSize();
 
 	fPopPort = new QLineEdit(this);
@@ -427,7 +427,7 @@ PopMailReceivePage::PopMailReceivePage(QWidget *parent) :
 	grid->addWidget(currentLabel,4,0);
 	grid->addWidget(fPopPort,4,1);
 
-	currentLabel = new QLabel(i18n("POP Username:"), this);
+	currentLabel = new QLabel(i18n("POP username:"), this);
 	currentLabel->adjustSize();
 
 	fPopUser = new QLineEdit(this);
@@ -436,12 +436,12 @@ PopMailReceivePage::PopMailReceivePage(QWidget *parent) :
 	grid->addWidget(currentLabel,5,0);
 	grid->addWidget(fPopUser,5,1);
 
-	fLeaveMail = new QCheckBox(i18n("&Leave mail on server."), this);
+	fLeaveMail = new QCheckBox(i18n("&Leave mail on server"), this);
 	fLeaveMail->adjustSize();
 
 	grid->addWidget(fLeaveMail,6,1);
 
-	currentLabel = new QLabel(i18n("Pop Password:"), this);
+	currentLabel = new QLabel(i18n("Pop password:"), this);
 	currentLabel->adjustSize();
 
 	fPopPass = new QLineEdit(this);
@@ -453,7 +453,7 @@ PopMailReceivePage::PopMailReceivePage(QWidget *parent) :
 	grid->addWidget(fPopPass,7,1);
 
 
-	fStorePass = new QCheckBox(i18n("Save &Pop password."), this);
+	fStorePass = new QCheckBox(i18n("Save &Pop password"), this);
 	connect(fStorePass, SIGNAL(clicked()), this, SLOT(togglePopPass()));
 	fStorePass->adjustSize();
 	togglePopPass();
@@ -674,6 +674,9 @@ PopMailOptions::setupWidget()
 
 
 // $Log$
+// Revision 1.26  2002/05/15 16:58:02  gioele
+// kapp.h -> kapplication.h
+//
 // Revision 1.25  2002/02/23 20:57:40  adridg
 // #ifdef DEBUG stuff
 //

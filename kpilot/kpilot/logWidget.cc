@@ -124,7 +124,7 @@ LogWidget::LogWidget(QWidget * parent) :
 
 	grid->addMultiCellWidget(h,2,2,1,2);
 
-	fLabel = new QLabel(i18n("Sync Progress:"),this);
+	fLabel = new QLabel(i18n("Sync progress:"),this);
 	grid->addWidget(fLabel,3,1);
 	fProgress = new KProgress(this);
 	QWhatsThis::add(fProgress,i18n("<qt>The (estimated) percentage "
@@ -366,6 +366,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.24  2002/05/23 20:19:40  adridg
+// Add support for extra buttons to the logwidget; use it for reset in kpilottest
+//
 // Revision 1.23  2002/05/19 15:01:49  adridg
 // Patches for the KNotes conduit
 //

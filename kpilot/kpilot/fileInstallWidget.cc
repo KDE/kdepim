@@ -85,7 +85,7 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 
 	QGridLayout *grid = new QGridLayout(this, 5, 5, SPACING);
 
-	QLabel *label = new QLabel(i18n("Files To Install:"), this);
+	QLabel *label = new QLabel(i18n("Files to install:"), this);
 
 	grid->addWidget(label, 1, 1);
 
@@ -189,6 +189,9 @@ void FileInstallWidget::refreshFileInstallList()
 
 
 // $Log$
+// Revision 1.23  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.22  2001/12/02 15:28:45  mhunter
 // Corrected typographical errors
 //

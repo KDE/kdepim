@@ -271,7 +271,7 @@ void AddressWidget::setupWidget()
 			"in the selected category. Click on "
 			"one to display it to the right.</qt>"));
 
-	label = new QLabel(i18n("Address Info:"), this);
+	label = new QLabel(i18n("Address info:"), this);
 	grid->addWidget(label, 0, 2);
 
 	// address info text view
@@ -763,6 +763,9 @@ void AddressWidget::writeAddress(PilotAddress * which,
 }
 
 // $Log$
+// Revision 1.51  2002/05/16 13:06:48  mhunter
+// Corrected typographical errors and Palm -> Pilot for consistency
+//
 // Revision 1.50  2002/05/15 17:15:33  gioele
 // kapp.h -> kapplication.h
 // I have removed KDE_VERSION checks because all that files included "options.h"
