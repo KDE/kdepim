@@ -469,7 +469,7 @@
 <customwidgets>
     <customwidget>
         <class>KDateEdit</class>
-        <header location="global">kdateedit.h</header>
+        <header>kdateedit.h</header>
         <sizehint>
             <width>95</width>
             <height>21</height>
