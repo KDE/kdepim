@@ -58,13 +58,23 @@ class KSyncEntry
      * Return a string describing the Type of the SyncEntry (Mail,iCalendar...)
      */
     virtual QString type() = 0;
+
+    /**  syncMode() will return the SYNC_MODE either SYNC_NORMAL or SYNC_META
+     *
+     */
+    int syncMode()const { return m_mode; };
+    /**
+     * setSyncMode() sets the syncMode of this KSyncEntry
+     */
+    void setSyncMode(int mode ) { m_mode = mode; };
     /**
       Return a string describing this entry. This is presented to the user as
       identifier for the entry, when user interaction is required.
     */
-    int syncMode()const { return m_mode; };
-    void setSyncMode(int mode ) { m_mode = mode; };
     virtual QString name() = 0;
+    /**
+      Set the name
+    */
     virtual void setName(const QString & ) = 0;
     /**
       Returns a unique id. This is used to uniquely identify the entry. Two
@@ -119,6 +129,9 @@ class KSyncEntry
      */
     QValueList<Kontainer > ids(const QString &type )const;
 
+    /**
+     * @return all ids
+     */
     QMap<QString,  QValueList<Kontainer > > ids()const;
  private:
     QMap<QString,  QValueList<Kontainer > > m_maps;

@@ -1,6 +1,6 @@
 /* This file is part of the KDE libraries
    Copyright (C) 2002 Holger Freyther <freyher@kde.org>
-		  
+
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
     License version 2 as published by the Free Software Foundation.
@@ -22,14 +22,25 @@
 
 #include "ksyncentry.h"
 
+/** OpieDesktopSyncEntry
+ *  OpieDesktopSyncEntry is Qtopia and Opie specific.
+ *  All files in the Document tab are represented with one
+ *  OpieDesktopSyncEntry
+ *
+ */
+
 class OpieDesktopSyncEntry : public KSyncEntry{
  public:
+    //c 'tor
     OpieDesktopSyncEntry();
     OpieDesktopSyncEntry(const QString &category, const QString &file, const QString &name, const QString &type, const QString &size  );
     ~OpieDesktopSyncEntry();
 
 
-    virtual QString type() { return QString::fromLatin1("OpieDesktopEntry" ); }; 
+    virtual QString type() { return QString::fromLatin1("OpieDesktopEntry" ); };
+    /**
+     * @return the Name of this OpieDesktopSyncEntry
+     */
     virtual QString name(); // Zweck entfremded
     QString file() const;
     QString type() const;

@@ -27,34 +27,60 @@
 class KAlendarSyncEntry : public KSyncEntry
 {
  public:
+    /**
+     * c'tor
+     */
     KAlendarSyncEntry();
+    /**
+     * c'tor
+     * @param cal the Calendar
+     * @param name set the Name
+     */
     KAlendarSyncEntry(KCal::CalendarLocal *cal,const QString &name );
     virtual ~KAlendarSyncEntry();
 
+    /**
+     * @return the calendar
+     */
     KCal::CalendarLocal *calendar();
-    void setCalendar(KCal::CalendarLocal *);
+    /**
+     * @param cal Sets the Calendar for this KSyncEntry
+     */
+    void setCalendar(KCal::CalendarLocal *cal);
   // META Information
+    /** These calendars are only != 0 if in SYNC_META
+     *  @return the modifed() calendar entries
+     */
     KCal::CalendarLocal *modified();
-    void setModified( KCal::CalendarLocal *);
+    /** set the modified calendar entries
+     *  @param cal the Calendar holding modified entries
+     */
+    void setModified( KCal::CalendarLocal *cal);
 
+    /**
+     * @return the added() Calendar
+     */
     KCal::CalendarLocal *added();
+    /**
+     * set the added calendar
+     */
     void setAdded( KCal::CalendarLocal * );
 
     KCal::CalendarLocal *removed();
     void setRemoved(KCal::CalendarLocal *);
   //
 
-  virtual QString type() {return QString::fromLatin1("KAlendarSyncEntry"); }
-  virtual QString name();
-  virtual void setName(const QString &name );
-  virtual QString id();
-  virtual void setId(const QString &id);
-  virtual QString oldId();
-  virtual void setOldId(const QString &oldId);
-  virtual QString timestamp();
-  virtual void setTimestamp(const QString & );
-  virtual bool equals(KSyncEntry * );
-  virtual KSyncEntry* clone();
+    virtual QString type() {return QString::fromLatin1("KAlendarSyncEntry"); }
+    virtual QString name();
+    virtual void setName(const QString &name );
+    virtual QString id();
+    virtual void setId(const QString &id);
+    virtual QString oldId();
+    virtual void setOldId(const QString &oldId);
+    virtual QString timestamp();
+    virtual void setTimestamp(const QString & );
+    virtual bool equals(KSyncEntry *entr );
+    virtual KSyncEntry* clone();
 
 private:
     QString m_name;

@@ -1,6 +1,6 @@
 /* This file is part of the KDE libraries
    Copyright (C) 2002 Holger Freyther <freyher@kde.org>
-		  
+
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
     License version 2 as published by the Free Software Foundation.
@@ -23,15 +23,27 @@
 #include <kabc/addressbook.h>
 #include "ksyncentry.h"
 
+/** This is the KAddressbookSyncEntry it encapsules
+ *  the KABC addressbook.
+ *
+ */
+
 class KAddressbookSyncEntry : public KSyncEntry{
  public:
     KAddressbookSyncEntry();
     KAddressbookSyncEntry(KABC::AddressBook * );
     ~KAddressbookSyncEntry();
 
+    /** @return returns the addressbook
+     *
+     */
     KABC::AddressBook* addressbook();
+    /**
+     * @param adr sets the AddreesBook to adr
+     */
+
     void setAddressbook(KABC::AddressBook *adr );
-    virtual QString type() { return QString::fromLatin1("KAddressbookSyncEntry" ); }; 
+    virtual QString type() { return QString::fromLatin1("KAddressbookSyncEntry" ); };
     virtual QString name();
     virtual void setName(const QString & );
     virtual QString id();
