@@ -158,7 +158,7 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
 
   connect( KABC::DistributionListWatcher::self(), SIGNAL( changed() ),
            this, SLOT( updateNameCombo() ) );
-  connect( KABC::StdAddressBook::self(), SIGNAL( addressBookChanged(AddressBook*) ),
+  connect( KABC::StdAddressBook::self( true ), SIGNAL( addressBookChanged(AddressBook*) ),
            this, SLOT( updateNameCombo() ) );
 
   updateNameCombo();

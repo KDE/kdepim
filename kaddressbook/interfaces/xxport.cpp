@@ -25,8 +25,8 @@
 #include <qsignalmapper.h>
 
 #include <kaction.h>
-#include <kmessagebox.h>
 #include <kinstance.h>
+#include <kmessagebox.h>
 #include "xxport.h"
 
 using namespace KAB;

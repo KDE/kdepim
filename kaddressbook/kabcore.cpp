@@ -75,10 +75,12 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 {
   mWidget = new QWidget( parent, name );
 
-  mAddressBook = KABC::StdAddressBook::self();
+  mAddressBook = KABC::StdAddressBook::self( true );
   mAddressBook->setErrorHandler( new KABC::GUIErrorHandler );
 
-  connect( mAddressBook, SIGNAL( addressBookChanged( AddressBook * ) ),
+  connect( mAddressBook, SIGNAL( addressBookChanged( AddressBook* ) ),
+           SLOT( addressBookChanged() ) );
+  connect( mAddressBook, SIGNAL( loadingFinished( Resource* ) ),
            SLOT( addressBookChanged() ) );
 
   mAddressBook->addCustomField( i18n( "Department" ), KABC::Field::Organization,
@@ -444,7 +446,7 @@ void KABCore::setWhoAmI()
 
   QString text( i18n( "<qt>Do you really want to use <b>%1</b> as your new personal contact?</qt>" ) );
   if ( KMessageBox::questionYesNo( mWidget, text.arg( addrList[ 0 ].assembledName() ) ) == KMessageBox::Yes )
-    static_cast<KABC::StdAddressBook*>( KABC::StdAddressBook::self() )->setWhoAmI( addrList[ 0 ] );
+    static_cast<KABC::StdAddressBook*>( KABC::StdAddressBook::self( true ) )->setWhoAmI( addrList[ 0 ] );
 }
 
 void KABCore::setCategories()
