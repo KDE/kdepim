@@ -152,7 +152,6 @@ protected:
 private:
 	bool            fQuitAfterCopyComplete; // Used for GUI-less interface
 	KJanusWidget    *fManagingWidget;
-	bool            fKillDaemonOnExit;
 	bool fDaemonWasRunning;
 
 	KPilotStatus fAppStatus;

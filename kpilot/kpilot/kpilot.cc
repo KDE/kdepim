@@ -107,7 +107,6 @@ KPilotInstaller::KPilotInstaller() :
 	fP(new KPilotPrivate),
 	fQuitAfterCopyComplete(false),
 	fManagingWidget(0L),
-	fKillDaemonOnExit(false),
 	fDaemonWasRunning(true),
 	fAppStatus(Startup),
 	fFileInstallWidget(0L),
@@ -140,7 +139,7 @@ KPilotInstaller::~KPilotInstaller()
 void KPilotInstaller::killDaemonIfNeeded()
 {
 	FUNCTIONSETUP;
-	if (fKillDaemonOnExit)
+	if (KPilotSettings::killDaemonAtExit())
 	{
 		if (!fDaemonWasRunning)
 		{
