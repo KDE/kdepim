@@ -2,4 +2,15 @@
 Encoding=UTF-8
 Hidden=true
 Name=Exchange 2000 Server (deprecated)
+Name[bg]=Сървър Exchange 2000 (остаряло)
+Name[es]=Servidor Exchange 2000 (obsoleto)
+Name[et]=Exchange 2000 server (iganenud)
+Name[it]=Server Exchange 2000 (deprecato)
+Name[nl]=Exchange 2000-server (afgeraden)
+Name[pt]=Servidor Exchange 2000 (depreciado)
+Name[pt_BR]=Servidor Exchange2000 (versão de compatibilidade)
+Name[ru]=Сервер Exchange 2000 (устаревший)
+Name[sv]=Exchange 2000-server (avråds från)
+Name[uk]=Сервер Exchange 2000 (застаріле)
+Name[xx]=xxExchange 2000 Server (deprecated)xx
 
