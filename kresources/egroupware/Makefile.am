@@ -22,16 +22,14 @@ libkabc_xmlrpc_la_SOURCES = kabc_resourcexmlrpc.cpp kabc_resourcexmlrpcconfig.cp
 libkabc_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
 libkabc_xmlrpc_la_LIBADD = $(LIB_KIO) -lkabc $(top_builddir)/libkdepim/libkdepim.la \
                            $(top_builddir)/kaddressbook/common/libkabcommon.la \
-                           $(top_builddir)/kresources/egroupware/libegwcommon.la
-libkabc_xmlrpc_la_COMPILE_FIRST = libegwcommon.la
+                           libegwcommon.la
 
 libkcal_xmlrpc_la_SOURCES = kcal_resourcexmlrpc.cpp kcal_resourcexmlrpcconfig.cpp \
                             kcal_egroupwareprefs.kcfgc
 libkcal_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
 libkcal_xmlrpc_la_LIBADD = $(top_builddir)/libkcal/libkcal.la \
                            $(top_builddir)/libkdepim/libkdepim.la \
-                           $(top_builddir)/kresources/egroupware/libegwcommon.la
-libkcal_xmlrpc_la_COMPILE_FIRST = libegwcommon.la
+                           libegwcommon.la
 
 libknotes_xmlrpc_la_SOURCES = knotes_resourcexmlrpc.cpp knotes_resourcexmlrpcconfig.cpp \
                               knotes_egroupwareprefs.kcfgc
@@ -39,8 +37,7 @@ libknotes_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 
 libknotes_xmlrpc_la_LIBADD = $(top_builddir)/libkcal/libkcal.la -lkdeprint \
                              $(top_builddir)/knotes/libknotesresources.la \
                              $(top_builddir)/libkdepim/libkdepim.la \
-                             $(top_builddir)/kresources/egroupware/libegwcommon.la
-libknotes_xmlrpc_la_COMPILE_FIRST = libegwcommon.la
+                             libegwcommon.la
 
 kabcincludedir = $(includedir)/kabc
 kabcinclude_HEADERS = kabc_resourcexmlrpc.h kcal_resourcexmlrpc.h
