@@ -21,6 +21,7 @@
 #define KDEPIM_EXCHANGE_DOWNLOAD_H
 
 #include <qstring.h>
+#include <qptrlist.h>
 #include <qdatetime.h>
 #include <qdom.h>
 #include <qmap.h>
@@ -41,13 +42,16 @@ class ExchangeDownload : public QObject {
    ~ExchangeDownload();
 
     void download( KCal::Calendar* calendar, 
-         const QDate& start, const QDate& end, bool showProgress);
+         const QDate& start, const QDate& end, bool showProgress );
+    void download( const QDate& start, const QDate& end, bool showProgress );
  
   signals:
     void startDownload();
     void finishDownload();
 
+    void gotEvent( KCal::Event* event, const KURL& url );
     void finished( ExchangeDownload*, int result, const QString& moreInfo );
+    void finished( ExchangeDownload*, int result, const QString& moreInfo, QPtrList<KCal::Event>& events );
 
   private slots:
     void slotSearchResult( KIO::Job *job );
@@ -68,7 +72,7 @@ class ExchangeDownload : public QObject {
     
     KCal::Calendar *mCalendar;
     KCal::ICalFormat *mFormat;
-    QPtrList<KCal::Event> mEvents;
+    QPtrList<KCal::Event> *mEvents;
     ExchangeAccount *mAccount;
     ExchangeProgress *mProgress;
     int mDownloadsBusy;

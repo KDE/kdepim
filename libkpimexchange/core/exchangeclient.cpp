@@ -23,9 +23,12 @@
 #include <kdebug.h>
 #include <kcursor.h>
 
-// These two for test() method
+// These for test() method
 #include <kio/http.h>
 #include <kio/davjob.h>
+// #include "libkdepim/resources/resourcemanager.h"
+// #include "libkdepim/resources/calendar/resourcecalendar.h"
+
 
 #include "exchangeclient.h"
 #include "exchangeaccount.h"
@@ -33,6 +36,7 @@
 #include "exchangeupload.h"
 #include "exchangedownload.h"
 #include "exchangedelete.h"
+//#include "exchangemonitor.h"
 #include "utils.h"
 
 using namespace KPIM;
@@ -74,51 +78,61 @@ QString ExchangeClient::timeZoneId()
 
 void ExchangeClient::test()
 {
+//  mAccount->authenticate( mWindow );
   kdDebug() << "Entering test()" << endl;
   KURL baseURL = KURL( "http://mail.tbm.tudelft.nl/janb/Calendar" );
-  KURL url( "webdav://mail.tbm.tudelft.nl/janb/" );
+  KURL url( "webdav://mail.tbm.tudelft.nl/exchange/" );
+
+/*
+  KRES::ResourceManager<KCal::ResourceCalendar>* manager = new KRES::ResourceManager<KCal::ResourceCalendar>( "calendar" );
+  KCal::ResourceCalendar* resource = manager->standardResource();
+
+  kdDebug(5800) << "Opening resource " + resource->resourceName() << endl;
+  bool result = resource->open();
+  kdDebug() << "Result: " << result << endl;
+
+  resource->subscribeEvents( QDate( 2002, 12, 18 ), QDate( 2002, 12, 19 ) );
+*/
+//  mAccount->tryFindMailbox();
 /*
   QString query = 
   "<propfind xmlns=\"DAV:\" xmlns:h=\"urn:schemas:httpmail:\">\r\n"
-  "  <prop>\r\n"
-  "    <h:calendar/>\r\n"
-  "    <h:contacts/>\r\n"
-  "    <h:deleteditems/>\r\n"
-  "    <h:drafts/>\r\n"
-  "    <h:inbox/>\r\n"
-  "    <h:journal/>\r\n"
-  "    <h:notes/>\r\n"
-  "    <h:outbox/>\r\n"
-  "    <h:sentitems/>\r\n"
-  "    <h:tasks/>\r\n"
-  "    <h:msgfolderroot/>\r\n"
-  "    <h:sendmsg/>\r\n"
-  "  </prop>\r\n"
+  "  <allprop/>\r\n"
   "</propfind>\r\n";
 
   KIO::DavJob* job = new KIO::DavJob( url, (int) KIO::DAV_PROPFIND, query, false );
   job->addMetaData( "davDepth", "0" );
 */
-  QString sql = 
-    "select \"DAV:displayname\",\r\n"
-    "  \"http://schemas.microsoft.com/exchange/outlookfolderclass\",\r\n"
-    "  \"urn:schemas:httpmail:unreadcount\",\r\n"
-    "  \"DAV:hassubs\"\r\n"
-    "from scope('hierarchical traversal of \"/janb/\"')\r\n";
-  KIO::DavJob *job = KIO::davSearch( url, "DAV:", "sql", sql, false );
+//  ExchangeMonitor* monitor = new ExchangeMonitor( mAccount );
 }
 
 void ExchangeClient::test2()
 {
   kdDebug() << "Entering test2()" << endl;
 }
-
+/*
+ExchangeMonitor* ExchangeClient::monitor( int pollMode, const QHostAddress& ownInterface ) 
+{
+  return new ExchangeMonitor( mAccount, pollMode, ownInterface  );
+}
+*/
 void ExchangeClient::download( KCal::Calendar* calendar, const QDate& start, const QDate& end, bool showProgress )
 {
   mAccount->authenticate( mWindow );
   ExchangeDownload* worker = new ExchangeDownload( mAccount, mWindow );
   worker->download( calendar, start, end, showProgress );
   connect( worker, SIGNAL( finished( ExchangeDownload*, int, const QString& ) ), this, SLOT( slotDownloadFinished( ExchangeDownload*, int, const QString& ) ) );
+}
+
+void ExchangeClient::download( const QDate& start, const QDate& end, bool showProgress )
+{
+  mAccount->authenticate( mWindow );
+  ExchangeDownload* worker = new ExchangeDownload( mAccount, mWindow );
+  worker->download( start, end, showProgress );
+  connect( worker, SIGNAL( finished( ExchangeDownload*, int, const QString& ) ), 
+           this, SLOT( slotDownloadFinished( ExchangeDownload*, int, const QString& ) ) );
+  connect( worker, SIGNAL( gotEvent( KCal::Event*, const KURL&  ) ), 
+           this, SIGNAL( event( KCal::Event*, const KURL& ) ) );
 }
 
 void ExchangeClient::upload( KCal::Event* event )
@@ -138,6 +152,12 @@ void ExchangeClient::remove( KCal::Event* event )
 void ExchangeClient::slotDownloadFinished( ExchangeDownload* worker, int result, const QString& moreInfo ) 
 {
   emit downloadFinished( result, moreInfo );
+  worker->deleteLater();
+}
+
+void ExchangeClient::slotDownloadFinished( ExchangeDownload* worker, int result, const QString& moreInfo, QPtrList<KCal::Event>& events ) 
+{
+  emit downloadFinished( result, moreInfo, events );
   worker->deleteLater();
 }
 

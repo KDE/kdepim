@@ -23,6 +23,8 @@
 #include <qstring.h>
 #include <qdatetime.h>
 #include <qobject.h>
+#include <qhostaddress.h>
+#include <qptrlist.h>
 
 namespace KCal { 
   class Event;
@@ -39,6 +41,7 @@ class ExchangeAccount;
 class ExchangeDownload;
 class ExchangeUpload;
 class ExchangeDelete;
+//class ExchangeMonitor;
 
 class ExchangeClient : public QObject {
     Q_OBJECT
@@ -79,17 +82,22 @@ class ExchangeClient : public QObject {
     int uploadSynchronous( KCal::Event* event );
     int removeSynchronous( KCal::Event* event );
 
+    // ExchangeMonitor* monitor( int pollMode, const QHostAddress& ownInterface );
+
     QString detailedErrorString();
 
   public slots:
     // Asynchronous functions, wait for "finished" signals for result
+    // Deprecated: use download() without the Calendar* argument instead
     void download( KCal::Calendar* calendar, const QDate& start, const QDate& end, bool showProgress=false);
+    void download( const QDate& start, const QDate& end, bool showProgress=false);
     void upload( KCal::Event* event );
     void remove( KCal::Event* event );
     void test();
 
   private slots:
     void slotDownloadFinished( ExchangeDownload* worker, int result, const QString& moreInfo );
+    void slotDownloadFinished( ExchangeDownload* worker, int result, const QString& moreInfo, QPtrList<KCal::Event>& );
     void slotUploadFinished( ExchangeUpload* worker, int result, const QString& moreInfo );
     void slotRemoveFinished( ExchangeDelete* worker, int result, const QString& moreInfo );
     void slotSyncFinished( int result, const QString& moreInfo );
@@ -100,8 +108,10 @@ class ExchangeClient : public QObject {
     void startDownload();
     void finishDownload();
 
-    void uploadFinished( int result, const QString& moreInfo );
     void downloadFinished( int result, const QString& moreInfo );
+    void event( KCal::Event* event, const KURL& url);
+    void downloadFinished( int result, const QString& moreInfo, QPtrList<KCal::Event>& events );
+    void uploadFinished( int result, const QString& moreInfo );
     void removeFinished( int result, const QString& moreInfo );
 
   private:

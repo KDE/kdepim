@@ -76,11 +76,13 @@ ExchangeDownload::~ExchangeDownload()
 {
   kdDebug() << "ExchangeDownload destructor" << endl;
   delete mFormat;
+  if ( mEvents ) delete mEvents;
 }
 
 void ExchangeDownload::download(KCal::Calendar* calendar, const QDate& start, const QDate& end, bool showProgress)
 {
   mCalendar = calendar;
+  mEvents = 0;
 
   if( showProgress ) {
     //kdDebug() << "Creating progress dialog" << endl;
@@ -95,6 +97,30 @@ void ExchangeDownload::download(KCal::Calendar* calendar, const QDate& start, co
  
   // kdDebug() << "Exchange download query: " << endl << sql << endl;
 
+  increaseDownloads();
+
+  KIO::DavJob *job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", sql, false );
+  KIO::Scheduler::scheduleJob(job);
+  job->setWindow( mWindow );
+  connect(job, SIGNAL(result( KIO::Job * )), this, SLOT(slotSearchResult(KIO::Job *)));
+}
+
+void ExchangeDownload::download( const QDate& start, const QDate& end, bool showProgress )
+{
+  mCalendar = 0;
+  mEvents = new QPtrList<KCal::Event>;
+
+  if( showProgress ) {
+    //kdDebug() << "Creating progress dialog" << endl;
+    mProgress = new ExchangeProgress();
+    mProgress->show();
+  
+    connect( this, SIGNAL(startDownload()), mProgress, SLOT(slotTransferStarted()) );
+    connect( this, SIGNAL(finishDownload()), mProgress, SLOT(slotTransferFinished()) );
+  }
+
+  QString sql = dateSelectQuery( start, end.addDays( 1 ) );
+ 
   increaseDownloads();
 
   KIO::DavJob *job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", sql, false );
@@ -145,7 +171,7 @@ void ExchangeDownload::slotMasterResult( KIO::Job *job )
   }
   QDomDocument& response = static_cast<KIO::DavJob *>( job )->response();
 
-  // kdDebug() << "Search (master) result: " << endl << response.toString() << endl;
+  kdDebug() << "Search (master) result: " << endl << response.toString() << endl;
 
   handleAppointments( response, false );
   
@@ -153,7 +179,7 @@ void ExchangeDownload::slotMasterResult( KIO::Job *job )
 }
 
 void ExchangeDownload::handleAppointments( const QDomDocument& response, bool recurrence ) {
-  //kdDebug() << "Entering handleAppointments" << endl;
+  // kdDebug() << "Entering handleAppointments" << endl;
   int successCount = 0;
 
   if ( response.documentElement().firstChild().toElement().isNull() ) {
@@ -218,7 +244,7 @@ void ExchangeDownload::handleAppointments( const QDomDocument& response, bool re
     }
   }
   if ( !successCount ) {
-    finishUp( ExchangeClient::ServerResponseError, "WebDAV server response:\n" + response.toString() );
+    finishUp( ExchangeClient::ServerResponseError, "WebDAV SEARCH response:\n" + response.toString() );
   }
 }  
 
@@ -322,10 +348,17 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
   // kdDebug() << "DEBUG: timezone = " << timezone << endl;
 
   // mFormat is used for parsing recurrence rules.
-  mFormat->setTimeZone( mCalendar->timeZoneId(), !mCalendar->isLocalTime() );
+  QString localTimeZoneId;
+  if ( mCalendar ) {
+    mFormat->setTimeZone( mCalendar->timeZoneId(), !mCalendar->isLocalTime() );
+    localTimeZoneId = mCalendar->timeZoneId();
+  }  else {
+    localTimeZoneId = "UTC";
+    // If no mCalendar, stay in UTC
+  }
 
   QString lastModified = prop.namedItem( "lastmodified" ).toElement().text();
-  QDateTime dt = utcAsZone( QDateTime::fromString( lastModified, Qt::ISODate ), mCalendar->timeZoneId() );
+  QDateTime dt = utcAsZone( QDateTime::fromString( lastModified, Qt::ISODate ), localTimeZoneId );
   event->setLastModified( dt );
   // kdDebug() << "Got lastModified:" << lastModified << ", " << dt.toString() << endl;
 
@@ -357,12 +390,12 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
   // kdDebug() << "Got readonly: " << readonly << ":" << (readonly != "0") << endl;
 
   QString created = prop.namedItem( "created" ).toElement().text();
-  dt = utcAsZone( QDateTime::fromString( created, Qt::ISODate ), mCalendar->timeZoneId() );
+  dt = utcAsZone( QDateTime::fromString( created, Qt::ISODate ), localTimeZoneId );
   event->setCreated( dt );
   // kdDebug() << "got created: " << dt.toString() << endl;
 
   QString dtstart = prop.namedItem( "dtstart" ).toElement().text();
-  dt = utcAsZone( QDateTime::fromString( dtstart, Qt::ISODate ), mCalendar->timeZoneId() );
+  dt = utcAsZone( QDateTime::fromString( dtstart, Qt::ISODate ), localTimeZoneId );
   event->setDtStart( dt );
   // kdDebug() << "got dtstart: " << dtstart << " becomes in timezone " << dt.toString() << endl;
 
@@ -372,7 +405,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
   // kdDebug() << "Got alldayevent: \"" << alldayevent << "\":" << floats << endl;
 
   QString dtend = prop.namedItem( "dtend" ).toElement().text();
-  dt = utcAsZone( QDateTime::fromString( dtend, Qt::ISODate ), mCalendar->timeZoneId() );
+  dt = utcAsZone( QDateTime::fromString( dtend, Qt::ISODate ), localTimeZoneId );
   // Outlook thinks differently about floating event timing than libkcal
   if ( floats ) dt = dt.addDays( -1 );
   event->setDtEnd( dt );
@@ -420,7 +453,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
   list = exdate.elementsByTagNameNS( "xml:", "v" );
   for( uint i=0; i < list.count(); i++ ) {
     QDomElement item = list.item(i).toElement();
-    QDate date = utcAsZone( QDateTime::fromString( item.text(), Qt::ISODate ), mCalendar->timeZoneId() ).date();
+    QDate date = utcAsZone( QDateTime::fromString( item.text(), Qt::ISODate ), localTimeZoneId ).date();
     exdates.append( date );
     // kdDebug() << "Got exdate: " << date.toString() << endl;
   }
@@ -478,13 +511,18 @@ void ExchangeDownload::slotPropFindResult( KIO::Job * job )
   // Problem: When you sync Outlook to a Palm, the conduit splits up
   // multi-day events into single-day events WITH ALL THE SAME UID
   // Grrrrrrr.
-  KCal::Event* oldEvent = mCalendar->event( event->uid() );
-  if ( oldEvent ) {
-    kdWarning() << "Already got his event, keeping old version..." << endl;
-    // This doesn't work
-    // *oldEvent = *event;
+  if ( mCalendar ) {
+    KCal::Event* oldEvent = mCalendar->event( event->uid() );
+    if ( oldEvent ) {
+      kdWarning() << "Already got his event, keeping old version..." << endl;
+      // This doesn't work
+      // *oldEvent = *event;
+    } else {
+      mCalendar->addEvent( event );
+    }
   } else {
-    mCalendar->addEvent( event );
+    emit gotEvent( event, static_cast<KIO::DavJob *>( job )->url() );
+//    mEvents->append( event );
   }
 
   decreaseDownloads();
@@ -509,7 +547,7 @@ void ExchangeDownload::decreaseDownloads()
 
 void ExchangeDownload::finishUp( int result, const QString& moreInfo )
 {
-  mCalendar->setModified( true );
+  if ( mCalendar ) mCalendar->setModified( true );
   // Disconnect from progress bar
   if ( mProgress ) {
     disconnect( this, 0, mProgress, 0 );
@@ -517,7 +555,11 @@ void ExchangeDownload::finishUp( int result, const QString& moreInfo )
     mProgress->delayedDestruct();
   }
 
-  emit finished( this, result, moreInfo );
+//  if ( mEvents ) {
+//    emit finished( this, result, moreInfo, *mEvents );
+//  } else {
+    emit finished( this, result, moreInfo );
+//  }
 }
 
 void ExchangeDownload::finishUp( int result, KIO::Job* job )
