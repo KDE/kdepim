@@ -206,9 +206,6 @@ main()
     
     PersonalName pn = ((Person *)(*it2))->pname();
     
-    if (pn == 0)
-      continue;
-    
     cerr << "    First name  : " << pn.firstName() << endl;
     
     // To get the middle name, we need to look at the list of 'other names'.
