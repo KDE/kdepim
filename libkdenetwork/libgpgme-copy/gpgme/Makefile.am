@@ -97,7 +97,7 @@ libgpgme_la_SOURCES = ath-compat.c # $(ath_pth_src) $(ath_pthread_src)
 #libgpgme_pthread_la_SOURCES = ath.h ath-pthread.c
 #libgpgme_pth_la_SOURCES = ath.h ath-pth.c
 
-AM_CPPFLAGS = $(assuan_cppflags) -I../../libgpg-error-copy # @GPG_ERROR_CFLAGS@
+AM_CPPFLAGS = $(assuan_cppflags) -I$(srcdir)/../../libgpg-error-copy # @GPG_ERROR_CFLAGS@
 
 #libgpgme_la_LDFLAGS = $(libgpgme_version_script_cmd) -version-info \
 	#@LIBGPGME_LT_CURRENT@:@LIBGPGME_LT_REVISION@:@LIBGPGME_LT_AGE@
