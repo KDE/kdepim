@@ -1,4 +1,68 @@
+Developer's notes for october 29th 2000
+=======================================
+
+* Thomas Zander pointed out that KPilot doesn't write a config file
+  the first time it is run, leading it to *still* believe it's the
+  first time it's run the next time. Fixed.
+
+* In PilotDaemon::setupConnections() things have been reorganized so that
+  a failure on opening the Pilot device will not allow KPilot to start.
+
+* Added an undocumented Debug= entry to conduit's configuration, to
+  ease debugging. Conduits will have to read this themselves.
+
+* Added a "Run KPilot" menu item to the daemon.
+
+And there's some really strange behavior that I've noticed: when I run
+the setup for an external conduit -- which is a separate process --
+KPilot always "jumps in front" of that conduits setup dialog when I 
+give KPilot the focus. This is very irritating.
+
+Bugs noted still remaining:
+
+* Much weirdness in conduit startup (mode must be set before running
+  the conduit's constructor, but mode wasn't set till after) has been 
+  looked at but not repaired.
+
+* The vcal-conduit had trouble running a sync the first time (you really
+  should do a backup instead). We're working on this one.
+
+  
+
+Developer's notes for october 26th 2000
+=======================================
+
+OK, I admit it:
+
+	code,commit,announce,test
+
+is the *wrong* way to do things. I made some mistakes in the code that
+looks up conduits in the .desktop files, so conduits *still* won't run
+with this morning's commits. This has been fixed now, and the conduits
+run. Of course, vcalconduit just SIGSEGV'ed on me, so ...
+
+This brings me to a couple of wishlist items for KPilot:
+
+* A "Cancel" button. I just clicked on Backup when I was aiming for
+  HotSync, and there's nothing I can do about it.
+
+* A timeout when running conduits so that badly behaved conduits don't
+  hang up the KPilot system.
+
+Some other minor issues have been fixed as well:
+
+* Boatloads of compiler warnings in the included .xpm files
+* Some i18n stuff
+
+And new questions raised for people who know the code (I'm thinking
+Preston or Cornelius may be able to explain):
+
+* vcal-conduit.cc line 522, what's the purpose of voStatus there?               
+
+
+
 Developer's notes for october 23rd 2000
+=======================================
 
 It's been a week where I couldn't bring myself to tackle
 really big problems, like an address-book conduit for
