@@ -136,8 +136,8 @@ public:
 } ;
 
 KPilotInstaller::KPilotInstaller() :
-	KMainWindow(0),
 	DCOPObject("KPilotIface"),
+	KMainWindow(0),
 	fDaemonStub(new PilotDaemonDCOP_stub("kpilotDaemon",
 		"KPilotDaemonIface")),
 	fP(new KPilotPrivate),
@@ -232,7 +232,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 #endif
 		))
 	{
-		kdError() << k_funcinfo 
+		kdError() << k_funcinfo
 			<< ": Can't start daemon : " << daemonError << endl;
 		if (fLogWidget)
 		{
@@ -254,7 +254,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 			s.remove(0,12);
 			wordoffset=s.find(' ');
 			if (wordoffset>0) s.remove(wordoffset,60);
-			
+
 			fLogWidget->addMessage(
 				i18n("Daemon status is `%1'")
 				.arg(s));

@@ -31,7 +31,7 @@ KPilot's settings.!</comment>
                     <cstring>GeneralTab</cstring>
                 </property>
                 <attribute name="title">
-                    <string>General</string>
+                    <string>&amp;General</string>
                 </attribute>
                 <grid>
                     <property name="name">
@@ -99,10 +99,13 @@ KPilot's settings.!</comment>
                                     <cstring>textLabel1</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Encoding:</string>
+                                    <string>En&amp;coding:</string>
                                 </property>
                                 <property name="alignment">
                                     <set>AlignVCenter|AlignRight</set>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fPilotEncoding</cstring>
                                 </property>
                             </widget>
                             <widget class="QComboBox" row="1" column="3">
@@ -137,10 +140,13 @@ KPilot's settings.!</comment>
                                     <cstring>TextLabel4</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Speed:</string>
+                                    <string>Spee&amp;d:</string>
                                 </property>
                                 <property name="alignment">
                                     <set>AlignVCenter|AlignRight</set>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fPilotSpeed</cstring>
                                 </property>
                             </widget>
                             <widget class="QLabel" row="0" column="0">
@@ -148,10 +154,13 @@ KPilot's settings.!</comment>
                                     <cstring>TextLabel1</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Pilot device:</string>
+                                    <string>Pilot &amp;device:</string>
                                 </property>
                                 <property name="alignment">
                                     <set>AlignVCenter|AlignRight</set>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fPilotDevice</cstring>
                                 </property>
                             </widget>
                             <widget class="QLabel" row="2" column="0">
@@ -159,10 +168,13 @@ KPilot's settings.!</comment>
                                     <cstring>TextLabel2</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Pilot user:</string>
+                                    <string>Pilot &amp;user:</string>
                                 </property>
                                 <property name="alignment">
                                     <set>AlignVCenter|AlignRight</set>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>fUserName</cstring>
                                 </property>
                             </widget>
                             <widget class="QComboBox" row="1" column="1">
@@ -207,7 +219,7 @@ KPilot's settings.!</comment>
                     <cstring>SyncTab</cstring>
                 </property>
                 <attribute name="title">
-                    <string>Sync</string>
+                    <string>S&amp;ync</string>
                 </attribute>
                 <grid>
                     <property name="name">
@@ -263,6 +275,11 @@ KPilot's settings.!</comment>
                         </item>
                         <item>
                             <property name="text">
+                                <string>Do Nothing</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
                                 <string>Handheld overrides</string>
                             </property>
                         </item>
@@ -298,7 +315,7 @@ KPilot's settings.!</comment>
                             </sizepolicy>
                         </property>
                         <property name="text">
-                            <string>&amp;Conflict resolution:</string>
+                            <string>Conflict &amp;resolution:</string>
                         </property>
                         <property name="buddy" stdset="0">
                             <cstring>fConflictResolution</cstring>
@@ -310,9 +327,6 @@ KPilot's settings.!</comment>
                         </property>
                         <property name="text">
                             <string>&amp;Install files</string>
-                        </property>
-                        <property name="checked">
-                            <bool>true</bool>
                         </property>
                         <property name="whatsThis" stdset="0">
                             <string>&lt;qt&gt;Install files that have been dragged onto KPilot or the KPilot daemon on the Pilot.&lt;/qt&gt;</string>
@@ -349,7 +363,7 @@ KPilot's settings.!</comment>
                                     <cstring>fSpecialSync</cstring>
                                 </property>
                                 <property name="enabled">
-                                    <bool>true</bool>
+                                    <bool>false</bool>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="0" column="0" rowspan="1" colspan="2">
@@ -393,9 +407,6 @@ KPilot's settings.!</comment>
                         <property name="text">
                             <string>&amp;Do full backup when changing PCs</string>
                         </property>
-                        <property name="checked">
-                            <bool>true</bool>
-                        </property>
                         <property name="whatsThis" stdset="0">
                             <string>We really don't know what this does.</string>
                         </property>
@@ -407,12 +418,20 @@ KPilot's settings.!</comment>
                     <cstring>ViewersTab</cstring>
                 </property>
                 <attribute name="title">
-                    <string>Viewers</string>
+                    <string>&amp;Viewers</string>
                 </attribute>
                 <vbox>
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>fInternalEditors</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Make internal viewers &amp;editable</string>
+                        </property>
+                    </widget>
                     <widget class="QCheckBox">
                         <property name="name">
                             <cstring>fUseSecret</cstring>
@@ -497,7 +516,7 @@ KPilot's settings.!</comment>
                         <property name="sizeHint">
                             <size>
                                 <width>20</width>
-                                <height>20</height>
+                                <height>60</height>
                             </size>
                         </property>
                     </spacer>
@@ -508,7 +527,7 @@ KPilot's settings.!</comment>
                     <cstring>BackupTab</cstring>
                 </property>
                 <attribute name="title">
-                    <string>Backup</string>
+                    <string>&amp;Backup</string>
                 </attribute>
                 <grid>
                     <property name="name">
@@ -530,7 +549,7 @@ KPilot's settings.!</comment>
                                     <cstring>TextLabel5</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>No &amp;backup:</string>
+                                    <string>&amp;No backup:</string>
                                 </property>
                                 <property name="buddy" stdset="0">
                                     <cstring>fBackupOnly</cstring>
@@ -603,6 +622,14 @@ KPilot's settings.!</comment>
         </widget>
     </grid>
 </widget>
+<connections>
+    <connection>
+        <sender>radioButton9</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>fSpecialSync</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+</connections>
 <tabstops>
     <tabstop>fPilotDevice</tabstop>
     <tabstop>fPilotSpeed</tabstop>

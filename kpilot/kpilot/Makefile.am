@@ -26,6 +26,7 @@ INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 ### you want any debugging at all.
 ###
 ### KDE_CXXFLAGS=-DNDEBUG -UDEBUG
+## KDE_CXXFLAGS=-DDEBUG -DDEBUG_CERR
 
 ###
 ### Non-automake variables
@@ -36,6 +37,7 @@ kpilot_SOURCES	= \
 	kpilot.cc kpilotConfig.cc \
 	kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
 	conduitConfigDialog.cc conduitConfigDialog_base.ui \
+	dbSelectionDialog.cc dbSelection_base.ui \
 	pilotComponent.cc logWidget.cc memoWidget.cc addressWidget.cc \
 	addressEditor.cc \
 	dbviewerWidget.cc datebookWidget.cc \
@@ -59,6 +61,7 @@ kpilotTest_SOURCES = kpilotConfig.cc \
 
 kpilotConfig_SOURCES = kpilotConfig.cc \
 	kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
+	dbSelectionDialog.cc dbSelection_base.ui \
 	conduitConfigDialog_base.ui conduitConfigDialog.cc \
 	listCat.cc main-config.cc
 

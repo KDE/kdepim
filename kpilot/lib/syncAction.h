@@ -19,7 +19,7 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -60,7 +60,7 @@ protected:
 	/**
 	* This function starts the actual processing done
 	* by the conduit. It should return false if the
-	* processing cannot be initiated, f.ex. because 
+	* processing cannot be initiated, f.ex. because
 	* some parameters were not set or a needed library
 	* is missing. This will be reported to the user.
 	* It should return true if processing is started
@@ -108,6 +108,27 @@ protected:
 	int pilotSocket() const { return fHandle->pilotSocket(); } ;
 
 	int openConduit() { return fHandle->openConduit(); } ;
+public:
+	enum eSyncMode
+	{
+		eFastSync=0,
+		eHotSync,
+		eFullSync,
+		eCopyPCToHH,
+		eCopyHHToPC,
+		eSyncModeLastRadiobutton=eFullSync
+	};
+	enum eConflictResolution
+	{
+		eUseGlobalSetting=-1,
+		eAskUser=0,
+		eDoNothing,
+		eHHOverrides,
+		ePCOverrides,
+		ePreviousSyncOverrides,
+		eDuplicate,
+		eCROffset=-1
+	};
 } ;
 
 

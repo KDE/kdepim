@@ -121,7 +121,7 @@ public:
 	char *appInfo() { return fAppInfo; } ;
 
 protected:
-	// Changes any forward slahses to underscores
+	// Changes any forward slashes to underscores
 	void fixupDBName();
 	virtual void openDatabase();
 	virtual void closeDatabase();

@@ -71,7 +71,7 @@ CheckUser::CheckUser(KPilotDeviceLink * p, QWidget * vp):
 	InteractiveAction(p, vp, "userCheck")
 {
 	FUNCTIONSETUP;
-	
+
 	(void) interactivesync_id;
 }
 
@@ -200,7 +200,7 @@ CheckUser::~CheckUser()
 
 	}
 
-	
+
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": User name set to <"
@@ -259,7 +259,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 #endif
 
 	QString dirname = fP->fDatabaseDir +
-		PilotAppCategory::codec()->toUnicode(fHandle->getPilotUser()->getUserName()) + 
+		PilotAppCategory::codec()->toUnicode(fHandle->getPilotUser()->getUserName()) +
 		CSL1("/");
 
 #ifdef DEBUG
@@ -294,7 +294,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 	}
 
 	emit logProgress(i18n("Restoring %1...").arg(QString::null),1);
-	
+
 	for (unsigned int i = 0; i < dir.count(); i++)
 	{
 		QString s;
@@ -464,7 +464,7 @@ nextFile:
 	addSyncLogEntry(databaseInfo.fileName());
 	emit logProgress(i18n("Restoring %1...").arg(databaseInfo.fileName()),
 		(100*fP->fDBIndex) / (fP->fDBList.count()+1)) ;
-	
+
 	pi_file *f =
 		pi_file_open( /* const_cast <
 		char *>((const char *)QFile::encodeName */ (dbi.name));

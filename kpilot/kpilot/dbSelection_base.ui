@@ -1,0 +1,83 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>KPilotDBSelectionWidget</class>
+<author>Reinhold Kainhofer</author>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>Form2</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>318</width>
+            <height>218</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Form2</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="KListView" row="0" column="0" rowspan="1" colspan="3">
+            <column>
+                <property name="text">
+                    <string>Database</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizable">
+                    <bool>true</bool>
+                </property>
+            </column>
+            <property name="name">
+                <cstring>fDatabaseList</cstring>
+            </property>
+            <property name="resizeMode">
+                <enum>LastColumn</enum>
+            </property>
+            <property name="itemsRenameable">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <widget class="KPushButton" row="1" column="2">
+            <property name="name">
+                <cstring>fRemoveButton</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Remove</string>
+            </property>
+        </widget>
+        <widget class="KLineEdit" row="1" column="0">
+            <property name="name">
+                <cstring>fNameEdit</cstring>
+            </property>
+        </widget>
+        <widget class="KPushButton" row="1" column="1">
+            <property name="name">
+                <cstring>fAddButton</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Add</string>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>fNameEdit</sender>
+        <signal>returnPressed()</signal>
+        <receiver>fAddButton</receiver>
+        <slot>animateClick()</slot>
+    </connection>
+</connections>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>klistview.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+</includehints>
+</UI>

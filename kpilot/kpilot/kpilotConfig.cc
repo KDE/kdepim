@@ -278,8 +278,7 @@ KPilotConfigSettings::~KPilotConfigSettings()
 	if ((i<0) || (i>m)) i=0; writeEntry(key,i); }
 
 IntProperty_(PilotSpeed, "PilotSpeed", 0, 4)
-IntProperty_(SyncType, "SyncType", 0, 2)
-IntProperty_(SpecialSyncType, "SpecialSync", 0, 2)
+IntProperty_(SyncType, "SyncType", 0, 4)
 IntProperty_(ConflictResolution, "ConflictResolution", 0,4)
 IntProperty_(AddressDisplayMode, "AddressDisplay", 0, 1)
 IntProperty_(Version, "Configured", 0, 100000)

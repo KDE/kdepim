@@ -48,6 +48,8 @@ protected:
 
 protected slots:
 	void changePortType(int);
+	void slotSelectNoBackupDBs();
+	void slotSelectNoRestoreDBs();
 
 private:
 	KPilotConfigWidget *fConfigWidget;

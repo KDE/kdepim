@@ -89,7 +89,6 @@ public:
 
 	/* Sync tab */
 	IntProperty(SyncType)
-	IntProperty(SpecialSyncType)
 	BoolProperty(FullSyncOnPCChange)
 	IntProperty(ConflictResolution)
 	BoolProperty(SyncFiles)
@@ -131,6 +130,7 @@ public:
 	void sync() { KSimpleConfig::sync(); } ;
 	KPilotConfigSettings & resetGroup()
 		{ setGroup(QString::null); return *this; } ;
+
 } ;
 
 class KPilotConfig

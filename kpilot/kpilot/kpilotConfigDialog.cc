@@ -38,6 +38,7 @@ static const char *kpilotconfigdialog_id =
 #include <qcombobox.h>
 #include <qcheckbox.h>
 #include <qradiobutton.h>
+#include <qpushbutton.h>
 #include <qbuttongroup.h>
 #include <qlineedit.h>
 #include <qtabwidget.h>
@@ -48,6 +49,8 @@ static const char *kpilotconfigdialog_id =
 
 #include "kpilotConfigDialog_base.h"
 #include "kpilotConfigDialog.moc"
+#include "syncAction.h"
+#include "dbSelectionDialog.h"
 
 // Vaguely copied from the JPilot source
 // list of supported codecs taken from QTextEncoding's doc
@@ -126,6 +129,11 @@ KPilotConfigDialog::KPilotConfigDialog(QWidget * w, const char *n,
 
 
 	addAboutPage(false);
+//	connect( fSyncFile, SIGNAL( toggled(bool) ), fAbookFile, SLOT( setEnabled(bool) ) );
+	connect(fConfigWidget->fBackupOnlyChooser, SIGNAL( clicked() ),
+		SLOT( slotSelectNoBackupDBs() ) );
+	connect(fConfigWidget->fSkipDBChooser, SIGNAL(clicked()),
+		SLOT(slotSelectNoRestoreDBs()));
 
 	(void) kpilotconfigdialog_id;
 }
@@ -157,8 +165,15 @@ void KPilotConfigDialog::readConfig()
 	fConfigWidget->fKillDaemonOnExit->setChecked(c.getKillDaemonOnExit());
 
 	/* Sync tab */
-	fConfigWidget->fSyncMode->setButton(c.getSyncType());
-	fConfigWidget->fSpecialSync->setCurrentItem(c.getSpecialSyncType());
+	int synctype=c.getSyncType();
+	if (synctype < SyncAction::eSyncModeLastRadiobutton)
+		fConfigWidget->fSyncMode->setButton(synctype);
+	else
+	{
+		fConfigWidget->fSyncMode->setButton(SyncAction::eSyncModeLastRadiobutton);
+		fConfigWidget->fSpecialSync->setCurrentItem(synctype-SyncAction::eSyncModeLastRadiobutton);
+	}
+
 	fConfigWidget->fFullBackupCheck->setChecked(c.getFullSyncOnPCChange());
 	fConfigWidget->fConflictResolution->setCurrentItem(c.getConflictResolution());
 	fConfigWidget->fSyncFiles->setChecked(c.getSyncFiles());
@@ -219,8 +234,10 @@ void KPilotConfigDialog::readConfig()
 	c.setKillDaemonOnExit(fConfigWidget->fKillDaemonOnExit->isChecked());
 
 	/* Sync tab */
-	c.setSyncType(fConfigWidget->fSyncMode->id(fConfigWidget->fSyncMode->selected()));
-	c.setSpecialSyncType(fConfigWidget->fSpecialSync->currentItem());
+	int syncmode=fConfigWidget->fSyncMode->id(fConfigWidget->fSyncMode->selected());
+	if (syncmode==SyncAction::eSyncModeLastRadiobutton)
+		syncmode+=fConfigWidget->fSpecialSync->currentItem();
+	c.setSyncType(syncmode);
 	c.setFullSyncOnPCChange(fConfigWidget->fFullBackupCheck->isChecked());
 	c.setConflictResolution(fConfigWidget->fConflictResolution->currentItem());
 	c.setSyncFiles(fConfigWidget->fSyncFiles->isChecked());
@@ -284,4 +301,43 @@ void KPilotConfigDialog::setEncoding(KPilotConfigSettings &c)
 	{
 		c.setEncoding(enc);
 	}
+}
+
+void KPilotConfigDialog::slotSelectNoBackupDBs()
+{
+	FUNCTIONSETUP;
+	KPilotConfigSettings & c = KPilotConfig::getConfig();
+
+	QStringList selectedDBs(QStringList::split(',', fConfigWidget->fBackupOnly->text() ));
+	QStringList deviceDBs(c.readListEntry("DeviceDBs"));
+	QStringList addedDBs(c.readListEntry("AddedDBsNoBackup"));
+
+	int res;
+	KPilotDBSelectionDialog*dlg=new KPilotDBSelectionDialog(selectedDBs, deviceDBs, addedDBs, this, "NoBackupDBs");
+	if (dlg && (dlg->exec()==QDialog::Accepted) )
+	{
+		fConfigWidget->fBackupOnly->setText(
+			dlg->getSelectedDBs().join(","));
+		c.writeEntry("AddedDBsNoBackup", dlg->getAddedDBs());
+	}
+	KPILOT_DELETE(dlg);
+}
+
+void KPilotConfigDialog::slotSelectNoRestoreDBs()
+{
+	FUNCTIONSETUP;
+	KPilotConfigSettings & c = KPilotConfig::getConfig();
+
+	QStringList selectedDBs(QStringList::split(',', fConfigWidget->fSkipDB->text() ));
+	QStringList deviceDBs(c.readListEntry("DeviceDBs"));
+	QStringList addedDBs(c.readListEntry("AddedDBsNoRestore"));
+
+	KPilotDBSelectionDialog*dlg=new KPilotDBSelectionDialog(selectedDBs, deviceDBs, addedDBs, this, "NoRestoreDBs");
+	if (dlg && (dlg->exec()==QDialog::Accepted) )
+	{
+		fConfigWidget->fSkipDB->setText(
+			dlg->getSelectedDBs().join(","));
+		c.writeEntry("AddedDBsNoRestore", dlg->getAddedDBs());
+	}
+	KPILOT_DELETE(dlg);
 }
