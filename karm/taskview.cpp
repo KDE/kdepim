@@ -257,7 +257,7 @@ void TaskView::scheduleSave()
 
 Preferences* TaskView::preferences() { return _preferences; }
 
-void TaskView::save()
+QString TaskView::save()
 {
     // DF: this code created a new event for the running task(s),
     // at every call (very frequent with autosave) !!!
@@ -282,7 +282,7 @@ void TaskView::save()
   if (activeTasks.count() == 0)
 #endif
   {
-    _storage->save(this);
+    return _storage->save(this);
   }
 }
 

@@ -80,7 +80,7 @@ class TaskView : public KListView
 
   public slots:
     /** Save to persistent storage. */
-    void save();
+    QString save();
 
     /** Start the timer on the current item (task) in view.  */
     void startCurrentTimer();

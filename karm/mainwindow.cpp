@@ -113,8 +113,9 @@ void MainWindow::slotSelectionChanged()
 void MainWindow::save()
 {
   kdDebug(5970) << i18n("Saving time data to disk.") << endl;
-  _taskView->save();
-  statusBar()->message(i18n("Successfully saved tasks and history"),1807);
+  QString err=_taskView->save();  // untranslated error msg.
+  if (err.isEmpty()) statusBar()->message(i18n("Successfully saved tasks and history"),1807);
+  else statusBar()->message(i18n(err.ascii()),7707); // no msgbox since save is called when exiting
   saveGeometry();
 }
 

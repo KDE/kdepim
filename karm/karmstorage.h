@@ -107,10 +107,11 @@ class KarmStorage
      * All tasks must have an associated VTODO object already created in the
      * calendar file; that is, the task->uid() must refer to a valid VTODO in
      * the calender.
+     * Delivers empty string if successful, else error msg.
      *
      * @param taskview    The list group used in the TaskView
      */
-    void save(TaskView* taskview);
+    QString save(TaskView* taskview);
 
     /**
      * Read tasks and their total times from a text file (legacy storage).

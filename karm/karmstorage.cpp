@@ -222,9 +222,10 @@ void KarmStorage::closeStorage(TaskView* view)
   }
 }
 
-void KarmStorage::save(TaskView* taskview)
+QString KarmStorage::save(TaskView* taskview)
 {
-  if ( !_lock ) return;
+  QString err="";
+  if ( !_lock ) return "Do not have lock";
 
   QPtrStack< KCal::Todo > parents;
 
@@ -233,13 +234,14 @@ void KarmStorage::save(TaskView* taskview)
     writeTaskAsTodo(task, 1, parents );
   }
 
-  _calendar->save(_lock);
+  if (!_calendar->save(_lock)) err="Could not save";
   _lock = _calendar->requestSaveTicket
     ( _calendar->resourceManager()->standardResource() );
 
   kdDebug(5970)
     << "KarmStorage::save : wrote "
     << taskview->count() << " tasks to " << _icalfile << endl;
+  return err;
 }
 
 void KarmStorage::writeTaskAsTodo(Task* task, const int level,
