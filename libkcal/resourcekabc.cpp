@@ -195,8 +195,12 @@ bool ResourceKABC::load()
       bool found = false;
       for ( addrIt = anniversaries.begin(); addrIt != anniversaries.end(); ++addrIt ) {
         if ( name == (*addrIt).realName() ) {
-          found = true;
-          break;
+          QDateTime spouseAnniversary = QDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
+          if ( anniversary == spouseAnniversary ) {
+            found = true;
+            break;
+
+          }
         }
       }
 
