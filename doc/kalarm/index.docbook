@@ -348,26 +348,26 @@ against accidental acknowledgment of alarms.</para>
 </listitem>
 
 <listitem>
-<para>Check the <guilabel>Sound</guilabel> checkbox if you want an
-audible alarm to sound when the alarm message is displayed. By default
-a beep is sounded; use the button on the right to select an audio file
-to play. To revert to a beep, click the button again. To see what your
-current sound selection is, hover the mouse above the button until a
-tooltip appears.</para>
+<para>Check <guilabel>Sound</guilabel> if you want an audible alarm
+to sound when the alarm message is displayed. By default a beep is
+sounded; use the button on the right to select an audio file to play.
+To revert to a beep, click the button again. To see what your current
+sound selection is, hover the mouse above the button until a tooltip
+appears.</para>
 
 <para>If you have selected an audio file to play, there are further
 options to control the sound:</para>
 
 <itemizedlist>
 <listitem>
-<para>Check the <guilabel>Repeat</guilabel> checkbox to continually
-repeat the audio file for as long as the alarm is displayed. (The
-alarm message window contains a button to stop playing the sound
-should you need silence but still want to display the alarm.)</para>
+<para>Check <guilabel>Repeat</guilabel> to continually repeat the
+audio file for as long as the alarm is displayed. (The alarm message
+window contains a button to stop playing the sound should you need
+silence but still want to display the alarm.)</para>
 </listitem>
 
 <listitem>
-<para>Select <guilabel>Volume</guilabel> and adjust the slider
+<para>Check <guilabel>Volume</guilabel> and adjust the slider
 control if you want to adjust the volume at which the audio file is
 played.</para>
 
@@ -378,16 +378,15 @@ the resultant sound level.</para></tip>
 </listitem>
 
 <listitem>
-<para>Check the <guilabel>Reminder</guilabel> checkbox if you want to
-display a reminder in advance of the main alarm and of each of its
-recurrences (if any). Enter how long in advance using the edit
-controls beside the checkbox.</para>
+<para>Check <guilabel>Reminder</guilabel> if you want to display a
+reminder in advance of the main alarm and of each of its recurrences
+(if any). Enter how long in advance using the edit controls beside
+the checkbox.</para>
 
-<para>If the alarm recurs, check the
-<guilabel>Reminder for first recurrence only</guilabel> checkbox if
-you only want a reminder before the alarm's first recurrence. If this
-is not checked, the reminder period is limited to being less than the
-recurrence interval.</para>
+<para>If the alarm recurs, check <guilabel>Reminder for first
+recurrence only</guilabel> if you only want a reminder before the
+alarm's first recurrence. If this is not checked, the reminder period
+is limited to being less than the recurrence interval.</para>
 </listitem>
 
 <listitem>
@@ -477,12 +476,11 @@ Center.</para>
 
 <itemizedlist>
 <listitem>
-<para>Check the <guilabel>Copy email to self</guilabel> checkbox to
-send a blind copy of the email to yourself when the alarm is
-triggered. The email address to which the copy will be sent may be
-set in the <link linkend="preferences">Preferences dialog</link>, the
-default being your email address set in the &kde; Control
-Center.</para>
+<para>Check <guilabel>Copy email to self</guilabel> to send a blind
+copy of the email to yourself when the alarm is triggered. The email
+address to which the copy will be sent may be set in the
+<link linkend="preferences">Preferences dialog</link>, the default
+being your email address set in the &kde; Control Center.</para>
 </listitem>
 </itemizedlist>
 </listitem>
@@ -500,12 +498,12 @@ change the deferred time or to cancel the deferral.</para>
 <itemizedlist>
 <listitem>
 <para><guilabel>At date/time</guilabel> to enter the date and time
-when the alarm is to be triggered. Check the <guilabel>Any
-time</guilabel> checkbox if you want to specify only a date for the
-alarm: in this case the alarm will be displayed at the first
-opportunity on or after the configured start-of-day time, on the
-specified date. (<link linkend="preferences">Configuring
-&kalarm;</link> describes how to set the start-of-day time.)</para>
+when the alarm is to be triggered. Check <guilabel>Any time</guilabel>
+if you want to specify only a date for the alarm: in this case the
+alarm will be displayed at the first opportunity on or after the
+configured start-of-day time, on the specified date.
+(<link linkend="preferences">Configuring &kalarm;</link> describes
+how to set the start-of-day time.)</para>
 
 <para>For a non-recurring alarm, the date/time which you enter must be
 in the future, or if you enter only a date it must be today or later.
@@ -609,8 +607,8 @@ in the list and press <guibutton>Delete</guibutton>.</para>
 </itemizedlist>
 
 <para>The <guilabel>Cancel if late</guilabel> checkbox determines what
-happens if the alarm cannot be triggered at its scheduled time. Check
-this box to cancel the alarm if it cannot be triggered within
+happens if the alarm cannot be triggered at its scheduled time.
+Check this box to cancel the alarm if it cannot be triggered within
 one minute after the right time.
 Leave the box unchecked to trigger the alarm at
 the first opportunity starting at the scheduled time. Date-only alarms,
