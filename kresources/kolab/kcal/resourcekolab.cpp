@@ -350,6 +350,13 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       // KMail is doing it's best to add the event now, put a sticker on it,
       // so we know it's one of our transient ones
       mUidsPendingAdding.append( uid );
+
+      /* Add to the cache immediately if this is a new event coming from 
+       * KOrganizer. It relies on the incidence being in the calendar when
+       * addIncidence returns. */
+      if ( newIncidence )
+        mCalendar.addIncidence( incidence );
+
     }
   } else { /* KMail told us */
     bool ourOwnUpdate = false;
@@ -369,9 +376,10 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
         resolveConflict( incidence, subResource, sernum );
         return true;
       }
-
-      /* Add to the cache and listen to update from KOrganizer for it. */
-      mCalendar.addIncidence( incidence );
+      /* Add to the cache if the add didn't come from KOrganizer, in which case
+       * we've already added it, and listen to updates from KOrganizer for it. */
+      if ( !mUidsPendingAdding.contains( uid ) )
+        mCalendar.addIncidence( incidence );
       incidence->registerObserver( this );
       if ( !subResource.isEmpty() && sernum != 0 ) {
         mUidMap[ uid ] = StorageReference( subResource, sernum );
@@ -394,8 +402,6 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     }
 
   }
-  // TODO get rid of this one
-  mResourceChangedTimer.changeInterval( 100 );
   return true;
 }
 
@@ -430,8 +436,6 @@ bool ResourceKolab::deleteIncidence( KCal::Incidence* incidence )
   } else {
     assert( false ); // If this still happens, something is very wrong
   }
-  // TODO
-  mResourceChangedTimer.changeInterval( 100 );
   return true;
 }
 
