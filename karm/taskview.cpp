@@ -124,7 +124,6 @@ Task* TaskView::item_at_index(int i)
 
 void TaskView::load()
 {
-
   QString err = _storage->load(this, _preferences);
 
   if (!err.isEmpty())
@@ -190,6 +189,8 @@ void TaskView::scheduleSave()
     _manualSaveTimer->start( 10, true /*single-shot*/ );
 }
 
+Preferences* TaskView::preferences() { return _preferences; }
+
 void TaskView::save()
 {
     // DF: this code created a new event for the running task(s),
@@ -247,9 +248,9 @@ void TaskView::startTimerFor(Task* task)
 
 void TaskView::stopAllTimers()
 {
-  for (unsigned int i=0; i<activeTasks.count();i++) {
+  for ( unsigned int i = 0; i < activeTasks.count(); i++ )
     activeTasks.at(i)->setRunning(false, _storage);
-  }
+
   _idleTimeDetector->stopIdleDetection();
   activeTasks.clear();
   emit updateButtons();
@@ -277,10 +278,10 @@ void TaskView::resetTimeForAllTasks()
 
 void TaskView::stopTimerFor(Task* task)
 {
-  if (task != 0 && activeTasks.findRef(task) != -1) {
+  if ( task != 0 && activeTasks.findRef(task) != -1 ) {
     activeTasks.removeRef(task);
     task->setRunning(false, _storage);
-    if (activeTasks.count()== 0) {
+    if ( activeTasks.count() == 0 ) {
       _idleTimeDetector->stopIdleDetection();
       emit timersInactive();
     }
@@ -298,30 +299,29 @@ void TaskView::stopCurrentTimer()
 void TaskView::changeTimer(QListViewItem *)
 {
   Task *task = current_item();
-  if (task != 0 && activeTasks.findRef(task) == -1) {
+
+  if ( task != 0 && activeTasks.findRef(task) == -1 ) 
+  {
     // Stop all the other timers.
-    for (unsigned int i=0; i<activeTasks.count();i++) {
+    for (unsigned int i=0; i<activeTasks.count();i++) 
       (activeTasks.at(i))->setRunning(false, _storage);
-    }
     activeTasks.clear();
 
     // Start the new timer.
     startCurrentTimer();
   }
-  else {
-    stopCurrentTimer();
-  }
+  else stopCurrentTimer();
 }
 
 void TaskView::minuteUpdate()
 {
-  addTimeToActiveTasks(1, false);
+  addTimeToActiveTasks(1);
 }
 
-void TaskView::addTimeToActiveTasks(int minutes, bool do_logging)
+void TaskView::addTimeToActiveTasks(int minutes)
 {
   for(unsigned int i=0; i<activeTasks.count();i++)
-    activeTasks.at(i)->changeTime(minutes, do_logging, _storage);
+    activeTasks.at(i)->changeTime(minutes, _storage);
 }
 
 void TaskView::newTask()
@@ -419,7 +419,7 @@ void TaskView::editTask()
     dialog->status( &total, &totalDiff, &session, &sessionDiff, &desktopList);
 
     if( totalDiff != 0 || sessionDiff != 0)
-      task->changeTimes( sessionDiff ,totalDiff, true, _storage );
+      task->changeTimes( sessionDiff, totalDiff, _storage );
 
     // If all available desktops are checked, disable auto tracking,
     // since it makes no sense to track for every desktop.
@@ -527,7 +527,7 @@ void TaskView::deleteTask(bool markingascomplete)
 
 void TaskView::extractTime(int minutes)
 {
-  addTimeToActiveTasks(-minutes, true);
+  addTimeToActiveTasks(-minutes);
 }
 
 void TaskView::autoSaveChanged(bool on)

@@ -1,6 +1,6 @@
 /*
  *   This file only:
- *     Copyright (C) 2003  Mark Bucciarelli <mark@hubcapconsutling.com>
+ *     Copyright (C) 2003, 2004  Mark Bucciarelli <mark@hubcapconsutling.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -71,29 +71,22 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
 
   // Use KDE_CXXFLAGS=$(USE_EXCEPTIONS) in Makefile.am if you want to use
   // exceptions (David Faure)
-  //
-  // Ok, put on the TODO list.  :)  (Mark B)
 
   QString err;
   KEMailSettings settings;
   int handle;
 
   // if same file, don't reload
-  if (preferences->iCalFile() == _icalfile)
-    return err;
+  if (preferences->iCalFile() == _icalfile) return err;
 
   // If file doesn't exist, create a blank one.  This avoids an error dialog
   // that libkcal presents when asked to load a non-existent file.  We make it
   // user and group read/write, others read.  This is masked by the users
   // umask.  (See man creat)
-  handle = open(QFile::encodeName(preferences->iCalFile()),
-      O_CREAT|O_EXCL|O_WRONLY,
+  handle = open
+    (QFile::encodeName(preferences->iCalFile()), O_CREAT|O_EXCL|O_WRONLY,
       S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH);
-
-  if (handle != -1)
-  {
-    close(handle);
-  }
+  if (handle != -1) close(handle);
 
   // Clear view and calendar from memory.
   view->clear();
@@ -105,8 +98,7 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
   _calendar.setEmail( settings.getSetting( KEMailSettings::EmailAddress ) );
   _calendar.setOwner( settings.getSetting( KEMailSettings::RealName ) );
   if (!_calendar.load(_icalfile))
-    err = i18n("Error loading file \"%1\"")
-      .arg(_icalfile);
+    err = i18n("Error loading file \"%1\"").arg(_icalfile);
 
   // Build task view from iCal data
   if (!err)
@@ -200,7 +192,6 @@ void KarmStorage::save(TaskView* taskview)
 void KarmStorage::writeTaskAsTodo(Task* task, const int level,
     QPtrStack< KCal::Todo >& parents )
 {
-
   KCal::Todo* todo;
 
   todo = _calendar.todo(task->uid());
@@ -230,10 +221,8 @@ bool KarmStorage::isEmpty()
 
 bool KarmStorage::isNewStorage(const Preferences* preferences) const
 {
-  if (!_icalfile.isNull())
-    return preferences->iCalFile() != _icalfile;
-  else
-    return false;
+  if ( !_icalfile.isNull() ) return preferences->iCalFile() != _icalfile;
+  else return false;
 }
 
 //----------------------------------------------------------------------------
@@ -307,7 +296,7 @@ QString KarmStorage::loadFromFlatFile(TaskView* taskview,
         task->setUid(addTask(task, parent));
 
         // Legacy File Format (!):
-        parent->changeTimes(0, -minutes, false);
+        parent->changeTimes(0, -minutes);
         taskview->setRootIsDecorated(true);
         parent->setOpen(true);
       }
@@ -418,7 +407,7 @@ void KarmStorage::adjustFromLegacyFileFormat(Task* task)
 {
   // unless the parent is the listView
   if ( task->parent() )
-    task->parent()->changeTimes(-task->sessionTime(), -task->time(), false);
+    task->parent()->changeTimes(-task->sessionTime(), -task->time());
 
   // traverse depth first -
   // as soon as we're in a leaf, we'll substract it's time from the parent
@@ -513,17 +502,19 @@ void KarmStorage::stopTimer(const Task* task)
 
 void KarmStorage::changeTime(const Task* task, const long deltaSeconds)
 {
-
   KCal::Event* e;
   QDateTime end;
+
+  // Don't write events (with timer start/stop duration) if user has turned
+  // this off in the settings dialog.
+  if ( ! task->taskView()->preferences()->logging() ) return;
 
   e = baseEvent(task);
 
   // Don't use duration, as ICalFormatImpl::writeIncidence never writes a
   // duration, even though it looks like it's used in event.cpp.
   end = task->startTime();
-  if (deltaSeconds > 0)
-    end = task->startTime().addSecs(deltaSeconds);
+  if ( deltaSeconds > 0 ) end = task->startTime().addSecs(deltaSeconds);
   e->setDtEnd(end);
 
   // Use a custom property to keep a record of negative durations
@@ -539,8 +530,9 @@ void KarmStorage::changeTime(const Task* task, const long deltaSeconds)
   // iCal file.
   //_calendar.save(_icalfile);
   // Meanwhile, we simply use a timer to delay the full-saving until the GUI
-  // has updated, for better user feedback. Feel free to get rid of this if/when
-  // implementing the faster saving (DF).
+  // has updated, for better user feedback. Feel free to get rid of this
+  // if/when implementing the faster saving (DF).
+
   task->taskView()->scheduleSave();
 }
 

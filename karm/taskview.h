@@ -69,6 +69,9 @@ class TaskView : public KListView
     /** Schedule that we should save very soon */
     void scheduleSave();
 
+    /** Return preferences user selected on settings dialog. **/
+    Preferences *preferences();
+
   public slots:
     /** Save to persistent storage. */
     void save();
@@ -153,7 +156,7 @@ class TaskView : public KListView
   private:
     void updateParents( Task* task, long totalDiff, long sesssionDiff);
     void deleteChildTasks( Task *item );
-    void addTimeToActiveTasks( int minutes, bool do_logging);
+    void addTimeToActiveTasks( int minutes );
 
   protected slots:
     void autoSaveChanged( bool );

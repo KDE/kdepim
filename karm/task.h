@@ -87,29 +87,20 @@ class Task : public QObject, public QListViewItem
        * Change task time.  Adds minutes to both total time and session time.
        *
        *  @param minutes        minutes to add to - may be negative
-       *  @param do_logging     distinguish between time changes due to
-       *    setting up task when reading from disk and changes due to a user
-       *    actually changing the tasks time.
        *  @param storage        handles writing changes to disk
        */
-      void changeTime( long minutes, bool do_logging, KarmStorage* storage )
-                { changeTimes( minutes, minutes, do_logging, storage); };
+      void changeTime( long minutes, KarmStorage* storage )
+                { changeTimes( minutes, minutes, storage); };
 
       /**
-       * Adds minutes to time and session time, and writes to storage.
-       *
-       * If do_logging is true, then storage should be loaded with a valid
-       * storage object.
+       * Add minutes to time and session time, and write to storage.
        *
        *  @param minutesSession   minutes to add to task session time
        *  @param minutes          minutes to add to task time
-       *  @param do_logging       distinguish between time changes due to
-       *    setting up task when reading from disk and changes due to a user
-       *    actually changing the tasks time.
        *  @param storage          where and how to write the change to disk
        */
-      void changeTimes( long minutesSession, long minutes, bool do_logging,
-              KarmStorage* storage=0);
+      void changeTimes
+        ( long minutesSession, long minutes, KarmStorage* storage=0);
 
       /** adds minutes to total and session time
        *

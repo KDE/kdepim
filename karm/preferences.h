@@ -26,6 +26,7 @@ class Preferences :public KDialogBase
     QString iCalFile() const;
     QString activeCalendarFile() const;
     bool autoSave() const;
+    bool logging() const;
     int autoSavePeriod() const;
     bool promptDelete() const;
     bool displayColumn(int n) const;
@@ -65,12 +66,13 @@ class Preferences :public KDialogBase
     QCheckBox *_doIdleDetectionW, *_doAutoSaveW, *_promptDeleteW;
     QCheckBox *_displayTimeW, *_displaySessionW,
               *_displayTotalTimeW, *_displayTotalSessionW;
+    QCheckBox *_loggingW;
     QLabel    *_idleDetectLabelW, *_displayColumnsLabelW;
     QSpinBox  *_idleDetectValueW, *_autoSaveValueW;
     KURLRequester *_iCalFileW ;
 
     // Values
-    bool _doIdleDetectionV, _doAutoSaveV, _promptDeleteV;
+    bool _doIdleDetectionV, _doAutoSaveV, _promptDeleteV, _loggingV;
     bool _displayColumnV[4];
     int  _idleDetectValueV, _autoSaveValueV;
     QString _iCalFileV;

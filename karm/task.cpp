@@ -98,7 +98,7 @@ Task::~Task() {
 
 void Task::setRunning( bool on, KarmStorage* storage )
 {
-  if (on) {
+  if ( on ) {
     if (!_timer->isActive()) {
       _timer->start(1000);
       storage->startTimer(this);
@@ -187,21 +187,13 @@ void Task::setDesktopList ( DesktopList desktopList )
   _desktops = desktopList;
 }
 
-void Task::changeTimes( long minutesSession, long minutes, bool do_logging,
-    KarmStorage* storage)
+void Task::changeTimes( long minutesSession, long minutes, KarmStorage* storage)
 {
-  if( minutesSession != 0 || minutes != 0) {
+  if( minutesSession != 0 || minutes != 0) 
+  {
     _sessionTime += minutesSession;
-
-    //kdDebug(5970)
-    //  << "Task::changeTimes: " << name()
-    //  << ", _sessionTime = " << minutesSession << endl;
-
     _time += minutes;
-    if ( do_logging )
-      storage->changeTime(this, minutes * gSecondsPerMinute);
-      //_logging->changeTimes( this, minutesSession, minutes);
-
+    storage->changeTime(this, minutes * gSecondsPerMinute);
     noNegativeTimes();
     changeTotalTimes( minutesSession, minutes );
   }
