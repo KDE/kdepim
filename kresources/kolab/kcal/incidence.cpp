@@ -561,9 +561,7 @@ void Incidence::setFields( const KCal::Incidence* incidence )
     }
   }
 
-  Email org;
-  org.displayName = incidence->organizer().name();
-  org.smtpAddress = incidence->organizer().email();
+  Email org( incidence->organizer().name(), incidence->organizer().email() );
   setOrganizer( org );
 
   // Attendees:
