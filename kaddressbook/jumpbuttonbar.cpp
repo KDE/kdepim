@@ -70,11 +70,6 @@ JumpButtonBar::JumpButtonBar( KABCore *core, QWidget *parent, const char *name )
 {
   mButtonLayout = new QGridLayout( this, 10, 3 );
   mButtonLayout->setAlignment( Qt::AlignTop );
-  
-  JumpButton *b = new JumpButton( "0,1,2", this, "0" );
-  connect( b, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
-
-  mButtonLayout->addMultiCellWidget( b, 0, 0, 0, 1 );
 
   recreateButtons();
 }
@@ -120,6 +115,7 @@ void JumpButtonBar::recreateButtons()
       return;
     }
 
+    character = character.lower();
     if ( !character.isEmpty() && !mCharacters.contains( character ) )
       mCharacters.append( character );
   }
@@ -135,7 +131,7 @@ void JumpButtonBar::recreateButtons()
 
   int row = 1, col = 0;
   for ( uint i = 0; i < mCharacters.count(); ++i ) {
-    JumpButton *button = new JumpButton( mCharacters[ i ], this, mCharacters[ i ] );
+    JumpButton *button = new JumpButton( mCharacters[ i ].upper(), this, mCharacters[ i ] );
     connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
     mButtonLayout->addWidget( button, row, col );
     mButtons.append( button );
