@@ -46,11 +46,11 @@ class KAboutData;
 class KAction;
 class KActionCollection;
 class KConfig;
+class KStatusBar;
 class KToggleAction;
 class KXMLGUIClient;
 
 class QSplitter;
-class QStatusBar;
 
 class AddresseeEditorDialog;
 class ExtensionManager;
@@ -128,9 +128,9 @@ class KABCore : public KAB::Core
 
     static KAboutData *createAboutData();
 
-    void setStatusBar( QStatusBar *statusBar );
+    void setStatusBar( KStatusBar *statusBar );
 
-    QStatusBar *statusBar() const;
+    KStatusBar *statusBar() const;
 
     KAB::SearchManager *searchManager() const { return mSearchManager; }
 
@@ -229,7 +229,7 @@ class KABCore : public KAB::Core
      */
     void incrementalTextSearch( const QString& text );
 
-    void incrementalJumpButtonSearch( const QStringList& characters );
+    void incrementalJumpButtonSearch( const QString& characters );
 
     /**
       Marks the address book as modified.
@@ -307,6 +307,12 @@ class KABCore : public KAB::Core
     void editContact( const QString &uid = QString::null );
 
     /**
+     * Let the user chose a different resource for the selected contacts.
+     * If the adding to the new resource is successfull, the contact is
+     * removed from the old one. */
+    void storeContactIn( const QString &uid = QString::null );
+
+    /**
       Launches the ldap search dialog.
      */
     void openLDAPDialog();
@@ -335,6 +341,7 @@ class KABCore : public KAB::Core
     void extensionModified( const KABC::Addressee::List &list );
     void clipboardDataChanged();
     void updateActionMenu();
+    void updateIncSearchWidget();
 
     void slotEditorDestroyed( const QString &uid );
     void addressBookChanged();
@@ -353,7 +360,7 @@ class KABCore : public KAB::Core
 
     QWidget *mWidget;
     KABC::AddressBook *mAddressBook;
-    QStatusBar *mStatusBar;
+    KStatusBar *mStatusBar;
 
     ViewManager *mViewManager;
     ExtensionManager *mExtensionManager;
@@ -381,6 +388,7 @@ class KABCore : public KAB::Core
     KAction *mActionDelete;
     KAction *mActionCopy;
     KAction *mActionEditAddressee;
+    KAction *mActionStoreAddresseeIn;
     KAction *mActionMerge;
     KAction *mActionMail;
     KAction *mActionMailVCard;

@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="14">
+<kpartgui name="kaddressbook" version="15">
 
   <MenuBar>
     <Menu name="file" noMerge="1"><text>&amp;File</text>
@@ -29,6 +29,7 @@
       <Action name="edit_paste"/>
       <Separator/>
       <Action name="edit_delete" append="edit_paste_merge"/>
+      <Action name="edit_store_in"/>
       <Action name="edit_select_all"/>
       <Action name="edit_merge"/>
       <Action name="edit_set_categories"/>
@@ -68,6 +69,7 @@
     <Action name="file_properties"/>
     <Action name="file_new_contact"/>
     <Action name="edit_delete"/>
+    <Action name="edit_store_in"/>
     <Separator/>
     <Action name="file_mail"/>
     <Action name="file_mail_vcard"/>
@@ -81,9 +83,6 @@
     <Action name="file_sync" />
     <Action name="file_print" />
     <Separator/>
-    <Action name="file_mail"/>
-    <Action name="file_chat"/>
-    <Separator/>
     <Action name="ldap_lookup"/>
   </ToolBar>
 
@@ -96,6 +95,7 @@
     <Action name="edit_paste"/>
     <Separator/>
     <Action name="edit_delete"/>
+    <Action name="edit_store_in"/>
   </ToolBar>
 
 </kpartgui>
