@@ -1,0 +1,394 @@
+<!DOCTYPE UI><UI>
+<class>Form2</class>
+<widget>
+    <class>QWidget</class>
+    <property stdset="1">
+        <name>name</name>
+        <cstring>Form2</cstring>
+    </property>
+    <property stdset="1">
+        <name>geometry</name>
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>592</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property stdset="1">
+        <name>caption</name>
+        <string>Form2</string>
+    </property>
+    <widget>
+        <class>QTabWidget</class>
+        <property stdset="1">
+            <name>name</name>
+            <cstring>TabWidget2</cstring>
+        </property>
+        <property stdset="1">
+            <name>geometry</name>
+            <rect>
+                <x>10</x>
+                <y>10</y>
+                <width>560</width>
+                <height>390</height>
+            </rect>
+        </property>
+        <widget>
+            <class>QWidget</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>tab</cstring>
+            </property>
+            <attribute>
+                <name>title</name>
+                <string>General</string>
+            </attribute>
+            <widget>
+                <class>QLabel</class>
+                <property stdset="1">
+                    <name>name</name>
+                    <cstring>TextLabel1</cstring>
+                </property>
+                <property stdset="1">
+                    <name>geometry</name>
+                    <rect>
+                        <x>18</x>
+                        <y>116</y>
+                        <width>220</width>
+                        <height>41</height>
+                    </rect>
+                </property>
+                <property stdset="1">
+                    <name>text</name>
+                    <string>Handle conflict in addresses:</string>
+                </property>
+            </widget>
+            <widget>
+                <class>QComboBox</class>
+                <item>
+                    <property>
+                        <name>text</name>
+                        <string>User Choose</string>
+                    </property>
+                </item>
+                <item>
+                    <property>
+                        <name>text</name>
+                        <string>Keep Both in Abbrowser</string>
+                    </property>
+                </item>
+                <item>
+                    <property>
+                        <name>text</name>
+                        <string>PDA Overrides</string>
+                    </property>
+                </item>
+                <item>
+                    <property>
+                        <name>text</name>
+                        <string>Abbrowser Overrides</string>
+                    </property>
+                </item>
+                <item>
+                    <property>
+                        <name>text</name>
+                        <string>Do Nothing</string>
+                    </property>
+                </item>
+                <property stdset="1">
+                    <name>name</name>
+                    <cstring>ComboBox1</cstring>
+                </property>
+                <property stdset="1">
+                    <name>geometry</name>
+                    <rect>
+                        <x>251</x>
+                        <y>120</y>
+                        <width>290</width>
+                        <height>31</height>
+                    </rect>
+                </property>
+            </widget>
+            <widget>
+                <class>QComboBox</class>
+                <item>
+                    <property>
+                        <name>text</name>
+                        <string>Home Address</string>
+                    </property>
+                </item>
+                <item>
+                    <property>
+                        <name>text</name>
+                        <string>Business Address</string>
+                    </property>
+                </item>
+                <property stdset="1">
+                    <name>name</name>
+                    <cstring>ComboBox8</cstring>
+                </property>
+                <property stdset="1">
+                    <name>geometry</name>
+                    <rect>
+                        <x>361</x>
+                        <y>210</y>
+                        <width>180</width>
+                        <height>31</height>
+                    </rect>
+                </property>
+            </widget>
+            <widget>
+                <class>QComboBox</class>
+                <item>
+                    <property>
+                        <name>text</name>
+                        <string>Other Phone</string>
+                    </property>
+                </item>
+                <item>
+                    <property>
+                        <name>text</name>
+                        <string>Assistant</string>
+                    </property>
+                </item>
+                <item>
+                    <property>
+                        <name>text</name>
+                        <string>Business Phone 2</string>
+                    </property>
+                </item>
+                <item>
+                    <property>
+                        <name>text</name>
+                        <string>Business Fax</string>
+                    </property>
+                </item>
+                <item>
+                    <property>
+                        <name>text</name>
+                        <string>Car Phone</string>
+                    </property>
+                </item>
+                <item>
+                    <property>
+                        <name>text</name>
+                        <string>Email 2</string>
+                    </property>
+                </item>
+                <item>
+                    <property>
+                        <name>text</name>
+                        <string>Home Fax</string>
+                    </property>
+                </item>
+                <item>
+                    <property>
+                        <name>text</name>
+                        <string>Home Phone 2</string>
+                    </property>
+                </item>
+                <item>
+                    <property>
+                        <name>text</name>
+                        <string>Telex</string>
+                    </property>
+                </item>
+                <item>
+                    <property>
+                        <name>text</name>
+                        <string>TTY/TTD Phone</string>
+                    </property>
+                </item>
+                <property stdset="1">
+                    <name>name</name>
+                    <cstring>ComboBox3</cstring>
+                </property>
+                <property stdset="1">
+                    <name>geometry</name>
+                    <rect>
+                        <x>360</x>
+                        <y>170</y>
+                        <width>180</width>
+                        <height>30</height>
+                    </rect>
+                </property>
+            </widget>
+            <widget>
+                <class>QLabel</class>
+                <property stdset="1">
+                    <name>name</name>
+                    <cstring>TextLabel2</cstring>
+                </property>
+                <property stdset="1">
+                    <name>geometry</name>
+                    <rect>
+                        <x>20</x>
+                        <y>171</y>
+                        <width>300</width>
+                        <height>30</height>
+                    </rect>
+                </property>
+                <property stdset="1">
+                    <name>text</name>
+                    <string>PDA "Other" -&gt; KAddressBook Phone</string>
+                </property>
+            </widget>
+            <widget>
+                <class>QLabel</class>
+                <property stdset="1">
+                    <name>name</name>
+                    <cstring>TextLabel4</cstring>
+                </property>
+                <property stdset="1">
+                    <name>geometry</name>
+                    <rect>
+                        <x>20</x>
+                        <y>210</y>
+                        <width>330</width>
+                        <height>30</height>
+                    </rect>
+                </property>
+                <property stdset="1">
+                    <name>text</name>
+                    <string>PDA Street Address -&gt; KAddressBook Type</string>
+                </property>
+            </widget>
+            <widget>
+                <class>QLabel</class>
+                <property stdset="1">
+                    <name>name</name>
+                    <cstring>TextLabel5</cstring>
+                </property>
+                <property stdset="1">
+                    <name>geometry</name>
+                    <rect>
+                        <x>18</x>
+                        <y>247</y>
+                        <width>280</width>
+                        <height>30</height>
+                    </rect>
+                </property>
+                <property stdset="1">
+                    <name>text</name>
+                    <string>PDA Fax -&gt; KAddressBook Phone</string>
+                </property>
+            </widget>
+            <widget>
+                <class>QComboBox</class>
+                <item>
+                    <property>
+                        <name>text</name>
+                        <string>Home Fax</string>
+                    </property>
+                </item>
+                <item>
+                    <property>
+                        <name>text</name>
+                        <string>Business Fax</string>
+                    </property>
+                </item>
+                <property stdset="1">
+                    <name>name</name>
+                    <cstring>ComboBox24</cstring>
+                </property>
+                <property stdset="1">
+                    <name>geometry</name>
+                    <rect>
+                        <x>360</x>
+                        <y>250</y>
+                        <width>181</width>
+                        <height>30</height>
+                    </rect>
+                </property>
+            </widget>
+            <widget>
+                <class>QCheckBox</class>
+                <property stdset="1">
+                    <name>name</name>
+                    <cstring>fFirstTimeSync</cstring>
+                </property>
+                <property stdset="1">
+                    <name>geometry</name>
+                    <rect>
+                        <x>20</x>
+                        <y>20</y>
+                        <width>210</width>
+                        <height>20</height>
+                    </rect>
+                </property>
+                <property stdset="1">
+                    <name>text</name>
+                    <string>&amp;First Time syncing</string>
+                </property>
+                <property>
+                    <name>toolTip</name>
+                    <string>Should be checked if your PDA has never been synced or backed up before</string>
+                </property>
+            </widget>
+            <widget>
+                <class>QCheckBox</class>
+                <property stdset="1">
+                    <name>name</name>
+                    <cstring>fCloseKab</cstring>
+                </property>
+                <property stdset="1">
+                    <name>geometry</name>
+                    <rect>
+                        <x>20</x>
+                        <y>50</y>
+                        <width>481</width>
+                        <height>21</height>
+                    </rect>
+                </property>
+                <property stdset="1">
+                    <name>text</name>
+                    <string>&amp;Close KAddressBook application if not already running</string>
+                </property>
+                <property>
+                    <name>toolTip</name>
+                    <string>Close Kaddressbook if the conduit had to open it</string>
+                </property>
+            </widget>
+            <widget>
+                <class>QCheckBox</class>
+                <property stdset="1">
+                    <name>name</name>
+                    <cstring>fSmartMerge</cstring>
+                </property>
+                <property stdset="1">
+                    <name>geometry</name>
+                    <rect>
+                        <x>20</x>
+                        <y>80</y>
+                        <width>491</width>
+                        <height>21</height>
+                    </rect>
+                </property>
+                <property stdset="1">
+                    <name>text</name>
+                    <string>&amp;Smartly merge new address by name or company</string>
+                </property>
+                <property stdset="1">
+                    <name>checked</name>
+                    <bool>true</bool>
+                </property>
+                <property>
+                    <name>toolTip</name>
+                    <string>Use key fields to merge address books</string>
+                </property>
+            </widget>
+        </widget>
+    </widget>
+</widget>
+<tabstops>
+    <tabstop>TabWidget2</tabstop>
+    <tabstop>fFirstTimeSync</tabstop>
+    <tabstop>fCloseKab</tabstop>
+    <tabstop>fSmartMerge</tabstop>
+    <tabstop>ComboBox1</tabstop>
+    <tabstop>ComboBox3</tabstop>
+    <tabstop>ComboBox8</tabstop>
+    <tabstop>ComboBox24</tabstop>
+</tabstops>
+</UI>
