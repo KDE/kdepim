@@ -21,8 +21,8 @@
 #include <unistd.h> // For usleep
 #include "IMAPClient.h"
 
-//#define IMAP_DEBUG
-#undef  IMAP_DEBUG
+#define IMAP_DEBUG
+//#undef  IMAP_DEBUG
 
 #ifdef IMAP_DEBUG
 #  include <qtextstream.h>
@@ -41,7 +41,7 @@ void log(const QString & s)
   if (!logfile.isOpen()) {
     logfile.setName("log");
     if (!logfile.open(IO_WriteOnly))
-      abort();
+      qDebug("Couldn't open logfile");
   }
 
   QTextStream t(&logfile);
@@ -58,6 +58,7 @@ class IMAPClientPrivate
     QIODevice * device_;
     IMAPClient::State state_;
     ulong commandCount_;
+    QString selected_;
 };
 
 IMAPClient::IMAPClient(QIODevice * dev)
@@ -167,6 +168,10 @@ IMAPClient::selectMailbox(const QString & name, MailboxInfo & info)
     return false;
   }
 
+  // Don't re-select.
+  if (d->state_ == Selected && d->selected_ == name)
+    return true;
+
   Response r = runCommand("SELECT " + name);
 
   bool ok = (r.statusCode() == Response::StatusCodeOk);
@@ -177,6 +182,7 @@ IMAPClient::selectMailbox(const QString & name, MailboxInfo & info)
   info = MailboxInfo(r.allData());
 
   d->state_ = Selected;
+  d->selected_ = name;
 
   return true;
 }
@@ -189,8 +195,16 @@ IMAPClient::examineMailbox(const QString & name, MailboxInfo & info)
     return false;
   }
 
-  // Is this really just the same thing ?
-  return selectMailbox(name, info);
+  Response r = runCommand("EXAMINE " + name);
+
+  bool ok = (r.statusCode() == Response::StatusCodeOk);
+
+  if (!ok)
+    return false;
+
+  info = MailboxInfo(r.allData());
+
+  return true;
 }
 
   bool

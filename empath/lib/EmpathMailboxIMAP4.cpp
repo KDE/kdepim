@@ -147,6 +147,8 @@ EmpathMailboxIMAP4::sync(const EmpathURL & url)
         return;
     }
 
+    i->clear();
+
     bool ok = false;
 
     IMAPClient::MailboxInfo info;
@@ -165,7 +167,7 @@ EmpathMailboxIMAP4::sync(const EmpathURL & url)
 
     empathDebug("Running FETCH...");
     QStringList l = client_->fetch(1, info.count(),
-            "(FLAGS RFC822.SIZE BODY[HEADER.FIELDS (SUBJECT SENDER FROM DATE MESSAGE-ID REFERENCES IN-REPLY-TO CONTENT-TYPE)])");
+            "(UID FLAGS RFC822.SIZE BODY[HEADER.FIELDS (SUBJECT SENDER FROM DATE MESSAGE-ID REFERENCES IN-REPLY-TO CONTENT-TYPE)])");
     empathDebug("FETCH complete");
 
     /* We should have lots of sections like this:
@@ -462,6 +464,7 @@ EmpathMailboxIMAP4::_createIndexRecordFromFetchReply(const QStringList & l)
 
     if (-1 == flagsPos) {
         empathDebug("No FLAGS section in string. Weird.");
+        return 0;
     } else {
 
         int flagsStart = line.find('(', flagsPos);
@@ -489,6 +492,7 @@ EmpathMailboxIMAP4::_createIndexRecordFromFetchReply(const QStringList & l)
 
     if (-1 == sizePos) {
         empathDebug("No RFC822.SIZE section in string. Weird.");
+        return 0;
     } else {
 
         int sizeStart = line.find(' ', sizePos + 1);
@@ -514,21 +518,33 @@ EmpathMailboxIMAP4::_createIndexRecordFromFetchReply(const QStringList & l)
         }
     }
 
-    int closeCurly = line.findRev('}');
-    int openCurly = line.findRev('{', closeCurly);
+    int uidPos = line.find("UID");
 
     QString id;
 
-    if (-1 == closeCurly || -1 == openCurly || openCurly >= openCurly)
-    {
-        empathDebug("Couldn't find message number");
+    if (-1 == uidPos) {
+        empathDebug("No UID section in string. Weird.");
         return 0;
-
     } else {
 
-        id = line.mid(openCurly + 1, closeCurly - openCurly);
+        int uidStart = line.find(' ', uidPos + 1);
+        int uidEnd = line.find(' ', uidStart + 1);
 
-        empathDebug("ID: `" + id + "'");
+        if (
+                (-1 == uidStart) ||
+                (-1 == uidEnd) ||
+                (uidStart >= uidEnd)
+           )
+        {
+            empathDebug("Couldn't find uid");
+            return 0;
+
+        } else {
+
+            id = line.mid(uidStart + 1, uidEnd - uidStart);
+            empathDebug("UID: " + id);
+
+        }
     }
 
     QCString textForEnvelope;
