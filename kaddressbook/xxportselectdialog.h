@@ -53,6 +53,9 @@ class XXPortSelectDialog : public KDialogBase
     void filterChanged( int );
     void categoryClicked( QListViewItem * i );
 
+  protected slots:
+    void slotHelp();
+
   private:
     void initGUI();
     QStringList categories() const;

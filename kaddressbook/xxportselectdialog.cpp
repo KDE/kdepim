@@ -45,7 +45,7 @@
 
 XXPortSelectDialog::XXPortSelectDialog( KABCore *core, bool sort,
                                         QWidget* parent, const char* name )
-    : KDialogBase( Plain, i18n( "Choose which contacts to export" ), Ok | Cancel,
+    : KDialogBase( Plain, i18n( "Choose which contacts to export" ), Help | Ok | Cancel,
                    Ok, parent, name, true, true ), mCore( core ),
       mUseSorting( sort )
 {
@@ -159,6 +159,11 @@ void XXPortSelectDialog::categoryClicked( QListViewItem *i )
 {
   if ( i && dynamic_cast<QCheckListItem*>( i )->isOn() )
     mUseCategories->setChecked( true );
+}
+
+void XXPortSelectDialog::slotHelp()
+{
+  kapp->invokeHelp( "import-and-export" );
 }
 
 void XXPortSelectDialog::initGUI()
