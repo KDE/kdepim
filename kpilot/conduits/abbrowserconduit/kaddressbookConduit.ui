@@ -110,7 +110,7 @@
                                     </sizepolicy>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Enter here the vCard file name and location or select it by clicking the file picker button. vCard is a standard format for exchanging contact information. &lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;Enter the vCard file name here and location or select it by clicking the file picker button. vCard is a standard format for exchanging contact information. &lt;/qt&gt;</string>
                                 </property>
                             </widget>
                         </grid>
@@ -223,7 +223,7 @@
                                     <cstring>textLabel1_7</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>&lt;p&gt;Here you can select the default action if an event was modified on both sides. &lt;/p&gt;</string>
+                                    <string>&lt;p&gt;Select the default action if an event was modified on both sides here. &lt;/p&gt;</string>
                                 </property>
                                 <property name="alignment">
                                     <set>WordBreak|AlignJustify|AlignVCenter</set>
@@ -275,7 +275,7 @@
                             <string>Handheld other phone:</string>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Select here which KAddressBook field should be used to store the Pilot's &amp;quot;Other&amp;quot; phone.&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;Select which KAddressBook field should be used to store the Pilot's &amp;quot;Other&amp;quot; phone here.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QComboBox" row="0" column="1">
@@ -331,7 +331,7 @@
                             </sizepolicy>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Select here which KAddressBook field should be used to store the Pilot's &amp;quot;Other&amp;quot; phone.&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;Select which KAddressBook field should be used to store the Pilot's &amp;quot;Other&amp;quot; phone here.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="1" column="0">
@@ -342,7 +342,7 @@
                             <string>Handheld street address:</string>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Select here which KAddressBook field should be used to store the Pilot's Street Address.&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;Select which KAddressBook field should be used to store the Pilot's Street Address here.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QComboBox" row="1" column="1">
@@ -360,7 +360,7 @@
                             <cstring>fAddress</cstring>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Select here which KAddressBook field should be used to store the Pilot's Street Address.&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;Select which KAddressBook field should be used to store the Pilot's Street Address here.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="2" column="0">
@@ -371,7 +371,7 @@
                             <string>Handheld fax:</string>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Select here which KAddressBook field should be used to store the Fax number from the Pilot.&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;Select which KAddressBook field should be used to store the Fax number from the Pilot here.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QComboBox" row="2" column="1">
@@ -389,7 +389,7 @@
                             <cstring>fFax</cstring>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Select here which KAddressBook field should be used to store the Fax number from the Pilot.&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;Select which KAddressBook field should be used to store the Fax number from the Pilot here.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <spacer row="3" column="0">
@@ -438,7 +438,7 @@
                             <string>Handheld custom field 1:</string>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Select here the field from this list that represents best the meaning given by your use of the first custom field on your handheld.&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;Select the field from this list that represents best the meaning given by your use of the first custom field on your handheld.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="1" column="0">
@@ -449,7 +449,7 @@
                             <string>Handheld custom field 2:</string>
                         </property>
                         <property name="whatsThis" stdset="0">
-                             <string>&lt;qt&gt;Select here the field from this list that represents best the meaning given by your use of the second custom field on your handheld.&lt;/qt&gt;</string>
+                             <string>&lt;qt&gt;Select the field from this list that represents best the meaning given by your use of the second custom field on your handheld.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="2" column="0">
@@ -460,7 +460,7 @@
                             <string>Handheld custom field 3:</string>
                         </property>
                         <property name="whatsThis" stdset="0">
-                             <string>&lt;qt&gt;Select here the field from this list that represents best the meaning given by your use of the third custom field on your handheld.&lt;/qt&gt;</string>
+                             <string>&lt;qt&gt;Select the field from this list that represents best the meaning given by your use of the third custom field on your handheld.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="3" column="0">
@@ -471,7 +471,7 @@
                             <string>Handheld custom field 4:</string>
                         </property>
                         <property name="whatsThis" stdset="0">
-                             <string>&lt;qt&gt;Select here the field from this list that represents best the meaning given by your use of the fourth custom field on your handheld.&lt;/qt&gt;</string>
+                             <string>&lt;qt&gt;Select the field from this list that represents best the meaning given by your use of the fourth custom field on your handheld.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QComboBox" row="0" column="1">
@@ -507,7 +507,7 @@
                             </sizepolicy>
                         </property>
                         <property name="whatsThis" stdset="0">
-                             <string>&lt;qt&gt;Select here the field from this list that represents best the meaning given by your use of the first custom field on your handheld.&lt;/qt&gt;</string>
+                             <string>&lt;qt&gt;Select the field from this list that represents best the meaning given by your use of the first custom field on your handheld.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QComboBox" row="1" column="1">
@@ -543,7 +543,7 @@
                             </sizepolicy>
                         </property>
                         <property name="whatsThis" stdset="0">
-                             <string>&lt;qt&gt;Select here the field from this list that represents best the meaning given by your use of the second custom field on your handheld.&lt;/qt&gt;</string>
+                             <string>&lt;qt&gt;Select the field from this list that represents best the meaning given by your use of the second custom field on your handheld.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QComboBox" row="2" column="1">
@@ -579,7 +579,7 @@
                             </sizepolicy>
                         </property>
                         <property name="whatsThis" stdset="0">
-                             <string>&lt;qt&gt;Select here the field from this list that represents best the meaning given by your use of the third custom field on your handheld.&lt;/qt&gt;</string>
+                             <string>&lt;qt&gt;Select the field from this list that represents best the meaning given by your use of the third custom field on your handheld.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QComboBox" row="3" column="1">
@@ -615,7 +615,7 @@
                             </sizepolicy>
                         </property>
                         <property name="whatsThis" stdset="0">
-                             <string>&lt;qt&gt;Select here the field from this list that represents best the meaning given by your use of the fourth custom field on your handheld.&lt;/qt&gt;</string>
+                             <string>&lt;qt&gt;Select the field from this list that represents best the meaning given by your use of the fourth custom field on your handheld.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="Line" row="4" column="0" rowspan="1" colspan="2">
@@ -643,7 +643,7 @@
                             <cstring>fCustomDate</cstring>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Select here the date format use if you selected "birthdate" for any of the custom fields above. Possible placeholders are:&lt;br&gt; %d for the day, %m for the month, %y for the two-digit year, %Y for the four-digit year. For  example, %d.%m.%Y would generate a date like 27.3.1952, while %m/%d/%y would write the same date as 03/27/52. &lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;Select the birthdate format here, if you selected "birthdate" for any of the custom fields above. Possible placeholders are:&lt;br&gt; %d for the day, %m for the month, %y for the two-digit year, %Y for the four-digit year. For  example, %d.%m.%Y would generate a date like 27.3.1952, while %m/%d/%y would write the same date as 03/27/52. &lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QComboBox" row="6" column="1">
@@ -697,7 +697,7 @@
                             <bool>true</bool>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Select here the date format use if you selected "birthdate" for any of the custom fields above. Possible placeholders are:&lt;br&gt; %d for the day, %m for the month, %y for the two-digit year, %Y for the four-digit year. For  example, %d.%m.%Y would generate a date like 27.3.1952, while %m/%d/%y would write the same date as 03/27/52. &lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;Select the birthdate format here, if you selected "birthdate" for any of the custom fields above. Possible placeholders are:&lt;br&gt; %d for the day, %m for the month, %y for the two-digit year, %Y for the four-digit year. For  example, %d.%m.%Y would generate a date like 27.3.1952, while %m/%d/%y would write the same date as 03/27/52. &lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <spacer row="8" column="1">

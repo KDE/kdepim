@@ -85,7 +85,7 @@
                         <string>&amp;Keep Both</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Click here to use both values, resulting in the duplication of the record.&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;Click this button to use both values, resulting in the duplication of the record.&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QPushButton" row="0" column="0">
@@ -96,7 +96,7 @@
                         <string>&amp;PC Values</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Click here to use the PC values for synchronizing all conflicting fields in this record.&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;Click this button to use the PC values for synchronizing all conflicting fields in this record.&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QPushButton" row="1" column="0">
@@ -107,7 +107,7 @@
                         <string>&amp;Last Sync Values</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Click here to use the last sync values (old values) for synchronizing all conflicting fields in this record.&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;Click this button to use the last sync values (old values) for synchronizing all conflicting fields in this record.&lt;/qt&gt;</string>
                     </property>
                 </widget>
                 <widget class="QPushButton" row="1" column="1">
@@ -118,7 +118,7 @@
                         <string>&amp;Handheld Values</string>
                     </property>
                     <property name="whatsThis" stdset="0">
-                        <string>&lt;qt&gt;Click here to use the handheld values for synchronizing all conflicting fields in this record.&lt;/qt&gt;</string>
+                        <string>&lt;qt&gt;Click this button to use the handheld values for synchronizing all conflicting fields in this record.&lt;/qt&gt;</string>
                     </property>
                 </widget>
             </grid>

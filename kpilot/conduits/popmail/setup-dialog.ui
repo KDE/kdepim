@@ -62,7 +62,7 @@
                             <string>Send method:</string>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Select here the method KPilot will use to send the mail from your Handheld to the recipients. Depending on the method you choose, the other fields in the dialog may be enabled or disabled. Currently, the only &lt;i&gt;working&lt;/i&gt; method is through KMail.&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;Select the method KPilot will use to send the mail from your Handheld to the recipients here. Depending on the method you choose, the other fields in the dialog may be enabled or disabled. Currently, the only &lt;i&gt;working&lt;/i&gt; method is through KMail.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="1" column="0">
@@ -73,7 +73,7 @@
                             <string>Email address:</string>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Enter here the email address you want to send messages as.&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;Enter the email address you want to send messages as here.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="KLineEdit" row="1" column="1">
@@ -84,7 +84,7 @@
                             <string>$USER</string>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Enter here the email address you want to send messages as.&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;Enter the email address you want to send messages as here.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QLabel" row="2" column="0">
@@ -95,7 +95,7 @@
                             <string>Signature file:</string>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;If you want to add a signature file, enter here the location of your signature file (usually, &lt;i&gt;.signature&lt;/i&gt;, located in your home folder) , or select it clicking the file picker button. The signature file contains the text that is added to the end of your outgoing mail messages.&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;If you want to add a signature file, enter the location of your signature file (usually, &lt;i&gt;.signature&lt;/i&gt;, located in your home folder) here, or select it clicking the file picker button. The signature file contains the text that is added to the end of your outgoing mail messages.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="KURLRequester" row="2" column="1">
@@ -103,7 +103,7 @@
                             <cstring>fSignature</cstring>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;If you want to add a signature file, enter here the location of your signature file (usually, &lt;i&gt;.signature&lt;/i&gt;, located in your home folder) , or select it clicking the file picker button. The signature file contains the text that is added to the end of your outgoing mail messages.&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;If you want to add a signature file, enter the location of your signature file (usually, &lt;i&gt;.signature&lt;/i&gt;, located in your home folder) here, or select it clicking the file picker button. The signature file contains the text that is added to the end of your outgoing mail messages.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                     <widget class="QComboBox" row="0" column="1">
@@ -124,7 +124,7 @@
                             <bool>true</bool>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>&lt;qt&gt;Select here the method KPilot will use to send the mail from your Handheld to the recipients. Depending on the method you choose, the other fields in the dialog may be enabled or disabled. Currently, the only &lt;i&gt;working&lt;/i&gt; method is through KMail.&lt;/qt&gt;</string>
+                            <string>&lt;qt&gt;Select the method KPilot will use to send the mail from your Handheld to the recipients here. Depending on the method you choose, the other fields in the dialog may be enabled or disabled. Currently, the only &lt;i&gt;working&lt;/i&gt; method is through KMail.&lt;/qt&gt;</string>
                         </property>
                     </widget>
                 </grid>

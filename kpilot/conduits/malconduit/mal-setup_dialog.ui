@@ -274,7 +274,7 @@
                                     <cstring>proxyServerName</cstring>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;If you selected HTTP or SOCKS proxy, type here the address of the proxy server to use, in the form &lt;i&gt;foo.bar.com&lt;/i&gt; (not &lt;i&gt;http://foo.bar.com&lt;/i&gt; or &lt;i&gt;http://foo.bar.com:8080&lt;/i&gt;).&lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;If you selected HTTP or SOCKS proxy, type the address of the proxy server to use here, in the form &lt;i&gt;foo.bar.com&lt;/i&gt; (not &lt;i&gt;http://foo.bar.com&lt;/i&gt; or &lt;i&gt;http://foo.bar.com:8080&lt;/i&gt;).&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="KHistoryCombo" row="0" column="1" rowspan="1" colspan="2">
@@ -282,7 +282,7 @@
                                     <cstring>proxyServerName</cstring>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;If you selected HTTP or SOCKS proxy, type here the address of the proxy server to use, in the form &lt;i&gt;foo.bar.com&lt;/i&gt; (not &lt;i&gt;http://foo.bar.com&lt;/i&gt; or &lt;i&gt;http://foo.bar.com:8080&lt;/i&gt;).&lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;If you selected HTTP or SOCKS proxy, type the address of the proxy server to use here, in the form &lt;i&gt;foo.bar.com&lt;/i&gt; (not &lt;i&gt;http://foo.bar.com&lt;/i&gt; or &lt;i&gt;http://foo.bar.com:8080&lt;/i&gt;).&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="KIntNumInput" row="1" column="1">
@@ -302,7 +302,7 @@
                                     <number>65535</number>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Enter here the port you want KPilot to use when connecting to your proxy server.&lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;Enter the port you want KPilot to use when connecting to your proxy server here.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="KPasswordEdit" row="5" column="1" rowspan="1" colspan="2">
