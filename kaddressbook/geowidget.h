@@ -29,7 +29,12 @@ class Geo;
 }
 
 class GeoMapWidget;
+
+class KComboBox;
 class KDoubleSpinBox;
+
+class QLabel;
+class QSpinBox;
 
 #include <qwidget.h>
 
@@ -55,13 +60,30 @@ class GeoWidget : public QWidget
     void changed();
 
   private slots:
-    void updateGeoMap();
+    void updateInputs();
+
+    void decimalInputChanged();
+    void sexagesimalInputChanged();
     void geoMapChanged();
 
   private:
     GeoMapWidget *mMapWidget;
+
     KDoubleSpinBox *mLatitudeBox;
     KDoubleSpinBox *mLongitudeBox;
+
+    QSpinBox *mLatDegrees;
+    QSpinBox *mLatMinutes;
+    QSpinBox *mLatSeconds;
+    KComboBox *mLatDirection;
+
+    QSpinBox *mLongDegrees;
+    QSpinBox *mLongMinutes;
+    QSpinBox *mLongSeconds;
+    KComboBox *mLongDirection;
+
+    double mLatitude;
+    double mLongitude;
 };
 
 class GeoMapWidget : public QWidget
