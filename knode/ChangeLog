@@ -35,7 +35,7 @@ changes between 0.4 and 0.6
  - New menu option: fetch an article by message-id
  - Added option to retreive an article from groups.google.com
    if it's unavailable on the local server
- - empty lines can be stripped from incoming articles
+ - Trailing empty lines can be stripped from incoming articles
  - Highlighting of "news:" and "mailto:" urls, all email-addresses
    and msgids
  - Its now configurable what characters are recognized as quote signs
@@ -62,7 +62,7 @@ changes between 0.4 and 0.6
    "x > value", not just ranges.
  - Its now possible to filter on the message-id and references header
  - The search function can show complete threads now (optionally)
- - Its now possible to search folders
+ - Its now possible to search in folders
 + Network related improvements:
  - Articles are no fetched via article number instead of article-id
    to avoid problems with broken newsservers
