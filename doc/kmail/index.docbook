@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>01/11/2000</date>
+<date>04/11/2000</date>
 <releaseinfo>1.2</releaseinfo>
 
 <abstract>
@@ -693,7 +693,8 @@ each mail manually.)</para>
 encrypted messages to you and to let them verify your signature you must send
 them your public key. To send encrypted mails to other people or to verify
 their signed messages you will need their public keys.  You can store your
-public key(s) on a public PGP key server such as <ulink url="http://www.pgp.net/">www.pgp.net</ulink>.</para>
+public key(s) on a public PGP key server such as
+<ulink url="http://www.cam.ac.uk.pgp.net/pgpnet/">http://www.cam.ac.uk.pgp.net/pgpnet/</ulink>.</para>
 
 </sect2>
 
