@@ -48,6 +48,7 @@ namespace KCal {
   k_dcop:
     virtual bool addIncidence( const QString& type, const QString& ical );
     virtual void deleteIncidence( const QString& type, const QString& uid );
+    virtual void slotRefresh( const QString& type );
 
   public:
     ResourceIMAP( const KConfig * );
@@ -158,6 +159,9 @@ namespace KCal {
   private:
     void init();
     QStringList getIncidenceList( const QString& type );
+
+    bool loadAllEvents();
+    bool loadAllTasks();
 
     KCal::Incidence* parseIncidence( const QString& str );
 

@@ -87,6 +87,10 @@ void ResourceIMAP::init()
 			  "deleteIncidence(QString,QString)", false ) ) {
     kdError() << "DCOP connection to incidenceDeleted failed" << endl;
   }
+  if( !connectDCOPSignal( "kmail", "KmailICalIface", "signalRefresh(QString)",
+			  "slotRefresh(QString)", false ) ) {
+    kdError() << "DCOP connection to signalRefresh failed" << endl;
+  }
 }
 
 
@@ -122,6 +126,12 @@ bool ResourceIMAP::load()
 {
   // kdDebug(5800) << "Loading resource " << resourceName() << " on " << mServer << endl;
 
+  // TODO: complete this for other incidence types
+  return loadAllEvents() & loadAllTasks();
+}
+
+bool ResourceIMAP::loadAllEvents()
+{
   QStringList lst = getIncidenceList( "Calendar" );
   for( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
     Incidence* i = parseIncidence( *it );
@@ -135,7 +145,13 @@ bool ResourceIMAP::load()
       }
     }
   }
-  lst = getIncidenceList( "Task" );
+
+  return true;
+}
+
+bool ResourceIMAP::loadAllTasks()
+{
+  QStringList lst = getIncidenceList( "Task" );
   for( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
     Incidence* i = parseIncidence( *it );
     if( i ) {
@@ -148,7 +164,6 @@ bool ResourceIMAP::load()
       }
     }
   }
-  // TODO: complete this for other incidence types
 
   return true;
 }
@@ -509,4 +524,14 @@ void ResourceIMAP::deleteIncidence( const QString& type, const QString& uid )
     deleteJournal(j);
   }
   mSilent = false;
+}
+
+void ResourceIMAP::slotRefresh( const QString& type )
+{
+  if( type == "Calendar" )
+    loadAllEvents();
+  else if( type == "Task" )
+    loadAllTasks();
+  else
+    kdDebug(5800) << "ResourceIMAP::slotRefresh called with wrong type " << type << endl;
 }
