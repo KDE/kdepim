@@ -67,13 +67,14 @@ class KABCKonnector : public KSync::Konnector
     void loadingFinished();
 
   private:
+    KABC::Resource* createResource( const QString& );
+
     KABCKonnectorConfig *mConfigWidget;
     QString mResourceIdentifier;
     QString mMd5sum;
 
     KABC::AddressBook mAddressBook;
     KABC::Resource *mResource;
-    KRES::Manager<KABC::Resource> *mManager;
 
     KSync::AddressBookSyncee *mAddressBookSyncee;
 

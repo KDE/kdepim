@@ -53,37 +53,25 @@ KABCKonnector::KABCKonnector( const KConfig *config )
   if ( config ) {
     mResourceIdentifier = config->readEntry( "CurrentResource" );
   }
+
   mMd5sum = generateMD5Sum( mResourceIdentifier ) + "_kabckonnector.log";
 
-  mManager = new KRES::Manager<KABC::Resource>( "contact" );
-  mManager->readConfig();
+  mResource = createResource( mResourceIdentifier );
+  if ( mResource ) {  
+    mAddressBook.addResource( mResource );
 
-  mAddressBook.addResource( new KABC::ResourceNull() );
+    mAddressBookSyncee = new AddressBookSyncee( &mAddressBook );
+    mAddressBookSyncee->setTitle( i18n( "Address Book" ) );
 
-  mAddressBookSyncee = new AddressBookSyncee( &mAddressBook );
-  mAddressBookSyncee->setTitle( i18n( "Address Book" ) );
+    mSyncees.append( mAddressBookSyncee );
 
-  mSyncees.append( mAddressBookSyncee );
-
-  KRES::Manager<KABC::Resource>::ActiveIterator it;
-  for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    if ( (*it)->identifier() == mResourceIdentifier ) {
-      mResource = *it;
-      break;
-    }
-  }
-
-  if ( mResource ) {
     connect( mResource, SIGNAL( loadingFinished( Resource* ) ),
              SLOT( loadingFinished() ) );
-
-    mResource->setAddressBook( &mAddressBook );
   }
 }
 
 KABCKonnector::~KABCKonnector()
 {
-  delete mManager;
 }
 
 void KABCKonnector::writeConfig( KConfig *config )
@@ -158,29 +146,20 @@ bool KABCKonnector::writeSyncees()
   if ( !mResource )
     return false;
 
-
   purgeRemovedEntries( mAddressBookSyncee );
 
-  KABC::AddressBook::Iterator it;
-  for ( it = mAddressBook.begin(); it != mAddressBook.end(); ++it )
-    mResource->insertAddressee( *it );
-
-  if ( !mResource->readOnly() ) {
-    KABC::Ticket *ticket;
-    ticket = mResource->requestSaveTicket();
-    if ( !ticket ) {
-      kdWarning() << "KABCKonnector::writeSyncees(). Couldn't get ticket for "
-                  << "resource." << endl;
-      return false;
-    }
-
-    if ( !mResource->save( ticket ) ) {
-      kdWarning() << "KABCKonnector::writeSyncees(). Couldn't save resource." << endl;
-      return false;
-    }
+  KABC::Ticket *ticket = mAddressBook.requestSaveTicket( mResource );
+  if ( !ticket ) {
+    kdWarning() << "KABCKonnector::writeSyncees(). Couldn't get ticket for resource." << endl;
+    return false;
   }
 
-  AddressBookSyncHistory syncInfo(mAddressBookSyncee, storagePath()+"/"+mMd5sum );
+  if ( !mAddressBook.save( ticket ) ) {
+    kdWarning() << "KABCKonnector::writeSyncees(). Couldn't save resource." << endl;
+    return false;
+  }
+
+  AddressBookSyncHistory syncInfo( mAddressBookSyncee, storagePath() + "/" + mMd5sum );
   syncInfo.save();
 
   emit synceesWritten( this );
@@ -192,16 +171,39 @@ void KABCKonnector::loadingFinished()
 {
   mAddressBookSyncee->reset();
 
-  KABC::Resource::Iterator it;
-  for ( it = mResource->begin(); it != mResource->end(); ++it ) {
+  KABC::AddressBook::Iterator it;
+  for ( it = mAddressBook.begin(); it != mAddressBook.end(); ++it ) {
     KSync::AddressBookSyncEntry entry( *it, mAddressBookSyncee );
     mAddressBookSyncee->addEntry( entry.clone() );
   }
 
-  AddressBookSyncHistory syncInfo(mAddressBookSyncee, storagePath()+"/"+mMd5sum );
+  AddressBookSyncHistory syncInfo( mAddressBookSyncee, storagePath() + "/" + mMd5sum );
   syncInfo.load();
 
   emit synceesRead( this );
+}
+
+KABC::Resource* KABCKonnector::createResource( const QString &identifier )
+{
+  KConfig config( "kresources/contact/stdrc" );
+
+  config.setGroup( "General" );
+  QStringList activeKeys = config.readListEntry( "ResourceKeys" );
+  if ( !activeKeys.contains( identifier ) )
+    return 0;
+
+  KRES::Factory *factory = KRES::Factory::self( "contact" );
+  config.setGroup( "Resource_" + identifier );
+
+  QString type = config.readEntry( "ResourceType" );
+  QString name = config.readEntry( "ResourceName" );
+  KABC::Resource *resource = dynamic_cast<KABC::Resource*>( factory->resource( type, &config ) );
+  if ( !resource ) {
+    kdError() << "Failed to create resource with id " << identifier << endl;
+    return 0;
+  }
+
+  return resource;
 }
 
 #include "kabckonnector.moc"
