@@ -1,11 +1,11 @@
 KDE_CXXFLAGS = $(USE_RTTI)
 INCLUDES= $(all_includes)
-if have_gpgme
-GPGME_SUBDIRS = gpgmepp qgpgme
+
+if needs_gpgme_copy
+GPGME_COPY_SUBDIRS = libgpg-error-copy libgpgme-copy
 endif
 
-# make this pics/ again:
-SUBDIRS = $(GPGME_SUBDIRS) . pics4kmail
+SUBDIRS = $(GPGME_COPY_SUBDIRS) gpgmepp qgpgme . pics4kmail
 
 lib_LTLIBRARIES = libkdenetwork.la
 

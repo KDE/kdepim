@@ -1,0 +1,13 @@
+dnl for now...
+AM_CONDITIONAL(needs_gpgme_copy, true)
+
+
+dnl From gpgme/configure.ac
+NEED_GPG_VERSION=1.2.2
+NEED_GPGSM_VERSION=1.9.3
+AC_DEFINE_UNQUOTED(NEED_GPG_VERSION, "$NEED_GPG_VERSION",
+                                        [Min. needed GnuPG version.])
+AC_DEFINE_UNQUOTED(NEED_GPGSM_VERSION, "$NEED_GPGSM_VERSION",
+                                          [Min. needed GPGSM version.])
+
+

@@ -81,10 +81,19 @@ dnl
 
 dnl END inline of gpgme.m4
 
+kdepim_needs_gpgme_copy=""
 KDEPIM_PATH_GPGME(0.4.4,[
-	AC_DEFINE(HAVE_GPGME_H, 1, [Define to 1 if you have gpgme >= 0.4.4])
-	AC_DEFINE(HAVE_GPGME_0_4_BRANCH, 1, [Define to 1 if you have gpgme >= 0.4.4])
 ],[
-	DO_NOT_COMPILE="$DO_NOT_COMPILE certmanager kmail"
+	kdepim_needs_gpgme_copy="true"
+	GPGME_CFLAGS="-I $(top_srcdir)/libkdenetwork/libgpgme-copy/gpgme"
+	GPGME_LIBS="$(top_builddir)/libkdenetwork/libgpgme-copy/gpgme/libgpgme.la"
 ])
-AM_CONDITIONAL(have_gpgme, test "x$GPGME_LIBS" != "x")
+
+AM_CONDITIONAL(needs_gpgme_copy, test -n "$kdepim_needs_gpgme_copy")
+
+dnl Always true - either from the local copy or from the system lib.
+dnl Only kept for compat, feel free to clean up those 3 lines
+AC_DEFINE(HAVE_GPGME_H, 1, [Define to 1 if you have gpgme >= 0.4.4])
+AC_DEFINE(HAVE_GPGME_0_4_BRANCH, 1, [Define to 1 if you have gpgme >= 0.4.4])
+AM_CONDITIONAL(have_gpgme, true)
+
