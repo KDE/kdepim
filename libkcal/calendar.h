@@ -129,6 +129,7 @@ class Calendar : public QObject, public CustomProperties,
       Return filtered list of all incidences of this calendar.
     */
     virtual Incidence::List incidences();
+    virtual Incidence::List incidences( const QDate &qdt );
 
     /**
       Return unfiltered list of all incidences of this calendar.

@@ -177,6 +177,14 @@ CalFilter *Calendar::filter()
   return mFilter;
 }
 
+Incidence::List Calendar::incidences( const QDate &qdt )
+{
+  Journal::List jnls;
+  Journal*jnl = journal(qdt);
+  if (jnl) jnls.append( journal(qdt) );
+  return mergeIncidenceList( events( qdt ), todos( qdt ), jnls );
+}
+
 Incidence::List Calendar::incidences()
 {
   return mergeIncidenceList( events(), todos(), journals() );
