@@ -27,9 +27,8 @@ What it is
 * knode: news client
 * korganizer: a calendar-of-events and todo-list manager
 * kpilot: to sync with your PalmPilot
-* kalarm: gui for setting up personal alarm/reminder messages
-* kalarmd: personal alarm/reminder messages daemon, shared by korganizer and
-           kalarm.
+* kalarm: gui for setting up personal alarm messages, emails and commands
+* kalarmd: alarm monitoring daemon, shared by korganizer and kalarm.
 * kontact: A shell for the PIM apps, still experimental.
 * karm: Time tracker.
 * kitchensync: Synchronisation framework, still under heavy development.
