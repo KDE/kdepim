@@ -560,8 +560,8 @@ bool KNNntpClient::openConnection()
   if (!getNextResponse(rep))
     return false;
     
-  if ((rep!=200)&&(rep!=201)) {  // 200 server ready - posting allowed
-    handleErrors();              // 201 server ready - no posting allowed
+  if ( ( rep < 200 ) || ( rep > 299 ) ) { // RFC977: 2xx - Command ok 
+    handleErrors();
     return false;
   }
   
@@ -575,8 +575,8 @@ bool KNNntpClient::openConnection()
     qDebug("knode: \"MODE READER\" command not recognized.");
 #endif
   } else
-    if ((rep!=200)&&(rep!=201)) { // 200 Hello, you can post
-      handleErrors();             // 201 Hello, you can't post
+    if ( ( rep < 200 ) || ( rep > 299 ) ) { // RFC977: 2xx - Command ok
+      handleErrors();
       return false;
     }
 
