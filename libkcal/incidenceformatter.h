@@ -25,46 +25,12 @@
 #include <qstring.h>
 
 namespace KCal {
-class Calendar;
-class Incidence;
-class IncidenceBase;
 
-class InvitationFormatterHelper
-{
-  public:
-    virtual QString generateLinkURL( const QString &id ) { return id; }
-    virtual QString makeLink( const QString &id, const QString &text );
-};
-
-/**
-  This class is a helper class that provides several static methods to format an Incidence
-  into different formats, like an HTML representation for KMail, a representation for tool tips,
-  ir a representation for the event viewer.
-
-  @short methods to format incidences into various formats for displaying them
-*/
 class IncidenceFormatter
 {
   public:
-    static QString toolTipString( IncidenceBase *incidence, bool richText = true );
-    static QString mailBodyString( IncidenceBase *incidencebase );
-    static QString extensiveDisplayString( IncidenceBase *incidence );
-
-    static QString formatICalInvitation( QString invitation, Calendar *mCalendar,
-                                         InvitationFormatterHelper *helper );
-    // Format a TNEF attachment to an HTML mail
-    static QString formatTNEFInvitation( const QByteArray& tnef,
-                                         Calendar *mCalendar,
-                                         InvitationFormatterHelper *helper );
     // Transform a TNEF attachment to an iCal or vCard
     static QString msTNEFToVPart( const QByteArray& tnef );
-  private:
-    class EventViewerVisitor;
-    class ScheduleMessageVisitor;
-    class InvitationHeaderVisitor;
-    class InvitationBodyVisitor;
-    class ToolTipVisitor;
-    class MailBodyVisitor;
 };
 
 }
