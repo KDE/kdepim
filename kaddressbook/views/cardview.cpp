@@ -1499,6 +1499,11 @@ void CardView::keyPressEvent( QKeyEvent *e )
   }
 }
 
+void CardView::contentsWheelEvent( QWheelEvent * e )
+{
+  scrollBy(-e->delta(), 0);
+}
+
 void CardView::setLayoutDirty(bool dirty)
 {
   if (d->mLayoutDirty != dirty)

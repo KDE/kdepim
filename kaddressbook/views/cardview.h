@@ -436,6 +436,8 @@ class CardView : public QScrollView
     virtual void contentsMouseReleaseEvent(QMouseEvent *e);
     virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
 	
+    virtual void contentsWheelEvent( QWheelEvent * e );
+
     virtual void enterEvent( QEvent * );
     virtual void leaveEvent( QEvent * );
 
