@@ -3,6 +3,7 @@
 /* abbrowser-factory.h                       KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2002-2003 Reinhold Kainhofer
 **
 ** This file defines the factory for the abbrowser-conduit plugin.
 */

@@ -837,6 +837,8 @@ int main(int argc, char **argv)
 	about.addAuthor("Adriaan de Groot",
 		I18N_NOOP("Maintainer"),
 		"groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot/");
+	about.addAuthor("Reinhold Kainhofer",
+		I18N_NOOP("Conduits developer"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
 	about.addCredit("Preston Brown", I18N_NOOP("VCal conduit"));
 	about.addCredit("Greg Stern", I18N_NOOP("Abbrowser conduit"));
 	about.addCredit("Chris Molnar", I18N_NOOP("Expenses conduit"));
@@ -849,8 +851,6 @@ int main(int argc, char **argv)
 		I18N_NOOP(".ui files"));
 	about.addCredit("Aaron J. Seigo",
 		I18N_NOOP("Bugfixer, coolness"));
-	about.addCredit("Reinhold Kainhofer",
-		I18N_NOOP("vCal and Addressbook conduit ports, time conduit, AvantGo conduit"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
 
 
 	KCmdLineArgs::init(argc, argv, &about);

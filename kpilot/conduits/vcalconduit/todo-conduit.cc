@@ -1,6 +1,6 @@
 /* todo-conduit.cc  Todo-Conduit for syncing KPilot and KOrganizer
 **
-** Copyright (C) 2002 Reinhold Kainhofer
+** Copyright (C) 2002-2003 Reinhold Kainhofer
 ** Copyright (C) 1998-2001 Dan Pilone
 ** Copyright (C) 1998-2000 Preston Brown
 ** Copyright (C) 1998 Herwin-Jan Steehouwer

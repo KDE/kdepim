@@ -2,7 +2,7 @@
 #define RESOLUTIONDIALOG_H
 /* resolutionDialog.h			KPilot
 **
-** Copyright (C) 2002 by Reinhold Kainhofer
+** Copyright (C) 2002-2003 by Reinhold Kainhofer
 **
 ** See the .cc file for an explanation of what this file is for.
 */

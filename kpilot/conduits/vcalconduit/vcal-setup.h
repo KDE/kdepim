@@ -2,6 +2,7 @@
 #define _KPILOT_VCAL_SETUP_H
 /* vcal-setup.h                       KPilot
 **
+** Copyright (C) 2002-2003 Reinhold Kainhofer
 ** Copyright (C) 2001 by Dan Pilone
 **
 ** It also defines the class for the behavior of the setup dialog.

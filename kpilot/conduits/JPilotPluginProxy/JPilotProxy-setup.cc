@@ -1,6 +1,5 @@
 /* JPilotProxy-setup.cc                        KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
 ** Copyright (C) 2002 by Reinhold Kainhofer
 **
 ** This file defines the factory for the JPilotProxy-conduit plugin.

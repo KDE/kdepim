@@ -1,6 +1,5 @@
 /* JPilotProxy-factory.cc					  KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
 ** Copyright (C) 2002 by Reinhold Kainhofer
 **
 ** This file defines the factory for the JPilotProxy-conduit plugin.
@@ -80,10 +79,8 @@ JPilotProxyConduitFactory::JPilotProxyConduitFactory(QObject *p, const char *n) 
 		I18N_NOOP("Configures the JPilotProxy Conduit for KPilot"),
 		KAboutData::License_GPL,
 		"(C) 2002, Reinhold F. Kainhofer");
-	fAbout->addAuthor("Dan Pilone", I18N_NOOP("Original Author of KPilot"));
-	fAbout->addAuthor("Adriaan de Groot", I18N_NOOP("Maintainer of KPilot"), "groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot");
-	fAbout->addAuthor("Judd Montgomery", I18N_NOOP("Author of JPilot"), 	"judd@engineer.com", "http://www.jpilot.org/");
 	fAbout->addAuthor("Reinhold Kainhofer", I18N_NOOP("Original author and maintainer of this conduit"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com");
+	fAbout->addAuthor("Judd Montgomery", I18N_NOOP("Author of JPilot"), 	"judd@engineer.com", "http://www.jpilot.org/");
 }
 
 JPilotProxyConduitFactory::~JPilotProxyConduitFactory() {

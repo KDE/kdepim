@@ -1,6 +1,7 @@
 /* abbrowser-factory.cc                      KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2002-2003 Reinhold Kainhofer
 **
 ** This file defines the factory for the abbrowser-conduit plugin.
 */
@@ -77,16 +78,16 @@ AbbrowserConduitFactory::AbbrowserConduitFactory(QObject *p, const char *n) :
 		KPILOT_VERSION,
 		I18N_NOOP("Configures the Abbrowser Conduit for KPilot"),
 		KAboutData::License_GPL,
-		"(C) 2001, Dan Pilone");
+		"(C) 2001, Dan Pilone\n(C) 2002-2003, Reinhold Kainhofer");
 	fAbout->addAuthor("Greg Stern",
 		I18N_NOOP("Primary Author"));
 	fAbout->addAuthor("Adriaan de Groot",
 		I18N_NOOP("Maintainer"),
 		"groot@kde.org",
 		"http://www.cs.kun.nl/~adridg/kpilot");
-	fAbout->addAuthor("Reinhold Kainhofer", I18N_NOOP("Maintainer"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com");
-	fAbout->addCredit("David Bishop",
-		I18N_NOOP("UI"));
+	fAbout->addAuthor("Reinhold Kainhofer", I18N_NOOP("Maintainer"),
+		"reinhold@kainhofer.com", "http://reinhold.kainhofer.com");
+	fAbout->addCredit("David Bishop", I18N_NOOP("UI"));
 }
 
 AbbrowserConduitFactory::~AbbrowserConduitFactory()

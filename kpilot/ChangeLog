@@ -48,6 +48,8 @@ TODO: Update libkcal files.
 * DOC databases are now also kept locally if the user set this option
   (installDatabases has the addidtional argument not to delete
 	the files)
+* Updated the copyright lines in the source files as well as 
+  in the about tabs of kpilot and the conduits.
 
 
 2003-2-27  Adriaan de Groot

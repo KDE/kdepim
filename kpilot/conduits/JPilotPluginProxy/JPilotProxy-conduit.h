@@ -3,9 +3,6 @@
 
 /* JPilotProxy-conduit.h            KPilot
 **
-** Copyright (C) 1998-2001 Dan Pilone
-** Copyright (C) 1998-2000 Preston Brown
-** Copyright (C) 1998 Herwin-Jan Steehouwer
 ** Copyright (C) 1998 Reinhold Kainhofer
 **
 ** This file is part of the JPilotProxy conduit, a conduit for KPilot that

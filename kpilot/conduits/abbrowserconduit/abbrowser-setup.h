@@ -3,6 +3,7 @@
 /* knotes-setup.h                       KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2002-2003 Reinhold Kainhofer
 **
 ** This file defines the widget and behavior for the config dialog
 ** of the KNotes conduit.

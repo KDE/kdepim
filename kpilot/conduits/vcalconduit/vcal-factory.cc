@@ -1,5 +1,6 @@
 /* vcal-factory.cc                      KPilot
 **
+** Copyright (C) 2002-2003 Reinhold Kainhofer
 ** Copyright (C) 2001 by Dan Pilone
 **
 ** This file defines the factory for the vcal-conduit plugin.
@@ -64,7 +65,7 @@ VCalConduitFactory::VCalConduitFactory(QObject *p, const char *n) :
 		KPILOT_VERSION,
 		I18N_NOOP("Configures the VCal Conduit for KPilot"),
 		KAboutData::License_GPL,
-		"(C) 2001, Adriaan de Groot");
+		"(C) 2001, Adriaan de Groot\n(C) 2002-2003, Reinhold Kainhofer");
 	fAbout->addAuthor("Adriaan de Groot",
 		I18N_NOOP("Maintainer"),
 		"groot@kde.org",
@@ -79,7 +80,7 @@ VCalConduitFactory::VCalConduitFactory(QObject *p, const char *n) :
 		I18N_NOOP("Original Author"));
 	fAbout->addAuthor("Herwin-Jan Steehouwer",
 		I18N_NOOP("Original Author"));
-	fAbout->addAuthor("Cornelius Schumacher",
+	fAbout->addCredit("Cornelius Schumacher",
 		I18N_NOOP("iCalendar port"));
 	fAbout->addCredit("Philipp Hullmann",
 		I18N_NOOP("Bugfixer"));

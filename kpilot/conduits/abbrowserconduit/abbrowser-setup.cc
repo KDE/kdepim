@@ -1,6 +1,7 @@
 /* abbrowser-setup.cc                      KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2002-2003 Reinhold Kainhofer
 **
 ** This file defines the setup dialog for the abbrowser-conduit plugin.
 */

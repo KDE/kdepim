@@ -1,5 +1,6 @@
 /* todo-factory.cc                      KPilot
 **
+** Copyright (C) 2002-2003 Reinhold Kainhofer
 ** Copyright (C) 2001 by Dan Pilone
 **
 ** This file defines the factory for the todo-conduit plugin.
@@ -64,7 +65,7 @@ ToDoConduitFactory::ToDoConduitFactory(QObject *p, const char *n) :
 		KPILOT_VERSION,
 		I18N_NOOP("Configures the ToDo Conduit for KPilot"),
 		KAboutData::License_GPL,
-		"(C) 2001, Adriaan de Groot");
+		"(C) 2001, Adriaan de Groot\n(C) 2002-2003, Reinhold Kainhofer");
 	fAbout->addAuthor("Dan Pilone",
 		I18N_NOOP("Original Author"));
 	fAbout->addAuthor("Preston Brown",

@@ -2,6 +2,7 @@
 #define _KPILOT_TODO_SETUP_H
 /* todo-setup.h                         KPilot
 **
+** Copyright (C) 2002-2003 Reinhold Kainhofer
 ** Copyright (C) 2001 by Dan Pilone
 **
 ** This file defines the class for the behavior of the setup dialog.

@@ -2,6 +2,7 @@
 #define _KPILOT_VCAL_FACTORYBASE_H
 /* vcal-factory.h                       KPilot
 **
+** Copyright (C) 2002-2003 Reinhold Kainhofer
 ** Copyright (C) 2001 by Dan Pilone
 **
 ** This file defines the factory for the vcal-conduit plugin.

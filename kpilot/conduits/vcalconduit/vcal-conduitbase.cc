@@ -1,6 +1,6 @@
 /* vcal-conduitbase.cc                      KPilot
 **
-** Copyright (C) 2002 by Reinhold Kainhofer
+** Copyright (C) 2002-3 by Reinhold Kainhofer
 ** Copyright (C) 2001 by Dan Pilone
 ** 
 ** Contributions:
