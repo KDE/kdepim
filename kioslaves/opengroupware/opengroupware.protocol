@@ -1,0 +1,7 @@
+[Protocol]
+DocPath=kioslave/opengroupware.html
+exec=kio_opengroupware
+input=none
+output=filesystem
+protocol=opengroupware
+reading=true
