@@ -210,8 +210,6 @@ CertManager::CertManager( bool remote, const QString& query,
   _leAction->setText(query);
   if ( !_remote || !query.isEmpty() )
     loadCertificates();
-
-  setMinimumWidth(_toolbar->sizeHint().width());
 }
 
 bool CertManager::checkExec( const QStringList& args )
