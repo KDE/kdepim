@@ -1,3 +1,4 @@
+// -*- C++ -*-
 /* addressEditor.h		KPilot
 **
 ** Copyright (C) 1998-2000 by Dan Pilone
@@ -62,6 +63,7 @@ private:
 
 	PilotAddress* fAddress;
         struct AddressAppInfo *fAppInfo;
+	// entry fields
 	QLineEdit *fCustom4Field;
 	QLineEdit *fCustom3Field;
 	QLineEdit *fCustom2Field;
@@ -76,9 +78,12 @@ private:
 	QLineEdit *fTitleField;
 	QLineEdit *fFirstNameField;
 	QLineEdit *fLastNameField;
-
-	void initLayout(const struct AddressAppInfo *);
-  void fillFields();
+	// phone labels (changing!)
+	QLabel    *m_phoneLabel[5];
+	
+	void initLayout();
+	void fillFields();
+	QString phoneLabelText(PilotAddress *, int i);
 };
 #else
 #ifdef DEBUG
@@ -88,6 +93,9 @@ private:
 
 
 // $Log$
+// Revision 1.10  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.9  2001/04/04 21:20:32  stern
 // Added support for category information and copy constructors
 //

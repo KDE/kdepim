@@ -32,6 +32,7 @@
 class QMultiLineEdit;
 class QListBox;
 class QComboBox;
+class QTextView;
 
 class KConfig;
 
@@ -53,40 +54,63 @@ Q_OBJECT
 
 public:
 	AddressWidget(QWidget* parent,const QString& dbpath);
-    ~AddressWidget();
+	~AddressWidget();
 
-    // Pilot Component Methods:
-      void initialize();
-      void preHotSync(char*);
-      void postHotSync();
-      bool saveData();
+	// Pilot Component Methods:
+	void initialize();
+	void preHotSync(char*);
+	void postHotSync();
+	bool saveData();
 
-    public slots:
-    void slotShowAddress(int);
-      void slotImportAddressList();
-      void slotExportAddressList();
-      void slotEditRecord(); // Edits the currently selected record.
-      void slotCreateNewRecord();
-      void slotDeleteRecord(); // Deletes the currently selected record
+public slots:
+	/**
+	* Called when a particular address is selected. This slot displays
+	* it in the viewer widget.
+	*/
+	void slotShowAddress(int);
+	void slotImportAddressList();
+	void slotExportAddressList();
+	void slotEditRecord();
+	void slotCreateNewRecord();
+	void slotDeleteRecord();
 
 	void slotUpdateButtons();	// Enable/disable buttons
 
 signals:
 	void recordChanged(PilotAddress *);
 
-    protected:
-      const char* getFieldBySymbol(PilotAddress* rec, const char* symbol);
-      void setFieldBySymbol(PilotAddress* rec, const char* symbol, const char* text);
-      PilotAddress* findAddress(const char* text, const char* symbol);
- protected slots:
- void slotUpdateRecord(PilotAddress*);
-      void slotAddRecord(PilotAddress*);
-      void slotSetCategory(int);
+protected:
+	/**
+	* These next threeare helper functions for the import and
+	* export functions.
+	*/
+	const char* getFieldBySymbol(PilotAddress* rec, const char* symbol);
+	void setFieldBySymbol(PilotAddress* rec, 
+		const char* symbol, const char* text);
+	PilotAddress* findAddress(const char* text, const char* symbol);
+
+protected slots:
+	/**
+	* When an edit window is closed, the corresponding record
+	* is updated and possibly re-displayed.
+	*/
+	void slotUpdateRecord(PilotAddress*);
+
+	/**
+	* Pop up an edit window for a new record.
+	*/
+	void slotAddRecord(PilotAddress*);
+
+	/**
+	* Change category. This means that the display should be
+	* cleared and that the list should be repopulated.
+	*/
+	void slotSetCategory(int);
 
 private:
-      void setupWidget();
-      void updateWidget(); // Called with the lists have changed..
-      void writeAddress(PilotAddress* which,PilotDatabase *db=0L);
+	void setupWidget();
+	void updateWidget(); // Called with the lists have changed..
+	void writeAddress(PilotAddress* which,PilotDatabase *db=0L);
 
 	/**
 	* getAllAddresses reads the database and places all
@@ -97,16 +121,30 @@ private:
 	int getAllAddresses(PilotDatabase *addressDB,KConfig& );
 	char *createTitle(PilotAddress *,int displayMode);
 
-      QComboBox*            fCatList;
-      QMultiLineEdit*       fTextWidget;
-      struct AddressAppInfo fAddressAppInfo;
-      QList<PilotAddress>   fAddressList;
-      QListBox*             fListBox;
-	QPushButton	*fEditButton,*fDeleteButton;
+	/**
+	* We use a QComboBox fCatList to hold the user-visible names
+	* of all the categories. The QTextView fAddrInfo is for
+	* displaying the currently selected address, if any.
+	* The QListBox fListBox lists all the addresses in the
+	* currently selected category.
+	*
+	* The entire address database is read into memory in the
+	* QList fAddressList. We need the appinfo block from the
+	* database to determine which categories there are; this
+	* is held in fAddressAppInfo.
+	*
+	* The two buttons should speak for themselves.
+	*/
+	QComboBox            *fCatList;
+	QTextView            *fAddrInfo;
+	struct AddressAppInfo fAddressAppInfo;
+	QList<PilotAddress>   fAddressList;
+	QListBox             *fListBox;
+	QPushButton	     *fEditButton,*fDeleteButton;
 
 public:
 	typedef enum { PhoneNumberLength=16 } Constants ;
-    };
+};
 
 #else
 #ifdef DEBUG
@@ -116,6 +154,9 @@ public:
 
 
 // $Log$
+// Revision 1.15  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.14  2001/03/24 15:59:22  adridg
 // Some populateCategories changes for bug #22112
 //

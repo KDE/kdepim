@@ -68,6 +68,9 @@ static const char *addresswidget_id="$Id$";
 #ifndef QTOOLTIP_H
 #include <qtooltip.h>
 #endif
+#ifndef QTEXTVIEW_H
+#include <qtextview.h>
+#endif
 
 #ifndef _KAPP_H
 #include <kapp.h>
@@ -112,15 +115,15 @@ static const char *addresswidget_id="$Id$";
 
 AddressWidget::AddressWidget(QWidget* parent, const QString& path) :
 	PilotComponent(parent,"component_address",path), 
-	fTextWidget(0L)
+	fAddrInfo(0)
 {
 	FUNCTIONSETUP;
 
 	setGeometry(0, 0, 
-		parent->geometry().width(), parent->geometry().height());
+		parent->geometry().width(), 
+		parent->geometry().height());
 	setupWidget();
 	fAddressList.setAutoDelete(true);
-	fTextWidget->setFont(KPilotConfig::fixed());
 }
 
 AddressWidget::~AddressWidget()
@@ -142,12 +145,9 @@ int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig& config)
 
 
 
-#ifdef DEBUG
-	{
-		kdDebug() << fname << ": Reading AddressDB..."
-			<< endl;
-	}
-#endif
+	DEBUGKPILOT << fname 
+		<< ": Reading AddressDB..."
+		<< endl;
 
 	while((pilotRec = addressDB->readRecordByIndex(currentRecord)) != 0L)
 	{
@@ -168,12 +168,8 @@ int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig& config)
 		currentRecord++;
 	}
 
-#ifdef DEBUG
-	{
-		kdDebug() << fname 
-			<< ": Total " << currentRecord << " records" << endl;
-	}
-#endif
+	DEBUGKPILOT << fname 
+		<< ": Total " << currentRecord << " records" << endl;
 
 	return currentRecord;
 	/* NOTREACHED */
@@ -291,15 +287,13 @@ AddressWidget::setupWidget()
 	label = new QLabel(i18n("Address Info:"), this);
 	grid->addWidget(label,0,2);
 
-	fTextWidget = new QMultiLineEdit(this, "textArea");
-	fTextWidget->setReadOnly(TRUE);
-	grid->addMultiCellWidget(fTextWidget,1,4,2,2);
-	QToolTip::add(fTextWidget,
-		i18n("This box displays address information when\n"
-			"an address is selected in the list to the left."));
-
+	// address info text view
+	fAddrInfo = new QTextView(this);
+	fAddrInfo->setPaper(this->backgroundColor());
+	grid->addMultiCellWidget(fAddrInfo, 1, 4, 2, 2);
+			
 	QPushButton* button ;
-	
+
 	fEditButton = new QPushButton(i18n("Edit Record"), this);
 	grid->addWidget(fEditButton,2,0);
 	connect(fEditButton, SIGNAL(clicked()), 
@@ -387,7 +381,7 @@ AddressWidget::updateWidget()
 		listIndex++;
 		fAddressList.next();
 	}
-	fTextWidget->clear();
+
 #ifdef DEBUG
 	{
 		kdDebug() << fname
@@ -617,59 +611,128 @@ AddressWidget::slotDeleteRecord()
 	initialize();
 }
 
+
+
 void
 AddressWidget::slotShowAddress(int which)
-    {
-    	FUNCTIONSETUP;
-
-    char text[BUFFERSIZE];
-	PilotListItem *p = (PilotListItem *)fListBox->item(which);
-    PilotAddress* theAdd = (PilotAddress *)p->rec();
+{
+    FUNCTIONSETUP;
+    
+    PilotListItem *p    = (PilotListItem *)fListBox->item(which);
+    PilotAddress  *addr = (PilotAddress *)p->rec();
     int i;
-    int pad;
-    text[0] = 0L;
 
-	int showWhichPhone = theAdd->getShownPhone();
+    /*
+     * enum values from pi-address.h
+     *
+     * entryLastname, entryFirstname,
+     * entryCompany, entryPhone1, entryPhone2, entryPhone3,
+     * entryPhone4, entryPhone5, entryAddress, entryCity, entryState,
+     * entryZip, entryCountry, entryTitle, entryCustom1, entryCustom2,
+     * entryCustom3, entryCustom4, entryNote
+     */
 
-    for(i = 0; i < 19; i++)
-	{
-	  if ((i > 2) && (i < 8))
-	    {
-	      strcat(text, fAddressAppInfo.phoneLabels[theAdd->getPhoneLabelIndex(i-3)]);
-	      pad = PhoneNumberLength -
-	      strlen(fAddressAppInfo.phoneLabels[theAdd->getPhoneLabelIndex(i-3)]);
-		if (showWhichPhone == i-3)
-		{
-			strcat(text," []");
-			pad -= 3;
-		}
-	    }
-	  else
-	    {
-	      strcat(text, fAddressAppInfo.labels[i]);
-	      pad = PhoneNumberLength - strlen(fAddressAppInfo.labels[i]);
-	    }
- 	strcat(text, ": ");
-	if (i == 18)
-	{
-		strcat(text,"\n");
-		pad=0;
-	}
-	while(pad > 0)
-	    {
-	    strcat(text, " ");
-	    pad--;
-	    }
-	if(theAdd->getField(i))
-	    strcat(text, theAdd->getField(i));
-	if(i < 18)
-	    strcat(text, "\n"); // So there's no return after note, it fits nicer.
-	}
-    fTextWidget->setText(text);
-
-
-	slotUpdateButtons();
+    QString text;
+    text += "<qt>";
+    
+    // title + name
+    text += "<p>";
+    if(addr->getField(entryTitle))
+    {
+	text += addr->getField(entryTitle);
+	text += " ";
     }
+    text += "<b><big>";
+    if(addr->getField(entryFirstname))
+    {
+	text += addr->getField(entryFirstname);
+	text += " ";
+    }
+    text += addr->getField(entryLastname);
+    text += "</big></b>";
+    text += "</p>";
+
+    // company
+    if(addr->getField(entryCompany))
+    {
+	text += "<p>";
+	text += addr->getField(entryCompany);
+	text += "</p>";
+    }
+
+    // phone numbers (+ labels)
+    text += "<p>";
+    for(i = entryPhone1; i <= entryPhone5; i++)
+	if(addr->getField(i))
+	{
+	    text += "<small>";
+	    text += fAddressAppInfo
+		    .phoneLabels[addr->getPhoneLabelIndex(i-entryPhone1)];
+	    text += ": </small>";
+ 	    if(addr->getShownPhone() == i-entryPhone1)
+		text += "<b>";
+	    text += addr->getField(i);
+ 	    if(addr->getShownPhone() == i-entryPhone1)
+		text += "</b>";
+	    text += "<br/>";
+	}
+    text += "</p>";
+
+    // address, city, state, country
+    text += "<p>";
+    if(addr->getField(entryAddress))
+    {
+	text += addr->getField(entryAddress);
+	text += "<br/>";
+    }
+    if(addr->getField(entryCity))
+    {
+	text += addr->getField(entryCity);
+	text += " ";
+    }
+    if(addr->getField(entryState))
+    {
+	text += addr->getField(entryState);
+	text += " ";
+    }
+    if(addr->getField(entryZip))
+    {
+	text += addr->getField(entryZip);
+    }
+    text += "<br/>";
+    if(addr->getField(entryCountry))
+    {
+	text += addr->getField(entryCountry);
+	text += "<br/>";
+    }
+    text += "</p>";
+
+    // custom fields
+    text += "<p>";
+    for(i = entryCustom1; i <= entryCustom4; i++)
+	if(addr->getField(i))
+	{
+	    text += addr->getField(i);
+	    text += "<br/>";
+	}
+    text += "</p>";
+
+    // note
+    if(addr->getField(entryNote))
+    {
+	text += "<hr/>";
+	text += "<p>";
+	text += addr->getField(entryNote);
+	text += "</p>";
+    }
+    
+    text += "</qt>\n";
+    fAddrInfo->setText(text);
+    
+    slotUpdateButtons();
+}
+
+
 
 void
 AddressWidget::slotImportAddressList()
@@ -979,6 +1042,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.35  2001/05/25 16:06:52  adridg
+// DEBUG breakage
+//
 // Revision 1.34  2001/04/16 13:54:17  adridg
 // --enable-final file inclusion fixups
 //

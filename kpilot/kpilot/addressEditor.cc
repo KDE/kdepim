@@ -1,3 +1,4 @@
+// -*- C++ -*-
 /* addressEditor.cc		KPilot
 **
 ** Copyright (C) 2000 by Dan Pilone
@@ -70,7 +71,7 @@ AddressEditor::AddressEditor(PilotAddress *p,
 {
 	FUNCTIONSETUP;
 
-	initLayout(appInfo);
+	initLayout();
 	fillFields();
 
 	connect(parent,SIGNAL(recordChanged(PilotAddress *)),
@@ -98,6 +99,34 @@ AddressEditor::~AddressEditor()
 		<< endl;
 }
 
+
+
+/*
+ * Return phone label from AddressAppInfo + some sanity checking
+ */
+QString AddressEditor::phoneLabelText(PilotAddress *addr, int i)
+{
+    QString ret(i18n("Phone"));
+    char *s;
+    int idx = i;
+
+    if(addr) 
+	idx = addr->getPhoneLabelIndex(i);
+    
+    if(idx>=0 && idx<8)		// hard-coded, no constant in pi-address.h
+    {
+	if( (s = fAppInfo->phoneLabels[idx]) )
+	{
+	    ret = s;
+	    ret += ":";
+	}
+    }
+
+    return ret;
+}
+
+
+
 void AddressEditor::fillFields()
 {
 	FUNCTIONSETUP;
@@ -108,73 +137,84 @@ void AddressEditor::fillFields()
 		fDeleteOnCancel = true;
 	}
 
-	fLastNameField->setText(fAddress->getField(entryLastname));
-	fFirstNameField->setText(fAddress->getField(entryFirstname));
-	fCompanyField->setText(fAddress->getField(entryCompany));
-	fPhoneField[0]->setText(fAddress->getField(entryPhone1));
-	fPhoneField[1]->setText(fAddress->getField(entryPhone2));
-	fPhoneField[2]->setText(fAddress->getField(entryPhone3));
-	fPhoneField[3]->setText(fAddress->getField(entryPhone4));
-	fPhoneField[4]->setText(fAddress->getField(entryPhone5));
-	fAddressField->setText(fAddress->getField(entryAddress));
-	fCityField->setText(fAddress->getField(entryCity));
-	fStateField->setText(fAddress->getField(entryState));
-	fZipField->setText(fAddress->getField(entryZip));
-	fCountryField->setText(fAddress->getField(entryCountry));
-	fTitleField->setText(fAddress->getField(entryTitle));
-	fCustom1Field->setText(fAddress->getField(entryCustom1));
-	fCustom2Field->setText(fAddress->getField(entryCustom2));
-	fCustom3Field->setText(fAddress->getField(entryCustom3));
-	fCustom4Field->setText(fAddress->getField(entryCustom4));
+	// phone labels
+	for(int i=0; i<5; i++)
+	    m_phoneLabel[i]->setText( phoneLabelText(fAddress, i) );
+	
+	// fields
+	fLastNameField ->setText( fAddress->getField(entryLastname) );
+	fFirstNameField->setText( fAddress->getField(entryFirstname) );
+	fCompanyField  ->setText( fAddress->getField(entryCompany) );
+	fPhoneField[0] ->setText( fAddress->getField(entryPhone1) );
+	fPhoneField[1] ->setText( fAddress->getField(entryPhone2) );
+	fPhoneField[2] ->setText( fAddress->getField(entryPhone3) );
+	fPhoneField[3] ->setText( fAddress->getField(entryPhone4) );
+	fPhoneField[4] ->setText( fAddress->getField(entryPhone5) );
+	fAddressField  ->setText( fAddress->getField(entryAddress) );
+	fCityField     ->setText( fAddress->getField(entryCity) );
+	fStateField    ->setText( fAddress->getField(entryState) );
+	fZipField      ->setText( fAddress->getField(entryZip) );
+	fCountryField  ->setText( fAddress->getField(entryCountry) );
+	fTitleField    ->setText( fAddress->getField(entryTitle) );
+	fCustom1Field  ->setText( fAddress->getField(entryCustom1) );
+	fCustom2Field  ->setText( fAddress->getField(entryCustom2) );
+	fCustom3Field  ->setText( fAddress->getField(entryCustom3) );
+	fCustom4Field  ->setText( fAddress->getField(entryCustom4) );
 }
 
 
 
 
-#define MakeField(label,field,row,column) t=new QLabel(i18n(label),p); \
+#define MakeField(text,field,row,column) \
+                t=new QLabel(text,p); \
 		field = new QLineEdit(p); \
+                field->setMinimumWidth(20*SPACING); \
 		t->setBuddy(field); \
 		grid->addWidget(t,row,column); \
 		grid->addWidget(field,row,column+1);
 
-void AddressEditor::initLayout(const struct AddressAppInfo *addressInfo)
+#define MakeFieldL(text,label,field,row,column) \
+                label = new QLabel(text,p); \
+		field = new QLineEdit(p); \
+                field->setMinimumWidth(20*SPACING); \
+		label->setBuddy(field); \
+		grid->addWidget(label,row,column); \
+		grid->addWidget(field,row,column+1);
+
+void AddressEditor::initLayout()
 {
-	QFrame *p = plainPage();
-	QGridLayout *grid = new QGridLayout(p,6,6,0,SPACING);
+    QFrame *p = plainPage();
+    QGridLayout *grid = new QGridLayout(p,10,5,0,SPACING);
+    
+    QLabel *t;
+    
+    MakeField(i18n("Last Name:"),  fLastNameField,   0,	0);
+    MakeField(i18n("First Name:"), fFirstNameField,  1,	0);
+    MakeField(i18n("Title:"),      fTitleField,      2,	0);
+    MakeField(i18n("Company:"),    fCompanyField,    3,	0);
+    
+    for(int i=0; i<5; i++)
+    {
+	MakeFieldL(phoneLabelText(NULL, 0),
+		   m_phoneLabel[i],
+		   fPhoneField[i],
+		   4+i, 0);
+    }
 
-	QLabel *t;
-
-	MakeField(I18N_NOOP("Last Name:"),fLastNameField,1,1);
-	MakeField(I18N_NOOP("First Name:"),fFirstNameField,2,1);
-	MakeField(I18N_NOOP("Title:"),fTitleField,3,1);
-	MakeField(I18N_NOOP("Company:"),fCompanyField,4,1);
-
-	// Vaguely copied from the addressWidget
-	//
-	//	
-	for (int i=0; i<5; i++)
-	{
-		MakeField(addressInfo->phoneLabels[i],
-			fPhoneField[i],5+i,1);
-        }
-
-	MakeField(I18N_NOOP("Address:"),fAddressField,1,4);
-	MakeField(I18N_NOOP("City:"),fCityField,2,4);
-	MakeField(I18N_NOOP("State:"),fStateField,3,4);
-	MakeField(I18N_NOOP("Zip Code:"),fZipField,4,4);
-	MakeField(I18N_NOOP("Country:"),fCountryField,5,4);
-	MakeField(I18N_NOOP("Custom 1:"),fCustom1Field,6,4);
-	MakeField(I18N_NOOP("Custom 2:"),fCustom2Field,7,4);
-	MakeField(I18N_NOOP("Custom 3:"),fCustom3Field,8,4);
-	MakeField(I18N_NOOP("Custom 4:"),fCustom4Field,9,4);
-
-	grid->addRowSpacing(0,SPACING);
-	grid->addRowSpacing(10,SPACING);
-	grid->addColSpacing(3,SPACING);
-	grid->addColSpacing(6,SPACING);
-	grid->setColStretch(2,50);
-	grid->setColStretch(5,50);
-	grid->setRowStretch(10,100);
+    MakeField(i18n("Address:"),    fAddressField,    0,	4);
+    MakeField(i18n("City:"),       fCityField,       1,	4);
+    MakeField(i18n("State:"),      fStateField,      2,	4);
+    MakeField(i18n("Zip Code:"),   fZipField,        3,	4);
+    MakeField(i18n("Country:"),    fCountryField,    4,	4);
+    MakeField(i18n("Custom 1:"),   fCustom1Field,    5,	4);
+    MakeField(i18n("Custom 2:"),   fCustom2Field,    6,	4);
+    MakeField(i18n("Custom 3:"),   fCustom3Field,    7,	4);
+    MakeField(i18n("Custom 4:"),   fCustom4Field,    8,	4);
+    
+    grid->addRowSpacing(9, SPACING);
+    grid->addColSpacing(2, SPACING);
+    grid->setRowStretch(9, 100);
+    grid->setColStretch(2, 50);
 }
 
 /* slot */ void AddressEditor::slotCancel()
@@ -237,6 +277,9 @@ void AddressEditor::initLayout(const struct AddressAppInfo *addressInfo)
 }
 
 // $Log$
+// Revision 1.7  2001/04/16 13:54:17  adridg
+// --enable-final file inclusion fixups
+//
 // Revision 1.6  2001/04/04 21:20:32  stern
 // Added support for category information and copy constructors
 //
