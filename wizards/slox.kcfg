@@ -2,24 +2,27 @@
 <!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
 <kcfg>
 
-  <kcfgfile name="kolabrc"/>
+  <kcfgfile name="sloxrc"/>
 
   <group name="General">
     <entry name="Server" type="String">
-      <label>Kolab server name</label>
+      <label>Server name</label>
       <default></default>
     </entry>
     <entry name="User" type="String">
-      <label>Kolab user name</label>
+      <label>User name</label>
       <default></default>
     </entry>
     <entry name="Password" type="Password">
-      <label>Kolab user password</label>
+      <label>User password</label>
       <default></default>
     </entry>
     <entry name="SavePassword" type="Bool">
       <label>Save Password</label>
       <default>false</default>
+    </entry>
+    <entry name="LogFile" type="String">
+      <label>Log File</label>
     </entry>
   </group>
 
