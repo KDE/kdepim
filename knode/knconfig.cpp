@@ -939,7 +939,7 @@ KNConfig::XHeader::XHeader(const QString &s)
 
 
 KNConfig::PostNewsTechnical::PostNewsTechnical()
- : findComposerCSCache(113)
+ : findComposerCSCache(113), o_verrideAllow8BitHeaders(false)
 {
   findComposerCSCache.setAutoDelete(true);
 

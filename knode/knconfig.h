@@ -902,7 +902,8 @@ class PostNewsTechnical : public Base {
 
     bool allow8BitBody()        { return a_llow8BitBody; }
     bool useOwnCharset()        { return u_seOwnCharset; }
-    bool allow8BitHeaders()     { return a_llow8BitHeaders; }
+    bool allow8BitHeaders()     { return (a_llow8BitHeaders && !o_verrideAllow8BitHeaders); }
+    void disableAllow8BitHeaders(bool b)  { o_verrideAllow8BitHeaders = b; }
     bool generateMessageID()    { return g_enerateMID; }
     QCString hostname()         { return h_ostname; }
     XHeaders& xHeaders()        { return x_headers; }
@@ -917,6 +918,7 @@ class PostNewsTechnical : public Base {
     bool      a_llow8BitBody,
               u_seOwnCharset,
               a_llow8BitHeaders,
+              o_verrideAllow8BitHeaders,
               g_enerateMID,
               d_ontIncludeUA,
               u_seExternalMailer;
