@@ -98,7 +98,7 @@ void KABC::ResourceKolab::loadSubResourceConfig( KConfig& config,
   bool active = group.readBoolEntry( "Active", true );
   int completionWeight = group.readNumEntry( "CompletionWeight", 80 );
   mSubResources.insert( name, Kolab::SubResource( active, writable, label,
-                                               completionWeight ) );
+                                                  completionWeight ) );
 }
 
 bool KABC::ResourceKolab::doOpen()
@@ -206,8 +206,6 @@ bool KABC::ResourceKolab::save( Ticket* )
     if( (*it).changed() ) {
       rc &= kmailUpdateAddressee( *it );
     }
-
-  // TODO save distribution lists too
 
   if ( !rc )
     kdDebug(5650) << k_funcinfo << " failed." << endl;
@@ -325,14 +323,14 @@ void KABC::ResourceKolab::insertAddressee( const Addressee& addr )
 {
   const QString uid = addr.uid();
   //kdDebug(5650) << k_funcinfo << uid << endl;
-   bool ok = false;
+  bool ok = false;
   if ( mUidMap.contains( uid ) ) {
     mUidsPendingUpdate.append( uid );
   } else {
     mUidsPendingAdding.append( uid );
-    }
+  }
 
-    ok = kmailUpdateAddressee( addr );
+  ok = kmailUpdateAddressee( addr );
 
   if ( ok )
     Resource::insertAddressee( addr );
@@ -398,14 +396,14 @@ void KABC::ResourceKolab::fromKMailDelIncidence( const QString& type,
     // replace it, so let's just sit tight.
   } else {
     // We didn't trigger this, so KMail did, remove the reference to the uid
-  mAddrMap.remove( uid );
-  mUidMap.remove( uid );
-  addressBook()->emitAddressBookChanged();
+    mAddrMap.remove( uid );
+    mUidMap.remove( uid );
+    addressBook()->emitAddressBookChanged();
   }
 }
 
 void KABC::ResourceKolab::fromKMailRefresh( const QString& type,
-                                       const QString& /*subResource*/ )
+                                            const QString& /*subResource*/ )
 {
   // Check if this is a contact
   if( type != s_kmailContentsType ) return;
@@ -418,7 +416,7 @@ void KABC::ResourceKolab::fromKMailRefresh( const QString& type,
 
 void KABC::ResourceKolab::fromKMailAddSubresource( const QString& type,
                                                    const QString& subResource,
-                                                   const QString& /*label*/,
+                                                   const QString& label,
                                                    bool writable )
 {
   if( type != s_kmailContentsType ) return;
@@ -429,8 +427,7 @@ void KABC::ResourceKolab::fromKMailAddSubresource( const QString& type,
 
   KConfig config( configFile() );
   config.setGroup( "Contact" );
-  // ###### TODO label
-  loadSubResourceConfig( config, subResource, subResource, writable );
+  loadSubResourceConfig( config, subResource, label, writable );
   loadSubResource( subResource );
   addressBook()->emitAddressBookChanged();
   emit signalSubresourceAdded( this, type, subResource );
