@@ -65,7 +65,12 @@ bool KonsoleKalendarDelete::deleteEvent()
       }
 
       m_variables->getCalendar()->deleteEvent( event );
+      cout << i18n("Success: \"").local8Bit()
+           << event->summary().local8Bit()
+           << i18n("\" deleted").local8Bit()
+           << endl;
 
+      // TODO: Do we need this??
       // TODO: save can fail, right?
       if ( !m_variables->isCalendarResources() ) {
         m_variables->getCalendar()->save( m_variables->getCalendarFile() );

@@ -78,6 +78,8 @@ bool KonsoleKalendarChange::changeEvent()
         event->setDtEnd( m_variables->getEndDateTime() );
       }
 
+      event->setFloats( m_variables->getFloating() );
+
       if ( m_variables->isSummary() ) {
         event->setSummary( m_variables->getSummary() );
       }
@@ -90,7 +92,17 @@ bool KonsoleKalendarChange::changeEvent()
         event->setLocation( m_variables->getLocation() );
       }
 
-      m_variables->getCalendar()->addEvent( event );
+      if ( m_variables->getCalendar()->addEvent( event ) ) {
+        cout << i18n("Success: \"").local8Bit()
+             << event->summary().local8Bit()
+             << i18n("\" changed").local8Bit()
+             << endl;
+      } else {
+        cout << i18n("Failure: \"").local8Bit()
+             << event->summary().local8Bit()
+             << i18n("\" not changed").local8Bit()
+             << endl;
+      }
 
       // TODO: Do we need this??
       // TODO: save can fail, right?

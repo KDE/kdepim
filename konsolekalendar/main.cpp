@@ -195,8 +195,6 @@ int main( int argc, char *argv[] )
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  QString KalendarFile;
-
   // Default values for start date/time (today at 07:00)
   QDate startdate = QDate::currentDate();
   QTime starttime( 7 ,0 );
@@ -221,6 +219,7 @@ int main( int argc, char *argv[] )
 
 
   variables.setExportType( NONE );
+  variables.setFloating( false ); // by default, new events do NOT float
 
   if ( args->isSet( "verbose" ) ) {
     variables.setVerbose( true );
@@ -464,17 +463,24 @@ int main( int argc, char *argv[] )
               << "(" << option << ")"
               << endl;
 
-    starttime = QTime::fromString( option,  Qt::ISODate );
-    if ( ! starttime.isValid() ) {
-      cout << i18n( "Invalid Start Time Specified: " ).local8Bit()
-           << option.local8Bit()
-           << endl;
-      return 1;
+    if ( option.upper() != "FLOAT" ) {
+      starttime = QTime::fromString( option,  Qt::ISODate );
+      if ( ! starttime.isValid() ) {
+        cout << i18n( "Invalid Start Time Specified: " ).local8Bit()
+             << option.local8Bit()
+             << endl;
+        return 1;
+      }
+      kdDebug() << "main | parse options | "
+                << "Start time after conversion: "
+                << "(" << starttime.toString() << ")"
+                << endl;
+    } else {
+      variables.setFloating( true );
+      kdDebug() << "main | parse options | "
+                << "Floating event time specified"
+                << endl;
     }
-    kdDebug() << "main | parse options | "
-              << "Start time after conversion: "
-              << "(" << starttime.toString() << ")"
-              << endl;
   }
 
   /*
@@ -545,18 +551,25 @@ int main( int argc, char *argv[] )
               << "(" << option << ")"
               << endl;
 
-    endtime = QTime::fromString( option,  Qt::ISODate );
-    if ( ! endtime.isValid() ) {
-      cout << i18n( "Invalid End Time Specified: " ).local8Bit()
-           << option.local8Bit()
-           << endl;
-      return 1;
-    }
+    if ( option.upper() != "FLOAT" ) {
+      endtime = QTime::fromString( option,  Qt::ISODate );
+      if ( ! endtime.isValid() ) {
+        cout << i18n( "Invalid End Time Specified: " ).local8Bit()
+             << option.local8Bit()
+             << endl;
+        return 1;
+      }
 
-    kdDebug() << "main | parse options | "
-              << "End time after conversion: "
-              << "(" << endtime.toString() << ")"
-              << endl;
+      kdDebug() << "main | parse options | "
+                << "End time after conversion: "
+                << "(" << endtime.toString() << ")"
+                << endl;
+    } else {
+      variables.setFloating( true );
+      kdDebug() << "main | parse options | "
+                << "Floating event time specified"
+                << endl;
+    }
   }
 
   /*
@@ -765,6 +778,16 @@ int main( int argc, char *argv[] )
               << endl;
   }
 
+  // Float check (for adding/changing)
+  // Events float if time AND end-time AND epoch times are UNspecified
+  if ( ! args->isSet( "time" )        && ! args->isSet( "end-time" ) &&
+       ! args->isSet( "epoch-start" ) && ! args->isSet( "epoch-end" ) ) {
+    variables.setFloating( true );
+    kdDebug() << "main | floatingcheck | "
+              << "turn-on floating event"
+              << endl;
+  }
+
   // Finally!
   variables.setStartDateTime( startdatetime );
   variables.setEndDateTime( enddatetime );
@@ -800,28 +823,10 @@ int main( int argc, char *argv[] )
   }
 
   /***************************************************************************
-   * Mode Dependent Settings                                                 *
-   ***************************************************************************/
-
-  // In add mode, make a check for floating events
-  //TODO: is this needed for change mode too?
-  if ( add ) {
-
-    // The event does NOT float if time, end-time, or epoch times are specified
-    if ( args->isSet( "time" )  || args->isSet( "end-time" ) ||
-        args->isSet( "epoch-start" ) || args->isSet( "epoch-end" ) ) {
-      variables.setFloating( false );
-      kdDebug() << "main | floatingcheck | "
-                << "turn-off floating event"
-                << endl;
-    }
-  }
-
-  args->clear(); // Free up some memory.
-
-  /***************************************************************************
    * And away we go with the real work...                                    *
    ***************************************************************************/
+
+  args->clear(); // Free up some memory.
 
   /*
    * Set our application name for use in unique IDs and error messages,
@@ -866,15 +871,14 @@ int main( int argc, char *argv[] )
               << "calling changeEvent()"
               << endl;
     if ( ! variables.isUID() ) {
-      cout << i18n(
-        "Must specify a UID with --uid to change event"
-        ).local8Bit() << endl;
+      cout << i18n( "Missing event UID: "
+                    "use --uid command line option" ).local8Bit()
+           << endl;
       return 1;
     }
     if ( konsolekalendar->changeEvent() != true ) {
-      cout << i18n(
-        "Attempting to change a non-existent event"
-        ).local8Bit() << endl;
+      cout << i18n( "No such event UID: change event failed" ).local8Bit()
+           << endl;
       return 1;
     }
     kdDebug() << "main | modework | "
@@ -887,15 +891,14 @@ int main( int argc, char *argv[] )
               << "calling deleteEvent()"
               << endl;
     if ( ! variables.isUID() ) {
-      cout << i18n(
-        "Must specify a UID with --uid to delete event"
-        ).local8Bit() << endl;
+      cout << i18n( "Missing event UID: "
+                    "use --uid command line option" ).local8Bit()
+           << endl;
       return 1;
     }
     if ( konsolekalendar->deleteEvent() != true ) {
-      cout << i18n(
-        "Attempting to delete a non-existent event"
-        ).local8Bit() << endl;
+      cout << i18n( "No such event UID: delete event failed").local8Bit()
+           << endl;
       return 1;
     }
     kdDebug() << "main | modework | "
