@@ -318,7 +318,7 @@ EGroupwareWizard::EGroupwareWizard() : KConfigWizard( new EGroupwarePropagator )
   label->setBuddy( mDomainEdit );
   topLayout->addWidget( mDomainEdit, 1, 1 );
 
-  label = new QLabel( i18n( "&User name:" ), page );
+  label = new QLabel( i18n( "&Username:" ), page );
   topLayout->addWidget( label, 2, 0 );
   mUserEdit = new KLineEdit( page );
   label->setBuddy( mUserEdit );
