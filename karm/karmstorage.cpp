@@ -48,6 +48,7 @@
 #include <timekard.h>
 #include <karmutility.h>
 #include <kio/netaccess.h>
+#include <vector>
 
 //#include <calendarlocal.h>
 //#include <journal.h>
@@ -59,8 +60,11 @@
 #include "task.h"
 #include "reportcriteria.h"
 
+using namespace std;
 
-KarmStorage *KarmStorage::_instance = 0;
+KarmStorage *KarmStorage::_instance = 0;    
+static long linenr;  // how many lines written by printTaskHistory so far
+
 
 KarmStorage *KarmStorage::instance()
 {
@@ -710,17 +714,21 @@ void KarmStorage::addComment(const Task* task, const QString& comment)
     ( _calendar->resourceManager()->standardResource() ));
 }
 
-void KarmStorage::printTaskHistory (
+long KarmStorage::printTaskHistory (
         const Task               *task, 
         const QMap<QString,long> &taskdaytotals, 
         QMap<QString,long>       &daytotals, 
         const QDate              &from,
         const QDate              &to, 
-        const int                level, 
-        QString                  &s,
+        const int                level,
+	vector <QString>         &matrix,
         const ReportCriteria     &rc)
 // to>=from is precondition
 {
+  long ownline=linenr++; // the how many-th instance of this function is this 
+  long colrectot=0;      // colum where to write the task's total recursive time
+  vector <QString> cell; // each line of the matrix is stored in an array of cells, one containing the recursive total
+  long add;              // total recursive time of all subtasks
   QString delim = rc.delimiter;
   QString dquote = rc.quote;
   QString double_dquote = dquote + dquote;
@@ -732,7 +740,7 @@ void KarmStorage::printTaskHistory (
   QDate day;
   long sum;
 
-  if ( !task ) return;
+  if ( !task ) return 0;
 
   day = from;
   sum = 0;
@@ -746,8 +754,8 @@ void KarmStorage::printTaskHistory (
 
     if (taskdaytotals.contains(daytaskkey))
     {
-      s += QString::fromLatin1("%1")
-        .arg(formatTime(taskdaytotals[daytaskkey]/60, rc.decimalMinutes));
+      cell.push_back(QString::fromLatin1("%1")
+        .arg(formatTime(taskdaytotals[daytaskkey]/60, rc.decimalMinutes)));
       sum += taskdaytotals[daytaskkey];  // in seconds
 
       if (daytotals.contains(daykey))
@@ -755,16 +763,22 @@ void KarmStorage::printTaskHistory (
       else
         daytotals.insert(daykey, taskdaytotals[daytaskkey]);
     }
-    s += delim;
+    cell.push_back(delim);
 
     day = day.addDays(1);
   }
 
   // Total for task 
-  s += QString::fromLatin1("%1").arg(formatTime(sum/60, rc.decimalMinutes));
-
+  cell.push_back(QString::fromLatin1("%1").arg(formatTime(sum/60, rc.decimalMinutes)));
+  
+  // room for the recursive total time (that cannot be calculated now)
+  cell.push_back(delim);
+  colrectot = cell.size();
+  cell.push_back("???");
+  cell.push_back(delim);
+  
   // Task name
-  for ( int i = level + 1; i > 0; i-- ) s += delim;
+  for ( int i = level + 1; i > 0; i-- ) cell.push_back(delim);
 
   /*
   // CSV compliance
@@ -773,23 +787,27 @@ void KarmStorage::printTaskHistory (
   to_quote = task->name().contains(delim) || task->name().contains(dquote);
   */
   to_quote = true; 
-  if ( to_quote) s += dquote;
+  if ( to_quote) cell.push_back(dquote);
 
 
   // Double quotes replaced by a pair of consecutive double quotes 
-  s += task->name().replace( dquote, double_dquote );
+  cell.push_back(task->name().replace( dquote, double_dquote ));
 
-  if ( to_quote) s += dquote;
+  if ( to_quote) cell.push_back(dquote);
 
-  s += cr;
+  cell.push_back(cr);
 
+  add=0;
   for (Task* subTask = task->firstChild();
       subTask;
       subTask = subTask->nextSibling())
   {
-    printTaskHistory( subTask, taskdaytotals, daytotals, from, to , level+1, s,
+    add += printTaskHistory( subTask, taskdaytotals, daytotals, from, to , level+1, matrix,
                       rc );
   }
+  cell[colrectot]=(QString::fromLatin1("%1").arg(formatTime((add+sum)/60, rc.decimalMinutes )));
+  for (unsigned int i=0; i < cell.size(); i++) matrix[ownline]+=cell[i];
+  return add+sum;
 }
 
 QString KarmStorage::report( TaskView *taskview, const ReportCriteria &rc )
@@ -879,10 +897,14 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
     retval += delim;
     dayheading=dayheading.addDays(1);
   }
+  retval += i18n("Sum") + delim + i18n("Total Sum") + delim + i18n("Task Hierarchy");
   retval += cr;
   retval += line;
         
   // the tasks
+  vector <QString> matrix;
+  linenr=0;
+  for (int i=0; i<=taskview->count()+1; i++) matrix.push_back("");
   if (events.empty())
   {
     retval += i18n("  No hours logged.");
@@ -895,14 +917,15 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
             task; task= task->nextSibling() )
       {
         printTaskHistory( task, taskdaytotals, daytotals, from, to, 0, 
-                          retval, rc );
+                          matrix, rc );
       }
     }
     else
     {
       printTaskHistory( taskview->current_item(), taskdaytotals, daytotals, 
-                        from, to, 0, retval, rc );
+                        from, to, 0, matrix, rc );
     }
+    for (unsigned int i=0; i<matrix.size(); i++) retval+=matrix[i];
     retval += line;
         
     // totals
@@ -922,9 +945,9 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
       day = day.addDays(1);
     }
         
-    retval += QString::fromLatin1("%1%2%3")
+    retval += QString::fromLatin1("%1%2%3%4")
         .arg( formatTime( sum/60, rc.decimalMinutes ) )
-        .arg( delim )
+        .arg( delim ).arg( delim )
         .arg( i18n( "Total" ) );
   }
 

@@ -32,6 +32,7 @@
 #include "desktoplist.h"
 
 #include <calendarresources.h>
+#include <vector>
 #include "resourcecalendar.h"
 
 class QDateTime;
@@ -300,13 +301,14 @@ class KarmStorage
             const ReportCriteria &rc
             );
 
-    void printTaskHistory (
+    long printTaskHistory (
             const Task *task,
             const QMap<QString,long>& taskdaytotals,
             QMap<QString,long>& daytotals,
             const QDate& from,
             const QDate& to,
-            const int level, QString& s,
+            const int level, 
+	    std::vector <QString> &matrix,
             const ReportCriteria &rc
             );
 };
