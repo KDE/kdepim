@@ -103,6 +103,8 @@ void AddresseeEditorWidget::initGUI()
   setupTab1();
   setupTab2();
   setupTab3();
+
+  mNameEdit->setFocus();
 }
 
 void AddresseeEditorWidget::setupTab1()
