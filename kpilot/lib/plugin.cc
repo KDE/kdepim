@@ -86,6 +86,8 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 /* virtual */ ConduitAction::~ConduitAction()
 {
 	FUNCTIONSETUP;
+	KPILOT_DELETE(fDatabase);
+	KPILOT_DELETE(fLocalDatabase);
 }
 
 bool ConduitAction::openDatabases_(const char *name)
@@ -208,6 +210,9 @@ bool PluginUtility::isModal(const QStringList &a)
 }
 
 // $Log$
+// Revision 1.8  2002/05/19 15:01:49  adridg
+// Patches for the KNotes conduit
+//
 // Revision 1.7  2002/05/14 22:57:40  adridg
 // Merge from _BRANCH
 //
