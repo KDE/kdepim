@@ -166,7 +166,7 @@ void KAddressBookTableView::refresh(QString uid)
     ContactListViewItem *currentItem = dynamic_cast<ContactListViewItem*>( mListView->currentItem() );
     if ( currentItem ) {
       ContactListViewItem *nextItem = dynamic_cast<ContactListViewItem*>( currentItem->itemBelow() );
-      if ( currentItem )
+      if ( nextItem )
         nextUID = nextItem->addressee().uid();
       currentUID = currentItem->addressee().uid();
     }
