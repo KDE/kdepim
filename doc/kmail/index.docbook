@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>02/09/2000</date>
+<date>05/09/2000</date>
 <releaseinfo>1.01.90</releaseinfo>
 
 <abstract>
@@ -1946,6 +1946,7 @@ on configuring sendmail for Dial-up connections</ulink>.</para></answer>
 
 	<listitem><para>Waldo Bastian <email>bastian@kde.org</email></para></listitem>
 	<listitem><para>Andreas Gungl <email>a.gungl@gmx.de</email></para></listitem>
+	<listitem><para>Michael H&auml;ckel <email>michael@haeckel.net</email></para></listitem>
 	<listitem><para>Lars Knoll <email>knoll@mpi-hd.mpg.de</email></para></listitem>
 	<listitem><para>J. Nick Koston <email>bdraco@darkorb.net</email></para></listitem>
 	<listitem><para>Daniel Naber <email>dnaber@mini.gt.owl.de</email></para></listitem>
