@@ -53,7 +53,7 @@ static const char *null_conduit_id=
 #include "pilotSerialDatabase.h"
 #include "null-factory.h"
 #include "null-conduit.h"
-#include "nullconduitSettings.h"
+#include "nullSettings.h"
 
 // A conduit that does nothing has a very
 // simple constructor and destructor.
