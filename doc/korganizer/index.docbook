@@ -3,6 +3,7 @@
  "dtd/kdex.dtd" [
   <!ENTITY kappname "&korganizer;">
   <!ENTITY package "kdepim">
+  <!ENTITY plugins-chapter SYSTEM "plugins-chapter.docbook">
   <!ENTITY exchange-plugin-workshop SYSTEM "exchange-plugin.docbook">
   <!ENTITY group-scheduling-workshop SYSTEM "group-scheduling.docbook">
   <!ENTITY outlook-to-vcalendar-workshop SYSTEM "outlook-to-vcalendar.docbook">
@@ -89,8 +90,8 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2004-04-27</date>
-<releaseinfo>2.30.00</releaseinfo>
+<date>2004-10-17</date>
+<releaseinfo>2.31.00</releaseinfo>
 
 <abstract><para>&korganizer; is an easy to use personal information manager
 (<acronym>PIM</acronym>). You can schedule appointments, events, and to-do
@@ -978,6 +979,7 @@ version.</para>
 
 </chapter>
 
+&plugins-chapter;
 
 <chapter id="examples">
 <title>Examples</title>
@@ -2707,32 +2709,14 @@ editing will be forgotten, and &korganizer; will close the
 
 </sect1>
 
-<sect1 id="vcalendar-format">
-<title>vCalendar Format</title> 
-
-<para>&korganizer; is the first free <abbrev>PIM</abbrev> for &UNIX;
-which implements the vCalendar protocol for personal data
-interchange. This vendor-independent, open standard allows different
-programs and devices to share/synchronize event and calendar information
-without proprietary standards. The data is stored in
-<acronym>ASCII</acronym> and is easily human-readable. While some
-&Windows; programs have implemented a limited import/export ability from
-their native formats to vCalendar, &korganizer;'s native file format on
-disk is vCalendar, so it bypasses this middle-step entirely. It also
-allows you to easily access your data without the program itself, in the
-spirit of other &UNIX; programs. </para>
-
-</sect1>
-
 </chapter>
 
 <chapter id="other-features">
 <title>Other Features</title>
 
 <para>In this chapter, you'll learn other useful features of
-&korganizer;: the parameters you can specify on the command line (when
-invoking &korganizer; from a shell), what tricks you can do with a click
-of your mouse, what interaction between &korganizer; and &konqueror; is
+&korganizer;: what tricks you can do with a click
+of your mouse and what interaction between &korganizer; and &konqueror; is
 possible.</para>
 
 <para>You'll also learn about merging and importing data, and about
@@ -2742,48 +2726,8 @@ computer.</para>
 <sect1 id="other-features-commandline-options">
 <title>Command Line</title>
 
-<para>While &korganizer; supports the full score of options that are
-common to all &kde; programs, it also supports DCOP. A nice program 
-to access a &kde; kalendar from the command line is KonsoleKalendar, which 
+<para>A nice program to access a &kde; calendar from the command line is konsolekalendar, which 
 is included in the kdepim package together with &korganizer;.</para>
-
-<informaltable>
-<tgroup cols="2">
-<thead>
-<row>
-  <entry>Option</entry>
-  <entry>Description</entry>
-</row>
-</thead>
-<tbody>
-<row>
-  <entry><option>--help</option></entry>
-  <entry>Shows a brief options help text.</entry>
-</row>
-<row>
-  <entry><option>--help-qt</option></entry>
-  <entry>Shows numerous generic Qt-specific options.</entry>
-</row>
-<row>
-  <entry><option>--help-kde</option></entry>
-  <entry>Shows numerous generic KDE-specific options.</entry>
-</row>
-<row>
-  <entry><option>--author</option></entry>
-  <entry>Shows the names and email addresses of &korganizer; authors.</entry>
-</row>
-<row>
-  <entry><option>-v</option>, <option>--version</option></entry>
-  <entry>Shows the running versions of the Qt library , &kde; and
- &korganizer;.</entry>
-</row>
-<row>
-  <entry><option>--license</option></entry>
-  <entry>Displays the license.</entry>
-</row>
-</tbody>
-</tgroup>
-</informaltable> 
 
 </sect1>
 
