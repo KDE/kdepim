@@ -38,11 +38,7 @@ class Attendee : public Person
                     Delegated, Completed, InProcess };
     enum Role { ReqParticipant, OptParticipant, NonParticipant, Chair };
 
-    class List : public ListBase<Attendee>
-    {
-      public:
-        List() : ListBase<Attendee>() {}
-    };
+    typedef ListBase<Attendee> List;
   
     /**
       Create Attendee.

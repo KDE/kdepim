@@ -41,11 +41,7 @@ class Alarm : public CustomProperties
   public:
     enum Type { Invalid, Display, Procedure, Email, Audio };
 
-    class List : public ListBase<Alarm>
-    {
-      public:
-        List() : ListBase<Alarm>() {}
-    };    
+    typedef ListBase<Alarm> List;
 
     /** Construct a new alarm with variables initialized to "sane" values. */
     explicit Alarm(Incidence *parent);
