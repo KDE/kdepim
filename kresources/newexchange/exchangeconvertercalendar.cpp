@@ -114,7 +114,7 @@ void ExchangeConverterCalendar::createRequestAppointment( QDomDocument &doc, QDo
   propertyCalendar( "timezone" );
   propertyCalendar( "alldayevent" );
   propertyCalendar( "dtstart" );
-  propertyCalendar( "dtEnd" );
+  propertyCalendar( "dtend" );
   propertyCalendar( "duration" );
   propertyCalendar( "rrule" );
   propertyCalendar( "rdate" );
@@ -355,7 +355,7 @@ kdDebug()<<"ExchangeConverterCalendar::readIncidence: ERROR: No UID given"<<endl
 
   if ( WebdavHandler::extractDateTime( node, "dtstart", tmpdt ) )
     event->setDtStart( tmpdt );
-  if ( WebdavHandler::extractDateTime( node, "dtEnd", tmpdt ) ) {
+  if ( WebdavHandler::extractDateTime( node, "dtend", tmpdt ) ) {
     event->setDtEnd( tmpdt );
   } else if ( WebdavHandler::extractLong( node, "duration", tmplng ) ) {
     event->setDuration( tmplng );
@@ -667,7 +667,7 @@ class ExchangeConverterCalendar::createWebDAVVisitor : public IncidenceBase::Vis
       el = domCalendarProperty( "dtstart", timePropString( event->dtStart() ) );
       addDateProp( el );
       if ( event->hasEndDate() ) {
-        el = domCalendarProperty( "dtEnd", timePropString( event->dtEnd() ) );
+        el = domCalendarProperty( "dtend", timePropString( event->dtEnd() ) );
         addDateProp( el );
       } else {
         domCalendarProperty( "duration", QString::number( event->duration() ) );
