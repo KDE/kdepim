@@ -32,63 +32,86 @@
 
 namespace KCal {
 
-/** KonsoleKalendar is the base class of the project */
+/**
+ * KonsoleKalendar is the base class of the project
+ */
 class KonsoleKalendar
 {
   public:
     KonsoleKalendar(KonsoleKalendarVariables &variables);
     ~KonsoleKalendar();
 
-   /*
+   /**
     * Visualisez what we need
     */
     void showInstance();
 
-   /*
+   /**
     *  Opens calendar file (now in our machine future from others)
     */
    bool openCalendar();
 
-   /*
+   /**
     * Closes calendar.
     */
    void closeCalendar();
 
-   /*
+   /**
     * Imports calendar file
     */
 
    void importCalendar();
 
-   /*
+   /**
     * Add event to calendar
     */
    void addEvent();
 
-   /*
+   /**
     * Change event
     */
 
    void changeEvent();
 
-   /*
+   /**
     * Delete event
     */
 
    void deleteEvent();
 
-   /*
+   /**
     * Detect if event already exists
+    *
+    * @param  startdate Starting date
+    * @param  enddate   Ending date
+    * @param  summary   Which summary event should have have
     */
 
    bool isEvent( QDateTime startdate, QDateTime enddate, QString summary );
 
+   /**
+    * Creates calendar file (If it doesn't exists)
+    */
+
    bool createCalendar();
 
   private:
+
+   /**
+    * Prints event list in many formats
+    *
+    * @param eventlist which event we should print
+    */
+
     void printEventList( Event::List *eventList );
-    
+
+   /**
+    * Variables that changes stuff in programm
+    */
     KonsoleKalendarVariables m_variables;
+   /**
+    * Calendar file itself
+    */
     CalendarLocal *m_Calendar;
 };
 
