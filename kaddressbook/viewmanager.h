@@ -331,7 +331,7 @@ class ViewManager : public QWidget
     /**
       Import a VCard that has been dragged.
      */
-    void importVCard( const QString &, bool );
+    void importVCard( const KURL&, bool );
 
   private:
     KTrader::OfferList availablePlugins( const QString &type );

@@ -24,6 +24,9 @@
 #ifndef GEOWIDGET_H
 #define GEOWIDGET_H
 
+#include <qwidget.h>
+#include <kdialogbase.h>
+
 namespace KABC {
 class Geo;
 }
@@ -35,8 +38,7 @@ class KDoubleSpinBox;
 
 class QLabel;
 class QSpinBox;
-
-#include <qwidget.h>
+class QPushButton;
 
 class GeoWidget : public QWidget
 {
@@ -60,17 +62,39 @@ class GeoWidget : public QWidget
     void changed();
 
   private slots:
+    void editGeoData();
+
+  private:
+    KDoubleSpinBox *mLatitudeBox;
+    KDoubleSpinBox *mLongitudeBox;
+
+    QPushButton *mExtendedButton;
+};
+
+class GeoDialog : public KDialogBase
+{
+  Q_OBJECT
+
+  public:
+    GeoDialog( QWidget *parent, const char *name = 0 );
+    ~GeoDialog();
+
+    void setLatitude( double latitude );
+    double latitude() const;
+
+    void setLongitude( double longitude );
+    double longitude() const;
+
+  private slots:
     void updateInputs();
 
-    void decimalInputChanged();
     void sexagesimalInputChanged();
     void geoMapChanged();
+    void cityInputChanged();
 
   private:
     GeoMapWidget *mMapWidget;
-
-    KDoubleSpinBox *mLatitudeBox;
-    KDoubleSpinBox *mLongitudeBox;
+    KComboBox *mCityCombo;
 
     QSpinBox *mLatDegrees;
     QSpinBox *mLatMinutes;

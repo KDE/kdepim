@@ -49,6 +49,7 @@
 #include <kmultipledrag.h>
 #include <libkdepim/kvcarddrag.h>
 #include <kstandarddirs.h>
+#include <kurldrag.h>
 
 #include "addresseeeditorwidget.h"
 #include "addresseeutil.h"
@@ -567,23 +568,19 @@ void ViewManager::dropped( QDropEvent *e )
   kdDebug(5720) << "ViewManager::dropped: got a drop event" << endl;
 
   QString clipText, vcards;
-  QStrList urls;
+  KURL::List urls;
 
-  if ( QUriDrag::decode( e, urls) ) {
-    QPtrListIterator<char> it( urls );
+  if ( KURLDrag::decode( e, urls) ) {
+    KURL::List::Iterator it = urls.begin();
     int c = urls.count();
     if ( c > 1 ) {
       QString questionString = i18n( "Import one contact into your addressbook?", "Import %n contacts into your addressbook?", c );
       if ( KMessageBox::questionYesNo( this, questionString, i18n( "Import Contacts?" ) ) == KMessageBox::Yes ) {
-        for ( ; it.current(); ++it) {
-          KURL url(*it);
-          emit importVCard( url.path(), false );
-        }
+        for ( ; it != urls.end(); ++it ) 
+          emit importVCard( *it, false );
       }
-    } else if ( c == 1 ) {
-      KURL url(*it);
-      emit importVCard( url.path(), true );
-    }
+    } else if ( c == 1 )
+      emit importVCard( *it, true );
   } else if ( KVCardDrag::decode( e, vcards ) ) {
     KABC::Addressee addr;
     KABC::VCardConverter converter;

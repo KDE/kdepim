@@ -413,19 +413,14 @@ void AddresseeEditorWidget::setupTab3()
   QGridLayout *layout = new QGridLayout( tab3, 1, 2 );
   layout->setMargin( KDialogBase::marginHint() );
   layout->setSpacing( KDialogBase::spacingHint() );
+  layout->setColStretch( 1, 1 );
   
-  QLabel *label;
-
   //////////////////////////////////////
   // Geo
-  label = new QLabel( i18n( "Geo:" ), tab3 );
-  label->setAlignment( Qt::AlignTop | Qt::AlignLeft );
-  layout->addWidget( label, 0, 0 );
   mGeoWidget = new GeoWidget( tab3 );
   mGeoWidget->setMinimumSize( mGeoWidget->sizeHint() );
   connect( mGeoWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
-  label->setBuddy( mGeoWidget );
-  layout->addWidget( mGeoWidget, 0, 1, Qt::AlignTop );
+  layout->addWidget( mGeoWidget, 0, 0, Qt::AlignTop );
 
    // Build the layout and add to the tab widget
   layout->activate(); // required

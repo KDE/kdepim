@@ -22,9 +22,10 @@
 */                                                                      
 
 #include <kabc/geo.h>
+#include <kaccelmanager.h>
 #include <kcombobox.h>
 #include <kdebug.h>
-#include <kdialog.h>
+#include <kiconloader.h>
 #include <klocale.h>
 #include <knuminput.h>
 #include <kstandarddirs.h>
@@ -32,49 +33,128 @@
 #include <qgroupbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qlistbox.h>
 #include <qpainter.h>
 #include <qpixmap.h>
+#include <qpushbutton.h>
 
 #include "geowidget.h"
 
+class GeoDataItem : public QListBoxItem
+{
+  public:
+    GeoDataItem( QListBox *parent )
+      : QListBoxItem( parent ) {}
+
+    void setLatitude( double latitude ) { mLatitude = latitude; }
+    double latitude() const { return mLatitude; }
+
+    void setLongtitude( double longitude ) { mLongitude = longitude; }
+    double longitude() const { return mLongitude; }
+
+  private:
+    double mLatitude;
+    double mLongitude;
+};
+
 GeoWidget::GeoWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name ), mLatitude( 0 ), mLongitude( 0 )
+  : QWidget( parent, name )
 {
   QLabel *label = 0;
 
-  QGridLayout *topLayout = new QGridLayout( this, 2, 2 );
+  QGridLayout *topLayout = new QGridLayout( this, 3, 3 );
   topLayout->setMargin( KDialog::marginHint() );
   topLayout->setSpacing( KDialog::spacingHint() );
 
-  mMapWidget = new GeoMapWidget( this );
-  topLayout->addMultiCellWidget( mMapWidget, 0, 1, 0, 0 );
+  label = new QLabel( this );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "package_network", KIcon::Desktop ) );
+  topLayout->addMultiCellWidget( label, 0, 2, 0, 0 );
 
-  QGroupBox *decimalGroup = new QGroupBox( 0, Vertical, i18n( "Decimal" ), this );
-  QGridLayout *decimalLayout = new QGridLayout( decimalGroup->layout(), 2, 2 );
+  label = new QLabel( i18n( "Latitude:" ), this );
+  topLayout->addWidget( label, 0, 1 );
 
-  label = new QLabel( i18n( "Latitude:" ), decimalGroup );
-  decimalLayout->addWidget( label, 0, 0 );
-
-  mLatitudeBox = new KDoubleSpinBox( -90, 90, 0.5, 0, 6, decimalGroup );
+  mLatitudeBox = new KDoubleSpinBox( -90, 90, 0.5, 0, 6, this );
   mLatitudeBox->setSuffix( "°" );
-  decimalLayout->addWidget( mLatitudeBox, 0, 1 );
+  topLayout->addWidget( mLatitudeBox, 0, 2 );
   label->setBuddy( mLatitudeBox );
 
-  label = new QLabel( i18n( "Longitude:" ), decimalGroup );
-  decimalLayout->addWidget( label, 1, 0 );
+  label = new QLabel( i18n( "Longitude:" ), this );
+  topLayout->addWidget( label, 1, 1 );
 
-  mLongitudeBox = new KDoubleSpinBox( -180, 180, 0.5, 0, 6, decimalGroup );
+  mLongitudeBox = new KDoubleSpinBox( -180, 180, 0.5, 0, 6, this );
   mLongitudeBox->setSuffix( "°" );
-  decimalLayout->addWidget( mLongitudeBox, 1, 1 );
+  topLayout->addWidget( mLongitudeBox, 1, 2 );
   label->setBuddy( mLongitudeBox );
 
-  topLayout->addWidget( decimalGroup, 0, 1 );
+  mExtendedButton = new QPushButton( i18n( "Edit Geo Data..." ), this );
+  topLayout->addMultiCellWidget( mExtendedButton, 2, 2, 1, 2 );
 
-  QGroupBox *sexagesimalGroup = new QGroupBox( 0, Vertical, i18n( "Sexagesimal" ), this );
+  connect( mLatitudeBox, SIGNAL( valueChanged( double ) ),
+           SIGNAL( changed() ) );
+  connect( mLongitudeBox, SIGNAL( valueChanged( double ) ),
+           SIGNAL( changed() ) );
+  connect( mExtendedButton, SIGNAL( clicked() ),
+           SLOT( editGeoData() ) );
+
+  KAcceleratorManager::manage( this );
+}
+
+GeoWidget::~GeoWidget()
+{
+}
+
+void GeoWidget::setGeo( const KABC::Geo &geo )
+{
+  mLatitudeBox->setValue( geo.latitude() );
+  mLongitudeBox->setValue( geo.longitude() );
+}
+
+KABC::Geo GeoWidget::geo()
+{
+  KABC::Geo geo;
+
+  geo.setLatitude( mLatitudeBox->value() );
+  geo.setLongitude( mLongitudeBox->value() );
+
+  return geo;
+}
+
+void GeoWidget::editGeoData()
+{
+  GeoDialog dlg( this );
+
+  dlg.setLatitude( mLatitudeBox->value() );
+  dlg.setLongitude( mLongitudeBox->value() );
+
+  if ( dlg.exec() ) {
+    mLatitudeBox->setValue( dlg.latitude() );
+    mLongitudeBox->setValue( dlg.longitude() );
+  }
+}
+
+
+
+GeoDialog::GeoDialog( QWidget *parent, const char *name )
+  : KDialogBase( Plain, i18n( "Geo Data Input" ), Ok | Cancel, Ok,
+                 parent, name, true, true )
+{
+  QFrame *page = plainPage();
+
+  QGridLayout *topLayout = new QGridLayout( page, 2, 2, marginHint(),
+                                            spacingHint() );
+  topLayout->setRowStretch( 1, 1 );
+  
+  mMapWidget = new GeoMapWidget( page );
+  topLayout->addMultiCellWidget( mMapWidget, 0, 1, 0, 0 );
+
+  mCityCombo = new KComboBox( page );
+  topLayout->addWidget( mCityCombo, 0, 1 );
+
+  QGroupBox *sexagesimalGroup = new QGroupBox( 0, Vertical, i18n( "Sexagesimal" ), page );
   QGridLayout *sexagesimalLayout = new QGridLayout( sexagesimalGroup->layout(),
                                                     2, 5 );
 
-  label = new QLabel( i18n( "Latitude:" ), sexagesimalGroup );
+  QLabel *label = new QLabel( i18n( "Latitude:" ), sexagesimalGroup );
   sexagesimalLayout->addWidget( label, 0, 0 );
 
   mLatDegrees = new QSpinBox( 0, 90, 1, sexagesimalGroup );
@@ -98,7 +178,7 @@ GeoWidget::GeoWidget( QWidget *parent, const char *name )
   label = new QLabel( i18n( "Longitude:" ), sexagesimalGroup );
   sexagesimalLayout->addWidget( label, 1, 0 );
 
-  mLongDegrees = new QSpinBox( 0, 90, 1, sexagesimalGroup );
+  mLongDegrees = new QSpinBox( 0, 180, 1, sexagesimalGroup );
   mLongDegrees->setSuffix( "°" );
   sexagesimalLayout->addWidget( mLongDegrees, 1, 1 );
 
@@ -119,11 +199,8 @@ GeoWidget::GeoWidget( QWidget *parent, const char *name )
 
   connect( mMapWidget, SIGNAL( changed() ),
            SLOT( geoMapChanged() ) );
-
-  connect( mLatitudeBox, SIGNAL( valueChanged( double ) ),
-           SLOT( decimalInputChanged() ) );
-  connect( mLongitudeBox, SIGNAL( valueChanged( double ) ),
-           SLOT( decimalInputChanged() ) );
+  connect( mCityCombo, SIGNAL( activated( int ) ),
+           SLOT( cityInputChanged() ) );
   connect( mLatDegrees, SIGNAL( valueChanged( int ) ),
            SLOT( sexagesimalInputChanged() ) );
   connect( mLatMinutes, SIGNAL( valueChanged( int ) ),
@@ -142,33 +219,62 @@ GeoWidget::GeoWidget( QWidget *parent, const char *name )
            SLOT( sexagesimalInputChanged() ) );
 }
 
-GeoWidget::~GeoWidget()
+GeoDialog::~GeoDialog()
 {
 }
 
-void GeoWidget::setGeo( const KABC::Geo &geo )
+void GeoDialog::setLatitude( double latitude )
 {
-  mLatitude = geo.latitude();
-  mLongitude = geo.longitude();
+  mLatitude = latitude;
+  updateInputs();
+}
+
+double GeoDialog::latitude() const
+{
+  return mLatitude;
+}
+
+void GeoDialog::setLongitude( double longitude )
+{
+  mLongitude = longitude;
+  updateInputs();
+}
+
+double GeoDialog::longitude() const
+{
+  return mLongitude;
+}
+
+void GeoDialog::sexagesimalInputChanged()
+{
+  mLatitude = (float)( mLatDegrees->value() + (float)mLatMinutes->value() /
+                       60 + (float)mLatSeconds->value() / 3600 );
+
+  mLatitude *= ( mLatDirection->currentItem() == 1 ? -1 : 1 );
+
+  mLongitude = (float)( mLongDegrees->value() + (float)mLongMinutes->value() /
+                       60 + (float)mLongSeconds->value() / 3600 );
+
+  mLongitude *= ( mLongDirection->currentItem() == 1 ? -1 : 1 );
 
   updateInputs();
 }
 
-KABC::Geo GeoWidget::geo()
+void GeoDialog::geoMapChanged()
 {
-  KABC::Geo geo;
+  mLatitude = mMapWidget->latitude();
+  mLongitude = mMapWidget->longitude();
 
-  geo.setLatitude( mLatitude );
-  geo.setLongitude( mLongitude );
-
-  return geo;
+  updateInputs();
 }
 
-void GeoWidget::updateInputs()
+void GeoDialog::cityInputChanged()
+{
+}
+
+void GeoDialog::updateInputs()
 {
   // hmm, doesn't look nice, but there is no better way AFAIK
-  mLatitudeBox->blockSignals( true );
-  mLongitudeBox->blockSignals( true );
   mLatDegrees->blockSignals( true );
   mLatMinutes->blockSignals( true );
   mLatSeconds->blockSignals( true );
@@ -181,9 +287,6 @@ void GeoWidget::updateInputs()
   mMapWidget->setLatitude( mLatitude );
   mMapWidget->setLongitude( mLongitude );
   mMapWidget->update();
-
-  mLatitudeBox->setValue( mLatitude );
-  mLongitudeBox->setValue( mLongitude );
 
   int degrees, minutes, seconds;
   double latitude = mLatitude;
@@ -211,8 +314,6 @@ void GeoWidget::updateInputs()
   mLongSeconds->setValue( seconds );
   mLongDirection->setCurrentItem( mLongitude < 0 ? 1 : 0 );
 
-  mLatitudeBox->blockSignals( false );
-  mLongitudeBox->blockSignals( false );
   mLatDegrees->blockSignals( false );
   mLatMinutes->blockSignals( false );
   mLatSeconds->blockSignals( false );
@@ -223,42 +324,7 @@ void GeoWidget::updateInputs()
   mLongDirection->blockSignals( false );
 }
 
-void GeoWidget::decimalInputChanged()
-{
-  mLatitude = mLatitudeBox->value();
-  mLongitude = mLongitudeBox->value();
 
-  updateInputs();
-
-  emit changed();
-}
-
-void GeoWidget::sexagesimalInputChanged()
-{
-  mLatitude = (float)( mLatDegrees->value() + (float)mLatMinutes->value() /
-                       60 + (float)mLatSeconds->value() / 3600 );
-
-  mLatitude *= ( mLatDirection->currentItem() == 1 ? -1 : 1 );
-
-  mLongitude = (float)( mLongDegrees->value() + (float)mLongMinutes->value() /
-                       60 + (float)mLongSeconds->value() / 3600 );
-
-  mLongitude *= ( mLongDirection->currentItem() == 1 ? -1 : 1 );
-
-  updateInputs();
-
-  emit changed();
-}
-
-void GeoWidget::geoMapChanged()
-{
-  mLatitude = mMapWidget->latitude();
-  mLongitude = mMapWidget->longitude();
-
-  updateInputs();
-
-  emit changed();
-}
 
 GeoMapWidget::GeoMapWidget( QWidget *parent, const char *name )
   : QWidget( parent, name ), mLatitude( 0 ), mLongitude( 0 )

@@ -36,6 +36,7 @@
 #include <kdebug.h>
 #include <kfiledialog.h>
 #include <kglobal.h>
+#include <kio/netaccess.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kprinter.h>
@@ -95,8 +96,8 @@ KAddressBook::KAddressBook( QWidget *parent, const char *name )
   connect( mViewManager, SIGNAL( executed( const QString& ) ),
            SLOT( addresseeExecuted( const QString& ) ) );
   connect( mViewManager, SIGNAL( modified() ), SLOT( viewModified() ) );
-  connect( mViewManager, SIGNAL( importVCard( const QString&, bool ) ),
-           SLOT( importVCard( const QString&, bool ) ) );
+  connect( mViewManager, SIGNAL( importVCard( const KURL&, bool ) ),
+           SLOT( importVCard( const KURL&, bool ) ) );
 
   mLdapSearchDialog = 0;
   mConfigureDialog = 0;
@@ -322,35 +323,37 @@ void KAddressBook::importCSV()
 
 void KAddressBook::importVCardSimple()
 {
-  importVCard( QString::null, true );
+  importVCard( KURL(), true );
 }
 
 
-void KAddressBook::importVCard( const QString &file, bool showDialog )
+void KAddressBook::importVCard( const KURL &url, bool showDialog )
 {
   QString fileName;
+  KURL fileUrl;
 
-  if ( file )
-    fileName = file;
+  if ( url.isEmpty() )
+    fileUrl = KFileDialog::getOpenURL( QString::null, "*.vcf|vCards", 0,
+                                       i18n( "Select vCard to Import" ) );
   else
-    fileName = KFileDialog::getOpenFileName( QString::null, "*.vcf|vCards", 0,
-                                             i18n( "Select vCard to Import" ) );
+    fileUrl = url;
 
-  if ( !fileName.isEmpty() ) {
+  if ( !KIO::NetAccess::download( fileUrl, fileName ) ) {
     KABC::VCardConverter converter;
     KABC::Addressee addr;
     QFile file( fileName );
 
     file.open( IO_ReadOnly );
     QByteArray rawData = file.readAll();
-    QString data = QString::fromUtf8( rawData.data(), rawData.size() + 1 );
-    bool ok = false;
+    file.close();
 
-    if ( data.contains( "VERSION:3.0" ) ) {
+    QString data = QString::fromUtf8( rawData.data(), rawData.size() + 1 );
+
+    bool ok = false;
+    if ( data.contains( "VERSION:3.0" ) )
       ok = converter.vCardToAddressee( data, addr, KABC::VCardConverter::v3_0 );
-    } else if ( data.contains( "VERSION:2.1" ) ) {
+    else if ( data.contains( "VERSION:2.1" ) )
       ok = converter.vCardToAddressee( data, addr, KABC::VCardConverter::v2_1 );
-    }
 
     if ( !addr.isEmpty() && ok ) {
       // Add it to the document, then let the user edit it. We use a
@@ -371,6 +374,9 @@ void KAddressBook::importVCard( const QString &file, bool showDialog )
 
       KMessageBox::sorry( this, text, i18n( "vCard Import Failed" ) );
     }
+
+    if ( !fileUrl.isLocalFile() )
+      KIO::NetAccess::removeTempFile( fileName );
   }
 }
 

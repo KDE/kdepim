@@ -122,7 +122,7 @@ class KAddressBook : public QWidget
     /**
       Import VCard files, the version is detected automatically.
      */
-    void importVCard( const QString &, bool );
+    void importVCard( const KURL&, bool );
 
     /**
       Import VCard file. Simple refers to the fact that no QString is passed
