@@ -35,7 +35,7 @@ class CalFormat;
 /**
   This class provides a calendar stored as a local file.
 */
-class CalendarLocal : public Calendar, public IncidenceBase::Observer
+class CalendarLocal : public Calendar
 {
   public:
     /** constructs a new calendar, with variables initialized to sane values. */

@@ -54,7 +54,7 @@ class CalFilter;
   visible in the Calendar. You shouldn't delete any Event object you get from
   Calendar.
 */
-class Calendar : public CustomProperties
+class Calendar : public CustomProperties, public IncidenceBase::Observer
 {
   public:
     Calendar();

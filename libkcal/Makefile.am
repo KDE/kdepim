@@ -21,7 +21,7 @@ libkcal_la_SOURCES = \
         calfilter.cpp \
         person.cpp period.cpp duration.cpp \
         dndfactory.cpp \
-        filestorage.cpp \
+        filestorage.cpp calendarimap.cpp \
         compat.cpp
 
 METASOURCES = AUTO
