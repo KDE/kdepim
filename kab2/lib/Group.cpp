@@ -1,3 +1,4 @@
+#include <iostream>
 #include <KabGroup.h>
 
 using namespace KAB;
@@ -12,6 +13,7 @@ Group::save(QDataStream & str)
   void
 KAB::Group::load(QDataStream & str)
 {
+  cerr << "Group::load" << endl;
   Entity::load(str);
   str >> members_;
 }

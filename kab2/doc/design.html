@@ -1,14 +1,15 @@
 <HTML>
 <HEAD>
-<TITLE>KabII Design</TITLE>
+<TITLE>Kab2 Design</TITLE>
 </HEAD>
 <BODY>
 
 <CENTER>
 
-<H1>KabII Design</H1>
+<H1>Kab2 Design</H1>
 <H2>Rik Hemsley &lt;<A HREF="mailto:rik@kde.org">rik@kde.org</A>&gt;</H2>
-<H3>Jul 31 1999</H3>
+<H3>Draft #2</H3>
+<H3>August 24 1999</H3>
 
 </CENTER>
 
@@ -21,8 +22,9 @@ plugins (for importing from other formats).
 </P>
 <P>
 The design of KAB 2 is intended to make use of the advanced mechanisms provided
-by KDE 2. This includes CORBA communication, which gives excellent network
-transparency while preserving a useful programmers' API.
+by KDE 2. In the future it is hoped that access to kab2 may be provided via
+CORBA communication. This would give excellent network transparency while
+preserving a useful API.
 </P>
 
 <H4>Description</H4>
@@ -35,7 +37,7 @@ addressbooks will appear in the user interface, and be accessible through
 the API.
 </P>
 <P>
-Addressbooks will be communicated with via CORBA. A standard idl will be
+Addressbooks will be communicated with via TCP/IP. A standard protocol will be
 used that provides a consistent interface and allows for accessing entities
 within each addressbook. This interface will not be visible to the user nor
 the application programmer as it will be hidden behind the API.
@@ -59,15 +61,15 @@ new records as best as it can.
 
 <H4>References</H4>
 <P>
-The API documentation for kab is available <A HREF="../../ab_test/v3/include/doc/index.html">here</A>
+The API documentation (in kdoc format) for libkab2 is available in <A HREF="srcdoc/index.html">kdoc</A> or <A HREF="srcdox/html/index.html">doxygen</A> format.
 </P>
 <P>
-The IDL for kab is available <A HREF="../../corba/kab/server/addressbook.idl">here</A>
+A draft IDL for kab2 is available <A HREF="kaddressbook.idl">here</A> (A pretty HTML version is <A HREF="kaddressbook.idl.html">here</A>).
 </P>
 
 <H4>Diagrammatic representation of the structure of KAB 2</H4>
 <CENTER>
-<IMG SRC="kab.gif" ALT="KAB structure diagram goes here">
+<IMG SRC="kab2.gif" ALT="KAB structure diagram goes here">
 </CENTER>
 
 <H4>Contacts</H4>

@@ -18,18 +18,25 @@
 const int PORT = 6566; // AB
 
   inline Q_UINT32
-decodeToInt(char * s)
-{ return (s[0] << 24) | (s[1] << 16) | (s[2] << 8) | s[3]; }
+decodeToInt(unsigned char * s)
+{
+  Q_UINT32 i = 0uL;
+  i |= s[0] << 24;
+  i |= s[1] << 16;
+  i |= s[2] << 8;
+  i |= s[3];
+  return i;
+}
 
-  char *
+  unsigned char *
 fourOctets(Q_UINT32 i)
 {
-  char * s = new char[4];
+  unsigned char * s = new unsigned char[4];
 
-  s[0] = (i >> 24)  & 0x000000ff;
-  s[1] = (i >> 16)  & 0x000000ff;
-  s[2] = (i >> 8)   & 0x000000ff;
-  s[3] = i          & 0x000000ff;
+  s[0] = (i & 0xff000000) >> 24;
+  s[1] = (i & 0x00ff0000) >> 16;
+  s[2] = (i & 0x0000ff00) >> 8;
+  s[3] =  i & 0x000000ff;
 
   return s;
 }
@@ -47,7 +54,17 @@ AddressBookClient::AddressBookClient(const QString & name, const KURL & url)
         
 AddressBookClient::~AddressBookClient()
 {
+  quit();
   _disconnect();
+}
+
+  void
+AddressBookClient::quit()
+{
+  char q = 'q';
+  int sz = ::write(fd, &q, 1);
+  if (sz != 1)
+    perror("write");
 }
 
   Entity *
@@ -57,24 +74,28 @@ AddressBookClient::entity(const QString & key)
   int l = strlen(a);
   char * s = new char(5 + l);
   s[0] = 'e';
-  char * c = fourOctets(l);
+  unsigned char * c = fourOctets(l);
   memcpy(s + 1, c, 4);
   memcpy(s + 5, a, l);
   int total_out = 1 + 4 + l;
   int sz = ::write(fd, a, total_out);
 
   if (sz != total_out) {
+    cerr << "AddressBookClient::entity(): Couldn't write the correct number of bytes" << endl;
     // Argh
   }
     
   delete [] c;
   c = 0;
 
-  c = new char[4];
+  c = new unsigned char[4];
   sz = ::read(fd, c, 4);
 
   if (sz != 4) {
-    // Argh
+    cerr << "AddressBookClient::entity(): Couldn't read the correct number of bytes" << endl;
+    delete [] c;
+    c = 0;
+    return 0;
   }
 
   int entitySize = decodeToInt(c);
@@ -83,6 +104,7 @@ AddressBookClient::entity(const QString & key)
   c = 0;
 
   if (entitySize == 0) {
+    cerr << "AddressBookClient::entity(): entitySize == 0 -> not found" << endl;
     // Not found.
     return 0;
   }
@@ -92,7 +114,8 @@ AddressBookClient::entity(const QString & key)
   sz = ::read(fd, buf, entitySize);
 
   if (sz != entitySize) {
-    // Argh
+    cerr << "AddressBookClient::entity(): entitySize != what I was expecting" << endl;
+    return 0;
   }
 
   QByteArray qbuf;
@@ -119,43 +142,110 @@ AddressBookClient::write(Entity * e)
   QByteArray a;
   QDataStream s(a, IO_WriteOnly);
   e->save(s);
+
+  QDataStream s2(a, IO_ReadOnly);
+  e->load(s2);
+  cerr << "Entity read back has name \"" << e->name() << "\"" << endl;
+
+  cerr << "Entity id == \"" << e->id() << "\"" << endl;
   
   const char * entity = a.data();
   int entitySize = a.size();
   
   const char * key = e->id().ascii();
   int keySize = strlen(key);
+  cerr << "Entity size     == " << entitySize << endl;
+  cerr << "Key size        == " << keySize << endl;
   
   // We need to send 'a' [total] [type] [keySize] [key] [entity]
 
-  // type keySize keySize entitySize
+  // Create the 'total' field - the server will be expecting a number which
+  // specifies exactly how many octets it needs to read.
   Q_UINT32 t = 1 + 4 + keySize + entitySize;
   
-  char * total_size = fourOctets(t);
-  char * key_size = fourOctets(keySize);
+  cerr << "Total info size == " << t << endl;
+  
+  unsigned char * total_size = fourOctets(t);
+  unsigned char * key_size = fourOctets(keySize);
 
+  fprintf(stderr, "total_size: %d %d %d %d\n", total_size[0], total_size[1], total_size[2], total_size[3]);
+
+  cerr << "decoded total_size == " << decodeToInt(total_size) << endl;
+  cerr << "decoded key_size   == " << decodeToInt(key_size) << endl;
+
+  // The total amount of octets we're going to write. The server will first
+  // read the command name (here 'a') and the total (4 bytes -> uint32).
   int total_out = 1 + 4 + t; // 'a' [total] t
+  
+  cerr << "Total data size == " << total_out << endl;
+  
+  int offset = 0;
+  
   char * out = new char [total_out];
-  out[0] = 'a';
-  memcpy(out + 1, total_size, 4);
-  char type = (e->type() == (EntityTypeEntity ? 'e' : 'g'));
-  out[5] = type;
-  memcpy(out + 6, key_size, 4);
-  memcpy(out + 10, key, keySize);
-  memcpy(out + 10 + keySize, entity, entitySize);
+  // Command name.
+  *(out + offset) = 'a';
+ 
+  offset += 1;
+ 
+  // Total size.
+  memcpy(out + offset, total_size, 4);
+  
+  offset += 4;
+
+  // Entity type.
+  char type = (e->type() == EntityTypeEntity) ? 'e' : 'g';
+  cerr << "AddressBookClient::write(): entity type is " << type << endl;
+  *(out + offset) = type;
+
+  offset += 1;
+
+  // Key size.
+  memcpy(out + offset, key_size, 4);
+
+  offset += 4;
+  
+  memcpy(out + offset, key, keySize);
+  
+  offset += keySize;
+  
+  memcpy(out + offset, entity, entitySize);
+
+  cerr << "Writing " << entitySize << " bytes" << endl;
 
   int sz = ::write(fd, out, total_out);
 
   if (sz != total_out) {
-    // Argh
+    cerr << "Wrote " << sz << " bytes" << endl;
+    cerr << "AddressBookClient::write(): Couldn't write the correct number of bytes" << endl;
+    delete [] total_size;
+    total_size = 0;
+    delete [] key_size;
+    key_size = 0;
+    delete [] out;
+    out = 0;
+    return false;
   }
+
+  cerr << "Wrote " << sz << " bytes" << endl;
 
   char retval;
 
-  sz = ::read(fd, &retval, 1);
+  cerr << "Reading retval" << endl;
+  sz = ::read(fd, (void *)&retval, (size_t)1);
+  if (sz == -1)
+    perror("read");
+  cerr << "Read " << sz << " bytes" << endl;
+  cerr << "Retval == '" << retval << "'" << endl;
 
   if (sz != 1) {
-    // Argh
+    cerr << "AddressBookClient::write(): Couldn't read the correct number of bytes" << endl;
+    delete [] total_size;
+    total_size = 0;
+    delete [] key_size;
+    key_size = 0;
+    delete [] out;
+    out = 0;
+    return false;
   }
 
   delete [] total_size;
@@ -177,21 +267,27 @@ AddressBookClient::remove(const QString & key)
   char * s = new char(5 + l);
   s[0] = 'e';
   
-  char * c = fourOctets(l);
+  unsigned char * c = fourOctets(l);
  
   memcpy(s + 5, a, l);
   
   int sz = ::write(fd, s, l);
   
   if (sz != l) {
-    // Argh
+    cerr << "AddressBookClient::remove(): Couldn't write the correct number of bytes" << endl;
+    delete [] s;
+    s = 0;
+    return false;
   }
 
   char retval;
   sz = ::read(fd, &retval, 1);
 
   if (sz != 1) {
-    // Argh
+    cerr << "AddressBookClient::remove(): Couldn't read the correct number of bytes" << endl;
+    delete [] s;
+    s = 0;
+    return false;
   }
 
   delete [] c;
@@ -220,15 +316,15 @@ AddressBookClient::allKeys()
   ssize_t sz = ::write(fd, (void *)&el, 1);
 
   if (sz != 1) {
-    // Argh
+    cerr << "AddressBookClient::allKeys(): Couldn't write the correct number of bytes" << endl;
     return l;
   }
 
-  char c[4];
+  unsigned char c[4];
   sz = ::read(fd, c, 4);
   
   if (sz != 4) {
-    // Argh 
+    cerr << "AddressBookClient::allKeys(): Couldn't read the correct number of bytes" << endl;
     return l;
   }
 
@@ -236,8 +332,10 @@ AddressBookClient::allKeys()
   length = decodeToInt(c);
   cerr << "length == " << length << endl;
 
-  if (length == 0)
+  if (length == 0) {
+    cerr << "AddressBookClient::allKeys(): No keys in addressbook" << endl;
     return l;
+  }
 
   for (Q_UINT32 i = 0; i != length; i++) {
 
@@ -246,7 +344,7 @@ AddressBookClient::allKeys()
     int keyLength = decodeToInt(c);
 
     if (keyLength == 0) {
-      // Argh
+      cerr << "AddressBookClient::allKeys(): Key length is 0 ?!?" << endl;
       return l;
     }
     
@@ -255,7 +353,7 @@ AddressBookClient::allKeys()
     sz = ::read(fd, buf, keyLength);
 
     if (sz != keyLength) {
-      // Argh
+      cerr << "AddressBookClient::allKeys(): Key length doesn't match read bytes" << endl;
       return l;
     }
 
@@ -265,6 +363,7 @@ AddressBookClient::allKeys()
     l.append(buf);
 
     delete [] buf;
+    buf = 0;
   }
 
   return l;
@@ -315,6 +414,7 @@ AddressBookClient::_connect()
   void
 AddressBookClient::_disconnect()
 {
-  ::close(fd);
+  if (-1 == ::close(fd))
+    perror("close");
 }
 

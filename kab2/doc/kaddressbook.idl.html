@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<TITLE>kaddressbook.idl.html</TITLE>
+</HEAD>
+<BODY BGcolor=#fff3f7 TEXT=#000000>
+<PRE>
+<FONT color=#a620f7>#ifndef __kaddressbook_idl__</FONT>
+<FONT color=#a620f7>#define __kaddressbook_idl__</FONT>
+
+<FONT color=#a620f7>#include </FONT><FONT color=#ff00ff>&lt;openparts.idl&gt;</FONT>
+
+<B><FONT color=#a62828>module</FONT></B> <B><FONT color=#288a51>KAddressBook</FONT></B>
+{
+
+  <FONT color=#0000ff>//forward references</FONT>
+  <B><FONT color=#a62828>interface</FONT></B> <B><FONT color=#288a51>AddressBook</FONT></B>;
+  <B><FONT color=#a62828>interface</FONT></B> <B><FONT color=#288a51>Group</FONT></B>;
+  <B><FONT color=#a62828>interface</FONT></B> <B><FONT color=#288a51>Entity</FONT></B>;
+  <B><FONT color=#a62828>interface</FONT></B> <B><FONT color=#288a51>Field</FONT></B>;
+
+  <B><FONT color=#a62828>typedef</FONT></B> sequence&lt;Entity&gt; <FONT color=#008a8e>EntityList</FONT>;
+  <B><FONT color=#a62828>typedef</FONT></B> sequence&lt;Group&gt; <FONT color=#008a8e>GroupList</FONT>;
+  <B><FONT color=#a62828>typedef</FONT></B> string <FONT color=#008a8e>key</FONT>;
+
+  <B><FONT color=#a62828>interface</FONT></B> <B><FONT color=#288a51>Entity</FONT></B> : <FONT color=#008a8e>KOM::Component</FONT>
+  {
+    void <FONT color=#008a8e>setName</FONT>(<B><FONT color=#288a51>in</FONT></B> string <FONT color=#008a8e>name</FONT>);
+
+    void <FONT color=#008a8e>addField</FONT>(<B><FONT color=#288a51>in</FONT></B> Field <FONT color=#008a8e>f</FONT>);
+    void <FONT color=#008a8e>removeField</FONT>(<B><FONT color=#288a51>in</FONT></B> Field <FONT color=#008a8e>f</FONT>);
+    void <FONT color=#008a8e>removeFieldByName</FONT>(<B><FONT color=#288a51>in</FONT></B> string <FONT color=#008a8e>fieldName</FONT>);
+  }; 
+
+  <B><FONT color=#a62828>interface</FONT></B> <B><FONT color=#288a51>Field</FONT></B>
+  {
+    wstring <FONT color=#008a8e>key</FONT>();
+    wstring <FONT color=#008a8e>type</FONT>();
+    wstring <FONT color=#008a8e>subType</FONT>();
+    wstring <FONT color=#008a8e>value</FONT>();
+
+    void <FONT color=#008a8e>setKey</FONT>(<B><FONT color=#288a51>in</FONT></B> string <FONT color=#008a8e>k</FONT>);
+    void <FONT color=#008a8e>setType</FONT>(<B><FONT color=#288a51>in</FONT></B> string <FONT color=#008a8e>t</FONT>);
+    void <FONT color=#008a8e>setSubType</FONT>(<B><FONT color=#288a51>in</FONT></B> string <FONT color=#008a8e>st</FONT>);
+    void <FONT color=#008a8e>setValue</FONT>(<B><FONT color=#288a51>in</FONT></B> string <FONT color=#008a8e>v</FONT>);
+  };
+
+  <B><FONT color=#a62828>interface</FONT></B> <B><FONT color=#288a51>Group</FONT></B>
+  {
+    wstring <FONT color=#008a8e>name</FONT>();
+    
+    void <FONT color=#008a8e>addEntity</FONT>(<B><FONT color=#288a51>in</FONT></B> Entity <FONT color=#008a8e>entity</FONT>);
+    void <FONT color=#008a8e>addGroup</FONT>(<B><FONT color=#288a51>in</FONT></B> Group <FONT color=#008a8e>group</FONT>);
+
+    GroupList <FONT color=#008a8e>subGroupList</FONT>();
+  };
+
+
+  <B><FONT color=#a62828>interface</FONT></B> <B><FONT color=#288a51>AddressBook</FONT></B>
+  {
+    GroupList <FONT color=#008a8e>topLevelGroupList</FONT>();
+    
+    void <FONT color=#008a8e>addGroup</FONT>(<B><FONT color=#288a51>in</FONT></B> Group <FONT color=#008a8e>g</FONT>);
+    
+    void <FONT color=#008a8e>addGroupByKey</FONT>(<B><FONT color=#288a51>in</FONT></B> key <FONT color=#008a8e>k</FONT>);
+
+    Group <FONT color=#008a8e>group</FONT>(<B><FONT color=#288a51>in</FONT></B> key <FONT color=#008a8e>k</FONT>);
+
+    Entity <FONT color=#008a8e>entity</FONT>(<B><FONT color=#288a51>in</FONT></B> key <FONT color=#008a8e>k</FONT>);
+
+    void <FONT color=#008a8e>remove</FONT>(<B><FONT color=#288a51>in</FONT></B> key <FONT color=#008a8e>k</FONT>);
+  };
+
+  <B><FONT color=#a62828>interface</FONT></B> <B><FONT color=#288a51>Browser</FONT></B>: <FONT color=#008a8e>OpenParts::MainWindow</FONT>
+  {
+     key <FONT color=#008a8e>addressBook</FONT>();
+     key <FONT color=#008a8e>group</FONT>();
+     key <FONT color=#008a8e>entity</FONT>();
+     Field <FONT color=#008a8e>field</FONT>();
+  };
+};
+
+<FONT color=#a620f7>#endif</FONT>
+</PRE>
+</BODY>
+</HTML>

@@ -19,22 +19,28 @@ int version = 1; // SET THIS WHEN THE PROTOCOL IS CHANGED !!
 int PORT = 6566;
 
   inline Q_UINT32
-decodeToInt(char * s)
-{ return (s[0] << 24) | (s[1] << 16) | (s[2] << 8) | s[3]; }
+decodeToInt(unsigned char * s)
+{
+  Q_UINT32 i = 0uL;
+  i |= s[0] << 24;
+  i |= s[1] << 16;
+  i |= s[2] << 8;
+  i |= s[3];
+  return i;
+}
 
-  char *
+  unsigned char *
 fourOctets(Q_UINT32 i)
 {
-  char * s = new char[4];
+  unsigned char * s = new unsigned char[4];
 
-  s[0] = (i >> 24)  & 0x000000ff;
-  s[1] = (i >> 16)  & 0x000000ff;
-  s[2] = (i >> 8)   & 0x000000ff;
-  s[3] = i          & 0x000000ff;
+  s[0] = (i & 0xff000000) >> 24;
+  s[1] = (i & 0x00ff0000) >> 16;
+  s[2] = (i & 0x0000ff00) >> 8;
+  s[3] =  i & 0x000000ff;
 
   return s;
 }
-
 
 const QCString welcomeMessage = "KAB " + QCString().setNum(version) + "\n"; 
 
@@ -76,7 +82,7 @@ processCommand(int fd)
   
   if (commandType != 'l') {
 
-    char total[4];
+    unsigned char total[4];
 
     nrecv = ::read(fd, total, (size_t)4);
 
@@ -87,6 +93,8 @@ processCommand(int fd)
 
     Q_UINT32 totalOctets = decodeToInt(total);
 
+    cerr << "Server: Total octets I must read is " << totalOctets << endl;
+
     if (totalOctets == 0) {
       cerr << "Server: Total number of octets to read is 0" << endl;
       return false;
@@ -95,12 +103,15 @@ processCommand(int fd)
     char * buf = new char[totalOctets];
 
     nrecv = ::read(fd, buf, (size_t)totalOctets);
+    
 
     if (nrecv != (int)totalOctets) {
       cerr << "Server: Couldn't read " << totalOctets << " octets" << endl;
       delete [] buf;
       return false;
     }
+    
+    cerr << "Server: Read " << totalOctets << " OK" << endl;
 
 
     s.setRawData(buf, totalOctets);
@@ -261,7 +272,7 @@ doReplace(int fd, const QByteArray & s)
 {
   char * d = s.data();
   
-  Q_UINT32 sizeOfEntity = decodeToInt(d);
+  Q_UINT32 sizeOfEntity = decodeToInt((unsigned char *)d);
 
   // The size of the key is what's left from the total after the entity.
   Q_UINT32 sizeOfKey    = s.size() - sizeOfEntity - 4;
@@ -293,8 +304,8 @@ doReplace(int fd, const QByteArray & s)
   e->load(str);
   
   // Remember to do 'resetRawData'
-  key.resetRawData(d + 8, sizeOfKey);
-  entityData.resetRawData(d + 8 + sizeOfKey, sizeOfEntity);
+  key.resetRawData(d + 4, sizeOfKey);
+  entityData.resetRawData(d + 4 + sizeOfKey, sizeOfEntity);
 
   // Write the new entity to the addressbook.
   ab->write(e);
@@ -307,7 +318,7 @@ doReplace(int fd, const QByteArray & s)
 doErase(int fd, const QByteArray & s)
 {
   char * d = s.data();
-  Q_UINT32 sizeOfKey = decodeToInt(d);
+  Q_UINT32 sizeOfKey = decodeToInt((unsigned char *)d);
   
   QByteArray key;
   
@@ -326,34 +337,50 @@ doAdd(int fd, const QByteArray & s)
 {
   cerr << "Server: Adding entity" << endl;
   char * d = s.data();
-  
-  Q_UINT32 sizeOfEntity = s.size() - 1;
+  char entityType = *d;
+  cerr << "Entity type : '" << entityType << "'" << endl;
+  unsigned char keySizeChars[4];
+  memcpy(keySizeChars, d + 1, 4);
+  Q_UINT32 keySize = decodeToInt(keySizeChars);
+  cerr << "Server: Entity's key size == " << keySize << endl;
+
+  char * key = d + 5;
+
+  Q_UINT32 sizeOfEntity = s.size() - 1 - 4 - keySize;
+
+  cerr << "Server: Size of entity data is " << sizeOfEntity << endl;
+
+  char * entityPtr = d + (1 + 4 + keySize);
   
   QByteArray entityData;
-  entityData.setRawData(d + 1, sizeOfEntity);
+  entityData.setRawData(entityPtr, sizeOfEntity);
   
   // We now have data to make the entity with.
   // Use the entity type to decide which type of entity to make.
   KAB::Entity * e;
-  if (d[0] == 'e') e = new KAB::Entity();
+  if (entityType == 'e') e = new KAB::Entity();
   else e = new KAB::Group();
+
+  e->setID(QString(key));
   
   // Create a data stream (using the data for the entity) and tell
   // the entity to load itself from that stream.
-  QDataStream str(entityData, IO_ReadOnly);
-  cerr << "Server: ,,," << endl;
-  e->load(str);
-  cerr << "Server: ,,," << endl;
+  QDataStream stream(entityData, IO_ReadOnly);
+  cerr << "Asking entity to load itself from my stream" << endl;
+  cerr << "-------------------------------------------" << endl;
+  e->load(stream);
+  cerr << "-------------------------------------------" << endl;
   cerr << "Server: Loaded entity from stream" << endl;
   cerr << "Server: Entity's name is \"" << e->name() << "\"" << endl;
   
   // Remember to do 'resetRawData'
-  entityData.resetRawData(d + 1, sizeOfEntity);
+  entityData.resetRawData(entityPtr, sizeOfEntity);
 
   // Write the new entity to the addressbook.
+  cerr << "Server: Writing entity to addressbook" << endl;
   ab->write(e);
 
-  cerr << "Server: Writing entity to backend" << endl;
+  cerr << "Server: Reporting success (writing '0')" << endl;
   char c = '0';
   ::write(fd, &c, 1);
 }
@@ -380,7 +407,7 @@ doFind(int fd, const QByteArray & s)
 
   Q_UINT32 sz = entityAsByteArray.size();
   
-  char * c = fourOctets(sz);
+  unsigned char * c = fourOctets(sz);
   ::write(fd, c, 4);
   delete [] c;
 }
@@ -406,7 +433,7 @@ doList(int fd)
 
   int sz = l.count();
   
-  char * c = fourOctets(sz);
+  unsigned char * c = fourOctets(sz);
   fprintf(stderr, "c == %d %d %d %d\n", c[0], c[1], c[2], c[3]);
   ::write(fd, c, 4);
   delete [] c;

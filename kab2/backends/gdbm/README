@@ -1,0 +1,21 @@
+Test backend implementation for kab2.
+
+A GDBM database is perhaps the easiest backend to write, and is actually quite
+useful for our purposes. GDBM is a tiny library, yet it's small and fast
+and supports enough features to make this implementation servicable yet easy
+to understand.
+
+There are only five methods that a backend implementation has to implement:
+
+bool init   (const KURL &);
+bool read   (const QCString &, QByteArray &);
+bool write  (const QCString &, const QByteArray &);
+bool remove (const QCString &);
+
+QStrList allKeys();
+
+As you can see, it's incredibly easy to map these methods to GDBM methods. If
+you don't see that, read the GDBM man page. It's really extremely simple.
+
+Questions, comments etc. should be directed to Rik <rik@kde.org>
+

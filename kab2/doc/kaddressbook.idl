@@ -1,0 +1,76 @@
+#ifndef __kaddressbook_idl__
+#define __kaddressbook_idl__
+
+#include <openparts.idl>
+
+module KAddressBook
+{
+
+  //forward references
+  interface AddressBook;
+  interface Group;
+  interface Entity;
+  interface Field;
+
+  typedef sequence<Entity> EntityList;
+  typedef sequence<Group> GroupList;
+  typedef string key;
+
+  interface Entity : KOM::Component
+  {
+    void setName(in string name);
+
+    void addField(in Field f);
+    void removeField(in Field f);
+    void removeFieldByName(in string fieldName);
+  }; 
+
+  interface Field
+  {
+    wstring key();
+    wstring type();
+    wstring subType();
+    wstring value();
+
+    void setKey(in string k);
+    void setType(in string t);
+    void setSubType(in string st);
+    void setValue(in string v);
+  };
+
+  interface Group
+  {
+    wstring name();
+    
+    void addEntity(in Entity entity);
+    void addGroup(in Group group);
+
+    GroupList subGroupList();
+  };
+
+
+  interface AddressBook
+  {
+    GroupList topLevelGroupList();
+    
+    void addGroup(in Group g);
+    
+    void addGroupByKey(in key k);
+
+    Group group(in key k);
+
+    Entity entity(in key k);
+
+    void remove(in key k);
+  };
+
+  interface Browser: OpenParts::MainWindow
+  {
+     key addressBook();
+     key group();
+     key entity();
+     Field field();
+  };
+};
+
+#endif

@@ -245,6 +245,11 @@ class Entity
      */
     virtual void load(QDataStream &);
 
+    /**
+     * @internal
+     */
+    void setID(const QString & s) { initialised_ = true; id_ = s; }
+
   protected:
     
     /**

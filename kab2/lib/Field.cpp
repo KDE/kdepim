@@ -18,12 +18,12 @@ Field::load(QDataStream & str)
 {
   cerr << "Field::load" << endl;
   str >> name_;
-  cerr << "Arse" << endl;
+  cerr << "- My name is \"" << name_ << "\"" << endl;
   str >> type_;
-  cerr << "Arse" << endl;
+  cerr << "- My type is \"" << type_ << "\"" << endl;
   str >> subType_;
-  cerr << "Arse" << endl;
+  cerr << "- My subtype is \"" << subType_ << "\"" << endl;
   str >> data_;
-  cerr << "Field::load done" << endl;
+  cerr << "Field: Done reading myself" << endl;
 }
 

@@ -1,0 +1,11 @@
+Test program for kab2.
+
+This program uses only the kab2 library to do all its work. As you will be able
+to see from the code, there is no need to know about anything going on behind
+the scenes.
+
+The code is extremely simple and the API is documented in the pim/kab2/doc
+directory.
+
+Questions, comments etc. should be directed to Rik <rik@kde.org>
+

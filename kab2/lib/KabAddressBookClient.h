@@ -80,6 +80,8 @@ class AddressBookClient
     Entity * entity(const QString &);
     Group * group(const QString &);
 
+    void quit();
+
   private:
     
     QString name_;

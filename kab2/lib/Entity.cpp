@@ -106,12 +106,16 @@ Entity::save(QDataStream & str)
   void
 Entity::load(QDataStream & str)
 {
+  cerr << "Entity::load()" << endl;
   str >> name_;
+  cerr << "- My name is \"" << name_ << "\"" << endl;
   int valCount;
   str >> valCount;
+  cerr << "- I am loading " << valCount << " value(s)" << endl;
   for (int i = 0; i < valCount; i++) {
     Field x;
     x.load(str);
+    cerr << "- Read a field with name \"" << x.name() << "\"" << endl;
     fields_.append(x);
   }
   int i;
@@ -119,6 +123,9 @@ Entity::load(QDataStream & str)
   type_ = (EntityType)i;
   str >> i;
   seq_ = i;
+  cerr << "Ok, I've read myself." << endl;
+  return;
+  cerr << "I should have returned by now" << endl;
 }
 
 
