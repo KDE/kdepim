@@ -5,22 +5,44 @@ Priority: optional
 Maintainer: Ivan E. Moore II <rkrusty@debian.org>
 Standards-Version: 3.1.1
 
-Package: kdepim
+Package: korganizer
+Architecture: any
+Section: x11
+Depends: ${shlibs:Depends}
+Suggests: kdebase, abbrowser
+Description: Personal organizer based on QT and KDE 
+ A complete calendar and scheduling program. KOrganizer supports
+ information interchange with other calendar applications through the
+ industry standard vCalendar file format.
+ .
+ KOrganizer aims to be a complete program for organizing your
+ appointments, contacts, projects, etc.  It is in the same spirit as
+ similar programs like the now ubiquitous Microsoft Outlook, Starfish
+ Internet Sidekick, Time & Chaos, etc. (all for the Microsoft Windows
+ platform, of course.)  Best of all, It reads and writes the vCalendar
+ file format NATIVELY (please see http://www.imc.org/pdi for more
+ information), which is now an industry-wide personal data interchange
+ format.  Because of this, you should be able to move from other modern
+ PIMs to KOrganizer with relative ease.  Current users of the popular
+ program ical should definitely take a look at KOrganizer and compare
+ features.
+ .
+ KOrganizer also offers full synchronization with your Palm Pilot, if you
+ have kpilot installed.
+
+Package: abbrowser
 Architecture: any
 Section: utils
-Replaces: kdepim-cvs
 Depends: ${shlibs:Depends}
-Conflicts: korganizer
-Suggests: kdebase
-Description: KDE Personal Information Management Applications
- This package contains the following programs: 
-  - korganizer
-  - kpilot
+Suggests: kdebase, korganizer
+Description: Address book reader
+ Address book reader for KDE
 
 Package: kdepim-dev
 Architecture: any
 Section: devel
-Replaces: kdepim-dev-cvs
-Depends: kdepim (= ${Source-Version}), libqt2.2-dev, kdelibs3-dev
+Replaces: kdepim-dev-cvs, korganizer-dev
+Depends: korganizer (= ${Source-Version}), abbrowser (= ${Source-Version}), libqt2.2-dev, kdelibs3-dev
 Description: Personal Information Management (development files)
  Development files for KDE related Personal Information Management apps
+ including abbrowser and korganizer

@@ -54,7 +54,14 @@ binary-arch: build
 	for i in `cat debian/undocumented.in | grep -v "#"`; do \
 	  echo "$$i.1" >> debian/undocumented ; \
 	done
-	dh_movefiles -pkdepim-dev $(kde_libdir)/*.a $(kde_libdir)/*.la 
+	for i in `find debian/ -type l -name "common"`; do \
+		rm $$i ;\
+		ln -s ../common $$i ;\
+	done
+	list=`cd debian/tmp && find ./ -type l -name "lib*.so" | sed -e 's#^./##'` ;\
+	dh_movefiles -pkdepim-dev $$list $(kde_libdir)/*.a $(kde_libdir)/*.la
+	abbrowserlist=`cd debian/tmp && find ./ -type l -name "*abbrowser*" | sed -e 's#^./##'` ;\
+	dh_movefiles -pabbrowser $$abbrowserlist
 	dh_undocumented 
 	dh_installdocs
 	dh_installmenu
