@@ -19,6 +19,7 @@
 #include <kmenubar.h>
 #include <ktoolbar.h>
 #include <kmessagebox.h>
+#include <kdebug.h>
 
 #include "task.h"
 #include "karm.h"
@@ -334,7 +335,7 @@ void Karm::newTask(QString caption, QListViewItem *parent)
 
 void Karm::newSubTask()
 {
-  Task *item = static_cast<Task*>( currentItem() );
+  QListViewItem *item = currentItem();
   if(!item)
     return;
   newTask(i18n("New Sub Task"), item);
@@ -379,47 +380,15 @@ void Karm::editTask()
   delete dialog;
 }
 
-namespace 
+void Karm::updateParents( QListViewItem* task, long totalDiff, long sessionDiff )
 {
-
-/**
- * Add all the times for each parent.
- *
- * This is a recursive routine to add all of the times for each parent along a top-level branch of the listview.
- * If task is a parent, add all the times of the leaf tasks under it, both total and session.
- * Then go to the next task on the subtree and add it up again for that task.
- */
-void accumulateParentTotals ( Task* task )
-{
-    if ( !task || task->childCount() == 0 )
-        return;
-
-    typedef SubtreeIterator<Karm, Task> SubIter;
-    using std::accumulate;
-
-    long total   = accumulate( SubIter( task ), SubIter(), 0, addTaskTotalTime );
-    long session = accumulate( SubIter( task ), SubIter(), 0, addTaskSessionTime );
-    task->setTotalTime( total );
-    task->setSessionTime( session );
-
-    SubIter next( task );
-    ++next;
-    accumulateParentTotals( *next );
-}
-
-void callAccumulateParentTotals( Task* task )
-{
-    // If a task has no parent, it is a top-level task in the list view. So add up all the times for it.
-    if ( ! task->QListViewItem::parent() )
-        accumulateParentTotals( task );
-}
-
-}
-
-void Karm::updateParents( QListViewItem*, long, long )
-{
-    typedef ListViewIterator<Karm, Task> AllIter;
-    std::for_each( AllIter( this ), AllIter(), callAccumulateParentTotals );
+  QListViewItem *item = task->parent();
+  while (item) {
+    Task *parrentTask = (Task *) item;
+    parrentTask->setTotalTime(parrentTask->totalTime()+totalDiff);
+    parrentTask->setSessionTime(parrentTask->sessionTime()+sessionDiff);
+    item = item->parent();
+  }
 }
 
 void Karm::deleteTask()
@@ -458,9 +427,9 @@ void Karm::deleteTask()
     }
     emit tasksChanged( activeTasks );
 
-    item->setSessionTime( 0 );
-    item->setTotalTime( 0 );
-    updateParents( item, 0, 0 );
+    long sessionTime = item->sessionTime();
+    long totalTime   = item->totalTime();
+    updateParents( item, -totalTime, -sessionTime );
     delete item;
 
     // remove root decoration if there is no more children.
