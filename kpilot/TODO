@@ -6,23 +6,24 @@ issues are periodically purged from this list.
 General TODO
 ============
 
-* Make the kpilotTest program able to do more than one sync in a run.
 * Make the FileInstallWidget use a KDirWatcher.
-* Add conduit-sync in the daemon as well.
-+ Make daemon able to sync more than once in a run.
-+ Close device at end of sync.
-- Look into possible buffer overflows in pi_socket structure.
-- Add a validator ensuring path lengths are kept < 14 chars for 
-  pilot-link <= 0.9.5
 * Handle real devfs better (regular USB support seems OK now).
 * Handle difference between pi_bind() "no such file" error and others.
-o Make pi_install_file amenable to use in a GUI program. [Move to a thread
-  in KDE3 and leave unsolved in KDE2]
-* Port conduits to new setup.
 * Add malsync conduit.
 * Fix local database & do regression testing
 * How *do* you sync KNotes with the memo pad? This is hard.
 * Make the popmail conduit use the ioslaves.
+* Make the address book conduit use libkab (or whatever it's called now).
++ Make daemon able to sync more than once in a run.
++ Close device at end of sync.
++ Port conduits to new setup.
+o Make the kpilotTest program able to do more than one sync in a run.
+o Make pi_install_file amenable to use in a GUI program. [Move to a thread
+  in KDE3 and leave unsolved in KDE2]
+- Add conduit-sync in the daemon as well.
+- Look into possible buffer overflows in pi_socket structure.
+- Add a validator ensuring path lengths are kept < 14 chars for 
+  pilot-link <= 0.9.5
 - Use KJanusWidget for main window area, to make various views
   more apparent.
 - Remove the exec()-style code for old conduits. Fixup the messages, too.

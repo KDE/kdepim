@@ -12,7 +12,6 @@ comes out and makes all this compatibility effort moot ...
   - Class Recurrence is the KDE3 name of class KORecurrence. Where the
     libkcal API has changed, added #ifdefs to use the right one, and
     #define Recurrence KORecurrence when compiling under KDE2.
-
 2002-01-16  David Bishop
 * *.ui
   - Added <qt>'s to all tooltips, neatness fixes.
@@ -21,6 +20,10 @@ comes out and makes all this compatibility effort moot ...
   - Added support for both ostream and kdbgstream << QSize to avoid
     plugin crashes when the plugin is compiled with different DEBUG_CERR
     settings from libkpilot.
+2002-01-19  Adriaan de Groot
+* Documentation
+  - Added a warning "Docs out of date" to the docs, adapted all the top-level
+    README &c. files to reflect the current situation.
 
 KPilot Developer's notes for december 31st 2001
 ===============================================
