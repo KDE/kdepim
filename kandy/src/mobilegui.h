@@ -100,6 +100,7 @@ class MobileGui : public MobileGui_base, virtual public KandyIface
     /* Phone specific items */
     QString mMobManufacturer;
     QString mMobModel;
+    unsigned int mPBStartIndex;
     unsigned int mPBLength;
     unsigned int mPBNameLength;
     QValueVector<bool> mPBIndexOccupied;

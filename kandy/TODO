@@ -1,6 +1,3 @@
-+ There seem to exist mobile phones where a selected phone book does not start
-  with index number 1. Still, this is assumed by Kandy and may lead to problems
-  (Ericsson, Nokia?).
 + Support of phone book memory of the phone itself instead of only the SIM
   memory.
 + Adding a new tab to the MobileGUI supporting a mobile phone's records for

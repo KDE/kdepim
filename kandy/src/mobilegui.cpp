@@ -195,6 +195,7 @@ MobileGui::MobileGui( CommandScheduler *scheduler, KandyPrefs *kprefs,
   // Setup mobile phone specific data
   mMobManufacturer = "";
   mMobModel = "";
+  mPBStartIndex = 0;
   mPBLength = 0;
   mPBNameLength = 0;
   mPBIndexOccupied.resize( 0, false );
@@ -283,9 +284,11 @@ void MobileGui::readPhonebook()
     mComingFromReadPhonebook = false;
     QString tmp = "";
     
-    ATCommand *cmd = new ATCommand( "+cpbr=1" );
+    ATCommand *cmd = new ATCommand( "+cpbr=" );
     cmd->setAutoDelete( true );
-    cmd->addParameter( new ATParameter( tmp.setNum( mPBLength ) ) );
+    cmd->addParameter( new ATParameter( tmp.setNum( mPBStartIndex ) ) );
+    cmd->addParameter( new ATParameter( tmp.setNum( mPBStartIndex +
+                                                    mPBLength - 1 ) ) );
     
     mScheduler->execute( cmd );
   
@@ -348,15 +351,18 @@ void MobileGui::writePhonebook()
     // Only process changed items of the mobile phonebook in
     // order to save time.
     if ( entry->mToBeUpdated || entry->mToBeInserted ) {
-      if ( entry->mToBeUpdated )
-        id = "+cpbw=" + entry->mIndex;
-      else {
-        QString tmp = "";
+      QString tmp = "";
+      
+      
+      if ( entry->mToBeUpdated ) {
+        tmp.setNum( entry->mIndex.toUInt() + mPBStartIndex - 1 );
+        id = "+cpbw=" + tmp;
+      } else {
         int index = firstFreeIndex();
 	
 	
 	mPBIndexOccupied[ index ] = true;
-        id = "+cpbw=" + tmp.setNum( index );
+        id = "+cpbw=" + tmp.setNum( index + mPBStartIndex - 1 );
       }
       mLastWriteId = id;
       entry->mToBeUpdated = false;
@@ -398,7 +404,8 @@ void MobileGui::writePhonebook()
       if ( !mPBIndexOccupied[ theIndex ] ) {
         // Index of item to be deleted still is 0, so that index position
 	// wasn't reused. We must delete it explicitly.
-	QString id = "+cpbw=" + entry->mIndex;
+	QString tmp = "";
+	QString id = "+cpbw=" + tmp.setNum( theIndex + mPBStartIndex - 1 );
 	
 	
 	mLastWriteId = id;
@@ -438,9 +445,11 @@ void MobileGui::writePhonebookPostProcessing()
     mComingFromReadPhonebook = false;
     QString tmp = "";
     
-    ATCommand *cmd = new ATCommand( "+cpbr=1" );
+    ATCommand *cmd = new ATCommand( "+cpbr=" );
     cmd->setAutoDelete( true );
-    cmd->addParameter( new ATParameter( tmp.setNum( mPBLength ) ) );
+    cmd->addParameter( new ATParameter( tmp.setNum( mPBStartIndex ) ) );
+    cmd->addParameter( new ATParameter( tmp.setNum( mPBStartIndex +
+                                                    mPBLength - 1 ) ) );
     
     mScheduler->execute( cmd );
 
@@ -978,17 +987,21 @@ void MobileGui::processResult( ATCommand *command )
     mSerialNumberLabel->setText( command->resultField( 0 ) );
   else
   if ( command->id() == "+cpbr=?" )
+  {
+    QStringList tmpList = QStringList::split( "-", command->resultField( 0 ) );
+    QString tmpString = tmpList.first().right( tmpList.first().length() - 1 );
+    mPBStartIndex = tmpString.toUInt();
     mPBNameLength = command->resultField( 2 ).toUInt();
-  else
+  } else
   if ( command->id() == "+cpbs?" ) {
     mPBLength = command->resultField( 2 ).toUInt();
 
-    // Allocate and initialize memory for the buckets if indices
+    // Allocate and initialize memory for the buckets of indices
     mPBIndexOccupied.resize( mPBLength + 1, false );
     for ( unsigned int i = 0; i <= mPBLength; i++ )
       mPBIndexOccupied[ i ] = false;
   } else
-  if ( command->id() == "+cpbr=1" ) {
+  if ( command->id() == "+cpbr=" ) {
     fillPhonebook( command );
     
     if ( mComingFromSyncPhonebooks ) {
