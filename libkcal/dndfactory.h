@@ -52,10 +52,14 @@ class DndFactory
 
     /** cut event to clipboard */
     void cutEvent(Event *);
-    /** cut, copy, and paste operations follow. */
+    /** cut todo to clipboard */
+    void cutTodo(Todo *);
+    /** copy event to clipboard */
     bool copyEvent(Event *);
-    /** pastes the event and returns a pointer to the new event pasted. */
-    Event *pasteEvent(const QDate &, const QTime *newTime = 0);
+    /** copy todo to clipboard */
+    bool copyTodo(Todo *);
+    /** pastes the event or todo and returns a pointer to the new incidence pasted. */
+    Incidence *pasteIncidence(const QDate &, const QTime *newTime = 0);
 
   private:
     Calendar *mCalendar;

@@ -46,7 +46,7 @@ DndFactory::DndFactory( Calendar *cal ) :
 ICalDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
 {
   CalendarLocal cal;
-  cal.setTimeZone( mCalendar->getTimeZoneStr() );
+  if (mCalendar) cal.setTimeZone( mCalendar->getTimeZoneStr() );
   Incidence *i = incidence->clone();
   cal.addIncidence( i );
 
@@ -64,7 +64,7 @@ Event *DndFactory::createDrop(QDropEvent *de)
   kdDebug() << "DndFactory::createDrop()" << endl;
 
   CalendarLocal cal;
-  cal.setTimeZone( mCalendar->getTimeZoneStr() );
+  if (mCalendar) cal.setTimeZone( mCalendar->getTimeZoneStr() );
 
   if ( ICalDrag::decode( de, &cal ) || VCalDrag::decode( de, &cal ) ) {
     de->accept();
@@ -84,7 +84,7 @@ Todo *DndFactory::createDropTodo(QDropEvent *de)
   kdDebug(5800) << "VCalFormat::createDropTodo()" << endl;
 
   CalendarLocal cal;
-  cal.setTimeZone( mCalendar->getTimeZoneStr() );
+  if (mCalendar) cal.setTimeZone( mCalendar->getTimeZoneStr() );
 
   if ( ICalDrag::decode( de, &cal ) || VCalDrag::decode( de, &cal ) ) {
     de->accept();
@@ -107,12 +107,19 @@ void DndFactory::cutEvent(Event *selectedEv)
   }
 }
 
+void DndFactory::cutTodo(Todo *selectedTodo)
+{
+  if (copyTodo(selectedTodo)) {
+    mCalendar->deleteTodo(selectedTodo);
+  }
+}
+
 bool DndFactory::copyEvent( Event *selectedEv )
 {
   QClipboard *cb = QApplication::clipboard();
 
   CalendarLocal cal;
-  cal.setTimeZone( mCalendar->getTimeZoneStr() );
+  if (mCalendar) cal.setTimeZone( mCalendar->getTimeZoneStr() );
   Event *ev = new Event( *selectedEv );
   cal.addEvent(ev);
   cb->setData( new ICalDrag( &cal ) );
@@ -120,7 +127,20 @@ bool DndFactory::copyEvent( Event *selectedEv )
   return true;
 }
 
-Event *DndFactory::pasteEvent(const QDate &newDate, const QTime *newTime)
+bool DndFactory::copyTodo( Todo *selectedTodo )
+{
+  QClipboard *cb = QApplication::clipboard();
+
+  CalendarLocal cal;
+  if (mCalendar) cal.setTimeZone( mCalendar->getTimeZoneStr() );
+  Todo *todo = new Todo( *selectedTodo );
+  cal.addTodo(todo);
+  cb->setData( new ICalDrag( &cal ) );
+
+  return true;
+}
+
+Incidence *DndFactory::pasteIncidence(const QDate &newDate, const QTime *newTime)
 {
 //  kdDebug() << "DnDFactory::pasteEvent()" << endl;
 
@@ -138,7 +158,7 @@ Event *DndFactory::pasteEvent(const QDate &newDate, const QTime *newTime)
 
   Event::List evList = cal.events();
   Event *ev = evList.first();
-  if ( ev ) {
+  if ( !evList.isEmpty() && ev ) {
     anEvent = new Event( *ev );
 
     anEvent->recreate();
@@ -159,20 +179,28 @@ Event *DndFactory::pasteEvent(const QDate &newDate, const QTime *newTime)
     }
 
     anEvent->setDtEnd( endDate );
-    mCalendar->addEvent( anEvent );
+    if (mCalendar) mCalendar->addEvent( anEvent );
+		return anEvent;
+		
   } else {
+	
     Todo::List toList = cal.todos();
     Todo *to = toList.first();
-    if (to) {
-      //anTodo = new Todo(*to);
-      kdDebug(5800) << "Trying to paste a Todo." << endl;
-      // TODO: check, if todos can be pasted
-      //    Todo *aTodo = VTodoToEvent(curVO);
-      //    mCalendar->addTodo(aTodo);
+    if ( !toList.isEmpty() && to ) {
+      Todo *anTodo = new Todo(*to);
+			anTodo->recreate();
+			
+	    if ( newTime ) {
+        anTodo->setDtDue( QDateTime( newDate, *newTime ) );
+	    } else {
+  	    anTodo->setDtDue( QDateTime( newDate, anTodo->dtDue().time() ) );
+    	}
+      if (mCalendar) mCalendar->addTodo(anTodo);
+			return anTodo;
     } else {
       kdDebug(5800) << "unknown event type in paste!!!" << endl;
     }
   }
 
-  return anEvent;
+  return 0;
 }
