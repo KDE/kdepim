@@ -97,11 +97,10 @@ void ProfileDialog::initListView( const Profile::ValueList& profiles )
 Profile::ValueList ProfileDialog::profiles() const
 {
   Profile::ValueList profiles;
-  ProfileItem* item;
 
   QListViewItemIterator it( mProfileList );
   for ( ; it.current(); ++it ) {
-    item = static_cast<ProfileItem *>( it.current() );
+    ProfileItem *item = static_cast<ProfileItem *>( it.current() );
     profiles.append( item->profile() );
   }
 

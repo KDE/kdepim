@@ -2,6 +2,7 @@
     This file is part of KitchenSync.
 
     Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,69 +20,114 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include <klineedit.h>
-#include <klocale.h>
-
-#include "profilewizardintro.h"
-#include "profilewizardchooserimpl.h"
-
 #include "profilewizard.h"
 
+#include "profilecheckitem.h"
+
+#include <klineedit.h>
+#include <klocale.h>
+#include <klistview.h>
+
+#include <qlayout.h>
+#include <qlabel.h>
 
 using namespace KSync;
 
-ProfileWizard::ProfileWizard( const Profile& prof,
-                              const ManPartService::ValueList& lst )
-    : KWizard( 0, "wiz", true ), m_prof( prof )
+ProfileWizard::ProfileWizard( const Profile &profile,
+                              const ManPartService::ValueList &parts )
+  : KDialogBase( Plain, i18n("Configure Profile"), Ok | Cancel, Ok, 0, "wiz" ),
+    mProfile( profile )
 {
-    m_useProf = true;
-    initUI();
-    initProf(lst);
+  initUI();
+  initPartList( parts );
+  initProfile();
 }
 
-ProfileWizard::ProfileWizard( const ManPartService::ValueList& lst )
-    : KWizard( 0, "wiz", true )
+ProfileWizard::ProfileWizard( const ManPartService::ValueList &parts )
+  : KDialogBase( Plain, i18n("Configure Profile"), Ok | Cancel, Ok, 0, "wiz" )
 {
-    m_useProf = false;
-    initUI();
-    init( lst );
+  initUI();
+  initPartList( parts );
 }
 
 ProfileWizard::~ProfileWizard()
 {
-// all deleted for us
 }
 
 void ProfileWizard::initUI()
 {
-    m_intro = new ProfileWizardIntro( this );
-    addPage( m_intro, i18n("Intro") );
+  QWidget *topWidget = plainPage();
 
-    m_choo = new ProfileWizardChooserImpl();
-    addPage( m_choo, i18n("Chooser") );
-    setFinishEnabled( m_choo, true );
+  QBoxLayout *topLayout = new QVBoxLayout( topWidget );
+  topLayout->setSpacing( spacingHint() );
+
+  QBoxLayout *nameLayout = new QHBoxLayout( topLayout );
+
+  QLabel *label = new QLabel( i18n("Profile Name"), topWidget );
+  nameLayout->addWidget( label );
+
+  mNameEdit = new KLineEdit( topWidget );
+  nameLayout->addWidget( mNameEdit );
+
+  label = new QLabel( i18n("Which Parts to load?"), topWidget );
+  topLayout->addWidget( label );
+  
+  label = new QLabel( i18n("KitchenSync supports a variety of plugins. Below\n"
+                           "you've the possibility to choose which plugins\n"
+                           "should be loaded when this Profile is the active\n"
+                           "one."), topWidget );
+  topLayout->addWidget( label );
+
+  mPartListView = new KListView( topWidget );
+  mPartListView->addColumn( i18n("Name") );
+  mPartListView->addColumn( i18n("Comment") );
+  topLayout->addWidget( mPartListView );
 }
 
-void ProfileWizard::init( const ManPartService::ValueList& lst )
+void ProfileWizard::initPartList( const ManPartService::ValueList &parts )
 {
-    m_choo->init(lst);
+  ManPartService::ValueList::ConstIterator it;
+  for ( it = parts.begin(); it != parts.end(); ++it ) {
+    new ProfileCheckItem( mPartListView, *it );
+  }
 }
 
-void ProfileWizard::initProf( const ManPartService::ValueList& lst )
+void ProfileWizard::initProfile()
 {
-    m_intro->lneName->setText( m_prof.name() );
-    m_choo->init( lst, m_prof.manParts() );
+  mNameEdit->setText( mProfile.name() );
+
+  ManPartService::ValueList selectedParts = mProfile.manParts();
+  
+  ManPartService::ValueList::ConstIterator itPart;
+  for ( itPart = selectedParts.begin(); itPart != selectedParts.end();
+        ++itPart ) {
+    QListViewItemIterator it( mPartListView );
+    for ( ; it.current(); ++it ) {
+      ProfileCheckItem *item = static_cast<ProfileCheckItem *>( it.current() );
+      if ( item->manpart() == *itPart ) {
+        item->setOn( true );
+        break;
+      }
+    }
+  }
 }
 
-Profile ProfileWizard::profile() const
+Profile ProfileWizard::profile()
 {
-    Profile prof;
-    if ( m_useProf )
-        prof = m_prof;
+  mProfile.setName( mNameEdit->text() );
+  mProfile.setManParts( selectedManParts() );
+  return mProfile;
+}
 
-    prof.setName( m_intro->lneName->text() );
-    prof.setManParts( m_choo->chosen() );
-    return prof;
+ManPartService::ValueList ProfileWizard::selectedManParts()
+{
+  ManPartService::ValueList manparts;
+  QListViewItemIterator it( mPartListView );
+  for ( ; it.current(); ++it ) {
+    ProfileCheckItem *item = static_cast<ProfileCheckItem *>( it.current() );
+    if ( item->isOn() ) manparts.append( item->manpart() );
+  }
+  return manparts;
 }
 
 #include "profilewizard.moc"

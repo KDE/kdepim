@@ -2,6 +2,7 @@
     This file is part of KitchenSync.
 
     Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -18,34 +19,41 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
+#ifndef KSYNC_PROFILEWIZARD_H
+#define KSYNC_PROFILEWIZARD_H
 
-#ifndef KSYNC_PROFILE_WIZARD_H
-#define KSYNC_PROFILE_WIZARD_H
-
-#include <kwizard.h>
-
-#include <profile.h>
 #include "manpartservice.h"
+#include "profile.h"
 
-class ProfileWizardIntro;
+#include <kdialogbase.h>
+
+class KLineEdit;
+class KListView;
+
 namespace KSync {
-    class ProfileWizardChooserImpl;
-    class ProfileWizard : public KWizard {
-        Q_OBJECT
-    public:
-        ProfileWizard( const ManPartService::ValueList& );
-        ProfileWizard( const Profile& , const ManPartService::ValueList&);
-        ~ProfileWizard();
-        Profile profile()const;
-    private:
-        void initUI();
-        void init( const ManPartService::ValueList& );
-        void initProf(const ManPartService::ValueList& );
-        Profile m_prof;
-        bool m_useProf:1;
-        ProfileWizardChooserImpl *m_choo;
-        ProfileWizardIntro *m_intro;
-    };
+
+class ProfileWizard : public KDialogBase
+{
+    Q_OBJECT
+  public:
+    ProfileWizard( const ManPartService::ValueList & );
+    ProfileWizard( const Profile &, const ManPartService::ValueList & );
+    ~ProfileWizard();
+
+    Profile profile();
+
+    ManPartService::ValueList selectedManParts();
+
+  private:
+    void initUI();
+    void initPartList( const ManPartService::ValueList & );
+    void initProfile();
+
+    Profile mProfile;
+    KLineEdit *mNameEdit;
+    KListView *mPartListView;
+};
+
 }
 
 #endif

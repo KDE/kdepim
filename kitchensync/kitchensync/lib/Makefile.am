@@ -8,9 +8,7 @@ libkitchensyncui_la_SOURCES = partbar.cpp manipulatorpart.cpp \
     profile.cpp \
     manpartservice.cpp profilemanager.cpp \
     profilefilemanager.cpp \
-    profilewizardchooser.ui \
-    profilewizardintro.ui profilecheckitem.cpp \
-    profilewizardchooserimpl.cpp profilewizard.cpp \
+    profilecheckitem.cpp  profilewizard.cpp \
     profileitem.cpp profiledialog.cpp syncalgo.cpp \
     synchelper.cpp konnectorbar.cpp syncconfig.cpp
     

@@ -18,8 +18,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KSYNC_MAN_PART_SERVICE_H
-#define KSYNC_MAN_PART_SERVICE_H
+#ifndef KSYNC_MANPARTSERVICE_H
+#define KSYNC_MANPARTSERVICE_H
 
 #include <qvaluelist.h>
 #include <qstring.h>
@@ -27,40 +27,47 @@
 #include <kservice.h>
 
 namespace KSync {
-   /**
-    * a ManPartServive saves a converted
-    * KService::Ptr of a ManipulatorPart
-    * @see KService::Ptr
+
+/**
+  A ManPartServive saves a converted KService::Ptr of a ManipulatorPart
+
+  @see KService::Ptr
+*/
+class ManPartService {
+
+  public:
+    typedef QValueList<ManPartService> ValueList;
+
+    /**
+      Creates an empty service.
     */
-    class ManPartService {
-    public:
-        /**
-         * creates an Empty Service
-         */
-        typedef QValueList<ManPartService> ValueList;
-        ManPartService();
-        ManPartService( const KService::Ptr& service );
-        ManPartService( const ManPartService& );
-        ~ManPartService();
-        bool operator==( const ManPartService& );
-        bool operator==( const ManPartService& )const;
-        QString name()const;
-        QString comment()const;
-        QString libname()const;
-        QString icon() const;
+    ManPartService();
+    ManPartService( const KService::Ptr &service );
+    ManPartService( const ManPartService & );
+    ~ManPartService();
 
-        void setName(const QString & );
-        void setComment( const QString& comment );
-        void setLibname( const QString& );
-        void setIcon( const QString& );
+    bool operator==( const ManPartService & );
+    bool operator==( const ManPartService & ) const;
 
-        ManPartService &operator=( const ManPartService&);
-    private:
-        QString m_name;
-        QString m_comment;
-        QString m_icon;
-        QString m_lib;
-    };
+    QString name() const;
+    QString comment() const;
+    QString libname() const;
+    QString icon() const;
+
+    void setName( const QString & );
+    void setComment( const QString & );
+    void setLibname( const QString & );
+    void setIcon( const QString & );
+
+    ManPartService &operator=( const ManPartService & );
+
+  private:
+    QString m_name;
+    QString m_comment;
+    QString m_icon;
+    QString m_lib;
+};
+
 }
 
 

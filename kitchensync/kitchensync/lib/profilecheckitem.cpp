@@ -2,6 +2,7 @@
     This file is part of KitchenSync.
 
     Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -23,15 +24,19 @@
 
 using namespace KSync;
 
-ProfileCheckItem::ProfileCheckItem( QListView* parent,
-                                    const ManPartService& prof )
-    : QCheckListItem( parent, "profile",  CheckBox), m_manpart( prof )
+ProfileCheckItem::ProfileCheckItem( QListView *parent,
+                                    const ManPartService &manpart )
+  : QCheckListItem( parent, "profile",  CheckBox ), m_manpart( manpart )
 {
-    setText(0, m_manpart.name() );
-    setText(1, m_manpart.comment() );
+  setText( 0, m_manpart.name() );
+  setText( 1, m_manpart.comment() );
 }
-ProfileCheckItem::~ProfileCheckItem() {
+
+ProfileCheckItem::~ProfileCheckItem()
+{
 }
-ManPartService ProfileCheckItem::manpart()const {
-    return m_manpart;
+
+ManPartService ProfileCheckItem::manpart() const
+{
+  return m_manpart;
 }

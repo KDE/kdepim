@@ -1,0 +1,3 @@
+- Parent widget for profile dialogs.
+- Merge ProfileWizard constructors
+- Rename Profile::name() to Profile::profileName()
