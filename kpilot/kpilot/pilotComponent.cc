@@ -39,7 +39,7 @@
 #include "pilotComponent.moc"
 
 static const char *pilotComponent_id =
-	"$Id:$";
+	"$Id$";
 
 inline
 PilotComponent::PilotComponent(QWidget* parent,
@@ -123,18 +123,35 @@ int PilotComponent::findSelectedCategory(QComboBox *fCatList,
 			currentCatID++;
 		}
 
+		if (!(currentCatID < fCatList->count()))
+		{
+			currentCatID=0;
+			while(strcmp(info->name[currentCatID],
+				selectedCategory.latin1()) &&
+				((currentCatID < fCatList->count()))
+			{
+				currentCatID++;
+			}
+		}
+
+		if (!(currentCatID < fCatList->count()))
+		{
+			currentCatID=0;
+			while(strcmp(info->name[currentCatID],
+				selectedCategory.ascii()) &&
+				((currentCatID < fCatList->count()))
+			{
+				currentCatID++;
+			}
+		}
+
 		if (currentCatID < fCatList->count())
 		{
-#ifdef DEBUG
-			if (debug_level&UI_MINOR)
-			{
-				kdDebug() << fname << 
-					": Matched category " <<
-					currentCatID << '=' <<
-					info->name[currentCatID]
-					<< endl ;
-			}
-#endif
+			DEBUGKPILOT << fname << 
+				": Matched category " <<
+				currentCatID << '=' <<
+				info->name[currentCatID]
+				<< endl ;
 		}
 		else
 		{
@@ -191,6 +208,9 @@ CategoryAll:
 
 
 // $Log$
+// Revision 1.9  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.8  2001/02/19 04:04:52  rkrusty
 // [IEM] fix for compiling with glibc 2.2.2
 //
