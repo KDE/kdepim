@@ -243,6 +243,24 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
     v_iew->e_dit->setCursorPosition(0,0);
   v_iew->e_dit->setFocus();
 
+  if (v_iew->s_ubject->text().length() == 0) {
+    v_iew->s_ubject->setCursorPosition(0);
+    v_iew->s_ubject->setFocus();
+    v_iew->e_dit->setFocusPolicy(ClickFocus);
+  }      
+
+  if (v_iew->g_roups->text().length() == 0 && m_ode == news) {
+    v_iew->g_roups->setCursorPosition(0);
+    v_iew->g_roups->setFocus();
+    v_iew->e_dit->setFocusPolicy(ClickFocus);
+  }
+
+  if (v_iew->t_o->text().length() == 0 && m_ode == mail) {
+    v_iew->t_o->setCursorPosition(0);
+    v_iew->t_o->setFocus();
+    v_iew->e_dit->setFocusPolicy(ClickFocus);
+  }
+
   if(firstEdit && knGlobals.cfgManager->postNewsComposer()->appendOwnSignature())
     slotAppendSig();
 
@@ -1405,30 +1423,22 @@ KNComposer::ComposerView::ComposerView(QWidget *p, const char *n)
   QGridLayout *hdrL=new QGridLayout(hdrFrame, 4,3, 7,5);
   hdrL->setColStretch(1,1);
 
-  //subject
-  s_ubject=new KLineEdit(hdrFrame);
-  QLabel *l=new QLabel(s_ubject, i18n("S&ubject:"), hdrFrame);
-  hdrL->addWidget(l, 0,0);
-  hdrL->addMultiCellWidget(s_ubject, 0,0, 1,2);
-  connect(s_ubject, SIGNAL(textChanged(const QString&)),
-          parent(), SLOT(slotSubjectChanged(const QString&)));
-
   //To
   t_o=new KLineEdit(hdrFrame);
   l_to=new QLabel(t_o, i18n("T&o:"), hdrFrame);
   t_oBtn=new QPushButton(i18n("&Browse..."), hdrFrame);
-  hdrL->addWidget(l_to, 1,0);
-  hdrL->addWidget(t_o, 1,1);
-  hdrL->addWidget(t_oBtn, 1,2);
+  hdrL->addWidget(l_to, 0,0);
+  hdrL->addWidget(t_o, 0,1);
+  hdrL->addWidget(t_oBtn, 0,2);
   connect(t_oBtn, SIGNAL(clicked()), parent(), SLOT(slotToBtnClicked()));
 
   //Newsgroups
   g_roups=new KLineEdit(hdrFrame);
   l_groups=new QLabel(g_roups, i18n("&Groups:"), hdrFrame);
   g_roupsBtn=new QPushButton(i18n("B&rowse..."), hdrFrame);
-  hdrL->addWidget(l_groups, 2,0);
-  hdrL->addWidget(g_roups, 2,1);
-  hdrL->addWidget(g_roupsBtn, 2,2);
+  hdrL->addWidget(l_groups, 1,0);
+  hdrL->addWidget(g_roups, 1,1);
+  hdrL->addWidget(g_roupsBtn, 1,2);
   connect(g_roups, SIGNAL(textChanged(const QString&)),
           parent(), SLOT(slotGroupsChanged(const QString&)));
   connect(g_roupsBtn, SIGNAL(clicked()), parent(), SLOT(slotGroupsBtnClicked()));
@@ -1436,9 +1446,17 @@ KNComposer::ComposerView::ComposerView(QWidget *p, const char *n)
   //Followup-To
   f_up2=new KComboBox(true, hdrFrame);
   l_fup2=new QLabel(f_up2, i18n("Follo&wup-To:"), hdrFrame);
-  hdrL->addWidget(l_fup2, 3,0);
-  hdrL->addMultiCellWidget(f_up2, 3,3, 1,2);
+  hdrL->addWidget(l_fup2, 2,0);
+  hdrL->addMultiCellWidget(f_up2, 2,2, 1,2);
 
+  //subject
+  s_ubject=new KLineEdit(hdrFrame);
+  QLabel *l=new QLabel(s_ubject, i18n("S&ubject:"), hdrFrame);
+  hdrL->addWidget(l, 3,0);
+  hdrL->addMultiCellWidget(s_ubject, 3,3, 1,2);
+  connect(s_ubject, SIGNAL(textChanged(const QString&)),
+          parent(), SLOT(slotSubjectChanged(const QString&)));
+  
   //Editor
   e_dit=new Editor(main);
   e_dit->setMinimumHeight(50);
