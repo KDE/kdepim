@@ -14,12 +14,21 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-
+#include <kconfig.h>
+#include <kglobal.h>
 #include "knpgp.h"
 
 KNpgp::KNpgp()
   : Kpgp()
 {
+  readConfig();
+}
+
+void KNpgp::readConfig()
+{
+  KConfig *c = KGlobal::config();
+  c->setGroup("PRIVACY");
+  autocheck = c->readBoolEntry("autoCheckSign",false);
 }
 
 KNpgp::~KNpgp()

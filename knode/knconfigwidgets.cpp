@@ -55,7 +55,7 @@
 #include "knmime.h"
 #include "knscoring.h"
 #include "knconfigmanager.h"
-
+#include "knpgp.h"
 
 
 KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n) : BaseWidget(p, n), d_ata(d)
@@ -2078,9 +2078,18 @@ void KNConfig::PostNewsSpellingWidget::apply()
 KNConfig::PrivacyWidget::PrivacyWidget(QWidget *p, const char *n)
   : BaseWidget(p,n)
 {
-  QGridLayout *topLayout = new QGridLayout(this,1,1);
+  //QGridLayout *topLayout = new QGridLayout(this,1,1);
+  QBoxLayout *topLayout = new QVBoxLayout(this, KDialog::spacingHint());
   conf = new KpgpConfig(this,"knode pgp config",false);
-  topLayout->addWidget(conf,0,0);
+  topLayout->addWidget(conf);
+  QGroupBox *optBox = new QGroupBox(i18n("KNode specific options"), this);
+  topLayout->addWidget(optBox);
+  QBoxLayout *groupL = new QVBoxLayout(optBox, KDialog::spacingHint());
+  groupL->addSpacing(fontMetrics().lineSpacing());
+  check = new QCheckBox(i18n("Automatic check signed articles"),optBox);
+  groupL->addWidget(check);
+  KNpgp *pgp = dynamic_cast<KNpgp*>(KNpgp::getKpgp());
+  check->setChecked(pgp->autoCheck());
 }
 
 KNConfig::PrivacyWidget::~PrivacyWidget()
@@ -2089,9 +2098,12 @@ KNConfig::PrivacyWidget::~PrivacyWidget()
 
 void KNConfig::PrivacyWidget::apply()
 {
-  if(!d_irty)
-    return;
   conf->applySettings();
+  KConfig *c=KGlobal::config();
+  c->setGroup("PRIVACY");
+  c->writeEntry("autoCheckSign",check->isChecked());
+  KNpgp *pgp = dynamic_cast<KNpgp*>(KNpgp::getKpgp());
+  pgp->readConfig();
 }
 
 

@@ -1000,6 +1000,7 @@ class PrivacyWidget : public BaseWidget {
 
   protected:
     KpgpConfig *conf;
+    QCheckBox *check;
 };
 
 

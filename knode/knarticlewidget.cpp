@@ -951,11 +951,13 @@ void KNArticleWidget::createHtmlPage()
   // signature, we show a nice header:
   if (a_rticle->type() == KNMimeBase::ATremote) {
     KNRemoteArticle *ra = static_cast<KNRemoteArticle*>(a_rticle);
-    if (ra->isPgpSigned()) {
-      Kpgp *pgp = Kpgp::getKpgp();
+    KNpgp *pgp = dynamic_cast<KNpgp*>(Kpgp::getKpgp());
+    ASSERT(pgp);
+    bool autocheck = pgp->autoCheck();
+    if (autocheck || ra->isPgpSigned()) {
       pgp->setMessage(ra->body());
       html += "<p>";
-      if (!pgp->isSigned()) {
+      if (!autocheck && !pgp->isSigned()) {
         html += "<b>" + i18n("Cannot find a signature in this message!") + "</b>";
       }
       else {
