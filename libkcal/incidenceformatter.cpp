@@ -296,6 +296,8 @@ static QString eventViewerFormatEvent( Event *event )
   tmpStr += eventViewerFormatAttendees( event );
   tmpStr += eventViewerFormatAttachments( event );
 
+  tmpStr += "<p><em>" + i18n( "Creation date: %1.").arg( 
+    KGlobal::locale()->formatDateTime( event->created() , true ) ) + "</em>";
   return tmpStr;
 }
 
@@ -334,7 +336,8 @@ static QString eventViewerFormatTodo( Todo *todo )
   tmpStr += eventViewerFormatReadOnly( todo );
   tmpStr += eventViewerFormatAttendees( todo );
   tmpStr += eventViewerFormatAttachments( todo );
-
+  tmpStr += "<p><em>" + i18n( "Creation date: %1.").arg( 
+    KGlobal::locale()->formatDateTime( todo->created() , true ) ) + "</em>";
   return tmpStr;
 }
 
