@@ -20,7 +20,7 @@
             <cstring>unnamed</cstring>
         </property>
         <property name="margin">
-            <number>0</number>
+            <number>11</number>
         </property>
         <property name="spacing">
             <number>6</number>
@@ -60,17 +60,17 @@
                 <attribute name="title">
                     <string>&amp;Details</string>
                 </attribute>
-                <vbox>
+                <grid>
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
                     <property name="margin">
-                        <number>0</number>
+                        <number>11</number>
                     </property>
                     <property name="spacing">
                         <number>6</number>
                     </property>
-                    <widget class="QListView">
+                    <widget class="QListView" row="0" column="0">
                         <column>
                             <property name="text">
                                 <string>Description</string>
@@ -103,7 +103,7 @@
                             <bool>false</bool>
                         </property>
                     </widget>
-                    <widget class="QTextEdit">
+                    <widget class="QTextEdit" row="1" column="0">
                         <property name="name">
                             <cstring>textView</cstring>
                         </property>
@@ -114,7 +114,7 @@
                             <bool>false</bool>
                         </property>
                     </widget>
-                </vbox>
+                </grid>
             </widget>
             <widget class="QWidget">
                 <property name="name">
@@ -123,36 +123,33 @@
                 <attribute name="title">
                     <string>&amp;Path</string>
                 </attribute>
-                <vbox>
-                    <property name="name">
-                        <cstring>unnamed</cstring>
-                    </property>
-                    <property name="margin">
-                        <number>11</number>
-                    </property>
-                    <property name="spacing">
-                        <number>6</number>
-                    </property>
-                    <widget class="QListView">
-                        <column>
-                            <property name="text">
-                                <string>Path</string>
-                            </property>
-                            <property name="clickable">
-                                <bool>true</bool>
-                            </property>
-                            <property name="resizeable">
-                                <bool>true</bool>
-                            </property>
-                        </column>
-                        <property name="name">
-                            <cstring>pathView</cstring>
+                <widget class="QListView">
+                    <column>
+                        <property name="text">
+                            <string>Path</string>
                         </property>
-                        <property name="rootIsDecorated">
+                        <property name="clickable">
                             <bool>true</bool>
                         </property>
-                    </widget>
-                </vbox>
+                        <property name="resizeable">
+                            <bool>true</bool>
+                        </property>
+                    </column>
+                    <property name="name">
+                        <cstring>pathView</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>11</x>
+                            <y>11</y>
+                            <width>429</width>
+                            <height>257</height>
+                        </rect>
+                    </property>
+                    <property name="rootIsDecorated">
+                        <bool>true</bool>
+                    </property>
+                </widget>
             </widget>
         </widget>
         <widget class="QLayoutWidget">
@@ -178,6 +175,12 @@
                     </property>
                     <property name="sizeType">
                         <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>0</height>
+                        </size>
                     </property>
                 </spacer>
                 <widget class="QPushButton">
