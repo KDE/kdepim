@@ -37,6 +37,8 @@
 #include <qtimer.h>
 #include <qsocketnotifier.h>
 
+#include "kandyprefs.h"
+
 
 
 
@@ -44,10 +46,8 @@ class Modem : public QObject
 {
 	Q_OBJECT
 public:
-	Modem(QObject *parent = 0, const char *name = 0);
+	Modem(KandyPrefs *kprefs, QObject *parent = 0, const char *name = 0);
 	virtual ~Modem();
-
-	void setDevice(const QString& name);
 
 	void setSpeed(int speed);
 	void setData(int data);
@@ -96,7 +96,6 @@ private:
 	speed_t cspeed;
 	tcflag_t cflag;
 
-	char *fdev;
 	int fd;
 	QTimer *timer;
 	QSocketNotifier *sn;
@@ -108,6 +107,8 @@ private:
 	bool xcrc;
 	uchar xblock;
 	int xsize;
+
+        KandyPrefs *prefs;
 
 signals:
 	void gotLine(const char *);
