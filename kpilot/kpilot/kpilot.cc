@@ -549,11 +549,18 @@ void KPilotInstaller::initMenu()
 	// View actions
 
 	// Options actions
-#ifdef KDE_VERSION_MAJOR >= 3 && KDE_VERSION_MINOR > 1
+#if KDE_VERSION >= 0x30180
 	createStandardStatusBarAction();
 #endif
-        setStandardToolBarMenuEnabled(true);
-    
+
+#if KDE_VERSION >= 0x30080
+	setStandardToolBarMenuEnabled(true);
+#else
+	m_toolbarAction =
+		KStdAction::showToolbar(this, SLOT(optionsShowToolbar()),
+		actionCollection());
+#endif
+
 	p = KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()),
 		actionCollection());
 	p = KStdAction::configureToolbars(this, SLOT(optionsConfigureKeys()),
@@ -662,6 +669,30 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 		p->initialize();
 	}
 }
+
+#if KDE_VERSION >= 0x30080
+// Included in kdelibs in KDE 3.1, but we can't #ifdef slots,
+// so include a dummy implementation.
+void KPilotInstaller::optionsShowToolbar()
+{
+}
+#else
+void KPilotInstaller::optionsShowToolbar()
+{
+	FUNCTIONSETUP;
+	if (m_toolbarAction->isChecked())
+	{
+		toolBar()->show();
+	}
+	else
+	{
+		toolBar()->hide();
+	}
+
+	kapp->processEvents();
+	resizeEvent(0);
+}
+#endif
 
 void KPilotInstaller::optionsConfigureKeys()
 {

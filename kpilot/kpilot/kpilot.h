@@ -113,8 +113,11 @@ public slots:
 
 	/**
 	* These are slots for the standard Configure ...
-	* actions and not interesting.
+	* actions and not interesting. The show toolbar
+	* functionality is in kdelibs starting with KDE 3.1,
+	* but we need to remain backwards compatible.
 	*/
+	void optionsShowToolbar();
 	void optionsConfigureKeys();
 	void optionsConfigureToolbars();
 
