@@ -53,7 +53,7 @@ HtmlExport::HtmlExport( Calendar *calendar ) :
   mExcludeConfidentialEventEnabled( false )
 {
   mTitle = I18N_NOOP("Calendar");
-  mTitleTodo = I18N_NOOP("To-Do List");
+  mTitleTodo = I18N_NOOP("To-do List");
   mCreditName = "";
   mCreditURL = "";
 }

@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Type=Service
-Comment=This conduit syncs the ToDo list from your handheld to KOrganizer.
+Comment=This conduit syncs the to-do list from your handheld to KOrganizer.
 Comment[bg]=Синхронизация на списъка със задачи на мобилно устройство с организатора в КДЕ
 Comment[bs]=Ovaj conduit sinhronizuje listu Zadataka na ručnom računaru sa KOrganizerom.
 Comment[ca]=Aquest conducte sincronitza la llista de pendents des de la vostra agenda electrònica a KOrganizer.
@@ -36,7 +36,7 @@ Comment[tg]=Канали синхронизатсияи рӯйхати вази�
 Comment[uk]=Цей акведук синхронізує список завдань кишенькового пристрою з тижневиком KOrganizer.
 Comment[xx]=xxThis conduit syncs the ToDo list from your handheld to KOrganizer.xx
 Comment[zh_CN]=此管道会将您的待办列表与 KOrganizer 同步。
-Name=ToDos (KOrganizer)
+Name=To-dos (KOrganizer)
 Name[be]=Заданьні (K Арганізатар)
 Name[ca]=Pendents (KOrganizer)
 Name[cs]=Úkoly (KOrganizer)
@@ -58,6 +58,7 @@ Name[sl]=Čakajoča opravila (KOrganizer)
 Name[sr]=Задаци (KOrganizer)
 Name[sr@Latn]=Задаци (KOrganizer)
 Name[sv]=Att-göra (Korganizer)
+Name[ta]=செய்ய வேண்டியவை(கேஅமைப்பாளர்)
 Name[tg]=Вазифот (KOrganizer)
 Name[xx]=xxToDos (KOrganizer)xx
 Name[zh_CN]=待办事项 (KOrganizer)

@@ -270,7 +270,7 @@ static QString eventViewerFormatTodo( Todo *todo )
     QDateTime dt = todo->recurrence()->getNextDateTime(
                                          QDateTime::currentDateTime() );
     tmpStr += eventViewerAddTag( "p", "<em>" +
-      i18n("This is a recurring todo. The next occurrence will be on %1.").arg(
+      i18n("This is a recurring to-do. The next occurrence will be on %1.").arg(
       KGlobal::locale()->formatDateTime( dt, true ) ) + "</em>" );
   }
   tmpStr += eventViewerFormatReadOnly( todo );

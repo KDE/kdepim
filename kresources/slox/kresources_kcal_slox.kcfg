@@ -17,7 +17,7 @@
       <label>Last Event Sync</label>
     </entry>
     <entry type="DateTime" name="LastTodoSync">
-      <label>Last Todo Sync</label>
+      <label>Last To-do Sync</label>
     </entry>
     <entry type="Bool" name="UseLastSync">
       <label>Only load data since last sync</label>

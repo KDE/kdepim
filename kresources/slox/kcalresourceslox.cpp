@@ -269,7 +269,7 @@ void KCalResourceSlox::requestTodos()
            SLOT( slotTodosProgress( KIO::Job *, unsigned long ) ) );
 
   mLoadTodosProgress = KPIM::ProgressManager::instance()->createProgressItem(
-      KPIM::ProgressManager::getUniqueID(), i18n("Downloading todos") );
+      KPIM::ProgressManager::getUniqueID(), i18n("Downloading to-dos") );
   connect( mLoadTodosProgress,
            SIGNAL( progressItemCanceled( ProgressItem * ) ),
            SLOT( cancelLoadTodos() ) );
