@@ -1,6 +1,15 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-03-12  Adriaan de Groot
+* Received patches from Joern Ahrens and Sebastian Voitzsch for 
+  various issues. Thanks guys! It's contributions like this that
+  really inspire me to keep working on KPilot. Reinhold and I can't
+  do everything by ourselves.
+* There will be tarballs of KPilot 4.4.2 soon; this will make it 
+  possible to get the bugfixes from Joern and Sebastian - and others -
+  on your system now without waiting for another KDE release.
+
 2004-03-08  Adriaan de Groot
 * Wow, lots of activity by Reinhold. I hope he updates the ChangeLog
   sometime as well.
