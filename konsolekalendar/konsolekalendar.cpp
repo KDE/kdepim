@@ -55,12 +55,12 @@ KonsoleKalendar::~KonsoleKalendar()
 {
 }
 
-void KonsoleKalendar::importCalendar()
+bool KonsoleKalendar::importCalendar()
 {
   KonsoleKalendarAdd add( m_variables );
 
   kdDebug() << "konsolecalendar.cpp::importCalendar() | importing now!"  << endl;
-  add.addImportedCalendar();
+  return( add.addImportedCalendar() );
 }
 
 bool KonsoleKalendar::createCalendar()

@@ -51,7 +51,7 @@ class KonsoleKalendar
     * Imports calendar file
     */
 
-   void importCalendar();
+   bool importCalendar();
 
    /**
     * Add event to calendar

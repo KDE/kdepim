@@ -466,6 +466,7 @@ int main(int argc, char *argv[])
   }
 
   if ( args->isSet("import") ) {
+    view = false;
     importFile = true;
     option = args->getOption("import");
     variables.setImportFile( option );
@@ -658,7 +659,16 @@ int main(int argc, char *argv[])
    */
 
     if( importFile ) {
-      konsolekalendar->importCalendar();
+      if( konsolekalendar->importCalendar() ) {
+        cout << i18n("Calendar ").local8Bit()
+             << variables.getImportFile().local8Bit()
+             << i18n(" successfully imported.").local8Bit() << endl;
+        return(0);
+      } else {
+        cout << i18n("Unable to import calendar: ").local8Bit()
+             << variables.getImportFile().local8Bit() << endl;
+        return(1);
+      }
     }
 
     if( add ) {
