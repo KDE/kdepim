@@ -66,6 +66,13 @@ public:
 
 	static KAboutData *about() { return fAbout; } ;
 
+	// Config keys for the mail conduit.
+	//
+	//
+	static const char * const group;
+	static const char * const syncOutgoing,
+		* const syncIncoming;
+
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
 		const char* name = 0,
@@ -84,6 +91,9 @@ void *init_libpopmailconduit();
 } ;
 
 // $Log$
+// Revision 1.1  2001/12/13 21:40:19  adridg
+// New files for move to .so
+//
 // Revision 1.1  2001/11/18 16:55:51  adridg
 // Moving expenses conduit to new arch.
 //

@@ -28,7 +28,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to groot@kde.org
 */
 
 #ifndef MRQPASSWD_H
@@ -59,4 +59,7 @@ private:
 #endif
 
 
-// $Log:$
+// $Log$
+// Revision 1.5  2001/02/07 15:46:31  adridg
+// Updated copyright headers for source release. Added CVS log. No code change.
+//

@@ -14,7 +14,8 @@ service_DATA = popmail-conduit.desktop
 kde_module_LTLIBRARIES = libpopmailconduit.la
 
 # Which sources should be compiled for popmail_conduit
-libpopmailconduit_la_SOURCES = popmail-factory.cc setupDialog.cc
+libpopmailconduit_la_SOURCES = popmail-factory.cc setupDialog.cc \
+	passworddialog.cc popmail-conduit.cc
 libpopmailconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib
 libpopmailconduit_la_LIBADD   =  -lkpilot
 

@@ -21,7 +21,7 @@
 ** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -36,7 +36,7 @@
 #include <kaboutdata.h>
 
 #include "setupDialog.h"
-
+#include "popmail-conduit.h"
 #include "popmail-factory.moc"
 
 
@@ -50,6 +50,10 @@ void *init_libpopmailconduit()
 
 } ;
 
+
+/* static */ const char * const PopmailConduitFactory::group = "Popmail-conduit" ;
+const char * const PopmailConduitFactory::syncIncoming = "SyncIncoming" ;
+const char * const PopmailConduitFactory::syncOutgoing = "SyncOutgoing" ;
 
 KAboutData *PopmailConduitFactory::fAbout = 0L;
 PopmailConduitFactory::PopmailConduitFactory(QObject *p, const char *n) :
@@ -70,8 +74,12 @@ PopmailConduitFactory::PopmailConduitFactory(QObject *p, const char *n) :
 		"http://www.cs.kun.nl/~adridg/kpilot");
 	fAbout->addAuthor("Dan Pilone",
 		I18N_NOOP("Original Author"));
-	fAbout->addAuthor("Michael Kropfberger",
-		I18N_NOOP("Original Author"));
+	fAbout->addCredit("Michael Kropfberger",
+		I18N_NOOP("POP3 code"));
+	fAbout->addCredit("Marko Gr&ouml;nroos",
+		I18N_NOOP("SMTP support and redesign"),
+		"magi@iki.fi",
+		"http://www/iki.fi/magi/");
 }
 
 PopmailConduitFactory::~PopmailConduitFactory()
@@ -115,14 +123,14 @@ PopmailConduitFactory::~PopmailConduitFactory()
 		}
 	}
 
-#if 0
+
 	if (qstrcmp(c,"SyncAction")==0)
 	{
 		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);
 
 		if (d)
 		{
-			return new PopmailConduit(d,n,a);
+			return new PopMailConduit(d,n,a);
 		}
 		else
 		{
@@ -132,7 +140,6 @@ PopmailConduitFactory::~PopmailConduitFactory()
 			return 0L;
 		}
 	}
-#endif
 	return 0L;
 }
 
@@ -165,7 +172,7 @@ PopmailWidgetSetup::~PopmailWidgetSetup()
 
 	if (!fConfig) return;
 
-	KConfigGroupSaver s(fConfig,"Popmail-conduit");
+	KConfigGroupSaver s(fConfig,PopmailConduitFactory::group);
 
 	fSendPage->commitChanges(*fConfig);
 	fRecvPage->commitChanges(*fConfig);
@@ -177,7 +184,7 @@ PopmailWidgetSetup::~PopmailWidgetSetup()
 
 	if (!fConfig) return;
 
-	KConfigGroupSaver s(fConfig,"Popmail-conduit");
+	KConfigGroupSaver s(fConfig,PopmailConduitFactory::group);
 
 	fSendPage->readSettings(*fConfig);
 	fRecvPage->readSettings(*fConfig);
@@ -185,4 +192,7 @@ PopmailWidgetSetup::~PopmailWidgetSetup()
 
 
 // $Log$
+// Revision 1.1  2001/12/13 21:40:19  adridg
+// New files for move to .so
+//
 

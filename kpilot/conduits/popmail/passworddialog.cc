@@ -29,7 +29,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to groot@kde.org
 */
 
 // This is an old trick so you can determine what revisions
@@ -141,6 +141,9 @@ const char * PasswordDialog::password()
 
 
 // $Log$
+// Revision 1.8  2001/02/09 15:59:28  habenich
+// replaced "char *id" with "char *<filename>_id", because of --enable-final in configure
+//
 // Revision 1.7  2001/02/07 15:46:31  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //

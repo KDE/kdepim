@@ -27,7 +27,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to groot@kde.org
 */
 // This is an old trick so you can determine what revisions
 // make up a binary distribution.
@@ -110,10 +110,8 @@ static const char *setupDialog_id=
 #include <qvbuttongroup.h>
 #endif
 
-
-#ifndef _KPILOT_SETUPDIALOG_H
+#include "popmail-factory.h"
 #include "setupDialog.moc"
-#endif
 
 
 PopMailSendPage::PopMailSendPage(QWidget *parent) :
@@ -149,7 +147,7 @@ PopMailSendPage::PopMailSendPage(QWidget *parent) :
 	//
 	// Sending mail options.
 	//
-	currentLabel = new QLabel(i18n("Email Address: "), 
+	currentLabel = new QLabel(i18n("Email Address: "),
 			    this);
 
 	fEmailFrom = new QLineEdit(this);
@@ -238,7 +236,7 @@ void PopMailSendPage::readSettings(KConfig &config)
 	fFirewallFQDN->setText(config.readEntry("explicitDomainName", "$MAILDOMAIN"));
 	fKMailSendImmediate->setChecked(config.readBoolEntry("SendImmediate",
 		true));
-	setMode(SendMode(config.readNumEntry("SyncOutgoing",SEND_NONE)));
+	setMode(SendMode(config.readNumEntry(PopmailConduitFactory::syncOutgoing,SEND_NONE)));
 }
 
 /* virtual */ int PopMailSendPage::commitChanges(KConfig& config)
@@ -262,7 +260,7 @@ void PopMailSendPage::readSettings(KConfig &config)
 	config.writeEntry("SMTPPort", fSMTPPort->text());
 	config.writeEntry("explicitDomainName", fFirewallFQDN->text());
 
-	config.writeEntry("SyncOutgoing", (int)getMode());
+	config.writeEntry(PopmailConduitFactory::syncOutgoing, (int)getMode());
 
 	config.writeEntry("SendImmediate", fKMailSendImmediate->isChecked());
 	return 0;
@@ -338,7 +336,7 @@ void PopMailSendPage::browseSignature()
 	}
 #endif
 
-	if (filename.isEmpty()) 
+	if (filename.isEmpty())
 	{
 		filename=QDir::currentDirPath();
 	}
@@ -498,7 +496,7 @@ void PopMailReceivePage::readSettings(KConfig &config)
 	fPopPass->setEnabled(config.readNumEntry("StorePass", 0));
 	fStorePass->setChecked(config.readNumEntry("StorePass", 0));
 	setMode(RetrievalMode(
-		config.readNumEntry("SyncIncoming",RECV_NONE)));
+		config.readNumEntry(PopmailConduitFactory::syncIncoming,RECV_NONE)));
 }
 
 /* virtual */ int PopMailReceivePage::commitChanges(KConfig& config)
@@ -526,7 +524,7 @@ void PopMailReceivePage::readSettings(KConfig &config)
 		config.writeEntry("PopPass",QString::null);
 	}
 
-	config.writeEntry("SyncIncoming", (int)getMode());
+	config.writeEntry(PopmailConduitFactory::syncIncoming, (int)getMode());
 	config.sync();
 
 	return 0;
@@ -678,6 +676,9 @@ PopMailOptions::setupWidget()
 
 
 // $Log$
+// Revision 1.20  2001/12/13 21:35:33  adridg
+// Gave all conduits a config dialog
+//
 // Revision 1.19  2001/07/04 08:53:37  cschumac
 // - Added explicitDomainName text widget to setup dialog
 // - Changed the support for the explicit domain name a little

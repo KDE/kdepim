@@ -29,7 +29,7 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to groot@kde.org
 */
 
 
@@ -154,6 +154,9 @@ private:
 
 
 // $Log$
+// Revision 1.11  2001/12/13 21:35:33  adridg
+// Gave all conduits a config dialog
+//
 // Revision 1.10  2001/10/31 23:47:12  adridg
 // CVS_SILENT: Ongoing conduits ports
 //

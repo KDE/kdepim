@@ -1,3 +1,5 @@
+#ifndef _KPILOT_POPMAIL_CONDUIT_H
+#define _KPILOT_POPMAIL_CONDUIT_H
 /* popmail-conduit.h			KPilot
 **
 ** Copyright (C) 1998,1999,2000 Dan Pilone
@@ -28,56 +30,34 @@
 */
 
 /*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
+** Bug reports and questions can be sent to groot@kde.org
 */
 
 
-#ifndef _KPILOT_POPMAIL_CONDUIT_H
-#define _KPILOT_POPMAIL_CONDUIT_H
+#include <stdio.h>
 
-#include <time.h>
+#include "plugin.h"
 
-#ifndef _PILOT_MAIL_H_
-#include <pi-mail.h>
-#endif
-
-#ifndef _KPILOT_BASECONDUIT_H
-#include "baseConduit.h"
-#endif
-
-#ifndef KSOCK_H
-#include "ksock.h"
-#endif
+class KSocket;
 
 class PilotRecord;
+class PilotDatabase;
 
-class PopMailConduit : public BaseConduit
+class PopMailConduit : public ConduitAction
 {
 public:
-  PopMailConduit(eConduitMode mode);
-  virtual ~PopMailConduit();
-  
-  virtual void doSync();
-  virtual void doTest();
-  virtual QWidget* aboutAndSetup();
+	PopMailConduit(KPilotDeviceLink *d,
+		const char *n=0L,
+		const QStringList &l=QStringList());
+	virtual ~PopMailConduit();
 
-  virtual const char* dbInfo() { return "MailDB"; }
+	virtual void exec();
 
-	virtual QPixmap icon() const;
-
-	/**
-	* Returns a string describing the version of
-	* the popmail conduit being used. This is used
-	* in mail headers and in window captions.
-	*/
-	static const char *version();
-
-
-	enum RetrievalMode { 
-		RECV_NONE=0, 
-		RECV_POP=1, 
+	enum RetrievalMode {
+		RECV_NONE=0,
+		RECV_POP=1,
 		RECV_UNIX=2 } ;
-	enum SendMode { 
+	enum SendMode {
 		SEND_NONE=0,
 		SEND_SENDMAIL=7,
 		SEND_KMAIL=8,
@@ -87,8 +67,11 @@ public:
 
 	static PilotRecord *readMessage(FILE *mailbox,
 	        char *buffer,int bufferSize);
-  
+
 protected:
+	void doSync();
+	void doTest();
+
 	// Pilot -> Sendmail
 	//
 	//
@@ -154,12 +137,16 @@ protected:
 	static int readBody(FILE *,char *buf,int size);
 
 private:
+	PilotDatabase *fDatabase;
 };
 
 #endif
 
 
 // $Log$
+// Revision 1.13  2001/05/03 06:36:34  leitner
+// the typedef is not required here, Compaq C++ even complains about it
+//
 // Revision 1.12  2001/04/26 19:20:17  adridg
 // Respect KMail's outboxFolder setting
 //
