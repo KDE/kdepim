@@ -9,5 +9,4 @@ if test "x$ac_use_exchange" != "xyes"; then
 else
 	AC_DEFINE(KDEPIM_ENABLE_EXCHANGE, 1, [Define if you want Microsoft Exchange 2000 support])
 fi
-~
 
