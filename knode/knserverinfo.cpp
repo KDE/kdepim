@@ -60,31 +60,38 @@ void KNServerInfo::readConf(KConfig *conf)
     i_d=conf->readNumEntry("id", -1);
     n_eedsLogon=conf->readBoolEntry("needsLogon",false);
     u_ser=conf->readEntry("user");
+    p_ass = KNHelper::decryptStr(conf->readEntry("pass"));
+    conf->deleteEntry("pass"); //first time run, don't store it in the config file
+
+    if (Wallet::folderDoesNotExist(Wallet::NetworkWallet(), "knode") ||
+        Wallet::keyDoesNotExist(Wallet::NetworkWallet(), "knode", s_erver))
+      return;
+
     Wallet* wallet = openWallet();
-    if ( !wallet || wallet->readPassword( s_erver, p_ass ) ) {
-      p_ass = KNHelper::decryptStr(conf->readEntry("pass"));
-      conf->deleteEntry("pass");
+    if (!wallet || wallet->readPassword(s_erver, p_ass)) {
       //Save the pass in wallet as this might be the first time it's used
-      if ( wallet )
-        wallet->writePassword( s_erver, p_ass );
+      if (wallet)
+        wallet->writePassword(s_erver, p_ass);
     }
   }
 }
 
 Wallet* KNServerInfo::openWallet()
 {
-  if ( !Wallet::isEnabled() )
+  //I use this because I don't want to bother user with error messages when
+  //he/she didn't even enable wallet.
+  if (!Wallet::isEnabled())
 	return 0;
   QString networkWallet = Wallet::NetworkWallet();
   Wallet* wallet = Wallet::openWallet(networkWallet);
-  if ( !wallet ) {
-    KMessageBox::error( 0, i18n("The wallet couldn't be opened "
-                                "This error is most probably caused "
-                                "by providing a wrong password.") );
+  if (!wallet) {
+    KMessageBox::error(0, i18n("The wallet couldn't be opened "
+                               "This error is most probably caused "
+                               "by providing a wrong password."));
     return 0;
   }
 
-  if ( wallet && !wallet->hasFolder("knode") )
+  if (wallet && !wallet->hasFolder("knode"))
     wallet->createFolder("knode");
   wallet->setFolder("knode");
   return wallet;
@@ -102,11 +109,15 @@ void KNServerInfo::saveConf(KConfig *conf)
     conf->writeEntry("id", i_d);
     conf->writeEntry("needsLogon", n_eedsLogon);
     conf->writeEntry("user", u_ser);
-    Wallet* wallet = openWallet();
-    if ( !wallet || wallet->writePassword( s_erver, p_ass ) ) {
-      KMessageBox::information( 0, i18n( "KWallet isn't running. We strongly recommend using "
-                                        "KWallet for managing your password" ) );
-      conf->writeEntry("pass", KNHelper::encryptStr(p_ass));
+    //open wallet for storing only if the user actually does have the password
+    if (!p_ass.isEmpty()) {
+      Wallet* wallet = openWallet();
+      if (!wallet || wallet->writePassword(s_erver, p_ass)) {
+          KMessageBox::information(0, i18n("KWallet isn't running. We strongly recommend using "
+                                           "KWallet for managing your password"),
+                                   i18n("KWallet isn't running!"), "KWalletWarning" );
+          conf->writeEntry("pass", KNHelper::encryptStr(p_ass));
+      }
     }
   }
 }
