@@ -21,6 +21,7 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include <qfile.h>
 #include <qlayout.h>
 #include <qwidgetstack.h>
 
@@ -35,6 +36,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kmultipledrag.h>
+#include <ktempdir.h>
 #include <ktrader.h>
 #include <kurldrag.h>
 
@@ -430,11 +432,30 @@ void ViewManager::startDrag()
     addrList.append( mCore->addressBook()->findByUid( *it ) );
 
   KMultipleDrag *drag = new KMultipleDrag( this );
-  drag->addDragObject( new QTextDrag( AddresseeUtil::addresseesToEmails( addrList ), this ) );
 
   KABC::VCardConverter converter;
   QString vcards = converter.createVCards( addrList );
+
+  KTempDir tempDir;
+  if ( tempDir.status() == 0 ) {
+    QString fileName;
+    if ( addrList.count() == 1 )
+      fileName = addrList[ 0 ].givenName() + "_" + addrList[ 0 ].familyName() + ".vcf";
+    else
+      fileName = "contacts.vcf";
+
+    QFile tempFile( tempDir.name() + "/" + fileName );
+    if ( tempFile.open( IO_WriteOnly ) ) {
+      tempFile.writeBlock( vcards.utf8() );
+      tempFile.close();
+
+      KURLDrag *urlDrag = new KURLDrag( KURL( tempFile.name() ), this );
+      drag->addDragObject( urlDrag );
+    }
+  }
+
   drag->addDragObject( new KVCardDrag( vcards, this ) );
+  drag->addDragObject( new QTextDrag( AddresseeUtil::addresseesToEmails( addrList ), this ) );
 
   drag->setPixmap( KGlobal::iconLoader()->loadIcon( "vcard", KIcon::Desktop ) );
   drag->dragCopy();
