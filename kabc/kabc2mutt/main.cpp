@@ -66,6 +66,7 @@ int main( int argc, char **argv )
     }
 
     KABC::AddressBook *ab = KABC::StdAddressBook::self();
+    KABC::StdAddressBook::setAutomaticSave( false );
 
     // print addressees
     KABC::AddressBook::Iterator it;
