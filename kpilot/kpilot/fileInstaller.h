@@ -33,10 +33,10 @@
 #define _KPILOT_FILEINSTALLER_H
 
 #include <qobject.h>
-#include <qstring.h>
-#include <qstringlist.h>
 
-class QStrList;
+
+class QStringList;
+class QString;
 
 class FileInstaller : public QObject
 {

@@ -33,6 +33,9 @@
 #include "loggerDCOP.h"
 #include "qobject.h"
 
+class QFile;
+class QTextStream;
+
 class LogFile : public QObject, public LoggerDCOP
 {
 Q_OBJECT

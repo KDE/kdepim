@@ -32,57 +32,31 @@ static const char *pilotdaemon_id =
 // Heck yeah.
 #define ENABLE_KROUPWARE
 
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
 
-#include <time.h>
-
-#ifdef TIME_WITH_SYS_TIME
-#include <sys/time.h>
-#endif
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <dirent.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <signal.h>
-#include <errno.h>
 
-#include <qdir.h>
-#include <qptrlist.h>
-#include <qcursor.h>
-#include <qptrstack.h>
 #include <qtimer.h>
 #include <qtooltip.h>
+#include <qpixmap.h>
 
 #include <kuniqueapplication.h>
-#include <kaboutdata.h>
 #include <kaboutapplication.h>
 #include <kcmdlineargs.h>
 #include <kwin.h>
-#include <ksimpleconfig.h>
 #include <kurl.h>
-#include <ksock.h>
-#include <kstandarddirs.h>
 #include <kpopupmenu.h>
 #include <kiconloader.h>
-#include <kio/netaccess.h>
 #include <kdebug.h>
-#include <ktempfile.h>
 #include <kprocess.h>
 #include <dcopclient.h>
 #include <kurldrag.h>
 #include <kservice.h>
-#include <kservicetype.h>
+#include <kapplication.h>
 
 #include "pilotAppCategory.h"
 
 #include "fileInstaller.h"
-#include "kpilotConfig.h"
 #include "pilotUser.h"
 
 #include "hotSync.h"
@@ -90,6 +64,8 @@ static const char *pilotdaemon_id =
 #include "syncStack.h"
 #include "internalEditorAction.h"
 #include "logFile.h"
+
+#include "kpilotConfig.h"
 
 #ifdef ENABLE_KROUPWARE
 #include "kroupware.h"

@@ -42,12 +42,12 @@ static const char *logf_id =
 #define PILOT_LINK_PATCH "unknown"
 #endif
 #include "logFile.h"
-#include "kpilotSettings.h"
+#include "kpilotConfig.h"
 
 #include "logFile.moc"
 
 
-LogFile::LogFile() : QObject(), DCOPObject("LogIface"), fOutfile(0L), fSyncing(false)
+LogFile::LogFile() : DCOPObject("LogIface"), QObject(), fOutfile(0L), fSyncing(false)
 {
 	FUNCTIONSETUP;
 	(void) logf_id;

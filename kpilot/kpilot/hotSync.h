@@ -34,9 +34,6 @@
 
 class QTimer;
 
-#include <qstring.h>
-#include <qstringlist.h>
-
 #include "syncAction.h"
 #include "syncStack.h"
 

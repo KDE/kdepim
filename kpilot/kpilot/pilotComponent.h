@@ -31,16 +31,11 @@
 /**
   * Base class for any module to KPilot
   */
-#ifndef QWIDGET_H
 #include <qwidget.h>
-#endif
-
-#ifndef QSTRING_H
-#include <qstring.h>
-#endif
 
 struct CategoryAppInfo;
 class QComboBox;
+class QString;
 
 class PilotComponent : public QWidget
 {

@@ -32,8 +32,6 @@
 
 class QTimer;
 
-#include <qstring.h>
-
 #include "syncAction.h"
 
 class CheckUser : public InteractiveAction

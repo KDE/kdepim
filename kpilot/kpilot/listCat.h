@@ -30,10 +30,8 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <qstringlist.h>
-#include <qlistview.h>
-
 #include <klistview.h>
+class QStringList;
 
 /**
  * This Widget extends KListView for a particular purpose:

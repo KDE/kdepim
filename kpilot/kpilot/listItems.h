@@ -31,7 +31,6 @@
 #ifndef _KPILOT_LISTITEMS_H
 #define _KPILOT_LISTITEMS_H
 
-#include <qlistbox.h>
 #include <qlistview.h>
 #include <pi-dlp.h>
 

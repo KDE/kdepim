@@ -140,7 +140,6 @@ ConduitTip::~ConduitTip()
 	tip(fListView->itemRect(l),s);
 }
 
-
 // implement our own check list items so we can detect if a given item was checked/unchecked. We need
 // this to prevent the modified signal if one only wants to display a conduit's config widget. Currently,
 // KListView doesn't provide any signal that indicates that the checked state of a checklist item was changed.
@@ -678,9 +677,10 @@ void ConduitConfigWidget::selected(QListViewItem *p)
 	{
 		if (!release())
 		{
-			p->setSelected(false);
-			fCurrentConduit->setSelected(true);
-			fConduitList->setCurrentItem(fCurrentConduit);
+//			fCurrentConduit->setSelected( true );
+//			p->setSelected(false);
+			fConduitList->setSelected( fCurrentConduit, true );
+//			fConduitList->setCurrentItem( fCurrentConduit );
 			return;
 		}
 	}

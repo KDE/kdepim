@@ -35,10 +35,9 @@ class TodoListView;
 class QComboBox;
 class QPushButton;
 class QTextView;
+class PilotTodoEntry;
 
 class PilotDatabase;
-
-#include "pi-todo.h"
 
 #include "pilotComponent.h"
 #include "pilotTodoEntry.h"

@@ -30,7 +30,6 @@
 
 #include "options.h"
 #include <kdialogbase.h>
-#include <qwidget.h>
 
 class QVBoxLayout;
 class QHBoxLayout;

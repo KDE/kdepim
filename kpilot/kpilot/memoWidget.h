@@ -28,36 +28,19 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <time.h>
-
-#ifndef _PILOT_MEMO_H_
 #include <pi-memo.h>
-#endif
-
-#ifndef KDE_VERSION
-#include <kdeversion.h>
-#endif
-
-#if KDE_VERSION >= 0x30100
-#include <ktextedit.h>
-#else
-#define KTextEdit QTextEdit
-#include <qtextedit.h>
-#endif
-
 #include <qptrlist.h>
+
+#include "pilotComponent.h"
 
 class KPilotInstaller;
 class QListBox;
 class QComboBox;
 class QPushButton;
+class KTextEdit;
 
 class PilotMemo;
 class PilotListItem;
-
-#ifndef _KPILOT_PILOTCOMPONENT_H
-#include "pilotComponent.h"
-#endif
 
 class MemoWidget : public PilotComponent
 {

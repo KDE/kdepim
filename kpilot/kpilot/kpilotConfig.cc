@@ -41,6 +41,7 @@
 #include <kmessagebox.h>
 #include <kglobalsettings.h>
 
+#include "kpilotSettings.h"
 #include "kpilotConfig.h"
 
 static const char kpilotconfig_id[] =
@@ -108,60 +109,6 @@ static const char kpilotconfig_id[] =
 
 	return debug_level;
 }
-
-//static KPilotConfigSettings *theconfig = 0L;
-
-/*KPilotConfigSettings & KPilotConfig::getConfig()
-{
-	FUNCTIONSETUP;
-
-	if (theconfig)
-	{
-		return *theconfig;
-	}
-*/
-	/**
-	* This causes a crash if no instance has been created
-	* yet. A standard KDE error message reports this fact.
-	* It is a grave programming error, so we will let that
-	* stand.
-	*/
-/*	QString existingConfig =
-		KGlobal::dirs()->findResource("config", CSL1("kpilotrc"));
-
-
-	if (existingConfig.isNull())
-	{
-#ifdef DEBUG
-		DEBUGDB << fname << ": Making a new config file" << endl;
-#endif
-		KSimpleConfig *c = new KSimpleConfig(CSL1("kpilotrc"), false);
-
-		c->writeEntry("Configured", ConfigurationVersion);
-		c->sync();
-		delete c;
-
-		theconfig = new KPilotConfigSettings(CSL1("kpilotrc"));
-	}
-	else
-	{
-#ifdef DEBUG
-		DEBUGDB << fname
-			<< ": Re-using existing config file "
-			<< existingConfig << endl;
-#endif
-
-		theconfig = new KPilotConfigSettings(existingConfig);
-	}
-
-	if (theconfig == 0L)
-	{
-		kdWarning() << k_funcinfo
-			<< ": No configuration was found." << endl;
-	}
-
-	return *theconfig;
-}*/
 
 static QFont *thefont = 0L;
 
@@ -322,4 +269,9 @@ void KPilotConfig::addFlagsChangedDatabase(QString db)
 
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::writeConfig();
+}
+
+void KPilotConfig::sync() 
+{
+  KPilotSettings::self()->config()->sync(); 
 }

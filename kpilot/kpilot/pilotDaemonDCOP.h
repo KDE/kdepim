@@ -31,12 +31,11 @@
 */
 
 
-#ifndef _DCOPOBJECT_H
 #include <dcopobject.h>
-#endif
-
 #include <qdatetime.h>
 #include <qstringlist.h>
+class QDateTime;
+class QStringList;
 
 class PilotDaemonDCOP : virtual public DCOPObject
 {

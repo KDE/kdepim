@@ -50,6 +50,7 @@ static const char *memowidget_id =
 #include <kapplication.h>
 #include <kmessagebox.h>
 #include <kfiledialog.h>
+#include <kdeversion.h>
 
 #include "kpilot.h"
 #include "kpilotConfig.h"
@@ -58,6 +59,13 @@ static const char *memowidget_id =
 #include "pilotMemo.h"
 
 #include "memoWidget.moc"
+
+#if KDE_VERSION >= 0x30100
+#include <ktextedit.h>
+#else
+#define KTextEdit QTextEdit
+#include <qtextedit.h>
+#endif
 
 
 // This constant (0xffff) appears all over the place (mostly in

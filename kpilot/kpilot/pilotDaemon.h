@@ -29,30 +29,19 @@
 */
 
 
-#include <qpixmap.h>
 #include <ksystemtray.h>
 
 #include "kpilotlink.h"
 #include "pilotDaemonDCOP.h"
 
-
-class QDragEnterEvent;
-class QDropEvent;
-
-class KServerSocket;
-class KSocket;
-class KProcess;
-class KAboutApplication;
-
-class PilotRecord;
-class KPilotDCOP_stub;
-class LoggerDCOP_stub;
-class LogFile;
-
-
 class PilotDaemon;
-class FileInstaller;
+class QPixmap;
+class KAboutApplication;
 class ActionQueue;
+class FileInstaller;
+class LoggerDCOP_stub;
+class KPilotDCOP_stub;
+class LogFile;
 
 class PilotDaemonTray : public KSystemTray
 {

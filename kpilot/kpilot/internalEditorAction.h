@@ -30,9 +30,9 @@
 
 
 
-#include <qstringlist.h>
 #include "syncAction.h"
 #include "syncStack.h"
+class QStringList;
 
 class InternalEditorAction : public SyncAction
 {

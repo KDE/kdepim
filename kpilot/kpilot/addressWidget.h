@@ -37,7 +37,6 @@ class QTextView;
 class PilotDatabase;
 
 
-
 #include "pilotComponent.h"
 #include "pilotAddress.h"
 

@@ -30,48 +30,14 @@
 */
 
 
-#include <ksimpleconfig.h>
-#include <qdatetime.h>
 #include "kpilotSettings.h"
 
 class KCmdLineArgs;
-class QLineEdit;
-class QComboBox;
-class QCheckBox;
 
-
-/*class KPilotConfigSettings : public KSimpleConfig
-{
-public:
-	KPilotConfigSettings(const QString &filename,bool readonly=false);
-	virtual ~KPilotConfigSettings();
-
-	// Conduit configuration information
-	void addDirtyDatabase(QString db);
-	void addAppBlockChangedDatabase(QString db);
-	void addFlagsChangedDatabase(QString db);
-	
-	QDateTime getLastSyncTime();
-	void setLastSyncTime( QDateTime &);
-	
-} ;*/
 
 class KPilotConfig
 {
 public:
-	/**
-	* Returns a (new) reference to the KPilot configuration object.
-	* This is used to put all the KPilot configuration --
-	* including conduits and such -- into one rc file and
-	* not spread out among config files for each conduit.
-	*
-	* Callers should @em never delete this object.
-	* @em Only call this after the KApplication object has been
-	* created, or the program will crash (SIGSEGV in KDE 2.1,
-	* qFatal() with a sensible message in KDE 2.2).
-	*/
-//	static KPilotConfigSettings& getConfig();
-
 	/**
 	 * @return QString of default path for the BackupDB files
 	 * are located
@@ -127,7 +93,7 @@ public:
 	*/
 	static const QFont& fixed() ;
 	
-	static void sync() { KPilotSettings::self()->config()->sync(); }
+	static void sync();
 } ;
 
 

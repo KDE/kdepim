@@ -29,9 +29,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <qstringlist.h>
-#include <qhbox.h>
-
 // #include "conduitConfigDialog_base.h"
 #include "kcmodule.h"
 
