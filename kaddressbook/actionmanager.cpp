@@ -94,6 +94,8 @@ ActionManager::~ActionManager()
     config->setGroup("MainWindow");
     config->writeEntry("JumpBar", mActionJumpBar->isChecked());
     config->writeEntry("QuickEdit", mActionQuickEdit->isChecked());
+
+    config->sync();
 }
 
 void ActionManager::setReadWrite(bool rw)

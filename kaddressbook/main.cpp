@@ -16,6 +16,7 @@
 class KAddressBookApp : public KUniqueApplication {
   public:
     KAddressBookApp() : mMainWin(0) {}
+    ~KAddressBookApp() { delete mMainWin; }
 
     int newInstance();
 
@@ -50,8 +51,8 @@ int KAddressBookApp::newInstance()
         mMainWin->hide();
     } else {
       if (mMainWin) {
-	mMainWin->show();
-	KWin::setActiveWindow(mMainWin->winId());
+        mMainWin->show();
+        KWin::setActiveWindow(mMainWin->winId());
       } else {
         mMainWin = new KAddressBookMain;
         mMainWin->show();
