@@ -52,8 +52,9 @@ static const char *test_id =
 
 #include "logWidget.h"
 #include "kpilotConfig.h"
-
 #include "syncStack.h"
+#include "hotSync.h"
+#include "interactiveSync.h"
 
 static KCmdLineOptions kpilotoptions[] = {
 	{"port <device>",
@@ -166,20 +167,24 @@ int syncTest(KCmdLineArgs *p)
 	createLogWidget();
 	createLink();
 
-	syncStack = new ActionQueue(deviceLink,&KPilotConfig::getConfig());
+	syncStack = new ActionQueue(deviceLink);
 
 	if (p->isSet("backup"))
 	{
-		syncStack->prepare(ActionQueue::Backup | ActionQueue::WithUserCheck);
+		syncStack->queueInit();
+		syncStack->addAction(new BackupAction(deviceLink));
 	}
 	else if (p->isSet("restore"))
 	{
-		syncStack->prepareRestore();
+		syncStack->queueInit(0);
+		syncStack->addAction(new RestoreAction(deviceLink));
 	}
 	else
 	{
-		syncStack->prepare(ActionQueue::Test);
+		syncStack->queueInit();
+		syncStack->addAction(new TestLink(deviceLink));
 	}
+	syncStack->queueCleanup();
 
 	connectStack();
 	createConnection(p);
@@ -199,16 +204,12 @@ int execConduit(KCmdLineArgs *p)
 	createLogWidget();
 	createLink();
 
-	syncStack = new ActionQueue(deviceLink,&KPilotConfig::getConfig(),l);
-
-	if (p->isSet("test"))
-	{
-		syncStack->prepare(ActionQueue::HotSyncMode|ActionQueue::TestMode);
-	}
-	else
-	{
-		syncStack->prepareSync();
-	}
+	syncStack = new ActionQueue(deviceLink); 
+	syncStack->queueInit();
+	syncStack->queueConduits(&KPilotConfig::getConfig(),l,
+		p->isSet("test") ? (ActionQueue::HotSyncMode|ActionQueue::TestMode) :
+			ActionQueue::HotSyncMode);
+	syncStack->queueCleanup();
 
 	connectStack();
 	createConnection(p);
