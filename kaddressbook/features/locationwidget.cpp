@@ -143,7 +143,7 @@ void LocationWidget::loadLocationPage()
     return;
   }
 
-  KURL url = createUrl( mAddressList[ mAddressTypeCombo->currentItem() ] );
+  KURL url ( createUrl( mAddressList[ mAddressTypeCombo->currentItem() ] ) );
   kapp->invokeBrowser( url.url() );
 }
 

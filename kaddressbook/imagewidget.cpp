@@ -190,7 +190,7 @@ KABC::Picture ImageBaseWidget::image() const
 
 void ImageBaseWidget::loadImage()
 {
-  mImageLabel->setPixmap( loadPixmap( mImageUrl->url() ) );
+  mImageLabel->setPixmap( loadPixmap( KURL( mImageUrl->url() ) ) );
 }
 
 void ImageBaseWidget::updateGUI()
