@@ -114,6 +114,9 @@ bool KABCKonnector::readSyncees()
   if ( !mResource )
     return false;
 
+  if ( !mResource->open() )
+    return false;
+
   mResource->asyncLoad();
 
   return true;
