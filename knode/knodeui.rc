@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="KNode" version="29">
+<kpartgui name="KNode" version="30">
 
 <MenuBar>
   <Menu noMerge="1" name="file"><text>&amp;File</text>
@@ -33,7 +33,7 @@
     <Action name="article_verify"/>
     <Action name="set_charset"/>
   </Menu>
-  <Menu name="go_news"><text>&amp;Go</text>
+  <Menu noMerge="1" name="go_document"><text>&amp;Go</text>
     <Action name="go_prevArticle"/>
     <Action name="go_nextArticle"/>
     <Separator/>
