@@ -56,9 +56,6 @@ class KNComposer : public KMainWindow  {
     KNLocalArticle* article()             { return a_rticle; }
     bool applyChanges();
 
-    // this tells closeEvent() whether it can accept or not:
-    void setDoneSuccess(bool b)           { d_oneSuccess = b; }
-
     void closeEvent(QCloseEvent *e);
 
     //set data from the given article
@@ -89,8 +86,7 @@ class KNComposer : public KMainWindow  {
     QString s_ignature, u_nwraped;
     QCString c_harset;
     MessageMode m_ode;
-    bool d_oneSuccess,
-         n_eeds8Bit,    // false: fall back to us-ascii
+    bool n_eeds8Bit,    // false: fall back to us-ascii
          v_alidated,    // hasValidData was run and found no problems, n_eeds8Bit is valid
          a_uthorDislikesMailCopies;
 

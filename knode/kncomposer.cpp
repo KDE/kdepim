@@ -661,12 +661,9 @@ void KNComposer::closeEvent(QCloseEvent *e)
     }
   }
 
-  d_oneSuccess = true;
-  emit composerDone(this);
-  if(d_oneSuccess)
     e->accept();
-  else
-    e->ignore();
+  emit composerDone(this);
+  // we're dead at this point, don't access members!
 }
 
 

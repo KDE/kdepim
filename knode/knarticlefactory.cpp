@@ -1003,8 +1003,6 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
         if ( com->applyChanges() )
           sendArticles(&lst, true);
       }
-      else
-        com->setDoneSuccess(false);
     break;
 
     case KNComposer::CRsendLater:
@@ -1013,8 +1011,6 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
         if ( com->applyChanges() )
           sendArticles(&lst, false);
       }
-      else
-        com->setDoneSuccess(false);
     break;
 
     case KNComposer::CRsave :
