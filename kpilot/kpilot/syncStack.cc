@@ -117,7 +117,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	}
 
 	QStringList l;
-	switch(fMode && ActionQueue::ActionMask)
+	switch(fMode & ActionQueue::ActionMask)
 	{
 	case ActionQueue::Backup :
 		l.append(CSL1("--backup"));
@@ -162,6 +162,14 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 
 	logMessage(i18n("[Conduit %1]").arg(fDesktopName));
 
+	QString conduitFlags = TODO_I18N("Running with flags: ");
+	for (QStringList::ConstIterator i = l.begin() ; i!=l.end(); ++i)
+	{
+		conduitFlags.append(*i);
+		conduitFlags.append(CSL1("  "));
+	}
+	
+	logMessage(conduitFlags);
 
 	// Handle the syncDone signal properly & unload the conduit.
 	QObject::connect(fConduit,SIGNAL(syncDone(SyncAction *)),
