@@ -525,8 +525,8 @@ void VCalConduitBase::cleanup()
 {
 	FUNCTIONSETUP;
 
-	fCurrentDatabase->resetSyncFlags();
-	fBackupDatabase->resetSyncFlags();
+	if (fCurrentDatabase) fCurrentDatabase->resetSyncFlags();
+	if (fBackupDatabase) fBackupDatabase->resetSyncFlags();
 	KPILOT_DELETE(fCurrentDatabase);
 	KPILOT_DELETE(fBackupDatabase);
 
@@ -691,6 +691,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.8  2002/05/18 13:08:57  kainhofe
+// dirty flag is now cleared, conflict resolution shows the correct item title and asks the correct question
+//
 // Revision 1.7  2002/05/16 13:06:48  mhunter
 // Corrected typographical errors and Palm -> Pilot for consistency
 //
