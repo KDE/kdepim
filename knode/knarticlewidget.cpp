@@ -179,12 +179,11 @@ KNArticleWidget::KNArticleWidget(QWidget *parent, const char *name )
 	        this, SLOT(slotPopup(const QString&, const QPoint&)));
 	instances.append(this);	
 
-  // No need to deal with focus policies here :) KHTMLPart does it all for us :) (Simon)
-  //	p_art->view()->viewport()->setFocusPolicy(QWidget::NoFocus);
+  p_art->view()->viewport()->setFocusPolicy(QWidget::NoFocus);
   instances.append(this);	
   view=p_art->view();
-  //	view->viewport()->setFocusProxy(this);
-  //  setFocusPolicy(QWidget::WheelFocus);
+  view->viewport()->setFocusProxy(this);
+  setFocusPolicy(QWidget::WheelFocus);
   urlPopup=new QPopupMenu();
   urlPopup->insertItem(i18n("Open URL"), PUP_OPEN);
   urlPopup->insertItem(i18n("Copy to clipboard"), PUP_COPY);
@@ -194,15 +193,11 @@ KNArticleWidget::KNArticleWidget(QWidget *parent, const char *name )
 
   actSave = KStdAction::save(this, SLOT(slotSave()), &actionCollection);
   actSave->setEnabled(false);
-  actPrint = KStdAction::print(this, SLOT(slotPrint()), &actionCollection);
+  actPrint = KStdAction::print(p_art->browserExtension(), SLOT(print()), &actionCollection);
   actPrint->setEnabled(false);
-  actCopy = KStdAction::copy(this, SLOT(slotCopy()), &actionCollection);
+  actCopy = KStdAction::copy(p_art->browserExtension(), SLOT(copy()), &actionCollection);
   actCopy->setEnabled(false);
   connect(p_art,SIGNAL(selectionChanged()),this,SLOT(slotSelectionChanged()));
-/*  KAction *act = p_art->actionCollection()->action( "selectAll" );
-  if (act) actionCollection.insert(act);
-  act = p_art->actionCollection()->action( "find" );
-  if (act) actionCollection.insert(act); */
 
 	applyConfig();
 }
@@ -283,6 +278,12 @@ void KNArticleWidget::keyPressEvent(QKeyEvent *e)
    	default:
    	  QVBox::keyPressEvent(e);
   }
+}
+
+
+void KNArticleWidget::wheelEvent(QWheelEvent *e)
+{
+  QApplication::sendEvent( view, e);
 }
 
 
@@ -833,23 +834,6 @@ void KNArticleWidget::slotSave()
 {
   if(a_rticle)
 		KNArticleManager::saveArticleToFile(a_rticle);
-}
-
-
-
-void KNArticleWidget::slotPrint()
-{
-  KAction *print = p_art->actionCollection()->action( "printFrame" );
-  if (print)
-    print->activate();
-}
-
-
-
-void KNArticleWidget::slotCopy()
-{
-  if (p_art->hasSelection())
-		QApplication::clipboard()->setText(p_art->selectedText());
 }
 
 

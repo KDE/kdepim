@@ -75,6 +75,7 @@ class KNArticleWidget : public QVBox  {
 		void focusInEvent(QFocusEvent *e);
 		void focusOutEvent(QFocusEvent *e);
 		void keyPressEvent(QKeyEvent *e);
+		void wheelEvent(QWheelEvent *e);
 		QString toHtmlString(const QString &line, bool parseURLs=true, bool beautification=true);
 		void openURL(const QString &url);
 		void saveAttachement(const QString &id);
@@ -101,8 +102,6 @@ class KNArticleWidget : public QVBox  {
 		void slotURLRequest (const KURL &url, const KParts::URLArgs &args);
 		void slotPopup(const QString &url, const QPoint &p);
 		void slotSave();
-    void slotPrint();
-    void slotCopy();
  		void slotSelectionChanged();
 		
 	signals:
