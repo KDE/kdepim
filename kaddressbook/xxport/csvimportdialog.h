@@ -100,6 +100,7 @@ class CSVImportDialog : public KDialogBase
     void fillComboBox();
     void setText( int row, int col, const QString& text );
     void adjustRows( int rows );
+    void resizeColumns();
     QString getText( int row, int col );
     uint posToType( int pos ) const;
     int typeToPos( uint type ) const;

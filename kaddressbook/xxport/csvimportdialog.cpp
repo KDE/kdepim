@@ -630,6 +630,8 @@ void CSVImportDialog::fillTable()
       item->setCurrentItem( typeToPos( Undefined ) );
     mTable->adjustColumn( column );
   }
+
+  resizeColumns();
 }
 
 void CSVImportDialog::clearTable()
@@ -691,6 +693,20 @@ void CSVImportDialog::adjustRows( int rows )
     mTable->setNumRows( rows );
     mAdjustRows = false;
   }
+}
+
+void CSVImportDialog::resizeColumns()
+{
+  QFontMetrics fm = fontMetrics();
+  int width = 0;
+
+  QMap<QString, uint>::ConstIterator it;
+  for ( it = mTypeMap.begin(); it != mTypeMap.end(); ++it ) {
+    width = QMAX( width, fm.width( it.key() ) );
+  }
+
+  for ( int i = 0; i < mTable->numCols(); ++i )
+    mTable->setColumnWidth( i, QMAX( width + 15, mTable->columnWidth( i ) ) );
 }
 
 void CSVImportDialog::returnPressed()
