@@ -107,7 +107,7 @@ EmpathFolder::update()
     unsigned int read = index_->count();
 
     if ((oldUnread != unread) || (oldRead != read)) {
-        empathDebug("Count changed");
+//        empathDebug("Count changed");
         emit(countUpdated(index_->countUnread(), index_->count()));
     }
 }

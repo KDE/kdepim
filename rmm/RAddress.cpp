@@ -115,7 +115,8 @@ RAddress::_parse()
     } else {
 
         RMailbox m(s);
-        m.parse();
+        // XXX Is this necessary ?
+        // m.parse();
         mailboxList_.append(m);
     }
 }
@@ -130,8 +131,7 @@ RAddress::_assemble()
 
     } else {
         
-        RMailbox m(*(mailboxList_.at(0)));
-        strRep_ = m.asString();
+        strRep_ = mailboxList_.at(0)->asString();
     }
 }
 

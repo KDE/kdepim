@@ -159,7 +159,9 @@ EmpathMessageViewWidget::s_retrieveJobFinished(EmpathRetrieveJob j)
 
                         empathDebug("Using this HTML part as body");
 
-                        s = QString::fromUtf8(it.current()->asString());
+                        s =QString::fromUtf8(
+                            ((it.current()->body()).at(0))->asString());
+
                         messageWidget_->show(s);
                         return;
     

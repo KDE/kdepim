@@ -1,5 +1,4 @@
 #include <qlist.h>
-#include <iostream>
 
 #include <RMM_HeaderList.h>
 #include <RMM_Envelope.h>
@@ -100,7 +99,8 @@ REnvelope::_parse()
                 QCString s(rstart);
 
                 RHeader * h = new RHeader(s);
-                h->parse();
+                // XXX Is this necessary ?
+//                h->parse();
                 headerList_.append(h);
             }
 
@@ -267,14 +267,14 @@ REnvelope::addHeader(const QCString & s)
 REnvelope::firstSender()
 {
     parse();
-    rmmDebug("firstSender() called");
+//    rmmDebug("firstSender() called");
 
     if (!has(HeaderFrom)) {
-        cerr << "No HeaderFrom - returning sender()" << endl;
+        rmmDebug("No HeaderFrom - returning sender()");
         return sender();
     }
     
-    cerr << "Returning from().at(0) == `" << from().at(0).asString() << "'" << endl;
+//    cerr << "Returning from().at(0) == `" << from().at(0).asString() << "'" << endl;
     return from().at(0);
 }
 

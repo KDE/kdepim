@@ -88,15 +88,15 @@ RParameter::_parse()
     int split = strRep_.find('=');
     
     if (split == -1) {
-        rmmDebug("Invalid parameter");
+        rmmDebug("Invalid parameter `" + strRep_ + "'");
         return;
     }
     
     attribute_    = strRep_.left(split).stripWhiteSpace();
     value_        = strRep_.right(strRep_.length() - split - 1).stripWhiteSpace();
     
-    rmmDebug("attribute == \"" + attribute_ + "\"");
-    rmmDebug("value     == \"" + value_ + "\"");
+//    rmmDebug("attribute == \"" + attribute_ + "\"");
+//    rmmDebug("value     == \"" + value_ + "\"");
 }
 
     void

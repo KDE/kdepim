@@ -72,7 +72,6 @@ EmpathMessageHTMLWidget::~EmpathMessageHTMLWidget()
     void
 EmpathMessageHTMLWidget::show(const QString & xml)
 {
-    empathDebug("");
     if (xml.isNull()) {
         empathDebug("xml is empty");
         setText(i18n("<i>No text to display</i>"));
@@ -93,6 +92,7 @@ EmpathMessageHTMLWidget::show(const QString & xml)
     setLinkColor(c->readColorEntry(UI_LINK, DFLT_LINK));
     setLinkUnderline(c->readBoolEntry(UI_UNDERLINE_LINKS, DFLT_UNDER_LINKS));
 
+    empathDebug("About to setText(xml). Watch Qt crash.");
     setText(xml);
 }
 

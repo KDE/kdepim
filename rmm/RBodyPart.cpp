@@ -291,7 +291,8 @@ RBodyPart::_parse()
 
         body_.append(newPart);
         
-        newPart->parse();
+        // XXX Is this necessary ?
+//        newPart->parse();
         
         previousBoundaryEnd = boundaryStart + bound.length();
         

@@ -127,12 +127,14 @@ RParameterList::createDefault()
 RParameterList::list()
 {
     parse();
+#if 0
     QValueList<RParameter>::Iterator it(list_.begin());
 
     for (; it != list_.end(); ++it) {
     rmmDebug("Parameter: `" + (*it).attribute() + "', `" +
                         (*it).value() + "'");
     }
+#endif
     return list_;
 }
 
