@@ -88,7 +88,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime 
       // Transparent
       continue;
 
-    for(i=0; i<=duration; i++) {
+    for( i = 0; i <= duration; ++i ) {
       day=(start.addDays(i).date());
       tmpStart.setDate(day);
       tmpEnd.setDate(day);
@@ -96,7 +96,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime 
       if( event->doesRecur() ) {
         if ( event->isMultiDay() ) {
           extraDays = event->dtStart().date().daysTo(event->dtEnd().date());
-          for (x=0; x<=extraDays; x++) {
+          for ( x = 0; x <= extraDays; ++x ) {
             if ( event->recursOn(day.addDays(-x))) {
               tmpStart.setDate(day.addDays(-x));
               tmpStart.setTime(event->dtStart().time());
@@ -192,7 +192,7 @@ void FreeBusy::sortList()
 
   while( mBusyPeriods.count() > 0 ) {
     earlyTime=(*mBusyPeriods.begin()).start();
-    for (tmpPeriod=mBusyPeriods.begin(); tmpPeriod!=mBusyPeriods.end(); tmpPeriod++) {
+    for ( tmpPeriod = mBusyPeriods.begin(); tmpPeriod != mBusyPeriods.end(); ++tmpPeriod ) {
       if (earlyTime.secsTo((*tmpPeriod).start()) <= 0) {
         earlyTime=(*tmpPeriod).start();
         earlyPeriod=tmpPeriod;
