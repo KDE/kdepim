@@ -32,7 +32,6 @@
 
 #include <klocale.h>
 #include <kglobalsettings.h>
-#include <kiconloader.h>
 #include <kdebug.h>
 #include <kconfig.h>
 #include <kapplication.h>
@@ -156,7 +155,7 @@ ContactListViewItem::ContactListViewItem(const KABC::Addressee &a,
     parentListView( parent ), mDocument(doc), mIMProxy( proxy )
 {
   if ( mIMProxy )
-    mHasIM = ( !( mIMProxy->allContacts().find( mAddressee.uid() ) == mIMProxy->allContacts().end() ) );
+    mHasIM = mIMProxy->isPresent( mAddressee.uid() );
   else
     mHasIM = false;
   refresh();
@@ -223,8 +222,11 @@ void ContactListViewItem::refresh()
     return;
 
   int i = 0;
-  if ( mHasIM )
+  // don't show unknown presence, it's not interesting
+  if ( mHasIM && mIMProxy->presenceNumeric( mAddressee.uid() ) > 0 )
     setPixmap( parentListView->imColumn(), mIMProxy->presenceIcon( mAddressee.uid() ) );
+  else
+    setPixmap( parentListView->imColumn(), QPixmap() );
 
   KABC::Field::List::ConstIterator it;
   for ( it = mFields.begin(); it != mFields.end(); ++it ) {

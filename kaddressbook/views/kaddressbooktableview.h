@@ -103,8 +103,8 @@ friend class ContactListView;
     void rmbClicked( KListView*, QListViewItem*, const QPoint& );
 
     /**
-	 * Called to update the presence of a single item
-	 */
+     * Called to update the presence of a single item
+     */
     void updatePresence( const QString &uid );
 
   private:
