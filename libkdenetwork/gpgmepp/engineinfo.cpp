@@ -53,7 +53,8 @@ GpgME::EngineInfo::EngineInfo( const EngineInfo & other )
 
 
 GpgME::EngineInfo::~EngineInfo() {
-  delete d; d = 0;
+  if ( d )
+    d->deref();
 }
 
 const GpgME::EngineInfo & GpgME::EngineInfo::operator=( const GpgME::EngineInfo & other ) {
