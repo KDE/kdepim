@@ -52,6 +52,7 @@ static const char *test_id =
 
 #include "hotSync.h"
 #include "interactiveSync.h"
+#include "plugin.h"
 
 
 static KCmdLineOptions kpilotoptions[] = {
@@ -115,6 +116,11 @@ int syncTest(KCmdLineArgs *p)
 	else
 	{
 		head = tail = new TestLink(t);
+
+		QObject::connect(head, SIGNAL(logError(const QString &)),
+			w, SLOT(addError(const QString &)));
+		QObject::connect(head, SIGNAL(logMessage(const QString &)),
+			w, SLOT(addMessage(const QString &)));
 	}
 
 	QObject::connect(t, SIGNAL(logError(const QString &)),
@@ -216,7 +222,7 @@ int execConduit(KCmdLineArgs *p)
 	kapp->setMainWidget(w);
 
 	KPilotDeviceLink *t = KPilotDeviceLink::init(0, "deviceLink");
-	SyncAction *head = 0L;
+	ConduitAction *head = 0L;
 
 	QStringList l;
 	if (p->isSet("test"))
@@ -233,15 +239,16 @@ int execConduit(KCmdLineArgs *p)
 		return 1;
 	}
 
-	head = dynamic_cast<SyncAction *>(object);
+	head = dynamic_cast<ConduitAction *>(object);
 
 	if (!head)
 	{
 		kdWarning() << k_funcinfo
-			<< ": Can't cast to SyncAction."
+			<< ": Can't cast to ConduitAction."
 			<< endl;
 		return 1;
 	}
+	head->setConfig(&KPilotConfig::getConfig());
 
 	QObject::connect(t, SIGNAL(logError(const QString &)),
 		w, SLOT(addError(const QString &)));
@@ -305,6 +312,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.10  2001/10/10 22:20:52  adridg
+// Added --notest, --exec-conduit
+//
 // Revision 1.9  2001/10/08 22:20:18  adridg
 // Changeover to libkpilot, prepare for lib-based conduits
 //
