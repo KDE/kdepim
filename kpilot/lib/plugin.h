@@ -174,20 +174,35 @@ public:
 	void setConfig(KConfig *c) { fConfig=c; } ;
 
 	QString conduitName() const { return fConduitName; } ;
+
 protected:
 	bool isTest() const { return fTest; } ;
 	bool isBackup() const { return fBackup; } ;
 	bool isLocal() const { return fLocal; } ;
+	
 	int getSyncDirection() const { return fSyncDirection; };
-	eConflictResolution getConflictResolution() const {return fConflictResolution; };
-	/* A full sync happens for eFullSync, eCopyPCToHH and eCopyHHToPC. It completely ignore
-	   all modified flags and walks through all records in the database */
-	bool isFullSync() const { return fFirstSync || (fSyncDirection!=SyncAction::eFastSync && fSyncDirection!=SyncAction::eHotSync);}
-	// A first sync (i.e. database newly fetched from the handheld )
-	// does not check for deleted records, but understands them as
-	// added on the other side. The flag is set by the conduits
-	// when opening the local database, or the calendar/addressbook (if it is empty)
-	// This also implies a full sync
+	eConflictResolution getConflictResolution() const 
+		{ return fConflictResolution; };
+
+	/**
+	* A full sync happens for eFullSync, eCopyPCToHH and eCopyHHToPC. It 
+	* completely ignores all modified flags and walks through all records 
+	* in the database.
+	*/
+	bool isFullSync() const 
+	{ 
+		return fFirstSync || 
+			(fSyncDirection!=SyncAction::eFastSync && 
+			fSyncDirection!=SyncAction::eHotSync);
+	}
+
+	/**
+	* A first sync (i.e. database newly fetched from the handheld )
+	* does not check for deleted records, but understands them as
+	* added on the other side. The flag is set by the conduits
+	* when opening the local database, or the calendar/addressbook 
+	* (if it is empty). This also implies a full sync.
+	*/
 	bool isFirstSync() const {
 		return fFirstSync ||
 		(fSyncDirection==SyncAction::eCopyHHToPC) ||

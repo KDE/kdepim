@@ -69,18 +69,6 @@ ConduitConfigBase::~ConduitConfigBase()
 	fModified=true;
 }
 
-#if 0
-void ConduitConfigBase::commit(KConfig *)
-{
-	FUNCTIONSETUP;
-}
-
-void ConduitConfigBase::load(KConfig *)
-{
-	FUNCTIONSETUP;
-}
-#endif
-
 /* virtual */ QString ConduitConfigBase::maybeSaveText() const
 {
 	FUNCTIONSETUP;
