@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Twister
+Exec=twister
+Icon=twister
+DocPath=twister/index.html
+Comment=PIM client
+Terminal=0
+Type=Application

@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Service
+Comment=twister browser
+Name=TwisterBrowser
+ServiceTypes=KParts/ReadWritePart
+X-KDE-Library=libTwisterBrowser
