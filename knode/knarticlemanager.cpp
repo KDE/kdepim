@@ -660,8 +660,6 @@ void KNArticleManager::slotItemExpanded(QListViewItem *p)
   int idRef=0, topId=0;
   KNRemoteArticle *art, *ref;
   KNHdrViewItem *hdrItem;
-
-
   bool inThread=false;
   KNConfig::ReadNewsGeneral *rng=knGlobals.cfgManager->readNewsGeneral();
 
@@ -669,9 +667,11 @@ void KNArticleManager::slotItemExpanded(QListViewItem *p)
     //kdDebug(5003) << "KNFetchArticleManager::slotItemExpanded() : childCount = " << p->childCount() << " => returning" << endl;
     return;
   }
+
+  knGlobals.top->setCursorBusy(true);
+
   hdrItem=static_cast<KNHdrViewItem*>(p);
   topId=hdrItem->art->id();
-
 
   for(int i=0; i<g_roup->count(); i++) {
     art=g_roup->at(i);
@@ -698,6 +698,8 @@ void KNArticleManager::slotItemExpanded(QListViewItem *p)
 
   if(rng->totalExpandThreads())
     hdrItem->expandChildren();
+
+  knGlobals.top->setCursorBusy(false);
 }
 
 //-----------------------------
