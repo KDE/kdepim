@@ -40,6 +40,7 @@
 #include <kdebug.h>
 
 #include <qcstring.h>
+#include <kstaticdeleter.h>
 
 #include <cassert>
 #include <cstring>
@@ -49,36 +50,42 @@ using namespace KMime;
 namespace KMime {
 
 // global list of KMime::Codec's
-QAsciiDict<Codec> Codec::all( 11, false /* case-insensitive */);
+QAsciiDict<Codec>* Codec::all = 0;
+static KStaticDeleter<QAsciiDict<Codec> > sdAll;
 #if defined(QT_THREAD_SUPPORT)
-QMutex Codec::dictLock;
+QMutex* Codec::dictLock = 0;
+static KStaticDeleter<QMutex> sdDictLock;
 #endif
 
 void Codec::fillDictionary() {
 
-  all.setAutoDelete(true);
+  all->setAutoDelete(true);
 
-  //all.insert( "7bit", new SevenBitCodec() );
-  //all.insert( "8bit", new EightBitCodec() );
-  all.insert( "base64", new Base64Codec() );
-  all.insert( "quoted-printable", new QuotedPrintableCodec() );
-  all.insert( "b", new Rfc2047BEncodingCodec() );
-  all.insert( "q", new Rfc2047QEncodingCodec() );
-  all.insert( "x-kmime-rfc2231", new Rfc2231EncodingCodec() );
-  all.insert( "x-uuencode", new UUCodec() );
-  //all.insert( "binary", new BinaryCodec() );
+  //all->insert( "7bit", new SevenBitCodec() );
+  //all->insert( "8bit", new EightBitCodec() );
+  all->insert( "base64", new Base64Codec() );
+  all->insert( "quoted-printable", new QuotedPrintableCodec() );
+  all->insert( "b", new Rfc2047BEncodingCodec() );
+  all->insert( "q", new Rfc2047QEncodingCodec() );
+  all->insert( "x-kmime-rfc2231", new Rfc2231EncodingCodec() );
+  all->insert( "x-uuencode", new UUCodec() );
+  //all->insert( "binary", new BinaryCodec() );
 
 }
 
 Codec * Codec::codecForName( const char * name ) {
 #if defined(QT_THREAD_SUPPORT)
-  dictLock.lock(); // protect "all"
+  if ( !dictLock )
+    sdDictLock.setObject( dictLock, new QMutex );
+  dictLock->lock(); // protect "all"
 #endif
-  if ( all.isEmpty() )
+  if ( !all ) {
+    sdAll.setObject( all, new QAsciiDict<Codec>( 11, false /* case-insensitive */) );
     fillDictionary();
-  Codec * codec = all[ name ];
+  }
+  Codec * codec = (*all)[ name ];
 #if defined(QT_THREAD_SUPPORT)
-  dictLock.unlock();
+  dictLock->unlock();
 #endif
 
   if ( !codec )

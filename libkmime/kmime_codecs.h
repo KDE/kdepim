@@ -56,9 +56,9 @@ class Decoder;
 class Codec {
 protected:
 
-  static QAsciiDict<Codec> all;
+  static QAsciiDict<Codec>* all;
 #if defined(QT_THREAD_SUPPORT)
-  static QMutex dictLock;
+  static QMutex* dictLock;
 #endif
 
   Codec() {}
