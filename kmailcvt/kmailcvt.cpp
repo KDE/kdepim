@@ -43,6 +43,9 @@ void KMailCVT::next() {
 	if( currentPage() == selfilterpage ){
 		// Save selected filter
 		Filter *selectedFilter = selfilterpage->getSelectedFilter();
+		// without filter don't go next
+		if (!selectedFilter)
+			return;
 		// Goto next page
 		KWizard::next();
 		// Disable back & finish
