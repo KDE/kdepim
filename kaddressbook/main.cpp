@@ -22,6 +22,7 @@
 */
 
 #include <stdlib.h>
+#include <unistd.h>
 
 #include <qstring.h>
 
@@ -56,6 +57,7 @@ int KAddressBookApp::newInstance()
     // There can only be one main window
     if ( KMainWindow::canBeRestored( 1 ) ) {
       mMainWin = new KAddressBookMain;
+      setMainWidget( mMainWin );
       mMainWin->show();
       mMainWin->restore( 1 );
     }
@@ -63,23 +65,30 @@ int KAddressBookApp::newInstance()
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
     if ( args->isSet( "editor-only" ) ) {
-      if ( !mMainWin )
-        mMainWin = new KAddressBookMain;
+        if ( !mMainWin ) {
+          mMainWin = new KAddressBookMain;
+          setMainWidget( mMainWin );
+          mMainWin->hide();
+        }
+        // otherwise, leave the window like it is (hidden or shown)
         KStartupInfo::appStarted();
-        mMainWin->hide();
     } else {
-      if ( mMainWin ) {
-        mMainWin->show();
-        KWin::activateWindow( mMainWin->winId() );
-        KStartupInfo::appStarted();
-      } else {
+      if ( !mMainWin ) {
         mMainWin = new KAddressBookMain;
-        mMainWin->show();
+        setMainWidget( mMainWin );
       }
+      mMainWin->show();
     }
 
     mMainWin->handleCommandLine();
   }
+
+  // Handle startup notification and window activation
+  // We do it ourselves instead of calling KUniqueApplication::newInstance
+  // to avoid the show() call there.
+#if defined Q_WS_X11 && ! defined K_WS_QTONLY
+  KStartupInfo::setNewStartupId( mMainWin, kapp->startupId() );
+#endif
 
   return 0;
 }
