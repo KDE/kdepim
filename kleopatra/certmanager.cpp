@@ -104,23 +104,9 @@ void CertManager::newCertificate()
       QByteArray data;
       QDataStream arg( data, IO_WriteOnly );
       arg << wizard->caEmailED->text();
-      arg << QString( "" ); // CC:
-      arg << QString( "" ); // BCC:
-      arg << i18n( "Certificate Request" ); // Subject:
-      arg << i18n( "Please process this certificate request" ); // Body
-      arg << 0; // not hidden
-      arg << QString( "smime.p10" ); // attachment name
-      arg << QCString( "base64" ); // content transfer encoding
-      arg << QCString( wizard->keyData() );
-      arg << QCString( "application" ); // attachment type
-      arg << QCString( "pkcs10" ); // attachment subtype
-      arg << QCString( "" ); // attachment param attr
-      arg << QString( "" ); // attachment param value
-      arg << QCString( "attachment" ); // attachment content disposition
-      QCString replyType;
-      QByteArray replyData;
+      arg << wizard->keyData();
       if( !dcopClient->send( "kmail*", "KMailIface",
-                             "openComposer(QString,QString,QString,QString,QString,int,QString,QCString,QCString,QCString,QCString,QCString,QString,QCString)", data ) ) {
+                             "sendCertificate(QString,QByteArray)", data ) ) {
           KMessageBox::error( this,
                               i18n( "DCOP Communication Error, can't ask KMail to send certificate" ),
                               i18n( "Certificate Manager Error" ) );
