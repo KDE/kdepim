@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=KOrganizer ListMaker Conduit
+Name[de]=Terminplaner-ListMaker
+Name[en_GB]=KOrganiser ListMaker Conduit
+Implemented=file
+ServiceTypes=KPilotConduit
+X-KDE-Library=libListMakerConduit
