@@ -23,6 +23,10 @@
 
 #include <kconfigwizard.h>
 
+#include "kresources/imap/kcal/resourceimap.h"
+
+#include <libkcal/resourcecalendar.h>
+
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kdebug.h>
@@ -45,6 +49,13 @@ class CreateImapResource : public KConfigPropagator::Change
     void apply()
     {
       kdDebug() << "Create IMAP Resource" << endl;
+
+      KCal::CalendarResourceManager m( "calendar" );
+      m.readConfig();
+      KCal::ResourceIMAP *r = new KCal::ResourceIMAP( "FIXME" );
+      r->setResourceName( i18n("Kolab") );
+      m.add( r );
+      m.writeConfig();
     }
 };
 
@@ -85,8 +96,16 @@ class KolabPropagator : public KConfigPropagator
       c->value = freeBusyBaseUrl;
 
       changes.append( c );
-    
-      changes.append( new CreateImapResource );
+
+      KCal::CalendarResourceManager m( "calendar" );
+      m.readConfig();
+      KCal::CalendarResourceManager::Iterator it;
+      for ( it = m.begin(); it != m.end(); ++it ) {
+        if ( (*it)->type() == "imap" ) break;
+      }
+      if ( it == m.end() ) {
+        changes.append( new CreateImapResource );
+      }
     }
 };
 
