@@ -78,6 +78,11 @@
 // For ostream
 #include <iostream>
 // For QString, and everything else needs it anyway.
+#if defined(DEBUG) && defined(DEBUG_CERR)
+#ifdef QT_NO_CAST_ASCII
+#undef QT_NO_CAST_ASCII
+#endif
+#endif
 #include <qstring.h>
 // Dunno, really. Probably because everything needs it.
 #include <klocale.h>
