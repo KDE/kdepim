@@ -376,12 +376,15 @@ int CertManager::importCertificateWithFingerprint( const QString& fingerprint )
   bool truncated;
   qDebug("Importing certificate with fpr %s", fingerprint.latin1() );
   int retval = pWrapper->importCertificate( fingerprint );
+  
   CryptPlugWrapper::CertificateInfoList lst = pWrapper->listKeys( fingerprint, false, &truncated );
-  if( !retval && !lst.isEmpty() && lst.first().fingerprint == fingerprint ) {
+  if( !retval ) return retval;
+  if( haveCertificate( fingerprint ) ) {
     // It seems everyting went OK!
     qDebug("Got cert with DN=%s", lst.first().userid[0].latin1() );
   } else {
-    if( !retval ) retval = -1;
+    // Everything went OK, but the certificate wasn't imported
+    retval = -42;
   }
   if( !isRemote() ) loadCertificates();
   return retval;
