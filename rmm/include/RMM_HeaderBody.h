@@ -33,8 +33,6 @@ namespace RMM {
  */
 class RHeaderBody : public RMessageComponent {
 
-    public:
-        
 #include "generated/RHeaderBody_generated.h"
         
 };

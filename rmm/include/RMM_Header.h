@@ -38,9 +38,10 @@ namespace RMM {
  */
 class RHeader : public RMessageComponent
 {
-    public:
-        
+
 #include "generated/RHeader_generated.h"
+        
+    public:
         
         QCString headerName();
         RMM::HeaderType headerType();
@@ -53,14 +54,14 @@ class RHeader : public RMessageComponent
     private:
         
         QCString        headerName_;
-        RMM::HeaderType    headerType_;
-        RHeaderBody *    headerBody_;
+        RMM::HeaderType headerType_;
+        RHeaderBody *   headerBody_;
 };
 
 typedef QListIterator<RHeader> RHeaderListIterator;
 typedef QList<RHeader> RHeaderList;
 
-};
+}
 
 #endif
 

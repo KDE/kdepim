@@ -41,26 +41,23 @@ namespace RMM {
  */ 
 class RDateTime : public RHeaderBody {
 
-    public:
-        
 #include "generated/RDateTime_generated.h"
 
+    public:
+        
         friend QDataStream & operator >> (QDataStream & s, RDateTime & dt);
         friend QDataStream & operator << (QDataStream & s, RDateTime & dt);
 
         QDateTime qdt() { parse(); return qdate_; }
-        void    setTimeZone    (const QCString &);
+        void setTimeZone(const QCString &);
     
-        QCString     timeZone();
+        QCString    timeZone();
         Q_UINT32    asUnixTime();
 
     private:
 
         QCString    zone_;
-        QDateTime    qdate_;
-        
-        bool        parsed_;
-        bool        assembled_;
+        QDateTime   qdate_;
 };
 
 }

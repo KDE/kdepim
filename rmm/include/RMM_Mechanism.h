@@ -34,13 +34,11 @@ namespace RMM {
 
 class RMechanism : public RHeaderBody {
 
-    public:
-        
 #include "generated/RMechanism_generated.h"
 
 };
 
-};
+}
 
 #endif //RMECHANISM_H
 // vim:ts=4:sw=4:tw=78

@@ -35,10 +35,10 @@ namespace RMM {
 
 class RMessage : public RBodyPart {
 
-    public:
-        
 #include "generated/RMessage_generated.h"
 
+    public:
+        
         QCString recipientListAsPlainString();
 
         void        addPart(RBodyPart * bp);

@@ -38,9 +38,9 @@ namespace RMM {
 
 class RMimeType : public RHeaderBody {
 
-    public:
-
 #include "generated/RMimeType_generated.h"
+
+    public:
 
         QCString boundary();
         QCString name();
@@ -61,13 +61,13 @@ class RMimeType : public RHeaderBody {
         QCString            boundary_;
         QCString            name_;
         
-        RMM::MimeType        type_;
+        RMM::MimeType       type_;
         RMM::MimeSubType    subType_;
         
-        RParameterList        parameterList_;
+        RParameterList      parameterList_;
 };
 
-};
+}
 
 #endif
 // vim:ts=4:sw=4:tw=78

@@ -40,11 +40,11 @@ typedef QListIterator<RMailbox> RMailboxListIterator;
  */
 class RMailboxList : public RHeaderBody {
 
-    public:
-        
 #include "generated/RMailboxList_generated.h"
 
-        int count();
+    public:
+        
+        unsigned int count();
         RMailbox * at(int);
         void append(RMailbox);
         
@@ -53,7 +53,7 @@ class RMailboxList : public RHeaderBody {
         QList<RMailbox> list_;
 };
 
-};
+}
 
 #endif //RMAILBOXLIST_H
 // vim:ts=4:sw=4:tw=78

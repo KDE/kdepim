@@ -37,24 +37,24 @@ namespace RMM {
 
 class RDispositionType : public RHeaderBody {
 
-    public:
-        
 #include "generated/RDispositionType_generated.h"
 
+    public:
+        
         QCString            filename();
         void                setFilename(const QCString &);
         void                addParameter(RParameter & p);
         RParameterList &    parameterList();
-        RMM::DispType        type();
+        RMM::DispType       type();
 
     private:
 
-        RParameterList        parameterList_;
-        RMM::DispType        dispType_;
+        RParameterList      parameterList_;
+        RMM::DispType       dispType_;
         QCString            filename_;
 };
 
-};
+}
 
 #endif //RDISPOSITIONTYPE_H
 // vim:ts=4:sw=4:tw=78

@@ -40,20 +40,20 @@ class RMailbox;
  */
 class RAddress : public RHeaderBody {
 
-    public:
-    
 #include "generated/RAddress_generated.h"
 
-        RGroup        * group();
+    public:
+    
         RMailbox    * mailbox();
+        RGroup      * group();
 
     private:
         
         RMailbox    * mailbox_;
-        RGroup        * group_;
+        RGroup      * group_;
 };
 
-};
+}
 
 #endif //RADDRESS_H
 // vim:ts=4:sw=4:tw=78

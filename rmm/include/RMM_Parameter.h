@@ -38,10 +38,10 @@ namespace RMM {
  */
 class RParameter : public RMessageComponent {
 
-    public:
-
 #include "generated/RParameter_generated.h"
         
+    public:
+
         QCString attribute();
         QCString value();
 
@@ -54,7 +54,7 @@ class RParameter : public RMessageComponent {
         QCString value_;
 };
 
-};
+}
 
 #endif
 // vim:ts=4:sw=4:tw=78

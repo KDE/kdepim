@@ -37,10 +37,10 @@ namespace RMM {
  */
 class RMessageID : public RHeaderBody {
 
-    public:
-        
 #include "generated/RMessageID_generated.h"
 
+    public:
+        
         friend QDataStream & operator >> (QDataStream &, RMessageID &);
         friend QDataStream & operator << (QDataStream &, RMessageID &);
 

@@ -37,9 +37,9 @@ namespace RMM {
 
 class RBodyPart : public REntity {
     
-    public:
-    
 #include "generated/RBodyPart_generated.h"
+
+    public:
         
         enum PartType {
             Basic,

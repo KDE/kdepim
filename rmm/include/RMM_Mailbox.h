@@ -40,10 +40,10 @@ namespace RMM {
  */
 class RMailbox : public RAddress {
 
-    public:
-
 #include "generated/RMailbox_generated.h"
         
+    public:
+
         friend QDataStream & operator >> (QDataStream & s, RMailbox & mailbox);
         
         friend QDataStream & operator << (QDataStream & s, RMailbox & mailbox);

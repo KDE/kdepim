@@ -1,5 +1,6 @@
 // XXX Automatically generated. DO NOT EDIT! XXX //
 
+public:
 RMessageID();
 RMessageID(const RMessageID &);
 RMessageID(const QCString &);
@@ -11,14 +12,12 @@ bool operator == (const QCString & s) { RMessageID a(s); return (*this == a); }
 bool operator != (const QCString &s) {return !(*this == s);}
 
 virtual ~RMessageID();
-void _parse();
-void _assemble();
-void parse() 			{ if (!parsed_) _parse(); parsed_ = true; assembled_ = false; }
-
-void assemble() 			{ parse() ; if (!assembled_) _assemble(); assembled_ = true;}
-
 void createDefault();
 
 const char * className() const { return "RMessageID"; }
+
+protected:
+void _parse();
+void _assemble();
 
 // End of automatically generated code           //

@@ -43,9 +43,9 @@ namespace RMM {
  */
 class RCte : public RHeaderBody {
 
-    public:
-
 #include "generated/RCte_generated.h"
+
+    public:
         
         RMM::CteType mechanism();
         void setMechanism(RMM::CteType);
@@ -55,7 +55,7 @@ class RCte : public RHeaderBody {
         RMM::CteType mechanism_;
 };
 
-};
+}
 
 #endif
 

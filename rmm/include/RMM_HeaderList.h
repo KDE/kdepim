@@ -35,7 +35,7 @@ namespace RMM {
 typedef QListIterator<RHeader> RHeaderListIterator;
 typedef QList<RHeader> RHeaderList;
 
-};
+}
 
 #endif
 // vim:ts=4:sw=4:tw=78

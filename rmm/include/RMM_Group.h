@@ -39,9 +39,9 @@ namespace RMM {
  */
 class RGroup : public RAddress {
 
-    public:
-
 #include "generated/RGroup_generated.h"
+
+    public:
         
         friend QDataStream & operator >> (QDataStream & s, RGroup & group);
         friend QDataStream & operator << (QDataStream & s, RGroup & group);
@@ -61,7 +61,7 @@ class RGroup : public RAddress {
         QCString        phrase_;
 };
 
-};
+}
 
 #endif
 // vim:ts=4:sw=4:tw=78

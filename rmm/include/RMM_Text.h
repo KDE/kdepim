@@ -35,13 +35,11 @@ namespace RMM {
  */
 class RText : public RHeaderBody {
 
-    public:
-
 #include "generated/RText_generated.h"        
 
 };
 
-};
+}
 
 #endif //RTEXT_H
 // vim:ts=4:sw=4:tw=78

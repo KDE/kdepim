@@ -42,13 +42,11 @@ typedef QListIterator<RParameter> RParameterListIterator;
  */
 class RParameterList : public QList<RParameter>, public RHeaderBody {
 
-    public:
-        
 #include "generated/RParameterList_generated.h"
 
 };
 
-};
+}
 
 #endif //RPARAMETERLIST_H
 

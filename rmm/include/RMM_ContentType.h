@@ -37,9 +37,9 @@ namespace RMM {
  */
 class RContentType : public RHeaderBody {
 
-    public:
-        
 #include "generated/RContentType_generated.h"
+
+    public:
 
         void setType(const QCString &);
         void setSubType(const QCString &);
@@ -52,11 +52,11 @@ class RContentType : public RHeaderBody {
     private:
 
         QCString        type_;
-        QCString         subType_;
-        RParameterList    parameterList_;
+        QCString        subType_;
+        RParameterList  parameterList_;
 };
 
-};
+}
 
 #endif //RMM_CONTENTTYPE_H
 // vim:ts=4:sw=4:tw=78

@@ -44,8 +44,6 @@ RDateTime::RDateTime()
         zone_("")
 {
     rmmDebug("ctor");
-    parsed_ = false;
-    assembled_ = false;
 }
 
 RDateTime::~RDateTime()
@@ -56,16 +54,13 @@ RDateTime::~RDateTime()
 RDateTime::RDateTime(const QCString & s)
     :    RHeaderBody(s)
 {
-    parsed_ = false;
-    assembled_ = false;
+    rmmDebug("ctor");
 }
 
 RDateTime::RDateTime(const RDateTime & t)
     :    RHeaderBody(t),
-                zone_           (t.zone_),
-        qdate_        (t.qdate_),
-        parsed_        (t.parsed_),
-        assembled_    (t.assembled_)
+        zone_   (t.zone_),
+        qdate_  (t.qdate_)
 {
     rmmDebug("copy ctor");
 }

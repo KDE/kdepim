@@ -37,27 +37,18 @@ namespace RMM {
  * RFC822 specification is recursive. That means that an RBodyPart can also be
  * an RMessage, which then in turn contains an RBodyPart !
  */
-class REntity : public RMessageComponent
-{
+class REntity : public RMessageComponent {
+
     public:
 
         REntity() : RMessageComponent() {}
-        REntity(const REntity & e) : RMessageComponent(e) {}
+        REntity(const REntity & e)  : RMessageComponent(e) {}
         REntity(const QCString & s) : RMessageComponent(s) {}
 
         virtual ~REntity();
 
-        virtual void parse() = 0L;
-        virtual void assemble() = 0L;
-        virtual void createDefault() = 0L;
-        
         virtual const char * className() const { return "REntity"; }
     
-    protected:
-        
-        RMessageComponent::strRep_;
-        RMessageComponent::parsed_;
-        RMessageComponent::assembled_;
 };
 
 }

@@ -59,10 +59,11 @@ namespace RMM {
  */
 class REnvelope : public RMessageComponent
 {
-    public:
 
 #include "generated/REnvelope_generated.h"
         
+    public:
+
         /**
          * Find out if this header exists in the envelope.
          */
@@ -72,8 +73,6 @@ class REnvelope : public RMessageComponent
          */
         bool has(const QCString & headerName);
 
-        QCString asString();
-        
         /**
          * Set the specified header to the string value.
          */
@@ -116,48 +115,48 @@ class REnvelope : public RMessageComponent
          * Note that you can accidentally create a header you didn't want by
          * calling one of these. Use has() instead before you try.
          */
-        RText                approved();
-        RAddressList         bcc();
-        RMailboxList         cc();
-        RText                 comments();
-        RText                 contentDescription();
-        RDispositionType     contentDisposition();
-        RMessageID             contentID();
-        RText                 contentMD5();
-        RContentType         contentType();
-        RText                 control();
-        RCte                 contentTransferEncoding();
-        RDateTime             date();
-        RText                 distribution();
-        RText                 encrypted();
-        RDateTime             expires();
-        RText                 followupTo();
-        RMailboxList         from();
-        RText                 inReplyTo();
-        RText                 keywords();
-        RText                 lines();
-        RMessageID             messageID();
-        RText                 mimeVersion();
-        RText                 newsgroups();
-        RText                 organization();
-        RText                 path();
-        RText                 received();
-        RText                 references();
-        RAddressList         replyTo();
-        RAddressList         resentBcc();
-        RAddressList         resentCc();
-        RDateTime             resentDate();
-        RMailboxList         resentFrom();
-        RMessageID             resentMessageID();
-        RAddressList         resentReplyTo();
-        RMailbox             resentSender();
-        RAddressList         resentTo();
-        RText                 returnPath();
-        RMailbox             sender();
-        RText                 subject();
-        RText                 summary();
-        RAddressList         to();
-        RText                 xref();
+        RText               approved();
+        RAddressList        bcc();
+        RMailboxList        cc();
+        RText               comments();
+        RText               contentDescription();
+        RDispositionType    contentDisposition();
+        RMessageID          contentID();
+        RText               contentMD5();
+        RContentType        contentType();
+        RText               control();
+        RCte                contentTransferEncoding();
+        RDateTime           date();
+        RText               distribution();
+        RText               encrypted();
+        RDateTime           expires();
+        RText               followupTo();
+        RMailboxList        from();
+        RText               inReplyTo();
+        RText               keywords();
+        RText               lines();
+        RMessageID          messageID();
+        RText               mimeVersion();
+        RText               newsgroups();
+        RText               organization();
+        RText               path();
+        RText               received();
+        RText               references();
+        RAddressList        replyTo();
+        RAddressList        resentBcc();
+        RAddressList        resentCc();
+        RDateTime           resentDate();
+        RMailboxList        resentFrom();
+        RMessageID          resentMessageID();
+        RAddressList        resentReplyTo();
+        RMailbox            resentSender();
+        RAddressList        resentTo();
+        RText               returnPath();
+        RMailbox            sender();
+        RText               subject();
+        RText               summary();
+        RAddressList        to();
+        RText               xref();
         
     private:
 

@@ -42,7 +42,6 @@ namespace RMM {
 class RMessageComponent {
 
     public:
-        
 
         virtual ~RMessageComponent();
 
@@ -52,11 +51,12 @@ class RMessageComponent {
         bool operator == (RMessageComponent &);
         virtual bool operator == (const QCString &);
 
-        virtual void parse()        = 0L;
-        virtual void assemble()        = 0L;
-        virtual void _parse()        = 0L;
-        virtual void _assemble()    = 0L;
-        virtual void createDefault()= 0L;
+        virtual void parse() 
+            { if (!parsed_) _parse(); parsed_ = true; assembled_ = false; }
+        virtual void assemble() 
+            { parse(); if (!assembled_) _assemble(); assembled_ = true; }
+
+        virtual void createDefault()    = 0L;
 
         QCString asString() { assemble(); return strRep_; }
 
@@ -67,6 +67,9 @@ class RMessageComponent {
         RMessageComponent();
         RMessageComponent(const RMessageComponent & component);
         RMessageComponent(const QCString &);
+
+        virtual void _parse()       = 0L;
+        virtual void _assemble()    = 0L;
 
         QCString            strRep_;
         bool                parsed_;

@@ -40,9 +40,9 @@ typedef QListIterator<RAddress> RAddressListIterator;
  */
 class RAddressList : public RHeaderBody {
 
-    public:
-
 #include "generated/RAddressList_generated.h"
+
+    public:
         
         RAddress * at(int);
         unsigned int count();
@@ -52,7 +52,7 @@ class RAddressList : public RHeaderBody {
         QList<RAddress> list_;
 };
 
-};
+}
 
 #endif //RADDRESSLIST_H
 // vim:ts=4:sw=4:tw=78

@@ -31,10 +31,10 @@
 namespace RMM {
 
 enum MessageStatus {
-    Read        = 1 << 0,
-    Marked        = 1 << 1,
-    Trashed        = 1 << 2,
-    Replied        = 1 << 3
+    Read    = 1 << 0,
+    Marked  = 1 << 1,
+    Trashed = 1 << 2,
+    Replied = 1 << 3
 };
 
 extern const QCString monthNames[];
@@ -197,16 +197,16 @@ enum Month {
     MonthJul, MonthAug, MonthSep, MonthOct, MonthNov, MonthDec
 };
 
-Month        strToMonth(const QCString & s);
+Month       strToMonth(const QCString & s);
 
 MimeType    mimeTypeStr2Enum(const QCString & s);
 QCString    mimeTypeEnum2Str(MimeType m);
-MimeSubType    mimeSubTypeStr2Enum(const QCString & s);
+MimeSubType mimeSubTypeStr2Enum(const QCString & s);
 QCString    mimeSubTypeEnum2Str(MimeSubType t);
-CteType        RCteStr2Enum(const QCString & s);
+CteType     RCteStr2Enum(const QCString & s);
 QCString    cteTypeEnumToStr(CteType t);
 
-QString        mimeTypeToIconName(MimeType t, MimeSubType st);
+QString     mimeTypeToIconName(MimeType t, MimeSubType st);
 
 HeaderType        headerNameToEnum(const QCString & s);
 HeaderDataType    headerNameToType(const QCString & s);

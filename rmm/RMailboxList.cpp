@@ -187,7 +187,7 @@ RMailboxList::at(int idx)
     return list_.at(idx);
 }
 
-    int
+    unsigned int
 RMailboxList::count()
 {
     parse();

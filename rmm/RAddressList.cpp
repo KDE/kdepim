@@ -93,12 +93,14 @@ RAddressList::operator == (RAddressList & al)
     RAddress *
 RAddressList::at(int i)
 {
+    parse();
     return list_.at(i);
 }
 
     unsigned int
 RAddressList::count()
 {
+    parse();
     return list_.count();
 }
 
@@ -136,14 +138,12 @@ RAddressList::_parse()
 RAddressList::_assemble()
 {
     bool firstTime = true;
-    
+
     RAddressListIterator it(list_);
 
     strRep_ = "";
     
     for (; it.current(); ++it) {
-        
-        it.current()->assemble();
         
         if (!firstTime) {
             strRep_ += QCString(",\n    ");
@@ -153,7 +153,6 @@ RAddressList::_assemble()
         strRep_ += it.current()->asString();
     }
 }
-
 
     void
 RAddressList::createDefault()

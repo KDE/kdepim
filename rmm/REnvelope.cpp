@@ -86,13 +86,6 @@ REnvelope::~REnvelope()
     rmmDebug("dtor");
 }
 
-    QCString
-REnvelope::asString()
-{
-    assemble();
-    return strRep_;
-}
-
     void
 REnvelope::_parse()
 {
@@ -244,7 +237,7 @@ REnvelope::get(HeaderType h)
         if (it.current()->headerType() == h) {
             rmmDebug("The header you asked for exists.");
             rmmDebug("headerbody: \"" +
-                QCString(it.current()->headerBody()->asString()) + "\"");
+                QCString(it.current()->headerBody()->asString()) + "\""); 
             return it.current()->headerBody();
         }
 
