@@ -317,42 +317,37 @@ void TodoConduit::preRecord(PilotRecord*r)
 	}
 }
  
- 
+
 
 void TodoConduit::setCategory(PilotTodoEntry*de, const KCal::Todo*todo)
 {
 	if (!de || !todo) return;
-	de->setCat(_getCat(de->getCat(), todo->categories()));
-#ifdef DEBUG
-	DEBUGCONDUIT<<"old Category="<<de->getCat()<<", new cat will be "<<_getCat(de->getCat(), todo->categories())<<endl;
-	DEBUGCONDUIT<<"Available Categories: "<<todo->categories().join(CSL1(" - "))<<endl;
-#endif
+	de->setCategory(_getCat(todo->categories(), de->getCategoryLabel()));
 }
 
 
 
-/** 
- * _getCat returns the id of the category from the given categories list. If none of the categories exist 
+/**
+ * _getCat returns the id of the category from the given categories list. If none of the categories exist
  * on the palm, the "Nicht abgelegt" (don't know the english name) is used.
  */
-int TodoConduit::_getCat(int cat, const QStringList cats) const
+QString TodoConduit::_getCat(const QStringList cats, const QString curr) const
 {
-	FUNCTIONSETUP;
 	int j;
-	if (cats.contains(PilotAppCategory::codec()->toUnicode(fTodoAppInfo.category.name[cat]))) 
-		return cat;
+	if (cats.length()<1) return QString();
+	if (cats.contains(curr)) return curr;
 	for ( QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it ) {
-		for (j=1; j<=15; j++) 
+		for (j=1; j<=15; j++)
 		{
-			if (!(*it).isEmpty() && 
-				! (*it).compare( PilotAppCategory::codec()->toUnicode(
-					fTodoAppInfo.category.name[j]) ) ) 
+			QString catName = PilotAppCategory::codec()->
+				toUnicode(fAddressAppInfo.category.name[j]);
+			if (!(*it).isEmpty() && !(*it).compare( catName ) )
 			{
-				return j;
+				return catname;
 			}
 		}
 	}
-	return 0;
+	return cats.first();
 }
 
 
@@ -422,19 +417,14 @@ void TodoConduit::setCategory(KCal::Todo *e, const PilotTodoEntry *de)
 {
 	if (!e || !de) return;
 	QStringList cats=e->categories();
-	if (!categoriesSynced)
+	int cat=de->getCat();
+	if (0<cat && cat<=15)
 	{
-		// TODO: This is not optimal because it has the consequence that only one of the
-		// palm categories can be set on the desktop, all others will be deleted from the desktop entry!
-		for (int j=1; j<=15; j++) 
+		QString newcat=PilotAppCategory::codec()->toUnicode(fTodoAppInfo.category.name[cat]);
+		if (!cats.contains(newcat))
 		{
-			cats.remove(PilotAppCategory::codec()->toUnicode(fTodoAppInfo.category.name[j]));
+			cats.append( newcat );
+			e->setCategories(cats);
 		}
 	}
-	int cat=de->getCat();
-	if (0<cat && cat<=15) 
-	{
-		cats.append( PilotAppCategory::codec()->toUnicode(fTodoAppInfo.category.name[cat]) );
-	}
-	e->setCategories(cats);
 }
