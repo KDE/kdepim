@@ -428,7 +428,10 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
         if(beautification) {
           regExp=QString("^\\%1[^\\s%2]+\\%3").arg(line[idx]).arg(line[idx]).arg(line[idx]);
           if (regExp.match(line,idx,&matchLen)!=-1) {
-            if ((idx+matchLen==len)||(line[idx+matchLen].isSpace())) {
+            if (( matchLen > 3 ) &&
+                ((idx==0)||line[idx-1].isSpace()||(line[idx-1] == '(')) &&
+                ((idx+matchLen==len)||line[idx+matchLen].isSpace()||(line[idx+matchLen]==',')||
+                 (line[idx+matchLen]=='.')||(line[idx+matchLen]==')'))) {
               switch (line[idx].latin1()) {
                 case '_' :
                   result+=QString("<u>%1</u>").arg(toHtmlString(line.mid(idx+1,matchLen-2),parseURLs));
