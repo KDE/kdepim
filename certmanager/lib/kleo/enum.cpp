@@ -135,6 +135,24 @@ Kleo::EncryptionPreference Kleo::stringToEncryptionPreference( const QString& st
   return UnknownPreference;
 }
 
+QString Kleo::encryptionPreferenceToLabel( EncryptionPreference pref )
+{
+  switch( pref ) {
+  case NeverEncrypt:
+    return i18n( "Never Encrypt" );
+  case AlwaysEncrypt:
+    return i18n( "Always Encrypt" );
+  case AlwaysEncryptIfPossible:
+    return i18n( "Always Encrypt If Possible" );
+  case AlwaysAskForEncryption:
+    return i18n( "Ask" );
+  case AskWheneverPossible:
+    return i18n( "Ask Whenever Possible" );
+  default:
+    return i18n( "no specific preference", "<none>" );
+  }
+}
+
 const char* Kleo::signingPreferenceToString( SigningPreference pref )
 {
   switch( pref ) {
@@ -167,4 +185,22 @@ Kleo::SigningPreference Kleo::stringToSigningPreference( const QString& str )
   if ( str == "askWhenPossible" )
     return AskSigningWheneverPossible;
   return UnknownSigningPreference;
+}
+
+QString Kleo::signingPreferenceToLabel( SigningPreference pref )
+{
+  switch( pref ) {
+  case NeverSign:
+    return i18n( "Never Sign" );
+  case AlwaysSign:
+    return i18n( "Always Sign" );
+  case AlwaysSignIfPossible:
+    return i18n( "Always Sign If Possible" );
+  case AlwaysAskForSigning:
+    return i18n( "Ask" );
+  case AskSigningWheneverPossible:
+    return i18n( "Ask Whenever Possible" );
+  default:
+    return i18n( "no specific preference", "<none>" );
+  }
 }

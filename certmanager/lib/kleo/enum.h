@@ -61,25 +61,29 @@ namespace Kleo {
 
   enum EncryptionPreference {
     UnknownPreference = 0,
-    NeverEncrypt,
-    AlwaysEncrypt,
-    AlwaysEncryptIfPossible,
-    AlwaysAskForEncryption,
-    AskWheneverPossible
+    NeverEncrypt = 1,
+    AlwaysEncrypt = 2,
+    AlwaysEncryptIfPossible = 3,
+    AlwaysAskForEncryption = 4,
+    AskWheneverPossible = 5,
+    MaxEncryptionPreference = AskWheneverPossible
   };
 
+  QString encryptionPreferenceToLabel( EncryptionPreference pref );
   const char* encryptionPreferenceToString( EncryptionPreference pref );
   EncryptionPreference stringToEncryptionPreference( const QString& str );
 
   enum SigningPreference {
-    UnknownSigningPreference,
-    NeverSign,
-    AlwaysSign,
-    AlwaysSignIfPossible,
-    AlwaysAskForSigning,
-    AskSigningWheneverPossible
+    UnknownSigningPreference = 0,
+    NeverSign = 1,
+    AlwaysSign = 2,
+    AlwaysSignIfPossible = 3,
+    AlwaysAskForSigning = 4,
+    AskSigningWheneverPossible = 5,
+    MaxSigningPreference = AskSigningWheneverPossible
   };
 
+  QString signingPreferenceToLabel( SigningPreference pref );
   const char* signingPreferenceToString( SigningPreference pref );
   SigningPreference stringToSigningPreference( const QString& str );
 }
