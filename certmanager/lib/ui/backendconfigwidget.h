@@ -53,6 +53,11 @@ namespace Kleo {
     void load();
     void save() const;
 
+    void emitChanged( bool b ) { emit changed( b ); }
+
+  signals:
+    void changed( bool );
+
   private slots:
     void slotSelectionChanged( QListViewItem * );
     void slotRescanButtonClicked();

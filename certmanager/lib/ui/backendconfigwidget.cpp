@@ -73,7 +73,7 @@ namespace Kleo {
 class Kleo::BackendListView : public KListView
 {
 public:
-  BackendListView( QWidget* parent, const char* name = 0 )
+  BackendListView( BackendConfigWidget* parent, const char* name = 0 )
     : KListView( parent, name ) {}
 
   /// return backend for currently selected (/current) item. Used by Configure button.
@@ -84,6 +84,8 @@ public:
 
   /// deselect all except one for a given protocol type (radiobutton-like exclusivity)
   void deselectAll( ProtocolType protocolType, QCheckListItem* except );
+
+  void emitChanged() { static_cast<BackendConfigWidget *>( parentWidget() )->emitChanged( true ); }
 };
 
 // Toplevel listviewitem for a given backend (e.g. "GpgME", "Kgpg/gpg v2")
@@ -126,9 +128,11 @@ public:
 
 protected:
   virtual void stateChange( bool b ) {
+    BackendListView* lv = static_cast<BackendListView *>( listView() );
     // "radio-button-like" behavior for the protocol checkboxes
     if ( b )
-      static_cast<BackendListView *>( listView() )->deselectAll( mProtocolType, this );
+      lv->deselectAll( mProtocolType, this );
+    lv->emitChanged();
     QCheckListItem::stateChange( b );
   }
 
@@ -292,6 +296,7 @@ void Kleo::BackendConfigWidget::slotRescanButtonClicked() {
 				  i18n("The following problems where encountered during scanning:"),
 				  reasons, i18n("Scan Results") );
   load();
+  emit changed( true );
 }
 
 void Kleo::BackendConfigWidget::slotConfigureButtonClicked() {
