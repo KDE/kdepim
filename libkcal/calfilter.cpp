@@ -1,8 +1,9 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
     Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-    Copyright (C) 2004 Bram Schoenmaker
+    Copyright (C) 2004 Bram Schoenmakers <bramschoenmakers@kde.nl>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -82,7 +83,7 @@ void CalFilter::apply( Todo::List *todolist ) const
 //  kdDebug(5800) << "CalFilter::apply() done" << endl;
 }
 
-void CalFilter::apply( Journal::List *journallist ) const 
+void CalFilter::apply( Journal::List *journallist ) const
 {
   if ( !mEnabled ) return;
 
@@ -106,7 +107,7 @@ bool CalFilter::filterIncidence(Incidence *incidence) const
   if( todo ) {
     if ( (mCriteria & HideCompleted) && todo->isCompleted() ) {
       // Check if completion date is suffently long ago:
-      if ( todo->completed().addDays( mCompletedTimeSpan ) < 
+      if ( todo->completed().addDays( mCompletedTimeSpan ) <
            QDateTime::currentDateTime() ) {
         return false;
       }
@@ -190,7 +191,7 @@ void CalFilter::setCompletedTimeSpan( int timespan )
   mCompletedTimeSpan = timespan;
 }
 
-int CalFilter::completedTimeSpan() const 
+int CalFilter::completedTimeSpan() const
 {
   return mCompletedTimeSpan;
 }

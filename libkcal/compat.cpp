@@ -1,5 +1,6 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
     Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
@@ -46,7 +47,7 @@ Compat *CompatFactory::createCompat( const QString &productId )
         QString version = productId.mid( versionStart + 1,
                                          versionStop - versionStart - 1 );
 //        kdDebug(5800) << "Found KOrganizer version: " << version << endl;
-        
+
         int versionNum = version.section( ".", 0, 0 ).toInt() * 10000 +
                          version.section( ".", 1, 1 ).toInt() * 100 +
                          version.section( ".", 2, 2 ).toInt();
@@ -56,9 +57,9 @@ Compat *CompatFactory::createCompat( const QString &productId )
           release = productId.mid( versionStop+1, releaseStop-versionStop-1 );
         }
 //        kdDebug(5800) << "KOrganizer release: \"" << release << "\"" << endl;
-                         
+
 //        kdDebug(5800) << "Numerical version: " << versionNum << endl;
-        
+
         if ( versionNum < 30100 ) {
           compat = new CompatPre31;
         } else if ( versionNum < 30200 ) {
@@ -75,7 +76,7 @@ Compat *CompatFactory::createCompat( const QString &productId )
     kdDebug(5800) << "Generating compat for Outlook < 2000 (Outlook 9.0)" << endl;
     compat = new CompatOutlook9;
   }
-  
+
   if ( !compat ) compat = new Compat;
 
   return compat;
@@ -84,7 +85,7 @@ Compat *CompatFactory::createCompat( const QString &productId )
 void Compat::fixEmptySummary( Incidence *incidence )
 {
   // some stupid vCal exporters ignore the standard and use Description
-  // instead of Summary for the default field. Correct for this: Copy the 
+  // instead of Summary for the default field. Correct for this: Copy the
   // first line of the description to the summary (if summary is just one
   // line, move it)
   if (incidence->summary().isEmpty() &&
@@ -139,7 +140,7 @@ void CompatOutlook9::fixAlarms( Incidence *incidence )
     if ( al && al->hasStartOffset() ) {
       Duration offsetDuration = al->startOffset();
       int offs = offsetDuration.asSeconds();
-      if ( offs>0 ) 
+      if ( offs>0 )
         offsetDuration = Duration( -offs );
       al->setStartOffset( offsetDuration );
     }

@@ -1,5 +1,6 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 2002 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
@@ -44,7 +45,7 @@ bool CustomProperties::operator==( const CustomProperties &other ) const
   for( it = mProperties.begin(); it != mProperties.end(); ++it ) {
     QMap<QCString, QString>::ConstIterator itOther =
       other.mProperties.find( it.key() );
-    
+
     if ( itOther == other.mProperties.end() ) {
       return false;
     }

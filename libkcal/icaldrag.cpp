@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 1998 Preston Brown
+
+    Copyright (c) 1998 Preston Brown <pbrown@kde.org>
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -32,13 +33,13 @@ ICalDrag::ICalDrag( Calendar *cal, QWidget *parent, const char *name )
 {
   ICalFormat icf;
   QString scal = icf.toString( cal );
-  
+
   setEncodedData( scal.utf8() );
 }
 
 bool ICalDrag::canDecode( QMimeSource *me )
 {
-  return me->provides( "text/calendar" );  
+  return me->provides( "text/calendar" );
 }
 
 bool ICalDrag::decode( QMimeSource *de, Calendar *cal )
@@ -48,8 +49,8 @@ bool ICalDrag::decode( QMimeSource *de, Calendar *cal )
   QByteArray payload = de->encodedData( "text/calendar" );
   if ( payload.size() ) {
     QString txt = QString::fromUtf8( payload.data() );
-    
-    ICalFormat icf;    
+
+    ICalFormat icf;
     success = icf.fromString( cal, txt );
   }
 

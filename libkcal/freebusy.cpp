@@ -1,5 +1,6 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
     Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
@@ -153,7 +154,7 @@ bool FreeBusy::addLocalPeriod(const QDateTime &eventStart, const QDateTime &even
 
   //Check to see if the start *or* end of the event is
   //between the start and end of the freebusy dates.
-  if ( !( ( ( dtStart().secsTo(eventStart) >= 0 ) && 
+  if ( !( ( ( dtStart().secsTo(eventStart) >= 0 ) &&
             ( eventStart.secsTo(dtEnd()) >= 0 ) )
        || ( ( dtStart().secsTo(eventEnd) >= 0 ) &&
             ( eventEnd.secsTo(dtEnd()) >= 0 ) ) ) )

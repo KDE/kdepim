@@ -1,5 +1,6 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or

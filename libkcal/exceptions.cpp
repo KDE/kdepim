@@ -1,5 +1,6 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -39,14 +40,14 @@ QString Exception::message()
   if (mMessage.isEmpty()) return i18n("%1 Error").arg(CalFormat::application());
   else return mMessage;
 }
-    
+
 
 ErrorFormat::ErrorFormat(ErrorCodeFormat code,const QString &message) :
   Exception(message)
 {
   mCode = code;
 }
-    
+
 QString ErrorFormat::message()
 {
   QString message = "";
@@ -78,9 +79,9 @@ QString ErrorFormat::message()
     default:
       break;
   }
-  
+
   if (!mMessage.isEmpty()) message += ": " + mMessage;
-  
+
   return message;
 }
 

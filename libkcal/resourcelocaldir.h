@@ -1,4 +1,4 @@
- /*
+/*
     This file is part of libkcal.
 
     Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
@@ -92,7 +92,7 @@ class LIBKCAL_EXPORT ResourceLocalDir : public ResourceCached
 //     ICalFormat mFormat;
 
     KDirWatch mDirWatch;
-    
+
     KABC::Lock *mLock;
 
     class Private;

@@ -1,5 +1,6 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
@@ -448,7 +449,7 @@ QString IncidenceFormatter::extensiveDisplayString( IncidenceBase *incidence )
 
 static QString string2HTML( const QString& str )
 {
-  return QStyleSheet::convertFromPlainText(str); 
+  return QStyleSheet::convertFromPlainText(str);
 }
 
 static QString invitationRow( const QString &cell1, const QString &cell2 )

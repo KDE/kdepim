@@ -1,7 +1,7 @@
- /*
+/*
     This file is part of libkcal.
 
-    Copyright (c) 1998 Preston Brown
+    Copyright (c) 1998 Preston Brown <pbrown@kde.org>
     Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -75,7 +75,7 @@ class LIBKCAL_EXPORT ResourceLocal : public ResourceCached
     bool doSave();
 
     QDateTime readLastModified();
- 
+
   private:
     void init();
 

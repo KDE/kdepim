@@ -1,4 +1,4 @@
- /*
+/*
     This file is part of libkcal.
 
     Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>

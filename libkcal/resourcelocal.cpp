@@ -1,7 +1,7 @@
 /*
     This file is part of libkcal.
 
-    Copyright (c) 1998 Preston Brown
+    Copyright (c) 1998 Preston Brown <pbrown@kde.org>
     Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -78,7 +78,7 @@ ResourceLocal::ResourceLocal( const KConfig* config )
   init();
 }
 
-ResourceLocal::ResourceLocal( const QString& fileName ) 
+ResourceLocal::ResourceLocal( const QString& fileName )
   : ResourceCached( 0 )
 {
   mURL = KURL( fileName );
@@ -94,7 +94,7 @@ void ResourceLocal::writeConfig( KConfig* config )
   ResourceCalendar::writeConfig( config );
   config->writePathEntry( "CalendarURL", mURL.prettyURL() );
   QString typeID = typeid( *mFormat ).name();
-  
+
   if ( typeid( *mFormat ) == typeid( ICalFormat ) )
     config->writeEntry( "Format", "ical" );
   else if ( typeid( *mFormat ) == typeid( VCalFormat ) ) // if ( typeID == "ICalFormat" )

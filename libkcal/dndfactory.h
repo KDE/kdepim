@@ -1,7 +1,7 @@
 /*
     This file is part of libkcal.
 
-    Copyright (c) 1998 Preston Brown
+    Copyright (c) 1998 Preston Brown <pbrown@kde.org>
     Copyright (c) 2001,2002,2003 Cornelius Schumacher <schumacher@kde.org>
     Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 

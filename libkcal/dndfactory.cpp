@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 1998 Preston Brwon
+
+    Copyright (c) 1998 Preston Brown <pbrown@kde.org>
     Copyright (c) 2001,2002 Cornelius Schumacher <schumacher@kde.org>
     Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
@@ -107,7 +108,7 @@ void DndFactory::cutIncidence( Incidence *selectedInc )
 
 bool DndFactory::copyIncidence( Incidence *selectedInc )
 {
-  if ( !selectedInc ) 
+  if ( !selectedInc )
     return false;
   QClipboard *cb = QApplication::clipboard();
 
@@ -142,7 +143,7 @@ Incidence *DndFactory::pasteIncidence(const QDate &newDate, const QTime *newTime
     inc->recreate();
 
     if ( inc->type() == "Event" ) {
-      
+
       Event *anEvent = static_cast<Event*>( inc );
       // Calculate length of event
       int daysOffset = anEvent->dtStart().date().daysTo(
@@ -159,7 +160,7 @@ Incidence *DndFactory::pasteIncidence(const QDate &newDate, const QTime *newTime
         anEvent->setDtStart( QDateTime( newDate, anEvent->dtStart().time() ) );
       }
       anEvent->setDtEnd( endDate );
-    
+
     } else if ( inc->type() == "Todo" ) {
       Todo *anTodo = static_cast<Todo*>( inc );
       if ( newTime ) {
@@ -177,9 +178,9 @@ Incidence *DndFactory::pasteIncidence(const QDate &newDate, const QTime *newTime
     } else {
       kdDebug(5850) << "Trying to paste unknown incidence of type " << inc->type() << endl;
     }
-    
+
     return inc;
-   
+
   }
 
   return 0;

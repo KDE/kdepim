@@ -1,5 +1,6 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -130,7 +131,7 @@ bool ICalFormat::fromString( Calendar *cal, const QString &text )
 {
   return fromRawString( cal, text.utf8() );
 }
- 
+
 bool ICalFormat::fromRawString( Calendar *cal, const QCString &text )
 {
   setTimeZone( cal->timeZoneId(), !cal->isLocalTime() );
