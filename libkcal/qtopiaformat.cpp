@@ -139,6 +139,48 @@ class QtopiaParser : public QXmlDefaultHandler
         if ( oldEvent ) mCalendar->deleteEvent( oldEvent );
 
         mCalendar->addEvent( event );
+      } else if ( qName == "Task" ) {
+        Todo *todo = new Todo;
+
+        QString uid = "Qtopia" + attributes.value( "Uid" );
+        todo->setUid( uid );
+        
+        QString description = attributes.value( "Description" );
+        int pos = description.find( '\n' );
+        if ( pos > 0 ) {
+          QString summary = description.left( pos );
+          todo->setSummary( summary );
+          todo->setDescription( description );
+        } else {
+          todo->setSummary( description );
+        }
+        
+        int priority = attributes.value( "Priority" ).toInt();
+        if ( priority == 0 ) priority = 3;
+        todo->setPriority( priority );
+        
+        QString categoryList = attributes.value( "Categories" );
+        QStringList categories = QStringList::split( ";", categoryList );
+        // TODO: Translate category ids in real text.
+        todo->setCategories( categories );
+        
+        QString completedStr = attributes.value( "Completed" );
+        if ( completedStr == "1" ) todo->setCompleted( true );
+        
+        QString hasDateStr = attributes.value( "HasDate" );
+        if ( hasDateStr == "1" ) {
+          int year = attributes.value( "DateYear" ).toInt();
+          int month = attributes.value( "DateMonth" ).toInt();
+          int day = attributes.value( "DateDay" ).toInt();
+          
+          todo->setDtDue( QDateTime( QDate( year, month, day ) ) );
+          todo->setHasDueDate( true );
+        }
+        
+        Todo *oldTodo = mCalendar->todo( uid );
+        if ( oldTodo ) mCalendar->deleteTodo( oldTodo );
+
+        mCalendar->addTodo( todo );
       }
       
       return true;
