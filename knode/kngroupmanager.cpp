@@ -24,7 +24,6 @@
 #include <kmessagebox.h>
 
 #include "kngroupmanager.h"
-#include "kngrouplistwidget.h"
 #include "resource.h"
 #include "utilities.h"
 #include "kncollectionviewitem.h"
@@ -35,11 +34,8 @@
 
 
 
-KNGroupManager::KNGroupManager(KNFetchArticleManager *a) : QObject(0,0)
+KNGroupManager::KNGroupManager(KNFetchArticleManager *a) : QObject(0,0), aManager(a), gDialog(0)
 {
-	aManager=a;
-	g_dial=0;	
-
 	gList=new QList<KNGroup>;
 	gList->setAutoDelete(true);
 		
@@ -52,7 +48,7 @@ KNGroupManager::KNGroupManager(KNFetchArticleManager *a) : QObject(0,0)
 KNGroupManager::~KNGroupManager()
 {
 	delete gList;
-	delete g_dial;
+	delete gDialog;
 }
 
 
@@ -213,8 +209,10 @@ void KNGroupManager::expireAll(KNPurgeProgressDialog *dlg)
 
 void KNGroupManager::showGroupDialog(KNNntpAccount *a)
 {
+	KNGroup *g=0;
 	QString dir(a->path());
-	if (dir == QString::null)
+	
+	if(dir==QString::null)
 		return;
 		
 	//check if grouplist file exists
@@ -225,12 +223,26 @@ void KNGroupManager::showGroupDialog(KNNntpAccount *a)
 	 	 	slotDialogNewList(a);
 	 	else return;
 	}
+		
+	gDialog=new KNGroupDialog(xTop, a);
+	connect(gDialog, SIGNAL(newList(KNNntpAccount*)), this, SLOT(slotDialogNewList(KNNntpAccount*)));
 	
-	g_dial=new KNGroupDialog(a, xTop);
-	connect(g_dial, SIGNAL(getNewList(KNNntpAccount*)),
-		this, SLOT(slotDialogNewList(KNNntpAccount*)));
-	connect(g_dial, SIGNAL(dialogDone(bool)), this, SLOT(slotDialogDone(bool)));
-	g_dial->show();
+	if(gDialog->exec()) {
+	  QStrList lst;
+	  gDialog->toUnsubscribe(&lst);
+	  for(char *var=lst.first(); var; var=lst.next()) {
+	    if((g=group(var, a)))
+	      unsubscribeGroup(g);
+	  }
+	
+	  gDialog->toSubscribe(&lst);
+	  for(char *var=lst.first(); var; var=lst.next()) {
+      subscribeGroup(var, a);
+    }
+  }	
+		
+	delete gDialog;
+	gDialog=0;	
 }
 
 
@@ -259,7 +271,8 @@ void KNGroupManager::unsubscribeGroup(KNGroup *g)
 	if(!g) return;
 	
 	if(g->locked()) {
-		KMessageBox::error(0, i18n("This group is being updated currently.\nIt is not possible to unsubscrib it at the moment."));	
+		KMessageBox::error(0,
+		  QString(i18n("The group \"%1\" is being updated currently.\nIt is not possible to unsubscrib it at the moment.")).arg(g->name()));	
 	  return;
 	}
 	
@@ -404,7 +417,7 @@ void KNGroupManager::jobDone(KNJobData *j)
 		     	  f.putch('\n');
 		     	}					
 					f.close();
-				  if(g_dial) g_dial->glw->newList();				
+				  if(gDialog) gDialog->newList();				
 				}
 				else displayInternalFileError();
 			}			
@@ -436,23 +449,6 @@ void KNGroupManager::slotDialogNewList(KNNntpAccount *a)
 	KNJobData *job=new KNJobData(KNJobData::JTlistGroups, a, groups);
 	xNet->addJob(job);
 }
-
-
-
-void KNGroupManager::slotDialogDone(bool accepted)
-{
-	if (accepted) {
-		QStrList *sub=g_dial->sub(), 	*unsub=g_dial->unsub();
-		for(char *var=sub->first(); var; var=sub->next())
-			subscribeGroup(var, g_dial->glw->account());
-		for(char *var=unsub->first(); var; var=unsub->next())		
-			for(KNGroup *g=gList->first(); g; g=gList->next())
-				if(g->name() ==var) unsubscribeGroup(g);
-	}	
-	delete g_dial;
-	g_dial=0;	
-}
-
 
 
 

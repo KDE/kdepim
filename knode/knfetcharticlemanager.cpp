@@ -221,10 +221,12 @@ void KNFetchArticleManager::setAllRead(KNGroup *g, bool r)
 {
 	if(!g) g=g_roup;
 	if(!g) return;
+	view->setUpdatesEnabled(false);
 	for(int i=0; i<g->length(); i++)
 		setArticleRead(g->at(i), r, false);
 	g_roup->updateListItem();
 	updateStatusString();
+	view->setUpdatesEnabled(true);
 }
 
 

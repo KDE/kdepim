@@ -306,9 +306,10 @@ void KNComposer::slotDestButtonClicked()
 	KabAPI *kab;
 	AddressBook::Entry entry;
 	KabKey key;
+	QString path;
 		
 	if(!a_rticle->isMail()) {
-		gsdlg=new KNGroupSelectDialog(nntp, d_estination, this);
+		gsdlg=new KNGroupSelectDialog(this, nntp, d_estination);
 		if(gsdlg->exec()) {
 	 		d_estination=gsdlg->selectedGroups();
 	 		view->dest->setText(d_estination);
@@ -417,7 +418,7 @@ KNComposer::ComposerView::~ComposerView()
 void KNComposer::ComposerView::showAttachementList()
 {
 	if(!attList) {
-		attList=new KNListBox(this);
+		attList=new QListView(this);
 		attList->show();
 	}
 }

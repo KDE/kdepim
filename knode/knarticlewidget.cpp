@@ -689,7 +689,7 @@ void KNArticleWidget::createHtmlPage()
   	if(body->mimeInfo()->ctSubType()==KNArticleBase::SThtml) {
   		body->prepareHtml();
   		for(char* l=body->firstBodyLine(); l; l=body->nextBodyLine()) {
-  		  qDebug("KNArticleWidget::createHtmlPage() : HTML-Line = %s", l);
+  		  //qDebug("KNArticleWidget::createHtmlPage() : HTML-Line = %s", l);
   			buffer+=l;
   		}
   	}
@@ -762,6 +762,7 @@ void KNArticleWidget::createHtmlPage()
   			  }
   			  else if(var->mimeInfo()->ctMediaType()==KNArticleBase::MTtext) {
   			    if(var->mimeInfo()->ctSubType()==KNArticleBase::STplain) {
+  			      var->prepareForDisplay();
   			      buffer+="<pre>";
   			      for(char *line=var->firstBodyLine(); line; line=var->nextBodyLine()) {
   			        buffer+=line;

@@ -16,7 +16,45 @@
 #ifndef KNGROUPDIALOG_H
 #define KNGROUPDIALOG_H
 
-#include <qsemimodal.h>
+
+#include "kngroupbrowser.h"
+
+class KNGroupDialog : public KNGroupBrowser {
+
+  Q_OBJECT
+
+  public:
+    KNGroupDialog(QWidget *parent, KNNntpAccount *a);
+    ~KNGroupDialog();
+
+    void itemChangedState(CheckItem *it, bool s);
+    void toSubscribe(QStrList *l);
+    void toUnsubscribe(QStrList *l);
+    void newList()  { slotLoadList(); }
+
+  protected:
+    enum arrowDirection { right, left };
+    enum arrowButton { btn1, btn2 };
+    void updateItemState(CheckItem *it, bool isSub);
+    void setButtonDirection(arrowButton b, arrowDirection d);
+    QPushButton *newListBtn;
+    QListView *subView, *unsubView;
+    arrowDirection dir1, dir2;
+
+  protected slots:
+    void slotItemSelected(QListViewItem *it);
+    void slotArrowBtn1();
+    void slotArrowBtn2();
+    void slotNewListBtn();
+
+  signals:
+    void newList(KNNntpAccount *a);
+};
+
+
+
+
+/*#include <qsemimodal.h>
 
 class QStrList;
 class QPushButton;
@@ -53,7 +91,7 @@ class KNGroupDialog : public QSemiModal  {
 	signals:
 		void dialogDone(bool);
 		void getNewList(KNNntpAccount*);
-};
+};*/
 
 #endif
 

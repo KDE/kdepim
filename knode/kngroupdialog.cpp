@@ -13,106 +13,224 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <qlayout.h>
 
 #include "kngroupdialog.h"
-#include "kngrouplistwidget.h"
-#include "knglobals.h"
-#include "utilities.h"
+#include <klocale.h> //i18n
 
-KNGroupDialog::KNGroupDialog(KNNntpAccount *a, QWidget *parent) :
-	QSemiModal(parent, 0, true)
+
+
+KNGroupDialog::KNGroupDialog(QWidget *parent, KNNntpAccount *a) :
+  KNGroupBrowser(parent, a)
 {
-	mSub=new QStrList(true);
-	mSub->setAutoDelete(true);
-	
-	mUnsub=new QStrList(true);
-	mUnsub->setAutoDelete(true);
-			
-	glw=new KNGroupListWidget(a, this);
-	mActive=glw->activeList();
-	
-	ok=new QPushButton(i18n("OK"), this);
-	cancel=new QPushButton(i18n("Cancel"), this);
-	newList=new QPushButton(i18n("new list"), this);
-	help=new QPushButton(i18n("Help"), this);
-	 	
-	QVBoxLayout *topLayout=new QVBoxLayout(this, 10);
-	QHBoxLayout *buttons=new QHBoxLayout(10);
-	
-	topLayout->addWidget(glw,1);
-	topLayout->addLayout(buttons,0);
-	
-	buttons->addWidget(help);
-	buttons->addStretch(1);
-	buttons->addWidget(newList);
-	buttons->addSpacing(10);
-	buttons->addWidget(ok);
-	buttons->addWidget(cancel);
-	
-	topLayout->activate();
-	
-	connect(ok, SIGNAL(clicked()), this, SLOT(slotOk()));
-	connect(cancel, SIGNAL(clicked()), this, SLOT(slotCancel()));
-	connect(help, SIGNAL(clicked()), this, SLOT(slotHelp()));
-	connect(newList, SIGNAL(clicked()), this, SLOT(slotNewList()));
-	connect(glw, SIGNAL(itemSelected(const QString&)), this, SLOT(slotItemSelected(const QString&)));
-  	
-	setCaption(i18n("Newsgroups"));
-	setDialogSize("groupDLG", this);
+  newListBtn=new QPushButton(i18n("New list"), this);
+  btnL->insertWidget(2, newListBtn);
+
+  rightLabel->setText(i18n("Current changes:"));
+  subView=new QListView(this);
+  subView->addColumn(i18n("subscribe to"));
+  unsubView=new QListView(this);
+  unsubView->addColumn(i18n("unsubscribe from"));
+
+  QVBoxLayout *protL=new QVBoxLayout(3);
+  listL->addLayout(protL, 1,2);
+  protL->addWidget(subView);
+  protL->addWidget(unsubView);
+
+  dir1=right;
+  dir2=left;
+
+  connect(groupView, SIGNAL(selectionChanged(QListViewItem*)),
+    this, SLOT(slotItemSelected(QListViewItem*)));
+  connect(subView, SIGNAL(selectionChanged(QListViewItem*)),
+    this, SLOT(slotItemSelected(QListViewItem*)));
+  connect(unsubView, SIGNAL(selectionChanged(QListViewItem*)),
+    this, SLOT(slotItemSelected(QListViewItem*)));
+
+  connect(arrowBtn1, SIGNAL(clicked()), this, SLOT(slotArrowBtn1()));
+  connect(arrowBtn2, SIGNAL(clicked()), this, SLOT(slotArrowBtn2()));
+  connect(newListBtn, SIGNAL(clicked()), this, SLOT(slotNewListBtn()));
 }
 
 
 
 KNGroupDialog::~KNGroupDialog()
 {
-	delete mSub;
-	delete mUnsub;
-	
-	saveDialogSize("groupDLG", this->size());
 }
 
 
 
-void KNGroupDialog::slotItemSelected(const QString &text)
+void KNGroupDialog::itemChangedState(CheckItem *it, bool s)
 {
-		
-	if(mActive->remove(text.latin1())) {
-  	if(!mSub->remove(text.latin1())) mUnsub->append(text.latin1());
-//  	glw->setPixmap(-1,false);
-  } else {
-		mActive->append(text.latin1());
-		if(!mUnsub->remove(text.latin1())) mSub->append(text.latin1());
-//		glw->setPixmap(-1,true);
-	}	
+  qDebug("KNGroupDialog::itemChangedState()");
+  if(s){
+    if(itemInListView(unsubView, it->text(0))) {
+      removeListItem(unsubView, it->text(0));
+      setButtonDirection(btn2, right);
+      arrowBtn1->setEnabled(false);
+      arrowBtn2->setEnabled(true);
+    }
+    else {
+      new QListViewItem(subView, it->text(0));
+      arrowBtn1->setEnabled(false);
+      arrowBtn2->setEnabled(false);
+    }
+  }
+  else {
+    if(itemInListView(subView, it->text(0))) {
+      removeListItem(subView, it->text(0));
+      setButtonDirection(btn1, right);
+      arrowBtn1->setEnabled(true);
+      arrowBtn2->setEnabled(false);
+    }
+    else {
+      new QListViewItem(unsubView, it->text(0));
+      arrowBtn1->setEnabled(false);
+      arrowBtn2->setEnabled(false);
+    }
+  }
 }
 
 
 
-void KNGroupDialog::slotHelp()
+void KNGroupDialog::updateItemState(CheckItem *it, bool isSub)
 {
-	kapp->invokeHTMLHelp("knode/working-1.html", "4.2");
+  it->setChecked( (isSub && !itemInListView(unsubView, it->text(0))) ||
+                  (!isSub && itemInListView(subView, it->text(0)))  );
+
+  if(isSub && it->pixmap(0)==0)
+    it->setPixmap(0, pmGroup);
 }
 
 
 
-void KNGroupDialog::slotOk()
+void KNGroupDialog::toSubscribe(QStrList *l)
 {
-	emit dialogDone(true);
+  l->clear();
+  QListViewItemIterator it(subView);
+  for(; it.current(); ++it)
+    l->append(it.current()->text(0).latin1());
 }
 
 
 
-void KNGroupDialog::slotCancel()
+void KNGroupDialog::toUnsubscribe(QStrList *l)
 {
-  emit dialogDone(false);
+  l->clear();
+  QListViewItemIterator it(unsubView);
+  for(; it.current(); ++it)
+    l->append(it.current()->text(0).latin1());
 }
 
 
 
-void KNGroupDialog::slotNewList()
+void KNGroupDialog::setButtonDirection(arrowButton b, arrowDirection d)
 {
-	emit getNewList(glw->account());
+  QPushButton *btn=0;
+  if(b==btn1 && dir1!=d) {
+    btn=arrowBtn1;
+    dir1=d;
+  }
+  else if(b==btn2 && dir2!=d) {
+    btn=arrowBtn2;
+    dir2=d;
+  }
+
+  if(btn) {
+    if(d==right)
+      btn->setPixmap(pmRight);
+    else
+      btn->setPixmap(pmLeft);
+  }
+}
+
+
+
+void KNGroupDialog::slotItemSelected(QListViewItem *it)
+{
+  const QObject *s=sender();
+
+
+  if(s==subView) {
+    unsubView->clearSelection();
+    groupView->clearSelection();
+    arrowBtn2->setEnabled(false);
+    arrowBtn1->setEnabled(true);
+    setButtonDirection(btn1, left);
+  }
+  else if(s==unsubView) {
+    subView->clearSelection();
+    groupView->clearSelection();
+    arrowBtn1->setEnabled(false);
+    arrowBtn2->setEnabled(true);
+    setButtonDirection(btn2, left);
+  }
+  else {
+    CheckItem *cit;
+    subView->clearSelection();
+    unsubView->clearSelection();
+    cit=static_cast<CheckItem*>(it);
+    if(!cit->isOn() && !itemInListView(subView, cit->text(0)) && !itemInListView(unsubView, cit->text(0))) {
+      arrowBtn1->setEnabled(true);
+      arrowBtn2->setEnabled(false);
+      setButtonDirection(btn1, right);
+    }
+    else if(cit->isOn() && !itemInListView(unsubView, cit->text(0)) && !itemInListView(subView, cit->text(0))) {
+      arrowBtn2->setEnabled(true);
+      arrowBtn1->setEnabled(false);
+      setButtonDirection(btn2, right);
+    }
+    else {
+      arrowBtn1->setEnabled(false);
+      arrowBtn2->setEnabled(false);
+    }
+  }
+}
+
+
+
+void KNGroupDialog::slotArrowBtn1()
+{
+  QListViewItem *it=0;
+
+  if(dir1==right) {
+    it=groupView->selectedItem();
+    new QListViewItem(subView, it->text(0));
+    (static_cast<CheckItem*>(it))->setChecked(true);
+  }
+  else {
+    it=subView->selectedItem();
+    changeItemState(it->text(0), false);
+    delete it;
+  }
+
+  arrowBtn1->setEnabled(false);
+}
+
+
+
+void KNGroupDialog::slotArrowBtn2()
+{
+  QListViewItem *it=0;
+
+  if(dir2==right) {
+    it=groupView->selectedItem();
+    new QListViewItem(unsubView, it->text(0));
+    (static_cast<CheckItem*>(it))->setChecked(false);
+  }
+  else {
+    it=unsubView->selectedItem();
+    changeItemState(it->text(0), true);
+    delete it;
+  }
+
+  arrowBtn2->setEnabled(false);
+}
+
+
+
+void KNGroupDialog::slotNewListBtn()
+{
+  emit newList(a_ccount);
 }
 
 

@@ -26,7 +26,7 @@
 #include <qcombobox.h>
 #include <qcheckbox.h>
 #include <qpushbutton.h>
-#include "knlistbox.h"
+#include <qlistview.h>
 #include "knsavedarticle.h"
 #include "knnntpaccount.h"
 
@@ -75,7 +75,7 @@ class KNComposer : public KTMainWindow  {
 			 	void showAttachementList();
 			
 				KEdit *edit;
-				KNListBox *attList;
+				QListView *attList;
 				QLineEdit *subject, *dest;
 				QComboBox *fup2;
 				QCheckBox *fupCheck;

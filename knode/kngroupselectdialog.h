@@ -16,7 +16,33 @@
 #ifndef KNGROUPSELECTDIALOG_H
 #define KNGROUPSELECTDIALOG_H
 
-#include <qdialog.h>
+
+#include "kngroupbrowser.h"
+
+
+class KNGroupSelectDialog : public KNGroupBrowser {
+
+  Q_OBJECT
+
+  public:
+    KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, QCString &act);
+		~KNGroupSelectDialog();
+		
+		QCString selectedGroups();
+		void itemChangedState(CheckItem *it, bool s);
+		
+	protected:
+	  void updateItemState(CheckItem *it, bool isSub);
+	  QListView *selView;
+	
+	protected slots:
+	  void slotItemSelected(QListViewItem *it);
+	  void slotArrowBtn1();
+	  void slotArrowBtn2();	
+	  	  		
+};
+
+/*#include <qdialog.h>
 
 class QListBox;
 class QPushButton;
@@ -51,7 +77,7 @@ class KNGroupSelectDialog : public QDialog  {
 		void slotRemoveBtn();			
 		void slotAdd(const QString &text);
 		void slotRemove(int i);
-};
+};*/
 
 #endif
 

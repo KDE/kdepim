@@ -65,13 +65,12 @@ class KNGroupManager : public QObject{
 		QList<KNGroup>  *gList;
 		KNGroup *c_urrentGroup;
 		KNFetchArticleManager *aManager;
-		KNGroupDialog *g_dial;				
+		KNGroupDialog *gDialog;				
 		int defaultMaxFetch;
 		bool a_utoCheck;
 				
 	public slots:
 		void slotDialogNewList(KNNntpAccount *a);
-		void slotDialogDone(bool accepted);
 };
 
 

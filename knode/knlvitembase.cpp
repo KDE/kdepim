@@ -49,9 +49,9 @@ QPixmap& KNLVItemBase::icon(pixmapType t)
 			case PTeyes:						*pms[t]=UserIcon("eyes");					break;
 			case PTmail:						*pms[t]=UserIcon("mail");					break;
 			case PTposting:					*pms[t]=UserIcon("posting");			break;
-			case PTstatusSent:			*pms[t]=UserIcon("stat_sent");			break;
-			case PTstatusEdit:			*pms[t]=UserIcon("stat_edit");			break;
-			case PTstatusCanceled:	*pms[t]=UserIcon("stat_cncl");			break;
+			case PTstatusSent:			*pms[t]=UserIcon("stat_sent");		break;
+			case PTstatusEdit:			*pms[t]=UserIcon("stat_edit");		break;
+			case PTstatusCanceled:	*pms[t]=UserIcon("stat_cncl");		break;
 			case PTnntp:            *pms[t]=UserIcon("server");				break;
 			case PTgroup:           *pms[t]=UserIcon("group");				break;
 			case PTfolder:          *pms[t]=UserIcon("folder");				break;

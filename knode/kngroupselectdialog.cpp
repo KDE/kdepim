@@ -13,7 +13,146 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <qlayout.h>
+#include <klocale.h>
+
+#include "kngroupselectdialog.h"
+#include "knstringsplitter.h"
+
+KNGroupSelectDialog::KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, QCString &act) :
+  KNGroupBrowser(parent, a)
+{
+  selView=new QListView(this);
+  selView->addColumn(i18n("selected groups"));
+  listL->addWidget(selView, 1,2);
+  rightLabel->setText(i18n("Groups for this article:"));
+
+  if(!act.isEmpty()) {
+    KNStringSplitter split;
+     QListViewItem *it;
+    split.init(act, ",");
+    bool splitOk;
+
+    if(!(splitOk=split.first())) {
+      it=new QListViewItem(selView, QString(act));
+    }
+    else {
+      do {
+        it=new QListViewItem(selView, QString(split.string()));
+        splitOk=split.next();
+      } while(splitOk);
+    }
+  }
+
+  connect(selView, SIGNAL(selectionChanged(QListViewItem*)),
+    this, SLOT(slotItemSelected(QListViewItem*)));
+  connect(groupView, SIGNAL(selectionChanged(QListViewItem*)),
+    this, SLOT(slotItemSelected(QListViewItem*)));
+  connect(arrowBtn1, SIGNAL(clicked()), this, SLOT(slotArrowBtn1()));
+  connect(arrowBtn2, SIGNAL(clicked()), this, SLOT(slotArrowBtn2()));
+}
+
+
+
+KNGroupSelectDialog::~KNGroupSelectDialog()
+{
+}
+
+
+
+void KNGroupSelectDialog::itemChangedState(CheckItem *it, bool s)
+{
+  if(s)
+    new QListViewItem(selView, it->text(0));
+  else
+    removeListItem(selView, it->text(0));
+  arrowBtn1->setEnabled(!s);
+}
+
+
+
+void KNGroupSelectDialog::updateItemState(CheckItem *it, bool isSub)
+{
+  it->setChecked(itemInListView(selView, it->text(0)));
+  if(isSub && it->pixmap(0)==0)
+    it->setPixmap(0, pmGroup);
+
+}
+
+
+		
+QCString KNGroupSelectDialog::selectedGroups()
+{
+  QCString ret;
+  QListViewItemIterator it(selView);
+  ret="";
+  bool isFirst=true;
+  for(; it.current(); ++it) {
+    if(!isFirst)
+      ret+=",";
+    ret+=it.current()->text(0).local8Bit();
+    isFirst=false;
+  }
+
+  return ret;
+}
+
+
+
+void KNGroupSelectDialog::slotItemSelected(QListViewItem *it)
+{
+  const QObject *s=sender();
+
+  if(s==groupView) {
+    selView->clearSelection();
+    arrowBtn2->setEnabled(false);
+    if(it)
+      arrowBtn1->setEnabled(!(static_cast<CheckItem*>(it))->isOn());
+    else
+      arrowBtn1->setEnabled(false);
+  }
+  else {
+    groupView->clearSelection();
+    arrowBtn1->setEnabled(false);
+    arrowBtn2->setEnabled((it!=0));
+  }
+}
+
+
+
+void KNGroupSelectDialog::slotArrowBtn1()
+{
+  QListViewItem *i=groupView->selectedItem();
+
+  if(i) {
+    new QListViewItem(selView, i->text(0));
+    arrowBtn1->setEnabled(false);
+    (static_cast<CheckItem*>(i))->setChecked(true);
+  }
+}
+
+
+
+void KNGroupSelectDialog::slotArrowBtn2()
+{
+
+  QListViewItem *i=selView->selectedItem();
+
+  if(i) {
+    changeItemState(i->text(0), false);
+    delete i;
+    arrowBtn2->setEnabled(false);
+  }
+}
+
+
+
+// -----------------------------------------------------------------------------
+
+#include "kngroupselectdialog.moc"
+
+
+
+/*#include <qlayout.h>
 #include <qlistbox.h>
 #include <qpushbutton.h>
 #include <qgroupbox.h>
@@ -21,7 +160,7 @@
 #include <kseparator.h>
 
 #include "kngrouplistwidget.h"
-#include "kngroupselectdialog.h"
+
 #include "knglobals.h"
 #include "knstringsplitter.h"
 #include "utilities.h"
@@ -166,6 +305,5 @@ QCString& KNGroupSelectDialog::selectedGroups()
 	return selGroups;
 }
 
-// -----------------------------------------------------------------------------
 
-#include "kngroupselectdialog.moc"
+*/
