@@ -216,7 +216,7 @@ KPilot's settings.</comment>
                                     <string>/dev/pilot</string>
                                 </property>
                                 <property name="toolTip" stdset="0">
-                                    <string>Enter the port the Pilot is attached to, serial or usb.</string>
+                                    <string>Enter the port the Pilot is attached to, serial or USB.</string>
                                 </property>
                             </widget>
                             <widget class="QLabel" row="0" column="2">

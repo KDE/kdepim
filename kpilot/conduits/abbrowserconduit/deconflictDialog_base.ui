@@ -263,7 +263,7 @@
                             </property>
                             <property stdset="1">
                                 <name>text</name>
-                                <string>No where</string>
+                                <string>Nowhere</string>
                             </property>
                             <property>
                                 <name>toolTip</name>
