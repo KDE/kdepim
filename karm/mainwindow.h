@@ -49,7 +49,7 @@ class MainWindow : public KMainWindow
     void contextMenuRequest( QListViewItem*, const QPoint&, int );
     void enableStopAll();
     void disableStopAll();
-    void timeLoggingChanged( bool on );
+//    void timeLoggingChanged( bool on );
 
   protected:
     void startStatusBar();
