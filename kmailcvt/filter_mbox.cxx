@@ -22,6 +22,10 @@
 #include <ktempfile.h>
 #include <kdebug.h>
 
+#ifndef MAX_LINE
+#define MAX_LINE 8192
+#endif
+
 #include "filter_mbox.hxx"
 
 FilterMBox::FilterMBox() :
