@@ -30,6 +30,7 @@
 #include <qcheckbox.h>
 #include <qstring.h>
 
+#include <kaccelmanager.h>
 #include <kapplication.h>
 #include <kbuttonbox.h>
 #include <kconfig.h>
@@ -59,21 +60,25 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, QWidget *parent, co
   mPrefixCombo = new KComboBox(page, "mPrefixCombo");
   mPrefixCombo->setDuplicatesEnabled(false);
   mPrefixCombo->setEditable(true);
+  label->setBuddy( mPrefixCombo );
   layout->addWidget(mPrefixCombo, 0, 1);
   
   label = new QLabel(i18n("Given name:"), page);
   layout->addWidget(label, 1, 0);
   mGivenNameEdit = new KLineEdit(page, "mGivenNameEdit");
+  label->setBuddy( mGivenNameEdit );
   layout->addMultiCellWidget(mGivenNameEdit, 1, 1, 1, 2);
 
   label = new QLabel(i18n("Additional names:"), page);
   layout->addWidget(label, 2, 0);
   mAdditionalNameEdit = new KLineEdit(page, "mAdditionalNameEdit");
+  label->setBuddy( mAdditionalNameEdit );
   layout->addMultiCellWidget(mAdditionalNameEdit, 2, 2, 1, 2);
   
   label = new QLabel(i18n("Family names:"), page);
   layout->addWidget(label, 3, 0);
   mFamilyNameEdit = new KLineEdit(page, "mFamilyNameEdit");
+  label->setBuddy( mFamilyNameEdit );
   layout->addMultiCellWidget(mFamilyNameEdit, 3, 3, 1, 2);
   
   label = new QLabel(i18n("Honorific suffixes:"), page);
@@ -81,6 +86,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, QWidget *parent, co
   mSuffixCombo = new KComboBox(page, "mSuffixCombo");
   mSuffixCombo->setDuplicatesEnabled(false);
   mSuffixCombo->setEditable(true);
+  label->setBuddy( mSuffixCombo );
   layout->addWidget(mSuffixCombo, 4, 1);
 
   mParseBox = new QCheckBox( i18n( "Parse name automatically" ), page );
@@ -119,6 +125,8 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, QWidget *parent, co
 
   mAddresseeConfig.setAddressee( addr );
   mParseBox->setChecked( mAddresseeConfig.automaticNameParsing() );
+
+  KAcceleratorManager::manage( this );
 }
     
 NameEditDialog::~NameEditDialog() 

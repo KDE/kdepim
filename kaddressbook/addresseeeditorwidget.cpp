@@ -32,6 +32,7 @@
 #include <qlistbox.h>
 #include <qhbox.h>
 
+#include <kaccelmanager.h>
 #include <kapplication.h>
 #include <kglobal.h>
 #include <kiconloader.h>
@@ -105,6 +106,8 @@ void AddresseeEditorWidget::initGUI()
   setupTab3();
 
   mNameEdit->setFocus();
+
+  connect( mTabWidget, SIGNAL( currentChanged(QWidget*) ), SLOT( pageChanged(QWidget*) ) );
 }
 
 void AddresseeEditorWidget::setupTab1()
@@ -291,6 +294,7 @@ void AddresseeEditorWidget::setupTab2()
   mDepartmentEdit = new KLineEdit(tab2, "mDepartmentEdit");
   connect(mDepartmentEdit, SIGNAL(textChanged(const QString &)),
           SLOT(textChanged(const QString &)));
+  label->setBuddy( mDepartmentEdit );
   layout->addWidget(mDepartmentEdit, 0, 2);
   
   label = new QLabel(i18n("Office:"), tab2);
@@ -298,6 +302,7 @@ void AddresseeEditorWidget::setupTab2()
   mOfficeEdit = new KLineEdit(tab2, "mOfficeEdit");
   connect(mOfficeEdit, SIGNAL(textChanged(const QString &)),
           SLOT(textChanged(const QString &)));
+  label->setBuddy( mOfficeEdit );
   layout->addWidget(mOfficeEdit, 1, 2);
   
   label = new QLabel(i18n("Profession:"), tab2);
@@ -305,6 +310,7 @@ void AddresseeEditorWidget::setupTab2()
   mProfessionEdit = new KLineEdit(tab2, "mProfessionEdit");
   connect(mProfessionEdit, SIGNAL(textChanged(const QString &)),
           SLOT(textChanged(const QString &)));
+  label->setBuddy( mProfessionEdit );
   layout->addWidget(mProfessionEdit, 2, 2);
   
   label = new QLabel(i18n("Manager\'s name:"), tab2);
@@ -312,6 +318,7 @@ void AddresseeEditorWidget::setupTab2()
   mManagerEdit = new KLineEdit(tab2, "mManagerEdit");
   connect(mManagerEdit, SIGNAL(textChanged(const QString &)),
           SLOT(textChanged(const QString &)));
+  label->setBuddy( mManagerEdit );
   layout->addMultiCellWidget(mManagerEdit, 0, 0, 4, 5);
   
   label = new QLabel(i18n("Assistant's name:"), tab2);
@@ -319,6 +326,7 @@ void AddresseeEditorWidget::setupTab2()
   mAssistantEdit = new KLineEdit(tab2, "mAssistantEdit");
   connect(mAssistantEdit, SIGNAL(textChanged(const QString &)),
           SLOT(textChanged(const QString &)));
+  label->setBuddy( mAssistantEdit );
   layout->addMultiCellWidget(mAssistantEdit, 1, 1, 4, 5);
   
   bar = new KSeparator(KSeparator::HLine, tab2);
@@ -336,6 +344,7 @@ void AddresseeEditorWidget::setupTab2()
   mNicknameEdit = new KLineEdit(tab2, "mNicknameEdit");
   connect(mNicknameEdit, SIGNAL(textChanged(const QString &)),
           SLOT(textChanged(const QString &)));
+  label->setBuddy( mNicknameEdit );
   layout->addWidget(mNicknameEdit, 4, 2);
 
   label = new QLabel(i18n("Spouse's name:"), tab2);
@@ -343,6 +352,7 @@ void AddresseeEditorWidget::setupTab2()
   mSpouseEdit = new KLineEdit(tab2, "mSpouseEdit");
   connect(mSpouseEdit, SIGNAL(textChanged(const QString &)),
           SLOT(textChanged(const QString &)));
+  label->setBuddy( mSpouseEdit );
   layout->addWidget(mSpouseEdit, 5, 2);
 
   label = new QLabel(i18n("Birthday:"), tab2);
@@ -351,6 +361,9 @@ void AddresseeEditorWidget::setupTab2()
   mBirthdayPicker->setHandleInvalid(true);
   connect(mBirthdayPicker, SIGNAL(dateChanged(QDate)),
           SLOT(dateChanged(QDate)));
+  connect( mBirthdayPicker, SIGNAL( invalidDateEntered() ),
+           SLOT( invalidDate() ) );
+  label->setBuddy( mBirthdayPicker );
   layout->addWidget(mBirthdayPicker, 4, 4);
   
   label = new QLabel(i18n("Anniversary:"), tab2);
@@ -359,6 +372,9 @@ void AddresseeEditorWidget::setupTab2()
   mAnniversaryPicker->setHandleInvalid(true);
   connect(mAnniversaryPicker, SIGNAL(dateChanged(QDate)),
           SLOT(dateChanged(QDate)));
+  connect( mAnniversaryPicker, SIGNAL( invalidDateEntered() ),
+           SLOT( invalidDate() ) );
+  label->setBuddy( mAnniversaryPicker );
   layout->addWidget(mAnniversaryPicker, 5, 4);
   
   bar = new KSeparator(KSeparator::HLine, tab2);
@@ -374,6 +390,7 @@ void AddresseeEditorWidget::setupTab2()
   mNoteEdit->setMinimumSize( mNoteEdit->sizeHint() );
   connect(mNoteEdit, SIGNAL(textChanged()),
           SLOT(emitModified()));
+  label->setBuddy( mNoteEdit );
   layout->addMultiCellWidget( mNoteEdit, 7, 7, 1, 5 );
   
    // Build the layout and add to the tab widget
@@ -641,11 +658,12 @@ void AddresseeEditorWidget::emitModified()
 
 void AddresseeEditorWidget::dateChanged(QDate)
 {
-  KDateEdit *dateEdit = (KDateEdit*)sender();
-  if ( !dateEdit->inputIsValid() )
-    KMessageBox::sorry( this, i18n( "You must specify a valid date" ) );
-
   emitModified();
+}
+
+void AddresseeEditorWidget::invalidDate()
+{
+  KMessageBox::sorry( this, i18n( "You must specify a valid date" ) );
 }
 
 void AddresseeEditorWidget::formattedNameChanged(const QString &fn)
@@ -659,6 +677,12 @@ void AddresseeEditorWidget::formattedNameChanged(const QString &fn)
   nameBoxChanged();
 
   le->setCursorPosition( pos );
+}
+
+void AddresseeEditorWidget::pageChanged(QWidget *wdg)
+{
+  if ( wdg )
+    KAcceleratorManager::manage( wdg );
 }
 
 #include "addresseeeditorwidget.moc"

@@ -52,6 +52,7 @@ EmailEditWidget::EmailEditWidget(QWidget *parent, const char *name)
   mEmailEdit = new KLineEdit(this);
   connect(mEmailEdit, SIGNAL( textChanged(const QString &) ), SLOT( textChanged(const QString&) ) );
   connect(mEmailEdit, SIGNAL( textChanged(const QString &) ), SIGNAL( modified() ) );
+  label->setBuddy( mEmailEdit );
   topLayout->addWidget(mEmailEdit, 0, 1);
 
   QPushButton *editButton = new QPushButton(i18n("Edit Email Addresses..."), this);

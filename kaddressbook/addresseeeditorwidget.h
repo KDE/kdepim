@@ -74,6 +74,7 @@ class AddresseeEditorWidget : public QWidget
   
   protected slots:
     void textChanged(const QString &);
+    void pageChanged(QWidget *wdg);
     
     /** Emits the modified signal and sets the dirty flag. Any slot
     * that modifies data should use this method instead of calling emit
@@ -81,6 +82,7 @@ class AddresseeEditorWidget : public QWidget
     */
     void emitModified();
     void dateChanged(QDate);
+    void invalidDate();
     void nameTextChanged(const QString &);
     void nameBoxChanged();
     void nameButtonClicked();

@@ -36,6 +36,7 @@
 #include <qstring.h>
 #include <qhbox.h>
 
+#include <kaccelmanager.h>
 #include <kapplication.h>
 #include <kbuttonbox.h>
 #include <kconfig.h>
@@ -188,26 +189,31 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   label->setAlignment(Qt::AlignTop | Qt::AlignLeft);
   topLayout->addWidget(label, 1, 0);
   mStreetTextEdit = new QTextEdit(page, "mStreetTextEdit");
+  label->setBuddy( mStreetTextEdit );
   topLayout->addWidget(mStreetTextEdit, 1, 1);
 
   label = new QLabel(i18n("Post office box:"), page);
   topLayout->addWidget(label, 2 , 0);
   mPOBoxEdit = new KLineEdit(page, "mPOBoxEdit");
+  label->setBuddy( mPOBoxEdit );
   topLayout->addWidget(mPOBoxEdit, 2, 1);
 
   label = new QLabel(i18n("Locality:"), page);
   topLayout->addWidget(label, 3, 0);
   mLocalityEdit = new KLineEdit(page, "mLocalityEdit");
+  label->setBuddy( mLocalityEdit );
   topLayout->addWidget(mLocalityEdit, 3, 1);
 
   label = new QLabel(i18n("Region:"), page);
   topLayout->addWidget(label, 4, 0);
   mRegionEdit = new KLineEdit(page, "mRegionEdit");
+  label->setBuddy( mRegionEdit );
   topLayout->addWidget(mRegionEdit, 4, 1);
 
   label = new QLabel(i18n("Postal code:"), page);
   topLayout->addWidget(label, 5, 0);
   mPostalCodeEdit = new KLineEdit(page, "mPostalCodeEdit");
+  label->setBuddy( mPostalCodeEdit );
   topLayout->addWidget(mPostalCodeEdit, 5, 1);
 
   label = new QLabel(i18n("Country:"), page);
@@ -217,6 +223,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   mCountryCombo->setDuplicatesEnabled(false);
   mCountryCombo->setAutoCompletion(true);
   fillCountryCombo( mCountryCombo );
+  label->setBuddy( mCountryCombo );
   topLayout->addWidget(mCountryCombo, 6, 1);
   
   mPreferredCheckBox = new QCheckBox( i18n( "This is the preferred address" ), page );
@@ -242,6 +249,8 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
 
   connect( mTypeCombo, SIGNAL( activated( int ) ),
            SLOT( updateAddressEdits() ) );
+
+  KAcceleratorManager::manage( this );
 }
 
 AddressEditDialog::~AddressEditDialog()
