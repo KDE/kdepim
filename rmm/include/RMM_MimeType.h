@@ -36,7 +36,7 @@ class RMimeType : public RHeaderBody {
 
 		RMimeType();
 		RMimeType(const RMimeType & mt);
-		RMimeType(const QString & s) : RHeaderBody(s) { }
+		RMimeType(const QCString & s) : RHeaderBody(s) { }
 
 		virtual ~RMimeType();
 
@@ -45,26 +45,26 @@ class RMimeType : public RHeaderBody {
 		void parse();
 		void assemble();
 
-		const QString & boundary() const;
-		const QString & name() const;
+		const QCString & boundary() const;
+		const QCString & name() const;
 
 		MimeType type() const;
 		MimeSubType subType() const;
 
 		void setType(MimeType);
-		void setType(const QString &);
+		void setType(const QCString &);
 		void setSubType(MimeSubType);
-		void setSubType(const QString &);
+		void setSubType(const QCString &);
 
-		void setBoundary(const QString & boundary);
-		void setName(const QString & name);
+		void setBoundary(const QCString & boundary);
+		void setName(const QCString & name);
 
 		const char * className() const { return "RMimeType"; }
 
 	private:
 
-		QString boundary_;
-		QString name_;
+		QCString boundary_;
+		QCString name_;
 		
 		MimeType type_;
 		MimeSubType subType_;

@@ -164,9 +164,9 @@ RTokenise(
 #ifdef TEST
 main()
 {
-	QString s = "Hello I'd \\\"like\" to be \"tokenised\r\n (I'm a \"with quote\" comment) without end";
+	QCString s = "Hello I'd \\\"like\" to be \"tokenised\r\n (I'm a \"with quote\" comment) without end";
 
-	QString d = " ";
+	QCString d = " ";
 
 	QStrList l;
 	l.setAutoDelete(true);

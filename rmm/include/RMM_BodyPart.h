@@ -33,7 +33,7 @@ class RBodyPart : public REntity {
 	
 		RBodyPart();
 		RBodyPart(const RBodyPart & part);
-		RBodyPart(const QString & s) : REntity(s) { }
+		RBodyPart(const QCString & s) : REntity(s) { }
 
 		const RBodyPart & operator = (const RBodyPart & part);
 
@@ -46,14 +46,14 @@ class RBodyPart : public REntity {
 		MimeSubType mimeSubType() const;
 		
 		void setMimeType(MimeType t);
-		void setMimeType(const QString & s);
+		void setMimeType(const QCString & s);
 		void setMimeSubType(MimeSubType st);
-		void setMimeSubType(const QString & s);
+		void setMimeSubType(const QCString & s);
 
-		const QString & description() const;
+		const QCString & description() const;
 		DispType disposition() const;
 		
-		void setDescription(const QString & s);
+		void setDescription(const QCString & s);
 		void setDisposition(DispType d);
 		
 		CteType encoding() const;
@@ -67,7 +67,7 @@ class RBodyPart : public REntity {
 		CteType encoding_;
 		MimeType mimeType_;
 		MimeSubType mimeSubType_;
-		QString contentDescription_;
+		QCString contentDescription_;
 		DispType disposition_;
 
 };

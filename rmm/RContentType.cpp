@@ -60,7 +60,7 @@ RContentType::parse()
 	rmmDebug("parse() called");
 	rmmDebug("strRep_ = " + strRep_);
 	
-	QString ts;
+	QCString ts;
 	int i = strRep_.find(";");
 	
 	if (i == -1)
@@ -96,7 +96,7 @@ RContentType::assemble()
 	
 	if (parameterList_.count() == 0) return;
 	
-	strRep_ += QString(";\n    ");
+	strRep_ += QCString(";\n    ");
 	
 	strRep_ += parameterList_.asString();
 

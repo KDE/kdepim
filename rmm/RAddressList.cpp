@@ -142,7 +142,7 @@ RAddressList::assemble()
 		it.current()->assemble();
 		
 		if (!firstTime) {
-			strRep_ += QString(",\n    ");
+			strRep_ += QCString(",\n    ");
 			firstTime = false;
 		}
 

@@ -2,6 +2,17 @@ OI !
 
 Developers: Please read DEVELOPER_INFO as well as this.
 
+NOTE WELL ! Started recently moving things to QCString. I've defined QCString as
+QString for Qt 1 compiles, of course.
+
+I want to make anything that deals with messages into QCString. You probably know
+that it's ok to have 8-bit chars in messages, well it's not OK to have Unicode
+unless you use MIME encoding. Headers, I think, are supposed to be 7-bit
+us-ascii, though I've heard this isn't strictly held to, and don't know if it's
+even true. Anyway, we will use QCString for all operations that act upon messages.
+This means more work, but it means we don't use huge amounts of storage for
+messages and their parts.
+
 Potential developers:
 
 Please mail me to let me know what you're interested in helping with.

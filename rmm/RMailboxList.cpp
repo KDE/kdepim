@@ -76,7 +76,7 @@ RMailboxList::parse()
 	// combined.
 	QStrListIterator bit(ltemp);
 	
-	QString s;
+	QCString s;
 	
 	for (; bit.current(); ++bit) {
 		
@@ -135,7 +135,7 @@ RMailboxList::assemble()
 		it.current()->assemble();
 		
 		if (!firstTime) {
-			strRep_ += QString(",\n    ");
+			strRep_ += QCString(",\n    ");
 			firstTime = false;
 		}
 

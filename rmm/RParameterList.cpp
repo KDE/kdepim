@@ -67,7 +67,7 @@ RParameterList::parse()
 	
 	for (; it.current(); ++it) {
 		
-		RParameter * p = new RParameter(QString(it.current()).stripWhiteSpace());
+		RParameter * p = new RParameter(QCString(it.current()).stripWhiteSpace());
 		p->parse();
 		QList::append(p);
 	}
@@ -88,7 +88,7 @@ RParameterList::assemble()
 		it.current()->assemble();
 		
 		if (!firstTime) {
-			strRep_ += QString(";\n    ");
+			strRep_ += QCString(";\n    ");
 			firstTime = false;
 		}
 

@@ -260,20 +260,20 @@ enum DayOfWeek {
 	DayMon, DayTue, DayWed, DayThu, DayFri, DaySat, DaySun
 };
 
-DayOfWeek strToDayOfWeek(const QString & s);
+DayOfWeek strToDayOfWeek(const QCString & s);
 
 enum Month {
 	MonthJan, MonthFeb, MonthMar, MonthApr, MonthMay, MonthJun,
 	MonthJul, MonthAug, MonthSep, MonthOct, MonthNov, MonthDec
 };
 
-Month strToMonth(const QString & s);
+Month strToMonth(const QCString & s);
 
-MimeType	mimeTypeStr2Enum(const QString & s);
-QString		mimeTypeEnum2Str(MimeType m);
-MimeSubType	mimeSubTypeStr2Enum(const QString & s);
-QString		mimeSubTypeEnum2Str(MimeSubType t);
-CteType		RCteStr2Enum(const QString & s);
-QString		cteTypeEnumToStr(CteType t);
+MimeType	mimeTypeStr2Enum(const QCString & s);
+QCString		mimeTypeEnum2Str(MimeType m);
+MimeSubType	mimeSubTypeStr2Enum(const QCString & s);
+QCString		mimeSubTypeEnum2Str(MimeSubType t);
+CteType		RCteStr2Enum(const QCString & s);
+QCString		cteTypeEnumToStr(CteType t);
 
 #endif

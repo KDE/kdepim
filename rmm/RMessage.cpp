@@ -103,7 +103,7 @@ RMessage::parse()
 	
 	if (endOfHeaders == -1) {
 		rmmDebug("No end of headers ! - message is " +
-			QString().setNum(strRep_.length()) + " bytes long");
+			QCString().setNum(strRep_.length()) + " bytes long");
 		return;
 	}
 	

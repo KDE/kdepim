@@ -79,7 +79,7 @@ operator << (QDataStream & s, const RMailbox & mailbox)
 }
 
 
-	const QString &
+	const QCString &
 RMailbox::phrase() const
 {
 	return phrase_;
@@ -87,44 +87,44 @@ RMailbox::phrase() const
 
 
 	void
-RMailbox::setPhrase(const QString & s)
+RMailbox::setPhrase(const QCString & s)
 {
 	phrase_ = s.data();
 }
 
-	const QString &
+	const QCString &
 RMailbox::route() const
 {
 	return route_;
 }
 
 	void
-RMailbox::setRoute(const QString & s)
+RMailbox::setRoute(const QCString & s)
 {
 	route_ = s.data();
 }
 
-	const QString &
+	const QCString &
 RMailbox::localPart() const
 {
 	return localPart_;
 }
 
 	void
-RMailbox::setLocalPart(const QString & s)
+RMailbox::setLocalPart(const QCString & s)
 {
 	localPart_ = s.data();
 }
 
 
-	const QString &
+	const QCString &
 RMailbox::domain() const
 {
 	return domain_;
 }
 
 	void
-RMailbox::setDomain(const QString & s)
+RMailbox::setDomain(const QCString & s)
 {
 	domain_ = s.data();
 }
@@ -156,7 +156,7 @@ void RMailbox::parse()
 		// Deal with the phrase part. Just put in a string.
 		phrase_ = "";
 		int i = 0;
-		QString s = l.at(i++);
+		QCString s = l.at(i++);
 		
 		// We're guaranteed to hit '<' since hasRouteAddress == true.
 		while (s.at(0) != '<') {

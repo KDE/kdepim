@@ -40,7 +40,7 @@ RAddress::RAddress(const RAddress & addr)
 	rmmDebug("ctor");
 }
 
-RAddress::RAddress(const QString & addr)
+RAddress::RAddress(const QCString & addr)
 	:	RHeaderBody(addr.data()),
 		mailbox_(0),
 		group_(0)
@@ -107,7 +107,7 @@ RAddress::parse()
 
 	rmmDebug("Done my deletions. Should be safe if ctors work");
 	
-	QString s = strRep_.stripWhiteSpace();
+	QCString s = strRep_.stripWhiteSpace();
 
 	// RFC822: group: phrase ":" [#mailbox] ";"
 	// -> If a group, MUST end in ";".

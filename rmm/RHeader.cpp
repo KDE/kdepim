@@ -37,7 +37,7 @@ RHeader::RHeader()
 	rmmDebug("ctor");
 }
 
-RHeader::RHeader(const QString & name, RHeaderBody * b)
+RHeader::RHeader(const QCString & name, RHeaderBody * b)
 {
 	rmmDebug("ctor");
 }
@@ -69,7 +69,7 @@ RHeader::operator = (const RHeader & h)
 	return *this;
 }
 
-	const QString &
+	const QCString &
 RHeader::headerName() const
 {
 	return headerName_;
@@ -88,7 +88,7 @@ RHeader::headerBody() const
 }
 
 	void
-RHeader::setName(const QString & name)
+RHeader::setName(const QCString & name)
 {
 	headerName_ = name;
 }
@@ -122,7 +122,7 @@ RHeader::parse()
 	for (int i = 0; i < 42; i++) {
 		if (!stricmp((headerName_), headerNames[i])) {
 			headerType_ = (HeaderType)i;
-			rmmDebug("I'm of type " + QString(headerNames[i]));
+			rmmDebug("I'm of type " + QCString(headerNames[i]));
 		}
 	}
 
@@ -173,7 +173,7 @@ RHeader::parse()
 			break;
 	}
 
-	QString hb = strRep_.right(strRep_.length() - split - 1);
+	QCString hb = strRep_.right(strRep_.length() - split - 1);
 	hb = hb.stripWhiteSpace();
 	b->set(hb);
 	b->parse();

@@ -31,7 +31,7 @@ class RMessageID : public RHeaderBody {
 
 		RMessageID();
 		RMessageID(const RMessageID & rMessageID);
-		RMessageID(const QString & s) : RHeaderBody(s) { }
+		RMessageID(const QCString & s) : RHeaderBody(s) { }
 		bool operator == (const RMessageID & msgID) const;
 		bool operator != (const RMessageID & msgID) const;
 		const RMessageID & operator = (const RMessageID & rMessageID);
@@ -51,18 +51,18 @@ class RMessageID : public RHeaderBody {
 		
 		void createDefault();
 
-		const QString & localPart()const;
-		const QString & domain()const;
-		void setLocalPart(const QString & localPart);
-		void setDomain(const QString & domain);
+		const QCString & localPart()const;
+		const QCString & domain()const;
+		void setLocalPart(const QCString & localPart);
+		void setDomain(const QCString & domain);
 		
 		const char * className() const { return "RMessageID"; }
 		
 
 	private:
 
-		QString domain_;
-		QString localPart_;
+		QCString domain_;
+		QCString localPart_;
 };
 
 #endif //RMESSAGEID_H

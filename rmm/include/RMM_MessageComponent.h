@@ -33,7 +33,7 @@ class RMessageComponent {
 
 		virtual ~RMessageComponent();
 
-		RMessageComponent & operator = (const QString & s)
+		RMessageComponent & operator = (const QCString & s)
 		{ strRep_ = s; }
 		
 		RMessageComponent & operator = (const RMessageComponent & m);
@@ -44,9 +44,9 @@ class RMessageComponent {
 		
 		virtual void createDefault() = 0L;
 
-		void set(const QString & s) { strRep_ = s.data(); }
+		void set(const QCString & s) { strRep_ = s.data(); }
 
-		const QString & asString() const { return strRep_; }
+		const QCString & asString() const { return strRep_; }
 
 		RMessageComponent * parent();
 
@@ -59,9 +59,9 @@ class RMessageComponent {
 
 		RMessageComponent();
 		RMessageComponent(const RMessageComponent & component);
-		RMessageComponent(const QString & s) : strRep_(s.data()) { }
+		RMessageComponent(const QCString & s) : strRep_(s.data()) { }
 
-		QString strRep_;
+		QCString strRep_;
 		bool 				isModified_;
 		RMessageComponent	* parent_;
 		bool				dirty_;

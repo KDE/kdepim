@@ -92,26 +92,26 @@ operator << (QDataStream & s, const RMessageID & mid)
 	s << mid.domain_;
 }
 	
-	const QString &
+	const QCString &
 RMessageID::localPart() const
 {
     return localPart_;
 }
 
 	void
-RMessageID::setLocalPart(const QString & localPart)
+RMessageID::setLocalPart(const QCString & localPart)
 {
 	localPart_ = localPart;
 }
 
-	const QString &
+	const QCString &
 RMessageID::domain() const
 {
     return domain_;
 }
 
 	void
-RMessageID::setDomain(const QString & domain)
+RMessageID::setDomain(const QCString & domain)
 {
     domain_ = domain;
 }
@@ -129,7 +129,7 @@ RMessageID::parse()
 	int ntokens = RTokenise(strRep_, "@", l);
 	if (ntokens < 2) return;
 	localPart_ = l.at(0);
-	QString b = l.at(1);
+	QCString b = l.at(1);
 	localPart_.replace(QRegExp("^<"), "");
 	domain_ = b.left(b.findRev('>'));
 	rmmDebug("Done parse");

@@ -24,24 +24,24 @@
 void	RInitialize();
 void	RFinalize();
 
-int		RCteStrToEnum(const QString & aStr);
-void	RCteEnumToStr(int aEnum, QString & aStr);
+int		RCteStrToEnum(const QCString & aStr);
+void	RCteEnumToStr(int aEnum, QCString & aStr);
 
-int		RTypeStrToEnum(const QString & aStr);
-void	RTypeEnumToStr(int aEnum, QString & aStr);
+int		RTypeStrToEnum(const QCString & aStr);
+void	RTypeEnumToStr(int aEnum, QCString & aStr);
 
-int		RSubtypeStrToEnum(const QString & aStr);
-void	RSubtypeEnumToStr(int aEnum, QString & aStr);
+int		RSubtypeStrToEnum(const QCString & aStr);
+void	RSubtypeEnumToStr(int aEnum, QCString & aStr);
 
-int		RToCrLfEol(const QString & aSrcStr, QString & aDestStr);
-int		RToLfEol(const QString & aSrcStr, QString & aDestStr);
-int		RToCrEol(const QString & aSrcStr, QString & aDestStr);
-int		RToLocalEol(const QString & aSrcStr, QString & aDestStr);
+int		RToCrLfEol(const QCString & aSrcStr, QCString & aDestStr);
+int		RToLfEol(const QCString & aSrcStr, QCString & aDestStr);
+int		RToCrEol(const QCString & aSrcStr, QCString & aDestStr);
+int		RToLocalEol(const QCString & aSrcStr, QCString & aDestStr);
 
-int		REncodeBase64(const QString & aSrcStr, QString & aDestStr);
-int		RDecodeBase64(const QString & aSrcStr, QString & aDestStr);
+int		REncodeBase64(const QCString & aSrcStr, QCString & aDestStr);
+int		RDecodeBase64(const QCString & aSrcStr, QCString & aDestStr);
 
-int		REncodeQuotedPrintable(const QString & aSrcStr, QString & aDestStr);
-int		RDecodeQuotedPrintable(const QString & aSrcStr, QString & aDestStr);
+int		REncodeQuotedPrintable(const QCString & aSrcStr, QCString & aDestStr);
+int		RDecodeQuotedPrintable(const QCString & aSrcStr, QCString & aDestStr);
 
 #endif

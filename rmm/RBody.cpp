@@ -119,7 +119,7 @@ RBody::removePart(RBodyPart * part)
 	RBodyPart *
 RBody::part(int index)
 {
-	rmmDebug("part(" + QString().setNum(index) + ") called");
+	rmmDebug("part(" + QCString().setNum(index) + ") called");
 	if (partList_.count() < (unsigned)index) return 0;
 	return partList_.at(index);
 }

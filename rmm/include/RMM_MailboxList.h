@@ -34,7 +34,7 @@ class RMailboxList : public QList<RMailbox>, public RHeaderBody {
 
 		RMailboxList();
 		RMailboxList(const RMailboxList & rMailboxList);
-		RMailboxList(const QString & s) : QList<RMailbox>(), RHeaderBody(s) { }
+		RMailboxList(const QCString & s) : QList<RMailbox>(), RHeaderBody(s) { }
 		const RMailboxList & operator = (const RMailboxList & rMailboxList);
 
 		virtual ~RMailboxList();

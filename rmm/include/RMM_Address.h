@@ -34,7 +34,7 @@ class RAddress : public RHeaderBody {
 
 		RAddress();
 		RAddress(const RAddress & a);
-		RAddress(const QString & s);
+		RAddress(const QCString & s);
 		virtual const RAddress & operator = (const RAddress & a);
 
 		virtual ~RAddress();

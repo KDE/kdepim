@@ -92,7 +92,7 @@ REnvelope::parse()
 			
 			if (r != rstart) { // Only use buffer if it's not empty.
 			
-				QString s(rstart);
+				QCString s(rstart);
 				
 				rmmDebug("New header: \"" + s + "\"");
 				RHeader * h = new RHeader(s);
@@ -142,7 +142,7 @@ REnvelope::assemble()
 	void
 REnvelope::_createDefault(HeaderType t)
 {
-	rmmDebug("Creating default of type " + QString(headerNames[t]));
+	rmmDebug("Creating default of type " + QCString(headerNames[t]));
 	RHeader * h = new RHeader;
 	h->setName(headerNames[t]);
 
@@ -217,7 +217,7 @@ REnvelope::has(HeaderType t) const
 }
 
 	bool
-REnvelope::has(const QString & headerName) const
+REnvelope::has(const QCString & headerName) const
 {
 	RHeaderListIterator it(headerList_);
 
@@ -231,7 +231,7 @@ template <class T>
 	T
 REnvelope::get(HeaderType h, T t)
 {
-	rmmDebug("get " + QString(headerNames[h]));
+	rmmDebug("get " + QCString(headerNames[h]));
 	// See if we can find this header in the list.
 	
 	RHeaderListIterator it(headerList_);
@@ -239,7 +239,7 @@ REnvelope::get(HeaderType h, T t)
 	for (; it.current(); ++it)
 		if (it.current()->headerType() == h) {
 			rmmDebug("The header you asked for exists.");
-			rmmDebug("headerbody: \"" + QString(it.current()->asString()) + "\"");
+			rmmDebug("headerbody: \"" + QCString(it.current()->asString()) + "\"");
 			return (T)(it.current()->headerBody());
 		}
 	
@@ -595,7 +595,7 @@ REnvelope::xref()
 }
 
 	RText &
-REnvelope::get(const QString & headerName)
+REnvelope::get(const QCString & headerName)
 {
 	RHeaderListIterator it(headerList_);
 	
@@ -626,7 +626,7 @@ REnvelope::firstSender()
 	
 		RMailboxList & m = from();
 		rmmDebug("Number of mailboxes in from field : " +
-			QString().setNum(m.count()));
+			QCString().setNum(m.count()));
 
 		if (m.count() == 0) {
 			
@@ -635,7 +635,7 @@ REnvelope::firstSender()
 			
 		}
 			
-		rmmDebug(QString("Returning ") + m.at(0)->asString());
+		rmmDebug(QCString("Returning ") + m.at(0)->asString());
 		m.at(0)->assemble();
 		return *(m.at(0));
 	
@@ -663,7 +663,7 @@ REnvelope::parentMessageId()
 				
 		/// FIXME have to do set() as operator = seems to think operand is
 		//RMessageID !
-		QString s = references().asString();
+		QCString s = references().asString();
 		s = s.right(s.length() - s.findRev('<'));
 		m.set(s);
 		

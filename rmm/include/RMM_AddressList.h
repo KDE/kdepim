@@ -34,7 +34,7 @@ class RAddressList : public QList<RAddress>, public RHeaderBody {
 
 		RAddressList();
 		RAddressList(const RAddressList & rAddressList);
-		RAddressList(const QString & s) : RHeaderBody(s) { }
+		RAddressList(const QCString & s) : RHeaderBody(s) { }
 		const RAddressList & operator = (const RAddressList & al);
 
 		virtual ~RAddressList();

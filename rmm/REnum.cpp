@@ -24,7 +24,7 @@
 #include <RMM_Enum.h>
 
 	Month
-strToMonth(const QString & s)
+strToMonth(const QCString & s)
 {
 	if (s.isEmpty()) return MonthJan;
 	
@@ -36,7 +36,7 @@ strToMonth(const QString & s)
 }
 
 	DayOfWeek
-strToDayOfWeek(const QString & s)
+strToDayOfWeek(const QCString & s)
 {
 	if (s.isEmpty()) return DayNone;
 
@@ -47,7 +47,7 @@ strToDayOfWeek(const QString & s)
 }
 
 	MimeType
-mimeTypeStr2Enum(const QString & s)
+mimeTypeStr2Enum(const QCString & s)
 {
 	if (s.isEmpty()) return MimeTypeNone;
 	
@@ -113,10 +113,10 @@ mimeTypeStr2Enum(const QString & s)
 	return t;
 }
 
-	QString
+	QCString
 mimeTypeEnum2Str(MimeType m)
 {
-	QString s;
+	QCString s;
 	
 	switch (m) {
 
@@ -165,7 +165,7 @@ mimeTypeEnum2Str(MimeType m)
 }
 
 	MimeSubType
-mimeSubTypeStr2Enum(const QString & s)
+mimeSubTypeStr2Enum(const QCString & s)
 {
 	if (s.isEmpty()) return MimeSubTypeNone;
 
@@ -287,10 +287,10 @@ mimeSubTypeStr2Enum(const QString & s)
 	return st;
 }
 
-	QString
+	QCString
 mimeSubTypeEnum2Str(MimeSubType t)
 {
-	QString s;
+	QCString s;
 	
 	switch (t) {
 		
@@ -377,7 +377,7 @@ mimeSubTypeEnum2Str(MimeSubType t)
 }
 
 	CteType
-RCteStr2Enum(const QString & s)
+RCteStr2Enum(const QCString & s)
 {
 	CteType cte = CteType7bit;
 	
@@ -424,10 +424,10 @@ RCteStr2Enum(const QString & s)
 	return cte;
 }
 
-	QString
+	QCString
 cteTypeEnumToStr(CteType t)
 {
-	QString s;
+	QCString s;
 
 	switch (t) {
 		

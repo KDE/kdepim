@@ -21,10 +21,10 @@
 static const char * base64table =
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-	QString
-encodeBase64(const QString & input)
+	QCString
+encodeBase64(const QCString & input)
 {
-	QString out;
+	QCString out;
 
 	int c1, c2, c3, ch;
 	int linelen = 0;

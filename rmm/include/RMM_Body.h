@@ -42,7 +42,7 @@ class RBody : public QList<RBodyPart>, public RMessageComponent {
 
 		RBody();
 		RBody(const RBody & body);
-		RBody(const QString & s) : RMessageComponent(s) { }
+		RBody(const QCString & s) : RMessageComponent(s) { }
 
 		virtual ~RBody();
 
@@ -52,7 +52,7 @@ class RBody : public QList<RBodyPart>, public RMessageComponent {
 		void assemble();
 		void createDefault();
 
-		QString		firstPlainBodyPart() { return ""; }
+		QCString		firstPlainBodyPart() { return ""; }
 		int			numberOfParts() const;
 		void		addPart(RBodyPart * bp);
 		void		removePart(RBodyPart * part);
@@ -64,11 +64,11 @@ class RBody : public QList<RBodyPart>, public RMessageComponent {
 
 		QList<RBodyPart>	partList_;
 		
-		QString 			strRep_;
+		QCString 			strRep_;
 
-		QString				boundary_;
-		QString				preamble_;
-		QString				epilogue_;
+		QCString				boundary_;
+		QCString				preamble_;
+		QCString				epilogue_;
 		
 		RContentType		contentType_;
 		RCte				cte_;

@@ -112,15 +112,15 @@ RDateTime::parse()
 	bool haveDay = false;
 	if (isalpha(tokens.at(i)[0])) { haveDay = true; i++; }
 
-	rmmDebug("0 = \"" + QString(tokens.at(i)) + "\"");
+	rmmDebug("0 = \"" + QCString(tokens.at(i)) + "\"");
 	if (tokens.at(i)[0] == '0')
 		dayOfMonth_ = tokens.at(i++)[1] - '0';
 	else
 		dayOfMonth_ = atoi(tokens.at(i++));
 
-	rmmDebug("Day of month = " + QString().setNum(dayOfMonth_));
+	rmmDebug("Day of month = " + QCString().setNum(dayOfMonth_));
 	month_ = strToMonth(tokens.at(i++)) + 1;
-	rmmDebug("Month = " + QString().setNum(month_));
+	rmmDebug("Month = " + QCString().setNum(month_));
 
 	if (strlen(tokens.at(i)) == 2)
 		year_ = atoi(tokens.at(i++)) + 1900;
@@ -129,10 +129,10 @@ RDateTime::parse()
 	
 	rmmDebug("Doing hour");
 	hour_ = atoi(tokens.at(i++));
-	rmmDebug("Hour:" + QString().setNum(hour_));
+	rmmDebug("Hour:" + QCString().setNum(hour_));
 	rmmDebug("Doing min");
 	min_ = atoi(tokens.at(i++));
-	rmmDebug("Min:" + QString().setNum(min_));
+	rmmDebug("Min:" + QCString().setNum(min_));
 	
 	// If the earlier token for day of week was there, and the total token
 	// count is 8, then we must also have a seconds field next
@@ -145,19 +145,19 @@ RDateTime::parse()
 	else
 		sec_ = 0;
 
-	rmmDebug("Sec:" + QString().setNum(sec_));
+	rmmDebug("Sec:" + QCString().setNum(sec_));
 
 	rmmDebug("Doing tz");
-	rmmDebug("Token count = " + QString().setNum(tokens.count()));
+	rmmDebug("Token count = " + QCString().setNum(tokens.count()));
 	if (tokens.count() - 1 == (unsigned)i)
 		zone_ = tokens.at(i);
 	
 	rmmDebug("setYMD(" +
-		QString().setNum(year_) +
+		QCString().setNum(year_) +
 		", " +
-		QString().setNum(month_) +
+		QCString().setNum(month_) +
 		", " +
-		QString().setNum(dayOfMonth_) +
+		QCString().setNum(dayOfMonth_) +
 		")");
 
 	QDate d;
@@ -165,11 +165,11 @@ RDateTime::parse()
 	setDate(d);
 	
 	rmmDebug("setHMS(" +
-		QString().setNum(hour_) +
+		QCString().setNum(hour_) +
 		", " +
-		QString().setNum(min_) +
+		QCString().setNum(min_) +
 		", " +
-		QString().setNum(sec_) +
+		QCString().setNum(sec_) +
 		")");
 	
 	QTime t;
@@ -193,11 +193,11 @@ RDateTime::assemble()
 	strRep_ = d.dayName(date().dayOfWeek());
 	strRep_ += ',';
 	strRep_ += ' ';
-	strRep_ += QString().setNum(d.day());
+	strRep_ += QCString().setNum(d.day());
 	strRep_ += ' ';
 	strRep_ += d.monthName(d.month());
 	strRep_ += ' ';
-	strRep_ += QString().setNum(d.year());
+	strRep_ += QCString().setNum(d.year());
 	strRep_ += ' ';
 	strRep_ += time().toString();
 	strRep_ += ' ';

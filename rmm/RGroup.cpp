@@ -55,26 +55,26 @@ RGroup::operator = (const RGroup & g)
 	return *this;
 }
 
-	const QString &
+	const QCString &
 RGroup::name() const
 {
 	return name_;
 }
 
-	const QString &
+	const QCString &
 RGroup::phrase() const
 {
 	return phrase_;
 }
 
 	void
-RGroup::setName(const QString & s)
+RGroup::setName(const QCString & s)
 {
 	name_ = s;
 }
 
 	void
-RGroup::setPhrase(const QString & s)
+RGroup::setPhrase(const QCString & s)
 {
 	phrase_ = s;
 }

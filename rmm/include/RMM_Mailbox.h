@@ -32,7 +32,7 @@ class RMailbox : public RAddress {
 
 		RMailbox();
 		RMailbox(const RMailbox & m);
-		RMailbox(const QString & s) : RAddress(s) { }
+		RMailbox(const QCString & s) : RAddress(s) { }
 		const RMailbox & operator = (const RMailbox & m);
 		
 		friend QDataStream & operator >> (
@@ -50,23 +50,23 @@ class RMailbox : public RAddress {
 
 		void createDefault();
 
-		void setPhrase(const QString & phrase);
-		void setRoute(const QString & route);
-		void setLocalPart(const QString & localPart);
-		void setDomain(const QString & domain);
-		const QString & phrase()const;
-		const QString & route()const;
-		const QString & localPart()const;
-		const QString & domain()const;
+		void setPhrase(const QCString & phrase);
+		void setRoute(const QCString & route);
+		void setLocalPart(const QCString & localPart);
+		void setDomain(const QCString & domain);
+		const QCString & phrase()const;
+		const QCString & route()const;
+		const QCString & localPart()const;
+		const QCString & domain()const;
 		
 		const char * className() const { return "RMailbox"; }
 
 	private:
 
-		QString phrase_;
-		QString route_;
-		QString localPart_;
-		QString domain_;
+		QCString phrase_;
+		QCString route_;
+		QCString localPart_;
+		QCString domain_;
 		bool isValid_;
 };
 

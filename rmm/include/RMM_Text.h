@@ -30,7 +30,7 @@ class RText : public RHeaderBody {
 
 		RText();
 		RText(const RText & rText);
-		RText(const QString & s) : RHeaderBody(s) { }
+		RText(const QCString & s) : RHeaderBody(s) { }
 		const RText & operator = (const RText & rText);
 
 		virtual ~RText();

@@ -38,7 +38,7 @@ class RMessage : public REntity {
 		
 		RMessage();
 		RMessage(const RMessage &);
-		RMessage(const QString & s) : REntity(s) {
+		RMessage(const QCString & s) : REntity(s) {
 			rmmDebug("ctor");
 			rmmDebug("Data:\n" + strRep_);
 		}
@@ -55,15 +55,15 @@ class RMessage : public REntity {
 		friend QDataStream & operator << (QDataStream & str, const RMessage & m)
 		{ str << m.asString(); return str; }
 
-		QString recipientListAsPlainString();
+		QCString recipientListAsPlainString();
 
 		REnvelope	& envelope()			{ return envelope_; }
 		RBody		& body()				{ return body_; }
 
 		Q_UINT32 size() const				{ return strRep_.length(); }
 		
-		void set(const QString & s)			{ REntity::set(s); }
-		const QString & asString() const	{ return REntity::asString(); }
+		void set(const QCString & s)			{ REntity::set(s); }
+		const QCString & asString() const	{ return REntity::asString(); }
 		
 		int			numberOfParts() const;
 		void		addPart(RBodyPart * bp);
@@ -79,8 +79,8 @@ class RMessage : public REntity {
 
 		void setStatus(MessageStatus status)		{ status_ = status; }
 		MessageStatus status() const				{ return status_; }
-		void setFolder(const QString & folderName)	{ folder_ = folderName.data();}
-		const QString & folder() const				{ return folder_; }
+		void setFolder(const QCString & folderName)	{ folder_ = folderName.data();}
+		const QCString & folder() const				{ return folder_; }
 
 		const char * className() const				{ return "RMessage"; }
 
@@ -97,7 +97,7 @@ class RMessage : public REntity {
 		RBody				body_;
 		
 		MessageStatus		status_;
-		QString				folder_;	
+		QCString				folder_;	
 		unsigned long int	id_;
 };
 

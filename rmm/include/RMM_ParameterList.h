@@ -35,9 +35,9 @@ class RParameterList : public QList<RParameter> {
 
 		RParameterList();
 		RParameterList(const RParameterList & pl);
-		RParameterList(const QString & s) : QList<RParameter>() { }
+		RParameterList(const QCString & s) : QList<RParameter>() { }
 		const RParameterList & operator = (const RParameterList & pl);
-		const QString & asString() const { return strRep_; }
+		const QCString & asString() const { return strRep_; }
 
 		virtual ~RParameterList();
 
@@ -54,7 +54,7 @@ class RParameterList : public QList<RParameter> {
 	private:
 
 		bool isValid_;
-		QString strRep_;
+		QCString strRep_;
 };
 
 #endif //RPARAMETERLIST_H

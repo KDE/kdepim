@@ -101,13 +101,13 @@ RBodyPart::setMimeSubType(MimeSubType st)
 }
 
 	void
-RBodyPart::setMimeType(const QString & s)
+RBodyPart::setMimeType(const QCString & s)
 {
 	mimeType_ = mimeTypeStr2Enum(s);
 }
 
 	void
-RBodyPart::setMimeSubType(const QString & s)
+RBodyPart::setMimeSubType(const QCString & s)
 {
 	mimeSubType_ = mimeSubTypeStr2Enum(s);
 }

@@ -47,7 +47,7 @@ class REnvelope : public RMessageComponent
 
 		REnvelope();
 		REnvelope(const REnvelope & envelope);
-		REnvelope(const QString & s) : RMessageComponent(s) { }
+		REnvelope(const QCString & s) : RMessageComponent(s) { }
 
 		virtual ~REnvelope();
 		const REnvelope & operator = (const REnvelope & envelope);
@@ -56,18 +56,18 @@ class REnvelope : public RMessageComponent
 		void assemble();
 
 		bool has(HeaderType t) const;
-		bool has(const QString & headerName) const;
+		bool has(const QCString & headerName) const;
 
-		void set(const QString & s) { RMessageComponent::set(s); }
-		const QString & asString() const { return RMessageComponent::asString(); }
-		void set(HeaderType t, const QString & s);
+		void set(const QCString & s) { RMessageComponent::set(s); }
+		const QCString & asString() const { return RMessageComponent::asString(); }
+		void set(HeaderType t, const QCString & s);
 		void _createDefault(HeaderType t);
 		void createDefault();
 		
 		const RMailbox & firstSender();
 		RMessageID parentMessageId();
 
-		RText &				get(const QString & headerName);
+		RText &				get(const QCString & headerName);
 
 		template <class T> T get(HeaderType h, T t);
 

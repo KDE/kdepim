@@ -35,9 +35,9 @@ class RDateTime : public QDateTime, public RHeaderBody {
 
 		RDateTime();
 		RDateTime(const RDateTime & dt);
-		RDateTime(const QString & s) : RHeaderBody(s) { }
+		RDateTime(const QCString & s) : RHeaderBody(s) { }
 		const RDateTime & operator = (const RDateTime & dt);
-		void set(const QString & s) { RHeaderBody::set(s); }
+		void set(const QCString & s) { RHeaderBody::set(s); }
 
 		friend QDataStream & operator >> (
 			QDataStream & s, RDateTime & dt);
@@ -52,12 +52,12 @@ class RDateTime : public QDateTime, public RHeaderBody {
 
 		bool isValid() const;
 
-		void			setTimeZone(const QString &);
+		void			setTimeZone(const QCString &);
 		void			set(Q_UINT32 unixTime);
 		
-		const QString &	timeZone() const;
+		const QCString &	timeZone() const;
 		
-		const QString &		asString() const { return RHeaderBody::asString(); }
+		const QCString &		asString() const { return RHeaderBody::asString(); }
 		Q_UINT32	asUnixTime() const;
 
 		void createDefault();
@@ -66,7 +66,7 @@ class RDateTime : public QDateTime, public RHeaderBody {
 
 	private:
 
-		QString			zone_;
+		QCString			zone_;
 };
 
 #endif //RDATETIME_H

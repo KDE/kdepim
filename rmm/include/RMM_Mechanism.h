@@ -32,7 +32,7 @@ class RMechanism : public RHeaderBody {
 
 		RMechanism();
 		RMechanism(const RMechanism & rMechanism);
-		RMechanism(const QString & s) : RHeaderBody(s) { }
+		RMechanism(const QCString & s) : RHeaderBody(s) { }
 		const RMechanism & operator = (const RMechanism & rMechanism);
 
 		virtual ~RMechanism();

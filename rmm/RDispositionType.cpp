@@ -68,7 +68,7 @@ RDispositionType::set(DispType t)
 {
 }
 
-	const QString &
+	const QCString &
 RDispositionType::filename() const
 {
 	return filename_;
@@ -76,7 +76,7 @@ RDispositionType::filename() const
 
 
 	void
-RDispositionType::setFilename(const QString & s)
+RDispositionType::setFilename(const QCString & s)
 {
 	filename_ = s;
 }

@@ -32,7 +32,7 @@ class RParameter : public RMessageComponent {
 
 		RParameter();
 		RParameter(const RParameter & p);
-		RParameter(const QString & s) : RMessageComponent(s) { }
+		RParameter(const QCString & s) : RMessageComponent(s) { }
 
 		virtual ~RParameter();
 
@@ -41,11 +41,11 @@ class RParameter : public RMessageComponent {
 		void parse();
 		void assemble();
 
-		const QString & attribute() const { return attribute_; }
-		const QString & value() const { return value_; }
+		const QCString & attribute() const { return attribute_; }
+		const QCString & value() const { return value_; }
 
-		void setAttribute(const QString & attribute) { attribute_ = attribute; }
-		void setValue(const QString & value) { value_ = value; }
+		void setAttribute(const QCString & attribute) { attribute_ = attribute; }
+		void setValue(const QCString & value) { value_ = value; }
 		
 		void createDefault();
 		
@@ -53,8 +53,8 @@ class RParameter : public RMessageComponent {
 
 	private:
 
-		QString attribute_;
-		QString value_;
+		QCString attribute_;
+		QCString value_;
 };
 
 #endif

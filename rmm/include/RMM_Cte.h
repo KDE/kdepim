@@ -34,7 +34,7 @@ class RCte : public RHeaderBody {
 
 		RCte();
 		RCte(const RCte & cte);
-		RCte(const QString & s) : RHeaderBody(s) { }
+		RCte(const QCString & s) : RHeaderBody(s) { }
 		const RCte & operator = (const RCte & cte);
 
 		virtual ~RCte();
@@ -46,15 +46,15 @@ class RCte : public RHeaderBody {
 
 		void createDefault();
 		
-		const QString & mechanism() const { return mechanism_; }
-		void setMechanism(const QString & s) { mechanism_ = s; }
+		const QCString & mechanism() const { return mechanism_; }
+		void setMechanism(const QCString & s) { mechanism_ = s; }
 		
 		const char * className() const { return "RCte"; }
 
 	private:
 
 		bool isValid_;
-		QString mechanism_;
+		QCString mechanism_;
 };
 
 #endif

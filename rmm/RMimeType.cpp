@@ -75,7 +75,7 @@ RMimeType::setType(MimeType t)
 }
 
 	void
-RMimeType::setType(const QString & s)
+RMimeType::setType(const QCString & s)
 {
 }
 
@@ -91,30 +91,30 @@ RMimeType::setSubType(MimeSubType t)
 }
 
 	void
-RMimeType::setSubType(const QString & s)
+RMimeType::setSubType(const QCString & s)
 {
 }
 
-	const QString &
+	const QCString &
 RMimeType::boundary() const
 {
 	return boundary_;
 }
 
 	void
-RMimeType::setBoundary(const QString & s)
+RMimeType::setBoundary(const QCString & s)
 {
 	boundary_ = s;
 }
 
-	const QString &
+	const QCString &
 RMimeType::name() const
 {
 	return name_;
 }
 
 	void
-RMimeType::setName(const QString & s)
+RMimeType::setName(const QCString & s)
 {
 	name_ = s;
 }

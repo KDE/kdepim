@@ -31,7 +31,7 @@ class REntity : public RMessageComponent
 
 		REntity();
 		REntity(const REntity & entity);
-		REntity(const QString & s) : RMessageComponent(s) { }
+		REntity(const QCString & s) : RMessageComponent(s) { }
 
 		virtual ~REntity();
 
@@ -41,8 +41,8 @@ class REntity : public RMessageComponent
 		virtual void assemble() = 0L;
 		virtual void createDefault() = 0L;
 		
-		void set(const QString & s) { strRep_ = s.data(); }
-		const QString & asString() const { return strRep_; }
+		void set(const QCString & s) { strRep_ = s.data(); }
+		const QCString & asString() const { return strRep_; }
 		
 		const char * className() const { return "REntity"; }
 

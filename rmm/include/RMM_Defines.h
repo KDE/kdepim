@@ -21,16 +21,20 @@
 #ifndef RMM_DEFINES_H
 #define RMM_DEFINES_H
 
+#if QT_VERSION < 200
+#define QCString QString
+#endif
+
 #ifndef NDEBUG
 #include <qstring.h>
 #include <qregexp.h>
 #include <iostream>
-#define rmmDebug(a) cerr << className() << ": " << QString((a)) << endl;
+#define rmmDebug(a) cerr << className() << ": " << QCString((a)) << endl;
 #else
 #define rmmDebug(a)
 #endif
 
-#define toCRLF(a) (a).replace(QRegExp("\n"), QString("\r\n"))
-#define toLF(a) (a).replace(QRegExp("\r\n"), QString("\n"))
+#define toCRLF(a) (a).replace(QRegExp("\n"), QCString("\r\n"))
+#define toLF(a) (a).replace(QRegExp("\r\n"), QCString("\n"))
 
 #endif
