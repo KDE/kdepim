@@ -33,35 +33,23 @@ static const char *todowidget_id =
 
 #include "options.h"
 
-//#include <iostream>
-//#include <cstring>
-//#include <cstdlib>
-
 #include <qptrlist.h>
 #include <klistview.h>
-//#include <qfile.h>
 #include <qpushbutton.h>
-//#include <qtextstream.h>
 #include <qlayout.h>
 #include <qlabel.h>
-//#include <qmultilineedit.h>
 #include <qtextview.h>
 #include <qcombobox.h>
 #include <qwhatsthis.h>
 #include <qtextcodec.h>
 
-//#include <kapplication.h>
 #include <kmessagebox.h>
-//#include <kdebug.h>
-//#include <kfiledialog.h>
-//#include <kdatewidget.h>
 
 #include "kpilotConfig.h"
-#include "listItems.h"
 #include "todoEditor.h"
 #include "pilotLocalDatabase.h"
-
 #include "todoWidget.moc"
+
 
 // This is the size of several (automatic) buffers,
 // used to retrieve data from the database.
@@ -69,6 +57,22 @@ static const char *todowidget_id =
 //
 //
 #define BUFFERSIZE	(0xffff)
+
+
+
+TodoCheckListItem::TodoCheckListItem(QListView*parent, const QString&text,
+	recordid_t pilotid, void*r):PilotCheckListItem(parent, text, pilotid, r)
+{
+
+}
+
+void TodoCheckListItem::stateChange(bool state)
+{
+	TodoListView*par=dynamic_cast<TodoListView*>(listView());
+	if (par) par->itemWasChecked(this, state);
+}
+
+
 
 TodoWidget::TodoWidget(QWidget * parent,
 	const QString & path) :
@@ -224,12 +228,13 @@ void TodoWidget::setupWidget()
 	label->setBuddy(fCatList);
 	grid->addWidget(label, 0, 0);
 
-	fListBox = new KListView(this);
+	fListBox = new TodoListView(this);
 	fListBox->addColumn( i18n( "Todo item" ) );
 	fListBox->setAllColumnsShowFocus( TRUE );
 	fListBox->setResizeMode( KListView::LastColumn );
 	fListBox->setFullWidth( TRUE );
 	fListBox->setItemsMovable( FALSE );
+	fListBox->setItemsRenameable (TRUE);
 	grid->addMultiCellWidget(fListBox, 1, 1, 0, 1);
 	connect(fListBox, SIGNAL(selectionChanged(QListViewItem*)),
 		this, SLOT(slotShowTodo(QListViewItem*)));
@@ -237,6 +242,10 @@ void TodoWidget::setupWidget()
 		this, SLOT(slotEditRecord(QListViewItem*)));
 	connect(fListBox, SIGNAL(returnPressed(QListViewItem*)),
 		this, SLOT(slotEditRecord(QListViewItem*)));
+	connect(fListBox, SIGNAL(itemChecked(QCheckListItem*, bool)),
+		this, SLOT(slotItemChecked(QCheckListItem*, bool)));
+	connect(fListBox, SIGNAL(itemRenamed(QListViewItem*, const QString &, int)),
+		this, SLOT(slotItemRenamed(QListViewItem*, const QString &, int)));
 	QWhatsThis::add(fListBox,
 		i18n("<qt>This list displays all the todos "
 			"in the selected category. Click on "
@@ -295,7 +304,7 @@ void TodoWidget::updateWidget()
 		{
 			QString title = todo->getDescription();
 
-			PilotCheckListItem*item=new PilotCheckListItem(fListBox, title,
+			TodoCheckListItem*item=new TodoCheckListItem(fListBox, title,
 				listIndex, todo);
 			item->setOn(todo->getComplete());
 		}
@@ -337,7 +346,7 @@ void TodoWidget::slotEditRecord(QListViewItem*item)
 {
 	FUNCTIONSETUP;
 
-	PilotCheckListItem*p = static_cast<PilotCheckListItem*>(item);
+	TodoCheckListItem*p = static_cast<TodoCheckListItem*>(item);
 	if (!p) return;
 	PilotTodoEntry *selectedRecord = (PilotTodoEntry *) p->rec();
 
@@ -440,7 +449,7 @@ void TodoWidget::slotUpdateRecord(PilotTodoEntry * todo)
 	FUNCTIONSETUP;
 
 	writeTodo(todo);
-	PilotCheckListItem* currentRecord = static_cast<PilotCheckListItem*>(fListBox->currentItem());
+	TodoCheckListItem* currentRecord = static_cast<TodoCheckListItem*>(fListBox->currentItem());
 
 	// TODO: Just change the record
 	updateWidget();
@@ -462,7 +471,7 @@ void TodoWidget::slotDeleteRecord()
 {
 	FUNCTIONSETUP;
 
-	PilotCheckListItem* p = static_cast<PilotCheckListItem*>(fListBox->currentItem());
+	TodoCheckListItem* p = static_cast<TodoCheckListItem*>(fListBox->currentItem());
 	if (p == 0L) return;
 
 	PilotTodoEntry *selectedRecord = (PilotTodoEntry *) p->rec();
@@ -493,7 +502,7 @@ void TodoWidget::slotShowTodo(QListViewItem*item)
 {
 	FUNCTIONSETUP;
 
-	PilotCheckListItem *p = dynamic_cast<PilotCheckListItem*>(item);
+	TodoCheckListItem *p = dynamic_cast<TodoCheckListItem*>(item);
 	if (!p) return;
 	PilotTodoEntry *todo = (PilotTodoEntry *) p->rec();
 
@@ -602,3 +611,25 @@ void TodoWidget::writeTodo(PilotTodoEntry * which,
 	}
 }
 
+void TodoWidget::slotItemChecked(QCheckListItem*item, bool on)
+{
+	TodoCheckListItem*p = static_cast<TodoCheckListItem*>(item);
+	if (!p) return;
+	PilotTodoEntry *selectedRecord = (PilotTodoEntry *) p->rec();
+	if (!selectedRecord) return;
+	selectedRecord->setComplete(on);
+	slotShowTodo(item);
+}
+
+void TodoWidget::slotItemRenamed(QListViewItem*item, const QString &txt, int nr)
+{
+	TodoCheckListItem*p = static_cast<TodoCheckListItem*>(item);
+	if (!p) return;
+	PilotTodoEntry *selectedRecord = (PilotTodoEntry *) p->rec();
+	if (!selectedRecord) return;
+	if (nr==0)
+	{
+		selectedRecord->setDescription(txt);
+		slotShowTodo(item);
+	}
+}

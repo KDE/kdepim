@@ -31,7 +31,7 @@
 #ifndef _KPILOT_TODOWIDGET_H
 #define _KPILOT_TODOWIDGET_H
 
-class KListView;
+class TodoListView;
 class QComboBox;
 class QPushButton;
 class QTextView;
@@ -42,6 +42,32 @@ class PilotDatabase;
 
 #include "pilotComponent.h"
 #include "pilotTodoEntry.h"
+#include "listItems.h"
+
+class TodoListView : public KListView
+{
+Q_OBJECT
+public:
+	TodoListView(QWidget * parent = 0, const char * name = 0 ):KListView(parent, name){};
+	~TodoListView() {};
+signals:
+	void itemChecked(QCheckListItem*item);
+	void itemChecked(QCheckListItem*item, bool on);
+//protected:
+public:
+	void itemWasChecked(QCheckListItem*item, bool on) {
+		emit itemChecked(item);
+		emit itemChecked(item, on);
+	}
+};
+
+class TodoCheckListItem : public PilotCheckListItem
+{
+public:
+	TodoCheckListItem(QListView*parent, const QString&text, recordid_t pilotid, void*r);
+	~TodoCheckListItem()  {};
+	virtual void  stateChange(bool state);
+};
 
 class TodoWidget : public PilotComponent
 {
@@ -91,6 +117,9 @@ protected slots:
 	*/
 	void slotSetCategory(int);
 
+
+	void slotItemChecked(QCheckListItem*item, bool on);
+	void slotItemRenamed(QListViewItem*item, const QString &txt, int nr);
 private:
 	void setupWidget();
 	void updateWidget(); // Called with the lists have changed..
@@ -124,12 +153,12 @@ private:
 	*
 	* The two buttons should speak for themselves.
 	*/
-	QComboBox            *fCatList;
-	QTextView            *fTodoInfo;
-	struct ToDoAppInfo fTodoAppInfo;
-	QPtrList<PilotTodoEntry>   fTodoList;
-	KListView            *fListBox;
-	QPushButton	     *fEditButton,*fDeleteButton;
+	QComboBox		*fCatList;
+	QTextView		*fTodoInfo;
+	struct ToDoAppInfo 	fTodoAppInfo;
+	QPtrList<PilotTodoEntry>	fTodoList;
+	TodoListView		*fListBox;
+	QPushButton		*fEditButton,*fDeleteButton;
 
 protected:
 	/**

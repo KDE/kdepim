@@ -65,7 +65,7 @@ public:
 	const void  *rec() const {return fr;};
 protected:
 	virtual void stateChange ( bool );
-	recordid_t fid;;
+	recordid_t fid;
 	void *fr;
 #ifdef DEBUG
 public:
