@@ -99,6 +99,7 @@ class ActionManager : public QObject
     void currentFilterChanged( const QString& );
     void keyBindings();
     void reloadExtensionNames();
+    void insertFilters();
 
   signals:
     /**

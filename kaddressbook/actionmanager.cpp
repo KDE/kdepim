@@ -245,6 +245,8 @@ void ActionManager::initReadOnlyActions()
   mActionSelectFilter->setMenuAccelsEnabled( false );
 #endif
 
+  insertFilters();
+ 
   connect( this, SIGNAL( filterActivated( int ) ),
            mViewManager, SLOT( filterActivated( int ) ) );
   connect( mViewManager, SIGNAL( filtersEdited() ),
@@ -375,14 +377,19 @@ void ActionManager::quickToolsAction()
   mViewManager->setDetailsVisible( mActionDetails->isChecked() );
 }
 
-void ActionManager::filtersEdited()
+void ActionManager::insertFilters()
 {
-  QString current = mActionSelectFilter->currentText();
-
   QStringList items( mViewManager->filterNames() );
   items.prepend( i18n( "None" ) );
 
   mActionSelectFilter->setItems( items );
+}
+
+void ActionManager::filtersEdited()
+{
+  QString current = mActionSelectFilter->currentText();
+  insertFilters();
+
   currentFilterChanged( current );
 }
 
