@@ -25,7 +25,7 @@ INCLUDES= $(all_includes) -I$(LIBPISOCK_PATH)
 ### kdDebug() support. You may need to add -DDEBUG_CERR to the CXXFLAGS, if
 ### you want any debugging at all.
 ###
-CXXFLAGS+=-DDEBUG -DDEBUG_CERR -O3
+KDE_CXXFLAGS =-DDEBUG -DDEBUG_CERR -O3
 
 ###
 ### Non-automake variables
