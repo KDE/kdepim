@@ -30,8 +30,8 @@ class PluckerConfig
 {
     template<class> friend class KStaticDeleter;
     PluckerConfig();
-    ~PluckerConfig();
 public:
+    ~PluckerConfig();
     static PluckerConfig* self();
 
 //@{

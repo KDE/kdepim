@@ -25,10 +25,11 @@
 #include <kstandarddirs.h>
 #include <kdebug.h>
 
+static KStaticDeleter<KSPlucker::PluckerConfig> s_deleter;
+
 namespace KSPlucker {
 
-static PluckerConfig *s_config = 0;
-static KStaticDeleter<PluckerConfig> s_deleter;
+static PluckerConfig *s_config;
 
 PluckerConfig::PluckerConfig()
 {}
