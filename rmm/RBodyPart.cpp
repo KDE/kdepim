@@ -357,12 +357,14 @@ RBodyPart::size()
     void
 RBodyPart::_update()
 {
+    // STUB
 //    type_ = (0 == 1) ? Basic : Mime;
 }
 
     void
 RBodyPart::addPart(RBodyPart *)
 {
+    // STUB
     parse();
     _update();
 }
@@ -370,6 +372,7 @@ RBodyPart::addPart(RBodyPart *)
     void
 RBodyPart::removePart(RBodyPart *)
 {
+    // STUB
     parse();
     _update();
 }
@@ -466,6 +469,18 @@ RBodyPart::decode()
     }
 
     return x;
+}
+
+    void
+RBodyPart::setDescription(const QCString & s)
+{
+    contentDescription_ = s;
+}
+
+    void
+RBodyPart::setEncoding(CteType t)
+{
+    encoding_ = t;
 }
 
 // vim:ts=4:sw=4:tw=78

@@ -61,12 +61,6 @@ class EmpathEditorProcess : public QObject
          */
         void s_composeFinished(KProcess *);
         
-        /**
-         * Use this to look at the output of the external editor
-         * if it's not working as expected.
-         */
-        void s_debugExternalEditorOutput(KProcess *, char *, int);
-        
     signals:
         
         /**
@@ -79,7 +73,7 @@ class EmpathEditorProcess : public QObject
     private:
         
         QCString text_;
-        QString fileName;
+        QString fileName_;
         QDateTime myModTime_;
         KProcess p;
 };

@@ -61,6 +61,8 @@ EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
 {
     setFrameStyle(QFrame::NoFrame);
 
+    setShowSortIndicator(true);
+
     lastHeaderClicked_ = -1;
 
     setAllColumnsShowFocus(true);

@@ -25,8 +25,6 @@
 #ifndef EMPATHMAILBOXPOP3_H
 #define EMPATHMAILBOXPOP3_H
 
-#define NO_KIO_COMPATABILITY 1
-
 // Qt includes
 #include <qstring.h>
 #include <qcstring.h>
@@ -52,7 +50,7 @@ class EmpathPOPCommand
 {
     public:
         
-        enum Type { Stat, List, UIDL, Get, Remove };
+        enum Type { Stat, Index, Get, Remove };
 
         EmpathPOPCommand(Type, int, QString, QString);
         ~EmpathPOPCommand(); 
@@ -60,7 +58,8 @@ class EmpathPOPCommand
         QString command();
         Type    type();
         QString xinfo();
-        QString xxinfo();
+        QString ixinfo();
+        int messageNumber();
         
         const char * className() const { return "EmpathPOPCommand"; }
 
@@ -69,7 +68,7 @@ class EmpathPOPCommand
         QString     command_;
         Type        type_;
         int         msgNo_;
-        QString     xxinfo_;
+        QString     ixinfo_;
         QString     xinfo_;
 };
 
@@ -182,7 +181,7 @@ class EmpathMailboxPOP3 : public EmpathMailbox
         // Not connected to the server.
     
         void _enqueue(
-            EmpathPOPCommand::Type, int i, QString xxinfo, QString xinfo);
+            EmpathPOPCommand::Type, int i, QString ixinfo, QString xinfo);
         void _nextCommand();
     
         // Order dependency

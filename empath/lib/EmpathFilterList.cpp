@@ -89,6 +89,7 @@ EmpathFilterList::loadConfig()
     void
 EmpathFilterList::filter(const EmpathURL & id)
 {
+    empathDebug(id.asString());
     EmpathFilterListIterator it(*this);
     
     for (; it.current(); ++it)

@@ -189,29 +189,31 @@ EmpathComposeWindow::setupStatusBar()
     void
 EmpathComposeWindow::s_fileSendMessage()
 {
-    /*
-    if (!composeWidget_->haveTo()) {
+    EmpathComposer::Form & f = composeWidget_->composeForm();
+    
+    if (!f.visibleHeaders.has(RMM::HeaderTo) &&
+        !f.invisibleHeaders.has(RMM::HeaderTo)) {
         _askForRecipient();
         return;
     }
-    
-    if (!composeWidget_->haveSubject()) {
+
+    if (!f.visibleHeaders.has(RMM::HeaderSubject) &&
+        !f.invisibleHeaders.has(RMM::HeaderSubject)) {
         _askForSubject();
         return;
     }
-    
-    RMM::RMessage outMessage(composeWidget_->message());
+
+    // XXX ??? RMM::RMessage outMessage = EmpathComposer::message(f);
 
     hide();
-    empath->send(outMessage);
+//    empath->send(outMessage);
     delete this;
-    */
 }
 
     void
 EmpathComposeWindow::s_fileSendLater()
 {   
-    /*
+#if 0
     if (!composeWidget_->haveTo()) {
         _askForRecipient();
         return;
@@ -228,7 +230,7 @@ EmpathComposeWindow::s_fileSendLater()
 //        outMessage.addAttachmentList(composeWidget_->messageAttachments());
 
     empath->queue(outMessage);
-    */
+#endif 
 }
 
     void

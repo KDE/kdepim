@@ -159,7 +159,8 @@ EmpathComposeWidget::_spawnExternalEditor(const QCString & text)
 EmpathComposeWidget::s_editorDone(bool ok, QCString text)
 {
     if (!ok) {
-//        statusBar()->message(i18n("Message not modified by external editor"));
+        empath->s_infoMessage(i18n("Message not modified by external editor"));
+        editorWidget_->setEnabled(true);
         return;
     }
     

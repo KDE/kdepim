@@ -90,20 +90,6 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(QWidget * parent)
     cb_threadMessages_ =
         new QCheckBox(i18n("Thread messages"), this, "cb_threadMessages");
    
-    QLabel * l_sortColumn =
-        new QLabel(i18n("Message sort column"), this, "l_sortColumn");
-    
-    cb_sortColumn_ =
-        new QComboBox(this, "cb_sortColumn");
- 
-    cb_sortColumn_->insertItem(i18n("Subject"), 0);
-    cb_sortColumn_->insertItem(i18n("Sender"),  1);
-    cb_sortColumn_->insertItem(i18n("Date"),    2);
-    cb_sortColumn_->insertItem(i18n("Size"),    3);
-
-    cb_sortAscending_ =
-        new QCheckBox(i18n("Sort ascending"), this, "cb_sortAscending");
-   
     cb_timer_ =
         new QCheckBox(i18n("Mark messages as read after"), this, "cb_timer");
    
@@ -117,15 +103,10 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(QWidget * parent)
     
     QVBoxLayout * layout = new QVBoxLayout(this, dialogSpace);
 
-    QHBoxLayout * layout0 = new QHBoxLayout(layout);
-    layout0->addWidget(l_sortColumn);
-    layout0->addWidget(cb_sortColumn_);
-    
     QHBoxLayout * layout2 = new QHBoxLayout(layout);
     layout2->addWidget(cb_timer_);
     layout2->addWidget(sb_timer_);
 
-    layout->addWidget(cb_sortAscending_);
     layout->addWidget(cb_threadMessages_);
 
     layout->addWidget(new EmpathSeparatorWidget(this));
@@ -222,16 +203,6 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(QWidget * parent)
         "another, it will be placed in a tree, where it\n"
         "is a branch from the previous message."));
      
-    QWhatsThis::add(cb_sortColumn_, i18n(
-        "Here you can specify which column the message\n"
-        "list will be sorted by, when you start the\n"
-        "program."));
-
-    QWhatsThis::add(cb_sortAscending_, i18n(
-        "If you select this, the column you specified\n"
-        "above will be sorted ascending.\n"
-        "Guess what happens if you don't."));
-
     QObject::connect(
         pb_chooseFixedFont_,    SIGNAL(clicked()),
         this,                   SLOT(s_chooseFixedFont()));   
@@ -271,9 +242,7 @@ EmpathDisplaySettingsDialog::saveData()
     c->writeEntry(UI_VLINK,           kcb_visitedLinkColour_->color());
     
     c->writeEntry(UI_THREAD,          cb_threadMessages_->isChecked());
-    c->writeEntry(UI_SORT_ASCENDING,  cb_sortAscending_->isChecked());
     c->writeEntry(UI_SHOW_HEADERS,    le_displayHeaders_->text());
-    c->writeEntry(UI_SORT_COLUMN,     cb_sortColumn_->currentItem());
     c->writeEntry(UI_MARK_READ,       cb_timer_->isChecked());
     c->writeEntry(UI_MARK_TIME,       sb_timer_->value());
 }
@@ -291,7 +260,7 @@ EmpathDisplaySettingsDialog::loadData()
     QFont savedFont = c->readFontEntry(UI_FIXED_FONT, &f);
 
     pb_chooseFixedFont_->setFont(savedFont);
-    pb_chooseFixedFont_->setFont(savedFont.family());
+    pb_chooseFixedFont_->setText(savedFont.family());
     cb_underlineLinks_->setChecked
         (c->readBoolEntry(UI_UNDERLINE_LINKS, DFLT_UNDER_LINKS));
     kcb_quoteColourOne_->setColor(c->readColorEntry(UI_QUOTE_ONE, &DFLT_Q_1));
@@ -299,11 +268,7 @@ EmpathDisplaySettingsDialog::loadData()
     kcb_linkColour_->setColor(c->readColorEntry(UI_LINK, &DFLT_LINK));
     kcb_visitedLinkColour_->setColor(c->readColorEntry(UI_VLINK, &DFLT_VLINK));
     cb_threadMessages_->setChecked(c->readBoolEntry(UI_THREAD, DFLT_THREAD));
-    cb_sortAscending_->setChecked
-        (c->readBoolEntry(UI_SORT_ASCENDING, DFLT_SORT_ASCENDING));
     le_displayHeaders_->setText(c->readEntry(UI_SHOW_HEADERS, DFLT_HEADERS));
-    cb_sortColumn_->setCurrentItem
-        (c->readNumEntry(UI_SORT_COLUMN, DFLT_SORT_COL));
     cb_timer_->setChecked(c->readBoolEntry(UI_MARK_READ, DFLT_MARK));
     sb_timer_->setValue(c->readNumEntry(UI_MARK_TIME, DFLT_MARK_TIMER));
 }
@@ -354,9 +319,7 @@ EmpathDisplaySettingsDialog::s_default()
     kcb_linkColour_->setColor(DFLT_LINK);
     kcb_visitedLinkColour_->setColor(DFLT_VLINK);
     cb_threadMessages_->setChecked(DFLT_THREAD);
-    cb_sortAscending_->setChecked(DFLT_SORT_ASCENDING);
     le_displayHeaders_->setText(DFLT_HEADERS);
-    cb_sortColumn_->setCurrentItem(DFLT_SORT_COL);
     cb_timer_->setChecked(DFLT_MARK);
     sb_timer_->setValue(DFLT_MARK_TIMER);
     saveData();

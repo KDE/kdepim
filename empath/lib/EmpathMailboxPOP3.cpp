@@ -55,7 +55,7 @@ EmpathMailboxPOP3::EmpathMailboxPOP3(const QString & name)
     job = new KIOJob();
     CHECK_PTR(job);
     
-    job->setGUImode(KIOJob::LIST);
+    job->setGUImode(KIOJob::NONE);
     
     commandQueue_.setAutoDelete(true);
 
@@ -101,14 +101,15 @@ EmpathMailboxPOP3::init()
     bool
 EmpathMailboxPOP3::alreadyHave()
 {
+    // STUB
     return false;
 }
 
     void
 EmpathMailboxPOP3::_enqueue(
-    EmpathPOPCommand::Type t, int i, QString xxinfo, QString xinfo)
+    EmpathPOPCommand::Type t, int i, QString ixinfo, QString xinfo)
 {
-    commandQueue_.enqueue(new EmpathPOPCommand(t, i, xxinfo, xinfo));
+    commandQueue_.enqueue(new EmpathPOPCommand(t, i, ixinfo, xinfo));
     
     if (commandQueue_.count() == 1)
         _nextCommand();
@@ -120,7 +121,9 @@ EmpathMailboxPOP3::_nextCommand()
     if (commandQueue_.isEmpty())
         return;
 
-    // FIXME: Ask user about password if not given
+    // TODO: KIO will ask user for password if not given.
+    // We really want to save this, so we should ask ourselves.
+
     QString prefix =
         "pop://" + username_ + ":" + password_ + "@" + serverAddress_ + "/";
     
@@ -134,15 +137,15 @@ EmpathMailboxPOP3::_nextCommand()
     void
 EmpathMailboxPOP3::s_checkMail()
 {
-    _enqueue(EmpathPOPCommand::UIDL, -1, "all", "filter");
+    _enqueue(EmpathPOPCommand::Index, -1, "all", "filter");
 }
 
     QString
 EmpathMailboxPOP3::_write(
-    const EmpathURL & url, RMM::RMessage &, QString xxinfo, QString xinfo)
+    const EmpathURL & url, RMM::RMessage &, QString ixinfo, QString xinfo)
 {
     empathDebug("This mailbox is READ ONLY !");
-    emit(writeComplete( false, url, xxinfo, xinfo));
+    emit(writeComplete( false, url, ixinfo, xinfo));
     return QString::null;
 }
     
@@ -176,13 +179,13 @@ EmpathMailboxPOP3::_retrieve(
 
     void
 EmpathMailboxPOP3::_retrieve(
-    const EmpathURL & url, QString xxinfo, QString xinfo)
+    const EmpathURL & url, QString ixinfo, QString xinfo)
 {
     QString inID = url.messageID();
     
     int messageIndex;
     
-    if (inID.left(4) == "UIDL") { // 'UIDL%s'
+    if (inID.find(url_.mailboxName() + ":") == 0) {
     
         bool found(false);
         
@@ -207,44 +210,33 @@ EmpathMailboxPOP3::_retrieve(
     } else // 'LIST%d'
         messageIndex = inID.mid(4).toInt();
 
-    _enqueue(EmpathPOPCommand::Get, messageIndex, xxinfo, xinfo);
+    _enqueue(EmpathPOPCommand::Get, messageIndex, ixinfo, xinfo);
 }
 
     void
 EmpathMailboxPOP3::_removeMessage(
-    const EmpathURL & url, const QStringList & l, QString xxinfo, QString xinfo)
+    const EmpathURL & url, const QStringList & l, QString ixinfo, QString xinfo)
 {
+    // STUB
     EmpathURL u(url);
 
     QStringList::ConstIterator it(l.begin());
     
     for (; it != l.end(); ++it) {
         u.setMessageID(*it);
-//        _enqueue(EmpathPOPCommand::Remove, *it, xxinfo, xinfo);
-        emit (removeComplete(false, u, xxinfo, xinfo));
+        _enqueue(EmpathPOPCommand::Remove, (*it).toInt(), ixinfo, xinfo);
+        emit (removeComplete(false, u, ixinfo, xinfo));
     }
 }
 
     void
 EmpathMailboxPOP3::_removeMessage(
-    const EmpathURL & url, QString xxinfo, QString xinfo)
+    const EmpathURL & url, QString ixinfo, QString xinfo)
 {
-    emit (removeComplete(false, url, xxinfo, xinfo));
+    // STUB
+    emit (removeComplete(false, url, ixinfo, xinfo));
 }
     
-#if 0
-    void
-EmpathMailboxPOP3::s_commandComplete(const EmpathPOPCommand & p)
-{
-    if (p.type() == UIDL && p.xinfo() == "filter")
-        if (p.xxinfo() == "all")
-            for (EmpathPOPIndexIterator it(index_); it.current(); ++it)
-                empath->filter(folderList_.at(0).url(), it.current()->id());
-        else
-            empath->filter(folderList_.at(0).url(), it.current()->id());
-}
-#endif
-
 //////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// KIOJOB SLOTS /////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -260,7 +252,70 @@ EmpathMailboxPOP3::s_jobCancelled(int id)
     void
 EmpathMailboxPOP3::s_jobFinished(int id) 
 {
-    empathDebug("s_jobFinished(" + QString().setNum(id) + ") called");
+    empathDebug(QString().setNum(id));
+
+    if (commandQueue_.isEmpty()) {
+        // Whoah ! We should be waiting for completion.
+        empathDebug("Command queue empty !");
+        return;
+    }
+    
+    switch (commandQueue_.head()->type()) {
+            
+        case EmpathPOPCommand::Stat:
+            break;
+        
+        case EmpathPOPCommand::Index:
+            {
+                EmpathPOPIndexIterator it(index_);
+               
+                EmpathURL messageURL(url_);
+
+                for (; it.current(); ++it) {
+                    messageURL.setMessageID(it.current()->id());
+                    empath->filter(messageURL);
+                }
+            }
+            break;
+        
+        case EmpathPOPCommand::Get:
+            {
+                EmpathURL messageURL(url_);
+                messageURL.setMessageID(
+                    QString().setNum(commandQueue_.head()->messageNumber()));
+
+                RMM::RMessage * message = new RMM::RMessage(messageBuffer_);
+                empath->cacheMessage(
+                    messageURL,
+                    message,
+                    commandQueue_.head()->xinfo());
+
+                emit(retrieveComplete(
+                        true,
+                        messageURL,
+                        commandQueue_.head()->ixinfo(),
+                        commandQueue_.head()->xinfo()));
+            }
+            
+            break;
+        
+        case EmpathPOPCommand::Remove:
+            {
+                EmpathURL messageURL(url_);
+                messageURL.setMessageID(
+                    QString().setNum(commandQueue_.head()->messageNumber()));
+                emit(removeComplete(
+                        true,
+                        messageURL,
+                        commandQueue_.head()->ixinfo(),
+                        commandQueue_.head()->xinfo()));
+            }
+            break;
+        
+        default:
+            break;
+    }
+
     commandQueue_.dequeue();
     _nextCommand();
 }
@@ -277,17 +332,17 @@ EmpathMailboxPOP3::s_jobError(int id, int errorID, const char * text)
     void
 EmpathMailboxPOP3::s_jobData(int, const char * data, int)
 {
-    empathDebug("s_data called with data == " + QString(data));
+    empathDebug("data == `" + QString(data) + "'");
     
     QString s(data);
     if (s.isEmpty()) {
-        empathDebug("Data is empty !!");
+        empathDebug("Data is empty !");
         return;
     }
 
     if (commandQueue_.isEmpty()) {
         // Whoah ! We should be waiting for completion.
-        empathDebug("Command queue empty in s_data !!");
+        empathDebug("Command queue empty !");
         return;
     }
     
@@ -303,26 +358,14 @@ EmpathMailboxPOP3::s_jobData(int, const char * data, int)
             }
             break;
         
-        case EmpathPOPCommand::List:
+        case EmpathPOPCommand::Index:
             {
                 int i = s.find(' ');
             
                 EmpathPOPIndexEntry * e =
                     new EmpathPOPIndexEntry(
                         s.left(i).toInt(),
-                        "LIST" + s.mid(i + 1));
-                index_.append(e);
-            }
-            break;
-            
-        case EmpathPOPCommand::UIDL:
-            {
-                int i = s.find(' ');
-            
-                EmpathPOPIndexEntry * e =
-                    new EmpathPOPIndexEntry(
-                        s.left(i).toInt(),
-                        "UIDL" + s.mid(i + 1));
+                        url_.mailboxName() + ":" + s.mid(i + 1));
                 index_.append(e);
             }
             break;
@@ -347,28 +390,28 @@ EmpathMailboxPOP3::s_jobData(int, const char * data, int)
 
     void
 EmpathMailboxPOP3::_createFolder(
-    const EmpathURL & url, QString xxinfo, QString xinfo)
+    const EmpathURL & url, QString ixinfo, QString xinfo)
 {
-    emit (createFolderComplete(false, url, xxinfo, xinfo));
+    emit (createFolderComplete(false, url, ixinfo, xinfo));
 }
 
     void
 EmpathMailboxPOP3::_removeFolder(const EmpathURL & url,
-    QString xxinfo, QString xinfo)
+    QString ixinfo, QString xinfo)
 {
-    emit (removeFolderComplete(false, url, xxinfo, xinfo));
+    emit (removeFolderComplete(false, url, ixinfo, xinfo));
 }
     void
 EmpathMailboxPOP3::_mark(const EmpathURL & url, RMM::MessageStatus,
-    QString xxinfo, QString xinfo)
+    QString ixinfo, QString xinfo)
 {
-    emit (markComplete(false, url, xxinfo, xinfo));
+    emit (markComplete(false, url, ixinfo, xinfo));
 }
 
     void
 EmpathMailboxPOP3::_mark(
     const EmpathURL & url, const QStringList & l, RMM::MessageStatus,
-    QString xxinfo, QString xinfo)
+    QString ixinfo, QString xinfo)
 {
     EmpathURL u(url);
     
@@ -376,7 +419,7 @@ EmpathMailboxPOP3::_mark(
     
     for (it = l.begin(); it != l.end(); ++it) {
         u.setMessageID(*it);
-        emit (markComplete(false, u, xxinfo, xinfo));
+        emit (markComplete(false, u, ixinfo, xinfo));
     }
 }
 
@@ -570,17 +613,16 @@ EmpathMailboxPOP3::setLogging(bool policy)
 //////////////////////////////////////////////////////////////////////////
 
 EmpathPOPCommand::EmpathPOPCommand(
-    EmpathPOPCommand::Type t, int n, QString xxinfo, QString xinfo)
+    EmpathPOPCommand::Type t, int n, QString ixinfo, QString xinfo)
     :   type_(t),
         msgNo_(n),
-        xxinfo_(xxinfo),
+        ixinfo_(ixinfo),
         xinfo_(xinfo)
 {
     switch (t) {
         
         case Stat:      command_ = "stat";      break;
-        case List:      command_ = "index";     break;
-        case UIDL:      command_ = "uidl";      break;
+        case Index:     command_ = "index";     break;
         case Get:       command_ = "download";  break;
         case Remove:    command_ = "remove";    break;
         default:                                break;
@@ -607,6 +649,24 @@ EmpathPOPCommand::command()
 EmpathPOPCommand::type()
 {
     return type_;
+}
+
+    int
+EmpathPOPCommand::messageNumber()
+{
+    return msgNo_;
+}
+
+    QString
+EmpathPOPCommand::ixinfo()
+{
+    return ixinfo_;
+}
+
+    QString
+EmpathPOPCommand::xinfo()
+{
+    return xinfo_;
 }
 
 //////////////////////////////////////////////////////////////////////////

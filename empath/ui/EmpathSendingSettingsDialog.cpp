@@ -193,7 +193,7 @@ EmpathSendingSettingsDialog::loadData()
     efsw_sendmail_  ->setPath       (c->readEntry       (S_SENDMAIL));
     efsw_qmail_     ->setPath       (c->readEntry       (S_QMAIL));
     le_smtpServer_  ->setText       (c->readEntry       (S_SMTP));
-    sb_smtpPort_    ->setValue      (c->readNumEntry    (S_SMTP_PORT));
+    sb_smtpPort_    ->setValue      (c->readNumEntry    (S_SMTP_PORT, 25));
     cb_copyOther_   ->setChecked    (c->readBoolEntry   (C_CC_OTHER));
     asw_copyOther_  ->setText       (c->readEntry       (C_CC_OTHER_ADDRESS));
     

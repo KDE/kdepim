@@ -84,10 +84,6 @@ class EmpathDisplaySettingsDialog : public QDialog
         
         QLineEdit       * le_displayHeaders_;
 
-        QComboBox       * cb_sortColumn_;
-
-        QCheckBox       * cb_sortAscending_;
-        
         KButtonBox      * buttonBox_;
         QPushButton     * pb_help_;
         QPushButton     * pb_default_;

@@ -41,12 +41,6 @@ EmpathEditorProcess::EmpathEditorProcess(const QCString & text)
     :   QObject(),
         text_(text)
 {
-    QObject::connect(&p, SIGNAL(receivedStdout(KProcess *, char *, int)),
-            this, SLOT(s_debugExternalEditorOutput(KProcess *, char *, int)));
-
-    QObject::connect(&p, SIGNAL(receivedStderr(KProcess *, char *, int)),
-            this, SLOT(s_debugExternalEditorOutput(KProcess *, char *, int)));
-
     QObject::connect(&p, SIGNAL(processExited(KProcess *)),
         this, SLOT(s_composeFinished(KProcess *)));
 }
@@ -59,16 +53,22 @@ EmpathEditorProcess::~EmpathEditorProcess()
     void
 EmpathEditorProcess::go()
 {    
-    QString tempName("/tmp/" + empath->generateUnique());
+    // Add 'empath_' prefix to allow editor to recognise.
+    fileName_ = "/tmp/empath_" + empath->generateUnique();
 
-    empathDebug("Opening file " + QString(tempName));
-    QFile f(tempName);
+    empathDebug("Opening file " + fileName_);
+
+    QFile f(fileName_);
 
     if (!f.open(IO_WriteOnly)) {
-        empathDebug("Couldn't open the temporary file " + tempName);
+        
+        empathDebug("Couldn't open the temporary file " + fileName_);
+        
+        QString warning = i18n("Couldn't open the temporary file `%1'");
+        
         QMessageBox::warning(
             (QWidget *)0, "Empath",
-            i18n("Couldn't open the temporary file") + " " + tempName,
+            warning.arg(fileName_),
             i18n("OK"));
         return;
     }
@@ -79,12 +79,11 @@ EmpathEditorProcess::go()
     
     if (f.status() != IO_Ok) {
         
-        empathDebug("Couldn't write to the temporary file " + tempName);
+        empathDebug("Couldn't write to the temporary file " + fileName_);
+
+        QString warning = i18n("Couldn't write to the temporary file `%1'");
         
-        QMessageBox::warning(
-            (QWidget *)0, "Empath",
-            i18n("Couldn't write to the temporary file") + " " + tempName,
-            i18n("OK"));
+        QMessageBox::warning(0, "Empath", warning.arg(fileName_), i18n("OK"));
     }
     
     QFileInfo fi(f);
@@ -97,10 +96,15 @@ EmpathEditorProcess::go()
     config->setGroup(GROUP_COMPOSE);
     QString externalEditor = config->readEntry(C_EXT_EDIT);
 
-    p << externalEditor << tempName;
+    p << externalEditor << fileName_;
 
     if (!p.start(KProcess::NotifyOnExit, KProcess::All)) {
         empathDebug("Couldn't start process");
+        
+        QString warning = i18n("Couldn't start the editor `%1'");
+        
+        QMessageBox::warning
+            (0, "Empath", warning.arg(externalEditor), i18n("OK"));
         return;
     }
 }
@@ -108,14 +112,7 @@ EmpathEditorProcess::go()
     void
 EmpathEditorProcess::s_composeFinished(KProcess *)
 {
-    // Find the process' filename in the process table.
-    // Once we have the filename, we can re-read the text from that file and use
-    // that text to send the new message. We must check if the file has been
-    // modified too. If not, we'll just remove it.
-
-    // Find out when the file was last modified.
-
-    QFileInfo finfo(fileName);
+    QFileInfo finfo(fileName_);
 
     QDateTime modTime = finfo.lastModified();
 
@@ -125,9 +122,7 @@ EmpathEditorProcess::s_composeFinished(KProcess *)
         return;
     }
 
-    // Create a new message and send it via the mail sender.
-
-    QFile f(fileName);
+    QFile f(fileName_);
 
     if (!f.open(IO_ReadOnly)) {
 
@@ -144,13 +139,6 @@ EmpathEditorProcess::s_composeFinished(KProcess *)
     }
     
     emit(done(true, text_));
-}
-
-    void
-EmpathEditorProcess::s_debugExternalEditorOutput(
-    KProcess *, char * buffer, int)
-{
-//    empathDebug("Received: " + QString(buffer));
 }
 
 // vim:ts=4:sw=4:tw=78

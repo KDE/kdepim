@@ -44,10 +44,11 @@ EmpathPasswordEditWidget::EmpathPasswordEditWidget
     pb_echoMode_->setToggleButton(true);
     pb_echoMode_->setOn(false);
     pb_echoMode_->setFixedWidth(pb_echoMode_->sizeHint().height());
-    pb_echoMode_->setFixedHeight(pb_echoMode_->sizeHint().height());
 
     QObject::connect(
         pb_echoMode_, SIGNAL(toggled(bool)), SLOT(s_switchEchoMode(bool)));
+    
+    le_pass_->setEchoMode(QLineEdit::NoEcho);
 }
 
 EmpathPasswordEditWidget::~EmpathPasswordEditWidget()

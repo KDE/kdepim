@@ -116,4 +116,17 @@ RMessage::createDefault()
     RBodyPart::createDefault();
 }
 
+    void
+RMessage::addPart(RBodyPart *)
+{
+    // STUB
+}
+
+    void
+RMessage::removePart(RBodyPart *)
+{
+    // STUB
+}
+
+
 // vim:ts=4:sw=4:tw=78

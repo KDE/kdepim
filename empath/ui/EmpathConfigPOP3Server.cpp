@@ -49,7 +49,7 @@ EmpathConfigPOP3Server::EmpathConfigPOP3Server
     QLabel * l_pass         = new QLabel(i18n("Mail server password"), this);
 
     le_inServer_        = new QLineEdit(this);
-    sb_inServerPort_    = new QSpinBox(this);
+    sb_inServerPort_    = new QSpinBox(1, 100000, 1, this);
     le_uname_           = new QLineEdit(this);
     epew_pass_          = new EmpathPasswordEditWidget(QString::null, this);
 

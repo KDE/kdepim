@@ -59,13 +59,59 @@ EmpathComposer::message(EmpathComposer::Form & composeForm)
 {
     empathDebug("message() called");
 
-    // FIXME
-    RMM::RMessage msg(  
-        composeForm.visibleHeaders.asString() + '\n' + 
-        composeForm.body + '\n' + 
-        _signature());
+    RMM::RMessage message;
+    
+    // Copy the visible headers first.
+    RMM::REnvelope envelope = composeForm.visibleHeaders;
 
-    return msg;
+    // Now add the invisible headers. Should really implement
+    // REnvelope::operator +, but for now this will do.
+    RMM::RHeaderList invisibleHeaders =
+        composeForm.invisibleHeaders.headerList();
+
+    RMM::RHeaderListIterator it(invisibleHeaders);
+
+    for (; it.current(); ++it)
+        envelope.addHeader(*it.current());
+
+    message.setEnvelope(envelope);
+
+    // Now we need to know what type the main body part has.
+    // We really need to find a nice way to send 16-bit Unicode.
+    //
+    // If the text is UTF-8 (8-bit) we can elect either to send
+    // it encoded as 8-bit (i.e., don't do anything) or we could
+    // encode it as quoted-printable.
+    //
+    // Either of these will work, but which is the best ? This
+    // needs to be thought about hard or decided on experience.
+    //
+    // My gut feeling is that it's better to simply send as 8-bit.
+    // This is not because I'm lazy, more because I've seen more
+    // MUAs that don't decode qp than MTAs that can't handle 8-bit.
+    //
+    // The problem is that while many sendmail installations don't
+    // advertise that they handle 8-bit, they really do. I'm not
+    // going to spend my life worrying about broken sendmail.
+
+    message.setData(composeForm.body + "\n-- \n" + _signature());
+
+    QValueList<EmpathAttachmentSpec>::Iterator it2 =
+        composeForm.attachments.begin();
+   
+    for (; it2 != composeForm.attachments.end(); it2++) {
+
+        RMM::RBodyPart * newPart = new RMM::RBodyPart;
+        newPart->setDescription((*it2).description().utf8());
+        newPart->setEncoding((*it2).encoding());
+        newPart->setMimeType((*it2).type().utf8());
+        newPart->setMimeSubType((*it2).subType().utf8());
+// TODO        newPart.setCharset((*it2).charset());
+
+        message.addPart(newPart);
+    }
+
+    return message;
 }
 
     void
@@ -104,21 +150,27 @@ EmpathComposer::bugReport()
     composeForm.composeType = ComposeNormal;
     composeForm.invisibleHeaders.set("To", 
         ( EMPATH_MAINTAINER + " <" + EMPATH_MAINTAINER_EMAIL +">").local8Bit() ); 
+    // Note: Leave ' ' at start of lines > 0 to conform to RFC822 header spec.
     composeForm.invisibleHeaders.set("X-EmpathInfo",
-        "Empath Version: "  + EMPATH_VERSION_STRING.local8Bit() + 
-        " KDE Version: "    + KDE_VERSION_STRING +    
-        " Qt Version: "     + QT_VERSION_STR); 
+        "Empath Version: "  + EMPATH_VERSION_STRING.local8Bit() + "\n"
+        " KDE Version: "    + KDE_VERSION_STRING + "\n"
+        " Qt Version: "     + QT_VERSION_STR + "\n");
 
     composeForm.body = 
-    "- " + i18n("What were you trying to do when the problem occured ?") +
+    "- " +
+    i18n("What were you trying to do when the problem occured ?") +
     "\n\n\n\n" +
-    "- " + i18n("What actually happened ?") +
+    "- " +
+    i18n("What actually happened ?") +
     "\n\n\n\n" +
-    "- " + i18n("Exactly what did you do that caused the problem to manifest itself ?") +
+    "- " +
+    i18n("Exactly what did you do that caused the problem to manifest itself ?") +
     "\n\n\n\n" +
-    "- " + i18n("Do you have a suggestion as to how this behaviour can be corrected ?") +
+    "- " +
+    i18n("Do you have a suggestion as to how this behaviour can be corrected ?") +
     "\n\n\n\n" +
-    "- " + i18n("If you saw an error message, please try to reproduce it here.");
+    "- " +
+    i18n("If you saw an error message, please try to reproduce it here.");
 
     _initVisibleHeaders(composeForm);
     emit(composeFormComplete(composeForm));
@@ -133,8 +185,12 @@ EmpathComposer::s_retrieveComplete(
 
     RMM::RMessage * m(empath->message(url, xinfo));
     
-    if (m == 0)
+    if (m == 0) {
+        empathDebug(
+            "Couldn't get supposedly retrieved message `" +
+            url.asString() + "'");
         return;
+    }
  
     int id = xinfo.remove(0, 10).toInt();
 
@@ -260,6 +316,7 @@ EmpathComposer::_reply(int id, RMM::RMessage * m, bool toAll)
 
     s = message.data();
 
+    // Quoting. hack ? Naah :)
     s.replace(QRegExp("\\n"), "\n> ");
     
     QString thingyWrote = c->readEntry( 
@@ -327,20 +384,25 @@ EmpathComposer::_bounce(int, RMM::RMessage * /* m */)
     // TODO
 }
 
-/*
+#if 0
     QCString
 EmpathComposer::_envelope()
 {
-    QCString s;
+    // Rikkus: Is this going to be used ?
+
+    // Copy the visible headers first.
+    RMM::REnvelope e = composeForm.visibleHeaders_;
+
+    // Now add the invisible headers. Should really implement
+    // REnvelope::operator +, but for now this will do.
+    RMM::RHeaderListIterator it(f.invisibleHeaders_);
+
+    for (; it.current(); ++it)
+        e.addHeader(*it.current());
     
-    s += referenceHeaders_;
-    s += _stdHeaders();
-    // s += _headerListAsString(visibleHeaders_);
-    // s += _headerListAsString(invisibleHeaders_);
-    
-    return s;
+    return e.asString();
 }
-*/
+#endif
 
     QCString
 EmpathComposer::_referenceHeaders(RMM::RMessage * m)
