@@ -337,10 +337,8 @@ int Alarm::snoozeTime() const
 
 void Alarm::setRepeatCount(int alarmRepeatCount)
 {
-  if (alarmRepeatCount >= 0) {
-    mAlarmRepeatCount = alarmRepeatCount;
-    mParent->updated();
-  }
+  mAlarmRepeatCount = alarmRepeatCount;
+  mParent->updated();
 }
 
 int Alarm::repeatCount() const
