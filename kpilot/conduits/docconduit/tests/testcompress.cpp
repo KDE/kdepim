@@ -1,5 +1,4 @@
-/* testcompress.cpp
-**
+/* 
 ** Copyright (C) 2003 by Reinhold Kainhofer
 **
 ** This is just a very simple programm to check the compress/uncompress 

@@ -1,4 +1,4 @@
-/* todoWidget.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 **

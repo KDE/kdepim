@@ -1,5 +1,5 @@
 /*
-** MAL-conduit.cc
+** MAL conduit for KPilot
 **
 ** Copyright (C) 2002 by Reinhold Kainhofer
 */

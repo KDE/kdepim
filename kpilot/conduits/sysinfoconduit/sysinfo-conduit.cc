@@ -1,4 +1,4 @@
-/* sysinfo-conduit.cc                           KPilot
+/* KPilot
 **
 ** Copyright (C) 2003 by Reinhold Kainhofer
 **

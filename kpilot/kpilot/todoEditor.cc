@@ -1,5 +1,5 @@
 // -*- C++ -*-
-/* todoEditor.cc		KPilot
+/* KPilot
 **
 ** Copyright (C) 2000 by Dan Pilone
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>

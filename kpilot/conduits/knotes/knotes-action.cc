@@ -1,4 +1,4 @@
-/* knotes-action.cc                      KPilot
+/* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
 ** Copyright (C) 2002,2003,2004 by Adriaan de Groot

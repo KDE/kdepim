@@ -1,4 +1,4 @@
-/* options.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 2000-2001 by Adriaan de Groot
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>

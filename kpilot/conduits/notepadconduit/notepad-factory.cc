@@ -1,4 +1,4 @@
-/* notepad-factory.cc                      KPilot
+/* KPilot
 **
 ** Copyright (C) 2004 by Adriaan de Groot, Joern Ahrens
 **

@@ -1,4 +1,4 @@
-/* knotes-setup.cc                      KPilot
+/* KPilot
 **
 ** Copyright (C) 2001,2003 by Dan Pilone
 **

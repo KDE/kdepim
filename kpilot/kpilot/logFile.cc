@@ -1,4 +1,4 @@
-/* logFile.cc                         KPilot
+/* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
 ** Copyright (C) 2004 by Reinhold Kainhofer

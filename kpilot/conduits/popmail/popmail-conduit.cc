@@ -1,4 +1,4 @@
-/* popmail-conduit.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 1998-2001 Dan Pilone
 ** Copyright (C) 1999,2000 Michael Kropfberger

@@ -1,4 +1,4 @@
-/* kroupware.cc			KPilot
+/* KPilot
 **
 ** Copyright still to be determined.
 **

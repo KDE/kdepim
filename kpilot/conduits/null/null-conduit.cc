@@ -1,4 +1,4 @@
-/* null-conduit.cc			KPilot
+/* KPilot
 **
 ** Copyright (C) 2000-2001 by Adriaan de Groot
 **

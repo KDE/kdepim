@@ -1,4 +1,4 @@
-/* logWidget.cc                         KPilot
+/* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone
 **

@@ -1,4 +1,4 @@
-/* DOC-converter.cc                           KPilot
+/* KPilot
 **
 ** Copyright (C) 2002-2003 by Reinhold Kainhofer
 **

@@ -1,4 +1,4 @@
-/* todo-conduit.cc  Todo-Conduit for syncing KPilot and KOrganizer
+/* Todo-Conduit for syncing KPilot and KOrganizer
 **
 ** Copyright (C) 2002-2003 Reinhold Kainhofer
 ** Copyright (C) 1998-2001 Dan Pilone

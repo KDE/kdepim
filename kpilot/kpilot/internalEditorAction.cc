@@ -1,4 +1,4 @@
-/* internalEditorAction.cc                KPilot
+/* KPilot
 **
 ** Copyright (C) 2003 Reinhold Kainhofer <reinhold@kainhofer.com>
 **

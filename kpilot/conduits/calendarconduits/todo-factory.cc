@@ -1,4 +1,4 @@
-/* todo-factory.cc                      KPilot
+/* KPilot
 **
 ** Copyright (C) 2002-2003 Reinhold Kainhofer
 ** Copyright (C) 2001 by Dan Pilone

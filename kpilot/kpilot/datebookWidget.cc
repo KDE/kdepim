@@ -1,4 +1,4 @@
-/* datebookWidget.cc		KPilot
+/* KPilot
 **
 ** Copyright (C) 2003 by Dan Pilone.
 **	Authored by Adriaan de Groot

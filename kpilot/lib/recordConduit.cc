@@ -1,4 +1,4 @@
-/* recordConduit.cc                           KPilot
+/* KPilot
 **
 ** Copyright (C) 2004 by Reinhold Kainhofer
 ** Based on the addressbook conduit:
