@@ -67,10 +67,9 @@ public:
   };
 
   struct Attendee : Email {
-    Attendee() : requestResponse( true ), invitationSent( false ) {}
+    Attendee() : requestResponse( true ) {}
     QString status;
     bool requestResponse;
-    bool invitationSent;
     QString role;
   };
 

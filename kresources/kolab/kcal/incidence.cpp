@@ -166,9 +166,6 @@ bool Incidence::loadAttendeeAttribute( QDomElement& element,
         // This sets reqResp to false, if the text is "false". Otherwise it
         // sets it to true. This means the default setting is true.
         attendee.requestResponse = ( e.text().lower() != "false" );
-      else if ( tagName == "invitation-sent" )
-        // Like above, only this defaults to false
-        attendee.invitationSent = ( e.text().lower() != "true" );
       else if ( tagName == "role" )
         attendee.role = e.text();
       else
@@ -191,8 +188,6 @@ void Incidence::saveAttendeeAttribute( QDomElement& element,
   writeString( e, "status", attendee.status );
   writeString( e, "request-response",
                ( attendee.requestResponse ? "true" : "false" ) );
-  writeString( e, "invitation-sent",
-               ( attendee.invitationSent ? "true" : "false" ) );
   writeString( e, "role", attendee.role );
 }
 
@@ -209,7 +204,7 @@ void Incidence::saveAttachments( QDomElement& element ) const
   for ( ; it != mAttachments.end(); ++it ) {
     KCal::Attachment *a = (*it);
     if ( a->isUri() ) {
-      writeString( element, "link-attachment", a->uri() ); 
+      writeString( element, "link-attachment", a->uri() );
     } else if ( a->isBinary() ) {
       // TODO
     }
@@ -295,6 +290,7 @@ bool Incidence::loadAttribute( QDomElement& element )
       return true;
     } else
       return false;
+    // TODO: creator
   } else if ( tagName == "start-date" )
     setStartDate( element.text() );
   else if ( tagName == "recurrence" )
@@ -342,6 +338,7 @@ bool Incidence::saveAttributes( QDomElement& element ) const
   writeString( element, "summary", summary() );
   writeString( element, "location", location() );
   saveEmailAttribute( element, organizer(), "organizer" );
+  // TODO: creator
   if ( !mRecurrence.cycle.isEmpty() )
     saveRecurrence( element );
   saveAttendees( element );
@@ -580,9 +577,6 @@ void Incidence::setFields( const KCal::Incidence* incidence )
     attendee.smtpAddress = kcalAttendee->email();
     attendee.status = attendeeStatusToString( kcalAttendee->status() );
     attendee.requestResponse = kcalAttendee->RSVP();
-    // TODO: KCal::Attendee::mFlag is not accessible
-    // attendee.invitationSent = kcalAttendee->mFlag;
-    // DF: Hmm? mFlag is set to true and never used at all.... Did you mean another field?
     attendee.role = attendeeRoleToString( kcalAttendee->role() );
 
     addAttendee( attendee );
@@ -597,7 +591,7 @@ void Incidence::setFields( const KCal::Incidence* incidence )
     KCal::Attachment *a = *it2;
     mAttachments.push_back( a );
   }
-  
+
   if ( incidence->doesRecur() ) {
     setRecurrence( incidence->recurrence() );
     mRecurrence.exclusions = incidence->exDates();
