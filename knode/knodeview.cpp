@@ -413,7 +413,7 @@ void KNodeView::initActions()
                               SLOT(slotAccGetNewHdrs()), a_ctions, "account_dnlHeaders");
   a_ctAccDelete             = new KAction(i18n("&Delete"), 0, this,
                               SLOT(slotAccDelete()), a_ctions, "account_delete");
-  a_ctAccPostNewArticle     = new KAction(i18n("&Post new article"), "filenew", Key_P , this,
+  a_ctAccPostNewArticle     = new KAction(i18n("&Post to Newsgroup..."), "filenew", Key_P , this,
                               SLOT(slotAccPostNewArticle()), a_ctions, "article_postNew");
 
   //collection-view - groups
@@ -465,7 +465,7 @@ void KNodeView::initActions()
 	                            SLOT(slotArtToggleShowThreads()), a_ctions, "view_showThreads");			
 		                            	
 	//header-view - remote articles
-	a_ctArtSetArtRead         = new KAction(i18n("M&ark as read"), Key_D , this,
+	a_ctArtSetArtRead         = new KAction(i18n("Mark as &read"), Key_D , this,
 	                            SLOT(slotArtSetArtRead()), a_ctions, "article_read");
 	a_ctArtSetArtUnread       = new KAction(i18n("Mar&k as unread"), Key_U , this,
 	                            SLOT(slotArtSetArtUnread()), a_ctions, "article_unread");

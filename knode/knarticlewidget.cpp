@@ -92,11 +92,13 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
   a_ctPrint             = KStdAction::print(this, SLOT(slotPrint()), a_ctions);
   a_ctSelAll            = KStdAction::selectAll(this, SLOT(slotSelectAll()), a_ctions);
   a_ctCopy              = KStdAction::copy(this, SLOT(copy()), a_ctions);
-  a_ctReply             = new KAction(i18n("Post &reply"),"message_reply", Key_R , this,
+
+
+  a_ctReply             = new KAction(i18n("&Followup to Newsgroup..."),"message_reply", Key_R , this,
                           SLOT(slotReply()), a_ctions, "article_postReply");
-  a_ctRemail            = new KAction(i18n("&Mail reply"),"mail_reply", Key_A , this,
+  a_ctRemail            = new KAction(i18n("Reply by E-&Mail..."),"mail_reply", Key_A , this,
                           SLOT(slotRemail()), a_ctions, "article_mailReply");
-  a_ctForward           = new KAction(i18n("&Forward"),"mail_forward", Key_F , this,
+  a_ctForward           = new KAction(i18n("Forw&ard by E-Mail..."),"mail_forward", Key_F , this,
                           SLOT(slotForward()), a_ctions, "article_forward");
   a_ctCancel            = new KAction(i18n("article","&Cancel"), 0 , this,
                           SLOT(slotCancel()), a_ctions, "article_cancel");
