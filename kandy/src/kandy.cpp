@@ -113,7 +113,7 @@ void Kandy::save(const QString & filename)
 {
   if (!filename.isEmpty()) {
     if (!mView->saveFile(filename)) {
-      KMessageBox::error(this,i18n("Couldn't save file %1.").arg(filename));
+      KMessageBox::error(this,i18n("Could not save file %1.").arg(filename));
     } else {
       mFilename = filename;
       setTitle();

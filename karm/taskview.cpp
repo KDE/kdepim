@@ -472,7 +472,7 @@ void TaskView::deleteTask(bool markingascomplete)
           i18n( "Are you sure you want to delete the task named"
           "\n\"%1\" and its entire history?\n"
           "NOTE: all its subtasks and their history will also "
-          "be deleted!").arg(task->name()),
+          "be deleted.").arg(task->name()),
           i18n( "Deleting Task"));
     }
   }

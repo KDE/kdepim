@@ -353,7 +353,7 @@
                                     <bool>false</bool>
                                 </property>
                                 <property name="text">
-                                    <string>Do&amp;n't convert bookmarks</string>
+                                    <string>Do &amp;not convert bookmarks</string>
                                 </property>
                                 <property name="buttonGroupId">
                                     <number>0</number>

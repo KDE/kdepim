@@ -82,7 +82,7 @@ NotifyDialog::NotifyDialog(QWidget* p)
   note = new QLabel(f);
   note->setTextFormat(RichText);
   topL->addWidget(note);
-  QCheckBox *check = new QCheckBox(i18n("Don't show this message again"),f);
+  QCheckBox *check = new QCheckBox(i18n("Do not show this message again"),f);
   check->setChecked(true);
   topL->addWidget(check);
   connect(check,SIGNAL(toggled(bool)),SLOT(slotShowAgainToggled(bool)));

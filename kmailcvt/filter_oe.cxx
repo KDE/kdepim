@@ -118,7 +118,7 @@ void FilterOE::importMailBox(const QString& fileName)
       }
     }
   }
-  inf->addLog(i18n("File %1 doesn't seem to be an Outlook Express mailbox").arg(fileName));
+  inf->addLog(i18n("File %1 does not seem to be an Outlook Express mailbox").arg(fileName));
 }
 
 /* ------------------- MBX support ------------------- */

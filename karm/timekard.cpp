@@ -94,7 +94,7 @@ QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask)
       .arg(i18n("Total"));
   }
   else
-    retval += i18n("No tasks!");
+    retval += i18n("No tasks.");
 
   return retval;
 }

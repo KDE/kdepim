@@ -772,7 +772,7 @@ void KABCore::openLDAPDialog()
 {
   if ( !KProtocolInfo::isKnownProtocol( KURL( "ldap://localhost" ) ) ) {
     KMessageBox::error( mWidget, i18n( "Your KDE installation is missing LDAP "
-                                       "support, please ask your administrator or distributor for more information!" ),
+                                       "support, please ask your administrator or distributor for more information." ),
                         i18n( "No LDAP IO slave available" ) );
     return;
   }

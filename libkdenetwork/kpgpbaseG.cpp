@@ -116,7 +116,7 @@ BaseG::encsign( Block& block, const KeyIDList& recipients,
   if( exitStatus != 0 )
   {
     // this error message is later hopefully overwritten
-    errMsg = i18n( "Unknown error!" );
+    errMsg = i18n( "Unknown error." );
     status = ERROR;
   }
 
