@@ -53,6 +53,8 @@ const char * const VCalConduitFactory::group = "vcalOptions" ;
 const char * const VCalConduitFactory::calendarFile = "CalFile" ;
 const char * const VCalConduitFactory::firstTime = "FirstTime" ;
 const char * const VCalConduitFactory::deleteOnPilot = "DeleteOnPilot" ;
+const char * const VCalConduitFactory::fullSyncOnPCChange = "FullSyncOnPCChange";
+const char * const VCalConduitFactory::alwaysFullSync = "AlwaysFullSync";
 
 
 KAboutData *VCalConduitFactory::fAbout = 0L;
@@ -145,6 +147,9 @@ VCalConduitFactory::~VCalConduitFactory()
 }
 
 // $Log$
+// Revision 1.5  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.4  2001/12/31 09:25:05  adridg
 // Cleanup, various fixes for runtime loading
 //
