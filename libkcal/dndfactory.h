@@ -53,6 +53,9 @@ class DndFactory : public VCalFormat {
     bool copyEvent(Event *);
     /** pastes the event and returns a pointer to the new event pasted. */
     Event *pasteEvent(const QDate &, const QTime *newTime = 0L);
+
+  private:
+    Calendar *mCalendar;
 };
 
 }

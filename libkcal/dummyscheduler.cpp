@@ -89,7 +89,8 @@ QPtrList<ScheduleMessage> DummyScheduler::retrieveTransactions()
       messageString += messageLine + "\n";
       if (messageLine.find("END:VCALENDAR") >= 0) {
         kdDebug(5800) << "---------------" << messageString << endl;
-        ScheduleMessage *message = mFormat->parseScheduleMessage(messageString);
+        ScheduleMessage *message = mFormat->parseScheduleMessage(mCalendar,
+                                                                 messageString);
         kdDebug(5800) << "--Parsed" << endl;
         if (message) {
           messageList.append(message);

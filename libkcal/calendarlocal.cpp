@@ -86,10 +86,10 @@ bool CalendarLocal::load(const QString &fileName)
 
   // Always try to load with iCalendar. It will detect, if it is actually a
   // vCalendar file.
-  mFormat = new ICalFormat(this);
+  mFormat = new ICalFormat;
 
   mFormat->clearException();
-  bool success = mFormat->load(fileName);
+  bool success = mFormat->load( this, fileName);
 
   if (!success) {
     if (mFormat->exception()) {
@@ -98,8 +98,8 @@ bool CalendarLocal::load(const QString &fileName)
         // Expected non vCalendar file, but detected vCalendar
         kdDebug(5800) << "CalendarLocal::load() Fallback to VCalFormat" << endl;
         delete mFormat;
-        mFormat = new VCalFormat(this);
-        return mFormat->load(fileName);
+        mFormat = new VCalFormat;
+        return mFormat->load( this, fileName);
       }
       return false;
     } else {
@@ -120,9 +120,9 @@ bool CalendarLocal::save(const QString &fileName,CalFormat *format)
   bool success;
 
   if (format) {
-    success = format->save(fileName);
+    success = format->save( this, fileName);
   } else {
-    success = mFormat->save(fileName);
+    success = mFormat->save( this, fileName);
   }
 
   if ( success ) setModified( false );

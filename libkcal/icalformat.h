@@ -40,39 +40,51 @@ class ICalFormatImpl;
 */
 class ICalFormat : public CalFormat {
   public:
-    /** Create new iCal format for calendar object */
-    ICalFormat(Calendar *);
+    /** Create new iCalendar format. */
+    ICalFormat();
     virtual ~ICalFormat();
 
     /**
-      loads a calendar on disk in iCalendar format  into current calendar.
-      Returns TRUE if successful, else returns FALSE. Provides more error
+      Loads a calendar on disk in iCalendar format into calendar.
+      Returns true if successful, else returns false. Provides more error
       information by exception().
-      @param fileName the name of the calendar on disk.
+      @param calendar Calendar object to be filled.
+      @param fileName The name of the calendar file on disk.
     */
-    bool load(const QString &fileName);
-    /** writes out the calendar to disk in iCalendar format. Returns true if
-     * successful and false on error.
-     * @param fileName the name of the file
-     */
-    bool save(const QString &fileName);
+    bool load( Calendar *, const QString &fileName );
+    /**
+      Writes out the calendar to disk in iCalendar format. Returns true if
+     successful and false on error.
+     
+     @param calendar The Calendar object to be written.
+     @param fileName The name of the calendar file on disk.
+    */
+    bool save( Calendar *, const QString &fileName );
 
     /**
       Parse string and populate calendar with that information.
     */
-    bool fromString( const QString & );  
+    bool fromString( Calendar *, const QString & );  
     /**
       Return calendar information as string.
     */
-    QString toString();
+    QString toString( Calendar * );
   
     /** Create a scheduling message for event \a e using method \m */
     QString createScheduleMessage(IncidenceBase *e,Scheduler::Method m);
     /** Parse scheduling message provided as string \s */
-    ScheduleMessage *parseScheduleMessage(const QString &s);
+    ScheduleMessage *parseScheduleMessage( Calendar *, const QString &s);
     
+    /** Set id of used time zone and whether this time zone is UTC or not. */
+    void setTimeZone( const QString &id, bool utc );
+    QString timeZoneId() const;
+    bool utc() const;
+
   private:
     ICalFormatImpl *mImpl;
+
+    QString mTimeZoneId;
+    bool mUtc;
 };
 
 }

@@ -41,7 +41,7 @@
 using namespace KCal;
 
 DndFactory::DndFactory( Calendar *cal ) :
-  VCalFormat( cal )
+  mCalendar( cal )
 {
 }
 

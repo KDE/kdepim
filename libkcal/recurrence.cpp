@@ -19,8 +19,6 @@
     Boston, MA 02111-1307, USA.
 */
 
-// $Id$
-
 #include <limits.h>
 
 #include <kdebug.h>
@@ -36,22 +34,16 @@ using namespace KCal;
 static QDate infiniteEndDate(7000,1,1);   // end date for infinite recurrences - a little bit in the future...
 
 
-#ifdef LIBKCAL_BACK_COMPAT
 Recurrence::Recurrence(Incidence *parent, int compatVersion)
-#else
-Recurrence::Recurrence(Incidence *parent)
-#endif
 : recurs(rNone),   // by default, it's not a recurring event
   rWeekStart(1),   // default is Monday
   rDays(7),
   mFloats(parent ? parent->doesFloat() : false),
   mRecurReadOnly(false),
   mRecurExDatesCount(0),
-#ifdef LIBKCAL_BACK_COMPAT
-  mCompatVersion(static_cast<uint>(compatVersion)),
+  mCompatVersion(compatVersion),
   mCompatRecurs(rNone),
   mCompatDuration(0),
-#endif
   mParent(parent)
 {
   rMonthDays.setAutoDelete(TRUE);
@@ -70,11 +62,9 @@ Recurrence::Recurrence(const Recurrence &r, Incidence *parent)
   mFloats(r.mFloats),
   mRecurReadOnly(r.mRecurReadOnly),
   mRecurExDatesCount(r.mRecurExDatesCount),
-#ifdef LIBKCAL_BACK_COMPAT
   mCompatVersion(r.mCompatVersion),
   mCompatRecurs(r.mCompatRecurs),
   mCompatDuration(r.mCompatDuration),
-#endif
   mParent(parent)
 {
   for (QPtrListIterator<rMonthPos> mp(r.rMonthPositions);  mp.current();  ++mp) {
@@ -354,9 +344,7 @@ void Recurrence::setDuration(int _rDuration)
   if (mRecurReadOnly) return;
   if (_rDuration > 0) {
     rDuration = _rDuration;
-#ifdef LIBKCAL_BACK_COMPAT
     mCompatVersion = 310;
-#endif
   }
 }
 
@@ -435,7 +423,6 @@ void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
   rDays = _rDays;
   rWeekStart = _rWeekStart;
   rDuration = _rDuration;
-#ifdef LIBKCAL_BACK_COMPAT
   if (mCompatVersion < 310 && _rDuration > 0) {
     // Backwards compatibility for KDE < 3.1.
     // rDuration was set to the number of time periods to recur,
@@ -445,9 +432,9 @@ void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
     int weeks = ((mCompatDuration-1+mRecurExDatesCount)*7) + (7 - mRecurStart.date().dayOfWeek());
     QDate end(mRecurStart.date().addDays(weeks * rFreq));
     rDuration = weeklyCalc(COUNT_TO_DATE, end);
-  } else
+  } else {
     mCompatDuration = 0;
-#endif
+  }
   rMonthPositions.clear();
   rMonthDays.clear();
   if (mParent) mParent->updated();
@@ -465,9 +452,7 @@ void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
   rEndDateTime.setDate(_rEndDate);
   rEndDateTime.setTime(mRecurStart.time());
   rDuration = 0; // set to 0 because there is an end date
-#ifdef LIBKCAL_BACK_COMPAT
   mCompatDuration = 0;
-#endif
   rMonthPositions.clear();
   rMonthDays.clear();
   rYearNums.clear();
@@ -481,10 +466,8 @@ void Recurrence::setMonthly(short type, int _rFreq, int _rDuration)
 
   rFreq = _rFreq;
   rDuration = _rDuration;
-#ifdef LIBKCAL_BACK_COMPAT
   if (mCompatVersion < 310)
     mCompatDuration = (_rDuration > 0) ? _rDuration : 0;
-#endif
   rYearNums.clear();
   if (mParent) mParent->updated();
 }
@@ -499,9 +482,7 @@ void Recurrence::setMonthly(short type, int _rFreq,
   rEndDateTime.setDate(_rEndDate);
   rEndDateTime.setTime(mRecurStart.time());
   rDuration = 0; // set to 0 because there is an end date
-#ifdef LIBKCAL_BACK_COMPAT
   mCompatDuration = 0;
-#endif
   rYearNums.clear();
   if (mParent) mParent->updated();
 }
@@ -541,7 +522,6 @@ void Recurrence::addMonthlyPos_(short _rPos, const QBitArray &_rDays)
   tmpPos->rDays.detach();
   rMonthPositions.append(tmpPos);
 
-#ifdef LIBKCAL_BACK_COMPAT
   if (mCompatVersion < 310 && mCompatDuration > 0) {
     // Backwards compatibility for KDE < 3.1.
     // rDuration was set to the number of time periods to recur.
@@ -551,7 +531,6 @@ void Recurrence::addMonthlyPos_(short _rPos, const QBitArray &_rDays)
     QDate end(mRecurStart.date().year() + month/12, month%12 + 1, 31);
     rDuration = recurCalc(COUNT_TO_DATE, end);
   }
-#endif
 
   if (mParent) mParent->updated();
 }
@@ -569,7 +548,6 @@ void Recurrence::addMonthlyDay(short _rDay)
   *tmpDay = _rDay;
   rMonthDays.append(tmpDay);
 
-#ifdef LIBKCAL_BACK_COMPAT
   if (mCompatVersion < 310 && mCompatDuration > 0) {
     // Backwards compatibility for KDE < 3.1.
     // rDuration was set to the number of time periods to recur.
@@ -579,7 +557,6 @@ void Recurrence::addMonthlyDay(short _rDay)
     QDate end(mRecurStart.date().year() + month/12, month%12 + 1, 31);
     rDuration = recurCalc(COUNT_TO_DATE, end);
   }
-#endif
 
   if (mParent) mParent->updated();
 }
@@ -587,10 +564,8 @@ void Recurrence::addMonthlyDay(short _rDay)
 void Recurrence::setYearly(int type, int _rFreq, int _rDuration)
 {
   if (mRecurReadOnly) return;
-#ifdef LIBKCAL_BACK_COMPAT
   if (mCompatVersion < 310)
     mCompatDuration = (_rDuration > 0) ? _rDuration : 0;
-#endif
   setYearly_(type, _rFreq, _rDuration);
 }
 
@@ -599,9 +574,7 @@ void Recurrence::setYearly(int type, int _rFreq, const QDate &_rEndDate)
   if (mRecurReadOnly) return;
   rEndDateTime.setDate(_rEndDate);
   rEndDateTime.setTime(mRecurStart.time());
-#ifdef LIBKCAL_BACK_COMPAT
   mCompatDuration = 0;
-#endif
   setYearly_(type, _rFreq, 0);
 }
 
@@ -623,7 +596,6 @@ void Recurrence::addYearlyNum(short _rNum)
   ||  _rNum <= 0)    // invalid day/month number
     return;
 
-#ifdef LIBKCAL_BACK_COMPAT
   if (mCompatVersion < 310 && mCompatRecurs == rYearlyDay) {
     // Backwards compatibility for KDE < 3.1.
     // Dates were stored as day numbers, with a fiddle to take account of leap years.
@@ -632,7 +604,6 @@ void Recurrence::addYearlyNum(short _rNum)
       return;     // invalid day number
     _rNum = QDate(mRecurStart.date().year(), 1, 1).addDays(_rNum - 1).month();
   } else
-#endif
   if ((recurs == rYearlyMonth || recurs == rYearlyPos) && _rNum > 12
   ||  recurs == rYearlyDay && _rNum > 366)
     return;     // invalid day number
@@ -648,7 +619,6 @@ void Recurrence::addYearlyNum(short _rNum)
   *tmpNum = _rNum;
   rYearNums.insert(i, tmpNum);   // insert the day/month in a sorted position
 
-#ifdef LIBKCAL_BACK_COMPAT
   if (mCompatVersion < 310 && mCompatDuration > 0) {
     // Backwards compatibility for KDE < 3.1.
     // rDuration was set to the number of time periods to recur.
@@ -656,7 +626,6 @@ void Recurrence::addYearlyNum(short _rNum)
     QDate end(mRecurStart.date().year() + (mCompatDuration-1+mRecurExDatesCount)*rFreq, 12, 31);
     rDuration = recurCalc(COUNT_TO_DATE, end);
   }
-#endif
 
   if (mParent) mParent->updated();
 }
@@ -853,12 +822,10 @@ void Recurrence::setDailySub(short type, int freq, int duration)
 void Recurrence::setYearly_(short type, int freq, int duration)
 {
   recurs = type;
-#ifdef LIBKCAL_BACK_COMPAT
   if (mCompatVersion < 310 && type == rYearlyDay) {
     mCompatRecurs = rYearlyDay;
     recurs = rYearlyMonth;      // convert old yearly-by-day to yearly-by-month
   }
-#endif
 
   rFreq = freq;
   rDuration = duration;

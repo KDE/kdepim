@@ -48,10 +48,12 @@ extern "C" {
 
 using namespace KCal;
 
-ICalFormat::ICalFormat(Calendar *cal) :
-  CalFormat(cal)
+ICalFormat::ICalFormat()
 {
-  mImpl = new ICalFormatImpl(this,cal);
+  mImpl = new ICalFormatImpl( this );
+  
+  mTimeZoneId = "UTC";
+  mUtc = true;
 }
 
 ICalFormat::~ICalFormat()
@@ -59,7 +61,7 @@ ICalFormat::~ICalFormat()
   delete mImpl;
 }
 
-bool ICalFormat::load(const QString &fileName)
+bool ICalFormat::load( Calendar *calendar, const QString &fileName)
 {
   kdDebug(5800) << "ICalFormat::load() " << fileName << endl;
 
@@ -76,17 +78,17 @@ bool ICalFormat::load(const QString &fileName)
   QString text = ts.read();
   file.close();
 
-  return fromString( text );
+  return fromString( calendar, text );
 }
 
 
-bool ICalFormat::save(const QString &fileName)
+bool ICalFormat::save( Calendar *calendar, const QString &fileName )
 {
   kdDebug(5800) << "ICalFormat::save(): " << fileName << endl;
 
   clearException();
 
-  QString text = toString();
+  QString text = toString( calendar );
 
   if ( text.isNull() ) return false;
 
@@ -106,8 +108,10 @@ bool ICalFormat::save(const QString &fileName)
   return true;
 }
 
-bool ICalFormat::fromString( const QString &text )
+bool ICalFormat::fromString( Calendar *cal, const QString &text )
 {
+  setTimeZone( cal->timeZoneId(), !cal->isLocalTime() );
+
   // Get first VCALENDAR component.
   // TODO: Handle more than one VCALENDAR or non-VCALENDAR top components
   icalcomponent *calendar;
@@ -128,7 +132,7 @@ bool ICalFormat::fromString( const QString &text )
     success = false;
   } else {
     // put all objects into their proper places
-    if (!mImpl->populate(calendar)) {
+    if ( !mImpl->populate( cal, calendar ) ) {
       kdDebug(5800) << "ICalFormat::load(): Could not populate calendar" << endl;
       if ( !exception() ) {
         setException(new ErrorFormat(ErrorFormat::ParseErrorKcal));
@@ -142,14 +146,16 @@ bool ICalFormat::fromString( const QString &text )
   return success;
 }
 
-QString ICalFormat::toString()
+QString ICalFormat::toString( Calendar *cal )
 {
+  setTimeZone( cal->timeZoneId(), !cal->isLocalTime() );
+
   icalcomponent *calendar = mImpl->createCalendarComponent();
   
   icalcomponent *component;
 
   // todos
-  QPtrList<Todo> todoList = mCalendar->getTodoList();
+  QPtrList<Todo> todoList = cal->getTodoList();
   QPtrListIterator<Todo> qlt(todoList);
   for (; qlt.current(); ++qlt) {
     component = mImpl->writeTodo(qlt.current());
@@ -157,7 +163,7 @@ QString ICalFormat::toString()
   }
 
   // events
-  QPtrList<Event> events = mCalendar->getAllEvents();
+  QPtrList<Event> events = cal->getAllEvents();
   Event *ev;
   for(ev=events.first();ev;ev=events.next()) {
     component = mImpl->writeEvent(ev);
@@ -165,7 +171,7 @@ QString ICalFormat::toString()
   }
 
   // journals
-  QPtrList<Journal> journals = mCalendar->journalList();
+  QPtrList<Journal> journals = cal->journalList();
   Journal *j;
   for(j=journals.first();j;j=journals.next()) {
     component = mImpl->writeJournal(j);
@@ -201,7 +207,8 @@ QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
   return messageText;
 }
 
-ScheduleMessage *ICalFormat::parseScheduleMessage(const QString &messageText)
+ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
+                                                   const QString &messageText )
 {
   clearException();
 
@@ -287,7 +294,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage(const QString &messageText)
   
   icalcomponent *calendarComponent = mImpl->createCalendarComponent();
 
-  Incidence *existingIncidence = mCalendar->getEvent(incidence->uid());
+  Incidence *existingIncidence = cal->getEvent(incidence->uid());
   if (existingIncidence) {
     // TODO: check, if cast is required, or if it can be done by virtual funcs.
     if (existingIncidence->type() == "Todo") {
@@ -332,4 +339,20 @@ ScheduleMessage *ICalFormat::parseScheduleMessage(const QString &messageText)
   }
   
   return new ScheduleMessage(incidence,method,status);
+}
+
+void ICalFormat::setTimeZone( const QString &id, bool utc )
+{
+  mTimeZoneId = id;
+  mUtc = utc;
+}
+
+QString ICalFormat::timeZoneId() const
+{
+  return mTimeZoneId;
+}
+
+bool ICalFormat::utc() const 
+{
+  return mUtc;
 }

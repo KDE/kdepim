@@ -69,18 +69,16 @@ void Calendar::init()
 
   mModified = false;
 
-  mDndFormat = new VCalFormat(this);
+  mDndFormat = new VCalFormat;
   
   mFormat = 0;
 
-  mICalFormat = new ICalFormat(this);
+  mICalFormat = new ICalFormat;
 
   // Setup default filter, which does nothing
   mDefaultFilter = new CalFilter;
   mFilter = mDefaultFilter;
   mFilter->setEnabled(false);
-
-  mDialogsOn = true;
 
   // initialize random numbers.  This is a hack, and not
   // even that good of one at that.
@@ -245,11 +243,6 @@ void Calendar::setEmail(const QString &e)
   mOwnerEmail = e;
 
   setModified( true );
-}
-
-void Calendar::showDialogs(bool d)
-{
-  mDialogsOn = d;
 }
 
 void Calendar::setFilter(CalFilter *filter)

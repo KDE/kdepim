@@ -484,10 +484,10 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
         CalendarLocal cal;
         cal.addEvent( new Event( *event ) );
 
-        ICalFormat format( &cal );
+        ICalFormat format;
 
         AlarmGuiIface_stub stub( calendar->appName(), client.dcopObject );
-        stub.handleEvent( format.toString() );
+        stub.handleEvent( format.toString( &cal ) );
         if ( !stub.ok() ) {
           kdDebug(5900) << "AlarmDaemon::notifyEvent(): dcop send failed" << endl;
         }

@@ -18,8 +18,6 @@
     Boston, MA 02111-1307, USA.
 */
 
-// $Id$
-
 #include <klocale.h>
 #include <kdebug.h>
 #include <kapplication.h>
@@ -44,10 +42,8 @@ static CalVersion prodIds[] = {
 };
 
 
-CalFormat::CalFormat(Calendar *cal)
+CalFormat::CalFormat()
 {
-  mCalendar = cal;
-
   mException = 0;
 }
 

@@ -49,10 +49,9 @@ const int gSecondsPerHour   = gSecondsPerMinute * 60;
 const int gSecondsPerDay    = gSecondsPerHour   * 24;
 const int gSecondsPerWeek   = gSecondsPerDay    * 7;
 
-ICalFormatImpl::ICalFormatImpl(ICalFormat *parent, Calendar *cal)
+ICalFormatImpl::ICalFormatImpl( ICalFormat *parent ) :
+  mParent( parent )
 {
-  mParent = parent;
-  mCalendar = cal;
 }
 
 ICalFormatImpl::~ICalFormatImpl()
@@ -74,7 +73,7 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
     if (todo->doesFloat()) {
       due = writeICalDate(todo->dtDue().date());
     } else {
-      due = writeICalDateTime(todo->dtDue(), !mCalendar->isLocalTime());
+      due = writeICalDateTime(todo->dtDue());
     }
     icalcomponent_add_property(vtodo,icalproperty_new_due(due));
   }
@@ -87,7 +86,7 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
       start = writeICalDate(todo->dtStart().date());
     } else {
 //      kdDebug(5800) << "§§ incidence " << todo->summary() << " has time." << endl;
-      start = writeICalDateTime(todo->dtStart(), !mCalendar->isLocalTime());
+      start = writeICalDateTime(todo->dtStart());
     }
     icalcomponent_add_property(vtodo,icalproperty_new_dtstart(start));
   }
@@ -99,7 +98,7 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
       // date. Set it to now.
       todo->setCompleted(QDateTime::currentDateTime());
     }
-    icaltimetype completed = writeICalDateTime(todo->completed(), !mCalendar->isLocalTime());
+    icaltimetype completed = writeICalDateTime(todo->completed());
     icalcomponent_add_property(vtodo,icalproperty_new_completed(completed));
   }
 
@@ -128,7 +127,7 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
     start = writeICalDate(event->dtStart().date());
   } else {
 //    kdDebug(5800) << "§§ incidence " << event->summary() << " has time." << endl;
-    start = writeICalDateTime(event->dtStart(), !mCalendar->isLocalTime());
+    start = writeICalDateTime(event->dtStart());
   }
   icalcomponent_add_property(vevent,icalproperty_new_dtstart(start));
 
@@ -139,7 +138,7 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
     end = writeICalDate(event->dtEnd().date());
   } else {
 //    kdDebug(5800) << "§§ Event " << event->summary() << " has time." << endl;
-    end = writeICalDateTime(event->dtEnd(), !mCalendar->isLocalTime());
+    end = writeICalDateTime(event->dtEnd());
   }
   icalcomponent_add_property(vevent,icalproperty_new_dtend(end));
 
@@ -168,7 +167,8 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
   return vevent;
 }
 
-icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy, Scheduler::Method method)
+icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy,
+                                             Scheduler::Method method)
 {
 #if QT_VERSION >= 300
   kdDebug() << "icalformatimpl: writeFreeBusy: startDate: "
@@ -190,13 +190,13 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy, Scheduler::Meth
   }
 
   icalcomponent_add_property(vfreebusy,icalproperty_new_dtstamp(
-      writeICalDateTime(QDateTime::currentDateTime(), !mCalendar->isLocalTime())));
+      writeICalDateTime(QDateTime::currentDateTime())));
 
   icalcomponent_add_property(vfreebusy, icalproperty_new_dtstart(
-      writeICalDateTime(freebusy->dtStart(), !mCalendar->isLocalTime())));
+      writeICalDateTime(freebusy->dtStart())));
 
   icalcomponent_add_property(vfreebusy, icalproperty_new_dtend(
-      writeICalDateTime(freebusy->dtEnd(), !mCalendar->isLocalTime())));
+      writeICalDateTime(freebusy->dtEnd())));
 
   if (method == Scheduler::Request) {
     icalcomponent_add_property(vfreebusy,icalproperty_new_uid(
@@ -208,8 +208,8 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy, Scheduler::Meth
   QValueList<Period>::Iterator it;
   icalperiodtype period;
   for (it = list.begin(); it!= list.end(); ++it) {
-    period.start = writeICalDateTime((*it).start(), !mCalendar->isLocalTime());
-    period.end = writeICalDateTime((*it).end(), !mCalendar->isLocalTime());
+    period.start = writeICalDateTime((*it).start());
+    period.end = writeICalDateTime((*it).end());
     icalcomponent_add_property(vfreebusy, icalproperty_new_freebusy(period) );
   }
 
@@ -229,7 +229,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 {
   // creation date
   icalcomponent_add_property(parent,icalproperty_new_created(
-      writeICalDateTime(incidence->created(), !mCalendar->isLocalTime())));
+      writeICalDateTime(incidence->created())));
 
   // unique id
   icalcomponent_add_property(parent,icalproperty_new_uid(
@@ -241,10 +241,10 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 
   // last modification date
   icalcomponent_add_property(parent,icalproperty_new_lastmodified(
-      writeICalDateTime(incidence->lastModified(), !mCalendar->isLocalTime())));
+      writeICalDateTime(incidence->lastModified())));
 
   icalcomponent_add_property(parent,icalproperty_new_dtstamp(
-      writeICalDateTime(QDateTime::currentDateTime(), !mCalendar->isLocalTime())));
+      writeICalDateTime(QDateTime::currentDateTime())));
 
   // organizer stuff
   icalcomponent_add_property(parent,icalproperty_new_organizer(
@@ -768,7 +768,7 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
 
   icaltriggertype trigger;
   if ( alarm->hasTime() ) {
-    trigger.time = writeICalDateTime(alarm->time(), !mCalendar->isLocalTime());
+    trigger.time = writeICalDateTime(alarm->time());
     trigger.duration = icaldurationtype_null_duration();
   } else {
     trigger.time = icaltime_null_time();
@@ -1774,7 +1774,7 @@ icaltimetype ICalFormatImpl::writeICalDate(const QDate &date)
   return t;
 }
 
-icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime, bool utc)
+icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
 {
   icaltimetype t;
 
@@ -1790,8 +1790,8 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime, bool u
   t.zone = 0;
   t.is_utc = 0;
 
-  if (utc) {
-    t = icaltime_as_utc(t,mCalendar->timeZoneId().local8Bit());
+  if ( mParent->utc() ) {
+    t = icaltime_as_utc(t,mParent->timeZoneId().local8Bit());
   }
 
   return t;
@@ -1809,8 +1809,8 @@ QDateTime ICalFormatImpl::readICalDateTime(icaltimetype t)
 */
 
   if (t.is_utc) {
-//    kdDebug(5800) << "--- Converting time to zone '" << mCalendar->timeZoneId() << "'." << endl;
-    t = icaltime_as_zone(t,mCalendar->timeZoneId().local8Bit());
+//    kdDebug(5800) << "--- Converting time to zone '" << cal->timeZoneId() << "'." << endl;
+    t = icaltime_as_zone(t,mParent->timeZoneId().local8Bit());
   }
 
   return QDateTime(QDate(t.year,t.month,t.day),
@@ -1882,7 +1882,7 @@ icalcomponent *ICalFormatImpl::createCalendarComponent()
 // take a raw vcalendar (i.e. from a file on disk, clipboard, etc. etc.
 // and break it down from it's tree-like format into the dictionary format
 // that is used internally in the ICalFormatImpl.
-bool ICalFormatImpl::populate(icalcomponent *calendar)
+bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
 {
   // this function will populate the caldict dictionary and other event
   // lists. It turns vevents into Events and then inserts them.
@@ -1921,7 +1921,7 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
 
 // TODO: check for unknown PRODID
 #if 0
-  if (!mCalendarVersion
+  if (!calVersion
   &&  strcmp(CalFormat::productId().local8Bit(), prodid) != 0) {
     // warn the user that we might have trouble reading non-known calendar.
     if (mEnableDialogs)
@@ -1975,7 +1975,7 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
   // set the time zone
   if ((curVO = isAPropertyOf(vcal, VCTimeZoneProp)) != 0) {
     char *s = fakeCString(vObjectUStringZValue(curVO));
-    mCalendar->setTimeZone(s);
+    cal->setTimeZone(s);
     deleteStr(s);
   }
 #endif
@@ -1992,7 +1992,7 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
   while (c) {
 //    kdDebug(5800) << "----Todo found" << endl;
     Todo *todo = readTodo(c);
-    if (!mCalendar->getTodo(todo->uid())) mCalendar->addTodo(todo);
+    if (!cal->getTodo(todo->uid())) cal->addTodo(todo);
     c = icalcomponent_get_next_component(calendar,ICAL_VTODO_COMPONENT);
   }
 
@@ -2001,7 +2001,7 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
   while (c) {
 //    kdDebug(5800) << "----Event found" << endl;
     Event *event = readEvent(c);
-    if (!mCalendar->getEvent(event->uid())) mCalendar->addEvent(event);
+    if (!cal->getEvent(event->uid())) cal->addEvent(event);
     c = icalcomponent_get_next_component(calendar,ICAL_VEVENT_COMPONENT);
   }
 
@@ -2010,7 +2010,7 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
   while (c) {
 //    kdDebug(5800) << "----Journal found" << endl;
     Journal *journal = readJournal(c);
-    if (!mCalendar->journal(journal->uid())) mCalendar->addJournal(journal);
+    if (!cal->journal(journal->uid())) cal->addJournal(journal);
     c = icalcomponent_get_next_component(calendar,ICAL_VJOURNAL_COMPONENT);
   }
 
@@ -2046,10 +2046,10 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
         QString tmpStr(s);
         deleteStr(s);
 
-        if (mCalendar->getEvent(tmpStr)) {
+        if (cal->getEvent(tmpStr)) {
           goto SKIP;
         }
-        if (mCalendar->getTodo(tmpStr)) {
+        if (cal->getTodo(tmpStr)) {
           goto SKIP;
         }
       }
@@ -2064,14 +2064,14 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
       // we now use addEvent instead of insertEvent so that the
       // signal/slot get connected.
       if (anEvent)
-        mCalendar->addEvent(anEvent);
+        cal->addEvent(anEvent);
       else {
         // some sort of error must have occurred while in translation.
         goto SKIP;
       }
     } else if (strcmp(vObjectName(curVO), VCTodoProp) == 0) {
       anEvent = VTodoToEvent(curVO);
-      mCalendar->addTodo(anEvent);
+      cal->addTodo(anEvent);
     } else if ((strcmp(vObjectName(curVO), VCVersionProp) == 0) ||
                (strcmp(vObjectName(curVO), VCProdIdProp) == 0) ||
                (strcmp(vObjectName(curVO), VCTimeZoneProp) == 0)) {
@@ -2089,11 +2089,11 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
   // Post-Process list of events with relations, put Event objects in relation
   Event *ev;
   for ( ev=mEventsRelate.first(); ev != 0; ev=mEventsRelate.next() ) {
-    ev->setRelatedTo(mCalendar->getEvent(ev->relatedToUid()));
+    ev->setRelatedTo(cal->getEvent(ev->relatedToUid()));
   }
   Todo *todo;
   for ( todo=mTodosRelate.first(); todo != 0; todo=mTodosRelate.next() ) {
-    todo->setRelatedTo(mCalendar->getTodo(todo->relatedToUid()));
+    todo->setRelatedTo(cal->getTodo(todo->relatedToUid()));
   }
 
   return true;

@@ -178,9 +178,6 @@ class Calendar {
     /** Add an incidence to calendar. */
     void addIncidence(Incidence *);
   
-    /** Enable/Disable dialogs shown by calendar class */  
-    void showDialogs(bool d);
-
     /** Return all alarms, which ocur in the given time interval. */
     virtual Alarm::List alarms( const QDateTime &from,
                                 const QDateTime &to ) = 0;
@@ -222,7 +219,6 @@ class Calendar {
     QString mOwnerEmail;   // email address of the owner
     int mTimeZone;         // timezone OFFSET from GMT (MINUTES)
     bool mLocalTime;       // use local time, not UTC or a time zone
-    bool mDialogsOn;       // display various GUI dialogs?
 
     CalFilter *mFilter;
     CalFilter *mDefaultFilter;

@@ -39,8 +39,7 @@ namespace KCal {
 */
 class VCalFormat : public CalFormat {
   public:
-    /** constructs a new calendar, with variables initialized to sane values. */
-    VCalFormat(Calendar *);
+    VCalFormat();
     virtual ~VCalFormat();
 
    /** loads a calendar on disk in vCalendar format into the current calendar.
@@ -48,21 +47,21 @@ class VCalFormat : public CalFormat {
      * else returns FALSE.
      * @param fileName the name of the calendar on disk.
      */
-    bool load(const QString &fileName);
+    bool load(Calendar *,const QString &fileName);
     /** writes out the calendar to disk in vCalendar format. Returns true if
      * successful and false on error.
      * @param fileName the name of the file
      */
-    bool save(const QString &fileName);
+    bool save(Calendar *,const QString &fileName);
   
     /**
       Parse string and populate calendar with that information.
     */
-    bool fromString( const QString & );  
+    bool fromString( Calendar *, const QString & );  
     /**
       Return calendar information as string.
     */
-    QString toString();
+    QString toString( Calendar * );
     
   protected:
     /** translates a VObject of the TODO type into a Event */
@@ -98,6 +97,8 @@ class VCalFormat : public CalFormat {
     QCString writeStatus(Attendee::PartStat status) const;
   
   private:
+    Calendar *mCalendar;
+  
     QPtrList<Event> mEventsRelate;           // events with relations
     QPtrList<Todo> mTodosRelate;             // todos with relations
 };

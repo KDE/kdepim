@@ -45,8 +45,7 @@
 
 using namespace KCal;
 
-VCalFormat::VCalFormat(Calendar *cal) :
-  CalFormat(cal)
+VCalFormat::VCalFormat()
 {
 }
 
@@ -54,8 +53,10 @@ VCalFormat::~VCalFormat()
 {
 }
 
-bool VCalFormat::load(const QString &fileName)
+bool VCalFormat::load(Calendar *calendar, const QString &fileName)
 {
+  mCalendar = calendar;
+
   clearException();
 
   kdDebug(5800) << "VCalFormat::load() " << fileName << endl;
@@ -80,12 +81,14 @@ bool VCalFormat::load(const QString &fileName)
   cleanVObjects(vcal);
   cleanStrTbl();
 
-  return TRUE;
+  return true;
 }
 
 
-bool VCalFormat::save(const QString &fileName)
+bool VCalFormat::save(Calendar *calendar, const QString &fileName)
 {
+  mCalendar = calendar;
+
   QString tmpStr;
   VObject *vcal, *vo;
 
@@ -115,37 +118,6 @@ bool VCalFormat::save(const QString &fileName)
     addVObjectProp(vcal, vo);
   }
 
-#if 0
-  QIntDictIterator<QPtrList<Event> > dictIt(*calDict);
-
-  while (dictIt.current()) {
-    QPtrListIterator<Event> listIt(*dictIt.current());
-    while (listIt.current()) {
-      // if the event is multi-day, we only want to save the
-      // first instance that is in the dictionary
-      if (listIt.current()->isMultiDay()) {
-	QPtrList<Event> *tmpList = calDict->find(makeKey(listIt.current()->dtStart().date()));
-	if (dictIt.current() == tmpList) {
-	  vo = eventToVEvent(listIt.current());
-	  addVObjectProp(vcal, vo);
-	}
-      } else {
-	vo = eventToVEvent(listIt.current());
-	addVObjectProp(vcal, vo);
-      }
-      ++listIt;
-    }
-    ++dictIt;
-  }
-
-  // put in events that recurs
-  QPtrListIterator<Event> qli(recursList);
-  for (; qli.current(); ++qli) {
-    vo = eventToVEvent(qli.current());
-    addVObjectProp(vcal, vo);
-  }
-#endif
-
   writeVObjectToFile(QFile::encodeName(fileName).data() ,vcal);
   cleanVObjects(vcal);
   cleanStrTbl();
@@ -159,14 +131,14 @@ bool VCalFormat::save(const QString &fileName)
   }
 }
 
-bool VCalFormat::fromString( const QString &text )
+bool VCalFormat::fromString( Calendar *calendar, const QString &text )
 {
   // TODO: Factor out VCalFormat::fromString()
   
   return false;
 }
 
-QString VCalFormat::toString()
+QString VCalFormat::toString( Calendar *calendar )
 {
   // TODO: Factor out VCalFormat::asString()
 

@@ -60,8 +60,8 @@ void KOAlarmClient::handleEvent( const QString &iCalendarString )
 //  kdDebug(5900) << "-- iCalendar-String:" << iCalendarString << endl;
 
   CalendarLocal cal;
-  ICalFormat format( &cal );
-  format.fromString( iCalendarString );
+  ICalFormat format;
+  format.fromString( &cal, iCalendarString );
   
   QPtrList<Event> events = cal.getAllEvents();
 

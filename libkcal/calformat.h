@@ -19,7 +19,6 @@
 */
 #ifndef _CALFORMAT_H
 #define _CALFORMAT_H
-// $Id$
 
 #include <qstring.h>
 #include <qdatetime.h>
@@ -41,34 +40,31 @@ class Calendar;
 */
 class CalFormat {
   public:
-    /** Constructs a new format for the calendar given as argument. */
-    CalFormat(Calendar *);
+    /** Constructs a new format. */
+    CalFormat();
     /** Destruct calendar format. */
     virtual ~CalFormat();
-
-    /** Associate a widget with this format */
-    void setTopwidget(QWidget *topWidget);
 
     /**
       loads a calendar on disk into the calendar associated with this format.
       Returns TRUE if successful,else returns FALSE.
       @param fileName the name of the calendar on disk.
     */
-    virtual bool load(const QString &fileName) = 0;
+    virtual bool load(Calendar *, const QString &fileName) = 0;
     /** writes out the calendar to disk. Returns true if
      * successful and false on error.
      * @param fileName the name of the file
      */
-    virtual bool save(const QString &fileName) = 0;
+    virtual bool save(Calendar *, const QString &fileName) = 0;
 
     /**
       Parse string and populate calendar with that information.
     */
-    virtual bool fromString( const QString & ) = 0;
+    virtual bool fromString(Calendar *, const QString & ) = 0;
     /**
       Return calendar information as string.
     */
-    virtual QString toString() = 0;
+    virtual QString toString(Calendar *) = 0;
 
     /** Clear exception status of this format object */
     void clearException();
@@ -97,9 +93,6 @@ class CalFormat {
       class to report errors.
     */
     void setException(ErrorFormat *error);
-
-  protected:
-    Calendar *mCalendar;
 
   private:
     QPtrList<Event> mEventsRelate;           // events with relations

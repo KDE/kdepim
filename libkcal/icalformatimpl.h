@@ -39,14 +39,15 @@ namespace KCal {
 class ICalFormatImpl {
   public:
     /** Create new iCal format for calendar object */
-    ICalFormatImpl(ICalFormat *parent, Calendar *);
+    ICalFormatImpl( ICalFormat *parent );
     virtual ~ICalFormatImpl();
 
-    bool populate(icalfileset *fs);
+    bool populate( Calendar *, icalfileset *fs);
 
     icalcomponent *writeTodo(Todo *todo);
     icalcomponent *writeEvent(Event *event);
-    icalcomponent *writeFreeBusy(FreeBusy *freebusy, Scheduler::Method method);
+    icalcomponent *writeFreeBusy(FreeBusy *freebusy,
+                                 Scheduler::Method method);
     icalcomponent *writeJournal(Journal *journal);
     void writeIncidence(icalcomponent *parent,Incidence *incidence);
     icalproperty *writeAttendee(Attendee *attendee);
@@ -65,7 +66,7 @@ class ICalFormatImpl {
 
     icaltimetype writeICalDate(const QDate &);
     QDate readICalDate(icaltimetype);
-    icaltimetype writeICalDateTime(const QDateTime &,bool utc=true);
+    icaltimetype writeICalDateTime(const QDateTime &);
     QDateTime readICalDateTime(icaltimetype);
     icaldurationtype writeICalDuration(int seconds);
     int readICalDuration(icaldurationtype);

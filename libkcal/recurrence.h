@@ -20,7 +20,6 @@
 */
 #ifndef KCAL_RECURRENCE_H
 #define KCAL_RECURRENCE_H
-// $Id$
 
 #include <qstring.h>
 #include <qbitarray.h>
@@ -48,12 +47,7 @@ class Recurrence {
       bool negative;
     };
 
-    /** Constructs a new recurrence with variables initialized to "sane" values. */
-#ifdef LIBKCAL_BACK_COMPAT
-    Recurrence(Incidence *parent, int compatVersion = -1);
-#else
-    Recurrence(Incidence *parent);
-#endif
+    Recurrence(Incidence *parent, int compatVersion = 310);
     Recurrence(const Recurrence&, Incidence *parent);
     ~Recurrence();
 
@@ -283,12 +277,10 @@ class Recurrence {
     bool mRecurReadOnly;
     int mRecurExDatesCount;
 
-#ifdef LIBKCAL_BACK_COMPAT
     // Backwards compatibility for KDE < 3.1.
     uint  mCompatVersion;                // calendar file version for backwards compatibility, or ~0
     short mCompatRecurs;                 // original 'recurs' in old calendar format, or rNone
     int   mCompatDuration;               // original 'rDuration' in old calendar format, or 0
-#endif
 
     Incidence *mParent;
 };
