@@ -36,6 +36,7 @@
 static const char *popmail_conduit_id=
 	"$Id$";
 
+#include <qsocket.h>
 
 #include "options.h"
 
@@ -56,6 +57,7 @@ static const char *popmail_conduit_id=
 #include <qtextstream.h>
 #endif
 
+#include <qsocket.h>
 
 #ifndef _KAPP_H
 #include <kapp.h>
@@ -458,73 +460,237 @@ int PopMailConduit::retrieveIncoming(int mode)
 
 
 
+///////////////////////////////////////////////////////////////////////////////
+//                                                                           //
+//    ---- |   | ----- ----  -----                                           //
+//   (     |\ /|   |   |   )   |        ___    _    ____  --            |    //
+//    ---  | V |   |   |---    |   |/\  ___| |/ \  (     |  )  __  |/\ -+-   //
+//       ) | | |   |   |       |   |   (   | |   |  \__  |--  /  \ |    |    //
+//   ___/  |   |   |   |       |   |    \__| |   | ____) |    \__/ |     \   //
+//                                                                           //
+///////////////////////////////////////////////////////////////////////////////
+//
+// SMTP Transfer Method (only sending)
+//
+// Additional changes by Michael Kropfberger
+// Cleanup and fixing by Marko Grönroos <magi@iki.fi>, 2001
+//
 
-// additional changes by Michael Kropfberger
-int PopMailConduit::sendViaSMTP() 
+// Helper function to get the Fully Qualified Domain Name
+QString getFQDomainName (const KConfig& config)
+{
+	QString fqDomainName;
+
+	// Has the user given an explicit domain name? If so, we should get "1".
+	int useExplicitDomainName = config.readEntry("useExplicitDomainName", "0").toInt ();
+
+	// Or was it given in the MAILDOMAIN environment variable?
+	if (!useExplicitDomainName && getenv ("MAILDOMAIN"))
+		useExplicitDomainName = 2;
+
+	if (useExplicitDomainName) {
+		// User has provided the FQDN either in config or in environment.
+
+		if (useExplicitDomainName == 2) {
+			fqDomainName = "$MAILDOMAIN";
+		} else {
+			// Use explicitly configured FQDN.
+			// The domain name can also be the name of an environment variable.
+			fqDomainName = config.readEntry("explicitDomainName", "$MAILDOMAIN");
+		}
+
+		// Get FQDN from environment, from given variable.
+		if (fqDomainName.left(1) == "$") {
+			QString envVar = fqDomainName.mid (1);
+			char* envDomain = getenv (envVar.latin1());
+			if (envDomain)
+				fqDomainName = envDomain;
+			else {
+				// Ummh... It didn't exist, fall back to using system domain name
+				useExplicitDomainName = false;
+			}
+		}
+	}
+
+	if (!useExplicitDomainName) {
+		// We trust in the system FQDN domain name
+
+#ifdef HAVE_GETDOMAINNAME
+		char namebuffer [1024];
+		int ret;
+		ret = getdomainname (namebuffer, 1024);
+		fqDomainName = namebuffer;
+		if (ret)
+			kdWarning() << __FUNCTION__ << ": getdomainname: " << strerror(errno) << endl;
+		else
+			DEBUGCONDUIT << __FUNCTION__ << ": Got domain name " << namebuffer  << endl;
+
+#else
+		struct utsname u;
+		uname (&u);
+		fqDomainName = u.nodename;
+
+		DEBUGCONDUIT << __FUNCTION__ << ": Got uname.nodename " << u.nodename << endl;
+#endif
+	}
+
+	return fqDomainName;
+}
+
+// Extracts email address from: "Firstname Lastname <mailbox@domain.tld>"
+QString extractAddress (const QString& address) {
+	int pos = address.find (QRegExp ("<.+>"));
+	if (pos != -1) {
+		return address.mid (pos+1, address.find (">", pos)-pos-1);
+	} else
+		return address;
+}
+
+QString buildRFC822Headers (const QString& sender, const struct Mail& theMail, const PopMailConduit& conduit) {
+	QString buffer;
+	QTextOStream bufs (&buffer);
+
+	bufs << "From: " << sender << "\r\n";
+	bufs << "To: " << theMail.to << "\r\n";
+	if (theMail.cc)
+		bufs << "Cc: " << theMail.cc << "\r\n";
+	if (theMail.bcc)
+		bufs << "Bcc: " << theMail.bcc << "\r\n";
+	if (theMail.replyTo)
+		bufs << "Reply-To: " << theMail.replyTo << "\r\n";
+	if (theMail.subject)
+		bufs << "Subject: " << theMail.subject << "\r\n";
+	bufs << "X-mailer: " << conduit.version() << "\r\n\r\n";
+
+	return buffer;
+}
+
+int sendSMTPCommand (KSocket& kSocket,
+					 const QString& sendBuffer,		// Buffer to send
+					 QTextOStream& logStream,		// For SMTP conversation logging
+					 const QString& logBuffer,		// Entire SMTP conversation log
+					 const QRegExp& expect,			// What do we expect as response (regexp)
+					 const QString& errormsg)		// Error message for error dialog
+{
+	// Send
+	logStream << ">>> " << sendBuffer;
+	write (kSocket.socket(), sendBuffer.latin1(), sendBuffer.length());
+
+	// Receive confirmation
+	QByteArray response (1024);
+	int ret;
+	ret = getResponse (&kSocket, response.data(), response.size());
+	logStream << "<<< " << (const char*) response;
+
+	// Check if the confirmation was correct
+	if (QString(response).find (expect) == -1) {
+		QString msg;
+		msg = errormsg +
+			i18n("\n\nPOPMail conduit sent to SMTP server:\n") +
+			sendBuffer +
+			i18n("\nSMTP server responded with:\n") +
+			QString(response);
+
+		showMessage (msg);
+
+		kdWarning() << __FUNCTION__ << ": SMTP error: " << msg << endl;
+		DEBUGCONDUIT << __FUNCTION__ << ": SMTP error: " << logBuffer << endl;
+
+		return -1;
+	}
+
+	return 0;
+}
+
+// Send
+int PopMailConduit::sendViaSMTP ()
 {
 	FUNCTIONSETUP;
-	int count=0;
+	QString			smtpSrv;					// Hostname of the SMTP server
+	int				smtpPort = 25;
+	int				handledCount = 0;			// Number of messages handled
+	int				current = 0;				// Current message
+	PilotRecord*	pilotRec;					// Message in Pilot format
+	struct Mail		theMail;					// Message in internal format
+	QCString		currentDest, msg;
+	QString			sendBuffer;					// Output buffer
+	int				ret;						// Return value from socket functions
+	QByteArray		recvBuffer (1024);			// Input buffer, size is always 1024 bytes
+	QString			domainName;					// The domain name of local host
+	QString			logBuffer;					// SMTP conversation log
+	QTextOStream	logStream (&logBuffer);		// Log stream, use with: log << stuff;
 
-  int i = 0;
-  struct Mail theMail;
-  QString smtpSrv;
-  int smtpPort=25;
-  QString currentDest, msg;
-  PilotRecord* pilotRec;
-  KSocket* smtpSocket;
-  char buffer[0xffff];
-  int ret;
-  
-  KConfig& config = KPilotConfig::getConfig(PopMailOptions::PopGroup);
-  smtpSrv = config.readEntry("SMTPServer","localhost");
-  smtpPort = config.readNumEntry("SMTPPort",25);
-  
+	// Read user-defined parameters
+	KConfig& config = KPilotConfig::getConfig (PopMailOptions::PopGroup);
+	smtpSrv = config.readEntry ("SMTPServer", "localhost");
+	smtpPort = config.readNumEntry ("SMTPPort", 25);
+
+	//
+	// Determine "domain name"
+	// (FQDN, Fully Qualified Domain Name, ie., hostname+domainname)
+	//
+
+	// If we are behind a masquerading firewall, we can't trust in our
+	// host- and domainname or even the IP number, so we have to fake them.
+	// Some systems also don't set the domainname properly.
+
+	domainName = getFQDomainName (config);
+
 #ifdef DEBUG
 	if (debug_level & SYNC_MINOR)
-	{
-		kdDebug() << fname
-			<< ": Connecting to SMTP server "
-			<< smtpSrv << " on port " << smtpPort
-			<< endl;
+		kdDebug() << fname << ": " << domainName << endl;
+#endif
+
+
+	//
+	//     Create socket connection to SMTP server
+	//
+
+#ifdef DEBUG
+	if (debug_level & SYNC_MINOR) {
+		kdDebug() << fname << ": Connecting to SMTP server "
+				  << smtpSrv << " on port " << smtpPort << endl;
 	}
 #endif
 
-	smtpSocket = new KSocket(smtpSrv.latin1(),smtpPort); 
-	CHECK_PTR(smtpSocket);
-	if(smtpSocket->socket() < 0)
-	{
-		showResponseResult(PERROR,"Cannot connect to SMTP server",
-			0L,__FUNCTION__);
-		delete smtpSocket;
+	//
+	//     Connect to SMTP server
+	//
+
+	// We open the socket with KSocket, because it's blocking, which
+	// is much easier for us.
+	KSocket kSocket (smtpSrv.latin1(), smtpPort); // Socket to SMTP server
+	if (kSocket.socket() < 0) {
+		showMessage (i18n("Cannot connect to SMTP server"));
 		return -1;
 	}
-	smtpSocket->enableRead(true);
-	smtpSocket->enableWrite(true);
+	kSocket.enableRead (true);
+	kSocket.enableWrite (true);
+
+	//
+	//     SMTP Handshaking
+	//
 
 	// all do-while loops wait until data is avail
-	ret=getResponse(smtpSocket,buffer,1024);
+	ret = getResponse (&kSocket, recvBuffer.data(), recvBuffer.size());
 
-	if ((ret<0) || (strstr(buffer,"220")==0L))
-	{
-		showResponseResult(ret,"SMTP server failed to announce itself",
-			buffer,__FUNCTION__);
-		delete smtpSocket;
+	// Receive server handshake initiation
+	if (ret<0 || QString(recvBuffer).find("220") == -1) {
+		showMessage (i18n("SMTP server failed to announce itself")+
+					 "\n\n"+logBuffer);
 		return -1;
 	}
 
+	// Send EHLO, expect "Hello"
+	sendBuffer.sprintf ("EHLO %s\r\n", domainName.latin1());
+	if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
+						 QRegExp("Hello"),
+						 i18n("Couldn't EHLO to SMTP server")))
+		return -1;
 
-#ifdef HAVE_GETDOMAINNAME
-	// Now we're going to do some yucky things with
-	// buffer -- one part will be used to hold the domain 
-	// name and the other will be used to hold the
-	// SMTP message being constructed.
 	//
-	//	buffer+1024	Area for domainname
-	//	buffer		Area for message
-	//
-	// Now we're assuming that the message is never
-	// longer than 1024 characters.
-	//
+	//     Should probably read the prefs..
+	//     But, let's just get the mail..
 	//
 #ifdef __osf__
 	getdomainname(buffer+1024,1024);    // getdomainname is void here
@@ -548,180 +714,147 @@ int PopMailConduit::sendViaSMTP()
 			<< endl;
 	}
 
-	sprintf(buffer, "EHLO %s\r\n",buffer+1024);
-#else
-	{
-		struct utsname u;
-		(void) uname(&u);
+	// Handle each message in queue
+	for (current=0, handledCount=0; ; current++) {
 
-		DEBUGCONDUIT << fname
-			<< ": Got uname.nodename "
-			<< u.nodename
-			<< endl;
+		// Get the Pilot message record
+		pilotRec = readNextRecordInCategory (1);
+		if (pilotRec == 0L)
+			break;
 
-		sprintf(buffer,"EHLO %s\r\n",u.nodename);
-	}
-#endif
+		// Do not handle the message if it is deleted or archived
+		if ((pilotRec->getAttrib() & dlpRecAttrDeleted)
+		   || (pilotRec->getAttrib() & dlpRecAttrArchived)) {
+			delete pilotRec;
+			continue; // Jumps to end of the for loop
+		}
 
-#ifdef DEBUG
-	if (debug_level & SYNC_MINOR)
-	{
-		kdDebug() << fname
-			<< ": " << buffer
-			;
-	}
-#endif
-	write(smtpSocket->socket(), buffer, strlen(buffer));
-	ret=getResponse(smtpSocket,buffer,1024);
-	if ((ret < 0 ) || (strstr(buffer,"Hello")==0L))
-	{
-		showResponseResult(ret,"Couldn't EHLO to SMTP server",
-			buffer,__FUNCTION__);
+		// Ok, we shall send the message
+		handledCount++;
+
+		// Get the message data
+		unpack_Mail (&theMail, (unsigned char*)pilotRec->getData(),
+					 pilotRec->getLen());
+		currentDest = "Mailing: ";
+		currentDest += theMail.to;
+
+		// Send "MAIL FROM: <...>", with the user-defined sender address
+		QString sender = config.readEntry("EmailAddress");
+		QString fromAddress = extractAddress (sender);
+		fromAddress.replace (QRegExp("\\s"), ""); // Remove whitespaces
+
+		// Send MAIL and receive response, expecting 250
+        sendBuffer.sprintf ("MAIL FROM: <%s>\r\n", fromAddress.latin1());
+		if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
+							 QRegExp("^250"),
+							 i18n("Couldn't start sending new mail.")))
+            return handledCount;
+
 		//
-		// Should we QUIT from SMTP server?
+		//     List recipients
 		//
-		//
-		delete smtpSocket;
-    		return -1;
-	}
 
-  // Should probably read the prefs.. 
-  // But, let's just get the mail..
-	count=0;
-  for(i = 0;; i++)
-    {
-      pilotRec = readNextRecordInCategory(1);
-      if(pilotRec == 0L)
-	break;
-      if((pilotRec->getAttrib() & dlpRecAttrDeleted) 
-               || (pilotRec->getAttrib() & dlpRecAttrArchived))
-	{
-	delete pilotRec;
-	}
-      else
-	{
-		count++;
-	  unpack_Mail(&theMail, (unsigned char*)pilotRec->getData()
-                      , pilotRec->getLen());
-	  currentDest = "Mailing: ";
-	  currentDest += theMail.to;
+		// Get recipient(s) and clean up any whitespaces
+		QCString recipients = theMail.to;
+		if (QCString(theMail.cc).length()>1)
+			recipients += QCString(",") + QCString (theMail.cc);
+		if (QCString(theMail.bcc).length()>1)
+			recipients += QCString(",") + QCString (theMail.bcc);
+		recipients.replace (QRegExp("\\s"), ""); // Remove whitespaces
 
+		// Send to all recipients
+		int rpos=0;
+		int nextComma=0;
+		for (rpos=0; rpos<int(recipients.length());) {
+			QCString recipient;
 
-          QString fromAddress = config.readEntry("EmailAddress");
-        sprintf(buffer,"MAIL FROM: %s\r\n",fromAddress.latin1());
-          write(smtpSocket->socket(), buffer, strlen(buffer));
+			nextComma = recipients.find (',', rpos);
+			if (nextComma > rpos) {
+				recipient = recipients.mid (rpos, nextComma-rpos);
+				rpos = nextComma+1;
+			} else {
+				recipient = recipients.mid (rpos);
+				rpos = recipients.length(); // Will exit
+			}
 
-	getResponse(smtpSocket,buffer,1024);
+			// Send "RCPT TO: <...>", expect 25*
+			sendBuffer.sprintf ("RCPT TO: <%s>\r\n", recipient.data());
+			if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
+								 QRegExp("^25"),
+								 i18n("The recipient doesn't exist!")))
+				return handledCount;
+		}
 
-          msg=buffer;
-          if (msg.find("250") == -1){
-            showMessage(i18n("Couldn't start sending new mail."));
-            delete smtpSocket;
-            return count;
-          }  
-             
-          sprintf(buffer,"RCPT TO: %s\r\n",theMail.to);
-             write(smtpSocket->socket(), buffer, strlen(buffer));
+		// Send "DATA",
+		sendBuffer.sprintf("DATA\r\n");
+		if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
+							 QRegExp("^354"),
+							 i18n("Couldn't start writing mailbody\n")))
+            return handledCount;
 
-	getResponse(smtpSocket,buffer,1024);
+		// Send RFC822 mail headers
+		sendBuffer = buildRFC822Headers (sender, theMail, *this);
+		write (kSocket.socket(), sendBuffer.latin1(), sendBuffer.length());
 
-          msg=buffer;
-          if (msg.find("25") == -1){  // positively could be 250 or 251
-            showMessage(i18n("The recipient doesn't exist!"));
-            delete smtpSocket;
-            return count;
-          }  
-          sprintf(buffer,"DATA\r\n");
-             write(smtpSocket->socket(), buffer, strlen(buffer));
+		// Send message body
+		if (theMail.body) {
+			sendBuffer = QString::fromLatin1 (theMail.body)+"\r\n";
+			write (kSocket.socket(), sendBuffer.latin1(), sendBuffer.length());
+		}
 
-	getResponse(smtpSocket,buffer,1024);
+		//insert the real signature file from disk
+		if (!config.readEntry ("Signature").isEmpty()) {
+			QFile f (config.readEntry ("Signature"));
+			if ( f.open (IO_ReadOnly) ) {    // file opened successfully
+				sendBuffer.sprintf ("\r\n-- \r\n");
+				write (kSocket.socket(), sendBuffer.latin1(), sendBuffer.length());
 
-          msg=buffer;
-          if (msg.find("354") == -1){
-            msg.prepend("Couldn't start writing mailbody\n");
-            showMessage(msg);
-            delete smtpSocket;
-            return count;
-          }  
-          sprintf(buffer,"From: %s\r\n",fromAddress.latin1());
-             write(smtpSocket->socket(), buffer, strlen(buffer));
-          sprintf(buffer,"To: %s\r\n",theMail.to);
-             write(smtpSocket->socket(), buffer, strlen(buffer));
-          if (theMail.cc) {
-             sprintf(buffer,"Cc: %s\r\n",theMail.cc);
-               write(smtpSocket->socket(), buffer, strlen(buffer));
-          }
-	  if (theMail.bcc) {
-               sprintf(buffer,"Bcc: %s\r\n",theMail.bcc);
-               write(smtpSocket->socket(), buffer, strlen(buffer));
-	  }
- 	  if (theMail.replyTo) {
-               sprintf(buffer,"Reply-To: %s\r\n",theMail.replyTo);
-               write(smtpSocket->socket(), buffer, strlen(buffer));
-	  }
-	  if (theMail.subject) {
-               sprintf(buffer,"Subject: %s\r\n",theMail.subject);
-               write(smtpSocket->socket(), buffer, strlen(buffer));
-	  }
-          sprintf(buffer,"X-mailer: %s\r\n\r\n",version());
-             write(smtpSocket->socket(), buffer, strlen(buffer));
-	     
-          if(theMail.body) {
-               sprintf(buffer,"%s\r\n",theMail.body);
-               write(smtpSocket->socket(), buffer, strlen(buffer));
-	  }
-          //insert the real signature file from disk
-          if(!config.readEntry("Signature").isEmpty()) {
-             QFile f(config.readEntry("Signature"));
-             if ( f.open(IO_ReadOnly) ) {    // file opened successfully
-                sprintf(buffer,"\r\n-- \r\n");
-                write(smtpSocket->socket(), buffer, strlen(buffer));
-                QTextStream t( &f );        // use a text stream
+				// Read signature file with a text stream
+                QTextStream t ( &f );
                 while ( !t.eof() ) {        // until end of file...
-                  sprintf(buffer,"%s\r\n",t.readLine().latin1());
-                  write(smtpSocket->socket(), buffer, strlen(buffer));
+					sendBuffer.sprintf ("%s\r\n", t.readLine().latin1());
+					write (kSocket.socket(), sendBuffer.latin1(), sendBuffer.length());
                 }
-             f.close();
-             }
-          }
-	    
-          sprintf(buffer,".\r\n");  //end of mail
-          write(smtpSocket->socket(), buffer, strlen(buffer));
+				f.close ();
+			}
+		}
 
-	getResponse(smtpSocket,buffer,1024);
-
-          msg=buffer;
-          if (msg.find("250") == -1){
-            showMessage(i18n("Couldn't send message."));
-            delete smtpSocket;
+	    // Send end-of-mail
+		sendBuffer.sprintf(".\r\n");
+		if (sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
+							 QRegExp("^250"),
+							 i18n("Couldn't send message.")))
             return -1;
-          }  
 
-	  // Mark it as filed...
-	  pilotRec->setCat(3);
-	  pilotRec->setAttrib(pilotRec->getAttrib() & ~dlpRecAttrDirty);
-	  writeRecord(pilotRec);
-	  delete pilotRec;
-	  // This is ok since we got the mail with unpack mail..
-	  free_Mail(&theMail);
+		// Mark it as filed...
+		pilotRec->setCat (3);
+		pilotRec->setAttrib (pilotRec->getAttrib() & ~dlpRecAttrDirty);
+		writeRecord (pilotRec);
+		delete pilotRec;
+
+		// This is ok since we got the mail with unpack mail..
+		free_Mail (&theMail);
 	}
-    }
-  sprintf(buffer, "QUIT\r\n");
-  write(smtpSocket->socket(), buffer, strlen(buffer));
 
-	getResponse(smtpSocket,buffer,1024);
+	sendBuffer.sprintf("QUIT\r\n");
+	sendSMTPCommand (kSocket, sendBuffer, logStream, logBuffer,
+					 QRegExp("^221"),
+					 i18n("QUIT command to SMTP server failed.\n"));
 
-  msg=buffer;
-  if (msg.find("221") == -1) 
-    {
-      msg.prepend("QUIT command to SMTP server failed.\n");
-      showMessage(msg);
-    }
-  delete smtpSocket;
-//   pilotLink->addSyncLogEntry("OK\n");}
+	//   pilotLink->addSyncLogEntry("OK\n");}
 
-	return count;
+	return handledCount;
 }
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+//                   ----                 |             o |                  //
+//                  (      ___    _       |        ___    |                  //
+//                   ---  /   ) |/ \   ---| |/|/|  ___| | |                  //
+//                      ) |---  |   | (   | | | | (   | | |                  //
+//                  ___/   \__  |   |  ---| | | |  \__| | |                  //
+///////////////////////////////////////////////////////////////////////////////
 
 int PopMailConduit::sendViaSendmail() 
 {
@@ -1880,8 +2013,16 @@ int main(int argc, char* argv[])
 	ConduitApp a(argc,argv,"popmail-conduit",
 		I18N_NOOP("POP Mail Conduit"),
 		KPILOT_VERSION);
-	a.addAuthor("Michael Kropfberger","POP3 code");
-	a.addAuthor("Adriaan de Groot","KDE2 port");
+	a.addAuthor("Michael Kropfberger",
+		I18N_NOOP("POP3 code"));
+	a.addAuthor("Adriaan de Groot",
+		I18N_NOOP("KDE2 port"),
+		"adridg@cs.kun.nl",
+		"http://www.cs.kun.nl/~adridg/kpilot/");
+	a.addAuthor("Marko Grönroos",
+		I18N_NOOP("SMTP support and redesign"),
+		"magi@iki.fi",
+		"http://www/iki.fi/magi/");
 
 	PopMailConduit conduit(a.getMode());
 	a.setConduit(&conduit);
@@ -1895,6 +2036,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.22  2001/05/03 06:37:21  leitner
+// getdomainname is void under Tru64
+//
 // Revision 1.21  2001/04/26 19:20:17  adridg
 // Respect KMail's outboxFolder setting
 //
