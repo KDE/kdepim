@@ -125,6 +125,18 @@ KDEPIM_PATH_GPGME(0.4.5,[
 	], [
 		AC_MSG_RESULT([no])
 	])
+
+	AC_MSG_CHECKING([if gpgme has gpgme_decrypt_result_t->wrong_key_usage])
+	AC_TRY_COMPILE([#include <gpgme.h>], [
+		gpgme_decrypt_result_t res;
+		unsigned int wku = res->wrong_key_usage;
+	], [
+		AC_DEFINE(HAVE_GPGME_WRONG_KEY_USAGE, 1, [Define to 1 if your gpgme's gpgme_decrypt_result_t has the wrong_key_usage member])
+		AC_MSG_RESULT([yes])
+	], [
+		AC_MSG_RESULT([no])
+	])
+
 	CFLAGS="$kdepim_gpgmepp_save_cflags"
 	LIBS="$kdepim_gpgmepp_save_libs"
 	AC_LANG_RESTORE
