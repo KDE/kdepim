@@ -33,6 +33,8 @@
  *            - September 1997 (CRAM-MD5 authentication method)
  *   - RFC 2104 - HMAC: Keyed-Hashing for Message Authentication - February 1997
  *   - RFC 2086 - IMAP4 ACL extension - January 1997
+ *   - http://www.ietf.org/internet-drafts/draft-daboo-imap-annotatemore-05.txt
+ *          IMAP ANNOTATEMORE draft - April 2004.
  *
  * Supported URLs:
  *   - imap://server/ - Prompt for user/pass, list all folders in home directory
@@ -570,7 +572,7 @@ IMAP4Protocol::listDir (const KURL & _url)
     }
   }
   if ( !selectInfo.alert().isNull() ) {
-    warning( i18n( "Message from %1 while processing '%2': %3" ).arg( myHost, myBox ,selectInfo.alert() ) );
+    warning( i18n( "Message from %1 while processing '%2': %3" ).arg( myHost, myBox, selectInfo.alert() ) );
     selectInfo.setAlert( 0 );
   }
 
@@ -1138,6 +1140,7 @@ IMAP4Protocol::del (const KURL & _url, bool isFile)
  * Subscribe: data = 'u' + URL (KURL)
  * Change the status: data = 'S' + URL (KURL) + Flags (QCString)
  * ACL commands: data = 'A' + command + URL (KURL) + command-dependent args
+ * AnnotateMore commands: data = 'M' + 'G'et/'S'et + URL + entry + command-dependent args
  * Search: data = 'E' + URL (KURL)
  */
 void
@@ -1222,6 +1225,18 @@ IMAP4Protocol::special (const QByteArray & aData)
       finished();
     } else {
       error( ERR_UNSUPPORTED_ACTION, "ACL" );
+    }
+    break;
+  }
+  case 'M': // annotatemore
+  {
+    int cmd;
+    stream >> cmd;
+    if ( hasCapability( "ANNOTATEMORE" ) ) {
+      specialAnnotateMoreCommand( cmd, stream );
+      finished();
+    } else {
+      error( ERR_UNSUPPORTED_ACTION, "ANNOTATEMORE" );
     }
     break;
   }
@@ -1392,6 +1407,71 @@ IMAP4Protocol::specialSearchCommand( QDataStream& stream )
   infoMessage( lst.join( " " ) );
 
   finished();
+}
+
+void
+IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
+{
+  // All commands start with the URL to the box
+  KURL _url;
+  stream >> _url;
+  QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
+  parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
+
+  switch( command ) {
+  case 'S': // SETANNOTATION
+  {
+    // Params:
+    //  KURL URL of the mailbox
+    //  QString entry (should be an actual entry name, no % or *; empty for server entries)
+    //  QMap<QString,QString> attributes (name and value)
+    QString entry;
+    QMap<QString, QString> attributes;
+    stream >> entry >> attributes;
+    kdDebug(7116) << "SETANNOTATION " << aBox << " " << entry << " " << attributes.count() << " attributes" << endl;
+    imapCommand *cmd = doCommand(imapCommand::clientSetAnnotation(aBox, entry, attributes));
+    if (cmd->result () != "OK")
+    {
+      error(ERR_SLAVE_DEFINED, i18n("Setting the annotation %1 on folder %2 "
+                                    " failed. The server returned: %3")
+            .arg(entry)
+            .arg(_url.prettyURL())
+            .arg(cmd->resultInfo()));
+      return;
+    }
+    completeQueue.removeRef (cmd);
+    break;
+  }
+  case 'G': // GETANNOTATION.
+  {
+    // Params:
+    //  KURL URL of the mailbox
+    //  QString entry (should be an actual entry name, no % or *; empty for server entries)
+    //  QStringList attributes (list of attributes to be retrieved, possibly with % or *)
+    QString entry;
+    QStringList attributeNames;
+    stream >> entry >> attributeNames;
+    kdDebug(7116) << "GETANNOTATION " << aBox << " " << entry << " " << attributeNames << endl;
+    imapCommand *cmd = doCommand(imapCommand::clientGetAnnotation(aBox, entry, attributeNames));
+    if (cmd->result () != "OK")
+    {
+      error(ERR_SLAVE_DEFINED, i18n("Retrieving the annotation %1 on folder %2 "
+                                     "failed. The server returned: %3")
+            .arg(entry)
+            .arg(_url.prettyURL())
+            .arg(cmd->resultInfo()));
+      return;
+    }
+    // Returning information to the application from a special() command isn't easy.
+    // I'm reusing the infoMessage trick seen above (for capabilities and acls), but this
+    // limits me to a string instead of a stringlist. Let's use \r as separator.
+    kdDebug(7116) << getResults() << endl;
+    infoMessage(getResults().join( "\r" ));
+    break;
+  }
+  default:
+    kdWarning(7116) << "Unknown special annotate command:" << command << endl;
+  }
 }
 
 void

@@ -273,6 +273,8 @@ public:
   void parseExpunge (ulong value, parseString & result);
   /** @brief parse a ACL line */
   void parseAcl (parseString & result);
+  /** @brief parse a ANNOTATION line */
+  void parseAnnotation (parseString & result);
 
   /**
    * parses the results of a fetch command

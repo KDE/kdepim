@@ -100,7 +100,8 @@ imapParser::sendCommand (imapCommand * aCmd)
   else if (command.find ("SEARCH") != -1
            || command == "GETACL"
            || command == "LISTRIGHTS"
-           || command == "MYRIGHTS")
+           || command == "MYRIGHTS"
+           || command == "GETANNOTATION")
   {
     lastResults.clear ();
   }
@@ -285,10 +286,14 @@ imapParser::parseUntagged (parseString & result)
     }
     break;
 
-  case 'A': // ACL
+  case 'A': // ACL or ANNOTATION
     if (qstrncmp(what, "ACL", what.size()) == 0)
     {
       parseAcl (result);
+    }
+    else if (qstrncmp(what, "ANNOTATION", what.size()) == 0)
+    {
+      parseAnnotation (result);
     }
     break;
   default:
@@ -545,6 +550,24 @@ void imapParser::parseAcl (parseString & result)
   int outlen = 1;
   // The result is user1 perm1 user2 perm2 etc. The caller will sort it out.
   while ( outlen && !result.isEmpty() ) {
+    QCString word = parseLiteralC (result, false, false, &outlen);
+    lastResults.append (word);
+  }
+}
+
+void imapParser::parseAnnotation (parseString & result)
+{
+  parseOneWordC (result); // skip mailbox name
+  skipWS (result);
+  parseOneWordC (result); // skip entry name (we know it since we don't allow wildcards in it)
+  skipWS (result);
+  if (result.isEmpty() || result[0] != '(')
+    return;
+  result.pos++;
+  skipWS (result);
+  int outlen = 1;
+  // The result is name1 value1 name2 value2 etc. The caller will sort it out.
+  while ( outlen && !result.isEmpty() && result[0] != ')' ) {
     QCString word = parseLiteralC (result, false, false, &outlen);
     lastResults.append (word);
   }

@@ -166,6 +166,9 @@ protected:
   /** Send an ACL command which is identified by @p command */
   void specialACLCommand( int command, QDataStream& stream );
 
+  /** Send an annotation command which is identified by @p command */
+  void specialAnnotateMoreCommand( int command, QDataStream& stream );
+
   /** Search current folder, the search string is passed as SECTION */
   void specialSearchCommand( QDataStream& );
 

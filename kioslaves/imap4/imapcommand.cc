@@ -348,3 +348,42 @@ imapCommand::clientMyRights( const QString& box )
   return new imapCommand ("MYRIGHTS", QString("\"") + rfcDecoder::toIMAP (box)
                           + "\"");
 }
+
+imapCommand *
+imapCommand::clientSetAnnotation( const QString& box, const QString& entry, const QMap<QString, QString>& attributes )
+{
+  QString parameter = QString("\"") + rfcDecoder::toIMAP (box)
+                      + "\" \"" + rfcDecoder::toIMAP (entry)
+                      + "\" (";
+  for( QMap<QString,QString>::ConstIterator it = attributes.begin(); it != attributes.end(); ++it ) {
+    parameter += "\"";
+    parameter += rfcDecoder::toIMAP (it.key());
+    parameter += "\" \"";
+    parameter += rfcDecoder::toIMAP (it.data());
+    parameter += "\" ";
+  }
+  // Turn last space into a ')'
+  parameter[parameter.length()-1] = ')';
+
+  return new imapCommand ("SETANNOTATION", parameter);
+}
+
+imapCommand *
+imapCommand::clientGetAnnotation( const QString& box, const QString& entry, const QStringList& attributeNames )
+{
+  QString parameter = QString("\"") + rfcDecoder::toIMAP (box)
+                          + "\" \"" + rfcDecoder::toIMAP (entry)
+                          + "\" ";
+  if ( attributeNames.count() == 1 )
+    parameter += "\"" + rfcDecoder::toIMAP (attributeNames.first()) + '"';
+  else {
+    parameter += '(';
+    for( QStringList::ConstIterator it = attributeNames.begin(); it != attributeNames.end(); ++it ) {
+      parameter += "\"" + rfcDecoder::toIMAP (*it) + "\" ";
+    }
+    // Turn last space into a ')'
+    parameter[parameter.length()-1] = ')';
+  }
+  return new imapCommand ("GETANNOTATION", parameter);
+}
+

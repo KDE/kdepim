@@ -25,6 +25,7 @@
 
 #include <qstringlist.h>
 #include <qstring.h>
+#include <qmap.h>
 
 /**
  *  @brief encapulate a IMAP command
@@ -337,6 +338,25 @@ public:
    * @return a MYRIGHTS imapCommand
    */
   static imapCommand *clientMyRights ( const QString& box );
+
+  //////////// ANNOTATEMORE support /////////////
+  /**
+   * @brief Create a SETANNOTATION command
+   * @param box mailbox name
+   * @param entry entry specifier
+   * @param attributes map of attribute names + values
+   * @return a SETANNOTATION imapCommand
+   */
+  static imapCommand *clientSetAnnotation ( const QString& box, const QString& entry, const QMap<QString, QString>& attributes );
+
+  /**
+   * @brief Create a GETANNOTATION command
+   * @param box mailbox name
+   * @param entry entry specifier
+   * @param attribute attribute specifier
+   * @return a GETANNOTATION imapCommand
+   */
+  static imapCommand *clientGetAnnotation ( const QString& box, const QString& entry, const QStringList& attributeNames );
 
 protected:
   QString aCommand;
