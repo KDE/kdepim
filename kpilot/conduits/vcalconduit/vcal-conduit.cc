@@ -35,6 +35,7 @@
 
 // $Revision$
 
+#define DEBUG
 #include "options.h"
 
 #include <sys/types.h>
@@ -124,37 +125,56 @@ void VCalConduit::getCalendar()
 	first = getFirstTime(config);
 
 	DEBUGCONDUIT << fname
-		<< ": Got calendar file " << calName
+		<< ": Calendar file is " << calName
 		<< ( first ? " (first time!)" : "" )
 		<< endl;
 
-	if ((getMode() == BaseConduit::HotSync) || 
-		(getMode() == BaseConduit::Backup)) 
-	{
-		const char *s=QFile::encodeName(calName);
-		fCalendar = Parse_MIME_FromFileName((char *)s);
+#ifdef DEBUG
+	// This (and the next debug message) need the #ifdefs
+	// because they use the debugging functions qstringExpansion
+	// and charExpansion.
+	//
+	//
+	DEBUGCONDUIT << fname
+		<< ": Using calendar name:"
+		<< endl;
+	DEBUGCONDUIT << fname
+		<< qstringExpansion(calName)
+		<< endl;
+#endif
+	QCString s=QFile::encodeName(calName);
 
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
+		<< ": Encoded calendar name:"
+		<< endl;
+	DEBUGCONDUIT << fname
+		<< charExpansion(s)
+		<< endl;
+#endif
+	fCalendar = Parse_MIME_FromFileName((const char *)s);
+
+	if(fCalendar == 0L) 
+	{
+		QString message = i18n(
+			"The VCalConduit could not open the file `%1'. "
+			"Please configure the conduit with the correct "
+			"filename and try again.")
+			.arg(calName);
+
+		kdError() << __FUNCTION__
+			<< ": Couldn't open "
+			<< calName
+			<< endl;
+
+		KMessageBox::error(0, message,"vCalendar Conduit Fatal Error");
+		exit(1);
+	}
+	else
+	{
 		DEBUGCONDUIT << fname
 			<< ": Got calendar!"
 			<< endl;
-
-		if(fCalendar == 0L) 
-		{
-			QString message = i18n(
-				"The VCalConduit could not open the file `%1'. "
-				"Please configure the conduit with the correct "
-				"filename and try again.")
-				.arg(calName);
-
-			kdError() << __FUNCTION__
-				<< ": Couldn't open "
-				<< calName
-				<< endl;
-
-			KMessageBox::error(0, "vCalendar Conduit Fatal Error",
-			    message);                                                 
-			exit(1);
-		}
 	}
 }
 
@@ -1797,11 +1817,16 @@ int VCalConduit::numFromDay(const QString &day)
 		"you would also have had an 18Mb core file\n"
 		"on your hands.");
 
-	KMessageBox::error(0, "Testing vCalendar Conduit", message);
+	KMessageBox::error(0, message, "Testing vCalendar Conduit");
+
+	getCalendar();
 }
 
 
 // $Log$
+// Revision 1.20  2001/01/05 12:06:01  adridg
+// Updated version number, removed VCalConduit::version()
+//
 // Revision 1.19  2001/01/03 00:05:13  adridg
 // Administrative
 //
