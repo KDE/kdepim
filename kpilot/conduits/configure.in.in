@@ -15,7 +15,7 @@ dnl                     checks for the MAL conduit
 dnl
 dnl ----------------------------------------------------------------------------
 
-dnl 
+dnl
 dnl
 dnl Check to see if MAL header and library are available
 dnl
@@ -26,7 +26,7 @@ dnl
 dnl This was copied and adapted from kabc's ldap configure.in.in
 
 
-AC_DEFUN(KPILOT_CHECK_MAL, 
+AC_DEFUN(KPILOT_CHECK_MAL,
 [
 AC_REQUIRE([KDE_CHECK_LIB64])
 AC_REQUIRE([KPILOT_CHECK_PISOCK])
@@ -70,7 +70,7 @@ fi
 
 case "$with_mal" in
 no) AC_MSG_RESULT(no) ;;
-NOTFOUND) AC_MSG_RESULT(searched but not found) 
+NOTFOUND) AC_MSG_RESULT(searched but not found)
 	AC_MSG_WARN([KPILOT: MAL headers or library not found. AvantGo conduit will not be compiled.])
 	AC_MSG_WARN([KPILOT: Download libmal>=0.20 from http://jasonday.home.att.net/code/libmal/])
 	;;
@@ -136,6 +136,13 @@ AC_SUBST(MAL_RPATH)
 AM_CONDITIONAL(include_malconduit, test "$HAVE_LIBMAL" = 1)
 
 ])
+
+AC_DEFUN(KPILOT_CHECK_KABC,[HAVE_KABC=0
+KDE_CHECK_HEADER(kresources/factory.h,HAVE_KABC=1,
+	AC_MSG_WARN([KPILOT: Older kaddressbook version detected. No address book
+	conduit will be compiled.]))
+AM_CONDITIONAL(include_abc, test "$HAVE_KABC" = 1)
+])
+
 KPILOT_CHECK_MAL
-
-
+KPILOT_CHECK_KABC

@@ -10,12 +10,14 @@ if include_malconduit
 MAL_SUBDIR = malconduit
 endif
 
+if include_abc
+ABC_SUBDIR = abbrowserconduit vcalconduit
+endif
+
 SUBDIRS = expense \
-          abbrowserconduit \
           docconduit \
           knotes \
           popmail \
           timeconduit \
-          vcalconduit \
           sysinfoconduit \
-          $(MAL_SUBDIR) 
+          $(MAL_SUBDIR) $(ABC_SUBDIR)
