@@ -93,11 +93,11 @@ KNMainWindow::KNMainWindow()
   //article view
   a_rtDock = createDockWidget("article_viewer", SmallIcon("contents"), 0,
                               kapp->makeStdCaption(i18n("Article Viewer")), i18n("Article Viewer"));
-  a_rtView=new KNArticleWidget(actionCollection(), a_rtDock ,"artView");
-  knGlobals.artWidget=a_rtView;
-  KDockWidgetHeader *header = new KDockWidgetHeader(a_rtDock);
-  header->setDragPanel(new KNDockWidgetHeaderDrag(a_rtView, header, a_rtDock));
+  KDockWidgetHeader *header = new KDockWidgetHeader(a_rtDock, "artDockHeader");
   a_rtDock->setHeader(header);
+  a_rtView=new KNArticleWidget(actionCollection(), a_rtDock ,"artView");
+  header->setDragPanel(new KNDockWidgetHeaderDrag(a_rtView, header, a_rtDock));
+  knGlobals.artWidget=a_rtView;
   a_rtDock->setWidget(a_rtView);
   setView(a_rtDock);
   setMainDockWidget(a_rtDock);
@@ -112,10 +112,10 @@ KNMainWindow::KNMainWindow()
   //collection view
   c_olDock = createDockWidget("group_view", UserIcon("group"), 0,
                               kapp->makeStdCaption(i18n("Group View")), i18n("Group View"));
-  c_olView=new KNListView(c_olDock, "collectionView");
-  header = new KDockWidgetHeader(c_olDock);
-  header->setDragPanel(new KNDockWidgetHeaderDrag(c_olView, header, c_olDock));
+  header = new KDockWidgetHeader(c_olDock, "colDockHeader");
   c_olDock->setHeader(header);
+  c_olView=new KNListView(c_olDock, "collectionView");
+  header->setDragPanel(new KNDockWidgetHeaderDrag(c_olView, header, c_olDock));
   c_olDock->setWidget(c_olView);
   c_olDock->manualDock(a_rtDock, KDockWidget::DockLeft, 3000);
 
@@ -157,10 +157,10 @@ KNMainWindow::KNMainWindow()
   //header view
   h_drDock = createDockWidget("header_view", SmallIcon("text_block"), 0,
                               kapp->makeStdCaption(i18n("Header View")), i18n("Header View"));
-  h_drView=new KNListView(h_drDock, "hdrView");
-  header = new KDockWidgetHeader(h_drDock);
-  header->setDragPanel(new KNDockWidgetHeaderDrag(h_drView, header, h_drDock));
+  header = new KDockWidgetHeader(h_drDock, "headerDockHeader");
   h_drDock->setHeader(header);
+  h_drView=new KNListView(h_drDock, "hdrView");
+  header->setDragPanel(new KNDockWidgetHeaderDrag(h_drView, header, h_drDock));
   h_drDock->setWidget(h_drView);
   h_drDock->manualDock(a_rtDock, KDockWidget::DockTop, 5000);
 
