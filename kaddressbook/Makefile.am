@@ -34,7 +34,7 @@ libkaddressbook_la_SOURCES = xxportobject.cpp xxportmanager.cpp kabcore.cpp \
  addresseeeditordialog.cpp addresseeeditorwidget.cpp \
  addviewdialog.cpp emaileditwidget.cpp extensionwidget.cpp \
  filterselectionwidget.cpp geowidget.cpp imagewidget.cpp \
- kaddressbookiface.skel kaddressbookmain.cpp \
+ kaddressbookiface.skel kaddressbookmain.cpp kaddressbookservice.cpp \
  kaddressbookview.cpp keywidget.cpp ldapsearchdialog.cpp nameeditdialog.cpp \
  phoneeditwidget.cpp secrecywidget.cpp soundwidget.cpp \
  viewconfigurefieldspage.cpp viewconfigurefilterpage.cpp \
@@ -52,8 +52,8 @@ noinst_HEADERS = \
  addresseeeditordialog.h addresseeeditorwidget.h addresseeutil.h \
  addviewdialog.h configurewidget.h emaileditwidget.h extensionmanager.h filter.h \
  filtereditdialog.h filterselectionwidget.h geowidget.h imagewidget.h \
- incsearchwidget.h jumpbuttonbar.h kabprefs.h \
- kaddressbook_part.h kaddressbookmain.h kaddressbookview.h keywidget.h \
+ incsearchwidget.h jumpbuttonbar.h kabprefs.h kaddressbook_part.h \
+ kaddressbookmain.h kaddressbookservice.h kaddressbookview.h keywidget.h \
  ldapsearchdialog.h nameeditdialog.h phoneeditwidget.h secrecywidget.h \
  soundwidget.h typecombo.h undo.h undocmds.h viewconfigurefieldspage.h \
  viewconfigurefilterpage.h viewconfigurewidget.h viewmanager.h xxportmanager.h \

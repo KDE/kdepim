@@ -39,7 +39,7 @@
 #include "xxportmanager.h"
 
 KURL XXPortManager::importURL = KURL();
-
+QString XXPortManager::importData = QString::null;
 
 class PreviewDialog : public KDialogBase
 {
@@ -79,6 +79,15 @@ void XXPortManager::importVCard( const KURL &url, bool showPreview )
   slotImport( "vcard", "<empty>" );
   mShowPreview = false;
   importURL = KURL();
+}
+
+void XXPortManager::importVCard( const QString &vCard, bool showPreview )
+{
+  importData = vCard;
+  mShowPreview = showPreview;
+  slotImport( "vcard", "<empty>" );
+  mShowPreview = false;
+  importData = "";
 }
 
 void XXPortManager::slotImport( const QString &identifier, const QString &data )

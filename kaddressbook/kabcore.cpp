@@ -57,6 +57,7 @@
 #include "incsearchwidget.h"
 #include "jumpbuttonbar.h"
 #include "kabprefs.h"
+#include "kaddressbookservice.h"
 #include "ldapsearchdialog.h"
 #include "printing/printingwizard.h"
 #include "undocmds.h"
@@ -125,6 +126,8 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
            SLOT( sendMail( const QString& ) ) );
   connect( mDetails, SIGNAL( browse( const QString& ) ),
            SLOT( browse( const QString& ) ) );
+
+  mAddressBookService = new KAddressBookService( this );
 
   setModified( false );
 }
@@ -636,9 +639,14 @@ void KABCore::addEmail( QString aStr )
   }
 }
 
-void KABCore::addVCard( const QString& fileName, bool showPreview )
+void KABCore::importVCard( const KURL &url, bool showPreview )
 {
-  mXXPortManager->importVCard( KURL( fileName ), showPreview );
+  mXXPortManager->importVCard( url, showPreview );
+}
+
+void KABCore::importVCard( const QString &vCard, bool showPreview )
+{
+  mXXPortManager->importVCard( vCard, showPreview );
 }
 
 void KABCore::editContact( const QString &uid )

@@ -48,7 +48,6 @@ class KAddressbookPart: public KParts::ReadOnlyPart, virtual public KAddressBook
 
   public slots:
     virtual void addEmail( QString addr );
-    virtual void addVCard( const QString& fileName, bool showPreview );
     virtual ASYNC showContactEditor( QString uid );
     virtual void newContact();
     virtual QString getNameByPhone( QString phone );

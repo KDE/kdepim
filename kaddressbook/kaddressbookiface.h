@@ -10,8 +10,7 @@ class KAddressBookIface : virtual public DCOPObject
 
   k_dcop:
     virtual void addEmail( QString addr ) = 0;
-    virtual void addVCard( const QString& fileName, bool showPreview ) = 0;
-  
+ 
     virtual ASYNC showContactEditor( QString uid ) = 0;
 
     /**

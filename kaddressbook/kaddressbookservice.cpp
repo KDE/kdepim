@@ -21,51 +21,21 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef XXPORTMANAGER_H
-#define XXPORTMANAGER_H
+#include "kabcore.h"
 
-#include <qdict.h>
-#include <qobject.h>
+#include "kaddressbookservice.h"
 
-#include <kurl.h>
-
-#include "xxportobject.h"
-
-class KABCore;
-
-class XXPortManager : public QObject
+KAddressBookService::KAddressBookService( KABCore *core )
+  : DCOPObject( "AddressBookServiceIface" ), mCore( core )
 {
-  Q_OBJECT
+}
 
-  public:
-    XXPortManager( KABCore *core, QObject *parent, const char *name = 0 );
-    ~XXPortManager();
+void KAddressBookService::importVCard( const QString& vCard, bool showPreview )
+{
+  mCore->importVCard( vCard, showPreview );
+}
 
-    void restoreSettings();
-    void saveSettings();
-
-    static KURL importURL;
-    static QString importData;
-
-  public slots:
-    void importVCard( const KURL &url );
-    void importVCard( const KURL &url, bool showPreview );
-    void importVCard( const QString &vCard, bool showPreview );
-
-  signals:
-    void modified();
-
-  protected slots:
-    void slotImport( const QString&, const QString& );
-    void slotExport( const QString&, const QString& );
-
-  private:
-    void loadPlugins();
-
-    QDict<XXPortObject> mXXPortObjects;
-
-    KABCore *mCore;
-    bool mShowPreview;
-};
-
-#endif
+void KAddressBookService::importVCard( const KURL& url, bool showPreview )
+{
+  mCore->importVCard( url, showPreview );
+}

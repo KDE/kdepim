@@ -21,51 +21,36 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef XXPORTMANAGER_H
-#define XXPORTMANAGER_H
+#ifndef KADDRESSBOOKSERVICE_H
+#define KADDRESSBOOKSERVICE_H
 
-#include <qdict.h>
-#include <qobject.h>
-
-#include <kurl.h>
-
-#include "xxportobject.h"
+#include <libkdepim/interfaces/AddressBookServiceIface.h>
 
 class KABCore;
 
-class XXPortManager : public QObject
+class KAddressBookService : virtual public KPIM::AddressBookServiceIface
 {
-  Q_OBJECT
-
   public:
-    XXPortManager( KABCore *core, QObject *parent, const char *name = 0 );
-    ~XXPortManager();
+    KAddressBookService( KABCore *core );
 
-    void restoreSettings();
-    void saveSettings();
+    /**
+      This method will add a vcard to the address book.
 
-    static KURL importURL;
-    static QString importData;
+      @param vCard The vCard in string representation.
+      @param showPreview Whether a preview should be shown.
+     */
+    void importVCard( const QString& vCard, bool showPreview );
 
-  public slots:
-    void importVCard( const KURL &url );
-    void importVCard( const KURL &url, bool showPreview );
-    void importVCard( const QString &vCard, bool showPreview );
+    /**
+      This method will add a vcard to the address book.
 
-  signals:
-    void modified();
-
-  protected slots:
-    void slotImport( const QString&, const QString& );
-    void slotExport( const QString&, const QString& );
+      @param url The url where the vcard is located.
+      @param showPreview Whether a preview should be shown.
+     */
+    void importVCard( const KURL& url, bool showPreview );
 
   private:
-    void loadPlugins();
-
-    QDict<XXPortObject> mXXPortObjects;
-
     KABCore *mCore;
-    bool mShowPreview;
 };
 
 #endif

@@ -47,6 +47,7 @@ class AddresseeEditorDialog;
 class ExtensionManager;
 class IncSearchWidget;
 class JumpButtonBar;
+class KAddressBookService;
 class LDAPSearchDialog;
 class ViewContainer;
 class ViewManager;
@@ -220,7 +221,8 @@ class KABCore : public QWidget
       DCOP METHODS.
      */
     void addEmail( QString addr );
-    void addVCard( const QString& fileName, bool showPreview );
+    void importVCard( const KURL& url, bool showPreview );
+    void importVCard( const QString& vCard, bool showPreview );
     void newContact();
     QString getNameByPhone( const QString& phone );
     /**
@@ -325,6 +327,8 @@ class KABCore : public QWidget
     KAction *mActionCategories;
     KToggleAction *mActionJumpBar;
     KToggleAction *mActionDetails;
+
+    KAddressBookService *mAddressBookService;
 
     class KABCorePrivate;
     KABCorePrivate *d;

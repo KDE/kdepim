@@ -110,57 +110,70 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
   KABC::AddresseeList addrList;
   KURL url;
 
-  if ( XXPortManager::importURL.isEmpty() )
-    url = KFileDialog::getOpenURL( QString::null, "*.vcf|vCards", 0,
-                                   i18n( "Select vCard to Import" ) );
-  else
-    url = XXPortManager::importURL;
+  if ( !XXPortManager::importData.isEmpty() )
+    addrList = parseVCard( XXPortManager::importData );
+  else {
+    if ( XXPortManager::importURL.isEmpty() )
+      url = KFileDialog::getOpenURL( QString::null, "*.vcf|vCards", 0,
+                                     i18n( "Select vCard to Import" ) );
+    else
+      url = XXPortManager::importURL;
 
-  if ( url.isEmpty() )
-    return addrList;
+    if ( url.isEmpty() )
+      return addrList;
 
-  QString caption( i18n( "vCard Import Failed" ) );
-  if ( KIO::NetAccess::download( url, fileName ) ) {
-    KABC::VCardConverter converter;
-    QFile file( fileName );
+    QString caption( i18n( "vCard Import Failed" ) );
+    if ( KIO::NetAccess::download( url, fileName ) ) {
 
-    file.open( IO_ReadOnly );
-    QByteArray rawData = file.readAll();
-    file.close();
+      QFile file( fileName );
 
-    QString data = QString::fromUtf8( rawData.data(), rawData.size() + 1 );
-    uint numVCards = data.contains( "BEGIN:VCARD", false );
-    QStringList dataList = QStringList::split( "\r\n\r\n", data );
+      file.open( IO_ReadOnly );
+      QByteArray rawData = file.readAll();
+      file.close();
 
-    for ( uint i = 0; i < numVCards && i < dataList.count(); ++i ) {
-      KABC::Addressee addr;
-      bool ok = false;
+      QString data = QString::fromUtf8( rawData.data(), rawData.size() + 1 );
+      addrList = parseVCard( data );
 
-      if ( dataList[ i ].contains( "VERSION:3.0" ) )
-        ok = converter.vCardToAddressee( dataList[ i ], addr, KABC::VCardConverter::v3_0 );
-      else if ( dataList[ i ].contains( "VERSION:2.1" ) )
-        ok = converter.vCardToAddressee( dataList[ i ], addr, KABC::VCardConverter::v2_1 );
-      else {
-        KMessageBox::sorry( parentWidget(), i18n( "Not supported vCard version." ),
-                            caption );
-        continue;
-      }
+      if ( !url.isLocalFile() )
+        KIO::NetAccess::removeTempFile( fileName );
 
-      if ( !addr.isEmpty() && ok )
-        addrList.append( addr );
-      else {
-        QString text = i18n( "The selected file does not include a valid vCard. "
-                             "Please check the file and try again." );
-        KMessageBox::sorry( parentWidget(), text, caption );
-      }
+    } else {
+      QString text = i18n( "<qt>Unable to access <b>%1</b>.</qt>" );
+      KMessageBox::error( parentWidget(), text.arg( url.url() ), caption );
+    }
+  }
+
+  return addrList;
+}
+
+KABC::AddresseeList VCardXXPort::parseVCard( const QString &data ) const
+{
+  KABC::VCardConverter converter;
+  KABC::AddresseeList addrList;
+
+  uint numVCards = data.contains( "BEGIN:VCARD", false );
+  QStringList dataList = QStringList::split( "\r\n\r\n", data );
+
+  for ( uint i = 0; i < numVCards && i < dataList.count(); ++i ) {
+    KABC::Addressee addr;
+    bool ok = false;
+
+    if ( dataList[ i ].contains( "VERSION:3.0" ) )
+      ok = converter.vCardToAddressee( dataList[ i ], addr, KABC::VCardConverter::v3_0 );
+    else if ( dataList[ i ].contains( "VERSION:2.1" ) )
+      ok = converter.vCardToAddressee( dataList[ i ], addr, KABC::VCardConverter::v2_1 );
+    else {
+      KMessageBox::sorry( parentWidget(), i18n( "Not supported vCard version." ) );
+      continue;
     }
 
-    if ( !url.isLocalFile() )
-      KIO::NetAccess::removeTempFile( fileName );
-
-  } else {
-    QString text = i18n( "<qt>Unable to access <b>%1</b>.</qt>" );
-    KMessageBox::error( parentWidget(), text.arg( url.url() ), caption );
+    if ( !addr.isEmpty() && ok )
+      addrList.append( addr );
+    else {
+      QString text = i18n( "The selected file does not include a valid vCard. "
+                           "Please check the file and try again." );
+      KMessageBox::sorry( parentWidget(), text );
+    }
   }
 
   return addrList;

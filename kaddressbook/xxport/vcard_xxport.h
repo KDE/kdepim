@@ -38,6 +38,9 @@ class VCardXXPort : public XXPortObject
   public slots:
     bool exportContacts( const KABC::AddresseeList &list, const QString &data );
     KABC::AddresseeList importContacts( const QString &data ) const;
+
+  private:
+    KABC::AddresseeList parseVCard( const QString &data ) const;
 };
 
 #endif
