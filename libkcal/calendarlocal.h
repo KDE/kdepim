@@ -89,7 +89,9 @@ class CalendarLocal : public Calendar {
   signals:
     /** emitted at regular intervals to indicate that the events in the
       list have triggered an alarm. */
+    //void alarmSignal(QList<Incidence> &);
     void alarmSignal(QList<Event> &);
+    void alarmSignal(QList<Todo> &);
     /** emitted whenever an event in the calendar changes.  Emits a pointer
       to the changed event. */
     void calUpdated(Incidence *);
@@ -119,8 +121,8 @@ class CalendarLocal : public Calendar {
   private:
     QIntDict<QList<Event> > *mCalDict;    // dictionary of lists of events.
     QList<Event> mRecursList;             // list of repeating events.
-  
-    QList<Todo> mTodoList;               // list of "todo" items.
+
+    QList<Todo> mTodoList;               // list of todo items.
 
     QMap<QDate,Journal *> mJournalMap;
   

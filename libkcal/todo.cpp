@@ -39,14 +39,19 @@ Todo *Todo::clone()
 }
 
 void Todo::setDtDue(const QDateTime &dtDue)
-{  
-  int diffsecs = mDtDue.secsTo(dtDue);
-
-  if (mReadOnly) return;
-  if (alarm()->enabled())
+{
+  //int diffsecs = mDtDue.secsTo(dtDue);
+  
+  /*if (mReadOnly) return;
+  if (alarm()->enabled()) {
     alarm()->setTime(alarm()->time().addSecs(diffsecs));
-
+    }*/
   mDtDue = dtDue;
+
+  //kdDebug() << "setDtDue says date is " << mDtDue.toString() << endl;
+  
+  //alarm()->setAlarmStart(mDtDue);
+
   emit eventUpdated(this);
 }
 

@@ -368,7 +368,10 @@ void CalendarLocal::checkAlarms()
   QIntDictIterator<QList<Event> > dictIt(*mCalDict);
   QList<Event> *tmpList;
   Event *anEvent;
+  QList<Todo> alarmTodos;
+  Todo *aTodo;
   QDateTime tmpDT;
+  
 
   // this function has to look at every event in the whole database
   // and find if any have an alarm pending.
@@ -377,11 +380,15 @@ void CalendarLocal::checkAlarms()
     tmpList = dictIt.current();
     for (anEvent = tmpList->first(); anEvent;
 	 anEvent = tmpList->next()) {
-      tmpDT = anEvent->alarm()->time();
-      if (tmpDT.date() == QDate::currentDate()) {
-	if ((tmpDT.time().hour() == QTime::currentTime().hour()) &&
-	    (tmpDT.time().minute() == QTime::currentTime().minute()))
-	  alarmEvents.append(anEvent);
+      if (anEvent->alarm()->enabled()) {
+	tmpDT = anEvent->alarm()->time();
+	//kdDebug() << "calendarlocal::checkAlarms - tmpDT of " << anEvent->summary() << " - " << tmpDT.date().toString() << endl;
+	if (tmpDT.date() == QDate::currentDate()) {
+	  if ((tmpDT.time().hour() == QTime::currentTime().hour()) &&
+	      (tmpDT.time().minute() == QTime::currentTime().minute())) {
+	    alarmEvents.append(anEvent);
+	  }
+	}
       }
     }
     ++dictIt;
@@ -395,9 +402,25 @@ void CalendarLocal::checkAlarms()
 	alarmEvents.append(anEvent);
     }
   }
-
   if (!alarmEvents.isEmpty())
     emit alarmSignal(alarmEvents);
+  
+  for(aTodo = mTodoList.first(); aTodo; aTodo = mTodoList.next()) {
+    if (aTodo->alarm()->enabled()) {
+      tmpDT = aTodo->alarm()->time();
+      //kdDebug() << "calendarlocal::checkAlarms - tmpDT of " << aTodo->summary() << " - " << tmpDT.date().toString() << endl;
+      if (tmpDT.date() == QDate::currentDate()) {
+	if ((tmpDT.time().hour() == QTime::currentTime().hour()) &&
+	    (tmpDT.time().minute() == QTime::currentTime().minute())) {
+	  alarmTodos.append(aTodo);
+	}
+      }
+    }
+  }
+  
+  if (!alarmTodos.isEmpty()) {
+    emit alarmSignal(alarmTodos);
+  }
 }
 
 /****************************** PROTECTED METHODS ****************************/

@@ -64,6 +64,19 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
     icalcomponent_add_property(vtodo,icalproperty_new_due(due));
   }
 
+  // start time
+  if (todo->hasStartDate()) {
+    icaltimetype start;
+    if (todo->doesFloat()) {
+      kdDebug() << "§§ Incidence " << todo->summary() << " floats." << endl; 
+      start = writeICalDate(todo->dtStart().date());
+    } else {
+      kdDebug() << "§§ incidence " << todo->summary() << " has time." << endl; 
+      start = writeICalDateTime(todo->dtStart());
+    }
+    icalcomponent_add_property(vtodo,icalproperty_new_dtstart(start));
+  }
+  
   // completion date
   if (todo->isCompleted()) {
     if (!todo->hasCompletedDate()) {
@@ -92,7 +105,18 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
   icalcomponent *vevent = icalcomponent_new(ICAL_VEVENT_COMPONENT);
 
   writeIncidence(vevent,event);
-
+  
+  // start time
+  icaltimetype start;
+  if (event->doesFloat()) {
+    kdDebug() << "§§ Incidence " << event->summary() << " floats." << endl; 
+    start = writeICalDate(event->dtStart().date());
+  } else {
+    kdDebug() << "§§ incidence " << event->summary() << " has time." << endl; 
+    start = writeICalDateTime(event->dtStart());
+  }
+     icalcomponent_add_property(vevent,icalproperty_new_dtstart(start));
+  
   // end time
   icaltimetype end;
   if (event->doesFloat()) {
@@ -199,18 +223,6 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
       icalcomponent_add_property(parent,p);
     }
   }
-
-  // start time
-  icaltimetype start;
-  if (incidence->doesFloat()) {
-    kdDebug() << "§§ Incidence " << incidence->summary() << " floats." << endl; 
-    start = writeICalDate(incidence->dtStart().date());
-  } else {
-    kdDebug() << "§§ incidence " << incidence->summary() << " has time." << endl; 
-    start = writeICalDateTime(incidence->dtStart());
-  }
-  icalcomponent_add_property(parent,icalproperty_new_dtstart(start));
-
   // description
   if (!incidence->description().isEmpty()) {
     icalcomponent_add_property(parent,icalproperty_new_description(
@@ -632,7 +644,7 @@ icalcomponent *ICalFormatImpl::writeAlarm(KOAlarm *alarm)
 Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
 {
   Todo *todo = new Todo;
-
+  
   readIncidence(vtodo,todo);
 
   icalproperty *p = icalcomponent_get_first_property(vtodo,ICAL_ANY_PROPERTY);
@@ -652,6 +664,7 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
         if (icaltime.is_date) {
           todo->setDtDue(QDateTime(readICalDate(icaltime),QTime(0,0,0)));
           todo->setFloats(true);
+	  
         } else {
           todo->setDtDue(readICalDateTime(icaltime));
           todo->setFloats(false);
@@ -676,9 +689,9 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
 
       case ICAL_DTSTART_PROPERTY:
         // Flag that todo has start date. Value is read in by readIncidence().
-        todo->setHasStartDate(true);
+	todo->setHasStartDate(true);
         break;
-
+    
       default:
 //        kdDebug() << "ICALFormat::readTodo(): Unknown property: " << kind
 //                  << endl;
@@ -904,7 +917,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
         break;
 
       case ICAL_DTSTART_PROPERTY:  // start date and time
-        icaltime = icalproperty_get_dtstart(p);
+	icaltime = icalproperty_get_dtstart(p);
         if (icaltime.is_date) {
           incidence->setDtStart(QDateTime(readICalDate(icaltime),QTime(0,0,0)));
           incidence->setFloats(true);
@@ -1325,8 +1338,8 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
 
 void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
 {
-  kdDebug() << "Read alarm for " << incidence->summary() << endl;
-
+  //kdDebug() << "Read alarm for " << incidence->summary() << endl;
+  
   KOAlarm* koalarm = incidence->alarm();
   koalarm->setRepeatCount(0);
   koalarm->setEnabled(true);
@@ -1426,6 +1439,28 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
       }
     }
   }
+
+  if ((vo = isAPropertyOf(vtodo, VCDAlarmProp))) {
+    VObject *a;
+    if ((a = isAPropertyOf(vo, VCRunTimeProp))) {
+      aTodo->setTime(ISOToQDateTime(s = fakeCString(vObjectUStringZValue(a))));
+      deleteStr(s);
+    }
+    aTodo->setEnabled(true);
+    if ((vo = isAPropertyOf(vtodo, VCPAlarmProp))) {
+      if ((a = isAPropertyOf(vo, VCProcedureNameProp))) {
+	aTodo->setProgramFile(s = fakeCString(vObjectUStringZValue(a)));
+	deleteStr(s);
+      }
+    }
+    if ((vo = isAPropertyOf(vtodo, VCAAlarmProp))) {
+      if ((a = isAPropertyOf(vo, VCAudioContentProp))) {
+	aTodo->setAudioFile(s = fakeCString(vObjectUStringZValue(a)));
+	deleteStr(s);
+      }
+    }
+  }
+  
 #endif
 }
 

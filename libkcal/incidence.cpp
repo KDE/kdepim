@@ -169,17 +169,17 @@ const QString &Incidence::organizer() const
 
 
 void Incidence::setDtStart(const QDateTime &dtStart)
-{  
-  int diffsecs = mDtStart.secsTo(dtStart);
-
+{
+  /*int diffsecs = mDtStart.secsTo(dtStart);
+  
   if (mReadOnly) return;
   if (alarm()->enabled())
-    alarm()->setTime(alarm()->time().addSecs(diffsecs));
+  alarm()->setTime(alarm()->time().addSecs(diffsecs));*/
 
   mDtStart = dtStart;
 
   recurrence()->setRecurStart(mDtStart);
-  alarm()->setAlarmStart(mDtStart);
+  //alarm()->setAlarmStart(mDtStart);
 
   emit eventUpdated(this);
 }

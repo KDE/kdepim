@@ -484,6 +484,30 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
     addPropValue(vtodo, VCCategoriesProp, tmpStr.utf8());
   }
 
+  // alarm stuff
+  kdDebug() << "vcalformat::eventToVTodo was called" << endl;
+  if (anEvent->alarm()->enabled()) {
+    VObject *a = addProp(vtodo, VCDAlarmProp);
+    tmpStr = qDateTimeToISO(anEvent->alarm()->time());
+    addPropValue(a, VCRunTimeProp, tmpStr.latin1());
+    addPropValue(a, VCRepeatCountProp, "1");
+    addPropValue(a, VCDisplayStringProp, "beep!");
+    if (!anEvent->alarm()->audioFile().isEmpty()) {
+      a = addProp(vtodo, VCAAlarmProp);
+      addPropValue(a, VCRunTimeProp, tmpStr.latin1());
+      addPropValue(a, VCRepeatCountProp, "1");
+      addPropValue(a, VCAudioContentProp,
+        (const char *)QFile::encodeName(anEvent->alarm()->audioFile()));
+    }
+    if (!anEvent->alarm()->programFile().isEmpty()) {
+      a = addProp(vtodo, VCPAlarmProp);
+      addPropValue(a, VCRunTimeProp, tmpStr.latin1());
+      addPropValue(a, VCRepeatCountProp, "1");
+      addPropValue(a, VCProcedureNameProp,
+        (const char *)QFile::encodeName(anEvent->alarm()->programFile()));
+    }
+  }
+  
   // pilot sync stuff
   tmpStr.sprintf("%i",anEvent->pilotId());
   addPropValue(vtodo, KPilotIdProp, tmpStr.latin1());
@@ -918,6 +942,31 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
     anEvent->setHasStartDate(false);
   }
 
+  /* alarm stuff */
+  //kdDebug() << "vcalformat::VTodoToEvent called" << endl;
+  if ((vo = isAPropertyOf(vtodo, VCDAlarmProp))) {
+    VObject *a;
+    if ((a = isAPropertyOf(vo, VCRunTimeProp))) {
+      anEvent->alarm()->setTime(ISOToQDateTime(s = fakeCString(vObjectUStringZValue(a))));
+      deleteStr(s);
+    }
+    anEvent->alarm()->setEnabled(true);
+    if ((vo = isAPropertyOf(vtodo, VCPAlarmProp))) {
+      if ((a = isAPropertyOf(vo, VCProcedureNameProp))) {
+	s = fakeCString(vObjectUStringZValue(a));
+	anEvent->alarm()->setProgramFile(QFile::decodeName(s));
+	deleteStr(s);
+      }
+    }
+    if ((vo = isAPropertyOf(vtodo, VCAAlarmProp))) {
+      if ((a = isAPropertyOf(vo, VCAudioContentProp))) {
+	s = fakeCString(vObjectUStringZValue(a));
+	anEvent->alarm()->setAudioFile(QFile::decodeName(s));
+	deleteStr(s);
+      }
+    }
+  }
+  
   // related todo
   if ((vo = isAPropertyOf(vtodo, VCRelatedToProp)) != 0) {
     anEvent->setRelatedToVUID(s = fakeCString(vObjectUStringZValue(vo)));
