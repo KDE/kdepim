@@ -638,8 +638,12 @@ void ResourceKolab::fromKMailDelSubresource( const QString& type,
 
 QStringList ResourceKolab::subresources() const
 {
-  return mEventSubResources.keys() + mTodoSubResources.keys()
-    + mJournalSubResources.keys();
+  // Workaround: The ResourceView in KOrganizer wants to know this
+  // before it opens the resource :-( Make sure we are open
+  const_cast<ResourceKolab*>( this )->doOpen();
+  return ( mEventSubResources.keys() 
+         + mTodoSubResources.keys() 
+         + mJournalSubResources.keys() ); 
 }
 
 void ResourceKolab::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map,
