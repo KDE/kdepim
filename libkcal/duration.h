@@ -40,6 +40,8 @@ class Duration
 };
 
     bool operator==( const Duration&, const Duration& );
+    inline bool operator!=( const Duration &d1, const Duration &d2 )
+                { return !operator==( d1, d2 ); }
 
 }
 
