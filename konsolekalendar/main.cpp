@@ -484,10 +484,7 @@ int main(int argc, char *argv[])
    * All modes need to know if the calendar file exists
    * This must be done before we get to opening biz
    */
-
-  QFile fileExists( variables.getCalendarFile() );
-  bool exists = fileExists.exists();
-  fileExists.close();
+    bool exists = QFile::exists( variables.getCalendarFile() );
 
   if ( create ) {
 
