@@ -5,9 +5,13 @@
     <Action name="start_new_session" />
     <Action name="reset_all_times" />
     <Separator />
-    <Action name="import_flatfile" />
-                <Action name="clip_totals" />
-                <Action name="clip_history" />
+    <Menu name="importexport">
+      <text>Import/Export</text>
+      <Action name="import_flatfile" />
+      <Action name="export_csvfile" />
+    </Menu>
+    <Action name="clip_totals" />
+    <Action name="clip_history" />
   </Menu>
   <Menu name="clock" >
     <text>&amp;Clock</text>

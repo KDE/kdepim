@@ -97,6 +97,9 @@ class TaskView : public KListView
     /** Used to import a legacy file format. */
     void loadFromFlatFile();
 
+    /** Used to export Comma-Separated Values (CSV) format. */
+    void exportcsvFile();
+
     /** Calls newTask with caption "New Sub Task". */
     void newSubTask();
 

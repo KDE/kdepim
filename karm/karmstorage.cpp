@@ -60,8 +60,8 @@ KarmStorage *KarmStorage::instance()
   return _instance;
 }
 
-KarmStorage::KarmStorage() 
-{ 
+KarmStorage::KarmStorage()
+{
   _calendar = 0;
 }
 
@@ -86,7 +86,7 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
 
   // If KArm just instantiated, load calendar resources.
   if ( ! _calendar) _calendar = new KCal::CalendarResources();
-  else 
+  else
   {
     // TODO: release lock here.
     _calendar->close();
@@ -103,11 +103,11 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
   KCal::CalendarResourceManager *m = _calendar->resourceManager();
   m->add(l);
   m->setStandardResource(l);
-    
+
   // Claim ownership of iCalendar file if no one else has.
   QString email = _calendar->getEmail();
   QString owner = _calendar->getOwner();
-  if ( email.isEmpty() && owner.isEmpty() ) 
+  if ( email.isEmpty() && owner.isEmpty() )
   {
     _calendar->setEmail( settings.getSetting( KEMailSettings::EmailAddress ) );
     _calendar->setOwner( settings.getSetting( KEMailSettings::RealName ) );
@@ -120,7 +120,7 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
   _lock = _calendar->requestSaveTicket(m->standardResource());
   if ( !_lock )
   {
-    KMessageBox::information(0, 
+    KMessageBox::information(0,
         i18n("Another program is currently using this file.  "
           "Access will be read-only."));
   }
@@ -443,6 +443,83 @@ void KarmStorage::adjustFromLegacyFileFormat(Task* task)
   for ( Task* subtask = task->firstChild(); subtask;
       subtask = subtask->nextSibling() )
     adjustFromLegacyFileFormat(subtask);
+}
+
+//----------------------------------------------------------------------------
+// Routines that handle Comma-Separated Values export file format.
+//
+QString KarmStorage::exportcsvFile(TaskView* taskview, const QString& filename)
+{
+  QString delim = i18n( "," );
+  QString rdelim = i18n( "\\" ) + delim;
+
+  QString err;
+
+  kdDebug(5970)
+    << "KarmStorage::exportcsvFile: " << filename << endl;
+
+  QFile f(filename);
+  if( !f.open( IO_WriteOnly ) ) {
+      err = i18n("Could not open \"%1\".").arg(filename);
+  }
+
+  if (!err)
+  {
+    QTextStream stream(&f);
+
+    // Determine depth of the tasks.
+    // The depth is: how often can you say "the task is a subtask of".
+    //
+    // Example:
+    // The task is a subtask of a subtask of a supertask=> depth is 2
+    int depth = 0;                     // depth of deepest task
+    int taskdeepn[taskview->count()];  // depth of each task
+
+    Task* task;
+    for (int tasknr=0; tasknr<=taskview->count()-1; ++tasknr)
+    {
+      task = taskview->item_at_index(tasknr);
+
+      taskdeepn[tasknr+1] = 0;
+      for (uint i=0; i<=task->fullName().length()-1; ++i)
+      {
+        // Each '/' character indicates the next in depth
+        if (task->fullName().latin1()[i] == '/')
+        {
+          taskdeepn[tasknr+1]++;
+        }
+      }
+      if (taskdeepn[tasknr+1] > depth)
+      {
+        depth=taskdeepn[tasknr+1];
+      }
+    }
+
+    for (int tasknr=0; tasknr<=taskview->count()-1; ++tasknr)
+    {
+      task = taskview->item_at_index(tasknr);
+
+      // indent the task in the csv-file:
+      for (int i=0; i<taskdeepn[tasknr+1]; ++i)
+      {
+        stream << delim;
+      }
+      stream << task->name().replace( delim, rdelim );
+
+      // maybe other tasks are more indented, so to align the columns:
+      for (int i=0; i<depth-taskdeepn[tasknr+1]; ++i)
+      {
+        stream << delim;
+      }
+      stream << delim << task->sessionTime()
+             << delim << task->time()
+             << delim << task->totalSessionTime()
+             << delim << task->totalTime()
+             << endl;
+    }
+    f.close();
+  }
+  return err;
 }
 
 //----------------------------------------------------------------------------

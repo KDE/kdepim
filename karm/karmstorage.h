@@ -134,6 +134,16 @@ class KarmStorage
     QString loadFromFlatFileCumulative(TaskView* taskview,
         const QString& filename);
 
+    /**
+     *  Writes all tasks and their totals to a Comma-Separated Values file.
+     *
+     * The format of this file is zero or more lines of:
+     *    taskName,subtaskName,..,sessionTime,time,totalSessionTime,totalTime
+     * the number of subtasks is determined at runtime.
+     */
+    QString KarmStorage::exportcsvFile(TaskView* taskview,
+        const QString& filename);
+
     /*
      * Log the change in a task's time.
      *

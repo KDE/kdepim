@@ -184,6 +184,24 @@ void TaskView::loadFromFlatFile()
   }
 }
 
+void TaskView::exportcsvFile()
+{
+  kdDebug(5970) << "TaskView::exportcsvFile()" << endl;
+
+  //KFileDialog::getSaveFileName("icalout.ics",i18n("*.ics|ICalendars"),this);
+
+  QString fileName(KFileDialog::getOpenFileName(QString::null, QString::null,
+                                                0));
+  if (!fileName.isEmpty()) {
+    QString err = _storage->exportcsvFile(this, fileName);
+    if (!err.isEmpty())
+    {
+      KMessageBox::error(this, err);
+      return;
+    }
+  }
+}
+
 void TaskView::scheduleSave()
 {
     _manualSaveTimer->start( 10, true /*single-shot*/ );
@@ -300,10 +318,10 @@ void TaskView::changeTimer(QListViewItem *)
 {
   Task *task = current_item();
 
-  if ( task != 0 && activeTasks.findRef(task) == -1 ) 
+  if ( task != 0 && activeTasks.findRef(task) == -1 )
   {
     // Stop all the other timers.
-    for (unsigned int i=0; i<activeTasks.count();i++) 
+    for (unsigned int i=0; i<activeTasks.count();i++)
       (activeTasks.at(i))->setRunning(false, _storage);
     activeTasks.clear();
 
