@@ -7,6 +7,8 @@ Kandy 0.5.1 (18.11.2004)
 + Full support for SIM phone books starting with an entry != 1 and having an
   arbitrary number of entries.
 
++ Removal of possible unsafe sprintf's, strdups and char* buffers.
+
 
 Kandy 0.5 (16.11.2004)
 ----------------------

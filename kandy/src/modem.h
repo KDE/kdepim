@@ -36,6 +36,7 @@
 #include <qstring.h>
 #include <qtimer.h>
 #include <qsocketnotifier.h>
+#include <qfile.h>
 
 #include "kandyprefs.h"
 
