@@ -1,16 +1,34 @@
-// kpilotOptions.cc
-//
-// Copyright (C) 1998-2000 Dan Pilone
-//
-// This file is distributed under the Gnu General Public Licence (GPL).
-// The GPL should have been included with this file in a file called
-// COPYING. 
-//
-// This is the version of kpilotOptions.cc for KDE 2 / KPilot 4.
-//
+/* kpilotOptions.cc			KPilot
+**
+** Copyright (C) 1998-2001 by Dan Pilone
+**
+** This file defines the dialog used by KPilot to setup
+** the Pilot device etc.
+**
+** You can compile this with -DSTANDALONE to get an app
+** that can modify KPilot's config files without anything else.
+*/
 
-// $Revision$
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** MA 02139, USA.
+*/
 
+/*
+** Bug reports and questions can be sent to adridg@cs.kun.nl
+*/
 
 
 #include "options.h"
@@ -696,6 +714,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.18  2000/12/31 16:44:00  adridg
+// Patched up the debugging stuff again
+//
 // Revision 1.17  2000/12/21 00:42:50  adridg
 // Mostly debugging changes -- added FUNCTIONSETUP and more #ifdefs. KPilot should now compile -DNDEBUG or with DEBUG undefined
 //

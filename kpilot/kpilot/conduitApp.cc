@@ -1,16 +1,31 @@
-// conduitApp.cc
-//
-// Copyright (C) 1998-2000 Dan Pilone
-//
-// This file is distributed under the Gnu General Public Licence (GPL).
-// The GPL should have been included with this file in a file called
-// COPYING. 
-//
-// This is conduitApp.cc for KDE 2 / KPilot 4.
-//
-//
-//
+/* conduitApp.cc			KPilot
+**
+** Copyright (C) 1998-2001 by Dan Pilone
+**
+** This provides a base class for KApplications that also
+** happen to be conduits.
+*/
 
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** MA 02139, USA.
+*/
+
+/*
+** Bug reports and questions can be sent to adridg@cs.kun.nl
+*/
 static const char *id=
 	"$Id$";
 
@@ -330,6 +345,9 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 
 
 // $Log$
+// Revision 1.16  2000/12/31 16:44:00  adridg
+// Patched up the debugging stuff again
+//
 // Revision 1.15  2000/12/22 07:47:04  adridg
 // Added DCOP support to conduitApp. Breaks binary compatibility.
 //

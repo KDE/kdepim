@@ -212,3 +212,4 @@ void AddressEditor::initLayout()
 	}
 }
 
+// $Log:$

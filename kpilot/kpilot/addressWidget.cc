@@ -1,24 +1,34 @@
-// addressWidget.cc
-//
-// Copyright (C) 1998,1999 Dan Pilone
-//
-// This file is distributed under the Gnu General Public Licence (GPL).
-// The GPL should have been included with this file in a file called
-// COPYING. 
+/* addressWidget.cc			KPilot
+**
+** Copyright (C) 1998-2001 by Dan Pilone
+**
+** This file defines the addressWidget, that part of KPilot that
+** displays address records from the Pilot.
+*/
 
-// $Revision$
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** MA 02139, USA.
+*/
 
+/*
+** Bug reports and questions can be sent to adridg@cs.kun.nl
+*/
 static const char *id="$Id$";
 
 
-// REVISION HISTORY 
-//
-// 3.1b9	By Dan Pilone
-// 3.1b10	By Adriaan de Groot: comments added all over the place,
-//		added "all" category.  The same kind of modifications
-//		that were made to memoWidget could also be made right here.
-//
-//		Remaining questions are marked with QADE.
 
 #include "options.h"
 
@@ -909,6 +919,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.23  2001/01/04 22:19:37  adridg
+// Stuff for Chris and Bug 18072
+//
 // Revision 1.22  2000/12/31 16:44:00  adridg
 // Patched up the debugging stuff again
 //
