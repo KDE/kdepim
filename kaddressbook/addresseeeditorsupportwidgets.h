@@ -32,12 +32,14 @@
 #include <kabc/addressee.h>
 #include <kabc/phonenumber.h>
 
+class QButtonGroup;
 class QToolButton;
 class QListView;
 class QTextEdit;
 class QCheckBox;
 
 class KLineEdit;
+class KListView;
 class KComboBox;
 
 /** This widget displays a list box of the email addresses as well as buttons
@@ -133,6 +135,25 @@ class AddressEditWidget : public QWidget
 };
 
 ////////////////////////////////
+// PhoneEditDialog
+
+class PhoneEditDialog : public KDialogBase
+{
+  Q_OBJECT
+public:
+  PhoneEditDialog( const KABC::PhoneNumber &phoneNumber, QWidget *parent, const char *name = 0 );
+
+  KABC::PhoneNumber phoneNumber();
+
+private:
+  KABC::PhoneNumber mPhoneNumber;
+  QMap<int,int> mTypeMap;
+
+  KLineEdit *mNumber;
+  QButtonGroup *mGroup;
+};
+
+////////////////////////////////
 // PhoneEditWidget
 
 class PhoneEditWidget : public QWidget
@@ -140,29 +161,31 @@ class PhoneEditWidget : public QWidget
   Q_OBJECT
   
   public:
-    PhoneEditWidget(QWidget *parent, const char *name);
+    PhoneEditWidget( QWidget *parent, const char *name = 0 );
     ~PhoneEditWidget();
     
-    void setPhoneNumbers(const KABC::PhoneNumber::List &list);
+    void setPhoneNumbers( const KABC::PhoneNumber::List &list );
     const KABC::PhoneNumber::List &phoneNumbers();
     
   signals:
     void modified();
-    
+
   protected slots:
-    void numberChanged(const QString &number);
-    void typeChanged(int);
-    
+    void slotAddPhoneNumber();
+    void slotRemovePhoneNumber();
+    void slotEditPhoneNumber();
+    void slotSelectionChanged();
+    void slotTypeChanged( int pos );
+
   private:
-    void fillCombo(KComboBox *combo);
-    void updatePhoneNumber(int type, const QString &number);
-    
     KABC::PhoneNumber::List mPhoneNumberList;
-    QMap<int, int> mTypeMap;
-    QStringList mTypeList;
-    
-    QPtrVector<KComboBox> mComboVector;
-    QPtrVector<KLineEdit> mEditVector;
+    KABC::PhoneNumber::TypeList mTypeList;
+    KComboBox *mTypeBox;
+    KListView *mListView;
+
+    QPushButton *mAddButton;
+    QPushButton *mRemoveButton;
+    QPushButton *mEditButton;
 };
 
 ////////////////////////////////////
