@@ -66,6 +66,41 @@ void listStrList(kdbgstream& s,const QStringList& l)
 		s << fname << ": " << *i << endl;
 	}
 }
+
+
+
+QString qstringExpansion(const QString& s)
+{
+	QString t;
+
+	for (unsigned i=0; i<s.length(); i++)
+	{
+		t+=s[i];
+		t+=' ';
+		t+=QString::number(s[i].unicode());
+		t+=' ';
+	}
+
+	return t;
+}
+
+QString charExpansion(const char *s)
+{
+	QString t;
+
+	while (*s)
+	{
+		t+=QChar(*s);
+		t+=' ';
+		t+=QString::number(*s);
+		t+=' ';
+		s++;
+	}
+
+	return t;
+}
+
+
 #else
 #ifdef TEST_DEBUG
 debugName const fname((int) id);

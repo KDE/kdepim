@@ -34,7 +34,9 @@
 // Turn OFF as much debugging as possible
 //
 //
+#ifdef NDEBUG
 #undef DEBUG
+#endif
 
 // Define TEST_DEBUG to check whether all the
 // calls to kdWarning and kdError use __FUNCTION__
@@ -44,6 +46,7 @@
 //
 #undef TEST_DEBUG
 
+#include <qstring.h>
 #include <klocale.h>
 #include <kdebug.h>
 
@@ -141,6 +144,8 @@ class KConfig;
 //
 void listConfig(kdbgstream&,KConfig&);
 void listStrList(kdbgstream&,const QStringList&);
+QString qstringExpansion(const QString&);
+QString charExpansion(const char *);
 #else
 // With debugging turned off, FUNCTIONSETUP doesn't do anything.
 // In particular it doesn't give functions a local variable fname,
