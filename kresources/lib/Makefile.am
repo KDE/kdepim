@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir) -I$(top_builddir)/libkdepim -I$(top_srcdir)/libkdepim $(all_includes)
+INCLUDES = -I$(top_srcdir) $(all_includes)
 
 lib_LTLIBRARIES = libkgroupwarebase.la libkgroupwaredav.la
 

@@ -1,6 +1,5 @@
 INCLUDES= -I$(top_srcdir)/libkmime \
-    -I$(srcdir)/.. -I$(top_builddir)/libkdepim \
-    $(SSL_INCLUDES) $(all_includes)
+    -I$(srcdir)/.. $(SSL_INCLUDES) $(all_includes)
 
 ####### Files
 

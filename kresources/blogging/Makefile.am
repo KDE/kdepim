@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kresources/lib -I../lib -I$(top_srcdir)/kresources/blogging/libkblog/ -I$(top_builddir)/libkdepim $(all_includes)
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kresources/lib -I../lib -I$(top_srcdir)/kresources/blogging/libkblog/ $(all_includes)
 
 lib_LTLIBRARIES = libkcal_blogging.la
 kde_module_LTLIBRARIES = kcal_blogging.la

@@ -35,6 +35,7 @@
 
 #include <qvaluelist.h>
 #include <dcopobject.h>
+#include <kdepimmacros.h>
 
 class KConfigBase;
 class KConfig;
@@ -49,7 +50,9 @@ class Identity;
  * @short Manages the list of identities.
  * @author Marc Mutz <mutz@kde.org>
  **/
+#define IdentityManager KDE_EXPORT IdentityManager
 class IdentityManager : public ConfigManager, public DCOPObject
+#undef IdentityManager
 {
   Q_OBJECT
   K_DCOP

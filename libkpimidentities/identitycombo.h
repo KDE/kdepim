@@ -34,6 +34,7 @@
 
 #include <qcombobox.h>
 #include <qvaluelist.h>
+#include <kdepimmacros.h>
 
 class QString;
 
@@ -47,7 +48,7 @@ class Identity;
  * @author Marc Mutz <mutz@kde.org>
  **/
 
-class IdentityCombo : public QComboBox {
+class KDE_EXPORT IdentityCombo : public QComboBox {
   Q_OBJECT
 public:
   IdentityCombo( IdentityManager* manager, QWidget * parent=0, const char * name=0 );

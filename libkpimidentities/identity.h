@@ -30,7 +30,7 @@ namespace KPIM {
  * @short abstraction of a signature (aka "footer").
  * @author Marc Mutz <mutz@kde.org>
  */
-class Signature {
+class KDE_EXPORT Signature {
   friend class Identity;
 
   friend QDataStream & KPIM::operator<<( QDataStream & stream, const Signature & sig );
@@ -85,7 +85,7 @@ private:
 };
 
 /** User identity information */
-class Identity
+class KDE_EXPORT Identity
 {
   // only the identity manager should be able to construct and
   // destruct us, but then we get into problems with using
