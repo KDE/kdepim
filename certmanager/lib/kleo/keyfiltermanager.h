@@ -52,7 +52,7 @@ namespace Kleo {
     ~KeyFilterManager();
 
   public:
-    static const KeyFilterManager * instance();
+    static KeyFilterManager * instance();
 
     const KeyFilter * filterMatching( const GpgME::Key & key ) const;
 

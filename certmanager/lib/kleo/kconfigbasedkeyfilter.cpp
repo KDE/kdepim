@@ -99,8 +99,8 @@ Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigBase & config )
   } else {
     mItalic = config.readBoolEntry( "font-italic", false );
     mBold = config.readBoolEntry( "font-bold", false );
-    mStrikeOut = config.readBoolEntry( "font-strikeout", false );
   }
+  mStrikeOut = config.readBoolEntry( "font-strikeout", false );
 #ifdef SET
 #undef SET
 #endif
@@ -170,7 +170,7 @@ bool Kleo::KConfigBasedKeyFilter::matches( const GpgME::Key & key ) const {
   CAN_MATCH( Certify );
   CAN_MATCH( Authenticate );
   MATCH( mHasSecret, isSecret );
-#undef MATCH  
+#undef MATCH
   if ( mIsOpenPGP != DoesNotMatter &&
        bool( key.protocol() == GpgME::Context::OpenPGP ) != bool( mIsOpenPGP == Set ) )
     return false;
@@ -225,8 +225,10 @@ bool Kleo::KConfigBasedKeyFilter::matches( const GpgME::Key & key ) const {
   return true;
 }
 
-static inline QFont resizedFont( QFont font, int pointSize ) {
+static inline QFont resizedFont( QFont font, int pointSize, bool strike ) {
   font.setPointSize( pointSize );
+  if ( strike )
+    font.setStrikeOut( true );
   return font;
 }
 
@@ -242,7 +244,7 @@ static inline QFont adapt( QFont font, bool it, bool b, bool strike ) {
 
 QFont Kleo::KConfigBasedKeyFilter::font( const QFont & f ) const {
   if ( mUseFullFont )
-    return resizedFont( mFont, f.pointSize() );
+    return resizedFont( mFont, f.pointSize(), mStrikeOut );
   else
     return adapt( f, mItalic, mBold, mStrikeOut );
 }

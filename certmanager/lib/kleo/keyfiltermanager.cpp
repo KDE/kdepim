@@ -83,7 +83,7 @@ Kleo::KeyFilterManager::~KeyFilterManager() {
   delete d; d = 0;
 }
 
-const Kleo::KeyFilterManager * Kleo::KeyFilterManager::instance() {
+Kleo::KeyFilterManager * Kleo::KeyFilterManager::instance() {
   if ( !mSelf )
     mSelf = new Kleo::KeyFilterManager();
   return mSelf;
