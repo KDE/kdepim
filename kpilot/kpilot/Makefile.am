@@ -48,7 +48,7 @@ kpilotDaemon_SOURCES = \
 	pilotDaemonDCOP.skel kpilotDCOP.stub logWidgetDCOP.stub \
 	pilotDaemon.cc kpilotConfig.cc \
 	hotSync.cc interactiveSync.cc syncStack.cc \
-	fileInstaller.cc
+	fileInstaller.cc kroupware.cc
 
 kpilotTest_SOURCES = kpilotConfig.cc \
 	logWidget.cc pilotComponent.cc \
