@@ -340,7 +340,6 @@ void KAddressBook::importVCard( const KURL &url, bool showDialog )
   QString caption( i18n( "vCard Import Failed" ) );
   if ( KIO::NetAccess::download( fileUrl, fileName ) ) {
     KABC::VCardConverter converter;
-    KABC::Addressee addr;
     QFile file( fileName );
 
     file.open( IO_ReadOnly );
@@ -348,42 +347,47 @@ void KAddressBook::importVCard( const KURL &url, bool showDialog )
     file.close();
 
     QString data = QString::fromUtf8( rawData.data(), rawData.size() + 1 );
+    QStringList dataList = QStringList::split( "\r\n\r\n", data );
 
-    bool ok = false;
-    if ( data.contains( "VERSION:3.0" ) )
-      ok = converter.vCardToAddressee( data, addr, KABC::VCardConverter::v3_0 );
-    else if ( data.contains( "VERSION:2.1" ) )
-      ok = converter.vCardToAddressee( data, addr, KABC::VCardConverter::v2_1 );
-    else {
-      KMessageBox::sorry( this, i18n( "Not supported vcard version!" ),
-                          caption );
-      return;
-    }
+    QStringList::Iterator it;
+    for ( it = dataList.begin(); it != dataList.end(); ++it ) {
+      KABC::Addressee addr;
+      bool ok = false;
+      if ( (*it).contains( "VERSION:3.0" ) )
+        ok = converter.vCardToAddressee( *it, addr, KABC::VCardConverter::v3_0 );
+      else if ( (*it).contains( "VERSION:2.1" ) )
+        ok = converter.vCardToAddressee( *it, addr, KABC::VCardConverter::v2_1 );
+      else {
+        KMessageBox::sorry( this, i18n( "Not supported vcard version!" ),
+                            caption );
+        continue;
+      }
 
-    if ( !addr.isEmpty() && ok ) {
-      // Add it to the document, then let the user edit it. We use a
-      // PwNewCommand so the user can undo it.
-      PwNewCommand *command = new PwNewCommand( mAddressBook, addr );
-      UndoStack::instance()->push( command );
-      RedoStack::instance()->clear();
+      if ( !addr.isEmpty() && ok ) {
+        // Add it to the document, then let the user edit it. We use a
+        // PwNewCommand so the user can undo it.
+        PwNewCommand *command = new PwNewCommand( mAddressBook, addr );
+        UndoStack::instance()->push( command );
+        RedoStack::instance()->clear();
 
-      mViewManager->refresh();
+        mViewManager->refresh();
 
-      if ( showDialog )
-        editAddressee( addr.uid() );
+        if ( showDialog )
+          editAddressee( addr.uid() );
 
-      emit modified( true );
-    } else {
-      QString text = i18n( "The selected file does not appear to be a valid vCard. "
-                           "Please check the file and try again." );
+        emit modified( true );
+      } else {
+        QString text = i18n( "The selected file does not appear to be a valid vCard. "
+                             "Please check the file and try again." );
 
-      KMessageBox::sorry( this, text, caption );
+        KMessageBox::sorry( this, text, caption );
+      }
     }
 
     if ( !fileUrl.isLocalFile() )
       KIO::NetAccess::removeTempFile( fileName );
   } else {
-    QString text( "<qt>Unable to access <b>%1</b>!</qt>" );
+    QString text = i18n( "<qt>Unable to access <b>%1</b>!</qt>" );
     KMessageBox::error( this, text.arg( fileUrl.url() ), caption );
   }
 }
@@ -441,34 +445,49 @@ void KAddressBook::exportVCard30()
 
 void KAddressBook::exportVCard( KABC::VCardConverter::Version )
 {
-  KABC::Addressee addr;
+  KABC::Addressee::List addrList;
 
   QStringList uids = viewManager()->selectedUids();
   if ( uids.count() == 0 )
     return;
-  else
-    addr = mAddressBook->findByUid( uids[ 0 ] );
 
-  if ( addr.isEmpty() )
+  for ( uint i = 0; i < uids.count(); ++i ) {
+    KABC::Addressee addr = mAddressBook->findByUid( uids[ i ] );
+    if ( !addr.isEmpty() )
+      addrList.append( addr );
+  }
+
+  if ( addrList.count() == 0 )
     return;
 
-  QString name = addr.givenName() + "_" + addr.familyName() + ".vcf";
+  QString name;
+  if ( addrList.count() == 1 )
+    name = addrList[ 0 ].givenName() + "_" + addrList[ 0 ].familyName() + ".vcf";
+  else
+    name = "addressbook.vcf";
 
   QString fileName = KFileDialog::getSaveFileName( name );
 
   QFile outFile( fileName );
-  if ( outFile.open( IO_WriteOnly ) ) {
+  if ( !outFile.open( IO_WriteOnly ) ) {
+    QString text = i18n( "<qt>Unable to open file <b>%1</b> for export!</qt>" );
+    KMessageBox::error( this, text.arg( fileName ) );
+    return;
+  }
+
+  QTextStream t( &outFile );
+  t.setEncoding( QTextStream::UnicodeUTF8 );
+
+  KABC::Addressee::List::Iterator it;
+  for ( it = addrList.begin(); it != addrList.end(); ++it ) {
     KABC::VCardConverter converter;
     QString vcard;
 
-    converter.addresseeToVCard( addr, vcard );
-
-    QTextStream t( &outFile );
-    t.setEncoding( QTextStream::UnicodeUTF8 );
-    t << vcard;
-
-    outFile.close();
+    converter.addresseeToVCard( *it, vcard );
+    t << vcard << "\r\n\r\n";
   }
+
+  outFile.close();
 }
 
 QString KAddressBook::getNameByPhone( QString phone )
