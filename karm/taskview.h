@@ -68,8 +68,8 @@ private:
     void saveToFileFormat();
     void loadFromKCalFormat();
     void saveToKCalFormat();
-    void buildTask( KCal::Event* event, QDict<Task>& map );
-    void positionTask( const KCal::Event* event, const QDict<Task>& map );
+    void buildTask( KCal::Incidence* event, QDict<Task>& map );
+    void positionTask( const KCal::Incidence* event, const QDict<Task>& map );
 
 public slots:
     /*
@@ -96,6 +96,8 @@ public slots:
     void extractTime(int minutes);
     void resetSessionTimeForAllTasks();
     void handleDesktopChange(int desktop);
+    void loadFromKOrgTodos();
+    void loadFromKOrgEvents();
 
 protected slots:
     void autoSaveChanged(bool);

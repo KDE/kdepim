@@ -16,6 +16,9 @@
 		<Action name="new_sub_task" />
 		<Action name="delete_task" />
 		<Action name="edit_task" />
+		<Separator />
+		<Action name="import_korg_events" />
+		<Action name="import_korg_todos" />
 	</Menu>
 </MenuBar>
 <ToolBar alreadyVisited="1" position="Top" iconText="IconOnly" noMerge="1" name="mainToolBar" >

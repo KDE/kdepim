@@ -28,7 +28,7 @@ Task::Task(const QString& taskName, long minutes, long sessionTime, DesktopListT
   init(taskName, minutes, sessionTime, desktops);
 }
 
-Task::Task( KCal::Event* event, QListView* parent )
+Task::Task( KCal::Incidence* event, QListView* parent )
   : QObject(), QListViewItem( parent )
 {
   long minutes = 0;
@@ -36,7 +36,7 @@ Task::Task( KCal::Event* event, QListView* parent )
   int level = 0;
   long sessionTime = 0;
   DesktopListType desktops;
-  parseEvent( event, minutes, name, level, desktops );
+  parseIncidence( event, minutes, name, level, desktops );
   init( name, minutes, sessionTime, desktops );
 }
 
@@ -174,7 +174,7 @@ KCal::Event* Task::asEvent( int level )
   return event;
 }
 
-bool Task::parseEvent( KCal::Event* event, long& minutes, QString& name, int& level, DesktopListType& desktops )
+bool Task::parseIncidence( KCal::Incidence* event, long& minutes, QString& name, int& level, DesktopListType& desktops )
 {
   bool ok = false;
 

@@ -239,6 +239,14 @@ void MainWindow::makeMenus()
                             _taskView,
                             SLOT( editTask() ), actionCollection(),
                             "edit_task");
+  new KAction( i18n("Import &Todos"), 0, 
+                            _taskView,
+                            SLOT( loadFromKOrgTodos() ), actionCollection(),
+                            "import_korg_todos");
+  new KAction( i18n("Import E&vents"), 0, 
+                            _taskView,
+                            SLOT( loadFromKOrgEvents() ), actionCollection(),
+                            "import_korg_events");
 
   createGUI( QString::fromLatin1("karmui.rc") );
 

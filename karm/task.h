@@ -30,7 +30,7 @@ public:
 	     DesktopListType desktops, QListView *parent = 0);
 	Task(const QString& taskame, long minutes, long sessionTime, 
 	     DesktopListType desktops, QListViewItem *parent = 0);
-  Task( KCal::Event* event, QListView* parent );
+  Task( KCal::Incidence* event, QListView* parent );
 
 	void init(const QString& taskame, long minutes, long sessionTime, 
 		  DesktopListType desktops);
@@ -93,7 +93,7 @@ public:
 
   KCal::Event* asEvent( int level );
 
-  static bool parseEvent( KCal::Event*, long&, QString&, int&, DesktopListType& );
+  static bool parseIncidence( KCal::Incidence*, long&, QString&, int&, DesktopListType& );
 
 protected slots:
   void updateActiveIcon();
