@@ -1212,12 +1212,15 @@ void PilotDaemon::updateTrayStatus(const QString &s)
 {
 	if (!fTray) return;
 
+	QString tipText = CSL1("<qt>");
+	tipText.append( s );
+	tipText.append( CSL1(" ") );
+	tipText.append( i18n("Next sync is %1.")
+		.arg( syncTypeString(fNextSyncType) ) );
+	tipText.append( CSL1("</qt>") );
+
 	QToolTip::remove(fTray);
-	QToolTip::add(fTray,
-		i18n("<qt>%1<br/>%2</qt>")
-			.arg(statusString())
-			.arg(s)
-		);
+	QToolTip::add(fTray,tipText);
 	emitDCOPSignal( "kpilotDaemonStatusChanged()", QByteArray() );
 }
 
