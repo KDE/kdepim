@@ -18,7 +18,7 @@ COMPILE_AFTER_libkcal = kalarm kitchensync konsolekalendar korganizer ksync libk
 COMPILE_AFTER_mimelib = korn kmail
 COMPILE_AFTER_libkdenetwork = kmail knode certmanager
 COMPILE_AFTER_libksieve = kmail
-COMPILE_BEFORE_kontact = kaddressbook knotes korganizer
+COMPILE_BEFORE_kontact = kaddressbook knotes korganizer akregator
 COMPILE_BEFORE_kioslaves = libkmime
 COMPILE_BEFORE_libkpimexchange = libkdepim
 COMPILE_BEFORE_kalarm = libkdepim libkmime
@@ -28,6 +28,7 @@ COMPILE_BEFORE_korn = libkdenetwork
 COMPILE_BEFORE_kitchensync = libkdepim
 COMPILE_AFTER_libemailfunctions = libkcal libkpimidentities kmail korganizer
 COMPILE_AFTER_libkholidays = korganizer kontact
+COMPILE_BEFORE_akregator = libkdepim
 
 AUTOMAKE_OPTIONS = foreign 1.5
 DISTCLEANFILES = inst-apps
