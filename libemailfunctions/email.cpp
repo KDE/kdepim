@@ -133,12 +133,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
     switch ( context ) {
     case TopLevel : {
       switch ( aStr[index] ) {
-        case '"' : 
-          if ( inQuotedString ) {
-            inQuotedString = false;
-            } else if ( !inQuotedString ) {
-              inQuotedString = true;
-            }
+        case '"' : inQuotedString = !inQuotedString; 
             break;
         case '(' : 
           if ( !inQuotedString ) {
