@@ -99,7 +99,7 @@ void KNProgress::initProgressBar()
 	setFormat("%p%");
 	setValue(1);
 }
-								
+
 
 
 // add 10%
@@ -110,7 +110,7 @@ void KNProgress::stepProgressBar()
 	setFormat("%p%");
 	setValue(progVal);
 }
-											
+
 
 
 // display 100%
@@ -143,13 +143,13 @@ KNodeApp::KNodeApp()
   //init the GUI
   setPlainCaption("KNode " KNODE_VERSION);
   initView();
-  KNLVItemBase::initIcons();	
+  KNLVItemBase::initIcons();
   initStatusBar();
-	
+
   //init Net
 	NAcc=new KNNetAccess();
 	knGlobals.netAccess = NAcc;
-	
+
   //init filter manager
 	FiManager=new KNFilterManager();
 	knGlobals.fiManager = FiManager;
@@ -157,19 +157,19 @@ KNodeApp::KNodeApp()
 	//init Fetch-Article Manager
 	FAManager=new KNFetchArticleManager(view->hdrView, FiManager);
 	knGlobals.fArtManager = FAManager;
-				
+
   //init Group Manager
 	GManager=new KNGroupManager(FAManager);
-	knGlobals.gManager = GManager;	
-	
+	knGlobals.gManager = GManager;
+
 	//init Account Manager
 	AManager=new KNAccountManager(GManager, view->collectionView);
 	knGlobals.accManager = AManager;
-	
+
 	//init Saved-Article Manager
 	SAManager=new KNSavedArticleManager(view->hdrView, AManager);
 	knGlobals.sArtManager = SAManager;
-	
+
 	//init Folder Manager
 	FoManager=new KNFolderManager(SAManager, view->collectionView);
 	knGlobals.foManager = FoManager;
@@ -178,7 +178,7 @@ KNodeApp::KNodeApp()
 	// build menu- & toolbar
   initActions();
   initPopups();
-	
+
 	restoreWindowSize("main", this, QSize(600,400));
 
   // set the keyboard focus indicator on the first item in the collectionView
@@ -192,28 +192,28 @@ KNodeApp::KNodeApp()
 KNodeApp::~KNodeApp()
 {
  	KNLVItemBase::clearIcons();
- 	
+
   delete acc;
   delete setDialog;
- 	
+
  	delete NAcc;
  	qDebug("Net deleted\n");
- 	
+
  	delete AManager;
  	qDebug("AManager deleted\n");
- 	
+
 	delete GManager;
  	qDebug("GManager deleted\n");
- 	
+
  	delete FAManager;
  	qDebug("FAManager deleted\n");
- 	
+
  	delete FoManager;
  	qDebug("FoManager deleted\n");
- 	
+
  	delete SAManager;
  	qDebug("SAManager deleted\n");
- 	
+
  	delete FiManager;
   qDebug("FiManager deleted\n");
 }
@@ -277,36 +277,36 @@ void KNodeApp::initView()
 
   connect(view->collectionView, SIGNAL(selectionChanged(QListViewItem *)),
   	this, SLOT(slotCollectionSelected(QListViewItem *)));
-    	
+
   connect(view->hdrView, SIGNAL(selectionChanged(QListViewItem *)),
   	this, SLOT(slotHeaderSelected(QListViewItem *)));
-  	
+
   connect(view->hdrView, SIGNAL(doubleClicked(QListViewItem*)),
   	this, SLOT(slotHeaderDoubleClicked(QListViewItem*)));
-  	
+
   connect(view->hdrView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
   	this, SLOT(slotArticlePopup(QListViewItem*, const QPoint&, int)));
 
   connect(view->collectionView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
-  	this, SLOT(slotCollectionPopup(QListViewItem*, const QPoint&, int)));	
+  	this, SLOT(slotCollectionPopup(QListViewItem*, const QPoint&, int)));
 }
 
 
 void KNodeApp::initStatusBar()
 {
 	KStatusBar *sb=statusBar();
-	
+
 	progBar = new KNProgress(sb->sizeHint().height()-4,0,1000,0, KProgress::Horizontal,sb );
 	knGlobals.progressBar = progBar;
   sb->addWidget(progBar);
-	
+
  	sb->insertItem(QString::null, SB_MAIN,2);
 	sb->setItemAlignment (SB_MAIN,AlignLeft | AlignVCenter);
 	sb->insertItem(QString::null, SB_FILTER,2);
 	sb->setItemAlignment (SB_FILTER,AlignLeft | AlignVCenter);
 	sb->insertItem(QString::null,SB_GROUP,3);
-	sb->setItemAlignment (SB_GROUP,AlignLeft | AlignVCenter);	
-	setStatusMsg();	
+	sb->setItemAlignment (SB_GROUP,AlignLeft | AlignVCenter);
+	setStatusMsg();
 }
 
 
@@ -426,7 +426,7 @@ void KNodeApp::initPopups()
 
 void KNodeApp::saveOptions()
 {
-	saveWindowSize("main", size());	
+	saveWindowSize("main", size());
   view->saveOptions();
   FiManager->saveOptions();
   KNArticleWidget::saveOptions();
@@ -450,7 +450,7 @@ void KNodeApp::slotCancel()
     SAManager->cancel();
 }
 
- 	
+
 void KNodeApp::slotSupersede()
 {
   if (FAManager->hasCurrentArticle())
@@ -459,7 +459,7 @@ void KNodeApp::slotSupersede()
     SAManager->supersede();
 }
 
-  	
+
 void KNodeApp::slotToggleToolBar()
 {
   if(toolBar()->isVisible())
@@ -475,16 +475,16 @@ void KNodeApp::slotToggleStatusBar()
     statusBar()->hide();
   else
     statusBar()->show();
-}	
-  	
-  	
+}
+
+
 void KNodeApp::slotConfKeys()
 {
   #warning FIXME: stub  (open conf dialog and show keyboard config widget)
 }
 
- 	
-  	
+
+
 void KNodeApp::slotConfToolbar()
 {
   #warning FIXME: stub  (open conf dialog and show toolbar config widget)
@@ -525,7 +525,7 @@ void KNodeApp::slotCollectionSelected(QListViewItem *it)
 	if(it) {
 		if(((KNCollectionViewItem*)it)->coll->type()==KNCollection::CTgroup) {
   		if (!(view->hdrView->hasFocus())&&!(view->artView->hasFocus()))
-	     	view->hdrView->setFocus();  			
+	     	view->hdrView->setFocus();
 			grp=(KNGroup*)((KNCollectionViewItem*)it)->coll;
 			acc=(KNNntpAccount*)grp->account();
 		}
@@ -544,7 +544,7 @@ void KNodeApp::slotCollectionSelected(QListViewItem *it)
 		}
 		view->artView->showBlankPage();
 	}
-	
+
 	AManager->setCurrentAccount(acc);
 	GManager->setCurrentGroup(grp);
 	FoManager->setCurrentFolder(fldr);
@@ -583,7 +583,7 @@ void KNodeApp::slotHeaderDoubleClicked(QListViewItem *it)
 		else {
 			sart=(KNSavedArticle*)((KNHdrViewItem*)it)->art;
 			SAManager->editArticle(sart);
-	 }			
+	 }
 	}
 }
 
@@ -610,7 +610,7 @@ void KNodeApp::slotCollectionPopup(QListViewItem *it, const QPoint &p, int c)
   	  if ((static_cast<KNCollectionViewItem*>(it))->coll->type()==KNCollection::CTfolder)
 	  		folderPopup->popup(p);
 			else
-  			accPopup->popup(p);			
+  			accPopup->popup(p);
   	}
   }
 }
@@ -622,7 +622,7 @@ void KNodeApp::slotCollectionPopup(QListViewItem *it, const QPoint &p, int c)
 void KNodeApp::cleanup()
 {
 	KNPurgeProgressDialog *ppdlg=0;
-	
+
 	saveOptions();
 
   if(GManager->timeToExpire()) {
@@ -642,7 +642,7 @@ void KNodeApp::cleanup()
  	}
  	else
  		FoManager->syncFolders();
-   		
+
   AManager->saveYourself();
 
   KNViewHeader::clear();
@@ -656,8 +656,8 @@ void KNodeApp::cleanup()
 bool KNodeApp::queryClose()
 {
 	if (!SAManager->closeComposeWindows())
-	  return false;	
-  cleanup();	
+	  return false;
+  cleanup();
 	return true;
 }
 
@@ -682,21 +682,22 @@ void KNodeApp::jobDone(KNJobData *j)
 		case KNJobData::JTmail:
 			qDebug("KNodeApp::jobDone() : job sent to SAManager");
 			SAManager->jobDone(j);
-		break;	
-	};	
+		break;
+	};
 }
 
 
 
-bool KNodeApp::eventFilter(QObject*, QEvent *e)
+bool KNodeApp::eventFilter(QObject* o, QEvent *e)
 {
-  if( (e->type()>1 && e->type()<10)  || //mouse and key events
+/*  if( (e->type()>1 && e->type()<10)  || //mouse and key events
        e->type()==30 || //accel events
        e->type()==31 // wheel events
     )
     return true;
+*/
 
-  return false;
+  return KTMainWindow::eventFilter( o, e );
 }
 
 
