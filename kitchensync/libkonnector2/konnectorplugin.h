@@ -28,6 +28,8 @@
 
 #include <syncer.h>
 
+#include "stderror.h"
+#include "stdprogress.h"
 #include "koperations.h"
 
 namespace KSync {
@@ -53,33 +55,46 @@ public:
     virtual bool startSync() = 0;
     virtual bool startRestore(const QString& path) = 0;
     virtual bool startBackup(const QString& path) = 0;
-    virtual bool connect() = 0;
-    virtual void disconnect() = 0;
+    virtual bool connectDevice() = 0;
+    virtual bool disconnectDevice() = 0;
 
     virtual KonnectorInfo info()const = 0;
 
-    virtual ConfigWidget* configWidget( const Kapabilities&, QWidget* parent, const char* name ) = 0;
-    virtual ConfigWidget* configWidget( QWidget* parent, const char* name ) = 0;
+    virtual ConfigWidget* configWidget( const Kapabilities&, QWidget* parent, const char* name ) ;
+    virtual ConfigWidget* configWidget( QWidget* parent, const char* name ) ;
 
     virtual void add( const QString& res  );
+    virtual void remove( const QString& res );
+    virtual QStringList resources()const;
+
+
+    /**
+     * can be a file, a resource, a Syncee...
+     */
     virtual void download( const QString& resource ) = 0;
 
-protected:
-    QString m_adds;
+    /**
+     * the Syncees that are supported builtIn
+     */
+    virtual QStringList builtIn()const;
     bool isConnected()const;
+
+protected:
     void progress( const Progress& );
     void error( const Error& );
 
     //virtual QString metaId()const = 0;
 public slots:
-    virtual void slotWrite(const QString &, const QByteArray & ) = 0;
-    virtual void slotWrite(Syncee::PtrList ) = 0;
-    virtual void slotWrite(KOperations::ValueList ) = 0;
+//    virtual void slotWrite(const QString &, const QByteArray & ) = 0;
+    virtual void slotWrite(const Syncee::PtrList& ) = 0;
+//    virtual void slotWrite(KOperations::ValueList ) = 0;
 signals:
     void sync(const UDI&,  Syncee::PtrList );
-    void sig_progress(const UDI&, Progress );
-    void sig_error( const UDI&, Error );
+    void sig_progress(const UDI&, const Progress& );
+    void sig_error( const UDI&, const Error& );
+    void sig_downloaded( const UDI&, Syncee::PtrList );
 private:
+    QStringList m_adds;
     QString m_udi;
     bool m_isCon : 1;
 };

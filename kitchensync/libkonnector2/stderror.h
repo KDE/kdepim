@@ -13,6 +13,7 @@ namespace KSync {
         static Error couldNotConnect();
         static Error downloadError(const QString& );
         static Error uploadError( const QString& );
+        static Error konnectorDoesNotExist(const QString& udi );
     };
 }
 #endif

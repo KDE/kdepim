@@ -23,6 +23,8 @@
 #include <qobject.h>
 #include <qstring.h>
 
+#include <kstaticdeleter.h>
+
 #include "kdevice.h"
 #include "filter.h"
 #include "error.h"
@@ -37,9 +39,10 @@ namespace KSync {
 
     class KonnectorManager : public QObject {
         Q_OBJECT
+        friend class KStaticDeleter<KonnectorManager>;
     public:
         static KonnectorManager* self();
-        Device::ValueList query( const QString& category = QString::null );
+        Device::ValueList query( );
         UDI load( const Device& device );
         UDI load( const QString& deviceName );
         bool unload( const UDI& udi );
@@ -59,15 +62,17 @@ namespace KSync {
          * on sync
          */
         void add( const UDI&, const QString& resource );
+        void remove( const UDI&, const QString& res );
+        QStringList resources( const UDI& )const;
 
         /**
          * download a file if possible and emits a signal
          */
         void download( const UDI&,  const QString& resource );
 
-        bool isConnected( const UDI& );
-        bool connect( const UDI& );
-        bool disconnect( const UDI& );
+        bool isConnected( const UDI& )const;
+        bool connectDevice( const UDI& );
+        bool disconnectDevice( const UDI& );
 
         bool startSync(const UDI& );
 
@@ -94,19 +99,36 @@ namespace KSync {
         const Filter::PtrList filters();
 
     public slots:
-        void write( const QString&, Syncee::PtrList param );
+        void write( const QString&, const Syncee::PtrList& );
 
     signals:
         void sync( const QString&,  Syncee::PtrList );
-        void stateChanged( const QString&, bool );
-        void progress( const UDI&, Progress );
-        void error( const UDI&,     Error );
+        void progress( const UDI&, const Progress& );
+        void error( const UDI&,  const   Error& );
+        void downloaded( const UDI&, Syncee::PtrList );
+
+    private slots:
+        void slotSync( const UDI&, Syncee::PtrList );
+        void slotProgress( const UDI&, const Progress& );
+        void slotError( const UDI&, const Error& );
+        void slotDownloaded( const UDI&, Syncee::PtrList );
 
     private:
+        void filter( Syncee::PtrList unknown, Syncee::PtrList& real );
+
         KonnectorManager();
         ~KonnectorManager();
+        Device::ValueList allDevices();
+        Device parseDevice( const QString& path );
+        Device find( const QString& deviceName );
+        KonnectorPlugin* pluginByUDI( const UDI& )const;
+        UDI newUDI()const;
+        Syncee::PtrList findUnknown( Syncee::PtrList& );
         static KonnectorManager* m_self;
         Filter::PtrList m_filter;
+        Filter::PtrList m_filAdded;
+        bool m_auto;
+
         class Private;
         Private *d;
     };

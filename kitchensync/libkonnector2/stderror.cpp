@@ -28,3 +28,6 @@ Error StdError::downloadError(const QString& file) {
 Error StdError::uploadError(const QString& file) {
     return Error( Error::UploadError, i18n("Could not upload '%1'").arg(file) );
 }
+Error StdError::konnectorDoesNotExist( const QString& udi ) {
+    return Error( Error::KonnectorNotExist, i18n("The Konnector with the UDI %1 does not exist").arg(udi) );
+}

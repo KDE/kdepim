@@ -58,11 +58,13 @@ Device::Device(const Device &dev )
 }
 Device &Device::operator=( const Device &dev )
 {
+    d = new DevicePrivate;
     d->name = dev.d->name;
     d->group = dev.d->group;
     d->vendor = dev.d->vendor;
     d->library = dev.d->library;
     d->id = dev.d->id;
+
     return *this;
 }
 Device::~Device()

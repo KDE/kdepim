@@ -13,7 +13,8 @@ namespace KSync {
     public:
         enum ErrorCodes{
             ConnectionLost, WrongPassword,  Authentication, WrongUser,
-            WrongIP, CouldNotConnect, DownloadError, UploadError, UserDefined
+            WrongIP, CouldNotConnect, DownloadError, UploadError, UserDefined,
+            KonnectorNotExist
         };
         Error( int number,  const QString& text );
         Error( const QString& text = QString::null);

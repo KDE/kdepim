@@ -22,6 +22,7 @@ namespace KSync {
 
         bool operator==( const KonnectorInfo& );
 
+        QString name()const;
         QIconSet iconSet()const;
         QString id()const;
         QString metaId()const;
@@ -29,6 +30,7 @@ namespace KSync {
         QString udi()const;
         bool isConnected()const;
     private:
+        QString m_na;
         QIconSet m_icon;
         QString m_id;
         QString m_meta;

@@ -25,6 +25,7 @@ namespace KSync {
         virtual QString name() = 0;
         virtual QStringList mimeTypes()const = 0;
 
+        virtual bool canFilter( Syncee* ) = 0;
         /**
          * both methods may return 0 if they're
          * not able to convert!
