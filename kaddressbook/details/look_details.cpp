@@ -60,8 +60,14 @@ KABDetailedView::KABDetailedView(QWidget* parent, const char* name)
     QFont fixed=KGlobalSettings::fixedFont();
     QString gfont=general.family();
     QString ffont=fixed.family();
-    int gpointsize=general.pixelSize(); // it is a joke
+    int gpointsize=general.pixelSize();
+    if ( gpointsize == -1 )
+      gpointsize = general.pointSize();
+
     int fpointsize=fixed.pixelSize();
+    if ( fpointsize == -1 )
+      fpointsize = fixed.pointSize();
+
     epainter=new KABEntryPainter
              (Qt::black, headlineTextColor,
               useHeadlineBGColor, headlineBGColor,
@@ -405,8 +411,15 @@ void KABDetailedView::configure(KConfig *config)
     QFont fixed=KGlobalSettings::fixedFont();
     QString gfont=general.family();
     QString ffont=fixed.family();
-    int gpointsize=general.pixelSize(); // it is a joke
+
+    int gpointsize=general.pixelSize();
+    if ( gpointsize == -1 )
+      gpointsize = general.pointSize();
+
     int fpointsize=fixed.pixelSize();
+    if ( fpointsize == -1 )
+      fpointsize = fixed.pointSize();
+
     // -----
     bool useBGImage=true;
     config->setGroup(ConfigView);
