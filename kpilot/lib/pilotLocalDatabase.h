@@ -32,7 +32,7 @@
 
 #include "pilotDatabase.h"
 
-#define SHADOW_LOCAL_DB (1)
+// #define SHADOW_LOCAL_DB (1)
 
 class PilotLocalDatabase : public PilotDatabase
 {
