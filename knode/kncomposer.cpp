@@ -1503,14 +1503,6 @@ void KNComposer::slotSpellDone(const QString &newtext)
     }
     s_pellChecker->cleanUp();
     DictSpellChecker::dictionaryChanged();
-
-    delete s_pellChecker;
-    s_pellChecker=0;
-    delete mSpellingFilter;
-    mSpellingFilter = 0;
-
-    if( spellLineEdit )
-        slotSpellcheck();
 }
 
 
@@ -1538,6 +1530,8 @@ void KNComposer::slotSpellFinished()
   {
       if( spellLineEdit )
           slotSpellcheck();
+      else if( status == KSpell::FinishedNoMisspellingsEncountered )
+          KMessageBox::information( this, i18n("No misspellings encountered"));
   }
 }
 
