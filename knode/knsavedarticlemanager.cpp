@@ -1051,13 +1051,29 @@ bool KNSavedArticleManager::generateSupersede(KNArticle *a, KNNntpAccount *acc)
   acc->incUnsentCount();
 
   ca->copyContent(a);
+  ca->clearHead();
+
   ca->setHeader(KNArticleBase::HTsupersedes, a->headerLine("Message-ID"));
-    
-  if(genMId)
-    ca->setHeader(KNArticleBase::HTmessageId, mid);
-  else
-    ca->removeHeader("Message-Id");
-  
+  if(genMId) ca->setHeader(KNArticleBase::HTmessageId, mid);
+  ca->setHeader(KNArticleBase::HTsubject, a->headerLine("Subject"));
+  ca->setHeader(KNArticleBase::HTnewsgroups, a->headerLine("Newsgroups"));
+  QCString ref = a->headerLine("References");
+  if (!ref.isEmpty())
+    ca->setHeader(KNArticleBase::HTreferences, ref);
+
+  //x-headers
+  QString dir(KGlobal::dirs()->saveLocation("appdata"));
+  if (dir==QString::null)
+    displayInternalFileError();
+  else {
+    KNFile f(dir+"xheaders");
+    if(f.open(IO_ReadOnly)) {
+      while(!f.atEnd())
+        a->addHeaderLine(f.readLine(), !allow8bit);
+      f.close();
+    }
+  }
+
   ca->parse();
 
   openInComposer(ca);
