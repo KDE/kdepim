@@ -105,7 +105,7 @@ After the plugin is enabled, you should configure it. Choose
 </para>
 
 <mediaobject>
-<imageobject><imagedata fileref="ep_config" format="PNG"/></imageobject>
+<imageobject><imagedata fileref="ep_config.png" format="PNG"/></imageobject>
 <textobject><para>Configuration</para></textobject>
 </mediaobject>
 
@@ -136,7 +136,7 @@ menu. Now the following dialog will pop up:
 </para>
 
 <mediaobject>
-<imageobject><imagedata fileref="ep_download" format="PNG"/></imageobject>
+<imageobject><imagedata fileref="ep_download.png" format="PNG"/></imageobject>
 <textobject><para>Downloading Appointments</para></textobject>
 </mediaobject>
 
@@ -165,7 +165,7 @@ the &korganizer; main window.
 
 </sect1>
 
-<sect1 id="exchange-plugin-updloading">
+<sect1 id="exchange-plugin-uploading">
 <title>Uploading Appointments</title>
 
 <para>
