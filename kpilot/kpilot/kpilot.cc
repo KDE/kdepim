@@ -221,59 +221,7 @@ void KPilotInstaller::initIcons()
 {
 	FUNCTIONSETUP;
 
-	DEBUGKPILOT << fname
-		<< ": Getting Icon Loader"
-		<< endl;
-
 	KIconLoader *il = KGlobal::iconLoader();
-
-	DEBUGKPILOT << fname
-		<< ": Got Icon Loader @"
-		<< (int) il
-		<< endl;
-
-	il->addAppDir("kpilot");
-
-	DEBUGKPILOT << fname
-		<< ": Added apps dir to Icon Loader"
-		<< endl;
-
-	icon_hotsync = il->loadIcon("hotsync",
-		KIcon::Toolbar,0,KIcon::DefaultState,0, true);
-
-	DEBUGKPILOT << fname
-		<< ": Got first icon."
-		<< endl;
-
-	if (icon_hotsync.isNull())
-	{
-		kdWarning() << __FUNCTION__ << ": Hot-Sync icon not found." << endl;
-		icon_hotsync=QPixmap((const char **)hotsync_icon);
-	}
-
-	icon_backup = il->loadIcon("backup",
-		KIcon::Toolbar,0,KIcon::DefaultState,0, true);
-	if (icon_backup.isNull())
-	{
-		kdWarning() << __FUNCTION__ << ": Backup icon not found." << endl;
-		icon_backup =QPixmap((const char **)toolbar_backup);
-	}
-
-	icon_fastsync = il->loadIcon("fastsync",
-		KIcon::Toolbar,0,KIcon::DefaultState,0, true);
-	if (icon_fastsync.isNull())
-	{
-		kdWarning() << __FUNCTION__ << ": Fast-Sync icon not found." << endl;
-		icon_fastsync = QPixmap((const char **)fastsync_xpm);
-	}
-
-	icon_restore = il->loadIcon("restore",
-		KIcon::Toolbar,0,KIcon::DefaultState,0, true);
-	if (icon_restore.isNull())
-	{
-		kdWarning() << __FUNCTION__ << ": Restore icon not found." << endl;
-		icon_restore = QPixmap((const char **)toolbar_restore);
-	}
 
 	icon_quit = il->loadIcon("exit",
 		KIcon::Toolbar,0,KIcon::DefaultState,0,true);
@@ -282,6 +230,11 @@ void KPilotInstaller::initIcons()
 	{
 		kdWarning() << __FUNCTION__ << ": Quit icon not found." << endl;
 	}
+
+	icon_fastsync = QPixmap((const char **)fastsync_xpm);
+	icon_hotsync = QPixmap((const char **)hotsync_icon);
+	icon_backup = QPixmap((const char **)toolbar_backup);
+	icon_restore = QPixmap((const char **)toolbar_restore);
 }
 
 
@@ -1278,6 +1231,10 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.30  2001/01/19 22:18:43  waba
+// KTMainWindow is obsolete. I hope it works because I can't test due to lack of
+// pilot. At least it compiles.
+//
 // Revision 1.29  2001/01/06 13:21:53  adridg
 // Updated version number
 //
