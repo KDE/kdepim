@@ -288,14 +288,14 @@ void MemoWidget::setupWidget()
 	QWhatsThis::add(fTextWidget,
 		i18n("The text of the selected memo appears here."));
 
-	button = new QPushButton(i18n("Import Memo"), this);
+	button = new QPushButton(i18n("Import Memo..."), this);
 	grid->addWidget(button, 2, 0);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotImportMemo()));
 	QWhatsThis::add(button,
 		i18n
 		("Read a text file and add it to the Pilot's memo database."));
 
-	fExportButton = new QPushButton(i18n("Export Memo"), this);
+	fExportButton = new QPushButton(i18n("Export Memo..."), this);
 	grid->addWidget(fExportButton, 2, 1);
 	connect(fExportButton, SIGNAL(clicked()), this,
 		SLOT(slotExportMemo()));

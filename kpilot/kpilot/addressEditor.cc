@@ -191,10 +191,10 @@ void AddressEditor::initLayout()
 
 	QLabel *t;
 
-	MakeField(i18n("Last Name:"), fLastNameField, 0, 0);
-	MakeField(i18n("First Name:"), fFirstNameField, 1, 0);
+	MakeField(i18n("Last name:"), fLastNameField, 0, 0);
+	MakeField(i18n("First name:"), fFirstNameField, 1, 0);
 	MakeField(i18n("Title:"), fTitleField, 2, 0);
-	MakeField(i18n("Company:"), fCompanyField, 3, 0);
+	MakeField(i18n("Compan:"), fCompanyField, 3, 0);
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -205,7 +205,7 @@ void AddressEditor::initLayout()
 	MakeField(i18n("Address:"), fAddressField, 0, 4);
 	MakeField(i18n("City:"), fCityField, 1, 4);
 	MakeField(i18n("State:"), fStateField, 2, 4);
-	MakeField(i18n("Zip Code:"), fZipField, 3, 4);
+	MakeField(i18n("Zip code:"), fZipField, 3, 4);
 	MakeField(i18n("Country:"), fCountryField, 4, 4);
 	MakeField(i18n("Custom 1:"), fCustom1Field, 5, 4);
 	MakeField(i18n("Custom 2:"), fCustom2Field, 6, 4);

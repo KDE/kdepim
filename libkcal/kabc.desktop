@@ -1,14 +1,20 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Birthdays from KAddressBook
+Name=Birthdays From KAddressBook
 Name[be]=Дні нараджэньня з K Адраснай кнігі
+Name[ca]=Aniversaris des de la Llibreta d'adreces
 Name[da]=Fødselsdage fra KAddressBook
 Name[el]=Γενέθλια από το KAddressBook
 Name[es]=Cumpleaños desde KAddressBook
+Name[fr]=Dates de naissance de KAddressBook
 Name[hu]=Születésnapok a KAddressBookból
 Name[pt_BR]=Aniversários do KAddressBook
+Name[ru]=Дни рождения из адресной книги KDE
 Name[sk]=Dátumy narodenia z KAddressBook
+Name[sr]=Рођендани из KAddressBook-а
 Name[sv]=Födelsedagar från adressboken
+Name[tr]=KAdresDefteri Doğum Günleri
+Name[xx]=xxBirthdays from KAddressBookxx
 X-KDE-Library=kcal_kabc
 Type=Service
 ServiceTypes=KResources/Plugin

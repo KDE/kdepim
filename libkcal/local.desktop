@@ -1,15 +1,21 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Calendar in local file
+Name=Calendar in Local File
 Name[be]=Каляндар у лякальным файле
+Name[ca]=Calendari a un fitxer local
+Name[cy]=Calendr mewn ffeil lleol
 Name[da]=Kalender i lokal fil
 Name[el]=Ημερολόγιο σε τοπικό αρχείο
 Name[es]=Calendario en archivo local
+Name[fr]=Calendrier dans un fichier local
 Name[hu]=Helyi fájlban tárolt naptár
 Name[pt_BR]=Calendário em arquivo local
 Name[ru]=Календарь в локальном файле
 Name[sk]=Kalendár v lokálnom súbore
+Name[sr]=Календар у локалном фајлу
 Name[sv]=Kalender i lokal fil
+Name[tr]=Yerel Takvim Dosyası
+Name[xx]=xxCalendar in local filexx
 Name[zh_CN]=本地文件中的日历
 X-KDE-Library=libkcal
 Type=Service

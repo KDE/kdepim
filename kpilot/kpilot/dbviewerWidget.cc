@@ -102,7 +102,7 @@ void GenericDBWidget::setupWidget()
 	fRecordList->setFullWidth( TRUE );
 	fRecordList->setItemsMovable( FALSE );
 
-	fAddRecord = new KPushButton( i18n("&Add"), this );
+	fAddRecord = new KPushButton( i18n("&Add..."), this );
 	g2->addWidget( fAddRecord, 1, 0 );
 	fEditRecord = new KPushButton( i18n("&Edit"), this );
 	g2->addWidget( fEditRecord, 1, 1 );

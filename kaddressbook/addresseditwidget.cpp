@@ -329,7 +329,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   mRemoveButton = new QPushButton( i18n( "Remove" ), buttonBox );
   connect( mRemoveButton, SIGNAL( clicked() ), SLOT( removeAddress() ) );
 
-  mChangeTypeButton = new QPushButton( i18n( "Change Type" ), buttonBox );
+  mChangeTypeButton = new QPushButton( i18n( "Change Type..." ), buttonBox );
   connect( mChangeTypeButton, SIGNAL( clicked() ), SLOT( changeType() ) );
 
   mTypeCombo->updateTypes();

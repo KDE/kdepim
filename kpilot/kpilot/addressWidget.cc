@@ -246,13 +246,13 @@ void AddressWidget::setupWidget()
 
 	QPushButton *button;
 
-	fEditButton = new QPushButton(i18n("Edit Record"), this);
+	fEditButton = new QPushButton(i18n("Edit Record..."), this);
 	grid->addWidget(fEditButton, 2, 0);
 	connect(fEditButton, SIGNAL(clicked()), this, SLOT(slotEditRecord()));
 	QWhatsThis::add(fEditButton,
 		i18n("<qt>You can edit an address when it is selected.</qt>"));
 
-	button = new QPushButton(i18n("New Record"), this);
+	button = new QPushButton(i18n("New Record..."), this);
 	grid->addWidget(button, 2, 1);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotCreateNewRecord()));
 	QWhatsThis::add(button, i18n("<qt>Add a new address to the address book.</qt>"));

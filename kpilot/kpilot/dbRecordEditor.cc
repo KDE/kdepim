@@ -53,7 +53,7 @@ using namespace KHE;
 
 
 DBRecordEditor::DBRecordEditor(PilotRecord*r, int n, QWidget *parent)
- : KDialogBase(parent, "RecordEditor",false,i18n("Edit Record"),
+ : KDialogBase(parent, "RecordEditor",false,i18n("Edit Record..."),
               Ok|Cancel), rec(r), nr(n)
 {
 //	fWidget=new DBRecordEditorBase(this);
