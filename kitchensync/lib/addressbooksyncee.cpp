@@ -1,7 +1,6 @@
 #include <kapplication.h>
 #include <kdebug.h>
 #include <kstaticdeleter.h>
-#include <kabc/resourcefile.h>
 
 #include "addressbooksyncee.h"
 

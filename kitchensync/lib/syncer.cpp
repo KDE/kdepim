@@ -6,7 +6,6 @@
 #include <ksimpleconfig.h>
 #include <kstandarddirs.h>
 
-#include "syncalgorithm.h"
 #include "standardsync.h"
 #include "syncui.h"
 

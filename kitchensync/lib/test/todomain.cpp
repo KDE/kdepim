@@ -1,6 +1,5 @@
 #include <kcmdlineargs.h>
 #include <kapplication.h>
-#include <klocale.h>
 #include <kaboutdata.h>
 #include <kdebug.h>
 

@@ -1,7 +1,7 @@
 #ifndef KSYNC_DEBUG_H
 #define KSYNC_DEBUG_H
 
-#include <syncer.h>
+#include "syncer.h"
 
 namespace KSync {
 

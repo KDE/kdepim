@@ -2,7 +2,7 @@
 
 #include <calformat.h>
 
-#include <incidencetemplate.h>
+#include "incidencetemplate.h"
 #include "todosyncee.h"
 
 

@@ -1,10 +1,8 @@
 #include <kcmdlineargs.h>
 #include <kapplication.h>
-#include <klocale.h>
 #include <kaboutdata.h>
 #include <kdebug.h>
 
-#include <kabc/addressee.h>
 #include <addressbooksyncee.h>
 static const char *description =
 	I18N_NOOP("Testapp");
