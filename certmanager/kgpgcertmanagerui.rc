@@ -1,34 +1,32 @@
-<!DOCTYPE kpartgui ><kpartgui name="kgpgcertmanager" version="1" >
+<!DOCTYPE kpartgui ><kpartgui name="kgpgcertmanager" version="6" >
 <MenuBar>
-	<Menu name="file" >
+	<Menu name="file">
 		<text>File</text>
-		<Action name="export_certificate"/>
-		<Action name="export_secret_keys"/>
+		<Action name="file_new_certificate"/>
 		<Separator/>
-		<Action name="redisplay" />
+		<Action name="file_export_certificate"/>
+		<Action name="file_export_secret_keys"/>
+		<Separator/>
+		<Action name="file_import_certificates"/>		        
+		<Action name="file_import_crls"/>
+		<Separator/>
 		<Action name="quit" />
 	</Menu>
-	<Menu name="view" >
+	<Menu name="view">
 		<text>View</text>
 		<Action name="view_stop_operations"/>
-		<Action name="viewCRLs" />
+		<Action name="view_dump_crls"/>
 	</Menu>
-	<Menu name="certMenu" >
+	<Menu name="certMenu">
 		<text>&amp;Certificates</text>
-		<Action name="newCert" />
-		<Action name="revokeCert" />
-		<Action name="extendCert" />
-		<Action name="delCert" />
-	</Menu>
-	<Menu name="importMenu">
-	        <text>&amp;Import</text>
-		<Action name="importCertFromFile" />		        
-		<Action name="importCRLFromFile" />
+		<Action name="edit_revoke_certificate"/>
+		<Action name="edit_extend_certificate"/>
+		<Action name="edit_delete_certificate"/>
 	</Menu>
 </MenuBar>
 
-<ToolBar alreadyVisited="1" position="Top" iconText="IconOnly" noMerge="1" name="mainToolBar" >
-<text>Main Toolbar</text>
+<ToolBar alreadyVisited="1" position="Top" iconText="IconOnly" noMerge="1" name="searchToolBar" >
+<text>Search Toolbar</text>
 	<Action name="label_action" />
 	<Action name="query_lineedit_action" />
 	<Action name="location_combo_action" />

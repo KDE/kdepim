@@ -45,6 +45,7 @@ namespace Kleo {
   class KeyListView;
   class KeyListViewItem;
   class ProgressBar;
+  class Job;
 }
 
 namespace KIO {
@@ -82,12 +83,12 @@ public:
 
 signals:
     void stopOperations();
+    void enableOperations( bool );
 
 private slots:
     void slotStartCertificateDownload( const QString & fingerprint );
     void slotStartCertificateListing();
     void newCertificate();
-    void quit();
     void revokeCertificate();
     void extendCertificate();
     void slotDeleteCertificate();
@@ -132,6 +133,8 @@ private:
     void startImportCRL( const QString& fileName, bool isTempFile );
     void startSecretKeyExport( const QString & fingerprint );
     void startCertificateExport( const QStringList & fingerprints );
+    void connectJobToStatusBarProgress( Kleo::Job * job, const QString & initialText );
+    void disconnectJobFromStatusBarProgress( const GpgME::Error & err );
 
 private:
     Kleo::KeyListView * mKeyListView;

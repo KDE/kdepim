@@ -178,66 +178,79 @@ void CertManager::createStatusBar() {
   bar->addWidget( mStatusLabel, 1, false );
 }
 
+static inline void connectEnableOperationSignal( QObject * s, QObject * d ) {
+  QObject::connect( s, SIGNAL(enableOperations(bool)),
+		    d, SLOT(setEnabled(bool)) );
+}
+  
 
 void CertManager::createActions() {
-  (void)KStdAction::redisplay( this, SLOT(slotStartCertificateListing()),
-			       actionCollection() );
-  (void)KStdAction::quit( this, SLOT( quit() ), actionCollection());
+  KAction * action = 0;
 
-  (void)new KAction( i18n("Stop Operation"), "stop", 0,
-		     this, SIGNAL(stopOperations()),
-		     actionCollection(), "view_stop_operations" );
+  (void)KStdAction::quit( this, SLOT(close()), actionCollection() );
 
-  // New Certificate
-  (void)new KAction( i18n("New Certificate"), QIconSet(), 0, this, SLOT( newCertificate() ),
-		     actionCollection(), "newCert" );
-  // Revoke Certificate
-  KAction* revokeCert = new KAction( i18n("Revoke Certificate"), QIconSet(), 0, this, SLOT( revokeCertificate() ),
-                                     actionCollection(), "revokeCert" );
-  revokeCert->setEnabled( false );
+  action = KStdAction::redisplay( this, SLOT(slotStartCertificateListing()),
+				  actionCollection() );
+  connectEnableOperationSignal( this, action );
 
-  // Extend Certificate
-  KAction* extendCert = new KAction( i18n("Extend Certificate"), QIconSet(), 0, this, SLOT( extendCertificate() ),
-                                     actionCollection(), "extendCert" );
-  extendCert->setEnabled( false );
+  action = new KAction( i18n("Stop Operation"), "stop", 0,
+			this, SIGNAL(stopOperations()),
+			actionCollection(), "view_stop_operations" );
+  action->setEnabled( false );
+  
+  (void)   new KAction( i18n("New Certificate..."), "filenew", 0,
+			this, SLOT(newCertificate()),
+			actionCollection(), "file_new_certificate" );
 
-  // Delete Certificate
-  (void)new KAction( i18n("Delete Certificate"), "editdelete", Key_Delete, this,
-                     SLOT(slotDeleteCertificate()), actionCollection(), "delCert" );
+#ifndef NOT_IMPLEMENTED_ANYWAY
+  action = new KAction( i18n("Revoke Certificate"), 0,
+			this, SLOT(revokeCertificate()),
+			actionCollection(), "edit_revoke_certificate" );
+  action->setEnabled( false );
+  connectEnableOperationSignal( this, action );
 
-  // Import Certificates
-  // Import from file
-  mImportCertFromFileAction = new KAction( i18n("Import Certificate..."), QIconSet(),
-                                             0, this,
-                                             SLOT(slotImportCertFromFile()),
-                                             actionCollection(),
-                                             "importCertFromFile" );
+  action = new KAction( i18n("Extend Certificate"), 0,
+			this, SLOT(extendCertificate()),
+			actionCollection(), "edit_extend_certificate" );
+  action->setEnabled( false );
+  connectEnableOperationSignal( this, action );
+#endif
 
+  action = new KAction( i18n("Delete Certificate"), "editdelete", Key_Delete,
+			this, SLOT(slotDeleteCertificate()),
+			actionCollection(), "edit_delete_certificate" );
+  connectEnableOperationSignal( this, action );
 
-  // CRLs
-  // Import from file
-  mImportCRLFromFileAction = new KAction( i18n("Import CRL..."), QIconSet(), 0, this, SLOT( importCRLFromFile() ),
-                                            actionCollection(), "importCRLFromFile" );
+  mImportCertFromFileAction = new KAction( i18n("Import Certificates..."), 0,
+					   this, SLOT(slotImportCertFromFile()),
+					   actionCollection(), "file_import_certificates" );
+  connectEnableOperationSignal( this, mImportCertFromFileAction );
 
-  mExportCertificateAction = new KAction( i18n("Export Certificate..."), "export", 0, this,
-                                          SLOT(slotExportCertificate()), actionCollection(),
-                                          "export_certificate" );
+  mImportCRLFromFileAction = new KAction( i18n("Import CRLs..."), 0,
+					  this, SLOT(importCRLFromFile()),
+					  actionCollection(), "file_import_crls" );
+  connectEnableOperationSignal( this, mImportCRLFromFileAction );
+
+  mExportCertificateAction = new KAction( i18n("Export Certificate..."), "export", 0,
+					  this, SLOT(slotExportCertificate()),
+					  actionCollection(), "file_export_certificate" );
   mExportCertificateAction->setEnabled( false ); // needs a selection
-  (void)new KAction( i18n("Export Secret Keys..."), "export", 0, this,
-		     SLOT(slotExportSecretKey()), actionCollection(),
-		     "export_secret_keys" );
 
-  QString dirmngr = KStandardDirs::findExe( "gpgsm" );
+  action = new KAction( i18n("Export Secret Keys..."), "export", 0,
+			this, SLOT(slotExportSecretKey()),
+			actionCollection(), "file_export_secret_keys" );
+  connectEnableOperationSignal( this, action );
+
+  const QString dirmngr = KStandardDirs::findExe( "gpgsm" );
   mDirMngrFound = !dirmngr.isEmpty();
-  updateImportActions( true );
 
-  // View CRLs
-  KAction* viewCRLs = new KAction( i18n("CRL Cache..."), QIconSet(), 0, this, SLOT( slotViewCRLs() ),
-				   actionCollection(), "viewCRLs");
-  viewCRLs->setEnabled( mDirMngrFound ); // we also need dirmngr for this
+  action = new KAction( i18n("Dump CRL Cache..."), 0,
+			this, SLOT(slotViewCRLs()),
+			actionCollection(), "view_dump_crls" );
+  action->setEnabled( mDirMngrFound ); // we also need dirmngr for this
 
   // Toolbar
-  KToolBar * _toolbar = toolBar( "mainToolBar" );
+  KToolBar * _toolbar = toolBar( "searchToolBar" );
 
   (new LabelAction( i18n("Search:"), actionCollection(), "label_action"))->plug( _toolbar );
   mLineEditAction = new LineEditAction( QString::null, actionCollection(), this,
@@ -256,9 +269,10 @@ void CertManager::createActions() {
   mFindAction->plug( _toolbar );
 
   KStdAction::keyBindings( this, SLOT(slotEditKeybindings()), actionCollection() );
-  createStandardStatusBarAction();
-
   KStdAction::preferences( this, SLOT(slotShowConfigurationDialog()), actionCollection() );
+
+  createStandardStatusBarAction();
+  updateImportActions( true );
 }
 
 void CertManager::updateImportActions( bool enable ) {
@@ -279,6 +293,37 @@ void CertManager::slotToggleRemote( int idx ) {
   mRemote = idx != 0;
 }
 
+
+void CertManager::connectJobToStatusBarProgress( Kleo::Job * job, const QString & initialText ) {
+  assert( mProgressBar );
+  if ( !job )
+    return;
+  if ( !initialText.isEmpty() )
+    statusBar()->message( initialText );
+  connect( job, SIGNAL(progress(const QString&,int,int,int)),
+	   mProgressBar, SLOT(slotProgress(const QString&,int,int,int)) );
+  connect( job, SIGNAL(done()), mProgressBar, SLOT(reset()) );
+  connect( this, SIGNAL(stopOperations()), job, SLOT(slotCancel()) );
+
+  action("view_stop_operations")->setEnabled( true );
+  emit enableOperations( false );
+}
+
+void CertManager::disconnectJobFromStatusBarProgress( const GpgME::Error & err ) {
+  updateStatusBarLabels();
+  const QString msg = err.isCanceled() ? i18n("Canceled.")
+    : err ? i18n("Failed.")
+    : i18n("Done.") ;
+  statusBar()->message( msg, 4000 );
+
+  action("view_stop_operations")->setEnabled( false );
+  emit enableOperations( true );
+}
+
+void CertManager::updateStatusBarLabels() {
+  mStatusLabel->setText( i18n( "%n Key.",
+			       "%n Keys.", mKeyListView->childCount() ) );
+}
 
 //
 //
@@ -312,27 +357,20 @@ void CertManager::slotStartCertificateListing()
     Kleo::CryptPlugFactory::instance()->smime()->keyListJob( mRemote );
   assert( job );
 
-  statusBar()->message( i18n("Fetching keys...") );
-
   connect( job, SIGNAL(nextKey(const GpgME::Key&)),
 	   mKeyListView, SLOT(slotAddKey(const GpgME::Key&)) );
-  connect( job, SIGNAL(progress(const QString&,int,int,int)),
-	   mProgressBar, SLOT(slotProgress(const QString&,int,int,int)) );
-  connect( job, SIGNAL(done()), mProgressBar, SLOT(reset()) );
   connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
 	   this, SLOT(slotKeyListResult(const GpgME::KeyListResult&)) );
-  connect( this, SIGNAL(stopOperations()),
-	   job, SLOT(slotCancel()) );
+
+  connectJobToStatusBarProgress( job, i18n("Fetching keys...") );
 
   const GpgME::Error err = job->start( query );
   if ( err ) {
     showKeyListError( this, err );
     return;
   }
-
   mProgressBar->setProgress( 0, 0 ); // enable busy indicator
 }
-
 
 void CertManager::slotKeyListResult( const GpgME::KeyListResult & res ) {
   if ( res.error() )
@@ -348,13 +386,7 @@ void CertManager::slotKeyListResult( const GpgME::KeyListResult & res ) {
   mFindAction->setEnabled( true );
 
   mLineEditAction->focusAll();
-  updateStatusBarLabels();
-  statusBar()->message( i18n("Done."), 4000 );
-}
-
-void CertManager::updateStatusBarLabels() {
-  mStatusLabel->setText( i18n( "%n Key.",
-			       "%n Keys.", mKeyListView->childCount() ) );
+  disconnectJobFromStatusBarProgress( res.error() );
 }
 
 /**
@@ -364,14 +396,6 @@ void CertManager::newCertificate()
 {
   CertificateWizardImpl wizard( this );
   wizard.exec();
-}
-
-/**
-   This slot is invoked when the user chooses File->Quit
-*/
-void CertManager::quit()
-{
-  close();
 }
 
 /**
@@ -456,11 +480,13 @@ void CertManager::slotStartCertificateDownload( const QString & fingerprint ) {
   connect( job, SIGNAL(result(const GpgME::Error&,const QByteArray&)),
 	   SLOT(slotCertificateDownloadResult(const GpgME::Error&,const QByteArray&)) );
 
+  connectJobToStatusBarProgress( job, i18n("Fetching certificate from server...") );
+
   const GpgME::Error err = job->start( fingerprint );
   if ( err )
     showCertificateDownloadError( this, err );
   else
-    (void)new Kleo::ProgressDialog( job, i18n("Fetching certificate from server"), this );
+    mProgressBar->setProgress( 0, 0 );
 }
 
 void CertManager::slotCertificateDownloadResult( const GpgME::Error & err, const QByteArray & keyData ) {
@@ -468,6 +494,7 @@ void CertManager::slotCertificateDownloadResult( const GpgME::Error & err, const
     showCertificateDownloadError( this, err );
   else
     startCertificateImport( keyData );
+  disconnectJobFromStatusBarProgress( err );
 }
 
 static void showCertificateImportError( QWidget * parent, const GpgME::Error & err ) {
@@ -486,13 +513,14 @@ void CertManager::startCertificateImport( const QByteArray & keyData ) {
   connect( job, SIGNAL(result(const GpgME::ImportResult&)),
 	   SLOT(slotCertificateImportResult(const GpgME::ImportResult&)) );
 
+  connectJobToStatusBarProgress( job, i18n("Importing certificates...") );
+
   kdDebug() << "Importing certificate. keyData size:" << keyData.size() << endl;
   const GpgME::Error err = job->start( keyData );
-  if ( err ) {
+  if ( err )
     showCertificateImportError( this, err );
-  }
   else
-    (void)new Kleo::ProgressDialog( job, i18n("Importing Certificate"), this );
+    mProgressBar->setProgress( 0, 0 );
 }
 
 void CertManager::slotCertificateImportResult( const GpgME::ImportResult & res ) {
@@ -536,6 +564,8 @@ void CertManager::slotCertificateImportResult( const GpgME::ImportResult & res )
     i18n( "Certificate Imported" ) );
   if ( !isRemote() )
     slotStartCertificateListing();
+  else
+    disconnectJobFromStatusBarProgress( res.error() );
 }
 
 
@@ -676,21 +706,24 @@ void CertManager::slotDeleteCertificate() {
   connect( job, SIGNAL(result(const GpgME::Error&,const GpgME::Key&)),
 	   SLOT(slotDeleteResult(const GpgME::Error&,const GpgME::Key&)) );
 
+  connectJobToStatusBarProgress( job, i18n("Deleting keys...") );
+
   const GpgME::Error err = job->start( keys, true );
   if ( err )
     showDeleteError( this, err );
   else
-    (void)new Kleo::ProgressDialog( job, i18n("Deleting keys"), this );
+    mProgressBar->setProgress( 0, 0 );
 }
 
 void CertManager::slotDeleteResult( const GpgME::Error & err, const GpgME::Key & ) {
   if ( err )
-    return showDeleteError( this, err );
-
-  mItemsToDelete.setAutoDelete( true );
-  mItemsToDelete.clear();
-  mItemsToDelete.setAutoDelete( false );
-  updateStatusBarLabels();
+    showDeleteError( this, err );
+  else {
+    mItemsToDelete.setAutoDelete( true );
+    mItemsToDelete.clear();
+    mItemsToDelete.setAutoDelete( false );
+  }
+  disconnectJobFromStatusBarProgress( err );
 }
 
 
@@ -750,11 +783,13 @@ void CertManager::startCertificateExport( const QStringList & fingerprints ) {
   connect( job, SIGNAL(result(const GpgME::Error&,const QByteArray&)),
 	   SLOT(slotCertificateExportResult(const GpgME::Error&,const QByteArray&)) );
 
+  connectJobToStatusBarProgress( job, i18n("Exporting certificate...") );
+
   const GpgME::Error err = job->start( fingerprints );
   if ( err )
     showCertificateExportError( this, err );
   else
-    (void)new Kleo::ProgressDialog( job, i18n("Exporting certificate"), this );
+    mProgressBar->setProgress( 0, 0 );
 }
 
 // return true if we should proceed, false if we should abort
@@ -775,6 +810,7 @@ static bool checkOverwrite( const KURL& url, bool& overwrite, QWidget* w )
 }
 
 void CertManager::slotCertificateExportResult( const GpgME::Error & err, const QByteArray & data ) {
+  disconnectJobFromStatusBarProgress( err );
   if ( err ) {
     showCertificateExportError( this, err );
     return;
@@ -840,14 +876,17 @@ void CertManager::startSecretKeyExport( const QString & fingerprint ) {
   connect( job, SIGNAL(result(const GpgME::Error&,const QByteArray&)),
 	   SLOT(slotSecretKeyExportResult(const GpgME::Error&,const QByteArray&)) );
 
+  connectJobToStatusBarProgress( job, i18n("Exporting secret key...") );
+
   const GpgME::Error err = job->start( fingerprint );
   if ( err )
     showSecretKeyExportError( this, err );
   else
-    (void)new Kleo::ProgressDialog( job, i18n("Exporting secret key"), this );
+    mProgressBar->setProgress( 0, 0 );
 }
 
 void CertManager::slotSecretKeyExportResult( const GpgME::Error & err, const QByteArray & data ) {
+  disconnectJobFromStatusBarProgress( err );
   if ( err ) {
     showSecretKeyExportError( this, err );
     return;
