@@ -21,11 +21,11 @@
 <title>The Main Window</title>
 
 <para>The main window is the window that appears
-when &kmail; is started. It is divided into three panes:</para>
+when &kmail; is started. It is by default divided into three panes:</para>
 
 <variablelist>
 <varlistentry>
-<term>Folders pane (left pane)</term>
+<term>Folder list (on the left)</term>
 <listitem>
 <para>This pane contains the list of your message folders (other email programs
 may call them mailboxes). To select a folder, simply click on
@@ -41,7 +41,7 @@ folders.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term>Headers pane (upper right pane)</term>
+<term>Message list (in the upper right by default)</term>
 <listitem>
 <para>This pane lists header information (message Status Flags, Sender, Subject,
 Date, optionally Size) for the messages in the currently-selected folder. Clicking on a header
@@ -49,19 +49,27 @@ will select that message and display it in the Message pane; you can also select
 more than one message by holding down the &Ctrl; key when clicking on messages.
 You may sort the messages by clicking on the column that you wish to
 sort; if you click on the same column more than once, sort order will toggle
-between ascending/descending.</para>
+between ascending/descending and some alternative sorting criteria will become
+available (like sorting by Status when you click on the header of the Subject column).</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term>Message pane (lower right pane)</term>
+<term>Message preview pane (in the lower right by default)</term>
 <listitem>
 <para>This pane displays the currently-selected message. Attachments appear
 at the bottom of the message, either as icons or embedded in the message,
 depending on <menuchoice><guimenu>View</guimenu>
-<guimenuitem>Attachments</guimenuitem></menuchoice>.
+<guimenuitem>Attachments</guimenuitem></menuchoice>. For complex messages
+the structure of the message is shown in the message structure viewer below
+the preview pane. The placement of the preview pane as well as the placement
+of the structure viewer can be changed under <guilabel>Appearance</guilabel>/<guilabel>Layout</guilabel>
+in the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
+&kmail;...</guimenuitem></menuchoice> dialog. Moreover, you can disable the 
+preview pane and you can choose when the message structure viewer should be
+shown.
 You can scroll through the message page-by-page
-using the <keycap>Page Up</keycap> and <keycap>Page down</keycap> keys, or line-
-by-line using the <keycap>up arrow</keycap> and <keycap>down arrow</keycap>
+using the <keycap>Page Up</keycap> and <keycap>Page down</keycap> keys, or 
+line-by-line using the <keycap>up arrow</keycap> and <keycap>down arrow</keycap>
 keys; you can also use <link linkend="keyboard-shortcuts">key shortcuts</link> to skip through 
 your messages without having to use the mouse.</para>
 </listitem>
@@ -149,6 +157,9 @@ to using <keycombo action="simul">&Ctrl;<keycap>Left Arrow</keycap></keycombo> o
 </tgroup>
 </informaltable>
 
+<para>For more keyboard shortcuts have a look at the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
+Shortcuts...</guimenuitem></menuchoice> dialog.</para>
+
 </sect1>
 
 <sect1 id="the-composer-window">
@@ -196,21 +207,84 @@ message, click the <guiicon>Send</guiicon> icon (the envelope) to send
 the message now, or click the <guiicon>Queue</guiicon> icon to put
 the message in the outbox. If your message is not finished yet, select
 <menuchoice><guimenu>Message</guimenu><guimenuitem>Save in Drafts
-Folder</guimenuitem></menuchoice>. If you want to send an <link
+Folder</guimenuitem></menuchoice>.
+</para></sect2>
+
+<sect2 id="encrypt-sign">
+<title>Signing and Encrypting Messages</title>
+
+<para>
+ If you want to send an <link
 linkend="pgp-encrypt-your-messages">encrypted</link>
 or <link linkend="pgp-sign-your-messages">digitally signed</link> message, select the
 <guiicon>Sign Message</guiicon> or <guiicon>Encrypt 
-Message</guiicon> icons in the toolbar.</para>
+Message</guiicon> icons in the toolbar. Moreover you can select the protocol that should be used to sign and/or encrypt the message. Depending on the
+installed encryption programs you can choose between:
+</para>
 
-<para>If you have installed and activated at least one of
-the <link linkend="configure-security-plugins">encryption plugins</link>
-then you can select whether you want to use either the
-built-in OpenPGP support or the plugin for encryption and/or signing.
-Use the built-in OpenPGP support if you want to send clearsigned
-messages or inline encrypted messages. If you want to send signed or
-encrypted messages with attachments you should use one of the crypto
-plugins. Please note that the built-in OpenPGP will <emphasis>not</emphasis>
-sign or encrypt attachments.</para> 
+<variablelist>
+<varlistentry>
+<term><guilabel>Any</guilabel></term>
+<listitem>
+<para>KMail will use a protocol which is understood by all recipients of the
+message. The prefered protocol of the recipients can be specified in the
+KDE Address Book.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Inline OpenPGP (deprecated)</guilabel></term>
+<listitem>
+<para>This protocol is outdated. If you use this protocol then only the
+message text will be signed and/or encrypted. <emphasis>Attachments will 
+neither be signed nor encrypted.</emphasis> HTML messages can't be signed
+with this protocol. You should only use this protocol
+if necessary, i.e. if you send messages to users of email clients that cannot
+handle the more advanced protocols.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>PGP/MIME</guilabel></term>
+<listitem>
+<para>This protocol is the successor of the inline OpenPGP protocol. If you
+use this protocol then the message text and all attachments will be signed
+and/or encrypted (at least by default). It's the recommended protocol if you
+use OpenPGP.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>S/MIME</guilabel></term>
+<listitem>
+<para>This protocol is an alternative protocol to PGP/MIME. If you
+use this protocol then the message text and all attachments will be signed
+and/or encrypted (at least by default). This protocol is mostly used by
+corporations.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>S/MIME opaque</guilabel></term>
+<listitem>
+<para>This protocol is a variant of the S/MIME protocol. It should only be
+used if necessary.</para></listitem>
+</varlistentry>
+</variablelist>
+
+</sect2>
+
+<sect2 id="html-mails">
+<title>Creating HTML Messages</title>
+
+<para>Note that HTML messages are often regarded as an annoyance. Therefore
+you should avoid sending HTML messages if possible. Especially you should never
+send HTML messages to a mailing list unless HTML messages are explicitely
+allowed.</para>
+
+<para>In order to be able to create HTML messages you first have to enable
+the markup tools. To do this enable <guimenuitem>Formatting (HTML)</guimenuitem> in the <menuchoice><guimenu>Options</guimenu></menuchoice> menu. 
+A toolbar with several tools to
+format the message will appear. Via the drop down box you can select between
+standard text and six different types of lists (three bulleted lists with 
+different symbols and three numbered lists with different numbering).
+Moreover, you can select the font family, the font size, the font style (bold,
+italic, underlined) and the text color. Last but not least, you can select
+the alignment of the text (left aligned, centered, right aligned).</para>
+
+<para>Creating tables and embedding images is currently not possible.</para>
 
 </sect2>
 
@@ -230,7 +304,7 @@ to attach;</para>
 composer window;</para> 
 </listitem>
 <listitem>
-<para>Drag a message from &kmail;'s Headers pane into the composer
+<para>Drag a message from &kmail;'s message list into the composer
 window -- that message will then be attached;</para>
 </listitem>
 <listitem>
@@ -253,32 +327,25 @@ field, it should be automatically filled with an appropriate value. Sometimes th
 choose from the list of common &MIME; types. You can also select an encoding
 method for your file from the list of encoding options (normally, the default
 value works fine). Check the <guilabel>Suggest automatic display</guilabel> option 
-if you want to suggest to the recipient the automatic (inline) display of this part 
-in the message preview, instead of the default icon view.</para>
-<!-- fixme: depends on the receiver's client -->
+if you want to suggest to the recipient the automatic (inline) display of this attachment. Whether this works or not depends on the recipient's email client
+and on his settings.</para>
 
-<para><application>PGP</application>/<application>GnuPG</application> keys may also 
-be attached to your message by using the appropriate options in the
+<para>You can also attach public keys to the message by using the appropriate options in the
 <menuchoice><guimenu>Attach</guimenu></menuchoice> menu. <application>PGP</application>
 key attachments are handled like file attachments.</para>
-
-<!-- copied from below -->
-<warning><para>Attachments will not be encrypted if you are using 
-the built-in OpenPGP support; to encrypt attachments, you have to install
-and configure <link linkend="configure-security-plugins">encryption plugins</link>.
-</para></warning>
-<!-- / copied from below -->
 
 </sect2>
 
 <sect2 id="checking-the-spelling-of-your-message">
 <title>Checking the Spelling of your Message</title>
 
-<para>&kmail; will automatically check the spelling of your message
+<para>&kmail; will automatically check the spelling of your message (in
+HTML mode this currently does not work)
 and display unknown words using red color. If there are too many
 unknown words &kmail; will disable its checking. To select the language
 used for checking, select <menuchoice><guimenu>View</guimenu>
-<guimenuitem>Dictionary</guimenuitem></menuchoice>.</para>
+<guimenuitem>Dictionary</guimenuitem></menuchoice>. You can disable
+automatic spellchecking in the <menuchoice><guimenu>Options</guimenu></menuchoice> menu.</para>
 
 <para>To check the spelling of your message using a dialog, select
 <menuchoice><guimenu>Tools</guimenu>

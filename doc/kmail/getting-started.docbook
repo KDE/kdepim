@@ -169,8 +169,8 @@ folders whose name starts with a dot are also displayed.</para>
 <sect3 id="receiving-mail-pop3">
 <title>Options only relevant to POP3</title>
 
-<para>Select <guilabel>Delete message from server after fetching</guilabel> if you do not want to
-leave your messages on the server after you downloaded it.</para>
+<para>Select <guilabel>Leave fetched messages on the server</guilabel> if you want to
+leave your messages on the server after you downloaded them.</para>
 
 <para>Select <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> if you
 do not want to check this account whenever you use <menuchoice><guimenu>File</guimenu><guimenuitem>Check
