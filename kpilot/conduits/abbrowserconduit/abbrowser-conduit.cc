@@ -136,7 +136,7 @@ bool AbbrowserConduit::_startAbbrowser()
 
 	if (!foundAbbrowser)
 	{
-		kdWarning() << fname
+		kdWarning() << k_funcinfo
 			<< " unable to connect to "
 			<< abbrowserName
 			<< " through dcop; autostart failed" << endl;

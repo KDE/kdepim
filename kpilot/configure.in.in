@@ -22,10 +22,10 @@ dnl since AC_CHECK_HEADER does not do so.
 dnl
 HAVE_PISOCK=0
 
-kpilot_save_cflags="$CFLAGS"
+kpilot_save_cflags="$CPPFLAGS"
 kpilot_save_ldflags="$LDFLAGS"
 
-CFLAGS="$CFLAGS $all_includes"
+CPPFLAGS="$CPPFLAGS $all_includes"
 LDFLAGS="$LDFLAGS $all_libraries"
 
 AC_CHECK_HEADER(pi-file.h,[HAVE_PISOCK=1], )
@@ -81,7 +81,7 @@ else
 	AC_SUBST(LIBPISOCK)
 fi
 
-CFLAGS="$kpilot_save_cflags"
+CPPFLAGS="$kpilot_save_cflags"
 LDFLAGS="$kpilot_save_ldflags"
 unset kpilot_save_cflags
 unset kpilot_save_ldflags

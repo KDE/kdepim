@@ -243,8 +243,9 @@ int main(int argc, char **argv)
 
 
 	KApplication a;
-
+#ifdef DEBUG
 	debug_level = -1;
+#endif
 	
 	if (p->isSet("backup") || p->isSet("restore") || p->isSet("list"))
 	{
@@ -268,6 +269,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.13  2002/01/22 22:11:41  danimo
+// "link" clashes with a function from unistd/stdlib
+//
 // Revision 1.12  2001/12/29 15:36:57  adridg
 // Sanity checking and simplification
 //
