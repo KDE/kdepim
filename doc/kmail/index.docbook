@@ -20,7 +20,7 @@
 </author>
 </authorgroup>
 
-<date>04/11/2000</date>
+<date>05/11/2000</date>
 <releaseinfo>1.2</releaseinfo>
 
 <abstract>
@@ -1920,17 +1920,20 @@ will prefer GnuPG. Here is no way to force &kmail; to use PGP.</para>
 </qandaentry>
 
 <qandaentry>
- <question><para>Can I use encryption with my normal (non-SSL) POP3 account?</para></question>
- <answer><para>If your POP3 server runs an ssh daemon, you can use ssh to tunnel your POP3 connection
-using the following command. (You need to be root to execute it. Alternatively, change the first
-port number, i.e. the first occurence of <userinput>110</userinput>, to something above 1024 and configure
-&kmail; to use that port):</para>
+ <question><para>Can I use encryption with my normal (non-<acronym>SSL</acronym>) <acronym>POP3</acronym> account?</para></question>
+ <answer><para>If your <acronym>POP3</acronym> server runs an ssh daemon, you can use ssh to tunnel your <acronym>POP3</acronym> connection
+using the following command:</para>
 
 <para><userinput>ssh -L 110:127.0.0.1:110 user@host</userinput></para>
 
+<para>Modify your &kmail; configuration to fetch the mail via <acronym>POP3</acronym> from
+<userinput>localhost</userinput>, ssh will tunnel the connection for you. You need to be root to execute this
+command. Alternatively, change the first port number, i.e. the first occurence of 
+<userinput>110</userinput>, to something above 1024 and configure
+&kmail; to use that port.</para>
+
 <para>Note that this often doesn't make things more secure if your
-mails have already been sent through the Internet.
-</para></answer>
+mails have already been sent through the Internet.</para></answer>
 </qandaentry>
 
 <qandaentry>
