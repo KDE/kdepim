@@ -55,6 +55,7 @@ public:
 	QPushButton *fConfigureButton;
 	QPushButton *fConfigureWizard,*fConfigureKontact;
 	QLabel *fActionDescription;
+	QLabel *fTitleText;  // Dialog title above fStack
 } ;
 
 class ConduitConfigWidget : public ConduitConfigWidgetBase
@@ -108,6 +109,6 @@ private:
 	QListViewItem *fGeneralPage;
 	ConduitConfigBase *fCurrentConfig;
 	ConduitConfig *fCurrentOldStyle;
-} ;
+};
 
 #endif

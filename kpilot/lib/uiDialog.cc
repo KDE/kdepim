@@ -151,7 +151,7 @@ UIDialog::~UIDialog()
 	grid->setColStretch(3,50);
 	linktext->setMinimumSize(linewidth,QMAX(260,60+12*lineheight));
 	linktext->setFixedHeight(QMAX(260,60+12*lineheight));
-	linktext->setVScrollBarMode(QScrollView::AlwaysOn);
+	linktext->setVScrollBarMode(QScrollView::Auto/*AlwaysOn*/);
 	text = new QLabel(w);
 	grid->addMultiCellWidget(text,0,0,2,3);
 	grid->addMultiCellWidget(linktext,1,2,1,3);

@@ -43,6 +43,7 @@ static const char *conduitconfigdialog_id =
 #include <qvbox.h>
 #include <qsplitter.h>
 #include <qheader.h>
+#include <qlabel.h>
 
 #include <kservice.h>
 #include <kservicetype.h>
@@ -162,7 +163,7 @@ static void addDescriptionPage(QWidgetStack *parent,
 	QVBox *v = new QVBox(parent);
 	QLabel *l = 0L;
 
-	v->setFrameShape(QLabel::Box);
+	v->setFrameShape(QLabel::NoFrame);
 	v->setMargin(SPACING);
 
 	l = new QLabel(v);
@@ -204,9 +205,20 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 		QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
 	mainLayout->addWidget(fConduitList);
 
+	// Create the title
+	QVBoxLayout *vbox = new QVBoxLayout(this, 0, KDialog::spacingHint());
+	fTitleText = new QLabel("Conduit Setup - Addressbook", this);
+	QFont titleFont(fTitleText->font());
+	titleFont.setBold(true);
+	fTitleText->setFont(titleFont);
+	vbox->addWidget(fTitleText, 0, AlignLeft);
+	vbox->addWidget(new KSeparator(QFrame::HLine|QFrame::Plain, this));
+
 	// Right hand column
 	fStack = new QWidgetStack(this, "RightPart");
-	mainLayout->addWidget(fStack);
+	vbox->addWidget(fStack, 10);
+
+	mainLayout->addLayout(vbox);
 
 	// First page in stack (right hand column)
 	addDescriptionPage(fStack,BROKEN_CONDUIT,
@@ -705,7 +717,13 @@ void ConduitConfigWidget::selected(QListViewItem *p)
 		<< size().width() << "x"
 		<< size().height() << endl;
 #endif
-
+	
+	// set the dialog title to the selected item
+	QListViewItem *pParent = p->parent();
+	QString title;
+	title = pParent ? pParent->text(CONDUIT_NAME) + " - " : "";
+	title += p ? p->text(CONDUIT_NAME) : i18n("KPilot Setup");
+	fTitleText->setText(title);
 }
 
 void ConduitConfigWidget::configure()
