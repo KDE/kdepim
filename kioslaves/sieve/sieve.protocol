@@ -29,6 +29,7 @@ Description[ru]=Канал протокола фильтра почты Sieve
 Description[sr]=IOslave протокола за филтрирање поште Sieve
 Description[sr@Latn]=IOslave протокола за филтрирање поште Sieve
 Description[sv]=En I/O-slav för brevfiltreringsprotokollet Sieve
+Description[ta]=Sieve அஞ்சல் வடிகட்டும் நெறிமுறைக்கான ஒரு ioslave
 Description[uk]=Підлеглий В/В для протоколу фільтрування пошти Sieve
 Description[xx]=xxAn ioslave for the Sieve mail filtering protocolxx
 Description[zh_CN]=邮件过滤协议仆人

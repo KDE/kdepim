@@ -7,7 +7,18 @@ X-KDE-Library=libksfilter_calendar
 X-KDE-KitchenSyncFilterType=calendar
 
 Name=Calendar Filter
-Name[xx]=xxCalendar Filterxx
+Name[bg]=Филтър за календара
+Name[br]=Sil deiziadur
+Name[da]=Kalenderfilter
+Name[es]=Filtro de calendario
+Name[et]=Kalendrifilter
+Name[sv]=Kalenderfilter
+Name[ta]=நாள்காட்டி அலங்காரம்
 
 Comment=Filters events and todos in a calendar
-Comment[xx]=xxFilters events and todos in a calendarxx
+Comment[bg]=Филтриране на събитията и задачите в календара
+Comment[da]=Filtrerer begivenheder og gøremål i en kalender
+Comment[es]=Filtra los eventos y las tareas pendientes de un calendario
+Comment[et]=Kalendri sündmuste ja ülesannete filtreerimine
+Comment[sv]=Filtrerar händelser och uppgifter i en kalender
+Comment[ta]=நாட்காட்டியில் செய்திகளையும் செய்யவேண்டியவைகளையும் வடிகட்டுகிறது

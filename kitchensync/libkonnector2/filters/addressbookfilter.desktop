@@ -7,7 +7,17 @@ X-KDE-Library=libksfilter_addressbook
 X-KDE-KitchenSyncFilterType=addressbook
 
 Name=Address Book Filter
-Name[xx]=xxAddress Book Filterxx
+Name[bg]=Филтър за адресника
+Name[da]=Addressebogsfilter
+Name[es]=Filtro de la libreta de direcciones
+Name[et]=Aadressiraamatu filter
+Name[sv]=Adressboksfilter
+Name[ta]=முகவரி புத்தக அலங்காரம்
 
 Comment=Filters contacts in an address book
-Comment[xx]=xxFilters contacts in an address bookxx
+Comment[bg]=Филтриране на контактите в адресника
+Comment[da]=Filtrerer kontakter i en adressebog
+Comment[es]=Filtra los contactos de la libreta de direcciones
+Comment[et]=Kontaktide filtreerimine aadressiraamatus
+Comment[sv]=Filtrerar kontakter i en adressbok
+Comment[ta]=முகவரிப் புத்தகத்தில் தொடர்புகளை வடிகட்டு
