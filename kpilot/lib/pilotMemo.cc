@@ -70,7 +70,7 @@ void *PilotMemo::pack(void *buf, int *len)
 	// It won't fit if the buffer is too small. This second test
 	// is because the encoded length in bytes may be longer (?)
 	// than the unencoded length in characters.
-	if (s.length() > *len) return NULL;
+	if (s.length() > (unsigned) *len) return NULL;
 
 	// Zero out the buffer, up to the max memo size.
 	memset(buf,0,QMIN(*len,MAX_MEMO_LEN));
