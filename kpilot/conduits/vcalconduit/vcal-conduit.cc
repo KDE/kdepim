@@ -103,7 +103,7 @@ VCalConduit::~VCalConduit()
 
 /* static */ const char *VCalConduit::version()
 {
-	return "VCal Conduit v2.0";
+	return "VCal Conduit v2.1a1";
 }
 
 void VCalConduit::getCalendar()
@@ -112,7 +112,7 @@ void VCalConduit::getCalendar()
 
 	if (fCalendar)
 	{
-		kdDebug() << fname
+		kdWarning() << __FUNCTION__
 			<< ": Already have a calendar file."
 			<< endl;
 		return;
@@ -131,7 +131,7 @@ void VCalConduit::getCalendar()
 	if ((getMode() == BaseConduit::HotSync) || 
 		(getMode() == BaseConduit::Backup)) 
 	{
-		const char *s=calName.local8Bit();
+		const char *s=QFile::encodeName(calName);
 		fCalendar = Parse_MIME_FromFileName((char *)s);
 
 		DEBUGCONDUIT << fname
@@ -147,7 +147,9 @@ void VCalConduit::getCalendar()
 				.arg(calName);
 
 			kdError() << __FUNCTION__
-				<< message << endl;
+				<< ": Couldn't open "
+				<< calName
+				<< endl;
 
 			KMessageBox::error(0, "vCalendar Conduit Fatal Error",
 			    message);                                                 
@@ -1506,26 +1508,74 @@ void VCalConduit::doLocalSync()
 	  //
   PilotRecord *rec;
   int index=0, response, insertall=0;
-  QList<int> deletedList;
-  deletedList.setAutoDelete(TRUE);
+  QValueList<int> deletedList;
   
   
   //  Get all entries from Pilot
-  while ((rec = readRecordByIndex(index++)) != 0) {
-    dateEntry = new PilotDateEntry(rec); // convert to date structure
-    vevent = findEntryInCalendar(rec->getID());
-    if (vevent == 0L) {
+  while ((rec = readRecordByIndex(index++)) != 0) 
+  {
+	DEBUGCONDUIT << fname
+		<< ": Got record "
+		<< index-1
+		<< " @"
+		<< (int) rec
+		<< endl;
 
-      if (first == FALSE) {
-		// add event to list of pilot events to delete
-		deletedList.append(new int(rec->getID()));
+    dateEntry = new PilotDateEntry(rec); // convert to date structure
+
+	if (dateEntry)
+	{
+		DEBUGCONDUIT << fname
+			<< ": Created date entry @"
+			<< (int) dateEntry
+			<< " with id "
+			<< rec->getID()
+			<< endl;
+	}
+	else
+	{
+		kdWarning() << __FUNCTION__
+			<< ": No dateentry!"
+			<< endl;
+		continue;
+	}
+
+    vevent = findEntryInCalendar(rec->getID());
+    if (vevent == 0L) 
+    {
+		DEBUGCONDUIT << fname
+			<< ": Entry not found in calendar."
+			<< endl;
+
+
+      if ( !first ) 
+      {
 
 		// In this case we want it entered into the vcalendar
 		if (!LocalOverridesPilot) {
+			DEBUGCONDUIT << fname
+				<< ": !LocalOverridesPilot so updating object."
+				<< endl;
+				
 	   	 	updateVObject(rec);
 		}
-      } else { 
+		else
+		{
+			DEBUGCONDUIT << fname
+				<< ": Scheduling this entry for deletion."
+				<< endl;
+
+		// add event to list of pilot events to delete
+		deletedList.append(rec->getID());
+		}
+      } 
+      else 
+      { 
 	if (insertall == 0) {
+		DEBUGCONDUIT << fname
+			<< ": Questioning event disposition."
+			<< endl;
+
 		QString text = i18n("This is the first time that "
 			"you have done a HotSync\n"
 			"with the vCalendar conduit. "
@@ -1550,7 +1600,7 @@ void VCalConduit::doLocalSync()
 		switch(response) 
 		{
 		case 1:
-			deletedList.append(new int(rec->getID()));
+			deletedList.append(rec->getID());
 			break;
 		case 2 :
 			insertall = 1;
@@ -1585,9 +1635,10 @@ void VCalConduit::doLocalSync()
 		}
 #endif
 
-		for (int *j = deletedList.first(); j; j = deletedList.next()) 
+		QValueList<int>::Iterator it;
+		for (it = deletedList.begin(); it != deletedList.end(); ++it)
 		{
-			rec = readRecordById(*j);
+			rec = readRecordById(*it);
 			rec->setAttrib(~dlpRecAttrDeleted);
 			writeRecord(rec);
 			delete rec;
@@ -1617,24 +1668,55 @@ void VCalConduit::doLocalSync()
  */
 VObject* VCalConduit::findEntryInCalendar(unsigned int id)
 {
-  VObjectIterator i;
-  VObject* entry = 0L;
-  VObject* objectID;
-  
-  initPropIterator(&i, fCalendar);
-  
-  // go through all the vobjects in the vcal
-  while (moreIteration(&i)) {
-     entry = nextVObject(&i);
-     objectID = isAPropertyOf(entry, KPilotIdProp);
+	FUNCTIONSETUP;
 
-     if (objectID && (strcmp(vObjectName(entry), VCEventProp) == 0)) {
-       if(strtoul(fakeCString(vObjectUStringZValue(objectID)), 0L, 0) == id) {
-  	 return entry;
-       }
-     }
-  }
-  return 0L;
+	VObjectIterator i;
+	VObject* entry = 0L;
+	VObject* objectID;
+
+	initPropIterator(&i, fCalendar);
+
+	// go through all the vobjects in the vcal
+	while (moreIteration(&i)) 
+	{
+		entry = nextVObject(&i);
+		if (!entry)
+		{
+			kdWarning() << __FUNCTION__
+				<< ": nextVObject returned NULL!"
+				<< endl;
+			break;
+		}
+
+		objectID = isAPropertyOf(entry, KPilotIdProp);
+
+		if (objectID && 
+			(strcmp(vObjectName(entry), VCEventProp) == 0)) 
+		{
+			const char *s = fakeCString(
+				vObjectUStringZValue(objectID));
+			if (!s)
+			{
+				kdWarning() << __FUNCTION__
+					<< ": fakeCString returned NULL!"
+					<< endl;
+				continue;
+			}
+			else
+			{
+				DEBUGCONDUIT << fname
+					<< ": Looking at object with id "
+					<< s
+					<< endl;
+			}
+
+			if(strtoul(s, 0L, 0) == id) 
+			{
+				return entry;
+			}
+		}
+	}
+	return 0L;
 }
 
 /* put up teh about / setup dialog. */
@@ -1707,6 +1789,9 @@ int VCalConduit::numFromDay(const QString &day)
 } 
 
 // $Log$
+// Revision 1.18  2000/12/31 16:44:00  adridg
+// Patched up the debugging stuff again
+//
 // Revision 1.17  2000/12/30 20:27:42  adridg
 // Dag's Patches for Repeating Events
 //

@@ -548,3 +548,6 @@ PopMailOptions::setupWidget()
 	addPage(new PopMailReceivePage(this,config));
 	addPage(new setupInfoPage(this));
 }
+
+
+// $Log:$
