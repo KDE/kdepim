@@ -33,6 +33,7 @@
 #include <kprocess.h>
 #include <kaudioplayer.h>
 #include <kdebug.h>
+#include <knotifyclient.h>
 
 #include <libkcal/event.h>
 
@@ -96,6 +97,8 @@ void AlarmDialog::slotUser1()
 
 void AlarmDialog::eventNotification()
 {
+  bool beeped = false;
+
   Event *ev;
   for (ev = mEvents.first(); ev; ev = mEvents.next()) {
     QPtrList<Alarm> alarms = ev->alarms();
@@ -111,8 +114,13 @@ void AlarmDialog::eventNotification()
       }
 
       if (!alarm->audioFile().isEmpty()) {
+        beeped = true;
         KAudioPlayer::play(QFile::encodeName(alarm->audioFile()));
       }
     }
+  }
+  
+  if ( !beeped ) {
+    KNotifyClient::beep();
   }
 }

@@ -11,6 +11,11 @@ DISTCLEANFILES = dummy.cpp
 dummy.cpp:
 	touch dummy.cpp
 
+check_PROGRAMS = testalarmdlg
+
+testalarmdlg_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+testalarmdlg_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la libkalarmd.la
+testalarmdlg_SOURCES = testalarmdlg.cpp alarmdialog.cpp koeventviewer.cpp
 
 bin_PROGRAMS = kalarmd korgac
 #bin_PROGRAMS = kalarmd kalarmdgui korgac

@@ -25,7 +25,6 @@
 
 #include <kdebug.h>
 #include <klocale.h>
-#include <knotifyclient.h>
 
 #include <libkcal/calendarlocal.h>
 #include <libkcal/icalformat.h>
@@ -82,10 +81,9 @@ void KOAlarmClient::suspend(int minutes)
   mSuspendTimer.start(1000*60*minutes, true);
 }
 
-/* Display the alarm dialog (showing KOrganiser-type events) */
+/* Display the alarm dialog (showing KOrganizer-type events) */
 void KOAlarmClient::showAlarmDialog()
 {
-  KNotifyClient::beep();
   mAlarmDialog->show();
   mAlarmDialog->eventNotification();
 }
