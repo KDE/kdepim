@@ -61,6 +61,7 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, KNNntpAccount *a) :
   groupView=new QListView(this);
   groupView->setRootIsDecorated(true);
   groupView->addColumn(i18n("available groups"));
+  groupView->setTreeStepSize(15);
 
   arrowBtn1=new QPushButton(this);
   arrowBtn1->setEnabled(false);
@@ -197,6 +198,75 @@ bool KNGroupBrowser::itemInListView(QListView *view, const QString &text)
 
 
 
+void KNGroupBrowser::createListItems(QListViewItem *parent)
+{
+  QCString prefix, tlgn;
+  QListViewItem *it;
+  CheckItem *cit;
+  char *compare=0, *colon=0;
+  int prefixLen=0, tlgnLen=0;
+  bool expandit=false;
+
+  if(parent) {
+    QString tmp("");
+    QListViewItem *p=parent;
+    while(p) {
+      tmp.prepend(p->text(0));
+      p=p->parent();
+    }
+    prefix=tmp.local8Bit();
+    prefixLen=prefix.length();
+  }
+
+  for(char *gn=listPtr->first(); gn; gn=listPtr->next()) {
+
+    if(prefixLen>0 && strncasecmp(gn, prefix.data(), prefixLen)!=0)
+      if(compare!=0)
+        break;
+      else
+        continue;
+
+    compare=&gn[prefixLen];
+
+    if(!expandit || strncasecmp(compare, tlgn.data(), tlgnLen)!=0) {
+      if((colon=strstr(compare, "."))) {
+        tlgnLen=colon-compare+1;
+        expandit=true;
+      }
+      else {
+        tlgnLen=strlen(compare);
+        expandit=false;
+      }
+
+      tlgn.resize(tlgnLen+2);
+      strncpy(tlgn.data(), compare, tlgnLen);
+      tlgn.data()[tlgnLen]='\0';
+
+      if(expandit) {
+        if(parent)
+          it=new QListViewItem(parent, QString(tlgn));
+        else
+          it=new QListViewItem(groupView, QString(tlgn));
+
+        it->setSelectable(false);
+        it->setExpandable(true);
+      }
+      else {
+        if(parent)
+          cit=new CheckItem(parent, QString(gn), this);
+        else
+          cit=new CheckItem(groupView, QString(gn), this);
+        if(listPtr==subList)
+          updateItemState(cit, true);
+        else
+          updateItemState(cit, subList->contains(gn));
+      }
+    }
+  }
+}
+
+
+
 void KNGroupBrowser::removeListItem(QListView *view, const QString &text)
 {
   if(!view) return;
@@ -220,7 +290,8 @@ void KNGroupBrowser::slotItemExpand(QListViewItem *it)
     return;
   }
 
-  QCString gn(it->text(0).latin1());
+  createListItems(it);
+ /* QCString gn(it->text(0).latin1());
   int gnlen = gn.length();
 
   for(char *var=listPtr->first(); var; var=listPtr->next()) {
@@ -234,7 +305,7 @@ void KNGroupBrowser::slotItemExpand(QListViewItem *it)
     else
       if(it->childCount())
         break;
-  }
+  }*/
 }
 
 
@@ -242,12 +313,8 @@ void KNGroupBrowser::slotItemExpand(QListViewItem *it)
 void KNGroupBrowser::slotFilter(const QString &txt)
 {
   qDebug("KNGroupBrowser::slotFilter()");
-  QCString tlgroupname("");
   QCString filtertxt(txt.local8Bit());
-  int groupnamelen = tlgroupname.length();
-  bool expandit = false;
-  QListViewItem* previous = 0;
-  CheckItem *item=0;
+  CheckItem *cit=0;
 
   matchList->clear();
   groupView->clear();
@@ -263,20 +330,18 @@ void KNGroupBrowser::slotFilter(const QString &txt)
     listPtr=matchList;
   }
 
-  //treeCB->setChecked( (listPtr->count() >= MIN_FOR_TREE) );
-
   if(listPtr->count() < MIN_FOR_TREE) {
-  //if(!treeCB->isChecked()) {
-    for(char *g=listPtr->first(); g; g=listPtr->next()) {
-      item=new CheckItem(groupView, QString(g), this);
+    for(char *gn=listPtr->first(); gn; gn=listPtr->next()) {
+      cit=new CheckItem(groupView, QString(gn), this);
       if(listPtr==subList)
-        updateItemState(item, true);
+        updateItemState(cit, true);
       else
-        updateItemState(item, subList->contains(g));
+        updateItemState(cit, subList->contains(gn));
     }
   }
-  else {
-    for(char *g=listPtr->first(); g; g=listPtr->next()) {
+  else
+    createListItems();
+    /*for(char *g=listPtr->first(); g; g=listPtr->next()) {
       char* p;
 
       if(!expandit || strnicmp(g, tlgroupname.data(), groupnamelen)) {
@@ -300,7 +365,7 @@ void KNGroupBrowser::slotFilter(const QString &txt)
         previous = i;
       }
     }
-  }
+  }*/
 
   arrowBtn1->setEnabled(false);
   arrowBtn2->setEnabled(false);

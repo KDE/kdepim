@@ -60,6 +60,7 @@ class KNGroupBrowser : public QDialog {
     void changeItemState(const QString &text, bool s);
     bool itemInListView(QListView *view, const QString &text);
     void removeListItem(QListView *view, const QString &text);
+    void createListItems(QListViewItem *parent=0);
 
     QListView *groupView;
     QLineEdit *filterEdit;
