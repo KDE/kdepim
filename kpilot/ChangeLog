@@ -38,6 +38,11 @@ TODO LIST (Ignore the file TODO)
 KPilot Developer's notes for April 30th, 2003
 =============================================
 
+2003-4-15  Reinhold Kainhofer
+* Finally fixed the configure.in.in check for libmal in the malconduit
+* calendar conduit had wrong RadioButton IDs, so the Resource and LocalCalendar
+  settings were messed upt
+
 2003-4-12  Adriaan de Groot
 * Mucking about with KPilot's UI again. Trying to remove dialogs
   and to make the viewers just viewers.
