@@ -73,8 +73,8 @@ RTokenise(
             *r = '\0';
             if (r != rstart) {
                 l.append(rstart);
-            }
-            r = rstart;
+                r = rstart;
+            }   
             ++i;
             continue;
         }
