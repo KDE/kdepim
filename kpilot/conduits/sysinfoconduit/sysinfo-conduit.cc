@@ -597,6 +597,6 @@ void SysInfoConduit::writeFile()
 void SysInfoConduit::cleanup()
 {
 	FUNCTIONSETUP;
-	// Nothing to clean up so far (Do I have memory leaks somewhere???)
+	// Nothing to clean up so far (Do I have memory leaks somewhere?)
 	emit syncDone(this);
 }
