@@ -26,7 +26,6 @@
 
 // Qt includes
 #include <qlineedit.h>
-#include <qpushbutton.h>
 #include <qlayout.h>
 
 // KDE includes
@@ -44,7 +43,7 @@
 #include "EmpathUIUtils.h"
 
 EmpathFolderChooserDialog::EmpathFolderChooserDialog(QWidget * parent)
-    :    QDialog(parent, "FolderChooserDialog", true)
+    :    KDialog(parent, "FolderChooserDialog", true)
 {
     setCaption(i18n("Folder Chooser"));
 

@@ -27,7 +27,6 @@
 // Local includes
 #include "EmpathLeftSideWidget.h"
 #include "EmpathFolderWidget.h"
-#include "EmpathTaskWidget.h"
 #include "EmpathMessageListWidget.h"
 
 EmpathLeftSideWidget::EmpathLeftSideWidget(
@@ -35,11 +34,9 @@ EmpathLeftSideWidget::EmpathLeftSideWidget(
         QWidget * parent, const char * name)
     :    QWidget(parent, name)
 {
-    layout_ = new QGridLayout(this, 2, 1, 0, 0);
-    CHECK_PTR(layout_);
+    layout_ = new QVBoxLayout(this);
     
     folderWidget_ = new EmpathFolderWidget(this, "folderWidget", true);
-    CHECK_PTR(folderWidget_);
     
     QObject::connect(
             folderWidget_,        SIGNAL(showFolder(const EmpathURL &)),
@@ -49,13 +46,7 @@ EmpathLeftSideWidget::EmpathLeftSideWidget(
             messageListWidget,    SIGNAL(showing()),
             folderWidget_,        SLOT(s_showing()));
     
-    taskWidget_ = new EmpathTaskWidget(this, "taskWidget");
-    CHECK_PTR(taskWidget_);
-    
-    layout_->addWidget(folderWidget_,    0, 0);
-    layout_->addWidget(taskWidget_,        1, 0);
-    
-    layout_->activate();
+    layout_->addWidget(folderWidget_);
 }
 
 EmpathLeftSideWidget::~EmpathLeftSideWidget()

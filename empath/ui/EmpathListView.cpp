@@ -37,7 +37,7 @@
 
 EmpathListView::EmpathListView(
     QWidget * parent, const char * name)
-    :    QListView(parent, name),
+    :   QListView(parent, name),
         delayedLink_(false),
         waitForLink_(false),
         dragEnabled_(true),

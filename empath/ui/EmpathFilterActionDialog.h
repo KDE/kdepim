@@ -27,25 +27,21 @@
 #ifndef EMPATHFILTERACTIONDIALOG_H
 #define EMPATHFILTERACTIONDIALOG_H
 
-#include <qwidget.h>
-#include <qdialog.h>
+// Qt includes
 #include <qradiobutton.h>
 #include <qbuttongroup.h>
 #include <qcheckbox.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qcombobox.h>
 #include <qpushbutton.h>
-#include <qlineedit.h>
 
 // KDE includes
+#include <kdialog.h>
 #include <kbuttonbox.h>
 
 class EmpathFilter;
 class EmpathFolderChooserWidget;
 class EmpathAddressSelectionWidget;
 
-class EmpathFilterActionDialog : public QDialog
+class EmpathFilterActionDialog : public KDialog
 {
     Q_OBJECT
 

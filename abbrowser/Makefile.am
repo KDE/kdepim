@@ -4,7 +4,7 @@ KDE_CXXFLAGS = $(USE_RTTI)
 
 APPSDIR = $(kde_appsdir)/Utilities
 
-INCLUDES= $(all_includes) -I../kab2/lib
+INCLUDES= -I$(top_srcdir)/kab2/lib $(all_includes)
 
 SUBDIRS = doc pics
 
@@ -16,7 +16,7 @@ abbrowser_SOURCES = abbrowser.cpp undo.cpp attributes.cpp selectfields.cpp viewo
 
 abbrowser_METASOURCES = AUTO
 
-abbrowser_LDFLAGS = -L../kab2/lib $(all_libraries) $(KDE_RPATH)
+abbrowser_LDFLAGS = -L$(top_srcdir)/kab2/lib $(all_libraries) $(KDE_RPATH)
 
 abbrowser_LDADD = -lkab2 -lkimgio $(LIB_KFILE)
 
@@ -37,7 +37,7 @@ srcdoc:
 # if you have more of them, create a subdirectory with an extra Makefile 
 install-data-local: 
 	$(mkinstalldirs) $(APPSDIR)
-	$(INSTALL_DATA) abbrowser.desktop $(APPSDIR)
+	$(INSTALL_DATA) $(srcdir)/abbrowser.desktop $(APPSDIR)
 
 # remove ALL you have installed in install-data-local or install-exec-local
 uninstall-local:

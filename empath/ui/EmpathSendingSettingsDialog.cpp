@@ -45,7 +45,7 @@
 #include "Empath.h"
     
 EmpathSendingSettingsDialog::EmpathSendingSettingsDialog(QWidget * parent)
-    :   QDialog(parent, "SendingSettings", true),
+    :   KDialog(parent, "SendingSettings", true),
         applied_(false)
 {
     setCaption(i18n("Sending Settings"));

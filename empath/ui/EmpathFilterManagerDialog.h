@@ -1,4 +1,3 @@
-
 /*
     Empath - Mailer for KDE
     
@@ -29,21 +28,19 @@
 #define EMPATHFILTERMANAGERDIALOG_H
 
 // Qt includes
-#include <qwidget.h>
 #include <qlistview.h>
 #include <qlabel.h>
 #include <qpushbutton.h>
-#include <qlayout.h>
-#include <qdialog.h>
 
 // KDE includes
 #include <kbuttonbox.h>
+#include <kdialog.h>
 
 // Local includes
 #include "EmpathFilterListItem.h"
 #include "EmpathDefines.h"
 
-class EmpathFilterManagerDialog : public QDialog
+class EmpathFilterManagerDialog : public KDialog
 {
     Q_OBJECT
 

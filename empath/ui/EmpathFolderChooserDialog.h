@@ -29,9 +29,10 @@
 #define EMPATHFOLDERCHOOSERDIALOG_H
 
 // Qt includes
-#include <qwidget.h>
-#include <qdialog.h>
 #include <qpushbutton.h>
+
+// KDE includes
+#include <kdialog.h>
 
 // Local includes
 #include "EmpathURL.h"
@@ -39,7 +40,7 @@
 class EmpathFolder;
 class EmpathFolderWidget;
 
-class EmpathFolderChooserDialog : public QDialog
+class EmpathFolderChooserDialog : public KDialog
 {
     Q_OBJECT
 

@@ -26,6 +26,7 @@
 
 // Qt includes
 #include <qwhatsthis.h>
+#include <qlayout.h>
 
 // KDE includes
 #include <klocale.h>
@@ -33,13 +34,15 @@
 
 // Local includes
 #include "EmpathMessageMarkDialog.h"
+#include "EmpathSeparatorWidget.h"
+#include "EmpathMessageMarkDialog.h"
 #include "EmpathUtilities.h"
 #include "EmpathUIUtils.h"
         
 EmpathMessageMarkDialog::EmpathMessageMarkDialog(
         QWidget * parent,
         const char * name)
-    :    QDialog(parent, name, true)
+    :   KDialog(parent, name, true)
 {
     setCaption(i18n("Mark Messages"));
 
@@ -116,26 +119,26 @@ EmpathMessageMarkDialog::EmpathMessageMarkDialog(
     
     rb_on_->setChecked(true);
     
-    l_tagged_    = new QLabel(this);
+    l_tagged_   = new QLabel(this);
     
     l_tagged_->setPixmap(empathIcon("tree-marked"));
     
-    l_replied_    = new QLabel(this);
+    l_replied_  = new QLabel(this);
     
     
     l_replied_->setPixmap(empathIcon("tree-replied"));
     
-    l_read_        = new QLabel(this);
+    l_read_     = new QLabel(this);
 
     l_read_->setPixmap(empathIcon("tree-read"));
     
-    stateButtonGroup_->insert(rb_tagged_,    RMM::Marked);
-    stateButtonGroup_->insert(rb_replied_,    RMM::Replied);
-    stateButtonGroup_->insert(rb_read_,        RMM::Read);
+    stateButtonGroup_->insert(rb_tagged_,   RMM::Marked);
+    stateButtonGroup_->insert(rb_replied_,  RMM::Replied);
+    stateButtonGroup_->insert(rb_read_,     RMM::Read);
 
-    typeButtonGroup_->insert(rb_on_,        On);
-    typeButtonGroup_->insert(rb_off_,        Off);
-    typeButtonGroup_->insert(rb_toggle_,    Toggle);
+    typeButtonGroup_->insert(rb_on_,     On);
+    typeButtonGroup_->insert(rb_off_,    Off);
+    typeButtonGroup_->insert(rb_toggle_, Toggle);
 
     // Button box
     
@@ -158,6 +161,27 @@ EmpathMessageMarkDialog::EmpathMessageMarkDialog(
     
     // Layouts
     
+    QVBoxLayout * layout = new QVBoxLayout(this, dialogSpace);
+
+    QGridLayout * layout2 = new QGridLayout(layout);
+
+    layout2->addWidget(rb_tagged_,  0, 0);
+    layout2->addWidget(rb_replied_, 1, 0);
+    layout2->addWidget(rb_read_,    2, 0);
+
+    layout2->addWidget(l_tagged_,  0, 1);
+    layout2->addWidget(l_replied_, 1, 1);
+    layout2->addWidget(l_read_,    2, 1);
+    
+    layout2->addWidget(rb_on_,      0, 2);
+    layout2->addWidget(rb_off_,     1, 2);
+    layout2->addWidget(rb_toggle_,  2, 2);
+
+
+    layout->addStretch(10);
+    layout->addWidget(new EmpathSeparatorWidget(this));
+
+    layout->addWidget(buttonBox_);
 }
 
     void

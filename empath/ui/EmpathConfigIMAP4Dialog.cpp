@@ -53,7 +53,7 @@ EmpathConfigIMAP4Dialog::create(const EmpathURL & url, QWidget * parent)
         
 EmpathConfigIMAP4Dialog::EmpathConfigIMAP4Dialog
     (const EmpathURL & url, QWidget * parent)
-    :   QDialog(parent, "ConfigIMAP4Dialog", true),
+    :   KDialog(parent, "ConfigIMAP4Dialog", true),
         url_(url)
 {
     KButtonBox * buttonBox = new KButtonBox(this);

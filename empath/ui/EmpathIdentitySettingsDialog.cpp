@@ -56,7 +56,7 @@
 #include "Empath.h"
         
 EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(QWidget * parent)
-    :   QDialog(parent, "IdentitySettings", true),
+    :   KDialog(parent, "IdentitySettings", true),
         applied_(false)
 {
     setCaption(i18n("Identity Settings"));

@@ -28,15 +28,17 @@
 #define EMPATHMATCHPROPERTIESDIALOG_H
 
 // Qt includes
-#include <qdialog.h>
 #include <qbuttongroup.h>
 #include <qcombobox.h>
 #include <qlineedit.h>
 #include <qspinbox.h>
 
+// KDE includes
+#include <kdialog.h>
+
 class EmpathMatcher;
 
-class EmpathMatchPropertiesDialog : public QDialog
+class EmpathMatchPropertiesDialog : public KDialog
 {
     Q_OBJECT
 

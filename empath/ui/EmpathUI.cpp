@@ -53,7 +53,6 @@
 #include "EmpathSendingSettingsDialog.h"
 #include "EmpathAccountsSettingsDialog.h"
 #include "EmpathFilterManagerDialog.h"
-#include "EmpathConfigMaildirDialog.h"
 #include "EmpathConfigIMAP4Dialog.h"
 #include "EmpathConfigPOP3Dialog.h"
 
@@ -62,8 +61,6 @@ QString EmpathAboutText;
 EmpathUI::EmpathUI()
     : QObject((QObject *)0L, "EmpathUI")
 {
-    // %1 == Version number.
-    // %2+ == Names of contributors
     QString aboutTemplate = i18n(
         "<p>Empath -- Mail client for KDE</p>"
         "<p>Version: %1</p>"

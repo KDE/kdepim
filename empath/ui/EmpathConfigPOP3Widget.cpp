@@ -83,7 +83,6 @@ EmpathConfigPOP3Widget::loadData()
     EmpathMailboxPOP3 * m = (EmpathMailboxPOP3 *)mailbox;
 
     m->loadConfig();
-    loggingWidget_->loadData();
 }
 
 // vim:ts=4:sw=4:tw=78

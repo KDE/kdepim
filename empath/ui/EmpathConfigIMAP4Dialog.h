@@ -28,9 +28,11 @@
 #define EMPATHCONFIGIMAP4DIALOG_H
 
 // Qt includes
-#include <qdialog.h>
 #include <qwidget.h>
 #include <qpushbutton.h>
+
+// KDE includes
+#include <kdialog.h>
 
 // Local includes
 #include "EmpathDefines.h"
@@ -41,7 +43,7 @@ class EmpathMailboxIMAP4;
 /**
  * Configure an imap mailbox
  */
-class EmpathConfigIMAP4Dialog : public QDialog
+class EmpathConfigIMAP4Dialog : public KDialog
 {
     Q_OBJECT
 

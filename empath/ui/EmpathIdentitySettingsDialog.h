@@ -28,21 +28,20 @@
 #define EMPATHIDENTITYSETTINGSDIALOG_H
 
 // Qt includes
-#include <qwidget.h>
 #include <qlineedit.h>
 #include <qmultilineedit.h>
 #include <qpushbutton.h>
-#include <qdialog.h>
 
 // KDE includes
 #include <kbuttonbox.h>
+#include <kdialog.h>
 
 // Local includes
 #include "EmpathDefines.h"
 
 class EmpathFileSelectWidget;
 
-class EmpathIdentitySettingsDialog : public QDialog
+class EmpathIdentitySettingsDialog : public KDialog
 {
     Q_OBJECT
 

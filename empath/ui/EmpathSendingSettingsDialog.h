@@ -30,7 +30,6 @@
 // Qt includes
 #include <qlayout.h>
 #include <qwidget.h>
-#include <qdialog.h>
 #include <qlabel.h>
 #include <qlineedit.h>
 #include <qcheckbox.h>
@@ -41,6 +40,7 @@
 #include <qspinbox.h>
 
 // KDE includes
+#include <kdialog.h>
 #include <kbuttonbox.h>
 
 // Local includes
@@ -50,7 +50,7 @@
 class EmpathAddressSelectionWidget;
 class EmpathFolderChooserWidget;
 
-class EmpathSendingSettingsDialog : public QDialog
+class EmpathSendingSettingsDialog : public KDialog
 {
     Q_OBJECT
 

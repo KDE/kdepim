@@ -42,7 +42,7 @@
 #include "EmpathUtilities.h"
 
 EmpathComposeSettingsDialog::EmpathComposeSettingsDialog(QWidget * parent)
-    :   QDialog(parent, "ComposeSettings", true),
+    :   KDialog(parent, "ComposeSettings", true),
         applied_(false)
 {
     setCaption(i18n("Compose Settings"));

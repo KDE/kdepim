@@ -24,6 +24,9 @@
 # pragma implementation "EmpathFilterActionDialog.h"
 #endif
 
+// Qt includes
+#include <qlayout.h>
+
 // KDE includes
 #include <kapp.h>
 #include <klocale.h>
@@ -43,7 +46,7 @@ EmpathFilterActionDialog::EmpathFilterActionDialog(
         EmpathFilter * filter,
         QWidget * parent,
         const char * name)
-    :    QDialog(parent, name, true),
+    :   KDialog(parent, name, true),
         filter_(filter)
 {
     setCaption(i18n("Filter Action"));

@@ -37,9 +37,9 @@
 #include <qradiobutton.h>
 #include <qcombobox.h>
 #include <qspinbox.h>
-#include <qdialog.h>
 
 // KDE includes
+#include <kdialog.h>
 #include <kcolorbtn.h>
 #include <kbuttonbox.h>
 
@@ -49,7 +49,7 @@
 /**
  * Configure the appearance of various stuff.
  */
-class EmpathDisplaySettingsDialog : public QDialog
+class EmpathDisplaySettingsDialog : public KDialog
 {
     Q_OBJECT
 

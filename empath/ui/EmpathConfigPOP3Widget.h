@@ -39,7 +39,6 @@
 #include "EmpathURL.h"
 
 class EmpathConfigPOP3Server;
-class EmpathConfigPOP3Logging;
 class EmpathConfigPOP3General;
 class EmpathMailbox;
 
@@ -64,7 +63,6 @@ class EmpathConfigPOP3Widget : public KTabCtl
         EmpathURL url_;
 
         EmpathConfigPOP3Server  * serverWidget_;
-        EmpathConfigPOP3Logging * loggingWidget_;
 };
 
 #endif

@@ -1,4 +1,7 @@
-INCLUDES= -I include -I include/generated $(all_includes)
+INCLUDES = \
+	-I$(top_srcdir)/vCard/include \
+	-I$(top_srcdir)/vCard/include/generated \
+	$(all_includes)
 
 lib_LTLIBRARIES = libvcard.la
 

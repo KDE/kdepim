@@ -44,7 +44,7 @@
 EmpathMatchPropertiesDialog::EmpathMatchPropertiesDialog(
         QWidget * parent,
         EmpathMatcher * matcher)
-    :    QDialog(parent, "matchPropertiesDialog", true),
+    :   KDialog(parent, "matchPropertiesDialog", true),
         matcher_(matcher)
 {
     setCaption(i18n("Match expression"));

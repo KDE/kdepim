@@ -1,4 +1,7 @@
-INCLUDES= -I include -I include/generated $(all_includes)
+INCLUDES = \
+	-I$(top_srcdir)/ldif/include \
+	-I$(top_srcdir)/ldif/include/generated \
+	$(all_includes)
 
 noinst_LIBRARIES = libldif.a
 

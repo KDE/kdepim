@@ -47,7 +47,7 @@
 #include "Empath.h"
     
 EmpathAccountsSettingsDialog::EmpathAccountsSettingsDialog(QWidget * parent)
-    :   QDialog(parent, "AccountsSettings", true)
+    :   KDialog(parent, "AccountsSettings", true)
 {
     setCaption(i18n("Accounts Settings"));
 

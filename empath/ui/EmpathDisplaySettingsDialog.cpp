@@ -46,7 +46,7 @@
 #include "Empath.h"
 
 EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(QWidget * parent)
-    :   QDialog(parent, "DisplaySettings", true),
+    :   KDialog(parent, "DisplaySettings", true),
         applied_(false)
 {
     setCaption(i18n("Display Settings"));

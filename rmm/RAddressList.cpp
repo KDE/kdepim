@@ -55,8 +55,8 @@ RAddressList::operator = (const QCString & s)
 RAddressList::operator == (RAddressList & al)
 {
     parse();
-    if (al.list_.count() != list_.count()) return false;
-    return true; // FIXME: Duh ? This isn't right.
+    // TODO
+    return false;
 }
         
     RAddress

@@ -38,10 +38,10 @@
 #include <qpushbutton.h>
 #include <qbuttongroup.h>
 #include <qspinbox.h>
-#include <qdialog.h>
 
 // KDE includes
 #include <kbuttonbox.h>
+#include <kdialog.h>
 
 // Local includes
 #include "EmpathDefines.h"
@@ -51,7 +51,7 @@ class Empath;
 /**
  * Used to configure the settings for composing messages.
  */
-class EmpathComposeSettingsDialog : public QDialog
+class EmpathComposeSettingsDialog : public KDialog
 {
     Q_OBJECT
 

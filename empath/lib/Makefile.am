@@ -1,11 +1,15 @@
-KDE_CXXFLAGS=$(USE_RTTI)
-INCLUDES= $(all_includes) -I$(top_srcdir)/rmm/
+KDE_CXXFLAGS = $(USE_RTTI)
 
-noinst_LIBRARIES = libempath.a
+INCLUDES = -I$(top_srcdir)/rmm/ $(all_includes)
 
-libempath_a_METASOURCES = AUTO
+lib_LTLIBRARIES = libempathkernel.la
 
-libempath_a_SOURCES = \
+libempathkernel_la_LDFLAGS = $(all_libraries)
+libempathkernel_la_LIBADD = $(LIB_KDECORE)
+
+METASOURCES = AUTO
+
+libempathkernel_la_SOURCES = \
 Empath.cpp \
 EmpathViewFactory.cpp \
 EmpathInterface.cpp \

@@ -1,5 +1,5 @@
-INCLUDES  = -I../lib $(all_includes)
-LDFLAGS   = -L../lib $(all_libraries) $(KDE_RPATH)
+INCLUDES  = -I$(top_srcdir)/kab2/lib $(all_includes)
+LDFLAGS   = -L$(top_srcdir)/kab2/lib $(all_libraries) $(KDE_RPATH)
 LDADD = -lkab2 -lkdecore -lqt
 
 bin_PROGRAMS = kab_server

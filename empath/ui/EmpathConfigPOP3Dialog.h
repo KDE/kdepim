@@ -28,11 +28,13 @@
 #define EMPATHCONFIGPOP3DIALOG_H
 
 // Qt includes
-#include <qdialog.h>
 #include <qpushbutton.h>
 #include <qspinbox.h>
 #include <qlineedit.h>
 #include <qlabel.h>
+
+// KDE includes
+#include <kdialog.h>
 
 // Local includes
 #include "EmpathURL.h"
@@ -42,7 +44,7 @@ class EmpathPasswordEditWidget;
 /**
  * Configure a pop3 mailbox.
  */
-class EmpathConfigPOP3Dialog : public QDialog
+class EmpathConfigPOP3Dialog : public KDialog
 {
     Q_OBJECT
 

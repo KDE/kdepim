@@ -1,4 +1,4 @@
-INCLUDES= -I ../include $(all_includes)
+INCLUDES= -I$(top_srcdir)/kab2/include $(all_includes)
 
 lib_LTLIBRARIES = libkab2.la
 

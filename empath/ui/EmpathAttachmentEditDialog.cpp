@@ -47,7 +47,7 @@
 EmpathAttachmentEditDialog::EmpathAttachmentEditDialog(
         QWidget * parent,
         const char * name)
-    :    QDialog(parent, name, true)
+    :    KDialog(parent, name, true)
 {
     setCaption(i18n("Attachment Edit"));
     

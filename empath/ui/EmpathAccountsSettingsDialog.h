@@ -30,7 +30,9 @@
 // Qt includes
 #include <qwidget.h>
 #include <qlistview.h>
-#include <qdialog.h>
+
+// KDE includes
+#include <kdialog.h>
 
 // Local includes
 #include "EmpathURL.h"
@@ -43,7 +45,7 @@ class EmpathMailbox;
  * User can add, remove and edit accounts and see some vital info.
  */
 
-class EmpathAccountsSettingsDialog : public QDialog
+class EmpathAccountsSettingsDialog : public KDialog
 {
     Q_OBJECT
 

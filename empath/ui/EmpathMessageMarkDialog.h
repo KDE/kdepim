@@ -28,22 +28,20 @@
 #define EMPATHMESSAGEMARKDIALOG_H
 
 // Qt includes
-#include <qwidget.h>
-#include <qdialog.h>
 #include <qpushbutton.h>
 #include <qradiobutton.h>
-#include <qlayout.h>
 #include <qbuttongroup.h>
 #include <qlabel.h>
 
 // KDE includes
+#include <kdialog.h>
 #include <kbuttonbox.h>
 
 // Local includes
 #include "EmpathDefines.h"
 #include <RMM_Enum.h>
 
-class EmpathMessageMarkDialog : public QDialog
+class EmpathMessageMarkDialog : public KDialog
 {
     Q_OBJECT
 

@@ -40,7 +40,7 @@
  
 EmpathConfigPOP3Dialog::EmpathConfigPOP3Dialog
     (const EmpathURL & url, QWidget * parent)
-    :   QDialog(parent, "ConfigPOP3Dialog", true),
+    :   KDialog(parent, "ConfigPOP3Dialog", true),
         url_(url)
 {
     QString caption = i18n("Configuring mailbox %1");

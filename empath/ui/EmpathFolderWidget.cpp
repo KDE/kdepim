@@ -39,7 +39,6 @@
 // Local includes
 #include "EmpathUIUtils.h"
 #include "EmpathConfig.h"
-#include "EmpathConfigMaildirDialog.h"
 #include "EmpathConfigPOP3Dialog.h"
 #include "EmpathConfigIMAP4Dialog.h"
 #include "EmpathFolderWidget.h"

@@ -28,7 +28,6 @@
 #define EMPATHATTACHMENTEDITDIALOG_H
 
 // Qt includes
-#include <qdialog.h>
 #include <qlineedit.h>
 #include <qpushbutton.h>
 #include <qradiobutton.h>
@@ -36,12 +35,13 @@
 #include <qcombobox.h>
 
 // KDE includes
+#include <kdialog.h>
 
 #include "EmpathAttachmentSpec.h"
 
 class EmpathFileSelectWidget;
 
-class EmpathAttachmentEditDialog : public QDialog
+class EmpathAttachmentEditDialog : public KDialog
 {
     Q_OBJECT
 

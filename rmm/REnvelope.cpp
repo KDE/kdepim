@@ -54,7 +54,7 @@ REnvelope::operator == (REnvelope & e)
     parse();
     e.parse();
 
-    return false; // XXX: Need to write this...
+    return false; // TODO
 }
 
 REnvelope::~REnvelope()
@@ -197,8 +197,8 @@ REnvelope::get(HeaderType h)
 REnvelope::parentMessageId()
 {
     parse();
-    // XXX If there's a references field, we use this over the InReplyTo: field.
-    // This is a temporary policy decision and may change.
+    // Note: If there's a references field, we use this over the InReplyTo:
+    // field. This is a temporary policy decision and may change.
 
     RMessageID m;
 

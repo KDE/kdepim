@@ -24,6 +24,9 @@
 # pragma implementation "EmpathFilterManagerDialog.h"
 #endif
 
+// Qt includes
+#include <qlayout.h>
+
 // KDE includes
 #include <klocale.h>
 #include <kapp.h>
@@ -42,7 +45,7 @@
 #include "EmpathUIUtils.h"
 
 EmpathFilterManagerDialog::EmpathFilterManagerDialog(QWidget * parent)
-    :    QDialog(parent, "FilterManager", true)
+    :    KDialog(parent, "FilterManager", true)
 {
     setCaption(i18n("Filter Settings"));
 
