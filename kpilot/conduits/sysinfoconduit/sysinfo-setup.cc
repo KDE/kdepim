@@ -114,7 +114,8 @@ void SysInfoWidgetConfig::load(KConfig *fConfig)
 	while (p && p->name)
 	{
 		i = new QCheckListItem(fConfigWidget->fPartsList,i18n(p->name),QCheckListItem::CheckBox);
-		i->setOn(fConfig->readBoolEntry(p->key,false));
+		// by default let the sysinfo conduit write out all available information
+		i->setOn(fConfig->readBoolEntry(p->key, true));
 		i->setText(1,QString::fromLatin1(p->key));
 		p++;
 	}

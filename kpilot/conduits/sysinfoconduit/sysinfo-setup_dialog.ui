@@ -167,6 +167,9 @@
                         <property name="name">
                             <cstring>fPartsList</cstring>
                         </property>
+                        <property name="resizeMode">
+                            <enum>LastColumn</enum>
+                        </property>
                     </widget>
                 </grid>
             </widget>
