@@ -67,9 +67,8 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &list, const QString
 
   if ( list.count() == 1 )
     name = list[ 0 ].givenName() + "_" + list[ 0 ].familyName() + ".vcf";
-  else {
+  else
     name = "addressbook.vcf";
-  }
 
   QString fileName = KFileDialog::getSaveFileName( name );
   if ( fileName.isEmpty() )

@@ -91,10 +91,10 @@ void XXPortManager::slotExport( const QString &identifier, const QString &data )
   KABC::AddresseeList addrList;
   KABC::AddressBook::Iterator it;
   for ( it = mCore->addressBook()->begin(); it != mCore->addressBook()->end(); ++it ) {
-    if ( list.count() == 0 )
+    if ( list.count() != 0 ) {
       if ( list.contains( (*it).uid() ) )
         addrList.append( *it );
-    else
+    } else
       addrList.append( *it );
   }
 
