@@ -34,6 +34,8 @@ class Event : public Incidence
     /** returns an event's end date and time as a string formatted according
      to the users locale settings */
     QString dtEndStr() const;
+    void setHasEndDate(bool);
+    bool hasEndDate() const;
 
     /** Return true if the event spans multiple days, otherwise return false. */
     bool isMultiDay() const;
@@ -43,10 +45,13 @@ class Event : public Incidence
     /** get the event's time transparency level. */
     int transparency() const;
 
+    void setDuration(int seconds);
+
   private:
     bool accept(IncidenceVisitor &v) { return v.visit(this); }
 
     QDateTime mDtEnd;
+    bool mHasEndDate;
     int mTransparency;
 };
 

@@ -41,9 +41,11 @@ class ICalFormatImpl {
     void readAlarm(icalcomponent *alarm,Incidence *incidence);
 
     icaltimetype writeICalDate(const QDate &);
-    icaltimetype writeICalDateTime(const QDateTime &);
     QDate readICalDate(icaltimetype);
+    icaltimetype writeICalDateTime(const QDateTime &);
     QDateTime readICalDateTime(icaltimetype);
+    icaldurationtype writeICalDuration(int seconds);
+    int readICalDuration(icaldurationtype);
     QString readUtf8Text(const char *);
     icalcomponent *createCalendarComponent();
     icalcomponent *createScheduleComponent(Incidence *,Scheduler::Method);
@@ -56,6 +58,11 @@ class ICalFormatImpl {
   
     QList<Event> mEventsRelate;           // events with relations
     QList<Todo> mTodosRelate;             // todos with relations
+    
+    static const int mSecondsPerWeek;
+    static const int mSecondsPerDay;
+    static const int mSecondsPerHour;
+    static const int mSecondsPerMinute;
 };
 
 }

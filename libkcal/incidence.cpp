@@ -11,11 +11,10 @@
 
 using namespace KCal;
 
-Incidence::Incidence()
+Incidence::Incidence() :
+  mReadOnly(false), mRelatedTo(0), mSecrecy(SecrecyPublic), mPriority(3), mPilotId(0),
+  mSyncStatus(SYNCMOD), mFloats(true), mDuration(0), mHasDuration(false)
 {
-  mReadOnly = false;
-  mFloats = true;
-
   mAlarm = new KOAlarm(this);
   mRecurrence = new KORecurrence(this);
 
@@ -29,16 +28,7 @@ Incidence::Incidence()
   mSummary = "";
   mDescription = "";
 
-  mRelatedTo = 0;
-
   mExDates.setAutoDelete(true);
-  
-  mPilotId = 0;
-  mSyncStatus = SYNCMOD;
-
-  mSecrecy = SecrecyPublic;
-  
-  mPriority = 1;
 }
 
 Incidence::Incidence(const Incidence &i) : QObject()
@@ -47,6 +37,8 @@ Incidence::Incidence(const Incidence &i) : QObject()
   mReadOnly = i.mReadOnly;
   kdDebug() << "Copying start date: " << i.mDtStart.toString() << endl;
   mDtStart = i.mDtStart;
+  mDuration = i.mDuration;
+  mHasDuration = i.mHasDuration;
   mOrganizer = i.mOrganizer;
   mVUID = i.mVUID;
   mRevision = i.mRevision;
@@ -575,6 +567,27 @@ QDate Incidence::strToDate(const QString &dateStr)
   month = dateStr.mid(4,2).toInt();
   day = dateStr.mid(6,2).toInt();
   return(QDate(year, month, day));
+}
+
+void Incidence::setDuration(int seconds)
+{
+  mDuration = seconds;
+  setHasDuration(true);
+}
+
+int Incidence::duration() const
+{
+  return mDuration;
+}
+
+void Incidence::setHasDuration(bool)
+{
+  mHasDuration = true;
+}
+
+bool Incidence::hasDuration() const
+{
+  return mHasDuration;
 }
 
 #include "incidence.moc"

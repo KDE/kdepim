@@ -8,14 +8,15 @@
 
 using namespace KCal;
 
-Event::Event()
+Event::Event() :
+  mHasEndDate(false), mTransparency(0) 
 {
-  mTransparency = 0;
 }
 
 Event::Event(const Event &e) : Incidence(e)
 {
   mDtEnd = e.mDtEnd;
+  mHasEndDate = e.mHasEndDate;
   mTransparency = e.mTransparency;
 }
 
@@ -32,13 +33,23 @@ Event *Event::clone()
 void Event::setDtEnd(const QDateTime &dtEnd)
 {  
   if (mReadOnly) return;
+
   mDtEnd = dtEnd;
+
+  setHasEndDate(true);
+  setHasDuration(false);
+  
   emit eventUpdated(this);
 }
 
 const QDateTime &Event::dtEnd() const
 {
-  return mDtEnd;
+  if (hasEndDate()) return mDtEnd;
+  if (hasDuration()) return dtStart().addSecs(duration());
+
+  kdDebug() << "Warning! Event '" << summary()
+            << "' does have neither end date nor duration." << endl;
+  return QDateTime();
 }
 
 QString Event::dtEndTimeStr() const
@@ -56,6 +67,15 @@ QString Event::dtEndStr() const
   return KGlobal::locale()->formatDateTime(mDtEnd);
 }
 
+void Event::setHasEndDate(bool b)
+{
+  mHasEndDate = b;
+}
+
+bool Event::hasEndDate() const
+{
+  return mHasEndDate;
+}
 
 bool Event::isMultiDay() const
 {
@@ -76,4 +96,8 @@ int Event::transparency() const
   return mTransparency;
 }
 
-
+void Event::setDuration(int seconds)
+{
+  setHasEndDate(false);
+  Incidence::setDuration(seconds);
+}

@@ -86,6 +86,11 @@ class Incidence : public QObject
      to the users locale settings */
     QString dtStartStr() const;
 
+    virtual void setDuration(int seconds);
+    int duration() const;
+    void setHasDuration(bool);
+    bool hasDuration() const;
+
     /** returns TRUE or FALSE depending on whether the event "floats,"
      * or doesn't have a time attached to it, only a date. */
     bool doesFloat() const;
@@ -244,6 +249,9 @@ class Incidence : public QObject
     int mSyncStatus;                      // status (for sync)
 
     bool mFloats;                         // floating means date without time
+
+    int mDuration;
+    bool mHasDuration;
   
     KOAlarm *mAlarm;
     KORecurrence *mRecurrence;

@@ -34,6 +34,11 @@ extern "C" {
 
 using namespace KCal;
 
+const int gSecondsPerMinute = 60;
+const int gSecondsPerHour   = gSecondsPerMinute * 60;
+const int gSecondsPerDay    = gSecondsPerHour   * 24;
+const int gSecondsPerWeek   = gSecondsPerDay    * 7;
+
 ICalFormatImpl::ICalFormatImpl(ICalFormat *parent, Calendar *cal)
 {
   mParent = parent;
@@ -115,7 +120,7 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
     kdDebug() << "§§ incidence " << event->summary() << " has time." << endl; 
     start = writeICalDateTime(event->dtStart());
   }
-     icalcomponent_add_property(vevent,icalproperty_new_dtstart(start));
+  icalcomponent_add_property(vevent,icalproperty_new_dtstart(start));
   
   // end time
   icaltimetype end;
@@ -327,6 +332,13 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   if (alarm->enabled()) {
     kdDebug() << "Write alarm for " << incidence->summary() << endl;
     icalcomponent_add_component(parent,writeAlarm(alarm));
+  }
+
+  // duration
+  if (incidence->hasDuration()) {
+    icaldurationtype duration;
+    duration = writeICalDuration(incidence->duration());
+    icalcomponent_add_property(parent,icalproperty_new_duration(duration));
   }
 }
 
@@ -880,6 +892,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
   const char *text;
   int intvalue;
   icaltimetype icaltime;
+  icaldurationtype icalduration;
 
   QStringList categories;
 
@@ -924,6 +937,11 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
         } else {
           incidence->setDtStart(readICalDateTime(icaltime));
         }
+        break;
+
+      case ICAL_DURATION_PROPERTY:  // start date and time
+	icalduration = icalproperty_get_duration(p);
+        incidence->setDuration(readICalDuration(icalduration));
         break;
 
       case ICAL_DESCRIPTION_PROPERTY:  // description
@@ -1524,6 +1542,38 @@ QDateTime ICalFormatImpl::readICalDateTime(icaltimetype t)
 QDate ICalFormatImpl::readICalDate(icaltimetype t)
 {
   return QDate(t.year,t.month,t.day);
+}
+
+icaldurationtype ICalFormatImpl::writeICalDuration(int seconds)
+{
+  icaldurationtype d;
+
+  d.weeks    = seconds   % gSecondsPerWeek;
+  seconds   -= d.weeks   * gSecondsPerWeek;
+  d.days     = seconds   % gSecondsPerDay;
+  seconds   -= d.days    * gSecondsPerDay;
+  d.hours    = seconds   % gSecondsPerHour;
+  seconds   -= d.hours   * gSecondsPerHour;
+  d.minutes  = seconds   % gSecondsPerMinute;
+  seconds   -= d.minutes * gSecondsPerMinute;
+  d.seconds  = seconds;
+
+  return d;
+}
+
+int ICalFormatImpl::readICalDuration(icaldurationtype d)
+{
+  int result = 0;
+  
+  result += d.weeks   * gSecondsPerWeek;
+  result += d.days    * gSecondsPerDay;
+  result += d.hours   * gSecondsPerHour;
+  result += d.minutes * gSecondsPerMinute;
+  result += d.seconds;
+
+  if (d.is_neg) result *= -1;
+  
+  return result;
 }
 
 icalcomponent *ICalFormatImpl::createCalendarComponent()
