@@ -22,10 +22,9 @@
 #include <sys/time.h>
 #include <sys/stat.h>
 #include <sys/utsname.h>
+#include <sys/types.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <unistd.h>
-
 #include <iostream.h>
 
 // Qt includes
@@ -43,11 +42,36 @@ QString hostName;
 unsigned long pid;
 QString path;
 
+// -----------------------------------------------------------------------------
+
 QString generateUnique();
 bool writeMessage(const QString & s);
+
+// -----------------------------------------------------------------------------
+
+void checkDir(QString path) 
+{
+    if(path[path.length()-1] == '/')
+        path.truncate(path.length()-1);
+    
+    QDir d;
+    
+    if (!d.cd(path)) {
+        if(d.mkdir(path)) {
+            chmod(path, S_IRUSR|S_IWUSR|S_IXUSR);
+            cout << "created dir: " << path << endl;
+        }
+        else {
+            cerr << "Can't create missing directory \"" << path << "\"" << endl;
+            exit(1);
+        }
+    }
+}
+
     
 int main(int argc, char * argv[])
 {
+
     if (argc != 3) {
         cerr << "usage: mbox2maildir <mbox> <Maildir>" << endl;
         exit(1);
@@ -72,6 +96,13 @@ int main(int argc, char * argv[])
     pid = (unsigned long)getpid();
     seq = 0;
 
+    QFileInfo fi(mboxPath);
+
+    if(fi.isDir()) {
+        cerr << "\"" << mboxPath << "\" should be a file, not a directory!" << endl;
+        exit(1);
+    }
+    
     QFile mboxFile(mboxPath);
     
     if (!mboxFile.open(IO_ReadOnly)) {
@@ -80,23 +111,14 @@ int main(int argc, char * argv[])
     }
     
     path = QDir(maildirPath).absPath();
+
+    checkDir(path);
+    checkDir(path + "/tmp");
+    checkDir(path + "/new");
+    checkDir(path + "/cur");
     
-    QDir d;
-    
-    if (!d.cd(path)) {
-        cerr << "Can't go to directory \"" << maildirPath.ascii() <<
-            "\"" << endl;
-        exit(1);
-    }
-    
-    QString maildirFullPath(path + "/cur/");
-    
-    if (!d.cd(maildirFullPath)) {
-        cerr << "Can't go to directory \"" << maildirFullPath.ascii()
-            << "\"" << endl;
-        exit(1);
-    }
-    
+    QString maildirFullPath(path + "/cur");
+
     QTextStream str(&mboxFile);
     
     QString buf;    
@@ -110,24 +132,24 @@ int main(int argc, char * argv[])
         
     while (!str.eof()) {
             
-        QString s = str.readLine();
+        QString s = str.readLine() + "\n";
 
-        if (s.find(QRegExp("^From[ \\t]"))) {    
+        if (s.contains(QRegExp("^From[ \\t]"))) {    
 
             QString unique = generateUnique();
+
+            cerr << "copying " << n << " message (" << failures << " failures)\r";
             
-            QFile f(maildirFullPath + unique);
+            QFile f(maildirFullPath + "/" + unique);
             
             if (0 != n++)
                 if (!writeMessage(buf))
                     ++failures;
             
             buf.truncate(0);
-            
-            cerr << ".";
         }
-        
-        buf += s;
+        else
+            buf += s;
     }
 
     cerr << endl;
@@ -178,8 +200,7 @@ writeMessage(const QString & s)
     }
 
     if (!f.open(IO_WriteOnly)) {
-        cerr <<
-            "Couldn't open mail file for writing." << endl;
+        cerr << "Couldn't open mail file (" << _path << ") for writing." << endl;
         return false;
     }
 
@@ -201,6 +222,8 @@ writeMessage(const QString & s)
     
     if (::link(_path.ascii(), linkTarget.ascii()) != 0) {
         cerr << "Couldn't successfully link mail file - giving up" << endl;
+        cout << "link from: " << _path.ascii() << endl;
+        cout << "link to  : " << linkTarget.ascii() << endl;
         perror("link");
         f.close();
         f.remove();
