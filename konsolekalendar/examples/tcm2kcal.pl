@@ -52,7 +52,7 @@ my($mmonth)=Month_to_Text($month);
 
 #location of TCM monthly calendar web page
 my($TCM)="http://www.turnerclassicmovies.com/Schedule/Print/0,,$month-$year|0|,00.html";
-print "Converting $TCM ...\n";
+print "Processing $TCM ...\n";
 
 if( open(GET, "lynx -dump -nolist -connect_timeout=3 '$TCM'|") ) {
 } else {
@@ -184,18 +184,50 @@ sub process() {
   my($tmp2,$title) = split("^[0-9]*:[0-9][0-9][[:space:]]*[A,P]M",$tmp);
   $title=&rmleadwhite($title);
   $title=$title . ")";
+
+  # "Grep line"
+  my($UID)=&find_uid("$date,$time,$enddate,$endtime,$title");
+
+  # New Title for Change Mode
   $title=uc($title) if( $mode eq "--change" );
 
   #print "EVENT start datetime=$date, $time, title=$title, end datetime=$enddate, $endtime, duration=$duration\n";
   $lastampm=$ampm;
 
-  # Run konsolekalendar to insert the event
-  if( system("$konkal $mode --file $cal --date $date --time $time --end-date $enddate --end-time $endtime --summary \"$title\" --description \"$event\"") ) {
+  # Run konsolekalendar to insert/change/delete the event
+  if( system("$konkal $mode $UID --file $cal --date $date --time $time --end-date $enddate --end-time $endtime --summary \"$title\" --description \"$event\"") ) {
     $mode =~ s/--//;
     print "Failure Condition Encountered.  Unable to $mode Event.\n"; exit 1;
   }
 
   $num++;
+}
+
+sub find_uid() {
+
+  my($line);
+  my($grepline) = shift;
+  my($UID)="";
+
+  if( $mode ne "--add" ) {
+    if( open(VIEW, "$konkal --view --all --export-type csv --file $cal |") ) {
+      while($line=<VIEW>) {
+	if( index($line,$grepline) == 0) {
+	  my(@u) = reverse(split(",",$line));
+	  chomp($u[0]);
+	  $UID="--uid=$u[0]";
+	  last;
+	}
+      }
+      if( $UID eq "" ) {
+	print "Failure Condition Encoutered.  Unable to locate Event $grepline in calendar.\n"; exit 1;
+      }
+    } else {
+      die "Failed to view cal $cal.\n";
+    }
+    close(VIEW);
+  }
+  return($UID);
 }
 
 __END__
