@@ -25,6 +25,7 @@
 #include <kapplication.h>
 #include <kiconloader.h>
 #include <klocale.h>
+#include <kdebug.h>
 
 #include <kmimetype.h>
 
@@ -52,6 +53,7 @@ Attachment::Attachment(QListView *parent, KTNEFAttach *attach)
 		setPixmap( 0, pix );
 	else
 		setPixmap(0, mimeType->pixmap(KIcon::Small));
+	setDragEnabled( true );
 }
 
 Attachment::~Attachment()
@@ -110,3 +112,18 @@ QPtrList<KTNEFAttach>* KTNEFView::getSelection()
 	}
 	return &attachments_;
 }
+
+void KTNEFView::startDrag()
+{
+	QListViewItemIterator it( this, QListViewItemIterator::Selected );
+	QValueList<KTNEFAttach*> list;
+	while ( it.current() )
+	{
+		list << static_cast<Attachment*>( it.current() )->getAttachment();
+		++it;
+	}
+	if ( !list.isEmpty() )
+		emit dragRequested( list );
+}
+
+#include "ktnefview.moc"
