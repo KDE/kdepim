@@ -12,6 +12,12 @@
         * - <a href="kaddressbook/html/index.html"><b>kaddressbook</b></a>
         *   (<a href="kaddressbook/html/classes.html">classes</a>)\n
         *   <i>Keeps your addresses on file.</i>
+        * - <a href="kalarm/html/index.html"><b>kalarm</b></a>
+        *   (<a href="kalarm/html/classes.html">classes</a>)\n
+        *   <i>A personal alarm message, command and email scheduler.</i>
+        * - <a href="kalarm/kalarmd/html/index.html"><b>kalarmd</b></a>
+        *   (<a href="kalarm/kalarmd/html/classes.html">classes</a>)\n
+        *   <i>Alarm daemon.</i>
         * - <a href="kandy/html/index.html"><b>kandy</b></a>
         *   (<a href="kandy/html/classes.html">classes</a>)\n
         *   <i>Synchronises data with your mobile phone.</i>
@@ -41,6 +47,9 @@
         * - <a href="korganizer/html/index.html"><b>korganizer</b></a>
         *   (<a href="korganizer/html/classes.html">classes</a>)\n
         *   <i>The calendar and scheduling program for KDE.</i>
+        * - <a href="korganizer/korgac/html/index.html"><b>korgac</b></a>
+        *   (<a href="korganizer/korgac/html/classes.html">classes</a>)\n
+        *   <i>An alarm client for KOrganizer.</i>
         * - <a href="kpilot/kpilot/html/index.html"><b>kpilot</b></a>
         *   (<a href="kpilot/kpilot/html/classes.html">classes</a>)\n
         *   <i>Synchronizes data with your PalmOS-based handheld.</i>
