@@ -1635,7 +1635,7 @@ option is selected.</para>
 <varlistentry>
 <term><guilabel>Enable IMAP resource functionality</guilabel></term>
 <listitem>
-<para>Makes it possible to store the entries from the Kontact applications (KOrganizer, KAddressBook and KNotes). This option has to be set whenever you are configuring Kontact as a <guilabel>KDE Kolab client</guilabel>. This option being enabled you will also need to add the appropriate resources from the <guilabel>KDE Kontrol Center</guilabel> (kcontrol) in the <guilabel>KDE Resources Configuration</guilabel> section. <guilabel>Kolab</guilabel> resources have to be added in case the resource functionality applies to a <guilabel>KDE Kolab client</guilabel> set-up.</para>
+<para>Makes it possible to store the entries from the Kontact applications (KOrganizer, KAddressBook and KNotes). This option has to be set whenever you are configuring Kontact as a <guilabel>KDE Kolab client</guilabel>. This option being enabled you will also need to add the appropriate resources from the <guilabel>KDE Control Center</guilabel> (kcontrol) in the <guilabel>KDE Resources Configuration</guilabel> section. <guilabel>Kolab</guilabel> resources have to be added in case the resource functionality applies to a <guilabel>KDE Kolab client</guilabel> set-up.</para>
 </listitem>
 </varlistentry>
 <varlistentry id="configure-misc-format-groupware-folders">
