@@ -559,7 +559,7 @@ QValueList<HistoryEvent> TaskView::getHistory(const QDate& from,
 void TaskView::clipTotals()
 {
   TimeKard *t = new TimeKard();
-  if (current_item()->isRoot())
+  if (current_item() && current_item()->isRoot())
   {
     int response = KMessageBox::questionYesNo( 0,
         i18n("Copy totals for just this task and it's subtasks?"

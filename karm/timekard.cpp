@@ -30,6 +30,7 @@ QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask)
   QString buf;
   long sum;
 
+        
   line.fill('-', reportWidth);
   line += '\n';
 
@@ -42,29 +43,34 @@ QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask)
   retval += line;
 
   // tasks
-  if (justThisTask)
+  if (taskview->current_item())
   {
-    // a task's total time includes the sum of all subtask times
-    sum = taskview->current_item()->totalTime();
-    printTask(taskview->current_item(), retval, 0);
+    if (justThisTask)
+    {
+      // a task's total time includes the sum of all subtask times
+      sum = taskview->current_item()->totalTime();
+      printTask(taskview->current_item(), retval, 0);
+    }
+    else
+    {
+      sum = 0;
+      for (Task* task= taskview->current_item(); task;
+          task= task->nextSibling())
+      {
+        sum += task->totalTime();
+        printTask(task, retval, 0);
+      }
+    } 
+
+    // total
+    buf.fill('-', timeWidth + 4);
+    retval += QString(QString::fromLatin1("%1\n")).arg(buf, timeWidth);
+    retval += QString(QString::fromLatin1("%1 %2"))
+      .arg(formatTime(sum),timeWidth)
+      .arg(i18n("Total"), -taskWidth);
   }
   else
-  {
-    sum = 0;
-    for (Task* task= taskview->current_item(); task;
-        task= task->nextSibling())
-    {
-      sum += task->totalTime();
-      printTask(task, retval, 0);
-    }
-  } 
-
-  // total
-  buf.fill('-', timeWidth + 4);
-  retval += QString(QString::fromLatin1("%1\n")).arg(buf, timeWidth);
-  retval += QString(QString::fromLatin1("%1 %2"))
-    .arg(formatTime(sum),timeWidth)
-    .arg(i18n("Total"), -taskWidth);
+    retval += i18n("No tasks!");
   
   return retval;
 }

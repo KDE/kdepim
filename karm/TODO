@@ -48,7 +48,8 @@ X * 2003-09-24: Fix "C" and "S" accelerators on file menu.
 
 X * 2003-09-24: Add my name as maintainer to About box.
 
-  * 2003-09-24: Add new task action--mark as complete.
+  * 2003-09-24: Add new task action--mark as complete.  Don't load completed
+    tasks.
 
   * 2003-09-24: Add date to clipboard reports.
 
