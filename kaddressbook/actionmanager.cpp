@@ -215,6 +215,9 @@ void ActionManager::initReadOnlyActions()
                  mWidget, SLOT( slotOpenLDAPDialog() ), mACollection, "ldap_lookup" );
   }
 
+  mActionSetPersonal = new KAction( i18n( "Set Personal Contact" ), "personal", 0, mViewManager,
+                                    SLOT( setUsersContact() ), mACollection, "set_personal" );
+
   // settings menu
   mActionExtensions = new KSelectAction( i18n( "Show Extension Bar" ), 0,
                                        mACollection, "options_show_extensions" );
@@ -312,6 +315,7 @@ void ActionManager::addresseeSelected( bool selected )
   mActionEditAddressee->setEnabled( selected );
   mActionMail->setEnabled( selected );
   mActionMailVCard->setEnabled( selected );
+  mActionSetPersonal->setEnabled( selected );
 }
 
 void ActionManager::modified(bool mod)

@@ -38,6 +38,7 @@
 #include <kabc/addressbook.h>
 #include <kabc/addresseelist.h>
 #include <kabc/field.h>
+#include <kabc/stdaddressbook.h>
 #include <kabc/vcardconverter.h>
 #include <kapplication.h>
 #include <kconfig.h>
@@ -783,6 +784,21 @@ QStringList ViewManager::extensionNames()
     list.append( wdg->title() );
 
   return list;
+}
+
+void ViewManager::setUsersContact()
+{
+  QStringList uidList = selectedUids();
+
+  if ( uidList.count() > 1 ) {
+    KMessageBox::sorry( this, i18n( "Please select only one contact." ) );
+    return;
+  }
+
+  QString text( i18n( "<qt>Do you really want to use <b>%1</b> as your new personal contact?</qt>" ) );
+  KABC::Addressee addr = mAddressBook->findByUid( uidList[ 0 ] );
+  if ( KMessageBox::questionYesNo( this, text.arg( addr.assembledName() ) ) == KMessageBox::Yes )
+    KABC::StdAddressBook::setUsersContact( addr.uid() );
 }
 
 KABC::AddressBook *ViewManager::addressBook()

@@ -259,6 +259,11 @@ class ViewManager : public QWidget
      */
     void setActiveExtension( int id );
 
+    /**
+      Set users contact.
+     */
+    void setUsersContact();
+
   protected slots:
     /**
       Handle events on the incremental search widget.

@@ -66,6 +66,7 @@
     <Action name="file_mail"/>
     <Separator/>
     <Action name="ldap_lookup"/>
+    <Action name="set_personal"/>
   </ToolBar>
   
   <ToolBar name="addresseeToolBar" noMerge="1"><text>Contact Toolbar</text>
