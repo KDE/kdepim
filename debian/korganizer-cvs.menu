@@ -1,8 +1,0 @@
-?package(korganizer-cvs):\
-	needs=x11\
-	section=Apps/Tools\
-	hints="KDE"\
-	kderemove="y"\
-	title="KOrganizer"\
-	command=/usr/bin/korganizer
-
