@@ -43,6 +43,8 @@ class CalendarSyncEntry : public SyncEntry
 
     KCal::Incidence *incidence() { return mIncidence; }
 
+    KPIM::DiffAlgo* diffAlgo( SyncEntry*, SyncEntry* );
+
   private:
     KCal::Incidence *mIncidence;
 };

@@ -21,6 +21,7 @@
 
 #include <kdebug.h>
 #include <libkcal/filestorage.h>
+#include <libkdepim/calendardiffalgo.h>
 
 #include "calendarsyncee.h"
 
@@ -78,6 +79,17 @@ bool CalendarSyncEntry::equals( SyncEntry *entry )
 CalendarSyncEntry *CalendarSyncEntry::clone()
 {
   return new CalendarSyncEntry( *this );
+}
+
+KPIM::DiffAlgo* CalendarSyncEntry::diffAlgo( SyncEntry *syncEntry, SyncEntry *targetEntry )
+{
+  CalendarSyncEntry *calSyncEntry = dynamic_cast<CalendarSyncEntry*>( syncEntry );
+  CalendarSyncEntry *calTargetEntry = dynamic_cast<CalendarSyncEntry*>( targetEntry );
+
+  if ( !calSyncEntry || !calTargetEntry )
+    return 0;
+
+  return new KPIM::CalendarDiffAlgo( calSyncEntry->incidence(), calTargetEntry->incidence() );
 }
 
 CalendarSyncee::CalendarSyncee( Calendar *calendar )
