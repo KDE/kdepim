@@ -64,7 +64,7 @@ void filter_oe5::import(filterInfo *info)
   info->alert(CAP,msg);
 
   choosen=KFileDialog::getExistingDirectory(QDir::homeDirPath(),parent, 
-      i18n("Select a folder"));
+      i18n("Select Folder"));
   if (choosen.isEmpty()) { return; } // No directory choosen here!
 
   msg=i18n("Searching for Outlook Express '.dbx' folders in directory %1").arg(choosen);
