@@ -527,12 +527,12 @@ void AddresseeEditorWidget::nameTextChanged(const QString &text)
 
 void AddresseeEditorWidget::nameBoxChanged()
 {
-  /* 
-   * Dummy addressee for parsing the name even if automatic parsing is
-   * disabled
-   */
   KABC::Addressee addr;
-  addr.setNameFromString( mNameEdit->text() );
+  AddresseeConfig config( mAddressee );
+  if ( config.automaticNameParsing() )
+    addr.setNameFromString( mNameEdit->text() );
+  else
+    addr = mAddressee;
 
   bool block = mFormattedNameBox->signalsBlocked();
   mFormattedNameBox->blockSignals( true );
