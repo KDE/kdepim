@@ -5,7 +5,7 @@
 ** This file specializes SyncAction to a kind that can have interaction
 ** with the user without the Sync timing out.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -22,12 +22,13 @@
 ** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 ** MA 02139, USA.
 */
- 
+
 /*
-** Bug reports and questions can be sent to groot@kde.org
+** Bug reports and questions can be sent to kde-pim@kde.org.
 */
 
-static const char *hotsync_id = "$Id$";
+static const char *hotsync_id =
+	"$Id$";
 
 #include "options.h"
 
@@ -61,17 +62,15 @@ static const char *hotsync_id = "$Id$";
 #include "kpilotConfig.h"
 #include "interactiveSync.moc"
 
-static const char *interactive_id="$Id$";
 
-
-InteractiveAction::InteractiveAction(KPilotDeviceLink *p,
-	QWidget *visibleparent,
-	QObject *parent,
-	const char *name) : 
-	SyncAction(p,parent,name),
-	fParent(visibleparent),
-	fTickleTimer(0L),
-	fTickleCount(0),
+InteractiveAction::InteractiveAction(KPilotDeviceLink * p,
+	QWidget * visibleparent,
+	QObject * parent,
+	const char *name) :
+	SyncAction(p, parent, name),
+	fParent(visibleparent), 
+	fTickleTimer(0L), 
+	fTickleCount(0), 
 	fTickleTimeout(0)
 {
 	FUNCTIONSETUP;
@@ -89,12 +88,13 @@ InteractiveAction::~InteractiveAction()
 
 void InteractiveAction::startTickle(unsigned timeout)
 {
+	FUNCTIONSETUP;
 	fTickleTimeout = timeout;
 	fTickleCount = 0;
 	if (!fTickleTimer)
 	{
 		fTickleTimer = new QTimer(this);
-		QObject::connect(fTickleTimer, SIGNAL(timeout()), 
+		QObject::connect(fTickleTimer, SIGNAL(timeout()),
 			this, SLOT(tickle()));
 	}
 	else
@@ -107,6 +107,7 @@ void InteractiveAction::startTickle(unsigned timeout)
 
 void InteractiveAction::stopTickle()
 {
+	FUNCTIONSETUP;
 	if (fTickleTimer)
 	{
 		fTickleTimer->stop();
@@ -115,6 +116,7 @@ void InteractiveAction::stopTickle()
 
 void InteractiveAction::tickle()
 {
+	FUNCTIONSETUP;
 	fTickleCount++;
 
 	// Note that if fTickleTimeout == 0 then this
@@ -138,31 +140,32 @@ void InteractiveAction::tickle()
 	}
 }
 
-int InteractiveAction::questionYesNo(const QString &text,
-	const QString &caption,
-	unsigned timeout)
+int InteractiveAction::questionYesNo(const QString & text,
+	const QString & caption, unsigned timeout)
 {
 	FUNCTIONSETUP;
 
-	KDialogBase *dialog = new KDialogBase(
-		caption.isNull() ? i18n("Question") : caption,
+	KDialogBase *dialog =
+		new KDialogBase(caption.isNull()? i18n("Question") : caption,
 		KDialogBase::Yes | KDialogBase::No,
-		KDialogBase::Yes,KDialogBase::No,
-		fParent,"questionYesNo",true,true,
-		i18n("Yes"),i18n("No"));
+		KDialogBase::Yes, KDialogBase::No,
+		fParent, "questionYesNo", true, true,
+		i18n("Yes"), i18n("No"));
 
 	// The following code is taken from KDialogBase.cc,
 	// part of the KDE 2.2 libraries. Copyright 2001
 	// by Waldo Bastian.
 	//
 	//
-	QVBox *topcontents = new QVBox (dialog);
-	topcontents->setSpacing(KDialog::spacingHint()*2);
-	topcontents->setMargin(KDialog::marginHint()*2);
+	QVBox *topcontents = new QVBox(dialog);
+
+	topcontents->setSpacing(KDialog::spacingHint() * 2);
+	topcontents->setMargin(KDialog::marginHint() * 2);
 
 	QWidget *contents = new QWidget(topcontents);
-	QHBoxLayout * lay = new QHBoxLayout(contents);
-	lay->setSpacing(KDialog::spacingHint()*2);
+	QHBoxLayout *lay = new QHBoxLayout(contents);
+
+	lay->setSpacing(KDialog::spacingHint() * 2);
 
 	lay->addStretch(1);
 	QLabel *label1 = new QLabel( contents);
@@ -175,31 +178,32 @@ int InteractiveAction::questionYesNo(const QString &text,
 	lay->add( label1 );
 	QLabel *label2 = new QLabel( text, contents);
 	label2->setMinimumSize(label2->sizeHint());
-	lay->add( label2 );
+	lay->add(label2);
 	lay->addStretch(1);
 
-	QSize extraSize = QSize(50,30);
+	QSize extraSize = QSize(50, 30);
 
 	dialog->setMainWidget(topcontents);
 	dialog->enableButtonSeparator(false);
-	dialog->incInitialSize( extraSize );
+	dialog->incInitialSize(extraSize);
 
 	QTimer *timer = new QTimer(dialog);
-	QObject::connect(timer,SIGNAL(timeout()),
-		dialog,SLOT(slotCancel()));
+
+	QObject::connect(timer, SIGNAL(timeout()),
+		dialog, SLOT(slotCancel()));
 	int result = dialog->exec();
 
-	DEBUGDAEMON << fname
-		<< ": Dialog returned "
-		<< result
-		<< endl;
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Dialog returned " << result << endl;
+#endif
 
 	delete dialog;
+
 	return result;
 }
 
-CheckUser::CheckUser(KPilotDeviceLink *p,QWidget *vp,QObject *o) :
-	InteractiveAction(p,vp,o,"userCheck")
+CheckUser::CheckUser(KPilotDeviceLink * p, QWidget * vp, QObject * o):
+	InteractiveAction(p, vp, o, "userCheck")
 {
 	FUNCTIONSETUP;
 }
@@ -213,7 +217,7 @@ CheckUser::~CheckUser()
 {
 	FUNCTIONSETUP;
 
-	KPilotConfigSettings &config = KPilotConfig::getConfig();
+	KPilotConfigSettings & config = KPilotConfig::getConfig();
 	config.resetGroup();
 
 	QString guiUserName = config.getUser();
@@ -230,7 +234,7 @@ CheckUser::~CheckUser()
 		if (pilotUserEmpty)
 		{
 			QString defaultUserName =
-				i18n("A common name","John Doe");
+				i18n("A common name", "John Doe");
 
 			QString q = i18n("<qt>Neither KPilot nor the "
 				"Pilot have a user name set. "
@@ -238,12 +242,12 @@ CheckUser::~CheckUser()
 				"Should KPilot set them to a default value "
 				"(<i>%1</i>)?</qt>").arg(defaultUserName);
 
-			if (questionYesNo(q,i18n("User Unknown")) ==
+			if (questionYesNo(q, i18n("User Unknown")) ==
 				KDialogBase::Yes)
 			{
 				config.setUser(defaultUserName);
-				fHandle->getPilotUser()->setUserName(
-					defaultUserName.latin1());
+				fHandle->getPilotUser()->
+					setUserName(defaultUserName.latin1());
 			}
 
 		}
@@ -251,17 +255,17 @@ CheckUser::~CheckUser()
 		{
 			QString q = i18n("<qt>The Pilot has a user name set "
 				"(<i>%1</i>) but KPilot does not. Should "
-				"KPilot use this user name in future?")
-				.arg(pilotUserName);
+				"KPilot use this user name in future?").
+				arg(pilotUserName);
 
-			if (questionYesNo(q,i18n("User Unknown")) ==
+			if (questionYesNo(q, i18n("User Unknown")) ==
 				KDialogBase::Yes)
 			{
 				config.setUser(pilotUserName);
 			}
 		}
 	}
-	else 
+	else
 	{
 		if (pilotUserEmpty)
 		{
@@ -270,19 +274,21 @@ CheckUser::~CheckUser()
 				"Should KPilot's user name be set in the "
 				"Pilot as well?").arg(guiUserName);
 
-			if (questionYesNo(q,i18n("User Unknown")) ==
+			if (questionYesNo(q, i18n("User Unknown")) ==
 				KDialogBase::Yes)
 			{
+#ifdef DEBUG
 				DEBUGDAEMON << fname
 					<< ": Setting user name in pilot"
 					<< endl;
+#endif
 
 				const char *l1 = guiUserName.latin1();
 
+#ifdef DEBUG
 				DEBUGDAEMON << fname
-					<< ": Setting to "
-					<< l1
-					<< endl;
+					<< ": Setting to " << l1 << endl;
+#endif
 
 				fHandle->getPilotUser()->setUserName(l1);
 			}
@@ -296,12 +302,12 @@ CheckUser::~CheckUser()
 					"however KPilot says you are %2."
 					"Should I assume the Pilot is right "
 					"and set the user name "
-					"for KPilot to %1?")
-					.arg(pilotUserName)
-					.arg(pilotUserName)
-					.arg(guiUserName);
+					"for KPilot to %1?").
+					arg(pilotUserName).arg(pilotUserName).
+					arg(guiUserName);
 
-				int r = questionYesNo(q,i18n("User Mismatch"));
+				int r = questionYesNo(q,
+					i18n("User Mismatch"));
 				if (r == KDialogBase::Yes)
 				{
 					config.setUser(pilotUserName);
@@ -313,22 +319,20 @@ CheckUser::~CheckUser()
 	emit syncDone(this);
 }
 
-class RestoreAction::RestoreActionPrivate
-{
-public:
+class RestoreAction::RestoreActionPrivate {
+      public:
 	QString fDatabaseDir;
-	QValueList<struct db> fDBList;
+	QValueList < struct db >fDBList;
 	QTimer fTimer;
 	int fDBIndex;
-} ;
+};
 
-bool operator<(const db &a, const db &b)
-{
+bool operator < (const db & a, const db & b) {
 	if (a.creator == b.creator)
 	{
 		if (a.type != b.type)
 		{
-			if (a.type == pi_mktag('a','p','p','l'))
+			if (a.type == pi_mktag('a', 'p', 'p', 'l'))
 				return false;
 			else
 				return true;
@@ -338,8 +342,9 @@ bool operator<(const db &a, const db &b)
 	return a.maxblock < b.maxblock;
 }
 
-RestoreAction::RestoreAction(KPilotDeviceLink *p,QWidget *visible,QObject *o) :
-	InteractiveAction(p,visible,o,"restoreAction")
+RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible, 
+	QObject * o) :
+	InteractiveAction(p, visible, o, "restoreAction")
 {
 	FUNCTIONSETUP;
 
@@ -352,100 +357,97 @@ RestoreAction::RestoreAction(KPilotDeviceLink *p,QWidget *visible,QObject *o) :
 {
 	FUNCTIONSETUP;
 
+#ifdef DEBUG
 	DEBUGDAEMON << fname
 		<< ": Restoring from base directory "
-		<< fP->fDatabaseDir
-		<< endl;
-	
-	QString dirname = fP->fDatabaseDir +
-		fHandle->getPilotUser()->getUserName() +
-		"/";
+		<< fP->fDatabaseDir << endl;
+#endif
 
-	DEBUGDAEMON << fname
-		<< ": Restoring user " 
-		<< dirname
-		<< endl;
+	QString dirname = fP->fDatabaseDir +
+		fHandle->getPilotUser()->getUserName() + "/";
+
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Restoring user " << dirname << endl;
+#endif
 
 	if (questionYesNo(i18n("<qt>Are you sure you want to completely "
-		"restore your Pilot from the backup directory "
-		"(<i>%1</i>)? This will erase any information "
-		"you currently have on your Pilot.</qt>").arg(dirname),
-		i18n("Restore Pilot")) != KDialogBase::Yes)
+				"restore your Pilot from the backup directory "
+				"(<i>%1</i>)? This will erase any information "
+				"you currently have on your Pilot.</qt>").
+			arg(dirname),
+			i18n("Restore Pilot")) != KDialogBase::Yes)
 	{
 		emit logError(i18n("Restore <i>not</i> performed."));
+
 		addSyncLogEntry(i18n("Restore not performed."));
 		emit syncDone(this);
+
 		return;
 	}
 
-	QDir dir(dirname,QString::null,QDir::Name,
+	QDir dir(dirname, QString::null, QDir::Name,
 		QDir::Files | QDir::Readable | QDir::NoSymLinks);
 
 	if (!dir.exists())
 	{
 		kdWarning() << __FUNCTION__
 			<< ": Restore directory "
-			<< dirname
-			<< " does not exist."
-			<< endl;
-		fStatus=Error;
+			<< dirname << " does not exist." << endl;
+		fStatus = Error;
 		return;
 	}
 
-	for (int i=0; i<dir.count(); i++)
+	for (int i = 0; i < dir.count(); i++)
 	{
-		QString s; 
+		QString s;
 		struct db dbi;
 		struct DBInfo info;
 		struct pi_file *f;
 
 		s = dir[i];
 
+#ifdef DEBUG
 		DEBUGDAEMON << fname
-			<< ": Adding "
-			<< s 
-			<< " to restore list."
-			<< endl;
+			<< ": Adding " << s << " to restore list." << endl;
+#endif
 
-		qstrcpy(dbi.name,QFile::encodeName(dirname + s));
-		
-		f=pi_file_open(dbi.name);
+		qstrcpy(dbi.name, QFile::encodeName(dirname + s));
+
+		f = pi_file_open(dbi.name);
 		if (!f)
 		{
 			kdWarning() << __FUNCTION__
-				<< ": Can't open "
-				<< dbi.name
-				<< endl;
+				<< ": Can't open " << dbi.name << endl;
 			continue;
 		}
 
-		pi_file_get_info(f,&info);
+		pi_file_get_info(f, &info);
 
-		dbi.creator=info.creator;
-		dbi.type=info.type;
-		dbi.flags=info.flags;
-		dbi.maxblock=0;
+		dbi.creator = info.creator;
+		dbi.type = info.type;
+		dbi.flags = info.flags;
+		dbi.maxblock = 0;
 
 		fP->fDBList.append(dbi);
 
 		pi_file_close(f);
-		f=0L;
+		f = 0L;
 	}
 
-	fP->fDBIndex=0;
-	fStatus=GettingFileInfo;
+	fP->fDBIndex = 0;
+	fStatus = GettingFileInfo;
 
-	QObject::connect(&(fP->fTimer),SIGNAL(timeout()),
-		this,SLOT(getNextFileInfo()));
+	QObject::connect(&(fP->fTimer), SIGNAL(timeout()),
+		this, SLOT(getNextFileInfo()));
 
-	fP->fTimer.start(0,false);
+	fP->fTimer.start(0, false);
 }
 
 /* slot */ void RestoreAction::getNextFileInfo()
 {
 	FUNCTIONSETUP;
 
-	ASSERT(fStatus==GettingFileInfo);
+	ASSERT(fStatus == GettingFileInfo);
 	ASSERT(fP->fDBIndex < fP->fDBList.count());
 
 	struct db &dbi = fP->fDBList[fP->fDBIndex];
@@ -453,66 +455,64 @@ RestoreAction::RestoreAction(KPilotDeviceLink *p,QWidget *visible,QObject *o) :
 
 	fP->fDBIndex++;
 
-	DEBUGDAEMON << fname
-		<< ": Getting info on "
-		<< dbi.name
-		<< endl;
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Getting info on " << dbi.name << endl;
+#endif
 
 	f = pi_file_open(dbi.name);
 	if (!f)
 	{
 		kdWarning() << __FUNCTION__
-			<< ": Can't open "
-			<< dbi.name
-			<< endl;
+			<< ": Can't open " << dbi.name << endl;
 		goto nextFile;
 	}
 
 	int max;
-	pi_file_get_entries(f,&max);
 
-	for (int i=0; i<max; i++)
+	pi_file_get_entries(f, &max);
+
+	for (int i = 0; i < max; i++)
 	{
 		int size;
 
 		if (dbi.flags & dlpDBFlagResource)
 		{
-			pi_file_read_resource(f,i,0,&size,0,0);
+			pi_file_read_resource(f, i, 0, &size, 0, 0);
 		}
 		else
 		{
-			pi_file_read_record(f,i,0,&size,0,0,0);
+			pi_file_read_record(f, i, 0, &size, 0, 0, 0);
 		}
 
-		if (size>dbi.maxblock)
+		if (size > dbi.maxblock)
 		{
-			dbi.maxblock=size;
+			dbi.maxblock = size;
 		}
 	}
 
+#ifdef DEBUG
 	DEBUGDAEMON << fname
-		<< ": Read " 
-		<< max
-		<< " entries for this database."
-		<< endl;
+		<< ": Read " << max << " entries for this database." << endl;
+#endif
 
-nextFile:
-	if (f) pi_file_close(f);
+      nextFile:
+	if (f)
+		pi_file_close(f);
 
 	if (fP->fDBIndex >= fP->fDBList.count())
 	{
-		QObject::disconnect(&(fP->fTimer),SIGNAL(timeout()),
-			this,SLOT(getNextFileInfo()));
+		QObject::disconnect(&(fP->fTimer), SIGNAL(timeout()),
+			this, SLOT(getNextFileInfo()));
 		fP->fTimer.stop();
 
 		qBubbleSort(fP->fDBList);
 
-		fP->fDBIndex=0;
-		fStatus=InstallingFiles;
+		fP->fDBIndex = 0;
+		fStatus = InstallingFiles;
 
-		QObject::connect(&(fP->fTimer),SIGNAL(timeout()),
-			this,SLOT(installNextFile()));
-		fP->fTimer.start(0,false);
+		QObject::connect(&(fP->fTimer), SIGNAL(timeout()),
+			this, SLOT(installNextFile()));
+		fP->fTimer.start(0, false);
 	}
 }
 
@@ -520,61 +520,59 @@ nextFile:
 {
 	FUNCTIONSETUP;
 
-	ASSERT(fStatus==InstallingFiles);
+	ASSERT(fStatus == InstallingFiles);
 	ASSERT(fP->fDBIndex < fP->fDBList.count());
 
 	struct db &dbi = fP->fDBList[fP->fDBIndex];
+
 	fP->fDBIndex++;
 
-	DEBUGDAEMON << fname
-		<< ": Trying to install "
-		<< dbi.name
-		<< endl;
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Trying to install " << dbi.name << endl;
+#endif
 
-	if (fP->fDBIndex >= fP->fDBList.count()-1)
+	if (fP->fDBIndex >= fP->fDBList.count() - 1)
 	{
-		QObject::disconnect(&(fP->fTimer),SIGNAL(timeout()),
-			this,SLOT(getNextFileInfo()));
+		QObject::disconnect(&(fP->fTimer), SIGNAL(timeout()),
+			this, SLOT(getNextFileInfo()));
 		fP->fTimer.stop();
 
-		fStatus=Done;
+		fStatus = Done;
 	}
 
 	if (dlp_OpenConduit(pilotSocket()) < 0)
 	{
 		kdWarning() << __FUNCTION__
-			<< ": Restore apparently cancelled."
-			<< endl;
-		fStatus=Done;
+			<< ": Restore apparently cancelled." << endl;
+		fStatus = Done;
 		emit syncDone(this);
+
 		return;
 	}
 
 	addSyncLogEntry(i18n("Restoring %1 ...").arg(dbi.name));
 
-	pi_file *f = pi_file_open(const_cast<char *>((const char *)QFile::encodeName(dbi.name)));
+	pi_file *f =
+		pi_file_open(const_cast <
+		char *>((const char *)QFile::encodeName(dbi.name)));
 	if (!f)
 	{
 		kdWarning() << __FUNCTION__
 			<< ": Can't open "
-			<< dbi.name
-			<< " for restore."
-			<< endl;
+			<< dbi.name << " for restore." << endl;
 		return;
 	}
 
-	if (pi_file_install(f,pilotSocket(),0) < 0)
+	if (pi_file_install(f, pilotSocket(), 0) < 0)
 	{
 		kdWarning() << __FUNCTION__
-			<< ": Couldn't  restore "
-			<< dbi.name
-			<< endl;
+			<< ": Couldn't  restore " << dbi.name << endl;
 	}
 
 	pi_file_close(f);
 
 
-	if (fStatus==Done)
+	if (fStatus == Done)
 	{
 		addSyncLogEntry(i18n("OK."));
 		emit syncDone(this);
@@ -583,15 +581,18 @@ nextFile:
 
 /* virtual */ QString RestoreAction::statusString() const
 {
+	FUNCTIONSETUP;
 	QString s;
 
-	switch(status())
+	switch (status())
 	{
-	case InstallingFiles : s.append("Installing Files (");
+	case InstallingFiles:
+		s.append("Installing Files (");
 		s.append(QString::number(fP->fDBIndex));
 		s.append(")");
 		break;
-	case GettingFileInfo : s.append("Getting File Info (");
+	case GettingFileInfo:
+		s.append("Getting File Info (");
 		s.append(QString::number(fP->fDBIndex));
 		s.append(")");
 		break;
@@ -604,6 +605,9 @@ nextFile:
 
 
 // $Log$
+// Revision 1.2  2001/09/25 08:22:29  cschumac
+// Make it compile with Qt3.
+//
 // Revision 1.1  2001/09/24 22:25:54  adridg
 // New SyncActions with support for interaction with the user
 //
