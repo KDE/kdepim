@@ -42,7 +42,7 @@ class CalendarUploadItem : public KPIM::GroupwareUploadItem
   public:
     CalendarUploadItem( CalendarAdaptor *adaptor, KCal::Incidence *incidence, UploadType type );
     virtual ~CalendarUploadItem() {}
-    
+
   protected:
     CalendarUploadItem( UploadType type ) : KPIM::GroupwareUploadItem( type ) {}
 };
@@ -67,25 +67,26 @@ class CalendarAdaptor : public KPIM::GroupwareDataAdaptor
     {
       return mResource;
     }
-    
+
     virtual QString mimeType() const;
     bool localItemExists( const QString &localId );
     bool localItemHasChanged( const QString &localId );
     void deleteItem( const QString &localId );
-    QString addItem( KIO::TransferJob *job, const QString &rawText, 
-           QString &fingerprint, const QString &localId, 
+    QString addItem( KIO::TransferJob *job, const QString &rawText,
+           QString &fingerprint, const QString &localId,
            const QString &storageLocation );
     QString extractUid( KIO::TransferJob *job, const QString &data );
     void clearChange( const QString &uid );
-    
-    virtual KCal::Incidence::List parseData( KIO::TransferJob *job, 
+
+    virtual KCal::Incidence::List parseData( KIO::TransferJob *job,
                                              const QString &rawText );
-    virtual KPIM::GroupwareUploadItem *newUploadItem( KCal::Incidence*it, 
+    virtual KPIM::GroupwareUploadItem *newUploadItem( KCal::Incidence*it,
            KPIM::GroupwareUploadItem::UploadType type );
+    virtual void uploadFinished( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item );
 
   private:
     KCal::ResourceCached *mResource;
-    
+
     QStringList mAddedItems;
     QStringList mChangedItems;
     QStringList mDeletedItems;

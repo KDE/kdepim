@@ -8,12 +8,12 @@
     modify it under the terms of the GNU Library General Public
     License as published by the Free Software Foundation; either
     version 2 of the License, or (at your option) any later version.
-    
+
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     Library General Public License for more details.
-    
+
     You should have received a copy of the GNU Library General Public License
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
@@ -44,17 +44,17 @@ class FolderLister : public QObject
     Q_OBJECT
   public:
     enum Type { AddressBook, Calendar };
-    enum FolderType { ContactsFolder, CalendarFolder, TasksFolder, 
-                      JournalsFolder, AllIncidencesFolder, 
+    enum FolderType { ContactsFolder, CalendarFolder, TasksFolder,
+                      JournalsFolder, AllIncidencesFolder,
                       MailFolder, MemoFolder, Folder, Unknown };
-  
+
     class Entry
     {
       public:
         Entry() : active( false ) {}
-      
+
         typedef QValueList<Entry> List;
-      
+
         QString id;
         QString name;
         FolderType type;
@@ -62,10 +62,10 @@ class FolderLister : public QObject
     };
 
     FolderLister( Type );
-  
+
     /** Initialize the retrieval with given root URL */
     virtual void retrieveFolders( const KURL & );
-  
+
     void setFolders( const Entry::List & );
     Entry::List folders() const { return mFolders; }
 
@@ -77,7 +77,7 @@ class FolderLister : public QObject
 
     void readConfig( const KConfig * );
     void writeConfig( KConfig * );
-    
+
   signals:
     void foldersRead();
 
@@ -98,9 +98,12 @@ class FolderLister : public QObject
     /** Returns the type of folder retrieved in the dom node. Typically, you'll
         compare the DAV:resourcetype property with some values. */
     virtual FolderType getFolderType( const QDomNode &folderNode ) = 0;
-    /** Interprets the results returned by the liste job (created by 
+    /** Extract from the dav response whether the folder has subitems that need
+        to be examined */
+    virtual bool getFolderHasSubs( const QDomNode &folderNode ) = 0;
+    /** Interprets the results returned by the liste job (created by
         createJob(url) ). Typically, this adds an Entry to the mFolders list if
-        the job describes a folder of the appropriate type. If the folder has 
+        the job describes a folder of the appropriate type. If the folder has
         subfolders, just call doRetrieveFolder(url) recursively. */
     virtual void interpretFolderResult( KIO::Job *job );
     /** List of folders that will always be included (subfolders won't!). Usually

@@ -23,9 +23,10 @@
 #include "groupwaredataadaptor.h"
 #include <kdebug.h>
 #include <kio/job.h>
+#include <libemailfunctions/idmapper.h>
 
 using namespace KPIM;
-    
+
 GroupwareUploadItem::GroupwareUploadItem( UploadType type ) : mType( type )
 {
 }
@@ -73,4 +74,45 @@ KIO::TransferJob *GroupwareDataAdaptor::createUploadNewJob( const KURL &url, Gro
     return item->createUploadNewJob( this, url );
   else return 0;
 }
+
+void GroupwareDataAdaptor::processDownloadListItem( QStringList &currentlyOnServer,
+        QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload,
+        const QString &entry, const QString &newFingerprint,
+        KPIM::GroupwareJob::ContentType type )
+{
+  bool download = false;
+  KURL url ( entry );
+  const QString &location = url.path();
+
+  currentlyOnServer << location;
+  // if not locally present, download
+  const QString &localId = idMapper()->localId( location );
+  kdDebug(5800) << "Looking up remote: " << location << " found: " << localId << endl;
+  if ( localId.isEmpty() || !localItemExists( localId ) ) {
+    //kdDebug(7000) << "Not locally present, download: " << location << endl;
+    download = true;
+  } else {
+    kdDebug(5800) << "Locally present " << endl;
+    // locally present, let's check if it's newer than what we have
+    const QString &oldFingerprint = idMapper()->fingerprint( localId );
+      if ( oldFingerprint != newFingerprint ) {
+      kdDebug(5800) << "Fingerprint changed old: " << oldFingerprint <<
+        " new: " << newFingerprint << endl;
+      // something changed on the server, let's see if we also changed it locally
+      if ( localItemHasChanged( localId ) ) {
+        // TODO conflict resolution
+        kdDebug(5800) << "TODO conflict resolution" << endl;
+        download = true;
+      } else {
+        download = true;
+      }
+    } else {
+      kdDebug(5800) << "Fingerprint did not change, don't download this one " << endl;
+    }
+  }
+  if ( download ) {
+    itemsForDownload[ entry ] = type;
+  }
+}
+
 

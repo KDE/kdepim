@@ -64,8 +64,8 @@ class AddressBookAdaptor : public KPIM::GroupwareDataAdaptor
     bool localItemExists( const QString &localId );
     bool localItemHasChanged( const QString &localId );
     void deleteItem( const QString &localId );
-    QString addItem( KIO::TransferJob *job, const QString &rawText, 
-           QString &fingerprint, const QString &localId, 
+    QString addItem( KIO::TransferJob *job, const QString &rawText,
+           QString &fingerprint, const QString &localId,
            const QString &storageLocation );
     QString extractUid( KIO::TransferJob *job, const QString &data );
     void clearChange( const QString &uid );
@@ -73,6 +73,7 @@ class AddressBookAdaptor : public KPIM::GroupwareDataAdaptor
     virtual KABC::Addressee::List parseData( KIO::TransferJob *job, const QString &rawText );
     virtual KPIM::GroupwareUploadItem *newUploadItem( KABC::Addressee addr,
                      KPIM::GroupwareUploadItem::UploadType type );
+    virtual void uploadFinished( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item );
 
   private:
     KABC::ResourceCached *mResource;

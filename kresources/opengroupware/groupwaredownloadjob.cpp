@@ -36,7 +36,7 @@
 using namespace KPIM;
 
 GroupwareDownloadJob::GroupwareDownloadJob( GroupwareDataAdaptor *adaptor )
-  : GroupwareJob( adaptor ), mProgress(0), 
+  : GroupwareJob( adaptor ), mProgress(0),
     mDownloadJob(0), mListEventsJob(0)
 {
 }
@@ -133,7 +133,7 @@ void GroupwareDownloadJob::downloadItem()
   if ( it != mItemsForDownload.end() ) {
     const QString href( it.key() );
     ContentType ctype = it.data();
-    
+
     mItemsForDownload.remove( it.key() );
 
     KURL url( href );
@@ -157,7 +157,7 @@ void GroupwareDownloadJob::downloadItem()
 
 void GroupwareDownloadJob::slotJobResult( KIO::Job *job )
 {
-  kdDebug(5800) << "OpenGroupware::slotJobResult(): " << endl;
+  kdDebug(5800) << "GroupwareDownloadJob::slotJobResult(): " << endl;
 
   KIO::TransferJob *trfjob = dynamic_cast<KIO::TransferJob*>(job);
   if ( !trfjob ) return;
@@ -168,10 +168,10 @@ void GroupwareDownloadJob::slotJobResult( KIO::Job *job )
     const QString &remote = KURL( trfjob->url() ).path();
     const QString &local = adaptor()->idMapper()->localId( remote );
 
-    // remove old version, we would not have downnloaded 
+    // remove old version, we would not have downnloaded
     // if it were still current
     adaptor()->deleteItem( local );
-    
+
     QString fingerprint; // <- will be set by addItem
     QString id = adaptor()->addItem( trfjob, mJobData, fingerprint, local, remote );
 

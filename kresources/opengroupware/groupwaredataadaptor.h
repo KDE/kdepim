@@ -213,6 +213,11 @@ class GroupwareDataAdaptor
     virtual KIO::TransferJob *createUploadNewJob( const KURL &url, GroupwareUploadItem *item );
     virtual void uploadFinished( KIO::TransferJob *trfjob, GroupwareUploadItem *item ) = 0;
 
+    virtual void processDownloadListItem( QStringList &currentlyOnServer,
+        QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload,
+        const QString &entry, const QString &newFingerprint,
+        KPIM::GroupwareJob::ContentType type );
+
   private:
     FolderLister *mFolderLister;
     QString mDownloadProgressMessage;

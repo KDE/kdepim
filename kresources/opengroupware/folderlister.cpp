@@ -8,12 +8,12 @@
     modify it under the terms of the GNU Library General Public
     License as published by the Free Software Foundation; either
     version 2 of the License, or (at your option) any later version.
-    
+
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     Library General Public License for more details.
-    
+
     You should have received a copy of the GNU Library General Public License
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
@@ -67,7 +67,7 @@ QStringList FolderLister::activeFolderIds() const
       ids.append( (*it).id );
     }
   }
-  
+
   return ids;
 }
 
@@ -77,7 +77,7 @@ bool FolderLister::isActive( const QString &id ) const
   for( it = mFolders.begin(); it != mFolders.end(); ++it ) {
     if ( (*it).id == id ) return (*it).active;
   }
-  return false;  
+  return false;
 }
 
 void FolderLister::readConfig( const KConfig *config )
@@ -87,7 +87,7 @@ void FolderLister::readConfig( const KConfig *config )
   QStringList ids = config->readListEntry( "FolderIds" );
   QStringList names = config->readListEntry( "FolderNames" );
   QStringList active = config->readListEntry( "ActiveFolders" );
-  
+
   QStringList::ConstIterator it;
   QStringList::ConstIterator it2 = names.begin();
   for( it = ids.begin(); it != ids.end(); ++it ) {
@@ -96,9 +96,9 @@ void FolderLister::readConfig( const KConfig *config )
     if ( it2 != names.end() ) e.name = *it2;
     else e.name = *it;
     if ( active.find( e.id ) != active.end() ) e.active = true;
-    
+
     mFolders.append( e );
-    
+
     ++it2;
   }
 
@@ -117,7 +117,7 @@ void FolderLister::writeConfig( KConfig *config )
     names.append( (*it).name );
     if ( (*it).active ) active.append( (*it).id );
   }
-  
+
   config->writeEntry( "FolderIds", ids );
   config->writeEntry( "FolderNames", names );
   config->writeEntry( "ActiveFolders", active );
@@ -133,7 +133,7 @@ KIO::DavJob *FolderLister::createJob( const KURL &url )
   WebdavHandler::addDavElement( doc, prop, "displayname" );
   WebdavHandler::addDavElement( doc, prop, "resourcetype" );
   WebdavHandler::addDavElement( doc, prop, "hassubs" );
-  
+
   kdDebug(7000) << "props: " << doc.toString() << endl;
   return KIO::davPropFind( url, doc, "1", false );
 }
@@ -154,10 +154,10 @@ kdDebug()<<"FolderLister::retrieveFolders( "<<u.url()<<" )"<<endl;
       (*it).active = isActive( (*it).id );
     }
   }
-  
+
   mUser = u.user();
   mPassword = u.pass();
-  
+
   doRetrieveFolder( u );
 }
 
@@ -191,7 +191,7 @@ void FolderLister::interpretFolderResult( KIO::Job *job )
   KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>( job );
   Q_ASSERT( davjob );
   if ( !davjob ) return;
-  
+
   QDomDocument doc = davjob->response();
   kdDebug(7000) << " Doc: " << doc.toString() << endl;
 
@@ -207,14 +207,14 @@ void FolderLister::interpretFolderResult( KIO::Job *job )
 
     QString href = n.namedItem( "href" ).toElement().text();
     QString displayName = n3.namedItem( "displayname" ).toElement().text();
-    
+
     FolderType type = getFolderType( n3 );
-    
-    if ( ( mType == Calendar && 
-            ( type == CalendarFolder || type == TasksFolder || 
+
+    if ( ( mType == Calendar &&
+            ( type == CalendarFolder || type == TasksFolder ||
               type == JournalsFolder ) ) ||
          ( type == ContactsFolder && mType == AddressBook ) ) {
-         
+
       if ( !href.isEmpty() && !displayName.isEmpty() ) {
         Entry entry;
         entry.id = href;
@@ -225,9 +225,8 @@ void FolderLister::interpretFolderResult( KIO::Job *job )
       }
       kdDebug(7000) << "FOLDER: " << displayName << endl;
     }
-    QString hassubs = n3.namedItem( "hassubs" ).toElement().text();
-kdDebug()<<"hassubs="<<hassubs<<endl;
-    if ( hassubs == "1" ) {
+    if ( getFolderHasSubs( n3 ) ) {
+kdDebug()<<"folder has Subitems!"<<endl;
       doRetrieveFolder( href );
     } else {
       KURL u( href );

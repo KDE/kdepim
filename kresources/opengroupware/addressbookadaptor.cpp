@@ -31,8 +31,8 @@
 using namespace KABC;
 
 
-AddressBookUploadItem::AddressBookUploadItem( KPIM::GroupwareDataAdaptor *adaptor, KABC::Addressee addr, GroupwareUploadItem::UploadType type ) 
-    : GroupwareUploadItem( type ) 
+AddressBookUploadItem::AddressBookUploadItem( KPIM::GroupwareDataAdaptor *adaptor, KABC::Addressee addr, GroupwareUploadItem::UploadType type )
+    : GroupwareUploadItem( type )
 {
   setUrl( addr.custom( adaptor->identifier(), "storagelocation" ) );
   setUid( addr.uid() );
@@ -41,7 +41,7 @@ AddressBookUploadItem::AddressBookUploadItem( KPIM::GroupwareDataAdaptor *adapto
 }
 
 
-    
+
 AddressBookAdaptor::AddressBookAdaptor()
 {
 }
@@ -73,6 +73,18 @@ bool AddressBookAdaptor::localItemHasChanged( const QString &localId )
   return false;
 }
 
+void AddressBookAdaptor::uploadFinished( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item )
+{
+//   OGoGlobals::uploadFinished( this, trfjob, item );
+  Addressee addr( resource()->findByUid( item->uid() ) );
+  if ( !addr.isEmpty() ) {
+    resource()->removeAddressee( addr );
+/*    addr.insertCustom( identifier(), "storagelocation",
+               idMapper()->remoteId( item->uid() ) );*/
+  }
+}
+
+
 void AddressBookAdaptor::deleteItem( const QString &localId )
 {
   KABC::Addressee a = mResource->findByUid( localId );
@@ -85,12 +97,12 @@ KABC::Addressee::List AddressBookAdaptor::parseData( KIO::TransferJob *, const Q
   return conv.parseVCards( rawText );
 }
 
-QString AddressBookAdaptor::addItem( KIO::TransferJob *job, 
-     const QString &rawText, QString &fingerprint, 
+QString AddressBookAdaptor::addItem( KIO::TransferJob *job,
+     const QString &rawText, QString &fingerprint,
      const QString &localId, const QString &storageLocation )
 {
   fingerprint = extractFingerprint( job, rawText );
-  
+
   KABC::Addressee::List addressees( parseData( job, rawText ) );
 
   if ( addressees.count() > 1 ) {
@@ -113,7 +125,7 @@ QString AddressBookAdaptor::addItem( KIO::TransferJob *job,
     addr.insertCustom( identifier(), "storagelocation", storageLocation );
     mResource->insertAddressee( addr );
     clearChange( addr.uid() );
-  
+
     return addr.uid();
   }
 }
@@ -122,7 +134,7 @@ QString AddressBookAdaptor::extractUid( KIO::TransferJob *job, const QString &da
 {
   KABC::Addressee::List addressees = parseData( job, data );
   if ( addressees.begin() == addressees.end() ) return QString::null;
-  
+
   KABC::Addressee a = *(addressees.begin());
   return a.uid();
 }
@@ -132,7 +144,7 @@ void AddressBookAdaptor::clearChange( const QString &uid )
   mResource->clearChange( uid );
 }
 
-KPIM::GroupwareUploadItem *AddressBookAdaptor::newUploadItem( KABC::Addressee addr, 
+KPIM::GroupwareUploadItem *AddressBookAdaptor::newUploadItem( KABC::Addressee addr,
              KPIM::GroupwareUploadItem::UploadType type )
 {
   return new AddressBookUploadItem( this, addr, type );

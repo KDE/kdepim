@@ -37,21 +37,18 @@ KIO::TransferJob *DAVGroupwareGlobals::createListItemsJob( const KURL &url )
   QDomElement root = WebdavHandler::addDavElement(  doc, doc, "propfind" );
   QDomElement prop = WebdavHandler::addDavElement(  doc, root, "prop" );
   WebdavHandler::addDavElement( doc, prop, "getetag" );
-//  WebdavHandler::addDavElement( doc, prop, "contentclass" );
+//  WebdavHandler::addDavElement( doc, prop, "getcontenttype" );
   kdDebug(5800) << "props = "<< doc.toString() << endl;
   return KIO::davPropFind( url, doc, "1", false );
 }
 
-KPIM::GroupwareJob::ContentType DAVGroupwareGlobals::contentClass( const QString &contentclass )
+KPIM::GroupwareJob::ContentType DAVGroupwareGlobals::getContentType( const QDomElement &prop )
 {
-  if ( contentclass == "urn:content-classes:appointment" )
-    return KPIM::GroupwareJob::Appointment;
-  if ( contentclass == "urn:content-classes:task" )
-    return KPIM::GroupwareJob::Task;
-  if ( contentclass == "urn:content-classes:message" )
-    return KPIM::GroupwareJob::Message;
-  if ( contentclass == "urn:content-classes:person" )
-    return KPIM::GroupwareJob::Contact;
+  QDomElement ctype = prop.namedItem("getcontenttype").toElement();
+  if ( ctype.isNull() ) return KPIM::GroupwareJob::Unknown;
+  const QString &type = ctype.text();
+kdDebug()<<"Found content type: "<<type<<endl;
+  /// TODO: Not yet implemented in OGo!
   return KPIM::GroupwareJob::Unknown;
 }
 
@@ -68,7 +65,69 @@ bool DAVGroupwareGlobals::itemsForDownloadFromList( KPIM::GroupwareDataAdaptor *
   kdDebug(7000) << " Doc: " << doc.toString() << endl;
   kdDebug(7000) << " IdMapper: " << adaptor->idMapper()->asString() << endl;
 
-  QDomNodeList entries = doc.elementsByTagNameNS( "DAV:", "href" );
+  QDomElement docElem = doc.documentElement();
+  QDomNode n = docElem.firstChild();
+  while( !n.isNull() ) {
+    QDomElement e = n.toElement(); // try to convert the node to an element.
+    n = n.nextSibling();
+    if ( e.isNull() )
+      continue;
+
+    const QString &entry = e.namedItem("href").toElement().text();
+    QDomElement propstat = e.namedItem("propstat").toElement();
+    if ( propstat.isNull() )
+      continue;
+    QDomElement prop = propstat.namedItem( "prop" ).toElement();
+    if ( prop.isNull() )
+      continue;
+    QDomElement elem = prop.namedItem("getetag").toElement();
+    const QString &newFingerprint = elem.text();
+    if ( elem.isNull() || newFingerprint.isEmpty() )
+      continue;
+
+    KPIM::GroupwareJob::ContentType type = getContentType( prop );
+
+    adaptor->processDownloadListItem( currentlyOnServer, itemsForDownload,
+        entry, newFingerprint, type );
+
+/*    bool download = false;
+    KURL url ( entry );
+    const QString &location = url.path();
+
+    currentlyOnServer << location;
+    // if not locally present, download
+    const QString &localId = adaptor->idMapper()->localId( location );
+    kdDebug(5800) << "Looking up remote: " << location << " found: " << localId << endl;
+    if ( localId.isEmpty() || !adaptor->localItemExists( localId ) ) {
+      //kdDebug(7000) << "Not locally present, download: " << location << endl;
+      download = true;
+    } else {
+      kdDebug(5800) << "Locally present " << endl;
+      // locally present, let's check if it's newer than what we have
+      const QString &oldFingerprint = adaptor->idMapper()->fingerprint( localId );
+      if ( oldFingerprint != newFingerprint ) {
+        kdDebug(5800) << "Fingerprint changed old: " << oldFingerprint <<
+          " new: " << newFingerprint << endl;
+        // something changed on the server, let's see if we also changed it locally
+        if ( adaptor->localItemHasChanged( localId ) ) {
+          // TODO conflict resolution
+          kdDebug(5800) << "TODO conflict resolution" << endl;
+          download = true;
+        } else {
+          download = true;
+        }
+      } else {
+        kdDebug(5800) << "Fingerprint did not change, don't download this one " << endl;
+      }
+    }
+    if ( download ) {
+      itemsForDownload[ entry ] = type;
+    }
+  */
+  }
+
+
+/*  QDomNodeList entries = doc.elementsByTagNameNS( "DAV:", "href" );
   QDomNodeList fingerprints = doc.elementsByTagNameNS( "DAV:", "getetag" );
   QDomNodeList ctypes = doc.elementsByTagNameNS( "DAV:", "contentclass" );
   int c = entries.count();
@@ -94,7 +153,7 @@ bool DAVGroupwareGlobals::itemsForDownloadFromList( KPIM::GroupwareDataAdaptor *
     const QString &location = url.path();
 
     currentlyOnServer << location;
-    /* if not locally present, download */
+    // if not locally present, download
     const QString &localId = adaptor->idMapper()->localId( location );
     kdDebug(5800) << "Looking up remote: " << location << " found: " << localId << endl;
     if ( localId.isEmpty() || !adaptor->localItemExists( localId ) ) {
@@ -102,7 +161,7 @@ bool DAVGroupwareGlobals::itemsForDownloadFromList( KPIM::GroupwareDataAdaptor *
       download = true;
     } else {
       kdDebug(5800) << "Locally present " << endl;
-      /* locally present, let's check if it's newer than what we have */
+      // locally present, let's check if it's newer than what we have
       const QString &oldFingerprint = adaptor->idMapper()->fingerprint( localId );
       if ( oldFingerprint != newFingerprint ) {
         kdDebug(5800) << "Fingerprint changed old: " << oldFingerprint <<
@@ -123,7 +182,7 @@ bool DAVGroupwareGlobals::itemsForDownloadFromList( KPIM::GroupwareDataAdaptor *
       itemsForDownload[ entry ] = type;
     }
   }
-
+*/
   kdDebug(5800)<<"currentlyOnServer="<<currentlyOnServer.join(", ")<<endl;
   kdDebug(5800)<<"itemsForDownload="<<QStringList( itemsForDownload.keys() ).join(", ")<<endl;
   return true;

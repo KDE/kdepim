@@ -70,20 +70,6 @@ bool OGoCalendarAdaptor::itemsForDownloadFromList( KIO::Job *job, QStringList &c
   return DAVGroupwareGlobals::itemsForDownloadFromList( this, job, currentlyOnServer, itemsForDownload );
 }
 
-void OGoCalendarAdaptor::uploadFinished( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item )
-{
-  OGoGlobals::uploadFinished( this, trfjob, item );
-//  idMapper()->setFingerprint( item->uid(), "" );
-  Incidence *inc = resource()->incidence( item->uid() );
-  if ( inc ) {
-    resource()->disableChangeNotification();
-    inc->setCustomProperty( identifier(), "storagelocation",
-               idMapper()->remoteId( item->uid() ) );
-//    resource()->addIncidence( inc );
-    resource()->enableChangeNotification();
-  }
-}
-
 KIO::Job *OGoCalendarAdaptor::createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
 {
   return OGoGlobals::createRemoveItemsJob( uploadurl, deletedItems );

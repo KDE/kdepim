@@ -43,31 +43,6 @@ QString OGoGlobals::extractFingerprint( KIO::TransferJob *job,
   return WebdavHandler::getEtagFromHeaders( headers );
 }
 
-void OGoGlobals::uploadFinished( KPIM::GroupwareDataAdaptor *adaptor,
-         KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item )
-{
-  Q_ASSERT( item && trfjob );
-  if ( !item || !trfjob ) return;
-  QString uid( item->uid() );
-  adaptor->clearChange( uid );
-
-/*  const QString& headers = trfjob->queryMetaData( "HTTP-Headers" );
-  const QString& etag = WebdavHandler::getEtagFromHeaders( headers );
-  const QString& rId = WebdavHandler::getLocationFromHeaders( headers );
-kdDebug()<<"OGoGlobals::uploadFinished. New remote id:"<<rId<<endl;
-
-  QString remoteId = trfjob->url().path();
-  remoteId.truncate( remoteId.findRev( "/" )+1 );
-  remoteId = remoteId + etag.left( etag.findRev( ":" ) ) + ".ics";
-  adaptor->idMapper()->setRemoteId( uid, remoteId );*/
-//  adaptor->idMapper()->setFingerprint( uid, etag );
-/*
-  kdDebug(5800) << "Setting remoteID for: " << uid << " to: " << remoteId << endl;
-  kdDebug(5800) << "Setting etag for: " << uid << " to: " << etag << endl;
-  kdDebug(5800) << adaptor()->idMapper()->asString() << endl;
-*/
-}
-
 KIO::Job *OGoGlobals::createRemoveItemsJob( const KURL &uploadurl,
        KPIM::GroupwareUploadItem::List deletedItems )
 {

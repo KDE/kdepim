@@ -34,13 +34,13 @@
 using namespace KCal;
 
 
-CalendarUploadItem::CalendarUploadItem( CalendarAdaptor *adaptor, KCal::Incidence *incidence, KPIM::GroupwareUploadItem::UploadType type ) 
+CalendarUploadItem::CalendarUploadItem( CalendarAdaptor *adaptor, KCal::Incidence *incidence, KPIM::GroupwareUploadItem::UploadType type )
     : GroupwareUploadItem( type )
 {
   if ( incidence && adaptor ) {
     setUrl( incidence->customProperty( adaptor->identifier(), "storagelocation" ) );
     setUid( incidence->uid() );
-    
+
     ICalFormat format;
     format.setTimeZone( adaptor->resource()->timeZoneId(), true );
     setData( format.toICalString( incidence ) );
@@ -69,15 +69,15 @@ bool CalendarAdaptor::localItemHasChanged( const QString &localId )
   KCal::Incidence *i = mResource->incidence( localId );
   if ( !i ) return false;
 
-  if ( !mResource->deletedIncidences().isEmpty() && 
-      mResource->deletedIncidences().find( i ) 
+  if ( !mResource->deletedIncidences().isEmpty() &&
+      mResource->deletedIncidences().find( i )
    != mResource->deletedIncidences().end() )
     return true;
   if ( !mResource->changedIncidences().isEmpty() &&
-       mResource->changedIncidences().find( i ) 
+       mResource->changedIncidences().find( i )
     != mResource->changedIncidences().end() )
     return true;
-    
+
   return false;
 }
 
@@ -112,17 +112,17 @@ kdDebug(5800)<<rawText<<endl;
   return incidences;
 }
 
-QString CalendarAdaptor::addItem( KIO::TransferJob *job, 
-     const QString &rawText, QString &fingerprint, 
+QString CalendarAdaptor::addItem( KIO::TransferJob *job,
+     const QString &rawText, QString &fingerprint,
      const QString &localId, const QString &storageLocation )
 {
   fingerprint = extractFingerprint( job, rawText );
-  
+
   KCal::Incidence::List incidences = parseData( job, rawText );
   if ( incidences.count() < 1 ) {
     kdError() << "Parsed iCalendar contains no event." << endl;
     return QString::null;
-  } 
+  }
   if ( incidences.count() > 1 ) {
     kdError() << "More than one event in iCalendar" << endl;
     KCal::Incidence::List::Iterator it = incidences.begin();
@@ -131,19 +131,19 @@ QString CalendarAdaptor::addItem( KIO::TransferJob *job,
     }
     return QString::null;
   }
-  
+
   mResource->disableChangeNotification();
   // TODO: Remove existing incidence. Make sure it was not changed meanwhile!
   Incidence *inc = mResource->incidence( localId );
-  if ( inc ) 
+  if ( inc )
     mResource->deleteIncidence( inc );
-  
+
   KCal::Incidence *i = (incidences.front())->clone();
   if ( !localId.isEmpty() ) i->setUid( localId );
   i->setCustomProperty( identifier(), "storagelocation", storageLocation );
   mResource->addIncidence( i );
   mResource->enableChangeNotification();
-  
+
   return i->uid();
 }
 
@@ -162,9 +162,23 @@ void CalendarAdaptor::clearChange( const QString &uid )
   mResource->clearChange( i );
 }
 
-KPIM::GroupwareUploadItem *CalendarAdaptor::newUploadItem( KCal::Incidence*it, 
+KPIM::GroupwareUploadItem *CalendarAdaptor::newUploadItem( KCal::Incidence*it,
              KPIM::GroupwareUploadItem::UploadType type )
 {
   return new CalendarUploadItem( this, it, type );
+}
+
+void CalendarAdaptor::uploadFinished( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item )
+{
+//   OGoGlobals::uploadFinished( this, trfjob, item );
+  Incidence *inc = resource()->incidence( item->uid() );
+  if ( inc ) {
+//     resource()->disableChangeNotification();
+    resource()->deleteIncidence( inc );
+/*    inc->setCustomProperty( identifier(), "storagelocation",
+               idMapper()->remoteId( item->uid() ) );*/
+//    resource()->addIncidence( inc );
+//     resource()->enableChangeNotification();
+  }
 }
 

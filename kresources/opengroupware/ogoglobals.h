@@ -42,8 +42,6 @@ class OGoGlobals
           KPIM::GroupwareDataAdaptor *adaptor, const KURL &url, KPIM::GroupwareJob::ContentType ctype );
 
     static QString extractFingerprint( KIO::TransferJob *job, const QString &rawText );
-    static void uploadFinished( KPIM::GroupwareDataAdaptor *adaptor,
-           KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item );
     static KIO::Job *createRemoveItemsJob( const KURL &uploadurl,
        KPIM::GroupwareUploadItem::List deletedItems );
 };

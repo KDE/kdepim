@@ -90,17 +90,6 @@ bool OGoAddressBookAdaptor::itemsForDownloadFromList( KIO::Job *job, QStringList
   return DAVGroupwareGlobals::itemsForDownloadFromList( this, job, currentlyOnServer, itemsForDownload );
 }
 
-void OGoAddressBookAdaptor::uploadFinished( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item )
-{
-//   OGoGlobals::uploadFinished( this, trfjob, item );
-  Addressee addr( resource()->findByUid( item->uid() ) );
-  if ( !addr.isEmpty() ) {
-    resource()->removeAddressee( addr );
-/*    addr.insertCustom( identifier(), "storagelocation",
-               idMapper()->remoteId( item->uid() ) );*/
-  }
-}
-
 KIO::Job *OGoAddressBookAdaptor::createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
 {
   return OGoGlobals::createRemoveItemsJob( uploadurl, deletedItems );
