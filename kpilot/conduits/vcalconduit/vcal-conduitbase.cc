@@ -182,7 +182,6 @@ there are two special cases: a full and a first sync.
 		", conflictResolution = "<<getConflictResolution()<<", archive = "<<config()->syncArchived()<<endl;
 #endif
 
-	addSyncLogEntry(i18n("Syncing with file \"%1\"").arg(config()->calendarFile()));
 	pilotindex=0;
 	switch (getSyncDirection())
 	{
@@ -233,6 +232,10 @@ error:
 
 	// Need a subclass ptr. for the ResourceCalendar methods
 	KCal::CalendarResources *rescal = 0L;
+
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": Got calendar type " << config()->calendarType() << endl;
+#endif
 
 	switch(config()->calendarType())
 	{
@@ -286,6 +289,7 @@ error:
 				fl.close();
 				fFirstSync=true;
 			}
+			addSyncLogEntry(i18n("Syncing with file \"%1\"").arg(config()->calendarFile()));
 			break;
 
 		case VCalConduitSettings::eCalendarResource:
@@ -302,6 +306,7 @@ error:
 			}
 			rescal->readConfig();
 			rescal->load();
+			addSyncLogEntry(i18n("Syncing with standard calendar resource."));
 			break;
 		default:
 			break;

@@ -67,8 +67,15 @@ VCalWidgetSetupBase::~VCalWidgetSetupBase()
 /* virtual */ void VCalWidgetSetupBase::commit()
 {
 	FUNCTIONSETUP;
-	
+
 	// General page
+#ifdef DEBUG
+	DEBUGCONDUIT << fname << ": Selected type="
+		<< fConfigWidget->fSyncDestination->selected()
+		<< " with id="
+		<< fConfigWidget->fSyncDestination->id(fConfigWidget->fSyncDestination->selected())
+		<< endl;
+#endif
 	config()->setCalendarType( fConfigWidget->fSyncDestination->id(
 			fConfigWidget->fSyncDestination->selected()));
 	config()->setCalendarFile( fConfigWidget->fCalendarFile->url());
@@ -76,7 +83,7 @@ VCalWidgetSetupBase::~VCalWidgetSetupBase()
 	config()->setSyncArchived( fConfigWidget->fArchive->isChecked() );
 
 	// Conflicts page
-	config()->setConflictResolution( 
+	config()->setConflictResolution(
 		fConfigWidget->fConflictResolution->currentItem()+SyncAction::eCROffset);
 
 	config()->writeConfig();
@@ -94,7 +101,7 @@ VCalWidgetSetupBase::~VCalWidgetSetupBase()
 	fConfigWidget->fArchive->setChecked( config()->syncArchived() );
 
 	// Conflicts page
-	fConfigWidget->fConflictResolution->setCurrentItem( 
+	fConfigWidget->fConflictResolution->setCurrentItem(
 		config()->conflictResolution() - SyncAction::eCROffset);
 
 	config()->writeConfig();
