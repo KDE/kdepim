@@ -33,16 +33,12 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-// TODO: Remove this!!!!! Had to add this because I misconfigured kdepim!!!!!
-#define DEBUG
-
 #include <plugin.h>
 #include <kconfig.h>
 
 #include <todo.h>
 #include <calendar.h>
 #include <pilotTodoEntry.h>
-//#include <pilotRecord.h>
 #include "todo-factory.h"
 #include "vcal-conduitbase.h"
 
@@ -117,6 +113,9 @@ protected:
 } ;
 
 // $Log$
+// Revision 1.10  2002/07/09 22:38:04  kainhofe
+// Implemented a first (not-yet-functional) version of the category sync
+//
 // Revision 1.9  2002/05/14 23:07:49  kainhofe
 // Added the conflict resolution code. the Palm and PC precedence is currently swapped, and will be improved in the next few days, anyway...
 //
