@@ -270,6 +270,7 @@ class Calendar : public QObject, public CustomProperties,
     };
   
     void registerObserver( Observer * );
+    void unregisterObserver( Observer * );
 
     void setModified( bool );
 

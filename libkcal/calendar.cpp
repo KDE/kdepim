@@ -340,8 +340,14 @@ void Calendar::removeRelations( Incidence *incidence )
 
 void Calendar::registerObserver( Observer *observer )
 {
+  // FIXME: Support more than one observer
   mObserver = observer;
   mNewObserver = true;
+}
+
+void Calendar::unregisterObserver( Observer *observer )
+{
+  if ( mObserver == observer ) mObserver = 0;
 }
 
 void Calendar::setModified( bool modified )
