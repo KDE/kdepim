@@ -1,7 +1,7 @@
 
 SUBDIRS = .  test
 
-INCLUDES = -I$(top_srcdir) $(all_includes)
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libkcal $(all_includes)
 
 lib_LTLIBRARIES   = libksync2.la
 libksync2_la_LDFLAGS =  $(all_libraries) -no-undefined -version-info 0:0:0 -module
