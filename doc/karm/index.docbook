@@ -505,19 +505,7 @@ Time</guilabel> and the fourth is the <guilabel>Total Time</guilabel>.
 <guimenu>File</guimenu>
 <guisubmenu>Import/Export</guisubmenu>
 <guimenuitem>Export History to CSV file...</guimenuitem>
-</menuchoice> and &karm; displays the following export dialog:</para>
-
-<screenshot>
-<screeninfo>&karm; CSV Export Dialog</screeninfo>
-<mediaobject>
-<imageobject>
-<imagedata fileref="csvexport.png" format="PNG"/>
-</imageobject>
-<textobject>
-<phrase>&karm; CSV Export Dialog</phrase>
-</textobject>
-</mediaobject>
-</screenshot>
+</menuchoice> and &karm; displays the same export dialog as shown above.</para>
 
 <para>Enter the file you would like to export the data to, and select a date
 range that you want the task history.  Modify the other dialog defaults if
