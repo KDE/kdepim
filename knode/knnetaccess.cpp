@@ -227,7 +227,7 @@ void KNNetAccess::startJobNntp()
 
   mNNTPProgressItem = ProgressManager::createProgressItem(
       0, "NNTP", i18n("KNode NNTP"), QString::null, true, false );
-  connect(mNNTPProgressItem, SIGNAL(progressItemCanceled(ProgressItem*)), SLOT(slotCancelNNTPJobs()));
+  connect(mNNTPProgressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)), SLOT(slotCancelNNTPJobs()));
 
   currentNntpJob = nntpJobQueue.take(0);
   currentNntpJob->prepareForExecution();
@@ -253,7 +253,7 @@ void KNNetAccess::startJobSmtp()
 
   mSMTPProgressItem = ProgressManager::createProgressItem(
       0, "SMTP", i18n("KNode SMTP"), QString::null, true, false );
-  connect(mSMTPProgressItem, SIGNAL(progressItemCanceled(ProgressItem*)), SLOT(slotCancelSMTPJobs()));
+  connect(mSMTPProgressItem, SIGNAL(progressItemCanceled(KPIM::ProgressItem*)), SLOT(slotCancelSMTPJobs()));
 
   currentSmtpJob = smtpJobQueue.take(0);
   currentSmtpJob->prepareForExecution();
