@@ -117,7 +117,7 @@ void IdMapper::clear()
 
 void IdMapper::setRemoteId( const QString &localId, const QString &remoteId )
 {
-  mIdMap.insert( localId, remoteId );
+  mIdMap.replace( localId, remoteId );
 }
 
 void IdMapper::removeRemoteId( const QString &remoteId )
