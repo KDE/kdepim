@@ -114,8 +114,30 @@ LogWidget::LogWidget(QWidget * parent) :
 		fLabel->hide();
 		fProgress->hide();
 
+		QPixmap splash(splashPath);
+		QPainter painter(&splash);
+		painter.setPen(QColor(255, 0, 0));
+
+		int textWidth =fontMetrics().width(KPILOT_VERSION) ;
+		int textHeight = fontMetrics().height();
+
+#ifdef DEBUG
+		DEBUGKPILOT << fname
+			<< ": Using text size "
+			<< textWidth << "x" << textHeight
+			<< endl;
+#endif
+
+		painter.fillRect(splash.width() -  28 - textWidth,
+			splash.height() - 6 - textHeight - textHeight ,
+			textWidth + 6,
+			textHeight + 4,
+			black);
+		painter.drawText(splash.width() -  25 - textWidth,
+			splash.height() - 8 - textHeight,
+			KPILOT_VERSION);
 		fSplash = new QLabel(this);
-		fSplash->setPixmap(QPixmap(splashPath));
+		fSplash->setPixmap(splash);
 		QTimer::singleShot(3000,this,SLOT(hideSplash()));
 		grid->addMultiCellWidget(fSplash,1,3,1,2);
 	}
@@ -295,6 +317,9 @@ bool LogWidget::saveFile(const QString &saveFileName)
 }
 
 // $Log$
+// Revision 1.9  2001/12/29 15:44:16  adridg
+// Missing progress slots
+//
 // Revision 1.8  2001/11/25 22:02:57  adridg
 // Save/clear the sync log
 //

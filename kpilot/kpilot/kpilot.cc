@@ -172,7 +172,7 @@ KPilotInstaller::KPilotInstaller() :
 	fManagingWidget(0L),
 	fKillDaemonOnExit(false),
 	fDaemonWasRunning(true),
-	fStatus(Startup), 
+	fStatus(Startup),
 	fFileInstallWidget(0L), 
 	fLogWidget(0L)
 {
@@ -694,7 +694,7 @@ void KPilotInstaller::slotConfigureConduits()
 //
 static KCmdLineOptions kpilotoptions[] = {
 	{"s", 0, 0},
-	{"setup", 
+	{"setup",
 		I18N_NOOP("Setup the Pilot device and other parameters"),
 		0L},
 	{"c", 0, 0},
@@ -741,7 +741,8 @@ int main(int argc, char **argv)
 		"mj@m-j-s.net", "http://www.m-j-s.net/kde/");
 	about.addCredit("David Bishop",
 		I18N_NOOP(".ui files"));
-
+	about.addCredit("Aaron J. Seigo",
+		I18N_NOOP("Bugfixer, coolness"));
 
 
 
@@ -855,6 +856,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.66  2001/11/18 16:59:55  adridg
+// New icons, DCOP changes
+//
 // Revision 1.65  2001/11/11 22:10:38  adridg
 // Switched to KJanuswidget
 //
