@@ -1,8 +1,10 @@
 #ifndef _ABBROWSER_CONDUIT_H
 #define _ABBROWSER_CONDUIT_H
-// knotes-conduit.h
+// abbrowser-conduit.cc
 //
+// Copyright (C) 2000,2001 by Dan Pilone
 // Copyright (C) 2000 Gregory Stern
+// Copyright (C) 2002 by Reinhold Kainhofer
 //
 // This file is distributed under the Gnu General Public Licence (GPL).
 // The GPL should have been included with this file in a file called
@@ -77,10 +79,10 @@ public slots:
 public:
 	enum EConflictResolution {
 		eUserChoose=0,
-		eKeepBothInAbbrowser,
 		ePilotOverides,
 		eAbbrowserOverides,
 		eRevertToBackup,
+		eKeepBothInAbbrowser,
 		eDoNotResolve
 	} ;
 	EConflictResolution getResolveConflictOption() const { return fConflictResolution; }
@@ -138,7 +140,9 @@ private:
 	int _mergeEntries(PilotAddress &pilotAddress, PilotAddress &backupAddress, KABC::Addressee &abEntry);
 	int _handleConflict(PilotAddress &piAddress, PilotAddress &backup, KABC::Addressee &abEntry);
 	int _smartMerge(PilotAddress & outPilotAddress, const PilotAddress & backupAddress, KABC::Addressee & outAbEntry);
-
+	int _smartMergePhone(KABC::Addressee &abEntry, const PilotAddress &backupAddress, PilotAddress &pilotAddress, PilotAddress::EPhoneType PalmFlag, KABC::PhoneNumber::Types PCFlag, QString thisName, QString name);
+	int _smartMergeEntry(QString abEntry, const PilotAddress &backupAddress, PilotAddress &pilotAddress, int PalmFlag, QString thisName, QString name, QString &mergedString);
+	
 	void _removePilotAddress(PilotAddress &address);
 	void _removeAbEntry(KABC::Addressee addressee);
    KABC::Addressee _saveAbEntry(KABC::Addressee &abEntry);
@@ -148,6 +152,8 @@ private:
 	*/
 	bool _savePilotAddress(PilotAddress &address, KABC::Addressee &abEntry);
 	bool _saveBackupAddress(PilotAddress & backup);
+	
+	void _copyPhone(KABC::Addressee &toAbEntry, KABC::PhoneNumber phone, QString palmphone);
 	void _copy(PilotAddress &toPilotAddr, KABC::Addressee &fromAbEntry);
 	void _copy(KABC::Addressee &toAbEntry, const PilotAddress &fromPilotAddr);
 	void _setPilotAddress(PilotAddress &toPilotAddr, const KABC::Address &abAddress);
@@ -181,7 +187,7 @@ private:
 //
 	void _addToPalm(KABC::Addressee &entry);
 	void _changeOnPalm(PilotRecord *rec, PilotRecord* backuprec, KABC::Addressee &ad);
-//	bool _deleteFromPalm();
+	void _deleteFromPalm(PilotRecord*rec);
 	
 	struct AddressAppInfo fAddressAppInfo;
 //
@@ -216,6 +222,9 @@ private:
 
 
 // $Log$
+// Revision 1.19  2002/07/09 22:40:18  kainhofe
+// backup database fixes, prevent duplicate vcal entries, fixed the empty record that was inserted on the palm on every sync
+//
 // Revision 1.18  2002/07/01 23:25:46  kainhofe
 // implemented categories syncing, many things seem to work, but still every sync creates an empty zombie.
 //
