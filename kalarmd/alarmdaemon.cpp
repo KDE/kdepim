@@ -50,14 +50,19 @@
 #include "alarmdaemon.moc"
 
 
+#ifdef CHECK_IF_SESSION_STARTED
 const int LOGIN_DELAY( 5 );
+#endif
 
 AlarmDaemon::AlarmDaemon(QObject *parent, const char *name)
-  : QObject(parent, name), DCOPObject(name),
-    mSessionStartTimer(0)
+  : QObject(parent, name), DCOPObject(name)
+#ifdef CHECK_IF_SESSION_STARTED
+    , mSessionStartTimer(0)
+#endif
 {
   kdDebug(5900) << "AlarmDaemon::AlarmDaemon()" << endl;
 
+#ifdef CHECK_IF_SESSION_STARTED
   bool splash = kapp->dcopClient()->isApplicationRegistered("ksplash");
   if (splash  ||  static_cast<AlarmApp*>(kapp)->startedAtLogin())
   {
@@ -71,9 +76,14 @@ AlarmDaemon::AlarmDaemon(QObject *parent, const char *name)
     connect(mSessionStartTimer, SIGNAL(timeout()), SLOT(checkIfSessionStarted()));
     mSessionStartTimer->start(splash ? 1000 : LOGIN_DELAY * 1000);
   }
+#endif
 
   readCheckInterval();
+#ifdef CHECK_IF_SESSION_STARTED
   readDaemonData(!!mSessionStartTimer);
+#else
+  readDaemonData(false);
+#endif
 
   enableAutoStart(true);    // switch autostart on whenever the program is run
 
@@ -548,6 +558,7 @@ bool AlarmDaemon::notifyEvent(ADCalendarBase* calendar, const QString& eventID)
   return true;
 }
 
+#ifdef CHECK_IF_SESSION_STARTED
 /*
  * Called by the timer to check whether session startup is complete.
  * If so, it checks which clients are already running and allows
@@ -578,6 +589,7 @@ void AlarmDaemon::checkIfSessionStarted()
     mSessionStartTimer = 0;    // indicate that session startup is complete
   }
 }
+#endif
 
 /*
  * Starts or stops the alarm timer as necessary after a calendar is enabled/disabled.

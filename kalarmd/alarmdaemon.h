@@ -45,7 +45,7 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
 
   private slots:
     void    checkAlarmsSlot();
-    void    checkIfSessionStarted();
+//    void    checkIfSessionStarted();
 
     void    checkAlarms();
 
