@@ -8,8 +8,8 @@
 
 <title>The Kmail Handbook
 <author>David Rugge
-<date>February 4, 1999
-<abstract>This documentation was last updated for Kmail version 1.0.14. 
+<date>July 10, 1999
+<abstract>This documentation was last updated for Kmail version 1.0.24.
 Please make any comments and additions to the authors.
 </abstract>
 
@@ -76,6 +76,10 @@ sendmail and SMTP. Sendmail has a reputation of being difficult to set up, so if
 do not already have a working sendmail configuration, choose SMTP and fill in the
 <bf>Server</bf> field with the name and domain of your mail server. You will probably
 not need to change the <bf>Port</bf> setting.
+<p>
+If you do want to use sendmail and you are using a dial-up connection, follow the instructions
+for setting up sendmail for a dial-up connection in the Questions and Answers section.
+
 
 <sect2>Receiving Mail
 <p>
@@ -117,28 +121,33 @@ is divided into three panes:
 <tag>Folders Pane (upper left pane)</tag>
 This pane contains a list of your message folders. (other email programs call them 
 mailboxes) To select a folder, simply click on it. The messages contained in the folder
-will now appear in the Headers Pane. The folders can be displayed in both a short view, which takes up only
-a small portion of the left side of the screen, and a long view, which takes up the entire left side of the
-screen but is able to show more mailboxes. See the <ref id="sec-Folders" name="Folders Section"> 
-for more information about how to use folders.  
+will now appear in the Headers Pane. The number of unread messages and the
+total number of messages in the selected folder is displayed in the status bar.
+The folders can be displayed in both a short view, which takes up only a small
+portion of the left side of the screen, and a long view, which takes up the
+entire left side of the screen but is able to show more mailboxes. See the <ref
+id="sec-Folders" name="Folders Section"> for more information about how to use
+folders.
 <p>
-<tag>Headers Pane (upper right pane)</tag>
-This pane lists header information (message Status Flags, Sender, Subject, and the Date the message 
-was sent) for the messages in the currently selected folder. Clicking on a header will
-select that message and display it in the Message Pane. You can also select a series of
-messages by clicking on one message, holding down the SHIFT key, and clicking on
-another message. The two messages you just clicked on will be selected, along with all
-the messages in between. You may sort the messages by clicking on the column that you wish to
-sort.
+<tag>Headers Pane (upper right pane)</tag> This pane lists header
+information (message Status Flags, Sender, Subject, and the Date the message was
+sent) for the messages in the currently selected folder. Clicking on a header
+will select that message and display it in the Message Pane. You can also select
+a series of messages by clicking on one message, holding down the SHIFT key, and
+clicking on another message. The two messages you just clicked on will be
+selected, along with all the messages in between. You may sort the messages by
+clicking on the column that you wish to sort.
 <p>
 <tag>Message Pane (lower pane)</tag>
-Displays the header and body of the currently selected message. You can scroll through
-the message page by page using the PAGE UP and PAGE DOWN keys, or line by line using the up and
-down arrow keys. You can also use the following key shortcuts to skip through your 
-messages without having to use the mouse:
+Displays the header and body of the currently selected message. Attachments
+appear at the bottom of the message as icons based on the MIME type of the
+attachment. You can scroll through the message page by page using the PAGE UP
+and PAGE DOWN keys, or line by line using the up and down arrow keys. You can
+also use the following key shortcuts to skip through your messages without
+having to use the mouse:
 <itemize>
-<item>N or the right arrow key - Next message
-<item>P or the left arrow key - Previous message
+<item>N or the left arrow key - Next message
+<item>P or the right arrow key - Previous message
 <item>+ - Next unread message
 <item>- - Previous unread message
 </itemize>
@@ -486,15 +495,47 @@ mail folders before you use this script.
 <p>
 Maildir mailboxes, used by the Qmail mail-transfer agent, are not supported by Kmail at this time. 
 <p>
-<tag>Microsoft Outlook, Lotus Notes, BeOS Mail files, cc: Mail, Pegasys, etc...</tag>
+<tag>Forte Agent</tag>
 <p>
-Other mail programs probably do not work with Kmail as they use specialized mail formats that Kmail cannot
-understand. However, there is no harm in trying! If the mailbox file looks similar to the mbox format, try
-copying the mailbox file (remember, the index file is not needed) to your <tt>~/Mail</tt> directory and
-see what happens.  If you get mailboxes from your favorite mail client to work in Kmail, please tell us
-how you did it so that we can include directions in a future revision of this documentation.
+In Agent:
+<enum>
+<item>Select the messages to export
+<item>Select <bf>FILE | SAVE MESSAGES AS</bf>
+<item>Mark the <bf>UNIX FORMAT</bf> and <bf>SAVE RAW</bf> boxes
+<item>Give File a  .txt extension and save.
+</enum>
 <p>
-</descrip>
+In Linux/KDE:
+<enum>
+<item>Move previously saves file to correct <tt>~/Mail</tt> folder
+<item>Rename file without .txt extension
+</enum>
+<p>
+When you open Kmail the new folder with appropriate messages will be there.
+<p>
+<tag>Netscape Mail</tag>
+<p>
+Copy your Netscape Mailfiles from <tt>~/nsmail/</tt> to <tt>~/Mail</tt>
+folder. The mailboxes will show up in Kmail the next time you restart it.
+<p>
+<tag>Pegasus Mail</tag>
+<p>
+Pegasus for win32 uses single files for Mail folders simmilar to Kmail. Pegasus mail
+ folder files have the extension .pmm but they are the same format as
+mbox except the messages do not start with the From header, but with a control character.
+To work around this, replace each instance of the control character with
+<tt>From aaa@aaa Mon Jan 01 00:00:00 1997</tt>. This <tt>From:</tt> line should be the first
+line of every message, before the <tt>Received:</tt> and other headers. Make sure to use
+a text editor that lets you save the files in Unix format.
+<p>
+<tag>Microsoft Outlook, Lotus Notes, BeOS Mail files, cc: Mail, etc...</tag>
+<p> Other mail programs probably do not work with Kmail as they use
+specialized mail formats that Kmail cannot understand. However, there is no harm
+in trying! If the mailbox file looks similar to the mbox format, try copying the
+mailbox file (remember, the index file is not needed) to your <tt>~/Mail</tt>
+directory and see what happens.  If you get mailboxes from your favorite mail
+client to work in Kmail, please tell us how you did it so that we can include
+directions in a future revision of this documentation. <p> </descrip>
  
 <sect>Menus and Keyboard Shortcuts<label id="sec-Menus">
 <p>
@@ -576,7 +617,7 @@ Removes the selected folder.
 <sect2>Message menu
 <p>
 <descrip>
-<tag>Next (N or the right arrow key)</tag>
+<tag>Next (N or the right arrow key</tag>
 Selects the next message in the Headers pane.<p>
 <tag>Next Unread (+)</tag>
 Selects the next unread message in the Headers pane.<p>
@@ -783,8 +824,7 @@ Settings...</bf> Look in the "Identity" tab
 for the "signature file" field. Click on the ellipses button and select the file you just created.
 Now Kmail will automatically insert that file in any message you write.
 <p>
-<sect1>Why does Kmail keep asking me for the location of my signature file? I
-don't have/want one!
+<sect1>Why does Kmail keep asking me for the location of my signature file?
 <p>
 Kmail will ask you the location of your signature file if you have checked the
 option <bf>Automatically Append Signature</bf> in the <bf>Composer</bf> tab of
@@ -792,10 +832,146 @@ the <bf>Settings</bf> dialog, but have not specified a signature file in the
 <bf>Identity</bf> tab. You should either specify a signature file or uncheck
 <bf>Automatically Append Signature</bf>.
 
-<sect1>Why doesn't word wrap work in the
-Composer window? <p>
+<sect1>Why doesn't word wrap work in the Composer window?
+<p>
 The word wrap setting is probably turned off. Word wrap can be toggled on and off in the 
 <bf>Composer</bf> tab of the <bf>Settings</bf> dialog box.
+
+<sect1>How can I find out how many unread messages I have in a mail folder?
+<p>
+When you click on a mail folder in the <bf>Folders Pane</bf>, the total number
+of messages and the number of unread messages is displayed in the status bar at
+the bottom of the main window.
+<p>
+In previous versions of Kmail, this was the only way to find out how many unread messages
+were in a folder. Now, the number of unread messages is conveniently displayed in the
+<bf>Folders Pane</bf> after the folder name.
+
+<sect1>How do I set up sendmail to work with Kmail if I have a dial-up connection?<label id="sec-QASendmail">
+<p>
+These instructions were taken almost verbatim from the
+UCT Linux User's group page on <htmlurl url="http://www.leg.uct.ac.za/Articles/sendmail_dialup.html"
+name="configuring Sendmail for Dial-up connections">.
+<p>
+<sect2>Step 1: Masquerade host
+<p>
+You now need to edit <tt>/etc/sendmail.cf</tt> to tell it which host to masquerade as.
+Look for a line which says something like:
+<tscreen><verb>
+# who I masquerade as (null for no masquerading) (see also $=M)
+DM
+</verb></tscreen>
+<p>
+and add your address to the end of the line beginning "DM". Our user changed it to the following
+<tscreen><verb>
+DMhendrix.org
+</verb></tscreen>
+<p>
+When our user sends mail, the <tt>Return-Path</tt> and <tt>From:</tt> fields will now say that the mail comes from hendrix.org. This
+prevents "cannot route to sender" messages which certain hosts you send mail to may generate because your machine does
+not have a DNS entry. We must still change the user portion of the email address, because if our user sends mail now, the
+<tt>From:</tt> field will read <tt>mj@hendrix.org</tt>, which is not correct. If you login to your home machine with the same
+username as the username portion of your email address, you can skip ahead to restarting sendmail. If you have different
+usernames (as our example does), you need to add a user database.
+
+<sect2>Step 2: Create a user database
+<p>
+Create a file modelled on the following:
+<tscreen><verb>
+loginname:mailname      First_Last
+First_Last:maildrop     loginname
+</verb></tscreen>
+<p>
+"loginname" is the name you login is on your machine at home (in this case mj), "First_Last" is the name portion of your
+email address (in this case mjturner). In this case our user created a file called <tt>/etc/userdb</tt> containing the following:
+<tscreen><verb>
+mj:mailname     mjturner@hendrix.org
+mjturner:maildrop       mj
+</verb></tscreen>
+<p>
+Once you have done this, you need to convert the text file <tt>/etc/userdb</tt> into a Berkeley "db" database file which sendmail can
+understand. To do this, you need to run makemap as follows:
+<tscreen><verb>
+# makemap btree /etc/userdb.db < /etc/userdb
+</verb></tscreen>
+<p>
+This creates the database file <tt>/etc/userdb.db</tt> from the text file <tt>/etc/userdb</tt>. You must remember do this every time you
+change <tt>/etc/userdb</tt> otherwise sendmail will not be using your latest user database when sending mail.
+
+<sect2>Step 3: Add user database to sendmail.cf
+<p>
+You must also tell sendmail to use your user database (<tt>/etc/userdb.db</tt>) when sending mail. The syntax differs slightly
+depending on whether you are using an 8.7.x/8.8.x or 8.6.x config file. You can tell which version yours is by searching for
+the string "DZ" (<tt>grep ^DZ /etc/sendmail.cf</tt>). For example, an 8.8.0 config file would say <tt>DZ8.8.0</tt>.
+
+<sect3>8.6.x config file
+<p>
+
+    If you are using an 8.6.x config file, look for a line beginning
+<tscreen><verb>
+    # list of locations of user database file (null means no lookup)
+    OU
+</verb></tscreen>
+<p>
+    and add the location of your user database. Our user changed the above line to:
+<tscreen><verb>
+    OU/etc/userdb.db
+</verb></tscreen>
+
+<sect3>8.7.x or 8.8.x config file
+<p>
+    If you are using an 8.7.x or 8.8.x config file look for a line beginning
+<tscreen><verb>
+    # list of locations of user database file (null means no lookup)
+    O UserDatabaseSpec=
+</verb></tscreen>
+<p>
+    and add the location of your user database to it. Our user changed it to the following:
+<tscreen><verb>
+    O UserDatabaseSpec=/etc/userdb.db
+</verb></tscreen>
+
+<sect2>Step 4: Restart sendmail
+<p>
+After making these changes, as root you need to restart sendmail:
+<tscreen><verb>
+# ps aux | grep sendmail | grep -v grep
+root        64  0.0  0.0  1208     0  ?  SW  11:45   0:00 (sendmail)
+
+# kill -HUP 64
+</verb></tscreen>
+<p>
+(use <tt>ps -ef</tt> instead of <tt>ps aux</tt> if you're using SysV).
+<p>
+Sendmail will now re-read its config file (<tt>/etc/sendmail.cf</tt>) and everything should be working. When you send mail, the from
+header field will be a valid email address and not the address you have on your machine. For example, when our user sends
+mail, it will read <tt>From: mjturner@hendrix.org</tt> in the headers. This works with all mail user agents (Mutt, Elm, Pine, mh,
+etc) because the address translation is done at the mail transport agent level. Basically, you can use any program to send
+mail and your address will be correct.
+
+<sect2>Step 5: Configure a "smart" relay
+<p>
+It can take quite a while for mail to get delivered to its final destination, as sendmail has to connect to the mail servers of the
+recipients of your mail. This time would have to be spent online, something which can prove to be costly. If, however, you
+configure sendmail to use a "smart" relay, it will deliver all mail to that relay and the relay will then deliver it to its
+destination. Your ISP's mail server makes an ideal "smart" relay.
+<p>
+Change
+<tscreen><verb>
+# "Smart" relay host (may be null)
+DS
+</verb></tscreen>
+<p>
+to
+<tscreen><verb>
+# "Smart" relay host (may be null)
+DSmail.hendrix.org
+</verb></tscreen>
+<p>
+Don't forget to restart sendmail after doing this (see restarting sendmail).
+All non-local mail will now be sent to
+<tt>mail.hendrix.org</tt> which will then deliver it to its final destination.
+
 
 <sect>Epilogue
 <p>
@@ -803,6 +979,8 @@ The word wrap setting is probably turned off. Word wrap can be toggled on and of
 <sect1>Developers<label id="sec-Developers">
 <p>
 Stefan Taferner <htmlurl url="mailto:taferner@alpin.or.at" name="&lt;taferner@alpin.or.at&gt;">
+<p>
+Sven Radej <htmlurl url="mailto:radej@kde.org" name="&lt;radej@kde.org&gt;">
 <p>
 Markus Wuebben <htmlurl url="mailto:markus.wuebben@kde.org" name="&lt;markus.wuebben@kde.org&gt;">
 <p>
@@ -832,11 +1010,29 @@ Robert Williams - Editor <htmlurl url="mailto:rwilliams@kde.org"
 name="&lt;rwilliams@kde.org&gt;">
 <p>
 Some of the Kmail Questions and Answers were taken from the Kmail section of the
-KDE FAQ. 
+KDE FAQ.
+<p>
+The section on Sendmail configuration for dial-up connections was copied almost
+verbatim from UCT Linux User's group page on
+<htmlurl url="http://www.leg.uct.ac.za/Articles/sendmail_dialup.html"
+name="configuring Sendmail for Dial-up connections">
 <p>
 Thanks to Michael Elkins <htmlurl url="mailto:me@cs.hmc.edu" name="&lt;me@cs.hmc.edu&gt;"> for his
 excellent description of the different Unix mail formats in the Mutt documentation.
 <p>
+Thanks to
+
+<itemize>
+<item>Mendel Mobach <htmlurl url="mailto:mendel@mobach.nl"
+name="&lt;mendel@mobach.nl&gt;"> (Netscape mail)
+<item>Ed Shapard <htmlurl url="shapard@bigfoot.com"
+name="&lt;mailto:shapard@bigfoot.com&gt;"> (Pegasus Mail)
+<item>Ray Muir <htmlurl url="mailto:rjmuir@ibm.net" name="&lt;rjmuir@ibm.net&gt;">
+(Forte Agent)
+</itemize>
+<p>
+for providing directions on using other mail clients' mailboxes
+with Kmail.
 
 <sect1>Copyright
 <p>
