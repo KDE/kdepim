@@ -36,6 +36,7 @@
 
 #include <kresources/resource.h>
 #include <kresources/manager.h>
+#include <kabc/lock.h>
 
 namespace KCal {
 
@@ -85,6 +86,8 @@ class ResourceCalendar : public KRES::Resource
     virtual bool save() = 0;
 
     virtual bool isSaving() { return false; }
+
+    virtual KABC::Lock *lock() = 0;
 
     virtual bool addIncidence( Incidence * );
 

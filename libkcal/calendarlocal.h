@@ -43,7 +43,7 @@ class CalendarLocal : public Calendar
     */
     CalendarLocal( const QString &timeZoneId );
     ~CalendarLocal();
-  
+
     /**
       Loads a calendar on disk in vCalendar or iCalendar format into the current
       calendar. Incidences already present are preserved. If an event of the

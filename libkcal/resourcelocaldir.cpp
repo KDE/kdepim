@@ -49,7 +49,7 @@
 using namespace KCal;
 
 ResourceLocalDir::ResourceLocalDir( const KConfig* config )
-  : ResourceCached( config )
+  : ResourceCached( config ), mLock( 0 )
 {
   if ( config ) {
     readConfig( config );
@@ -95,6 +95,8 @@ void ResourceLocalDir::init()
   connect( &mDirWatch, SIGNAL( deleted( const QString & ) ),
            SLOT( reload( const QString & ) ) );
 
+  mLock = new KABC::Lock( mURL.path() );
+
   mDirWatch.addDir( mURL.path(), true );
   mDirWatch.startScan();
 }
@@ -103,6 +105,8 @@ void ResourceLocalDir::init()
 ResourceLocalDir::~ResourceLocalDir()
 {
   close();
+
+  delete mLock;
 }
 
 bool ResourceLocalDir::doOpen()
@@ -167,6 +171,11 @@ bool ResourceLocalDir::save()
   }
 
   return true;
+}
+
+KABC::Lock *ResourceLocalDir::lock()
+{
+  return mLock;
 }
 
 void ResourceLocalDir::reload( const QString &file )

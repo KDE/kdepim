@@ -58,6 +58,8 @@ class ResourceLocalDir : public ResourceCached
 
     bool save();
 
+    KABC::Lock *lock();
+
     /** deletes an event from this calendar. */
     void deleteEvent(Event *);
 
@@ -66,15 +68,13 @@ class ResourceLocalDir : public ResourceCached
     */
     void deleteTodo( Todo * );
 
-    // Public because needed in MultiCalendar::load()
-    bool doOpen();
-
     void dump() const;
 
   protected slots:
     void reload( const QString & );
 
   protected:
+    bool doOpen();
 
     /** clears out the current calendar, freeing all used memory etc. etc. */
     void doClose();
@@ -94,6 +94,8 @@ class ResourceLocalDir : public ResourceCached
     bool mOpen;
 
     KDirWatch mDirWatch;
+    
+    KABC::Lock *mLock;
 };
 
 }

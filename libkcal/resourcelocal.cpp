@@ -1,7 +1,8 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 1998 Preston Brown
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -49,7 +50,7 @@
 using namespace KCal;
 
 ResourceLocal::ResourceLocal( const KConfig* config )
-  : ResourceCached( config )
+  : ResourceCached( config ), mLock( 0 )
 {
   if ( config ) {
     QString url = config->readPathEntry( "CalendarURL" );
@@ -108,6 +109,8 @@ void ResourceLocal::init()
   connect( &mDirWatch, SIGNAL( deleted( const QString & ) ),
            SLOT( reload() ) );
 
+  mLock = new KABC::Lock( mURL.path() );
+
   mDirWatch.addFile( mURL.path() );
   mDirWatch.startScan();
 }
@@ -116,6 +119,8 @@ void ResourceLocal::init()
 ResourceLocal::~ResourceLocal()
 {
   close();
+
+  delete mLock;
 }
 
 bool ResourceLocal::doOpen()
@@ -139,6 +144,11 @@ bool ResourceLocal::save()
   if ( !mOpen ) return true;
 
   return mCalendar.save( mURL.path() );
+}
+
+KABC::Lock *ResourceLocal::lock()
+{
+  return mLock;
 }
 
 void ResourceLocal::reload()

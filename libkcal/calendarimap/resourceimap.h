@@ -64,6 +64,8 @@ class ResourceIMAP : public ResourceCalendar, public IncidenceBase::Observer,
 
     bool save();
 
+    KABC::Lock *lock();
+
     /** Add Event to calendar. */
     bool addEvent(Event *anEvent);
     /** deletes an event from this calendar. */

@@ -69,6 +69,8 @@ class ResourceKABC : public ResourceCalendar
 
     bool isSaving();
 
+    KABC::Lock *lock();
+
     /** Add Event to calendar. */
     bool addEvent(Event *anEvent);
     /** deletes an event from this calendar. */
@@ -175,6 +177,8 @@ class ResourceKABC : public ResourceCalendar
     int mAlarmDays;
     bool mAlarm;
     KABC::AddressBook *mAddressbook;
+    
+    KABC::Lock *mLock;
 };
 
 }

@@ -133,7 +133,7 @@ void HtmlExport::createHtmlMonthView(QTextStream *ts)
     // Write header
     *ts << "<h2>" << (i18n("month_year","%1 %2").arg(KGlobal::locale()->calendar()->monthName(start))
         .arg(start.year())) << "</h2>\n";
-    if (KGlobal::locale()->weekStartsMonday()) {
+    if ( KGlobal::locale()->weekStartDay() == 1 ) {
       start = start.addDays(1 - start.dayOfWeek());
     } else {
       if (start.dayOfWeek() != 7) {

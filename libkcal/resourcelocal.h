@@ -1,7 +1,8 @@
  /*
     This file is part of libkcal.
+
     Copyright (c) 1998 Preston Brown
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -56,6 +57,8 @@ class ResourceLocal : public ResourceCached
 
     bool save();
 
+    KABC::Lock *lock();
+
     void dump() const;
 
   protected slots:
@@ -81,6 +84,8 @@ class ResourceLocal : public ResourceCached
     bool mOpen;
 
     KDirWatch mDirWatch;
+
+    KABC::Lock *mLock;
 };
 
 }

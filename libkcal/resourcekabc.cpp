@@ -33,6 +33,7 @@
 #include <kstandarddirs.h>
 
 #include <kabc/stdaddressbook.h>
+#include <kabc/locknull.h>
 
 #include "vcaldrag.h"
 #include "vcalformat.h"
@@ -83,6 +84,7 @@ ResourceKABC::ResourceKABC( )
 
 ResourceKABC::~ResourceKABC()
 {
+  delete mLock;
 }
 
 void ResourceKABC::init()
@@ -91,6 +93,8 @@ void ResourceKABC::init()
 
   mOpen = false;
   setReadOnly( true );
+
+  mLock = new KABC::LockNull( false );
 
   mAddressbook = KABC::StdAddressBook::self();
   connect( mAddressbook, SIGNAL(addressBookChanged(AddressBook*)), SLOT( reload() ) );
@@ -212,6 +216,11 @@ bool ResourceKABC::save()
 bool ResourceKABC::isSaving()
 {
   return false;
+}
+
+KABC::Lock *ResourceKABC::lock()
+{
+  return mLock;
 }
 
 void ResourceKABC::doClose()

@@ -34,7 +34,6 @@ class QWidget;
 namespace KCal {
 
 class CalFormat;
-class ResourceCalendar;
 
 /**
   This class provides a calendar composed of several calendar resources.
@@ -80,6 +79,18 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
         QWidget *mParent;
     };
 
+    class Ticket
+    {
+        friend class CalendarResources;
+      public:
+        ResourceCalendar *resource() const { return mResource; }
+        
+      private:
+        Ticket( ResourceCalendar *r ) : mResource( r ) {}
+    
+        ResourceCalendar *mResource;
+    };
+
     /** constructs a new calendar that uses the ResourceManager for "calendar" */
     CalendarResources();
     /** constructs a new calendar, with variables initialized to sane values. */
@@ -105,6 +116,21 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
 
     /** clears out the current calendar, freeing all used memory etc. etc. */
     void close();
+
+    /**
+      Request ticket for saving the calendar. If a ticket is returned the
+      calendar is locked for write access until save() or releaseSaveTicket() is
+      called.
+    */
+    Ticket *requestSaveTicket( ResourceCalendar * );
+    /**
+      Save calendar. If save is successfull, the ticket is deleted.
+    */
+    virtual bool save( Ticket * );
+    /**
+      Release the save ticket. The calendar is unlocked without saving.
+    */
+    virtual void releaseSaveTicket( Ticket *ticket );
 
     void save();
 

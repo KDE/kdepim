@@ -42,6 +42,8 @@
 #include "journal.h"
 #include "filestorage.h"
 
+#include <kabc/locknull.h>
+
 #include <kresources/configwidget.h>
 
 #include "resourceremoteconfig.h"
@@ -51,7 +53,7 @@
 using namespace KCal;
 
 ResourceRemote::ResourceRemote( const KConfig* config )
-  : ResourceCached( config )
+  : ResourceCached( config ), mLock( 0 )
 {
   if ( config ) {
     readConfig( config );
@@ -80,6 +82,8 @@ ResourceRemote::~ResourceRemote()
 
   if ( mDownloadJob ) mDownloadJob->kill();
   if ( mUploadJob ) mUploadJob->kill();
+
+  delete mLock;
 }
 
 void ResourceRemote::init()
@@ -90,6 +94,8 @@ void ResourceRemote::init()
   setType( "remote" );
 
   mOpen = false;
+
+  mLock = new KABC::LockNull( true );
 }
 
 void ResourceRemote::readConfig( const KConfig *config )
@@ -250,6 +256,10 @@ void ResourceRemote::doClose()
   mOpen = false;
 }
 
+KABC::Lock *ResourceRemote::lock()
+{
+  return mLock;
+}
 
 void ResourceRemote::update(IncidenceBase *)
 {

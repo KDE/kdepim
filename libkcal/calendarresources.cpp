@@ -38,6 +38,7 @@
 
 #include <kresources/manager.h>
 #include <kresources/selectdialog.h>
+#include <kabc/lock.h>
 
 #include "resourcecalendar.h"
 #include "resourcelocal.h"
@@ -617,16 +618,42 @@ void CalendarResources::resourceDeleted( ResourceCalendar *resource )
     }
     old_it = it;
   }
-
 }
 
-void CalendarResources::doSetTimeZoneId( const QString& tzid )
+void CalendarResources::doSetTimeZoneId( const QString &tzid )
 {
-	// set the timezone for all resources. Otherwise we'll have those terrible tz troubles ;-((
-	CalendarResourceManager::Iterator i1;
-	for ( i1 = mManager->begin(); i1 != mManager->end(); ++i1 ) {
-		(*i1)->setTimeZoneId( tzid );
-	}
+  // set the timezone for all resources. Otherwise we'll have those terrible
+  // tz troubles ;-((
+  CalendarResourceManager::Iterator i1;
+  for ( i1 = mManager->begin(); i1 != mManager->end(); ++i1 ) {
+    (*i1)->setTimeZoneId( tzid );
+  }
+}
+
+CalendarResources::Ticket *CalendarResources::requestSaveTicket( ResourceCalendar *resource )
+{
+  KABC::Lock *lock = resource->lock();
+  if ( !lock ) return 0;
+  if ( lock->lock() ) return new Ticket( resource );
+  else return 0;
+}
+
+bool CalendarResources::save( Ticket *ticket )
+{
+  if ( !ticket || !ticket->resource() ) return false;
+
+  if ( ticket->resource()->save() ) {
+    releaseSaveTicket( ticket );
+    return true;
+  }
+  
+  return false;
+}
+
+void CalendarResources::releaseSaveTicket( Ticket *ticket )
+{
+  ticket->resource()->lock()->unlock();
+  delete ticket;
 }
 
 #include "calendarresources.moc"

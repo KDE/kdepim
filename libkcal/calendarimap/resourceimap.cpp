@@ -34,10 +34,13 @@
 #include <libkcal/todo.h>
 #include <libkcal/journal.h>
 
+#include <kabc/locknull.h>
+
 #include <kresources/configwidget.h>
 #include <kresources/resource.h>
 
 #include "kmailicalIface_stub.h"
+
 
 #include "resourceimapconfig.h"
 #include "resourceimap.h"
@@ -214,6 +217,11 @@ bool ResourceIMAP::loadAllJournals()
 bool ResourceIMAP::save()
 {
   return false;
+}
+
+KABC::Lock *ResourceIMAP::lock()
+{
+  return new KABC::LockNull( true );
 }
 
 /***********************************************
@@ -582,7 +590,7 @@ void ResourceIMAP::unregisteredFromDCOP( const QCString& appId )
     // Delete the stub so that the next time we need the addressbook,
     // we'll know that we need to start a new one.
     delete mKMailIcalIfaceStub;
-    mKMailIcalIfaceStub = 0L;
+    mKMailIcalIfaceStub = 0;
   }
 }
 

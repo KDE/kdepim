@@ -71,6 +71,8 @@ class ResourceRemote : public ResourceCached
 
     bool save();
 
+    KABC::Lock *lock();
+
     bool isSaving();
 
     void dump() const;
@@ -102,6 +104,8 @@ class ResourceRemote : public ResourceCached
 
     KIO::FileCopyJob *mDownloadJob;
     KIO::FileCopyJob *mUploadJob;
+    
+    KABC::Lock *mLock;
 };
 
 }

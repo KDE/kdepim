@@ -2,7 +2,7 @@
     This file is part of libkcal.
 
     Copyright (c) 1998 Preston Brown
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -70,7 +70,7 @@ class Calendar : public QObject, public CustomProperties,
       Clears out the current calendar, freeing all used memory etc.
     */
     virtual void close() = 0;
-  
+
     /**
       Sync changes in memory to persistant storage.
     */
