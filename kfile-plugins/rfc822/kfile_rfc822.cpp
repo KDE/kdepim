@@ -106,33 +106,33 @@ bool KRfc822Plugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
     while (!done) {
 
         // read a line
-        file.readLine(linebuf, 4095);
+        file.readLine(linebuf, sizeof( linebuf ));
 
         // have we got something useful?
         if (memcmp(linebuf, id_from, 6) == 0) {
             // we have a name
             myptr = linebuf + 6;
-            strncpy(buf_from, myptr, 999);
+            strncpy(buf_from, myptr, sizeof( buf_from ));
             buf_from[998]='\0';
         } else if (memcmp(linebuf, id_to, 4) == 0) {
             // we have a name
             myptr = linebuf + 4;
-            strncpy(buf_to, myptr, 999);
+            strncpy(buf_to, myptr, sizeof( buf_to ));
             buf_to[998]='\0';
         } else if (memcmp(linebuf, id_subject, 9) == 0) {
             // we have a name
             myptr = linebuf + 9;
-            strncpy(buf_subject, myptr, 999);
+            strncpy(buf_subject, myptr, sizeof( buf_subject ));
             buf_subject[998]='\0';
         } else if (memcmp(linebuf, id_date, 6) == 0) {
             // we have a name
             myptr = linebuf + 6;
-            strncpy(buf_date, myptr, 999);
+            strncpy(buf_date, myptr, sizeof( buf_date ));
             buf_date[998]='\0';
         } else if (memcmp(linebuf, id_contenttype, 14) == 0) {
             // we have a name
             myptr = linebuf + 14;
-            strncpy(buf_contenttype, myptr, 999);
+            strncpy(buf_contenttype, myptr, sizeof( buf_contenttype ));
             buf_contenttype[998]='\0';
         }
 
