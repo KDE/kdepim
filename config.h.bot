@@ -11,7 +11,6 @@
 #ifndef __FUNCTION__
 #define __FUNCTION__ ""
 #endif
-#ifndef HAVE_USLEEP                 /* usleep not defined in Tru64  */ 
 #ifdef __cplusplus  
 extern "C" void usleep(unsigned int);
 extern "C" long gethostid (void);
@@ -20,7 +19,6 @@ extern "C" void getdomainname (char *name, int namelen);
 void usleep(unsigned int);
 extern long gethostid (void);
 extern void getdomainname (char *name, int namelen);
-#endif
 #endif
 #endif
 
