@@ -469,7 +469,7 @@
 <customwidgets>
     <customwidget>
         <class>KDateEdit</class>
-        <header location="global">/usr/local/src/kdecvs/kdepim/libkdepim/kdateedit.h</header>
+        <header location="global">kdateedit.h</header>
         <sizehint>
             <width>95</width>
             <height>21</height>
