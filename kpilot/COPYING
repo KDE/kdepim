@@ -7,6 +7,11 @@ to allow plugins with non-GPL yet LGPL-compatible licenses to be written.
 
 * The NULL conduit in conduits/null/, so that it can serve as a development
 example even for non-GPL conduits.
+
+* The malconduit in conduits/malconduit/ is licensed under the GPL with the
+  additional specific permission for the code to be linked to libmal, 
+	which is released under the Mozilla Public License (MPL).
+  This is necessary because the libmal license is not GPL-compatible.
 ]
 
 		    GNU GENERAL PUBLIC LICENSE
