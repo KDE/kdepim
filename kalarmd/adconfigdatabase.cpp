@@ -73,7 +73,7 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
     if (mIsAlarmDaemon)
       mClientDataFile = locateLocal("appdata", QString(CLIENT_DATA_FILE));
     else
-      mClientDataFile = locate("appdata", QString("kalarmd/" CLIENT_DATA_FILE));
+      mClientDataFile = locate("data", QString("kalarmd/" CLIENT_DATA_FILE));
   }
   KSimpleConfig clientConfig(mClientDataFile);
   clientConfig.setGroup("General");
