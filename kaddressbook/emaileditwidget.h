@@ -72,22 +72,27 @@ class EmailEditDialog : public KDialogBase
   public:
     EmailEditDialog( const QStringList &list, QWidget *parent, const char *name = 0 );
     ~EmailEditDialog();
-    
+
     QStringList emails() const;
-    
+    bool changed() const;
+
   protected slots:
     void add();
     void remove();
     void edit();
     void standard();
     void selectionChanged( int );
+    void emailChanged();
 
   private:
     KLineEdit *mEmailEdit;
     QListBox *mEmailListBox;
+    QPushButton *mAddButton;
     QPushButton *mRemoveButton;
     QPushButton *mEditButton;
     QPushButton *mStandardButton;
+
+    bool mChanged;
 };
 
 #endif
