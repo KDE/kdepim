@@ -44,11 +44,34 @@
 #include <qcheckbox.h>
 #include <qvbox.h>
 
-typedef KParts::GenericFactory< KSync::Debugger> DebuggerFactory;
-K_EXPORT_COMPONENT_FACTORY( libksync_debugger, DebuggerFactory );
-
 using namespace KCal;
 using namespace KSync;
+
+typedef KParts::GenericFactory< Debugger> DebuggerFactory;
+K_EXPORT_COMPONENT_FACTORY( libksync_debugger, DebuggerFactory );
+
+
+class CustomComboBox : public QComboBox
+{
+  public:
+    CustomComboBox( QWidget *parent, const char *name = 0 )
+      : QComboBox( parent, name ) {}
+
+    void insertItem( Konnector *k, const QString &text )
+    {
+      QComboBox::insertItem( text );
+      mKonnectors.append( k );
+    }
+
+    Konnector *currentKonnector()
+    {
+      return mKonnectors.at( currentItem() );
+    }
+
+  private:
+    QPtrList<Konnector> mKonnectors;
+};
+
 
 Debugger::Debugger( QWidget *parent, const char *name,
                     QObject *, const char *,const QStringList & )
@@ -115,16 +138,10 @@ QWidget *Debugger::widget()
     konnectorLayout->addWidget( new QLabel( i18n("Current Konnector:" ),
                                             m_widget ) );
 
-    mKonnectorCombo = new QComboBox( m_widget );
+    mKonnectorCombo = new CustomComboBox( m_widget );
     konnectorLayout->addWidget( mKonnectorCombo );
 
-    KonnectorProfile::ValueList konnectors =
-        core()->konnectorProfileManager()->list();
-
-    KonnectorProfile::ValueList::ConstIterator it;
-    for( it = konnectors.begin(); it != konnectors.end(); ++it ) {
-      mKonnectorCombo->insertItem( (*it).name() );
-    }
+    updateKonnectors();
 
     konnectorLayout->addStretch();
 
@@ -164,6 +181,19 @@ QWidget *Debugger::widget()
   return m_widget;
 }
 
+void Debugger::updateKonnectors()
+{
+  kdDebug() << "Debugger::updateKonnectors()" << endl;
+
+  KRES::Manager<Konnector> *manager = KonnectorManager::self();
+  
+  KRES::Manager<Konnector>::ActiveIterator it;
+  for( it = manager->activeBegin(); it != manager->activeEnd(); ++it ) {
+    kdDebug() << "Konnector: id: " << (*it)->identifier() << endl;
+    mKonnectorCombo->insertItem( *it, (*it)->resourceName() );
+  }
+}
+
 void Debugger::configureKonnector()
 {
   Konnector *k = currentKonnector();
@@ -185,32 +215,17 @@ void Debugger::configureKonnector()
 
 Konnector *Debugger::currentKonnector()
 {
-  QString konnectorName = mKonnectorCombo->currentText();
-  
-  KonnectorProfile::ValueList konnectors =
-      core()->konnectorProfileManager()->list();
+  Konnector *k = mKonnectorCombo->currentKonnector();
 
-  KonnectorProfile::ValueList::Iterator it;
-  for( it = konnectors.begin(); it != konnectors.end(); ++it ) {
-    if ( konnectorName == (*it).name() ) break;
-  }
-
-  if ( it == konnectors.end() ) return 0;
-
-  Konnector *k = 0;
-  QMap<QString,Konnector *>::ConstIterator itK;
-  itK = mKonnectorMap.find( konnectorName );
-  if ( itK != mKonnectorMap.end() ) k = *itK;
-  if ( !k ) {
-    kdDebug() << "Create Konnector" << endl;
-    k = core()->konnectorManager()->load( (*it).device() );
+  if ( mConnectedKonnectors.find( k ) < 0 ) {
+    kdDebug() << "Connect Konnector" << endl;
     connect( k, SIGNAL( synceesRead( Konnector *, const SynceeList & ) ),
              SLOT( slotReceiveData( Konnector *, const SynceeList & ) ) );
     connect( k, SIGNAL( sig_progress( Konnector *, const Progress & ) ),
              SLOT( slotProgress( Konnector *, const Progress & ) ) );
     connect( k, SIGNAL( sig_error( Konnector *, const Error & ) ),
              SLOT( slotError( Konnector *, const Error & ) ) );
-    mKonnectorMap.insert( konnectorName, k );
+    mConnectedKonnectors.append( k );
   }
 
   return k;
@@ -310,6 +325,11 @@ void Debugger::logMessage( const QString &message )
   text += message;
 
   mLogView->append( text );
+}
+
+void Debugger::actionSync()
+{
+  logMessage( i18n("actionSync()") );
 }
 
 #include "debugger.moc"

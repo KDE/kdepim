@@ -36,13 +36,10 @@ class LocalKonnector : public KSync::Konnector
 { 
     Q_OBJECT
   public:
-    /**
-     * @param parent the Parent Object
-     * @param name the name
-     * @param strlist a QStringList which is not used but necessary for KGenericFactory
-     */
-    LocalKonnector( QObject*, const char*, const QStringList = QStringList() );
+    LocalKonnector( const KConfig *config );
     ~LocalKonnector();
+
+    void writeConfig( KConfig * );
 
     /** return our capabilities() */
     KSync::Kapabilities capabilities();
@@ -68,9 +65,11 @@ class LocalKonnector : public KSync::Konnector
     /** download a resource/url/foobar */
     void download( const QString& );
 
-    /** configuration widgets */
-    KSync::ConfigWidget* configWidget( const KSync::Kapabilities&, QWidget* parent, const char* name );
-    KSync::ConfigWidget* configWidget( QWidget* parent, const char* name );
+    void setCalendarFile( const QString &f ) { mCalendarFile = f; }
+    QString calendarFile() const { return mCalendarFile; }
+    
+    void setAddressBookFile( const QString &f ) { mAddressBookFile = f; }
+    QString addressBookFile() const { return mAddressBookFile; }
 
   private:
     LocalKonnectorConfig *mConfigWidget;

@@ -2,6 +2,7 @@
     This file is part of KitchenSync.
 
     Copyright (c) 2002 Holger Freyther <zecke@handhelds.org>
+    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -24,13 +25,18 @@
 
 using namespace KSync;
 
-Konnector::Konnector( QObject *obj, const char *name, const QStringList & )
-    : QObject( obj, name )
+Konnector::Konnector( const KConfig *config )
+    : KRES::Resource( config )
 {
 }
 
 Konnector::~Konnector()
 {
+}
+
+void Konnector::writeConfig( KConfig *config )
+{
+  KRES::Resource::writeConfig( config );
 }
 
 void Konnector::add( const QString& res )

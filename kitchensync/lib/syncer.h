@@ -110,7 +110,7 @@ class Syncer
   private:
     QPtrList<Syncee> mSyncees;
     SyncUi *mUi;
-    SyncAlgorithm *mInterface;
+    SyncAlgorithm *mAlgorithm;
 
     class SyncerPrivate;
     SyncerPrivate *d;

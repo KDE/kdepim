@@ -25,10 +25,12 @@
 #include <qstring.h>
 
 #include <kstaticdeleter.h>
+#include <kresources/manager.h>
 
 #include <syncee.h>
 #include <synceelist.h>
 
+#include "konnectorplugin.h"
 #include "kdevice.h"
 #include "filter.h"
 #include "error.h"
@@ -42,7 +44,7 @@ class ConfigWidget;
 class Konnector;
 class KonnectorInfo;
 
-class KonnectorManager : public QObject
+class KonnectorManager : public QObject, public KRES::Manager<Konnector>
 {
     Q_OBJECT
     friend class KStaticDeleter<KonnectorManager>;
@@ -81,6 +83,29 @@ class KonnectorManager : public QObject
     void write( Konnector *, const SynceeList & );
 
   signals:
+    /**
+      Emitted when Syncee list becomes available as response to
+      requestSyncees().
+    */
+    void synceesRead( Konnector *, const SynceeList & );
+
+    /**
+      Emitted when an error occurs during read.
+    */
+    void synceeReadError( Konnector * );
+
+    /**
+      Emitted when Syncee list was successfully written back to connected
+      entity.
+    */
+    void synceesWritten( Konnector * );
+
+    /**
+      Emitted when an error occurs during write.
+    */
+    void synceeWriteError( Konnector * );
+
+  signals:
     void sync( Konnector *, const SynceeList & );
     void progress( Konnector *, const Progress & );
     void error( Konnector *, const Error & );
@@ -91,6 +116,9 @@ class KonnectorManager : public QObject
     void slotProgress( Konnector *, const Progress & );
     void slotError( Konnector *, const Error & );
     void slotDownloaded( Konnector *, const SynceeList & );
+
+  protected:
+    void connectSignals();
 
   private:
     void filter( const SynceeList &unknown, const SynceeList &real );

@@ -21,6 +21,8 @@
 
 #include "localkonnectorconfig.h"
 
+#include "localkonnector.h"
+
 #include <kconfig.h>
 #include <klocale.h>
 
@@ -31,34 +33,41 @@
 using namespace KSync;
 
 LocalKonnectorConfig::LocalKonnectorConfig( QWidget *parent )
-  : ConfigWidget( parent, 0 )
+  : KRES::ConfigWidget( parent, 0 )
 {
   QBoxLayout *topLayout = new QVBoxLayout( this );
-  
-  KConfig cfg( "localkonnectorrc" );
-  QString calendarFile = cfg.readPathEntry( "CalendarFile" );
-  QString addressBookFile = cfg.readPathEntry( "AddressBookFile" );
-  
-  mCalendarFile = new KURLRequester( calendarFile, this );
-  topLayout->addWidget( mCalendarFile );
-  
-  mAddressBookFile = new KURLRequester( addressBookFile, this );
-  topLayout->addWidget( mAddressBookFile );
 
-  QPushButton *button = new QPushButton( i18n("Save"), this );
-  topLayout->addWidget( button );
-  connect( button, SIGNAL( clicked() ), SLOT( writeSettings() ) );
+  topLayout->addWidget( new QLabel( i18n("Calendar File:"), this ) );
+  
+  mCalendarFile = new KURLRequester( this );
+  topLayout->addWidget( mCalendarFile );
+
+  topLayout->addWidget( new QLabel( i18n("Address Book File:"), this ) );
+  
+  mAddressBookFile = new KURLRequester( this );
+  topLayout->addWidget( mAddressBookFile );
 }
 
 LocalKonnectorConfig::~LocalKonnectorConfig()
 {
 }
 
-void LocalKonnectorConfig::writeSettings()
+void LocalKonnectorConfig::loadSettings( KRES::Resource *r )
 {
-  KConfig cfg( "localkonnectorrc" );
-  cfg.writePathEntry( "CalendarFile", mCalendarFile->url() );
-  cfg.writePathEntry( "AddressBookFile", mAddressBookFile->url() );
+  LocalKonnector *konnector = dynamic_cast<LocalKonnector *>( r );
+  if ( konnector ) {
+    mCalendarFile->setURL( konnector->calendarFile() );
+    mAddressBookFile->setURL( konnector->addressBookFile() );
+  }
+}
+
+void LocalKonnectorConfig::saveSettings( KRES::Resource *r )
+{
+  LocalKonnector *konnector = dynamic_cast<LocalKonnector *>( r );
+  if ( konnector ) {
+    konnector->setCalendarFile( mCalendarFile->url() );
+    konnector->setAddressBookFile( mAddressBookFile->url() );
+  }
 }
 
 #include "localkonnectorconfig.moc"

@@ -39,10 +39,15 @@ static KStaticDeleter<KonnectorManager> deleter;
 KonnectorManager* KonnectorManager::m_self = 0;
 
 KonnectorManager::KonnectorManager()
+  : KRES::Manager<Konnector>( "konnector" )
 {
     m_auto = false;
     m_filter.setAutoDelete( true );
     m_konnectors.setAutoDelete( true );
+
+  readConfig();
+
+  connectSignals();
 }
 
 KonnectorManager::~KonnectorManager()
@@ -51,10 +56,9 @@ KonnectorManager::~KonnectorManager()
 
 KonnectorManager* KonnectorManager::self()
 {
-    if ( !m_self )
-        deleter.setObject( m_self,  new KonnectorManager() );
+  if ( !m_self ) deleter.setObject( m_self, new KonnectorManager() );
 
-    return m_self;
+  return m_self;
 }
 
 Device::ValueList KonnectorManager::query()
@@ -147,8 +151,10 @@ const Filter::PtrList KonnectorManager::filters()
     return m_filAdded;
 }
 
-void KonnectorManager::write( Konnector *plugin, const SynceeList &lst )
+void KonnectorManager::write( Konnector * /*plugin*/, const SynceeList & )
 {
+// Konnectors should be directly called.
+#if 0
     kdDebug(5201) << "KonnectorManager::write" << endl;
     if ( !plugin ) {
         kdDebug(5201) << " Did not contain the plugin " << endl;
@@ -158,6 +164,7 @@ void KonnectorManager::write( Konnector *plugin, const SynceeList &lst )
     }
     kdDebug(5201) << "Konnector: " << plugin->info().name() << endl;
     plugin->writeSyncees();
+#endif
 }
 
 /*
@@ -246,12 +253,13 @@ void KonnectorManager::slotDownloaded( Konnector *k, const SynceeList & list)
  *
  * FIXME use filters!!!!
  */
-void KonnectorManager::filter( const SynceeList &lst, const SynceeList &real )
+void KonnectorManager::filter( const SynceeList & /*lst*/,
+                               const SynceeList & /*real*/ )
 {
     kdError() << "KonnectorManager::filter() not implemented" << endl;
 }
 
-SynceeList KonnectorManager::findUnknown( const SynceeList &lst )
+SynceeList KonnectorManager::findUnknown( const SynceeList & )
 {
 #if 0
     lst.setAutoDelete( false );
@@ -266,6 +274,21 @@ SynceeList KonnectorManager::findUnknown( const SynceeList &lst )
     return list;
 #endif
   return SynceeList();
+}
+
+void KonnectorManager::connectSignals()
+{
+  Iterator it;
+  for( it = begin(); it != end(); ++it ) {
+    connect( *it, SIGNAL( synceesRead( Konnector *, const SynceeList & ) ),
+             SIGNAL( synceesRead( Konnector *, const SynceeList & ) ) );
+    connect( *it, SIGNAL( synceeReadError( Konnector * ) ),
+             SIGNAL( synceeReadError( Konnector * ) ) );
+    connect( *it, SIGNAL( synceesWritten( Konnector * ) ),
+             SIGNAL( synceesWritten( Konnector * ) ) );
+    connect( *it, SIGNAL( synceeWriteError( Konnector * ) ),
+             SIGNAL( synceeWriteError( Konnector * ) ) );
+  }
 }
 
 #include "konnectormanager.moc"

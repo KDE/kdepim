@@ -30,12 +30,13 @@
 #include <klocale.h>
 
 #include <qpixmap.h>
-#include <qmap.h>
+#include <qptrlist.h>
 
 class KAboutData;
 
-class QComboBox;
 class QTextView;
+
+class CustomComboBox;
 
 namespace KSync {
 
@@ -60,8 +61,12 @@ class Debugger : public ManipulatorPart
 
     void logMessage( const QString & );
 
+    void actionSync();
+
   protected:
     Konnector *currentKonnector();
+
+    void updateKonnectors();
 
   protected slots:
     void configureKonnector();
@@ -78,14 +83,14 @@ class Debugger : public ManipulatorPart
     QPixmap m_pixmap;
     QWidget *m_widget;
 
-    QComboBox *mKonnectorCombo;
+    CustomComboBox *mKonnectorCombo;
     QTextView *mLogView;
 
     KCal::CalendarLocal mCalendar;
 
     SynceeList mSynceeList;
 
-    QMap<QString,Konnector *> mKonnectorMap;
+    QPtrList<Konnector> mConnectedKonnectors;
 };
 
 }

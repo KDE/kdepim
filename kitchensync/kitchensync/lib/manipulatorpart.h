@@ -130,6 +130,17 @@ class ManipulatorPart : public KParts::Part
      */
     virtual void sync( const SynceeList &in, SynceeList &out );
 
+    virtual void actionSync();
+
+  public slots:
+    virtual void slotSynceesRead( Konnector *, const SynceeList & ) {}
+
+    virtual void slotSynceeReadError( Konnector * ) {}
+
+    virtual void slotSynceesWritten( Konnector * ) {}
+
+    virtual void slotSynceeWriteError( Konnector * ) {}
+
   protected:
 
     /**

@@ -53,11 +53,6 @@ class Core : public KParts::MainWindow
     ~Core();
 
     /**
-     * @return the KitchenSync KonnectorManager
-     */
-    virtual KonnectorManager *konnectorManager() = 0;
-
-    /**
      * @return the currently enabled Profile
      */
     virtual Profile currentProfile() const = 0;

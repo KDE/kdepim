@@ -21,6 +21,9 @@
 
 #include "syncerpart.h"
 
+#include "calendarsyncee.h"
+#include "addressbooksyncee.h"
+
 #include <konnectorplugin.h>
 #include <configwidget.h>
 #include <konnectormanager.h>
@@ -54,7 +57,7 @@ class KonnectorCheckItem : public QCheckListItem
 {
   public:
     KonnectorCheckItem( Konnector *k, QListView *l )
-      : QCheckListItem( l, k ? k->info().name() : QString::null, CheckBox ),
+      : QCheckListItem( l, k->resourceName(), CheckBox ),
         mKonnector( k )
     {
     }
@@ -145,13 +148,15 @@ QWidget *SyncerPart::widget()
 
 void SyncerPart::updateKonnectorList()
 {
-  KonnectorProfile::ValueList konnectors =
-      core()->konnectorProfileManager()->list();
+  kdDebug() << "SyncerPart::updateKonnectorList()" << endl;
 
-  KonnectorProfile::ValueList::ConstIterator it;
-  for( it = konnectors.begin(); it != konnectors.end(); ++it ) {
-    QCheckListItem *item = new KonnectorCheckItem( 0, mKonnectorList );
-    item->setText( 0, (*it).name() );
+  KRES::Manager<Konnector> *manager = KonnectorManager::self();
+  
+  KRES::Manager<Konnector>::ActiveIterator it;
+  for( it = manager->activeBegin(); it != manager->activeEnd(); ++it ) {
+    kdDebug() << "Konnector: id: " << (*it)->identifier() << endl;
+    KonnectorCheckItem *item = new KonnectorCheckItem( *it, mKonnectorList );
+    item->setOn( true );
   }
 }
 
@@ -171,6 +176,130 @@ void SyncerPart::logMessage( const QString &message )
   text += message;
 
   mLogView->append( text );
+}
+
+void SyncerPart::actionSync()
+{
+  logMessage( i18n("Sync Action triggered") );
+
+  mCalendarSyncer.clear();
+  mAddressBookSyncer.clear();
+
+  mOpenedKonnectors.clear();
+  mProcessedKonnectors.clear();
+  mKonnectorCount = 0;
+
+  QListViewItemIterator it( mKonnectorList );
+  while ( it.current() ) {
+    KonnectorCheckItem *item = static_cast<KonnectorCheckItem *>( it.current() );
+    if ( item->isOn() ) {
+      Konnector *k = item->konnector();
+      logMessage( i18n("Connecting '%1'").arg( k->resourceName() ) );
+      if ( !k->connectDevice() ) {
+        logMessage( i18n("Error connecting device.") );
+      } else {
+        mOpenedKonnectors.append( k );
+        ++mKonnectorCount;
+      }
+    }
+    ++it;
+  }
+
+  Konnector *k;
+  for ( k = mOpenedKonnectors.first(); k; k = mOpenedKonnectors.next() ) {
+    logMessage( i18n("Request Syncees") );
+    if ( !k->readSyncees() ) {
+      logMessage( i18n("Request failed.") );
+    }
+  }
+}
+
+void SyncerPart::slotSynceesRead( Konnector *k, const SynceeList &syncees )
+{
+  logMessage( i18n("Syncees read from '%1'").arg( k->resourceName() ) );
+
+  mProcessedKonnectors.append( k );
+
+  if ( syncees.count() == 0 ) {
+    logMessage( i18n("Syncee list is empty.") );
+    return;
+  }
+
+  CalendarSyncee *calendarSyncee = syncees.calendarSyncee();
+  if ( calendarSyncee ) mCalendarSyncer.addSyncee( calendarSyncee );
+  
+  AddressBookSyncee *addressBookSyncee = syncees.addressBookSyncee();
+  if ( addressBookSyncee ) mAddressBookSyncer.addSyncee( addressBookSyncee );
+
+  trySync();
+}
+
+void SyncerPart::trySync()
+{
+  if ( mKonnectorCount == mProcessedKonnectors.count() ) {
+    mCalendarSyncer.sync();
+    mAddressBookSyncer.sync();
+
+    mProcessedKonnectors.clear();    
+    
+    Konnector *konnector;
+    for( konnector = mOpenedKonnectors.first(); konnector;
+         konnector = mOpenedKonnectors.next() ) {
+      if ( konnector->writeSyncees() ) {
+        kdDebug() << "writeSyncees(): " << konnector->resourceName() << endl;
+      } else {
+        kdError() << "Error requesting to write Syncee: "
+                  << konnector->resourceName() << endl;
+      }
+    }
+  }
+}
+
+void SyncerPart::slotSynceeReadError( Konnector *k )
+{
+  logMessage( i18n("Error reading Syncees from '%1'")
+              .arg( k->resourceName() ) );
+  
+  --mKonnectorCount;
+
+  trySync();
+}
+
+void SyncerPart::slotSynceesWritten( Konnector *k )
+{
+  logMessage( i18n("Syncees written to '%1'").arg( k->resourceName() ) );
+
+  mProcessedKonnectors.append( k );
+
+  disconnectDevice( k );
+
+  tryFinishSync();
+}
+
+void SyncerPart::slotSynceeWriteError( Konnector *k )
+{
+  logMessage( i18n("Error writing Syncees to '%1'")
+              .arg( k->resourceName() ) );
+
+  --mKonnectorCount;
+
+  disconnectDevice( k );
+
+  tryFinishSync();
+}
+
+void SyncerPart::disconnectDevice( Konnector *k )
+{
+  if ( !k->disconnectDevice() ) {
+    logMessage( i18n("Error disconnecting device") );
+  }
+}
+
+void SyncerPart::tryFinishSync()
+{
+  if ( mKonnectorCount == mProcessedKonnectors.count() ) {
+    logMessage( i18n("Synchronisation finished.") );
+  }
 }
 
 #include "syncerpart.moc"

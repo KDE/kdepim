@@ -44,7 +44,7 @@ class DummyKonnector : public KSync::Konnector
      * @param name the name
      * @param strlist a QStringList which is not used but necessary for KGenericFactory
      */
-    DummyKonnector( QObject*, const char*, const QStringList = QStringList() );
+    DummyKonnector( const KConfig *config );
     ~DummyKonnector();
 
     /** return our capabilities() */

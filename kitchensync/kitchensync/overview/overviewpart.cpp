@@ -138,9 +138,11 @@ void OverviewPart::slotProfileChanged(const Profile& )
 void OverviewPart::slotKonnectorChanged( Konnector * )
 {
     KonnectorProfile prof = core()->currentKonnectorProfile();
-    QPixmap pix = DesktopIcon( prof.konnector()->info().iconName(), KIcon::User );
-    m_widget->setProfile( prof.name(), pix );
-    kdDebug(5210) << "Konnector Changed " << endl;
+    if ( prof.konnector() ) {
+      QPixmap pix = DesktopIcon( prof.konnector()->info().iconName(), KIcon::User );
+      m_widget->setProfile( prof.name(), pix );
+      kdDebug(5210) << "Konnector Changed " << endl;
+    }
 }
 
 void OverviewPart::slotSyncProgress( ManipulatorPart* part, int status, int percent )

@@ -24,6 +24,7 @@
 #include <manipulatorpart.h>
 
 #include <synceelist.h>
+#include <syncer.h>
 
 #include <libkcal/calendarlocal.h>
 
@@ -60,8 +61,24 @@ class SyncerPart : public ManipulatorPart
 
     void logMessage( const QString & );
 
+    void actionSync();
+
+  public slots:
+    void slotSynceesRead( Konnector *, const SynceeList & );
+
+    void slotSynceeReadError( Konnector * );
+
+    void slotSynceesWritten( Konnector * );
+
+    void slotSynceeWriteError( Konnector * );
+
   protected:
     void updateKonnectorList();
+
+    void trySync();
+    void tryFinishSync();
+    
+    void disconnectDevice( Konnector *k );
 
   protected slots:
     void slotProgress( Konnector *, const Progress & );
@@ -77,6 +94,13 @@ class SyncerPart : public ManipulatorPart
     SynceeList mSynceeList;
 
     QMap<QString,Konnector *> mKonnectorMap;
+
+    QPtrList<Konnector> mOpenedKonnectors;
+    QPtrList<Konnector> mProcessedKonnectors;
+    uint mKonnectorCount;
+
+    Syncer mCalendarSyncer;
+    Syncer mAddressBookSyncer;
 };
 
 }

@@ -7,7 +7,7 @@ liblocalkonnector_la_LIBDADD = ../../libkonnector.la ../../../libksync2.la
 liblocalkonnector_la_LDFLAGS = $(all_libraries)  $(KDE_RPATH) -module
 liblocalkonnector_la_SOURCES = localkonnector.cpp localkonnectorconfig.cpp
 
-localkonnectordatadir = $(kde_datadir)/kitchensync
+localkonnectordatadir = $(kde_servicesdir)/kresources/konnector
 localkonnectordata_DATA = localkonnector.desktop
 
 METASOURCES = AUTO

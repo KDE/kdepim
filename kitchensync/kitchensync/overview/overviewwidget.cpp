@@ -16,7 +16,8 @@ using namespace KSync;
 using namespace KSync::OverView;
 
 Widget::Widget( QWidget* parent, const char* name )
-    : QWidget( parent, name ) {
+    : QWidget( parent, name )
+{
     m_lay = new QVBoxLayout(this);
     QLabel* label = new QLabel(this);
     label->setText( "<qt><h1>" + i18n("Overview") + "</h1></qt>" );
@@ -41,11 +42,13 @@ Widget::Widget( QWidget* parent, const char* name )
     m_edit->setTextFormat(Qt::LogText);
     m_ab = new QWidget( m_split );
 
+#if 1
     QValueList<int> list;
     list.append( 0 );
     list.append( 200 );
     m_split->setSizes( list );
     m_split->setResizeMode( m_edit, QSplitter::KeepSize );
+#endif
 
     m_layout = new QVBoxLayout( m_ab );
     m_layout->insertStretch( -1, 5 );
@@ -58,28 +61,38 @@ Widget::Widget( QWidget* parent, const char* name )
 
     m_messageList.setAutoDelete( true );
 }
-Widget::~Widget() {
 
+Widget::~Widget()
+{
 }
-void Widget::setProfile( const Profile& prof) {
+
+void Widget::setProfile( const Profile& prof)
+{
     m_profile->setText("<qt><b>" + i18n(" Profile: ") + "</b>" + prof.name() + "</qt>");
     cleanView();
 }
-void Widget::setProfile( const QString& name, const QPixmap& pix) {
+
+void Widget::setProfile( const QString& name, const QPixmap& pix)
+{
     m_device->setText("<qt><b>"+ i18n(" Device: ") + "</b>" + name + "</qt>");
     m_logo->setPixmap( pix );
     cleanView();
 }
-void Widget::addProgress( Konnector *, const Progress& prog) {
+
+void Widget::addProgress( Konnector *, const Progress& prog)
+{
     m_edit->append( "<b>"+QDateTime::currentDateTime().toString() + "</b> " + prog.text() );
 }
-void Widget::addProgress( ManipulatorPart *, const Progress& prog) {
+
+void Widget::addProgress( ManipulatorPart *, const Progress& prog)
+{
     m_edit->append( "<b>" + QDateTime::currentDateTime().toString() + "</b> " + prog.text() );
 }
-void Widget::syncProgress( ManipulatorPart * part, int status, int )  {
 
+void Widget::syncProgress( ManipulatorPart * part, int status, int )
+{
     OverViewProgressEntry* it;
-    for ( it = m_messageList.first(); it; it = m_messageList.next() )  {
+    for ( it = m_messageList.first(); it; it = m_messageList.next() ) {
         if ( QString::compare( it->name(), part->name() ) == 0 ) {
             it->setProgress( status );
             return;
@@ -101,16 +114,23 @@ void Widget::syncProgress( ManipulatorPart * part, int status, int )  {
     test->show();
 }
 
-void Widget::addError( Konnector *, const Error& prog) {
+void Widget::addError( Konnector *, const Error& prog )
+{
     m_edit->append( "<b>"+ QDateTime::currentDateTime().toString() + "</b> " + prog.text() );
 }
-void Widget::addError( ManipulatorPart*, const Error& prog) {
+
+void Widget::addError( ManipulatorPart*, const Error& prog )
+{
     m_edit->append( "<b>"+ QDateTime::currentDateTime().toString() + "</b> " + prog.text() );
 }
-void Widget::startSync() {
+
+void Widget::startSync()
+{
     m_edit->append("Starting to sync now");
 }
-void Widget::cleanView() {
+
+void Widget::cleanView()
+{
     m_messageList.clear();
 }
 

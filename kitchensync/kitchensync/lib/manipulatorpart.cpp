@@ -177,4 +177,8 @@ bool ManipulatorPart::confirmBeforeWriting() const
     return core()->currentProfile().confirmSync();
 }
 
+void ManipulatorPart::actionSync()
+{
+}
+
 #include "manipulatorpart.moc"

@@ -7,7 +7,7 @@ libdummykonnector_la_LIBDADD = ../../libkonnector.la ../../../libksync2.la
 libdummykonnector_la_LDFLAGS = $(all_libraries)  $(KDE_RPATH) -module
 libdummykonnector_la_SOURCES = dummykonnector.cpp
 
-dummykonnectordatadir = $(kde_datadir)/kitchensync
-dummykonnectordata_DATA = dummykonnector.desktop
+servicedir = $(kde_servicesdir)/kresources/konnector
+service_DATA = dummykonnector.desktop
 
 METASOURCES = AUTO

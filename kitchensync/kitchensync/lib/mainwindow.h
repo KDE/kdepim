@@ -52,7 +52,7 @@ class KonnectorBar;
  */
 class KSyncMainWindow : public Core
 {
-   Q_OBJECT
+    Q_OBJECT
   public:
 
     /**
@@ -75,11 +75,6 @@ class KSyncMainWindow : public Core
      * @return the SystemTray of KitchenSync
      */
     KSyncSystemTray *tray();
-
-    /**
-     * @return the KitchenSync KonnectorManager
-     */
-    KonnectorManager *konnectorManager();
 
     /**
      * REMOVE
@@ -142,90 +137,6 @@ class KSyncMainWindow : public Core
                        KonnectorProfile::ValueList& items );
     void updateEdited( const KonnectorProfile::ValueList& edited );
 
-
-  signals:
-    /**
-     * This signal gets emitted whenever the Profile
-     * is changed.
-     * @param oldProfile the previously enabled profile
-     */
-    void profileChanged( const Profile &oldProfile );
-
-    /**
-     * This signal gets emitted whenever the Profile
-     * is changed.
-     * @param udi The old Konnector of the previously enabled profile
-     */
-    void konnectorChanged( Konnector * );
-
-    /**
-     * This signals gets emitted on KonnectorProfile switch.
-     * @param oldProf the old Profile
-     */
-    void konnectorChanged( const KonnectorProfile& oldProf );
-
-    /**
-     * signal emitted when progress from the konnectorProgress arrived
-     * @param konnector pointer to Konnector object
-     * @param prog the Progress
-     */
-    void konnectorProgress( Konnector *konnector , const Progress &prog );
-
-    /**
-     * @param konnector pointer to Konnector object
-     * @param err the error
-     */
-    void konnectorError( Konnector *konnector, const Error &err );
-
-    /**
-     * This signal gets emitted when the KonnectorManager
-     * downloaded a list of files
-     * @param konnector pointer to Konnector object
-     * @param lst The downloaded Syncee
-     */
-    void konnectorDownloaded( Konnector *, SynceeList lst );
-
-    /**
-     * Whenever the currently activated parts changed
-     * @param newPart the newly activated part
-     */
-    void partChanged( ManipulatorPart *newPart );
-
-    /**
-     * progress coming from one part
-     * @param part where the progress comes from, 0 if from MainWindow
-     * @param prog The progress
-     */
-    void partProgress( ManipulatorPart *part, const Progress &prog );
-
-    /**
-     * error coming from one part
-     * @param part where the error comes from, 0 if from MainWindow
-     * @param err The error
-     */
-    void partError( ManipulatorPart *part, const Error &error );
-
-    /**
-     * emitted when ever sync starts
-     */
-    void startSync();
-
-    /**
-     * emitted when a part is asked to sync
-     */
-    void startSync( ManipulatorPart * );
-
-    void syncProgress( ManipulatorPart *, int, int );
-    /**
-     * emitted when done with syncing
-     */
-    void doneSync();
-
-    /**
-     * emitted when one part is done with syncing
-     */
-    void doneSync(ManipulatorPart* );
-
   private slots:
     void slotKonnectorProfile();
     void slotProfile();
@@ -245,6 +156,9 @@ class KSyncMainWindow : public Core
     void slotActivated(ManipulatorPart *);
     void slotQuit();
     void slotKonnectorBar(bool );
+
+    void slotPreferences();
+    void updateConfig();
 
     /* slots for the KonnectorManager */
   private slots:
@@ -272,7 +186,6 @@ class KSyncMainWindow : public Core
     ManPartService::ValueList m_partsLst;
     KSyncSystemTray *m_tray;
 
-    KonnectorManager *m_konnectorManager;
     KonnectorProfileManager *m_konprof;
     KSelectAction *m_konAct;
     KSelectAction *m_profAct;

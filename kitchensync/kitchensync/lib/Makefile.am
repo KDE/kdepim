@@ -22,8 +22,9 @@ libkitchensyncui_la_SOURCES = partbar.cpp manipulatorpart.cpp \
     synchelper.cpp konnectorbar.cpp syncconfig.cpp
     
 libkitchensyncui_la_LDFLAGS = $(all_libraries) -no-undefined 
-libkitchensyncui_la_LIBADD = $(LIB_KPARTS) $(top_builddir)/kitchensync/libkonnector2/libkonnector.la
-
+libkitchensyncui_la_LIBADD = \
+  $(top_builddir)/kitchensync/libkonnector2/libkonnector.la \
+  -lkutils $(LIB_KPARTS) 
 ksyncincludedir = $(includedir)/kitchensync
 ksyncinclude_HEADERS = partbar.h manipulatorpart.h systemtray.h mainwindow.h \
   profile.h

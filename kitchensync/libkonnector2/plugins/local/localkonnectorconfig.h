@@ -21,28 +21,23 @@
 #ifndef KSYNC_LOCALKONNECTORCONFIG_H
 #define KSYNC_LOCALKONNECTORCONFIG_H
 
-#include "configwidget.h"
-
 #include <kurlrequester.h>
+#include <kresources/configwidget.h>
 
 #include <qwidget.h>
 
 namespace KSync {
 
-class LocalKonnectorConfig : public ConfigWidget
+class LocalKonnectorConfig : public KRES::ConfigWidget
 { 
     Q_OBJECT
   public:
     LocalKonnectorConfig( QWidget *parent );
     ~LocalKonnectorConfig();
 
-    Kapabilities capabilities() const { return Kapabilities(); }
+    void loadSettings( KRES::Resource *resource );
+    void saveSettings( KRES::Resource *resource );
 
-    void setCapabilities( const Kapabilities& ) {}
-
-  protected slots:
-    void writeSettings();
-    
   private:
     KURLRequester *mCalendarFile;
     KURLRequester *mAddressBookFile;

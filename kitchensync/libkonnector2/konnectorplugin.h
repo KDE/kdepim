@@ -2,6 +2,7 @@
     This file is part of KitchenSync.
 
     Copyright (c) 2002,2003 Holger Freyther <freyther@kde.org>
+    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -27,6 +28,8 @@
 #include <qstringlist.h>
 #include <qptrlist.h>
 
+#include <kresources/resource.h>
+
 #include <syncee.h>
 #include <synceelist.h>
 
@@ -47,16 +50,20 @@ class ConfigWidget;
   further processing within KDE, e.g. for syncing or being accessed by a
   kioslave.
 */
-class Konnector : public QObject
+class Konnector : public KRES::Resource
 {
     Q_OBJECT
   public:
     /**
-      Create Konnector object. The Konnector is usually created by the
-      corresponding manager class by loading as plugin.
+      Construct Konnector from information in config file.
     */
-    Konnector( QObject *obj, const char *name,
-               const QStringList &args = QStringList() );
+    Konnector( const KConfig *config );
+
+    /**
+      Write configuration to config file.
+    */
+    void writeConfig( KConfig *config );
+
     /**
       Destruct Konnector object.
     */

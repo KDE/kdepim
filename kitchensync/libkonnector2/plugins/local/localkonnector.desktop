@@ -1,10 +1,13 @@
 [Desktop Entry]
 Encoding=UTF-8
 Type=Service
-ServiceTypes=KitchenSync/Konnector
+ServiceTypes=KResources/Plugin
 X-KDE-Library=liblocalkonnector
 
 Name=Local Konnector
 Group=Test
 Vendor=KDE Team
 Id=localkonnector
+
+X-KDE-ResourceFamily=konnector
+X-KDE-ResourceType=local

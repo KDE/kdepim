@@ -20,6 +20,7 @@
 */
 
 #include <kgenericfactory.h>
+#include <kdebug.h>
 
 #include <konnectorinfo.h>
 #include <kapabilities.h>
@@ -31,11 +32,31 @@
 using namespace KSync;
 using namespace KCal;
 
-typedef KGenericFactory<KSync::DummyKonnector, QObject>  DummyKonnectorPlugin;
-K_EXPORT_COMPONENT_FACTORY( libdummykonnector,  DummyKonnectorPlugin );
+class DummyKonnectorFactory : public KRES::PluginFactoryBase
+{
+  public:
+    KRES::Resource *resource( const KConfig *config )
+    {
+      return new DummyKonnector( config );
+    }
 
-DummyKonnector::DummyKonnector( QObject* obj, const char* name,const QStringList )
-    : Konnector( obj, name )
+    KRES::ConfigWidget *configWidget( QWidget * )
+    {
+      return 0;
+    }
+};
+
+extern "C"
+{
+  void *init_libdummykonnector()
+  {
+    return new DummyKonnectorFactory();
+  }
+}
+
+
+DummyKonnector::DummyKonnector( const KConfig *config )
+    : Konnector( config )
 {
   Event *event = new Event;
   event->setSummary( "An Event" );
@@ -74,6 +95,8 @@ void DummyKonnector::setCapabilities( const KSync::Kapabilities & )
 
 bool DummyKonnector::readSyncees()
 {
+  kdDebug() << "DummyKonnector::readSyncees()" << endl;
+
   SynceeList synceeList;
 
   CalendarSyncee *calendarSyncee = new CalendarSyncee( &mCalendar );

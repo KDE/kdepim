@@ -36,14 +36,14 @@ Syncer::Syncer( SyncUi *ui, SyncAlgorithm *iface )
   if ( !ui ) mUi = new SyncUi();
   else mUi = ui;
 
-  if ( !iface ) mInterface = new StandardSync( mUi );
-  else mInterface = iface;
+  if ( !iface ) mAlgorithm = new StandardSync( mUi );
+  else mAlgorithm = iface;
 }
 
 Syncer::~Syncer()
 {
   delete mUi;
-  delete mInterface;
+  delete mAlgorithm;
 }
 
 void Syncer::addSyncee( Syncee *syncee )
@@ -59,6 +59,12 @@ void Syncer::clear()
 void Syncer::sync()
 {
   Syncee *target = mSyncees.last();
+
+  if ( !target ) {
+    kdWarning() << "Syncer::sync(): No Syncees set." << endl;
+    return;
+  }
+
   Syncee *syncee = mSyncees.first();
   while (syncee != target) {
     syncToTarget(syncee,target);
@@ -93,12 +99,12 @@ void Syncer::syncAllToTarget( Syncee *target, bool writeback )
 
 void Syncer::syncToTarget( Syncee *source, Syncee *target, bool override )
 {
-  mInterface->syncToTarget( source, target, override );
+  mAlgorithm->syncToTarget( source, target, override );
 }
 
 void Syncer::setSyncAlgorithm( SyncAlgorithm *iface )
 {
   if ( !iface ) return;
-  delete mInterface;
-  mInterface = iface;
+  delete mAlgorithm;
+  mAlgorithm = iface;
 }
