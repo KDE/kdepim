@@ -53,6 +53,8 @@ static const char *kpilotconfigdialog_id =
 #include "kpilotConfigDialog_base.h"
 #include "kpilotConfigDialog2_base.h"
 #include "kpilotConfigDialog3_base.h"
+#include "kpilotConfigDialog_viewers.h"
+#include "kpilotConfigDialog_backup.h"
 #include "kpilotConfigDialog.moc"
 #include "syncAction.h"
 #include "dbSelectionDialog.h"
@@ -71,7 +73,7 @@ DeviceConfigPage::DeviceConfigPage(QWidget * w, const char *n ) : ConduitConfigB
 		}
 	}
 
-	fConfigWidget->resize(fConfigWidget->tabWidget->size());
+	fConfigWidget->resize(fConfigWidget->size());
 	fWidget = fConfigWidget;
 
 #if defined(PILOT_LINK_VERSION) && defined(PILOT_LINK_MAJOR) && defined(PILOT_LINK_MINOR)
@@ -195,22 +197,14 @@ SyncConfigPage::SyncConfigPage(QWidget * w, const char *n ) : ConduitConfigBase(
 	FUNCTIONSETUP;
 
 	fConfigWidget = new SyncConfigWidget( w );
-	fConfigWidget->resize(fConfigWidget->tabWidget->size());
+	fConfigWidget->resize(fConfigWidget->size());
 	fWidget = fConfigWidget;
-
-	connect(fConfigWidget->fBackupOnlyChooser, SIGNAL( clicked() ),
-		SLOT( slotSelectNoBackupDBs() ) );
-	connect(fConfigWidget->fSkipDBChooser, SIGNAL(clicked()),
-		SLOT(slotSelectNoRestoreDBs()));
 
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
 	CM(fSyncMode, SIGNAL(clicked(int)));
 	CM(fSpecialSync, SIGNAL(textChanged(const QString &)));
 	CM(fFullBackupCheck, SIGNAL(toggled(bool)));
 	CM(fConflictResolution, SIGNAL(activated(int)));
-
-	CM(fBackupOnly, SIGNAL(textChanged(const QString &)));
-	CM(fSkipDB, SIGNAL(textChanged(const QString &)));
 #undef CM
 }
 
@@ -232,16 +226,7 @@ void SyncConfigPage::load()
 	fConfigWidget->fFullBackupCheck->setChecked(KPilotSettings::fullSyncOnPCChange());
 	fConfigWidget->fConflictResolution->setCurrentItem(KPilotSettings::conflictResolution());
 
-	/* Backup tab */
-	fConfigWidget->fBackupOnly->setText(KPilotSettings::skipBackupDB().join(CSL1(",")));
-	fConfigWidget->fSkipDB->setText(KPilotSettings::skipRestoreDB().join(CSL1(",")));
-	fConfigWidget->fRunConduitsWithBackup->setChecked(KPilotSettings::runConduitsWithBackup());
 	unmodified();
-}
-
-/* virtual */ bool SyncConfigPage::validate()
-{
-	return true;
 }
 
 /* virtual */ void SyncConfigPage::commit()
@@ -256,6 +241,48 @@ void SyncConfigPage::load()
 	KPilotSettings::setFullSyncOnPCChange(fConfigWidget->fFullBackupCheck->isChecked());
 	KPilotSettings::setConflictResolution(fConfigWidget->fConflictResolution->currentItem());
 
+	KPilotConfig::updateConfigVersion();
+	KPilotSettings::self()->writeConfig();
+	unmodified();
+}
+
+
+
+BackupConfigPage::BackupConfigPage(QWidget * w, const char *n ) : ConduitConfigBase( w, n )
+{
+	FUNCTIONSETUP;
+
+	fConfigWidget = new BackupConfigWidget( w );
+	fConfigWidget->resize(fConfigWidget->size());
+	fWidget = fConfigWidget;
+
+	connect(fConfigWidget->fBackupOnlyChooser, SIGNAL( clicked() ),
+		SLOT( slotSelectNoBackupDBs() ) );
+	connect(fConfigWidget->fSkipDBChooser, SIGNAL(clicked()),
+		SLOT(slotSelectNoRestoreDBs()));
+
+#define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
+	CM(fBackupOnly, SIGNAL(textChanged(const QString &)));
+	CM(fSkipDB, SIGNAL(textChanged(const QString &)));
+#undef CM
+}
+
+void BackupConfigPage::load()
+{
+	FUNCTIONSETUP;
+	KPilotSettings::self()->readConfig();
+
+	/* Backup tab */
+	fConfigWidget->fBackupOnly->setText(KPilotSettings::skipBackupDB().join(CSL1(",")));
+	fConfigWidget->fSkipDB->setText(KPilotSettings::skipRestoreDB().join(CSL1(",")));
+	fConfigWidget->fRunConduitsWithBackup->setChecked(KPilotSettings::runConduitsWithBackup());
+	unmodified();
+}
+
+/* virtual */ void BackupConfigPage::commit()
+{
+	FUNCTIONSETUP;
+
 	/* Backup tab */
 	KPilotSettings::setSkipBackupDB(
 		QStringList::split(CSL1(","),fConfigWidget->fBackupOnly->text()));
@@ -268,7 +295,7 @@ void SyncConfigPage::load()
 	unmodified();
 }
 
-void SyncConfigPage::slotSelectNoBackupDBs()
+void BackupConfigPage::slotSelectNoBackupDBs()
 {
 	FUNCTIONSETUP;
 
@@ -286,7 +313,7 @@ void SyncConfigPage::slotSelectNoBackupDBs()
 	KPILOT_DELETE(dlg);
 }
 
-void SyncConfigPage::slotSelectNoRestoreDBs()
+void BackupConfigPage::slotSelectNoRestoreDBs()
 {
 	FUNCTIONSETUP;
 
@@ -306,20 +333,15 @@ void SyncConfigPage::slotSelectNoRestoreDBs()
 
 
 
-KPilotConfigPage::KPilotConfigPage(QWidget * w, const char *n ) : ConduitConfigBase( w, n )
+ViewersConfigPage::ViewersConfigPage(QWidget * w, const char *n ) : ConduitConfigBase( w, n )
 {
 	FUNCTIONSETUP;
 
-	fConfigWidget = new KPilotConfigWidget( w );
-	fConfigWidget->resize(fConfigWidget->tabWidget->size());
+	fConfigWidget = new ViewersConfigWidget( w );
+	fConfigWidget->resize(fConfigWidget->size());
 	fWidget = fConfigWidget;
 
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
-	CM(fStartDaemonAtLogin, SIGNAL(toggled(bool)));
-	CM(fKillDaemonOnExit, SIGNAL(toggled(bool)));
-	CM(fDockDaemon, SIGNAL(toggled(bool)));
-	CM(fQuitAfterSync, SIGNAL(toggled(bool)));
-
 	CM(fInternalEditors, SIGNAL(toggled(bool)));
 	CM(fUseSecret, SIGNAL(toggled(bool)));
 	CM(fAddressGroup, SIGNAL(clicked(int)));
@@ -327,7 +349,63 @@ KPilotConfigPage::KPilotConfigPage(QWidget * w, const char *n ) : ConduitConfigB
 #undef CM
 }
 
-void KPilotConfigPage::load()
+void ViewersConfigPage::load()
+{
+	FUNCTIONSETUP;
+	KPilotSettings::self()->readConfig();
+
+	fConfigWidget->fInternalEditors->setChecked(KPilotSettings::internalEditors());
+	fConfigWidget->fUseSecret->setChecked(KPilotSettings::showSecrets());
+	fConfigWidget->fAddressGroup->setButton(KPilotSettings::addressDisplayMode());
+	fConfigWidget->fUseKeyField->setChecked(KPilotSettings::useKeyField());
+	unmodified();
+}
+
+/* virtual */ void ViewersConfigPage::commit()
+{
+	FUNCTIONSETUP;
+
+	KPilotSettings::setInternalEditors( fConfigWidget->fInternalEditors->isChecked());
+	KPilotSettings::setShowSecrets(fConfigWidget->fUseSecret->isChecked());
+	KPilotSettings::setAddressDisplayMode(fConfigWidget->fAddressGroup->id(
+		fConfigWidget->fAddressGroup->selected()));
+	KPilotSettings::setUseKeyField(fConfigWidget->fUseKeyField->isChecked());
+	KPilotConfig::updateConfigVersion();
+	KPilotSettings::self()->writeConfig();
+	unmodified();
+}
+
+
+
+
+
+
+
+
+
+StartExitConfigPage::StartExitConfigPage(QWidget * w, const char *n ) : ConduitConfigBase( w, n )
+{
+	FUNCTIONSETUP;
+
+	fConfigWidget = new StartExitConfigWidget( w );
+	fConfigWidget->resize(fConfigWidget->size());
+	fWidget = fConfigWidget;
+
+#define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
+	CM(fStartDaemonAtLogin, SIGNAL(toggled(bool)));
+	CM(fKillDaemonOnExit, SIGNAL(toggled(bool)));
+	CM(fDockDaemon, SIGNAL(toggled(bool)));
+	CM(fQuitAfterSync, SIGNAL(toggled(bool)));
+#if 0
+	CM(fInternalEditors, SIGNAL(toggled(bool)));
+	CM(fUseSecret, SIGNAL(toggled(bool)));
+	CM(fAddressGroup, SIGNAL(clicked(int)));
+	CM(fUseKeyField, SIGNAL(toggled(bool)));
+#endif
+#undef CM
+}
+
+void StartExitConfigPage::load()
 {
 	FUNCTIONSETUP;
 	KPilotSettings::self()->readConfig();
@@ -336,22 +414,17 @@ void KPilotConfigPage::load()
 	fConfigWidget->fDockDaemon->setChecked(KPilotSettings::dockDaemon());
 	fConfigWidget->fKillDaemonOnExit->setChecked(KPilotSettings::killDaemonAtExit());
 	fConfigWidget->fQuitAfterSync->setChecked(KPilotSettings::quitAfterSync());
-
+#if 0
 	/* Viewers tab */
 	fConfigWidget->fInternalEditors->setChecked(KPilotSettings::internalEditors());
 	fConfigWidget->fUseSecret->setChecked(KPilotSettings::showSecrets());
 	fConfigWidget->fAddressGroup->setButton(KPilotSettings::addressDisplayMode());
 	fConfigWidget->fUseKeyField->setChecked(KPilotSettings::useKeyField());
-
+#endif
 	unmodified();
 }
 
-/* virtual */ bool KPilotConfigPage::validate()
-{
-	return true;
-}
-
-/* virtual */ void KPilotConfigPage::commit()
+/* virtual */ void StartExitConfigPage::commit()
 {
 	FUNCTIONSETUP;
 
@@ -359,14 +432,14 @@ void KPilotConfigPage::load()
 	KPilotSettings::setDockDaemon(fConfigWidget->fDockDaemon->isChecked());
 	KPilotSettings::setKillDaemonAtExit(fConfigWidget->fKillDaemonOnExit->isChecked());
 	KPilotSettings::setQuitAfterSync(fConfigWidget->fQuitAfterSync->isChecked());
-
+#if 0
 	/* Viewers tab */
 	KPilotSettings::setInternalEditors( fConfigWidget->fInternalEditors->isChecked());
 	KPilotSettings::setShowSecrets(fConfigWidget->fUseSecret->isChecked());
 	KPilotSettings::setAddressDisplayMode(fConfigWidget->fAddressGroup->id(
 		fConfigWidget->fAddressGroup->selected()));
 	KPilotSettings::setUseKeyField(fConfigWidget->fUseKeyField->isChecked());
-
+#endif
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::self()->writeConfig();
 	unmodified();

@@ -25,6 +25,8 @@ kcm_kpilot_la_SOURCES = pilotDaemonDCOP.stub  kpilotConfigDialog.cc \
 	kpilotConfigDialog_base.ui \
 	kpilotConfigDialog2_base.ui \
 	kpilotConfigDialog3_base.ui \
+	kpilotConfigDialog_viewers.ui \
+	kpilotConfigDialog_backup.ui \
 	conduitConfigDialog.cc \
 	kpilotProbeDialog.cc \
 	kpilotConfigWizard_base1.ui \

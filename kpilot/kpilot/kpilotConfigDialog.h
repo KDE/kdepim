@@ -33,9 +33,12 @@
 #include "plugin.h"
 
 
-class KPilotConfigWidget;
+// class KPilotConfigWidget;
+class StartExitConfigWidget;
 class SyncConfigWidget;
 class DeviceConfigWidget;
+class ViewersConfigWidget;
+class BackupConfigWidget;
 
 class DeviceConfigPage : public ConduitConfigBase
 {
@@ -63,12 +66,24 @@ private:
 
 class SyncConfigPage : public ConduitConfigBase
 {
-Q_OBJECT
 public:
 	SyncConfigPage( QWidget *, const char * );
 
 protected:
-	virtual bool validate();
+	virtual void load();
+	virtual void commit();
+
+private:
+	SyncConfigWidget *fConfigWidget;
+} ;
+
+class BackupConfigPage : public ConduitConfigBase
+{
+Q_OBJECT
+public:
+	BackupConfigPage( QWidget *, const char * );
+
+protected:
 	virtual void load();
 	virtual void commit();
 
@@ -77,22 +92,33 @@ protected slots:
 	void slotSelectNoRestoreDBs();
 
 private:
-	SyncConfigWidget *fConfigWidget;
+	BackupConfigWidget *fConfigWidget;
 } ;
 
-class KPilotConfigPage : public ConduitConfigBase
+class StartExitConfigPage : public ConduitConfigBase
 {
-Q_OBJECT
 public:
-	KPilotConfigPage( QWidget *, const char * );
+	StartExitConfigPage( QWidget *, const char * );
 
 protected:
-	virtual bool validate();
 	virtual void load();
 	virtual void commit();
 
 private:
-	KPilotConfigWidget *fConfigWidget;
+	StartExitConfigWidget *fConfigWidget;
+} ;
+
+class ViewersConfigPage : public ConduitConfigBase
+{
+public:
+	ViewersConfigPage( QWidget *, const char * );
+
+protected:
+	virtual void load();
+	virtual void commit();
+
+private:
+	ViewersConfigWidget *fConfigWidget;
 } ;
 
 #endif

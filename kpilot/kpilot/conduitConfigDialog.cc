@@ -379,10 +379,21 @@ void ConduitConfigWidget::fillLists()
 
 
 	// Create entries under general.
+#define CE(a,b,c) q = new QListViewItem(general,a) ; \
+	q->setText(CONDUIT_COMMENT,b) ; \
+	q->setText(CONDUIT_LIBRARY,c) ;
+
+	q = new QListViewItem(general, i18n("Startup and Exit") );
+	q->setText(CONDUIT_COMMENT,
+		i18n("Behavior at startup and exit.") );
+	q->setText(CONDUIT_LIBRARY, CSL1("general_startexit") );
+
 	q = new QListViewItem(general, i18n("Viewers") );
 	q->setText(CONDUIT_COMMENT,
 		i18n("Viewer settings.") );
 	q->setText(CONDUIT_LIBRARY, CSL1("general_view") );
+
+	CE(i18n("Backup"),i18n("Special settings for backup."),CSL1("general_backup"));
 
 	q = new QListViewItem(general, i18n("HotSync") );
 	q->setText(CONDUIT_COMMENT,
@@ -394,7 +405,7 @@ void ConduitConfigWidget::fillLists()
 		i18n("Hardware settings and startup and exit options.") );
 	q->setText(CONDUIT_LIBRARY, CSL1("general_setup") );
 
-
+#undef CE
 
 
 	// List of installed (enabled) actions and conduits.
@@ -468,6 +479,36 @@ static void dumpConduitInfo(const KLibrary *lib)
 	DEBUGKPILOT << "Plugin id      = " << PluginUtility::pluginVersionString(lib) << endl;
 }
 
+static QObject *handleGeneralPages(QWidget *w, QListViewItem *p)
+{
+	QObject *o = 0L;
+
+	QString s = p->text(CONDUIT_LIBRARY) ;
+
+	if (s.startsWith(CSL1("general_setup")))
+	{
+		o = new DeviceConfigPage( w, "generalSetup" );
+	}
+	else if (s.startsWith(CSL1("general_sync")))
+	{
+		o = new SyncConfigPage( w, "syncSetup" );
+	}
+	else if (s.startsWith(CSL1("general_view")))
+	{
+		o = new ViewersConfigPage( w, "viewSetup" );
+	}
+	else if (s.startsWith(CSL1("general_startexit")))
+	{
+		o = new StartExitConfigPage(w,"startSetup");
+	}
+	else if (s.startsWith(CSL1("general_backup")))
+	{
+		o = new BackupConfigPage(w,"backupSetup");
+	}
+
+	return o;
+}
+
 void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 {
 	FUNCTIONSETUP;
@@ -533,17 +574,9 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 	QObject *o = 0L;
 
 	// Page 4: General setup
-	if (p->text(CONDUIT_LIBRARY).startsWith(CSL1("general_setup")))
+	if (p->text(CONDUIT_LIBRARY).startsWith(CSL1("general_")))
 	{
-		o = new DeviceConfigPage( fStack, "generalSetup" );
-	}
-	else if (p->text(CONDUIT_LIBRARY).startsWith(CSL1("general_sync")))
-	{
-		o = new SyncConfigPage( fStack, "syncSetup" );
-	}
-	else if (p->text(CONDUIT_LIBRARY).startsWith(CSL1("general_view")))
-	{
-		o = new KPilotConfigPage( fStack, "syncSetup" );
+		o = handleGeneralPages(fStack,p);
 	}
 	else
 	{
