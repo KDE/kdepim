@@ -90,7 +90,7 @@ EmpathMainWindow::EmpathMainWindow()
         return;
     }
 
-    setView(browser_->widget());
+    setCentralWidget(browser_->widget());
     createGUI(browser_);
 
     show();
