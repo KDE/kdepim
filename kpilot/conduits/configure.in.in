@@ -117,7 +117,8 @@ NOTFOUND) AC_MSG_RESULT(searched but not found)
     AC_MSG_WARN([KPILOT: MAL headers or library not found. AvantGo conduit will not be compiled.])
     AC_MSG_WARN([KPILOT: Download libmal>=0.20 from http://jasonday.home.att.net/code/libmal/])
   else
-    AC_DEFINE_UNQUOTED(HAVE_LIBMAL, 1, [Define if you have MAL libraries])
+    AC_DEFINE(HAVE_LIBMAL, 1, [Define if you have MAL libraries])
+    HAVE_LIBMAL=1
     AC_MSG_RESULT($msg)
   fi
   ;;
