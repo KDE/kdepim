@@ -1,4 +1,5 @@
 * Note: Lines starting with a # are my comments - Cornelius
+* Note: Lines starting with a "z" are my comments - Zack :)
 
 Misc:
 =====
@@ -12,7 +13,38 @@ Misc:
   Idea: Let the part send a description of their folders and reaction to calls
   as XML, similar to XMLGUI
 
-# Is a folder tree really the right tool to represent events, todos or contacts?
+# Is a folder tree really the right tool to represent events, todos or
+  contacts?
+
+z I think so. Applications could send the root of their tree to
+z Kaplan so that the interface looks like
+
+- Mail
+  |    \
+  |     - Local Folders
+  |                   \
+  |                    Inbox
+  |                    |
+  |                    Thrash
+  |                    |
+  |                    Sent
+- Notes
+  |    \
+  |     Notes 1
+  |     |
+  |     Notes 2
+  |
+  - Events
+          \
+           Event 1
+           |
+           Event 2
+
+z which is not that bad. The question would be how to render the tree
+z on the Kaplan side while keeping the items on the parts side ( because
+z e.g. KMails hold custom pixmaps for the folders which had to be
+z displayed in the Kaplan tree). 
+
 
 - Toolbar Items
   The KParts Technology only provides actions for the current part. It might be
@@ -38,6 +70,16 @@ Communication/Interaction:
 # parts could be loaded in the background based on usage patterns. Kaplan could
 # remeber which parts were used at the last session and load them in the
 # background after loading the initial part to be shown at startup.
+
+z This idea seems to be similar to Microsoft's
+z hide-unused-item-in-the-menu strategy. But it probably mess up
+z kaddressbook integration. Although not used during every session
+z this part is needed and should be always loaded. This strategy
+z would be great for could-to-come parts, like a summary part.
+z Background loading of parts is OK. The idea is simple : load the
+z last used part on startup. Make sure its loading finishes and then
+z load the rest once the user can already interact with the last used
+z loaded part.
 
 - DCOP is too slow, internal communication should be handled via a dedicated
   interface, communication with external applications (i.e. knotes) should be
