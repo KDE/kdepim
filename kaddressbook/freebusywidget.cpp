@@ -28,6 +28,8 @@
 #include <klocale.h>
 #include <kstandarddirs.h>
 
+#include <libkcal/freebusyurlstore.h>
+
 #include "freebusywidget.h"
 
 FreeBusyWidget::FreeBusyWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
@@ -56,9 +58,7 @@ void FreeBusyWidget::loadContact( KABC::Addressee *addr )
   if ( addr->preferredEmail().isEmpty() )
     return;
 
-  KConfig config( locateLocal( "data", "korganizer/freebusyurls" ) );
-  config.setGroup( addr->preferredEmail() );  
-  mURL->setURL( config.readEntry( "url" ) );
+  mURL->setURL( KCal::FreeBusyUrlStore::self()->readUrl( addr->preferredEmail() ) );
 }
 
 void FreeBusyWidget::storeContact( KABC::Addressee *addr )
@@ -66,10 +66,8 @@ void FreeBusyWidget::storeContact( KABC::Addressee *addr )
   if ( addr->preferredEmail().isEmpty() )
     return;
 
-  KConfig config( locateLocal( "data", "korganizer/freebusyurls" ) );
-  config.setGroup( addr->preferredEmail() );  
-  config.writeEntry( "url", mURL->url() );
-  config.sync();
+  KCal::FreeBusyUrlStore::self()->writeUrl( addr->preferredEmail(), mURL->url() );
+  KCal::FreeBusyUrlStore::self()->sync();
 }
 
 void FreeBusyWidget::setReadOnly( bool readOnly )
