@@ -36,93 +36,95 @@ FilterEudoraAb::FilterEudoraAb() : Filter(i18n("Import Filter for Eudora Light A
 }
 
 FilterEudoraAb::~FilterEudoraAb()
-{}
+{
+}
 
 void FilterEudoraAb::import(FilterInfo *info)
 {
-QString file;
-QWidget *parent=info->parent();
-FILE   *F;
+  QString file;
+  QWidget *parent=info->parent();
+  FILE   *F;
 
-   if (!kabStart(info)) return;
+  if (!kabStart(info)) return;
 
-   QString dir = QDir::homeDirPath();
- 
-   file=KFileDialog::getOpenFileName(dir,"*.txt *.TXT *.Txt",parent);
-   if (file.length()==0) {
-     info->alert(name(),i18n("No address book chosen"));
-     return;
-   }
-   F=fopen(file.latin1(),"rt");
-   if (F==NULL) {QString msg=i18n("Unable to open file '%1'").arg(file);
-     info->alert(name(),msg);
-     return;
-   }
+  QString dir = QDir::homeDirPath();
 
-   QString from=i18n("Source: "),to=i18n("Destination: ");
-     from+="\t";from+=file;
-     to+="\t";to+=i18n("the KAddressBook");
-     info->from(from);
-     info->to(to);
-     info->current(i18n("Currently converting Eudora Light addresses to address book"));
-     convert(F,info);
-     {int i,N;
-       LINES=keys.size();
-       for(i=0,N=keys.size();i<N;i++) {
+  file=KFileDialog::getOpenFileName(dir,"*.txt *.TXT *.Txt",parent);
+  if (file.length()==0) {
+    info->alert(name(),i18n("No address book chosen"));
+    return;
+  }
+  F=fopen(file.latin1(),"rt");
+  if (F==NULL) {QString msg=i18n("Unable to open file '%1'").arg(file);
+    info->alert(name(),msg);
+    return;
+  }
+
+  QString from=i18n("Source: "),to=i18n("Destination: ");
+  from+="\t";from+=file;
+  to+="\t";to+=i18n("the KAddressBook");
+  info->from(from);
+  info->to(to);
+  info->current(i18n("Currently converting Eudora Light addresses to address book"));
+  convert(F,info);
+  {int i,N;
+    LINES=keys.size();
+    for(i=0,N=keys.size();i<N;i++) {
       /*   printf("%s %s %s %s %s %s\n",keys[i].latin1(),emails[i].latin1(),
-                                   names[i].latin1(),adr[i].latin1(),
-                                   phones[i].latin1(),comments[i].latin1()
-               );
-      */
-         {QString msg=i18n("Adding/Merging '%1' email '%2'").arg(keys[i]).arg(emails[i]);
-           info->log(msg);
-         }
+           names[i].latin1(),adr[i].latin1(),
+           phones[i].latin1(),comments[i].latin1()
+           );
+       */
+      {
+        QString msg=i18n("Adding/Merging '%1' email '%2'").arg(keys[i]).arg(emails[i]);
+        info->log(msg);
+      }
 
-         QString comment;
-           if(adr[i]=="") { comment=comments[i]; }
-           else { comment=adr[i]+"\n"+comments[i]; }
- 
-           kabAddress(info,"Eudora Light",
-                      keys[i],(emails[i]=="") ? QString::null : emails[i],
-                      QString::null,QString::null,QString::null,
-                      (names[i]=="") ? QString::null : names[i],
-                      QString::null,
-                      QString::null,QString::null,
-                      QString::null,QString::null,
-                      QString::null,
-                      QString::null,QString::null,
-                      QString::null,QString::null,
-                      (phones[i]=="") ? QString::null : phones[i],QString::null,
-                      QString::null,QString::null,
-                      QString::null,QString::null,
-                      (comments[i]=="") ? QString::null : comments[i], QString::null
-                     );
+      QString comment;
+      if(adr[i]=="") { comment=comments[i]; }
+      else { comment=adr[i]+"\n"+comments[i]; }
 
-         { float perc=((float) i)/((float) LINES)*100.0;
-             info->overall(perc);
-         }
-       }
-       {QString msg;
-          msg=i18n("Added %1 keys").arg(keys.size());
-          info->log(msg);
-       }
-     }
+      kabAddress(info,"Eudora Light",
+          keys[i],(emails[i]=="") ? QString::null : emails[i],
+          QString::null,QString::null,QString::null,
+          (names[i]=="") ? QString::null : names[i],
+          QString::null,
+          QString::null,QString::null,
+          QString::null,QString::null,
+          QString::null,
+          QString::null,QString::null,
+          QString::null,QString::null,
+          (phones[i].isNull()) ? QString::null : phones[i],QString::null,
+          QString::null,QString::null,
+          QString::null,QString::null,
+          (comments[i].isNull()) ? QString::null : comments[i], QString::null
+          );
 
-   kabStop(info);
-   info->current(i18n("Finished converting Eudora Light addresses to Kab"));
-   fclose(F);
-   info->overall(100.0);
+      { 
+        float perc=((float) i)/((float) LINES)*100.0;
+        info->overall(perc);
+      }
+    }
+    {
+      info->log(i18n("Added %1 keys").arg(keys.size()));
+    }
+  }
+
+  kabStop(info);
+  info->current(i18n("Finished converting Eudora Light addresses to KAddressBook"));
+  fclose(F);
+  info->overall(100.0);
 }
 
 #define LINELEN 10240
 
 void FilterEudoraAb::convert(FILE *f,FilterInfo *info)
 {
-QString line;
-char _line[LINELEN+1];
-int  i,e;
-int LINE=0;
-float perc;
+  QString line;
+  char _line[LINELEN+1];
+  int  i,e;
+  int LINE=0;
+  float perc;
   while(fgets(_line,LINELEN,f)!=NULL) { LINES+=1; }
   rewind(f);
   while(fgets(_line,LINELEN,f)!=NULL) {
@@ -135,65 +137,63 @@ float perc;
     _line[i]='\0';
     line=_line;
 
-    if (strncmp(line.latin1(),"alias",5)==0) {QString key,email;
-      key=getkey(line);
-      email=getemail(line);
-      e=find(key);
-      keys[e]=key;emails[e]=email;
-      {QString msg=i18n("Reading '%1', email '%2'").arg(key).arg(email);
+    if (line.startsWith("alias")) {
+      QString k = key(line); 
+      e=find(k);
+      keys[e]=k;
+      emails[e]=email(line);
+      {
+        QString msg=i18n("Reading '%1', email '%2'").arg(k).arg(emails[e]);
         info->log(msg);
       }
     }
-    else if (strncmp(line.latin1(),"note",4)==0) { 
-     QString key,name,address,phone,comment;
-      key=getkey(line);
-      comment=getcomment(line);
-      name=get(line,"name");
-      address=get(line,"address");
-      phone=get(line,"phone");
-      
-      e=find(key);
-      keys[e]=key;comments[e]=comment;names[e]=name;
-      adr[e]=address;phones[e]=phone;
+    else if (line.startsWith("note")) { 
+      QString k = key(line); 
+      e=find(k);
+      keys[e]=k;
+      comments[e]=comment(line);
+      names[e]=get(line,"name");
+      adr[e]=get(line, "address");
+      phones[e]=get(line, "phone");
     }
   }
   info->current(100.0);
 }
 
-QString FilterEudoraAb::getkey(QString line)
+QString FilterEudoraAb::key(const QString& line) const
 {
-int b,e;
-QString result="";
- b=line.find('\"',0);if (b==-1) { 
-   b=line.find(' ');
-   if (b==-1) { return result; }
-   b+=1;
-   e=line.find(' ',b);
-   result=line.mid(b,e-b);
-   return result;
- }
- b+=1;
- e=line.find('\"',b);if (e==-1) { return result; }
- result=line.mid(b,e-b);
-return result;
+  int b,e;
+  QString result;
+  b=line.find('\"',0);if (b==-1) { 
+    b=line.find(' ');
+    if (b==-1) { return result; }
+    b+=1;
+    e=line.find(' ',b);
+    result=line.mid(b,e-b);
+    return result;
+  }
+  b+=1;
+  e=line.find('\"',b);if (e==-1) { return result; }
+  result=line.mid(b,e-b);
+  return result;
 }
 
-QString FilterEudoraAb::getemail(QString line)
+QString FilterEudoraAb::email(const QString& line) const
 {
-int b;
-QString result="";
+  int b;
+  QString result;
   b=line.findRev('\"');if (b==-1) { 
     b=line.findRev(' ');if(b==-1) { return result; }
   }
   result=line.mid(b+1);
-return result;
+  return result;
 }
 
-QString FilterEudoraAb::getcomment(QString line)
+QString FilterEudoraAb::comment(const QString& line) const
 {
-int b;
-QString result="";
-unsigned int i;
+  int b;
+  QString result;
+  unsigned int i;
   b=line.findRev('>');if (b==-1) {
     b=line.findRev('\"');if (b==-1) { return result; }
   }
@@ -201,15 +201,15 @@ unsigned int i;
   for(i=0;i<result.length();i++) {
     if (result[i]==CTRL_C) { result[i]='\n'; }
   }
-return result;
+  return result;
 }
 
-QString FilterEudoraAb::get(QString line,QString key)
+QString FilterEudoraAb::get(const QString& line,const QString& key) const
 {
-QString result="";
-QString fd="<"+key+":";
-int b,e;
-unsigned int i;
+  QString result;
+  QString fd="<"+key+":";
+  int b,e;
+  unsigned int i;
   b=line.find(fd);if (b==-1) { return result; }
   b+=fd.length();
   e=line.find('>',b);if (e==-1) { return result; }
@@ -218,11 +218,12 @@ unsigned int i;
   for(i=0;i<result.length();i++) {
     if (result[i]==CTRL_C) { result[i]='\n'; }
   }
-return result;
+  return result;
 }
 
-int FilterEudoraAb::find(QString key)
+int FilterEudoraAb::find(const QString& key) const
 {
   return keys.findIndex(key);
 }
 
+// vim: ts=2 sw=2 et

@@ -29,6 +29,13 @@ class FilterEudoraAb : public Filter
     void import(FilterInfo *info);
     void convert(FILE *f,FilterInfo *info);
 
+  protected:
+    QString get(const QString& line, const QString& key) const;
+    QString comment(const QString& line) const;
+    QString email(const QString& line) const;
+    QString key(const QString& line) const;
+    int     find(const QString& key) const;
+
   private:
     QString CAP;
     int     LINES;
@@ -39,11 +46,6 @@ class FilterEudoraAb : public Filter
     QStringList phones;
     QStringList adr;
     QStringList comments;
-    QString get(QString line,QString key);
-    QString getcomment(QString line);
-    QString getemail(QString line);
-    QString getkey(QString line);
-    int     find(QString key);
 };
 
 #endif
