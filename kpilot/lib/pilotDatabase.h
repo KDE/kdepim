@@ -34,6 +34,7 @@
 #endif
 
 #include <qobject.h>
+#include <qvaluelist.h>
 
 // Handle all time.h variations properly.
 // Required because pi-macros.h sometimes forgets it.

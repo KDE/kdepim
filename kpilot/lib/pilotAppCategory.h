@@ -4,7 +4,13 @@
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
-** See the .cc file for an explanation of what this file is for.
+** The class PilotAppCategory is the base class for "interpretations"
+** of a PilotRecord. This is where the records change from a collction
+** of bits to something with meaning. Subclasses of PilotAppCategory
+** give specific meaning to records from specific databases.
+**
+** Almost everything is inline; as a crufty hack, the non-inline
+** part of this class lives in pilotRecord.cc.
 */
 
 /*
@@ -31,6 +37,8 @@
 // #include <pi-macros.h>
 
 #include "pilotRecord.h"
+
+class QTextCodec;
 
 class PilotAppCategory
 {
@@ -120,6 +128,13 @@ public:
 	void makeSecret() { fAttrs |= dlpRecAttrSecret; } ;
 	void makeDeleted() { fAttrs |= dlpRecAttrDeleted ; } ;
 	bool isModified() const { return fAttrs & dlpRecAttrDirty; }
+
+protected:
+	static QTextCodec *pilotCodec;
+public:
+	static QTextCodec *codec() 
+		{ if (pilotCodec) return pilotCodec; else return createCodec(0L); } ;
+	static QTextCodec *createCodec(const char *);
 };
 
 #endif

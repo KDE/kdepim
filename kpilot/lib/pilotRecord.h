@@ -44,8 +44,8 @@ public:
 	char* getData() const { return fData; }
 	int   getLen() const { return fLen; }
 	void setData(const char* data, int len);
-	int   getAttrib() const { return fAttrib; }
-	void  setAttrib(int attrib) { fAttrib = attrib; }
+	inline int   getAttrib() const { return fAttrib; }
+	inline void  setAttrib(int attrib) { fAttrib = attrib; }
 
 	int   getCat() const { return fCat; }
 	void  setCat(int cat) { fCat = cat; }
@@ -61,11 +61,11 @@ private:
 	unsigned long fID;
 
 public:
-	bool isDeleted() const;
-	bool isSecret() const;
-	bool isArchived() const;
-	void makeDeleted() ;
-	void makeSecret() ;
+	inline bool isDeleted() const { return fAttrib & dlpRecAttrDeleted; };
+	inline bool isSecret() const { return fAttrib & dlpRecAttrSecret; } ;
+	inline bool isArchived() const { return fAttrib & dlpRecAttrArchived; } ;
+	inline void makeDeleted() { fAttrib |= dlpRecAttrDeleted; } ;
+	inline void makeSecret() { fAttrib |= dlpRecAttrSecret; } ;
 };
 
 #endif

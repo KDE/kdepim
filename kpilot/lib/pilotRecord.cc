@@ -2,9 +2,13 @@
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 **
-** This is a wrapper -- and base class -- for pilot-link's general
-** Pilot database structures. It serves as a base class for other
-** classes specialized for a particular database.
+** This is a wrapper for pilot-link's general
+** Pilot database structures. These records are
+*** just collections of bits. See PilotAppCategory
+** for interpreting the bits in a meaningful way.
+**
+** As a crufty hack, the non-inline parts of 
+** PilotAppCategory live in this file as well.
 */
 
 /*
@@ -31,9 +35,13 @@
 
 #include <string.h>
 
-#ifndef _KPILOT_PILOTRECORD_H
-#include "pilotRecord.h"
-#endif
+#include <qtextcodec.h>
+
+// PilotAppCategory includes pilotRecord and we
+// provide its implementation here as well.
+//
+#include "pilotAppCategory.h"
+
 
 
 static const char *pilotRecord_id =
@@ -93,35 +101,14 @@ void PilotRecord::setData(const char *data, int len)
 	fLen = len;
 }
 
-bool PilotRecord::isArchived() const
+
+/* static */ QTextCodec *PilotAppCategory::pilotCodec = 0L;
+
+static const char *latin1 = "ISO8859-1" ;
+/* static */ QTextCodec *PilotAppCategory::createCodec(const char *p)
 {
-	// FUNCTIONSETUP;
-	return getAttrib() & dlpRecAttrArchived;
-}
-
-bool PilotRecord::isDeleted() const
-{
-	// FUNCTIONSETUP;
-	return getAttrib() & dlpRecAttrDeleted;
-}
-
-bool PilotRecord::isSecret() const
-{
-	// FUNCTIONSETUP;
-	return getAttrib() & dlpRecAttrSecret;
-}
-
-
-void PilotRecord::makeDeleted()
-{
-	FUNCTIONSETUP;
-	fAttrib |= dlpRecAttrDeleted;
-}
-
-
-
-void PilotRecord::makeSecret()
-{
-	FUNCTIONSETUP;
-	fAttrib |= dlpRecAttrSecret;
+	if (!p) p=latin1;
+	QTextCodec *q = QTextCodec::codecForName(p);
+	if (!q) q = QTextCodec::codecForName(latin1);
+	return q;
 }
