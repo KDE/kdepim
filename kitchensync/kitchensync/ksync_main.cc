@@ -78,9 +78,6 @@ int main(int argc,  char* argv[] )
   aboutData.addCredit("Philib Bundell",
                       I18N_NOOP("For being such a nice guy."),
                       "pb@gnu.org" );
-  aboutData.addCredit("Old Europe",
-                      I18N_NOOP("Teaching morality to us."),
-                      0, "http://www.alteseuropa.de/" );
 
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options );
