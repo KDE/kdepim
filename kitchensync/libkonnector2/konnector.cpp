@@ -24,11 +24,18 @@
 
 #include "konnectorinfo.h"
 
+#include <kmdcodec.h>
+#include <kdebug.h>
+
+#include <qdir.h>
+
 using namespace KSync;
 
 Konnector::Konnector( const KConfig *config )
     : KRES::Resource( config )
 {
+  /* default storage path */
+  m_sPath = QDir::homeDirPath() + "/.kitchensync/meta/";
 }
 
 Konnector::~Konnector()
@@ -73,6 +80,51 @@ void Konnector::error( const Error& err )
 QStringList Konnector::builtIn() const
 {
     return QStringList();
+}
+
+QString Konnector::storagePath()const
+{
+  return m_sPath;
+}
+
+void Konnector::setStoragePath( const QString& path )
+{
+  m_sPath = path;
+  emit storagePathChanged( m_sPath );
+}
+
+
+/**
+ * Generate a MD5SUM from a QString. The intended use is with
+ * with storagePath() + "/" + generateMD5Sum(path) + "some_name.log"
+ * to really have unique identifiers
+ *
+ * @return a MD5SUM for the name
+ */
+QString Konnector::generateMD5Sum( const QString& base) {
+  KMD5 sum(base.local8Bit() );
+  QString str = QString::fromLatin1( sum.hexDigest().data() );
+
+  return str;
+}
+
+/**
+ * Remove SyncEntry::wasRemoved() itrems from the Syncee
+ *
+ * @param syn The Syncee to manipulate
+ */
+void Konnector::purgeRemovedEntries( Syncee* sync) {
+  QPtrList<SyncEntry> lst = sync->removed();
+  SyncEntry* entry;
+
+  for (entry = lst.first(); entry; entry = lst.next() ) {
+    kdDebug() << "purgeRemoved Entries " << entry->id() << " " << entry->name() << endl;
+    sync->removeEntry( entry );
+  }
+
+
+  lst.setAutoDelete( true );
+  lst.clear();
 }
 
 #include "konnector.moc"

@@ -55,7 +55,9 @@ class Konnector : public KRES::Resource
     Q_OBJECT
   public:
     typedef QPtrList<Konnector> List;
-  
+    static QString generateMD5Sum( const QString& );
+    static void purgeRemovedEntries( Syncee* );
+
     /**
       Construct Konnector from information in config file.
     */
@@ -97,6 +99,24 @@ class Konnector : public KRES::Resource
     */
     virtual bool writeSyncees() = 0;
 
+    /**
+     *
+     * If a Konnector needs to store permanent data, such as timestamps using
+     * the KSync::SyncHistory it'll use this path as base.
+     *
+     * @return Return the Base-Path to be used for permanent storage
+     * @todo FIXME verb in name
+     */
+    QString storagePath()const;
+
+    /**
+     *
+     * Set the path to where the Konnector should save its data
+     * to restore the SyncHistory on next sync.
+     * This is normally set by the part that does the syncing
+     */
+    void setStoragePath(const QString& path );
+
   signals:
     /**
       Emitted when Syncee list becomes available as response to
@@ -119,6 +139,11 @@ class Konnector : public KRES::Resource
       Emitted when an error occurs during write.
     */
     void synceeWriteError( Konnector * );
+
+    /**
+     * Emitted when the sourcePath was changed
+     */
+    void storagePathChanged( const QString& path );
 
   public:
     /**
@@ -162,6 +187,7 @@ class Konnector : public KRES::Resource
 
   private:
     QStringList m_resources;
+    QString m_sPath;
     bool m_isCon : 1;
 };
 
