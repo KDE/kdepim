@@ -339,7 +339,7 @@ KNotesConduit::readConfig()
 void
 KNotesConduit::doSync()
 {
-	FUNCTIONSETUP;
+	EFUNCTIONSETUP;
 
 	readConfig();
 
@@ -357,17 +357,32 @@ KNotesConduit::doSync()
 			.arg(newCount)
 			.arg(oldCount);
 		addSyncLogMessage(msg.local8Bit());
-#ifdef DEBUG
-		if (debug_level & SYNC_MAJOR)
-		{
-			kdDebug() << fname
-				<< ": "
-				<< msg
-				<< endl;
-		}
-#endif
+
+		DEBUGCONDUIT << fname
+			<< ": "
+			<< msg
+			<< endl;
 	}
 
+	DCOPClient *dcopptr = KApplication::kApplication()->dcopClient();
+	if (!dcopptr)
+	{
+		kdWarning() << fname
+			<< ": Can't get DCOP client."
+			<< endl;
+		return;
+	}
+
+	QByteArray data;
+	if (dcopptr -> send("knotes",
+		"KNotesIface",
+		"rereadNotesDir()",
+		data))
+	{
+		kdWarning() << fname
+			<< ": Couldn't tell KNotes to re-read notes."
+			<< endl;
+	}
 }
 
 
@@ -795,6 +810,9 @@ KNotesConduit::doTest()
 }
 
 // $Log$
+// Revision 1.6  2000/12/29 14:17:51  adridg
+// Added checksumming to KNotes conduit
+//
 // Revision 1.5  2000/12/22 07:47:04  adridg
 // Added DCOP support to conduitApp. Breaks binary compatibility.
 //
