@@ -1,3 +1,3 @@
 #SUBDIRS = test
 
-SUBDIRS = opie 
+SUBDIRS = opie pv

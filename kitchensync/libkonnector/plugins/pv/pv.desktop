@@ -1,0 +1,15 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=KitchenSync/Konnector
+X-KDE-Library=libpvkonnector
+
+Name=PV Konnector
+Name[cs]=PV konektor
+Name[es]=Konnector PV
+Name[lv]=PV Konnektors
+Name[pt_BR]=Konnector
+Name[sl]=Povezovalnik PV
+Group= PDA
+Vendor = Maurus Erni
+Id=Pocket Viewer
