@@ -64,9 +64,9 @@ class Recurrence
      * or according to whether a time is specified in setRecurStart(). */
     void setFloats(bool f);
     /** Set if recurrence is read-only or can be changed. */
-    void setRecurReadOnly(bool readOnly ) { mRecurReadOnly = readOnly; }
+    void setRecurReadOnly(bool readOnly) { mRecurReadOnly = readOnly; }
     /** Set number of exception dates. */
-    void setRecurExDatesCount(int count ) { if (count >= 0) mRecurExDatesCount = count; }
+    void setRecurExDatesCount(int count) { if (count >= 0) mRecurExDatesCount = count; }
 
     /** Returns the event's recurrence status.  See the enumeration at the top
      * of this file for possible values. */
@@ -79,6 +79,38 @@ class Recurrence
     bool recursAtPure(const QDateTime &) const;
     /** Turns off recurrence for the event. */
     void unsetRecurs();
+
+    /** Returns the date of the next recurrence, after the specified date.
+     * @var preDate the date after which to find the recurrence.
+     * @var last if non-null, *last is set to true if the next recurrence is the
+     * last recurrence, else false.
+     * Reply = date of next recurrence, or invalid date if none.
+     */
+    QDate getNextDate(const QDate& preDate, bool* last = 0) const;
+    /** Returns the date and time of the next recurrence, after the specified date/time.
+     * If the recurrence has no time, the next date after the specified date is returned.
+     * @var preDate the date/time after which to find the recurrence.
+     * @var last if non-null, *last is set to true if the next recurrence is the
+     * last recurrence, else false.
+     * Reply = date/time of next recurrence, or invalid date if none.
+     */
+    QDateTime getNextDateTime(const QDateTime& preDateTime, bool* last = 0) const;
+    /** Returns the date of the last previous recurrence, before the specified date.
+     * @var afterDate the date before which to find the recurrence.
+     * @var last if non-null, *last is set to true if the previous recurrence is the
+     * last recurrence, else false.
+     * Reply = date of previous recurrence, or invalid date if none.
+     */
+    QDate getPreviousDate(const QDate& afterDate, bool* last = 0) const;
+    /** Returns the date and time of the last previous recurrence, before the specified date/time.
+     * If a time later than 00:00:00 is specified and the recurrence has no time, 00:00:00 on
+     * the specified date is returned if that date recurs.
+     * @var afterDate the date/time before which to find the recurrence.
+     * @var last if non-null, *last is set to true if the previous recurrence is the
+     * last recurrence, else false.
+     * Reply = date/time of previous recurrence, or invalid date if none.
+     */
+    QDateTime getPreviousDateTime(const QDateTime& afterDateTime, bool* last = 0) const;
 
     /** Returns frequency of recurrence, in terms of the recurrence time period type. */
     int frequency() const;
@@ -214,6 +246,9 @@ class Recurrence
     bool recursYearlyByPos(const QDate &) const;
     bool recursYearlyByDay(const QDate &) const;
 
+    QDate getNextDateNoTime(const QDate& preDate, bool* last) const;
+    QDate getPreviousDateNoTime(const QDate& afterDate, bool* last) const;
+
     void addMonthlyPos_(short _rPos, const QBitArray &_rDays);
     void setDailySub(short type, int freq, int duration);
     void setYearly_(short type, int freq, int duration);
@@ -241,17 +276,22 @@ class Recurrence
     int  yearlyDayCalcEndDate(QDate& enddate, YearlyDayData&) const;
     int  yearlyDayCalcToDate(const QDate& enddate, YearlyDayData&) const;
     int  yearlyDayCalcNextAfter(QDate& enddate, YearlyDayData&) const;
+
     int  countMonthlyPosDays() const;
-    void getMonthlyPosDays(QValueList<int> &, int daysInMonth,
+    void getMonthlyPosDays(QValueList<int>&, int daysInMonth,
                            int startDayOfWeek) const;
-    bool getMonthlyDayDays(QValueList<int>&, int daysInMonth,
-                           const QValueList<int> *days31 = 0) const;
+    bool getMonthlyDayDays(QValueList<int>&, int daysInMonth) const;
     bool getYearlyMonthMonths(int day, QValueList<int>&,
                               QValueList<int> &leaplist) const;
 
-  private:
-    Recurrence(const Recurrence&);
+    int   getFirstDayInWeek(int startDay, bool useWeekStart = true) const;
+    int   getLastDayInWeek(int endDay, bool useWeekStart = true) const;
+    QDate getFirstDateInMonth(const QDate& earliestDate) const;
+    QDate getLastDateInMonth(const QDate& latestDate) const;
+    QDate getFirstDateInYear(const QDate& earliestDate) const;
+    QDate getLastDateInYear(const QDate& latestDate) const;
 
+  private:
     short recurs;                        // should be one of the enums.
 
     int rWeekStart;                      // day which starts the week, 1 = Monday .. 7 = Sunday
@@ -263,8 +303,8 @@ class Recurrence
     QPtrList<int> rMonthDays;            // list of days during a month on
                                          // which the event recurs
 
-    QPtrList<int> rYearNums;             // either months/days to recur on
-                                         // for rYearly
+    QPtrList<int> rYearNums;             // either months/days to recur on for rYearly,
+                                         // sorted in numerical order
 
     int rFreq;                           // frequency of period
 
@@ -275,7 +315,7 @@ class Recurrence
     QDateTime mRecurStart;               // date/time of first recurrence
     bool mFloats;                        // the recurrence has no time, just a date
     bool mRecurReadOnly;
-    int mRecurExDatesCount;
+    int  mRecurExDatesCount;             // number of recurrences (in addition to rDuration) which are excluded
 
     // Backwards compatibility for KDE < 3.1.
     uint  mCompatVersion;                // calendar file version for backwards compatibility, or ~0

@@ -431,6 +431,7 @@ void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
     mCompatDuration = _rDuration;
     int weeks = ((mCompatDuration-1+mRecurExDatesCount)*7) + (7 - mRecurStart.date().dayOfWeek());
     QDate end(mRecurStart.date().addDays(weeks * rFreq));
+    rDuration = INT_MAX;    // ensure that weeklyCalc() does its job correctly
     rDuration = weeklyCalc(COUNT_TO_DATE, end);
   } else {
     mCompatDuration = 0;
@@ -529,6 +530,7 @@ void Recurrence::addMonthlyPos_(short _rPos, const QBitArray &_rDays)
     int monthsAhead = (mCompatDuration-1+mRecurExDatesCount) * rFreq;
     int month = mRecurStart.date().month() - 1 + monthsAhead;
     QDate end(mRecurStart.date().year() + month/12, month%12 + 1, 31);
+    rDuration = INT_MAX;    // ensure that recurCalc() does its job correctly
     rDuration = recurCalc(COUNT_TO_DATE, end);
   }
 
@@ -555,6 +557,7 @@ void Recurrence::addMonthlyDay(short _rDay)
     int monthsAhead = (mCompatDuration-1+mRecurExDatesCount) * rFreq;
     int month = mRecurStart.date().month() - 1 + monthsAhead;
     QDate end(mRecurStart.date().year() + month/12, month%12 + 1, 31);
+    rDuration = INT_MAX;    // ensure that recurCalc() does its job correctly
     rDuration = recurCalc(COUNT_TO_DATE, end);
   }
 
@@ -624,11 +627,153 @@ void Recurrence::addYearlyNum(short _rNum)
     // rDuration was set to the number of time periods to recur.
     // Convert this to the number of occurrences.
     QDate end(mRecurStart.date().year() + (mCompatDuration-1+mRecurExDatesCount)*rFreq, 12, 31);
+    rDuration = INT_MAX;    // ensure that recurCalc() does its job correctly
     rDuration = recurCalc(COUNT_TO_DATE, end);
   }
 
   if (mParent) mParent->updated();
 }
+
+
+QDateTime Recurrence::getNextDateTime(const QDateTime& preDateTime, bool* last) const
+{
+  int freq;
+  switch (recurs)
+  {
+    case rMinutely:
+      freq = rFreq * 60;
+      break;
+    case rHourly:
+      freq = rFreq * 3600;
+      break;
+    case rDaily:
+    case rWeekly:
+    case rMonthlyPos:
+    case rMonthlyDay:
+    case rYearlyMonth:
+    case rYearlyDay:
+    case rYearlyPos: {
+      QDate preDate = preDateTime.date();
+      if (!mFloats && mRecurStart.time() > preDateTime.time())
+        preDate.addDays(-1);
+      return QDateTime(getNextDate(preDate, last), mRecurStart.time());
+    }
+    default:
+      return QDateTime();
+  }
+
+  // It's a sub-daily recurrence
+  if (last)
+    *last = false;
+  if (preDateTime < mRecurStart)
+    return mRecurStart;
+  int count = mRecurStart.secsTo(preDateTime) / freq + 2;
+  if (rDuration > 0) {
+    if (count > rDuration)
+      return QDateTime();
+    if (last && count == rDuration)
+      *last = true;
+  }
+  QDateTime endtime = mRecurStart.addSecs((count - 1)*freq);
+  if (rDuration == 0) {
+    if (endtime > rEndDateTime)
+      return QDateTime();
+    if (last && endtime == rEndDateTime)
+      *last = true;
+  }
+  return endtime;
+}
+
+QDate Recurrence::getNextDate(const QDate& preDate, bool* last) const
+{
+  switch (recurs)
+  {
+    case rMinutely:
+    case rHourly:
+      return getNextDateTime(QDateTime(preDate, QTime(23,59,59)), last).date();
+    case rDaily:
+    case rWeekly:
+    case rMonthlyPos:
+    case rMonthlyDay:
+    case rYearlyMonth:
+    case rYearlyDay:
+    case rYearlyPos:
+      return getNextDateNoTime(preDate, last);
+    default:
+      return QDate();
+  }
+}
+
+
+QDateTime Recurrence::getPreviousDateTime(const QDateTime& afterDateTime, bool* last) const
+{
+  int freq;
+  switch (recurs)
+  {
+    case rMinutely:
+      freq = rFreq * 60;
+      break;
+    case rHourly:
+      freq = rFreq * 3600;
+      break;
+    case rDaily:
+    case rWeekly:
+    case rMonthlyPos:
+    case rMonthlyDay:
+    case rYearlyMonth:
+    case rYearlyDay:
+    case rYearlyPos: {
+      QDate afterDate = afterDateTime.date();
+      if (!mFloats && mRecurStart.time() < afterDateTime.time())
+        afterDate.addDays(1);
+      return QDateTime(getPreviousDate(afterDate, last), mRecurStart.time());
+    }
+    default:
+      return QDateTime();
+  }
+
+  // It's a sub-daily recurrence
+  if (last)
+    *last = false;
+  if (afterDateTime <= mRecurStart)
+    return QDateTime();
+  int count = (mRecurStart.secsTo(afterDateTime) - 1) / freq + 1;
+  if (rDuration > 0) {
+    if (count > rDuration)
+      count = rDuration;
+    if (last && count == rDuration)
+      *last = true;
+  }
+  QDateTime endtime = mRecurStart.addSecs((count - 1)*freq);
+  if (rDuration == 0) {
+    if (endtime > rEndDateTime)
+      endtime = rEndDateTime;
+    if (last && endtime == rEndDateTime)
+      *last = true;
+  }
+  return endtime;
+}
+
+QDate Recurrence::getPreviousDate(const QDate& afterDate, bool* last) const
+{
+  switch (recurs)
+  {
+    case rMinutely:
+    case rHourly:
+      return getPreviousDateTime(QDateTime(afterDate, QTime(0,0,0)), last).date();
+    case rDaily:
+    case rWeekly:
+    case rMonthlyPos:
+    case rMonthlyDay:
+    case rYearlyMonth:
+    case rYearlyDay:
+    case rYearlyPos:
+      return getPreviousDateNoTime(afterDate, last);
+    default:
+      return QDate();
+  }
+}
+
 
 /***************************** PROTECTED FUNCTIONS ***************************/
 
@@ -808,6 +953,196 @@ bool Recurrence::recursYearlyByDay(const QDate &qd) const
   return false;
 }
 
+/* Get the date of the next recurrence, after the specified date.
+ * If 'last' is non-null, '*last' is set to true if the next recurrence is the
+ * last recurrence, else false.
+ * Reply = date of next recurrence, or invalid date if none.
+ */
+QDate Recurrence::getNextDateNoTime(const QDate& preDate, bool* last) const
+{
+  if (last)
+    *last = false;
+  QDate dStart = mRecurStart.date();
+  if (preDate < dStart)
+    return dStart;
+  QDate earliestDate = preDate.addDays(1);
+  QDate nextDate;
+  int endCount = 0;
+  if (rDuration > 0)
+    endCount = (rDuration - 1 + mRecurExDatesCount) * rFreq;
+
+  switch (recurs) {
+    case rDaily:
+      nextDate = dStart.addDays((dStart.daysTo(preDate)/rFreq + 1) * rFreq);
+      break;
+
+    case rWeekly: {
+      QDate start = dStart.addDays(1 - dStart.dayOfWeek());   // start of week for dStart
+      int earliestDayOfWeek = earliestDate.dayOfWeek();
+      int weeksAhead = start.daysTo(earliestDate) / 7;
+      int notThisWeek = weeksAhead % rFreq;    // zero if this week is a recurring week
+      weeksAhead -= notThisWeek;               // latest week which recurred
+      int weekday = 0;
+      // First check for any remaining day this week, if this week is a recurring week
+      if (!notThisWeek)
+        weekday = getFirstDayInWeek(earliestDayOfWeek);
+      // Check for a day in the next scheduled week
+      if (!weekday  &&  earliestDayOfWeek > 1)
+        weekday = getFirstDayInWeek(rWeekStart) + rFreq*7;
+      if (weekday)
+        nextDate = start.addDays(weeksAhead*7 + weekday - 1);
+      break;
+    }
+    case rMonthlyDay:
+    case rMonthlyPos: {
+      int startYear  = dStart.year();
+      int startMonth = dStart.month();     // 1..12
+      int earliestYear = earliestDate.year();
+      int monthsAhead = (earliestYear - startYear)*12 + earliestDate.month() - startMonth;
+      int notThisMonth = monthsAhead % rFreq;    // zero if this month is a recurring month
+      monthsAhead -= notThisMonth;               // latest month which recurred
+      // Check for the first later day in the current month
+      if (!notThisMonth)
+        nextDate = getFirstDateInMonth(earliestDate);
+      if (!nextDate.isValid()  &&  earliestDate.day() > 1) {
+        // Check for a day in the next scheduled month
+        int months = startMonth - 1 + monthsAhead + rFreq;
+        nextDate = getFirstDateInMonth(QDate(startYear + months/12, months%12 + 1, 1));
+      }
+      break;
+    }
+    case rYearlyMonth:
+    case rYearlyPos:
+    case rYearlyDay: {
+      int startYear  = dStart.year();
+      int yearsAhead = earliestDate.year() - startYear;
+      int notThisYear = yearsAhead % rFreq;   // zero if this year is a recurring year
+      yearsAhead -= notThisYear;              // latest year which recurred
+      // Check for the first later date in the current year
+      if (!notThisYear)
+        nextDate = getFirstDateInYear(earliestDate);
+      // Check for a date in the next scheduled year
+      if (!nextDate.isValid()  &&  earliestDate.dayOfYear() > 1)
+        nextDate = getFirstDateInYear(QDate(startYear + yearsAhead + rFreq, 1, 1));
+      break;
+    }
+    case rNone:
+    default:
+      return QDate();
+  }
+
+  if (nextDate.isValid()) {
+    // Check that the date found is within the range of the recurrence
+    QDate end = endDate();
+    if (nextDate > end)
+      return QDate();
+    if (last  &&  nextDate == end)
+      *last = true;
+  }
+  return nextDate;
+}
+
+/* Get the date of the last previous recurrence, before the specified date.
+ * Reply = date of previous recurrence, or invalid date if none.
+ */
+QDate Recurrence::getPreviousDateNoTime(const QDate& afterDate, bool* last) const
+{
+  if (last)
+    *last = false;
+  QDate dStart = mRecurStart.date();
+  QDate latestDate = afterDate.addDays(-1);
+  if (latestDate < dStart)
+    return QDate();
+  QDate prevDate;
+  int endCount = 0;
+  if (rDuration > 0)
+    endCount = (rDuration - 1 + mRecurExDatesCount) * rFreq;
+
+  switch (recurs) {
+    case rDaily:
+      prevDate = dStart.addDays((dStart.daysTo(latestDate) / rFreq) * rFreq);
+      break;
+
+    case rWeekly: {
+      QDate start = dStart.addDays(1 - dStart.dayOfWeek());   // start of week for dStart
+      int latestDayOfWeek = latestDate.dayOfWeek();
+      int weeksAhead = start.daysTo(latestDate) / 7;
+      int notThisWeek = weeksAhead % rFreq;    // zero if this week is a recurring week
+      weeksAhead -= notThisWeek;               // latest week which recurred
+      int weekday = 0;
+      // First check for any previous day this week, if this week is a recurring week
+      if (!notThisWeek)
+        weekday = getLastDayInWeek(latestDayOfWeek);
+      // Check for a day in the previous scheduled week
+      if (!weekday) {
+        int weekEnd = (rWeekStart + 5)%7 + 1;
+        if (latestDayOfWeek < weekEnd) {
+          if (!notThisWeek)
+            weeksAhead -= rFreq;
+          weekday = getLastDayInWeek(weekEnd);
+        }
+      }
+      if (weekday)
+        prevDate = start.addDays(weeksAhead*7 + weekday - 1);
+      break;
+    }
+    case rMonthlyDay:
+    case rMonthlyPos: {
+      int startYear  = dStart.year();
+      int startMonth = dStart.month();     // 1..12
+      int latestYear = latestDate.year();
+      int monthsAhead = (latestYear - startYear)*12 + latestDate.month() - startMonth;
+      int notThisMonth = monthsAhead % rFreq;    // zero if this month is a recurring month
+      monthsAhead -= notThisMonth;               // latest month which recurred
+      // Check for the last earlier day in the current month
+      if (!notThisMonth)
+        prevDate = getLastDateInMonth(latestDate);
+      if (!prevDate.isValid()  &&  latestDate.day() < latestDate.daysInMonth()) {
+        // Check for a day in the previous scheduled month
+        if (!notThisMonth)
+          monthsAhead -= rFreq;
+        int months = startMonth + monthsAhead;   // get the month after the one that recurs
+        prevDate = getLastDateInMonth(QDate(startYear + months/12, months%12 + 1, 1).addDays(-1));
+      }
+      break;
+    }
+    case rYearlyMonth:
+    case rYearlyPos:
+    case rYearlyDay: {
+      int startYear  = dStart.year();
+      int yearsAhead = latestDate.year() - startYear;
+      int notThisYear = yearsAhead % rFreq;   // zero if this year is a recurring year
+      yearsAhead -= notThisYear;              // latest year which recurred
+      // Check for the first later date in the current year
+      if (!notThisYear)
+        prevDate = getLastDateInYear(latestDate);
+      if (!prevDate.isValid()  &&  latestDate.dayOfYear() < latestDate.daysInYear()) {
+        // Check for a date in the next scheduled year
+        if (!notThisYear)
+          yearsAhead -= rFreq;
+        prevDate = getLastDateInYear(QDate(startYear + yearsAhead, 12, 31));
+      }
+      break;
+    }
+    case rNone:
+    default:
+      return QDate();
+  }
+
+  if (prevDate.isValid()) {
+    // Check that the date found is within the range of the recurrence
+    if (prevDate < dStart)
+      return QDate();
+    QDate end = endDate();
+    if (prevDate >= end) {
+      if (last)
+        *last = true;
+      return end;
+    }
+  }
+  return prevDate;
+}
+
 void Recurrence::setDailySub(short type, int freq, int duration)
 {
   recurs = type;
@@ -851,11 +1186,11 @@ int Recurrence::recurCalc(PeriodFunc func, QDateTime& endtime) const
       break;
     case COUNT_TO_DATE:
       // Count recurrences up to and including the specified date/time.
-      // If the specified date/time is after the configured end of the recurrence,
-      // the recurrence end is ignored and counting continues past it.
       if (endtime < mRecurStart)
         return 0;
-      if (!mFloats && mRecurStart.time() > endtime.time())
+      if (rDuration == 0 && endtime > rEndDateTime)
+        enddate = rEndDateTime.date();
+      else if (!mFloats && mRecurStart.time() > endtime.time())
         enddate.addDays(-1);
       break;
     case NEXT_AFTER_DATE:
@@ -941,10 +1276,12 @@ int Recurrence::recurCalc(PeriodFunc func, QDate& enddate) const
       break;
     case COUNT_TO_DATE:
       // Count recurrences up to and including the specified date.
-      // If the specified date is after the configured end of the recurrence,
-      // the recurrence end is ignored and counting continues past it.
       if (enddate < mRecurStart.date())
         return 0;
+      if (rDuration == 0 && enddate > rEndDateTime.date()) {
+        enddate = rEndDateTime.date();
+        endtime.setDate(enddate);
+      }
       break;
     case NEXT_AFTER_DATE:
       if (enddate < mRecurStart.date()) {
@@ -1248,7 +1585,7 @@ struct Recurrence::MonthlyData {
             if (recurrence->recurs == rMonthlyPos)
               recurrence->getMonthlyPosDays(*days, daysInMonth, startOfMonth.dayOfWeek());
             else if (days->isEmpty())
-              recurrence->getMonthlyDayDays(*days, daysInMonth, &days31);
+              recurrence->getMonthlyDayDays(*days, daysInMonth);
             return days;
     }
     int    yearMonth() const       { return year*12 + month; }
@@ -2375,8 +2712,7 @@ int Recurrence::countMonthlyPosDays() const
 
 // Get the days in this month which recur, in numerical order.
 // Reply = true if day numbers varies from month to month.
-bool Recurrence::getMonthlyDayDays(QValueList<int>& list, int daysInMonth,
-                                   const QValueList<int> *) const
+bool Recurrence::getMonthlyDayDays(QValueList<int>& list, int daysInMonth) const
 {
   list.clear();
   bool variable = false;
@@ -2431,4 +2767,230 @@ bool Recurrence::getYearlyMonthMonths(int day, QValueList<int>& list, QValueList
     }
   }
   return feb29;
+}
+
+/* From the recurrence day of the week list, get the earliest day in the
+ * specified week which is >= the startDay.
+ * Parameters:  startDay = 1..7 (Monday..Sunday)
+ *              useWeekStart = true to end search at day before next rWeekStart
+ *                           = false to search for a full 7 days
+ * Reply = day of the week (1..7), or 0 if none found.
+ */
+int Recurrence::getFirstDayInWeek(int startDay, bool useWeekStart) const
+{
+  int last = ((useWeekStart ? rWeekStart : startDay) + 5)%7;
+  for (int i = startDay - 1;  ;  i = (i + 1)%7) {
+    if (rDays.testBit(i))
+      return i + 1;
+    if (i == last)
+      return 0;
+  }
+}
+
+/* From the recurrence day of the week list, get the latest day in the
+ * specified week which is <= the endDay.
+ * Parameters:  endDay = 1..7 (Monday..Sunday)
+ *              useWeekStart = true to end search at rWeekStart
+ *                           = false to search for a full 7 days
+ * Reply = day of the week (1..7), or 0 if none found.
+ */
+int Recurrence::getLastDayInWeek(int endDay, bool useWeekStart) const
+{
+  int last = useWeekStart ? rWeekStart - 1 : endDay%7;
+  for (int i = endDay - 1;  ;  i = (i + 6)%7) {
+    if (rDays.testBit(i))
+      return i + 1;
+    if (i == last)
+      return 0;
+  }
+}
+
+/* From the recurrence monthly day number list or monthly day of week/week of
+ * month list, get the earliest day in the specified month which is >= the
+ * earliestDate.
+ */
+QDate Recurrence::getFirstDateInMonth(const QDate& earliestDate) const
+{
+  int earliestDay = earliestDate.day();
+  int daysInMonth = earliestDate.daysInMonth();
+  switch (recurs) {
+    case rMonthlyDay: {
+      int minday = daysInMonth + 1;
+      for (QPtrListIterator<int> it(rMonthDays);  it.current();  ++it) {
+        int day = *it.current();
+        if (day < 0)
+          day = daysInMonth + day + 1;
+        if (day >= earliestDay  &&  day < minday)
+          minday = day;
+      }
+      if (minday <= daysInMonth)
+        return QDate(earliestDate.addDays(minday - earliestDay));
+      break;
+    }
+    case rMonthlyPos:
+    case rYearlyPos: {
+      QDate monthBegin(earliestDate.addDays(1 - earliestDay));
+      QValueList<int> dayList;
+      getMonthlyPosDays(dayList, daysInMonth, monthBegin.dayOfWeek());
+      for (QValueList<int>::ConstIterator id = dayList.begin();  id != dayList.end();  ++id) {
+        if (*id >= earliestDay)
+          return monthBegin.addDays(*id - 1);
+      }
+      break;
+    }
+  }
+  return QDate();
+}
+
+/* From the recurrence monthly day number list or monthly day of week/week of
+ * month list, get the latest day in the specified month which is <= the
+ * latestDate.
+ */
+QDate Recurrence::getLastDateInMonth(const QDate& latestDate) const
+{
+  int latestDay = latestDate.day();
+  int daysInMonth = latestDate.daysInMonth();
+  switch (recurs) {
+    case rMonthlyDay: {
+      int maxday = -1;
+      for (QPtrListIterator<int> it(rMonthDays);  it.current();  ++it) {
+        int day = *it.current();
+        if (day < 0)
+          day = daysInMonth + day + 1;
+        if (day <= latestDay  &&  day > maxday)
+          maxday = day;
+      }
+      if (maxday > 0)
+        return QDate(latestDate.year(), latestDate.month(), maxday);
+      break;
+    }
+    case rMonthlyPos:
+    case rYearlyPos: {
+      QDate monthBegin(latestDate.addDays(1 - latestDay));
+      QValueList<int> dayList;
+      getMonthlyPosDays(dayList, daysInMonth, monthBegin.dayOfWeek());
+      for (QValueList<int>::ConstIterator id = dayList.fromLast();  id != dayList.end();  --id) {
+        if (*id <= latestDay)
+          return monthBegin.addDays(*id - 1);
+      }
+      break;
+    }
+  }
+  return QDate();
+}
+
+/* From the recurrence yearly month list or yearly day list, get the earliest
+ * month or day in the specified year which is >= the earliestDate.
+ * Note that rYearNums is sorted in numerical order.
+ */
+QDate Recurrence::getFirstDateInYear(const QDate& earliestDate) const
+{
+  QPtrListIterator<int> it(rYearNums);
+  switch (recurs) {
+    case rYearlyMonth: {
+      int day = recurStart().date().day();
+      int earliestYear  = earliestDate.year();
+      int earliestMonth = earliestDate.month();
+      if (earliestDate.day() > day) {
+        // The earliest date is later in the month than the recurrence date,
+        // so skip to the next month before starting to check
+        if (++earliestMonth > 12)
+          return QDate();
+      }
+      for ( ;  it.current();  ++it) {
+        int month = *it.current();
+        if (month >= earliestMonth
+        &&  (day <= 28  ||  QDate::isValid(earliestYear, month, day)))
+          return QDate(earliestYear, month, day);
+      }
+      break;
+    }
+    case rYearlyPos: {
+      QValueList<int> dayList;
+      int earliestYear  = earliestDate.year();
+      int earliestMonth = earliestDate.month();
+      int earliestDay   = earliestDate.day();
+      for ( ;  it.current();  ++it) {
+        int month = *it.current();
+        if (month >= earliestMonth) {
+          QDate monthBegin(earliestYear, month, 1);
+          getMonthlyPosDays(dayList, monthBegin.daysInMonth(), monthBegin.dayOfWeek());
+          for (QValueList<int>::ConstIterator id = dayList.begin();  id != dayList.end();  ++id) {
+            if (*id >= earliestDay)
+              return monthBegin.addDays(*id - 1);
+          }
+          earliestDay = 1;
+        }
+      }
+      break;
+    }
+    case rYearlyDay: {
+      int earliestDay = earliestDate.dayOfYear();
+      for ( ;  it.current();  ++it) {
+        int day = *it.current();
+        if (day >= earliestDay && (day <= 365 || day <= earliestDate.daysInYear()))
+          return earliestDate.addDays(day - earliestDay);
+      }
+      break;
+    }
+  }
+  return QDate();
+}
+
+/* From the recurrence yearly month list or yearly day list, get the latest
+ * month or day in the specified year which is <= the latestDate.
+ * Note that rYearNums is sorted in numerical order.
+ */
+QDate Recurrence::getLastDateInYear(const QDate& latestDate) const
+{
+  QPtrListIterator<int> it(rYearNums);
+  switch (recurs) {
+    case rYearlyMonth: {
+      int day = recurStart().date().day();
+      int latestYear  = latestDate.year();
+      int latestMonth = latestDate.month();
+      if (latestDate.day() > day) {
+        // The latest date is earlier in the month than the recurrence date,
+        // so skip to the previous month before starting to check
+        if (--latestMonth <= 0)
+          return QDate();
+      }
+      for (it.toLast();  it.current();  --it) {
+        int month = *it.current();
+        if (month <= latestMonth
+        &&  (day <= 28  ||  QDate::isValid(latestYear, month, day)))
+          return QDate(latestYear, month, day);
+      }
+      break;
+    }
+    case rYearlyPos: {
+      QValueList<int> dayList;
+      int latestYear  = latestDate.year();
+      int latestMonth = latestDate.month();
+      int latestDay   = latestDate.day();
+      for (it.toLast();  it.current();  --it) {
+        int month = *it.current();
+        if (month <= latestMonth) {
+          QDate monthBegin(latestYear, month, 1);
+          getMonthlyPosDays(dayList, monthBegin.daysInMonth(), monthBegin.dayOfWeek());
+          for (QValueList<int>::ConstIterator id = dayList.fromLast();  id != dayList.end();  --id) {
+            if (*id <= latestDay)
+              return monthBegin.addDays(*id - 1);
+          }
+          latestDay = 31;
+        }
+      }
+      break;
+    }
+    case rYearlyDay: {
+      int latestDay = latestDate.dayOfYear();
+      for (it.toLast();  it.current();  --it) {
+        int day = *it.current();
+        if (day <= latestDay)
+          return latestDate.addDays(day - latestDay);
+      }
+      break;
+    }
+  }
+  return QDate();
 }
