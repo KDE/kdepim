@@ -31,10 +31,11 @@
 */
 
 #include "contact.h"
+#include "resourcekolab.h"
 
 #include <kabc/addressee.h>
+#include <kio/netaccess.h>
 #include <kdebug.h>
-#include "resourcekolab.h"
 #include <qfile.h>
 
 using namespace Kolab;
@@ -841,8 +842,17 @@ void Contact::setFields( const KABC::Addressee* addressee )
     }
   }
 
-  // ### TODO load picture from addressee->photo().url() if !isIntern()
-  setPicture( addressee->photo().data() );
+  QImage photo;
+  if ( !addressee->photo().isIntern() ) {
+    QString tmpFile;
+    if ( KIO::NetAccess::download( addressee->photo().url(), tmpFile, 0 /*no widget known*/ ) ) {
+      photo.load( tmpFile );
+      KIO::NetAccess::removeTempFile( tmpFile );
+    }
+  } else
+    photo = addressee->photo().data();
+
+  setPicture( photo );
 
   // TODO: Unhandled Addressee fields:
   // mailer, timezone, geo, productId, sortString, logo, sound
