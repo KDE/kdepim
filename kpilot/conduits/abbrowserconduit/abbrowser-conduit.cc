@@ -189,7 +189,6 @@ void AbbrowserConduit::showContactEntry(const ContactEntry &abAddress)
      qDebug("\t\tLast name = %s", abAddress.getLastName().latin1());
      qDebug("\t\tFirst name = %s", abAddress.getFirstName().latin1());
      qDebug("\t\tCompany = %s", abAddress.getCompany().latin1());
-     /*
      qDebug("\tJob Title = %s", abAddress.getJobTitle().latin1());
      qDebug("\tNote = %s", abAddress.getNote().latin1());
      qDebug("\tHome phone = %s", abAddress.getHomePhone().latin1());
@@ -198,7 +197,6 @@ void AbbrowserConduit::showContactEntry(const ContactEntry &abAddress)
      qDebug("\tEmail = %s", abAddress.getEmail().latin1());
      qDebug("\tFax = %s", abAddress.getBusinessFax().latin1());
      qDebug("\tPager = %s", abAddress.getPager().latin1());
-     */
      }
 
 
@@ -208,7 +206,7 @@ void AbbrowserConduit::showPilotAddress(const PilotAddress &pilotAddress)
      qDebug("\t\tLast name = %s", pilotAddress.getField(entryLastname));
      qDebug("\t\tFirst name = %s", pilotAddress.getField(entryFirstname));
      qDebug("\t\tCompany = %s", pilotAddress.getField(entryCompany));
-     /*qDebug("\tJob Title = %s", pilotAddress.getField(entryTitle));
+     qDebug("\tJob Title = %s", pilotAddress.getField(entryTitle));
      qDebug("\tNote = %s", pilotAddress.getField(entryNote));
      qDebug("\tHome phone = %s",
 	    pilotAddress.getPhoneField(PilotAddress::eHome));
@@ -222,7 +220,6 @@ void AbbrowserConduit::showPilotAddress(const PilotAddress &pilotAddress)
 	    pilotAddress.getPhoneField(PilotAddress::eFax));
      qDebug("\tPager = %s",
 	    pilotAddress.getPhoneField(PilotAddress::ePager));
-     */
      }
 
 void AbbrowserConduit::_copy(PilotAddress &toPilotAddr,
@@ -331,6 +328,204 @@ void AbbrowserConduit::_addToPalm(ContactEntry &entry)
     _savePilotAddress(pilotAddress, entry);
     }
 
+bool AbbrowserConduit::_conflict(const QString &str1,
+				 const QString &str2,
+				 bool &mergeNeeded, QString &mergedStr) const
+    {
+    mergeNeeded = false;
+    if (str1.isEmpty() && str2.isEmpty())
+	return false;
+    if (str1.isEmpty() || str2.isEmpty())
+	{
+	mergeNeeded = true;
+	if (str1 == QString::null)
+	    mergedStr = str2;
+	else
+	    mergedStr = str1;
+	return false;
+	}
+    if (str1 != str2)
+	return true;
+    return false;
+    }
+
+bool AbbrowserConduit::_smartMerge(PilotAddress &pilotAddress,
+				   ContactEntry &abEntry)
+    {
+    bool mergeNeeded = false;
+    QString mergedStr;
+
+    if (_conflict(pilotAddress.getField(entryLastname),
+		  abEntry.getLastName(), mergeNeeded, mergedStr))
+	return false;
+    if (mergeNeeded)
+	{
+	pilotAddress.setField(entryLastname, mergedStr.latin1());
+	abEntry.setLastName(mergedStr);
+	}
+
+    if (_conflict(pilotAddress.getField(entryFirstname),
+		  abEntry.getFirstName(), mergeNeeded, mergedStr))
+	return false;
+    if (mergeNeeded)
+	{
+	pilotAddress.setField(entryFirstname, mergedStr.latin1());
+	abEntry.setFirstName(mergedStr);
+	}
+
+    if (_conflict(pilotAddress.getField(entryCompany),
+		  abEntry.getCompany(), mergeNeeded, mergedStr))
+	return false;
+    if (mergeNeeded)
+	{
+	pilotAddress.setField(entryCompany, mergedStr.latin1());
+	abEntry.setCompany(mergedStr);
+	}
+
+    if (_conflict(pilotAddress.getField(entryTitle),
+		  abEntry.getJobTitle(), mergeNeeded, mergedStr))
+	return false;
+    if (mergeNeeded)
+	{
+	pilotAddress.setField(entryTitle, mergedStr.latin1());
+	abEntry.setJobTitle(mergedStr);
+	}
+
+    if (_conflict(pilotAddress.getField(entryNote),
+		  abEntry.getNote(), mergeNeeded, mergedStr))
+	return false;
+    if (mergeNeeded)
+	{
+	pilotAddress.setField(entryNote, mergedStr.latin1());
+	abEntry.setNote(mergedStr);
+	}
+
+    if (_conflict(pilotAddress.getPhoneField(PilotAddress::eWork),
+		  abEntry.getBusinessPhone(), mergeNeeded, mergedStr))
+	return false;
+    if (mergeNeeded)
+	{
+	pilotAddress.setPhoneField(PilotAddress::eWork, mergedStr.latin1());
+	abEntry.setBusinessPhone(mergedStr);
+	}
+
+    if (_conflict(pilotAddress.getPhoneField(PilotAddress::eHome),
+		  abEntry.getHomePhone(), mergeNeeded, mergedStr))
+	return false;
+    if (mergeNeeded)
+	{
+	pilotAddress.setPhoneField(PilotAddress::eHome, mergedStr.latin1());
+	abEntry.setHomePhone(mergedStr);
+	}
+
+    if (_conflict(pilotAddress.getPhoneField(PilotAddress::eEmail),
+		  abEntry.getEmail(), mergeNeeded, mergedStr))
+	return false;
+    if (mergeNeeded)
+	{
+	pilotAddress.setPhoneField(PilotAddress::eEmail, mergedStr.latin1());
+	abEntry.setEmail(mergedStr);
+	}
+
+    if (_conflict(pilotAddress.getPhoneField(PilotAddress::eMobile),
+		  abEntry.getMobilePhone(), mergeNeeded, mergedStr))
+	return false;
+    if (mergeNeeded)
+	{
+	pilotAddress.setPhoneField(PilotAddress::eMobile, mergedStr.latin1());
+	abEntry.setMobilePhone(mergedStr);
+	}
+    
+    if (_conflict(pilotAddress.getPhoneField(PilotAddress::eFax),
+		  abEntry.getBusinessFax(), mergeNeeded, mergedStr))
+	return false;
+    if (mergeNeeded)
+	{
+	pilotAddress.setPhoneField(PilotAddress::eFax, mergedStr.latin1());
+	abEntry.setBusinessFax(mergedStr);
+	}
+
+    if (_conflict(pilotAddress.getPhoneField(PilotAddress::ePager),
+		  abEntry.getPager(), mergeNeeded, mergedStr))
+	return false;
+    if (mergeNeeded)
+	{
+	pilotAddress.setPhoneField(PilotAddress::ePager, mergedStr.latin1());
+	abEntry.setPager(mergedStr);
+	}
+
+    ContactEntry::Address *abAddress = abEntry.getHomeAddress();
+    if (_conflict(pilotAddress.getField(entryAddress) ,abAddress->getStreet(),
+					mergeNeeded, mergedStr))
+	{
+	delete abAddress;
+	abAddress = abEntry.getBusinessAddress();
+
+	if (_conflict(pilotAddress.getField(entryAddress) ,
+		      abAddress->getStreet(),mergeNeeded, mergedStr))
+	    {
+	    delete abAddress;
+	    return false;
+	    }
+	}
+    if (mergeNeeded)
+	{
+	pilotAddress.setField(entryAddress, mergedStr.latin1());
+	abAddress->setStreet(mergedStr);
+	}
+    
+    if (_conflict(pilotAddress.getField(entryCity), abAddress->getCity(),
+					mergeNeeded, mergedStr))
+	{
+	delete abAddress;
+	return false;
+	}
+    if (mergeNeeded)
+	{
+	pilotAddress.setField(entryCity, mergedStr.latin1());
+	abAddress->setCity(mergedStr);
+	}
+
+    if (_conflict(pilotAddress.getField(entryState), abAddress->getState(),
+					mergeNeeded, mergedStr))
+	{
+	delete abAddress;
+	return false;
+	}
+    if (mergeNeeded)
+	{
+	pilotAddress.setField(entryState, mergedStr.latin1());
+	abAddress->setState(mergedStr);
+	}
+
+    if (_conflict(pilotAddress.getField(entryZip), abAddress->getZip(),
+					mergeNeeded, mergedStr))
+	{
+	delete abAddress;
+	return false;
+	}
+    if (mergeNeeded)
+	{
+	pilotAddress.setField(entryZip, mergedStr.latin1());
+	abAddress->setZip(mergedStr);
+	}
+
+    if (_conflict(pilotAddress.getField(entryCountry), abAddress->getCountry(),
+					mergeNeeded, mergedStr))
+	{
+	delete abAddress;
+	return false;
+	}
+    if (mergeNeeded)
+	{
+	pilotAddress.setField(entryCountry, mergedStr.latin1());
+	abAddress->setCountry(mergedStr);
+	}
+
+    delete abAddress;
+    return true;
+    }
+
 /** There was a conflict between the two fields; either could be null,
  *  or both have been modified
  */
@@ -339,9 +534,17 @@ void AbbrowserConduit::_handleConflict(PilotAddress *pilotAddress,
     {
     if (pilotAddress && abEntry)
 	{
-	qDebug("AbbrowserConduit::_handleConflict => Both records exist but both were changed");
-	showContactEntry(*abEntry);
-	showPilotAddress(*pilotAddress);
+	if (_smartMerge(*pilotAddress, *abEntry))
+	  {
+	    qDebug("AbbrowserConduit::_handleConflict => Both records exist but both were changed => MERGE done");
+	    //showContactEntry(*abEntry);
+	    }
+	else
+	    { 
+	    qDebug("AbbrowserConduit::_handleConflict => Both records exist but both were changed => conflict, unable to merge");
+	    showPilotAddress(*pilotAddress);
+	    showContactEntry(*abEntry);
+	    }
 	}
     else if (pilotAddress)
 	{
@@ -372,7 +575,7 @@ void AbbrowserConduit::_saveAbEntry(ContactEntry &abEntry)
     // this marks that this field has been synced
     abEntry.setModified(false);
 
-    showContactEntry(abEntry);
+    //showContactEntry(abEntry);
     // save over kdcop to abbrowser
     }
 
@@ -545,11 +748,7 @@ void AbbrowserConduit::doBackup()
 		    _handleConflict(&pilotAddress, abEntry);
 		}
 	    else  // if not found in the abbrowser contacts, add it
-		{
-		ContactEntry newEntry;
-		_copy(newEntry, pilotAddress);
-		_saveAbEntry(newEntry);
-		}
+		_addToAbbrowser(pilotAddress);
 	    }
 	}
     }

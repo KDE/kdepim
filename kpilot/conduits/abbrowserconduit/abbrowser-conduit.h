@@ -70,6 +70,9 @@ class AbbrowserConduit : public BaseConduit
       static void showContactEntry(const ContactEntry &abAddress);
       /** Output to console, for debugging only */
       static void showPilotAddress(const PilotAddress &pilotAddress);
+      bool _conflict(const QString &str1, const QString &str2,
+		     bool &mergeNeeded, QString &mergedStr) const;
+      bool _smartMerge(PilotAddress &pilotAddress, ContactEntry &abEntry);
       
       
       DCOPClient *fDcop;
