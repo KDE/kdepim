@@ -1,0 +1,8 @@
+kpilot: binary-without-manpage conduitKNotes
+kpilot: binary-without-manpage kpilot
+kpilot: binary-without-manpage kpilotDaemon
+kpilot: binary-without-manpage null_conduit
+kpilot: binary-without-manpage pilotListener
+kpilot: binary-without-manpage popmail_conduit
+kpilot: binary-without-manpage todoconduit
+kpilot: binary-without-manpage vcalconduit
