@@ -905,32 +905,41 @@ void KABCore::initActions()
   connect( QApplication::clipboard(), SIGNAL( dataChanged() ),
            SLOT( clipboardDataChanged() ) );
 
+  KAction *action, *settingsAction;
+
   // file menu
   if ( mIsPart ) {
     mActionMail = new KAction( i18n( "&Mail" ), "mail_generic", 0, this,
                                SLOT( sendMail() ), actionCollection(),
                                "kaddressbook_mail" );
-    new KAction( i18n( "&Print" ), "fileprint", CTRL + Key_P, this,
-                 SLOT( print() ), actionCollection(), "kaddressbook_print" );
 
+    action = new KAction( i18n( "&Print" ), "fileprint", CTRL + Key_P, this,
+                          SLOT( print() ), actionCollection(),
+                          "kaddressbook_print" );
   } else {
     mActionMail = KStdAction::mail( this, SLOT( sendMail() ), actionCollection() );
-    KStdAction::print( this, SLOT( print() ), actionCollection() );
+    action = KStdAction::print( this, SLOT( print() ), actionCollection() );
   }
+  mActionMail->setWhatsThis( i18n( "Send a mail to all selected contacts." ) );
+  action->setWhatsThis( i18n( "Print a special number of contacts." ) );
 
   mActionSave = new KAction( i18n( "&Save" ), "filesave", CTRL+Key_S, this,
                              SLOT( save() ), actionCollection(), "file_sync" );
+  mActionSave->setWhatsThis( i18n( "Save all changes of the address book to the storage backend." ) );
 
-  new KAction( i18n( "&New Contact..." ), "filenew", CTRL+Key_N, this,
+  action = new KAction( i18n( "&New Contact..." ), "filenew", CTRL+Key_N, this,
                SLOT( newContact() ), actionCollection(), "file_new_contact" );
+  action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data of a person, including addresses and phonenumbers." ) );
 
-  mActionMailVCard = new KAction(i18n("Mail &vCard..."), "mail_post_to", 0,
+  mActionMailVCard = new KAction( i18n("Mail &vCard..."), "mail_post_to", 0,
                                  this, SLOT( mailVCard() ),
-                                 actionCollection(), "file_mail_vcard");
+                                  actionCollection(), "file_mail_vcard" );
+  mActionMailVCard->setWhatsThis( i18n( "Send a mail with the selected contact as attachment." ) );
 
   mActionEditAddressee = new KAction( i18n( "&Edit Contact..." ), "edit", 0,
                                       this, SLOT( editContact() ),
                                       actionCollection(), "file_properties" );
+  mActionEditAddressee->setWhatsThis( i18n( "Edit a contact<p>You will be presented with a dialog where you can change all data of a person, including addresses and phonenumbers." ) );
 
   // edit menu
   if ( mIsPart ) {
@@ -943,7 +952,7 @@ void KABCore::initActions()
     mActionPaste = new KAction( i18n( "&Paste" ), "editpaste", CTRL + Key_V, this,
                                 SLOT( pasteContacts() ), actionCollection(),
                                 "kaddressbook_paste" );
-    new KAction( i18n( "Select &All" ), CTRL + Key_A, this,
+    action = new KAction( i18n( "Select &All" ), CTRL + Key_A, this,
                  SLOT( selectAllContacts() ), actionCollection(),
                  "kaddressbook_select_all" );
     mActionUndo = new KAction( i18n( "&Undo" ), "undo", CTRL + Key_Z, this,
@@ -956,54 +965,68 @@ void KABCore::initActions()
     mActionCopy = KStdAction::copy( this, SLOT( copyContacts() ), actionCollection() );
     mActionCut = KStdAction::cut( this, SLOT( cutContacts() ), actionCollection() );
     mActionPaste = KStdAction::paste( this, SLOT( pasteContacts() ), actionCollection() );
-    KStdAction::selectAll( this, SLOT( selectAllContacts() ), actionCollection() );
+    action = KStdAction::selectAll( this, SLOT( selectAllContacts() ), actionCollection() );
     mActionUndo = KStdAction::undo( this, SLOT( undo() ), actionCollection() );
     mActionRedo = KStdAction::redo( this, SLOT( redo() ), actionCollection() );
   }
+  mActionCopy->setWhatsThis( i18n( "Copy the currently selected contact(s) to system clipboard in vCard format." ) );
+  mActionCut->setWhatsThis( i18n( "Cuts the currently selected contact(s) to system clipboard in vCard format." ) );
+  mActionPaste->setWhatsThis( i18n( "Paste the previously cut or copied contacts from clipboard." ) );
+  action->setWhatsThis( i18n( "Selects all visible contacts from current view." ) );
+  mActionUndo->setWhatsThis( i18n( "Undoes the last <b>Cut</b>, <b>Copy</b> or <b>Paste</b>." ) );
+  mActionRedo->setWhatsThis( i18n( "Redoes the last <b>Cut</b>, <b>Copy</b> or <b>Paste</b>." ) );
 
   mActionDelete = new KAction( i18n( "&Delete Contact" ), "editdelete",
                                Key_Delete, this, SLOT( deleteContacts() ),
                                actionCollection(), "edit_delete" );
+  mActionDelete->setWhatsThis( i18n( "Delete all selected contacts." ) );
 
   mActionUndo->setEnabled( false );
   mActionRedo->setEnabled( false );
 
   // settings menu
   if ( mIsPart ) {
-    new KAction( i18n( "&Configure KAddressBook..." ), "configure", 0, this,
+    action = new KAction( i18n( "&Configure KAddressBook..." ), "configure", 0, this,
                  SLOT( openConfigDialog() ), actionCollection(),
                  "kaddressbook_configure" );
-    new KAction( i18n( "Configure S&hortcuts..." ), "configure_shortcuts", 0,
+    settingsAction = new KAction( i18n( "Configure S&hortcuts..." ), "configure_shortcuts", 0,
                  this, SLOT( configureKeyBindings() ), actionCollection(),
                  "kaddressbook_configure_shortcuts" );
   } else {
-    KStdAction::preferences( this, SLOT( openConfigDialog() ), actionCollection() );
-    KStdAction::keyBindings( this, SLOT( configureKeyBindings() ), actionCollection() );
+    action = KStdAction::preferences( this, SLOT( openConfigDialog() ), actionCollection() );
+    settingsAction = KStdAction::keyBindings( this, SLOT( configureKeyBindings() ), actionCollection() );
   }
+  action->setWhatsThis( i18n( "You will be presented with a dialog, that offers you all possebilities to configure KAddressBook." ) );
+  settingsAction->setWhatsThis( i18n( "You will be presented with a dialog, where you can configure the application wide shortcuts." ) );
 
   mActionJumpBar = new KToggleAction( i18n( "Show Jump Bar" ), "next", 0,
                                       actionCollection(), "options_show_jump_bar" );
+  mActionJumpBar->setWhatsThis( i18n( "Toggle whether the jump button bar shall be visible." ) );
   connect( mActionJumpBar, SIGNAL( toggled( bool ) ), SLOT( setJumpButtonBarVisible( bool ) ) );
   
   mActionDetails = new KToggleAction( i18n( "Show Details" ), 0, 0,
                                       actionCollection(), "options_show_details" );
+  mActionDetails->setWhatsThis( i18n( "Toggle whether the details page shall be visible." ) );
   connect( mActionDetails, SIGNAL( toggled( bool ) ), SLOT( setDetailsVisible( bool ) ) );
 
   // misc
   // only enable LDAP lookup if we can handle the protocol
   if ( KProtocolInfo::isKnownProtocol( KURL( "ldap://localhost" ) ) ) {
-    new KAction( i18n( "&Lookup Addresses in Directory" ), "find", 0,
+    action = new KAction( i18n( "&Lookup Addresses in Directory" ), "find", 0,
                  this, SLOT( openLDAPDialog() ), actionCollection(),
                  "ldap_lookup" );
+    action->setWhatsThis( i18n( "Search for contacts on a LDAP server<p>You will be presented with a dialog, where you can search for contacts and select the ones you want to add to your local address book." ) );
   }
 
   mActionWhoAmI = new KAction( i18n( "Set Who Am I" ), "personal", 0, this,
                                SLOT( setWhoAmI() ), actionCollection(),
                                "set_personal" );
+  mActionWhoAmI->setWhatsThis( i18n( "Set the personal contact<p>The data of this contact will be used in many other KDE applications, so you don't have to input your personal data several times." ) );
 
   mActionCategories = new KAction( i18n( "Set Categories" ), 0, this,
                                    SLOT( setCategories() ), actionCollection(),
                                    "edit_set_categories" );
+  mActionCategories->setWhatsThis( i18n( "Set the categories for all selected contacts." ) );
 
   clipboardDataChanged();
 

@@ -21,10 +21,11 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include <qcombobox.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qtooltip.h>
-#include <qcombobox.h>
+#include <qwhatsthis.h>
 
 #include <kdialog.h>
 #include <klineedit.h>
@@ -44,12 +45,15 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   layout->addWidget( label );
 
   mSearchText = new KLineEdit( this );
+  QWhatsThis::add( mSearchText, i18n( "The incremental search<p>Enter some text
+  here will start the search for the contact, which matchs the search pattern best. The part of the contact, which will be used for matching, depends on the field selection." ) );
   layout->addWidget( mSearchText );
 
   mFieldCombo = new QComboBox( false, this );
   layout->addWidget( mFieldCombo );
 
   QToolTip::add( mFieldCombo, i18n( "Select Incremental Search Field" ) );
+  QWhatsThis::add( mFieldCombo, i18n( "Here you can choose the field, which shall be used for incremental search." ) );
 
   resize( QSize(420, 50).expandedTo( sizeHint() ) );
 
