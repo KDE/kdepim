@@ -126,7 +126,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
     dup2(perr[1], 2);
     close(perr[1]);
 
-    execl("/bin/sh", "sh", "-c", cmd,  NULL);
+    execl("/bin/sh", "sh", "-c", cmd,  (void *)0);
     _exit(127);
   }
 
@@ -452,7 +452,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
 
     kdDebug(5100) << "pgp cmd = " << gpgcmd << endl;
 
-    execl("/bin/sh", "sh", "-c", gpgcmd,  NULL);
+    execl("/bin/sh", "sh", "-c", gpgcmd,  (void *)0);
     _exit(127);
   }
 
