@@ -16,4 +16,4 @@ devel-pot :
 	$(XGETTEXT) -C --keyword=i18n --keyword=I18N_NOOP -o /tmp/kpilot.po \
 		`find . -name "*.cc"`
 
-include $(top_srcdir)/admin/Doxyfile.am
+include ../admin/Doxyfile.am

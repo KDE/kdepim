@@ -19,4 +19,4 @@ dummy.cpp:
 messages:
 	$(XGETTEXT) calendar/*.cpp core/*.cpp -o $(podir)/libkpimexchange.pot
 
-include $(top_srcdir)/admin/Doxyfile.am
+include ../admin/Doxyfile.am

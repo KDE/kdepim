@@ -3,4 +3,4 @@
 
 SUBDIRS = src profiles
 
-include $(top_srcdir)/admin/Doxyfile.am
+include ../admin/Doxyfile.am

@@ -11,4 +11,4 @@ konsolekalendar_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/konsolekalendar.pot
 
-include $(top_srcdir)/admin/Doxyfile.am
+include ../admin/Doxyfile.am

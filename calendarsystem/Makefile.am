@@ -16,4 +16,4 @@ calendar3_SOURCES = calendar3.cpp  mkdatepicker.cpp mkdatetbl.cpp
 
 METASOURCES = AUTO
 
-include $(top_srcdir)/admin/Doxyfile.am
+include ../admin/Doxyfile.am

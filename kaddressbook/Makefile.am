@@ -72,4 +72,4 @@ KDE_ICON = kaddressbook
 servicetypedir = $(kde_servicetypesdir)
 servicetype_DATA = kaddressbook_extension.desktop kaddressbook_view.desktop
 
-include $(top_srcdir)/admin/Doxyfile.am
+include ../admin/Doxyfile.am
