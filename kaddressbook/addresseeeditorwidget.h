@@ -47,6 +47,7 @@ class EmailEditWidget;
 class GeoWidget;
 class ImageWidget;
 class PhoneEditWidget;
+class SecrecyWidget;
 class SoundWidget;
 
 namespace KPIM
@@ -132,6 +133,7 @@ class AddresseeEditorWidget : public ExtensionWidget
     KLineEdit *mURLEdit;
     KLineEdit *mIMAddressEdit;
     KLineEdit *mCategoryEdit;
+    SecrecyWidget *mSecrecyWidget;
     KSqueezedTextLabel *mNameLabel;
     
     // Tab2

@@ -58,6 +58,7 @@
 #include "kabprefs.h"
 #include "nameeditdialog.h"
 #include "phoneeditwidget.h"
+#include "secrecywidget.h"
 #include "soundwidget.h"
 
 #include "addresseeeditorwidget.h"
@@ -270,6 +271,9 @@ void AddresseeEditorWidget::setupTab1()
   connect( mCategoryEdit, SIGNAL( textChanged( const QString& ) ), 
            SLOT( textChanged( const QString& ) ) );
 
+  mSecrecyWidget = new SecrecyWidget( categoryBox );
+  connect( mSecrecyWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
+
   layout->addMultiCellWidget( categoryBox, 11, 11, 0, 6 );
   
   // Build the layout and add to the tab widget
@@ -473,6 +477,7 @@ void AddresseeEditorWidget::load()
   mGeoWidget->setGeo( mAddressee.geo() );
   mImageWidget->setPhoto( mAddressee.photo() );
   mImageWidget->setLogo( mAddressee.logo() );
+  mSecrecyWidget->setSecrecy( mAddressee.secrecy() );
   mSoundWidget->setSound( mAddressee.sound() );
 
   // Load customs
@@ -510,6 +515,7 @@ void AddresseeEditorWidget::save()
   mAddressee.setPhoto( mImageWidget->photo() );
   mAddressee.setLogo( mImageWidget->logo() );
   mAddressee.setSound( mSoundWidget->sound() );
+  mAddressee.setSecrecy( mSecrecyWidget->secrecy() );
 
   // save custom fields
   mAddressee.insertCustom( "KADDRESSBOOK", "X-IMAddress", mIMAddressEdit->text() );
