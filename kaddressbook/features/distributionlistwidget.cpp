@@ -327,8 +327,11 @@ void DistributionListWidget::updateContactView()
 {
   mContactView->clear();
 
-  KPIM::DistributionList dist = KPIM::DistributionList::findByName(
-    core()->addressBook(), mNameCombo->currentText() );
+  KPIM::DistributionList dist;
+  if ( mNameCombo->count() != 0 )
+    dist = KPIM::DistributionList::findByName(
+      core()->addressBook(), mNameCombo->currentText() );
+
   if ( dist.isEmpty() ) { // not found
     mEditListButton->setEnabled( false );
     mRemoveListButton->setEnabled( false );
@@ -368,6 +371,8 @@ void DistributionListWidget::updateNameCombo()
 
 void DistributionListWidget::dropEvent( QDropEvent *e )
 {
+  if ( mNameCombo->count() == 0 )
+    return;
   KPIM::DistributionList dist = KPIM::DistributionList::findByName(
     core()->addressBook(), mNameCombo->currentText() );
   if ( dist.isEmpty() )
