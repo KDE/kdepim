@@ -58,6 +58,8 @@ class KNJobItem {
     virtual bool isLocked()         { return false; }
     virtual void setLocked(bool)    { }
 
+    virtual QString prepareForExecution() { return QString::null; }
+
 };
 
 
@@ -94,6 +96,7 @@ class KNJobData {
     void cancel()                         { c_anceled=true; }
     void setAuthError(bool b)             { a_uthError=b; }
 
+    void prepareForExecution()           { e_rrorString = d_ata->prepareForExecution(); }
     void notifyConsumer();
 
   protected:

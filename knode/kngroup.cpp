@@ -39,7 +39,7 @@
 #include "knode.h"
 #include "knscoring.h"
 #include "knarticlemanager.h"
-#include "knarticlefactory.h"
+#include "kngroupmanager.h"
 
 #define SORT_DEPTH 5
 
@@ -966,6 +966,14 @@ int KNGroup::statThrWithUnread()
   for(int i=0; i<length(); i++)
     if( (at(i)->idRef()==0) && (at(i)->hasUnreadFollowUps()) ) cnt++;
   return cnt;
+}
+
+QString KNGroup::prepareForExecution()
+{
+  if (knGlobals.grpManager->loadHeaders(this))
+    return QString::null;
+  else
+    return i18n("Cannot load saved headers");
 }
 
 //***************************************************************************

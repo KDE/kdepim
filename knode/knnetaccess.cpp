@@ -205,10 +205,15 @@ void KNNetAccess::startJobNntp()
     return;
   }
   currentNntpJob = nntpJobQueue.take(0);
-  nntpClient->insertJob(currentNntpJob);
-  triggerAsyncThread(nntpOutPipe[1]);
-  emit netActive(true);
-  kdDebug(5003) << "KNNetAccess::startJobNntp(): job started" << endl;
+  currentNntpJob->prepareForExecution();
+  if (currentNntpJob->success()) {
+    nntpClient->insertJob(currentNntpJob);
+    triggerAsyncThread(nntpOutPipe[1]);
+    emit netActive(true);
+    kdDebug(5003) << "KNNetAccess::startJobNntp(): job started" << endl;
+  } else {
+    threadDoneNntp();
+  }
 }
 
 
@@ -224,10 +229,15 @@ void KNNetAccess::startJobSmtp()
   unshownProgress = 0;
   
   currentSmtpJob = smtpJobQueue.take(0);
-  smtpClient->insertJob(currentSmtpJob);
-  triggerAsyncThread(smtpOutPipe[1]);
-  emit netActive(true);
-  kdDebug(5003) << "KNNetAccess::startJobSmtp(): job started" << endl;
+  currentSmtpJob->prepareForExecution();
+  if (currentSmtpJob->success()) {
+    smtpClient->insertJob(currentSmtpJob);
+    triggerAsyncThread(smtpOutPipe[1]);
+    emit netActive(true);
+    kdDebug(5003) << "KNNetAccess::startJobSmtp(): job started" << endl;
+  } else {
+    threadDoneSmtp();
+  }
 }
 
 

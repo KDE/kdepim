@@ -104,11 +104,12 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     void subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a);
     bool unsubscribeGroup(KNGroup *g=0);
     void showGroupProperties(KNGroup *g=0);
-    void checkGroupForNewHeaders(KNGroup *g=0);
     void expireGroupNow(KNGroup *g=0);
     void reorganizeGroup(KNGroup *g=0);
 
+    void checkGroupForNewHeaders(KNGroup *g=0);
     void checkAll(KNNntpAccount *a);
+
     void expireAll(KNCleanUp *cup);
     void expireAll(KNNntpAccount *a);
     void syncGroups();    

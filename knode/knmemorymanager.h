@@ -32,6 +32,8 @@ class KNMemoryManager {
     // Collection-Handling
     void updateCacheEntry(KNArticleCollection *c);
     void removeCacheEntry(KNArticleCollection *c);
+    // try to free enough memory for this collection
+    void prepareLoad(KNArticleCollection *c);
 
     // Article-Handling
     void updateCacheEntry(KNArticle *a);

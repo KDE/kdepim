@@ -107,6 +107,8 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     bool isLocked()             { return l_ocked; }
     void setLocked(bool l)      { l_ocked=l; }
 
+    QString prepareForExecution();
+
     // charset-handling
     const QCString defaultCharset()           { return d_efaultChSet; }
     void setDefaultCharset(const QCString &s) { d_efaultChSet=s; }

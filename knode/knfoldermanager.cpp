@@ -103,7 +103,16 @@ void KNFolderManager::setCurrentFolder(KNFolder *f)
 
 bool KNFolderManager::loadHeaders(KNFolder *f)
 {
-  if( f && !f->isRootFolder() && ( f->isLoaded() || f->loadHdrs() ) ) {
+  if( !f || f->isRootFolder() )
+    return false;
+
+  if (f->isLoaded())
+    return true;
+
+  // we want to delete old stuff first => reduce vm fragmentation
+  knGlobals.memManager->prepareLoad(f);
+
+  if (f->loadHdrs()) {
     knGlobals.memManager->updateCacheEntry( f );
     return true;
   }

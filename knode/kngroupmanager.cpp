@@ -233,7 +233,6 @@ QSortedList<KNGroupInfo>* KNGroupListData::extractList()
 //===============================================================================
 
 
-
 KNGroupManager::KNGroupManager(KNArticleManager *a, QObject * parent, const char * name)
   : QObject(parent,name)
 {
@@ -242,7 +241,6 @@ KNGroupManager::KNGroupManager(KNArticleManager *a, QObject * parent, const char
   c_urrentGroup=0;
   a_rticleMgr=a;
 }
-
 
 
 KNGroupManager::~KNGroupManager()
@@ -258,7 +256,6 @@ void KNGroupManager::syncGroups()
     var->saveInfo();
   }
 }
-
 
 
 void KNGroupManager::loadGroups(KNNntpAccount *a)
@@ -288,7 +285,6 @@ void KNGroupManager::loadGroups(KNNntpAccount *a)
 }
 
 
-
 void KNGroupManager::getSubscribed(KNNntpAccount *a, QStringList &l)
 {
   l.clear();
@@ -296,7 +292,6 @@ void KNGroupManager::getSubscribed(KNNntpAccount *a, QStringList &l)
     if(var->account()==a) l.append(var->groupname());
   }
 }
-
 
 
 void KNGroupManager::getGroupsOfAccount(KNNntpAccount *a, QList<KNGroup> *l)
@@ -319,7 +314,16 @@ void KNGroupManager::getAllGroups(QList<KNGroup> *l)
 
 bool KNGroupManager::loadHeaders(KNGroup *g)
 {
-  if( g && ( g->isLoaded() || g->loadHdrs() ) ) {
+  if (!g)
+    return false;
+
+  if (g->isLoaded())
+    return true;
+
+  // we want to delete old stuff first => reduce vm fragmentation
+  knGlobals.memManager->prepareLoad(g);
+
+  if (g->loadHdrs()) {
     knGlobals.memManager->updateCacheEntry( g );
     return true;
   }
@@ -434,7 +438,6 @@ void KNGroupManager::showGroupDialog(KNNntpAccount *a, QWidget *parent)
 }
 
 
-
 void KNGroupManager::subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a)
 {
   KNGroup *grp;
@@ -451,7 +454,6 @@ void KNGroupManager::subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a)
   grp->setListItem(it);
   grp->updateListItem();
 }
-
 
 
 bool KNGroupManager::unsubscribeGroup(KNGroup *g)
@@ -498,7 +500,6 @@ bool KNGroupManager::unsubscribeGroup(KNGroup *g)
 }
 
 
-
 void KNGroupManager::showGroupProperties(KNGroup *g)
 {
   if(!g) g=c_urrentGroup;
@@ -507,19 +508,18 @@ void KNGroupManager::showGroupProperties(KNGroup *g)
 }
 
 
-
 void KNGroupManager::checkGroupForNewHeaders(KNGroup *g)
 {
   if(!g) g=c_urrentGroup;
   if(!g) return;
   if(g->isLocked()) {
-    kdDebug(5003) << "KNGroupManager::setCurrentGroup() : group locked - returning" << endl;
+    kdDebug(5003) << "KNGroupManager::checkGroupForNewHeaders() : group locked - returning" << endl;
     return;
   }
+
   g->setMaxFetch(knGlobals.cfgManager->readNewsGeneral()->maxToFetch());
   emitJob( new KNJobData(KNJobData::JTfetchNewHeaders, this, g->account(), g) );
 }
-
 
 
 void KNGroupManager::expireGroupNow(KNGroup *g)
@@ -575,24 +575,17 @@ void KNGroupManager::setCurrentGroup(KNGroup *g)
 }
 
 
-
 void KNGroupManager::checkAll(KNNntpAccount *a)
 {
   if(!a) return;
 
-  KNJobData *j=0;
   for(KNGroup *g=g_List->first(); g; g=g_List->next()) {
     if(g->account()==a) {
       g->setMaxFetch(knGlobals.cfgManager->readNewsGeneral()->maxToFetch());
-      j=new KNJobData(KNJobData::JTfetchNewHeaders, this, a, g);  // locks "g"
-      if( loadHeaders( g ) )
-        emitJob(j);
-      else
-        delete j; // unlocks "g"
+      emitJob( new KNJobData(KNJobData::JTfetchNewHeaders, this, g->account(), g) );
     }
   }
 }
-
 
 
 void KNGroupManager::processJob(KNJobData *j)

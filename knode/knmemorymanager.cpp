@@ -77,6 +77,16 @@ void KNMemoryManager::removeCacheEntry(KNArticleCollection *c)
 }
 
 
+void KNMemoryManager::prepareLoad(KNArticleCollection *c)
+{
+  CollectionItem ci(c);
+
+  c_ollCacheSize += ci.storageSize;
+  checkMemoryUsageCollections();
+  c_ollCacheSize -= ci.storageSize;
+}
+
+
 void KNMemoryManager::updateCacheEntry(KNArticle *a)
 {
   ArticleItem *ai;
