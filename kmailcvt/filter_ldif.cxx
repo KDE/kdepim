@@ -66,7 +66,6 @@ bool filter_ldif::convert(const char *filename, filterInfo *info) {
 		caption=i18n("Import Netscape LDIF Personal Addressbook (.LDIF)");
 
 		if (!kabStart(info)) {
-			info->alert(caption,"Error starting KAB");
 			return false;
 		}
 
