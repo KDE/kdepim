@@ -94,7 +94,7 @@ void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
 
   g->setNotUnloadable(true);
 
-  if (!g->isLoaded() && !knGlobals.grpManager->loadHeaders(g)) {
+  if (!g->isLoaded() && !knGlobals.groupManager()->loadHeaders(g)) {
     g->setNotUnloadable(false);
     return;
   }
@@ -170,7 +170,7 @@ void KNCleanUp::expireGroup(KNGroup *g, bool showResult)
     g->setNewCount(newCnt);
     g->setFirstNewIndex(firstNew);
     g->saveInfo();
-    knGlobals.grpManager->unloadHeaders(g, true);
+    knGlobals.groupManager()->unloadHeaders(g, true);
   }
   else
     g->syncDynamicData();
@@ -201,7 +201,7 @@ void KNCleanUp::compactFolder(KNFolder *f)
 
   f->setNotUnloadable(true);
 
-  if (!f->isLoaded() && !knGlobals.folManager->loadHeaders(f)) {
+  if (!f->isLoaded() && !knGlobals.folderManager()->loadHeaders(f)) {
     f->setNotUnloadable(false);
     return;
   }

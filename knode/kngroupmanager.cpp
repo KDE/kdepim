@@ -27,7 +27,6 @@
 #include "knmainwidget.h"
 #include "knarticlemanager.h"
 #include "kngroupdialog.h"
-#include "kncollectionviewitem.h"
 #include "knnntpaccount.h"
 #include "knprotocolclient.h"
 #include "kncleanup.h"
@@ -225,13 +224,13 @@ QSortedList<KNGroupInfo>* KNGroupListData::extractList()
 //===============================================================================
 
 
-KNGroupManager::KNGroupManager(KNArticleManager *a, QObject * parent, const char * name)
+KNGroupManager::KNGroupManager(QObject * parent, const char * name)
   : QObject(parent,name)
 {
   g_List=new QPtrList<KNGroup>;
   g_List->setAutoDelete(true);
   c_urrentGroup=0;
-  a_rticleMgr=a;
+  a_rticleMgr = knGlobals.articleManager();
 }
 
 
@@ -253,7 +252,6 @@ void KNGroupManager::syncGroups()
 void KNGroupManager::loadGroups(KNNntpAccount *a)
 {
   KNGroup *group;
-  KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
 
   QString dir(a->path());
   if (dir.isNull())
@@ -265,10 +263,7 @@ void KNGroupManager::loadGroups(KNNntpAccount *a)
     group=new KNGroup(a);
     if (group->readInfo(dir+(*it))) {
       g_List->append(group);
-      KNCollectionViewItem *cvit=new KNCollectionViewItem(a->listItem());
-      cvit->setPixmap(0, app->icon(KNConfig::Appearance::group));
-      group->setListItem(cvit);
-      group->updateListItem();
+      emit groupAdded(group);
     } else {
       delete group;
       kdError(5003) << "Unable to load " << (*it) << "!" << endl;
@@ -391,7 +386,7 @@ void KNGroupManager::expireAll(KNNntpAccount *a)
     if((var->account()!=a) || (var->isLocked()) || (var->lockedArticles()>0))
       continue;
 
-    var->updateListItem();
+    emit groupUpdated(var);
     if(var==c_urrentGroup) {
       if (loadHeaders(var))
         a_rticleMgr->showHdrs();
@@ -442,7 +437,6 @@ void KNGroupManager::showGroupDialog(KNNntpAccount *a, QWidget *parent)
 void KNGroupManager::subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a)
 {
   KNGroup *grp;
-  KNCollectionViewItem *it;
 
   grp=new KNGroup(a);
   grp->setGroupname(gi->name);
@@ -450,10 +444,7 @@ void KNGroupManager::subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a)
   grp->setStatus(gi->status);
   grp->saveInfo();
   g_List->append(grp);
-  it=new KNCollectionViewItem(a->listItem());
-  it->setPixmap(0,UserIcon("group"));
-  grp->setListItem(it);
-  grp->updateListItem();
+  emit groupAdded(grp);
 }
 
 
@@ -494,6 +485,7 @@ bool KNGroupManager::unsubscribeGroup(KNGroup *g)
       }
       kdDebug(5003) << "Files deleted!" << endl;
 
+      emit groupRemoved(g);
       g_List->removeRef(g);
 
       return true;
@@ -541,7 +533,7 @@ void KNGroupManager::expireGroupNow(KNGroup *g)
   KNCleanUp cup(knGlobals.cfgManager->cleanup());
   cup.expireGroup(g, true);
 
-  g->updateListItem();
+  emit groupUpdated(g);
   if(g==c_urrentGroup) {
     if( loadHeaders(g) )
       a_rticleMgr->showHdrs();
@@ -635,7 +627,7 @@ void KNGroupManager::processJob(KNJobData *j)
         if(group->lastFetchCount()>0) {
           group->scoreArticles();
           group->processXPostBuffer(true);
-          group->updateListItem();
+          emit groupUpdated(group);
           group->saveInfo();
           knGlobals.memManager->updateCacheEntry(group);
         }

@@ -78,7 +78,8 @@ libknodecommon_la_SOURCES =   knconfigmanager.cpp \
 		  aboutdata.cpp \
 		  knglobals.cpp \
 		  knodecomposeriface.skel \
-		  knodeiface.skel
+		  knodeiface.skel \
+		  kncollectionview.cpp
 
 knode_SOURCES = knode.cpp knapplication.cpp main.cpp
 
@@ -144,7 +145,8 @@ noinst_HEADERS =  knconfigmanager.h \
                   resource.h \
                   knglobals.h \
 		  aboutdata.h \
-		  knmainwidget.h 
+		  knmainwidget.h \
+		  kncollectionview.h
 
 
 knode_METASOURCES = AUTO

@@ -21,7 +21,6 @@
 #include <qptrlist.h>
 
 class KNGroupManager;
-class KNListView;
 class KNNntpAccount;
 class KNServerInfo;
 
@@ -31,7 +30,7 @@ class KNAccountManager : public QObject
   Q_OBJECT
 
   public:
-    KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * parent=0, const char * name=0);
+    KNAccountManager(KNGroupManager *gm, QObject * parent=0, const char * name=0);
     ~KNAccountManager();
 
     void prepareShutdown();
@@ -56,7 +55,6 @@ class KNAccountManager : public QObject
     QPtrList<KNNntpAccount> *accList;
     KNNntpAccount *c_urrentAccount;
     KNServerInfo *s_mtp;
-    KNListView *view;
 
   signals:
     void accountAdded(KNNntpAccount *a);

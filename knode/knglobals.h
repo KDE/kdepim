@@ -55,24 +55,27 @@ class KNGlobals {
     KNConfigManager       *cfgManager;
     KNNetAccess           *netAccess;
     KNProgress            *progressBar;
-    KNAccountManager      *accManager;
-    KNGroupManager        *grpManager;
     KNArticleFactory      *artFactory;
-    KNFolderManager       *folManager;
     KNScoringManager      *scoreManager;
     KNMemoryManager       *memManager;
     Kpgp::Module          *pgp;
     KConfig               *config();
     KInstance             *instance;
 
+    KNAccountManager      *accountManager();
+    KNGroupManager        *groupManager();
     KNArticleManager      *articleManager();
     KNFilterManager       *filterManager();
+    KNFolderManager       *folderManager();
 
 private:
     KSharedConfig::Ptr c_onfig;
     
+    KNAccountManager      *mAccManager;
+    KNGroupManager        *mGrpManager;
     KNArticleManager      *mArtManager;
     KNFilterManager       *mFilManager;
+    KNFolderManager       *mFolManager;
 };
 
 

@@ -37,6 +37,7 @@ using KRecentAddress::RecentAddresses;
 #include "knmainwidget.h"
 #include "knarticlewidget.h"
 #include "knarticlewindow.h"
+#include "kncollectionview.h"
 #include "kncollectionviewitem.h"
 #include "knhdrviewitem.h"
 
@@ -114,27 +115,10 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   }
   header = new KDockWidgetHeader(c_olDock, "colDockHeader");
   c_olDock->setHeader(header);
-  c_olView=new KNListView( this, "collectionView");
+  c_olView = new KNCollectionView(this, "collectionView");
   header->setDragPanel(new KNDockWidgetHeaderDrag(c_olView, header, c_olDock));
   c_olDock->setWidget(c_olView);
   c_olDock->manualDock(a_rtDock, KDockWidget::DockLeft, 3000);
-
-  c_olView->setAcceptDrops(true);
-  c_olView->setDragEnabled(true);
-  c_olView->addAcceptableDropMimetype("x-knode-drag/article", false);
-  c_olView->addAcceptableDropMimetype("x-knode-drag/folder", true);
-  c_olView->setSelectionModeExt(KListView::Single);
-  c_olView->setFrameStyle(QFrame::Panel | QFrame::Plain);
-  c_olView->setLineWidth(1);
-  c_olView->setTreeStepSize(12);
-  c_olView->setRootIsDecorated(true);
-  c_olView->setShowSortIndicator(true);
-  c_olView->addColumn(i18n("Name"),162);
-  c_olView->addColumn(i18n("Total"),36);
-  c_olView->addColumn(i18n("Unread"),48);
-  c_olView->setColumnAlignment(1,AlignCenter);
-  c_olView->setColumnAlignment(2,AlignCenter);
-  c_olView->setAlternateBackground(QColor());
 
   connect(c_olDock, SIGNAL(iMBeingClosed()), SLOT(slotGroupDockHidden()));
   connect(c_olDock, SIGNAL(hasUndocked()), SLOT(slotGroupDockHidden()));
@@ -250,16 +234,13 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   a_rtManager->setView(h_drView);
 
   //Group Manager
-  g_rpManager=new KNGroupManager(a_rtManager);
-  knGlobals.grpManager=g_rpManager;
+  g_rpManager = knGlobals.groupManager();
 
   //Folder Manager
-  f_olManager=new KNFolderManager(c_olView, a_rtManager);
-  knGlobals.folManager=f_olManager;
+  f_olManager = knGlobals.folderManager();
 
   //Account Manager
-  a_ccManager=new KNAccountManager(g_rpManager, c_olView);
-  knGlobals.accManager=a_ccManager;
+  a_ccManager = knGlobals.accountManager();
 
   //Article Factory
   a_rtFactory=new KNArticleFactory();
@@ -831,7 +812,7 @@ bool KNMainWidget::firstStart()
   id->setReplyTo(emailConf.readEntry("ReplyAddr"));
   id->save();
 
-  KNServerInfo *smtp=knGlobals.accManager->smtp();
+  KNServerInfo *smtp=knGlobals.accountManager()->smtp();
   smtp->setServer(emailConf.readEntry("OutgoingServer").latin1());
   smtp->setPort(25);
   conf->setGroup("MAILSERVER");

@@ -694,10 +694,10 @@ bool KNComposer::hasValidData()
   if ( a_ctPGPsign->isChecked() ) {
     // try to get the signing key
     QCString signingKey = knGlobals.cfgManager->identity()->signingKey();
-    KNNntpAccount *acc = knGlobals.accManager->account( a_rticle->serverId() );
+    KNNntpAccount *acc = knGlobals.accountManager()->account( a_rticle->serverId() );
     if ( acc ) {
       KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
-      KNGroup *grp = knGlobals.grpManager->group( grps->firstGroup(), acc );
+      KNGroup *grp = knGlobals.groupManager()->group( grps->firstGroup(), acc );
       if ( grp && grp->identity() && grp->identity()->hasSigningKey() )
         signingKey = grp->identity()->signingKey();
       else if ( acc->identity() && acc->identity()->hasSigningKey() )
@@ -820,10 +820,10 @@ bool KNComposer::applyChanges()
   if ( a_ctPGPsign->isChecked() ) {
       // first get the signing key
       QCString signingKey = knGlobals.cfgManager->identity()->signingKey();
-      KNNntpAccount *acc = knGlobals.accManager->account( a_rticle->serverId() );
+      KNNntpAccount *acc = knGlobals.accountManager()->account( a_rticle->serverId() );
       if ( acc ) {
           KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
-          KNGroup *grp = knGlobals.grpManager->group( grps->firstGroup(), acc );
+          KNGroup *grp = knGlobals.groupManager()->group( grps->firstGroup(), acc );
           if ( grp && grp->identity() && grp->identity()->hasSigningKey() )
               signingKey = grp->identity()->signingKey();
           else if ( acc->identity() && acc->identity()->hasSigningKey() )
@@ -1476,10 +1476,10 @@ void KNComposer::slotGroupsBtnClicked()
   KNNntpAccount *nntp=0;
 
   if(id!=-1)
-    nntp=knGlobals.accManager->account(id);
+    nntp=knGlobals.accountManager()->account(id);
 
   if(!nntp)
-    nntp=knGlobals.accManager->first();
+    nntp=knGlobals.accountManager()->first();
 
   if(!nntp) {
     KMessageBox::error(this, i18n("You have no valid news accounts configured."));
@@ -1493,8 +1493,8 @@ void KNComposer::slotGroupsBtnClicked()
   KNGroupSelectDialog *dlg=new KNGroupSelectDialog(this, nntp, v_iew->g_roups->text().remove(QRegExp("\\s")));
 
   connect(dlg, SIGNAL(loadList(KNNntpAccount*)),
-    knGlobals.grpManager, SLOT(slotLoadGroupList(KNNntpAccount*)));
-  connect(knGlobals.grpManager, SIGNAL(newListReady(KNGroupListData*)),
+    knGlobals.groupManager(), SLOT(slotLoadGroupList(KNNntpAccount*)));
+  connect(knGlobals.groupManager(), SIGNAL(newListReady(KNGroupListData*)),
     dlg, SLOT(slotReceiveList(KNGroupListData*)));
 
   if(dlg->exec())

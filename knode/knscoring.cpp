@@ -103,12 +103,12 @@ KNScoringManager::~KNScoringManager()
 
 QStringList KNScoringManager::getGroups() const
 {
-  KNAccountManager *am = knGlobals.accManager;
+  KNAccountManager *am = knGlobals.accountManager();
   KNNntpAccount *ac = am->first();
   QStringList res;
   while (ac) {
     QStringList groups;
-    knGlobals.grpManager->getSubscribed(ac,groups);
+    knGlobals.groupManager()->getSubscribed(ac,groups);
     res += groups;
     ac = am->next();
   }

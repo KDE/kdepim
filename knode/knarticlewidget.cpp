@@ -1305,9 +1305,9 @@ void KNArticleWidget::createHtmlPage()
     a_ctRemail->setEnabled(a_rticle->type()==KMime::Base::ATremote);
     a_ctForward->setEnabled(true);
     a_ctCancel->setEnabled( (a_rticle->type()==KMime::Base::ATremote) ||
-                            (a_rticle->collection()==knGlobals.folManager->sent()));
+                            (a_rticle->collection()==knGlobals.folderManager()->sent()));
     a_ctSupersede->setEnabled( (a_rticle->type()==KMime::Base::ATremote) ||
-                               (a_rticle->collection()==knGlobals.folManager->sent()));
+                               (a_rticle->collection()==knGlobals.folderManager()->sent()));
     a_ctSave->setEnabled(true);
     a_ctPrint->setEnabled(true);
     a_ctSelAll->setEnabled(true);
@@ -1454,9 +1454,9 @@ void KNArticleWidget::createHtmlPage()
   a_ctRemail->setEnabled(a_rticle->type()==KMime::Base::ATremote);
   a_ctForward->setEnabled(true);
   a_ctCancel->setEnabled( (a_rticle->type()==KMime::Base::ATremote) ||
-                          (a_rticle->collection()==knGlobals.folManager->sent()));
+                          (a_rticle->collection()==knGlobals.folderManager()->sent()));
   a_ctSupersede->setEnabled( (a_rticle->type()==KMime::Base::ATremote) ||
-                             (a_rticle->collection()==knGlobals.folManager->sent()));
+                             (a_rticle->collection()==knGlobals.folderManager()->sent()));
   a_ctVerify->setEnabled(true);
   a_ctToggleFullHdrs->setEnabled(true);
   a_ctToggleRot13->setEnabled(true);

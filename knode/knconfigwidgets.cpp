@@ -261,7 +261,7 @@ void KNConfig::IdentityWidget::slotSignatureEdit()
 
 
 KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n)
-  : BaseWidget(p, n), p_ixmap(UserIcon("server")), a_ccManager(knGlobals.accManager)
+  : BaseWidget(p, n), p_ixmap(UserIcon("server")), a_ccManager(knGlobals.accountManager())
 {
   QGridLayout *topL=new QGridLayout(this, 6,2, 5,5);
 
@@ -421,7 +421,7 @@ void KNConfig::NntpAccountListWidget::slotSubBtnClicked()
   LBoxItem *it = static_cast<LBoxItem*>(l_box->item(l_box->currentItem()));
 
   if(it)
-    knGlobals.grpManager->showGroupDialog(it->account, this);
+    knGlobals.groupManager()->showGroupDialog(it->account, this);
 }
 
 
@@ -609,7 +609,7 @@ KNConfig::SmtpAccountWidget::SmtpAccountWidget(QWidget *p, const char *n) : Base
   topL->setColStretch(1,1);
   topL->setColStretch(2,1);
 
-  s_erverInfo=knGlobals.accManager->smtp();
+  s_erverInfo=knGlobals.accountManager()->smtp();
 
   u_seExternalMailer->setChecked(knGlobals.cfgManager->postNewsTechnical()->useExternalMailer());
   useExternalMailerToggled(knGlobals.cfgManager->postNewsTechnical()->useExternalMailer());

@@ -67,7 +67,7 @@ void KNNntpAccountIntervalChecking::deinstallTimer()
 
 void KNNntpAccountIntervalChecking::slotCheckNews()
 {
-  knGlobals.grpManager->checkAll(a_ccount, true);
+  knGlobals.groupManager()->checkAll(a_ccount, true);
 }
 
 

@@ -19,8 +19,11 @@
 
 #include <kconfig.h>
 
+#include "knaccountmanager.h"
+#include "kngroupmanager.h"
 #include "knarticlemanager.h"
 #include "knfiltermanager.h"
+#include "knfoldermanager.h"
 
 KConfig* KNGlobals::config()
 {
@@ -28,6 +31,20 @@ KConfig* KNGlobals::config()
       c_onfig = KSharedConfig::openConfig( "knoderc" );
   }
   return c_onfig;
+}
+
+KNAccountManager* KNGlobals::accountManager()
+{
+  if(!mAccManager)
+    mAccManager = new KNAccountManager(groupManager());
+  return mAccManager;
+}
+
+KNGroupManager* KNGlobals::groupManager()
+{
+  if(!mGrpManager)
+    mGrpManager = new KNGroupManager();
+  return mGrpManager;
 }
 
 KNArticleManager* KNGlobals::articleManager()
@@ -42,4 +59,11 @@ KNFilterManager* KNGlobals::filterManager()
   if (!mFilManager)
     mFilManager = new KNFilterManager();
   return mFilManager;
+}
+
+KNFolderManager* KNGlobals::folderManager()
+{
+  if(!mFolManager)
+    mFolManager = new KNFolderManager(articleManager());
+  return mFolManager;
 }

@@ -83,7 +83,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
 
   public:
 
-    KNGroupManager(KNArticleManager *a, QObject * parent=0, const char * name=0);
+    KNGroupManager(QObject * parent=0, const char * name=0);
     ~KNGroupManager();
 
     // group access
@@ -133,6 +133,10 @@ class KNGroupManager : public QObject , public KNJobConsumer {
 
   signals:
     void newListReady(KNGroupListData* d);
+
+    void groupAdded(KNGroup* g);
+    void groupRemoved(KNGroup* g);
+    void groupUpdated(KNGroup* g);
 
 };
 

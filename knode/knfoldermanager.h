@@ -17,19 +17,20 @@
 #ifndef KNFOLDERMANAGER_H
 #define KNFOLDERMANAGER_H
 
-#include <qglobal.h>
+#include <qobject.h>
 #include <qptrlist.h>
 
-class KNListView;
 class KNFolder;
 class KNArticleManager;
 class KNCleanUp;
 
 
-class KNFolderManager
+class KNFolderManager : public QObject
 {
+  Q_OBJECT
+
   public:
-    KNFolderManager(KNListView *v, KNArticleManager *a);
+    KNFolderManager(KNArticleManager *a);
     ~KNFolderManager();
 
     //folder access
@@ -37,6 +38,7 @@ class KNFolderManager
     KNFolder* currentFolder()const             { return c_urrentFolder; }
     bool hasCurrentFolder()               { return (c_urrentFolder!=0); }
     KNFolder* folder(int id);
+    QPtrList<KNFolder>& folders()         { return f_List; }
 
     //standard folders
     KNFolder* root()                     { return f_List.at(0); }
@@ -72,15 +74,18 @@ class KNFolderManager
     //synchronization
     void syncFolders();
 
+  signals:
+    // signals for the collection tree to update the UI
+    void folderAdded(KNFolder *f);
+    void folderRemoved(KNFolder *f);
+    void folderActivated(KNFolder *f);
+
   protected:
     int loadCustomFolders();
-    void showListItems();
-    void createListItem(KNFolder *f);
 
     KNFolder  *c_urrentFolder;
     QPtrList<KNFolder> f_List;
     int l_astId;
-    KNListView *v_iew;
     KNArticleManager *a_rtManager;
 
 };

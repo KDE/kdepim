@@ -289,7 +289,7 @@ void KNArticleFactory::createForward(KNArticle *a)
 
   //create new article
   QString sig;
-  KNLocalArticle *art=newArticle(knGlobals.grpManager->currentGroup(), sig, chset);
+  KNLocalArticle *art=newArticle(knGlobals.groupManager()->currentGroup(), sig, chset);
   if(!art)
     return;
 
@@ -377,7 +377,7 @@ void KNArticleFactory::createCancel(KNArticle *a)
     nntp=(static_cast<KNGroup*>(a->collection()))->account();
   else {
     if(!nntp)
-      nntp=knGlobals.accManager->first();
+      nntp=knGlobals.accountManager()->first();
     if(!nntp) {
       KMessageBox::error(knGlobals.topWidget, i18n("You have no valid news accounts configured."));
       return;
@@ -385,10 +385,10 @@ void KNArticleFactory::createCancel(KNArticle *a)
     KNLocalArticle *la=static_cast<KNLocalArticle*>(a);
     la->setCanceled(true);
     la->updateListItem();
-    nntp=knGlobals.accManager->account(la->serverId());
+    nntp=knGlobals.accountManager()->account(la->serverId());
   }
 
-  grp=knGlobals.grpManager->group(a->newsgroups()->firstGroup(), nntp);
+  grp=knGlobals.groupManager()->group(a->newsgroups()->firstGroup(), nntp);
 
   QString sig;
   KNLocalArticle *art=newArticle(grp, sig, "us-ascii", false);
@@ -452,16 +452,16 @@ void KNArticleFactory::createSupersede(KNArticle *a)
     KNLocalArticle *la=static_cast<KNLocalArticle*>(a);
     la->setCanceled(true);
     la->updateListItem();
-    nntp=knGlobals.accManager->account(la->serverId());
+    nntp=knGlobals.accountManager()->account(la->serverId());
     if(!nntp)
-      nntp=knGlobals.accManager->first();
+      nntp=knGlobals.accountManager()->first();
     if(!nntp) {
       KMessageBox::error(knGlobals.topWidget, i18n("You have no valid news accounts configured."));
       return;
     }
   }
 
-  grp=knGlobals.grpManager->group(a->newsgroups()->firstGroup(), nntp);
+  grp=knGlobals.groupManager()->group(a->newsgroups()->firstGroup(), nntp);
 
   //new article
   QString sig;
@@ -513,7 +513,7 @@ void KNArticleFactory::createMail(KMime::Headers::AddressField *address)
 
   //create new article
   QString sig;
-  KNLocalArticle *art=newArticle(knGlobals.grpManager->currentGroup(), sig, knGlobals.cfgManager->postNewsTechnical()->charset());
+  KNLocalArticle *art=newArticle(knGlobals.groupManager()->currentGroup(), sig, knGlobals.cfgManager->postNewsTechnical()->charset());
   if(!art)
     return;
 
@@ -579,10 +579,10 @@ void KNArticleFactory::edit(KNLocalArticle *a)
   KNConfig::Identity *id=knGlobals.cfgManager->identity();
 
   if(a->doPost()) {
-    KNNntpAccount *acc=knGlobals.accManager->account(a->serverId());
+    KNNntpAccount *acc=knGlobals.accountManager()->account(a->serverId());
     if(acc) {
       KMime::Headers::Newsgroups *grps=a->newsgroups();
-      KNGroup *grp=knGlobals.grpManager->group(grps->firstGroup(), acc);
+      KNGroup *grp=knGlobals.groupManager()->group(grps->firstGroup(), acc);
       if (grp && grp->identity() && grp->identity()->hasSignature())
         id=grp->identity();
       else if (acc->identity() && acc->identity()->hasSignature())
@@ -622,7 +622,7 @@ void KNArticleFactory::sendArticles(KNLocalArticle::List *l, bool now)
   }
 
   if(!now) {
-    knGlobals.articleManager()->moveIntoFolder(unsent, knGlobals.folManager->outbox());
+    knGlobals.articleManager()->moveIntoFolder(unsent, knGlobals.folderManager()->outbox());
     return;
   }
 
@@ -641,12 +641,12 @@ void KNArticleFactory::sendArticles(KNLocalArticle::List *l, bool now)
     }
 
     if(a->doPost() && !a->posted()) {
-      ser=knGlobals.accManager->account(a->serverId());
+      ser=knGlobals.accountManager()->account(a->serverId());
       job=new KNJobData(KNJobData::JTpostArticle, this, ser, a);
       emitJob(job);
     }
     else if(a->doMail() && !a->mailed()) {
-      ser=knGlobals.accManager->smtp();
+      ser=knGlobals.accountManager()->smtp();
       job=new KNJobData(KNJobData::JTmail, this, ser, a);
       emitJob(job);
     }
@@ -659,12 +659,12 @@ void KNArticleFactory::sendOutbox()
   KNLocalArticle::List lst;
   KNFolder *ob=0;
 
-  if(!knGlobals.folManager->loadOutbox()) {
+  if(!knGlobals.folderManager()->loadOutbox()) {
     KMessageBox::error(knGlobals.topWidget, i18n("Unable to load the outbox-folder."));
     return;
   }
 
-  ob=knGlobals.folManager->outbox();
+  ob=knGlobals.folderManager()->outbox();
   for(int i=0; i< ob->length(); i++)
     lst.append(ob->at(i));
 
@@ -731,8 +731,8 @@ void KNArticleFactory::processJob(KNJobData *j)
     delete j;
 
     //sending of this article was canceled => move it to the "Outbox-Folder"
-    if(art->collection()!=knGlobals.folManager->outbox())
-      knGlobals.articleManager()->moveIntoFolder(lst, knGlobals.folManager->outbox());
+    if(art->collection()!=knGlobals.folderManager()->outbox())
+      knGlobals.articleManager()->moveIntoFolder(lst, knGlobals.folderManager()->outbox());
 
     KMessageBox::information(knGlobals.topWidget, i18n("You have aborted the posting of articles. The unsent articles are stored in the \"Outbox\" folder."));
 
@@ -745,8 +745,8 @@ void KNArticleFactory::processJob(KNJobData *j)
     delete j; //unlock article
 
     //sending of this article failed => move it to the "Outbox-Folder"
-    if(art->collection()!=knGlobals.folManager->outbox())
-      knGlobals.articleManager()->moveIntoFolder(lst, knGlobals.folManager->outbox());
+    if(art->collection()!=knGlobals.folderManager()->outbox())
+      knGlobals.articleManager()->moveIntoFolder(lst, knGlobals.folderManager()->outbox());
   }
   else {
 
@@ -773,7 +773,7 @@ void KNArticleFactory::processJob(KNJobData *j)
     };
 
     //article has been sent successfully => move it to the "Sent-folder"
-    knGlobals.articleManager()->moveIntoFolder(lst, knGlobals.folManager->sent());
+    knGlobals.articleManager()->moveIntoFolder(lst, knGlobals.folderManager()->sent());
   }
 }
 
@@ -1025,7 +1025,7 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
 
     case KNComposer::CRsave :
       if ( com->applyChanges() )
-        knGlobals.articleManager()->moveIntoFolder(lst, knGlobals.folManager->drafts());
+        knGlobals.articleManager()->moveIntoFolder(lst, knGlobals.folderManager()->drafts());
     break;
 
     case KNComposer::CRdelAsk:

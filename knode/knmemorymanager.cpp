@@ -161,10 +161,10 @@ void KNMemoryManager::checkMemoryUsageCollections()
       c=ci->col;
 
       if (c->type() == KNCollection::CTgroup)
-        knGlobals.grpManager->unloadHeaders(static_cast<KNGroup*>(c), false);   // *try* to unload
+        knGlobals.groupManager()->unloadHeaders(static_cast<KNGroup*>(c), false);   // *try* to unload
       else
         if (c->type() == KNCollection::CTfolder)
-          knGlobals.folManager->unloadHeaders(static_cast<KNFolder*>(c), false);   // *try* to unload
+          knGlobals.folderManager()->unloadHeaders(static_cast<KNFolder*>(c), false);   // *try* to unload
     }
   }
 

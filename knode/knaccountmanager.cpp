@@ -26,7 +26,6 @@
 
 #include "kngroupmanager.h"
 #include "knnntpaccount.h"
-#include "kncollectionviewitem.h"
 #include "knglobals.h"
 #include "knconfigmanager.h"
 #include "utilities.h"
@@ -34,8 +33,8 @@
 #include "knfoldermanager.h"
 
 
-KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * parent, const char * name)
-  : QObject(parent, name), gManager(gm), c_urrentAccount(0), view(v)
+KNAccountManager::KNAccountManager(KNGroupManager *gm, QObject * parent, const char * name)
+  : QObject(parent, name), gManager(gm), c_urrentAccount(0)
 {
   accList=new QPtrList<KNNntpAccount>;
   accList->setAutoDelete(true);
@@ -73,7 +72,6 @@ void KNAccountManager::loadAccounts()
   }
   QDir d(dir);
   KNNntpAccount *a;
-  QPixmap pm=knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::nntp);
   QStringList entries(d.entryList("nntp.*", QDir::Dirs));
 
   QStringList::Iterator it;
@@ -81,11 +79,8 @@ void KNAccountManager::loadAccounts()
     a=new KNNntpAccount();
     if (a->readInfo(dir+(*it)+"/info")) {
       accList->append(a);
-      KNCollectionViewItem* cvit=new KNCollectionViewItem(view);
-      a->setListItem(cvit);
-      cvit->setPixmap(0, pm);
       gManager->loadGroups(a);
-      cvit->setOpen(a->wasOpen());
+      emit accountAdded(a);
     } else {
       delete a;
       kdError(5003) << "Unable to load account " << (*it) << "!" << endl;
@@ -138,9 +133,6 @@ bool KNAccountManager::newAccount(KNNntpAccount *a)
   dir = locateLocal("data",QString("knode/nntp.%1/").arg(a->id()));
   if (!dir.isNull()) {
     accList->append(a);
-    KNCollectionViewItem *it = new KNCollectionViewItem(view);
-    it->setPixmap(0, knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::nntp));
-    a->setListItem(it);
     emit(accountAdded(a));
     return true;
   } else {
@@ -158,7 +150,7 @@ bool KNAccountManager::removeAccount(KNNntpAccount *a)
   if(!a) return false;
 
   QPtrList<KNGroup> *lst;
-  if(knGlobals.folManager->unsentForAccount(a->id()) > 0) {
+  if(knGlobals.folderManager()->unsentForAccount(a->id()) > 0) {
     KMessageBox::sorry(knGlobals.topWidget, i18n("This account cannot be deleted since there are some unsent messages for it."));
   }
   else if(KMessageBox::questionYesNo(knGlobals.topWidget, i18n("Do you really want to delete this account?"))==KMessageBox::Yes) {

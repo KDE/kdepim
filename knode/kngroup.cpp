@@ -986,7 +986,7 @@ int KNGroup::statThrWithUnread()
 
 QString KNGroup::prepareForExecution()
 {
-  if (knGlobals.grpManager->loadHeaders(this))
+  if (knGlobals.groupManager()->loadHeaders(this))
     return QString::null;
   else
     return i18n("Cannot load saved headers: %1").arg(groupname());

@@ -508,7 +508,7 @@ void KNArticleManager::copyIntoFolder(KNArticle::List &l, KNFolder *f)
 
     f->setNotUnloadable(true);
 
-    if (!f->isLoaded() && !knGlobals.folManager->loadHeaders(f)) {
+    if (!f->isLoaded() && !knGlobals.folderManager()->loadHeaders(f)) {
       l2.setAutoDelete(true);
       l2.clear();
       f->setNotUnloadable(false);
@@ -540,7 +540,7 @@ void KNArticleManager::moveIntoFolder(KNLocalArticle::List &l, KNFolder *f)
 
   f->setNotUnloadable(true);
 
-  if (!f->isLoaded() && !knGlobals.folManager->loadHeaders(f)) {
+  if (!f->isLoaded() && !knGlobals.folderManager()->loadHeaders(f)) {
     f->setNotUnloadable(false);
     return;
   }
@@ -687,7 +687,7 @@ void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPos
       QCString mid=a->messageID()->as7BitString(false);
 
       for (QStringList::Iterator it = groups.begin(); it != groups.end(); ++it) {
-        targetGroup = knGlobals.grpManager->group(*it, g->account());
+        targetGroup = knGlobals.groupManager()->group(*it, g->account());
         if (targetGroup) {
           if (targetGroup->isLoaded() && (xp=targetGroup->byMessageId(mid)) ) {
             al.clear();

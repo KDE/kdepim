@@ -35,6 +35,7 @@ class KLineEdit;
 class KXMLGUIClient;
 
 class KNListView;
+class KNCollectionView;
 class KNProgress;
 class KNConfigManager;
 class KNAccountManager;
@@ -87,7 +88,7 @@ public:
   void configChanged();
 
   /** access to GUI-elements */
-  KNListView*       collectionView()const  { return c_olView; }
+  KNCollectionView* collectionView()const  { return c_olView; }
   KNListView*       headerView()const      { return h_drView; }
   KNArticleWidget*  articleView()const     { return a_rtView; }
   KStatusBarLabel*  statusBarLabelMain() const { return s_tatusMain; }
@@ -189,7 +190,8 @@ protected:
   KAccel          *a_ccel;
   KNProgress      *p_rogBar;
   KNArticleWidget *a_rtView;
-  KNListView      *c_olView, *h_drView;
+  KNCollectionView *c_olView;
+  KNListView      *h_drView;
   KDockWidget     *c_olDock, *h_drDock, *a_rtDock;
   bool b_lockui;
 

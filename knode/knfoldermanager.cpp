@@ -24,7 +24,6 @@
 #include "knglobals.h"
 #include "knconfigmanager.h"
 #include "knfolder.h"
-#include "kncollectionviewitem.h"
 #include "utilities.h"
 #include "knfoldermanager.h"
 #include "knarticlemanager.h"
@@ -33,7 +32,7 @@
 #include "knmainwidget.h"
 
 
-KNFolderManager::KNFolderManager(KNListView *v, KNArticleManager *a) : v_iew(v), a_rtManager(a)
+KNFolderManager::KNFolderManager(KNArticleManager *a) : a_rtManager(a)
 {
   f_List.setAutoDelete(true);
 
@@ -67,7 +66,6 @@ KNFolderManager::KNFolderManager(KNListView *v, KNArticleManager *a) : v_iew(v),
   //custom folders
   loadCustomFolders();
 
-  showListItems();
   setCurrentFolder(0);
 }
 
@@ -145,7 +143,7 @@ KNFolder* KNFolderManager::newFolder(KNFolder *p)
     p = root();
   KNFolder *f=new KNFolder(++l_astId, i18n("New folder"), p);
   f_List.append(f);
-  createListItem(f);
+  emit folderAdded(f);
   return f;
 }
 
@@ -173,6 +171,8 @@ bool KNFolderManager::deleteFolder(KNFolder *f)
     }
   }
 
+  emit folderRemoved(f);
+  
   del.append(f);
   for(fol=del.first(); fol; fol=del.next()) {
     if(c_urrentFolder==fol)
@@ -214,15 +214,16 @@ bool KNFolderManager::moveFolder(KNFolder *f, KNFolder *p)
   if( (p2 && p2==f) || f==p || f->isStandardFolder() || f->isRootFolder()) //  no way ;-)
     return false;
 
+  emit folderRemoved(f);
+  
   // reparent
   f->setParent(p);
   f->saveInfo();
+  
+  emit folderAdded(f);
 
-  // recreate list-item
-  delete f->listItem();
-  showListItems();
   if(c_urrentFolder==f)
-    v_iew->setActive(f->listItem(), true);
+    emit folderActivated(f);
 
   return true;
 }
@@ -488,37 +489,4 @@ int KNFolderManager::loadCustomFolders()
 }
 
 
-void KNFolderManager::showListItems()
-{
-  for(KNFolder *f=f_List.first(); f; f=f_List.next())
-    if(!f->listItem()) createListItem(f);
-  // now open the folders if they were open in the last session
-  for(KNFolder *f=f_List.first(); f; f=f_List.next())
-    if (f->listItem()) f->listItem()->setOpen(f->wasOpen());
-}
-
-
-void KNFolderManager::createListItem(KNFolder *f)
-{
-  KNCollectionViewItem *it;
-  if(f->parent()==0) {
-    it=new KNCollectionViewItem(v_iew);
-  }
-  else {
-    if(!f->parent()->listItem())
-      createListItem(static_cast<KNFolder*>(f->parent()));
-    it=new KNCollectionViewItem(f->parent()->listItem());
-  }
-  f->setListItem(it);
-  QPixmap pix;
-  if (f->isRootFolder())
-    pix = knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::rootFolder);
-  else
-    if (f->isStandardFolder())
-      pix = knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::customFolder);
-    else
-      pix = knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::folder);
-  it->setPixmap(0, pix);
-  f->updateListItem();
-}
-
+#include "knfoldermanager.moc"
