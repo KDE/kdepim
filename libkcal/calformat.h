@@ -70,21 +70,6 @@ class CalFormat {
     */
     virtual QString toString() = 0;
   
-    /** create an object to be used with the Xdnd Drag And Drop protocol. */
-    virtual VCalDrag *createDrag(Event *selectedEv, QWidget *owner) = 0;
-    /** create an object to be used with the Xdnd Drag And Drop protocol. */
-    virtual VCalDrag *createDragTodo(Todo *selectedEv, QWidget *owner) = 0;
-
-    /** Create Todo object from drop event */
-    virtual Todo *createDropTodo(QDropEvent *de) = 0;
-    /** Create Event object from drop event */
-    virtual Event *createDrop(QDropEvent *de) = 0;
-  
-    /** cut, copy, and paste operations follow. */
-    virtual bool copyEvent(Event *) = 0;
-    /** pastes the event and returns a pointer to the new event pasted. */
-    virtual Event *pasteEvent(const QDate &, const QTime *newTime = 0L) = 0;
-    
     /** /deprecated */
     void showDialogs(bool);
 

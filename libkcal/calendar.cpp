@@ -133,43 +133,6 @@ ICalFormat *Calendar::iCalFormat()
   return mICalFormat;
 }
 
-VCalDrag *Calendar::createDrag(Event *selectedEv, QWidget *owner)
-{
-  return mDndFormat->createDrag(selectedEv,owner);
-}
-
-VCalDrag *Calendar::createDragTodo(Todo *selectedEv, QWidget *owner)
-{
-  return mDndFormat->createDragTodo(selectedEv,owner);
-}
-
-Event *Calendar::createDrop(QDropEvent *de)
-{
-  return mDndFormat->createDrop(de);
-}
-
-Todo *Calendar::createDropTodo(QDropEvent *de)
-{
-  kdDebug(5800) << "Calendar::createDropTodo()" << endl;
-  return mDndFormat->createDropTodo(de);
-}
-
-void Calendar::cutEvent(Event *selectedEv)
-{
-  if (copyEvent(selectedEv))
-    deleteEvent(selectedEv);
-}
-
-bool Calendar::copyEvent(Event *selectedEv)
-{
-  return mDndFormat->copyEvent(selectedEv);
-}
-
-Event *Calendar::pasteEvent(const QDate &newDate,const QTime *newTime)
-{
-  return mDndFormat->pasteEvent(newDate,newTime);
-}
-
 const QString &Calendar::getOwner() const
 {
   return mOwner;

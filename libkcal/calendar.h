@@ -75,22 +75,6 @@ class Calendar {
     /** clears out the current calendar, freeing all used memory etc. etc. */
     virtual void close() = 0;
   
-    /** create an object to be used with the Xdnd Drag And Drop protocol. */
-    VCalDrag *createDrag(Event *selectedEv, QWidget *owner);
-    /** create an object to be used with the Xdnd Drag And Drop protocol. */
-    VCalDrag *createDragTodo(Todo *selectedEv, QWidget *owner);
-    /** Create Todo object from drop event */
-    Todo *createDropTodo(QDropEvent *de);
-    /** Create Event object from drop event */
-    Event *createDrop(QDropEvent *de);
-  
-    /** cut event to clipboard */
-    void cutEvent(Event *);
-    /** copy event to clipboard */
-    bool copyEvent(Event *);
-    /** pastes the event and returns a pointer to the new event pasted. */
-    Event *pasteEvent(const QDate &, const QTime *newTime = 0L);
-
     /** set the owner of the calendar.  Should be owner's full name. */
     const QString &getOwner() const;
     /** return the owner of the calendar's full name. */

@@ -66,20 +66,6 @@ class ICalFormat : public CalFormat {
     */
     QString toString();
   
-    /** create an object to be used with the Xdnd Drag And Drop protocol. */
-    VCalDrag *createDrag(Event *selectedEv, QWidget *owner);
-    /** create an object to be used with the Xdnd Drag And Drop protocol. */
-    VCalDrag *createDragTodo(Todo *selectedEv, QWidget *owner);
-    /** Create Todo object from drop event */
-    Todo *createDropTodo(QDropEvent *de);
-    /** Create Event object from drop event */
-    Event *createDrop(QDropEvent *de);
-  
-    /** cut, copy, and paste operations follow. */
-    bool copyEvent(Event *);
-    /** pastes the event and returns a pointer to the new event pasted. */
-    Event *pasteEvent(const QDate &, const QTime *newTime = 0L);
-    
     /** Create a scheduling message for event \a e using method \m */
     QString createScheduleMessage(Incidence *e,Scheduler::Method m);
     /** Parse scheduling message provided as string \s */
