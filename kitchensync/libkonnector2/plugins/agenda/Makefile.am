@@ -26,7 +26,7 @@ libagendakonnector_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector2 -I$(t
 libagendakonnector_la_LIBADD = ../../libkonnector.la 
 libagendakonnector_la_LDFLAGS = -module $(KDE_PLUGIN)
 libagendakonnector_la_SOURCES = configwidget.cpp converterbase.cpp \
-	dbwrapper.cpp socket.cpp konnector.cpp md5map.cpp
+	dbwrapper.cpp socket.cpp agendaplugin.cpp md5map.cpp
 
 
 agendadatadir = $(kde_datadir)/kitchensync

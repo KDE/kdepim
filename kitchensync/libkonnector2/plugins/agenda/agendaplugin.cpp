@@ -4,7 +4,7 @@
 
 #include "configwidget.h"
 #include "socket.h"
-#include "konnector.h"
+#include "agendaplugin.h"
 
 typedef KGenericFactory<KSync::AgendaPlugin, QObject>  AgendaKonnectorPlugin;
 K_EXPORT_COMPONENT_FACTORY( libagendakonnector,  AgendaKonnectorPlugin )
