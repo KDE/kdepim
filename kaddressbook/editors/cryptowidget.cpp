@@ -168,11 +168,11 @@ void CryptoWidget::loadContact( KABC::Addressee *addr )
   blockSignals( true );
 
   mProtocol->setCurrentItem( proto_string_to_int(addr->custom( "KADDRESSBOOK",
-															   "CRYPTOPROTOPREF" )) );
+                                                               "CRYPTOPROTOPREF" )) );
   mSignPref->setCurrentItem( pref_string_to_int(addr->custom( "KADDRESSBOOK",
-															  "CRYPTOSIGNPREF" )) );
+                                                              "CRYPTOSIGNPREF" )) );
   mCryptPref->setCurrentItem( pref_string_to_int(addr->custom( "KADDRESSBOOK",
-															   "CRYPTOENCRYPTPREF" )) );
+                                                               "CRYPTOENCRYPTPREF" )) );
 
   // We dont use the contents of addr->key(...) because we want just a ref.
   // to the key/cert. stored elsewhere.
@@ -186,11 +186,11 @@ void CryptoWidget::loadContact( KABC::Addressee *addr )
 void CryptoWidget::storeContact( KABC::Addressee *addr )
 {
   addr->insertCustom( "KADDRESSBOOK", "CRYPTOPROTOPREF",
-					  proto_int_to_string(mProtocol->currentItem()) );
+                      proto_int_to_string(mProtocol->currentItem()) );
   addr->insertCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF",
-					  pref_int_to_string(mSignPref->currentItem()) );
+                      pref_int_to_string(mSignPref->currentItem()) );
   addr->insertCustom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF",
-					  pref_int_to_string(mCryptPref->currentItem()) );
+                      pref_int_to_string(mCryptPref->currentItem()) );
 
   QString pfp = mPgpKey->fingerprint();
   QString sfp = mSmimeCert->fingerprint();
