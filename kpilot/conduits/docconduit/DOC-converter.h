@@ -24,6 +24,9 @@
 #define BMK_SUFFIX ".bmk"
 #define PDBBMK_SUFFIX ".bm"
 
+#include <qptrlist.h>
+#include <qobject.h>
+
 
 class PilotDatabase;
 
