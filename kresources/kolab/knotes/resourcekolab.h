@@ -34,10 +34,11 @@
 #ifndef RESOURCEKOLAB_H
 #define RESOURCEKOLAB_H
 
-#include <resourcekolabbase.h>
 #include <resourcenotes.h>
 #include <libkcal/incidencebase.h>
 #include <libkcal/calendarlocal.h>
+#include <resourcekolabbase.h>
+#include <subresource.h>
 
 
 namespace Kolab {
@@ -75,15 +76,16 @@ public:
   void incidenceUpdated( KCal::IncidenceBase* );
 
   // The IMAPBase methods called by KMail
-  bool addIncidence( const QString& type, const QString& resource,
-                     const QString& notes );
-  void deleteIncidence( const QString& type, const QString& resource,
-                        const QString& uid );
+  bool fromKMailAddIncidence( const QString& type, const QString& resource,
+                              const QString& note );
+  void fromKMailDelIncidence( const QString& type, const QString& resource,
+                              const QString& note );
   void slotRefresh( const QString& type, const QString& resource );
 
   // Listen to KMail changes in the amount of sub resources
-  void subresourceAdded( const QString& type, const QString& resource );
-  void subresourceDeleted( const QString& type, const QString& resource );
+  void fromKMailAddSubresource( const QString& type, const QString& resource,
+                                bool writable );
+  void fromKMailDelSubresource( const QString& type, const QString& resource );
 
   /** Return the list of subresources. */
   QStringList subresources() const;
@@ -109,7 +111,7 @@ private:
   KCal::CalendarLocal mCalendar;
 
   // The list of subresources
-  QMap<QString, bool> mResources;
+  Kolab::ResourceMap mResources;
   // Mapping from uid to resource
   QMap<QString, QString> mUidmap;
 };
