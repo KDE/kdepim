@@ -30,9 +30,6 @@
 #include "vcaldrag.h"
 #include "vcalformat.h"
 #include "icalformat.h"
-#include "exceptions.h"
-#include "incidence.h"
-#include "journal.h"
 
 #include "filestorage.h"
 
