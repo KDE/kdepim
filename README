@@ -33,26 +33,27 @@ What it is
 * knotes: yellow notes application
 * konsolecalendar: Command line tool for accessing calendar files.
 
-The following apps are not compiled by default:
+There is also quite an amount of infrastructure in this package:
+
+* calendarsystem: library for handling of non-gregorian calendar systems 
+* libical: a basic iCalendar protocol implementation, see RFCs 2245,2246
+* libkcal: C++ api for the iCalendar and vCalendar formats
+* libkpimexchange: connecting to Exchange2000 servers
+* kabc/frontend: A GUI frontend for libkabc, not intended for end users.
+* kgantt: lib to display and manage Gantt diagrams
+* ksync: library for syncing collections of data entries
+
+The following subdirectories have been moved to kdenonbeta/kdepim:
 
 * empath: a modular e-mail client, designed for reuse, needs a Qt
           with threading support
 * twister: another personal information manager, needs empath
 * kab2: another design for the KDE addressbook
 
-There is also quite an amount of infrastructure in this package:
-
-* calendarsystem: library for handling of non-gregorian calendar systems 
 * ldif: a parser for LDIF, the LDAP Information Interchange Format
 * libdif: dito, one of them is superfluous
-* libical: a basic iCalendar protocol implementation, see RFCs 2245,2246
 * libimap: IMAP handling
-* libkcal: C++ api for the iCalendar and vCalendar formats
-* libkpimexchange: connecting to Exchange2000 servers
 * librmm: an Internet mail message parser (RFC 822 -> Class hierarchy)
-* kabc/frontend: A GUI frontend for libkabc, not intended for end users.
-* kgantt: lib to display and manage Gantt diagrams
-* ksync: library for syncing collections of data entries
 
 Mailing List, getting involved
 ------------------------------
