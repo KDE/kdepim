@@ -82,8 +82,6 @@ public:
   /** handle URL given as command-line argument */
   void openURL(const KURL &url);
 
-  void initPopups();
-
   /** update fonts and colors */
   void configChanged();
 
@@ -187,14 +185,6 @@ protected:
   KNListView      *c_olView, *h_drView;
   KDockWidget     *c_olDock, *h_drDock, *a_rtDock;
   bool b_lockui;
-
-  //Popups
-  QPopupMenu  *a_ccPopup,
-    *g_roupPopup,
-    *r_ootFolderPopup,
-    *f_olderPopup,
-    *r_emotePopup,
-    *l_ocalPopup;
 
   //Core
   KNConfigManager   *c_fgManager;
@@ -407,7 +397,6 @@ protected slots:
 private:
   KStatusBarLabel *s_tatusGroup; // widget used in the statusBar() for the group status
   KXMLGUIClient *m_GUIClient;
-  bool           b_popupInitialized;
 };
 
 

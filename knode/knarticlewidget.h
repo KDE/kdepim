@@ -86,7 +86,6 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     void find();
 
     void applyConfig();
-    void setBodyPopup(QPopupMenu *popup)  { b_odyPopup = popup; };
 
     void setArticle(KNArticle *a);
     void createHtmlPage();
@@ -134,7 +133,6 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     bool f_orceCS, emuKMail;
 
     KPopupMenu *u_rlPopup, *a_ttPopup;
-    QPopupMenu *b_odyPopup;
 
     KEdFind* f_inddialog;
     bool     f_ind_first;

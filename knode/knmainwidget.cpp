@@ -62,10 +62,10 @@ KNGlobals knGlobals;
 KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* parent,
                             const char* name  )
   : DCOPObject("KNodeIface"), KDockArea( parent, name ),
-    b_lockui( false ), m_GUIClient( client ),
-    b_popupInitialized( false )
+    b_lockui( false ), m_GUIClient( client )
 {
   knGlobals.top=this;
+  knGlobals.guiClient=client;
   knGlobals.topWidget=this;
   if ( detachable )
     kapp->setMainWidget(this);  // this makes the external viewer windows close on shutdown...
@@ -781,34 +781,6 @@ void KNMainWidget::initActions()
   a_ctSwitchToArticleViewer->plugAccel(a_ccel);
 }
 
-void KNMainWidget::initPopups()
-{
-  a_ccPopup = static_cast<QPopupMenu *>(factory()->container("account_popup", m_GUIClient));
-  if (!a_ccPopup) a_ccPopup = new QPopupMenu(this);
-
-  g_roupPopup = static_cast<QPopupMenu *>(factory()->container("group_popup", m_GUIClient));
-  if (!g_roupPopup) g_roupPopup = new QPopupMenu(this);
-
-  r_ootFolderPopup = static_cast<QPopupMenu *>(factory()->container("root_folder_popup", m_GUIClient));
-  if (!r_ootFolderPopup) r_ootFolderPopup = new QPopupMenu(this);
-
-  f_olderPopup = static_cast<QPopupMenu *>(factory()->container("folder_popup", m_GUIClient));
-  if (!f_olderPopup) f_olderPopup = new QPopupMenu(this);
-
-  r_emotePopup = static_cast<QPopupMenu *>(factory()->container("remote_popup", m_GUIClient));
-  if (!r_emotePopup) r_emotePopup = new QPopupMenu(this);
-
-  l_ocalPopup = static_cast<QPopupMenu *>(factory()->container("local_popup", m_GUIClient));
-  if (!l_ocalPopup) l_ocalPopup = new QPopupMenu(this);
-
-  QPopupMenu *pop = static_cast<QPopupMenu *>(factory()->container("body_popup", m_GUIClient));
-  if (!pop) pop = new QPopupMenu(this);
-  a_rtView->setBodyPopup(pop);
-
-  b_popupInitialized = true;
-}
-
-
 bool KNMainWidget::firstStart()
 {
   KConfig *conf=knGlobals.config();
@@ -1340,14 +1312,16 @@ void KNMainWidget::slotArticleRMB(QListViewItem *i, const QPoint &p, int)
   if(b_lockui)
     return;
 
-  if(!b_popupInitialized)
-    initPopups();
-
   if(i) {
-    if( (static_cast<KNHdrViewItem*>(i))->art->type()==KMime::Base::ATremote)
-      r_emotePopup->popup(p);
-    else
-      l_ocalPopup->popup(p);
+    QPopupMenu *popup;
+    if( (static_cast<KNHdrViewItem*>(i))->art->type()==KMime::Base::ATremote) {
+     popup = static_cast<QPopupMenu *>(factory()->container("remote_popup", m_GUIClient));
+    } else {
+     popup = static_cast<QPopupMenu *>(factory()->container("local_popup", m_GUIClient));
+    }
+
+    if ( popup )
+      popup->popup(p);
   }
 }
 
@@ -1357,19 +1331,26 @@ void KNMainWidget::slotCollectionRMB(QListViewItem *i, const QPoint &p, int)
   if(b_lockui)
     return;
 
-  if ( !b_popupInitialized )
-    initPopups();
-
   if(i) {
-    if( (static_cast<KNCollectionViewItem*>(i))->coll->type()==KNCollection::CTgroup)
-      g_roupPopup->popup(p);
-    else if ((static_cast<KNCollectionViewItem*>(i))->coll->type()==KNCollection::CTfolder) {
-      if (static_cast<KNFolder*>(static_cast<KNCollectionViewItem*>(i)->coll)->isRootFolder())
-        r_ootFolderPopup->popup(p);
-      else
-        f_olderPopup->popup(p);
-    } else
-      a_ccPopup->popup(p);
+    if( (static_cast<KNCollectionViewItem*>(i))->coll->type()==KNCollection::CTgroup) {
+      QPopupMenu *popup = static_cast<QPopupMenu *>(factory()->container("group_popup", m_GUIClient));
+      if ( popup )
+        popup->popup(p);
+    } else if ((static_cast<KNCollectionViewItem*>(i))->coll->type()==KNCollection::CTfolder) {
+      if (static_cast<KNFolder*>(static_cast<KNCollectionViewItem*>(i)->coll)->isRootFolder()) {
+        QPopupMenu *popup = static_cast<QPopupMenu *>(factory()->container("root_folder_popup", m_GUIClient));
+        if ( popup )
+          popup->popup(p);
+      } else {
+        QPopupMenu *popup  = static_cast<QPopupMenu *>(factory()->container("folder_popup", m_GUIClient));
+        if ( popup )
+          popup->popup(p);
+      }
+    } else {
+      QPopupMenu *popup = static_cast<QPopupMenu *>(factory()->container("account_popup", m_GUIClient));
+      if ( popup )
+        popup->popup( p );
+    }
   }
 }
 

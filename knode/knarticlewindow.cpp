@@ -113,9 +113,6 @@ KNArticleWindow::KNArticleWindow(KNArticle *art)
   artW->setCharsetKeyboardAction()->plugAccel(a_ccel);
 
   createGUI("knreaderui.rc");
-  QPopupMenu *pop = static_cast<QPopupMenu *>(factory()->container("body_popup", this));
-  if (!pop) pop = new QPopupMenu(this);
-  artW->setBodyPopup(pop);
 
   KConfig *conf = knGlobals.config();
   conf->setGroup("articleWindow_options");
@@ -156,9 +153,6 @@ void KNArticleWindow::slotConfToolbar()
 void KNArticleWindow::slotNewToolbarConfig()
 {
   createGUI("knreaderui.rc");
-  QPopupMenu *pop = static_cast<QPopupMenu *>(factory()->container("body_popup", this));
-  if (!pop) pop = new QPopupMenu(this); // deleted where?
-  artW->setBodyPopup(pop);
 }
 
 //--------------------------------

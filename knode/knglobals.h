@@ -32,6 +32,7 @@ class KNFilterManager;
 class KNMainWidget;
 class KNScoringManager;
 class KNMemoryManager;
+class KXMLGUIClient;
 namespace Kpgp {
    class Module;
 }
@@ -48,6 +49,7 @@ class KNGlobals {
     QWidget               *topWidget;
     /** no need to include knode.h everywhere */
     KNMainWidget          *top;
+    KXMLGUIClient         *guiClient;
     KNArticleWidget       *artWidget;
     KNConfigManager       *cfgManager;
     KNNetAccess           *netAccess;
