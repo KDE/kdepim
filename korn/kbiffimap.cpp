@@ -33,7 +33,7 @@ void KBiffSocket::close()
 
 bool KBiffSocket::connect(const QString & _host, unsigned int port)
 {
-	// test for _host == ""
+	// test to see if _host is empty
 	if (_host.isNull()) return false;
 	 
 	QCString host(_host.ascii());
