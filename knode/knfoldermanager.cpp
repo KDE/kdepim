@@ -25,14 +25,15 @@
 #include <kaction.h>
 #include <kglobal.h>
 #include <kapp.h>
+#include <kurl.h>
 
 #include "knfolder.h"
-#include "knfoldermanager.h"
 #include "kncollectionviewitem.h"
 #include "kncleanup.h"
 #include "knpurgeprogressdialog.h"
 #include "knsavedarticlemanager.h"
 #include "utilities.h"
+#include "knfoldermanager.h"
 
 
 KNFolderManager::KNFolderManager(KNSavedArticleManager *a, KNListView *v,  QObject * parent, const char * name)

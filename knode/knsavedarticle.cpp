@@ -16,9 +16,9 @@
  ***************************************************************************/
 
 #include <qpixmap.h>
-#include "utilities.h"
-#include "knsavedarticle.h"
+
 #include "knhdrviewitem.h"
+#include "knsavedarticle.h"
 
 
 KNSavedArticle::KNSavedArticle(articleStatus s)

@@ -20,8 +20,12 @@
 #define KNARTICLEMANAGER_H
 
 #include <qlist.h>
-#include <kurl.h>
-#include <ktempfile.h>
+
+class QFile;
+class QString;
+
+class KURL;
+class KTempFile;
 
 class KNListView;
 class KNArticleWidget;
@@ -49,6 +53,7 @@ private:
   KURL url;
   QFile* file;
   KTempFile* tmpFile;	
+
 };
 
 
@@ -72,7 +77,8 @@ class KNArticleManager {
 	protected:	
 		KNListView *view;
 		KNArticleWidget *mainArtWidget;
-		static QList<KTempFile> tempFiles;		
+		static QList<KTempFile> tempFiles;	
+			
 };
 
 #endif

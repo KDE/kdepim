@@ -20,12 +20,13 @@
 #define KNREADHDRSETTINGS_H
 
 
-#include <qlineedit.h>
-#include <qcheckbox.h>
-#include <qpushbutton.h>
 #include "knsettingswidget.h"
-#include "knlistbox.h"
 
+class QLineEdit;
+class QCheckBox;
+class QPushButton;
+
+class KNListBox;
 
 
 class KNReadHdrSettings : public KNSettingsWidget  {
@@ -56,6 +57,7 @@ class KNReadHdrSettings : public KNSettingsWidget  {
 		void slotUpBtnClicked();
 		void slotDownBtnClicked();
 		void slotOkBtnClicked();
+
 };
 
 #endif

@@ -20,10 +20,12 @@
 #define KNUSERWIDGET_H
 
 #include <qgroupbox.h>
-#include <qlineedit.h>
-#include <qpushbutton.h>
 
-#include "knuserentry.h"
+class QLineEdit;
+class QPushButton;
+
+class KNUserEntry;
+
 
 class KNUserWidget : public QGroupBox  {
 	

@@ -15,11 +15,15 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <klocale.h>
-
-#include "knstatusfilter.h"
-#include "utilities.h"
 #include <qlayout.h>
+#include <qbitarray.h>
+#include <qcheckbox.h>
+
+#include <klocale.h>
+#include <ksimpleconfig.h>
+
+#include "knfetcharticle.h"
+#include "knstatusfilter.h"
 
 
 KNStatusFilter::KNStatusFilter()

@@ -24,6 +24,7 @@
 #include "knarticle.h"
 #include "kncollection.h"
 
+
 class KNArticleCollection : public KNCollection {
 
 	public:
@@ -52,6 +53,10 @@ class KNArticleCollection : public KNCollection {
 		int siz, len, lastID, incr;
 		KNArticle **list;
 };
+
+
+//==============================================================================
+
 
 class KNFile : public QFile {
 

@@ -16,9 +16,9 @@
 #ifndef KNHDRVIEWITEM_H
 #define KNHDRVIEWITEM_H
 
-#include "knlvitembase.h"
-#include "knarticle.h"
+#include "knlistview.h"
 
+class KNArticle;
 
 
 class KNHdrViewItem : public KNLVItemBase  {

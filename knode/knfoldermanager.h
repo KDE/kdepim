@@ -20,13 +20,13 @@
 #define KNFOLDERMANAGER_H
 
 #include <qlist.h>
-
-class KAction;
+#include <kaction.h>
 
 class KNListView;
 class KNPurgeProgressDialog;
 class KNFolder;
 class KNSavedArticleManager;
+
 
 class KNFolderManager : public QObject
 {

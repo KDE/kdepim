@@ -20,9 +20,10 @@
 #define KNREADGENSETTINGS_H
 
 #include "knsettingswidget.h"
-#include <qcheckbox.h>
-#include <qspinbox.h>
-#include <qcombobox.h>
+
+class QCheckBox;
+class QSpinBox;
+class QComboBox;
 
 
 class KNReadGenSettings : public KNSettingsWidget  {
@@ -38,6 +39,7 @@ class KNReadGenSettings : public KNSettingsWidget  {
 		QCheckBox *autoCB, *markCB, *sigCB, *inlineCB, *openAttCB, *expCB, *altAttCB;
 		QSpinBox *markSecs, *maxFetch;
 		QComboBox *browser;		
+		
 };
 
 #endif

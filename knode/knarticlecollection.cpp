@@ -21,7 +21,7 @@
 #include <kmessagebox.h>
 
 #include "knarticlecollection.h"
-#include "utilities.h"
+
 
 KNArticleCollection::KNArticleCollection(KNCollection *p)
 	: KNCollection(p)

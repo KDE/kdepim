@@ -15,8 +15,13 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <qlineedit.h>
+#include <qgroupbox.h>
+#include <qlabel.h>
+
 #include <klocale.h>
 
+#include "knuserwidget.h"
 #include "kngrouppropdlg.h"
 #include "utilities.h"
 #include "kngroup.h"
@@ -91,23 +96,24 @@ KNGroupPropDlg::statistics::statistics(QWidget *parent, const char *name, int *v
 		
 	sprintf(tmp, "%d", values[0]);
 	t_otal=new QLabel(tmp, gb1);
+	t_otal->setMinimumSize(t_otal->sizeHint());	
 	
 	sprintf(tmp, "%d", values[1]);
 	u_nread=new QLabel(tmp, gb1);
+	u_nread->setMinimumSize(u_nread->sizeHint());
 
 	sprintf(tmp, "%d", values[2]);
 	n_ew=new QLabel(tmp, gb1);
+  n_ew->setMinimumSize(n_ew->sizeHint());	
 		
 	sprintf(tmp, "%d", values[3]);
 	u_nrThr=new QLabel(tmp, gb1);
+	u_nrThr->setMinimumSize(u_nrThr->sizeHint());
 		
 	sprintf(tmp, "%d", values[4]);
 	n_ewThr=new QLabel(tmp, gb1);
-		
-	SIZE(t_otal); SIZE(u_nread); SIZE(n_ew);
-	SIZE(u_nrThr); SIZE(n_ewThr);
-	 	
-	
+	n_ewThr->setMinimumSize(n_ewThr->sizeHint());
+			
 	QGridLayout *topL=new QGridLayout(gb1, 5,2, 20,10);
 	
 	topL->addWidget(l1, 0,0);

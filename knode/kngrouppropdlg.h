@@ -21,13 +21,14 @@
 
 
 #include <qtabdialog.h>
-#include <qgroupbox.h>
-#include <qlabel.h>
-#include <qlineedit.h>
-#include <qcheckbox.h>
-#include "knuserwidget.h"
 
+class QGroupBox;
+class QLabel;
+class QLineEdit;
+class QCheckBox;
+class KNUserWidget;
 class KNGroup;
+
 
 class KNGroupPropDlg : public QTabDialog  {
 

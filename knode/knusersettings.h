@@ -20,8 +20,9 @@
 #define KNUSERSETTINGS_H
 
 #include "knsettingswidget.h"
-#include "knuserwidget.h"
 
+class KNUserWidget;
+class KNUserEntry;
 
 
 class KNUserSettings : public KNSettingsWidget  {
@@ -36,6 +37,7 @@ class KNUserSettings : public KNSettingsWidget  {
 	protected:
 		KNUserWidget *uw;
 		KNUserEntry *user;
+		
 };
 
 #endif

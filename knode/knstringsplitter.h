@@ -38,14 +38,12 @@ class KNStringSplitter {
 		bool prev();	
 			
 		QCString& string()							{ return dst; }
-		
-			
+					
 	private:
 		QCString src, dst, sep;
 		int start,end;
 		bool incSep;
-	
-		
+			
 };
 
 #endif

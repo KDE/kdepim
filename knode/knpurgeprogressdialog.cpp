@@ -15,12 +15,14 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "knpurgeprogressdialog.h"
-#include "utilities.h"
-#include "knglobals.h"
+#include <qprogressbar.h>
+#include <qlayout.h>
 
 #include <kseparator.h>
-#include <qlayout.h>
+
+#include "knode.h"
+#include "knglobals.h"
+#include "knpurgeprogressdialog.h"
 
 
 KNPurgeProgressDialog::KNPurgeProgressDialog()
@@ -50,15 +52,15 @@ KNPurgeProgressDialog::KNPurgeProgressDialog()
 	setFrameStyle(WinPanel | Raised);
 	setFixedSize(400,120);
 	
-	if(xTop->isVisible()) {
-		x=(xTop->width()-400)/2;
-		y=(xTop->height()-120)/2;
+	if(knGlobals.top->isVisible()) {
+		x=(knGlobals.top->width()-400)/2;
+		y=(knGlobals.top->height()-120)/2;
 		if(x<0 || y<0) {
 			x=0;
 			y=0;
 		}
-		x+=xTop->x();
-		y+=xTop->y();
+		x+=knGlobals.top->x();
+		y+=knGlobals.top->y();
 		move(x,y);
 	}	
 }

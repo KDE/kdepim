@@ -15,12 +15,18 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <kseparator.h>
+#include <qtimer.h>
 
-#include "kngroupbrowser.h"
+#include <kseparator.h>
+#include <kiconloader.h>
+#include <klocale.h>
+
+#include "knode.h"
 #include "knglobals.h"
 #include "knarticlecollection.h" //KNFile
 #include "knnntpaccount.h"
+#include "kngroupmanager.h"
+#include "kngroupbrowser.h"
 
 
 KNGroupBrowser::KNGroupBrowser(QWidget *parent, KNNntpAccount *a) :
@@ -28,7 +34,7 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, KNNntpAccount *a) :
 {
   allList=new QStrList();
   subList=new QStrList();
-  xTop->gManager()->getSubscribed(a, subList);
+  knGlobals.gManager->getSubscribed(a, subList);
   matchList=new QStrList(false);
   matchList->setAutoDelete(false);
   listPtr=allList;
@@ -150,7 +156,7 @@ void KNGroupBrowser::slotLoadList()
   QCString line;
 
   if(f.open(IO_ReadOnly)) {
-    xTop->setStatusMsg(i18n("loading list of groups ..."));
+    knGlobals.top->setStatusMsg(i18n("loading list of groups ..."));
     allList->clear();			
 
     while(!f.atEnd()) {
@@ -163,7 +169,7 @@ void KNGroupBrowser::slotLoadList()
     }
 
     f.close();
-    xTop->setStatusMsg();
+    knGlobals.top->setStatusMsg();
     filterEdit->setText("");
     slotFilter("");
   }	

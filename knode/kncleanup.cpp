@@ -15,13 +15,22 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <stdlib.h>
+
 #include <qdatetime.h>
+#include <qtextstream.h>
 
 #include <kmessagebox.h>
 #include <kglobal.h>
+#include <kconfig.h>
 
-#include "kncleanup.h"
+#include "kngroup.h"
+#include "knfolder.h"
+#include "knfetcharticle.h"
+#include "knsavedarticle.h"
 #include "knglobals.h"
+#include "kncleanup.h"
+
 
 KNCleanUp::KNCleanUp()
 {

@@ -21,7 +21,7 @@
 
 #include <qstring.h>
 #include <qstrlist.h>
-#include <mimelib/string.h>
+
 
 class KNArticleBase {
 	

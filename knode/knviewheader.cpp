@@ -18,10 +18,12 @@
  ***************************************************************************/
 
 #include <ksimpleconfig.h>
+#include <kglobal.h>
 #include <kstddirs.h>
 
-#include "knviewheader.h"
 #include "utilities.h"
+#include "knviewheader.h"
+
 
 QList<KNViewHeader> KNViewHeader::instances;
 

@@ -17,10 +17,10 @@
 
 #include <stdlib.h>
 #include <qstrlist.h>
-//#include <kapp.h>
 #include <klocale.h>
 
 #include "knsavedarticle.h"
+#include "knfetcharticle.h"
 #include "kngroup.h"
 #include "knjobdata.h"
 #include "knnntpclient.h"

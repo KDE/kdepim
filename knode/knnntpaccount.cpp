@@ -18,8 +18,9 @@
 #include <ksimpleconfig.h>
 #include <kstddirs.h>
 
-#include "knnntpaccount.h"
 #include "utilities.h"
+#include "knnntpaccount.h"
+
 
 KNNntpAccount::KNNntpAccount() : KNCollection(0), KNServerInfo()
 {

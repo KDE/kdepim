@@ -20,9 +20,13 @@
 #define KNFILTERSETTINGS_H
 
 #include "knsettingswidget.h"
-#include "knlistbox.h"
-#include "knfiltermanager.h"
-#include <qpushbutton.h>
+
+class QPushButton;
+
+class KNListBox;
+class KNFilterManager;
+class KNArticleFilter;
+
 
 class KNFilterSettings : public KNSettingsWidget  {
 	

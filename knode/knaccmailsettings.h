@@ -20,8 +20,9 @@
 #define KNACCMAILSETTINGS_H
 
 #include "knsettingswidget.h"
-#include <qlineedit.h>
-#include <qspinbox.h>
+
+class QLineEdit;
+class QSpinBox;
 
 class KNAccMailSettings : public KNSettingsWidget  {
 	

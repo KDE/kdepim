@@ -15,10 +15,11 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "knfetcharticle.h"
-#include "knstringsplitter.h"
-#include "utilities.h"
+#include <stdio.h>
+
 #include "knhdrviewitem.h"
+#include "knfetcharticle.h"
+
 
 KNFetchArticle::KNFetchArticle()
 {

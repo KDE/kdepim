@@ -24,6 +24,7 @@
 
 class QProgressBar;
 
+
 class KNPurgeProgressDialog : public QFrame  {
  	
  	public:
@@ -33,13 +34,13 @@ class KNPurgeProgressDialog : public QFrame  {
 		void init(const QString& txt, int st);
 		void setInfo(const QString& txt) { info->setText(txt); }
 		void progress();
-		
-		
+						
 	protected:
 		QLabel *text, *info;
 		QProgressBar *pb;
 		
 		int s_teps, p_rogress;	
+		
 };
 
 #endif

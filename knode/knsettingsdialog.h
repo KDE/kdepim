@@ -20,8 +20,6 @@
 #define KNSETTINGSDIALOG_H
 
 #include <kdialogbase.h>
-#include <qlistview.h>
-#include <kjanuswidget.h>
 
 class KNSettingsWidget;
 

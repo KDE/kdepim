@@ -17,17 +17,21 @@
 
 #include <qfile.h>
 #include <qtextstream.h>
+#include <mimelib/datetime.h>
+
 #include <ksimpleconfig.h>
 #include <klocale.h>
-#include <mimelib/datetime.h>
 #include <kmessagebox.h>
 
-#include "utilities.h"
+#include "knuserentry.h"
+#include "knfetcharticle.h"
 #include "knstringsplitter.h"
-#include "kngroup.h"
 #include "kncollectionviewitem.h"
 #include "kngrouppropdlg.h"
 #include "knnntpaccount.h"
+#include "utilities.h"
+#include "kngroup.h"
+
 
 #define SORT_DEPTH 5
 
@@ -702,7 +706,6 @@ void KNGroup::resort()
 void KNGroup::updateThreadInfo()
 {
 	KNFetchArticle *ref;
-	int idRef;
 	bool brokenThread=false;
 	
 	for(int idx=0; idx<len; idx++) {
@@ -711,7 +714,7 @@ void KNGroup::updateThreadInfo()
 	}
 		
 	for(int idx=0; idx<len; idx++) {
-		idRef=at(idx)->idRef();
+		int idRef=at(idx)->idRef();
 		while(idRef!=0) {
 			ref=byId(idRef);
 			if(!ref) {

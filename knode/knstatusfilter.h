@@ -20,9 +20,13 @@
 
 #include <qbuttongroup.h>
 #include <qcombobox.h>
-#include <qcheckbox.h>
-#include <ksimpleconfig.h>
-#include "knfetcharticle.h"
+
+class QCheckBox;
+class QBitArray;
+
+class KSimpleConfig;
+
+class KNFetchArticle;
 
 
 class KNStatusFilter {
@@ -46,6 +50,8 @@ class KNStatusFilter {
 
 };
 
+
+//=================================================================================
 
 
 class KNStatusFilterWidget : public QButtonGroup  {
@@ -93,19 +99,4 @@ class KNStatusFilterWidget : public QButtonGroup  {
 #define DAT_NS 	7
 
 
-
-
-
 #endif
-
-
-
-
-
-
-
-
-
-
-
-

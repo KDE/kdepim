@@ -19,8 +19,9 @@
 #ifndef KNCLEANUP_H
 #define KNCLEANUP_H
 
-#include "kngroup.h"
-#include "knfolder.h"
+class KNGroup;
+class KNFolder;
+
 
 class KNCleanUp {
 	

@@ -16,14 +16,39 @@
 #ifndef KNGLOBALS_H
 #define KNGLOBALS_H
 
-#include "knnetaccess.h"
-#include "knode.h"
+class KNNetAccess;
+class KNodeApp;
+class KNProgress;
+class KNAccountManager;
+class KNGroupManager;
+class KNFetchArticleManager;
+class KNFolderManager;
+class KNSavedArticleManager;
+class KNFilterManager;
 
-extern KNNetAccess *xNet;
 
-extern KNodeApp *xTop;
+// idea: Previously the manager classes were available
+//       via KNodeApp. Now they can be accessed directly,
+//       this removes many header dependencies.
+//       (knode.h isn't include everywhere)
+class KNGlobals {
 
-extern KNProgress *xProgress;
+  public:
+
+    KNodeApp              *top;
+    KNNetAccess           *netAccess;
+    KNProgress            *progressBar;
+    KNAccountManager      *accManager;
+    KNGroupManager        *gManager;
+    KNFetchArticleManager *fArtManager;
+    KNFolderManager       *foManager;
+    KNSavedArticleManager *sArtManager;
+    KNFilterManager       *fiManager;
+
+};
+
+
+extern KNGlobals knGlobals;
 
 #endif
 

@@ -21,6 +21,7 @@
 
 #include <qwidget.h>
 
+
 class KNSettingsWidget : public QWidget  {
 	
 	Q_OBJECT	
@@ -33,6 +34,7 @@ class KNSettingsWidget : public QWidget  {
 		virtual void apply()	{}
 		
 		QSize sizeHint()			{ return minimumSize(); }
+
 };
 
 #endif

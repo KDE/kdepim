@@ -20,10 +20,12 @@
 #define KNREADAPPSETTINGS_H
 
 #include "knsettingswidget.h"
-#include <qlistbox.h>
-#include <kcolorbtn.h>
-#include <qcombobox.h>
-#include <qspinbox.h>
+
+class QListBox;
+class QComboBox;
+class QSpinBox;
+
+class KColorButton;
 
 
 class KNReadAppSettings : public KNSettingsWidget  {
@@ -47,6 +49,7 @@ class KNReadAppSettings : public KNSettingsWidget  {
 	protected slots:
 		void slotCListChanged(int id);
 		void slotColorChanged(const QColor &col);
+		
 };
 
 #endif

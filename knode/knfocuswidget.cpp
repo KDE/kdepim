@@ -16,8 +16,9 @@
  ***************************************************************************/
 
 #include <qpainter.h>
-#include "utilities.h"
+
 #include "knfocuswidget.h"
+
 
 KNFocusWidget::KNFocusWidget(QWidget *parent, const char *name)
 	: QWidget(parent, name)

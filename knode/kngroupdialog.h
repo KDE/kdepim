@@ -13,11 +13,12 @@
  *                                                                         *
  ***************************************************************************/
 
+
 #ifndef KNGROUPDIALOG_H
 #define KNGROUPDIALOG_H
 
-
 #include "kngroupbrowser.h"
+
 
 class KNGroupDialog : public KNGroupBrowser {
 

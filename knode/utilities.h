@@ -16,15 +16,17 @@
 #ifndef UTIL
 #define UTIL
 
-#include <qstring.h>
-#include <qsize.h>
+class QWidget;
+class QString;
+class QSize;
 
+/*
 #define SIZE(w) 		w->setMinimumSize(w->sizeHint())
 #define FSIZE(w) 		w->setFixedSize(w->sizeHint())
 #define WIDTH(w,s)  w->setMinimumWidth(s); w->setMinimumHeight(w->sizeHint().height())
 #define HEIGHT(w,s) w->setMinimumHeight(s); w->setMinimumWidth(w->sizeHint().width());
 
-/*bool stripCRLF(char *str);
+bool stripCRLF(char *str);
 bool stripCRLF(QCString &str);
 void removeQuots(QCString &str);*/
 

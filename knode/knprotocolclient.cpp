@@ -15,9 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
+
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <netinet/in.h>
@@ -30,7 +29,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
-#include <klocale.h>
 
 #ifndef MSG_NOSIGNAL
 /* bloody glibc 2.0 doesn't define MSG_NOSIGNAL */
@@ -41,7 +39,13 @@
 #endif
 #endif
 
+#include <qstrlist.h>
+#include <klocale.h>
+
+#include "knserverinfo.h"
+#include "knjobdata.h"
 #include "knprotocolclient.h"
+
 
 KNProtocolClient::KNProtocolClient(int NfdPipeIn, int NfdPipeOut, QObject *parent, const char *name)
 :  QObject(parent,name), job(0L), inputSize(10000), fdPipeIn(NfdPipeIn), fdPipeOut(NfdPipeOut), tcpSocket(-1)

@@ -18,13 +18,16 @@
 #include <qgroupbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qpushbutton.h>
+#include <qlineedit.h>
+#include <qcheckbox.h>
 
 #include <kmessagebox.h>
 #include <klocale.h>
 
-#include "knreadhdrsettings.h"
+#include "knlistbox.h"
 #include "knviewheader.h"
-#include "utilities.h"
+#include "knreadhdrsettings.h"
 
 
 KNReadHdrSettings::KNReadHdrSettings(QWidget *p) : KNSettingsWidget(p)

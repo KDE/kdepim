@@ -13,23 +13,39 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <qpixmap.h>
+
 #include <kmessagebox.h>
 #include <kstdaction.h>
 #include <kaccel.h>
+#include <kurl.h>
+#include <klocale.h>
+#include <khtml_part.h>
 
+#include "knjobdata.h"
+#include "knnetaccess.h"
+#include "knpurgeprogressdialog.h"
+#include "knarticlewidget.h"
+#include "knodeview.h"
 #include "knsettingsdialog.h"
 #include "knhdrviewitem.h"
 #include "kncollectionviewitem.h"
 #include "knviewheader.h"
+#include "knfetcharticlemanager.h"
 #include "knsavedarticlemanager.h"
+#include "kngroupmanager.h"
+#include "knaccountmanager.h"
+#include "knfoldermanager.h"
+#include "knfiltermanager.h"
 #include "knfolder.h"
+#include "kngroup.h"
 #include "utilities.h"
 #include "resource.h"
+#include "knglobals.h"
 #include "knode.h"
 
-KNProgress* xProgress;
-KNodeApp* xTop;
-KNNetAccess *xNet;
+
+KNGlobals knGlobals;
 
 
 //========================================================================
@@ -119,7 +135,7 @@ QSize KNProgress::sizeHint() const
 
 KNodeApp::KNodeApp()
 {
-  xTop=this;
+  knGlobals.top=this;
 
   //init the GUI
   setPlainCaption("KNode " KNODE_VERSION);
@@ -129,25 +145,31 @@ KNodeApp::KNodeApp()
 	
   //init Net
 	NAcc=new KNNetAccess();
-	xNet=NAcc;
+	knGlobals.netAccess = NAcc;
 	
   //init filter manager
 	FiManager=new KNFilterManager();
+	knGlobals.fiManager = FiManager;
 
 	//init Fetch-Article Manager
 	FAManager=new KNFetchArticleManager(view->hdrView, FiManager);
+	knGlobals.fArtManager = FAManager;
 				
   //init Group Manager
 	GManager=new KNGroupManager(FAManager);
+	knGlobals.gManager = GManager;	
 	
 	//init Account Manager
 	AManager=new KNAccountManager(GManager, view->collectionView);
+	knGlobals.accManager = AManager;
 	
 	//init Saved-Article Manager
 	SAManager=new KNSavedArticleManager(view->hdrView, AManager);
+	knGlobals.sArtManager = SAManager;
 	
 	//init Folder Manager
 	FoManager=new KNFolderManager(SAManager, view->collectionView);
+	knGlobals.foManager = FoManager;
 
 	// all components that provide actions are created, now
 	// build menu- & toolbar
@@ -254,7 +276,7 @@ void KNodeApp::initStatusBar()
 	KStatusBar *sb=statusBar();
 	
 	progBar = new KNProgress(sb->sizeHint().height()-4,0,1000,0, KProgress::Horizontal,sb );
-	xProgress = progBar;
+	knGlobals.progressBar = progBar;
   sb->addWidget(progBar);
 	
  	sb->insertItem(QString::null, SB_MAIN,2);

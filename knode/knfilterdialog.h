@@ -27,6 +27,7 @@ class QLineEdit;
 class QComboBox;
 class QCheckBox;
 
+
 class KNFilterDialog : public QSemiModal {
 	
 	Q_OBJECT

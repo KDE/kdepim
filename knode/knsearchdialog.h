@@ -19,11 +19,13 @@
 #ifndef KNSEARCHDIALOG_H
 #define KNSEARCHDIALOG_H
 
-#include <qdialog.h>
-#include <qpushbutton.h>
-#include "knfilterconfigwidget.h"
+#include <qwidget.h>
 
+class QPushButton;
+
+class KNFilterConfigWidget;
 class KNArticleFilter;
+
 
 class KNSearchDialog : public QWidget  {
 	

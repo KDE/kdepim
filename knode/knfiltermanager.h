@@ -19,17 +19,14 @@
 #ifndef KNFILTERMANAGER_H
 #define KNFILTERMANAGER_H
 
-#include <qobject.h>
-#include <qpushbutton.h>
-#include <qsemimodal.h>
+#include <qlist.h>
 
 #include <kaction.h>
 
-#include "knarticlefilter.h"
-#include "knlistbox.h"
-
-
 class KNFilterSettings;
+class KNArticleFilter;
+class KNFilterDialog;
+
 
 class KNFilterSelectAction : public KAction
 {
@@ -57,6 +54,8 @@ class KNFilterSelectAction : public KAction
 };
 
 
+//==================================================================================
+
 
 class KNFilterManager : public QObject
 {
@@ -71,7 +70,7 @@ class KNFilterManager : public QObject
 		void readOptions();
 		void saveOptions();
 		
-		KNArticleFilter* currentFilter()	    { return currFilter; }		
+		KNArticleFilter* currentFilter()	      { return currFilter; }		
 			
 		void startConfig(KNFilterSettings *fs);
 		void endConfig();
@@ -105,20 +104,3 @@ class KNFilterManager : public QObject
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -20,6 +20,7 @@
 #define KNFETCHARTICLEMANAGER_H
 
 #include <kaction.h>
+
 #include "knarticlemanager.h"
 
 class QTimer;

@@ -15,8 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
-
+#include "kngroup.h"
+#include "knfetcharticle.h"
 #include "knthread.h"
+
 
 KNThread::KNThread()
 {
@@ -77,7 +79,7 @@ void KNThread::createThreadOf(KNFetchArticle *a)
 int KNThread::setRead(bool r, int &newCnt)
 {
 	KNFetchArticle *ref;
-	int idRef, changeCnt=0, n_ew=0;
+	int changeCnt=0, n_ew=0;
 
 	for(KNFetchArticle *a=hdrs->first(); a; a=hdrs->next()) {
 		
@@ -96,7 +98,7 @@ int KNThread::setRead(bool r, int &newCnt)
 			
 			if(!r) {
 				
-				idRef=a->idRef();
+				int idRef=a->idRef();
 				
 				while(idRef!=0) {
 					ref=src->byId(idRef);

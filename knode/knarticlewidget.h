@@ -20,12 +20,15 @@
 #define KNARTICLEWIDGET_H
 
 #include <qvbox.h>
-#include <qscrollview.h>
+#include <qlist.h>
 
-#include <kurl.h>
 #include <kparts/browserextension.h>
-#include <khtml_part.h>
-#include <kaction.h>
+
+class QPopupMenu;
+class QScrollView;
+
+class KActionCollection;
+class KHTMLPart;
 
 class KNArticle;
 class KNArticleCollection;

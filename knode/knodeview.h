@@ -20,13 +20,11 @@
 #include <config.h>
 #endif
 
-
 #include <qsplitter.h>
+#include <kaction.h>
 
-#include <kapp.h>
-
-#include "knarticlewidget.h"
-#include "knlistview.h"
+class KNArticleWidget;
+class KNListView;
 
 
 class KNodeView : public QSplitter

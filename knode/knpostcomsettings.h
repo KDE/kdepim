@@ -20,9 +20,10 @@
 #define KNPOSTCOMSETTINGS_H
 
 #include "knsettingswidget.h"
-#include <qcheckbox.h>
-#include <qspinbox.h>
-#include <qlineedit.h>
+
+class QCheckBox;
+class QSpinBox;
+class QLineEdit;
 
 
 class KNPostComSettings : public KNSettingsWidget  {

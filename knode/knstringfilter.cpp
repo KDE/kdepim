@@ -15,12 +15,16 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <klocale.h>
-
-#include "knstringfilter.h"
-#include "utilities.h"
 #include <qlayout.h>
 #include <qregexp.h>
+#include <qcheckbox.h>
+#include <qcombobox.h>
+#include <qlineedit.h>
+
+#include <klocale.h>
+#include <ksimpleconfig.h>
+
+#include "knstringfilter.h"
 
 
 KNStringFilter& KNStringFilter::operator=(const KNStringFilter &sf)

@@ -19,16 +19,19 @@
 #ifndef KNNETACCESS_H
 #define KNNETACCESS_H
 
+#include <pthread.h>
+
 #include <qobject.h>
 #include <qqueue.h>
-#include <qsocketnotifier.h>
-#include <pthread.h>
 
 #include <kaction.h>
 
-#include "knnntpclient.h"
-#include "knsmtpclient.h"
-#include "knjobdata.h"
+class QSocketNotifier;
+
+class KNJobData;
+class KNNntpClient;
+class KNSmtpClient;
+
 
 class KNNetAccess : public QObject  {
 
@@ -66,6 +69,7 @@ class KNNetAccess : public QObject  {
 	protected slots:
 		void slotThreadSignal(int i);
 		void slotCancelAllJobs();
+		
 };
 
 #endif

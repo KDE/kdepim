@@ -15,14 +15,24 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <klocale.h>
-
 #include <qlayout.h>
-#include "knsenderrordialog.h"
-#include "knglobals.h"
-#include "utilities.h"
+#include <qlabel.h>
+#include <qframe.h>
+#include <qpushbutton.h>
 
-KNSendErrorDialog::KNSendErrorDialog() : QSemiModal(xTop, 0, true)
+#include <klocale.h>
+#include <kiconloader.h>
+
+#include "knjobdata.h"
+#include "knsavedarticle.h"
+#include "utilities.h"
+#include "knlistbox.h"
+#include "knode.h"
+#include "knglobals.h"
+#include "knsenderrordialog.h"
+
+
+KNSendErrorDialog::KNSendErrorDialog() : QSemiModal(knGlobals.top, 0, true)
 {
 	jobList.setAutoDelete(true);
 	jobs=new KNListBox(this);

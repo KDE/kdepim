@@ -19,13 +19,15 @@
 #include <qgroupbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qcheckbox.h>
+#include <qspinbox.h>
+#include <qcombobox.h>
 
 #include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
 
 #include "knreadgensettings.h"
-#include "utilities.h"
 
 
 KNReadGenSettings::KNReadGenSettings(QWidget *p) : KNSettingsWidget(p)

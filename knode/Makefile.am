@@ -21,10 +21,9 @@ knode_SOURCES = kngroupbrowser.cpp knpurgeprogressdialog.cpp knsmtpclient.cpp \
 	kngrouppropdlg.cpp knuserwidget.cpp knuserentry.cpp \
 	knscoredialog.cpp knthread.cpp convert.cpp knfiltermanager.cpp \
 	knstatusfilter.cpp knstringfilter.cpp knrangefilter.cpp \
-	knfilterdialog.cpp kngroupdialog.cpp \
-	knstringsplitter.cpp knhdrviewitem.cpp knlistview.cpp knlistbox.cpp \
-	knlboxitem.cpp knlvitembase.cpp utilities.cpp knodeview.cpp \
-	knode.cpp main.cpp
+	knfilterdialog.cpp kngroupdialog.cpp  knstringsplitter.cpp \
+        knhdrviewitem.cpp knlistview.cpp knlistbox.cpp 	utilities.cpp \
+        knodeview.cpp knode.cpp main.cpp
 
 noinst_HEADERS = knaccmailsettings.h      knglobals.h              knrangefilter.h \
 	knaccnewssettings.h      kngroup.h                knreadappsettings.h \
@@ -36,10 +35,10 @@ noinst_HEADERS = knaccmailsettings.h      knglobals.h              knrangefilter
 	knarticlemanager.h       knhdrviewitem.h          knsearchdialog.h \
 	knarticlewidget.h        knjobdata.h              knsenderrordialog.h \
 	knarticlewindow.h        knkeysettings.h          knserverinfo.h \
-	kncleanup.h              knlboxitem.h             knsettingsdialog.h \
+	kncleanup.h              knsettingsdialog.h \
 	kncleanupsettings.h      knlistbox.h              knsettingswidget.h \
 	kncollection.h           knlistview.h             knsmtpclient.h \
-	kncollectionviewitem.h   knlvitembase.h           knstatusfilter.h \
+	kncollectionviewitem.h   knstatusfilter.h \
 	kncomposer.h             knmimecontent.h          knstringfilter.h \
 	knmimeinfo.h             knstringsplitter.h \
 	knfetcharticle.h         knnetaccess.h            knthread.h \

@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#define HAVE_SGI_STL
+//#define HAVE_SGI_STL
 #include <qlabel.h>
 #include <qlayout.h>
 
@@ -29,10 +29,12 @@
 #include <kkeydialog.h>
 #include <kedittoolbar.h>
 
-#include "kncomposer.h"
+#include "knsavedarticle.h"
+#include "knmimecontent.h"
 #include "kngroupselectdialog.h"
 #include "knstringsplitter.h"
 #include "utilities.h"
+#include "kncomposer.h"
 
 
 KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
@@ -404,10 +406,10 @@ KNComposer::ComposerView::ComposerView(QWidget *parent, bool mail)
 	destButton=new QPushButton(i18n("Browse..."), fr1);
 	if(!mail) {
 		fupCheck=new QCheckBox(i18n("Followup-To:"), fr1);
+		fupCheck->setMinimumSize(fupCheck->sizeHint());
 		fup2=new QComboBox(true, fr1);
+		fup2->setMinimumSize(fup2->sizeHint());
 		frameLines=3;
-		SIZE(fupCheck);
-		SIZE(fup2);
 	}
 	
 	//SIZE(l1); SIZE(l2); SIZE(destButton);

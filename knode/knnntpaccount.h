@@ -19,9 +19,8 @@
 #ifndef KNNNTPACCOUNT_H
 #define KNNNTPACCOUNT_H
 
-//#include <qlist.h>
+#include "kncollection.h"
 #include "knserverinfo.h"
-#include "kngroup.h"
 
 
 class KNNntpAccount : public KNCollection, public KNServerInfo {

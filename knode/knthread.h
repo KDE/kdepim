@@ -20,8 +20,9 @@
 #define KNTHREAD_H
 
 #include <qlist.h>
-#include "kngroup.h"
 
+class KNGroup;
+class KNFetchArticle;
 
 class KNThread {
 	
@@ -44,11 +45,11 @@ class KNThread {
 		void toggleWatched();
 		void toggleIgnored();
 		//void kill() {}
-		
-		
+				
   protected:
   	QList<KNFetchArticle> *hdrs;
   	KNGroup *src;
+  	
 };
 
 #endif

@@ -15,12 +15,17 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <qlayout.h>
+#include <qlabel.h>
+#include <qbuttongroup.h>
+#include <qradiobutton.h>
+#include <qspinbox.h>
+#include <qpushbutton.h>
+
 #include <klocale.h>
 
 #include "knscoredialog.h"
-#include "utilities.h"
-#include <qlayout.h>
-#include <qlabel.h>
+
 
 KNScoreDialog::KNScoreDialog(short sc, QWidget *parent, const char *name ) :
 	QDialog(parent,name, true)
@@ -33,11 +38,12 @@ KNScoreDialog::KNScoreDialog(short sc, QWidget *parent, const char *name ) :
 	cBtn=new QRadioButton(i18n("custom"), bg);
 	spin=new QSpinBox(0,100,1,bg);
 	okBtn=new QPushButton(i18n("OK"), this);
+  okBtn->setMinimumSize(okBtn->sizeHint());
 	cancelBtn=new QPushButton(i18n("Cancel"), this);
+	cancelBtn->setMinimumSize(cancelBtn->sizeHint());
 		
 	//spin->setFixedHeight(spin->sizeHint().height());
 	//spin->setMinimumWidth(spin->sizeHint().width());
-	SIZE(cancelBtn); SIZE(okBtn);
 		
 	QVBoxLayout *topL=new QVBoxLayout(this, 10);
 	QHBoxLayout *btnL=new QHBoxLayout(1);

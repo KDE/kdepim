@@ -15,10 +15,19 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <kstddirs.h>
+#include <qcombobox.h>
 
-#include "knarticlefilter.h"
+#include <kstddirs.h>
+#include <ksimpleconfig.h>
+
+#include "kngroup.h"
+#include "knfetcharticle.h"
+#include "knstatusfilter.h"
+#include "knrangefilter.h"
+#include "knstringfilter.h"
 #include "utilities.h"
+#include "knarticlefilter.h"
+
 
 KNArticleFilter::KNArticleFilter(int id)
 :	i_d(id), c_ount(0), l_oaded(false), e_nabled(false), apon(articles)

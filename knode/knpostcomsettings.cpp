@@ -18,13 +18,15 @@
 #include <qgroupbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qspinbox.h>
+#include <qcheckbox.h>
+#include <qlineedit.h>
 
 #include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
 
 #include "knpostcomsettings.h"
-#include "utilities.h"
 
 
 KNPostComSettings::KNPostComSettings(QWidget *p) : KNSettingsWidget(p)

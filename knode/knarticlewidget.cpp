@@ -29,6 +29,7 @@
 #include <kconfig.h>
 #include <kstdaction.h>
 
+#include "knfetcharticlemanager.h"
 #include "resource.h"
 #include "knarticlecollection.h"
 #include "knarticlewidget.h"
@@ -316,7 +317,7 @@ void KNArticleWidget::slotURLRequest (const KURL &url, const KParts::URLArgs &ar
 		  openURL(urlText);	
  		}	else {
 			if(type=="mailto")
-				xTop->sArtManager()->mailToClicked(this);						
+				knGlobals.sArtManager->mailToClicked(this);						
 		  else
 		  	if(type=="news") {		
 		  		pos = urlText.find(':');		  		
@@ -324,7 +325,7 @@ void KNArticleWidget::slotURLRequest (const KURL &url, const KParts::URLArgs &ar
 				  if((pos=target.find("Ref."))!=-1)	{
 				  	pos+=4;
 				  	target=target.mid(pos, target.length()-pos);
-						xTop->fArtManager()->referenceClicked(target.toInt(), this,0);
+						knGlobals.fArtManager->referenceClicked(target.toInt(), this,0);
 					}	else
 						if((pos=target.find("Att."))!=-1) {
 							if(openAtt) openAttachement(target);

@@ -15,11 +15,13 @@
  *                                                                         *
  ***************************************************************************/
 
-
-#include "knjobdata.h"
-#include "kngroup.h"
-#include "knsavedarticle.h"
 #include <qstrlist.h>
+
+#include "kngroup.h"
+#include "knfetcharticle.h"
+#include "knsavedarticle.h"
+#include "knjobdata.h"
+
 
 KNJobData::KNJobData(jobType t, KNServerInfo *a, void *d)
 {

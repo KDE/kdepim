@@ -17,9 +17,13 @@
 
 #include <qlabel.h>
 #include <qlayout.h>
-#include "knrangefilter.h"
-#include "utilities.h"
+#include <qspinbox.h>
+#include <qcombobox.h>
+#include <qcheckbox.h>
 
+#include <ksimpleconfig.h>
+
+#include "knrangefilter.h"
 
 
 bool KNRangeFilter::doFilter(int a)

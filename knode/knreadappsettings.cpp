@@ -22,13 +22,16 @@
 #include <qgroupbox.h>
 #include <qlabel.h>
 #include <qvalidator.h>
+#include <qlistbox.h>
+#include <qcombobox.h>
 
+#include <kcolorbutton.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
 
 #include "knreadappsettings.h"
-#include "utilities.h"
+
 
 KNReadAppSettings::KNReadAppSettings(QWidget *p) : KNSettingsWidget(p)
 {

@@ -20,8 +20,10 @@
 #define KNCLEANUPSETTINGS_H
 
 #include "knsettingswidget.h"
-#include <qcheckbox.h>
-#include <qspinbox.h>
+
+class QCheckBox;
+class QSpinBox;
+
 
 class KNCleanupSettings : public KNSettingsWidget  {
 	

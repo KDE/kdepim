@@ -19,8 +19,8 @@
 #ifndef KNJOBDATA_H
 #define KNJOBDATA_H
 
-
 #include "knserverinfo.h"
+
 
 class KNJobData {
 	
@@ -54,9 +54,7 @@ class KNJobData {
 		KNServerInfo *a_ccount;
 		QString e_rrorString;
 		bool c_anceled;		
-		
-	
-		
+				
 };
 
 #endif

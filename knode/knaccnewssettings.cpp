@@ -26,6 +26,7 @@
 #include <kconfig.h>
 #include <kiconloader.h>
 
+#include "knnntpaccount.h"
 #include "knaccnewssettings.h"
 #include "knlistbox.h"
 #include "knaccountmanager.h"

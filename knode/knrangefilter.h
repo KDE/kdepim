@@ -19,10 +19,12 @@
 #define KNRANGEFILTER_H
 
 #include <qgroupbox.h>
-#include <qspinbox.h>
-#include <qcombobox.h>
-#include <qcheckbox.h>
-#include <ksimpleconfig.h>
+
+class QSpinBox;
+class QComboBox;
+class QCheckBox;
+
+class KSimpleConfig;
 
 
 class KNRangeFilter {
@@ -54,6 +56,9 @@ class KNRangeFilter {
 		bool enabled;
 			
 };
+
+
+//==================================================================================
  	   	
 
 class KNRangeFilterWidget : public QGroupBox {
@@ -76,6 +81,7 @@ class KNRangeFilterWidget : public QGroupBox {
 	protected slots:
  		void slotEnabled(bool e); 								
  		void slotOp1Changed(int id);
+ 		
 };
 
 #endif

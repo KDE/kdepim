@@ -22,6 +22,8 @@
 #include "knarticle.h"
 
 class KNFolder;
+
+
 class KNSavedArticle : public KNArticle  {
 	
 	public:

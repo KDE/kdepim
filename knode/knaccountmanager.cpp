@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include <stdlib.h>
+
 #include <qdir.h>
 
 #include <ksimpleconfig.h>
@@ -23,15 +24,21 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kstddirs.h>
 #include <kaction.h>
+#include <kurl.h>
+#include <kstddirs.h>
 
+#include "kngroup.h"
+#include "kngroupmanager.h"
+#include "knnntpaccount.h"
+#include "knserverinfo.h"
 #include "knsavedarticlemanager.h"
-#include "knaccountmanager.h"
 #include "knaccnewssettings.h"
 #include "kncollectionviewitem.h"
-#include "utilities.h"
 #include "knglobals.h"
+#include "utilities.h"
+#include "knaccountmanager.h"
+
 
 KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * parent, const char * name)
   : QObject(parent, name), gManager(gm), set(0), lastId(0), view(v)
@@ -289,9 +296,9 @@ void KNAccountManager::slotPostNewArticle()
 {
   if (c_urrentAccount) {
   	if(gManager->hasCurrentGroup())
-	    xTop->sArtManager()->post(gManager->currentGroup());
+	    knGlobals.sArtManager->post(gManager->currentGroup());
   	else
-  	  xTop->sArtManager()->post(c_urrentAccount);	
+  	  knGlobals.sArtManager->post(c_urrentAccount);	
   }
 }
 

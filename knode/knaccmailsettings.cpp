@@ -15,11 +15,13 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <stdlib.h>
-
 #include <qgroupbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qlineedit.h>
+#include <qspinbox.h>
+#include <qcheckbox.h>
+#include <qpixmap.h>
 
 #include <klocale.h>
 #include <kconfig.h>

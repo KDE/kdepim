@@ -19,11 +19,10 @@
 #ifndef KNKEYSETTINGS_H
 #define KNKEYSETTINGS_H
 
-#include <qdict.h>
 #include "knsettingswidget.h"
 
-class KKeyEntry;
 class KKeyChooser;
+
 
 class KNKeySettings : public KNSettingsWidget  {
 	

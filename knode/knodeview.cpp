@@ -19,7 +19,10 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kglobal.h>
+#include <kapp.h>
 
+#include "knfoldermanager.h"
+#include "knarticlewidget.h"
 #include "knodeview.h"
 #include "knarticlecollection.h"
 #include "kncollectionviewitem.h"
@@ -240,7 +243,7 @@ void KNodeView::slotNextUnreadArticle()
 	KNHdrViewItem *next, *current;
 	KNFetchArticle *art;
 	
-	if (!xTop->foManager()->hasCurrentFolder()) {   // don't do anything if this is a folder !!!
+	if (!knGlobals.foManager->hasCurrentFolder()) {   // don't do anything if this is a folder !!!
 	
   	current=(KNHdrViewItem*)hdrView->currentItem();
   	if(!current) current=(KNHdrViewItem*)hdrView->firstChild();	
@@ -295,7 +298,7 @@ void KNodeView::slotNextUnreadThread()
 	KNHdrViewItem *next, *current;
 	KNFetchArticle *art;
 	
-  if (!xTop->foManager()->hasCurrentFolder()) {   // don't do anything if this is a folder !!!
+  if (!knGlobals.foManager->hasCurrentFolder()) {   // don't do anything if this is a folder !!!
 	
   	current=(KNHdrViewItem*)hdrView->currentItem();
   	if(!current) current=(KNHdrViewItem*)hdrView->firstChild();	

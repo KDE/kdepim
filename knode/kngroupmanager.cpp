@@ -19,19 +19,29 @@
 #include <stdlib.h>
 #include <qheader.h>
 #include <qdir.h>
+
 #include <ksimpleconfig.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kglobal.h>
+#include <kurl.h>
+#include <kiconloader.h>
 
-#include "kngroupmanager.h"
-#include "resource.h"
+#include "knpurgeprogressdialog.h"
+#include "knode.h"
+#include "knfetcharticlemanager.h"
+#include "knjobdata.h"
+#include "kngroupdialog.h"
+#include "kngroup.h"
 #include "kncollectionviewitem.h"
-#include "utilities.h"
 #include "knnntpaccount.h"
 #include "kncleanup.h"
 #include "knuserentry.h"
+#include "knnetaccess.h"
 #include "knglobals.h"
+#include "resource.h"
+#include "utilities.h"
+#include "kngroupmanager.h"
 
 
 KNGroupManager::KNGroupManager(KNFetchArticleManager *a, QObject * parent, const char * name)
@@ -237,7 +247,7 @@ void KNGroupManager::showGroupDialog(KNNntpAccount *a)
 	 	else return;
 	}
 		
-	gDialog=new KNGroupDialog(xTop, a);
+	gDialog=new KNGroupDialog(knGlobals.top, a);
 	connect(gDialog, SIGNAL(newList(KNNntpAccount*)), this, SLOT(slotDialogNewList(KNNntpAccount*)));
 	
 	if(gDialog->exec()) {
@@ -324,7 +334,7 @@ void KNGroupManager::checkGroupForNewHeaders(KNGroup *g)
 	}	
 	g->setMaxFetch(defaultMaxFetch);
 	KNJobData *job=new KNJobData(KNJobData::JTfetchNewHeaders, g->account(), g);
-	xNet->addJob(job);
+	knGlobals.netAccess->addJob(job);
 }
 
 
@@ -365,9 +375,9 @@ void KNGroupManager::setCurrentGroup(KNGroup *g)
 	qDebug("KNGroupManager::setCurrentGroup() : group changed");
 	
 	if (g) {
-		xTop->setCursorBusy(true);
+		knGlobals.top->setCursorBusy(true);
 		loaded=g->loadHdrs();
-		xTop->setCursorBusy(false);	
+		knGlobals.top->setCursorBusy(false);	
 		if (loaded) {
 			aManager->showHdrs();
 			if(a_utoCheck) checkGroupForNewHeaders(g);
@@ -399,7 +409,7 @@ void KNGroupManager::checkAll(KNNntpAccount *a)
 		if(g->account()==a) {
   		g->setMaxFetch(defaultMaxFetch);
   		j=new KNJobData(KNJobData::JTfetchNewHeaders, a, g);
-  		xNet->addJob(j);
+  		knGlobals.netAccess->addJob(j);
   	}
 	}	
 }
@@ -458,7 +468,7 @@ void KNGroupManager::slotDialogNewList(KNNntpAccount *a)
 	QStrList *groups=new QStrList();
 	groups->setAutoDelete(true);
 	KNJobData *job=new KNJobData(KNJobData::JTlistGroups, a, groups);
-	xNet->addJob(job);
+	knGlobals.netAccess->addJob(job);
 }
 
 

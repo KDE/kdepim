@@ -20,6 +20,7 @@
 #define KNSAVEDARTICLEMANAGER_H
 
 #include <qobject.h>
+#include <qlist.h>
 
 #include <kaction.h>
 
@@ -37,6 +38,7 @@ class KNSavedArticle;
 class KNSearchDialog;
 class KNSendErrorDialog;
 class KNUserEntry;
+
 
 class KNSavedArticleManager : public QObject, public KNArticleManager  {
 	

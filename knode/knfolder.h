@@ -20,8 +20,8 @@
 #define KNFOLDER_H
 
 #include "knarticlecollection.h"
-#include "knsavedarticle.h"
 
+class KNSavedArticle;
 
 
 class KNFolder : public KNArticleCollection  {

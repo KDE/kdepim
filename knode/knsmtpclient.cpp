@@ -18,6 +18,7 @@
 #include <unistd.h>
 
 #include "knsavedarticle.h"
+#include "knjobdata.h"
 #include "knsmtpclient.h"
 
 KNSmtpClient::KNSmtpClient(int NfdPipeIn, int NfdPipeOut, QObject *parent, const char *name)

@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <qlayout.h>
 #include <qwhatsthis.h>
+#include <qbitarray.h>
 
 #include <ktabctl.h>
 #include <klocale.h>
@@ -28,16 +29,16 @@
 #include <ktoolbarbutton.h>
 #include <kiconloader.h>
 #include <ktoolbar.h>
+#include <ksimpleconfig.h>
 
-#include "knfiltermanager.h"
-#include "knfilterdialog.h"
 #include "utilities.h"
-#include "resource.h"
+#include "knstatusfilter.h"
+#include "knrangefilter.h"
+#include "knstringfilter.h"
+#include "knarticlefilter.h"
+#include "knfilterdialog.h"
 #include "knfiltersettings.h"
-
-
-//==========================================================================================
-
+#include "knfiltermanager.h"
 
 
 KNFilterSelectAction::KNFilterSelectAction( const QString& text, const QString& pix,

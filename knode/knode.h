@@ -16,29 +16,32 @@
 #ifndef KNODE_H
 #define KNODE_H
 
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-// include files for QT
-#include <qprinter.h>
-#include <qpainter.h>
-#include <qdir.h>
-
-// include files for KDE
-#include <klocale.h>
 #include <ktmainwindow.h>
-#include <kiconloader.h>
-#include <qprogressbar.h>
 #include <kprogress.h>
 
 #include "resource.h"
-#include "knodeview.h"
-#include "knnetaccess.h"
-#include "knaccountmanager.h"
-#include "knfoldermanager.h"
-#include "knfiltermanager.h"
+
+class QSize;
+class QListViewItem;
+
+class KAccel;
+class KAction;
+class KToggleAction;
+
+class KNFetchArticleManager;
+class KNAccountManager;
+class KNGroupManager;
+class KNFetchArticleManager;
+class KNFolderManager;
+class KNSavedArticleManager;
+class KNFilterManager;
+class KNNetAccess;
+class KNJobData;
+class KNodeView;
 
 
 class KNProgress : public KProgress
@@ -76,13 +79,7 @@ class KNodeApp : public KTMainWindow
     void setStatusHelpMsg(const QString& text);
     void setCursorBusy(bool b=true);
 
-    //Member-Access
-    KNAccountManager* accManager()				{ return AManager; }
-    KNGroupManager* gManager()						{ return GManager; }
-    KNFetchArticleManager* fArtManager()	{ return FAManager; }
-    KNFolderManager* foManager()					{ return FoManager; }
-    KNSavedArticleManager* sArtManager()	{ return SAManager; }
-    KNFilterManager* fiManager() 					{ return FiManager; }
+
 
     //network
     void jobDone(KNJobData *j);
@@ -102,7 +99,7 @@ class KNodeApp : public KTMainWindow
     bool queryExit();
 
 	  //actions
-	  KAction *actCancel, *actSupersede;       // located here, because KNSaved- *and* KNReadArticleManager provide cancel/supersede
+	  KAction *actCancel, *actSupersede;
     KToggleAction *actShowAllHdrs;
 
    	//popups

@@ -15,15 +15,18 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <qtextstream.h>
 
-#include "knmimecontent.h"
-#include "knarticlecollection.h"
-#include "utilities.h"
-#include "knstringsplitter.h"
-#include <string.h>
-#include <klocale.h>
+#include <mimelib/string.h>
 #include <mimelib/utility.h>
 #include <mimelib/uuencode.h>
+
+#include <klocale.h>
+
+#include "knarticlecollection.h"
+#include "knstringsplitter.h"
+#include "knmimecontent.h"
+
 
 KNMimeContent::KNMimeContent()
 {

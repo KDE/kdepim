@@ -13,11 +13,13 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <qwidget.h>
+
 #include <klocale.h>
 
-#include "kngroupselectdialog.h"
-#include "knstringsplitter.h"
 #include "utilities.h"
+#include "knstringsplitter.h"
+#include "kngroupselectdialog.h"
 
 
 KNGroupSelectDialog::KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, QCString &act) :

@@ -18,12 +18,20 @@
 #include <mimelib/datetime.h>
 #include <qheader.h>
 
+#include <kurl.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kstddirs.h>
 #include <kglobal.h>
+#include <kconfig.h>
 
-#include "knsavedarticlemanager.h"
+#include "kngroupmanager.h"
+#include "knjobdata.h"
+#include "knnntpaccount.h"
+#include "knarticlewidget.h"
+#include "knsavedarticle.h"
+#include "knode.h"
+#include "knuserentry.h"
 #include "knhdrviewitem.h"
 #include "kngroup.h"
 #include "knfetcharticle.h"
@@ -32,8 +40,10 @@
 #include "knsenderrordialog.h"
 #include "knsearchdialog.h"
 #include "knaccountmanager.h"
-#include "utilities.h"
+#include "knnetaccess.h"
 #include "knglobals.h"
+#include "utilities.h"
+#include "knsavedarticlemanager.h"
 
 
 KNSavedArticleManager::KNSavedArticleManager(KNListView *v, KNAccountManager *am, QObject * parent, const char * name) :
@@ -130,8 +140,8 @@ void KNSavedArticleManager::showHdrs()
 	if(!f_older) return;
 	
 	view->clear();
-	xTop->setCursorBusy(true);
-	xTop->setStatusMsg(i18n(" Creating list ..."));
+	knGlobals.top->setCursorBusy(true);
+	knGlobals.top->setStatusMsg(i18n(" Creating list ..."));
 	for(int idx=0; idx<f_older->length(); idx++) {
 		art=f_older->at(idx);
 		//if(f_ilter) filterResult=f_ilter->applyFilter(art);
@@ -144,8 +154,8 @@ void KNSavedArticleManager::showHdrs()
 	if(view->firstChild())
 	  view->setCurrentItem(view->firstChild());
 	
-	xTop->setStatusMsg();
-	xTop->setCursorBusy(false);
+	knGlobals.top->setStatusMsg();
+	knGlobals.top->setCursorBusy(false);
 	updateStatusString();
 }
 
@@ -409,7 +419,7 @@ void KNSavedArticleManager::sendArticle(KNSavedArticle *a, bool now)
 		if(a->isMail()) job=new KNJobData(KNJobData::JTmail, accM->smtp(), a);
 		else job=new KNJobData(KNJobData::JTpostArticle, getAccount(a), a);
 		
-	  xNet->addJob(job);
+	  knGlobals.netAccess->addJob(job);
 	}
 	else {
 		fOutbox->addArticle(a);
@@ -446,7 +456,7 @@ void KNSavedArticleManager::sendOutbox()
 				jobDone(job);
 			}
 		}
-		else xNet->addJob(job);
+		else knGlobals.netAccess->addJob(job);
 	}
 }
 
@@ -563,8 +573,6 @@ KNNntpAccount* KNSavedArticleManager::getAccount(KNSavedArticle *a)
 
 void KNSavedArticleManager::openInComposer(KNSavedArticle *a)
 {
-	KNComposer *com;
-	KNGroup *g;
 	QCString sigPath, sig, tmp;
 	KNNntpAccount *acc=getAccount(a);
 	
@@ -574,7 +582,7 @@ void KNSavedArticleManager::openInComposer(KNSavedArticle *a)
 			return;
 		}
 	if(!a->isMail() && a->hasDestination()) {
-		g=xTop->gManager()->group(a->firstDestination(), acc);
+		KNGroup *g=knGlobals.gManager->group(a->firstDestination(), acc);
 		if(g && g->user() && g->user()->hasSigPath()) sigPath=g->user()->sigPath();
 	}
 	if(sigPath.isEmpty()) sigPath=defaultUser->sigPath();			
@@ -589,7 +597,7 @@ void KNSavedArticleManager::openInComposer(KNSavedArticle *a)
 		else KMessageBox::error(0, i18n("Cannot open the signature-file"));
 	}	
 	
-	com=new KNComposer(a, sig, acc);
+	KNComposer *com=new KNComposer(a, sig, acc);
   com->show();
   connect(com, SIGNAL(composerDone(KNComposer*)),
   	this, SLOT(slotComposerDone(KNComposer*)));
@@ -627,7 +635,7 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
 	
 	//set additional headers
 	if(!art->isMail()) {
-		g=xTop->gManager()->group(art->firstDestination(), getAccount(art));
+		g=knGlobals.gManager->group(art->firstDestination(), getAccount(art));
 		if(g) guser=g->user();
 	}
 	
@@ -810,8 +818,8 @@ void KNSavedArticleManager::mailToClicked(KNArticleWidget *aw)
 void KNSavedArticleManager::updateStatusString()
 {
 	if(f_older) {
-	  xTop->setStatusMsg(i18n(" %1 : %2 messages").arg(f_older->name()).arg(f_older->length()), SB_GROUP);
-	  xTop->setCaption(f_older->name());
+	  knGlobals.top->setStatusMsg(i18n(" %1 : %2 messages").arg(f_older->name()).arg(f_older->length()), SB_GROUP);
+	  knGlobals.top->setCaption(f_older->name());
 	}
 }
 

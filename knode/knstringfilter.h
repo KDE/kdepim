@@ -19,10 +19,12 @@
 #define KNSTRINGFILTER_H
 
 #include <qgroupbox.h>
-#include <qcheckbox.h>
-#include <qcombobox.h>
-#include <qlineedit.h>
-#include <ksimpleconfig.h>
+
+class QCheckBox;
+class QComboBox;
+class QLineEdit;
+
+class KSimpleConfig;
 
 
 class KNStringFilter {
@@ -34,22 +36,20 @@ class KNStringFilter {
 		~KNStringFilter() {}
 	
 		KNStringFilter& operator=(const KNStringFilter &sf);
-			
-		
+					
 		void load(KSimpleConfig *conf);
 		void save(KSimpleConfig *conf);			
-			
-		
+					
 		bool doFilter(const QCString &s);
-		
-				
-		
+								
 	protected:
 		QCString data;
 		bool con, enabled, regExp;	
 		
-		
 };
+
+
+//===============================================================================
 
 
 class KNStringFilterWidget : public QGroupBox  {
@@ -75,17 +75,4 @@ class KNStringFilterWidget : public QGroupBox  {
 };
 
 
-
-
 #endif
-
-
-
-
-
-
-
-
-
-
-

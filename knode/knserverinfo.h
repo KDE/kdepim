@@ -21,6 +21,7 @@
 
 #include <qstring.h>
 
+
 class KNServerInfo {
 	
 	public:

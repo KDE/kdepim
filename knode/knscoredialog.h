@@ -20,11 +20,11 @@
 #define KNSCOREDIALOG_H
 
 #include <qdialog.h>
-#include <qbuttongroup.h>
-#include <qradiobutton.h>
-#include <qspinbox.h>
-#include <qpushbutton.h>
 
+class QButtonGroup;
+class QRadioButton;
+class QSpinBox;
+class QPushButton;
 
 
 class KNScoreDialog : public QDialog  {
@@ -42,7 +42,6 @@ class KNScoreDialog : public QDialog  {
 		QRadioButton *iBtn, *nBtn, *wBtn, *cBtn;
 		QSpinBox *spin;
 		QPushButton *okBtn, *cancelBtn;
-		
 		
 };
 

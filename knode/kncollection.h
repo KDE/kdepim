@@ -56,7 +56,6 @@ class KNCollection {
 		KNCollectionViewItem *l_istItem;
 		QString n_ame;
 		int c_ount;
-		
 	
 };
 

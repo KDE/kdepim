@@ -19,12 +19,16 @@
 #include <klocale.h>
 #include <kedittoolbar.h>
 #include <kkeydialog.h>
+#include <khtml_part.h>
 
-#include "knarticlewindow.h"
+#include "kngroup.h"
+#include "knsavedarticle.h"
+#include "knfetcharticle.h"
 #include "knarticlewidget.h"
-#include "knglobals.h"
 #include "knsavedarticlemanager.h"
 #include "utilities.h"
+#include "knglobals.h"
+#include "knarticlewindow.h"
 
 
 KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, const char *name )
@@ -85,35 +89,35 @@ void KNArticleWindow::slotFileClose()
 
 void KNArticleWindow::slotArtReply()
 {
-	xTop->sArtManager()->reply(artW->article(),static_cast<KNGroup*>(artW->collection()));
+	knGlobals.sArtManager->reply(artW->article(),static_cast<KNGroup*>(artW->collection()));
 }
 
 
 
 void KNArticleWindow::slotArtRemail()
 {
-	xTop->sArtManager()->reply(artW->article(), 0);
+	knGlobals.sArtManager->reply(artW->article(), 0);
 }
 
 
 
 void KNArticleWindow::slotArtForward()
 {
-	xTop->sArtManager()->forward(artW->article());
+	knGlobals.sArtManager->forward(artW->article());
 }
 
 
 
 void KNArticleWindow::slotArtCancel()
 {
-	xTop->sArtManager()->cancel(static_cast<KNFetchArticle*>(artW->article()),static_cast<KNGroup*>(artW->collection()));
+	knGlobals.sArtManager->cancel(static_cast<KNFetchArticle*>(artW->article()),static_cast<KNGroup*>(artW->collection()));
 }
 
 
 
 void KNArticleWindow::slotArtSupersede()
 {
-	xTop->sArtManager()->supersede(static_cast<KNFetchArticle*>(artW->article()),static_cast<KNGroup*>(artW->collection()));
+	knGlobals.sArtManager->supersede(static_cast<KNFetchArticle*>(artW->article()),static_cast<KNGroup*>(artW->collection()));
 }
 
 

@@ -15,13 +15,14 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <klocale.h>
-
-#include "utilities.h"
-#include "knuserwidget.h"
 #include <qlayout.h>
 #include <qlabel.h>
+
+#include <klocale.h>
 #include <kfiledialog.h>
+
+#include "knuserentry.h"
+#include "knuserwidget.h"
 
 
 KNUserWidget::KNUserWidget(QString title, QWidget *parent, const char *n)

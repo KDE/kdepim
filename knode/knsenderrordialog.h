@@ -20,11 +20,13 @@
 #define KNSENDERRORDIALOG_H
 
 #include <qsemimodal.h>
-#include <qpushbutton.h>
 #include <qlist.h>
-#include <qlabel.h>
-#include "knlistbox.h"
-#include "knjobdata.h"
+
+class QPushButton;
+class QLabel;
+
+class KNListBox;
+class KNJobData;
 
 
 class KNSendErrorDialog : public QSemiModal  {

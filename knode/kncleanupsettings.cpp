@@ -18,6 +18,8 @@
 
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qcheckbox.h>
+#include <qspinbox.h>
 
 #include <klocale.h>
 #include <kconfig.h>
@@ -25,7 +27,7 @@
 #include <kglobal.h>
 
 #include "kncleanupsettings.h"
-#include "utilities.h"
+
 
 KNCleanupSettings::KNCleanupSettings(QWidget *p) : KNSettingsWidget(p)
 {

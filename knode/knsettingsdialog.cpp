@@ -18,12 +18,15 @@
 #include <qlayout.h>
 #include <qwidgetstack.h>
 #include <qsplitter.h>
+#include <qheader.h>
+#include <qhbox.h>
+
 #include <klocale.h>
 #include <kconfig.h>
 #include <kseparator.h>
-#include <qheader.h>
+#include <kiconloader.h>
 
-#include "knsettingsdialog.h"
+#include "knode.h"
 #include "knaccnewssettings.h"
 #include "knaccmailsettings.h"
 #include "knreadgensettings.h"
@@ -35,17 +38,17 @@
 #include "kncleanupsettings.h"
 #include "knkeysettings.h"
 #include "knusersettings.h"
-
 #include "knglobals.h"
 #include "utilities.h"
-  
+#include "knsettingsdialog.h"
+
+
 KNSettingsDialog::KNSettingsDialog() : KDialogBase(TreeList, i18n("Settings"), Ok|Cancel|Help, Ok,
-                                                   xTop, 0, true, true)
+                                                   knGlobals.top, 0, true, true)
 {
   setShowIconsInTreeList(true);
   //  setRootIsDecorated(false);
-  
-  QFrame *frame;
+
   QStringList list;
 
   // Set up the folder bitmaps
@@ -64,9 +67,9 @@ KNSettingsDialog::KNSettingsDialog() : KDialogBase(TreeList, i18n("Settings"), O
   // Accounts / News
   list.clear();
   list << i18n("Accounts") << i18n("News"); 
-  frame = addHBoxPage(list, i18n("News"), BarIcon("arrow_right"));
+  QFrame *frame = addHBoxPage(list, i18n("News"), BarIcon("arrow_right"));
   
-  widgets.append(new  KNAccNewsSettings(frame, xTop->accManager()));
+  widgets.append(new  KNAccNewsSettings(frame, knGlobals.accManager));
   
   // Accounts / Mail
   list.clear();
@@ -101,7 +104,7 @@ KNSettingsDialog::KNSettingsDialog() : KDialogBase(TreeList, i18n("Settings"), O
   list.clear();
   list << i18n("Read News") << i18n("Filters");
   frame = addHBoxPage(list,i18n("Filters"),BarIcon("fltrblue"));
-  widgets.append(new KNFilterSettings(xTop->fiManager(), frame));
+  widgets.append(new KNFilterSettings(knGlobals.fiManager, frame));
 
   // Post News / Technical
   list.clear();

@@ -21,21 +21,23 @@
 
 #include <knprotocolclient.h>
 
+
 class KNSmtpClient : public KNProtocolClient  {
 
-Q_OBJECT
+  Q_OBJECT
 
-public:
-	KNSmtpClient(int NfdPipeIn, int NfdPipeOut, QObject *parent=0, const char *name=0);
-	~KNSmtpClient();
+  public:
+  	KNSmtpClient(int NfdPipeIn, int NfdPipeOut, QObject *parent=0, const char *name=0);
+  	~KNSmtpClient();
 	
-protected:
+  protected:
 
-	virtual void processJob();				 // examines the job and calls the suitable handling method
+  	virtual void processJob();				 // examines the job and calls the suitable handling method
 	
-	void doMail();
+  	void doMail();
 	
-	virtual bool openConnection();     // connect, handshake
+  	virtual bool openConnection();     // connect, handshake
+
 };
 
 #endif

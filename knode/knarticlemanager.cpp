@@ -15,17 +15,19 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <mimelib/string.h>
 #include <kfiledialog.h>
 #include <kmessagebox.h>
 #include <krun.h>
 #include <kio/netaccess.h>
+#include <ktempfile.h>
 
-#include "knarticlemanager.h"
+#include "knarticlewidget.h"
+#include "knarticle.h"
 #include "knglobals.h"
 #include "utilities.h"
+#include "knarticlemanager.h"
 
-
-//===============================================================================
 
 KNSaveHelper::KNSaveHelper(QString saveName)
   : s_aveName(saveName), file(0), tmpFile(0)

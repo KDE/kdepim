@@ -20,17 +20,23 @@
 #include <qlayout.h>
 #include <qgroupbox.h>
 #include <qtextstream.h>
+#include <qcombobox.h>
+#include <qcheckbox.h>
+#include <qlistbox.h>
+#include <qpushbutton.h>
+#include <qlineedit.h>
 
+#include <kstddirs.h>
 #include <kcharsets.h>
 #include <kconfig.h>
 #include <kseparator.h>
 #include <klocale.h>
 #include <kcharsets.h>
 #include <kglobal.h>
-#include <kstddirs.h>
 
-#include "knposttechsettings.h"
 #include "utilities.h"
+#include "knposttechsettings.h"
+
 
 KNPostTechSettings::KNPostTechSettings(QWidget *p) : KNSettingsWidget(p)
 {

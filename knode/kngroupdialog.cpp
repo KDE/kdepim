@@ -15,8 +15,8 @@
 
 #include <klocale.h> //i18n
 
-#include "kngroupdialog.h"
 #include "utilities.h"
+#include "kngroupdialog.h"
 
 
 KNGroupDialog::KNGroupDialog(QWidget *parent, KNNntpAccount *a) :

@@ -20,10 +20,14 @@
 #define KNACCOUNTMANAGER_H
 
 #include <qlist.h>
-#include "kngroupmanager.h"
-#include "knnntpaccount.h"
+
+#include <kaction.h>
 
 class KNAccNewsSettings;
+class KNGroupManager;
+class KNListView;
+class KNNntpAccount;
+class KNServerInfo;
 
 class KNAccountManager : public QObject
 {

@@ -19,16 +19,14 @@
 #ifndef KNCOMPOSER_H
 #define KNCOMPOSER_H
 
-#include <ktmainwindow.h>
-#include <qsplitter.h>
-#include <keditcl.h>
 #include <qlineedit.h>
-#include <qcombobox.h>
-#include <qcheckbox.h>
-#include <qpushbutton.h>
-#include <qlistview.h>
-#include "knsavedarticle.h"
-#include "knnntpaccount.h"
+#include <qsplitter.h>
+
+#include <ktmainwindow.h>
+#include <keditcl.h>
+
+class KNNntpAccount;
+class KNSavedArticle;
 
 
 class KNComposer : public KTMainWindow  {

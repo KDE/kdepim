@@ -15,16 +15,20 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <klocale.h>
-#include <kkeydialog.h>
 #include <qlayout.h>
 
-#include "knkeysettings.h"
+#include <klocale.h>
+#include <kkeydialog.h>
+#include <kaction.h>
+
+#include "knode.h"
 #include "knglobals.h"
+#include "knkeysettings.h"
+
 
 KNKeySettings::KNKeySettings(QWidget *parent) : KNSettingsWidget(parent)
 {
-	kc=new KKeyChooser(xTop->actionCollection()->keyDict(), this);
+	kc=new KKeyChooser(knGlobals.top->actionCollection()->keyDict(), this);
 	
 	stdBtn=new QPushButton(i18n("Reset"), this);
 	stdBtn->setFixedSize(stdBtn->sizeHint());

@@ -15,14 +15,24 @@
  *                                                                         *
  ***************************************************************************/
 
-
-#include "knfiltersettings.h"
 #include <qlayout.h>
 #include <qgroupbox.h>
 #include <qlabel.h>
+#include <qpushbutton.h>
+#include <qbitarray.h>
+#include <qcombobox.h>
+
 #include <kiconloader.h>
 #include <klocale.h>
-#include "utilities.h"
+
+#include "knstringfilter.h"
+#include "knrangefilter.h"
+#include "knstatusfilter.h"
+#include "knarticlefilter.h"
+#include "knfiltermanager.h"
+#include "knlistbox.h"
+#include "knfiltersettings.h"
+
 
 KNFilterSettings::KNFilterSettings(KNFilterManager *fm, QWidget *p) : KNSettingsWidget(p)
 {
@@ -31,16 +41,20 @@ KNFilterSettings::KNFilterSettings(KNFilterManager *fm, QWidget *p) : KNSettings
 	
 	flb=new KNListBox(fgb);
 	addBtn=new QPushButton(i18n("Add"), fgb);
+	addBtn->setMinimumSize(addBtn->sizeHint());
 	delBtn=new QPushButton(i18n("Delete"), fgb);
+	delBtn->setMinimumSize(delBtn->sizeHint());
 	editBtn=new QPushButton(i18n("Edit"), fgb);
+	editBtn->setMinimumSize(editBtn->sizeHint());
 	mlb=new KNListBox(mgb);
 	upBtn=new QPushButton(i18n("Up"), mgb);
+	upBtn->setMinimumSize(upBtn->sizeHint());
 	downBtn=new QPushButton(i18n("Down"), mgb);
+	downBtn->setMinimumSize(downBtn->sizeHint());
 	sepAddBtn=new QPushButton(i18n("Add\nSeparator"), mgb);
+	sepAddBtn->setMinimumSize(sepAddBtn->sizeHint());
 	sepRemBtn=new QPushButton(i18n("Remove\nSeparator"), mgb);
-	SIZE(addBtn); SIZE(editBtn);
-	SIZE(upBtn); SIZE(downBtn); SIZE(delBtn);
-	SIZE(sepAddBtn); SIZE(sepRemBtn);
+	sepRemBtn->setMinimumSize(sepRemBtn->sizeHint());
 	
 	QVBoxLayout *topL=new QVBoxLayout(this, 10);
 	QGridLayout *fgbL=new QGridLayout(fgb, 4,2, 20,5);

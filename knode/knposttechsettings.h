@@ -20,11 +20,12 @@
 #define KNPOSTTECHSETTINGS_H
 
 #include "knsettingswidget.h"
-#include <qcombobox.h>
-#include <qcheckbox.h>
-#include <qlistbox.h>
-#include <qpushbutton.h>
-#include <qlineedit.h>
+
+class QComboBox;
+class QCheckBox;
+class QListBox;
+class QPushButton;
+class QLineEdit;
 
 
 class KNPostTechSettings : public KNSettingsWidget  {
@@ -54,6 +55,7 @@ class KNPostTechSettings : public KNSettingsWidget  {
 		void slotDelBtnClicked();
 		void slotOkBtnClicked();
 		void slotItemSelected(int i);	
+
 };
 
 #endif

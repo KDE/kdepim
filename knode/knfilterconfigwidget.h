@@ -19,12 +19,11 @@
 #ifndef KNFILTERCONFIGWIDGET_H
 #define KNFILTERCONFIGWIDGET_H
 
-#include <qwidget.h>
 #include <qtabwidget.h>
-#include <qwidgetstack.h>
-#include "knstatusfilter.h"
-#include "knstringfilter.h"
-#include "knrangefilter.h"
+
+class KNStatusFilterWidget;
+class KNStringFilterWidget;
+class KNRangeFilterWidget;
 
 
 class KNFilterConfigWidget : public QTabWidget  {

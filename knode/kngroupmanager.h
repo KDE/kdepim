@@ -19,13 +19,18 @@
 #ifndef KNGROUPMANAGER_H
 #define KNGROUPMANAGER_H
 
-#include <qlistview.h>
+#include <qlist.h>
 
-#include "kngroup.h"
-#include "knfetcharticlemanager.h"
-#include "knjobdata.h"
-#include "kngroupdialog.h"
-#include "knpurgeprogressdialog.h"
+#include <kaction.h>
+
+class KNGroup;
+class KNFetchArticleManager;
+class KNJobData;
+class KNGroupDialog;
+class KNPurgeProgressDialog;
+class KNNntpAccount;
+class KNServerInfo;
+
 
 class KNGroupManager : public QObject {
 

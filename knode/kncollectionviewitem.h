@@ -19,8 +19,9 @@
 #ifndef KNCOLLECTIONVIEWITEM_H
 #define KNCOLLECTIONVIEWITEM_H
 
-#include "knlvitembase.h"
-#include "kncollection.h"
+#include "knlistview.h"
+
+class KNCollection;
 
 
 class KNCollectionViewItem : public KNLVItemBase  {

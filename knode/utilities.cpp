@@ -13,16 +13,15 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <stdio.h>
-#include <ctype.h>
-#include <qdir.h>
+#include <qsize.h>
+#include <qwidget.h>
 
+#include <kconfig.h>
 #include <klocale.h>
+#include <kglobal.h>
 #include <kmessagebox.h>
 
 #include "utilities.h"
-#include "knode.h"
-#include "knstringsplitter.h"
 
 
 /*

@@ -20,7 +20,9 @@
 #define KNUSERENTRY_H
 
 #include <qstring.h>
-#include <kconfigbase.h>
+
+class KConfigBase;
+
 
 class KNUserEntry {
 	
@@ -53,6 +55,7 @@ class KNUserEntry {
 		
 	protected:
 		QCString n_ame, e_mail, o_rga, r_eplyTo, s_igPath;
+		
 };
 
 #endif

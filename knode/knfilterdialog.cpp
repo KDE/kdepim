@@ -21,19 +21,23 @@
 #include <qlineedit.h>
 #include <qcombobox.h>
 #include <qcheckbox.h>
+#include <qgroupbox.h>
+#include <qbitarray.h>
 
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kapp.h>
 
+#include "knstatusfilter.h"
+#include "knrangefilter.h"
+#include "knstringfilter.h"
 #include "knfilterconfigwidget.h"
 #include "knarticlefilter.h"
-#include "knfilterdialog.h"
 #include "utilities.h"
+#include "knfilterdialog.h"
 
 
-KNFilterDialog::
-	KNFilterDialog(QWidget *parent, const char *name, KNArticleFilter *f)
+KNFilterDialog::KNFilterDialog(QWidget *parent, const char *name, KNArticleFilter *f)
 	: QSemiModal(parent, name, true)
 {
 	fltr=f;

@@ -21,6 +21,8 @@
 #include <qlayout.h>
 #include <qcheckbox.h>
 
+#include "knuserwidget.h"
+#include "knuserentry.h"
 #include "knusersettings.h"
 
 KNUserSettings::KNUserSettings(QWidget *p) : KNSettingsWidget(p)

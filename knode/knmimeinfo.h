@@ -22,7 +22,9 @@
 #include "knarticlebase.h"
 
 class KNMimeContent;
-class KNMimeInfo : public KNArticleBase{
+
+
+class KNMimeInfo : public KNArticleBase {
 	
 	public:
 		KNMimeInfo();
@@ -52,8 +54,7 @@ class KNMimeInfo : public KNArticleBase{
 		void setIsReadable(bool i)								{ i_sReadable=i; }
 		void setCustomMimeType(const QCString &m);
 		void addCTParameter(const QCString &s);
-		
-		
+			
 	protected:
 	 	QCString assembleMimeType();
 	 	void parseMimeType(const QCString &s);
@@ -66,7 +67,6 @@ class KNMimeInfo : public KNArticleBase{
 	  contentCategory   c_tCategory;
 	  bool 					    i_sReadable;
 	  QCString          c_ontentType;
-		
 		
 };
 

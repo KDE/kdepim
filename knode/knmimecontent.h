@@ -20,11 +20,12 @@
 #define KNMIMECONTENT_H
 
 #include <qlist.h>
-#include <mimelib/string.h>
-#include <qfile.h>
-#include <qtextstream.h>
 
+#include "knarticlebase.h"
 #include "knmimeinfo.h"
+
+class QTextStream;
+class DwString;
 
 
 class KNMimeContent : public KNArticleBase  {

@@ -17,16 +17,20 @@
 
 
 #include <qtextstream.h>
+
 #include <kmessagebox.h>
 #include <ksimpleconfig.h>
 #include <kstddirs.h>
 
-#include "knfolder.h"
-#include "utilities.h"
+#include "knaccountmanager.h"
+#include "knnntpaccount.h"
+#include "knsavedarticle.h"
 #include "knstringsplitter.h"
 #include "kncollectionviewitem.h"
 #include "knhdrviewitem.h"
+#include "utilities.h"
 #include "knglobals.h"
+#include "knfolder.h"
 
 
 KNFolder::KNFolder(KNCollection *p) : KNArticleCollection(p)
@@ -349,8 +353,7 @@ bool KNFolder::saveArticle(KNSavedArticle *a)
 
 void KNFolder::removeArticle(KNSavedArticle *a)
 {
-	int idx;
-	idx=findId(a->id());
+	int idx=findId(a->id());
 	
 	if(idx!=-1 && at(idx)==a) {
 		list[idx]=0;
@@ -373,7 +376,7 @@ void KNFolder::deleteAll()
 		if(!a->sent() && !a->isMail()) {
 			if(a->serverId()!=lastId) {
 				lastId=a->serverId();
-				lastAcc=xTop->accManager()->account(lastId);
+				lastAcc=knGlobals.accManager->account(lastId);
 			}
 			if(lastAcc) lastAcc->decUnsentCount();
 		}

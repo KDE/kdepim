@@ -15,23 +15,34 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <klocale.h>
-
-#include "knsearchdialog.h"
-#include "knarticlefilter.h"
-#include "utilities.h"
-#include "knglobals.h"
-#include <kseparator.h>
 #include <qlayout.h>
 #include <qgroupbox.h>
+#include <qpushbutton.h>
+#include <qcombobox.h>
+#include <qbitarray.h>
+
+#include <klocale.h>
+#include <kseparator.h>
+
+#include "knfilterconfigwidget.h"
+#include "knstatusfilter.h"
+#include "knrangefilter.h"
+#include "knstringfilter.h"
+#include "knarticlefilter.h"
+#include "knglobals.h"
+#include "utilities.h"
+#include "knsearchdialog.h"
+
 
 KNSearchDialog::KNSearchDialog(searchType /*t*/) : QWidget()
 {
 	QGroupBox *bg=new QGroupBox(this);
 	startBtn=new QPushButton(i18n("Start search"), bg);
+	startBtn->setMinimumSize(startBtn->sizeHint());
 	newBtn=new QPushButton(i18n("New search"), bg);
+	newBtn->setMinimumSize(newBtn->sizeHint());
 	closeBtn=new QPushButton(i18n("Close"), bg);
-	SIZE(startBtn); SIZE(newBtn); SIZE(closeBtn);
+	closeBtn->setMinimumSize(closeBtn->sizeHint());
 	
 	fcw=new KNFilterConfigWidget(this);
 	

@@ -20,11 +20,11 @@
 #define KNGROUP_H
 
 #include "knarticlecollection.h"
-#include "knfetcharticle.h"
-#include "knuserentry.h"
 
-
+class KNFetchArticle;
+class KNUserEntry;
 class KNNntpAccount;
+
 
 class KNGroup : public KNArticleCollection  {
 	

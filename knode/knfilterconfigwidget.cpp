@@ -15,12 +15,17 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <kconfig.h>
+#include <qlayout.h>
+#include <qbitarray.h>
+#include <qcombobox.h>
+
 #include <klocale.h>
 
+#include "knstringfilter.h"
+#include "knstatusfilter.h"
+#include "knrangefilter.h"
 #include "knfilterconfigwidget.h"
-#include "utilities.h"
-#include <qlayout.h>
+
 
 KNFilterConfigWidget::KNFilterConfigWidget(QWidget *parent, const char *name ) :
 	QTabWidget(parent,name)

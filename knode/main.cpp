@@ -14,10 +14,14 @@
  ***************************************************************************/
 
 #include <iostream>
+
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
+#include <klocale.h>
+
 #include "knode.h"
 #include "resource.h"
+
 
 void convert(const char*);
 

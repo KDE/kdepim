@@ -19,19 +19,19 @@
 #ifndef KNARTICLEFILTER_H
 #define KNARTICLEFILTER_H
 
-#include <ksimpleconfig.h>
-#include "kngroup.h"
-#include "knstatusfilter.h"
-#include "knstringfilter.h"
-#include "knrangefilter.h"
-#include "knsavedarticle.h"
+#include <qstring.h>
 
+class	KNStatusFilter;
+class KNRangeFilter;
+class KNStringFilter;
+class KNFetchArticle;
+class KNGroup;
 
 class KNArticleFilter {
 	
 	friend class KNFilterManager;
 	friend class KNFilterDialog;
-	friend class KNSearchDialog;
+	friend class KNSearchDialog;	
 
 	public:
 		KNArticleFilter(int id=-1);
@@ -45,7 +45,7 @@ class KNArticleFilter {
 		//bool applyFilter(KNSavedArticle *a);
 		int count()											{ return c_ount; }
 		int id()												{ return i_d; }
-		int applyOn()										{ return (int) apon; }
+		int applyOn()										{ return static_cast<int>(apon); }
 		const QString& name()						{ return n_ame; }
 		bool isEnabled()								{ return e_nabled; }
 		bool loaded()										{ return l_oaded; }

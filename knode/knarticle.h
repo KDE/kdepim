@@ -58,10 +58,7 @@ class KNArticle : public KNMimeContent  {
 		void setSubject(const QCString &s)				{ s_ubject=decodeRFC1522String(s); }
 		void setListItem(KNHdrViewItem *it);
 		void setId(int i)												{ i_d=i; }
-		void setTimeT(time_t t);
-		
-		
-		
+		void setTimeT(time_t t);					
 				
 	protected:
 		QCString s_ubject;
