@@ -77,6 +77,8 @@ KCalResourceSlox::KCalResourceSlox( const KURL &url )
 
 KCalResourceSlox::~KCalResourceSlox()
 {
+  kdDebug() << "~KCalResourceSlox()" << endl;
+
   close();
 
   if ( mLoadEventsJob ) mLoadEventsJob->kill();
@@ -181,7 +183,12 @@ QString KCalResourceSlox::errorMessage()
 
 void KCalResourceSlox::requestEvents()
 {
-  QString url = mPrefs->url() + "/servlet/webdav.calendar/";
+  KURL url = mPrefs->url();
+  url.setPath( "/servlet/webdav.calendar/" );
+  url.setUser( mPrefs->user() );
+  url.setPass( mPrefs->password() );
+
+  kdDebug() << "KCalResourceSlox::requestEvents(): " << url << endl;
 
   QString lastsync = "0";
   if ( mPrefs->useLastSync() ) {
@@ -217,7 +224,12 @@ void KCalResourceSlox::requestEvents()
 
 void KCalResourceSlox::requestTodos()
 {
-  QString url = mPrefs->url() + "/servlet/webdav.tasks/";
+  KURL url = mPrefs->url();
+  url.setPath( "/servlet/webdav.tasks/" );
+  url.setUser( mPrefs->user() );
+  url.setPass( mPrefs->password() );
+
+  kdDebug() << "KCalResourceSlox::requestTodos(): " << url << endl;
 
   QString lastsync = "0";
   if ( mPrefs->useLastSync() ) {
@@ -442,6 +454,7 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
   mLoadTodosJob = 0;
 
   mLoadTodosProgress->setComplete();
+  mLoadTodosProgress = 0;
 
   emit resourceLoaded( this );
 }
@@ -504,6 +517,7 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
   mLoadEventsJob = 0;
 
   mLoadEventsProgress->setComplete();
+  mLoadEventsProgress = 0;
 
   emit resourceLoaded( this );
 }
@@ -517,7 +531,7 @@ void KCalResourceSlox::slotEventsProgress( KIO::Job *job,
   Q_UNUSED( job );
   Q_UNUSED( percent );
 #endif
-  mLoadEventsProgress->updateProgress();
+  if ( mLoadEventsProgress ) mLoadEventsProgress->setProgress( percent );
 }
 
 void KCalResourceSlox::slotTodosProgress( KIO::Job *job, unsigned long percent )
@@ -528,7 +542,7 @@ void KCalResourceSlox::slotTodosProgress( KIO::Job *job, unsigned long percent )
   Q_UNUSED( job );
   Q_UNUSED( percent );
 #endif
-  mLoadTodosProgress->updateProgress();
+  if ( mLoadTodosProgress ) mLoadTodosProgress->setProgress( percent );
 }
 
 bool KCalResourceSlox::save()
@@ -586,6 +600,9 @@ void KCalResourceSlox::doClose()
 {
   if ( !mOpen ) return;
 
+  cancelLoadEvents();
+  cancelLoadTodos();
+
   mCalendar.close();
   mOpen = false;
 }
@@ -607,16 +624,16 @@ void KCalResourceSlox::dump() const
 
 void KCalResourceSlox::cancelLoadEvents()
 {
-  mLoadEventsJob->kill();
+  if ( mLoadEventsJob ) mLoadEventsJob->kill();
   mLoadEventsJob = 0;
-  mLoadEventsProgress->setComplete();
+  if ( mLoadEventsProgress ) mLoadEventsProgress->setComplete();
 }
 
 void KCalResourceSlox::cancelLoadTodos()
 {
-  mLoadTodosJob->kill();
+  if ( mLoadTodosJob ) mLoadTodosJob->kill();
   mLoadTodosJob = 0;
-  mLoadTodosProgress->setComplete();
+  if ( mLoadTodosProgress ) mLoadTodosProgress->setComplete();
 }
 
 #include "kcalresourceslox.moc"

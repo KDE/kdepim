@@ -26,6 +26,7 @@
 #include <kresources/configwidget.h>
 
 class QCheckBox;
+class KLineEdit;
 
 /**
   Configuration widget for SLOX resource.
@@ -44,7 +45,9 @@ class KCalResourceSloxConfig : public KRES::ConfigWidget
 
   private:
     KURLRequester *mDownloadUrl;
-    QCheckBox *mLastSyncCheck;
+    KLineEdit *mUserEdit;
+    KLineEdit *mPasswordEdit;
+    QCheckBox *mLastSyncCheck;    
 };
 
 #endif

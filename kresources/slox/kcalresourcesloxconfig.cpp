@@ -27,6 +27,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kstandarddirs.h>
+#include <klineedit.h>
 
 #include "kcalresourceslox.h"
 #include "kcalsloxprefs.h"
@@ -47,9 +48,22 @@ KCalResourceSloxConfig::KCalResourceSloxConfig( QWidget* parent,  const char* na
   mainLayout->addWidget( label, 1, 0 );
   mainLayout->addWidget( mDownloadUrl, 1, 1 );
 
+  label = new QLabel( i18n("User:"), this );
+  mainLayout->addWidget( label, 2, 0 );
+  
+  mUserEdit = new KLineEdit( this );
+  mainLayout->addWidget( mUserEdit, 2, 1 );
+  
+  label = new QLabel( i18n("Password:"), this );
+  mainLayout->addWidget( label, 3, 0 );
+  
+  mPasswordEdit = new KLineEdit( this );
+  mainLayout->addWidget( mPasswordEdit, 3, 1 );
+  mPasswordEdit->setEchoMode( KLineEdit::Password );
+
   mLastSyncCheck = new QCheckBox( i18n("Only load data since last sync"),
                                   this );
-  mainLayout->addMultiCellWidget( mLastSyncCheck, 2, 2, 0, 1 );
+  mainLayout->addMultiCellWidget( mLastSyncCheck, 4, 4, 0, 1 );
 
 #if 0
   // FIXME: Post 3.2: i18n("Upload to:") ( bug 67330 )
@@ -74,6 +88,8 @@ void KCalResourceSloxConfig::loadSettings( KRES::Resource *resource )
   if ( res ) {
     mDownloadUrl->setURL( res->prefs()->url() );
     mLastSyncCheck->setChecked( res->prefs()->useLastSync() );
+    mUserEdit->setText( res->prefs()->user() );
+    mPasswordEdit->setText( res->prefs()->password() );
 #if 0
     mUploadUrl->setURL( res->uploadUrl().url() );
     kdDebug() << "ANOTER RELOAD POLICY: " << res->reloadPolicy() << endl;
@@ -90,6 +106,8 @@ void KCalResourceSloxConfig::saveSettings( KRES::Resource *resource )
   if ( res ) {
     res->prefs()->setUrl( mDownloadUrl->url() );
     res->prefs()->setUseLastSync( mLastSyncCheck->isChecked() );
+    res->prefs()->setUser( mUserEdit->text() );
+    res->prefs()->setPassword( mPasswordEdit->text() );
 #if 0
     res->setUploadUrl( mUploadUrl->url() );
     res->setReloadPolicy( mReloadGroup->selectedId() );

@@ -36,6 +36,8 @@ class KConfig;
 
 namespace KABC {
 
+class SloxPrefs;
+
 class ResourceSlox : public Resource
 {
     Q_OBJECT
@@ -45,34 +47,28 @@ class ResourceSlox : public Resource
                   const QString &user, const QString &password );
     ~ResourceSlox();
 
-    virtual void writeConfig( KConfig * );
+    void readConfig( const KConfig * );
+    void writeConfig( KConfig * );
 
-    virtual bool doOpen();
-    virtual void doClose();
+    SloxPrefs *prefs() const { return mPrefs; }
 
-    virtual Ticket *requestSaveTicket();
-    virtual void releaseSaveTicket( Ticket* );
+    bool doOpen();
+    void doClose();
 
-    virtual bool load();
-    virtual bool asyncLoad();
-    virtual bool save( Ticket * );
-    virtual bool asyncSave( Ticket * );
+    Ticket *requestSaveTicket();
+    void releaseSaveTicket( Ticket* );
 
-    virtual void insertAddressee( const Addressee &addr );
-    virtual void removeAddressee( const Addressee& addr );
+    bool load();
+    bool asyncLoad();
+    bool save( Ticket * );
+    bool asyncSave( Ticket * );
 
-    void setURL( const KURL &url );
-    KURL url() const;
-
-    void setUser( const QString &user );
-    QString user() const;
-
-    void setPassword( const QString &password );
-    QString password() const;
+    void insertAddressee( const Addressee &addr );
+    void removeAddressee( const Addressee& addr );
 
   protected:
-    void init( const KURL &url,
-               const QString &user, const QString &password );
+    void init();
+    void initSlox();
 
     void parseContactAttribute( const QDomElement &e, Addressee &a,
                                 QString &userId );
@@ -81,9 +77,7 @@ class ResourceSlox : public Resource
     void slotResult( KIO::Job *job );
 
   private:
-    KURL mURL;
-    QString mUser;
-    QString mPassword;
+    SloxPrefs *mPrefs;
 
     KIO::DavJob *mDownloadJob;
 

@@ -33,6 +33,7 @@
 
 #include "webdavhandler.h"
 #include "sloxaccounts.h"
+#include "kabcsloxprefs.h"
 
 #include "kabcresourceslox.h"
 
@@ -41,48 +42,62 @@ using namespace KABC;
 ResourceSlox::ResourceSlox( const KConfig *config )
   : Resource( config )
 {
+  init();
+
   if ( config ) {
-    init( KURL( config->readEntry( "SloxUrl" ) ),
-          config->readEntry( "SloxUser" ),
-          KStringHandler::obscure( config->readEntry( "SloxPassword" ) ) );
-  } else {
-    init( KURL(), "", "" );
+    readConfig( config );
   }
+
+  initSlox();
 }
 
 ResourceSlox::ResourceSlox( const KURL &url,
                             const QString &user, const QString &password )
   : Resource( 0 )
 {
-  init( url, user, password );
+  init();
+
+  mPrefs->setUrl( url.url() );
+  mPrefs->setUser( user );
+  mPrefs->setPassword( password );
+
+  initSlox();
 }
 
-void ResourceSlox::init( const KURL &url,
-                         const QString &user, const QString &password )
+void ResourceSlox::init()
 {
-  kdDebug() << "KABC::ResourceSlox::init()" << endl;
+  mPrefs = new SloxPrefs;
 
   setType( "slox" );
 
   mDownloadJob = 0;
-  mURL = url;
-  mUser = user;
-  mPassword = password;
+}
 
-  SloxAccounts::setServer( mURL.host() );
+void ResourceSlox::initSlox()
+{
+  SloxAccounts::setServer( KURL( mPrefs->url() ).host() );
 }
 
 ResourceSlox::~ResourceSlox()
 {
+  kdDebug() << "KABC::~ResourceSlox()" << endl;
+
+  delete mPrefs;
+}
+
+void ResourceSlox::readConfig( const KConfig * )
+{
+  mPrefs->readConfig();
 }
 
 void ResourceSlox::writeConfig( KConfig *config )
 {
+  kdDebug() << "ResourceSlox::writeConfig() " << endl;
+  kdDebug() << mPrefs->url() << endl;
+
   Resource::writeConfig( config );
 
-  config->writeEntry( "SloxUrl", mURL.url() );
-  config->writeEntry( "SloxUser", mUser );
-  config->writeEntry( "SloxPassword", KStringHandler::obscure( mPassword ) );
+  mPrefs->writeConfig();
 }
 
 Ticket *ResourceSlox::requestSaveTicket()
@@ -126,7 +141,10 @@ bool ResourceSlox::asyncLoad()
     return false;
   }
 
-  QString url = mURL.url() + "/servlet/webdav.contacts/";
+  KURL url = mPrefs->url();
+  url.setPath( "/servlet/webdav.contacts/" );
+  url.setUser( mPrefs->user() );
+  url.setPass( mPrefs->password() );
 
   QDomDocument doc;
   QDomElement root = WebdavHandler::addDavElement( doc, doc, "propfind" );
@@ -274,37 +292,6 @@ void ResourceSlox::insertAddressee( const Addressee& addr )
 
 void ResourceSlox::removeAddressee( const Addressee& addr )
 {
-}
-
-
-void ResourceSlox::setURL( const KURL &url )
-{
-  mURL = url;
-}
-
-KURL ResourceSlox::url() const
-{
-  return mURL;
-}
-
-void ResourceSlox::setUser( const QString &user )
-{
-  mUser = user;
-}
-
-QString ResourceSlox::user() const
-{
-  return mUser;
-}
-
-void ResourceSlox::setPassword( const QString &password )
-{
-  mPassword = password;
-}
-
-QString ResourceSlox::password() const
-{
-  return mPassword;
 }
 
 #include "kabcresourceslox.moc"

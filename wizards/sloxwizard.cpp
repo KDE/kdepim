@@ -22,6 +22,7 @@
 #include "sloxconfig.h"
 
 #include "kresources/slox/kabcresourceslox.h"
+#include "kresources/slox/kcalsloxprefs.h"
 #include "kresources/slox/kcalresourceslox.h"
 
 #include <libkcal/resourcecalendar.h>
@@ -53,6 +54,8 @@ class CreateSloxKcalResource : public KConfigPropagator::Change
 
       KCalResourceSlox *r = new KCalResourceSlox( url );
       r->setResourceName( i18n("Openexchange Server") );
+      r->prefs()->setUser( SloxConfig::self()->user() );
+      r->prefs()->setPassword( SloxConfig::self()->password() );
       m.add( r );
       m.writeConfig();
     }
@@ -73,7 +76,7 @@ class CreateSloxKabcResource : public KConfigPropagator::Change
       KRES::Manager<KABC::Resource> m( "contact" );
       m.readConfig();
 
-      KURL url( "https://" + SloxConfig::self()->server() );
+      KURL url( "http://" + SloxConfig::self()->server() );
       QString user( SloxConfig::self()->user() );
       QString password( SloxConfig::self()->password() );
 

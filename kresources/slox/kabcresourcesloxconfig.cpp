@@ -18,8 +18,10 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include <qlabel.h>
-#include <qlayout.h>
+#include "kabcresourcesloxconfig.h"
+
+#include "kabcresourceslox.h"
+#include "kabcsloxprefs.h"
 
 #include <kdebug.h>
 #include <kdialog.h>
@@ -27,8 +29,8 @@
 #include <klineedit.h>
 #include <kurlrequester.h>
 
-#include "kabcresourceslox.h"
-#include "kabcresourcesloxconfig.h"
+#include <qlabel.h>
+#include <qlayout.h>
 
 using namespace KABC;
 
@@ -66,9 +68,9 @@ void ResourceSloxConfig::loadSettings( KRES::Resource *res )
     return;
   }
 
-  mURL->setURL( resource->url().url() );
-  mUser->setText( resource->user() );
-  mPassword->setText( resource->password() );
+  mURL->setURL( resource->prefs()->url() );
+  mUser->setText( resource->prefs()->user() );
+  mPassword->setText( resource->prefs()->password() );
 }
 
 void ResourceSloxConfig::saveSettings( KRES::Resource *res )
@@ -80,9 +82,9 @@ void ResourceSloxConfig::saveSettings( KRES::Resource *res )
     return;
   }
 
-  resource->setURL( KURL( mURL->url() ) );
-  resource->setUser( mUser->text() );
-  resource->setPassword( mPassword->text() );
+  resource->prefs()->setUrl( mURL->url() );
+  resource->prefs()->setUser( mUser->text() );
+  resource->prefs()->setPassword( mPassword->text() );
 }
 
 #include "kabcresourcesloxconfig.moc"

@@ -13,7 +13,8 @@ libkcal_slox_la_SOURCES = kcalresourceslox.cpp kcalresourcesloxconfig.cpp \
 libkcal_slox_la_LDFLAGS = $(all_libraries)
 libkcal_slox_la_LIBADD  = libkslox.la $(top_builddir)/libkcal/libkcal.la
 
-libkabc_slox_la_SOURCES = kabcresourceslox.cpp kabcresourcesloxconfig.cpp
+libkabc_slox_la_SOURCES = kabcresourceslox.cpp kabcresourcesloxconfig.cpp \
+                          kabcsloxprefs.kcfgc
 libkabc_slox_la_LDFLAGS = $(all_libraries)
 libkabc_slox_la_LIBADD  = libkslox.la  -lkabc
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
 <kcfg>
-  <kcfgfile name="kresources_kcal_sloxrc"/>
+  <kcfgfile name="kresources_kabc_sloxrc"/>
 
   <group name="General">
     <entry type="String" name="Url">
@@ -12,12 +12,6 @@
     </entry>
     <entry type="Password" name="Password">
       <label>Password</label>
-    </entry>
-    <entry type="DateTime" name="LastEventSync">
-      <label>Last Event Sync</label>
-    </entry>
-    <entry type="DateTime" name="LastTodoSync">
-      <label>Last Todo Sync</label>
     </entry>
     <entry type="Bool" name="UseLastSync">
       <label>Only load data since last sync</label>
