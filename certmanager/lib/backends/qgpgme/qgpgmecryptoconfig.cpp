@@ -37,6 +37,8 @@
 #include <kmessagebox.h>
 #include <klocale.h>
 
+#include <assert.h>
+
 // TODO: runtime changes from other apps? Is that possible to support (other than manual clear()?)
 
 #define GPGCONF_FLAG_GROUP 1
