@@ -38,3 +38,6 @@ kabc_servicedir = $(kde_servicesdir)/kresources/kabc
 kabc_service_DATA = kabc_opengroupware.desktop
 
 METASOURCES = AUTO
+
+messages: rc.cpp
+	$(XGETTEXT) *.cpp -o $(podir)/kres_opengroupware.pot
