@@ -24,7 +24,7 @@
 
 
 ConverterDlg::ConverterDlg( QWidget *parent, const QString& caption)
-   : KDialogBase( parent, "converterdialog", true, caption, KDialogBase::Close|KDialogBase::Help|KDialogBase::User1,
+   : KDialogBase( parent, "converterdialog", false, caption, KDialogBase::Close|KDialogBase::Help|KDialogBase::User1,
 	   KDialogBase::Close, true, i18n("&About"))
 {
 	QWidget *page = makeHBoxMainWidget();
