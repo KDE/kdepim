@@ -692,29 +692,25 @@ void KNMimeContent::parse()
 
 void KNMimeContent::assemble()
 {
-  if(type()==ATmimeContent)
-    h_ead=""; //body-parts do not get the "MIME-Version" header
-  else
-    h_ead+="MIME-Version: 1.0\n";
+  QCString newHead="";
 
   //Content-Type
-  h_ead+=contentType()->as7BitString()+"\n";
+  newHead+=contentType()->as7BitString()+"\n";
 
   //Content-Transfer-Encoding
-  h_ead+=contentTransferEncoding()->as7BitString()+"\n";
+  newHead+=contentTransferEncoding()->as7BitString()+"\n";
 
+  //Content-Description
+  KNHeaders::Base *h=contentDescription(false);
+  if(h)
+    newHead+=h->as7BitString()+"\n";
 
-  if(type()==ATmimeContent) {
-    //Content-Description
-    KNHeaders::Base *h=contentDescription(false);
-    if(h)
-      h_ead+=h->as7BitString()+"\n";
+  //Content-Disposition
+  h=contentDisposition(false);
+  if(h)
+    newHead+=h->as7BitString()+"\n";
 
-    //Content-Disposition
-    h=contentDisposition(false);
-    if(h)
-      h_ead+=h->as7BitString()+"\n";
-  }
+  h_ead=newHead;
 }
 
 
@@ -1244,74 +1240,85 @@ void KNArticle::parse()
 void KNArticle::assemble()
 {
   KNHeaders::Base *h;
-  h_ead="";
+  QCString newHead="";
 
   //Message-ID
   if( (h=messageID(false))!=0 )
-    h_ead+=h->as7BitString()+"\n";
+    newHead+=h->as7BitString()+"\n";
 
   //Control
   if( (h=control(false))!=0 )
-    h_ead+=h->as7BitString()+"\n";
+    newHead+=h->as7BitString()+"\n";
 
   //Supersedes
   if( (h=supersedes(false))!=0 )
-    h_ead+=h->as7BitString()+"\n";
+    newHead+=h->as7BitString()+"\n";
 
   //From
-  if( (h=from(false))!=0 )
-  h_ead+=h->as7BitString()+"\n";
+  h=from(); // "From" is mandatory
+  newHead+=h->as7BitString()+"\n";
 
   //Subject
-  if( (h=subject(false))!=0 )
-  h_ead+=h->as7BitString()+"\n";
+  h=subject(); // "Subject" is mandatory
+  newHead+=h->as7BitString()+"\n";
 
   //To
   if( (h=to(false))!=0 )
-    h_ead+=h->as7BitString()+"\n";
+    newHead+=h->as7BitString()+"\n";
 
   //Newsgroups
   if( (h=newsgroups(false))!=0 )
-    h_ead+=h->as7BitString()+"\n";
+    newHead+=h->as7BitString()+"\n";
 
   //Followup-To
   if( (h=followUpTo(false))!=0 )
-    h_ead+=h->as7BitString()+"\n";
+    newHead+=h->as7BitString()+"\n";
 
   //Reply-To
   if( (h=replyTo(false))!=0 )
-      h_ead+=h->as7BitString()+"\n";
+      newHead+=h->as7BitString()+"\n";
 
   //Date
-  if( (h=date(false))!=0 )
-  h_ead+=h->as7BitString()+"\n";
+  h=date(); // "Date" is mandatory
+  newHead+=h->as7BitString()+"\n";
 
   //References
   if( (h=references(false))!=0 )
-    h_ead+=h->as7BitString()+"\n";
+    newHead+=h->as7BitString()+"\n";
 
   //Lines
-  if( (h=lines(false))!=0 )
-  h_ead+=h->as7BitString()+"\n";
+  h=lines(); // "Lines" is mandatory
+  newHead+=h->as7BitString()+"\n";
 
   //Organization
   if( (h=organization(false))!=0 )
-    h_ead+=h->as7BitString()+"\n";
+    newHead+=h->as7BitString()+"\n";
 
   //User-Agent
   if( (h=userAgent(false))!=0 )
-    h_ead+=h->as7BitString()+"\n";
+    newHead+=h->as7BitString()+"\n";
 
-  //Mime-Headers
-  KNMimeContent::assemble();
+  //Mime-Version
+  newHead+="MIME-Version: 1.0\n";
+
+  //Content-Type
+  newHead+=contentType()->as7BitString()+"\n";
+
+  //Content-Transfer-Encoding
+  newHead+=contentTransferEncoding()->as7BitString()+"\n";
 
   //X-Headers
-  if(h_eaders && !h_eaders->isEmpty()) {
+  int pos=h_ead.find("\nX-");
+  if(pos>-1) //we already have some x-headers => "recycle" them
+    newHead+=h_ead.mid(++pos, h_ead.length()-pos);
+  else if(h_eaders && !h_eaders->isEmpty()) {
     for(h=h_eaders->first(); h; h=h_eaders->next()) {
       if( h->isXHeader() && (strncasecmp(h->type(), "X-KNode", 7)!=0) )
-        h_ead+=h->as7BitString()+"\n";
+        newHead+=h->as7BitString()+"\n";
     }
   }
+
+  h_ead=newHead;
 }
 
 
