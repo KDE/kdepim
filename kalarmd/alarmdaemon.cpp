@@ -111,7 +111,7 @@ void AlarmDaemon::enableCal_(const QString& urlString, bool enable)
  */
 void AlarmDaemon::addCal_(const QString& appname, const QString& urlString, bool msgCal)
 {
-  kdDebug() << "AlarmDaemon::addCal_(" << urlString << "): " << (msgCal ? "KALARM" : "KORGANISER") << endl;
+  kdDebug() << "AlarmDaemon::addCal_(" << urlString << "): " << (msgCal ? "KALARM" : "KORGANIZER") << endl;
 
   ADCalendar* cal = getCalendar(urlString);
   if (cal)
@@ -130,7 +130,7 @@ void AlarmDaemon::addCal_(const QString& appname, const QString& urlString, bool
   }
 
   // Load the calendar
-  cal = new ADCalendar(urlString, appname, (msgCal ? ADCalendar::KALARM : ADCalendar::KORGANISER));
+  cal = new ADCalendar(urlString, appname, (msgCal ? ADCalendar::KALARM : ADCalendar::KORGANIZER));
   mCalendars.append(cal);
 
   writeConfigCalendar(appname, cal);
@@ -149,7 +149,7 @@ void AlarmDaemon::addCal_(const QString& appname, const QString& urlString, bool
  */
 void AlarmDaemon::reloadCal_(const QString& appname, const QString& urlString, bool msgCal)
 {
-  kdDebug() << "AlarmDaemon::reloadCal_(" << urlString << "): " << (msgCal ? "KALARM" : "KORGANISER") << endl;
+  kdDebug() << "AlarmDaemon::reloadCal_(" << urlString << "): " << (msgCal ? "KALARM" : "KORGANIZER") << endl;
 
   if (!urlString.isEmpty())
   {
@@ -312,7 +312,7 @@ void AlarmDaemon::checkAlarms(const QString& appName)
 /*
  * Check if any alarms are pending for a specified calendar, and
  * display the pending alarms.
- * Reply = true if there were any KOrganiser type alarms.
+ * Reply = true if there were any KORGANIZER type alarms.
  */
 void AlarmDaemon::checkAlarms(ADCalendar* cal)
 {
@@ -321,13 +321,13 @@ void AlarmDaemon::checkAlarms(ADCalendar* cal)
     QPtrList<Event> alarmEvents;
     switch (cal->actionType())
     {
-      case ADCalendar::KORGANISER:
+      case ADCalendar::KORGANIZER:
         if (cal->checkNonRecurringAlarms(alarmEvents)
         ||  cal->checkRecurringAlarms(alarmEvents, true))
         {
           for (Event* event = alarmEvents.first();  event;  event = alarmEvents.next())
           {
-            kdDebug() << "AlarmDaemon::checkAlarms(): KORGANISER event " << event->VUID() << endl;
+            kdDebug() << "AlarmDaemon::checkAlarms(): KORGANIZER event " << event->VUID() << endl;
             notifyEvent(cal, event->VUID());
           }
         }

@@ -106,13 +106,11 @@ class AlarmGui : public QObject, public ADConfigData, virtual public AlarmGuiIfa
     bool              autostartDaemon() const  { return mAutostartDaemon; }
     const QString&    defaultClient() const    { return mDefaultClient; }
     void              setDefaultClient(int menuIndex);
-    void              setAutostart(bool on);
+    void              setAutostart(bool on) {}
     void              readDaemonConfig();
 
   public slots:
     void              suspend(int minutes);
-    void              toggleGuiAutostart();
-    void              toggleDaemonAutostart();
   private slots:
     void              showAlarmDialog();
 
@@ -122,10 +120,11 @@ class AlarmGui : public QObject, public ADConfigData, virtual public AlarmGuiIfa
     void              handleEvent(const QString& calendarURL, const QString& eventID);
 
   private:
-    QString           checkDefaultClient();
+    void              checkDefaultClient();
     void              setToolTip();
     void              removeDialogEvents(const Calendar*);
     void              notifyDaemon(const QString& calendarURL, bool enable);
+    void              registerWithDaemon();
 
     CalendarList      mCalendars;           // the calendars being monitored
     AlarmDockWindow*  mDocker;              // the panel icon

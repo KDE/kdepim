@@ -13,12 +13,13 @@ kalarmdgui_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kalarmdgui_LDADD = $(LIB_KDEUI) $(top_builddir)/libkcal/libkcal.la
 kalarmdgui_SOURCES = guimain.cpp guiapp.cpp alarmdialog.cpp \
 	dockwindow.cpp daemonguiiface.skel daemonguiiface.stub \
-	koeventviewer.cpp daemongui.cpp
+	koeventviewer.cpp daemongui.cpp adconfigdatabase.cpp \
+        adcalendarbase.cpp adcalendar.cpp
 
 noinst_HEADERS = alarmapp.h alarmdaemon.h alarmdaemoniface.h \
 	guiapp.h daemongui.h daemonguiiface.h alarmdialog.h \
 	dockwindow.h koeventviewer.h \
-        acalendarbase.cpp adcalendar.h
+        adcalendarbase.h adcalendar.h adconfigdatabase.h
 
 METASOURCES = AUTO
 
@@ -28,8 +29,6 @@ autostart_DATA = kalarmd.desktop kalarmdgui.desktop
 autostartdir = $(prefix)/share/autostart
 
 #datadir = $(kde_bindir)
-
-kde_conf_DATA = kalarmdrc kalarmdguirc
 
 KDE_ICON = AUTO
 

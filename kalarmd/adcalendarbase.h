@@ -31,7 +31,7 @@ using namespace KCal;
 class ADCalendarBase : public CalendarLocal
 {
   public:
-    enum Type { KORGANISER = 0, KALARM = 1 };
+    enum Type { KORGANIZER = 0, KALARM = 1 };
     ADCalendarBase(const QString& url, const QString& appname, Type);
     ~ADCalendarBase()  { }
 //    virtual ADCalendarBase* create(const QString& url, const QString& appname, Type) = 0;

@@ -40,6 +40,7 @@
 
 ADCalendar::ADCalendar(const QString& url, const QString& appname, Type type)
   : ADCalendarBase(url, appname, type),
+    available_( false ),
     enabled_(true),
     unregistered(false)
 {

@@ -58,10 +58,13 @@ AlarmGui::AlarmGui(QObject *parent, const char *name)
   kdDebug() << "AlarmGui::AlarmGui()" << endl;
 
   readDaemonConfig();
-  readDaemonData(false);
+  bool deletedClients;
+  bool deletedCalendars;
+  readDaemonData(deletedClients, deletedCalendars);
   checkDefaultClient();
 
-  mDocker = new AlarmDockWindow(*this, mDefaultClient);
+  mDocker = new AlarmDockWindow(*this);
+//  mDocker = new AlarmDockWindow(*this, this, mDefaultClient);
   setAutostart(true);    // switch autostart on whenever the program is run
   mDocker->show();
 
@@ -71,7 +74,7 @@ AlarmGui::AlarmGui(QObject *parent, const char *name)
   // set up the alarm timer
   mSuspendTimer = new QTimer(this);
 
-  setToolTipStartTimer();
+//  setToolTipStartTimer();
 
   registerWithDaemon();
 }
@@ -95,7 +98,7 @@ void AlarmGui::alarmDaemonUpdate(const QString& change, const QString& calendarU
   if (change == "STATUS")
   {
     readDaemonConfig();
-    mDocker->setAutostart(mAutostartDaemon);
+    mDocker->setGuiAutostart(mAutostartDaemon);
   }
   else if (change == "CLIENT")
   {
@@ -169,19 +172,19 @@ void AlarmGui::alarmDaemonUpdate(const QString& change, const QString& calendarU
       else if (change == "CALENDAR_UNAVAILABLE")
       {
         // Calendar is not available for monitoring
-        cal->available_ = false;
+//        cal->available_ = false;
         cal->enabled_   = false;
       }
       else if (change == "CALENDAR_DISABLED")
       {
         // Calendar is available for monitoring but is not currently being monitored
-        cal->available_ = true;
+//        cal->available_ = true;
         cal->enabled_   = false;
       }
       else if (change == "CALENDAR_ENABLED")
       {
         // Calendar is currently being monitored
-        cal->available_ = true;
+//        cal->available_ = true;
         cal->enabled_   = true;
       }
       else
@@ -210,7 +213,7 @@ void AlarmGui::registerWithDaemon()
   QByteArray data;
   QDataStream arg(data, IO_WriteOnly);
   arg << QString(kapp->aboutData()->appName()) << kapp->aboutData()->programName() << DCOP_OBJECT_NAME << (Q_INT8)1 << (Q_INT8)0;
-  if (!dcopClient()->send(DAEMON_APP_NAME, DAEMON_DCOP_OBJECT, "registerApp(QString,QString,QString,bool,bool)", data))
+  if (!kapp->dcopClient()->send(DAEMON_APP_NAME, DAEMON_DCOP_OBJECT, "registerApp(QString,QString,QString,bool,bool)", data))
      kdDebug() << "KAlarmApp::startDaemon(): registerApp dcop send failed" << endl;
 }
 
@@ -339,7 +342,7 @@ void AlarmGui::setToolTip()
   mDocker->addToolTip(filename);
 }
 
-
+#if 0
 ///////////////////////////////////////////////////////////////////////////////
 // class ADCalendar
 ///////////////////////////////////////////////////////////////////////////////
@@ -359,3 +362,4 @@ ADCalendarBase* ADCalendar::create(const QString& url, const QString& appname, T
 {
   return new ADCalendar(url, appname, type);
 }
+#endif

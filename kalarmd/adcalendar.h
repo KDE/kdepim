@@ -32,6 +32,7 @@ class ADCalendar : public ADCalendarBase
     ~ADCalendar()  { }
     static ADCalendar *create(const QString& url, const QString& appname, Type);
     bool           enabled() const     { return enabled_ && !unregistered; }
+    void           setEnabled( bool enabled ) { enabled_ = enabled; }
     bool           available() const   { return loaded() && !unregistered; }
     static bool    eventHandled(const Event*, const QValueList<QDateTime> &);
     void           setEventHandled(const Event*,
@@ -41,6 +42,8 @@ class ADCalendar : public ADCalendarBase
     bool           getEventPending(QString& ID);
     bool           loadFile()          { return loadFile_(QString()); }
 
+  public:
+    bool              available_;
     bool              enabled_;       // events are currently manually enabled
     bool              unregistered;   // client has registered since calendar was
                                       // constructed, but has not since added the

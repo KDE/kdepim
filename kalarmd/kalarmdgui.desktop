@@ -1,0 +1,8 @@
+# KDE Config File
+[Desktop Entry]
+Name=Alarm daemon GUI
+Exec=kalarmdgui
+Icon=kalarmd
+Type=Application
+Comment=KOrganizer/KAlarm alarm daemon GUI
+Terminal=0
