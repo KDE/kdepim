@@ -629,6 +629,12 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
   const bool silent = mSilent;
   mSilent = true;
 
+  if ( type != kmailCalendarContentsType && type != kmailTodoContentsType
+       && type != kmailJournalContentsType )
+    // Not ours
+    return false;
+  if ( !subresourceActive( subResource ) ) return true;
+
   // If this xml file is one of ours, load it here
   if ( type == kmailCalendarContentsType )
     addEvent( xml, subResource, sernum );
@@ -644,13 +650,14 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
 }
 
 void ResourceKolab::fromKMailDelIncidence( const QString& type,
-                                           const QString& /*subResource*/,
+                                           const QString& subResource,
                                            const QString& uid )
 {
   if ( type != kmailCalendarContentsType && type != kmailTodoContentsType
        && type != kmailJournalContentsType )
     // Not ours
     return;
+  if ( !subresourceActive( subResource ) ) return;
 
   // Can't be in both, by contract
   if ( mUidsPendingDeletion.contains( uid ) ) {
