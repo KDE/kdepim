@@ -90,7 +90,7 @@ KNSettingsDialog::KNSettingsDialog(QWidget *parent, const char *name)
   setFolderIcon(list, BarIcon("mail_forward"));
 
   // Identity
-  QFrame *frame = addHBoxPage(i18n(" Identity"),i18n("Personal Information"), UserIcon("smile"));
+  QFrame *frame = addHBoxPage(i18n(" Identity"),i18n("Personal Information"),UserIcon("identity"));
   widgets.append(new KNUserSettings(frame));
 
   // Accounts / News
@@ -103,11 +103,11 @@ KNSettingsDialog::KNSettingsDialog(QWidget *parent, const char *name)
   // Accounts / Mail
   list.clear();
   list << QString(" ")+i18n("Accounts") << i18n(" Mail");
-  frame = addHBoxPage(list, i18n("Mail Server"), BarIcon("mail_send"));
+  frame = addHBoxPage(list, i18n("Mail Server"), BarIcon("mail_generic"));
   widgets.append(new KNAccMailSettings(frame));
 
   // Appearance
-  frame = addHBoxPage(QString(" ")+i18n("Appearance"), i18n("Customize visual appearance"), BarIcon("blend"));
+  frame = addHBoxPage(QString(" ")+i18n("Appearance"), i18n("Customize visual appearance"), BarIcon("appearance"));
   widgets.append(new KNAppSettings(frame));
 
   // Read News / General
@@ -137,7 +137,7 @@ KNSettingsDialog::KNSettingsDialog(QWidget *parent, const char *name)
   // Post News / Composer
   list.clear();
   list << QString(" ")+i18n("Posting News") << QString(" ")+i18n("Composer");
-  frame = addHBoxPage(list, i18n("Customize composer behaviour"), BarIcon("signature"));
+  frame = addHBoxPage(list, i18n("Customize composer behaviour"), BarIcon("edit"));
   widgets.append(new KNPostComSettings(frame));
 
   // Post News / Spelling

@@ -60,7 +60,7 @@ KNSavedArticleManager::KNSavedArticleManager(KNListView *v, KNAccountManager *am
   actSendOutbox = new KAction(i18n("Sen&d pending messages"), "mail_send", 0, this, SLOT(slotSendOutbox()),
                               actionCollection, "net_sendPending");
   actSendOutbox->setEnabled(false);
-  actEdit = new KAction(i18n("edit article","&Edit"), "signature", Key_E , this, SLOT(slotEdit()),
+  actEdit = new KAction(i18n("edit article","&Edit"), "edit", Key_E , this, SLOT(slotEdit()),
                         actionCollection, "article_edit");
   actEdit->setEnabled(false);
   actDelete = new KAction(i18n("&Delete"), "editdelete", Key_Delete, this, SLOT(slotDelete()),
