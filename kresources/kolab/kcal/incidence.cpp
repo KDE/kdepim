@@ -318,7 +318,7 @@ bool Incidence::saveAttributes( QDomElement& element ) const
   saveAttendees( element );
   if ( mHasAlarm ) {
     // Alarms should be minutes before. Libkcal uses event time + alarm time
-    int alarmTime = ( int )( ( -alarm() ) + 0.5f );
+    int alarmTime = qRound( -alarm() );
     writeString( element, "alarm", QString::number( alarmTime ) );
   }
   return true;
