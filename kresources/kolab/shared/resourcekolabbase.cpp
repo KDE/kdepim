@@ -87,11 +87,29 @@ bool ResourceKolabBase::kmailDeleteIncidence( const QString& resource,
   return mSilent || mConnection->kmailDeleteIncidence( resource, sernum );
 }
 
+static QString plainTextBody()
+{
+  const char * firstPartTextToTranslate = I18N_NOOP(
+    "This is a Kolab Groupware object.\nTo view this object you"
+    " will need an email client that can understand the Kolab"
+    " Groupware format.\nFor a list of such email clients please"
+    " visit\n%1" );
+  const char * url = "http://www.kolab.org/kolab2-clients.html";
+  QString firstPartTextUntranslated = QString::fromLatin1( firstPartTextToTranslate ).arg( url );
+  QString firstPartText = i18n( firstPartTextToTranslate ).arg( url );
+  if ( firstPartText != firstPartTextUntranslated ) {
+    firstPartText.append("\n\n-----------------------------------------------------\n\n");
+    firstPartText.append( firstPartTextUntranslated );
+  }
+  return firstPartText;
+}
+
 bool ResourceKolabBase::kmailUpdate( const QString& resource,
                                      Q_UINT32& sernum,
                                      const QString& xml,
                                      const QString& mimetype,
                                      const QString& subject,
+                                     const CustomHeaderMap& _customHeaders,
                                      const QStringList& _attachmentURLs,
                                      const QStringList& _attachmentMimetypes,
                                      const QStringList& _attachmentNames,
@@ -123,7 +141,10 @@ bool ResourceKolabBase::kmailUpdate( const QString& resource,
   if ( subj.isEmpty() )
     subj = i18n("Internal kolab data: Do not delete this mail.");
 
-  return mConnection->kmailUpdate( resource, sernum, subj,
+  CustomHeaderMap customHeaders( _customHeaders );
+  customHeaders.insert( "X-Kolab-Type", mimetype );
+
+  return mConnection->kmailUpdate( resource, sernum, subj, plainTextBody(), customHeaders,
                                    attachmentURLs, attachmentMimeTypes, attachmentNames,
                                    deletedAttachments );
 }

@@ -338,7 +338,12 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
 
 //  kdDebug() << k_funcinfo << "XML string:\n" << xml << endl;
 
-  return kmailUpdate( subresource, sernum, xml, mimetype, incidencebase->uid() );
+  KCal::Incidence* incidence = static_cast<KCal::Incidence *>( incidencebase );
+  CustomHeaderMap customHeaders;
+  if ( incidence->schedulingID() != incidence->uid() )
+    customHeaders.insert( "X-Kolab-SchedulingID", incidence->schedulingID() );
+
+  return kmailUpdate( subresource, sernum, xml, mimetype, incidencebase->uid(), customHeaders );
 }
 
 bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _subresource,
