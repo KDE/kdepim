@@ -31,6 +31,7 @@
 <surname>Watts</surname>
 <contrib>Reviewer</contrib>
 </othercredit>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
 
 </authorgroup>
 
@@ -512,6 +513,8 @@ icon.</para></step>
 
 <para>Documentation updated 2001 by Fabian Del Santo
 <email>linuxgnu@yahoo.com.au</email>.</para>
+
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 
 &underFDL;
 &underGPL;

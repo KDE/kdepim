@@ -36,6 +36,7 @@
 		<address><email>adridg@cs.kun.nl</email></address>
 	</affiliation>
 </author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
 <copyright>
@@ -1796,6 +1797,9 @@ Documentation copyright 2000 Adriaan de Groot <email>adridg@cs.kun.nl</email>
 </book>
 <!-- 
      $Log$
+     Revision 1.7  2001/03/14 19:51:57  coolo
+     CVS_SILENT fixsgml
+
      Revision 1.6  2001/02/22 11:29:16  bischoff
      Fixed the date and the releaseinfo
 
