@@ -96,19 +96,45 @@ const int CStatusMessages::NEXT_REC_IN_CAT = 14;
 
 const int CStatusMessages::LOG_MESSAGE = 17;
 
+// This is a number indicating what configuration version
+// we're dealing with. Whenever new configuration options are
+// added that make it imperative for the user to take a
+// look at the configuration of KPilot (for example the
+// skipDB setting really needs user attention) we can change
+// (increase) this number.
+//
+//
+/* static */ const int KPilotLink::ConfigurationVersion = 320;
+
+void KPilotLink::readConfig()
+{
+	FUNCTIONSETUP;
+	int version=0;
+
+	// When KPilot starts up we want to be able to find 
+	// the last synced users data.
+	//
+	//
+	KConfig* config = getConfig();
+	config->setGroup(QString());
+	version=config->readNumEntry("Configured",0);
+	if (version<ConfigurationVersion)
+	{
+		kdDebug() << fname << ": Config file has old version "
+			<< version
+			<< endl;
+	}
+	getPilotUser().setUserName(config->readEntry("UserName").latin1());
+	delete config;
+}
 
 KPilotLink::KPilotLink()
   : fConnected(false), fCurrentPilotSocket(-1), fSlowSyncRequired(false),
     fOwningWidget(0L), fStatusBar(0L), fProgressDialog(0L), fConduitSocket(0L),
     fCurrentDB(0L), fNextDBIndex(0), fConduitProcess(0L), fMessageDialog(0L)
 {
-  fKPilotLink = this;
-
-  // When KPilot starts up we want to be able to find the last synced users data.
-  KConfig* config = getConfig();
-  config->setGroup(QString());
-  getPilotUser().setUserName(config->readEntry("UserName").latin1());
-  delete config;
+	fKPilotLink = this;
+	readConfig();
 }
 
 
@@ -120,73 +146,132 @@ KPilotLink::KPilotLink(QWidget* owner, KStatusBar* statusBar,
     fMessageDialog(0L)
 {
   fKPilotLink = this;
+	readConfig();
   initPilotSocket(devicePath.latin1());
   initConduitSocket();
   fMessageDialog = new MessageDialog(i18n("Sync Status"));
 
-  // When KPilot starts up we want to find the last synced users data.
-  KConfig* config = getConfig();
-  config->setGroup(QString());
-  getPilotUser().setUserName(config->readEntry("UserName").latin1());
-  delete config;
 }
 
 KPilotLink::~KPilotLink()
 {
-  if(fMessageDialog)
-    delete fMessageDialog;
-  if(fConduitSocket)
-    delete fConduitSocket;
-  if(getConnected())
-    endHotSync();
+	if(fMessageDialog)
+	{
+		delete fMessageDialog;
+		fMessageDialog=0L;
+	}
+	if(fConduitSocket)
+	{
+		delete fConduitSocket;
+		fConduitSocket=0L;
+	}
+	if(getConnected())
+	{
+		endHotSync();
+	}
 }
 
 
 void
 KPilotLink::initPilotSocket(const char* devicePath)
 {
-  FUNCTIONSETUP;
+	FUNCTIONSETUP;
 
-  struct pi_sockaddr addr;
-  int ret;
+	struct pi_sockaddr addr;
+	int ret;
+	int e=0;
+	QString msg;
 
-  pi_close(getCurrentPilotSocket());
-  fPilotPath = devicePath;
+	pi_close(getCurrentPilotSocket());
+	fPilotPath = devicePath;
+
+	if (fPilotPath.isEmpty())
+	{
+		kdDebug() << fname << ": No point in trying empty device."
+			<< endl;
+
+		msg=i18n("The Pilot device is not configured yet.");
+		e=0;
+		goto errInit;
+	}
   
-  if (!(fPilotMasterSocket = 
-	pi_socket(PI_AF_SLP, PI_SOCK_STREAM, PI_PF_PADP))) 
-    {
-      kdDebug() << fname << ": Cannot create socket"
-	   << endl;
+	if (!(fPilotMasterSocket = 
+		pi_socket(PI_AF_SLP, PI_SOCK_STREAM, PI_PF_PADP))) 
+	{
+		e=errno;
+		msg=i18n("Cannot create socket for communicating "
+			"with the Pilot");
+		goto errInit;
+	}
 
-      KMessageBox::error(fOwningWidget,
-			 i18n("Cannot create socket for communicating "
-			      "with the Pilot"),
-			 i18n("Error Initializing")
-			 );
-      perror(fname);
-      fPilotMasterSocket = -1;
-      return;
-    }
+	addr.pi_family = PI_AF_SLP;
+	strcpy(addr.pi_device, fPilotPath.ascii());
 
-  addr.pi_family = PI_AF_SLP;
-  strcpy(addr.pi_device, fPilotPath.latin1());
-  ret = pi_bind(fPilotMasterSocket, 
+	ret = pi_bind(fPilotMasterSocket, 
 		(struct sockaddr*)&addr, sizeof(addr));
-  if(ret == -1) 
-    {
-      kdDebug() << fname << ": Cannot bind() to pilot"
-	   << endl;
+	if (ret>=0)
+	{
+		return;
+	}
+	else
+	{
+		e=errno;
+		msg=i18n("Cannot open Pilot port \"%1\". ");
+		// goto errInit;
+	}
 
-      KMessageBox::error(fOwningWidget,
-			 i18n("Cannot open serial port. "
-			      "Check Pilot path and permissions."),
-			 i18n("Error Initializing")
-			 );
 
-      perror(fname);
-      exit(1);
-    }
+// We arrive here when some action for initializing the sockets
+// has gone wrong, and we need to log that and alert the user
+// that it has gone wrong.
+//
+//
+errInit:
+	fPilotMasterSocket = -1;
+
+	if (msg.contains('%'))
+	{
+		if (fPilotPath.isEmpty())
+		{
+			msg=msg.arg(i18n("(empty)"));
+		}
+		else
+		{
+			msg=msg.arg(fPilotPath);
+		}
+	}
+	switch(e)
+	{
+	case ENOENT :
+		msg += i18n(" The port does not exist.");
+		break;
+	case ENODEV :
+		msg += i18n(" These is no such device.");
+		break;
+	case EPERM :
+		msg += i18n(" You don't have permission to open the "
+			"Pilot device.");
+		break;
+	default :
+		msg+= i18n(" Check Pilot path and permissions.");
+	}
+
+	// OK, so we may have to deal with a translated 
+	// error message here. Big deal -- we have the line
+	// number as well, right?
+	//
+	//
+	kdDebug() << fname << ": " << msg << endl;
+	if (e)
+	{
+		kdDebug() << fname 
+			<< ": (" << strerror(e) << ")" << endl;
+	}
+
+	KMessageBox::error(fOwningWidget, msg,
+		i18n("Error Initializing Daemon"));
+
+	exit(1);
 }
 
 void

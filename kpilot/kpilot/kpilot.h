@@ -71,13 +71,6 @@ class KPilotInstaller : public KTMainWindow
     void addComponentPage(QWidget* widget, QString name);
 
 
-	/**
-	* This number can be changed every time a new
-	* KPilot version is released that absolutely requires
-	* the user to take a look at the configuration of
-	* KPilot.
-	*/
-	static const int ConfigurationVersion;
 
     protected:
       void closeEvent(QCloseEvent *e);

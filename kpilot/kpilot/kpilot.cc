@@ -20,6 +20,7 @@ static const char *id="$Id$";
 //		to ensure compatibility.
 //
 
+#include "options.h"
 
 
 #include <sys/types.h>
@@ -46,9 +47,12 @@ static const char *id="$Id$";
 #include <ksock.h>
 #include <kcombobox.h>
 #include <kmenubar.h>
+#include <kstddirs.h>
+#ifdef KDE2
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
-#include <kstddirs.h>
+#include <kdebug.h>
+#endif
 
 #include "kpilotOptions.h"
 #include "kpilot.moc"
@@ -59,7 +63,6 @@ static const char *id="$Id$";
 #include "statusMessages.h"
 #include "conduitSetup.h"
 #include "pilotDaemon.h"
-#include "options.h"
 
 
 const int KPilotInstaller::ID_FILE_QUIT = 1;
@@ -80,16 +83,6 @@ const int KPilotInstaller::ID_CONDUITS_SETUP = 8;
 // Remember to catch this in the menu handler.
 const int KPilotInstaller::ID_COMBO = 1000;
 
-// This is a number indicating what configuration version
-// we're dealing with. Whenever new configuration options are
-// added that make it imperative for the user to take a
-// look at the configuration of KPilot (for example the
-// skipDB setting really needs user attention) we can change
-// (increase) this number.
-//
-//
-const int KPilotInstaller::ConfigurationVersion = 320;
-
 KPilotInstaller::KPilotInstaller()
   : KTMainWindow(), fMenuBar(0L), fStatusBar(0L), fToolBar(0L),
     fQuitAfterCopyComplete(false), fManagingWidget(0L), fPilotLink(0L),
@@ -103,14 +96,20 @@ KPilotInstaller::KPilotInstaller()
 	config->setGroup(QString());
 	cfg_version=config->readNumEntry("Configured", 0);
 
-	if(cfg_version < ConfigurationVersion)
+	if(cfg_version < KPilotLink::ConfigurationVersion)
 	{
+		kdDebug() << fname << ": Old configuration "
+			<< cfg_version
+			<< " shouldn't be used."
+			<< endl;
+
+#if 0
 		if (debug_level & UI_MAJOR)
 		{
 			cerr << fname << ": Read config version "
 				<< cfg_version
 				<< " require "
-				<< ConfigurationVersion
+				<< KPilotLink::ConfigurationVersion
 				<< endl;
 		}
 
@@ -119,6 +118,7 @@ KPilotInstaller::KPilotInstaller()
 		KPilotOptions* options = new KPilotOptions(this);
 		options->show();
 		delete options;
+#endif
 	}
     if(config->readNumEntry("NextUniqueID", 0) == 0)
       {
@@ -921,6 +921,22 @@ static char authorsbuf[256]={0};
 	return authorsbuf;
 }
 
+// Command line options descriptions.
+//
+//
+#ifdef KDE2
+// Due to the strings freeze there are no descriptions
+// for any of the command-line options. --help and such
+// are now standard KDE options.
+//
+//
+static KCmdLineOptions kpilotoptions[] =
+{
+	{ "setup", I18N_NOOP(""),0L },
+	{ "debug <level>", I18N_NOOP(""),"0" },
+	{ 0,0,0 }
+} ;
+#else
 static struct option longOptions[]=
 {
 	{ "debug",1,0L,'d' },
@@ -929,9 +945,13 @@ static struct option longOptions[]=
 	{ "setup",0,0L,'s' },
 	{ 0L,0,0L,0 }
 } ;
+#endif
+
+
+
 
 // "Regular" mode == 0
-// setup mode == 1
+// setup mode == 's'
 //
 // This is only changed by the --setup flag --
 // kpilot still does a setup the first time it is run.
@@ -940,6 +960,7 @@ static struct option longOptions[]=
 int run_mode=0;
 			 
 
+#ifndef KDE2
 void handleOptions(int& argc, char **argv)
 {
 	FUNCTIONSETUP;
@@ -969,40 +990,69 @@ void handleOptions(int& argc, char **argv)
 		}
 	}
 }
-
+#endif
 
 int main(int argc, char** argv)
 {
 	FUNCTIONSETUP;
 
-	// QStrList fileList;
+#ifdef KDE2
         KAboutData about("kpilot", I18N_NOOP("KPilot"),
                          "4.0b",
                          "KPilot - Hot-sync software for unix\n\n",
                          KAboutData::License_GPL,
                          "(c) 1998-2000, Dan Pilone");
+	about.addAuthor("Dan Pilone",
+		I18N_NOOP("Project Leader"),
+		"pilone@slac.com",
+		"http://www.slac.com/pilone/kpilot_home/");
+	about.addAuthor("Adriaan de Groot",
+		I18N_NOOP("Maintainer"),
+		"adridg@cs.kun.nl",
+		"http://www.cs.kun.nl/~adridg/kpilot/");
 
         KCmdLineArgs::init(argc, argv, &about);
+	KCmdLineArgs::addCmdLineOptions(kpilotoptions);
+	KApplication::addCmdLineOptions();
+	KCmdLineArgs *p=KCmdLineArgs::parsedArgs();
+
+	debug_level=atoi(p->getOption("debug"));
+	if (p->isSet("setup")) { run_mode='s'; } 
+
+	KApplication a(true,true);
+
+	KConfig *c=KPilotLink::getConfig();
+	if (c->readNumEntry("Configured",0)<KPilotLink::ConfigurationVersion)
+	{
+		run_mode='s';
+	}
+#else
 	KApplication a;
 	handleOptions(argc,argv);
+#endif
 
 	if (run_mode=='s')
 	{
 		if (debug_level & UI_MAJOR)
 		{
-			cerr << fname << ": Running setup first."
+			kdDebug() << fname << ": Running setup first."
 				<< " (mode " << run_mode << ')'
 				<< endl ;
 		}
 
 		KPilotOptions* options = new KPilotOptions(0L);
 		options->show();
-		if (! options->result())
-		{
-			return 0;
-		}
+		return 0;
 	}
 
+#ifdef KDE2
+	if (c->readNumEntry("Configured",0)<KPilotLink::ConfigurationVersion)
+	{
+		cerr << fname << ": Is still not configured for use."
+			<< endl;
+		return 1;
+	}
+#endif
 
         KPilotInstaller *tp = new KPilotInstaller();
 

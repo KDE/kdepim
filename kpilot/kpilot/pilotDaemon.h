@@ -11,37 +11,15 @@
 
 
 
-#include <qpopmenu.h>
+#include <qpixmap.h>
 #include <ktmainwindow.h>
 #include <kpilotlink.h>
-#include <kdockwindow.h>
+#include <ksystemtray.h>
 
 class KConfig;
 class KSocket;
 class KProcess;
-
-class PilotDaemon;
-
-class DockingLabel : public KDockWindow
-{
-  Q_OBJECT
-
-public:
-  DockingLabel(PilotDaemon* daemon, QWidget* w);
-  void setPopupMenu(QPopupMenu* menu) { fMenu = menu; }
-
- protected:
-  void dropEvent(QDropEvent* drop);
-  void dragEnterEvent(QDragEnterEvent* event);
-
-private:
-  QPopupMenu* fMenu;
-  PilotDaemon* fDaemon;
-
- private slots:
- void mousePressEvent(QMouseEvent* e);
-};
-
+class KAboutApplication;
 
 #define PILOTDAEMON_COMMAND_PORT	31509
 #define PILOTDAEMON_STATUS_PORT		31510
@@ -50,7 +28,7 @@ private:
 // KPilotLink then you need to connect to the command port _BEFORE_ the 
 // hot sync begins. (ie: before the user presses the button...)
 
-class PilotDaemon : public KTMainWindow
+class PilotDaemon : public KSystemTray
 {
   friend class DockingLabel;
 
@@ -74,9 +52,22 @@ public:
   void quit(bool yesno) { fQuit = yesno; }
 
   KProcess* getMonitorProcess() { return fMonitorProcess; }
+	/**
+	* Kill the monitor process, if any. Note that
+	* it is a bad idea to continue using the
+	* daemon without the monitor process, so
+	* this will usually be called just before quit().
+	*
+	* @arg finishsync indicates that the sync-status
+	* window should be updated before quitting.
+	*/
+	void killMonitor(bool finishsync=false);
 
 protected:
 	DaemonStatus fStatus;
+
+signals:
+  void endHotSync();
 
 private:
 	int getPilotSpeed(KConfig *);
@@ -101,14 +92,13 @@ private:
   KPilotLink* fPilotLink;
   QString fPilotDevice;
   QList<KSocket> fStatusConnections;
-  DockingLabel* fDockingLabel;
   bool    fStartKPilot;
   bool    fWaitingForKPilot;
 
-  signals:
-  void endHotSync();
+	QPixmap icon,busyicon;
+	KAboutApplication *kap;
 
- private slots:
+private slots:
  void slotProcFinished(KProcess*);
   void slotAccepted(KSocket* connection);
   void slotAddStatusConnection(KSocket* connection);
@@ -121,4 +111,11 @@ private:
 
   void slotSyncingDatabase(char* dbName);
   void slotDBBackupFinished();
+
+protected:
+	// "Regular" QT actions
+	//
+	//
+	virtual void mousePressEvent(QMouseEvent* e);
+	virtual void closeEvent(QCloseEvent *e);
 };

@@ -34,9 +34,12 @@
 #include <kconfig.h>
 #include <kwin.h>
 #include <kmessagebox.h>
+#ifdef KDE2
 #include <kglobal.h>
 #include <kio/netaccess.h>
 #include <kstddirs.h>
+#include <kdebug.h>
+#endif
 
 
 #include "kpilotOptions.moc"
@@ -382,7 +385,25 @@ int KPilotOptionsGeneral::commitChanges(KConfig *config)
 {
 	FUNCTIONSETUP;
 
-	config->setGroup(QString());
+	QString dest,src;
+
+	dest = getenv("HOME");
+	dest+="/Desktop/Autostart/KPilotDaemon.desktop";
+
+	src = locate("apps","Utilities/KPilotDaemon.desktop");
+	if (src.isNull())
+	{
+		if (fStartDaemonAtLogin->isChecked())
+		{
+			KMessageBox::sorry(this,
+				i18n("Can't find the KPilotDaemon link file\n"
+					"needed to autostart the daemon."));
+		}
+		fStartDaemonAtLogin->setChecked(false);
+		return 1;
+	}
+
+	config->setGroup(QString::null);
 	config->writeEntry("PilotDevice", fPilotDevice->text());
 	config->writeEntry("PilotSpeed", fPilotSpeed->currentItem());
 	config->writeEntry("UserName", fUserName->text());
@@ -395,30 +416,28 @@ int KPilotOptionsGeneral::commitChanges(KConfig *config)
 		(int)fStartKPilotAtHotSync->isChecked());
 	config->writeEntry("DockDaemon", (int)fDockDaemon->isChecked());
 
-	QString dest,src;
-
-	dest = getenv("HOME");
-	dest+="/Desktop/Autostart/KPilotDaemon.desktop";
-
-	src = locate("apps","Utilities/KPilotDaemon.desktop");
-
 	if (fStartDaemonAtLogin->isChecked())
 	{
-		if (src.isNull())
+		if (debug_level & UI_MAJOR)
 		{
-			KMessageBox::sorry(this,
-				i18n("Can't find the KPilotDaemon link file\n"
-					"needed to autostart the daemon."));
+			kdDebug() << fname
+				<< ": Copying autostart file"
+				<< endl;
 		}
-		else
-		{
-			KIO::NetAccess::copy(src,dest);
-		}
+		KIO::NetAccess::copy(src,dest);
 	}
 	else
 	{
+		if (debug_level & UI_MAJOR)
+		{
+			kdDebug() << fname
+				<< ": Deleting daemon autostart file (ignore errors)"
+				<< endl;
+		}
 		KIO::NetAccess::del(dest);
 	}
+
+	return 0;
 }
 
 // ----------------------------------------------------
@@ -515,6 +534,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.8  2000/08/01 06:48:15  adridg
+// Ported autostart-daemon to KDE2
+//
 // Revision 1.7  2000/07/30 10:01:55  adridg
 // Completed KDE2 layout
 //

@@ -16,7 +16,7 @@
 //
 //		Remaining questions are marked with QADE.
 
-static char *id="$Id$";
+static const char *id="$Id$";
 
 #include <sys/time.h>
 #include <sys/types.h>
@@ -33,11 +33,13 @@ static char *id="$Id$";
 
 #include <qdir.h>
 #include <qlist.h>
-#include <qpopmenu.h>
 #include <qcursor.h>
 #include <qdragobject.h>
 
 #include <kapp.h>
+#include <kaboutdata.h>
+#include <kaboutapplication.h>
+#include <kcmdlineargs.h>
 #include <kwin.h>
 #include <ksimpleconfig.h>
 #include <kurl.h>
@@ -45,6 +47,7 @@ static char *id="$Id$";
 #include <kmessagebox.h>
 #include <kstddirs.h>
 #include <kpopupmenu.h>
+#include <kiconloader.h>
 #include <kio/netaccess.h>
 #include <kdebug.h>
 
@@ -55,94 +58,13 @@ static char *id="$Id$";
 #include "options.h"
 #include "kpilot.h"
 
-static struct option longOptions[]=
+static KCmdLineOptions kpilotoptions[] =
 {
-	{ "debug",1,0L,'d' },
-	{ "help",0,0L,1 },
-	{ 0L,0,0L,0 }
+	{ "debug <level>", I18N_NOOP(""),"0" },
+	{ 0,0,0 }
 } ;
 
-void handleOptions(int& argc, char **argv)
-{
-	FUNCTIONSETUP;
 
-	static const char *banner=
-		"\t\tKPilotDaemon v4.0b\n"
-		"Copyright (C) 1998,1999 Dan Pilone\n"
-		"Copyright (C) 2000 Adriaan de Groot\n\n";
-
-	int c,li;
-
-	while((c=getopt_long(argc,argv,"d:",longOptions,&li))>0)
-	{
-		switch(c)
-		{
-		case 'd' : debug_level=atoi(optarg);
-			if (debug_level)
-			{
-				cerr << fname << ": Debug level set to "
-					<< debug_level << endl;
-			}
-			break;
-		case 1 : usage(banner,longOptions); exit(0);
-		default : usage(banner,longOptions); exit(1);
-		}
-	}
-}
-
-
-DockingLabel::DockingLabel (PilotDaemon* daemon, QWidget* w) : KDockWindow(), fDaemon(daemon)
-{
-  FUNCTIONSETUP;
-  QPixmap icon(hotsync_icon);
-  setPixmap(icon);
-  QPopupMenu* menu = contextMenu();
-  menu->insertItem(i18n("&About"), daemon, SLOT(slotShowAbout()));
-  menu->insertSeparator();
-  menu->insertItem(i18n("&Exit"), daemon, SLOT(quitImmediately()));
-  setAcceptDrops(true);
-}
-
-
-void 
-DockingLabel::mousePressEvent(QMouseEvent *e)
-{
-  FUNCTIONSETUP;
-  if( e->button() == RightButton)
-    {
-      KPopupMenu *menu = contextMenu();
-      contextMenuAboutToShow( menu );
-      menu->popup( e->globalPos() );
-    }
-}
-
-void DockingLabel::dragEnterEvent(QDragEnterEvent* event)
-{
-  event->accept(QUriDrag::canDecode(event));
-}
-
-
-void
-DockingLabel::dropEvent(QDropEvent* drop)
-{
-  QStrList list;
-  QUriDrag::decode(drop, list);
-  
-  kdDebug() << "DockingLabel::dropEvent() - Got " << list.first() << endl;
-  
-  if(list.first() != 0L)
-    {
-      unsigned int i = 0;
-      QString dirname = KGlobal::dirs()->saveLocation("data", QString("kpilot/pending_install/"));
-      while (i < list.count())
-	{
-	  KURL srcName = list.at(i);
-	  KURL destDir(dirname + "/" + srcName.filename());
-	  KIO::NetAccess::copy(srcName, destDir);
-	  i++;
-	}
-    }
-}
 
 int PilotDaemon::getPilotSpeed(KConfig *config)
 {
@@ -155,7 +77,7 @@ int PilotDaemon::getPilotSpeed(KConfig *config)
 	// put in the environment (for who?)
 	//
 	//
-	char *speedname=0L;
+	const char *speedname=0L;
 
 	switch(speed)
 	{
@@ -187,17 +109,39 @@ int PilotDaemon::getPilotSpeed(KConfig *config)
 			<< endl;
 	}
 
-	putenv(speedname);
+	putenv((char *)speedname);
 
 	return speed;
 }
 
+/* virtual */ void PilotDaemon::mousePressEvent(QMouseEvent *e)
+{
+  FUNCTIONSETUP;
+  if( e->button() == RightButton)
+    {
+      KPopupMenu *menu = contextMenu();
+      contextMenuAboutToShow( menu );
+      menu->popup( e->globalPos() );
+    }
+    else
+	{
+		KSystemTray::mousePressEvent(e);
+	}
+}
+
+/* virtual */ void PilotDaemon::closeEvent(QCloseEvent *e)
+{
+	FUNCTIONSETUP;
+	quitImmediately();
+}
+
+
 PilotDaemon::PilotDaemon() : 
-	KTMainWindow(), 
+	KSystemTray(0,"pilotDaemon"), 
 	fStatus(INIT),
   	fMonitorProcess(0L), fCurrentSocket(0L),
     fCommandSocket(0L), fStatusSocket(0L), fQuit(false), fPilotLink(0L),
-    fDockingLabel(0L), fStartKPilot(false), fWaitingForKPilot(false)
+	fStartKPilot(false), fWaitingForKPilot(false)
 {
 	FUNCTIONSETUP;
 
@@ -213,8 +157,8 @@ PilotDaemon::PilotDaemon() :
   delete config;
   fStatusConnections.setAutoDelete(true);
 
-  setupWidget();
-  setupConnections();
+	setupWidget();
+	setupConnections();
 	if (fStatus == ERROR) return;
   setupSubProcesses();
 }
@@ -250,9 +194,7 @@ PilotDaemon::reloadSettings()
 	{
 		disconnect(fMonitorProcess, SIGNAL(processExited(KProcess*)),
 			this, SLOT(slotProcFinished(KProcess*)));
-		fMonitorProcess->kill();
-		delete fMonitorProcess;
-		fMonitorProcess=0L;
+		killMonitor();
 	}
 	else
 	{
@@ -323,33 +265,66 @@ PilotDaemon::setupWidget()
 {
 	FUNCTIONSETUP;
 
-  KConfig* config = KPilotLink::getConfig();
-  config->setGroup(QString());
-  if(config->readNumEntry("DockDaemon", 0))
-    {
-      fDockingLabel = new DockingLabel(this, (QWidget*)0L);
-      fDockingLabel->show();
-    }
-  delete config;
+	KGlobal::iconLoader()->addAppDir("kpilot");
+	icon = KGlobal::iconLoader()->loadIcon("hotsync",KIcon::Toolbar,
+		0,KIcon::DefaultState,0,
+		true);
+	busyicon = KGlobal::iconLoader()->loadIcon("busysync",KIcon::Toolbar,
+		0,KIcon::DefaultState,0,true);
+	if (icon.isNull())
+	{
+		kdDebug() << fname << ": HotSync icon not found."
+			<< endl;
+		icon=QPixmap(hotsync_icon);
+	}
+	if (busyicon.isNull())
+	{
+		kdDebug() << fname << ": HotSync-Busy icon not found."
+			<< endl;
+		busyicon=QPixmap(busysync_icon);
+	}
+	setPixmap(icon);
+
+	KPopupMenu* menu = contextMenu();
+	menu->insertItem(i18n("&About"), this, SLOT(slotShowAbout()));
 }
 
-void 
-PilotDaemon::slotShowAbout()
+void PilotDaemon::slotShowAbout()
 {
-  FUNCTIONSETUP;
+	FUNCTIONSETUP;
   
-  KMessageBox::error(0L, i18n("KPilot Hot-Sync Daemon v4.0 \n"
-				 "By: Dan Pilone.\n"
-				"Email: pilone@slac.com"),
-		       i18n("KPilot Daemon v4.0"));
+	if (!kap)
+	{
+		kap=new KAboutApplication(0,"kpdab",false);
+	}
+
+	kap->show();
 }
 
-void
-PilotDaemon::quitImmediately()
+void PilotDaemon::killMonitor(bool finishsync)
 {
 	FUNCTIONSETUP;
 
-	getPilotLink()->endHotSync();
+	if (finishsync)
+	{
+		getPilotLink()->endHotSync();
+	}
+
+	KProcess *m=getMonitorProcess();
+	if (m)
+	{
+		kdDebug() << fname << ": Killing monitor" << endl;
+		m->kill();
+	}
+
+	delete fMonitorProcess;
+	fMonitorProcess=0L;
+}
+
+void PilotDaemon::quitImmediately()
+{
+	FUNCTIONSETUP;
+	killMonitor();
 	quit(true);
 	kapp->quit();
 } 
@@ -360,11 +335,15 @@ PilotDaemon::startHotSync()
 	FUNCTIONSETUP;
 
 
+#ifdef KDE2
+	setPixmap(busyicon);
+#else
 	if(fDockingLabel)
 	{
 		QPixmap icon(busysync_icon);
 		fDockingLabel->setPixmap(icon);
 	}
+#endif
 
   // We need to send the SYNC_STARTING message after the sync
   // has already begun so that if KPilot is running it doesn't start
@@ -445,11 +424,15 @@ PilotDaemon::slotEndHotSync()
 {
 	FUNCTIONSETUP;
 
+#ifdef KDE2
+	setPixmap(icon);
+#else
 	if(fDockingLabel)
 	{
 		QPixmap icon(hotsync_icon);
 		fDockingLabel->setPixmap(icon);
 	}
+#endif
 
 	KPilotLink *p=getPilotLink();
 
@@ -822,12 +805,7 @@ void signalHandler(int s)
 
 	if (gPilotDaemon)
 	{
-		KProcess *m=gPilotDaemon->getMonitorProcess();
-		if (m)
-		{
-			cerr << fname << ": Killing monitor" << endl;
-			m->kill();
-		}
+		gPilotDaemon->killMonitor();
 	}
 
 
@@ -840,10 +818,44 @@ int main(int argc, char* argv[])
 {
 	FUNCTIONSETUP;
 
+#ifdef KDE2
+        KAboutData about("kpilot", I18N_NOOP("KPilot"),
+                         "4.0b",
+                         "KPilot - Hot-sync software for unix\n\n",
+                         KAboutData::License_GPL,
+                         "(c) 1998-2000, Dan Pilone");
+	about.addAuthor("Dan Pilone",
+		I18N_NOOP("Project Leader"),
+		"pilone@slac.com",
+		"http://www.slac.com/pilone/kpilot_home/");
+	about.addAuthor("Adriaan de Groot",
+		I18N_NOOP("Maintainer"),
+		"adridg@cs.kun.nl",
+		"http://www.cs.kun.nl/~adridg/kpilot/");
 
-	KApplication a(argc, argv, "pilotDaemon");
+        KCmdLineArgs::init(argc, argv, &about);
+	KCmdLineArgs::addCmdLineOptions(kpilotoptions);
+	KApplication::addCmdLineOptions();
+	KCmdLineArgs *p=KCmdLineArgs::parsedArgs();
+
+	debug_level=atoi(p->getOption("debug"));
+
+	KApplication a(true,true);
+
+	KConfig *c=KPilotLink::getConfig();
+#else
+	KApplication a(argc,argv,"pilotDaemon");
 	handleOptions(argc,argv);
+#endif
 
+#ifdef KDE2
+	if (c->readNumEntry("Configured",0)<KPilotLink::ConfigurationVersion)
+	{
+		cerr << fname << ": Is still not configured for use."
+			<< endl;
+		return 1;
+	}
+#endif
 
 
 	gPilotDaemon = new PilotDaemon();
@@ -863,6 +875,12 @@ int main(int argc, char* argv[])
 	signal(SIGQUIT, signalHandler);
 	signal(SIGTERM, signalHandler);
 
-	a.setMainWidget(gPilotDaemon);
+#ifdef KDE2
+	// Copied from Klipper
+	KWin::setSystemTrayWindowFor( gPilotDaemon->winId(), 0 );
+	gPilotDaemon->setGeometry(-100, -100, 42, 42 );
+	gPilotDaemon->show();
+#endif
+
 	return a.exec();
 }

@@ -73,8 +73,16 @@ class KPilotLink : public QObject
   Q_OBJECT
   
   friend class PilotSerialDatabase;
-  
+
 public:
+	/**
+	* This number can be changed every time a new
+	* KPilot version is released that absolutely requires
+	* the user to take a look at the configuration of
+	* KPilot.
+	*/
+	static const int ConfigurationVersion;
+
   /**
    * Used for opening local databases only.
    */
@@ -191,6 +199,12 @@ public:
 #endif
 
 private:
+	/**
+	* For initializing the link: read the configuration
+	* file and save vital information from there.
+	*/
+	void readConfig();
+
   PilotRecord* readRecord(KSocket*);
   void writeRecord(KSocket*, PilotRecord*);
 
