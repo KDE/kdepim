@@ -260,6 +260,18 @@ namespace {
 #undef make_operator
     operator const char *() const { return m; }
   };
+#define make_ext_operator( op, inv_op ) \
+  inline bool operator op( const char * lhs, const CaseInsensitiveString & rhs ) { \
+    return rhs.operator inv_op( lhs ); \
+  }
+  make_ext_operator( ==, == )
+  make_ext_operator( !=, != )
+  make_ext_operator( <, > )
+  make_ext_operator( >, < )
+  make_ext_operator( <=, >= )
+  make_ext_operator( >=, <= )
+#undef make_ext_operator
+
 }
 
 bool Kleo::CryptoBackendFactory::knowsAboutProtocol( const char * name ) const {
