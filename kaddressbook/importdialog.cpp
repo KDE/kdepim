@@ -23,7 +23,9 @@
 
 #include "importdialog.h"
 
+#include <kdebug.h>
 #include <klocale.h>
+
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
 #include <kabc/phonenumber.h>
@@ -35,37 +37,38 @@ ContactImportDialog::ContactImportDialog(KABC::AddressBook *doc,
 {
     mCustomList.setAutoDelete( true );
 
-    mFirstName = new KImportColumn(this, KABC::Addressee::givenNameLabel(), 1);
+    mFormattedName = new KImportColumn(this, KABC::Addressee::formattedNameLabel());
     mLastName = new KImportColumn(this, KABC::Addressee::familyNameLabel(), 1);
+    mFirstName = new KImportColumn(this, KABC::Addressee::givenNameLabel(), 1);
     mAdditionalName = new KImportColumn(this, KABC::Addressee::additionalNameLabel());
     mNamePrefix = new KImportColumn(this, KABC::Addressee::prefixLabel());
     mNameSuffix = new KImportColumn(this, KABC::Addressee::suffixLabel());
-    mFormattedName = new KImportColumn(this, KABC::Addressee::formattedNameLabel());
     mNickName = new KImportColumn(this, KABC::Addressee::nickNameLabel());
     mBirthday = new KImportColumn(this, KABC::Addressee::birthdayLabel());
-    mEmail = new KImportColumn(this, KABC::Addressee::emailLabel());
+
+    mAddressHomeStreet = new KImportColumn(this, KABC::Addressee::homeAddressStreetLabel());
+    mAddressHomeCity = new KImportColumn(this, KABC::Addressee::homeAddressLocalityLabel());
+    mAddressHomeState = new KImportColumn(this, KABC::Addressee::homeAddressRegionLabel());
+    mAddressHomeZip = new KImportColumn(this, KABC::Addressee::homeAddressPostalCodeLabel());
+    mAddressHomeCountry = new KImportColumn(this, KABC::Addressee::homeAddressCountryLabel());
+
+    mAddressBusinessStreet = new KImportColumn(this, KABC::Addressee::businessAddressStreetLabel());
+    mAddressBusinessCity = new KImportColumn(this, KABC::Addressee::businessAddressLocalityLabel());
+    mAddressBusinessState = new KImportColumn(this, KABC::Addressee::businessAddressRegionLabel());
+    mAddressBusinessZip = new KImportColumn(this, KABC::Addressee::businessAddressPostalCodeLabel());
+    mAddressBusinessCountry = new KImportColumn(this, KABC::Addressee::businessAddressCountryLabel());
+
     mPhoneHome = new KImportColumn(this, KABC::Addressee::homePhoneLabel());
     mPhoneBusiness = new KImportColumn(this, KABC::Addressee::businessPhoneLabel());
     mPhoneMobile = new KImportColumn(this, KABC::Addressee::mobilePhoneLabel());
     mFaxHome = new KImportColumn(this, KABC::Addressee::homeFaxLabel());
     mFaxBusiness = new KImportColumn(this, KABC::Addressee::businessFaxLabel());
+    mEmail = new KImportColumn(this, KABC::Addressee::emailLabel());
+    mMailClient = new KImportColumn(this, KABC::Addressee::mailerLabel());
     mJobTitle = new KImportColumn(this, KABC::Addressee::titleLabel());
     mRole = new KImportColumn(this, KABC::Addressee::roleLabel());
     mCompany = new KImportColumn(this, KABC::Addressee::organizationLabel());
-    mMailClient = new KImportColumn(this, KABC::Addressee::mailerLabel());
     mUrl = new KImportColumn(this, KABC::Addressee::urlLabel());
-
-    mAddressHomeCity = new KImportColumn(this, KABC::Addressee::homeAddressLocalityLabel());
-    mAddressHomeStreet = new KImportColumn(this, KABC::Addressee::homeAddressStreetLabel());
-    mAddressHomeZip = new KImportColumn(this, KABC::Addressee::homeAddressPostalCodeLabel());
-    mAddressHomeState = new KImportColumn(this, KABC::Addressee::homeAddressRegionLabel());
-    mAddressHomeCountry = new KImportColumn(this, KABC::Addressee::homeAddressCountryLabel());
-
-    mAddressBusinessCity = new KImportColumn(this, KABC::Addressee::businessAddressLocalityLabel());
-    mAddressBusinessStreet = new KImportColumn(this, KABC::Addressee::businessAddressStreetLabel());
-    mAddressBusinessZip = new KImportColumn(this, KABC::Addressee::businessAddressPostalCodeLabel());
-    mAddressBusinessState = new KImportColumn(this, KABC::Addressee::businessAddressRegionLabel());
-    mAddressBusinessCountry = new KImportColumn(this, KABC::Addressee::businessAddressCountryLabel());
 
     KABC::Field::List fields = mDocument->fields( KABC::Field::CustomCategory );
     KABC::Field::List::Iterator it;
