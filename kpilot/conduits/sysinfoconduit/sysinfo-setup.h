@@ -44,19 +44,4 @@ protected:
 	SysInfoWidget *fConfigWidget;
 } ;
 
-class SysInfoWidgetSetup : public ConduitConfig
-{
-public:
-	SysInfoWidgetSetup(QWidget *,const char *,const QStringList &);
-	virtual ~SysInfoWidgetSetup();
-
-	virtual void readSettings();
-
-protected:
-	virtual void commitChanges();
-
-private:
-	SysInfoWidgetConfig *fConfigBase;
-} ;
-
 #endif

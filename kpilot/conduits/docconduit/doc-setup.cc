@@ -41,35 +41,6 @@
 #include "docconduitSettings.h"
 
 
-DOCWidgetSetup::DOCWidgetSetup(QWidget *w, const char *n,
-	const QStringList & a) :
-	ConduitConfig(w,n,a)
-{
-	FUNCTIONSETUP;
-
-	fConfigBase = new DOCWidgetConfig(widget(),"ConfigWidget");
-	fConduitName = i18n("Palm DOC");
-}
-
-DOCWidgetSetup::~DOCWidgetSetup()
-{
-	FUNCTIONSETUP;
-}
-
-/* virtual */ void DOCWidgetSetup::commitChanges()
-{
-	FUNCTIONSETUP;
-	fConfigBase->commit();
-}
-
-/* virtual */ void DOCWidgetSetup::readSettings()
-{
-	FUNCTIONSETUP;
-	fConfigBase->load();
-}
-
-
-
 DOCWidgetConfig::DOCWidgetConfig(QWidget * w, const char *n):
 	ConduitConfigBase(w, n),
 	fConfigWidget(new DOCWidget(w))

@@ -125,27 +125,7 @@ VCalConduitSettings* ToDoConduitFactory::config()
 			return 0L;
 		}
 	}
-
-	if (qstrcmp(c,"ConduitConfig")==0)
-	{
-		QWidget *w = dynamic_cast<QWidget *>(p);
-
-		if (w)
-		{
-			return new ConduitConfigImplementation(w,n,a,
-				ToDoWidgetSetup::create);
-		}
-		else
-		{
-#ifdef DEBUG
-			DEBUGCONDUIT << fname
-				<< ": Couldn't cast parent to widget."
-				<< endl;
-#endif
-			return 0L;
-		}
-	}
-
+	else
 	if (qstrcmp(c,"SyncAction")==0)
 	{
 		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);

@@ -183,31 +183,3 @@ void SysInfoWidgetConfig::load()
 	}
 	return false;
 }
-
-SysInfoWidgetSetup::SysInfoWidgetSetup(QWidget *w, const char *n,
-	const QStringList & a) :
-	ConduitConfig(w,n,a)
-{
-	FUNCTIONSETUP;
-
-	fConfigBase = new SysInfoWidgetConfig(widget(),"ConfigWidget");
-	fConduitName = i18n("System Information");
-}
-
-SysInfoWidgetSetup::~SysInfoWidgetSetup()
-{
-	FUNCTIONSETUP;
-}
-
-/* virtual */ void SysInfoWidgetSetup::commitChanges()
-{
-	FUNCTIONSETUP;
-	fConfigBase->commit();
-}
-
-/* virtual */ void SysInfoWidgetSetup::readSettings()
-{
-	FUNCTIONSETUP;
-	fConfigBase->load();
-}
-

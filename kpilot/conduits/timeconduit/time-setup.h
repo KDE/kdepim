@@ -35,6 +35,7 @@ class TimeWidget;
 
 class TimeWidgetConfig : public ConduitConfigBase
 {
+Q_OBJECT
 public:
 	TimeWidgetConfig(QWidget *parent, const char *);
 	virtual void commit();
@@ -42,22 +43,6 @@ public:
 	static ConduitConfigBase *create(QWidget *,const char *);
 protected:
 	TimeWidget *fConfigWidget;
-} ;
-
-class TimeWidgetSetup : public ConduitConfig
-{
-Q_OBJECT
-public:
-	TimeWidgetSetup(QWidget *,const char *,const QStringList &);
-	virtual ~TimeWidgetSetup();
-
-	virtual void readSettings();
-
-protected:
-	virtual void commitChanges();
-
-private:
-	TimeWidgetConfig *fConfigBase;
 } ;
 
 #endif

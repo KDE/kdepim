@@ -65,32 +65,3 @@ void TimeWidgetConfig::load()
 	fConfigWidget->directionGroup->setButton( TimeConduitSettings::direction() );
 }
 
-TimeWidgetSetup::TimeWidgetSetup(QWidget *w, const char *n,
-	const QStringList & a) :
-	ConduitConfig(w,n,a)
-{
-	FUNCTIONSETUP;
-
-	fConfigBase = new TimeWidgetConfig(widget(),"ConfigWidget");
-	fConduitName=i18n("Time");
-}
-
-TimeWidgetSetup::~TimeWidgetSetup()
-{
-	FUNCTIONSETUP;
-}
-
-/* virtual */ void TimeWidgetSetup::commitChanges()
-{
-	FUNCTIONSETUP;
-
-	fConfigBase->commit();
-}
-
-/* virtual */ void TimeWidgetSetup::readSettings()
-{
-	FUNCTIONSETUP;
-
-	fConfigBase->load();
-}
-

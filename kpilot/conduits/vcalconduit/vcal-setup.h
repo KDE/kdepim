@@ -46,20 +46,4 @@ protected:
 	virtual VCalConduitSettings*config() { return VCalConduitFactory::config(); }
 } ;
 
-#if 0
-class VCalWidgetSetup : public ConduitConfig
-{
-public:
-	VCalWidgetSetup(QWidget *,const char *,const QStringList &);
-	virtual ~VCalWidgetSetup();
-
-	virtual void readSettings();
-	virtual QString configGroup() const { return VCalConduitFactory::group; };
-
-protected:
-	virtual void commitChanges();
-	VCalWidget *fConfigWidget;
-} ;
-#endif
-
 #endif

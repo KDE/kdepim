@@ -102,15 +102,33 @@ MALConduitFactory::~MALConduitFactory()
 		<< endl;
 #endif
 
+	if (qstrcmp(c,"ConduitConfigBase")==0)
+	{
+		QWidget *w = dynamic_cast<QWidget *>(p);
+
+		if (w)
+		{
+			return new MALWidgetSetup(w,n);
+		}
+		else 
+		{
+			kdError() << k_funcinfo
+				<< ": Couldn't cast parent to widget."
+				<< endl;
+			return 0L;
+		}
+	}
+
 	if (qstrcmp(c,"ConduitConfig")==0)
 	{
 		QWidget *w = dynamic_cast<QWidget *>(p);
 
 		if (w)
 		{
-			return new MALWidgetSetup(w,n,a);
+			return new ConduitConfigImplementation(w,n,a,
+				MALWidgetSetup::create);
 		}
-		else 
+		else
 		{
 			kdError() << k_funcinfo
 				<< ": Couldn't cast parent to widget."
