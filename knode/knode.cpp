@@ -37,7 +37,7 @@
 #include "knconfigmanager.h"
 #include "knaccountmanager.h"
 #include "knserverinfo.h"
-
+#include "knarticlewidget.h"
 
 
 KNGlobals knGlobals;
@@ -152,14 +152,17 @@ KNMainWindow::KNMainWindow() : KMainWindow(0,"mainWindow"), b_lockInput(false)
   //actions
   a_ccel=new KAccel(this);
   v_iew->a_ctNavReadThrough->plugAccel(a_ccel);
-
+  v_iew->a_ctArtFilterKeyb->plugAccel(a_ccel);
+  v_iew->a_ctArtSortHeadersKeyb->plugAccel(a_ccel);
+  v_iew->articleView()->setCharsetKeyboardAction()->plugAccel(a_ccel);
+  
   KStdAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
   KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
   KStdAction::preferences(this, SLOT(slotSettings()), actionCollection());
 
-  a_ctWinToggleToolbar    = KStdAction::showToolbar(this, SLOT(slotWinToggleToolbar()), actionCollection());
-  a_ctWinToggleStatusbar  = KStdAction::showStatusbar(this, SLOT(slotWinToggleStatusbar()), actionCollection());
+  a_ctWinToggleToolbar   = KStdAction::showToolbar(this, SLOT(slotWinToggleToolbar()), actionCollection());
+  a_ctWinToggleStatusbar = KStdAction::showStatusbar(this, SLOT(slotWinToggleStatusbar()), actionCollection());
 
   createGUI("knodeui.rc");
   v_iew->initPopups(this);
@@ -279,7 +282,13 @@ void KNMainWindow::slotWinToggleStatusbar()
 
 void KNMainWindow::slotConfKeys()
 {
-  KKeyDialog::configureKeys(actionCollection(), xmlFile(), true, this);
+  KActionCollection coll(*actionCollection());
+
+  coll.take(v_iew->a_ctArtSortHeaders);   // hack, remove actions which cant have a shortcut
+  coll.take(v_iew->a_ctArtFilter);
+  coll.take(v_iew->articleView()->setCharsetAction());
+
+  KKeyDialog::configureKeys(&coll, xmlFile(), true, this);
 }
 
 

@@ -72,6 +72,9 @@ KNArticleWindow::KNArticleWindow(KNArticle *art)
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
   KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
 
+  a_ccel=new KAccel(this);
+  artW->setCharsetKeyboardAction()->plugAccel(a_ccel);
+
   createGUI("knreaderui.rc");
   QPopupMenu *pop = static_cast<QPopupMenu *>(factory()->container("body_popup", this));
   if (!pop) pop = new QPopupMenu(this);
@@ -111,7 +114,12 @@ void KNArticleWindow::slotToggleToolBar()
 
 void KNArticleWindow::slotConfKeys()
 {
-  KKeyDialog::configureKeys(actionCollection(), xmlFile(), true, this);
+  KActionCollection coll(*actionCollection());
+
+  // hack, remove actions which cant have a shortcut
+  coll.take(artW->setCharsetAction());
+
+  KKeyDialog::configureKeys(&coll, xmlFile(), true, this);
 }
 
     

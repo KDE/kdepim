@@ -49,7 +49,7 @@
 #include "knfoldermanager.h"
 #include "knfolder.h"
 #include "kncleanup.h"
-
+#include "utilities.h"
 
 
 KNodeView::KNodeView(KNMainWindow *w, const char * name)
@@ -136,7 +136,7 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
   knGlobals.netAccess=n_etAccess;
 
   //Filter Manager
-  f_ilManager=new KNFilterManager(a_ctArtFilter);
+  f_ilManager=new KNFilterManager(a_ctArtFilter, a_ctArtFilterKeyb);
   knGlobals.filManager=f_ilManager;
 
   //Article Manager
@@ -496,9 +496,12 @@ void KNodeView::initActions()
   items += i18n("By &Date");
   a_ctArtSortHeaders->setItems(items);
 	connect(a_ctArtSortHeaders, SIGNAL(activated(int)), this, SLOT(slotArtSortHeaders(int)));
+	a_ctArtSortHeadersKeyb   = new KAction(i18n("Sort"), 0, Key_F7 , this,
+                             SLOT(slotArtSortHeadersKeyb()), a_ctions, "view_Sort_Keyb");
 	
 	a_ctArtFilter             = new KNFilterSelectAction(i18n("&Filter"), "filter",
 	                            a_ctions, "view_Filter");
+  a_ctArtFilterKeyb         =	new KAction(i18n("Filter"), Key_F6, a_ctions, "view_Filter_Keyb");
 	a_ctArtSearch             = new KAction(i18n("&Search Articles..."),"find" , Key_F4 , this,
 	                            SLOT(slotArtSearch()), a_ctions, "article_search");
 	a_ctArtRefreshList        = new KAction(i18n("&Refresh List"),"reload", KStdAccel::key(KStdAccel::Reload), this,
@@ -729,6 +732,7 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
     a_ctGrpSetAllRead->setEnabled(enabled);
   	a_ctGrpSetAllUnread->setEnabled(enabled);
 		a_ctArtFilter->setEnabled(enabled);
+		a_ctArtFilterKeyb->setEnabled(enabled);
 		a_ctArtSearch->setEnabled(enabled);
 		a_ctArtRefreshList->setEnabled(enabled);
 		a_ctArtCollapseAll->setEnabled(enabled);
@@ -1117,6 +1121,16 @@ void KNodeView::slotArtSortHeaders(int i)
 {
   kdDebug(5003) << "KNodeView::slotArtSortHeaders(int i)" << endl;
   h_drView->slotSortList(i);
+}
+
+
+void KNodeView::slotArtSortHeadersKeyb()
+{
+  kdDebug(5003) << "KNodeView::slotArtSortHeadersKeyb()" << endl;
+
+  int newCol = selectDialog(this, i18n("Select Sort Column"), a_ctArtSortHeaders->items(), a_ctArtSortHeaders->currentItem());
+  if (newCol != -1)
+    h_drView->slotSortList(newCol);
 }
 
 

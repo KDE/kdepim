@@ -43,12 +43,13 @@
 
 
 
-KNFilterManager::KNFilterManager(KNFilterSelectAction *a, QObject * parent, const char * name)
+KNFilterManager::KNFilterManager(KNFilterSelectAction *a, KAction *keybA, QObject * parent, const char * name)
  : QObject(parent,name), fset(0), currFilter(0), a_ctFilter(a)
 {
   fList.setAutoDelete(true);
 
   connect(a_ctFilter, SIGNAL(activated(int)), this,  SLOT(slotMenuActivated(int)));
+  connect(keybA, SIGNAL(activated()), this,  SLOT(slotShowFilterChooser()));
   loadFilters();
 
   KConfig *conf=KGlobal::config();
@@ -327,6 +328,34 @@ void KNFilterManager::slotMenuActivated(int id)
 
   if (!f)
     KMessageBox::error(knGlobals.topWidget, i18n("ERROR : no such filter!"));
+}
+
+
+void KNFilterManager::slotShowFilterChooser()
+{
+  KNArticleFilter *f=0;
+  QStringList items;
+  QValueList<int> ids;
+
+  QValueList<int>::Iterator it = menuOrder.begin();
+  while (it != menuOrder.end()) {
+    if ((*it)!=-1)
+      if ((f=byID((*it)))) {
+        items.append(f->translatedName());
+        ids.append(*it);
+      }
+    ++it;
+  }
+
+  int currentItem=0;
+  if (currFilter)
+    currentItem=ids.findIndex(currFilter->id());
+  if (currentItem==-1)
+    currentItem=0;
+
+  int newFilter = selectDialog(knGlobals.topWidget, i18n("Select Filter"), items, currentItem);
+  if (newFilter != -1)
+    setFilter(ids[newFilter]);
 }
 
 

@@ -83,13 +83,10 @@ KNSearchDialog::~KNSearchDialog()
 }
 
 
-
-void KNSearchDialog::closeEvent(QCloseEvent *e)
+void KNSearchDialog::hideEvent(QHideEvent *)
 {
-  e->accept();
   emit dialogDone();
 }
-
 
 
 void KNSearchDialog::slotStartClicked()

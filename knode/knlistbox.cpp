@@ -74,3 +74,25 @@ int KNListBoxItem::width(const QListBox *lb) const
   else
     return (lb->fontMetrics().width( text() ) + 6);
 }
+
+// **** listbox for dialogs **************************************************
+
+KNDialogListBox::KNDialogListBox(QWidget * parent, const char * name)
+ : QListBox(parent, name)
+{
+}
+
+
+KNDialogListBox::~KNDialogListBox()
+{
+}
+
+
+void KNDialogListBox::keyPressEvent(QKeyEvent *e)
+{
+  if ((e->key()==Key_Enter)||(e->key()==Key_Return))
+    e->ignore();
+  else
+    QListBox::keyPressEvent(e);
+}
+

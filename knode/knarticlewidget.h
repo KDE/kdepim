@@ -68,6 +68,8 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
 
     KNArticle* article()              { return a_rticle; }
 
+    KAction* setCharsetAction() { return a_ctSetCharset; }
+    KAction* setCharsetKeyboardAction() { return a_ctSetCharsetKeyb; }
 
   protected:
 		void processJob(KNJobData *j);
@@ -107,7 +109,8 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
             *a_ctForward,
             *a_ctCancel,
             *a_ctVerify,
-            *a_ctSupersede;
+            *a_ctSupersede,
+            *a_ctSetCharsetKeyb;
     KToggleAction *a_ctToggleFullHdrs, *a_ctToggleRot13;
     KSelectAction *a_ctSetCharset;
 
@@ -124,6 +127,7 @@ class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
     void slotToggleFullHdrs();
     void slotToggleRot13();
     void slotSetCharset(const QString&);
+    void slotSetCharsetKeyboard();
 
   //-------------------------- </Actions> --------------------------
 

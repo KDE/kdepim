@@ -26,6 +26,12 @@ class QChar;
 class QStringList;
 class QSize;
 
+
+// list selection dialog, used instead of a popup menu
+// when a select action is called via the keyboard.
+// returns -1 when the user canceled the dialog.
+int selectDialog(QWidget *parent, const QString &caption, const QStringList &options, int initialValue);
+
 // clone of QSortedList...
 template<class type> class Q_EXPORT QSortedVector : public QVector<type>
 {

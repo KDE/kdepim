@@ -106,11 +106,13 @@ class KNComposer : public KMainWindow  {
 
   //------------------------------ <Actions> -----------------------------
 
+    KAccel        *a_ccel;
     KAction       *a_ctExternalEditor,
                   *a_ctSpellCheck,
                   *a_ctRemoveAttachment,
                   *a_ctAttachmentProperties,
-                  *a_ctPGPsign;
+                  *a_ctPGPsign,
+                  *a_ctSetCharsetKeyb;
     KToggleAction *a_ctShowToolbar, *a_ctShowStatusbar,
                   *a_ctDoPost, *a_ctDoMail, *a_ctWordWrap;
     KSelectAction *a_ctSetCharset;
@@ -130,6 +132,7 @@ class KNComposer : public KMainWindow  {
     void slotToggleDoPost();
     void slotToggleDoMail();
     void slotSetCharset(const QString &s);
+    void slotSetCharsetKeyboard();
     void slotToggleWordWrap();
     void slotUndoRewrap();
     void slotExternalEditor();

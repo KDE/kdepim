@@ -44,7 +44,7 @@ class KNSaveHelper {
 
 public:
   
-  KNSaveHelper(QString saveName);
+  KNSaveHelper(QString saveName, QWidget *parent);
   ~KNSaveHelper();
   
   // returns a file open for writing
@@ -52,6 +52,7 @@ public:
   
 private:
 
+  QWidget *p_arent;
   QString s_aveName;
   KURL url;
   QFile* file;
@@ -74,8 +75,8 @@ class KNArticleManager : public QObject {
 
     //content handling
     void deleteTempFiles();
-    void saveContentToFile(KNMimeContent *c);
-    void saveArticleToFile(KNArticle *a);
+    void saveContentToFile(KNMimeContent *c, QWidget *parent);
+    void saveArticleToFile(KNArticle *a, QWidget *parent);
     QString saveContentToTemp(KNMimeContent *c);
     void openContent(KNMimeContent *c);
 

@@ -90,7 +90,6 @@ class KNodeView : public QSplitter
     KNListView*       headerView()      { return h_drView; }
     KNArticleWidget*  articleView()     { return a_rtView; }
 
-
   protected:
     void initActions();
     void initPopups(KNMainWindow *w);
@@ -155,9 +154,8 @@ class KNodeView : public QSplitter
     					*a_ctNavNextUnreadThread,
     					*a_ctNavNextGroup,
     					*a_ctNavPrevGroup,
-    					*a_ctNavReadThrough;
-
-
+    					*a_ctNavReadThrough;    			
+    					
     //collection-view - accounts
     KAction   *a_ctAccProperties,
               *a_ctAccSubscribe,
@@ -178,12 +176,13 @@ class KNodeView : public QSplitter
     KAction   *a_ctFolCompact,
               *a_ctFolEmpty,
               *a_ctFolProperties;
-	
-					
+				
     //header-view - list-handling
     KSelectAction					*a_ctArtSortHeaders;
-		KNFilterSelectAction	*a_ctArtFilter;
-		KAction								*a_ctArtSearch,
+		KNFilterSelectAction	*a_ctArtFilter;		
+		KAction								*a_ctArtSortHeadersKeyb,
+		                      *a_ctArtFilterKeyb,
+		                      *a_ctArtSearch,
 													*a_ctArtRefreshList,
 													*a_ctArtCollapseAll,
 													*a_ctArtExpandAll,
@@ -200,8 +199,7 @@ class KNodeView : public QSplitter
 						*a_ctArtToggleIgnored,
 						*a_ctArtToggleWatched,
 						*a_ctArtOpenNewWindow;
-							
-							
+														
     //header-view local articles
     KAction *a_ctArtSendOutbox,
             *a_ctArtDelete,
@@ -239,6 +237,7 @@ class KNodeView : public QSplitter
     void slotFolProperties();
 
     void slotArtSortHeaders(int i);
+    void slotArtSortHeadersKeyb();
 		void slotArtSearch();
 		void slotArtRefreshList();
 		void slotArtCollapseAll();

@@ -38,6 +38,7 @@ class KNArticleWindow : public KMainWindow  {
     static void closeAllWindowsForArticle(KNArticle *art);
       
   protected:
+    KAccel *a_ccel;
     KNArticleWidget *artW;
     KToggleAction *a_ctShowToolbar;
     static QList<KNArticleWindow> instances;

@@ -198,7 +198,7 @@ KNConfig::NntpAccountListWidget::NntpAccountListWidget(QWidget *p, const char *n
   QGridLayout *topL=new QGridLayout(this, 6,2, 5,5);
 
   // account listbox
-  l_box=new QListBox(this);
+  l_box=new KNDialogListBox(this);
   connect(l_box, SIGNAL(selected(int)), this, SLOT(slotItemSelected(int)));
   connect(l_box, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()));
   topL->addMultiCellWidget(l_box, 0,4, 0,0);
@@ -636,7 +636,7 @@ KNConfig::AppearanceWidget::AppearanceWidget(Appearance *d, QWidget *p, const ch
   topL->addWidget(l_ongCB,0,0);
 
   //color-list
-  c_List = new QListBox(this);
+  c_List = new KNDialogListBox(this);
   topL->addMultiCellWidget(c_List,2,4,0,0);
   connect(c_List, SIGNAL(selected(QListBoxItem*)),SLOT(slotColItemSelected(QListBoxItem*)));
   connect(c_List, SIGNAL(selectionChanged()), SLOT(slotColSelectionChanged()));
@@ -655,7 +655,7 @@ KNConfig::AppearanceWidget::AppearanceWidget(Appearance *d, QWidget *p, const ch
 
 
   //font-list
-  f_List = new QListBox(this);
+  f_List = new KNDialogListBox(this);
   topL->addMultiCellWidget(f_List,6,8,0,0);
   connect(f_List, SIGNAL(selected(QListBoxItem*)),SLOT(slotFontItemSelected(QListBoxItem*)));
   connect(f_List, SIGNAL(selectionChanged()),SLOT(slotFontSelectionChanged()));
@@ -1014,7 +1014,7 @@ KNConfig::DisplayedHeadersWidget::DisplayedHeadersWidget(DisplayedHeaders *d, QW
   QGridLayout *topL=new QGridLayout(this, 7,2, 5,5);
 
   //listbox
-  l_box=new QListBox(this);
+  l_box=new KNDialogListBox(this);
   connect(l_box, SIGNAL(selected(int)), this, SLOT(slotItemSelected(int)));
   connect(l_box, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()));
   topL->addMultiCellWidget(l_box, 0,6, 0,0);
@@ -1281,7 +1281,7 @@ KNConfig::FilterListWidget::FilterListWidget(QWidget *p, const char *n)
 
   // == Filters =================================================
 
-  f_lb=new QListBox(this);
+  f_lb=new KNDialogListBox(this);
   topL->addWidget(new QLabel(f_lb, i18n("&Filters:"),this),0,0);
 
   connect(f_lb, SIGNAL(selectionChanged()), SLOT(slotSelectionChangedFilter()));
@@ -1306,7 +1306,7 @@ KNConfig::FilterListWidget::FilterListWidget(QWidget *p, const char *n)
 
   // == Menu ====================================================
 
-  m_lb=new QListBox(this);
+  m_lb=new KNDialogListBox(this);
   topL->addWidget(new QLabel(m_lb, i18n("&Menu:"),this),6,0);
 
   connect(m_lb, SIGNAL(selectionChanged()), SLOT(slotSelectionChangedMenu()));
@@ -1590,7 +1590,7 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
 
   xgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
-  l_box=new QListBox(xgb);
+  l_box=new KNDialogListBox(xgb);
   connect(l_box, SIGNAL(selected(int)), SLOT(slotItemSelected(int)));
   connect(l_box, SIGNAL(selectionChanged()), SLOT(slotSelectionChanged()));
   xgbL->addMultiCellWidget(l_box, 1,4, 0,0);

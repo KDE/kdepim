@@ -978,7 +978,7 @@ KNSendErrorDialog::KNSendErrorDialog() : QSemiModal(knGlobals.topWidget, 0, true
   QLabel *l=new QLabel(QString("<b>%1</b>").arg(i18n("Failed tasks:")), this);
   topL->addWidget(l);
 
-  j_obs=new QListBox(this);
+  j_obs=new KNDialogListBox(this);
   topL->addWidget(j_obs, 1);
 
   e_rror=new QLabel(this);
@@ -1031,6 +1031,21 @@ void KNSendErrorDialog::slotCloseBtnClicked()
   emit dialogDone();
 }
 
+
+void KNSendErrorDialog::keyPressEvent(QKeyEvent *e)
+{
+  if ((e->key()==Key_Enter)||(e->key()==Key_Return)||(e->key()==Key_Escape))
+    emit dialogDone();
+  else
+    QSemiModal::keyPressEvent(e);
+}
+
+
+void KNSendErrorDialog::closeEvent(QCloseEvent *e)
+{
+  e->accept();
+  emit dialogDone();
+}
 
 //-------------------------------
 #include "knarticlefactory.moc"

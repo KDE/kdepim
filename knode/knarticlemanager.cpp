@@ -52,8 +52,8 @@
 
 QString KNSaveHelper::lastPath;
 
-KNSaveHelper::KNSaveHelper(QString saveName)
-  : s_aveName(saveName), file(0), tmpFile(0)
+KNSaveHelper::KNSaveHelper(QString saveName, QWidget *parent)
+  : p_arent(parent), s_aveName(saveName), file(0), tmpFile(0)
 {
 }
 
@@ -75,7 +75,7 @@ KNSaveHelper::~KNSaveHelper()
 
 QFile* KNSaveHelper::getFile(QString dialogTitle)
 {
-  url = KFileDialog::getSaveURL(lastPath+s_aveName,QString::null,knGlobals.topWidget,dialogTitle);
+  url = KFileDialog::getSaveURL(lastPath+s_aveName,QString::null,p_arent,dialogTitle);
 
   if (url.isEmpty())
     return 0;
@@ -150,9 +150,9 @@ void KNArticleManager::deleteTempFiles()
 }
 
 
-void KNArticleManager::saveContentToFile(KNMimeContent *c)
+void KNArticleManager::saveContentToFile(KNMimeContent *c, QWidget *parent)
 {
-	KNSaveHelper helper(c->contentType()->name());
+	KNSaveHelper helper(c->contentType()->name(),parent);
 
   QFile *file = helper.getFile(i18n("Save Attachment"));
 
@@ -163,11 +163,11 @@ void KNArticleManager::saveContentToFile(KNMimeContent *c)
 }
 
 
-void KNArticleManager::saveArticleToFile(KNArticle *a)
+void KNArticleManager::saveArticleToFile(KNArticle *a, QWidget *parent)
 {
   QString fName = a->subject()->asUnicodeString();
   fName.replace(QRegExp("[\\s/]"),"_");
-  KNSaveHelper helper(fName);
+  KNSaveHelper helper(fName,parent);
   QFile *file = helper.getFile(i18n("Save Article"));
 
   if (file) {

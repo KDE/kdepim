@@ -14,17 +14,53 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include <qsize.h>
-#include <qwidget.h>
+#include <qframe.h>
+#include <qlayout.h>
 
 #include <kconfig.h>
 #include <klocale.h>
 #include <kglobal.h>
 #include <kmessagebox.h>
+#include <kdialogbase.h>
 
+#include "knlistbox.h"
 #include "knglobals.h"
 #include "utilities.h"
 
+
+// **** keyboard selection dialog *********************************************
+
+int selectDialog(QWidget *parent, const QString &caption, const QStringList &options, int initialValue)
+{
+  KDialogBase *dlg=new KDialogBase(KDialogBase::Plain, caption, KDialogBase::Ok|KDialogBase::Cancel,
+                                   KDialogBase::Ok, parent);
+  QFrame *page = dlg->plainPage();
+  QHBoxLayout *pageL = new QHBoxLayout(page,8,5);
+
+  KNDialogListBox *list = new KNDialogListBox(page);
+  pageL->addWidget(list);
+
+  QString s;
+  for ( QStringList::ConstIterator it = options.begin(); it != options.end(); ++it ) {
+    s = (*it);
+    s.replace(QRegExp("&"),"");   // remove accelerators
+    list->insertItem(s);
+  }
+
+  list->setCurrentItem(initialValue);
+  list->setFocus();
+  restoreWindowSize("selectBox", dlg, QSize(247,174));
+
+  int ret;
+  if (dlg->exec())
+    ret = list->currentItem();
+  else
+    ret = -1;
+
+  saveWindowSize("selectBox", dlg->size());
+  delete dlg;
+  return ret;
+}
 
 // **** window geometry managing *********************************************
 
@@ -45,7 +81,6 @@ void restoreWindowSize(const QString &name, QWidget *d, const QSize &defaultSize
   
   if(s.isValid()) d->resize(s); 
 }
-
 
 // **** scramble password strings **********************************************
 
@@ -70,7 +105,6 @@ const QString decryptStr(const QString& aStr)
   return encryptStr(aStr);
 }
 
-
 // **** rot13 *******************************************************************
 
 QString rot13(const QString &s)
@@ -90,7 +124,6 @@ QString rot13(const QString &s)
   return r;
 }
 
-
 // **** us-ascii check **********************************************************
 
 bool isUsAscii(const QString &s)
@@ -101,7 +134,6 @@ bool isUsAscii(const QString &s)
 
   return true;
 }
-
 
 // **** text rewraping *********************************************************
 
@@ -194,7 +226,6 @@ QString rewrapStringList(QStringList text, int wrapAt, QChar quoteChar, bool sto
 
   return quoted;
 }
-
 
 // **** misc. message-boxes **********************************************************
 

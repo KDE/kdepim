@@ -119,7 +119,10 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
   a_ctSetCharset->setItems(cs);
   a_ctSetCharset->setCurrentItem(0);
   connect(a_ctSetCharset, SIGNAL(activated(const QString&)),
-    this, SLOT(slotSetCharset(const QString&)));
+          this, SLOT(slotSetCharset(const QString&)));
+  a_ctSetCharsetKeyb = new KAction(i18n("Charset"), Key_C, this,
+                                   SLOT(slotSetCharsetKeyboard()), a_ctions, "set_charset_keyboard");
+
   overrideCS=QFont::ISO_8859_1;
   forceCS=false;
 
@@ -432,7 +435,7 @@ void KNArticleWidget::saveAttachment(int id)
   KNMimeContent *a=a_tt->at(id);
 
   if(a)
-    knGlobals.artManager->saveContentToFile(a);
+    knGlobals.artManager->saveContentToFile(a,this);
   else KMessageBox::error(this, i18n("Internal error: Malformed identifier!"));
 }
 
@@ -480,6 +483,7 @@ void KNArticleWidget::showBlankPage()
   a_ctToggleFullHdrs->setEnabled(false);
   a_ctToggleRot13->setEnabled(false);
   a_ctSetCharset->setEnabled(false);
+  a_ctSetCharsetKeyb->setEnabled(false);
 }
 
 
@@ -509,6 +513,7 @@ void KNArticleWidget::showErrorMessage(const QString &s)
   a_ctToggleFullHdrs->setEnabled(false);
   a_ctToggleRot13->setEnabled(false);
   a_ctSetCharset->setEnabled(false);
+  a_ctSetCharsetKeyb->setEnabled(false);
 }
 
 
@@ -729,6 +734,7 @@ void KNArticleWidget::createHtmlPage()
     a_ctSelAll->setEnabled(true);
     a_ctToggleFullHdrs->setEnabled(true);
     a_ctSetCharset->setEnabled(true);
+    a_ctSetCharsetKeyb->setEnabled(true);
     return;
   }
 
@@ -861,6 +867,7 @@ void KNArticleWidget::createHtmlPage()
   a_ctToggleFullHdrs->setEnabled(true);
   a_ctToggleRot13->setEnabled(true);
   a_ctSetCharset->setEnabled(true);
+  a_ctSetCharsetKeyb->setEnabled(true);
 
   //start automark-timer
   if(a_rticle->type()==KNMimeBase::ATremote && knGlobals.cfgManager->readNewsGeneral()->autoMark())
@@ -967,7 +974,7 @@ void KNArticleWidget::slotSave()
 {
   kdDebug(5003) << "KNArticleWidget::slotSave()" << endl;
   if(a_rticle)
-    knGlobals.artManager->saveArticleToFile(a_rticle);
+    knGlobals.artManager->saveArticleToFile(a_rticle,this);
 }
 
 
@@ -1131,6 +1138,16 @@ void KNArticleWidget::slotSetCharset(const QString &s)
     a_rticle->setDefaultCharset(overrideCS);  // the article will choose the correct default,
     a_rticle->setForceDefaultCS(forceCS);     // when we disable the overdrive
     createHtmlPage();
+  }
+}
+
+
+void KNArticleWidget::slotSetCharsetKeyboard()
+{
+  int newCS = selectDialog(this, i18n("Select Charset"), a_ctSetCharset->items(), a_ctSetCharset->currentItem());
+  if (newCS != -1) {
+    a_ctSetCharset->setCurrentItem(newCS);
+    slotSetCharset(*(a_ctSetCharset->items().at(newCS)));
   }
 }
 

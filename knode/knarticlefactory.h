@@ -117,7 +117,7 @@ class KNSendErrorDialog : public QSemiModal  {
         QString error;
     };
 
-    QListBox *j_obs;
+    KNDialogListBox *j_obs;
     QLabel *e_rror;
     QPushButton *c_loseBtn;
     QPixmap p_ixmap;
@@ -125,6 +125,10 @@ class KNSendErrorDialog : public QSemiModal  {
   protected slots:
     void slotHighlighted(int idx);
     void slotCloseBtnClicked();
+
+  protected:
+    void keyPressEvent(QKeyEvent *e);
+    void closeEvent(QCloseEvent *e);
 
   signals:
     void dialogDone();

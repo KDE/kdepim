@@ -159,6 +159,10 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   connect(a_ctSetCharset, SIGNAL(activated(const QString&)),
   this, SLOT(slotSetCharset(const QString&)));
 
+  a_ctSetCharsetKeyb = new KAction(i18n("Set Charset"), 0, this,
+                                   SLOT(slotSetCharsetKeyboard()), actionCollection(), "set_charset_keyboard");
+
+
   a_ctWordWrap	= new KToggleAction(i18n("&Word Wrap"), 0 , this,
 	                    SLOT(slotToggleWordWrap()), actionCollection(), "toggle_wordwrap");			
 
@@ -199,6 +203,9 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
 
   KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
+
+  a_ccel=new KAccel(this);
+  a_ctSetCharsetKeyb->plugAccel(a_ccel);
 
   createGUI("kncomposerui.rc");
 
@@ -895,6 +902,16 @@ void KNComposer::slotSetCharset(const QString &s)
 }
 
 
+void KNComposer::slotSetCharsetKeyboard()
+{
+  int newCS = selectDialog(this, i18n("Select Charset"), a_ctSetCharset->items(), a_ctSetCharset->currentItem());
+  if (newCS != -1) {
+    a_ctSetCharset->setCurrentItem(newCS);
+    slotSetCharset(*(a_ctSetCharset->items().at(newCS)));
+  }
+}
+
+
 void KNComposer::slotToggleWordWrap()
 {
   v_iew->e_dit->setWordWrap(a_ctWordWrap->isChecked()? QMultiLineEdit::FixedColumnWidth : QMultiLineEdit::NoWrap);
@@ -1059,7 +1076,12 @@ void KNComposer::slotUpdateCursorPos()
 
 void KNComposer::slotConfKeys()
 {
-  KKeyDialog::configureKeys(actionCollection(), xmlFile(), true, this);
+  KActionCollection coll(*actionCollection());
+
+  // hack, remove actions which cant have a shortcut
+  coll.take(a_ctSetCharset);
+
+  KKeyDialog::configureKeys(&coll, xmlFile(), true, this);
 }
 
 

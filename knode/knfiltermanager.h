@@ -34,14 +34,13 @@ class KNFilterManager : public QObject
   Q_OBJECT
 
   public:
-    KNFilterManager(KNFilterSelectAction *a, QObject * parent=0, const char * name=0);
+    KNFilterManager(KNFilterSelectAction *a, KAction *keybA, QObject * parent=0, const char * name=0);
     ~KNFilterManager();
     
     void readOptions();
     void saveOptions();
 
-
-    KNArticleFilter* currentFilter()        { return currFilter; }    
+    KNArticleFilter* currentFilter()        { return currFilter; }
       
     void startConfig(KNConfig::FilterListWidget *fs);
     void endConfig();
@@ -69,6 +68,7 @@ class KNFilterManager : public QObject
   
   protected slots:
     void slotMenuActivated(int id);
+    void slotShowFilterChooser();
       
   signals:
     void filterChanged(KNArticleFilter *f);     

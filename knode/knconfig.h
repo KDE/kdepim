@@ -45,7 +45,6 @@ class KNDisplayedHeader;
 class KNServerInfo;
 
 
-
 namespace KNConfig {
 
 class Base {
@@ -181,7 +180,7 @@ class NntpAccountListWidget : public BaseWidget {
         KNNntpAccount *account;
     };
 
-    QListBox   *l_box;
+    KNDialogListBox *l_box;
     QPushButton *a_ddBtn,
                 *d_elBtn,
                 *e_ditBtn,
@@ -385,7 +384,7 @@ class AppearanceWidget : public BaseWidget {
 
     //===================================================================================
 
-    QListBox  *c_List,
+    KNDialogListBox *c_List,
               *f_List;
     QCheckBox *l_ongCB,
               *c_olorCB,
@@ -581,7 +580,7 @@ class DisplayedHeadersWidget : public BaseWidget {
 
     HdrItem* generateItem(KNDisplayedHeader *);
 
-    QListBox    *l_box;
+    KNDialogListBox *l_box;
     QPushButton *a_ddBtn,
                 *d_elBtn,
                 *e_ditBtn,
@@ -657,8 +656,8 @@ class FilterListWidget : public BaseWidget {
 
     int findItem(QListBox *l, KNArticleFilter *f);
 
-    QListBox *f_lb,
-             *m_lb;
+    KNDialogListBox *f_lb,
+                    *m_lb;
 
     QPushButton   *a_ddBtn,
                   *d_elBtn,
@@ -771,7 +770,7 @@ class PostNewsTechnicalWidget : public BaseWidget {
                 *a_llow8bitCB,
                 *g_enMIdCB,
                 *i_ncUaCB;
-    QListBox    *l_box;
+    KNDialogListBox *l_box;
     QPushButton *a_ddBtn,
                 *d_elBtn,
                 *e_ditBtn;
