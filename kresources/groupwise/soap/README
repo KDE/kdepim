@@ -1,5 +1,5 @@
 This directory contains the bindings for the Groupwise SOAP interface. They
-consist of generated binding classes and and the classes encapsulating
+consist of generated binding classes and the classes encapsulating
 the SOAP for use by KDE programs.
 
 The bindings are generated with gSoap 2.7.0d (see
