@@ -1131,8 +1131,6 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
         readTzidParameter(p,icaltime);
         if (icaltime.is_date) {
           todo->setDtDue(QDateTime(readICalDate(icaltime),QTime(0,0,0)),true);
-          todo->setFloats(true);
-
         } else {
           todo->setDtDue(readICalDateTime(icaltime),true);
           todo->setFloats(false);
@@ -1187,7 +1185,6 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
 Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
 {
   Event *event = new Event;
-  event->setFloats(false);
 
   readIncidence(vevent,event);
 
@@ -1207,7 +1204,6 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
         icaltime = icalproperty_get_dtend(p);
         readTzidParameter(p,icaltime);
         if (icaltime.is_date) {
-          event->setFloats( true );
           // End date is non-inclusive
           QDate endDate = readICalDate( icaltime ).addDays( -1 );
           mCompat->fixFloatingEnd( endDate );
@@ -1217,6 +1213,7 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
           event->setDtEnd( QDateTime( endDate, QTime( 0, 0, 0 ) ) );
         } else {
           event->setDtEnd(readICalDateTime(icaltime));
+          event->setFloats( false );
         }
         break;
 
@@ -1275,12 +1272,12 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
 
 
       case ICAL_TRANSP_PROPERTY:  // Transparency
-	transparency = QString::fromUtf8(icalproperty_get_transp(p));
-	if( transparency == "TRANSPARENT" )
-	  event->setTransparency( Event::Transparent );
-	else
-	  event->setTransparency( Event::Opaque );
-	break;
+        transparency = QString::fromUtf8(icalproperty_get_transp(p));
+        if( transparency == "TRANSPARENT" )
+          event->setTransparency( Event::Transparent );
+        else
+          event->setTransparency( Event::Opaque );
+        break;
 
       default:
 //        kdDebug(5800) << "ICALFormat::readEvent(): Unknown property: " << kind
@@ -1542,9 +1539,9 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
         readTzidParameter(p,icaltime);
         if (icaltime.is_date) {
           incidence->setDtStart(QDateTime(readICalDate(icaltime),QTime(0,0,0)));
-          incidence->setFloats(true);
         } else {
           incidence->setDtStart(readICalDateTime(icaltime));
+          incidence->setFloats(false);
         }
         break;
 
