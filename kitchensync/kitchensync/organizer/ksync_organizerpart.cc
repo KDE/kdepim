@@ -38,7 +38,7 @@ K_EXPORT_COMPONENT_FACTORY( liborganizerpart, OrganizerPartFactory );
 using namespace KSync ;
 
 OrganizerPart::OrganizerPart(QWidget *parent, const char *name,
-			     QObject *obj, const char *na, const QStringList & )
+			     QObject *, const char *, const QStringList & )
   : ManipulatorPart( parent, name )
 {
 //    kdDebug() << "Parent " << parent->className() << endl;
@@ -125,11 +125,11 @@ void OrganizerPart::processEntry( const Syncee::PtrList& in,
     EventSyncee* evSyncee = 0l;
     TodoSyncee* toSyncee = 0l;
     QPtrListIterator<Syncee> syncIt( in );
-    kdDebug() << "in count " << in.count() << endl;
+    kdDebug(5222) << "in count " << in.count() << endl;
     for ( ; syncIt.current(); ++syncIt ) {
-        kdDebug() << "syncee pointer " <<  syncIt.current() << endl;
+        kdDebug(5222) << "syncee pointer " <<  syncIt.current() << endl;
         syncee = syncIt.current();
-        kdDebug() << "type " << syncee->type() << endl;
+        kdDebug(5222) << "type " << syncee->type() << endl;
         if ( syncee->type() == QString::fromLatin1("EventSyncee") )
             evSyncee = (EventSyncee*)syncee;
         else if ( syncee->type() == QString::fromLatin1("TodoSyncee") )
@@ -172,7 +172,7 @@ void OrganizerPart::processEntry( const Syncee::PtrList& in,
     if ( met )
         writeMeta( events, todos, meta );
 
-    /* 8. write back data */     
+    /* 8. write back data */
     save( events, todos, path );
 
     /* 8.1 take care of the IdHelpers.... */
@@ -242,15 +242,24 @@ void OrganizerPart::doMeta( EventSyncee* evSyncee,
     QString str = QDir::homeDirPath();
     str += "/.kitchensync/meta/konnector-" + path;
     if (!QFile::exists( str ) ) {
-        evSyncee->setFirstSync( true );
-        toSyncee->setFirstSync( true );
-        evSyncee->setSyncMode( Syncee::MetaMode );
-        toSyncee->setSyncMode( Syncee::MetaMode );
+        if (evSyncee ) {
+            evSyncee->setFirstSync( true );
+            evSyncee->setSyncMode( Syncee::MetaMode );
+        }
+        if (toSyncee) {
+            toSyncee->setFirstSync( true );
+            toSyncee->setSyncMode( Syncee::MetaMode );
+        }
         return;
     }
     KSimpleConfig conf( str );
-    doMetaIntern(evSyncee, &conf, "events-" );
-    doMetaIntern(toSyncee, &conf, "todos-" );
+
+    /* check if event and or todosyncee are valid */
+    if (evSyncee )
+        doMetaIntern(evSyncee, &conf, "events-" );
+
+    if (toSyncee )
+        doMetaIntern(toSyncee, &conf, "todos-" );
 }
 void OrganizerPart::doMetaIntern( Syncee* syncee,
                                   KSimpleConfig* conf,
@@ -285,7 +294,7 @@ void OrganizerPart::doMetaIntern( Syncee* syncee,
         /* if group starts with the key */
         if ( (*it).startsWith(key ) ) { // right group
             QString id = (*it).mid( key.length() );
-            kdDebug() << "OrganizerPart Meta Gathering: "
+            kdDebug(5222) << "OrganizerPart Meta Gathering: "
                       << id << endl;
 
             /* the previous saved list of ids
@@ -336,8 +345,10 @@ void OrganizerPart::writeMeta( EventSyncee* evSyncee,
     for (it = groups.begin(); it != groups.end(); ++it ) {
         conf.deleteGroup( (*it) );
     }
-    writeMetaIntern( evSyncee, &conf, "events-");
-    writeMetaIntern( toSyncee, &conf, "todos-");
+    if (evSyncee )
+        writeMetaIntern( evSyncee, &conf, "events-");
+    if (toSyncee)
+        writeMetaIntern( toSyncee, &conf, "todos-");
 }
 void OrganizerPart::writeMetaIntern( Syncee* syncee,
                                      KSimpleConfig* conf,
