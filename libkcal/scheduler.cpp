@@ -157,6 +157,7 @@ bool Scheduler::acceptPublish(IncidenceBase *incidence,ScheduleMessage::Status s
     return acceptFreeBusy(incidence, method);
   }
   switch (status) {
+    case ScheduleMessage::Unknown:
     case ScheduleMessage::PublishNew:
       if (!mCalendar->event(incidence->uid())) {
 	Incidence *inc = static_cast<Incidence *>(incidence);
