@@ -203,7 +203,7 @@ class Calendar : public CustomProperties, public IncidenceBase::Observer
     /**
       Return unfiltered list of todos.
     */
-    virtual QPtrList<Todo> rawTodos() const = 0;
+    virtual QPtrList<Todo> rawTodos() = 0;
 
     /**
       Add a Journal entry to calendar.

@@ -162,7 +162,7 @@ class ResourceCalendar : public QObject, public KRES::Resource
     /**
       Return list of all todos.
     */
-    virtual QPtrList<Todo> rawTodos() const = 0;
+    virtual QPtrList<Todo> rawTodos() = 0;
     /**
       Returns list of todos due on the specified date.
     */
@@ -197,8 +197,11 @@ class ResourceCalendar : public QObject, public KRES::Resource
      * consistent. */
     virtual void update(IncidenceBase *incidence) = 0;
 
+    /** Returns a list of all incideces */
+    QPtrList<Incidence> rawIncidences();
+
   protected:
- 
+
 };
 
 typedef KRES::ResourceManager<ResourceCalendar> CalendarResourceManager;

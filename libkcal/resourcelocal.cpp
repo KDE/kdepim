@@ -227,7 +227,7 @@ void ResourceLocal::deleteTodo(Todo *todo)
 }
 
 
-QPtrList<Todo> ResourceLocal::rawTodos() const
+QPtrList<Todo> ResourceLocal::rawTodos()
 {
   return mCalendar.rawTodos();
 }

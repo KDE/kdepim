@@ -300,7 +300,7 @@ void ResourceExchange::deleteTodo(Todo *todo)
 //  setModified( true );
 }
 
-QPtrList<Todo> ResourceExchange::rawTodos() const
+QPtrList<Todo> ResourceExchange::rawTodos()
 {
   return mCache->rawTodos();
 }

@@ -312,7 +312,7 @@ void ResourceRemote::deleteTodo(Todo *todo)
 }
 
 
-QPtrList<Todo> ResourceRemote::rawTodos() const
+QPtrList<Todo> ResourceRemote::rawTodos()
 {
   return mCalendar.rawTodos();
 }

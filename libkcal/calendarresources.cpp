@@ -69,10 +69,10 @@ void CalendarResources::init()
     QString fileName = locateLocal( "data", "kcal/std.ics" );
 
     kdDebug() << "DEFAULT: " << fileName << endl;
-    
+
     ResourceCalendar *defaultResource = new ResourceLocal( fileName );
     defaultResource->setResourceName( i18n("Default calendar resource") );
-    
+
     mManager->add( defaultResource );
     mManager->setStandardResource( defaultResource );
   }
@@ -140,6 +140,7 @@ void CalendarResources::addEvent(Event *anEvent)
 
   if ( mManager->standardResource() ) {
     mManager->standardResource()->addEvent( anEvent );
+    mResourceMap[anEvent] = mManager->standardResource();
   } else {
     kdDebug() << "FIXME: We don't have a standard resource. Adding events isn't going to work" << endl;
   }
@@ -147,13 +148,33 @@ void CalendarResources::addEvent(Event *anEvent)
   setModified( true );
 }
 
+void CalendarResources::addEvent(Event *anEvent, ResourceCalendar *resource)
+{
+  bool validRes = false;
+  CalendarResourceManager::ActiveIterator it;
+  for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
+    if ( (*it) == resource ) validRes = true;
+  }
+  if ( validRes ) {
+    resource->addEvent( anEvent );
+    mResourceMap[anEvent] = resource;
+  } else {
+    addEvent( anEvent );
+  }
+}
+
 void CalendarResources::deleteEvent(Event *event)
 {
   kdDebug(5800) << "CalendarResources::deleteEvent" << endl;
 
-  CalendarResourceManager::ActiveIterator it;
-  for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    (*it)->deleteEvent( event );
+  if ( mResourceMap.find(event)!=mResourceMap.end() ) {
+    mResourceMap.remove( event );
+    mResourceMap[event]->deleteEvent( event );
+  } else {
+    CalendarResourceManager::ActiveIterator it;
+    for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
+      (*it)->deleteEvent( event );
+    }
   }
 
   setModified( true );
@@ -167,7 +188,11 @@ Event *CalendarResources::event( const QString &uid )
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
     Event* event = (*it)->event( uid );
-    if ( event ) return event;
+    if ( event )
+    {
+      mResourceMap[event] = *it;
+      return event;
+    }
   }
 
   // Not found
@@ -180,6 +205,7 @@ void CalendarResources::addTodo(Todo *todo)
 
   if ( mManager->standardResource() ) {
     mManager->standardResource()->addTodo( todo );
+    mResourceMap[todo] = mManager->standardResource();
   } else {
     kdDebug() << "FIXME: We don't have a standard resource. Adding todos isn't going to work" << endl;
   }
@@ -187,19 +213,39 @@ void CalendarResources::addTodo(Todo *todo)
   setModified( true );
 }
 
+void CalendarResources::addTodo(Todo *todo, ResourceCalendar *resource)
+{
+  bool validRes = false;
+  CalendarResourceManager::ActiveIterator it;
+  for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
+    if ( (*it) == resource ) validRes = true;
+  }
+  if ( validRes ) {
+    resource->addTodo( todo );
+    mResourceMap[todo] = resource;
+  } else {
+    addTodo( todo );
+  }
+}
+
 void CalendarResources::deleteTodo(Todo *todo)
 {
   kdDebug(5800) << "CalendarResources::deleteTodo" << endl;
 
-  CalendarResourceManager::ActiveIterator it;
-  for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    (*it)->deleteTodo( todo );
+  if ( mResourceMap.find(todo)!=mResourceMap.end() ) {
+    mResourceMap.remove( todo );
+    mResourceMap[todo]->deleteTodo( todo );
+  } else {
+    CalendarResourceManager::ActiveIterator it;
+    for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
+      (*it)->deleteTodo( todo );
+    }
   }
 
   setModified( true );
 }
 
-QPtrList<Todo> CalendarResources::rawTodos() const
+QPtrList<Todo> CalendarResources::rawTodos()
 {
   kdDebug(5800) << "CalendarResources::rawTodos()" << endl;
 
@@ -214,6 +260,7 @@ QPtrList<Todo> CalendarResources::rawTodos() const
     for ( todo = todos.first(); todo; todo = todos.next() ) {
       kdDebug(5800) << "Adding todo to result" << endl;
       result.append( todo );
+      mResourceMap[todo] = *it;
     }
   }
 
@@ -227,7 +274,10 @@ Todo *CalendarResources::todo( const QString &uid )
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
     Todo *todo = (*it)->todo( uid );
-    if ( todo ) return todo;
+    if ( todo ) {
+      mResourceMap[todo] = *it;
+      return todo;
+    }
   }
 
   // not found
@@ -244,8 +294,10 @@ QPtrList<Todo> CalendarResources::todos( const QDate &date )
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
     QPtrList<Todo> todos = (*it)->todos( date );
     Todo* todo;
-    for ( todo = todos.first(); todo; todo = todos.next() )
+    for ( todo = todos.first(); todo; todo = todos.next() ) {
       result.append( todo );
+      mResourceMap[todo] = *it;
+    }
   }
 
   return result;
@@ -313,15 +365,17 @@ QPtrList<Event> CalendarResources::rawEventsForDate(const QDate &qd, bool sorted
       Event* item;
       uint insertionPoint = 0;
       for ( item = list.first(); item; item = list.next() ) {
-        while ( insertionPoint<result.count() && 
-                result.at( insertionPoint )->dtStart().time() <= item->dtStart().time() ) 
+        while ( insertionPoint<result.count() &&
+                result.at( insertionPoint )->dtStart().time() <= item->dtStart().time() )
           insertionPoint++;
         result.insert( insertionPoint, item );
+        mResourceMap[item] = *it;
       }
     } else {
       Event* item;
       for ( item = list.first(); item; item = list.next() ) {
         result.append( item );
+        mResourceMap[item] = *it;
       }
     }
   }
@@ -341,6 +395,7 @@ QPtrList<Event> CalendarResources::rawEvents( const QDate &start,
     Event* item;
     for ( item = list.first(); item; item = list.next() ) {
       result.append( item );
+      mResourceMap[item] = *it;
     }
   }
   return result;
@@ -357,6 +412,7 @@ QPtrList<Event> CalendarResources::rawEventsForDate(const QDateTime &qdt)
     Event* item;
     for ( item = list.first(); item; item = list.next() ) {
       result.append( item );
+      mResourceMap[item] = *it;
     }
   }
   return result;
@@ -373,6 +429,7 @@ QPtrList<Event> CalendarResources::rawEvents()
     Event* item;
     for ( item = list.first(); item; item = list.next() ) {
       result.append( item );
+      mResourceMap[item] = *it;
     }
   }
   return result;
@@ -385,11 +442,27 @@ void CalendarResources::addJournal(Journal *journal)
 
   if ( mManager->standardResource() ) {
     mManager->standardResource()->addJournal( journal );
+    mResourceMap[journal] = mManager->standardResource();
   } else {
     kdDebug() << "FIXME: We don't have a standard resource. Adding journals isn't going to work" << endl;
   }
 
   setModified( true );
+}
+
+void CalendarResources::addJournal(Journal *journal, ResourceCalendar *resource)
+{
+  bool validRes = false;
+  CalendarResourceManager::ActiveIterator it;
+  for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
+    if ( (*it) == resource ) validRes = true;
+  }
+  if ( validRes ) {
+    resource->addJournal( journal );
+    mResourceMap[journal] = resource;
+  } else {
+    addJournal( journal );
+  }
 }
 
 Journal *CalendarResources::journal(const QDate &date)
@@ -403,12 +476,18 @@ Journal *CalendarResources::journal(const QDate &date)
 
   if ( mManager->standardResource() ) {
     Journal* journal = mManager->standardResource()->journal( date );
-    if ( journal ) return journal;
+    if ( journal ) {
+      mResourceMap[journal] = mManager->standardResource();
+      return journal;
+    }
   }
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
     Journal* journal = (*it)->journal( date );
-    if ( journal ) return journal;
+    if ( journal ) {
+      mResourceMap[journal] = *it;
+      return journal;
+    }
   }
 
   return 0;
@@ -421,7 +500,10 @@ Journal *CalendarResources::journal(const QString &uid)
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
     Journal* journal = (*it)->journal( uid );
-    if ( journal ) return journal;
+    if ( journal ) {
+      mResourceMap[journal] = *it;
+      return journal;
+    }
   }
 
   // not found
@@ -439,6 +521,7 @@ QPtrList<Journal> CalendarResources::journals()
     Journal* item;
     for ( item = list.first(); item; item = list.next() ) {
       result.append( item );
+      mResourceMap[item] = *it;
     }
   }
   return result;
@@ -454,6 +537,43 @@ void CalendarResources::connectResource( ResourceCalendar *resource )
 {
   connect( resource, SIGNAL( resourceChanged( ResourceCalendar * ) ),
            SIGNAL( calendarChanged() ) );
+}
+
+ResourceCalendar *CalendarResources::resource(Incidence *inc)
+{
+  if ( mResourceMap.find(inc)!=mResourceMap.end() ) {
+    return mResourceMap[inc];
+  }
+  return 0;
+}
+
+void CalendarResources::resourceAdded( ResourceCalendar *resource )
+{
+  kdDebug() << "Resource added: " << resource->resourceName() << endl;
+}
+
+void CalendarResources::resourceModified( ResourceCalendar *resource )
+{
+  resourceDeleted( resource );
+}
+
+void CalendarResources::resourceDeleted( ResourceCalendar *resource )
+{
+  typedef QMap<Incidence*, ResourceCalendar*> RMap;
+  RMap::Iterator it, old_it;
+  for ( it =mResourceMap.begin(); it != mResourceMap.end(); ++it ) {
+    if ( it.data() == resource ) {
+      if ( it == mResourceMap.begin() ) {
+        mResourceMap.remove(it);
+        it = mResourceMap.begin();
+      } else {
+        mResourceMap.remove(it);
+        it = old_it;
+      }
+    }
+    old_it = it;
+  }
+
 }
 
 #include "calendarresources.moc"

@@ -285,7 +285,7 @@ void CalendarLocal::deleteTodo(Todo *todo)
   setModified( true );
 }
 
-QPtrList<Todo> CalendarLocal::rawTodos() const
+QPtrList<Todo> CalendarLocal::rawTodos()
 {
   return mTodoList;
 }

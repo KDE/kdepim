@@ -37,7 +37,7 @@ class ResourceCalendar;
 /**
   This class provides a calendar stored as a local file.
 */
-class CalendarResources : public QObject, public Calendar
+class CalendarResources : public QObject, public Calendar, public KRES::ManagerListener<ResourceCalendar>
 {
     Q_OBJECT
   public:
@@ -59,9 +59,11 @@ class CalendarResources : public QObject, public Calendar
     void close();
 
     void sync();
-  
+
     /** Add Event to calendar. */
     void addEvent(Event *anEvent);
+    /** Add Event to a resource. */
+    void addEvent(Event *anEvent, ResourceCalendar *resource);
     /** deletes an event from this calendar. */
     void deleteEvent(Event *);
 
@@ -83,14 +85,16 @@ class CalendarResources : public QObject, public Calendar
       on the specified date.
     */
     QString getHolidayForDate(const QDate &qd);
-    
+
     /** returns the number of events that are present on the specified date. */
     int numEvents(const QDate &qd);
-  
+
     /**
       Add a todo to the todolist.
     */
     void addTodo( Todo *todo );
+    /** Add Todo to a resource. */
+    void addTodo(Todo *todo, ResourceCalendar *resource);
     /**
       Remove a todo from the todolist.
     */
@@ -103,20 +107,22 @@ class CalendarResources : public QObject, public Calendar
     /**
       Return list of all todos.
     */
-    QPtrList<Todo> rawTodos() const;
+    QPtrList<Todo> rawTodos();
     /**
       Returns list of todos due on the specified date.
     */
     QPtrList<Todo> todos( const QDate &date );
     /**
       Return list of all todos.
-      
+
       Workaround because compiler does not recognize function of base class.
     */
     QPtrList<Todo> todos() { return Calendar::todos(); }
 
     /** Add a Journal entry to calendar */
     virtual void addJournal(Journal *);
+    /** Add Event to a resource. */
+    void addJournal(Journal *journal, ResourceCalendar *resource);
     /** Return Journal for given date */
     virtual Journal *journal(const QDate &);
     /** Return Journal with given UID */
@@ -129,6 +135,9 @@ class CalendarResources : public QObject, public Calendar
 
     /** Return all alarms, which ocur before given date. */
     Alarm::List alarmsTo( const QDateTime &to );
+
+    /** Return Resource for given uid */
+    ResourceCalendar *resource(Incidence *);
 
   signals:
     void calendarChanged();
@@ -157,12 +166,17 @@ class CalendarResources : public QObject, public Calendar
 
     void connectResource( ResourceCalendar * );
 
+    void resourceAdded( ResourceCalendar *resource );
+    void resourceModified( ResourceCalendar *resource );
+    void resourceDeleted( ResourceCalendar *resource );
+
   private:
     void init();
 
     bool mOpen;
 
     KRES::ResourceManager<ResourceCalendar>* mManager;
+    QMap <Incidence*, ResourceCalendar*> mResourceMap;
 };
 
 }

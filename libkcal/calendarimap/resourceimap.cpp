@@ -309,7 +309,7 @@ void ResourceIMAP::deleteTodo(Todo *todo)
  * Getting Todos
  */
 
-QPtrList<Todo> ResourceIMAP::rawTodos() const
+QPtrList<Todo> ResourceIMAP::rawTodos()
 {
   return mCalendar.rawTodos();
 }
