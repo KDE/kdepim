@@ -1067,7 +1067,11 @@ VCalConduit::getRepetition(VObject *vevent) {
 void VCalConduit::setRepetition(PilotDateEntry *dateEntry,
 				const eventRepetition &er) {
   FUNCTIONSETUP;
-  PeriodConstants period;
+
+	// Default to repeat daily, since there is
+	// no "None" element of PeriodConstants.
+	//
+	PeriodConstants period = DailyPeriod;
 
   dateEntry->setRepeatType(er.type);
 
@@ -1105,15 +1109,21 @@ void VCalConduit::setRepetition(PilotDateEntry *dateEntry,
       break;
     }
 
-    if (er.hasEndDate) {
-      dateEntry->setRepeatFrequency(er.freq);
-      dateEntry->setRepeatEnd(er.endDate);
-    } else if (er.duration == 0) {
-      dateEntry->setRepeatFrequency(er.freq);
-      dateEntry->setRepeatForever();
-    } else 
-      repeatUntil(dateEntry, &er.startDate, er.freq, er.duration,
-		  period);
+	if (er.hasEndDate) 
+	{
+		dateEntry->setRepeatFrequency(er.freq);
+		dateEntry->setRepeatEnd(er.endDate);
+	} 
+	else if (er.duration == 0) 
+	{
+		dateEntry->setRepeatFrequency(er.freq);
+		dateEntry->setRepeatForever();
+	} 
+	else 
+	{
+		repeatUntil(dateEntry, &er.startDate, er.freq, er.duration,
+			period);
+	}
   }
 }
 
@@ -1286,6 +1296,9 @@ void mimeError(char *s)
 
 
 // $Log$
+// Revision 1.41  2001/06/05 22:58:40  adridg
+// General rewrite, cleanup thx. Philipp Hullmann
+//
 // Revision 1.40  2001/05/25 16:06:52  adridg
 // DEBUG breakage
 //
