@@ -135,6 +135,11 @@ class Calendar : public QObject, public CustomProperties,
       Return unfiltered list of all incidences of this calendar.
     */
     virtual Incidence::List rawIncidences();
+    
+    /** 
+      Return a list of all categories used in this calendar.
+    */
+    QStringList incidenceCategories();
 
     /**
       Adds a Event to this calendar object.
