@@ -465,13 +465,13 @@ void LDAPSearchDialog::slotUser3()
       }
 
       addr.setOrganization( asUtf8( cli->mAttrs[ "o" ].first() ) );
-      if (addr.organization().isEmpty())
+      if ( addr.organization().isEmpty() )
          addr.setOrganization( asUtf8( cli->mAttrs[ "Company" ].first() ) );
 
       addr.insertCustom("KADDRESSBOOK", "X-Department", asUtf8( cli->mAttrs[ "department" ].first() ) );
 
       // Address
-      KABC::Address workAddr(KABC::Address::Work);
+      KABC::Address workAddr( KABC::Address::Work );
 
       workAddr.setStreet( asUtf8( cli->mAttrs[ "street" ].first()) );
       workAddr.setLocality( asUtf8( cli->mAttrs[ "l" ].first()) );
@@ -479,28 +479,29 @@ void LDAPSearchDialog::slotUser3()
       workAddr.setPostalCode( asUtf8( cli->mAttrs[ "postalCode" ].first()) );
       workAddr.setCountry( asUtf8( cli->mAttrs[ "co" ].first()) );
 
-      addr.insertAddress( workAddr );
+      if ( !workAddr.isEmpty() )
+        addr.insertAddress( workAddr );
 
       // phone
       KABC::PhoneNumber homeNr = asUtf8( cli->mAttrs[  "homePhone" ].first() );
-      homeNr.setType(KABC::PhoneNumber::Home);
-      addr.insertPhoneNumber(homeNr);
+      homeNr.setType( KABC::PhoneNumber::Home );
+      addr.insertPhoneNumber( homeNr );
 
       KABC::PhoneNumber workNr = asUtf8( cli->mAttrs[  "telephoneNumber" ].first() );
-      workNr.setType(KABC::PhoneNumber::Work);
-      addr.insertPhoneNumber(workNr);
+      workNr.setType( KABC::PhoneNumber::Work );
+      addr.insertPhoneNumber( workNr );
 
       KABC::PhoneNumber faxNr = asUtf8( cli->mAttrs[  "facsimileTelephoneNumber" ].first() );
-      faxNr.setType(KABC::PhoneNumber::Fax);
-      addr.insertPhoneNumber(faxNr);
+      faxNr.setType( KABC::PhoneNumber::Fax );
+      addr.insertPhoneNumber( faxNr );
 
       KABC::PhoneNumber cellNr = asUtf8( cli->mAttrs[  "mobile" ].first() );
-      cellNr.setType(KABC::PhoneNumber::Cell);
-      addr.insertPhoneNumber(cellNr);
+      cellNr.setType( KABC::PhoneNumber::Cell );
+      addr.insertPhoneNumber( cellNr );
 
       KABC::PhoneNumber pagerNr = asUtf8( cli->mAttrs[  "pager" ].first() );
-      pagerNr.setType(KABC::PhoneNumber::Pager);
-      addr.insertPhoneNumber(pagerNr);
+      pagerNr.setType( KABC::PhoneNumber::Pager );
+      addr.insertPhoneNumber( pagerNr );
 
       if ( mAddressBook )
         mAddressBook->insertAddressee( addr );
