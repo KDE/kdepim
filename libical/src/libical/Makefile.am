@@ -41,6 +41,8 @@ INCLUDES =			\
 libical_la_LDFLAGS = -version-info 0:0:0
 
 libical_la_SOURCES =		\
+	icalrecur.c		\
+	icalrecur.h		\
 	icalattendee.h		\
 	icalattendee.c		\
 	icalcomponent.c		\
@@ -65,8 +67,6 @@ libical_la_SOURCES =		\
 	icalderivedproperty.h	\
 	icalproperty.c		\
 	icalproperty.h		\
-	icalrecur.c		\
-	icalrecur.h		\
 	icalrestriction.c	\
 	icalrestriction.h	\
 	icaltime.c		\
