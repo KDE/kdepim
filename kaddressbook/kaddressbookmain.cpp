@@ -131,7 +131,9 @@ void KAddressBookMain::closeWithSave()
 {
   if ( mActionManager->isModified() ) {
     QString text = i18n( "The address book was modified. Do you want to save your changes?" );
-    int ret = KMessageBox::warningYesNoCancel( this, text );
+    int ret = KMessageBox::warningYesNoCancel( this, text, "",
+                                              KStdGuiItem::yes(),
+                                              KStdGuiItem::no(), "AskForSave" );
     if ( ret == KMessageBox::Yes )
       save();
     else if ( ret == KMessageBox::Cancel )

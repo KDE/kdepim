@@ -46,6 +46,8 @@ KAddressBook::KAddressBook( QWidget *parent, const char *name )
   QBoxLayout *topLayout = new QVBoxLayout( this );
 
   mDocument = KABC::StdAddressBook::self();
+  KABC::StdAddressBook::setAutomaticSave( false );
+
   connect( mDocument, SIGNAL( addressBookChanged( AddressBook * ) ),
            SLOT( slotAddressBookChanged() ) );
 
