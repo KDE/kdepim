@@ -464,7 +464,7 @@ linkend="filter-dialog">filter dialog</link> to those messages.</para>
 to use <menuchoice><guimenu>Tools</guimenu><guimenuitem>Create
 Filter...</guimenuitem></menuchoice>. This will call the filter dialog
 and present you with a new filter which has the first rule of the
-search pattern and the first action (as <guilabel>move to folder</guilabel>) preset. In
+search pattern and the first action (as <guilabel>file into folder</guilabel>) preset. In
 most cases, all you have to do is select the folder where the message
 should be moved to. But you can, of course, edit the filter as you
 like.</para>
@@ -648,9 +648,10 @@ folder</guilabel>. Here is a list of all possible actions:</para>
 
 <variablelist>
 <varlistentry>
-<term><guilabel>move to folder</guilabel></term>
+<term><guilabel>file into folder</guilabel></term>
 <listitem>
-<para>This will move the message to another folder. You currently 
+<para>This will file the message into another folder, removing it from
+it's current folder if necessary. You currently 
 cannot use <acronym>IMAP</acronym> folders as a target.</para>
 <!-- fixme: still correct? -->
 </listitem>
