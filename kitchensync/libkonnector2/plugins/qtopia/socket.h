@@ -96,6 +96,7 @@ public:
     void writeAddressbook( AddressBookSyncee * );
     void writeDatebook( CalendarSyncee * );
     void writeTodoList( CalendarSyncee * );
+    void writeUnknown( KSync::UnknownSyncee * );
 
     void readAddressbook();
     void readDatebook();

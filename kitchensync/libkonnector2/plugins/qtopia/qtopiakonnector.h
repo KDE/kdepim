@@ -52,18 +52,20 @@ class QtopiaKonnector : public Konnector
 
     void setDestinationIP( const QString &IP ) { mDestinationIP = IP; }
     QString destinationIP() const { return mDestinationIP; }
-    
+
     void setUserName( const QString &name ) { mUserName = name; }
     QString userName() const { return mUserName; }
-    
+
     void setPassword( const QString &password ) { mPassword = password; }
     QString password() const { return mPassword; }
-    
+
     void setModel( const QString &model ) { mModel = model; }
     QString model() const { return mModel; }
-    
+
     void setModelName( const QString &name ) { mModelName = name; }
     QString modelName() const { return mModelName; }
+
+    void appendSyncee( KSync::Syncee * );
 
   protected:
     QString metaId() const;

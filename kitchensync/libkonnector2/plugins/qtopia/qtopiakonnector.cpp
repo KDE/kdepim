@@ -185,6 +185,15 @@ QString QtopiaKonnector::iconName() const
   return QString::fromLatin1("opie.png");
 }
 
+/**
+ * @internal
+ * @reimplementation
+ */
+void QtopiaKonnector::appendSyncee( KSync::Syncee* syn)
+{
+  mSynceeList.append( syn );
+}
+
 bool QtopiaKonnector::writeSyncees()
 {
   d->socket->write( mSynceeList );

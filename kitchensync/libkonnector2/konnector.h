@@ -79,6 +79,7 @@ class Konnector : public KRES::Resource
       Syncees will be empty.
     */
     virtual SynceeList syncees() = 0;
+    virtual void appendSyncee( Syncee* ap);
 
     /**
       Request list of Syncee objects containing PIM data from connected entity.

@@ -31,6 +31,7 @@
 
 #include <addressbooksyncee.h>
 #include <calendarsyncee.h>
+#include <unknownsyncee.h>
 
 #include <idhelper.h>
 
@@ -237,19 +238,21 @@ void QtopiaSocket::setResources( const QStringList& list )
 bool QtopiaSocket::startSync()
 {
     if ( d->isSyncing )
-        return false;
+      return false;
     d->isSyncing = true;
     d->getMode   = d->NotStarted;
 
     if (d->isConnecting ) {
-        d->startSync = true;
-        return true;
+      d->startSync = true;
+      return true;
     }
+
     if (!isConnected() ) {
-        startUp();
-        d->startSync = true;
-        return true;
+      startUp();
+      d->startSync = true;
+      return true;
     }
+
     slotStartSync();
 
     return true;
@@ -298,6 +301,12 @@ void QtopiaSocket::write( SynceeList list )
     writeCategory();
     d->helper->save();
 
+    /*
+     * Upload custom files
+     */
+    KSync::UnknownSyncee *unk = list.unknownSyncee();
+    if ( unk )
+      writeUnknown( unk );
 
     /* trigger reload for apps on pda */
     sendCommand( "call QPE/Application/datebook reload()" );
@@ -315,6 +324,11 @@ void QtopiaSocket::write( SynceeList list )
      */
     d->first = false;
     emit prog(StdProgress::done() );
+
+    /*
+     * Delete the Syncee
+     */
+    list.deleteAndClear();
 }
 
 QString QtopiaSocket::metaId() const
@@ -322,7 +336,7 @@ QString QtopiaSocket::metaId() const
     return d->partnerId;
 }
 
-void QtopiaSocket::slotError( int err )
+void QtopiaSocket::slotError( int )
 {
     d->isSyncing = false;
     d->isConnecting = false;
@@ -476,6 +490,19 @@ void QtopiaSocket::writeTodoList( CalendarSyncee* syncee)
      * The SyncHistory is saved after both datebook and todo
      * was written
      */
+}
+
+void QtopiaSocket::writeUnknown( KSync::UnknownSyncee *syncee )
+{
+  for ( KSync::UnknownSyncEntry* entry = syncee->firstEntry();
+        entry; entry = syncee->nextEntry() ) {
+    QString baseName = QFileInfo( entry->fileName() ).fileName();
+
+    kdDebug() << "Writing " << entry->fileName() << " "
+              << d->path+"/"+baseName << endl;
+    KIO::NetAccess::upload(entry->fileName(),
+                           url(d->path+"/"+baseName), 0 );
+  }
 }
 
 void QtopiaSocket::readAddressbook()

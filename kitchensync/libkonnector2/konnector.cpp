@@ -93,6 +93,22 @@ void Konnector::setStoragePath( const QString& path )
   emit storagePathChanged( m_sPath );
 }
 
+/**
+   Append the Syncee to the internal list of Syncees.
+   If the Konnector implements this method and can
+   handle the format it will upload the Syncee
+   on writeSyncees.
+   The ownership of \par ap is transfered to the Konnector.
+   The default implementation deletes \par ap.
+
+   @param ap The Syncee to append to the list of Syncees
+   @see writeSyncees
+*/
+void Konnector::appendSyncee( Syncee* ap )
+{
+  delete ap;
+/* DEFAULT NO IMPLEMENTATION */
+}
 
 /**
  * Generate a MD5SUM from a QString. The intended use is with
