@@ -271,6 +271,10 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
   // summary
   if (!anEvent->summary().isEmpty())
     addPropValue(vtodo, VCSummaryProp, anEvent->summary().local8Bit());
+    
+  // location
+  if (!anEvent->location().isEmpty())
+    addPropValue(vtodo, VCLocationProp, anEvent->location().local8Bit());
 
   // completed
   // status
@@ -534,6 +538,10 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
   // summary
   if (!anEvent->summary().isEmpty())
     addPropValue(vevent, VCSummaryProp, anEvent->summary().local8Bit());
+    
+  // location
+  if (!anEvent->location().isEmpty())
+    addPropValue(vevent, VCLocationProp, anEvent->location().local8Bit());
 
   // status
 // TODO: define Event status
@@ -734,6 +742,13 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
     deleteStr(s);
   }
 
+  
+  // location
+  if ((vo = isAPropertyOf(vtodo, VCLocationProp)) != 0) {
+    s = fakeCString(vObjectUStringZValue(vo));
+    anEvent->setLocation( QString::fromLocal8Bit(s) );
+    deleteStr(s);
+  }
   // completed
   // was: status
   if ((vo = isAPropertyOf(vtodo, VCStatusProp)) != 0) {
@@ -1223,6 +1238,13 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
     } else {
       anEvent->setDescription(QString::fromLocal8Bit(s));
     }
+    deleteStr(s);
+  }
+  
+  // location
+  if ((vo = isAPropertyOf(vevent, VCLocationProp)) != 0) {
+    s = fakeCString(vObjectUStringZValue(vo));
+    anEvent->setLocation( QString::fromLocal8Bit(s) );
     deleteStr(s);
   }
 
