@@ -31,14 +31,23 @@
 // Configuration keys
 //
 //
-const char * const VCalConduitFactoryBase::calendarFile = "CalFile" ;
-const char * const VCalConduitFactoryBase::firstTime = "FirstTime" ;
-const char * const VCalConduitFactoryBase::deleteOnPilot = "DeleteOnPilot" ;
+const char *const VCalConduitFactoryBase::syncAction = "SyncAction";
+const char *const VCalConduitFactoryBase::nextSyncAction = "NextSyncAction";
+const char *const VCalConduitFactoryBase::archive = "SyncArchived";
+const char *const VCalConduitFactoryBase::conflictResolution = "ConflictResolution";
 const char * const VCalConduitFactoryBase::fullSyncOnPCChange = "FullSyncOnPCChange";
-const char * const VCalConduitFactoryBase::alwaysFullSync = "AlwaysFullSync";
+
+const char * const VCalConduitFactoryBase::calendarFile = "CalFile" ;
+
+//const char * const VCalConduitFactoryBase::firstTime = "FirstTime" ;
+//const char * const VCalConduitFactoryBase::deleteOnPilot = "DeleteOnPilot" ;
+//const char * const VCalConduitFactoryBase::alwaysFullSync = "AlwaysFullSync";
 
 
 // $Log$
+// Revision 1.1.2.2  2002/05/01 21:11:49  kainhofe
+// Reworked the settings dialog, added various different sync options
+//
 // Revision 1.1.2.1  2002/04/28 12:58:54  kainhofe
 // Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
 //

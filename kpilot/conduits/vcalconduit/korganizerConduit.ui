@@ -1,155 +1,265 @@
-<!DOCTYPE UI><UI>
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
 <class>VCalWidget</class>
-<widget>
-    <class>QWidget</class>
-    <property stdset="1">
-        <name>name</name>
-        <cstring>Form1</cstring>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>Form2</cstring>
     </property>
-    <property stdset="1">
-        <name>geometry</name>
+    <property name="geometry">
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>572</width>
-            <height>373</height>
+            <width>502</width>
+            <height>515</height>
         </rect>
     </property>
-    <property stdset="1">
-        <name>caption</name>
+    <property name="caption">
         <string>Form1</string>
     </property>
-    <widget>
-        <class>QTabWidget</class>
-        <property stdset="1">
-            <name>name</name>
-            <cstring>tabWidget</cstring>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
         </property>
-        <property stdset="1">
-            <name>geometry</name>
-            <rect>
-                <x>10</x>
-                <y>10</y>
-                <width>540</width>
-                <height>180</height>
-            </rect>
+        <property name="margin">
+            <number>11</number>
         </property>
-        <widget>
-            <class>QWidget</class>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>tab</cstring>
+        <property name="spacing">
+            <number>6</number>
+        </property>
+        <widget class="QTabWidget" row="0" column="0">
+            <property name="name">
+                <cstring>tabWidget</cstring>
             </property>
-            <attribute>
-                <name>title</name>
-                <string>Calendar</string>
-            </attribute>
-            <grid>
-                <property stdset="1">
-                    <name>margin</name>
-                    <number>11</number>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
                 </property>
-                <property stdset="1">
-                    <name>spacing</name>
-                    <number>6</number>
+                <attribute name="title">
+                    <string>Calendar File</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>11</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>TextLabel1</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Calendar File:</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="2" column="0" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>fArchive</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Sync &amp;archived entries to the PC</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Deleting something in KOrganizer will delete it in your PDA as well&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <widget class="QButtonGroup" row="1" column="0" rowspan="1" colspan="3">
+                        <property name="name">
+                            <cstring>syncAction</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Sync Action</string>
+                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <property name="margin">
+                                <number>11</number>
+                            </property>
+                            <property name="spacing">
+                                <number>6</number>
+                            </property>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>RadioButton9</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Fast sync if possible</string>
+                                </property>
+                                <property name="checked">
+                                    <bool>true</bool>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>RadioButton10</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Always do a f&amp;ull sync (may take some time)</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>RadioButton11</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Sync only Palm items to PC (next sync only)</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>RadioButton12</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Sync only PC items to Palm (next sync only)</string>
+                                </property>
+                            </widget>
+                        </vbox>
+                    </widget>
+                    <widget class="QPushButton" row="0" column="2">
+                        <property name="name">
+                            <cstring>fCalBrowse</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Browse</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>Open a file browser</string>
+                        </property>
+                    </widget>
+                    <widget class="QLineEdit" row="0" column="1">
+                        <property name="name">
+                            <cstring>fCalendarFile</cstring>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>&lt;qt&gt;Path to the KOrganizer calendar file&lt;/qt&gt;</string>
+                        </property>
+                    </widget>
+                    <spacer row="3" column="1">
+                        <property name="name" stdset="0">
+                            <cstring>Spacer1</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </grid>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
                 </property>
-                <widget row="0"  column="0" >
-                    <class>QLabel</class>
-                    <property stdset="1">
-                        <name>name</name>
-                        <cstring>TextLabel1</cstring>
+                <attribute name="title">
+                    <string>Conflict resolution</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
                     </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>Calendar File:</string>
+                    <property name="margin">
+                        <number>11</number>
                     </property>
-                </widget>
-                <widget row="0"  column="1" >
-                    <class>QLineEdit</class>
-                    <property stdset="1">
-                        <name>name</name>
-                        <cstring>fCalendarFile</cstring>
+                    <property name="spacing">
+                        <number>6</number>
                     </property>
-                    <property>
-                        <name>whatsThis</name>
-                        <string>&lt;qt&gt;Path to the KOrganizer calendar file&lt;/qt&gt;</string>
-                    </property>
-                </widget>
-                <widget row="0"  column="2" >
-                    <class>QPushButton</class>
-                    <property stdset="1">
-                        <name>name</name>
-                        <cstring>fCalBrowse</cstring>
-                    </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>Browse</string>
-                    </property>
-                    <property>
-                        <name>whatsThis</name>
-                        <string>Open a file browser</string>
-                    </property>
-                </widget>
-                <widget row="1"  column="1" >
-                    <class>QCheckBox</class>
-                    <property stdset="1">
-                        <name>name</name>
-                        <cstring>fPromptFirstTime</cstring>
-                    </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>Prompt before changing data</string>
-                    </property>
-                    <property>
-                        <name>whatsThis</name>
-                        <string>&lt;qt&gt;Prompt for confirmation before each change&lt;/qt&gt;</string>
-                    </property>
-                </widget>
-                <widget row="2"  column="1" >
-                    <class>QCheckBox</class>
-                    <property stdset="1">
-                        <name>name</name>
-                        <cstring>fDeleteOnPilot</cstring>
-                    </property>
-                    <property stdset="1">
-                        <name>text</name>
-                        <string>Delete locally deleted records on PDA</string>
-                    </property>
-                    <property>
-                        <name>whatsThis</name>
-                        <string>&lt;qt&gt;Deleting something in KOrganizer will delete it in your PDA as well. Use carefully!&lt;/qt&gt;</string>
-                    </property>
-                </widget>
-                <spacer row="3"  column="1" >
-                    <property>
-                        <name>name</name>
-                        <cstring>Spacer1</cstring>
-                    </property>
-                    <property stdset="1">
-                        <name>orientation</name>
-                        <enum>Vertical</enum>
-                    </property>
-                    <property stdset="1">
-                        <name>sizeType</name>
-                        <enum>Expanding</enum>
-                    </property>
-                    <property>
-                        <name>sizeHint</name>
-                        <size>
-                            <width>20</width>
-                            <height>20</height>
-                        </size>
-                    </property>
-                </spacer>
-            </grid>
+                    <widget class="QButtonGroup" row="0" column="0">
+                        <property name="name">
+                            <cstring>conflictResolution</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Conflicting items</string>
+                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <property name="margin">
+                                <number>11</number>
+                            </property>
+                            <property name="spacing">
+                                <number>6</number>
+                            </property>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>RadioButton1</cstring>
+                                </property>
+                                <property name="focusPolicy">
+                                    <enum>TabFocus</enum>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Palm overrides desktop</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>RadioButton2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Desktop overrides Palm</string>
+                                </property>
+                                <property name="checked">
+                                    <bool>true</bool>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>RadioButton3</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>&amp;Ask for every conflicting item</string>
+                                </property>
+                            </widget>
+                        </vbox>
+                    </widget>
+                    <spacer row="1" column="0">
+                        <property name="name" stdset="0">
+                            <cstring>Spacer3</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </grid>
+            </widget>
         </widget>
-    </widget>
+    </grid>
 </widget>
 <tabstops>
     <tabstop>tabWidget</tabstop>
     <tabstop>fCalendarFile</tabstop>
     <tabstop>fCalBrowse</tabstop>
-    <tabstop>fPromptFirstTime</tabstop>
-    <tabstop>fDeleteOnPilot</tabstop>
+    <tabstop>RadioButton9</tabstop>
+    <tabstop>RadioButton10</tabstop>
+    <tabstop>RadioButton11</tabstop>
+    <tabstop>RadioButton12</tabstop>
+    <tabstop>fArchive</tabstop>
+    <tabstop>RadioButton1</tabstop>
+    <tabstop>RadioButton2</tabstop>
+    <tabstop>RadioButton3</tabstop>
 </tabstops>
+<includes>
+    <include location="local" impldecl="in implementation">korganizerConduit.ui.h</include>
+</includes>
+<layoutdefaults spacing="6" margin="11"/>
 </UI>

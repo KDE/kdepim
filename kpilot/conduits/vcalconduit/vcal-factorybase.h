@@ -31,6 +31,16 @@
 
 #include <klibloader.h>
 
+#define RES_PALMOVERRIDES 0
+#define RES_PCOVERRIDES 1
+#define RES_ASK 2
+
+#define SYNC_FIRST 0
+#define SYNC_FAST 1
+#define SYNC_FULL 2
+#define SYNC_MAX SYNC_FULL
+
+
 class VCalConduitFactoryBase : public KLibFactory
 {
 Q_OBJECT;
@@ -39,11 +49,12 @@ public:
 	VCalConduitFactoryBase(QObject * p= 0L,const char * n= 0L):KLibFactory(p,n){};
 	virtual ~VCalConduitFactoryBase() {};
 
-	static const char * const calendarFile,
-		* const firstTime,
-		* const deleteOnPilot,
-		*const fullSyncOnPCChange,
-		*const alwaysFullSync;
+	static const char *const calendarFile,
+		*const syncAction,
+		*const nextSyncAction,
+		*const archive,
+		*const conflictResolution,
+		*const fullSyncOnPCChange;
 
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
@@ -54,6 +65,9 @@ protected:
 
 
 // $Log$
+// Revision 1.1.2.2  2002/05/01 21:11:49  kainhofe
+// Reworked the settings dialog, added various different sync options
+//
 // Revision 1.1.2.1  2002/04/28 12:58:54  kainhofe
 // Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
 //

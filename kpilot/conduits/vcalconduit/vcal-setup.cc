@@ -31,6 +31,7 @@
 #include <qtabwidget.h>
 #include <qlineedit.h>
 #include <qcheckbox.h>
+#include <qbuttongroup.h>
 
 #include <kconfig.h>
 #include <kfiledialog.h>
@@ -57,9 +58,9 @@ VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n,
 	// correct size, since the designer dialog is so small.
 	//
 	//
-	QSize s = fConfigWidget->size() + QSize(SPACING,SPACING);
-	fConfigWidget->resize(s);
-	fConfigWidget->setMinimumSize(s);
+//	QSize s = fConfigWidget->size() + QSize(SPACING,SPACING);
+//	fConfigWidget->resize(s);
+//	fConfigWidget->setMinimumSize(s);
 
 	QObject::connect((QObject*)fConfigWidget->fCalBrowse,SIGNAL(clicked()),
 		this,SLOT(slotBrowseCalendar()));
@@ -78,12 +79,21 @@ VCalWidgetSetup::~VCalWidgetSetup()
 
 	KConfigGroupSaver s(fConfig,VCalConduitFactory::group);
 
-	fConfig->writeEntry(VCalConduitFactory::calendarFile,
-		fConfigWidget->fCalendarFile->text());
-	fConfig->writeEntry(VCalConduitFactory::firstTime,
-		fConfigWidget->fPromptFirstTime->isChecked());
-	fConfig->writeEntry(VCalConduitFactory::deleteOnPilot,
-		fConfigWidget->fDeleteOnPilot->isChecked());
+	fConfig->writeEntry(VCalConduitFactoryBase::calendarFile, fConfigWidget->fCalendarFile->text());
+	fConfig->writeEntry(VCalConduitFactoryBase::archive, fConfigWidget->fArchive->isChecked());
+	fConfig->writeEntry(VCalConduitFactoryBase::conflictResolution,
+		fConfigWidget->conflictResolution->id(fConfigWidget->conflictResolution->selected()));
+
+	int act=fConfigWidget->syncAction->id(fConfigWidget->syncAction->selected())+1;
+	if (act>SYNC_MAX)
+	{
+		fConfig->writeEntry(VCalConduitFactoryBase::nextSyncAction, act-SYNC_MAX);
+	}
+	else
+	{
+		fConfig->writeEntry(VCalConduitFactoryBase::nextSyncAction, 0);
+		fConfig->writeEntry(VCalConduitFactoryBase::syncAction, act);
+	}
 }
 
 /* virtual */ void VCalWidgetSetup::readSettings()
@@ -93,12 +103,20 @@ VCalWidgetSetup::~VCalWidgetSetup()
 	if (!fConfig) return;
 
 	KConfigGroupSaver s(fConfig,VCalConduitFactory::group);
-	fConfigWidget->fCalendarFile->setText(
-		fConfig->readEntry(VCalConduitFactory::calendarFile,QString::null));
-	fConfigWidget->fPromptFirstTime->setChecked(
-		fConfig->readBoolEntry(VCalConduitFactory::firstTime,false));
-	fConfigWidget->fDeleteOnPilot->setChecked(
-		fConfig->readBoolEntry(VCalConduitFactory::deleteOnPilot,false));
+	fConfigWidget->fCalendarFile->setText( fConfig->readEntry(VCalConduitFactoryBase::calendarFile,QString::null));
+	fConfigWidget->fArchive->setChecked( fConfig->readBoolEntry(VCalConduitFactoryBase::archive, true));
+	fConfigWidget->conflictResolution->setButton( fConfig->readNumEntry(VCalConduitFactoryBase::conflictResolution, RES_ASK));
+
+	int nextAction=fConfig->readNumEntry(VCalConduitFactoryBase::nextSyncAction, 0);
+	if (nextAction)
+	{
+		fConfigWidget->syncAction->setButton( SYNC_MAX+nextAction-1);
+	}
+	else
+	{
+		fConfigWidget->syncAction->setButton( fConfig->readNumEntry(VCalConduitFactoryBase::syncAction, SYNC_FAST)-1);
+	}
+
 }
 
 void VCalWidgetSetup::slotBrowseCalendar()
@@ -111,6 +129,12 @@ void VCalWidgetSetup::slotBrowseCalendar()
 }
 
 // $Log$
+// Revision 1.18.2.1  2002/05/01 21:11:49  kainhofe
+// Reworked the settings dialog, added various different sync options
+//
+// Revision 1.18  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.17  2002/01/02 12:21:16  bero
 // Fix build
 //

@@ -70,6 +70,7 @@ public:
 	virtual KCal::Incidence *findIncidence(recordid_t)=0;
 	virtual KCal::Incidence *getNextIncidence()=0;
 	virtual KCal::Incidence *getNextModifiedIncidence()=0;
+	virtual int count()=0;
 } ;
 
 
@@ -131,7 +132,9 @@ protected:
 	PilotLocalDatabase *fBackupDatabase;
 
 	QString fCalendarFile;
-	bool fFirstTime,fDeleteOnPilot, fFullSync;
+	int syncAction, nextSyncAction, conflictResolution;
+	bool archive;
+	bool fFirstTime, fFullSync;
 	int pilotindex;
 
 protected:
@@ -142,6 +145,9 @@ protected:
 
 
 // $Log$
+// Revision 1.1.2.2  2002/05/01 21:11:49  kainhofe
+// Reworked the settings dialog, added various different sync options
+//
 // Revision 1.1.2.1  2002/04/28 12:58:54  kainhofe
 // Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
 //

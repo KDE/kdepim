@@ -32,6 +32,7 @@
 #include <qtabwidget.h>
 #include <qlineedit.h>
 #include <qcheckbox.h>
+#include <qbuttongroup.h>
 
 #include <kconfig.h>
 #include <kinstance.h>
@@ -61,9 +62,9 @@ ToDoWidgetSetup::ToDoWidgetSetup(QWidget *w, const char *n,
 	// correct size, since the designer dialog is so small.
 	//
 	//
-	QSize s = fConfigWidget->size() + QSize(SPACING,SPACING);
-	fConfigWidget->resize(s);
-	fConfigWidget->setMinimumSize(s);
+//	QSize s = fConfigWidget->size() + QSize(SPACING,SPACING);
+//	fConfigWidget->resize(s);
+//	fConfigWidget->setMinimumSize(s);
 
 	QObject::connect(fConfigWidget->fCalBrowse,SIGNAL(clicked()),
 		this,SLOT(slotBrowseCalendar()));
@@ -80,15 +81,23 @@ ToDoWidgetSetup::~ToDoWidgetSetup()
 
 	if (!fConfig) return;
 
-	KConfigGroupSaver s(fConfig,ToDoConduitFactory::group);
+	KConfigGroupSaver s(fConfig, ToDoConduitFactory::group);
 
-	fConfig->writeEntry(ToDoConduitFactory::calendarFile,
-		fConfigWidget->fCalendarFile->text());
-	fConfig->writeEntry(ToDoConduitFactory::firstTime,
-		fConfigWidget->fPromptFirstTime->isChecked());
-	fConfig->writeEntry(ToDoConduitFactory::deleteOnPilot,
-		fConfigWidget->fDeleteOnPilot->isChecked());
+	fConfig->writeEntry(VCalConduitFactoryBase::calendarFile, fConfigWidget->fCalendarFile->text());
+	fConfig->writeEntry(VCalConduitFactoryBase::archive, fConfigWidget->fArchive->isChecked());
+	fConfig->writeEntry(VCalConduitFactoryBase::conflictResolution,
+		fConfigWidget->conflictResolution->id(fConfigWidget->conflictResolution->selected()));
 
+	int act=fConfigWidget->syncAction->id(fConfigWidget->syncAction->selected())+1;
+	if (act>SYNC_MAX)
+	{
+		fConfig->writeEntry(VCalConduitFactoryBase::nextSyncAction, act-SYNC_MAX);
+	}
+	else
+	{
+		fConfig->writeEntry(VCalConduitFactoryBase::nextSyncAction, 0);
+		fConfig->writeEntry(VCalConduitFactoryBase::syncAction, act);
+	}
 }
 
 /* virtual */ void ToDoWidgetSetup::readSettings()
@@ -99,13 +108,20 @@ ToDoWidgetSetup::~ToDoWidgetSetup()
 
 	KConfigGroupSaver s(fConfig,ToDoConduitFactory::group);
 
-	fConfigWidget->fCalendarFile->setText(
-		fConfig->readEntry(ToDoConduitFactory::calendarFile,QString::null));
+	fConfigWidget->fCalendarFile->setText( fConfig->readEntry(VCalConduitFactoryBase::calendarFile,QString::null));
+	fConfigWidget->fArchive->setChecked( fConfig->readBoolEntry(VCalConduitFactoryBase::archive, true));
+	fConfigWidget->conflictResolution->setButton( fConfig->readNumEntry(VCalConduitFactoryBase::conflictResolution, RES_ASK));
 
-	fConfigWidget->fPromptFirstTime->setChecked(
-		fConfig->readBoolEntry(ToDoConduitFactory::firstTime,false));
-	fConfigWidget->fDeleteOnPilot->setChecked(
-		fConfig->readBoolEntry(ToDoConduitFactory::deleteOnPilot,false));
+	int nextAction=fConfig->readNumEntry(VCalConduitFactoryBase::nextSyncAction, 0);
+	if (nextAction)
+	{
+		fConfigWidget->syncAction->setButton( SYNC_MAX+nextAction-1);
+	}
+	else
+	{
+		fConfigWidget->syncAction->setButton( fConfig->readNumEntry(VCalConduitFactoryBase::syncAction, SYNC_FAST)-1);
+	}
+
 }
 
 void ToDoWidgetSetup::slotBrowseCalendar()
@@ -118,6 +134,13 @@ void ToDoWidgetSetup::slotBrowseCalendar()
 }
 
 // $Log$
+// Revision 1.5.2.1  2002/05/01 21:11:49  kainhofe
+// Reworked the settings dialog, added various different sync options
+//
+// Revision 1.5  2002/01/01 02:30:26  molnarc
+//
+// include <qpushbutton.h>
+//
 // Revision 1.4  2001/12/28 12:56:46  adridg
 // Added SyncAction, it may actually do something now.
 //

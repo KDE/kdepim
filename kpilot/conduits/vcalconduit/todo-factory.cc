@@ -75,6 +75,10 @@ ToDoConduitFactory::ToDoConduitFactory(QObject *p, const char *n) :
 		I18N_NOOP("Maintainer"),
 		"groot@kde.org",
 		"http://www.cs.kun.nl/~adridg/kpilot");
+	fAbout->addAuthor("Reinhold Kainhofer", 
+		I18N_NOOP("Maintainer"),
+		"reinhold@kainhofer.com",
+		"http://reinhold.kainhofer.com/Linux/");
 }
 
 ToDoConduitFactory::~ToDoConduitFactory()
@@ -138,6 +142,9 @@ ToDoConduitFactory::~ToDoConduitFactory()
 }
 
 // $Log$
+// Revision 1.3.2.2  2002/05/01 21:11:49  kainhofe
+// Reworked the settings dialog, added various different sync options
+//
 // Revision 1.3.2.1  2002/04/28 12:58:54  kainhofe
 // Calendar conduit now works, no memory leaks, timezone still shifted. Todo conduit mostly works, for my large list it crashes when saving the calendar file.
 //
