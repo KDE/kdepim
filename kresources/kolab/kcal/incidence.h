@@ -104,6 +104,9 @@ public:
   virtual void setSchedulingID( const QString& sid );
   virtual QString schedulingID() const;
 
+  virtual void setRevision( int );
+  virtual int revision() const;
+
   // Load the attributes of this class
   virtual bool loadAttribute( QDomElement& );
 
@@ -140,6 +143,7 @@ protected:
   QValueList<Attendee> mAttendees;
   QValueList<KCal::Attachment*> mAttachments;
   QString mSchedulingID;
+  int mRevision;
 
   struct Custom {
     QCString key;

@@ -155,7 +155,7 @@ void createKMailChanges( KConfigPropagator::Change::List& changes )
   c->file = "kmailrc";
   c->group = "Groupware";
   c->name = "LegacyMangleFromToHeaders";
-  c->value = "false";
+  c->value = "true";
   changes.append( c );
 
   c = new KConfigPropagator::ChangeConfig;
