@@ -253,6 +253,7 @@ QStringList AppearanceConfigWidget::createDefaultCategories( KConfig* config )
 
 void AppearanceConfigWidget::load()
 {
+  categoriesLV->clear();
   KConfig * config = Kleo::CryptPlugFactory::instance()->configObject();
   if ( !config )
     return;
