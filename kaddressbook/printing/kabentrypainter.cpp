@@ -37,6 +37,8 @@
 #include "kabentrypainter.h"
 
 KABEntryPainter::KABEntryPainter()
+  : mShowAddresses( true ), mShowEmails( true ), mShowPhones( true ),
+    mShowURLs( true )
 {
 }
 
@@ -62,7 +64,7 @@ void KABEntryPainter::setHeaderColor( const QColor &color )
 {
   mHeaderColor = color;
 }
-                     
+
 void KABEntryPainter::setHeaderFont( const QFont &font )
 {
   mHeaderFont = font;
