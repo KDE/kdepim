@@ -1,4 +1,4 @@
-<!DOCTYPE kpartgui ><kpartgui name="kgpgcertmanager" version="6" >
+<!DOCTYPE kpartgui ><kpartgui name="kgpgcertmanager" version="7" >
 <MenuBar>
 	<Menu name="file">
 		<text>File</text>
@@ -16,6 +16,7 @@
 		<text>View</text>
 		<Action name="view_stop_operations"/>
 		<Action name="view_dump_crls"/>
+		<Action name="view_certificate_details"/>
 	</Menu>
 	<Menu name="certMenu">
 		<text>&amp;Certificates</text>
@@ -25,12 +26,24 @@
 	</Menu>
 </MenuBar>
 
-<ToolBar alreadyVisited="1" position="Top" iconText="IconOnly" noMerge="1" name="searchToolBar" >
+<ToolBar position="Top" iconText="IconOnly" noMerge="1" name="searchToolBar" >
 <text>Search Toolbar</text>
 	<Action name="label_action" />
 	<Action name="query_lineedit_action" />
 	<Action name="location_combo_action" />
 	<Action name="find" />
 </ToolBar>
+
+<Menu name="listview_popup">
+	<text>&amp;Certificates</text>
+	<Action name="edit_revoke_certificate"/>
+	<Action name="edit_extend_certificate"/>
+	<Action name="edit_delete_certificate"/>
+	<Separator/>
+	<Action name="file_export_certificate"/>
+	<Action name="file_export_secret_keys"/>
+	<Separator/>
+	<Action name="view_certificate_details"/>
+</Menu>
 
 </kpartgui>

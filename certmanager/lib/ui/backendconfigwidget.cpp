@@ -54,8 +54,13 @@
 
 #include <assert.h>
 
-struct Kleo::BackendConfigWidget::Private {
-  KListView * listView;
+namespace Kleo {
+  class BackendListView;
+}
+
+class Kleo::BackendConfigWidget::Private {
+public:
+  Kleo::BackendListView * listView;
   QPushButton * configureButton;
   QPushButton * rescanButton;
   Kleo::CryptPlugFactory * backendFactory;
@@ -64,7 +69,24 @@ struct Kleo::BackendConfigWidget::Private {
 namespace Kleo {
   class BackendListViewItem;
   class ProtocolCheckListItem;
+  enum ProtocolType { OpenPGP, SMIME };
 }
+
+class Kleo::BackendListView : public KListView
+{
+public:
+  BackendListView( QWidget* parent, const char* name = 0 )
+    : KListView( parent, name ) {}
+
+  /// return backend for currently selected (/current) item. Used by Configure button.
+  const Kleo::CryptoBackend* currentBackend() const;
+
+  /// return which protocol implementation was chosen (checked) for each type (used when saving)
+  const Kleo::CryptoBackend* chosenBackend( ProtocolType protocolType );
+
+  /// deselect all except one for a given protocol type (radiobutton-like exclusivity)
+  void deselectAll( ProtocolType protocolType, QCheckListItem* except );
+};
 
 // Toplevel listviewitem for a given backend (e.g. "GpgME", "Kgpg/gpg v2")
 class Kleo::BackendListViewItem : public QListViewItem
@@ -77,6 +99,7 @@ public:
   const CryptoBackend *cryptoBackend() const { return mCryptoBackend; }
   static const int RTTI = 20001;
   virtual int rtti() const { return RTTI; }
+
 private:
   const CryptoBackend *mCryptoBackend;
 };
@@ -87,18 +110,29 @@ private:
 class Kleo::ProtocolCheckListItem : public QCheckListItem
 {
 public:
-  enum ProtocolType { OpenPGP, SMIME };
   ProtocolCheckListItem( BackendListViewItem* blvi,
                          QListViewItem* prev,
                          ProtocolType protocolType,
                          const CryptoBackend::Protocol* protocol ) // can be 0
     : QCheckListItem( blvi, prev, itemText( protocolType, protocol ),
                       QCheckListItem::CheckBox ),
-      mProtocol( protocol )
+      mProtocol( protocol ), mProtocolType( protocolType )
     {}
 
   static const int RTTI = 20002;
   virtual int rtti() const { return RTTI; }
+
+  // can be 0
+  const CryptoBackend::Protocol* protocol() const { return mProtocol; }
+  ProtocolType protocolType() const { return mProtocolType; }
+
+protected:
+  virtual void stateChange( bool b ) {
+    // "radio-button-like" behavior for the protocol checkboxes
+    if ( b )
+      static_cast<BackendListView *>( listView() )->deselectAll( mProtocolType, this );
+    QCheckListItem::stateChange( b );
+  }
 
 private:
   // Helper for the constructor.
@@ -111,10 +145,11 @@ private:
   }
 
   const CryptoBackend::Protocol* mProtocol; // can be 0
+  ProtocolType mProtocolType;
 };
 
-static const Kleo::CryptoBackend* currentBackend( KListView* listView ) {
-  QListViewItem* curItem = listView->currentItem();
+const Kleo::CryptoBackend* Kleo::BackendListView::currentBackend() const {
+  QListViewItem* curItem = currentItem();
   if ( !curItem ) // can't happen
     return 0;
   if ( curItem->rtti() == Kleo::ProtocolCheckListItem::RTTI )
@@ -123,6 +158,40 @@ static const Kleo::CryptoBackend* currentBackend( KListView* listView ) {
     return static_cast<Kleo::BackendListViewItem *>( curItem )->cryptoBackend();
   return 0;
 }
+
+// can't be const method due to QListViewItemIterator (why?)
+const Kleo::CryptoBackend* Kleo::BackendListView::chosenBackend( ProtocolType protocolType )
+{
+  QListViewItemIterator it( this /*, QListViewItemIterator::Checked doesn't work*/ );
+  for ( ; it.current() ; ++it ) {
+    if( it.current()->rtti() == Kleo::ProtocolCheckListItem::RTTI ) {
+      Kleo::ProtocolCheckListItem* p = static_cast<Kleo::ProtocolCheckListItem *>( it.current() );
+      if ( p->isOn() && p->protocolType() == protocolType ) {
+        // OK that's the one. Now go up to the parent backend
+        // (need to do that in the listview since Protocol doesn't know it)
+        QListViewItem* parItem = it.current()->parent();
+        if ( parItem && parItem->rtti() == Kleo::BackendListViewItem::RTTI )
+          return static_cast<Kleo::BackendListViewItem *>( parItem )->cryptoBackend();
+      }
+    }
+  }
+  return 0;
+}
+
+void Kleo::BackendListView::deselectAll( ProtocolType protocolType, QCheckListItem* except )
+{
+  QListViewItemIterator it( this /*, QListViewItemIterator::Checked doesn't work*/ );
+  for ( ; it.current() ; ++it ) {
+    if( it.current() != except &&
+        it.current()->rtti() == Kleo::ProtocolCheckListItem::RTTI ) {
+      Kleo::ProtocolCheckListItem* p = static_cast<Kleo::ProtocolCheckListItem *>( it.current() );
+      if ( p->isOn() && p->protocolType() == protocolType )
+        p->setOn( false );
+    }
+  }
+}
+
+////
 
 Kleo::BackendConfigWidget::BackendConfigWidget( CryptPlugFactory * factory, QWidget * parent, const char * name, WFlags f )
   : QWidget( parent, name, f ), d( 0 )
@@ -134,7 +203,7 @@ Kleo::BackendConfigWidget::BackendConfigWidget( CryptPlugFactory * factory, QWid
   QHBoxLayout * hlay =
     new QHBoxLayout( this, 0, KDialog::spacingHint() );
 
-  d->listView = new KListView( this, "d->listView" );
+  d->listView = new BackendListView( this, "d->listView" );
   d->listView->addColumn( i18n("Available Backends") );
   d->listView->setAllColumnsShowFocus( true );
   d->listView->setSorting( -1 );
@@ -183,18 +252,18 @@ void Kleo::BackendConfigWidget::load() {
     top = new Kleo::BackendListViewItem( d->listView, top, b );
     ProtocolCheckListItem * last = 0;
     if ( openpgp ) {
-      last = new ProtocolCheckListItem( top, last, ProtocolCheckListItem::OpenPGP, openpgp );
+      last = new ProtocolCheckListItem( top, last, Kleo::OpenPGP, openpgp );
       last->setOn( openpgp == d->backendFactory->openpgp() );
     } else if ( b->supportsOpenPGP() ) {
-      last = new ProtocolCheckListItem( top, last, ProtocolCheckListItem::OpenPGP, 0 );
+      last = new ProtocolCheckListItem( top, last, Kleo::OpenPGP, 0 );
       last->setOn( false );
       last->setEnabled( false );
     }
     if ( smime ) {
-      last = new ProtocolCheckListItem( top, last, ProtocolCheckListItem::SMIME, smime );
+      last = new ProtocolCheckListItem( top, last, Kleo::SMIME, smime );
       last->setOn( smime == d->backendFactory->smime() );
     } else if ( b->supportsSMIME() ) {
-      last = new ProtocolCheckListItem( top, last, ProtocolCheckListItem::SMIME, 0 );
+      last = new ProtocolCheckListItem( top, last, Kleo::SMIME, 0 );
       last->setOn( false );
       last->setEnabled( false );
     }
@@ -212,7 +281,7 @@ void Kleo::BackendConfigWidget::load() {
 }
 
 void Kleo::BackendConfigWidget::slotSelectionChanged( QListViewItem * ) {
-  const CryptoBackend* backend = currentBackend( d->listView );
+  const CryptoBackend* backend = d->listView->currentBackend();
   d->configureButton->setEnabled( backend && backend->config() );
 }
 
@@ -228,7 +297,7 @@ void Kleo::BackendConfigWidget::slotRescanButtonClicked() {
 }
 
 void Kleo::BackendConfigWidget::slotConfigureButtonClicked() {
-  const CryptoBackend* backend = currentBackend( d->listView );
+  const CryptoBackend* backend = d->listView->currentBackend();
   if ( backend && backend->config() ) {
     Kleo::CryptoConfigDialog dlg( backend->config() );
     dlg.exec();
@@ -238,7 +307,8 @@ void Kleo::BackendConfigWidget::slotConfigureButtonClicked() {
 }
 
 void Kleo::BackendConfigWidget::save() const {
-  qDebug( "Sorry, not implemented: Kleo::BackendConfigWidget::save()" );
+  d->backendFactory->setSMIMEBackend( d->listView->chosenBackend( Kleo::SMIME ) );
+  d->backendFactory->setOpenPGPBackend( d->listView->chosenBackend( Kleo::OpenPGP ) );
 }
 
 void Kleo::BackendConfigWidget::virtual_hook( int, void* ) {}

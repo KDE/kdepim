@@ -84,6 +84,8 @@
 Kleo::KeyRequester::KeyRequester( unsigned int allowedKeys, bool multipleKeys,
 				  QWidget * parent, const char * name )
   : QWidget( parent, name ),
+    mOpenPGPBackend( 0 ),
+    mSMIMEBackend( 0 ),
     mMulti( multipleKeys ),
     mKeyUsage( allowedKeys ),
     mJobs( 0 ),

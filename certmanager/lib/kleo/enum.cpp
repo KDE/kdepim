@@ -1,5 +1,5 @@
-/*  -*- mode: C++; c-file-style: "gnu" -*-
-    kpgpbackendbase.h
+/*
+    kleo/enum.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -30,39 +30,54 @@
     your version.
 */
 
+#include "enum.h"
 
-#ifndef __KLEO_KPGPBACKENDBASE_H__
-#define __KLEO_KPGPBACKENDBASE_H__
+#include <klocale.h>
 
-#include "kleo/cryptobackend.h"
+#include <qstring.h>
 
-namespace Kleo {
-  class CryptoConfig;
-}
-class QString;
-class CryptPlugWrapper;
-
-namespace Kleo {
-
-  class KpgpBackendBase : public Kleo::CryptoBackend {
-  public:
-    KpgpBackendBase();
-    ~KpgpBackendBase();
-
-    CryptoConfig * config() const { return 0; }
-    Protocol * openpgp() const;
-    Protocol * smime() const { return 0; }
-
-    bool supportsOpenPGP() const { return true; }
-    bool supportsSMIME() const { return false; }
-
-    bool checkForOpenPGP( QString * reason=0 ) const;
-    bool checkForSMIME( QString * reason=0 ) const;
-  private:
-    mutable CryptPlugWrapper * mOpenPGPProtocol;
+const char * Kleo::cryptoMessageFormatToString( Kleo::CryptoMessageFormat f ) {
+  switch ( f ) {
+  default:
+  case AutoFormat:
+    return "auto";
+  case InlineOpenPGPFormat:
+    return "inline openpgp";
+  case OpenPGPMIMEFormat:
+    return "openpgp/mime";
+  case SMIMEFormat:
+    return "s/mime";
+  case SMIMEOpaqueFormat:
+    return "s/mime opaque";
   };
-
 }
 
+QString Kleo::cryptoMessageFormatToLabel( Kleo::CryptoMessageFormat f ) {
+  switch ( f ) {
+  default:
+    return QString::null;
+  case AutoFormat:
+    return i18n("Auto");
+  case InlineOpenPGPFormat:
+    return i18n("Inline OpenPGP (deprecated)");
+  case OpenPGPMIMEFormat:
+    return i18n("OpenPGP/MIME");
+  case SMIMEFormat:
+    return i18n("S/MIME");
+  case SMIMEOpaqueFormat:
+    return i18n("S/MIME opaque");
+  }
+}
 
-#endif // __KLEO_KPGPBACKENDBASE_H__
+Kleo::CryptoMessageFormat Kleo::stringToCryptoMessageFormat( const QString & s ) {
+  const QString t = s.lower();
+  if ( t == "inline openpgp" )
+    return InlineOpenPGPFormat;
+  if ( t == "openpgp/mime" )
+    return OpenPGPMIMEFormat;
+  if ( t == "s/mime" )
+    return SMIMEFormat;
+  if ( t == "s/mime opaque" )
+    return SMIMEOpaqueFormat;
+  return AutoFormat;
+}

@@ -62,8 +62,12 @@ Kleo::QGpgMEBackend::~QGpgMEBackend() {
   delete mSMIMEProtocol; mSMIMEProtocol = 0;
 }
 
+QString Kleo::QGpgMEBackend::name() const {
+  return "gpgme";
+}
+
 QString Kleo::QGpgMEBackend::displayName() const {
-  return "GpgME";
+  return i18n( "GpgME" );
 }
 
 Kleo::CryptoConfig * Kleo::QGpgMEBackend::config() const {
@@ -113,4 +117,3 @@ Kleo::CryptoBackend::Protocol * Kleo::QGpgMEBackend::smime() const {
       mSMIMEProtocol = new CryptPlugWrapper( "gpgsm", "smime" );
   return mSMIMEProtocol;
 }
-

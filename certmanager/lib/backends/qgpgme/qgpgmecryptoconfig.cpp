@@ -179,6 +179,10 @@ void QGpgMECryptoConfigComponent::runGpgConf()
 
   if( rc != 0 ) // Can it really be non-0, when gpg-config --list-components worked?
     kdWarning(5150) << k_funcinfo << ":" << strerror( rc ) << endl;
+  else {
+    if ( mCurrentGroup && !mCurrentGroup->mEntries.isEmpty() ) // only add non-empty groups
+      mGroups.insert( mCurrentGroupName, mCurrentGroup );
+  }
 }
 
 void QGpgMECryptoConfigComponent::slotCollectStdOut( KProcIO* proc )
@@ -216,8 +220,6 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut( KProcIO* proc )
       //kdWarning(5150) << "Parse error on gpgconf --list-options output: " << line << endl;
     }
   }
-  if ( mCurrentGroup && !mCurrentGroup->mEntries.isEmpty() ) // only add non-empty groups
-    mGroups.insert( mCurrentGroupName, mCurrentGroup );
 }
 
 QStringList QGpgMECryptoConfigComponent::groupList() const

@@ -1,5 +1,5 @@
-/*  -*- mode: C++; c-file-style: "gnu" -*-
-    kpgpbackendbase.h
+/*
+    kleo/enum.h
 
     This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2004 Klarälvdalens Datakonsult AB
@@ -30,39 +30,42 @@
     your version.
 */
 
+#ifndef __KLEO_ENUM_H__
+#define __KLEO_ENUM_H__
 
-#ifndef __KLEO_KPGPBACKENDBASE_H__
-#define __KLEO_KPGPBACKENDBASE_H__
-
-#include "kleo/cryptobackend.h"
-
-namespace Kleo {
-  class CryptoConfig;
-}
 class QString;
-class CryptPlugWrapper;
 
 namespace Kleo {
 
-  class KpgpBackendBase : public Kleo::CryptoBackend {
-  public:
-    KpgpBackendBase();
-    ~KpgpBackendBase();
+  enum CryptoMessageFormat {
+    AutoFormat = -1,
+    InlineOpenPGPFormat = 0,
+    OpenPGPMIMEFormat = 1,
+    SMIMEFormat = 2,
+    SMIMEOpaqueFormat = 3
+  };
 
-    CryptoConfig * config() const { return 0; }
-    Protocol * openpgp() const;
-    Protocol * smime() const { return 0; }
+  QString cryptoMessageFormatToLabel( CryptoMessageFormat f );
 
-    bool supportsOpenPGP() const { return true; }
-    bool supportsSMIME() const { return false; }
+  const char * cryptoMessageFormatToString( CryptoMessageFormat f );
+  CryptoMessageFormat stringToCryptoMessageFormat( const QString & s );
 
-    bool checkForOpenPGP( QString * reason=0 ) const;
-    bool checkForSMIME( QString * reason=0 ) const;
-  private:
-    mutable CryptPlugWrapper * mOpenPGPProtocol;
+  enum EncryptionAction {
+    Conflict = -1,
+    DoNotEncrypt = 0,
+    DoEncrypt = 1,
+    AskForApproval = 2
+  };
+
+  enum EncryptionPreference {
+    UnknownPreference,
+    NeverEncrypt,
+    AlwaysEncrypt,
+    AlwaysEncryptIfPossible,
+    AlwaysAskForEncryption,
+    AskWheneverPossible
   };
 
 }
 
-
-#endif // __KLEO_KPGPBACKENDBASE_H__
+#endif // __KLEO_CRYPTOBACKEND_H__

@@ -122,8 +122,8 @@ static const struct {
     SLOT(slotEmitReturnPressed(QListViewItem*)) },
   { SIGNAL(selectionChanged(QListViewItem*)),
     SLOT(slotEmitSelectionChanged(QListViewItem*)) },
-  { SIGNAL(contextMenuRequested(QListViewItem*,const QPoint&,int)),
-    SLOT(slotEmitContextMenuRequested(QListViewItem*,const QPoint&,int)) },
+  { SIGNAL(contextMenu(KListView*, QListViewItem*,const QPoint&)),
+    SLOT(slotEmitContextMenu(KListView*, QListViewItem*,const QPoint&)) },
 };
 static const int numSignalReplacements = sizeof signalReplacements / sizeof *signalReplacements;
 
@@ -223,9 +223,9 @@ void Kleo::KeyListView::slotEmitSelectionChanged( QListViewItem * item ) {
     emit selectionChanged( static_cast<KeyListViewItem*>( item ) );
 }
 
-void Kleo::KeyListView::slotEmitContextMenuRequested( QListViewItem * item, const QPoint & p, int col ) {
+void Kleo::KeyListView::slotEmitContextMenu( KListView*, QListViewItem * item, const QPoint & p ) {
   if ( !item || ( item->rtti() & KeyListViewItem::RTTI_MASK ) == KeyListViewItem::RTTI )
-    emit contextMenuRequested( static_cast<KeyListViewItem*>( item ), p, col );
+    emit contextMenu( static_cast<KeyListViewItem*>( item ), p );
 }
 
 //

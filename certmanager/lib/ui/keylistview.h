@@ -182,7 +182,7 @@ namespace Kleo {
   public:
     class ColumnStrategy;
     class DisplayStrategy;
-    
+
 
     KeyListView( const ColumnStrategy * strategy,
 		 const DisplayStrategy * display=0,
@@ -197,7 +197,7 @@ namespace Kleo {
     void doubleClicked( Kleo::KeyListViewItem*, const QPoint&, int );
     void returnPressed( Kleo::KeyListViewItem* );
     void selectionChanged( Kleo::KeyListViewItem* );
-    void contextMenuRequested( Kleo::KeyListViewItem*, const QPoint&, int );
+    void contextMenu( Kleo::KeyListViewItem*, const QPoint& );
 
   public slots:
     virtual void slotAddKey( const GpgME::Key & key );
@@ -210,7 +210,7 @@ namespace Kleo {
     void slotEmitDoubleClicked( QListViewItem*, const QPoint&, int );
     void slotEmitReturnPressed( QListViewItem* );
     void slotEmitSelectionChanged( QListViewItem* );
-    void slotEmitContextMenuRequested( QListViewItem*, const QPoint&, int );
+    void slotEmitContextMenu( KListView*, QListViewItem*, const QPoint& );
     void slotUpdateTimeout();
 
   public:
@@ -259,14 +259,14 @@ namespace Kleo {
     virtual int signatureCompare( const GpgME::UserID::Signature & sig1, const GpgME::UserID::Signature & sig2, const int column ) const;
   };
 
-  class KeyListView::DisplayStrategy { 
+  class KeyListView::DisplayStrategy {
   public:
     virtual ~DisplayStrategy();
     //font
-    virtual QFont keyFont( const GpgME::Key &, const QFont & ) const; 
-    virtual QFont subkeyFont( const GpgME::Subkey &, const QFont & ) const; 
-    virtual QFont useridFont( const GpgME::UserID &, const QFont &  ) const; 
-    virtual QFont signatureFont( const GpgME::UserID::Signature & , const QFont & ) const; 
+    virtual QFont keyFont( const GpgME::Key &, const QFont & ) const;
+    virtual QFont subkeyFont( const GpgME::Subkey &, const QFont & ) const;
+    virtual QFont useridFont( const GpgME::UserID &, const QFont &  ) const;
+    virtual QFont signatureFont( const GpgME::UserID::Signature & , const QFont & ) const;
     //foreground
     virtual QColor keyForeground( const GpgME::Key & , const QColor & ) const;
     virtual QColor subkeyForeground( const GpgME::Subkey &, const QColor &  ) const;

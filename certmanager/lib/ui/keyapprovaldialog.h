@@ -37,6 +37,8 @@
 #ifndef __KLEO_KEYAPPROVALDIALOG_H__
 #define __KLEO_KEYAPPROVALDIALOG_H__
 
+#include <kleo/enum.h>
+
 #include <kdialogbase.h>
 
 #include <kpgpkey.h> // for EncryptPref
@@ -56,11 +58,14 @@ namespace Kleo {
     Q_OBJECT
   public:
     struct Item {
-      Item( const QString & a, const std::vector<GpgME::Key> & k, Kpgp::EncryptPref p )
-	: address( a ), keys( k ), pref( p ) {}
+      Item() : pref( UnknownPreference ), format( AutoFormat ) {}
+      Item( const QString & a, const std::vector<GpgME::Key> & k,
+	    EncryptionPreference p=UnknownPreference, CryptoMessageFormat f=AutoFormat )
+	: address( a ), keys( k ), pref( p ), format( f ) {}
       QString address;
       std::vector<GpgME::Key> keys;
-      Kpgp::EncryptPref pref;
+      EncryptionPreference pref;
+      CryptoMessageFormat format; // unused by this dialog
     };
 
     KeyApprovalDialog( const std::vector<Item> & recipients,

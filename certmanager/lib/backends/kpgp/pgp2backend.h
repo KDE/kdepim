@@ -42,6 +42,7 @@ namespace Kleo {
 
   class PGP2Backend : public KpgpBackendBase {
   public:
+    QString name() const;
     QString displayName() const;
   };
 

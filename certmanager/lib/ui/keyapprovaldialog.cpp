@@ -61,26 +61,26 @@
 
 #include <assert.h>
 
-static Kpgp::EncryptPref cb2pref( int i ) {
+static Kleo::EncryptionPreference cb2pref( int i ) {
   switch ( i ) {
   default:
-  case 0: return Kpgp::UnknownEncryptPref;
-  case 1: return Kpgp::NeverEncrypt;
-  case 2: return Kpgp::AlwaysEncrypt;
-  case 3: return Kpgp::AlwaysEncryptIfPossible;
-  case 4: return Kpgp::AlwaysAskForEncryption;
-  case 5: return Kpgp::AskWheneverPossible;
+  case 0: return Kleo::UnknownPreference;
+  case 1: return Kleo::NeverEncrypt;
+  case 2: return Kleo::AlwaysEncrypt;
+  case 3: return Kleo::AlwaysEncryptIfPossible;
+  case 4: return Kleo::AlwaysAskForEncryption;
+  case 5: return Kleo::AskWheneverPossible;
   }
 }
 
-static int pref2cb( Kpgp::EncryptPref p ) {
+static int pref2cb( Kleo::EncryptionPreference p ) {
   switch ( p ) {
   default:                            return 0;
-  case Kpgp::NeverEncrypt:            return 1;
-  case Kpgp::AlwaysEncrypt:           return 2;
-  case Kpgp::AlwaysEncryptIfPossible: return 3;
-  case Kpgp::AlwaysAskForEncryption:  return 4;
-  case Kpgp::AskWheneverPossible:     return 5;
+  case Kleo::NeverEncrypt:            return 1;
+  case Kleo::AlwaysEncrypt:           return 2;
+  case Kleo::AlwaysEncryptIfPossible: return 3;
+  case Kleo::AlwaysAskForEncryption:  return 4;
+  case Kleo::AskWheneverPossible:     return 5;
   }
 }
 

@@ -84,7 +84,7 @@
 #include <assert.h>
 
 static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
-  
+
   if ( keyUsage & Kleo::KeySelectionDialog::ValidKeys )
     if ( key.isInvalid() )
       qDebug( "key is invalid - ignoring" );
@@ -370,13 +370,13 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
     connect( mCheckSelectionTimer, SIGNAL(timeout()),
              SLOT(slotCheckSelection()) );
   connectSignals();
-  
+
   connect( mKeyListView,
 	   SIGNAL(doubleClicked(Kleo::KeyListViewItem*,const QPoint&,int)),
 	   SLOT(accept()) );
   connect( mKeyListView,
-	   SIGNAL(contextMenuRequested(Kleo::KeyListViewItem*,const QPoint&,int)),
-           SLOT(slotRMB(Kleo::KeyListViewItem*,const QPoint&,int)) );
+	   SIGNAL(contextMenu(Kleo::KeyListViewItem*,const QPoint&)),
+           SLOT(slotRMB(Kleo::KeyListViewItem*,const QPoint&)) );
 
   setButtonText( KDialogBase::Default, i18n("&Reread Keys") );
   connect( this, SIGNAL(defaultClicked()),
@@ -626,7 +626,7 @@ bool Kleo::KeySelectionDialog::rememberSelection() const {
   return mRememberCB && mRememberCB->isChecked() ;
 }
 
-void Kleo::KeySelectionDialog::slotRMB( Kleo::KeyListViewItem * item, const QPoint & p, int ) {
+void Kleo::KeySelectionDialog::slotRMB( Kleo::KeyListViewItem * item, const QPoint & p ) {
   if ( !item ) return;
 
   mCurrentContextMenuItem = item;

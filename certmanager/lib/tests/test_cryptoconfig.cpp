@@ -91,12 +91,14 @@ int main( int argc, char** argv ) {
             break;
           }
         else // lists
+        {
           switch( entry->argType() ) {
           case Kleo::CryptoConfigEntry::ArgType_None: {
             cout << " set " << entry->numberOfTimesSet() << " times";
             break;
           }
           case Kleo::CryptoConfigEntry::ArgType_Int: {
+            assert( entry->isOptional() ); // empty lists must be allowed (see issue121)
             QValueList<int> lst = entry->intValueList();
             QString str;
             for( QValueList<int>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
@@ -106,6 +108,7 @@ int main( int argc, char** argv ) {
             break;
           }
           case Kleo::CryptoConfigEntry::ArgType_UInt: {
+            assert( entry->isOptional() ); // empty lists must be allowed (see issue121)
             QValueList<uint> lst = entry->uintValueList();
             QString str;
             for( QValueList<uint>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
@@ -116,6 +119,7 @@ int main( int argc, char** argv ) {
           }
           case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
           case Kleo::CryptoConfigEntry::ArgType_URL: {
+              assert( entry->isOptional() ); // empty lists must be allowed (see issue121)
               KURL::List urls = entry->urlValueList();
               cout << " url values=" << urls.toStringList().join(" ").local8Bit() << "\n    ";
           }
@@ -123,12 +127,14 @@ int main( int argc, char** argv ) {
           case Kleo::CryptoConfigEntry::ArgType_Path:
             // fallthrough
           case Kleo::CryptoConfigEntry::ArgType_String: {
+            assert( entry->isOptional() ); // empty lists must be allowed (see issue121)
             QStringList lst = entry->stringValueList();
             cout << " string values=" << lst.join(" ").local8Bit();
             break;
           }
           }
-        cout << endl;
+          cout << endl;
+        }
       }
       // ...
     }
@@ -299,11 +305,13 @@ int main( int argc, char** argv ) {
       KURL::List lst;
       // We use non-empty paths to workaround a bug in KURL (kdelibs-3.2)
       lst << KURL( "ldap://a:389/?b" );
-      lst << KURL( "ldap://foo:389/?a:b" ); // the query contains a litteral ':' (KURL supports this)
-      lst << KURL( "ldap://server:389/?a%3db,c%3dDE" ); // the query contains a litteral ','
+      // Test with query containing a litteral ':' (KURL supports this)
+      // and a ' ' (KURL will escape it, see issue119)
+      lst << KURL( "ldap://foo:389/?a:b c" );
+      lst << KURL( "ldap://server:389/?a%3db,c=DE" ); // the query contains a litteral ','
       //cout << " trying to set: " << lst.toStringList().join(", ").local8Bit() << endl;
       assert( lst[0].query() == "?b" );
-      assert( lst[1].query() == "?a:b" );
+      assert( lst[1].query() == "?a:b%20c" ); // see, the space got escaped
       entry->setURLValueList( lst );
       assert( entry->isDirty() );
       config->sync( true );
@@ -319,6 +327,16 @@ int main( int argc, char** argv ) {
       assert( entry );
       assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_LDAPURL );
       assert( entry->isList() );
+      // Get raw a:b:c:d:e form
+      QStringList asStringList = entry->stringValueList();
+      assert( asStringList.count() == 3 );
+      cout << "asStringList[0]=" << asStringList[0].local8Bit() << endl;
+      cout << "asStringList[1]=" << asStringList[1].local8Bit() << endl;
+      cout << "asStringList[2]=" << asStringList[2].local8Bit() << endl;
+      assert( asStringList[0] == "a:389:::b" );
+      assert( asStringList[1] == "foo:389:::a%3ab c" ); // the space must be decoded (issue119)
+      assert( asStringList[2] == "server:389:::a=b,c=DE" ); // all decoded
+      // Get KURL form
       KURL::List newlst = entry->urlValueList();
       cout << "URL list now: " << newlst.toStringList().join(", ").local8Bit() << endl;
       assert( newlst.count() == 3 );
@@ -326,7 +344,7 @@ int main( int argc, char** argv ) {
       //cout << "lst[0]=" << lst[0].url().local8Bit() << endl;
       assert( newlst[0] == lst[0] );
       assert( newlst[1] == lst[1] );
-      assert( newlst[2] == lst[2] );
+      assert( newlst[2].url() == "ldap://server:389/?a=b,c=DE" ); // != lst[2] due to the encoded =
 
       // Reset old value
       entry->setURLValueList( val );

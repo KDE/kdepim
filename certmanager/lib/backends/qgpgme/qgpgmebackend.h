@@ -51,6 +51,7 @@ namespace Kleo {
     QGpgMEBackend();
     ~QGpgMEBackend();
 
+    QString name() const;
     QString displayName() const;
 
     CryptoConfig * config() const;

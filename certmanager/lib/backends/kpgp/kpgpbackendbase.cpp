@@ -30,6 +30,12 @@
     your version.
 */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include "kpgpbackendbase.h"
+
 #include "pgp2backend.h"
 #include "pgp5backend.h"
 #include "pgp6backend.h"
@@ -39,16 +45,49 @@
 
 #include <qstring.h>
 
+#include "cryptplugwrapper.h"
+
+// Define this to enable the checkboxes in backendconfigwidget, for testing
+// Remove when this backend is correctly implemented
+// #define IMPL_HACK
+
+Kleo::KpgpBackendBase::KpgpBackendBase()
+  : Kleo::CryptoBackend(),
+    mOpenPGPProtocol( 0 )
+{
+}
+
+Kleo::KpgpBackendBase::~KpgpBackendBase()
+{
+  delete mOpenPGPProtocol; mOpenPGPProtocol = 0;
+}
+
+QString Kleo::GPG1Backend::name() const {
+  return "Kpgp/gpg1";
+}
+
 QString Kleo::GPG1Backend::displayName() const {
   return i18n("Kpgp/gpg");
+}
+
+QString Kleo::PGP2Backend::name() const {
+  return "Kpgp/pgp v2";
 }
 
 QString Kleo::PGP2Backend::displayName() const {
   return i18n("Kpgp/pgp v2");
 }
 
+QString Kleo::PGP5Backend::name() const {
+  return "Kpgp/pgp v5";
+}
+
 QString Kleo::PGP5Backend::displayName() const {
   return i18n("Kpgp/pgp v5");
+}
+
+QString Kleo::PGP6Backend::name() const {
+  return "Kpgp/pgp v6";
 }
 
 QString Kleo::PGP6Backend::displayName() const {
@@ -64,11 +103,26 @@ static const QString notSupported() {
 }
 
 bool Kleo::KpgpBackendBase::checkForOpenPGP( QString * reason ) const {
+#ifdef IMPL_HACK
+  return true;
+#else
   if ( reason ) *reason = notYetImplemented();
   return false;
+#endif
 }
 
 bool Kleo::KpgpBackendBase::checkForSMIME( QString * reason ) const {
   if ( reason ) *reason = notSupported();
   return false;
 }
+
+Kleo::CryptoBackend::Protocol * Kleo::KpgpBackendBase::openpgp() const {
+#ifdef IMPL_HACK
+  if ( !mOpenPGPProtocol )
+    if ( checkForOpenPGP() )
+      //############### HACK
+      mOpenPGPProtocol = new CryptPlugWrapper( "gpg", "openpgp" );
+#endif
+  return mOpenPGPProtocol;
+}
+

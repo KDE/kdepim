@@ -84,12 +84,13 @@
 
 // Qt
 #include <qfontmetrics.h>
+#include <qpopupmenu.h>
 
 // other
 #include <assert.h>
 
 namespace {
-  //PENDING Michel (testing my code) 
+  //PENDING Michel (testing my code)
   class DisplayStrategy : public Kleo::KeyListView::DisplayStrategy{
   public:
     ~DisplayStrategy() {}
@@ -98,7 +99,7 @@ namespace {
       return key.canCertify() ? Qt::red : c ;
     }
   };
-  
+
   // end of PENDING
 
   class ColumnStrategy : public Kleo::KeyListView::ColumnStrategy {
@@ -164,11 +165,13 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
   setCentralWidget( mKeyListView );
 
   connect( mKeyListView, SIGNAL(doubleClicked(Kleo::KeyListViewItem*,const QPoint&,int)),
-	   SLOT(slotListViewItemActivated(Kleo::KeyListViewItem*)) );
+	   SLOT(slotViewDetails(Kleo::KeyListViewItem*)) );
   connect( mKeyListView, SIGNAL(returnPressed(Kleo::KeyListViewItem*)),
-	   SLOT(slotListViewItemActivated(Kleo::KeyListViewItem*)) );
+	   SLOT(slotViewDetails(Kleo::KeyListViewItem*)) );
   connect( mKeyListView, SIGNAL(selectionChanged()),
 	   SLOT(slotSelectionChanged()) );
+  connect( mKeyListView, SIGNAL(contextMenu(Kleo::KeyListViewItem*, const QPoint&)),
+           SLOT(slotContextMenu(Kleo::KeyListViewItem*, const QPoint&)) );
 
   mLineEditAction->setText(query);
   if ( !mRemote || !query.isEmpty() )
@@ -194,7 +197,7 @@ static inline void connectEnableOperationSignal( QObject * s, QObject * d ) {
   QObject::connect( s, SIGNAL(enableOperations(bool)),
 		    d, SLOT(setEnabled(bool)) );
 }
-  
+
 
 void CertManager::createActions() {
   KAction * action = 0;
@@ -209,29 +212,29 @@ void CertManager::createActions() {
 			this, SIGNAL(stopOperations()),
 			actionCollection(), "view_stop_operations" );
   action->setEnabled( false );
-  
+
   (void)   new KAction( i18n("New Certificate..."), "filenew", 0,
 			this, SLOT(newCertificate()),
 			actionCollection(), "file_new_certificate" );
 
-#ifndef NOT_IMPLEMENTED_ANYWAY
-  action = new KAction( i18n("Revoke Certificate"), 0,
-			this, SLOT(revokeCertificate()),
-			actionCollection(), "edit_revoke_certificate" );
-  action->setEnabled( false );
-  connectEnableOperationSignal( this, action );
+#ifdef NOT_IMPLEMENTED_ANYWAY
+  mRevokeCertificateAction = new KAction( i18n("Revoke Certificate"), 0,
+                                          this, SLOT(revokeCertificate()),
+                                          actionCollection(), "edit_revoke_certificate" );
+  mRevokeCertificateAction->setEnabled( false );
+  connectEnableOperationSignal( this, mRevokeCertificateAction );
 
-  action = new KAction( i18n("Extend Certificate"), 0,
-			this, SLOT(extendCertificate()),
-			actionCollection(), "edit_extend_certificate" );
-  action->setEnabled( false );
-  connectEnableOperationSignal( this, action );
+  mExtendCertificateAction = new KAction( i18n("Extend Certificate"), 0,
+                                          this, SLOT(extendCertificate()),
+                                          actionCollection(), "edit_extend_certificate" );
+  mExtendCertificateAction->setEnabled( false );
+  connectEnableOperationSignal( this, mExtendCertificateAction );
 #endif
 
-  action = new KAction( i18n("Delete Certificate"), "editdelete", Key_Delete,
-			this, SLOT(slotDeleteCertificate()),
-			actionCollection(), "edit_delete_certificate" );
-  connectEnableOperationSignal( this, action );
+  mDeleteCertificateAction = new KAction( i18n("Delete Certificate"), "editdelete", Key_Delete,
+                                    this, SLOT(slotDeleteCertificate()),
+                                    actionCollection(), "edit_delete_certificate" );
+  connectEnableOperationSignal( this, mDeleteCertificateAction );
 
   mImportCertFromFileAction = new KAction( i18n("Import Certificates..."), 0,
 					   this, SLOT(slotImportCertFromFile()),
@@ -252,6 +255,11 @@ void CertManager::createActions() {
 			this, SLOT(slotExportSecretKey()),
 			actionCollection(), "file_export_secret_keys" );
   connectEnableOperationSignal( this, action );
+
+  mViewCertDetailsAction = new KAction( i18n("View Certificate Details..."), 0, 0,
+                                        this, SLOT(slotViewDetails()), actionCollection(),
+                                        "view_certificate_details" );
+  mViewCertDetailsAction->setEnabled( false ); // needs a selection
 
   const QString dirmngr = KStandardDirs::findExe( "gpgsm" );
   mDirMngrFound = !dirmngr.isEmpty();
@@ -399,6 +407,13 @@ void CertManager::slotKeyListResult( const GpgME::KeyListResult & res ) {
 
   mLineEditAction->focusAll();
   disconnectJobFromStatusBarProgress( res.error() );
+}
+
+void CertManager::slotContextMenu(Kleo::KeyListViewItem*, const QPoint& point) {
+  QPopupMenu *popup = static_cast<QPopupMenu*>(factory()->container("listview_popup",this));
+  if ( popup ) {
+    popup->exec( point );
+  }
 }
 
 /**
@@ -738,8 +753,7 @@ void CertManager::slotDeleteResult( const GpgME::Error & err, const GpgME::Key &
   disconnectJobFromStatusBarProgress( err );
 }
 
-
-void CertManager::slotListViewItemActivated( Kleo::KeyListViewItem * item ) {
+void CertManager::slotViewDetails( Kleo::KeyListViewItem * item ) {
   if ( !item || item->key().isNull() )
     return;
 
@@ -754,10 +768,27 @@ void CertManager::slotListViewItemActivated( Kleo::KeyListViewItem * item ) {
   dialog->show();
 }
 
+void CertManager::slotViewDetails()
+{
+  QPtrList<Kleo::KeyListViewItem> items = mKeyListView->selectedItems();
+  if ( items.isEmpty() )
+    return;
+
+  // selectedItem() doesn't work in Extended mode.
+  // But we only want to show the details of one item...
+  slotViewDetails( items.first() );
+}
+
 void CertManager::slotSelectionChanged()
 {
   bool b = mKeyListView->hasSelection();
   mExportCertificateAction->setEnabled( b );
+  mViewCertDetailsAction->setEnabled( b );
+  mDeleteCertificateAction->setEnabled( b );
+#ifdef NOT_IMPLEMENTED_ANYWAY
+  mRevokeCertificateAction->setEnabled( b );
+  mExtendCertificateAction->setEnabled( b );
+#endif
 }
 
 void CertManager::slotExportCertificate() {

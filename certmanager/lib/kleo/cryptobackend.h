@@ -60,8 +60,9 @@ namespace Kleo {
 
     virtual ~CryptoBackend() {}
 
+    virtual QString name() const = 0;
     virtual QString displayName() const = 0;
-    
+
     virtual bool checkForOpenPGP( QString * reason=0 ) const = 0;
     virtual bool checkForSMIME( QString * reason=0 ) const = 0;
 

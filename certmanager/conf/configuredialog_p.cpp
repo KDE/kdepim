@@ -37,6 +37,76 @@
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kdebug.h>
+#include <kconfig.h>
+
+// For sync'ing kabldaprc
+class KABSynchronizer
+{
+public:
+  KABSynchronizer()
+    : mConfig( "kabldaprc" ) {
+    mConfig.setGroup( "LDAP" );
+  }
+
+  KURL::List readCurrentList() const {
+
+    KURL::List lst;
+    // stolen from kabc/ldapclient.cpp
+    const uint numHosts = mConfig.readUnsignedNumEntry( "NumSelectedHosts" );
+    for ( uint j = 0; j < numHosts; j++ ) {
+      const QString num = QString::number( j );
+
+      KURL url;
+      url.setProtocol( "ldap" );
+      url.setPath( "/" ); // workaround KURL parsing bug
+      const QString host = mConfig.readEntry( QString( "SelectedHost" ) + num ).stripWhiteSpace();
+      url.setHost( host );
+
+      const int port = mConfig.readUnsignedNumEntry( QString( "SelectedPort" ) + num );
+      if ( port != 0 )
+        url.setPort( port );
+
+      const QString base = mConfig.readEntry( QString( "SelectedBase" ) + num ).stripWhiteSpace();
+      url.setQuery( base );
+
+      const QString bindDN = mConfig.readEntry( QString( "SelectedBind" ) + num ).stripWhiteSpace();
+      url.setUser( bindDN );
+
+      const QString pwdBindDN = mConfig.readEntry( QString( "SelectedPwdBind" ) + num ).stripWhiteSpace();
+      url.setPass( pwdBindDN );
+      lst.append( url );
+    }
+    return lst;
+  }
+
+  void writeList( const KURL::List& lst ) {
+
+    mConfig.writeEntry( "NumSelectedHosts", lst.count() );
+
+    KURL::List::const_iterator it = lst.begin();
+    KURL::List::const_iterator end = lst.end();
+    unsigned j = 0;
+    for( ; it != end; ++it, ++j ) {
+      const QString num = QString::number( j );
+      KURL url = *it;
+
+      Q_ASSERT( url.protocol() == "ldap" );
+      mConfig.writeEntry( QString( "SelectedHost" ) + num, url.host() );
+      mConfig.writeEntry( QString( "SelectedPort" ) + num, url.port() );
+
+      // KURL automatically encoded the query (e.g. for spaces inside it),
+      // so decode it before writing it out
+      const QString base = KURL::decode_string( url.query().mid(1) );
+      mConfig.writeEntry( QString( "SelectedBase" ) + num, base );
+      mConfig.writeEntry( QString( "SelectedBind" ) + num, url.user() );
+      mConfig.writeEntry( QString( "SelectedPwdBind" ) + num, url.pass() );
+    }
+    mConfig.sync();
+  }
+
+private:
+  KConfig mConfig;
+};
 
 static const char s_dirserv_componentName[] = "dirmngr";
 static const char s_dirserv_groupName[] = "LDAP";
@@ -75,6 +145,21 @@ void DirectoryServicesConfigurationPage::save()
 {
   mWidget->save();
   mConfig->sync( true );
+
+  // Also write the LDAP URLs to kabldaprc so that they are used by kaddressbook
+  KABSynchronizer sync;
+  KURL::List toAdd = mWidget->urlList();
+  KURL::List currentList = sync.readCurrentList();
+
+  KURL::List::const_iterator it = toAdd.begin();
+  KURL::List::const_iterator end = toAdd.end();
+  for( ; it != end; ++it ) {
+    // check if the URL is already in currentList
+    if ( currentList.find( *it ) == currentList.end() )
+      // if not, add it
+      currentList.append( *it );
+  }
+  sync.writeList( currentList );
 }
 
 void DirectoryServicesConfigurationPage::defaults()

@@ -5,6 +5,7 @@ INCLUDES = -I$(top_srcdir)/libkdenetwork \
 noinst_LTLIBRARIES = libkleopatra_core.la
 
 libkleopatra_core_la_SOURCES = \
+	enum.cpp \
 	dn.cpp \
 	job.cpp \
 	\
@@ -15,6 +16,7 @@ libkleopatra_core_la_SOURCES = \
 
 kleodir = $(includedir)/kleo
 kleo_HEADERS = \
+	enum.h \
 	cryptobackend.h \
 	cryptoconfig.h \
 	dn.h \

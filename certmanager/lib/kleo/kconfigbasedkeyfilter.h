@@ -64,10 +64,10 @@ namespace Kleo {
     QString mName;
     QString mIcon;
     unsigned int mSpecificity;
-    bool mItalic : 1;
-    bool mBold : 1;
-    bool mStrikeOut : 1;
-    bool mUseFullFont : 1;
+    bool mItalic;
+    bool mBold;
+    bool mStrikeOut;
+    bool mUseFullFont;
     QFont mFont;
 
     enum TriState {
@@ -75,16 +75,16 @@ namespace Kleo {
       Set = 1,
       NotSet = 2
     };
-    TriState mRevoked : 2;
-    TriState mExpired : 2;
-    TriState mDisabled : 2;
-    TriState mCanEncrypt : 2;
-    TriState mCanSign : 2;
-    TriState mCanCertify : 2;
-    TriState mCanAuthenticate : 2;
-    TriState mHasSecret : 2;
-    TriState mIsOpenPGP : 2;
-    TriState mWasValidated : 2;
+    TriState mRevoked;
+    TriState mExpired;
+    TriState mDisabled;
+    TriState mCanEncrypt;
+    TriState mCanSign;
+    TriState mCanCertify;
+    TriState mCanAuthenticate;
+    TriState mHasSecret;
+    TriState mIsOpenPGP;
+    TriState mWasValidated;
     enum LevelState {
       LevelDoesNotMatter = 0,
       Is = 1,
@@ -92,9 +92,9 @@ namespace Kleo {
       IsAtLeast = 3,
       IsAtMost = 4,
     };
-    LevelState mOwnerTrust : 3;
+    LevelState mOwnerTrust;
     GpgME::Key::OwnerTrust mOwnerTrustReferenceLevel;
-    LevelState mValidity : 3;
+    LevelState mValidity;
     GpgME::UserID::Validity mValidityReferenceLevel;
   };
 

@@ -43,6 +43,7 @@ namespace Kleo {
 }
 
 class QWidget;
+class KConfig;
 
 namespace Kleo {
 
@@ -64,12 +65,29 @@ namespace Kleo {
 
     Kleo::BackendConfigWidget * configWidget( QWidget * parent=0, const char * name=0 ) const;
 
+    KConfig* configObject() const;
+
+    // The preferred backend for smime (can be 0) - currently unused
+    //const CryptoBackend* smimeBackend() const;
+    // The preferred backend for openpgp (can be 0) - currently unused
+    //const CryptoBackend* openpgpBackend() const;
+
+    // For BackendConfigWidget to save the configuration
+    // 0 means no backend selected.
+    void setSMIMEBackend( const CryptoBackend* backend );
+    void setOpenPGPBackend( const CryptoBackend* backend );
+
     void scanForBackends( QStringList * reasons=0 );
 
   protected:
     QValueVector<CryptoBackend*> mBackendList;
+    mutable KConfig* mConfigObject;
+    const CryptoBackend* mSMIMEBackend;
+    const CryptoBackend* mOpenPGPBackend;
 
   private:
+    const CryptoBackend * backendByName( const QString& name ) const;
+    void readConfig();
     CryptPlugFactory( const CryptPlugFactory & );
     void operator=( const CryptPlugFactory & );
 

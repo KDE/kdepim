@@ -94,7 +94,7 @@ namespace Kleo {
     /** Returns the key ID of the selected key in single selection mode.
         Otherwise it returns a null key. */
     const GpgME::Key & selectedKey() const;
- 
+
     QString fingerprint() const;
 
     /** Returns a list of selected key IDs. */
@@ -114,7 +114,7 @@ namespace Kleo {
     void slotSelectionChanged();
     void slotCheckSelection() { slotCheckSelection( 0 ); }
     void slotCheckSelection( Kleo::KeyListViewItem * );
-    void slotRMB( Kleo::KeyListViewItem *, const QPoint &, int );
+    void slotRMB( Kleo::KeyListViewItem *, const QPoint & );
     void slotRecheckKey();
     void slotOk();
     void slotCancel();

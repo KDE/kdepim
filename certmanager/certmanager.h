@@ -118,11 +118,13 @@ private slots:
 
     void slotViewCRLs();
 
-    void slotListViewItemActivated( Kleo::KeyListViewItem * item );
+    void slotViewDetails();
+    void slotViewDetails( Kleo::KeyListViewItem * item );
     void slotSelectionChanged();
 
     void slotEditKeybindings();
     void slotShowConfigurationDialog();
+    void slotContextMenu(Kleo::KeyListViewItem*, const QPoint& point);
 
 private:
     void createStatusBar();
@@ -152,6 +154,10 @@ private:
     KAction * mImportCertFromFileAction;
     KAction * mImportCRLFromFileAction;
     KAction * mExportCertificateAction;
+    KAction * mViewCertDetailsAction;
+    KAction * mDeleteCertificateAction;
+    KAction * mRevokeCertificateAction;
+    KAction * mExtendCertificateAction;
 
     QString mImportCRLTempFile;
     bool     mRemote;
