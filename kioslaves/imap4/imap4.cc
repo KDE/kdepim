@@ -180,7 +180,6 @@ IMAP4Protocol::IMAP4Protocol (const QCString & pool, const QCString & app, bool 
   cacheOutput = false;
   decodeContent = false;
   mTimeOfLastNoop = QDateTime();
-  mHierarchyDelim.clear();
 }
 
 IMAP4Protocol::~IMAP4Protocol ()
@@ -632,7 +631,6 @@ IMAP4Protocol::setHost (const QString & _host, int _port,
     myPort = _port;
     myUser = _user;
     myPass = _pass;
-    mHierarchyDelim.clear();
   }
 }
 
@@ -730,7 +728,8 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, ulong relay)
       }
 
       readBufferLen -= copyLen;
-      if (readBufferLen) memcpy(readBuffer, &readBuffer[copyLen], readBufferLen);
+      if (readBufferLen) 
+        memmove(readBuffer, &readBuffer[copyLen], readBufferLen);
       if (buffer[buffer.size() - 1] == '\n') return TRUE;
     }
     if (!isConnectionValid())
@@ -908,10 +907,14 @@ IMAP4Protocol::mkdir (const KURL & _url, int)
   }
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   parseURL(parentUrl, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
-  if ( newBox.isEmpty() )
+  if ( newBox.isEmpty() ) {
     newBox = aBox;
-  else if ( !aBox.isEmpty() )
-    newBox = aBox + aDelimiter + newBox;
+  } else if ( !aBox.isEmpty() ) {
+    if ( !aBox.endsWith( aDelimiter ) )
+      newBox = aBox + aDelimiter + newBox;
+    else
+      newBox = aBox + newBox;
+  }
   kdDebug(7116) << "IMAP4::mkdir - create " << newBox << endl;
   imapCommand *cmd = doCommand (imapCommand::clientCreate(newBox));
 
@@ -1175,6 +1178,7 @@ IMAP4Protocol::del (const KURL & _url, bool isFile)
  * Copy a mail: data = 'C' + srcURL (KURL) + destURL (KURL)
  * Capabilities: data = 'c'. Result shipped in infoMessage() signal
  * No-op: data = 'N'
+ * Namespace: data = 'n'. Result shipped in infoMessage() signal
  * Unsubscribe: data = 'U' + URL (KURL)
  * Subscribe: data = 'u' + URL (KURL)
  * Change the status: data = 'S' + URL (KURL) + Flags (QCString)
@@ -1196,6 +1200,7 @@ IMAP4Protocol::special (const QByteArray & aData)
   switch (tmp) {
   case 'C':
   {
+    // copy
     KURL src;
     KURL dest;
     stream >> src >> dest;
@@ -1204,14 +1209,24 @@ IMAP4Protocol::special (const QByteArray & aData)
   }
   case 'c':
   {
+    // capabilities
     infoMessage(imapCapabilities.join(" "));
     finished();
     break;
   }
   case 'N':
   {
+    // NOOP
     imapCommand *cmd = doCommand(imapCommand::clientNoop());
     completeQueue.removeRef (cmd);
+    finished();
+    break;
+  }
+  case 'n':
+  { 
+    // namespace
+    // separate the entries by , this should be save
+    infoMessage( imapNamespaces.join(",") );
     finished();
     break;
   }
@@ -1255,8 +1270,9 @@ IMAP4Protocol::special (const QByteArray & aData)
     finished();
     break;
   }
-  case 'A': // acl
+  case 'A': 
   {
+    // acl
     int cmd;
     stream >> cmd;
     if ( hasCapability( "ACL" ) ) {
@@ -1266,8 +1282,9 @@ IMAP4Protocol::special (const QByteArray & aData)
     }
     break;
   }
-  case 'M': // annotatemore
+  case 'M': 
   {
+    // annotatemore
     int cmd;
     stream >> cmd;
     if ( hasCapability( "ANNOTATEMORE" ) ) {
@@ -1277,8 +1294,9 @@ IMAP4Protocol::special (const QByteArray & aData)
     }
     break;
   }
-  case 'S': // status
+  case 'S': 
   {
+    // status
     KURL _url;
     QCString newFlags;
     stream >> _url >> newFlags;
@@ -1311,8 +1329,9 @@ IMAP4Protocol::special (const QByteArray & aData)
     finished();
     break;
   }
-  case 'E': // search
+  case 'E': 
   {
+    // search
     specialSearchCommand( stream );
     break;
   }
@@ -1528,9 +1547,9 @@ IMAP4Protocol::rename (const KURL & src, const KURL & dest, bool overwrite)
   QString sBox, sSequence, sLType, sSection, sValidity, sDelimiter, sInfo;
   QString dBox, dSequence, dLType, dSection, dValidity, dDelimiter, dInfo;
   enum IMAP_TYPE sType =
-    parseURL (src, sBox, sSection, sLType, sSequence, sValidity, sDelimiter, sInfo, false, false);
+    parseURL (src, sBox, sSection, sLType, sSequence, sValidity, sDelimiter, sInfo, false);
   enum IMAP_TYPE dType =
-    parseURL (dest, dBox, dSection, dLType, dSequence, dValidity, dDelimiter, dInfo, false, false);
+    parseURL (dest, dBox, dSection, dLType, dSequence, dValidity, dDelimiter, dInfo, false);
 
   if (dType == ITYPE_UNKNOWN)
   {
@@ -1773,7 +1792,7 @@ void IMAP4Protocol::closeConnection()
   setState(ISTATE_NO);
   completeQueue.clear();
   sentQueue.clear();
-  lastHandled = NULL;
+  lastHandled = 0;
   currentBox = QString::null;
   readBufferLen = 0;
 }
@@ -1906,6 +1925,29 @@ bool IMAP4Protocol::makeLogin ()
       error(KIO::ERR_COULD_NOT_LOGIN, i18n("SASL authentication is not compiled into kio_imap4."));
 #endif
     }
+    if ( hasCapability("NAMESPACE") )
+    {
+      // get all namespaces and save the namespace - delimiter association
+      cmd = doCommand( imapCommand::clientNamespace() );
+      if (cmd->result () == "OK")
+      {
+        kdDebug(7116) << "makeLogin - registered namespaces" << endl;
+      }
+      completeQueue.removeRef (cmd);
+    }
+    // get the default delimiter (empty listing)
+    cmd = doCommand( imapCommand::clientList("", "") );
+    if (cmd->result () == "OK")
+    {
+      QValueListIterator < imapList > it = listResponses.begin();
+      if ( it != listResponses.end() )
+      {
+        imapNamespaceDelimiter[QString::null] = (*it).hierarchyDelimiter();
+        kdDebug(7116) << "makeLogin - delimiter for empty ns='" << 
+          (*it).hierarchyDelimiter() << "'" << endl;
+      }
+    }
+    completeQueue.removeRef (cmd);
   }
 
   return getState() == ISTATE_LOGIN;
@@ -2145,39 +2187,39 @@ enum IMAP_TYPE
 IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
                          QString & _section, QString & _type, QString & _uid,
                          QString & _validity, QString & _hierarchyDelimiter,
-                         QString & _info, bool cache, bool maybePrefix)
+                         QString & _info, bool cache)
 {
   enum IMAP_TYPE retVal;
   retVal = ITYPE_UNKNOWN;
-  _hierarchyDelimiter = QString();
 
   imapParser::parseURL (_url, _box, _section, _type, _uid, _validity, _info);
 //  kdDebug(7116) << "URL: query - '" << KURL::decode_string(_url.query()) << "'" << endl;
 
+  // get the delimiter
+  QString myNamespace = namespaceForBox( _box );
+  kdDebug(7116) << "IMAP4::parseURL - namespace=" << myNamespace << endl;
+  if ( imapNamespaceDelimiter.contains(myNamespace) )
+  {
+    _hierarchyDelimiter = imapNamespaceDelimiter[myNamespace];
+    kdDebug(7116) << "IMAP4::parseURL - delimiter=" << _hierarchyDelimiter << endl;
+  }
+
   if (!_box.isEmpty ())
   {
-    kdDebug(7116) << "IMAP4::parseURL: box " << _box << endl;
-
-    // Hack for UW-IMAP news folders
-    if (_box.left(5) == "#news")
-    {
-      _hierarchyDelimiter = ".";
-      retVal = ITYPE_DIR_AND_BOX;
-    } else
+    kdDebug(7116) << "IMAP4::parseURL - box=" << _box << endl;
 
     if (makeLogin ())
     {
       if (getCurrentBox () != _box ||
           _type == "LIST" || _type == "LSUB" || _type == "LSUBNOCHECK")
       {
-        QString myNamespace = QString::null; // until namespace is supported
-        if (cache && mHierarchyDelim.contains(myNamespace))
+        if ( cache )
         {
-          _hierarchyDelimiter = mHierarchyDelim[myNamespace];
+          // assume a normal box
           retVal = ITYPE_DIR_AND_BOX;
-          kdDebug(7116) << "IMAP4::parseURL - got delimiter from cache:" << _hierarchyDelimiter << endl;
         } else
         {
+          // start a listing for the box to get the type
           imapCommand *cmd;
 
           cmd = doCommand (imapCommand::clientList ("", _box));
@@ -2189,9 +2231,8 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
               //kdDebug(7116) << "IMAP4::parseURL - checking " << _box << " to " << (*it).name() << endl;
               if (_box == (*it).name ())
               {
-                _hierarchyDelimiter = (*it).hierarchyDelimiter();
-                if (!mHierarchyDelim.contains(myNamespace))
-                  mHierarchyDelim[myNamespace] = _hierarchyDelimiter;
+                if ( !(*it).hierarchyDelimiter().isEmpty() )
+                  _hierarchyDelimiter = (*it).hierarchyDelimiter();
                 if ((*it).noSelect ())
                 {
                   retVal = ITYPE_DIR;
@@ -2206,11 +2247,9 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
                 }
               }
             }
-            // if we got no list response for the box it's probably some kind of prefix
-            // e.g. "#mh" (as in #70377)
-            if (maybePrefix && retVal == ITYPE_UNKNOWN) {
+            // if we got no list response for the box see if it's a prefix
+            if ( retVal == ITYPE_UNKNOWN && imapNamespaceDelimiter.contains(_box) )
               retVal = ITYPE_DIR;
-            }
           } else {
             kdDebug(7116) << "IMAP4::parseURL - got error for " << _box << endl;
           }
@@ -2225,32 +2264,15 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
     else
       kdDebug(7116) << "IMAP4::parseURL: no login!" << endl;
 
-  }
-  else
+  } 
+  else // empty box
   {
+    // the root is just a dir
     kdDebug(7116) << "IMAP4: parseURL: box [root]" << endl;
-    QString myNamespace = QString::null; // until namespace is supported
-    if (!mHierarchyDelim.contains(myNamespace))
-    {
-      // get the hierarchydelimiter (empty listing) and put it in the cache
-      imapCommand *cmd = doCommand (imapCommand::clientList ("", ""));
-      if (cmd->result () == "OK")
-      {
-        for (QValueListIterator < imapList > it = listResponses.begin ();
-             it != listResponses.end (); ++it)
-        {
-          _hierarchyDelimiter = (*it).hierarchyDelimiter();
-          mHierarchyDelim[myNamespace] = _hierarchyDelimiter;
-          kdDebug(7116) << "IMAP4: parseURL - got delimiter " <<
-            _hierarchyDelimiter << endl;
-        }
-      }
-      completeQueue.removeRef (cmd);
-    }
     retVal = ITYPE_DIR;
   }
 
-  //see if it is a real sequence or a simple uid
+  // see if it is a real sequence or a simple uid
   if (retVal == ITYPE_BOX || retVal == ITYPE_DIR_AND_BOX)
   {
     if (!_uid.isEmpty ())
@@ -2271,7 +2293,8 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
   if ( _hierarchyDelimiter.isEmpty() &&
        (_type == "LIST" || _type == "LSUB" || _type == "LSUBNOCHECK") )
   {
-    // try to reconstruct the delimiter from the URL
+    // this shouldn't happen but when the delimiter is really empty 
+    // we try to reconstruct it from the URL
     if (!_box.isEmpty())
     {
       int start = _url.path().findRev(_box);

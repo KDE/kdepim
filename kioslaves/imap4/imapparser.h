@@ -278,6 +278,8 @@ public:
   void parseAcl (parseString & result);
   /** @brief parse a ANNOTATION line */
   void parseAnnotation (parseString & result);
+  /** @brief parse a NAMESPACE line */
+  void parseNamespace (parseString & result);
 
   /**
    * parses the results of a fetch command
@@ -368,7 +370,7 @@ public:
   /** parse one number using parseOneWord */
   static bool parseOneNumber (parseString & inWords, ulong & num);
 
-  /** extract the box,section,list type, uid, uidvalidity from an url */
+  /** extract the box,section,list type, uid, uidvalidity,info from an url */
   static void parseURL (const KURL & _url, QString & _box, QString & _section,
                         QString & _type, QString & _uid, QString & _validity, 
                         QString & _info);
@@ -419,6 +421,9 @@ public:
     }
   }
 
+  /** @brief find the namespace for the given box */
+  QString namespaceForBox( const QString & box );
+
 
 protected:
 
@@ -460,6 +465,12 @@ protected:
 
   /** @brief the results from search/acl commands */
   QStringList lastResults;
+
+  /** @brief namespace prefix - delimiter association */
+  QMap<QString, QString> imapNamespaceDelimiter;
+
+  /** @brief list of namespace - prefix */
+  QStringList imapNamespaces;
 
 private:
 

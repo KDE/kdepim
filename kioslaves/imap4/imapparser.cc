@@ -62,7 +62,7 @@ imapParser::imapParser ()
   completeQueue.setAutoDelete (true);
   currentState = ISTATE_NO;
   commandCounter = 0;
-  lastHandled = NULL;
+  lastHandled = 0;
 }
 
 imapParser::~imapParser ()
@@ -110,7 +110,8 @@ imapParser::sendCommand (imapCommand * aCmd)
            || command == "GETACL"
            || command == "LISTRIGHTS"
            || command == "MYRIGHTS"
-           || command == "GETANNOTATION")
+           || command == "GETANNOTATION"
+           || command == "NAMESPACE")
   {
     lastResults.clear ();
   }
@@ -182,7 +183,7 @@ static bool sasl_interact( KIO::SlaveBase *slave, KIO::AuthInfo &ai, void *in )
         interact->len = strlen( (const char *) interact->result );
         break;
       default:
-        interact->result = NULL; interact->len = 0;
+        interact->result = 0; interact->len = 0;
         break;
     }
     interact++;
@@ -198,11 +199,11 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   bool retVal = false;
 #ifdef HAVE_LIBSASL2
   int result;
-  sasl_conn_t *conn = NULL;
-  sasl_interact_t *client_interact = NULL;
-  const char *out = NULL;
+  sasl_conn_t *conn = 0;
+  sasl_interact_t *client_interact = 0;
+  const char *out = 0;
   uint outlen = 0;
-  const char *mechusing = NULL;
+  const char *mechusing = 0;
   QByteArray tmp, challenge;
 
   kdDebug(7116) << "aAuth: " << aAuth << " FQDN: " << aFQDN << " isSSL: " << isSSL << endl;
@@ -215,7 +216,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   result = sasl_client_new( "imap", /* FIXME: with cyrus-imapd, even imaps' digest-uri 
                                        must be 'imap'. I don't know if it's good or bad. */
                        aFQDN.latin1(),
-                       0, 0, NULL, 0, &conn );
+                       0, 0, 0, 0, &conn );
 
   if ( result != SASL_OK ) {
     kdDebug(7116) << "sasl_client_new failed with: " << result << endl;
@@ -345,6 +346,10 @@ imapParser::parseUntagged (parseString & result)
     {
       parseResult (what, result);
     }
+    else if (qstrncmp(what, "NAMESPACE", what.size()) == 0)
+    {
+      parseNamespace (result);
+    }
     break;
 
   case 'O':                    // OK
@@ -446,8 +451,10 @@ imapParser::parseUntagged (parseString & result)
           if (qstrncmp(what, "FETCH", what.size()) == 0)
           {
             seenUid = QString::null;
-            if (lastHandled) lastHandled->clear();
-            else lastHandled = new imapCache();
+            if (lastHandled) 
+              lastHandled->clear();
+            else 
+              lastHandled = new imapCache();
             parseFetch (number, result);
           }
           break;
@@ -480,7 +487,8 @@ void
 imapParser::parseResult (QByteArray & result, parseString & rest,
   const QString & command)
 {
-  if (command == "SELECT") selectInfo.setReadWrite(true);
+  if (command == "SELECT") 
+    selectInfo.setReadWrite(true);
 
   if (rest[0] == '[')
   {
@@ -791,9 +799,6 @@ void imapParser::parseAddressList (parseString & inWords, QPtrList<mailAddress>&
 
 const mailAddress& imapParser::parseAddress (parseString & inWords, mailAddress& retVal)
 {
-  // This is already done in parseAddressList
-  //if (inWords[0] != '(')
-  //  return retVal;
   inWords.pos++;
   skipWS (inWords);
 
@@ -811,7 +816,7 @@ const mailAddress& imapParser::parseAddress (parseString & inWords, mailAddress&
 
 mailHeader * imapParser::parseEnvelope (parseString & inWords)
 {
-  mailHeader *envelope = NULL;
+  mailHeader *envelope = 0;
 
   if (inWords[0] != '(')
     return envelope;
@@ -964,7 +969,7 @@ mimeHeader * imapParser::parseSimplePart (parseString & inWords,
   parameters.setAutoDelete (true);
 
   if (inWords[0] != '(')
-    return NULL;
+    return 0;
 
   if (!localPart)
     localPart = new mimeHeader;
@@ -1232,7 +1237,7 @@ void imapParser::parseBody (parseString & inWords)
     // parse the header
     if (qstrncmp(specifier, "0", specifier.size()) == 0)
     {
-      mailHeader *envelope = NULL;
+      mailHeader *envelope = 0;
       if (lastHandled)
         envelope = lastHandled->getHeader ();
 
@@ -1308,7 +1313,7 @@ void imapParser::parseBody (parseString & inWords)
   }
   else // no part specifier
   {
-    mailHeader *envelope = NULL;
+    mailHeader *envelope = 0;
     if (lastHandled)
       envelope = lastHandled->getHeader ();
 
@@ -1338,7 +1343,7 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
   skipWS (inWords);
 
   delete lastHandled;
-  lastHandled = NULL;
+  lastHandled = 0;
 
   while (!inWords.isEmpty () && inWords[0] != ')')
   {
@@ -1353,11 +1358,12 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
       case 'E':
         if (word == "ENVELOPE")
         {
-          mailHeader *envelope = NULL;
+          mailHeader *envelope = 0;
 
           if (lastHandled)
             envelope = lastHandled->getHeader ();
-          else lastHandled = new imapCache();
+          else 
+            lastHandled = new imapCache();
 
           if (envelope && !envelope->getMessageId ().isEmpty ())
           {
@@ -1390,7 +1396,7 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
         }
         else if (word == "BODYSTRUCTURE")
         {
-          mailHeader *envelope = NULL;
+          mailHeader *envelope = 0;
 
           if (lastHandled)
             envelope = lastHandled->getHeader ();
@@ -1412,10 +1418,11 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
         if (word == "UID")
         {
           seenUid = parseOneWordC(inWords);
-          mailHeader *envelope = NULL;
+          mailHeader *envelope = 0;
           if (lastHandled)
             envelope = lastHandled->getHeader ();
-          else lastHandled = new imapCache();
+          else 
+            lastHandled = new imapCache();
 
           if (envelope || seenUid.isEmpty ())
           {
@@ -1536,6 +1543,56 @@ void imapParser::parseRecent (ulong value, parseString & result)
   result.pos = result.data.size();
 }
 
+void imapParser::parseNamespace (parseString & result)
+{
+  if ( result[0] != '(' )
+    return;
+
+  imapNamespaceDelimiter.clear();
+  imapNamespaces.clear();
+
+  // remember what section we're in (user, other users, shared)
+  int ns = -1;
+  while ( !result.isEmpty() )
+  {
+    if ( result[0] == '(' )
+    {
+      result.pos++; // tie off (
+      if ( result[0] == '(' )
+      {
+        // new namespace section
+        result.pos++; // tie off (
+        ++ns;
+      }
+      // namespace prefix
+      QCString prefix = parseOneWordC( result );
+      // delimiter
+      QCString delim = parseOneWordC( result );
+      kdDebug(7116) << "imapParser::parseNamespace ns='" << prefix <<
+       "',delim='" << delim << "'" << endl;
+      imapNamespaceDelimiter[prefix] = delim;
+      const QString prefixStr = prefix;
+      QString nsentry = QString::number( ns ) + "=" + prefixStr;
+      imapNamespaces.append( nsentry );
+      
+      result.pos++; // tie off )
+      skipWS( result );
+    } else if ( result[0] == ')' )
+    {
+      result.pos++; // tie off )
+      skipWS( result );
+    } else if ( result[0] == 'N' )
+    {
+      // drop NIL
+      ++ns;
+      parseOneWord( result );
+    } else {
+      // drop whatever it is
+      parseOneWord( result );
+    }
+  }
+}
+
 int imapParser::parseLoop ()
 {
   parseString result;
@@ -1653,6 +1710,7 @@ imapParser::parseURL (const KURL & _url, QString & _box, QString & _section,
     parameters = QStringList::split (';', paramString);  //split parameters
     _box.truncate( paramStart ); // strip parameters
   }
+  // extract parameters
   for (QStringList::ConstIterator it (parameters.begin ());
        it != parameters.end (); ++it)
   {
@@ -1662,8 +1720,6 @@ imapParser::parseURL (const KURL & _url, QString & _box, QString & _section,
     int pt = temp.find ('/');
     if (pt > 0)
       temp.truncate(pt);
-//    if(temp[temp.length()-1] == '/')
-//      temp = temp.left(temp.length()-1);
     if (temp.find ("section=", 0, false) == 0)
       _section = temp.right (temp.length () - 8);
     else if (temp.find ("type=", 0, false) == 0)
@@ -1682,6 +1738,7 @@ imapParser::parseURL (const KURL & _url, QString & _box, QString & _section,
 
   if (!_box.isEmpty ())
   {
+    // strip /
     if (_box[0] == '/')
       _box = _box.right (_box.length () - 1);
     if (!_box.isEmpty () && _box[_box.length () - 1] == '/')
@@ -1865,5 +1922,21 @@ bool imapParser::hasCapability (const QString & cap)
 void imapParser::removeCapability (const QString & cap)
 {
   imapCapabilities.remove(cap.lower());
+}
+
+QString imapParser::namespaceForBox( const QString & box )
+{
+  kdDebug(7116) << "imapParse::namespaceForBox " << box << endl;
+  QString myNamespace;
+  if ( !box.isEmpty() )
+  {
+    QValueList<QString> list = imapNamespaceDelimiter.keys();
+    for ( QValueList<QString>::Iterator it = list.begin(); it != list.end(); ++it )
+    {
+      if ( !(*it).isEmpty() && box.find( *it ) != -1 )
+        return (*it);
+    }
+  }
+  return myNamespace;
 }
 

@@ -387,3 +387,9 @@ imapCommand::clientGetAnnotation( const QString& box, const QString& entry, cons
   return new imapCommand ("GETANNOTATION", parameter);
 }
 
+imapCommand *
+imapCommand::clientNamespace()
+{
+  return new imapCommand("NAMESPACE", "");
+}
+

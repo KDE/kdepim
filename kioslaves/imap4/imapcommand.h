@@ -358,6 +358,12 @@ public:
    */
   static imapCommand *clientGetAnnotation ( const QString& box, const QString& entry, const QStringList& attributeNames );
 
+  /**
+   * @brief Create a NAMESPACE command
+   * @return a NAMESPACE imapCommand
+   */
+  static imapCommand *clientNamespace ();
+
 protected:
   QString aCommand;
   QString mId;

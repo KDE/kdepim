@@ -137,19 +137,16 @@ protected:
 
   /**
    * @brief Parses the given URL
-   * The return value is the type of the box
-   * If you set caching to true the server is not queried but the delimiter
-   * is fetched from the cache. The return type is always ITYPE_DIR in this case
+   * The return values are set by parsing the URL and querying the server
    *
-   * @param maybePrefix By default if the given url can't be listed we'll assume
-   * that it's a strange prefix (see #70377). But when testing whether something
-   * exist (e.g. from rename()) we don't want this hack to be activated.
+   * If you set caching to true the server is not queried but the type is always
+   * set to ITYPE_DIR_AND_BOX
    */
   enum IMAP_TYPE
   parseURL (const KURL & _url, QString & _box, QString & _section,
             QString & _type, QString & _uid, QString & _validity,
             QString & _hierarchyDelimiter, QString & _info,
-            bool cache = false, bool maybePrefix = true);
+            bool cache = false);
   QString getMimeType (enum IMAP_TYPE);
 
   bool makeLogin ();
@@ -188,7 +185,6 @@ private:
   ssize_t readBufferLen;
   int readSize;
   QDateTime mTimeOfLastNoop;
-  QMap<QString, QString> mHierarchyDelim;
 };
 
 #endif
