@@ -15,7 +15,7 @@ libkdepim_la_SOURCES = \
   AddressBookServiceIface.skel \
   kconfigpropagator.cpp kconfigwizard.cpp \
   weaver.cpp weaverextensions.cpp weaverlogger.cpp \
-  pluginloaderbase.cpp addresseelineedit.cpp \
+  pluginloaderbase.cpp addresseelineedit.cpp addresseelineedit.skel \
   klistviewsearchline_pimcopy.cpp kdatepickerpopup.cpp \
   clicklineedit.cpp \
   email.cpp kfileio.cpp configmanager.cpp \

@@ -67,9 +67,21 @@ static KStaticDeleter<KPIM::LdapSearch> ldapSearchDeleter;
 static KStaticDeleter<QString> ldapTextDeleter;
 static KStaticDeleter<KConfig> configDeleter;
 
+// needs to be unique, but the actual name doesn't matter much
+static QCString newLineEditDCOPObjectName()
+{
+    static int s_count = 0;
+    QCString name( "KPIM::AddresseeLineEdit" );
+    if ( s_count++ ) {
+      name += '-';
+      name += QCString().setNum( s_count );
+    }
+    return name;
+}
+
 AddresseeLineEdit::AddresseeLineEdit( QWidget* parent, bool useCompletion,
                                       const char *name )
-  : ClickLineEdit( parent, QString::null, name )
+  : ClickLineEdit( parent, QString::null, name ), DCOPObject( newLineEditDCOPObjectName() )
 {
   m_useCompletion = useCompletion;
   m_completionInitialized = false;
@@ -93,12 +105,10 @@ void AddresseeLineEdit::init()
 //  connect( s_completion, SIGNAL( match( const QString& ) ),
 //           this, SLOT( slotMatched( const QString& ) ) );
 
-  if ( m_useCompletion ) {
-    if ( !s_LDAPTimer ) {
-      ldapTimerDeleter.setObject( s_LDAPTimer, new QTimer );
-      ldapSearchDeleter.setObject( s_LDAPSearch, new KPIM::LdapSearch );
-      ldapTextDeleter.setObject( s_LDAPText, new QString );
-    }
+  if ( m_useCompletion && !s_LDAPTimer ) {
+    ldapTimerDeleter.setObject( s_LDAPTimer, new QTimer );
+    ldapSearchDeleter.setObject( s_LDAPSearch, new KPIM::LdapSearch );
+    ldapTextDeleter.setObject( s_LDAPText, new QString );
     connect( s_LDAPTimer, SIGNAL( timeout() ), SLOT( slotStartLDAPLookup() ) );
     connect( s_LDAPSearch, SIGNAL( searchData( const KPIM::LdapResultList& ) ),
              SLOT( slotLDAPSearchData( const KPIM::LdapResultList& ) ) );
@@ -114,6 +124,11 @@ void AddresseeLineEdit::init()
              this, SLOT( slotPopupCompletion( const QString& ) ) );
     connect( box, SIGNAL( userCancelled( const QString& ) ),
              SLOT( userCancelled( const QString& ) ) );
+
+    // The emitter is always called KPIM::IMAPCompletionOrder by contract
+    if ( !connectDCOPSignal( 0, "KPIM::IMAPCompletionOrder", "orderChanged()",
+                             "slotIMAPCompletionOrderChanged()", false ) )
+      kdError() << "AddresseeLineEdit: connection to orderChanged() failed" << endl;
 
     m_completionInitialized = true;
   }
@@ -167,7 +182,7 @@ void AddresseeLineEdit::insert( const QString &t )
     KLineEdit::insert( t );
     return;
   }
-        
+
   //kdDebug(5300) << "     AddresseeLineEdit::insert( \"" << t << "\" )" << endl;
 
   QString newText = t.stripWhiteSpace();
@@ -495,7 +510,7 @@ void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight )
       i = name.findRev(' ');
       if( 1 < i ){
         QString sLastName( name.mid(i+1) );
-        if( ! sLastName.isEmpty() && 
+        if( ! sLastName.isEmpty() &&
             2 <= sLastName.length() &&   // last names must be at least 2 chars long
             ! sLastName.endsWith(".") ){ // last names must not end with a dot (like "Jr." or "Sr.")
           name.truncate( i );
@@ -623,6 +638,12 @@ KConfig* AddresseeLineEdit::config()
                              "kabldaprc" ) ) );
 
   return s_config;
+}
+
+void KPIM::AddresseeLineEdit::slotIMAPCompletionOrderChanged()
+{
+  if ( m_useCompletion )
+    s_addressesDirty = true;
 }
 
 #include "addresseelineedit.moc"
