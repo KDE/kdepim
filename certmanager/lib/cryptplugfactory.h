@@ -61,6 +61,7 @@ namespace Kleo {
 
     const CryptoBackend::Protocol * smime() const;
     const CryptoBackend::Protocol * openpgp() const;
+    CryptoConfig * config() const;
 
     const CryptoBackend * backend( unsigned int idx ) const;
 

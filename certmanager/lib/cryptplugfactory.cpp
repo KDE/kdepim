@@ -87,6 +87,9 @@ const Kleo::CryptoBackend::Protocol * Kleo::CryptPlugFactory::openpgp() const {
   return backend( 0 ) ? backend( 0 )->openpgp() : 0 ;
 }
 
+Kleo::CryptoConfig * Kleo::CryptPlugFactory::config() const {
+  return backend( 0 ) ? backend( 0 )->config() : 0;
+}
 
 bool Kleo::CryptPlugFactory::hasBackends() const {
   return !mBackendList.empty();

@@ -44,12 +44,12 @@ class ConfigModule : public KCModule {
 public:
   ConfigModule( QWidget * parent=0, const char * name=0 )
      : KCModule ( parent, name )
-     { };
-  ~ConfigModule() {};
+     { }
+  virtual ~ConfigModule() {}
 
   virtual void load() = 0;
   virtual void save() = 0;
-  virtual void defaults() {};
+  virtual void defaults() {}
 
   /// Should return the help anchor for this page or tab
   virtual QString helpAnchor() const = 0;
@@ -59,6 +59,7 @@ public:
 // If we want to use tabs (QTabWidget), see kmail-HEAD's ConfigModuleWithTabs
 
 class DirectoryServicesConfigurationDialogImpl;
+namespace Kleo { class CryptoConfig; }
 
 /**
  * DirectoryServicesConfigurationPage
@@ -76,6 +77,7 @@ public:
 
 private:
   DirectoryServicesConfigurationDialogImpl* mWidget;
+  Kleo::CryptoConfig* mConfig;
 };
 
 #endif // _CONFIGURE_DIALOG_PRIVATE_H_

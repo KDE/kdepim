@@ -32,6 +32,7 @@
 #include "configuredialog_p.h"
 #include <qlayout.h>
 #include "directoryservicesconfigurationdialogimpl.h"
+#include <cryptplugfactory.h>
 
 DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( QWidget * parent, const char * name )
     : ConfigModule( parent, name )
@@ -39,6 +40,7 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( QWidget 
   QVBoxLayout* lay = new QVBoxLayout( this );
   mWidget = new DirectoryServicesConfigurationDialogImpl( this );
   lay->addWidget( mWidget );
+  mConfig = Kleo::CryptPlugFactory::instance()->config();
 }
 
 void DirectoryServicesConfigurationPage::load()
