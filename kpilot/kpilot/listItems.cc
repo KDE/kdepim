@@ -29,7 +29,6 @@
 #include "options.h"
 #include <qstring.h>
 #include <qlistbox.h>
-#include "listItems.moc"
 #include "listItems.h"
 
 PilotListItem::PilotListItem(const QString &text, 
@@ -42,4 +41,9 @@ PilotListItem::PilotListItem(const QString &text,
 }
 
 
-// $Log:$
+// $Log$
+// Revision 1.1  2001/03/04 11:22:12  adridg
+// In response to bug 21392, replaced fixed-length lookup table by a subclass
+// of QListBoxItem inserted into list box. This subclass carries data to
+// lookup the relevant pilot record.
+//
