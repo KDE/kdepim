@@ -3459,13 +3459,6 @@ a different calendar file is specified in the preferences file by a
 <parameter>Calendar</parameter> entry in the
 <parameter>General</parameter> section.</para>
 
-<note><para>If you change this calendar file in the preferences file,
-you should also edit the <application>alarm daemon</application>'s
-<filename>clients</filename> configuration file to remove the old
-calendar file reference. This should be done while the
-<application>alarm daemon</application> is not running to avoid it
-overwriting your change.</para></note>
-
 <para>The calendar file which stores your expired alarms is
 <filename>$KDEHOME/share/apps/kalarm/expired.ics</filename>, unless
 a different calendar file is specified in the preferences file.</para>
