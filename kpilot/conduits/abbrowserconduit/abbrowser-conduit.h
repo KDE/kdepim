@@ -44,9 +44,9 @@
 #define CHANGED_BOTH CHANGED_PC|CHANGED_PALM
 #define CHANGED_ADD  0x100
 #define CHANGED_NORES 0x200
-#define CHANGED_NORESOLVE CHANGED_ADD|CHANGED_NORES
+#define CHANGED_DUPLICATE CHANGED_ADD|CHANGED_NORES|CHANGED_BOTH
 
-#define ADD_BOTH CHANGED_BOTH|CHANGED_ADD
+//#define ADD_BOTH CHANGED_BOTH|CHANGED_ADD
 
 // Made a local copy of contactentry.h now that abbrowser has moved.
 //
@@ -147,6 +147,7 @@ private:
 	*  @return true if the abbEntry's pilot id was changed 
 	*/
 	bool _savePilotAddress(PilotAddress &address, KABC::Addressee &abEntry);
+	bool _saveBackupAddress(PilotAddress & backup);
 	void _copy(PilotAddress &toPilotAddr, KABC::Addressee &fromAbEntry);
 	void _copy(KABC::Addressee &toAbEntry, const PilotAddress &fromPilotAddr);
 	void _setPilotAddress(PilotAddress &toPilotAddr, const KABC::Address &abAddress);
@@ -215,6 +216,9 @@ private:
 
 
 // $Log$
+// Revision 1.18  2002/07/01 23:25:46  kainhofe
+// implemented categories syncing, many things seem to work, but still every sync creates an empty zombie.
+//
 // Revision 1.17  2002/06/30 22:17:50  kainhofe
 // some cleanup. Changes from the palm are still not applied to the pc, pc->palm still disabled.
 //
