@@ -145,7 +145,7 @@ bool KNAccountManager::newAccount(KNNntpAccount *a)
     return true;
   } else {
     delete a;
-    KMessageBox::error(knGlobals.topWidget, i18n("Cannot create a directory for this account!"));
+    KMessageBox::error(knGlobals.topWidget, i18n("Cannot create a folder for this account!"));
     return false;
   }
 }

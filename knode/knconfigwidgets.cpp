@@ -212,7 +212,7 @@ void KNConfig::IdentityWidget::slotSignatureEdit()
 
   QFileInfo fileInfo( fileName );
   if (fileInfo.isDir()) {
-    KMessageBox::sorry(this, i18n("You have specified a directory!"));
+    KMessageBox::sorry(this, i18n("You have specified a folder!"));
     return;
   }
 
