@@ -15,6 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "filter_oe4.hxx"
 #include "oe4_2mbox.h"
 #include "harray.hxx"
