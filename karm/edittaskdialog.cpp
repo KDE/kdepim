@@ -126,11 +126,13 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
   desktopCount = getDesktopCount();
   
   // If desktopList contains higher numbered desktops than desktopCount then
-  // delete thos from desktopList. This may be the case if the user has
+  // delete those from desktopList. This may be the case if the user has
   // configured virtual desktops. The values in desktopList are sorted.
-  if (desktopList->size()>0) {
+  if ( (desktopList != 0) && (desktopList->size() > 0) ) 
+  {
     DesktopList::iterator rit = desktopList->begin();
-    while (*rit < desktopCount && rit!=desktopList->end()) {
+    while (*rit < desktopCount && rit!=desktopList->end()) 
+    {
       ++rit;
     }
     desktopList->erase(rit, desktopList->end());
@@ -166,9 +168,11 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
   // check specified Desktop Check Boxes
   bool enableDesktops = false;
 
-  if (desktopList->size()>0) {
+  if ( (desktopList != 0) && (desktopList->size() > 0) ) 
+  {
     DesktopList::iterator it = desktopList->begin();
-    while (it != desktopList->end()) {
+    while (it != desktopList->end()) 
+    {
       _deskBox[*it]->setChecked(true);
       it++;
     }
