@@ -42,12 +42,10 @@ OverviewWidget::OverviewWidget( QWidget* parent,  const char* name, WFlags fl )
     QVBox *nameBox = new QVBox( topBox );
 
     deviceName = new QLabel( nameBox, "deviceName" );
-    //  deviceName->setGeometry( QRect( 20, 20, 200, 40 ) );
     deviceName->setText( i18n( "<h2>Device</h2>" ) );
     deviceName->setAlignment( int( QLabel::WordBreak | QLabel::AlignTop ) );
 
     nameField = new QLabel ( nameBox, "namField" );
-    // nameField->setGeometry( QRect( 20, 80, 200, 40 ) );
     nameField->setText( i18n("Name") );
     nameField->setAlignment( int( QLabel::WordBreak | QLabel::AlignTop ) );
 
@@ -76,10 +74,7 @@ OverviewWidget::OverviewWidget( QWidget* parent,  const char* name, WFlags fl )
     sv = new QScrollView( this );
     sv->setResizePolicy(QScrollView::AutoOneFit);
     sv->setHScrollBarMode( QScrollView::AlwaysOff );
-    //sv->setGeometry (QRect( 20, 160 , this->width()-100 , this->height()-260 ) );
-
     sv->setFrameShape(QFrame::NoFrame);
-
     sv->addChild(filler);
     sv->show();
 
