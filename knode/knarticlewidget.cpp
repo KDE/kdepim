@@ -1234,13 +1234,9 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
     target=a;
     type=ATurl;
   }
-  else if(a.left(7).lower()=="news://") {
+  else if(a.left(5).lower()=="news:") {
     target=a;
     type=ATnews;
-  }
-  else if(a.left(5)=="news:") {
-    target=a.mid(5, a.length()-5);
-    type=ATmsgid;
   }
   else if(a.left(7)=="mailto:") {
     target=a.mid(7, a.length()-7);

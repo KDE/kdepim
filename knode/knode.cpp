@@ -447,7 +447,9 @@ void KNMainWindow::openURL(const KURL &url)
   } else {
     if (url.url().left(5) == "news:") {
       // TODO: make the default server configurable
-      acc=a_ccManager->first();
+      acc=a_ccManager->currentAccount();
+      if (acc == 0)
+        acc=a_ccManager->first();
     } else {
       kdDebug(5003) << "KNMainWindow::openURL() URL is not a valid news URL" << endl;
     }
