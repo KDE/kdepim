@@ -30,6 +30,15 @@ TODO LIST (Ignore the file TODO)
 KPilot Developer's notes for December 30th, 2002
 ================================================
 
+2002-12-30  Reinhold Kainhofer
+* Some more work on the docconduit. I'm currently restructuring again,
+  so right now it doesn't work at all, but should be finished really
+  soon now.
+* Add a method PilotDatabase::deleteDatabase() to delete the database.
+* Add a warning to the vcal conduit's setup dialog to clear any 
+  misconception about conflict resolution. Also changed "Pilot" to 
+	"handheld" at several places.
+
 2002-12-15  Reinhold Kainhofer
 * Added a parameter "bool useDefaultPath=false" to 
   PilotLocalDatabase::PilotLocalDatabase to prevent resetting
