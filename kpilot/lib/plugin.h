@@ -40,6 +40,30 @@
 class KConfig;
 class PilotDatabase;
 
+/**
+* The first three classes here: ConduitConfigBase, ConduitConfig
+* and ConduitConfigImplementation - are for configuration purposes
+* and reflect two different styles of configuration.
+*
+* ConduitConfigBase: this is an object (with a widget!) that is embedded
+* in a dialog. This is the currently preferred form for configuration,
+* and it's what is used in the KPilot conduit configuration dialog.
+* The factory is asked for a "ConduitConfigBase" object.
+*
+* NB. The reason that this is a QObject which needs to create a 
+* separate widget - instead of a QWidget subclass - has to do with
+* layouting. If you make the widget with designer then the easiest
+* thing to do is to use a grid layout there. Making ConduitConfigBase
+* a QWidget subclass would require an additional layout here, which
+* seems a little foolish.
+*
+* DEPRECATED: ConduitConfig: This is a dialog that contains the
+* setup widget (typically a ConduitConfigBase widget!).
+*
+* DEPRECATED: ConduitConfigImplementation: This is an automated
+* facility for creating ConduitConfigs containing a Base widget.
+*/
+
 class ConduitConfigBase : public QObject
 {
 Q_OBJECT
@@ -111,7 +135,7 @@ Q_OBJECT
 public:
 	ConduitConfig(QWidget *parent=0L,
 		const char *name=0L,
-		const QStringList &args = QStringList());
+		const QStringList &args = QStringList()) KDE_DEPRECATED;
 	virtual ~ConduitConfig();
 
 	void setConfig(KConfig *c) { fConfig=c; } ;
@@ -140,7 +164,7 @@ public:
 	ConduitConfigImplementation(QWidget *,
 		const char *,
 		const QStringList &,
-		ConduitConfigBase *(*f)(QWidget *, const char *));
+		ConduitConfigBase *(*f)(QWidget *, const char *)) KDE_DEPRECATED;
 	virtual ~ConduitConfigImplementation();
 
 	virtual void readSettings();
@@ -151,6 +175,13 @@ protected:
 protected:
 	ConduitConfigBase *fConfigWidget;
 } ;
+
+
+
+
+
+
+
 
 /**
 * The SyncActions created by the factory should obey at least
