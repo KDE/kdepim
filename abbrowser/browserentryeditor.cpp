@@ -1,3 +1,4 @@
+#include <KabEntity.h>
 #include "browserentryeditor.h"
 #include "entry.h"
 
@@ -7,9 +8,9 @@
 PabContactDialog::PabContactDialog( QWidget *parent, 
 				    const char *name, 
 				    QString entryKey,
-				    ContactEntry *entry,
+            KAB::Entity *entry,
 				    bool modal )
-  : ContactDialog( parent, name, new ContactEntry( *entry ) , modal ),
+  : ContactDialog( parent, name, new KAB::Entity( *entry ) , modal ),
     entryKey_( entryKey )
 {
 }
@@ -31,7 +32,7 @@ void PabContactDialog::accept()
 PabNewContactDialog::PabNewContactDialog( QWidget *parent, 
 					  const char *name, 
 					  bool modal )
-  : ContactDialog( parent, name, new ContactEntry(), modal )
+  : ContactDialog( parent, name, new KAB::Entity(), modal )
 {}
 
 PabNewContactDialog::~PabNewContactDialog()

@@ -3,6 +3,10 @@
  *
  * Copyright (C) 1999 Don Sanders <dsanders@kde.org>
  */
+
+#include <KabAddressBookClient.h>
+#include <KabEntity.h>
+
 #include "abbrowser.h"
 #include "browserentryeditor.h"
 
@@ -21,7 +25,7 @@
 Pab::Pab()
 {
   setCaption( i18n( "Address Book Browser" ));
-  document = new ContactEntryList( "entries.txt" );
+  document = new KAB::AddressBookClient( "Local", KURL("kab://localhost"));
   view = new PabWidget( document, this, "Kontact" );
 
   // tell the KTMainWindow that this is indeed the main widget
@@ -75,34 +79,34 @@ Pab::Pab()
   menuBar()->insertItem(i18n("&Help"), p);
   
   // insert a quit button.  the icon is the standard one in KDE
-  toolBar()->insertButton(BarIcon("exit.xpm"),   // icon
+  toolBar()->insertButton(BarIcon("exit"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  kapp, SLOT(quit()), // result
 			  i18n("Exit"));      // tooltip text
 	
-  toolBar()->insertButton(BarIcon("filenew.xpm"),   // icon
+  toolBar()->insertButton(BarIcon("filenew"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  this, SLOT(newContact()), // result
 			  i18n("Add a new entry"));      // tooltip text
-  toolBar()->insertButton(BarIcon("page.xpm"),   // icon
+  toolBar()->insertButton(BarIcon("page"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  view, SLOT(properties()), // result
 			  i18n("Change this entry"));      // tooltip text
-  toolBar()->insertButton(BarIcon("delete.xpm"),   // icon
+  toolBar()->insertButton(BarIcon("delete"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  view, SLOT(clear()), // result
 			  i18n("Remove this entry"));      // tooltip text
-  toolBar()->insertButton(BarIcon("find.xpm"),   // icon
+  toolBar()->insertButton(BarIcon("find"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  this, SLOT(find()), // result
 			  i18n("Search entries"));      // tooltip text
 
-  toolBar()->insertButton(BarIcon("filemail.xpm"),   // icon
+  toolBar()->insertButton(BarIcon("filemail"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  this, SLOT(mail()), // result
@@ -118,14 +122,14 @@ Pab::Pab()
 void Pab::newContact()
 {
  ContactDialog *test = new PabNewContactDialog( this, i18n( "Address Book Entry Editor" ));
- connect( test, SIGNAL( add( ContactEntry* ) ), 
-	  view, SLOT( addNewEntry( ContactEntry* ) ));
+ connect( test, SIGNAL( add( KAB::Entity* ) ), 
+	  view, SLOT( addNewEntry( KAB::Entity* ) ));
  test->show();
 }
 
 void Pab::save()
 {
-  document->save( "entries.txt" );
+  //document->save( "entries.txt" );
 }
 
 void Pab::readConfig()
@@ -150,7 +154,6 @@ Pab::~Pab()
 
 void Pab::saveCe() {
   debug( "saveCe()" );
-  ce->save( "entry.txt" );
 }
 
 void Pab::slotDropEvent(/*KDNDDropZone *zone*/)

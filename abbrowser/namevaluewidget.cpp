@@ -15,7 +15,7 @@ NameValueSheet::NameValueSheet( QWidget *parent,
 				int rows, 
 				QStringList name, 
 				QStringList entryField, 
-				ContactEntry *ce )
+        KAB::Entity *ce )
  : QFrame( parent ), lCell( 0 ), rows( rows )
 {
   temp = new QLabel( i18n( "Name" ) + i18n ( "Name" ), 0, "temp" );
@@ -117,17 +117,18 @@ void NameValueFrame::resizeEvent(QResizeEvent* e)
 
 ContactLineEdit::ContactLineEdit( QWidget * parent, 
 				  const char * name, 
-				  ContactEntry *ce )
+          KAB::Entity *ce )
  : QLineEdit( parent, name ), ce( ce )
 {
-  if (ce->find( name ))
-    setText( *ce->find( name ));
+  KAB::Field * f = ce->find(name);
+  if (f != 0)
+    setText(f->data());
   connect( ce, SIGNAL( changed() ), this, SLOT( sync() ));
 }
 
 void ContactLineEdit::focusOutEvent ( QFocusEvent * )
 {	
-  ce->replace( QString( name()), new QString( text()) );
+  ce->replace(name(),  text());
 }
 
 void ContactLineEdit::setName( const char *name )
@@ -139,14 +140,16 @@ void ContactLineEdit::setName( const char *name )
 
 void ContactLineEdit::sync()
 {
-  const QString *value = ce->find( name() );
-  if ((value) && (*value != text()))
-    setText( *value );
+  KAB::Field * f = ce->find(name());
+  if (f == 0) return;
+  QString value = f->data();
+  if ((!value.isEmpty()) && (value != text()))
+    setText(value);
 }
 
 ContactMultiLineEdit::ContactMultiLineEdit( QWidget * parent, 
 					    const char * name, 
-					    ContactEntry *ce )
+              KAB::Entity *ce )
  : QMultiLineEdit( parent, name ), ce( ce )
 {
   connect( ce, SIGNAL( changed() ), this, SLOT( sync() ));
@@ -154,7 +157,7 @@ ContactMultiLineEdit::ContactMultiLineEdit( QWidget * parent,
 
 void ContactMultiLineEdit::focusOutEvent( QFocusEvent * )
 {	
-  ce->replace( QString( name()), new QString( text()) );
+  ce->replace( QString( name()), text());
 }
 
 void ContactMultiLineEdit::setName( const char *name )
@@ -166,14 +169,17 @@ void ContactMultiLineEdit::setName( const char *name )
 
 void ContactMultiLineEdit::sync()
 {
-  const QString *value = ce->find( name() );
-  if ((value) && (*value != text()))
-    setText( *value );
+  KAB::Field * f = ce->find(name());
+  if (f == 0)
+    return;
+  QString value = f->data();
+  if ((!value.isEmpty()) && (value != text()))
+    setText( value );
 }
 
 FileAsComboBox::FileAsComboBox( QWidget * parent, 
 				const char * name, 
-				ContactEntry *ce )
+        KAB::Entity *ce )
  : QComboBox( true, parent, name ), ce( ce )
 {
   connect( ce, SIGNAL( changed() ), this, SLOT( sync() ));
@@ -183,7 +189,7 @@ void FileAsComboBox::updateContact()
 {	
   debug( "FileAsComboBox::focusOutEvent" );
   debug( currentText() );
-  ce->replace( QString( name()), new QString( currentText()) );
+  ce->replace( QString( name()), currentText());
 }
 
 void FileAsComboBox::setName( const char *name )
@@ -195,9 +201,13 @@ void FileAsComboBox::setName( const char *name )
 
 void FileAsComboBox::sync()
 {
-  const QString *value = ce->find( name() );
-  if ((value) && (*value != currentText()))
-    setEditText( *value );
+  KAB::Field * f = ce->find(name());
+  if (f == 0)
+    return;
+  
+  QString value = f->data();
+  if ((!value.isEmpty()) && (value != currentText()))
+    setEditText( value );
 }
 
 ContactComboBox::ContactComboBox( QWidget *parent )

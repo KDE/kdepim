@@ -80,6 +80,7 @@ ContactEntry::ContactEntry()
 }
 
 ContactEntry::ContactEntry( const ContactEntry &r )
+  : QObject()
 {
   QDictIterator<QString> it( r.dict );
   

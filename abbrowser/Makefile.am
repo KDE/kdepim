@@ -15,7 +15,7 @@
 APPSDIR = $(kde_appsdir)/Utilities
 
 # set the include path for X, qt and KDE
-INCLUDES= $(all_includes)
+INCLUDES= $(all_includes) -I../kab2/lib
 
 # this has all of the subdirectories that make will recurse into.  if
 # there are none, comment this out
@@ -29,20 +29,20 @@ SRCDOC_DEST=$(kde_htmldir)/en/abbrowser
 bin_PROGRAMS = 	abbrowser
 
 # Which sources should be compiled for abbrowser.
-abbrowser_SOURCES = abbrowser.cpp undo.cpp attributes.cpp selectfields.cpp viewoptions.cpp namevaluewidget.cpp entry.cpp browserentryeditor.cpp entryeditorwidget.cpp datepickerdialog.cpp browserwidget.cpp main.cpp
+abbrowser_SOURCES = abbrowser.cpp undo.cpp attributes.cpp selectfields.cpp viewoptions.cpp namevaluewidget.cpp browserentryeditor.cpp entryeditorwidget.cpp datepickerdialog.cpp browserwidget.cpp main.cpp
 
 # let automoc handle all of the meta source files (moc)
 abbrowser_METASOURCES = USE_AUTOMOC
 
 # the library search path. 
-abbrowser_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+abbrowser_LDFLAGS = -L../kab2/lib $(all_libraries) $(KDE_RPATH)
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
-abbrowser_LDADD = -lqimgio -ljpeg $(LIB_KFILE)
+abbrowser_LDADD = -lkab2 -lqimgio -ljpeg $(LIB_KFILE)
 
 # these are the headers for your project
-noinst_HEADERS = abbrowser.h undo.h attributes.h selectfields.h viewoptions.h namevaluewidget.h entry.h browserentryeditor.h entryeditorwidget.h datepickerdialog.h browserwidget.h
+noinst_HEADERS = abbrowser.h undo.h attributes.h selectfields.h viewoptions.h namevaluewidget.h browserentryeditor.h entryeditorwidget.h datepickerdialog.h browserwidget.h
 
 # if you "make distclean", this files get removed. If you want to remove
 # them while "make clean", use CLEANFILES
@@ -65,14 +65,14 @@ srcdoc:
 # if you have more of them, create a subdirectory with an extra Makefile 
 install-data-local: 
 	$(mkinstalldirs) $(APPSDIR)
-	$(INSTALL_DATA) abbrowser.kdelnk $(APPSDIR)
+	$(INSTALL_DATA) abbrowser.desktop $(APPSDIR)
 	$(mkinstalldirs) $(kde_icondir)
-	$(INSTALL_DATA) abbrowser.xpm $(kde_icondir)
+	$(INSTALL_DATA) abbrowser.png $(kde_icondir)
 	$(mkinstalldirs) $(kde_minidir)
-	$(INSTALL_DATA) mini-abbrowser.xpm $(kde_minidir)/abbrowser.xpm
+	$(INSTALL_DATA) mini-abbrowser.png $(kde_minidir)/abbrowser.png
 
 # remove ALL you have installed in install-data-local or install-exec-local
 uninstall-local:
-	-rm -f $(APPSDIR)/abbrowser.kdelnk
-	-rm -f $(kde_icondir)/abbrowser.xpm
-	-rm -f $(kde_minidir)/abbrowser.xpm
+	-rm -f $(APPSDIR)/abbrowser.desktop
+	-rm -f $(kde_icondir)/abbrowser.png
+	-rm -f $(kde_minidir)/abbrowser.png

@@ -1,9 +1,8 @@
 #ifndef PABWIDGET_H 
 #define PABWIDGET_H 
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif 
+#include <KabEntity.h>
+#include <KabAddressBookClient.h>
 
 #include <qwidget.h>
 #include <qlistview.h>
@@ -19,8 +18,6 @@
 #include "undo.h"
 
 class QComboBox;
-class ContactEntry;
-class ContactEntryList;
 
 /**
  * This class is the main view for Pab.  Most non-menu, non-toolbar,
@@ -57,7 +54,7 @@ class PabListViewItem : public QListViewItem
 public:
   PabListViewItem( QString entryKey, PabListView* parent, QStringList* field );
   QString entryKey();
-  ContactEntry *getEntry(); // will change name back to entry some time
+  KAB::Entity *getEntry(); // will change name back to entry some time
   virtual void refresh();
   virtual PabListView* parent();
   virtual QString key ( int, bool ) const;
@@ -120,9 +117,9 @@ friend class PabListView;
   Q_OBJECT
 
 public:
-  PabWidget( ContactEntryList *cel, QWidget *parent, const char *name = 0L );
+  PabWidget( KAB::AddressBookClient *cel, QWidget *parent, const char *name = 0L );
   virtual ~PabWidget();
-  virtual ContactEntryList* contactEntryList();
+  virtual KAB::AddressBookClient* contactEntryList();
   virtual PabListView* pabListView();
   virtual QStringList *fields();
 
@@ -137,9 +134,9 @@ public slots:
   virtual void selectAll();
   virtual void saveConfig();
   virtual void readConfig();
-  void change( QString entryKey, ContactEntry *ce );
+  void change( QString entryKey, KAB::Entity *ce );
   PabListViewItem* addEntry( QString EntryKey );
-  void addNewEntry( ContactEntry *ce );
+  void addNewEntry( KAB::Entity *ce );
 
 protected slots:
   void itemSelected( QListViewItem* );
@@ -152,7 +149,7 @@ protected:
   void setupListView();
   virtual void reconstructListView();
 
-  ContactEntryList *cel;
+  KAB::AddressBookClient *cel;
   QStringList field;
   QValueList<int> fieldWidth;
   QIconSet *myIcon;
@@ -165,7 +162,7 @@ protected:
 class PwDeleteCommand : public Command
 {
 public:
-  PwDeleteCommand( PabWidget *pw, QString entryKey, ContactEntry *ce );
+  PwDeleteCommand( PabWidget *pw, QString entryKey, KAB::Entity *ce );
   virtual ~PwDeleteCommand();
   virtual QString name();
   virtual void undo();
@@ -174,7 +171,7 @@ public:
 private:
   PabWidget* pw;
   QString entryKey;
-  ContactEntry *ce;
+  KAB::Entity *ce;
 };
 
 #include <qlist.h>
@@ -213,7 +210,7 @@ private:
 class PwNewCommand : public Command
 {
 public:
-  PwNewCommand( PabWidget *pw, ContactEntry *ce );
+  PwNewCommand( PabWidget *pw, KAB::Entity *ce );
   virtual QString name();
   virtual void undo();
   virtual void redo();
@@ -221,7 +218,7 @@ public:
 private:
   PabWidget *pw;
   QString entryKey;
-  ContactEntry *ce;
+  KAB::Entity *ce;
 };
 
 class PwEditCommand : public Command
@@ -229,8 +226,8 @@ class PwEditCommand : public Command
 public:
   PwEditCommand( PabWidget *pw, 
 		 QString entryKey,
-		 ContactEntry *oldCe, 
-		 ContactEntry *newCe );
+     KAB::Entity *oldCe, 
+     KAB::Entity *newCe );
   virtual ~PwEditCommand();
   virtual QString name();
   virtual void undo();
@@ -239,8 +236,8 @@ public:
 private:
   PabWidget *pw;
   QString entryKey;
-  ContactEntry *oldCe;
-  ContactEntry *newCe;
+  KAB::Entity *oldCe;
+  KAB::Entity *newCe;
 };
 
 #endif // PABWIDGET_H 

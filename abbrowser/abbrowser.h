@@ -1,15 +1,12 @@
 #ifndef PAB_H 
 #define PAB_H 
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif 
-
 #include <kapp.h>
 #include <ktmainwindow.h>
  
-class ContactEntry;
-class ContactEntryList;
+#include <KabEntity.h>
+#include <KabAddressBookClient.h>
+
 class PabWidget;
 
 /**
@@ -33,7 +30,6 @@ public:
 	 * Default Destructor
 	 */
 	virtual ~Pab();
-	ContactEntry *ce;
 
 public slots:
 	/**
@@ -41,7 +37,7 @@ public slots:
 	 * window
 	 */
 	void slotDropEvent(/*KDNDDropZone **/);
-        void newContact();
+  void newContact();
 	void saveCe();
 	void save();
 	void readConfig();
@@ -69,7 +65,7 @@ protected:
 
 private:
 	PabWidget *view;
-	ContactEntryList *document;
+  KAB::AddressBookClient *document;
 };
 
 #endif // PAB_H 

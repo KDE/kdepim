@@ -7,6 +7,8 @@
 #ifndef NAMEVALUE_H 
 #define NAMEVALUE_H 
 
+#include <KabEntity.h>
+
 #include <qframe.h>
 #include <qlabel.h>
 #include <qstringlist.h>
@@ -23,7 +25,7 @@
  * A table with two columns and a variable number of rows. The columns are 
  * field name and field value. The field value column is editable.
  *
- * A ContactEntry object is updated as values are changed.
+ * An Entity object is updated as values are changed.
  */
 class NameValueSheet : public QFrame
 {
@@ -38,9 +40,9 @@ public:
  * @param rows The number of rows.
  * @param name A list of entry field names.
  * @param entryField A list of entry field keys.
- * @param ce A ContactEntry object that will be updated as values are changed.
+ * @param ce An Entity object that will be updated as values are changed.
  */
-    NameValueSheet( QWidget *parent, int rows, QStringList name, QStringList entryField, ContactEntry *ce );
+    NameValueSheet( QWidget *parent, int rows, QStringList name, QStringList entryField, KAB::Entity *ce );
 
 /**
  * Destroys the name NameValueSheet object
@@ -86,8 +88,8 @@ protected:
 
 /**
  * A ContactLineEdit object is substitutable for a QLineEdit object.
- * It both automatically updates an associated ContactEntry object and 
- * is itself  updated if changes are made to the ContactEntry object.
+ * It both automatically updates an associated Entity object and 
+ * is itself  updated if changes are made to the Entity object.
  */
 class ContactLineEdit : public QLineEdit
 {
@@ -99,24 +101,25 @@ public:
  *
  * Arguments:
  *
- * @param name Both the name of the widget and the name of the key used in the ContactEntry object.
- * @param ce The ContactEntry object associated with this LineEdit.
+ * @param name Both the name of the widget and the name of the key used in the
+ * Entity object.
+ * @param ce The Entity object associated with this LineEdit.
  */
-    ContactLineEdit( QWidget *parent, const char *name, ContactEntry *ce );
+    ContactLineEdit( QWidget *parent, const char *name, KAB::Entity *ce );
 
 /**
- * When the widget loses focus the associated ContactEntry object is updated.
+ * When the widget loses focus the associated Entity object is updated.
  */
     virtual void focusOutEvent ( QFocusEvent * );
 
 /**
- * Changes the ContactEntry key this widget is associated with, and updates
+ * Changes the Entity key this widget is associated with, and updates
  * the text of this ContactLineEdit.
  */
     virtual void setName ( const char * name );
 
 private:
-    ContactEntry *ce;
+    KAB::Entity *ce;
 
 private slots:
     void sync();
@@ -131,12 +134,12 @@ class ContactMultiLineEdit : public QMultiLineEdit
     Q_OBJECT
 
 public:
-    ContactMultiLineEdit( QWidget *parent, const char *name, ContactEntry *ce );
+    ContactMultiLineEdit( QWidget *parent, const char *name, KAB::Entity *ce );
     virtual void focusOutEvent ( QFocusEvent * );
     virtual void setName ( const char * name );
 
 private:
-    ContactEntry *ce;
+    KAB::Entity *ce;
 
 private slots:
     void sync();
@@ -151,11 +154,11 @@ class FileAsComboBox : public QComboBox
     Q_OBJECT
 
 public:
-    FileAsComboBox( QWidget *parent, const char *name, ContactEntry *ce );
+    FileAsComboBox( QWidget *parent, const char *name, KAB::Entity *ce );
     virtual void setName ( const char * name );
 
 private:
-    ContactEntry *ce;
+    KAB::Entity *ce;
 
 public slots:
     virtual void updateContact();
@@ -169,7 +172,7 @@ private slots:
   ContactComboBox has a buddy widget, normally a ContactLineEdit associated
   with it.
 
-  Each item in ContactComboBox object has a ContactEntry key associated
+  Each item in ContactComboBox object has an Entity key associated
   with it. When a new item is selected the buddy widget is renamed to
   the value of the key associated with the selected item. This will result
   in the buddy widget being associated with the new key.

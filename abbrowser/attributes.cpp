@@ -44,7 +44,7 @@ bool Attributes::nameFieldList( int index,
 				QStringList *pnames, 
 				QStringList *pfields )
 {
-  if ((index >= 0) && (index < nameList_.count())) {
+  if ((index >= 0) && ((unsigned int)index < nameList_.count())) {
     QStringList newpfields;
     QStringList::Iterator it;
 
@@ -300,7 +300,7 @@ QString Attributes::fieldListName( int index )
               << i18n( "Phone number fields" )
               << QString::null;
   
-  if (index > sFieldsList.count()) {
+  if ((unsigned int)index > sFieldsList.count()) {
    debug("Attributes::fieldListName() : index out of range");
    return QString::null;
   }
