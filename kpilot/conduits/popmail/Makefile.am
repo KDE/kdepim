@@ -1,4 +1,4 @@
-INCLUDES= @all_includes@ -I$(top_srcdir)/kpilot/kpilot
+INCLUDES= $(all_includes) -I$(top_srcdir)/kpilot/kpilot
 METASOURCES = AUTO
 
 servicedir  = $(kde_servicesdir)
@@ -13,7 +13,8 @@ popmail_conduit_SOURCES= popmail-conduit.cc \
 	passworddialog.cc parsedate.c setupDialog.cc
 
 # the library search path
-popmail_conduit_LDFLAGS = $(all_libraries) -L../../kpilot
+popmail_conduit_LDFLAGS = $(all_libraries) \
+	$(KDE_RPATH) -L../../kpilot
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
