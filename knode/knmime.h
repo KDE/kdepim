@@ -65,7 +65,6 @@ class KNMimeBase {
     static QCString CRLFtoLF(const QCString &s);
     static QCString CRLFtoLF(const char *s);
     static QCString LFtoCRLF(const QCString &s);
-    static void stripCRLF(char *str);
     // removes quote characters and decodes "quoted-pairs"
     static void removeQuots(QCString &str);
     static void removeQuots(QString &str);

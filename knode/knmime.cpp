@@ -352,18 +352,6 @@ QCString KNMimeBase::LFtoCRLF(const QCString &s)
 }
 
 
-void KNMimeBase::stripCRLF(char *str)
-{
-  int pos=strlen(str)-1;
-  while(pos>-1 && (str[pos]!='\n' && str[pos]!='\r') ) pos--;
-  if(pos>-1) {
-    if(str[pos]=='\n' && (pos-1)>0 && str[pos-1]=='\r')
-      pos--;
-    str[pos]='\0';
-  }
-}
-
-
 void KNMimeBase::removeQuots(QCString &str)
 {
   bool inQuote=false;
@@ -705,8 +693,6 @@ void KNMimeContent::setContent(QStrList *l)
 
   bool isHead=true;
   for(char *line=l->first(); line; line=l->next()) {
-    stripCRLF(line); //make sure that there's no newline
-
     if(isHead && line[0]=='\0') {
       isHead=false;
       continue;
