@@ -49,7 +49,6 @@ static const char *vcalconduitbase_id = "$Id$";
 #include <ksimpleconfig.h>
 
 
-
 /*
 ** KDE 2.2 uses class KORecurrence in a different header file.
 */
@@ -117,6 +116,7 @@ struct tm writeTm(const QDate &dt)
 
   return t;
 }
+
 
 
 /****************************************************************************
@@ -210,7 +210,6 @@ there are two special cases: a full and a first sync.
 		goto error;
 	}
 
-	// TODO: 
 	if (PluginUtility::isRunning("korganizer") ||
 		PluginUtility::isRunning("alarmd"))
 	{
@@ -251,13 +250,11 @@ there are two special cases: a full and a first sync.
 		// TODO: Clear the palm and backup database??? Or just add the new items ignore
 		// the Palm->PC side and leave the existing items on the palm?
 		QTimer::singleShot(0, this, SLOT(syncPCRecToPalm()));
-		cout<<"syncPCRecToPalm()"<<endl;
 		break;
 	case 1:
 		// TODO: Clear the backup database and the calendar, update fP
 		//       or just add the palm items and leave the PC ones there????
 	default:
-		cout<<"syncPalmRecToPC()"<<endl;
 		QTimer::singleShot(0, this, SLOT(syncPalmRecToPC()));
 	}
 	return;
@@ -326,7 +323,7 @@ error:
 	}
 
 	fP = newVCalPrivate(fCalendar);
-   if (!fP) return false;
+	if (!fP) return false;
 	fP->updateIncidences();
 	if (fP->count()<1) fFullSync=true;
 	
@@ -381,7 +378,7 @@ void VCalConduitBase::syncPalmRecToPC()
 		if (!r->isDeleted() || (archive && archiveRecord))
 		{
 			KCal::Incidence*e=addRecord(r);
-			if (archive)  {
+			if (archive && archiveRecord)  {
 				e->setSyncStatus(KCal::Incidence::SYNCDEL);
 			}
 		}
@@ -671,6 +668,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.12  2002/06/12 22:11:17  kainhofe
+// Proper cleanup, libkcal still has some problems marking records modified on loading
+//
 // Revision 1.11  2002/06/09 21:08:06  kainhofe
 // Use the openDatabases() function and the fDatabase/fLocalDatabase instead of our own fCurrentDatabase/fBackupDatabase
 //
