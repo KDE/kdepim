@@ -105,10 +105,10 @@ signals:
 private:
   bool addNote( KCal::Journal* journal, const QString& resource,
                 Q_UINT32 sernum );
-  KCal::Journal* addNote( const QString& xml, const QString& subresource,
-                          Q_UINT32 sernum );
+  KCal::Journal* addNote( const QString& data, const QString& subresource,
+                          Q_UINT32 sernum, const QString &mimetype );
 
-  bool loadSubResource( const QString& resource );
+  bool loadSubResource( const QString& resource, const QString& mimetype );
 
   QString configFile() const {
     return ResourceKolabBase::configFile( "knotes" );

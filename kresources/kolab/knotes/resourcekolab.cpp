@@ -3,6 +3,7 @@
     Kolab storage format. See www.kolab.org for documentation on this.
 
     Copyright (c) 2004 Bo Thorsen <bo@sonofthor.dk>
+    Copyright (c) 2004 Till Adam <adam@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -46,6 +47,7 @@ using namespace Kolab;
 static const char* configGroupName = "Note";
 static const char* kmailContentsType = "Note";
 static const char* attachmentMimeType = "application/x-vnd.kolab.note";
+static const char* inlineMimeType = "text/calendar";
 
 ResourceKolab::ResourceKolab( const KConfig *config )
   : ResourceNotes( config ), ResourceKolabBase( "ResourceKolab-KNotes" )
@@ -88,17 +90,18 @@ void ResourceKolab::doClose()
     config.writeEntry( it.key(), it.data().active() );
 }
 
-bool ResourceKolab::loadSubResource( const QString& subResource )
+bool ResourceKolab::loadSubResource( const QString& subResource,
+                                     const QString &mimetype )
 {
   // Get the list of journals
   int count = 0;
-  if ( !kmailIncidencesCount( count, attachmentMimeType, subResource ) ) {
+  if ( !kmailIncidencesCount( count, mimetype, subResource ) ) {
     kdError() << "Communication problem in ResourceKolab::load()\n";
     return false;
   }
 
   QMap<Q_UINT32, QString> lst;
-  if( !kmailIncidences( lst, attachmentMimeType, subResource, 0, count ) ) {
+  if( !kmailIncidences( lst, mimetype, subResource, 0, count ) ) {
     kdError(5500) << "Communication problem in "
                   << "ResourceKolab::getIncidenceList()\n";
     return false;
@@ -111,7 +114,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource )
   mSilent = true;
   QMap<Q_UINT32, QString>::Iterator it;
   for ( it = lst.begin(); it != lst.end(); ++it ) {
-    KCal::Journal* journal = addNote( it.data(), subResource, it.key() );
+    KCal::Journal* journal = addNote( it.data(), subResource, it.key(), mimetype );
     if ( !journal )
       kdDebug(5500) << "loading note " << it.key() << " failed" << endl;
     else
@@ -135,7 +138,10 @@ bool ResourceKolab::load()
       // This subResource is disabled
       continue;
 
-    rc &= loadSubResource( itR.key() );
+    QString mimetype = inlineMimeType;
+    rc &= loadSubResource( itR.key(), mimetype );
+    mimetype = attachmentMimeType;
+    rc &= loadSubResource( itR.key(), mimetype );
   }
 
   return rc;
@@ -152,10 +158,16 @@ bool ResourceKolab::addNote( KCal::Journal* journal )
   return addNote( journal, QString::null, 0 );
 }
 
-KCal::Journal* ResourceKolab::addNote( const QString& xml, const QString& subresource,
-                             Q_UINT32 sernum )
+KCal::Journal* ResourceKolab::addNote( const QString& data, const QString& subresource,
+                             Q_UINT32 sernum, const QString &mimetype )
 {
-  KCal::Journal* journal = Note::xmlToJournal( xml );
+  KCal::Journal* journal = 0;
+  KCal::ICalFormat formatter;
+  if ( mimetype == attachmentMimeType )
+    journal = Note::xmlToJournal( data );
+  else 
+    journal = static_cast<KCal::Journal*>( formatter.fromString( data ) );
+
   Q_ASSERT( journal );
   if( journal && !mUidMap.contains( journal->uid() ) )
     if ( addNote( journal, subresource, sernum ) )
@@ -251,7 +263,12 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
 
   const bool silent = mSilent;
   mSilent = true;
-  KCal::Journal* journal = addNote( note, subResource, sernum );
+  QString mimetype;
+  if ( format == KMailICalIface::StorageXML )
+    mimetype = attachmentMimeType;
+  else
+    mimetype = inlineMimeType;
+  KCal::Journal* journal = addNote( note, subResource, sernum, mimetype );
   if ( journal )
     manager()->registerNote( this, journal );
   mSilent = silent;
@@ -285,7 +302,7 @@ void ResourceKolab::fromKMailRefresh( const QString& type,
 
 void ResourceKolab::fromKMailAddSubresource( const QString& type,
                                              const QString& subResource,
-                                             const QString&,
+                                             const QString& mimetype,
                                              bool writable )
 {
   if ( type != kmailContentsType )
@@ -301,7 +318,7 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
 
   bool active = config.readBoolEntry( subResource, true );
   mSubResources[ subResource ] = Kolab::SubResource( active, writable, subResource );
-  loadSubResource( subResource );
+  loadSubResource( subResource, mimetype );
   emit signalSubresourceAdded( this, type, subResource );
 }
 
@@ -353,12 +370,17 @@ void ResourceKolab::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map
                                               const QString& folder )
 {
   // We are only interested in notes
-  if ( type != attachmentMimeType ) return;
+  if ( ( type != attachmentMimeType ) && ( type != inlineMimeType ) ) return;
   // Populate with the new entries
   const bool silent = mSilent;
   mSilent = true;
+  QString mimetype;
+  if ( kmailStorageFormat( folder ) == KMailICalIface::StorageXML )
+    mimetype = attachmentMimeType;
+  else
+    mimetype = inlineMimeType;
   for( QMap<Q_UINT32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it ) {
-    KCal::Journal* journal = addNote( it.data(), folder, it.key() );
+    KCal::Journal* journal = addNote( it.data(), folder, it.key(), mimetype );
     if ( !journal )
       kdDebug(5500) << "loading note " << it.key() << " failed" << endl;
     else
