@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Name=Synchronizer Part
+Name[bs]=Dio za sinhronizaciju
 Name[ca]=Part del sincronitzador
 Name[cs]=Komponenta synchronizace
 Name[da]=Synkronisator-part
@@ -12,12 +13,16 @@ Name[fr]=Composant de synchronisation
 Name[hi]=सिंक्रोनाइज़र पार्ट
 Name[hu]=Szinkronizáló objektum
 Name[it]=Parte Synchronizer
+Name[ja]=同期パート
 Name[nb]=Synkroniseringsdel
 Name[nl]=Synchronizer-part
 Name[nn]=Synkroniseringsdel
+Name[pl]=Część Synchronizatora
 Name[pt]=Componente de Sincronização
 Name[pt_BR]=Componente do Sincronizador
+Name[ro]=Componentă sincronizare
 Name[ru]=Компонент синхронизации
+Name[sk]=Part pre synchronizáciu
 Name[sr]=Део Synchronizer
 Name[sv]=Synkroniseringsdel
 Name[ta]=ஒத்திழக்கு பகுதி
