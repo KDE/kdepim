@@ -530,7 +530,7 @@ void Incidence::setRecurrence( KCal::Recurrence* recur )
     mRecurrence.cycle = "yearly";
     mRecurrence.type = "monthday";
     QPtrList<int> rmd = recur->monthDays();
-    int day = !rmd.isEmpty() ? day = *rmd.first() : day = recur->parent()->dtStart().date().day();
+    int day = !rmd.isEmpty() ? *rmd.first() : recur->parent()->dtStart().date().day();
     mRecurrence.dayNumber = QString::number( day );
     QPtrList<int> months = recur->yearNums();
     if ( !months.isEmpty() )
