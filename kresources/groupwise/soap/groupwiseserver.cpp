@@ -38,13 +38,13 @@
 
 #include "groupwiseserver.h"
 
-GroupwiseServer::GroupwiseServer( const QString &host, const QString &user,
+GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
                                   const QString &password, QObject *parent )
   : QObject( parent, "GroupwiseServer" ),
-    mUrl( "http://" + host + ":7181/soap/" ), mUser( user ), mPassword( password )
+    mUrl( url ), mUser( user ), mPassword( password )
 {
   mSoap = new soap;
-
+qDebug("XXXXXXX %sI", url.latin1() );
   mWeaver = new KPIM::ThreadWeaver::Weaver( this );
   KPIM::ThreadWeaver::WeaverThreadLogger *weaverLogger = new KPIM::ThreadWeaver::WeaverThreadLogger( this );
   weaverLogger->attach( mWeaver );

@@ -36,6 +36,7 @@ class GroupwiseWizard : public KConfigWizard
 
   private:
     KLineEdit *mServerEdit;
+    KLineEdit *mPortEdit;
     KLineEdit *mUserEdit;
     KLineEdit *mPasswordEdit;
     QCheckBox *mSavePasswordCheck;

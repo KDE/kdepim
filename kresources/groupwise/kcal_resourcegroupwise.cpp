@@ -85,7 +85,10 @@ void ResourceGroupwise::init()
 
 void ResourceGroupwise::initGroupwise()
 {
-  mServer = new GroupwiseServer( mPrefs->url(), mPrefs->user(),
+  QString url;
+  url =  "http://" + mPrefs->host() +":";
+  url += QString::number(mPrefs->port()) + "/soap/";
+  mServer = new GroupwiseServer( url, mPrefs->user(),
                                  mPrefs->password(), this );
 
   connect( mServer, SIGNAL( readCalendarFinished() ),
@@ -103,7 +106,7 @@ void ResourceGroupwise::readConfig( const KConfig * )
 
   mPrefs->readConfig();
 
-  kdDebug() << "URL: " << mPrefs->url() << endl;
+  kdDebug() << "HOST: " << mPrefs->host() << endl;
 }
 
 void ResourceGroupwise::writeConfig( KConfig *config )

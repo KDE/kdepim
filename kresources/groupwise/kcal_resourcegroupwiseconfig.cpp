@@ -44,25 +44,25 @@ ResourceGroupwiseConfig::ResourceGroupwiseConfig( QWidget* parent,  const char* 
   resize( 245, 115 ); 
   QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
 
-  // FIXME: Post 3.2: i18n("Download from:") ( bug 67330 )
-  QLabel *label = new QLabel( i18n( "Download URL:" ), this );
-
-  mDownloadUrl = new KURLRequester( this );
-  mDownloadUrl->setMode( KFile::File );
+  QLabel *label = new QLabel( i18n("Server:"), this );
   mainLayout->addWidget( label, 1, 0 );
-  mainLayout->addWidget( mDownloadUrl, 1, 1 );
-
-  label = new QLabel( i18n("User:"), this );
-  mainLayout->addWidget( label, 2, 0 );
+  mHost = new KLineEdit( this );
+  mainLayout->addWidget( mHost, 1, 1 );
   
+  label = new QLabel( i18n("Port:"), this );
+  mainLayout->addWidget( label, 2, 0 );
+  mPort = new KLineEdit( this );
+  mainLayout->addWidget( mPort, 2, 1 );
+  
+  label = new QLabel( i18n("User:"), this );
+  mainLayout->addWidget( label, 3, 0 );
   mUserEdit = new KLineEdit( this );
-  mainLayout->addWidget( mUserEdit, 2, 1 );
+  mainLayout->addWidget( mUserEdit, 3, 1 );
   
   label = new QLabel( i18n("Password:"), this );
-  mainLayout->addWidget( label, 3, 0 );
-  
+  mainLayout->addWidget( label, 4, 0 );
   mPasswordEdit = new KLineEdit( this );
-  mainLayout->addWidget( mPasswordEdit, 3, 1 );
+  mainLayout->addWidget( mPasswordEdit, 4, 1 );
   mPasswordEdit->setEchoMode( KLineEdit::Password );
 
 #if 0
@@ -85,7 +85,8 @@ void ResourceGroupwiseConfig::loadSettings( KRES::Resource *resource )
       return;
     }
   
-    mDownloadUrl->setURL( res->prefs()->url() );
+    mHost->setText( res->prefs()->host() );
+    mPort->setText( QString::number(res->prefs()->port()) );
     mUserEdit->setText( res->prefs()->user() );
     mPasswordEdit->setText( res->prefs()->password() );
 #if 0
@@ -101,7 +102,8 @@ void ResourceGroupwiseConfig::saveSettings( KRES::Resource *resource )
 {
   ResourceGroupwise *res = static_cast<ResourceGroupwise*>( resource );
   if ( res ) {
-    res->prefs()->setUrl( mDownloadUrl->url() );
+    res->prefs()->setHost( mHost->text() );
+    res->prefs()->setPort( mPort->text().toUInt() );
     res->prefs()->setUser( mUserEdit->text() );
     res->prefs()->setPassword( mPasswordEdit->text() );
 #if 0

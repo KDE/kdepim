@@ -36,20 +36,6 @@
 #include <qlabel.h>
 
 
-QString groupwiseUrl()
-{
-  QString url;
-
-#if 0
-  if ( GroupwiseConfig::self()->useHttps() ) url = "https://";
-  else url = "http://";
-#endif
-  
-  url += GroupwiseConfig::self()->server();
-
-  return url;
-}
-
 class CreateGroupwiseKcalResource : public KConfigPropagator::Change
 {
   public:
@@ -67,11 +53,10 @@ class CreateGroupwiseKcalResource : public KConfigPropagator::Change
 
       kdDebug() << "TICK" << endl;
 
-      KURL url( groupwiseUrl() );
-
       KCal::ResourceGroupwise *r = new KCal::ResourceGroupwise();
       r->setResourceName( i18n("Groupwise") );
-      r->prefs()->setUrl( url.url() );
+      r->prefs()->setHost( GroupwiseConfig::self()->host() );
+      r->prefs()->setPort( GroupwiseConfig::self()->port() );
       r->prefs()->setUser( GroupwiseConfig::self()->user() );
       r->prefs()->setPassword( GroupwiseConfig::self()->password() );
       r->setSavePolicy( KCal::ResourceCached::SaveDelayed );
@@ -102,13 +87,12 @@ class UpdateGroupwiseKcalResource : public KConfigPropagator::Change
       KCal::CalendarResourceManager m( "calendar" );
       m.readConfig();
 
-      KURL url( groupwiseUrl() );
-
       KCal::CalendarResourceManager::Iterator it;
       for ( it = m.begin(); it != m.end(); ++it ) {
         if ( (*it)->identifier() == GroupwiseConfig::kcalResource() ) {
           KCal::ResourceGroupwise *r = static_cast<KCal::ResourceGroupwise *>( *it );
-          r->prefs()->setUrl( url.url() );
+          r->prefs()->setHost( GroupwiseConfig::self()->host() );
+          r->prefs()->setPort( GroupwiseConfig::self()->port() );
           r->prefs()->setUser( GroupwiseConfig::self()->user() );
           r->prefs()->setPassword( GroupwiseConfig::self()->password() );
           r->setSavePolicy( KCal::ResourceCached::SaveDelayed );
@@ -133,11 +117,15 @@ class CreateGroupwiseKabcResource : public KConfigPropagator::Change
       KRES::Manager<KABC::Resource> m( "contact" );
       m.readConfig();
 
-      KURL url( groupwiseUrl() );
+      KURL url;
+      url.setProtocol( "http" );
+      url.setHost( GroupwiseConfig::self()->host() );
+      url.setPort( GroupwiseConfig::self()->port() );
+      url.setPath( "/soap/" );
       QString user( GroupwiseConfig::self()->user() );
       QString password( GroupwiseConfig::self()->password() );
 
-      KABC::ResourceGroupwise *r = new KABC::ResourceGroupwise( url, user,
+      KABC::ResourceGroupwise *r = new KABC::ResourceGroupwise( url.url(), user,
                                                                 password,
                                                                 QStringList(),
                                                                 QString::null );
@@ -162,13 +150,12 @@ class UpdateGroupwiseKabcResource : public KConfigPropagator::Change
       KRES::Manager<KABC::Resource> m( "contact" );
       m.readConfig();
 
-      KURL url( groupwiseUrl() );
-
       KRES::Manager<KABC::Resource>::Iterator it;
       for ( it = m.begin(); it != m.end(); ++it ) {
         if ( (*it)->identifier() == GroupwiseConfig::kabcResource() ) {
           KABC::ResourceGroupwise *r = static_cast<KABC::ResourceGroupwise *>( *it );
-          r->prefs()->setUrl( url.url() );
+          r->prefs()->setHost( GroupwiseConfig::self()->host() );
+          r->prefs()->setPort( GroupwiseConfig::self()->port() );
           r->prefs()->setUser( GroupwiseConfig::self()->user() );
           r->prefs()->setPassword( GroupwiseConfig::self()->password() );
         }
@@ -205,7 +192,8 @@ class GroupwisePropagator : public KConfigPropagator
       } else {
         if ( (*it)->identifier() == GroupwiseConfig::kcalResource() ) {
           KCal::GroupwisePrefs *prefs = static_cast<KCal::ResourceGroupwise *>( *it )->prefs();
-          if ( prefs->url() != groupwiseUrl() ||
+          if ( prefs->host() != GroupwiseConfig::self()->host() ||
+               prefs->port() != GroupwiseConfig::self()->port() ||
                prefs->user() != GroupwiseConfig::user() ||
                prefs->password() != GroupwiseConfig::password() ) {
             changes.append( new UpdateGroupwiseKcalResource );
@@ -224,7 +212,8 @@ class GroupwisePropagator : public KConfigPropagator
       } else {
         if ( (*it2)->identifier() == GroupwiseConfig::kabcResource() ) {
           KABC::GroupwisePrefs *prefs = static_cast<KABC::ResourceGroupwise *>( *it2 )->prefs();
-          if ( prefs->url() != groupwiseUrl() ||
+          if ( prefs->host() != GroupwiseConfig::self()->host() ||
+               prefs->port() != GroupwiseConfig::self()->port() ||
                prefs->user() != GroupwiseConfig::user() ||
                prefs->password() != GroupwiseConfig::password() ) {
             changes.append( new UpdateGroupwiseKabcResource );
@@ -246,25 +235,30 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
   mServerEdit = new KLineEdit( page );
   topLayout->addWidget( mServerEdit, 0, 1 );
 
-  label = new QLabel( i18n("User name:"), page );
+  label = new QLabel( i18n("Port:"), page );
   topLayout->addWidget( label, 1, 0 );
+  mPortEdit = new KLineEdit( page, "0123456789" );
+  topLayout->addWidget( mPortEdit, 1, 1 );
+
+  label = new QLabel( i18n("User name:"), page );
+  topLayout->addWidget( label, 2, 0 );
   mUserEdit = new KLineEdit( page );
-  topLayout->addWidget( mUserEdit, 1, 1 );
+  topLayout->addWidget( mUserEdit, 2, 1 );
 
   label = new QLabel( i18n("Password:"), page );
-  topLayout->addWidget( label, 2, 0 );
+  topLayout->addWidget( label, 3, 0 );
   mPasswordEdit = new KLineEdit( page );
   mPasswordEdit->setEchoMode( KLineEdit::Password );
-  topLayout->addWidget( mPasswordEdit, 2, 1 );
+  topLayout->addWidget( mPasswordEdit, 3, 1 );
 
   mSavePasswordCheck = new QCheckBox( i18n("Save password"), page );
-  topLayout->addMultiCellWidget( mSavePasswordCheck, 3, 3, 0, 1 );
+  topLayout->addMultiCellWidget( mSavePasswordCheck, 4, 4, 0, 1 );
 
   mSecureCheck = new QCheckBox( i18n("Encrypt communication with server"),
                                 page );
-  topLayout->addMultiCellWidget( mSecureCheck, 4, 4, 0, 1 );
+  topLayout->addMultiCellWidget( mSecureCheck, 5, 5, 0, 1 );
 
-  topLayout->setRowStretch( 5, 1 );
+  topLayout->setRowStretch( 6, 1 );
 
   setupRulesPage();
   setupChangesPage();
@@ -278,7 +272,8 @@ GroupwiseWizard::~GroupwiseWizard()
 
 void GroupwiseWizard::usrReadConfig()
 {
-  mServerEdit->setText( GroupwiseConfig::self()->server() );
+  mServerEdit->setText( GroupwiseConfig::self()->host() );
+  mPortEdit->setText( QString::number(GroupwiseConfig::self()->port()) );
   mUserEdit->setText( GroupwiseConfig::self()->user() );
   mPasswordEdit->setText( GroupwiseConfig::self()->password() );
   mSavePasswordCheck->setChecked( GroupwiseConfig::self()->savePassword() );
@@ -287,7 +282,8 @@ void GroupwiseWizard::usrReadConfig()
 
 void GroupwiseWizard::usrWriteConfig()
 {
-  GroupwiseConfig::self()->setServer( mServerEdit->text() );
+  GroupwiseConfig::self()->setHost( mServerEdit->text() );
+  GroupwiseConfig::self()->setPort( mPortEdit->text().toUInt() );
   GroupwiseConfig::self()->setUser( mUserEdit->text() );
   GroupwiseConfig::self()->setPassword( mPasswordEdit->text() );
   GroupwiseConfig::self()->setSavePassword( mSavePasswordCheck->isChecked() );

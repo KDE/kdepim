@@ -50,7 +50,7 @@ class GroupwiseServer : public QObject
   Q_OBJECT
 
   public:
-    GroupwiseServer( const QString &host, const QString &user,
+    GroupwiseServer( const QString &url, const QString &user,
                      const QString &password, QObject *parent );
     ~GroupwiseServer();
 
