@@ -1,0 +1,71 @@
+# You might want to change the next 2 lines, the rest should be ok
+Prefix: /opt/kde2
+%define qtdir /usr/lib/qt-2.1.0
+
+Name: kdepim
+Summary: Personal Information Management (PIM) for KDE
+Version: @VERSION@
+Release: 1
+Serial: 2
+Source: ftp://ftp.kde.org/pub/kde/stable/%{version}/distribution/tar/generic/source/%{name}-%{version}.tar.bz2
+License: GPL
+Group: Applications/Productivity
+Buildroot: /var/tmp/%{name}-buildroot
+Requires: kdesupport
+Obsoletes: korganizer, kpilot
+
+%description
+kdepim is a collection of Personal Information Management (PIM) tools for
+the K Desktop Enviromnent (KDE)
+kdepim contains the following applications:
+
+KOrganizer: a complete calendar and scheduling program. KOrganizer supports
+information interchange with other calendar applications through the
+industry standard vCalendar file format.
+
+Empath: an E-Mail client
+
+abbrowser: an address book reader
+
+kpilot: Syncronization tool for 3com Palm Pilots and compatible devices
+
+twister: A PIM client
+
+%prep
+rm -rf $RPM_BUILD_ROOT
+
+%setup -q
+
+%build
+export KDEDIR=%{prefix} QTDIR=%{qtdir}
+make -f Makefile.cvs
+CXXFLAGS="$RPM_OPT_FLAGS -L%{prefix}/lib" \
+CFLAGS="$RPM_OPT_FLAGS -L%{prefix}/lib" ./configure \
+	--prefix=%{prefix}
+make
+
+%install
+make install DESTDIR=$RPM_BUILD_ROOT
+find $RPM_BUILD_ROOT%{prefix}/bin/* || :
+
+cd $RPM_BUILD_ROOT
+find . -type d | sed '1,2d;s,^\.,\%attr(-\,root\,root) \%dir ,' > \
+        $RPM_BUILD_DIR/file.list.%{name}
+
+find . -type f | sed -e 's,^\.,\%attr(-\,root\,root) ,' \
+        -e '/\/config\//s|^|%config|' >> \
+        $RPM_BUILD_DIR/file.list.%{name}
+
+find . -type l | sed 's,^\.,\%attr(-\,root\,root) ,' >> \
+        $RPM_BUILD_DIR/file.list.%{name}
+
+echo "%docdir %{prefix}/doc/kde" >> $RPM_BUILD_DIR/file.list.%{name}
+
+%clean
+rm -rf $RPM_BUILD_ROOT $RPM_BUILD_DIR/file.list.%{name}
+
+%files -f ../file.list.%{name}
+
+%changelog
+* Thu May 11 2000 Bernhard Rosenkraenzer <bero@redhat.com>
+- 1.90
