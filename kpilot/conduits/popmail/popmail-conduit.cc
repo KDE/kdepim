@@ -39,6 +39,10 @@ static const char *popmail_conduit_id=
 
 #include "options.h"
 
+#ifndef HAVE_GETDOMAINNAME
+#include <sys/utsname.h>
+#endif
+
 #include <sys/types.h>
 #include <sys/socket.h> 
 #include <ctype.h>
@@ -447,6 +451,7 @@ int PopMailConduit::sendViaSMTP()
 	}
 
 
+#ifdef HAVE_GETDOMAINNAME
 	// Now we're going to do some yucky things with
 	// buffer -- one part will be used to hold the domain 
 	// name and the other will be used to hold the
@@ -461,6 +466,14 @@ int PopMailConduit::sendViaSMTP()
 	//
 	getdomainname(buffer+1024,1024);
 	sprintf(buffer, "EHLO %s\r\n",buffer+1024);
+#else
+	{
+		struct utsname u;
+		(void) uname(&u);
+		sprintf(buffer,"EHLO %s\r\n",u.nodename);
+	}
+#endif
+
 #ifdef DEBUG
 	if (debug_level & SYNC_MINOR)
 	{
@@ -1623,6 +1636,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.15  2001/02/09 15:59:28  habenich
+// replaced "char *id" with "char *<filename>_id", because of --enable-final in configure
+//
 // Revision 1.14  2001/02/07 15:46:31  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //

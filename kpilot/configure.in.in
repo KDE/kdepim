@@ -25,9 +25,14 @@ else
     CPPFLAGS="$ac_save_cppflags"
 fi
 
-AC_CHECK_LIB(pisock,pi_accept,[LIBPISOCK="-lpisock"], 
-            [AC_MSG_WARN([KPILOT: pisock library not found])
-            HAVE_PISOCK=0])
+AC_CHECK_LIB(pisock,
+	pi_accept,
+	[LIBPISOCK="-lpisock"], 
+	[AC_CHECK_LIB(pisock,
+		pi_accept,
+		[LIBPISOCK="-lpisock -lxnet"],
+		[AC_MSG_WARN([KPILOT: pisock library not found])
+		HAVE_PISOCK=0])])
 AC_SUBST(LIBPISOCK)
 
 if test "$HAVE_PISOCK" = "0" ; then
