@@ -45,7 +45,7 @@ class IncidenceBase : public CustomProperties
       public:
         virtual void incidenceUpdated( IncidenceBase * ) = 0;
     };
-  
+
     IncidenceBase();
     IncidenceBase(const IncidenceBase &);
     virtual ~IncidenceBase();
@@ -90,11 +90,11 @@ class IncidenceBase : public CustomProperties
     void setHasDuration(bool);
     bool hasDuration() const;
 
-    /** returns TRUE or FALSE depending on whether the event "floats,"
-     * or doesn't have a time attached to it, only a date. */
+    /** Return true or false depending on whether the incidence "floats,"
+     * i.e. has a date but no time attached to it. */
     bool doesFloat() const;
-    /** sets the event's float value. */
-    void setFloats(bool f);
+    /** Set whether the incidence floats, i.e. has a date but no time attached to it. */
+    virtual void setFloats(bool f);
 
     /**
       Add Attendee to this incidence. IncidenceBase takes ownership of the
@@ -149,7 +149,7 @@ class IncidenceBase : public CustomProperties
     // PILOT SYNCHRONIZATION STUFF
     int mPilotId;                         // unique id for pilot sync
     int mSyncStatus;                      // status (for sync)
-    
+
     QPtrList<Observer> mObservers;
 };
 
