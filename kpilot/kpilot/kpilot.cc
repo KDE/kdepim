@@ -30,9 +30,9 @@
 static const char *kpilot_id="$Id$";
 
 
-#define KPILOT_USE_XMLGUI	(1)
-
+#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
+#endif
 
 
 #include <sys/types.h>
@@ -118,8 +118,8 @@ static const char *kpilot_id="$Id$";
 #ifndef _KKDEYDIALOG_H_
 #include <kkeydialog.h>
 #endif
-#ifndef _KACTION_H_
-#include <kaction.h>
+#ifndef _KEDITTOOLBAR_H_
+#include <kedittoolbar.h>
 #endif
 
 
@@ -173,6 +173,9 @@ KPilotInstaller::KPilotInstaller() :
     fQuitAfterCopyComplete(false), fManagingWidget(0L), fPilotLink(0L),
     fPilotCommandSocket(0L), fPilotStatusSocket(0L), fKillDaemonOnExit(false),
     fStatus(Startup),
+#if !KPILOT_USE_XMLGUI
+	conduitCombo(0L),
+#endif
 	fFileInstallWidget(0L)
 {
 	FUNCTIONSETUP;
@@ -334,12 +337,6 @@ void KPilotInstaller::initIcons()
 }
 
 
-#if KPILOT_USE_XMLGUI
-#define	theToolbar	toolBar()
-#else
-#define theToolbar	fToolBar
-#endif
-
 void
 KPilotInstaller::initToolBar()
 {
@@ -347,20 +344,15 @@ KPilotInstaller::initToolBar()
 
 #if !KPILOT_USE_XMLGUI
 	fToolBar = new KToolBar(this,"toolbar");
-#endif
 
-#if 0
- 	conduitCombo=new QComboBox(theToolbar,"conduitCombo");
+ 	conduitCombo=new QComboBox(fToolBar,"conduitCombo");
  	conduitCombo->insertItem(version(0));
 
 	theToolbar->insertWidget(KPilotInstaller::ID_COMBO,140,conduitCombo,0);
  	connect(conduitCombo,SIGNAL(activated(int)),
  		this,SLOT(slotModeSelected(int)));
 
-	theToolbar->alignItemRight(KPilotInstaller::ID_COMBO);
-#endif
-
-#if !KPILOT_USE_XMLGUI
+	fToolBar->alignItemRight(KPilotInstaller::ID_COMBO);
 	addToolBar(fToolBar);
 #endif
 }
@@ -428,10 +420,12 @@ KPilotInstaller::slotModeSelected(int selected)
 	}
 		
 
+#if !KPILOT_USE_XMLGUI
 	if (conduitCombo)
 	{
 		fStatusBar->changeItem(conduitCombo->text(selected),0);
 	}
+#endif
 }
 
 void KPilotInstaller::slotShowComponent(PilotComponent *p)
@@ -467,6 +461,7 @@ void KPilotInstaller::showTitlePage(const QString& msg,bool force)
 {
 	FUNCTIONSETUP;
 
+#if !KPILOT_USE_XMLGUI
 	if (conduitCombo)
 	{
 		if ((conduitCombo->currentItem()!=0) || force)
@@ -479,6 +474,9 @@ void KPilotInstaller::showTitlePage(const QString& msg,bool force)
 	{
 		slotModeSelected(0);
 	}
+#else
+	slotModeSelected(0);
+#endif
 
 	if (!msg.isNull())
 	{
@@ -1093,6 +1091,9 @@ KPilotInstaller::initMenu()
 				      actionCollection());
 	p = KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()),
 				    actionCollection());
+	p = KStdAction::configureToolbars(this,
+		SLOT(optionsConfigureKeys()),
+		actionCollection());
 	p = KStdAction::preferences(this, SLOT(slotConfigureKPilot()),
 				    actionCollection());
 	p = new KAction(i18n("C&onfigure Conduits..."), "configure", 0,
@@ -1169,8 +1170,6 @@ KPilotInstaller::addComponentPage(PilotComponent *p, const QString &name)
 	fVisibleWidgetList.append(p);
 
 
-	// conduitCombo->insertItem(name,fVisibleWidgetList.count()); 
-
 	const char *componentname = p->name("(none)");
 	char *actionname = 0L;
 	if (strncmp(componentname,"component_",10)==0)
@@ -1217,10 +1216,12 @@ void KPilotInstaller::menuCallback(int item)
 	if ((item>=ID_COMBO) && 
 		(item<ID_COMBO+(int)fVisibleWidgetList.count()))
 	{
+#if !KPILOT_USE_XMLGUI
 		if (conduitCombo)
 		{
 			conduitCombo->setCurrentItem(item-ID_COMBO);
 		}
+#endif
 		slotModeSelected(item-ID_COMBO);
 		return;
 	}
@@ -1292,9 +1293,20 @@ void KPilotInstaller::optionsShowToolbar()
 
 void KPilotInstaller::optionsConfigureKeys()
 {
-    KKeyDialog::configureKeys(actionCollection(), "kpilotui.rc");
+    KKeyDialog::configureKeys(actionCollection(), xmlFile());
 }
 
+void KPilotInstaller::optionsConfigureToolbars()
+{
+	// use the standard toolbar editor
+	KEditToolbar dlg(actionCollection());
+
+	if (dlg.exec())
+	{
+		// recreate our GUI
+		createGUI();
+	} 
+}
 
 
 void
@@ -1487,7 +1499,8 @@ int main(int argc, char** argv)
 	about.addAuthor("Joerg Habenicht",
 		I18N_NOOP("Bugfixer"));
 	about.addAuthor("Martin Junius",
-		I18N_NOOP("XML GUI"));
+		I18N_NOOP("XML GUI"),
+		"mj@m-j-s.net", "http://www.m-j-s.net/kde/");
 
 
 
@@ -1588,6 +1601,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.47  2001/04/14 15:21:35  adridg
+// XML GUI and ToolTips
+//
 // Revision 1.46  2001/04/11 21:36:54  adridg
 // Added app icons
 //

@@ -41,6 +41,9 @@
 #ifndef QHBOX_H
 #include <qhbox.h>
 #endif
+#ifndef QTOOLTIP_H
+#include <qtooltip.h>
+#endif
 
 #ifndef _KSIMPLECONFIG_H
 #include <ksimpleconfig.h>
@@ -116,6 +119,10 @@ CConduitSetup::CConduitSetup(QWidget *parent, const char *name) :
 	connect(categories,SIGNAL(executed(QListViewItem *)),
 		this,
 		SLOT(conduitExecuted(QListViewItem *)));
+	QToolTip::add(categories,
+		i18n("You can drag and drop conduits between the\n"
+			"active and available groups. Only the conduits\n"
+			"in the active group will run when you do a HotSync."));
 
 
 	fillLists();
@@ -468,6 +475,9 @@ void CConduitSetup::warnSetupRunning()
 
 
 // $Log$
+// Revision 1.22  2001/04/16 13:54:17  adridg
+// --enable-final file inclusion fixups
+//
 // Revision 1.21  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

@@ -10,7 +10,7 @@
     <Separator />
     <Action name="file_quit" />
   </Menu>
-  <Menu name="vieww" noMerge="1"><text>&amp;View</text>
+  <Menu name="view" noMerge="1"><text>&amp;View</text>
     <Action name="view_kpilot" />
     <Action name="view_memo" />
     <Action name="view_address" />
@@ -21,7 +21,7 @@
     <Action name="options_show_toolbar" />
     <Separator />
     <Action name="options_configure_keybinding" />
-    <!-- configure toolbar -->
+    <Action name="options_configure_toolbars" />
     <Action name="options_configure" />
     <Action name="options_configure_conduits" />
   </Menu>

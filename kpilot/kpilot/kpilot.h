@@ -29,6 +29,13 @@
 #ifndef _KPILOT_KPILOT_H
 #define _KPILOT_KPILOT_H
 
+/*
+** Define KPILOT_USE_XMLGUI to a non-zero value to use the
+** new, modern, KDE 2 XML GUI style. Otherwise, KPilot uses
+** the old-fashioned hard-coded GUI.
+*/
+#define KPILOT_USE_XMLGUI	(1)
+
 
 #ifndef QAPP_H
 #include <qapp.h>
@@ -160,6 +167,7 @@ public slots:
 	void optionsShowStatusbar();
 	void optionsShowToolbar();
 	void optionsConfigureKeys();
+	void optionsConfigureToolbars();
 	
 
 protected:
@@ -221,6 +229,7 @@ private:
 
       Status fStatus;
 
+#if !KPILOT_USE_XMLGUI
 	/**
 	* We keep track of this one (conduitMenu)
 	* because the various builtin conduits
@@ -237,9 +246,12 @@ private:
 	* @see conduitMenu
 	*/
 	QComboBox	*conduitCombo;
+#endif
 
+#if 0
 	QPixmap	icon_hotsync,icon_backup,icon_fastsync,icon_restore,
 		icon_quit;
+#endif
 
 	FileInstallWidget *fFileInstallWidget;
 
@@ -278,6 +290,9 @@ private:
 
 
 // $Log$
+// Revision 1.24  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.23  2001/04/14 15:21:35  adridg
 // XML GUI and ToolTips
 //

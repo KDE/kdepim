@@ -73,6 +73,9 @@
 #ifndef QLAYOUT_H
 #include <qlayout.h>
 #endif
+#ifndef QTOOLTIP_H
+#include <qtooltip.h>
+#endif
 
 
 #ifndef _KLOCALE_H
@@ -145,7 +148,9 @@ KPilotOptionsPrivacy::KPilotOptionsPrivacy(setupDialog *p,KConfig& c) :
 	fuseSecret->adjustSize();
 	grid->addWidget(fuseSecret,0,fieldCol);
 	fuseSecret->setChecked(c.readBoolEntry("ShowSecrets"));
-
+	QToolTip::add(fuseSecret,
+		i18n("Records that are marked `Private' in the Pilot are\n"
+			"displayed by KPilot only when this box is checked."));
 
 
 	l1=new QLabel(i18n("Backup Only:"),this);
@@ -154,6 +159,8 @@ KPilotOptionsPrivacy::KPilotOptionsPrivacy(setupDialog *p,KConfig& c) :
 	l1->setBuddy(fBackupOnly);
 	grid->addWidget(l1,1,labelCol);
 	grid->addWidget(fBackupOnly,1,fieldCol);
+	QToolTip::add(fBackupOnly,
+		i18n("Databases listed here are only backed up, not synced."));
 
 	l2=new QLabel(i18n("Skip:"),this);
 	fSkipDB=new QLineEdit(this);
@@ -161,6 +168,8 @@ KPilotOptionsPrivacy::KPilotOptionsPrivacy(setupDialog *p,KConfig& c) :
 	l2->setBuddy(fSkipDB);
 	grid->addWidget(l2,2,labelCol);
 	grid->addWidget(fSkipDB,2,fieldCol);
+	QToolTip::add(fSkipDB,
+		i18n("Databases listed here are neither backed up, nor synced."));
 
 	c.setGroup(QString::null);
 	fBackupOnly->setText(c.readEntry("BackupForSync",
@@ -233,6 +242,9 @@ KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig& c) :
 	// fIncomingFormat->resize(250, fIncomingFormat->height());
 	currentLabel->setBuddy(fIncomingFormat);
 	grid->addWidget(fIncomingFormat,1,1);
+	QToolTip::add(fIncomingFormat,
+		i18n("This defines the CSV format for importing addresses\n"
+			"from a text file."));
 
 	currentLabel = new QLabel(i18n("Export Format:"),
 		formatGroup);
@@ -247,12 +259,20 @@ KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig& c) :
 	fOutgoingFormat->resize(250, fIncomingFormat->height());
 	currentLabel->setBuddy(fOutgoingFormat);
 	grid->addWidget(fOutgoingFormat,2,1);
+	QToolTip::add(fOutgoingFormat,
+		i18n("This defines the CSV format for exporting addresses\n"
+			"to a text file."));
 
 	fUseKeyField = new QCheckBox(i18n("Use &Key Field"), 
 		formatGroup);
 	fUseKeyField->adjustSize();
 	fUseKeyField->setChecked(c.readBoolEntry("UseKeyField", false));
 	grid->addWidget(fUseKeyField,3,1);
+	QToolTip::add(fUseKeyField,
+		i18n("When this option is checked, imported addresses with\n"
+			"duplicate last names are merged with addresses\n"
+			"already present. Otherwise, all addresses are\n"
+			"entered individually."));
 
 
 	formatGroup->adjustSize();
@@ -267,10 +287,16 @@ KPilotOptionsAddress::KPilotOptionsAddress(setupDialog *w,KConfig& c) :
 	fNormalDisplay=new QRadioButton(i18n("Last,First"),
 		displayGroup);
 	fNormalDisplay->adjustSize();
+	QToolTip::add(fNormalDisplay,
+		i18n("Addresses are displayed in the address viewer sorted\n"
+			"by last name, first name."));
 
 	fCompanyDisplay=new QRadioButton(i18n("Company,Last"),
 		displayGroup);
 	fCompanyDisplay->adjustSize();
+	QToolTip::add(fCompanyDisplay,
+		i18n("Addresses are displayed in the address viewer sorted\n"
+			"by company name, last name."));
 
 	displayGroup->adjustSize();
 	vl->addWidget(displayGroup);
@@ -441,6 +467,9 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig& config) :
 	fPilotDevice->resize(100, fPilotDevice->height());
 	grid->addWidget(currentLabel,0,labelCol);
 	grid->addWidget(fPilotDevice,0,fieldCol);
+	QToolTip::add(fPilotDevice,
+		i18n("Enter the serial port the Pilot is attached to.\n"
+			"You can also enter a USB port device."));
 
 	currentLabel = new QLabel(i18n("Speed: "), this);
 	currentLabel->adjustSize();
@@ -759,6 +788,9 @@ int main(int argc, char **argv)
 #endif
 
 // $Log$
+// Revision 1.27  2001/04/16 13:54:17  adridg
+// --enable-final file inclusion fixups
+//
 // Revision 1.26  2001/04/11 21:33:06  adridg
 // Make version number consistent across KPilot applications
 //
