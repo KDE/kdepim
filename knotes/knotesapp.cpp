@@ -55,7 +55,7 @@ KNotesApp::KNotesApp()
     // create the GUI...
     new KAction( i18n("New Note"), "filenew", 0, this, SLOT(slotNewNote()), actionCollection(), "new_note" );
     new KAction( i18n("&Preferences..."), "configure", 0, this, SLOT(slotPreferences()), actionCollection(), "options_configure" );
-    new KAction( i18n("&Quit"), "exit", 0, kapp, SLOT(quit()), actionCollection(), "quit" );
+    new KAction( i18n("&Quit"), "exit", 0, kapp, SLOT(slotQuit()), actionCollection(), "quit" );
     new KHelpMenu( this, kapp->aboutData(), false, actionCollection() );
 
     setXMLFile( QString( instance()->instanceName() + "ui.rc" ) );
@@ -123,31 +123,33 @@ KNotesApp::KNotesApp()
     }
     updateNoteActions();
 
+    connect( kapp, SIGNAL( lastWindowClosed() ), kapp, SLOT( quit() ) );
+    
     kapp->installEventFilter( this );
-
+    
     if ( m_noteList.count() == 0 && !kapp->isRestored() )
         slotNewNote();
 }
 
 KNotesApp::~KNotesApp()
 {
-    saveNotes();
-    blockSignals(true);
+    saveNotes( false );
+    blockSignals( true );
     m_noteList.clear();
-    blockSignals(false);
+    blockSignals( false );
 
     delete factory;
 }
 
 bool KNotesApp::saveState( QSessionManager& )
 {
-    saveNotes();
+    saveNotes( false );
     return true;
 }
 
 bool KNotesApp::commitData( QSessionManager& )
 {
-    saveNotes();
+    saveNotes( true );
     return true;
 }
 
@@ -443,6 +445,11 @@ void KNotesApp::slotPreferences() const
     config.exec();
 }
 
+void KNotesApp::slotQuit()
+{
+    saveNotes( true );
+    kapp->quit();
+}
 
 // -------------------- private methods -------------------- //
 
@@ -477,7 +484,7 @@ void KNotesApp::showNote( KNote* note ) const
     }
 }
 
-void KNotesApp::saveNotes() const
+void KNotesApp::saveNotes( bool display ) const
 {
     // save all the notes...
     QDictIterator<KNote> it( m_noteList );
@@ -485,7 +492,8 @@ void KNotesApp::saveNotes() const
     {
         it.current()->saveData();
         it.current()->saveConfig();
-        it.current()->saveDisplayConfig();
+        if ( display )
+            it.current()->saveDisplayConfig();
     }
 }
 
