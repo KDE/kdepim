@@ -2282,7 +2282,7 @@ task.</para>
 <chapter id="faq">
 <title>Questions and Answers</title>
 
-<qandaset>
+<qandaset id="questions-and-answers">
 <qandaentry>
 <question>
 <para>Can I import my old <application>Ical</application> data??</para>
