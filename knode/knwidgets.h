@@ -71,7 +71,7 @@ class KNProgress : public KProgress
   Q_OBJECT
 
   public:
-    KNProgress (int desiredHeight, int minValue, int maxValue, int value, KProgress::Orientation orient, QWidget *parent=0, const char *name=0);
+    KNProgress (int desiredHeight, int maxValue, int value, QWidget *parent=0, const char *name=0);
     ~KNProgress();
 
     /** 0% and no text */

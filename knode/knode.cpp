@@ -72,7 +72,7 @@ KNMainWindow::KNMainWindow()
   //-------------------------------- <GUI> ------------------------------------
   //statusbar
   KStatusBar *sb=statusBar();
-  p_rogBar=new KNProgress(sb->sizeHint().height()-4,0,1000,0, KProgress::Horizontal,sb );
+  p_rogBar=new KNProgress(sb->sizeHint().height()-4, 1000, 0, sb);
   knGlobals.progressBar=p_rogBar;
   sb->addWidget(p_rogBar);
   sb->insertItem(QString::null, SB_MAIN,2);
@@ -964,7 +964,6 @@ void KNMainWindow::showEvent(QShowEvent *)
 
 void KNMainWindow::fontChange( const QFont & )
 {
-  p_rogBar->setFont(font());    // should be called automatically?
   a_rtFactory->configChanged();
   KNArticleWidget::configChanged();
   configChanged();
@@ -973,7 +972,6 @@ void KNMainWindow::fontChange( const QFont & )
 
 void KNMainWindow::paletteChange( const QPalette & )
 {
-  p_rogBar->setPalette(palette());    // should be called automatically?
   c_fgManager->appearance()->updateHexcodes();
   KNArticleWidget::configChanged();
   configChanged();
