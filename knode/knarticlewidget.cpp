@@ -181,7 +181,7 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, QWidget *parent, co
                           SLOT(slotViewSource()), a_ctions, "article_viewSource");
 
   a_ctSetCharset = new KSelectAction(i18n("Chars&et"), 0, a_ctions, "set_charset");
-  a_ctSetCharset->setConfigurable(false);
+  a_ctSetCharset->setShortcutConfigurable(false);
   QStringList cs=KGlobal::charsets()->availableEncodingNames();
   cs.prepend(i18n("Automatic"));
   a_ctSetCharset->setItems(cs);

@@ -164,7 +164,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   a_ctSetCharset = new KSelectAction(i18n("Set &Charset"), 0, actionCollection(), "set_charset");
   a_ctSetCharset->setItems(knGlobals.cfgManager->postNewsTechnical()->composerCharsets());
-  a_ctSetCharset->setConfigurable(false);
+  a_ctSetCharset->setShortcutConfigurable(false);
   connect(a_ctSetCharset, SIGNAL(activated(const QString&)),
   this, SLOT(slotSetCharset(const QString&)));
 
