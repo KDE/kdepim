@@ -272,7 +272,7 @@ KOTodoView::KOTodoView(Calendar *calendar,QWidget* parent,const char* name) :
   // Double clicking conflicts with opening/closing the subtree                   
   QObject::connect(mTodoListView,SIGNAL(doubleClicked(QListViewItem *)),
                    this,SLOT(showItem(QListViewItem *)));
-  QObject::connect(mTodoListView,SIGNAL(rightButtonClicked ( QListViewItem *,
+  QObject::connect(mTodoListView,SIGNAL(contextMenuRequested ( QListViewItem *,
                    const QPoint &, int )),
                    this,SLOT(popupMenu(QListViewItem *,const QPoint &,int)));
   QObject::connect(mTodoListView,SIGNAL(clicked(QListViewItem *)),
