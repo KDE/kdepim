@@ -53,7 +53,7 @@ public:
 
 	typedef enum { Error=-1 } Status;
 
-	int status() const { return fStatus; } ;
+	int status() const { return fActionStatus; } ;
 	virtual QString statusString() const;
 
 protected:
@@ -101,7 +101,7 @@ protected:
 
 protected:
 	KPilotDeviceLink *fHandle;
-	int fStatus;
+	int fActionStatus;
 
 	void addSyncLogEntry(const QString &e,bool log=true)
 		{ fHandle->addSyncLogEntry(e,log); } ;

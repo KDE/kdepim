@@ -70,7 +70,7 @@ KPilotDeviceLink *KPilotDeviceLink::fDeviceLink = 0L;
 
 KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name) :
 	QObject(parent, name),
-	fStatus(Init),
+	fLinkStatus(Init),
 	fPilotPath(QString::null),
 	fDeviceType(None),
 	fRetries(0),
@@ -146,7 +146,7 @@ void KPilotDeviceLink::reset(DeviceType t, const QString & dP)
 {
 	FUNCTIONSETUP;
 
-	fStatus = Init;
+	fLinkStatus = Init;
 	fRetries = 0;
 
 	// Release all resources
@@ -182,7 +182,7 @@ void KPilotDeviceLink::reset()
 		this, SLOT(openDevice()));
 	fOpenTimer->start(1000, false);
 
-	fStatus = WaitingForDevice;
+	fLinkStatus = WaitingForDevice;
 }
 
 void KPilotDeviceLink::checkDevice()
@@ -220,9 +220,9 @@ void KPilotDeviceLink::openDevice()
 	// This transition (from Waiting to Found) can only be
 	// taken once.
 	//
-	if (fStatus == WaitingForDevice)
+	if (fLinkStatus == WaitingForDevice)
 	{
-		fStatus = FoundDevice;
+		fLinkStatus = FoundDevice;
 	}
 
 	shouldPrint(OpenMessage,i18n("Trying to open device %1...")
@@ -238,7 +238,7 @@ void KPilotDeviceLink::openDevice()
 				"(will retry)").
 				arg(fPilotPath));
 
-		if (fStatus != PilotLinkError)
+		if (fLinkStatus != PilotLinkError)
 		{
 			fOpenTimer->start(1000, false);
 		}
@@ -299,10 +299,10 @@ bool KPilotDeviceLink::open()
 			<< ": Got master " << fPilotMasterSocket << endl;
 #endif
 
-		fStatus = CreatedSocket;
+		fLinkStatus = CreatedSocket;
 	}
 
-	Q_ASSERT(fStatus == CreatedSocket);
+	Q_ASSERT(fLinkStatus == CreatedSocket);
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname << ": Binding to path " << fPilotPath << endl;
@@ -321,7 +321,7 @@ bool KPilotDeviceLink::open()
 
 	if (ret >= 0)
 	{
-		fStatus = DeviceOpen;
+		fLinkStatus = DeviceOpen;
 		fOpenTimer->stop();
 
 		fSocketNotifier = new QSocketNotifier(fPilotMasterSocket,
@@ -402,7 +402,7 @@ errInit:
 			<< ": (" << strerror(e) << ")" << endl;
 	}
 
-	fStatus = PilotLinkError;
+	fLinkStatus = PilotLinkError;
 	emit logError(msg);
 	return false;
 }
@@ -470,14 +470,14 @@ void KPilotDeviceLink::acceptDevice()
 		emit logError(i18n("Can't accept Pilot (%1)")
 			.arg(QString::fromLocal8Bit(s)));
 
-		fStatus = PilotLinkError;
+		fLinkStatus = PilotLinkError;
 		close();
 		return;
 	}
 
-	if ((fStatus != DeviceOpen) || (fPilotMasterSocket == -1))
+	if ((fLinkStatus != DeviceOpen) || (fPilotMasterSocket == -1))
 	{
-		fStatus = PilotLinkError;
+		fLinkStatus = PilotLinkError;
 		kdError() << k_funcinfo
 			<< ": Already connected or unable to connect!"
 			<< endl;
@@ -493,7 +493,7 @@ void KPilotDeviceLink::acceptDevice()
 	if (dlp_ReadSysInfo(fCurrentPilotSocket, fPilotSysInfo->sysInfo()) < 0)
 	{
 		emit logError(i18n("Unable to read system information from Pilot"));
-		fStatus=PilotLinkError;
+		fLinkStatus=PilotLinkError;
 		return;
 	}
 #ifdef DEBUG
@@ -540,7 +540,7 @@ void KPilotDeviceLink::acceptDevice()
 			<< ": dlp_OpenConduit returned " << ret << endl;
 
 #if 0
-		fStatus = SyncDone;
+		fLinkStatus = SyncDone;
 		emit logMessage(i18n
 			("Exiting on cancel. All data not restored."));
 		return;
@@ -548,7 +548,7 @@ void KPilotDeviceLink::acceptDevice()
 		emit logError(i18n("Could not read user information from the Pilot. "
 			"Perhaps you have a password set on the device?"));
 	}
-	fStatus = AcceptedDevice;
+	fLinkStatus = AcceptedDevice;
 
 
 	emit logProgress(QString::null, 100);
@@ -674,7 +674,7 @@ QString KPilotDeviceLink::statusString() const
 	QString s = QString::fromLatin1("KPilotDeviceLink=");
 
 
-	switch (fStatus)
+	switch (fLinkStatus)
 	{
 	case Init:
 		s.append(QString::fromLatin1("Init"));

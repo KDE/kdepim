@@ -131,8 +131,9 @@ public:
 		INIT
 	};
 
-	DaemonStatus status() const { return fStatus; } ;
+	DaemonStatus status() const { return fDaemonStatus; } ;
 	/* DCOP */ virtual QString statusString();
+	/* DCOP */ virtual QString shortStatusString();
 	QString  syncTypeString(int i) const;
 
 	/**
@@ -162,7 +163,7 @@ public:
 	virtual QString pilotDevice();
 
 protected:
-	DaemonStatus fStatus;
+	DaemonStatus fDaemonStatus;
 
 	enum postSyncActions {
 		None=0,

@@ -69,7 +69,7 @@ public:
 	void addComponentPage(PilotComponent *, const QString &name);
 
 
-	KPilotStatus status() const { return fStatus; } ;
+	KPilotStatus status() const { return fAppStatus; } ;
 
 
 protected:
@@ -155,7 +155,7 @@ private:
 	bool            fKillDaemonOnExit;
 	bool fDaemonWasRunning;
 
-	KPilotStatus fStatus;
+	KPilotStatus fAppStatus;
 
 	FileInstallWidget *fFileInstallWidget;
 	LogWidget *fLogWidget;

@@ -284,7 +284,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		kdWarning() << k_funcinfo
 			<< ": Restore directory "
 			<< dirname << " does not exist." << endl;
-		fStatus = Error;
+		fActionStatus = Error;
 		return false;
 	}
 
@@ -339,7 +339,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 	}
 
 	fP->fDBIndex = 0;
-	fStatus = GettingFileInfo;
+	fActionStatus = GettingFileInfo;
 
 	QObject::connect(&(fP->fTimer), SIGNAL(timeout()),
 		this, SLOT(getNextFileInfo()));
@@ -352,7 +352,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 {
 	FUNCTIONSETUP;
 
-	Q_ASSERT(fStatus == GettingFileInfo);
+	Q_ASSERT(fActionStatus == GettingFileInfo);
 	Q_ASSERT((unsigned) fP->fDBIndex < fP->fDBList.count());
 
 	struct db &dbi = fP->fDBList[fP->fDBIndex];
@@ -413,7 +413,7 @@ nextFile:
 		qBubbleSort(fP->fDBList);
 
 		fP->fDBIndex = 0;
-		fStatus = InstallingFiles;
+		fActionStatus = InstallingFiles;
 
 		QObject::connect(&(fP->fTimer), SIGNAL(timeout()),
 			this, SLOT(installNextFile()));
@@ -425,7 +425,7 @@ nextFile:
 {
 	FUNCTIONSETUP;
 
-	Q_ASSERT(fStatus == InstallingFiles);
+	Q_ASSERT(fActionStatus == InstallingFiles);
 	Q_ASSERT((unsigned) fP->fDBIndex < fP->fDBList.count());
 
 	struct db &dbi = fP->fDBList[fP->fDBIndex];
@@ -442,14 +442,14 @@ nextFile:
 			this, SLOT(getNextFileInfo()));
 		fP->fTimer.stop();
 
-		fStatus = Done;
+		fActionStatus = Done;
 	}
 
 	if (openConduit() < 0)
 	{
 		kdWarning() << k_funcinfo
 			<< ": Restore apparently canceled." << endl;
-		fStatus = Done;
+		fActionStatus = Done;
 		emit syncDone(this);
 
 		return;
@@ -480,7 +480,7 @@ nextFile:
 	pi_file_close(f);
 
 
-	if (fStatus == Done)
+	if (fActionStatus == Done)
 	{
 		addSyncLogEntry(i18n("OK."));
 		emit syncDone(this);

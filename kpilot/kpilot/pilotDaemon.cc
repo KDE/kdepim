@@ -256,7 +256,7 @@ void PilotDaemonTray::slotShowBusy()
 
 PilotDaemon::PilotDaemon() :
 	DCOPObject("KPilotDaemonIface"),
-	fStatus(INIT),
+	fDaemonStatus(INIT),
 	fPostSyncAction(None),
 	fPilotLink(0L),
 //	fPilotDevice(QString::null),
@@ -274,7 +274,7 @@ PilotDaemon::PilotDaemon() :
 	setupPilotLink();
 	reloadSettings();
 
-	if (fStatus == ERROR)
+	if (fDaemonStatus == ERROR)
 	{
 		kdWarning() << k_funcinfo
 			<< ": Connecting to device failed." << endl;
@@ -290,7 +290,7 @@ PilotDaemon::PilotDaemon() :
 #ifdef DEBUG
 	DEBUGDAEMON << fname
 		<< ": The daemon is ready with status "
-		<< statusString() << " (" << (int) fStatus << ")" << endl;
+		<< statusString() << " (" << (int) fDaemonStatus << ")" << endl;
 #endif
 }
 
@@ -385,7 +385,7 @@ void PilotDaemon::showTray()
 {
 	FUNCTIONSETUP;
 
-	switch (fStatus)
+	switch (fDaemonStatus)
 	{
 	case INIT:
 	case HOTSYNC_END:
@@ -507,6 +507,35 @@ void PilotDaemon::showTray()
 	return s;
 }
 
+/* DCOP */ QString PilotDaemon::shortStatusString()
+{
+	FUNCTIONSETUP;
+
+	QString s;
+
+	switch (status())
+	{
+	case INIT:
+	case READY:
+		s.append(QString(CSL1("Waiting for sync")));
+		break;
+	case ERROR:
+		s.append(QString(CSL1("Error")));
+		break;
+	case FILE_INSTALL_REQ:
+		s.append(QString(CSL1("Installing File")));
+		break;
+	case HOTSYNC_END:
+		s.append(QString(CSL1("End of Hotsync")));
+		break;
+	case HOTSYNC_START:
+		s.append(QString(CSL1("Syncing")));
+		break;
+	}
+
+	return s;
+}
+
 
 
 bool PilotDaemon::setupPilotLink()
@@ -550,7 +579,7 @@ bool PilotDaemon::setupPilotLink()
 	// Using switch to make sure we cover all the cases.
 	//
 	//
-	switch (fStatus)
+	switch (fDaemonStatus)
 	{
 	case INIT:
 	case HOTSYNC_END:
@@ -663,7 +692,7 @@ QString PilotDaemon::pilotDevice()
 	getLogger().logStartSync();
 	getFileLogger().logStartSync();
 
-	fStatus = HOTSYNC_START ;
+	fDaemonStatus = HOTSYNC_START ;
 	int mode=0;
 	bool pcchanged=false;
 
@@ -919,7 +948,7 @@ launch:
 	KPilotSettings::setLastSyncTime(QDateTime::currentDateTime());
 	KPilotSettings::self()->writeConfig();
 
-	fStatus = HOTSYNC_END;
+	fDaemonStatus = HOTSYNC_END;
 
 	if (fPostSyncAction & Quit)
 	{

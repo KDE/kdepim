@@ -108,7 +108,7 @@ KPilotInstaller::KPilotInstaller() :
 	fManagingWidget(0L),
 	fKillDaemonOnExit(false),
 	fDaemonWasRunning(true),
-	fStatus(Startup),
+	fAppStatus(Startup),
 	fFileInstallWidget(0L),
 	fLogWidget(0L)
 {
@@ -156,7 +156,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 {
 	FUNCTIONSETUP;
 
-	fStatus=WaitingForDaemon;
+	fAppStatus=WaitingForDaemon;
 
 	QString daemonError;
 	QCString daemonDCOP;
@@ -200,7 +200,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 				"KPilot daemon. The system error message "
 				"was: &quot;%1&quot;").arg(daemonError));
 		}
-		fStatus=Error;
+		fAppStatus=Error;
 	}
 	else
 	{
@@ -219,7 +219,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 				i18n("Daemon status is `%1'")
 				.arg(s));
 		}
-		fStatus=Normal;
+		fAppStatus=Normal;
 	}
 }
 
@@ -441,17 +441,17 @@ void KPilotInstaller::slotListSyncRequested()
 	switch(i)
 	{
 	case KPilotDCOP::StartOfHotSync :
-		if (fStatus==Normal)
+		if (fAppStatus==Normal)
 		{
-			fStatus=WaitingForDaemon;
+			fAppStatus=WaitingForDaemon;
 			componentPreSync();
 		}
 		break;
 	case KPilotDCOP::EndOfHotSync :
-		if (fStatus==WaitingForDaemon)
+		if (fAppStatus==WaitingForDaemon)
 		{
 			componentPostSync();
-			fStatus=Normal;
+			fAppStatus=Normal;
 		}
 		break;
 	default :
@@ -754,8 +754,8 @@ void KPilotInstaller::slotConfigureKPilot()
 {
 	FUNCTIONSETUP;
 
-	if (fStatus!=Normal) return;
-	fStatus=UIBusy;
+	if (fAppStatus!=Normal) return;
+	fAppStatus=UIBusy;
 	fConfigureKPilotDialogInUse = true;
 	// Display the (modal) options page.
 	//
@@ -774,7 +774,7 @@ void KPilotInstaller::slotConfigureKPilot()
 			<< ": Can't allocate KPilotOptions object" << endl;
 		getDaemon().requestSync(rememberedSync);
 		fConfigureKPilotDialogInUse = false;
-		fStatus=Normal;
+		fAppStatus=Normal;
 		return;
 	}
 
@@ -817,7 +817,7 @@ void KPilotInstaller::slotConfigureKPilot()
 	DEBUGKPILOT << fname << ": Done with options." << endl;
 #endif
 	fConfigureKPilotDialogInUse = false;
-	fStatus=Normal;
+	fAppStatus=Normal;
 }
 
 

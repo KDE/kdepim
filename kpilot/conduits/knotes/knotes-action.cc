@@ -221,7 +221,7 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	else
 	{
 		fP->fTimer = new QTimer(this);
-		fStatus = Init;
+		fActionStatus = Init;
 		resetIndexes();
 
 		connect(fP->fTimer,SIGNAL(timeout()),SLOT(process()));
@@ -274,41 +274,41 @@ void KNotesAction::listNotes()
 	FUNCTIONSETUP;
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
-		<< ": Now in state " << fStatus << endl;
+		<< ": Now in state " << fActionStatus << endl;
 #endif
 
-	switch(fStatus)
+	switch(fActionStatus)
 	{
 	case Init:
 		resetIndexes();
 		getAppInfo();
 		getConfigInfo();
-		fStatus = ModifiedNotesToPilot;
+		fActionStatus = ModifiedNotesToPilot;
 		// TODO: Handle all varieties of special syncs
 		if (SyncAction::eCopyHHToPC == getSyncDirection())
 		{
-			fStatus = MemosToKNotes;
+			fActionStatus = MemosToKNotes;
 		}
 		break;
 	case ModifiedNotesToPilot :
 		if (modifyNoteOnPilot())
 		{
 			resetIndexes();
-			fStatus = NewNotesToPilot;
+			fActionStatus = NewNotesToPilot;
 		}
 		break;
 	case NewNotesToPilot :
 		if (addNewNoteToPilot())
 		{
 			resetIndexes();
-			fStatus = MemosToKNotes;
+			fActionStatus = MemosToKNotes;
 			fDatabase->resetDBIndex();
 		}
 		break;
 	case MemosToKNotes :
 		if (syncMemoToKNotes())
 		{
-			fStatus=Cleanup;
+			fActionStatus=Cleanup;
 		}
 		break;
 	case Cleanup :
@@ -372,7 +372,7 @@ void KNotesAction::getAppInfo()
 
 	if (appInfoSize<0)
 	{
-		fStatus=Error;
+		fActionStatus=Error;
 		return;
 	}
 
@@ -668,7 +668,7 @@ void KNotesAction::cleanupMemos()
 	KNotesConduitSettings::setMemoIds(memos);
 	KNotesConduitSettings::self()->writeConfig();
 
-	fStatus=Done;
+	fActionStatus=Done;
 	fDatabase->cleanup();
 	fDatabase->resetSyncFlags();
 	fLocalDatabase->cleanup();
@@ -678,7 +678,7 @@ void KNotesAction::cleanupMemos()
 
 /* virtual */ QString KNotesAction::statusString() const
 {
-	switch(fStatus)
+	switch(fActionStatus)
 	{
 	case Init : return CSL1("Init");
 	case NewNotesToPilot :
@@ -694,7 +694,7 @@ void KNotesAction::cleanupMemos()
 	case Done :
 		return CSL1("Done");
 	default :
-		return CSL1("Unknown (%1)").arg(fStatus);
+		return CSL1("Unknown (%1)").arg(fActionStatus);
 	}
 }
 

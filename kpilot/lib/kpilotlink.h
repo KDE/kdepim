@@ -127,14 +127,14 @@ public:
 		PilotLinkError
 		} LinkStatus;
 
-	LinkStatus status() const { return fStatus; } ;
+	LinkStatus status() const { return fLinkStatus; } ;
 	virtual QString statusString() const;
 
 	/**
 	* True if HotSync has been started but not finished yet
 	* (ie. the physical Pilot is waiting for sync commands)
 	*/
-	bool getConnected() const { return fStatus == AcceptedDevice; }
+	bool getConnected() const { return fLinkStatus == AcceptedDevice; }
 
 public slots:
 	/**
@@ -143,7 +143,7 @@ public slots:
 	void tickle() const;
 
 private:
-	LinkStatus fStatus;
+	LinkStatus fLinkStatus;
 
 
 /*

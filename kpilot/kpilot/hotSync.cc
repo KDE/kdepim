@@ -179,18 +179,18 @@ BackupAction::BackupAction(KPilotDeviceLink * p, int mode) :
 
 	if (fFullBackup)
 	{
-		fStatus = FullBackup;
+		fActionStatus = FullBackup;
 		addSyncLogEntry(i18n("Full backup started."));
 	}
 	else
 	{
-		fStatus = FastBackup;
+		fActionStatus = FastBackup;
 		addSyncLogEntry(i18n("Fast backup started"));
 	}
 
 	if (!checkBackupDirectory(fBackupDir))
 	{
-		fStatus=BackupIncomplete;
+		fActionStatus=BackupIncomplete;
 		// Don't issue an error message, checkBackupDirectory
 		// did this already...
 		return false;
@@ -259,7 +259,7 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 
 		addSyncLogEntry(i18n("Exiting on cancel."));
 		endBackup();
-		fStatus = BackupIncomplete;
+		fActionStatus = BackupIncomplete;
 		return;
 	}
 
@@ -276,7 +276,7 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 		else
 			addSyncLogEntry(i18n("Fast backup complete."));
 		endBackup();
-		fStatus = BackupComplete;
+		fActionStatus = BackupComplete;
 		return;
 	}
 
@@ -380,7 +380,7 @@ void BackupAction::endBackup()
 
 	KPILOT_DELETE(fTimer);
 	fDBIndex = (-1);
-	fStatus = BackupEnded;
+	fActionStatus = BackupEnded;
 
 	emit syncDone(this);
 }
