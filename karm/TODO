@@ -1,4 +1,4 @@
-$Id:  $
+$Id$
 
 * times can be negative - does that make any sense?
 * one can adjust subtask *and* task times which has the effect that times
@@ -16,6 +16,8 @@ $Id:  $
   and if not, create a blank one and ask wheter we want to add a task.
 * add mouse double-click action (start new timer, stop old) to "Configure
   Shortcuts" dialog.
+* Deleting a task should be logged as well.
+
 * Willi:
 --------
   * If one starts karm and installs some desktop tracking tasks nothing

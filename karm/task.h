@@ -72,7 +72,7 @@ class Task : public QObject, public QListViewItem
     void setName( const QString& name );
 
     /** returns the name of this task.
-     * @return a pointer to the name.
+     *  @return a pointer to the name.
      */
     QString name() const
            { return _name; };
