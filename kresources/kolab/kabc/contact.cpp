@@ -709,8 +709,9 @@ void Contact::setFields( KABC::Addressee* addressee )
 
   // TODO: Unhandled Addressee fields:
   // mailer, timezone, geo, productId, sortString, logo, sound
-  // agent, preferred email, emails, phoneNumbers, keys, addresses,
-  // customs, name(), preferred address, preferred phone number
+  // agent, preferred email, emails, phoneNumbers, addresses,
+  // extra custom fields, name(), preferred address, preferred phone number,
+  // extra im addresses, crypto settings
 
   // TODO: Things KAddressBook can't handle:
   // initials, children, gender, language
