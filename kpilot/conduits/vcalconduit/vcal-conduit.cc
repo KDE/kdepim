@@ -419,7 +419,7 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 	Recurrence_t *recur = event->recurrence();
 	int freq = dateEntry->getRepeatFrequency();
 	bool repeatsForever = dateEntry->getRepeatForever();
-	QDate endDate;
+	QDate endDate, evt;
 
 	if (!repeatsForever)
 	{
@@ -496,25 +496,16 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 	case repeatYearly:
 		if (repeatsForever)
 		{
-			recur->setYearly(Recurrence_t::rYearlyDay,freq,-1);
+			recur->setYearly(Recurrence_t::rYearlyMonth,freq,-1);
 		}
 		else
 		{
-			recur->setYearly(Recurrence_t::rYearlyDay,freq,endDate);
-		}
-		recur->addYearlyNum( readTm(dateEntry->getEventStart()).date().dayOfYear() );
-/*		if (repeatsForever)
-		{
-			recur->setYearly(Recurrence_t::rYearlyPos,freq,-1);
-		}
-		else
-		{
-			recur->setYearly(Recurrence_t::rYearlyPos,freq,endDate);
+			recur->setYearly(Recurrence_t::rYearlyMonth,freq,endDate);
 		}
 		evt=readTm(dateEntry->getEventStart()).date();
 		recur->addYearlyNum( evt.month() );
-		dayArray.setBit((evt.day()-1) % 7);
-		recur->addYearlyMonthPos( ( (evt.day()-1) / 7) + 1, dayArray );*/
+//		dayArray.setBit((evt.day()-1) % 7);
+//		recur->addYearlyMonthPos( ( (evt.day()-1) / 7) + 1, dayArray );
 		break;
 	case repeatNone:
 	default :
@@ -613,6 +604,9 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 //TODO: is this needed?		dateEntry->setRepeatDay(static_cast<DayOfMonthType>(startDt.day()));
 		break;
 	case KCal::Recurrence::rYearlyDay:
+	case KCal::Recurrence::rYearlyPos:
+		emit logMessage(i18n("Event \"%1\" has a yearly recurrence other than by month, will change this to recurrence by month on handheld.").arg(event->summary()));
+	case KCal::Recurrence::rYearlyMonth:
 		dateEntry->setRepeatType(repeatYearly);
 		break;
 	case KCal::Recurrence::rNone:
@@ -705,6 +699,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.79  2002/11/27 21:29:05  adridg
+// See larger ChangeLog entry
+//
 // Revision 1.78  2002/08/24 21:27:32  adridg
 // Lots of small stuff to remove warnings
 //

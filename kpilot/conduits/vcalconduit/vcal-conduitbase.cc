@@ -446,7 +446,7 @@ void VCalConduitBase::syncPCRecToPalm()
 	preIncidence(e);
 
 	// find the corresponding index on the palm and sync. If there is none, create it.
-	int ix=e->pilotId();
+	recordid_t ix=e->pilotId();
 #ifdef DEBUG
 		DEBUGCONDUIT<<fname<<": found PC entry with pilotID "<<ix<<endl;
 		DEBUGCONDUIT<<fname<<": Description: "<<e->summary()<<endl;
@@ -729,6 +729,9 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 
 
 // $Log$
+// Revision 1.23  2002/11/27 21:29:05  adridg
+// See larger ChangeLog entry
+//
 // Revision 1.22  2002/08/24 18:06:51  kainhofe
 // First sync no longer generates duplicates, addIncidence checks if a similar entry already exists
 //
