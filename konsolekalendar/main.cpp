@@ -465,7 +465,7 @@ int main(int argc, char *argv[])
 
   CalendarResources *calendarResource = new CalendarResources(); 
   variables.setCalendarResources( calendarResource );
-  ResourceCalendar *defaultResource; 
+  ResourceCalendar *defaultResource = NULL; 
   /*
    * File must be there when we open it;)
    */
