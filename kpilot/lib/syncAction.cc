@@ -280,7 +280,6 @@ int SyncAction::questionYesNoCancel(const QString & text,
 		KMessageBox::saveDontShowAgainYesNo(key,result);
 	}
 
-	delete dialog;
 	return result;
 }
 
