@@ -486,4 +486,11 @@ QPtrList<Kleo::KeyListViewItem> Kleo::KeyListView::selectedItems() const {
   return result;
 }
 
+bool Kleo::KeyListView::hasSelection() const {
+  for ( KeyListViewItem * item = firstChild() ; item ; item = item->nextSibling() )
+    if ( item->isSelected() )
+      return true;
+  return false;
+}
+
 #include "keylistview.moc"

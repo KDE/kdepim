@@ -115,6 +115,7 @@ private slots:
     void slotViewCRLs();
 
     void slotListViewItemActivated( Kleo::KeyListViewItem * item );
+    void slotSelectionChanged();
 
     void slotEditKeybindings();
     void slotShowConfigurationDialog();
@@ -144,6 +145,7 @@ private:
     KAction * mFindAction;
     KAction * mImportCertFromFileAction;
     KAction * mImportCRLFromFileAction;
+    KAction * mExportCertificateAction;
 
     QString mImportCRLTempFile;
     bool     mRemote;

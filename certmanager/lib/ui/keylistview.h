@@ -206,6 +206,8 @@ namespace Kleo {
     /*! \reimp for covariant return */
     KeyListViewItem * firstChild() const;
 
+    bool hasSelection() const;
+
   private:
     const ColumnStrategy * mColumnStrategy;
     QToolTip * mItemToolTip;

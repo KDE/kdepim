@@ -154,6 +154,8 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
 	   SLOT(slotListViewItemActivated(Kleo::KeyListViewItem*)) );
   connect( mKeyListView, SIGNAL(returnPressed(Kleo::KeyListViewItem*)),
 	   SLOT(slotListViewItemActivated(Kleo::KeyListViewItem*)) );
+  connect( mKeyListView, SIGNAL(selectionChanged()),
+	   SLOT(slotSelectionChanged()) );
 
   mLineEditAction->setText(query);
   if ( !mRemote || !query.isEmpty() )
@@ -212,9 +214,10 @@ void CertManager::createActions() {
   mImportCRLFromFileAction = new KAction( i18n("Import CRL..."), QIconSet(), 0, this, SLOT( importCRLFromFile() ),
                                             actionCollection(), "importCRLFromFile" );
 
-  (void)new KAction( i18n("Export Certificate..."), "export", 0, this,
-		     SLOT(slotExportCertificate()), actionCollection(),
-		     "export_certificate" );
+  mExportCertificateAction = new KAction( i18n("Export Certificate..."), "export", 0, this,
+                                          SLOT(slotExportCertificate()), actionCollection(),
+                                          "export_certificate" );
+  mExportCertificateAction->setEnabled( false ); // needs a selection
   (void)new KAction( i18n("Export Secret Keys..."), "export", 0, this,
 		     SLOT(slotExportSecretKey()), actionCollection(),
 		     "export_secret_keys" );
@@ -696,6 +699,12 @@ void CertManager::slotListViewItemActivated( Kleo::KeyListViewItem * item ) {
   connect( top, SIGNAL(requestCertificateDownload(const QString&)),
 	   SLOT(slotStartCertificateDownload(const QString&)) );
   dialog->show();
+}
+
+void CertManager::slotSelectionChanged()
+{
+  bool b = mKeyListView->hasSelection();
+  mExportCertificateAction->setEnabled( b );
 }
 
 void CertManager::slotExportCertificate() {
