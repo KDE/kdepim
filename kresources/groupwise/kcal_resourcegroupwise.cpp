@@ -50,6 +50,8 @@ ResourceGroupwise::ResourceGroupwise()
 {
   init();
 
+  mPrefs->addGroupPrefix( identifier() );
+
   initGroupwise();
 }
 
@@ -57,6 +59,8 @@ ResourceGroupwise::ResourceGroupwise( const KConfig *config )
   : ResourceCached( config ), mLock( true ), mServer( 0 )
 {
   init();
+
+  mPrefs->addGroupPrefix( identifier() );
 
   if ( config ) readConfig( config );
   

@@ -37,6 +37,8 @@ ResourceGroupwise::ResourceGroupwise( const KConfig *config )
 {
   init();
 
+  mPrefs->addGroupPrefix( identifier() );
+
   if ( config ) {
     readConfig( config );
   }
@@ -52,6 +54,8 @@ ResourceGroupwise::ResourceGroupwise( const KURL &url,
   : Resource( 0 )
 {
   init();
+
+  mPrefs->addGroupPrefix( identifier() );
 
   mPrefs->setUrl( url.url() );
   mPrefs->setUser( user );
