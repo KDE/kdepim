@@ -67,7 +67,7 @@ void *PilotMemo::pack(void *buf, int *len)
 
 	QCString s = codec()->fromUnicode(fText);
 
-	unsigned int use_length = *len;
+	unsigned int use_length = Q_MIN(*len,MAX_MEMO_LEN);
 
 	// It won't fit if the buffer is too small. This second test
 	// is because the encoded length in bytes may be longer (?)
@@ -75,12 +75,10 @@ void *PilotMemo::pack(void *buf, int *len)
 	if (s.length() > use_length) return NULL;
 
 	// Zero out the buffer, up to the max memo size.
-	use_length = QMIN(MAX_MEMO_LEN,use_length);
 	memset(buf,0,use_length);
 
 	// Copy the encoded string and make extra sure it's NUL terminated.
 	// Yay, _every_ parameter needs a cast.
-	use_length = QMIN(s.length(),use_length);
 	strlcpy(( char *)buf,(const char *)s,use_length);
 
 	*len = use_length;
