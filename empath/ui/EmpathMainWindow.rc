@@ -1,0 +1,28 @@
+<!DOCTYPE kpartgui>
+<kpartgui name="empath">
+<MenuBar>
+    <Menu name="message"><text>&amp;Message</text>
+        <Action name="messageView"/>
+        <Action name="messageReply"/>
+        <Action name="messageReplyAll"/>
+        <Action name="messageForward"/>
+        <Action name="messageDelete"/>
+        <Action name="messageSaveAs"/>
+        <Action name="messageCopyTo"/>
+        <Action name="messageMoveto"/>
+        <Action name="messageTag"/>
+        <Action name="messageMarkRead"/>
+        <Action name="messageMarkReplied"/>
+        <Action name="messageMarkMany"/>
+        <Action name="messageFilter"/>
+    </Menu>
+</MenuBar>
+<ToolBar fullWidth="true" name="mainToolBar">
+    <Action name="messageCompose"/>
+    <Action name="messageReply"/>
+    <Action name="messageReplyAll"/>
+    <Action name="messageForward"/>
+    <Action name="messageDelete"/>
+    <Action name="messageSaveAs"/>
+</ToolBar>
+</kpartgui>

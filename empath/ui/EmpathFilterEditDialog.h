@@ -35,7 +35,7 @@
 #include <qpushbutton.h>
 #include <qlineedit.h>
 
-// Qt includes
+// KDE includes
 #include <kdialog.h>
 
 class EmpathFilter;
