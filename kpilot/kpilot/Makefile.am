@@ -11,11 +11,11 @@ kpilot_SOURCES	= kpilot.cc kpilotlink.cc fileInstallWidget.cc pilotMemo.cc memoW
 	kpilotOptions.cc messageDialog.cc gsetupDialog.cc \
 	pilotSerialDatabase.cc pilotLocalDatabase.cc pilotRecord.cc pilotAddress.cc \
 	addressWidget.cc strToken.cc addressEditor.cpp addressEditorData.cpp pilotDateEntry.cc \
-	logFile.cc conduitSetup.cc pilotTodoEntry.cc \
+	conduitSetup.cc pilotTodoEntry.cc \
 	options.cc 
 
 kpilotDaemon_SOURCES = pilotDaemon.cc kpilotlink.cc pilotSerialDatabase.cc pilotLocalDatabase.cc pilotRecord.cc \
-	messageDialog.cc logFile.cc \
+	messageDialog.cc \
 	options.cc
 
 pilotListener_SOURCES = pilotListener.cc
