@@ -30,7 +30,7 @@
 #include <sys/un.h>
 #include <unistd.h>
 #include <fcntl.h>
-#ifdef __Linux__
+#ifdef HAVE_ALLOCA_H
 #include <alloca.h>
 #endif
 #include <string.h>
