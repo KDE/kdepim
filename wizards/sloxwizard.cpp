@@ -67,6 +67,9 @@ class CreateSloxKcalResource : public KConfigPropagator::Change
       r->setResourceName( i18n("Openexchange Server") );
       r->prefs()->setUser( SloxConfig::self()->user() );
       r->prefs()->setPassword( SloxConfig::self()->password() );
+      r->setSavePolicy( KCal::ResourceCached::SaveDelayed );
+      r->setReloadPolicy( KCal::ResourceCached::ReloadInterval );
+      r->setReloadInterval( 20 );
       m.add( r );
       m.writeConfig();
       
@@ -96,6 +99,9 @@ class UpdateSloxKcalResource : public KConfigPropagator::Change
           r->prefs()->setUrl( url.url() );
           r->prefs()->setUser( SloxConfig::self()->user() );
           r->prefs()->setPassword( SloxConfig::self()->password() );
+          r->setSavePolicy( KCal::ResourceCached::SaveDelayed );
+          r->setReloadPolicy( KCal::ResourceCached::ReloadInterval );
+          r->setReloadInterval( 20 );
         }
       }
       m.writeConfig();
