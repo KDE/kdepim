@@ -73,7 +73,7 @@ namespace KitchenSync {
 
         QGroupBox *m_grpConnection; // The connection GroupBox
         QGridLayout *m_conLayout; // the Layout of the conBox
-        QSpacerItem *m_conSpacer; // the QSpacerItem
+        //QSpacerItem *m_conSpacer; // the QSpacerItem
         QComboBox *m_conSrcIp; // SRC IP
         QComboBox *m_conDestIp; // DEST IP
         QComboBox *m_conUser; // COn USER;
@@ -86,10 +86,14 @@ namespace KitchenSync {
         QLabel *m_lblPort;
 
 
-        QGroupBox *m_grpModel; // The Model configuration
+        QGroupBox *m_grpModel; // The Model configuration maybe QVGroupBox
         QGridLayout *m_grpLayout;
         QLabel *m_lblDevice;
         QLabel *m_lblConnection;
+        QLabel *m_grpUser;
+        QLabel *m_grpPass;
+        QComboBox *m_cmbPass;
+        QComboBox *m_cmbUser;
         QComboBox *m_cmbDevice;
         QComboBox *m_cmbConnection;
         // user and pass?

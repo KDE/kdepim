@@ -76,6 +76,88 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     else
         m_lblAutoHandle = new QLabel( i18n("To function properly you need to establish a connection"), this );
     m_mainLayout->addWidget( m_lblAutoHandle,  2,  0 );
+
+    // Connection
+    // column 0 = Label, 1= ComboBox, 2 = Space, 3 = Label, 4 = Combo
+    m_grpConnection = new QGroupBox( i18n("Connection"),  this );
+    m_conLayout = new QGridLayout(m_grpConnection,  4,  5);
+    m_conLayout->setMargin( 12 );
+    QSpacerItem *iti1b = new QSpacerItem(2, 10, QSizePolicy::Fixed,
+                                         QSizePolicy::Fixed );
+    m_conLayout->addItem( iti1b,  0, 0);
+
+    // Source
+    m_lblSrcIp = new QLabel(i18n("Source Address: "),  m_grpConnection);
+    m_conSrcIp = new QComboBox(m_grpConnection);
+    m_lblSrcIp->setBuddy( m_conSrcIp );
+    m_conLayout->addWidget(m_lblSrcIp, 1, 0 );
+    m_conLayout->addWidget(m_conSrcIp, 1, 1 );
+
+    //Destination
+    m_lblDestIp = new QLabel(i18n("Destination Address: "),  m_grpConnection );
+    m_conDestIp = new QComboBox(m_grpConnection);
+    m_lblDestIp->setBuddy( m_conDestIp );
+    m_conLayout->addWidget( m_lblDestIp, 1, 3 );
+    m_conLayout->addWidget( m_conDestIp, 1, 4 );
+
+    //user
+    m_lblUser = new QLabel(i18n("User:"), m_grpConnection );
+    m_conUser = new QComboBox(m_grpConnection );
+    m_lblUser->setBuddy( m_conUser );
+    m_conLayout->addWidget( m_lblUser,  2,  0 );
+    m_conLayout->addWidget( m_conUser,  2,  1 );
+
+    //pass
+    m_lblPass = new QLabel(i18n("Password:"),  m_grpConnection );
+    m_conPass = new QComboBox( m_grpConnection );
+    m_lblPass->setBuddy( m_conPass );
+    m_conLayout->addWidget( m_lblPass,  2,  3 );
+    m_conLayout->addWidget( m_conPass,  2,  4 );
+
+    // port
+    m_lblPort = new QLabel( i18n("Port:"),  m_grpConnection);
+    m_conPort = new QComboBox( m_grpConnection );
+    m_lblPort->setBuddy( m_conPort );
+    m_conLayout->addWidget( m_lblPort,  3,  0 );
+    m_conLayout->addWidget( m_conPort,  3,  1 );
+    // add the Connection Groupbox
+    m_mainLayout->addWidget( m_grpConnection,  3,  0 );
+
+    // Model specific
+    m_grpModel = new QGroupBox( i18n("Model"),  this );
+    m_grpLayout = new QGridLayout( m_grpModel, 5,  2 );
+
+    m_grpLayout->setMargin( 12 );
+    QSpacerItem *iti1c = new QSpacerItem(2, 10, QSizePolicy::Fixed,
+                                         QSizePolicy::Fixed );
+    m_grpLayout->addItem( iti1c,  0, 0);
+    // Devices
+    m_lblDevice = new QLabel( i18n("Device: "), m_grpModel );
+    m_cmbDevice = new QComboBox( m_grpModel );
+    m_lblDevice->setBuddy( m_cmbDevice );
+    m_grpLayout->addWidget( m_lblDevice, 1,  0 );
+    m_grpLayout->addWidget( m_cmbDevice, 1,  1 );
+
+    // Connection Mode usb, paralell, net,....
+    m_lblConnection = new QLabel( i18n("Connection:"),  m_grpModel );
+    m_cmbConnection = new QComboBox( m_grpModel );
+    m_lblConnection->setBuddy( m_cmbConnection );
+    m_grpLayout->addWidget( m_lblConnection, 2, 0 );
+    m_grpLayout->addWidget( m_cmbConnection, 2, 1 );
+
+    //Mode USER
+    m_grpUser = new QLabel( i18n("User:"),  m_grpModel );
+    m_cmbUser = new QComboBox( m_grpModel );
+    m_grpUser->setBuddy( m_cmbUser );
+    m_grpLayout->addWidget(m_grpUser,  3, 0);
+    m_grpLayout->addWidget(m_cmbPass,  3, 1);
+
+    // MODE PASS
+    m_grpPass = new QLabel( i18n("Pass:"),  m_grpModel );
+    m_cmbPass = new QComboBox( m_grpModel );
+    m_grpPass->setBuddy( m_cmbPass );
+    m_grpLayout->addWidget( m_grpPass,  4, 0 );
+    m_grpLayout->addWidget( m_cmbPass,  4, 1 );
 }
 
 Kapabilities ConfigPart::capability()
@@ -90,7 +172,7 @@ void ConfigPart::init()
     m_lblAutoHandle = 0;
     m_grpConnection = 0;
     m_conLayout = 0;
-    m_conSpacer = 0;
+//    m_conSpacer = 0;
     m_conSrcIp = 0;
     m_conDestIp = 0;
     m_conUser = 0;
