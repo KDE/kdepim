@@ -19,53 +19,39 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#ifndef KCAL_RESOURCEGROUPWAREBASECONFIG_H
-#define KCAL_RESOURCEGROUPWAREBASECONFIG_H
+#ifndef KCAL_CACHESETTINGSDLG_H
+#define KCAL_CACHESETTINGSDLG_H
 
-#include <kresources/configwidget.h>
+#include <kdialogbase.h>
 #include <kdepimmacros.h>
 
-class KPushButton;
-class KLineEdit;
 
-namespace KPIM {
-class FolderConfig;
-}
 namespace KRES {
 class Resource;
 }
 
 namespace KCal {
 
-class CacheSettingsDialog;
+class ResourceCachedReloadConfig;
+class ResourceCachedSaveConfig;
 
 /**
   Configuration widget for groupware kioslave resource.
-
   @see KCalOpenGroupware
 */
-class KDE_EXPORT ResourceGroupwareBaseConfig : public KRES::ConfigWidget
-{
+class KDE_EXPORT CacheSettingsDialog : public KDialogBase
+{ 
     Q_OBJECT
   public:
-    ResourceGroupwareBaseConfig( QWidget *parent = 0, const char *name = 0 );
+    CacheSettingsDialog( QWidget *parent = 0, const char *name = 0 );
 
   public slots:
     virtual void loadSettings( KRES::Resource *resource );
     virtual void saveSettings( KRES::Resource *resource );
 
-  protected slots:
-    void updateFolders();
-    void showCacheSettings();
-
   private:
-    KLineEdit *mUrl;
-    KLineEdit *mUserEdit;
-    KLineEdit *mPasswordEdit;
-    KPushButton *mCacheSettingsButton;
-
-    CacheSettingsDialog *mCacheDialog;
-    KPIM::FolderConfig *mFolderConfig;
+    KCal::ResourceCachedReloadConfig *mReloadConfig;
+    KCal::ResourceCachedSaveConfig *mSaveConfig;
 };
 
 }

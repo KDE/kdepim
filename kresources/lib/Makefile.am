@@ -7,7 +7,8 @@ libkgroupwarebase_la_SOURCES = folderlister.cpp folderconfig.cpp \
   calendaradaptor.cpp addressbookadaptor.cpp groupwareresourcejob.cpp \
   groupwareuploadjob.cpp kcal_resourcegroupwarebase.cpp kabc_resourcegroupwarebase.cpp \
   kcal_groupwareprefs.kcfgc kabc_groupwareprefs.kcfgc \
-  kcal_resourcegroupwarebaseconfig.cpp kabc_resourcegroupwarebaseconfig.cpp
+  kcal_resourcegroupwarebaseconfig.cpp kabc_resourcegroupwarebaseconfig.cpp \
+	kcal_cachesettingsdlg.cpp
 libkgroupwarebase_la_LDFLAGS = $(all_libraries) -no-undefined
 libkgroupwarebase_la_LIBADD  = $(top_builddir)/libkcal/libkcal.la \
                       $(top_builddir)/libkdepim/libkdepim.la
