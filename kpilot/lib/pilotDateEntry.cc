@@ -166,23 +166,9 @@ void PilotDateEntry::setDescription(const char *desc)
 	FUNCTIONSETUP;
 	KPILOT_FREE(fAppointmentInfo.description);
 
-	if (desc)
+	if (desc && (::strlen(desc) > 0)) 
 	{
-	  if (::strlen(desc) > 0) {
-		fAppointmentInfo.description =
-			(char *) malloc(strlen(desc) + 1);
-		if (fAppointmentInfo.description)
-		{
-			strcpy(fAppointmentInfo.description, desc);
-		}
-		else
-		{
-			kdError(LIBPILOTDB_AREA) << __FUNCTION__
-				<< ": malloc() failed, description not set"
-				<< endl;
-		}
-	  } else
-	    fAppointmentInfo.description = 0L;
+		fAppointmentInfo.description = strdup(desc);
 	}
 	else
 	{
@@ -195,21 +181,9 @@ void PilotDateEntry::setNote(const char *note)
 	FUNCTIONSETUP;
 	KPILOT_FREE(fAppointmentInfo.note);
 
-	if (note)
+	if (note && (::strlen(note) > 0)) 
 	{
-	  if (::strlen(note) > 0) {
-		fAppointmentInfo.note = (char *)::malloc(strlen(note) + 1);
-		if (fAppointmentInfo.note)
-		{
-			strcpy(fAppointmentInfo.note, note);
-		}
-		else
-		{
-			kdError(LIBPILOTDB_AREA) << __FUNCTION__
-				<< ": malloc() failed, note not set" << endl;
-		}
-	  } else
-	    fAppointmentInfo.note = 0L;
+		fAppointmentInfo.note = strdup(note);
 	}
 	else
 	{
@@ -220,6 +194,11 @@ void PilotDateEntry::setNote(const char *note)
 
 
 // $Log$
+// Revision 1.6  2002/08/20 21:18:31  adridg
+// License change in lib/ to allow plugins -- which use the interfaces and
+// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
+// allow the use of libmal which is MPL.
+//
 // Revision 1.5  2002/05/14 22:57:40  adridg
 // Merge from _BRANCH
 //

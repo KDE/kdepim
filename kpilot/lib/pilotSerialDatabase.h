@@ -38,7 +38,7 @@
 class PilotSerialDatabase : public PilotDatabase
 {
 public:
-	PilotSerialDatabase(int linksocket, const char* dbName,
+	PilotSerialDatabase(int linksocket, const QString &dbName,
 		QObject * = 0L, const char * = 0L);
 	virtual ~PilotSerialDatabase();
 
@@ -69,7 +69,7 @@ public:
 
 	virtual QString dbPathName() const;
 
-	const char *getDBName() { return fDBName; }
+	QString getDBName() { return fDBName; }
 
 protected:
 	virtual void openDatabase();
@@ -80,7 +80,7 @@ protected:
 private:
 	void setDBHandle(int handle) { fDBHandle = handle; }
 
-	char*       fDBName;
+	QString     fDBName;
 	int         fDBHandle;
 	int         fDBSocket;
 };
@@ -88,6 +88,11 @@ private:
 
 
 // $Log$
+// Revision 1.5  2002/08/20 21:18:31  adridg
+// License change in lib/ to allow plugins -- which use the interfaces and
+// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
+// allow the use of libmal which is MPL.
+//
 // Revision 1.4  2002/06/30 14:49:53  kainhofe
 // added a function idList, some minor bug fixes
 //

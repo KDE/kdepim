@@ -31,6 +31,8 @@
 #include <time.h>
 #include <iostream.h>
 
+#include <qfile.h>
+
 #include <pi-dlp.h>
 
 #include <klocale.h>
@@ -43,7 +45,7 @@ static const char *pilotSerialDatabase_id =
 	"$Id$";
 
 PilotSerialDatabase::PilotSerialDatabase(int linksocket,
-	const char *dbName,
+	const QString &dbName,
 	QObject *p,const char *n) :
 	PilotDatabase(p,n),
 	fDBName(0L), 
@@ -51,9 +53,8 @@ PilotSerialDatabase::PilotSerialDatabase(int linksocket,
 	fDBSocket(linksocket)
 {
 	FUNCTIONSETUP;
-	fDBName = new char[strlen(dbName) + 1];
+	fDBName = dbName;
 
-	strcpy(fDBName, dbName);
 	openDatabase();
 
 	/* NOTREACHED */
@@ -64,7 +65,6 @@ PilotSerialDatabase::~PilotSerialDatabase()
 {
 	FUNCTIONSETUP;
 	closeDatabase();
-	delete[]fDBName;
 }
 
 QString PilotSerialDatabase::dbPathName() const
@@ -268,7 +268,7 @@ void PilotSerialDatabase::openDatabase()
 	int db;
 
 	if (dlp_OpenDB(fDBSocket, 0, dlpOpenReadWrite, 
-		const_cast<char *>(getDBName()), &db) < 0)
+		QFile::encodeName(getDBName()).data(), &db) < 0)
 	{
 		kdError() << k_funcinfo
 			<< i18n("Cannot open database")
@@ -290,6 +290,11 @@ void PilotSerialDatabase::closeDatabase()
 
 
 // $Log$
+// Revision 1.5  2002/08/20 21:18:31  adridg
+// License change in lib/ to allow plugins -- which use the interfaces and
+// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
+// allow the use of libmal which is MPL.
+//
 // Revision 1.4  2002/06/30 14:49:53  kainhofe
 // added a function idList, some minor bug fixes
 //

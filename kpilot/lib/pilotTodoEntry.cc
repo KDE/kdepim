@@ -132,22 +132,9 @@ void *PilotTodoEntry::pack(void *buf, int *len)
 void PilotTodoEntry::setDescription(const char *desc)
 {
 	KPILOT_FREE(fTodoInfo.description);
-	if (desc)
+	if (desc && (::strlen(desc) > 0)) 
 	{
-	  if (::strlen(desc) > 0) {
-		fTodoInfo.description = (char *)::malloc(::strlen(desc) + 1);
-		if (fTodoInfo.description)
-		{
-			::strcpy(fTodoInfo.description, desc);
-		}
-		else
-		{
-			kdError(LIBPILOTDB_AREA) << __FUNCTION__
-				<< ": malloc() failed, description not set"
-				<< endl;
-		}
-	  } else
-		fTodoInfo.description = 0L;
+		fTodoInfo.description = strdup(desc);
 	}
 	else
 	{
@@ -158,21 +145,9 @@ void PilotTodoEntry::setDescription(const char *desc)
 void PilotTodoEntry::setNote(const char *note)
 {
 	KPILOT_FREE(fTodoInfo.note);
-	if (note)
-	  {
-	    if (::strlen(note) > 0) {
-		fTodoInfo.note = (char *)::malloc(::strlen(note) + 1);
-		if (fTodoInfo.note)
-		{
-		    ::strcpy(fTodoInfo.note, note);
-		}
-		else
-		{
-			kdError(LIBPILOTDB_AREA) << __FUNCTION__
-				<< ": malloc() failed, note not set" << endl;
-		}
-	    } else
-	      fTodoInfo.note = 0;
+	if (note && (::strlen(note) > 0))
+	{
+		fTodoInfo.note = strdup(note);
 	}
 	else
 	{
@@ -183,6 +158,11 @@ void PilotTodoEntry::setNote(const char *note)
 
 
 // $Log$
+// Revision 1.7  2002/08/20 21:18:31  adridg
+// License change in lib/ to allow plugins -- which use the interfaces and
+// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
+// allow the use of libmal which is MPL.
+//
 // Revision 1.6  2002/07/23 18:30:57  kainhofe
 // a void caused compilation problems under gcc 3.1
 //

@@ -301,8 +301,7 @@ void PilotAddress::setField(int field, const char *text)
 	}
 	if (text)
 	{
-		fAddressInfo.entry[field] = (char *) malloc(strlen(text) + 1);
-		strcpy(fAddressInfo.entry[field], text);
+		fAddressInfo.entry[field] = strdup(text);
 	}
 	else
 	{
@@ -321,6 +320,11 @@ void *PilotAddress::pack(void *buf, int *len)
 }
 
 // $Log$
+// Revision 1.4  2002/08/20 21:18:31  adridg
+// License change in lib/ to allow plugins -- which use the interfaces and
+// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
+// allow the use of libmal which is MPL.
+//
 // Revision 1.3  2002/06/30 22:21:05  kainhofe
 // some more checks for NULL strings
 //
