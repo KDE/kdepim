@@ -525,9 +525,9 @@ void KNodeView::initActions()
                               SLOT(slotArtSetThreadRead()), a_ctions, "thread_read");
   a_ctArtSetThreadUnread    = new KAction(i18n("Mark thread as u&nread"), CTRL+Key_U , this,
                               SLOT(slotArtSetThreadUnread()), a_ctions, "thread_unread");
-  a_ctSetArtScore           = new KAction(i18n("Set Sc&ore"), "rotate", Key_S , this,
+  a_ctSetArtScore           = new KAction(i18n("Set Sc&ore..."), "rotate", Key_S , this,
                               SLOT(slotArtSetArtScore()), a_ctions, "article_setScore");
-  a_ctArtSetThreadScore     = new KAction(i18n("Set Score of &thread"), "rotate", CTRL+Key_S , this,
+  a_ctArtSetThreadScore     = new KAction(i18n("Set Score of &thread..."), "rotate", CTRL+Key_S , this,
                               SLOT(slotArtSetThreadScore()), a_ctions, "thread_setScore");
   a_ctArtToggleIgnored      = new KAction(i18n("&Ignore"), "bottom", Key_I , this,
                               SLOT(slotArtToggleIgnored()), a_ctions, "thread_ignore");
