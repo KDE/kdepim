@@ -119,11 +119,11 @@ bool filter_ldif::convert(const QString &filename, filterInfo *info) {
 	int position = s.find("::");
     	if (position != -1) {
     		// String is BASE64 encoded
-    		fieldname = s.left(position);
+    		fieldname = s.left(position).lower();
     		s = decodeBase64(s.mid(position+3, s.length()-position-2));
     	} else {
     		position = s.find(":");
-    		fieldname = s.left(position);
+    		fieldname = s.left(position).lower();
     		// Convert Utf8 string to unicode so special characters are preserved
 		// We need this since we are reading normal strings from the file
 		// which are not converted automatically
