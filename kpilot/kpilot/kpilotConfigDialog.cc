@@ -86,7 +86,6 @@ DeviceConfigPage::DeviceConfigPage(QWidget * w, const char *n ) : ConduitConfigB
 	CM(fPilotSpeed, SIGNAL(activated(int)));
 	CM(fPilotEncoding, SIGNAL(textChanged(const QString &)));
 	CM(fUserName, SIGNAL(textChanged(const QString &)));
-	CM(fDelay, SIGNAL(valueChanged(int)));
 #undef CM
 
 	(void) kpilotconfigdialog_id;
