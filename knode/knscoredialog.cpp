@@ -54,8 +54,7 @@ KNScoreDialog::KNScoreDialog(short sc, QWidget *parent, const char *name )
   bgL->addWidget(spin, 3,1);
 
   bgL->setColStretch(1,1);    
-  topL->activate();
-  
+
   int b;
   
   switch(sc) {

@@ -64,8 +64,8 @@ int main(int argc, char* argv[])
 
   if (app.isRestored()) {
     int n = 1;
-    while (KTMainWindow::canBeRestored(n)){
-      if (KTMainWindow::classNameOfToplevel(n)=="KNodeApp")
+    while (KMainWindow::canBeRestored(n)){
+      if (KMainWindow::classNameOfToplevel(n)=="KNodeApp")
         (new KNodeApp)->restore(n);
       n++;
     }

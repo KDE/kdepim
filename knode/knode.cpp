@@ -40,13 +40,15 @@
 #include "knaccountmanager.h"
 #include "knfoldermanager.h"
 #include "knfiltermanager.h"
+#include "knappmanager.h"
 #include "knfolder.h"
 #include "kngroup.h"
 #include "utilities.h"
 #include "resource.h"
 #include "knglobals.h"
-#include "knode.h"
 #include "knarticle.h"
+#include "knnntpaccount.h"
+#include "knode.h"
 
 
 KNGlobals knGlobals;
@@ -144,8 +146,12 @@ KNodeApp::KNodeApp()
   knGlobals.topWidget=this;
   kapp->setMainWidget(this);  // this makes the external viewer windows close on shutdown...
 
+  // load color&font settings
+  AppManager = new KNAppManager();
+  knGlobals.appManager = AppManager;
+
   //init the GUI
-  setPlainCaption("KNode " KNODE_VERSION);
+  setCaption(i18n("KDE News Reader"));
   initView();
   KNLVItemBase::initIcons();
   initStatusBar();
@@ -220,6 +226,9 @@ KNodeApp::~KNodeApp()
 
   delete FiManager;
   qDebug("FiManager deleted\n");
+
+  delete AppManager;
+  qDebug("AppManager deleted\n");
 }
 
 
@@ -278,6 +287,9 @@ void KNodeApp::initView()
   KNViewHeader::loadAll();
   view = new KNodeView(this);
   setCentralWidget(view);
+
+  connect(view->collectionView, SIGNAL(clicked(QListViewItem *)),
+    this, SLOT(slotCollectionClicked(QListViewItem *)));
 
   connect(view->collectionView, SIGNAL(selectionChanged(QListViewItem *)),
     this, SLOT(slotCollectionSelected(QListViewItem *)));
@@ -433,7 +445,9 @@ void KNodeApp::saveOptions()
   saveWindowSize("main", size());
   view->saveOptions();
   FiManager->saveOptions();
+  FAManager->saveOptions();
   KNArticleWidget::saveOptions();
+  AppManager->saveOptions();
 }
 
 
@@ -531,6 +545,15 @@ void KNodeApp::slotSettingsFinished()
 //==================== VIEW-SLOTS ======================
 
 
+
+void KNodeApp::slotCollectionClicked(QListViewItem *it)
+{
+  if(it && (static_cast<KNCollectionViewItem*>(it)->coll->type()==KNCollection::CTnntpAccount))
+    it->setOpen(!it->isOpen());
+}
+
+
+
 void KNodeApp::slotCollectionSelected(QListViewItem *it)
 {
   KNGroup *grp=0;
@@ -540,24 +563,27 @@ void KNodeApp::slotCollectionSelected(QListViewItem *it)
   kapp->processEvents();
 
   if(it) {
-    if(((KNCollectionViewItem*)it)->coll->type()==KNCollection::CTgroup) {
+    KNCollectionViewItem* collI = static_cast<KNCollectionViewItem*>(it);
+
+    if(collI->coll->type()==KNCollection::CTgroup) {
       if (!(view->hdrView->hasFocus())&&!(view->artView->hasFocus()))
         view->hdrView->setFocus();
       grp=(KNGroup*)((KNCollectionViewItem*)it)->coll;
       acc=(KNNntpAccount*)grp->account();
+      setCaption(grp->name());
     }
-    else if(((KNCollectionViewItem*)it)->coll->type()==KNCollection::CTfolder) {
+    else if(collI->coll->type()==KNCollection::CTfolder) {
       if (!(view->hdrView->hasFocus())&&!(view->artView->hasFocus()))
         view->hdrView->setFocus();
       fldr=(KNFolder*)((KNCollectionViewItem*)it)->coll;
       setStatusMsg(QString::null, SB_FILTER);
+      setCaption(fldr->name());
     }
-    else if(((KNCollectionViewItem*)it)->coll->type()==KNCollection::CTnntpAccount) {
-      it->setOpen(true);
+    else if(collI->coll->type()==KNCollection::CTnntpAccount) {
       acc=(KNNntpAccount*)((KNCollectionViewItem*)it)->coll;
       setStatusMsg(QString::null, SB_GROUP);
       setStatusMsg(QString::null, SB_FILTER);
-      setCaption(QString::null);
+      setCaption(acc->name());
     }
     view->artView->showBlankPage();
   }
@@ -576,9 +602,10 @@ void KNodeApp::slotHeaderSelected(QListViewItem *it)
   KNFetchArticle *fart=0;
   KNSavedArticle *sart=0;
   if(it) {
-    if(((KNHdrViewItem*)it)->art->type()==KNArticleBase::ATfetch)
-      fart=(KNFetchArticle*)((KNHdrViewItem*)it)->art;
-    else sart=(KNSavedArticle*)((KNHdrViewItem*)it)->art;
+    if(static_cast<KNHdrViewItem*>(it)->art->type()==KNArticleBase::ATfetch)
+      fart=(KNFetchArticle*)(static_cast<KNHdrViewItem*>(it)->art);
+    else
+      sart=(KNSavedArticle*)(static_cast<KNHdrViewItem*>(it)->art);
   }
   FAManager->setCurrentArticle(fart);
   SAManager->setCurrentArticle(sart);
@@ -593,7 +620,7 @@ void KNodeApp::slotHeaderDoubleClicked(QListViewItem *it)
   KNFetchArticle *fart=0;
   KNSavedArticle *sart=0;
   if(it) {
-    if(((KNHdrViewItem*)it)->art->type()==KNArticleBase::ATfetch) {
+    if(static_cast<KNHdrViewItem*>(it)->art->type()==KNArticleBase::ATfetch) {
       fart=(KNFetchArticle*)((KNHdrViewItem*)it)->art;
       FAManager->articleWindow(fart);
     }

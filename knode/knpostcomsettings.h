@@ -19,7 +19,7 @@
 #ifndef KNPOSTCOMSETTINGS_H
 #define KNPOSTCOMSETTINGS_H
 
-#include "knsettingswidget.h"
+#include "knsettingsdialog.h"
 
 class QCheckBox;
 class QSpinBox;
@@ -27,18 +27,23 @@ class QLineEdit;
 
 
 class KNPostComSettings : public KNSettingsWidget  {
-  
+
+  Q_OBJECT
+
   public:
     KNPostComSettings(QWidget *p);
     ~KNPostComSettings();
     
     void apply();
+
+  protected slots:
+    void slotChooseEditor();
     
   protected:
     void init();
     QSpinBox *maxLen;
-    QCheckBox *ownSigCB, *fontCB, *authSigCB;
-    QLineEdit *intro, *quot;
+    QCheckBox *ownSigCB, *authSigCB, *rewarpCB, *externCB;
+    QLineEdit *intro, *quot, *editor;
     
 };
 

@@ -19,14 +19,15 @@
 #ifndef KNREADHDRSETTINGS_H
 #define KNREADHDRSETTINGS_H
 
+#include <qlistbox.h>
+#include <kdialogbase.h>
+#include "knsettingsdialog.h"
 
-#include "knsettingswidget.h"
-
+class QComboBox;
 class QLineEdit;
 class QCheckBox;
 class QPushButton;
-
-class KNListBox;
+class KNViewHeader;
 
 
 class KNReadHdrSettings : public KNSettingsWidget  {
@@ -36,29 +37,57 @@ class KNReadHdrSettings : public KNSettingsWidget  {
   public:
     KNReadHdrSettings(QWidget *p);
     ~KNReadHdrSettings();
-    
-    void apply();
-    
+
   protected:
-    void init();
-    void enableEdit(bool b);
-    void createCBs(QWidget *p, QCheckBox **ptrs);
-    
-    KNListBox *lb;
-    QLineEdit *name, *hdr;
-    QCheckBox *nameCB[4], *hdrCB[4];
-    QPushButton *addBtn, *delBtn, *upBtn, *downBtn, *okBtn;
-    int currentItem;
+
+    class ConfDialog;
+
+    class HdrItem : public QListBoxText {
+
+      public:
+        HdrItem( const QString &, KNViewHeader * );
+        ~HdrItem();
+
+        KNViewHeader *hdr;
+    };
+
+    HdrItem* generateItem(KNViewHeader *);
+
+    QListBox *lb;
+    QPushButton *addBtn, *delBtn, *editBtn, *upBtn, *downBtn;
     bool save;
-    
+
   protected slots:
-    void slotItemSelected(int i);
+    void slotItemSelected(int);
+    void slotSelectionChanged();
     void slotAddBtnClicked();
     void slotDelBtnClicked();
+    void slotEditBtnClicked();
     void slotUpBtnClicked();
     void slotDownBtnClicked();
-    void slotOkBtnClicked();
 
 };
+
+
+class KNReadHdrSettings::ConfDialog  : public KDialogBase {
+
+  Q_OBJECT
+
+  public:
+    ConfDialog(KNViewHeader *, QWidget *parent=0, char *name=0);
+    ~ConfDialog();
+
+  protected slots:
+    void slotOk();
+    void slotActivated(int);
+    void slotNameChanged(const QString&);
+
+  protected:
+    KNViewHeader *hdr;
+    QComboBox *hdrC;
+    QLineEdit *nameE;
+    QCheckBox *nameCB[4], *valueCB[4];
+};
+
 
 #endif

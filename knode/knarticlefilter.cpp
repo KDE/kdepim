@@ -19,6 +19,7 @@
 
 #include <kstddirs.h>
 #include <ksimpleconfig.h>
+#include <klocale.h>
 
 #include "kngroup.h"
 #include "knfetcharticle.h"
@@ -28,10 +29,44 @@
 #include "utilities.h"
 #include "knarticlefilter.h"
 
+//=============================================================================================================
+
+
+// the names of our default filters
+static const char *defFil[] = { "all","unread","watched","threads with unread",
+                                "threads with new","own articles","threads with own articles", 0 };
+void dummyFilter()
+{
+  i18n("default filter name","all");
+  i18n("default filter name","unread");
+  i18n("default filter name","watched");
+  i18n("default filter name","threads with unread");
+  i18n("default filter name","threads with new");
+  i18n("default filter name","own articles");
+  i18n("default filter name","threads with own articles");
+}
+
+
+//=============================================================================================================
+
 
 KNArticleFilter::KNArticleFilter(int id)
-: i_d(id), c_ount(0), l_oaded(false), e_nabled(false), apon(articles)
+: i_d(id), c_ount(0), l_oaded(false), e_nabled(true), apon(articles)
 {}
+
+
+
+// constructs a copy of org
+KNArticleFilter::KNArticleFilter(const KNArticleFilter& org)
+: i_d(-1), c_ount(0), l_oaded(false), e_nabled(org.e_nabled), apon(org.apon)
+{
+  status = org.status;
+  score = org.score;
+  age = org.age;
+  lines = org.lines;
+  subject = org.subject;
+  from = org.from;
+}
 
 
 
@@ -194,6 +229,37 @@ void KNArticleFilter::doFilter(KNGroup *g)
       else c_ount++;
     }
   }
+}
+
+
+
+// *trys* to translate the name
+QString KNArticleFilter::translatedName()
+{
+  // major hack alert !!!
+  if (!n_ame.isEmpty()) {
+    if (i18n(n_ame.local8Bit())!=n_ame.local8Bit().data())    // try to guess if this english or not
+      return i18n(n_ame.local8Bit());
+    else
+      return n_ame;
+  } else
+    return QString::null;
+}
+
+
+
+// *trys* to retranslate the name to english
+void KNArticleFilter::setTranslatedName(const QString &s)
+{
+  bool retranslated = false;
+  for (const char *c=defFil[0];(*c)!=0;c++)   // ok, try if it matches any of the standard filter names
+    if (s==i18n(c)) {
+      n_ame = c;
+      retranslated = true;
+      break;
+    }
+  if (!retranslated)        // ok, we give up and store the maybe non-english string
+    n_ame = s;
 }
 
 

@@ -33,6 +33,7 @@
 #include <klocale.h>
 #include <kcharsets.h>
 #include <kglobal.h>
+#include <kmessagebox.h>
 
 #include "utilities.h"
 #include "knposttechsettings.h"
@@ -40,71 +41,79 @@
 
 KNPostTechSettings::KNPostTechSettings(QWidget *p) : KNSettingsWidget(p)
 {
+  QVBoxLayout *topL=new QVBoxLayout(this, 5);
+
+  // ==== General =============================================================
+
   QGroupBox *ggb=new QGroupBox(i18n("General"), this);
-  QGroupBox *xgb=new QGroupBox(i18n("X-Headers"), this);
-  QLabel *l1, *l2, *l3, *l4, *l5;
-      
-  l1=new QLabel(i18n("Charset"), ggb);
+  QGridLayout *ggbL=new QGridLayout(ggb, 6,2, 8,5);
+  topL->addWidget(ggb);
+
+  ggbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+  ggbL->addWidget(new QLabel(i18n("Charset"), ggb), 1,0);
   charset=new QComboBox(ggb);
+  charset->insertItem("us-ascii");
   charset->insertStringList(KGlobal::charsets()->availableCharsetNames());
-  l2=new QLabel(i18n("Encoding"), ggb);
+  ggbL->addWidget(charset, 1,1);
+
+  ggbL->addWidget(new QLabel(i18n("Encoding"), ggb), 2,0);
   encoding=new QComboBox(ggb);
   encoding->insertItem("7 bit");
   encoding->insertItem("8 bit");
   encoding->insertItem("quoted-printable");
-  allow8bitCB=new QCheckBox(i18n("allow 8-bit characters in the header"), ggb);
+  ggbL->addWidget(encoding, 2,1);
+
+  allow8bitCB=new QCheckBox(i18n("don't encode 8-bit characters in the header"), ggb);
+  ggbL->addMultiCellWidget(allow8bitCB, 3,3, 0,1);
+
   genMIdCB=new QCheckBox(i18n("generate Message-Id"), ggb);
-  l3=new QLabel(i18n("Hostname"), ggb);
-  host=new QLineEdit(ggb);  
+  connect(genMIdCB, SIGNAL(toggled(bool)), this, SLOT(slotGenMIdCBtoggled(bool)));
+  ggbL->addMultiCellWidget(genMIdCB, 4,4, 0,1);
+  hostL=new QLabel(i18n("Hostname"), ggb);
+  hostL->setEnabled(false);
+  ggbL->addWidget(hostL, 5,0);
+  host=new QLineEdit(ggb);
   host->setEnabled(false);
-  lb=new QListBox(xgb);
-  lb->setFocusPolicy(NoFocus);
-  addBtn=new QPushButton(i18n("Add"), xgb);
-  delBtn=new QPushButton(i18n("Delete"), xgb);
-  KSeparator *sep=new KSeparator(xgb);
-  l4=new QLabel("X-", xgb);
-  hName=new QLineEdit(xgb);
-  l5=new QLabel(":", xgb);
-  hValue=new QLineEdit(xgb);
-  okBtn=new QPushButton(i18n("OK"), xgb);
-    
-  QVBoxLayout *topL=new QVBoxLayout(this, 10);
-  QGridLayout *ggbL=new QGridLayout(ggb, 5,2, 20,5);
-  QGridLayout *xgbL=new QGridLayout(xgb, 6,5, 20,5);
-  topL->addWidget(ggb);
-  topL->addWidget(xgb, 1);
-  ggbL->addWidget(l1, 0,0);
-  ggbL->addWidget(charset, 0,1);
-  ggbL->addWidget(l2, 1,0);
-  ggbL->addWidget(encoding, 1,1);
-  ggbL->addMultiCellWidget(allow8bitCB, 2,2, 0,1);
-  ggbL->addMultiCellWidget(genMIdCB, 3,3, 0,1);
-  ggbL->addWidget(l3, 4,0);
-  ggbL->addWidget(host, 4,1);
+  ggbL->addWidget(host, 5,1);
+
   ggbL->setColStretch(1,1);
-  xgbL->addMultiCellWidget(lb, 0,2, 0,3);
-  xgbL->addWidget(addBtn, 0,4);
-  xgbL->addWidget(delBtn, 1,4);
-  xgbL->addMultiCellWidget(sep, 3,3, 0,4);
-  xgbL->addWidget(l4, 4,0);
-  xgbL->addWidget(hName, 4,1);
-  xgbL->addWidget(l5, 4,2);
-  xgbL->addMultiCellWidget(hValue, 4,4, 3,4);
-  xgbL->addWidget(okBtn, 5,4);
-  xgbL->addRowSpacing(3,20);
-  xgbL->setRowStretch(2,1);
-  xgbL->setColStretch(3,1);
-  topL->setResizeMode(QLayout::Minimum);
-  topL->activate();
-  
-  connect(genMIdCB, SIGNAL(toggled(bool)),
-    this, SLOT(slotGenMIdCBtoggled(bool)));
-  connect(addBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
-  connect(delBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
-  connect(okBtn, SIGNAL(clicked()), this, SLOT(slotOkBtnClicked()));
-  connect(lb, SIGNAL(highlighted(int)), this, SLOT(slotItemSelected(int)));
-  
+
+  // ==== X-Headers =============================================================
+
+  QGroupBox *xgb=new QGroupBox(i18n("X-Headers"), this);
+  topL->addWidget(xgb, 1);
+  QGridLayout *xgbL=new QGridLayout(xgb, 6,2, 8,5);
+
+  xgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+
+  lb=new QListBox(xgb);
+  connect(lb, SIGNAL(selected(int)), SLOT(slotItemSelected(int)));
+  connect(lb, SIGNAL(selectionChanged()), SLOT(slotSelectionChanged()));
+  xgbL->addMultiCellWidget(lb, 1,4, 0,0);
+
+  addBtn=new QPushButton(i18n("&Add"), xgb);
+  connect(addBtn, SIGNAL(clicked()), SLOT(slotAddBtnClicked()));
+  xgbL->addWidget(addBtn, 1,1);
+
+  delBtn=new QPushButton(i18n("&Delete"), xgb);
+  connect(delBtn, SIGNAL(clicked()), SLOT(slotDelBtnClicked()));
+  xgbL->addWidget(delBtn, 2,1);
+
+  editBtn=new QPushButton(i18n("&Edit"), xgb);
+  connect(editBtn, SIGNAL(clicked()), SLOT(slotEditBtnClicked()));
+  xgbL->addWidget(editBtn, 3,1);
+
+  incUaCB=new QCheckBox(i18n("don't add the \"User-Agent\" identification header"), xgb);
+  xgbL->addMultiCellWidget(incUaCB, 5,5, 0,1);
+
+  xgbL->setRowStretch(4,1);
+  xgbL->setColStretch(0,1);
+
   init();
+
+  slotSelectionChanged();
+
+  connect(allow8bitCB, SIGNAL(toggled(bool)), this, SLOT(slotHeadEnctoggled(bool)));
 }
 
 
@@ -146,11 +155,9 @@ void KNPostTechSettings::init()
       f.close();
     }     
   }
-  
+  incUaCB->setChecked(conf->readBoolEntry("dontIncludeUA", false));
+
   saveHdrs=false;
-  editEnabled=true;
-  enableEdit(false);
-  currentItem=-1;
 }
 
 
@@ -165,6 +172,7 @@ void KNPostTechSettings::apply()
   conf->writeEntry("allow8bitChars", allow8bitCB->isChecked());
   conf->writeEntry("generateMId", genMIdCB->isChecked());
   conf->writeEntry("MIdhost", host->text());
+  conf->writeEntry("dontIncludeUA", incUaCB->isChecked());
   
   if(saveHdrs) {
     QString dir(KGlobal::dirs()->saveLocation("appdata"));
@@ -178,21 +186,15 @@ void KNPostTechSettings::apply()
         f.close();
       } 
     }
-  } 
+  }
 }
 
 
 
-void KNPostTechSettings::enableEdit(bool e)
+void KNPostTechSettings::slotHeadEnctoggled(bool b)
 {
-  hValue->clear();
-  hName->clear();
-  if(editEnabled!=e) {
-    editEnabled=e;
-    okBtn->setEnabled(e);
-    hName->setEnabled(e);
-    hValue->setEnabled(e);
-  }
+  if (b)
+    KMessageBox::information(this,i18n("Please be aware that unencoded 8-bit characters\nare illegal in the header of a usenet message.\nUse this feature with extreme care!"));
 }
 
 
@@ -200,66 +202,108 @@ void KNPostTechSettings::enableEdit(bool e)
 void KNPostTechSettings::slotGenMIdCBtoggled(bool b)
 {
   host->setEnabled(b);
+  hostL->setEnabled(b);
+}
+
+
+
+void KNPostTechSettings::slotSelectionChanged()
+{
+  delBtn->setEnabled(lb->currentItem()!=-1);
+  editBtn->setEnabled(lb->currentItem()!=-1);
+}
+
+
+
+void KNPostTechSettings::slotItemSelected(int id)
+{
+  slotEditBtnClicked();
 }
 
 
 
 void KNPostTechSettings::slotAddBtnClicked()
 {
-  enableEdit(true);
-  currentItem=-1;
+  XHeadDlg *dlg=new XHeadDlg(this);
+  if (dlg->exec()) {
+    lb->insertItem(dlg->headResult());
+    saveHdrs=true;
+  }
+  delete dlg;
+
+  slotSelectionChanged();
 }
 
 
 
 void KNPostTechSettings::slotDelBtnClicked()
 {
-  enableEdit(false);
   int c=lb->currentItem();
-  if(c!=-1) lb->removeItem(c);
-  currentItem=-1;
-  saveHdrs=true;  
-}
+  if (c == -1)
+    return;
 
-
-
-void KNPostTechSettings::slotOkBtnClicked()
-{
-  QString item;
-  item="X-";
-  item+=hName->text();
-  item+=": ";
-  item+=hValue->text();
-  if(currentItem==-1) lb->insertItem(item);
-  else {
-    lb->changeItem(item, currentItem);
-    lb->clearSelection();
-  }
-  enableEdit(false);
-  currentItem=-1;
+  lb->removeItem(c);
+  slotSelectionChanged();
   saveHdrs=true;
 }
 
 
 
-void KNPostTechSettings::slotItemSelected(int i)
+void KNPostTechSettings::slotEditBtnClicked()
 {
-  int pos1=2 ,pos2=0;
-  QString txt, tmp;
+  int c=lb->currentItem();
+  if (c == -1)
+    return;
 
-  currentItem=i;
-  if(i==-1) return;
-  txt=lb->text(i);
-  pos2=txt.find(":", 2);
-  if(pos2==-1) return;
-  else {
-    enableEdit(true);
-    tmp=txt.mid(pos1, pos2-pos1);
-    hName->setText(tmp);
-    tmp=txt.mid(pos2+2, txt.length()-pos2);
-    hValue->setText(tmp);
+  XHeadDlg *dlg=new XHeadDlg(this,lb->text(c));
+  if (dlg->exec()) {
+    lb->changeItem(dlg->headResult(),c);
+    saveHdrs=true;
   }
-} 
+  delete dlg;
+
+  slotSelectionChanged();
+}
+
+
+//=====================================================================
+
+
+KNPostTechSettings::XHeadDlg::XHeadDlg(QWidget *parent, const QString &header)
+  : KDialogBase(Plain, i18n("X-Headers"),Ok|Cancel, Ok, parent)
+{
+  QFrame* page=plainPage();
+  QHBoxLayout *topL=new QHBoxLayout(page, 5,8);
+  topL->setAutoAdd(true);
+
+  new QLabel("X-", page);
+  name=new QLineEdit(page);
+  new QLabel(":", page);
+  value=new QLineEdit(page);
+
+  int pos=header.find(":", 2);
+  if (pos!=-1) {
+    name->setText(header.mid(2, pos-2));
+    value->setText(header.mid(pos+2, header.length()-pos));
+  }
+
+  setFixedHeight(sizeHint().height());
+  restoreWindowSize("XHeaderDlg", this, sizeHint());
+}
+
+
+
+KNPostTechSettings::XHeadDlg::~XHeadDlg()
+{
+  saveWindowSize("XHeaderDlg", size());
+}
+
+
+
+QString KNPostTechSettings::XHeadDlg::headResult()
+{
+  return QString("X-%1: %2").arg(name->text()).arg(value->text());
+}
 
 
 

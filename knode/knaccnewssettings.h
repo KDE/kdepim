@@ -19,18 +19,19 @@
 #ifndef KNACCNEWSSETTINGS_H
 #define KNACCNEWSSETTINGS_H
 
-#include <qlineedit.h>
-#include <qcheckbox.h>
-#include <qspinbox.h>
-
 #include <kdialogbase.h>
 
-#include "knsettingswidget.h"
+#include "knsettingsdialog.h"
 
 class QPushButton;
 class QPixMap;
+class QLabel;
+class QCheckBox;
+class QSpinBox;
+class QLineEdit;
 
 class KNAccountManager;
+class KNGroupManager;
 class KNListBox;
 class KNNntpAccount;
 
@@ -43,7 +44,7 @@ class KNAccNewsSettings : public KNSettingsWidget  {
   Q_OBJECT  
 
   public:
-    KNAccNewsSettings(QWidget *p, KNAccountManager *am);
+    KNAccNewsSettings(QWidget *p, KNAccountManager *am, KNGroupManager *gm);
     ~KNAccNewsSettings();
         
   public slots:
@@ -53,8 +54,9 @@ class KNAccNewsSettings : public KNSettingsWidget  {
             
   protected:
     KNListBox *lb;
-    QPushButton *addBtn, *delBtn, *editBtn;
+    QPushButton *addBtn, *delBtn, *editBtn, *subBtn;
     KNAccountManager *aManager;
+    KNGroupManager *gManager;
     QPixmap pm;
     QLabel *serverInfo, *portInfo;
     
@@ -64,6 +66,8 @@ class KNAccNewsSettings : public KNSettingsWidget  {
     void slotAddBtnClicked();
     void slotDelBtnClicked();
     void slotEditBtnClicked();
+    void slotSubBtnClicked();
+
 };
 
 
@@ -80,6 +84,7 @@ class KNAccNewsConfDialog : public KDialogBase  {
         
   protected:
     QLineEdit *n_ame, *s_erver, *u_ser, *p_ass, *p_ort;
+    QLabel *userLabel, *passLabel;
     QSpinBox *h_old, *t_imeout;
     QCheckBox *f_etchDes, *authCB;
     KNNntpAccount* acc;

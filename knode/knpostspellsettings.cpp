@@ -1,9 +1,9 @@
 /***************************************************************************
-                          knsettingswidget.cpp  -  description
-                             -------------------
+       knpostspellsettings.h  -  config page for the spellchecker
+                                  -------------------
    
-    copyright            : (C) 2000 by Christian Thurner
-    email                : cthurner@freepage.de
+    copyright            : (C) 2000 by Christian Gebauer
+    email                : gebauer@bigfoot.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,21 +15,32 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <qlayout.h>
 
-#include "knsettingswidget.h"
+#include <kspell.h>
 
-KNSettingsWidget::KNSettingsWidget(QWidget *parent) : QWidget(parent)
+#include "knpostspellsettings.h"
+
+
+KNPostSpellSettings::KNPostSpellSettings(QWidget *parent)
+  : KNSettingsWidget(parent)
+{
+  QVBoxLayout *topL=new QVBoxLayout(this, 5);
+
+  spellConf = new KSpellConfig( this, "spell", 0, false );
+  topL->addWidget(spellConf);
+
+  topL->addStretch(1);
+}
+
+
+KNPostSpellSettings::~KNPostSpellSettings()
 {
 }
 
 
-
-KNSettingsWidget::~KNSettingsWidget()
+void KNPostSpellSettings::apply()
 {
 }
 
 
-
-//--------------------------------
-
-#include "knsettingswidget.moc"

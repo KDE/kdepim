@@ -21,187 +21,254 @@
 #include <qpushbutton.h>
 #include <qlineedit.h>
 #include <qcheckbox.h>
+#include <qcombobox.h>
 
 #include <kmessagebox.h>
 #include <klocale.h>
 
-#include "knglobals.h"
-#include "knlistbox.h"
+#include "utilities.h"
 #include "knviewheader.h"
 #include "knreadhdrsettings.h"
 
 
-KNReadHdrSettings::KNReadHdrSettings(QWidget *p) : KNSettingsWidget(p)
+KNReadHdrSettings::ConfDialog::ConfDialog(KNViewHeader *header, QWidget *parent, char *name)
+  : KDialogBase(Plain, i18n("Header Properties"),Ok|Cancel|Help, Ok, parent, name),
+    hdr(header)
 {
-  QGroupBox *ngb=new QGroupBox(i18n("Name"), this);
-  QGroupBox *hgb=new QGroupBox(i18n("Header"), this);
-  lb=new KNListBox(this);
-  lb->setFocusPolicy(NoFocus);
-  addBtn=new QPushButton(i18n("Add"), this);
-  delBtn=new QPushButton(i18n("Delete"), this);
-  upBtn=new QPushButton(i18n("Up"), this);
-  downBtn=new QPushButton(i18n("Down"), this);
-  okBtn=new QPushButton(i18n("OK"), this);
-  name=new QLineEdit(ngb);
-  name->setMaxLength(64);
-  hdr=new QLineEdit(hgb);
-  hdr->setMaxLength(64);
-  createCBs(ngb, nameCB);
-  createCBs(hgb, hdrCB);
-  
-  QVBoxLayout *topL=new QVBoxLayout(this, 7);
-  QGridLayout *lbL=new QGridLayout(4,2, 3); 
-  QGridLayout *ngbL=new QGridLayout(ngb, 4,2, 5,5); 
-  QGridLayout *hgbL=new QGridLayout(hgb, 4,2, 5,5);
-  QHBoxLayout *btnL=new QHBoxLayout(5);
-  
-  
-  topL->addLayout(lbL, 1);
-  topL->addWidget(ngb);
-  topL->addWidget(hgb);
-  topL->addLayout(btnL);
-  lbL->addMultiCellWidget(lb, 0,3,0,0);
-  lbL->addWidget(addBtn, 0,1);
-  lbL->addWidget(delBtn, 1,1);
-  lbL->addWidget(upBtn, 2,1);
-  lbL->addWidget(downBtn, 3,1);
-  lbL->setColStretch(0,1);
-  ngbL->addMultiCellWidget(name, 1,1,0,1);
-  ngbL->addWidget(nameCB[0], 2,0);
-  ngbL->addWidget(nameCB[1], 2,1);
-  ngbL->addWidget(nameCB[2], 3,0);
-  ngbL->addWidget(nameCB[3], 3,1);
-  ngbL->addRowSpacing(0, 10);
-  hgbL->addMultiCellWidget(hdr, 1,1,0,1);
-  hgbL->addWidget(hdrCB[0], 2,0);
-  hgbL->addWidget(hdrCB[1], 2,1);
-  hgbL->addWidget(hdrCB[2], 3,0);
-  hgbL->addWidget(hdrCB[3], 3,1);
-  hgbL->addRowSpacing(0, 10);
-  btnL->addStretch(1);
-  btnL->addWidget(okBtn);
-  topL->setResizeMode(QLayout::Minimum);
-  topL->activate();
-  
-  connect(lb, SIGNAL(highlighted(int)), this, SLOT(slotItemSelected(int)));
+  QFrame* page=plainPage();
+  QGridLayout *topL=new QGridLayout(page, 2, 2, 0, 5);
+
+  QWidget *nameW = new QWidget(page);
+  QGridLayout *nameL=new QGridLayout(nameW, 2, 2, 5);
+
+  nameL->addWidget(new QLabel(i18n("Header:"),nameW),0,0);
+  hdrC=new QComboBox(true, nameW);
+  hdrC->lineEdit()->setMaxLength(64);
+  connect(hdrC, SIGNAL(activated(int)), this, SLOT(slotActivated(int)));
+  nameL->addWidget(hdrC,0,1);
+
+  nameL->addWidget(new QLabel(i18n("Displayed Name:"),nameW),1,0);
+  nameE=new QLineEdit(nameW);
+  connect(nameE, SIGNAL(textChanged(const QString&)), SLOT(slotNameChanged(const QString&)));
+  nameE->setMaxLength(64);
+  nameL->addWidget(nameE,1,1);
+  nameL->setColStretch(1,1);
+
+  topL->addMultiCellWidget(nameW,0,0,0,1);
+
+  QGroupBox *ngb=new QGroupBox(i18n("Name"), page);
+  QVBoxLayout *ngbL = new QVBoxLayout(ngb, 8, 5);
+  ngbL->setAutoAdd(true);
+  ngbL->addSpacing(fontMetrics().lineSpacing()-4);
+  nameCB[0]=new QCheckBox(i18n("large"), ngb);
+  nameCB[1]=new QCheckBox(i18n("bold"), ngb);
+  nameCB[2]=new QCheckBox(i18n("italic"), ngb);
+  nameCB[3]=new QCheckBox(i18n("underlined"), ngb);
+  topL->addWidget(ngb,1,0);
+
+  QGroupBox *vgb=new QGroupBox(i18n("Value"), page);
+  QVBoxLayout *vgbL = new QVBoxLayout(vgb, 8, 5);
+  vgbL->setAutoAdd(true);
+  vgbL->addSpacing(fontMetrics().lineSpacing()-4);
+  valueCB[0]=new QCheckBox(i18n("large"), vgb);
+  valueCB[1]=new QCheckBox(i18n("bold"), vgb);
+  valueCB[2]=new QCheckBox(i18n("italic"), vgb);
+  valueCB[3]=new QCheckBox(i18n("underlined"), vgb);
+  topL->addWidget(vgb,1,1);
+
+  topL->setColStretch(0,1);
+  topL->setColStretch(1,1);
+
+  // preset values...
+  hdrC->insertStrList(KNViewHeader::predefs());
+  hdrC->lineEdit()->setText(hdr->header());
+  nameE->setText(hdr->translatedName());
+  for(int i=0; i<4; i++) {
+    nameCB[i]->setChecked(hdr->flag(i));
+    valueCB[i]->setChecked(hdr->flag(i+4));
+  }
+
+  setFixedHeight(sizeHint().height());
+  restoreWindowSize("accReadHdrPropDLG", this, sizeHint());
+}
+
+
+KNReadHdrSettings::ConfDialog::~ConfDialog()
+{
+  saveWindowSize("accReadHdrPropDLG", size());
+}
+
+
+void KNReadHdrSettings::ConfDialog::slotOk()
+{
+  hdr->setHeader(hdrC->currentText());
+  hdr->setTranslatedName(nameE->text());
+  for(int i=0; i<4; i++) {
+    if (hdr->hasName())
+      hdr->setFlag(i, nameCB[i]->isChecked());
+    else
+      hdr->setFlag(i,false);
+    hdr->setFlag(i+4, valueCB[i]->isChecked());
+  }
+  accept();
+}
+
+
+// the user selected one of the presets, insert the *translated* string as display name:
+void KNReadHdrSettings::ConfDialog::slotActivated(int pos)
+{
+  nameE->setText(i18n(hdrC->text(pos).local8Bit()));  // I think it's save here, the combobox has only english defaults
+}
+
+
+// disable the name format options when the name is empty
+void KNReadHdrSettings::ConfDialog::slotNameChanged(const QString& str)
+{
+  for(int i=0; i<4; i++)
+    nameCB[i]->setEnabled(!str.isEmpty());
+}
+
+
+//=============================================================================================
+
+
+KNReadHdrSettings::HdrItem::HdrItem( const QString &text, KNViewHeader * header)
+  : QListBoxText(text), hdr(header)
+{
+}
+
+
+KNReadHdrSettings::HdrItem::~HdrItem()
+{
+}
+
+
+//=============================================================================================
+
+
+KNReadHdrSettings::KNReadHdrSettings(QWidget *p)
+  : KNSettingsWidget(p), save(false)
+{
+  QGridLayout *topL=new QGridLayout(this, 7,2, 5,5);
+
+  // account listbox
+  lb=new QListBox(this);
+  connect(lb, SIGNAL(selected(int)), this, SLOT(slotItemSelected(int)));
+  connect(lb, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()));
+  topL->addMultiCellWidget(lb, 0,6, 0,0);
+
+  // buttons
+  addBtn=new QPushButton(i18n("&Add"), this);
   connect(addBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
+  topL->addWidget(addBtn, 0,1);
+
+  delBtn=new QPushButton(i18n("&Delete"), this);
   connect(delBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
+  topL->addWidget(delBtn, 1,1);
+
+  editBtn=new QPushButton(i18n("&Edit"), this);
+  connect(editBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
+  topL->addWidget(editBtn, 2,1);
+
+  upBtn=new QPushButton(i18n("&Up"), this);
   connect(upBtn, SIGNAL(clicked()), this, SLOT(slotUpBtnClicked()));
+  topL->addWidget(upBtn, 4,1);
+
+  downBtn=new QPushButton(i18n("D&own"), this);
   connect(downBtn, SIGNAL(clicked()), this, SLOT(slotDownBtnClicked()));
-  connect(okBtn, SIGNAL(clicked()), this, SLOT(slotOkBtnClicked()));
-  
-  init(); 
+  topL->addWidget(downBtn, 5,1);
+
+  topL->addRowSpacing(3,20);        // separate up/down buttons
+  topL->setRowStretch(6,1);         // stretch the listbox
+
+  for(KNViewHeader *h=KNViewHeader::first(); h; h=KNViewHeader::next())
+    lb->insertItem(generateItem(h));
+
+  slotSelectionChanged();     // disable buttons initially
 }
 
 
 
 KNReadHdrSettings::~KNReadHdrSettings()
 {
-  if(save) KNViewHeader::saveAll();
+  if (save)
+    KNViewHeader::saveAll();
 }
 
 
 
-void KNReadHdrSettings::init()
+KNReadHdrSettings::HdrItem* KNReadHdrSettings::generateItem(KNViewHeader *h)
 {
-  KNLBoxItem *it;
-  KNViewHeader *h;
   QString text;
-  
-  enableEdit(false);
-  
-  for(h=KNViewHeader::first(); h; h=KNViewHeader::next()) {
-    if(h->hasName()) {
-      text=h->name();
-      text+=": <";
-    }
-    else text="<";
-    text+=h->header();
-    text+=">";
-    it=new KNLBoxItem(text, h, 0);
-    lb->insertItem(it);
-  }
-  currentItem=-1;
-  save=false;
+  if(h->hasName()) {
+    text=h->name();
+    text+=": <";
+  } else
+    text="<";
+  text+=h->header();
+  text+=">";
+  return new HdrItem(text,h);
 }
 
 
 
-void KNReadHdrSettings::apply()
+void KNReadHdrSettings::slotItemSelected(int)
 {
+  slotEditBtnClicked();
 }
 
 
 
-void KNReadHdrSettings::enableEdit(bool b)
+void KNReadHdrSettings::slotSelectionChanged()
 {
-  name->clear();
-  hdr->clear();
-  if(nameCB[0]->isEnabled()!=b) {
-    for(int i=0; i<4; i++) {
-      nameCB[i]->setEnabled(b);
-      hdrCB[i]->setEnabled(b);
-    }
-    name->setEnabled(b);
-    hdr->setEnabled(b);
-    okBtn->setEnabled(b);
-  }   
-}
-
-
-
-void KNReadHdrSettings::createCBs(QWidget *p, QCheckBox **ptrs)
-{
-  ptrs[0]=new QCheckBox(i18n("large"), p);
-  ptrs[1]=new QCheckBox(i18n("bold"), p);
-  ptrs[2]=new QCheckBox(i18n("italic"), p);
-  ptrs[3]=new QCheckBox(i18n("underlined"), p);
-}
-
-
-void KNReadHdrSettings::slotItemSelected(int idx)
-{
-  currentItem=idx;
-  KNViewHeader *h;
-  
-  enableEdit((idx!=-1));    
-  if(idx!=-1) {
-    h=(KNViewHeader*)lb->itemAt(idx)->data();
-    name->setText(h->name());
-    hdr->setText (h->header());
-    for(int i=0; i<4; i++) {
-      nameCB[i]->setChecked(h->flag(i));
-      hdrCB[i]->setChecked(h->flag(i+4));
-    }
-  }
+  int curr = lb->currentItem();
+  delBtn->setEnabled(curr!=-1);
+  editBtn->setEnabled(curr!=-1);
+  upBtn->setEnabled(curr>0);
+  downBtn->setEnabled((curr!=-1)&&(curr+1!=(int)lb->count()));
 }
 
 
 
 void KNReadHdrSettings::slotAddBtnClicked()
 {
-  enableEdit(true);
-  currentItem=lb->currentItem();
-  if(currentItem!=-1) {
-    lb->setSelected(currentItem, false);
-    currentItem=-1;
-  }
+  KNViewHeader *h=KNViewHeader::newItem();
+
+  ConfDialog* dlg=new ConfDialog(h, this, 0);
+  if (dlg->exec()) {
+    lb->insertItem(generateItem(h));
+    h->createTags();
+    save=true;
+  } else
+    KNViewHeader::remove(h);
 }
 
 
 
 void KNReadHdrSettings::slotDelBtnClicked()
 {
-  KNViewHeader *h;
-  if(currentItem==-1) return;
-  if(KMessageBox::questionYesNo(this, i18n("Really delete this line?"))==KMessageBox::Yes) {
-    enableEdit(false);
-    h=(KNViewHeader*)lb->itemAt(currentItem)->data();
+  if (lb->currentItem()==-1) return;
+  if (KMessageBox::questionYesNo(this, i18n("Really delete this header?"))==KMessageBox::Yes) {
+    KNViewHeader *h = static_cast<HdrItem*>(lb->item(lb->currentItem()))->hdr;
     KNViewHeader::remove(h);
-    lb->removeItem(currentItem);
-    currentItem=lb->currentItem();
+    lb->removeItem(lb->currentItem());
     save=true;
   } 
+}
+
+
+
+void KNReadHdrSettings::slotEditBtnClicked()
+{
+  if (lb->currentItem()==-1) return;
+  KNViewHeader *h = static_cast<HdrItem*>(lb->item(lb->currentItem()))->hdr;
+
+  ConfDialog* dlg=new ConfDialog(h, this, 0);
+  if (dlg->exec()) {
+    lb->changeItem(generateItem(h),lb->currentItem());
+    h->createTags();
+    save=true;
+  }
 }
 
 
@@ -209,14 +276,12 @@ void KNReadHdrSettings::slotDelBtnClicked()
 void KNReadHdrSettings::slotUpBtnClicked()
 {
   int c=lb->currentItem();
-  KNViewHeader *h=0;
-  KNLBoxItem *it;
-  
   if(c==0 || c==-1) return;
-  it=lb->itemAt(c);
-  h=(KNViewHeader*) it->data();
+
+  KNViewHeader *h = static_cast<HdrItem*>(lb->item(c))->hdr;
+
   KNViewHeader::up(h);  
-  lb->insertItem(new KNLBoxItem(it->text(), h,0), c-1);
+  lb->insertItem(generateItem(h), c-1);
   lb->removeItem(c+1);
   lb->setCurrentItem(c-1);  
   save=true;
@@ -227,57 +292,19 @@ void KNReadHdrSettings::slotUpBtnClicked()
 void KNReadHdrSettings::slotDownBtnClicked()
 {
   int c=lb->currentItem();
-  KNViewHeader *h=0;
-  KNLBoxItem *it;
-  
   if(c==-1 || c==(int) lb->count()-1) return;
-  it=lb->itemAt(c);
-  h=(KNViewHeader*) it->data();
-  KNViewHeader::down(h);  
-  lb->insertItem(new KNLBoxItem(it->text(), h,0), c+2);
+
+  KNViewHeader *h = static_cast<HdrItem*>(lb->item(c))->hdr;
+
+  KNViewHeader::down(h);
+  lb->insertItem(generateItem(h), c+2);
   lb->removeItem(c);
   lb->setCurrentItem(c+1);
   save=true;
 }
 
 
-
-void KNReadHdrSettings::slotOkBtnClicked()
-{
-  KNViewHeader *h;
-  KNLBoxItem *it;
-  QString text;
-  qDebug("KNReadHdrSettings::slotOkBtnClicked()");  
-  if(currentItem==-1) h=KNViewHeader::newItem();
-  else h=(KNViewHeader*)lb->itemAt(currentItem)->data();  
-  h->setName(name->text());
-  h->setHeader(hdr->text());
-  for(int i=0; i<4; i++) {
-    if(h->hasName()) h->setFlag(i, nameCB[i]->isChecked());
-    else h->setFlag(i,false);
-    h->setFlag(i+4, hdrCB[i]->isChecked());
-  }
-  if(h->hasName()) {
-    text=h->name();
-    text+=": <";
-  }
-  else text="<";
-  text+=h->header();
-  text+=">";
-  
-  it=new KNLBoxItem(text, h, 0);
-  if(currentItem==-1) lb->insertItem(it);
-  else {
-    lb->changeItem(it, currentItem);
-    lb->clearSelection();
-  }
-  h->createTags();
-  save=true;
-  enableEdit(false);    
-}
-
-
-
 //--------------------------------
 
 #include "knreadhdrsettings.moc"
+

@@ -103,23 +103,22 @@ KNStatusFilterWidget::KNStatusFilterWidget(QWidget *parent) :
   setFrameStyle(NoFrame);
   enR=new QCheckBox(i18n("is read"), this);
   enN=new QCheckBox(i18n("is new"), this);
-  enUS=new QCheckBox(i18n("has unread Follow-Ups"), this);
-  enNS=new QCheckBox(i18n("has new Follow-Ups"), this);
+  enUS=new QCheckBox(i18n("has unread followups"), this);
+  enNS=new QCheckBox(i18n("has new followups"), this);
   
   rCom=new TFCombo(this);
   nCom=new TFCombo(this);
   usCom=new TFCombo(this);
   nsCom=new TFCombo(this);
     
-  QGridLayout *topL=new QGridLayout(this, 5, 3, 20,10);
+  QGridLayout *topL=new QGridLayout(this, 5, 3, 15,5);
   topL->addWidget(enR,0,0); topL->addWidget(rCom,0,1);
   topL->addWidget(enN,1,0); topL->addWidget(nCom,1,1);
   topL->addWidget(enUS,2,0); topL->addWidget(usCom,2,1);
   topL->addWidget(enNS,3,0); topL->addWidget(nsCom,3,1);
   topL->setColStretch(2,1);
   topL->setRowStretch(4,1);
-  topL->activate();
-    
+
   connect(this, SIGNAL(clicked(int)), this, SLOT(slotEnabled(int)));
 }
 

@@ -44,7 +44,8 @@ class KNFetchArticleManager : public QObject, public KNArticleManager  {
     
     const KActionCollection& actions()      { return actionCollection; }
     
-    void readConfig();
+    void readOptions();
+    void saveOptions();
         
     void setGroup(KNGroup *g);          
     KNGroup* group() const  { return g_roup; }

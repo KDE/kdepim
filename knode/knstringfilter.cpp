@@ -30,7 +30,7 @@
 KNStringFilter& KNStringFilter::operator=(const KNStringFilter &sf)
 {
   con=sf.con;
-  data=sf.data;
+  data=sf.data.copy();
   enabled=sf.enabled;
   regExp=sf.regExp;
     
@@ -89,18 +89,18 @@ KNStringFilterWidget::KNStringFilterWidget(const QString& title, QWidget *parent
   
   fString=new QLineEdit(this);
   
-  regExp=new QCheckBox(i18n("regular Expression"), this);
+  regExp=new QCheckBox(i18n("regular expression"), this);
   
-  QGridLayout *topL=new QGridLayout(this, 2,3, 20,10);
-  
-  topL->addWidget(enabled, 0,0);
-  topL->addWidget(fType, 0,1);
-  topL->addWidget(regExp, 0,2);
-  topL->addMultiCellWidget(fString, 1,1, 1,2);
+  QGridLayout *topL=new QGridLayout(this, 3,4, 8,5 );
+  topL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+  topL->addWidget(enabled,1,0, Qt::AlignHCenter);
+  topL->addColSpacing(0, 30);
+  topL->addWidget(fType, 1,1);
+  topL->addColSpacing(2, 10);
+  topL->addWidget(regExp, 1,3);
+  topL->addMultiCellWidget(fString, 2,2, 1,3);
+  topL->setColStretch(3,1);
 
-  topL->setColStretch(2,1); 
-  topL->activate();
-  
   connect(enabled, SIGNAL(toggled(bool)), this, SLOT(slotEnabled(bool)));
   enabled->setChecked(false);
   slotEnabled(false);   

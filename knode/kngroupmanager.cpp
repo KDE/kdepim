@@ -225,7 +225,7 @@ void KNGroupManager::readConfig()
   KConfig *conf=KGlobal::config();
   conf->setGroup("READNEWS");
   a_utoCheck=conf->readBoolEntry("autoCheck",true);
-  defaultMaxFetch=conf->readNumEntry("maxFetch", 500);    
+  defaultMaxFetch=conf->readNumEntry("maxFetch", 1000);
 }
 
 
@@ -346,9 +346,9 @@ void KNGroupManager::expireAll(KNPurgeProgressDialog *dlg)
 
 
 
-void KNGroupManager::showGroupDialog(KNNntpAccount *a)
+void KNGroupManager::showGroupDialog(KNNntpAccount *a, QWidget *parent=0)
 {
-  KNGroupDialog* gDialog=new KNGroupDialog(knGlobals.topWidget, a); 
+  KNGroupDialog* gDialog=new KNGroupDialog((parent!=0)? parent:knGlobals.topWidget, a);
   
   connect(gDialog, SIGNAL(loadList(KNNntpAccount*)), this, SLOT(slotLoadGroupList(KNNntpAccount*)));
   connect(gDialog, SIGNAL(fetchList(KNNntpAccount*)), this, SLOT(slotFetchGroupList(KNNntpAccount*)));
@@ -356,13 +356,18 @@ void KNGroupManager::showGroupDialog(KNNntpAccount *a)
   connect(this, SIGNAL(newListReady(KNGroupListData*)), gDialog, SLOT(slotReceiveList(KNGroupListData*)));
     
   if(gDialog->exec()) {
-    QStrList lst;
     KNGroup *g=0;
     
+    QStrList lst;
     gDialog->toUnsubscribe(&lst);
-    for(char *var=lst.first(); var; var=lst.next()) {
-      if((g=group(var, a)))
-        unsubscribeGroup(g);
+    if (lst.count()>0) {
+      if (KMessageBox::Yes == KMessageBox::questionYesNoList((parent!=0)? parent:knGlobals.topWidget,i18n("Do you really want to unsubscribe\nfrom these groups?"),
+                                                             QStringList::fromStrList(lst))) {
+        for(char *var=lst.first(); var; var=lst.next()) {
+          if((g=group(var, a)))
+            unsubscribeGroup(g);
+        }
+      }
     }
   
     QSortedList<KNGroupInfo> lst2;
@@ -634,7 +639,9 @@ void KNGroupManager::slotCheckForNewGroups(KNNntpAccount *a, QDate date)
 
 void KNGroupManager::slotUnsubscribe()
 {
-  if(KMessageBox::Yes == KMessageBox::questionYesNo(knGlobals.topWidget, i18n("Do you really want to unsubscribe this group?")))
+  if (!c_urrentGroup)
+    return;
+  if(KMessageBox::Yes == KMessageBox::questionYesNo(knGlobals.topWidget, i18n("Do you really want to unsubscribe from %1?").arg(c_urrentGroup->name())))
     unsubscribeGroup();
 }
 

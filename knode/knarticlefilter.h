@@ -35,6 +35,7 @@ class KNArticleFilter {
 
   public:
     KNArticleFilter(int id=-1);
+    KNArticleFilter(const KNArticleFilter& org);   // constructs a copy of org
     ~KNArticleFilter();
     
     bool loadInfo();
@@ -47,14 +48,15 @@ class KNArticleFilter {
     int id()                        { return i_d; }
     int applyOn()                   { return static_cast<int>(apon); }
     const QString& name()           { return n_ame; }
+    QString translatedName();        // *trys* to translate the name
     bool isEnabled()                { return e_nabled; }
     bool loaded()                   { return l_oaded; }
-    
-    
+
     void setId(int i)               { i_d=i; }
     void setApplyOn(int i)          { apon=(ApOn)i; }
     void setLoaded(bool l)          { l_oaded=l; }
     void setName(const QString &s)  { n_ame=s; }
+    void setTranslatedName(const QString &s);     // *trys* to retranslate the name to english
     void setEnabled(bool l)         { e_nabled=l; }
     
   protected:

@@ -20,7 +20,7 @@
 #include <config.h>
 #endif
 
-#include <ktmainwindow.h>
+#include <kmainwindow.h>
 #include <kprogress.h>
 
 #include "resource.h"
@@ -40,6 +40,7 @@ class KNFetchArticleManager;
 class KNFolderManager;
 class KNSavedArticleManager;
 class KNFilterManager;
+class KNAppManager;
 class KNNetAccess;
 class KNJobData;
 class KNodeView;
@@ -126,6 +127,7 @@ class KNodeApp : public KMainWindow
     KNFolderManager *FoManager;
     KNSavedArticleManager *SAManager;
     KNFilterManager *FiManager;
+    KNAppManager *AppManager;
 
   protected slots:
 
@@ -139,7 +141,8 @@ class KNodeApp : public KMainWindow
     void slotConfToolbar();
     void slotSettingsFinished();
         
-    //view-slots    
+    //view-slots
+    void slotCollectionClicked(QListViewItem *it);
     void slotCollectionSelected(QListViewItem *it);
     void slotHeaderSelected(QListViewItem *it);
     void slotHeaderDoubleClicked(QListViewItem *it);

@@ -19,10 +19,11 @@
 #ifndef KNCLEANUPSETTINGS_H
 #define KNCLEANUPSETTINGS_H
 
-#include "knsettingswidget.h"
+#include "knsettingsdialog.h"
 
 class QCheckBox;
 class QSpinBox;
+class QLabel;
 
 
 class KNCleanupSettings : public KNSettingsWidget  {
@@ -39,6 +40,7 @@ class KNCleanupSettings : public KNSettingsWidget  {
     void init();
     QCheckBox *folderCB, *groupCB, *thrCB;
     QSpinBox *folderDays, *groupDays, *readDays, *unreadDays;
+    QLabel *folderDaysL,*groupDaysL, *readDaysL, *unreadDaysL;
     
   protected slots:
     void slotGroupCBtoggled(bool b);

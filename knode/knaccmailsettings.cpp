@@ -50,20 +50,17 @@ KNAccMailSettings::KNAccMailSettings(QWidget *p) : KNSettingsWidget(p)
   l = new QLabel(i18n("Hold connection for:"), this);
   topL->addWidget(l,2,0);
   h_old = new QSpinBox(0,300,5,this);
+  h_old->setSuffix(i18n(" sec"));
   topL->addWidget(h_old,2,1);
-  l = new QLabel(i18n("secs"),this);
-  topL->addWidget(l,2,2);
 
   l = new QLabel(i18n("Timeout:"), this);
   topL->addWidget(l,3,0);
   t_imeout = new QSpinBox(0,300,5,this);
+  t_imeout->setSuffix(i18n(" sec"));
   topL->addWidget(t_imeout,3,1);
-  l = new QLabel(i18n("secs"),this);
-  topL->addWidget(l,3,2);
 
+  topL->setColStretch(1,1);
   topL->setColStretch(2,1);
-//  topL->setResizeMode(QLayout::Minimum);
-  topL->activate();
 
   serverInfo=new KNServerInfo();
   serverInfo->setType(KNServerInfo::STsmtp);

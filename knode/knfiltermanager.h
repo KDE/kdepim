@@ -74,8 +74,10 @@ class KNFilterManager : public QObject
       
     void startConfig(KNFilterSettings *fs);
     void endConfig();
+    void commitChanges();
     void newFilter();
     void editFilter(KNArticleFilter *f);
+    void copyFilter(KNArticleFilter *f);
     void addFilter(KNArticleFilter *f);
     void deleteFilter(KNArticleFilter *f);
     bool newNameIsOK(KNArticleFilter *f, const QString &newName);

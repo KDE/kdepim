@@ -19,7 +19,7 @@
 #ifndef KNUSERSETTINGS_H
 #define KNUSERSETTINGS_H
 
-#include "knsettingswidget.h"
+#include "knsettingsdialog.h"
 
 class KNUserWidget;
 class KNUserEntry;

@@ -66,7 +66,7 @@ class KNRangeFilterWidget : public QGroupBox {
   Q_OBJECT
     
   public:
-    KNRangeFilterWidget(const QString& value, int min, int max, QWidget* parent);
+    KNRangeFilterWidget(const QString& value, int min, int max, QWidget* parent, const QString &unit=QString::null);
     ~KNRangeFilterWidget();
         
     KNRangeFilter filter();

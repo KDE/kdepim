@@ -20,16 +20,66 @@
 #include <ksimpleconfig.h>
 #include <kglobal.h>
 #include <kstddirs.h>
+#include <klocale.h>
 
 #include "utilities.h"
 #include "knviewheader.h"
+
+
+//=============================================================================================================
+
+
+// some standard headers
+static const char *predef[] = { "Approved","Content-Transfer-Encoding","Content-Type","Control","Date","Distribution",
+                                "Expires","Followup-To","From","Lines","Message-ID","Mime-Version","NNTP-Posting-Host",
+                                "Newsgroups","Organization","Path","References","Reply-To","Sender","Subject","Supersedes",
+                                "User-Agent","X-Mailer","X-Newsreader","X-No-Archive","XRef",0 };
+
+// default display names KNode uses
+static const char *disp[] = { "Groups", 0 };
+
+void dummyHeader()
+{
+  i18n("it's not very important to translate this","Approved");
+  i18n("it's not very important to translate this","Content-Transfer-Encoding");
+  i18n("it's not very important to translate this","Content-Type");
+  i18n("it's not very important to translate this","Control");
+  i18n("it's not very important to translate this","Date");
+  i18n("it's not very important to translate this","Distribution");
+  i18n("it's not very important to translate this","Expires");
+  i18n("it's not very important to translate this","Followup-To");
+  i18n("it's not very important to translate this","From");
+  i18n("it's not very important to translate this","Lines");
+  i18n("it's not very important to translate this","Message-ID");
+  i18n("it's not very important to translate this","Mime-Version");
+  i18n("it's not very important to translate this","NNTP-Posting-Host");
+  i18n("it's not very important to translate this","Newsgroups");
+  i18n("it's not very important to translate this","Organization");
+  i18n("it's not very important to translate this","Path");
+  i18n("it's not very important to translate this","References");
+  i18n("it's not very important to translate this","Reply-To");
+  i18n("it's not very important to translate this","Sender");
+  i18n("it's not very important to translate this","Subject");
+  i18n("it's not very important to translate this","Supersedes");
+  i18n("it's not very important to translate this","User-Agent");
+  i18n("it's not very important to translate this","X-Mailer");
+  i18n("it's not very important to translate this","X-Newsreader");
+  i18n("it's not very important to translate this","X-No-Archive");
+  i18n("it's not very important to translate this","XRef");
+
+  i18n("it's not very important to translate this","Groups");
+}
+
+
+//=============================================================================================================
 
 
 QList<KNViewHeader> KNViewHeader::instances;
 
 KNViewHeader::KNViewHeader()
 {
-  flags.fill(false, 8); 
+  flags.fill(false, 8);
+  flags[1] = true;   // header name bold by default
 }
 
 
@@ -157,6 +207,55 @@ void KNViewHeader::down(KNViewHeader *h)
     qDebug("KNViewHeader::up() : item moved down");
   }
   else qDebug("KNViewHeader::up() : item not found in list");
+}
+
+
+
+// some common headers
+const char** KNViewHeader::predefs()
+{
+  return predef;
+}
+
+
+
+// *trys* to translate the name
+QString KNViewHeader::translatedName()
+{
+  // major hack alert !!!
+  if (!n_ame.isEmpty()) {
+    if (i18n(n_ame.local8Bit())!=n_ame.local8Bit().data())    // try to guess if this english or not
+      return i18n(n_ame.local8Bit());
+    else
+      return n_ame;
+  } else
+    return QString::null;
+}
+
+
+
+// *trys* to retranslate the name to english
+void KNViewHeader::setTranslatedName(const QString &s)
+{
+  bool retranslated = false;
+  for (const char *c=predef[0];(*c)!=0;c++)   // ok, first the standard header names
+    if (s==i18n(c)) {
+      n_ame = c;
+      retranslated = true;
+      break;
+    }
+
+  if (!retranslated) {
+    for (const char *c=disp[0];(*c)!=0;c++)   // now our standard display names
+      if (s==i18n(c)) {
+        n_ame = c;
+        retranslated = true;
+        break;
+      }
+  }
+
+  if (!retranslated)        // ok, we give up and store the maybe non-english string
+    n_ame = s;
 }
 
 

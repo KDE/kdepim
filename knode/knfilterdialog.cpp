@@ -56,7 +56,7 @@ KNFilterDialog::KNFilterDialog(KNArticleFilter *f, QWidget *parent, const char *
       
   fw=new KNFilterConfigWidget(page);
 
-  QGridLayout *gbL=new QGridLayout(gb, 2,4,10);
+  QGridLayout *gbL=new QGridLayout(gb, 2,4,8,5);
   gbL->addWidget(l1, 0,0);
   gbL->addMultiCellWidget(fname, 0,0,1,3);
   gbL->addWidget(enabled, 1,0);
@@ -64,15 +64,14 @@ KNFilterDialog::KNFilterDialog(KNArticleFilter *f, QWidget *parent, const char *
   gbL->addWidget(apon, 1,3);
   gbL->setColStretch(1,1);
   
-  QVBoxLayout *topL=new QVBoxLayout(page,10);
+  QVBoxLayout *topL=new QVBoxLayout(page,0,5);
 
   topL->addWidget(gb);
   topL->addWidget(fw,1);
-  topL->activate();
-  
+
   enabled->setChecked(f->isEnabled());
   apon->setCurrentItem((int) f->applyOn());
-  fname->setText(f->name());
+  fname->setText(f->translatedName());
 
   fw->status->setFilter(f->status);
   fw->lines->setFilter(f->lines);
@@ -100,9 +99,9 @@ void KNFilterDialog::slotOk()
     KMessageBox::sorry(this, i18n("Please provide a name for this filter."));
   else
     if (!knGlobals.fiManager->newNameIsOK(fltr,fname->text()))
-      KMessageBox::sorry(this, i18n("This name exists already.\nPlease choose a different one."));
+      KMessageBox::sorry(this, i18n("A filter with this name exists already.\nPlease choose a different name."));
     else {
-      fltr->setName(fname->text());
+      fltr->setTranslatedName(fname->text());
       fltr->setEnabled(enabled->isChecked());
       fltr->status=fw->status->filter();
       fltr->score=fw->score->filter();

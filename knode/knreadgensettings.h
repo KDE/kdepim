@@ -19,7 +19,7 @@
 #ifndef KNREADGENSETTINGS_H
 #define KNREADGENSETTINGS_H
 
-#include "knsettingswidget.h"
+#include "knsettingsdialog.h"
 
 class QCheckBox;
 class QSpinBox;

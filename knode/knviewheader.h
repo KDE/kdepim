@@ -39,14 +39,16 @@ class KNViewHeader {
     static void clear();
     static void up(KNViewHeader *h);
     static void down(KNViewHeader *h);
-    
+    static const char** predefs();                // some common headers
         
     const QString& name()               { return n_ame; }
+    QString translatedName();                     // *trys* to translate the name
     const QString& header()             { return h_eader; }
     bool flag(int i)                    { return flags.at(i); }
-    bool hasName()                      { return (n_ame.length()>0); }
+    bool hasName()                      { return !n_ame.isEmpty(); }
     void setHeader(const QString &s)    { h_eader = s; }
     void setName(const QString &s)      { n_ame = s; }
+    void setTranslatedName(const QString &s);     // *trys* to retranslate the name to english
     void setFlag(int i, bool b)         { flags.setBit(i, b); }
     
     void createTags();

@@ -46,8 +46,7 @@ KNPurgeProgressDialog::KNPurgeProgressDialog()
   topL->addWidget(sep);
   topL->addWidget(info);
   topL->addWidget(pb);
-  topL->activate();
-  
+
   setFrameStyle(WinPanel | Raised);
   setFixedSize(400,120);
   

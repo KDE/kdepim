@@ -2,8 +2,8 @@
                           knsmtpclient.cpp  -  description
                              -------------------
 
-    copyright            : (C) 2000 by Christian Thurner
-    email                : cthurner@freepage.de
+    copyright            : (C) 2000 by Christian Gebauer
+    email                : gebauer@bigfoot.com
  ***************************************************************************/
 
 /***************************************************************************

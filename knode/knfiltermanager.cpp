@@ -227,20 +227,22 @@ void KNFilterManager::startConfig(KNFilterSettings *fs)
 
 void KNFilterManager::endConfig()
 {
-  QValueList<int> newOrder(fset->menuOrder());
-  if (newOrder != menuOrder) {  // save only on demand, to avoid making a local
-    menuOrder = newOrder;        // copy of the config-file as long as possible
-    saveFilterLists();
-  }
-    
+  fset=0;
+}
+
+
+
+void KNFilterManager::commitChanges()
+{
+  menuOrder = fset->menuOrder();
+  saveFilterLists();
+
   if(currFilter)
     if(!currFilter->isEnabled()) currFilter=0;
 
   updateMenu();
 
   emit filterChanged(currFilter);
-  
-  fset=0;
 }
 
 
@@ -305,6 +307,14 @@ void KNFilterManager::editFilter(KNArticleFilter *f)
 }
 
 
+void KNFilterManager::copyFilter(KNArticleFilter *f)
+{
+  if (!f->loaded())
+    f->load();
+  KNArticleFilter *newf=new KNArticleFilter(*f);
+  editFilter(newf);
+}
+
 
 void KNFilterManager::deleteFilter(KNArticleFilter *f)
 {
@@ -314,7 +324,10 @@ void KNFilterManager::deleteFilter(KNArticleFilter *f)
         fset->removeItem(f);
         fset->removeMenuItem(f);
       }
-      if(currFilter==f) currFilter=0;
+      if(currFilter==f) {
+        currFilter=0;
+        emit filterChanged(currFilter);
+      }
     }
   }
 }
@@ -326,7 +339,7 @@ bool KNFilterManager::newNameIsOK(KNArticleFilter *f, const QString &newName)
   bool found=false;
   
   while(var && !found) {
-    if(var!=f) found=(newName==var->name());
+    if(var!=f) found=(newName==var->translatedName());
     var=fList.next();
   }
 
@@ -373,7 +386,7 @@ void KNFilterManager::updateMenu()
   while (it != menuOrder.end()) {
     if ((*it)!=-1) {
       if ((f=byID((*it))))
-        actFilter->popupMenu()->insertItem(f->name(), f->id());
+        actFilter->popupMenu()->insertItem(f->translatedName(), f->id());
     }
     else actFilter->popupMenu()->insertSeparator();
     ++it;

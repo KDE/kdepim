@@ -19,13 +19,15 @@
 #ifndef KNPOSTTECHSETTINGS_H
 #define KNPOSTTECHSETTINGS_H
 
-#include "knsettingswidget.h"
+#include <kdialogbase.h>
+#include "knsettingsdialog.h"
 
 class QComboBox;
 class QCheckBox;
 class QListBox;
 class QPushButton;
 class QLineEdit;
+class QLabel;
 
 
 class KNPostTechSettings : public KNSettingsWidget  {
@@ -39,22 +41,36 @@ class KNPostTechSettings : public KNSettingsWidget  {
     void apply();
     
   protected:
+
+    class XHeadDlg : public KDialogBase {
+
+      public:
+        XHeadDlg(QWidget *parent=0, const QString &header=QString::null);
+        ~XHeadDlg();
+
+        QString headResult();
+
+      protected:
+        QLineEdit *name, *value;
+    };
+
     void init();
-    void enableEdit(bool e);
     QComboBox *charset, *encoding;
-    QCheckBox *allow8bitCB, *genMIdCB;
+    QCheckBox *allow8bitCB, *genMIdCB, *incUaCB;
     QListBox *lb;
-    QPushButton *addBtn, *delBtn, *okBtn;
-    QLineEdit *host, *hName, *hValue;
-    bool saveHdrs, editEnabled;
-    int currentItem;
+    QPushButton *addBtn, *delBtn, *editBtn;
+    QLineEdit *host;
+    QLabel *hostL;
+    bool saveHdrs;
     
   protected slots:
+    void slotHeadEnctoggled(bool b);
     void slotGenMIdCBtoggled(bool b);
+    void slotSelectionChanged();
+    void slotItemSelected(int id);
     void slotAddBtnClicked();
     void slotDelBtnClicked();
-    void slotOkBtnClicked();
-    void slotItemSelected(int i); 
+    void slotEditBtnClicked();
 
 };
 

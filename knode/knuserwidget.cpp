@@ -90,7 +90,6 @@ KNUserWidget::KNUserWidget(QWidget *parent, const char *n)
   topL->setColStretch(1,1);
   topL->setRowStretch(5,1);
   topL->setResizeMode(QLayout::Minimum);  
-  topL->activate();
 }
 
 

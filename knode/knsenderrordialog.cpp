@@ -53,8 +53,7 @@ KNSendErrorDialog::KNSendErrorDialog() : QSemiModal(knGlobals.topWidget, 0, true
   topL->addLayout(btnL);
   btnL->addStretch(1);
   btnL->addWidget(closeBtn);
-  topL->activate();
-  
+
   setCaption(kapp->makeStdCaption(i18n("Errors while sending")));
   restoreWindowSize("sendDlg", this, sizeHint());
 }

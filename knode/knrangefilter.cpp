@@ -80,13 +80,15 @@ void KNRangeFilter::save(KSimpleConfig *conf)
 //=====================================================================================
 //=====================================================================================
 
-KNRangeFilterWidget::KNRangeFilterWidget(const QString& value, int min, int max, QWidget* parent)
+KNRangeFilterWidget::KNRangeFilterWidget(const QString& value, int min, int max, QWidget* parent, const QString &unit=QString::null)
   : QGroupBox(value, parent)
 {
   enabled=new QCheckBox(this);
     
   val1=new QSpinBox(min, max, 1, this);
+  val1->setSuffix(unit);
   val2=new QSpinBox(min, max, 1, this);
+  val2->setSuffix(unit);
   
   op1=new QComboBox(this);
   op1->insertItem("<");
@@ -99,24 +101,24 @@ KNRangeFilterWidget::KNRangeFilterWidget(const QString& value, int min, int max,
   des=new QLabel(value, this);
   des->setAlignment(AlignCenter); 
   
-  QHBoxLayout *topL=new QHBoxLayout(this,20,10);
-  
-  topL->addWidget(enabled);
-  topL->addSpacing(20);
-  topL->addWidget(val1);
-  topL->addWidget(op1);
-  topL->addWidget(des);
-  topL->addWidget(op2);
-  topL->addWidget(val2);
-  topL->addStretch(1);
-  
-  topL->activate();
-  
+  QGridLayout *topL=new QGridLayout(this, 2,6, 8,5 );
+
+  topL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+  topL->addWidget(enabled,1,0, Qt::AlignHCenter);
+  topL->addColSpacing(0, 30);
+  topL->addWidget(val1,1,1);
+  topL->addWidget(op1,1,2);
+  topL->addWidget(des,1,3);
+  topL->addColSpacing(3, 45);
+  topL->addWidget(op2,1,4);
+  topL->addWidget(val2,1,5);
+  topL->setColStretch(1,1);
+  topL->setColStretch(5,1);
+
   connect(op1, SIGNAL(activated(int)), this, SLOT(slotOp1Changed(int)));
   connect(enabled, SIGNAL(toggled(bool)), this, SLOT(slotEnabled(bool)));
   
   slotEnabled(false);
-        
 }
 
 

@@ -34,59 +34,74 @@
 #include "knfiltersettings.h"
 
 
-KNFilterSettings::KNFilterSettings(KNFilterManager *fm, QWidget *p) : KNSettingsWidget(p)
-{
-  QGroupBox *fgb=new QGroupBox(i18n("Filters"), this);
-  QGroupBox *mgb=new QGroupBox(i18n("Menu"), this);
-  
-  flb=new KNListBox(fgb);
-  addBtn=new QPushButton(i18n("Add"), fgb);
-  addBtn->setMinimumSize(addBtn->sizeHint());
-  delBtn=new QPushButton(i18n("Delete"), fgb);
-  delBtn->setMinimumSize(delBtn->sizeHint());
-  editBtn=new QPushButton(i18n("Edit"), fgb);
-  editBtn->setMinimumSize(editBtn->sizeHint());
-  mlb=new KNListBox(mgb);
-  upBtn=new QPushButton(i18n("Up"), mgb);
-  upBtn->setMinimumSize(upBtn->sizeHint());
-  downBtn=new QPushButton(i18n("Down"), mgb);
-  downBtn->setMinimumSize(downBtn->sizeHint());
-  sepAddBtn=new QPushButton(i18n("Add\nSeparator"), mgb);
-  sepAddBtn->setMinimumSize(sepAddBtn->sizeHint());
-  sepRemBtn=new QPushButton(i18n("Remove\nSeparator"), mgb);
-  sepRemBtn->setMinimumSize(sepRemBtn->sizeHint());
-  
-  QVBoxLayout *topL=new QVBoxLayout(this, 10);
-  QGridLayout *fgbL=new QGridLayout(fgb, 4,2, 20,5);
-  QGridLayout *mgbL=new QGridLayout(mgb, 5,2, 20,5);
-  
-  topL->addWidget(fgb);
-  topL->addWidget(mgb);
-  fgbL->addMultiCellWidget(flb, 0,3, 0,0);
-  fgbL->addWidget(addBtn ,0,1);
-  fgbL->addWidget(delBtn ,1,1);
-  fgbL->addWidget(editBtn ,2,1);
-  fgbL->setRowStretch(3,1);
-  fgbL->setColStretch(0,1);
-  mgbL->addMultiCellWidget(mlb, 0,4, 0,0);
-  mgbL->addWidget(upBtn ,0,1);
-  mgbL->addWidget(downBtn ,1,1);
-  mgbL->addWidget(sepAddBtn ,2,1);
-  mgbL->addWidget(sepRemBtn ,3,1);
-  mgbL->setRowStretch(4,1);
-  mgbL->setColStretch(0,1);
-  topL->setResizeMode(QLayout::Minimum);
+//=============================================================================================
 
+
+
+KNFilterSettings::KNFilterSettings(KNFilterManager *fm, QWidget *p)
+ : KNSettingsWidget(p), fiManager(fm)
+{
+  QGridLayout *topL=new QGridLayout(this, 6,2, 5,5);
+
+  // == Filters =================================================
+
+  topL->addWidget(new QLabel(i18n("<b>Filters:</b>"),this),0,0);
+
+  flb=new KNListBox(this);
+  connect(flb, SIGNAL(selectionChanged()), SLOT(slotSelectionChangedFilter()));
+  connect(flb, SIGNAL(selected(int)), SLOT(slotItemSelectedFilter(int)));
+  topL->addMultiCellWidget(flb,1,5,0,0);
+
+  addBtn=new QPushButton(i18n("&Add"), this);
   connect(addBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
+  topL->addWidget(addBtn,1,1);
+
+  delBtn=new QPushButton(i18n("&Delete"), this);
   connect(delBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
+  topL->addWidget(delBtn,2,1);
+
+  editBtn=new QPushButton(i18n("&Edit"), this);
   connect(editBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
+  topL->addWidget(editBtn,3,1);
+
+  copyBtn=new QPushButton(i18n("C&opy"), this);
+  connect(copyBtn, SIGNAL(clicked()), this, SLOT(slotCopyBtnClicked()));
+  topL->addWidget(copyBtn,4,1);
+
+  // == Menu ====================================================
+
+  topL->addWidget(new QLabel(i18n("<b>Menu:</b>"),this),6,0);
+
+  mlb=new KNListBox(this);
+  connect(mlb, SIGNAL(selectionChanged()), SLOT(slotSelectionChangedMenu()));
+  topL->addMultiCellWidget(mlb,7,11,0,0);
+
+  upBtn=new QPushButton(i18n("&Up"), this);
   connect(upBtn, SIGNAL(clicked()), this, SLOT(slotUpBtnClicked()));
+  topL->addWidget(upBtn,7,1);
+
+  downBtn=new QPushButton(i18n("D&own"), this);
   connect(downBtn, SIGNAL(clicked()), this, SLOT(slotDownBtnClicked()));
+  topL->addWidget(downBtn,8,1);
+
+  sepAddBtn=new QPushButton(i18n("Add\n&Separator"), this);
   connect(sepAddBtn, SIGNAL(clicked()), this, SLOT(slotSepAddBtnClicked()));
+  topL->addWidget(sepAddBtn,9,1);
+
+  sepRemBtn=new QPushButton(i18n("&Remove\nSeparator"), this);
   connect(sepRemBtn, SIGNAL(clicked()), this, SLOT(slotSepRemBtnClicked()));
-  connect(flb, SIGNAL(selected(int)), this, SLOT(slotItemSelected(int)));
-  fiManager=fm;
+  topL->addWidget(sepRemBtn,10,1);
+
+  topL->setRowStretch(5,1);
+  topL->setRowStretch(11,1);
+
+  active = UserIcon("fltrblue");
+  disabled = UserIcon("fltrgrey");
+
   fiManager->startConfig(this);
+
+  slotSelectionChangedFilter();
+  slotSelectionChangedMenu();
 }
 
 
@@ -98,14 +113,20 @@ KNFilterSettings::~KNFilterSettings()
 
 
 
+void KNFilterSettings::apply()
+{
+  fiManager->commitChanges();
+}
+
+
+
 void KNFilterSettings::addItem(KNArticleFilter *f)
 {
-  QPixmap pm;
-  if(f->isEnabled()) pm=UserIcon("fltrblue");
-  else pm=UserIcon("fltrgrey");
-  
-  KNLBoxItem *it=new KNLBoxItem(f->name(),f,&pm);
-  flb->insertItem(it);
+  if(f->isEnabled())
+    flb->insertItem(new KNLBoxItem(f->translatedName(),f,&active));
+  else
+    flb->insertItem(new KNLBoxItem(f->translatedName(),f,&disabled));
+  slotSelectionChangedFilter();
 }
 
 
@@ -113,7 +134,8 @@ void KNFilterSettings::addItem(KNArticleFilter *f)
 void KNFilterSettings::removeItem(KNArticleFilter *f)
 {
   int i=findItem(flb, f);
-  if(i!=-1) flb->removeItem(i);
+  if (i!=-1) flb->removeItem(i);
+  slotSelectionChangedFilter();
 }
 
 
@@ -122,26 +144,26 @@ void KNFilterSettings::updateItem(KNArticleFilter *f)
 {
   int i=findItem(flb, f);
   
-  if(i!=-1) {
-    QPixmap pm;
-    if(f->isEnabled()) pm=UserIcon("fltrblue"); 
-    else pm=UserIcon("fltrgrey");
-    flb->changeItem(new KNLBoxItem(f->name(),f,&pm), i);
+  if (i!=-1) {
+    if(f->isEnabled()) {
+      flb->changeItem(new KNLBoxItem(f->translatedName(),f,&active), i);
+      mlb->changeItem(new KNLBoxItem(f->translatedName()), findItem(mlb, f));
+    } else
+      flb->changeItem(new KNLBoxItem(f->translatedName(),f,&disabled), i);
   }
-
-  if(f->isEnabled())  
-    mlb->changeItem(new KNLBoxItem(f->name(),f,0), findItem(mlb, f));     
+  slotSelectionChangedFilter();
 }
 
 
 
 void KNFilterSettings::addMenuItem(KNArticleFilter *f)
 {
-  if(f) {
-    if(findItem(mlb, f)==-1)
-      mlb->insertItem(new KNLBoxItem(f->name(), f,0));
-  }
-  else mlb->insertItem(new KNLBoxItem("===", 0,0));
+  if (f) {
+    if (findItem(mlb, f)==-1)
+      mlb->insertItem(new KNLBoxItem(f->translatedName(),f));
+  } else   // separator
+    mlb->insertItem(new KNLBoxItem("==="));
+  slotSelectionChangedMenu();
 }
 
 
@@ -149,7 +171,8 @@ void KNFilterSettings::addMenuItem(KNArticleFilter *f)
 void KNFilterSettings::removeMenuItem(KNArticleFilter *f)
 {
   int i=findItem(mlb, f);
-  if(i!=-1) mlb->removeItem(i);   
+  if(i!=-1) mlb->removeItem(i);
+  slotSelectionChangedMenu();
 }
 
 
@@ -160,7 +183,7 @@ QValueList<int> KNFilterSettings::menuOrder()
   QValueList<int> lst;
   
   for(uint i=0; i<mlb->count(); i++) {
-    f=(KNArticleFilter*)(mlb->itemAt(i)->data());
+    f= static_cast<KNArticleFilter*>(mlb->itemAt(i)->data());
     if(f)
       lst << f->id();
     else
@@ -176,11 +199,11 @@ int KNFilterSettings::findItem(KNListBox *l, KNArticleFilter *f)
   int idx=0;
   bool found=false;
   while(!found && idx < (int) l->count()) {
-    found=(l->itemAt(idx)->data()==f);
+    found=(static_cast<KNArticleFilter*>(l->itemAt(idx)->data())==f);
     if(!found) idx++;
   }
   if(found) return idx;
-  else return -1; 
+  else return -1;
 }
 
 
@@ -194,27 +217,24 @@ void KNFilterSettings::slotAddBtnClicked()
 
 void KNFilterSettings::slotDelBtnClicked()
 {
-  int c=flb->currentItem();
-  KNArticleFilter *f=0;
-  
-  if(c!=-1) {
-    f=(KNArticleFilter*) flb->itemAt(c)->data();
-    fiManager->deleteFilter(f);
-  } 
-  
+  if (flb->currentItem()!=-1)
+    fiManager->deleteFilter(static_cast<KNArticleFilter*>(flb->itemAt(flb->currentItem())->data()));
 }
 
 
 
 void KNFilterSettings::slotEditBtnClicked()
 {
-  int c=flb->currentItem();
-  KNArticleFilter *f=0;
-  
-  if(c!=-1) {
-    f=(KNArticleFilter*) flb->itemAt(c)->data();
-    fiManager->editFilter(f);
-  } 
+  if (flb->currentItem()!=-1)
+    fiManager->editFilter(static_cast<KNArticleFilter*>(flb->itemAt(flb->currentItem())->data()));
+}
+
+
+
+void KNFilterSettings::slotCopyBtnClicked()
+{
+  if (flb->currentItem()!=-1)
+    fiManager->copyFilter(static_cast<KNArticleFilter*>(flb->itemAt(flb->currentItem())->data()));
 }
 
 
@@ -225,9 +245,11 @@ void KNFilterSettings::slotUpBtnClicked()
   KNArticleFilter *f=0;
   
   if(c==0 || c==-1) return;
-  f=(KNArticleFilter*) mlb->itemAt(c)->data();
-  if(f) mlb->insertItem(new KNLBoxItem(f->name(), f,0), c-1);
-  else mlb->insertItem(new KNLBoxItem("===", 0,0), c-1);
+  f=static_cast<KNArticleFilter*>(mlb->itemAt(c)->data());
+  if (f)
+    mlb->insertItem(new KNLBoxItem(f->translatedName(),f),c-1);
+  else
+    mlb->insertItem(new KNLBoxItem("==="),c-1);
   mlb->removeItem(c+1);
   mlb->setCurrentItem(c-1);
 }
@@ -239,10 +261,12 @@ void KNFilterSettings::slotDownBtnClicked()
   int c=mlb->currentItem();
   KNArticleFilter *f=0;
   
-  if(c==-1 || c==(int) mlb->count()-1) return;
-  f=(KNArticleFilter*) mlb->itemAt(c)->data();
-  if(f) mlb->insertItem(new KNLBoxItem(f->name(), f,0), c+2);
-  else mlb->insertItem(new KNLBoxItem("===", 0,0), c+2);
+  if(c==-1 || c+1==(int)mlb->count()) return;
+  f=static_cast<KNArticleFilter*>(mlb->itemAt(c)->data());
+  if (f)
+    mlb->insertItem(new KNLBoxItem(f->translatedName(),f),c+2);
+  else
+    mlb->insertItem(new KNLBoxItem("==="),c+2);
   mlb->removeItem(c);
   mlb->setCurrentItem(c+1);
 }
@@ -251,8 +275,8 @@ void KNFilterSettings::slotDownBtnClicked()
 
 void KNFilterSettings::slotSepAddBtnClicked()
 {
-  int c=mlb->currentItem();
-  if(c!=-1) mlb->insertItem(new KNLBoxItem("===", 0,0), c);
+  mlb->insertItem(new KNLBoxItem("==="), mlb->currentItem());
+  slotSelectionChangedMenu();
 }
 
 
@@ -260,17 +284,39 @@ void KNFilterSettings::slotSepAddBtnClicked()
 void KNFilterSettings::slotSepRemBtnClicked()
 {
   int c=mlb->currentItem();
-  KNArticleFilter *f=0;
-  
-  if(c!=-1) f=(KNArticleFilter*) mlb->itemAt(c)->data();
-  if(c!=-1 && f==0) mlb->removeItem(c);
+
+  if ((c!=-1) && (mlb->itemAt(c)->data()==0))
+     mlb->removeItem(c);
+  slotSelectionChangedMenu();
 }
 
 
 
-void KNFilterSettings::slotItemSelected(int i)
+void KNFilterSettings::slotItemSelectedFilter(int)
 {
-  fiManager->editFilter((KNArticleFilter*) flb->itemAt(i)->data()); 
+  slotEditBtnClicked();
+}
+
+
+
+void KNFilterSettings::slotSelectionChangedFilter()
+{
+  int curr = flb->currentItem();
+
+  delBtn->setEnabled(curr!=-1);
+  editBtn->setEnabled(curr!=-1);
+  copyBtn->setEnabled(curr!=-1);
+}
+
+
+
+void KNFilterSettings::slotSelectionChangedMenu()
+{
+  int curr = mlb->currentItem();
+
+  upBtn->setEnabled(curr>0);
+  downBtn->setEnabled((curr!=-1)&&(curr+1!=(int)mlb->count()));
+  sepRemBtn->setEnabled((curr!=-1) && (mlb->itemAt(curr)->data()==0));
 }
 
 

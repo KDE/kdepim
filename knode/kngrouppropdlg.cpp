@@ -94,7 +94,6 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
   grpL->addWidget(l,4,1); 
     
   pageL->setRowStretch(3,2);
-  pageL->activate();
 
   // Specfic Identity tab ========================================= 
   

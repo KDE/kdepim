@@ -19,13 +19,12 @@
 #ifndef KNFILTERSETTINGS_H
 #define KNFILTERSETTINGS_H
 
-#include "knsettingswidget.h"
+#include "knsettingsdialog.h"
 
 class QPushButton;
-
-class KNListBox;
 class KNFilterManager;
 class KNArticleFilter;
+class KNListBox;
 
 
 class KNFilterSettings : public KNSettingsWidget  {
@@ -35,7 +34,9 @@ class KNFilterSettings : public KNSettingsWidget  {
   public:
     KNFilterSettings(KNFilterManager *fm, QWidget *p);
     ~KNFilterSettings();
-    
+
+    void apply();
+
     void addItem(KNArticleFilter *f);
     void removeItem(KNArticleFilter *f);
     void updateItem(KNArticleFilter *f);
@@ -45,19 +46,24 @@ class KNFilterSettings : public KNSettingsWidget  {
       
   protected:
     int findItem(KNListBox *l, KNArticleFilter *f);
+
     KNListBox *flb, *mlb;
-    QPushButton *addBtn, *delBtn, *editBtn, *upBtn, *downBtn, *sepAddBtn, *sepRemBtn;
+    QPushButton *addBtn, *delBtn, *editBtn, *copyBtn, *upBtn, *downBtn, *sepAddBtn, *sepRemBtn;
+    QPixmap active, disabled;
     KNFilterManager *fiManager;
     
   protected slots:
     void slotAddBtnClicked();
     void slotDelBtnClicked();
     void slotEditBtnClicked();
+    void slotCopyBtnClicked();
     void slotUpBtnClicked();
     void slotDownBtnClicked();
     void slotSepAddBtnClicked();
     void slotSepRemBtnClicked();
-    void slotItemSelected(int i);
+    void slotItemSelectedFilter(int);
+    void slotSelectionChangedFilter();
+    void slotSelectionChangedMenu();
 };
 
 #endif

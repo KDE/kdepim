@@ -631,7 +631,7 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
   }
   
   //UserAgent
-  art->setHeader(KNArticleBase::HTuserAgent, "KNode " KNODE_VERSION);
+  art->setHeader(KNArticleBase::HTuserAgent, "KNode/" KNODE_VERSION);
   
   //Organization
   if(guser && guser->hasOrga()) usr=guser;
@@ -815,10 +815,8 @@ bool KNSavedArticleManager::closeComposeWindows()
 
 void KNSavedArticleManager::updateStatusString()
 {
-  if(f_older) {
+  if (f_older)
     knGlobals.top->setStatusMsg(i18n(" %1 : %2 messages").arg(f_older->name()).arg(f_older->length()), SB_GROUP);
-    knGlobals.top->setCaption(f_older->name());
-  }
 }
 
 
@@ -875,9 +873,15 @@ bool KNSavedArticleManager::cancelAllowed(KNFetchArticle *a, KNGroup *g)
 // returns false if aborted by the user
 bool KNSavedArticleManager::generateCancel(KNArticle *a, KNNntpAccount *acc)
 {
-  if(KMessageBox::No==KMessageBox::questionYesNo(knGlobals.topWidget, i18n("Do you really want to cancel this article?")))
+  if (KMessageBox::No==KMessageBox::questionYesNo(knGlobals.topWidget, i18n("Do you really want to cancel this article?")))
     return false;
-  bool sendNow = (KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget, i18n("Do you want to send the cancel\nmessage now or later?"),QString::null,i18n("&Now"),i18n("&Later")));
+  bool sendNow;
+  // well, KMessageBox::questionYesNoCancel would be nice here...
+  switch (KMessageBox::warningYesNoCancel(knGlobals.topWidget, i18n("Do you want to send the cancel\nmessage now or later?"), i18n("Question"),i18n("&Now"),i18n("&Later"))) {
+    case KMessageBox::Yes : sendNow = true; break;
+    case KMessageBox::No :  sendNow = false; break;
+    default :               return false;
+  }
 
   QCString mid;
   if (genMId) {

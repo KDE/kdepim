@@ -21,7 +21,22 @@
 
 #include <kdialogbase.h>
 
-class KNSettingsWidget;
+
+class KNSettingsWidget : public QWidget  {
+
+  Q_OBJECT
+
+  public:
+    KNSettingsWidget(QWidget *parent);
+    virtual ~KNSettingsWidget();
+
+    virtual void apply() {}
+
+  protected:
+
+    virtual void init()  {}
+
+};
 
 
 class KNSettingsDialog : public KDialogBase  {

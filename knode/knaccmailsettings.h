@@ -19,7 +19,7 @@
 #ifndef KNACCMAILSETTINGS_H
 #define KNACCMAILSETTINGS_H
 
-#include "knsettingswidget.h"
+#include "knsettingsdialog.h"
 
 class QLineEdit;
 class QSpinBox;

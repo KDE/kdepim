@@ -76,7 +76,7 @@ void KNArticleWidget::readOptions()
   
   showSig=c->readBoolEntry("showSig", true);
   fullHdrs=c->readBoolEntry("fullHdrs", false);
-  inlineAtt=c->readBoolEntry("inlineAtt", false);
+  inlineAtt=c->readBoolEntry("inlineAtt", true);
   openAtt=c->readBoolEntry("openAtt", false);
   altAsAtt=c->readBoolEntry("showAlts", false);
   browser=(browserType)(c->readNumEntry("Browser", 0));
@@ -604,7 +604,7 @@ void KNArticleWidget::createHtmlPage()
       
       if(vh->hasName()) {
         buffer += QString("<tr><td align=right valign=top width=\"1%\">%1%2:%3</td><td valign=top width=\"99%\">")
-                          .arg(vh->nameOpenTag()).arg(toHtmlString(vh->name(),false,false)).arg(vh->nameCloseTag());
+                          .arg(vh->nameOpenTag()).arg(toHtmlString(vh->translatedName(),false,false)).arg(vh->nameCloseTag());
       } else {
         buffer += "<tr><td colspan =\"2\" width=\"100%\">";
       }
@@ -760,7 +760,7 @@ void KNArticleWidget::createHtmlPage()
           if(var->mimeInfo()->ctMediaType()==KNArticleBase::MTimage) {
             path=KNArticleManager::saveContentToTemp(var);
             if(!path.isEmpty()) {
-              buffer+=QString("<img src=\"file:%1\">").arg(path);
+              buffer+=QString("<a href=\"news:Att.%1\"><img src=\"file:%2\"></a>").arg(attCnt).arg(path);
             }
           }
           else if(var->mimeInfo()->ctMediaType()==KNArticleBase::MTtext) {

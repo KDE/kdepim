@@ -91,7 +91,7 @@ class KNGroupManager : public QObject {
     void loadGroups(KNNntpAccount *a);
     void getSubscribed(KNNntpAccount *a, QStrList* l);
     void getGroupsOfAccount(KNNntpAccount *a, QList<KNGroup> *l);   
-    void showGroupDialog(KNNntpAccount *a);
+    void showGroupDialog(KNNntpAccount *a, QWidget *parent=0);
     void subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a);
     void unsubscribeGroup(KNGroup *g=0);
     void showGroupProperties(KNGroup *g=0);

@@ -36,14 +36,15 @@ KNReadGenSettings::KNReadGenSettings(QWidget *p) : KNSettingsWidget(p)
   QGroupBox *vgb=new QGroupBox(i18n("View"), this);
   QGroupBox *agb=new QGroupBox(i18n("Attachments"), this);
   QGroupBox *bgb=new QGroupBox(i18n("Browser"), this);
-  QLabel *l1, *l2,*l3;
+  QLabel *l1,*l3;
   
   autoCB=new QCheckBox(i18n("check for new articles automatically"), mgb);
   l1=new QLabel(i18n("max to fetch"), mgb);
   maxFetch=new QSpinBox(0, 9999, 1, mgb);
   markCB=new QCheckBox(i18n("mark article as read after"), mgb);
   markSecs=new QSpinBox(0, 9999, 1, mgb);
-  l2=new QLabel(i18n("secs"), mgb);
+  connect(markCB, SIGNAL(toggled(bool)), markSecs, SLOT(setEnabled(bool)));
+  markSecs->setSuffix(i18n(" sec"));
   l3=new QLabel(i18n("Open links with"), bgb);
   browser=new QComboBox(bgb);
   browser->insertItem("Konqueror"); 
@@ -53,34 +54,36 @@ KNReadGenSettings::KNReadGenSettings(QWidget *p) : KNSettingsWidget(p)
   inlineCB=new QCheckBox(i18n("show attachments inline if possible"), agb);
   openAttCB=new QCheckBox(i18n("open attachments on click"), agb);
   altAttCB=new QCheckBox(i18n("show alternative contents as attachments"), agb);
-  QVBoxLayout *topL=new QVBoxLayout(this, 10);
-  QGridLayout *mgbL=new QGridLayout(mgb, 4,3, 15,10);
-  QVBoxLayout *vgbL=new QVBoxLayout(vgb, 15, 10);
-  QVBoxLayout *agbL=new QVBoxLayout(agb, 15, 10);
-  QHBoxLayout *bgbL=new QHBoxLayout(bgb, 15, 10);
-    
+  QVBoxLayout *topL=new QVBoxLayout(this, 5);
+  QGridLayout *mgbL=new QGridLayout(mgb, 4,2, 8,5);
+  QVBoxLayout *vgbL=new QVBoxLayout(vgb, 8, 5);
+  QVBoxLayout *agbL=new QVBoxLayout(agb, 8, 5);
+  QGridLayout *bgbL=new QGridLayout(bgb, 2,2, 8,5);
+
   topL->addWidget(mgb);
   topL->addWidget(vgb);
   topL->addWidget(agb);
   topL->addWidget(bgb);
   topL->addStretch(1);
-  mgbL->addWidget(autoCB, 0,0);
-  mgbL->addWidget(l1, 1,0);
-  mgbL->addWidget(maxFetch, 1,1);
-  mgbL->addWidget(markCB, 2,0);
-  mgbL->addWidget(markSecs, 2,1);
-  mgbL->addWidget(l2, 2,2);
+  mgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+  mgbL->addWidget(autoCB, 1,0);
+  mgbL->addWidget(l1, 2, 0);
+  mgbL->addWidget(maxFetch, 2,1);
+  mgbL->addWidget(markCB, 3,0);
+  mgbL->addWidget(markSecs, 3,1);
   mgbL->setColStretch(0,1);
+  vgbL->addSpacing(fontMetrics().lineSpacing()-4);
   vgbL->addWidget(expCB);
   vgbL->addWidget(sigCB);
+  agbL->addSpacing(fontMetrics().lineSpacing()-4);
   agbL->addWidget(inlineCB);
   agbL->addWidget(openAttCB);
   agbL->addWidget(altAttCB);
-  bgbL->addWidget(l3);
-  bgbL->addWidget(browser, 1);
+  bgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+  bgbL->addWidget(l3, 1,0);
+  bgbL->addWidget(browser, 1,1);
   topL->setResizeMode(QLayout::Minimum);
-  topL->activate();
-  
+
   init();
 }
 
@@ -97,18 +100,18 @@ void KNReadGenSettings::init()
   KConfig *conf=KGlobal::config();
   
   conf->setGroup("READNEWS");
-  maxFetch->setValue(conf->readNumEntry("maxFetch", 300));
+  maxFetch->setValue(conf->readNumEntry("maxFetch", 1000));
   markCB->setChecked(conf->readBoolEntry("autoMark", true));
   markSecs->setValue(conf->readNumEntry("markSecs", 5));
+  markSecs->setEnabled(markCB->isChecked());
   sigCB->setChecked(conf->readBoolEntry("showSig", true));
   browser->setCurrentItem(conf->readNumEntry("Browser", 0));
   autoCB->setChecked(conf->readBoolEntry("autoCheck", true));
   expCB->setChecked(conf->readBoolEntry("totalExpand", true));
-  inlineCB->setChecked(conf->readBoolEntry("inlineAtt", false));
+  inlineCB->setChecked(conf->readBoolEntry("inlineAtt", true));
   openAttCB->setChecked(conf->readBoolEntry("openAtt", false));
   altAttCB->setChecked(conf->readBoolEntry("showAlts", false));
 }
-
 
 
 void KNReadGenSettings::apply()

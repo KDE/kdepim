@@ -55,7 +55,7 @@ KNFetchArticleManager::KNFetchArticleManager(KNListView *v, KNFilterManager* fiM
   connect(timer, SIGNAL(timeout()), this, SLOT(slotTimer()));
   connect(view, SIGNAL(expanded(QListViewItem*)), this, SLOT(slotItemExpanded(QListViewItem*)));
 
-  readConfig();
+  readOptions();
 
   actShowThreads = new KToggleAction(i18n("Show T&hreads"), 0 , this, SLOT(slotToggleShowThreads()),
                                      &actionCollection, "view_showThreads");
@@ -85,7 +85,7 @@ KNFetchArticleManager::KNFetchArticleManager(KNListView *v, KNFilterManager* fiM
                               &actionCollection, "thread_read");
   actThreadUnread = new KAction(i18n("Mark thread as u&nread"), CTRL+Key_U , this, SLOT(slotThreadUnread()),
                                 &actionCollection, "thread_unread");
-  actThreadSetScore = new KAction(i18n("Set &score"), Key_S , this, SLOT(slotThreadScore()),
+  actThreadSetScore = new KAction(i18n("Set &Score..."), Key_S , this, SLOT(slotThreadScore()),
                                   &actionCollection, "thread_setScore");
   actThreadWatch = new KAction(i18n("&Watch"), Key_W , this, SLOT(slotThreadWatch()),
                                &actionCollection, "thread_watch");
@@ -93,7 +93,7 @@ KNFetchArticleManager::KNFetchArticleManager(KNListView *v, KNFilterManager* fiM
                                 &actionCollection, "thread_ignore");
   actOwnWindow = new KAction(i18n("&Open in own window"), Key_O , this, SLOT(slotOwnWindow()),
                              &actionCollection, "article_ownWindow");
-  actSearch = new KAction(i18n("&Search"),"find" , Key_F4 , this, SLOT(slotSearch()),
+  actSearch = new KAction(i18n("&Search..."),"find" , Key_F4 , this, SLOT(slotSearch()),
                           &actionCollection, "article_search");
 }
 
@@ -107,7 +107,7 @@ KNFetchArticleManager::~KNFetchArticleManager()
 
 
 
-void KNFetchArticleManager::readConfig()
+void KNFetchArticleManager::readOptions()
 {
   KConfig *c=KGlobal::config();
   c->setGroup("READNEWS");
@@ -116,6 +116,16 @@ void KNFetchArticleManager::readConfig()
   //KNHdrViewItem::setTotalExpand(totalExpand);
   t_hreaded=c->readBoolEntry("showThreads", true);
   autoMark=c->readBoolEntry("autoMark", true);
+}
+
+
+
+void KNFetchArticleManager::saveOptions()
+{
+  KConfig *c=KGlobal::config();
+  c->setGroup("READNEWS");
+
+  c->writeEntry("showThreads", t_hreaded);  // the remaining options are save in the settings-module
 }
 
 
@@ -621,8 +631,6 @@ void KNFetchArticleManager::updateStatusString()
       knGlobals.top->setStatusMsg(i18n(" Filter: %1").arg(f_ilter->name()), SB_FILTER);
     else
       knGlobals.top->setStatusMsg(QString::null, SB_FILTER);
-
-    knGlobals.top->setCaption(g_roup->name());
   }
 }
 

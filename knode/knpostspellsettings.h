@@ -1,9 +1,9 @@
 /***************************************************************************
-                          knsettingswidget.h  -  description
+       knpostspellsettings.h  -  config page for the spellchecker
                              -------------------
     
-    copyright            : (C) 2000 by Christian Thurner
-    email                : cthurner@freepage.de
+    copyright            : (C) 2000 by Christian Gebauer
+    email                : gebauer@bigfoot.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -16,26 +16,26 @@
  ***************************************************************************/
 
 
-#ifndef KNSETTINGSWIDGET_H
-#define KNSETTINGSWIDGET_H
+#ifndef KNPOSTSPELLSETTINGS_H
+#define KNPOSTSPELLSETTINGS_H
 
-#include <qwidget.h>
+#include "knsettingsdialog.h"
+
+class KSpellConfig;
 
 
-class KNSettingsWidget : public QWidget  {
-  
-  Q_OBJECT  
+class KNPostSpellSettings : public KNSettingsWidget  {
 
   public:
-    KNSettingsWidget(QWidget *parent);
-    virtual ~KNSettingsWidget();
+    KNPostSpellSettings(QWidget *parent);
+    virtual ~KNPostSpellSettings();
     
-    virtual void apply() {}
+    void apply();
     
   protected:
   
-    virtual void init()  {}   
-    
+    KSpellConfig *spellConf;
+
 };
 
 #endif

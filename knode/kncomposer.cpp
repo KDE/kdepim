@@ -47,68 +47,6 @@
 #include "kncomposer.h"
 
 
-//=====================================================================================
-
-
-KNAttachmentView::KNAttachmentView(QWidget *parent, char *name) :
-  QListView(parent, name)
-{
-  setFrameStyle( QFrame::WinPanel | QFrame::Sunken );  // match the QMultiLineEdit style
-  addColumn(i18n("File"), 115);
-  addColumn(i18n("Type"), 91);
-  addColumn(i18n("Size"), 55);
-  addColumn(i18n("Description"), 110);
-  addColumn(i18n("Encoding"), 60);
-  header()->setClickEnabled(false);
-  setAllColumnsShowFocus(true);
-}
-
-
-
-KNAttachmentView::~KNAttachmentView()
-{
-}
-
-
-
-void KNAttachmentView::keyPressEvent( QKeyEvent * e )
-{
-  if ( !e )
-    return; // subclass bug
-
-  if ((e->key() == Key_Delete)&&(currentItem()))
-    emit( delPressed(currentItem()) );
-  else
-    QListView::keyPressEvent(e);
-}
-
-
-
-//===============================================================
-
-
-
-KNAttachmentItem::KNAttachmentItem(QListView *v, KNAttachment *a) :
-  QListViewItem(v), attachment(a)
-{
-  setText(0, a->contentName());
-  setText(1, a->contentMimeType());
-  setText(2, a->contentSize());
-  setText(3, a->contentDescription());
-  setText(4, a->contentEncoding());
-}
-
-
-
-KNAttachmentItem::~KNAttachmentItem()
-{
-  delete attachment;
-}
-
-
-//=====================================================================================
-
-
 
 KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)//, int textEnc)
     : KMainWindow(0), spellChecker(0), r_esult(CRsave), a_rticle(a), nntp(n),
@@ -282,11 +220,11 @@ void KNComposer::initData()
   if(a_rticle->isMultipart()) {
     view->showAttachmentView();
     QList<KNMimeContent> attList;
-    KNAttachmentItem *item=0;
+    AttachmentViewItem *item=0;
     attList.setAutoDelete(false);
     a_rticle->attachments(&attList);
     for(KNMimeContent *c=attList.first(); c; c=attList.next())
-      item=new KNAttachmentItem(view->attView, new KNAttachment(c));
+      item=new AttachmentViewItem(view->attView, new KNAttachment(c));
   } 
 }
 
@@ -354,7 +292,7 @@ void KNComposer::applyChanges()
 
     QListViewItemIterator it(view->attView);
     while(it.current()) {
-      a=(static_cast<KNAttachmentItem*> (it.current()))->attachment;
+      a=(static_cast<AttachmentViewItem*> (it.current()))->attachment;
       if(a->hasChanged()) {
         if(a->isAttached())
           a->updateContentInfo();
@@ -674,7 +612,7 @@ void KNComposer::slotAttachFile()
       view->showAttachmentView();
       restoreWindowSize("composerAtt", this, QSize(535,450));  // optimized default for 800x600
     }
-    (void) new KNAttachmentItem(view->attView, new KNAttachment(path));
+    (void) new AttachmentViewItem(view->attView, new KNAttachment(path));
     attChanged=true;
   }
 }
@@ -685,7 +623,7 @@ void KNComposer::slotRemoveAttachment()
   if(!view->viewOpen) return;
 
   if(view->attView->currentItem()) {
-    KNAttachmentItem *it=static_cast<KNAttachmentItem*>(view->attView->currentItem());
+    AttachmentViewItem *it=static_cast<AttachmentViewItem*>(view->attView->currentItem());
     if(it->attachment->isAttached()) {
       delAttList->append(it->attachment);
       it->attachment=0;
@@ -708,8 +646,8 @@ void KNComposer::slotAttachmentProperties()
   if(!view->viewOpen) return;
 
   if(view->attView->currentItem()) {
-    KNAttachmentItem *it=static_cast<KNAttachmentItem*>(view->attView->currentItem());
-    KNAttachmentPropertyDialog *d=new KNAttachmentPropertyDialog(this, it->attachment);
+    AttachmentViewItem *it=static_cast<AttachmentViewItem*>(view->attView->currentItem());
+    AttachmentPropertiesDlg *d=new AttachmentPropertiesDlg(this, it->attachment);
     if(d->exec()) {
       d->apply();
       it->setText(1, it->attachment->contentMimeType());
@@ -902,7 +840,6 @@ KNComposer::ComposerView::ComposerView(QWidget *parent, bool mail)
   QVBoxLayout *topL=new QVBoxLayout(editW, 4,4);
   topL->addWidget(fr1);
   topL->addWidget(edit, 1);
-  topL->activate();
 }
 
 
@@ -932,7 +869,7 @@ void KNComposer::ComposerView::showAttachmentView()
     attWidget=new QWidget(this);
     QGridLayout *topL=new QGridLayout(attWidget, 3, 2, 4, 4);
 
-    attView=new KNAttachmentView(attWidget);
+    attView=new AttachmentView(attWidget);
     topL->addMultiCellWidget(attView,0,2,0,0);
     connect(attView, SIGNAL(currentChanged(QListViewItem*)),
             parent(), SLOT(slotAttachmentSelected(QListViewItem*)));
@@ -961,7 +898,6 @@ void KNComposer::ComposerView::showAttachmentView()
 
     topL->setRowStretch(2,1);
     topL->setColStretch(0,1);
-    topL->activate();
   }
   
   if (!viewOpen) {
@@ -1055,12 +991,69 @@ void KNComposer::readConfig()
 }
 
 
+//=====================================================================================
+
+
+KNComposer::AttachmentView::AttachmentView(QWidget *parent, char *name)
+ : QListView(parent, name)
+{
+  setFrameStyle( QFrame::WinPanel | QFrame::Sunken );  // match the QMultiLineEdit style
+  addColumn(i18n("File"), 115);
+  addColumn(i18n("Type"), 91);
+  addColumn(i18n("Size"), 55);
+  addColumn(i18n("Description"), 110);
+  addColumn(i18n("Encoding"), 60);
+  header()->setClickEnabled(false);
+  setAllColumnsShowFocus(true);
+}
+
+
+
+KNComposer::AttachmentView::~AttachmentView()
+{
+}
+
+
+
+void KNComposer::AttachmentView::keyPressEvent( QKeyEvent * e )
+{
+  if ( !e )
+    return; // subclass bug
+
+  if ((e->key() == Key_Delete)&&(currentItem()))
+    emit( delPressed(currentItem()) );
+  else
+    QListView::keyPressEvent(e);
+}
+
+
+
+//===============================================================
+
+
+
+KNComposer::AttachmentViewItem::AttachmentViewItem(QListView *v, KNAttachment *a) :
+  QListViewItem(v), attachment(a)
+{
+  setText(0, a->contentName());
+  setText(1, a->contentMimeType());
+  setText(2, a->contentSize());
+  setText(3, a->contentDescription());
+  setText(4, a->contentEncoding());
+}
+
+
+
+KNComposer::AttachmentViewItem::~AttachmentViewItem()
+{
+  delete attachment;
+}
+
 
 //===================================================================
 
 
-
-KNAttachmentPropertyDialog::KNAttachmentPropertyDialog(QWidget *p, KNAttachment *a) :
+KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg(QWidget *p, KNAttachment *a) :
   KDialogBase(p, 0, true, i18n("Attachment Properties"), Help|Ok|Cancel, Ok), attachment(a),
   nonTextAsText(false)
 {
@@ -1121,14 +1114,14 @@ KNAttachmentPropertyDialog::KNAttachmentPropertyDialog(QWidget *p, KNAttachment 
 
 
 
-KNAttachmentPropertyDialog::~KNAttachmentPropertyDialog()
+KNComposer::AttachmentPropertiesDlg::~AttachmentPropertiesDlg()
 {
   saveWindowSize("attProperties", this->size());
 }
 
 
 
-void KNAttachmentPropertyDialog::apply()
+void KNComposer::AttachmentPropertiesDlg::apply()
 {
   attachment->setContentDescription(description->text());
   attachment->setContentMimeType(mimeType->text());
@@ -1137,7 +1130,7 @@ void KNAttachmentPropertyDialog::apply()
 
 
 
-void KNAttachmentPropertyDialog::accept()
+void KNComposer::AttachmentPropertiesDlg::accept()
 {
   if(mimeType->text().find('/')==-1) {
     KMessageBox::sorry(this, i18n("You have set an invalid mime-type.\nPlease change it."));
@@ -1154,7 +1147,7 @@ void KNAttachmentPropertyDialog::accept()
 
 
 
-void KNAttachmentPropertyDialog::slotMimeTypeTextChanged(const QString &text)
+void KNComposer::AttachmentPropertiesDlg::slotMimeTypeTextChanged(const QString &text)
 {
   if(text.left(5)!="text/") {
     nonTextAsText=attachment->isFixedBase64();
@@ -1166,7 +1159,6 @@ void KNAttachmentPropertyDialog::slotMimeTypeTextChanged(const QString &text)
     encoding->setEnabled(true);
   }
 }
-
 
 
 //--------------------------------

@@ -40,40 +40,6 @@ class KNMimeContent;
 class KNAttachment;
 
 
-// === attachment handling ===========================================================
-// sorry, this classes should be in KNComposer, but moc refuses to generate
-// the signal of KNKNAttachmentView?? CG
-
-class KNAttachmentView : public QListView {
-
-  Q_OBJECT
-
-  public:
-    KNAttachmentView(QWidget *parent, char *name=0);
-    ~KNAttachmentView();
-
-  protected:
-    void keyPressEvent( QKeyEvent *e );
-
-  signals:
-    void delPressed ( QListViewItem * );      // the user used Key_Delete on list view item
-};
-
-
-class KNAttachmentItem : public QListViewItem {
-
-  public:
-    KNAttachmentItem(QListView *v, KNAttachment *a);
-    ~KNAttachmentItem();
-
-  KNAttachment *attachment;
-
-};
-
-
-// ===================================================================================
-
-
 class KNComposer : public KMainWindow  {
 
   Q_OBJECT
@@ -105,6 +71,9 @@ class KNComposer : public KMainWindow  {
     // inserts at cursor position if clear is false, replaces content otherwise
     void insertFile(QString fileName, bool clear=false);
 
+    class AttachmentView;
+    class AttachmentViewItem;
+    class AttachmentPropertiesDlg;
 
     class ComposerView  : public QSplitter {
       
@@ -121,7 +90,7 @@ class KNComposer : public KMainWindow  {
         QGroupBox *notification;
         QPushButton *cancelEditorButton, *attRemoveButton, *attEditButton;
         QWidget *attWidget;
-        KNAttachmentView *attView;
+        AttachmentView *attView;
         bool viewOpen;
         QLineEdit *subject, *dest;
         QComboBox *fup2;
@@ -194,14 +163,43 @@ class KNComposer : public KMainWindow  {
 };
 
 
+// === attachment handling ===========================================================
 
-class KNAttachmentPropertyDialog : public KDialogBase {
+
+class KNComposer::AttachmentView : public QListView {
 
   Q_OBJECT
 
   public:
-    KNAttachmentPropertyDialog(QWidget *p, KNAttachment *a);
-    ~KNAttachmentPropertyDialog();
+    AttachmentView(QWidget *parent, char *name=0);
+    ~AttachmentView();
+
+  protected:
+    void keyPressEvent( QKeyEvent *e );
+
+  signals:
+    void delPressed ( QListViewItem * );      // the user used Key_Delete on list view item
+};
+
+
+class KNComposer::AttachmentViewItem : public QListViewItem {
+
+  public:
+    AttachmentViewItem(QListView *v, KNAttachment *a);
+    ~AttachmentViewItem();
+
+  KNAttachment *attachment;
+
+};
+
+
+class KNComposer::AttachmentPropertiesDlg : public KDialogBase {
+
+  Q_OBJECT
+
+  public:
+    AttachmentPropertiesDlg(QWidget *p, KNAttachment *a);
+    ~AttachmentPropertiesDlg();
 
     void apply();
 

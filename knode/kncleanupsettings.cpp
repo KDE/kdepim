@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 
+#include <qgroupbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qcheckbox.h>
@@ -31,44 +32,65 @@
 
 KNCleanupSettings::KNCleanupSettings(QWidget *p) : KNSettingsWidget(p)
 {
-  QLabel *l1, *l2, *l3, *l4, *l5, *l6;
-  folderCB=new QCheckBox(i18n("compact folders every"), this);
-  groupCB=new QCheckBox(i18n("purge groups every"), this);
-  folderDays=new QSpinBox(0, 999, 1, this);
-  groupDays=new QSpinBox(0, 999, 1, this);
-  readDays=new QSpinBox(0, 999, 1, this);
-  unreadDays=new QSpinBox(0, 999, 1, this);
-  thrCB=new QCheckBox(i18n("save threads"), this);
-  l1=new QLabel(i18n("purgeGroup","days"), this);
-  l2=new QLabel(i18n("keep read articles"), this);
-  l3=new QLabel(i18n("keepRead","days"), this);
-  l4=new QLabel(i18n("keep unread articles"), this);
-  l5=new QLabel(i18n("keepUnread","days"), this);
-  l6=new QLabel(i18n("compactFolders","days"), this);
-  KSeparator *sep=new KSeparator(this);
-    
-  QGridLayout *topL=new QGridLayout(this, 7, 3, 10);
-  topL->addWidget(groupCB, 0,0);
-  topL->addWidget(groupDays, 0,1);
-  topL->addWidget(l1, 0,2);
-  topL->addWidget(l2, 1,0);
-  topL->addWidget(readDays, 1,1);
-  topL->addWidget(l3, 1,2);
-  topL->addWidget(l4, 2,0);
-  topL->addWidget(unreadDays, 2,1);
-  topL->addWidget(l5, 2,2);
-  topL->addWidget(thrCB, 3,0);
-  topL->addMultiCellWidget(sep, 4,4, 0,2);
-  topL->addWidget(folderCB, 5,0);
-  topL->addWidget(folderDays, 5,1);
-  topL->addWidget(l6, 5,2);
-  topL->setColStretch(0,1);
-  topL->setRowStretch(6,1);
-  topL->setResizeMode(QLayout::Minimum);
-  
+  QVBoxLayout *topL=new QVBoxLayout(this, 5);
+
+  // === groups ===========================================================
+
+  QGroupBox *groupsB=new QGroupBox(i18n("Groups"), this);
+  topL->addWidget(groupsB);
+  QGridLayout *groupsL=new QGridLayout(groupsB, 6,2, 8,5);
+
+  groupsL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+
+  groupCB=new QCheckBox(i18n("remove old articles from newsgroups"), groupsB);
   connect(groupCB, SIGNAL(toggled(bool)), this, SLOT(slotGroupCBtoggled(bool)));
+  groupsL->addMultiCellWidget(groupCB,1,1,0,1);
+
+  groupDaysL=new QLabel(i18n("purge groups every"), groupsB);
+  groupsL->addWidget(groupDaysL,2,0);
+  groupDays=new QSpinBox(0, 999, 1, groupsB);
+  groupDays->setSuffix(i18n(" days"));
+  groupsL->addWidget(groupDays,2,1,Qt::AlignRight);
+
+  readDaysL=new QLabel(i18n("keep read articles"), groupsB);
+  groupsL->addWidget(readDaysL,3,0);
+  readDays=new QSpinBox(0, 999, 1, groupsB);
+  readDays->setSuffix(i18n(" days"));
+  groupsL->addWidget(readDays,3,1,Qt::AlignRight);
+
+  unreadDaysL=new QLabel(i18n("keep read articles"), groupsB);
+  groupsL->addWidget(unreadDaysL,4,0);
+  unreadDays=new QSpinBox(0, 999, 1, groupsB);
+  unreadDays->setSuffix(i18n(" days"));
+  groupsL->addWidget(unreadDays,4,1,Qt::AlignRight);
+
+  thrCB=new QCheckBox(i18n("preserve threads"), groupsB);
+  groupsL->addWidget(thrCB,5,0);
+
+  groupsL->setColStretch(1,1);
+
+  // === folders =========================================================
+
+  QGroupBox *foldersB=new QGroupBox(i18n("Folders"), this);
+  topL->addWidget(foldersB);
+  QGridLayout *foldersL=new QGridLayout(foldersB, 3,2, 8,5);
+
+  foldersL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+
+  folderCB=new QCheckBox(i18n("compact folders"), foldersB);
   connect(folderCB, SIGNAL(toggled(bool)), this, SLOT(slotFolderCBtoggled(bool)));
-  
+  foldersL->addMultiCellWidget(folderCB,1,1,0,1);
+
+  folderDaysL=new QLabel(i18n("purge folders every"), foldersB);
+  foldersL->addWidget(folderDaysL,2,0);
+  folderDays=new QSpinBox(0, 999, 1, foldersB);
+  folderDays->setSuffix(i18n(" days"));
+  foldersL->addWidget(folderDays,2,1,Qt::AlignRight);
+
+  foldersL->setColStretch(1,1);
+
+  topL->addStretch(1);
+
   init();
 }
 
@@ -114,8 +136,11 @@ void KNCleanupSettings::apply()
 
 void KNCleanupSettings::slotGroupCBtoggled(bool b)
 {
+  groupDaysL->setEnabled(b);
   groupDays->setEnabled(b);
+  readDaysL->setEnabled(b);
   readDays->setEnabled(b);
+  unreadDaysL->setEnabled(b);
   unreadDays->setEnabled(b);
   thrCB->setEnabled(b);
 }
@@ -124,9 +149,9 @@ void KNCleanupSettings::slotGroupCBtoggled(bool b)
 
 void KNCleanupSettings::slotFolderCBtoggled(bool b)
 {
+  folderDaysL->setEnabled(b);
   folderDays->setEnabled(b);
 }
-
 
 
 //--------------------------------

@@ -49,8 +49,8 @@ KNSearchDialog::KNSearchDialog(searchType /*t*/, QWidget *parent)
   fcw=new KNFilterConfigWidget(this);
   fcw->reset();
   
-  QHBoxLayout *topL=new QHBoxLayout(this, 8);
-  QVBoxLayout *btnL=new QVBoxLayout(bg, 10);
+  QHBoxLayout *topL=new QHBoxLayout(this, 5);
+  QVBoxLayout *btnL=new QVBoxLayout(bg, 8, 5);
   
   topL->addWidget(fcw, 1);
   topL->addWidget(bg);
@@ -59,8 +59,7 @@ KNSearchDialog::KNSearchDialog(searchType /*t*/, QWidget *parent)
   btnL->addWidget(newBtn);
   btnL->addStretch(1);
   btnL->addWidget(closeBtn);  
-  topL->activate();
-  
+
   connect(startBtn, SIGNAL(clicked()), this, SLOT(slotStartClicked())); 
   connect(newBtn, SIGNAL(clicked()), this, SLOT(slotNewClicked()));
   connect(closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseClicked()));

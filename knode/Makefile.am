@@ -8,9 +8,9 @@ knode_SOURCES = kngroupbrowser.cpp knpurgeprogressdialog.cpp knsmtpclient.cpp \
 	knaccountmanager.cpp knnntpaccount.cpp knserverinfo.cpp \
 	kncollection.cpp knviewheader.cpp knreadhdrsettings.cpp \
 	knfiltersettings.cpp knpostcomsettings.cpp knposttechsettings.cpp \
-	knreadgensettings.cpp knreadappsettings.cpp kncleanupsettings.cpp \
+	knreadgensettings.cpp knappsettings.cpp kncleanupsettings.cpp \
 	knaccmailsettings.cpp knaccnewssettings.cpp knusersettings.cpp \
-	knsettingswidget.cpp knsettingsdialog.cpp \
+	knsettingsdialog.cpp knappmanager.cpp knpostspellsettings.cpp \
 	knsearchdialog.cpp knfilterconfigwidget.cpp knsenderrordialog.cpp \
 	kngroupselectdialog.cpp knsavedarticlemanager.cpp knfetcharticlemanager.cpp \
 	knfoldermanager.cpp kncleanup.cpp knsavedarticle.cpp kncomposer.cpp \
@@ -27,7 +27,7 @@ knode_SOURCES = kngroupbrowser.cpp knpurgeprogressdialog.cpp knsmtpclient.cpp \
         knodeview.cpp knode.cpp main.cpp
 
 noinst_HEADERS = knaccmailsettings.h      knglobals.h              knrangefilter.h \
-	knaccnewssettings.h      kngroup.h                knreadappsettings.h \
+	knaccnewssettings.h      kngroup.h                knappsettings.h \
 	knaccountmanager.h       kngroupdialog.h          knreadgensettings.h \
 	knarticle.h              knreadhdrsettings.h \
 	knarticlebase.h          kngroupmanager.h         knsavedarticle.h \
@@ -36,8 +36,8 @@ noinst_HEADERS = knaccmailsettings.h      knglobals.h              knrangefilter
 	knarticlemanager.h       knhdrviewitem.h          knsearchdialog.h \
 	knarticlewidget.h        knjobdata.h              knsenderrordialog.h \
 	knarticlewindow.h        knserverinfo.h \
-	kncleanup.h              knsettingsdialog.h \
-	kncleanupsettings.h      knlistbox.h              knsettingswidget.h \
+	kncleanup.h              knsettingsdialog.h       knappmanager.h \
+	kncleanupsettings.h      knlistbox.h \
 	kncollection.h           knlistview.h             knsmtpclient.h \
 	kncollectionviewitem.h   knstatusfilter.h \
 	kncomposer.h             knmimecontent.h          knstringfilter.h \
@@ -47,7 +47,7 @@ noinst_HEADERS = knaccmailsettings.h      knglobals.h              knrangefilter
 	knfilterconfigwidget.h   knnntpclient.h           knusersettings.h \
 	knfilterdialog.h         knode.h                  knuserwidget.h \
 	knfiltermanager.h        knodeview.h              knviewheader.h \
-	knfiltersettings.h       knpostcomsettings.h \
+	knfiltersettings.h       knpostcomsettings.h      knpostspellsettings.h\
 	knfocuswidget.h          knposttechsettings.h     resource.h \
 	knfolder.h               knprotocolclient.h       utilities.h \
 	knfoldermanager.h        knpurgeprogressdialog.h  kngroupbrowser.h
