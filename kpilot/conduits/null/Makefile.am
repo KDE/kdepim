@@ -6,7 +6,7 @@ service_DATA = null-conduit.desktop
 
 ####### This part is very kpilot specific
 # you can add here more. This one gets installed
-noinst_PROGRAMS = null_conduit
+bin_PROGRAMS = null_conduit
 
 # KDE magic file
 MAGIC=$(kde_mimedir)/magic

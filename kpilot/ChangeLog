@@ -23,6 +23,24 @@ UI Changes:
   That's not a lot but it should keep Heiko happy for a while and
   it reminds us that we should move towards a more modern method
   of setting up the UI -- or not?
+* Fixed some UI weirdneses like:
+	- Delete Memo button enabled when no memo selected
+  Now I know that the internal conduits -- memoWidget and addressWidget
+  will probably die out soon when we have a real working kab2 conduit
+  as well as a KNotes conduit, but till then it's nice to have something
+  that at least obeys basic UI design rules.
+* The following bugs in QListBox and QListView made me ditch the old
+  two column layout with movement buttons for something else. Let me
+  know which one you prefer.
+	- There is some *bizzarre* behavior in the handling of 
+	  conduits being selected: select the top item in
+	  the left column, the top item in the right column
+	  (um, so install a conduit first) and then the top
+	  item in the left column again.
+  The new layout allows you to drag conduits from one state (available)
+  to another (active). Click on a conduit to set it up -- you may have
+  to doubleclick depending on you KDE settings.
+
 
 Internal Changes:
 
@@ -31,13 +49,15 @@ Internal Changes:
   enum values instead, and added a function write() to CStatusMessages
   for a clean way to write status messages to the link.
 * Replaced several if else if ... constructions with switch() 
+* Added a sensibleTitle() and shortTitle() to PilotMemo for use 
+  by the KNotes conduit (and maybe others)
 
 Wishlist:
 
 * More and better information in the progress bar
 * The PilotMemo class is butt-ugly and filled with weird C-string
   manipulations.
-* KPilot should display the sync log as well, just like th Pilot
+* KPilot should display the sync log as well, just like the Pilot
   does. This is useful for reporting the result of a sync to the
   user (who then doesn't need to look at the Pilot)
 

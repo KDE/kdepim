@@ -7,7 +7,7 @@ KPILOT 4.0.0 by Dan Pilone
 
 	KPilot is software for syncing the 3Com Palm Pilot and IBM Workpad
 (UNTESTED!) with a machine running some flavor of unix. The actual PC->PP
-communcations was originally based on pilot-link.0.8.7. By default it
+communications was originally based on pilot-link.0.8.7. By default it
 attempts to connnect using /dev/pilot which should be a link to the actual
 serial port, however this is configurable in the settings dialog. 
 
