@@ -697,14 +697,14 @@ void KNComposer::insertFile(QFile *file, bool clear, bool box, QString boxTitle)
 // ask for a filename, handle network urls
 void KNComposer::insertFile(bool clear, bool box)
 {
-	KNLoadHelper helper(this);
-	QFile *file = helper.getFile(i18n("Insert File"));
-	KURL url;
-	QString boxName;
-	
-	if (file) {
-		url = helper.getURL();
-		
+  KNLoadHelper helper(this);
+  QFile *file = helper.getFile(i18n("Insert File"));
+  KURL url;
+  QString boxName;
+  
+  if (file) {
+    url = helper.getURL();
+    
     if (url.isLocalFile())
       boxName = url.path();
     else
@@ -769,9 +769,9 @@ void KNComposer::slotInsertFileBoxed()
 
 void KNComposer::slotAttachFile()
 {
-	KNLoadHelper *helper = new KNLoadHelper(this);
-	
-	if (helper->getFile(i18n("Attach File"))) {
+  KNLoadHelper *helper = new KNLoadHelper(this);
+  
+  if (helper->getFile(i18n("Attach File"))) {
    if (!v_iew->v_iewOpen) {
       KNHelper::saveWindowSize("composer", size());
       v_iew->showAttachmentView();

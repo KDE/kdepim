@@ -331,7 +331,7 @@ void KNNntpClient::doFetchNewHeaders()
   
   sendSignal(TSdownloadNew);
   errorPrefix=i18n("No new articles could have been retrieved for\n%1/%2!\nThe following error ocurred:\n")
-  						.arg(account.server()).arg(target->groupname());
+              .arg(account.server()).arg(target->groupname());
   
   cmd="GROUP ";
   cmd+=target->groupname().utf8();
@@ -535,7 +535,7 @@ void KNNntpClient::doFetchSource()
 
 bool KNNntpClient::openConnection()
 {
-	currentGroup = QString::null;
+  currentGroup = QString::null;
 
   QString oldPrefix = errorPrefix;
   errorPrefix=i18n("Unable to connect.\nThe following error ocurred:\n");

@@ -228,8 +228,8 @@ void KNGroupBrowser::createListItems(QListViewItem *parent)
         else
           it=new QListViewItem(groupView, tlgn);
 
-				it->setSelectable(false);
-				it->setExpandable(true);
+        it->setSelectable(false);
+        it->setExpandable(true);
       }
       else {
         if(parent)

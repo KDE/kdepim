@@ -244,7 +244,7 @@ bool KNGroup::loadHdrs()
       if (fileFormatVersion > 0) {
         buff=f.readLine();
         sscanf(buff,"%d", &artNumber);
-				art->setArticleNumber(artNumber);
+        art->setArticleNumber(artNumber);
       }
 
       if(append(art)) cnt++;
@@ -810,13 +810,13 @@ void KNGroup::scoreArticles(bool onlynew)
       KScoringManager *sm = knGlobals.scoreManager;
       sm->initCache(name());
       for(int idx=0; idx<newCount(); idx++) {
-				KNRemoteArticle *a = at(length()-idx-1);
-				ASSERT( a );
-				KNScorableArticle sa(a);
-				sm->applyRules( sa );
-				/*if (idx % 10 == 0 ) {
-				  kdDebug(5003) << "still " << cnt-idx << " articles to score..." << endl;
-				}*/
+        KNRemoteArticle *a = at(length()-idx-1);
+        ASSERT( a );
+        KNScorableArticle sa(a);
+        sm->applyRules( sa );
+        /*if (idx % 10 == 0 ) {
+          kdDebug(5003) << "still " << cnt-idx << " articles to score..." << endl;
+        }*/
       }
       knGlobals.top->setStatusMsg(QString::null);
       knGlobals.top->setCursorBusy(false);

@@ -545,9 +545,9 @@ void KNodeView::initActions()
                               SLOT(slotFolCompact()), a_ctions, "folder_compact");
   a_ctFolEmpty              = new KAction(i18n("&Empty"), 0, this,
                               SLOT(slotFolEmpty()), a_ctions, "folder_empty");
-	a_ctFolMboxImport         = new KAction(i18n("&Import mbox folder"), 0, this,
+  a_ctFolMboxImport         = new KAction(i18n("&Import mbox folder"), 0, this,
                               SLOT(slotFolMBoxImport()), a_ctions, "folder_MboxImport");
-	a_ctFolMboxExport         = new KAction(i18n("E&xport as mbox folder"), 0, this,
+  a_ctFolMboxExport         = new KAction(i18n("E&xport as mbox folder"), 0, this,
                               SLOT(slotFolMBoxExport()), a_ctions, "folder_MboxExport");
 
   //header-view - list-handling
@@ -1343,7 +1343,7 @@ void KNodeView::slotFolMBoxImport()
 {
   kdDebug(5003) << "KNodeView::slotFolMBoxImport()" << endl;
   if(f_olManager->currentFolder()) {
-		 f_olManager->currentFolder()->importMBoxFile();
+     f_olManager->currentFolder()->importMBoxFile();
   }
 }
 

@@ -280,8 +280,8 @@ void KNListView::contentsMousePressEvent(QMouseEvent *e)
 
   if ( (e->button() == RightButton) && i && (i->isSelected()) ) {
     emit rightButtonPressed( i, viewport()->mapToGlobal(vp), -1 );
-	  return;
-	}
+    return;
+  }
 
   QListView::contentsMousePressEvent(e);
   i=currentItem();

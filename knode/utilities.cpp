@@ -210,9 +210,9 @@ KNLoadHelper::KNLoadHelper(QWidget *parent)
 
 KNLoadHelper::~KNLoadHelper()
 {
-	delete file;
-	if (!tempName.isEmpty())
-   	KIO::NetAccess::removeTempFile(tempName);
+  delete file;
+  if (!tempName.isEmpty())
+    KIO::NetAccess::removeTempFile(tempName);
 }
 
 

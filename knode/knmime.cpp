@@ -295,9 +295,9 @@ QCString KNMimeBase::extractHeader(const QCString &src, const char *name)
   bool folded(false);
 
   if (n == src.left(n.length())) {
-  	pos1 = 0;
+    pos1 = 0;
   } else {
-  	n.prepend("\n");
+    n.prepend("\n");
     pos1 = src.find(n);
   }
 
@@ -1811,9 +1811,9 @@ void KNLocalArticle::updateListItem()
   if(isSavedRemoteArticle()) {
     i_tem->setPixmap(0, app->icon(KNConfig::Appearance::savedRemote));
     if (!n_ewsgroups.isEmpty())
-	    tmp=n_ewsgroups.asUnicodeString();
-	  else
-  	  tmp=t_o.asUnicodeString();
+      tmp=n_ewsgroups.asUnicodeString();
+    else
+      tmp=t_o.asUnicodeString();
   }
   else {
 
@@ -1918,9 +1918,9 @@ QString KNAttachment::contentSize()
   if(c_ontent && c_ontent->hasContent())
     s=c_ontent->size();
   else {
-  	if (l_oadHelper)
-	    s=l_oadHelper->getFile()->size();
-	}
+    if (l_oadHelper)
+      s=l_oadHelper->getFile()->size();
+  }
 
   if(s > 1023) {
     s=s/1024;
@@ -1976,7 +1976,7 @@ void KNAttachment::attach(KNMimeContent *c)
 
 
   c_ontent=new KNMimeContent();
- 	QFile *file = l_oadHelper->getFile();
+  QFile *file = l_oadHelper->getFile();
   updateContentInfo();
   KNHeaders::ContentType *type=c_ontent->contentType();
   KNHeaders::CTEncoding *e=c_ontent->contentTransferEncoding();
