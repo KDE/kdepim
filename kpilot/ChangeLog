@@ -27,11 +27,24 @@ TODO LIST (Ignore the file TODO)
 * GJJ: Make an application that just has a LogWidget and KPilot's dcop
   interface (and registration!) so that you can follow the daemon's log
   output without starting KPilot at all.
-* Merge changes from 2003-2-13 to HEAD.
 * Update README, TODO, NEWS, AUTHORS in HEAD.
+* Merge the JPilot proxy changes (even though it's disabled).
 
-KPilot Developer's notes for March 2nd, 2003
+KPilot Developer's notes for March 9th, 2003
 ============================================
+
+2003-3-4  Adriaan de Groot
+* Welcome back to David Mott, author of several patches already and
+  ready to dive into the code again for GJJs. Happy distraction, dude.
+* [vcal-conduitbase.cc] Checked against wrong KDE_VERSION. [BRANCH]
+* Various merging from BRANCH to HEAD. Layout fixups here and there.
+* Test mode in the vcal conduit by default uses local databases from
+  /tmp.
+
+2003-3-3  Adriaan de Groot
+* pilotDatabase.h [BRANCH] Merged additional parameters to findDatabase
+  from HEAD. Merged every other change in lib/ from BRANCH to HEAD.
+* pilotRecord.{h,cc} [BRANCH] Added instrumentation for alloc/delete count.
 
 2003-3-2  Adriaan de Groot
 * Continued instrumentation of the vcal conduit.
