@@ -14,7 +14,7 @@ General TODO
 * Handle difference between pi_bind() "no such file" error and others.
 * Add malsync conduit.
 * Fix local database & do regression testing
-* How *do* you sync KNotes with the memo pad? This is hard.
++ How *do* you sync KNotes with the memo pad? This is hard.
 * Make the address book conduit use libkab (or whatever it's called now).
 * base classes for project manager conduits
 * add ListMaker conduit

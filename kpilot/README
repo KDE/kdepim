@@ -1,7 +1,7 @@
-KPILOT 4.3.0-beta by Dan Pilone
-===============================
-	Additional work by Robert Ambrose, 
-	Preston Brown, Adriaan de Groot, 
+KPILOT 4.3.2 by Dan Pilone
+==========================
+	Additional work by Robert Ambrose,
+	Preston Brown, Adriaan de Groot,
 	Heiko Purnhagen, Jorg Habenicht,
 	David Bishop, Aaron Seigo,
 	and probably many more.
@@ -9,7 +9,7 @@ KPILOT 4.3.0-beta by Dan Pilone
 	KPilot is software for syncing the 3Com Palm Pilot and IBM Workpad
 (UNTESTED!) with a machine running some flavor of unix.  By default KPilot
 attempts to connnect using /dev/pilot which should be a link to the actual
-serial port, however this is configurable in the settings dialog. 
+serial port, however this is configurable in the settings dialog.
 
 	Release notes can be found in Documentation/README-4.*. These are
 official announcements of KPilot 4.x releases. There is also a README for
@@ -20,12 +20,12 @@ probably only of interest if you want to see how certain features developed
 or if certain bugs have been reported before.
 
 	Generic installation instructions can be found in the file
-INSTALL, but note that KPilot is part of the kdepim package and you 
+INSTALL, but note that KPilot is part of the kdepim package and you
 have to configure that package, not KPilot. KPilot does compile and
-install on its own though, once kdepim is configured. 
+install on its own though, once kdepim is configured.
 
-	You NEED pilot-link to compile or install KPilot; KPilot is 
-currently tested using version 0.9.5 of pilot-link. 
+	You NEED pilot-link to compile or install KPilot; KPilot is
+currently tested using version 0.9.5 of pilot-link.
 
 
 
@@ -37,9 +37,9 @@ STANDARD DISCLAIMER, WARNINGS, ETC..
 	THIS SOFTWARE HAS BUGS.  Use at your own risk.  It has not even
 been tested anywhere but on my machine and only with my Palm Pilot.  I
 have been using it against XCopilot for development then verifying it
-works with a real Pilot with my Palm Pilot Professional running OS v2.0.4.  
+works with a real Pilot with my Palm Pilot Professional running OS v2.0.4.
 I make no claims that it will work, or even try to work.  I take no
-responsibility for any data loss, damage, etc. done by this software.  
+responsibility for any data loss, damage, etc. done by this software.
 ie:  Should your Pilot burst into flames while trying to sync a new game..
 sorry.
 	That being said, I _really_ want comments regarding the software
@@ -53,4 +53,4 @@ contributions are welcome.  :)  Send mail to kpilot-list@slac.com.
 
 	Adriaan de Groot
 	adridg@cs.kun.nl
-	January 14, 2002
+	May 23, 2002

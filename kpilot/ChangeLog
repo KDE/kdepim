@@ -1,6 +1,13 @@
 KPilot Developer's notes for may 25th 2002
 ==========================================
 
+2002-05-23  Adriaan de Groot
+* KNotes syncing now really seems to work both ways.
+* Time to deal with a lot of little administrative files.
+* Fixed tooltips in config dialog.
+* KPilotTest now resets after a sync as well.
+* Added hooks in LogWidget to allow extra buttons.
+
 2002-05-21  Adriaan de Groot
 * Renamed PilotDatabase::cleanUpDatabase() to cleanup(), this
   affected the Serial and Local reimplementations and also the
