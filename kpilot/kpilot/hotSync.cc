@@ -161,7 +161,7 @@ BackupAction::BackupAction(KPilotDeviceLink * p) :
 
 	addSyncLogEntry(i18n("Full backup started."));
 
-	// ASSERT(!fTimer);
+	// Q_ASSERT(!fTimer);
 
 	fTimer = new QTimer(this);
 	QObject::connect(fTimer, SIGNAL(timeout()),
@@ -378,8 +378,8 @@ FileInstallAction::~FileInstallAction()
 {
 	FUNCTIONSETUP;
 
-	ASSERT(fDBIndex >= 0);
-	ASSERT((unsigned) fDBIndex <= fList.count());
+	Q_ASSERT(fDBIndex >= 0);
+	Q_ASSERT((unsigned) fDBIndex <= fList.count());
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname

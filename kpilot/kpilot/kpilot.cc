@@ -126,7 +126,7 @@ static const char *kpilot_id =
 class KPilotInstaller::KPilotPrivate
 {
 public:
-	typedef QList<PilotComponent> ComponentList;
+	typedef QPtrList<PilotComponent> ComponentList;
 
 private:
 	ComponentList  fPilotComponentList;
@@ -246,7 +246,7 @@ void KPilotInstaller::readConfig()
 
 	KPilotConfigSettings & c = KPilotConfig::getConfig();
 	fKillDaemonOnExit = c.getKillDaemonOnExit();
-	
+
 	(void) PilotAppCategory::setupPilotCodec(c.getEncoding());
 }
 
@@ -258,7 +258,7 @@ void KPilotInstaller::setupWidget()
 #ifdef DEBUG
 	DEBUGKPILOT << fname << ": Creating central widget." << endl;
 #endif
-	
+
 	setCaption(CSL1("KPilot"));
 	setMinimumSize(500, 405);
 
@@ -307,7 +307,7 @@ void KPilotInstaller::initComponents()
 	addComponentPage(fLogWidget, i18n("HotSync"));
 	fLogWidget->setShowTime(true);
 
-	
+
 	ADDICONPAGE(i18n("Memo Viewer"),CSL1("kpilot/kpilot-knotes.png"));
 	addComponentPage(new MemoWidget(w, defaultDBPath),
 		i18n("Memo Viewer"));
@@ -662,7 +662,7 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 /* slot */ void KPilotInstaller::initializeComponents()
 {
 	FUNCTIONSETUP;
-	
+
 	for (PilotComponent *p = fP->list().first();
 		p ; p = fP->list().next())
 	{

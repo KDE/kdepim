@@ -314,11 +314,11 @@ void MemoWidget::slotUpdateButtons()
 	FUNCTIONSETUP;
 
 	bool highlight = false;
-	
+
 	if ((fListBox->currentItem() != -1) &&
 		(fListBox->isSelected(fListBox->currentItem())))
 			highlight=true;
-	
+
 #ifdef DEBUG
 	DEBUGKPILOT << fname << ": Selected items " << highlight << endl;
 #endif
@@ -344,7 +344,7 @@ void MemoWidget::slotDeleteMemo()
 	FUNCTIONSETUP;
 
 	int item = fListBox->currentItem();
-	
+
 	if (item == -1)
 	{
 #ifdef DEBUG
@@ -501,7 +501,7 @@ void MemoWidget::writeMemo(PilotMemo * which)
 void MemoWidget::saveChangedMemo()
 {
 	FUNCTIONSETUP;
-	
+
 	if (-1 == lastSelectedMemo) return;
 	if (!fTextWidget->isModified()) return;
 
@@ -509,7 +509,7 @@ void MemoWidget::saveChangedMemo()
 	DEBUGKPILOT << fname
 		<< ": Saving changed memo " << lastSelectedMemo << endl;
 #endif
-	
+
 	PilotListItem *p =
 		(PilotListItem *) fListBox->item(lastSelectedMemo);
 	PilotMemo *currentMemo = (PilotMemo *) p->rec();
@@ -585,10 +585,10 @@ void MemoWidget::slotExportMemo()
 	if (fileName.isEmpty())
 		return;
 
-	QList<PilotListItem> menu_items;
+	QPtrList<PilotListItem> menu_items;
 
 	for (int x = 0; x < index; x++){
-		if (fListBox->item(x)->selected()){
+		if (fListBox->item(x)->isSelected()){
 			menu_items.append((PilotListItem *) fListBox->item(x));
 		}
 	}
@@ -606,7 +606,7 @@ void MemoWidget::slotExportMemo()
 	return;
 }
 
-bool MemoWidget::saveAsText(const QString &fileName,const QList<PilotListItem> &memo_list)
+bool MemoWidget::saveAsText(const QString &fileName,const QPtrList<PilotListItem> &memo_list)
 {
 	QFile f( fileName );
 	QTextStream stream(&f);
@@ -626,7 +626,7 @@ bool MemoWidget::saveAsText(const QString &fileName,const QList<PilotListItem> &
 		}
 	}
 
-	QListIterator<PilotListItem> it(memo_list);
+	QPtrListIterator<PilotListItem> it(memo_list);
 	for ( ; it.current(); ++it )
 	{
 		PilotListItem *p = it.current();
@@ -638,7 +638,7 @@ bool MemoWidget::saveAsText(const QString &fileName,const QList<PilotListItem> &
 	return true;
 }
 
-bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &memo_list)
+bool MemoWidget::saveAsXML(const QString &fileName,const QPtrList<PilotListItem> &memo_list)
 {
 	QDomDocument doc( CSL1("kpilotmemos") );
 	QFile f( fileName );
@@ -704,7 +704,7 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &m
 		doc.appendChild ( memos );
 	}
 
-	QListIterator<PilotListItem> it(memo_list);
+	QPtrListIterator<PilotListItem> it(memo_list);
 	for ( ; it.current(); ++it )
 	{
 		PilotListItem *p = it.current();

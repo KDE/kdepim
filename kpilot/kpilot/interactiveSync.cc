@@ -338,8 +338,8 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 {
 	FUNCTIONSETUP;
 
-	ASSERT(fStatus == GettingFileInfo);
-	ASSERT((unsigned) fP->fDBIndex < fP->fDBList.count());
+	Q_ASSERT(fStatus == GettingFileInfo);
+	Q_ASSERT((unsigned) fP->fDBIndex < fP->fDBList.count());
 
 	struct db &dbi = fP->fDBList[fP->fDBIndex];
 	pi_file *f;
@@ -411,8 +411,8 @@ nextFile:
 {
 	FUNCTIONSETUP;
 
-	ASSERT(fStatus == InstallingFiles);
-	ASSERT((unsigned) fP->fDBIndex < fP->fDBList.count());
+	Q_ASSERT(fStatus == InstallingFiles);
+	Q_ASSERT((unsigned) fP->fDBIndex < fP->fDBList.count());
 
 	struct db &dbi = fP->fDBList[fP->fDBIndex];
 

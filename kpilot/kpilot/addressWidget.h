@@ -19,7 +19,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -126,7 +126,7 @@ private:
 	QComboBox            *fCatList;
 	QTextView            *fAddrInfo;
 	struct AddressAppInfo fAddressAppInfo;
-	QList<PilotAddress>   fAddressList;
+	QPtrList<PilotAddress>   fAddressList;
 	QListBox             *fListBox;
 	QPushButton	     *fEditButton,*fDeleteButton;
 
