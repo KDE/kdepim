@@ -831,6 +831,7 @@ EmpathMessageListWidget::s_itemCome(const QString & s)
 EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
 {
     filling_ = true;
+    setUpdatesEnabled(false);
     viewport()->setUpdatesEnabled(false);
     
     selected_.clear();
@@ -844,6 +845,7 @@ EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
         _fillNonThreading(f);
     
     viewport()->setUpdatesEnabled(true);
+    setUpdatesEnabled(true);
     triggerUpdate();
     filling_ = false;
     

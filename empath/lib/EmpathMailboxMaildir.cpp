@@ -461,10 +461,7 @@ EmpathMailboxMaildir::_removeMessage(
 EmpathMailboxMaildir::setPath(const QString & path)
 {
     path_ = path;
-    empathDebug("path_ == " + path_);
     saveConfig();
-    loadConfig();
-    empathDebug("path_ == " + path_);
 }
 
     EmpathMaildir *

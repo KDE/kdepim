@@ -89,7 +89,7 @@ class EmpathMaildir : public QObject
     private:
         
         QString     _write(RMM::RMessage &);
-        QCString    _messageData(const QString &);
+        QCString    _messageData(const QString &, bool isFullName = false);
         void        _markNewMailAsSeen();
         void        _markAsSeen(const QString &);
         void        _clearTmp();

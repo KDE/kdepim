@@ -74,7 +74,6 @@ EmpathMaildir::init()
 {
     _checkDirs();           kapp->processEvents();
     _clearTmp();            kapp->processEvents();
-    _markNewMailAsSeen();   kapp->processEvents();
     
     sync();
 }
@@ -103,11 +102,7 @@ EmpathMaildir::sync(bool force)
 
     _removeUntagged(f);
     
-    kapp->processEvents();
-
     f->index()->setInitialised(true);
-    
-    kapp->processEvents();
 }
 
     bool
@@ -244,27 +239,34 @@ EmpathMaildir::removeMessage(const QStringList & l)
 ////////////////////////////////////////////////////////////////////////////////
 
     QCString
-EmpathMaildir::_messageData(const QString & filename)
+EmpathMaildir::_messageData(const QString & filename, bool isFullName)
 {
+    QString filename_(filename);
+
     if (filename.length() == 0) {
         empathDebug("Must supply filename !");
         return "";
     }
 
-    // Now we need to locate the actual file, by looking for the basename with
-    // the flags section appended.
-    
-    QDir cur(path_ + "/cur/", filename + "*");
-    
-    if (cur.count() != 1) {
-        empathDebug("Can't match the filename, giving up.");
-        return "";
+    if (!isFullName) {
+
+        // We need to locate the actual file, by looking for the basename
+        // with the flags section appended.
+        
+        QDir cur(path_ + "/cur/", filename + "*");
+        
+        if (cur.count() != 1) {
+            empathDebug("Can't match the filename, giving up.");
+            return "";
+        }
+
+        filename_ = cur[0];
     }
     
-    QFile f(path_ + "/cur/" + cur[0]);    
+    QFile f(path_ + "/cur/" + filename_);
 
     if (!f.open(IO_ReadOnly)) {
-        empathDebug("Couldn't open mail file " + cur[0] + " for reading.");
+        empathDebug("Couldn't open mail file " + filename_ + " for reading.");
         return "";
     }
 
@@ -509,8 +511,8 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
 
     for (; it != fileList.end(); ++it) {
         
-        s = (*it).latin1();
-    
+        s = (*it).utf8();
+
         RMM::MessageStatus status(RMM::MessageStatus(0));
         
         int i = s.find(re_flags);
@@ -527,6 +529,8 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
         }
         
         s.replace(re_flags, QString::null);
+
+        empathDebug("s == `" + s + "'");
         
         EmpathIndexRecord * rec = f->index()->record(s);
         
@@ -537,8 +541,8 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
         
         } else {
  
-            RMM::RMessage m(_messageData(s));
- 
+            QCString messageData = _messageData(*it, true);
+            RMM::RMessage m(messageData);
             EmpathIndexRecord ir(s, m);
             
             ir.tag(true);

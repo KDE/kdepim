@@ -62,11 +62,11 @@ EmpathUI::EmpathUI()
 {
     _wizard();
     
-//    qInitPngIO();
-    
     _connectUp();
 
-    kapp->setMainWidget(new EmpathMainWindow);
+    EmpathMainWindow * w = new EmpathMainWindow;
+    w->show();
+    kapp->setMainWidget(w);
 }
 
 EmpathUI::~EmpathUI()
