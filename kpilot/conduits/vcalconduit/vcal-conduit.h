@@ -1,8 +1,8 @@
-/* vcal-conduit.c		VCalendar Conduit 
-**
+/* vcal-conduit.c  VCalendar Conduit 
 **
 ** Copyright (C) 1998-2000 by Dan Pilone, Preston Brown, and
 **	Herwin Jan Steehouwer
+** Copyright (C) 2001 by Cornelius Schumacher
 **
 ** A program to synchronize KOrganizer's date book with the Palm
 ** Pilot / KPilot. This program is part of KPilot.
@@ -34,138 +34,86 @@
 
 #include <time.h>
 
-#ifndef _PILOT_DATEBOOK_H_
 #include <pi-datebook.h>
-#endif
 
-#ifndef _KPILOT_VCALBASE_H
-#include "vcalBase.h"
-#endif
-
-#ifndef QBITARRAY_H
 #include <qbitarray.h>
-#endif
+
+#include <event.h>
+
+#include "vcalBase.h"
 
 class PilotRecord;
 class PilotDateEntry;
-class VObject;
-	
+
+using namespace KCal;
+
 class VCalConduit : public VCalBaseConduit
 {
-public:
-  VCalConduit(BaseConduit::eConduitMode mode);
-  virtual ~VCalConduit();
+  public:
+    VCalConduit(eConduitMode mode,DatabaseSource source);
+    virtual ~VCalConduit();
   
-  virtual void doSync();
-  virtual void doBackup();
-  virtual QWidget* aboutAndSetup();
-  virtual void doTest();
+    virtual void doSync();
+    virtual void doBackup();
+    virtual QWidget* aboutAndSetup();
+    virtual void doTest();
 
-  virtual const char* dbInfo() { return "DatebookDB"; }
+    virtual const char* dbInfo() { return "DatebookDB"; }
   
+  protected:
+    void doLocalSync();
+    void updateEvent(PilotRecord *rec);
 
+  private:
+    void setAlarms(PilotDateEntry *dateEntry, Event *vevent);
+    void firstSyncCopy(bool DeleteOnPilot);
+    /** Copy the start and end times from @arg *vevent to @arg
+      *dateEntry. */
+    void setStartEndTimes(PilotDateEntry *dateEntry,Event *vevent);
+    void setRepetition(PilotDateEntry *dateEntry,Incidence *incidence);
 
-protected:
-	void doLocalSync();
-	void updateVObject(PilotRecord *rec);
+    void setVcalStartEndTimes(Event *vevent,const PilotDateEntry &dateEntry);
+    void setVcalAlarms(Incidence *vevent,const PilotDateEntry &dateEntry);
+    void setVcalRecurrence(Incidence *vevent,const PilotDateEntry &dateEntry);
+    void setVcalExceptions(Incidence *vevent,const PilotDateEntry &dateEntry);
+    /** Get the list of exceptions for a repeating event. The
+      result is an array of struct tm and should be free()d
+      after use. The number of exceptions is written to @arg
+      *n. */
+    struct tm *getExceptionDates(Event *vevent, int *n);
 
-private:
-	struct tm getStartTime(VObject *vevent);
-	struct tm getEndTime(VObject *vevent);
-	void setAlarms(PilotDateEntry *dateEntry, VObject
-		       *vevent) const;
-	void firstSyncCopy(bool DeleteOnPilot);
+    /**
+     * The following enums distinguish various repeat-by
+     * possiblities. Sometimes the specific value of the
+     * enum (like DailyPeriod) encodes something special,
+     * so these shouldn't be changed at whim without
+     * changing @ref repeatUntil as well.
+     */
 
-	/** Copy the start and end times from @arg *vevent to @arg
-	 *dateEntry. */
-	void setStartEndTimes(PilotDateEntry *dateEntry,
-			      VObject *vevent);
+     typedef enum { DailyPeriod=60*60*24,     /* seconds per day */
+                    WeeklyPeriod=60*60*24*7,  /* seconds per week */
+                    MonthlyByPosPeriod=1,     /* just a constant */
+                    MonthlyByDayPeriod=2,
+                    YearlyByDayPeriod=3
+                  } PeriodConstants;
 
-	static void setVcalStartEndTimes(VObject *vevent, 
-					 const PilotDateEntry &dateEntry);
-	static void setVcalAlarms(VObject *vevent, 
-				  const PilotDateEntry &dateEntry);
-	static void setVcalRecurrence(VObject *vevent, 
-				      const PilotDateEntry &dateEntry);
-	static void setVcalExceptions(VObject *vevent, 
-				      const PilotDateEntry &dateEntry);
-
-	struct eventRepetition {
-	  enum ::repeatTypes type;
-	  int freq;
-	  bool hasEndDate;
-	  struct tm startDate, endDate;
-	  int duration; // 0 means forever
-	  QBitArray weekdays;
-	  DayOfMonthType repeatDay; // for monthlyByPos
-	  
-	  eventRepetition() {
-	    type = ::repeatNone;
-	    weekdays = QBitArray(7);
-	  }
-
-	  eventRepetition(const eventRepetition &e) {
-	    type = e.type;
-	    freq = e.freq;
-	    hasEndDate = e.hasEndDate;
-	    startDate = e.startDate;
-	    endDate = e.endDate;
-	    duration = e.duration;
-	    weekdays = e.weekdays;
-	    repeatDay = e.repeatDay;
-	  }
-	};
-
-	eventRepetition getRepetition(VObject *vevent);
-	void setRepetition(PilotDateEntry *dateEntry, 
-			   const eventRepetition &er);
-
-	/** Get the list of exceptions for a repeating event. The
-	    result is an array of struct tm and should be free()d
-	    after use. The number of exceptions is written to @arg
-	    *n. */
-	struct tm *getExceptionDates(VObject *vevent, int *n);
-
-	/**
-	* Set the event to repeat forever, with repeat
-	* frequency @arg rFreq. This function also
-	* warns the user that this is probably not
-	* *quite* the behavior intented but there's
-	* no fix for that.
-	*/
-	void repeatForever(PilotDateEntry *p,int rFreq,VObject *v=0L);
-
-	/**
-	* The following enums distinguish various repeat-by
-	* possiblities. Sometimes the specific value of the
-	* enum (like DailyPeriod) encodes something special,
-	* so these shouldn't be changed at whim without
-	* changing @ref repeatUntil as well.
-	*/
-	typedef enum { DailyPeriod=60*60*24, 	/* seconds per day */
-		WeeklyPeriod=60*60*24*7,	/* seconds per week */
-		MonthlyByPosPeriod=1,		/* just a constant */
-		MonthlyByDayPeriod=2,
-		YearlyByDayPeriod=3
-		} PeriodConstants;
-
-	/**
-	* Set the date entry to repeat every rFreq periods,
-	* rDuration times, starting at start. 
-	*
-	* This function contains code by Dag Nygren.
-	*/
-	void repeatUntil(PilotDateEntry *dateEntry,
-			 const struct tm *start,
-			 int rFreq,
-			 int rDuration,
-			 PeriodConstants period);
+     /**
+      * Set the date entry to repeat every rFreq periods,
+      * rDuration times, starting at start. 
+      *
+      * This function contains code by Dag Nygren.
+      */
+      struct tm repeatUntil(const QDateTime &startDt,int rFreq,int rDuration,
+                            PeriodConstants period);
 };
 
 #endif
 
 
 // $Log$
+// Revision 1.16  2001/06/05 22:58:40  adridg
+// General rewrite, cleanup thx. Philipp Hullmann
+//
 // Revision 1.15  2001/04/16 13:48:35  adridg
 // --enable-final cleanup and #warning reduction
 //

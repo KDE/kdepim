@@ -1,8 +1,8 @@
-/* vcalBase.cc			Program
+/* vcalBase.cc			Base class for KOrganizer Conduits
 **
-** Copyright (C) 2001 by Adriaan de Groot
+** Copyright (C) 2001 by Adriaan de Groot, Cornelius Schumacher
 **
-** Program description
+** This is the base class for the todo and datebook conduits
 */
 
 /*
@@ -22,63 +22,36 @@
 ** MA 02139, USA.
 */
 
-/*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
-*/
-
-
 #include <cstdlib>
 
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
 
-#ifndef QFILE_H
 #include <qfile.h>
-#endif
-
-#ifndef QDATETIME_H
 #include <qdatetime.h>
-#endif
 
-#ifndef _KMESSAGEBOX_H_
-#include "kmessagebox.h"
-#endif
-
-#ifndef _KPILOT_KPILOTCONFIG_H
-#include "kpilotConfig.h"
-#endif
-
-#ifndef _KDEBUG_H_
+#include <kmessagebox.h>
 #include <kdebug.h>
-#endif
 
-#ifndef _VCAL_VCALBASE_H
+#include <calendarlocal.h>
+#include <icalformat.h>
+
+#include "kpilotConfig.h"
+
 #include "vcalBase.h"
-#endif
 
-VCalBaseConduit::VCalBaseConduit(BaseConduit::eConduitMode mode) :
-	BaseConduit(mode), 
-	fTimeZone(0), 
-	calName(),         // That's QString::null
-	fCalendar(0) 
+
+VCalBaseConduit::VCalBaseConduit(BaseConduit::eConduitMode mode,
+                                 BaseConduit::DatabaseSource source) :
+  BaseConduit(mode,source),
+  fTimeZone(0), 
+  calName(),         // That's QString::null
+  fCalendar(0) 
 {
-	FUNCTIONSETUP;
-	
-	fCalendar = 0L;
 }
 
-/* virtual */ VCalBaseConduit::~VCalBaseConduit()
+VCalBaseConduit::~VCalBaseConduit()
 {
-	FUNCTIONSETUP;
-	
-	if (fCalendar)
-	{
-		cleanVObject(fCalendar);
-		cleanStrTbl();
-	}
-	
-	fCalendar=0L;
+  delete fCalendar;
 }
 
 bool VCalBaseConduit::getCalendar(const QString &group)
@@ -104,9 +77,9 @@ bool VCalBaseConduit::getCalendar(const QString &group)
   
   QCString s = QFile::encodeName(calName);
   
-  fCalendar = Parse_MIME_FromFileName((const char*)s);
+  fCalendar = new CalendarLocal();
   
-  if(fCalendar == 0L) {
+  if(!fCalendar->load(s)) {
     kdError(CONDUIT_AREA) << __FUNCTION__
 			  << ": Couldn't open "
 			  << calName
@@ -117,7 +90,7 @@ bool VCalBaseConduit::getCalendar(const QString &group)
     DEBUGCONDUIT << fname
 		 << ": Got calendar!"
 		 << endl;
-    fTimeZone = getCalendarTimeZone(fCalendar);
+    fTimeZone = fCalendar->getTimeZone();
     return true;
   }
 }
@@ -125,527 +98,76 @@ bool VCalBaseConduit::getCalendar(const QString &group)
 
 void VCalBaseConduit::saveVCal()
 {
-  FUNCTIONSETUP;
-
   if (fCalendar) {
-    QCString filename(QFile::encodeName(calName));
-    writeVObjectToFile(const_cast<char *>((const char *) filename),
-		       fCalendar);
+    ICalFormat *format = new ICalFormat(fCalendar);
+    fCalendar->save(QFile::encodeName(calName),format);
   }
 
   fFirstTime = false;
 }
 
 
-
 void VCalBaseConduit::noCalendarError(const QString &conduitName)
 {
-	QString message = i18n(
-		"The %1 could not open the file `%2'. "
-		"Please configure the conduit with the correct "
-		"filename and try again.")
-		.arg(conduitName)
-		.arg(calName);
-		
-	KMessageBox::error(0, message,
-		i18n("%1 Fatal Error").arg(conduitName));
-}
+  QString message = i18n(
+      "The %1 could not open the file `%2'. "
+      "Please configure the conduit with the correct "
+      "filename and try again.")
+      .arg(conduitName)
+      .arg(calName);
 	
-void VCalBaseConduit::setSummary(VObject *vevent,const char *summary)
+  KMessageBox::error(0, message,i18n("%1 Fatal Error").arg(conduitName));
+}
+
+void VCalBaseConduit::setSummary(Incidence *incidence,const char *summary)
 {
-	FUNCTIONSETUP;
-
-	VObject *vo = isAPropertyOf(vevent, VCSummaryProp);
-	QString qsummary (summary);
-	qsummary = qsummary.simplifyWhiteSpace();
-	if (qsummary.isEmpty())
-	{
-		// We should probably update (empty) the
-		// summary in the VObject if there
-		// is one.
-	  // +++
-	}
-	else
-	{
-		if (vo)
-		{
-			setVObjectUStringZValue_(vo,
-				fakeUnicode(qsummary.utf8(),0));
-		}
-		else
-		{
-			addPropValue(vevent, VCSummaryProp,
-				qsummary.utf8());
-		}
-	}
+  incidence->setSummary(summary);
 }
 
-void VCalBaseConduit::setNote(VObject *vevent,const char *s)
+void VCalBaseConduit::setNote(Incidence *incidence,const char *s)
 {
-	FUNCTIONSETUP;
-
-	VObject *vo = isAPropertyOf(vevent, VCDescriptionProp);
-	
-	if (s) {
-	  if (*s) {
-		QString qnote (s);
-
-		// There is a note for this event
-		//
-		//
-		if (vo)
-		{
-			setVObjectUStringZValue_(vo,
-				fakeUnicode(qnote.utf8(),0));
-		}
-		else
-		{
-			vo = addPropValue(vevent, VCDescriptionProp,
-				qnote.utf8());
-		}
-
-		// vo now certainly (?) points to the note property.
-		//
-		//
-		if (!vo)
-		{
-			kdError() << __FUNCTION__
-				<< ": No object for note property."
-				<< endl;
-			return;
-		}
-
-		if (strchr(s,'\n') &&
-			!isAPropertyOf(vo, VCQuotedPrintableProp))
-		{
-			// Note takes more than one line so we need
-			// to add the Quoted-Printable property
-			//
-			//
-			addProp(vo,VCQuotedPrintableProp);
-		}
-	}
-	else
-	{
-		// No note at all
-		//
-		//
-		if (vo)
-		{
-			// So skip existing note
-			//
-			//
-			addProp(vo,KPilotSkipProp);
-		}
-	}
-	}
+  incidence->setDescription(s);
 }
 
-
-int VCalBaseConduit::getCalendarTimeZone(VObject *cal) {
-  FUNCTIONSETUP;
-  
-  VObject *vo = isAPropertyOf(cal, VCTimeZoneProp);
-  if (!vo) return 0;
-  
-  bool neg = FALSE;
-  int hours, minutes;
-  char *s;
-  
-  QString tmpStr(s = fakeCString(vObjectUStringZValue(vo)));
-  DEBUGCONDUIT << __FUNCTION__
-	       << ": Got time zone string '"
-	       << s << "'" << endl;
-  deleteStr(s);
-  
-  if (tmpStr.left(1) == "-") neg = TRUE;
-  if (tmpStr.left(1) == "-" || tmpStr.left(1) == "+")
-    tmpStr.remove(0, 1);
-
-  hours = tmpStr.left(2).toInt();
-  if (tmpStr.length() > 2)
-    minutes = tmpStr.right(2).toInt();
-  else
-    minutes = 0;
-  
-  int timeZone = 60 * hours + minutes;
-  if (neg) timeZone = -timeZone;
-  
-  DEBUGCONDUIT << __FUNCTION__ << ": Calculated TZ offset "
-	       << timeZone << endl;
-  
-  return timeZone;
-}
-
-
-/*
- * Given an pilot id, search the vCalendar for a matching vobject, and return
- * the pointer to that object.  If not found, return NULL.
- */
-VObject* VCalBaseConduit::findEntryInCalendar(recordid_t id, const
-					      char *entryType)
+void VCalBaseConduit::setSecret(Incidence *vevent,bool secret)
 {
-	FUNCTIONSETUP;
-
-	if (fCalendar == 0)
-	  kdFatal() << __FUNCTION__ << ": fCalendar == 0" << endl;
-
-	VObjectIterator i;
-	VObject* entry = 0L;
-	VObject* objectID;
-
-	initPropIterator(&i, fCalendar);
-
-	// go through all the vobjects in the vcal
-	while (moreIteration(&i))
-	{
-		entry = nextVObject(&i);
-		if (!entry)
-		{
-			kdWarning() << __FUNCTION__
-				<< ": nextVObject returned NULL!"
-				<< endl;
-			break;
-		}
-
-		objectID = isAPropertyOf(entry, KPilotIdProp);
-
-		if (objectID &&
-			(strcmp(vObjectName(entry), entryType) == 0))
-		{
-			const char *s = fakeCString(
-				vObjectUStringZValue(objectID));
-			if (!s)
-			{
-				kdWarning() << __FUNCTION__
-					<< ": fakeCString returned NULL!"
-					<< endl;
-				continue;
-			}
-#if 0
-			else
-			{
-				DEBUGCONDUIT << fname
-					<< ": Looking at object with id "
-					<< s
-					<< endl;
-			}
-#endif
-
-			if(strtoul(s, 0L, 0) == id)
-			{
-				return entry;
-			}
-		}
-	}
-	return 0L;
+  vevent->setSecrecy(secret ? Incidence::SecrecyPrivate :
+                              Incidence::SecrecyPublic);
 }
 
-void VCalBaseConduit::setNumProperty(VObject *vevent,
-	const char *propertyname,
-	int num)
+QDateTime VCalBaseConduit::readTm(const struct tm &t)
 {
-	FUNCTIONSETUP;
-
-	VObject *vo = isAPropertyOf(vevent,propertyname);
-	QString s;
-	s.setNum(num);
-
-	if (vo)
-	{
-		setVObjectUStringZValue_(vo,fakeUnicode(s.latin1(),0));
-	}
-	else
-	{
-		addPropValue(vevent,propertyname,s.latin1());
-	}
+  QDateTime dt;
+  dt.setDate(QDate(1900 + t.tm_year, t.tm_mon + 1, t.tm_mday));
+  dt.setTime(QTime(t.tm_hour, t.tm_min, t.tm_sec));
+  return dt;
 }
 
-void VCalBaseConduit::setSecret(VObject *vevent,bool secret)
+struct tm VCalBaseConduit::writeTm(const QDateTime &dt)
 {
-	FUNCTIONSETUP;
+  struct tm t;
 
-	VObject *vo = isAPropertyOf(vevent, VCClassProp);
-	const char *s = secret ? "PRIVATE" : "PUBLIC" ;
+  t.tm_wday = 0; // unimplemented
+  t.tm_yday = 0; // unimplemented
+  t.tm_isdst = 0; // unimplemented
 
-	if (vo)
-	{
-		setVObjectUStringZValue_(vo,fakeUnicode(s,0));
-	}
-	else
-	{	
-		addPropValue(vevent,VCClassProp,s);
-	}
+  t.tm_year = dt.date().year() - 1900;
+  t.tm_mon = dt.date().month() - 1;
+  t.tm_mday = dt.date().day();
+  t.tm_hour = dt.time().hour();
+  t.tm_min = dt.time().minute();
+  t.tm_sec = dt.time().second();
+
+  return t;
 }
 
-#if 0
-void VCalBaseConduit::setStatus(VObject *vevent, int status)
+void VCalBaseConduit::deleteRecord(PilotRecord *rec)
 {
-	FUNCTIONSETUP;
-
-	VObject *vo = isAPropertyOf(vevent, KPilotStatusProp);
-	char buffer[2+4*sizeof(int)];	// One byte produces at most 3 digits
-					// in decimal, add some slack and
-					// space for a -
-
-	snprintf(buffer, 2 + 4 * sizeof(int), "%d", status);
-
-	if (vo)
-	{
-
-		setVObjectUStringZValue_(vo,fakeUnicode(buffer,0));
-	}
-	else
-	{
-		addPropValue(vevent,KPilotStatusProp,buffer);
-	}
-}
-#endif
-
-
-int VCalBaseConduit::getStatus(VObject *vevent) {
-  FUNCTIONSETUP;
-
-  int status = 2;
-  ASSERT(vevent);
-  VObject *vo = isAPropertyOf(vevent, KPilotStatusProp);
-  if (vo) {
-    char *s = fakeCString(vObjectUStringZValue(vo));
-    status = atoi(s);
-    deleteStr(s);
-  }
-  return status;
+  kdDebug() << "VCalBaseConduit::deleteRecord() not yet implemented" << endl;
 }
 
-
-recordid_t VCalBaseConduit::getRecordID(VObject *vevent) {
-  FUNCTIONSETUP;
-  recordid_t id;
-  VObject *vo = isAPropertyOf(vevent, KPilotIdProp);
-  if (vo) {
-    char *s = fakeCString(vObjectUStringZValue(vo));
-    id = atoi(s);
-    deleteStr(s);
-  } else
-    id = 0;
-  return id;
-}
-
-
-bool VCalBaseConduit::getDateProperty(struct tm *t,
-				      VObject *vevent,
-				      const char *prop) {
-  FUNCTIONSETUP;
-
-  if (!t)
-    kdFatal() << fname << ": t == 0" << endl;
-
-  VObject *vo = isAPropertyOf(vevent, prop);
-  
-  if (vo) {
-    char *s = fakeCString(vObjectUStringZValue(vo));
-    struct tm t2 = ISOToTm(QString(s));
-    memcpy(t, &t2, sizeof(struct tm));
-    deleteStr(s);
-  } else
-    return false;
-  return true;
-}
-
-
-void VCalBaseConduit::addDateProperty(VObject *vevent,
-	const char *prop,
-	const QDateTime& dt,
-	bool truncateTime)
+void VCalBaseConduit::deleteFromPilot(int entryType)
 {
-	QString dateString = TmToISO(dt,truncateTime);
-	addPropValue(vevent, prop, dateString.latin1());
-}
-
-void VCalBaseConduit::addDateProperty(VObject *vevent,
-	const char *prop,
-	const struct tm *t,
-	bool truncateTime)
-{
-	QString dateString = TmToISO(t,truncateTime);
-	addPropValue(vevent, prop, dateString.latin1());
-}
-
-void VCalBaseConduit::setDateProperty(VObject *vevent,
-	const QDateTime& dt,
-	bool truncateTime)
-{
-	setVObjectUStringZValue_(vevent,
-		fakeUnicode(TmToISO(dt,truncateTime).latin1(), 0));
-}
-
-void VCalBaseConduit::setDateProperty(VObject *vevent,
-	const struct tm *p,
-	bool truncateTime)
-{
-	setVObjectUStringZValue_(vevent,
-		fakeUnicode(TmToISO(p,truncateTime).latin1(), 0));
-}
-
-
-QString VCalBaseConduit::TmToISO(const QDateTime &dt,
-	bool truncateTime)
-{
-	FUNCTIONSETUP;
-
-	QString dateString;
-
-	if (truncateTime)
-	{
-	dateString.sprintf("%.4d%.2d%.2dT000000",
-		dt.date().year(), dt.date().month(), dt.date().day());
-	}
-	else
-	{
-	dateString.sprintf("%.4d%.2d%.2dT%.2d%.2d%.2d",
-		dt.date().year(), dt.date().month(), dt.date().day(), 
-		dt.time().hour(), dt.time().minute(), dt.time().second());
-	}
-
-	return dateString;
-}
-
-
-QString VCalBaseConduit::TmToISO(const struct tm *tm,
-	bool truncateTime)
-{
-  QString dStr;
-
-  if (truncateTime)
-  {
-  dStr.sprintf("%.4d%.2d%.2dT000000",
-	       1900 + tm->tm_year,
-	       tm->tm_mon + 1,
-	       tm->tm_mday);
-  }
-  else
-  {
-  dStr.sprintf("%.4d%.2d%.2dT%.2d%.2d%.2d",
-	       1900 + tm->tm_year,
-	       tm->tm_mon + 1,
-	       tm->tm_mday,
-	       tm->tm_hour,
-	       tm->tm_min,
-	       tm->tm_sec);
-  }
-
-  return dStr;
-}
-
-/* static */ struct tm VCalBaseConduit::ISOToTm(const QString &tStr,int timeZone)
-{
-  struct tm tm;
-
-  tm.tm_wday = 0; // unimplemented
-  tm.tm_yday = 0; // unimplemented
-  tm.tm_isdst = 0; // unimplemented
-
-  sscanf(tStr.latin1(),"%04d%02d%02dT%02d%02d%02d",
-	 &tm.tm_year, &tm.tm_mon,
-	 &tm.tm_mday, &tm.tm_hour,
-	 &tm.tm_min, &tm.tm_sec);
-
-  // possibly correct for timeZone
-  if (timeZone && (tStr.right(1) == "Z")) {
-    QDateTime tmpDT;
-    tmpDT.setDate(QDate(tm.tm_year, tm.tm_mon, tm.tm_mday));
-    tmpDT.setTime(QTime(tm.tm_hour, tm.tm_min, tm.tm_sec));
-    tmpDT = tmpDT.addSecs(60*timeZone); // correct from GMT
-    tm.tm_year = tmpDT.date().year();
-    tm.tm_mon = tmpDT.date().month();
-    tm.tm_mday = tmpDT.date().day();
-    tm.tm_hour = tmpDT.time().hour();
-    tm.tm_min = tmpDT.time().minute();
-    tm.tm_sec = tmpDT.time().second();
-  }
-
-  // tm_year is only since 1900
-  tm.tm_year -= 1900;
-  // pilot month is 0-based.
-  tm.tm_mon -= 1;
-
-  return tm;
-}
-
-
-int VCalBaseConduit::numFromDay(const QString &day)
-{
-  if (day == "SU ") return 0;
-  if (day == "MO ") return 1;
-  if (day == "TU ") return 2;
-  if (day == "WE ") return 3;
-  if (day == "TH ") return 4;
-  if (day == "FR ") return 5;
-  if (day == "SA ") return 6;
-
-  return -1; // something bad happened. :)
-}
-
-/*
- * The pilot record specified was deleted on the pilot.  Remove
- * the corresponding vobject from the vCalendar.
- */
-void VCalBaseConduit::deleteVObject(PilotRecord *rec, const char *type)
-{
-  VObject *delvo;
-
-  delvo = findEntryInCalendar(rec->getID(), type);
-  // if the entry was found, it is still in the vCalendar.  We need to
-  // set the Status flag to Deleted, so that KOrganizer will not load
-  // it next time the vCalendar is read in.  If it is not found, the
-  // user has also deleted it already in the vCalendar, and we can
-  // safely do nothing.
-  if (delvo) {
-    // we now use the additional 'KPilotSkip' property, instead of a special
-    // value for KPilotStatusProp.
-    addProp(delvo, KPilotSkipProp);
-  }
-}
-
-
-//////////////////////////////////////////////////////////////////////////
-
-
-QString VCalBaseConduit::getSummary(VObject *vevent) {
-  FUNCTIONSETUP;
-
-  QString s;
-  VObject *vo = isAPropertyOf(vevent, VCSummaryProp);
-  if (vo) {
-    const char *s2 = fakeCString(vObjectUStringZValue(vo));
-    s = QString::fromUtf8(s2);
-    deleteStr(s2);
-  }
-  return s;
-} // QString VCalConduit::getSummary(const VObject *vevent)
-
-
-//////////////////////////////////////////////////////////////////////////
-
-
-QString VCalBaseConduit::getDescription(VObject *vevent) {
-  // what we call description pilot puts as a separate note
-  FUNCTIONSETUP;
-  VObject *vo = isAPropertyOf(vevent, VCDescriptionProp);
-  QString str;
-  if (vo) {
-    const char *s = fakeCString(vObjectUStringZValue(vo));
-    str = QString::fromUtf8(s);
-    deleteStr(s);
-  }
-  return str;
-} // QString VCalConduit::getDescription(const VObject *vevent)
-
-
-/////////////////////////////////////////////////////////////////////////
-
-
-void VCalBaseConduit::deleteFromPilot(const char *entryType) {
   QValueList<recordid_t> deletedList;
 
   /* Build a list of records in the pilot calendar that are not
@@ -655,7 +177,10 @@ void VCalBaseConduit::deleteFromPilot(const char *entryType) {
   PilotRecord *rec;
   int index = 0;
   while ((rec = readRecordByIndex(index++)) != 0) {
-    if (!findEntryInCalendar(rec->getID(), entryType)) {
+    bool found = false;
+    if ((entryType == TypeTodo) && findTodo(rec->getID())) found = true;
+    if ((entryType == TypeEvent) && findEvent(rec->getID())) found = true;
+    if (!found) {
       DEBUGCONDUIT << __FUNCTION__
 		   << ": record "
 		   << rec->getID()
@@ -666,6 +191,11 @@ void VCalBaseConduit::deleteFromPilot(const char *entryType) {
     }
     delete rec;
   }
+
+  // Disable deletion to prevent data loss in case of logs.
+  // Will be removed, when the todo and datebook conduits are thoroughly tested
+  // TODO: Reenable deleteFromPilot()
+  return;
   
   // Now process the list of deleted records. 
   for (QValueList<recordid_t>::Iterator it = deletedList.begin();
@@ -688,8 +218,36 @@ void VCalBaseConduit::deleteFromPilot(const char *entryType) {
   }
 }
 
+Todo *VCalBaseConduit::findTodo(recordid_t id)
+{
+  QList<Todo> todos = calendar()->getTodoList();
+  
+  Todo *todo = todos.first();
+  while(todo) {
+    if (todo->pilotId() == id) return todo;
+    todo = todos.next();
+  }
+  
+  return 0;
+}
+
+Event *VCalBaseConduit::findEvent(recordid_t id)
+{
+  QList<Event> events = calendar()->getAllEvents();
+  
+  Event *event = events.first();
+  while(event) {
+    if (event->pilotId() == id) return event;    
+    event = events.next();
+  }
+  
+  return 0;
+}
 
 // $Log$
+// Revision 1.8  2001/06/05 22:58:40  adridg
+// General rewrite, cleanup thx. Philipp Hullmann
+//
 // Revision 1.7  2001/05/25 16:06:52  adridg
 // DEBUG breakage
 //

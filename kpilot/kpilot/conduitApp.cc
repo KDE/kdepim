@@ -357,7 +357,7 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 	switch(fMode)
 	{
 	case BaseConduit::DBInfo : 
-		cout << fConduit->dbInfo(); 
+		cout << fConduit->dbInfo() << endl; 
 		keepRunning=false;
 		break;
 	case BaseConduit::Setup :
@@ -436,6 +436,9 @@ int ConduitApp::exec(bool withDCOP,bool withGUI)
 
 
 // $Log$
+// Revision 1.28  2001/05/25 16:06:52  adridg
+// DEBUG breakage
+//
 // Revision 1.27  2001/05/03 18:04:09  adridg
 // Additional authors can now have web addresses, too
 //

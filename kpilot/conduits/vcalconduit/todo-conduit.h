@@ -41,40 +41,45 @@
 #include <time.h>
 #endif
 
-#ifndef _VCAL_VCALBASE_H
+#include <todo.h>
+
 #include "vcalBase.h"
-#endif
 
 class QWidget;
 class PilotRecord;
 
+using namespace KCal;
 
 class TodoConduit : public VCalBaseConduit
 {
-public:
-  TodoConduit(eConduitMode mode);
-  virtual ~TodoConduit();
+  public:
+    TodoConduit(eConduitMode mode,DatabaseSource source=ConduitSocket);
+    virtual ~TodoConduit();
+
+    virtual void doSync();
+    virtual void doBackup();
+    virtual QWidget* aboutAndSetup();
+
+    virtual const char* dbInfo() { return "ToDoDB"; }
   
-  virtual void doSync();
-  virtual void doBackup();
-  virtual QWidget* aboutAndSetup();
+    static const char *version();
 
-  virtual const char* dbInfo() { return "TodoDB"; }
-  
-  static const char *version();
+  protected:
+    virtual void doLocalSync();
+    virtual void updateTodo(PilotRecord *rec);
+//    virtual void updateVObject(PilotRecord *rec);
 
-protected:
-  virtual void doLocalSync();
-  virtual void updateVObject(PilotRecord *rec);
-
- private:
-  void firstSyncCopy(bool DeleteOnPilot);
+   private:
+    void firstSyncCopy(bool DeleteOnPilot);
 };
 
 #endif
 
 
 // $Log$
+// Revision 1.2  2001/06/05 22:58:40  adridg
+// General rewrite, cleanup thx. Philipp Hullmann
+//
 // Revision 1.1  2001/04/16 13:36:20  adridg
 // Moved todoconduit
 //

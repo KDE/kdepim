@@ -1,8 +1,9 @@
-/* todo-conduit.cc			KPilot
+/* todo-conduit.cc  Todo-Conduit for syncing KPilot and KOrganizer
 **
 ** Copyright (C) 1998-2001 Dan Pilone
 ** Copyright (C) 1998-2000 Preston Brown
 ** Copyright (C) 1998 Herwin-Jan Steehouwer
+** Copyright (C) 2001 Cornelius Schumacher
 **
 ** This file is part of the todo conduit, a conduit for KPilot that
 ** synchronises the Pilot's todo application with the outside world,
@@ -26,15 +27,7 @@
 ** MA 02139, USA.
 */
 
-/*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
-*/
-// I have noticed that this is full of memory leaks, but since it is
-// short lived, it shouldn't matter so much. -- PGB
-
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
 
 #include <sys/types.h>
 #include <signal.h>
@@ -42,104 +35,54 @@
 #include <stdlib.h>
 #include <time.h>
 
-#ifndef QBITARRAY_H
 #include <qbitarray.h>
-#endif
-
-#ifndef QDIR_H
 #include <qdir.h>
-#endif
-
-#ifndef QDATETM_H
 #include <qdatetm.h>
-#endif
-
-#ifndef QSTRING_H
 #include <qstring.h>
-#endif
-
-#ifndef QMSGBOX_H
 #include <qmsgbox.h>
-#endif
 
-
-#ifndef _KAPP_H
 #include <kapp.h>
-#endif
-
-#ifndef _KMESSAGEBOX_H
 #include <kmessagebox.h>
-#endif
-
-#ifndef _KCONFIG_H
 #include <kconfig.h>
-#endif
-
-#ifndef _KDEBUG_H
 #include <kdebug.h>
-#endif
 
-
-#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
-#endif
-
-#ifndef _KPILOT_PILOTDATABASE_H
 #include "pilotDatabase.h"
-#endif
-
-#ifndef _KPILOT_PILOTRECORD_H
-#include "pilotRecord.h"
-#endif
-
-#ifndef _KPILOT_PILOTTODOENTRY_H
 #include "pilotTodoEntry.h"
-#endif
-
-
-#ifndef __VCC_H__
-#include "vcc.h"
-#endif
-
-#ifndef _KPILOT_TODO_CONDUIT_H
 #include "todo-conduit.h"
-#endif
-
-#ifndef _KPILOT_TODO_SETUP_H
 #include "todo-setup.h"
-#endif
-
-#ifndef _KPILOT_CONDUITAPP_H
 #include "conduitApp.h"
-#endif
+
+#include <todo.h>
+
+using namespace KCal;
 
 static const char *todo_conduit_id = "$Id$";
 
 
 int main(int argc, char* argv[])
 {
-  ConduitApp a(argc, argv, "todo_conduit",
-  	"ToDo-list conduit",
-	KPILOT_VERSION);
+  ConduitApp a(argc,argv,"todo_conduit","ToDo-list conduit",KPILOT_VERSION);
   a.addAuthor("Preston Brown",I18N_NOOP("Organizer author"));
-	a.addAuthor("Adriaan de Groot",
-		I18N_NOOP("Maintainer"),
-		"adridg@cs.kun.nl");
-	a.addAuthor("Philipp Hullmann",
-		I18N_NOOP("Bugfixer"));
-  TodoConduit conduit(a.getMode());
+  a.addAuthor("Adriaan de Groot",I18N_NOOP("Maintainer"),"adridg@cs.kun.nl");
+  a.addAuthor("Philipp Hullmann",I18N_NOOP("Bugfixer"));
+  a.addAuthor("Cornelius Schumacher",I18N_NOOP("iCalendar port"));
+  
+  TodoConduit conduit(a.getMode(),a.getDBSource());
   a.setConduit(&conduit);
   return a.exec();
 
-	/* NOTREACHED */
-	(void) todo_conduit_id;
+  /* NOTREACHED */
+  (void) todo_conduit_id;
 }
 
 
-TodoConduit::TodoConduit(eConduitMode mode)
-  : VCalBaseConduit(mode)
+TodoConduit::TodoConduit(eConduitMode mode,DatabaseSource source)
+  : VCalBaseConduit(mode,source)
 {
-	FUNCTIONSETUP;
+  FUNCTIONSETUP;
+  
+  kdDebug() << "TodoConduit()" << endl;
 }
 
 
@@ -148,219 +91,164 @@ TodoConduit::~TodoConduit()
 }
 
 
-/* static */ const char *TodoConduit::version()
+const char *TodoConduit::version()
 {
-	return "ToDo Conduit " KPILOT_VERSION;
+  return "ToDo Conduit " KPILOT_VERSION;
 }
 
 
 void TodoConduit::doBackup()
 {
-   PilotRecord* rec;
-   int index = 0;
+   kdDebug() << "TodoConduit::doBackup()" << endl;
 
    if (!getCalendar(TodoSetup::TodoGroup)) {
      noCalendarError(i18n("ToDo Conduit"));
      exit(ConduitMisconfigured);
    }
 
-   rec = readRecordByIndex(index++);
+   int index = 0;
+   PilotRecord *rec = readRecordByIndex(index++);
 
-  // Get ALL entries from Pilot
+   // Get ALL entries from Pilot
    while(rec) {
-     if(rec->getAttrib() & dlpRecAttrDeleted) { // tagged for deletion
-       deleteVObject(rec, VCTodoProp);
+     if(rec->isDeleted()) { // tagged for deletion
+       deleteRecord(rec);
+//       deleteVObject(rec, VCTodoProp);
      } else {
-       updateVObject(rec);
-     }    
+       updateTodo(rec);
+//       updateVObject(rec);
+     }
      delete rec;
      rec = readRecordByIndex(index++);
    }
+
    // save the todoendar
    saveVCal();
 
    // clear the "first time" flag
-  KConfig& config = KPilotConfig::getConfig(TodoSetup::TodoGroup);
-  setFirstTime(config, false);
+   KConfig& config = KPilotConfig::getConfig(TodoSetup::TodoGroup);
+   setFirstTime(config, false);
 }
 
 void TodoConduit::doSync()
 {
-	FUNCTIONSETUP;
-   PilotRecord* rec;
+  FUNCTIONSETUP;
+  PilotRecord* rec;
 
-   if (!getCalendar(TodoSetup::TodoGroup)) {
-     noCalendarError(i18n("ToDo Conduit"));
-     exit(ConduitMisconfigured);
-   }
+  if (!getCalendar(TodoSetup::TodoGroup)) {
+    noCalendarError(i18n("ToDo Conduit"));
+    exit(ConduitMisconfigured);
+  }
 
-   DEBUGCONDUIT << fname << ": Pilot -> Desktop" << endl;
+  DEBUGCONDUIT << fname << ": Pilot -> Desktop" << endl;
 
-   rec = readNextModifiedRecord();
+  rec = readNextModifiedRecord();
 
-   // get only MODIFIED entries from Pilot, compared with the above (doBackup),
-   // which gets ALL entries
-   while (rec) {
-     if(rec->getAttrib() & dlpRecAttrDeleted)
-       //	 recordDeleted(rec);
-       deleteVObject(rec, VCTodoProp);
-     else {
-       bool pilotRecModified = (rec->getAttrib() & dlpRecAttrDirty);
-       if (pilotRecModified)
-	{
-	 updateVObject(rec);
-	}
-       else {
-		DEBUGCONDUIT << fname
-			<< ": Asked for a modified record and got "
-			   "an unmodified one."
-			<< endl;
-       }
-     }
-	 
-     delete rec;
-     rec = readNextModifiedRecord();
-   }
+  // get only MODIFIED entries from Pilot, compared with the above (doBackup),
+  // which gets ALL entries
+  while (rec) {
+    if(rec->isDeleted()) deleteRecord(rec);
+    else {
+      bool pilotRecModified = (rec->getAttrib() & dlpRecAttrDirty);
+      if (pilotRecModified) {
+        updateTodo(rec);
+      } else {
+        DEBUGCONDUIT << fname
+		     << ": Asked for a modified record and got "
+		        "an unmodified one."
+		     << endl;
+      }
+    }
 
-   // now, all the stuff that was modified/new on the pilot should be
-   // added to the todoendar.  We now need to add stuff to the pilot
-   // that is modified/new in the todoendar (the opposite).	  
-   DEBUGCONDUIT << fname << ": Desktop -> Pilot" << endl;
-   doLocalSync();
+    delete rec;
+    rec = readNextModifiedRecord();
+  }
 
-   // now we save the todoendar.
-   saveVCal();
+  // now, all the stuff that was modified/new on the pilot should be
+  // added to the todoendar.  We now need to add stuff to the pilot
+  // that is modified/new in the todoendar (the opposite).	  
+  DEBUGCONDUIT << fname << ": Desktop -> Pilot" << endl;
+  doLocalSync();
 
-   // clear the "first time" flag
+  // now we save the todoendar.
+  saveVCal();
+
+  // clear the "first time" flag
   KConfig& config = KPilotConfig::getConfig(TodoSetup::TodoGroup);
   setFirstTime(config, false);
 }
 
-
-/*****************************************************************************/
 
 /*
  * Given a pilot record, check to see what needs to be done to the
  * analogous vobject to bring things into sync.
  */
-void TodoConduit::updateVObject(PilotRecord *rec)
+void TodoConduit::updateTodo(PilotRecord *rec)
 {
-	FUNCTIONSETUP;
-
-  VObject *vtodo;
-  VObject *vo;
-  QDateTime todaysDate = QDateTime::currentDateTime();
-  QString tmpStr;
   PilotTodoEntry todoEntry(rec);
   
-  vtodo=findEntryInCalendar(rec->getID(), VCTodoProp);
+  Todo *vtodo=findTodo(rec->getID());
   if (!vtodo) {
     // no event was found, so we need to add one with some initial info
-    QString numStr;
-    vtodo = addProp(calendar(), VCTodoProp);
-    addDateProperty(vtodo, VCDCreatedProp, todaysDate);
-    numStr.sprintf("KPilot - %ld",rec->getID());
-    addPropValue(vtodo, VCUniqueStringProp, numStr.latin1());
-    addPropValue(vtodo, VCSequenceProp, "1");
-    addDateProperty(vtodo, VCLastModifiedProp, todaysDate);
-    addPropValue(vtodo, VCPriorityProp, "0");
-    addPropValue(vtodo, KPilotIdProp,
-		 numStr.setNum(todoEntry.getID()).latin1()); 
-    addPropValue(vtodo, KPilotStatusProp, "0");
+    vtodo = new Todo;
+    calendar()->addTodo(vtodo);
+
+    vtodo->setPilotId(todoEntry.getID());
+    vtodo->setSyncStatus(Incidence::SYNCNONE);
   }
 
-  if (getStatus(vtodo)) {
-    // we don't want to modify the vobject with pilot info, because it has
-    // already been  modified on the desktop.  The VObject's modified state
-    // overrides the PilotRec's modified state.
-    return;
-  }
+  // we don't want to modify the vobject with pilot info, because it has
+  // already been  modified on the desktop.  The VObject's modified state
+  // overrides the PilotRec's modified state.
+
+  if (vtodo->syncStatus() != Incidence::SYNCNONE) return;
 
   // otherwise, the vObject hasn't been touched.  Updated it with the
   // info from the PilotRec.
-  
-	// DUE DATE //
-	vo = isAPropertyOf(vtodo, VCDueProp);
-	if (todoEntry.getIndefinite()) 
-	{ 
-		// there is no due date, remove it if already present.
-		//
-		//
-		if (vo)
-		{
-			addProp(vo, KPilotSkipProp);
-		}
-    
-		DEBUGCONDUIT << fname
-			<< ": Todo-item with no end date."
-			<< endl;
-	} 
-	else 
-	{
-		if (vo)
-		{
-			setDateProperty(vo, todoEntry.getDueDate_p());
-		}
-		else
-		{
-			addDateProperty(vtodo, VCDueProp,
-				todoEntry.getDueDate_p());
-		}
-	}
-  
+
+  if (todoEntry.getIndefinite()) {
+    vtodo->setHasDueDate(false);
+  } else {
+    vtodo->setDtDue(readTm(todoEntry.getDueDate()));
+  }
+
   // PRIORITY //
-  vo = isAPropertyOf(vtodo, VCPriorityProp);
-  int priority = todoEntry.getPriority();
-  tmpStr.setNum(priority);
-  if (vo)
-    setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
-  else
-    addPropValue(vtodo, VCPriorityProp, tmpStr.latin1());
+  vtodo->setPriority(todoEntry.getPriority());
 
   // COMPLETED? //
-  vo = isAPropertyOf(vtodo, VCStatusProp);
-  tmpStr = (todoEntry.getComplete() ? "COMPLETED" : "X-ACTION");
-  if (vo)
-    setVObjectUStringZValue_(vo, fakeUnicode(tmpStr.latin1(), 0));
-  else
-    addPropValue(vtodo, VCStatusProp, tmpStr.latin1());
+  vtodo->setCompleted(todoEntry.getComplete());
 
   setSummary(vtodo, todoEntry.getDescription());
   setNote(vtodo, todoEntry.getNote());
-  setStatus(vtodo, 0);
+  
+  vtodo->setSyncStatus(Incidence::SYNCNONE);
 }
-
-/*****************************************************************************/
 
 
 void TodoConduit::doLocalSync()
 {
-	FUNCTIONSETUP;
+  FUNCTIONSETUP;
 
-  VObjectIterator i;
-  
-  initPropIterator(&i, calendar());
+  QList<Todo> todos = calendar()->getTodoList();
   
   /* go through the whole todo list.  If the event has the dirty
      (modified) flag set, make a new pilot record and add it. */
-  while (moreIteration(&i)) {
+  for(Todo *todo = todos.first();todo;todo = todos.next()) {
     recordid_t id;
     PilotTodoEntry *todoEntry;
     PilotRecord *pRec;
 
-    VObject *vtodo = nextVObject(&i);
-    if (strcmp(vObjectName(vtodo), VCTodoProp) == 0 &&
-	getStatus(vtodo)) {
-      /* the event has been modified, need to write it to the pilot
-	 After using the writeRecord method, be sure and put the returned id
-	 back into the todo entry! */
+    if (todo->syncStatus() != Incidence::SYNCNONE) {
+      // The event has been modified, need to write it to the pilot.
+      // After using the writeRecord method, be sure and put the returned id
+      // back into the todo entry! 
       
       // we read the pilotID.
 
-      id = getRecordID(vtodo);
+      id = todo->pilotId();
 
-	// if id != 0, this is a modified event, otherwise it is new.
-	if (id != 0) {
+      // if id != 0, this is a modified event, otherwise it is new.
+      if (id != 0) {
 	  pRec = readRecordById(id);
 	  /* If this fails, somehow the record got deleted from the
 	     pilot but we were never informed! bad pilot. naughty
@@ -373,93 +261,60 @@ void TodoConduit::doLocalSync()
 	    todoEntry = new PilotTodoEntry();
 	    id = 0;
 	  }
-	} else {
-	  todoEntry = new PilotTodoEntry();
-	}
-	
-	// update it from the vObject.
-	
-	// END TIME (DUE DATE) //
-	VObject *vo;
-	if ((vo = isAPropertyOf(vtodo, VCDueProp)) != 0L) {
-	  char *s = fakeCString(vObjectUStringZValue(vo));
-	  struct tm due = ISOToTm(QString(s));
-	  DEBUGCONDUIT << fname <<  ": Due Date: " << s << endl;
-	  deleteStr(s);
-	  todoEntry->setDueDate(due);
-	  todoEntry->setIndefinite(0);
-	} else {
-	  // indefinite event
-	  DEBUGCONDUIT << fname << ": Indefinite event.\n";
-	  todoEntry->setIndefinite(1);
-	}
-
-	// PRIORITY //
-	if ((vo = isAPropertyOf(vtodo, VCPriorityProp)) != 0L) {
-	  int priority = atoi(fakeCString(vObjectUStringZValue(vo)));
-	  if (priority == 0)
-	    priority = 1; // no 'undefined' priorities on the pilot
-	  todoEntry->setPriority(priority);
-	} else {
-	  todoEntry->setPriority(1); // todo needs a priority.
-	}
-
-	// COMPLETE? //
-	if ((vo = isAPropertyOf(vtodo, VCStatusProp)) != 0L) {
-	  char *s = fakeCString(vObjectUStringZValue(vo));
-	  if (strcmp(s, "COMPLETED") == 0)
-	    todoEntry->setComplete(1);
-	  else
-	    todoEntry->setComplete(0);
-	  deleteStr(s);
-	} else {
-	  // needs complete status even if none given
-	  todoEntry->setComplete(0);
-	}
-
-	// SUMMARY //
-	// what we call summary pilot calls description.
-	todoEntry->setDescription(getSummary(vtodo));
-	
-	// DESCRIPTION //
-	// what we call description pilot puts as a separate note
-	todoEntry->setNote(getDescription(vtodo));
-
-	// put the pilotRec in the database...
-	pRec=todoEntry->pack();
-	pRec->setAttrib(todoEntry->getAttrib() & ~dlpRecAttrDirty);
-	id = writeRecord(pRec);
-	delete(todoEntry);
-	delete(pRec);
-
-	// write the id we got from writeRecord back to the vObject
-	if (id > 0) {
-	  setNumProperty(vtodo, KPilotIdProp, id);
-	  setNumProperty(vtodo, KPilotStatusProp, 0);
-	} else {
-		kdDebug() << fname
-			<< "error! writeRecord returned a pilotID <= 0!"
-			<< endl;
-	}
+      } else {
+        todoEntry = new PilotTodoEntry();
       }
-   }
+
+      // update it from the iCalendar Todo.
+
+      if (todo->hasDueDate()) {
+        struct tm t = writeTm(todo->dtDue());
+        todoEntry->setDueDate(t);
+        todoEntry->setIndefinite(0);
+      } else {
+        todoEntry->setIndefinite(1);
+      }	
+
+      todoEntry->setPriority(todo->priority());
+
+      todoEntry->setComplete(todo->isCompleted());
+
+      // what we call summary pilot calls description.
+      todoEntry->setDescription(todo->summary());
+	
+      // what we call description pilot puts as a separate note
+      todoEntry->setNote(todo->description());
+
+      // put the pilotRec in the database...
+      pRec=todoEntry->pack();
+      pRec->setAttrib(todoEntry->getAttrib() & ~dlpRecAttrDirty);
+      id = writeRecord(pRec);
+      delete(todoEntry);
+      delete(pRec);
+
+      // write the id we got from writeRecord back to the vObject
+      if (id > 0) {
+        todo->setPilotId(id);
+        todo->setSyncStatus(Incidence::SYNCNONE);
+      } else {
+        kdDebug() << fname
+                  << "error! writeRecord returned a pilotID <= 0!"
+                  << endl;
+      }
+    }
+  }
 
   KConfig& config = KPilotConfig::getConfig(TodoSetup::TodoGroup);
-  bool DeleteOnPilot = config.readBoolEntry("DeleteOnPilot", true);
+  bool deleteOnPilot = config.readBoolEntry("DeleteOnPilot", true);
 
-  if (firstTime())
-    firstSyncCopy(DeleteOnPilot);
+  if (firstTime()) firstSyncCopy(deleteOnPilot);
 
-  if (DeleteOnPilot)
-    deleteFromPilot(VCTodoProp);
+  if (deleteOnPilot) deleteFromPilot(VCalBaseConduit::TypeTodo);
 }
 
 
-//////////////////////////////////////////////////////////////////////////
-
-void TodoConduit::firstSyncCopy(bool DeleteOnPilot) {
-  FUNCTIONSETUP;
-
+void TodoConduit::firstSyncCopy(bool DeleteOnPilot)
+{
   bool insertall = false, skipall = false;
 
   // Get all entries from Pilot
@@ -474,10 +329,9 @@ void TodoConduit::firstSyncCopy(bool DeleteOnPilot) {
 			    << endl;
       continue;
     }
-      
-    VObject *vevent = findEntryInCalendar(rec->getID(),
-					  VCTodoProp);
-    if (vevent == 0L) {
+    
+    Todo *todo = findTodo(rec->getID());
+    if (!todo) {
       DEBUGCONDUIT << __FUNCTION__
 		   << ": Entry found on pilot but not in vcalendar."
 		   << endl;
@@ -497,7 +351,7 @@ void TodoConduit::firstSyncCopy(bool DeleteOnPilot) {
 	text += i18n("Item: %1.\n\n"
 		     "What must be done with this item?")
 	  .arg(todoEntry->getDescription());
-	    
+    
 	int response =
 	  QMessageBox::information(0, 
 				   i18n("KPilot To-Do Conduit"), 
@@ -514,30 +368,28 @@ void TodoConduit::firstSyncCopy(bool DeleteOnPilot) {
 		     << endl;
 	    
 	switch (response) {
-	case 0:
-	default: 
-	  /* Default is to insert this single entry and ask again
-	     later. */
-	  updateVObject(rec);
-	  break;
-	case 1:
-	  // Just skip this, it will be deleted by deleteFromPilot().
-	  break;
-	case 2:
-	  insertall = true;
-	  skipall = false;
-	  updateVObject(rec);
-	  break;
-	} // switch (response)
+          case 0:
+          default: 
+	    // Default is to insert this single entry and ask again later
+            updateTodo(rec);
+            break;
+          case 1:
+            // Just skip this, it will be deleted by deleteFromPilot().
+            break;
+          case 2:
+            insertall = true;
+            skipall = false;
+            updateTodo(rec);
+            break;
+	}
       } else if (insertall) {
-	// all records are to be inserted.
-	updateVObject(rec);
+        // all records are to be inserted.
+        updateTodo(rec);
       }
-    } // if (!vevent)
+    }
     delete rec;
-  } // while ((rec = readRecordByIndex(index++)) != 0)
-} // void TodoConduit::firstSyncCopy()
-
+  }
+}
 
 /* put up the about / setup dialog. */
 QWidget* TodoConduit::aboutAndSetup()
@@ -546,6 +398,9 @@ QWidget* TodoConduit::aboutAndSetup()
 }
 
 // $Log$
+// Revision 1.5  2001/06/05 22:58:40  adridg
+// General rewrite, cleanup thx. Philipp Hullmann
+//
 // Revision 1.4  2001/05/07 20:09:32  adridg
 // Phillipp's due-date patches
 //

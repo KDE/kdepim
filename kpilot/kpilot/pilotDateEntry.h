@@ -124,11 +124,10 @@ public:
   void  setNote(const char* note);
   const char* getNote() const { return fAppointmentInfo.note; }
 
-	bool isMultiDay() const 
-	{
-		return ((fAppointmentInfo.repeatType == repeatDaily) &&
-			fAppointmentInfo.event);
-	}
+  bool isMultiDay() const {
+    return ((fAppointmentInfo.repeatType == repeatDaily) &&
+            fAppointmentInfo.event);
+  }
   
 protected:
   void *pack(void *, int *);
@@ -151,6 +150,9 @@ private:
 
 
 // $Log$
+// Revision 1.10  2001/05/24 10:31:38  adridg
+// Philipp Hullmann's extensive memory-leak hunting patches
+//
 // Revision 1.9  2001/04/16 13:48:35  adridg
 // --enable-final cleanup and #warning reduction
 //

@@ -28,77 +28,35 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-
 #include "options.h"
 
-#ifndef QDIR_H
 #include <qdir.h>
-#endif
-
-#ifndef QLABEL_H
 #include <qlabel.h>
-#endif
-
-#ifndef QPUSHBT_H
-#include <qpushbt.h>
-#endif
-
-#ifndef QDIALOG_H
+#include <qpushbutton.h>
 #include <qdialog.h>
-#endif
-
-#ifndef QLINED_H
-#include <qlined.h>
-#endif
-
-#ifndef QCHKBOX_H
-#include <qchkbox.h>
-#endif
-
-#ifndef QLAYOUT_H
+#include <qlineedit.h>
+#include <qcheckbox.h>
 #include <qlayout.h>
-#endif
 
-#ifndef _KAPP_H
 #include <kapp.h>
-#endif
-
-#ifndef _KLOCALE_H
 #include <klocale.h>
-#endif
-
-#ifndef _KDEBUG_H
 #include <kdebug.h>
-#endif
-
-#ifndef _KFILEDIALOG_H
 #include <kfiledialog.h>
-#endif
 
-#ifndef _KDEBUG_H
-#include <kdebug.h>
-#endif
-
-#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
-#endif
-
-#ifndef _KPILOT_VCAL_CONDUIT_H
 #include "vcal-conduit.h"
-#endif
 
-
+#include "vcal-setup.h"
 #include "vcal-setup.moc"
+
+const QString VCalSetup::VCalGroup("vcalOptions");
 
 VCalSetupPage::VCalSetupPage(setupDialog *parent, KConfig& config) :
 	setupDialogPage(i18n("Calendar"),parent)
 {
-  FUNCTIONSETUP;
-
   grid = new QGridLayout(this, 2, 4, SPACING);
   
-  FileLabel =
-    new QLabel(i18n("Calendar File:"), this);
+  FileLabel = new QLabel(i18n("Calendar File:"), this);
 
   fCalendarFile = new QLineEdit(this);
   fCalendarFile->setText(config.readEntry("CalFile", ""));
@@ -138,11 +96,8 @@ VCalSetupPage::~VCalSetupPage()
   delete grid;
 }
 
-
 int VCalSetupPage::commitChanges(KConfig& config)
 {
-  FUNCTIONSETUP;
-
   config.writeEntry("CalFile", fCalendarFile->text());
   config.writeEntry("FirstTime", 
 		    fPromptFirstTime->isChecked() ? "true" : "false");
@@ -151,41 +106,37 @@ int VCalSetupPage::commitChanges(KConfig& config)
   return 0;
 }
 
-
-
 void VCalSetupPage::slotBrowse()
 {
-	FUNCTIONSETUP;
-
-	QString fileName = KFileDialog::getOpenFileName(0L, "*.vcs");
-	if(fileName.isNull()) return;
-	fCalendarFile->setText(fileName);
+  QString fileName = KFileDialog::getOpenFileName(0L, "*.vcs *.ics");
+  if(fileName.isNull()) return;
+  fCalendarFile->setText(fileName);
 }
 
-
-
-/* static */ const QString VCalSetup::VCalGroup("vcalOptions");
 
 VCalSetup::VCalSetup(QWidget *parent) :
 	setupDialog(parent, VCalGroup)
 {
-	FUNCTIONSETUP;
-	KConfig& config = KPilotConfig::getConfig(VCalGroup);
-	sPage = new VCalSetupPage(this, config);
-	if (sPage) addPage(sPage);
-	iPage = new setupInfoPage(this);
-	if (iPage) addPage(iPage);
+  KConfig& config = KPilotConfig::getConfig(VCalGroup);
+  sPage = new VCalSetupPage(this, config);
+  if (sPage) addPage(sPage);
+  iPage = new setupInfoPage(this);
+  if (iPage) addPage(iPage);
 
-	setupDialog::setupWidget();
+  setupDialog::setupWidget();
 }
 
-VCalSetup::~VCalSetup() {
+VCalSetup::~VCalSetup()
+{
   delete sPage;
   delete iPage;
 }
 
 
 // $Log$
+// Revision 1.14  2001/06/05 22:58:40  adridg
+// General rewrite, cleanup thx. Philipp Hullmann
+//
 // Revision 1.13  2001/03/09 09:46:15  adridg
 // Large-scale #include cleanup
 //

@@ -25,110 +25,64 @@
 ** MA 02139, USA.
 */
 
-/*
-** Bug reports and questions can be sent to adridg@cs.kun.nl
-*/
 static const char *todo_setup_id="$Id$";
-
 
 #include "options.h"
 
-#ifndef QDIR_H
 #include <qdir.h>
-#endif
-
-#ifndef QLABEL_H
 #include <qlabel.h>
-#endif
-
-#ifndef QPUSHBT_H
-#include <qpushbt.h>
-#endif
-
-#ifndef QCHKBOX_H
-#include <qchkbox.h>
-#endif
-
-#ifndef QLINED_H
-#include <qlined.h>
-#endif
-
-#ifndef QLAYOUT_H
+#include <qpushbutton.h>
+#include <qcheckbox.h>
+#include <qlineedit.h>
 #include <qlayout.h>
-#endif
 
-#ifndef _KAPP_H
 #include <kapp.h>
-#endif
-
-#ifndef _KLOCALE_H
 #include <klocale.h>
-#endif
-
-#ifndef _KDEBUG_H
 #include <kdebug.h>
-#endif
-
-#ifndef _KFILEDIALOG_H
 #include <kfiledialog.h>
-#endif
 
-#ifndef _KDEBUG_H
-#include <kdebug.h>
-#endif
-
-#ifndef _KPILOT_TODO_CONDUIT_H
-#include "todo-conduit.h"
-#endif
-
-#ifndef _KPILOT_KPILOTCONFIG_H
 #include "kpilotConfig.h"
-#endif
+#include "todo-conduit.h"
 
-
+#include "todo-setup.h"
 #include "todo-setup.moc"
 
 
-/* static */ const QString TodoSetup::TodoGroup("todoOptions");
+const QString TodoSetup::TodoGroup("todoOptions");
 
 TodoSetup::TodoSetup(QWidget *parent)
   : setupDialog(parent,TodoGroup,TodoConduit::version())
 {
-	FUNCTIONSETUP;
-	KConfig& config=KPilotConfig::getConfig(TodoGroup);
-	addPage(new TodoSetupPage(this,config));
-	addPage(new setupInfoPage(this));
-	setupDialog::setupWidget();
-	(void) todo_setup_id;
+  KConfig& config=KPilotConfig::getConfig(TodoGroup);
+  addPage(new TodoSetupPage(this,config));
+  addPage(new setupInfoPage(this));
+  setupDialog::setupWidget();
+  (void) todo_setup_id;
 }
 
 
 int TodoSetupPage::commitChanges(KConfig& config)
 {
-	config.writeEntry("CalFile", fCalendarFile->text());
-	config.writeEntry("FirstTime", 
-			  fPromptFirstTime->isChecked() ? "true" : "false");
-	config.writeEntry("DeleteOnPilot",
-			  fDeleteOnPilot->isChecked() ? "true" : "false");
+  config.writeEntry("CalFile", fCalendarFile->text());
+  config.writeEntry("FirstTime", 
+                    fPromptFirstTime->isChecked() ? "true" : "false");
+  config.writeEntry("DeleteOnPilot",
+                    fDeleteOnPilot->isChecked() ? "true" : "false");
 
-	return 0;
+  return 0;
 }
 
 
 void TodoSetupPage::slotBrowse()
 {
-	FUNCTIONSETUP;
-
-  QString fileName = KFileDialog::getOpenFileName(0L, "*.vcs");
+  QString fileName = KFileDialog::getOpenFileName(0, "*.vcs *ics");
   if(fileName.isNull()) return;
   fCalendarFile->setText(fileName);
 }
 
 TodoSetupPage::TodoSetupPage(setupDialog *parent,KConfig& config) :
-	setupDialogPage(i18n("ToDo File"),parent)
+    setupDialogPage(i18n("ToDo File"),parent)
 {
-  FUNCTIONSETUP;
-
   grid = new QGridLayout(this, 2, 3, SPACING);
 
   fCalFileLabel = new QLabel(i18n("Calendar File:"),
@@ -160,7 +114,8 @@ TodoSetupPage::TodoSetupPage(setupDialog *parent,KConfig& config) :
   grid->addWidget(fDeleteOnPilot, 2, 1);
 }
 
-TodoSetupPage::~TodoSetupPage() {
+TodoSetupPage::~TodoSetupPage()
+{
   delete fCalendarFile;
   delete fPromptFirstTime;
   delete fDeleteOnPilot;
@@ -171,6 +126,9 @@ TodoSetupPage::~TodoSetupPage() {
 
 
 // $Log$
+// Revision 1.2  2001/06/05 22:58:40  adridg
+// General rewrite, cleanup thx. Philipp Hullmann
+//
 // Revision 1.1  2001/04/16 13:36:20  adridg
 // Moved todoconduit
 //
