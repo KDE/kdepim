@@ -34,7 +34,7 @@
 #define __KLEO_KEYFILTERMANAGER_H__
 
 #include <qobject.h>
-
+#include <kdepimmacros.h>
 namespace GpgME {
   class Key;
 }
@@ -45,7 +45,7 @@ namespace Kleo {
 
 namespace Kleo {
 
-  class KeyFilterManager : public QObject {
+  class KDE_EXPORT KeyFilterManager : public QObject {
     Q_OBJECT
   protected:
     KeyFilterManager( QObject * parent=0, const char * name=0 );

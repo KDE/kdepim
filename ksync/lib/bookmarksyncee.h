@@ -22,6 +22,7 @@
 #define BOOKMARKSYNCEE_H
 
 #include <qvaluelist.h>
+#include <kdepimmacros.h>
 
 #include <kbookmark.h>
 
@@ -50,7 +51,7 @@ class BookmarkSyncEntry : public KSyncEntry
   This class provides an implementation of the @see KSyncee interface for KSync.
   It provides syncing of bookmark files as used by Konqueror.
 */
-class BookmarkSyncee : public KSyncee
+class KDE_EXPORT BookmarkSyncee : public KSyncee
 {
   public:
     BookmarkSyncee();

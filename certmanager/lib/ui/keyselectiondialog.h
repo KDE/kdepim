@@ -41,7 +41,7 @@
 
 #include <kleo/cryptobackend.h>
 #include <gpgmepp/key.h>
-
+#include <kdepimmacros.h>
 #include <vector>
 
 class QCheckBox;
@@ -62,7 +62,7 @@ namespace GpgME {
 
 namespace Kleo {
 
-  class KeySelectionDialog : public KDialogBase {
+  class KDE_EXPORT KeySelectionDialog : public KDialogBase {
     Q_OBJECT
   public:
 

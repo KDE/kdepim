@@ -36,7 +36,7 @@
 //#include <gpgme.h>
 
 #include <kmainwindow.h>
-
+#include <kdepimmacros.h>
 #include <kurl.h>
 #include <qcstring.h>
 #include <qptrlist.h>
@@ -76,7 +76,7 @@ namespace GpgME {
   class Key;
 }
 
-class CertManager : public KMainWindow {
+class KDE_EXPORT CertManager : public KMainWindow {
   Q_OBJECT
 public:
     CertManager( bool remote = false, const QString& query = QString::null,

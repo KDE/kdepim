@@ -44,6 +44,7 @@
 
 #include <utility>
 
+#include <kdepimmacros.h>
 namespace GpgME {
   class Error;
   class Context;
@@ -52,7 +53,7 @@ namespace GpgME {
 
 namespace Kleo {
 
-  class QGpgMESignEncryptJob : public SignEncryptJob, private QGpgMEJob {
+  class KDE_EXPORT QGpgMESignEncryptJob : public SignEncryptJob, private QGpgMEJob {
     Q_OBJECT QGPGME_JOB
   public:
     QGpgMESignEncryptJob( GpgME::Context * context );

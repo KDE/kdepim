@@ -1,6 +1,6 @@
 KDE_CXXFLAGS = -DLIBKLEOPATRA_NO_COMPAT
 
-INCLUDES = -I$(top_srcdir)/certmanager/lib -I$(top_srcdir)/libkdenetwork $(GPGME_CFLAGS) $(all_includes)
+INCLUDES = -I$(top_srcdir)/certmanager/lib -I$(top_srcdir)/libkdenetwork -I$(top_srcdir)/libkdepim $(GPGME_CFLAGS) $(all_includes)
 
 bin_PROGRAMS = kwatchgnupg
 

@@ -35,6 +35,7 @@
 
 #include <qstring.h>
 #include <qvaluevector.h>
+#include <kdepimmacros.h>
 
 class QStringList;
 class QWidget;
@@ -48,7 +49,7 @@ namespace Kleo {
   /**
      @short DN Attribute mapper
   */
-  class DNAttributeMapper {
+  class KDE_EXPORT DNAttributeMapper {
     DNAttributeMapper();
     ~DNAttributeMapper();
   public:
@@ -72,7 +73,7 @@ namespace Kleo {
   /**
      @short DN parser and reorderer
   */
-  class DN  {
+  class KDE_EXPORT DN  {
   public:
     class Attribute;
     typedef QValueVector<Attribute> AttributeList;

@@ -23,7 +23,7 @@
 
 #include <qstring.h>
 #include <qptrlist.h>
-
+#include <kdepimmacros.h>
 class KSimpleConfig;
 
 class KSyncUi;
@@ -105,7 +105,7 @@ class KSyncEntry
   
   @ref KSyncer operates on KSyncee objects.
 */
-class KSyncee
+class KDE_EXPORT KSyncee
 {
   public:
     KSyncee();
@@ -228,7 +228,7 @@ class KSyncee
   For conflict resolution, a user interface is needed. This has to be a subclass
   of @ref KSyncUi and is provided, when constructing a Ksyncer instance.
 */
-class KSyncer
+class KDE_EXPORT KSyncer
 {
   public:
     /**

@@ -34,13 +34,14 @@
 #define DIRECTORYSERVICESWIDGET_H
 #include "directoryserviceswidgetbase.h"
 #include <kurl.h>
+#include <kdepimmacros.h>
 
 class CryptPlugWrapper;
 namespace Kleo {
 
 class CryptoConfigEntry;
 
-class DirectoryServicesWidget : public DirectoryServicesWidgetBase
+class KDE_EXPORT DirectoryServicesWidget : public DirectoryServicesWidgetBase
 {
   Q_OBJECT
 

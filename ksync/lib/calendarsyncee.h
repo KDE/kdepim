@@ -22,7 +22,7 @@
 #define CALENDARSYNCEE_H
 
 #include <calendarlocal.h>
-
+#include <kdepimmacros.h>
 #include "ksyncer.h"
 
 using namespace KCal;
@@ -48,7 +48,7 @@ class CalendarSyncEntry : public KSyncEntry
   This class provides an implementation of the @see KSyncee interface for KSync.
   It provides syncing of iCalendar files.
 */
-class CalendarSyncee : public KSyncee
+class KDE_EXPORT CalendarSyncee : public KSyncee
 {
   public:
     CalendarSyncee();

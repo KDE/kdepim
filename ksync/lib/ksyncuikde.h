@@ -24,8 +24,9 @@
 class KSyncEntry;
 
 #include "ksyncui.h"
+#include <kdepimmacros.h>
 
-class KSyncUiKde : public KSyncUi
+class KDE_EXPORT KSyncUiKde : public KSyncUi
 {
   public:
     KSyncUiKde(QWidget *parent);

@@ -35,6 +35,7 @@
 #define __KLEO_UI_BACKENDCONFIGWIDGET_H__
 
 #include <qwidget.h>
+#include <kdepimmacros.h>
 
 namespace Kleo {
   class CryptoBackendFactory;
@@ -44,7 +45,7 @@ class QListViewItem;
 
 namespace Kleo {
 
-  class BackendConfigWidget : public QWidget {
+  class KDE_EXPORT BackendConfigWidget : public QWidget {
     Q_OBJECT
   public:
     BackendConfigWidget( CryptoBackendFactory * factory, QWidget * parent=0, const char * name=0, WFlags f=0 );

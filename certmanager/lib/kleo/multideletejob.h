@@ -36,6 +36,7 @@
 #include <kleo/job.h>
 #include <kleo/cryptobackend.h>
 
+#include <kdepimmacros.h>
 #include <qguardedptr.h>
 
 #include <vector>
@@ -63,7 +64,7 @@ namespace Kleo {
      After result() is emitted, the MultiDeleteJob will schedule it's own
      destruction by calling QObject::deleteLater().
   */
-  class MultiDeleteJob : public Job {
+  class KDE_EXPORT MultiDeleteJob : public Job {
     Q_OBJECT
   public:
     MultiDeleteJob( const CryptoBackend::Protocol * protocol );

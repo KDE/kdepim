@@ -53,6 +53,7 @@
 #include <kleo/cryptobackend.h>
 
 #include <vector>
+#include <kdepimmacros.h>
 
 namespace Kleo {
   class KeyListView;
@@ -72,7 +73,7 @@ class QLabel;
 namespace Kleo {
 
   /// Base class for SigningKeyRequester and EncryptionKeyRequester
-  class KeyRequester : public QWidget {
+  class KDE_EXPORT KeyRequester : public QWidget {
     Q_OBJECT
   public:
     KeyRequester( unsigned int allowedKeys, bool multipleKeys=false,

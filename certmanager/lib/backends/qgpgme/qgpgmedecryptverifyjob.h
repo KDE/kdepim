@@ -38,6 +38,7 @@
 #include "qgpgmejob.h"
 
 #include <qcstring.h>
+#include <kdepimmacros.h>
 
 namespace GpgME {
   class Error;
@@ -46,7 +47,7 @@ namespace GpgME {
 
 namespace Kleo {
 
-  class QGpgMEDecryptVerifyJob : public DecryptVerifyJob, private QGpgMEJob {
+  class KDE_EXPORT QGpgMEDecryptVerifyJob : public DecryptVerifyJob, private QGpgMEJob {
     Q_OBJECT QGPGME_JOB
   public:
     QGpgMEDecryptVerifyJob( GpgME::Context * context );

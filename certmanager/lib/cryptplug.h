@@ -26,6 +26,7 @@
 
 #include <gpgmepp/context.h>
 #include <gpgme.h> // need it for gpgme_protocol_t :(
+#include <kdepimmacros.h>
 
 namespace GpgME {
   class ImportResult;
@@ -295,7 +296,7 @@ typedef unsigned long SigStatusFlags;
 
 class CryptPlugWrapper;
 
-class CryptPlug {
+class KDE_EXPORT CryptPlug {
   friend class CryptPlugWrapper;
 protected:
   CryptPlug();

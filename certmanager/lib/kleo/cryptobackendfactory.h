@@ -37,6 +37,7 @@
 #include <qvaluevector.h>
 
 #include "cryptobackend.h"
+#include <kdepimmacros.h>
 
 namespace Kleo {
   class BackendConfigWidget;
@@ -47,7 +48,7 @@ class KConfig;
 
 namespace Kleo {
 
-  class CryptoBackendFactory : public QObject {
+  class KDE_EXPORT CryptoBackendFactory : public QObject {
     Q_OBJECT
   protected:
     CryptoBackendFactory();

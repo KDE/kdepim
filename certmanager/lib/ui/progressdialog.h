@@ -35,7 +35,7 @@
 
 #include <qprogressdialog.h>
 #include <qstring.h>
-
+#include <kdepimmacros.h>
 namespace Kleo {
 
   class Job;
@@ -43,7 +43,7 @@ namespace Kleo {
   /**
      @short A progress dialog for Kleo::Jobs
   */
-  class ProgressDialog : public QProgressDialog {
+  class KDE_EXPORT ProgressDialog : public QProgressDialog {
     Q_OBJECT
   public:
     ProgressDialog( Job * job, const QString & baseText,

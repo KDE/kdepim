@@ -95,12 +95,12 @@
 // other
 #include <algorithm>
 #include <assert.h>
-
+#include <kdepimmacros.h>
 static const bool startWithHierarchicalKeyListing = false;
 
 namespace {
 
-  class DisplayStrategy : public Kleo::KeyListView::DisplayStrategy{
+  class KDE_EXPORT DisplayStrategy : public Kleo::KeyListView::DisplayStrategy{
   public:
     ~DisplayStrategy() {}
 
@@ -122,7 +122,7 @@ namespace {
     }
   };
 
-  class ColumnStrategy : public Kleo::KeyListView::ColumnStrategy {
+  class KDE_EXPORT ColumnStrategy : public Kleo::KeyListView::ColumnStrategy {
   public:
     ~ColumnStrategy() {}
 

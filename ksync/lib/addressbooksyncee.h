@@ -22,7 +22,7 @@
 #define ADDRESSBOOKSYNCEE_H
 
 #include <kabc/addressbook.h>
-
+#include <kdepimmacros.h>
 #include "ksyncer.h"
 
 class AddressBookSyncEntry : public KSyncEntry
@@ -46,7 +46,7 @@ class AddressBookSyncEntry : public KSyncEntry
   This class provides an implementation of the @see KSyncee interface for KSync.
   It provides syncing of AddressBook files.
 */
-class AddressBookSyncee : public KSyncee
+class KDE_EXPORT AddressBookSyncee : public KSyncee
 {
   public:
     AddressBookSyncee();

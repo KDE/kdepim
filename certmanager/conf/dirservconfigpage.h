@@ -34,6 +34,7 @@
 
 #include <kcmodule.h>
 #include <kleo/cryptoconfig.h>
+#include <kdepimmacros.h>
 
 class QCheckBox;
 class QTimeEdit;
@@ -49,7 +50,7 @@ namespace Kleo {
  * The user can configure LDAP servers in this page, to be used for listing/fetching
  * remote certificates in kleopatra.
  */
-class DirectoryServicesConfigurationPage : public KCModule {
+class KDE_EXPORT DirectoryServicesConfigurationPage : public KCModule {
   Q_OBJECT
 public:
   DirectoryServicesConfigurationPage( QWidget * parent=0, const char * name=0 );
