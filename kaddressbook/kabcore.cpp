@@ -39,7 +39,6 @@
 #include <kaccelmanager.h>
 #include <kapplication.h>
 #include <dcopclient.h>
-#include "kmailIface_stub.h"
 #include <kactionclasses.h>
 #include <kcmdlineargs.h>
 #include <kcmultidialog.h>
@@ -387,10 +386,11 @@ void KABCore::mailVCard( const QStringList& uids )
       urls.append( url );
     }
   }
-  KMailIface_stub kmailIface( "kmail", "KMailIface" );
-  kmailIface.openComposer( QString::null, QString::null, QString::null,
-                           QString::null, QString::null, 0, KURL(),
-                           urls );
+  kapp->invokeMailer( QString::null, QString::null, QString::null,
+                      QString::null,  // subject
+                      QString::null,  // body
+                      QString::null,
+                      urls.toStringList() );  // attachments
 }
 
 void KABCore::browse( const QString& url )
