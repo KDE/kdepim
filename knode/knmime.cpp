@@ -151,7 +151,7 @@ QString KNMimeBase::decodeRFC2047String(const QCString &src, const char **usedCS
 }
 
 
-QCString KNMimeBase::encodeRFC2047String(const QString &src, const char *charset)
+QCString KNMimeBase::encodeRFC2047String(const QString &src, const char *charset, bool addressHeader)
 {
   QCString encoded8Bit, result, usedCS;
   unsigned int start=0,end=0;
@@ -181,8 +181,9 @@ QCString KNMimeBase::encodeRFC2047String(const QString &src, const char *charset
       start = i+1;
 
     // encode escape character, for japanese encodings...
-    if ((encoded8Bit[i]<0) || (encoded8Bit[i] == '\033')) {     // non us-ascii char found, now we determine where to stop encoding
-      end = start;
+    if ((encoded8Bit[i]<0) || (encoded8Bit[i] == '\033') ||
+        (addressHeader && (strchr("\"()<>@,;:\\[]=",encoded8Bit[i])!=0))) {
+      end = start;   // non us-ascii char found, now we determine where to stop encoding
       nonAscii=true;
       break;
     }
@@ -193,11 +194,12 @@ QCString KNMimeBase::encodeRFC2047String(const QString &src, const char *charset
       end++;
 
     for (unsigned int x=end;x<encoded8Bit.length();x++)
-      if ((encoded8Bit[x]<0) || (encoded8Bit[x] == '\033')) {        // we found another non-ascii word
-        end = encoded8Bit.length();
+      if ((encoded8Bit[x]<0) || (encoded8Bit[x] == '\033') ||
+          (addressHeader && (strchr("\"()<>@,;:\\[]=",encoded8Bit[x])!=0))) {
+        end = encoded8Bit.length();     // we found another non-ascii word
 
-    while ((end<encoded8Bit.length())&&(encoded8Bit[end]!=' '))  // we encode complete words
-      end++;
+      while ((end<encoded8Bit.length())&&(encoded8Bit[end]!=' '))  // we encode complete words
+        end++;
     }
 
     result = encoded8Bit.left(start)+"=?"+usedCS;
@@ -290,6 +292,7 @@ QCString KNMimeBase::extractHeader(const QCString &src, const char *name)
 {
   QCString n=QCString(name)+": ";
   int pos1=src.find(n, 0, false), pos2=0, len=src.length()-1;
+  bool folded(false);
 
   if(pos1>-1 && (pos1==0 || src[pos1-1]=='\n')) {    //there is a header with the given name
     pos1+=n.length(); //skip the name
@@ -300,14 +303,17 @@ QCString KNMimeBase::extractHeader(const QCString &src, const char *name)
         pos2=src.find("\n", pos2+1);
         if(pos2==-1 || pos2==len || ( src[pos2+1]!=' ' && src[pos2+1]!='\t') ) //break if we reach the end of the string, honor folded lines
           break;
+        else
+          folded = true;
       }
     }
 
     if(pos2<0) pos2=len+1; //take the rest of the string
 
-    //*** FIXME: using simplifyWhiteSpace() is the easiest solution,
-    //***        but not the correct one
-    return src.mid(pos1, pos2-pos1).simplifyWhiteSpace();
+    if (!folded)
+      return src.mid(pos1, pos2-pos1);
+    else
+      return (src.mid(pos1, pos2-pos1).replace(QRegExp("\\n\\s")," "));
   }
   else
     return QCString(""); //header not found
@@ -1245,25 +1251,6 @@ int KNMimeContent::lineCount()
 
 QCString KNMimeContent::rawHeader(const char *name)
 {
-  /*QCString n=QCString(name)+": ";
-  int pos1=h_ead.find(n, 0, false), pos2=0, len=h_ead.length()-1;
-
-  if(pos1>-1 && (pos1==0 || h_ead[pos1-1]=='\n')) {    //there is a header with the given name
-    QCString tmp=h_ead.mid(pos1, h_ead.length()-pos1);
-
-    pos1+=n.length(); //skip the name
-    pos2=pos1;
-    while(1) {
-      pos2=h_ead.find("\n", pos2+1);
-      if(pos2==-1 || pos2==len || ( h_ead[pos2+1]!=' ' && h_ead[pos2+1]!='\t') ) //break if we reach the end of the string, honor folded lines
-        break;
-    }
-
-    if(pos2<0) pos2=len+1; //take the rest of the string
-    return h_ead.mid(pos1, pos2-pos1).simplifyWhiteSpace();
-  }
-  else
-    return QCString(); //header not found*/
   return extractHeader(h_ead, name);
 }
 

@@ -46,7 +46,8 @@ class KNMimeBase {
 
     //encode and decode
     static QString decodeRFC2047String(const QCString &src, const char **usedCS, const QCString &defaultCS, bool forceCS);
-    static QCString encodeRFC2047String(const QString &src, const char *charset);
+    // addressHeader:   if this flag is true, all special characters like <,>,[,],... will be encoded, too.
+    static QCString encodeRFC2047String(const QString &src, const char *charset, bool addressHeader=false);
 
     //charset cache
     static QStrIList c_harsetCache;

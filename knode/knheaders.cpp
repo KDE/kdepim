@@ -312,7 +312,7 @@ QCString KNHeaders::AddressField::as7BitString(bool incType)
   if(n_ame.isEmpty())
     ret+=e_mail;
   else
-    ret+=KNMimeBase::encodeRFC2047String(n_ame, e_ncCS)+" <"+e_mail+">";
+    ret+=KNMimeBase::encodeRFC2047String(n_ame, e_ncCS, true)+" <"+e_mail+">";
 
   return ret;
 }
