@@ -62,6 +62,9 @@ class KNFile : public QFile {
     ~KNFile();
     const QCString& readLine();
     const QCString& readLineWnewLine();
+    // searches for the string from the current file position
+    // returns -1 when the string wasn't found.
+    int findString(const char *s);
 
    protected:
     bool increaseBuffer();
@@ -108,16 +111,16 @@ public:
   ~KNLoadHelper();
 
   // returns a file open for reading
-  QFile* getFile(QString dialogTitle);
+  KNFile* getFile(QString dialogTitle);
   // returns the file after getFile(QString) was called
-  QFile* getFile() { return file; };
+  KNFile* getFile() { return file; };
   KURL getURL()    { return url; };
 
 private:
 
   QWidget *p_arent;
   KURL url;
-  QFile *file;
+  KNFile *file;
   QString tempName;
   static QString lastPath;
 

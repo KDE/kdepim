@@ -545,7 +545,10 @@ void KNodeView::initActions()
                               SLOT(slotFolCompact()), a_ctions, "folder_compact");
   a_ctFolEmpty              = new KAction(i18n("&Empty"), 0, this,
                               SLOT(slotFolEmpty()), a_ctions, "folder_empty");
-
+	a_ctFolMboxImport         = new KAction(i18n("&Import mbox folder"), 0, this,
+                              SLOT(slotFolMBoxImport()), a_ctions, "folder_MboxImport");
+	a_ctFolMboxExport         = new KAction(i18n("E&xport as mbox folder"), 0, this,
+                              SLOT(slotFolMBoxExport()), a_ctions, "folder_MboxExport");
 
   //header-view - list-handling
   a_ctArtSortHeaders        = new KSelectAction(i18n("S&ort"), 0, a_ctions, "view_Sort");
@@ -859,6 +862,8 @@ void KNodeView::slotCollectionSelected(QListViewItem *i)
     a_ctFolDelete->setEnabled(enabled);
     a_ctFolCompact->setEnabled(enabled);
     a_ctFolEmpty->setEnabled(enabled);
+    a_ctFolMboxImport->setEnabled(enabled);
+    a_ctFolMboxExport->setEnabled(enabled);
   }
 }
 
@@ -898,7 +903,7 @@ void KNodeView::slotArticleMousePressed(int button, QListViewItem *item, const Q
   if(b_lockui)
     return;
 
-  if (button == MidButton) {
+  if (item && (button == MidButton)) {
     KNArticle *art=(static_cast<KNHdrViewItem*>(item))->art;
 
     if ((art->type()==KNMimeBase::ATlocal) && ((f_olManager->currentFolder()==f_olManager->outbox())||
@@ -1330,6 +1335,24 @@ void KNodeView::slotFolEmpty()
     if( KMessageBox::Yes == KMessageBox::questionYesNo(
         knGlobals.topWidget, i18n("Do you really want to empty this folder?")) )
       f_olManager->currentFolder()->deleteAll();
+  }
+}
+
+
+void KNodeView::slotFolMBoxImport()
+{
+  kdDebug(5003) << "KNodeView::slotFolMBoxImport()" << endl;
+  if(f_olManager->currentFolder()) {
+		 f_olManager->currentFolder()->importMBoxFile();
+  }
+}
+
+
+void KNodeView::slotFolMBoxExport()
+{
+  kdDebug(5003) << "KNodeView::slotFolMBoxExport()" << endl;
+  if(f_olManager->currentFolder()) {
+    f_olManager->currentFolder()->exportMBoxFile();
   }
 }
 

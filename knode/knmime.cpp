@@ -291,10 +291,17 @@ QCString KNMimeBase::multiPartBoundary()
 QCString KNMimeBase::extractHeader(const QCString &src, const char *name)
 {
   QCString n=QCString(name)+": ";
-  int pos1=src.find(n, 0, false), pos2=0, len=src.length()-1;
+  int pos1=-1, pos2=0, len=src.length()-1;
   bool folded(false);
 
-  if(pos1>-1 && (pos1==0 || src[pos1-1]=='\n')) {    //there is a header with the given name
+  if (n == src.left(n.length())) {
+  	pos1 = 0;
+  } else {
+  	n.prepend("\n");
+    pos1 = src.find(n);
+  }
+
+  if (pos1>-1) {    //there is a header with the given name
     pos1+=n.length(); //skip the name
     pos2=pos1;
 
@@ -315,8 +322,9 @@ QCString KNMimeBase::extractHeader(const QCString &src, const char *name)
     else
       return (src.mid(pos1, pos2-pos1).replace(QRegExp("\\n\\s")," "));
   }
-  else
+  else {
     return QCString(""); //header not found
+  }
 }
 
 
@@ -1334,6 +1342,12 @@ void KNArticle::parse()
     if(!raw.isEmpty())
       d_ate.from7BitString(raw);
   }
+
+  if(l_ines.isEmpty()) {
+    raw=rawHeader(l_ines.type());
+    if(!raw.isEmpty())
+      l_ines.from7BitString(raw);
+  }
 }
 
 
@@ -1796,7 +1810,10 @@ void KNLocalArticle::updateListItem()
 
   if(isSavedRemoteArticle()) {
     i_tem->setPixmap(0, app->icon(KNConfig::Appearance::savedRemote));
-    tmp=n_ewsgroups.asUnicodeString();
+    if (!n_ewsgroups.isEmpty())
+	    tmp=n_ewsgroups.asUnicodeString();
+	  else
+  	  tmp=t_o.asUnicodeString();
   }
   else {
 

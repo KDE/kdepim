@@ -802,7 +802,7 @@ void KNGroup::scoreArticles(bool onlynew)
   kdDebug(5003) << "KNGroup::scoreArticles()" << endl;
   if (onlynew) {
     if (newCount() > 0) {
-      int cnt = newCount();
+      //int cnt = newCount();
       kdDebug(5003) << "scoring " << newCount() << " articles" << endl;
       kdDebug(5003) << "(total " << length() << " article in group)" << endl;
       knGlobals.top->setCursorBusy(true);
@@ -810,13 +810,13 @@ void KNGroup::scoreArticles(bool onlynew)
       KScoringManager *sm = knGlobals.scoreManager;
       sm->initCache(name());
       for(int idx=0; idx<newCount(); idx++) {
-	KNRemoteArticle *a = at(length()-idx-1);
-	ASSERT( a );
-	KNScorableArticle sa(a);
-	sm->applyRules( sa );
-	if (idx % 10 == 0 ) {
-	  kdDebug(5003) << "still " << cnt-idx << " articles to score..." << endl;
-	}
+				KNRemoteArticle *a = at(length()-idx-1);
+				ASSERT( a );
+				KNScorableArticle sa(a);
+				sm->applyRules( sa );
+				/*if (idx % 10 == 0 ) {
+				  kdDebug(5003) << "still " << cnt-idx << " articles to score..." << endl;
+				}*/
       }
       knGlobals.top->setStatusMsg(QString::null);
       knGlobals.top->setCursorBusy(false);

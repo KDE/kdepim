@@ -90,6 +90,36 @@ const QCString& KNFile::readLineWnewLine()
 }
 
 
+int KNFile::findString(const char *s)
+{
+  QCString searchBuffer;
+  searchBuffer.resize(2048);
+  char *buffPtr = searchBuffer.data(), *pos;
+  int readBytes, currentFilePos;
+
+  while (!atEnd()) {
+    currentFilePos = at();
+    readBytes = readBlock(buffPtr, 2047);
+    if (readBytes == -1)
+      return -1;
+    else
+      buffPtr[readBytes] = 0;       // terminate string
+
+    pos = strstr(buffPtr,s);
+    if (pos == 0) {
+      if (!atEnd())
+        at(at()-strlen(s));
+      else
+        return -1;
+    } else {
+      return currentFilePos + (pos-buffPtr);
+    }
+  }
+
+  return -1;
+}
+
+
 bool KNFile::increaseBuffer()
 {
   if(buffer.resize(2*buffer.size())) {;
@@ -186,7 +216,7 @@ KNLoadHelper::~KNLoadHelper()
 }
 
 
-QFile* KNLoadHelper::getFile(QString dialogTitle)
+KNFile* KNLoadHelper::getFile(QString dialogTitle)
 {
   url = KFileDialog::getOpenURL(lastPath,QString::null,p_arent,dialogTitle);
 
@@ -206,7 +236,7 @@ QFile* KNLoadHelper::getFile(QString dialogTitle)
   if (fileName.isEmpty())
     return 0;
 
-  file = new QFile(fileName);
+  file = new KNFile(fileName);
   if(!file->open(IO_ReadOnly)) {
     KNHelper::displayExternalFileError();
     delete file;

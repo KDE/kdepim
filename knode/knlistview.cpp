@@ -277,35 +277,21 @@ void KNListView::contentsMousePressEvent(QMouseEvent *e)
 
   QPoint vp = contentsToViewport( e->pos() );
   QListViewItem * i = itemAt( vp );
-  //QRect ir=itemRect(i);
-  //kdDebug(5003) << "treeStepSize = " << this->treeStepSize() << "  depth = " << i->depth() << endl;
 
   if ( (e->button() == RightButton) && i && (i->isSelected()) ) {
     emit rightButtonPressed( i, viewport()->mapToGlobal(vp), -1 );
 	  return;
 	}
 
-	// select item ?
-  if(!i || !i->isSelected() || selectMode) {
-    QListView::contentsMousePressEvent(e);
-    i=currentItem();
-    if(i && !selectMode && i->isSelected())
-      setActive(i, true);
-  }
-  // open item ?
-  else if(i) {
-    if( vp.x() >= header()->sectionPos(0) &&
-        vp.x() < ((i->depth()+1)*treeStepSize() + header()->sectionPos(0))
-      )
-      QListView::contentsMousePressEvent(e);
-  }
-
+  QListView::contentsMousePressEvent(e);
+  i=currentItem();
+  if(i && !selectMode && i->isSelected())
+    setActive(i, true);
 
   if(i && !selectMode && i->isSelected() && e->button()==LeftButton) {
     d_ragStartPos=e->pos();
     d_ragMousePressed=true;
   }
-
 }
 
 

@@ -421,10 +421,10 @@ class KNLocalArticle : public KNArticle {
     KNHeaders::Base* getHeaderByType(const char *type);
     void setHeader(KNHeaders::Base *h);
     bool removeHeader(const char *type);
-    KNHeaders::Newsgroups* newsgroups(bool create=true)     { if( (!create && n_ewsgroups.isEmpty()) || (!create && !doPost()) )
+    KNHeaders::Newsgroups* newsgroups(bool create=true)     { if(!create && n_ewsgroups.isEmpty())
                                                                 return 0;
                                                               return &n_ewsgroups; }
-    KNHeaders::To* to(bool create=true)                     { if( (!create && t_o.isEmpty()) || (!create && !doMail()) )
+    KNHeaders::To* to(bool create=true)                     { if (!create && t_o.isEmpty())
                                                                 return 0;
                                                               return &t_o; }
 

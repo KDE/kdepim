@@ -164,9 +164,10 @@ class KNodeView : public QSplitter
               *a_ctFolRename,
               *a_ctFolMakeTopLevel,
               *a_ctFolCompact,
-              *a_ctFolEmpty;
+              *a_ctFolEmpty,
+              *a_ctFolMboxImport,
+              *a_ctFolMboxExport;
 
-        
     //header-view - list-handling
     KSelectAction         *a_ctArtSortHeaders;
     KNFilterSelectAction  *a_ctArtFilter;   
@@ -231,6 +232,8 @@ class KNodeView : public QSplitter
     void slotFolMakeTopLevel();
     void slotFolCompact();
     void slotFolEmpty();
+    void slotFolMBoxImport();
+    void slotFolMBoxExport();
 
     void slotArtSortHeaders(int i);
     void slotArtSortHeadersKeyb();

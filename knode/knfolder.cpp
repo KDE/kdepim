@@ -21,6 +21,7 @@
 #include <ksimpleconfig.h>
 #include <kstddirs.h>
 #include <kdebug.h>
+#include <klocale.h>
 
 #include "knaccountmanager.h"
 #include "knarticlemanager.h"
@@ -34,6 +35,7 @@
 #include "knfolder.h"
 #include "knarticlewidget.h"
 #include "knarticlewindow.h"
+#include "knode.h"
 
 
 KNFolder::KNFolder()
@@ -149,14 +151,6 @@ void KNFolder::setParent(KNCollection *p)
 }
 
 
-/*KNLocalArticle* KNFolder::byId(int id)
-{
-  int idx=findId(id);
-  if(idx!=-1) return ( static_cast<KNLocalArticle*>(list[idx]) );
-  else return 0;
-} */
-
-
 bool KNFolder::loadHdrs()
 {
   if(isLoaded()) {
@@ -187,6 +181,9 @@ bool KNFolder::loadHdrs()
   DynData dynamic;
   int pos1=0, pos2=0, cnt=0, byteCount;
 
+  knGlobals.top->setCursorBusy(true);
+	knGlobals.top->setStatusMsg(i18n(" Loading folder..."));
+	knGlobals.top->secureProcessEvents();
 
   while(!i_ndexFile.atEnd()) {
 
@@ -282,6 +279,9 @@ bool KNFolder::loadHdrs()
       delete art;
       clear();
       closeFiles();
+
+      knGlobals.top->setStatusMsg(QString::null);		
+      knGlobals.top->setCursorBusy(false);
       return false;
     }
 
@@ -292,6 +292,9 @@ bool KNFolder::loadHdrs()
   setLastID();
   c_ount=cnt;
   updateListItem();
+
+  knGlobals.top->setStatusMsg(QString::null);		
+  knGlobals.top->setCursorBusy(false);
 
   return true;
 }
@@ -343,7 +346,7 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
     return false;
 
   if(!m_boxFile.open(IO_WriteOnly | IO_Append)) {
-    kdError(5003) << "KNFolder::loadHdrs() : cannot open mbox-file!" << endl;
+    kdError(5003) << "KNFolder::saveArticles() : cannot open mbox-file!" << endl;
     closeFiles();
     return false;
   }
@@ -406,7 +409,7 @@ bool KNFolder::saveArticles(KNLocalArticle::List *l)
 
       //write article
       a->toStream(ts);
-      ts << '\n';
+      ts << "\n";
 
       a->setEndOffset(m_boxFile.at()); //save offset
 
@@ -487,6 +490,10 @@ void KNFolder::deleteAll()
   if(l_ockedArticles>0)
     return;
 
+  knGlobals.top->setCursorBusy(true);
+	knGlobals.top->setStatusMsg(i18n(" Deleting articles..."));
+	knGlobals.top->secureProcessEvents();
+
   KNLocalArticle *a;
   for(int idx=0; idx<length(); idx++) {
     a=at(idx);
@@ -499,6 +506,9 @@ void KNFolder::deleteAll()
   c_ount=0;
   syncIndex(true);
   updateListItem();
+
+  knGlobals.top->setStatusMsg(QString::null);		
+  knGlobals.top->setCursorBusy(false);
 }
 
 
@@ -506,6 +516,10 @@ void KNFolder::killYourself()
 {
   if(l_ockedArticles>0)
     return;
+
+  knGlobals.top->setCursorBusy(true);
+	knGlobals.top->setStatusMsg(i18n(" Deleting folder..."));
+	knGlobals.top->secureProcessEvents();
 
   KNLocalArticle *a;
   for(int idx=0; idx<length(); idx++) {
@@ -520,6 +534,136 @@ void KNFolder::killYourself()
   m_boxFile.remove();
   i_ndexFile.remove();
   QFile::remove(i_nfoPath);
+
+  knGlobals.top->setStatusMsg(QString::null);		
+  knGlobals.top->setCursorBusy(false);
+}
+
+
+void KNFolder::importMBoxFile()
+{
+  KNLoadHelper helper(knGlobals.topWidget);
+  KNFile *file = helper.getFile(i18n("Import MBox Folder"));
+  KNLocalArticle::List list;
+  KNLocalArticle *art;
+  QString s;
+  int artStart=0, artEnd=0;
+  bool done=true;
+
+  if (file) {
+	  knGlobals.top->setCursorBusy(true);
+	  knGlobals.top->setStatusMsg(i18n(" Importing articles..."));
+	  knGlobals.top->secureProcessEvents();
+	
+	  if (!file->atEnd()) {                // search for the first article...
+    	s = file->readLine();
+			if (s.left(5) == "From ") {
+			  artStart = file->at();
+			  done = false;
+			} else {
+			  artStart = file->findString("\nFrom ");
+			  if (artStart != -1) {
+			    file->at(artStart+1);
+			    s = file->readLine();
+			    artStart = file->at();
+			    done = false;
+			  }
+			}
+	  }			
+		
+	  knGlobals.top->secureProcessEvents();
+		
+		if (!done) {
+			while (!file->atEnd()) {
+			  artEnd = file->findString("\nFrom ");
+			
+			  if (artEnd != -1) {	
+			    file->at(artStart);    // seek the first character of the article	
+          int size=artEnd-artStart;
+          QCString buff(size+10);
+          int readBytes=file->readBlock(buff.data(), size);
+
+          if (readBytes != -1) {
+            buff.at(readBytes)='\0'; //terminate string
+            art = new KNLocalArticle(0);
+   				  art->setEditDisabled(true);
+            art->setContent(buff);
+            art->parse();
+            list.append(art);
+  			  }
+  			
+  			  file->at(artEnd+1);
+  			  s = file->readLine();
+  			  artStart = file->at();
+  			} else {
+  			  if ((int)file->size() > artStart) {
+    			  file->at(artStart);    // seek the first character of the article	
+            int size=file->size()-artStart;
+            QCString buff(size+10);
+            int readBytes=file->readBlock(buff.data(), size);
+
+            if (readBytes != -1) {
+              buff.at(readBytes)='\0'; //terminate string
+              art = new KNLocalArticle(0);
+     				  art->setEditDisabled(true);
+              art->setContent(buff);
+              art->parse();	
+              list.append(art);
+    			  }			
+  			  }
+  			}
+  			
+	      if (list.count()%75 == 0)
+      	  knGlobals.top->secureProcessEvents();
+  		}
+		}				
+		
+	  knGlobals.top->setStatusMsg(i18n(" Storing articles..."));		
+	  knGlobals.top->secureProcessEvents();
+		
+		if (!list.isEmpty())
+			if (!saveArticles(&list))
+        KMessageBox::error(knGlobals.topWidget, i18n("Unable to store the imported articles!"));
+
+	  knGlobals.top->setStatusMsg(QString::null);		
+    knGlobals.top->setCursorBusy(false);
+  }
+}
+
+
+void KNFolder::exportMBoxFile()
+{
+  if(!loadHdrs())
+    return;
+
+  KNSaveHelper helper(name()+".mbox", knGlobals.topWidget);
+  QFile *file = helper.getFile(i18n("Export Folder"));
+
+  if (file) {
+	  knGlobals.top->setCursorBusy(true);
+	  knGlobals.top->setStatusMsg(i18n(" Exporting articles..."));
+	  knGlobals.top->secureProcessEvents();
+
+    QTextStream ts(file);
+    ts.setEncoding(QTextStream::Latin1);
+    KNLocalArticle *a;
+
+    for(int idx=0; idx<length(); idx++) {
+      a=at(idx);
+      if (!a->hasContent())
+        loadArticle(a);
+
+      ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";
+      a->toStream(ts);
+      ts << "\n";
+
+      if (idx%75 == 0)
+    	  knGlobals.top->secureProcessEvents();
+    }
+ 	
+ 	  knGlobals.top->setStatusMsg(QString::null);		
+    knGlobals.top->setCursorBusy(false);
+  }
 }
 
 

@@ -104,10 +104,10 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     //article handling
     void setAllRead(bool r=true);
     void setRead(KNRemoteArticle::List &l, bool r=true, bool handleXPosts=true);
+
     void toggleWatched(KNRemoteArticle::List &l);
     void toggleIgnored(KNRemoteArticle::List &l);
     void setScore(KNRemoteArticle::List &l, int score=-1);
-
 
 
   protected:  

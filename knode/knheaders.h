@@ -341,9 +341,9 @@ class Organization : public Base {
 class Date : public Base {
 
   public:
-    Date() : Base()  {}
-    Date(KNMimeContent *p) : Base(p)  { t_ime=0; }
-    Date(KNMimeContent *p, time_t t) : Base(p)  { t_ime=t; }
+    Date() : Base(), t_ime(0)  {}
+    Date(KNMimeContent *p) : Base(p), t_ime(0)  {}
+    Date(KNMimeContent *p, time_t t) : Base(p), t_ime(t)  {}
     Date(KNMimeContent *p, const QCString &s) : Base(p)  { from7BitString(s); }
     Date(KNMimeContent *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
     ~Date()  {}

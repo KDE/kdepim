@@ -524,11 +524,13 @@ QCString KNHeaders::To::as7BitString(bool incType)
   if(incType)
     ret+=typeIntro();
 
-  AddressField *it=a_ddrList->first();
-  if (it)
-    ret+=it->as7BitString(false);
-  for (it=a_ddrList->next() ; it != 0; it=a_ddrList->next() )
-    ret+=","+it->as7BitString(false);
+  if (a_ddrList) {
+	  AddressField *it=a_ddrList->first();
+	  if (it)
+	    ret+=it->as7BitString(false);
+	  for (it=a_ddrList->next() ; it != 0; it=a_ddrList->next() )
+	    ret+=","+it->as7BitString(false);
+	}
 
   return ret;
 }
