@@ -119,7 +119,7 @@ private:
  */
 
 /**
- * \fn ITEM* ListViewIterator::operator*()
+ * \fn ITEM* ListViewIterator::operator*() const
  * \brief Return the item at the current iterator position.
  */
 

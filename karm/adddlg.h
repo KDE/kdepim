@@ -29,6 +29,10 @@ class QLineEdit;
 class KTimeWidget;
 class QRadioButton;
 
+/**
+ * Dialog to add a new task or edit an existing task.
+ */
+
 class AddTaskDialog : public KDialogBase
 {
   Q_OBJECT

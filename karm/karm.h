@@ -18,6 +18,10 @@ class QTimer;
 class Preferences;
 class Task;
 
+/**
+ * Container and interface for the tasks.
+ */
+
 class Karm : public QListView
 {
     Q_OBJECT

@@ -15,8 +15,8 @@ class QTimer;
 class Loging;
 
 /**
-	Encapsulates a task.
-*/
+ * Store information about each task.
+ */
 
 class Task :public QObject, public QListViewItem
 {

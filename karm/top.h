@@ -14,6 +14,10 @@ class KAccelMenuWatch;
 class Preferences;
 class KarmTray;
 
+/**
+ * Main window to tie the application together.
+ */
+
 class KarmWindow : public KMainWindow
 {
   Q_OBJECT
