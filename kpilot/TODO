@@ -35,7 +35,7 @@ Important (hight priority)
     addresses to and from the handheld. (Bug #56364)
 7)  Check the first-time syncing behavior of all the conduits.
 8)  Find out what's the reason of the "Invalid unique ID" crashes in
-    the calendar conduits (and the addresssbook conduit)
+    the calendar conduits (and the addresssbook conduit) (bug #51216)
 12) ABook conduit: Check all fields for differences before asking
     for conflict resolution. (i.e. don't ask for conflict resolution
     of single fields, just for the whole record) (bug #59222)
