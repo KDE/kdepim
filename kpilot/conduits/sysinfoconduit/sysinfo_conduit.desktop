@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=System Information
+Name[be]=Сынхранізацыя часу
+Name[da]=Tidsynkronisering
+Name[es]=Sincronización de hora
+Name[sv]=Tidssynkronisering
+Implemented=file
+ServiceTypes=KPilotConduit
+X-KDE-Library=libsysinfoconduit

@@ -1,0 +1,76 @@
+KPilot System Information Page
+==============================
+
+<!--#ifhardware#
+-) Hardware Information
+     DeviceID:      #deviceid#
+     Device name:   #devicename#
+     Device model:  #devicemodel#
+     Manufacturer:  #manufacturer#
+     Connected via: #devicetype#
+#endifhardware#-->
+
+<!--#ifuser#
+-) User Information
+     Handheld User Name: #username#
+     Handheld Password:  #pw#
+     Handheld User ID:   #uid#
+     Viewer ID:          #viewerid#
+#endifuser#-->
+
+<!--#ifmemory#
+-) Memory Information
+     ROM:       #rom# kB total
+     Total RAM: #totalmem# kB total
+     Free RAM:  #freemem# kB fre
+#endifmemory#-->
+
+<!--#ifstorage#
+-) Storage Information
+     Number of cards: #cards#
+     Memory on cards: #storagemem#
+#endifstorage#-->
+
+<!--#ifdblist#
+-) List of Databases on Handheld
+     Available Databases: #dblist[%1,]#
+#endifdblist#-->
+
+<!--#ifrecords#
+-) Number of addresses, todos, events, and memos
+     Addresses: #addresses# entries in Addressbook
+     Events:    #events# entries in Calendar
+     Todos:     #todos# entries in ToDo list
+     Memos:     #memos# memos
+#endifrecords#-->
+
+<!--#ifsync#
+-) Synchronization Information
+     Last sync attempt:      #lastsync#
+     Last successfull sync:  #lastsuccsync#
+     Last sync with PC (ID): #lastsyncpc#
+#endifsync#-->
+
+<!--#ifpcversion#
+-) Version Information (Desktop)
+     Operating System:   #os#
+     Hostname:           #hostname##
+     Qt Version:         #qt#
+     KDE Version:        #kde#
+     KPilot Version:     #kpilot#
+     Pilot-Link Version: #pilotlink#
+#endifpcversion#-->
+
+<!--#ifpalmversion#
+-) Version Information (Handheld)
+     PalmOS: #palmos#
+#endifpalmversion#-->
+
+<!--#ifdebug#
+-) Debug Information
+     #debug#
+#endifdebug#-->
+
+
+------------------------------------------------------------
+Page created <!--#date#--> by the SysInfo conduit of KPilot.
