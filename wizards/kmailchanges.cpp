@@ -78,6 +78,15 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
       c.writeEntry( "port", "993" );
       c.writeEntry( "use-ssl", true );
 
+      c.writeEntry( "sieve-support", "true" );
+
+      QString user = KolabConfig::self()->user();
+      int pos = user.find( "@" );
+      if ( pos > 0 ) user = user.left( pos );
+
+      QString email = user+"@"+KolabConfig::self()->server();
+      user = email; // with kolab the userid _is_ the full email
+
       c.setGroup( QString("Folder-%1").arg( uid ) );
       c.writeEntry( "isOpen", true );
 
@@ -87,12 +96,11 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
       c.writeEntry( "type", "smtp" );
       c.writeEntry( "port", "465" );
       c.writeEntry( "encryption", "SSL" );
-
-      QString user = KolabConfig::self()->user();
-      int pos = user.find( "@" );
-      if ( pos > 0 ) user = user.left( pos );
-
-      QString email = user+"@"+KolabConfig::self()->server();
+      c.writeEntry( "auth", true );
+      c.writeEntry( "authtype", "PLAIN" );
+      c.writeEntry( "user", email );
+      c.writeEntry( "pass", encryptStr(KolabConfig::self()->password()) );
+      c.writeEntry( "storepass", "true" );
 
       // Write email in "default kcontrol settings", used by IdentityManager
       // if it has to create a default identity.
@@ -107,8 +115,6 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
         identity.setFullName( KolabConfig::self()->realName() );
         identity.setEmailAddr( email );
         identityManager.commit();
-      } else {
-        kdDebug() << "Identity with " << email << " exists already" << endl;
       }
 
       // This needs to be done here, since it reference just just generated id
@@ -147,6 +153,13 @@ void createKMailChanges( KConfigPropagator::Change::List& changes )
   c->group = "Groupware";
   c->name = "LegacyMangleFromToHeaders";
   c->value = "false";
+  changes.append( c );
+
+  c = new KConfigPropagator::ChangeConfig;
+  c->file = "kmailrc";
+  c->group = "Groupware";
+  c->name = "LegacyBodyInvites";
+  c->value = "true";
   changes.append( c );
 
   c = new KConfigPropagator::ChangeConfig;
