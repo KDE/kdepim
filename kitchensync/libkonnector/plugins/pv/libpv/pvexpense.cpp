@@ -28,6 +28,7 @@
    */
 CasioPV::PVExpense::PVExpense(unsigned int uid) {
   m_uid = uid;
+  m_state = UNDEFINED;
   m_data[EX_DATE] = "";
   m_data[EX_PAYMENT_TYPE] = "";
   m_data[EX_AMOUNT] = "";
@@ -50,12 +51,39 @@ unsigned int CasioPV::PVExpense::getModeCode() const{
 }
 
 /**
+   * Setter for the uid.
+   * @param uid The uid of the data entry.
+   */
+void CasioPV::PVExpense::setUid(unsigned int uid)
+{
+  m_uid = uid;
+}
+
+/**
    * Getter for the uid.
    * @return The uid of the data entry.
    */
 unsigned int CasioPV::PVExpense::getUid() const
 {
   return m_uid;
+}
+
+/**
+   * Setter for the state of an entry.
+   * @param state The state of the entry
+   */
+void CasioPV::PVExpense::setState(unsigned int state)
+{
+  m_state = state;
+}
+   
+/**
+   * Getter for the state of an entry.
+   * @return The state of the entry
+   */
+unsigned int CasioPV::PVExpense::getState()
+{
+  return m_state;
 }
 
 /**
@@ -214,7 +242,8 @@ std::ostream& CasioPV::operator<< (std::ostream& out, CasioPV::PVExpense expense
 string CasioPV::PVExpense::toXML()
 {
   std::stringstream oss;
-  oss << "<expense uid='" << getUid() << "'>" << endl
+  oss << "<expense uid='" << getUid()
+                           << "' state='" << getState() << "'>" << endl
        << "<date>" << getDate() << "</date>" << endl
        << "<amount>" << getAmount() << "</amount>" << endl
        << "<expensetype>" << getExpenseType() << "</expensetype>" << endl

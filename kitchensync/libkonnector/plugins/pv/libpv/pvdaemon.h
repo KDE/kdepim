@@ -44,7 +44,7 @@ namespace CasioPV {
 
       void getAllEntries(const QStringList& categories);
 
-      void setChanges(const QByteArray& array);
+      void setChanges(const QString& optionalCode, const QByteArray& array);
 
       void setAllEntries(const QByteArray& array);
 
@@ -53,8 +53,11 @@ namespace CasioPV {
     private:
       unsigned int getCategory(const QString& strCategory);
       PVDataEntry* ClearEntry(unsigned int category, unsigned int uid);
-      QByteArray getEntries(unsigned int category);
+      QString getAllEntriesFromPV(unsigned int category);
+      QString getChangesFromPV(unsigned int category);
       void writeEntries(QDomNode& n);
+      
+      void sendException(const QString& msg, const unsigned int number, const bool disconnect = true);
 
       QMap<QString, unsigned int> m_mapCategories;
 

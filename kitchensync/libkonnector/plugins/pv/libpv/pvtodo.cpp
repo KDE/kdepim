@@ -23,11 +23,14 @@
 #include "utils.h"
 
 
+#include <kdebug.h>
+
 /**
    * Constructor.
    */
 CasioPV::PVTodo::PVTodo(unsigned int uid) {
   m_uid = uid;
+  m_state = UNDEFINED;
   m_data[CHECK] = "";
   m_data[DUE_DATE] = "";
   m_data[ALARM_DATE] = "";
@@ -53,12 +56,39 @@ unsigned int   CasioPV::PVTodo::getModeCode() const{
 }
 
 /**
+   * Setter for the uid.
+   * @param uid The uid of the data entry.
+   */
+void CasioPV::PVTodo::setUid(unsigned int uid)
+{
+  m_uid = uid;
+}
+
+/**
    * Getter for the uid.
    * @return The uid of the data entry.
    */
 unsigned int CasioPV::PVTodo::getUid() const
 {
   return m_uid;
+}
+
+/**
+   * Setter for the state of an entry.
+   * @param state The state of the entry
+   */
+void CasioPV::PVTodo::setState(unsigned int state)
+{
+  m_state = state;
+}
+   
+/**
+   * Getter for the state of an entry.
+   * @return The state of the entry
+   */
+unsigned int CasioPV::PVTodo::getState()
+{
+  return m_state;
 }
 
 /**
@@ -77,12 +107,12 @@ string CasioPV::PVTodo::getCheck()
 
 string CasioPV::PVTodo::getDueDate()
 {
-  return m_data[DUE_DATE];
+  return Utils::ChangeDateToUnix(m_data[DUE_DATE]);
 }
 
 string CasioPV::PVTodo::getAlarmDate()
 {
-  return m_data[ALARM_DATE];
+  return Utils::ChangeDateToUnix(m_data[ALARM_DATE]);
 }
 
 string CasioPV::PVTodo::getAlarmTime()
@@ -92,7 +122,7 @@ string CasioPV::PVTodo::getAlarmTime()
 
 string CasioPV::PVTodo::getCheckDate()
 {
-  return m_data[CHECK_DATE];
+  return Utils::ChangeDateToUnix(m_data[CHECK_DATE]);
 }
 
 string CasioPV::PVTodo::getPriority()
@@ -113,7 +143,7 @@ string CasioPV::PVTodo::getDescription()
 
 void CasioPV::PVTodo::setCheck( string& value )
 {
-  if ( value != "0" || value != "1" ) throw PVDataEntryException( "PVTodo::setCheck : string not 0 or 1", 4005 );
+  if ( value != "0" && value != "1" ) throw PVDataEntryException( "PVTodo::setCheck : string not 0 or 1 ", 4005 );
   m_data[CHECK] = value;
 }
 
@@ -123,7 +153,7 @@ void CasioPV::PVTodo::setDueDate( string& value )
   {
     throw PVDataEntryException( "PVTodo::setDueDate : string not in yyyymmdd format", 4004 );
   }
-  m_data[DUE_DATE] = value;
+  m_data[DUE_DATE] = Utils::ChangeDateToPV(value);
 }
 
 void CasioPV::PVTodo::setAlarmDate( string& value )
@@ -132,7 +162,8 @@ void CasioPV::PVTodo::setAlarmDate( string& value )
   {
     throw PVDataEntryException("PVTodo::setAlarmDate : string not in yyyymmdd format", 4004 );
   }
-  m_data[ALARM_DATE] = value;
+  
+  m_data[ALARM_DATE] = Utils::ChangeDateToPV(value);
 }
 
 void CasioPV::PVTodo::setAlarmTime( string& value )
@@ -142,7 +173,11 @@ void CasioPV::PVTodo::setAlarmTime( string& value )
 
 void CasioPV::PVTodo::setCheckDate( string& value )
 {
-  m_data[CHECK_DATE] = value;
+  if (!Utils::checkDate(value))
+  {
+    throw PVDataEntryException("PVTodo::setAlarmDate : string not in yyyymmdd format", 4004 );
+  }
+  m_data[CHECK_DATE] = Utils::ChangeDateToPV(value);
 }
 
 void CasioPV::PVTodo::setPriority( string& value )
@@ -158,7 +193,7 @@ void CasioPV::PVTodo::setCategory( string& value )
 void CasioPV::PVTodo::setDescription( string& value )
 {
   if ( value.length() > 2046 ) throw PVDataEntryException( "PVTodo::setDescription : string longer than 2046 characters", 4002 );
-  m_data[DESCRIPTION] = Utils::ChangeReturnCodeToPV( value );
+  m_data[DESCRIPTION] = Utils::ChangeReturnCodeToPV(value);
 }
 
 
@@ -227,7 +262,8 @@ std::ostream& CasioPV::operator<< (std::ostream& out, CasioPV::PVTodo& todo)
 string CasioPV::PVTodo::toXML()
 {
   std::stringstream oss;
-  oss << "<todo uid='" << getUid() << "'>" << endl
+  oss << "<todo uid='" << getUid()
+                        << "' state='" << getState() << "'>" << endl  
        << "<alarmdate>" << getAlarmDate() << "</alarmdate>" << endl
        << "<alarmtime>" << getAlarmTime() << "</alarmtime>" << endl
        << "<category>" << getCategory() << "</category>" << endl
@@ -249,18 +285,31 @@ void CasioPV::PVTodo::fromXML(string strXML)
   vector<string> vecElem;
   vecElem = Utils::getElements(strXML);
   unsigned int size = vecElem.size();
-  if (size != 7)
+  if (size != 8)
   {
     throw PVDataEntryException("PVTodo::fromXML : invalid XML format", 4006);
   }
   else
   {
-    setAlarmDate(vecElem[0]);
-    setAlarmTime(vecElem[1]);
+    if (vecElem[0] != "")
+    {
+      setAlarmDate(vecElem[0]);
+    }
+    if (vecElem[1] != "")
+    {
+      setAlarmTime(vecElem[1]);
+    }
     setCategory(vecElem[2]);
     setCheck(vecElem[3]);
-    setCheckDate(vecElem[4]);
-    setPriority(vecElem[5]);
-    setDescription(vecElem[6]);
+    if (vecElem[4] != "")
+    {
+      setCheckDate(vecElem[4]);
+    }
+    if (vecElem[5] != "")
+    {
+      setDueDate(vecElem[5]);
+    }
+    setPriority(vecElem[6]);
+    setDescription(vecElem[7]);
   }
 }

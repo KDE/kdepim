@@ -19,7 +19,6 @@
 #define event_h
 
 #include <qdom.h>
-#include <qbuffer.h>
 
 #include <libkcal/event.h>
 #include <eventsyncee.h>
@@ -31,7 +30,7 @@ namespace PVHelper
     public:
       static KSync::EventSyncee* toEventSyncee(QDomNode& n);
 
-      static QByteArray toXML(KSync::EventSyncee* syncee);
+      static QString toXML(KSync::EventSyncee* syncee);
   };
 }
 

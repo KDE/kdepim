@@ -20,12 +20,11 @@
 #include <qdir.h>
 
 #include <kdebug.h>
-
-#include <kabc/resourcefile.h>
-#include <kabc/phonenumber.h>
-#include <kabc/address.h>
+#include <kapp.h>
 
 #include <idhelper.h>
+
+#include "libpv/pvdataentry.h"
 
 #include "addressbook.h"
 
@@ -36,20 +35,19 @@ AddressBookSyncee* AddressBook::toAddressBookSyncee(QDomNode& n)
 {
   kdDebug() << "Begin::AddressBook::toAddressBookSyncee" << endl;
   AddressBookSyncee *syncee = new AddressBookSyncee();
-  KonnectorUIDHelper helper(QDir::homeDirPath() + "/.kitchensync/meta/" + "55");
+  KonnectorUIDHelper helper(QDir::homeDirPath() + "/.kitchensync/meta/idhelper");
+  
+  QString id;
 
   while(!n.isNull())
   {
     QDomElement e = n.toElement();
     if( e.tagName() == QString::fromLatin1("contact"))
     {
-      kdDebug() << "contact found!" << endl;
       // convert XML contact to addressee
       KABC::Addressee adr;
-//      kdDebug() << "addressee uid: " << adr.uid() << endl;
-//      helper.addId("AddressBookSyncEntry", e.attribute("uid"), adr.uid());
-      adr.setUid(helper.kdeId("AddressBookSyncEntry", "Konnector-" + e.attribute("uid"), "Konnector-" + e.attribute("uid")));
-//      kdDebug() << "addressee uid after kdeId: " << adr.uid() << endl;
+
+      helper.addId(e.attribute("category"), e.attribute("uid"), adr.uid());
       adr.insertCategory(e.attribute("category"));
       // Get subentries
       QDomNode n = e.firstChild();
@@ -58,69 +56,82 @@ AddressBookSyncee* AddressBook::toAddressBookSyncee(QDomNode& n)
       while(!n.isNull()) // get all sub entries of element contact
       {
         QDomElement el = n.toElement();
-        if (el.tagName() == QString::fromLatin1("name"))
+        if ((el.tagName() == QString::fromLatin1("name")) ||
+             (el.tagName() == QString::fromLatin1("field1")))        
         {
           adr.setFamilyName(el.text());
         }
-        else if (el.tagName() == QString::fromLatin1("homenumber"))
+        else if ((el.tagName() == QString::fromLatin1("homenumber")) ||
+                  (el.tagName() == QString::fromLatin1("field2")))
         {
           KABC::PhoneNumber homePhoneNum( el.text(),
               KABC::PhoneNumber::Home );
           adr.insertPhoneNumber(homePhoneNum );
         }
-        else if (el.tagName() == QString::fromLatin1("businessnumber"))
+        else if ((el.tagName() == QString::fromLatin1("businessnumber")) ||
+                  (el.tagName() == QString::fromLatin1("field3")))
         {
           KABC::PhoneNumber businessPhoneNum(el.text(),
               KABC::PhoneNumber::Work);
           adr.insertPhoneNumber( businessPhoneNum );
         }
-        else if (el.tagName() == QString::fromLatin1("faxnumber"))
+        else if ((el.tagName() == QString::fromLatin1("faxnumber")) ||
+                  (el.tagName() == QString::fromLatin1("field4")))        
         {
           KABC::PhoneNumber homeFax (el.text(),
               KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
           adr.insertPhoneNumber(homeFax );
         }
-        else if (el.tagName() == QString::fromLatin1("businessfax"))
+        else if ((el.tagName() == QString::fromLatin1("businessfax")) ||
+                  (el.tagName() == QString::fromLatin1("field5")))        
         {
           KABC::PhoneNumber businessFaxNum ( el.text(),
                KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax);
           adr.insertPhoneNumber( businessFaxNum );
         }
-        else if (el.tagName() == QString::fromLatin1("mobile"))
+        else if ((el.tagName() == QString::fromLatin1("mobile")) ||
+                  (el.tagName() == QString::fromLatin1("field6")))        
         {
           KABC::PhoneNumber businessMobile ( el.text(),
               KABC::PhoneNumber::Work | KABC::PhoneNumber::Cell );
           adr.insertPhoneNumber( businessMobile);
         }
-        else if (el.tagName() == QString::fromLatin1("address"))
+        else if ((el.tagName() == QString::fromLatin1("address")) ||
+                  (el.tagName() == QString::fromLatin1("field7")))
         {
-          KABC::Address home( KABC::Address::Home );
-          home.setStreet(el.text());
+          KABC::Address home ( KABC::Address::Home );
+          home = strToAddress(el.text(), KABC::Address::Home);
           adr.insertAddress(home);
         }
-        else if (el.tagName() == QString::fromLatin1("email"))
+        else if ((el.tagName() == QString::fromLatin1("email")) ||
+                  (el.tagName() == QString::fromLatin1("field8")))        
         {
           adr.insertEmail(el.text(), true); // preferred
         }
-        else if (el.tagName() == QString::fromLatin1("employer"))
+        else if ((el.tagName() == QString::fromLatin1("employer")) ||
+                  (el.tagName() == QString::fromLatin1("field9")))        
         {
           adr.setOrganization(el.text());
         }
-        else if (el.tagName() == QString::fromLatin1("businessaddress"))
+        else if ((el.tagName() == QString::fromLatin1("businessaddress")) ||
+                  (el.tagName() == QString::fromLatin1("field10")))
         {
           KABC::Address business( KABC::Address::Work );
-          business.setStreet(el.text());
+          business = strToAddress(el.text(), KABC::Address::Work);
           adr.insertAddress( business );
         }
-        else if (el.tagName() == QString::fromLatin1("department"))
+        else if ((el.tagName() == QString::fromLatin1("department")) ||
+                  (el.tagName() == QString::fromLatin1("field11")))
         {
-          adr.setOrganization(el.text());
+          adr.insertCustom("PV", "Department", el.text());        
         }
-        else if (el.tagName() == QString::fromLatin1("position"))
+        else if ((el.tagName() == QString::fromLatin1("position")) ||
+                  (el.tagName() == QString::fromLatin1("field12")))
         {
           adr.setRole(el.text());
         }
-        else if (el.tagName() == QString::fromLatin1("note"))
+        else if ((el.tagName() == QString::fromLatin1("note")) ||
+                  (el.tagName() == QString::fromLatin1("field13")))
         {
           adr.setNote(el.text());
         }
@@ -128,7 +139,26 @@ AddressBookSyncee* AddressBook::toAddressBookSyncee(QDomNode& n)
       }  // end of while
       adr.setRevision( QDateTime::currentDateTime() );
       KSync::AddressBookSyncEntry* entry = new KSync::AddressBookSyncEntry( adr );
-      syncee->addEntry(entry);  // add entry to syncee
+      // add entry to syncee
+      syncee->addEntry(entry);
+      // Check state and set it in syncee
+      switch (e.attribute("state").toUInt())
+      {
+        case CasioPV::PVDataEntry::UNDEFINED:
+          entry->setState(KSync::SyncEntry::Undefined);
+          break;
+        case CasioPV::PVDataEntry::ADDED:
+          entry->setState(KSync::SyncEntry::Added);
+          break;
+        case CasioPV::PVDataEntry::MODIFIED:
+          entry->setState(KSync::SyncEntry::Modified);
+          break;
+        case CasioPV::PVDataEntry::REMOVED:
+          entry->setState(KSync::SyncEntry::Removed);
+          break;
+        default:
+          break;
+      }
     }  // end of if contact
     else
     {
@@ -141,100 +171,190 @@ AddressBookSyncee* AddressBook::toAddressBookSyncee(QDomNode& n)
   return syncee;
 }
 
-QByteArray AddressBook::toXML(AddressBookSyncee* syncee)
+QString AddressBook::toXML(AddressBookSyncee* syncee)
 {
-  KonnectorUIDHelper helper(QDir::homeDirPath() + "/.kitchensync/meta/" + "55");
+  KonnectorUIDHelper helper(QDir::homeDirPath() + "/.kitchensync/meta/idhelper");
+  
+  QStringList categories;
+ 
+  QString str;
 
-  QByteArray array;
-  QBuffer buffer(array);
-  QTextStream stream( &buffer );
-  if (buffer.open( IO_WriteOnly))
+  str.append("<contacts>\n");
+  // for all entries
+  KABC::Addressee ab;
+  KSync::AddressBookSyncEntry *entry;
+    
+  for (entry = syncee->firstEntry(); entry != 0l; entry = syncee->nextEntry())
   {
-    stream.setEncoding( QTextStream::UnicodeUTF8 );
-    stream << "<contacts>" << endl;
-// for all entries
-    KABC::Addressee ab;
-    KSync::AddressBookSyncEntry *entry;
     QString state;
-    for (entry = syncee->firstEntry(); entry != 0l; entry = syncee->nextEntry())
+    QString id;
+    // Get addresse from entry
+    ab = entry->addressee();
+
+    categories = ab.categories(); // xxx only one category supported yet!
+      
+    // Check if id is new
+    id =  helper.konnectorId(categories[0],  ab.uid());
+    if (id.isEmpty())
     {
-      kdDebug() << "Cycle entries" << endl;
-      switch (entry->state())
-      {
-        case KSync::SyncEntry::Removed:
-          state = "removed";
-          kdDebug() << "Entry was removed" << endl;
-          break;
-        case KSync::SyncEntry::Modified:
-          state = "modified";
-          kdDebug() << "Entry was modified" << endl;
-          break;
-        case KSync::SyncEntry::Added:
-          state = "added";
-          kdDebug() << "Entry was added" << endl;
-          break;
-        case KSync::SyncEntry::Undefined:
-          state = "undefined";
-          kdDebug() << "Entry undefined" << endl;
-          // xxx wieso sind alle undefined?? continue;
-          break;
-      }
-      ab = entry->addressee();
+      // New entry -> set state = added
+      state = "added";
+    }
+    else
+    {
+      state = "undefined";
+    }
+      
+    // Convert to XML string
+    str.append("<contact uid='" + id + "' category='" + categories[0] + "'");
+    str.append(" state='" + state + "'>\n");
 
-      QStringList categories = ab.categories(); // xxx only one category supported yet!
-      // Check if new entry (not in uid map)
-      QString konnectorId = helper.konnectorId("AddressBookSyncEntry", ab.uid(), "newId");
-      if (konnectorId == "newId")
-      {
-        state = "added";
-      }
-      stream << "<contact uid='" << helper.konnectorId("AddressBookSyncEntry", ab.uid())
-              << "' category='" << categories[0] << "' state='" << state << "'>" << endl;
-
-      stream << "<name>" << ab.familyName() << "</name>" << endl;
+    if ((categories[0] == "Contact Business") || (categories[0] == "Contact Private"))
+    {
+      str.append("<name>" + ab.familyName() + "</name>\n");
 
       KABC::PhoneNumber homePhoneNum = ab.phoneNumber(KABC::PhoneNumber::Home );
-      stream << "<homenumber>" << homePhoneNum.number() << "</homenumber>" << endl;
+      str.append("<homenumber>" + homePhoneNum.number() + "</homenumber>\n");
 
       KABC::PhoneNumber businessPhoneNum = ab.phoneNumber(KABC::PhoneNumber::Work );
-      stream << "<businessnumber>" << businessPhoneNum.number() << "</businessnumber>" << endl;
+      str.append("<businessnumber>" + businessPhoneNum.number() + "</businessnumber>\n");
 
       KABC::PhoneNumber homeFax = ab.phoneNumber( KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
-      stream << "<faxnumber>" << homeFax.number() << "</faxnumber>" << endl;
+      str.append("<faxnumber>" + homeFax.number() + "</faxnumber>\n");
 
       KABC::PhoneNumber businessFaxNum = ab.phoneNumber(KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax );
-      stream << "<businessfax>" << businessFaxNum.number() << "</businessfax>" << endl;
+      str.append("<businessfax>" + businessFaxNum.number() + "</businessfax>\n");
 
       KABC::PhoneNumber businessMobile = ab.phoneNumber(KABC::PhoneNumber::Work | KABC::PhoneNumber::Cell );
-      stream << "<mobile>" << businessMobile.number() << "</mobile>" << endl;
+      str.append("<mobile>" + businessMobile.number() + "</mobile>\n");
 
       KABC::Address home = ab.address( KABC::Address::Home );
-      stream << "<address>" << home.street() << "</address>" << endl;
+      str.append("<address>" + addressToStr(home) + "</address>\n");
 
       QStringList list = ab.emails();
       if ( list.count() > 0 )
       {
-        stream << "<email>" << list[0] << "</email>" << endl;
+        QString email = list[0];
+        str.append("<email>" + email + "</email>\n");
       }
       else
       {
-        stream << "<email></email>" << endl;
+        str.append("<email></email>\n");
+      }
+      str.append("<employer>" + ab.organization() + "</employer>\n");
+       
+      KABC::Address business = ab.address(KABC::Address::Work);
+      str.append("<businessaddress>" + addressToStr(business) + "</businessaddress>\n");
+
+      if (!ab.custom("PV", "Department").isEmpty())
+      {
+        str.append("<department>" + ab.custom("PV", "Department") + "</department>\n");
+      }
+      else
+      {
+        str.append("<department></department>\n");      
+      }
+      str.append("<position>" + ab.role() + "</position>\n");
+      str.append("<note>" + ab.note() + "</note>\n");
+      str.append("</contact>\n");
+    } // if
+    else
+    {
+      str.append("<field1>" + ab.familyName() + "</field1>\n");
+      KABC::PhoneNumber homePhoneNum = ab.phoneNumber(KABC::PhoneNumber::Home );
+      str.append("<field2>" + homePhoneNum.number() + "</field2>\n");
+
+      KABC::PhoneNumber businessPhoneNum = ab.phoneNumber(KABC::PhoneNumber::Work );
+      str.append("<field3>" + businessPhoneNum.number() + "</field3>\n");
+
+      KABC::PhoneNumber homeFax = ab.phoneNumber( KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
+      str.append("<field4>" + homeFax.number() + "</field4>\n");
+
+      KABC::PhoneNumber businessFaxNum = ab.phoneNumber(KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax );
+      str.append("<field5>" + businessFaxNum.number() + "</field5>\n");
+
+      KABC::PhoneNumber businessMobile = ab.phoneNumber(KABC::PhoneNumber::Work | KABC::PhoneNumber::Cell );
+      str.append("<field6>" + businessMobile.number() + "</field6>\n");
+
+      KABC::Address home = ab.address( KABC::Address::Home );
+      str.append("<field7>" + addressToStr(home) + "</field7>\n");
+
+      QStringList list = ab.emails();
+      if ( list.count() > 0 )
+      {
+        QString email = list[0];      
+        str.append("<field8>" + email + "</field8>\n");
+      }
+      else
+      {
+        str.append("<field8></field8>\n");
       }
 
-      stream << "<employer>" << ab.organization() << "</employer>" << endl;
+      str.append("<field9>" + ab.organization() + "</field9>\n");
 
       KABC::Address business = ab.address(KABC::Address::Work  );
-      stream << "<businessaddress>" << business.street() << "</businessaddress>" << endl;
+      str.append("<field10>" + addressToStr(business) + "</field10>\n");
 
-      stream << "<department>" << ab.organization() << "</department>" << endl
-             << "<position>" << ab.role() << "</position>" << endl
-             << "<note>" << ab.note() << "</note>" << endl
-            << "</contact>" << endl;
-    } // end for
-    stream << "</contacts>" << endl;
-    // now replace the UIDs for us -> xxx for what??
-//    m_helper->replaceIds( "AddressBookSyncEntry",  m_kde2opie ); // to keep the use small
+      if (!ab.custom("PV", "Department").isEmpty())
+      {
+        str.append("<field11>" + ab.custom("PV", "Department") + "</field11>\n");
+      }
+      else
+      {
+        str.append("<field11></field11>\n");
+      }
+      str.append("<field12>" + ab.role() + "</field12>\n");
+      str.append("<field13>" + ab.note() + "</field13>\n");
+      str.append("</contact>\n");
+    } // end else
+  } // end for
+  str.append("</contacts>\n");
+  return str;
+}
 
-  }  // end if (buffer.open( IO_WriteOnly))
-  return array;
+KABC::Address AddressBook::strToAddress(const QString& strAddr, KABC::Address::Type type)
+{
+  KABC::Address addr(type);
+  
+  int posline = 0, pos = 0; 
+  posline = strAddr.find("\n");
+  
+  if (posline)
+  {
+    // found street
+    addr.setStreet(strAddr.left(posline));
+    // searching for postal code and city
+    pos = strAddr.find(" ", posline);
+    if (pos)
+    {
+      // found postal code and city
+      addr.setPostalCode(strAddr.mid(posline + 1, pos - posline - 1));
+      addr.setLocality(strAddr.right(strAddr.length() - pos - 1));      
+    }   
+  }
+  else
+  {
+    // set the whole address in the street field
+    addr.setStreet(strAddr);
+  }
+  return addr;
+}
+
+QString AddressBook::addressToStr(const KABC::Address& addr)
+{
+  QString strAddr;
+            
+  if (!addr.street().isEmpty())
+  {
+    strAddr.append(addr.street() + "\n");
+  }
+  if (!addr.postalCode().isEmpty())
+  {
+    strAddr.append(addr.postalCode());
+  }
+  if (!addr.locality().isEmpty())
+  {
+    strAddr.append(addr.locality());
+  }
+  return strAddr;
 }

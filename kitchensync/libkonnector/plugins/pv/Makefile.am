@@ -20,13 +20,13 @@ SUBDIRS = libpv
 
 lib_LTLIBRARIES = libpvkonnector.la
 
-INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/libkcal -Ilibpv $(all_includes)
+INCLUDES = -I$(top_srcdir)/ -I$(top_srcdir)/kitchensync/lib -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/libkcal $(all_includes) -Ilibpv
 
 libpvkonnector_la_INCLUDES = -I$(top_srcdir)/kitchensync/libkonnector -I$(top_srcdir)/kitchensync/lib -I../../   $(all_includes)
 libpvkonnector_la_LIBDADD = ../../libkonnector.la ../../../libksync.la
 # libpvkonnector_la_LIBADD = libpv/libpv.la
 libpvkonnector_la_LDFLAGS = $(all_libraries)  $(KDE_RPATH) -module 
-libpvkonnector_la_SOURCES = pvkonnector.cpp casiopvlink.cpp helper.cpp addressbook.cpp event.cpp todo.cpp casiopvlinkiface.skel
+libpvkonnector_la_SOURCES = pvkonnector.cpp casiopvlink.cpp addressbook.cpp event.cpp todo.cpp casiopvlinkiface.skel
 
 pvdatadir = $(kde_datadir)/kitchensync
 pvdata_DATA = pv.desktop

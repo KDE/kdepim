@@ -25,6 +25,7 @@
 
 CasioPV::PVPocketSheet::PVPocketSheet(unsigned int uid) {
   m_uid = uid;
+  m_state = UNDEFINED;
   m_data[PS_SHEET_DATA] = "";
   m_data[PS_X_LINE_DATA] = "";
   m_data[PS_Y_LINE_DATA] = "";
@@ -46,12 +47,39 @@ unsigned int  CasioPV::PVPocketSheet::getModeCode() const{
 }
 
 /**
+   * Setter for the uid.
+   * @param uid The uid of the data entry.
+   */
+void CasioPV::PVPocketSheet::setUid(unsigned int uid)
+{
+  m_uid = uid;
+}
+
+/**
    * Getter for the uid.
    * @return The uid of the data entry.
    */
 unsigned int CasioPV::PVPocketSheet::getUid() const
 {
   return m_uid;
+}
+
+/**
+   * Setter for the state of an entry.
+   * @param state The state of the entry
+   */
+void CasioPV::PVPocketSheet::setState(unsigned int state)
+{
+  m_state = state;
+}
+   
+/**
+   * Getter for the state of an entry.
+   * @return The state of the entry
+   */
+unsigned int CasioPV::PVPocketSheet::getState()
+{
+  return m_state;
 }
 
 /**
@@ -162,7 +190,8 @@ std::ostream& CasioPV::operator<< (std::ostream& out, CasioPV::PVPocketSheet& po
 string CasioPV::PVPocketSheet::toXML()
 {
   std::stringstream oss;
-  oss << "<pocketsheet uid='" << getUid() << "'>" << endl
+  oss << "<pocketsheet uid='" << getUid()
+                               << "' state='" << getState() << "'>" << endl  
        << "<xlinedata>" << getXLineData() << "</xlinedata>" << endl
        << "<ylinedata>" << getYLineData() << "</ylinedata>" << endl
        << "<celldata>" << getCellData() << "</celldata>" << endl

@@ -49,6 +49,22 @@ namespace CasioPV {
       static string ChangeReturnCodeToPV(string& data);
 
       /**
+         * This method changes a date in the PV format ("yyyymmdd__") in the date
+         * format normally used by PC's ("yyyymmdd").
+         * @param date Date to be changed
+         * @return string Changed date (date in Unix format)
+         */
+      static string ChangeDateToUnix(string& date);
+      
+      /**
+         * This method changes a date in the "yyyymmdd" format in the date format used
+         * in the PV ("yyyymmdd__").
+         * @param date Date to be changed
+         * @return string Changed date (date in PV format)
+         */
+      static string ChangeDateToPV(string& date);
+
+      /**
          * Convert the XML string to a vector of elements.
          * @param strXML The XML string to be converted
          * @return vector<string> The elements in a vector

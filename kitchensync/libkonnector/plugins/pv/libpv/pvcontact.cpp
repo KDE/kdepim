@@ -32,6 +32,7 @@ CasioPV::PVContact::PVContact(unsigned int modeCode, unsigned int uid) {
     case  CONTACT_BUSINESS:
           m_modeCode = modeCode;
           m_uid = uid;
+          m_state = UNDEFINED;
           break;
     default :
           throw PVDataEntryException( "PVContact::PVContact : tried to set an unsupported ModeCode : " + modeCode, 4001 );
@@ -67,12 +68,39 @@ unsigned int CasioPV::PVContact::getModeCode() const
 }
 
 /**
+   * Setter for the uid.
+   * @param uid The uid of the data entry.
+   */
+void CasioPV::PVContact::setUid(unsigned int uid)
+{
+  m_uid = uid;
+}
+
+/**
    * Getter for the uid.
    * @return The uid of the data entry.
    */
 unsigned int CasioPV::PVContact::getUid() const
 {
   return m_uid;
+}
+
+/**
+   * Setter for the state of an entry.
+   * @param state The state of the entry
+   */
+void CasioPV::PVContact::setState(unsigned int state)
+{
+  m_state = state;
+}
+   
+/**
+   * Getter for the state of an entry.
+   * @return The state of the entry
+   */
+unsigned int CasioPV::PVContact::getState()
+{
+  return m_state;
 }
 
 string CasioPV::PVContact::getName()
@@ -336,7 +364,8 @@ string CasioPV::PVContact::toXML()
 {
   std::stringstream oss;
   oss <<  "<contact uid='" << getUid() << "' category='"
-                            << Utils::getCategoryString(getModeCode()) << "'>" << endl
+                            << Utils::getCategoryString(getModeCode())
+                             << "' state='" << getState() << "'>" << endl
         << "<name>" << getName() << "</name>" << endl
         << "<homenumber>" << getHomeNumber() << "</homenumber>" << endl
         << "<businessnumber>" << getBusinessNumber() << "</businessnumber>" << endl

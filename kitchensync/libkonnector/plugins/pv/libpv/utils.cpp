@@ -17,7 +17,9 @@
 
 // project includes
 #include "ModeCode.h"
+
 #include "utils.h"
+
 
 using namespace CasioPV;
 
@@ -49,6 +51,28 @@ string Utils::ChangeReturnCodeToPV(string& data)
     else tmp += data[i];
   }
   return tmp;
+}
+
+/**
+   * This method changes a date in the PV format ("yyyymmdd__") in the date
+   * format normally used by PC's ("yyyymmdd").
+   * @param date Date to be changed
+   * @return string Changed date (date in Unix format)
+   */
+string Utils::ChangeDateToUnix(string& date)
+{
+  return (date.substr(0, 8));
+}
+
+/**
+   * This method changes a date in the "yyyymmdd" format in the date format used
+   * in the PV ("yyyymmdd__").
+   * @param date Date to be changed
+   * @return string Changed date (date in PV format)
+   */
+string Utils::ChangeDateToPV(string& date)
+{
+  return (date + "  ");
 }
 
 /**
@@ -106,13 +130,14 @@ bool Utils::checkDate(string& strDate)
   int year = ((int)strDate[0]-0x30)*1000 + ((int)strDate[1]-0x30)*100 + ((int)strDate[2]-0x30)*10 + ((int)strDate[3]-0x30),
      month = ((int)strDate[4]-0x30)*10 + ((int)strDate[5]-0x30),
      day = ((int)strDate[6]-0x30)*10 + ((int)strDate[7]-0x30);
+     
   if ((strDate.length() != 8) || (month == 0) || (month > 12) || (day == 0) || (day > 31) ||
         (((month ==4) || (month == 6) || (month == 9) || (month == 11) || (month == 10) || (month == 12)) && (day > 30)) ||
         ((month == 2) && ((day > 29) || (((year%4 != 0) || ((year%100 == 0)) && (year%400 != 0)) && (day > 28)))))
   {
-    return true;  // Date valid
+    return false;  // Date invalid
   }
-  return false;
+  return true;
 }
 
 /**
@@ -206,7 +231,7 @@ unsigned int Utils::getCategoryPV(const string& strCategory)
     return CONTACT_UNTITLED_3;
   else if (strCategory == "Contact Untitled 4")
     return CONTACT_UNTITLED_4;
-  else if (strCategory == "Contact Untitled 55")
+  else if (strCategory == "Contact Untitled 5")
     return CONTACT_UNTITLED_5;
   else if (strCategory == "Memo 1")
     return MEMO_1;

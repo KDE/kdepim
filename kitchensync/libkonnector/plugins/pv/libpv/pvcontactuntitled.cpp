@@ -36,6 +36,7 @@ CasioPV::PVContactUntitled::PVContactUntitled( unsigned int modeCode, unsigned i
     case  CONTACT_UNTITLED_5:
           m_modeCode = modeCode;
           m_uid = uid;
+          m_state = UNDEFINED;
           break;
     default :
           throw PVDataEntryException( "PVContactUntitled::PVContactUntitled : tried to set an unsupported ModeCode : " + modeCode, 4001 );
@@ -71,12 +72,39 @@ unsigned int CasioPV::PVContactUntitled::getModeCode() const
 }
 
 /**
+   * Setter for the uid.
+   * @param uid The uid of the data entry.
+   */
+void CasioPV::PVContactUntitled::setUid(unsigned int uid)
+{
+  m_uid = uid;
+}
+
+/**
    * Getter for the uid.
    * @return The uid of the data entry.
    */
 unsigned int CasioPV::PVContactUntitled::getUid() const
 {
   return m_uid;
+}
+
+/**
+   * Setter for the state of an entry.
+   * @param state The state of the entry
+   */
+void CasioPV::PVContactUntitled::setState(unsigned int state)
+{
+  m_state = state;
+}
+   
+/**
+   * Getter for the state of an entry.
+   * @return The state of the entry
+   */
+unsigned int CasioPV::PVContactUntitled::getState()
+{
+  return m_state;
 }
 
 string CasioPV::PVContactUntitled::getField1()
@@ -335,7 +363,8 @@ string CasioPV::PVContactUntitled::toXML()
 {
   std::stringstream oss;
   oss <<  "<contact uid='" << getUid() << "' category='"
-                            << Utils::getCategoryString(getModeCode()) << "'>" << endl
+                            << Utils::getCategoryString(getModeCode())
+                             << "' state='" << getState() << "'>" << endl
        << "<field1>" << getField1() << "</field1>" << endl
        << "<field2>" << getField2() << "</field2>" << endl
        << "<field3>" << getField3() << "</field3>" << endl

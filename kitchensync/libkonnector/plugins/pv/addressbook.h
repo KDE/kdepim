@@ -19,7 +19,10 @@
 #define addressbook_h
 
 #include <qdom.h>
-#include <qbuffer.h>
+
+#include <kabc/resourcefile.h>
+#include <kabc/phonenumber.h>
+#include <kabc/address.h>
 
 #include <addressbooksyncee.h>
 
@@ -30,7 +33,14 @@ namespace PVHelper
     public:
       static KSync::AddressBookSyncee* toAddressBookSyncee(QDomNode& node);
 
-      static QByteArray toXML(KSync::AddressBookSyncee* syncee);
+      static QString toXML(KSync::AddressBookSyncee* syncee);
+      
+      /* xxx not used yet. first meta sync has to be implemented!      
+      static KSync::AddressBookSyncee* doMeta(KSync::AddressBookSyncee* AdrSyncOld,
+                                               KSync::AddressBookSyncee* AdrSyncNew);*/
+    private:
+      static KABC::Address strToAddress(const QString& strAddr, KABC::Address::Type type);
+      static QString addressToStr(const KABC::Address& addr);
   };
 }
 

@@ -42,6 +42,7 @@ CasioPV::PVMail::PVMail( unsigned int modeCode, unsigned int uid ) {
     case  SMS_SETTING:
           m_modeCode = modeCode;
           m_uid = uid;
+          m_state = UNDEFINED;
           break;
     default :
           throw PVDataEntryException( "PVMail::PVMail : tried to set an unsupported ModeCode : " + modeCode, 4001 );
@@ -65,12 +66,39 @@ unsigned int CasioPV::PVMail::getModeCode() const{
 }
 
 /**
+   * Setter for the uid.
+   * @param uid The uid of the data entry.
+   */
+void CasioPV::PVMail::setUid(unsigned int uid)
+{
+  m_uid = uid;
+}
+
+/**
    * Getter for the uid.
    * @return The uid of the data entry.
    */
 unsigned int CasioPV::PVMail::getUid() const
 {
   return m_uid;
+}
+
+/**
+   * Setter for the state of an entry.
+   * @param state The state of the entry
+   */
+void CasioPV::PVMail::setState(unsigned int state)
+{
+  m_state = state;
+}
+   
+/**
+   * Getter for the state of an entry.
+   * @return The state of the entry
+   */
+unsigned int CasioPV::PVMail::getState()
+{
+  return m_state;
 }
 
 /**
@@ -152,7 +180,8 @@ string CasioPV::PVMail::toXML()
 {
   std::stringstream oss;
   oss << "<mail uid='" << getUid() << "' category='"
-                        << Utils::getCategoryString(getModeCode()) << "'>" << endl
+                        << Utils::getCategoryString(getModeCode())
+                         << "' state='" << getState() << "'>" << endl                        
        << "<data>" << getMailData() << "</data>" << endl
       << "</mail>" << endl;
   return oss.str();

@@ -25,6 +25,7 @@
 
 CasioPV::PVQuickMemo::PVQuickMemo(unsigned int uid) {
   m_uid = uid;
+  m_state = UNDEFINED;
   m_continued = false;
   m_data[QM_CATEGORY] = "";
   m_data[QM_BITMAP_DATA] = "";
@@ -45,12 +46,39 @@ unsigned int  CasioPV::PVQuickMemo::getModeCode() const{
 }
 
 /**
+   * Setter for the uid.
+   * @param uid The uid of the data entry.
+   */
+void CasioPV::PVQuickMemo::setUid(unsigned int uid)
+{
+  m_uid = uid;
+}
+
+/**
    * Getter for the uid.
    * @return The uid of the data entry.
    */
 unsigned int CasioPV::PVQuickMemo::getUid() const
 {
   return m_uid;
+}
+
+/**
+   * Setter for the state of an entry.
+   * @param state The state of the entry
+   */
+void CasioPV::PVQuickMemo::setState(unsigned int state)
+{
+  m_state = state;
+}
+   
+/**
+   * Getter for the state of an entry.
+   * @return The state of the entry
+   */
+unsigned int CasioPV::PVQuickMemo::getState()
+{
+  return m_state;
 }
 
 /**
@@ -181,7 +209,8 @@ std::ostream& CasioPV::operator<< (std::ostream& out, CasioPV::PVQuickMemo& quic
 string CasioPV::PVQuickMemo::toXML()
 {
   std::stringstream oss;
-  oss << "<quickmemo uid='" << getUid() << "'>" << endl
+  oss << "<quickmemo uid='" << getUid()
+                             << "' state='" << getState() << "'>" << endl  
        << "<data>" << getBitmapData() << "</data>" << endl
       << "</quickmemo>" << endl;
   return oss.str();

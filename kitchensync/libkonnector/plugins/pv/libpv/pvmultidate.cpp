@@ -28,6 +28,7 @@
    */
 CasioPV::PVMultiDate::PVMultiDate(unsigned int uid) {
   m_uid = uid;
+  m_state = UNDEFINED;
   m_data[DATE] = "";
   m_data[END_DATE] = "";
   m_data[DESCRIPTION] = "";
@@ -48,12 +49,39 @@ unsigned int  CasioPV::PVMultiDate::getModeCode() const{
 }
 
 /**
+   * Setter for the uid.
+   * @param uid The uid of the data entry.
+   */
+void CasioPV::PVMultiDate::setUid(unsigned int uid)
+{
+  m_uid = uid;
+}
+
+/**
    * Getter for the uid.
    * @return The uid of the data entry.
    */
 unsigned int CasioPV::PVMultiDate::getUid() const
 {
   return m_uid;
+}
+
+/**
+   * Setter for the state of an entry.
+   * @param state The state of the entry
+   */
+void CasioPV::PVMultiDate::setState(unsigned int state)
+{
+  m_state = state;
+}
+   
+/**
+   * Getter for the state of an entry.
+   * @return The state of the entry
+   */
+unsigned int CasioPV::PVMultiDate::getState()
+{
+  return m_state;
 }
 
 /**
@@ -158,7 +186,9 @@ std::ostream& CasioPV::operator<< (std::ostream& out, CasioPV::PVMultiDate& mult
 string CasioPV::PVMultiDate::toXML()
 {
   std::stringstream oss;
-  oss << "<multidate uid='" << getUid() << "'>" << endl
+  oss << "<multidate uid='" << getUid() << "' category='"
+                            << Utils::getCategoryString(getModeCode())
+                             << "' state='" << getState() << "'>" << endl  
        << "<date>" << getDate() << "</date>" << endl
        << "<enddate>" << getEndDate() << "</enddate>" << endl
        << "<description>" << getDescription() << "</description>" << endl
@@ -181,8 +211,14 @@ void CasioPV::PVMultiDate::fromXML(string strXML)
   }
   else
   {
-    setDate(vecElem[0]);
-    setEndDate(vecElem[1]);
+    if (vecElem[0] != "")
+    {
+      setDate(vecElem[0]);
+    }
+    if (vecElem[0] != "")
+    {   
+      setEndDate(vecElem[1]);
+    }
     setDescription(vecElem[2]);
   }
 }

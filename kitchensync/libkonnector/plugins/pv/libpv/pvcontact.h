@@ -50,11 +50,29 @@ public:
     virtual unsigned int getModeCode() const;
 
     /**
+       * Setter for the uid.
+       * @param uid The uid of the data entry.
+       */
+    virtual void setUid(unsigned int uid);
+    
+    /**
        * Getter for the uid.
        * @return The uid of the data entry.
        */
     virtual unsigned int getUid() const;
 
+    /**
+       * Setter for the state of an entry.
+       * @param state The state of the entry
+       */
+    virtual void setState(unsigned int state);
+    
+    /**
+       * Getter for the state of an entry.
+       * @return The state of the entry
+       */
+    virtual unsigned int getState();    
+    
     /**
        * Getter for name.
        * @return Return the name in a string with up to 2036 characters
@@ -281,6 +299,11 @@ private:
        * unsigned int The uid of the entry
        */
     unsigned int m_uid;
+    
+    /**
+       * unsigned int The state of the entry
+       */
+    unsigned int m_state;
 
     /**
        * bool for isSecret()

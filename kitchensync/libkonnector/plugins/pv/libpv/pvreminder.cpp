@@ -28,6 +28,7 @@
    */
 CasioPV::PVReminder::PVReminder(unsigned int uid) {
   m_uid = uid;
+  m_state = UNDEFINED;
   m_data[TYPE] = "";
   m_data[DATE] = "";
   m_data[START_TIME] = "";
@@ -51,12 +52,39 @@ unsigned int  CasioPV::PVReminder::getModeCode() const{
 }
 
 /**
+   * Setter for the uid.
+   * @param uid The uid of the data entry.
+   */
+void CasioPV::PVReminder::setUid(unsigned int uid)
+{
+  m_uid = uid;
+}
+
+/**
    * Getter for the uid.
    * @return The uid of the data entry.
    */
 unsigned int CasioPV::PVReminder::getUid() const
 {
   return m_uid;
+}
+
+/**
+   * Setter for the state of an entry.
+   * @param state The state of the entry
+   */
+void CasioPV::PVReminder::setState(unsigned int state)
+{
+  m_state = state;
+}
+   
+/**
+   * Getter for the state of an entry.
+   * @return The state of the entry
+   */
+unsigned int CasioPV::PVReminder::getState()
+{
+  return m_state;
 }
 
 /**
@@ -196,14 +224,16 @@ std::ostream& CasioPV::operator<< (std::ostream& out, CasioPV::PVReminder& remin
 string CasioPV::PVReminder::toXML()
 {
   std::stringstream oss;
-  oss << "<reminder uid='" << getUid() << "'>" << endl
+  oss << "<event uid='" << getUid() << "' category='"
+                            << Utils::getCategoryString(getModeCode())
+                            << "' state='" << getState() << "'>" << endl  
        << "<type>" << getType() << "</type>" << endl
        << "<date>" << getDate() << "</date>" << endl
        << "<alarmtime>" << getAlarmTime() << "</alarmtime>" << endl
        << "<starttime>" << getStartTime() << "</starttime>" << endl
        << "<endtime>" << getEndTime() << "</endtime>" << endl
        << "<description>" << getDescription() << "</description>" << endl
-      << "</reminder>" << endl;
+      << "</event>" << endl;
   return oss.str();
 }
 
@@ -223,10 +253,16 @@ void CasioPV::PVReminder::fromXML(string strXML)
   else
   {
     setType(vecElem[0]);
-    setDate(vecElem[1]);
+    if (vecElem[1] != "")
+    {    
+      setDate(vecElem[1]);
+    }
     setAlarmTime(vecElem[2]);
     setStartTime(vecElem[3]);
-    setEndTime(vecElem[4]);
+    if (vecElem[4] != "")
+    {
+      setEndTime(vecElem[4]);
+    }
     setDescription(vecElem[5]);
   }
 }

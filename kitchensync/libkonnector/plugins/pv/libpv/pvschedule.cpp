@@ -28,6 +28,7 @@
    */
 CasioPV::PVSchedule::PVSchedule(unsigned int uid) {
   m_uid = uid;
+  m_state = UNDEFINED;
   m_data[DATE] = "";
   m_data[START_TIME] = "";
   m_data[END_TIME] = "";
@@ -50,12 +51,39 @@ unsigned int CasioPV::PVSchedule::getModeCode() const{
 }
 
 /**
+   * Setter for the uid.
+   * @param uid The uid of the data entry.
+   */
+void  CasioPV::PVSchedule::setUid(unsigned int uid)
+{
+  m_uid = uid;
+}
+
+/**
    * Getter for the uid.
    * @return The uid of the data entry.
    */
 unsigned int CasioPV::PVSchedule::getUid() const
 {
   return m_uid;
+}
+
+/**
+   * Setter for the state of an entry.
+   * @param state The state of the entry
+   */
+void CasioPV::PVSchedule::setState(unsigned int state)
+{
+  m_state = state;
+}
+   
+/**
+   * Getter for the state of an entry.
+   * @return The state of the entry
+   */
+unsigned int CasioPV::PVSchedule::getState()
+{
+  return m_state;
 }
 
 /**
@@ -183,13 +211,15 @@ std::ostream& CasioPV::operator<< (std::ostream& out, CasioPV::PVSchedule& sched
 string CasioPV::PVSchedule::toXML()
 {
   std::stringstream oss;
-  oss << "<schedule uid='" << getUid() << "'>" << endl
+  oss << "<event uid='" << getUid() << "' category='"
+                            << Utils::getCategoryString(getModeCode())
+                            << "' state='" << getState() << "'>" << endl  
        << "<date>" << getDate() << "</date>" << endl
        << "<alarmtime>" << getAlarmTime() << "</alarmtime>" << endl
        << "<starttime>" << getStartTime() << "</starttime>" << endl
        << "<endtime>" << getEndTime() << "</endtime>" << endl
        << "<description>" << getDescription() << "</description>" << endl
-      << "</schedule>" << endl;
+      << "</event>" << endl;
   return oss.str();
 }
 
@@ -208,7 +238,10 @@ void CasioPV::PVSchedule::fromXML(string strXML)
   }
   else
   {
-    setDate(vecElem[0]);
+    if (vecElem[0] != "")
+    {  
+      setDate(vecElem[0]);
+    }
     setAlarmTime(vecElem[1]);
     setStartTime(vecElem[2]);
     setEndTime(vecElem[3]);

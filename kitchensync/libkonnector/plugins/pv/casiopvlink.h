@@ -19,6 +19,7 @@
 #define casiopvlink_h
 
 #include <qcstring.h>
+#include <qbuffer.h>
 #include <qobject.h>
 
 #include <konnector.h>
@@ -60,7 +61,8 @@ namespace KSync
       void errorPV(const QString& msg, const unsigned int errorcode);
 
     private:
-      bool connectPV();
+      bool callConnectPV();
+      void callDisconnectPV();
       // Kapabilities
       QString m_udi;
       QString m_model;
@@ -71,12 +73,14 @@ namespace KSync
       enum Mode {NONE, SYNC, BACKUP};
       int m_state;
       int m_mode;
-      QString m_path;
+      QString m_backupPath;
+      QString m_metaPath;
       bool m_firstSync;
       // Model data of connected PV
       QString m_modelCode;
       QString m_optionalCode;
       bool m_secretArea;
+      QByteArray m_array; // Data to be stored to a file after updating PV
 
     signals:
         void sync( Syncee::PtrList );

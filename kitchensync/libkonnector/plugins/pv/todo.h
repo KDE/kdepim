@@ -19,7 +19,6 @@
 #define todo_h
 
 #include <qdom.h>
-#include <qbuffer.h>
 
 #include <libkcal/todo.h>
 #include <todosyncee.h>
@@ -31,7 +30,7 @@ namespace PVHelper
     public:
       static KSync::TodoSyncee* toTodoSyncee(QDomNode& n);
 
-      static QByteArray toXML(KSync::TodoSyncee* syncee);
+      static QString toXML(KSync::TodoSyncee* syncee);
   };
 }
 

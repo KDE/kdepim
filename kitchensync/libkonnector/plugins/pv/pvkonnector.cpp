@@ -85,7 +85,7 @@ Kapabilities PVPlugin::capabilities( )
   // create the capabilities Apply
   kdDebug(5202) << "PVPlugin capabilities" << endl;
   Kapabilities caps;
-  caps.setSupportMetaSyncing(true);
+  caps.setSupportMetaSyncing(false);
   caps.setSupportsPushSync(true);
   caps.setNeedsConnection(false);
   caps.setSupportsListDir(false);
