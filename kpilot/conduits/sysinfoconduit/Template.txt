@@ -27,13 +27,13 @@ KPilot System Information Page
 
 <!--#ifstorage#
 -) Storage Information
-     Number of cards: #cards#
-     Memory on cards: #storagemem#
+     Cards: #cards#
 #endifstorage#-->
 
 <!--#ifdblist#
 -) List of Databases on Handheld
-     Available Databases: #dblist[%1,]#
+     Available Databases: #dblist[
+         %0 (%1, %2)]#
 #endifdblist#-->
 
 <!--#ifrecords#
@@ -73,4 +73,4 @@ KPilot System Information Page
 
 
 ------------------------------------------------------------
-Page created <!--#date#--> by the SysInfo conduit of KPilot.
+Page created #date# by the SysInfo conduit of KPilot.
