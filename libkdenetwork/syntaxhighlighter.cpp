@@ -324,7 +324,7 @@ QString DictSpellChecker::spellKey()
     key += '/';
     key += QString::number(config->readNumEntry("KSpell_RunTogether", 0));
     key += '/';
-    key += config->readEntry("KSpell_Dictionary", "");
+    key += config->readEntry("KSpell_Dictionary");
     key += '/';
     key += QString::number(config->readNumEntry("KSpell_DictFromList", FALSE));
     key += '/';

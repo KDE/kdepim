@@ -88,9 +88,9 @@ void CryptPlugWrapperList::loadFromConfig( KConfig* config )
         // load the initial config data for one plugin
         config->setGroup( QString( "CryptPlug #%1" ).arg( i ) );
         
-        QString name = config->readEntry( "name", "" );
-        QString location = config->readEntry( "location", "" );
-        QString updateURL = config->readEntry( "updates", "" );
+        QString name = config->readEntry( "name" );
+        QString location = config->readPathEntry( "location" );
+        QString updateURL = config->readPathEntry( "updates" );
         bool active = config->readBoolEntry( "active", false );
 
         // Try to initialize that plugin
@@ -114,7 +114,7 @@ void CryptPlugWrapperList::loadFromConfig( KConfig* config )
 
           
         // Signature configuration
-        QString sigKeyCert = config->readEntry( "SigKeyCert", "" );
+        QString sigKeyCert = config->readEntry( "SigKeyCert" );
         newWrapper->setSignatureKeyCertificate( sigKeyCert.utf8() );
           
         int sigAlgo = config->readNumEntry( "SigAlgo", SignAlg_SHA1 );
@@ -240,11 +240,11 @@ void CryptPlugWrapperList::loadFromConfig( KConfig* config )
         int numDirServers = config->readNumEntry( "NumDirServers", 0 );
         for( int j = 0; j < numDirServers; j++ ) {
             QString dirServerName = 
-                config->readEntry( QString( "DirServer%1Name" ).arg( j ), "" );
+                config->readEntry( QString( "DirServer%1Name" ).arg( j ) );
             int dirServerPort = 
                 config->readNumEntry( QString( "DirServer%1Port" ).arg( j ), 0 );
             QString dirServerDescr =
-                config->readEntry( QString( "DirServer%1Descr" ).arg( j ), "" );
+                config->readEntry( QString( "DirServer%1Descr" ).arg( j ) );
             newWrapper->appendDirectoryServer( dirServerName.utf8(),
                                                dirServerPort,
                                                dirServerDescr.utf8() );
