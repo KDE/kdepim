@@ -562,7 +562,7 @@ void KAddressBook::configureFilters()
   dlg.setFilters( mViewManager->filters() );
 
   if ( dlg.exec() )
-    mViewManager->filtersChanged( dlg.filters() );
+    mViewManager->setFilters( dlg.filters() );
 }
 
 #include "kaddressbook.moc"

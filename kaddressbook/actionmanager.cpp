@@ -237,12 +237,10 @@ void ActionManager::initReadOnlyActions()
 
   connect( this, SIGNAL( filterActivated( int ) ),
            mViewManager, SLOT( filterActivated( int ) ) );
-  connect( mViewManager, SIGNAL( setFilterNames( const QStringList& ) ),
-           SLOT( setFilterNames( const QStringList& ) ) );
-  connect( mViewManager, SIGNAL( setCurrentFilterName( const QString& ) ),
-           SLOT( setCurrentFilterName( const QString& ) ) );
-  connect( mViewManager, SIGNAL( setCurrentFilter( int ) ),
-           SLOT( setCurrentFilter( int ) ) );
+  connect( mViewManager, SIGNAL( filtersEdited() ),
+           SLOT( filtersEdited() ) );
+  connect( mViewManager, SIGNAL( currentFilterChanged( const QString& ) ),
+           SLOT( currentFilterChanged( const QString& ) ) );
 
   if ( mIsPart ) {
     new KAction( i18n( "&Configure KAddressBook..." ), "configure", 0, mWidget,
@@ -365,16 +363,16 @@ void ActionManager::quickToolsAction()
   mViewManager->setDetailsVisible( mActionDetails->isChecked() );
 }
 
-void ActionManager::setFilterNames( const QStringList& list )
+void ActionManager::filtersEdited()
 {
   QString current = mActionSelectFilter->currentText();
 
   QStringList items;
   items.append( i18n( "None" ) );
-  items += list;
+  items += mViewManager->filterNames();
 
   mActionSelectFilter->setItems( items );
-  setCurrentFilterName( current );
+  currentFilterChanged( current );
 }
 
 void ActionManager::slotFilterActivated()
@@ -382,16 +380,15 @@ void ActionManager::slotFilterActivated()
   emit filterActivated( mActionSelectFilter->currentItem() - 1 );
 }
 
-void ActionManager::setCurrentFilterName( const QString& name )
+void ActionManager::currentFilterChanged( const QString& name )
 {
-  QStringList items = mActionSelectFilter->items();
-  int index = items.findIndex( name );
-  if ( index != -1 )
-    setCurrentFilter( index );
-}
+  int index = 0;
 
-void ActionManager::setCurrentFilter( int index )
-{
+  if ( !name.isEmpty() ) {
+    QStringList items = mActionSelectFilter->items();
+    index = items.findIndex( name );
+  }
+
   mActionSelectFilter->setCurrentItem( index );
   emit filterActivated( index - 1 );
 }

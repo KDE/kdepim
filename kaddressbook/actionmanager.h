@@ -63,19 +63,9 @@ class ActionManager : public QObject
     void addresseeSelected( bool selected );
 
     /**
-      Called to set the filter list.
+      Rebuilds content of the filter combo box.
      */
-    void setFilterNames( const QStringList& );
-
-    /**
-      Set the current filter by its name. Ignored if the name does not exist.
-     */
-    void setCurrentFilterName( const QString& );
-
-    /**
-      Set the current filter. 0 for none.
-     */
-    void setCurrentFilter( int index );
+    void filtersEdited();
 
     /**
       Called whenever the addressbook is modified.
@@ -110,6 +100,8 @@ class ActionManager : public QObject
       Catch changes in the filter selection.
      */
     void slotFilterActivated();
+
+    void currentFilterChanged( const QString& );
 
     void keyBindings();
 

@@ -118,9 +118,19 @@ class ViewManager : public QWidget
     bool isQuickEditVisible();
 
     /**
+      Set the list of filters, which are defined for the application.
+     */
+    void setFilters( const Filter::List &list );
+
+    /**
       @return The list of filters defined for the application.
      */
     const Filter::List &filters() const;
+
+    /**
+      @return The name list of all filters defined for the application.
+     */
+    QStringList filterNames();
 
     /**
       @return The name list of all registered extension widgets.
@@ -225,11 +235,6 @@ class ViewManager : public QWidget
     void addView();
 
     /**
-      Updates the filter list to list.
-     */
-    void filtersChanged( const Filter::List &list );
-
-    /**
       Called whenever a filter is activated.
      */
     void filterActivated( int index );
@@ -309,19 +314,19 @@ class ViewManager : public QWidget
     void viewConfigChanged( const QString &newActive );
 
     /**
-      Update the select_filter action.
+      Emitted whenever the filter combo bar should reread the filter name
+      list from the viewmanager.
      */
-    void setFilterNames( const QStringList& );
+    void filtersEdited();
 
     /**
-      Set the current filter by its name. Ignored if the name does not exist.
+      Emitted whenever the filter combo bar should change its
+      current filter.
+      
+      @param name Is the name of the new filter.
+                  name.isEmpty() for no filter.
      */
-    void setCurrentFilterName( const QString& );
-
-    /**
-      Set the current filter. 0 for none.
-     */
-    void setCurrentFilter( int index );
+    void currentFilterChanged( const QString &name );
 
     /**
       Import a VCard that has been dragged.

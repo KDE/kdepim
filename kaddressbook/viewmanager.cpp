@@ -94,10 +94,13 @@ void ViewManager::readConfig()
     mViewNameList.append( i18n("Default Table View") );
 
   mFilterList = Filter::restore( mConfig, "Filter" );
-  filtersChanged( mFilterList );
+  mCurrentFilter = Filter();
+
+  emit filtersEdited();
+
   mConfig->setGroup( "Filter" );
   if ( mConfig->hasKey( "Active" ) )
-    emit setCurrentFilterName( mConfig->readEntry( "Active" ) );
+    emit currentFilterChanged( mConfig->readEntry( "Active" ) );
 
   // Tell the views to reread their config, since they may have
   // been modified by global settings
@@ -291,12 +294,12 @@ void ViewManager::setActiveView( const QString &name )
     // box, the activated slot will be called, which will push
     // the filter to the view and refresh it.
     if ( view->defaultFilterType() == KAddressBookView::None )
-      emit setCurrentFilter( 0 );
+      emit currentFilterChanged( "" );
     else if ( view->defaultFilterType() == KAddressBookView::Active )
-      emit setCurrentFilterName( mCurrentFilter.name() );
+      emit currentFilterChanged( mCurrentFilter.name() );
     else {
       QString filterName = view->defaultFilterName();
-      emit setCurrentFilterName( filterName );
+      emit currentFilterChanged( filterName );
     }
 
     // Update the inc search widget to show the fields in the new active
@@ -345,12 +348,12 @@ void ViewManager::modifyView()
       // box, the activated slot will be called, which will push
       // the filter to the view and refresh it.
       if ( mActiveView->defaultFilterType() == KAddressBookView::None )
-        emit setCurrentFilter( 0 );
+        emit currentFilterChanged( "" );
       else if ( mActiveView->defaultFilterType() == KAddressBookView::Active )
-        emit setCurrentFilterName( mCurrentFilter.name() );
+        emit currentFilterChanged( mCurrentFilter.name() );
       else {
         QString filterName = mActiveView->defaultFilterName();
-        emit setCurrentFilterName( filterName );
+        emit currentFilterChanged( filterName );
       }
 
       mIncSearchWidget->setFields( mActiveView->fields() );
@@ -654,21 +657,6 @@ void ViewManager::extensionWidgetModified( KABC::Addressee::List list )
   emit modified();
 }
 
-void ViewManager::filtersChanged( const Filter::List &list )
-{
-  mFilterList = list;
-
-  QStringList names;
-  Filter::List::Iterator it;
-  for ( it = mFilterList.begin(); it != mFilterList.end(); ++it )
-    names.append( (*it).name() );
-
-  // update the combo
-  emit setFilterNames( names );
-
-  mCurrentFilter = Filter();
-}
-
 void ViewManager::filterActivated( int index )
 {
   if ( index < 0 )
@@ -741,9 +729,26 @@ const QStringList &ViewManager::viewNames()
   return mViewNameList;
 }
 
+void ViewManager::setFilters( const Filter::List &list )
+{
+  mFilterList = list;
+  emit filtersEdited();
+}
+
 const Filter::List &ViewManager::filters() const
 {
   return mFilterList;
+}
+
+QStringList ViewManager::filterNames()
+{
+  QStringList names;
+
+  Filter::List::Iterator it;
+  for ( it = mFilterList.begin(); it != mFilterList.end(); ++it )
+    names.append( (*it).name() );
+
+  return names;
 }
 
 KTrader::OfferList ViewManager::availablePlugins( const QString &type )
