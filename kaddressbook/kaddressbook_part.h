@@ -26,7 +26,7 @@
 #include <kparts/browserextension.h>
 #include <kparts/event.h>
 #include <kparts/factory.h>
-#include <libkdepim/part.h>
+#include <kparts/part.h>
 
 #include "kaddressbookiface.h"
 
@@ -36,7 +36,7 @@ class KInstance;
 
 class KABCore;
 
-class KAddressbookPart: public KPIM::Part, virtual public KAddressBookIface
+class KAddressbookPart: public KParts::ReadOnlyPart, virtual public KAddressBookIface
 {
   Q_OBJECT
 
