@@ -78,6 +78,8 @@ class ExchangeCalendarAdaptor : public DavCalendarAdaptor
         { return ExchangeGlobals::interpretListItemsJob( this, job, jobData ); }
     bool interpretDownloadItemsJob( KIO::Job *job, const QString &jobData )
         { return ExchangeGlobals::interpretCalendarDownloadItemsJob( this, job, jobData );  }
+    bool interpretUploadJob( KIO::Job *job, const QString &/*jobData*/ );
+    bool interpretUploadNewJob( KIO::Job *job, const QString &/*jobData*/ );
 
 
 

@@ -117,3 +117,59 @@ KPIM::GroupwareUploadItem *ExchangeCalendarAdaptor::newUploadItem( KCal::Inciden
 {
   return new ExchangeCalendarUploadItem( this, it, type );
 }
+
+bool ExchangeCalendarAdaptor::interpretUploadJob( KIO::Job *job, const QString &/*jobData*/ )
+{
+  kdDebug(7000) << "ExchangeCalendarAdaptor::interpretUploadJob " << endl;
+  KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>(job);
+  bool error = job->error();
+  const QString err = job->errorString();
+
+  if ( davjob ) {
+    if ( error ) {
+      emit itemUploadError( davjob->url().url(), err );
+      return false;
+    } else {
+      QDomDocument doc( davjob->response() );
+      // TODO: extract the href and the items that got a 404. If there's
+      // something important among them, issue the "usual" not-all-settings-uploaded
+      // warning to the user.
+      KURL url( davjob->url() );
+      // We don't know the local id here (and we don't want to extract it from
+      // the idMapper, that's the task of the receiver
+      emit itemUploaded( QString::null, url.url() );
+    }
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool ExchangeCalendarAdaptor::interpretUploadNewJob( KIO::Job *job, const QString &/*jobData*/ )
+{
+// TODO: How does the incidence mapper know the old/new ids???
+  kdDebug(7000) << "ExchangeCalendarAdaptor::interpretUploadNewJob " << endl;
+  KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>(job);
+  bool error = job->error();
+  const QString err = job->errorString();
+
+  if ( davjob ) {
+    if ( error ) {
+      emit itemUploadNewError( davjob->url().url(), err );
+      return false;
+    } else {
+      QDomDocument doc( davjob->response() );
+      // TODO: extract the href and the items that got a 404. If there's
+      // something important among them, issue the "usual" not-all-settings-uploaded
+      // warning to the user.
+      KURL url( davjob->url() );
+      // We don't know the local id here (and we don't want to extract it from
+      // the idMapper, that's the task of the receiver
+      emit itemUploadedNew( QString::null, url.url() );
+    }
+    return true;
+  } else {
+    return false;
+  }
+}
+
