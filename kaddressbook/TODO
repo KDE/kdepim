@@ -63,19 +63,3 @@ New Features (features people want that have not been implemented)
 Fixes
 -----
 - Reinstate custom fields and a custom field editor
-
-
-----------
-Dead Files (files that are no longer used and will be removed soon)
-----------
-Note: Not all the dependancies have been fixed to allow these to actually
-      be removed. Be sure not to use them in new code however.
-- attributes.{h,cpp}
-- browserentryeditor.{h,cpp}
-- contactentry.{h,cpp}
-- contactentrylist.{h,cpp}
-- entryeditorwidget.{h,cpp}
-- viewoptions.{h,cpp}
-- datepickerdialog.{h,cpp}
-- namevaluewidget.{h,cpp}
-

@@ -8,8 +8,6 @@
 #include <kabc/vcardconverter.h>
 #include "kaddressbookiface.h"
 
-class ContactEntry;
-class ContactEntryList;
 class ViewManager;
 class PrefsDialog;
 class LDAPSearchDialogImpl;
