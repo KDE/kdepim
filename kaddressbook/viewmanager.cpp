@@ -453,6 +453,7 @@ void ViewManager::startDrag()
   drag->addDragObject( new KVCardDrag( vcards, this ) );
 
   KTempDir tempDir;
+  // can't set tempDir to autoDelete, in case of dropping on the desktop, the copy is async...
   if ( tempDir.status() == 0 ) {
     QString fileName;
     if ( addrList.count() == 1 )
