@@ -17,7 +17,6 @@
 #include <qheader.h>
 #include <qtextcodec.h>
 #include <qclipboard.h>
-#include <qdragobject.h>
 #include <qapplication.h>
 #include <kspelldlg.h>
 #include <kdeversion.h>
@@ -45,6 +44,7 @@ using KRecentAddress::RecentAddresses;
 #include <kqcstringsplitter.h>
 #include <syntaxhighlighter.h>
 #include <qcursor.h>
+#include <kurldrag.h>
 
 using Syntaxhighlighter::DictSpellChecker;
 using Syntaxhighlighter::SpellChecker;
@@ -1597,20 +1597,19 @@ void KNComposer::slotSpellFinished()
 void KNComposer::slotDragEnterEvent(QDragEnterEvent *ev)
 {
   QStringList files;
-  ev->accept(QUriDrag::canDecode(ev));
+  ev->accept(KURLDrag::canDecode(ev));
 }
 
 
 void KNComposer::slotDropEvent(QDropEvent *ev)
 {
-  QStrList urls;
-  char *s;
+  KURL::List urls;
 
-  if (!QUriDrag::decode(ev, urls))
+  if (!KURLDrag::decode(ev, urls))
     return;
 
-  for (s = urls.first(); s != 0; s=urls.next()) {
-    KURL url(s);
+  for (KURL::List::ConstIterator it = urls.begin(); it != urls.end(); ++it) {
+    const KURL &url = *it;
     KNLoadHelper *helper = new KNLoadHelper(this);
 
     if (helper->setURL(url)) {
@@ -2092,7 +2091,7 @@ void KNComposer::Editor::slotRot13()
 
 void KNComposer::Editor::dragEnterEvent(QDragEnterEvent *ev)
 {
-  if (QUriDrag::canDecode(ev))
+  if (KURLDrag::canDecode(ev))
     emit(sigDragEnterEvent(ev));
   else
     KEdit::dragEnterEvent(ev);
@@ -2101,7 +2100,7 @@ void KNComposer::Editor::dragEnterEvent(QDragEnterEvent *ev)
 
 void KNComposer::Editor::dropEvent(QDropEvent *ev)
 {
-  if (QUriDrag::canDecode(ev))
+  if (KURLDrag::canDecode(ev))
     emit(sigDropEvent(ev));
   else
     KEdit::dropEvent(ev);
