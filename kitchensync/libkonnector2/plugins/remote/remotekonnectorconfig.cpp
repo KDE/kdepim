@@ -47,6 +47,9 @@ RemoteKonnectorConfig::RemoteKonnectorConfig( QWidget *parent )
   topLayout->addWidget( button );
   connect( button, SIGNAL( clicked() ), SLOT( setupStandard() ) );
 
+  // makes no sense... do we need it at all?
+  button->hide();
+
   topLayout->addWidget( new QLabel( i18n("Calendar file:"), this ) );
 
   mCalendarUrl = new KURLRequester( this );
