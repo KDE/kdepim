@@ -36,7 +36,7 @@
 #include <qcheckbox.h>
 
 #include <kdialogbase.h>
-#include <kfoldertree.h>
+#include "kfoldertree.h"
 
 class KSubscription;
 
@@ -49,18 +49,18 @@ class QCheckBox;
 
 //==========================================================================
 
-class KGroupInfo 
+class KGroupInfo
 {
   public:
-    enum Status { 
-      unknown, 
-      readOnly, 
-      postingAllowed, 
-      moderated 
+    enum Status {
+      unknown,
+      readOnly,
+      postingAllowed,
+      moderated
     };
-    
-    KGroupInfo( const QString &name, const QString &description = QString::null, 
-        bool newGroup = false, bool subscribed = false, 
+
+    KGroupInfo( const QString &name, const QString &description = QString::null,
+        bool newGroup = false, bool subscribed = false,
         Status status = unknown, QString path = QString::null );
 
     QString name, description;
@@ -78,37 +78,37 @@ class KGroupInfo
 class GroupItem : public QCheckListItem
 {
   public:
-    GroupItem( QListView *v, const KGroupInfo &gi, KSubscription* browser, 
+    GroupItem( QListView *v, const KGroupInfo &gi, KSubscription* browser,
         bool isCheckItem = false );
-    GroupItem( QListViewItem *i, const KGroupInfo &gi, KSubscription* browser, 
+    GroupItem( QListViewItem *i, const KGroupInfo &gi, KSubscription* browser,
         bool isCheckItem = false );
 
     /**
      * Get/Set the KGroupInfo
-     */ 
+     */
     KGroupInfo info() { return mInfo; }
     void setInfo( KGroupInfo info ) { mInfo = info; }
 
     /**
      * Get/Set the original parent
-     */ 
+     */
     QListViewItem* originalParent() { return mOriginalParent; }
     void setOriginalParent( QListViewItem* parent ) { mOriginalParent = parent; }
 
     /**
      * Get/Set the last open state
-     */ 
+     */
     bool lastOpenState() { return mLastOpenState; }
     void setLastOpenState( bool last ) { mLastOpenState = last; }
-    
+
     /**
      * Sets the description from the KGroupInfo
      * Reimplement this for special cases
-     */ 
+     */
     virtual void setDescription();
 
-    /** 
-     * Get/Set if this is a checkable item 
+    /**
+     * Get/Set if this is a checkable item
      */
     bool isCheckItem() { return mIsCheckItem; }
     void setIsCheckItem( bool check ) { mIsCheckItem = check; }
@@ -116,43 +116,43 @@ class GroupItem : public QCheckListItem
     /**
      * Reimplemented
      * Sets the subscribed property (only while items are loaded)
-     */ 
+     */
     virtual void setOn( bool on );
 
     /**
      * Reimlemented
      * Calls KSubscription::changeItemState
-     */ 
+     */
     virtual void stateChange( bool on );
 
-    /** 
-     * Reimplemented 
+    /**
+     * Reimplemented
      * Sets items invisible or disabled or even moves them
      */
     void setVisible( bool b );
 
-    /** 
-     * Reimplemented 
+    /**
+     * Reimplemented
      * Calls QListViewItem or QCheckListItem
      */
     virtual void paintCell( QPainter * p, const QColorGroup & cg,
         int column, int width, int align );
 
-    /** 
-     * Reimplemented 
+    /**
+     * Reimplemented
      * Calls QListViewItem or QCheckListItem
      */
     virtual void paintFocus( QPainter *, const QColorGroup & cg,
                  const QRect & r );
 
-    /** 
-     * Reimplemented 
+    /**
+     * Reimplemented
      * Calls QListViewItem or QCheckListItem
      */
     virtual int width( const QFontMetrics&, const QListView*, int column) const;
 
-    /** 
-     * Reimplemented 
+    /**
+     * Reimplemented
      * Calls QListViewItem or QCheckListItem
      */
     virtual void setup();
@@ -172,12 +172,12 @@ class GroupItem : public QCheckListItem
 
 //==========================================================================
 
-class KSubscription : public KDialogBase 
+class KSubscription : public KDialogBase
 {
   Q_OBJECT
 
   public:
-    /** 
+    /**
      * The direction of the buttons
      */
     enum Direction {
@@ -193,18 +193,18 @@ class KSubscription : public KDialogBase
 
     /**
      * Get/Set the account
-     */ 
+     */
     KAccount* account() { return mAcct; }
     void setAccount( KAccount * acct ) { mAcct = acct; }
 
     /**
      * Access to the treewidget that holds the GroupItems
-     */ 
+     */
     QListView* folderTree() { return groupView; }
 
     /**
      * Access to the searchfield
-     */ 
+     */
     KLineEdit* searchField() { return filterEdit; }
 
     /**
@@ -214,14 +214,14 @@ class KSubscription : public KDialogBase
 
     /**
      * Removes the item from the listview
-     */ 
+     */
     void removeListItem( QListView *view, const KGroupInfo &gi );
 
     /**
      * Gets the item from the listview
      * Returns 0 if the item can't be found
      */
-    QListViewItem* getListItem( QListView *view, const KGroupInfo &gi ); 
+    QListViewItem* getListItem( QListView *view, const KGroupInfo &gi );
 
     /**
      * Is the item in the given listview
@@ -231,64 +231,64 @@ class KSubscription : public KDialogBase
     /**
      * Makes all changes after an item is toggled
      * called by the item's stateChange-method
-     */ 
+     */
     void changeItemState( GroupItem* item, bool on );
 
     /**
      * Get/Set the direction of button1
      */
-    Direction directionButton1() { return mDirButton1; } 
+    Direction directionButton1() { return mDirButton1; }
     void setDirectionButton1( Direction dir );
 
     /**
      * Get/Set the direction of button2
      */
-    Direction directionButton2() { return mDirButton2; } 
+    Direction directionButton2() { return mDirButton2; }
     void setDirectionButton2( Direction dir );
 
     /**
      * Returns true if items are being constructed
      * Call 'slotLoadingComplete' to switch this
      */
-    bool isLoading() { return mLoading; } 
+    bool isLoading() { return mLoading; }
 
-    /** 
-     * Hide 'Disable tree view' checkbox 
+    /**
+     * Hide 'Disable tree view' checkbox
      */
     void hideTreeCheckbox() { noTreeCB->hide(); }
 
-    /** 
-     * Hide 'New Only' checkbox 
+    /**
+     * Hide 'New Only' checkbox
      */
     void hideNewOnlyCheckbox() { newCB->hide(); }
 
     /**
      * Update the item-states (visible, enabled) when a filter
      * criteria changed
-     */ 
+     */
     void filterChanged( QListViewItem* item = 0,
         const QString & text = QString::null );
 
     /**
      * The amount of items that are visible and enabled
      */
-    uint activeItemCount(); 
+    uint activeItemCount();
 
     /**
      * Moves all items from toplevel back to their original position
      */
-    void restoreOriginalParent(); 
+    void restoreOriginalParent();
 
     /**
      * Saves the open states
      */
     void saveOpenStates();
-    
+
     /**
      * Restores the saved open state
      */
     void restoreOpenStates();
-    
+
 
   public slots:
     /**
@@ -298,19 +298,19 @@ class KSubscription : public KDialogBase
 
     /**
      * Changes the current state of the buttons
-     */ 
+     */
     void slotChangeButtonState( QListViewItem* );
 
     /**
      * Buttons are clicked
-     */ 
-    void slotButton1();  
-    void slotButton2();  
+     */
+    void slotButton1();
+    void slotButton2();
 
     /**
      * Updates the status-label
      */
-    void slotUpdateStatusLabel(); 
+    void slotUpdateStatusLabel();
 
     /**
      * The reload-button is pressed
@@ -320,7 +320,7 @@ class KSubscription : public KDialogBase
   protected slots:
     /**
      * Slot for the checkboxes
-     */ 
+     */
     void slotCBToggled();
 
     /**
@@ -328,19 +328,19 @@ class KSubscription : public KDialogBase
      */
     void slotFilterTextChanged( const QString & text );
 
-    
+
   signals:
     /**
      * Emitted when the amount of items in the
      * groupView changes (e.g. on filtering)
-     */ 
+     */
     void listChanged();
 
 
   protected:
     // current account
     KAccount* mAcct;
-    
+
     // widgets
     QWidget *page;
     QListView *groupView;

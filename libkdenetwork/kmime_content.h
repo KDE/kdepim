@@ -26,8 +26,8 @@ class KMime::Headers::CDisposition;
 class KMime::Headers::List;
 #endif
 
-#include <kmime_util.h>
-#include <kmime_headers.h>
+#include "kmime_util.h"
+#include "kmime_headers.h"
 
 #include <qtextstream.h>
 
