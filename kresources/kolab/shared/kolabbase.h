@@ -126,7 +126,8 @@ protected:
 
   bool loadEmailAttribute( QDomElement& element, Email& email );
 
-  void saveEmailAttribute( QDomElement& element, const Email& email ) const;
+  void saveEmailAttribute( QDomElement& element, const Email& email,
+                           const QString& tagName = "email" ) const;
 
   // Load the attributes of this class
   virtual bool loadAttribute( QDomElement& );

@@ -202,10 +202,10 @@ bool KolabBase::loadEmailAttribute( QDomElement& element, Email& email )
   return true;
 }
 
-void KolabBase::saveEmailAttribute( QDomElement& element,
-                                    const Email& email ) const
+void KolabBase::saveEmailAttribute( QDomElement& element, const Email& email,
+                                    const QString& tagName ) const
 {
-  QDomElement e = element.ownerDocument().createElement( "email" );
+  QDomElement e = element.ownerDocument().createElement( tagName );
   element.appendChild( e );
   writeString( e, "display-name", email.displayName );
   writeString( e, "smtp-address", email.smtpAddress );
