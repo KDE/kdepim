@@ -150,7 +150,9 @@ full name (&eg; <userinput>John Doe</userinput>) and the
 <guilabel>Organization</guilabel> field (optional) with the appropriate
 information. Next, fill in the <guilabel>Email Address</guilabel> and
 the <guilabel>Reply-To Address</guilabel> (optional) field with your
-email address.</para>
+email address. If you are using <application>PGP</application> or
+<application>GnuPG</application> you need to set an identity in 
+the <guilabel>PGP User Identity</guilabel> field.</para>
 
 <para>Finally, set the location of your signature file in the
 <guilabel>Signature File</guilabel> field. You can skip setting the signature
@@ -299,13 +301,18 @@ every time you start &kmail; and fetch new mail.</para>
 encrypt your password, so people who can access your configuration files (&eg;
 system administrators) can get your password if you select this option.</para></warning>
 
-<para>For POP3 &kmail; supports <guilabel>Clear text</guilabel> authentificaton, 
-<guilabel>PLAIN</guilabel>, <guilabel>CRAM-MD5</guilabel> and <guilabel>APOP</guilabel>. 
-You should  only use <guilabel>Clear text</guilabel> if your server doesn't support any of the other 
-authentification methods. These other methods transfer the password encrypted over the 
-network, which is more secure. <!-- fixme? plain also secure? -->
-Additionally, for IMAP <guilabel>Anonymous</guilabel> is supported.</para>
-<!-- fixme: explain? -->
+<para>&kmail; supports encryption via <guilabel>SSL</guilabel> 
+and <guilabel>TLS</guilabel>.</para> 
+<!-- fixme: what's that?? -->
+
+<para>For POP3 &kmail; supports <guilabel>Clear text</guilabel>, 
+<guilabel>PLAIN</guilabel>, <guilabel>CRAM-MD5</guilabel> and
+<guilabel>APOP</guilabel> authentificaton. You should only use
+<guilabel>Clear text</guilabel> if your server doesn't support any of the
+other  authentification methods. These other methods transfer the password
+encrypted over the  network, which is more secure. <!-- fixme? plain also
+secure? --> Additionally, for IMAP <guilabel>Anonymous</guilabel> is
+supported.</para> <!-- fixme: explain? -->
 
 <para>You are now ready to send and receive mail! For IMAP,
 click on the <guilabel>+</guilabel> sign in the folder tree in
@@ -1241,13 +1248,18 @@ Mail</guiicon> icon for some time to get a list of accounts.</para>
 (<application>GnuPG</application>)</title>
 
 <para>This is a short introduction on how to setup &kmail;'s
-<application>pgp</application> support. It will give some hints on the use of
-<application>pgp</application> too. It's written for people who are beginners in
-this area. If you are familiar with the use of <acronym>pgp</acronym>, you can
-skip most of the steps. Working with <application>GnuPG</application> is
-generally similar, but some command line parameters may be different. Please
+<application>PGP</application> support. It will give some hints on the use of
+<application>PGP</application> too. It's written for people who are beginners in
+this area. If you are familiar with the use of <acronym>PGP</acronym>, you can
+skip most of the steps. This documentation (and the &kmail; user interface) 
+generally talks only about  <quote>PGP</quote>, but it applies to 
+both <application>PGP</application> and <application>GnuPG</application>, 
+although some <application>GnuPG</application> command line parameters 
+may be different.</para>
+
+<para>Please
 also check out the <link linkend="pgp-faq">&FAQ; item about
-<application>pgp</application></link>.</para>
+<application>PGP</application></link>.</para>
 
 <warning><para>You can encrypt your messages sent with &kmail;, but this does
 not mean that the attachments are encrypted. You have to encrypt your
@@ -1261,16 +1273,16 @@ really works with your setup before you start using it seriously. &kmail; might
 <emphasis>not</emphasis> warn you if something fails. You better enable <guilabel>Show ciphered text
 after composing</guilabel>.  </para></warning>
 
-<para>To setup and use <application>pgp</application> support in &kmail; it is
-necessary to have <application>pgp</application> installed and set up
+<para>To setup and use <application>PGP</application> support in &kmail; it is
+necessary to have <application>PGP</application> installed and set up
 properly. Of course we cannot give you a full introduction of
-<application>pgp</application> here. We will only mention the steps you have to
-do to get <application>pgp</application> going. For details you should have a look at the excellent 
-<application>pgp</application> documentation.</para> 
+<application>PGP</application> here. We will only mention the steps you have to
+do to get <application>PGP</application> going. For details you should have a look at the excellent 
+<application>PGP</application> documentation.</para> 
 
 <para>It is certainly a good idea to study this documentation as well as an
 introduction into public key cryptography (&eg; out of the
-<application>pgp</application> 6.5.x package). There you can learn a lot about
+<application>PGP</application> 6.5.x package). There you can learn a lot about
 the basic concepts, which will help you to understand what is going on. As well,
 many security related issues you should know about are discussed there.</para>
 
@@ -1370,7 +1382,7 @@ url="http://www.cam.ac.uk.pgp.net/pgpnet/">http://www.cam.ac.uk.pgp.net/pgpnet/<
 <para>You compose your message as usual in the <guilabel>Composer</guilabel>
 window of &kmail;. Before you send the message, check the button with the
 underlining icon on it in the toolbar of the composer window. Then, you can send
-the message. To sign it, &kmail; needs to know your <application>pgp</application> passphrase. If you
+the message. To sign it, &kmail; needs to know your <application>PGP</application> passphrase. If you
 didn't select <guilabel>Keep passphrase in memory</guilabel> in the
 <guilabel>Security</guilabel> settings tab, &kmail; will ask you for it.  On the
 other hand, if you have already given the phrase to &kmail;, it will sign the
@@ -1392,7 +1404,7 @@ that the receiver will get the correct key. There can be a man-in-the-middle
 attack, as somebody can change the key and sign the message with that other
 key. That's why the recipient should verify the attached key by checking the
 key's fingerprint against the one he got in a secure way from you. Have a look
-at the <application>pgp</application> documentation for further details.</para>
+at the <application>PGP</application> documentation for further details.</para>
 
 </sect2>
 
@@ -1529,6 +1541,30 @@ use the same database.</para>
 
 </sect2>
 
+<sect2 id="appearance-tab-messages-scoring">
+<title>Messages Scoring</title>
+
+<para>In this section you can manage rules that define a message's score.
+If at least one rule is defined for a folder, a <guilabel>Score</guilabel>
+column will appear in the Headers pane of that folder. Each rule has a
+name, a list of folders where it is active, one or more conditions that
+decide wheter the rule matches a message, and one or more actions that get
+triggered if a condition is matched. This concept is very similar to that
+of <link linkend="filters">filters</link>.</para>
+
+<para>The most useful action is <guilabel>adjust score</guilabel>. It will
+increase or decrease the score of a message. The idea is that important
+messages have a high score and you can then use the
+<guilabel>Score</guilabel> column to sort your messages.</para>
+
+<para>The <guilabel>display message</guilabel> action will display
+a dialog when you enter a folder with a matching message.</para>
+
+<!-- fixme?: date + less than/greater than broken in kmail -->
+<!-- fixme?: "group" wording in program -->
+
+</sect2>
+
 </sect1>
 
 <sect1 id="composer-tab">
@@ -1631,6 +1667,9 @@ is only useful for advanced users.</para>
 <sect1 id="security-tab">
 <title>Security Tab</title>
 
+<sect2 id="security-tab-general">
+<title>General</title>
+
 <para><guilabel>Prefer HTML to plain text</guilabel> will show
 <acronym>HTML</acronym> messages with their <acronym>HTML</acronym>
 formatting and layout. We strongly recommend to leave this option off, as
@@ -1656,9 +1695,16 @@ recommend to leave this option off. If you want to send confirmations
 to certain people you can do so by using the <guilabel>confirm
 delivery</guilabel> filter action.</para>
 
+</sect2>
+
+<sect2 id="security-tab-pgp">
+<title>PGP</title>
+
 <para>For the <guilabel>PGP</guilabel> tab please see the <link
 linkend="pgp-settings"><application>PGP</application>
 section</link>.</para>
+
+</sect2>
 
 </sect1>
 
@@ -2380,7 +2426,9 @@ they reply to.</para>
 </term>
 <listitem>
 <para>Opens the <guilabel>Composer</guilabel> window so you can write a new
-mail.</para>
+mail. If the current folder holds a mailing list and has a <guilabel>Post 
+Address</guilabel> defined, this address will be default <guilabel>To:</guilabel>
+address.</para>
 </listitem>
 </varlistentry>
 
@@ -3540,7 +3588,10 @@ I suggest you modify the &kmail; source to remove that line.</para>
 <question><para>&kmail; fetches the same messages over and over again.</para></question>
 <answer><para>This happens if you have <guilabel>Delete mail from server</guilabel>
 deselected and your POP3 server doesn't support the UIDL command. There's currently
-no workaround besides selecting <guilabel>Delete mail from server</guilabel>.</para></answer>
+no workaround besides selecting <guilabel>Delete mail from server</guilabel>.
+A more detailed explanation can be found 
+<ulink url="http://lists.kde.org/?l=kmail&amp;m=99220697415300&amp;w=2">in this
+mailing list post</ulink>.</para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -3668,10 +3719,6 @@ which often change between different versions.</para>
 <para>As most other mail clients, &kmail; can encrypt your messages, but
 <emphasis>not</emphasis> your attachments. You have to encrypt them manually
 before you attach them.</para>
-</listitem>
-<listitem>
-<para>&kmail; is <emphasis>not</emphasis> able to use different keys
-for multiple identities.<!-- fixme: remove for KDE 2.2??? --></para>
 </listitem>
 </itemizedlist>
 </answer>
@@ -3843,7 +3890,6 @@ tab. You should either specify a signature file or deselect <guilabel>Use a
 signature from file</guilabel>.</para></answer>
 </qandaentry>
 
-
 <qandaentry>
 <question><para>How do I set up <application>sendmail</application> to work with
 &kmail; if I have a  dial-up connection?</para></question> 
@@ -3858,6 +3904,16 @@ HOWTO</ulink> or at <ulink
 url="http://www.leg.uct.ac.za/Articles/sendmail_dialup.html">UCT Linux User's
 group page on configuring sendmail for Dial-up
 connections</ulink>.</para></answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>I've seen demonstrations of remote control behavior with &kmail;.
+Is there any documentation on the available interfaces?</para></question>
+<answer><para>You can get a list of functions by using this command in a shell:
+<userinput><command>dcop</command> 
+<option>kmail  KMailIface</option></userinput>. Some documentation is also
+in <filename>kdenetwork/kmail/kmailIface.h</filename> and
+<filename>kdenetwork/kmail/mailcomposerIface.h</filename>.</para></answer>
 </qandaentry>
 
 </qandaset>
