@@ -34,7 +34,7 @@
 </Menu>
 
 <ToolBar name="mainToolBar"><text>Main Toolbar</text>
-  <Action name="file_hotsync" />
+  <Action name="popup_hotsync" />
   <Action name="file_backup" />
   <Action name="file_reload" />
   <Separator />

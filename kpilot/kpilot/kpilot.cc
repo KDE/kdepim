@@ -54,6 +54,7 @@ static const char *kpilot_id =
 #include <kiconloader.h>
 #include <kdebug.h>
 #include <kaction.h>
+#include <kactionclasses.h>
 #include <kstdaction.h>
 #include <kuniqueapp.h>
 #include <kkeydialog.h>
@@ -558,24 +559,34 @@ void KPilotInstaller::initMenu()
 
 	KAction *a;
 
+	KActionMenu *syncPopup;
+
+	syncPopup = new KActionMenu(i18n("HotSync"), CSL1("hotsync"), 
+		actionCollection(), "popup_hotsync");
+	connect(syncPopup, SIGNAL(activated()), 
+		this, SLOT(slotHotSyncRequested()));
+
 	// File actions
 	a = new KAction(i18n("&HotSync"), CSL1("hotsync"), 0,
 		this, SLOT(slotHotSyncRequested()),
 		actionCollection(), "file_hotsync");
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should be a normal HotSync."));
-
+	syncPopup->insert(a);
+	
 	a = new KAction(i18n("&FastSync"), CSL1("fastsync"), 0,
 		this, SLOT(slotFastSyncRequested()),
 		actionCollection(), "file_fastsync");
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should be a FastSync (run conduits only)."));
-
+	syncPopup->insert(a);
+	
 	a = new KAction(i18n("Full&Sync"), CSL1("fullsync"), 0,
 		this, SLOT(slotFullSyncRequested()),
 		actionCollection(), "file_fullsync");
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should be a FullSync (check data on both sides)."));
+	syncPopup->insert(a);
 
 #ifdef DEBUG
 	a = new KAction(i18n("&List only"),CSL1("list"),0,
@@ -584,18 +595,21 @@ void KPilotInstaller::initMenu()
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should just list the files on the Handheld and do nothing "
 		"else."));
+	syncPopup->insert(a);
 #endif
 	a = new KAction(i18n("&Backup"), CSL1("backup"), 0,
 		this, SLOT(slotBackupRequested()),
 		actionCollection(), "file_backup");
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should back up the Handheld to the PC."));
+	syncPopup->insert(a);
 
 	a = new KAction(i18n("&Restore"), CSL1("restore"), 0,
 		this, SLOT(slotRestoreRequested()),
 		actionCollection(), "file_restore");
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should restore the Handheld from data on the PC."));
+	syncPopup->insert(a);
 
 	a = new KAction(i18n("Rese&t Link"),CSL1("reload"), 0,
 		this, SLOT(slotResetLink()),
@@ -634,7 +648,7 @@ void KPilotInstaller::initMenu()
 		this, SLOT(slotConfigureWizard()),
 		actionCollection(), "options_configure_wizard");
 	a->setWhatsThis(i18n("Configure KPilot using the configuration wizard."));
-
+	
 }
 
 void KPilotInstaller::fileInstalled(int)
