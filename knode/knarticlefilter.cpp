@@ -224,9 +224,11 @@ void KNArticleFilter::doFilter(KNGroup *g)
           inThread=ref->filterResult();
           idRef=ref->idRef();
         }
-        
-        art->setFilterResult(inThread);
-        if(inThread) c_ount++;
+        if(inThread) {
+          art->setFilterResult(true);
+          g->byId(art->idRef())->setVisibleFollowUps(true);
+          c_ount++;
+        }
       }
       else c_ount++;
     }
