@@ -18,8 +18,11 @@
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qvbox.h>
+#include <qcheckbox.h>
+#include <qcombobox.h>
 
 #include <klocale.h>
+#include <klineedit.h>
 
 #include "knglobals.h"
 #include "knconfigmanager.h"
@@ -48,7 +51,7 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
 
   grpL->addRowSpacing(0, fontMetrics().lineSpacing()-9);
 
-  n_ick=new QLineEdit(gb);
+  n_ick=new KLineEdit(gb);
   if (g_rp->hasName())
     n_ick->setText(g_rp->name());
   QLabel *l=new QLabel(n_ick, i18n("&Nickname:"), gb);

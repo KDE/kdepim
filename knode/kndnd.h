@@ -17,9 +17,11 @@
 #ifndef KNDND_H
 #define KNDND_H
 
-#include <qdragobject.h>
-#include <qlistview.h>
-
+class QWidget;
+class QListViewItem;
+class QDragEnterEvent;
+class QDragMoveEvent;
+class QDropEvent;
 
 
 class KNDragHandler {
@@ -35,7 +37,6 @@ class KNDragHandler {
     // drag handling
     virtual void startDrag(QListViewItem*)  { }
 
-
     // drop handling
     virtual bool accept(QDragEnterEvent*)                 { return false; }
     virtual bool accept(QDragMoveEvent*, QListViewItem*)  { return false; }
@@ -43,7 +44,6 @@ class KNDragHandler {
 
   protected:
     QWidget *w_idget;
-
 
 };
 

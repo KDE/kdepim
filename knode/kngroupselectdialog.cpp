@@ -18,6 +18,7 @@
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qheader.h>
+#include <qcheckbox.h>
 
 #include <klocale.h>
 #include <kmessagebox.h>

@@ -37,6 +37,7 @@
 #include <kstdaction.h>
 #include <kprocess.h>
 #include <kcharsets.h>
+#include <kaction.h>
 
 #include "resource.h"
 #include "knmime.h"
@@ -731,6 +732,14 @@ void KNArticleWidget::showErrorMessage(const QString &s)
   a_ctSetCharset->setEnabled(false);
   a_ctSetCharsetKeyb->setEnabled(false);
   a_ctViewSource->setEnabled(false);
+}
+
+
+void KNArticleWidget::setShowFullHdrs(bool b)
+{
+  f_ullHdrs=b;
+  a_ctToggleFullHdrs->setChecked(b);
+  updateContents();
 }
 
 

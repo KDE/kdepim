@@ -21,7 +21,7 @@
 
 class KNFilterConfigWidget;
 class KNArticleFilter;
-class QLineEdit;
+class KLineEdit;
 class QComboBox;
 class QCheckBox;
 
@@ -40,7 +40,7 @@ class KNFilterDialog : public KDialogBase {
           
   protected:
     KNFilterConfigWidget *fw;
-    QLineEdit *fname;
+    KLineEdit *fname;
     QComboBox *apon;
     QCheckBox *enabled;
     

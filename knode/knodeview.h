@@ -22,8 +22,13 @@
 #endif
 
 #include <qsplitter.h>
-#include <kaction.h>
-#include <qlistview.h>
+
+class QListViewItem;
+
+class KAction;
+class KSelectAction;
+class KActionCollection;
+class KToggleAction;
 
 class KNArticleWidget;
 class KNListView;

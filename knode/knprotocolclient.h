@@ -21,9 +21,10 @@
 #include <qobject.h>
 #include <qcstring.h>
 
+#include <knserverinfo.h>
+
 class QStrList;
 class KNJobData;
-class KNServerInfo;
 struct in_addr;
 
 

@@ -49,7 +49,6 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
     bool useDiskCache()               { return u_seDiskCache; }
     KNConfig::Identity* identity()    { return i_dentity; }
 
-
     //set
     void setFetchDescriptions(bool b) { f_etchDescriptions = b; }
     void setLastNewFetch(QDate date)  { l_astNewFetch = date; }

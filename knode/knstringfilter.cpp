@@ -19,10 +19,10 @@
 #include <qregexp3.h>
 #include <qcheckbox.h>
 #include <qcombobox.h>
-#include <qlineedit.h>
 
 #include <klocale.h>
 #include <ksimpleconfig.h>
+#include <klineedit.h>
 
 #include "kngroup.h"
 #include "knnntpaccount.h"
@@ -112,7 +112,7 @@ KNStringFilterWidget::KNStringFilterWidget(const QString& title, QWidget *parent
   fType->insertItem(i18n("does contain"));
   fType->insertItem(i18n("does NOT contain"));
   
-  fString=new QLineEdit(this);
+  fString=new KLineEdit(this);
   
   regExp=new QCheckBox(i18n("regular expression"), this);
   

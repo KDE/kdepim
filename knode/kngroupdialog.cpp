@@ -19,7 +19,6 @@
 #include <qstrlist.h>
 #include <qbuttongroup.h>
 #include <qradiobutton.h>
-#include <qlineedit.h>
 #include <qcheckbox.h>
 
 #include <kdebug.h>
@@ -27,6 +26,7 @@
 #include <kdatepik.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <klineedit.h>
 
 #include "utilities.h"
 #include "kngroupmanager.h"

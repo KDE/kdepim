@@ -19,9 +19,9 @@
 
 #include <time.h>
 
-#include "knarticlecollection.h"
-#include "knmime.h"
 #include "utilities.h"
+#include "knmime.h"
+#include "knarticlecollection.h"
 
 
 class KNFolder : public KNArticleCollection  {

@@ -19,12 +19,14 @@
 
 #include <qlist.h>
 
-#include "knmime.h"
 #include "knjobdata.h"
+#include "knmime.h"
 
 class QListViewItem;
-class KNArticle;
+
 class KTempFile;
+
+class KNArticle;
 class KNListView;
 class KNThread;
 class KNArticleCollection;
@@ -33,6 +35,7 @@ class KNFolder;
 class KNArticleFilter;
 class KNFilterManager;
 class KNSearchDialog;
+class KNJobData;
 
 
 class KNArticleManager : public QObject, public KNJobConsumer {

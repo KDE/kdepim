@@ -14,18 +14,25 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include "knconvert.h"
-#include "knmime.h"
-#include "resource.h"
 #include <qlayout.h>
 #include <qdir.h>
 #include <qtextstream.h>
+#include <qwidgetstack.h>
+#include <qlabel.h>
+#include <qcheckbox.h>
+
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <kseparator.h>
 #include <kmessagebox.h>
 #include <kglobal.h>
 #include <kstddirs.h>
+#include <klineedit.h>
+#include <kprocess.h>
+
+#include "knconvert.h"
+#include "knmime.h"
+#include "resource.h"
 
 
 bool KNConvert::needToConvert(const QString &oldVersion)
@@ -79,7 +86,7 @@ will be created before the conversion starts.").arg(KNODE_VERSION), w_1);
   b_ackupPathLabel=new QLabel(i18n("save backup in:"), w_1);
   w1L->addWidget(b_ackupPathLabel, 3,0);
 
-  b_ackupPath=new QLineEdit(QDir::homeDirPath()+QString("/"), w_1);
+  b_ackupPath=new KLineEdit(QDir::homeDirPath()+QString("/"), w_1);
   w1L->addWidget(b_ackupPath, 3,1);
 
   b_rowseBtn= new QPushButton(i18n("Browse ..."), w_1);

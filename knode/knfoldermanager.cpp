@@ -27,6 +27,7 @@
 #include <kapp.h>
 #include <kurl.h>
 #include <kdebug.h>
+#include <klineedit.h>
 
 #include "knglobals.h"
 #include "knconfigmanager.h"
@@ -201,7 +202,7 @@ void KNFolderManager::renameFolder(KNFolder *f, bool isNew)
   QHBox *page = dlg->makeHBoxMainWidget();
 
   QLabel *label = new QLabel(i18n("&Name:"),page);
-  QLineEdit *edit = new QLineEdit(page);
+  KLineEdit *edit = new KLineEdit(page);
   edit->setText(f->name());
 
   label->setBuddy(edit);

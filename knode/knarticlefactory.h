@@ -19,12 +19,12 @@
 
 #include <qsemimodal.h>
 #include <qlist.h>
-#include <qlabel.h>
-#include <qpushbutton.h>
 
 #include "knjobdata.h"
 #include "knmime.h"
 #include "knlistbox.h"
+
+class QLabel;
 
 class KNGroup;
 class KNFolder;

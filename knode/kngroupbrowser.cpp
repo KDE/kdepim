@@ -16,13 +16,13 @@
 
 #include <qlayout.h>
 #include <qcheckbox.h>
-#include <qlineedit.h>
 #include <qtimer.h>
 
 #include <kseparator.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kdebug.h>
+#include <klineedit.h>
 
 #include "knnetaccess.h"
 #include "knjobdata.h"
@@ -48,7 +48,7 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
   page=new QWidget(this);
   setMainWidget(page);
 
-  filterEdit=new QLineEdit(page);
+  filterEdit=new KLineEdit(page);
   QLabel *l=new QLabel(filterEdit,i18n("&Filter:"), page);
   subCB=new QCheckBox(i18n("&subscribed only"), page);
   subCB->setChecked(false);

@@ -17,10 +17,11 @@
 #ifndef KNJOBDATA_H
 #define KNJOBDATA_H
 
-#include "knserverinfo.h"
 #include <qlist.h>
 
 class KNJobData;
+class KNServerInfo;
+
 
 class KNJobConsumer {
 

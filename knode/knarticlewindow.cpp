@@ -21,6 +21,7 @@
 #include <kedittoolbar.h>
 #include <kkeydialog.h>
 #include <kconfig.h>
+#include <kaction.h>
 
 #include "kngroup.h"
 #include "knmime.h"

@@ -15,7 +15,9 @@
 */
 
 #include <ctype.h>
-#include <mimelib/mimepp.h>
+#include <mimelib/string.h>
+#include <mimelib/utility.h>
+#include <mimelib/uuencode.h>
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -1938,7 +1940,7 @@ void KNLocalArticle::setForceDefaultCS(bool b)
 
 
 KNAttachment::KNAttachment(KNMimeContent *c)
-  : c_ontent(c), l_oadHelper(0), i_sAttached(true)
+  : c_ontent(c), l_oadHelper(0), f_ile(0), i_sAttached(true)
 {
   KNHeaders::ContentType  *t=c->contentType();
   KNHeaders::CTEncoding   *e=c->contentTransferEncoding();
@@ -1965,9 +1967,9 @@ KNAttachment::KNAttachment(KNMimeContent *c)
 
 
 KNAttachment::KNAttachment(KNLoadHelper *helper)
-  : c_ontent(0), l_oadHelper(helper), i_sAttached(false), h_asChanged(true)
+  : c_ontent(0), l_oadHelper(helper), f_ile(helper->getFile()), i_sAttached(false), h_asChanged(true)
 {
-  setMimeType((KMimeMagic::self()->findFileType(helper->getFile()->name()))->mimeType());
+  setMimeType((KMimeMagic::self()->findFileType(f_ile->name()))->mimeType());
   n_ame=helper->getURL().fileName();
 }
 
@@ -2007,8 +2009,8 @@ QString KNAttachment::contentSize()
   if(c_ontent && c_ontent->hasContent())
     s=c_ontent->size();
   else {
-    if (l_oadHelper)
-      s=l_oadHelper->getFile()->size();
+    if (f_ile)
+      s=f_ile->size();
   }
 
   if(s > 1023) {
@@ -2027,7 +2029,7 @@ QString KNAttachment::contentSize()
 
 void KNAttachment::updateContentInfo()
 {
-  if(!h_asChanged)
+  if(!h_asChanged || !c_ontent)
     return;
 
   //Content-Type
@@ -2062,12 +2064,10 @@ void KNAttachment::updateContentInfo()
 
 void KNAttachment::attach(KNMimeContent *c)
 {
-  if(i_sAttached || !l_oadHelper)
+  if(i_sAttached || !f_ile)
     return;
 
-
   c_ontent=new KNMimeContent();
-  QFile *file = l_oadHelper->getFile();
   updateContentInfo();
   KNHeaders::ContentType *type=c_ontent->contentType();
   KNHeaders::CTEncoding *e=c_ontent->contentTransferEncoding();
@@ -2078,15 +2078,15 @@ void KNAttachment::attach(KNMimeContent *c)
     int readBytes=0;
     DwString dest;
     DwString src;
-    QCString data( (file->size()*4/3)+10 );
+    QCString data( (f_ile->size()*4/3)+10 );
     data.at(0)='\0';
 
-    while(!file->atEnd()) {
+    while(!f_ile->atEnd()) {
       // read 5700 bytes at once :
       // 76 chars per line * 6 bit per char / 8 bit per byte => 57 bytes per line
       // we append 100 lines in a row => encode 5700 bytes
-      readBytes=file->readBlock(buff, 5700);
-      if(readBytes<5700 && file->status()!=IO_Ok) {
+      readBytes=f_ile->readBlock(buff, 5700);
+      if(readBytes<5700 && f_ile->status()!=IO_Ok) {
         KNHelper::displayExternalFileError();
         delete c_ontent;
         c_ontent=0;
@@ -2105,10 +2105,10 @@ void KNAttachment::attach(KNMimeContent *c)
     e->setDecoded(false);
   }
   else { //do not encode text
-    QCString txt(file->size()+10);
-    int readBytes=file->readBlock(txt.data(), file->size());
+    QCString txt(f_ile->size()+10);
+    int readBytes=f_ile->readBlock(txt.data(), f_ile->size());
 
-    if(readBytes<(int)file->size() && file->status()!=IO_Ok) {
+    if(readBytes<(int)f_ile->size() && f_ile->status()!=IO_Ok) {
       KNHelper::displayExternalFileError();
       delete c_ontent;
       c_ontent=0;

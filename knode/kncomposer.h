@@ -17,19 +17,18 @@
 #ifndef KNCOMPOSER_H
 #define KNCOMPOSER_H
 
-#include <qlineedit.h>
-#include <qsplitter.h>
-#include <qgroupbox.h>
-#include <qcombobox.h>
-#include <qpushbutton.h>
 #include <qlistview.h>
 
 #include <kmainwindow.h>
-#include <keditcl.h>
 #include <kdialogbase.h>
-#include <kprocess.h>
-#include <kspell.h>
-#include <ktempfile.h>
+#include <keditcl.h>
+
+class QGroupBox;
+
+class KProcess;
+class KSpell;
+class KSelectAction;
+class KToggleAction;
 
 class KNLocalArticle;
 class KNMimeContent;
@@ -168,6 +167,16 @@ class KNComposer : public KMainWindow  {
     void slotSpellDone(const QString&);
     void slotSpellFinished();
 
+    // DND handling
+    virtual void slotDragEnterEvent(QDragEnterEvent *);
+    virtual void slotDropEvent(QDropEvent *);
+
+  protected:
+
+    // DND handling
+    virtual void dragEnterEvent(QDragEnterEvent *);
+    virtual void dropEvent(QDropEvent *);
+
   signals:
     void composerDone(KNComposer*);
               
@@ -189,17 +198,16 @@ class KNComposer::ComposerView  : public QSplitter {
     QLabel      *l_to,
                 *l_groups,
                 *l_fup2;
-    QLineEdit   *s_ubject,
+    KLineEdit   *s_ubject,
                 *g_roups,
                 *t_o;
-    QComboBox   *f_up2;
+    KComboBox   *f_up2;
     QPushButton *g_roupsBtn,
                 *t_oBtn;
 
     Editor      *e_dit;
     QGroupBox   *n_otification;
     QPushButton *c_ancelEditorBtn;
-
 
     QWidget         *a_ttWidget;
     AttachmentView  *a_ttView;
@@ -224,6 +232,8 @@ class KNComposer::Editor : public KEdit {
     // inserts s at the current cursor position, deletes the current selection
     void pasteString(const QString &s);
 
+    virtual bool eventFilter(QObject*, QEvent* e);
+
   public slots:
     void slotPasteAsQuotation();
     void slotFind();
@@ -235,8 +245,16 @@ class KNComposer::Editor : public KEdit {
     void slotRemoveBox();
     void slotRot13();
 
+  signals:
+    void sigDragEnterEvent(QDragEnterEvent *);
+    void sigDropEvent(QDropEvent *);
+
   protected:
-    bool eventFilter(QObject*, QEvent* e);
+
+    // DND handling
+    virtual void dragEnterEvent(QDragEnterEvent *);
+    virtual void dropEvent(QDropEvent *);
+
 };
 
 
@@ -278,7 +296,7 @@ class KNComposer::AttachmentPropertiesDlg : public KDialogBase {
     void apply();
 
   protected:
-    QLineEdit *m_imeType,
+    KLineEdit *m_imeType,
               *d_escription;
     QComboBox *e_ncoding;
 

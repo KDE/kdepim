@@ -18,19 +18,18 @@
 #define KNGROUPBROWSER_H
 
 #include <qlistview.h>
-#include <qsortedlist.h>
-#include <qcheckbox.h>
 
 #include <kdialogbase.h>
 
 #include "kngroupmanager.h"
 
-class QLineEdit;
+class KLineEdit;
 class QCheckBox;
 class QLayout;
 class QLabel;
 
 class KNNntpAccount;
+
 
 class KNGroupBrowser : public KDialogBase {
 
@@ -84,7 +83,7 @@ class KNGroupBrowser : public KDialogBase {
 
     QWidget *page;
     QListView *groupView;
-    QLineEdit *filterEdit;
+    KLineEdit *filterEdit;
     QCheckBox *subCB, *newCB;
     QPushButton  *arrowBtn1, *arrowBtn2;
     QPixmap pmGroup, pmNew,

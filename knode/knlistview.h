@@ -18,8 +18,6 @@
 #define KNLISTVIEW_H
 
 #include <qlistview.h>
-#include <qlist.h>
-#include <kaction.h>
 
 class KNListView;
 class KNDragHandler;

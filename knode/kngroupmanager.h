@@ -17,20 +17,17 @@
 #ifndef KNGROUPMANAGER_H
 #define KNGROUPMANAGER_H
 
-#include <qlist.h>
-#include <qstrlist.h>
-#include <qdatetime.h>
+#include <qobject.h>
 #include <qsortedlist.h>
-#include <kaction.h>
 
 #include "knjobdata.h"
 #include "kngroup.h"
 
-class KNCleanUp;
 class KNNntpAccount;
 class KNProtocolClient;
 class KNServerInfo;
 class KNArticleManager;
+class KNCleanUp;
 
 
 //=================================================================================

@@ -25,6 +25,7 @@
 #include <kapp.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
+#include <klineedit.h>
 
 //GUI
 #include "knodeview.h"
@@ -1647,7 +1648,7 @@ void KNodeView::slotFetchArticleWithID()
   QHBox *page = dlg->makeHBoxMainWidget();
 
   QLabel *label = new QLabel(i18n("&Message-ID:"),page);
-  QLineEdit *edit = new QLineEdit(page);
+  KLineEdit *edit = new KLineEdit(page);
   label->setBuddy(edit);
   edit->setFocus();
   KNHelper::restoreWindowSize("fetchArticleWithID", dlg, QSize(325,66));

@@ -200,49 +200,66 @@ QFile* KNSaveHelper::getFile(QString dialogTitle)
 
 //===============================================================================
 
-QString KNLoadHelper::lastPath;
+QString KNLoadHelper::l_astPath;
 
 KNLoadHelper::KNLoadHelper(QWidget *parent)
-  : p_arent(parent), file(0)
+  : p_arent(parent), f_ile(0)
 {
 }
 
 
 KNLoadHelper::~KNLoadHelper()
 {
-  delete file;
-  if (!tempName.isEmpty())
-    KIO::NetAccess::removeTempFile(tempName);
+  delete f_ile;
+  if (!t_empName.isEmpty())
+    KIO::NetAccess::removeTempFile(t_empName);
 }
 
 
 KNFile* KNLoadHelper::getFile(QString dialogTitle)
 {
-  url = KFileDialog::getOpenURL(lastPath,QString::null,p_arent,dialogTitle);
+  if (f_ile)
+    return f_ile;
+
+  KURL url = KFileDialog::getOpenURL(l_astPath,QString::null,p_arent,dialogTitle);
 
   if (url.isEmpty())
     return 0;
 
-  lastPath = url.url(-1);
-  lastPath.truncate(lastPath.length()-url.fileName().length());
+  l_astPath = url.url(-1);
+  l_astPath.truncate(l_astPath.length()-url.fileName().length());
+
+  return setURL(url);
+}
+
+
+KNFile* KNLoadHelper::setURL(KURL url)
+{
+  if (f_ile)
+    return f_ile;
+
+  u_rl = url;
+
+  if (u_rl.isEmpty())
+    return 0;
 
   QString fileName;
-  if (!url.isLocalFile()) {
-    if (KIO::NetAccess::download(url, tempName))
-      fileName = tempName;
+  if (!u_rl.isLocalFile()) {
+    if (KIO::NetAccess::download(u_rl, t_empName))
+      fileName = t_empName;
   } else
-    fileName = url.path();
+    fileName = u_rl.path();
 
   if (fileName.isEmpty())
     return 0;
 
-  file = new KNFile(fileName);
-  if(!file->open(IO_ReadOnly)) {
+  f_ile = new KNFile(fileName);
+  if(!f_ile->open(IO_ReadOnly)) {
     KNHelper::displayExternalFileError();
-    delete file;
-    file = 0;
+    delete f_ile;
+    f_ile = 0;
   }
-  return file;
+  return f_ile;
 }
 
 

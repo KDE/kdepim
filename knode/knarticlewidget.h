@@ -17,21 +17,23 @@
 #ifndef KNARTICLEWIDGET_H
 #define KNARTICLEWIDGET_H
 
+#include <qbitarray.h>
+
 //bad hack, but we need access to QTextBrowser::anchorAt(). Obsolete with Qt 3.0.
 #define private protected
 #include <ktextbrowser.h>
 #undef private
 
-#include <qlist.h>
-#include <qtimer.h>
-#include <qstring.h>
-#include <qbitarray.h>
-#include <qvbox.h>
-
-#include <kaction.h>
-#include <kpopupmenu.h>
-
 #include "knjobdata.h"
+
+class QWidget;
+class QPopupMenu;
+
+class KAction;
+class KActionCollection;
+class KToggleAction;
+class KSelectAction;
+class KPopupMenu;
 
 class KNArticle;
 class KNArticleCollection;
@@ -95,15 +97,12 @@ class KNArticleWidget : public KTextBrowser, public KNJobConsumer {
     void showErrorMessage(const QString &s);
 
     bool showFullHdrs()               { return f_ullHdrs; }
-    void setShowFullHdrs(bool b=true) { f_ullHdrs=b;
-                                        a_ctToggleFullHdrs->setChecked(b);
-                                        updateContents(); }
-
+    void setShowFullHdrs(bool b=true);
     void updateContents();
 
-    KNArticle* article()              { return a_rticle; }
+    KNArticle* article()                { return a_rticle; }
 
-    KAction* setCharsetAction() { return a_ctSetCharset; }
+    KSelectAction* setCharsetAction()   { return a_ctSetCharset; }
     KAction* setCharsetKeyboardAction() { return a_ctSetCharsetKeyb; }
 
   protected:

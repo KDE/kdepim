@@ -18,16 +18,18 @@
 #define KNGROUP_H
 
 #include "knarticlecollection.h"
-#include "knmime.h"
 #include "knjobdata.h"
+#include "knmime.h"
+
+class QStrList;
 
 class KNProtocolClient;
 class KNNntpAccount;
-class QStrList;
 
 namespace KNConfig {
 class Identity;
 };
+
 
 class KNGroup : public KNArticleCollection , public KNJobItem  {
   

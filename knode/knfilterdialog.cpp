@@ -15,8 +15,6 @@
 */
 
 #include <qlabel.h>
-#include <qlineedit.h>
-#include <qcombobox.h>
 #include <qcheckbox.h>
 #include <qgroupbox.h>
 #include <qlayout.h>
@@ -25,6 +23,7 @@
 
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <klineedit.h>
 
 #include "knglobals.h"
 #include "knfiltermanager.h"
@@ -45,7 +44,7 @@ KNFilterDialog::KNFilterDialog(KNArticleFilter *f, QWidget *parent, const char *
   QFrame* page=plainPage();
 
   QGroupBox *gb=new QGroupBox(page);
-  fname=new QLineEdit(gb);
+  fname=new KLineEdit(gb);
   QLabel *l1=new QLabel(fname, i18n("Na&me:"), gb);
   apon=new QComboBox(gb);
   apon->insertItem(i18n("single articles"));

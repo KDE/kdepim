@@ -21,6 +21,8 @@
 #include <qdir.h>
 #include <qlayout.h>
 #include <qframe.h>
+#include <qlabel.h>
+#include <qprogressbar.h>
 
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -294,6 +296,12 @@ KNCleanUp::ProgressDialog::ProgressDialog(int steps)
 
 KNCleanUp::ProgressDialog::~ProgressDialog()
 {
+}
+
+
+void KNCleanUp::ProgressDialog::showMessage(const QString &s)
+{
+  m_sg->setText(s);
 }
 
 

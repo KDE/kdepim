@@ -32,6 +32,7 @@ class KNodeView;
 class KNScoringManager;
 class KNMemoryManager;
 
+
 // idea: Previously the manager classes were available
 //       via KNodeApp. Now they can be accessed directly,
 //       this removes many header dependencies.

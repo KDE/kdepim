@@ -20,10 +20,9 @@
 #include <qlist.h>
 
 class KNListView;
-class KNCleanUp;
 class KNFolder;
 class KNArticleManager;
-class KNCleanupProgress;
+class KNCleanUp;
 
 
 class KNFolderManager

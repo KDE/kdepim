@@ -19,6 +19,8 @@
 #include <qlayout.h>
 #include <qbuttongroup.h>
 #include <qvbox.h>
+#include <qlabel.h>
+#include <qcheckbox.h>
 
 #include <klocale.h>
 #include <knumvalidator.h>
@@ -37,6 +39,10 @@
 #include <kscoring.h>
 #include <kscoringeditor.h>
 #include <kpgp.h>
+#include <knuminput.h>
+#include <kspell.h>
+#include <klineedit.h>
+#include <kcombobox.h>
 
 #include "knaccountmanager.h"
 #include "kngroupmanager.h"
@@ -56,25 +62,25 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
 {
   QGridLayout *topL=new QGridLayout(this,  9, 3, 5,5);
 
-  n_ame=new QLineEdit(this);
+  n_ame=new KLineEdit(this);
   QLabel *l=new QLabel(n_ame, i18n("&Name:"), this);
   topL->addWidget(l, 0,0);
   topL->addMultiCellWidget(n_ame, 0,0, 1,2);
   n_ame->setText(d_ata->n_ame);
 
-  o_rga=new QLineEdit(this);
+  o_rga=new KLineEdit(this);
   l=new QLabel(o_rga, i18n("Organi&zation:"), this);
   topL->addWidget(l, 1,0);
   topL->addMultiCellWidget(o_rga, 1,1, 1,2);
   o_rga->setText(d_ata->o_rga);
 
-  e_mail=new QLineEdit(this);
+  e_mail=new KLineEdit(this);
   l=new QLabel(e_mail, i18n("Email A&ddress:"), this);
   topL->addWidget(l, 2,0);
   topL->addMultiCellWidget(e_mail, 2,2, 1,2);
   e_mail->setText(d_ata->e_mail);
 
-  r_eplyTo=new QLineEdit(this);
+  r_eplyTo=new KLineEdit(this);
   l=new QLabel(r_eplyTo, i18n("&Reply-To Address:"), this);
   topL->addWidget(l, 3,0);
   topL->addMultiCellWidget(r_eplyTo, 3,3, 1,2);
@@ -89,7 +95,7 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
   buttonGroup->insert(s_igFile);
   topL->addMultiCellWidget(s_igFile, 4, 4, 0, 2);
 
-  s_ig = new QLineEdit(this);
+  s_ig = new KLineEdit(this);
   f_ileName = new QLabel(s_ig, i18n("Signature &File:"), this);
   topL->addWidget(f_ileName, 5, 0 );
   topL->addWidget(s_ig, 5, 1 );
@@ -380,19 +386,19 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
   QFrame* page=addPage(i18n("Ser&ver"));
   QGridLayout *topL=new QGridLayout(page, 11, 3, 5);
 
-  n_ame=new QLineEdit(page);
+  n_ame=new KLineEdit(page);
   QLabel *l=new QLabel(n_ame,i18n("&Name:"),page);
   topL->addWidget(l, 0,0);
   n_ame->setText(a->name());
   topL->addMultiCellWidget(n_ame, 0, 0, 1, 2);
 
-  s_erver=new QLineEdit(page);
+  s_erver=new KLineEdit(page);
   l=new QLabel(s_erver,i18n("&Server:"), page);
   s_erver->setText(a->server());
   topL->addWidget(l, 1,0);
   topL->addMultiCellWidget(s_erver, 1, 1, 1, 2);
 
-  p_ort=new QLineEdit(page);
+  p_ort=new KLineEdit(page);
   l=new QLabel(p_ort, i18n("&Port:"), page);
   p_ort->setValidator(new KIntValidator(0,65536,this));
   p_ort->setText(QString::number(a->port()));
@@ -425,15 +431,15 @@ KNConfig::NntpAccountConfDialog::NntpAccountConfDialog(KNNntpAccount *a, QWidget
   connect(a_uth, SIGNAL(toggled(bool)), this, SLOT(slotAuthChecked(bool)));
   topL->addMultiCellWidget(a_uth, 6,6, 0,3);
 
-  u_ser=new QLineEdit(page);
+  u_ser=new KLineEdit(page);
   u_serLabel=new QLabel(u_ser,i18n("&User:"), page);
   u_ser->setText(a->user());
   topL->addWidget(u_serLabel, 7,0);
   topL->addMultiCellWidget(u_ser, 7,7, 1,2);
 
-  p_ass=new QLineEdit(page);
+  p_ass=new KLineEdit(page);
   p_assLabel=new QLabel(p_ass, i18n("Pass&word:"), page);
-  p_ass->setEchoMode(QLineEdit::Password);
+  p_ass->setEchoMode(KLineEdit::Password);
   p_ass->setText(a->pass());
   topL->addWidget(p_assLabel, 8,0);
   topL->addMultiCellWidget(p_ass, 8,8, 1,2);
@@ -504,12 +510,12 @@ KNConfig::SmtpAccountWidget::SmtpAccountWidget(QWidget *p, const char *n) : Base
   connect(u_seExternalMailer, SIGNAL(toggled(bool)), SLOT(useExternalMailerToggled(bool)));
   topL->addMultiCellWidget(u_seExternalMailer, 0, 0, 0, 2);
 
-  s_erver=new QLineEdit(this);
+  s_erver=new KLineEdit(this);
   s_erverLabel=new QLabel(s_erver, i18n("&Server:"), this);
   topL->addWidget(s_erverLabel, 1,0);
   topL->addMultiCellWidget(s_erver, 1, 1, 1, 2);
 
-  p_ort=new QLineEdit(this);
+  p_ort=new KLineEdit(this);
   p_ortLabel=new QLabel(p_ort, i18n("&Port:"), this);
   topL->addWidget(p_ortLabel, 2,0);
   p_ort->setValidator(new KIntValidator(0,65536,this));
@@ -977,7 +983,7 @@ KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget(ReadNewsViewer *d, QWidget 
   r_emoveTrailingCB=new QCheckBox(i18n("Re&move trailing empty lines"), appgb);
   s_igCB=new QCheckBox(i18n("Show sig&nature"), appgb);
   f_ormatCB=new QCheckBox(i18n("Interpret te&xt format tags"), appgb);
-  q_uoteCharacters=new QLineEdit(appgb);
+  q_uoteCharacters=new KLineEdit(appgb);
   QLabel *quoteCharL = new QLabel(q_uoteCharacters, i18n("Recognized q&uote characters:"), appgb);
 
   i_nlineCB=new QCheckBox(i18n("Show attachments &inline if possible"), agb);
@@ -992,7 +998,7 @@ KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget(ReadNewsViewer *d, QWidget 
   b_rowser->insertItem("Other");
   connect(b_rowser, SIGNAL(activated(int)), SLOT(slotBrowserTypeChanged(int)));
   l1=new QLabel(b_rowser, i18n("Open &links with"), bgb);
-  b_rowserCommand = new QLineEdit(bgb);
+  b_rowserCommand = new KLineEdit(bgb);
   c_hooseBrowser= new QPushButton(i18n("Choo&se..."),bgb);
   connect(c_hooseBrowser, SIGNAL(clicked()), SLOT(slotChooseBrowser()));
 
@@ -1269,13 +1275,13 @@ KNConfig::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog(KNDisplayedHeader
   QWidget *nameW = new QWidget(page);
   QGridLayout *nameL=new QGridLayout(nameW, 2, 2, 5);
 
-  h_drC=new QComboBox(true, nameW);
+  h_drC=new KComboBox(true, nameW);
   h_drC->lineEdit()->setMaxLength(64);
   connect(h_drC, SIGNAL(activated(int)), this, SLOT(slotActivated(int)));
   nameL->addWidget(new QLabel(h_drC, i18n("H&eader:"),nameW),0,0);
   nameL->addWidget(h_drC,0,1);
 
-  n_ameE=new QLineEdit(nameW);
+  n_ameE=new KLineEdit(nameW);
   connect(n_ameE, SIGNAL(textChanged(const QString&)), SLOT(slotNameChanged(const QString&)));
   n_ameE->setMaxLength(64);
   nameL->addWidget(new QLabel(n_ameE, i18n("Displayed Na&me:"),nameW),1,0);
@@ -1706,7 +1712,7 @@ KNConfig::PostNewsTechnicalWidget::PostNewsTechnicalWidget(PostNewsTechnical *d,
   g_enMIdCB=new QCheckBox(i18n("&Generate Message-Id"), ggb);
   connect(g_enMIdCB, SIGNAL(toggled(bool)), this, SLOT(slotGenMIdCBToggled(bool)));
   ggbL->addMultiCellWidget(g_enMIdCB, 5,5, 0,1);
-  h_ost=new QLineEdit(ggb);
+  h_ost=new KLineEdit(ggb);
   h_ost->setEnabled(false);
   h_ostL=new QLabel(h_ost, i18n("Ho&stname:"), ggb);
   h_ostL->setEnabled(false);
@@ -1871,9 +1877,9 @@ KNConfig::XHeaderConfDialog::XHeaderConfDialog(const QString &h, QWidget *p, con
   topL->setAutoAdd(true);
 
   new QLabel("X-", page);
-  n_ame=new QLineEdit(page);
+  n_ame=new KLineEdit(page);
   new QLabel(":", page);
-  v_alue=new QLineEdit(page);
+  v_alue=new KLineEdit(page);
 
   int pos=h.find(": ", 2);
   if(pos!=-1) {
@@ -1938,7 +1944,7 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
 
   replyL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
-  i_ntro=new QLineEdit(replyB);
+  i_ntro=new KLineEdit(replyB);
   replyL->addMultiCellWidget(new QLabel(i_ntro,i18n("&Introduction Phrase:"), replyB),1,1,0,1);
   replyL->addMultiCellWidget(i_ntro, 2,2,0,1);
   replyL->addMultiCellWidget(new QLabel(i18n("Placeholders: %NAME=name, %EMAIL=email address,\n%DATE=date, %MSID=message-id, %GROUP=group name"), replyB),3,3,0,1);
@@ -1962,7 +1968,7 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
 
   editorL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
 
-  e_ditor=new QLineEdit(editorB);
+  e_ditor=new KLineEdit(editorB);
   editorL->addWidget(new QLabel(e_ditor, i18n("Specify Edi&tor:"), editorB),1,0);
   editorL->addWidget(e_ditor,1,1);
   QPushButton *btn = new QPushButton(i18n("Choo&se..."),editorB);

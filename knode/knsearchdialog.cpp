@@ -17,7 +17,6 @@
 #include <qlayout.h>
 #include <qgroupbox.h>
 #include <qpushbutton.h>
-#include <qcombobox.h>
 #include <qbitarray.h>
 #include <qcheckbox.h>
 

@@ -17,25 +17,25 @@
 #ifndef KNCONFIG_H
 #define KNCONFIG_H
 
-#include <qlabel.h>
-#include <qlineedit.h>
-#include <qmultilineedit.h>
-#include <qcheckbox.h>
-#include <qpushbutton.h>
-#include <qradiobutton.h>
-#include <qcombobox.h>
-#include <qlistbox.h>
-#include <qpixmap.h>
-#include <qlist.h>
-#include <qstringlist.h>
 #include <qasciidict.h>
 
-#include <knuminput.h>
-#include <kspell.h>
 #include <kdialogbase.h>
-#include <kconfigbase.h>
 
-#include "knlistbox.h"
+#include <knlistbox.h>
+
+class QRadioButton;
+class QMultiLineEdit;
+class QCheckBox;
+
+class KScoringRule;
+class KScoringRulesConfig;
+class KpgpConfig;
+class KConfigBase;
+class KProcess;
+class KLineEdit;
+class KComboBox;
+class KIntSpinBox;
+class KSpellConfig;
 
 class KNNntpAccount;
 class KNAccountManager;
@@ -44,9 +44,6 @@ class KNFilterManager;
 class KNDisplayedHeader;
 class KNServerInfo;
 class KNScoringManager;
-class KScoringRule;
-class KScoringRulesConfig;
-class KpgpConfig;
 
 namespace KNConfig {
 
@@ -152,7 +149,7 @@ class IdentityWidget : public BaseWidget {
 
   protected:
     QLabel          *f_ileName;
-    QLineEdit       *n_ame,
+    KLineEdit       *n_ame,
                     *o_rga,
                     *e_mail,
                     *r_eplyTo,
@@ -229,7 +226,7 @@ class NntpAccountConfDialog : public KDialogBase  {
     ~NntpAccountConfDialog();
 
   protected:
-    QLineEdit   *n_ame,
+    KLineEdit   *n_ame,
                 *s_erver,
                 *u_ser,
                 *p_ass,
@@ -268,7 +265,7 @@ Q_OBJECT
   protected:
     KNServerInfo  *s_erverInfo;
     QCheckBox     *u_seExternalMailer;
-    QLineEdit     *s_erver,
+    KLineEdit     *s_erver,
                   *p_ort;
     KIntSpinBox   *h_old,
                   *t_imeout;
@@ -572,7 +569,7 @@ class ReadNewsViewerWidget : public BaseWidget {
                 *a_ltAttCB,
                 *f_ormatCB;
     QComboBox   *b_rowser;
-    QLineEdit   *b_rowserCommand,
+    KLineEdit   *b_rowserCommand,
                 *q_uoteCharacters;
     QPushButton *c_hooseBrowser;
 
@@ -666,8 +663,8 @@ class DisplayedHeaderConfDialog : public KDialogBase {
 
   protected:
     KNDisplayedHeader *h_dr;
-    QComboBox *h_drC;
-    QLineEdit *n_ameE;
+    KComboBox *h_drC;
+    KLineEdit *n_ameE;
     QCheckBox *n_ameCB[4],
               *v_alueCB[4];
 
@@ -869,7 +866,7 @@ class PostNewsTechnicalWidget : public BaseWidget {
     QPushButton *a_ddBtn,
                 *d_elBtn,
                 *e_ditBtn;
-    QLineEdit   *h_ost;
+    KLineEdit   *h_ost;
     QLabel      *h_ostL;
 
     PostNewsTechnical *d_ata;
@@ -896,7 +893,7 @@ class XHeaderConfDialog : public KDialogBase {
 
 
   protected:
-    QLineEdit *n_ame,
+    KLineEdit *n_ame,
               *v_alue;
 
 };
@@ -957,7 +954,7 @@ class PostNewsComposerWidget : public BaseWidget {
                 *a_uthSigCB,
                 *c_ursorOnTopCB,
                 *e_xternCB;
-    QLineEdit   *i_ntro,
+    KLineEdit   *i_ntro,
                 *e_ditor;
 
     PostNewsComposer *d_ata;

@@ -17,14 +17,15 @@
 #ifndef KNHEADERS_H
 #define KNHEADERS_H
 
+#ifdef HAVE_CONFIG_H
 #include <config.h>
-#include <qstring.h>
+#endif
 #include <time.h>
+
+#include <qstring.h>
 #include <qstrlist.h>
-#include <qtextstream.h>
 #include <qdatetime.h>
 #include <qlist.h>
-#include <qfont.h>
 
 //forward declaration
 class KNMimeContent;
@@ -50,6 +51,7 @@ enum contentDisposition { CDinline,
 
 //often used charset
 static const QCString Latin1("ISO-8859-1");
+
 
 /* Baseclass of all header-classes. It represents a
    header-field as described in RFC-822.  */

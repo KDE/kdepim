@@ -18,15 +18,17 @@
 #define KNGROUPPROPDLG_H
 
 #include <kdialogbase.h>
-#include <qlineedit.h>
-#include <qcheckbox.h>
-#include <qcombobox.h>
+
+class QCheckBox;
+
+class KLineEdit;
 
 class KNGroup;
 
 namespace KNConfig {
 class IdentityWidget;
 };
+
 
 class KNGroupPropDlg : public KDialogBase  {
 
@@ -40,7 +42,7 @@ class KNGroupPropDlg : public KDialogBase  {
     KNGroup *g_rp;
     bool n_ickChanged;
     KNConfig::IdentityWidget* i_dWidget;
-    QLineEdit *n_ick;
+    KLineEdit *n_ick;
     QCheckBox *u_seCharset;
     QComboBox *c_harset;
     

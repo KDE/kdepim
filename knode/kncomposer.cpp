@@ -21,6 +21,7 @@
 #include <qvbox.h>
 #include <qtextcodec.h>
 #include <qclipboard.h>
+#include <qdragobject.h>
 
 #include <klocale.h>
 #include <kglobalsettings.h>
@@ -35,6 +36,11 @@
 #include <kio/netaccess.h>
 #include <kfiledialog.h>
 #include <kdebug.h>
+#include <klineedit.h>
+#include <kcombobox.h>
+#include <kspell.h>
+#include <kprocess.h>
+#include <ktempfile.h>
 
 #include "kngroupmanager.h"
 #include "kngroupselectdialog.h"
@@ -58,12 +64,16 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 {
   d_elAttList.setAutoDelete(true);
 
+  // activate dnd of attachments...
+  setAcceptDrops(true);
+
   //init v_iew
   v_iew=new ComposerView(this);
   setCentralWidget(v_iew);
 
-  connect(v_iew->c_ancelEditorBtn, SIGNAL(clicked()),
-          this, SLOT(slotCancelEditor()));
+  connect(v_iew->c_ancelEditorBtn, SIGNAL(clicked()), SLOT(slotCancelEditor()));
+  connect(v_iew->e_dit, SIGNAL(sigDragEnterEvent(QDragEnterEvent *)), SLOT(slotDragEnterEvent(QDragEnterEvent *)));
+  connect(v_iew->e_dit, SIGNAL(sigDropEvent(QDropEvent *)), SLOT(slotDropEvent(QDropEvent *)));
 
   //statusbar
   KStatusBar *sb=statusBar();
@@ -782,6 +792,8 @@ void KNComposer::slotAttachFile()
     }
     (void) new AttachmentViewItem(v_iew->a_ttView, new KNAttachment(helper));
     a_ttChanged=true;
+  } else {
+    delete helper;
   }
 }
 
@@ -1294,6 +1306,50 @@ void KNComposer::slotSpellFinished()
 }
 
 
+void KNComposer::slotDragEnterEvent(QDragEnterEvent *ev)
+{
+  QStringList files;
+  ev->accept(QUriDrag::canDecode(ev));
+}
+
+
+void KNComposer::slotDropEvent(QDropEvent *ev)
+{
+  QStrList urls;
+  char *s;
+
+  if (!QUriDrag::decode(ev, urls))
+    return;
+
+  for (s = urls.first(); s != 0; s=urls.next()) {
+    KURL url(s);
+    KNLoadHelper *helper = new KNLoadHelper(this);
+
+    if (helper->setURL(url)) {
+      if (!v_iew->v_iewOpen) {
+        KNHelper::saveWindowSize("composer", size());
+        v_iew->showAttachmentView();
+      }
+      (void) new AttachmentViewItem(v_iew->a_ttView, new KNAttachment(helper));
+      a_ttChanged=true;
+    } else {
+      delete helper;
+    }
+  }
+}
+
+
+void KNComposer::dragEnterEvent(QDragEnterEvent *ev)
+{
+  slotDragEnterEvent(ev);
+}
+
+
+void KNComposer::dropEvent(QDropEvent *ev)
+{
+  slotDropEvent(ev);
+}
+
 //=====================================================================================
 
 
@@ -1309,7 +1365,7 @@ KNComposer::ComposerView::ComposerView(QWidget *p, const char *n)
   hdrL->setColStretch(1,1);
 
   //subject
-  s_ubject=new QLineEdit(hdrFrame);
+  s_ubject=new KLineEdit(hdrFrame);
   QLabel *l=new QLabel(s_ubject, i18n("S&ubject:"), hdrFrame);
   hdrL->addWidget(l, 0,0);
   hdrL->addMultiCellWidget(s_ubject, 0,0, 1,2);
@@ -1317,7 +1373,7 @@ KNComposer::ComposerView::ComposerView(QWidget *p, const char *n)
           parent(), SLOT(slotSubjectChanged(const QString&)));
 
   //To
-  t_o=new QLineEdit(hdrFrame);
+  t_o=new KLineEdit(hdrFrame);
   l_to=new QLabel(t_o, i18n("T&o:"), hdrFrame);
   t_oBtn=new QPushButton(i18n("&Browse..."), hdrFrame);
   hdrL->addWidget(l_to, 1,0);
@@ -1326,7 +1382,7 @@ KNComposer::ComposerView::ComposerView(QWidget *p, const char *n)
   connect(t_oBtn, SIGNAL(clicked()), parent(), SLOT(slotToBtnClicked()));
 
   //Newsgroups
-  g_roups=new QLineEdit(hdrFrame);
+  g_roups=new KLineEdit(hdrFrame);
   l_groups=new QLabel(g_roups, i18n("&Groups:"), hdrFrame);
   g_roupsBtn=new QPushButton(i18n("B&rowse..."), hdrFrame);
   hdrL->addWidget(l_groups, 2,0);
@@ -1337,7 +1393,7 @@ KNComposer::ComposerView::ComposerView(QWidget *p, const char *n)
   connect(g_roupsBtn, SIGNAL(clicked()), parent(), SLOT(slotGroupsBtnClicked()));
 
   //Followup-To
-  f_up2=new QComboBox(true, hdrFrame);
+  f_up2=new KComboBox(true, hdrFrame);
   l_fup2=new QLabel(f_up2, i18n("Follo&wup-To:"), hdrFrame);
   hdrL->addWidget(l_fup2, 3,0);
   hdrL->addMultiCellWidget(f_up2, 3,3, 1,2);
@@ -1715,6 +1771,24 @@ bool KNComposer::Editor::eventFilter(QObject*, QEvent* e)
 }
 
 
+void KNComposer::Editor::dragEnterEvent(QDragEnterEvent *ev)
+{
+  if (QUriDrag::canDecode(ev))
+    emit(sigDragEnterEvent(ev));
+  else
+    KEdit::dragEnterEvent(ev);
+}
+
+
+void KNComposer::Editor::dropEvent(QDropEvent *ev)
+{
+  if (QUriDrag::canDecode(ev))
+    emit(sigDropEvent(ev));
+  else
+    KEdit::dropEvent(ev);
+}
+
+
 //=====================================================================================
 
 
@@ -1800,12 +1874,12 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg(KNAttachment *a, QW
   QGridLayout *mimeL=new QGridLayout(mimeGB, 4,2, 15,5);
 
   mimeL->addRowSpacing(0, fontMetrics().lineSpacing()-9);
-  m_imeType=new QLineEdit(mimeGB);
+  m_imeType=new KLineEdit(mimeGB);
   m_imeType->setText(a->mimeType());
   mimeL->addWidget(m_imeType, 1,1);
   mimeL->addWidget(new QLabel(m_imeType, i18n("&Mime-Type:"), mimeGB), 1,0);
 
-  d_escription=new QLineEdit(mimeGB);
+  d_escription=new KLineEdit(mimeGB);
   d_escription->setText(a->description());
   mimeL->addWidget(d_escription, 2,1);
   mimeL->addWidget(new QLabel(d_escription, i18n("&Description:"), mimeGB), 2,0);

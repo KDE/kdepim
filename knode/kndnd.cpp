@@ -14,6 +14,7 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
+#include <qdragobject.h>
 
 #include "kndnd.h"
 #include "kncollectionviewitem.h"
@@ -25,9 +26,9 @@
 #include "knconfig.h"
 #include "knconfigmanager.h"
 
+
 void KNArticleDragHandler::startDrag(QListViewItem *i)
 {
-
   QDragObject *d=0;
   KNHdrViewItem *hvi=static_cast<KNHdrViewItem*>(i);
   if(hvi && hvi->art && hvi->isSelected()) {

@@ -21,6 +21,7 @@
 
 class KNConfigDialog;
 
+
 class KNConfigManager : QObject {
 
   Q_OBJECT

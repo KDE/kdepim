@@ -34,6 +34,7 @@
 #include <kiconloader.h>
 #include <kiconeffect.h>
 #include <kcharsets.h>
+#include <kprocess.h>
 
 #include "knglobals.h"
 #include "knnntpaccount.h"

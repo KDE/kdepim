@@ -21,11 +21,12 @@
 
 class QCheckBox;
 class QComboBox;
-class QLineEdit;
 
+class KLineEdit;
 class KSimpleConfig;
 
 class KNGroup;
+
 
 class KNStringFilter {
   
@@ -71,7 +72,7 @@ class KNStringFilterWidget : public QGroupBox  {
   protected:
     QCheckBox *regExp;
     QComboBox *fType;
-    QLineEdit *fString;
+    KLineEdit *fString;
 
 };
 

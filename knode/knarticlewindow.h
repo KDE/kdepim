@@ -20,7 +20,6 @@
 #include <kmainwindow.h>
 
 class KToggleAction;
-
 class KNArticle;
 class KNArticleWidget;
 class KNArticleCollection;

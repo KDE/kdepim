@@ -17,7 +17,7 @@
 #ifndef KNSTRINGSPLITTER_H
 #define KNSTRINGSPLITTER_H
 
-#include <qstring.h>
+#include <qcstring.h>
 
 
 class KNStringSplitter {

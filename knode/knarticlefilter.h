@@ -17,13 +17,13 @@
 #ifndef KNARTICLEFILTER_H
 #define KNARTICLEFILTER_H
 
-#include <qstring.h>
 #include "knstatusfilter.h"
 #include "knrangefilter.h"
 #include "knstringfilter.h"
 
 class KNRemoteArticle;
 class KNGroup;
+
 
 class KNArticleFilter {
   

@@ -19,6 +19,7 @@
 
 #include <qlist.h>
 #include <qstringlist.h>
+#include <qtextstream.h>
 #include <qfile.h>
 #include <qfont.h>
 #include <qasciidict.h>
@@ -532,11 +533,12 @@ class KNAttachment {
 
   protected:
     KNMimeContent *c_ontent;
+    KNLoadHelper *l_oadHelper;
+    QFile *f_ile;
     QCString m_imeType;
     QString n_ame,
             d_escription;
     KNHeaders::CTEncoding e_ncoding;
-    KNLoadHelper *l_oadHelper;
     bool  i_sAttached,
           h_asChanged,
           f_b64;

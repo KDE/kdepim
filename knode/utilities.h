@@ -110,19 +110,22 @@ public:
   KNLoadHelper(QWidget *parent);
   ~KNLoadHelper();
 
-  // returns a file open for reading
+  // opens a file dialog and returns a file open for reading
   KNFile* getFile(QString dialogTitle);
-  // returns the file after getFile(QString) was called
-  KNFile* getFile() { return file; };
-  KURL getURL()    { return url; };
+  // trys to access the file specified by the url and returns
+  // a file open for reading
+  KNFile* setURL(KURL url);
+  // returns the file after getFile(QString) of setURL(url) was called
+  KNFile* getFile() { return f_ile; };
+  KURL getURL()     { return u_rl; };
 
 private:
 
   QWidget *p_arent;
-  KURL url;
-  KNFile *file;
-  QString tempName;
-  static QString lastPath;
+  KURL u_rl;
+  KNFile *f_ile;
+  QString t_empName;
+  static QString l_astPath;
 
 };
 

@@ -17,16 +17,18 @@
 #ifndef KNCONVERT_H
 #define KNCONVERT_H
 
-#include <qdialog.h>
-#include <qlistbox.h>
-#include <qwidgetstack.h>
-#include <qcheckbox.h>
-#include <qlineedit.h>
-#include <qpushbutton.h>
-#include <qlabel.h>
-#include <kprogress.h>
-#include <kprocess.h>
+#include <time.h>
 
+#include <qdialog.h>
+#include <qlist.h>
+
+class QListBox;
+class QLabel;
+class QWidgetStack;
+class QCheckBox;
+
+class KLineEdit;
+class KProcess;
 
 
 class KNConvert : public QDialog {
@@ -97,7 +99,7 @@ class KNConvert : public QDialog {
     QLabel        *b_ackupPathLabel,
                   *w_2,
                   *r_esultLabel;
-    QLineEdit     *b_ackupPath;
+    KLineEdit     *b_ackupPath;
     QPushButton   *b_rowseBtn,
                   *s_tartBtn,
                   *c_ancelBtn;

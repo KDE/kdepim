@@ -14,8 +14,6 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include <qcombobox.h>
-
 #include <kstddirs.h>
 #include <ksimpleconfig.h>
 #include <klocale.h>
