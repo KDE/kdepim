@@ -33,7 +33,6 @@
 
 #include "kabcore.h"
 #include "kaddressbookiface.h"
-#include "libkdepim/aboutdataextension.h"
 #include "libkdepim/infoextension.h"
 
 #include "kaddressbook_part.h"
@@ -74,8 +73,6 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetNam
            info, SIGNAL( textChanged( const QString& ) ) );
   connect( mCore, SIGNAL( contactSelected( const QPixmap& ) ),
            info, SIGNAL( iconChanged( const QPixmap& ) ) );
-
-  new KParts::AboutDataExtension( createAboutData(), this, "AboutData" );
 
   setXMLFile( "kaddressbookui.rc" );
 }
