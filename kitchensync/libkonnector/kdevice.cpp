@@ -63,6 +63,7 @@ Device &Device::operator=( const Device &dev )
     d->vendor = dev.d->vendor;
     d->library = dev.d->library;
     d->id = dev.d->id;
+    return *this;
 }
 Device::~Device()
 {
@@ -88,8 +89,8 @@ QString Device::id()const
 {
     return d->id;
 }
-bool operator==(const Device &orig, const Device &dest ){
-  if( orig.identify() == dest.identify() && orig.group() == dest.group() && dest.vendor() == orig.vendor() ){
+bool Device::operator==(const Device &dest ){
+  if( identify() == dest.identify() && group() == dest.group() && dest.vendor() == vendor() ){
     return true;
   }else{
     return false;

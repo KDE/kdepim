@@ -33,7 +33,7 @@
 namespace KSync {
 
 class Kapabilities;
-
+class ConfigWidget;
 /**
  *  The base class of all plugins. The functions are
  *  the same as in konnector
@@ -59,6 +59,8 @@ public:
     virtual QString  iconName()const =0;
     virtual QString id()const = 0;
     virtual QString metaId()const = 0;
+    virtual ConfigWidget* configWidget( const Kapabilities&, QWidget* parent, const char* name ) = 0;
+    virtual ConfigWidget* configWidget( QWidget* parent, const char* name ) = 0;
     //virtual QString metaId()const = 0;
 public slots:
     virtual void slotWrite(const QString &, const QByteArray & ) = 0;

@@ -29,7 +29,11 @@ namespace KSync {
         virtual QString metaId()const;
         virtual QIconSet iconSet() const;
         virtual QString iconName()const;
+        /* FIXME get rid of inline without inline */
         virtual QString id()const { return QString::fromLatin1("Opie-1"); };
+        virtual ConfigWidget* configWidget( const Kapabilities&, QWidget*,  const char* ) { return 0l; }
+        virtual ConfigWidget* configWidget( QWidget*, const char* ) { return 0l; }
+
     public slots:
         virtual void slotWrite(const QString &, const QByteArray & ) ;
         virtual void slotWrite(Syncee::PtrList ) ;

@@ -40,9 +40,9 @@ namespace KSync {
 class Kapabilities;
 class Device;
 class KonnectorPlugin;
-
+class ConfigWidget;
 /**
- *  Konnector is a convience to class to load/ configure
+ *  KonnectorManager is a convience to class to load/ configure
  *  and communicate with a Konnector plugin. This way all
  *  communication is done at one place. You query for konnectors
  *  and then set say this class to load one. You can connect
@@ -90,6 +90,24 @@ public:
      *         by the udi
      */
     Kapabilities capabilities( const QString &udi ) ;
+
+    /**
+     * Another way to configure a Konnector is to request a GUI
+     * Note this only works if a QApplication with type Gui*
+     * was created
+     *
+     * @param parent the QWidget parent
+     * @return 0 if no QWidget could be created
+     *
+     */
+    ConfigWidget* configWidget( const QString& udi, QWidget* parent,  const char* name );
+
+    /**
+     *
+     * same as above but uses a Kapability for the initial setup
+     */
+    ConfigWidget* configWidget( const QString& udi, const Kapabilities&, QWidget* parent,  const char* name );
+
 
     /**
      * @return If GUI is available and the KonnectorPlugin

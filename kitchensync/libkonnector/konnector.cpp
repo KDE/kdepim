@@ -1,5 +1,7 @@
 
+#include <qapplication.h>
 #include <qdir.h>
+
 #include <kglobal.h>
 #include <kstandarddirs.h>
 #include <kservice.h>
@@ -14,7 +16,7 @@
 #include "konnector.h"
 #include "kapabilities.h"
 #include "koperations.h"
-
+#include "configwidget.h"
 
 using namespace KSync;
 
@@ -333,5 +335,25 @@ QString KonnectorManager::metaId( const QString& udi ) const
         return QString::null;
 
     return plugin->metaId();
+}
+ConfigWidget* KonnectorManager::configWidget( const QString& udi, QWidget* parent, const char* name ) {
+    if ( kapp->type() == QApplication::Tty )
+        return 0l;
+    KonnectorPlugin * plugin = pluginByUDI( udi );
+    if ( plugin == 0l )
+        return 0l;
+    return plugin->configWidget( parent, name );
+
+}
+ConfigWidget* KonnectorManager::configWidget( const QString& udi,
+                                              const Kapabilities& caps,  QWidget* parent,
+                                              const char* name ) {
+    if ( kapp->type() == QApplication::Tty )
+        return 0l;
+    KonnectorPlugin * plugin = pluginByUDI( udi );
+    if ( plugin == 0l )
+        return 0l;
+
+    return plugin->configWidget( caps, parent,  name );
 }
 #include "konnector.moc"

@@ -33,12 +33,12 @@ public:
      * Convinience typedef
      */
     typedef QValueList<Device> ValueList;
-    
+
     /**
      *  C'TOR
      */
     Device();
-    
+
     /**
      * C'tor
      * @param ident The identity of the Konnector/Device
@@ -51,22 +51,23 @@ public:
             const QString &id);
     Device( const Device & );
     ~Device();
-    
+
+    bool operator==(const Device &);
     /**
      * @return returns the identity of the Device
      */
     QString identify() const;
-    
+
     /**
      * @return returns the group/category of the Device
      */
     QString group() const;
-    
+
     /**
      * @return returns the vendor of the Device
      */
     QString vendor() const;
-    
+
     /**
      * @return returns the library of the Device
      */
@@ -75,7 +76,6 @@ public:
     QString library() const;
     Device &operator=(const Device & );
 private:
-    friend bool operator==(const Device &, const Device );
     friend class Konnector;
     class DevicePrivate;
     DevicePrivate *d;
