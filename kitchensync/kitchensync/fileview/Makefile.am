@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)/kitchensync/kitchensync/lib/ -I$(top_srcdir)/kitchensync/lib/ $(all_includes)
+INCLUDES = -I$(top_srcdir)/kitchensync/kitchensync/lib/ -I$(top_srcdir)/kitchensync/libksync $(all_includes)
 
 kde_module_LTLIBRARIES = libfileviewpart.la
 libfileviewpart_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)

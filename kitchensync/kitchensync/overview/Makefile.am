@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)/kitchensync/kitchensync/lib/ -I$(top_srcdir)/kitchensync/lib/ \
+INCLUDES = -I$(top_srcdir)/kitchensync/kitchensync/lib/ -I$(top_srcdir)/kitchensync/libksync \
 		-I$(top_srcdir)/kitchensync/libkonnector2 $(all_includes)
 
 kde_module_LTLIBRARIES = liboverviewpart.la
