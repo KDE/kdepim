@@ -121,6 +121,7 @@ class KCalResourceSlox : public KCal::ResourceCached
                                   KCal::Incidence *incidence );
     void parseTodoAttribute( const QDomElement &e, KCal::Todo *todo );
     void parseEventAttribute( const QDomElement &e, KCal::Event *event );
+    void parseRecurrence( const QDomNode &n, KCal::Event *event );
 
     void createIncidenceAttributes( QDomDocument &doc,
                                     QDomElement &parent,

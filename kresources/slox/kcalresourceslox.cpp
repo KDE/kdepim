@@ -307,6 +307,15 @@ void KCalResourceSlox::uploadIncidences()
     return;
   }
 
+  // Don't try to upload recurring incidences as long as the resource doesn't
+  // correctly write them in order to avoid corrupting data on the server.
+  // FIXME: Remove when recurrences are correctly written.
+  if ( mUploadedIncidence->doesRecur() ) {
+    clearChange( mUploadedIncidence );
+    uploadIncidences();
+    return;
+  }
+
   KURL url = mPrefs->url();
 
   QString sloxId = mUploadedIncidence->customProperty( "SLOX", "ID" );
@@ -544,6 +553,97 @@ void KCalResourceSlox::parseEventAttribute( const QDomElement &e,
   }
 }
 
+void KCalResourceSlox::parseRecurrence( const QDomNode &node, Event *event )
+{
+  QString type;
+
+  int dailyValue = -1;
+  QDateTime end;
+
+  int weeklyValue = -1;
+  QBitArray days( 7 ); // days, starting with monday
+ 
+  int monthlyValueDay = -1;
+  int monthlyValueMonth = -1;
+
+  int yearlyValueDay = -1;
+  int yearlyMonth = -1;
+  
+  int monthly2Recurrency = 0;
+  int monthly2Day = 0;
+  int monthly2ValueMonth = -1;
+  
+  int yearly2Recurrency = 0;
+  int yearly2Day = 0;
+  int yearly2Month = -1;
+
+  QDomNode n;
+  
+  for( n = node.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    QDomElement e = n.toElement();
+    QString tag = e.tagName();
+    QString text = QString::fromUtf8( e.text().latin1() );
+    
+    if ( tag == "date_sequence" ) {
+      type = text;
+    } else if ( tag == "daily_value" ) {
+      dailyValue = text.toInt();
+    } else if ( tag == "ds_ends" ) {
+      end = WebdavHandler::sloxToQDateTime( text );
+    } else if ( tag == "weekly_value" ) {
+      weeklyValue = text.toInt();
+    } else if ( tag.left( 11 ) == "weekly_day_" ) {
+      int day = tag.mid( 11, 1 ).toInt();
+      int index;
+      if ( day == 1 ) index = 0;
+      else index = day - 2;
+      days.setBit( index );
+    } else if ( tag == "monthly_value_day" ) {
+      monthlyValueDay = text.toInt();
+    } else if ( tag == "monthly_value_month" ) {
+      monthlyValueMonth = text.toInt();
+    } else if ( tag == "yearly_value_day" ) {
+      yearlyValueDay = text.toInt();
+    } else if ( tag == "yearly_month" ) {
+      yearlyMonth = text.toInt();
+    } else if ( tag == "monthly2_recurrency" ) {
+      monthly2Recurrency = text.toInt();
+    } else if ( tag == "monthly2_day" ) {
+      monthly2Day = text.toInt();
+    } else if ( tag == "monthly2_value_month" ) {
+      monthly2ValueMonth = text.toInt();
+    } else if ( tag == "yearly2_recurrency" ) {
+      yearly2Recurrency = text.toInt();
+    } else if ( tag == "yearly2_day" ) {
+      yearly2Day = text.toInt();
+    } else if ( tag == "yearly2_month" ) {
+      yearly2Month = text.toInt();
+    }
+  }
+  
+  Recurrence *r = event->recurrence();
+  
+  if ( type == "daily" ) {
+    r->setDaily( dailyValue, end.date() );
+  } else if ( type == "weekly" ) {
+    r->setWeekly( weeklyValue, days, end.date() );
+  } else if ( type == "monthly" ) {
+    r->setMonthly( Recurrence::rMonthlyDay, monthlyValueMonth, end.date() );
+    r->addMonthlyDay( monthlyValueDay );
+  } else if ( type == "yearly" ) {
+    r->setYearlyByDate( yearlyValueDay, Recurrence::rMar1, 1, end.date() );
+    r->addYearlyNum( yearlyMonth );
+  } else if ( type == "monthly2" ) {
+    r->setMonthly( Recurrence::rMonthlyPos, monthly2ValueMonth, end.date() );
+    QBitArray days( 7 );
+    days.setBit( event->dtStart().date().dayOfWeek() );
+    r->addMonthlyPos( monthly2Recurrency, days );
+  } else if ( type == "yearly2" ) {
+    r->setYearlyByDate( yearly2Day, Recurrence::rMar1, 1, end.date() );
+    r->addYearlyNum( yearly2Month );
+  }
+}
+
 void KCalResourceSlox::parseTodoAttribute( const QDomElement &e,
                                            Todo *todo )
 {
@@ -700,11 +800,18 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
         QDomNode n = item.domNode.namedItem( "full_time" );
         event->setFloats( n.toElement().text() == "yes" );
 
+        bool doesRecur = false;
+
         for( n = item.domNode.firstChild(); !n.isNull(); n = n.nextSibling() ) {
           QDomElement e = n.toElement();
           parseIncidenceAttribute( e, event );
           parseEventAttribute( e, event );
+          if ( e.tagName() == "date_sequence" && e.text() != "no" ) {
+            doesRecur = true;
+          }
         }
+
+        if ( doesRecur ) parseRecurrence( item.domNode, event );
 
 //        kdDebug() << "EVENT " << item.uid << " " << event->summary() << endl;
 
@@ -715,6 +822,8 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
     }
 
     enableChangeNotification();
+
+    mCalendar.save( cacheFile() );
 
     clearChanges();
 
