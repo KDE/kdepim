@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Name=Address Manager
 Name[af]=Adres Bestuurder
+Name[bg]=Адресен Менаджър
 Name[bs]=Upravitelj adresama
 Name[cs]=Kniha adres
 Name[da]=Adressehåndtering
@@ -44,6 +45,7 @@ DocPath=kaddressbook/index.html
 Terminal=0
 X-KDE-StartupNotify=true
 X-DCOP-ServiceType=Unique
-MimeType=text/x-vcard;
-ServiceTypes=KParts/ReadOnlyPart;Browser/View
+X-DCOP-ServiceName=kaddressbook
+MimeType=text/x-vcard
+ServiceTypes=KParts/ReadOnlyPart,Browser/View,DCOP/AddressBook
 X-KDE-Library=libkaddressbookpart
