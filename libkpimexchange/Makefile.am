@@ -1,6 +1,6 @@
 # $Id$
 
-SUBDIRS=core .
+SUBDIRS=core
 
 METASOURCES = AUTO
 
@@ -17,6 +17,6 @@ dummy.cpp:
 	echo >dummy.cpp
 
 messages:
-	$(XGETTEXT) calendar/*.cpp core/*.cpp -o $(podir)/libkpimexchange.pot
+	$(XGETTEXT) core/*.cpp -o $(podir)/libkpimexchange.pot
 
 include ../admin/Doxyfile.am
