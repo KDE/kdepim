@@ -284,15 +284,16 @@ void CertificateWizardImpl::slotResult( const GpgME::KeyGenerationResult & res,
     //kdDebug() << "keyData.size(): " << keyData.size() << endl;
     _keyData = keyData;
 
-    if ( res.error() ) {
+    if ( res.error().isCanceled() || res.error() ) {
           setNextEnabled( generatePage, false );
 	  setBackEnabled( generatePage, true );
           setFinishEnabled( finishPage, false );
 	  generatePB->setEnabled( true );
-          KMessageBox::error( this,
-                              i18n( "Could not generate certificate: %1" )
-			      .arg( QString::fromLatin1( res.error().asString() ) ),
-                              i18n( "Certificate Manager Error" ) );
+	  if ( !res.error().isCanceled() )
+	    KMessageBox::error( this,
+				i18n( "Could not generate certificate: %1" )
+				.arg( QString::fromLatin1( res.error().asString() ) ),
+				i18n( "Certificate Manager Error" ) );
     } else {
         // next will stay enabled until the user clicks Generate
         // Certificate again
