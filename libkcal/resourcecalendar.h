@@ -198,4 +198,5 @@ class ResourceCalendar : public QObject, public KRES::Resource
 typedef KRES::ResourceManager<ResourceCalendar> CalendarResourceManager;
 
 }
+
 #endif
