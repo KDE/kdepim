@@ -21,8 +21,6 @@
 #include <dcopclient.h>
 #include <kapplication.h>
 
-#include <unistd.h>
-
 #include "kmailcvt.h"
 
 static const char *description =
@@ -34,8 +32,6 @@ static KCmdLineOptions options[] =
   { 0, 0, 0 }
   // INSERT YOUR COMMANDLINE OPTIONS HERE
 };
-
-static KApplication *app;
 
 int main(int argc, char *argv[])
 {
@@ -49,9 +45,6 @@ int main(int argc, char *argv[])
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
   KApplication a;
-
-  app=&a;
-
   Kmailcvt2 *kmailcvt2 = new Kmailcvt2();
   a.setMainWidget(kmailcvt2);
   kmailcvt2->show();  

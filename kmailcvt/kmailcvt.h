@@ -22,13 +22,6 @@
 #include <config.h>
 #endif
 
-#include <qwidget.h>
-
-#include <klocale.h>
-
-#include <stdio.h>
-
-
 #define KMAILCVT_VERSION " v2.1"
 #define KMAILCVT         I18N_NOOP("KMail & KAddressBook Import Filters")
 
@@ -54,8 +47,5 @@ private:
 	KImportPage* importpage;
 	QWidget *_parent;
 };
-
-#include "filters.hxx"
-
 
 #endif
