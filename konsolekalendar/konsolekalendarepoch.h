@@ -1,8 +1,8 @@
-#ifndef _KONSOLEKALENDAR_VARIABLES_H_
-#define _KONSOLEKALENDAR_VARIABLES_H_
+#ifndef _KONSOLEKALENDAR_EPOCH_H_
+#define _KONSOLEKALENDAR_EPOCH_H_
 
 /***************************************************************************
-        konsolekalendarvariables.h  -  description
+        konsolekalendarepoch.h  -  Epoch parsing routines
            -------------------
     begin                : Sun Jan 6 2002
     copyright            : (C) 2002 by Tuukka Pasanen
