@@ -171,6 +171,14 @@ QWidget *KAddressBookView::viewWidget()
 void KAddressBookView::updateView()
 {
   refresh();
+
+  KABC::Addressee::List contacts = SearchManager::self()->contacts();
+  if ( contacts.count() > 0 )
+    setSelected( contacts.first().uid(), true );
+  else {
+    setSelected( QString::null, false );
+    emit selected( QString::null );
+  }
 }
 
 ViewConfigureWidget *ViewFactory::configureWidget( KABC::AddressBook *ab,
