@@ -1,8 +1,12 @@
 Inner Version|							| KDE VERSION
--------------+--------------------------------------------------+-------------------
+-------------+--------------------------------------------------+-------------
 0.5	     |  Re-Organization		[System is here]        |   CVS 
 0.6	     |  Adding and changing	[Now in progress]       |   CVS
-0.7	     |  Deleting   		                        |   3.1.x
-0.8	     |  Man, info, dockbook..  				|   3.1.x	
-0.8.1	     |  HTML export 					|   3.1.x
-1.0	     |  Everything working now				|   3.2.x
+0.6.1        |  creating calendar file.				|   cvs
+0.7	     |  Deleting   		                        |   3.1.3
+0.8	     |  Man, info, dockbook..  				|   3.2	
+0.8.1	     |  HTML export (other exports?)			|   3.2.x
+0.9	     |  Possiblity to use Ncurses interface		|   3.3.x
+0.9.1	     |  Adding/changing with Ncurses			|   3.3.x
+0.9.2	     |  Deleting with Ncurses				|   3.3.x
+1.0	     |  Everything working now				|   3.4.x
