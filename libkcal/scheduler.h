@@ -105,8 +105,10 @@ class Scheduler {
     */
     bool acceptTransaction(IncidenceBase *,Method method,ScheduleMessage::Status status);
 
-    /** Return a human-readable name for a iTIP method. */
+    /** Return a machine-readable name for a iTIP method. */
     static QString methodName(Method);
+    /** Return a translated and human-readable name for a iTIP method. */
+    static QString translatedMethodName(Method);
 
     virtual bool deleteTransaction(IncidenceBase *incidence);
 

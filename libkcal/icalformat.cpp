@@ -359,7 +359,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
 
   if (!icalrestriction_check(message)) {
     setException(new ErrorFormat(ErrorFormat::Restriction,
-                                   Scheduler::methodName(method) + ": " +
+                                   Scheduler::translatedMethodName(method) + ": " +
                                    mImpl->extractErrorProperty(c)));
     return 0;
   }

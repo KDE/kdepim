@@ -102,6 +102,30 @@ QString Scheduler::methodName(Method method)
 {
   switch (method) {
     case Publish:
+      return QString::fromLatin1("Publish");
+    case Request:
+      return QString::fromLatin1("Request");
+    case Refresh:
+      return QString::fromLatin1("Refresh");
+    case Cancel:
+      return QString::fromLatin1("Cancel");
+    case Add:
+      return QString::fromLatin1("Add");
+    case Reply:
+      return QString::fromLatin1("Reply");
+    case Counter:
+      return QString::fromLatin1("Counter");
+    case Declinecounter:
+      return QString::fromLatin1("Decline Counter");
+    default:
+      return QString::fromLatin1("Unknown");
+  }
+}
+
+QString Scheduler::translatedMethodName(Method method)
+{
+  switch (method) {
+    case Publish:
       return i18n("Publish");
     case Request:
       return i18n("Request");
@@ -160,7 +184,7 @@ bool Scheduler::acceptRequest(IncidenceBase *incidence,ScheduleMessage::Status s
     Event *even = mCalendar->event(incidence->uid());
     if (even) {
       if ( even->revision()<=inc->revision() ) {
-        if ( even->revision()==inc->revision() && 
+        if ( even->revision()==inc->revision() &&
              even->lastModified()>inc->lastModified()) {
           deleteTransaction(incidence);
           return false;
@@ -174,7 +198,7 @@ bool Scheduler::acceptRequest(IncidenceBase *incidence,ScheduleMessage::Status s
       Todo *todo = mCalendar->todo(incidence->uid());
       if (todo) {
         if ( todo->revision()<=inc->revision() ) {
-          if ( todo->revision()==inc->revision() && 
+          if ( todo->revision()==inc->revision() &&
                todo->lastModified()>inc->lastModified()) {
             deleteTransaction(incidence);
             return false;
@@ -324,7 +348,7 @@ bool Scheduler::acceptFreeBusy(IncidenceBase *incidence, Method method)
   QTextStream t(&f);
   t << messageText;
   f.close();
-  
+
   deleteTransaction(incidence);
   return true;
 }
