@@ -1,12 +1,12 @@
 KDE_CXXFLAGS = $(USE_RTTI)
 
-INCLUDES = -I$(top_srcdir)/mimelib -I$(top_srcdir)/libkdenetwork $(all_includes)
+INCLUDES = -I$(top_srcdir)/mimelib -I$(top_srcdir)/libkmime $(all_includes)
 AM_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 METASOURCES = AUTO
 
 bin_PROGRAMS = korn
-korn_LDADD = $(top_builddir)/mimelib/libmimelib.la $(LIB_KFILE) $(LIBSOCKET) $(top_builddir)/libkdenetwork/libkdenetwork.la
+korn_LDADD = $(top_builddir)/mimelib/libmimelib.la $(LIB_KFILE) $(LIBSOCKET) $(top_builddir)/libkmime/libkmime.la
 
 korn_SOURCES = \
   dropdlg.cpp \
