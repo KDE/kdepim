@@ -5,11 +5,8 @@ In Progress:
 -	Add something to Calendar
 	* konsolekalendaradd.cpp
 
--	Needed new command-line switches (at least):
-		--add-action <date>
-		--description <text>
-		--title <text>
-		..more..
+-	Actually make add working
+
 
 ToDo:
 
@@ -19,4 +16,3 @@ ToDo:
 -	Delete Something from calendar
 	* konsolekalendardelete.cpp
 	
--	Form korganizer_lookup, korganizer_delete, korganizer_add
