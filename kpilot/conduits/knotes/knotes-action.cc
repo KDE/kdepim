@@ -153,6 +153,11 @@ public:
 	// Pilot id's, so we make a list of pairs.
 	//
 	QValueList<NoteAndMemo> fIdList;
+
+	// Setting to delete a KNote when the corresponding memo
+	// has been deleted.
+	//
+	bool fDeleteNoteForMemo;
 } ;
 
 
@@ -325,10 +330,12 @@ void KNotesAction::getConfigInfo()
 
 	KNotesConduitSettings::self()->readConfig();
 
+	fP->fDeleteNoteForMemo = KNotesConduitSettings::deleteNoteForMemo();
+
 	QValueList<KNoteID_t> notes;
 	QValueList<int> memos;
 
-		// Make this match the type of KNoteID_t !
+	// Make this match the type of KNoteID_t !
 	notes=KNotesConduitSettings::noteIds();
 	memos=KNotesConduitSettings::memoIds();
 
@@ -552,7 +559,10 @@ bool KNotesAction::syncMemoToKNotes()
 		// has changed on the Pilot.
 		//
 		//
-		fP->fKNotes->killNote(m.note());
+		if (fP->fDeleteNoteForMemo)
+		{
+			fP->fKNotes->killNote(m.note());
+		}
 	}
 	else if (memo->isDeleted() /* && !m.valid() */ )
 	{
