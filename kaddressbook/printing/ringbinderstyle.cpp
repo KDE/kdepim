@@ -210,8 +210,6 @@ bool RingBinderPrintStyle::printEntries( KABC::Addressee::List &contacts,
         } else {
           QString tmpstr = ltgroups[ grpnum + 1 ];
           nextchar = tmpstr.at( tmpstr.length() - 1 ).upper();
-          kdDebug(5720) << "################### " << tmpstr << " last is: " <<
-            QString(nextchar) << endl;
         }
 
         // determine nowchar depending on sorting criterion
@@ -219,8 +217,6 @@ bool RingBinderPrintStyle::printEntries( KABC::Addressee::List &contacts,
           QString tmpstr = sfield->value( addressee );
           if ( !tmpstr.isEmpty() ) {
             nowchar = tmpstr.at( 0 ).upper();
-            kdDebug(5720) << "------------------ " << tmpstr << " has nowchar: "
-              << QString(nowchar) << endl;
           }
         }
         if (    ( !tmpl->reverseSorting() && nowchar >= nextchar )
@@ -248,8 +244,6 @@ bool RingBinderPrintStyle::printEntries( KABC::Addressee::List &contacts,
       // get the bounding rect:
       int entryheight = entryMetrics( addressee, window, painter, ypos ).height();
 
-      // FIXME: the following conditional means that if we encounter an entry 
-      // that does not fit on one page we just paint over the borders
       if (   entryheight > ( window.height() - ypos ) 
           && !( entryheight > window.height() ) ) { 
         // it does not fit on the page beginning at ypos:
@@ -272,7 +266,6 @@ bool RingBinderPrintStyle::printEntries( KABC::Addressee::List &contacts,
   fillEmpty( window, printer, painter, ypos, grpnum );
   // ----- set progress:
   mPrintProgress->setProgress( 100 );
-  kdDebug(5720) << "PLANNER STYLE: PRINT FINISHED" << endl;
   return true;
 }
 
@@ -380,7 +373,6 @@ bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact
     KABC::PhoneNumber::List phonel = contact.phoneNumbers();
     KABC::PhoneNumber::List::iterator nit;
     for ( nit = phonel.begin(); nit != phonel.end(); ++nit ) {
-
       // don't print empty lines just reading "Home:"
       if ( ( *nit ).number().isEmpty() ) {
         continue;
@@ -393,9 +385,11 @@ bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact
         numstr.append( ": " );
       }
       numstr.append( ( *nit ).number() );
-      painter->drawText( ( int ) ( window.width() * 0.5 ) + 5,
+      if ( !fake ) {
+        painter->drawText( ( int ) ( window.width() * 0.5 ) + 5,
                          top + ( linenum * fmnorm.lineSpacing() ) 
                              - fmnorm.leading(), numstr );
+      }
     }
   }
 
@@ -408,9 +402,11 @@ bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact
         continue;
       }
       linenum++;
-      painter->drawText( ( int ) ( window.width() * 0.5 ) + 5,
+      if ( !fake ) {
+        painter->drawText( ( int ) ( window.width() * 0.5 ) + 5,
                          top + ( linenum * fmnorm.lineSpacing() ) 
                              - fmnorm.leading(), *it );
+      }
     }
   }
 
