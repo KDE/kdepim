@@ -86,9 +86,7 @@ public:
 	IntProperty(PilotSpeed)
 	StringProperty(PilotDevice)
 	StringProperty(User)
-	// There's no GUI to access this one.
 	StringProperty(Encoding)
-	IntProperty(EncodingDD)
 
 
 	BoolProperty(StartDaemonAtLogin)

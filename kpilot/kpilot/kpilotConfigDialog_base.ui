@@ -11,25 +11,20 @@ KPilot's settings. Use Qt2 designer only!</comment>
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>429</width>
-            <height>283</height>
+            <width>444</width>
+            <height>289</height>
         </rect>
     </property>
     <property name="caption">
         <string>KPilot Options</string>
     </property>
      <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
     <widget class="QTabWidget" row="0" column="0">
         <property name="name">
             <cstring>tabWidget</cstring>
-        </property>
-        <property name="geometry">
-            <rect>
-                <x>1</x>
-                <y>1</y>
-                <width>427</width>
-                <height>281</height>
-            </rect>
         </property>
         <widget class="QWidget">
             <property name="name">
@@ -117,46 +112,14 @@ KPilot's settings. Use Qt2 designer only!</comment>
                             </property>
                         </widget>
                         <widget class="QComboBox" row="1" column="3">
-                            <item>
-                                <property name="text">
-                                    <string>Latin-1</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>Japanese</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>Czech</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>Russian (CP1251)</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>Russian (KOI8-R)</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>Chinese</string>
-                                </property>
-                            </item>
-                            <item>
-                                <property name="text">
-                                    <string>Korean</string>
-                                </property>
-                            </item>
                             <property name="name">
                                 <cstring>fPilotEncoding</cstring>
                             </property>
+                                <property name="editable">
+                                    <bool>true</bool>
+                                </property>
                             <property name="whatsThis" stdset="0">
-                                <string>&lt;qt&gt;This box lets you select the encoding that your Pilot uses. If your Pilot accepts input in one of the languages listed, choose it. If your Pilot is a European or North American model, choose Latin-1.&lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;This box lets you select the encoding that your Pilot uses. If your Pilot accepts input in one of the languages listed, choose it. If your Pilot is a European or North American model, choose Western (ISO8859-1).&lt;/qt&gt;</string>
                             </property>
                         </widget>
                         <widget class="QLineEdit" row="2" column="1" rowspan="1" colspan="3">

@@ -316,7 +316,6 @@ BoolProperty_(UseKeyField, "UseKeyField", false)
 
 StringProperty_(PilotDevice, "PilotDevice", CSL1("/dev/pilot"))
 StringProperty_(Encoding, "Encoding", QString::null)
-IntProperty_(EncodingDD,"EncodingDD",0,7)
 
 StringProperty_(User, "UserName", QString::null)
 StringProperty_(BackupOnly, "BackupForSync", CSL1("Arng,PmDB,lnch"))
