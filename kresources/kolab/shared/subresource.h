@@ -34,6 +34,8 @@
 #define SUBRESOURCE_H
 
 #include <qstring.h>
+#include <qmap.h>
+
 
 namespace Kolab {
 
@@ -69,6 +71,8 @@ private:
   // to a d-pointer instead.
   int mCompletionWeight;
 };
+
+typedef QMap<QString, SubResource> ResourceMap;
 
 }
 
