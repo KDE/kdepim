@@ -18,6 +18,7 @@
 #include <qpainter.h>
 
 #include <kdeversion.h>
+#include <kdebug.h>
 #include <kstringhandler.h>
 
 #include "knglobals.h"
@@ -28,18 +29,25 @@
 
 
 KNHdrViewItem::KNHdrViewItem( KNHeaderView *ref, KNArticle *a ) :
-  KListViewItem( ref ),
-  art( a ),
-  mActive( false )
+  KListViewItem( ref )
 {
+  init( a );
 }
 
 
 KNHdrViewItem::KNHdrViewItem( KNHdrViewItem *ref, KNArticle *a ) :
-  KListViewItem( ref ),
-  art( a ),
-  mActive( false )
+  KListViewItem( ref )
 {
+  init( a );
+}
+
+
+void KNHdrViewItem::init( KNArticle *a )
+{
+  art = a;
+  mActive = false;
+  for ( int i = 0; i < 5; ++i) // FIXME hardcoded column count
+    mShowToolTip[i] = false;
 }
 
 
@@ -154,13 +162,20 @@ void KNHdrViewItem::paintCell( QPainter *p, const QColorGroup &cg, int column, i
     int cntWidth = 0;
     QString t2;
     QFont f2;
-    if (countUnreadInThread() > 0 && column == 0 && !isOpen()) {
-      t2 = QString( "   (%1)" ).arg( countUnreadInThread() );
+    if (countUnreadInThread() > 0 && column == paintInfo->subCol && !isOpen()) {
+      t2 = QString( " (%1)" ).arg( countUnreadInThread() );
       f2 = p->font();
       f2.setBold( true );
       cntWidth = QFontMetrics( f2 ).width( t2, -1 );
     }
-    QString t = KStringHandler::rPixelSqueeze( text(column), p->fontMetrics(), width - xText - cntWidth - 5 );
+    QString t = KStringHandler::rPixelSqueeze( text( column ), p->fontMetrics(), width - xText - cntWidth - 5 );
+
+    // show tooltip if we have to squeeze the text
+    if ( t != text( column ) )
+      mShowToolTip[column] = true;
+    else
+      mShowToolTip[column] = false;
+
     p->drawText( xText, 0, width - xText - 5, height(), alignment | AlignVCenter,  t );
     if (cntWidth) {
       QFont orig = p->font();

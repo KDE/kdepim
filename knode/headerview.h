@@ -15,6 +15,8 @@
 #ifndef KNHEADERVIEW_H
 #define KNHEADERVIEW_H
 
+#include <qtooltip.h>
+
 #include <klistview.h>
 #include <kfoldertree.h>
 #include <kmime_util.h>
@@ -90,11 +92,26 @@ class KNHeaderView : public KListView  {
     KPaintInfo mPaintInfo;
     KMime::DateFormatter mDateFormatter;
     KPopupMenu *mPopup;
+    bool mShowingFolder;
 
   private slots:
     void slotCenterDelayed();
     void slotSizeChanged( int, int, int );
     void resetCurrentTime();
+
+};
+
+
+class KNHeaderViewToolTip : public QToolTip {
+
+  public:
+    KNHeaderViewToolTip( KNHeaderView *parent );
+
+  protected:
+    void maybeTip( const QPoint &p );
+
+  private:
+    KNHeaderView *listView;
 
 };
 

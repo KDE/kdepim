@@ -37,7 +37,8 @@ KNHeaderView::KNHeaderView(QWidget *parent, const char *name) :
   mSortAsc( true ),
   mSortByThreadChangeDate( false ),
   mDelayedCenter( -1 ),
-  mActiveItem( 0 )
+  mActiveItem( 0 ),
+  mShowingFolder( false )
 {
   mPaintInfo.subCol    = addColumn( i18n("Subject"), 310 );
   mPaintInfo.senderCol = addColumn( i18n("From"), 115 );
@@ -81,7 +82,9 @@ KNHeaderView::KNHeaderView(QWidget *parent, const char *name) :
   connect( knGlobals.articleManager(), SIGNAL(aboutToShowGroup()), SLOT(prepareForGroup()) );
   connect( knGlobals.articleManager(), SIGNAL(aboutToShowFolder()), SLOT(prepareForFolder()) );
 
-  installEventFilter(this);
+  new KNHeaderViewToolTip( this );
+
+  installEventFilter( this );
 }
 
 
@@ -105,7 +108,8 @@ void KNHeaderView::readConfig()
 
   KNConfig::ReadNewsGeneral *rngConf = knGlobals.configManager()->readNewsGeneral();
   toggleColumn( KPaintInfo::COL_SIZE, rngConf->showLines() );
-  toggleColumn( KPaintInfo::COL_SCORE, rngConf->showScore() );
+  if ( !mShowingFolder ) // score column is always hidden when showing a folder
+    toggleColumn( KPaintInfo::COL_SCORE, rngConf->showScore() );
 
   mDateFormatter.setCustomFormat( rngConf->dateCustomFormat() );
   mDateFormatter.setFormat( rngConf->dateFormat() );
@@ -129,7 +133,8 @@ void KNHeaderView::writeConfig()
 
   KNConfig::ReadNewsGeneral *rngConf = knGlobals.configManager()->readNewsGeneral();
   rngConf->setShowLines( mPaintInfo.showSize );
-  rngConf->setShowScore( mPaintInfo.showScore );
+  if ( !mShowingFolder ) // score column is always hidden when showing a folder
+    rngConf->setShowScore( mPaintInfo.showScore );
 }
 
 
@@ -432,6 +437,7 @@ void KNHeaderView::toggleColumn( int column, int mode )
 
 void KNHeaderView::prepareForGroup()
 {
+  mShowingFolder = false;
   header()->setLabel( mPaintInfo.senderCol, i18n("From") );
   KNConfig::ReadNewsGeneral *rngConf = knGlobals.configManager()->readNewsGeneral();
   toggleColumn( KPaintInfo::COL_SCORE, rngConf->showScore() );
@@ -440,6 +446,7 @@ void KNHeaderView::prepareForGroup()
 
 void KNHeaderView::prepareForFolder()
 {
+  mShowingFolder = true;
   header()->setLabel( mPaintInfo.senderCol, i18n("Newsgroups / To") );
   toggleColumn( KPaintInfo::COL_SCORE, false ); // local folders have no score
 }
@@ -574,5 +581,37 @@ void KNHeaderView::resetCurrentTime()
 }
 
 
-//--------------------------------
+//BEGIN: KNHeaderViewToolTip ==================================================
+
+KNHeaderViewToolTip::KNHeaderViewToolTip( KNHeaderView *parent ) :
+  QToolTip( parent->viewport() ),
+  listView( parent )
+{
+}
+
+
+void KNHeaderViewToolTip::maybeTip( const QPoint &p )
+{
+  const KNHdrViewItem *item = static_cast<KNHdrViewItem*>( listView->itemAt( p ) );
+  if ( !item )
+    return;
+  const int column = listView->header()->sectionAt( p.x() );
+  if ( column == -1 )
+    return;
+
+  if ( !item->showToolTip( column ) )
+    return;
+
+  const QRect itemRect = listView->itemRect( item );
+  if ( !itemRect.isValid() )
+    return;
+  const QRect headerRect = listView->header()->sectionRect( column );
+  if ( !headerRect.isValid() )
+    return;
+
+  tip( QRect( headerRect.left(), itemRect.top(), headerRect.width(), itemRect.height() ), item->text( column ) );
+}
+
+//END: KNHeaderViewToolTip ====================================================
+
 #include "headerview.moc"

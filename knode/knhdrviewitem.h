@@ -49,13 +49,18 @@ class KNHdrViewItem : public KListViewItem  {
     KNArticle *art;
     int countUnreadInThread();
 
+    bool showToolTip( int column ) const { return mShowToolTip[column]; }
+
   private:
+    void init( KNArticle *a );
+
     bool greyOut();
     bool firstColBold();
     QColor normalColor();
     QColor greyColor();
 
     bool mActive;
+    bool mShowToolTip[5]; // ### hardcoded column count :-(
 
 };
 
