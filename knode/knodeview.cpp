@@ -71,11 +71,11 @@ KNodeView::KNodeView(QWidget *parent, const char * name)
                            &actionCollection, "go_nextArticle");
   actPrevArt = new KAction(i18n("&Previous article"), Key_B , this, SLOT(slotPrevArticle()),
                            &actionCollection, "go_prevArticle");
-  actNextUnreadArt = new KAction(i18n("Next unread &article"), "nextart", ALT+Key_Space , this, SLOT(slotNextUnreadArticle()),
+  actNextUnreadArt = new KAction(i18n("Next unread &article"), "1rightarrow", ALT+Key_Space , this, SLOT(slotNextUnreadArticle()),
                                  &actionCollection, "go_nextUnreadArticle");
   actReadThrough = new KAction(i18n("Read &through articles"), Key_Space , this, SLOT(slotReadThrough()),
                                &actionCollection, "go_readThrough");
-  actNextUnreadThread =  new KAction(i18n("Next unread &thread"), "nextthr", CTRL+Key_Space , this, SLOT(slotNextUnreadThread()),
+  actNextUnreadThread =  new KAction(i18n("Next unread &thread"),"2rightarrow", CTRL+Key_Space , this, SLOT(slotNextUnreadThread()),
                                      &actionCollection, "go_nextUnreadThread");
   actNextGroup = new KAction(i18n("Ne&xt group"), Key_Plus , this, SLOT(slotNextGroup()),
                              &actionCollection, "go_nextGroup");

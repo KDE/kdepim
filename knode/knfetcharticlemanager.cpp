@@ -93,7 +93,7 @@ KNFetchArticleManager::KNFetchArticleManager(KNListView *v, KNFilterManager* fiM
                                 &actionCollection, "thread_ignore");
   actOwnWindow = new KAction(i18n("&Open in own window"), Key_O , this, SLOT(slotOwnWindow()),
                              &actionCollection, "article_ownWindow");
-  actSearch = new KAction(i18n("&Search"),"search" , Key_F4 , this, SLOT(slotSearch()),
+  actSearch = new KAction(i18n("&Search"),"find" , Key_F4 , this, SLOT(slotSearch()),
                           &actionCollection, "article_search");
 }
 

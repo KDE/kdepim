@@ -2,7 +2,7 @@
 <kpartgui name="KNode" version="5">
 
 <ActionProperties>
-<Action name="options_configure" icon="settings"/>
+<Action name="options_configure" icon="configure"/>
 </ActionProperties>
 
 <MenuBar>
