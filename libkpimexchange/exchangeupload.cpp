@@ -277,8 +277,8 @@ void ExchangeUpload::startUpload( KURL& url )
   }
   kdDebug() << doc.toString() << endl;
 
-  KIO::DavJob *job2 = KIO::davPropPatch( url, doc, false );
-  connect( job2, SIGNAL( result( KIO::Job * ) ), this, SLOT( slotPatchResult( KIO::Job * ) ) );
+  KIO::DavJob *job = KIO::davPropPatch( url, doc, false );
+  connect( job, SIGNAL( result( KIO::Job * ) ), this, SLOT( slotPatchResult( KIO::Job * ) ) );
 }
 
 void ExchangeUpload::slotPatchResult( KIO::Job* job )

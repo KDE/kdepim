@@ -214,6 +214,7 @@ void ExchangeDownload::handleRecurrence(QString uid) {
   emit startDownload();
  
   KIO::DavJob* job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", query, false );
+  KIO::Scheduler::scheduleJob(job);
   connect(job, SIGNAL(result( KIO::Job * )), this, SLOT(slotMasterResult(KIO::Job *)));
 }
 
