@@ -16,7 +16,7 @@
    Boston, MA 02111-1307, USA.
 */
 
-// Test program for libkdepim/email.h
+// Test program for libemailfunctions/email.h
 #include "email.h"
 
 #include <kcmdlineargs.h>
@@ -54,7 +54,7 @@ static bool checkGetNameAndEmail(const QString& input, const QString& expName, c
 // convert this to a switch instead but hey, nothing speedy in here is needed but still.. it would be nice
 static QString emailTestParseResultToString( EmailParseResult errorCode )
 {
-  if( errorCode == TooManyAts ) { 
+  if( errorCode == TooManyAts ) {
     return "TooManyAts";
   } else if( errorCode == TooFewAts ) {
     return "TooFewAts";
@@ -81,8 +81,8 @@ static QString emailTestParseResultToString( EmailParseResult errorCode )
 static QString simpleEmailTestParseResultToString( bool validEmail )
 {
   if ( validEmail ) {
-    return "true"; 
-  } 
+    return "true";
+  }
   return "false";
 }
 
@@ -222,14 +222,14 @@ int main(int argc, char *argv[])
   // Check that angle brackets are closed the other way around, and anglebrackets in domainpart
   // instead of local part
   // checkIsValidEmailAddress( "matt douhanmatt@<fruitsalad.org", "UnclosedAngleAddr" );
- 
+
   // check that a properly formated anglebrackets situation is OK
   checkIsValidEmailAddress( "matt douhan<matt@fruitsalad.org>", "AddressOk" );
 
   // a full email address with comments angle brackets and the works should be valid too
   checkIsValidEmailAddress( "Matt (jongel) Douhan <matt@fruitsalad.org>", "AddressOk" );
 
-  // Double quotes        
+  // Double quotes
   checkIsValidEmailAddress( "\"Matt Douhan\" <matt@fruitsalad.org>", "AddressOk" );
 
   // Double quotes inside parens
@@ -244,7 +244,7 @@ int main(int argc, char *argv[])
   // @ is allowed inisde doublequotes
   checkIsValidEmailAddress( "\"matt@jongel\" <matt@fruitsalad.org>", "AddressOk" );
 
-  // anglebrackets inside dbl quotes 
+  // anglebrackets inside dbl quotes
   checkIsValidEmailAddress( "\"matt<blah blah>\" <matt@fruitsalad.org>", "AddressOk" );
 
   // a , inside a double quoted string is OK, how do I know this? well Ingo says so
@@ -286,15 +286,15 @@ int main(int argc, char *argv[])
   // check the getEmailAddress address method
   checkGetEmailAddress( "matt@fruitsalad.org", "matt@fruitsalad.org" );
   checkGetEmailAddress( "Matt Douhan <matt@fruitsalad.org>", "matt@fruitsalad.org" );
-  checkGetEmailAddress( "\"Matt Douhan <blah blah>\" <matt@fruitsalad.org>", "matt@fruitsalad.org" ); 
-  checkGetEmailAddress( "\"Matt <blah blah>\" <matt@fruitsalad.org>", "matt@fruitsalad.org" ); 
+  checkGetEmailAddress( "\"Matt Douhan <blah blah>\" <matt@fruitsalad.org>", "matt@fruitsalad.org" );
+  checkGetEmailAddress( "\"Matt <blah blah>\" <matt@fruitsalad.org>", "matt@fruitsalad.org" );
   checkGetEmailAddress( "Matt Douhan (jongel) <matt@fruitsalad.org", QString() );
   checkGetEmailAddress( "Matt Douhan (m@tt) <matt@fruitsalad.org>", "matt@fruitsalad.org" );
   checkGetEmailAddress( "\"Douhan, Matt\" <matt@fruitsalad.org>", "matt@fruitsalad.org" );
   checkGetEmailAddress( "\"Matt Douhan (m@tt)\" <matt@fruitsalad.org>", "matt@fruitsalad.org" );
   checkGetEmailAddress( "\"Matt Douhan\" (matt <matt@fruitsalad.org>", QString() );
   checkGetEmailAddress( "Matt Douhan <matt@[123.123.123.123]>", "matt@[123.123.123.123]" );
- 
+
   // check the splitEmailAddrList method
   checkSplitEmailAddrList( "Matt Douhan <matt@fruitsalad.org>, Foo Bar <foo@bar.com>", "Matt Douhan <matt@fruitsalad.org>,Foo Bar <foo@bar.com>" );
   checkSplitEmailAddrList( "\"Matt, Douhan\" <matt@fruitsalad.org>, Foo Bar <foo@bar.com>", "\"Matt, Douhan\" <matt@fruitsalad.org>,Foo Bar <foo@bar.com>" );
