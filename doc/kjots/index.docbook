@@ -97,7 +97,7 @@ name for the new book.</para>
 <para>The name of the new book should now appear in the bottom left hand
 corner of the window. If you want the book to be on your
 <quote>Hotlist</quote>, choose <menuchoice><guimenu>Hotlist</guimenu>
-<guimenuitem>Add current book to hotlist</guimenuitem></menuchoice> and
+<guimenuitem>Add Current Book to Hotlist</guimenuitem></menuchoice> and
 a button with the book's name will appear near the bottom of the
 screen. You can have up to 8 books on the hotlist, and can remove the
 current book using <menuchoice><guimenu>Hotlist</guimenu>
@@ -225,7 +225,7 @@ See <link linkend="kjots-books">Using Books</link>.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Delete current Book</guimenuitem>
+<guimenuitem>Delete Current Book</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Deletes</action> the currently open Book.</para></listitem>
 </varlistentry>
@@ -421,8 +421,8 @@ book, allowing you to select which page to view.
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Options</guimenu>
-<guimenuitem>Configure Key Bindings...</guimenuitem>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Shortcuts...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Choose</action> shortcut keys for various
 menu items.</para></listitem>
@@ -430,7 +430,7 @@ menu items.</para></listitem>
 
 <varlistentry>
 <term><menuchoice>
-<guimenu>Options</guimenu>
+<guimenu>Settings</guimenu>
 <guimenuitem>Configure KJots...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Configure</action> options for &kjots;, including
