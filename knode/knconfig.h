@@ -24,7 +24,7 @@
 #include "knwidgets.h"
 
 class QRadioButton;
-class QMultiLineEdit;
+class QTextEdit;
 class QCheckBox;
 class QButtonGroup;
 
@@ -180,7 +180,7 @@ class IdentityWidget : public BaseWidget {
     QCheckBox       *s_igGenerator;
     QPushButton     *c_hooseBtn,
                     *e_ditBtn;
-    QMultiLineEdit  *s_igEditor;
+    QTextEdit       *s_igEditor;
     QButtonGroup    *b_uttonGroup;
     Kpgp::SecretKeyRequester
                     *s_igningKey;

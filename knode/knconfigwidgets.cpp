@@ -161,7 +161,8 @@ KNConfig::IdentityWidget::IdentityWidget(Identity *d, QWidget *p, const char *n)
   b_uttonGroup->insert(s_igEdit, 1);
   topL->addMultiCellWidget(s_igEdit, 9, 9, 0, 2);
 
-  s_igEditor = new QMultiLineEdit(this);
+  s_igEditor = new QTextEdit(this);
+  s_igEditor->setTextFormat(Qt::PlainText);
   topL->addMultiCellWidget(s_igEditor, 10, 10, 0, 2);
   s_igEditor->setText(d_ata->s_igText);
 
