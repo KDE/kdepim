@@ -196,7 +196,7 @@ void AlarmDaemon::reloadCal_(ADCalendarBase* cal)
       kdDebug(5900) << "AlarmDaemon::reloadCal_(): calendar reloaded" << endl;
     notifyGuiCalStatus(cal);
     setTimerStatus();
-//    checkAlarms(cal);
+    checkAlarms(cal);
   }
 }
 
