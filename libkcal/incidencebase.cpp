@@ -37,7 +37,8 @@ IncidenceBase::IncidenceBase() :
   mAttendees.setAutoDelete( true );
 }
 
-IncidenceBase::IncidenceBase(const IncidenceBase &i)
+IncidenceBase::IncidenceBase(const IncidenceBase &i) :
+  CustomProperties( i )
 {
   mReadOnly = i.mReadOnly;
   mDtStart = i.mDtStart;
