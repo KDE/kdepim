@@ -76,7 +76,7 @@ class Base {
 };
 
 
-class BaseWidget : public KCModule {
+class KDE_EXPORT BaseWidget : public KCModule {
 
   Q_OBJECT
 
@@ -97,7 +97,7 @@ class BaseWidget : public KCModule {
 };
 
 
-class Identity : public QObject, public Base {
+class KDE_EXPORT Identity : public QObject, public Base {
 
 Q_OBJECT
 
@@ -167,7 +167,7 @@ Q_OBJECT
 };
 
 
-class IdentityWidget : public BaseWidget {
+class KDE_EXPORT IdentityWidget : public BaseWidget {
 
   Q_OBJECT
 
@@ -208,7 +208,7 @@ class IdentityWidget : public BaseWidget {
 };
 
 
-class NntpAccountListWidget : public BaseWidget {
+class KDE_EXPORT NntpAccountListWidget : public BaseWidget {
 
   Q_OBJECT
 
@@ -255,7 +255,7 @@ class NntpAccountListWidget : public BaseWidget {
 };
 
 
-class NntpAccountConfDialog : public KDialogBase  {
+class KDE_EXPORT NntpAccountConfDialog : public KDialogBase  {
 
   Q_OBJECT
 
@@ -293,7 +293,7 @@ class NntpAccountConfDialog : public KDialogBase  {
 };
 
 
-class SmtpAccountWidget : public BaseWidget {
+class KDE_EXPORT SmtpAccountWidget : public BaseWidget {
 
 Q_OBJECT
 
@@ -321,7 +321,7 @@ Q_OBJECT
 };
 
 
-class Appearance : public Base {
+class KDE_EXPORT Appearance : public Base {
 
 #define COL_CNT 12
 #define FNT_CNT 5
@@ -397,7 +397,7 @@ class Appearance : public Base {
 };
 
 
-class AppearanceWidget : public BaseWidget {
+class KDE_EXPORT AppearanceWidget : public BaseWidget {
 
   Q_OBJECT
 
@@ -412,7 +412,7 @@ class AppearanceWidget : public BaseWidget {
     //===================================================================================
     // code taken from KMail, Copyright (C) 2000 Espen Sand, espen@kde.org
 
-    class ColorListItem : public QListBoxText {
+    class KDE_EXPORT ColorListItem : public QListBoxText {
 
       public:
         ColorListItem( const QString &text, const QColor &color=Qt::black );
@@ -431,7 +431,7 @@ class AppearanceWidget : public BaseWidget {
 
     //===================================================================================
 
-    class FontListItem : public QListBoxText {
+    class KDE_EXPORT FontListItem : public QListBoxText {
 
       public:
         FontListItem( const QString &name, const QFont & );
@@ -475,7 +475,7 @@ class AppearanceWidget : public BaseWidget {
 };
 
 
-class ReadNewsGeneral : public Base {
+class KDE_EXPORT ReadNewsGeneral : public Base {
 
   friend class ReadNewsGeneralWidget;
 
@@ -537,7 +537,7 @@ class ReadNewsGeneral : public Base {
 };
 
 
-class ReadNewsGeneralWidget : public BaseWidget {
+class KDE_EXPORT ReadNewsGeneralWidget : public BaseWidget {
 
   public:
     ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidget *p=0, const char *n=0);
@@ -566,7 +566,7 @@ class ReadNewsGeneralWidget : public BaseWidget {
 };
 
 
-class ReadNewsNavigation : public Base {
+class KDE_EXPORT ReadNewsNavigation : public Base {
 
   friend class ReadNewsNavigationWidget;
 
@@ -592,7 +592,7 @@ class ReadNewsNavigation : public Base {
 };
 
 
-class ReadNewsNavigationWidget : public BaseWidget {
+class KDE_EXPORT ReadNewsNavigationWidget : public BaseWidget {
 
   public:
     ReadNewsNavigationWidget(ReadNewsNavigation *d, QWidget *p=0, const char *n=0);
@@ -613,7 +613,7 @@ class ReadNewsNavigationWidget : public BaseWidget {
 };
 
 
-class ReadNewsViewer : public Base {
+class KDE_EXPORT ReadNewsViewer : public Base {
 
   friend class ReadNewsViewerWidget;
 
@@ -663,7 +663,7 @@ class ReadNewsViewer : public Base {
 };
 
 
-class ReadNewsViewerWidget : public BaseWidget {
+class KDE_EXPORT ReadNewsViewerWidget : public BaseWidget {
 
   Q_OBJECT
 
@@ -698,7 +698,7 @@ class ReadNewsViewerWidget : public BaseWidget {
 
 
 
-class DisplayedHeaders : public Base {
+class KDE_EXPORT DisplayedHeaders : public Base {
 
   friend class DisplayedHeadersWidget;
 
@@ -724,7 +724,7 @@ class DisplayedHeaders : public Base {
 };
 
 
-class DisplayedHeadersWidget : public BaseWidget {
+class KDE_EXPORT DisplayedHeadersWidget : public BaseWidget {
 
   Q_OBJECT
 
@@ -770,7 +770,7 @@ class DisplayedHeadersWidget : public BaseWidget {
 };
 
 
-class DisplayedHeaderConfDialog : public KDialogBase {
+class KDE_EXPORT DisplayedHeaderConfDialog : public KDialogBase {
 
   Q_OBJECT
 
@@ -794,7 +794,7 @@ class DisplayedHeaderConfDialog : public KDialogBase {
 };
 
 
-class Scoring : public Base {
+class KDE_EXPORT Scoring : public Base {
 
   friend class ScoringWidget;
 
@@ -814,7 +814,7 @@ class Scoring : public Base {
 };
 
 
-class ScoringWidget : public BaseWidget {
+class KDE_EXPORT ScoringWidget : public BaseWidget {
 
   Q_OBJECT
 
@@ -834,7 +834,7 @@ class ScoringWidget : public BaseWidget {
 };
 
 
-class FilterListWidget : public BaseWidget {
+class KDE_EXPORT FilterListWidget : public BaseWidget {
 
   Q_OBJECT
 
@@ -899,7 +899,7 @@ class FilterListWidget : public BaseWidget {
 };
 
 
-class XHeader {
+class KDE_EXPORT XHeader {
 
   public:
     XHeader()                  {}
@@ -921,7 +921,7 @@ class XHeader {
 typedef QValueList<XHeader> XHeaders;
 
 
-class PostNewsTechnical : public Base {
+class KDE_EXPORT PostNewsTechnical : public Base {
 
   friend class PostNewsTechnicalWidget;
   friend class SmtpAccountWidget;
@@ -962,7 +962,7 @@ class PostNewsTechnical : public Base {
 };
 
 
-class PostNewsTechnicalWidget : public BaseWidget {
+class KDE_EXPORT PostNewsTechnicalWidget : public BaseWidget {
 
   Q_OBJECT
 
@@ -999,7 +999,7 @@ class PostNewsTechnicalWidget : public BaseWidget {
 };
 
 
-class XHeaderConfDialog : public KDialogBase {
+class KDE_EXPORT XHeaderConfDialog : public KDialogBase {
 
   public:
     XHeaderConfDialog(const QString &h=QString::null, QWidget *p=0, const char *n=0);
@@ -1052,7 +1052,7 @@ class PostNewsComposer : public Base {
 };
 
 
-class PostNewsComposerWidget : public BaseWidget {
+class KDE_EXPORT PostNewsComposerWidget : public BaseWidget {
 
   Q_OBJECT
 
@@ -1082,7 +1082,7 @@ class PostNewsComposerWidget : public BaseWidget {
 };
 
 
-class PostNewsSpellingWidget : public BaseWidget {
+class KDE_EXPORT PostNewsSpellingWidget : public BaseWidget {
 
   public:
     PostNewsSpellingWidget(QWidget *p=0, const char *n=0);
@@ -1097,7 +1097,7 @@ class PostNewsSpellingWidget : public BaseWidget {
 
 
 
-class PrivacyWidget : public BaseWidget {
+class KDE_EXPORT PrivacyWidget : public BaseWidget {
 
   Q_OBJECT
 
@@ -1117,7 +1117,7 @@ class PrivacyWidget : public BaseWidget {
 
 //BEGIN: Cleanup configuration -----------------------------------------------
 
-class Cleanup : public Base {
+class KDE_EXPORT Cleanup : public Base {
 
   friend class CleanupWidget;
   friend class GroupCleanupWidget;
@@ -1169,7 +1169,7 @@ class Cleanup : public Base {
 
 
 /** Configuration widget for group expireration */
-class GroupCleanupWidget : public QWidget {
+class KDE_EXPORT GroupCleanupWidget : public QWidget {
 
   Q_OBJECT
 
@@ -1195,7 +1195,7 @@ class GroupCleanupWidget : public QWidget {
 
 
 /** Global cleanup configuration widget */
-class CleanupWidget : public BaseWidget {
+class KDE_EXPORT CleanupWidget : public BaseWidget {
 
   Q_OBJECT
 

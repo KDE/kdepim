@@ -21,7 +21,7 @@
 
 namespace KNode
 {
-  class AboutData : public KAboutData
+  class KDE_EXPORT AboutData : public KAboutData
   {
   public:
     AboutData();

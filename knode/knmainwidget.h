@@ -58,7 +58,7 @@ class KNLocalArticle;
 class KNRemoteArticle;
 class KActionCollection;
 
-class KNMainWidget : public KDockArea, virtual public KNodeIface
+class KDE_EXPORT KNMainWidget : public KDockArea, virtual public KNodeIface
 {
   Q_OBJECT
 public:

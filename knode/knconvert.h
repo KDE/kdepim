@@ -33,7 +33,7 @@ class KLineEdit;
 class KProcess;
 
 
-class KNConvert : public QDialog {
+class KDE_EXPORT KNConvert : public QDialog {
 
   Q_OBJECT
 

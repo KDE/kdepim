@@ -29,7 +29,7 @@ namespace KNConfig {
  * It simply forwards load and save operations to all tabs.
  * Code mostly taken from kmail.
  */
-class BasePageWithTabs : public KCModule {
+class KDE_EXPORT BasePageWithTabs : public KCModule {
   Q_OBJECT
   public:
     BasePageWithTabs( QWidget * parent=0, const char * name=0 );
@@ -58,7 +58,7 @@ class AccountsPage : public BasePageWithTabs {
 
 
 // read news page
-class ReadNewsPage : public BasePageWithTabs {
+class KDE_EXPORT ReadNewsPage : public BasePageWithTabs {
   Q_OBJECT
  
   public:
@@ -66,7 +66,7 @@ class ReadNewsPage : public BasePageWithTabs {
 };
 
 // post news page
-class PostNewsPage : public BasePageWithTabs {
+class KDE_EXPORT PostNewsPage : public BasePageWithTabs {
   Q_OBJECT
 
   public:

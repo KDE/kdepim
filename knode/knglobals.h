@@ -45,7 +45,7 @@ class KNArticleWidget;
     via KNodeApp. Now they can be accessed directly,
     this removes many header dependencies.
     (knode.h isn't include everywhere) */
-class KNGlobals {
+class KDE_EXPORT KNGlobals {
   public:
     /** topWidget == top, used for message boxes, */
     QWidget               *topWidget;
@@ -86,6 +86,6 @@ private:
 };
 
 
-extern KNGlobals knGlobals;
+extern KNGlobals knGlobals KDE_EXPORT;
 
 #endif
