@@ -96,7 +96,7 @@ class ContactListItem : public QListViewItem
 LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, QWidget* parent,
                                             const char* name )
   : KDialogBase( Plain, i18n( "Search for Addresses in Directory" ), Help | User1 |
-    User2 | User3 | Cancel, Cancel, parent, name, false, true ),
+    User2 | User3 | Cancel, Default, parent, name, false, true ),
     mAddressBook( ab )
 {
   QFrame *page = plainPage();
@@ -128,6 +128,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, QWidget* parent,
   boxLayout->addWidget( mFilterCombo, 0, 3 );
 
   mSearchButton = new QPushButton( i18n( "Search" ), groupBox );
+  mSearchButton->setDefault(true);
   boxLayout->addWidget( mSearchButton, 0, 4 );
 
   mRecursiveCheckbox = new QCheckBox( i18n( "Recursive search" ), groupBox  );
@@ -155,6 +156,10 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, QWidget* parent,
 	   this, SLOT( slotSetScope( bool ) ) );
   connect( mSearchButton, SIGNAL( clicked() ),
 	   this, SLOT( slotStartSearch() ) );
+
+  setTabOrder(mSearchEdit, mFilterCombo);
+  setTabOrder(mFilterCombo, mSearchButton);
+  mSearchEdit->setFocus();
 
   restoreSettings();
 }
