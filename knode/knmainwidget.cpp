@@ -1883,7 +1883,7 @@ void KNMainWidget::slotFolEmpty()
       i18n("This folder cannot be emptied at the moment\nbecause some of its articles are currently in use.") );
       return;
     }
-    if( KMessageBox::Yes == KMessageBox::warningContinueCancel(
+    if( KMessageBox::Continue == KMessageBox::warningContinueCancel(
         this, i18n("Do you really want to delete all articles in %1?").arg(f_olManager->currentFolder()->name()),"",KGuiItem(i18n("&Delete"),"editdelete")) )
       f_olManager->emptyFolder(f_olManager->currentFolder());
   }
