@@ -119,6 +119,8 @@ void KCalResourceSlox::readConfig( const KConfig *config )
 {
   mPrefs->readConfig();
 
+  mWebdavHandler.setUserId( mPrefs->user() );
+
   ResourceCached::readConfig( config );
 }
 
@@ -731,12 +733,17 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
 
         todo->setCustomProperty( "SLOX", "ID", item.sloxId );
 
+        mWebdavHandler.clearSloxAttributeStatus();
+
         QDomNode n;
         for( n = item.domNode.firstChild(); !n.isNull(); n = n.nextSibling() ) {
           QDomElement e = n.toElement();
+          mWebdavHandler.parseSloxAttribute( e );
           parseIncidenceAttribute( e, todo );
           parseTodoAttribute( e, todo );
         }
+
+        mWebdavHandler.setSloxAttributes( todo );
 
         if ( newTodo ) mCalendar.addTodo( todo );
 
@@ -804,8 +811,11 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
 
         bool doesRecur = false;
 
+        mWebdavHandler.clearSloxAttributeStatus();
+
         for( n = item.domNode.firstChild(); !n.isNull(); n = n.nextSibling() ) {
           QDomElement e = n.toElement();
+          mWebdavHandler.parseSloxAttribute( e );
           parseIncidenceAttribute( e, event );
           parseEventAttribute( e, event );
           if ( e.tagName() == "date_sequence" && e.text() != "no" ) {
@@ -814,6 +824,8 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
         }
 
         if ( doesRecur ) parseRecurrence( item.domNode, event );
+
+        mWebdavHandler.setSloxAttributes( event );
 
 //        kdDebug() << "EVENT " << item.uid << " " << event->summary() << endl;
 

@@ -159,6 +159,9 @@ class KCalResourceSlox : public KCal::ResourceCached
     KABC::Lock *mLock;
 
     WebdavHandler mWebdavHandler;
+
+    QString mOwner;
+    QString mWriteRights;
 };
 
 #endif

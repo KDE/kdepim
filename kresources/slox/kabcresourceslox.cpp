@@ -217,11 +217,16 @@ void ResourceSlox::slotResult( KIO::Job *job )
         Addressee a;
         a.setUid( uid );
 
+        mWebdavHandler.clearSloxAttributeStatus();
+
         QDomNode n;
         for( n = item.domNode.firstChild(); !n.isNull(); n = n.nextSibling() ) {
           QDomElement e = n.toElement();
+          mWebdavHandler.parseSloxAttribute( e );
           parseContactAttribute( e, a );
         }
+
+        mWebdavHandler.setSloxAttributes( a );
 
         a.setResource( this );
         a.setChanged( false );
