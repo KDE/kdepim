@@ -1,4 +1,4 @@
-INCLUDES = $(all_includes)
+INCLUDES = -I$(top_srcdir) $(all_includes)
 
 noinst_LTLIBRARIES = libresourceimapshared.la
 libresourceimapshared_la_SOURCES = \
