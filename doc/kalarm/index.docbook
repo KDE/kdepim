@@ -35,7 +35,7 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2002-05-29</date>
+<date>2002-06-14</date>
 <releaseinfo>0.07.00</releaseinfo>
 
 <abstract>
@@ -70,9 +70,9 @@ deletion.</para>
 <para>When setting up or modifying an alarm, you may either type in
 the alarm message text, specify a text file to display, or specify a
 command to execute. You can also choose the colour of the alarm
-message, whether it should repeat, whether to sound an audible beep,
-and whether the alarm should be cancelled if it can't be triggered at
-its scheduled time.</para>
+message, whether it should repeat, whether to play a sound, and
+whether the alarm should be cancelled if it can't be triggered at its
+scheduled time.</para>
 
 <para>Alarms may also be scheduled on the command line, or via &DCOP;
 calls from programs.</para>
@@ -120,9 +120,11 @@ them when they become due.</para>
 
 <para>When it is run with no command line parameters, &kalarm; starts
 in graphical mode. It displays the current list of outstanding alarms,
-showing their times, repetition counts, colours, and message texts,
-names of files to display or commands to execute. An icon at the left
-of each alarm text/file/command indicates the type of alarm.</para>
+showing their times, repetition intervals, colours, and message texts,
+names of files to display or commands to execute. (For a recurring
+alarm, the time shown is its next scheduled trigger time.) An icon at
+the left of each alarm text/file/command indicates the type of
+alarm.</para>
 
 <screenshot>
 <screeninfo>Screenshot of the &kalarm; main window</screeninfo>
@@ -140,8 +142,8 @@ of each alarm text/file/command indicates the type of alarm.</para>
 time and the number of times which it is due to repeat after
 that.</para>
 
-<para>The alarms may be ordered by date/time, repeat count, colour or
-text by clicking on the title bar for the appropriate column.
+<para>The alarms may be ordered by date/time, repeat interval, colour
+or text by clicking on the title bar for the appropriate column.
 To reverse the sort order, click the column title bar again.</para>
 
 <para>When &kalarm; starts in graphical mode, it checks whether the
@@ -153,7 +155,35 @@ already running, &kalarm; starts it.</para>
 
 <para>To add a new alarm, select <menuchoice>
 <guimenu>Actions</guimenu><guimenuitem>New</guimenuitem></menuchoice>.
-This displays the alarm edit window:</para>
+This displays the alarm edit window as described below.</para>
+
+</sect2>
+
+<sect2>
+<title>Modifying an existing alarm</title>
+
+<para>To modify an existing alarm, do one of the following:</para>
+
+<itemizedlist>
+<listitem>
+<para>Double click on its entry in the alarm list.</para>
+</listitem>
+
+<listitem>
+<para>Select it by clicking on its entry in the alarm list. Then
+choose <menuchoice><guimenu>Actions</guimenu>
+<guimenuitem>Modify</guimenuitem></menuchoice>.</para>
+</listitem>
+
+<listitem>
+<para><mousebutton>Right</mousebutton> click on its entry in the alarm
+list and choose
+<menuchoice><guimenuitem>Modify</guimenuitem></menuchoice> from the
+context menu.</para>
+</listitem>
+</itemizedlist>
+
+<para>This displays the alarm edit window:</para>
 
 <screenshot>
 <screeninfo>Screenshot of the alarm edit window</screeninfo>
@@ -173,8 +203,14 @@ may include newlines) in the edit box, <guilabel>Command</guilabel> to
 enter a shell command to execute, or <guilabel>File</guilabel> to
 enter the name or &URL; of a text file whose contents are to be
 displayed in the alarm message.  When <guilabel>File</guilabel> is
-selected, <guibutton>Browse...</guibutton> may be used
-to display a file selection dialog.</para>
+selected, the button to the right may be used to display a file
+selection dialog.</para>
+
+<para>If the alarm is a recurring alarm and it was deferred after it
+was last displayed, the <guilabel>Deferred Alarm</guilabel> group box
+shows the time the alarm was deferred to.
+<guibutton>Change...</guibutton> displays a dialog which allows you to
+change the deferred time or to cancel the deferral.</para>
 
 <para>In the <guilabel>Time</guilabel> group box, select either</para>
 
@@ -217,7 +253,7 @@ appear only while <guilabel>Recur</guilabel> is selected.</para>
 <para>Set the recurrence time period by selecting one of the time
 period types and entering in the <guilabel>Recur every</guilabel> box
 how many time periods should elapse between recurrences. For example,
-to repeat every 14 days, you could select <guilabel>Daily</guilabel>
+to repeat every fortnight, you could select <guilabel>Daily</guilabel>
 and enter a value of 14, or select <guilabel>Weekly</guilabel> and
 enter a value of 2. Depending on the time period type selected, you
 may have further options:</para>
@@ -234,9 +270,9 @@ a position (&eg; the second Tuesday).</para>
 </listitem>
 
 <listitem>
-<para>For a yearly recurrence, you may select either a fixed month (in
-which case the recurrence start date determines the day in the month
-for the alarm), or a day number.</para>
+<para>For a yearly recurrence, you may select either a fixed date in
+the year, or a position in a month (&eg; the last Saturday in
+May).</para>
 </listitem>
 </itemizedlist>
 
@@ -271,8 +307,12 @@ scheduled.</para>
 and while both X and the <application>alarm daemon</application> are
 running.</para></note>
 
-<para>Check the <guilabel>Beep</guilabel> checkbox if you want an
-audible alarm to sound when the alarm message is displayed.</para>
+<para>Check the <guilabel>Sound</guilabel> checkbox if you want an
+audible alarm to sound when the alarm message is displayed. By default
+a beep is sounded; use the button on the right to select an audio file
+to play. To revert to a beep, click the button again. To see what your
+current sound selection is, hover the mouse above the button until a
+tooltip appears.</para>
 
 <para>Select the background colour for the alarm message
 window.</para>
@@ -280,30 +320,6 @@ window.</para>
 <para>Press the <guibutton>OK</guibutton> button
 when all details are correct, to add the alarm to the scheduled
 list.</para>
-
-</sect2>
-
-<sect2>
-<title>Modifying an existing alarm</title>
-
-<para>To modify an existing alarm, do one of the following:</para>
-
-<itemizedlist>
-<listitem>
-<para>Select it by clicking on its entry in the alarm list. Then
-choose <menuchoice><guimenu>Actions</guimenu>
-<guimenuitem>Modify</guimenuitem></menuchoice>.</para>
-</listitem>
-
-<listitem>
-<para><mousebutton>Right</mousebutton> click on its entry in the alarm
-list and choose
-<menuchoice><guimenuitem>Modify</guimenuitem></menuchoice> from the
-context menu.</para>
-</listitem>
-</itemizedlist>
-
-<para>This displays the alarm edit window as described above.</para>
 
 </sect2>
 
@@ -705,7 +721,9 @@ time.</para>
 <tbody>
 <row>
   <entry><option>-b</option>, <option>--beep</option></entry>
-  <entry>Make an audible beep when the message is displayed.</entry>
+  <entry>Make an audible beep when the message is displayed.
+  <option>--sound</option> must not be present if this option is
+  specified.</entry>
 </row>
 <row>
   <entry><option>-c</option>, <option>--color</option>, <option>--colour
@@ -761,6 +779,12 @@ time.</para>
   -1 to repeat the alarm indefinitely. <option>--interval</option>
   must be, and<option>--until</option> cannot be, specified with this
   option.</entry>
+</row>
+<row>
+  <entry><option>-s</option>, <option>--sound <replaceable>URL</replaceable></option></entry>
+  <entry>Specify the name or &URL; of an audio file to be played when
+  the alarm message is displayed. <option>--beep</option> must
+  not be present if this option is specified.</entry>
 </row>
 <row>
   <entry><option>-t</option>, <option>--time
@@ -1234,13 +1258,13 @@ ignored.</para></note>
 </refnamediv>
 <refsynopsisdiv>
 <synopsis>
-bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>)
+bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>)
 </synopsis>
 <synopsis>
-bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, int <replaceable>repeatCount</replaceable>)
+bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, int <replaceable>repeatCount</replaceable>)
 </synopsis>
 <synopsis>
-bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, const QDateTime&amp; <replaceable>endTime</replaceable>)
+bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, const QDateTime&amp; <replaceable>endTime</replaceable>)
 </synopsis>
 
 <refsect2>
@@ -1274,6 +1298,14 @@ should be displayed.</para>
 <para>Specifies the logical OR of the desired alarm message flags. The
 flag bits are those defined in class KAlarmEvent in
 <filename>msgevent.h</filename></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>audioURL</parameter></term>
+<listitem>
+<para>Specifies the name or &URL; of an audio file which is to be
+played when the message is displayed.</para>
 </listitem>
 </varlistentry>
 
@@ -1327,17 +1359,17 @@ parameter data for the &DCOP; call to
 alarm:</para>
 
 <screen>
-QString message;
+QString message, audioFile;
 QDateTime dateTime;
 QColor bgColour;
 Q_UINT32 flags;
 . . .
 QByteArray data;
 QDataStream arg(data, IO_WriteOnly);
-arg &lt;&lt;  message;
+arg &lt;&lt; message;
 arg.writeRawBytes((char*)&amp;dateTime, sizeof(QDateTime));
 arg.writeRawBytes((char*)&amp;bgColour, sizeof(QColor));
-arg &lt;&lt; flags;
+arg &lt;&lt; flags &lt;&lt; audioFile;
 </screen>
 
 <para>Use a code sequence similar to the following to set up the
@@ -1345,7 +1377,7 @@ parameter data for the &DCOP; call to
 <function>scheduleMessage()</function> for a repeating alarm:</para>
 
 <screen>
-QString message;
+QString message, audioFile;
 QDateTime dateTime;
 QColor bgColour;
 Q_UINT32 flags;
@@ -1356,7 +1388,7 @@ QDataStream arg(data, IO_WriteOnly);
 arg &lt;&lt; message;
 arg.writeRawBytes((char*)&amp;dateTime, sizeof(QDateTime));
 arg.writeRawBytes((char*)&amp;bgColour, sizeof(QColor));
-arg &lt;&lt; flags &lt;&lt; repeatType &lt;&lt; repeatCount &lt;&lt; repeatInterval;
+arg &lt;&lt; flags &lt;&lt; audioFile &lt;&lt; repeatType &lt;&lt; repeatCount &lt;&lt; repeatInterval;
 </screen>
 </refsect1>
 </refentry>
@@ -1372,13 +1404,13 @@ text file.</refpurpose>
 </refnamediv>
 <refsynopsisdiv>
 <synopsis>
-bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>)
+bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>)
 </synopsis>
 <synopsis>
-bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, int <replaceable>repeatCount</replaceable>)
+bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, int <replaceable>repeatCount</replaceable>)
 </synopsis>
 <synopsis>
-bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, const QDateTime&amp; <replaceable>endTime</replaceable>)
+bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, const QDateTime&amp; <replaceable>endTime</replaceable>)
 </synopsis>
 
 <refsect2>
@@ -1413,6 +1445,14 @@ should be displayed.</para>
 <para>Specifies the logical OR of the desired alarm flags. The flag
 bits are those defined in class KAlarmEvent in
 <filename>msgevent.h</filename></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>audioURL</parameter></term>
+<listitem>
+<para>Specifies the name or &URL; of an audio file which is to be
+played when the message is displayed.</para>
 </listitem>
 </varlistentry>
 
@@ -1541,7 +1581,8 @@ Specify -1 to repeat the alarm indefinitely.</para>
 <para><function>scheduleCommand()</function> is a &DCOP; call to
 schedule the specified shell command line for execution at the
 specified date and time. Apart from specifying a command line and
-omitting the message colour, its usage is identical to
+omitting the message colour and audio file parameters, its usage is
+identical to
 <link linkend="scheduleMessage-descrip"><function>scheduleMessage</function></link>
 - see the description of that function for further details.</para>
 </refsect1>
@@ -1766,12 +1807,12 @@ url="http://www.astrojar.org.uk/linux/kalarm.html">http://www.astrojar.org.uk/li
 
 <para>If you cannot obtain a suitable precompiled binary package, you
 need to compile &kalarm; yourself from source files. Get the source
-package file <filename>kdepim-x.x.tar.gz</filename> or
-<filename>kalarm-x.x.tar.gz</filename> (or similar), depending on
+package file <filename>kdepim-x.x.tar.bz2</filename> or
+<filename>kalarm-x.x.tar.bz2</filename> (or similar), depending on
 whether you want to install &package; or just &kalarm;. Unpack it in a
 new directory using a command similar to
-<userinput><command>tar</command> <option>xvfz
-<replaceable>package.tar.gz</replaceable></option></userinput>, and
+<userinput><command>tar</command> <option>xvfj
+<replaceable>package.tar.bz2</replaceable></option></userinput>, and
 change to the directory which has been created.</para>
 
 &install.compile.documentation;
