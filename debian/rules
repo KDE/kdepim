@@ -11,38 +11,18 @@ DEB_KDE_APIDOX := yes
 
 DEB_CONFIGURE_EXTRA_FLAGS := --enable-shared --enable-static
 
-post-patches:: debian/stamp-libtool-update debian/stamp-karm-doc-uu \
-	debian/stamp-kontact-doc-uu debian/stamp-kontact-icons-uu \
-	debian/stamp-kpilot-splash-uu
+post-patches:: debian/stamp-libtool-update debian/stamp-kpilot-icons-uu
 
 debian/stamp-libtool-update:
 	cp -f /usr/share/libtool/libtool.m4 admin/libtool.m4.in
 	cp -f /usr/share/libtool/ltmain.sh admin/ltmain.sh
 	touch debian/stamp-libtool-update
 
-debian/stamp-karm-doc-uu:
-	if test -f debian/patches/karm_doc.tar.gz.uu; then \
-		uudecode -o - debian/patches/karm_doc.tar.gz.uu | tar xfz -; \
+debian/stamp-kpilot-icons-uu:
+	if test -f debian/patches/kpilot_icons.tar.gz.uu; then \
+		uudecode -o - debian/patches/kpilot_icons.tar.gz.uu | tar xfz -; \
 	fi
-	touch debian/stamp-karm-doc-uu
-
-debian/stamp-kontact-doc-uu:
-	if test -f debian/patches/kontact_doc.tar.gz.uu; then \
-		uudecode -o - debian/patches/kontact_doc.tar.gz.uu | tar xfz -; \
-	fi
-	touch debian/stamp-kontact-doc-uu
-
-debian/stamp-kontact-icons-uu:
-	if test -f debian/patches/kontact_icons.tar.gz.uu; then \
-		uudecode -o - debian/patches/kontact_icons.tar.gz.uu | tar xfz -; \
-	fi
-	touch debian/stamp-kontact-icons-uu
-
-debian/stamp-kpilot-splash-uu:
-	if test -f debian/patches/kpilot_splash.tar.gz.uu; then \
-		uudecode -o - debian/patches/kpilot_splash.tar.gz.uu | tar xfz -; \
-	fi
-	touch debian/stamp-kpilot-splash-uu
+	touch debian/stamp-kpilot-icons-uu
 
 common-build-arch:: debian/stamp-man-pages
 debian/stamp-man-pages:
@@ -55,32 +35,29 @@ debian/stamp-man-pages:
 
 clean::
 	rm -f debian/man/*.1
-	for tgzuu in debian/patches/karm_doc.tar.gz.uu \
-		debian/patches/kontact_doc.tar.gz.uu \
-		debian/patches/kontact_icons.tar.gz.uu \
-		debian/patches/kpilot_splash.tar.gz.uu; do \
-		if test -f $$tgzuu; then \
-			rm -f `uudecode -o - $$tgzuu | tar tfz -`; \
-		fi; \
-	done
-	rm -f debian/stamp-karm-doc-uu debian/stamp-kontact-doc-uu \
-		debian/stamp-kontact-icons-uu debian/stamp-kpilot-splash-uu
 	rm -f debian/stamp-libtool-update debian/stamp-man-pages
+	if test -f debian/patches/kpilot_icons.tar.gz.uu; then \
+		rm -f `uudecode -o - debian/patches/kpilot_icons.tar.gz.uu | tar tfz -`; \
+	fi
+	rm -f debian/stamp-kpilot-icons-uu
 	rm -f admin/libtool.m4.in admin/ltmain.sh
+	rm -f Makefile.cvs
+	rm -f debian/patches/05_force_modulename.diff
 
 DEB_INSTALL_DOCS_ALL :=
 
 DEB_INSTALL_CHANGELOGS_ALL = $(shell for f in ChangeLog CHANGELOG CHANGES; do if test -s $(cdbs_curpkg)/$$f; then echo $(cdbs_curpkg)/$$f; break; fi; done)
 
-DEB_DH_MAKESHLIBS_ARGS_libkcal2 := -V'libkcal2 (>= 4:3.2.92)'
-DEB_DH_MAKESHLIBS_ARGS_libkdenetwork2 := -V'libkdenetwork2 (>= 4:3.2.92)'
-DEB_DH_MAKESHLIBS_ARGS_libkdepim1 := -V'libkdepim1 (>= 4:3.2.92)'
-DEB_DH_MAKESHLIBS_ARGS_libkgantt0 := -V'libkgantt0 (>= 4:3.2.92)'
-DEB_DH_MAKESHLIBS_ARGS_libkleopatra0 := -V'libkleopatra0 (>= 4:3.2.92)'
-DEB_DH_MAKESHLIBS_ARGS_libkpimexchange1 := -V'libkpimexchange1 (>= 4:3.2.92)'
-DEB_DH_MAKESHLIBS_ARGS_libkpimidentities1 := -V'libkpimidentities1 (>= 4:3.2.92)'
-DEB_DH_MAKESHLIBS_ARGS_libksieve0 := -V'libksieve0 (>= 4:3.2.92)'
-DEB_DH_MAKESHLIBS_ARGS_libmimelib1 := -V'libmimelib1 (>= 4:3.2.92)'
+shlibs_ver=4:3.3.0
+DEB_DH_MAKESHLIBS_ARGS_libkcal2 := -V'libkcal2 (>= $(shlibs_ver))'
+DEB_DH_MAKESHLIBS_ARGS_libkdenetwork2 := -V'libkdenetwork2 (>= $(shlibs_ver))'
+DEB_DH_MAKESHLIBS_ARGS_libkdepim1 := -V'libkdepim1 (>= $(shlibs_ver))'
+DEB_DH_MAKESHLIBS_ARGS_libkgantt0 := -V'libkgantt0 (>= $(shlibs_ver))'
+DEB_DH_MAKESHLIBS_ARGS_libkleopatra0 := -V'libkleopatra0 (>= $(shlibs_ver))'
+DEB_DH_MAKESHLIBS_ARGS_libkpimexchange1 := -V'libkpimexchange1 (>= $(shlibs_ver))'
+DEB_DH_MAKESHLIBS_ARGS_libkpimidentities1 := -V'libkpimidentities1 (>= $(shlibs_ver))'
+DEB_DH_MAKESHLIBS_ARGS_libksieve0 := -V'libksieve0 (>= $(shlibs_ver))'
+DEB_DH_MAKESHLIBS_ARGS_libmimelib1 := -V'libmimelib1 (>= $(shlibs_ver))'
 DEB_DH_MAKESHLIBS_ARGS_kaddressbook := -V
 DEB_DH_MAKESHLIBS_ARGS_kalarm := -V
 DEB_DH_MAKESHLIBS_ARGS_kdepim-wizards := -V

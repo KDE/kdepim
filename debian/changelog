@@ -1,3 +1,28 @@
+kdepim (4:3.3.0-2) unstable; urgency=low
+
+  * Using automake1.7 doesn't fix the korganizer install problems; go to
+    automake1.9 and readd 03_automake1.8.diff and
+    04_korganizer_makefile.diff.
+  * New patch 05_lib_link.diff: Correct link lines for libkalarmd and
+    libkpilot so that they are linked against all necessary libraries.
+  * Include new fixes from KDE_3_3_BRANCH.
+
+ -- Daniel Schepler <schepler@debian.org>  Fri, 27 Aug 2004 07:25:15 -0700
+
+kdepim (4:3.3.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Add German debconf translations, thanks to Erik Schanze.
+    Closes: #264825.
+  * Correct typo in kpilot.install which caused file conflicts.
+    Closes: #266311.
+  * Add Recommends: kdepim-kio-plugins to kmail for newimap, and also
+    move kdebase-kio-plugins there from Depends.  Closes: #266603.
+  * Use automake1.7 instead of 1.8 to work around problem in
+    korganizer/Makefile.am.
+
+ -- Daniel Schepler <schepler@debian.org>  Wed, 25 Aug 2004 00:09:09 -0400
+
 kdepim (4:3.2.92+3.3.0rc1-1) experimental; urgency=low
 
   * New upstream release.

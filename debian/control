@@ -3,7 +3,7 @@ Section: kde
 Priority: optional
 Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
 Uploaders: Christopher L Cheney <ccheney@debian.org>, Daniel Schepler <schepler@debian.org>
-Build-Depends: autoconf, automake1.8, bison, byacc, cdbs, debhelper (>> 4.2.0), docbook-to-man, flex, gawk, gettext, kdelibs4-dev (>> 4:3.2.92), libbluetooth1-dev, libgnokii2-dev (>= 0.6.3-3), libgpgme11-dev, liblockdev1-dev, libmal-dev, libpisock-dev, libreadline4-dev, libtool, sharutils, texinfo
+Build-Depends: autoconf, automake1.9, bison, byacc, cdbs, debhelper (>> 4.2.0), docbook-to-man, flex, gawk, gettext, groff-base, kdelibs4-dev (>> 4:3.3.0), libbluetooth1-dev, libgnokii2-dev (>= 0.6.3-3), libgpgme11-dev, liblockdev1-dev, libmal-dev, libpisock-dev, libreadline4-dev, libtool, sharutils, texinfo
 Build-Depends-Indep: doxygen, qt3-doc, kdelibs4-doc
 Standards-Version: 3.6.1.0
 
@@ -157,7 +157,8 @@ Description: KDE Certificate Manager
 Package: kmail
 Section: mail
 Architecture: any
-Depends: ${shlibs:Depends}, ${perl:Depends}, kdebase-kio-plugins
+Depends: ${shlibs:Depends}, ${perl:Depends}
+Recommends: kdebase-kio-plugins, kdepim-kio-plugins
 Suggests: cryptplug, gnupg, kaddressbook, kleopatra, spamassassin | bogofilter | annoyance-filter, clamav | f-prot-installer
 Replaces: libkdenetwork2 (<< 4:3.2.92)
 Provides: imap-client, mail-reader
