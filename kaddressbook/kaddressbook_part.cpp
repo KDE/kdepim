@@ -33,6 +33,7 @@
 
 #include "kabcore.h"
 #include "kaddressbookiface.h"
+#include "libkdepim/infoextension.h"
 
 #include "kaddressbook_part.h"
 
@@ -66,6 +67,12 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetNam
   mCore = new KABCore( this, true, canvas );
   mCore->restoreSettings();
   topLayout->addWidget( mCore );
+
+  KParts::InfoExtension *info = new KParts::InfoExtension( this, "KABPart" );
+  connect( mCore, SIGNAL( contactSelected( const QString& ) ),
+           info, SIGNAL( textChanged( const QString& ) ) );
+  connect( mCore, SIGNAL( contactSelected( const QPixmap& ) ),
+           info, SIGNAL( iconChanged( const QPixmap& ) ) );
 
   setXMLFile( "kaddressbook_part.rc" );
 }

@@ -271,6 +271,10 @@ class KABCore : public QWidget
      */
     void addGUIClient( KXMLGUIClient *client );
 
+  signals:
+    void contactSelected( const QString &name );
+    void contactSelected( const QPixmap &pixmap );
+
   private slots:
     void setJumpButtonBarVisible( bool visible );
     void setDetailsVisible( bool visible );
