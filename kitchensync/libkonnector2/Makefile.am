@@ -4,7 +4,8 @@ lib_LTLIBRARIES= libkonnector.la
 
 INCLUDES = -I$(top_srcdir)/kitchensync/lib $(all_includes)
 
-libkonnector_la_LDFLAGS = -version-info 0:0 -no-undefined
+libkonnector_la_LDFLAGS = $(all_libraries) $(KDE_EXTRA_RPATH) $(KDE_RPATH) \
+	-version-info 0:0 -no-undefined
 libkonnector_la_LIBADD = $(top_builddir)/kitchensync/lib/libksync2.la
 libkonnector_la_SOURCES = konnectorplugin.cpp kapabilities.cpp \
     kdevice.cpp konnectormanager.cpp \
