@@ -1563,7 +1563,7 @@ void AbbrowserConduit::_copy(Addressee &toAbEntry, PilotAddress *fromPiAddr)
 
 	// copy the phone stuff
 	toAbEntry.removeEmail(toAbEntry.preferredEmail());
-	toAbEntry.insertEmail(fromPiAddr->getPhoneField(PilotAddress::eEmail, false));
+	toAbEntry.insertEmail(fromPiAddr->getPhoneField(PilotAddress::eEmail, false), true);
 
 	_copyPhone(toAbEntry,
 		toAbEntry.phoneNumber(PhoneNumber::Home),
