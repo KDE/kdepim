@@ -782,8 +782,8 @@ void CertManager::slotCertificateExportResult( const GpgME::Error & err, const Q
 
   kdDebug() << "CertManager::slotCertificateExportResult(): got " << data.size() << " bytes" << endl;
 
-  QString filter = QString("*.p7c|") + i18n("PKCS#7 Certificate Bundles (*.p7c)");
-  KURL url = KFileDialog::getOpenURL( QString::null,
+  const QString filter = QString("*.pem|") + i18n("ASCII Armored Certificate Bundles (*.pem)");
+  const KURL url = KFileDialog::getOpenURL( QString::null,
                                       filter,
                                       this,
                                       i18n( "Save Certificate" ) );
