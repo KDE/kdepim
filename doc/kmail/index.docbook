@@ -4062,10 +4062,16 @@ before you use it. &kmail; partly relies on
 which often change between different versions.</para>
 </listitem>
 <listitem>
-<para>Trusting a foreign public key without checking it is no good idea.</para>
+<para>&kmail; will not encrypt messages with an untrusted (unsigned) public key.
+In fact, it will not even display untrusted keys. If you want to encrypt to such a 
+key you should check the identity of the key owner and only then sign the key
+with your secret key. If you don't want to or can't check the identity
+of the key owner but nevertheless want to encrypt the message then
+please sign the key locally with <userinput><command>gpg</command>
+<option>--lsign</option> <replaceable>keyID</replaceable></userinput>.</para>
 </listitem>
 <listitem>
-<para>&kmail; will not encrypt messages with an untrusted (unsigned) public key.</para>
+<para>Trusting a foreign public key without checking it is no good idea.</para>
 </listitem>
 <listitem>
 <para>As most other mail clients, &kmail; can encrypt your messages, but
