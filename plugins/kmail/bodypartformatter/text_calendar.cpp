@@ -107,9 +107,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       kdDebug() << "UrlHandler() (iCalendar)" << endl;
     }
 
-    Incidence* icalToString( const QString& iCal, ICalFormat& format ) const
+    Incidence* icalToString( const QString& iCal ) const
     {
-      CalendarLocal calendar;
+      CalendarLocal calendar( KPimPrefs::timezone() ) ;
+      ICalFormat format;
       ScheduleMessage *message =
         format.parseScheduleMessage( &calendar, iCal );
       if ( !message )
@@ -205,8 +206,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       saveFile( receiver, iCal, "accepted" );
 
       // Now produce the return message
-      ICalFormat format;
-      Incidence* incidence = icalToString( iCal, format );
+      Incidence* incidence = icalToString( iCal );
       if( !incidence ) return false;
       Attendee *myself = findMyself( incidence, receiver );
       if ( myself && myself->RSVP() ) {
@@ -229,8 +229,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       saveFile( receiver, iCal, "tentative" );
 
       // Now produce the return message
-      ICalFormat format;
-      Incidence* incidence = icalToString( iCal, format );
+      Incidence* incidence = icalToString( iCal );
       if( !incidence ) return false;
       Attendee *myself = findMyself( incidence, receiver );
       if ( myself && myself->RSVP() ) {
@@ -251,8 +250,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         return true;
 
       // Produce a decline message
-      ICalFormat format;
-      Incidence* incidence = icalToString( iCal, format );
+      Incidence* incidence = icalToString( iCal );
       if( !incidence ) return false;
       Attendee *myself = findMyself( incidence, receiver );
       if ( myself && myself->RSVP() ) {
