@@ -49,7 +49,6 @@ libmimelib_la_SOURCES = \
     nntp.cpp \
     param.cpp \
     pop.cpp \
-    smtp.cpp \
     dwstring.cpp \
     text.cpp \
     token.cpp \

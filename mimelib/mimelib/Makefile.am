@@ -30,7 +30,6 @@ mimelib_HEADERS=    \
    param.h \
    pop.h \
    protocol.h \
-   smtp.h \
    string.h \
    text.h \
    token.h \
