@@ -35,3 +35,17 @@ $(top_srcdir)/configure.files:
 
 MAINTAINERCLEANFILES = subdirs configure.in acinclude.m4 SUBDIRS
 
+
+cvs-local:
+	@echo "*** preparing libical" 
+	cp admin/libtool.m4.in libical/acinclude.m4 ;\
+	cp admin/config.sub admin/config.guess libical ;\
+	cp admin/install-sh admin/mkinstalldirs admin/missing admin/lt* libical ;\
+	cd  libical && \
+	aclocal && \
+	autoheader && \
+	automake && \
+	autoconf
+
+cvs-dist-local:
+	@cd  libical && automake -i && autoconf
