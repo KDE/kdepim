@@ -133,7 +133,6 @@ bool ResourceKABC::doLoad()
 
   // import from kabc
   QString summary;
-
   KABC::Addressee::List anniversaries;
   KABC::Addressee::List::Iterator addrIt;
 
@@ -141,24 +140,34 @@ bool ResourceKABC::doLoad()
   for ( it = mAddressbook->begin(); it != mAddressbook->end(); ++it ) {
 
     QDateTime birthdate = (*it).birthday().date();
+    QString name_1, email_1, uid_1;
     if ( birthdate.isValid() ) {
       kdDebug(5800) << "found a birthday " << birthdate.toString() << endl;
 
-      QString name = (*it).nickName();
-      if (name.isEmpty()) name = (*it).realName();
-      summary = i18n("%1's birthday").arg( name );
-
+      name_1 = (*it).nickName();
+      email_1 = (*it).fullEmail();
+      uid_1 = (*it).uid();
+      if (name_1.isEmpty()) name_1 = (*it).realName();
+      summary = i18n("%1's birthday").arg( name_1 );
+      
+      
       Event *ev = new Event();
-      ev->setUid( (*it).uid()+"_KABC_Birthday");
-
+      ev->setUid( uid_1+"_KABC_Birthday");
+      
       ev->setDtStart(birthdate);
       ev->setDtEnd(birthdate);
       ev->setHasEndDate(true);
       ev->setFloats(true);
       ev->setTransparency( Event::Transparent );
-
+      
+      ev->setCustomProperty("KABC", "BIRTHDAY", "YES");
+      ev->setCustomProperty("KABC", "UID-1", uid_1 );
+      ev->setCustomProperty("KABC", "NAME-1", name_1 );
+      ev->setCustomProperty("KABC", "EMAIL-1", email_1 );
+      kdDebug(5800) << "ResourceKABC::doLoad: uid:" << uid_1 << " name: " << name_1
+        << " email: " << email_1 << endl;
       ev->setSummary(summary);
-
+      
       // Set the recurrence
       Recurrence *vRecurrence = ev->recurrence();
       vRecurrence->setRecurStart(birthdate);
@@ -216,14 +225,23 @@ bool ResourceKABC::doLoad()
   for ( addrIt = anniversaries.begin(); addrIt != anniversaries.end(); ++addrIt ) {
     QDateTime anniversary = QDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
     kdDebug(5800) << "found a anniversary " << anniversary.toString() << endl;
+    QString name;
+    QString name_1 = (*addrIt).nickName();
+    QString uid_1 = (*addrIt).uid();
+    QString email_1 = (*addrIt).fullEmail();
 
-    QString name = (*addrIt).nickName();
+    
     QString spouseName = (*addrIt).custom( "KADDRESSBOOK", "X-SpousesName" );
-    if ( name.isEmpty() )
-      name = (*addrIt).givenName();
+    QString email_2,uid_2;
+    if ( name_1.isEmpty() )
+      name_1 = (*addrIt).givenName();
     if ( !spouseName.isEmpty() ) {
+      //TODO: find a KABC:Addressee of the spouse 
       KABC::Addressee spouse;
       spouse.setNameFromString( spouseName );
+      uid_2 = spouse.uid();
+      email_2 = spouse.fullEmail();
+      name = name_1;
       name += " & " + spouse.givenName();
     }
     summary = i18n("%1's anniversary").arg( name );
@@ -238,6 +256,17 @@ bool ResourceKABC::doLoad()
 
     ev->setSummary(summary);
 
+    ev->setCustomProperty( "KABC", "BIRTHDAY", "YES" );
+    
+    ev->setCustomProperty( "KABC", "UID-1", (*it).uid() );
+    ev->setCustomProperty( "KABC", "NAME-1", name_1 );
+    ev->setCustomProperty( "KABC", "EMAIL-1", email_1 );
+    ev->setCustomProperty( "KABC", "ANNIVERSARY", "YES" );
+    if ( !spouseName.isEmpty() ) {
+      ev->setCustomProperty("KABC", "UID-2", uid_2 );
+      ev->setCustomProperty("KABC", "NAME-2", spouseName );
+      ev->setCustomProperty("KABC", "EMAIL-2", email_2 );
+    }
     // Set the recurrence
     Recurrence *vRecurrence = ev->recurrence();
     vRecurrence->setRecurStart(anniversary);

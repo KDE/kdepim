@@ -213,6 +213,36 @@ static QString eventViewerFormatAttachments( Incidence *i )
   return tmpStr;
 }
 
+static QString eventViewerFormatBirthday( Event *event )
+{
+  if ( !event) return  QString::null;
+  if ( event->customProperty("KABC","BIRTHDAY")!= "YES" ) return QString::null;
+  
+  QString uid_1 = event->customProperty("KABC","UID-1");
+  QString name_1 = event->customProperty("KABC","NAME-1");
+  QString email_1= event->customProperty("KABC","EMAIL-1");
+  
+  KIconLoader iconLoader;
+  const QString iconPath = iconLoader.iconPath( "mail_generic",
+                                                  KIcon::Small );
+  //TODO: add a tart icon 
+  kdDebug(5800) << "eventViewerFormatBirthday: email:" << email_1 << "uid: " << uid_1     << " name: " << name_1 << endl;
+  QString tmpString = "<ul>";
+  tmpString += linkPerson( email_1, name_1, uid_1, iconPath );
+  
+  if ( event->customProperty( "KABC", "ANNIVERSARY") == "YES" ) {
+    QString uid_2 = event->customProperty("KABC","UID-2");
+    QString name_2 = event->customProperty("KABC","NAME-2");
+    QString email_2= event->customProperty("KABC","EMAIL-2");
+  kdDebug(5800) << "eventViewerFormatBirthday: email:" << email_2 << "uid: " << uid_2 
+    << " name: " << name_2 << endl;
+    tmpString += linkPerson( email_2, name_2, uid_2, iconPath );
+  }
+  
+  tmpString += "</ul>";
+  return tmpString;
+}
+
 static QString eventViewerFormatEvent( Event *event )
 {
   if ( !event ) return QString::null;
@@ -243,7 +273,10 @@ static QString eventViewerFormatEvent( Event *event )
                     .arg( event->dtEndTimeStr() );
     }
   }
-
+  if ( event->customProperty("KABC","BIRTHDAY")== "YES" ) {
+    tmpStr+=eventViewerFormatBirthday( event );
+    return tmpStr;
+  }
   if ( !event->description().isEmpty() )
     tmpStr += eventViewerAddTag( "p", event->description() );
 
@@ -258,6 +291,7 @@ static QString eventViewerFormatEvent( Event *event )
   }
 
   tmpStr += eventViewerFormatReadOnly( event );
+  
   tmpStr += eventViewerFormatAttendees( event );
   tmpStr += eventViewerFormatAttachments( event );
 
