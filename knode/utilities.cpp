@@ -155,7 +155,7 @@ KNSaveHelper::~KNSaveHelper()
 }
 
 
-QFile* KNSaveHelper::getFile(QString dialogTitle)
+QFile* KNSaveHelper::getFile(const QString &dialogTitle)
 {
   if (lastPath.isEmpty())
     lastPath = "file:/";

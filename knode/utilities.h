@@ -88,7 +88,7 @@ public:
   ~KNSaveHelper();
 
   /** returns a file open for writing */
-  QFile* getFile(QString dialogTitle);
+  QFile* getFile(const QString &dialogTitle);
 
 private:
 

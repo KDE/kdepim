@@ -98,7 +98,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     KNGroup* group(const QString &gName, const KNServerInfo *s);
     KNGroup* firstGroupOfAccount(const KNServerInfo *s);
     KNGroup* currentGroup() const              { return c_urrentGroup; }
-    bool hasCurrentGroup()                { return (c_urrentGroup!=0); }
+    bool hasCurrentGroup() const               { return (c_urrentGroup!=0); }
     void setCurrentGroup(KNGroup *g);
 
     // group handling

@@ -44,7 +44,7 @@ class KNNetAccess : public QObject  {
     void cancelAllJobs();
 
     /** current statusbar message */
-    QString currentMsg()         { return currMsg; }
+    QString currentMsg() const        { return currMsg; }
 
     QMutex& nntpMutex() { return nntp_Mutex; }
 
@@ -65,9 +65,9 @@ class KNNetAccess : public QObject  {
     int unshownProgress;
 
     KNNntpClient *nntpClient;
-    KNSmtpClient *smtpClient;   
+    KNSmtpClient *smtpClient;
     QPtrList<KNJobData> nntpJobQueue, smtpJobQueue;
-    KNJobData *currentNntpJob, *currentSmtpJob;    
+    KNJobData *currentNntpJob, *currentSmtpJob;
     QMutex nntp_Mutex;
     int nntpInPipe[2], nntpOutPipe[2], smtpInPipe[2], smtpOutPipe[2];
     QSocketNotifier *nntpNotifier,*smtpNotifier;

@@ -32,7 +32,7 @@ class Identity;
 
 
 class KNGroup : public KNArticleCollection , public KNJobItem  {
-  
+
   public:
     enum Status { unknown=0, readOnly=1, postingAllowed=2, moderated=3 };
 
@@ -51,7 +51,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     void saveInfo();
 
     /** name */
-    bool hasName()                          { return (!n_ame.isEmpty()); }
+    bool hasName() const                         { return (!n_ame.isEmpty()); }
     const QString& name();
     const QString& groupname()              { return g_roupname; }
     void setGroupname(const QString &s)     { g_roupname=s; }
@@ -59,26 +59,26 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     void setDescription(const QString &s)   { d_escription=s; }
 
     /** count + numbers */
-    int newCount()                { return n_ewCount; }
+    int newCount() const               { return n_ewCount; }
     void setNewCount(int i)       { n_ewCount=i; }
     void incNewCount(int i=1)     { n_ewCount+=i; }
     void decNewCount(int i=1)     { n_ewCount-=i; }
-    int firstNewIndex()           { return f_irstNew; }
+    int firstNewIndex() const          { return f_irstNew; }
     void setFirstNewIndex(int i)  { f_irstNew=i; }
 
-    int lastFetchCount()          { return l_astFetchCount; }
+    int lastFetchCount() const         { return l_astFetchCount; }
     void setLastFetchCount(int i) { l_astFetchCount=i; }
 
-    int readCount()               { return r_eadCount; }
+    int readCount()const               { return r_eadCount; }
     void setReadCount(int i)      { r_eadCount=i; }
     void incReadCount(int i=1)    { r_eadCount+=i; }
     void decReadCount(int i=1)    { r_eadCount-=i; }
 
-    int firstNr()                 { return f_irstNr; }
+    int firstNr() const                { return f_irstNr; }
     void setFirstNr(int i)        { f_irstNr=i; }
-    int lastNr()                  { return l_astNr; }
+    int lastNr() const                 { return l_astNr; }
     void setLastNr(int i)         { l_astNr=i; }
-    int maxFetch()                { return m_axFetch; }
+    int maxFetch() const               { return m_axFetch; }
     void setMaxFetch(int i)       { m_axFetch=i; }
 
     int statThrWithNew();
@@ -120,9 +120,9 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
 
     // misc
     KNNntpAccount* account();
-    KNConfig::Identity* identity()          { return i_dentity; }
+    KNConfig::Identity* identity()const          { return i_dentity; }
     void setIdentity(KNConfig::Identity *i) { i_dentity=i; }
-    Status status()                         { return s_tatus; }
+    Status status()const                         { return s_tatus; }
     void setStatus(Status s)                { s_tatus=s; }
     void showProperties();
 
@@ -130,7 +130,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
   protected:
     void buildThreads(int cnt, KNProtocolClient *client=0);
     KNRemoteArticle* findReference(KNRemoteArticle *a);
-        
+
     int       n_ewCount,
               l_astFetchCount,
               r_eadCount,
@@ -154,13 +154,13 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     KNConfig::Identity *i_dentity;
 
     class dynDataVer0 {
-      
+
       public:
         dynDataVer0()     { id=-1; idRef=-1; read=0; thrLevel=0; score=50; }
         ~dynDataVer0()    {}
         void setData(KNRemoteArticle *a);
         void getData(KNRemoteArticle *a);
-      
+
         int id;
         int idRef;
         bool read;
@@ -181,7 +181,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
         short thrLevel, score;
         char ignoredWatched;
     };
-    
+
 };
 
 #endif

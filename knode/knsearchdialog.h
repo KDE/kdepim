@@ -27,15 +27,15 @@ class KNArticleFilter;
 
 class KNSearchDialog : public QDialog {
 
-  Q_OBJECT  
+  Q_OBJECT
 
   public:
     enum searchType { STfolderSearch, STgroupSearch };
     KNSearchDialog(searchType t=STgroupSearch, QWidget *parent=0);
     ~KNSearchDialog();
-    
-    KNArticleFilter* filter()   { return f_ilter; }
-      
+
+    KNArticleFilter* filter() const  { return f_ilter; }
+
   protected:
     void hideEvent(QHideEvent *e);
 
@@ -43,16 +43,16 @@ class KNSearchDialog : public QDialog {
     QPushButton *startBtn, *newBtn,  *closeBtn;
     QCheckBox *completeThreads;
     KNArticleFilter *f_ilter;
-    
+
   protected slots:
     void slotStartClicked();
     void slotNewClicked();
     void slotCloseClicked();
-    
+
   signals:
     void doSearch(KNArticleFilter *);
     void dialogDone();
-  
+
 };
 
 #endif

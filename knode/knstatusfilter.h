@@ -27,22 +27,22 @@ class KNRemoteArticle;
 
 
 class KNStatusFilter {
-  
+
   friend class KNStatusFilterWidget;
 
   public:
     KNStatusFilter();
     ~KNStatusFilter();
-  
+
     KNStatusFilter& operator=(const KNStatusFilter &sf)
       { for(int i=0; i<8; i++) data.setBit(i, sf.data.at(i)); return (*this); }
-    
+
     void load(KSimpleConfig *conf);
-    void save(KSimpleConfig *conf); 
-      
+    void save(KSimpleConfig *conf);
+
     bool doFilter(KNRemoteArticle *a);
-    
-  protected:  
+
+  protected:
     QBitArray data;
 
 };
@@ -52,33 +52,33 @@ class KNStatusFilter {
 
 
 class KNStatusFilterWidget : public QButtonGroup  {
-  
+
   Q_OBJECT
-  
+
   public:
     KNStatusFilterWidget(QWidget *parent);
     ~KNStatusFilterWidget();
 
     KNStatusFilter filter();
     void setFilter(KNStatusFilter &f);
-    void clear();   
-    
-    
+    void clear();
+
+
   protected:
-    
+
     class TFCombo : public QComboBox {
-      
+
       public:
         TFCombo(QWidget *parent);
         ~TFCombo();
         void setValue(bool b) { if(b) setCurrentItem(0); else setCurrentItem(1); }
-        bool value()          { return (currentItem()==0); }
+        bool value() const         { return (currentItem()==0); }
     };
-        
-    
+
+
     QCheckBox *enR, *enN, *enUS, *enNS;
     TFCombo *rCom, *nCom, *usCom, *nsCom;
-  
+
   protected slots:
     void slotEnabled(int c);
 
