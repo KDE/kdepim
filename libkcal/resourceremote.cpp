@@ -191,10 +191,10 @@ void ResourceRemote::slotLoadJobResult( KIO::Job *job )
     job->showErrorDialog( 0 );
   } else {
     kdDebug() << "ResourceRemote::slotLoadJobResult() success" << endl;
-    
+
     mCalendar.close();
     mCalendar.load( cacheFile() );
-    
+
     emit resourceChanged( this );
   }
 
@@ -209,6 +209,11 @@ bool ResourceRemote::save()
 
   if ( !mOpen ) return true;
 
+  if ( readOnly() ) {
+    emit resourceSaved( this );
+    return true;
+  }
+
   if ( mDownloadJob ) {
     kdWarning() << "ResourceRemote::save(): download still in progress."
                 << endl;
@@ -221,10 +226,10 @@ bool ResourceRemote::save()
   }
 
   mCalendar.save( cacheFile() );
-  
+
   mUploadJob = KIO::file_copy( KURL( cacheFile() ), mUploadUrl, -1, true );
   connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotSaveJobResult( KIO::Job * ) ) );  
+           SLOT( slotSaveJobResult( KIO::Job * ) ) );
 
   return true;
 }
