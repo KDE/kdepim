@@ -213,6 +213,7 @@ KNArticleWidget::~KNArticleWidget()
   delete a_ttPopup;
   delete u_rlPopup;
   delete f_actory;
+  delete t_imer;
 }
 
 void KNArticleWidget::setText( const QString& text, const QString& context )
@@ -255,7 +256,7 @@ void KNArticleWidget::find()
 void KNArticleWidget::slotFindStart()
 {
   bool forward = !f_inddialog->get_direction();
-  
+
   if (f_ind_first) {
     if (forward) {
       f_ind_para = 0;

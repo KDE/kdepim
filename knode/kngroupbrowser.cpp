@@ -148,6 +148,7 @@ KNGroupBrowser::~KNGroupBrowser()
 
   delete matchList;
   delete allList;
+  delete refilterTimer;
 }
 
 
