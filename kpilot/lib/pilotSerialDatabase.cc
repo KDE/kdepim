@@ -92,6 +92,7 @@ int PilotSerialDatabase::readAppBlock(unsigned char *buffer, int maxLen)
 	{
 		memcpy(buffer, buf->data, KMAX(maxLen, r));
 	}
+	pi_buffer_free(buf);
 	return r;
 #endif
 }
