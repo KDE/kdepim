@@ -36,8 +36,8 @@
 
 #include "kpgpkeylistjob.h"
 
-#include "../../../libkdenetwork/kpgpbase.h"
-#include "../../../libkdenetwork/kpgpkey.h"
+#include <kpgpbase.h>
+#include <kpgpkey.h>
 
 #include <gpgmepp/key.h>
 #include <gpgmepp/keylistresult.h>

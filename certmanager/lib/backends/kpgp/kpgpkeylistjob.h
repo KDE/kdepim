@@ -62,6 +62,9 @@ namespace Kleo {
     GpgME::KeyListResult exec( const QStringList & patterns, bool secretOnly,
                                std::vector<GpgME::Key> & keys );
 
+    /*! \reimp from Job */
+    void slotCancel() { /*FIXME*/ }
+
   private slots:
     void slotDoIt();
 
