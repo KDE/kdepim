@@ -377,7 +377,6 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
 
   icalproperty *m = icalcomponent_get_first_property(message,
                                                      ICAL_METHOD_PROPERTY);
-
   if (!m) return 0;
 
   icalcomponent *c;
@@ -385,7 +384,8 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   IncidenceBase *incidence = 0;
   c = icalcomponent_get_first_component(message,ICAL_VEVENT_COMPONENT);
   if (c) {
-    incidence = mImpl->readEvent(c);
+    icalcomponent *ctz = icalcomponent_get_first_component(message,ICAL_VTIMEZONE_COMPONENT);
+    incidence = mImpl->readEvent(c, ctz);
   }
 
   if (!incidence) {

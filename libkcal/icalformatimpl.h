@@ -67,7 +67,7 @@ class ICalFormatImpl
 
     QString extractErrorProperty(icalcomponent *);
     Todo *readTodo(icalcomponent *vtodo);
-    Event *readEvent(icalcomponent *vevent);
+    Event *readEvent(icalcomponent *vevent, icalcomponent *vtimezone);
     FreeBusy *readFreeBusy(icalcomponent *vfreebusy);
     Journal *readJournal(icalcomponent *vjournal);
     Attendee *readAttendee(icalproperty *attendee);

@@ -48,6 +48,14 @@ using namespace KCal;
 
 namespace KCal {
 
+static QDateTime ICalDate2QDate(const icaltimetype& t)
+{
+  // Outlook sends dates starting from 1601-01-01, but QDate()
+  // can only handle dates starting 1752-09-14.
+  const int year = (t.year>=1754) ? t.year : 1754;
+  return QDateTime(QDate(year,t.month,t.day), QTime(t.hour,t.minute,t.second));
+}
+
 /**
  * A TimezonePhase represents a setting within a timezone, e.g. standard or
  * daylight savings.
@@ -132,7 +140,7 @@ class TimezonePhase : private icaltimezonephase {
      */
     QDateTime nearestStart(const QDateTime &t) const
     {
-      QDateTime tmp(QDate(dtstart.year,dtstart.month,dtstart.day), QTime(dtstart.hour,dtstart.minute,dtstart.second));
+      QDateTime tmp( ICalDate2QDate(dtstart) );
       // If this phase was not valid at the given time, give up.
       if (tmp > t) {
         kdDebug(5800) << "TimezonePhase::nearestStart(): Phase not valid" << endl;
@@ -142,6 +150,8 @@ class TimezonePhase : private icaltimezonephase {
       // The Recurrance class's getPreviousDateTime() logic was not designed for
       // start times which are not aligned with a reference time, but a little
       // magic is sufficient to work around that...
+      // 
+      // XXX: NO.... it's not. This NEEDS to be fixed!
       QDateTime previous = mRrule->getPreviousDateTime(tmp);
       if (mRrule->getNextDateTime(previous) < tmp)
         previous = mRrule->getNextDateTime(previous);
@@ -292,7 +302,7 @@ class Timezone : private icaltimezonetype {
      */
     int offset(icaltimetype t)
     {
-      QDateTime tmp(QDate(t.year,t.month,t.day), QTime(t.hour,t.minute,t.second));
+      QDateTime tmp( ICalDate2QDate(t) );
       const TimezonePhase *phase = nearestStart(tmp);
 
       if (phase) {
@@ -1191,9 +1201,12 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
   return todo;
 }
 
-Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
+Event *ICalFormatImpl::readEvent(icalcomponent *vevent, icalcomponent *vtimezone)
 {
   Event *event = new Event;
+
+  if (vtimezone)
+	readTimezone(vtimezone);
 
   readIncidence(vevent,event);
 
@@ -2109,7 +2122,7 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
 
 QDateTime ICalFormatImpl::readICalDateTime(icaltimetype t)
 {
-/*
+#if 0
   kdDebug(5800) << "ICalFormatImpl::readICalDateTime()" << endl;
   kdDebug(5800) << "--- Y: " << t.year << " M: " << t.month << " D: " << t.day
             << endl;
@@ -2118,7 +2131,7 @@ QDateTime ICalFormatImpl::readICalDateTime(icaltimetype t)
   kdDebug(5800) << "--- isDate: " << t.is_date << endl;
   kdDebug(5800) << "--- isUtc: " << t.is_utc << endl;
   kdDebug(5800) << "--- zoneId: " << t.zone << endl;
-*/
+#endif
 
   // First convert the time into UTC if required.
   if ( !t.is_utc && t.zone ) {
@@ -2142,21 +2155,19 @@ QDateTime ICalFormatImpl::readICalDateTime(icaltimetype t)
   }
 
   if ( t.is_utc && mCompat && mCompat->useTimeZoneShift() ) {
-//    kdDebug(5800) << "--- Converting time to zone '" << cal->timeZoneId() << "'." << endl;
+    // kdDebug(5800) << "--- Converting time to zone " << mParent->timeZoneId() << " (" << ICalDate2QDate(t) << ")." << endl;
     if (mParent->timeZoneId().isEmpty())
       t = icaltime_as_zone(t, 0);
     else
       t = icaltime_as_zone(t,mParent->timeZoneId().utf8());
   }
-  QDateTime result(QDate(t.year,t.month,t.day),
-                   QTime(t.hour,t.minute,t.second));
 
-  return result;
+  return ICalDate2QDate(t);
 }
 
 QDate ICalFormatImpl::readICalDate(icaltimetype t)
 {
-  return QDate(t.year,t.month,t.day);
+  return ICalDate2QDate(t).date();
 }
 
 icaldurationtype ICalFormatImpl::writeICalDuration(int seconds)
@@ -2359,7 +2370,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
   c = icalcomponent_get_first_component(calendar,ICAL_VEVENT_COMPONENT);
   while (c) {
 //    kdDebug(5800) << "----Event found" << endl;
-    Event *event = readEvent(c);
+    Event *event = readEvent(c, NULL);
     if (event && !cal->event(event->uid())) cal->addEvent(event);
     c = icalcomponent_get_next_component(calendar,ICAL_VEVENT_COMPONENT);
   }
