@@ -43,6 +43,7 @@
 #include "EmpathMainWindow.h"
 #include "EmpathMessageListWidget.h"
 #include "EmpathProgressIndicator.h"
+#include "EmpathUI.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
 
@@ -130,13 +131,15 @@ EmpathMainWindow::s_toolbarMoved(BarPosition pos)
     void
 EmpathMainWindow::_setupActions()
 {
-    messageMenu_ = new QPopupMenu;
+    messageMenu_ = new QPopupMenu(this);
     menuBar()->insertItem(i18n("&Message"), messageMenu_);
 
 #define PLUGMSGMENU(a) \
-    mainWidget_->messageListWidget()->actionCollection()->action(a)->plug(messageMenu_)
+    mainWidget_->messageListWidget()->actionCollection()->action(a) \
+        ->plug(messageMenu_)
 
 
+    PLUGMSGMENU("messageCompose");
     PLUGMSGMENU("messageView");
     
     messageMenu_->insertSeparator();
@@ -156,13 +159,21 @@ EmpathMainWindow::_setupActions()
 #undef PLUGMSGMENU
 
 #define PLUGTOOLBAR(a) \
-    mainWidget_->messageListWidget()->actionCollection()->action((a))->plug(toolBar(0))
+    mainWidget_->messageListWidget()->actionCollection()->action(a) \
+        ->plug(toolBar(0))
 
+    PLUGTOOLBAR("messageCompose");
     PLUGTOOLBAR("messageReply");
     PLUGTOOLBAR("messageReplyAll");
     PLUGTOOLBAR("messageForward");
     PLUGTOOLBAR("messageDelete");
     PLUGTOOLBAR("messageSaveAs");
+
+    toolBar(0)->insertSeparator();
+    
+    PLUGTOOLBAR("goPrevious");
+    PLUGTOOLBAR("goNext");
+    PLUGTOOLBAR("goNextUnread");
 
 #undef PLUGTOOLBAR
 }

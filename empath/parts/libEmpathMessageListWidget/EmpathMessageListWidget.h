@@ -88,6 +88,7 @@ class EmpathMessageListWidget : public EmpathListView
         void s_goNext();
         void s_goNextUnread();
         
+        void s_messageCompose();
         void s_messageMark();
         void s_messageMarkRead();
         void s_messageMarkReplied();
@@ -124,6 +125,7 @@ class EmpathMessageListWidget : public EmpathListView
     signals:
 
         void changeView(const QString &);
+        void compose();
         void reply(const QString &);
         void replyAll(const QString &);
         void forward(const QString &);

@@ -2,8 +2,6 @@
 #include "EmpathUIUtils.h"
 #include <kmenubar.h>
 
-extern QString EmpathAboutText;
-
     void
 EmpathComposeWindow::setupMenuBar()
 {
@@ -95,15 +93,13 @@ EmpathComposeWindow::setupMenuBar()
     priorityMenu_->insertItem(i18n("Low"),      Low);
     priorityMenu_->insertItem(i18n("Lowest"),   Lowest);
     
-    helpMenu_ = helpMenu(EmpathAboutText);
-    
     menuBar()->insertItem(i18n("&File"), fileMenu_);
     menuBar()->insertItem(i18n("&Edit"), editMenu_);
     menuBar()->insertItem(i18n("&Attachment"), attachmentMenu_);
     menuBar()->insertItem(i18n("&Message"), messageMenu_);
     menuBar()->insertItem(i18n("&Priority"), priorityMenu_);
     menuBar()->insertSeparator();
-    menuBar()->insertItem(i18n("&Help"), helpMenu_);
+    menuBar()->insertItem(i18n("&Help"), helpMenu());
 }
 
 

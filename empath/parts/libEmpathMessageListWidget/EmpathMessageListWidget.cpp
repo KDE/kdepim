@@ -848,6 +848,10 @@ EmpathMessageListWidget::s_messageMarkReplied()
 { _markOne(EmpathIndexRecord::Replied); }
 
     void
+EmpathMessageListWidget::s_messageCompose()
+{ emit(compose()); }
+
+    void
 EmpathMessageListWidget::s_messageReply()
 { emit(reply(firstSelected())); }
 

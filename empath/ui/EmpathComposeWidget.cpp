@@ -66,10 +66,9 @@ EmpathComposeWidget::EmpathComposeWidget(
             composeForm_.visibleHeaders(), this, "envelopeWidget");
     editorWidget_ = new QMultiLineEdit(splitter_, "editorWidget");
     attachmentWidget_ = new EmpathAttachmentListWidget(splitter_);
+    attachmentWidget_->hide();
 
     _initActions();
-    
-    splitter_->setResizeMode(attachmentWidget_, QSplitter::FollowSizeHint);
     
     KConfig * c = KGlobal::config();
    

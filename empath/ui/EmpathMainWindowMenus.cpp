@@ -3,8 +3,6 @@
 #include "EmpathUI.h"
 #include "EmpathDefines.h"
 
-extern QString EmpathAboutText;
-
 void
 EmpathMainWindow::_setupMenuBar()
 {
@@ -136,15 +134,13 @@ EmpathMainWindow::_setupMenuBar()
         i18n("&Filters"),
         this, SLOT(s_setupFilters()));
     
-    helpMenu_ = helpMenu(EmpathAboutText);
-    
     menu_->insertItem(i18n("&Message"), messageMenu_);
     menu_->insertItem(i18n("&Select"), selectMenu_);
     menu_->insertItem(i18n("&Go"), goMenu_);
     menu_->insertItem(i18n("&Thread"), threadMenu_);
     menu_->insertItem(i18n("&Options"), optionsMenu_);
     menu_->insertSeparator();
-    menu_->insertItem(i18n("&Help"), helpMenu_);
+    menu_->insertItem(i18n("&Help"), helpMenu());
 }
 
 

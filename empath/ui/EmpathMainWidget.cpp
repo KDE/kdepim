@@ -35,6 +35,7 @@
 #include <kglobal.h>
 
 // Local includes
+#include "Empath.h"
 #include "EmpathURL.h"
 #include "EmpathConfig.h"
 #include "EmpathMainWidget.h"
@@ -54,9 +55,7 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent)
     QSplitter * vSplit = new QSplitter(Qt::Vertical, hSplit, "vSplit");
 
     messageListWidget_  = new EmpathMessageListWidget(vSplit);
-
-    messageViewWidget_ =
-        new EmpathMessageViewWidget(EmpathURL(), vSplit);
+    messageViewWidget_  = new EmpathMessageViewWidget(EmpathURL(), vSplit);
 
     QObject::connect(
         folderWidget,       SIGNAL(showFolder(const EmpathURL &)),
@@ -65,6 +64,54 @@ EmpathMainWidget::EmpathMainWidget(QWidget * parent)
     QObject::connect(
         messageListWidget_, SIGNAL(changeView(const QString &)),
         this,               SLOT(s_changeView(const QString &)));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(compose()),
+        empath,             SLOT(s_compose()));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(reply(const QString &)),
+        this,               SLOT(s_reply(const QString &)));
+    
+    QObject::connect(
+        messageListWidget_, SIGNAL(replyAll(const QString &)),
+        this,               SLOT(s_replyAll(const QString &)));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(forward(const QString &)),
+        this,               SLOT(s_forward(const QString &)));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(bounce(const QString &)),
+        this,               SLOT(s_bounce(const QString &)));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(remove(const QStringList &)),
+        this,               SLOT(s_remove(const QStringList &)));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(save(const QString &)),
+        this,               SLOT(s_save(const QString &)));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(copy(const QStringList &)),
+        this,               SLOT(s_copy(const QStringList &)));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(move(const QStringList &)),
+        this,               SLOT(s_move(const QStringList &)));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(print(const QStringList &)),
+        this,               SLOT(s_print(const QStringList &)));
+
+    QObject::connect(
+        messageListWidget_, SIGNAL(filter(const QStringList &)),
+        this,               SLOT(s_filter(const QStringList &)));
+    
+    QObject::connect(
+        messageListWidget_, SIGNAL(view(const QString &)),
+        this,               SLOT(s_view(const QString &)));
 }
 
 EmpathMainWidget::~EmpathMainWidget()
@@ -84,7 +131,6 @@ EmpathMainWidget::s_showFolder(const EmpathURL & url)
         return;
     }
 
-    empathDebug("Doing showFolder...");
     messageListWidget_->s_showFolder(f->index()->dict());
 }
 
@@ -96,5 +142,86 @@ EmpathMainWidget::s_changeView(const QString & id)
 
     messageViewWidget_->s_setMessage(u);
 }
+
+    void
+EmpathMainWidget::s_reply(const QString & id)
+{
+    EmpathURL u(currentFolder_);
+    u.setMessageID(id);
+
+    empath->s_reply(u);
+}
+
+    void
+EmpathMainWidget::s_replyAll(const QString & id)
+{
+    EmpathURL u(currentFolder_);
+    u.setMessageID(id);
+
+    empath->s_replyAll(u);
+}
+
+    void
+EmpathMainWidget::s_forward(const QString & id)
+{
+    EmpathURL u(currentFolder_);
+    u.setMessageID(id);
+
+    empath->s_forward(u);
+}
+
+    void
+EmpathMainWidget::s_bounce(const QString & id)
+{
+    EmpathURL u(currentFolder_);
+    u.setMessageID(id);
+
+    empath->s_bounce(u);
+}
+
+    void
+EmpathMainWidget::s_remove(const QStringList & IDList)
+{
+    empath->remove(currentFolder_, IDList);
+}
+
+    void
+EmpathMainWidget::s_save(const QString & id)
+{
+    EmpathURL u(currentFolder_);
+    u.setMessageID(id);
+    empathDebug("STUB");
+}
+
+    void
+EmpathMainWidget::s_copy(const QStringList & IDList)
+{
+    empathDebug("STUB");
+}
+
+    void
+EmpathMainWidget::s_move(const QStringList &)
+{
+    empathDebug("STUB");
+}
+
+    void
+EmpathMainWidget::s_print(const QStringList &)
+{
+    empathDebug("STUB");
+}
+
+    void
+EmpathMainWidget::s_filter(const QStringList &)
+{
+    empathDebug("STUB");
+}
+
+    void
+EmpathMainWidget::s_view(const QString &)
+{
+    empathDebug("STUB");
+}
+
 
 // vim:ts=4:sw=4:tw=78

@@ -62,7 +62,6 @@
 #include "EmpathMessageListItem.h"
 #include "EmpathMailbox.h"
 
-QString EmpathAboutText;
 EmpathUI * EmpathUI::instance_ = 0L;
 
 EmpathUI::EmpathUI()
@@ -214,18 +213,6 @@ EmpathUI::s_configureMailbox(const EmpathURL & url, QWidget * w)
     void
 EmpathUI::_init()
 {
-    QString aboutTemplate = i18n(
-        "<p>Empath -- Mail client for KDE</p>"
-        "<p>Version: %1</p>"
-        "<p>Program design and code:<ul><li>%2</li><li>%3</li></ul></p>"
-        "<p>Graphics:<ul><li>%4</li></ul></p>");
-
-    EmpathAboutText =
-        aboutTemplate.arg("Under Development")
-            .arg("Rik Hemsley (rikkus)")
-            .arg("Wilco Greven")
-            .arg("kraftw");
-
     EmpathMessageListItem::initStatic();
     
     _initActions();

@@ -52,6 +52,17 @@ class EmpathMainWidget : public QWidget
     
         void s_showFolder(const EmpathURL & url);
         void s_changeView(const QString & messageID);
+        void s_reply(const QString &);
+        void s_replyAll(const QString &);
+        void s_forward(const QString &);
+        void s_bounce(const QString &);
+        void s_remove(const QStringList &);
+        void s_save(const QString &);
+        void s_copy(const QStringList &);
+        void s_move(const QStringList &);
+        void s_print(const QStringList &);
+        void s_filter(const QStringList &);
+        void s_view(const QString &);
         
     private:
 
