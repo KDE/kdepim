@@ -51,7 +51,8 @@ static const char *kpilotconfigdialog_id =
 #include <kcharsets.h>
 #include <kstandarddirs.h>
 #include <kglobal.h>
-#include <kio/job.h>
+#include <kurl.h>
+#include <kio/netaccess.h>
 
 #include "kpilotConfig.h"
 #include "kpilotSettings.h"
@@ -464,6 +465,10 @@ void StartExitConfigPage::load()
 	QString desktopfile = CSL1("kpilotdaemon.desktop");
 	QString desktopcategory = CSL1("kde/");
 	QString location = KGlobal::dirs()->findResource("xdgdata-apps",desktopcategory + desktopfile);
+	if (location.isEmpty()) // Fallback to KDE 3.0?
+	{
+		location = KGlobal::dirs()->findResource("apps",desktopfile);
+	}
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname << ": Autostart=" << autostart << endl;
@@ -476,7 +481,11 @@ void StartExitConfigPage::load()
 	{
 		if (!location.isEmpty())
 		{
-			KIO::symlink(location,autostart+desktopfile,true);
+			KURL src;
+			src.setPath(location);
+			KURL dst;
+			dst.setPath(autostart+desktopfile);
+			KIO::NetAccess::file_copy(src,dst,-1 /* 0666? */,true /* overwrite */);
 		}
 	}
 	else
