@@ -1,3 +1,5 @@
+#ifndef _POPMAIL_SETUPDIALOG_H
+#define _POPMAIL_SETUPDIALOG_H
 /* setupDialog.h			KPilot
 **
 ** Copyright (C) 1998-2001 Dan Pilone
@@ -30,8 +32,6 @@
 ** Bug reports and questions can be sent to adridg@cs.kun.nl
 */
 
-#ifndef __POPMAIL_SETUP_H
-#define __POPMAIL_SETUP_H
 
 #include "gsetupDialog.h"
 
@@ -154,6 +154,13 @@ protected:
 
 
 // $Log$
+// Revision 1.9  2001/07/04 08:53:37  cschumac
+// - Added explicitDomainName text widget to setup dialog
+// - Changed the support for the explicit domain name a little
+//   (added a few more debug lines)
+// - Changed expected response to EHLO to "^250" instead of "Hello", to
+//   fix some people's protocol-correct but unexpected SMTP server reply.
+//
 // Revision 1.8  2001/04/23 21:18:43  adridg
 // Some i18n() fixups and KMail sending
 //

@@ -43,6 +43,7 @@ public:
 	virtual ~KNotesConduitFactory();
 
 	static KAboutData *about() { return fAbout; } ;
+	static const char *group() { return fGroup; } ;
 
 protected:
 	virtual QObject* createObject( QObject* parent = 0, 
@@ -52,6 +53,7 @@ protected:
 private:
 	KInstance *fInstance;
 	static KAboutData *fAbout;
+	static const char *fGroup;
 } ;
 
 extern "C"
@@ -62,6 +64,9 @@ void *init_libknotesconduit();
 } ;
 
 // $Log$
+// Revision 1.3  2001/10/16 21:44:53  adridg
+// Split up some files, added behavior
+//
 // Revision 1.2  2001/10/10 21:42:09  adridg
 // Actually do part of a sync now
 //

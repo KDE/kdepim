@@ -59,7 +59,9 @@ void *init_libknotesconduit()
 } ;
 
 
-KAboutData *KNotesConduitFactory::fAbout = 0L;
+/* static */ KAboutData *KNotesConduitFactory::fAbout = 0L;
+/* static */ const char *KNotesConduitFactory::fGroup = "KNotes-conduit";
+
 KNotesConduitFactory::KNotesConduitFactory(QObject *p, const char *n) :
 	KLibFactory(p,n)
 {
@@ -141,6 +143,9 @@ KNotesConduitFactory::~KNotesConduitFactory()
 
 
 // $Log$
+// Revision 1.6  2001/10/16 21:44:53  adridg
+// Split up some files, added behavior
+//
 // Revision 1.5  2001/10/11 10:13:27  cschumac
 // Compile fixes.
 //

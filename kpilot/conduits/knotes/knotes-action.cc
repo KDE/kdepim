@@ -36,10 +36,8 @@
 #else
 #include <kapplication.h>
 #endif
-#include <kconfig.h>
-// #include <kinstance.h>
-// #include <kaboutdata.h>
 
+#include <kconfig.h>
 #include <dcopclient.h>
 
 #include <time.h>  // required by pilot-link includes
@@ -50,6 +48,8 @@
 #include "pilotSerialDatabase.h"
 
 #include "KNotesIface_stub.h"
+
+#include "knotes-factory.h"
 
 #include "knotes-action.moc"
 
@@ -62,6 +62,11 @@ public:
 
 	int memo() const { return memoId; } ;
 	int note() const { return noteId; } ;
+	bool valid() const { return (noteId>0) && (memoId>0); } ;
+
+
+	static NoteAndMemo findNote(const QValueList<NoteAndMemo> &,int note);
+	static NoteAndMemo findMemo(const QValueList<NoteAndMemo> &,int memo);
 
 protected:
 	int noteId;
@@ -136,6 +141,7 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 
 	if (!fP->fDCOP) return;
 	if (!knotesRunning()) return;
+	if (!fConfig) return;
 
 	fP->fKNotes = new KNotesIface_stub("knotes","KNotesIface");
 
@@ -150,13 +156,20 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	{
 		fP->fTimer = new QTimer(this);
 		fStatus = Init;
-		fP->fCounter = 0;
-		fP->fIndex = fP->fNotes.begin();
+		resetIndexes();
 
 		connect(fP->fTimer,SIGNAL(timeout()),SLOT(process()));
 
 		fP->fTimer->start(0,false);
 	}
+}
+
+void KNotesAction::resetIndexes()
+{
+	FUNCTIONSETUP;
+
+	fP->fCounter = 0;
+	fP->fIndex = fP->fNotes.begin();
 }
 
 void KNotesAction::listNotes()
@@ -186,12 +199,60 @@ void KNotesAction::listNotes()
 {
 	switch(fStatus)
 	{
-	case Init: getAppInfo(); break;
-	case NewNotesToPilot : addNewNoteToPilot(); break;
-	case Cleanup : cleanupMemos(); break;
+	case Init: 
+		getAppInfo(); 
+		getConfigInfo();
+		break;
+	case ModifiedNotesToPilot : 
+		modifyNoteOnPilot(); 
+		break;
+	case NewNotesToPilot : 
+		addNewNoteToPilot(); 
+		break;
+	case Cleanup : 
+		cleanupMemos(); 
+		break;
 	default : 
 		fP->fTimer->stop();
 		emit syncDone(this);
+	}
+}
+
+void KNotesAction::getConfigInfo()
+{
+	FUNCTIONSETUP;
+
+	if (fConfig)
+	{
+		KConfigGroupSaver g(fConfig,KNotesConduitFactory::group());
+
+		QValueList<int> notes;
+		QValueList<int> memos;
+
+
+		notes=fConfig->readIntListEntry("NoteIds");
+		memos=fConfig->readIntListEntry("MemoIds");
+
+		if (notes.count() != memos.count())
+		{
+			kdWarning() << k_funcinfo
+				<< ": Notes and memo id lists don't match ("
+				<< notes.count()
+				<< ","
+				<< memos.count()
+				<< ")"
+				<< endl;
+		}
+
+		QValueList<int>::ConstIterator iNotes = notes.begin();
+		QValueList<int>::ConstIterator iMemos = memos.begin();
+
+		while((iNotes != notes.end()) && (iMemos != memos.end()))
+		{
+			fP->fIdList.append(NoteAndMemo(*iNotes,*iMemos));
+			++iNotes;
+			++iMemos;
+		}
 	}
 }
 
@@ -213,9 +274,71 @@ void KNotesAction::getAppInfo()
 	unpack_MemoAppInfo(&memoInfo,buffer,appInfoSize);
 	PilotDatabase::listAppInfo(&memoInfo.category);
 
-	fStatus=NewNotesToPilot;
+	resetIndexes();
+	fStatus=ModifiedNotesToPilot;
 }
 
+
+void KNotesAction::modifyNoteOnPilot()
+{
+	FUNCTIONSETUP;
+
+	if (fP->fIndex == fP->fNotes.end())
+	{
+		if (fP->fCounter)
+		{
+			addSyncLogEntry(i18n("Modified one memo.",
+				"Modified %n memos.",
+				fP->fCounter));
+		}
+
+		resetIndexes();
+		fStatus = NewNotesToPilot;
+		return;
+	}
+
+	if (fP->fKNotes->isModified("kpilot",fP->fIndex.key()))
+	{
+#ifdef DEBUG
+		DEBUGCONDUIT << fname
+			<< ": The note #"
+			<< fP->fIndex.key()
+			<< " with name "
+			<< fP->fIndex.data()
+			<< " is modified in KNotes."
+			<< endl;
+#endif
+
+		NoteAndMemo nm = NoteAndMemo::findNote(fP->fIdList,
+			fP->fIndex.key());
+
+		if (nm.valid())
+		{
+			QString text = fP->fIndex.data() + "\n" ;
+			text.append(fP->fKNotes->text(fP->fIndex.key()));
+
+			const char *c = text.latin1();
+			PilotMemo *a = new PilotMemo((void *)(const_cast<char *>(c)));
+			PilotRecord *r = a->pack();
+			r->setID(nm.memo());
+
+			int newid = fP->fDatabase->writeRecord(r);
+
+			if (newid != nm.memo())
+			{
+				kdWarning() << k_funcinfo
+					<< ": Memo id changed during write? "
+					<< "From "
+					<< nm.memo()
+					<< " to "
+					<< newid
+					<< endl;
+			}
+		}
+	}
+
+	++(fP->fIndex);
+}
 
 void KNotesAction::addNewNoteToPilot()
 {
@@ -230,7 +353,7 @@ void KNotesAction::addNewNoteToPilot()
 				fP->fCounter));
 		}
 
-		fP->fCounter = 0;
+		resetIndexes();
 		fStatus = Cleanup;
 		return;
 	}
@@ -276,7 +399,7 @@ void KNotesAction::cleanupMemos()
 
 	if (fConfig)
 	{
-		KConfigGroupSaver g(fConfig,"KNotes-conduit");
+		KConfigGroupSaver g(fConfig,KNotesConduitFactory::group());
 
 		QValueList<int> notes;
 		QValueList<int> memos;
@@ -322,6 +445,9 @@ bool KNotesAction::knotesRunning() const
 
 
 // $Log$
+// Revision 1.2  2001/10/29 09:45:19  cschumac
+// Make it compile.
+//
 // Revision 1.1  2001/10/16 21:44:53  adridg
 // Split up some files, added behavior
 //

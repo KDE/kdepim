@@ -41,6 +41,7 @@ public:
 	virtual ~KNotesAction();
 
 	enum Status { Init,
+		ModifiedNotesToPilot,
 		NewNotesToPilot,
 		Cleanup,
 		Done } ;
@@ -62,8 +63,12 @@ protected:
 	* and it is critical that fP->fIndex is set properly.
 	*/
 	void getAppInfo();
+	void getConfigInfo();
+	void modifyNoteOnPilot();
 	void addNewNoteToPilot();
 	void cleanupMemos();
+
+	void resetIndexes();
 
 protected slots:
 	void process();
@@ -73,7 +78,10 @@ private:
 	KNotesActionPrivate *fP;
 } ;
 
-// $Log: $
+// $Log$
+// Revision 1.1  2001/10/16 21:44:53  adridg
+// Split up some files, added behavior
+//
 //
 
 #endif
