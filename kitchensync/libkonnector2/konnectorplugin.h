@@ -62,8 +62,8 @@ class Konnector : public QObject
     virtual KonnectorInfo info() const = 0;
 
     virtual ConfigWidget *configWidget( const Kapabilities &, QWidget *parent,
-                                        const char *name );
-    virtual ConfigWidget *configWidget( QWidget *parent, const char *name );
+                                        const char *name = 0 );
+    virtual ConfigWidget *configWidget( QWidget *parent, const char *name = 0 );
 
     virtual void add( const QString &res );
     virtual void remove( const QString &res );

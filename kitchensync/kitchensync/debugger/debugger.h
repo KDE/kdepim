@@ -28,6 +28,9 @@
 
 class KAboutData;
 
+class QComboBox;
+class QTextView;
+
 namespace KSync {
 
 class Debugger : public ManipulatorPart
@@ -49,9 +52,18 @@ class Debugger : public ManipulatorPart
     QString iconName() const;
     QWidget* widget();
 
+  protected:
+    Konnector *currentKonnector();
+
+  protected slots:
+    void configureKonnector();
+
   private:
     QPixmap m_pixmap;
     QWidget *m_widget;
+
+    QComboBox *mKonnectorCombo;
+    QTextView *mLogView;
 };
 
 }

@@ -20,6 +20,8 @@
 */
 #include "debugger.h"
 
+#include <konnectorplugin.h>
+#include <configwidget.h>
 #include <konnectormanager.h>
 #include <konnectorinfo.h>
 #include <mainwindow.h>
@@ -27,10 +29,15 @@
 #include <kaboutdata.h>
 #include <kiconloader.h>
 #include <kparts/genericfactory.h>
+#include <kmessagebox.h>
+#include <kdialog.h>
 
 #include <qlabel.h>
 #include <qlistview.h>
-#include <qhbox.h>
+#include <qcombobox.h>
+#include <qpushbutton.h>
+#include <qtextview.h>
+#include <qlayout.h>
 
 typedef KParts::GenericFactory< KSync::Debugger> DebuggerFactory;
 K_EXPORT_COMPONENT_FACTORY( libksync_debugger, DebuggerFactory );
@@ -87,20 +94,72 @@ bool Debugger::partIsVisible() const
 QWidget *Debugger::widget()
 {
   if( !m_widget ) {
-    m_widget = new QHBox();
+    m_widget = new QWidget;
+    QBoxLayout *topLayout = new QVBoxLayout( m_widget );
+    topLayout->setSpacing( KDialog::spacingHint() );
+    topLayout->setMargin( KDialog::spacingHint() );
 
-    QListView *konnectorList = new QListView( m_widget );
-    konnectorList->addColumn( i18n("Konnector") );
     
+    QBoxLayout *konnectorLayout = new QHBoxLayout( topLayout );
+
+    konnectorLayout->addWidget( new QLabel( i18n("Current Konnector:" ),
+                                            m_widget ) );
+
+    mKonnectorCombo = new QComboBox( m_widget );
+    konnectorLayout->addWidget( mKonnectorCombo );
+
     KonnectorProfile::ValueList konnectors =
         core()->konnectorProfileManager()->list();
 
     KonnectorProfile::ValueList::ConstIterator it;
     for( it = konnectors.begin(); it != konnectors.end(); ++it ) {
-      new QListViewItem( konnectorList, (*it).name() );
+      mKonnectorCombo->insertItem( (*it).name() );
     }
+
+    konnectorLayout->addStretch();
+
+
+    QBoxLayout *commandLayout = new QHBoxLayout( topLayout );
+
+    QPushButton *button = new QPushButton( "Configure...", m_widget );
+    connect( button, SIGNAL( clicked() ), SLOT( configureKonnector() ) );    
+    commandLayout->addWidget( button );
+
+    commandLayout->addStretch();
+
+
+    mLogView = new QTextView( m_widget );
+    topLayout->addWidget( mLogView );    
   }
   return m_widget;
+}
+
+void Debugger::configureKonnector()
+{
+  Konnector *k = currentKonnector();
+  if ( !k ) {
+    KMessageBox::sorry( m_widget, i18n("Konnector isn't loaded" ) );
+  } else {
+    ConfigWidget *configWidget = k->configWidget( m_widget );
+    configWidget->show();
+  }
+}
+
+Konnector *Debugger::currentKonnector()
+{
+  QString konnectorName = mKonnectorCombo->currentText();
+  
+  KonnectorProfile::ValueList konnectors =
+      core()->konnectorProfileManager()->list();
+
+  KonnectorProfile::ValueList::ConstIterator it;
+  for( it = konnectors.begin(); it != konnectors.end(); ++it ) {
+    if ( konnectorName == (*it).name() ) break;
+  }
+
+  if ( it == konnectors.end() ) return 0;
+
+  return (*it).konnector();
 }
 
 #include "debugger.moc"
