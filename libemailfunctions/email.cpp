@@ -134,13 +134,13 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
     case TopLevel : {
       switch ( aStr[index].latin1() ) {
         case '"' : inQuotedString = !inQuotedString; 
-            break;
+          break;
         case '(' : 
           if ( !inQuotedString ) {
             context = InComment;
             commentLevel = 1;
           }
-                 break;
+          break;
         case '<' : 
           if ( !inQuotedString ) {
             context = InAngleAddress;
