@@ -117,11 +117,13 @@ void VCalConduit::doSync()
     delete rec;
   }
    
-  DEBUGCONDUIT << __FUNCTION__
+  #ifdef DEBUG
+  DEBUGCONDUIT << fname
                << ": Read a total of "
                << recordcount
                << " modified records from the pilot."
                << endl;
+	       #endif
 
    // now, all the stuff that was modified/new on the pilot should be
    // added to the vCalendar.  We now need to add stuff to the pilot
@@ -148,8 +150,10 @@ void VCalConduit::updateEvent(PilotRecord *rec)
   Event *vevent = findEvent(rec->getID());
   if (!vevent) {
     // no event was found, so we need to add one with some initial info
-    DEBUGCONDUIT << __FUNCTION__ << ": creating new vCalendar event"
+    #ifdef DEBUG
+    DEBUGCONDUIT << fname << ": creating new vCalendar event"
 		 << endl;
+		 #endif
     vevent = new Event;
     vevent->setOrganizer(calendar()->getEmail());
 
@@ -229,10 +233,12 @@ void VCalConduit::setVcalAlarms(Incidence *vevent,
       advanceUnits = 60*24;
       break;
     default:
-      DEBUGCONDUIT << __FUNCTION__ 
+      #ifdef DEBUG
+      DEBUGCONDUIT << fname 
                    << ": Unknown advance units "
                    << advanceUnits
                    << endl;
+		   #endif
       advanceUnits=1;
   }
 
@@ -277,7 +283,8 @@ void VCalConduit::setVcalRecurrence(Incidence *vevent,
       {
 	const int *days = dateEntry.getRepeatDays();
 
-	DEBUGCONDUIT << __FUNCTION__
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
 		     << ": Got repeat-weekly entry, by-days="
 		     << days[0] << " "
 		     << days[1] << " "
@@ -286,6 +293,7 @@ void VCalConduit::setVcalRecurrence(Incidence *vevent,
 		     << days[5] << " "
 		     << days[6] << " "
 		     << endl;
+#endif
 
         if (days[0]) dayArray.setBit(6);
 	for (int i = 1; i < 7; i++) {
@@ -323,9 +331,12 @@ void VCalConduit::setVcalRecurrence(Incidence *vevent,
 #endif
       break;
     case repeatNone:
-      DEBUGCONDUIT << __FUNCTION__
+#ifdef DEBUG
+      DEBUGCONDUIT << fname
 		   << ": argh! we think it repeats, "
-		   << "but dateEntry has repeatNone!\n";
+		   << "but dateEntry has repeatNone!"
+		   << endl;
+#endif
       break;
     default:
       break;
@@ -340,10 +351,12 @@ void VCalConduit::setVcalExceptions(Incidence *vevent,
 
   if (((dateEntry.getRepeatType() == repeatDaily) &&
        dateEntry.getEvent()) && dateEntry.getExceptionCount()) {
-    DEBUGCONDUIT << __FUNCTION__
+#ifdef DEBUG
+    DEBUGCONDUIT << fname
 		 << ": WARNING Exceptions ignored for multi-day event "
 		 << dateEntry.getDescription()
 		 << endl ;
+#endif
     return;
   }
 
@@ -357,9 +370,11 @@ void VCalConduit::doLocalSync()
 {
   FUNCTIONSETUP;
 
-  DEBUGCONDUIT << __FUNCTION__ 
+#ifdef DEBUG
+  DEBUGCONDUIT << fname 
 	       << ": Performing local sync."
 	       << endl;
+#endif
 
   int recordcount = 0;
 
@@ -409,21 +424,25 @@ void VCalConduit::doLocalSync()
       // which recurs daily a number of times.
       if (event->isMultiDay() && event->doesFloat()) {
         // multi day event
-        DEBUGCONDUIT << __FUNCTION__
+#ifdef DEBUG
+        DEBUGCONDUIT << fname
                      << ": multi-day event from "
                      << (event->dtStart().toString()) << " to "
                      << (event->dtEnd().toString()) << endl;
+#endif
         dateEntry->setRepeatType(repeatDaily);
         dateEntry->setRepeatFrequency(1);
         struct tm end = writeTm(event->dtEnd());
         dateEntry->setRepeatEnd(end);
 
         if (event->exDates().count() > 0) {
-          DEBUGCONDUIT << __FUNCTION__
+#ifdef DEBUG
+          DEBUGCONDUIT << fname
                        << ": WARNING: exceptions ignored "
                        << "for multi-day event "
                        << event->summary()
                        << endl ;
+#endif
         }
       }
 
@@ -535,15 +554,19 @@ void VCalConduit::firstSyncCopy(bool DeleteOnPilot)
     }
 
     if (findEvent(rec->getID())) {
-      DEBUGCONDUIT << __FUNCTION__
+#ifdef DEBUG
+      DEBUGCONDUIT << fname
 		   << ": Entry found on pilot but not in vcalendar."
 		   << endl;
+#endif
       
       // First hot-sync, ask user how to treat this event.
       if (!insertall && !skipall) {
-	DEBUGCONDUIT << __FUNCTION__
+#ifdef DEBUG
+	DEBUGCONDUIT << fname
 		     << ": Questioning event disposition."
 		     << endl;
+#endif
 
 	QString text = i18n("This is the first time that "
 			    "you have done a HotSync\n"
@@ -795,6 +818,9 @@ void VCalConduit::doTest()
 }
 
 // $Log$
+// Revision 1.45  2001/12/28 12:56:46  adridg
+// Added SyncAction, it may actually do something now.
+//
 // Revision 1.44  2001/12/13 21:35:53  adridg
 // Gave all conduits a config dialog
 //

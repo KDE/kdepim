@@ -310,7 +310,7 @@ void PopMailSendPage::setMode(SendMode m)
 		fNoSend->setChecked(true);
 		break;
 	default :
-		kdWarning() << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Unknown mode "
 			<< (int) m
 			<< endl;
@@ -574,7 +574,7 @@ void PopMailReceivePage::setMode(RetrievalMode m)
 		fReceiveUNIX->setChecked(true);
 		break;
 	default :
-		cerr << __FUNCTION__
+		kdWarning() << k_funcinfo
 			<< ": Unknown mode " << (int) m
 			<< endl;
 		return;
@@ -676,6 +676,9 @@ PopMailOptions::setupWidget()
 
 
 // $Log$
+// Revision 1.21  2001/12/28 13:01:16  adridg
+// Add SyncAction
+//
 // Revision 1.20  2001/12/13 21:35:33  adridg
 // Gave all conduits a config dialog
 //
