@@ -509,6 +509,11 @@ void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight )
       name.truncate( name.length()-1 );
     if( name.startsWith("\"") )
       name = name.mid( 1 );
+
+    // While we're here also add "email (full name)" for completion on the email
+    if ( !name.isEmpty() )
+      addCompletionItem( addr.preferredEmail() + " (" + name + ")", weight );
+
     bool bDone = false;
     int i = 1;
     do{
@@ -609,6 +614,15 @@ void AddresseeLineEdit::slotLDAPSearchData( const KPIM::LdapResultList& adrs )
       doCompletion( false );
 }
 
+// Workaround for bug in kdelibs < 3.4.beta2: KCompletionBox didn't resize
+// when calling setItems
+class KCompletionBoxHack : public KCompletionBox
+{
+public:
+  KCompletionBoxHack() : KCompletionBox( 0 ) {}
+  void sizeAndPosition() { KCompletionBox::sizeAndPosition(); }
+};
+
 void AddresseeLineEdit::setCompletedItems( const QStringList& items, bool autoSuggest )
 {
     KCompletionBox* completionBox = this->completionBox();
@@ -629,6 +643,10 @@ void AddresseeLineEdit::setCompletedItems( const QStringList& items, bool autoSu
             completionBox->setSelected( item, wasSelected );
             completionBox->blockSignals( false );
           }
+          // Workaround for bug in kdelibs < 3.4.beta2: KCompletionBox didn't resize
+          // when calling setItems
+          KCompletionBoxHack* hack = static_cast<KCompletionBoxHack *>( completionBox );
+          hack->sizeAndPosition();
         }
         else // completion box not visible yet -> show it
         {
