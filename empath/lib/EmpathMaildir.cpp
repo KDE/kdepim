@@ -61,7 +61,7 @@ EmpathMaildir::EmpathMaildir(const QString & basePath, const EmpathURL & url)
     path_ = basePath + "/" + url.folderPath();
     tagList_.setAutoDelete(true);
    
-    createdOK_ = _checkDirs();
+//    createdOK_ = _checkDirs();
     
     QObject::connect(
         &timer_,    SIGNAL(timeout()),
@@ -84,7 +84,9 @@ EmpathMaildir::init()
     
     mtime_ = QFileInfo(path_ + "/cur").lastModified();
 
-    if (_checkDirs()) {
+    createdOK_ = _checkDirs();
+
+    if (createdOK_) {
         _clearTmp();
         sync();
     }

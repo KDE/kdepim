@@ -91,6 +91,9 @@ EmpathFolder::setPixmap(const QString & p)
     void
 EmpathFolder::update()
 {
+    if (container_)
+        return;
+
     EmpathMailbox * m = empath->mailbox(url_);
     
     if (m == 0) {

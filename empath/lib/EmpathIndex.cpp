@@ -122,6 +122,7 @@ EmpathIndex::sync()
     }
     
     f->update();
+    _close(); // == write(), but needs renaming.
 }
 
     void
@@ -169,6 +170,7 @@ EmpathIndex::_close()
     } else {
 
         empathDebug("Index written successfully (` " + filename_ + "')");
+        dirty_ = false;
 
     }
     
@@ -220,6 +222,7 @@ EmpathIndex::insert(const QString & key, EmpathIndexRecord & rec)
 
     dict_.insert(key, new EmpathIndexRecord(rec));
     
+    _setDirty();
     return true;
 }
 
@@ -237,6 +240,7 @@ EmpathIndex::replace(const QString & key, EmpathIndexRecord & rec)
     dict_.replace(key, new EmpathIndexRecord(rec));
 
     _setDirty();
+    return true;
 }
 
     bool

@@ -1,10 +1,5 @@
 INCLUDES=$(all_includes)
 
-noinst_PROGRAMS = test
-test_SOURCES = test.cpp
-test_LDFLAGS = $(all_libraries)
-test_LDADD = -L$(top_builddir)/rmm -lrmm
-
 lib_LTLIBRARIES = librmm.la
 librmm_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module
 # Define this for testing.

@@ -211,8 +211,11 @@ EmpathFolderListItem::init()
             return;
         }
 
-        setText(1, QString().setNum(f->index()->countUnread()));
-        setText(2, QString().setNum(f->index()->count()));
+        if (!f->isContainer()) {
+
+            setText(1, QString().setNum(f->index()->countUnread()));
+            setText(2, QString().setNum(f->index()->count()));
+        }
 
     } else {
 

@@ -83,6 +83,7 @@ main(int argc, char ** argv)
     // Pick a sensible umask for everything Empath does.
     int prev_umask = umask(077);
     
+#define DOSOMEDOSOMEDOSOME
 #ifdef DOSOMEDOSOMEDOSOME
 
     if (!KUniqueApplication::start())

@@ -182,10 +182,48 @@ EmpathMailboxMaildir::loadConfig()
         }
 
     empath->s_infoMessage(i18n("Reading folders"));
+    
+    c->setGroup(GROUP_MAILBOX + url_.mailboxName());
+    QStringList folderList = c->readListEntry(M_FOLDER_LIST);
+
+    QStringList::ConstIterator it(folderList.begin());
+
+    QTime startTime = QTime::currentTime();
+
+    for (; it != folderList.end(); ++it) {
+        
+        EmpathURL url(*it);
+
+        QString path = path_ + "/" + url.folderPath();
+
+        if (QDir(path).exists()) {
+
+            EmpathFolder * f = new EmpathFolder(url);
+    
+            folderList_.insert(url.folderPath(), f);
+
+            boxList_.append(new EmpathMaildir(path_, url));
+        }
+    }
+    
+    QTime endTime = QTime::currentTime();
+
+    empathDebug("Total time to create folder and maildir objects: " + QString::number(startTime.msecsTo(endTime)));
+    
+    emit(updateFolderLists());
+
     _recursiveReadFolders(path_);
     _setupDefaultFolders();
     
     emit(updateFolderLists());
+
+    folderList.clear();
+ 
+    for (EmpathFolderListIterator it(folderList_); it.current(); ++it)
+        folderList << it.current()->url().asString();
+
+    c->setGroup(GROUP_MAILBOX + url_.mailboxName());
+    c->writeEntry(M_FOLDER_LIST, folderList);
 
     // Initialise all maildir objects.
 
@@ -258,14 +296,17 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
         currentDir.right(currentDir.length() - path_.length()),
         QString::null);
     
-    EmpathFolder * f = new EmpathFolder(url);
-    
-    folderList_.insert(url.folderPath(), f);
+    if (0 == folderList_[url.folderPath()]) {
 
-    if (!isMaildir)
-        f->setContainer(true);
-    else
-        boxList_.append(new EmpathMaildir(path_, url));
+        EmpathFolder * f = new EmpathFolder(url);
+        
+        folderList_.insert(url.folderPath(), f);
+
+        if (!isMaildir)
+            f->setContainer(true);
+        else
+            boxList_.append(new EmpathMaildir(path_, url));
+    }
 
     kapp->processEvents();
 }

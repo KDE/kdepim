@@ -143,9 +143,6 @@ EmpathFolderWidget::id() const
     void
 EmpathFolderWidget::s_update()
 {
-    itemList_.clear();
-    clear();
-
     EmpathMailboxListIterator mit(empath->mailboxList());
 
     for (; mit.current(); ++mit)
@@ -195,11 +192,9 @@ EmpathFolderWidget::_addMailbox(EmpathMailbox * mailbox)
     
     EmpathFolderListIterator fit(mailbox->folderList());
 
-    for (; fit.current(); ++fit) {
-
+    for (; fit.current(); ++fit)
         if (fit.current()->parent() == 0)
             _addChildren(mailbox, fit.current(), newItem);
-    }
 }
 
     void
@@ -394,6 +389,9 @@ EmpathFolderWidget::s_openCurrent()
     void
 EmpathFolderWidget::s_startDrag(const QList<QListViewItem> & items)
 {
+    // We don't want to drag anything right now !
+    return;
+
     EmpathFolderListItem * i = (EmpathFolderListItem *)items.getFirst();
     
     // We don't want to drag Mailboxes.
