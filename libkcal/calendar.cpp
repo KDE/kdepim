@@ -152,7 +152,11 @@ bool Calendar::isLocalTime() const
 
 void Calendar::setFilter(CalFilter *filter)
 {
-  mFilter = filter;
+  if ( filter ) {
+    mFilter = filter;
+  } else {
+    mFilter = mDefaultFilter; 
+  }
 }
 
 CalFilter *Calendar::filter()
