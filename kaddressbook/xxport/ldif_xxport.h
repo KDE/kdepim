@@ -37,7 +37,11 @@ class LDIFXXPort : public XXPortObject
     QString identifier() const { return "ldif"; }
 
   public slots:
+    bool exportContacts( const KABC::AddresseeList &list, const QString &data );
     KABC::AddresseeList importContacts( const QString &data ) const;
+
+  private:
+    void doExport( QFile *fp, const KABC::AddresseeList &list );
 };
 
 #endif

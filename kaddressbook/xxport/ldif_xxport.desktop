@@ -2,6 +2,6 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_ldif_xxport
 Name=KAB LDIF XXPort Plugin
-Comment=Plugin to import contacts in Netscapes LDIF format
+Comment=Plugin to import contacts in Netscapes and Mozillas LDIF format
 Type=Service
 ServiceTypes=KAddressBook/XXPort

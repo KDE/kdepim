@@ -59,7 +59,7 @@ extern "C"
 KDE2XXPort::KDE2XXPort( KABCore *core, QObject *parent, const char *name )
   : XXPortObject( core, parent, name )
 {
-  createImportAction( i18n( "Import KDE 2 Address Book..." ) );
+  createImportAction( i18n( "Import KDE 2 Addressbook..." ) );
 }
 
 KABC::AddresseeList KDE2XXPort::importContacts( const QString& ) const
