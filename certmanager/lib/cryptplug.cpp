@@ -65,6 +65,7 @@
 #include <errno.h>
 #include <time.h>
 #include <ctype.h>
+#include <locale.h>
 
 #define __GPGMEPLUG_ERROR_CLEARTEXT_IS_ZERO "Error: Cannot run checkMessageSignature() with cleartext == 0"
 
@@ -277,6 +278,8 @@ CryptPlug::~CryptPlug() {
 }
 
 bool CryptPlug::initialize() {
+  GpgME::setDefaultLocale( LC_CTYPE, setlocale( LC_CTYPE, 0 ) );
+  GpgME::setDefaultLocale( LC_MESSAGES, setlocale( LC_MESSAGES, 0 ) );
   return (gpgme_engine_check_version (GPGMEPLUG_PROTOCOL) == GPG_ERR_NO_ERROR);
 };
 
