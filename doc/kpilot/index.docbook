@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd" [
+  <!ENTITY kappname "&kpilot;">
+  <!ENTITY USB "<acronym>USB</acronym>">
   <!ENTITY % English "INCLUDE" > <!-- Change language ONLY here -->
   <!ENTITY % addindex "IGNORE">
-  
-  
 ]>
 
 
@@ -11,9 +11,12 @@
 
 	Add link to IR-HOWTO
 	Check all commands
-	Fixup all the dubious trademark things, marked in the
-		docbook source with "TM?" in a comment.
 	Fix american / english spelling
+-->
+<!-- 
+    From LW: http://www.palm.com/about/trademark.html According to this,
+	we have have overspecified some of the tradmarks... feel free to
+	adjust if you think this is the case.  
 -->
 
 <book lang="&language;">
@@ -55,7 +58,7 @@
 <abstract>
 <para>
 &kpilot; 4.2.2
-is the KDE version of the Desktop HotSync software for 
+is the &kde; version of the Desktop &HotSync; software for 
 the &ThreeCom; &PalmPilot; and similar products.
 </para>
 </abstract>
@@ -75,7 +78,7 @@ the &ThreeCom; &PalmPilot; and similar products.
 
 <para>
 &kpilot; 4.2.2
-is the latest version of the Desktop HotSync software for &UNIX;.
+is the latest version of the Desktop &HotSync; software for &UNIX;.
 After several releases and 
 many contributions from users &kpilot;, along with
 &korganizer;, has evolved into 
@@ -87,7 +90,7 @@ tools for viewing and manipulating data, and a convenient
 developing ways of sharing data with other applications.
 &kpilot; supports the &ThreeCom; &PalmPilot; and
 similar devices, like the
-<!-- TM? -->Handspring Visor.
+&Handspring; &Visor;.
 </para>
 
 <para>
@@ -108,23 +111,20 @@ list itself.)
 You may also wish to use 
 <email>kde-pim@kde.org</email> for more general
 questions about the integration between 
-your &PalmPilot; and KDE.
-</para>
+your &PalmPilot; and &kde;.
+</para>          
 
 <para>
 A word about version numbers:
 &kpilot; 3.x versions
 are for KDE 1.
-With the release of KDE 2
+With the release of &kde; 2
 &kpilot; 3.x is obsolete
 and &kpilot; 4.x has become current.
 </para>
 
-
-
 <sect1 id="kpilot-revhistory">
 <title>&kpilot; Revision History</title>
-
 
 <itemizedlist>
 <listitem>
@@ -316,11 +316,6 @@ better.
 
 </chapter>
 
-
-
-
-
-
 <chapter id="using-kpilot">
 <title>Using &kpilot;</title>
  
@@ -332,7 +327,7 @@ The <link linkend="conduits">conduits</link>
 need to be configured as well.
 After that you can use &kpilot;
 to synchronise your &PalmPilot; with 
-your KDE desktop or view
+your &kde; desktop or view
 data from your &PalmPilot; with the
 <link linkend="builtin">builtin applications</link>.
 </para>
@@ -354,7 +349,7 @@ from the
 menu or by starting &kpilot;
 from the shell
 as follows:
-<screen width="40"><prompt>$ </prompt> <userinput>kpilot --setup</userinput>
+<screen width="40"><prompt>$ </prompt> <userinput><command>kpilot</command> <option>--setup</option></userinput>
 </screen>
 In addition, if you upgrade &kpilot; and some new configuration
 options require your attention, this setup dialog will reappear.
@@ -384,14 +379,14 @@ or the toolbar icon
 </inlinemediaobject>
 </guiicon>.  
 When you do,
-the status bar will ask you to press the HotSync button on the
+the status bar will ask you to press the &HotSync; button on the
 cradle.  
 Assuming everything is set up properly you should see the
 &PalmPilot; begin to sync and a message box telling you what databases are
 being backed up.  This will back up your entire &PalmPilot; into your local
 directory.  
 Note that this may take a little while, however a normal
-HotSync is significantly faster.
+&HotSync; operation is significantly faster.
 </para>
 
 <sect2 id="general">
@@ -421,18 +416,18 @@ to be started.
 <para>
 This
 is the serial port that the cradle is connected to.  By default it is
-set to <filename>/dev/pilot</filename>
+set to <filename class="devicefile">/dev/pilot</filename>
 which should be a symbolic link to the proper serial port.  
 <emphasis>Make sure the serial port has
 the correct permissions.</emphasis>
 It
 must be read/write by all if &kpilot; is intended to be used by a
 normal user!  This is done by doing a 
-<userinput>chmod 666 <replaceable>device</replaceable></userinput> where
+<userinput><command>chmod</command> <parameter>666</parameter> <replaceable>device</replaceable></userinput> where
 <replaceable>device</replaceable> is the correct serial port.
 See also the <link linkend="faq">FAQ</link>
 for more information about setting up the &PalmPilot; device.
-<emphasis>Handspring Visor / USB cradle users see the
+<emphasis>&Handspring; &Visor; / &USB; cradle users see the
 <link linkend="faq">FAQ</link> as well!</emphasis>
 </para>
 </listitem>
@@ -490,11 +485,11 @@ needed if the daemon is docked in the panel.
 <listitem>
 <para>
 When the
-HotSync button is pressed on the cradle (assuming the daemon is
+&HotSync; button is pressed on the cradle (assuming the daemon is
 running) &kpilot; can sync without actually starting up the 
 &GUI;. 
 However, by enabling this option the daemon will start up the &kpilot;
-&GUI; when the HotSync begins.
+&GUI; when the &HotSync; operation begins.
 </para>
 </listitem>
 </varlistentry>
@@ -513,7 +508,7 @@ This option lets the daemon place a little HotSync icon
 in
 the &kicker; system tray. 
 This icon has a menu that can be brought up with
-the right mouse button, for performing a HotSync and the like.
+the right mouse button, for performing a &HotSync; and the like.
 Without this option, the daemon is not visible to the user at all.
 </para>
 </listitem>
@@ -556,12 +551,12 @@ Address page
 The address page contains settings specific to the
 <emphasis>built in</emphasis> address book viewer.
 Note that this address book has nothing directly 
-to do with the KDE address book, your email address book,
+to do with the &kde; address book, your email address book,
 or anything else.
 Connections with those address books could be
 provided by conduits.
 The <application>kaddressbook</application> conduit
-can sync your &PalmPilot; with the KDE address book.
+can sync your &PalmPilot; with the &kde; address book.
 </para>
 
 <screenshot>
@@ -591,8 +586,10 @@ The names of fields are described
 <link linkend="addressfmt">below</link>.
 
 <tip>
+<para>
 Noone really uses the <acronym>CSV</acronym> import and
 export for the address book, so leave it alone.
+</para>
 </tip>
 </para>
 </listitem>
@@ -664,18 +661,6 @@ The following field specifiers are supported:
 
 </sect2>
 
-
-
-
-
-
-
-
-
-
-
-
-
 <sect2 id="dbspecial">
 <title>
 DB Specials page
@@ -745,10 +730,12 @@ the &PalmPilot; databases &kpilot; works with.
 </variablelist>
 
 <warning>
+<para>
 Changing the contents of the <guilabel>Backup Only</guilabel>
 or <guilabel>Skip</guilabel> fields, in particular removing
 the databases already listed there, can damage those databases
-when you perform a HotSync.
+when you perform a &HotSync;.
+</para>
 </warning>
 
 </sect2>
@@ -760,7 +747,7 @@ Sync page
 
 <para>
 The sync page contains preferences relevant to
-the HotSync operation on your &PalmPilot;. 
+the &HotSync; operation on your &PalmPilot;. 
 </para>
 
 <screenshot>
@@ -890,12 +877,15 @@ The main window contains the application menu, which we will deal with here.
 </term>
 <listitem>
 <para>
-Starts a HotSync. You should press the
+Starts a &HotSync;. You should press the
 HotSync button on your &PalmPilot;'s cradle.
-<emphasis>Note:</emphasis>
-it is not possible to cancel a HotSync once
+</para>
+<note>
+<para>
+It is not possible to cancel a &HotSync; once
 the request has been made.
 </para>
+</note>
 </listitem>
 </varlistentry>
 
@@ -911,7 +901,7 @@ the request has been made.
 <para>
 (not available with all installations)
 Starts a FastSync in the same way that 
-a HotSync is started.
+a &HotSync; is started.
 </para>
 </listitem>
 </varlistentry>
@@ -930,18 +920,15 @@ a HotSync is started.
 <listitem>
 <para>
 Performs a full backup of your &PalmPilot;. This 
-is like a HotSync, but can take several minutes.
-<tip>
-The first thing you should do after starting &kpilot; for
-the first time is make a full backup.
-</tip>
+is like a &HotSync;, but can take several minutes.
 </para>
+<tip>
+<para>
+The first thing you should do after starting &kpilot; for
+the first time is make a full backup.</para>
+</tip>
 </listitem>
 </varlistentry>
-
-
-
-
 
 
 <varlistentry>
@@ -958,12 +945,13 @@ This copies all the data on your
 replacing whatever data was there.
 Use this if your &PalmPilot; suffers some catastrophe
 (or is replaced by a new one).
+</para>
 <warning>
+<para>
 Doing a restore will erase all data on the &PalmPilot;
 before restoring the information from your 
-<acronym>PC</acronym>!
+<acronym>PC</acronym>!</para>
 </warning>
-</para>
 </listitem>
 </varlistentry>
 
@@ -1068,9 +1056,6 @@ See <link linkend="installer-app">below</link> for more information.
 
 </sect1>
 
-
-
-
 <sect1 id="builtin">
 <title>
 Builtin Applications
@@ -1104,7 +1089,7 @@ do not take effect on the &PalmPilot; until the next HotSync.
 <para>
     The memo application allows you to view the memos on your &PalmPilot;,
       export them to text files, import new ones to be installed the next 
-      time you HotSync, or edit existing ones.
+      time you &HotSync;, or edit existing ones.
 </para>
 
 <screenshot>
@@ -1139,7 +1124,7 @@ you to give a filename; the memo
 is written to that file.
 Take care not to overwrite existing files with this action.
 Deleting a memo does not affect the &PalmPilot;
-until the next HotSync.
+until the next &HotSync;.
 </para>
 
 <para>
@@ -1148,10 +1133,10 @@ The
 button allows you to read a text file and
 add it &mdash; as a memo &mdash; to the &PalmPilot;.
 Importing a memo does not take effect until
-the next HotSync.
+the next &HotSync;.
 Note that if you import a memo and decide that
 you do not want to have it on the &PalmPilot;
-you must perform a HotSync (copying the memo
+you must perform a &HotSync; (copying the memo
 to the &PalmPilot;) and then delete the memo
 from the &PalmPilot;. It is not possible to
 delete newly-added memos from the builtin memo application.
@@ -1186,7 +1171,6 @@ Key Field,
 so every record read in from the import file is created and
 added to the database.
 </para>
-
 
 
 <screenshot>
@@ -1237,7 +1221,7 @@ files into the file list area
 or just hit the
 <guibutton>Add File</guibutton> button to add a file if you are not.  
 These files will
-be installed on your &PalmPilot; during the next HotSync if 
+be installed on your &PalmPilot; during the next &HotSync; if 
 <guilabel>Sync Files</guilabel>
 is checked in the 
 <link linkend="configuring-kpilot">settings dialog</link>.  
@@ -1254,15 +1238,13 @@ file is kept, so you can even drag and drop &URL;s from
 </tip>
 
 <para>
-Also, if you are using the HotSync Daemon you may drag and
+Also, if you are using the &HotSync; Daemon you may drag and
 drop files or &URL;s 
 onto the docked icon on the tool bar.  Provided
 <guilabel>Sync Files</guilabel> is checked in the 
 <link linkend="general">settings dialog</link> they
 will be installed the next time you HotSync.
 </para>
-
-
 
 <screenshot>
 <screeninfo>The File Installer</screeninfo>
@@ -1272,8 +1254,6 @@ will be installed the next time you HotSync.
 <caption><para>The File Installer</para></caption>
 </mediaobject>
 </screenshot>
-
-
 
 </sect2>
 </sect1>
@@ -1293,7 +1273,7 @@ Conduits can be set up by selecting
 <guimenuitem>Configure Conduits</guimenuitem>
 </menuchoice>.
 This allows you to select which conduits 
-to run during a HotSync and to configure those conduits.
+to run during a &HotSync; and to configure those conduits.
 A window similar to the following will be displayed:
 <screenshot>
 <screeninfo>The Conduit Setup Dialog</screeninfo>
@@ -1362,59 +1342,47 @@ tab, allowing you to enter the necessary information.
 </screenshot>
 
 <para>
-Your email address can be entered in the
-<guilabel>Email Address</guilabel> field.
-This is the email address that goes in the <quote>From:</quote>
-line in outgoing mail.
-If you enter a file name in the <guilabel>Signature File</guilabel>
-field then that file will be appended to each outgoing mail as
-a signature.
+Your email address can be entered in the <guilabel>Email
+Address</guilabel> field.  This is the email address that goes in the
+<quote>From:</quote> line in outgoing mail.  If you enter a file name in
+the <guilabel>Signature File</guilabel> field then that file will be
+appended to each outgoing mail as a signature.
 </para>
-
-
-
 
 <screenshot>
 <screeninfo>Setting up the Mail Conduit</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="conduit-popmail-sendmail.png" format="PNG"/></imageobject>
-<textobject><phrase>Sendmail configuration</phrase></textobject>
-<caption><para>Sendmail configuration</para></caption>
+<textobject><phrase>&Sendmail; configuration</phrase></textobject>
+<caption><para>&Sendmail; configuration</para></caption>
 </mediaobject>
 </screenshot>
 
 <para>
-The configuration of the
-<application><trademark>Sendmail</trademark></application> 
-method of sending is fairly straightforward.
-Check the path to your installation of 
-<application><trademark>Sendmail</trademark></application>,
-for example by typing
-<userinput><command>which sendmail</command></userinput>
-in a &konsole; window.
-The options to <application><trademark>Sendmail</trademark></application>
-should not need to be changed, but you can if you like.
-<warning>
-<application><trademark>Sendmail</trademark></application>
-is not provided with destination addresses on the command line,
-so you must specify the <userinput><option>-t</option></userinput>.
-If you are using a 
-non-<trademark><application>Sendmail</application></trademark>
-<acronym>MTA</acronym>
-like <application><trademark>Postfix</trademark></application>
-then the equivalent
-<quote>extract recipients from message headers</quote>
-option must be given.
-</warning>
+The configuration of the &Sendmail; method of sending is fairly
+straightforward.  Check the path to your installation of &Sendmail;, for
+example by typing <userinput><command>which
+sendmail</command></userinput> in a &konsole; window.  The options to
+&Sendmail; should not need to be changed, but you can if you like.
 </para>
+
+<warning>
+<para>
+&Sendmail; is not provided with destination addresses on the command
+line, so you must specify the <option>-t</option>.  If you are using a
+non-&Sendmail; <acronym>MTA</acronym> like
+<application>Postfix</application> then the equivalent <quote>extract
+recipients from message headers</quote> option must be given.
+</para>
+</warning>
 
 
 <screenshot>
 <screeninfo>Setting up the Mail Conduit</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="conduit-popmail-smtp.png" format="PNG"/></imageobject>
-<textobject><phrase>SMTP setup</phrase></textobject>
-<caption><para>SMTP setup</para></caption>
+<textobject><phrase><acronym>SMTP</acronym> setup</phrase></textobject>
+<caption><para><acronym>SMTP</acronym> setup</para></caption>
 </mediaobject>
 </screenshot>
 
@@ -1424,12 +1392,15 @@ the name of the machine which runs your
 <acronym>SMTP</acronym> server, and the port number to
 connect to.
 The default port number of 25 is almost always correct.
+</para>
 <note>
+<para>
 &kpilot; does not use the <acronym>SMTP</acronym>
 configuration of the <acronym>SMTP</acronym> IOSlave.
 This may change in a future version of &kpilot;.
-</note>
 </para>
+</note>
+
 
 
 <screenshot>
@@ -1442,15 +1413,13 @@ This may change in a future version of &kpilot;.
 </screenshot>
 
 <para>
-When sending mail through &kmail;, &kpilot;
-automatically places it in your &kmail; outbox.
-&kmail; saves mail in the outbox until you request that
-those pieces of mail are <emphasis>really</emphasis> sent.
-Check the <guilabel>Send mail through &kmail; immediately</guilabel>
-to let the Mail Conduit tell &kmail; to send all mail from the
-outbox as soon as it it done HotSyncing.
-This has the side effect of also sending any other pieces of
-mail that may be in your outbox.
+When sending mail through &kmail;, &kpilot; automatically places it in
+your &kmail; outbox.  &kmail; saves mail in the outbox until you request
+that those pieces of mail are <emphasis>really</emphasis> sent.  Check
+the <guilabel>Send mail through &kmail; immediately</guilabel> to let
+the Mail Conduit tell &kmail; to send all mail from the outbox as soon
+as it it done HotSyncing.  This has the side effect of also sending any
+other pieces of mail that may be in your outbox.
 </para>
 
 </sect3>
@@ -1467,13 +1436,14 @@ mail that may be in your outbox.
 <caption><para>Choosing the Receive Method</para></caption>
 </mediaobject>
 </screenshot>
-</sect3>
+
 
 <para>
-Depending on which send method you choose,
-different fields will be activated in the remainder of the
-tab, allowing you to enter the necessary information.
+Depending on which send method you choose, different fields will be
+activated in the remainder of the tab, allowing you to enter the
+necessary information.
 </para>
+</sect3>
 
 </sect2>
 
@@ -1481,17 +1451,13 @@ tab, allowing you to enter the necessary information.
 <title>Calendar Conduit</title>
 
 <para>
-This conduit will synchronize your &PalmPilot;
-with &korganizer;.
-The conduit needs two pieces of information:
-the filename of the calendar file
-(this will usually be a file
-that ends in <filename>.vcs</filename>
-under
-<filename>.kde/share/apps/korganizer/</filename>
-under your home directory)
-and whether or not to ask before changing
-data in that calendar file.
+This conduit will synchronize your &PalmPilot; with &korganizer;.  The
+conduit needs two pieces of information: the filename of the calendar
+file (this will usually be a file that ends in <literal
+role="extension">.vcs</literal> under <filename
+class="directory">.kde/share/apps/korganizer/</filename> under your home
+directory) and whether or not to ask before changing data in that
+calendar file.
 </para>
 
 <screenshot>
@@ -1515,12 +1481,9 @@ off.
 <title>To-do Conduit</title>
 
 <para>
-This conduit synchronizes with
-&korganizer;'s
-todo list.
-The configuration dialog looks exactly the same as
-the configuration dialog for the
-<link linkend="vcal-cond">Calendar Conduit</link>.
+This conduit synchronizes with &korganizer;'s todo list.  The
+configuration dialog looks exactly the same as the configuration dialog
+for the <link linkend="vcal-cond">Calendar Conduit</link>.
 </para>
 
 </sect2>
@@ -1529,14 +1492,9 @@ the configuration dialog for the
 <title>&knotes; Conduit</title>
 
 <para>
-The
-&knotes; Conduit
-is a partial replacement for the builtin 
-<link linkend="builtin">memo application</link>.
-It keeps the notes you write with
-&knotes;
-synchronized with the memos you write on 
-your &PalmPilot;.
+The &knotes; Conduit is a partial replacement for the builtin <link
+linkend="builtin">memo application</link>.  It keeps the notes you write
+with &knotes; synchronized with the memos you write on your &PalmPilot;.
 </para>
 
 <para>
@@ -1553,14 +1511,13 @@ since there is only one configuration option.
 </para>
 </sect2>
 
-
 <sect2 id="conduit-kaddressbook">
 <title>&kaddressbook; Conduit</title>
 
 <para>
 The &kaddressbook; conduit allows you to synchronize the
 &PalmPilot; address book with your 
-KDE address book.
+&kde; address book.
 </para>
 
 </sect2>
@@ -1574,37 +1531,32 @@ has no practical function whatsoever.
 </para>
 </sect2>
 
-
 </sect1>
-
-
-
 
 </chapter>
 
-
-
 <chapter id="faq">
-<title>FAQ</title>
+<title>&FAQ;</title>
 
 <sect1 id="crash">
 <title>&kpilot; Startup Problems</title>
-
 
 <qandaset>
 
 <qandaentry>
 <question>
 <para>
-What do I put after <userinput><option>--debug</option></userinput>?
+What do I put after <option>--debug</option>?
 </para>
 </question>
 <answer>
 <para>
-The number after <userinput><option>--debug</option></userinput>
+The number after <option>--debug</option>
 indicates what kind of messages
 you want to see; 1023 indicates <emphasis>all messages</emphasis>.
 The exact numbers you can use are as follows:
+</para>
+
 <table id="debug">
 <title>Debug Values</title>
 <tgroup cols="2">
@@ -1616,13 +1568,13 @@ The exact numbers you can use are as follows:
 	Very tedious.
 </entry></row>
 <row><entry>2</entry><entry>Major &GUI; operations 
-	(e.g.&nbsp;Creating windows).
+	(&eg; Creating windows).
 </entry></row>
 <row><entry>4</entry><entry>Minor &GUI; operations 
-	(e.g.&nbsp;Adding visual elements).
+	(&eg; Adding visual elements).
 </entry></row>
 <row><entry>8</entry><entry><emphasis>All</emphasis> &GUI; operations 
-	(e.g.&nbsp;Filling list boxes -- this is very tedious).
+	(&eg; Filling list boxes -- this is very tedious).
 </entry></row>
 <row><entry>16</entry><entry>Major database operations.
 </entry></row>
@@ -1639,12 +1591,11 @@ The exact numbers you can use are as follows:
 </tbody>
 </tgroup>
 </table>
+<para>
 Just add up the numbers of the kind of messages you want.
 </para>
 </answer>
 </qandaentry>
-
-
 
 <qandaentry>
 <question>
@@ -1658,27 +1609,29 @@ This can have various causes. Check that:
 <itemizedlist>
 <listitem>
 <para>
-	The pilot device 
-	(usually <filename>/dev/pilot</filename>) exists and points
-	to the serial port the &PalmPilot; is actually connected to.
+	The pilot device (usually <filename
+	class="devicefile">/dev/pilot</filename>) exists and points to the
+	serial port the &PalmPilot; is actually connected to.
 </para>
 <para>
-	To link the &PalmPilot; device to the correct serial port,
-	you can either fill in 
-	<filename>/dev/ttyS<replaceable>n</replaceable></filename> 
-	in the <guilabel>Pilot Device</guilabel>
-	field in the
-	<link linkend="general">setup dialog</link> 
-	or (preferably) link 
-	<filename>/dev/pilot</filename> to 
-	<filename>/dev/ttyS<replaceable>n</replaceable></filename> 
-	with the following command (as root):
+	To link the &PalmPilot; device to the correct serial port, you can
+	either fill in
+	<filename
+	class="devicefile">/dev/ttyS<replaceable>n</replaceable></filename>
+	in the <guilabel>Pilot Device</guilabel> field in the <link
+	linkend="general">setup dialog</link> or (preferably) link
+	<filename class="devicefile">/dev/pilot</filename> to
+	<filename
+	class="devicefile">/dev/ttyS<replaceable>n</replaceable></filename>
+	with the following command (as <systemitem
+	class="username">root</systemitem>): 
 	<userinput>
 	<command>ln</command> 
-	<option>-s /dev/ttyS<replaceable>n</replaceable></option>
-	<option>/dev/pilot</option>
-	</userinput>
-	Here <filename>/dev/ttyS<replaceable>n</replaceable></filename> 
+	<option>-s</option>
+	<parameter>/dev/ttyS<replaceable>n</replaceable></parameter>
+	<parameter>/dev/pilot</parameter></userinput>
+	Here <filename
+	class="devicefile">/dev/ttyS<replaceable>n</replaceable></filename>  
 	is the name 
 	of the serial port; replace <replaceable>n</replaceable>
 	with the correct number (usually 0 or 1).
@@ -1692,7 +1645,7 @@ This can have various causes. Check that:
 	<userinput>
 	<command>chmod</command>
 	<option>666</option> 
-	<option>/dev/ttyS<replaceable>n</replaceable></option>
+	<parameter>/dev/ttyS<replaceable>n</replaceable></parameter>
 	</userinput>
 </para>
 </listitem>
@@ -1703,14 +1656,14 @@ This can have various causes. Check that:
 </listitem>
 <listitem>
 <para>
-	(For Mandrake 7 systems) Check the system security level:
+	(For &Linux-Mandrake; 7 systems) Check the system security level:
 	settings higher than 3 prevent some forms of inter-process
 	communication which are necessary for &kpilot; to
 	operate correctly.
 </para>
 
 <para>
-	(<emphasis>Mandrake security information 
+	(<emphasis>&Linux-Mandrake; security information 
 	courtesy of Jay Summett</emphasis>)
 	To set your 
 <!-- TM? --><acronym>MSEC</acronym> 
@@ -1850,57 +1803,52 @@ How do I do an infrared (<acronym>IR</acronym>) HotSync?
 </question>
 <answer>
 <para>
-First of all your &PalmPilot; has to actually support 
-<acronym>IR</acronym> HotSyncs.
-This can be achieved through various means:
-<!-- TM? -->PalmOS 3.3 
-and higher include support for it;
-there is an <acronym>IR</acronym> enhancements package for older
-<!-- TM? --><application>PalmOS</application> 
-versions; 
-<!-- TM? --><application>IrLink</application> from 
-<!-- TM? -->IsComplete 
-apparently has the
-same capabilities.
-Check out the
-<!-- TM? --><ulink url="http://www.palm.com/">Palm</ulink>
-web pages for more information.
+First of all your &PalmPilot; has to actually support
+<acronym>IR</acronym> HotSyncs.  This can be achieved through various
+means: &PalmOS; 3.3 and higher include support for it; there is an
+<acronym>IR</acronym> enhancements package for older &PalmOS; versions;
+<application>IrLink</application> from IsComplete apparently has the
+same capabilities.  Check out the <ulink
+url="http://www.palm.com/">Palm</ulink> web pages for more information.
 </para>
 
 <para>
-Assuming your &PalmPilot; now has <acronym>PC</acronym> HotSync support and it
-is setup to do <acronym>IR</acronym> HotSyncs (in the HotSync preferences on the &PalmPilot;),
-we can turn our attention to the <acronym>PC</acronym> you will be syncing with.
-It needs an <acronym>IR</acronym> port. 
-For laptops, this is trivial, desktop <acronym>PCs</acronym> may require some
-extra hardware.
+Assuming your &PalmPilot; now has <acronym>PC</acronym> HotSync support
+and it is setup to do <acronym>IR</acronym> HotSyncs (in the HotSync
+preferences on the &PalmPilot;), we can turn our attention to the
+<acronym>PC</acronym> you will be syncing with.  It needs an
+<acronym>IR</acronym> port.  For laptops, this is trivial, desktop
+<acronym>PCs</acronym> may require some extra hardware.
 </para>
 
 <para>
-Your linux kernel will need to support <acronym>IR</acronym> and the <acronym>IRCOMM</acronym> protocol.
+Your &Linux; kernel will need to support <acronym>IR</acronym> and the <acronym>IRCOMM</acronym> protocol.
 For stock 
-<!-- TM? -->RedHat 
+&RedHat; 
 systems, the following command should
-setup <acronym>IR</acronym> support (as root):
+setup <acronym>IR</acronym> support (as <systemitem class="username">root</systemitem>):
 <screen width="40">
 <prompt># </prompt><userinput><command>modprobe</command> <option>ircomm</option></userinput>
 </screen>
+
 Other distributions should follow the <filename>IR-HOWTO</filename>.
 Once <acronym>IR</acronym> support in the kernel has been activated,
 you need to make devices for the <acronym>IR</acronym> ports.
-The <filename>IR-HOWTO</filename> suggests (as root):
+The <filename>IR-HOWTO</filename> suggests (as <systemitem class="username">root</systemitem>):
 <screen width="40">
-<prompt># </prompt><userinput><command>mknod</command> <option>/dev/ircomm0</option> <option>60</option> <option>64</option> </userinput>
-<prompt># </prompt><userinput><command>chmod</command> <option>666</option> <option>/dev/ircomm0</option></userinput>
+<prompt># </prompt><userinput><command>mknod</command>
+<option>/dev/ircomm0</option> <parameter>60</parameter> <parameter>64</parameter> </userinput>
+<prompt># </prompt><userinput><command>chmod</command>
+<option>666</option> <parameter>/dev/ircomm0</parameter></userinput>
 </screen>
 Next we need to start some daemons for <acronym>IR</acronym> services:
 <screen width="40">
 <prompt># </prompt><userinput><command>irattach</command> 
 <option>/dev/ttyS<replaceable>n</replaceable></option></userinput>
 <prompt># </prompt><userinput><command>irmanager</command> 
-<option>-d 0</option></userinput>
+<option>-d</option> <parameter>0</parameter></userinput>
 </screen>
-Here <filename>/dev/ttyS<replaceable>n</replaceable></filename>
+Here <filename class="devicefile">/dev/ttyS<replaceable>n</replaceable></filename>
 is the serial port
 the <acronym>IR</acronym> port is using. <replaceable>n</replaceable> could be 0, 1, or some other
 number depending on your hardware setup.
@@ -1909,8 +1857,8 @@ Follow the instructions in the <filename>IR-HOWTO</filename> for assistance
 </para>
 
 <para>
-Once you've gotten this far, just make <filename>/dev/pilot</filename>
-point to <filename>/dev/ircomm0</filename>
+Once you've gotten this far, just make <filename class="devicefile">/dev/pilot</filename>
+point to <filename class="devicefile">/dev/ircomm0</filename>
 and you're ready!
 </para>
 
@@ -1924,19 +1872,17 @@ and
 </answer>
 </qandaentry>
 
-
-
 <qandaentry>
 <question>
-<para>Can I do a HotSync with my (<acronym>USB</acronym>) 
-<!-- TM? -->Handspring Visor?
+<para>Can I do a &HotSync; with my (<acronym>USB</acronym>) 
+<!-- TM? -->&Handspring; &Visor;?
 </para>
 </question>
 <answer>
 <para>
 Yes, you can.
 I don't have definitive information, but postings on the
-&kpilot; mailing-list have stated that you can point <filename>/dev/pilot</filename>
+&kpilot; mailing-list have stated that you can point <filename class="devicefile">/dev/pilot</filename>
 to the <acronym>USB</acronym> device and everything will work fine.
 </para>
 </answer>
@@ -1953,15 +1899,10 @@ Maybe later.
 </answer>
 </qandaentry>
 
-
 </qandaset>
-
-
 
 </sect1>
 </chapter>
-
-
 
 <chapter id="credits">
 
@@ -2012,6 +1953,9 @@ Documentation copyright 2000,2001 Adriaan de Groot <email>adridg@cs.kun.nl</emai
 </book>
 <!-- 
      $Log$
+     Revision 1.11  2001/05/16 21:23:33  adridg
+     Updated docs ready for 2.2b1
+
      Revision 1.10  2001/04/30 13:48:09  bischoff
      Converted dates to ISO format
 
