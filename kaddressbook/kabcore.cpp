@@ -997,7 +997,7 @@ void KABCore::initActions()
                              SLOT( save() ), actionCollection(), "file_sync" );
   mActionSave->setWhatsThis( i18n( "Save all changes of the address book to the storage backend." ) );
 
-  action = new KAction( i18n( "&New Contact..." ), "filenew", CTRL+Key_N, this,
+  action = new KAction( i18n( "&New Contact..." ), "identity", CTRL+Key_N, this,
                SLOT( newContact() ), actionCollection(), "file_new_contact" );
   action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data about a person, including addresses and phone numbers." ) );
 
