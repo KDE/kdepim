@@ -132,7 +132,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
   for ( unsigned int index=0; index < strlen; index++ ) {
     switch ( context ) {
     case TopLevel : {
-      switch ( aStr[index] ) {
+      switch ( aStr[index].latin1() ) {
         case '"' : inQuotedString = !inQuotedString; 
             break;
         case '(' : 
