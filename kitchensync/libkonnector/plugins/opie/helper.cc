@@ -122,6 +122,9 @@ QString Base::konnectorId( const QString &appName,  const QString &uid )
         //                        konnector kde
         if (id.isEmpty() ) { // generate new id
             kdDebug() << "Id is empty" << endl;
+            id2 = QString::number( newId() );
+            id = QString::fromLatin1("Konnector-") + id2;
+            kdDebug() << "Id is " << id << endl;
         }else if ( id.startsWith( "Konnector-" ) ) { // not converted
             kdDebug() << "prev " << id << endl;
             id2 =  id.mid( 10 );
@@ -145,4 +148,15 @@ QString Base::kdeId( const QString &appName,  const QString &uid )
     }
     kdDebug() << "AppName " << appName << " kon " << ret << endl;
     return ret;
+}
+// code copyrighted by tt
+int Base::newId()
+{
+    QMap<int,  bool> ids;
+    int id = -1 * (int) ::time(NULL );
+    while ( ids.contains( id ) ){
+        id += -1;
+        if ( id > 0 )
+            id = -1;
+    }
 }

@@ -28,6 +28,7 @@ namespace OpieHelper {
         time_t toUTC( const QDateTime& dt );
         QDateTime fromUTC( time_t time );
         // off tt code
+        int newId();
         CategoryEdit* edit() { return m_edit; };
         KonnectorUIDHelper* helper() { return m_helper; };
         bool isMetaSyncingEnabled()const;

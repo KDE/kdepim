@@ -152,6 +152,8 @@ KSyncEntry* KAlendarSyncEntry::clone()
 {
   KAlendarSyncEntry *entry = new KAlendarSyncEntry();
   KCal::CalendarLocal *cal = new KCal::CalendarLocal();
+  entry->setSyncMode( syncMode() );
+  entry->setFirstSync( firstSync() );
   entry->setCalendar( cal );
   entry->m_name = m_name;
   entry->m_oldId = m_oldId;

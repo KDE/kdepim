@@ -143,7 +143,7 @@ void OrganizerPart::processEntry( const KSyncEntryList& in,
             kdDebug() << "Found our type" << endl;
             our.append(  (KAlendarSyncEntry*) entry );
             //out.append(  entry->clone() );
-            entry2 = (KAlendarSyncEntry*) entry ; //not cloning
+            entry2 = (KAlendarSyncEntry*) entry->clone() ; //not cloning
         }
     }
     if (entry2 == 0 )

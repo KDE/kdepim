@@ -313,7 +313,7 @@ void KSyncMainWindow::slotSync( const QString &udi,
         }
     }
     lis.setAutoDelete( TRUE );
-    lis.clear();
+    lis.clear(); //there is a bug now we will leak but not crash :(
     m_konnector->write( udi, ret );
 }
 void KSyncMainWindow::slotStateChanged( const QString &udi,
