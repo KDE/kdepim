@@ -55,6 +55,14 @@ PilotAddress::PilotAddress(struct AddressAppInfo &appInfo) :
       PilotAppCategory(), fAppInfo(appInfo)
     {
     reset();
+
+    // assign the phoneLabel so it doesn't appear in the pilot as
+    // work for all fields, but at least shows other fields
+    fAddressInfo.phoneLabel[0] = (int) eWork;
+    fAddressInfo.phoneLabel[1] = (int) eHome;
+    fAddressInfo.phoneLabel[2] = (int) eOther;
+    fAddressInfo.phoneLabel[3] = (int) eMobile;
+    fAddressInfo.phoneLabel[4] = (int) eEmail;
     }
 
 PilotAddress::PilotAddress(const PilotAddress &copyFrom) :
@@ -92,37 +100,6 @@ PilotAddress::~PilotAddress()
     {
     free_Address(&fAddressInfo);
     }
-
-QString PilotAddress::_typeToStr(EPhoneType type) const
-{
-	FUNCTIONSETUP;
-
-	QString s;
-	if ((0<=(int)type) && (type<8))
-	{
-		s=QString::fromLatin1(fAppInfo.phoneLabels[(int)type]);
-	}
-	if (!s.isEmpty()) return s;
-
-	kdWarning() << __FUNCTION__
-		<< ": No category name for category number "
-		<< (int) type
-		<< endl;
-
-	switch(type)
-	{
-	case eWork : s = "Work"; break;
-	case eHome : s = "Home"; break;
-	case eFax : s = "Fax"; break;
-	case eOther : s = "Other"; break;
-	case ePager : s = "Pager"; break;
-	case eMobile : s = "Mobile"; break;
-	case eEmail : s = "E-mail"; break;
-	case eMain :
-	default : s = "Main"; break;
-	}
-	return s;
-}
 
 bool PilotAddress::setCategory(const char *label)
     {
@@ -162,9 +139,11 @@ void PilotAddress::setPhoneField(EPhoneType type, const char *field,
 				 bool overflowCustom)
     {
     // first look to see if the type is already assigned to a fieldSlot
+    //QString typeStr(_typeToStr(type));
+    //int appPhoneLabelNum = _getAppPhoneLabelNum(typeStr);
+    int appPhoneLabelNum = (int)type;
+    QString typeStr( fAppInfo.phoneLabels[appPhoneLabelNum] );
     QString fieldStr(field);
-    QString typeStr(_typeToStr(type));
-    int appPhoneLabelNum = _getAppPhoneLabelNum(typeStr);
     int fieldSlot = _findPhoneFieldSlot(appPhoneLabelNum);
     if (fieldSlot == -1)
 	fieldSlot = _getNextEmptyPhoneSlot();
@@ -199,8 +178,11 @@ const char *PilotAddress::getPhoneField(EPhoneType type,
 					bool checkCustom4) const
     {
     // given the type, need to find which slot is associated with it
-    QString typeToStr(_typeToStr(type));
-    int appTypeNum = _getAppPhoneLabelNum(typeToStr);
+    //QString typeToStr(_typeToStr(type));
+    //int appTypeNum = _getAppPhoneLabelNum(typeToStr);
+    int appTypeNum = (int)type;
+    QString typeToStr( fAppInfo.phoneLabels[appTypeNum] );
+
     int fieldSlot = _findPhoneFieldSlot(appTypeNum); 
     if (fieldSlot != -1)
 	return getField(fieldSlot);
@@ -240,8 +222,9 @@ int PilotAddress::_getAppPhoneLabelNum(const QString &phoneType) const
 
 void PilotAddress::setShownPhone(EPhoneType type)
     {
-    QString typeStr(_typeToStr(type));
-    int appPhoneLabelNum = _getAppPhoneLabelNum(typeStr);
+    //QString typeStr(_typeToStr(type));
+    //int appPhoneLabelNum = _getAppPhoneLabelNum(typeStr);
+    int appPhoneLabelNum = (int)type;
     int fieldSlot = _findPhoneFieldSlot(appPhoneLabelNum);
     if (fieldSlot == -1)
 	{
@@ -283,6 +266,9 @@ PilotAddress::pack(void *buf, int *len)
     }
 
 // $Log$
+// Revision 1.19  2001/05/07 19:26:41  adridg
+// Possible fix for abbrowser phone label corruption
+//
 // Revision 1.18  2001/04/16 13:54:17  adridg
 // --enable-final file inclusion fixups
 //

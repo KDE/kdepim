@@ -61,13 +61,33 @@
  * is an overflow.
  *
  * There are eight possible fields for 5 view slots:
-  * <li> fields: Work, Home, Fax, Other, Pager, Mobile, E-mail, Main
-  * <li> slots: entryPhone1, entryPhone2, entryPhone3, entryPhone4,
-  * entryPhone5
-  */
+ * <li> fields: Work, Home, Fax, Other, Pager, Mobile, E-mail, Main
+ * <li> slots: entryPhone1, entryPhone2, entryPhone3, entryPhone4,
+ * entryPhone5
+ *
+ * Internally in the pilot-link library, the AddressAppInfo phone
+ * array stores the strings for the eight possible phone values.
+ * Their English string values are :
+ * <li> phone[0] = Work
+ * <li> phone[1] = Home
+ * <li> phone[2] = Fax
+ * <li> phone[3] = Other
+ * <li> phone[4] = E-mail
+ * <li> phone[5] = Main 
+ * <li> phone[6] = Pager
+ * <li> phone[7] = Mobile
+ *
+ * Apparently, this order is kept for all languages, just with localized
+ * strings.  The implementation of the internal methods will assume
+ * this order is kept. In other languages, main can replaced with
+ * Corporation.
+ */
 class PilotAddress : public PilotAppCategory
     {
     public:
+      enum EPhoneType { eWork=0, eHome, eFax, eOther, eEmail, eMain,
+			ePager, eMobile };
+      
       PilotAddress(struct AddressAppInfo &appInfo);
       PilotAddress(struct AddressAppInfo &appInfo, PilotRecord* rec);
       PilotAddress(const PilotAddress &copyFrom);
@@ -101,8 +121,7 @@ class PilotAddress : public PilotAppCategory
        */
       bool setCategory(const char *label);
 					    
-      enum EPhoneType { eWork=0, eHome, eFax, eOther, ePager, eMobile, eEmail,
-			eMain };
+     
       /** @param checkCustom4 flag if true, checks the entryCustom4 field
        *  for extra phone fields
        *  @return the field associated with the type
@@ -137,8 +156,6 @@ class PilotAddress : public PilotAppCategory
       
     private:
       void _copyAddressInfo(const struct Address &copyFrom);
-      /** @return the type string (as used by the Palm Pilot) */
-      QString _typeToStr(EPhoneType type) const;
       int _getNextEmptyPhoneSlot() const;
       /** @return the phone label number (0 through 8) that corresponds
        *  to the phoneType; do O(n) search though the phoneLabels array
@@ -165,6 +182,9 @@ class PilotAddress : public PilotAppCategory
 
 
 // $Log$
+// Revision 1.13  2001/04/16 13:48:35  adridg
+// --enable-final cleanup and #warning reduction
+//
 // Revision 1.12  2001/04/13 22:13:38  stern
 // Added setShownPhoneField method
 //
