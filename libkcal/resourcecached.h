@@ -315,6 +315,15 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
      */
     virtual QString cacheFile() const;
 
+    /**
+      Functions for keeping the changes persistent.
+     */
+    virtual QString changesCacheFile( const QString& ) const;
+    void loadChangesCache( QMap<Incidence*, bool>&, const QString& );
+    void loadChangesCache();
+    void saveChangesCache( const QMap<Incidence*, bool>&, const QString& );
+    void saveChangesCache();
+
   protected slots:
     void slotReload();
     void slotSave();

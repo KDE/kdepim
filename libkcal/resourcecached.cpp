@@ -21,6 +21,7 @@
 
 #include <qdatastream.h>
 #include <qdatetime.h>
+#include <qfile.h>
 #include <qstring.h>
 #include <qptrlist.h>
 
@@ -29,11 +30,12 @@
 #include <kurl.h>
 #include <kstandarddirs.h>
 
+#include "event.h"
 #include "exceptions.h"
 #include "incidence.h"
-#include "event.h"
-#include "todo.h"
 #include "journal.h"
+#include "todo.h"
+
 
 #include "resourcecached.h"
 
@@ -370,6 +372,63 @@ KPIM::IdMapper& ResourceCached::idMapper()
 QString ResourceCached::cacheFile() const
 {
   return locateLocal( "cache", "kcal/kresources/" + identifier() );
+}
+
+QString ResourceCached::changesCacheFile( const QString &type ) const
+{
+  return locateLocal( "cache", "kcal/changescache/" + identifier() + "_" + type );
+}
+
+void ResourceCached::saveChangesCache( const QMap<Incidence*, bool> &map, const QString &type )
+{
+  CalendarLocal calendar;
+
+  bool isEmpty = true;
+  QMap<Incidence *,bool>::ConstIterator it;
+  for ( it = map.begin(); it != map.end(); ++it ) {
+    isEmpty = false;
+    calendar.addIncidence( it.key()->clone() );
+  }
+
+  if ( !isEmpty ) {
+    calendar.save( changesCacheFile( type ) );
+  } else {
+    QFile file( changesCacheFile( type ) );
+    file.remove();
+  }
+
+  calendar.close();
+}
+
+void ResourceCached::saveChangesCache()
+{
+  saveChangesCache( mAddedIncidences, "added" );
+  saveChangesCache( mDeletedIncidences, "deleted" );
+  saveChangesCache( mChangedIncidences, "changed" );
+}
+
+void ResourceCached::loadChangesCache( QMap<Incidence*, bool> &map, const QString &type )
+{
+  CalendarLocal calendar;
+
+  if ( KStandardDirs::exists( changesCacheFile( type ) ) )
+    calendar.load( changesCacheFile( type ) );
+  else
+    return;
+
+  const Incidence::List list = calendar.incidences();
+  Incidence::List::ConstIterator it;
+  for ( it = list.begin(); it != list.end(); ++it )
+    map.insert( (*it)->clone(), true );
+
+  calendar.close();
+}
+
+void ResourceCached::loadChangesCache()
+{
+  loadChangesCache( mAddedIncidences, "added" );
+  loadChangesCache( mDeletedIncidences, "deleted" );
+  loadChangesCache( mChangedIncidences, "changed" );
 }
 
 void ResourceCached::calendarIncidenceAdded( Incidence *i )
