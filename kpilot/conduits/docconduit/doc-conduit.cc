@@ -50,7 +50,7 @@
 
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.
-const char *doc_conduit_id = "$Id: $";
+const char *doc_conduit_id = "$Id$";
 
 
 /*********************************************************************
@@ -453,7 +453,7 @@ bool DOCConduit::needsSync(DBInfo dbinfo, eSyncDirectionEnum & dir)
 
 	int storyRecs = docHeader.numRecords;
 
-	// TODO: How do I determine the index of the next modified record????
+	// determine the index of the next modified record (does it lie beyond the actual text records?)
 	int modRecInd=0;
 	PilotRecord*modRec=docdb->readNextModifiedRec(&modRecInd);
 #ifdef DEBUG
@@ -585,7 +585,7 @@ PilotDatabase *DOCConduit::preSyncAction(DBInfo &dbinfo, eSyncDirectionEnum dire
 	}
 	if (fKeepPDBLocally)
 	{
-		return new PilotLocalDatabase(fPDBDir, dbinfo.name);
+		return new PilotLocalDatabase(fPDBDir, dbinfo.name, false);
 	}
 	else
 	{
@@ -639,3 +639,6 @@ void DOCConduit::cleanup()
 
 
 // $Log$
+// Revision 1.1  2002/12/13 16:29:53  kainhofe
+// New PalmDOC conduit to syncronize text files with doc databases (AportisDoc, TealReader, etc) on the handheld
+//

@@ -20,6 +20,9 @@
 #include <plugin.h>
 #include <qptrlist.h>
 
+#define DOC_UNCOMPRESSED 1
+#define DOC_COMPRESSED 2
+
 
 class PilotLocalDatabase;
 class PilotSerialDatabase;
@@ -27,7 +30,7 @@ class PilotDatabase;
 
 
 /****************************************************************************************************
- *  various bookmark classes. Most important is the bmkList  findMatches(QString) function, 
+ *  various bookmark classes. Most important is the bmkList  findMatches(QString, bmkList &) function, 
  *  which needs to return a list of all bookmarks found for the given bookmark expression.
  *  A bookmark usually consists of a bookmark text and an offset into the text document.
  ****************************************************************************************************/
@@ -45,7 +48,6 @@ public:
 	virtual ~ docBookmark() { };
 	virtual int findMatches(QString, bmkList &fBookmarks) {
 		FUNCTIONSETUP;
-		DEBUGCONDUIT<<"docBookmark::findMatches"<<endl;
 		fBookmarks.append(new docBookmark(*this));
 		return 1;
 	};
@@ -56,31 +58,30 @@ public:
 
 class docMatchBookmark:public docBookmark {
  public:
-	docMatchBookmark():docBookmark() { };
+	docMatchBookmark():docBookmark() { from=0; to=100;};
 	docMatchBookmark(QString pattrn, int options=0):docBookmark(),
-		pattern(pattrn), opts(options) { };
+		pattern(pattrn), opts(options) { from=0; to=100; };
 	docMatchBookmark(QString pattrn, QString bmkname,
 		int options=0):docBookmark(bmkname, 0), pattern(pattrn), 
-		opts(options) { };
+		opts(options) { from=0; to=100; };
 	virtual ~ docMatchBookmark() { };
 
 	virtual int findMatches(QString, bmkList &fBookmarks);
 	QString pattern;
 	int opts;
+	int from, to;
 };
 
 class docRegExpBookmark:public docMatchBookmark {
  public:
 	docRegExpBookmark():docMatchBookmark() { };
 	docRegExpBookmark(QString regexp,
-		int options):docMatchBookmark(regexp, options) { };;
+		int options=0):docMatchBookmark(regexp, options) { };;
 	docRegExpBookmark(QString pattrn, QString bmkname,
-		int options):docMatchBookmark(pattrn, bmkname, options) { };
+		int options=0):docMatchBookmark(pattrn, bmkname, options) { };
 	virtual ~ docRegExpBookmark() { };
 
 	virtual int findMatches(QString, bmkList &fBookmarks);
-
-	QString pattern;
 };
 
 
@@ -135,9 +136,9 @@ public:
 		return fBookmarks.count();
 	};
 	
-	int findBmkEndtags(QString &, bmkList&) const;
-	int findBmkInline(QString &, bmkList&) const;
-	int findBmkFile(QString &, bmkList&) const;
+	int findBmkEndtags(QString &, bmkList&);
+	int findBmkInline(QString &, bmkList&);
+	int findBmkFile(QString &, bmkList&);
 	
 
 	void setSort(enum eSortBookmarksEnum sort) {eSortBookmarks=sort;}
@@ -169,5 +170,8 @@ signals:
 
 
 // $Log$
+// Revision 1.1  2002/12/13 16:29:53  kainhofe
+// New PalmDOC conduit to syncronize text files with doc databases (AportisDoc, TealReader, etc) on the handheld
+//
 //
 #endif

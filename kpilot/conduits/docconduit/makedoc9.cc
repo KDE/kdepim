@@ -102,10 +102,10 @@ unsigned tBuf::Compress()
 	if (!buf)
 		return 0;
 	if (isCompressed) {
-		cout<<"Buffer is already compressed!"<<endl;
+//		cout<<"Buffer is already compressed!"<<endl;
 		return len;
-	} else {
-		cout<<" Compressing buffer!!!"<<endl;
+//	} else {
+//		cout<<" Compressing buffer!!!"<<endl;
 	}
 
 	unsigned int i;
@@ -247,10 +247,10 @@ unsigned tBuf::Decompress()
 	if (!buf)
 		return 0;
 	if (!isCompressed) {
-		cout<<"Buffer already uncompressed. Doing nothing"<<endl;
+//		cout<<"Buffer already uncompressed. Doing nothing"<<endl;
 		return len;
-	} else {
-		cout<<"Decompressing buffer"<<endl;
+//	} else {
+//		cout<<"Decompressing buffer"<<endl;
 	}
 
 	// we "know" that all decompresses fit within 4096, right?
@@ -384,5 +384,5 @@ void tBuf::setText(const byte * text, unsigned txtlen, bool txtcomp)
 	memcpy(buf, text, len*sizeof(char));
 //	strncpy((char *) buf, (const char *) text, len);
 	isCompressed = txtcomp;
-	cout<<"Setting text, compressed="<<txtcomp<<endl;
+//	cout<<"Setting text, compressed="<<txtcomp<<endl;
 }

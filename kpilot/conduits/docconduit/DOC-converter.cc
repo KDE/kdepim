@@ -44,7 +44,7 @@
 
 // Something to allow us to check what revision
 // the modules are that make up a binary distribution.
-const char *doc_converter_id = "$Id: $";
+const char *doc_converter_id = "$Id$";
 
 #define min(a,b) (a<b)?(a):(b)
 
@@ -74,21 +74,25 @@ bool operator== ( const docBookmark &s1, const docBookmark &s2)
 int docMatchBookmark::findMatches(QString doctext, bmkList &fBookmarks) {
 	FUNCTIONSETUP;
 //	bmkList res;
-	int pos = 0, nr=0;
+	int pos = 0, nr=0, found=0;
 #ifdef DEBUG
 	DEBUGCONDUIT<<"Finding matches of "<<pattern<<endl;
 #endif
 
-	while (pos >= 0) {
+	while (pos >= 0 && found<to) {
 		pos = doctext.find(pattern, pos);
 #ifdef DEBUG
 		DEBUGCONDUIT<<"Result of search: pos="<<pos<<endl;
 #endif
 		if (pos >= 0)
 		{
-			fBookmarks.append(new docBookmark(pattern, pos));
+			found++;
+			if (found>=from && found<=to) {
+				fBookmarks.append(new docBookmark(pattern, pos));
+				nr++;
+				
+			}
 			pos++;
-			nr++;
 		}
 	}
 	return nr;
@@ -99,14 +103,21 @@ int docMatchBookmark::findMatches(QString doctext, bmkList &fBookmarks) {
 int docRegExpBookmark::findMatches(QString doctext, bmkList &fBookmarks) {
 //	bmkList res;
 	QRegExp rx(pattern);
-	int pos = 0, nr=0;
+	int pos = 0, nr=0, found=0;
 
-	while (pos>=0) 	{
+	while (pos>=0 && found<=to) 	{
+#ifdef DEBUG
+		DEBUGCONDUIT<<"Searching for bookmark "<<pattern<<endl;
+#endif
 		pos=rx.search(doctext, pos);
 		if (pos > -1) {
-			fBookmarks.append(new docBookmark(rx.cap(0), pos));
+			found++;
+			if (found>=from && found<to) {
+				// TODO: use the subexpressions from the regexp for the bmk name ($1..$9)
+				fBookmarks.append(new docBookmark(bmkName.left(16), pos));
+				nr++;
+			}
 			pos++;
-			nr++;
 		}
 	}
 	return nr;
@@ -186,7 +197,7 @@ QString DOCConverter::readText() {
 	return doc;
 }
 
-int DOCConverter::findBmkEndtags(QString &text, bmkList&fBmks) const {
+int DOCConverter::findBmkEndtags(QString &text, bmkList&fBmks) {
 	FUNCTIONSETUP;
 	// Start from the end of the text
 	int pos = text.length() - 1, nr=0;
@@ -203,7 +214,6 @@ int DOCConverter::findBmkEndtags(QString &text, bmkList&fBmks) const {
 			pos--;
 		}
 		// every other character than a > is assumed to belong to the text, so there are no more bookmarks.
-		// TODO: Does this break only jump out of the if or the whole while (which is what I actually want)
 		if (pos < 0 || text[pos] != '>') {
 #ifdef DEBUG
 			DEBUGCONDUIT<<"Current character \'"<<text[pos].latin1()<<"\' at position "<<pos<<" is not and ending >. Finish searching for bookmarks."<<endl;
@@ -253,7 +263,7 @@ int DOCConverter::findBmkEndtags(QString &text, bmkList&fBmks) const {
 	return nr;
 }
 		
-int DOCConverter::findBmkInline(QString &text, bmkList &fBmks) const {
+int DOCConverter::findBmkInline(QString &text, bmkList &fBmks) {
 	FUNCTIONSETUP;
 //	bmkList res;
 	int nr=0;
@@ -272,13 +282,95 @@ int DOCConverter::findBmkInline(QString &text, bmkList &fBmks) const {
 	return nr;
 }
 
-int DOCConverter::findBmkFile(QString &text, bmkList &fBmks) const {
+int DOCConverter::findBmkFile(QString &text, bmkList &fBmks) {
 	FUNCTIONSETUP;
-//	bmkList res;
 	int nr=0;
-	// TODO: Read in regexps from a file...
-	text.length();
-	fBmks.count();
+	
+	QString bmkfilename = docfilename;
+	if (bmkfilename.endsWith(".txt")){
+		bmkfilename.remove(bmkfilename.length()-4, 4);
+	}
+	bmkfilename+=".bmk";
+	QFile bmkfile(bmkfilename);
+	if (!bmkfile.open(IO_ReadOnly)) 	{
+		emit logError(i18n("Unable to open bookmarks file %1 for reading the bookmarks of %2.").arg(bmkfilename).arg(docdb ->dbPathName()));
+		return 0;
+	}
+	
+#ifdef DEBUG
+	DEBUGCONDUIT<<"Bookmark file: "<<bmkfilename<<endl;
+#endif
+
+	QTextStream bmkstream(&bmkfile);
+	QString line;
+	while ( (line=bmkstream.readLine()) && (!line.isNull()) ) {
+		if (!line.isEmpty()) {
+			QStringList bmkinfo=QStringList::split(",", line);
+			int fieldnr=bmkinfo.count();
+			// We use the same syntax for the entries as MakeDocJ bookmark files:
+			//   <bookmark>,<string-to-search>,<bookmark-name-string>,<starting-bookmark>,<ending-bookmark>
+			// For an explanation see: http://home.kc.rr.com/krzysztow/PalmPilot/MakeDocJ/index.html
+			if (fieldnr>0){
+#ifdef DEBUG
+				DEBUGCONDUIT<<"Working on bookmark \""<<line<<"\""<<endl;
+#endif
+				docMatchBookmark*bmk=0L;
+				QString bookmark=bmkinfo[0];
+				bool ok;
+				int pos=bookmark.toInt(&ok);
+				if (ok) {
+					if (fieldnr>1) {
+						QString name(bmkinfo[1]);
+#ifdef DEBUG
+						DEBUGCONDUIT<<"Bookmark \""<<name<<"\" set at position "<<pos<<endl;
+#endif
+						fBmks.append(new docBookmark(name, pos));
+					}
+				} else if (bookmark=="-" || bookmark=="+") {
+					if (fieldnr>1) {
+						QString patt(bmkinfo[1]);
+						QString name(patt);
+						if (fieldnr>2) name=bmkinfo[2];
+						bmk=new docRegExpBookmark(patt, name);
+#ifdef DEBUG
+						DEBUGCONDUIT<<"RegExp Bookmark, pattern="<<patt<<", name="<<name<<endl;
+#endif
+						if (bookmark=="-") {
+							bmk->from=1;
+							bmk->to=1;
+						} else {
+							if (fieldnr>3) {
+								bool ok;
+								int tmp=bmkinfo[3].toInt(&ok);
+								if (ok) bmk->from=tmp;
+								if (fieldnr>4) {
+									tmp=bmkinfo[4].toInt(&ok);
+									if (ok) bmk->to=tmp;
+								}
+							}
+						}
+						fBmks.append(bmk);
+						bmk=0L;
+					} else {
+#ifdef DEBUG
+						DEBUGCONDUIT<<"RegExp bookmark found with no other information (no bookmark pattern nor name)"<<endl;
+#endif
+					}
+				} else {
+					QString pattern(bookmark);
+					if (fieldnr>1) pattern=bmkinfo[1];
+					if (fieldnr>2) bookmark=bmkinfo[2];
+#ifdef DEBUG
+					DEBUGCONDUIT<<"RegExp Bookmark, pattern="<<pattern<<", name="<<bookmark<<endl;
+#endif
+					bmk=new docRegExpBookmark(pattern, bookmark);
+					bmk->from=1;
+					bmk->to=1;
+					fBmks.append(bmk);
+				}
+			} // fieldnr>0
+		} // !line.isEmpty()
+	} // while
 	return nr;
 }
 
@@ -366,7 +458,7 @@ bool DOCConverter::convertDOCtoPDB() {
 	docHead.recordSize=4096;
 	docHead.spare=0;
 	docHead.storyLen=text.length();
-	docHead.version=compress?2:1;
+	docHead.version=compress?DOC_COMPRESSED:DOC_UNCOMPRESSED;
 	docHead.numRecords=(int)( (text.length()-1)/docHead.recordSize)+1;
 	PilotRecord*rec=docHead.pack();
 	docdb->writeRecord(rec);
@@ -470,8 +562,7 @@ bool DOCConverter::convertPDBtoDOC()
 		PilotRecord*rec=docdb->readRecordByIndex(i);
 		if (rec)
 		{
-				// TODO: use a symbolic tag instead of the 2 for compressed
-			PilotDOCEntry recText(rec, header.version==2);
+			PilotDOCEntry recText(rec, header.version==DOC_COMPRESSED);
 			docstream<<recText.getText();
 #ifdef DEBUG
 			DEBUGCONDUIT<<"Record "<<i<<endl;
@@ -529,3 +620,6 @@ bool DOCConverter::convertPDBtoDOC()
 
 
 // $Log$
+// Revision 1.1  2002/12/13 16:29:53  kainhofe
+// New PalmDOC conduit to syncronize text files with doc databases (AportisDoc, TealReader, etc) on the handheld
+//
