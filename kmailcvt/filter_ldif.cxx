@@ -92,8 +92,11 @@ bool FilterLDIF::convert(const QString &filename, FilterInfo *info) {
    int numEntries = 0;
 
    KABC::Addressee *a = new KABC::Addressee();
-   KABC::Address *addr = new KABC::Address();
-   addr->setType(KABC::Address::Home);
+   KABC::Address *homeAddr, *workAddr; 
+   homeAddr = new KABC::Address();
+   homeAddr->setType(KABC::Address::Home);
+   workAddr = new KABC::Address();
+   workAddr->setType(KABC::Address::Work);
    while ( !t.eof() ) {
 	s = t.readLine();
 	completeline = s;
@@ -109,19 +112,23 @@ writeData:
 		if (!isGroup) {
 			if (!a->formattedName().isEmpty() && a->emails().count() > 0) {
 				numEntries++;
-				a->insertAddress(*addr);
+				a->insertAddress(*workAddr);
+				a->insertAddress(*homeAddr);
 				addContact(*a);
 			}
    		} else {
 			info->addLog(i18n("Warning: List data is being ignored."));
    		}
 
-		// delete old and create a new empty entry
+		// delete old and create a new empty address entry
 		delete a;
-		delete addr;
+		delete homeAddr;
+		delete workAddr;
 		a = new KABC::Addressee();
-		addr = new KABC::Address();
- 		addr->setType(KABC::Address::Home);
+		homeAddr = new KABC::Address();
+ 		homeAddr->setType(KABC::Address::Home);
+		workAddr = new KABC::Address();
+		workAddr->setType(KABC::Address::Work);
 
 		isGroup = false;
 		lastWasComment = false;
@@ -156,6 +163,7 @@ writeData:
 		if (lastWasComment) {
 			// if the last entry was a comment, add this one too, since
 			// we might have a multi-line comment entry.
+addComment:
 			if (!a->note().isEmpty())
 				a->setNote(a->note() + "\n");
 			a->setNote(a->note() + s);
@@ -179,6 +187,9 @@ writeData:
 	if (fieldname == "mail")
 		{ a->insertEmail(s); continue; }
 
+	if (fieldname == "mozillasecondemail")	// mozilla
+		{ a->insertEmail(s); continue; }
+
 	if (fieldname == "title")
 		{ a->setTitle(s); continue; }
 
@@ -189,37 +200,80 @@ writeData:
 		{ a->setOrganization(s); continue; }
 
 	if (fieldname == "description")
-		{ a->setNote(s); lastWasComment = true; continue; }
+		{ lastWasComment = true; goto addComment; }
 
-	if (fieldname == "homeurl")
-		{ a->setUrl(s); continue; }
+	if (fieldname == "custom1" || fieldname == "custom2" ||
+		fieldname == "custom3" || fieldname == "custom4" )
+		{ goto addComment; }
+
+	if (a->url().isEmpty() && (fieldname == "homeurl" || fieldname == "workurl"))
+		{ a->setUrl(s); continue; } // only one URL allowed, ignore the other one
 
 	if (fieldname == "homephone")
 		{ a->insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Home ) ); continue; }
 	
 	if (fieldname == "telephonenumber")
-		{ a->insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Voice ) ); continue; }
+		{ a->insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Work ) ); continue; }
+	
+	if (fieldname == "mobile")	// mozilla
+		{ a->insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Cell ) ); continue; }
 
-	if (fieldname == "postalcode")
-		{ addr->setPostalCode(s); continue; }
+	if (fieldname == "cellphone")
+		{ a->insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Cell ) ); continue; }
+
+	if (fieldname == "pager")	// mozilla
+		{ a->insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Pager ) ); continue; }
 
 	if (fieldname == "facsimiletelephonenumber")
 		{ a->insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Fax ) ); continue; }
 	
-	if (fieldname == "streetaddress")
-		{ addr->setStreet(s); continue; }
+	if (fieldname == "streethomeaddress")
+		{ homeAddr->setStreet(s); continue; }
+
+	if (fieldname == "postaladdress")		// mozilla
+		{ workAddr->setStreet(s); continue; }
+	
+	if (fieldname == "mozillapostaladdress2")	// mozilla
+		{ workAddr->setStreet(workAddr->street()+"\n"+s); continue; }
+
+	if (fieldname == "postalcode")
+		{ workAddr->setPostalCode(s); continue; }
+
+	if (fieldname == "homepostaladdress")		// mozilla
+		{ homeAddr->setStreet(s); continue; }
+	
+	if (fieldname == "mozillahomepostaladdress2")	// mozilla
+		{ homeAddr->setStreet(homeAddr->street()+"\n"+s); continue; }
+
+	if (fieldname == "mozillahomelocalityname")	// mozilla
+		{ homeAddr->setLocality(s); continue; }
+
+	if (fieldname == "mozillahomestate")		// mozilla
+		{ homeAddr->setRegion(s); continue; }
+
+	if (fieldname == "mozillahomepostalcode")	// mozilla
+		{ homeAddr->setPostalCode(s); continue; }
+
+	if (fieldname == "mozillahomecountryname")	// mozilla
+		{ homeAddr->setCountry(s); continue; }
 
 	if (fieldname == "locality")
-		{ addr->setLocality(s); continue; }
+		{ workAddr->setLocality(s); continue; }
+	
+	if (fieldname == "streetaddress")
+		{ workAddr->setStreet(s); continue; }
 	
 	if (fieldname == "countryname")
-		{ addr->setCountry(s); continue; }
+		{ workAddr->setCountry(s); continue; }
 		
-	if (fieldname == "cellphone")
-		{ a->insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Cell ) ); continue; }
+	if (fieldname == "l")	// mozilla
+		{ workAddr->setLocality(s); continue; }
+
+	if (fieldname == "c")	// mozilla
+		{ workAddr->setCountry(s); continue; }
 
 	if (fieldname == "st")
-		{ addr->setRegion(s); continue; }
+		{ workAddr->setRegion(s); continue; }
 
 	if (fieldname == "ou")
 		{ a->setRole(s); continue; }
@@ -227,11 +281,15 @@ writeData:
 	if (fieldname == "objectclass" && s == "groupOfNames")
 			isGroup = true;
 
+	if (fieldname == "modifytimestamp" || fieldname == "objectclass") // ignore 
+		{ continue; }
+
 	info->addLog(i18n("Unable to handle line: %1").arg(completeline));
   	  	
     } /* while !eof(f) */
     delete a;
-    delete addr;
+    delete homeAddr;
+    delete workAddr;
 
     f.close();
     
