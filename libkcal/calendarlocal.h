@@ -22,7 +22,6 @@
 #define KCAL_CALENDARLOCAL_H
 
 #include <qintdict.h>
-#include <qmap.h>
 
 #include "calendar.h"
 
@@ -187,7 +186,7 @@ class CalendarLocal : public Calendar, public IncidenceBase::Observer
 
     QPtrList<Todo> mTodoList;               // list of todo items.
 
-    QMap<QDate,Journal *> mJournalMap;
+    QPtrList<Journal> mJournalList;
   
     QDate *mOldestDate;
     QDate *mNewestDate;

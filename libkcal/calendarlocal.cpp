@@ -709,9 +709,12 @@ QPtrList<Event> CalendarLocal::rawEvents()
 
 void CalendarLocal::addJournal(Journal *journal)
 {
-  kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
+  if (journal->dtStart().isValid())
+    kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
+  else
+    kdDebug(5800) << "Adding Journal without a DTSTART" << endl;
 
-  mJournalMap.insert(journal->dtStart().date(),journal);
+  mJournalList.append(journal);
 
   journal->registerObserver( this );
 
@@ -722,32 +725,23 @@ Journal *CalendarLocal::journal(const QDate &date)
 {
 //  kdDebug(5800) << "CalendarLocal::journal() " << date.toString() << endl;
 
-  QMap<QDate,Journal *>::ConstIterator it = mJournalMap.find(date);
-  if (it == mJournalMap.end()) return 0;
-  else {
-//    kdDebug(5800) << "  Found" << endl;
-    return *it;
-  }
+  for (Journal *it = mJournalList.first(); it; it = mJournalList.next())
+    if (it->dtStart().date() == date)
+      return it;
+
+  return 0;
 }
 
 Journal *CalendarLocal::journal(const QString &uid)
 {
-  QMap<QDate,Journal *>::ConstIterator it = mJournalMap.begin();
-  QMap<QDate,Journal *>::ConstIterator end = mJournalMap.end();
-  for(;it != end; ++it) {
-    if ((*it)->uid() == uid) return *it;
-  }
+  for (Journal *it = mJournalList.first(); it; it = mJournalList.next())
+    if (it->uid() == uid)
+      return it;
+
   return 0;
 }
 
 QPtrList<Journal> CalendarLocal::journals()
 {
-  QPtrList<Journal> list;
-
-  QMap<QDate,Journal *>::Iterator it;
-  for( it = mJournalMap.begin(); it != mJournalMap.end(); ++it ) {
-    list.append(*it);
-  }
-
-  return list;
+  return mJournalList;
 }

@@ -246,17 +246,19 @@ icalcomponent *ICalFormatImpl::writeJournal(Journal *journal)
   icalcomponent *vjournal = icalcomponent_new(ICAL_VJOURNAL_COMPONENT);
 
   writeIncidence(vjournal,journal);
-
+  
   // start time
-  icaltimetype start;
-  if (journal->doesFloat()) {
-//    kdDebug(5800) << "§§ Incidence " << event->summary() << " floats." << endl;
-    start = writeICalDate(journal->dtStart().date());
-  } else {
-//    kdDebug(5800) << "§§ incidence " << event->summary() << " has time." << endl;
-    start = writeICalDateTime(journal->dtStart());
+  if (journal->dtStart().isValid()) {
+    icaltimetype start;
+    if (journal->doesFloat()) {
+//      kdDebug(5800) << "§§ Incidence " << event->summary() << " floats." << endl;
+      start = writeICalDate(journal->dtStart().date());
+    } else {
+//      kdDebug(5800) << "§§ incidence " << event->summary() << " has time." << endl;
+      start = writeICalDateTime(journal->dtStart());
+    }
+    icalcomponent_add_property(vjournal,icalproperty_new_dtstart(start));
   }
-  icalcomponent_add_property(vjournal,icalproperty_new_dtstart(start));
 
   return vjournal;
 }
