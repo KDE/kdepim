@@ -840,15 +840,7 @@ int main(int argc, char **argv)
 
 	KCmdLineArgs::init(argc, argv, &about);
 	KUniqueApplication::addCmdLineOptions();
-#ifdef DEBUG
-	DEBUGDAEMON << fname 
-		<< ": Adding debug options." << endl;
-	// KCmdLineArgs::addCmdLineOptions(debug_options); // , "debug");
-
-
-
-	DEBUGDAEMON << fname << ": Starting app." << endl;
-#endif
+	
 	if (!KUniqueApplication::start())
 	{
 		return 0;
