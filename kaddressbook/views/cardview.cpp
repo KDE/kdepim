@@ -227,6 +227,7 @@ CardViewItem::~CardViewItem()
     mView->takeItem(this);
 
   delete d;
+  d = 0;
 }
 
 void CardViewItem::initialize()
@@ -636,6 +637,7 @@ CardView::~CardView()
     delete d->mFm;
     delete d->mBFm;
     delete d;
+    d = 0;
 }
 
 void CardView::insertItem(CardViewItem *item)
@@ -1615,7 +1617,7 @@ void CardView::drawRubberBands( int pos )
 }
 
 
-int CardView::itemWidth()const
+int CardView::itemWidth() const
 {
   return d->mItemWidth;
 }
@@ -1661,7 +1663,7 @@ void CardView::setSeparatorWidth( int width )
   setLayoutDirty( true ); // hmm, actually I could just adjust the x'es...
 }
 
-int CardView::maxFieldLines()const
+int CardView::maxFieldLines() const
 {
   return d->mMaxFieldLines;
 }

@@ -496,8 +496,9 @@ void ViewManager::initGUI()
 
 void ViewManager::incSearch( const QString& text )
 {
-    if(!mActiveView )
-        return;
+  if(!mActiveView )
+    return;
+
   mActiveView->setSelected( QString::null, false );
 
   if ( !text.isEmpty() ) {
@@ -615,7 +616,8 @@ void ViewManager::startDrag()
 void ViewManager::addresseeSelected( const QString &uid )
 {
   KABC::Addressee addr = mAddressBook->findByUid( uid );
-  mDetails->setAddressee( addr );
+  if ( !mDetails->isHidden() )
+    mDetails->setAddressee( addr );
 
   if ( mCurrentExtensionWidget )
     mCurrentExtensionWidget->addresseeSelectionChanged();
@@ -674,6 +676,9 @@ void ViewManager::setActiveExtension( int id )
     if ( mCurrentExtensionWidget ) {
       mExtensionBar->show();
       mCurrentExtensionWidget->show();
+    } else {
+      mExtensionBar->hide();
+      mCurrentExtensionWidget = 0;
     }
   }
 }

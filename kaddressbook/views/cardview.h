@@ -341,7 +341,7 @@ class CardView : public QScrollView
     void setItemSpacing( uint spacing );
 
     /** @return the width made available to the card items. */
-    int itemWidth()const;
+    int itemWidth() const;
 
     /** Sets the width made available to card items. */
     void setItemWidth( int width );
@@ -367,7 +367,7 @@ class CardView : public QScrollView
     void setMaxFieldLines( int howmany );
 
     /** @return the maximum number of lines pr field */
-    int maxFieldLines()const;
+    int maxFieldLines() const;
 
   signals:
     /** Emitted whenever the selection changes. This means a user highlighted
