@@ -377,7 +377,6 @@ void ActionManager::setFilterNames(const QStringList& list)
 
 void ActionManager::slotFilterActivated(int index)
 {
-    kdDebug() << "slotFilterChanged" << endl;
     emit(filterActivated(index-1));
 }
 
@@ -385,15 +384,14 @@ void ActionManager::setCurrentFilterName(const QString& name)
 {
     QStringList items=mActionSelectFilter->items();
     int index=items.findIndex(name);
-    if(index!=-1)
+    if( index != -1 )
         setCurrentFilter(index);
-    else
-        setCurrentFilter( 0 ); // default
 }
 
 void ActionManager::setCurrentFilter(int index)
 {
     mActionSelectFilter->setCurrentItem(index);
+    mViewManager->filterActivated(index-1);
 }
 
 

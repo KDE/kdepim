@@ -170,6 +170,10 @@ class ViewManager : public QWidget
     */
     void filtersChanged(const Filter::List &list);
 
+    /** Called whenever a filter is activated
+    */
+    void filterActivated(int index);
+
   protected slots:
     /** Handle events on the incremental search widget. */
     void incSearch(const QString& text, int field);
@@ -200,10 +204,6 @@ class ViewManager : public QWidget
     * the modified signal and then tell the view to refresh.
     */
     void quickEditModified();
-
-    /** Called whenever a filter is activated
-    */
-    void filterActivated(int index);
 
   signals:
     /** Called whenever the user selects an entry in the view.

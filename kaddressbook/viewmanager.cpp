@@ -364,8 +364,6 @@ void ViewManager::modifyView()
         emit(setCurrentFilterName(filterName));
       }
 
-      kdDebug() << "currentFilter=" << currentFilter.name() << endl;
-
       mActiveView->refresh();
 
       // cleanup
@@ -623,7 +621,6 @@ void ViewManager::filterActivated(int index)
   // the view, this slot could be called before there is a valid view.
   if (!mActiveView)
     return;
-
 
   if (index < 0)
   {
