@@ -44,6 +44,8 @@ bool KonsoleKalendarChange::changeEvent()
 {
   bool status = false;
 
+  kdDebug() << "konsolekalendarchange.cpp::changeEvent()" << endl;
+
   /* Retrieve event on the basis of the unique string ID */
   Event *event = m_variables->getCalendar()->event( m_variables->getUID() );
   if ( event ) {
@@ -97,25 +99,25 @@ bool KonsoleKalendarChange::changeEvent()
              << event->summary().local8Bit()
              << i18n("\" changed").local8Bit()
              << endl;
+
+        if ( !m_variables->isCalendarResources() ) {
+          status =
+            m_variables->getCalendar()->save( m_variables->getCalendarFile() );
+        } else {
+          m_variables->getCalendar()->save();
+          status = true;
+        }
       } else {
         cout << i18n("Failure: \"").local8Bit()
              << event->summary().local8Bit()
              << i18n("\" not changed").local8Bit()
              << endl;
       }
-
-      // TODO: Do we need this??
-      // TODO: save can fail, right?
-      if ( !m_variables->isCalendarResources() ) {
-        m_variables->getCalendar()->save( m_variables->getCalendarFile() );
-      } else {
-        m_variables->getCalendar()->save();
-      }
     }
-    status = true;
   }
 
-  return( status );
+  kdDebug() << "konsolekalendarchange.cpp::changeEvent() | Done " << endl;
+  return status;
 }
 
 void KonsoleKalendarChange::printSpecs( Event *event )

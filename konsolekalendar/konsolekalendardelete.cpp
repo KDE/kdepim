@@ -45,9 +45,10 @@ bool KonsoleKalendarDelete::deleteEvent()
 {
   bool status = false;
 
+  kdDebug() << "konsolekalendardelete.cpp::deleteEvent()" << endl;
+
   /* Retrieve event on the basis of the unique string ID */
   Event *event = m_variables->getCalendar()->event( m_variables->getUID() );
-
   if ( event ) {
     if ( m_variables->isDryRun() ) {
       cout << i18n("Delete Event <Dry Run>:").local8Bit()
@@ -70,18 +71,18 @@ bool KonsoleKalendarDelete::deleteEvent()
            << i18n("\" deleted").local8Bit()
            << endl;
 
-      // TODO: Do we need this??
-      // TODO: save can fail, right?
       if ( !m_variables->isCalendarResources() ) {
-        m_variables->getCalendar()->save( m_variables->getCalendarFile() );
+        status =
+          m_variables->getCalendar()->save( m_variables->getCalendarFile() );
       } else {
         m_variables->getCalendar()->save();
+        status = true;
       }
     }
-    status = true;
   }
 
-  return( status );
+  kdDebug() << "konsolekalendardelete.cpp::deleteEvent() | Done " << endl;
+  return status;
 }
 
 void KonsoleKalendarDelete::printSpecs( Event *event )

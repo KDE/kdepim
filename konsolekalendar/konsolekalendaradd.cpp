@@ -54,8 +54,9 @@ KonsoleKalendarAdd::~KonsoleKalendarAdd()
 
 bool KonsoleKalendarAdd::addEvent()
 {
-  //TODO: can't this function return false?  else why is it a bool function?
-  kdDebug() << "konsolekalendaradd.cpp::addEvent() | Add stuff " << endl;
+  bool status = true;
+
+  kdDebug() << "konsolekalendaradd.cpp::addEvent()" << endl;
 
   if ( m_variables->isDryRun() ) {
     cout << i18n("Insert Event <Dry Run>:").local8Bit()
@@ -82,28 +83,25 @@ bool KonsoleKalendarAdd::addEvent()
 	   << m_variables->getSummary().local8Bit()
            << i18n("\" inserted").local8Bit()
            << endl;
+
+      if ( ! m_variables->isCalendarResources() ) {
+        status =
+          m_variables->getCalendar()->save( m_variables->getCalendarFile() );
+      } else {
+        m_variables->getCalendar()->save();
+      }
+
     } else {
       cout << i18n("Failure: \"").local8Bit()
 	   << m_variables->getSummary().local8Bit()
            << i18n("\" not inserted").local8Bit()
            << endl;
-    }
-
-    // Do we need these??
-    // TODO: save can fail, right?
-    if ( !m_variables->isCalendarResources() ) {
-      m_variables->getCalendar()->save( m_variables->getCalendarFile() );
-    } else {
-      m_variables->getCalendar()->save();
-      //TODO: make this work without bitching
-      m_variables->getCalendar()->connect( m_variables->getCalendarResources(),
-                        SIGNAL( calendarChanged() ),
-                        SLOT( slotCalendarChanged() ) );
+      status = false;
     }
   }
 
   kdDebug() << "konsolekalendaradd.cpp::addEvent() | Done " << endl;
-  return true;
+  return status;
 }
 
 bool KonsoleKalendarAdd::addImportedCalendar()
@@ -123,7 +121,7 @@ bool KonsoleKalendarAdd::addImportedCalendar()
       << endl;
   }
 
-  if ( !m_variables->isCalendarResources() ) {
+  if ( ! m_variables->isCalendarResources() ) {
     m_variables->getCalendar()->save( m_variables->getCalendarFile() );
   } else {
     m_variables->getCalendar()->save();
