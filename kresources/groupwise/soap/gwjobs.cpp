@@ -70,16 +70,18 @@ void ReadAddressBooksJob::run()
   if ( addressBookListResponse.books ) {
     std::vector<class ns1__AddressBook * > *addressBooks = addressBookListResponse.books->book;
 
-    mServer->emitReadAddressBookTotalSize( mAddressBookIds.count() * 100 );
+    mServer->emitReadAddressBookTotalSize( ( mAddressBookIds.count() )
+      * 100 );
     mProgress = 0;
 
     std::vector<class ns1__AddressBook * >::const_iterator it;
     for ( it = addressBooks->begin(); it != addressBooks->end(); ++it ) {
       QString id = GWConverter::stringToQString( (*it)->id );
       kdDebug() << "ID: " << id << endl;
-      if ( mAddressBookIds.find( id ) != mAddressBookIds.end() )
+      if ( mAddressBookIds.find( id ) != mAddressBookIds.end() ) {
         readAddressBook( (*it)->id );
         mProgress += 100;
+      }
     }
   }
 }
@@ -147,8 +149,14 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
         mResource->clearChange( addr );
       }
 
-      mServer->emitReadAddressBookProcessedSize( int( mProgress +
-        count++ * 100. / maxCount ) );
+      int progress = int( mProgress + count++ * 100. / maxCount );
+
+      kdDebug() << "PROGRESS: mProgress: " << mProgress << " count: "
+        << count << " maxCount: " << maxCount << " progress: " << progress
+        << endl;
+
+
+      mServer->emitReadAddressBookProcessedSize( progress );
     }
   }
 }
