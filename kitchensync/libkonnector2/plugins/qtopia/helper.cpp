@@ -209,7 +209,7 @@ const Device* Base::device() {
 
 // FROM TT QStyleSheet and StringUtil it's GPLed
 // we also need to escape '\"' for our xml files
-QString Base::escape( const QString& plain ) {
+QString OpieHelper::escape( const QString& plain ) {
     QString rich;
 
     for ( int i = 0; i < int(plain.length()); ++i ) {

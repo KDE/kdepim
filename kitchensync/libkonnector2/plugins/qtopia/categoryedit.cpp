@@ -8,6 +8,8 @@
 #include <kconfig.h>
 #include <kdebug.h>
 
+#include "helper.h"
+
 #include "categoryedit.h"
 
 
@@ -31,12 +33,12 @@ void CategoryEdit::save(const QString& fileName)const{
         for ( QValueList<OpieCategories>::ConstIterator it = m_categories.begin();
               it != m_categories.end(); ++it )
         {
-            stream << "<Category id=\""<< (*it).id() << "\" ";
+            stream << "<Category id=\""<< escape( (*it).id() ) << "\" ";
 
             if ( !(*it).app().isEmpty() )
-                stream << " app=\""<< (*it).app() <<  "\" ";
+                stream << " app=\""<< escape( (*it).app() ) <<  "\" ";
 
-            stream << "name=\"" << (*it).name() << "\" ";
+            stream << "name=\"" << escape( (*it).name() ) << "\" ";
             stream << " />" << endl;
         }
         stream << "</Categories>" << endl;

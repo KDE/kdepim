@@ -53,8 +53,6 @@ namespace OpieHelper {
         QString konnectorId( const QString &appName,  const QString &uid );
         QString kdeId( const QString &appName, const QString &uid );
 
-        /** escapes a whole string */
-        QString escape(const QString&);
 	const Device* device();
 
 	CategoryEdit *m_edit;
@@ -67,6 +65,10 @@ namespace OpieHelper {
         class BasePrivate;
         BasePrivate *baseD;
     };
+
+    /** escapes a whole string */
+    QString escape(const QString&);
+
 };
 
 
