@@ -117,10 +117,6 @@ namespace Kleo {
     QStringList smimeFingerprints() const;
 
     bool rememberSelection() const;
-    bool hideInvalidKeys() const;
-
-  public slots:
-    void setHideInvalidKeys( bool hide );
 
   private slots:
     void slotRereadKeys();
@@ -156,7 +152,6 @@ namespace Kleo {
     const Kleo::CryptoBackend::Protocol * mOpenPGPBackend;
     const Kleo::CryptoBackend::Protocol * mSMIMEBackend;
     QCheckBox * mRememberCB;
-    QCheckBox * mHideInvalidKeys;
     std::vector<GpgME::Key> mSelectedKeys, mKeysToCheck;
     unsigned int mKeyUsage;
     QTimer * mCheckSelectionTimer;

@@ -357,14 +357,10 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   le->setText( initialQuery );
   hlay->addWidget( new QLabel( le, i18n("&Search for:"), page ) );
   hlay->addWidget( le, 1 );
-  mHideInvalidKeys = new QCheckBox( i18n("Hide &invalid keys"), page );
-  hlay->addWidget( mHideInvalidKeys );
   le->setFocus();
-  mHideInvalidKeys->setChecked( true );
 
   connect( le, SIGNAL(textChanged(const QString&)),
 	   this, SLOT(slotSearch(const QString&)) );
-  connect( mHideInvalidKeys, SIGNAL(toggled(bool)), SLOT(slotSearch()) );
   connect( mStartSearchTimer, SIGNAL(timeout()), SLOT(slotFilter()) );
 
   mKeyListView = new KeyListView( new ColumnStrategy( mKeyUsage ), 0, page, "mKeyListView" );
@@ -732,13 +728,11 @@ void Kleo::KeySelectionDialog::slotFilter() {
 void Kleo::KeySelectionDialog::filterByKeyID( const QString & keyID ) {
   assert( keyID.length() <= 8 );
   assert( !keyID.isEmpty() ); // regexp in slotFilter should prevent these
-  const bool hideInvalidKeys = mHideInvalidKeys->isChecked();
   if ( keyID.isEmpty() )
     showAllItems();
   else
     for ( KeyListViewItem * item = mKeyListView->firstChild() ; item ; item = item->nextSibling() )
-      item->setVisible( ( !hideInvalidKeys || checkKeyUsage( item->key(), mKeyUsage ) ) &&
-			item->text( 0 ).upper().startsWith( keyID ) );
+      item->setVisible( item->text( 0 ).upper().startsWith( keyID ) );
 }
 
 static bool anyUIDMatches( const Kleo::KeyListViewItem * item, QRegExp & rx ) {
@@ -757,11 +751,9 @@ void Kleo::KeySelectionDialog::filterByKeyIDOrUID( const QString & str ) {
 
   // match beginnings of words:
   QRegExp rx( "\\b" + QRegExp::escape( str ), false );
-  const bool hideInvalidKeys = mHideInvalidKeys->isChecked();
 
   for ( KeyListViewItem * item = mKeyListView->firstChild() ; item ; item = item->nextSibling() )
-    item->setVisible( ( !hideInvalidKeys || checkKeyUsage( item->key(), mKeyUsage ) ) &&
-		      ( item->text( 0 ).upper().startsWith( str ) || anyUIDMatches( item, rx ) ) );
+    item->setVisible( item->text( 0 ).upper().startsWith( str ) || anyUIDMatches( item, rx ) );
 
 }
 
@@ -770,29 +762,15 @@ void Kleo::KeySelectionDialog::filterByUID( const QString & str ) {
 
   // match beginnings of words:
   QRegExp rx( "\\b" + QRegExp::escape( str ), false );
-  const bool hideInvalidKeys = mHideInvalidKeys->isChecked();
 
   for ( KeyListViewItem * item = mKeyListView->firstChild() ; item ; item = item->nextSibling() )
-    item->setVisible( ( !hideInvalidKeys || checkKeyUsage( item->key(), mKeyUsage ) ) &&
-		      anyUIDMatches( item, rx ) );
+    item->setVisible( anyUIDMatches( item, rx ) );
 }
 
 
 void Kleo::KeySelectionDialog::showAllItems() {
-  const bool hideInvalidKeys = mHideInvalidKeys->isChecked();
   for ( KeyListViewItem * item = mKeyListView->firstChild() ; item ; item = item->nextSibling() )
-    item->setVisible( !hideInvalidKeys || checkKeyUsage( item->key(), mKeyUsage ) );
-}
-
-bool Kleo::KeySelectionDialog::hideInvalidKeys() const {
-  return mHideInvalidKeys->isChecked();
-}
-
-void Kleo::KeySelectionDialog::setHideInvalidKeys( bool hide ) {
-  if ( hide == hideInvalidKeys() )
-    return;
-  mHideInvalidKeys->setChecked( hide );
-  slotFilter();
+    item->setVisible( true );
 }
 
 #include "keyselectiondialog.moc"

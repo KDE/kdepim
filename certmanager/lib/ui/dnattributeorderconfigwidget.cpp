@@ -63,8 +63,6 @@ struct Kleo::DNAttributeOrderConfigWidget::Private {
   QListView * currentLV;
   QToolButton * navTB[6];
 
-  QListViewItem * selectedAvailableItem;
-  QListViewItem * selectedCurrentOrderItem;
   QListViewItem * placeHolderItem;
 };
 
@@ -153,8 +151,6 @@ void Kleo::DNAttributeOrderConfigWidget::load() {
   // clear the rest:
   d->availableLV->clear();
   d->currentLV->clear();
-  d->selectedAvailableItem = 0;
-  d->selectedCurrentOrderItem = 0;
 
   const DNAttributeMapper * const am = DNAttributeMapper::instance();
 
@@ -163,20 +159,22 @@ void Kleo::DNAttributeOrderConfigWidget::load() {
 
   // fill the RHS listview:
   QListViewItem * last = 0;
-  for ( QStringList::const_iterator it = order.begin() ; it != order.end() ; ++it )
-    if ( *it == "_X_" ) {
+  for ( QStringList::const_iterator it = order.begin() ; it != order.end() ; ++it ) {
+    const QString attr = (*it).upper();
+    if ( attr == "_X_" ) {
       takePlaceHolderItem();
       d->currentLV->insertItem( d->placeHolderItem );
       d->placeHolderItem->moveItem( last );
       last = d->placeHolderItem;
     } else
-      last = new QListViewItem( d->currentLV, last, *it, am->name2label( *it ) );
+      last = new QListViewItem( d->currentLV, last, attr, am->name2label( attr ) );
+  }
 
   // fill the LHS listview with what's left:
 
   const QStringList all = Kleo::DNAttributeMapper::instance()->names();
   for ( QStringList::const_iterator it = all.begin() ; it != all.end() ; ++it )
-    if ( order.find( it, false ) == order.end() )
+    if ( order.find( *it ) == order.end() )
       (void)new QListViewItem( d->availableLV, *it, am->name2label( *it ) );
 
   if ( !d->placeHolderItem->listView() )
@@ -223,7 +221,7 @@ void Kleo::DNAttributeOrderConfigWidget::slotUpButtonClicked() {
   QListViewItem * item = d->currentLV->selectedItem();
   if ( !item )
     return;
-  QListViewItem * above = d->selectedCurrentOrderItem->itemAbove();
+  QListViewItem * above = item->itemAbove();
   if ( !above )
     return;
   above->moveItem( item ); // moves "above" to after "item", ie. "item" one up
@@ -239,7 +237,7 @@ void Kleo::DNAttributeOrderConfigWidget::slotDoubleUpButtonClicked() {
     return;
   d->currentLV->takeItem( item );
   d->currentLV->insertItem( item );
-  item->setSelected( true );
+  d->currentLV->setSelected( item, true );
   enableDisableButtons( item );
   emit changed();
 }
@@ -279,7 +277,7 @@ void Kleo::DNAttributeOrderConfigWidget::slotLeftButtonClicked() {
   d->currentLV->takeItem( right );
   d->availableLV->insertItem( right );
   if ( next )
-    next->setSelected( true );
+    d->currentLV->setSelected( next, true );
   enableDisableButtons( next );
   emit changed();
 }
@@ -293,14 +291,16 @@ void Kleo::DNAttributeOrderConfigWidget::slotRightButtonClicked() {
     next = left->itemAbove();
   d->availableLV->takeItem( left );
   d->currentLV->insertItem( left );
-  QListViewItem * right = d->currentLV->selectedItem();
-  if ( right )
-    left->moveItem( right ); // move new item immediately before old selected
-  left->setSelected( true );
+  if ( QListViewItem * right = d->currentLV->selectedItem() ) {
+    if ( QListViewItem * above = right->itemAbove() )
+      left->moveItem( above ); // move new item immediately before old selected
+    d->currentLV->setSelected( right, false );
+  }
+  d->currentLV->setSelected( left, true );
   enableDisableButtons( left );
   d->navTB[Private::Right]->setEnabled( next );
   if ( next )
-    next->setSelected( true );
+    d->availableLV->setSelected( next, true );
   emit changed();
 }
 
