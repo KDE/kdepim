@@ -78,11 +78,8 @@ class KonsoleKalendar
   void createCalendar();
 
   private:
-    void showNext();
-    void showDate( QDateTime date );
-    void printEventTime(Event *event);
-    bool isHappened(Event *event);
-
+    void printEventList( Event::List *eventList );
+    
     KonsoleKalendarVariables m_variables;
     CalendarLocal *m_Calendar;
 };

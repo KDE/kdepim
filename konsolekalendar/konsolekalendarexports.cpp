@@ -46,7 +46,7 @@ void KonsoleKalendarExports::exportAsHTML( Event *event ){
 
 void KonsoleKalendarExports::exportAsTxt( Event *event ){
 
-  if (!event->doesFloat()) {
+  if ( !event->doesFloat() ) {
     cout <<  event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
     cout << " - ";
     cout << event->dtEndStr().remove(0, (event->dtEndStr().find(' ', 0, false) + 1) ).local8Bit();
@@ -66,7 +66,7 @@ void KonsoleKalendarExports::exportAsTxtKorganizer( Event *event ){
 }
 
 void KonsoleKalendarExports::exportAsCSV( Event *event ){
-  if (!event->doesFloat()) {
+  if ( !event->doesFloat() ) {
     cout <<  event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
     cout << "\t";
     cout << event->dtEndStr().remove(0, (event->dtEndStr().find(' ', 0, false) + 1) ).local8Bit();
@@ -74,9 +74,9 @@ void KonsoleKalendarExports::exportAsCSV( Event *event ){
 
 
   cout << "\t" << I18N_NOOP("Summary:") << "\t";
-  cout << "\t" << event->summary().local8Bit() << "\t";
+  cout << "\t\"" << event->summary().local8Bit() << "\"" << "\t";
   cout << "\t" << I18N_NOOP("Description:") << "\t";
-  cout << "\t" << event->description().local8Bit() << endl;
+  cout << "\t\"" << event->description().local8Bit() << "\"" << endl;
 
 
 }

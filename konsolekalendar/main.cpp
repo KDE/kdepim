@@ -136,6 +136,8 @@ int main(int argc, char *argv[])
   KonsoleKalendarVariables variables;
   KonsoleKalendarEpoch epochs;
 
+  variables.setExportType( NONE );
+
   if ( args->isSet("verbose") ) {
      variables.setVerbose(true);
   }
@@ -159,10 +161,16 @@ int main(int argc, char *argv[])
 
      if ( option.upper() == "HTML" ) {
        kdDebug() << "main.cpp::int main(int argc, char *argv[] | Export to HTML" << endl;
+       variables.setExportType( HTML );
+
      } else if (option.upper() == "CSV" ) {
        kdDebug() << "main.cpp::int main(int argc, char *argv[] | Export to CSV" << endl;
+       variables.setExportType( CSV );
+
      } else {
        kdDebug() << "main.cpp::int main(int argc, char *argv[] | Export to TXT" << endl;
+       variables.setExportType( TEXT_KONSOLEKALENDAR );
+
      }
 
   }
@@ -227,8 +235,6 @@ int main(int argc, char *argv[])
     kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Summary: (" << option << ")" << endl;
 
     variables.setSummary(option);
-
-    //variables.setDate(date);
   }
 
   /*
@@ -241,8 +247,6 @@ int main(int argc, char *argv[])
     kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Description: (" << option << ")" << endl;
 
     variables.setDescription(option);
-
-    //variables.setDate(date);
   }
 
   /*
@@ -269,6 +273,8 @@ int main(int argc, char *argv[])
     //date = variables.parseDate(option);
 
     date = QDate::fromString( option,  Qt::ISODate );      
+    variables.isDate( true );
+    
     kdDebug() << "main.cpp::int main(int argc, char *argv[]) | date: [" << date.toString() << "]" << endl;
 
     //variables.setDate(date);
@@ -302,6 +308,8 @@ int main(int argc, char *argv[])
     kdDebug() << "main.cpp::int main(int argc, char *argv[]) | Start date: (" << option << ")" << endl;
 
     //startdate = variables.parseDate(option);
+    variables.isDate( false );
+    variables.isStartDate( true );
     startdate = QDate::fromString( option,  Qt::ISODate );
     kdDebug() << "main.cpp::int main(int argc, char *argv[]) | date: [" << startdate.toString() << "]" << endl;
 
@@ -339,6 +347,7 @@ int main(int argc, char *argv[])
       kdDebug() << "main.cpp::int main(int argc, char *argv[]) | End date: (" << option << ")" << endl;
 
     //enddate = variables.parseDate(option);
+    variables.isEndDate( true );
     enddate = QDate::fromString( option,  Qt::ISODate );
     kdDebug() << "main.cpp::int main(int argc, char *argv[]) | date: [" << enddate.toString() << "]" << endl;
 
@@ -497,6 +506,7 @@ int main(int argc, char *argv[])
     }
 
     if( view ) {
+      kdDebug() << "main.cpp::int main(int argc, char *argv[]) | viewing" << endl;
       konsolekalendar->showInstance();
     }
 

@@ -87,72 +87,84 @@ void KonsoleKalendar::importCalendar()
 void KonsoleKalendar::createCalendar()
 {
 
-	QFile fileExists( m_variables.getCalendarFile() );
-	bool exists = fileExists.exists();
-	fileExists.close();
+  QFile fileExists( m_variables.getCalendarFile() );
+  bool exists = fileExists.exists();
+  fileExists.close();
 
-	if( !exists )
-	{
+  if( !exists )
+  {
+    kdDebug() << "Creating calendar file: " << m_variables.getCalendarFile() << endl;
 
-	if(m_variables.isVerbose()){
-	  kdDebug() << "Creating calendar file: " << m_variables.getCalendarFile() << endl;
-	}
-
-	  CalendarLocal newCalendar;
-	  newCalendar.save( m_variables.getCalendarFile() );
-	  newCalendar.close();
-	}// if
+    CalendarLocal newCalendar;
+    newCalendar.save( m_variables.getCalendarFile() );
+    newCalendar.close();
+  }// if
 }
 
 
 
 void KonsoleKalendar::showInstance()
 {
-    KonsoleKalendarExports exports;
 
+  Event::List *eventList;
 
-    if( m_variables.isNext() ) {
-      showNext();
-    }
+  if( m_variables.isDate() )
+  {
 
-    if( m_variables.isDate() && m_variables.isStartDate() == false ) {
-      showDate( m_variables.getDate() );
-    }
+     eventList = new Event::List( m_Calendar->rawEventsForDate( m_variables.getDate() ) );
+     printEventList( eventList );
 
-    if( m_variables.isStartDate() ) {
-      if(m_variables.isVerbose()){
-        kdDebug() << "konsolecalendar.cpp::showInstance() | Start date set" << endl;
-      }
+  } else {
 
-      QDateTime start = m_variables.getStartDate( );
-      QDateTime end;
-      bool loop = false;
+     eventList = new Event::List ( m_Calendar->rawEvents( m_variables.getStartDate().date(),
+                                                         m_variables.getEndDate().date(),
+                                                        false )
+                                );
+     printEventList ( eventList );
 
-      if( m_variables.isEndDate() ) {
-        end = m_variables.getEndDate( );
-      } else {
-         end = start.addDays(30);
-      }
+  }
 
-      while( !loop ) {
-        if(m_variables.isVerbose()) {
-          kdDebug() << "konsolecalendar.cpp::showInstance() | " << start.toString().local8Bit()  << endl;
-          kdDebug() << "konsolecalendar.cpp::showInstance() | days to end " << start.daysTo( end )  << endl;
-        }
-
-        showDate( start );
-
-        if( !start.daysTo( end )  ) {
-          loop = true;
-        }
-
-        start = start.addDays(1);
-      }
-    }
-
-
+  delete eventList;  
 
 }
+
+void KonsoleKalendar::printEventList( Event::List *eventList )
+{
+
+  if( eventList->count() ) {
+
+  Event *singleEvent;
+  Event::List::ConstIterator it;
+  KonsoleKalendarExports exports;
+
+
+  
+    for( it = eventList->begin(); it != eventList->end(); ++it ) {
+      singleEvent = *it;
+
+      if( m_variables.getExportType() == HTML ) {
+        kdDebug() << "HTML export" << endl;
+
+        exports.exportAsHTML( singleEvent );
+
+      } else if( m_variables.getExportType() == CSV ) {
+        kdDebug() << "CSV export" << endl;
+
+        exports.exportAsCSV( singleEvent );
+
+      } else {
+        kdDebug() << "TEXT export" << endl;
+
+        exports.exportAsTxt( singleEvent );
+
+      } //else
+
+    }// for
+
+  }// if eventList.count() != 0
+
+}
+
 
 void KonsoleKalendar::addEvent()
 {
@@ -180,171 +192,3 @@ void KonsoleKalendar::deleteEvent()
   del.deleteEvent();
 }
 
-void KonsoleKalendar::showDate( QDateTime date )
-{
-  Event *singleEvent;
-
-  Event::List eventList(m_Calendar->events( date.date(), TRUE));
-  QString tempString;
-  QDate current = QDate::currentDate();
-
-  if( eventList.count() ) {
-    int len = 100;
-    tempString = date.toString();
-    len -= tempString.length();
-
-    cout << endl << tempString.local8Bit() << "\n";
-
-    for( len = len; len < 100; len ++) {
-       cout << "-";
-    }
-
-    cout << endl;
-
-    Event::List::ConstIterator it;
-    for( it = eventList.begin(); it != eventList.end(); ++it ) {
-      singleEvent = *it;
-      if( m_variables.isAll() ) {
-        printEventTime(singleEvent);
-        // cout << endl;
-        cout << "\t" << singleEvent->summary().local8Bit() << endl;
-      }
-       else
-      {
-        if(current.daysTo( date.date() ) == 0)
-	{
-          if( m_variables.isVerbose() )
-	  {
-            cout << i18n("Today: ").local8Bit() <<  isHappened(singleEvent) << endl;
-          }
-
-          if( isHappened(singleEvent) == false)
-	  {
-            printEventTime( singleEvent );
-            cout << "\t" << singleEvent->summary().local8Bit() << endl;
-          }
-        } // if
-	 else
-	{
-
-          if( m_variables.isVerbose() )
-	  {
-            cout << i18n("Not today: ").local8Bit() <<  isHappened(singleEvent) << endl;
-          }
-
-          printEventTime( singleEvent );
-          cout << "\t" << singleEvent->summary().local8Bit() << endl;
-        }// else
-      }//else
-    }// for
-  } // if
-}
-
-
-void KonsoleKalendar::showNext()
-{
-  int date = 0;
-  bool loop = false;
-
-  // single event
-  Event *singleEvent;
-  QDate qdate;
-  QString tempString;
-  int len = 50;
-
-  while(!loop) {
-    Event::List eventList(m_Calendar->events(m_variables.getDate().date(), TRUE));
-
-    if( eventList.count() ) {
-      len = 80;
-      tempString = m_variables.getDate().toString();
-      len -= tempString.length();
-
-      cout << endl << tempString.local8Bit() << " ";
-
-      for( len = len; len < 80; len ++) {
-        cout << "-";
-      }
-
-      cout << endl;
-
-      Event::List::ConstIterator it;
-      for( it = eventList.begin(); it != eventList.end(); ++it ) {
-        singleEvent = *it;
-        printEventTime(singleEvent);
-        cout << endl;
-        cout << "\t\t" << singleEvent->summary().local8Bit() << endl;
-
-        if (!singleEvent->doesFloat()) {
-          loop = true;
-          break;
-        }
-      }
-       loop = true;
-    }
-  
-    date ++;
-    if(date >= 30) {
-      loop = true;
-    }
-
-    qdate = m_variables.getDate().date();
-    qdate = qdate.addDays(1);
-    m_variables.setDate(qdate);
-  }
-}
-
-
-bool KonsoleKalendar::isHappened( Event *event )
-{
-  int minute, hour;
-    
-  QString sHour, sMinute;
-  QString temp;
-  QString temp2;
-  QTime time( QTime::currentTime() );
-    
-  temp = event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) );
-  temp2 = temp;
-    
-  sHour = temp.remove( (temp.find(':', 0, false) ), ( temp.length() - temp.find(':', 0, false) ));
-    
-  sMinute = temp2.remove( 0, ( temp2.find(':', 0, false) + 1 ));
-
-  if( m_variables.isVerbose() ) {
-    cout << i18n("hours: ").local8Bit() << sHour.latin1() 
-         << i18n(" minutes: ").local8Bit() << sMinute.latin1() << endl;
-  }
-    
-  hour = sHour.toInt();
-  minute = sMinute.toInt();
-    
-  if( m_variables.isVerbose() ) {
-    cout << i18n("hours: ").local8Bit() << hour 
-        << i18n(" minutes: ").local8Bit() << minute << endl;
-  }
-    
-  if( hour >= time.hour() && minute >= time.minute()) {
-    if( m_variables.isVerbose() ) {
-      cout << i18n("This is valid!").local8Bit();
-    }
-    return false;
-  } 
-
-  return true;
-}
-
-
-/** Print event time */
-void KonsoleKalendar::printEventTime(Event *event)
-{
-  if (!event->doesFloat()) {
-    //cout << event->dtStartStr();
-      
-    // Cut out info only leave times
-    //
-    cout <<  event->dtStartStr().remove(0, (event->dtStartStr().find(' ', 0, false) + 1) ).local8Bit();
-    cout << " - ";  
-    cout << event->dtEndStr().remove(0, (event->dtEndStr().find(' ', 0, false) + 1) ).local8Bit();
-  }
-}

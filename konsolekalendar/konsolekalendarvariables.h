@@ -24,6 +24,20 @@
 #include "calendarlocal.h"
 #include "event.h"
 
+
+   /*
+    * Our export types
+    */
+  #define   NONE                     0
+  #define   TEXT_KONSOLEKALENDAR     1
+  #define   TEXT_KORGANIZER          2
+  #define   HTML                     3
+  #define   XHTML                    4
+  #define   XML                      5
+  #define   CSV                      6
+  #define   VCARD                    7
+
+
 namespace KCal {
 
 class KonsoleKalendarVariables
@@ -35,15 +49,20 @@ class KonsoleKalendarVariables
     void setDate( QDateTime date );
     QDateTime getDate();
     bool isDate();
+    void isDate( bool is );
 
+    
     void setStartDate( QDateTime start );
     QDateTime getStartDate();
     bool isStartDate();
+    void isStartDate( bool is );
 
+    
     void setEndDate( QDateTime end );
     QDateTime getEndDate();
     bool isEndDate();
-
+    void isEndDate( bool is );
+    
     void setNext( bool next );
     bool isNext();
 
@@ -127,22 +146,7 @@ class KonsoleKalendarVariables
     // We can use this from everywhere
     CalendarLocal *m_caledarLocal;
    
-   /*
-    * Our export types
-    */
-  struct XportTypes{
-   enum Args{
-     NONE,
-     TEXT_NORMAL,
-     TEXT_KORGANIZER,
-     HTML,
-     XHTML,
-     XML,
-     CSV,
-     VCARD
-    } args_needed;
-  };
-
+ 
 
 };
 

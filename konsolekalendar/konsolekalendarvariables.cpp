@@ -29,7 +29,7 @@ using namespace std;
 
 KonsoleKalendarVariables::KonsoleKalendarVariables()
 {
-  m_bIsDate = false;
+  m_bIsDate = true;
   m_bIsStartDate = false;
   m_bIsEndDate = false;
   m_bNext = false;
@@ -44,7 +44,6 @@ KonsoleKalendarVariables::~KonsoleKalendarVariables()
 
 void KonsoleKalendarVariables::setDate(QDateTime date)
 {
-  m_bIsDate = true;
   m_date = date;
 }
   
@@ -52,7 +51,12 @@ QDateTime KonsoleKalendarVariables::getDate()
 {
   return m_date;
 }
-  
+
+void KonsoleKalendarVariables::isDate( bool is )
+{
+  m_bIsDate = is;
+}
+      
 bool KonsoleKalendarVariables::isDate()
 {
   return m_bIsDate;
@@ -60,7 +64,6 @@ bool KonsoleKalendarVariables::isDate()
 
 void KonsoleKalendarVariables::setStartDate(QDateTime start)
 {
-  m_bIsStartDate = true;
   m_startDate = start;
 }
 
@@ -68,7 +71,13 @@ QDateTime KonsoleKalendarVariables::getStartDate()
 {
   return m_startDate;
 }
-  
+
+void KonsoleKalendarVariables::isStartDate( bool is )
+{
+  m_bIsStartDate = is;
+}
+
+    
 bool KonsoleKalendarVariables::isStartDate()
 {
   return m_bIsStartDate;
@@ -76,7 +85,6 @@ bool KonsoleKalendarVariables::isStartDate()
 
 void KonsoleKalendarVariables::setEndDate(QDateTime end)
 {
-  m_bIsEndDate = true;
   m_endDate = end;
 }
 
@@ -84,6 +92,12 @@ QDateTime KonsoleKalendarVariables::getEndDate()
 {
   return m_endDate;
 }
+
+void KonsoleKalendarVariables::isEndDate( bool is )
+{
+  m_bIsStartDate = is;
+}
+
 
 bool KonsoleKalendarVariables::isEndDate()
 {
@@ -170,34 +184,34 @@ bool KonsoleKalendarVariables::getAll()
 
 void KonsoleKalendarVariables::setDescription(QString description)
 {
-	m_bDescription = true;
-	m_description = description;
+  m_bDescription = true;
+  m_description = description;
 }
 
 QString KonsoleKalendarVariables::getDescription()
 {
-	return m_description;
+  return m_description;
 }
 
 bool KonsoleKalendarVariables::isDescription()
 {
-	return m_bDescription;
+  return m_bDescription;
 }
 
 void KonsoleKalendarVariables::setSummary(QString summary)
 {
-	m_bSummary = true;
-	m_summary = summary;
+  m_bSummary = true;
+  m_summary = summary;
 }
 
 QString KonsoleKalendarVariables::getSummary()
 {
-	return m_summary;
+  return m_summary;
 }
 
 bool KonsoleKalendarVariables::isSummary()
 {
-	return m_bSummary;
+  return m_bSummary;
 }
 
 
