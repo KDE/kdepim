@@ -60,7 +60,7 @@ Q_OBJECT
      * KIO::xmlrpcSearch() to create a new XmlrpcJob.
      */
     XmlrpcJob( const KURL& url, const QString& method, const QValueList<QVariant> &params, bool showProgressInfo );
-    virtual XmlrpcJob::~XmlrpcJob();
+    virtual ~XmlrpcJob();
     /**
      * Returns the response as a QDomDocument.
      * @return the response document
