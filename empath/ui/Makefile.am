@@ -19,13 +19,16 @@ EmpathComposeSettingsDialog.cpp \
 EmpathComposeWidget.cpp \
 EmpathComposeWindow.cpp \
 EmpathConfigPOP3Dialog.cpp \
+EmpathConfigPOP3Logging.cpp \
 EmpathConfigIMAP4Dialog.cpp \
+EmpathConfigMaildirDialog.cpp \
 EmpathDisplaySettingsDialog.cpp \
 EmpathEnvelopeWidget.cpp \
 EmpathFilterActionDialog.cpp \
 EmpathFilterEditDialog.cpp \
 EmpathFilterListItem.cpp \
 EmpathFilterManagerDialog.cpp \
+EmpathFindDialog.cpp \
 EmpathFolderChooserDialog.cpp \
 EmpathFolderChooserWidget.cpp \
 EmpathFolderListItem.cpp \
@@ -49,6 +52,7 @@ EmpathMessageViewWindow.cpp \
 EmpathMessageWidget.cpp \
 EmpathPathSelectWidget.cpp \
 EmpathPasswordEditWidget.cpp \
+EmpathTaskWidget.cpp \
 EmpathSubjectSpecWidget.cpp \
 EmpathSendingSettingsDialog.cpp \
 EmpathSetupWizard.cpp \

@@ -39,5 +39,6 @@ EmpathMatcher.cpp \
 EmpathQuotedText.cpp \
 EmpathSecurityProcess.cpp \
 EmpathTask.cpp \
+EmpathTaskTimer.cpp \
 EmpathURL.cpp \
 EmpathUtilities.cpp
