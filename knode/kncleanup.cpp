@@ -55,13 +55,13 @@ void KNCleanUp::start()
 
   for(KNArticleCollection *c=c_olList.first(); c; c=c_olList.next()) {
     if(c->type()==KNCollection::CTgroup) {
-      d_lg->showMessage(i18n("deleting expired articles in <b>%1</b>").arg(c->name()));
+      d_lg->showMessage(i18n("Deleting expired articles in <b>%1</b>").arg(c->name()));
       kapp->processEvents();
       expireGroup(static_cast<KNGroup*>(c));
       d_lg->doProgress();
     }
     else if(c->type()==KNCollection::CTfolder) {
-      d_lg->showMessage(i18n("compacting folder <b>%1</b>").arg(c->name()));
+      d_lg->showMessage(i18n("Compacting folder <b>%1</b>").arg(c->name()));
       kapp->processEvents();
       compactFolder(static_cast<KNFolder*>(c));
       d_lg->doProgress();
