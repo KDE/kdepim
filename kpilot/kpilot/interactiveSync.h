@@ -34,7 +34,7 @@ class QTimer;
 
 #include "syncAction.h"
 
-class CheckUser : public InteractiveAction
+class CheckUser : public SyncAction
 {
 public:
 	CheckUser(KPilotDeviceLink *p,QWidget *w=0L);
@@ -44,7 +44,7 @@ protected:
 	virtual bool exec();
 } ;
 
-class RestoreAction : public InteractiveAction
+class RestoreAction : public SyncAction
 {
 Q_OBJECT
 public:

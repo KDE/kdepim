@@ -59,10 +59,21 @@ static const char *syncAction_id =
 SyncAction::SyncAction(KPilotDeviceLink  *p,
 	const char *name) :
 	QObject(p, name),
-	fHandle(p)
+	fHandle(p),
+	fParent(0L)
 {
 	FUNCTIONSETUP;
 	(void) syncAction_id;
+}
+
+SyncAction::SyncAction(KPilotDeviceLink *p,
+	QWidget * visibleparent,
+	const char *name) :
+	QObject(p, name),
+	fHandle(p),
+	fParent(visibleparent)
+{
+	FUNCTIONSETUP;
 }
 
 SyncAction::~SyncAction()
@@ -143,21 +154,8 @@ void SyncAction::stopTickle()
 	fHandle->stopTickle();
 }
 
-InteractiveAction::InteractiveAction(KPilotDeviceLink *p,
-	QWidget * visibleparent,
-	const char *name) :
-	SyncAction(p, name),
-	fParent(visibleparent)
-{
-	FUNCTIONSETUP;
-}
 
-InteractiveAction::~InteractiveAction()
-{
-	FUNCTIONSETUP;
-}
-
-int InteractiveAction::questionYesNo(const QString & text,
+int SyncAction::questionYesNo(const QString & text,
 	const QString & caption,
 	const QString & key,
 	unsigned timeout)
@@ -212,7 +210,7 @@ int InteractiveAction::questionYesNo(const QString & text,
 }
 
 
-int InteractiveAction::questionYesNoCancel(const QString & text,
+int SyncAction::questionYesNoCancel(const QString & text,
 	const QString & caption,
 	const QString & key,
 	unsigned timeout,

@@ -49,6 +49,9 @@ Q_OBJECT
 public:
 	SyncAction(KPilotDeviceLink *p,
 		const char *name=0L);
+	SyncAction(KPilotDeviceLink *p,
+		QWidget *visibleparent,
+		const char *name=0L);
 	~SyncAction();
 
 	typedef enum { Error=-1 } Status;
@@ -166,27 +169,8 @@ protected:
 	void stopTickle();
 signals:
 	void timeout();
-};
 
 
-
-class InteractiveAction : public SyncAction
-{
-Q_OBJECT
-public:
-	// Note that this takes a QWidget as additional parameter,
-	// so that it can display windows relative to that if necessary.
-	//
-	//
-	InteractiveAction(KPilotDeviceLink *p,
-		QWidget *visibleparent=0L,
-		const char *name=0L);
-	virtual ~InteractiveAction();
-
-	// Reminder that the whole point of the class is to implement
-	// the pure virtual function exec().
-	//
-	// virtual void exec()=0;
 
 
 protected:
@@ -214,6 +198,7 @@ protected:
 		unsigned timeout = 20,
 		const QString &yes = QString::null,
 		const QString &no = QString::null ) ;
-} ;
+};
+
 
 #endif

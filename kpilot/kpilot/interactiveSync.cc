@@ -68,7 +68,7 @@ static const char *interactivesync_id =
 
 
 CheckUser::CheckUser(KPilotDeviceLink * p, QWidget * vp):
-	InteractiveAction(p, vp, "userCheck")
+	SyncAction(p, vp, "userCheck")
 {
 	FUNCTIONSETUP;
 
@@ -239,7 +239,7 @@ public:
 
 
 RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
-	InteractiveAction(p, visible, "restoreAction")
+	SyncAction(p, visible, "restoreAction")
 {
 	FUNCTIONSETUP;
 
