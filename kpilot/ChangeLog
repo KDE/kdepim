@@ -2,11 +2,23 @@ KPilot Developer's notes for march 3rd 2001
 ===========================================
 
 So after "the big cleanup" I've continued doing cleanup code in smaller
-chunks with more commits, mostly for reasons of bug-tracking.
+chunks with more commits, mostly for reasons of bug-tracking. Dates in []
+indicate when the fix or change was committed.
 
-* Removed a really stupid crash from KPilotConfig::fixed().
+* Removed a really stupid crash from KPilotConfig::fixed().		[23-2]
 * The internal conduits' names weren't reported properly anymore. This
-  is a binary and source incompatible change.
+  is a binary and source incompatible change. 				[23-2]
+* Extra debugging while starting the listener process. 			[26-2]
+* Changed exit(-1) to exit(3) in the daemon. 				[26-2]
+* Use Qt layout classes in fileInstallWidget. 				[26-2]
+* Removed some null-conduit comments from the KNotes conduit.		[26-2]
+* Removed some #include <getopt.h> for Solaris. Cleaned up other
+  includes as well, just a little.					[26-2]
+* Started a change to KActions.						[ 1-3]
+* Added a new FileInstaller for use in the daemon and the widget.	[ 1-3]
+  It's currently only used by the widget.
+* Added listItems.{h,cc} in response to bug #21392; changed address
+  and memo widgets to use them.						[ 4-3]
 
 KPilot Developer's notes for february 19th 2001
 ===============================================
