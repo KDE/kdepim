@@ -30,7 +30,7 @@ class PhonePlugin::PhonePluginPrivate
 PhonePlugin::PhonePlugin(QObject *obj, const char *name, const QStringList )
   : KonnectorPlugin(obj, name )
 {
-    kdDebug(5202) << "PhonePlugin ";
+    kdDebug(5203) << "PhonePlugin " << endl;
     d = new PhonePluginPrivate;
     d->modemHandler = new ModemHandler;
 /*
@@ -62,7 +62,7 @@ QString PhonePlugin::udi()const
 Kapabilities PhonePlugin::capabilities( )
 {
   // create the capabilities Apply
-  kdDebug(5202) << "PhonePlugin capabilities" << endl;
+  kdDebug(5203) << "PhonePlugin capabilities" << endl;
   Kapabilities caps;
   caps.setSupportMetaSyncing( true );
   caps.setSupportsPushSync( true );
@@ -79,7 +79,7 @@ Kapabilities PhonePlugin::capabilities( )
 
 bool PhonePlugin::connectDevice()
 {
-	kdDebug(52002) << "PhonePlugin::connectDevice()" << endl;
+	kdDebug(5203) << "PhonePlugin::connectDevice()" << endl;
 	if ( !d->isConnected )
 	{ 
 		// TODO: make configurable
@@ -134,7 +134,7 @@ void PhonePlugin::slotWrite(KOperationsList operations )
 }
 void PhonePlugin::slotChanged( bool b)
 {
-    kdDebug(5202) << "State changed Phonekonnector" << endl;
+    kdDebug(5203) << "State changed Phonekonnector" << endl;
     //emit  stateChanged( d->udi,  b );
 }
 KSyncEntry* PhonePlugin::retrEntry( const QString& path )
