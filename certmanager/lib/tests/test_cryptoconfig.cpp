@@ -37,6 +37,8 @@
 #include <iostream>
 using namespace std;
 
+#include <assert.h>
+
 int main( int argc, char** argv ) {
 
   KAboutData aboutData( "test_cryptoconfig", "CryptoConfig Test", "0.1" );
