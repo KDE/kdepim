@@ -37,6 +37,10 @@ KDevice::KDevice(const QString &ident, const QString &group,
   d->group = group;
   d->vendor = vendor;
 }
+KDevice::KDevice()
+{
+  d = new KDevicePrivate();
+}
 KDevice::KDevice(const KDevice &dev )
 {
   d = new KDevicePrivate();

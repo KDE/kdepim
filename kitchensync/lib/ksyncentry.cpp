@@ -16,27 +16,17 @@
     Boston, MA 02111-1307, USA.
 
 */
-#ifndef kdevice_h
-#define kdevice_h
 
-#include <qstring.h>
+#include <qdatetime.h>
+#include "ksyncentry.h"
 
-class KDevice {
- public:
-  KDevice();
-  KDevice(const QString &ident, const QString &group,
-	  const QString &vendor);
-  KDevice( const KDevice & );
-  ~KDevice();
-  QString identify() const;
-  QString group() const;
-  QString vendor() const;
-  KDevice &operator=(const KDevice & );
 
- private:
-  friend class Konnector;
-  class KDevicePrivate;
-  KDevicePrivate *d;
-};
+KSyncEntry::KSyncEntry()
+{
 
-#endif
+}
+KSyncEntry::~KSyncEntry()
+{
+
+}
+

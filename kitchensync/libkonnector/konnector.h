@@ -17,35 +17,37 @@
 
 */
 
-#ifndef kunit_h
-#define kunit_h
+#ifndef konnector_h
+#define konnector_h
 
 #include <qobject.h>
 #include <qvaluelist.h>
+#include <qptrlist.h>
 #include <qstring.h>
 #include <qcstring.h>
-
+#include <ksyncentry.h>
 
 
 class Kapabilities;
 class KDevice;
 class KOperations;
-class KUnit : public QObject{
+class Konnector : public QObject{
 Q_OBJECT
  public:
-  KUnit(QObject *, const char*);
+  Konnector(QObject *, const char*);
+ ~Konnector();
   QValueList<KDevice> query(const QString &category= QString::null );
-  int /*unique-dev-id*/ register(const QString &DeviceIdentification );
-  Kapabilities capabilities( int udi ) const;
-  void setConfig( int udi, const Kapabilities& );
-  QByteArray file( int udi, const QString &path ); // this would allow some post processing
+  QString /*runtime unique-dev-id*/ registerKonnector(const QString &DeviceIdentification );
+  Kapabilities capabilities( const QString &udi ) const;
+  void setCapabilities( const QString &udi, const Kapabilities& );
+  QByteArray file( const QString &udi, const QString &path ); // this would allow some post processing
 
  public slots:
-  void write(int udi, QValueList<KSyncEntries> );
-  void write(int udi, QValueList<KOperations> );
-  void write(int udi, const QString &dest, const QByteArray& ); // post processing
+  void write(const QString &udi, QPtrList<KSyncEntry> );
+  void write(const QString &udi, QValueList<KOperations> );
+  void write(const QString &udi, const QString &dest, const QByteArray& ); // post processing
  signals:
-  void wantsToSync(int udi, int way, QValueList<SyncEntries> );
+  void wantsToSync(int udi, int way, QPtrList<KSyncEntry>);
 
  private:
   class KonnectorPrivate;
