@@ -725,8 +725,10 @@ void AddresseeEditorWidget::categoryButtonClicked()
     connect( mCategoryDialog, SIGNAL( editCategories() ), SLOT( editCategories() ) );
   }
 
-  mCategoryDialog->setCategories();
-  mCategoryDialog->setSelected( QStringList::split( ",", mCategoryEdit->text() ) );
+  QStringList customCategories = QStringList::split( ",", mCategoryEdit->text() );
+
+  mCategoryDialog->setCategories( customCategories );
+  mCategoryDialog->setSelected( customCategories );
   mCategoryDialog->show();
   mCategoryDialog->raise();
 }
