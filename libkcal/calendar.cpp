@@ -265,16 +265,6 @@ QString Calendar::getTimeZoneStr() const
   return tmpStr;
 }
 
-const QString &Calendar::getEmail()
-{
-  return mOwnerEmail;
-}
-
-void Calendar::setEmail(const QString &e)
-{
-  mOwnerEmail = e;
-}
-
 void Calendar::setTimeZone(int tz)
 {
   mTimeZone = tz;
@@ -283,6 +273,16 @@ void Calendar::setTimeZone(int tz)
 int Calendar::getTimeZone() const
 {
   return mTimeZone;
+}
+
+const QString &Calendar::getEmail()
+{
+  return mOwnerEmail;
+}
+
+void Calendar::setEmail(const QString &e)
+{
+  mOwnerEmail = e;
 }
 
 void Calendar::showDialogs(bool d)
