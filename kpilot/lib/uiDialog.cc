@@ -36,6 +36,7 @@
 #include <qlayout.h>
 #include <qhbox.h>
 #include <qtextview.h>
+#include <qpushbutton.h>
 
 #include <kaboutapplication.h>
 #include <kglobal.h>
@@ -282,6 +283,9 @@ void UIDialog::setTabWidget(QTabWidget * w)
 
 
 // $Log$
+// Revision 1.2  2001/10/10 22:39:49  adridg
+// Some UI/Credits/About page patches
+//
 // Revision 1.1  2001/10/08 21:56:02  adridg
 // Start of making a separate KPilot lib
 //
