@@ -199,7 +199,7 @@ void MainWindow::makeMenus()
       SLOT(showDialog()),
       actionCollection() );
   (void) KStdAction::save( this, SLOT( save() ), actionCollection() );
-  KAction* actionStartNewSession = new KAction( i18n("&Start New Session"),
+  KAction* actionStartNewSession = new KAction( i18n("Start &New Session"),
       0,
       this,
       SLOT( startNewSession() ),
@@ -262,7 +262,7 @@ void MainWindow::makeMenus()
       SLOT( clipTotals() ),
       actionCollection(),
       "clip_totals");
-  actionClipHistory = new KAction( i18n("&Copy history to clipboard"),
+  actionClipHistory = new KAction( i18n("Copy &history to clipboard"),
       QString::fromLatin1("klipper"),
       CTRL+ALT+Key_C,
       _taskView,
