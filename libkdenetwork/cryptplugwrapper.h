@@ -1828,14 +1828,14 @@ public:
       QDateTime created;
       QDateTime expire;
 
-      int secret   : 1;
-      int invalid  : 1;
-      int expired  : 1;
-      int disabled : 1;
+      bool secret   : 1;
+      bool invalid  : 1;
+      bool expired  : 1;
+      bool disabled : 1;
 
-      int sign     : 1;
-      int encrypt  : 1;
-      int certify  : 1;
+      bool sign     : 1;
+      bool encrypt  : 1;
+      bool certify  : 1;
       
       QMap<QString,QString> dn;
     };

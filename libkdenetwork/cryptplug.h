@@ -1845,11 +1845,11 @@ struct CertificateInfo {
   unsigned long created;
   unsigned long expire;
 
-  int secret   : 1;
-  int invalid  : 1;
-  int expired  : 1;
-  int disabled : 1;
-  
+  bool secret   : 1;
+  bool invalid  : 1;
+  bool expired  : 1;
+  bool disabled : 1;
+
 
   struct DnPair *dnarray; /* parsed values from userid[0] */
 };
