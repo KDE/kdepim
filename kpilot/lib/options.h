@@ -41,8 +41,8 @@
 
 // #define QT_NO_ASCII_CAST		(1)
 // #define QT_NO_CAST_ASCII		(1)
-#define DEBUG			(1)
-#define DEBUG_CERR			(1)
+// #define DEBUG			(1)
+// #define DEBUG_CERR			(1)
 
 #include "config.h"
 #include <unistd.h>     /* For size_t for pilot-link */
@@ -66,11 +66,17 @@
 #error "You need at least pilot-link version 0.9.5"
 #endif
 
+
 #define PILOT_LINK_NUMBER	((10000*PILOT_LINK_VERSION) + \
 				(100*PILOT_LINK_MAJOR)+PILOT_LINK_MINOR)
 #define PILOT_LINK_0_10_0	(1000)
 #define PILOT_LINK_0_11_0	(1100)
+#define PILOT_LINK_0_11_8	(1108)
 #define PILOT_LINK_0_12_0	(1200)
+
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_11_8
+#warning "You need at least pilot-link version 0.11.8 for modern devices"
+#endif
 
 #if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 #define PI_SIZE_T int

@@ -22,8 +22,9 @@ if include_python
 PYTHON_SUBDIR = pythonconduit
 endif
 
-#NOTEPAD_SUBDIR = notepadconduit
-NOTEPAD_SUBDIR=
+if include_notepad
+NOTEPAD_SUBDIR = notepadconduit
+endif
 
 SUBDIRS = \
           docconduit \

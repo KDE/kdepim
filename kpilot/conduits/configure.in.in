@@ -178,6 +178,18 @@ AM_CONDITIONAL(include_abc, test "$HAVE_KABC" = 1)
 
 dnl ----------------------------------------------------------------------------
 dnl
+dnl                     checks for the notepad conduit
+dnl
+dnl ----------------------------------------------------------------------------
+
+AC_DEFUN([KPILOT_CHECK_NOTEPAD],[HAVE_NOTEPAD=0
+KDE_CHECK_HEADER(pi-notepad.h,HAVE_NOTEPAD=1,
+	AC_MSG_WARN([KPILOT: No notepad.h for pilot-link. Your pilot-link is too old.]))
+AM_CONDITIONAL(include_notepad, test "$HAVE_NOTEPAD" = 1)
+])
+
+dnl ----------------------------------------------------------------------------
+dnl
 dnl                     checks for embedded language conduits
 dnl
 dnl ----------------------------------------------------------------------------
