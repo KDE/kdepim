@@ -38,11 +38,10 @@ class KNGroupManager : public QObject{
 		void readConfig();
 	 	void loadGroups(KNNntpAccount *a);
 	 	void getSubscribed(KNNntpAccount *a, QStrList *l);
-	  	 	
+	  void getGroupsOfAccount(KNNntpAccount *a, QList<KNGroup> *l);	 	
 	 	void showGroupDialog(KNNntpAccount *a);
 	  void subscribeGroup(const QCString &gName, KNNntpAccount *a);
 		void unsubscribeGroup(KNGroup *g=0);
-		void unsubscribeAccount(KNNntpAccount *a);
 		void showGroupProperties(KNGroup *g=0);
 		void checkGroupForNewHeaders(KNGroup *g=0);
 		void expireGroupNow(KNGroup *g=0);

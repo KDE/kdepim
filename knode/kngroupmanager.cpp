@@ -164,6 +164,16 @@ void KNGroupManager::getSubscribed(KNNntpAccount *a, QStrList *l)
 
 
 
+void KNGroupManager::getGroupsOfAccount(KNNntpAccount *a, QList<KNGroup> *l)
+{
+  l->clear();
+  for(KNGroup *var=gList->first(); var; var=gList->next()) {
+		if(var->account()==a) l->append(var);
+	}
+}
+
+
+
 KNGroup* KNGroupManager::group(const QCString &gName, const KNServerInfo *s)
 {
 	for(KNGroup *var=gList->first(); var; var=gList->next())
@@ -266,14 +276,6 @@ void KNGroupManager::unsubscribeGroup(KNGroup *g)
 	}
 }
 
-
-
-void KNGroupManager::unsubscribeAccount(KNNntpAccount *a)
-{
-  #warning FIXME: what happens when one group is locked??
-	for(KNGroup *g=gList->first(); g; g=gList->next())
-		if(g->account()==a) unsubscribeGroup(g);	
-}
 
 
 

@@ -188,11 +188,25 @@ void KNAccountManager::applySettings(KNNntpAccount *a)
 
 void KNAccountManager::removeAccount(KNNntpAccount *a)
 {
+	QList<KNGroup> *lst;
 	if(a->hasUnsent()) {
 		KMessageBox::information(0, i18n("This account cannot be deleted, since there are some unsent messages for it."));
 	}	
 	else if(KMessageBox::questionYesNo(0, i18n("Do you really want to delete this account?"))==KMessageBox::Yes) {
-		gManager->unsubscribeAccount(a);
+		lst=new QList<KNGroup>;
+		lst->setAutoDelete(false);
+		gManager->getGroupsOfAccount(a, lst);
+		for(KNGroup *g=lst->first(); g; g=lst->next()) {
+		  if(g->locked()) {
+		    KMessageBox::information(0, i18n("At least one group of this account is currently in use.\nThe account cannot be deleted at the moment."));
+		    return;
+		  }
+		}
+		
+		for(KNGroup *g=lst->first(); g; g=lst->next())
+		  gManager->unsubscribeGroup(g);
+		
+		delete lst;
 		set->removeItem(a);
 		QString dir(a->path());
 		if (dir != QString::null) {
