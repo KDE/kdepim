@@ -88,15 +88,13 @@ AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
            SLOT( updateAddressEdit() ) );
   layout->addWidget( mTypeCombo );
 
-  mAddressTextEdit = new QTextEdit( this );
-  mAddressTextEdit->setReadOnly( true );
-  mAddressTextEdit->setMinimumHeight( 20 );
-  layout->addWidget( mAddressTextEdit );
+  mAddressField = new QLabel( this );
+  mAddressField->setFrameStyle( QFrame::Panel | QFrame::Sunken );
+  mAddressField->setMinimumHeight( 20 );
+  layout->addWidget( mAddressField );
 
   mEditButton = new QPushButton( i18n( "&Edit Addresses..." ), this );
   connect( mEditButton, SIGNAL( clicked() ), this, SLOT( edit() ) );
-
-  connect( mAddressTextEdit, SIGNAL( clicked( int, int ) ), SLOT( edit() ) );
 
   layout->addWidget( mEditButton );
 }
@@ -108,10 +106,6 @@ AddressEditWidget::~AddressEditWidget()
 void AddressEditWidget::setReadOnly( bool readOnly )
 {
   mEditButton->setEnabled( !readOnly );
-
-  disconnect( mAddressTextEdit, SIGNAL( clicked( int, int ) ), this, SLOT( edit() ) );
-  if ( !readOnly )
-    connect( mAddressTextEdit, SIGNAL( clicked( int, int ) ), this, SLOT( edit() ) );
 }
 
 KABC::Address::List AddressEditWidget::addresses()
@@ -212,17 +206,17 @@ void AddressEditWidget::updateAddressEdit()
   bool block = signalsBlocked();
   blockSignals( true );
 
-  mAddressTextEdit->setText( "" );
+  mAddressField->setText( "" );
 
   if ( it != mAddressList.end() ) {
     KABC::Address a = *it;
     if ( !a.isEmpty() ) {
 #if KDE_VERSION >= 319
       if ( a.type() & KABC::Address::Work ) {
-        mAddressTextEdit->setText( a.formattedAddress( mAddressee.realName(),
+        mAddressField->setText( a.formattedAddress( mAddressee.realName(),
                                    mAddressee.organization() ) );
       } else {
-        mAddressTextEdit->setText( a.formattedAddress( mAddressee.realName() ) );
+        mAddressField->setText( a.formattedAddress( mAddressee.realName() ) );
       }
 #else
       QString text;
@@ -244,7 +238,7 @@ void AddressEditWidget::updateAddressEdit()
 
       text += a.extended();
 
-      mAddressTextEdit->setText( text );
+      mAddressField->setText( text );
 #endif
     }
   }

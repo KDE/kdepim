@@ -77,7 +77,7 @@ class AddressEditWidget : public QWidget
     AddressTypeCombo *mTypeCombo;
 
     QPushButton *mEditButton;
-    QTextEdit *mAddressTextEdit;
+    QLabel *mAddressField;
 
     KABC::Address::List mAddressList;
     KABC::Addressee mAddressee;
