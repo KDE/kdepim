@@ -203,7 +203,6 @@ ClientInfo ADConfigDataBase::getClientInfo(const QCString& appName)
   ClientList::Iterator it;
   for( it = mClients.begin(); it != mClients.end(); ++it ) {
     if ( (*it).appName == appName ) return *it;
-    break;
   }
   return ClientInfo();
 }
@@ -212,8 +211,10 @@ void ADConfigDataBase::removeClientInfo( const QCString &appName )
 {
   ClientList::Iterator it;
   for( it = mClients.begin(); it != mClients.end(); ++it ) {
-    if ( (*it).appName == appName ) mClients.remove(it);
-    break;
+    if ( (*it).appName == appName ) {
+      mClients.remove(it);
+      break;
+    }
   }
 }
 
