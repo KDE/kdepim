@@ -144,7 +144,7 @@ ConduitTip::~ConduitTip()
 // implement our own check list items so we can detect if a given item was checked/unchecked. We need
 // this to prevent the modified signal if one only wants to display a conduit's config widget. Currently,
 // KListView doesn't provide any signal that indicates that the checked state of a checklist item was changed.
-class KPilotCheckListItem : public QCheckListItem 
+class KPilotCheckListItem : public QCheckListItem
 {
 public:
 	KPilotCheckListItem ( QListViewItem * parent, const QString & text, Type tt = RadioButtonController ) : QCheckListItem(parent, text, tt),mOriginalState(false) {}
@@ -389,27 +389,11 @@ void ConduitConfigWidget::fillLists()
 	q->setText(CONDUIT_COMMENT,b) ; \
 	q->setText(CONDUIT_LIBRARY,c) ;
 
-	q = new QListViewItem(general, i18n("Startup and Exit") );
-	q->setText(CONDUIT_COMMENT,
-		i18n("Behavior at startup and exit.") );
-	q->setText(CONDUIT_LIBRARY, CSL1("general_startexit") );
-
-	q = new QListViewItem(general, i18n("Viewers") );
-	q->setText(CONDUIT_COMMENT,
-		i18n("Viewer settings.") );
-	q->setText(CONDUIT_LIBRARY, CSL1("general_view") );
-
+	CE(i18n("Startup and Exit"), i18n("Behavior at startup and exit."), CSL1("general_startexit") );
+	CE(i18n("Viewers"), i18n("Viewer settings."), CSL1("general_view") );
 	CE(i18n("Backup"),i18n("Special settings for backup."),CSL1("general_backup"));
-
-	q = new QListViewItem(general, i18n("HotSync") );
-	q->setText(CONDUIT_COMMENT,
-		i18n("Special behavior during HotSync.") );
-	q->setText(CONDUIT_LIBRARY, CSL1("general_sync") );
-
-	q = new QListViewItem(general, i18n("Device") );
-	q->setText(CONDUIT_COMMENT,
-		i18n("Hardware settings and startup and exit options.") );
-	q->setText(CONDUIT_LIBRARY, CSL1("general_setup") );
+	CE(i18n("HotSync",i18n("Special behavior during HotSync."),CSL1("general_sync"));
+	CE(i18n("Device"),i18n("Hardware settings and startup and exit options."),CSL1("general_setup"));
 
 #undef CE
 
@@ -485,9 +469,9 @@ static void dumpConduitInfo(const KLibrary *lib)
 	DEBUGKPILOT << "Plugin id      = " << PluginUtility::pluginVersionString(lib) << endl;
 }
 
-static QObject *handleGeneralPages(QWidget *w, QListViewItem *p)
+static ConduitConfigBase *handleGeneralPages(QWidget *w, QListViewItem *p)
 {
-	QObject *o = 0L;
+	ConduitConfigBase *o = 0L;
 
 	QString s = p->text(CONDUIT_LIBRARY) ;
 
