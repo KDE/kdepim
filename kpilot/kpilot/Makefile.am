@@ -18,7 +18,7 @@ bin_PROGRAMS = kpilot kpilotDaemon
 
 METASOURCES = AUTO
 
-INCLUDES= $(all_includes)  -I../lib
+INCLUDES= $(all_includes)  -I$(top_srcdir)/kpilot/lib
 
 ###
 ### On some platforms, such as stock RH 7.1, the KDE libraries are built without

@@ -1,4 +1,4 @@
-INCLUDES= $(all_includes) -I../../lib 
+INCLUDES= $(all_includes) -I$(top_srcdir)/kpilot/lib 
 
 METASOURCES = AUTO
 
