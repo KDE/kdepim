@@ -939,7 +939,7 @@ void KABCore::initActions()
   KAction *action;
 
   // file menu
-  mActionMail = new KAction( i18n( "&Send email to contact" ), "mail_send", 0,
+  mActionMail = new KAction( i18n( "&Send Email to Contact" ), "mail_send", 0,
                              this, SLOT( sendMail() ), actionCollection(), "file_mail" );
   action = KStdAction::print( this, SLOT( print() ), actionCollection() );
   mActionMail->setWhatsThis( i18n( "Send a mail to all selected contacts." ) );
@@ -964,7 +964,7 @@ void KABCore::initActions()
   mActionEditAddressee->setWhatsThis( i18n( "Edit a contact<p>You will be presented with a dialog where you can change all data about a person, including addresses and phone numbers." ) );
 
   mActionMerge = new KAction( i18n( "&Merge Contacts" ), "", 0,
-                              this, SLOT( mergeContacts() ), 
+                              this, SLOT( mergeContacts() ),
                               actionCollection(), "edit_merge" );
 
   // edit menu
