@@ -162,7 +162,7 @@ bool ResourceXMLRPC::load()
 
   enter_loop();
 
-  columns.insert( "type", "task" );
+  columns.insert( "type", "note" );
   args.clear();
   args.insert( "filter", "none" );
   args.insert( "col_filter", columns );
