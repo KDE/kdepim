@@ -1,15 +1,37 @@
-dnl May want something slightly more sophisticated here,
-dnl since some older pilot-link installations forget to
-dnl include time.h and fail.
-AC_CHECK_HEADER(pi-file.h)
-AC_CHECK_LIB(pisock,pi_accept,[])
+dnl Check to see if pisock header and library are available
 
-if test "x$ac_cv_header_pi_file_h" != "xyes" ; then
-  DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot"
+HAVE_PISOCK=1
+
+AC_MSG_CHECKING(for libpisock)
+libpisock_not_set=1
+LIBPISOCK_PATH="."
+dirs="/usr/include /usr/include/libpisock /usr/local/include/libpisock"
+for i in $dirs ; do
+    if test -r $i/pi-file.h; then
+        LIBPISOCK_PATH="$i"
+        AC_SUBST(LIBPISOCK_PATH)
+        AC_MSG_RESULT(found)
+        libpisock_not_set=0
+        break
+    fi
+done
+
+if test "libpisock_not_set" = "1" ; then
+    HAVE_PISOCK=0
 else
-  if test "x$ac_cv_lib_pisock_pi_accept" != "xyes" ; then
-    DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot"
-  fi
+    ac_save_cppflags="$CPPFLAGS"
+    CPPFLAGS="$CPPFLAGS -I$LIBPISOCK_PATH"
+    AC_CHECK_HEADER(pi-file.h, , HAVE_PISOCK=0)
+    CPPFLAGS="$ac_save_cppflags"
+fi
+
+AC_CHECK_LIB(pisock,pi_accept,[LIBPISOCK="-lpisock"], 
+            [AC_MSG_WARN([KPILOT: pisock library not found])
+            HAVE_PISOCK=0])
+AC_SUBST(LIBPISOCK)
+
+if test "$HAVE_PISOCK" = "0" ; then
+  DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot"
 fi
 
 
