@@ -1,5 +1,11 @@
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook V3.1-Based Variant V1.0//EN" [
- <!ENTITY kmail "<application>KMail</application>">
+  <!ENTITY kappname "&kmail;">
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % English "INCLUDE" -- change language only here -->
+  <!ENTITY % ents PUBLIC "-//KDE//ENTITIES Documentation V2.0//EN">
+  %ents;
+  <!-- Do not define any other entities; instead, use the entities
+       from kde-genent.entities and <lg>/user.entities. -->
 ]>
 
 <book lang="en">
@@ -397,7 +403,12 @@ help you with writing your messages. The ellipses buttons next to the
 can select addresses from there instead of trying to remember them. If you
 already started typing an adress you can also press
 <keycombo><keycap>Ctrl</keycap><keycap>T</keycap></keycombo> to get a list
-of possible completions. You can use the
+of possible completions. Whenever you want to add more than one recipient in
+one of the fields, use a comma to separate each address from the
+next one. You may need to specify full-qualified addresses (like
+<userinput>user@domain.com</userinput>) even for local users.</para>
+
+<para>You can use the
 <menuchoice><guimenu>View</guimenu></menuchoice> menu to set up the header
 fields offered to you. When you are finished with your message, hit the
 Send button (the envelope) to queue or send the message.</para> </sect2>
