@@ -227,45 +227,66 @@ int KMobileDevice::storeNote( int, const QString & )
  * File storage support
  * @param fileName  path and name of a file in the mobile device, e.g. "/MYFILE.TXT", "/mp3/song1.mp3"
  */
-int KMobileDevice::listDir( const QString & )
+
+void KMobileDevice::listDir( const QString & )
 {
-  return KIO::ERR_DOES_NOT_EXIST;
+  emit error(KIO::ERR_CANNOT_ENTER_DIRECTORY,QString::null);
 }
 
-int KMobileDevice::stat( const QString &, KIO::UDSEntry & )
+void KMobileDevice::mkdir( const QString &, int )
 {
-  return KIO::ERR_DOES_NOT_EXIST;
+  emit error(KIO::ERR_COULD_NOT_MKDIR, QString::null);
 }
 
-int KMobileDevice::deleteFile( const QString & )
+void KMobileDevice::rename( const QString &, const QString &, bool )
 {
-  return KIO::ERR_WRITE_ACCESS_DENIED;
+  emit error(KIO::ERR_UNSUPPORTED_ACTION, QString::null);
 }
 
-int KMobileDevice::readFile( const QString &, QByteArray & )
+void KMobileDevice::symlink( const QString &, const QString &, bool )
 {
-  return KIO::ERR_DOES_NOT_EXIST;
+  emit error(KIO::ERR_UNSUPPORTED_ACTION, QString::null);
 }
 
-int KMobileDevice::storeFile( const QString &, const QByteArray &, const KIO::UDSEntry & )
+void KMobileDevice::del( const QString &, bool )
 {
-  return KIO::ERR_WRITE_ACCESS_DENIED;
+  emit error(KIO::ERR_UNSUPPORTED_ACTION, QString::null);
 }
 
-int KMobileDevice::mkDir( const QString &, const KIO::UDSEntry & )
+void KMobileDevice::stat( const QString & )
 {
-  return KIO::ERR_WRITE_ACCESS_DENIED;
+  emit error(KIO::ERR_UNSUPPORTED_ACTION, QString::null);
 }
 
-int KMobileDevice::rmDir( const QString & )
+void KMobileDevice::chmod( const QString &, int )
 {
-  return KIO::ERR_WRITE_ACCESS_DENIED;
+  emit error(KIO::ERR_UNSUPPORTED_ACTION, QString::null);
+}
+
+void KMobileDevice::get( const QString & )
+{
+  emit error(KIO::ERR_UNSUPPORTED_ACTION, QString::null);
+}
+
+void KMobileDevice::put( const QString &, int, bool, bool )
+{
+  emit error(KIO::ERR_UNSUPPORTED_ACTION, QString::null);
+}
+
+void KMobileDevice::mimetype( const QString & )
+{
+  emit error(KIO::ERR_UNSUPPORTED_ACTION, QString::null);
+}
+
+void KMobileDevice::special( const QByteArray & )
+{
+  emit error(KIO::ERR_UNSUPPORTED_ACTION, QString::null);
 }
 
 
-// Slots
 
-// called whenever the connection status changes
+
+
 void KMobileDevice::slotConnectionChanged( bool conn_established )
 {
   PRINT_DEBUG << QString("KMobile: Connection to %1 via %2 %3.\n")
