@@ -114,6 +114,8 @@ class KDE_EXPORT KCalResourceSlox : public KCal::ResourceCached
  
     void parseMembersAttribute( const QDomElement &e,
                                 KCal::Incidence *incidence );
+    void parseReadRightsAttribute( const QDomElement &e,
+                                              KCal::Incidence *incidence );
     void parseIncidenceAttribute( const QDomElement &e,
                                   KCal::Incidence *incidence );
     void parseTodoAttribute( const QDomElement &e, KCal::Todo *todo );

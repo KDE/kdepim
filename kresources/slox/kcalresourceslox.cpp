@@ -228,7 +228,7 @@ void KCalResourceSlox::requestEvents()
   mLoadEventsProgress = KPIM::ProgressManager::instance()->createProgressItem(
       KPIM::ProgressManager::getUniqueID(), i18n("Downloading events") );
   connect( mLoadEventsProgress,
-           SIGNAL( progressItemCanceled( ProgressItem * ) ),
+           SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
            SLOT( cancelLoadEvents() ) );
 
   mPrefs->setLastEventSync( QDateTime::currentDateTime() );
@@ -269,7 +269,7 @@ void KCalResourceSlox::requestTodos()
   mLoadTodosProgress = KPIM::ProgressManager::instance()->createProgressItem(
       KPIM::ProgressManager::getUniqueID(), i18n("Downloading to-dos") );
   connect( mLoadTodosProgress,
-           SIGNAL( progressItemCanceled( ProgressItem * ) ),
+           SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
            SLOT( cancelLoadTodos() ) );
 
   mPrefs->setLastTodoSync( QDateTime::currentDateTime() );
@@ -372,7 +372,7 @@ void KCalResourceSlox::uploadIncidences()
   mUploadProgress = KPIM::ProgressManager::instance()->createProgressItem(
       KPIM::ProgressManager::getUniqueID(), i18n("Uploading incidence") );
   connect( mUploadProgress,
-           SIGNAL( progressItemCanceled( ProgressItem * ) ),
+           SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
            SLOT( cancelUpload() ) );
 }
 
@@ -385,6 +385,8 @@ void KCalResourceSlox::createIncidenceAttributes( QDomDocument &doc,
 
   WebdavHandler::addSloxElement( doc, parent, "S:description",
                                  incidence->description() );
+
+  WebdavHandler::addSloxElement( doc, parent, "S:folderid" );
 
   if ( incidence->attendeeCount() > 0 ) {
     QDomElement members = WebdavHandler::addSloxElement( doc, parent,
@@ -401,7 +403,18 @@ void KCalResourceSlox::createIncidenceAttributes( QDomDocument &doc,
     }
   }
 
-  // FIXME: create reminder
+  // set read attributes - if SecrecyPublic, set it to users
+  if ( incidence->secrecy() == Incidence::SecrecyPublic )
+  {
+    QDomElement rights = WebdavHandler::addSloxElement( doc, parent, "S:readrights" );
+    WebdavHandler::addSloxElement( doc, rights, "S:group", "users" );
+  }
+
+  // set reminder as the number of minutes to the start of the event
+  KCal::Alarm::List alarms = incidence->alarms();
+  if ( !alarms.isEmpty() && alarms.first()->hasStartOffset() && alarms.first()->enabled() )
+    WebdavHandler::addSloxElement( doc, parent, "S:reminder", QString::number( alarms.first()->startOffset().asSeconds() / 60 ) );;
+
 }
 
 void KCalResourceSlox::createEventAttributes( QDomDocument &doc,
@@ -499,6 +512,20 @@ void KCalResourceSlox::parseMembersAttribute( const QDomElement &e,
   }
 }
 
+void KCalResourceSlox::parseReadRightsAttribute( const QDomElement &e,
+                                              Incidence *incidence )
+{
+  QDomNode n;
+  for( n = e.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    QDomElement rightElement = n.toElement();
+    if ( rightElement.tagName() == "group" ) {
+      QString groupName = rightElement.text();
+      if ( groupName == "users" )
+        incidence->setSecrecy( Incidence::SecrecyPublic );
+    }
+  }
+}
+
 void KCalResourceSlox::parseIncidenceAttribute( const QDomElement &e,
                                                 Incidence *incidence )
 {
@@ -521,12 +548,14 @@ void KCalResourceSlox::parseIncidenceAttribute( const QDomElement &e,
       if ( alarm->type() == Alarm::Invalid ) {
         alarm->setType( Alarm::Display );
       }
-      Duration d( minutes * 60 );
+      Duration d( minutes * -60 );
       alarm->setStartOffset( d );
       alarm->setEnabled( true );
     }
   } else if ( tag == "members" ) {
     parseMembersAttribute( e, incidence );
+  } else if ( tag == "readrights" ) {
+    parseReadRightsAttribute( e, incidence );
   }
 }
 
@@ -727,6 +756,7 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
           newTodo = new Todo;
           todo = newTodo;
           todo->setUid( uid );
+          todo->setSecrecy( Incidence::SecrecyPrivate );
         }
 
         todo->setCustomProperty( "SLOX", "ID", item.sloxId );
@@ -800,6 +830,7 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
           newEvent = new Event;
           event = newEvent;
           event->setUid( uid );
+          event->setSecrecy( Incidence::SecrecyPrivate );
         }
 
         event->setCustomProperty( "SLOX", "ID", item.sloxId );
@@ -858,6 +889,12 @@ void KCalResourceSlox::slotUploadResult( KIO::Job *job )
     saveError( job->errorString() );
   } else {
     kdDebug() << "KCalResourceSlox::slotUploadResult() success" << endl;
+
+    if ( !mUploadJob )
+    {
+        kdDebug() << "KCalResourceSlox::slotUploadResult() - mUploadJob was 0" << endl;
+        return;
+    }
 
     QDomDocument doc = mUploadJob->response();
 
