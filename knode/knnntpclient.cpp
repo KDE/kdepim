@@ -157,45 +157,49 @@ void KNNntpClient::doFetchGroups()
     sendSignal(TSdownloadDesc);
     sendSignal(TSprogressUpdate);
 
-    if (!sendCommandWCheck("LIST NEWSGROUPS",215))       // 215 informations follows
+    int rep;
+    if (!sendCommand("LIST NEWSGROUPS",rep))
       return;
 
-    QString description;
-    KNGroupInfo info;
-    int pos;
+    if (rep == 215) {       // 215 informations follows
+      QString description;
+      KNGroupInfo info;
+      int pos;
 
-    while (getNextLine()) {
-      line = getCurrentLine();
-      if (line[0]=='.') {
-        if (line[1]=='.')
-          line++;        // collapse double period into one
-        else
-          if (line[1]==0)
-            break;   // message complete
-      }
-      s = line;
-      while (*s != '\0' && *s != '\t' && *s != ' ') s++;
-      if (*s == '\0') {
+      while (getNextLine()) {
+        line = getCurrentLine();
+        if (line[0]=='.') {
+          if (line[1]=='.')
+            line++;        // collapse double period into one
+          else
+            if (line[1]==0)
+              break;   // message complete
+        }
+        s = line;
+        while (*s != '\0' && *s != '\t' && *s != ' ') s++;
+        if (*s == '\0') {
 #ifndef NDEBUG
-        qDebug("knode: retrieved broken group-description - ignoring");
+          qDebug("knode: retrieved broken group-description - ignoring");
 #endif
-      } else {
-        s[0] = 0;         // terminate groupname
-        s++;
-        while (*s == ' ' || *s == '\t') s++;    // go on to the description
+        } else {
+          s[0] = 0;         // terminate groupname
+          s++;
+          while (*s == ' ' || *s == '\t') s++;    // go on to the description
 
-        name = QString::fromUtf8(line);
-        if (target->codecForDescriptions)          // some countries use local 8 bit characters in the tag line
-          description = target->codecForDescriptions->toUnicode(s);
-        else
-          description = QString::fromLocal8Bit(s);
-        info.name = name;
+          name = QString::fromUtf8(line);
+          if (target->codecForDescriptions)          // some countries use local 8 bit characters in the tag line
+            description = target->codecForDescriptions->toUnicode(s);
+          else
+            description = QString::fromLocal8Bit(s);
+          info.name = name;
 
-        if ((pos=tempVector.bsearch(&info))!=-1)
-          tempVector[pos]->description = description;
+          if ((pos=tempVector.bsearch(&info))!=-1)
+            tempVector[pos]->description = description;
+        }
+        doneLines++;
       }
-      doneLines++;
     }
+
     if (!job->success() || job->canceled())
       return;     // stopped...
   }
@@ -281,10 +285,13 @@ void KNNntpClient::doCheckNewGroups()
     cmd = "LIST NEWSGROUPS ";
     QStrList desList;
     char *s;
+    int rep;
 
     for (KNGroupInfo *group=tmpList.first(); group; group=tmpList.next()) {
-      if (!sendCommandWCheck(cmd+group->name.utf8(),215))       // 215 informations follows
+      if (!sendCommand(cmd+group->name.utf8(),rep))
         return;
+      if (rep != 215)        // 215 informations follows
+        break;
       desList.clear();
       if (!getMsg(desList))
         return;
