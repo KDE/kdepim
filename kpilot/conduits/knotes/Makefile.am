@@ -13,5 +13,5 @@ libknotesconduit_la_SOURCES = knotes-factory.cc \
 	setup_base.ui \
 	KNotesIface.stub
 libknotesconduit_la_LDFLAGS = $(KDE_PLUGIN) $(all_libraries)
-libknotesconduit_la_LIBADD = ../../lib/libkpilot.la
+libknotesconduit_la_LIBADD = ../../lib/libkpilot.la $(LIB_KDEUI)
 

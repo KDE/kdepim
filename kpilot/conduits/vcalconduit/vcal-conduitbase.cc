@@ -776,3 +776,14 @@ void VCalConduitBase::updateIncidenceOnPalm(KCal::Incidence*e, PilotAppCategory*
 	}
 }
 
+const QString VCalConduitBase::configGroup()
+{
+    return QString::null;
+}
+
+const QString VCalConduitBase::dbname()
+{
+    return QString::null;
+}
+	
+	

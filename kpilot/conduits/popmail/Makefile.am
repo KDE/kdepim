@@ -17,7 +17,7 @@ kde_module_LTLIBRARIES = libpopmailconduit.la
 libpopmailconduit_la_SOURCES = popmail-factory.cc setupDialog.cc \
 	passworddialog.cc popmail-conduit.cc parsedate.c
 libpopmailconduit_la_LDFLAGS = $(KDE_PLUGIN) $(all_libraries)
-libpopmailconduit_la_LIBADD  =  ../../libkpilot.la
+libpopmailconduit_la_LIBADD  =  ../../lib/libkpilot.la $(LIB_KIO)
 
 # this option you can leave out. Just, if you use "make dist", you need it
 noinst_HEADERS = popmail-conduit.h passworddialog.h setupDialog.h

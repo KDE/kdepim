@@ -18,7 +18,7 @@ libvcalconduit_la_SOURCES = korganizerConduit.ui vcal-factorybase.cc vcal-factor
 libvcalconduit_la_LDFLAGS = $(KDE_PLUGIN) $(all_libraries)
 libvcalconduit_la_LIBADD = ../../lib/libkpilot.la ../../../libkcal/libkcal.la
 
-libtodoconduit_la_SOURCES = korganizerConduit.ui vcal-factorybase.cc vcal-factory.cc todo-factory.cc  \
-	vcal-setup.cc todo-setup.cc vcal-conduitbase.cc todo-conduit.cc
+libtodoconduit_la_SOURCES = korganizerConduit.ui vcal-factorybase.cc todo-factory.cc  \
+	vcal-setup.cc todo-setup.cc vcal-conduit.cc vcal-conduitbase.cc todo-conduit.cc vcal-factory.cc 
 libtodoconduit_la_LDFLAGS = $(KDE_PLUGIN) $(all_libraries)
-libtodoconduit_la_LIBADD = ../../lib/libkpilot.la ../../../libkcal.la
+libtodoconduit_la_LIBADD = ../../lib/libkpilot.la ../../../libkcal/libkcal.la

@@ -48,11 +48,7 @@ public:
 	VCalConduitPrivate(KCal::Calendar *buddy);
 	virtual ~VCalConduitPrivate() {};
 
-#ifdef KDE2
-	QList<KCal::Event> fAllEvents;
-#else
 	QPtrList<KCal::Event> fAllEvents;
-#endif
 
 	virtual int updateIncidences();
 	virtual void addIncidence(KCal::Incidence*);
