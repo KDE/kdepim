@@ -32,7 +32,7 @@ namespace KABPrinting {
     public:
         MikesStyle(PrintingWizard* parent, const char* name);
         ~MikesStyle();
-        void print(QStringList, PrintProgress*);
+        void print(KABC::Addressee::List&, PrintProgress*);
     protected:
         void doPaint(QPainter &painter, const KABC::Addressee &a,
                      int maxHeight,

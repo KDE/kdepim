@@ -21,6 +21,8 @@
 #include <qstringlist.h>
 #include <qpixmap.h>
 
+#include <kabc/field.h>
+
 namespace KABPrinting {
 
 class PrintingWizard;
@@ -59,7 +61,7 @@ class PrintStyle : public QObject
     /**
      Reimplement this method to actually print.
      */
-    virtual void print(QStringList contacts, PrintProgress*)=0;
+    virtual void print( KABC::Addressee::List &contacts, PrintProgress* ) = 0;
 
     /**
      Reimplement this method to provide a preview of what will
@@ -78,17 +80,25 @@ class PrintStyle : public QObject
      */
     void showPages();
 
+    /**
+      Returns the preferred sort criterion field.
+     */
+    KABC::Field* preferredSortField();
+
+    /**
+      Returns the preferred sort type.
+      
+      true = ascending
+      false = descending
+     */
+    bool preferredSortType();
+
   protected:
     /**
      Load the preview image from the kaddressbook data
      directory. The image should be located in the subdirectory
      "printing". Give only the file name without any prefix as
      the parameter.
-     In case the image cannot be loaded, the preview will show
-     a text message that there is no preview available. Do not
-     change the preview frame manually if you do not have
-     to. The return value is true if loading and setting the
-     preview image worked out good.
      */
     bool setPreview( const QString& fileName );
 
@@ -96,6 +106,11 @@ class PrintStyle : public QObject
      Set the preview image.
      */
     void setPreview( const QPixmap& image );
+
+    /**
+      Set preferred sort options for this printing style.
+     */
+    void setPreferredSortOptions( KABC::Field *field, bool ascending = true );
 
     /**
      Return the wizard object.
@@ -113,6 +128,9 @@ class PrintStyle : public QObject
     QPixmap mPreview;
     QPtrList<QWidget> mPageList;
     QStringList mPageTitles;
+
+    KABC::Field *mSortField;
+    bool mSortType;
 };
 
 

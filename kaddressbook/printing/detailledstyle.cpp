@@ -117,7 +117,7 @@ namespace KABPrinting {
         mEPntr = 0;
     }
 
-    void DetailledPrintStyle::print(QStringList contacts, PrintProgress *progress)
+    void DetailledPrintStyle::print( KABC::Addressee::List &contacts, PrintProgress *progress)
     {
         mPrintProgress=progress;
         progress->addMessage(i18n("Setting up fonts and colors"));
@@ -233,36 +233,35 @@ namespace KABPrinting {
         config->sync();
     }
 
-    bool DetailledPrintStyle::printEntries(const QStringList& contacts,
+    bool DetailledPrintStyle::printEntries( KABC::Addressee::List &contacts,
                                            KPrinter *printer,
                                            QPainter *painter,
                                            const QRect& window)
     {
-        KABC::Addressee addressee;
-        QStringList::ConstIterator it;
         QRect brect;
         int ypos=0, count=0;
+
         // -----
-        for(it=contacts.begin(); it!=contacts.end(); ++it)
+        KABC::Addressee::List::Iterator it;
+        for ( it = contacts.begin(); it != contacts.end(); ++it )
         {
-            addressee=wizard()->document()->findByUid(*it);
-            if(!addressee.isEmpty())
+            if( !(*it).isEmpty())
             { // print it:
                 kdDebug() << "DetailledPrintStyle::printEntries: printing addressee "
-                          << addressee.realName() << endl;
+                          << (*it).realName() << endl;
                 // ----- do a faked print to get the bounding rect:
-                if(!mEPntr->printEntry(addressee, window, painter, ypos, true, &brect))
+                if(!mEPntr->printEntry((*it), window, painter, ypos, true, &brect))
                 { // it does not fit on the page beginning at ypos:
                     printer->newPage();
                     // WORK_TO_DO: this assumes the entry fits on the whole page
                     // (dunno how to fix this without being illogical)
                     ypos=0;
                 }
-                mEPntr->printEntry(addressee, window, painter, ypos, false, &brect);
+                mEPntr->printEntry((*it), window, painter, ypos, false, &brect);
                 ypos+=brect.height();
             } else {
                 kdDebug() << "DetailledPrintStyle::printEntries: strange, addressee "
-                          << "with UID " << *it << " not available." << endl;
+                          << "with UID " << (*it).uid() << " not available." << endl;
             }
             // ----- set progress:
             mPrintProgress->setProgress((count++*100)/contacts.count());

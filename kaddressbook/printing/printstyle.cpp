@@ -26,7 +26,7 @@ using namespace KABPrinting;
 
 
 PrintStyle::PrintStyle( PrintingWizard* parent, const char* name )
-  : QObject( parent, name ), mWizard( parent )
+  : QObject( parent, name ), mWizard( parent ), mSortField( 0 )
 {
 }
 
@@ -93,6 +93,22 @@ void PrintStyle::hidePages()
 {
   for ( QWidget *wdg = mPageList.first(); wdg; wdg = mPageList.next() )
     mWizard->removePage( wdg );
+}
+
+void PrintStyle::setPreferredSortOptions( KABC::Field *field, bool ascending )
+{
+  mSortField = field;
+  mSortType = ascending;
+}
+
+KABC::Field* PrintStyle::preferredSortField()
+{
+  return mSortField;
+}
+
+bool PrintStyle::preferredSortType()
+{
+  return mSortType;
 }
 
 PrintStyleFactory::PrintStyleFactory( PrintingWizard* parent, const char* name )

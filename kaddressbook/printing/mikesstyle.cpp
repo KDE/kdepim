@@ -46,7 +46,7 @@ namespace KABPrinting
     {
     }
 
-    void MikesStyle::print(QStringList printUids, PrintProgress *progress)
+    void MikesStyle::print( KABC::Addressee::List &contacts, PrintProgress *progress)
     {
         QFont mFont;
         QFont mBoldFont;
@@ -62,23 +62,19 @@ namespace KABPrinting
         QPaintDeviceMetrics metrics(p.device());
 
         int height = 0;
-        KABC::Addressee a;
-        QStringList::ConstIterator iter;
+        KABC::Addressee::List::Iterator it;
 
         progress->addMessage(i18n("Preparing"));
         progress->addMessage(i18n("Printing"));
 
-        for (iter = printUids.begin(); iter != printUids.end(); ++iter)
+        for ( it = contacts.begin(); it != contacts.end(); ++it )
         {
-            progress->setProgress((count++*100)/printUids.count());
+            progress->setProgress((count++*100)/contacts.count());
             kapp->processEvents();
-
-            // find the addressee
-            a = wizard()->document()->findByUid(*iter);
 
             // Get the total height so we know if it will fit on the
             // current page
-            height = calcHeight(a, mFont, mBoldFont);
+            height = calcHeight((*it), mFont, mBoldFont);
             if ((yPos + spacingHint + height)
                 > (metrics.height()-fm.height()-5))
             {
@@ -96,7 +92,7 @@ namespace KABPrinting
             yPos += spacingHint;
             p.save();
             p.translate(0, yPos);
-            doPaint(p, a, height, mFont, mBoldFont);
+            doPaint(p, (*it), height, mFont, mBoldFont);
             p.restore();
             yPos += height;
             // ----- set progress bar:

@@ -5,20 +5,24 @@ INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kaddressbook \
 
 libprinter_la_METASOURCES = AUTO
 
-libprinter_la_SOURCES = printingwizard_base.ui \
-	printingwizard.cpp \
-	printstyle.cpp \
-	printprogress_base.ui printprogress.cpp \
+libprinter_la_SOURCES = \
 	detailledstyle.cpp  \
 	ds_appearance.ui \
-	mikesstyle.cpp 
+	mikesstyle.cpp \
+	printingwizard.cpp \
+	printprogress_base.ui printprogress.cpp \
+	printstyle.cpp \
+	selectionpage.cpp \
+	stylepage.cpp
 
-EXTRA_DIST = printingwizard_base.ui \
-	printingwizard.cpp printingwizard.h \
-	printstyle.cpp printstyle.h \
-	printprogress.cpp printprogress.h \
+EXTRA_DIST = \
 	detailledstyle.cpp detailledstyle.h \
-	mikesstyle.cpp mikesstyle.h
+	mikesstyle.cpp mikesstyle.h \
+	printingwizard.cpp printingwizard.h \
+	printprogress.cpp printprogress.h \
+	printstyle.cpp printstyle.h \
+	selectionpage.cpp selectionpage.h \
+	stylepage.cpp stylepage.h
 
 preview_DATA = detailed-style.png mike-style.png
 

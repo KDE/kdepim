@@ -32,9 +32,9 @@ namespace KABPrinting {
     public:
         DetailledPrintStyle(PrintingWizard* parent, const char* name=0);
         ~DetailledPrintStyle();
-        void print(QStringList contacts, PrintProgress*);
+        void print( KABC::Addressee::List &contacts, PrintProgress* );
     protected:
-        bool printEntries(const QStringList& contacts,
+        bool printEntries( KABC::Addressee::List &contacts,
                           KPrinter *printer,
                           QPainter *painter,
                           const QRect& window);
