@@ -717,7 +717,8 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
         a = new Attendee(0, tmpStr);
       } else {
         // just a name
-        QString email = tmpStr.replace( QRegExp(" "), "." );
+				// WTF??? Replacing the spaces of a name and using this as email?
+        QString email = tmpStr.replace( ' ', '.' );
         a = new Attendee(tmpStr,email);
       }
 
@@ -945,7 +946,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
         a = new Attendee(0, tmpStr);
       } else {
         // just a name
-        QString email = tmpStr.replace( QRegExp(" "), "." );
+        QString email = tmpStr.replace( ' ', '.' );
         a = new Attendee(tmpStr,email);
       }
 
