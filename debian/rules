@@ -93,8 +93,10 @@ binary-arch: build
 	dh_shlibdeps
 	dh_gencontrol
 	-for package in `cat debian/control | grep Package | grep -v kdepim | sed -e 's#^Package: ##'`; do \
-		cd debian/$$package && find ./etc/kde2 -type f -print | sed -e 's#^./#/#' > DEBIAN/conffiles ;\
+		cd debian/$$package ;\
+		find ./etc/kde2 -type f -print | sed -e 's#^./#/#' > DEBIAN/conffiles ;\
 		chmod 644 debian/$$package/DEBIAN/conffiles ;\
+		cd ../../ ;\
 	done
 	dh_md5sums
 	dh_builddeb       	
