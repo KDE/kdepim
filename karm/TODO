@@ -10,6 +10,8 @@
 Mark - Sooner ...
 --------------------------
 
+  * 2004-04-30: KArm crashes if task running when you pick a new storage file.
+
   * 2004-01-27: File locking--test and clear lock on exit.
 
         If I open a file in KArm, and then open the same file in KOrganizer
