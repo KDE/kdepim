@@ -17,13 +17,13 @@
 ** (at your option) any later version.
 **
 ** This program is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of 
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ** GNU General Public License for more details.
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
 
@@ -198,7 +198,7 @@ static int getResponse(KSocket *s,char *buffer,const int bufsiz)
 //
 //	BADPOP	If the response doesn't begin(*) with a +
 //		(indicating OK in POP3)
-//      >=0	If the response begins with a +, the number 
+//      >=0	If the response begins with a +, the number
 //		returned indicates the offset of the + in
 //		the buffer.
 //	TIMEOUT	If the POP3 server times out (currently
@@ -300,8 +300,8 @@ PopMailConduit::doSync()
 
 	mode=fConfig->readNumEntry(PopmailConduitFactory::syncOutgoing);
 #ifdef DEBUG
-	DEBUGCONDUIT << fname 
-		<< ": Outgoing mail mail disposition " 
+	DEBUGCONDUIT << fname
+		<< ": Outgoing mail mail disposition "
 		<< mode << endl;
 #endif
 
@@ -321,7 +321,7 @@ PopMailConduit::doSync()
 	}
 
 	// Internationalisation and Qt issues be here.
-	// This is an attempt at making a nice log 
+	// This is an attempt at making a nice log
 	// message on the pilot, but it's obviously very
 	// en locale-centric.
 	//
@@ -380,9 +380,9 @@ int PopMailConduit::sendPendingMail(int mode)
 	else
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname 
+		DEBUGCONDUIT << fname
 			<< ": Sent "
-			<< count 
+			<< count
 			<< " messages"
 			<< endl;
 #endif
@@ -490,8 +490,8 @@ QString getFQDomainName (const KConfig& config)
 		fqDomainName = u.nodename;
 
 #ifdef DEBUG
-		DEBUGCONDUIT << fname 
-			<< ": Got uname.nodename " 
+		DEBUGCONDUIT << fname
+			<< ": Got uname.nodename "
 			<< u.nodename << endl;
 #endif
 	}
@@ -802,7 +802,7 @@ int PopMailConduit::sendViaSMTP ()
 //                  ___/   \__  |   |  ---| | | |  \__| | |                  //
 ///////////////////////////////////////////////////////////////////////////////
 
-int PopMailConduit::sendViaSendmail() 
+int PopMailConduit::sendViaSendmail()
 {
 	FUNCTIONSETUP;
 	int count=0;
@@ -943,10 +943,10 @@ int PopMailConduit::sendViaKMail()
 	while (PilotRecord *pilotRec = fDatabase->readNextRecInCategory(1))
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname 
-			<< ": Reading " 
+		DEBUGCONDUIT << fname
+			<< ": Reading "
 			<< count + 1
-			<< "th message" 
+			<< "th message"
 			<< endl;
 #endif
 
@@ -983,14 +983,14 @@ int PopMailConduit::sendViaKMail()
 			kdWarning() << k_funcinfo
 				<< ": Can't open temporary file for writing!"
 				<< endl;
-			KMessageBox::error(0L, 
+			KMessageBox::error(0L,
 				i18n("Cannot open temporary file to store "
 					"mail from Pilot in."),
 				i18n("Error Sending Mail"));
 			continue;
 		}
 
-		unpack_Mail(&theMail, 
+		unpack_Mail(&theMail,
 			(unsigned char*)pilotRec->getData(),
 			pilotRec->getLen());
 		writeMessageToFile(sendf, theMail);
@@ -1132,12 +1132,12 @@ PopMailConduit::skipspace(char * c)
     return c;
     }
 
-int 
+int
 PopMailConduit::getpopchar(int socket)
     {
     unsigned char buf;
     int ret;
-    do 
+    do
 	{
       do
         ret=read(socket, &buf, 1);
@@ -1149,11 +1149,11 @@ PopMailConduit::getpopchar(int socket)
     return buf;
     }
 
-int 
+int
 PopMailConduit::getpopstring(int socket, char * buf)
     {
     int c;
-    while ((c = getpopchar(socket)) >= 0) 
+    while ((c = getpopchar(socket)) >= 0)
 	{
 	*buf++ = c;
 	if (c == '\n')
@@ -1163,14 +1163,14 @@ PopMailConduit::getpopstring(int socket, char * buf)
     return c;
     }
 
-int 
+int
 PopMailConduit::getpopresult(int socket, char * buf)
     {
     int c = getpopstring(socket, buf);
-    
+
     if (c<0)
 	return c;
-    
+
     if (buf[0] == '+')
 	return 0;
     else
@@ -1183,10 +1183,10 @@ PopMailConduit::header(struct Mail * m, char * t)
 	FUNCTIONSETUP;
 
     static char holding[4096];
-    
+
     if (t && strlen(t) && t[strlen(t)-1] == '\n')
 	t[strlen(t)-1] = 0;
-    if (t && ((t[0] == ' ') || (t[0] == '\t'))) 
+    if (t && ((t[0] == ' ') || (t[0] == '\t')))
 	{
 	if ((strlen(t) + strlen(holding)) > 4096)
 	    return; /* Just discard approximate overflow */
@@ -1195,35 +1195,35 @@ PopMailConduit::header(struct Mail * m, char * t)
 	}
 
     /* Decide on what we do with m->sendTo */
-    
+
     if (strncmp(holding, "From:", 5)==0)
 	{
 	m->from = strdup(skipspace(holding+5));
-	} 
-    else if (strncmp(holding, "To:",3)==0) 
+	}
+    else if (strncmp(holding, "To:",3)==0)
 	{
 	m->to = strdup(skipspace(holding+3));
-	} 
-    else if (strncmp(holding, "Subject:",8)==0) 
+	}
+    else if (strncmp(holding, "Subject:",8)==0)
 	{
 	m->subject = strdup(skipspace(holding+8));
-	} 
-    else if (strncmp(holding, "Cc:",3)==0) 
+	}
+    else if (strncmp(holding, "Cc:",3)==0)
 	{
 	m->cc = strdup(skipspace(holding+3));
-	} 
-    else if (strncmp(holding, "Bcc:",4)==0) 
+	}
+    else if (strncmp(holding, "Bcc:",4)==0)
 	{
 	m->bcc = strdup(skipspace(holding+4));
-	} 
-    else if (strncmp(holding, "Reply-To:",9)==0) 
+	}
+    else if (strncmp(holding, "Reply-To:",9)==0)
 	{
 	m->replyTo = strdup(skipspace(holding+9));
-	} 
-    else if (strncmp(holding, "Date:",4)==0) 
+	}
+    else if (strncmp(holding, "Date:",4)==0)
 	{
 	time_t d = parsedate(skipspace(holding+5));
-	if (d != -1) 
+	if (d != -1)
 	    {
 	    struct tm * d2;
 	    m->dated = 1;
@@ -1243,7 +1243,7 @@ void PopMailConduit::retrievePOPMessages(KSocket *popSocket,int const msgcount,
 	FUNCTIONSETUP;
 	int i,ret;
 
-	for(i=1;i<(msgcount+1);i++) 
+	for(i=1;i<(msgcount+1);i++)
 	{
 		int len;
 		char * msg;
@@ -1272,22 +1272,22 @@ void PopMailConduit::retrievePOPMessages(KSocket *popSocket,int const msgcount,
 		}
 #endif
 
-		if (len > 16000) 
+		if (len > 16000)
 		{
 			kdWarning() << k_funcinfo
 				<< ": Skipped long message " << i
 				<< endl;
-			continue; 
+			continue;
 		}
 
 		sprintf(buffer, "RETR %d\r\n", i);
 		write(popSocket->socket(), buffer, strlen(buffer));
 		ret = getpopstring(popSocket->socket(), buffer);
-		if ((ret < 0) || (buffer[0] != '+')) 
+		if ((ret < 0) || (buffer[0] != '+'))
 		{
 			/* Weird */
 			continue;
-		} 
+		}
 		else
 		{
 			buffer[ret] = 0;
@@ -1295,40 +1295,40 @@ void PopMailConduit::retrievePOPMessages(KSocket *popSocket,int const msgcount,
 
 		msg = (char*)buffer;
 		h = 1;
-		for(;;) 
+		for(;;)
 		{
-			if (getpopstring(popSocket->socket(), msg) < 0) 
+			if (getpopstring(popSocket->socket(), msg) < 0)
 			{
 				showMessage(i18n("Error reading message"));
 				return;
 			}
 
-			if (h == 1) 
-			{ 
+			if (h == 1)
+			{
 				/* Header mode */
-				if ((msg[0] == '.') && 
-					(msg[1] == '\n') && (msg[2] == 0)) 
+				if ((msg[0] == '.') &&
+					(msg[1] == '\n') && (msg[2] == 0))
 				{
 					break; /* End of message */
 				}
-				if (msg[0] == '\n') 
+				if (msg[0] == '\n')
 				{
 					h = 0;
 					header(&t, 0);
-				} 
+				}
 				else
 				{
 					header(&t, msg);
 				}
 				continue;
 			}
-			if ((msg[0] == '.') && 
+			if ((msg[0] == '.') &&
 				(msg[1] == '\n') && (msg[2] == 0))
 			{
 				msg[0] = 0;
 				break; /* End of message */
 			}
-			if (msg[0] == '.') 
+			if (msg[0] == '.')
 			{
 				/* Must be escape */
 				memmove(msg, msg+1, strlen(msg));
@@ -1336,10 +1336,10 @@ void PopMailConduit::retrievePOPMessages(KSocket *popSocket,int const msgcount,
 			msg += strlen(msg);
 		}
 
-		// Well, we've now got the message. 
+		// Well, we've now got the message.
 		// I bet _you_ feel happy with yourself.
 
-		if (h) 
+		if (h)
 		{
 			/* Oops, incomplete message, still reading headers */
 			// 	  showMessage("Incomplete message");
@@ -1349,7 +1349,7 @@ void PopMailConduit::retrievePOPMessages(KSocket *popSocket,int const msgcount,
 		}
 
 		// Need to add this support...
-		// 	if (strlen(msg) > p.truncate) 
+		// 	if (strlen(msg) > p.truncate)
 		// 	    {
 		// 	    /* We could truncate it, but we won't for now */
 		// 	    fprintf(stderr, "Message %d too large (%ld bytes)\n", i, (long)strlen(msg));
@@ -1361,20 +1361,20 @@ void PopMailConduit::retrievePOPMessages(KSocket *popSocket,int const msgcount,
 
 		len = pack_Mail(&t, (unsigned char*)buffer, 0xffff);
 		pilotRec = new PilotRecord(buffer, len, 0, 0, 0);
-		if (fDatabase->writeRecord(pilotRec) > 0) 
+		if (fDatabase->writeRecord(pilotRec) > 0)
 		{
 			if (flags & POP_DELE)
-			{ 
+			{
 				sprintf(buffer, "DELE %d\r\n", i);
-				write(popSocket->socket(), 
+				write(popSocket->socket(),
 					buffer, strlen(buffer));
 				getPOPResponse(popSocket,
 					"Error deleting message",
 					buffer,bufsiz);
 
-			} 
-		} 
-		else 
+			}
+		}
+		else
 		{
 			showMessage(
 				i18n("Error writing message to the Pilot."));
@@ -1411,7 +1411,7 @@ int PopMailConduit::doPopQuery()
 
 	popSocket = new KSocket(fConfig->readEntry("PopServer").latin1(),
 		fConfig->readNumEntry("PopPort"));
-	CHECK_PTR(popSocket);
+	Q_CHECK_PTR(popSocket);
 
 #ifdef DEBUG
 	{
@@ -1607,7 +1607,7 @@ int PopMailConduit::doPopQuery()
 
 	//
 	// EOF found, so erase buffer beginning.
-	//	
+	//
 	*buffer=0;
 	return count;
 }
@@ -1656,7 +1656,7 @@ int PopMailConduit::doPopQuery()
 		{
 #ifdef DEBUG
 			{
-				DEBUGCONDUIT << fname << ": Found end-of-headers " 
+				DEBUGCONDUIT << fname << ": Found end-of-headers "
 					"and end-of-message."
 					<< endl;
 			}
@@ -1723,7 +1723,7 @@ int PopMailConduit::doPopQuery()
 #ifdef DEBUG
 		{
 			DEBUGCONDUIT << fname << ": Got line ["
-				<< (int) buf[0] << ',' << (int) buf[1] 
+				<< (int) buf[0] << ',' << (int) buf[1]
 				<< ']'
 				<< buf;
 		}
@@ -1774,7 +1774,7 @@ int PopMailConduit::doPopQuery()
 	messageLength=readHeaders(mailbox,buffer,bufferSize,&t,1);
 	if (messageLength == 0)
 	{
-		kdWarning() << k_funcinfo 
+		kdWarning() << k_funcinfo
 			<< ": Bad headers in message." << endl;
 		return 0;
 	}
@@ -1787,9 +1787,9 @@ int PopMailConduit::doPopQuery()
 		{
 			DEBUGCONDUIT << fname << ": Message so far:" << endl
 				<< buffer << endl;
-			DEBUGCONDUIT << fname << ": Length " 
+			DEBUGCONDUIT << fname << ": Length "
 				<< messageLength << endl;
-			DEBUGCONDUIT << fname << ": Buffer @" << (int) buffer 
+			DEBUGCONDUIT << fname << ": Buffer @" << (int) buffer
 				<< endl;
 		}
 #endif
@@ -1869,7 +1869,7 @@ int PopMailConduit::doUnixStyle()
 	mailbox=fopen(filename.latin1(),"r");
 	if (mailbox==0L)
 	{
-		kdWarning() << k_funcinfo << ": Can't open mailbox:" 
+		kdWarning() << k_funcinfo << ": Can't open mailbox:"
 			<< perror
 			<< endl;
 		return -1;
@@ -1884,7 +1884,7 @@ int PopMailConduit::doUnixStyle()
 #ifdef DEBUG
 			{
 				DEBUGCONDUIT << fname << ": Read message "
-					<< messageCount << " from mailbox." 
+					<< messageCount << " from mailbox."
 					<< endl;
 			}
 #endif
