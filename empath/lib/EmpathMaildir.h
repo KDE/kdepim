@@ -29,6 +29,7 @@
 
 // Qt includes
 #include <qdir.h>
+#include <qdict.h>
 #include <qstring.h>
 #include <qdir.h>
 #include <qlist.h>
@@ -102,7 +103,7 @@ class EmpathMaildir : public QObject
         void        _recalculateCounters(EmpathFolder *);
        
         QDateTime    mtime_;
-        QStringList tagList_;
+        QDict<bool>  tagList_;
         
         QTimer       timer_;
 

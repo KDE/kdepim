@@ -211,9 +211,9 @@ EmpathMailboxMaildir::_recursiveReadFolders(const QString & currentDir)
     
     QDir d(
         currentDir,
-        QString::null, // No name filter.
+        QString::null,
         QDir::Unsorted,
-        QDir::Dirs | QDir::NoSymLinks | QDir::Readable);
+        QDir::Dirs | QDir::Readable);
     
     if (d.count() == 0)
         return;

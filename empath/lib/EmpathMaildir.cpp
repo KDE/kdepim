@@ -59,6 +59,7 @@ EmpathMaildir::EmpathMaildir(const QString & basePath, const EmpathURL & url)
         basePath_(basePath)
 {
     path_ = basePath + "/" + url.folderPath();
+    tagList_.setAutoDelete(true);
    
     createdOK_ = _checkDirs();
     
@@ -77,10 +78,7 @@ EmpathMaildir::~EmpathMaildir()
     void
 EmpathMaildir::init()
 {
-    QDir d(path_ + "/cur",
-        QString::null,
-        QDir::Unsorted,
-        QDir::Files | QDir::NoSymLinks);
+    QDir d(path_ + "/cur", QString::null, QDir::Unsorted, QDir::Files);
 
     cachedEntryList_ = d.entryList();
     
@@ -204,7 +202,6 @@ EmpathMaildir::_removeMessage(const QString & id)
     bool
 EmpathMaildir::_mark(const QString & id, RMM::MessageStatus msgStat)
 {
-    empathDebug("id == " + id);
     QStringList matchingEntries = _entryList().grep(id);
 
     if (matchingEntries.count() != 1) {
@@ -213,10 +210,8 @@ EmpathMaildir::_mark(const QString & id, RMM::MessageStatus msgStat)
     }
  
     QString statusFlags = _generateFlagsString(msgStat);
-    empathDebug("statusFlags == " + statusFlags);
 
     QString filename(matchingEntries[0]);
-    empathDebug("filename == " + filename);
 
     QString newFilename(filename);
     
@@ -244,7 +239,6 @@ EmpathMaildir::_mark(const QString & id, RMM::MessageStatus msgStat)
         return renameOK;
     }
 
-    empathDebug("Asking folder to update");
     f->update();
    
     return renameOK;
@@ -341,7 +335,7 @@ EmpathMaildir::_markNewMailAsSeen()
         path_ + "/new",
         QString::null,
         QDir::Unsorted,
-        QDir::Files | QDir::NoSymLinks | QDir::Writable);
+        QDir::Files | QDir::Writable);
 
     QStringList l(dn.entryList());
     
@@ -370,7 +364,7 @@ EmpathMaildir::_clearTmp()
         path_ + "/tmp/",
         QString::null,
         QDir::Unsorted,
-        QDir::Files | QDir::NoSymLinks | QDir::Writable);
+        QDir::Files | QDir::Writable);
 
     const QFileInfoList * infoList = tmpDir.entryInfoList();
 
@@ -565,11 +559,9 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
         
         s.replace(re_flags, QString::null);
         
-        tagList_.append(s);
+        tagList_.insert(s, new bool(true));
 
-        bool exists = f->index()->contains(s);
-
-        if (exists) {
+        if (f->index()->contains(s)) {
         
             EmpathIndexRecord rec = f->index()->record(s);
 
@@ -608,16 +600,14 @@ EmpathMaildir::_removeUntagged(EmpathFolder * f)
 {
     QStringList l(f->index()->allKeys());
 
-    QStringList::ConstIterator it;
-    
-    for (it = l.begin(); it != l.end(); ++it) {
+    for (QStringList::ConstIterator it = l.begin(); it != l.end(); ++it)
 
-        if (!tagList_.contains(*it)) {
+        if (tagList_.find(*it) == 0) {
+            empathDebug("Item `" + *it + "' has gone away - is this correct ?");
 
             f->index()->remove(*it);
             f->itemGone(*it);
         }
-    }
 }
 
     QStringList &
@@ -627,10 +617,7 @@ EmpathMaildir::_entryList()
 
     if (currentMtime != mtime_) {
 
-        QDir d(path_ + "/cur",
-            QString::null,
-            QDir::Unsorted,
-            QDir::Files | QDir::NoSymLinks);
+        QDir d(path_ + "/cur", QString::null, QDir::Unsorted, QDir::Files);
 
         cachedEntryList_ = d.entryList();
         // Finished reading dir. Get the UI going again quick ! :)
