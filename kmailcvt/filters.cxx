@@ -24,6 +24,10 @@
 #include "filters.hxx"
 #include "kmailcvt.h"
 
+#ifndef MAX_LINE
+#define MAX_LINE 4096
+#endif
+
 //////////////////////////////////////////////////////////////////////////////////
 //
 // The API to the kmailcvt dialog --> Gives the import filter access to

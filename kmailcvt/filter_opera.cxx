@@ -85,20 +85,31 @@ void FilterOpera::import(FilterInfo *info)
             info->addLog( i18n("Importing emails from %1...").arg( *mailFile ) );
             QFileInfo filenameInfo( importDir.filePath(*mailFile) );
             QString folderName( "OPERA-" + importDir.dirName() );
-            QTextStream operaFile( &operaArchiv );
-            QString operaLine = operaFile.readLine();
             
             info->setFrom( *mailFile );
             info->setTo( folderName );
             
-            while ( !operaFile.atEnd() ) {
+	    while ( !operaArchiv.atEnd() ) {
 		KTempFile tmp;
-		*tmp.textStream() << operaLine << endl; 
-		while ( !( operaLine = operaFile.readLine() ).isNull() && operaLine.left(5) != "From " ) {
+		/* comment by Danny:
+		* Don't use QTextStream to read from mbox. QTextStream only support
+		* Unicode/UTF. So you lost informations from emails with charset!=utf/unicode 
+		* (e.g. KOI8-R) and Content-Transfer-Encoding != base64 (e.g. 8Bit).
+		* It also not help to convert the QTextStream to UTF/Unicode. By this you
+		* get UTF-email but KMail can't detect the correct charset.
+		*/
+		QByteArray input(MAX_LINE);
+		QCString seperate;
+		operaArchiv.readLine(input.data(),MAX_LINE);
+	
+		long l = operaArchiv.readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
+		tmp.file()->writeBlock( input, l );
+	
+		while ( ! operaArchiv.atEnd() &&  (l = operaArchiv.readLine(input.data(),MAX_LINE)) && ((seperate = input.data()).left(5) != "From ")) {
 			/** remove in KMail unneeded Flags from Opera (for example: X-Opera-Status)*/
-			if(!operaLine.startsWith("X-Opera-")) *tmp.textStream() << operaLine << endl;
+			if(seperate.left(8) != "X-Opera-")
+				tmp.file()->writeBlock( input, l );
 		}
-		
 		tmp.close();
 		if(info->removeDupMsg) addMessage( info, folderName, tmp.name() );
 		else addMessage_fastImport( info, folderName, tmp.name() );

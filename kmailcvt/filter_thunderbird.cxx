@@ -46,7 +46,7 @@ void FilterThunderbird::import(FilterInfo *info)
 {
   /** 
    * We ask the user to choose Evolution's root directory. 
-   * This should be usually ~/.thunderbird/*.default/Mail/Local Folders/
+   * This should be usually ~/.thunderbird/xxxx.default/Mail/Local Folders/
    */
   QString mailDir = KFileDialog::getExistingDirectory(QDir::homeDirPath(), info->parent());
   info->setOverall(0);
@@ -66,10 +66,10 @@ void FilterThunderbird::import(FilterInfo *info)
   for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile) {
     QString temp_mailfile = *mailFile;
     if (temp_mailfile.endsWith(".msf")) {}
-    else {  
+    else {
         info->addLog( i18n("Start import file %1...").arg( temp_mailfile ) );
         importMBox(info, mailDir + "/" + temp_mailfile , temp_mailfile, QString::null);
-    }    
+    }
   }
   
   info->addLog( i18n("Finished importing emails from %1").arg( mailDir ));
@@ -96,10 +96,10 @@ void FilterThunderbird::importDirContents(FilterInfo *info, const QString& dirNa
     for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile) {
       QString temp_mailfile = *mailFile;
       if (temp_mailfile.endsWith(".msf")) {}
-      else {  
+      else {
           info->addLog( i18n("Start import file %1...").arg( temp_mailfile ) );
           importMBox(info, (dirName + "/" + temp_mailfile) , KMailRootDir, KMailSubDir);
-      }    
+      }
     }
 
     /** If there are subfolders, we import them one by one */
@@ -130,19 +130,31 @@ void FilterThunderbird::importMBox(FilterInfo *info, const QString& mboxName, co
     info->alert(i18n("Unable to open %1, skipping").arg(mboxName));
   } else {
     QFileInfo filenameInfo(mboxName);
-    QTextStream mboxFile(&mbox);
-    QString mboxLine = mboxFile.readLine();
     
     info->setCurrent(0);
     info->setFrom(mboxName);
     info->setTo(targetDir);
     
-    while (!mboxFile.atEnd()) {
+    while (!mbox.atEnd()) {
       KTempFile tmp;
       /** @todo check if the file is really a mbox, maybe search for 'from' string at start */
-      *tmp.textStream() << mboxLine << endl; // Not really needed (the From line)
-      while (!(mboxLine = mboxFile.readLine()).isNull() && mboxLine.left(5) != "From ")
-        *tmp.textStream() << mboxLine << endl;
+      /* comment by Danny:
+      * Don't use QTextStream to read from mbox. QTextStream only support
+      * Unicode/UTF. So you lost informations from emails with charset!=utf/unicode 
+      * (e.g. KOI8-R) and Content-Transfer-Encoding != base64 (e.g. 8Bit).
+      * It also not help to convert the QTextStream to UTF/Unicode. By this you
+      * get UTF-email but KMail can't detect the correct charset.
+      */
+      QByteArray input(MAX_LINE);
+      QCString seperate;
+      mbox.readLine(input.data(),MAX_LINE);
+	
+      long l = mbox.readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
+      tmp.file()->writeBlock( input, l );
+	
+      while ( ! mbox.atEnd() &&  (l = mbox.readLine(input.data(),MAX_LINE)) && ((seperate = input.data()).left(5) != "From ")) {
+	tmp.file()->writeBlock( input, l );
+      }
       tmp.close();
       QString destFolder = rootDir;
       QString _targetDir = targetDir;
