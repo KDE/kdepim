@@ -97,7 +97,7 @@ class ActionManager : public QObject
     /** Catch changes in the filter selection. */
     void slotFilterActivated(int);
 
-signals:
+  signals:
     /** Announce filter selection changes. */
     void filterActivated(int);
   private:
@@ -138,7 +138,7 @@ signals:
     QPtrList<KAction> mActionViewList;
     KToggleAction *mActiveActionView;
     KToggleAction *mActionJumpBar;
-    KToggleAction *mActionFeatures;
+    KSelectAction *mActionFeatures;
     KToggleAction *mActionDetails;
     KSelectAction *mActionSelectFilter;
 };

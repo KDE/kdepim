@@ -42,7 +42,6 @@
 #include <kdebug.h>
 #include <kglobal.h>
 #include <kiconloader.h>
-#include <kjanuswidget.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kmultipledrag.h>
@@ -136,8 +135,6 @@ void ViewManager::readConfig()
     splitterSize.append( height() / 2 );
   }
   mQSpltDetails->setSizes( splitterSize );
-
-  mFeatureBar->showPage( mConfig->readNumEntry( "CurrentFeatureBarPage", 0 ) );
 }
 
 void ViewManager::writeConfig()
@@ -160,7 +157,6 @@ void ViewManager::writeConfig()
   mConfig->setGroup( "Splitter" );
   mConfig->writeEntry( "FeaturesSplitter", mQSpltFeatures->sizes() );
   mConfig->writeEntry( "DetailsSplitter", mQSpltDetails->sizes() );
-  mConfig->writeEntry( "CurrentFeatureBarPage", mFeatureBar->activePageIndex() );
 }
 
 QStringList ViewManager::selectedUids()
@@ -522,17 +518,12 @@ void ViewManager::initGUI()
   /*
    * Setup the feature bar widget.
    */
-  mFeatureBar = new KJanusWidget( mQSpltFeatures, "mFeatureBar", KJanusWidget::IconList );
-  QHBox *featureBox = mFeatureBar->addHBoxPage( i18n( "Contact Editor" ), i18n( "Contact Editor" ),
-                    KGlobal::iconLoader()->loadIcon( "personal", KIcon::Desktop ) );
+  mFeatureBar = new QHBox( mQSpltFeatures );
 
-  mQuickEdit = new AddresseeEditorWidget( featureBox, "mQuickEdit" );
+  mQuickEdit = new AddresseeEditorWidget( mFeatureBar, "mQuickEdit" );
   connect( mQuickEdit, SIGNAL(modified()), SLOT(addresseeModified()) );
 
-  featureBox = mFeatureBar->addHBoxPage( i18n( "Distribution Lists" ), i18n( "Distribution Lists" ),
-                    KGlobal::iconLoader()->loadIcon( "contents", KIcon::Desktop ) );
-
-  mFeatDistList = new FeatureDistributionList( mDocument, featureBox );
+  mFeatDistList = new FeatureDistributionList( mDocument, mFeatureBar );
   connect( mFeatDistList, SIGNAL(modified()), SLOT(slotModified()) );
 
   l->addWidget( mQSpltFeatures );
@@ -583,14 +574,6 @@ void ViewManager::setJumpButtonBarVisible(bool visible)
       mJumpButtonBar->show();
     else
       mJumpButtonBar->hide();
-}
-
-void ViewManager::setFeaturesVisible(bool visible)
-{
-  if (visible)
-    mFeatureBar->show();
-  else
-    mFeatureBar->hide();
 }
 
 void ViewManager::setDetailsVisible(bool visible)
@@ -730,6 +713,26 @@ void ViewManager::filterActivated(int index)
 void ViewManager::slotModified()
 {
   modified();
+}
+
+void ViewManager::showFeatures( int id )
+{
+  if ( id == 0 ) {
+    mFeatureBar->hide();
+  } else {
+    switch( id ) {
+      default:
+      case 1:
+        mQuickEdit->show();
+        mFeatDistList->hide();
+        break;
+      case 2:
+        mQuickEdit->hide();
+        mFeatDistList->show();
+        break;
+    }
+    mFeatureBar->show();
+  }
 }
 
 #include "viewmanager.moc"

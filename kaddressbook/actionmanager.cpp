@@ -68,7 +68,7 @@ ActionManager::ActionManager(KXMLGUIClient *client, KAddressBook *widget,
     mActiveViewName = config->readEntry("Active");
     config->setGroup("MainWindow");
     mActionJumpBar->setChecked(config->readBoolEntry("JumpBar", false));
-    mActionFeatures->setChecked(config->readBoolEntry("Features", false));
+    mActionFeatures->setCurrentItem(config->readBoolEntry("Features", 0));
     mActionDetails->setChecked(config->readBoolEntry("Details", true));
     // Set the defaults
     addresseeSelected(false);
@@ -93,7 +93,7 @@ ActionManager::~ActionManager()
 
     config->setGroup("MainWindow");
     config->writeEntry("JumpBar", mActionJumpBar->isChecked());
-    config->writeEntry("Features", mActionFeatures->isChecked());
+    config->writeEntry("Features", mActionFeatures->currentItem());
     config->writeEntry("Details", mActionDetails->isChecked());
 
     config->sync();
@@ -191,14 +191,20 @@ void ActionManager::initReadOnlyActions()
     }
 
     // Settings menu
+    mActionFeatures = new KSelectAction( i18n("Show Features Bar"),
+                                         0, mACollection,
+                                         "options_show_features" );
+    connect( mActionFeatures, SIGNAL( activated( int ) ),
+             mViewManager, SLOT( showFeatures( int ) ) );
+    QStringList features;
+    features << i18n("None") << i18n("Contact Editor")
+             << i18n("Distribution Lists");
+    mActionFeatures->setItems( features );
+    
     mActionJumpBar = new KToggleAction(i18n("Show Jump Bar"), "next", 0,
                                        this, SLOT(quickToolsAction()),
                                        mACollection,
                                        "options_show_jump_bar");
-    mActionFeatures = new KToggleAction(i18n("Show Features Bar"), "features",
-                                        0, this, SLOT(quickToolsAction()),
-                                        mACollection,
-                                        "options_show_features");
     mActionDetails = new KToggleAction(i18n("Show Details"), "details",
                                        0, this, SLOT(quickToolsAction()),
                                        mACollection,
@@ -366,7 +372,7 @@ void ActionManager::selectViewAction()
 void ActionManager::quickToolsAction()
 {
     mViewManager->setJumpButtonBarVisible(mActionJumpBar->isChecked());
-    mViewManager->setFeaturesVisible(mActionFeatures->isChecked());
+    mViewManager->showFeatures(mActionFeatures->currentItem());
     mViewManager->setDetailsVisible(mActionDetails->isChecked());
 }
 

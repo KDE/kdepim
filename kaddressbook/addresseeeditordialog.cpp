@@ -27,7 +27,6 @@
 
 #include <klocale.h>
 #include <kdebug.h>
-#include <kjanuswidget.h>
 
 #include "addresseeeditorwidget.h"
 

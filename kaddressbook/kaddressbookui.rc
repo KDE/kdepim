@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="5">
+<kpartgui name="kaddressbook" version="7">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
@@ -27,20 +27,19 @@
     <Menu name="view"><text>&amp;View</text>
       <ActionList name="view_loadedviews"/>
       <Separator/>
-      <Action name="select_filter"/>
-      <Separator/>
+      <Action name="view_add"/>
       <Action name="view_modify"/>
       <Action name="view_delete"/>
-      <Action name="view_add"/>
       <Separator/>
       <Action name="view_refresh"/>
+      <Separator/>
+      <Action name="select_filter"/>
     </Menu>
 
     <Menu noMerge="1" name="settings"><text>&amp;Settings</text>
-      <Action name="options_show_jump_bar"/>
       <Action name="options_show_features"/>
+      <Action name="options_show_jump_bar"/>
       <Action name="options_show_details"/>
-      <Action name="options_show_toolbar"/>
       <Action name="options_show_statusbar"/>
       <Merge name="show_merge"/>
       <Separator/>
@@ -56,38 +55,43 @@
   </MenuBar>
 
   <ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
-    <Separator/>
     <Action name="file_sync" />
     <Action name="file_print" />
     <Separator/>
-    <Action name="edit_undo"/>
-    <Action name="edit_redo"/> 
+    <Action name="file_new_contact"/>
+    <Action name="file_properties"/>
+    <Separator/>
+    <Action name="file_mail"/>
     <Separator/>
     <Action name="ldap_lookup"/>
   </ToolBar>
   
   <ToolBar name="addresseeToolBar" noMerge="1"><text>Contact Toolbar</text>
-    <Action name="file_new_contact"/>
-    <Action name="file_properties"/>
-    <Action name="edit_delete"/>
-    <Separator/>
-    <Action name="file_mail"/>
+    <Action name="edit_undo"/>
+    <Action name="edit_redo"/> 
     <Separator/>
     <Action name="edit_cut"/>
     <Action name="edit_copy"/>
     <Action name="edit_paste"/>
+    <Separator/>
+    <Action name="edit_delete"/>
   </ToolBar>
   
   <ToolBar name="viewToolBar" noMerge="1"><text>View Toolbar</text>
-    <Action name="view_delete"/>
     <Action name="view_add"/>
     <Action name="view_modify"/>
+    <Action name="view_delete"/>
     <Separator/>
     <Action name="view_refresh"/>
+    <Separator/>
+    <Action name="options_show_features"/>
+    <Separator/>
   </ToolBar>
 
   <ToolBar name="filterToolBar" noMerge="1"><text>Filter Toolbar</text>
+    <Action name="options_edit_filters"/>
     <Action name="select_filter"/>
+    <Separator/>
   </ToolBar>
   
 </kpartgui>

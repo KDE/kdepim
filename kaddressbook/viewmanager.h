@@ -39,8 +39,8 @@ class QResizeEvent;
 class QDropEvent;
 class QSplitter;
 class QTabWidget;
+class QHBox;
 class KConfig;
-class KJanusWidget;
 namespace KABC { class AddressBook; }
 
 class ViewWrapper;
@@ -95,12 +95,6 @@ class ViewManager : public QWidget
     * @param visible True for the widget to be visible, false otherwise
     */
     void setJumpButtonBarVisible(bool visible);
-
-    /** Used to enable or disable the features tab widget.
-    *
-    * @param visible True for the widget to be visible, false otherwise
-    */
-    void setFeaturesVisible(bool visible);
 
     /** Used to enable or disable the details widget.
      */
@@ -191,7 +185,15 @@ class ViewManager : public QWidget
     /** The resource has been modified and needs to be saved. */
     void slotModified();
 
-    protected slots:
+    /**
+      Show widget of the feature bar.
+      @param id 0: hide feature bar
+                1: show quick edit
+                2: show distribution list editor
+    */
+    void showFeatures( int id );
+
+  protected slots:
     /** Handle events on the incremental search widget. */
     void incSearch(const QString& text, int field);
 
@@ -291,7 +293,7 @@ class ViewManager : public QWidget
     AddresseeEditorWidget *mQuickEdit;
     QSplitter *mQSpltDetails;
     QSplitter *mQSpltFeatures;
-    KJanusWidget *mFeatureBar;
+    QHBox *mFeatureBar;
     FeatureDistributionList *mFeatDistList;
 };
 

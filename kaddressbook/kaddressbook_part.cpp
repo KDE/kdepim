@@ -71,7 +71,7 @@ KAddressbookPart::KAddressbookPart(QWidget *parentWidget, const char *widgetName
   widget = new KAddressBook(canvas);
   widget->readConfig();
   topLayout->addWidget(widget);
-  widget->viewManager()->setFeaturesVisible( false );
+  widget->viewManager()->showFeatures( 0 );
 
   widget->show();
 

@@ -43,7 +43,6 @@
 #include <klineedit.h>
 #include <kcombobox.h>
 #include <kdebug.h>
-#include <kjanuswidget.h>
 
 #include <libkdepim/categoryselectdialog.h>
 #include <libkdepim/categoryeditdialog.h>
