@@ -1,6 +1,6 @@
 #############################################################################
 
-SUBDIRS = pics import lib parts ui
+SUBDIRS = pics import lib ui parts
 APPSDIR = $(kde_appsdir)/Internet
 KDE_CXXFLAGS = $(LIBQPTHREAD_CXXFLAGS) -DQT_NO_ASCII_CAST
 INCLUDES = -I$(srcdir)/lib -I$(srcdir)/ui -I$(top_srcdir)/librmm $(all_includes)
