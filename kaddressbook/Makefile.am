@@ -38,12 +38,13 @@ libkaddressbook_la_SOURCES = addresseeconfig.cpp addresseeeditordialog.cpp \
     phoneeditwidget.cpp secrecywidget.cpp soundwidget.cpp \
     viewconfigurefieldspage.cpp viewconfigurefilterpage.cpp \
     viewconfigurewidget.cpp undo.cpp undocmds.cpp viewmanager.cpp \
-    xxportmanager.cpp xxportselectdialog.cpp
+    xxportmanager.cpp xxportselectdialog.cpp contacteditorwidgetmanager.cpp \
+    simpleaddresseeeditor.cpp advancedcustomfields.cpp
 libkaddressbook_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
 libkaddressbook_la_LIBADD = $(top_builddir)/kaddressbook/printing/libprinter.la \
                             $(top_builddir)/kaddressbook/interfaces/libkabinterfaces.la \
                             $(top_builddir)/libkdepim/libkdepim.la \
-                            $(LIB_KABC) $(LIB_KHTML) libkabcommon.la -lkdeprint
+                            $(LIB_KABC) $(LIB_KHTML) libkabcommon.la -lkdeprint -lqui
 libkaddressbook_la_COMPILE_FIRST = $(top_srcdir)/libkdepim/categoryselectdialog.h \
                                    $(top_srcdir)/libkdepim/categoryeditdialog.h
 
@@ -57,7 +58,7 @@ noinst_HEADERS = \
     ldapsearchdialog.h nameeditdialog.h phoneeditwidget.h secrecywidget.h \
     soundwidget.h typecombo.h undo.h undocmds.h viewconfigurefieldspage.h \
     viewconfigurefilterpage.h viewconfigurewidget.h viewmanager.h xxportmanager.h \
-    xxportselectdialog.h
+    xxportselectdialog.h advancedcustomfields.h
 
 kaddressbook_METASOURCES = AUTO
 

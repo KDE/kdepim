@@ -30,6 +30,7 @@ class QCheckBox;
 class QLineEdit;
 class QListViewItem;
 class QPushButton;
+class QComboBox;
 
 class KListView;
 
@@ -65,6 +66,7 @@ class KABConfigWidget : public QWidget
 
     QCheckBox *mNameParsing;
     QCheckBox *mViewsSingleClickBox;
+    QComboBox *mEditorCombo;
     QPushButton *mConfigureButton;
     QLineEdit *mPhoneHook;
     QLineEdit *mFaxHook;

@@ -160,16 +160,16 @@ void JumpButtonBar::updateButtons()
         continue;
       if ( characters.count() - current <= possibleButtons - i ) {
         JumpButton *button = new JumpButton( characters[ current ],
-			                     QString::null, this );
+                                             QString::null, this );
         connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
         mButtons.append( button );
         button->show();
-        current++;      
+        current++;
       } else {
         int pos = ( current + offset >= (int)characters.count() ?
                     characters.count() - 1 : current + offset - 1 );
         JumpButton *button = new JumpButton( characters[ current ],
-			                     characters[ pos ], this );
+                                             characters[ pos ], this );
         connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
         mButtons.append( button );
         button->show();
@@ -212,7 +212,7 @@ class SortContainer
     QString data() const
     {
       return mString;
-  }
+    }
 
   private:
     QString mString;

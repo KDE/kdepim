@@ -28,7 +28,7 @@
 
 #include <kabc/addressbook.h>
 
-class AddresseeEditorWidget;
+class AddresseeEditorBase;
 class QWidget;
 namespace KAB { class Core; }
 
@@ -57,7 +57,7 @@ class AddresseeEditorDialog : public KDialogBase
     void widgetModified();
 
   private:
-    AddresseeEditorWidget *mEditorWidget;
+    AddresseeEditorBase *mEditorWidget;
 };
 
 #endif

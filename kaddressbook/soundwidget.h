@@ -24,37 +24,26 @@
 #ifndef SOUNDWIDGET_H
 #define SOUNDWIDGET_H
 
-#include <qwidget.h>
-
 #include <kabc/sound.h>
+
+#include "contacteditorwidget.h"
 
 class KURLRequester;
 
 class QCheckBox;
 class QPushButton;
 
-class SoundWidget : public QWidget
+class SoundWidget : public KAB::ContactEditorWidget
 {
   Q_OBJECT
 
   public:
-    SoundWidget( QWidget *parent, const char *name = 0 );
+    SoundWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
     ~SoundWidget();
 
-    /**
-      Sets the sound object.
-     */
-    void setSound( const KABC::Sound &sound );
-
-    /**
-      Returns the sound object.
-     */
-    KABC::Sound sound() const;
-
+    void loadContact( KABC::Addressee *addr );
+    void storeContact( KABC::Addressee *addr );
     void setReadOnly( bool readOnly );
-
-  signals:
-    void changed();
 
   private slots:
     void playSound();
@@ -69,6 +58,17 @@ class SoundWidget : public QWidget
 
     KABC::Sound mSound;
     bool mReadOnly;
+};
+
+class SoundWidgetFactory : public KAB::ContactEditorWidgetFactory
+{
+  public:
+    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    {
+      return new SoundWidget( ab, parent, name );
+    }
+
+    QString pageIdentifier() const { return "misc"; }
 };
 
 #endif

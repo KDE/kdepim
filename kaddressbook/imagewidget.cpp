@@ -89,7 +89,7 @@ void ImageLabel::mouseMoveEvent( QMouseEvent *event )
 }
 
 
-ImageWidget::ImageWidget( const QString &title, QWidget *parent, const char *name )
+ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent, const char *name )
   : QWidget( parent, name ), mReadOnly( false )
 {
   QHBoxLayout *topLayout = new QHBoxLayout( this, KDialog::marginHint(),
@@ -136,18 +136,18 @@ ImageWidget::ImageWidget( const QString &title, QWidget *parent, const char *nam
            SLOT( clear() ) );
 }
 
-ImageWidget::~ImageWidget()
+ImageBaseWidget::~ImageBaseWidget()
 {
 }
 
-void ImageWidget::setReadOnly( bool readOnly )
+void ImageBaseWidget::setReadOnly( bool readOnly )
 {
   mReadOnly = readOnly;
   mImageLabel->setReadOnly( mReadOnly );
   mImageUrl->setEnabled( !mReadOnly );
 }
 
-void ImageWidget::setImage( const KABC::Picture &photo )
+void ImageBaseWidget::setImage( const KABC::Picture &photo )
 {
   bool blocked = signalsBlocked();
   blockSignals( true );
@@ -167,7 +167,7 @@ void ImageWidget::setImage( const KABC::Picture &photo )
   updateGUI();
 }
 
-KABC::Picture ImageWidget::image() const
+KABC::Picture ImageBaseWidget::image() const
 {
   KABC::Picture photo;
 
@@ -188,12 +188,12 @@ KABC::Picture ImageWidget::image() const
   return photo;
 }
 
-void ImageWidget::loadImage()
+void ImageBaseWidget::loadImage()
 {
   mImageLabel->setPixmap( loadPixmap( mImageUrl->url() ) );
 }
 
-void ImageWidget::updateGUI()
+void ImageBaseWidget::updateGUI()
 {
   if ( !mReadOnly ) {
     mUseImageUrl->setEnabled( !mImageUrl->url().isEmpty() );
@@ -201,7 +201,7 @@ void ImageWidget::updateGUI()
   }
 }
 
-void ImageWidget::clear()
+void ImageBaseWidget::clear()
 {
   mImageLabel->clear();
   mImageUrl->clear();
@@ -212,14 +212,14 @@ void ImageWidget::clear()
   emit changed();
 }
 
-void ImageWidget::imageChanged()
+void ImageBaseWidget::imageChanged()
 {
   updateGUI();
   
   emit changed();
 }
 
-QPixmap ImageWidget::loadPixmap( const KURL &url )
+QPixmap ImageBaseWidget::loadPixmap( const KURL &url )
 {
   QString tempFile;
   QPixmap pixmap;
@@ -235,6 +235,40 @@ QPixmap ImageWidget::loadPixmap( const KURL &url )
   }
 
   return pixmap;
+}
+
+ImageWidget::ImageWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
+  : KAB::ContactEditorWidget( ab, parent, name )
+{
+  QHBoxLayout *layout = new QHBoxLayout( this, KDialog::marginHint(), 
+                                         KDialog::spacingHint() );
+
+  mPhotoWidget = new ImageBaseWidget( KABC::Addressee::photoLabel(), this );
+  layout->addWidget( mPhotoWidget );
+
+  mLogoWidget = new ImageBaseWidget( KABC::Addressee::logoLabel(), this );
+  layout->addWidget( mLogoWidget );
+
+  connect( mPhotoWidget, SIGNAL( changed() ), SIGNAL( changed() ) );
+  connect( mLogoWidget, SIGNAL( changed() ), SIGNAL( changed() ) );
+}
+
+void ImageWidget::loadContact( KABC::Addressee *addr )
+{
+  mPhotoWidget->setImage( addr->photo() );
+  mLogoWidget->setImage( addr->logo() );
+}
+
+void ImageWidget::storeContact( KABC::Addressee *addr )
+{
+  addr->setPhoto( mPhotoWidget->image() );
+  addr->setLogo( mLogoWidget->image() );
+}
+
+void ImageWidget::setReadOnly( bool readOnly )
+{
+  mPhotoWidget->setReadOnly( readOnly );
+  mLogoWidget->setReadOnly( readOnly );
 }
 
 #include "imagewidget.moc"

@@ -63,6 +63,9 @@ KABPrefs::KABPrefs()
 
   KConfigSkeleton::setCurrentGroup( "Filters" );
   addItemInt( "CurrentFilter", mCurrentFilter, 0 );
+
+  KConfigSkeleton::setCurrentGroup( "AddresseeEditor" );
+  addItemInt( "EditorType", mEditorType, 0 );
 }
 
 KABPrefs::~KABPrefs()

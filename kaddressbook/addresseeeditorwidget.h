@@ -30,6 +30,8 @@
 #include <kdialogbase.h>
 #include <kjanuswidget.h>
 
+#include "addresseeeditorbase.h"
+#include "contacteditorwidgetmanager.h"
 #include "extensionwidget.h"
 
 class QCheckBox;
@@ -44,12 +46,9 @@ class KSqueezedTextLabel;
 
 class AddressEditWidget;
 class EmailEditWidget;
-class GeoWidget;
-class ImageWidget;
 class KeyWidget;
 class PhoneEditWidget;
 class SecrecyWidget;
-class SoundWidget;
 
 namespace KAB {
 class Core;
@@ -62,7 +61,7 @@ class CategoryEditDialog;
 
 namespace KABC { class AddressBook; }
 
-class AddresseeEditorWidget : public KAB::ExtensionWidget
+class AddresseeEditorWidget : public AddresseeEditorBase
 {
   Q_OBJECT
   
@@ -74,8 +73,6 @@ class AddresseeEditorWidget : public KAB::ExtensionWidget
     void setAddressee( const KABC::Addressee& );
     const KABC::Addressee &addressee();
 
-    void contactsSelectionChanged();
-  
     void load();
     void save();
     
@@ -116,7 +113,8 @@ class AddresseeEditorWidget : public KAB::ExtensionWidget
     void initGUI();
     void setupTab1();
     void setupTab2();
-    void setupTab3();
+    void setupAdditionalTabs();
+    void setupCustomFieldsTabs();
 
     void setReadOnly( bool );
 
@@ -158,16 +156,8 @@ class AddresseeEditorWidget : public KAB::ExtensionWidget
     KDateEdit *mBirthdayPicker;
     KDateEdit *mAnniversaryPicker;
     QTextEdit *mNoteEdit;
-    QSpinBox *mTimeZoneSpin;
-    QSpinBox *mGeoLat;
-    QSpinBox *mGeoLon;
 
-    // Tab3
-    GeoWidget *mGeoWidget;
-    ImageWidget *mPhotoWidget;
-    ImageWidget *mLogoWidget;
-    SoundWidget *mSoundWidget;
-    KeyWidget *mKeyWidget;
+    QDict<ContactEditorTabPage> mTabPages;
 };
 
 #endif

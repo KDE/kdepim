@@ -29,6 +29,8 @@
 #include <kabc/picture.h>
 #include <kdialogbase.h>
 
+#include "contacteditorwidget.h"
+
 class KURLRequester;
 class QCheckBox;
 
@@ -60,13 +62,13 @@ class ImageLabel : public QLabel
     QPoint mDragStartPos;
 };
 
-class ImageWidget : public QWidget
+class ImageBaseWidget : public QWidget
 {
   Q_OBJECT
 
   public:
-    ImageWidget( const QString &title, QWidget *parent, const char *name = 0 );
-    ~ImageWidget();
+    ImageBaseWidget( const QString &title, QWidget *parent, const char *name = 0 );
+    ~ImageBaseWidget();
 
     /**
       Sets the photo object.
@@ -99,6 +101,31 @@ class ImageWidget : public QWidget
     QPushButton *mClearButton;
 
     bool mReadOnly;
+};
+
+class ImageWidget : public KAB::ContactEditorWidget
+{
+  public:
+    ImageWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+
+    void loadContact( KABC::Addressee *addr );
+    void storeContact( KABC::Addressee *addr );
+    void setReadOnly( bool readOnly );
+
+  private:
+    ImageBaseWidget *mPhotoWidget;
+    ImageBaseWidget *mLogoWidget;
+};
+
+class ImageWidgetFactory : public KAB::ContactEditorWidgetFactory
+{
+  public:
+    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    {
+      return new ImageWidget( ab, parent, name );
+    }
+
+    QString pageIdentifier() const { return "misc"; }
 };
 
 #endif

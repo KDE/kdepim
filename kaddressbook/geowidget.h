@@ -24,8 +24,9 @@
 #ifndef GEOWIDGET_H
 #define GEOWIDGET_H
 
-#include <qwidget.h>
 #include <kdialogbase.h>
+
+#include "contacteditorwidget.h"
 
 namespace KABC {
 class Geo;
@@ -47,28 +48,18 @@ typedef struct {
   QString country;
 } GeoData;
 
-class GeoWidget : public QWidget
+class GeoWidget : public KAB::ContactEditorWidget
 {
   Q_OBJECT
 
   public:
-    GeoWidget( QWidget *parent, const char *name = 0 );
+    GeoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
     ~GeoWidget();
 
-    /**
-      Sets the geo object.
-     */
-    void setGeo( const KABC::Geo &geo );
-
-    /**
-      Returns a geo object.
-     */
-    KABC::Geo geo() const;
+    void loadContact( KABC::Addressee *addr );
+    void storeContact( KABC::Addressee *addr );
 
     void setReadOnly( bool readOnly );
-
-  signals:
-    void changed();
 
   private slots:
     void editGeoData();
@@ -152,6 +143,17 @@ class GeoMapWidget : public QWidget
   private:
     double mLatitude;
     double mLongitude;
+};
+
+class GeoWidgetFactory : public KAB::ContactEditorWidgetFactory
+{
+  public:
+    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    {
+      return new GeoWidget( ab, parent, name );
+    }
+
+    QString pageIdentifier() const { return "misc"; }
 };
 
 #endif

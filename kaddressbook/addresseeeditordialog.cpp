@@ -28,6 +28,8 @@
 
 #include "core.h"
 #include "addresseeeditorwidget.h"
+#include "simpleaddresseeeditor.h"
+#include "kabprefs.h"
 
 #include "addresseeeditordialog.h"
 
@@ -43,7 +45,11 @@ AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core *core,
 
   QVBoxLayout *layout = new QVBoxLayout( page );
 
-  mEditorWidget = new AddresseeEditorWidget( core, false, page );
+  if ( KABPrefs::instance()->mEditorType == KABPrefs::SimpleEditor ) {
+    mEditorWidget = new SimpleAddresseeEditor( core, false, page );  
+  } else {
+    mEditorWidget = new AddresseeEditorWidget( core, false, page );
+  }
   connect( mEditorWidget, SIGNAL( modified( const KABC::Addressee::List& ) ),
            SLOT( widgetModified() ) );
   layout->addWidget( mEditorWidget );

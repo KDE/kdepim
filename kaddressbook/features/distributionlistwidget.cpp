@@ -436,20 +436,24 @@ EmailSelector::EmailSelector( const QStringList &emails,
                                    topFrame );
   topLayout->addWidget( mButtonGroup );
 
+  QRadioButton *button = new QRadioButton( i18n("Preferred Address"), mButtonGroup );
+  button->setDown( true );
+  mEmailMap.insert( mButtonGroup->id( button ), "" );
+
   QStringList::ConstIterator it;
-  for( it = emails.begin(); it != emails.end(); ++it ) {
-    QRadioButton *button = new QRadioButton( *it, mButtonGroup );
-    if ( (*it) == current ) {
+  for ( it = emails.begin(); it != emails.end(); ++it ) {
+    button = new QRadioButton( *it, mButtonGroup );
+    mEmailMap.insert( mButtonGroup->id( button ), *it );
+    if ( (*it) == current )
       button->setDown( true );
-    }
   }
 }
 
-QString EmailSelector::selected()
+QString EmailSelector::selected() const
 {
   QButton *button = mButtonGroup->selected();
   if ( button )
-    return button->text();
+    return mEmailMap[ mButtonGroup->id( button ) ];
 
   return QString::null;
 }

@@ -30,6 +30,7 @@
 #include <qpushbutton.h>
 #include <qtabwidget.h>
 #include <qtooltip.h>
+#include <qcombobox.h>
 
 #include <kconfig.h>
 #include <kdebug.h>
@@ -87,10 +88,22 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
 
   layout->addWidget( groupBox );
 
+  QBoxLayout *editorLayout = new QHBoxLayout( layout );
+  
+  QLabel *label = new QLabel( i18n("Addressee Editor Type:"), generalPage );
+  editorLayout->addWidget( label );
+  
+  mEditorCombo = new QComboBox( generalPage );
+  mEditorCombo->insertItem( i18n("Full Editor") );
+  mEditorCombo->insertItem( i18n("Simple Editor") );
+  editorLayout->addWidget( mEditorCombo );
+
+  editorLayout->addStretch( 1 );
+
   groupBox = new QGroupBox( 0, Qt::Vertical, i18n( "Script-Hooks" ), generalPage );
   QGridLayout *grid = new QGridLayout( groupBox->layout(), 2, 2,
                                        KDialog::spacingHint() );
-  QLabel *label = new QLabel( i18n( "Phone:" ), groupBox );
+  label = new QLabel( i18n( "Phone:" ), groupBox );
   grid->addWidget( label, 0, 0 );
 
   mPhoneHook = new QLineEdit( groupBox );
@@ -123,16 +136,17 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
 
   layout->addWidget( groupBox );
 
-  connect( mNameParsing, SIGNAL( toggled( bool ) ), this, SLOT( modified() ) );
-  connect( mViewsSingleClickBox, SIGNAL( toggled( bool ) ), this, SLOT( modified() ) );
-  connect( mPhoneHook, SIGNAL( textChanged( const QString& ) ), this, SLOT( modified() ) );
-  connect( mFaxHook, SIGNAL( textChanged( const QString& ) ), this, SLOT( modified() ) );
+  connect( mNameParsing, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
+  connect( mViewsSingleClickBox, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
+  connect( mPhoneHook, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
+  connect( mFaxHook, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
   connect( mExtensionView, SIGNAL( selectionChanged( QListViewItem* ) ),
            SLOT( selectionChanged( QListViewItem* ) ) );
   connect( mExtensionView, SIGNAL( clicked( QListViewItem* ) ),
            SLOT( itemClicked( QListViewItem* ) ) );
   connect( mConfigureButton, SIGNAL( clicked() ),
            SLOT( configureExtension() ) );
+  connect( mEditorCombo, SIGNAL( activated( int ) ), SLOT( modified() ) );
 
   tabWidget->addTab( generalPage, i18n( "General" ) );
 
@@ -161,6 +175,7 @@ void KABConfigWidget::restoreSettings()
   mPhoneHook->setText( KABPrefs::instance()->mPhoneHookApplication );
   mFaxHook->setText( KABPrefs::instance()->mFaxHookApplication );
   mAddresseeWidget->restoreSettings();
+  mEditorCombo->setCurrentItem( KABPrefs::instance()->mEditorType );
 
   restoreExtensionSettings();
 
@@ -175,6 +190,7 @@ void KABConfigWidget::saveSettings()
   KABPrefs::instance()->mHonorSingleClick = mViewsSingleClickBox->isChecked();
   KABPrefs::instance()->mPhoneHookApplication = mPhoneHook->text();
   KABPrefs::instance()->mFaxHookApplication = mFaxHook->text();
+  KABPrefs::instance()->mEditorType = mEditorCombo->currentItem();
   mAddresseeWidget->saveSettings();
 
   saveExtensionSettings();
@@ -187,6 +203,7 @@ void KABConfigWidget::defaults()
 {
   mNameParsing->setChecked( true );
   mViewsSingleClickBox->setChecked( false );
+  mEditorCombo->setCurrentItem( 0 );
 
   emit changed( true );
 }

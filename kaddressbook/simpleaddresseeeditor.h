@@ -1,6 +1,7 @@
-/*                                                                      
+/*
     This file is part of KAddressBook.                                  
-    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
+
+    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>                   
                                                                         
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,58 +20,48 @@
     As a special exception, permission is given to link this program    
     with any edition of Qt, and distribute the resulting executable,    
     without including the source code for Qt in the source distribution.
-*/                                       
+*/                                                                      
 
-#ifndef KABPREFS_H
-#define KABPREFS_H
+#ifndef SIMPLEADDRESSEEEDITOR_H
+#define SIMPLEADDRESSEEEDITOR_H
 
-#include <qstringlist.h>
+#include "addresseeeditorwidget.h"
 
-#include <libkdepim/kpimprefs.h>
+class KLineEdit;
 
-class KConfig;
-
-class KABPrefs : public KPimPrefs
+class SimpleAddresseeEditor : public AddresseeEditorBase
 {
+    Q_OBJECT  
   public:
-    ~KABPrefs();
+    SimpleAddresseeEditor( KAB::Core *core, bool isExtension,
+                           QWidget *parent, const char *name = 0 );
+    ~SimpleAddresseeEditor();  
 
-    static KABPrefs *instance();
-    
-    // General
-    bool mHonorSingleClick;
-    bool mAutomaticNameParsing;
-    int mCurrentIncSearchField;
-    QString mPhoneHookApplication;
-    QString mFaxHookApplication;
+    void setAddressee( const KABC::Addressee& );
+    const KABC::Addressee &addressee();
 
-    // GUI
-    bool mJumpButtonBarVisible;
-    bool mDetailsPageVisible;
-    QValueList<int> mExtensionsSplitter;
-    QValueList<int> mDetailsSplitter;
+    void load();
+    void save();
 
-    // Extensions stuff
-    int mCurrentExtension;
-    QStringList mActiveExtensions;
+    bool dirty();
 
-    // Views stuff
-    QString mCurrentView;
-    QStringList mViewNames;
+    QString title() const;
+    QString identifier() const;
 
-    // Filter
-    int mCurrentFilter;
+  protected slots:
+    void emitModified();
 
-    enum { FullEditor, SimpleEditor };
+  protected:
+    void initGui();
 
-    int mEditorType;
-
-    void setCategoryDefaults();
-    
   private:
-    KABPrefs();
+    KLineEdit *mNameEdit;
+    KLineEdit *mEmailEdit;
+
+    KABC::Addressee mAddressee;
     
-    static KABPrefs *sInstance;
+    bool mDirty;
+    bool mBlockModified;
 };
 
 #endif

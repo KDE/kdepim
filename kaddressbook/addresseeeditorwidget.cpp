@@ -46,6 +46,7 @@
 #include <kmessagebox.h>
 #include <kseparator.h>
 #include <ksqueezedtextlabel.h>
+#include <kstandarddirs.h>
 
 #include <libkdepim/categoryeditdialog.h>
 #include <libkdepim/categoryselectdialog.h>
@@ -53,22 +54,20 @@
 #include <libkdepim/kdateedit.h>
 
 #include "addresseditwidget.h"
+#include "advancedcustomfields.h"
 #include "core.h"
 #include "emaileditwidget.h"
-#include "geowidget.h"
-#include "imagewidget.h"
 #include "kabprefs.h"
 #include "keywidget.h"
 #include "nameeditdialog.h"
 #include "phoneeditwidget.h"
 #include "secrecywidget.h"
-#include "soundwidget.h"
 
 #include "addresseeeditorwidget.h"
 
 AddresseeEditorWidget::AddresseeEditorWidget( KAB::Core *core, bool isExtension, 
                                               QWidget *parent, const char *name )
-  : KAB::ExtensionWidget( core, parent, name ), mIsExtension( isExtension ),
+  : AddresseeEditorBase( core, isExtension, parent, name ),
     mBlockSignals( false ), mReadOnly( false )
 {
   kdDebug(5720) << "AddresseeEditorWidget()" << endl;
@@ -87,13 +86,6 @@ AddresseeEditorWidget::~AddresseeEditorWidget()
 {
   kdDebug(5720) << "~AddresseeEditorWidget()" << endl;
 }  
-  
-void AddresseeEditorWidget::contactsSelectionChanged()
-{
-  KABC::Addressee::List list = selectedContacts();
-
-  setAddressee( list[ 0 ] );
-}
 
 void AddresseeEditorWidget::setAddressee( const KABC::Addressee &addr )
 {
@@ -124,7 +116,8 @@ void AddresseeEditorWidget::initGUI()
 
   setupTab1();
   setupTab2();
-  setupTab3();
+  setupAdditionalTabs();
+  setupCustomFieldsTabs();
 
   mNameEdit->setFocus();
 
@@ -419,57 +412,58 @@ void AddresseeEditorWidget::setupTab2()
   mTabWidget->addTab( tab2, i18n( "&Details" ) );
 }
 
-void AddresseeEditorWidget::setupTab3()
+void AddresseeEditorWidget::setupAdditionalTabs()
 {
-  // This is the Misc tab
-  QWidget *tab3 = new QWidget( mTabWidget );
+  ContactEditorWidgetManager *manager = ContactEditorWidgetManager::self();
 
-  QGridLayout *layout = new QGridLayout( tab3, 3, 2 );
-  layout->setMargin( KDialogBase::marginHint() );
-  layout->setSpacing( KDialogBase::spacingHint() );
-  
-  //////////////////////////////////////
-  // Geo
-  mGeoWidget = new GeoWidget( tab3 );
-  mGeoWidget->setMinimumSize( mGeoWidget->sizeHint() );
-  connect( mGeoWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
-  layout->addWidget( mGeoWidget, 0, 0, Qt::AlignTop );
+  // create all tab pages and add the widgets
+  for ( int i = 0; i < manager->count(); ++i ) {
+    QString pageIdentifier = manager->factory( i )->pageIdentifier();
+    QString pageTitle = manager->factory( i )->pageTitle();
 
-  //////////////////////////////////////
-  // Sound
-  mSoundWidget = new SoundWidget( tab3 );
-  mSoundWidget->setMinimumSize( mSoundWidget->sizeHint() );
-  connect( mSoundWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
-  layout->addWidget( mSoundWidget, 0, 1, Qt::AlignTop );
+    if ( pageIdentifier == "misc" )
+      pageTitle = i18n( "&Misc" );
 
-  QFrame *separator = new QFrame( tab3 );
-  separator->setFrameShape( QFrame::HLine );
-  separator->setFrameShadow( QFrame::Sunken );
-  layout->addMultiCellWidget( separator, 1, 1, 0, 1 );
+    ContactEditorTabPage *page = mTabPages[ pageIdentifier ];
+    if ( page == 0 ) { // tab not yet available, create one
+      page = new ContactEditorTabPage( mTabWidget );
+      mTabPages.insert( pageIdentifier, page );
 
-  //////////////////////////////////////
-  // Images
-  mPhotoWidget = new ImageWidget( KABC::Addressee::photoLabel(), tab3 );
-  mPhotoWidget->setMinimumSize( mPhotoWidget->sizeHint() );
-  connect( mPhotoWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
-  layout->addWidget( mPhotoWidget, 2, 0 );
+      mTabWidget->addTab( page, pageTitle );
 
-  mLogoWidget = new ImageWidget( KABC::Addressee::logoLabel(), tab3 );
-  mLogoWidget->setMinimumSize( mLogoWidget->sizeHint() );
-  connect( mLogoWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
-  layout->addWidget( mLogoWidget, 2, 1 );
+      connect( page, SIGNAL( changed() ), SLOT( emitModified() ) );
+    }
 
-/* FIXME: will be enabled again when kgpg support is in kdelibs
-  //////////////////////////////////////
-  // Keys
-  mKeyWidget = new KeyWidget( mReadOnly, tab3 );
-  mKeyWidget->setMinimumSize( mKeyWidget->sizeHint() );
-  connect( mKeyWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
-  layout->addWidget( mKeyWidget, 1, 1, Qt::AlignTop );
-*/
-  mTabWidget->addTab( tab3, i18n( "&Misc" ) );
+    KAB::ContactEditorWidget *widget
+              = manager->factory( i )->createWidget( core()->addressBook(),
+                                                     page );
+    if ( widget )
+      page->addWidget( widget );
+  }
+
+  // query the layout update
+  QDictIterator<ContactEditorTabPage> it( mTabPages );
+  for ( ; it.current(); ++it )
+    it.current()->updateLayout();
 }
-    
+
+void AddresseeEditorWidget::setupCustomFieldsTabs()
+{
+  QStringList list = KGlobal::dirs()->findAllResources( "data", "kaddressbook/contacteditorpages/*.ui", true, true );
+  for ( QStringList::iterator it = list.begin(); it != list.end(); ++it ) {
+    ContactEditorTabPage *page = new ContactEditorTabPage( mTabWidget );
+    AdvancedCustomFields *wdg = new AdvancedCustomFields( *it, core()->addressBook(), page );
+    if ( wdg ) {
+      mTabPages.insert( wdg->pageIdentifier(), page );
+      mTabWidget->addTab( page, wdg->pageTitle() );
+
+      page->addWidget( wdg );
+      page->updateLayout();
+    } else
+      delete page;
+  }
+}
+
 void AddresseeEditorWidget::load()
 {
   kdDebug(5720) << "AddresseeEditorWidget::load()" << endl;
@@ -516,12 +510,7 @@ void AddresseeEditorWidget::load()
   mNicknameEdit->setText( mAddressee.nickName() );
   mCategoryEdit->setText( mAddressee.categories().join( "," ) );
 
-  mGeoWidget->setGeo( mAddressee.geo() );
-  mPhotoWidget->setImage( mAddressee.photo() );
-  mLogoWidget->setImage( mAddressee.logo() );
-//  mKeyWidget->setKeys( mAddressee.keys() );
   mSecrecyWidget->setSecrecy( mAddressee.secrecy() );
-  mSoundWidget->setSound( mAddressee.sound() );
 
   // Load customs
   mIMAddressEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-IMAddress" ) );
@@ -531,7 +520,11 @@ void AddresseeEditorWidget::load()
   mDepartmentEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Department" ) );
   mOfficeEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Office" ) );
   mProfessionEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Profession" ) );
-  
+
+  QDictIterator<ContactEditorTabPage> it( mTabPages );
+  for ( ; it.current(); ++it )
+    it.current()->loadContact( &mAddressee );
+
   blockSignals( block );
   mBlockSignals = false;
 
@@ -554,11 +547,6 @@ void AddresseeEditorWidget::save()
   mAddressee.setNickName( mNicknameEdit->text() );
   mAddressee.setCategories( QStringList::split( ",", mCategoryEdit->text() ) );
 
-  mAddressee.setGeo( mGeoWidget->geo() );
-  mAddressee.setPhoto( mPhotoWidget->image() );
-  mAddressee.setLogo( mLogoWidget->image() );
-//  mAddressee.setKeys( mKeyWidget->keys() );
-  mAddressee.setSound( mSoundWidget->sound() );
   mAddressee.setSecrecy( mSecrecyWidget->secrecy() );
 
   // save custom fields
@@ -613,6 +601,10 @@ void AddresseeEditorWidget::save()
   for ( addressIter = addresses.begin(); addressIter != addresses.end();
         ++addressIter )
     mAddressee.insertAddress( *addressIter );
+
+  QDictIterator<ContactEditorTabPage> it( mTabPages );
+  for ( ; it.current(); ++it )
+    it.current()->storeContact( &mAddressee );
 
   mDirty = false;
 }
@@ -797,10 +789,10 @@ void AddresseeEditorWidget::setReadOnly( bool readOnly )
   mBirthdayPicker->setEnabled( !readOnly );
   mAnniversaryPicker->setEnabled( !readOnly );
   mNoteEdit->setReadOnly( mReadOnly );
-  mGeoWidget->setReadOnly( readOnly );
-  mSoundWidget->setReadOnly( readOnly );
-  mPhotoWidget->setReadOnly( readOnly );
-  mLogoWidget->setReadOnly( readOnly );
+
+  QDictIterator<ContactEditorTabPage> it( mTabPages );
+  for ( ; it.current(); ++it )
+    it.current()->setReadOnly( readOnly );
 }
 
 #include "addresseeeditorwidget.moc"

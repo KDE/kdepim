@@ -1,6 +1,6 @@
 /*                                                                      
     This file is part of KAddressBook.                                  
-    Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>                   
                                                                         
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,58 +19,48 @@
     As a special exception, permission is given to link this program    
     with any edition of Qt, and distribute the resulting executable,    
     without including the source code for Qt in the source distribution.
-*/                                       
+*/                                                                      
 
-#ifndef KABPREFS_H
-#define KABPREFS_H
+#ifndef ADDRESSEEEDITORBASE_H
+#define ADDRESSEEEDITORBASE_H
 
-#include <qstringlist.h>
+#include <kabc/addressee.h>
 
-#include <libkdepim/kpimprefs.h>
+#include "extensionwidget.h"
 
-class KConfig;
+namespace KAB {
+class Core;
+}
 
-class KABPrefs : public KPimPrefs
+class AddresseeEditorBase : public KAB::ExtensionWidget
 {
   public:
-    ~KABPrefs();
-
-    static KABPrefs *instance();
+    AddresseeEditorBase( KAB::Core *core, bool isExtension,
+                         QWidget *parent, const char *name = 0 )
+      : KAB::ExtensionWidget( core, parent, name ), mIsExtension( isExtension )
+    {
+    }
     
-    // General
-    bool mHonorSingleClick;
-    bool mAutomaticNameParsing;
-    int mCurrentIncSearchField;
-    QString mPhoneHookApplication;
-    QString mFaxHookApplication;
+    ~AddresseeEditorBase() {}
 
-    // GUI
-    bool mJumpButtonBarVisible;
-    bool mDetailsPageVisible;
-    QValueList<int> mExtensionsSplitter;
-    QValueList<int> mDetailsSplitter;
+    virtual void setAddressee( const KABC::Addressee& ) = 0;
+    virtual const KABC::Addressee &addressee() = 0;
 
-    // Extensions stuff
-    int mCurrentExtension;
-    QStringList mActiveExtensions;
+    virtual void contactsSelectionChanged()
+    {
+       KABC::Addressee::List list = selectedContacts();
+       setAddressee( list[ 0 ] );
+    }
 
-    // Views stuff
-    QString mCurrentView;
-    QStringList mViewNames;
-
-    // Filter
-    int mCurrentFilter;
-
-    enum { FullEditor, SimpleEditor };
-
-    int mEditorType;
-
-    void setCategoryDefaults();
+    virtual void load() = 0;
+    virtual void save() = 0;
     
+    virtual bool dirty() = 0;
+
+    bool isExtension() { return mIsExtension; }
+
   private:
-    KABPrefs();
-    
-    static KABPrefs *sInstance;
+    bool mIsExtension;
 };
 
 #endif

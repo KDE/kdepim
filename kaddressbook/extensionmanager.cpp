@@ -28,6 +28,7 @@
 #include <ktrader.h>
 
 #include "addresseeeditorwidget.h"
+#include "simpleaddresseeeditor.h"
 #include "core.h"
 #include "kabprefs.h"
 
@@ -117,7 +118,11 @@ void ExtensionManager::createExtensionWidgets()
   QStringList extensionNames( i18n( "None" ) );
 
   // add addressee editor as default
-  wdg = new AddresseeEditorWidget( mCore, true, this );
+  if ( KABPrefs::instance()->mEditorType == KABPrefs::SimpleEditor ) {
+    wdg = new SimpleAddresseeEditor( mCore, true, this );
+  } else {
+    wdg = new AddresseeEditorWidget( mCore, true, this );
+  }
   wdg->hide();
   connect( wdg, SIGNAL( modified( const KABC::Addressee::List& ) ),
            SIGNAL( modified( const KABC::Addressee::List& ) ) );

@@ -44,8 +44,8 @@
 
 #include "geowidget.h"
 
-GeoWidget::GeoWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name ), mReadOnly( false )
+GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
+  : KAB::ContactEditorWidget( ab, parent, name ), mReadOnly( false )
 {
   QLabel *label = 0;
 
@@ -105,15 +105,10 @@ GeoWidget::~GeoWidget()
 {
 }
 
-void GeoWidget::setReadOnly( bool readOnly )
+void GeoWidget::loadContact( KABC::Addressee *addr )
 {
-  mReadOnly = readOnly;
+  KABC::Geo geo = addr->geo();
 
-  mGeoIsValid->setEnabled( !mReadOnly );
-}
-
-void GeoWidget::setGeo( const KABC::Geo &geo )
-{
   if ( geo.isValid() ) {
     if ( !mReadOnly )
       mGeoIsValid->setChecked( true );
@@ -123,7 +118,7 @@ void GeoWidget::setGeo( const KABC::Geo &geo )
     mGeoIsValid->setChecked( false );
 }
 
-KABC::Geo GeoWidget::geo() const
+void GeoWidget::storeContact( KABC::Addressee *addr )
 {
   KABC::Geo geo;
 
@@ -135,7 +130,14 @@ KABC::Geo GeoWidget::geo() const
     geo.setLongitude( 181 );
   }
 
-  return geo;
+  addr->setGeo( geo );
+}
+
+void GeoWidget::setReadOnly( bool readOnly )
+{
+  mReadOnly = readOnly;
+
+  mGeoIsValid->setEnabled( !mReadOnly );
 }
 
 void GeoWidget::editGeoData()

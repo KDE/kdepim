@@ -114,15 +114,16 @@ class EmailSelector : public KDialogBase
 {
   public:
     EmailSelector( const QStringList &emails, const QString &current,
-        QWidget *parent );
+                   QWidget *parent );
 
-    QString selected();
+    QString selected() const;
 
     static QString getEmail( const QStringList &emails, const QString &current,
-        QWidget *parent );
+                             QWidget *parent );
 
   private:
     QButtonGroup *mButtonGroup;
+    QMap<int, QString> mEmailMap;
 };
 
 #endif

@@ -498,7 +498,7 @@ void KABCore::incrementalSearch( const QString& text, bool search )
 
 #if KDE_VERSION >= 319
     KABC::AddresseeList list( mAddressBook->allAddressees() );
-    if (  field ) {
+    if ( field ) {
       list.sortByField( field );
       KABC::AddresseeList::Iterator it;
       for ( it = list.begin(); it != list.end(); ++it ) {
@@ -912,7 +912,7 @@ void KABCore::initGUI()
 
   QHBoxLayout *detailsPageLayout = new QHBoxLayout( mDetailsPage,
                                                     KDialog::marginHint(),
-                                                KDialog::spacingHint() );
+                                                    KDialog::spacingHint() );
   mDetails = new KPIM::AddresseeView( mDetailsPage );
   detailsPageLayout->addWidget( mDetails );
 

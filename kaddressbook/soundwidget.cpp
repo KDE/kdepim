@@ -38,8 +38,8 @@
 
 #include "soundwidget.h"
 
-SoundWidget::SoundWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name ), mReadOnly( false )
+SoundWidget::SoundWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
+  : KAB::ContactEditorWidget( ab, parent, name ), mReadOnly( false )
 {
   QGridLayout *topLayout = new QGridLayout( this, 2, 3, KDialog::marginHint(),
                                             KDialog::spacingHint() );
@@ -79,17 +79,12 @@ SoundWidget::~SoundWidget()
 {
 }
 
-void SoundWidget::setReadOnly( bool readOnly )
-{
-  mReadOnly = readOnly;
-  mSoundUrl->setEnabled( !mReadOnly );
-}
-
-void SoundWidget::setSound( const KABC::Sound &sound )
+void SoundWidget::loadContact( KABC::Addressee *addr )
 {
   bool blocked = signalsBlocked();
   blockSignals( true );
 
+  KABC::Sound sound = addr->sound();
   if ( sound.isIntern() ) {
     mSound.setData( sound.data() );
     mPlayButton->setEnabled( true );
@@ -104,7 +99,7 @@ void SoundWidget::setSound( const KABC::Sound &sound )
   blockSignals( blocked );
 }
 
-KABC::Sound SoundWidget::sound() const
+void SoundWidget::storeContact( KABC::Addressee *addr )
 {
   KABC::Sound sound;
 
@@ -113,7 +108,13 @@ KABC::Sound SoundWidget::sound() const
   else
     sound.setData( mSound.data() );
 
-  return sound;
+  addr->setSound( sound );
+}
+
+void SoundWidget::setReadOnly( bool readOnly )
+{
+  mReadOnly = readOnly;
+  mSoundUrl->setEnabled( !mReadOnly );
 }
 
 void SoundWidget::playSound()
