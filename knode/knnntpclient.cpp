@@ -451,15 +451,41 @@ void KNNntpClient::doPostArticle()
 {
   KNLocalArticle *art=static_cast<KNLocalArticle*>(job->data());
   
-  sendSignal(TSsendArticle);  
-  
+  sendSignal(TSsendArticle);
+
+  if (art->messageID(false)!=0) {
+    int rep;
+    if (!sendCommand(QCString("STAT ")+art->messageID(false)->as7BitString(false),rep))
+      return;
+
+    if (rep==223) {   // 223 n <a> article retrieved - request text separately
+      #ifndef NDEBUG
+      qDebug("knode: STAT successfull, we have probably already sent this article.");
+      #endif
+      return;       // the article is already on the server, lets put it silently into the send folder
+    }
+  }
+
   if(!sendCommandWCheck("POST", 340))       // 340 send article to be posted. End with <CR-LF>.<CR-LF>
     return;
 
-  if(!sendMsg(art->encodedContent(true)))
+  if (art->messageID(false)==0) {  // article has no message ID => search for a ID in the response
+    QCString s = getCurrentLine();
+    int start = s.findRev(QRegExp("<[^\\s]*@[^\\s]*>"));
+    if (start != -1) {        // post response includes a recommended id
+      int end = s.find('>',start);
+      art->messageID()->from7BitString(s.mid(start,end-start+1));
+      art->assemble();
+      #ifndef NDEBUG
+      qDebug("knode: using the message-id recommended by the server: %s",s.mid(start,end-start+1).data());
+      #endif
+    }
+  }
+
+  if (!sendMsg(art->encodedContent(true)))
     return;
     
-  if(!checkNextResponse(240))            // 240 article posted ok
+  if (!checkNextResponse(240))            // 240 article posted ok
     return;
 }
 
