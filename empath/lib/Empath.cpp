@@ -337,7 +337,7 @@ Empath::remove(
     EmpathJobID
 Empath::mark(
     const EmpathURL & url,
-    RMM::MessageStatus status,
+    EmpathIndexRecord::Status status,
     QObject * o
 )
 {
@@ -348,7 +348,7 @@ Empath::mark(
 Empath::mark(
     const EmpathURL & f,
     const QStringList & l,
-    RMM::MessageStatus s,
+    EmpathIndexRecord::Status s,
     QObject * o
 )
 {
@@ -440,10 +440,6 @@ Empath::s_infoMessage(const QString & s)
     void
 Empath::s_checkMail()
 { emit(checkMail()); }
-
-    void
-Empath::s_showFolder(const EmpathURL & u, unsigned int i)
-{ emit(showFolder(u, i)); }
 
     void
 Empath::s_updateFolderLists()

@@ -202,7 +202,7 @@ EmpathFolder::removeMessage(const QStringList & idList)
 }
 
     bool
-EmpathFolder::markMessage(const QString & id, RMM::MessageStatus status)
+EmpathFolder::markMessage(const QString & id, EmpathIndexRecord::Status status)
 {
     EmpathMailbox * m = empath->mailbox(url_);
     
@@ -218,7 +218,10 @@ EmpathFolder::markMessage(const QString & id, RMM::MessageStatus status)
 }
 
     EmpathSuccessMap
-EmpathFolder::markMessage(const QStringList & idList, RMM::MessageStatus stat)
+EmpathFolder::markMessage(
+    const QStringList & idList,
+    EmpathIndexRecord::Status stat
+)
 {
     EmpathSuccessMap retval;
 

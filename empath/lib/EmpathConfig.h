@@ -74,6 +74,7 @@ static const char * UI_STAR_PASSWORD      = "StarPassword";
 static const char * UI_FOLDERS_OPEN       = "FolderListItemsOpen";
 static const char * UI_MARK_READ          = "MarkAsRead";
 static const char * UI_MARK_TIME          = "MarkAsReadAfterTime";
+static const char * UI_LAST_SHOWN_FOLDER  = "LastShownFolder";
 
 // MAILBOX
 static const char * M_TYPE        = "Type";

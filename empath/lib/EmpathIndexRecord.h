@@ -31,9 +31,6 @@
 #include <qstring.h>
 #include <qdatetime.h>
 
-// Local includes
-#include <RMM_Message.h>
-
 /**
  * @short An index record
  * 
@@ -42,17 +39,24 @@
 class EmpathIndexRecord
 {
     public:
-        
+
+        enum Status {
+            Read        = 1 << 0,
+            Marked      = 1 << 1,
+            Trashed     = 1 << 2,
+            Replied     = 1 << 3,
+            New         = 1 << 4,
+            Old         = 1 << 5,
+            Forwarded   = 1 << 6,
+            Queued      = 1 << 7,
+            Sent        = 1 << 8
+        };
+
         /**
          * @internal
          */
         EmpathIndexRecord();
             
-        /**
-         * Create a new index record using the given id and the given message.
-         */
-        EmpathIndexRecord(const QString & id, RMM::RMessage &);
-        
         /**
          * Copy ctor.
          */
@@ -68,7 +72,7 @@ class EmpathIndexRecord
                 const QString &     senderAddress,
                 const QDateTime &   date,
                 int                 timezone,
-                unsigned int        status,
+                Status              status,
                 unsigned int        size,
                 const QString &     messageID,
                 const QString &     parentMessageID,
@@ -130,7 +134,7 @@ class EmpathIndexRecord
         /**
          * The status of the related message (Read, Marked, ...).
          */
-        unsigned int status() const
+        Status status() const
         { return status_; }
         
         /**
@@ -166,7 +170,7 @@ class EmpathIndexRecord
         /**
          * Change the status of this record.
          */
-        void setStatus(unsigned int s)
+        void setStatus(Status s)
         { status_ = s; }
         
         /**
@@ -201,7 +205,7 @@ class EmpathIndexRecord
         QString         senderAddress_;
         QDateTime       date_;
         int             timeZone_;
-        unsigned int    status_;
+        Status          status_;
         unsigned int    size_;
         QString         messageID_;
         QString         parentID_;

@@ -38,6 +38,10 @@ EmpathMailboxIMAP4::EmpathMailboxIMAP4(const QString & name)
     typeString_ = "IMAP4";
 }
 
+EmpathMailboxIMAP4::~EmpathMailboxIMAP4()
+{
+    // Empty.
+}
 
     void
 EmpathMailboxIMAP4::s_checkMail()

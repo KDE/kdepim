@@ -28,6 +28,7 @@
 #include <qheader.h>
 #include <qvaluelist.h>
 #include <qlayout.h>
+#include <qsplitter.h>
 
 // KDE includes
 #include <kconfig.h>
@@ -40,27 +41,30 @@
 #include "EmpathFolderWidget.h"
 #include "EmpathMessageViewWidget.h"
 #include "EmpathMessageListWidget.h"
+#include "EmpathIndex.h"
 
 EmpathMainWidget::EmpathMainWidget(QWidget * parent)
     : QWidget(parent, "MainWidget")
 {
-    QVBoxLayout * layout = new QVBoxLayout(this);
-    layout->setAutoAdd(true);
-    
-    hSplit = new QSplitter(this, "hSplit");
-    
-    EmpathFolderWidget * fw = new EmpathFolderWidget(hSplit);
-    
-    vSplit = new QSplitter(Qt::Vertical, hSplit, "vSplit");
-        
-    messageListWidget_ = new EmpathMessageListWidget(vSplit);
-    messageListWidget_->listenTo(fw->id());
+    QSplitter * hSplit = new QSplitter(this, "hSplit");
+    (new QVBoxLayout(this))->addWidget(hSplit);
 
-    messageViewWidget_ = new EmpathMessageViewWidget(EmpathURL(), vSplit);
+    EmpathFolderWidget * folderWidget = new EmpathFolderWidget(hSplit);
+
+    QSplitter * vSplit = new QSplitter(Qt::Vertical, hSplit, "vSplit");
+
+    messageListWidget_  = new EmpathMessageListWidget(vSplit);
+
+    EmpathMessageViewWidget * messageViewWidget =
+        new EmpathMessageViewWidget(EmpathURL(), vSplit);
+
+    QObject::connect(
+        folderWidget,       SIGNAL(showFolder(const EmpathURL &)),
+        this,               SLOT(s_showFolder(const EmpathURL &)));
    
     QObject::connect(
-        messageListWidget_, SIGNAL(changeView(const EmpathURL &)),
-        messageViewWidget_, SLOT(s_setMessage(const EmpathURL &)));
+        messageListWidget_, SIGNAL(changeView(const QString &)),
+        this,               SLOT(s_changeView(const QString &)));
 }
 
 EmpathMainWidget::~EmpathMainWidget()
@@ -68,16 +72,29 @@ EmpathMainWidget::~EmpathMainWidget()
     // Empty.
 }
 
-    EmpathMessageListWidget *
-EmpathMainWidget::messageListWidget()
+    void
+EmpathMainWidget::s_showFolder(const EmpathURL & url)
 {
-    return messageListWidget_;
+    currentFolder_ = url;
+
+    EmpathFolder * f(empath->folder(url));
+
+    if (0 == f) {
+        empathDebug("Can't find folder `" + url.asString() + "'");
+        return;
+    }
+
+    empathDebug("Doing showFolder...");
+    messageListWidget_->s_showFolder(f->index()->dict());
 }
 
-    EmpathMessageViewWidget *
-EmpathMainWidget::messageViewWidget()
+    void
+EmpathMainWidget::s_changeView(const QString & id)
 {
-    return messageViewWidget_;
+    EmpathURL u(currentFolder_);
+    u.setMessageID(id);
+
+    messageViewWidget_->s_setMessage(u);
 }
 
 // vim:ts=4:sw=4:tw=78

@@ -116,11 +116,12 @@ class EmpathIndex
         QString indexFileName() const { return filename_; }
 		
         QStringList allKeys() const;
+        QDict<EmpathIndexRecord> dict() const { return dict_; }
 
         bool initialised() const { return initialised_; }
         void setInitialised(bool i) { initialised_ = i; }
 
-        void setStatus(const QString & id, RMM::MessageStatus);
+        void setStatus(const QString & id, EmpathIndexRecord::Status);
 
         QDateTime lastSync() const { return lastSync_; }
         QDateTime setLastSync(QDateTime dt) { lastSync_ = dt; }

@@ -29,6 +29,13 @@
 
 // Local includes
 #include "EmpathUtilities.h"
+#include "RMM_MessageID.h"
+#include "RMM_DateTime.h"
+#include "RMM_Envelope.h"
+#include "RMM_ContentType.h"
+#include "RMM_Address.h"
+#include "RMM_Mailbox.h"
+#include "RMM_Enum.h"
 
 QString baseName(const QString & filename)
 {
@@ -39,5 +46,23 @@ bool stricmp(const QString & a, const QString & b)
 {
     return a.lower() == b.lower();
 }
+
+EmpathIndexRecord indexRecordFromMessage(const QString & id, RMM::RMessage & m)
+{
+    return EmpathIndexRecord(
+        id,
+        QString::fromUtf8(m.envelope().subject().asString()),
+        QString::fromUtf8(m.envelope().firstSender().phrase()),
+        QString::fromUtf8(m.envelope().firstSender().route()),
+        m.envelope().date().qdt(),
+        0,
+        EmpathIndexRecord::Status(m.status()),
+        m.size(),
+        QString::fromUtf8(m.envelope().messageID().asString()),
+        QString::fromUtf8(m.envelope().parentMessageId().asString()),
+        (0 != stricmp(m.envelope().contentType().type(), "multipart"))
+    );
+}
+
 
 // vim:ts=4:sw=4:tw=78

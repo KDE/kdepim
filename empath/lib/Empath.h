@@ -42,6 +42,7 @@
 #include "EmpathCachedMessage.h"
 #include "EmpathComposeForm.h"
 #include "EmpathViewFactory.h"
+#include "EmpathIndexRecord.h"
 
 #include "RMM_Enum.h"
 #include "RMM_Message.h"
@@ -358,7 +359,7 @@ class Empath : public QObject
          */
         EmpathJobID mark(
             const EmpathURL & messageURL,
-            RMM::MessageStatus,
+            EmpathIndexRecord::Status,
             QObject * = 0L
         );
         
@@ -370,7 +371,7 @@ class Empath : public QObject
         EmpathJobID mark(
             const EmpathURL & folder,
             const QStringList & ids,
-            RMM::MessageStatus,
+            EmpathIndexRecord::Status,
             QObject * = 0L
         );
 
@@ -410,15 +411,6 @@ class Empath : public QObject
          */
 //        void s_saveNameReady(const EmpathURL & url, QString path);
 
-        /**
-         * @short We want to show a folder's contents
-         * Call this when you want a folder's contents to be displayed.
-         * Used only by EmpathFolderWidget, which maintains unique
-         * numbers for each instance of itself so you can decide whether
-         * to ignore the signal or not.
-         */
-        void s_showFolder(const EmpathURL & url, unsigned int idx);
-       
         /**
          * @internal
          */

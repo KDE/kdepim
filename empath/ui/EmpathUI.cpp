@@ -59,10 +59,10 @@
 #include "EmpathFilterManagerDialog.h"
 #include "EmpathConfigIMAP4Dialog.h"
 #include "EmpathConfigPOP3Dialog.h"
-#include "EmpathMessageListWidget.h"
+#include "EmpathMessageListItem.h"
 
 QString EmpathAboutText;
-QActionCollection * EmpathUI::actionCollection_ = 0L;
+EmpathUI * EmpathUI::instance_ = 0L;
 
 EmpathUI::EmpathUI()
     : QObject((QObject *)0L, "EmpathUI")
@@ -286,6 +286,12 @@ EmpathUI::_initActions()
             actionCollection_,
             "messageCompose"
         );
+}
+
+    void
+EmpathUI::s_showFolder(const EmpathURL & url, unsigned int id)
+{
+    emit(showFolder(url, id));
 }
 
 // vim:ts=4:sw=4:tw=78

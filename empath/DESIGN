@@ -3,7 +3,7 @@
               Guide for developers 
 -------------------------------------------------------------------------------
               Rik Hemsley rik@kde.org 
-              Last update: Wed Nov 24 1999
+              Last update: Wed Mar 1 2000
 ===============================================================================
               Introduction 
 -------------------------------------------------------------------------------
@@ -16,12 +16,7 @@
 ===============================================================================
               Contents 
 -------------------------------------------------------------------------------
-  librmm - The Message Parser
-    Introduction
-    Qt collections
-    Transparency
-    Construction
-    Unicode
+
   libempath - The Kernel
     Introduction
     URLs
@@ -40,68 +35,21 @@
   libempathui - The User Interface
 
 ===============================================================================
-              librmm - The Message Parser 
--------------------------------------------------------------------------------
-Introduction
--------------------------------------------------------------------------------
-
-  librmm is designed to have a class hierarchy which looks exactly the same
-  as that specified by RFC 822.
-  
-  You'll notice that in a couple of places, the code is a little strange.
-  For example, RFC 822 specifies that an Address may be either a Mailbox
-  OR a Group.
-  
-  This doesn't work well with an OO design, so an RAddress is a little smart -
-  it know whether it's a Mailbox or a Group.
-
-  Note: librmm implements the design pattern 'Proxy'. Actually, it's a
-  bit different, but basically it doesn't create/parse until absolutely
-  necessary.
-
--------------------------------------------------------------------------------
-Qt collections
--------------------------------------------------------------------------------
-
-  librmm uses Qt collection classes. While these may be slightly slower than,
-  e.g. STL, they're guaranteed to be available and consistent over the
-  platforms that Empath runs on.
-
--------------------------------------------------------------------------------
-Transparency
--------------------------------------------------------------------------------
-
-  Parsing of string data and reassembly of string-based representations is
-  handled automatically by librmm. librmm avoids doing more parsing or
-  reassembly than is necessary.
-
--------------------------------------------------------------------------------
-Construction
--------------------------------------------------------------------------------
-
-  You may create any part in librmm by using either a string or specific
-  parameters. This means that you can create an RHeader by passing
-  either the header name (e.g. 'To:') and the header body as strings,
-  or you can simply pass the whole header (e.g. 'To: foo@bar').
-
--------------------------------------------------------------------------------
-Unicode
--------------------------------------------------------------------------------
-
-  librmm uses QCString rather than QString. This is deliberate, as we're
-  dealing with data, which may be binary. There's no concept of Unicode in
-  the RFCs defining Internet Mail Messages. Another reason is that it's a lot
-  faster to use QCString, as you can cast to const char * and do some fast
-  parsing.
-
-===============================================================================
               libempath - The Kernel 
 -------------------------------------------------------------------------------
 Introduction
 -------------------------------------------------------------------------------
 
-  The kernel does most of the hard work. It is designed to be very open, in
-  the sense that the parts are not tied together tightly with interdependencies.
+  The kernel does most of the hard work. It is designed to be very open,
+  in the sense that the parts are not tied tightly together with
+  interdependencies.
+
+  Note: Empath used to 'contain' a library called 'librmm'. This library
+  does the message parsing necessary for Empath to manipulate IMM (Internet
+  Mail Messages.) Recently this library has been separated from Empath
+  proper and moved to its own 'module'. You should find a directory
+  called 'rmm' on the KDE CVS server, in the same module where you found
+  Empath. There is now a separate DESIGN document in the rmm subdirectory.
 
 -------------------------------------------------------------------------------
 URLs
@@ -195,8 +143,22 @@ Asynchronous Operations
 Composing
 -------------------------------------------------------------------------------
 
-  This section will reappear once I'm sure I understand what Wilco's new
-  composition code does :)
+  If the user wants to compose a message, you can just call
+  empath->s_compose(). See also empath->reply(...) &c.
+
+  The mechanism by which composition works is quite logical.
+
+  EmpathComposer creates and looks after objects of the class
+  EmpathComposeForm. It fills in any values it can in this form and then
+  passes it back to Empath. This means that if you reply to a message,
+  EmpathComposer will try to fill in a form addressed to the sender(s)
+  of the message.
+
+  When EmpathComposer has done its dirty work, it signals that the
+  form is ready. Empath then re-fires that signal. EmpathUI will then
+  notice the signal and create a composition window, passing along
+  the composition form. This form is then used to fill in the various
+  fields in the composition window.
 
 -------------------------------------------------------------------------------
 Filtering
@@ -207,13 +169,19 @@ Introduction
   All automatic operations are done by filters.
 
   When an EmpathMailbox notices that a new message is available, it doesn't do
-  anything with it. It tells Empath that the message has arrived. Empath lets
+  anything with it* It tells Empath that the message has arrived. Empath lets
   the filter mechanism know. The filter mechanism is basically a list of
   EmpathFilter.
 
   Note: The Empath filter system (specifically, the matching of messages
   performed by EmpathMatcher objects) implements the 'Chain of Responsibility'
   design pattern.
+
+  * Actually, this is at the moment untrue. When Empath sees a new message
+    in a maildir box (the only box currently supported,) it will simply
+    notify anyone who cares that a new message has arrived. The filtering
+    mechanism will be put in place shortly, once the core functionality
+    is 100% solid.
 
 ...............................................................................
 What is a filter ?
@@ -288,15 +256,31 @@ Sending Mail
   empath->sendQueued() 
 
   Simple ? Quite !
+
+  The Empath object keeps a pointer to an object of type EmpathMailSender.
+  This pointer is updated if the user switches the type of sender they
+  wish to use.
+
+  Empath simply passes the message you give it along to EmpathMailSender.
+
+  Operations specified in the base class (EmpathMailSender) perform
+  queuing of the message if necessary, then call derived-class methods
+  to perform the actual delivery.
   
 -------------------------------------------------------------------------------
 Kernel Summary
 -------------------------------------------------------------------------------
 
-  You should by now be able to see that you don't have much work to do. If
-  you want the data of a message, you simply ask for it. If you want to send
-  a new message, you just ask. Empath handles the rest as intelligently
-  as it can.
+  You should by now be able to see that as a user (writing 'user' code,)
+  you don't have much work to do. If you want the data of a message, you
+  simply ask for it. If you want to send a new message, you just ask.
+  Empath handles the rest as intelligently as it can.
+
+  The design is geared towards keeping the various components separate
+  and, in the future, allowing adaptation for extensions such as scripting.
+
+  Bindings for scripting are not currently planned, but keeping Empath's
+  design open and dependency-free will continue to be a priority.
 
 ===============================================================================
               The User Interface 
@@ -314,8 +298,15 @@ Kernel Summary
   why the kernel's there, to provide the intelligence.
 
   I like having the UI separate as it allows me to think more clearly. Of
-  course, it is entirely possible to write a new (GTK/Motif/Tk/slang) interface,
-  but that's not my intention, though it's nice to have the option.
+  course, it is entirely possible to write a new (GTK/Motif/Tk/slang)
+  interface. That's not currently on the drawing board, though it's nice
+  to have the option.
+
+  Currently work is being done to convert Empath's UI into a set of
+  kparts. Please see developer.kde.org for more information about kparts.
+
+  The basic idea is that each major widget will be wrapped into a kpart
+  and will thus be available for embedding in any KDE application.
 
 ===============================================================================
 

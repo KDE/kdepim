@@ -49,13 +49,8 @@
 #include "EmpathMailboxPOP3.h"
 #include "EmpathMailboxIMAP4.h"
 
-// Start at 1 so EmpathMessageListWidget won't automatically listen to
-// our first instance it listens to 0 by default).
-unsigned int EmpathFolderWidget::ID_ = 1;
-
 EmpathFolderWidget::EmpathFolderWidget(QWidget * parent)
-    :   EmpathListView(parent, "FolderWidget"),
-        id_(ID_++)
+    :   EmpathListView(parent, "FolderWidget")
 {
     setFrameStyle(QFrame::NoFrame);
     viewport()->setAcceptDrops(true);
@@ -132,12 +127,6 @@ EmpathFolderWidget::EmpathFolderWidget(QWidget * parent)
 EmpathFolderWidget::~EmpathFolderWidget()
 {
     // Empty.
-}
-
-    unsigned int
-EmpathFolderWidget::id() const
-{
-    return id_;
 }
 
     void
@@ -243,7 +232,7 @@ EmpathFolderWidget::s_linkChanged(QListViewItem * item)
     if (f->isContainer())
         return;
 
-    empath->s_showFolder(i->url(), id_);
+    emit(showFolder(i->url()));
 }
 
     EmpathURL

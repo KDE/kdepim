@@ -49,13 +49,22 @@ class EmpathUI : public QObject
 
     public:
 
-        EmpathUI();
         ~EmpathUI();
 
-        static QActionCollection * actionCollection()
+        static EmpathUI * instance()
         {
-            return actionCollection_;
+            if (0 == instance_)
+                instance_ = new EmpathUI;
+
+            return instance_;
         }
+
+        QActionCollection * actionCollection()
+        { return actionCollection_; }
+
+    protected:
+
+        EmpathUI();
         
     protected slots:
     
@@ -64,17 +73,26 @@ class EmpathUI : public QObject
         void s_getSaveName(const EmpathURL &, QWidget *);
         void s_infoMessage(const QString &);
         void s_newComposer(EmpathComposeForm);
+        void s_showFolder(const EmpathURL &, unsigned int id);
+
+    signals:
+
+        void showFolder(const EmpathURL &, unsigned int id);
 
     private:
+        
         
         void _init();
         void _connectUp();
         void _initActions();
         void _showWizardIfNeeded();
 
-        static QActionCollection * actionCollection_;
+        static EmpathUI * instance_;
+        QActionCollection * actionCollection_;
 
         KAction	* ac_messageCompose_;
+
+        EmpathURL lastShownFolder_;
 };
 
 #endif

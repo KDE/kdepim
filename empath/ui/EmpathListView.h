@@ -31,9 +31,6 @@
 #include <klistview.h>
 #include <qlist.h>
 
-// Local includes
-#include "Empath.h"
-
 class QTimer;
 
 /**

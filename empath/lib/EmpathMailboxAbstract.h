@@ -59,13 +59,13 @@ removeMessage(const EmpathURL & url);
 removeMessage(const EmpathURL & folder, const QStringList & messageIDList);
 
     virtual bool
-markMessage(const EmpathURL & url, RMM::MessageStatus);
+markMessage(const EmpathURL & url, EmpathIndexRecord::Status);
 
     virtual EmpathSuccessMap
 markMessage(
     const EmpathURL & folder,
     const QStringList & messageIDList,
-    RMM::MessageStatus
+    EmpathIndexRecord::Status
 );
 
     virtual bool

@@ -29,14 +29,12 @@
 
 // Qt includes
 #include <qwidget.h>
-#include <qsplitter.h>
 
-// KDE includes
-#include <kapp.h>
-#include <kiconloader.h>
+// Local includes
+#include "EmpathURL.h"
 
-class EmpathMessageViewWidget;
 class EmpathMessageListWidget;
+class EmpathMessageViewWidget;
 
 class EmpathMainWidget : public QWidget
 {
@@ -46,17 +44,21 @@ class EmpathMainWidget : public QWidget
         
         EmpathMainWidget(QWidget * parent);
         ~EmpathMainWidget();
-        
-        EmpathMessageListWidget * messageListWidget();
-        EmpathMessageViewWidget * messageViewWidget();
+
+        EmpathMessageListWidget * messageListWidget()
+        { return messageListWidget_; }
+
+    protected slots:
+    
+        void s_showFolder(const EmpathURL & url);
+        void s_changeView(const QString & messageID);
         
     private:
 
-        QSplitter                  * vSplit;
-        QSplitter                  * hSplit;
-        
-        EmpathMessageListWidget    * messageListWidget_;
-        EmpathMessageViewWidget    * messageViewWidget_;
+        EmpathURL currentFolder_;
+
+        EmpathMessageListWidget * messageListWidget_;
+        EmpathMessageViewWidget * messageViewWidget_;
 };
 
 #endif

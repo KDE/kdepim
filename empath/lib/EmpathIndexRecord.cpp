@@ -35,10 +35,6 @@
 // Local includes
 #include "Empath.h"
 #include "EmpathIndexRecord.h"
-#include <RMM_Enum.h>
-#include <RMM_MessageID.h>
-#include <RMM_Address.h>
-#include <RMM_DateTime.h>
 
 EmpathIndexRecord::EmpathIndexRecord()
     :   id_             (QString::null),
@@ -46,7 +42,7 @@ EmpathIndexRecord::EmpathIndexRecord()
         senderName_     (""),
         senderAddress_  (""),
         timeZone_       (0),
-        status_         (0),
+        status_         (Status(0)),
         size_           (0),
         messageID_      (""),
         parentID_       (""),
@@ -73,25 +69,6 @@ EmpathIndexRecord::EmpathIndexRecord(const EmpathIndexRecord & i)
     // Empty.
 }
 
-EmpathIndexRecord::EmpathIndexRecord(const QString & id, RMM::RMessage & m)
-    :   id_             (id),
-        subject_        (m.envelope().subject().asString()),
-        senderName_     (m.envelope().firstSender().phrase()),
-        senderAddress_  (m.envelope().firstSender().route()),
-        date_           (m.envelope().date().qdt()),
-        timeZone_       (0), // TODO m.envelope().date().timeZone()),
-        status_         ((unsigned int)(m.status())),
-        size_           (m.size()),
-        messageID_      (m.envelope().messageID().asString()),
-        parentID_       (m.envelope().parentMessageId().asString()),
-        hasAttachments_
-            (0 != stricmp(m.envelope().contentType().type(), "multipart")),
-        tagged_         (false)
-{
-    if (!subject_)
-        subject_ = QString::fromUtf8("");
-}
-
 EmpathIndexRecord::EmpathIndexRecord(
         const QString &     id,
         const QString &     subject,
@@ -99,7 +76,7 @@ EmpathIndexRecord::EmpathIndexRecord(
         const QString &     senderAddress,
         const QDateTime &   date,
         int                 timeZone,
-        unsigned int        status,
+        Status              status,
         unsigned int        size,
         const QString &     messageID,
         const QString &     parentID,
@@ -188,7 +165,7 @@ operator >> (QDataStream & s, EmpathIndexRecord & rec)
         >> rec.parentID_
         >> hasAttachmentsAsInt;
 
-    rec.status_         = static_cast<unsigned int>(statusAsInt);
+    rec.status_         = static_cast<EmpathIndexRecord::Status>(statusAsInt);
     rec.tagged_         = static_cast<bool>(taggedAsInt);
     rec.hasAttachments_ = static_cast<bool>(hasAttachmentsAsInt);
     

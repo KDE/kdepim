@@ -36,6 +36,7 @@
 #include "EmpathEnum.h"
 #include "EmpathURL.h"
 #include "EmpathFolderList.h"
+#include "EmpathIndexRecord.h"
 #include <RMM_Message.h>
 #include <RMM_Envelope.h>
 #include <RMM_Message.h>
@@ -105,12 +106,15 @@ class EmpathMailbox : public QObject
             const EmpathURL & folder,
             const QStringList & messageIDList) = 0;
 
-        virtual bool markMessage(const EmpathURL & url, RMM::MessageStatus) = 0;
+        virtual bool markMessage(
+            const EmpathURL & url,
+            EmpathIndexRecord::Status
+        ) = 0;
 
         virtual EmpathSuccessMap markMessage(
             const EmpathURL & folder,
             const QStringList & messageIDList,
-            RMM::MessageStatus) = 0;
+            EmpathIndexRecord::Status) = 0;
 
         virtual bool createFolder(const EmpathURL & url) = 0;
         virtual bool removeFolder(const EmpathURL & url) = 0;

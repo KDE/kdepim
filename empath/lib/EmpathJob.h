@@ -33,6 +33,7 @@
 // Local includes
 #include <RMM_Message.h>
 #include "EmpathDefines.h"
+#include "EmpathIndexRecord.h"
 #include "EmpathEnum.h"
 #include "EmpathURL.h"
 #include "config.h"
@@ -281,12 +282,12 @@ class EmpathMarkJob : public EmpathSingleJob
         EmpathMarkJob(
             const EmpathURL & folder,
             const QStringList & IDList,
-            RMM::MessageStatus flags
+            EmpathIndexRecord::Status flags
         );
         
         EmpathMarkJob(
             const EmpathURL & url,
-            RMM::MessageStatus flags
+            EmpathIndexRecord::Status flags
         );
 
         EmpathMarkJob(const EmpathMarkJob &);
@@ -299,7 +300,7 @@ class EmpathMarkJob : public EmpathSingleJob
         EmpathURL folder() const { return folder_; }
         QStringList IDList() const { return IDList_; }
         EmpathURL url() const { return url_; }
-        RMM::MessageStatus flags() const { return flags_; }
+        EmpathIndexRecord::Status flags() const { return flags_; }
 
     signals:
 
@@ -311,7 +312,7 @@ class EmpathMarkJob : public EmpathSingleJob
         EmpathURL url_;
         EmpathURL folder_;
         QStringList IDList_;
-        RMM::MessageStatus flags_;
+        EmpathIndexRecord::Status flags_;
 };
 
 class EmpathCreateFolderJob : public EmpathSingleJob

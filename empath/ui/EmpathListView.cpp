@@ -278,7 +278,7 @@ EmpathListView::contentsMouseMoveEvent(QMouseEvent *e)
     if (!e) 
         return;
 
-    empathDebug("We may be dragging");
+    qDebug("We may be dragging");
 
     QPoint p = e->pos();
 
@@ -289,12 +289,12 @@ EmpathListView::contentsMouseMoveEvent(QMouseEvent *e)
         return;
     }
 
-    empathDebug("Ok, we're dragging");
+    qDebug("Ok, we're dragging");
 
     maybeDrag_ = false;
 
     if (!pressItem_) {
-        empathDebug("Not over anything to drag");
+        qDebug("Not over anything to drag");
         // QListView::contentsMouseMoveEvent(e);
         return;
     }

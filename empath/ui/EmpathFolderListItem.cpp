@@ -170,7 +170,7 @@ EmpathFolderListItem::setup()
 EmpathFolderListItem::paintCell(
     QPainter * p, const QColorGroup & cg, int column, int width, int align)
 {
-    if ((text(1)[0] == '0') || (text(1)[0] == '.'))
+    if ((text(1)[0] == '0') || (text(1).isEmpty()))
         QListViewItem::paintCell(p, cg, column, width, align);
 
     else {

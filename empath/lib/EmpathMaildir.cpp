@@ -46,9 +46,11 @@
 // Local includes
 #include "RMM_Envelope.h"
 #include "EmpathMaildir.h"
+#include "EmpathUtilities.h"
 #include "EmpathFolder.h"
 #include "EmpathFolderList.h"
 #include "EmpathIndex.h"
+#include "EmpathIndexRecord.h"
 #include "EmpathTask.h"
 #include "Empath.h"
 #include "EmpathMailbox.h"
@@ -116,7 +118,7 @@ EmpathMaildir::sync(bool force)
 }
 
     EmpathSuccessMap
-EmpathMaildir::mark(const QStringList & l, RMM::MessageStatus msgStat)
+EmpathMaildir::mark(const QStringList & l, EmpathIndexRecord::Status msgStat)
 {
     empathDebug("Number to mark: " + QString::number(l.count()));
     EmpathSuccessMap successMap;
@@ -202,7 +204,7 @@ EmpathMaildir::_removeMessage(const QString & id)
 }
 
     bool
-EmpathMaildir::_mark(const QString & id, RMM::MessageStatus msgStat)
+EmpathMaildir::_mark(const QString & id, EmpathIndexRecord::Status msgStat)
 {
     QStringList matchingEntries = _entryList().grep(id);
 
@@ -411,7 +413,7 @@ EmpathMaildir::_write(RMM::RMessage msg)
     // I can't be bothered to maintain the comments.
 
     QString canonName   = empath->generateUnique();
-    QString flags       = _generateFlagsString(msg.status());
+    QString flags       = _generateFlagsString(EmpathIndexRecord::Status(msg.status()));
     QString path        = path_ + "/tmp/" + canonName;
 
     QFile f(path);
@@ -475,14 +477,14 @@ EmpathMaildir::_write(RMM::RMessage msg)
 }
 
     QString
-EmpathMaildir::_generateFlagsString(RMM::MessageStatus s)
+EmpathMaildir::_generateFlagsString(EmpathIndexRecord::Status s)
 {
     QString flags;
     
-    if (s & RMM::Read)      flags += 'S';
-    if (s & RMM::Marked)    flags += 'F';
-    if (s & RMM::Trashed)   flags += 'T';
-    if (s & RMM::Replied)   flags += 'R';
+    if (s & EmpathIndexRecord::Read)      flags += 'S';
+    if (s & EmpathIndexRecord::Marked)    flags += 'F';
+    if (s & EmpathIndexRecord::Trashed)   flags += 'T';
+    if (s & EmpathIndexRecord::Replied)   flags += 'R';
     
     return flags;
 }
@@ -544,7 +546,7 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
 
         s = *it;
 
-        RMM::MessageStatus status(RMM::MessageStatus(0));
+        EmpathIndexRecord::Status status(EmpathIndexRecord::Status(0));
         
         int i = s.find(re_flags);
         QString flags;
@@ -553,10 +555,10 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
             
             flags = s.right(s.length() - i - 3);
             
-            status = (RMM::MessageStatus)
-                (   (flags.contains('S') ? RMM::Read    : 0)    |
-                    (flags.contains('R') ? RMM::Replied : 0)    |
-                    (flags.contains('F') ? RMM::Marked  : 0));
+            status = (EmpathIndexRecord::Status)
+                (   (flags.contains('S') ? EmpathIndexRecord::Read    : 0)  |
+                    (flags.contains('R') ? EmpathIndexRecord::Replied : 0)  |
+                    (flags.contains('F') ? EmpathIndexRecord::Marked  : 0));
         }
         
         s.replace(re_flags, QString::null);
@@ -585,7 +587,7 @@ EmpathMaildir::_tagOrAdd(EmpathFolder * f)
             }
 
             RMM::RMessage m(messageData);
-            EmpathIndexRecord ir(s, m);
+            EmpathIndexRecord ir = indexRecordFromMessage(s, m);
             
             ir.setStatus(status);
             

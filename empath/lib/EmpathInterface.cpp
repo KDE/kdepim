@@ -24,8 +24,8 @@
 
 #include "Empath.h"
 #include "EmpathInterface.h"
+#include "EmpathIndexRecord.h"
 #include "RMM_Message.h"
-#include "RMM_Enum.h"
 
 enum EmpathFn {
     EmpathFnInboxURL,
@@ -300,7 +300,10 @@ EmpathInterface::process(
                 int arg2;
                 inStream >> arg1;
                 inStream >> arg2;
-                outStream << empath->mark(EmpathURL(arg1), RMM::MessageStatus(arg2));
+                outStream << empath->mark(
+                    EmpathURL(arg1),
+                    EmpathIndexRecord::Status(arg2)
+                    );
             }
             break;
 
@@ -313,7 +316,10 @@ EmpathInterface::process(
                 inStream >> arg1;
                 inStream >> arg2;
                 inStream >> arg3;
-                outStream << empath->mark(EmpathURL(arg1), arg2, RMM::MessageStatus(arg3));
+                outStream << empath->mark(
+                    EmpathURL(arg1),
+                    arg2,
+                    EmpathIndexRecord::Status(arg3));
             }
             break;
 

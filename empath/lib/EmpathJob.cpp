@@ -243,7 +243,7 @@ EmpathRetrieveJob::EmpathRetrieveJob(
 EmpathMarkJob::EmpathMarkJob(
     const EmpathURL & folder,
     const QStringList & IDList,
-    RMM::MessageStatus flags
+    EmpathIndexRecord::Status flags
 )
     :
     EmpathSingleJob(MarkMessage),
@@ -256,7 +256,7 @@ EmpathMarkJob::EmpathMarkJob(
 
 EmpathMarkJob::EmpathMarkJob(
     const EmpathURL & url,
-    RMM::MessageStatus flags
+    EmpathIndexRecord::Status flags
 )
     :
     EmpathSingleJob(MarkMessage),

@@ -435,7 +435,10 @@ EmpathMailboxMaildir::removeMessage(
 }
 
     bool
-EmpathMailboxMaildir::markMessage(const EmpathURL & url, RMM::MessageStatus s)
+EmpathMailboxMaildir::markMessage(
+    const EmpathURL & url,
+    EmpathIndexRecord::Status s
+)
 {
     return (markMessage(url, url.messageID(), s))[url.messageID()];
 }
@@ -444,7 +447,7 @@ EmpathMailboxMaildir::markMessage(const EmpathURL & url, RMM::MessageStatus s)
 EmpathMailboxMaildir::markMessage(
     const EmpathURL & folder,
     const QStringList & messageIDList,
-    RMM::MessageStatus status)
+    EmpathIndexRecord::Status status)
 {
     EmpathSuccessMap retval;
 

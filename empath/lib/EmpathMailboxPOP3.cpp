@@ -324,7 +324,7 @@ EmpathMailboxPOP3::removeMessage(
 }
 
     bool
-EmpathMailboxPOP3::markMessage(const EmpathURL & url, RMM::MessageStatus s)
+EmpathMailboxPOP3::markMessage(const EmpathURL & url, EmpathIndexRecord::Status s)
 {
     // We don't do this.
     return false;
@@ -334,7 +334,7 @@ EmpathMailboxPOP3::markMessage(const EmpathURL & url, RMM::MessageStatus s)
 EmpathMailboxPOP3::markMessage(
     const EmpathURL & folder,
     const QStringList & messageIDList,
-    RMM::MessageStatus status)
+    EmpathIndexRecord::Status status)
 {
     // We don't do this.
     EmpathSuccessMap retval;

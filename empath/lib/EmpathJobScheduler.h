@@ -28,6 +28,7 @@
 #include <qqueue.h>
 
 // Local includes
+#include "EmpathIndexRecord.h"
 #include "EmpathDefines.h"
 #include "EmpathJob.h"
 
@@ -75,14 +76,14 @@ class EmpathJobScheduler
 
         EmpathJobID newMarkJob(
             const EmpathURL &,
-            RMM::MessageStatus,
+            EmpathIndexRecord::Status,
             QObject *
         );
 
         EmpathJobID newMarkJob(
             const EmpathURL &,
             const QStringList &,
-            RMM::MessageStatus,
+            EmpathIndexRecord::Status,
             QObject *
         );
 

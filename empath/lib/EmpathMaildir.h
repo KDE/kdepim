@@ -41,10 +41,8 @@
 // Local includes
 #include "EmpathURL.h"
 #include "EmpathDefines.h"
-#include "RMM_Enum.h"
-#include "RMM_Envelope.h"
+#include "EmpathIndexRecord.h"
 #include "RMM_Message.h"
-#include "RMM_MessageID.h"
 
 class EmpathFolder;
 
@@ -70,7 +68,7 @@ class EmpathMaildir : public QObject
         const EmpathURL & url() const       { return url_; }
         const QString & path() const        { return path_; }
         
-        EmpathSuccessMap mark(const QStringList &, RMM::MessageStatus);
+        EmpathSuccessMap mark(const QStringList &, EmpathIndexRecord::Status);
         
         QString writeMessage(RMM::RMessage);
         
@@ -89,14 +87,14 @@ class EmpathMaildir : public QObject
         EmpathMaildir();
 
         bool        _removeMessage(const QString & id);
-        bool        _mark(const QString & id, RMM::MessageStatus msgStat);
+        bool        _mark(const QString & id, EmpathIndexRecord::Status);
         QString     _write(RMM::RMessage);
         QCString    _messageData(const QString &, bool isFullName = false);
         void        _markNewMailAsSeen();
         void        _markAsSeen(const QString &);
         void        _clearTmp();
         bool        _checkDirs();
-        QString     _generateFlagsString(RMM::MessageStatus);
+        QString     _generateFlagsString(EmpathIndexRecord::Status);
         bool        _touched(EmpathFolder *);
         void        _tagOrAdd(EmpathFolder *);
         void        _removeUntagged(EmpathFolder *);

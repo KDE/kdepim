@@ -106,7 +106,8 @@ EmpathIndex::countUnread() const
     QDictIterator<EmpathIndexRecord> it(dict_);
 
     for (; it.current(); ++it)
-        unreadCount += ((it.current()->status() & RMM::Read) ? 0 : 1);
+        unreadCount +=
+            ((it.current()->status() & EmpathIndexRecord::Read) ? 0 : 1);
 
     return unreadCount;
 }
@@ -264,7 +265,7 @@ EmpathIndex::clear()
 }
 
     void
-EmpathIndex::setStatus(const QString & key, RMM::MessageStatus status)
+EmpathIndex::setStatus(const QString & key, EmpathIndexRecord::Status status)
 {
     EmpathIndexRecord * rec = dict_.find(key);
     

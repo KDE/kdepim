@@ -139,7 +139,7 @@ EmpathJobScheduler::newRemoveJob(
     EmpathJobID
 EmpathJobScheduler::newMarkJob(
     const EmpathURL & url,
-    RMM::MessageStatus status,
+    EmpathIndexRecord::Status status,
     QObject * o
 )
 {
@@ -157,7 +157,7 @@ EmpathJobScheduler::newMarkJob(
 EmpathJobScheduler::newMarkJob(
     const EmpathURL & folder,
     const QStringList & idList,
-    RMM::MessageStatus status,
+    EmpathIndexRecord::Status status,
     QObject * o
 )
 {
@@ -213,7 +213,7 @@ EmpathJobScheduler::_enqueue(EmpathJob * j)
   void
 EmpathJobScheduler::_runQueue()
 {
-    if (queue_.count() != 0) {
+    if (queue_.count() == 1) {
         queue_.dequeue()->run();
 
 // TODO: Enable this code in the far future, when Qt is MT safe.

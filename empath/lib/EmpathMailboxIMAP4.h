@@ -57,7 +57,7 @@ class EmpathMailboxIMAP4 : public EmpathMailbox
         EmpathMailboxIMAP4 & operator = (const EmpathMailboxIMAP4 &);
 
 
-        ~EmpathMailboxIMAP4 () { empathDebug ("dtor"); } // blank
+        ~EmpathMailboxIMAP4 ();
     
 #include "EmpathMailboxAbstract.h"
         

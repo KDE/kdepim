@@ -89,10 +89,6 @@ class EmpathFolderWidget : public EmpathListView
 
     private:
 
-        static unsigned int ID_;
-
-        unsigned int id_;
-
         enum OverType { Folder, Mailbox };
         
         void _addMailbox(EmpathMailbox * mailbox);

@@ -96,11 +96,14 @@ class EmpathFolder : public QObject
 
         /**
          */
-        bool markMessage(const QString & id, RMM::MessageStatus);
+        bool markMessage(const QString & id, EmpathIndexRecord::Status);
         
         /**
          */
-        EmpathSuccessMap markMessage(const QStringList &, RMM::MessageStatus);
+        EmpathSuccessMap markMessage(
+            const QStringList &,
+            EmpathIndexRecord::Status
+        );
 
         /**
          * Set the name of a pixmap to use in the GUI.
