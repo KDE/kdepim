@@ -1,13 +1,31 @@
-// knotes-conduit.h
-//
-// Copyright (C) 2000 Adriaan de Groot
-//
-// This file is distributed under the Gnu General Public Licence (GPL).
-// The GPL should have been included with this file in a file called
-// COPYING. 
-//
-// $Revision$
+/* knotes-conduit.h			KPilot
+**
+** Copyright (C) 2000-2001 by Adriaan de Groot
+**
+** This file is part of the KNotes conduit, a conduit for KPilot that
+** synchronises the Pilot's memo pad application with KNotes.
+*/
 
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** MA 02139, USA.
+*/
+
+/*
+** Bug reports and questions can be sent to adridg@cs.kun.nl
+*/
 
 #ifndef _KNOTES_CONDUIT_H
 #define _KNOTES_CONDUIT_H
@@ -153,12 +171,11 @@ private:
 	bool fDeleteNoteForMemo;
 };
 
+#endif
+
 // $Log$
-// Revision 1.4  2000/12/05 07:44:01  adridg
-// Cleanup
-//
-// Revision 1.3  2000/11/26 01:43:21  adridg
-// Two-way syncs
+// Revision 1.5  2000/12/29 14:17:51  adridg
+// Added checksumming to KNotes conduit
 //
 // Revision 1.2  2000/11/24 17:54:28  adridg
 // Two-way sync
@@ -166,4 +183,3 @@ private:
 // Revision 1.1  2000/11/20 00:22:28  adridg
 // New KNotes conduit
 //
-#endif

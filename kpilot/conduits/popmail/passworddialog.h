@@ -1,14 +1,35 @@
-// passworddialog.h
-//
-// (c) 1997 by Michael Roth
-//
-// This file is distributed under the Gnu General Public Licence (GPL).
-// The GPL should have been included with this file in a file called
-// COPYING. 
+/* passworddialog.h			KPilot
+**
+** Copyright (c) 1997 by Michael Roth
+** 	Taken from KPasswd
+**
+** This file is part of the popmail conduit, a conduit for KPilot that
+** synchronises the Pilot's email application with the outside world,
+** which currently means:
+**	-- sendmail or SMTP for outgoing mail
+**	-- POP or mbox for incoming mail
+*/
 
-// $Revision$
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** MA 02139, USA.
+*/
 
-// Taken from KPasswd
+/*
+** Bug reports and questions can be sent to adridg@cs.kun.nl
+*/
 
 #ifndef MRQPASSWD_H
 #define MRQPASSWD_H
@@ -38,3 +59,4 @@ private:
 #endif
 
 
+// $Log:$

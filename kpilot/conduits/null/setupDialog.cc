@@ -1,21 +1,34 @@
-// setupDialog.cc
-//
-// Copyright (C) 2000 Dan Pilone, Adriaan de Groot
-//
-// This file is distributed under the Gnu General Public Licence (GPL).
-// The GPL should have been included with this file in a file called
-// COPYING. 
-//
-//
-// This is setupDialog.cc for KDE 2 / KPilot 4
+/* setupDialog.cc			KPilot
+**
+** Copyright (C) 2000-2001 by Adriaan de Groot
+**
+** This file is part of the NULL conduit, a conduit for KPilot that
+** does nothing except add a log message to the Pilot's HotSync log.
+** It is also intended as a programming example.
+**
+** This file defines the setup dialog for the conduit.
+*/
 
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** MA 02139, USA.
+*/
 
-// This is the setup dialog for null-conduit.
-// Because null-conduit does nothing, the
-// setup is fairly simple.
-//
-//
-
+/*
+** Bug reports and questions can be sent to adridg@cs.kun.nl
+*/
 #include "options.h"
 
 #include <stream.h>
@@ -117,18 +130,8 @@ NullPage::NullPage(setupDialog *parent, KConfig& config) :
 
 
 // $Log$
-// Revision 1.10  2000/11/13 08:52:31  adridg
-// Much getConfig() grief averted
-//
-// Revision 1.9  2000/11/02 23:10:32  adridg
-// Added attach-to-database feature
-//
-// Revision 1.8  2000/09/27 18:41:21  adridg
-// Added author info and new QT layout code.
-//
-// Revision 1.7  2000/08/28 12:22:03  pilone
-// 	KDE 2.0 Cleanup patches.  Start of adding conduits as kpilot
-// services.
+// Revision 1.11  2000/12/31 16:43:59  adridg
+// Patched up the debugging stuff again
 //
 // Revision 1.6  2000/08/08 02:22:30  matz
 // As rikkus did not disable compilation of kpilot anymore I can even make
@@ -143,31 +146,5 @@ NullPage::NullPage(setupDialog *parent, KConfig& config) :
 // - it even starts, but as I have no Pilot I can't really test it
 // - I'm very tired now ;)
 //
-// Revision 1.5  2000/07/27 23:07:16  pilone
-// 	Ported the conduits.  They build.  Don't know if they work, but they
-// build.
-//
-// Revision 1.7  2000/07/19 20:12:06  adridg
-// Added KDE2 code
-//
-// Revision 1.6  2000/07/13 18:08:42  adridg
-// Restructuring and sanitation of config files
-//
-// Revision 1.5  2000/07/10 21:23:33  adridg
-// Adjusted to changes in setupDialog class
-//
-// Revision 1.4  2000/05/21 00:40:36  adridg
-// Changed to reflect new debug guidelines
-//
-// Revision 1.3  2000/01/23 23:13:59  adridg
-// Unified dialog layout
-//
-// Revision 1.2  2000/01/22 23:01:27  adridg
-// Minor ID stuff
-//
 // Revision 1.1  2000/01/21 16:31:39  adridg
 // Added null conduit to 3.1b11 (KDE 1.1.2)
-//
-// Revision 1.2  2000/01/17 13:50:21  adridg
-// Fixed resize bugs; log null-conduit message; lots of comments added as example
-//

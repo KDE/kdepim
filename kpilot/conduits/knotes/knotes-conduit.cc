@@ -1,19 +1,31 @@
-// knotes-conduit.cc
-//
-// Copyright (C) 2000 by Dan Pilone, Adriaan de Groot
-//
-// This file is distributed under the Gnu General Public Licence (GPL).
-// The GPL should have been included with this file in a file called
-// COPYING. 
-//
-//
-//
-// The KNotes conduit copies memos from the Pilot's memo pad to KNotes
-// and vice-versa. It complements or replaces the builtin memo conduit
-// in KPilot.
-//
-//
+/* knotes-conduit.cc			KPilot
+**
+** Copyright (C) 2000-2001 by Adriaan de Groot
+**
+** This file is part of the KNotes conduit, a conduit for KPilot that
+** synchronises the Pilot's memo pad application with KNotes.
+*/
 
+/*
+** This program is free software; you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation; either version 2 of the License, or
+** (at your option) any later version.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with this program in a file called COPYING; if not, write to
+** the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
+** MA 02139, USA.
+*/
+
+/*
+** Bug reports and questions can be sent to adridg@cs.kun.nl
+*/
 
 
 #include "options.h"
@@ -811,6 +823,9 @@ KNotesConduit::doTest()
 }
 
 // $Log$
+// Revision 1.9  2001/01/06 13:23:12  adridg
+// Updated version numbers, fixed debugging stuff
+//
 // Revision 1.8  2001/01/02 15:02:59  bero
 // Fix build
 //
