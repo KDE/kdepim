@@ -22,12 +22,9 @@
 
 #include "kresources/newexchange/kabc_resourceexchange.h"
 #include "kresources/newexchange/kcal_resourceexchange.h"
-#include "kresources/lib/kabc_groupwareprefs.h"
-#include "kresources/lib/kcal_groupwareprefs.h"
 
 #include "kresources/lib/folderconfig.h"
 
-#include "kresources/lib/kcal_groupwareprefs.h"
 #include <libkcal/resourcecalendar.h>
 
 #include <klineedit.h>
