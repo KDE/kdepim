@@ -192,26 +192,21 @@ bool KarmStorage::isNewStorage(const Preferences* preferences) const
 //
 
 QString KarmStorage::loadFromFlatFile(TaskView* taskview,
-    const Preferences* preferences)
+    const QString& filename)
 {
   QString err;
 
   kdDebug() 
-    << "KarmStorage::loadFromFlatFile: " << preferences->flatFile()
-    << endl;
+    << "KarmStorage::loadFromFlatFile: " << filename << endl;
 
-  QFile f(preferences->flatFile());
-  kdDebug() << "Loading karm data from " << f.name() << endl;
-
+  QFile f(filename);
   if( !f.exists() )
-    err = i18n("File") + QString::fromLatin1(" \"") + preferences->flatFile()
-      + QString::fromLatin1("\" ") + i18n("not found.");
+    err = i18n("File \"%1\" not found.").arg(filename);
 
   if (!err)
   {
     if( !f.open( IO_ReadOnly ) )
-      err = i18n("Could not open") + QString::fromLatin1(" \"") 
-        + preferences->flatFile() + QString::fromLatin1("\" ");
+      err = i18n("Could not open \"%1\".").arg(filename);
   }
 
   if (!err)
@@ -280,9 +275,9 @@ QString KarmStorage::loadFromFlatFile(TaskView* taskview,
 }
 
 QString KarmStorage::loadFromFlatFileCumulative(TaskView* taskview,
-    const Preferences* preferences)
+    const QString& filename)
 {
-  QString err = loadFromFlatFile(taskview, preferences);
+  QString err = loadFromFlatFile(taskview, filename);
   if (!err)
   {
     for (Task* task = taskview->first_child(); task;

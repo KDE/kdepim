@@ -34,7 +34,7 @@ class TaskView;
  *
  * @short Logic that gets and stores KArm data to disk.
  * @author Mark Bucciarelli <mark@hubcapconsulting.com>
- * @version $Id: $
+ * @version $Id$
  */
 
 class KarmStorage
@@ -97,7 +97,7 @@ class KarmStorage
      *    string    task name
      *    [string]  desktops, in which to count. e.g. "1,2,5" (optional)
      */
-    QString loadFromFlatFile(TaskView* taskview, const Preferences* preferences);
+    QString loadFromFlatFile(TaskView* taskview, const QString& filename);
 
     /**
      *  Reads tasks and their total times from text file (legacy).
@@ -108,7 +108,7 @@ class KarmStorage
      *  @see loadFromFlatFile
      */
     QString loadFromFlatFileCumulative(TaskView* taskview,
-        const Preferences* preferences);
+        const QString& filename);
 
     /*
      * Log the change in a task's time.

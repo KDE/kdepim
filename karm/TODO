@@ -37,10 +37,6 @@ Mark / iCalendar Work:
   * 2003-08-15: Update karmstorage.cpp when LocalCalendar::deleteTodo works.
       - KarmStorage::removeTask: delete "return false;" and uncomment code
     
-  * 2003-08-15: Update karmstorage.cpp when LocalCalendar::load() works.
-      - KarmStorage::load -- remove three deleteAll statements (and 
-      call _calendar.clear()?).
-
   * 2003-08-15: Remove code that is causing compiler warnings.
   
   * 2003-08-15: Add ability to import tasks from an iCalendar file.
@@ -51,17 +47,19 @@ Mark / iCalendar Work:
       - KarmStorage::addComment()
 
   * 2003-08-15: Go over code and delete all cruft.  In particular, take a look
-    at preferences.cpp and taskview.cpp.
-
-  * 2003-08-15: When importing, ask user to pick file.
-      - Currently, import gets tasks from file specified on preferences
-      screen.  This is bogus.  The old legacy fields should come off the
-      preferences screen and the user should be prompted for a file name to
-      import.  (TaskView::loadFromFlatFile)
+    at taskview.cpp.
 
   * 2003-08-15: When loading an empty ics file, ask user if they want to
     import a task list from another file.  If they say no, then pop up the new
     task dialog.  (TaskView::load).
+
+  * 2003-09-03: Timecard report.
+
+  * 2003-09-03: Replace all string concatenations with .arg (for i18n).
+
+  * 2003-09-03: Review all strings and attempt to minimize i18n work.
+
+  * 2003-09-03: Use file menu and delete storeage page in preferences.
 
 
 Wishlist:

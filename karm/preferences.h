@@ -23,17 +23,11 @@ class Preferences :public KDialogBase
     // Retrive information about settings
     bool detectIdleness() const;
     int idlenessTimeout() const;
-    QString flatFile() const;
     QString iCalFile() const;
     QString activeCalendarFile() const;
-    bool timeLogging() const;
-    bool usingiCalFile() const;
-    bool usingFlatFile() const;
-    QString timeLog() const;
     bool autoSave() const;
     int autoSavePeriod() const;
     bool promptDelete() const;
-    QString fileFormat() const;
     bool displayColumn(int n) const;
 
     void emitSignals();
@@ -46,12 +40,7 @@ class Preferences :public KDialogBase
   signals:
     void detectIdleness(bool on);
     void idlenessTimeout(int minutes);
-    void flatFile(QString);
     void iCalFile(QString);
-    void timeLogging(bool on);
-    void usingiCalFile(bool on);
-    void usingFlatFile(bool on);
-    void timeLog(QString);
     void autoSave(bool on);
     void autoSavePeriod(int minutes);
     void setupChanged();
@@ -61,9 +50,6 @@ class Preferences :public KDialogBase
     virtual void slotCancel();
     void idleDetectCheckBoxChanged();
     void autoSaveCheckBoxChanged();
-    void iCalFileCheckBoxChanged();
-    void flatFileCheckBoxChanged();
-    void timeLoggingCheckBoxChanged();
 
   private:
     void makeDisplayPage();
@@ -75,20 +61,18 @@ class Preferences :public KDialogBase
     bool _unsavedChanges;
 
     // Widgets
-    QCheckBox *_doIdleDetectionW, *_doAutoSaveW, *_doTimeLoggingW,
-              *_promptDeleteW, *_useFlatFileW, *_useiCalFileW;
+    QCheckBox *_doIdleDetectionW, *_doAutoSaveW, *_promptDeleteW; 
     QCheckBox *_displayTimeW, *_displaySessionW,
               *_displayTotalTimeW, *_displayTotalSessionW;
     QLabel    *_idleDetectLabelW, *_displayColumnsLabelW;
     QSpinBox  *_idleDetectValueW, *_autoSaveValueW;
-    KURLRequester *_flatFileW, *_logFileW, *_iCalFileW ;
+    KURLRequester *_iCalFileW ;
   
     // Values
-    bool _doIdleDetectionV, _doAutoSaveV, _doTimeLoggingV,
-         _promptDeleteV, _useiCalFileV, _useFlatFileV;
+    bool _doIdleDetectionV, _doAutoSaveV, _promptDeleteV;
     bool _displayColumnV[4];
     int  _idleDetectValueV, _autoSaveValueV;
-    QString _flatFileV, _logFileV, _iCalFileV;
+    QString _iCalFileV;
 };
 
 #endif // KARM_PREFERENCES_H

@@ -114,39 +114,18 @@ void Preferences::makeStoragePage()
   _autoSaveValueW->setSuffix(i18n(" minutes"));
 
   // iCalendar
-  _useiCalFileW = new QCheckBox ( i18n("Store in iCalendar File"),
-      storagePage, "_useiCalFileW");
+  QLabel* _iCalFileLabel = new QLabel( i18n("iCalendar File:"), storagePage);
   _iCalFileW = new KURLRequester(storagePage, "_iCalFileW");
 
-  // flat file
-  _useFlatFileW = new QCheckBox ( i18n("Store in flat file"), storagePage,
-      "_useFlatFileW");
-  _flatFileW = new KURLRequester(storagePage, "_flatFileW");
-  
-  // logging
-  _doTimeLoggingW = new QCheckBox( i18n("Do time logging to "), storagePage,
-      "_doTimeLoggingW");
-  _logFileW = new KURLRequester(storagePage, "_logFileW" );
-  
   // add widgets to layout
   layout->addWidget(_doAutoSaveW, 0, 0);
   layout->addWidget(_autoSaveValueW, 0, 1);
-  layout->addWidget(_useiCalFileW, 1, 0);
+  layout->addWidget(_iCalFileLabel, 1, 0 );
   layout->addWidget(_iCalFileW, 1, 1 );
-  layout->addWidget(_useFlatFileW, 2, 0);
-  layout->addWidget(_flatFileW, 2, 1 );
-  layout->addWidget(_doTimeLoggingW, 3, 0);
-  layout->addWidget(_logFileW, 3, 1 );
 
   // checkboxes disable file selection controls
   connect( _doAutoSaveW, SIGNAL( clicked() ), this,
       SLOT( autoSaveCheckBoxChanged() ));
-  connect( _useiCalFileW, SIGNAL( clicked() ), this,
-      SLOT( iCalFileCheckBoxChanged() ));
-  connect( _useFlatFileW, SIGNAL( clicked() ), this,
-      SLOT( flatFileCheckBoxChanged() ));
-  connect( _doTimeLoggingW, SIGNAL( clicked() ), this,
-      SLOT( timeLoggingCheckBoxChanged() ));
 }
 
 void Preferences::disableIdleDetection()
@@ -163,14 +142,7 @@ void Preferences::showDialog()
 {
 
   // set all widgets
-  _useFlatFileW->setChecked(_useFlatFileV);
-  _flatFileW->lineEdit()->setText(_flatFileV);
-
-  _useiCalFileW->setChecked(_useiCalFileV);
   _iCalFileW->lineEdit()->setText(_iCalFileV);
-
-  _doTimeLoggingW->setChecked(_doTimeLoggingV);
-  _logFileW->lineEdit()->setText(_logFileV);
 
   _doIdleDetectionW->setChecked(_doIdleDetectionV);
   _idleDetectValueW->setValue(_idleDetectValueV);
@@ -188,10 +160,7 @@ void Preferences::showDialog()
   // adapt visibility of preference items according
   // to settings
   idleDetectCheckBoxChanged();
-  timeLoggingCheckBoxChanged();
   autoSaveCheckBoxChanged();
-  iCalFileCheckBoxChanged();
-  flatFileCheckBoxChanged();
 
   show();
 }
@@ -200,13 +169,6 @@ void Preferences::slotOk()
 {
 
   // storage
-  _useFlatFileV = _useFlatFileW->isChecked();
-  _flatFileV = _flatFileW->lineEdit()->text();
-
-  _doTimeLoggingV = _doTimeLoggingW->isChecked();
-  _logFileV = _logFileW->lineEdit()->text();
-
-  _useiCalFileV = _useiCalFileW->isChecked();
   _iCalFileV = _iCalFileW->lineEdit()->text();
 
   _doIdleDetectionV = _doIdleDetectionW->isChecked();
@@ -244,29 +206,9 @@ void Preferences::autoSaveCheckBoxChanged()
   _autoSaveValueW->setEnabled(_doAutoSaveW->isChecked());
 }
 
-void Preferences::iCalFileCheckBoxChanged()
-{
-  _iCalFileW->setEnabled(_useiCalFileW->isChecked());
-}
-
-void Preferences::flatFileCheckBoxChanged()
-{
-  _flatFileW->setEnabled(_useFlatFileW->isChecked());
-}
-
-void Preferences::timeLoggingCheckBoxChanged()
-{
-  _logFileW->setEnabled(_doTimeLoggingW->isChecked());
-}
-
 void Preferences::emitSignals()
 {
-  emit usingFlatFile(_useFlatFileV);
-  emit usingiCalFile(_useiCalFileV);
-  emit flatFile( _flatFileV );
   emit iCalFile( _iCalFileV );
-  emit timeLogging( _doTimeLoggingV );
-  emit timeLog( _logFileV );
   emit detectIdleness( _doIdleDetectionV );
   emit idlenessTimeout( _idleDetectValueV );
   emit autoSave( _doAutoSaveV );
@@ -274,33 +216,14 @@ void Preferences::emitSignals()
   emit setupChanged();
 }
 
-QString Preferences::flatFile() const
-{
-  return _flatFileV;
-}
-
 QString Preferences::iCalFile() const
 {
   return _iCalFileV;
 }
+
 QString Preferences::activeCalendarFile() const
 {
   return _iCalFileV;
-}
-
-QString Preferences::timeLog() const
-{
-  return _logFileV;
-}
-
-bool Preferences::usingiCalFile() const
-{
-  return _useiCalFileV;
-}
-
-bool Preferences::usingFlatFile() const
-{
-  return _useFlatFileV;
 }
 
 bool Preferences::detectIdleness() const
@@ -316,11 +239,6 @@ int Preferences::idlenessTimeout() const
 bool Preferences::autoSave() const
 {
   return _doAutoSaveV;
-}
-
-bool Preferences::timeLogging() const
-{
-  return _doTimeLoggingV;
 }
 
 int Preferences::autoSavePeriod() const
@@ -348,18 +266,8 @@ void Preferences::load()
   _idleDetectValueV = config.readNumEntry(QString::fromLatin1("period"), 15);
 
   config.setGroup( QString::fromLatin1("Saving") );
-  _useFlatFileV = config.readBoolEntry( QString::fromLatin1("use flat file"),
-      false);
-  _flatFileV = config.readPathEntry( QString::fromLatin1("flat file"),
-      locateLocal( "appdata", QString::fromLatin1( "karm.data")));
-  _useiCalFileV = config.readBoolEntry( QString::fromLatin1("use ical file"),
-      true);
   _iCalFileV = config.readPathEntry( QString::fromLatin1("ical file"),
       locateLocal( "appdata", QString::fromLatin1( "karm.ics")));
-  _doTimeLoggingV = config.readBoolEntry( QString::fromLatin1("time logging"),
-      false);
-  _logFileV = config.readPathEntry( QString::fromLatin1("time log file"),
-      locateLocal( "appdata", QString::fromLatin1("karm.log")));
   _doAutoSaveV = config.readBoolEntry( QString::fromLatin1("auto save"),
       true);
   _autoSaveValueV = config.readNumEntry( 
@@ -386,12 +294,7 @@ void Preferences::save()
   config.writeEntry( QString::fromLatin1("period"), _idleDetectValueV);
 
   config.setGroup( QString::fromLatin1("Saving"));
-  config.writeEntry( QString::fromLatin1("use ical file"), _useiCalFileV);
   config.writePathEntry( QString::fromLatin1("ical file"), _iCalFileV);
-  config.writeEntry( QString::fromLatin1("use flat file"), _useFlatFileV);
-  config.writePathEntry( QString::fromLatin1("flat file"), _flatFileV);
-  config.writeEntry( QString::fromLatin1("time logging"), _doTimeLoggingV);
-  config.writePathEntry( QString::fromLatin1("time log file"), _logFileV);
   config.writeEntry( QString::fromLatin1("auto save"), _doAutoSaveV);
   config.writeEntry( QString::fromLatin1("auto save period"), _autoSaveValueV);
   config.writeEntry( QString::fromLatin1("prompt delete"), _promptDeleteV);

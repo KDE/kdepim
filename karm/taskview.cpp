@@ -10,6 +10,7 @@
 #include <kconfig.h>
 #include <kdebug.h>
 #include <klocale.h>            // i18n
+#include <kfiledialog.h>
 #include <kmessagebox.h>
 #include <klineeditdlg.h>
 #include <kmessagebox.h>
@@ -147,13 +148,12 @@ void TaskView::loadFromFlatFile()
 {
   kdDebug() << "TaskView::loadFromFlatFile()" << endl;
 
-  // FIXME: replace with a file open dialog
-  QString msg = QString(QString::fromLatin1("You are going to add all tasks from %1 (defined in the KArm preferences) to the current task view.  Are you sure you want to do this?")).arg(_preferences->flatFile());
-
-  int answer = KMessageBox::warningContinueCancel(this, msg);
-  if (answer == KMessageBox::Continue)
-  {
-    QString err = _storage->loadFromFlatFile(this, _preferences);
+  //KFileDialog::getSaveFileName("icalout.ics",i18n("*.ics|ICalendars"),this);
+  
+  QString fileName(KFileDialog::getOpenFileName(QString::null, QString::null,
+        0));
+  if (!fileName.isEmpty()) {
+    QString err = _storage->loadFromFlatFile(this, fileName);
     if (!err.isEmpty())
     {
       KMessageBox::error(this, err);
