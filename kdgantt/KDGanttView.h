@@ -336,6 +336,9 @@ public:
     void setLvVScrollBarMode( QScrollView::ScrollBarMode );
     void setGvVScrollBarMode( QScrollView::ScrollBarMode );
 
+    void setLinkItemsEnabled(bool on);
+    bool isLinkItemsEnabled() const;
+    
 public slots:
     void editItem( KDGanttViewItem* );
     void zoomToSelection( const QDateTime& start,  const QDateTime&  end);
@@ -352,6 +355,9 @@ signals:
     void itemRightClicked( KDGanttViewItem* );
     void itemDoubleClicked( KDGanttViewItem* );
 
+    // The following signal is emitted when two items shall be linked
+    void linkItems( KDGanttViewItem* from, KDGanttViewItem* to, int linkType );
+    
     // the following signals are emitted if an item is clicked in the
     // listview (exlusive) or in the ganttview
     // gv... means item in ganttview clicked

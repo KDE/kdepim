@@ -4611,6 +4611,28 @@ void  KDGanttView::notifyEditdialog( KDGanttViewItem * item)
   }
 }
 
+/*!
+  \fn void KDGanttView::setLinkItemsEnabled( bool on );
+
+  This enables/disables the linking ui of KDGanttViewItems in KDGanttView.
+  A signal linkItems() is emitted when two items shall be linked and can
+  be used to create the actual link.
+*/
+void KDGanttView::setLinkItemsEnabled(bool on)
+{
+    myCanvasView->linkItemsEnabled = on;
+    myCanvasView->autoScrollEnabled = true;    
+}
+
+/*!
+  \fn void KDGanttView::isLinkItemsEnabled();
+
+  Returns if the linking functionallity is enabled or disabled.
+*/
+bool KDGanttView::isLinkItemsEnabled() const 
+{
+    return myCanvasView->linkItemsEnabled;
+}
 
 /*!
   \fn void KDGanttView::timeIntervalSelected( const QDateTime& start,  const QDateTime&  end);
@@ -4695,6 +4717,13 @@ void  KDGanttView::notifyEditdialog( KDGanttViewItem * item)
 
   This signal is emitted when the user requests a context menu in the
   Gantt view. Notice that \a pos is the absolute mouse position.
+*/
+
+
+/*!
+  \fn void KDGanttView::linkItems ( KDGanttViewItem* from, KDGanttViewItem* to, int linkType )
+
+  This signal is emitted when the user wants to link two items in the Gantt view.
 */
 
 

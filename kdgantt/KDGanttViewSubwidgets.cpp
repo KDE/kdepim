@@ -683,7 +683,9 @@ int KDTimeTableWidget::horBackgroundLines(  QBrush& brush )
     return denseLineCount;
 }
 
-
+int KDTimeTableWidget::getCoordX( QDateTime dt ) {
+    return myGanttView->myTimeHeader->getCoordX(dt);
+}
 
 /* ***************************************************************
    KDTimeHeaderWidget:: KDTimeHeaderWidget
@@ -2959,6 +2961,12 @@ KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidg
     currentItem = 0;
     currentLink = 0;
     cuttedItem = 0;
+    fromItem = 0;
+    fromArea = 0;
+    linkItemsEnabled = false;
+    linkLine = new QCanvasLine(canvas);
+    linkLine->hide();
+    linkLine->setZ(1000);
     //set_Mouse_Tracking(true);
     new KDCanvasWhatsThis(viewport(),this);
     onItem = new QPopupMenu( this );
@@ -3000,7 +3008,10 @@ KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidg
     onItem->setItemEnabled( 3, false );
     myMyContentsHeight = 0;
     _showItemAddPopupMenu = false;
-
+    
+    myScrollTimer = new QTimer( this );
+    connect( myScrollTimer, SIGNAL( timeout() ), SLOT( slotScrollTimer() ) );
+    autoScrollEnabled = false;
 }
 
 
@@ -3290,8 +3301,13 @@ void KDGanttCanvasView::contentsMousePressEvent ( QMouseEvent * e )
             switch (getType(*it)) {
             case Type_is_KDGanttViewItem:
                 currentItem = getItem(*it);
-                if (! currentItem->enabled() )
+                if (! currentItem->enabled() ) {
                     currentItem = 0;
+                } else if (linkItemsEnabled) {
+                    fromItem = currentItem;
+                    linkLine->setPoints(e->pos().x(), e->pos().y(), e->pos().x(), e->pos().y());
+                    linkLine->show();
+                }
                 break;
             case Type_is_KDGanttTaskLink:
                 currentLink = getLink(*it);
@@ -3331,6 +3347,9 @@ void KDGanttCanvasView::contentsMousePressEvent ( QMouseEvent * e )
     if (e->button() == RightButton ) {
         mySignalSender->gvContextMenuRequested( currentItem, e->globalPos() );
     }
+    if (autoScrollEnabled && e->button() == LeftButton) {
+        myScrollTimer->start(50);
+    }
 }
 /**
    Handles the mouseevent if a mousekey is released
@@ -3350,12 +3369,29 @@ void KDGanttCanvasView::contentsMouseReleaseEvent ( QMouseEvent * e )
     {
         switch ( e->button() ) {
         case LeftButton:
+            myScrollTimer->stop();
             {
                 mySignalSender->itemLeftClicked( currentItem );
                 mySignalSender->gvItemLeftClicked( currentItem );
             }
             if ( currentLink )
                 mySignalSender->taskLinkLeftClicked( currentLink );
+            if (linkItemsEnabled && fromItem) {
+                linkLine->hide();
+                canvas()->update();
+                QCanvasItemList il = canvas() ->collisions ( e->pos() );
+                QCanvasItemList::Iterator it;
+                for ( it = il.begin(); it != il.end(); ++it ) {
+                    if (getType(*it) == Type_is_KDGanttViewItem) {
+                        KDGanttViewItem *toItem = getItem(*it);
+                        if (toItem && (fromItem != toItem)) {
+                            mySignalSender->linkItems(fromItem, toItem, 0);
+                        }
+                        break;
+                    }
+                }
+            }
+            fromItem = 0;
             break;
         case RightButton:
             {
@@ -3451,7 +3487,7 @@ void KDGanttCanvasView::contentsMouseDoubleClickEvent ( QMouseEvent * e )
 
 */
 
-void KDGanttCanvasView::contentsMouseMoveEvent ( QMouseEvent *  )
+void KDGanttCanvasView::contentsMouseMoveEvent ( QMouseEvent *e )
 {
     //qDebug("mousemove! ");
     static int moves = 0;
@@ -3462,6 +3498,13 @@ void KDGanttCanvasView::contentsMouseMoveEvent ( QMouseEvent *  )
         moves = 0;
         currentLink = 0;
         currentItem = 0;
+    }
+    if (autoScrollEnabled)
+        mousePos = e->pos()- QPoint(contentsX(),contentsY()); // make mousePos relative 0
+    if (fromItem) {
+        //qDebug("mousemove: linking %s: %d,%d ",fromItem->listViewText().latin1(), e->pos().x(), e->pos().y());
+        linkLine->setPoints(linkLine->startPoint().x(), linkLine->startPoint().y(), e->pos().x(), e->pos().y());
+        canvas()->update();
     }
     // no action implemented
     //qDebug("mousemove ");
@@ -3522,3 +3565,19 @@ KDGanttViewTaskLink*  KDGanttCanvasView::getLink(QCanvasItem* it)
     return 0;
 }
 
+void KDGanttCanvasView::slotScrollTimer() {
+    int mx = mousePos.x(); 
+    int my = mousePos.y();
+    int dx = 0;
+    int dy = 0;
+    if (mx < 0)
+        dx = -5;
+    else if (mx > visibleWidth())
+        dx = 5;
+    if (my < 0)
+        dy = -5;
+    else if (my > visibleHeight())
+        dy = 5;
+    if (dx != 0 || dy != 0)
+        scrollBy(dx, dy);
+}

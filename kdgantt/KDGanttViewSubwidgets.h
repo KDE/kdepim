@@ -54,6 +54,7 @@
 #include <qbrush.h>
 #include <qvbox.h>
 #include <qdockwindow.h>
+#include <qtimer.h>
 
 #include "KDGanttView.h"
 #include "KDGanttViewTaskLink.h"
@@ -267,6 +268,8 @@ public:
     void setNoInformationBrush( const QBrush& brush );
     QBrush noInformationBrush() const;
 
+    int getCoordX( QDateTime dt );
+    
 signals:
    void   heightComputed( int );
 
@@ -469,6 +472,11 @@ protected:
     QPopupMenu* onItem;
     bool _showItemAddPopupMenu;
     int myMyContentsHeight;
+    KDGanttViewItem *fromItem;
+    bool linkItemsEnabled;
+    QCanvasLine *linkLine;
+    int fromArea;
+    bool autoScrollEnabled;
 signals:
   void heightResized( int );
   void widthResized( int );
@@ -481,9 +489,12 @@ private slots:
   void pasteItem( int );
   void newRootItem( int );
   void newChildItem( int );
+  void slotScrollTimer();
 
 private:
   KDCanvasToolTip* myToolTip;
+  QTimer *myScrollTimer;
+  QPoint mousePos;
 };
 
 class KDTimeHeaderToolTip :public QToolTip
