@@ -828,7 +828,7 @@ static const char* s_knownCustomFields[] = {
   0
 };
 
-// The loading is addressee -> Contact -> xml, this is the first part
+// The saving is addressee -> Contact -> xml, this is the first part
 void Contact::setFields( const KABC::Addressee* addressee )
 {
   KolabBase::setFields( addressee );
