@@ -301,15 +301,17 @@ QString DateBook::event2string( KCal::Event *event )
     if ( al != 0 ) {
         int sec = al->offset().asSeconds();
         sec = sec > 0 ? sec % 60 : sec % -60; // as minutes now
-        str.append( "alarm=\"" +QString::number( sec )  + "\" ");
-        QString sound = al->audioFile();
-        if ( sound != "loud" && sound != "silent" ) {
-            if ( sound.isEmpty() )
-                sound = QString::fromLatin1("silent");
-            else
-                sound = QString::fromLatin1("loud");
-        }
-        str.append( "sound=\"" +  sound + "\" ");
+	if( sec != 0 ){
+            str.append( "alarm=\"" +QString::number( sec )  + "\" ");
+	    QString sound = al->audioFile();
+    	    if ( sound != "loud" && sound != "silent" ) {
+        	if ( sound.isEmpty() )
+                	sound = QString::fromLatin1("silent");
+	        else	
+    	            sound = QString::fromLatin1("loud");
+    	    }
+    	    str.append( "sound=\"" +  sound + "\" ");
+	}
     }
     str.append( " />" );
     return str;
