@@ -30,6 +30,7 @@
 #include <kdebug.h>
 
 #include "addressbook.h"
+#include "addresseedialog.h"
 #include "distributionlist.h"
 
 #include "distributionlisteditor.h"
@@ -44,11 +45,11 @@ EmailSelectDialog::EmailSelectDialog( const QStringList &emails, const QString &
 {
   QFrame *topFrame = plainPage();
   QBoxLayout *topLayout = new QVBoxLayout( topFrame );
-  
+
   mButtonGroup = new QButtonGroup( 1, Horizontal, i18n("Email Addresses"),
                                    topFrame );
   topLayout->addWidget( mButtonGroup );
-  
+
   QStringList::ConstIterator it;
   for( it = emails.begin(); it != emails.end(); ++it ) {
     QRadioButton *button = new QRadioButton( *it, mButtonGroup );
@@ -70,33 +71,13 @@ QString EmailSelectDialog::getEmail( const QStringList &emails, const QString &c
 {
   EmailSelectDialog *dlg = new EmailSelectDialog( emails, current, parent );
   dlg->exec();
-  
+
   QString result = dlg->selected();
 
   delete dlg;
-  
+
   return result;
 }
-
-class AddresseeItem : public QListViewItem
-{
-  public:
-    AddresseeItem( QListView *parent, const Addressee &addressee ) :
-      QListViewItem( parent ),
-      mAddressee( addressee )
-    {
-      setText( 0, addressee.realName() );
-      setText( 1, addressee.preferredEmail() );
-    }
-    
-    Addressee addressee() const
-    {
-      return mAddressee;
-    }
-    
-  private:
-    Addressee mAddressee;
-};
 
 class EntryItem : public QListViewItem
 {
@@ -116,17 +97,17 @@ class EntryItem : public QListViewItem
         setText( 2, i18n("No") );
       }
     }
-    
+
     Addressee addressee() const
     {
       return mAddressee;
     }
-    
+
     QString email() const
     {
       return mEmail;
     }
-    
+
   private:
     Addressee mAddressee;
     QString mEmail;
@@ -141,15 +122,15 @@ DistributionListEditor::DistributionListEditor( AddressBook *addressBook, QWidge
   QBoxLayout *topLayout = new QVBoxLayout( this );
 
   QBoxLayout *nameLayout = new QHBoxLayout( topLayout) ;
-  
+
   mNameCombo = new QComboBox( this );
   nameLayout->addWidget( mNameCombo );
   connect( mNameCombo, SIGNAL( activated( int ) ), SLOT( updateEntryView() ) );
-  
+
   QPushButton *newButton = new QPushButton( i18n("New Argl List"), this );
   nameLayout->addWidget( newButton );
-  connect( newButton, SIGNAL( clicked() ), SLOT( newList() ) );  
-  
+  connect( newButton, SIGNAL( clicked() ), SLOT( newList() ) );
+
   QPushButton *removeButton = new QPushButton( i18n("Remove List"), this );
   nameLayout->addWidget( removeButton );
   connect( removeButton, SIGNAL( clicked() ), SLOT( removeList() ) );
@@ -159,7 +140,7 @@ DistributionListEditor::DistributionListEditor( AddressBook *addressBook, QWidge
   mEntryView->addColumn( i18n("Email") );
   mEntryView->addColumn( i18n("Use preferred") );
   topLayout->addWidget( mEntryView );
-  
+
   QPushButton *changeEmailButton = new QPushButton( i18n("Change Email"), this );
   topLayout->addWidget( changeEmailButton );
   connect( changeEmailButton, SIGNAL( clicked() ), SLOT( changeEmail() ) );
@@ -202,7 +183,7 @@ void DistributionListEditor::newList()
   if ( !ok || name.isEmpty() ) return;
 
   new DistributionList( mManager, name );
-  
+
   mNameCombo->insertItem( name );
 
   updateEntryView();
@@ -220,12 +201,12 @@ void DistributionListEditor::addEntry()
 {
   AddresseeItem *addresseeItem =
       dynamic_cast<AddresseeItem *>( mAddresseeView->selectedItem() );
-  
+
   if( !addresseeItem ) {
     kdDebug() << "DLE::addEntry(): No addressee selected." << endl;
     return;
   }
-  
+
   DistributionList *list = mManager->list( mNameCombo->currentText() );
   if ( !list ) {
     kdDebug() << "DLE::addEntry(): No dist list '" << mNameCombo->currentText() << "'" << endl;
@@ -271,7 +252,7 @@ void DistributionListEditor::updateEntryView()
 {
   DistributionList *list = mManager->list( mNameCombo->currentText() );
   if ( !list ) return;
-  
+
   mEntryView->clear();
   DistributionList::Entry::List entries = list->entries();
   DistributionList::Entry::List::ConstIterator it;
@@ -293,6 +274,6 @@ void DistributionListEditor::updateAddresseeView()
 void DistributionListEditor::updateNameCombo()
 {
   mNameCombo->insertStringList( mManager->listNames() );
-  
+
   updateEntryView();
 }

@@ -31,13 +31,33 @@
 
 namespace KABC {
 
+class AddresseeItem : public QListViewItem
+{
+  public:
+    AddresseeItem( QListView *parent, const Addressee &addressee ) :
+      QListViewItem( parent ),
+      mAddressee( addressee )
+    {
+      setText( 0, addressee.realName() );
+      setText( 1, addressee.preferredEmail() );
+    }
+
+    Addressee addressee() const
+    {
+      return mAddressee;
+    }
+
+  private:
+    Addressee mAddressee;
+};
+
 /**
   @short Dialog for selecting address book entries.
-  
+
   This class provides a dialog for selecting entries from the standard KDE
   address book. Use the @ref getAddressee() function to open a modal dialog,
   returning an address book entry.
-  
+
   In the dialog you can select an entry from the list with the mouse or type in
   the first letters of the name or email address you are searching for. The
   entry matching best is automatically selected. Use double click, pressing
@@ -49,7 +69,7 @@ class AddresseeDialog : public KDialogBase {
   public:
     /**
       Construct addressbook entry select dialog.
-      
+
       @param parent parent widget
     */
     AddresseeDialog( QWidget *parent );
@@ -69,12 +89,12 @@ class AddresseeDialog : public KDialogBase {
   private:
     void loadAddressBook();
     void addCompletionItem( const QString &str, QListViewItem *item );
-  
+
     KListView *mAddresseeList;
     KLineEdit *mAddresseeEdit;
-    
+
     AddressBook *mAddressBook;
-    
+
     QDict<QListViewItem> mItemDict;
 };
 

@@ -30,34 +30,13 @@
 
 using namespace KABC;
 
-class AddresseeItem : public QListViewItem
-{
-  public:
-    AddresseeItem( KListView *parent, const Addressee &addressee ) :
-      QListViewItem( parent ),
-      mAddressee( addressee )
-    {
-      setText( 0, addressee.realName() );
-      setText( 1, addressee.preferredEmail() );
-    }
-    
-    Addressee addressee() const
-    {
-      return mAddressee;
-    }
-    
-  private:
-    Addressee mAddressee;
-};
-
-
 AddresseeDialog::AddresseeDialog( QWidget *parent ) :
   KDialogBase( KDialogBase::Plain, i18n("Select Addressee"),
                Ok|Cancel, Ok, parent )
 {
   QWidget *topWidget = plainPage();
   QBoxLayout *topLayout = new QVBoxLayout( topWidget );
-  
+
   mAddresseeList = new KListView( topWidget );
   mAddresseeList->addColumn( i18n("Name") );
   mAddresseeList->addColumn( i18n("Email") );
@@ -67,7 +46,7 @@ AddresseeDialog::AddresseeDialog( QWidget *parent ) :
            SLOT( slotOk() ) );
   connect( mAddresseeList, SIGNAL( selectionChanged( QListViewItem * ) ),
            SLOT( updateEdit( QListViewItem * ) ) );
-  
+
   mAddresseeEdit = new KLineEdit( topWidget );
   mAddresseeEdit->setCompletionMode( KGlobalSettings::CompletionAuto );
   connect( mAddresseeEdit->completionObject(), SIGNAL( match( const QString & ) ),
@@ -130,7 +109,7 @@ Addressee AddresseeDialog::getAddressee( QWidget *parent )
   if ( result == QDialog::Accepted ) {
     QListViewItem *item = dlg->mAddresseeList->selectedItem();
     AddresseeItem *aItem = dynamic_cast<AddresseeItem *>( item );
-    if ( !aItem ) return Addressee(); 
+    if ( !aItem ) return Addressee();
     return aItem->addressee();
   }
 
