@@ -324,94 +324,6 @@ MemoWidget::slotDeleteMemo()
 	initialize();
 }
 
-#if 0
-int MemoWidget::findSelectedCategory(bool AllIsUnfiled)
-{
-	FUNCTIONSETUP;
-
-	// Semantics of currentCatID are: 
-	//
-	// >=0		is a specific category based on the text -> 
-	//		category number mapping defined by the Pilot, 
-	// ==-1 	means "All" category selected when 
-	//		AllIsUnfiled is true.
-	// == Unfiled	means "All" category selected when 
-	//		AllIsUnfiled is false.
-	//
-	//
-	int currentCatID = 0;
-
-	// If a category is deleted after others have been added, none of the
-	// category numbers are changed.  So we need to find the category number
-	// for this category (this category is represented by the selected
-	// *text*).
-	//
-	//
-	// The top entry in the list is "All", so if the top item is
-	// selected we can indicate that we are using the "All" category.
-	//
-	//
-	if (fCatList->currentItem()==0)
-	{
-		currentCatID=-1;
-		if (debug_level & UI_MINOR)
-		{
-			kdDebug() << fname <<
-				": Category 'All' selected.\n" ;
-		}
-	}
-	else
-	{
-		QString selectedCategory=fCatList->text(fCatList->currentItem());
-		if (debug_level & UI_MINOR)
-		{
-			kdDebug() << fname << 
-				": List item " << fCatList->currentItem() <<
-				" selected, text=" <<
-				selectedCategory << endl ;
-		}
-
-		currentCatID=0;
-		while(strcmp(fMemoAppInfo.category.name[currentCatID], 
-		       selectedCategory.local8Bit()) && 
-			(currentCatID < fCatList->count()))
-		{
-			if (debug_level & UI_TEDIOUS)
-			{
-				kdDebug() << fname <<
-					": Didn't match category " <<
-					currentCatID << '=' <<
-					fMemoAppInfo.category.name[currentCatID]
-					<< endl ;
-			}
-
-			currentCatID++;
-		}
-
-		if (currentCatID < fCatList->count())
-		{
-			if (debug_level&UI_MINOR)
-			{
-				kdDebug() << fname << 
-					": Matched category " <<
-					currentCatID << '=' <<
-					fMemoAppInfo.category.name[currentCatID]
-					<< endl ;
-			}
-		}
-		else
-		{
-			kdDebug() << fname 
-				<< ": Selected category didn't match "
-				"any name!\n" ;
-			currentCatID=-1;
-		}
-	}
-
-	if ((currentCatID==-1) && AllIsUnfiled) currentCatID=0;
-	return currentCatID;
-}
-#endif
 
 void
 MemoWidget::updateWidget()
@@ -545,7 +457,7 @@ MemoWidget::slotImportMemo()
 	    // show error!
 	    return;
 	    }
-	char text[MemoWidget::MAX_MEMO_LEN];
+	char *text = new char[MemoWidget::MAX_MEMO_LEN];
 	for(i = 0; (i < (MemoWidget::MAX_MEMO_LEN - 1)) && ((nextChar = importFile.getch()) != -1); i++)
 	    text[i] = nextChar;
 	text[i] = 0;
@@ -553,6 +465,7 @@ MemoWidget::slotImportMemo()
 	fMemoList.append(aMemo);
 	writeMemo(aMemo);
 	updateWidget();
+	delete[] text;
 	}
     }
 
