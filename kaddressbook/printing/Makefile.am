@@ -1,5 +1,6 @@
 INCLUDES = -I$(top_srcdir) -I$(top_builddir)/kaddressbook -I$(top_srcdir)/kaddressbook \
-           -I$(top_srcdir)/kaddressbook/details -I$(top_srcdir)/kaddressbook/common $(all_includes) 
+           -I$(top_srcdir)/kaddressbook/details -I$(top_srcdir)/kaddressbook/common \
+	   -I$(top_builddir)/kaddressbook/common $(all_includes) 
 
 noinst_LTLIBRARIES = libprinter.la
 
@@ -15,7 +16,7 @@ libprinter_la_SOURCES = \
 	rbs_appearance.ui \
 	selectionpage.cpp \
 	stylepage.cpp
-libprinter_la_COMPILE_FIRST = $(top_builddir)/kaddressbook/kabprefs_base.h
+libprinter_la_COMPILE_FIRST = $(top_builddir)/kaddressbook/common/kabprefs_base.h
 
 EXTRA_DIST = \
 	detailledstyle.cpp detailledstyle.h kabentrypainter.h \
