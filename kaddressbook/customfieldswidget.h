@@ -110,6 +110,7 @@ class FieldWidget : public QWidget
 
     QVBoxLayout *mGlobalLayout;
     QVBoxLayout *mLocalLayout;
+    QFrame *mSeparator;
 
     FieldRecordList mFieldList;
 };

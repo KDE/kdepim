@@ -130,9 +130,10 @@ FieldWidget::FieldWidget( QWidget *parent, const char *name )
   mGlobalLayout = new QVBoxLayout( layout, KDialog::spacingHint() );
   mGlobalLayout->setAlignment( Qt::AlignTop );
 
-  QFrame *hline = new QFrame( this );
-  hline->setFrameStyle( QFrame::HLine | QFrame::Sunken );
-  layout->addWidget( hline );
+  mSeparator = new QFrame( this );
+  mSeparator->setFrameStyle( QFrame::HLine | QFrame::Sunken );
+  mSeparator->hide();
+  layout->addWidget( mSeparator );
 
   mLocalLayout = new QVBoxLayout( layout, KDialog::spacingHint() );
   mLocalLayout->setAlignment( Qt::AlignTop );
@@ -190,6 +191,7 @@ void FieldWidget::addField( const QString &identifier, const QString &title,
     record.mLayout = new QHBoxLayout( mLocalLayout );
     record.mLayout->addWidget( record.mLabel );
     record.mLayout->addWidget( record.mWidget, Qt::AlignLeft );
+    mSeparator->show();
   }
 
   mFieldList.append( record );
@@ -208,6 +210,13 @@ void FieldWidget::removeField( const QString &identifier )
 
       mFieldList.remove( it );
       recalculateLayout();
+
+      bool hasLocal = false;
+      for ( it = mFieldList.begin(); it != mFieldList.end(); ++it )
+        hasLocal = hasLocal || !(*it).mGlobal;
+
+      if ( !hasLocal )
+        mSeparator->hide();
 
       return;
     }
