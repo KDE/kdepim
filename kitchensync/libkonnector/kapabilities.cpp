@@ -32,6 +32,27 @@ public:
     m_canHandle = false;
     m_needsAuthent=false;
   };
+  KapabilitiesPrivate(const KapabilitiesPrivate &kap){
+    (*this) = kap;
+  }
+  KapabilitiesPrivate &operator=(const KapablitiesPrivate& kap ){
+    m_push = kap.m_push;
+    m_needConnecttion = kap.m_needConnection;
+    m_listdir = kap.m_listdir;
+    m_needsIp = kap.m_needsIp;
+    m_needsSrcIp = kap.m_needsSrcIp;
+    m_needsDestIp = kap.m_needsDestIp;
+    m_needsAuthent = kap.m_needsAuthent;
+    m_src = kap.m_src;
+    m_dest = kap.m_dest;
+    m_propsIPs = kap.m_propsIPs;
+    m_propAuth = kap.m_propAuth;
+    m_canHandle = kap.m_canHandle;
+    m_ports= kap.m_ports;
+    m_current = kap.m_current;
+    m_user = kap.m_user;
+    m_pass = kap.m_pass;
+  } 
   bool m_push:1;
   bool m_needConnection:1;
   bool m_listdir:1;
@@ -42,7 +63,7 @@ public:
   QHostAddress m_src;
   QHostAddress m_dest;
   QValueList< QPair<QHostAddress,QHostAddress> > m_propsIPs; 
-  QPair<QString, QString> m_propAuth;
+  QValueList< QPair<QString, QString> > m_propAuth;
   bool m_canHandle;
   QStringList m_ports;
   int m_current;
@@ -55,14 +76,9 @@ Kapabilities::Kapabilities()
   d = new KapabilitiesPrivate();
 }
 Kapabilities::Kapabilities(const Kapabilities &kap )
+  : d( 0 )
 {
-  d = new KapabilitiesPrivate();
-  copy(kap );
-}
-void Kapabilities::copy(const Kapabilities &kap )
-{
-  d->m_push = kap.d->m_push;
-
+  (*this) = kap;
 }
 Kapabilities::~Kapabilities()
 {
@@ -168,6 +184,10 @@ bool Kapabilities::needAuthentication()
 {
   return d->m_needsAuthent;
 }
+void Kapabilities::setNeedAuthentication(bool authent)
+{
+  d->m_needsAuthent = authent;
+}
 void Kapabilities::setUser(const QString &user )
 {
   d->m_user = user;
@@ -184,13 +204,23 @@ QString Kapabilities::user()
 {
   return d->m_user;
 }
-QPair<QString,QString> Kapabilities::userProposals()
+QValueList<QPair<QString,QString>> Kapabilities::userProposals()
 {
   return d->m_propAuth;
 }
-void Kapabilities::setUserProposals(const QPair<QString, QString> &auth )
+void Kapabilities::setUserProposals( QValueList< QPair<QString, QString> > auth )
 {
   d->m_propAuth = auth;
+}
+Kapabilities &Kapabilities=(const Kapabilities & )
+{
+  if( d == rhs.d )
+  return *this;
+
+  delete d;
+
+  d = new KapabilitiesPrivate( *rhs.d );
+  return *this;
 }
 
 

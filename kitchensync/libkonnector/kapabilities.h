@@ -64,19 +64,19 @@ class Kapabilities {
   void setIpProposals( QValueList< QPair<QHostAddress, QHostAddress> >);
 
   bool needAuthentication();
+  void setNeedAuthentication(bool need);
   void setUser(const QString &);
   QString user();
   void setPassword(const QString & );
   QString password();
 
-  QPair<QString, QString> userProposals();
-  void setUserProposals( const QPair<QString, QString>& );
+  QValueList< QPair<QString, QString> > userProposals();
+  void setUserProposals( QValueList< QPair<QString, QString> > );
   Kapabilities &operator=(const Kapabilities & );
 
  private:
   class KapabilitiesPrivate;
   KapabilitiesPrivate *d;
-  void copy(const Kapabilities &);
 };
 #endif
 

@@ -68,6 +68,7 @@ QString Konnector::registerKonnector(const QString &Device )
       }
       plugin->setUDI( randStr );
       connect(plugin, SIGNAL(sync(QString, int, QPtrLsit<KSyncEntry> ) ), this, SLOT(slotSync(QString, int, QPtrList<KSyncEntry> ) ) );
+      connect(plugin, SIGNAL(errorKonnector(QString, int, QString), this, SLOT(slotError(QString,int,QString)) );
       d->m_konnectors.insert(randStr, plugin  );
       return randStr;
     }
@@ -199,9 +200,9 @@ void Konnector::slotSync(QString udi, int mode, QPtrList<KSyncEntry> entry)
   emit wantsToSync(udi, mode, entry );
 }
 
-void Konnector::slotError(QString, int, QString )
+void Konnector::slotError(QString udi, int mode, QString info)
 {
-
+  emit konnectorError(udi, mode, info );
 
 }
 
