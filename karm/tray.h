@@ -12,6 +12,7 @@
 class QPopupMenu;
 class QTimer;
 class KSystemTray;
+class KarmWindow;
 // experiment
 // class KPopupMenu;
 
@@ -20,7 +21,7 @@ class KarmTray : public KSystemTray
   Q_OBJECT
 
   public:
-    KarmTray(QWidget * parent);
+    KarmTray(KarmWindow * parent);
     ~KarmTray();
 
   private:

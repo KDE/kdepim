@@ -12,7 +12,6 @@
  * $Id$
  */
 
-#include "top.h"
 #include <qstring.h>
 #include <qkeycode.h>
 #include <qlayout.h>
@@ -32,12 +31,15 @@
 #include <qtimer.h>
 #include <qtooltip.h>
 #include <qptrlist.h>
+#include <kaction.h>
 
+#include "top.h"
 #include "task.h"
+#include "tray.h"
 
 QPtrVector<QPixmap> *KarmTray::icons = 0;
 
-KarmTray::KarmTray(QWidget * parent)
+KarmTray::KarmTray(KarmWindow* parent)
   : KSystemTray(parent, "Karm Tray")
 {
   // the timer that updates the "running" icon in the tray
@@ -55,6 +57,10 @@ KarmTray::KarmTray(QWidget * parent)
       icons->insert(i,icon);
     }
   }
+
+  parent->actionPreferences->plug( contextMenu() ); 
+  parent->actionStopAll->plug( contextMenu() );
+  connect( this, SIGNAL(quitSelected()), parent, SLOT(quit()) );
 
   resetClock();
   initToolTip();
@@ -99,7 +105,6 @@ void KarmTray::stopClock()
 {
   _taskActiveTimer->stop();
   show();
-  QToolTip::add(this, i18n("No active tasks"));
 }
 
 void KarmTray::advanceClock()

@@ -2,9 +2,11 @@
 #define KARM_TOP_H
 
 #include <kmainwindow.h>
-#include <kkeydialog.h>
-#include "task.h"
-#include "tray.h"
+
+class QListViewItem;
+class QPoint;
+
+class KDialogBase;
 
 class Karm;
 class KAccel;
@@ -17,19 +19,18 @@ class KarmWindow : public KMainWindow
   Q_OBJECT
 
 private:
-  KAccel          *_accel;
-  KAccelMenuWatch *_watcher;
-  Karm            *_karm;
-  long            _totalTime;
-  Preferences     *_preferences;
-  KarmTray        *_tray;
+  KAccel		*_accel;
+  KAccelMenuWatch	*_watcher;
+  Karm		*_karm;
+  long		_totalSum;
+  long _sessionSum;
+  Preferences *_preferences;
+  bool _hideOnClose;
+  KarmTray *_tray;
 
   public:
     KarmWindow();
     virtual ~KarmWindow();
-
-  public slots:
-    void updateTime( long difference );
 
   protected slots:
     void keyBindings();
@@ -40,21 +41,30 @@ private:
     void quit();
     void print();
     void slotSelectionChanged();
+    void hideOnClose( bool hide );
+    void contextMenuRequest( QListViewItem*, const QPoint&, int );
+    void enableStopAll();
+    void disableStopAll();
     
   protected:
+    void startStatusBar();
     virtual void saveProperties( KConfig* );
     void saveGeometry();
     void loadGeometry();
+    bool queryClose();
 
   private:
     void makeMenus();
-    KDialogBase *dialog;
-    KAction 
-      *actionStart,
-      *actionStop,
-      *actionDelete,
-      *actionEdit;
 
+    KDialogBase *dialog;
+    KAction* actionStart;
+    KAction* actionStop;
+    KAction* actionStopAll;
+    KAction* actionDelete;
+    KAction* actionEdit;
+    KAction* actionPreferences;
+
+    friend class KarmTray;
 };
 
 #endif
