@@ -113,7 +113,7 @@ private:
   KCal::CalendarLocal mCalendar;
 
   // The list of subresources
-  Kolab::ResourceMap mResources;
+  Kolab::ResourceMap mSubResources;
 };
 
 }

@@ -85,18 +85,18 @@ bool ResourceKolab::doOpen()
   config.setGroup( configGroupName );
 
   // Get the list of Notes folders from KMail
-  QMap<QString, bool> resources;
-  if ( !kmailSubresources( resources, kmailContentsType ) )
+  QMap<QString, bool> subResources;
+  if ( !kmailSubresources( subResources, kmailContentsType ) )
     return false;
 
   // Make the resource map from the folder list
   QMap<QString, bool>::ConstIterator it;
-  mResources.clear();
-  for ( it = resources.begin(); it != resources.end(); ++it ) {
-    const QString resource = it.key();
+  mSubResources.clear();
+  for ( it = subResources.begin(); it != subResources.end(); ++it ) {
+    const QString subResource = it.key();
     const bool active = config.readBoolEntry( it.key(), true );
     const bool writable = it.data();
-    mResources[ resource ] = Kolab::SubResource( active, writable, resource );
+    mSubResources[ subResource ] = Kolab::SubResource( active, writable, subResource );
   }
 
   return true;
@@ -107,28 +107,28 @@ void ResourceKolab::doClose()
   KConfig config( configFile() );
   config.setGroup( configGroupName );
   Kolab::ResourceMap::ConstIterator it;
-  for ( it = mResources.begin(); it != mResources.end(); ++it )
+  for ( it = mSubResources.begin(); it != mSubResources.end(); ++it )
     config.writeEntry( it.key(), it.data().active() );
 }
 
-bool ResourceKolab::loadSubResource( const QString& resource )
+bool ResourceKolab::loadSubResource( const QString& subResource )
 {
   // Get the list of journals
   QMap<Q_UINT32, QString> lst;
-  if( !kmailIncidences( lst, attachmentMimeType, resource ) ) {
+  if( !kmailIncidences( lst, attachmentMimeType, subResource ) ) {
     kdError(5500) << "Communication problem in "
                   << "ResourceKolab::getIncidenceList()\n";
     return false;
   }
 
-  kdDebug(5500) << "Notes kolab resource: got " << lst.count() << " notes in " << resource << endl;
+  kdDebug(5500) << "Notes kolab resource: got " << lst.count() << " notes in " << subResource << endl;
 
   // Populate with the new entries
   const bool silent = mSilent;
   mSilent = true;
   QMap<Q_UINT32, QString>::Iterator it;
   for ( it = lst.begin(); it != lst.end(); ++it ) {
-    KCal::Journal* journal = addNote( it.data(), resource, it.key() );
+    KCal::Journal* journal = addNote( it.data(), subResource, it.key() );
     if ( !journal )
       kdDebug(5500) << "loading note " << it.key() << " failed" << endl;
     else
@@ -147,9 +147,9 @@ bool ResourceKolab::load()
 
   bool rc = true;
   Kolab::ResourceMap::ConstIterator itR;
-  for ( itR = mResources.begin(); itR != mResources.end(); ++itR ) {
+  for ( itR = mSubResources.begin(); itR != mSubResources.end(); ++itR ) {
     if ( !itR.data().active() )
-      // This resource is disabled
+      // This subResource is disabled
       continue;
 
     rc &= loadSubResource( itR.key() );
@@ -194,7 +194,7 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
   mCalendar.addJournal( journal );
 
   QString resource =
-    newNote ? findWritableResource( mResources ) : subresource;
+    newNote ? findWritableResource( mSubResources ) : subresource;
 
   if ( !mSilent ) {
     QString xml = Note::journalToXML( journal );
@@ -233,20 +233,20 @@ bool ResourceKolab::deleteNote( KCal::Journal* journal )
 
 void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* i )
 {
-  QString resource;
+  QString subResource;
   Q_UINT32 sernum;
   if ( mUidMap.contains( i->uid() ) ) {
-    resource = mUidMap[ i->uid() ].resource();
+    subResource = mUidMap[ i->uid() ].resource();
     sernum = mUidMap[ i->uid() ].serialNumber();
   } else {
-    resource = findWritableResource( mResources );
+    subResource = findWritableResource( mSubResources );
     sernum = 0;
   }
 
   KCal::Journal* journal = dynamic_cast<KCal::Journal*>( i );
   QString xml = Note::journalToXML( journal );
-  if( !xml.isEmpty() && kmailUpdate( resource, sernum, xml, attachmentMimeType, journal->summary() ) )
-    mUidMap[ i->uid() ] = StorageReference( resource, sernum );
+  if( !xml.isEmpty() && kmailUpdate( subResource, sernum, xml, attachmentMimeType, journal->summary() ) )
+    mUidMap[ i->uid() ] = StorageReference( subResource, sernum );
 }
 
 /*
@@ -254,7 +254,7 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* i )
  * changed.
  */
 bool ResourceKolab::fromKMailAddIncidence( const QString& type,
-                                           const QString& resource,
+                                           const QString& subResource,
                                            Q_UINT32 sernum,
                                            const QString& note )
 {
@@ -263,7 +263,7 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
 
   const bool silent = mSilent;
   mSilent = true;
-  KCal::Journal* journal = addNote( note, resource, sernum );
+  KCal::Journal* journal = addNote( note, subResource, sernum );
   if ( journal )
     manager()->registerNote( this, journal );
   mSilent = silent;
@@ -271,7 +271,7 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
 }
 
 void ResourceKolab::fromKMailDelIncidence( const QString& type,
-                                           const QString& /*resource*/,
+                                           const QString& /*subResource*/,
                                            const QString& uid )
 {
   // Check if this is a note
@@ -289,57 +289,57 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
 }
 
 void ResourceKolab::slotRefresh( const QString& type,
-                                 const QString& /*resource*/ )
+                                 const QString& /*subResource*/ )
 {
   if ( type == kmailContentsType )
-    load();
+    load(); // ### should call loadSubResource(subResource) probably
 }
 
 void ResourceKolab::fromKMailAddSubresource( const QString& type,
-                                             const QString& resource,
+                                             const QString& subResource,
                                              bool writable )
 {
   if ( type != kmailContentsType )
     // Not ours
     return;
 
-  if ( mResources.contains( resource ) )
+  if ( mSubResources.contains( subResource ) )
     // Already registered
     return;
 
   KConfig config( configFile() );
   config.setGroup( configGroupName );
 
-  bool active = config.readBoolEntry( resource, true );
-  mResources[ resource ] = Kolab::SubResource( active, writable, resource );
-  loadSubResource( resource );
-  emit signalSubresourceAdded( this, type, resource );
+  bool active = config.readBoolEntry( subResource, true );
+  mSubResources[ subResource ] = Kolab::SubResource( active, writable, subResource );
+  loadSubResource( subResource );
+  emit signalSubresourceAdded( this, type, subResource );
 }
 
 void ResourceKolab::fromKMailDelSubresource( const QString& type,
-                                             const QString& resource )
+                                             const QString& subResource )
 {
   if ( type != configGroupName )
     // Not ours
     return;
 
-  if ( !mResources.contains( resource ) )
+  if ( !mSubResources.contains( subResource ) )
     // Not registered
     return;
 
   // Ok, it's our job, and we have it here
-  mResources.erase( resource );
+  mSubResources.erase( subResource );
 
   KConfig config( configFile() );
   config.setGroup( configGroupName );
-  config.deleteEntry( resource );
+  config.deleteEntry( subResource );
   config.sync();
 
   // Make a list of all uids to remove
   Kolab::UidMap::ConstIterator mapIt;
   QStringList uids;
   for ( mapIt = mUidMap.begin(); mapIt != mUidMap.end(); ++mapIt )
-    if ( mapIt.data().resource() == resource )
+    if ( mapIt.data().resource() == subResource )
       // We have a match
       uids << mapIt.key();
 
@@ -356,18 +356,18 @@ void ResourceKolab::fromKMailDelSubresource( const QString& type,
     mSilent = silent;
   }
 
-  emit signalSubresourceRemoved( this, type, resource );
+  emit signalSubresourceRemoved( this, type, subResource );
 }
 
 QStringList ResourceKolab::subresources() const
 {
-  return mResources.keys();
+  return mSubResources.keys();
 }
 
 bool ResourceKolab::subresourceActive( const QString& res ) const
 {
-  if ( mResources.contains( res ) ) {
-    return mResources[ res ].active();
+  if ( mSubResources.contains( res ) ) {
+    return mSubResources[ res ].active();
   }
 
   // Safe default bet:
