@@ -136,7 +136,7 @@ KNMainWindow::KNMainWindow() : KMainWindow(0,"mainWindow"), b_lockInput(false)
   //apply settings
   KConfig *conf = KGlobal::config();
   conf->setGroup("mainWindow_options");
-  resize(759,478);  // default optimized for 800x600
+  resize(787,478);  // default optimized for 800x600
   applyMainWindowSettings(conf);
   a_ctWinToggleToolbar->setChecked(!toolBar()->isHidden());
   a_ctWinToggleStatusbar->setChecked(!statusBar()->isHidden());

@@ -214,16 +214,20 @@ void KNodeView::readOptions()
   conf->setGroup("APPEARANCE");
 
   QValueList<int> lst = conf->readIntListEntry("Vert_SepPos");
-  if (lst.count()!=2)
-    lst << 266 << 487;
+  if (lst.count()!=2) {
+    lst.clear();
+    lst << 251 << 530;
+  }
   if (l_ongView)
     setSizes(lst);
   else
     s_ecSplitter->setSizes(lst);
 
   lst = conf->readIntListEntry("Horz_SepPos");
-  if (lst.count()!=2)
+  if (lst.count()!=2) {
+    lst.clear();
     lst << 153 << 234;
+  }
   if (l_ongView)
     s_ecSplitter->setSizes(lst);
   else
@@ -232,7 +236,6 @@ void KNodeView::readOptions()
   lst = conf->readIntListEntry("Hdrs_Size");
   if (lst.count()==8) {
     QValueList<int>::Iterator it = lst.begin();
-
     QHeader *h=c_olView->header();
     for (int i=0; i<3; i++) {
       h->resizeSection(i,(*it));
@@ -263,7 +266,7 @@ void KNodeView::readOptions()
     }
   }
 
-  int sortCol=conf->readNumEntry("sortCol",3);
+  int sortCol=conf->readNumEntry("sortCol",4);
   bool sortAsc=conf->readBoolEntry("sortAscending", false);
   h_drView->setColAsc(sortCol, sortAsc);
   h_drView->setSorting(sortCol, sortAsc);
