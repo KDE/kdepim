@@ -36,6 +36,7 @@ class GNOKIIXXPort : public XXPortObject
     QString identifier() const { return "gnokii"; }
 
   public slots:
+    bool exportContacts( const KABC::AddresseeList &list, const QString &data );
     KABC::AddresseeList importContacts( const QString &data ) const;
 };
 
