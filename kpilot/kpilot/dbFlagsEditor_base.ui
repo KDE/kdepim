@@ -31,12 +31,6 @@
                     <verstretch>0</verstretch>
                 </sizepolicy>
             </property>
-            <property name="frameShape">
-                <enum>NoFrame</enum>
-            </property>
-            <property name="frameShadow">
-                <enum>Plain</enum>
-            </property>
             <property name="text">
                 <string>Database &amp;name:</string>
             </property>
@@ -258,6 +252,29 @@
                         <cstring>fBackupDate</cstring>
                     </property>
                 </widget>
+                <widget class="KTimeWidget" row="0" column="2">
+                    <property name="name">
+                        <cstring>fCreationTime</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>4</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                </widget>
+                <widget class="KTimeWidget" row="1" column="2">
+                    <property name="name">
+                        <cstring>fModificationTime</cstring>
+                    </property>
+                </widget>
+                <widget class="KTimeWidget" row="2" column="2">
+                    <property name="name">
+                        <cstring>fBackupTime</cstring>
+                    </property>
+                </widget>
                 <widget class="KDateWidget" row="2" column="1">
                     <property name="name">
                         <cstring>fBackupDate</cstring>
@@ -333,6 +350,9 @@
 </includes>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
+    <includehint>ktimewidget.h</includehint>
+    <includehint>ktimewidget.h</includehint>
+    <includehint>ktimewidget.h</includehint>
     <includehint>kdatewidget.h</includehint>
     <includehint>kdatewidget.h</includehint>
     <includehint>kdatewidget.h</includehint>

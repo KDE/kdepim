@@ -11,5 +11,12 @@
 #endif
 
 #if KDE_VERSION < 0x30110
-#define KTimeWidget QWidget
+#warning "Workaround for KTimeWidget in KDE 3.1"
+class KTimeWidget : public QWidget
+{
+public:
+	KTimeWidget(QWidget *p, const char *n) : QWidget(p,n) {};
+} ;
+
+
 #endif
