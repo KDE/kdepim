@@ -124,8 +124,7 @@ public:
   /// Is this subresource active?
   bool subresourceActive( const QString& ) const;
 
-  // ############ TODO
-  virtual void setSubresourceActive( const QString &, bool ) {}
+  virtual void setSubresourceActive( const QString &, bool );
 
   /// Completion weight for a given subresource
   virtual int subresourceCompletionWeight( const QString& ) const;
@@ -138,10 +137,6 @@ public:
 
   /// Give the uidmap. Used for ordered searching
   QMap<QString, QString> uidToResourceMap() const;
-
-signals:
-  void signalSubresourceAdded( Resource*, const QString&, const QString& );
-  void signalSubresourceRemoved( Resource*, const QString&, const QString& );
 
 protected:
   bool kmailUpdateAddressee( const Addressee& );

@@ -692,7 +692,7 @@ bool Contact::loadXML( const QDomDocument& document )
       QDomElement e = n.toElement();
       if ( !loadAttribute( e ) ) {
         // Unhandled tag - save for later storage
-        kdDebug() << "Saving unhandled tag " << e.tagName() << endl;
+        //kdDebug() << "Saving unhandled tag " << e.tagName() << endl;
         Custom c;
         c.app = s_unhandledTagAppName;
         c.name = e.tagName();
