@@ -43,23 +43,11 @@ korgac_SOURCES = korgacmain.cpp alarmdialog.cpp \
 	koeventviewer.cpp koalarmclient.cpp \
         alarmguiiface.skel
 
-
-kde_module_LTLIBRARIES = libkcm_alarmdaemonctrl.la
-
-libkcm_alarmdaemonctrl_la_SOURCES = alarmdaemonctrl.cpp alarmdaemoniface.stub
-libkcm_alarmdaemonctrl_la_LDFLAGS = -module -avoid-version $(all_libraries) -no-undefined
-libkcm_alarmdaemonctrl_la_LIBADD = $(LIB_KDEUI)
-
-alarmdaemonctrl_DATA = alarmdaemonctrl.desktop
-alarmdaemonctrldir = $(kde_appsdir)/Settings/System
-
-
 noinst_HEADERS = alarmapp.h alarmdaemon.h alarmdaemoniface.h \
 	guiapp.h alarmgui.h alarmguiiface.h alarmdialog.h \
 	dockwindow.h koeventviewer.h \
         adcalendarbase.h adcalendar.h adcalendar_gui.h \
-	adconfigdatabase.h adconfigdatarw.h clientinfo.h compat.h \
-	alarmdaemonctrl.h
+	adconfigdatabase.h adconfigdatarw.h clientinfo.h compat.h
 
 METASOURCES = AUTO
 
@@ -67,6 +55,9 @@ SUBDIRS = pixmaps
  
 autostart_DATA = kalarmd.autostart.desktop korgac.desktop # kalarmdgui.desktop
 autostartdir = $(prefix)/share/autostart
+
+app_DATA = kalarmd.desktop
+appdir = $(kde_appsdir)/.hidden
 
 #datadir = $(kde_bindir)
 
