@@ -96,7 +96,7 @@
                         <cstring>textLabel9</cstring>
                     </property>
                     <property name="text">
-                        <string>User name:</string>
+                        <string>Username:</string>
                     </property>
                 </widget>
                 <widget class="KLineEdit" row="1" column="1">
