@@ -68,8 +68,6 @@ const char *AbbrowserConduitFactory::fFaxType = "PilotFax";
 const char *AbbrowserConduitFactory::fCustom = "Custom %1";
 const char *AbbrowserConduitFactory::fCustomFmt = "CustomDateFormat";
 
-const char *AbbrowserConduitFactory::fFullSyncOnPCChange = "FullSyncOnPCChange";
-
 
 
 AbbrowserConduitFactory::AbbrowserConduitFactory(QObject *p, const char *n) :

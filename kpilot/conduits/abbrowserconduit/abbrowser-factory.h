@@ -48,8 +48,7 @@ public:
 		*fSyncMode, *fArchive,
 		*fResolution, *fSmartMerge, *fFirstSync,
 		*fOtherField, *fStreetType, *fFaxType,
-		*fCustom, *fCustomFmt,
-		*fFullSyncOnPCChange;
+		*fCustom, *fCustomFmt;
 
 	static KAboutData *about() { return fAbout; } ;
 	static const char *group() { return fGroup; } ;
