@@ -6,7 +6,7 @@ diff -u -r1.35 configure.in.in
 --- configure.in.in	10 Jun 2004 12:36:15 -0000	1.35
 +++ configure.in.in	8 Aug 2004 20:42:41 -0000
 @@ -1,4 +1,6 @@
- #MIN_CONFIG(3.2)
+ #MIN_CONFIG(3.3)
 +AM_INIT_AUTOMAKE(kdepim, @VERSION@)
 +
  AC_HEADER_DIRENT
