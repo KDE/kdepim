@@ -35,9 +35,14 @@
 class QVBoxLayout;
 class QHBoxLayout;
 class QGridLayout;
+
+#ifdef USE_KHEXEDIT
 namespace KHE {
-class KHexEdit;
+class BytesEditInterface;
 }
+using namespace KHE;
+#endif
+
 class QButtonGroup;
 class QCheckBox;
 class QLabel;
@@ -56,6 +61,7 @@ public:
 	DBRecordEditor(PilotRecord*r=0L, int n=-1, QWidget *parent = 0);
 	~DBRecordEditor();
 	
+protected:
 	QLabel* fRecordIndexLabel;
 	QLabel* fRecordIDLabel;
 	QLineEdit* fRecordIndex;
@@ -66,7 +72,8 @@ public:
 	QCheckBox* fBusy;
 	QCheckBox* fSecret;
 	QCheckBox* fArchived;
-	KHE::KHexEdit* fRecordData;
+	QWidget* fRecordData;
+	KHE::BytesEditInterface*fRecordDataIf;
 	
 protected:
 	QGridLayout* DBRecordEditorBaseLayout;
