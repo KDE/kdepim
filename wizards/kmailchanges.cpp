@@ -102,6 +102,7 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
 
       // This needs to be done here, since it reference just just generated id
       c.setGroup( "IMAP Resource" );
+      c.writeEntry("TheIMAPResourceAccount", uid);
       c.writeEntry("TheIMAPResourceFolderParent", QString(".%1.directory/INBOX").arg( uid ));
    }
 
