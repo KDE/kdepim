@@ -40,7 +40,6 @@
 
 #include "kaddressbookConduit.h"
 #include "abbrowser-factory.h"
-#include <kdebug.h>
 
 AbbrowserWidgetSetup::AbbrowserWidgetSetup(QWidget *w, const char *n,
 	const QStringList & a) :
@@ -117,10 +116,18 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 	// General page
 	fConfigWidget->fSyncDestination->setButton(
 		fConfig->readNumEntry(AbbrowserConduitFactory::fAbookType, 0));
-        kdDebug()<<"abookType="<<fConfig->readNumEntry(AbbrowserConduitFactory::fAbookType, 0)<<endl;
+#ifdef DEBUG
+        DEBUG_CONDUIT << fname << ": abookType=" 
+		<< fConfig->readNumEntry(AbbrowserConduitFactory::fAbookType, 0)
+		<< endl;
+#endif
 	fConfigWidget->fAbookFile->setURL(
 		fConfig->readEntry(AbbrowserConduitFactory::fAbookFile));
-        kdDebug()<<"ABookFile="<<fConfig->readEntry(AbbrowserConduitFactory::fAbookFile)<<endl;
+#ifdef DEBUG
+	DEBUG_CONDUIT << fname << ": ABookFile="
+		<< fConfig->readEntry(AbbrowserConduitFactory::fAbookFile)
+		<< endl;
+#endif
 	fConfigWidget->fSyncMode->setButton(
 		fConfig->readNumEntry(AbbrowserConduitFactory::fSyncMode, 0));
 	fConfigWidget->fArchive->setChecked(
