@@ -20,7 +20,7 @@ groupwarewizard_LDADD = libegroupwarewizard.la libsloxwizard.la $(LIB_KDEUI) \
 groupwarewizard_SOURCES = groupwarewizard.cpp main.cpp overviewpage.cpp
 
 # Kolab
-libkolabwizard_la_LDFLAGS = $(all_libraries) -no-undefined
+libkolabwizard_la_LDFLAGS = -avoid-version -no-undefined $(all_libraries)
 libkolabwizard_la_LIBADD = $(top_builddir)/kresources/kolab/kcal/libkcalkolab.la \
                            $(top_builddir)/kresources/kolab/kabc/libkabckolab.la \
                            $(top_builddir)/kresources/kolab/knotes/libknoteskolab.la \
@@ -36,7 +36,7 @@ kolabwizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kolabwizard_SOURCES = kolabmain.cpp
 
 # eGroupware
-libegroupwarewizard_la_LDFLAGS = $(all_libraries) -no-undefined
+libegroupwarewizard_la_LDFLAGS = -avoid-version -no-undefined $(all_libraries)
 libegroupwarewizard_la_SOURCES = egroupwarewizard.cpp egroupwareconfig.kcfgc
 libegroupwarewizard_la_LIBADD = $(top_builddir)/kresources/egroupware/libkabc_xmlrpc.la \
                                 $(top_builddir)/kresources/egroupware/libkcal_xmlrpc.la \
@@ -50,7 +50,7 @@ egroupwarewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 egroupwarewizard_SOURCES = egroupwaremain.cpp
 
 # SLOX
-libsloxwizard_la_LDFLAGS = $(all_libraries) -no-undefined
+libsloxwizard_la_LDFLAGS = -avoid-version -no-undefined $(all_libraries)
 libsloxwizard_la_SOURCES = sloxwizard.cpp sloxconfig.kcfgc
 libsloxwizard_la_LIBADD = $(top_builddir)/kresources/slox/libkcal_slox.la \
                           $(top_builddir)/kresources/slox/libkabc_slox.la \
@@ -61,7 +61,7 @@ sloxwizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 sloxwizard_SOURCES = sloxmain.cpp
 
 # GroupWise
-libgroupwisewizard_la_LDFLAGS = $(all_libraries) -no-undefined
+libgroupwisewizard_la_LDFLAGS = -avoid-version -no-undefined $(all_libraries)
 libgroupwisewizard_la_SOURCES = groupwisewizard.cpp groupwiseconfig.kcfgc \
   kmailchanges.cpp
 libgroupwisewizard_la_LIBADD = $(top_builddir)/kresources/groupwise/libkcal_groupwise.la \
