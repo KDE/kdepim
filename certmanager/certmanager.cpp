@@ -736,8 +736,9 @@ void CertManager::startCertificateExport( const QStringList & fingerprints ) {
   if ( fingerprints.empty() )
     return;
 
-  // PENDING(marc): let user choose between binary and PEM format?
-  Kleo::ExportJob * job = Kleo::CryptPlugFactory::instance()->smime()->publicKeyExportJob( false );
+  // we need to use PEM (ascii armoured) format, since DER (binary)
+  // can't transport more than one certificate *sigh* this is madness :/
+  Kleo::ExportJob * job = Kleo::CryptPlugFactory::instance()->smime()->publicKeyExportJob( true );
   assert( job );
 
   connect( job, SIGNAL(result(const GpgME::Error&,const QByteArray&)),
