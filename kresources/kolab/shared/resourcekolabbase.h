@@ -41,7 +41,7 @@ class QCString;
 class QStringList;
 class KURL;
 
-namespace ResourceKolab {
+namespace Kolab {
 
 class KMailConnection;
 

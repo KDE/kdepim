@@ -40,7 +40,7 @@ class KURL;
 class DCOPClient;
 class KMailICalIface_stub;
 
-namespace ResourceKolab {
+namespace Kolab {
 
 class ResourceKolabBase;
 

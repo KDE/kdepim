@@ -44,7 +44,7 @@ namespace KCal {
   class Incidence;
 }
 
-namespace ResourceKolab {
+namespace Kolab {
 
 class KolabBase {
 public:

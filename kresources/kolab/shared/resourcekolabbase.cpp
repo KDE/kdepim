@@ -41,7 +41,7 @@
 #include <ktempfile.h>
 #include <qtextstream.h>
 
-using namespace ResourceKolab;
+using namespace Kolab;
 
 
 ResourceKolabBase::ResourceKolabBase( const QCString& objId )

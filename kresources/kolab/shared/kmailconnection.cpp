@@ -43,7 +43,7 @@
 #include "kmailicalIface_stub.h"
 
 
-using namespace ResourceKolab;
+using namespace Kolab;
 
 
 KMailConnection::KMailConnection( ResourceKolabBase* resource,

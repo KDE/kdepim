@@ -35,7 +35,7 @@
 #include <libkcal/journal.h>
 #include <qfile.h>
 
-using namespace ResourceKolab;
+using namespace Kolab;
 
 
 KolabBase::KolabBase()
