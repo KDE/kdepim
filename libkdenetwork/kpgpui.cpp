@@ -30,6 +30,7 @@
 #include <qlayout.h>
 #include <qtimer.h>
 #include <qpopupmenu.h>
+#include <qregexp.h>
 
 #include <klocale.h>
 #include <kpassdlg.h>
@@ -251,6 +252,7 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   resize( dialogSize );
 
   mCheckSelectionTimer = new QTimer( this );
+  mStartSearchTimer = new QTimer( this );
 
   // load the key status icons
   mKeyGoodPix    = new QPixmap( UserIcon("key_ok") );
@@ -266,6 +268,15 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
     label->setText( text );
     topLayout->addWidget( label );
   }
+
+  QHBoxLayout * hlay = new QHBoxLayout( topLayout ); // inherits spacing
+  mSearchEdit = new QLineEdit( page );
+  hlay->addWidget( new QLabel( mSearchEdit, i18n("&Search for:"), page ) );
+  hlay->addWidget( mSearchEdit, 1 );
+
+  connect( mSearchEdit, SIGNAL(textChanged(const QString&)),
+	   this, SLOT(slotSearch(const QString&)) );
+  connect( mStartSearchTimer, SIGNAL(timeout()), SLOT(slotFilter()) );
 
   mListView = new KListView( page );
   mListView->addColumn( i18n("Key ID") );
@@ -339,7 +350,6 @@ KeySelectionDialog::~KeySelectionDialog()
   delete mKeyBadPix;
   delete mKeyUnknownPix;
   delete mKeyValidPix;
-
 }
 
 
@@ -991,6 +1001,7 @@ void KeySelectionDialog::slotOk()
   if( mCheckSelectionTimer->isActive() ) {
     slotCheckSelection();
   }
+  mStartSearchTimer->stop();
   accept();
 }
 
@@ -998,10 +1009,90 @@ void KeySelectionDialog::slotOk()
 void KeySelectionDialog::slotCancel()
 {
   mCheckSelectionTimer->stop();
+  mStartSearchTimer->stop();
   mKeyIds.clear();
   reject();
 }
 
+void KeySelectionDialog::slotSearch( const QString & text )
+{
+  mSearchText = text.stripWhiteSpace().upper();
+  mStartSearchTimer->start( sCheckSelectionDelay, true /*single-shot*/ );
+}
+
+void KeySelectionDialog::slotFilter()
+{
+  if ( mSearchText.isEmpty() ) {
+    showAllItems();
+    return;
+  }
+
+  // OK, so we need to filter:
+  QRegExp keyIdRegExp( "(?:0x)?[A-F0-9]{1,8}", false /*case-insens.*/ );
+  if ( keyIdRegExp.exactMatch( mSearchText ) ) {
+    if ( mSearchText.startsWith( "0X" ) )
+      // search for keyID only:
+      filterByKeyID( mSearchText.mid( 2 ) );
+    else
+      // search for UID and keyID:
+      filterByKeyIDOrUID( mSearchText );
+  } else {
+    // search in UID:
+    filterByUID( mSearchText );
+  }
+}
+
+void KeySelectionDialog::filterByKeyID( const QString & keyID )
+{
+  assert( keyID.length() <= 8 );
+  assert( !keyID.isEmpty() ); // regexp in slotFilter should prevent these
+  if ( keyID.isEmpty() )
+    showAllItems();
+  else
+    for ( QListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
+      item->setVisible( item->text( 0 ).upper().startsWith( keyID ) );
+}
+
+void KeySelectionDialog::filterByKeyIDOrUID( const QString & str )
+{
+  assert( !str.isEmpty() );
+
+  // match beginnings of words:
+  QRegExp rx( "\\b" + QRegExp::escape( str ), false );
+
+  for ( QListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
+    item->setVisible( item->text( 0 ).upper().startsWith( str )
+		      || rx.search( item->text( 1 ) ) >= 0 );
+  
+}
+
+void KeySelectionDialog::filterByUID( const QString & str )
+{
+  assert( !str.isEmpty() );
+
+  // match beginnings of words:
+  QRegExp rx( "\\b" + QRegExp::escape( str ), false );
+
+  for ( QListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
+    item->setVisible( rx.search( item->text( 1 ) ) >= 0 );
+}
+
+
+bool KeySelectionDialog::anyChildMatches( const QListViewItem * item, QRegExp & rx ) const
+{
+  for ( QListViewItemIterator it( item->firstChild() ) ; it.current() && it.current() != item ; ++it )
+    if ( rx.search( it.current()->text( 1 ) ) >= 0 ) {
+      //item->setOpen( true ); // do we want that?
+      return true;
+    }
+  return false;
+}
+
+void KeySelectionDialog::showAllItems()
+{
+  for ( QListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
+    item->setVisible( true );
+}
 
 // ------------------------------------------------------------------------
 KeyRequester::KeyRequester( QWidget * parent, bool multipleKeys,

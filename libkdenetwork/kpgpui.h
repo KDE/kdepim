@@ -30,6 +30,7 @@
 #include "kpgp.h"
 
 class QString;
+class QRegExp;
 class QCString;
 class QCheckBox;            // needed by Config, KeySelectionDialog
 class QMultiLineEdit;       // needed by CipherTextDialog
@@ -141,8 +142,16 @@ class KeySelectionDialog: public KeySelectionDialogSuper
     virtual void slotRecheckKey();
     virtual void slotOk();
     virtual void slotCancel();
+    virtual void slotSearch( const QString & text );
+    virtual void slotFilter();
 
   private:
+    void filterByKeyID( const QString & keyID );
+    void filterByKeyIDOrUID( const QString & keyID );
+    void filterByUID( const QString & uid );
+    void showAllItems();
+    bool anyChildMatches( const QListViewItem * item, QRegExp & rx ) const;
+
     void initKeylist( const KeyList& keyList, const KeyIDList& keyIds );
 
     QString keyInfo( const Kpgp::Key* ) const;
@@ -172,12 +181,15 @@ class KeySelectionDialog: public KeySelectionDialogSuper
     bool checkKeys( const QValueList<QListViewItem*>& ) const;
 
   private:
+    QLineEdit *mSearchEdit;
     KListView *mListView;
     QCheckBox *mRememberCB;
     QPixmap *mKeyGoodPix, *mKeyBadPix, *mKeyUnknownPix, *mKeyValidPix;
     KeyIDList mKeyIds;
     unsigned int mAllowedKeys;
     QTimer* mCheckSelectionTimer;
+    QTimer* mStartSearchTimer;
+    QString mSearchText;
     QListViewItem* mCurrentContextMenuItem;
 
   static const int sCheckSelectionDelay;
