@@ -21,14 +21,48 @@ TODO LIST (Ignore the file TODO)
 * Sync with the preferred address in the addressbook conduit
 * Split up events going over midnight in the calendar conduit
 * Do not store the RecordID with the vcalendar entry, but in the kpilot config
-* GJJ: Add a flag to the log{Error,Message} function 
+* GJJ: Add a flag to the log{Error,Message} function
   to prevent the addition of the trailing <br> and the date
 * GJJ: Make an application that just has a LogWidget and KPilot's dcop
   interface (and registration!) so that you can follow the daemon's log
   output without starting KPilot at all.
+* Merge changes from 2003-2-13 to HEAD.
+* Update README, TODO, NEWS, AUTHORS in HEAD.
+
+KPilot Developer's notes for March 2nd, 2003
+============================================
+
+TODO: Update libkcal files.
+
+2003-2-27  Adriaan de Groot
+* Merged Reinhold's print-conduit-id patch from HEAD.
+* Continued updating the documentation. Ripped out the revision
+  history, Lauri says I'm the only developer in the history of
+  KDE to actually maintain it in the docs.
+* Updated version to 4.3.9 now that 4.3.8 is out.
+* Started work on a real test mode for the vcal conduit.
+* syncStack.cc [BRANCH] Set conduit action name to the conduit's name.
+
+KPilot Developer's notes for February 26th, 2003
+================================================
+
+2003-2-26  Adriaan de Groot
+* Finally solved KDE 3.0 build issues, incorporated minor fixes, updated
+  build scripts and RELEASED KPILOT 4.3.8. Get it from the website,
+  possibly in a few hours after it updates or from my personal
+  backup copy (replace pilone by adridg in the URL).
 
 KPilot Developer's notes for February 14th, 2003
 ================================================  
+
+2003-2-14  Adriaan de Groot
+* Happy Valentine's Day, eh. Remember guys, today your girlfriend
+  _is_ more important than hacking. Which reminds me .. 
+
+2003-2-13  Adriaan de Groot
+* kpilotLink.{h,cc} [BRANCH] Added a messagesType flag to distinguish
+  error messages from normal once-only messages in shouldPrint().
+  Print out device name before opening in open().
 
 2003-2-12  Adriaan de Groot
 * Applied David Mott's DCOP patches to HEAD. Also applied his RMB
