@@ -20,7 +20,7 @@ libkaddressbookpart_la_LIBADD  = ./detailledview/libdetailledview.la \
                                  -lkabc -lkdeprint
 libkaddressbookpart_la_SOURCES = kaddressbook.cpp kaddressbookiface.skel \
   undo.cpp kaddressbookview.cpp kabprefs.cpp \
-  undocmds.cpp contactlistview.cpp kldapclient.cpp \
+  undocmds.cpp contactlistview.cpp \
   addhostdialog.ui KDListBoxPair.cpp selectfieldswidget.cpp \
   kaddressbook_part.cpp kaddressbookmain.cpp kaddressbooktableview.cpp \
   importdialog.cpp kaddressbookiconview.cpp configureviewdialog.cpp \
@@ -40,7 +40,7 @@ libkaddressbookpart_la_SOURCES = kaddressbook.cpp kaddressbookiface.skel \
 kaddressbook_METASOURCES = AUTO
 
 noinst_HEADERS = kaddressbook.h undo.h kaddressbookview.h undocmds.h \
-  contactlistview.h kldapclient.h kabprefs.h \
+  contactlistview.h kabprefs.h \
   KDListBoxPair.h kaddressbook_part.h selectfieldswidget.h \
   kaddressbookmain.h kaddressbooktableview.h importdialog.h \
   kaddressbookiconview.h configureviewdialog.h \

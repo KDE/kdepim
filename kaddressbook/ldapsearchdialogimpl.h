@@ -24,9 +24,9 @@
 #include <qptrlist.h>
 
 #include <kabc/addressbook.h>
+#include <kabc/ldapclient.h>
 
 #include "ldapsearchdialog.h"
-#include "kldapclient.h"
 
 class KAddressBookTableView;
 
@@ -45,7 +45,7 @@ signals:
   void addresseesAdded();
 
 protected slots:
-  void slotAddResult( const KLdapObject& obj );
+  void slotAddResult( const KABC::LdapObject& obj );
   void slotSetScope( bool rec );
   void slotStartSearch();
   void slotStopSearch();
@@ -65,7 +65,7 @@ private:
   void cancelQuery();
 
   int numHosts;
-  QPtrList<KLdapClient> ldapclientlist;
+  QPtrList<KABC::LdapClient> ldapclientlist;
   bool bOK;
   KABC::AddressBook *mAddressBook;
 };
