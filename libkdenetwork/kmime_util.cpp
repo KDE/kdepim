@@ -261,7 +261,7 @@ QCString encodeRFC2047String(const QString &src, const char *charset,
       start = i+1;
 
     // encode escape character, for japanese encodings...
-    if ((encoded8Bit[i]<0) || (encoded8Bit[i] == '\033') ||
+    if (((signed char)encoded8Bit[i]<0) || (encoded8Bit[i] == '\033') ||
         (addressHeader && (strchr("\"()<>@,.;:\\[]=",encoded8Bit[i])!=0))) {
       end = start;   // non us-ascii char found, now we determine where to stop encoding
       nonAscii=true;
@@ -274,7 +274,7 @@ QCString encodeRFC2047String(const QString &src, const char *charset,
       end++;
 
     for (unsigned int x=end;x<encoded8Bit.length();x++)
-      if ((encoded8Bit[x]<0) || (encoded8Bit[x] == '\033') ||
+      if (((signed char)encoded8Bit[x]<0) || (encoded8Bit[x] == '\033') ||
           (addressHeader && (strchr("\"()<>@,.;:\\[]=",encoded8Bit[x])!=0))) {
         end = encoded8Bit.length();     // we found another non-ascii word
 

@@ -726,7 +726,7 @@ BaseG::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
 
             // We only look at the first part of the user id (i. e. everything
             // before the email address resp. before a comment)
-            for( char* ch = uid.data();
+            for( signed char* ch = (signed char*)uid.data();
                  ch && ( *ch != '(' ) && ( *ch != '<' );
                  ++ch ) {
               if( ( ( *ch >= 'A' ) && ( *ch <= 'Z' ) )
