@@ -53,7 +53,7 @@ namespace Kleo {
 
     void setUseStatusFD( bool use );
 
-    /*! \reimp */
+    /*! reimplementation */
     bool start( RunMode runmode, Communication comm );
 
     bool closeStatus();
@@ -62,15 +62,15 @@ namespace Kleo {
     void status( Kleo::GnuPGProcessBase * proc, const QString & type, const QStringList & args );
 
   protected:
-    /* !\reimp */
+    /*! reimplementation */
     int setupCommunication( Communication comm );
-    /* !\reimp */
+    /*! reimplementation */
     int commSetupDoneP();
-    /* !\reimp */
+    /*! reimplementation */
     int commSetupDoneC();
 
     int childStatus( int fd );
-    
+
 
   private slots:
     void slotChildStatus( int fd );
@@ -82,7 +82,7 @@ namespace Kleo {
     class Private;
     Private * d;
   protected:
-    /*! \reimp */
+    /*! reimplementation */
     void virtual_hook( int id, void * data );
   };
 

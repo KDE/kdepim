@@ -51,7 +51,7 @@ namespace Kleo {
     ~ProgressDialog();
 
   public slots:
-    /*! \reimp */
+    /*! reimplementation */
     void setMinimumDuration( int ms );
 
   private slots:
