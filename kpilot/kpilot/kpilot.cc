@@ -42,42 +42,121 @@ static const char *kpilot_id="$Id$";
 #include <unistd.h>
 #include <errno.h>
 
+#ifndef QFILE_H
 #include <qfile.h>
+#endif
+
+#ifndef QLIST_H
 #include <qlist.h>
+#endif
+
+#ifndef QSTRING_H
 #include <qstring.h>
+#endif
+
+#ifndef QLISTBOX_H
 #include <qlistbox.h>
+#endif
+
+#ifndef QCOMBOBOX_H
 #include <qcombobox.h>
+#endif
 
+#ifndef _KURL_H_
 #include <kurl.h>
+#endif
+#ifndef _KMESSAGEBOX_H_
 #include <kmessagebox.h>
+#endif
+#ifndef _KSTATUSBAR_H_
 #include <kstatusbar.h>
+#endif
+#ifndef _KCONFIG_H_
 #include <kconfig.h>
+#endif
+#ifndef _KWIN_H_
 #include <kwin.h>
+#endif
+#ifndef _KPROCESS_H_
 #include <kprocess.h>
+#endif
+#ifndef _KSOCK_H_
 #include <ksock.h>
+#endif
+#ifndef _KCOMBOBOX_H_
 #include <kcombobox.h>
+#endif
+#ifndef _KMENUBAR_H_
 #include <kmenubar.h>
+#endif
+#ifndef _KSTDDIRS_H_
 #include <kstddirs.h>
+#endif
+#ifndef _KABOUTDATA_H_
 #include <kaboutdata.h>
+#endif
+#ifndef _KCMDLINEARGS_H_
 #include <kcmdlineargs.h>
+#endif
+#ifndef _KICONLOADER_H_
 #include <kiconloader.h>
+#endif
+#ifndef _KDEBUG_H_
 #include <kdebug.h>
+#endif
+#ifndef _KACTION_H_
 #include <kaction.h>
+#endif
+#ifndef _KSTDACTION_H_
 #include <kstdaction.h>
+#endif
+#ifndef _KUNIQUEAPP_H_
 #include <kuniqueapp.h>
+#endif
 
+
+#ifndef _KPILOT_KPILOTOPTIONS_H
 #include "kpilotOptions.h"
-#include "kpilot.moc"
-#include "kpilotConfig.h"
-#include "messageDialog.h"
-#include "addressWidget.h"
-#include "memoWidget.h"
-#include "fileInstallWidget.h"
-#include "kpilot_on_pp.h"
-#include "statusMessages.h"
-#include "conduitSetup.h"
-#include "pilotDaemon.h"
+#endif
 
+#ifndef _KPILOT_KPILOTCONFIG_H
+#include "kpilotConfig.h"
+#endif
+
+#ifndef _KPILOT_MESSAGEDIALOG_H
+#include "messageDialog.h"
+#endif
+
+#ifndef _KPILOT_ADDRESSWIDGET_H
+#include "addressWidget.h"
+#endif
+
+#ifndef _KPILOT_MEMOWIDGET_H
+#include "memoWidget.h"
+#endif
+
+#ifndef _KPILOT_FILEINSTALLWIDGET_H
+#include "fileInstallWidget.h"
+#endif
+
+#ifndef _KPILOT_STATUSMESSAGES_H
+#include "statusMessages.h"
+#endif
+
+#ifndef _KPILOT_CONDUITSETUP_H
+#include "conduitSetup.h"
+#endif
+
+#ifndef _KPILOT_PILOTDAEMON_H
+#include "pilotDaemon.h"
+#endif
+
+#include "kpilot.moc"
+
+// This is an XPM disguised as an include file.
+//
+//
+#include "kpilot_on_pp.h"
 
 KPilotInstaller::KPilotInstaller() : 
 	KMainWindow(0), 
@@ -251,6 +330,28 @@ KPilotInstaller::initToolBar()
 	addToolBar(fToolBar);
 }
 
+void KPilotInstaller::resizeEvent(QResizeEvent *e)
+{
+	FUNCTIONSETUP;
+
+	KMainWindow::resizeEvent(e);
+
+	if (fManagingWidget)
+	{
+		kdDebug() << fname 
+			<< ": New size = "
+			<< fManagingWidget->width()
+			<< "x" 
+			<< fManagingWidget->height() << endl;
+		for (fVisibleWidgetList.first();
+			fVisibleWidgetList.current();
+			fVisibleWidgetList.next())
+		{
+			fVisibleWidgetList.current()->resize(
+				fManagingWidget->size());
+		}
+	}
+}
 
 void
 KPilotInstaller::slotModeSelected(int selected)
@@ -1295,6 +1396,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.43  2001/03/05 23:57:53  adridg
+// Added KPILOT_VERSION
+//
 // Revision 1.42  2001/03/04 22:22:29  adridg
 // DCOP cooperation between daemon & kpilot for d&d file install
 //
