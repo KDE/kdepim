@@ -24,6 +24,7 @@
 #include "filter_oe.hxx"
 #include "filter_pmail.hxx"
 #include "filter_plain.hxx"
+#include "filter_evolution.hxx"
 
 #include "kselfilterpage.h"
 
@@ -42,7 +43,7 @@ KSelFilterPage::KSelFilterPage(QWidget *parent, const char *name ) : KSelFilterP
         addFilter(new FilterMBox);
         addFilter(new FilterPlain);
         addFilter(new FilterPMail);
-
+        addFilter(new FilterEvolution);
 }
 
 KSelFilterPage::~KSelFilterPage() {
