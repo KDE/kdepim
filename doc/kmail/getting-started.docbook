@@ -33,9 +33,9 @@ appendix</link>.</para>
 <para>Invoking &kmail; for the first time creates a folder called
 <filename class="directory">Mail</filename> in your home folder.
 This folder contains the initial folders
-(<filename>inbox</filename>, <filename>outbox</filename>,
-<filename>sent-mail</filename>, <filename>trash</filename> and
-<filename>drafts</filename>). Use <menuchoice>
+(<filename class="directory">inbox</filename>, <filename class="directory">outbox</filename>,
+<filename class="directory">sent-mail</filename>, <filename class="directory">trash</filename> and
+<filename class="directory">drafts</filename>). Use <menuchoice>
 <guimenu>Settings</guimenu> <guimenuitem>Configure
 &kmail;...</guimenuitem> </menuchoice> to enter some initial information
 so &kmail; will be able to properly retrieve and send your

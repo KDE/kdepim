@@ -257,7 +257,7 @@ there are tools to convert your messages.</para>
 proprietary mail formats that &kmail; cannot understand. However, there is no
 harm in trying! If the mailbox file looks similar to the mbox format, try
 copying the mailbox file (remember, the index file is not needed) to your
-<filename>~/Mail</filename> folder and see what happens if you start
+<filename class="directory">~/Mail</filename> folder and see what happens if you start
 &kmail;. If you get mailboxes from your favorite email client to work in &kmail;,
 please tell us how you did it so that we can include directions in a future
 revision of this documentation. </para>
