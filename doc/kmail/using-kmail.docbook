@@ -583,8 +583,8 @@ in the <menuchoice><guimenu>Message</guimenu> <guimenuitem>Apply
 Filter</guimenuitem></menuchoice> submenu. You can then apply this
 filter to a message. Another way of applying filters is to use
 <menuchoice><guimenu>Message</guimenu> <guimenuitem>Apply
-Filters</guimenuitem></menuchoice> menu option, which applies <emphasis>all
-</emphasis> the filters - one after another until they are all used or one of the
+Filters</guimenuitem></menuchoice> menu option, which applies <emphasis>all</emphasis>
+the filters - one after another until they are all used or one of the
 filters that matches has the <guilabel>If the filters matches, stop
 processing here</guilabel>.</para>
 
@@ -970,13 +970,13 @@ from list B.
 <listitem>
 <para>The time required to evaluate a filter rule depends on the way
 the rule is constructed. In particular, scanning for a
-substring using the <guilabel>contains</guilabel> operation is easier
+substring using the <guilabel>contains</guilabel> operation is faster
 than a pattern matching using the <guilabel>matches regular
 expr.</guilabel> operation.
 </para>
 <para>Another dependency is on the amount of data which is used for the
 evaluation of a filter rule. If the rule is based on a message header,
-it's evaluation should normally be much faster than the evaluation of 
+its evaluation should normally be much faster than the evaluation of 
 a rule based on the complete message.
 </para>
 <para>You should try to keep the filter rules as simple as possible.
@@ -1001,7 +1001,7 @@ tool via a <guilabel>pipe through</guilabel> action. Filtering the messages
 for the mailing list is done via the List-Id header. If you don't want to 
 check the messages from the mailing list for spam too, it is better to
 use the filter for the mailing list messages before the filter for the 
-spam detection. So you avoid the expensive and slow spam check for all
+spam detection. This way you avoid the expensive and slow spam check for all
 messages which were identified as mailing list messages.
 </para>
 </listitem>
@@ -1126,7 +1126,7 @@ way to undelete it again.</para>
 <para>In the <guilabel>Filtered Messages</guilabel> section you can
 check the box if you receive messages that were automatically tagged for
 a certain action (download, download later, delete) by a filter rule.
-The check-box is only enabled if you receive some messages that were
+The checkbox is only enabled if you receive some messages that were
 matched by a filter rule; once you check it, a list similar to the
 one for the not-automatically-tagged messages will be displayed and you 
 can change the action for every single message.</para>
@@ -1373,7 +1373,7 @@ display a list containing all matching keys for this recipient. In both
 cases you can select the key(s) which should be used for encrypting
 this message for the recipient in question.
 Using the <guilabel>Remember choice</guilabel>
-check-box you can save your selection for future messages.</para>
+checkbox you can save your selection for future messages.</para>
 
 <para>If you are using a key for the first time, there are conflicting
 Encryption Preferences, or if <guilabel>Always
