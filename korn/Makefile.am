@@ -85,6 +85,7 @@ noinst_HEADERS = \
   polldrop.h \
   pop.h \
   popcfg.h \
+  progress_dialog.ui.h \
   protocols.h \
   qmail.h \
   qmailcfg.h \
