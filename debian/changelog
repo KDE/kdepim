@@ -1,3 +1,38 @@
+kdepim (4:3.3.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Rename 01_kdepim_branch.diff to 10_kdepim_branch.diff, and
+    other kdepim-specific patches to 2?_*.diff.
+  * New patch 04_disable_static_la_final.diff, to keep --enable-final
+    from messing up the static libraries.
+    + debian/rules: Reenable --enable-final.
+  * kde.mk: Add calls to dh_desktop.
+    + debian/control: Build-Depends on debhelper (>= 4.2.21) to ensure
+      dh_desktop is available.
+  * Correct URL in kleopatra description.  Closes: #275522.
+  * Bump shlibs version to require current version.  Closes: #275211.
+  * Package name change: libmimelib1 -> libmimelib1a, because of
+    missing DwHeaders::AllFieldBodiesAsString(DwString const&) (at least)
+    since version 4:3.2.3-1.  Closes: #276607.
+  * Package name change: libkleopatra0 -> libkleopatra0a, because of
+    missing symbols since last version:
+    + Kleo::Job::showErrorDialog(QWidget*) const
+    + Kleo::KeyListView::parentFor(QCString const&) const
+    + Kleo::KeyListView::refillFingerprintDictionary()
+    + Kleo::QGpgMEEncryptJob::showErrorDialog(QWidget*) const
+    + Kleo::QGpgMESignEncryptJob::showErrorDialog(QWidget*) const
+    + Kleo::QGpgMESignJob::showErrorDialog(QWidget*) const
+    + Kleo::KeyListViewItem::~KeyListViewItem().
+
+    To KDE upstream maintainers: every time you break binary compatibility
+    like this in a public library, I'm going to have to increase the
+    library "subversion" in the package name, which will delay packages
+    entering sid.  Please keep this in mind before making such changes, if
+    the rule that non-backward-compatible changes require a new SONAME
+    carries no weight with you.
+
+ -- Daniel Schepler <schepler@debian.org>  Sat,  6 Nov 2004 12:18:42 -0800
+
 kdepim (4:3.3.0-3) unstable; urgency=low
 
   * Updates from KDE_3_3_BRANCH.

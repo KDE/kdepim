@@ -1,0 +1,60 @@
+Index: admin/acinclude.m4.in
+===================================================================
+RCS file: /home/kde/kde-common/admin/acinclude.m4.in,v
+retrieving revision 2.461.2.1
+diff -u -r2.461.2.1 acinclude.m4.in
+--- admin/acinclude.m4.in	25 Aug 2004 21:21:05 -0000	2.461.2.1
++++ admin/acinclude.m4.in	31 Oct 2004 19:20:31 -0000
+@@ -1634,6 +1634,8 @@
+ 
+ AC_DEFUN([KDE_CHECK_FINAL],
+ [
++  AC_REQUIRE([AC_ENABLE_STATIC])
++
+   AC_ARG_ENABLE(final,
+ 	AC_HELP_STRING([--enable-final],
+ 		       [build size optimized apps (experimental - needs lots of memory)]),
+@@ -1642,12 +1644,23 @@
+   if test "x$kde_use_final" = "xyes"; then
+       KDE_USE_FINAL_TRUE=""
+       KDE_USE_FINAL_FALSE="#"
++      if test "x$enable_static" = "xyes"; then
++	KDE_USE_FINAL_LA_TRUE="#"
++	KDE_USE_FINAL_LA_FALSE=""
++      else
++	KDE_USE_FINAL_LA_TRUE=""
++	KDE_USE_FINAL_LA_FALSE=""
++      fi
+    else
+       KDE_USE_FINAL_TRUE="#"
+       KDE_USE_FINAL_FALSE=""
++      KDE_USE_FINAL_LA_TRUE="#"
++      KDE_USE_FINAL_LA_FALSE=""
+   fi
+   AC_SUBST(KDE_USE_FINAL_TRUE)
+   AC_SUBST(KDE_USE_FINAL_FALSE)
++  AC_SUBST(KDE_USE_FINAL_LA_TRUE)
++  AC_SUBST(KDE_USE_FINAL_LA_FALSE)
+ ])
+ 
+ AC_DEFUN([KDE_CHECK_CLOSURE],
+Index: admin/am_edit
+===================================================================
+RCS file: /home/kde/kde-common/admin/am_edit,v
+retrieving revision 1.411
+diff -u -r1.411 am_edit
+--- admin/am_edit	24 Mar 2004 22:26:00 -0000	1.411
++++ admin/am_edit	31 Oct 2004 19:20:33 -0000
+@@ -369,8 +369,10 @@
+         if (!$kdeopts{"nofinal"} && @list > 1 && $finalObjs{$program}) {
+             $new .= "$program\_final\_OBJECTS = " . $finalObjs{$program};
+             $new .= "\n$program\_nofinal\_OBJECTS = " . $realObjs{$program};
+-            $new .= "\n\@KDE_USE_FINAL_FALSE\@$program\_OBJECTS = \$($program\_nofinal\_OBJECTS)";
+-            $new .= "\n\@KDE_USE_FINAL_TRUE\@$program\_OBJECTS = \$($program\_final\_OBJECTS)";
++	    my $final_tag = (($program =~ /_la$/) ?
++			     "\@KDE_USE_FINAL_LA" : "\@KDE_USE_FINAL");
++            $new .= "\n$final_tag\_FALSE\@$program\_OBJECTS = \$($program\_nofinal\_OBJECTS)";
++            $new .= "\n$final_tag\_TRUE\@$program\_OBJECTS = \$($program\_final\_OBJECTS)";
+ 
+             $final_lines .= "$program\_OBJECTS=\"\$($program\_final_OBJECTS)\" ";
+             $final_install_lines .= "$program\_OBJECTS=\"\$($program\_final_OBJECTS)\" ";

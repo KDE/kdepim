@@ -97,4 +97,7 @@ binary-install/$(DEB_SOURCE_PACKAGE)-doc-html::
 	  meinproc $(CURDIR)/debian/tmp/usr/share/doc/kde/HTML/en/$$pkg/index.docbook; \
 	done
 
+$(patsubst %,binary-install/%,$(DEB_PACKAGES)) :: binary-install/%:
+	if test -x /usr/bin/dh_desktop; then dh_desktop -p$(cdbs_curpkg) $(DEB_DH_DESKTOP_ARGS); fi
+
 endif

@@ -1,6 +1,6 @@
 debian/tmp/etc/kde3/libkleopatrarc
 debian/tmp/usr/lib/libgpgme++.so.0
-debian/tmp/usr/lib/libgpgme++.so.0.0.0
+debian/tmp/usr/lib/libgpgme++.so.0.1.0
 debian/tmp/usr/lib/libkleopatra.so.0
 debian/tmp/usr/lib/libkleopatra.so.0.0.0
 debian/tmp/usr/lib/libqgpgme.so.0

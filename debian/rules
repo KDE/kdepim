@@ -1,28 +1,22 @@
 #! /usr/bin/make -f
 
-include debian/kde.mk
 include /usr/share/cdbs/1/rules/debhelper.mk
+include debian/kde.mk
 include /usr/share/cdbs/1/rules/simple-patchsys.mk
 include /usr/share/cdbs/1/rules/utils.mk
 
 DEB_KDE_CVS_MAKE := yes
-#DEB_KDE_ENABLE_FINAL := yes
+DEB_KDE_ENABLE_FINAL := yes
 DEB_KDE_APIDOX := yes
 
 DEB_CONFIGURE_EXTRA_FLAGS := --enable-shared --enable-static
 
-post-patches:: debian/stamp-libtool-update debian/stamp-kpilot-icons-uu
+post-patches:: debian/stamp-libtool-update
 
 debian/stamp-libtool-update:
 	cp -f /usr/share/libtool/libtool.m4 admin/libtool.m4.in
 	cp -f /usr/share/libtool/ltmain.sh admin/ltmain.sh
 	touch debian/stamp-libtool-update
-
-debian/stamp-kpilot-icons-uu:
-	if test -f debian/patches/kpilot_icons.tar.gz.uu; then \
-		uudecode -o - debian/patches/kpilot_icons.tar.gz.uu | tar xfz -; \
-	fi
-	touch debian/stamp-kpilot-icons-uu
 
 common-build-arch:: debian/stamp-man-pages
 debian/stamp-man-pages:
@@ -36,19 +30,16 @@ debian/stamp-man-pages:
 clean::
 	rm -f debian/man/*.1
 	rm -f debian/stamp-libtool-update debian/stamp-man-pages
-	if test -f debian/patches/kpilot_icons.tar.gz.uu; then \
-		rm -f `uudecode -o - debian/patches/kpilot_icons.tar.gz.uu | tar tfz -`; \
-	fi
-	rm -f debian/stamp-kpilot-icons-uu
 	rm -f admin/libtool.m4.in admin/ltmain.sh
 	rm -f Makefile.cvs
-	rm -f debian/patches/05_force_modulename.diff
+	rm -f debian/patches/04_korganizer_makefile.diff \
+		debian/patches/05_lib_link.diff
 
 DEB_INSTALL_DOCS_ALL :=
 
 DEB_INSTALL_CHANGELOGS_ALL = $(shell for f in ChangeLog CHANGELOG CHANGES; do if test -s $(cdbs_curpkg)/$$f; then echo $(cdbs_curpkg)/$$f; break; fi; done)
 
-shlibs_ver=4:3.3.0
+shlibs_ver=4:3.3.1
 DEB_DH_MAKESHLIBS_ARGS_libkcal2 := -V'libkcal2 (>= $(shlibs_ver))'
 DEB_DH_MAKESHLIBS_ARGS_libkdenetwork2 := -V'libkdenetwork2 (>= $(shlibs_ver))'
 DEB_DH_MAKESHLIBS_ARGS_libkdepim1 := -V'libkdepim1 (>= $(shlibs_ver))'

@@ -3,14 +3,14 @@ Section: kde
 Priority: optional
 Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
 Uploaders: Christopher L Cheney <ccheney@debian.org>, Daniel Schepler <schepler@debian.org>
-Build-Depends: autoconf, automake1.9, bison, byacc, cdbs, debhelper (>> 4.2.0), flex, gawk, gettext, groff-base, kdelibs4-dev (>> 4:3.3.0), libbluetooth1-dev, libgnokii2-dev (>= 0.6.3-3), libgpgme11-dev, liblockdev1-dev, libmal-dev, libpisock-dev, libreadline4-dev, libtool, sharutils, texinfo
+Build-Depends: autoconf, automake1.9, bison, byacc, cdbs, debhelper (>= 4.2.21), flex, gawk, gettext, groff-base, kdelibs4-dev (>> 4:3.3.1), libbluetooth1-dev, libgnokii2-dev (>= 0.6.3-3), libgpgme11-dev, liblockdev1-dev, libmal-dev, libpisock-dev, libreadline4-dev, libtool, sharutils, texinfo
 Build-Depends-Indep: doxygen, qt3-doc, kdelibs4-doc
 Standards-Version: 3.6.1.0
 
 Package: kdepim
 Section: kde
 Architecture: all
-Depends: kaddressbook (>= ${Source-Version}), kalarm (>= ${Source-Version}), kandy (>= ${Source-Version}), karm (>= ${Source-Version}), kdepim-kfile-plugins (>= ${Source-Version}), kdepim-kio-plugins (>= ${Source-Version}), kdepim-wizards (>= ${Source-Version}), kitchensync (>= ${Source-Version}), kmail (>= ${Source-Version}), kmailcvt (>= ${Source-Version}), knode (>= ${Source-Version}), knotes (>= ${Source-Version}), konsolekalendar (>= ${Source-Version}), kontact (>= ${Source-Version}), korganizer (>= ${Source-Version}), korn (>= ${Source-Version}), kpilot (>= ${Source-Version}), ksync (>= ${Source-Version}), ktnef (>= ${Source-Version}), libkcal2 (>= ${Source-Version}), libkdenetwork2 (>= ${Source-Version}), libkdepim1 (>= ${Source-Version}), libkgantt0 (>= ${Source-Version}), libkleopatra0 (>= ${Source-Version}), libkpimexchange1 (>= ${Source-Version}), libkpimidentities1 (>= ${Source-Version}), libksieve0 (>= ${Source-Version}), libmimelib1 (>= ${Source-Version})
+Depends: kaddressbook (>= ${Source-Version}), kalarm (>= ${Source-Version}), kandy (>= ${Source-Version}), karm (>= ${Source-Version}), kdepim-kfile-plugins (>= ${Source-Version}), kdepim-kio-plugins (>= ${Source-Version}), kdepim-wizards (>= ${Source-Version}), kitchensync (>= ${Source-Version}), kmail (>= ${Source-Version}), kmailcvt (>= ${Source-Version}), knode (>= ${Source-Version}), knotes (>= ${Source-Version}), konsolekalendar (>= ${Source-Version}), kontact (>= ${Source-Version}), korganizer (>= ${Source-Version}), korn (>= ${Source-Version}), kpilot (>= ${Source-Version}), ksync (>= ${Source-Version}), ktnef (>= ${Source-Version}), libkcal2 (>= ${Source-Version}), libkdenetwork2 (>= ${Source-Version}), libkdepim1 (>= ${Source-Version}), libkgantt0 (>= ${Source-Version}), libkleopatra0a (>= ${Source-Version}), libkpimexchange1 (>= ${Source-Version}), libkpimidentities1 (>= ${Source-Version}), libksieve0 (>= ${Source-Version}), libmimelib1a (>= ${Source-Version})
 Suggests: kdepim-doc-html
 Description: KDE Personal Information Management metapackage
  kdepim is a collection of Personal Information Management (PIM) tools for the
@@ -154,7 +154,7 @@ Description: KDE Certificate Manager
  .
  To install this package, you will need unofficial packages for GnuPG
  version 1.9, and you will also need to recompile gpgme with S/MIME
- support.  See http://lists.debian.org/lists-kde/2004/09/msg00102.html
+ support.  See http://lists.debian.org/debian-kde/2004/09/msg00102.html
  for details.
  .
  This package is part of the official KDE pim module.
@@ -388,10 +388,11 @@ Description: KDE gantt charting library [development]
  .
  This package is part of the official KDE pim module.
 
-Package: libkleopatra0
+Package: libkleopatra0a
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, gnupg
+Conflicts: libkleopatra0
 Description: KDE GnuPG interface libraries
  This library is used by several KDE applications to interface to the
  GnuPG program.
@@ -403,7 +404,7 @@ Description: KDE GnuPG interface libraries
 Package: libkleopatra0-dev
 Section: libdevel
 Architecture: any
-Depends: libkleopatra0 (= ${Source-Version})
+Depends: libkleopatra0a (= ${Source-Version})
 Description: KDE GnuPG interface libraries [development]
  This library is used by several KDE applications to interface to the
  GnuPG program.
@@ -468,10 +469,11 @@ Description: KDE mail/news message filtering library [development]
  .
  This package is part of the official KDE pim module.
 
-Package: libmimelib1
+Package: libmimelib1a
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}
+Conflicts: libmimelib1
 Description: KDE mime library
  This library is used by several KDE applications to handle mime types.
  .
@@ -482,9 +484,9 @@ Description: KDE mime library
 Package: libmimelib1-dev
 Section: libdevel
 Architecture: any
-Depends: libmimelib1 (= ${Source-Version})
-Conflicts: libmimelib-dev (<< 4:3.0.0), libmimelib1 (<< 4:3.0.0)
-Replaces: libmimelib-dev (<< 4:3.0.0), libmimelib1 (<< 4:3.0.0)
+Depends: libmimelib1a (= ${Source-Version})
+Conflicts: libmimelib-dev (<< 4:3.0.0)
+Replaces: libmimelib-dev (<< 4:3.0.0)
 Description: KDE mime library [development]
  This library is used by several KDE applications to handle mime types.
  .
