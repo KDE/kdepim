@@ -77,8 +77,7 @@ QString ExtensionWidget::identifier() const
   return "empty_widget";
 }
 
-ConfigureWidget *ExtensionFactory::configureWidget( ViewManager*, QWidget*,
-                                                    const char* )
+ConfigureWidget *ExtensionFactory::configureWidget( QWidget*, const char* )
 {
   return 0;
 }

@@ -51,6 +51,7 @@ KAddressBookMain::KAddressBookMain()
   setCaption( i18n( "Address Book Browser" ) );
 
   mWidget = new KAddressBook( this, "KAddressBook" );
+  mWidget->readConfig();
 
   mActionManager = new ActionManager( this, mWidget, true, this );
 
@@ -59,8 +60,6 @@ KAddressBookMain::KAddressBookMain()
   setCentralWidget( mWidget );
 
   statusBar()->show();
-
-  mWidget->readConfig();
 
   createGUI( "kaddressbookui.rc", false );
 

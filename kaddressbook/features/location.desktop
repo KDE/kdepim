@@ -1,6 +1,12 @@
 [Desktop Entry]
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_location
-Name=Plugin for displaying the location of a postal address
+Name=KAB Location Plugin
+Comment=Plugin for displaying the location of a postal address
+Comment[es]=Plugin para mostrar la ubicación de una dirección postal
+Comment[hu]=Bővítőmodul postai címek megjelenítéséhez
+Comment[ru]=Модуль для показа местоположения почтового адреса
+Comment[sv]=Insticksprogram för att visa platsen för en postadress
+Comment[zh_CN]=显示邮政地址位置的插件
 Type=Service
 ServiceTypes=KAddressBook/Extension

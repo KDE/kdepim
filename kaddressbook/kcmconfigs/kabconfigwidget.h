@@ -27,6 +27,10 @@
 #include <qwidget.h>
 
 class QCheckBox;
+class QListViewItem;
+class QPushButton;
+
+class KListView;
 
 class KABConfigWidget : public QWidget
 {
@@ -45,9 +49,20 @@ class KABConfigWidget : public QWidget
   public slots:
     void modified();
 
+  private slots:
+    void configureExtension();
+    void selectionChanged( QListViewItem* );
+    void itemClicked( QListViewItem* );
+
   private:
+    void restoreExtensionSettings();
+    void saveExtensionSettings();
+
+    KListView *mExtensionView;
+
     QCheckBox *mNameParsing;
     QCheckBox *mViewsSingleClickBox;
+    QPushButton *mConfigureButton;
 };
 
 #endif

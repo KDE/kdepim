@@ -95,15 +95,10 @@ class ActionManager : public QObject
 
   private slots:
     void clipboardDataChanged();
-
-    /**
-      Catch changes in the filter selection.
-     */
     void slotFilterActivated();
-
     void currentFilterChanged( const QString& );
-
     void keyBindings();
+    void reloadExtensionNames();
 
   signals:
     /**

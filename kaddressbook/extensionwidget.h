@@ -88,8 +88,7 @@ class ExtensionFactory : public KLibFactory
     virtual ExtensionWidget *extension( ViewManager *vm, QWidget *parent,
                                         const char *name = 0 ) = 0;
 
-    virtual ConfigureWidget *configureWidget( ViewManager *vm,
-                                              QWidget *parent,
+    virtual ConfigureWidget *configureWidget( QWidget *parent,
                                               const char *name = 0 );
   protected:
     virtual QObject* createObject( QObject*, const char*, const char*,

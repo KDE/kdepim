@@ -26,7 +26,7 @@ libkaddressbookpart_la_LIBADD  = $(top_builddir)/libkdepim/libkdepim.la \
 libkaddressbookpart_la_SOURCES = \
  actionmanager.cpp addresseditwidget.cpp addresseeconfig.cpp \
  addresseeeditordialog.cpp addresseeeditorwidget.cpp addresseeutil.cpp \
- addviewdialog.cpp configurewidget.cpp \
+ addviewdialog.cpp \
  emaileditwidget.cpp extensionwidget.cpp filter.cpp filtereditdialog.cpp \
  filterselectionwidget.cpp geowidget.cpp imagewidget.cpp importdialog.cpp \
  incsearchwidget.cpp jumpbuttonbar.cpp kaddressbook.cpp \
@@ -77,6 +77,6 @@ servicetype_DATA = kaddressbook_extension.desktop kaddressbook_view.desktop dcop
 
 noinst_LTLIBRARIES = libkabcommon.la
 
-libkabcommon_la_SOURCES = kabprefs.cpp
+libkabcommon_la_SOURCES = kabprefs.cpp configurewidget.cpp
 
 include ../admin/Doxyfile.am

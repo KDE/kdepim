@@ -531,8 +531,10 @@ void KAddressBook::configure()
     mConfigureDialog = new KCMultiDialog( "PIM", this );
     mConfigureDialog->addModule( "PIM/kabconfig.desktop" );
     mConfigureDialog->addModule( "PIM/kabldapconfig.desktop" );
-    connect( mConfigureDialog, SIGNAL( applyClicked() ), SLOT( configChanged() ) );
-    connect( mConfigureDialog, SIGNAL( okClicked() ), SLOT( configChanged() ) );
+    connect( mConfigureDialog, SIGNAL( applyClicked() ),
+             this, SLOT( configChanged() ) );
+    connect( mConfigureDialog, SIGNAL( okClicked() ),
+             this, SLOT( configChanged() ) );
   }
 
   // Save the current config so we do not loose anything if the user accepts

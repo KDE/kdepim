@@ -333,11 +333,14 @@ class ViewManager : public QWidget
      */
     void importVCard( const KURL&, bool );
 
+    /**
+      Emitted whenever the extension names need to be updated
+      in the action manager.
+     */
+    void extensionsReloaded();
+
   private:
-    KTrader::OfferList availablePlugins( const QString &type );
-  
-    ExtensionWidget *loadExtension( KService::Ptr, QWidget *parent );
-    ExtensionWidget *loadExtension( const QString&, QWidget *parent  );
+    void loadExtensions();
 
     void createViewFactories();
     void initGUI();

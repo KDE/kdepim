@@ -213,9 +213,11 @@ void ActionManager::initReadOnlyActions()
   // settings menu
   mActionExtensions = new KSelectAction( i18n( "Show Extension Bar" ), 0,
                                        mACollection, "options_show_extensions" );
-  mActionExtensions->setItems( mViewManager->extensionNames() );
+  reloadExtensionNames();
   connect( mActionExtensions, SIGNAL( activated( int ) ),
            mViewManager, SLOT( setActiveExtension( int ) ) );
+  connect( mViewManager, SIGNAL( extensionsReloaded() ),
+           SLOT( reloadExtensionNames() ) );
 
   mActionJumpBar = new KToggleAction( i18n( "Show Jump Bar" ), "next", 0,
                                       this, SLOT( quickToolsAction() ),
@@ -401,6 +403,13 @@ bool ActionManager::isModified() const
 void ActionManager::keyBindings()
 {
   KKeyDialog::configure( mACollection, true );
+}
+
+void ActionManager::reloadExtensionNames()
+{
+  int pos = mActionExtensions->currentItem();
+  mActionExtensions->setItems( mViewManager->extensionNames() );
+  mActionExtensions->setCurrentItem( pos );
 }
 
 #include "actionmanager.moc"

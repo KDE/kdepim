@@ -88,6 +88,8 @@ ViewManager::~ViewManager()
 void ViewManager::readConfig()
 {
   // Read the view names
+  mConfig->reparseConfiguration();
+
   mConfig->setGroup( "Views" );
   mViewNameList = mConfig->readListEntry( "Names" );
 
@@ -126,6 +128,8 @@ void ViewManager::readConfig()
     splitterSize.append( height() / 2 );
   }
   mDetailsSplitter->setSizes( splitterSize );
+
+  loadExtensions();
 }
 
 void ViewManager::writeConfig()
@@ -423,7 +427,7 @@ void ViewManager::addView()
 
 void ViewManager::createViewFactories()
 {
-  KTrader::OfferList plugins = availablePlugins( "KAddressBook/View" );
+  KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/View" );
   KTrader::OfferList::ConstIterator it;
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {
     if ( !(*it)->hasServiceType( "KAddressBook/View" ) )
@@ -482,26 +486,7 @@ void ViewManager::initGUI()
   // Setup the feature bar widget.
   mExtensionBar = new QHBox( mExtensionBarSplitter );
 
-  /**
-    Add all extension bar widgets.
-   */
-  ExtensionWidget *wdg = new AddresseeEditorWidget( this, mExtensionBar );
-  wdg->hide();
-  connect( wdg, SIGNAL( modified( KABC::Addressee::List ) ),
-           SLOT( extensionWidgetModified( KABC::Addressee::List ) ) );
-  mExtensionWidgetList.append( wdg );
-
-  KTrader::OfferList plugins = availablePlugins( "KAddressBook/Extension" );
-  KTrader::OfferList::ConstIterator it;
-  for ( it = plugins.begin(); it != plugins.end(); ++it ) {
-    wdg = loadExtension( *it, mExtensionBar );
-    if ( wdg ) {
-      wdg->hide();
-      connect( wdg, SIGNAL( modified( KABC::Addressee::List ) ),
-               SLOT( extensionWidgetModified( KABC::Addressee::List ) ) );
-      mExtensionWidgetList.append( wdg );
-    }
-  }
+  loadExtensions();
 
   topLayout->addWidget( mExtensionBarSplitter );
   topLayout->setStretchFactor( mExtensionBarSplitter, 100 );
@@ -686,9 +671,10 @@ void ViewManager::setActiveExtension( int id )
       mCurrentExtensionWidget->hide();
 
     mCurrentExtensionWidget = mExtensionWidgetList.at( id - 1 );
-
-    mExtensionBar->show();
-    mCurrentExtensionWidget->show();
+    if ( mCurrentExtensionWidget ) {
+      mExtensionBar->show();
+      mCurrentExtensionWidget->show();
+    }
   }
 }
 
@@ -750,43 +736,61 @@ QStringList ViewManager::filterNames()
   return names;
 }
 
-KTrader::OfferList ViewManager::availablePlugins( const QString &type )
+void ViewManager::loadExtensions()
 {
-  return KTrader::self()->query( type );
-}
+  // clear extension widget list
+  mExtensionWidgetList.setAutoDelete( true );
+  QPtrListIterator<ExtensionWidget> wdgIt( mExtensionWidgetList );
+  ExtensionWidget *wdg = 0;
+  while ( ( wdg = wdgIt.current() ) != 0 )
+    mExtensionWidgetList.remove( wdg );
 
-ExtensionWidget *ViewManager::loadExtension( KService::Ptr service, QWidget *parent )
-{
-  if ( !service->hasServiceType( "KAddressBook/Extension" ) )
-    return 0;
+  mExtensionWidgetList.setAutoDelete( false );
 
-  KLibFactory *factory = KLibLoader::self()->factory( service->library() );
+  // add addressee editor as default
+  wdg = new AddresseeEditorWidget( this, mExtensionBar );
+  wdg->hide();
+  connect( wdg, SIGNAL( modified( KABC::Addressee::List ) ),
+           SLOT( extensionWidgetModified( KABC::Addressee::List ) ) );
+  mExtensionWidgetList.append( wdg );
 
-  if ( !factory ) {
-    kdDebug(5720) << "ViewManager::loadExtension(): Factory creation failed" << endl;
-    return 0;
-  }
+  // load the other extensions
+  KConfig *config = ViewManager::config();
+  config->setGroup( "Extensions_General" );
+  QStringList activeExtensions = config->readListEntry( "activeExtensions" );
 
-  ExtensionFactory *extensionFactory = static_cast<ExtensionFactory*>( factory );
-
-  if ( !extensionFactory ) {
-    kdDebug(5720) << "ViewManager::loadExtension(): Cast failed" << endl;
-    return 0;
-  }
-
-  return extensionFactory->extension( this, parent );
-}
-
-ExtensionWidget *ViewManager::loadExtension( const QString &name, QWidget *parent )
-{
-  KTrader::OfferList list = availablePlugins( "KAddressBook/Extension" );
+  KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/Extension" );
   KTrader::OfferList::ConstIterator it;
-  for ( it = list.begin(); it != list.end(); ++it ) {
-    if ( (*it)->desktopEntryName() == name )
-      return loadExtension( *it, parent );
+  for ( it = plugins.begin(); it != plugins.end(); ++it ) {
+    if ( !(*it)->hasServiceType( "KAddressBook/Extension" ) )
+      continue;
+
+    if ( !activeExtensions.contains( (*it)->library() ) )
+      continue;
+
+    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library() );
+    if ( !factory ) {
+      kdDebug(5720) << "ViewManager::loadExtensions(): Factory creation failed" << endl;
+      continue;
+    }
+
+    ExtensionFactory *extensionFactory = static_cast<ExtensionFactory*>( factory );
+
+    if ( !extensionFactory ) {
+      kdDebug(5720) << "ViewManager::loadExtensions(): Cast failed" << endl;
+      continue;
+    }
+
+    wdg = extensionFactory->extension( this, mExtensionBar );
+    if ( wdg ) {
+      wdg->hide();
+      connect( wdg, SIGNAL( modified( KABC::Addressee::List ) ),
+               SLOT( extensionWidgetModified( KABC::Addressee::List ) ) );
+      mExtensionWidgetList.append( wdg );
+    }
   }
 
-  return 0;
+  emit extensionsReloaded();
 }
 
 #include "viewmanager.moc"
