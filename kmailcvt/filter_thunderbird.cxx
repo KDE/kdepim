@@ -30,8 +30,8 @@ FilterThunderbird::FilterThunderbird(void) :
 	 i18n("<p><b>Thunderbird import filter</b></p>"
               "<p>Select your base Thunderbird mailfolder"
               " (usually ~/.thunderbird/*.default/Mail/Local Folders/).</p>"
-              "<p><b>Note:</b> Never choose a Folder, which <u>doesn't</u> contain mbox-files (for example"
-              " a maildir)! If you do it anyway, you will get many new folder!</p>"
+              "<p><b>Note:</b> Never choose a Folder, which <u>does not</u> contain mbox-files (for example"
+              " a maildir). If you do it anyway, you will get many new folders.</p>"
               "<p>As it is currently impossible to recreate the folder structure, it will be "
 	      "\"contained\" in the generated folder's names.</p>"))
 {}
@@ -75,7 +75,7 @@ void FilterThunderbird::import(FilterInfo *info)
   info->addLog( i18n("Finished importing emails from %1").arg( mailDir ));
   info->setCurrent(100);
   if(count_duplicates > 0) {
-     info->addLog( i18n("%1 Duplicate messages not imported").arg(count_duplicates));
+     info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
   }
 }
 

@@ -46,11 +46,11 @@ void FilterOutlook::import(FilterInfo *info)
 {
   info->alert(i18n("No directory selected."));
   info->addLog(i18n("Counting files..."));
-  info->addLog(i18n("Counting mails..."));
-  info->addLog(i18n("Counting directorys..."));
-  info->addLog(i18n("Counting folder..."));
+  info->addLog(i18n("Counting mail..."));
+  info->addLog(i18n("Counting directories..."));
+  info->addLog(i18n("Counting folders..."));
   info->addLog(i18n("Importing new mail files..."));
-  info->addLog(i18n("No file found for import."));
+  info->addLog(i18n("No files found for import."));
   
   QString outlookDir = "";
   outlookDir = KFileDialog::getExistingDirectory(QDir::homeDirPath(), info->parent());
@@ -59,7 +59,7 @@ void FilterOutlook::import(FilterInfo *info)
   for ( QStringList::Iterator pstFile = files.begin(); pstFile != files.end(); ++pstFile)
   {
     info->addLog( i18n("Importing emails from %1...").arg( *pstFile ) );
-    info->addLog( i18n("%1 Duplicate messages not imported").arg(count_duplicates));
+    info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
     info->alert( i18n("Unable to open %1, skipping").arg( *pstFile ) );
   }
 }

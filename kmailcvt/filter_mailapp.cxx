@@ -99,7 +99,7 @@ void FilterMailApp::import(FilterInfo *info)
       
       info->addLog( i18n("Finished importing emails from %1").arg( *filename ) );
       if (count_duplicates > 0) {
-          info->addLog( i18n("%1 Duplicate messages not imported to folder %2 in KMail").arg(count_duplicates).arg(folderName));
+	info->addLog( i18n("1 duplicate message not imported to folder %1 in KMail", "%n duplicate messages not imported to folder %1 in KMail", count_duplicates).arg(folderName));
       }
       count_duplicates = 0;
       mbox.close();

@@ -137,7 +137,7 @@ void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, cons
     info->addLog(i18n("Finished importing emails from %1").arg(mboxName));
     if (count_duplicates > 0)
     {
-	info->addLog( i18n("%1 Duplicate messages not imported").arg(count_duplicates));
+	info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
     }
     count_duplicates = 0;
     mbox.close();
