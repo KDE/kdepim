@@ -792,6 +792,53 @@ void KNComposer::slotCancelEditor()
 
 
 //=====================================================================================
+// handle Tabs... (expanding them in textLine(), etc.)
+
+KNComposer::Editor::Editor(QWidget *parent=0, char *name=0)
+  : KEdit(parent, name)
+{
+  installEventFilter(this);
+}
+
+
+KNComposer::Editor::~Editor()
+{
+  removeEventFilter(this);
+}
+
+
+// expand tabs to avoid the "tab-damage"
+QString KNComposer::Editor::textLine(int line) const
+{
+  QString temp = KEdit::textLine(line);
+  QString replacement;
+  int tabPos;
+
+  while ((tabPos = temp.find('\t'))!=-1) {
+    replacement.fill(QChar(' '),8-(tabPos%8));
+    temp.replace(tabPos,1,replacement);
+  }
+  return temp;
+}
+
+
+// don't use Tab for focus handling
+bool KNComposer::Editor::eventFilter(QObject*, QEvent* e)
+{
+  if (e->type() == QEvent::KeyPress) {
+    QKeyEvent *k = static_cast<QKeyEvent*>(e);
+    if (k->key()==Key_Tab) {
+      int col, row;
+      getCursorPosition(&row, &col);
+      insertAt("\t", row, col);
+      return true;
+    }
+  }
+  return false;
+}
+
+
+//=====================================================================================
 
 
 KNComposer::ComposerView::ComposerView(QWidget *parent, bool mail)
@@ -819,7 +866,7 @@ KNComposer::ComposerView::ComposerView(QWidget *parent, bool mail)
     frameLines=3;
   }
   
-  edit=new KEdit(editW);
+  edit=new Editor(editW);
   edit->setMinimumHeight(50);
   
   QVBoxLayout *l = new QVBoxLayout(edit);

@@ -32,7 +32,6 @@ class QComboBox;
 class KSpell;
 class KProcess;
 class KTempFile;
-class KEdit;
 
 class KNNntpAccount;
 class KNSavedArticle;
@@ -73,6 +72,18 @@ class KNComposer : public KMainWindow  {
     // inserts at cursor position if clear is false, replaces content otherwise
     void insertFile(QString fileName, bool clear=false);
 
+    class Editor : public KEdit {      // handle Tabs... (expanding them in textLine(), etc.)
+
+      public:
+        Editor(QWidget *parent=0, char *name=0);
+        ~Editor();
+
+        QString textLine(int line) const;
+
+      protected:
+        bool eventFilter(QObject*, QEvent* e);
+    };
+
     class AttachmentView;
     class AttachmentViewItem;
     class AttachmentPropertiesDlg;
@@ -88,7 +99,7 @@ class KNComposer : public KMainWindow  {
         void showExternalNotification();
         void hideExternalNotification();
       
-        KEdit *edit;
+        Editor *edit;
         QGroupBox *notification;
         QPushButton *cancelEditorButton, *attRemoveButton, *attEditButton;
         QWidget *attWidget;
@@ -163,6 +174,7 @@ class KNComposer : public KMainWindow  {
     void composerDone(KNComposer*);
               
 };
+
 
 
 // === attachment handling ===========================================================

@@ -358,7 +358,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case '>' :  result+="&gt;"; break;
       case '&' :  result+="&amp;"; break;
       case '"' :  result+="&quot;"; break;
-      case '\t':  result+="&nbsp;&nbsp;"; break;
+      case '\t':  result+="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; break;   // tab == 8 spaces
       
       case 32 :
         if(line[idx+1].isSpace())  {
