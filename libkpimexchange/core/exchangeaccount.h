@@ -68,7 +68,7 @@ class ExchangeAccount : public QObject {
   private:
     void authenticate( int windowId );
     void calcFolderURLs();
-    QString tryMailbox( const QString& _url, const QString& user, const QString& password );
+    static QString tryMailbox( const QString& _url, const QString& user, const QString& password );
 
 
   private slots:
