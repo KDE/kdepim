@@ -36,15 +36,17 @@
 #include "tray.h"
 #include "version.h"
 
-MainWindow::MainWindow()
+MainWindow::MainWindow( const QString &icsfile )
   : DCOPObject ( "KarmDCOPIface" ),
     KMainWindow(0), 
     _accel     ( new KAccel( this ) ),
     _watcher   ( new KAccelMenuWatch( _accel, this ) ),
-    _taskView  ( new TaskView( this ) ),
     _totalSum  ( 0 ),
     _sessionSum( 0 )
 {
+
+  _taskView  = new TaskView( this, 0, icsfile );
+
   setCentralWidget( _taskView );
   // status bar
   startStatusBar();
@@ -432,10 +434,21 @@ void MainWindow::contextMenuRequest( QListViewItem*, const QPoint& point, int )
       pop->popup( point );
 }
 
+//----------------------------------------------------------------------------
+//
+//                       D C O P   I N T E R F A C E
+//
+//----------------------------------------------------------------------------
 
 QString MainWindow::version() const
 {
   return KARM_VERSION;
+}
+
+QString MainWindow::setStorage( const QString &storage )
+{
+  return "1";
+
 }
 
 #include "mainwindow.moc"

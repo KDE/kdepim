@@ -1,18 +1,20 @@
-#include <qfile.h>
 #include <qclipboard.h>
+#include <qfile.h>
 #include <qlayout.h>
 #include <qlistbox.h>
+#include <qlistview.h>
 #include <qptrlist.h>
 #include <qptrstack.h>
+#include <qstring.h>
 #include <qtextstream.h>
-#include <qlistview.h>
 #include <qtimer.h>
+#include <qxml.h>
 
 #include "kapplication.h"       // kapp
 #include <kconfig.h>
 #include <kdebug.h>
-#include <klocale.h>            // i18n
 #include <kfiledialog.h>
+#include <klocale.h>            // i18n
 #include <kmessagebox.h>
 #include <kurlrequester.h>
 
@@ -28,16 +30,15 @@
 #include "task.h"
 #include "taskview.h"
 #include "timekard.h"
-#include "qxml.h"
 
 #define T_LINESIZE 1023
 #define HIDDEN_COLUMN -10
 
 class DesktopTracker;
 
-TaskView::TaskView(QWidget *parent, const char *name):KListView(parent,name)
+TaskView::TaskView(QWidget *parent, const char *name, const QString &icsfile ):KListView(parent,name)
 {
-  _preferences = Preferences::instance();
+  _preferences = Preferences::instance( icsfile );
   _storage = KarmStorage::instance();
 
   connect(this, SIGNAL( doubleClicked( QListViewItem * )),

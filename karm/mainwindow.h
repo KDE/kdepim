@@ -6,6 +6,7 @@
 
 class QListViewItem;
 class QPoint;
+class QString;
 
 class KAccel;
 class KDialogBase;
@@ -34,9 +35,12 @@ class MainWindow : public KMainWindow, virtual public KarmDCOPIface
     KarmTray        *_tray;
 
   public:
-    MainWindow();
+    MainWindow( const QString &icsfile = "" );
     virtual ~MainWindow();
+
+    // DCOP
     QString version() const;
+    QString setStorage( const QString & storage);
 
 
   protected slots:

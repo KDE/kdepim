@@ -19,7 +19,7 @@
 
 Preferences *Preferences::_instance = 0;
 
-Preferences::Preferences()
+Preferences::Preferences( const QString& icsFile )
   : KDialogBase( IconList, i18n("Preferences"), Ok|Cancel, Ok )
 {
 
@@ -30,12 +30,16 @@ Preferences::Preferences()
   makeStoragePage();
 
   load();
+
+  // command-line option overrides what is stored in 
+  if ( ! icsFile.isEmpty() ) _iCalFileV = icsFile;
+
 }
 
-Preferences *Preferences::instance()
+Preferences *Preferences::instance( const QString &icsfile )
 {
   if (_instance == 0) {
-    _instance = new Preferences();
+    _instance = new Preferences( icsfile );
   }
   return _instance;
 }

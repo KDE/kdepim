@@ -6,6 +6,7 @@
 class QCheckBox;
 class QLabel;
 class QSpinBox;
+class QString;
 class KURLRequester;
 
 /**
@@ -17,7 +18,7 @@ class Preferences :public KDialogBase
   Q_OBJECT
 
   public:
-    static Preferences *instance();
+    static Preferences *instance( const QString& icsfile = "" );
     void disableIdleDetection();
 
     // Retrive information about settings
@@ -61,7 +62,7 @@ class Preferences :public KDialogBase
     void makeBehaviorPage();
     void makeStoragePage();
 
-    Preferences();
+    Preferences( const QString& icsfile = "" );
     static Preferences *_instance;
     bool _unsavedChanges;
 
