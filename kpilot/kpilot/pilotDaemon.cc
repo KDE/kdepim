@@ -150,10 +150,10 @@ void PilotDaemonTray::setupWidget()
 {
 	FUNCTIONSETUP;
 
-	KGlobal::iconLoader()->addAppDir(CSL1("kpilot"));
-	icons[Normal] = SmallIcon(CSL1("hotsync"));
-	icons[Busy] = SmallIcon(CSL1("busysync"));
-	icons[NotListening] = SmallIcon(CSL1("nosync"));
+	KGlobal::iconLoader()->addAppDir( CSL1("kpilot") );
+	icons[Normal] = loadIcon( CSL1("hotsync") );
+	icons[Busy] = loadIcon( CSL1("busysync") );
+	icons[NotListening] = loadIcon( CSL1("nosync") );
 
 	slotShowBusy();
 	QTimer::singleShot(2000,this,SLOT(slotShowNormal()));
