@@ -43,6 +43,8 @@
 #include <kcmdlineargs.h>
 #include <kmessagebox.h>
 #include <klocale.h>
+#include <kglobal.h>
+#include <kiconloader.h>
 
 int main( int argc, char** argv )
 {
@@ -64,6 +66,7 @@ int main( int argc, char** argv )
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
   KGlobal::locale()->insertCatalogue( "libkleopatra" );
+  KGlobal::iconLoader()->addAppDir( "libkleopatra" );
 
   if( !Kleo::CryptPlugFactory::instance()->smime() ) {
     KMessageBox::error(0,

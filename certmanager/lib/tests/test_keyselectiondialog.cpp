@@ -39,6 +39,8 @@
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
+#include <kglobal.h>
+#include <kiconloader.h>
 
 #include <vector>
 
@@ -46,7 +48,9 @@ int main( int argc, char ** argv ) {
   KAboutData aboutData( "test_keyselectiondialog", "KeySelectionDialog Test", "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
   KApplication app;
-  
+
+  KGlobal::iconLoader()->addAppDir( "libkleopatra" );
+
   Kleo::KeySelectionDialog dlg( "Kleo::KeySelectionDialog Test",
 				"Please select a key:",
 				0, std::vector<GpgME::Key>(),
