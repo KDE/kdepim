@@ -424,7 +424,6 @@ void Contact::saveNameAttribute( QDomElement& element ) const
 bool Contact::loadPhoneAttribute( QDomElement& element )
 {
   PhoneNumber number;
-
   for ( QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
     if ( n.isComment() )
       continue;
@@ -464,6 +463,36 @@ void Contact::saveEmailAttributes( QDomElement& element ) const
   QValueList<Email>::ConstIterator it = mEmails.begin();
   for ( ; it != mEmails.end(); ++it )
     saveEmailAttribute( element, *it );
+}
+
+void Contact::loadCustomAttributes( QDomElement& element )
+{
+  Custom custom;
+  for ( QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    if ( n.isElement() ) {
+      const QDomElement e = n.toElement();
+      const QString tagName = e.tagName();
+      if ( tagName == "app" )
+        custom.app = e.text();
+      else if ( tagName == "name" )
+        custom.name = e.text();
+      else if ( tagName == "value" )
+        custom.value = e.text();
+    }
+  }
+  mCustomList.append( custom );
+}
+
+void Contact::saveCustomAttributes( QDomElement& element ) const
+{
+  QValueList<Custom>::ConstIterator it = mCustomList.begin();
+  for ( ; it != mCustomList.end(); ++it ) {
+    QDomElement e = element.ownerDocument().createElement( "x-custom" );
+    element.appendChild( e );
+    writeString( e, "app", (*it).app );
+    writeString( e, "name", (*it).name );
+    writeString( e, "value", (*it).value );
+  }
 }
 
 bool Contact::loadAddressAttribute( QDomElement& element )
@@ -592,6 +621,8 @@ bool Contact::loadAttribute( QDomElement& element )
     setLongitude( element.text().toFloat() );
     mHasGeo = true;
   }
+  else if ( tagName == "x-custom" )
+    loadCustomAttributes( element );
   else
     return KolabBase::loadAttribute( element );
 
@@ -637,6 +668,7 @@ bool Contact::saveAttributes( QDomElement& element ) const
     writeString( element, "latitude", QString::number( latitude(), 'g', DBL_DIG ) );
     writeString( element, "longitude", QString::number( longitude(), 'g', DBL_DIG ) );
   }
+  saveCustomAttributes( element );
 
   return true;
 }
@@ -788,7 +820,8 @@ static const char* s_knownCustomFields[] = {
   "X-ManagersName",
   "X-AssistantsName",
   "X-SpousesName",
-  "X-Anniversary"
+  "X-Anniversary",
+  0
 };
 
 // The loading is addressee -> Contact -> xml, this is the first part
@@ -881,15 +914,39 @@ void Contact::setFields( const KABC::Addressee* addressee )
     mHasGeo = true;
   }
 
+  // Other KADDRESSBOOK custom fields than those already handled
+  //    (includes e.g. crypto settings, and extra im addresses)
+  QStringList knownCustoms;
+  for ( const char** p = s_knownCustomFields; *p; ++p )
+    knownCustoms << QString::fromLatin1( *p );
+  QStringList customs = addressee->customs();
+  for( QStringList::Iterator it = customs.begin(); it != customs.end(); ++it ) {
+    // KABC::Addressee doesn't offer a real way to iterate over customs, other than splitting strings ourselves
+    // The format is "app-name:value".
+    int pos = (*it).find( '-' );
+    if ( pos == -1 ) continue;
+    QString app = (*it).left( pos );
+    if ( app == "KOLAB" ) continue;
+    QString name = (*it).mid( pos + 1 );
+    pos = name.find( ':' );
+    if ( pos == -1 ) continue;
+    QString value = name.mid( pos + 1 );
+    name = name.left( pos );
+    if ( !knownCustoms.contains( name ) ) {
+      //kdDebug() << k_funcinfo << "app=" << app << " name=" << name << " value=" << value << endl;
+      Custom c;
+      if ( app != "KADDRESSBOOK" ) // that's the default
+        c.app = app;
+      c.name = name;
+      c.value = value;
+      mCustomList.append( c );
+    }
+  }
+
   // Those fields, although defined in Addressee, are not used in KDE
   // (e.g. not visible in kaddressbook/addresseeeditorwidget.cpp)
   // So it doesn't matter much if we don't have them in the XML.
   // mailer, timezone, productId, sortString, agent, rfc2426 name()
-
-  // TODO: Unhandled Addressee fields:
-  // other KADDRESSBOOK custom fields than those already handled
-  //    (includes IM address, crypto settings)
-  // extra im addresses (X-messaging/*)
 
   // TODO: Things KAddressBook can't handle:
   // initials, children, gender, language
@@ -975,6 +1032,11 @@ void Contact::saveTo( KABC::Addressee* addressee )
     number.setType( phoneTypeFromString( (*it).type ) );
     number.setNumber( (*it).number );
     addressee->insertPhoneNumber( number );
+  }
+
+  for( QValueList<Custom>::ConstIterator it = mCustomList.begin(); it != mCustomList.end(); ++it ) {
+    QString app = (*it).app.isEmpty() ? QString::fromLatin1( "KADDRESSBOOK" ) : (*it).app;
+    addressee->insertCustom( app, (*it).name, (*it).value );
   }
 }
 
