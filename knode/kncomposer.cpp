@@ -710,7 +710,7 @@ bool KNComposer::hasValidData()
                         "Please specify it in the global "
                         "identity configuration,\n"
                         "in the account properties or in the "
-                        "group properties!\n"
+                        "group properties.\n"
                         "The article will be sent unsigned." ),
                    QString::null, i18n( "Send Unsigned" ),
                    "sendUnsignedDialog" )

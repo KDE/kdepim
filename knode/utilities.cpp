@@ -172,7 +172,7 @@ QFile* KNSaveHelper::getFile(const QString &dialogTitle)
   if (url.isLocalFile()) {
     if (QFileInfo(url.path()).exists() &&
         (KMessageBox::warningContinueCancel(knGlobals.topWidget,
-                                            i18n("A file named %1 already exists.\nDo you want to replace it?").arg(url.path()),
+                                            i18n("<qt>A file named <b>%1</b> already exists.<br>Do you want to replace it?</qt>").arg(url.path()),
                                             dialogTitle, i18n("&Replace")) != KMessageBox::Continue)) {
       return 0;
     }
@@ -461,23 +461,23 @@ QString KNHelper::rewrapStringList(QStringList text, int wrapAt, QChar quoteChar
 
 void KNHelper::displayInternalFileError(QWidget *w)
 {
-  KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to load/save configuration!\nWrong permissions on home folder?\nYou should close KNode now to avoid data loss!"));
+  KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to load/save configuration.\nWrong permissions on home folder?\nYou should close KNode now to avoid data loss."));
 }
 
 
 void KNHelper::displayExternalFileError(QWidget *w)
 {
-  KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to load/save file!"));
+  KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to load/save file."));
 }
 
 
 void KNHelper::displayRemoteFileError(QWidget *w)
 {
-  KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to save remote file!"));
+  KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to save remote file."));
 }
 
 
 void KNHelper::displayTempFileError(QWidget *w)
 {
-  KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to create temporary file!"));
+  KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to create temporary file."));
 }

@@ -235,13 +235,13 @@ void KNConfig::IdentityWidget::slotSignatureEdit()
   QString fileName = c_ompletion->replacedPath(s_ig->text()).stripWhiteSpace();
 
   if (fileName.isEmpty()) {
-    KMessageBox::sorry(this, i18n("You must specify a filename!"));
+    KMessageBox::sorry(this, i18n("You must specify a filename."));
     return;
   }
 
   QFileInfo fileInfo( fileName );
   if (fileInfo.isDir()) {
-    KMessageBox::sorry(this, i18n("You have specified a folder!"));
+    KMessageBox::sorry(this, i18n("You have specified a folder."));
     return;
   }
 

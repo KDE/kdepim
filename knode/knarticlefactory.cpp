@@ -935,7 +935,7 @@ bool KNArticleFactory::cancelAllowed(KNArticle *a)
     if(!mid || mid->isEmpty()) {
       KMessageBox::sorry(knGlobals.topWidget, i18n(
 "This article cannot be canceled or superseded,\n\
-because its message-id has not been created by KNode!\n\
+because its message-id has not been created by KNode.\n\
 But you can look for your article in the newsgroup\n\
 and cancel (or supersede) it there."));
       return false;
