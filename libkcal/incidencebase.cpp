@@ -250,7 +250,7 @@ Attendee *IncidenceBase::attendeeByMail(const QString &email)
   return 0L;
 }
 
-Attendee *IncidenceBase::attendeeByMails(const QStringList &emails, QString email)
+Attendee *IncidenceBase::attendeeByMails(const QStringList &emails, const QString& email)
 {
   QPtrListIterator<Attendee> qli(mAttendees);
 

@@ -112,7 +112,7 @@ class IncidenceBase : public CustomProperties
     /** Return the Attendee with this email */
     Attendee* attendeeByMail(const QString &);
     /** Return first Attendee with one of this emails */
-    Attendee* attendeeByMails(const QStringList &, QString email =0);
+    Attendee* attendeeByMails(const QStringList &, const QString& email = QString::null);
 
     /** pilot syncronization states */
     enum { SYNCNONE = 0, SYNCMOD = 1, SYNCDEL = 3 };
