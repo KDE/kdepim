@@ -34,6 +34,8 @@ class QCheckBox;
 class KLineEdit;
 class KComboBox;
 
+typedef TypeCombo<KABC::PhoneNumber> PhoneTypeCombo;
+
 /**
   Widget for editing phone numbers.
 */
@@ -72,14 +74,14 @@ class PhoneEditWidget : public QWidget
     void updateCombos();
 
   private:
-    void updateEdit( TypeCombo *combo );
-    void updatePhoneNumber( TypeCombo *combo );
-    void updateOtherEdit( TypeCombo *combo, TypeCombo *otherCombo );
+    void updateEdit( PhoneTypeCombo *combo );
+    void updatePhoneNumber( PhoneTypeCombo *combo );
+    void updateOtherEdit( PhoneTypeCombo *combo, PhoneTypeCombo *otherCombo );
 
-    TypeCombo *mPrefCombo;
-    TypeCombo *mSecondCombo;
-    TypeCombo *mThirdCombo;
-    TypeCombo *mFourthCombo;
+    PhoneTypeCombo *mPrefCombo;
+    PhoneTypeCombo *mSecondCombo;
+    PhoneTypeCombo *mThirdCombo;
+    PhoneTypeCombo *mFourthCombo;
     
     KLineEdit *mPrefEdit;
     KLineEdit *mSecondEdit;

@@ -53,25 +53,25 @@ PhoneEditWidget::PhoneEditWidget( QWidget *parent, const char *name )
   QGridLayout *layout = new QGridLayout( this, 5, 2 );
   layout->setSpacing( KDialog::spacingHint() );
   
-  mPrefCombo = new TypeCombo( mPhoneList, this );
+  mPrefCombo = new PhoneTypeCombo( mPhoneList, this );
   mPrefEdit = new KLineEdit( this );
   mPrefCombo->setLineEdit( mPrefEdit );
   layout->addWidget( mPrefCombo, 0, 0 );
   layout->addWidget( mPrefEdit, 0, 1 );
 
-  mSecondCombo = new TypeCombo( mPhoneList, this );
+  mSecondCombo = new PhoneTypeCombo( mPhoneList, this );
   mSecondEdit = new KLineEdit( this );
   mSecondCombo->setLineEdit( mSecondEdit );
   layout->addWidget( mSecondCombo, 1, 0 );
   layout->addWidget( mSecondEdit, 1, 1 );
 
-  mThirdCombo = new TypeCombo( mPhoneList, this );
+  mThirdCombo = new PhoneTypeCombo( mPhoneList, this );
   mThirdEdit = new KLineEdit( this );
   mThirdCombo->setLineEdit( mThirdEdit );
   layout->addWidget( mThirdCombo, 2, 0 );
   layout->addWidget( mThirdEdit, 2, 1 );
 
-  mFourthCombo = new TypeCombo( mPhoneList, this );
+  mFourthCombo = new PhoneTypeCombo( mPhoneList, this );
   mFourthEdit = new KLineEdit( this );
   mFourthCombo->setLineEdit( mFourthEdit );
   layout->addWidget( mFourthCombo, 3, 0 );
@@ -193,7 +193,7 @@ void PhoneEditWidget::updateFourthEdit()
   updateEdit( mFourthCombo );
 }
 
-void PhoneEditWidget::updateEdit( TypeCombo *combo )
+void PhoneEditWidget::updateEdit( PhoneTypeCombo *combo )
 {
 //  kdDebug() << "updateEdit()" << endl;
 
@@ -237,7 +237,7 @@ void PhoneEditWidget::slotFourthEditChanged()
   updatePhoneNumber( mFourthCombo );
 }
 
-void PhoneEditWidget::updatePhoneNumber( TypeCombo *combo )
+void PhoneEditWidget::updatePhoneNumber( PhoneTypeCombo *combo )
 {
 //  kdDebug() << "PhoneEditWidget::updatePhoneNumber()" << endl;
 
@@ -260,7 +260,7 @@ void PhoneEditWidget::updatePhoneNumber( TypeCombo *combo )
   emit modified();
 }
 
-void PhoneEditWidget::updateOtherEdit( TypeCombo *combo, TypeCombo *otherCombo )
+void PhoneEditWidget::updateOtherEdit( PhoneTypeCombo *combo, PhoneTypeCombo *otherCombo )
 {
 //  kdDebug() << "PhoneEditWidget::updateOtherEdit()" << endl;
 

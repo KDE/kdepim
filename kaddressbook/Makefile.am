@@ -32,7 +32,7 @@ libkaddressbookpart_la_SOURCES = kaddressbook.cpp kaddressbookiface.skel \
   cardview.cpp kaddressbookcardview.cpp addresseeeditorwidget.cpp \
   addresseeeditordialog.cpp configurecardviewdialog.cpp \
   nameeditdialog.cpp addresseditwidget.cpp emaileditwidget.cpp \
-  phoneeditwidget.cpp typecombo.cpp \
+  phoneeditwidget.cpp \
   kaddressbookprinter.cpp \
   filtereditdialog.cpp filtereditwidget.cpp filter.cpp \
   filterselectionwidget.cpp configureviewfilterpage.cpp \

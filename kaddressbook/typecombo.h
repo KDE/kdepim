@@ -27,14 +27,18 @@
 
 #include <kcombobox.h>
 
+
 /**
   Combo box for type information of Addresses and Phone numbers.
 */
+template <class T>
 class TypeCombo : public KComboBox
 {
-    Q_OBJECT
   public:
-    TypeCombo( KABC::PhoneNumber::List &list, QWidget *parent, const char *name = 0 );
+    typedef typename T::List List;
+    typedef typename T::List::Iterator Iterator;
+  
+    TypeCombo( List &list, QWidget *parent, const char *name = 0 );
 
     void setLineEdit( QLineEdit *edit ) { mLineEdit = edit; }
     QLineEdit *lineEdit() const { return mLineEdit; }
@@ -45,15 +49,116 @@ class TypeCombo : public KComboBox
 
     int selectedType();
 
-    KABC::PhoneNumber::List::Iterator selectedElement();
+    Iterator selectedElement();
 
-    void insertType( const KABC::PhoneNumber::List &list, int type,
-                     const KABC::PhoneNumber &defaultObject );
-    void insertTypeList( const KABC::PhoneNumber::List &list );
+    void insertType( const List &list, int type,
+                     const T &defaultObject );
+    void insertTypeList( const List &list );
 
   private:
-    KABC::PhoneNumber::List &mTypeList;
+    List &mTypeList;
     QLineEdit *mLineEdit;
 };
+
+template <class T>
+TypeCombo<T>::TypeCombo( TypeCombo::List &list, QWidget *parent,
+                      const char *name )
+  : KComboBox( parent, name ),
+    mTypeList( list )
+{
+}
+
+template <class T>
+void TypeCombo<T>::updateTypes()
+{
+  // Remember current item
+  QString currentId;
+  int current = currentItem();  
+  if ( current >= 0 ) currentId = mTypeList[ current ].id();
+
+  clear();
+
+  QMap<QString,int> labelCount;
+
+  uint i;
+  for( i = 0; i < mTypeList.count(); ++i ) {
+    QString label = mTypeList[ i ].typeLabel( mTypeList[ i ].type() );
+    int count = 1;
+    if ( labelCount.contains( label ) ) {
+      count = labelCount[ label ] + 1;
+    }
+    labelCount[ label ] = count;
+    if ( count > 1 ) {
+      label = i18n("label (number)", "%1 (%2)").arg( label )
+                                           .arg( QString::number( count ) );
+    }
+    insertItem( label );
+  }
+
+  // Restore previous current item
+  if ( !currentId.isEmpty() ) {
+    for( i = 0; i < mTypeList.count(); ++i ) {
+      if ( mTypeList[ i ].id() == currentId ) {
+        setCurrentItem( i );
+        break;
+      }
+    }
+  }
+}
+
+template <class T>
+void TypeCombo<T>::selectType( int type )
+{
+  uint i;
+  for( i = 0; i < mTypeList.count(); ++i ) {
+    if ( mTypeList[ i ].type() == type ) {
+      setCurrentItem( i );
+      break;
+    }
+  }
+}
+
+template <class T>
+int TypeCombo<T>::selectedType()
+{
+  return mTypeList[ currentItem() ].type();
+}
+
+template <class T>
+TypeCombo<T>::Iterator TypeCombo<T>::selectedElement()
+{
+  return mTypeList.at( currentItem() );
+}
+
+template <class T>
+void TypeCombo<T>::insertType( const TypeCombo::List &list, int type,
+                               const T &defaultObject )
+{
+  uint i;
+  for ( i = 0; i < list.count(); ++i ) {
+    if ( list[ i ].type() == type ) {
+      mTypeList.append( list[ i ] );
+      break;
+    }
+  }
+  if ( i == list.count() ) {
+    mTypeList.append( defaultObject );
+  }
+}
+
+template <class T>
+void TypeCombo<T>::insertTypeList( const TypeCombo::List &list )
+{
+  uint i;
+  for ( i = 0; i < list.count(); ++i ) {
+    uint j;
+    for( j = 0; j < mTypeList.count(); ++j ) {
+      if ( list[ i ].id() == mTypeList[ j ].id() ) break;
+    }
+    if ( j == mTypeList.count() ) {
+      mTypeList.append( list[ i ] );
+    }
+  }
+}
 
 #endif

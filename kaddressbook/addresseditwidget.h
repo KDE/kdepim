@@ -30,6 +30,7 @@
 #include <kabc/addressee.h>
 
 #include "addresseeconfig.h"
+#include "typecombo.h"
 
 class QButtonGroup;
 class QToolButton;
@@ -40,6 +41,8 @@ class QCheckBox;
 class KLineEdit;
 class KListView;
 class KComboBox;
+
+typedef TypeCombo<KABC::Address> AddressTypeCombo;
 
 /**
   Editor widget for addresses.
@@ -62,14 +65,13 @@ class AddressEditWidget : public QWidget
     void modified();
     
   protected slots:
-    void typeHighlighted(int);
-    void addressChanged();
-    void addAddress();
-    void editAddress();
-    void removeAddress();
-    
+    void updateAddressEdit();
+
+    void edit();
+
   private:
-    KComboBox *mTypeCombo;
+    AddressTypeCombo *mTypeCombo;
+
     QPushButton *mEditButton;
     QPushButton *mRemoveButton;
     QTextEdit *mAddressTextEdit;
@@ -86,26 +88,30 @@ class AddressEditDialog : public KDialogBase
   Q_OBJECT
 
   public:
-    AddressEditDialog( const KABC::Address::List &list, const KABC::Address &addr,
+    AddressEditDialog( const KABC::Address::List &list, int selected,
                        QWidget *parent, const char *name = 0 );
     ~AddressEditDialog();
     
-    const KABC::Address &address();
+    KABC::Address::List addresses();
 
   protected slots:
-    void editType();
+    void addAddress();
+    void removeAddress();
+
+    void updateAddressEdits();
 
   private:
-    void fillCombo(KComboBox *combo);
-    void updateTypeCombo();
+    void fillCountryCombo(KComboBox *combo);
+
+    void saveAddress();
+
+    KABC::Address::List mAddressList;
     
-    KABC::Address mAddress;
-    QValueList<int> mTypeList;
+    AddressTypeCombo *mTypeCombo;
     
     QCheckBox *mPreferredCheckBox;
     QTextEdit *mStreetTextEdit;
     KComboBox *mCountryCombo;
-    KComboBox *mTypeCombo;
     KLineEdit *mRegionEdit;
     KLineEdit *mLocalityEdit;
     KLineEdit *mPostalCodeEdit;
