@@ -61,18 +61,18 @@ void FilterPMail::import(FilterInfo *info)
    kdDebug() << "Count is " << totalFiles << endl;
 
    info->addLog(i18n("Importing new mail files ('.cnm')..."));
-   processFiles("*.cnm", &FilterPMail::importNewMessage);
+   processFiles("*.[cC][nN][mM]", &FilterPMail::importNewMessage);
    info->addLog(i18n("Importing mail folders ('.pmm')..."));
-   processFiles("*.pmm", &FilterPMail::importMailFolder);
+   processFiles("*.[pP][mM][mM]", &FilterPMail::importMailFolder);
    info->addLog(i18n("Importing 'UNIX' mail folders ('.mbx')..."));
-   processFiles("*.mbx", &FilterPMail::importUnixMailFolder);
+   processFiles("*.[mM][bB][xX]", &FilterPMail::importUnixMailFolder);
 }
 
 /** this looks for all files with the filemask 'mask' and calls the 'workFunc' on each of them */
 void FilterPMail::processFiles(const QString& mask, void(FilterPMail::* workFunc)(const QString&) )
 {
    QStringList files = dir.entryList(mask, QDir::Files, QDir::Name);
-   kdDebug() << "Mask is " << mask << " count is " << files.count() << endl;
+   //kdDebug() << "Mask is " << mask << " count is " << files.count() << endl;
    for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
       // Notify current file
       QFileInfo mailfileinfo(*mailFile);
