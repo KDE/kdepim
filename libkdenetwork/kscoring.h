@@ -346,8 +346,8 @@ class KScoringManager : public QObject
   bool isCacheValid() { return cacheValid; }
   void initCache(const QString& group/*, const QString& server*/);
 
-  void load(const QString& appName = QString::null);
-  void save(const QString& appName = QString::null);
+  void load();
+  void save();
 
   //--------------- Properties
   virtual bool canScores() { return true; }
@@ -381,6 +381,9 @@ class KScoringManager : public QObject
   QString group;
 
   //ScorableServer* _s;
+  
+  // filename of the scorefile
+  QString mFilename;
 };
 
 

@@ -739,8 +739,13 @@ KScoringManager::KScoringManager(const QString& appName)
   :  cacheValid(false)//, _s(0)
 {
   allRules.setAutoDelete(true);
+  // determine filename of the scorefile
+  if(appName.isEmpty())
+    mFilename = KGlobal::dirs()->saveLocation("appdata") + "/scorefile";
+  else
+    mFilename = KGlobal::dirs()->saveLocation("data") + "/" + appName + "/scorefile";
   // open the score file
-  load(appName);
+  load();
 }
 
 
@@ -748,15 +753,10 @@ KScoringManager::~KScoringManager()
 {
 }
 
-void KScoringManager::load(const QString& appName)
+void KScoringManager::load()
 {
   QDomDocument sdoc("Scorefile");
-  QString filename;
-  if(appName.isNull())
-    filename = KGlobal::dirs()->saveLocation("appdata") + "/scorefile";
-  else
-    filename = KGlobal::dirs()->saveLocation("data") + "/" + appName + "/scorefile";
-  QFile f( filename );
+  QFile f( mFilename );
   if ( !f.open( IO_ReadOnly ) )
     return;
   if ( !sdoc.setContent( &f ) ) {
@@ -772,15 +772,10 @@ void KScoringManager::load(const QString& appName)
   kdDebug(5100) << "ready, got " << allRules.count() << " rules" << endl;
 }
 
-void KScoringManager::save(const QString& appName)
+void KScoringManager::save()
 {
   kdDebug(5100) << "KScoringManager::save() starts" << endl;
-  QString filename;
-  if(appName.isNull())
-    filename = KGlobal::dirs()->saveLocation("appdata") + "/scorefile";
-  else
-    filename = KGlobal::dirs()->saveLocation("data") + "/" + appName + "/scorefile";
-  QFile f( filename );
+  QFile f( mFilename );
   if ( !f.open( IO_WriteOnly ) )
     return;
   QTextStream stream(&f);
