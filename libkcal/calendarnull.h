@@ -69,7 +69,6 @@ class CalendarNull : public Calendar
       return Alarm::List();
     }
 
-  protected:
     Event::List rawEventsForDate( const QDateTime & )
     {
       return Event::List();

@@ -255,6 +255,7 @@ class CalendarResources : public Calendar,
     */
     void incidenceUpdated( IncidenceBase * );
 
+  public:
     /**
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
@@ -271,6 +272,7 @@ class CalendarResources : public Calendar,
     Event::List rawEvents( const QDate &start, const QDate &end,
                            bool inclusive = false );
 
+  protected:
     void connectResource( ResourceCalendar * );
 
     void resourceAdded( ResourceCalendar *resource );

@@ -176,6 +176,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     virtual bool doLoad();
     virtual bool doSave();
 
+  public:
     /**
       Builds and then returns a list of all events that match for the
       date specified. useful for dayView, etc. etc.
@@ -192,6 +193,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     Event::List rawEvents( const QDate &start, const QDate &end,
                                bool inclusive = false );
 
+  protected:
     /** Notification function of IncidenceBase::Observer. */
     void incidenceUpdated( IncidenceBase *i );
   

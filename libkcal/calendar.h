@@ -321,7 +321,7 @@ class Calendar : public QObject, public CustomProperties,
     void calendarSaved();
     void calendarLoaded();
 
-  protected:
+  public:
     /**
       Get unfiltered events, which occur on the given date.
     */
@@ -337,6 +337,7 @@ class Calendar : public QObject, public CustomProperties,
     */
     virtual Event::List rawEvents( const QDate &start, const QDate &end,
                                    bool inclusive = false ) = 0;
+  protected:
     /**
       let the subclasses of KCal::Calendar set the time zone
     */
