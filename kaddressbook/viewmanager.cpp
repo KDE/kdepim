@@ -469,7 +469,6 @@ void ViewManager::createViewWrappers()
 void ViewManager::initGUI()
 {
   QHBoxLayout *l = new QHBoxLayout( this );
-  l->setMargin( KDialogBase::marginHint() );
   l->setSpacing( KDialogBase::spacingHint() );
 
   mQSpltFeatures = new QSplitter( this );
