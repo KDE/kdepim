@@ -34,23 +34,24 @@ namespace GpgME {
   using std::vector;
 
   struct Key::Private {
-    Private( gpgme_key_t aKey )
-      : key( aKey ) {}
+    Private( gpgme_key_t aKey, unsigned int aMode )
+      : key( aKey ), mode( aMode ) {}
     gpgme_key_t key;
+    unsigned int mode;
   };
 
   Key::Key() {
-    d = new Private( 0 );
+    d = new Private( 0, 0 );
   }
 
-  Key::Key( gpgme_key_t key, bool ref ) {
-    d = new Private( key );
+  Key::Key( gpgme_key_t key, bool ref, unsigned int mode ) {
+    d = new Private( key, mode );
     if ( ref && d->key )
       gpgme_key_ref( d->key );
   }
 
   Key::Key( const Key & other ) {
-    d = new Private( other.d->key );
+    d = new Private( other.d->key, other.d->mode );
     if ( d->key )
       gpgme_key_ref( d->key );
   }
@@ -219,19 +220,27 @@ namespace GpgME {
   }
 
   const char * Key::keyID() const {
+#ifdef HAVE_GPGME_KEY_T_KEYID
+    return d->key ? d->key->keyid : 0 ;
+#else
     if ( !d->key || !d->key->subkeys || !d->key->subkeys->fpr )
       return 0;
     const int len = strlen( d->key->subkeys->fpr );
     if ( len < 16 )
       return 0;
     return d->key->subkeys->fpr + len - 16; // return the last 8 bytes (in hex notation)
+#endif
   }
 
   const char * Key::shortKeyID() const {
-    if ( const char * kid = keyID() )
-      return kid + 8 ;
+    if ( const char * keyid = keyID() )
+      return keyid + 8 ;
     else
       return 0;
+  }
+
+  unsigned int Key::keyListMode() const {
+    return d ? d->mode : 0 ;
   }
 
   //

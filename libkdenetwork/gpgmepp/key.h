@@ -39,7 +39,7 @@ namespace GpgME {
     friend class Context;
   public:
     Key();
-    Key( gpgme_key_t key, bool acquireRef );
+    Key( gpgme_key_t key, bool acquireRef, unsigned int keyListMode=0 );
     Key( const Key & key );
     ~Key();
 
@@ -76,7 +76,8 @@ namespace GpgME {
     OwnerTrust ownerTrust() const;
     char ownerTrustAsString() const;
 
-    Context::Protocol protocol() const;
+    typedef Context::Protocol Protocol;
+    Protocol protocol() const;
     const char * protocolAsString() const;
 
     const char * issuerSerial() const;
@@ -85,6 +86,9 @@ namespace GpgME {
 
     const char * keyID() const;
     const char * shortKeyID() const;
+
+    typedef Context::KeyListMode KeyListMode;
+    unsigned int keyListMode() const;
 
   private:
     gpgme_key_t impl() const;

@@ -128,7 +128,7 @@ namespace GpgME {
     case GPGME_EVENT_NEXT_KEY:
       {
 	gpgme_key_t key = static_cast<gpgme_key_t>( type_data );
-	instance()->nextKeyEvent( ctx, Key( key, false ) );
+	instance()->nextKeyEvent( ctx, Key( key, false, ctx ? ctx->keyListMode() : 0 ) );
       }
       break;
     case GPGME_EVENT_NEXT_TRUSTITEM:

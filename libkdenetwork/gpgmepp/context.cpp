@@ -264,7 +264,7 @@ namespace GpgME {
     d->lastop = Private::KeyList;
     gpgme_key_t key;
     e = d->lasterr = gpgme_op_keylist_next( d->ctx, &key );
-    return Key( key, false );
+    return Key( key, false, keyListMode() );
   }
 
   KeyListResult Context::endKeyListing() {
@@ -276,7 +276,7 @@ namespace GpgME {
     d->lastop = Private::KeyList;
     gpgme_key_t key;
     e = d->lasterr = gpgme_get_key( d->ctx, fingerprint, &key, int( secret )/*, int( forceUpdate )*/ );
-    return Key( key, false );
+    return Key( key, false, keyListMode() );
   }
 
   KeyGenerationResult Context::generateKey( const char * parameters, Data & pubKey ) {
@@ -460,7 +460,7 @@ namespace GpgME {
 
   Key Context::signingKey( unsigned int idx ) const {
     gpgme_key_t key = gpgme_signers_enum( d->ctx, idx );
-    return Key( key, false );
+    return Key( key, false, keyListMode() );
   }
 
 
