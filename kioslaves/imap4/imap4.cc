@@ -221,14 +221,14 @@ IMAP4Protocol::get (const KURL & _url)
     {
       if (aSection.isEmpty())
          aSection = "UID RFC822";
-      else if (aSection == "FLAGS" )
+      else if (aSection.startsWith("FLAGS") )
          ; /*aSection = "UID FLAGS";*/
       else
          aSection = "UID BODY[" + aSection + "]";
     }
     if (aEnum == ITYPE_BOX || aEnum == ITYPE_DIR_AND_BOX)
     {
-      if( aSection != "FLAGS" ) aSection += " RFC822.SIZE INTERNALDATE FLAGS";
+      if( !aSection.startsWith("FLAGS") ) aSection += " RFC822.SIZE INTERNALDATE FLAGS";
 
       // write the digest header
       outputLine
