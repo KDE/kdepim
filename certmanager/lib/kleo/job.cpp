@@ -30,9 +30,7 @@
     your version.
 */
 
-#ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
 
 #include "job.h"
 
@@ -52,6 +50,7 @@
 #include "refreshkeysjob.h"
 
 #include <qapplication.h>
+#include <kdebug.h>
 
 Kleo::Job::Job( QObject * parent, const char * name )
   : QObject( parent, name )
@@ -65,7 +64,7 @@ Kleo::Job::~Job() {
 }
 
 void Kleo::Job::showErrorDialog( QWidget *, const QString & ) const {
-  qDebug( "Kleo::Job::showErrorDialog() should be reimplemented in Kleo::Job subclasses!");
+  kdDebug() << "Kleo::Job::showErrorDialog() should be reimplemented in Kleo::Job subclasses!" << endl;
 }
 
 

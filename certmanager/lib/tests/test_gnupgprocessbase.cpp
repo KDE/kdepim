@@ -116,7 +116,7 @@ void GnuPGViewer::slotProcessExited( KProcess * proc ) {
 
 int main( int argc, char** argv ) {
   if ( argc < 3 ) {
-    qDebug( "Need at least two arguments" );
+    kdDebug() << "Need at least two arguments" << endl;
     return 1;
   }
   KAboutData aboutData( "test_gnupgprocessbase", "GnuPGProcessBase Test", "0.1" );

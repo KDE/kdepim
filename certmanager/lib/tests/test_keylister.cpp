@@ -29,9 +29,7 @@
     your version.
 */
 
-#ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
 
 #include "test_keylister.h"
 
@@ -45,6 +43,7 @@
 #include <kapplication.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
+#include <kdebug.h>
 
 #include <qmessagebox.h>
 #include <qstringlist.h>
@@ -100,7 +99,7 @@ CertListView::CertListView( QWidget * parent, const char * name, WFlags f )
 }
 
 void CertListView::slotResult( const GpgME::KeyListResult & result ) {
-  qDebug( "CertListView::slotResult()" );
+  kdDebug() << "CertListView::slotResult()" << endl;
   if ( result.isNull() )
     QMessageBox::information( this, "Key Listing Result", "KeyListResult is null!" );
   else if ( result.error() )
@@ -113,7 +112,7 @@ void CertListView::slotResult( const GpgME::KeyListResult & result ) {
 }
 
 void CertListView::slotStart() {
-  qDebug( "CertListView::slotStart()" );
+  kdDebug() << "CertListView::slotStart()" << endl;
   Kleo::KeyListJob * job = Kleo::CryptoBackendFactory::instance()->smime()->keyListJob( false );
   assert( job );
   QObject::connect( job, SIGNAL(nextKey(const GpgME::Key&)),
