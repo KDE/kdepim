@@ -252,6 +252,13 @@ void MainWindow::makeMenus()
                             _taskView,
                             SLOT( editTask() ), actionCollection(),
                             "edit_task");
+  actionAddComment = new KAction( i18n("&Add Comment..."),
+                                  QString::fromLatin1("document"),
+                                  CTRL+ALT+Key_C,
+                                  _taskView,
+                                  SLOT( addCommentToTask() ),
+                                  actionCollection(),
+                                  "add_comment_to_task");
   new KAction( i18n("Import &Todos"), 0,
                             _taskView,
                             SLOT( loadFromKOrgTodos() ), actionCollection(),

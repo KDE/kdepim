@@ -97,6 +97,13 @@ class Task : public QObject, public QListViewItem
     static bool parseIncidence( KCal::Incidence*, long&, QString&, int&,
                                 DesktopListType& );
 
+    /** adds a Comment to the task - currently only being passed through to
+     ** the logger
+     * @return total time in minutes
+     */
+    void addComment( QString comment )
+           { _logging->comment(this, comment ); };
+
   protected slots:
     void updateActiveIcon();
 

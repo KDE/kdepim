@@ -23,6 +23,7 @@
 #include <kmessagebox.h>
 #include <kemailsettings.h>
 #include <kstandarddirs.h>
+#include <klineeditdlg.h>
 
 #include "event.h"
 #include "calendarlocal.h"
@@ -743,6 +744,20 @@ void TaskView::editTask()
     emit updateButtons();
   }
   delete dialog;
+}
+
+void TaskView::addCommentToTask()
+{
+  Task *task = (Task *) currentItem();
+  if (!task)
+    return;
+
+  bool ok;
+  QString comment = KLineEditDlg::getText(
+                       i18n("Log comment for task %1").arg(task->name()),
+                       QString(), &ok, this);
+  if ( ok )
+    task->addComment( comment );
 }
 
 void TaskView::updateParents( QListViewItem* task, long totalDiff,

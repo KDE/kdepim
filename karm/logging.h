@@ -69,6 +69,15 @@ class TotalTimeLogEvent: public KarmLogEvent
 };
 
 
+class CommentLogEvent: public KarmLogEvent
+{
+ private:
+   QString comment;
+ public:
+   CommentLogEvent( Task *task, QString& comment);
+   QString toXML();
+};
+
 class Logging
 {
  private:
@@ -85,6 +94,7 @@ class Logging
    void rename( Task *task, QString& oldName);
    void newTotalTime( Task *task, long minutes, long change);
    void newSessionTime( Task *task, long minutes, long change);
+   void comment( Task *task, QString& comment);
 };
 
 #endif

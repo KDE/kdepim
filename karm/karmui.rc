@@ -17,6 +17,7 @@
 		<Action name="new_sub_task" />
 		<Action name="delete_task" />
 		<Action name="edit_task" />
+		<Action name="add_comment_to_task" />
 		<Separator />
 		<Action name="import_korg_events" />
 		<Action name="import_korg_todos" />
@@ -30,6 +31,7 @@
 	<Action name="new_sub_task" />
 	<Action name="delete_task" />
 	<Action name="edit_task" />
+	<Action name="add_comment_to_task" />
 </ToolBar>
 <Menu name="task_popup">
 	<Action name="start" />
@@ -40,5 +42,6 @@
 	<Action name="new_sub_task" />
 	<Action name="delete_task" />
 	<Action name="edit_task" />
+	<Action name="add_comment_to_task" />
 </Menu>
 </kpartgui>

@@ -67,6 +67,7 @@ class MainWindow : public KMainWindow
     KAction* actionStopAll;
     KAction* actionDelete;
     KAction* actionEdit;
+    KAction* actionAddComment;
     KAction* actionPreferences;
 
     friend class KarmTray;

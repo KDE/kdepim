@@ -107,6 +107,7 @@ class TaskView : public KListView
     void newSubTask();
     void editTask();
     void deleteTask();
+    void addCommentToTask();
     void extractTime( int minutes );
     void handleDesktopChange( int desktop );
     void loadFromKOrgTodos();
