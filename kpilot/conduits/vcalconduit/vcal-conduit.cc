@@ -498,6 +498,7 @@ void VCalConduit::doLocalSync()
   if (deleteOnPilot) deleteFromPilot(VCalBaseConduit::TypeEvent);
 
   setFirstTime(config,false);
+  config->sync();
 }
 
 
@@ -768,6 +769,10 @@ void VCalConduit::doTest()
 
 
 // $Log$
+// Revision 1.43  2001/06/18 19:51:40  cschumac
+// Fixed todo and datebook conduits to cope with KOrganizers iCalendar format.
+// They use libkcal now.
+//
 // Revision 1.42  2001/06/13 21:30:24  adridg
 // Avoid uninitialized variable warning
 //

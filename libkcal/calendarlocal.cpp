@@ -153,7 +153,9 @@ void CalendarLocal::addEvent(Event *anEvent)
   if (anEvent->organizer() != getEmail()) {
     kdDebug() << "Event " << anEvent->summary() << " Organizer: " << anEvent->organizer()
               << " Email: " << getEmail() << endl;
-    anEvent->setReadOnly(true);
+// Disable read-only events. They confuse users and the KPilot conduits.
+// Have to think about a more sensible scheme    
+//    anEvent->setReadOnly(true);
   }
   connect(anEvent,SIGNAL(eventUpdated(Incidence *)),this,SLOT(updateEvent(Incidence *)));
   emit calUpdated(anEvent);
