@@ -91,7 +91,7 @@ class docRegExpBookmark:public docMatchBookmark {
  public:
 	docRegExpBookmark():docMatchBookmark() { capSubexpression=-1;};
 	docRegExpBookmark(QString regexp, int cap=0,
-		int options=0):docMatchBookmark(regexp, options) {capSubexpression=cap; };;
+		int options=0):docMatchBookmark(regexp, options) {capSubexpression=cap; };
 	docRegExpBookmark(QString pattrn, QString bmkname,
 		int options=0):docMatchBookmark(pattrn, bmkname, options) { capSubexpression=-1; };
 	virtual ~ docRegExpBookmark() { };

@@ -1557,11 +1557,11 @@ void KNArticleWidget::anchorClicked(const QString &a, ButtonState button, const 
           saveAttachment(target.toInt());
       break;
       case ATurl:
-        kdDebug(5003) << "KNArticleWidget::anchorClicked() : url " << target << endl;;
+        kdDebug(5003) << "KNArticleWidget::anchorClicked() : url " << target << endl;
         openURL(target);
       break;
       case ATnews:
-        kdDebug(5003) << "KNArticleWidget::anchorClicked() : news-url " << target << endl;;
+        kdDebug(5003) << "KNArticleWidget::anchorClicked() : news-url " << target << endl;
         knGlobals.top->openURL(target);
       break;
       case ATmailto:

@@ -7,7 +7,7 @@
 #include <kglobal.h>
 #include <klocale.h>    // i18n
 
-IdleTimeDetector::IdleTimeDetector(int maxIdle) 
+IdleTimeDetector::IdleTimeDetector(int maxIdle)
 {
   _maxIdle = maxIdle;
 
@@ -33,14 +33,14 @@ bool IdleTimeDetector::isIdleDetectionPossible()
   return _idleDetectionPossible;
 }
 
-void IdleTimeDetector::check() 
+void IdleTimeDetector::check()
 {
 #ifdef HAVE_LIBXSS
   if (_idleDetectionPossible)
   {
     _mit_info = XScreenSaverAllocInfo ();
     XScreenSaverQueryInfo(qt_xdisplay(), qt_xrootwin(), _mit_info);
-    int idleMinutes = (_mit_info->idle/1000)/secsPerMinute;;
+    int idleMinutes = (_mit_info->idle/1000)/secsPerMinute;
     if (idleMinutes >= _maxIdle)
       informOverrun(idleMinutes);
   }
@@ -53,18 +53,18 @@ void IdleTimeDetector::setMaxIdle(int maxIdle)
 }
 
 #ifdef HAVE_LIBXSS
-void IdleTimeDetector::informOverrun(int idleMinutes) 
+void IdleTimeDetector::informOverrun(int idleMinutes)
 {
   if (!_overAllIdleDetect)
     return; // In the preferences the user has indicated that he do not
             // want idle detection.
 
   _timer->stop();
-  
+
   QDateTime start = QDateTime::currentDateTime();
   QDateTime idleStart = start.addSecs(-60 * _maxIdle);
   QString backThen = KGlobal::locale()->formatTime(idleStart.time());
-  
+
   int id =  QMessageBox::warning( 0, i18n("Idle detection"),
                                      i18n("Desktop has been idle since %1."
                                           " What should we do?").arg(backThen),
@@ -86,12 +86,12 @@ void IdleTimeDetector::informOverrun(int idleMinutes)
   }
   else {
     // Continue
-    _timer->start(testInterval);      
+    _timer->start(testInterval);
   }
 }
 #endif // HAVE_LIBXSS
 
-void IdleTimeDetector::startIdleDetection() 
+void IdleTimeDetector::startIdleDetection()
 {
 #ifdef HAVE_LIBXSS
   if (!_timer->isActive())
@@ -106,7 +106,7 @@ void IdleTimeDetector::stopIdleDetection()
     _timer->stop();
 #endif // HAVE_LIBXSS
 }
-void IdleTimeDetector::toggleOverAllIdleDetection(bool on) 
+void IdleTimeDetector::toggleOverAllIdleDetection(bool on)
 {
   _overAllIdleDetect = on;
 }

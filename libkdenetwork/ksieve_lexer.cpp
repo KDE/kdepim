@@ -67,7 +67,7 @@ namespace KSieve {
       return true;
     }
   }
-      
+
 
   bool Lexer::parseHashComment( QString & result, bool reallySave ) {
     // hash-comment := "#" *CHAR-NOT-CRLF CRLF
@@ -163,7 +163,7 @@ namespace KSieve {
       case ' ':
       case '\t': // SP / HTAB
 	++mCursor;
-	break;;
+	break;
       case '\n':
       case '\r': // CRLF
 	if ( !eatCRLF() )

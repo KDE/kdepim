@@ -35,7 +35,7 @@ bool KNRangeFilter::doFilter(int a)
           if (op2 != dis)
             ret=( matchesOp(val1,op1,a) && matchesOp(a,op2,val2) );
           else
-            ret = matchesOp(val1,op1,a);;
+            ret = matchesOp(val1,op1,a);
           break;
       case eq:
       case lt:

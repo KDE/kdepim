@@ -433,7 +433,7 @@ void KDGanttView::slotHeaderSizeChanged()
   int listViewHeaderHeight = 0;
   if ( headerVisible() )
     listViewHeaderHeight = myListView->header()->height();
-  int timeHeaderHeight = myTimeHeader->height()+myTimeHeaderScroll->frameWidth()*2;;
+  int timeHeaderHeight = myTimeHeader->height()+myTimeHeaderScroll->frameWidth()*2;
   int diffY = timeHeaderHeight-legendHeight-listViewHeaderHeight;
   if ( diffY < 0 ) {
     spacerLeft->setFixedHeight( 0 );

@@ -413,7 +413,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
 	       curAttendee->email().isEmpty())
 	kdDebug(5800) << "warning! this Event has an attendee w/o name or email!" << endl;
       VObject *aProp = addPropValue(vevent, VCAttendeeProp, tmpStr.local8Bit());
-      addPropValue(aProp, VCRSVPProp, curAttendee->RSVP() ? "TRUE" : "FALSE");;
+      addPropValue(aProp, VCRSVPProp, curAttendee->RSVP() ? "TRUE" : "FALSE");
       addPropValue(aProp, VCStatusProp, writeStatus(curAttendee->status()));
     }
   }
@@ -580,7 +580,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     addPropValue(vevent, VCCategoriesProp, tmpStr.local8Bit());
   }
 
-  // attachments 
+  // attachments
   // TODO: handle binary attachments!
   QPtrList<Attachment> attachments = anEvent->attachments();
   for ( Attachment *at = attachments.first(); at; at = attachments.next() )
