@@ -68,7 +68,7 @@ namespace Kleo {
       multiple QObject-derived subclasses.
 
       To use it, inherit from the Job-subclass, then from this class,
-      add QGPGME_JOB to just after Q_OBJECT and implement
+      add QGPGME_JOB to just after Q OBJECT and implement
       doOperationDoneEvent() by emitting your variant of the result()
       signal there. Pass "this" as the first argument this QGpgMEJOb's
       ctor. The rest is dealt with automatically.
