@@ -443,6 +443,7 @@ QStringList KScoringExpression::headerNames()
   l.append("Subject");
   l.append("Date");
   l.append("References");
+  l.append("NNTP-Posting-Host");
   l.append("Bytes");
   l.append("Lines");
   l.append("Xref");

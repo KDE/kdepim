@@ -122,6 +122,7 @@ QStringList KNScoringManager::getDefaultHeaders() const
   QStringList l = KScoringManager::getDefaultHeaders();
   l << "Lines";
   l << "References";
+  l << "NNTP-Posting-Host";
   return l;
 }
 
