@@ -23,6 +23,7 @@ class CategoryEditDialog : public CategoryEditDialog_base
 
   private slots:
     void editItem(QListViewItem *item);
+  void slotTextChanged(const QString &text);
 };
 
 #endif // CATEGORYEDITDIALOG_H

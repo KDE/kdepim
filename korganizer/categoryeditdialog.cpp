@@ -4,7 +4,7 @@
 #include <qlineedit.h>
 #include <qlistview.h>
 #include <qheader.h>
-
+#include <qpushbutton.h>
 #include "koprefs.h"
 
 #include "categoryeditdialog.h"
@@ -22,17 +22,22 @@ CategoryEditDialog::CategoryEditDialog( QWidget* parent,  const char* name, bool
   mCategories->header()->hide();
 
   QStringList::Iterator it;
-
+  bool categoriesExist=false;
   for (it = KOPrefs::instance()->mCustomCategories.begin();
        it != KOPrefs::instance()->mCustomCategories.end(); ++it ) {
     new QListViewItem(mCategories,*it);
+    categoriesExist=true;
   }
 
   connect(mCategories,SIGNAL(selectionChanged(QListViewItem *)),
           SLOT(editItem(QListViewItem *)));
+  connect(mEdit,SIGNAL(textChanged ( const QString & )),this,SLOT(slotTextChanged(const QString &)));
+  mButtonRemove->setEnabled(categoriesExist);
+  mButtonModify->setEnabled(categoriesExist);
+  mButtonAdd->setEnabled(!mEdit->text().isEmpty());
 }
 
-/*  
+/*
  *  Destroys the object and frees any allocated resources
  */
 CategoryEditDialog::~CategoryEditDialog()
@@ -40,11 +45,18 @@ CategoryEditDialog::~CategoryEditDialog()
     // no need to delete child widgets, Qt does it all for us
 }
 
+void CategoryEditDialog::slotTextChanged(const QString &text)
+{
+    mButtonAdd->setEnabled(!text.isEmpty());
+}
+
 void CategoryEditDialog::add()
 {
   if (!mEdit->text().isEmpty()) {
     new QListViewItem(mCategories,mEdit->text());
     mEdit->setText("");
+    mButtonRemove->setEnabled(mCategories->childCount()>0);
+    mButtonModify->setEnabled(mCategories->childCount()>0);
   }
 }
 
@@ -52,6 +64,8 @@ void CategoryEditDialog::remove()
 {
   if (mCategories->currentItem()) {
     delete mCategories->currentItem();
+    mButtonRemove->setEnabled(mCategories->childCount()>0);
+    mButtonModify->setEnabled(mCategories->childCount()>0);
   }
 }
 
@@ -79,13 +93,15 @@ void CategoryEditDialog::slotApply()
     KOPrefs::instance()->mCustomCategories.append(item->text(0));
     item = item->nextSibling();
   }
-  
+
   emit categoryConfigChanged();
 }
 
 void CategoryEditDialog::editItem(QListViewItem *item)
 {
   mEdit->setText(item->text(0));
+  mButtonRemove->setEnabled(true);
+  mButtonModify->setEnabled(true);
 }
 
 #include "categoryeditdialog.moc"
