@@ -1,0 +1,53 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=ServiceType
+X-KDE-ServiceType=KitchenSync/Konnector
+Comment=Konnector Definitions
+Comment[bs]=Definicije Konnectora
+Comment[cs]=Definice konektorů
+Comment[da]=Konnector-definitioner
+Comment[de]=Konnector-Definitionen
+Comment[el]=Ορισμοί Konnector
+Comment[eo]=Konektilo-agordo
+Comment[es]=Definiciones de Konnector
+Comment[et]=Konnector definitsioonid
+Comment[fi]=Konnector määritykset
+Comment[fr]=Description de Konnector
+Comment[he]=הגדרות Konnector
+Comment[hr]=Definicije Konnector-a
+Comment[hu]=Konnector-definíciók
+Comment[it]=Definizioni di Konnector
+Comment[ja]=Konnector 定義
+Comment[lt]=Konnector nustatymai
+Comment[mt]=Definizzjonijiet Konnector
+Comment[nb]=Tilpass tilknytning
+Comment[nl]=Konnector-definities
+Comment[nn]=Konnector-definisjonar
+Comment[nso]=Dithlaloso tsa Mokgomaganyi
+Comment[pl]=Definicje Łącznika
+Comment[pt]=Configuração do Konnector
+Comment[pt_BR]=Definições do Konnector
+Comment[ru]=Определения Konnector
+Comment[sk]=Definície Konnector
+Comment[sv]=Anpassa Konnector
+Comment[tr]=Konnector Tanımlamaları
+Comment[ven]=Dzithalutshedzo dza Konnector
+Comment[xh]=Iinkcazelo ze Konnector
+Comment[zh_CN]=Konnector 定义
+Comment[zh_TW]=Kontour 定義
+Comment[zu]=Izincazelo ze-Konnector
+Name=Konnector
+Name[bg]=Конектор
+Name[cs]=Konektor
+Name[eo]=Konektilo
+Name[nb]=Tilknytning
+Name[nso]=Mokgomaganyi
+Name[pl]=Łącznik
+[PropertyDef::Group]
+Type=QString
+
+[PropertyDef::Vendor]
+Type=QString
+
+[PropertyDef::Id]
+Type=QString
