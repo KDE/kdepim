@@ -71,6 +71,9 @@ convertqtopia_LDADD = libkcal.la
 servicedir = $(kde_servicesdir)/kresources/kcal
 service_DATA = local.desktop localdir.desktop kabc.desktop
 
+manager_DATA = kcal_manager.desktop
+managerdir = $(kde_servicesdir)/kresources
+
 METASOURCES = AUTO
 
 messages: rc.cpp
