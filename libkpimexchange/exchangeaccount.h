@@ -50,6 +50,10 @@ class ExchangeAccount : public QObject {
     KURL baseURL();
     KURL calendarURL();
 
+    //  Put authentication info in KDE password store for auto-authentication
+    //  with later webdav access
+    void authenticate();
+
   private:
     QString mHost;
     QString mAccount;

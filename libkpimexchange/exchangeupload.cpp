@@ -66,6 +66,7 @@ ExchangeUpload::ExchangeUpload( KCal::Event* event, ExchangeAccount* account )
   kdDebug() << "Called ExchangeUpload" << endl;
 
   mAccount = account;
+  account->authenticate();
   m_currentUpload = event;
   m_currentUploadNumber = 0;
 
@@ -132,8 +133,6 @@ void ExchangeUpload::tryExist()
     url.addPath( m_currentUpload->summary() + "-" + QString::number( m_currentUploadNumber ) + ".EML" );
 
   kdDebug() << "Trying to see whether " << url.prettyURL() << " exists" << endl;
-  url.setUser( mAccount->account() );
-  url.setPass( mAccount->password() );
  
   QDomDocument doc;
   QDomElement root = addElement( doc, doc, "DAV:", "propfind" );
@@ -278,8 +277,6 @@ void ExchangeUpload::startUpload( KURL& url )
   }
   kdDebug() << doc.toString() << endl;
 
-  url.setUser( mAccount->account() );
-  url.setPass( mAccount->password() );
   KIO::DavJob *job2 = KIO::davPropPatch( url, doc, false );
   connect( job2, SIGNAL( result( KIO::Job * ) ), this, SLOT( slotPatchResult( KIO::Job * ) ) );
 }

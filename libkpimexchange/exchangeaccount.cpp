@@ -18,11 +18,18 @@
 */
 
 #include <qstring.h>
+#include <qapplication.h>
+#include <qwidgetlist.h>
+#include <qwidget.h>
+
 #include <kurl.h>
 #include <kapplication.h>
 #include <kconfig.h>
+#include <dcopclient.h>
+#include <kio/authinfo.h>
 
 #include "exchangeaccount.h"
+
 using namespace KPIM;
 
 ExchangeAccount::ExchangeAccount( QString& host, QString& account, QString& password )
@@ -41,12 +48,21 @@ ExchangeAccount::~ExchangeAccount()
 {
 }
 
+QString endecryptStr( const QString &aStr ) 
+{
+  QString result;
+  for (uint i = 0; i < aStr.length(); i++)
+    result += (aStr[i].unicode() < 0x20) ? aStr[i] :
+      QChar(0x1001F - aStr[i].unicode());
+  return result;
+}
+
 void ExchangeAccount::save( QString const& group )
 {
   kapp->config()->setGroup( group );
   kapp->config()->writeEntry( "host", mHost );
   kapp->config()->writeEntry( "user", mAccount );
-  kapp->config()->writeEntry( "password", mPassword );
+  kapp->config()->writeEntry( "MS-ID", endecryptStr( mPassword ) );
   kapp->config()->sync();
 }
 
@@ -64,7 +80,7 @@ void ExchangeAccount::load( QString const& group )
     mAccount = user;
   }
 
-  QString password = kapp->config()->readEntry( "password" );
+  QString password = endecryptStr( kapp->config()->readEntry( "MS-ID" ) );
   if ( ! password.isNull() ) {
     mPassword = password;
   }
@@ -73,10 +89,7 @@ void ExchangeAccount::load( QString const& group )
 KURL ExchangeAccount::baseURL()
 {
   KURL url = KURL( "webdav://" + mHost + "/exchange/" + mAccount );
-  url.setUser( mAccount );
-  url.setPass( mPassword );
   return url;
-  
 }
 
 KURL ExchangeAccount::calendarURL()
@@ -84,5 +97,24 @@ KURL ExchangeAccount::calendarURL()
   KURL url = baseURL();
   url.addPath( "Calendar" );
   return url;
+}
+
+void ExchangeAccount::authenticate()
+{
+    KIO::AuthInfo info;
+    info.url = baseURL();
+    info.username = mAccount;
+    info.password = mPassword;
+
+    QByteArray params;
+    long windowId = QApplication::topLevelWidgets()->first()->winId();
+
+    DCOPClient *dcopClient = new DCOPClient();
+    dcopClient->attach();
+
+    QDataStream stream(params, IO_WriteOnly);
+    stream << info << windowId;
+
+    dcopClient->send( "kded", "kpasswdserver", "addAuthInfo(KIO::AuthInfo, long int)", params );
 }
 

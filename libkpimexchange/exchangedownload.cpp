@@ -72,6 +72,8 @@ ExchangeDownload::ExchangeDownload(KCal::Calendar* calendar, ExchangeAccount* ac
   mCalendar = calendar;
   mAccount = account;
 
+  account->authenticate();
+
   if( showProgress ) {
     ExchangeProgress *progress = new ExchangeProgress();
   
@@ -185,8 +187,6 @@ void ExchangeDownload::handleAppointments( const QDomDocument& response, bool re
       QString href = hrefElement.text();
       KURL url(href);
       url.setProtocol("webdav");
-      url.setUser( mAccount->account() );
-      url.setPass( mAccount->password() );
       
       kdDebug() << "GET url: " << url.prettyURL() << endl;
     
