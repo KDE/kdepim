@@ -5,14 +5,15 @@
 <sect1 id="plugins-chapter-overview">
 <title>Overview</title>
 <para>
-&korganizer; provides you the possibility of extending the applications with plugins.
+&korganizer; provides you the possibility of extending the application with plugins.
 </para>
 </sect1>
 
 <sect1 id="plugins-chapter-configuration">
 <title>Configuration</title>
 <para>
-	
+	The plugins for &korganizer; can be configured under <menuchoice><guimenu>Settings</guimenu><guimenuitem>
+Configure Plugins</guimenuitem></menuchoice>.
 </para>
 </sect1>
 
@@ -36,7 +37,8 @@
 <sect2 id="holiday-plugin">
 <title>Holiday plugin for Calendars</title>
 <para>
-	
+	The holiday plugin provides you with a set of country-specific holidays.
+	In the configuration dialog of the plugin you are able to select the country the holidays of which will be inserted into your calendar.
 </para>
 </sect2>
 
@@ -50,7 +52,8 @@
 <sect2 id="microsoft-exchange-2000-plugin">
 <title>Microsoft Exchange 2000 plugin for KOrganizer</title>
 <para>
-	
+	The Exchange 2000 plugin enables you to place a calendar resource on an Exchange 2000 server.
+	Please note that you need to have Outlook Web Access enabled to activate the WebDAV access &korganizer; uses to connect to the Exchange 2000 server.
 </para>
 </sect2>
 
@@ -64,7 +67,8 @@
 <sect2 id="web-export-plugin">
 <title>Web export plugin for &korganizer;</title>
 <para>
-	
+	The web export plugin makes it possible to export your calendar to an HTML page.
+	After having activated the plugin in the configuration dialog you'll find the menu entry to export your calendar under <menuchoice><guimenu>File</guimenu><guimenuitem>Export</guimenuitem><guimenuitem>Export Web Page...</guimenuitem></menuchoice>.
 </para>
 </sect2>
 
