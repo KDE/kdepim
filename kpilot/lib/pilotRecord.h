@@ -41,6 +41,7 @@
 class PilotRecord
 {
 public:
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 	// This constructor makes a copy of the data buffer
 	PilotRecord(void* data, int len, int attrib, int cat, pi_uid_t uid);
 #ifdef HANDOFF_BUFFERS
@@ -49,15 +50,38 @@ public:
 		fData(data),fLen(len),fAttrib(attrib),
 		fCat(cat),fID(uid) { fAllocated++; } ;
 #endif
-	PilotRecord(PilotRecord* orig);
 	~PilotRecord() { delete [] fData; fDeleted++; }
+
+
+	char* getData() const { return fData; }
+	int   getLen() const { return fLen; }
+
+#else
+	PilotRecord(pi_buffer_t *b, int attrib, int cat, recordid_t id) :
+		fBuffer(b),
+		fAttrib(attrib),
+		fCat(cat),
+		fID(id)
+	{
+		fAllocated++;
+		if (b)
+		{
+			fLen = b->used;
+		}
+	}
+	~PilotRecord() { if (fBuffer) { pi_buffer_free(fBuffer); fBuffer=0L; } fDeleted++; }
+
+
+	char* getData() const { return fBuffer->data; }
+	int   getLen() const { return fBuffer->used; }
+#endif
+	PilotRecord(PilotRecord* orig);
 
 	enum { APP_BUFFER_SIZE = 0xffff } ;
 
 	PilotRecord& operator=(PilotRecord& orig);
 
-	char* getData() const { return fData; }
-	int   getLen() const { return fLen; }
+
 	void setData(const char* data, int len);
 	inline int   getAttrib() const { return fAttrib; }
 	inline void  setAttrib(int attrib) { fAttrib = attrib; }
@@ -72,8 +96,12 @@ public:
 	void setID(recordid_t id) { fID = id; }
 
 private:
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 	char* fData;
 	int   fLen;
+#else
+	pi_buffer_t *fBuffer;
+#endif
 	int   fAttrib;
 	int   fCat;
 	recordid_t fID;

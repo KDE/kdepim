@@ -44,7 +44,9 @@ static const char *kpilotlink_id = "$Id$";
 #include <pi-socket.h>
 #include <pi-dlp.h>
 #include <pi-file.h>
-
+#if !(PILOT_LINK_NUMBER < PILOT_LINK_0_12_0)
+#include <pi-buffer.h>
+#endif
 
 #include <qdir.h>
 #include <qtimer.h>
@@ -302,7 +304,6 @@ bool KPilotDeviceLink::open(QString device)
 {
 	FUNCTIONSETUPL(2);
 
-	struct pi_sockaddr addr;
 	int ret;
 	int e = 0;
 	QString msg;
@@ -376,6 +377,8 @@ bool KPilotDeviceLink::open(QString device)
 	DEBUGDAEMON << fname << ": Binding to path " << fPilotPath << endl;
 #endif
 
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
+	struct pi_sockaddr addr;
 #if PILOT_LINK_NUMBER < PILOT_LINK_0_10_0
 	addr.pi_family = PI_AF_SLP;
 #else
@@ -385,6 +388,9 @@ bool KPilotDeviceLink::open(QString device)
 
 	ret = pi_bind(fPilotMasterSocket,
 		(struct sockaddr *) &addr, sizeof(addr));
+#else
+	ret = pi_bind(fPilotMasterSocket, QFile::encodeName(device));
+#endif
 
 	if (ret >= 0)
 	{
@@ -806,7 +812,11 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 		return false;
 	}
 
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 	if (pi_file_install(pf, fCurrentPilotSocket, 0) < 0)
+#else
+	if (pi_file_install(pf, fCurrentPilotSocket, 0, 0L) < 0)
+#endif
 	{
 		kdWarning() << k_funcinfo
 			<< ": Cannot pi_file_install " << f << endl;
@@ -907,7 +917,17 @@ int KPilotDeviceLink::getNextDatabase(int index,struct DBInfo *dbinfo)
 {
 	FUNCTIONSETUP;
 
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 	return dlp_ReadDBList(pilotSocket(),0,dlpDBListRAM,index,dbinfo);
+#else
+	pi_buffer_t buf = { 0,0,0 };
+	int r = dlp_ReadDBList(pilotSocket(),0,dlpDBListRAM,index,&buf);
+	if (r >= 0)
+	{
+		memcpy(dbinfo,buf.data,sizeof(struct DBInfo));
+	}
+	return r;
+#endif
 }
 
 // Find a database with the given name. Info about the DB is stored into dbinfo (e.g. to be used later on with retrieveDatabase).
@@ -947,7 +967,11 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 		return false;
 	}
 
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 	if (pi_file_retrieve(f, pilotSocket(), 0) < 0)
+#else
+	if (pi_file_retrieve(f, pilotSocket(), 0, 0L) < 0)
+#endif
 	{
 		kdWarning() << k_funcinfo
 			<< ": Failed, unable to back up database" << endl;
@@ -968,6 +992,7 @@ QPtrList<DBInfo> KPilotDeviceLink::getDBList(int cardno, int flags)
 	int index=0;
 	while (cont)
 	{
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 		DBInfo*dbi=new DBInfo();
 		if (dlp_ReadDBList(pilotSocket(), cardno, flags, index, dbi)<0)
 		{
@@ -979,6 +1004,34 @@ QPtrList<DBInfo> KPilotDeviceLink::getDBList(int cardno, int flags)
 			index=dbi->index+1;
 			dbs.append(dbi);
 		}
+#else
+		pi_buffer_t buf = { 0,0,0 };
+		pi_buffer_clear(&buf);
+		// DBInfo*dbi=new DBInfo();
+		if (dlp_ReadDBList(pilotSocket(), cardno, flags | dlpDBListMultiple, index, &buf)<0)
+		{
+			cont=false;
+		}
+		else
+		{
+			DBInfo *db_n = 0L;
+			DBInfo *db_it = (DBInfo *)buf.data;
+			int info_count = buf.used / sizeof(struct DBInfo);
+
+			while(info_count>0)
+			{
+				db_n = new DBInfo();
+				memcpy(db_n,db_it,sizeof(struct DBInfo));
+				++db_it;
+				info_count--;
+				dbs.append(db_n);
+			}
+			if (db_n)
+			{
+				index=db_n->index+1;
+			}
+		}
+#endif
 	}
 	return dbs;
 }

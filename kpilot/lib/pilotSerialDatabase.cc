@@ -160,20 +160,41 @@ PilotRecord *PilotSerialDatabase::readRecordById(recordid_t id)
 PilotRecord *PilotSerialDatabase::readRecordByIndex(int index)
 {
 	FUNCTIONSETUP;
-	char buffer[PilotRecord::APP_BUFFER_SIZE];
-	PI_SIZE_T size;
-	int attr, category;
-	recordid_t id;
 
 	if (isDBOpen() == false)
 	{
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return 0L;
 	}
+
+	int attr, category;
+	recordid_t id;
+	PilotRecord *rec = 0L;
+
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
+	char buffer[PilotRecord::APP_BUFFER_SIZE];
+	PI_SIZE_T size;
+
 	if (dlp_ReadRecordByIndex(fDBSocket, getDBHandle(), index,
-			(void *) buffer, &id, &size, &attr, &category) >= 0)
-		return new PilotRecord(buffer, size, attr, category, id);
-	return 0L;
+			buffer, &id, &size, &attr, &category) >= 0)
+	{
+		rec = new PilotRecord(buffer, size, attr, category, id);
+	}
+#else
+	pi_buffer_t *bufptr = pi_buffer_new(PilotRecord::APP_BUFFER_SIZE);
+	if (dlp_ReadRecordByIndex(fDBSocket, getDBHandle(), index,
+		bufptr, &id, &attr, &category) >= 0)
+	{
+		rec = new PilotRecord(bufptr, size, attr, category, id);
+	}
+	else
+	{
+		pi_buffer_free(bufptr);
+	}
+#endif
+
+
+	return rec;
 }
 
 // Reads the next record from database in category 'category'
