@@ -168,6 +168,10 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( QWidget 
   connect( mAddNewServersCB, SIGNAL( clicked() ), this, SLOT( slotChanged() ) );
   lay->addWidget( mAddNewServersCB );
 #endif
+
+#ifndef HAVE_UNBROKEN_KCMULTIDIALOG
+  load();
+#endif
 }
 
 void DirectoryServicesConfigurationPage::load()

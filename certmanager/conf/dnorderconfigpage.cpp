@@ -43,6 +43,10 @@ DNOrderConfigPage::DNOrderConfigPage( QWidget * parent, const char * name )
   vlay->addWidget( mWidget );
 
   connect( mWidget, SIGNAL(changed()), SLOT(slotChanged()) );
+
+#ifndef HAVE_UNBROKEN_KCMULTIDIALOG
+  load();
+#endif
 }
 
 

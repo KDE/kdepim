@@ -44,6 +44,10 @@ AppearanceConfigurationPage::AppearanceConfigurationPage( QWidget * parent, cons
   mWidget = new Kleo::AppearanceConfigWidget( this );
   lay->addWidget( mWidget );
   connect( mWidget, SIGNAL( changed() ), this, SLOT( slotChanged() ) );
+
+#ifndef HAVE_UNBROKEN_KCMULTIDIALOG
+  load();
+#endif
 }
 
 
