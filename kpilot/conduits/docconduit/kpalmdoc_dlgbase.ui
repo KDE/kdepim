@@ -300,7 +300,7 @@
                     <cstring>tab</cstring>
                 </property>
                 <attribute name="title">
-                    <string>Handheld -&gt;PC</string>
+                    <string>Handheld -&gt; PC</string>
                 </attribute>
                 <grid>
                     <property name="name">
