@@ -29,7 +29,7 @@
 
 
 #define KMAILCVT_VERSION " v2.1"
-#define KMAILCVT         "KMail & K Addressbook import filters"
+#define KMAILCVT         "KMail & K Addressbook Import Filters"
 
 void procEvents(void);
 int  dcopAddMessage(QString folderName,QString message);
