@@ -85,7 +85,7 @@ private:
 	EConflictResolution getResolveConflictOption() const { return fConflictResolution; }
 	bool doSmartMerge() const { return fSmartMerge; }
 	
-	EConflictResolution getEntryResolution(const KABC::Addressee & abEntry, const PilotAddress &pilotAddress);
+	EConflictResolution getEntryResolution(const KABC::Addressee & abEntry, const PilotAddress &backupAddress, const PilotAddress & pilotAddress);
 	EConflictResolution getFieldResolution(const QString &entry, const QString &field, const QString &palm, const QString &backup, const QString &pc);
 	EConflictResolution ResolutionDialog(QString Title, QString Text, QStringList &lst, QString remember="", bool*rem=0L) const;
 
@@ -145,6 +145,7 @@ private:
 	void _removePilotAddress(PilotAddress &address);
 	void _removeAbEntry(KABC::Addressee addressee);
 	KABC::Addressee _saveAbEntry(KABC::Addressee &abEntry);
+	void _checkDelete(PilotRecord *r, PilotRecord *s);
 
    /** 
 	*  @return true if the abbEntry's pilot id was changed 
@@ -228,6 +229,9 @@ private:
 
 
 // $Log$
+// Revision 1.27  2002/10/05 13:59:29  kainhofe
+// duplication now works as conflict resolution. Removed the warning in the setup dialog.
+//
 // Revision 1.26  2002/09/12 13:58:20  kainhofe
 // some more fixes, still does not do any sync unless compiled with -NDO_DANGEROUS_ABOOK_SYNC . Most things work, except for several conflict resolution settings
 //
