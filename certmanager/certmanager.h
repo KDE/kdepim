@@ -1,4 +1,4 @@
-/*
+/* -*- mode: c++; c-basic-offset:4 -*-
     certmanager.h
 
     This file is part of Kleopatra, the KDE keymanager
@@ -37,7 +37,7 @@
 
 #include <kmainwindow.h>
 
-#include <qstring.h>
+#include <kurl.h>
 #include <qcstring.h>
 #include <qptrlist.h>
 
@@ -86,7 +86,7 @@ signals:
     void enableOperations( bool );
 
 private slots:
-    void slotStartCertificateDownload( const QString & fingerprint );
+    void slotStartCertificateDownload( const QString & fingerprint, const QString& displayName );
     void slotStartCertificateListing();
     void newCertificate();
     void revokeCertificate();
@@ -126,18 +126,21 @@ private slots:
     void slotEditKeybindings();
     void slotShowConfigurationDialog();
     void slotContextMenu(Kleo::KeyListViewItem*, const QPoint& point);
+    void slotDropped(const KURL::List&);
 
 private:
     void createStatusBar();
     void createActions();
     void updateStatusBarLabels();
     void updateImportActions( bool enable );
-    void startCertificateImport( const QByteArray & keyData );
+    void startCertificateImport( const QByteArray & keyData, const QString& certDisplayName );
     void startImportCRL( const QString& fileName, bool isTempFile );
     void startSecretKeyExport( const QString & fingerprint );
     void startCertificateExport( const QStringList & fingerprints );
     void connectJobToStatusBarProgress( Kleo::Job * job, const QString & initialText );
     void disconnectJobFromStatusBarProgress( const GpgME::Error & err );
+    void importNextURL();
+    QString displayNameForJob( const Kleo::Job *job );
 
 private:
     Kleo::KeyListView * mKeyListView;
@@ -148,6 +151,9 @@ private:
     KProcess * mDirmngrProc;
     QString mErrorbuffer;
     QPtrList<Kleo::KeyListViewItem> mItemsToDelete;
+    KURL::List mURLsToImport;
+    typedef QMap<const Kleo::Job *, QString> JobsDisplayNameMap;
+    JobsDisplayNameMap mJobsDisplayNameMap;
 
     LineEditAction * mLineEditAction;
     ComboAction * mComboAction;

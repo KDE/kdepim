@@ -36,6 +36,7 @@
 
 #include "certmanager.h"
 
+#include "certlistview.h"
 #include "certificatewizardimpl.h"
 #include "certificateinfowidgetimpl.h"
 #include "crlview.h"
@@ -56,7 +57,6 @@
 
 #include <ui/progressdialog.h>
 #include <ui/progressbar.h>
-#include <ui/keylistview.h>
 #include <ui/keyselectiondialog.h>
 
 // GPGME++
@@ -150,8 +150,8 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
     mFindAction( 0 ),
     mImportCertFromFileAction( 0 ),
     mImportCRLFromFileAction( 0 ),
-    mRemote( remote ),
     mNextFindRemote( false ),
+    mRemote( remote ),
     mDirMngrFound( false )
 {
   createStatusBar();
@@ -161,7 +161,7 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
   setAutoSaveSettings();
 
   // Main Window --------------------------------------------------
-  mKeyListView = new Kleo::KeyListView( new ColumnStrategy(), new DisplayStrategy(), this, "mKeyListView" );
+  mKeyListView = new CertKeyListView( new ColumnStrategy(), new DisplayStrategy(), this, "mKeyListView" );
   mKeyListView->setSelectionMode( QListView::Extended );
   setCentralWidget( mKeyListView );
 
@@ -173,6 +173,9 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
 	   SLOT(slotSelectionChanged()) );
   connect( mKeyListView, SIGNAL(contextMenu(Kleo::KeyListViewItem*, const QPoint&)),
            SLOT(slotContextMenu(Kleo::KeyListViewItem*, const QPoint&)) );
+
+  connect( mKeyListView, SIGNAL(dropped(const KURL::List&) ),
+           SLOT( slotDropped(const KURL::List&) ) );
 
   mLineEditAction->setText(query);
   if ( !mRemote || !query.isEmpty() )
@@ -484,19 +487,21 @@ void CertManager::slotImportResult( KIO::Job* job )
 {
   if ( job->error() ) {
     job->showErrorDialog();
-    updateImportActions( true );
-    return;
+  } else {
+    KIOext::StoredTransferJob* trJob = static_cast<KIOext::StoredTransferJob *>( job );
+    startCertificateImport( trJob->data(), trJob->url().fileName() );
   }
-  startCertificateImport( static_cast<KIOext::StoredTransferJob *>( job )->data() );
+
   updateImportActions( true );
 }
 
-static void showCertificateDownloadError( QWidget * parent, const GpgME::Error & err ) {
+static void showCertificateDownloadError( QWidget * parent, const GpgME::Error & err, const QString& certDisplayName ) {
   assert( err );
   const QString msg = i18n( "<qt><p>An error occurred while trying "
-			    "to download the certificate:</p>"
-			    "<p><b>%1</b></p></qt>" )
-    .arg( QString::fromLocal8Bit( err.asString() ) );
+			    "to download the certificate %1:</p>"
+			    "<p><b>%2</b></p></qt>" )
+                      .arg( certDisplayName )
+                      .arg( QString::fromLocal8Bit( err.asString() ) );
 
   KMessageBox::error( parent, msg, i18n( "Certificate Download Failed" ) );
 }
@@ -506,11 +511,11 @@ void CertManager::slotDownloadCertificate() {
   for ( QPtrListIterator<Kleo::KeyListViewItem> it( items ) ; it.current() ; ++it )
     if ( !it.current()->key().isNull() )
       if ( const char * fpr = it.current()->key().subkey(0).fingerprint() )
-        slotStartCertificateDownload( fpr );
+        slotStartCertificateDownload( fpr, it.current()->text(0) );
 }
 
 // Called from slotDownloadCertificate and from the certificate-details widget
-void CertManager::slotStartCertificateDownload( const QString & fingerprint ) {
+void CertManager::slotStartCertificateDownload( const QString& fingerprint, const QString& displayName ) {
   if ( fingerprint.isEmpty() )
     return;
 
@@ -525,29 +530,49 @@ void CertManager::slotStartCertificateDownload( const QString & fingerprint ) {
 
   const GpgME::Error err = job->start( fingerprint );
   if ( err )
-    showCertificateDownloadError( this, err );
-  else
+    showCertificateDownloadError( this, err, displayName );
+  else {
     mProgressBar->setProgress( 0, 0 );
+    mJobsDisplayNameMap.insert( job, displayName );
+  }
 }
 
+QString CertManager::displayNameForJob( const Kleo::Job *job )
+{
+  JobsDisplayNameMap::iterator it = mJobsDisplayNameMap.find( job );
+  QString displayName;
+  if ( it != mJobsDisplayNameMap.end() ) {
+    displayName = *it;
+    mJobsDisplayNameMap.remove( it );
+  } else {
+    kdWarning() << "Job not found in map: " << job << endl;
+  }
+  return displayName;
+}
+
+// Don't call directly!
 void CertManager::slotCertificateDownloadResult( const GpgME::Error & err, const QByteArray & keyData ) {
+
+  QString displayName = displayNameForJob( static_cast<const Kleo::Job *>( sender() ) );
+
   if ( err )
-    showCertificateDownloadError( this, err );
+    showCertificateDownloadError( this, err, displayName );
   else
-    startCertificateImport( keyData );
+    startCertificateImport( keyData, displayName );
   disconnectJobFromStatusBarProgress( err );
 }
 
-static void showCertificateImportError( QWidget * parent, const GpgME::Error & err ) {
+static void showCertificateImportError( QWidget * parent, const GpgME::Error & err, const QString& certDisplayName ) {
   assert( err );
   const QString msg = i18n( "<qt><p>An error occurred while trying "
-			    "to import the certificate:</p>"
+			    "to import the certificate %1:</p>"
 			    "<p><b>%2</b></p></qt>" )
-    .arg( QString::fromLocal8Bit( err.asString() ) );
+                      .arg( certDisplayName )
+                      .arg( QString::fromLocal8Bit( err.asString() ) );
   KMessageBox::error( parent, msg, i18n( "Certificate Import Failed" ) );
 }
 
-void CertManager::startCertificateImport( const QByteArray & keyData ) {
+void CertManager::startCertificateImport( const QByteArray & keyData, const QString& certDisplayName ) {
   Kleo::ImportJob * job = Kleo::CryptPlugFactory::instance()->smime()->importJob();
   assert( job );
 
@@ -559,16 +584,19 @@ void CertManager::startCertificateImport( const QByteArray & keyData ) {
   kdDebug() << "Importing certificate. keyData size:" << keyData.size() << endl;
   const GpgME::Error err = job->start( keyData );
   if ( err )
-    showCertificateImportError( this, err );
-  else
+    showCertificateImportError( this, err, certDisplayName );
+  else {
     mProgressBar->setProgress( 0, 0 );
+    mJobsDisplayNameMap.insert( job, certDisplayName );
+  }
 }
 
 void CertManager::slotCertificateImportResult( const GpgME::ImportResult & res ) {
+  QString displayName = displayNameForJob( static_cast<const Kleo::Job *>( sender() ) );
+
   if ( res.error() ) {
-    showCertificateImportError( this, res.error() );
-    return;
-  }
+    showCertificateImportError( this, res.error(), displayName );
+  } else {
 
   KMessageBox::information( this,
     QString( "<qt><p>%1</p>"
@@ -587,7 +615,7 @@ void CertManager::slotCertificateImportResult( const GpgME::ImportResult & res )
     "<tr><td align=right>%1</td><td>%1</td></tr>"
     "<tr><td align=right>%1</td><td>%1</td></tr>"
     "</table></qt>" )
-    .arg(i18n("Certificate imported successfully."))
+    .arg(i18n("Certificate %1 imported successfully.").arg( displayName ))
     .arg(i18n("Additional info:"))
     .arg(i18n("Total number processed:")).arg(res.numConsidered())
     .arg(i18n("imported:")).arg(res.numImported()).arg(i18n("RSA:")).arg(res.numRSAImported())
@@ -607,6 +635,9 @@ void CertManager::slotCertificateImportResult( const GpgME::ImportResult & res )
     slotStartCertificateListing();
   else
     disconnectJobFromStatusBarProgress( res.error() );
+  }
+  if ( !mURLsToImport.isEmpty() )
+    importNextURL();
 }
 
 
@@ -973,6 +1004,22 @@ void CertManager::slotUploadResult( KIO::Job* job )
 {
   if ( job->error() )
     job->showErrorDialog();
+}
+
+void CertManager::slotDropped(const KURL::List& lst)
+{
+  mURLsToImport = lst;
+  importNextURL();
+}
+
+void CertManager::importNextURL()
+{
+  if ( !mURLsToImport.isEmpty() ) {
+    // We can only import them one by one, otherwise the jobs would run into each other
+    KURL url = mURLsToImport.front();
+    mURLsToImport.pop_front();
+    slotImportCertFromFile( url );
+  }
 }
 
 #include "certmanager.moc"

@@ -12,7 +12,7 @@ kleopatra_SOURCES = \
 	main.cpp certmanager.cpp \
 	certificatewizard.ui certificatewizardimpl.cpp \
 	certificateinfowidget.ui certificateinfowidgetimpl.cpp \
-	crlview.cpp storedtransferjob.cpp
+	crlview.cpp storedtransferjob.cpp certlistview.cpp
 
 METASOURCES = AUTO
 
