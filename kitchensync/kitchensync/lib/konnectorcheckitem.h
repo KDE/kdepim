@@ -38,8 +38,24 @@ namespace KSync {
          * if the konnector currently is loaded
          */
         bool isLoaded()const;
+	
+	/**
+	 * bool was edited
+	 */
+	bool wasEdited()const;
+	 
+	 /**
+	  *
+	  */
+	void setEdited( bool b );
+	 
+	/**
+	 *
+	 */
+	void setProfile( const KonnectorProfile& );
     private:
         KonnectorProfile m_prof;
+	bool m_edit :1 ;
 
     };
 

@@ -35,6 +35,8 @@ KonnectorDialog::KonnectorDialog( const KonnectorProfile::ValueList& list, Konne
              this, SLOT( slotAdd() ) );
     connect( m_base->btnRemove, SIGNAL( clicked() ),
              this, SLOT( slotRemove() ) );
+    connect( m_base->btnEdit, SIGNAL( clicked() ),
+	     this, SLOT(slotEdit() ) );
 }
 KonnectorDialog::~KonnectorDialog() {
     m_base->lstView->clear();
@@ -68,6 +70,17 @@ KonnectorProfile::ValueList KonnectorDialog::toLoad()const {
 
     return list;
 }
+KonnectorProfile::ValueList KonnectorDialog::edited()const {
+    QPtrList<KonnectorCheckItem> items  = list2list();
+    KonnectorProfile::ValueList list;
+    KonnectorCheckItem* item;
+    for( item = items.first(); item != 0; item = items.next() ){
+        /* if marked as loaded and is currently loaded... and it is edited... */
+	if( item->isOn() && !item->profile().udi().isEmpty() && item->wasEdited() )
+		list.append( item->profile() );
+    }
+    return list;
+}
 KonnectorProfile::ValueList KonnectorDialog::devices()const {
     return list();
 }
@@ -98,6 +111,10 @@ KonnectorProfile::ValueList KonnectorDialog::removed() const {
 
     return deleted;
 }
+/*
+ * converts the list of KonnectorCheckItem
+ * into a QPtrList
+ */
 QPtrList<KonnectorCheckItem> KonnectorDialog::list2list() const {
     QPtrList<KonnectorCheckItem> list;
     QListViewItemIterator it( m_base->lstView );
@@ -126,6 +143,16 @@ void KonnectorDialog::slotAdd() {
     if ( wiz.exec() ) {
         new KonnectorCheckItem( m_base->lstView, wiz.profile() );
     }
+}
+void KonnectorDialog::slotEdit() {
+    KonnectorCheckItem* item = static_cast<KonnectorCheckItem*> ( m_base->lstView->selectedItem() );
+    if(!item ) return;
+    
+    KonnectorWizard wiz(m_manager, item->profile() );
+    if( wiz.exec() != QDialog::Accepted ) return;
+    
+    item->setEdited( true );
+    item->setProfile( wiz.profile() );
 }
 void KonnectorDialog::slotRemove() {
     KonnectorCheckItem* item = (KonnectorCheckItem*) m_base->lstView->selectedItem();

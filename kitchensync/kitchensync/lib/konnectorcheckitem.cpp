@@ -10,6 +10,7 @@ KonnectorCheckItem::KonnectorCheckItem( QListView* parent,  const KonnectorProfi
     setText(1, prof.name() );
     if (!prof.udi().isNull() )
         setOn( true );
+    m_edit = false;
 }
 KonnectorCheckItem::~KonnectorCheckItem() {
 
@@ -33,4 +34,13 @@ bool KonnectorCheckItem::unload() const {
 }
 bool KonnectorCheckItem::isLoaded() const {
     return (!m_prof.udi().isNull() ); // if udi != null it's loaded
+}
+bool KonnectorCheckItem::wasEdited()const {
+    return m_edit;
+}
+void KonnectorCheckItem::setEdited( bool b ){
+    m_edit = b;
+}
+void KonnectorCheckItem::setProfile( const KonnectorProfile& prof ){
+    m_prof = prof;
 }

@@ -47,11 +47,16 @@ namespace KSync {
          * guess it! Wrong! The removed devices/profiles
          */
         KonnectorProfile::ValueList removed() const;
+	
+	/**
+	 * the edited devices...which are also loaded...
+	 */
+	KonnectorProfile::ValueList edited()const;
 
     protected slots:
         virtual void slotRemove();
         virtual void slotAdd();
-
+	virtual void slotEdit();
     private:
         KonnectorProfile::ValueList m_list;
         KonnectorManager* m_manager;

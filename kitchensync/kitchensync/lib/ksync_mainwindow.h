@@ -96,6 +96,7 @@ namespace KSync {
                            KonnectorProfile::ValueList& items );
         void loadUnloaded( const KonnectorProfile::ValueList& toLoad,
                            KonnectorProfile::ValueList& items );
+	void updateEdited( const KonnectorProfile::ValueList& edited );			
 
 
     signals:

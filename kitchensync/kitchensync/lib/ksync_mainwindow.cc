@@ -327,6 +327,7 @@ void KSyncMainWindow::slotConfigure() {
         removeDeleted(dlg.removed() );
         loadUnloaded( dlg.toLoad(), all );
         unloadLoaded( dlg.toUnload(), all );
+	updateEdited( dlg.edited() );
 
         /* the rest and unchanged items */
         for ( KonnectorProfile::ValueList::Iterator it = all.begin();
@@ -391,6 +392,19 @@ void KSyncMainWindow::unloadLoaded( const KonnectorProfile::ValueList& list,
         }
     }
 }
+/*
+ * update edited updates the kapabilities of the currently loaded
+ * konnectors..
+ */
+void KSyncMainWindow::updateEdited( const KonnectorProfile::ValueList& list ){
+    KonnectorProfile::ValueList::ConstIterator it;
+    for( it = list.begin(); it != list.end(); ++it ){
+	m_konnector->setCapabilities( (*it).udi(), (*it).kapabilities() );
+    
+    }
+}
+
+
 void KSyncMainWindow::slotActivated(ManipulatorPart *part) {
     emit partChanged( part );
     m_stack->raiseWidget(part->widget() );

@@ -14,28 +14,52 @@
 
 using namespace KSync;
 
+namespace {
+    const int AREA = 5210;
+
+    void setCurrent( const QString& str, QComboBox* box, bool insert = true ) {
+        if (str.isEmpty() ) return;
+        uint b = box->count();
+        for ( uint i = 0; i < b; i++ ) {
+            if ( box->text(i) == str ) {
+                box->setCurrentItem(i );
+                return;
+            }
+        }
+        if (!insert ) return;
+
+        box->insertItem( str );
+        box->setCurrentItem( b );
+    }
+}
 
 
 KonnectorWizard::KonnectorWizard(KonnectorManager* manager)
     : KWizard(0, "wizard", true), m_manager( manager ) {
+    m_isEdit = false;
     m_conf = 0;
-    m_free = true;
     initUI();
 }
 KonnectorWizard::KonnectorWizard(KonnectorManager* manager,
-                                 const KonnectorProfile& /*prof*/)
+                                 const KonnectorProfile& prof)
     : KWizard(0, "wizard", true ), m_manager( manager) {
+    m_isEdit = true;
+    m_kaps = prof.kapabilities();
     m_conf = 0;
-    m_free = false;
     initUI();
-    initKap();
+
+    /* init the ui */
+    m_outro->lneName->setText( prof.name() );
+    kdDebug(AREA) << "Current Identify is " << prof.device().name() << " " << prof.device().identify() << endl;
+    setCurrent( prof.device().name(), m_intro->cmbDevice, false );
+    kdDebug(AREA) << "Current entry is now  " << m_intro->cmbDevice->currentText() << endl;
+    slotKonChanged( m_intro->cmbDevice->currentText() );
 }
 KonnectorWizard::~KonnectorWizard() {
-
 }
 KonnectorProfile KonnectorWizard::profile()const {
     KonnectorProfile prof;
-    if (m_conf != 0 ) {
+    if (m_conf) {
         prof.setKapabilities( m_conf->capabilities() );
         prof.setDevice( byString( m_intro->cmbDevice->currentText()   ) );
         prof.setName( m_outro->lneName->text() );
@@ -62,20 +86,16 @@ void KonnectorWizard::initUI() {
     m_current =i18n("Please choose a Konnector");
     m_intro->cmbDevice->insertItem( m_current  );
     for (it = list.begin(); it != list.end(); ++it ) {
-        m_intro->cmbDevice->insertItem( (*it).identify() );
-        m_devices.insert( (*it).identify(), (*it) );
-
+	kdDebug(AREA) << "Inserting into Combo " << (*it).name() << " " << (*it).identify() << endl;
+        m_intro->cmbDevice->insertItem( (*it).name() );
+        m_devices.insert( (*it).name(), (*it) );
     }
     // connect to textchanges
     connect(m_intro->cmbDevice, SIGNAL(activated(const QString&) ),
             this, SLOT(slotKonChanged(const QString&) ) );
 }
-void KonnectorWizard::initKap() {
-
-
-}
 /*
- * If the Device Combobox changes we need to update the
+ * If the Device Combobox changed we need to update the
  * Configuration Tab
  * First check tif the selection changed
  * Then check if the selection changed to the Kapabilities
@@ -97,23 +117,21 @@ void KonnectorWizard::slotKonChanged( const QString& str) {
     m_conf = 0;
 
     Device dev = byString( str );
-    if (m_free ) { // add
-        // load the Konnector for getting a ConfigureWidget
-        QString udi = m_manager->load( dev );
-        if (udi.isEmpty() ) return;
+
+    // load the Konnector for getting a ConfigureWidget
+    QString udi = m_manager->load( dev );
+    if (udi.isEmpty() ) return;
+
+    if(!m_isEdit)
         m_conf = m_manager->configWidget(udi, this, "config"); // never 0l
-        insertPage(m_conf, i18n("Configure"), 1 );
-        m_manager->unload( udi );
-    }
+    else
+        m_conf = m_manager->configWidget(udi, m_kaps,this,"config");
+
+    insertPage(m_conf, i18n("Configure"), 1 );
+    m_manager->unload( udi );
 }
 Device KonnectorWizard::byString( const QString& str )const {
-    Device dev;
-
-    if ( m_devices.contains( str ) ) {
-        QMap<QString,Device>::ConstIterator it = m_devices.find( str );
-        dev = it.data();
-    }
-    return dev;
+    return m_devices[str];
 }
 
 

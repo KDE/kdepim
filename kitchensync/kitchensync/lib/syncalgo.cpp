@@ -67,7 +67,9 @@ void PIMSyncAlg::syncFirst( Syncee* syncee,
                 // Entries are different, resolve conflict
                 if (override && targetEntry->state() != SyncEntry::Removed ) {
                     // Force override
-		    kdDebug(5231) << "override" << endl;
+		    kdDebug(5231) << "overriding and merging!" << endl;
+		    // we try to keep as much attributes as possible
+		    sourceEntry->mergeWith( targetEntry );
                     target->replaceEntry(targetEntry,sourceEntry->clone() );
                 } else {
                     if (syncee->hasChanged(sourceEntry) &&
@@ -78,15 +80,23 @@ void PIMSyncAlg::syncFirst( Syncee* syncee,
                         // Both entries have changed
                         SyncEntry *result = deconflict(sourceEntry,targetEntry);
                         if (result == sourceEntry) {
+			    kdDebug(5231) << "Merging and then replacing!" << endl;
+			    sourceEntry->mergeWith( targetEntry );
                             target->replaceEntry(targetEntry,sourceEntry->clone() );
-                        }
+                        }else
+                            targetEntry->mergeWith( sourceEntry );
+
                     } else if (syncee->hasChanged(sourceEntry) &&
                                !target->hasChanged(targetEntry)) {
                         // take source entry
+                        kdDebug(5231) << "Take source entry" << endl;
+                        sourceEntry->mergeWith( targetEntry );
                         target->replaceEntry(targetEntry,sourceEntry->clone() );
                     } else if (!syncee->hasChanged(sourceEntry) &&
                                target->hasChanged(targetEntry)) {
-                        // take target entry, no action required
+                        // take target entry, no action required but merge
+                        kdDebug(5231) << "Take target entry" << endl;
+                        targetEntry->mergeWith(sourceEntry);
                     }
                 }
             }
@@ -169,12 +179,14 @@ void PIMSyncAlg::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
             /* entry modified and other unchanged */
             if(entry->wasModified() && other->state()== SyncEntry::Undefined ) {
                 kdDebug(5231) << "Modified and unchanged " << endl;
+                entry->mergeWith( other );
                 target->replaceEntry( other, entry->clone() );
             }
             /* entry removed and other unchanged or removed too */
             else if ( entry->wasRemoved() &&
                        ( other->wasRemoved() || other->state() == SyncEntry::Undefined ) ) {
                 kdDebug(5231) << "Removed and either removed or unchanged too " << endl;
+                // no need for merge
                 target->replaceEntry( other, entry->clone() );
             }
             /* entry was removed and other changed */
@@ -185,6 +197,7 @@ void PIMSyncAlg::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
                 if (!over)
                     result = deconflict(entry,other);
                 if (result == entry || over) {
+                    // no need to merge here too we still remove
                     target->replaceEntry(other,entry->clone() );
                 }
 
@@ -198,6 +211,7 @@ void PIMSyncAlg::forAll(QPtrList<SyncEntry> entries,  Syncee* syncee,
                     result = deconflict(entry,other);
 
                 if (result == entry || over) {
+                    entry->mergeWith( other );
                     target->replaceEntry(other,entry->clone() );
                 }
 

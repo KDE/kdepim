@@ -24,15 +24,15 @@ namespace KSync{
         KonnectorProfile profile() const;
     private:
         void initUI();
-        void initKap();
         Device byString( const QString&  )const;
         KonnectorManager* m_manager;
         KonnectorProfileWizardIntro *m_intro;
         KonnectorWizardOutro *m_outro;
         ConfigWidget* m_conf;
-        bool m_free:1;
         QMap<QString, Device> m_devices;
         QString m_current;
+	bool m_isEdit;
+	Kapabilities m_kaps;
 
       private slots:
         void slotKonChanged( const QString& );

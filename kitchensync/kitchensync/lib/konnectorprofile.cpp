@@ -99,7 +99,7 @@ void KonnectorProfile::saveToConfig( KConfig* config ) const{
     config->writeEntry("Ident", m_dev.identify() );
     config->writeEntry("Group", m_dev.group() );
     config->writeEntry("Vendor", m_dev.vendor() );
-    config->writeEntry("Id", m_dev.id() );
+    config->writeEntry("DevName", m_dev.name() );
     config->writeEntry("Lib", m_dev.library() );
     config->writeEntry("UDI", udi() );
 
@@ -147,13 +147,13 @@ void KonnectorProfile::loadFromConfig( KConfig* conf ) {
     m_icon = conf->readEntry("Icon");
     m_name = conf->readEntry("Name");
 
-    QString ident, grp, vend, lib, id;
+    QString ident, grp, vend, lib, name;
     ident = conf->readEntry("Ident");
     grp = conf->readEntry("Group");
     vend = conf->readEntry("Vendor");
-    id = conf->readEntry("Id");
+    name = conf->readEntry("DevName");
     lib = conf->readEntry("Lib");
-    m_dev = Device( ident, grp,  vend,  lib,  id );
+    m_dev = Device( name, grp,  vend,  lib,  ident );
 
     // get the udi
     QString udi = conf->readEntry("UDI");
