@@ -289,7 +289,11 @@ bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
 {
   int atChar = aStr.find( '@' );
   QString domainPart = aStr.mid( atChar + 1);
+  QString localPart = aStr.left( atChar );
   QString addrRx = "[a-zA-Z]*[\\w.-]*[a-zA-Z0-9]@";
+  if ( localPart[ 0 ] == '\"' || localPart[ localPart.length()-1 ] == '\"' ) {
+    addrRx = "\"[a-zA-Z]*[\\w.-]*[a-zA-Z0-9]\"@";
+  }
   if ( domainPart[ 0 ] == '[' || domainPart[ domainPart.length()-1 ] == ']' ) {
     addrRx += "\\[[0-9]{,3}(\\.[0-9]{,3}){3}\\]";
   } else {
