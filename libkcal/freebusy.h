@@ -50,7 +50,7 @@ class FreeBusy : public IncidenceBase
     QCString type() const { return "FreeBusy"; }
 
     virtual QDateTime dtEnd() const;
-    bool setDtEnd(const QDateTime &end);
+    bool setDtEnd( const QDateTime &end );
 
     QValueList<Period> busyPeriods() const;
 

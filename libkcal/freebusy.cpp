@@ -95,12 +95,14 @@ FreeBusy::~FreeBusy()
 {
 }
 
-bool FreeBusy::setDtEnd(const QDateTime &end) {
+bool FreeBusy::setDtEnd( const QDateTime &end )
+{
   mDtEnd = end;
   return true;
 }
 
-QDateTime FreeBusy::dtEnd() const {
+QDateTime FreeBusy::dtEnd() const
+{
   return mDtEnd;
 }
 
