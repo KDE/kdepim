@@ -410,7 +410,9 @@ void MemoWidget::slotDeleteMemo()
 			PilotMemo m(r);
 			if (m.text() == selectedMemo->text())
 			{
+#ifdef DEBUG
 				DEBUGKPILOT << fname << ": I think I found the memo." << endl;
+#endif
 				(const_cast<PilotRecord *>(r))->makeDeleted();
 				break;
 			}
