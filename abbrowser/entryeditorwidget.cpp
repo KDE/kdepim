@@ -203,6 +203,7 @@ void ContactDialog::setupTab1()
   // Perhaps the address "subfields" (city, postal, country) should be cleared
   // when this control loses focus. They aren't at the moment.
   QMultiLineEdit *mleAddress = new ContactMultiLineEdit( tab1, "X-BusinessAddress", ce );
+  mleAddress->setWordWrap( QMultiLineEdit::WidgetWidth );
   cbAddress->setBuddy( mleAddress );
   tab1lay->addWidget( mleAddress, 5, 1 );
 
@@ -266,6 +267,7 @@ void ContactDialog::setupTab1()
 // The Note group
   // Interestingly this doesn't have an equivalent in tab3
   QMultiLineEdit *mleNotes = new ContactMultiLineEdit( tab1, "X-Notes", ce );
+  mleNotes->setWordWrap( QMultiLineEdit::WidgetWidth );
   mleNotes->setMinimumSize( mleNotes->sizeHint() );
   mleNotes->resize( mleNotes->sizeHint() );
   tab1lay->addMultiCellWidget( mleNotes, 7, 7, 0, 4 );

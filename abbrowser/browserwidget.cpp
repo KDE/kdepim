@@ -328,9 +328,59 @@ void DynamicTip::maybeTip( const QPoint &pos )
       s += i18n( "Name" ) + ": " + *ce->find( "N" ) + "\n";
     if (ce->find( "ORG" ))
       s += i18n( "Company" ) + ": " + *ce->find( "ORG" ) + "\n";
-    if (ce->find( "X-Notes" ))
-      s += i18n( "Notes:" ) + "\n" + 
-	(*ce->find( "X-Notes" )).stripWhiteSpace() + "\n";
+
+    if (ce->find( "X-Notes" )) {
+      s += i18n( "Notes:" ) + "\n";
+      QString notes = (*ce->find( "X-Notes" )).stripWhiteSpace() + "\n";
+      QFontMetrics fm( font() );
+
+      // Begin word wrap code based on QMultiLineEdit code
+      int i = 0;
+      bool doBreak = false;
+      int linew = 0;
+      int lastSpace = -1;
+      int a = 0;
+      int lastw = 0;
+
+      while ( i < int(notes.length()) ) {
+	doBreak = FALSE;
+	if ( notes[i] != '\n' )
+	  linew += fm.width( notes[i] );
+
+	if ( lastSpace >= a && notes[i] != '\n' )
+	  if  (linew >= parentWidget()->width()) {
+	    doBreak = TRUE; 
+	    if ( lastSpace > a ) {
+	      i = lastSpace;
+	      linew = lastw;
+	    }
+	    else
+	      i = QMAX( a, i-1 );
+	  }
+
+	if ( notes[i] == '\n' || doBreak ) {
+	  s += notes.mid( a, i - a + (doBreak?1:0) ) +"\n";
+
+	  a = i + 1;
+	  lastSpace = a;
+	  linew = 0;
+	}
+
+	if ( notes[i].isSpace() ) {
+	  lastSpace = i;
+	  lastw = linew;
+	}
+	
+	if ( lastSpace <= a ) {
+	  lastw = linew;
+	}
+
+	++i;
+      }
+	
+    }
+    // End wordwrap code based on QMultiLineEdit code
+
     tip( r, s );
 }
 
@@ -1031,8 +1081,3 @@ bool PabListView::tooltips()
 {
   return tooltips_;
 }
-
-
-
-
-
