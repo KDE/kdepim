@@ -58,7 +58,7 @@ KNCleanupSettings::KNCleanupSettings(QWidget *p) : KNSettingsWidget(p)
   readDays->setSuffix(i18n(" days"));
   groupsL->addWidget(readDays,3,1,Qt::AlignRight);
 
-  unreadDaysL=new QLabel(i18n("keep read articles"), groupsB);
+  unreadDaysL=new QLabel(i18n("keep unread articles"), groupsB);
   groupsL->addWidget(unreadDaysL,4,0);
   unreadDays=new QSpinBox(0, 999, 1, groupsB);
   unreadDays->setSuffix(i18n(" days"));

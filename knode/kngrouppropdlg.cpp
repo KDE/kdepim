@@ -51,47 +51,51 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
   // group name & description
   QGroupBox *gb=new QGroupBox(i18n("Description"), page);
   pageL->addMultiCellWidget(gb,1,1,0,1);
-  QGridLayout *grpL=new QGridLayout(gb, 2, 2, 20, 10);
-  
+  QGridLayout *grpL=new QGridLayout(gb, 3, 2, 15, 5);
+
+  grpL->addRowSpacing(0, fontMetrics().lineSpacing()-9);
+
   l=new QLabel(i18n("Name:"), gb);
-  grpL->addWidget(l,0,0);
+  grpL->addWidget(l,1,0);
   l=new QLabel(group->groupname(),gb);
-  grpL->addWidget(l,0,1);
+  grpL->addWidget(l,1,1);
   
   l=new QLabel(i18n("Description:"), gb);
-  grpL->addWidget(l,1,0);
+  grpL->addWidget(l,2,0);
   l=new QLabel(grp->description(),gb);
-  grpL->addWidget(l,1,1);
+  grpL->addWidget(l,2,1);
   
   // statistics
   gb=new QGroupBox(i18n("Statistics"), page);
   pageL->addMultiCellWidget(gb,2,2,0,1);
-  grpL=new QGridLayout(gb, 5, 2, 20, 10);
+  grpL=new QGridLayout(gb, 6, 2, 15, 5);
+
+  grpL->addRowSpacing(0, fontMetrics().lineSpacing()-9);
   
   l=new QLabel(i18n("Articles:"), gb);
-  grpL->addWidget(l,0,0);
-  l=new QLabel(QString::number(grp->count()),gb);
-  grpL->addWidget(l,0,1);
-  
-  l=new QLabel(i18n("Unread articles:"), gb);
   grpL->addWidget(l,1,0);
-  l=new QLabel(QString::number(grp->count()-grp->readCount()),gb);
+  l=new QLabel(QString::number(grp->count()),gb);
   grpL->addWidget(l,1,1);
   
-  l=new QLabel(i18n("New articles:"), gb);
+  l=new QLabel(i18n("Unread articles:"), gb);
   grpL->addWidget(l,2,0);
+  l=new QLabel(QString::number(grp->count()-grp->readCount()),gb);
+  grpL->addWidget(l,2,1);
+  
+  l=new QLabel(i18n("New articles:"), gb);
+  grpL->addWidget(l,3,0);
   l=new QLabel(QString::number(grp->newCount()),gb);
-  grpL->addWidget(l,2,1);   
+  grpL->addWidget(l,3,1);
 
   l=new QLabel(i18n("Threads with unread articles:"), gb);
-  grpL->addWidget(l,3,0);
+  grpL->addWidget(l,4,0);
   l=new QLabel(QString::number(grp->statThrWithUnread()),gb);
-  grpL->addWidget(l,3,1); 
+  grpL->addWidget(l,4,1);
   
   l=new QLabel(i18n("Threads with new articles:"), gb);
-  grpL->addWidget(l,4,0);
+  grpL->addWidget(l,5,0);
   l=new QLabel(QString::number(grp->statThrWithNew()),gb);
-  grpL->addWidget(l,4,1); 
+  grpL->addWidget(l,5,1);
     
   pageL->setRowStretch(3,2);
 
