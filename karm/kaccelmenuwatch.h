@@ -25,8 +25,11 @@
  * It is safe to delete menus that have connections handled by this class.
  * On deletion of a menu, all associated accelerators will be deleted.
  *
- * Note that you _have_ to call KAccelMenuWatch::updateMenus() after you connect the
- * accelerators, as they are not activated till then.
+ * Note that you _have_ to call KAccelMenuWatch::updateMenus() after you
+ * connect the * accelerators, as they are not activated till then.
+ * 
+ * @author Sirtaj Singh Kang (taj@kde.org)
+ * @version $Id$
  */
 
 class KAccelMenuWatch : public QObject
@@ -77,7 +80,8 @@ public:
 	void setMenu( QPopupMenu *menu );
 
 	/** 
-	 * Return the last menu set with KAccelMenuWatch::setMenu(QPopupMenu*), or 0 if none has been set.
+	 * Return the last menu set with KAccelMenuWatch::setMenu(QPopupMenu*),
+         * or 0 if none has been set.
 	 */
 	QPopupMenu *currentMenu() const  { return _menu; }
 
