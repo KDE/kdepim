@@ -479,6 +479,41 @@ bool KNNntpClient::openConnection()
       handleErrors();             // 201 Hello, you can't post
       return false;
     }
+
+  progressValue = 60;
+
+  // logon now, some newsserver send a incomplete group list otherwise
+  if (account.needsLogon() && !account.user().isEmpty()) {
+    //qDebug("knode: user: %s",account.user().latin1());
+
+    QCString command = "AUTHINFO USER ";
+    command += account.user().local8Bit();
+    if (!KNProtocolClient::sendCommand(command,rep))
+      return false;
+
+    if (rep==381) {          // 381 PASS required
+      //qDebug("knode: Password required");
+
+      if (!account.pass().length()) {
+        job->setErrorString(i18n("Authentication failed!\nCheck your username and password."));
+        return false;
+      }
+
+      //qDebug("knode: pass: %s",account.pass().latin1());
+
+      command = "AUTHINFO PASS ";
+      command += account.pass().local8Bit();
+      if (!KNProtocolClient::sendCommand(command,rep))
+        return false;
+    }
+
+    #ifndef NDEBUG
+    if (rep==281)          // 281 authorization success
+      qDebug("knode: Authorization successful");
+    else
+      qDebug("knode: Authorization failed");    // we don't care, the server can refuse the info
+    #endif
+  }
   
   progressValue = 70;
   
@@ -525,7 +560,9 @@ bool KNNntpClient::sendCommand(const QCString &cmd, int &rep)
     }
     
     if (rep==281) {         // 281 authorization success
-      //qDebug("knode: Authorization successful");
+      #ifndef NDEBUG
+      qDebug("knode: Authorization successful");
+      #endif
       if (!KNProtocolClient::sendCommand(cmd,rep))    // retry the original command
         return false;
     } else {
