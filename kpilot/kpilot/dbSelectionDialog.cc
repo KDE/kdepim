@@ -106,7 +106,7 @@ void KPilotDBSelectionDialog::removeDB()
 		QString dbname=item->text(0);
 		if (fDeviceDBs.contains(dbname))
 		{
-			KMessageBox::error(this, i18n("This is a database that exists on the device. It was not added manually, so it can not removed from the list."), i18n("Database on device"));
+			KMessageBox::error(this, i18n("This is a database that exists on the device. It was not added manually, so it can not removed from the list."), i18n("Database on Device"));
 		}
 		else
 		{
@@ -117,7 +117,7 @@ void KPilotDBSelectionDialog::removeDB()
 	}
 	else
 	{
-		KMessageBox::information(this, i18n("You need to select a database to delete in the list."),i18n("No database selected"), "NoDBSelected");
+		KMessageBox::information(this, i18n("You need to select a database to delete in the list."),i18n("No Database Selected"), "NoDBSelected");
 	}
 }
 

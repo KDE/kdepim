@@ -52,7 +52,7 @@ SyncEntry *SyncUiKde::deconflict(SyncEntry *syncEntry,SyncEntry *targetEntry)
     text += i18n("Entry 2: '%1'\n").arg(targetEntry->name());
 
     int result = KMessageBox::questionYesNo(mParent,text,
-                                            i18n("Resolve conflict"),i18n("Entry 1"),i18n("Entry 2"));
+                                            i18n("Resolve Conflict"),i18n("Entry 1"),i18n("Entry 2"));
 
     if (result == KMessageBox::Yes) {
         return syncEntry;
@@ -82,7 +82,7 @@ bool SyncUiKde::confirmDelete( SyncEntry* entry, SyncEntry* target )
 SyncEntry* SyncUiKde::deletedChanged( SyncEntry* syncEntry, SyncEntry* target )
 {
     QString text = i18n("%1 was deleted on %2 and changed on %3").arg( target->name() ).arg( syncEntry->syncee()->source() ).arg( target->syncee()->source() );
-    int res = KMessageBox::questionYesNo(mParent, text, i18n("Delete or modify?"),
+    int res = KMessageBox::questionYesNo(mParent, text, i18n("Delete or Modify?"),
                                i18n("Delete"), i18n("Modify") );
     if ( res == KMessageBox::Yes )
         return syncEntry;

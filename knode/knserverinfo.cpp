@@ -115,7 +115,7 @@ void KNServerInfo::saveConf(KConfig *conf)
       if (!wallet || wallet->writePassword(QString::number(i_d), p_ass)) {
           KMessageBox::information(0, i18n("KWallet is not running. It is strongly recommend to use "
                                            "KWallet for managing your password"),
-                                   i18n("KWallet is not running!"), "KWalletWarning" );
+                                   i18n("KWallet is Not Running!"), "KWalletWarning" );
           conf->writeEntry("pass", KNHelper::encryptStr(p_ass));
       }
     }

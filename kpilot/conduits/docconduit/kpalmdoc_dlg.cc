@@ -223,7 +223,7 @@ DEBUGCONDUIT<<"pdbfile="<<*it<<", pdbdir="<<pdburl<<", txtfile="<<txtfile<<", tx
 		}
 		if (converted_Files.size()>0) {
 			KMessageBox::informationList(this, i18n("The following texts were "
-					"successfully converted:"), converted_Files, i18n("Conversion successful"));
+					"successfully converted:"), converted_Files, i18n("Conversion Successful"));
 		}
 		else
 		{
@@ -360,7 +360,7 @@ DEBUGCONDUIT<<"pdbfile="<<pdbfile<<", pdbdir="<<pdburl<<", txtfile="<<*it<<", tx
 		}
 		if (converted_Files.size()>0) {
 			KMessageBox::informationList(this, i18n("The following texts were "
-					"successfully converted:"), converted_Files, i18n("Conversion successful"));
+					"successfully converted:"), converted_Files, i18n("Conversion Successful"));
 		}
 		else
 		{

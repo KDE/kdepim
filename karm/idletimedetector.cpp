@@ -65,11 +65,11 @@ void IdleTimeDetector::informOverrun(int idleMinutes)
   QDateTime idleStart = start.addSecs(-60 * _maxIdle);
   QString backThen = KGlobal::locale()->formatTime(idleStart.time());
 
-  int id =  QMessageBox::warning( 0, i18n("Idle detection"),
+  int id =  QMessageBox::warning( 0, i18n("Idle Detection"),
                                      i18n("Desktop has been idle since %1."
                                           " What should we do?").arg(backThen),
-                                     i18n("Revert and Stop"),
-                                     i18n("Revert and Continue"),
+                                     i18n("Revert && Stop"),
+                                     i18n("Revert && Continue"),
                                      i18n("Continue Timing"),0,2);
   QDateTime end = QDateTime::currentDateTime();
   int diff = start.secsTo(end)/secsPerMinute;
