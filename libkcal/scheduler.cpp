@@ -10,13 +10,28 @@
 
 using namespace KCal;
 
-ScheduleMessage::ScheduleMessage(Incidence *event,int method,icalclass status)
+ScheduleMessage::ScheduleMessage(Incidence *event,int method,ScheduleMessage::Status status)
 {
   mEvent = event;
   mMethod = method;
   mStatus = status;
 }
 
+QString ScheduleMessage::statusName(ScheduleMessage::Status status)
+{
+  switch (status) {
+    case PublishNew:
+      return i18n("Publish");
+    case Obsolete:
+      return i18n("Obsolete");
+    case RequestNew:
+      return i18n("New Request");
+    case RequestUpdate:
+      return i18n("Updated Request");
+    default:
+      return i18n("Unknown Status: %1").arg(QString::number(status));
+  }
+}
 
 Scheduler::Scheduler(Calendar *calendar)
 {
@@ -28,17 +43,17 @@ Scheduler::~Scheduler()
 {
 }
 
-bool Scheduler::acceptTransaction(Incidence *incidence,icalclass status)
+bool Scheduler::acceptTransaction(Incidence *incidence,ScheduleMessage::Status status)
 {
   switch (status) {
-    case ICAL_PUBLISH_NEW_CLASS:
+    case ScheduleMessage::PublishNew:
       if (!mCalendar->getEvent(incidence->VUID())) {
         mCalendar->addIncidence(incidence);
       }
       return true;
-    case ICAL_OBSOLETE_CLASS:
+    case ScheduleMessage::Obsolete:
       return true;
-    case ICAL_REQUEST_NEW_CLASS:
+    case ScheduleMessage::RequestNew:
       mCalendar->addIncidence(incidence);
       return true;
     default:
@@ -67,21 +82,5 @@ QString Scheduler::methodName(Method method)
       return i18n("Decline Counter");
     default:
       return i18n("Unknown");
-  }
-}
-
-QString Scheduler::statusName(icalclass status)
-{
-  switch (status) {
-    case ICAL_PUBLISH_NEW_CLASS:
-      return i18n("Publish");
-    case ICAL_OBSOLETE_CLASS:
-      return i18n("Obsolete");
-    case ICAL_REQUEST_NEW_CLASS:
-      return i18n("New Request");
-    case ICAL_REQUEST_UPDATE_CLASS:
-      return i18n("Updated Request");
-    default:
-      return i18n("Unknown Status: %1").arg(QString::number(status));
   }
 }

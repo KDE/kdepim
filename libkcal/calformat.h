@@ -73,15 +73,15 @@ class CalFormat {
     /** Create a unique id string. */
     static QString createUniqueId();
   
-  protected:  
-    /** shows an error dialog box. */
-    void loadError(const QString &fileName);
-  
     /**
       Set exception for this object. This is used by the functions of this
       class to report errors.
     */
     void setException(KOErrorFormat *error);
+  
+  protected:  
+    /** shows an error dialog box. */
+    void loadError(const QString &fileName);
   
     QWidget *mTopWidget;      // topWidget used for message boxes
     bool mEnableDialogs;      // display various GUI dialogs?

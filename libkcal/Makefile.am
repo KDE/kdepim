@@ -19,7 +19,7 @@ libkcal_la_SOURCES = \
         incidence.cpp journal.cpp todo.cpp event.cpp attendee.cpp \
         korecurrence.cpp koalarm.cpp \
         calendar.cpp calendarlocal.cpp \
-        calformat.cpp vcalformat.cpp icalformat.cpp \
+        calformat.cpp vcalformat.cpp icalformat.cpp icalformatimpl.cpp \
 	vcaldrag.cpp \
         koexceptions.cpp \
         scheduler.cpp imipscheduler.cpp dummyscheduler.cpp \

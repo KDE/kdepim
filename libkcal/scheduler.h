@@ -7,11 +7,6 @@
 #include <qstring.h>
 #include <qlist.h>
 
-extern "C" {
-  #include <ical.h>
-  #include <icalss.h>
-}
-
 namespace KCal {
 
 class Event;
@@ -24,15 +19,17 @@ class ICalFormat;
   Scheduler class.
 
   @short A Scheduling message
-  @author Cornelius Schumacher
 */
 class ScheduleMessage {
   public:
+    /** Message status. */
+    enum Status { PublishNew, Obsolete, RequestNew, RequestUpdate, Unknown };
+  
     /**
       Create a scheduling message with method as defined in Scheduler::Method
       and a status.
     */
-    ScheduleMessage(Incidence *,int method,icalclass status);
+    ScheduleMessage(Incidence *,int method,Status status);
     ~ScheduleMessage() {};
     
     /** Return event associated with this message. */
@@ -40,14 +37,17 @@ class ScheduleMessage {
     /** Return iTIP method associated with this message. */
     int method() { return mMethod; }
     /** Return status of this message. */
-    icalclass status() { return mStatus; }
+    Status status() { return mStatus; }
     /** Return error message if there is any. */
     QString error() { return mError; }
+
+    /** Return a human-readable name for an ical message status. */
+    static QString statusName(Status status);
 
   private:
     Incidence *mEvent;
     int mMethod;
-    icalclass mStatus;
+    Status mStatus;
     QString mError;
 };
 
@@ -80,12 +80,10 @@ class Scheduler {
       iTIP message with the current calendar and specifies the action to be
       taken for this incidence.
     */
-    bool acceptTransaction(Incidence *,icalclass status);
+    bool acceptTransaction(Incidence *,ScheduleMessage::Status status);
 
     /** Return a human-readable name for a iTIP method. */
     static QString methodName(Method);
-    /** Return a human-readable name for an ical message status. */
-    static QString statusName(icalclass status);
 
   protected:
     Calendar *mCalendar;

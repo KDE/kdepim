@@ -1,7 +1,6 @@
+#ifndef ICALFORMAT_H
+#define ICALFORMAT_H
 // $Id$
-
-#ifndef _ICALFORMAT_H
-#define _ICALFORMAT_H
 
 #include <qstring.h>
 
@@ -9,12 +8,9 @@
 
 #include "calformat.h"
 
-extern "C" {
-  #include <ical.h>
-  #include <icalss.h>
-}
-
 namespace KCal {
+
+class ICalFormatImpl;
 
 /**
   This class implements the iCalendar format. It provides methods for
@@ -22,8 +18,6 @@ namespace KCal {
   representation as Calendar and Events.
 
   @short iCalendar format implementation
-  @author Cornelius Schumacher
-  @version $Revision$
 */
 class ICalFormat : public CalFormat {
   public:
@@ -63,38 +57,8 @@ class ICalFormat : public CalFormat {
     /** Parse scheduling message provided as string \s */
     ScheduleMessage *parseScheduleMessage(const QString &s);
     
-  protected:
-    bool populate(icalfileset *fs);
-
-    icalcomponent *writeTodo(Todo *todo);
-    icalcomponent *writeEvent(Event *event);
-    icalcomponent *writeJournal(Journal *journal);
-    void writeIncidence(icalcomponent *parent,Incidence *incidence);
-    icalproperty *writeRecurrenceRule(KORecurrence *);
-    icalproperty *writeAlarm(KOAlarm *alarm);
-
-    QString extractErrorProperty(icalcomponent *);    
-    Todo *readTodo(icalcomponent *vtodo);
-    Event *readEvent(icalcomponent *vevent);
-    Journal *readJournal(icalcomponent *vjournal);
-    Attendee *readAttendee(icalproperty *attendee);
-    void readIncidence(icalcomponent *parent,Incidence *incidence);
-    void readRecurrenceRule(icalproperty *rrule,Incidence *event);
-    void readAlarm(icalcomponent *alarm,Incidence *incidence);
-
-    icaltimetype writeICalDate(const QDate &);
-    icaltimetype writeICalDateTime(const QDateTime &);
-    QDate readICalDate(icaltimetype);
-    QDateTime readICalDateTime(icaltimetype);
-    char *writeText(const QString &);
-    icalcomponent *createCalendarComponent();
-    icalcomponent *createScheduleComponent(Incidence *,Scheduler::Method);
-
   private:
-    void dumpIcalRecurrence(icalrecurrencetype);
-  
-    QList<Event> mEventsRelate;           // events with relations
-    QList<Todo> mTodosRelate;             // todos with relations
+    ICalFormatImpl *mImpl;
 };
 
 }
