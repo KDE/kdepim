@@ -63,7 +63,7 @@ public:
 	* id of kpilot.o
 	*/
 	static const char *version(int kind);
-	
+
 
 	// Adds 'name' to the pull down menu of components
 	void addComponentPage(PilotComponent *, const QString &name);
@@ -169,6 +169,12 @@ protected slots:
 	void slotConfigureKPilot();
 	void fileInstalled(int which);
 	void slotNewToolbarConfig();
+
+	/**
+	 * Get the daemon to reset the link. This uses reloadSettings()
+	 * to achieve this result - the daemon calls reset() in there.
+	 */
+	void slotResetLink();
 
 	/**
 	 * Indicate that a particular component has been selected (through

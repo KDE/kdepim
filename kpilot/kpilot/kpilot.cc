@@ -265,7 +265,7 @@ void KPilotInstaller::setupWidget()
 	initComponents();
 
 	setMinimumSize(sizeHint() + QSize(10,60));
-	
+
 	createGUI(CSL1("kpilotui.rc"), false);
 #ifdef DEBUG
 	DEBUGKPILOT << fname
@@ -556,27 +556,49 @@ void KPilotInstaller::initMenu()
 {
 	FUNCTIONSETUP;
 
+	KAction *a;
+
 	// File actions
-	(void )new KAction(i18n("&HotSync"), CSL1("hotsync"), 0,
+	a = new KAction(i18n("&HotSync"), CSL1("hotsync"), 0,
 		this, SLOT(slotHotSyncRequested()),
 		actionCollection(), "file_hotsync");
+	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
+		"should be a normal HotSync."));
 #if 0
 	(void) new KAction(i18n("&FastSync"), CSL1("fastsync"), 0,
 		this, SLOT(slotHotSyncRequested()),
 		actionCollection(), "file_fastsync");
 #endif
 #ifdef DEBUG
-	(void) new KAction(i18n("List only"),CSL1("list"),0,
+	a = new KAction(i18n("&List only"),CSL1("list"),0,
 		this,SLOT(slotListSyncRequested()),
 		actionCollection(), "file_list");
+	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
+		"should just list the files on the Handheld and do nothing "
+		"else."));
 #endif
-	(void) new KAction(i18n("&Backup"), CSL1("backup"), 0,
+	a = new KAction(i18n("&Backup"), CSL1("backup"), 0,
 		this, SLOT(slotBackupRequested()),
 		actionCollection(), "file_backup");
-	(void) new KAction(i18n("&Restore"), CSL1("restore"), 0,
+	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
+		"should back up the Handheld to the PC."));
+
+	a = new KAction(i18n("&Restore"), CSL1("restore"), 0,
 		this, SLOT(slotRestoreRequested()),
 		actionCollection(), "file_restore");
-	(void) KStdAction::quit(this, SLOT(quit()), actionCollection());
+	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
+		"should restore the Handheld from data on the PC."));
+
+	a = new KAction(i18n("Rese&t Link"),CSL1("reload"), 0,
+		this, SLOT(slotResetLink()),
+		actionCollection(),"file_reload");
+	a->setWhatsThis(i18n("Try to reset the daemon and its connection "
+		"to the Handheld."));
+
+
+	a = KStdAction::quit(this, SLOT(quit()), actionCollection());
+	a->setWhatsThis(i18n("Quit KPilot, (and stop the daemon "
+		"if configured that way)."));
 
 	// View actions
 
@@ -751,6 +773,12 @@ void KPilotInstaller::slotNewToolbarConfig()
 #if KDE_VERSION >= 0x030100
 	applyMainWindowSettings( KGlobal::config(), autoSaveGroup() );
 #endif
+}
+
+void KPilotInstaller::slotResetLink()
+{
+	FUNCTIONSETUP;
+	getDaemon().reloadSettings();
 }
 
 /*
