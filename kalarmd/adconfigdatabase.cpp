@@ -197,11 +197,22 @@ void ADConfigDataBase::deleteConfigCalendar(const ADCalendarBase*)
 }
 
 /* Return the ClientInfo structure for the specified client application */
-ClientInfo* ADConfigDataBase::getClientInfo(const QString& appName) const
+ClientInfo* ADConfigDataBase::getClientInfo(const QString& appName) 
+{
+  ClientList::Iterator it;
+  for( it = mClients.begin(); it != mClients.end(); ++it ) {
+    if ( (*it).appName == appName ) return &(*it);
+    break;
+  }
+  return 0;
+}
+
+/* Return the ClientInfo structure for the specified client application */
+const ClientInfo* ADConfigDataBase::getClientInfo(const QString& appName) const
 {
   ClientList::ConstIterator it;
   for( it = mClients.begin(); it != mClients.end(); ++it ) {
-    if ( (*it).appName == appName ) return const_cast<ClientInfo*>(&(*it));
+    if ( (*it).appName == appName ) return &(*it);
     break;
   }
   return 0;
