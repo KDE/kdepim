@@ -104,8 +104,6 @@ KPilotInstaller::KPilotInstaller() :
 	fDaemonStub(new PilotDaemonDCOP_stub("kpilotDaemon",
 		"KPilotDaemonIface")),
 	fP(new KPilotPrivate),
-	fMenuBar(0L),
-	fToolBar(0L),
 	fQuitAfterCopyComplete(false),
 	fManagingWidget(0L),
 	fKillDaemonOnExit(false),
@@ -581,7 +579,7 @@ void KPilotInstaller::initMenu()
 
 	(void) KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()),
 		actionCollection());
-	(void) KStdAction::configureToolbars(this, SLOT(optionsConfigureKeys()),
+	(void) KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()),
 		actionCollection());
 	(void) KStdAction::preferences(this, SLOT(slotConfigureKPilot()),
 		actionCollection());
@@ -727,15 +725,17 @@ void KPilotInstaller::optionsConfigureToolbars()
 	saveMainWindowSettings( KGlobal::config(), autoSaveGroup() );
 #endif
 	KEditToolbar dlg(actionCollection());
-	connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(newToolbarConfig()));
+	connect(&dlg, SIGNAL(newToolbarConfig()), this, SLOT(slotNewToolbarConfig()));
 	dlg.exec();
 }
 
+
 void KPilotInstaller::slotNewToolbarConfig()
 {
+	FUNCTIONSETUP;
 	// recreate our GUI
 	createGUI();
-#if KDE_VERSION >= 0x030180
+#if KDE_VERSION >= 0x030100
 	applyMainWindowSettings( KGlobal::config(), autoSaveGroup() );
 #endif
 }

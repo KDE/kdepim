@@ -160,8 +160,6 @@ protected:
 	KPilotPrivate *fP;
 
 private:
-	KMenuBar*       fMenuBar;
-	KToolBar*       fToolBar;
 	bool            fQuitAfterCopyComplete; // Used for GUI-less interface
 	KJanusWidget    *fManagingWidget;
 	bool            fKillDaemonOnExit;
@@ -200,7 +198,7 @@ protected slots:
 	* This improves perceived startup time.
 	*/
 	void initializeComponents();
-	
+
 signals:
 	void modeSelected(int selected);
 };
