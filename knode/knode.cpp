@@ -261,7 +261,7 @@ void KNMainWindow::slotConfKeys()
 void KNMainWindow::slotConfToolbar()
 {
   saveMainWindowSettings(KGlobal::config(),"mainWindow_options");
-  KEditToolbar *dlg = new KEditToolbar(guiFactory(),this);
+  KEditToolbar *dlg = new KEditToolbar(actionCollection(), "knodeui.rc");
 
   if (dlg->exec()) {
     createGUI("knodeui.rc");
