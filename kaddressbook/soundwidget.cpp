@@ -35,6 +35,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
+#include <qwhatsthis.h>
 
 #include "soundwidget.h"
 
@@ -75,6 +76,9 @@ SoundWidget::SoundWidget( KABC::AddressBook *ab, QWidget *parent, const char *na
            SLOT( updateGUI() ) );
   connect( mPlayButton, SIGNAL( clicked() ),
            SLOT( playSound() ) );
+
+  QWhatsThis::add( this, i18n( "This field stores a sound file which contains the name of the contact to clarify the pronunciation." ) );
+  QWhatsThis::add( mUseSoundUrl, i18n( "Save only the URL to the sound file, not the whole object." ) );
 }
 
 SoundWidget::~SoundWidget()
