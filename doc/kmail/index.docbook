@@ -16,11 +16,21 @@
 <author>
 <firstname>Daniel</firstname>
 <surname>Naber</surname>
+<affiliation><address>
+<email>daniel.naber@t-online.de</email>
+</address></affiliation>
 </author>
+
 <author>
 <firstname>David</firstname>
 <surname>Rugge</surname>
+<affiliation><address>
+<email>davidrugge@mindspring.com</email>
+</address></affiliation>
 </author>
+
+<!-- TRANS:ROLES_OF_TRANSLATORS -->  
+
 </authorgroup>
 
 <date>2001-06-19</date>
@@ -32,7 +42,7 @@
 <year>2001</year>
 <holder>David Rugge</holder>
 </copyright>
-  
+
 <abstract>
 	
 <para>&kmail; is &kde;'s powerful and user friendly email client.</para>
@@ -54,10 +64,10 @@
 <title>Introduction</title>
 
 <para>The &kmail; Team welcomes you to &kmail;, a user-friendly mailer for the
-K Desktop Environment. Our goal is to make a mailer that is beautiful and intuitive
-without sacrificing power. </para>
+K Desktop Environment. Our goal is to make a mailer that is beautiful
+and intuitive without sacrificing power. </para>
 
-<para>If you have never set up an email client on a Unix system before, we
+<para>If you have never set up an email client on a &UNIX; system before, we
 suggest that you read through the <link linkend="getting-started">Getting
 Started</link> section first so that your setup goes smoothly.</para>
 
@@ -66,14 +76,15 @@ most helpful tips:</para>
 
 <itemizedlist>
 <listitem>
-<para>You don't have to use your mouse to use &kmail;. Everything should be
-possible with keys. &kmail; supports all the standard keys like
-<keycap>TAB</keycap> (switch between panes). The trick is: <keycap>left
-arrow</keycap>/<keycap>right arrow</keycap> always jumps to the previous/next
-message, but when you hold down &Ctrl;, you can use <keycap>left
-arrow</keycap>/<keycap>right arrow</keycap> to navigate in the Folders pane and
-<keycap>up arrow</keycap>/<keycap>down arrow</keycap> to navigate in the Headers
-pane. Use <keycap>space</keycap> to select the folder you navigated to.</para>
+<para>You don't have to use your mouse to use &kmail;. Everything should
+be possible with keys. &kmail; supports all the standard keys like
+<keycap>Tab</keycap> (switch between panes). The trick is: <keycap>Left
+Arrow</keycap>/<keycap>Right Arrow</keycap> always jumps to the
+previous/next message, but when you hold down &Ctrl;, you can use
+<keycap>Left Arrow</keycap>/<keycap>Right Arrow</keycap> to navigate in
+the Folders pane and <keycap>up arrow</keycap>/<keycap>down
+arrow</keycap> to navigate in the Headers pane. Use
+<keycap>Space</keycap> to select the folder you navigated to.</para>
 </listitem>
 <listitem>
 <para>When you are writing a new mail and you are in the
@@ -134,11 +145,12 @@ tabs.</para>
 <title>Setting your Identity</title>
 
 <para>The settings in the <guilabel>Identity</guilabel> tab are fairly
-straightforward. Fill in the <guilabel>Name</guilabel> field with your full name
-(&eg; <userinput>John Doe</userinput>) and the <guilabel>Organization</guilabel>
-field (optional) with the appropriate information. Next, fill in the 
-<guilabel>Email Address</guilabel> and the <guilabel>Reply-To Address</guilabel> 
-(optional) field with your email address.</para>
+straightforward. Fill in the <guilabel>Name</guilabel> field with your
+full name (&eg; <userinput>John Doe</userinput>) and the
+<guilabel>Organization</guilabel> field (optional) with the appropriate
+information. Next, fill in the <guilabel>Email Address</guilabel> and
+the <guilabel>Reply-To Address</guilabel> (optional) field with your
+email address.</para>
 
 <para>Finally, set the location of your signature file in the
 <guilabel>Signature File</guilabel> field. You can skip setting the signature
@@ -166,14 +178,15 @@ or System Administrator.</para>
 <para>The <guilabel>Properties</guilabel> section lets you customize 
 how and when messages are sent.</para>
 
-<para><guilabel>Default send method</guilabel> lets you define what happens when
-a message is sent. If <guilabel>Send now</guilabel> is selected, the message is
-sent to the mail server immediately, while if <guilabel>Send later</guilabel> is
-selected, the message is queued in the outbox to be sent later with the
+<para><guilabel>Default send method</guilabel> lets you define what
+happens when a message is sent. If <guilabel>Send now</guilabel> is
+selected, the message is sent to the mail server immediately, while if
+<guilabel>Send later</guilabel> is selected, the message is queued in
+the outbox to be sent later with the
 <menuchoice><guimenu>File</guimenu><guimenuitem>Send
-Queued</guimenuitem></menuchoice> command or automatically when you check your
-mail, depending on the settings in the <guilabel>Miscellaneous</guilabel>
-tab.</para>
+Queued</guimenuitem></menuchoice> command or automatically when you
+check your mail, depending on the settings in the
+<guilabel>Miscellaneous</guilabel> tab.</para>
 
 <para><guilabel>Message Property</guilabel> lets you select how your message
 will be encoded when it is sent. <guilabel>Allow 8-bit</guilabel> means that
@@ -272,10 +285,10 @@ in</guimenuitem></menuchoice>.</para>
 &kmail; to check for new mail automatically. The interval can be specified below
 under <guilabel>Check interval (minutes)</guilabel>.</para>
 
-<para><guilabel>inbox</guilabel> is the default folder for incoming mail. If you
-want to change that for some reason, you can do so with <guilabel>Destination
-folder</guilabel>. But what you probably want is a <link
-linkend="filters">filter</link>, which has nothing to do with this
+<para><guilabel>inbox</guilabel> is the default folder for incoming
+mail. If you want to change that for some reason, you can do so with
+<guilabel>Destination folder</guilabel>. But what you probably want is a
+<link linkend="filters">filter</link>, which has nothing to do with this
 option.</para>
 
 <para>With <guilabel>Precommand</guilabel> you can specify any program &kmail;
@@ -304,7 +317,7 @@ network, which is more secure. Besides that anonymous IMAP is supported.</para>
 <!--fixme: apop etc.; pop/imap diff -->
 
 <para>You are now ready to send and receive mail! For IMAP,
-click on the <guilabel>[+]</guilabel> sign in  the folder tree in
+click on the <guilabel>+</guilabel> sign in  the folder tree in
 &kmail;'s main window. &kmail; then connects to your server and
 displays the folders it finds.</para>
 
@@ -317,16 +330,18 @@ displays the folders it finds.</para>
 <sect1 id="testing-your-setup">
 <title>Testing your Setup</title>
 
-<para>First, you should send an email to test your configuration. To send an
-email, hit <keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo>, select the
-<guiicon>Compose new message</guiicon> icon (the empty sheet of paper) or select
-the <menuchoice><guimenu>Message</guimenu><guimenuitem>New
-Message</guimenuitem></menuchoice> menu item.  The <guilabel>Composer</guilabel>
-window will appear. Fill in the <guilabel>To:</guilabel> field with your email
-address and type something in the <guilabel>Subject</guilabel> field. Send the
-mail by selecting <menuchoice><guimenu>Message</guimenu>
+<para>First, you should send an email to test your configuration. To
+send an email, hit <keycombo
+action="simul">&Ctrl;<keycap>N</keycap></keycombo>, select the
+<guiicon>Compose new message</guiicon> icon (the empty sheet of paper)
+or select the <menuchoice><guimenu>Message</guimenu><guimenuitem>New
+Message</guimenuitem></menuchoice> menu item.  The
+<guilabel>Composer</guilabel> window will appear. Fill in the
+<guilabel>To:</guilabel> field with your email address and type
+something in the <guilabel>Subject</guilabel> field. Send the mail by
+selecting <menuchoice><guimenu>Message</guimenu>
 <guimenuitem>Send</guimenuitem></menuchoice>.</para>
-
+      
 <para>To check your email, select
 <menuchoice><guimenu>File</guimenu><guimenuitem>Check
 Mail</guimenuitem></menuchoice>. In the lower right corner of the main window, a
@@ -406,11 +421,11 @@ without having to use the mouse:</para>
 </thead>
 <tbody>
 <row>
-<entry><keycap>right arrow</keycap> or <keycap>N</keycap></entry>
+<entry><keycap>Right Arrow</keycap> or <keycap>N</keycap></entry>
 <entry>Next message</entry>
 </row>
 <row>
-<entry><keycap>left arrow</keycap> key or <keycap>P</keycap></entry>
+<entry><keycap>Left Arrow</keycap> key or <keycap>P</keycap></entry>
 <entry>Previous message</entry>
 </row>
 <row>
@@ -423,12 +438,12 @@ without having to use the mouse:</para>
 </row>
 <row>
 <entry><keycombo
-action="simul"><keycap>Ctrl</keycap><keycap>+</keycap></keycombo></entry>
+action="simul">&Ctrl;<keycap>+</keycap></keycombo></entry>
 <entry>Go to next folder with unread messages</entry>
 </row>
 <row>
 <entry><keycombo
-action="simul"><keycap>Ctrl</keycap><keycap>-</keycap></keycombo></entry>
+action="simul">&Ctrl;<keycap>-</keycap></keycombo></entry>
 <entry>Go to the previous folder with unread messages</entry>
 </row>
 </tbody>
@@ -700,11 +715,11 @@ perform actions on selected messages in a folder.</para>
 <para>Filters consist of a search pattern, whose rules are used as
 criteria to determine whether this filter should be applied to a given
 message, and a list of filter actions, which describe what is being
-done with/to the message if the search pattern matches. Read more
+done with or to the message if the search pattern matches. Read more
 about search patterns and filter actions is the following
 subsections.</para>
 
-<caution><para> Filters are being considered one after the other,
+<caution><para> Filters are considered one after the other,
 starting with the first filter in the list. The first one whose
 pattern matches the given message gets executed. You can request that
 the remaining filters also be applied, but the default is to stop
@@ -726,7 +741,7 @@ messages, except for incoming and outgoing messages.</para>
 to use <menuchoice><guimenu>Message</guimenu><guimenuitem>Create
 Filter</guimenuitem></menuchoice>. This will call the filter dialog
 and present you with a new filter which has the first rule of the
-search pattern and the first action (as "move to folder") preset. In
+search pattern and the first action (as <quote>move to folder</quote>) preset. In
 most cases, all you have to do is select the folder where the message
 should be moved to. But you can, of course, edit the filter as you
 like.</para>
@@ -746,8 +761,8 @@ again. Usually, just keeping the list address works best.</para></tip>
 <para>The second method is to manually construct a filter from scratch
 by calling the filter dialog through
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Filter
-Rules...</guimenuitem></menuchoice>. The filter dialog is described in detail in the
-following subsection.</para>
+Rules...</guimenuitem></menuchoice>. The filter dialog is described in
+detail in the following subsection.</para>
 </sect2>
 
 <sect2 id="filter-dialog">
@@ -764,7 +779,7 @@ Filter</guisubmenu></menuchoice> or
 Rules...</guimenuitem></menuchoice>.</para>
 
 <para>To exit this dialog without applying changes, click on
-<guibutton>Cancel</guibutton> or hit <keycap>Esc</keycap>.</para>
+<guibutton>Cancel</guibutton> or hit &Esc;.</para>
 
 <para>The dialog is divided into four main sections:</para>
 <variablelist>
@@ -838,8 +853,9 @@ limitation. </para></note></listitem>
 
 <note><para>Filters are automatically named unless you explicitely
 rename them using the <guibutton>Rename...</guibutton> button.</para>
-<para>The dialog assumes that it should continue auto-naming the
-filter as long as the filter name starts with "&lt;".</para></note>
+<para>The dialog assumes that it should continue auto-naming the filter
+as long as the filter name starts with <quote>&lt;</quote>.
+</para></note>
 
 <para>Click on the <guibutton>OK</guibutton> button to apply all
 changes and close the dialog, <guibutton>Apply</guibutton> to apply
@@ -860,7 +876,7 @@ filters are actually copied to the internal filter manager.</para>
 </orderedlist>
 
 <para>Simlilarly, empty rules and actions are removed from the pattern
-and action list, resp., before the filter is saved.</para>
+and action list respectively, before the filter is saved.</para>
 </note>
 
 </sect2>
@@ -1061,8 +1077,10 @@ case!</para></caution>
 
 <tip><para> You can enter arbitrarily complex shell commands here,
 since &kmail; uses a subshell to execute the command line. Therefore,
-even this command will work (within its limits): <userinput>uudecode -o
-$(mktemp kmail-uudecoded.XXXXXX) &amp;&amp; echo $'\a'</userinput></para></tip>
+even this command will work (within its limits):
+<userinput><command>uudecode</command> <option>-o</option>
+<parameter>$(mktemp kmail-uudecoded.XXXXXX)</parameter> &amp;&amp;
+<command>echo</command> <parameter>$'\a'</parameter></userinput></para></tip>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -1805,7 +1823,7 @@ revision of this documentation. </para>
 <title>Menus and Keyboard Shortcuts</title>
 
 <para>Each menu item is discussed below. When there is a keyboard shorcut that
-performs a menu item function, it is listed after the menu item.</para>
+performs a menu item function, it is listed with the menu item.</para>
 
 <sect1 id="main-mail-reader-window">
 <title>The Main Mail Reader window</title>
@@ -2129,7 +2147,6 @@ pane</guilabel>.</para>
 </variablelist>
 
 </sect2>
-
 
 <sect2 id="reader-folder-menu">
 <title><guimenu>Folder</guimenu> Menu</title>
@@ -2455,7 +2472,7 @@ added in special header fields (<literal>Redirect-From</literal>,
 <listitem>
 <para>Sends the message back to the sender with a notice that it cannot be
 delivered. This is nearly exactly the message you get from a mail relay if the
-user does not exist. Some people use this option to "reply" to spam.</para> 
+user does not exist. Some people use this option to <quote>reply</quote> to spam.</para> 
 </listitem>
 </varlistentry>
 
@@ -2669,7 +2686,7 @@ toolbar.</para>
 <term>
 <menuchoice>
 <guimenu><accel>S</accel>ettings</guimenu>
-<guimenuitem><accel>C</accel>onfigure &kmail;...</guimenuitem>
+<guimenuitem><accel>C</accel>onfigure KMail...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
