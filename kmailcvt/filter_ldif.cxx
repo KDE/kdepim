@@ -26,7 +26,7 @@
 #include "filter_ldif.hxx"
 
 FilterLDIF::FilterLDIF() 
-  : Filter(i18n("Import Netscape LDIF Personal Address Book (.LDIF)"), 
+  : Filter(i18n("Import Netscape LDIF Personal Address Book"), 
 	"Oliver Strutynski",
 	i18n("<p>The LDAP Data Interchange Format (LDIF) is a common ASCII-text based "
 		"Internet interchange format. Most programs allow you to export data in "
@@ -90,9 +90,9 @@ bool FilterLDIF::convert(const QString &filename, FilterInfo *info) {
    bool lastWasComment = false;
    int numEntries = 0;
 
+   KABC::Addressee *a = new KABC::Addressee();
+   KABC::Address *addr = new KABC::Address();
    while ( !t.eof() ) {
-	KABC::Addressee a;
-	KABC::Address addr;
 	s = t.readLine();
 	completeline = s;
 	bytesProcessed += s.length();
@@ -105,10 +105,14 @@ bool FilterLDIF::convert(const QString &filename, FilterInfo *info) {
 		// Newline: Write data
 writeData:
 		if (!isGroup) {
-			if (!a.formattedName().isEmpty() || a.emails().count() > 1) {
+			if (!a->formattedName().isEmpty() && a->emails().count() > 0) {
 				numEntries++;
-				a.insertAddress(addr);
-				addContact(a);
+				a->insertAddress(*addr);
+				addContact(*a);
+				delete a;
+				delete addr;
+				a = new KABC::Addressee();
+				addr = new KABC::Address();
 			}
    		} else {
 			info->log(i18n("Warning: List data is being ignored."));
@@ -147,70 +151,70 @@ writeData:
 		if (lastWasComment) {
 			// if the last entry was a comment, add this one too, since
 			// we might have a multi-line comment entry.
-			if (!a.note().isEmpty())
-				a.setNote(a.note() + "\n");
-			a.setNote(a.note() + s);
+			if (!a->note().isEmpty())
+				a->setNote(a->note() + "\n");
+			a->setNote(a->note() + s);
 		}
 		continue;
 	}
 	lastWasComment = false;
 
 	if (fieldname == "givenname")
-		{ a.setFormattedName(s); continue; }
+		{ a->setFormattedName(s); continue; }
 
 	if (fieldname == "xmozillanickname")
-		{ a.setNickName(s); continue; }
+		{ a->setNickName(s); continue; }
 
 	if (fieldname == "dn")	/* ignore */
 		{ goto writeData; }
 	
 	if (fieldname == "sn")
-		{ a.setFamilyName(s); continue; }
+		{ a->setFamilyName(s); continue; }
 	
 	if (fieldname == "mail")
-		{ a.insertEmail(s); continue; }
+		{ a->insertEmail(s); continue; }
 
 	if (fieldname == "title")
-		{ a.setTitle(s); continue; }
+		{ a->setTitle(s); continue; }
 
 	if (fieldname == "cn")
-		{ a.setFormattedName(s); continue; }
+		{ a->setFormattedName(s); continue; }
 
 	if (fieldname == "o")
-		{ a.setOrganization(s); continue; }
+		{ a->setOrganization(s); continue; }
 
 	if (fieldname == "description")
-		{ a.setNote(s); lastWasComment = true; continue; }
+		{ a->setNote(s); lastWasComment = true; continue; }
 
 	if (fieldname == "homeurl")
-		{ a.setUrl(s); continue; }
+		{ a->setUrl(s); continue; }
 
 	if (fieldname == "homephone" || fieldname == "telephonenumber")
-		{ a.insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Voice ) ); continue; }
+		{ a->insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Voice ) ); continue; }
 
 	if (fieldname == "postalcode")
-		{ addr.setPostalCode(s); continue; }
+		{ addr->setPostalCode(s); continue; }
 
 	if (fieldname == "facsimiletelephonenumber")
-		{ a.insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Fax ) ); continue; }
+		{ a->insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Fax ) ); continue; }
 	
 	if (fieldname == "streetaddress")
-		{ addr.setStreet(s); continue; }
+		{ addr->setStreet(s); continue; }
 
 	if (fieldname == "locality")
-		{ addr.setLocality(s); continue; }
+		{ addr->setLocality(s); continue; }
 	
 	if (fieldname == "countryname")
-		{ addr.setCountry(s); continue; }
+		{ addr->setCountry(s); continue; }
 		
 	if (fieldname == "cellphone")
-		{ a.insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Cell ) ); continue; }
+		{ a->insertPhoneNumber( KABC::PhoneNumber (s, KABC::PhoneNumber::Cell ) ); continue; }
 
 	if (fieldname == "st")
-		{ addr.setRegion(s); continue; }
+		{ addr->setRegion(s); continue; }
 
 	if (fieldname == "ou")
-		{ a.setRole(s); continue; }
+		{ a->setRole(s); continue; }
 
 	if (fieldname == "objectclass" && s == "groupOfNames")
 			isGroup = true;
@@ -218,6 +222,8 @@ writeData:
 	info->log(i18n("Unable to handle line: %1").arg(completeline));
   	  	
     } /* while !eof(f) */
+    delete a;
+    delete addr;
 
     f.close();
     
