@@ -104,14 +104,14 @@ static const QString AddTodoCommand = "infolog.boinfolog.write";
 static const QString DeleteTodoCommand = "infolog.boinfolog.delete";
 static const QString LoadTodoCategoriesCommand = "infolog.boinfolog.categories";
 
-static void setRights( Event *event, int rights )
+static void setRights( Incidence *incidence, int rights )
 {
-  event->setCustomProperty( "EGWRESOURCE", "RIGHTS", QString::number( rights ) );
+  incidence->setCustomProperty( "EGWRESOURCE", "RIGHTS", QString::number( rights ) );
 }
 
-static int rights( Event *event )
+static int rights( Incidence *incidence )
 {
-  return event->customProperty( "EGWRESOURCE", "RIGHTS" ).toInt();
+  return incidence->customProperty( "EGWRESOURCE", "RIGHTS" ).toInt();
 }
 
 ResourceXMLRPC::ResourceXMLRPC( const KConfig* config )
@@ -315,7 +315,7 @@ bool ResourceXMLRPC::addEvent( Event* ev )
   if ( oldEvent ) { // already exists
     if ( !oldEvent->isReadOnly() ) {
       writeEvent( ev, args );
-      args.insert( "id", mEventUidMapper->remoteUid( ev->uid() ) );
+      args.insert( "id", mEventUidMapper->remoteUid( ev->uid() ).toInt() );
       mServer->call( AddEventCommand, QVariant( args ),
                      this, SLOT( updateEventFinished( const QValueList<QVariant>&, const QVariant& ) ),
                      this, SLOT( fault( int, const QString&, const QVariant& ) ) );
@@ -342,7 +342,7 @@ bool ResourceXMLRPC::addEvent( Event* ev )
 
 void ResourceXMLRPC::deleteEvent( Event* ev )
 {
-  if ( rights( ev ) & CAL_ACCESS_DELETE )
+  if ( !(rights( ev ) & CAL_ACCESS_DELETE) && rights( ev ) != -1 )
     return;
 
   QString id = mEventUidMapper->remoteUid( ev->uid() );
@@ -386,15 +386,33 @@ bool ResourceXMLRPC::addTodo( Todo *todo )
 {
   QMap<QString, QVariant> args;
 
-  writeTodo( todo, args );
-  mServer->call( AddTodoCommand, QVariant( args ),
-                 this, SLOT( addTodoFinished( const QValueList<QVariant>&, const QVariant& ) ),
-                 this, SLOT( fault( int, const QString&, const QVariant& ) ),
-                 QVariant( todo->uid() ) );
-
   disableChangeNotification();
-  mCalendar.addTodo( todo );
-  saveCache();
+
+  setRights( todo, CAL_ACCESS_ALL );
+  Todo *oldTodo = mCalendar.todo( todo->uid() );
+  if ( oldTodo ) { // already exists
+    if ( !oldTodo->isReadOnly() ) {
+      writeTodo( todo, args );
+      args.insert( "id", mTodoUidMapper->remoteUid( todo->uid() ).toInt() );
+      mServer->call( AddTodoCommand, QVariant( args ),
+                     this, SLOT( updateTodoFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                     this, SLOT( fault( int, const QString&, const QVariant& ) ) );
+
+      mCalendar.deleteIncidence( oldTodo );
+      mCalendar.addIncidence( todo );
+      saveCache();
+    }
+  } else { // new todo
+    writeTodo( todo, args );
+    mServer->call( AddTodoCommand, QVariant( args ),
+                   this, SLOT( addTodoFinished( const QValueList<QVariant>&, const QVariant& ) ),
+                   this, SLOT( fault( int, const QString&, const QVariant& ) ),
+                   QVariant( todo->uid() ) );
+
+    mCalendar.addTodo( todo );
+    saveCache();
+  }
+
   enableChangeNotification();
 
   return true;
@@ -402,13 +420,15 @@ bool ResourceXMLRPC::addTodo( Todo *todo )
 
 void ResourceXMLRPC::deleteTodo( Todo *todo )
 {
+  if ( !(rights( todo ) & CAL_ACCESS_DELETE) && rights( todo ) != -1 )
+    return;
+
   QString id = mTodoUidMapper->remoteUid( todo->uid() );
 
-  mServer->call( DeleteTodoCommand, id,
+  mServer->call( DeleteTodoCommand, id.toInt(),
                  this, SLOT( deleteTodoFinished( const QValueList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ),
                  QVariant( todo->uid() ) );
-
 }
 
 Todo::List ResourceXMLRPC::rawTodos()
@@ -680,6 +700,12 @@ void ResourceXMLRPC::addTodoFinished( const QValueList<QVariant>& list,
   mTodoUidMapper->add( id.toString(), list[ 0 ].toString() );
 
   emit resourceChanged( this );
+}
+
+void ResourceXMLRPC::updateTodoFinished( const QValueList<QVariant>&,
+                                         const QVariant& )
+{
+  exit_loop();
 }
 
 void ResourceXMLRPC::loadTodoCategoriesFinished( const QValueList<QVariant> &mapList, const QVariant& )

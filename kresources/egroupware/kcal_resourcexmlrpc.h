@@ -186,6 +186,7 @@ class ResourceXMLRPC : public ResourceCached
 
     void listTodosFinished( const QValueList<QVariant>&, const QVariant& );
     void addTodoFinished( const QValueList<QVariant>&, const QVariant& );
+    void updateTodoFinished( const QValueList<QVariant>&, const QVariant& );
     void deleteTodoFinished( const QValueList<QVariant>&, const QVariant& );
     void loadTodoCategoriesFinished( const QValueList<QVariant>&, const QVariant& );
 
