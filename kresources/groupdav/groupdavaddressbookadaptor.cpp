@@ -1,8 +1,9 @@
- /*
+/*
     This file is part of kdepim.
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Till Adam <adam@kde.org>
+    Copyright (c) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,29 +20,35 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KCAL_RESOURCEOPENGROUPWARE_H
-#define KCAL_RESOURCEOPENGROUPWARE_H
 
-#include "kcal_resourcegroupwarebase.h"
+#include "groupdavaddressbookadaptor.h"
+#include "groupdavglobals.h"
+#include "davgroupwareglobals.h"
+#include "webdavhandler.h"
 
-namespace KCal {
+#include <kabc/addressee.h>
+#include <kabc/vcardconverter.h>
+#include <kabcresourcecached.h>
 
-class GroupwarePrefsBase;
+#include <kio/job.h>
+#include <kdebug.h>
 
-/**
-  This class provides a resource for accessing an OpenGroupware.org server
-*/
-class KDE_EXPORT ResourceOpenGroupware : public ResourceGroupwareBase
+using namespace KABC;
+
+GroupDavAddressBookAdaptor::GroupDavAddressBookAdaptor() : DavAddressBookAdaptor()
 {
-    Q_OBJECT
-  public:
-    ResourceOpenGroupware();
-    ResourceOpenGroupware( const KConfig * );
-
-  protected:
-    void init();
-};
-
 }
 
-#endif
+void GroupDavAddressBookAdaptor::customAdaptDownloadUrl( KURL &url )
+{
+  url = WebdavHandler::toDAV( url );
+}
+
+void GroupDavAddressBookAdaptor::customAdaptUploadUrl( KURL &url )
+{
+kdDebug()<<"GroupDavAddressBookAdaptor::adaptUploadUrl( "<<url.url()<<")"<<endl;
+  url = WebdavHandler::toDAV( url );
+//   url.setPath( url.path() + "/new.vcf" );
+// url.addPath( "new.vcf" );
+kdDebug()<<"after GroupDavAddressBookAdaptor::adaptUploadUrl( "<<url.url()<<")"<<endl;
+}

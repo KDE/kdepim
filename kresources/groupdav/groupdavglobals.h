@@ -20,8 +20,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef OGOGLOBALS_H
-#define OGOGLOBALS_H
+#ifndef GROUPDAVGLOBALS_H
+#define GROUPDAVGLOBALS_H
 
 #include <groupwareuploadjob.h>
 #include <folderlister.h>
@@ -43,10 +43,10 @@ namespace KCal {
 class CalendarAdaptor;
 }
 
-class OGoGlobals
+class GroupDavGlobals
 {
   public:
-    OGoGlobals() {}
+    GroupDavGlobals() {}
     static QString extractFingerprint( KIO::Job *job, const QString &/*jobData*/ );
     static KPIM::GroupwareJob::ContentType getContentType( const QDomElement &prop );
     static KPIM::FolderLister::FolderType getFolderType( const QDomNode &folderNode );

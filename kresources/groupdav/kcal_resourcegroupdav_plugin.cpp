@@ -3,6 +3,7 @@
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Till Adam <adam@kde.org>
+    Copyright (c) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -20,34 +21,10 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include "ogoaddressbookadaptor.h"
-#include "ogoglobals.h"
-#include "davgroupwareglobals.h"
-#include "webdavhandler.h"
+#include "kcal_resourcegroupdav.h"
+#include "kcal_resourcegroupwarebaseconfig.h"
 
-#include <kabc/addressee.h>
-#include <kabc/vcardconverter.h>
-#include <kabcresourcecached.h>
+using namespace KCal;
 
-#include <kio/job.h>
-#include <kdebug.h>
-
-using namespace KABC;
-
-OGoAddressBookAdaptor::OGoAddressBookAdaptor() : DavAddressBookAdaptor()
-{
-}
-
-void OGoAddressBookAdaptor::customAdaptDownloadUrl( KURL &url )
-{
-  url = WebdavHandler::toDAV( url );
-}
-
-void OGoAddressBookAdaptor::customAdaptUploadUrl( KURL &url )
-{
-kdDebug()<<"OGoAddressBookAdaptor::adaptUploadUrl( "<<url.url()<<")"<<endl;
-  url = WebdavHandler::toDAV( url );
-//   url.setPath( url.path() + "/new.vcf" );
-// url.addPath( "new.vcf" );
-kdDebug()<<"after OGoAddressBookAdaptor::adaptUploadUrl( "<<url.url()<<")"<<endl;
-}
+typedef KRES::PluginFactory< ResourceGroupDav, ResourceGroupwareBaseConfig > GroupDavFactory;
+K_EXPORT_COMPONENT_FACTORY( kcal_groupdav, GroupDavFactory )

@@ -3,6 +3,7 @@
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Till Adam <adam@kde.org>
+    Copyright (c) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,47 +19,24 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#ifndef KABC_RESOURCEOPENOpenGroupwareCONFIG_H
-#define KABC_RESOURCEOPENOpenGroupwareCONFIG_H
+#ifndef KABC_RESOURCEGROUPDAV_H
+#define KABC_RESOURCEGROUPDAV_H
 
-#include <kresources/configwidget.h>
-
-#include <qmap.h>
-
-class KComboBox;
-class KLineEdit;
-class KListView;
-class KURLRequester;
-
-namespace KCal {
-class FolderConfig;
-}
+#include "kabc_resourcegroupwarebase.h"
+#include <kdepimmacros.h>
 
 namespace KABC {
 
-class ResourceOpenGroupware;
-
-class ResourceOpenGroupwareConfig : public KRES::ConfigWidget
-{ 
+class KDE_EXPORT ResourceGroupDav : public ResourceGroupwareBase
+{
   Q_OBJECT
 
   public:
-    ResourceOpenGroupwareConfig( QWidget* parent = 0, const char* name = 0 );
-
-  public slots:
-    void loadSettings( KRES::Resource* );
-    void saveSettings( KRES::Resource* );
-
-  protected slots:
-    void updateFolders();
-
-  private:
-    KURLRequester *mURL;
-    KLineEdit *mUser;
-    KLineEdit *mPassword;
-    KCal::FolderConfig *mFolderConfig;
-
-    ResourceOpenGroupware *mResource;
+    ResourceGroupDav( const KConfig * );
+//     ResourceGroupDav( const KURL &url,
+//             const QString &user, const QString &password );
+  protected:
+    void init();
 };
 
 }

@@ -1,8 +1,9 @@
-/*
+ /*
     This file is part of kdepim.
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Till Adam <adam@kde.org>
+    Copyright (c) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,34 +20,29 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
+#ifndef KCAL_RESOURCEGROUPDAV_H
+#define KCAL_RESOURCEGROUPDAV_H
 
-#include "ogocalendaradaptor.h"
-// #include "ogoglobals.h"
-// #include "davgroupwareglobals.h"
-#include "webdavhandler.h"
-// #include <libemailfunctions/idmapper.h>
+#include "kcal_resourcegroupwarebase.h"
 
-// #include <libkcal/calendarlocal.h>
-// #include <libkcal/icalformat.h>
-// #include <libkcal/resourcecached.h>
+namespace KCal {
 
-#include <kdebug.h>
+class GroupwarePrefsBase;
 
-using namespace KCal;
-
-OGoCalendarAdaptor::OGoCalendarAdaptor() : DavCalendarAdaptor()
+/**
+  This class provides a resource for accessing an GroupDav.org server
+*/
+class KDE_EXPORT ResourceGroupDav : public ResourceGroupwareBase
 {
+    Q_OBJECT
+  public:
+    ResourceGroupDav();
+    ResourceGroupDav( const KConfig * );
+
+  protected:
+    void init();
+};
+
 }
 
-void OGoCalendarAdaptor::customAdaptDownloadUrl( KURL &url )
-{
-  url = WebdavHandler::toDAV( url );
-}
-
-void OGoCalendarAdaptor::customAdaptUploadUrl( KURL &url )
-{
-  url = WebdavHandler::toDAV( url );
-  // FIXME: Find a good place where we can obtain the path for a new item
-//  url.setPath( url.path() + "/new.ics" );
-}
-
+#endif

@@ -1,8 +1,8 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=OpenGroupware.org
-X-KDE-Library=kcal_opengroupware
+Name=GroupDAV server (e.g. OpenGroupware)
+X-KDE-Library=kcal_groupdav
 Type=Service
 ServiceTypes=KResources/Plugin
 X-KDE-ResourceFamily=calendar
-X-KDE-ResourceType=opengroupware
+X-KDE-ResourceType=groupdav

@@ -3,6 +3,7 @@
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Till Adam <adam@kde.org>
+    Copyright (c) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,10 +20,10 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include "kabc_resourceopengroupware.h"
+#include "kabc_resourcegroupdav.h"
 #include "kabc_resourcegroupwarebaseconfig.h"
 
 using namespace KABC;
 
-typedef KRES::PluginFactory< ResourceOpenGroupware, ResourceGroupwareBaseConfig > OpenGroupwareFactory;
-K_EXPORT_COMPONENT_FACTORY( kabc_opengroupware, OpenGroupwareFactory )
+typedef KRES::PluginFactory< ResourceGroupDav, ResourceGroupwareBaseConfig > GroupDavFactory;
+K_EXPORT_COMPONENT_FACTORY( kabc_groupdav, GroupDavFactory )

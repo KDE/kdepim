@@ -3,6 +3,7 @@
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Till Adam <adam@kde.org>
+    Copyright (c) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,58 +20,60 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KCAL_OGOCALENDARADAPTOR_H
-#define KCAL_OGOCALENDARADAPTOR_H
+#ifndef KABC_GROUPDAVADDRESSBOOKADAPTOR_H
+#define KABC_GROUPDAVADDRESSBOOKADAPTOR_H
 
-#include "davcalendaradaptor.h"
-#include "groupwareuploadjob.h"
-#include "ogoglobals.h"
+#include "davaddressbookadaptor.h"
+#include "groupdavglobals.h"
 #include <davgroupwareglobals.h>
-
+#include <kabc/addressee.h>
 #include <kurl.h>
 
-namespace KIO {
-class Job;
-}
+#include <qdom.h>
 
-namespace KCal {
+namespace KABC {
 
-class OGoCalendarAdaptor : public DavCalendarAdaptor
+class GroupDavAddressBookAdaptor : public DavAddressBookAdaptor
 {
   public:
-    OGoCalendarAdaptor();
+    GroupDavAddressBookAdaptor();
 
     void customAdaptDownloadUrl( KURL &url );
     void customAdaptUploadUrl( KURL &url );
-    QCString identifier() const { return "KCalResourceOpengroupware"; }
-    QString defaultNewItemName( KPIM::GroupwareUploadItem */*item*/ ) { return "new.ics"; }
+    QString mimeType() const { return "text/x-vcard"; }
+    QCString identifier() const { return "KABCResourceGroupDAV"; }
+    QString defaultNewItemName( KPIM::GroupwareUploadItem */*item*/ ) { return "new.vcf"; }
     long flags() const { return GWResBatchDelete; }
 
 
     // Creating Jobs
     KIO::Job *createListFoldersJob( const KURL &url )
-        { return OGoGlobals::createListFoldersJob( url ); }
+        { return GroupDavGlobals::createListFoldersJob( url ); }
     KIO::TransferJob *createListItemsJob( const KURL &url )
-        { return OGoGlobals::createListItemsJob( url ); }
+        { return GroupDavGlobals::createListItemsJob( url ); }
     KIO::TransferJob *createDownloadJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
-        { return OGoGlobals::createDownloadJob( this, url,ctype ); }
+        { return GroupDavGlobals::createDownloadJob( this, url, ctype ); }
     KIO::Job *createRemoveJob( const KURL &uploadurl, const KPIM::GroupwareUploadItem::List &deletedItems )
-        { return OGoGlobals::createRemoveJob( this, uploadurl, deletedItems ); }
+        { return GroupDavGlobals::createRemoveJob( this, uploadurl, deletedItems ); }
 
 
     // Interpreting Jobs
     bool interpretListItemsJob( KIO::Job *job, const QString &/*jobData*/ )
-        { return OGoGlobals::interpretListItemsJob( this, job ); }
+        { return GroupDavGlobals::interpretListItemsJob( this, job ); }
     bool interpretDownloadItemsJob( KIO::Job *job, const QString &jobData )
-        { return OGoGlobals::interpretCalendarDownloadItemsJob( this, job, jobData );  }
+        { return GroupDavGlobals::interpretAddressBookDownloadItemsJob(
+           this, job, jobData ); }
 
 
     bool getFolderHasSubs( const QDomNode &folderNode )
-        { return OGoGlobals::getFolderHasSubs( folderNode ); }
+        { return GroupDavGlobals::getFolderHasSubs( folderNode ); }
     KPIM::FolderLister::FolderType getFolderType( const QDomNode &folderNode )
-        { return OGoGlobals::getFolderType( folderNode ); }
+        { return GroupDavGlobals::getFolderType( folderNode ); }
 };
+
 }
+
+
 
 
 #endif

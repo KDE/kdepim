@@ -3,6 +3,7 @@
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Till Adam <adam@kde.org>
+    Copyright (c) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -20,10 +21,26 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include "kcal_resourceopengroupware.h"
-#include "kcal_resourcegroupwarebaseconfig.h"
+#include "groupdavcalendaradaptor.h"
+#include "webdavhandler.h"
+
+#include <kdebug.h>
 
 using namespace KCal;
 
-typedef KRES::PluginFactory< ResourceOpenGroupware, ResourceGroupwareBaseConfig > OpenGroupwareFactory;
-K_EXPORT_COMPONENT_FACTORY( kcal_opengroupware, OpenGroupwareFactory )
+GroupDavCalendarAdaptor::GroupDavCalendarAdaptor() : DavCalendarAdaptor()
+{
+}
+
+void GroupDavCalendarAdaptor::customAdaptDownloadUrl( KURL &url )
+{
+  url = WebdavHandler::toDAV( url );
+}
+
+void GroupDavCalendarAdaptor::customAdaptUploadUrl( KURL &url )
+{
+  url = WebdavHandler::toDAV( url );
+  // FIXME: Find a good place where we can obtain the path for a new item
+//  url.setPath( url.path() + "/new.ics" );
+}
+

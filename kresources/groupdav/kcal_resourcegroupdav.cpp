@@ -3,6 +3,7 @@
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Till Adam <adam@kde.org>
+    Copyright (c) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,33 +20,33 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include "ogocalendaradaptor.h"
+#include "groupdavcalendaradaptor.h"
 
-#include "kcal_resourceopengroupware.h"
+#include "kcal_resourcegroupdav.h"
 
 using namespace KCal;
 
-ResourceOpenGroupware::ResourceOpenGroupware()
+ResourceGroupDav::ResourceGroupDav()
   : ResourceGroupwareBase()
 {
   init();
 }
 
-ResourceOpenGroupware::ResourceOpenGroupware( const KConfig *config )
+ResourceGroupDav::ResourceGroupDav( const KConfig *config )
   : ResourceGroupwareBase( config )
 {
   init();
   if ( config ) readConfig( config );
 }
 
-void ResourceOpenGroupware::init()
+void ResourceGroupDav::init()
 {
-  setType( "ResourceOpenGroupware" );
+  setType( "ResourceGroupDav" );
   setPrefs( createPrefs() );
   setFolderLister( new KPIM::FolderLister( KPIM::FolderLister::Calendar ) );
-  setAdaptor( new OGoCalendarAdaptor() );
+  setAdaptor( new GroupDavCalendarAdaptor() );
   
   ResourceGroupwareBase::init();
 }
 
-#include "kcal_resourceopengroupware.moc"
+#include "kcal_resourcegroupdav.moc"

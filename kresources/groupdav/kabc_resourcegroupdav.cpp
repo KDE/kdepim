@@ -3,6 +3,7 @@
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Till Adam <adam@kde.org>
+    Copyright (c) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,21 +20,21 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include "ogoaddressbookadaptor.h"
+#include "groupdavaddressbookadaptor.h"
 #include "kabc_groupwareprefs.h"
 
-#include "kabc_resourceopengroupware.h"
+#include "kabc_resourcegroupdav.h"
 
 using namespace KABC;
 
-ResourceOpenGroupware::ResourceOpenGroupware( const KConfig *config )
+ResourceGroupDav::ResourceGroupDav( const KConfig *config )
   : ResourceGroupwareBase( config )
 {
   init();
   if ( config ) readConfig( config );
 }
 
-/*ResourceOpenGroupware::ResourceOpenGroupware( const KURL &url, const QString &user, 
+/*ResourceGroupDav::ResourceGroupDav( const KURL &url, const QString &user, 
    const QString &password ) : ResourceGroupwareBase( url, user, password )
 {
   init();
@@ -42,14 +43,14 @@ ResourceOpenGroupware::ResourceOpenGroupware( const KConfig *config )
   prefs()->setPassword( password );
 }*/
 
-void ResourceOpenGroupware::init()
+void ResourceGroupDav::init()
 {
-  setType( "ResourceOpenGroupware" );
+  setType( "ResourceGroupDav" );
   setPrefs( createPrefs() );
   setFolderLister( new KPIM::FolderLister( KPIM::FolderLister::AddressBook ) );
-  setAdaptor( new OGoAddressBookAdaptor() );
+  setAdaptor( new GroupDavAddressBookAdaptor() );
   
   ResourceGroupwareBase::init();
 }
 
-#include "kabc_resourceopengroupware.moc"
+#include "kabc_resourcegroupdav.moc"

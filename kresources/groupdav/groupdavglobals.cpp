@@ -3,6 +3,7 @@
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Till Adam <adam@kde.org>
+    Copyright (c) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -20,7 +21,7 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include "ogoglobals.h"
+#include "groupdavglobals.h"
 #include "groupwaredataadaptor.h"
 #include <webdavhandler.h>
 #include <libemailfunctions/idmapper.h>
@@ -36,28 +37,28 @@
 #include <kio/davjob.h>
 #include <kio/job.h>
 
-QString OGoGlobals::extractFingerprint( KIO::Job *job, const QString &/*jobData*/ )
+QString GroupDavGlobals::extractFingerprint( KIO::Job *job, const QString &/*jobData*/ )
 {
   const QString& headers = job->queryMetaData( "HTTP-Headers" );
   return WebdavHandler::getEtagFromHeaders( headers );
 }
 
 
-KPIM::GroupwareJob::ContentType OGoGlobals::getContentType( const QDomElement &prop )
+KPIM::GroupwareJob::ContentType GroupDavGlobals::getContentType( const QDomElement &prop )
 {
   QDomElement ctype = prop.namedItem("getcontenttype").toElement();
   if ( ctype.isNull() ) return KPIM::GroupwareJob::Unknown;
   const QString &type = ctype.text();
 kdDebug()<<"Found content type: "<<type<<endl;
-  /// TODO: Not yet implemented in OGo!
+  /// TODO: Not yet implemented in GroupDav!
   return KPIM::GroupwareJob::Unknown;
 }
 
 
-KPIM::FolderLister::FolderType OGoGlobals::getFolderType( const QDomNode &folderNode )
+KPIM::FolderLister::FolderType GroupDavGlobals::getFolderType( const QDomNode &folderNode )
 {
   QDomNode n4;
-kdDebug()<<"OGoGlobals::getFolderType(...)"<<endl;
+kdDebug()<<"GroupDavGlobals::getFolderType(...)"<<endl;
   for( n4 = folderNode.firstChild(); !n4.isNull(); n4 = n4.nextSibling() ) {
     QDomElement e = n4.toElement();
 
@@ -77,7 +78,7 @@ kdDebug()<<"OGoGlobals::getFolderType(...)"<<endl;
   return KPIM::FolderLister::Unknown;
 }
 
-bool OGoGlobals::getFolderHasSubs( const QDomNode &folderNode )
+bool GroupDavGlobals::getFolderHasSubs( const QDomNode &folderNode )
 {
   // a folder is identified by the collection item in the resourcetype:
   // <a:resourcetype xmlns:a="DAV:"><a:collection xmlns:a="DAV:"/>...</a:resourcetype>
@@ -90,7 +91,7 @@ bool OGoGlobals::getFolderHasSubs( const QDomNode &folderNode )
 
 
 
-KIO::Job *OGoGlobals::createListFoldersJob( const KURL &url )
+KIO::Job *GroupDavGlobals::createListFoldersJob( const KURL &url )
 {
   QDomDocument doc;
   QDomElement root = WebdavHandler::addDavElement(  doc, doc, "d:propfind" );
@@ -104,7 +105,7 @@ KIO::Job *OGoGlobals::createListFoldersJob( const KURL &url )
 }
 
 
-KIO::TransferJob *OGoGlobals::createListItemsJob( const KURL &url )
+KIO::TransferJob *GroupDavGlobals::createListItemsJob( const KURL &url )
 {
   QDomDocument doc;
   QDomElement root = WebdavHandler::addDavElement(  doc, doc, "propfind" );
@@ -116,10 +117,10 @@ KIO::TransferJob *OGoGlobals::createListItemsJob( const KURL &url )
 }
 
 
-KIO::TransferJob *OGoGlobals::createDownloadJob( KPIM::GroupwareDataAdaptor *adaptor,
+KIO::TransferJob *GroupDavGlobals::createDownloadJob( KPIM::GroupwareDataAdaptor *adaptor,
                     const KURL &url, KPIM::GroupwareJob::ContentType /*ctype*/ )
 {
-kdDebug()<<"OGoGlobals::createDownloadJob, url="<<url.url()<<endl;
+kdDebug()<<"GroupDavGlobals::createDownloadJob, url="<<url.url()<<endl;
   KIO::TransferJob *job = KIO::get( url, false, false );
   if ( adaptor ) {
     QString mt = adaptor->mimeType();
@@ -130,12 +131,12 @@ kdDebug()<<"OGoGlobals::createDownloadJob, url="<<url.url()<<endl;
 }
 
 
-KIO::Job *OGoGlobals::createRemoveJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &uploadurl,
+KIO::Job *GroupDavGlobals::createRemoveJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &uploadurl,
        const KPIM::GroupwareUploadItem::List &deletedItems )
 {
   QStringList urls;
   KPIM::GroupwareUploadItem::List::const_iterator it;
-  kdDebug(5800) << " OGoGlobals::createRemoveJob, BaseURL="<<uploadurl.url()<<endl;
+  kdDebug(5800) << " GroupDavGlobals::createRemoveJob, BaseURL="<<uploadurl.url()<<endl;
   for ( it = deletedItems.constBegin(); it != deletedItems.constEnd(); ++it ) {
     //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
     KURL url( (*it)->url() );
@@ -157,7 +158,7 @@ kdDebug() << "Deleting item at "<< url.url() << endl;
 
 
 
-bool OGoGlobals::interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor,
+bool GroupDavGlobals::interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor,
                                         KIO::Job *job )
 {
   KIO::DavJob *davjob = dynamic_cast<KIO::DavJob *>(job);
@@ -199,10 +200,10 @@ bool OGoGlobals::interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor,
 }
 
 
-bool OGoGlobals::interpretCalendarDownloadItemsJob( KCal::CalendarAdaptor *adaptor,
+bool GroupDavGlobals::interpretCalendarDownloadItemsJob( KCal::CalendarAdaptor *adaptor,
                                          KIO::Job *job, const QString &jobData )
 {
-kdDebug(5800) << "DAVGroupwareGlobals::interpretCalendarDownloadItemsJob, iCalendar=" << endl;
+kdDebug(5800) << "GroupDavGlobals::interpretCalendarDownloadItemsJob, iCalendar=" << endl;
 kdDebug(5800) << jobData << endl;
   if ( !adaptor || !job ) return false;
   KCal::CalendarLocal calendar;
@@ -233,10 +234,10 @@ kdDebug(5800) << jobData << endl;
 }
 
 
-bool OGoGlobals::interpretAddressBookDownloadItemsJob(
+bool GroupDavGlobals::interpretAddressBookDownloadItemsJob(
       KABC::AddressBookAdaptor *adaptor, KIO::Job *job, const QString &jobData )
 {
-kdDebug(5800) << "DAVGroupwareGlobals::interpretAddressBookDownloadItemsJob, vCard=" << endl;
+kdDebug(5800) << "GroupDavGlobals::interpretAddressBookDownloadItemsJob, vCard=" << endl;
 kdDebug(5800) << jobData << endl;
   if ( !adaptor || !job ) return false;
 
