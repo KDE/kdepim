@@ -2,6 +2,7 @@
     This file is part of kdepim.
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2004 Till Adam <adam@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -87,3 +88,11 @@ QDomDocument WebdavHandler::createAllPropsRequest()
   prop.appendChild( doc.createElementNS( "http://apache.org/dav/props/", "executable" ) );
   return doc;
 }
+
+const QString WebdavHandler::getEtagFromHeaders( const QString& headers )
+{
+  int start = headers.find( "etag:" );
+  start += 6;
+  return headers.mid( start, headers.find( "\n", start ) - start );
+}
+

@@ -2,6 +2,7 @@
     This file is part of kdepim.
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2004 Till Adam <adam@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -329,6 +330,7 @@ void OpenGroupware::downloadNextIncidence()
   }
 }
 
+
 void OpenGroupware::slotUploadJobResult( KIO::Job *job )
 {
   kdDebug(7000) << " slotUploadJobResult " << endl;
@@ -340,6 +342,9 @@ void OpenGroupware::slotUploadJobResult( KIO::Job *job )
     ICalFormat ical;
     Incidence *i = ical.fromString( mIncidencesForUpload.front() );
     clearChange( i );
+    const QString& headers = job->queryMetaData( "HTTP-Headers" );
+    const QString& etag = WebdavHandler::getEtagFromHeaders( headers );
+    idMapper().setFingerprint( i->uid(), etag );
     mIncidencesForUpload.pop_front();
   }
 
@@ -349,14 +354,6 @@ void OpenGroupware::slotUploadJobResult( KIO::Job *job )
   }
   mUploadJob = 0;
   uploadNextIncidence();
-}
-
-
-static const QString getEtagFromHeaders( const QString& headers )
-{
-  int start = headers.find( "etag:" );
-  start += 6;
-  return headers.mid( start, headers.find( "\n", start ) - start );
 }
 
 void OpenGroupware::slotJobResult( KIO::Job *job )
@@ -369,7 +366,7 @@ void OpenGroupware::slotJobResult( KIO::Job *job )
     mIsShowingError = false;
   } else {
     const QString& headers = job->queryMetaData( "HTTP-Headers" );
-    const QString& etag = getEtagFromHeaders( headers );
+    const QString& etag = WebdavHandler::getEtagFromHeaders( headers );
     CalendarLocal calendar;
     ICalFormat ical;
     if ( !ical.fromString( &calendar, mJobData ) ) {
@@ -476,18 +473,23 @@ bool OpenGroupware::doSave()
 void OpenGroupware::uploadNextIncidence()
 {
   if ( !mIncidencesForUpload.isEmpty() ) {
-    KURL url( mBaseUrl );
     ICalFormat ical;
     Incidence *i = ical.fromString( mIncidencesForUpload.front() );
     const QString remote = idMapper().remoteId( i->uid() );
-    if ( !remote.isEmpty() )
+    KURL url;
+    if ( !remote.isEmpty() ) {
+      url = KURL( mBaseUrl );
       url.setPath( remote );
-    else
+    } else {
+      url = KURL( mFolderLister->writeDestinationId() );
       url.setPath( url.path() + "/Calendar/new.ics" );
+      kdDebug() << "Put new URL: " << url.url() << endl;
+    }
     const QString inc = mIncidencesForUpload.front();
     //kdDebug(7000) << "Uploading to: " << inc << endl;
     //kdDebug(7000) << "Uploading: " << url.prettyURL() << endl;
     mUploadJob = KIO::storedPut( inc.utf8(), url, -1, true, false, false );
+    mUploadJob->addMetaData( "PropagateHttpHeader", "true" );
     mUploadJob->addMetaData( "content-type", "text/calendar" );
     connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
         this, SLOT( slotUploadJobResult( KIO::Job * ) ) );

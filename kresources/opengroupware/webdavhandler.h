@@ -2,6 +2,7 @@
     This file is part of kdepim.
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2004 Till Adam <adam@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,6 +47,12 @@ class WebdavHandler
      * Creates a request body which asks only for the file name and the sequence 
      * number, which is what OGo uses to track revisions. */
     static QDomDocument createItemsAndVersionsPropsRequest();
+
+
+    /**
+     * Returns the value of the "etag" header if it can be found in the headers.
+     */
+    static const QString getEtagFromHeaders( const QString& );
 };
 
 #endif
