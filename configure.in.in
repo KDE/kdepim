@@ -11,4 +11,13 @@ fi
 
 KDE_INIT_DOXYGEN([The KDE-PIM API Reference], [Version $VERSION])
 
+KDE_CHECK_THREADING
+
+dnl For apps that NEED threads
+if test -z "$LIBPTHREAD" && test -z "$USE_THREADS"; then
+  DO_NOT_COMPILE="$DO_NOT_COMPILE knode"
+fi
+
 CXXFLAGS="$CXXFLAGS $KDE_DEFAULT_CXXFLAGS"
+
+
