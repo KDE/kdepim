@@ -26,6 +26,7 @@
 #include <kdialogbase.h>
 
 #include "addresseeconfig.h"
+#include "typecombo.h"
 
 class QButtonGroup;
 class QCheckBox;
@@ -50,29 +51,46 @@ class PhoneEditWidget : public QWidget
     void updateTypeCombo( const KABC::PhoneNumber::List&, KComboBox* );
     KABC::PhoneNumber currentPhoneNumber( KComboBox*, int );
 
-    void updateAllTypeCombos();
-
   signals:
     void modified();
 
   private slots:
-    void numberChanged( const QString& );
-    void comboChanged( int );
-    void comboChanged( KComboBox*, int );
     void edit();
 
+    void updatePrefEdit();
+    void updateSecondEdit();
+    void updateThirdEdit();
+    void updateFourthEdit();
+
+    void slotPrefEditChanged();
+    void slotSecondEditChanged();
+    void slotThirdEditChanged();
+    void slotFourthEditChanged();
+  
+  protected:
+    void updateLineEdits();
+
   private:
-    KComboBox *mPrefCombo;
-    KComboBox *mSecondCombo;
-    KComboBox *mThirdCombo;
-    KComboBox *mFourthCombo;
+    void updateEdit( TypeCombo *combo );
+    void updatePhoneNumber( TypeCombo *combo );
+    void updateOtherEdit( TypeCombo *combo, TypeCombo *otherCombo );
+
+    void initTypes();
+
+    TypeCombo *mPrefCombo;
+    TypeCombo *mSecondCombo;
+    TypeCombo *mThirdCombo;
+    TypeCombo *mFourthCombo;
     KLineEdit *mPrefEdit;
     KLineEdit *mSecondEdit;
     KLineEdit *mThirdEdit;
     KLineEdit *mFourthEdit;
 
-    QMap<KLineEdit*, KComboBox*> mEditMap;
     KABC::PhoneNumber::List mPhoneList;
+
+    QValueList<int> mTypes;
+    QStringList mTypeLabels;
+    TypeCombo::TypeList *mTypeList;
 };
   
 /**

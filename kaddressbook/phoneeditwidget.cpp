@@ -43,7 +43,10 @@
 
 #include <kabc/phonenumber.h>
 
+#include "typecombo.h"
+
 #include "phoneeditwidget.h"
+
 
 class PhoneItem : public QListBoxText
 {
@@ -77,179 +80,125 @@ private:
 PhoneEditWidget::PhoneEditWidget( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
+  mTypeList = new TypeCombo::TypeList;
+
   QGridLayout *layout = new QGridLayout( this, 5, 2 );
+  layout->setSpacing( KDialog::spacingHint() );
   
-  mPrefCombo = new KComboBox( this );
+  mPrefCombo = new TypeCombo( mTypeList, this );
   mPrefEdit = new KLineEdit( this );
+  mPrefCombo->setLineEdit( mPrefEdit );
   layout->addWidget( mPrefCombo, 0, 0 );
   layout->addWidget( mPrefEdit, 0, 1 );
-  mEditMap.insert( mPrefEdit, mPrefCombo );
 
-  mSecondCombo = new KComboBox( this );
+  mSecondCombo = new TypeCombo( mTypeList, this );
   mSecondEdit = new KLineEdit( this );
+  mSecondCombo->setLineEdit( mSecondEdit );
   layout->addWidget( mSecondCombo, 1, 0 );
   layout->addWidget( mSecondEdit, 1, 1 );
-  mEditMap.insert( mSecondEdit, mSecondCombo );
 
-  mThirdCombo = new KComboBox( this );
+  mThirdCombo = new TypeCombo( mTypeList, this );
   mThirdEdit = new KLineEdit( this );
+  mThirdCombo->setLineEdit( mThirdEdit );
   layout->addWidget( mThirdCombo, 2, 0 );
   layout->addWidget( mThirdEdit, 2, 1 );
-  mEditMap.insert( mThirdEdit, mThirdCombo );
 
-  mFourthCombo = new KComboBox( this );
+  mFourthCombo = new TypeCombo( mTypeList, this );
   mFourthEdit = new KLineEdit( this );
+  mFourthCombo->setLineEdit( mFourthEdit );
   layout->addWidget( mFourthCombo, 3, 0 );
   layout->addWidget( mFourthEdit, 3, 1 );
-  mEditMap.insert( mFourthEdit, mFourthCombo );
 
-  QPushButton *editButton = new QPushButton( i18n( "Edit Phone Numbers..." ), this );
+  // Four numbers don't fit in the current dialog
+  mFourthCombo->hide();
+  mFourthEdit->hide();
+
+  QPushButton *editButton = new QPushButton( i18n( "Edit Phone Numbers..." ),
+                                             this );
   layout->addMultiCellWidget( editButton, 4, 4, 0, 1 );
 
-  connect( mPrefEdit, SIGNAL( textChanged( const QString& ) ), SLOT( numberChanged( const QString& ) ) );
-  connect( mSecondEdit, SIGNAL( textChanged( const QString& ) ), SLOT( numberChanged( const QString& ) ) );
-  connect( mThirdEdit, SIGNAL( textChanged( const QString& ) ), SLOT( numberChanged( const QString& ) ) );
-  connect( mFourthEdit, SIGNAL( textChanged( const QString& ) ), SLOT( numberChanged( const QString& ) ) );
+  connect( mPrefEdit, SIGNAL( textChanged( const QString& ) ),
+           SLOT( slotPrefEditChanged() ) );
+  connect( mSecondEdit, SIGNAL( textChanged( const QString& ) ),
+           SLOT( slotSecondEditChanged() ) );
+  connect( mThirdEdit, SIGNAL( textChanged( const QString& ) ),
+           SLOT( slotThirdEditChanged() ) );
+  connect( mFourthEdit, SIGNAL( textChanged( const QString& ) ),
+           SLOT( slotFourthEditChanged() ) );
+
   connect( editButton, SIGNAL( clicked() ), SLOT( edit() ) );
 
-  connect( mPrefCombo, SIGNAL( highlighted( int ) ), SLOT( comboChanged( int ) ) );
-  connect( mSecondCombo, SIGNAL( highlighted( int ) ), SLOT( comboChanged( int ) ) );
-  connect( mThirdCombo, SIGNAL( highlighted( int ) ), SLOT( comboChanged( int ) ) );
-  connect( mFourthCombo, SIGNAL( highlighted( int ) ), SLOT( comboChanged( int ) ) );
+  connect( mPrefCombo, SIGNAL( activated( int ) ),
+           SLOT( updatePrefEdit() ) );
+  connect( mSecondCombo, SIGNAL( activated( int ) ),
+           SLOT( updateSecondEdit() ) );
+  connect( mThirdCombo, SIGNAL( activated( int ) ),
+           SLOT( updateThirdEdit() ) );
+  connect( mFourthCombo, SIGNAL( activated( int ) ),
+           SLOT( updateFourthEdit() ) );
 }
-    
+
 PhoneEditWidget::~PhoneEditWidget()
 {
+  delete mTypeList;
 }
-    
+
+void PhoneEditWidget::initTypes()
+{
+  mTypeList->clear();
+
+  // Default types
+  mTypeList->addType( PhoneNumber::Home, i18n("Home") );
+  mTypeList->addType( PhoneNumber::Work, i18n("Work") );
+  mTypeList->addType( PhoneNumber::Cell, i18n("Mobile" ) );
+  mTypeList->addType( PhoneNumber::Fax | PhoneNumber::Work, i18n("Work Fax") );
+  mTypeList->addType( PhoneNumber::Fax | PhoneNumber::Home, i18n("Home Fax") );
+}
+
 void PhoneEditWidget::setPhoneNumbers( const KABC::PhoneNumber::List &list )
 {
   mPhoneList = list;
 
-  mPrefCombo->clear();
-  mSecondCombo->clear();
-  mThirdCombo->clear();
-  mFourthCombo->clear();
+  kdDebug() << "PhoneEditWidget::setPhoneNumbers(): count: "
+            << mPhoneList.count() << endl;
 
-  updateAllTypeCombos();
+  if ( mTypeList->count() == 0 ) initTypes();
+
+  mPrefCombo->updateTypes();
+  mSecondCombo->updateTypes();
+  mThirdCombo->updateTypes();
+  mFourthCombo->updateTypes();
+
+  if ( mPhoneList.count() > 0 ) {
+    mPrefCombo->selectType( mPhoneList[ 0 ].type() );
+  } else mPrefCombo->selectType( PhoneNumber::Home );
+
+  if ( mPhoneList.count() > 1 ) {
+    mSecondCombo->selectType( mPhoneList[ 1 ].type() );
+  } else mSecondCombo->selectType( PhoneNumber::Work );
+
+  if ( mPhoneList.count() > 2 ) {
+    mThirdCombo->selectType( mPhoneList[ 2 ].type() );
+  } else mThirdCombo->selectType( PhoneNumber::Cell );
+
+  if ( mPhoneList.count() > 3 ) {
+    mFourthCombo->selectType( mPhoneList[ 3 ].type() );
+  } else mFourthCombo->selectType( PhoneNumber::Work | PhoneNumber::Fax );
+
+  updateLineEdits();
+}
+
+void PhoneEditWidget::updateLineEdits()
+{
+  updatePrefEdit();
+  updateSecondEdit();
+  updateThirdEdit();
+  updateFourthEdit();
 }
 
 const KABC::PhoneNumber::List &PhoneEditWidget::phoneNumbers()
 {
   return mPhoneList;
-}
-
-void PhoneEditWidget::updateTypeCombo( const KABC::PhoneNumber::List &list, KComboBox *combo )
-{
-  int pos = combo->currentItem();
-  combo->clear();
-
-  QListBox *lb = combo->listBox();
-
-  KABC::PhoneNumber::List::ConstIterator it;
-  for ( it = list.begin(); it != list.end(); ++it )
-    new PhoneItem( lb, list, *it );
-
-  lb->sort();
-  combo->setCurrentItem( pos );
-}
-
-void PhoneEditWidget::updateAllTypeCombos()
-{
-  if ( mPhoneList.count() > 0 ) {
-    updateTypeCombo( mPhoneList, mPrefCombo );
-    mPrefCombo->setCurrentItem( 0 );
-  }
-
-  if ( mPhoneList.count() > 1 ) {
-    updateTypeCombo( mPhoneList, mSecondCombo );
-    mSecondCombo->setCurrentItem( 1 );
-  }
-
-  if ( mPhoneList.count() > 2 ) {
-    updateTypeCombo( mPhoneList, mThirdCombo );
-    mThirdCombo->setCurrentItem( 2 );
-  }
-
-  if ( mPhoneList.count() > 3 ) {
-    updateTypeCombo( mPhoneList, mFourthCombo );
-    mFourthCombo->setCurrentItem( 3 );
-  }
-
-    comboChanged( mPrefCombo, mPrefCombo->currentItem() );
-    comboChanged( mSecondCombo, mSecondCombo->currentItem() );
-    comboChanged( mThirdCombo, mThirdCombo->currentItem() );
-    comboChanged( mFourthCombo, mFourthCombo->currentItem() );
-}
-
-KABC::PhoneNumber PhoneEditWidget::currentPhoneNumber( KComboBox *combo, int index )
-{
-  if ( index < 0 ) index = 0;
-  if ( index >= combo->count() ) index = combo->count() - 1;
-
-  QListBox *lb = combo->listBox();
-  PhoneItem *item = dynamic_cast<PhoneItem*>( lb->item( index ) );
-  if ( item )
-    return item->phoneNumber();
-  else
-    return KABC::PhoneNumber();
-}
-
-void PhoneEditWidget::numberChanged( const QString &text )
-{
-  KLineEdit *edit = (KLineEdit*)sender();
-  if ( !edit )
-    return;
-
-  KComboBox *combo = mEditMap[ edit ];
-  if ( !combo )
-    return;
-
-  KABC::PhoneNumber number = currentPhoneNumber( combo, combo->currentItem() );
-
-  KABC::PhoneNumber::List::Iterator it;
-  for ( it = mPhoneList.begin(); it != mPhoneList.end(); ++it ) {
-    if ( (*it).id() == number.id() ) {
-      (*it).setNumber( text );
-      bool blocked = combo->signalsBlocked();
-      combo->blockSignals( true );
-      updateTypeCombo( mPhoneList, combo );
-      combo->blockSignals( blocked );
-      return;
-    }
-  }
-}
-
-void PhoneEditWidget::comboChanged( int index )
-{
-  KComboBox *combo = (KComboBox*)sender();
-  if ( !combo )
-    return;
-
-  comboChanged( combo, index );
-}
-
-void PhoneEditWidget::comboChanged( KComboBox *combo, int index )
-{
-  KABC::PhoneNumber number = currentPhoneNumber( combo, index );
-
-  KABC::PhoneNumber::List::Iterator iter;
-  for ( iter = mPhoneList.begin(); iter != mPhoneList.end(); ++iter ) {
-    if ( (*iter).id() == number.id() )
-      number = *iter;
-  }
-
-  QMap<KLineEdit*,KComboBox*>::Iterator it;
-  for ( it = mEditMap.begin(); it != mEditMap.end(); ++it ) {
-    if ( it.data() == combo ) {
-      KLineEdit *edit = it.key();
-      bool blocked = edit->signalsBlocked();
-      edit->blockSignals( true );
-      edit->setText( number.number() );
-      edit->blockSignals( blocked );
-      return;
-    }
-  }
 }
 
 void PhoneEditWidget::edit()
@@ -258,8 +207,86 @@ void PhoneEditWidget::edit()
   
   if ( dlg.exec() ) {
     mPhoneList = dlg.phoneNumbers();
-    updateAllTypeCombos();
+    updateLineEdits();
     emit modified();
+  }
+}
+
+void PhoneEditWidget::updatePrefEdit()
+{
+  updateEdit( mPrefCombo );
+}
+
+void PhoneEditWidget::updateSecondEdit()
+{
+  updateEdit( mSecondCombo );
+}
+
+void PhoneEditWidget::updateThirdEdit()
+{
+  updateEdit( mThirdCombo );
+}
+
+void PhoneEditWidget::updateFourthEdit()
+{
+  updateEdit( mFourthCombo );
+}
+
+void PhoneEditWidget::updateEdit( TypeCombo *combo )
+{
+  QLineEdit *edit = combo->lineEdit();
+  if ( !edit ) return;
+
+  PhoneNumber::List::Iterator it = combo->selectedElement( mPhoneList );
+  if ( it != mPhoneList.end() ) edit->setText( (*it).number() );
+  else edit->clear();
+}
+
+void PhoneEditWidget::slotPrefEditChanged()
+{
+  updatePhoneNumber( mPrefCombo );
+}
+
+void PhoneEditWidget::slotSecondEditChanged()
+{
+  updatePhoneNumber( mSecondCombo );
+}
+
+void PhoneEditWidget::slotThirdEditChanged()
+{
+  updatePhoneNumber( mThirdCombo );
+}
+
+void PhoneEditWidget::slotFourthEditChanged()
+{
+  updatePhoneNumber( mFourthCombo );
+}
+
+void PhoneEditWidget::updatePhoneNumber( TypeCombo *combo )
+{
+  QLineEdit *edit = combo->lineEdit();
+  if ( !edit ) return;
+
+  PhoneNumber::List::Iterator it = combo->selectedElement( mPhoneList );
+  if ( it != mPhoneList.end() ) (*it).setNumber( edit->text() );
+  else {
+    mPhoneList.append( PhoneNumber( edit->text(), combo->selectedType() ) );
+  }
+
+  updateOtherEdit( mPrefCombo, combo );
+  updateOtherEdit( mSecondCombo, combo );
+  updateOtherEdit( mThirdCombo, combo );
+  updateOtherEdit( mFourthCombo, combo );
+
+  emit modified();
+}
+
+void PhoneEditWidget::updateOtherEdit( TypeCombo *combo, TypeCombo *otherCombo )
+{
+  if ( combo == otherCombo ) return;
+
+  if ( combo->currentItem() == otherCombo->currentItem() ) {
+    updateEdit( otherCombo );
   }
 }
 
@@ -464,5 +491,6 @@ KABC::PhoneNumber PhoneTypeDialog::phoneNumber()
 
   return mPhoneNumber;
 }
+
 
 #include "phoneeditwidget.moc"

@@ -373,7 +373,9 @@ void AddresseeEditorWidget::setupTab3()
 }
     
 void AddresseeEditorWidget::load()
-{ 
+{
+  kdDebug() << "AddresseeEditorWidget::load()" << endl;
+
   // Block signals in case anything tries to emit modified
   // CS: This doesn't seem to work.
   bool block = signalsBlocked();
