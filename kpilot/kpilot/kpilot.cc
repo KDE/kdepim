@@ -1069,13 +1069,16 @@ int main(int argc, char** argv)
 		if (debug_level & UI_MAJOR)
 		{
 			kdDebug() << fname << ": Running setup first."
-				<< " (mode " << run_mode << ')'
+				<< " (mode " << run_mode << ")"
 				<< endl ;
 		}
 
 		KPilotOptions* options = new KPilotOptions(0L);
 		options->show();
-		return 0;
+		// gsetupDialog uses result 0 for cancel
+		//
+		//
+		if (!options->result()) return 0;
 	}
 
 #ifdef KDE2

@@ -261,7 +261,7 @@ AddressWidget::updateWidget()
 	if (debug_level & UI_MINOR)
 	{
 		kdDebug() << fname << ": Display Mode=" << 
-			addressDisplayMode << '\n' ;
+			addressDisplayMode << endl ;
 	}
 
 	if (fCatList->currentItem()==-1)
@@ -851,6 +851,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.11  2000/10/29 14:12:37  habenich
+// removed compiler warnings
+//
 // Revision 1.10  2000/10/26 10:10:09  adridg
 // Many fixes
 //

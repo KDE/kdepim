@@ -459,11 +459,24 @@ KPilotLink::slotConduitClosed(KSocket* theSocket)
 QString
 KPilotLink::registeredConduit(const QString &dbName)
 {
+	FUNCTIONSETUP;
+
 	KConfig* config = getConfig("Database Names");
+
+	if (debug_level & SYNC_MINOR)
+	{
+		kdDebug() << fname << ": Looking for "
+			<< dbName << endl;
+	}
 
 	QString result = config->readEntry(dbName);
 	if (result.isNull())
 	{
+		if (debug_level & SYNC_MINOR)
+		{
+			kdDebug() << fname << ": Not found." << endl;
+		}
+
 		delete config;
 		return result;
 	}
@@ -472,19 +485,51 @@ KPilotLink::registeredConduit(const QString &dbName)
 	QStringList installed = config->readListEntry("InstalledConduits");
 	delete config;
 
+	if (debug_level & SYNC_TEDIOUS)
+	{
+		QStringList::Iterator i;
+		kdDebug() << fname << ": Found conduit "
+			<< result << endl
+			<< fname << ": Installed Conduits are"
+			<< endl;
+
+		for (i=installed.begin(); i!=installed.end(); ++i)
+		{
+			kdDebug() << fname << ": * "
+				<< (*i)
+				<< endl;
+		}
+	}
+
 	if (!installed.contains(result))
 	{
+		if (debug_level & SYNC_MINOR)
+		{
+			kdDebug() << fname << ": Conduit not installed."
+				<< endl;
+		}
 		return QString::null;
 	}
 
 #ifdef KDE2
-	KService::Ptr conduit = KService::serviceByName(result);
+	KService::Ptr conduit = KService::serviceByDesktopName(result);
 	if (!conduit)
 	{
+		if (debug_level & SYNC_MINOR)
+		{
+			kdDebug() << fname << ": No service for this conduit"
+				<< endl;
+		}
 		return QString::null;
 	}
 	else
 	{
+		if (debug_level & SYNC_MINOR)
+		{
+			kdDebug() << fname << ": Found service with exec="
+				<< conduit->exec()
+				<< endl;
+		}
 		return conduit->exec();
 	}
 #else
@@ -896,7 +941,7 @@ KPilotLink::createNewProgressBar(QString title, QString text, int min, int max, 
   QLabel* label = new QLabel(fProgressDialog);
   label->setAutoResize(true);
   label->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-  label->setAlignment(AlignBottom | AlignCenter | WordBreak);
+  label->setAlignment(AlignBottom | AlignHCenter | WordBreak);
   label->setText(text);
   label->setFixedWidth(200);
   label->move(10, 0);
@@ -1008,9 +1053,9 @@ KPilotLink::quickHotSync()
 void
 KPilotLink::doConduitBackup()
 {
-  FUNCTIONSETUP;
+	FUNCTIONSETUP;
+	QString displaymessage;
 
-  char message[256];
   struct DBInfo info;
   do
     {
@@ -1048,8 +1093,8 @@ KPilotLink::doConduitBackup()
 
   // Fire up the conduit responsible for this db and when it's finished
   // we'll get called again.
-  sprintf(message, "%s: Running conduit", info.name);
-  fMessageDialog->setMessage(message);
+  displaymessage=i18n("%1: Running conduit").arg(info.name);
+  fMessageDialog->setMessage(displaymessage);
   fCurrentDBInfo = info;
   fCurrentDB = openDatabase(info.name);
   fCurrentDB->resetDBIndex();
@@ -1137,9 +1182,9 @@ KPilotLink::syncNextDB()
 
   if (debug_level & SYNC_TEDIOUS)
     {
-      kdDebug() << fname << ": Special dispositions\n"
-	   << fname << ": BackupOnly=" << backupOnly << endl
-	   << fname << ": Skip=" << skip << endl ;
+      kdDebug() << fname << ": Special dispositions are: \n"
+	   << fname << ": * BackupOnly=" << backupOnly << endl
+	   << fname << ": * Skip=" << skip << endl ;
     }
   if (!findNextDB(&info)) return;
 
@@ -1245,8 +1290,14 @@ KPilotLink::syncNextDB()
       kapp->processEvents();
     }
 
-  fConduitProcess->clearArguments();
-  *fConduitProcess << conduitName;
+	fConduitProcess->clearArguments();
+	*fConduitProcess << conduitName;
+	*fConduitProcess << "--hotsync" ;
+	if (debug_level)
+	{
+		*fConduitProcess << "--debug" ;
+		*fConduitProcess << QString::number(debug_level);
+	}
   fConduitProcess->start(KProcess::DontCare);
 }
 
@@ -1409,9 +1460,34 @@ KConfig *KPilotLink::getConfig(const QString &s)
 	* It is a grave programming error, so we will let that
 	* stand.
 	*/
-	KConfig* config = new KConfig(KGlobal::dirs()->
-		findResource("config", "kpilotrc"));
-	if (!s.isNull()) config->setGroup(s);
+	QString existingConfig=
+		KGlobal::dirs()->findResource("config", "kpilotrc");
+
+	KConfig* config = 0L;
+	
+	if (existingConfig.isNull())
+	{
+		if (debug_level & UI_MAJOR)
+		{
+			kdDebug() << fname 
+				<< ": Making a new config file"
+				<< endl;
+		}
+		config=new KConfig("kpilotrc",false,false);
+	}
+	else
+	{
+		config=new KConfig(existingConfig);
+	}
+
+	if (config == 0L)
+	{
+		kdDebug() << fname << ": No configuration was found."
+			<< endl;
+		return config;
+	}
+
+	config->setGroup(s);
 	return config;
 }
 

@@ -104,11 +104,11 @@ void MemoWidget::initializeCategories(PilotDatabase *memoDB)
 			fCatList->insertItem(fMemoAppInfo.category.name[i]);
 			if (debug_level & UI_MINOR)
 			{
-				kdDebug() << fname << 
-					": Added category " <<
-					i << '=' <<
-					fMemoAppInfo.category.name[i] <<
-					'\n' ;
+				kdDebug() << fname 
+					<< ": Added category "
+					<< i << '='
+					<< fMemoAppInfo.category.name[i]
+					<< endl ;
 			}
 		}
 	}
@@ -401,7 +401,7 @@ MemoWidget::updateWidget()
 			kdDebug() << fname << 
 				": List item " << fCatList->currentItem() <<
 				" selected, text=" <<
-				selectedCategory << '\n' ;
+				selectedCategory << endl ;
 		}
 
 		currentCatID=0;
@@ -415,7 +415,7 @@ MemoWidget::updateWidget()
 					": Didn't match category " <<
 					currentCatID << '=' <<
 					fMemoAppInfo.category.name[currentCatID]
-					<< '\n' ;
+					<< endl ;
 			}
 
 			currentCatID++;
@@ -429,7 +429,7 @@ MemoWidget::updateWidget()
 					": Matched category " <<
 					currentCatID << '=' <<
 					fMemoAppInfo.category.name[currentCatID]
-					<< '\n' ;
+					<< endl ;
 			}
 		}
 		else
