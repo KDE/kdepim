@@ -21,17 +21,17 @@
 #include "knnntpaccount.h"
 
 KNCollectionViewItem::KNCollectionViewItem(KNListView *vi) :
-  KNLVItemBase(vi)
+  KNLVItemBase(vi), coll(0)
 {
-  coll=0;
+  num[0]=num[1]=num[2]=-1;
 }
 
 
 
 KNCollectionViewItem::KNCollectionViewItem(KNLVItemBase *it) :
-  KNLVItemBase(it)
+  KNLVItemBase(it), coll(0)
 {
-  coll=0;
+  num[0]=num[1]=num[2]=-1;
 }
 
 
@@ -42,12 +42,30 @@ KNCollectionViewItem::~KNCollectionViewItem()
 }
 
 
-
-QString KNCollectionViewItem::key(int c, bool) const
+void KNCollectionViewItem::setNumber(int column, int number)
 {
-  if(coll->type()==KNCollection::CTfolder && c==0)
-    return QString("\xff\xff\xff\xff");
-  else return text(c);
+  if ((column >= 1)&&(column <=2)) {
+    setText(column, QString::number(number));
+    num[column]=number;
+  }
+}
+
+
+QString KNCollectionViewItem::key(int c, bool ascending) const
+{
+  QString prefix;
+
+  if (coll->type()==KNCollection::CTfolder)    // folders should be always on the bottom
+    prefix = (ascending)? QString("b"):QString("a");
+  else
+    prefix = (ascending)? QString("a"):QString("b");
+
+  if ((c >= 1)&&(c <= 2)&&(num[c] != -1)) {
+     QString tmpString;
+     return prefix+tmpString.sprintf("%07d", num[c]);
+  } else
+    return prefix+text(0);
+
 }
 
 

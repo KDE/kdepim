@@ -386,7 +386,7 @@ void KNFetchArticleManager::search()
     sDlg->show();
     KWin::setActiveWindow(sDlg->winId());
   } else {
-    sDlg=new KNSearchDialog(KNSearchDialog::STfolderSearch, knGlobals.topWidget);
+    sDlg=new KNSearchDialog(KNSearchDialog::STfolderSearch, 0);
     connect(sDlg, SIGNAL(doSearch(KNArticleFilter*)), this,
       SLOT(slotFilterChanged(KNArticleFilter*)));
     connect(sDlg, SIGNAL(dialogDone()), this,

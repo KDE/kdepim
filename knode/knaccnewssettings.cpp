@@ -286,7 +286,7 @@ KNAccNewsConfDialog::~KNAccNewsConfDialog()
 void KNAccNewsConfDialog::slotOk()
 {
   if (n_ame->text().isEmpty() || s_erver->text().isEmpty()) {
-    KMessageBox::information(this, i18n("Please enter an arbitrary name for the account and the\nhostname of the news server."));
+    KMessageBox::sorry(this, i18n("Please enter an arbitrary name for the account and the\nhostname of the news server."));
     return;
   }
 

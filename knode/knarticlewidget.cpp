@@ -620,7 +620,7 @@ void KNArticleWidget::createHtmlPage()
                   .arg(toHtmlString(a_rticle->fromEmail(), false));
       else
         if(vh->header().lower()=="date")
-          buffer+=a_rticle->timeString();
+          buffer+=a_rticle->longTimeString();
       else
           buffer+=toHtmlString(hLine, false);   
         

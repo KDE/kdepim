@@ -41,8 +41,8 @@ class KNodeView : public QSplitter
     const KActionCollection& actions()      { return actionCollection; }    
     
     void readOptions();
-    void saveOptions();       
-          
+    void saveOptions();
+
   protected:
     void initCollectionView();
     void initHdrView();

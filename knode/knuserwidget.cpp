@@ -159,13 +159,13 @@ void KNUserWidget::slotSignatureEdit()
   QString fileName = sig->text().stripWhiteSpace();
 
   if (fileName.isEmpty()) {
-    KMessageBox::error(this, i18n("You must specify a filename!"));
+    KMessageBox::sorry(this, i18n("You must specify a filename!"));
     return;
   }
 
   QFileInfo fileInfo( fileName );
   if (fileInfo.isDir()) {
-    KMessageBox::error(this, i18n("You have specified a directory!"));
+    KMessageBox::sorry(this, i18n("You have specified a directory!"));
     return;
   }
 

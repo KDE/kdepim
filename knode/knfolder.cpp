@@ -59,7 +59,7 @@ QString KNFolder::path()
 void KNFolder::updateListItem()
 {
   if(l_istItem)
-    l_istItem->setText(1,QString::number(c_ount));
+    l_istItem->setNumber(1,c_ount);
 }
 
 

@@ -204,7 +204,7 @@ void KNSavedArticleManager::post(KNNntpAccount *acc)
     if(!art) return;
     openInComposer(art);
   }
-  else KMessageBox::information(knGlobals.topWidget, i18n("Please set your name and email first."));  
+  else KMessageBox::sorry(knGlobals.topWidget, i18n("Please set your name and email first."));
 }
 
 
@@ -218,7 +218,7 @@ void KNSavedArticleManager::post(KNGroup *g)
     art->setDestination(g->name().utf8().copy());
     openInComposer(art);
   }
-  else KMessageBox::information(knGlobals.topWidget, i18n("Please set your name and email first."));      
+  else KMessageBox::sorry(knGlobals.topWidget, i18n("Please set your name and email first."));
 }
 
 
@@ -232,6 +232,12 @@ void KNSavedArticleManager::reply(KNArticle *a, KNGroup *g)
   KNMimeContent *text;
   
   if(!a) return;
+
+  if (!defaultUser->isValid()) {
+    KMessageBox::sorry(knGlobals.topWidget, i18n("Please set your name and email first."));
+    return;
+  }
+
   if(asMail) art=newArticle();
   else art=newArticle(g->account());
   if(!art) return;
@@ -349,7 +355,7 @@ void KNSavedArticleManager::editArticle(KNSavedArticle *a)
   if(!a) a=c_urrentArticle;
   if(!a) return;
   if(a->editable()) openInComposer(a);
-  else KMessageBox::information(knGlobals.topWidget, i18n("Sorry this article cannot be edited!"));
+  else KMessageBox::sorry(knGlobals.topWidget, i18n("Sorry, this article cannot be edited!"));
 }
 
 
@@ -405,7 +411,7 @@ void KNSavedArticleManager::sendArticle(KNSavedArticle *a, bool now)
   if(!a) return;
   
   if(a->sent()) {
-    KMessageBox::information(knGlobals.topWidget, i18n("This article has already been sent."));
+    KMessageBox::sorry(knGlobals.topWidget, i18n("This article has already been sent."));
     return;
   } 
   
@@ -525,7 +531,7 @@ KNSavedArticle* KNSavedArticleManager::newArticle(KNNntpAccount *acc)
   
   if(genMId) {
     if(MIdhost.isEmpty()) {
-      KMessageBox::information(knGlobals.topWidget, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
+      KMessageBox::sorry(knGlobals.topWidget, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
       return 0;
     }
     else {
@@ -608,7 +614,7 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
   QCString tmp;
 
   if(!c->hasValidData()) {
-    KMessageBox::information(knGlobals.topWidget, i18n("Please enter a subject and at least one\nnewsgroup or mail-address!"));
+    KMessageBox::sorry(knGlobals.topWidget, i18n("Please enter a subject and at least one\nnewsgroup or mail-address!"));
     return false;
   }
   
@@ -822,23 +828,23 @@ bool KNSavedArticleManager::cancelAllowed(KNSavedArticle *a)
   if (!a)
     return false;
   if (a->isMail()) {
-    KMessageBox::information(knGlobals.topWidget, i18n("Emails cannot be canceled or superseded!"));
+    KMessageBox::sorry(knGlobals.topWidget, i18n("Emails cannot be canceled or superseded!"));
     return false;
   }
   if ((a->type()==KNArticleBase::ATcontrol) && (static_cast<KNControlArticle*>(a)->ctlType()==KNArticleBase::CTcancel)) {
-    KMessageBox::information(knGlobals.topWidget, i18n("Cancel messages cannot be canceled or superseded!"));
+    KMessageBox::sorry(knGlobals.topWidget, i18n("Cancel messages cannot be canceled or superseded!"));
     return false;
   }
   if (!a->sent()) {
-    KMessageBox::information(knGlobals.topWidget, i18n("Only sent articles can be canceled or superseded!"));
+    KMessageBox::sorry(knGlobals.topWidget, i18n("Only sent articles can be canceled or superseded!"));
     return false;
   }
   if (a->canceled()) {
-    KMessageBox::information(knGlobals.topWidget, i18n("This article has already been canceled or superseded!")); 
+    KMessageBox::sorry(knGlobals.topWidget, i18n("This article has already been canceled or superseded!"));
     return false;
   }   
   if(a->headerLine("Message-ID").isEmpty()) {
-    KMessageBox::information(knGlobals.topWidget, i18n("This article cannot be canceled or superseded,\nbecause it's message-id has not been created by KNode!\nBut you can look for your article in the newsgroup\nand cancel (or supersede) it there."));
+    KMessageBox::sorry(knGlobals.topWidget, i18n("This article cannot be canceled or superseded,\nbecause it's message-id has not been created by KNode!\nBut you can look for your article in the newsgroup\nand cancel (or supersede) it there."));
     return false;
   }
   return true;
@@ -854,11 +860,11 @@ bool KNSavedArticleManager::cancelAllowed(KNFetchArticle *a, KNGroup *g)
   if (g->user())
     user = g->user();
   if (user->name()!=a->fromName()||user->email()!=a->fromEmail()) {
-    KMessageBox::information(knGlobals.topWidget, i18n("This article does not appear to be from you.\nYou can only cancel or supersede you own articles."));  
+    KMessageBox::sorry(knGlobals.topWidget, i18n("This article does not appear to be from you.\nYou can only cancel or supersede you own articles."));
     return false;
   }
   if (!a->hasContent())  {
-    KMessageBox::information(knGlobals.topWidget, i18n("You have to download the article body\nbefore you can cancel or supersede the article."));  
+    KMessageBox::sorry(knGlobals.topWidget, i18n("You have to download the article body\nbefore you can cancel or supersede the article."));
     return false;
   }
   return true;
@@ -876,7 +882,7 @@ bool KNSavedArticleManager::generateCancel(KNArticle *a, KNNntpAccount *acc)
   QCString mid;
   if (genMId) {
     if (MIdhost.isEmpty()) {
-      KMessageBox::information(knGlobals.topWidget, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
+      KMessageBox::sorry(knGlobals.topWidget, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
       return false;
     } else {
       mid="<"+KNArticleBase::uniqueString();
@@ -919,7 +925,7 @@ bool KNSavedArticleManager::generateSupersede(KNArticle *a, KNNntpAccount *acc)
   QCString mid;
   if (genMId) {
     if (MIdhost.isEmpty()) {
-      KMessageBox::information(knGlobals.topWidget, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
+      KMessageBox::sorry(knGlobals.topWidget, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
       return false;
     } else {
       mid="<"+KNArticleBase::uniqueString();

@@ -66,7 +66,7 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, const
   KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
   KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
 
-  createGUI( "knreaderui.rc",false);
+  createGUI("knreaderui.rc",false);
   guiFactory()->addClient(artW->part());
   conserveMemory();
 
@@ -126,29 +126,31 @@ void KNArticleWindow::slotArtSupersede()
 
 void KNArticleWindow::slotToggleToolBar()
 {
-  if(toolBar()->isVisible())
-    toolBar()->hide();
+  if(toolBar("mainToolBar")->isVisible())
+    toolBar("mainToolBar")->hide();
   else
-    toolBar()->show();
+    toolBar("mainToolBar")->show();
 }
 
 
 
-    
 void KNArticleWindow::slotConfKeys()
 {
-  KKeyDialog::configureKeys(actionCollection(),xmlFile());
+  KKeyDialog::configureKeys(actionCollection(), xmlFile(), true, this);
 }
 
-  
 
     
 void KNArticleWindow::slotConfToolbar()
 {
-  KEditToolbar dlg(actionCollection());
-  if (dlg.exec()) {
-    createGUI();
+  KEditToolbar *dlg = new KEditToolbar(guiFactory(),this);
+  if (dlg->exec()) {
+    guiFactory()->removeClient(artW->part());
+    createGUI("knreaderui.rc",false);
+    guiFactory()->addClient(artW->part());
+    conserveMemory();
   }
+  delete dlg;
 }
 
 

@@ -51,7 +51,7 @@
 
 
 KNSettingsDialog::KNSettingsDialog(QWidget *parent, const char *name)
-  : KDialogBase(TreeList, i18n("Settings"), Ok|Apply|Cancel|Help, Ok, parent, name, false, true)
+  : KDialogBase(TreeList, i18n("Preferences"), Ok|Apply|Cancel|Help, Ok, parent, name, false, true)
 {
   setShowIconsInTreeList(true);
   //  setRootIsDecorated(false);
@@ -127,7 +127,7 @@ KNSettingsDialog::KNSettingsDialog(QWidget *parent, const char *name)
   frame = addHBoxPage(i18n("Cleanup"),i18n("Cleanup"), BarIcon("arrow_right"));
   widgets.append(new KNCleanupSettings(frame));
 
-  restoreWindowSize("settingsDlg", this, sizeHint());
+  restoreWindowSize("settingsDlg", this, QSize(539,484));
 }
 
 

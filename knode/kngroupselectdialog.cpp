@@ -60,7 +60,7 @@ KNGroupSelectDialog::KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, QCSt
   connect(arrowBtn1, SIGNAL(clicked()), this, SLOT(slotArrowBtn1()));
   connect(arrowBtn2, SIGNAL(clicked()), this, SLOT(slotArrowBtn2()));
 
-  restoreWindowSize("groupSelDlg", this, sizeHint());
+  restoreWindowSize("groupSelDlg", this, QSize(659,364));  // optimized for 800x600
 }
 
 

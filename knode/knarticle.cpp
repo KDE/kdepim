@@ -18,6 +18,9 @@
 #include "mimelib/datetime.h"
 #include <qdatetime.h>
 
+#include <kglobal.h>
+#include <klocale.h>
+
 #include "knhdrviewitem.h"
 #include "knarticle.h"
 
@@ -148,6 +151,7 @@ const QCString& KNArticle::replyToEmail()
 
 
 
+// TODO: this should honor the global date format!!
 void KNArticle::setTimeT(time_t t)
 {
   t_imeT=t;
@@ -162,6 +166,7 @@ void KNArticle::setTimeT(time_t t)
 
 
 
+// TODO: this should honor the global date format!!
 const QString& KNArticle::timeString()
 {
   if(!t_imeString) {
@@ -173,6 +178,15 @@ const QString& KNArticle::timeString()
   return *t_imeString;
 }
 
+
+
+// this will be used only for html generation, no need to cache the string in this case
+QString KNArticle::longTimeString()
+{
+  QDateTime dt;
+  dt.setTime_t(t_imeT);
+  return KGlobal::locale()->formatDateTime(dt);
+}
 
 
 int KNArticle::age()

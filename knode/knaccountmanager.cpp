@@ -212,7 +212,7 @@ void KNAccountManager::removeAccount(KNNntpAccount *a)
 
   QList<KNGroup> *lst;
   if(a->hasUnsent()) {
-    KMessageBox::information(knGlobals.topWidget, i18n("This account cannot be deleted, since there are some unsent messages for it."));
+    KMessageBox::sorry(knGlobals.topWidget, i18n("This account cannot be deleted, since there are some unsent messages for it."));
   } 
   else if(KMessageBox::questionYesNo(knGlobals.topWidget, i18n("Do you really want to delete this account?"))==KMessageBox::Yes) {
     lst=new QList<KNGroup>;
@@ -220,7 +220,7 @@ void KNAccountManager::removeAccount(KNNntpAccount *a)
     gManager->getGroupsOfAccount(a, lst);
     for(KNGroup *g=lst->first(); g; g=lst->next()) {
       if(g->locked()) {
-        KMessageBox::information(knGlobals.topWidget, i18n("At least one group of this account is currently in use.\nThe account cannot be deleted at the moment."));
+        KMessageBox::sorry(knGlobals.topWidget, i18n("At least one group of this account is currently in use.\nThe account cannot be deleted at the moment."));
         return;
       }
     }

@@ -183,7 +183,7 @@ KNodeApp::KNodeApp()
   initActions();
   initPopups();
 
-  restoreWindowSize("main", this, QSize(600,400));
+  restoreWindowSize("main", this, QSize(759,478));    // default optimized for 800x600
 
   // set the keyboard focus indicator on the first item in the collectionView
   if(view->collectionView->firstChild())
@@ -466,10 +466,10 @@ void KNodeApp::slotSupersede()
 
 void KNodeApp::slotToggleToolBar()
 {
-  if(toolBar()->isVisible())
-    toolBar()->hide();
+  if(toolBar("mainToolBar")->isVisible())
+    toolBar("mainToolBar")->hide();
   else
-    toolBar()->show();
+    toolBar("mainToolBar")->show();
 }
 
 
@@ -484,14 +484,14 @@ void KNodeApp::slotToggleStatusBar()
 
 void KNodeApp::slotConfKeys()
 {
-  KKeyDialog::configureKeys(actionCollection(), xmlFile());
+  KKeyDialog::configureKeys(actionCollection(), xmlFile(), true, this);
 }
 
 
 
 void KNodeApp::slotConfToolbar()
 {
-  KEditToolbar *dlg = new KEditToolbar(guiFactory());
+  KEditToolbar *dlg = new KEditToolbar(guiFactory(),this);
 
   if (dlg->exec()) {
     guiFactory()->removeClient(view->artView->part());

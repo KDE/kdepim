@@ -30,13 +30,15 @@ class KNCollectionViewItem : public KNLVItemBase  {
     KNCollectionViewItem(KNListView *vi);
     KNCollectionViewItem(KNLVItemBase *it);
     ~KNCollectionViewItem();
-  
+
+    void setNumber ( int column, int number );  // avoid converting back and forth in key()
     QString key(int, bool) const;
     
     KNCollection *coll;
     
   protected:
-    bool firstColBold();  
+    bool firstColBold();
+    int num[3];
 };
 
 

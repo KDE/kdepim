@@ -240,7 +240,6 @@ void KNListView::slotSortList(int col)
     emit sortingChanged(col);
     sCol=col;
     sAsc=true;
-  
   }
       
   this->setSorting(sCol, sAsc);

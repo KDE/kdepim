@@ -23,6 +23,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
+#include "knglobals.h"
 #include "knuserentry.h"
 #include "knfetcharticle.h"
 #include "knstringsplitter.h"
@@ -70,8 +71,8 @@ const QString& KNGroup::name()
 void KNGroup::updateListItem()
 {
   if(!l_istItem) return;
-  l_istItem->setText(1,QString::number(c_ount));
-  l_istItem->setText(2,QString::number(c_ount-r_eadCount));
+  l_istItem->setNumber(1,c_ount);
+  l_istItem->setNumber(2,c_ount-r_eadCount);
 }
 
 
@@ -786,7 +787,7 @@ KNFetchArticle* KNGroup::byMessageId(const QCString &mId)
 void KNGroup::showProperties()
 {
   if(!u_ser) u_ser=new KNUserEntry();
-  KNGroupPropDlg *d=new KNGroupPropDlg(this);
+  KNGroupPropDlg *d=new KNGroupPropDlg(this, knGlobals.topWidget);
   
   if(d->exec()) {
     if(d->nickHasChanged()) {

@@ -49,7 +49,8 @@ class KNArticle : public KNMimeContent  {
     virtual const QCString& fromEmail();
     const QCString& replyToEmail();
     ReferenceLine& references()             { return r_eferences; }
-    const QString& timeString();
+    const QString& timeString();         // TODO: this should honor the global date format!!  (CG)
+    QString longTimeString();
     bool hasSubject()                       { return (!s_ubject.isEmpty()); }
     virtual bool isNew()                    { return false; } 
     KNHdrViewItem* listItem()               { return i_tem; }
@@ -58,7 +59,7 @@ class KNArticle : public KNMimeContent  {
     void setSubject(const QCString &s)        { s_ubject=decodeRFC1522String(s); }
     void setListItem(KNHdrViewItem *it);
     void setId(int i)                       { i_d=i; }
-    void setTimeT(time_t t);          
+    void setTimeT(time_t t);          // TODO: this should honor the global date format!!
         
   protected:
     QCString s_ubject;

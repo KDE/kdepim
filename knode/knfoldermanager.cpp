@@ -223,7 +223,7 @@ void KNFolderManager::deleteFolder(KNFolder *f)
   if(!f) f=c_urrentFolder;
   if(!f) return;
   if(f->id()<=3)
-    KMessageBox::information(knGlobals.topWidget, i18n("This folder can not be deleted!"));
+    KMessageBox::sorry(knGlobals.topWidget, i18n("This folder can not be deleted!"));
   else {}
 }
 
@@ -234,7 +234,7 @@ void KNFolderManager::removeFolder(KNFolder *f)
   if(!f) f=c_urrentFolder;
   if(!f) return;
   if(f->id()<=3)
-    KMessageBox::information(knGlobals.topWidget, i18n("This folder can not be removed!"));
+    KMessageBox::sorry(knGlobals.topWidget, i18n("This folder can not be removed!"));
   else {}
 }
 

@@ -15,7 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-//#define HAVE_SGI_STL
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qvgroupbox.h>
@@ -46,6 +45,69 @@
 #include "knglobals.h"
 #include "knode.h"
 #include "kncomposer.h"
+
+
+//=====================================================================================
+
+
+KNAttachmentView::KNAttachmentView(QWidget *parent, char *name) :
+  QListView(parent, name)
+{
+  setFrameStyle( QFrame::WinPanel | QFrame::Sunken );  // match the QMultiLineEdit style
+  addColumn(i18n("File"), 115);
+  addColumn(i18n("Type"), 91);
+  addColumn(i18n("Size"), 55);
+  addColumn(i18n("Description"), 110);
+  addColumn(i18n("Encoding"), 60);
+  header()->setClickEnabled(false);
+  setAllColumnsShowFocus(true);
+}
+
+
+
+KNAttachmentView::~KNAttachmentView()
+{
+}
+
+
+
+void KNAttachmentView::keyPressEvent( QKeyEvent * e )
+{
+  if ( !e )
+    return; // subclass bug
+
+  if ((e->key() == Key_Delete)&&(currentItem()))
+    emit( delPressed(currentItem()) );
+  else
+    QListView::keyPressEvent(e);
+}
+
+
+
+//===============================================================
+
+
+
+KNAttachmentItem::KNAttachmentItem(QListView *v, KNAttachment *a) :
+  QListViewItem(v), attachment(a)
+{
+  setText(0, a->contentName());
+  setText(1, a->contentMimeType());
+  setText(2, a->contentSize());
+  setText(3, a->contentDescription());
+  setText(4, a->contentEncoding());
+}
+
+
+
+KNAttachmentItem::~KNAttachmentItem()
+{
+  delete attachment;
+}
+
+
+//=====================================================================================
+
 
 
 KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)//, int textEnc)
@@ -128,7 +190,11 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
   if (appSig) slotAppendSig();
   
   setConfig();
-  restoreWindowSize("composer", this, sizeHint());
+
+  if (view->viewOpen)
+    restoreWindowSize("composerAtt", this, QSize(535,450));  // optimized default for 800x600
+  else
+    restoreWindowSize("composer", this, QSize(535,450));     // optimized default for 800x600
 
   view->edit->setModified(false);
     
@@ -145,7 +211,10 @@ KNComposer::~KNComposer()
     editorTempfile->unlink();
     delete editorTempfile;
   }
-  saveWindowSize("composer", size());
+  if (view->viewOpen)
+    saveWindowSize("composerAtt", size());
+  else
+    saveWindowSize("composer", size());
 }
 
 
@@ -213,11 +282,11 @@ void KNComposer::initData()
   if(a_rticle->isMultipart()) {
     view->showAttachmentView();
     QList<KNMimeContent> attList;
-    AttachmentItem *item=0;
+    KNAttachmentItem *item=0;
     attList.setAutoDelete(false);
     a_rticle->attachments(&attList);
     for(KNMimeContent *c=attList.first(); c; c=attList.next())
-      item=new AttachmentItem(view->attView, new KNAttachment(c));
+      item=new KNAttachmentItem(view->attView, new KNAttachment(c));
   } 
 }
 
@@ -281,11 +350,11 @@ void KNComposer::applyChanges()
     a_rticle->removeHeader("Followup-To");
 
 
-  if(attChanged) {
+  if(attChanged && (view->attView)) {
 
     QListViewItemIterator it(view->attView);
     while(it.current()) {
-      a=(static_cast<AttachmentItem*> (it.current()))->attachment;
+      a=(static_cast<KNAttachmentItem*> (it.current()))->attachment;
       if(a->hasChanged()) {
         if(a->isAttached())
           a->updateContentInfo();
@@ -469,7 +538,7 @@ void KNComposer::slotExternalEditor()
     return;
 
   if (externalEditorCommand.isEmpty())
-    KMessageBox::error(this, i18n("No editor configured.\nPlease do this in the settings dialog."));
+    KMessageBox::sorry(this, i18n("No editor configured.\nPlease do this in the settings dialog."));
 
   if (editorTempfile) {       // shouldn't happen...
     editorTempfile->unlink();
@@ -499,7 +568,7 @@ void KNComposer::slotExternalEditor()
   }
 
   externalEditor = new KProcess();
-  
+
   KNStringSplitter split;       // construct command line...
   split.init(externalEditorCommand.local8Bit(), " "); 
   bool filenameAdded = false;
@@ -525,7 +594,7 @@ void KNComposer::slotExternalEditor()
     editorTempfile = 0;
     return;
   }
-  
+
   actExternalEditor->setEnabled(false);   // block other edit action while the editor is running...
   actSpellCheck->setEnabled(false);
   view->showExternalNotification();
@@ -540,8 +609,7 @@ void KNComposer::slotSpellcheck()
   actExternalEditor->setEnabled(false);
   actSpellCheck->setEnabled(false);
 
-  spellChecker = new KSpell(this, i18n("Spellcheck"), this,
-                            SLOT(slotSpellStarted(KSpell *)));
+  spellChecker = new KSpell(this, i18n("Spellcheck"), this, SLOT(slotSpellStarted(KSpell *)));
 
   connect(spellChecker, SIGNAL(death()), this, SLOT(slotSpellFinished()));
   connect(spellChecker, SIGNAL(done(const QString&)), this, SLOT(slotSpellDone(const QString&)));
@@ -598,11 +666,15 @@ void KNComposer::slotInsertFile()
 
 void KNComposer::slotAttachFile()
 {
-  QString path=KFileDialog::getOpenFileName();
+  QString path=KFileDialog::getOpenFileName(QString::null, QString::null, this, i18n("Attach File"));   // this needs to be network-transparent (CG)
 
   if(!path.isEmpty()) {
-    view->showAttachmentView();
-    (void) new AttachmentItem(view->attView, new KNAttachment(path));
+    if (!view->viewOpen) {
+      saveWindowSize("composer", size());
+      view->showAttachmentView();
+      restoreWindowSize("composerAtt", this, QSize(535,450));  // optimized default for 800x600
+    }
+    (void) new KNAttachmentItem(view->attView, new KNAttachment(path));
     attChanged=true;
   }
 }
@@ -610,18 +682,21 @@ void KNComposer::slotAttachFile()
 
 void KNComposer::slotRemoveAttachment()
 {
-  if(!view->attView) return;
+  if(!view->viewOpen) return;
 
   if(view->attView->currentItem()) {
-    AttachmentItem *it=static_cast<AttachmentItem*>(view->attView->currentItem());
+    KNAttachmentItem *it=static_cast<KNAttachmentItem*>(view->attView->currentItem());
     if(it->attachment->isAttached()) {
       delAttList->append(it->attachment);
       it->attachment=0;
     }
     delete it;
 
-    if(view->attView->childCount()==0)
+    if(view->attView->childCount()==0) {
+      saveWindowSize("composerAtt", size());
       view->hideAttachmentView();
+      restoreWindowSize("composer", this, QSize(535,450));     // optimized default for 800x600
+    }
 
     attChanged=true;
   }
@@ -630,11 +705,10 @@ void KNComposer::slotRemoveAttachment()
 
 void KNComposer::slotAttachmentProperties()
 {
-  qDebug("KNComposer::slotAttachmentProperties()");
-  if(!view->attView) return;
+  if(!view->viewOpen) return;
 
   if(view->attView->currentItem()) {
-    AttachmentItem *it=static_cast<AttachmentItem*>(view->attView->currentItem());
+    KNAttachmentItem *it=static_cast<KNAttachmentItem*>(view->attView->currentItem());
     KNAttachmentPropertyDialog *d=new KNAttachmentPropertyDialog(this, it->attachment);
     if(d->exec()) {
       d->apply();
@@ -658,34 +732,48 @@ void KNComposer::slotAttachmentPopup(QListViewItem *it, const QPoint &p, int)
 
 void KNComposer::slotAttachmentSelected(QListViewItem *it)
 {
-  actRemoveAttachment->setEnabled((it!=0));
-  actAttachmentProperties->setEnabled((it!=0));
-  if(it && !it->isSelected())
-    it->setSelected(true);
+  if (view->attWidget) {
+    view->attRemoveButton->setEnabled((it!=0));
+    view->attEditButton->setEnabled((it!=0));
+  }
 }
-  
-    
-void KNComposer::slotToggleToolBar()
+
+
+void KNComposer::slotAttachmentEdit(QListViewItem *it)
 {
-  if(toolBar()->isVisible())
-    toolBar()->hide();
-  else
-    toolBar()->show();
+  slotAttachmentProperties();
+}
+
+
+void KNComposer::slotAttachmentRemove(QListViewItem *it)
+{
+  slotRemoveAttachment();
 }
 
     
+void KNComposer::slotToggleToolBar()
+{
+  if(toolBar("mainToolBar")->isVisible())
+    toolBar("mainToolBar")->hide();
+  else
+    toolBar("mainToolBar")->show();
+}
+
+
 void KNComposer::slotConfKeys()
 {
-  KKeyDialog::configureKeys(actionCollection(),xmlFile());
+  KKeyDialog::configureKeys(actionCollection(), xmlFile(), true, this);
 }
   
     
 void KNComposer::slotConfToolbar()
 {
-  KEditToolbar dlg(actionCollection());
-  if (dlg.exec()) {
-    createGUI();
+  KEditToolbar *dlg = new KEditToolbar(guiFactory(),this);
+  if (dlg->exec()) {
+    createGUI("kncomposerui.rc");
+    attPopup=static_cast<QPopupMenu*> (factory()->container("attachment_popup", this));
   }
+  delete dlg;
 }
 
 
@@ -724,11 +812,11 @@ void KNComposer::slotSpellFinished()
   delete spellChecker;
   spellChecker = 0;
   if (status == KSpell::Error) {
-    KMessageBox::sorry(this, i18n("ISpell could not be started.\n"
+    KMessageBox::error(this, i18n("ISpell could not be started.\n"
     "Please make sure you have ISpell properly configured and in your PATH."));
   } else if (status == KSpell::Crashed) {
     view->edit->spellcheck_stop();
-    KMessageBox::sorry(this, i18n("ISpell seems to have crashed."));
+    KMessageBox::error(this, i18n("ISpell seems to have crashed."));
   }
 }
 
@@ -762,7 +850,7 @@ void KNComposer::slotCancelEditor()
 
 
 KNComposer::ComposerView::ComposerView(QWidget *parent, bool mail)
-  : QSplitter(QSplitter::Vertical, parent, 0)
+  : QSplitter(QSplitter::Vertical, parent, 0), attWidget(0), attView(0), viewOpen(false)
 {
   QLabel *l1, *l2;
   int frameLines=2;
@@ -785,16 +873,13 @@ KNComposer::ComposerView::ComposerView(QWidget *parent, bool mail)
     frameLines=3;
   }
   
-  //SIZE(l1); SIZE(l2); SIZE(destButton);
-  //SIZE(subject); SIZE(dest);  
-
   edit=new KEdit(editW);
-  edit->setMinimumHeight(150);
+  edit->setMinimumHeight(50);
   
   QVBoxLayout *l = new QVBoxLayout(edit);
   l->addStretch(1);
   notification=new QGroupBox(2,Qt::Horizontal,edit);
-  new QLabel(i18n("You are currently editing the article body in an external editor.\nTo continue you have to close the external editor."),notification);
+  new QLabel(i18n("You are currently editing the article body\nin an external editor. To continue you have\nto close the external editor."),notification);
   cancelEditorButton=new QPushButton(i18n("&Kill external editor"), notification);
   notification->setFrameStyle(QFrame::Panel | QFrame::Raised);
   notification->setLineWidth(2);
@@ -814,50 +899,117 @@ KNComposer::ComposerView::ComposerView(QWidget *parent, bool mail)
   }
   frameL1->setColStretch(1,1);
     
-  QVBoxLayout *topL=new QVBoxLayout(editW, 5,5);
+  QVBoxLayout *topL=new QVBoxLayout(editW, 4,4);
   topL->addWidget(fr1);
   topL->addWidget(edit, 1);
   topL->activate();
-  
-  attView=0;
 }
 
 
 
 KNComposer::ComposerView::~ComposerView()
 {
-}
+  if (viewOpen) {
+    KConfig *conf=KGlobal::config();
+    conf->setGroup("POSTNEWS");
 
+    conf->writeEntry("Att_Splitter",sizes());   // save splitter pos
+
+    QValueList<int> lst;                        // save header sizes
+    QHeader *h=attView->header();
+    for (int i=0; i<5; i++)
+      lst << h->sectionSize(i);
+    conf->writeEntry("Att_Headers",lst);
+
+    conf->sync();
+  }
+}
 
 
 void KNComposer::ComposerView::showAttachmentView()
 {
-  if(!attView) {
-    attView=new QListView(this);
-    attView->addColumn(i18n("File"), 100);
-    attView->addColumn(i18n("Type")), 100;
-    attView->addColumn(i18n("Size"), 50);
-    attView->addColumn(i18n("Description"), 200);
-    attView->addColumn(i18n("Encoding"), 75);
-    attView->header()->setClickEnabled(false);
-    attView->setAllColumnsShowFocus(true);
-    
+  if(!attWidget) {
+    attWidget=new QWidget(this);
+    QGridLayout *topL=new QGridLayout(attWidget, 3, 2, 4, 4);
+
+    attView=new KNAttachmentView(attWidget);
+    topL->addMultiCellWidget(attView,0,2,0,0);
     connect(attView, SIGNAL(currentChanged(QListViewItem*)),
-      parent(), SLOT(slotAttachmentSelected(QListViewItem*)));
+            parent(), SLOT(slotAttachmentSelected(QListViewItem*)));
     connect(attView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
-      parent(), SLOT(slotAttachmentPopup(QListViewItem*, const QPoint&, int)));
+            parent(), SLOT(slotAttachmentPopup(QListViewItem*, const QPoint&, int)));
+    connect(attView, SIGNAL(delPressed(QListViewItem*)),
+            parent(), SLOT(slotAttachmentRemove(QListViewItem*)));
+    connect(attView, SIGNAL(doubleClicked(QListViewItem*)),
+            parent(), SLOT(slotAttachmentEdit(QListViewItem*)));
+    connect(attView, SIGNAL(returnPressed(QListViewItem*)),
+            parent(), SLOT(slotAttachmentEdit(QListViewItem*)));
+
+    QPushButton *btn = new QPushButton(i18n("A&dd"),attWidget);
+    connect(btn, SIGNAL(clicked()), parent(), SLOT(slotAttachFile()));
+    topL->addWidget(btn, 0,1);
+
+    attRemoveButton = new QPushButton(i18n("&Remove"),attWidget);
+    attRemoveButton->setEnabled(false);
+    connect(attRemoveButton, SIGNAL(clicked()), parent(), SLOT(slotRemoveAttachment()));
+    topL->addWidget(attRemoveButton, 1,1);
+
+    attEditButton = new QPushButton(i18n("&Properties"),attWidget);
+    attEditButton->setEnabled(false);
+    connect(attEditButton, SIGNAL(clicked()), parent(), SLOT(slotAttachmentProperties()));
+    topL->addWidget(attEditButton, 2,1, Qt::AlignTop);
+
+    topL->setRowStretch(2,1);
+    topL->setColStretch(0,1);
+    topL->activate();
   }
   
-  if(!attView->isVisible())
-    attView->show();
+  if (!viewOpen) {
+    viewOpen = true;
+    attWidget->show();
+
+    KConfig *conf=KGlobal::config();
+    conf->setGroup("POSTNEWS");
+
+    QValueList<int> lst = conf->readIntListEntry("Att_Splitter");
+    if (lst.count()!=2)
+      lst << 267 << 112;
+    setSizes(lst);
+
+    lst = conf->readIntListEntry("Att_Headers");
+    if (lst.count()==5) {
+      QValueList<int>::Iterator it = lst.begin();
+
+      QHeader *h=attView->header();
+      for (int i=0; i<5; i++) {
+         h->resizeSection(i,(*it));
+         ++it;
+      }
+    }
+  }
 }
 
 
 
 void KNComposer::ComposerView::hideAttachmentView()
 {
-  if(attView && attView->isVisible())
-    attView->hide();
+  if (viewOpen) {
+    KConfig *conf=KGlobal::config();
+    conf->setGroup("POSTNEWS");
+
+    conf->writeEntry("Att_Splitter",sizes());   // save splitter pos
+
+    QValueList<int> lst;                        // save header sizes
+    QHeader *h=attView->header();
+    for (int i=0; i<5; i++)
+      lst << h->sectionSize(i);
+    conf->writeEntry("Att_Headers",lst);
+
+    conf->sync();
+
+    attWidget->hide();
+    viewOpen = false;
+  }
 }
 
 
@@ -877,31 +1029,6 @@ void KNComposer::ComposerView::hideExternalNotification()
 }
 
 
-
-//===============================================================
-
-
-
-
-KNComposer::AttachmentItem::AttachmentItem(QListView *v, KNAttachment *a) :
-  QListViewItem(v), attachment(a)
-{
-  setText(0, a->contentName());
-  setText(1, a->contentMimeType());
-  setText(2, a->contentSize());
-  setText(3, a->contentDescription());
-  setText(4, a->contentEncoding());
-}
-
-
-
-KNComposer::AttachmentItem::~AttachmentItem()
-{
-  delete attachment;
-}
-    
-    
-    
 
 //===============================================================
 
@@ -1013,7 +1140,7 @@ void KNAttachmentPropertyDialog::apply()
 void KNAttachmentPropertyDialog::accept()
 {
   if(mimeType->text().find('/')==-1) {
-    KMessageBox::information(this, i18n("You have set an invalid mime-type.\nPlease change it."));
+    KMessageBox::sorry(this, i18n("You have set an invalid mime-type.\nPlease change it."));
     return;
   }
   else if(nonTextAsText && mimeType->text().find("text/", 0, false)!=-1 &&

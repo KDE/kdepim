@@ -62,11 +62,11 @@ KNHdrViewItem::~KNHdrViewItem()
 
 QString KNHdrViewItem::key(int col, bool asc) const
 {
-  if(col==3)
-      return QString::number((uint) art->timeT());
-  
-  else return this->text(col);
-  
+  if(col==3) {
+    QString tmpString;
+    return tmpString.sprintf("%08d",(uint)art->timeT());
+  } else
+    return text(col);
 }
 
 

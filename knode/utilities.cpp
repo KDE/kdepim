@@ -85,7 +85,7 @@ void removeQuots(QCString &str)
 
 void saveWindowSize(const QString &name, const QSize &s)
 {
-  KConfig *c=KGlobal::config(); 
+  KConfig *c=KGlobal::config();
   c->setGroup("WINDOW_SIZES");
   c->writeEntry(name, s); 
 }

@@ -97,10 +97,10 @@ KNFilterDialog::~KNFilterDialog()
 void KNFilterDialog::slotOk()
 {
   if (fname->text().isEmpty())
-    KMessageBox::error(this, i18n("Please provide a name for this filter."));
+    KMessageBox::sorry(this, i18n("Please provide a name for this filter."));
   else
     if (!knGlobals.fiManager->newNameIsOK(fltr,fname->text()))
-      KMessageBox::error(this, i18n("This name exists already.\nPlease choose a different one."));  
+      KMessageBox::sorry(this, i18n("This name exists already.\nPlease choose a different one."));
     else {
       fltr->setName(fname->text());
       fltr->setEnabled(enabled->isChecked());

@@ -96,19 +96,21 @@ KNodeView::~KNodeView()
 }
 
 
+
 void KNodeView::readOptions()
 {
   KConfig *conf=KGlobal::config();    
   conf->setGroup("APPEARANCE");
 
-  #warning FIXME: define useful default sizes
   QValueList<int> lst = conf->readIntListEntry("Vert_SepPos");
-  if (lst.count()==2)
-    setSizes(lst);
-    
+  if (lst.count()!=2)
+    lst << 266 << 487;
+  setSizes(lst);
+
   lst = conf->readIntListEntry("Horz_SepPos");
-  if (lst.count()==2)
-    PanHorz->setSizes(lst);
+  if (lst.count()!=2)
+    lst << 153 << 234;
+  PanHorz->setSizes(lst);
   
   lst = conf->readIntListEntry("Hdrs_Size");
   if (lst.count()==7) {
@@ -118,20 +120,25 @@ void KNodeView::readOptions()
     for (int i=0; i<3; i++) {
       h->resizeSection(i,(*it));
       ++it;
-    } 
+    }
   
     h=hdrView->header();
     for (int i=0; i<4; i++) {
       h->resizeSection(i,(*it));
       ++it;
-    }   
+    }
   }
 
   int sortCol = conf->readNumEntry("sortCol",3);
-  bool sortAsc =conf->readBoolEntry("sortAscending", false);
+  bool sortAsc = conf->readBoolEntry("sortAscending", false);
   hdrView->setColAsc(sortCol, sortAsc); 
   hdrView->setSorting(sortCol, sortAsc);
   actSortSelect->setCurrentItem(sortCol);
+
+  sortCol = conf->readNumEntry("account_sortCol", 0);
+  sortAsc = conf->readBoolEntry("account_sortAscending", true);
+  collectionView->setColAsc(sortCol, sortAsc);
+  collectionView->setSorting(sortCol, sortAsc);
 }
 
 
@@ -156,6 +163,8 @@ void KNodeView::saveOptions()
 
   conf->writeEntry("sortCol", hdrView->sortColumn());
   conf->writeEntry("sortAscending", hdrView->ascending());
+  conf->writeEntry("account_sortCol", collectionView->sortColumn());
+  conf->writeEntry("account_sortAscending", collectionView->ascending());
 }
 
 
@@ -164,14 +173,12 @@ void KNodeView::initCollectionView()
   collectionView->setFrameStyle(QFrame::Panel | QFrame::Sunken);
   collectionView->setTreeStepSize(12);
   collectionView->setRootIsDecorated(true);
-  collectionView->addColumn(i18n("Name"),150);
-  collectionView->addColumn(i18n("Total"),50);
-  collectionView->addColumn(i18n("Unread"),50);
+  collectionView->setShowSortIndicator(true);
+  collectionView->addColumn(i18n("Name"),162);
+  collectionView->addColumn(i18n("Total"),36);
+  collectionView->addColumn(i18n("Unread"),48);
   collectionView->setColumnAlignment(1,AlignCenter);
   collectionView->setColumnAlignment(2,AlignCenter);
-  collectionView->setSorting(0);
-  collectionView->header()->setClickEnabled(false);
-  collectionView->setColumnWidthMode(0,QListView::Maximum);
 }
 
 
@@ -179,12 +186,12 @@ void KNodeView::initCollectionView()
 void KNodeView::initHdrView()
 {
   hdrView->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-  hdrView->addColumn(i18n("Subject"),500);
-  hdrView->addColumn(i18n("From"),300);
-  hdrView->addColumn(i18n("Score"),50);
-  hdrView->addColumn(i18n("Date (Time)"),300);
-  hdrView->setRootIsDecorated(true);
   hdrView->setShowSortIndicator(true);
+  hdrView->setRootIsDecorated(true);
+  hdrView->addColumn(i18n("Subject"),207);
+  hdrView->addColumn(i18n("From"),115);
+  hdrView->addColumn(i18n("Score"),42);
+  hdrView->addColumn(i18n("Date (Time)"),102);
   hdrView->setColumnAlignment(2, AlignCenter);
 }
 
