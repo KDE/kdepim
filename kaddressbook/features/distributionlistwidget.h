@@ -79,7 +79,7 @@ class DistributionListWidget : public KAB::ExtensionWidget
 
   private:
     QComboBox *mNameCombo;  
-    QLabel *mListLabel;
+    QLabel *mEntryCountLabel;
     DistributionListView *mContactView;
 
     KABC::DistributionListManager *mManager;

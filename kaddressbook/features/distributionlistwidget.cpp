@@ -179,6 +179,9 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
   topLayout->addWidget( mAddContactButton, 2, 0 );
   connect( mAddContactButton, SIGNAL( clicked() ), SLOT( addContact() ) );
 
+  mEntryCountLabel = new QLabel( this );
+  topLayout->addWidget( mEntryCountLabel, 2, 1 );
+
   mChangeEmailButton = new QPushButton( i18n( "Change Email..." ), this );
   topLayout->addWidget( mChangeEmailButton, 2, 2 );
   connect( mChangeEmailButton, SIGNAL( clicked() ), SLOT( changeEmail() ) );
@@ -362,9 +365,10 @@ void DistributionListWidget::updateContactView()
     mContactView->setEnabled( true );
   }
 
+  uint entryCount = 0;
   KABC::DistributionList::Entry::List entries = list->entries();
   KABC::DistributionList::Entry::List::ConstIterator it;
-  for( it = entries.begin(); it != entries.end(); ++it )
+  for( it = entries.begin(); it != entries.end(); ++it, ++entryCount )
     new ContactItem( mContactView, (*it).addressee, (*it).email );
 
   ContactItem *contactItem =
@@ -373,6 +377,8 @@ void DistributionListWidget::updateContactView()
 
   mChangeEmailButton->setEnabled( state );
   mRemoveContactButton->setEnabled( state );
+
+  mEntryCountLabel->setText( i18n( "Count: %n contact", "Count: %n contacts", entryCount ) );
 }
 
 void DistributionListWidget::updateNameCombo()
