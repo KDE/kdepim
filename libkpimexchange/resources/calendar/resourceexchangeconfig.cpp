@@ -82,8 +82,7 @@ void ResourceExchangeConfig::loadSettings( KRES::Resource *resource )
     mHostEdit->setText( res->mAccount->host() );
     mAccountEdit->setText( res->mAccount->account() );
     mPasswordEdit->setText( res->mAccount->password() );
-    // FIXME: store this in some config file
-    mAutoMailbox->setChecked( true );
+    mAutoMailbox->setChecked( res->mAutoMailbox );
     mMailboxEdit->setText( res->mAccount->mailbox() );
     mCacheEdit->setValue( res->mCachedSeconds );
   } else
@@ -102,6 +101,7 @@ void ResourceExchangeConfig::saveSettings( KRES::Resource *resource )
         kdWarning() << "Could not find Exchange mailbox URL, incomplete settings!" << endl;
       }
     }
+    res->mAutoMailbox = mAutoMailbox->isChecked();
 
     res->mAccount->setHost(mHostEdit->text());
     res->mAccount->setAccount(mAccountEdit->text());

@@ -228,6 +228,7 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     QMap<Event, QDateTime>* mEventDates;
     QMap<QDate, QDateTime>* mCacheDates;
     int mCachedSeconds;
+    bool mAutoMailbox;
 };  
 
 }

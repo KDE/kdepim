@@ -68,7 +68,7 @@ public:
 ResourceExchange::ResourceExchange( const KConfig *config )
   : ResourceCalendar( config )
 {
-    mCache = 0L;
+  mCache = 0L;
   kdDebug() << "Creating ResourceExchange" << endl;
   if (config ) {
     mAccount = new ExchangeAccount(
@@ -77,6 +77,7 @@ ResourceExchange::ResourceExchange( const KConfig *config )
             config->readEntry( "ExchangeMailbox" ),
             decryptStr( config->readEntry( "ExchangePassword" ) ) );
     mCachedSeconds = config->readNumEntry( "ExchangeCacheTimeout", 600 );
+    mAutoMailbox = config->readBoolEntry( "ExchangeAutoMailbox", true );
   } else {
     mAccount = new ExchangeAccount( "", "", "" );
     mCachedSeconds = 600;
@@ -97,6 +98,7 @@ void ResourceExchange::writeConfig( KConfig* config )
   config->writeEntry( "ExchangeMailbox", mAccount->mailbox() );
   config->writeEntry( "ExchangePassword", encryptStr( mAccount->password() ) );
   config->writeEntry( "ExchangeCacheTimeout", mCachedSeconds );
+  config->writeEntry( "ExchangeAutoMailbox", mAutoMailbox );
 }
 
 bool ResourceExchange::doOpen()
