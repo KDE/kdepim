@@ -53,6 +53,7 @@ bool AddressBookSyncEntry::equals( SyncEntry *entry )
 }
 
 AddressBookSyncee::AddressBookSyncee()
+ : Syncee()
 {
 //  mAddressBook = new KABC::AddressBook;
 
@@ -110,6 +111,10 @@ void AddressBookSyncee::addEntry( SyncEntry *entry )
               << endl;
   } else {
       abEntry->setSyncee( this ); // set the parent
+      if( abEntry->state() == SyncEntry::Undefined ) { // lets find out the state
+	if( hasChanged( abEntry ) )
+	    abEntry->setState( SyncEntry::Modified );
+      }
       mEntries.append( abEntry);
   }
 }
@@ -144,7 +149,7 @@ Syncee* AddressBookSyncee::clone() {
     AddressBookSyncEntry* entry;
     SyncEntry* cloneE;
     AddressBookSyncee* clone = new AddressBookSyncee();
-
+    clone->setSyncMode( syncMode() );
     for ( entry = mEntries.first(); entry != 0; entry = mEntries.next() ) {
         cloneE = entry->clone();
         clone->addEntry( cloneE ); // mSyncee gets updatet
