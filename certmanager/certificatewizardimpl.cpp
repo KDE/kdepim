@@ -40,6 +40,7 @@
 // libkleopatra
 #include <kleo/oidmap.h>
 #include <kleo/keygenerationjob.h>
+#include <kleo/dn.h>
 
 #include <ui/progressdialog.h>
 
@@ -73,51 +74,19 @@
 #include <qlayout.h>
 #include <qlabel.h>
 
-#include <map>
 #include <assert.h>
-
-namespace {
-  struct ltstr {
-    bool operator()( const char * s1, const char * s2 ) const {
-      return qstrcmp( s1, s2 ) < 0 ;
-    }
-  };
-}
-
-std::pair<const char*,const char*> attributeLabels[] = {
-#define MAKE_PAIR(x,y) std::pair<const char*,const char*>( x, y )
-  MAKE_PAIR( "CN", I18N_NOOP("Common name") ),
-  MAKE_PAIR( "SN", I18N_NOOP("Surname") ),
-  MAKE_PAIR( "GN", I18N_NOOP("Given name") ),
-  MAKE_PAIR( "L",  I18N_NOOP("Location") ),
-  MAKE_PAIR( "T",  I18N_NOOP("Title") ),
-  MAKE_PAIR( "OU", I18N_NOOP("Organizational unit") ),
-  MAKE_PAIR( "O",  I18N_NOOP("Organization") ),
-  MAKE_PAIR( "PC", I18N_NOOP("Postal code") ),
-  MAKE_PAIR( "C",  I18N_NOOP("Country code") ),
-  MAKE_PAIR( "SP", I18N_NOOP("State or province") ),
-  MAKE_PAIR( "DC", I18N_NOOP("Domain component") ),
-  MAKE_PAIR( "BC", I18N_NOOP("Business category") ),
-  MAKE_PAIR( "EMAIL", I18N_NOOP("Email address") )
-#undef MAKE_PAIR
-};
-static const unsigned int numAttributeLabels = sizeof attributeLabels / sizeof *attributeLabels ;
-
-static const std::map<const char*,const char*,ltstr>
-attributeLabelMap( attributeLabels, attributeLabels + numAttributeLabels );
 
 static QString attributeLabel( const QString & attr, bool required ) {
   if ( attr.isEmpty() )
     return QString::null;
-  const std::map<const char*,const char*>::const_iterator it =
-    attributeLabelMap.find( attr.utf8().data() );
-  if ( it != attributeLabelMap.end() && (*it).second )
+  const QString label = Kleo::DNAttributeMapper::instance()->name2label( attr );
+  if ( !label.isEmpty() )
     if ( required )
       return i18n("Format string for the labels in the \"Your Personal Data\" page - required field",
-		  "*%1 (%2):").arg( i18n( (*it).second ) ).arg( attr );
+		  "*%1 (%2):").arg( label, attr );
     else
       return i18n("Format string for the labels in the \"Your Personal Data\" page",
-		  "%1 (%2):").arg( i18n( (*it).second ) ).arg( attr );
+		  "%1 (%2):").arg( label, attr );
 
   else if ( required )
     return '*' + attr + ':';
@@ -125,7 +94,7 @@ static QString attributeLabel( const QString & attr, bool required ) {
     return attr + ':';
 }
 
-static const QString attributeFromKey( QString key ) {
+static QString attributeFromKey( QString key ) {
   return key.remove( '!' );
 }
 

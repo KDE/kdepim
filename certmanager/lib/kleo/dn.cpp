@@ -40,6 +40,7 @@
 
 #include <kapplication.h>
 #include <kconfig.h>
+#include <klocale.h>
 
 #include <qstringlist.h>
 #include <qvaluevector.h>
@@ -47,6 +48,7 @@
 #include <iostream>
 #include <iterator>
 #include <algorithm>
+#include <map>
 
 #include <string.h>
 #include <ctype.h>
@@ -488,4 +490,76 @@ Kleo::DN::const_iterator Kleo::DN::begin() const {
 
 Kleo::DN::const_iterator Kleo::DN::end() const {
   return d ? d->attributes.end() : empty.end() ;
+}
+
+
+/////////////////////
+
+namespace {
+  struct ltstr {
+    bool operator()( const char * s1, const char * s2 ) const {
+      return qstrcmp( s1, s2 ) < 0 ;
+    }
+  };
+}
+
+std::pair<const char*,const char*> attributeLabels[] = {
+#define MAKE_PAIR(x,y) std::pair<const char*,const char*>( x, y )
+  MAKE_PAIR( "CN", I18N_NOOP("Common name") ),
+  MAKE_PAIR( "SN", I18N_NOOP("Surname") ),
+  MAKE_PAIR( "GN", I18N_NOOP("Given name") ),
+  MAKE_PAIR( "L",  I18N_NOOP("Location") ),
+  MAKE_PAIR( "T",  I18N_NOOP("Title") ),
+  MAKE_PAIR( "OU", I18N_NOOP("Organizational unit") ),
+  MAKE_PAIR( "O",  I18N_NOOP("Organization") ),
+  MAKE_PAIR( "PC", I18N_NOOP("Postal code") ),
+  MAKE_PAIR( "C",  I18N_NOOP("Country code") ),
+  MAKE_PAIR( "SP", I18N_NOOP("State or province") ),
+  MAKE_PAIR( "DC", I18N_NOOP("Domain component") ),
+  MAKE_PAIR( "BC", I18N_NOOP("Business category") ),
+  MAKE_PAIR( "EMAIL", I18N_NOOP("Email address") )
+#undef MAKE_PAIR
+};
+static const unsigned int numAttributeLabels = sizeof attributeLabels / sizeof *attributeLabels ;
+
+class Kleo::DNAttributeMapper::Private {
+public:
+  Private();
+  std::map<const char*,const char*,ltstr> map;
+};
+
+Kleo::DNAttributeMapper::Private::Private()
+  : map( attributeLabels, attributeLabels + numAttributeLabels ) {}
+
+Kleo::DNAttributeMapper::DNAttributeMapper() {
+  d = new Private();
+  mSelf = this;
+}
+
+Kleo::DNAttributeMapper::~DNAttributeMapper() {
+  mSelf = 0;
+  delete d; d = 0;
+}
+
+Kleo::DNAttributeMapper * Kleo::DNAttributeMapper::mSelf = 0;
+
+const Kleo::DNAttributeMapper * Kleo::DNAttributeMapper::instance() {
+  if ( !mSelf )
+    (void)new DNAttributeMapper();
+  return mSelf;
+}
+
+QString Kleo::DNAttributeMapper::name2label( const QString & s ) const {
+  const std::map<const char*,const char*,ltstr>::const_iterator it
+    = d->map.find( s.stripWhiteSpace().upper().latin1() );
+  if ( it == d->map.end() )
+    return QString::null;
+  return i18n( it->second );
+}
+
+QStringList Kleo::DNAttributeMapper::names() const {
+  QStringList result;
+  for ( std::map<const char*,const char*,ltstr>::const_iterator it = d->map.begin() ; it != d->map.end() ; ++it )
+    result.push_back( i18n( it->second ) );
+  return result;
 }

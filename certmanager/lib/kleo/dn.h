@@ -36,7 +36,27 @@
 #include <qstring.h>
 #include <qvaluevector.h>
 
+class QStringList;
+
 namespace Kleo {
+
+  /**
+     @short DN Attribute mapper
+  */
+  class DNAttributeMapper {
+    DNAttributeMapper();
+    ~DNAttributeMapper();
+  public:
+    static const DNAttributeMapper * instance();
+
+    QString name2label( const QString & s ) const;
+    QStringList names() const;
+
+  private:
+    class Private;
+    Private * d;
+    static DNAttributeMapper * mSelf;
+  };
 
   /**
      @short DN parser and reorderer
