@@ -12,6 +12,7 @@ libkleopatra_ui_la_SOURCES = \
 	keylistview.cpp \
 	keyselectiondialog.cpp \
 	keyrequester.cpp \
+	passphrasedialog.cpp \
 	keyapprovaldialog.cpp \
 	backendconfigwidget.cpp \
 	dnattributeorderconfigwidget.cpp \
@@ -29,6 +30,7 @@ kleo_HEADERS = \
 	keylistview.h \
 	keyselectiondialog.h \
 	keyrequester.h \
+	passphrasedialog.h \
 	keyapprovaldialog.h \
 	backendconfigwidget.h \
 	dnattributeorderconfigwidget.h
