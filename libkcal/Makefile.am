@@ -32,7 +32,8 @@ libkcal_la_SOURCES = \
         calendarresources.cpp \
         qtopiaformat.cpp \
 	resourcecached.cpp \
-        htmlexport.cpp calendarnull.cpp
+        htmlexport.cpp calendarnull.cpp \
+        freebusyurlstore.cpp
 
 libkcalincludedir = $(includedir)/libkcal
 libkcalinclude_HEADERS = alarm.h attachment.h attendee.h calendar.h \
