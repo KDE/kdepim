@@ -84,15 +84,15 @@ static bool check( GpgME::Context::Protocol proto, QString * reason ) {
   // error, check why:
   const GpgME::EngineInfo ei = GpgME::engineInfo( proto );
   if ( ei.isNull() )
-    *reason = i18n("GPGME was compiled without support for %1").arg( proto == GpgME::Context::CMS ? "S/MIME" : "OpenPGP" );
+    *reason = i18n("GPGME was compiled without support for %1.").arg( proto == GpgME::Context::CMS ? "S/MIME" : "OpenPGP" );
   else if ( ei.fileName() && !ei.version() )
-    *reason = i18n("Engine %1 is not installed properly").arg( QFile::decodeName( ei.fileName() ) );
+    *reason = i18n("Engine %1 is not installed properly.").arg( QFile::decodeName( ei.fileName() ) );
   else if ( ei.fileName() && ei.version() && ei.requiredVersion() )
     *reason = i18n("Engine %1 version %2 installed, "
-		   "but at least version %3 is required")
+		   "but at least version %3 is required.")
       .arg( QFile::decodeName( ei.fileName() ), ei.version(), ei.requiredVersion() );
   else
-    *reason = i18n("Unknown problem with engine for protocol %1").arg( proto == GpgME::Context::CMS ? "S/MIME" : "OpenPGP" );
+    *reason = i18n("Unknown problem with engine for protocol %1.").arg( proto == GpgME::Context::CMS ? "S/MIME" : "OpenPGP" );
   return false;
 }
 
