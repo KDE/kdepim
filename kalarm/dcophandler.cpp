@@ -93,11 +93,11 @@ bool DcopHandler::process(const QCString& func, const QByteArray& data, QCString
 	||       func == "scheduleFile(QString,QDateTime,QColor,Q_UINT32,QString,Q_UINT32,QString)")
 		function = SCHEDULE | FILE;
 	//                scheduleCommand(commandLine, dateTime, flags, recurrence)
-	else if (func == "scheduleCommand(const QString&,const QDateTime&,Q_UINT32,Q_INT32,const QString&)"
+	else if (func == "scheduleCommand(const QString&,const QDateTime&,Q_UINT32,const QString&)"
 	||       func == "scheduleCommand(QString,QDateTime,Q_UINT32,QString)")
 		function = SCHEDULE | COMMAND;
 	//                scheduleEmail(addresses, subject, message, attachments, dateTime, flags, recurrence)
-	else if (func == "scheduleEmail(const QString&,const QString&,const QString&,const QString&,const QDateTime&,Q_UINT32,Q_INT32,const QString&)"
+	else if (func == "scheduleEmail(const QString&,const QString&,const QString&,const QString&,const QDateTime&,Q_UINT32,const QString&)"
 	||       func == "scheduleEmail(QString,QString,QString,QString,QDateTime,Q_UINT32,QString)")
 		function = SCHEDULE | EMAIL;
 
@@ -290,9 +290,11 @@ bool DcopHandler::process(const QCString& func, const QByteArray& data, QCString
 				flags |= KAlarmEvent::DEFAULT_FONT;
 			}
 			if ((action == KAlarmEvent::MESSAGE  ||  action == KAlarmEvent::FILE)  &&  !(function & PRE_070))
+			{
 				arg >> audioFile;
-			if (!(function & PRE_091))
-				arg >> reminderMinutes;
+				if (!(function & PRE_091))
+					arg >> reminderMinutes;
+			}
 			if (function & (REP_COUNT | REP_END))
 			{
 				KAlarmEvent::RecurType recurType;
