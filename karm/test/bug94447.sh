@@ -29,7 +29,7 @@ if [ -e $TESTFILE ]; then RVAL=0; fi
 
 # clean up
 if [ -n $DCOPID ]; then dcop $DCOPID KarmDCOPIface quit; fi;
-#if [ -e $TESTFILE ]; then rm $TESTFILE; fi
+if [ -e $TESTFILE ]; then rm $TESTFILE; fi
 
 if [ $RVAL -eq 0 ]
 then 
