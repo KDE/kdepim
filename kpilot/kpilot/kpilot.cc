@@ -174,11 +174,11 @@ static const char *kpilot_id="$Id$";
 KPilotInstaller::KPilotInstaller() : 
 	KMainWindow(0), 
 	DCOPObject("KPilotIface"),
+	fDaemonStub(new PilotDaemonDCOP_stub("kpilotDaemon","KPilotDaemonIface")),
 	fMenuBar(0L), 
 	fStatusBar(0L), 
 	fToolBar(0L),
 	fQuitAfterCopyComplete(false), 
-	fDaemonStub(new PilotDaemonDCOP_stub("kpilotDaemon","KPilotDaemonIface")),
 	fManagingWidget(0L), 
 	// fPilotCommandSocket(0L), 
 	// fPilotStatusSocket(0L), 
@@ -217,6 +217,7 @@ KPilotInstaller::~KPilotInstaller()
 
 void KPilotInstaller::killDaemonIfNeeded()
 {
+	FUNCTIONSETUP;
 	if(fKillDaemonOnExit)
 	{
 		DEBUGKPILOT << fname
@@ -899,6 +900,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.55  2001/08/27 22:54:27  adridg
+// Decruftifying; improve DCOP link between daemon & viewer
+//
 // Revision 1.54  2001/08/19 19:25:57  adridg
 // Removed kpilotlink dependency from kpilot; added DCOP interfaces to make that possible. Also fixed a connect() type mismatch that was harmless but annoying.
 //
