@@ -2,7 +2,7 @@ METASOURCES = AUTO
 
 INCLUDES = -I$(top_srcdir)/kresources/imap/shared -I$(top_srcdir) $(all_includes)
 
-kde_module_LTLIBRARIES = libkabc_imap.la kabc_imap.la
+lib_LTLIBRARIES = libkabc_imap.la
 
 noinst_HEADERS = resourceimap.h
 
@@ -14,7 +14,9 @@ libkabc_imap_la_LIBADD = -lkresources -lkabc \
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kabc_imap.pot
 
-kabc_imap_la_SOURCES = resourceimap_plugin.cpp
+kde_module_LTLIBRARIES = kabc_imap.la
+
+  kabc_imap_la_SOURCES = resourceimap_plugin.cpp
 kabc_imap_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
 kabc_imap_la_LIBADD = libkabc_imap.la
 
