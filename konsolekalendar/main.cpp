@@ -59,7 +59,7 @@ using namespace std;
 
 static const char progName[] = "konsolekalendar";
 static const char progDisplay[] = "KonsoleKalendar";
-static const char progVersion[] = "1.2.2";
+static const char progVersion[] = "1.0.2";
 static const char description[] = I18N_NOOP("A command line interface to KDE calendars");
 
 static KCmdLineOptions options[] =
@@ -82,7 +82,7 @@ static KCmdLineOptions options[] =
   { "next", I18N_NOOP("  View next activity in calendar"), 0 },
   { "all", I18N_NOOP("  View all calendar entries"), 0 },
   { "uid <uid>", I18N_NOOP("  Event Unique-string identifier"), 0 },
-  { "show-next <show-next>", I18N_NOOP("  From this day show next # days activities"), 0 },
+  { "show-next <show-next>", I18N_NOOP("  From this day show next # days' activities"), 0 },
   { "date <start-date>", I18N_NOOP("  Start from this day [YYYY-MM-DD]"), 0 },
   { "time <start-time>", I18N_NOOP("  Start from this time [HH:MM:SS]"), 0 },
   { "end-date <end-date>", I18N_NOOP("  End at this day [YYYY-MM-DD]"), 0 },
@@ -104,6 +104,7 @@ static KCmdLineOptions options[] =
 
 int main(int argc, char *argv[])
 {
+  KLocale::setMainCatalogue("konsolekalendar");
 
   KAboutData aboutData(
       progName,                        // internal program name
@@ -111,7 +112,7 @@ int main(int argc, char *argv[])
       progVersion,                     // version string
       description,                     // short porgram description
       KAboutData::License_GPL,         // license type
-      "(c) 2002-2003, Tuukka Pasanen and Allen Winter", // copyright statement
+      "(c) 2002-2004, Tuukka Pasanen and Allen Winter", // copyright statement
       0,                               // any free form text
       "http://pim.kde.org",            // program home page address
       "bugs.kde.org"                   // bug report email address
@@ -363,7 +364,7 @@ int main(int argc, char *argv[])
     starttime = QTime::fromString( option,  Qt::ISODate );
     if( ! starttime.isValid() ) {
       cout << i18n("Invalid Start Time Specified: ").local8Bit()
-                << option.local8Bit() << endl;
+           << option.local8Bit() << endl;
       return(1);
     }
     kdDebug() << "main | parse options | Start time after conversion: (" << starttime.toString() << ")" << endl;
@@ -382,7 +383,7 @@ int main(int argc, char *argv[])
     enddate = QDate::fromString( option,  Qt::ISODate );
     if( ! enddate.isValid() ) {
       cout << i18n("Invalid End Date Specified: ").local8Bit()
-                << option.local8Bit() << endl;
+           << option.local8Bit() << endl;
       return(1);
     }
     kdDebug() << "main | parse options | End date after conversion: (" << enddate.toString() << ")" << endl;
@@ -404,7 +405,7 @@ int main(int argc, char *argv[])
 
     if( !ok ) {
       cout << i18n("Invalid Date Count Specified: ").local8Bit()
-                << option.local8Bit() << endl;
+           << option.local8Bit() << endl;
       return(1);
     }
 
@@ -512,7 +513,8 @@ int main(int argc, char *argv[])
    if ( !exists ){
      cout << i18n("Calendar file not found").local8Bit()
           << option.local8Bit() << endl;
-     cout << i18n("Try --create to create new calendar file").local8Bit() << endl;
+     cout << i18n("Try --create to create new calendar file").local8Bit()
+          << endl;
      return(1);
    }
  }
@@ -649,14 +651,6 @@ int main(int argc, char *argv[])
    */
   QString prodId = "-//K Desktop Environment//NONSGML %1 %2//EN";
   CalFormat::setApplication( progDisplay, prodId.arg( progDisplay).arg( progVersion ) );
-
-  /*
-   * Opens calendar file so we can use it;)
-   * Because at this point we don't know what we'll
-   * Do with it..
-   *
-   * Adds it to konsolekalendarvariables also..
-   */
 
     if( importFile ) {
       if( konsolekalendar->importCalendar() ) {
