@@ -69,7 +69,7 @@ BodyPart::BodyPart(const QCString & s)
 BodyPart::operator = (const BodyPart & part)
 {
     if (this == &part) return *this;    // Avoid a = a.
-    
+
     envelope_           = part.envelope_;
     data_               = part.data_.copy();
     encoding_           = part.encoding_;
@@ -96,7 +96,7 @@ BodyPart::~BodyPart()
 {
     // Empty.
 }
-    
+
     BodyPart &
 BodyPart::operator = (const QCString & part)
 {
@@ -111,9 +111,9 @@ BodyPart::operator = (const QCString & part)
 BodyPart::operator == (BodyPart & part)
 {
     parse();
-    
+
     part.parse();
-    
+
     bool equal = (
         envelope_           == part.envelope_           &&
         data_               == part.data_               &&
@@ -128,7 +128,7 @@ BodyPart::operator == (BodyPart & part)
         epilogue_           == part.epilogue_           &&
         body_               == part.body_               &&
         charset_            == part.charset_ );
-    
+
     return equal;
 }
 
@@ -178,49 +178,49 @@ BodyPart::setMimeValue(const QCString & s)
 BodyPart::_parse()
 {
     //rmmDebug("=== BodyPart parse start =====================================");
-    
+
     body_.clear();
     mimeGroup_  = MimeGroupUnknown;
     mimeValue_  = MimeValueUnknown;
-    
+
     // A body part consists of an envelope and a body.
     // The body may, again, consist of multiple body parts.
-    
+
     int endOfHeaders = strRep_.find(QRegExp("\n\n"));
-    
+
     if (endOfHeaders == -1) {
-        
+
         // The body is blank. We'll treat what there is as the envelope.
         //rmmDebug("empty body");
         envelope_    = strRep_.copy();
         data_        = "";
-        
+
     } else {
-        
+
         // Add 1 to include eol of last header.
         envelope_ = strRep_.left(endOfHeaders + 1);
-        
+
         // Add 2 to ignore eol on last header plus empty line.
         data_ = strRep_.mid(endOfHeaders + 2);
     }
-    
+
 
     //rmmDebug("Looking to see if there's a Content-Type header");
     // Now see if there's a Content-Type header in the envelope.
     // If there is, we might be looking at a multipart message.
     if (!envelope_.has(HeaderContentType)) {
-        
+
         //rmmDebug("done parse(1)");
         //rmmDebug("=== BodyPart parse end   =================================");
         return;
     }
 
     //rmmDebug("There's a Content-Type header");
-    
+
     ContentType contentType(envelope_.contentType());
-    
+
     //rmmDebug("contentType.type() == " + contentType.type());
-    
+
     // If this isn't multipart, we've finished parsing.
     if (qstricmp(contentType.type(), "multipart") != 0) {
         mimeGroup_       = mimeGroupStr2Enum(contentType.type());
@@ -229,25 +229,25 @@ BodyPart::_parse()
         //rmmDebug("=== BodyPart parse end   =================================");
         return;
     }
- 
+
     //rmmDebug(" ==== This part is multipart ========================");
 
     QValueList<Parameter> parameterList(contentType.parameterList().list());
     QValueList<Parameter>::Iterator it;
-    
+
     //rmmDebug("Looking for boundary");
 
     for (it = parameterList.begin(); it != parameterList.end(); ++it)
         if (0 == qstricmp((*it).attribute(), "boundary"))
             boundary_ = (*it).value();
-    
+
     //rmmDebug("boundary == \"" + boundary_ + "\"");
-    
+
     if (boundary_.isEmpty()) {
         //rmmDebug("Boundary not found in ContentType header. Giving up.");
         return;
     }
-    
+
     if (boundary_.at(0) == '\"') {
         //rmmDebug("Boundary is quoted. Removing quotes.");
         boundary_.remove(boundary_.length() - 1, 1);
@@ -282,7 +282,7 @@ BodyPart::_parse()
     int previousBoundaryEnd = boundaryStart + bound.length();
 
     // Now find the rest of the parts.
-    
+
     // We keep track of the end of the last boundary and the start of the next.
 
     boundaryStart = data_.find(bound, previousBoundaryEnd);
@@ -294,9 +294,9 @@ BodyPart::_parse()
         );
 
         body_.append(newPart);
-        
+
         previousBoundaryEnd = boundaryStart + bound.length();
-        
+
         boundaryStart = data_.find(bound, previousBoundaryEnd);
     }
 
@@ -305,7 +305,7 @@ BodyPart::_parse()
     epilogue_ = data_.right(data_.length() - previousBoundaryEnd);
 
     //rmmDebug("epilogue == \"" + epilogue_ + "\"");
-    
+
     mimeGroup_  = mimeGroupStr2Enum(contentType.type());
     mimeValue_  = mimeValueStr2Enum(contentType.subType());
 
@@ -335,7 +335,7 @@ BodyPart::envelope()
     return envelope_;
 }
 
-    QList<BodyPart>
+    QPtrList<BodyPart>
 BodyPart::body()
 {
     parse();
@@ -398,7 +398,7 @@ BodyPart::setEnvelope(Envelope e)
 {
     parse();
     envelope_ = e;
-}    
+}
 
     void
 BodyPart::setData(const QCString & s)
@@ -408,7 +408,7 @@ BodyPart::setData(const QCString & s)
 }
 
     void
-BodyPart::setBody(QList<BodyPart> & b)
+BodyPart::setBody(QPtrList<BodyPart> & b)
 {
     parse();
     body_ = b;
@@ -421,13 +421,13 @@ BodyPart::decode()
     parse();
     Envelope e;
     QByteArray output;
-    
+
     if (envelope_.has(ClassCte)) {
-        
+
         rmmDebug("This part has cte header");
-    
+
         switch (envelope_.contentTransferEncoding().mechanism()) {
-            
+
             case CteTypeBase64:
                 output = decodeBase64(data_);
                 break;
@@ -435,7 +435,7 @@ BodyPart::decode()
             case CteTypeQuotedPrintable:
                 output = decodeQuotedPrintable(data_);
                 break;
-                
+
             case CteType7bit:
             case CteType8bit:
             case CteTypeBinary:
@@ -519,11 +519,11 @@ BodyPart::_init()
 }
 
     void
-BodyPart::_replacePartList(const QList<BodyPart> & l)
+BodyPart::_replacePartList(const QPtrList<BodyPart> & l)
 {
     body_.clear();
 
-    QListIterator<BodyPart> it(l);
+    QPtrListIterator<BodyPart> it(l);
 
     for (; it.current(); ++it)
         body_.append(new BodyPart(*it.current()));
@@ -578,7 +578,7 @@ BodyPart::asXML(QColor quote1, QColor quote2)
         outputCursor += addrEnd - addrStart; }
 
     QCString encodedData;
-    
+
     // Check size isn't 0.
     unsigned int length = data_.length();
 
@@ -594,19 +594,19 @@ BodyPart::asXML(QColor quote1, QColor quote2)
     QCString quoteTwo(col.utf8());
 
     const char * input(data_.data());
-    
+
     const char * inputStart = input;
     const char * inputEnd = input + length;
 
     char * inputCursor = const_cast<char *>(input);
-    
+
     // Allocate an output buffer. When full, it will be dumped into
     // encodedData and reused.
     register char * outputBuf = new char[32768]; // 32k buffer. Will be reused.
 
     const char * outputEnd = outputBuf + 32768;
     register char * outputCursor = outputBuf;
-    
+
     // Temporary counter + pointers.
     register int len = 0;
     register char * addrStart = 0;
@@ -626,7 +626,7 @@ BodyPart::asXML(QColor quote1, QColor quote2)
             encodedData += outputBuf;
             outputCursor = outputBuf;
         }
-        
+
         switch (*inputCursor) {
 
             case '<': toOutput("&lt;", 4); break;
@@ -674,7 +674,7 @@ BodyPart::asXML(QColor quote1, QColor quote2)
 
                 // Mark up signature separator.
                 // Handle '\n--[ ]\n'.
- 
+
                 if  (
                         // We must be sure we can look back 1 and forward 3.
                         safeToLookBack() && (inputCursor <  inputEnd - 2) &&
@@ -703,16 +703,16 @@ BodyPart::asXML(QColor quote1, QColor quote2)
                 }
                 else
                     inputToOutput();
-        
+
                 break;
-                  
+
             case '>':
 
                 // Mark up quoted line if that's what we have.
-         
+
                 // First char on line?
                 if (safeToLookBack() && *(inputCursor - 1) == '\n') {
-                    
+
                     quoteDepth = 0;
 
                     // While we have '>' or ' ' then we're still in
@@ -730,7 +730,7 @@ BodyPart::asXML(QColor quote1, QColor quote2)
                     }
 
                     toOutput("<font color=\"#", 14);
-                    
+
                     // Set the colour according to whether there's an odd
                     // or even quote depth.
                     //
@@ -744,9 +744,9 @@ BodyPart::asXML(QColor quote1, QColor quote2)
                     {
                         toOutput(quoteTwo, 6);
                     }
-                    
+
                     toOutput("\">", 2);
-                    
+
                     // Write some funky HTML-style versions of '>'.
                     for (len = 0 ; len < quoteDepth; len++)
                         toOutput("&gt; ", 5);
@@ -754,21 +754,21 @@ BodyPart::asXML(QColor quote1, QColor quote2)
                     // Remember that we need to mark down next time we
                     // see '\n'.
                     markDownQuotedLine = true;
-                   
+
                     inputCursor--;
-                    
+
                 } else {
                     toOutput("&gt;", 4);
                 }
-                
+
                 break;
 
             case '@': // Address matching.
-            
+
                 // First check to see if this is an address of the form
                 // "Rik Hemsley"@dev.null.
                 if (safeToLookBack() && *(inputCursor - 1) == '"') {
-                    
+
                     while (
 
                         // Don't go back further than the start of the input.
@@ -785,7 +785,7 @@ BodyPart::asXML(QColor quote1, QColor quote2)
                     }
 
                     ++addrStart;
-                
+
                 }
                 else
                 {
@@ -793,7 +793,7 @@ BodyPart::asXML(QColor quote1, QColor quote2)
 
                     // Work backwards from one before '@' until we're sure
                     // that we've found the start of the address.
-  
+
                     addrStart = inputCursor - 1;
 
                     while (
@@ -820,7 +820,7 @@ BodyPart::asXML(QColor quote1, QColor quote2)
 
                 // Now work forwards from one after '@' until we're sure
                 // that we're clear of the inputEnd of the address.
-                
+
                 addrEnd = inputCursor + 1;
 
                 while (
@@ -868,7 +868,7 @@ BodyPart::asXML(QColor quote1, QColor quote2)
 
                 // Start the markup.
                 toOutput("<a href=\"mailto:", 16);
-                
+
                 writeAddress();
 
                 // End of this part of the markup.
@@ -890,7 +890,7 @@ BodyPart::asXML(QColor quote1, QColor quote2)
 
         ++inputCursor;
     }
-    
+
     nulTerminate();
     encodedData += outputBuf;
     delete [] outputBuf;

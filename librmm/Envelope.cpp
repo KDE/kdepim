@@ -1,4 +1,4 @@
-#include <qlist.h>
+#include <qptrlist.h>
 
 #include <rmm/Envelope.h>
 #include <rmm/Enum.h>
@@ -274,7 +274,7 @@ Envelope::firstSender()
 Envelope::approved()
 { return *static_cast<Text *>(get(HeaderApproved)); }
 
-    RMM::AddressList 
+    RMM::AddressList
 Envelope::bcc()
 { return *static_cast<AddressList *>(get(HeaderBcc)); }
 
@@ -282,11 +282,11 @@ Envelope::bcc()
 Envelope::cc()
 { return *static_cast<AddressList *>(get(HeaderCc)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::comments()
 { return *static_cast<Text *>(get(HeaderComments)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::contentDescription()
 { return *static_cast<Text *>(get(HeaderContentDescription)); }
 
@@ -294,115 +294,115 @@ Envelope::contentDescription()
 Envelope::contentDisposition()
 { return *static_cast<ContentDisposition *>(get(HeaderContentDisposition)); }
 
-    RMM::MessageID 
+    RMM::MessageID
 Envelope::contentID()
 { return *static_cast<MessageID *>(get(HeaderContentID)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::contentMD5()
 { return *static_cast<Text *>(get(HeaderContentMD5)); }
 
-    RMM::ContentType 
+    RMM::ContentType
 Envelope::contentType()
 { return *static_cast<ContentType *>(get(HeaderContentType)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::control()
 { return *static_cast<Text *>(get(HeaderControl)); }
 
-    RMM::Cte 
+    RMM::Cte
 Envelope::contentTransferEncoding()
 { return *static_cast<Cte *>(get(HeaderContentTransferEncoding)); }
 
-    RMM::DateTime 
+    RMM::DateTime
 Envelope::date()
 { return *static_cast<DateTime *>(get(HeaderDate)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::distribution()
 { return *static_cast<Text *>(get(HeaderDistribution)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::encrypted()
 { return *static_cast<Text *>(get(HeaderEncrypted)); }
 
-    RMM::DateTime 
+    RMM::DateTime
 Envelope::expires()
 { return *static_cast<DateTime *>(get(HeaderExpires)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::followupTo()
 { return *static_cast<Text *>(get(HeaderFollowupTo)); }
 
-    RMM::AddressList 
+    RMM::AddressList
 Envelope::from()
 { return *static_cast<AddressList *>(get(HeaderFrom)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::inReplyTo()
 { return *static_cast<Text *>(get(HeaderInReplyTo)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::keywords()
 { return *static_cast<Text *>(get(HeaderKeywords)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::lines()
 { return *static_cast<Text *>(get(HeaderLines)); }
 
-    RMM::MessageID 
+    RMM::MessageID
 Envelope::messageID()
 { return *static_cast<MessageID *>(get(HeaderMessageID)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::mimeVersion()
 { return *static_cast<Text *>(get(HeaderMimeVersion)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::newsgroups()
 { return *static_cast<Text *>(get(HeaderNewsgroups)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::organization()
 { return *static_cast<Text *>(get(HeaderOrganization)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::path()
 { return *static_cast<Text *>(get(HeaderPath)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::received()
 { return *static_cast<Text *>(get(HeaderReceived)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::references()
 { return *static_cast<Text *>(get(HeaderReferences)); }
 
-    RMM::AddressList 
+    RMM::AddressList
 Envelope::replyTo()
 { return *static_cast<AddressList *>(get(HeaderReplyTo)); }
 
-    RMM::AddressList 
+    RMM::AddressList
 Envelope::resentBcc()
 { return *static_cast<AddressList *>(get(HeaderResentBcc)); }
 
-    RMM::AddressList 
+    RMM::AddressList
 Envelope::resentCc()
 { return *static_cast<AddressList *>(get(HeaderResentCc)); }
 
-    RMM::DateTime 
+    RMM::DateTime
 Envelope::resentDate()
 { return *static_cast<DateTime *>(get(HeaderResentDate)); }
 
-    RMM::AddressList 
+    RMM::AddressList
 Envelope::resentFrom()
 { return *static_cast<AddressList *>(get(HeaderResentFrom)); }
 
-    RMM::MessageID 
+    RMM::MessageID
 Envelope::resentMessageID()
 { return *static_cast<MessageID *>(get(HeaderResentMessageID)); }
 
-    RMM::AddressList 
+    RMM::AddressList
 Envelope::resentReplyTo()
 { return *static_cast<AddressList *>(get(HeaderResentReplyTo)); }
 
@@ -410,11 +410,11 @@ Envelope::resentReplyTo()
 Envelope::resentSender()
 { return *static_cast<Address *>(get(HeaderResentSender)); }
 
-    RMM::AddressList 
+    RMM::AddressList
 Envelope::resentTo()
 { return *static_cast<AddressList *>(get(HeaderResentTo)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::returnPath()
 { return *static_cast<Text *>(get(HeaderReturnPath)); }
 
@@ -422,19 +422,19 @@ Envelope::returnPath()
 Envelope::sender()
 { return *static_cast<Address *>(get(HeaderSender)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::subject()
 { return *static_cast<Text *>(get(HeaderSubject)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::summary()
 { return *static_cast<Text *>(get(HeaderSummary)); }
 
-    RMM::AddressList 
+    RMM::AddressList
 Envelope::to()
 { return *static_cast<AddressList *>(get(HeaderTo)); }
 
-    RMM::Text 
+    RMM::Text
 Envelope::xref()
 { return *static_cast<Text *>(get(HeaderXref)); }
 
