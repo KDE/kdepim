@@ -1,6 +1,8 @@
 KAlarm
 
-=== Version 1.0.3 --- 1 Feb 2004 ===
+=== Version 1.0.3 --- 10 Feb 2004 ===
+Prevent email alarms from being sent if no 'From' address is configured.
+Omit 'Bcc' when sending email alarms if no 'Bcc' address is configured.
 Fix memory leaks displaying dialogs.
 Fix scheduleCommand() and scheduleEmail() DCOP handling.
 

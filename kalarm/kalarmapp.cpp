@@ -1437,14 +1437,17 @@ void* KAlarmApp::execAlarm(KAlarmEvent& event, const KAlarmAlarm& alarm, bool re
 		QString err = KAMail::send(event, (reschedule || allowDefer));
 		if (!err.isNull())
 		{
-			kdDebug(5950) << "KAlarmApp::execAlarm(): failed\n";
 			QStringList errmsgs;
 			if (err.isEmpty())
+			{
 				errmsgs += i18n("Failed to send email");
+				kdDebug(5950) << "KAlarmApp::execAlarm(): failed\n";
+			}
 			else
 			{
 				errmsgs += i18n("Failed to send email:");
 				errmsgs += err;
+				kdDebug(5950) << "KAlarmApp::execAlarm(): failed: " << err << endl;
 			}
 			(new MessageWin(event, alarm, errmsgs, reschedule))->show();
 			result = 0;
