@@ -78,11 +78,6 @@ else
 	test -f "$pisock_path/pi-version.h" || HAVE_PISOCK="0"
 fi
 
-if test "$HAVE_PISOCK" = "0" ; then
-	AC_MSG_WARN([KPILOT: no pilot-link headers found.])
-fi
-
-
 dnl Now we know where the includes are, we need to
 dnl check the version more closely.
 dnl
@@ -110,8 +105,6 @@ if test "$HAVE_PISOCK" = "1" ; then
 	])
 fi
 
-
-
 if test "$HAVE_PISOCK" = "1" ; then
 	HAVE_PISOCK=0
 
@@ -134,7 +127,15 @@ if test "$HAVE_PISOCK" = "1" ; then
 				[PISOCK_LIB="-lpisock -lsocket -lxnet"
 				HAVE_PISOCK=1
 				],
-				[HAVE_PISOCK=0],
+				[
+					AC_CHECK_LIB(pisock,
+					pi_accept,
+					[PISOCK_LIB="-lpisock -lnsl -lsocket"
+					HAVE_PISOCK=1
+					],
+					[HAVE_PISOCK=0
+					])
+				],
 				[-lsocket -lxnet]
 				)
 			],
@@ -167,7 +168,6 @@ else
 fi
 
 if test "$HAVE_PISOCK" = "0" ; then
-	AC_MSG_WARN([KPILOT: pisock library not found])
 	DO_NOT_COMPILE="$DO_NOT_COMPILE kpilot"
 fi
 
@@ -179,7 +179,6 @@ CPPFLAGS="$kpilot_save_cflags"
 LDFLAGS="$kpilot_save_ldflags"
 unset kpilot_save_cflags
 unset kpilot_save_ldflags
-
 
 AC_LANG_POP(C++)
 

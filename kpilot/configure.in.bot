@@ -1,0 +1,6 @@
+if test "$HAVE_PISOCK" = "0" ; then
+	echo ""
+	echo "You're missing the pisock library for kpilot."
+	echo ""
+	all_tests=bad
+fi
