@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kab:entry>
+
+<kab:entry id="blah-000">
+
+  <name>Bjork</name>
+  <email>bjork@home</email>
+  <size>quite small</size>
+  <sex-appeal>great</sex-appeal>
+
+  <kab:child-list>
+    <kab:child>blah-001</kab:child>
+    <kab:child>blah-002</kab:child>
+    <kab:child>blah-003</kab:child>
+  </kab:child-list>
+
+</kab:entry>

@@ -1,0 +1,6 @@
+dn: dc=geoid,dc=clara,dc=net
+objectClass: kabentry 
+o: rik
+dc: geoid
+description: Rik Hemsley
+
