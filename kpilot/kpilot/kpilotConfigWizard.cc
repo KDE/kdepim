@@ -1,6 +1,7 @@
 /* conduitConfigDialog.cc                KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2004 by Dan Pilone
+** Written 2004 by Reinhold Kainhofer
 **
 ** This file defines a .ui-based configuration dialog for conduits.
 */
@@ -50,6 +51,7 @@ static const char *conduitconfigdialog_id =
 
 #include "kpilotConfigWizard.moc"
 
+
 ConfigWizard::ConfigWizard(QWidget *parent, const char *n) :
 	KWizard(parent, n)
 {
@@ -79,7 +81,7 @@ void ConfigWizard::accept()
 	FUNCTIONSETUP;
 	QString username( page2->fUserName->text() );
 	QString devicename( page2->fDeviceName->text() );
-	int devicetype( page1->fConnectionType->selectedId() );
+//	int devicetype( page1->fConnectionType->selectedId() );
 	enum eSyncApp {
 		eAppKDE=0,
 		eAppKontact,
@@ -105,18 +107,21 @@ void ConfigWizard::accept()
 	QStringList conduits = KPilotSettings::installedConduits();
 	// TODO: enable the right conduits
 #define APPEND_CONDUIT(a) if (!conduits.contains(a)) conduits.append(a)
+	QString applicationName(i18n("general KDE-PIM"));
 	APPEND_CONDUIT("internal_fileinstall");
 	APPEND_CONDUIT("todo-conduit");
 	APPEND_CONDUIT("vcal-conduit");
 	switch (app) {
 		case eAppEvolution:
+			applicationName=i18n("Gnome's PIM suite", "Evolution");
 			conduits.remove("knotes-conduit");
 			// TODO: Once the Evolution abook resource is finished, enable it...
 			conduits.remove("abbrowser_conduit");
 			// TODO: settings for conduits
 			break;
-		case eAppKDE:
 		case eAppKontact:
+			applicationName=i18n("KDE's PIM suite", "Kontact");
+		case eAppKDE:
 		default:
 			APPEND_CONDUIT("knotes-conduit");
 			APPEND_CONDUIT("abbrowser_conduit");
@@ -126,9 +131,15 @@ void ConfigWizard::accept()
 	KPilotSettings::setInstalledConduits( conduits );
 #undef APPEND_CONDUIT
 	
+	KMessageBox::information(this, i18n("KPilot is now configured to sync with %1.\n"
+		"The remaining options in the config dialog are advanced options and can "
+		"be used to fine-tune KPilot.").arg(applicationName), i18n("Automatic configuration finished"));
 	KPilotSettings::self()->writeConfig();
 	QDialog::accept();
 }
+
+// Devices to probe:
+//
 
 void ConfigWizard::probeHandheld()
 {
