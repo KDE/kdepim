@@ -53,7 +53,7 @@ public:
 	MultiDBConduit(KPilotDeviceLink *, const char *n=0L, const QStringList &l=QStringList(), SyncTypeList_t *tps=NULL);
 	virtual ~MultiDBConduit() {} ;
 
-	virtual long flags() const { return 0; }
+	virtual unsigned long flags() const { return 0; }
 	virtual void exec();
 	virtual bool isCorrectDBTypeCreator(DBInfo dbinfo) { return dbinfo.type==dbtype() && dbinfo.creator==dbcreator(); } ;
 
@@ -61,8 +61,8 @@ public:
 	virtual const QString conduitName()=0;
 	virtual const QString conduitSettingsGroup()=0;
 	virtual const QString settingsFileList()=0;
-	virtual const long dbtype()=0;
-	virtual const long dbcreator()=0;
+	virtual const unsigned long dbtype()=0;
+	virtual const unsigned long dbcreator()=0;
 	virtual bool GetSyncType(DBInfo dbinfo, DBSyncInfo*syncinfo);
 	virtual const QString getSyncTypeEntry()=0;
 	virtual const QString getSyncFileEntry()=0;
@@ -72,7 +72,7 @@ public:
 protected slots:
 	virtual void syncNextDB();
 	virtual void finishedDB();
-	virtual void syncNextRecod();
+	virtual void syncNextRecord();
 	virtual void cleanup();
 	virtual void cleanupDB();
 
@@ -80,6 +80,7 @@ protected:
 	DBSyncInfo syncinfo;
 	QStringList dbases;
 	int dbnr;
+	bool fFullSync, conflictResolution, archive;
 	PilotSerialDatabase *fCurrentDatabase;
 	PilotLocalDatabase *fBackupDatabase;
 	SyncTypeList_t *synctypes;
@@ -87,6 +88,9 @@ protected:
 
 
 // $Log$
+// Revision 1.1  2002/04/07 12:09:42  kainhofe
+// Initial checkin of the conduit. The gui works mostly, but syncing crashes KPilot...
+//
 // Revision 1.1  2002/04/07 01:03:52  reinhold
 // the list of possible actions is now created dynamically
 //

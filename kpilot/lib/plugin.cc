@@ -68,10 +68,10 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	const QStringList &args) :
 	SyncAction(p,name),
 	fConfig(0L),
-	fTest(args.contains("--test")),
-	fBackup(args.contains("--backup")),
 	fDatabase(0L),
-	fLocalDatabase(0L)
+	fLocalDatabase(0L),
+	fTest(args.contains("--test")),
+	fBackup(args.contains("--backup"))
 {
 	FUNCTIONSETUP;
 
@@ -265,6 +265,9 @@ bool PluginUtility::isModal(const QStringList &a)
 }
 
 // $Log$
+// Revision 1.11  2002/06/30 14:49:53  kainhofe
+// added a function idList, some minor bug fixes
+//
 // Revision 1.10  2002/06/08 16:33:43  kainhofe
 // openDatabases fetches the database from the palm if it doesn't exist. openDatabases has an additional (optional) parameter (bool*) retrieved which is set to true if the database had to be downloaded from the handheld
 //

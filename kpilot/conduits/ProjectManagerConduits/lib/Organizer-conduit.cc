@@ -39,23 +39,11 @@
 #endif
 
 #include <qtimer.h>
-
 #include <kconfig.h>
-/*
-#if KDE_VERSION < 300
-#include <libkcal/todo.h>
-#else
-#include <todo.h>
-#endif
-*/
-#include "kmessagebox.h"
-/*
-#include "pilotRecord.h"*/
-#include "pilotSerialDatabase.h"
-//#include "pilotOrganizerEntry.h"
-#include "calendarlocal.h"
-
-//#include "Organizer-factory.h"
+#include <kmessagebox.h>
+#include <kstandarddirs.h>
+#include <pilotSerialDatabase.h>
+#include <calendarlocal.h>
 #include "Organizer-conduit.h"
 #include "DatabaseAction.h"
 
@@ -69,6 +57,9 @@ static const char *Organizer_conduit_id = "$Id$";
  *****************************************************************/
 
 class OrganizerConduit::VCalPrivate {
+private:
+	bool reading;
+	KCal::Calendar*fCalendar;
 public:
 	VCalPrivate(KCal::Calendar *buddy);
 	#ifdef KDE2
@@ -77,35 +68,71 @@ public:
 		QPtrList<KCal::Todo> fAllTodos;
 	#endif
 	int updateTodos();
+	int count() {return fAllTodos.count();};
+	void addTodo(KCal::Todo*);
 	void removeTodo(KCal::Todo*);
 	void insertTodo(KCal::Todo*);
 	KCal::Todo *findTodo(recordid_t);
-private:
-	KCal::Calendar*fCalendar;
+	KCal::Todo *getNextTodo();
+	KCal::Todo *getNextModifiedTodo();
 };
+
+
 
 OrganizerConduit::VCalPrivate::VCalPrivate(KCal::Calendar *b) : fCalendar(b) {
 	fAllTodos.setAutoDelete(false);
 }
+
+void OrganizerConduit::VCalPrivate::addTodo(KCal::Todo*e)
+{
+	fAllTodos.append(e);
+	fCalendar->addTodo(e);
+}
+
 int OrganizerConduit::VCalPrivate::updateTodos() {
 	fAllTodos=fCalendar->getTodoList();
 	fAllTodos.setAutoDelete(false);
 	return fAllTodos.count();
 }
+
 void OrganizerConduit::VCalPrivate::removeTodo(KCal::Todo*e) {
 	fAllTodos.remove(e);
 	fCalendar->deleteTodo(e);
 }
+
 void OrganizerConduit::VCalPrivate::insertTodo(KCal::Todo*e) {
 	fAllTodos.append(e);
 }
+
 KCal::Todo*OrganizerConduit::VCalPrivate::findTodo(recordid_t id) {
 	KCal::Todo *todo = fAllTodos.first();
 	while (todo) {
-		if (todo->pilotId()==id) return todo;
+		if ((recordid_t)todo->pilotId()==id) return todo;
 		todo=fAllTodos.next();
 	}
 	return 0L;
+}
+
+KCal::Todo *OrganizerConduit::VCalPrivate::getNextTodo()
+{
+	if (reading) return fAllTodos.next();
+	reading=true;
+	return fAllTodos.first();
+}
+
+KCal::Todo *OrganizerConduit::VCalPrivate::getNextModifiedTodo()
+{
+	KCal::Todo*e=0L;
+	if (!reading) {
+		reading=true;
+		e=fAllTodos.first();
+	} else {
+		e=fAllTodos.next();
+	}
+	while (e && e->syncStatus()==KCal::Todo::SYNCNONE) {
+		e=fAllTodos.next();
+	}
+	return e;
 }
 
 
@@ -126,6 +153,20 @@ OrganizerConduit::~OrganizerConduit() {
 	cleanup();
 }
 
+void OrganizerConduit::exec() {
+	FUNCTIONSETUP;
+	KConfig korgcfg( locate( "config", "korganizerrc" ) );
+	QString tz;
+	// this part taken from adcalendarbase.cpp:
+	korgcfg.setGroup( "Time & Date" );
+	tz = korgcfg.readEntry( "TimeZoneId" );
+#ifdef DEBUG
+	DEBUGCONDUIT << fname<<": KOrganizer's time zone = "<<tz<<endl;
+#endif
+
+	return MultiDBConduit::exec();
+}
+
 void OrganizerConduit::cleanup() {
 	FUNCTIONSETUP;
 	MultiDBConduit::cleanup();
@@ -139,24 +180,20 @@ void OrganizerConduit::cleanupDB() {
 }
 
 
-void OrganizerConduit::updateRecords(int pid, PilotRecord*rec, int  pcid, KCal::Todo*todo) {
-	// TODO: merge the two records in a sensitive way and write them out.
-}
-
 void OrganizerConduit::syncNextRecord() {
 	PilotRecord*rec=fCurrentDatabase->readRecordByIndex(Palmix);
 	KCal::Todo*todo=fP->fAllTodos.at(PCix);
 
 	// if any of them could not be found, we are at the end, just add the rest:
 	if (!rec) {
-		while (todo=fP->fAllTodos.at(PCix++)) {
+		while ( (todo=fP->fAllTodos.at(PCix++)) ) {
 			insertRecordToPalm(Palmix++, todo);
 		}
 		QTimer::singleShot(0, this, SLOT(finishedDB()));
 		return;
 	}
 	if (!todo) {
-		while (rec=fCurrentDatabase->readRecordByIndex(Palmix++)) {
+		while ( (rec=fCurrentDatabase->readRecordByIndex(Palmix++)) ) {
 			insertRecordToPC(PCix++, rec);
 		}
 		QTimer::singleShot(0, this, SLOT(finishedDB()));
@@ -165,7 +202,7 @@ void OrganizerConduit::syncNextRecord() {
 
 
 	// Check if the two items are the same and only need to be updated but not moved:
-	if (rec->getID()==todo->pilotId()) {
+	if ((recordid_t)rec->getID()==(recordid_t)todo->pilotId()) {
 		/* There is just one case that both the current palm and pc entries are
 		   in the correct order. For this the following needs to hold:
 		   1) neither the palm nor the pc entry have been changed
@@ -192,8 +229,8 @@ void OrganizerConduit::syncNextRecord() {
 	}
 
 	// if there are only unsynced entries before the next synced PC entry, insert them on the palm:
-	if (todo->pilotId()==0)
-	while (todo->pilotId() ==0) {
+	if ((recordid_t)todo->pilotId()==0)
+	while ((recordid_t)todo->pilotId() ==0) {
 		insertRecordToPalm(Palmix++, todo);
 		if (!(todo=fP->fAllTodos.at(PCix++))) {
 			QTimer::singleShot(0, this, SLOT(syncNextRecord()));
@@ -220,6 +257,10 @@ void OrganizerConduit::syncNextRecord() {
 	movePalmRecord(Palmix, Palmix + (fP->fAllTodos.find(t)-Palmix));
 	QTimer::singleShot(0, this, SLOT(syncNextRecord()));
 	return;
+}
+
+void OrganizerConduit::updateRecords(int pid, PilotRecord*rec, int  pcid, KCal::Todo*todo) {
+	// TODO: merge the two records in a sensitive way and write them out.
 }
 
 void OrganizerConduit::insertRecordToPC(int pos, PilotRecord*rec) {
@@ -265,13 +306,18 @@ bool OrganizerConduit::preSyncAction(DBSyncInfo*dbinfo) {
 	inserted=false;
 	switch (syncinfo.syncaction) {
 		case st_vcal:
-			fCalendar=new KCal::CalendarLocal();
-			// now load the list of todos from the icalendar file
-			if ((!fCalendar) || (!fCalendar->load(dbinfo->filename))) {
-				emit logError(i18n("Couldn't open the calendar database "+dbinfo->filename));
-				kdWarning() << k_funcinfo << ": Couldn't open calendar "<<dbinfo->filename<<" on local harddrive" << endl;
-				return false;
+			fCalendar=new KCal::CalendarLocal(timezone);
+			if (!fCalendar) return false;
+			
+			// if there is no calendar yet, use a first sync..
+			// the calendar is initialized, so nothing more to do...
+			if (!fCalendar->load(dbinfo->filename) ) {
+#ifdef DEBUG
+				DEBUGCONDUIT << "calendar file "<<fCalendarFile<<" could not be opened. Will create a new one"<<endl;
+#endif
+				fFullSync=true;
 			}
+
 			fP = new VCalPrivate(fCalendar);
 			if (!fP) {
 				emit logError(i18n("Could not load the calendar "+dbinfo->filename));
@@ -279,6 +325,8 @@ bool OrganizerConduit::preSyncAction(DBSyncInfo*dbinfo) {
 				return false;
 			}
 			fP->updateTodos();
+			if (fP->count()<1) fFullSync=true;
+
 			return true;
 			break;
 		case st_pdb:
@@ -350,9 +398,6 @@ void OrganizerConduit::updateLocalEntry(PilotRecord *rec, bool force) {
 		// already been  modified on the desktop.  The VObject's modified state
 		// overrides the PilotRec's modified state.
 
-		// TODO: Does this still make sense???
-		if (vtodo->syncStatus() != Incidence::SYNCNONE) return;
-
 		// otherwise, the vObject hasn't been touched.  Updated it with the
 		// info from the PilotRec.
 		
@@ -395,6 +440,9 @@ void OrganizerConduit::updateLocalEntry(PilotRecord *rec, bool force) {
 
 
 // $Log$
+// Revision 1.2  2002/04/07 20:19:48  cschumac
+// Compile fixes.
+//
 // Revision 1.1  2002/04/07 12:09:43  kainhofe
 // Initial checkin of the conduit. The gui works mostly, but syncing crashes KPilot...
 //

@@ -7,6 +7,17 @@ TODO
 KPilot Developer's notes for july 7th, 2002
 ===========================================
 
+
+KPilot Developer's notes for july 4th, 2002
+===========================================
+
+2002-07-04  Reinhold Kainhofer
+* Added a function KPilotDeviceLink::tickle() which prevents a timeout 
+  on the palm side if it is called with a timer (e.g. when a dialog is open)
+* Some more work on the addressbook conduit, which seems to be trickier
+  than I had thought initially.
+
+
 KPilot Developer's notes for june 24th, 2002
 ============================================
 

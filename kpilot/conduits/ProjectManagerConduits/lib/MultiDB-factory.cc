@@ -57,6 +57,9 @@ KPilotSyncType::KPilotSyncType(KPilotSyncType*tp) {
 
 KAboutData *MultiDBConduitFactory::fAbout = 0L;
 SyncTypeList_t *MultiDBConduitFactory::synctypes = 0L;
+QString MultiDBConduitFactory::conflictResolution = "ConflictResolution";
+QString MultiDBConduitFactory::archive = "ArchiveDeletedEntries";
+QString MultiDBConduitFactory::fullSyncOnPCChange = "FullSyncOnPCChange";
 
 MultiDBConduitFactory::MultiDBConduitFactory(QObject *p, const char *n) :
 	KLibFactory(p,n) {
@@ -140,6 +143,9 @@ MultiDBConduitFactory::~MultiDBConduitFactory() {
 }
 
 // $Log$
+// Revision 1.1  2002/04/07 12:09:42  kainhofe
+// Initial checkin of the conduit. The gui works mostly, but syncing crashes KPilot...
+//
 // Revision 1.2  2002/04/07 11:56:19  reinhold
 // Last version before moving to KDE CVS
 //

@@ -451,6 +451,13 @@ void KPilotDeviceLink::acceptDevice()
 	emit deviceReady();
 }
 
+void KPilotDeviceLink::tickle() const
+{
+	FUNCTIONSETUP;
+	pi_tickle(pilotSocket());
+}
+
+
 int KPilotDeviceLink::installFiles(const QStringList & l)
 {
 	FUNCTIONSETUP;
@@ -680,6 +687,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.13  2002/05/18 23:28:19  adridg
+// Compile fixes
+//
 // Revision 1.12  2002/05/15 20:16:20  kainhofe
 // Wrongfully had a constant where 0 needed to be...
 //

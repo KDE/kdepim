@@ -50,6 +50,15 @@
 #define SyncTypeIterator_t QPtrListIterator<KPilotSyncType>
 #endif
 
+#define RES_PALMOVERRIDES 0
+#define RES_PCOVERRIDES 1
+#define RES_ASK 2
+
+#define SYNC_FIRST 0
+#define SYNC_FAST 1
+#define SYNC_FULL 2
+#define SYNC_MAX SYNC_FULL
+
 
 typedef enum synctps {
 	st_ask, st_ignore, st_backup, st_pdb, st_vcal, st_ldap, st_sql, st_csv
@@ -58,14 +67,15 @@ typedef enum synctps {
 class DBSyncInfo{
 public:
 	DBSyncInfo(QListViewItem*item) {dbname=item->text(0); syncaction=item->text(1).toInt(); filename=item->text(2);};
-	DBSyncInfo(){dbname=QString::null; syncaction=0; filename=QString::null;}
-	DBSyncInfo(char*db, int act, char*fn) {dbname=QString(db); syncaction=act; filename=QString(fn);};
-	DBSyncInfo(QString db, int act, QString fn) {dbname=db; syncaction=act; filename=fn;};
-	bool set(QString name, int act, QString fn) {dbname=name; syncaction=act; filename=fn; return true;}
+	DBSyncInfo(){dbname=QString::null; syncaction=0; filename=QString::null; synctype=SYNC_FAST;}
+	DBSyncInfo(char*db, int act, char*fn, int st=SYNC_FAST) {dbname=QString(db); syncaction=act; filename=QString(fn); synctype=st;};
+	DBSyncInfo(QString db, int act, QString fn, int st=SYNC_FAST) {dbname=db; syncaction=act; filename=fn; synctype=st;};
+	bool set(QString name, int act, QString fn, int st=SYNC_FAST) {dbname=name; syncaction=act; filename=fn; synctype=st; return true;}
 	~DBSyncInfo() {};
 public:
 	QString dbname;
 	int syncaction;
+	int synctype;
 	QString filename;
 };
 
@@ -114,10 +124,16 @@ private:
 public:
 	static KAboutData *fAbout;
 	static SyncTypeList_t *synctypes;
+	static QString conflictResolution;
+	static QString archive;
+	static QString fullSyncOnPCChange;
 } ;
 
 
 // $Log$
+// Revision 1.1  2002/04/07 12:09:42  kainhofe
+// Initial checkin of the conduit. The gui works mostly, but syncing crashes KPilot...
+//
 // Revision 1.1  2002/04/07 01:03:52  reinhold
 // the list of possible actions is now created dynamically
 //

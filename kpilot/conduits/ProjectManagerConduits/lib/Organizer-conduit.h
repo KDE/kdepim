@@ -53,7 +53,7 @@ class OrganizerConduit : public MultiDBConduit {
 public:
 	OrganizerConduit(KPilotDeviceLink *, const char *n=0L, const QStringList &l=QStringList(), SyncTypeList_t *tps=NULL);
 	virtual ~OrganizerConduit();
-	virtual long flags() const { return FLG_SORTED; }
+	virtual unsigned long flags() const { return FLG_SORTED; }
 
 protected:
 	virtual void updateLocalEntry(PilotRecord *rec, bool force=false);
@@ -62,8 +62,8 @@ protected:
 	virtual PilotOrganizerEntry*createOrganizerEntry(PilotRecord *rec=NULL)=0;
 	virtual PilotOrganizerEntry*createOrganizerEntry(KCal::Todo *todo=NULL)=0;
 	// let child classes read and set fields from the todo to the palm entry
-	virtual void getCustomFields(Todo*vtodo, PilotOrganizerEntry*entry) {} ;
-	virtual void setCustomFields(Todo*vtodo, PilotOrganizerEntry*entry) {} ;
+	virtual void getCustomFields(Todo*, PilotOrganizerEntry*) {} ;
+	virtual void setCustomFields(Todo*, PilotOrganizerEntry*) {} ;
 	
 	virtual const QString getSyncTypeEntry() { return "SyncAction";};
 	virtual const QString getSyncFileEntry() { return "SyncFile";};
@@ -82,6 +82,7 @@ protected slots:
 	virtual void syncNextRecord();
 	virtual void cleanup();
 	virtual void cleanupDB();
+	virtual void exec();
 	
 protected:
 	KCal::Calendar *fCalendar;
@@ -91,6 +92,7 @@ protected:
 	int PCix, Palmix;
 	// inserted determines if any entries have been moved/inserted before the current record in the palm db
 	bool inserted;
+	QString timezone;
 	
 private:
 	class VCalPrivate;
@@ -102,6 +104,9 @@ private:
 
 
 // $Log$
+// Revision 1.1  2002/04/07 12:09:43  kainhofe
+// Initial checkin of the conduit. The gui works mostly, but syncing crashes KPilot...
+//
 // Revision 1.1  2002/04/07 01:03:52  reinhold
 // the list of possible actions is now created dynamically
 //

@@ -36,11 +36,12 @@
 #include <qmessagebox.h>
 #endif
 
+#include <unistd.h>
 #include <qtimer.h>
-
 #include <kconfig.h>
 #include <kmessagebox.h>
 
+#include <pilotUser.h>
 #include "pilotRecord.h"
 #include "pilotSerialDatabase.h"
 #include "MultiDB-conduit.h"
@@ -91,13 +92,15 @@ bool MultiDBConduit::preSyncAction(DBSyncInfo*dbinfo) {
 void MultiDBConduit::finishedDB() {
 	QTimer::singleShot(0, this, SLOT(syncNextDB()));
 };
-void MultiDBConduit::syncNextRecod() {
+void MultiDBConduit::syncNextRecord() {
+	QTimer::singleShot(0, this, SLOT(finishedDB()));
 };
 
 
 void MultiDBConduit::syncNextDB() {
 	FUNCTIONSETUP;
 	DBInfo dbinfo;
+	KPilotUser*usr;
 	// just to make sure
 	cleanupDB();
 	if (fHandle->getNextDatabase(++dbnr, &dbinfo/*, cardno*/)<=0) {
@@ -106,62 +109,79 @@ void MultiDBConduit::syncNextDB() {
 		return;
 	}
 	
+	KConfigGroupSaver cfgs(fConfig, conduitSettingsGroup());
 	// db could be opened, so sync, sync sync...
 	if (!fConfig) {
 		kdWarning() << k_funcinfo <<": No configuration set for conduit. Skipping database "<<dbinfo.name<<"..."<<endl;
-		QTimer::singleShot(0, this, SLOT(syncNextDB()));
-		return;
+		goto skip;
 	}
-	KConfigGroupSaver cfgs(fConfig, conduitSettingsGroup());
 		
-	if (!isCorrectDBTypeCreator(dbinfo)) {  // if creator and/or type don't match, go to next db
-		QTimer::singleShot(0, this, SLOT(syncNextDB()));
-		return;
-	}
-	// read config entry for the db, will also ask if needed
-	// if the user cancels, just skip this database...
-	if (!GetSyncType(dbinfo, &syncinfo))  {
-		QTimer::singleShot(0, this, SLOT(syncNextDB()));
-		return;
-	}
+	// if creator and/or type don't match, go to next db
+	if (!isCorrectDBTypeCreator(dbinfo)) goto skip;
+	// read config entry for the db, will ask if needed. if user cancels, just skip this database...
+	if (!GetSyncType(dbinfo, &syncinfo)) goto skip;
+	
 	dbases.append(dbinfo.name);
-	#ifdef DEBUG
+#ifdef DEBUG
 	DEBUGCONDUIT << fname << ": Using file " << syncinfo.filename << " to sync the palm database "<< dbinfo.name << endl;
-	#endif
+#endif
 		
 	// preSyncAction should initialize the custom databases/files for the specific action chosen for this db
 	if (!preSyncAction(&syncinfo)) {
-		#ifdef DEBUG
+#ifdef DEBUG
 		DEBUGCONDUIT << "Error initializing the databases for "<<dbinfo.name<<endl;
-		#endif
-		// TODO: write out a real KPilot error message to be included in the log
-		kdWarning() << k_funcinfo << ": Couldn't initialize the database "<<dbinfo.name<<endl;
-		emit logError(i18n("Unable to initialize the database ")+dbinfo.name);
-		QTimer::singleShot(0, this, SLOT(syncNextDB()));
-		return;
+#endif
+		emit logError(i18n("Unable to initialize the database: ")+dbinfo.name);
+		goto error;
 	}
 
+	usr=fHandle->getPilotUser();
+	fFullSync |= (syncinfo.synctype==SYNC_FULL) || ( (usr->getLastSyncPC()!=(unsigned long)gethostid()) && fConfig->readBoolEntry(MultiDBConduitFactory::fullSyncOnPCChange, true));
+	
 
 	// open the db on palm, backup db on harddisk and the calendar file
-	fCurrentDatabase = new PilotSerialDatabase(pilotSocket(), dbinfo.name, this, dbinfo.name );
 	fBackupDatabase = new PilotLocalDatabase(dbinfo.name);
+	if (!fBackupDatabase) goto error;
+	
+	if (!fBackupDatabase->isDBOpen()) {
+#ifdef DEBUG
+		DEBUGCONDUIT<<"Backup databse "<<fBackupDatabase->dbPathName()<<" could not be opened. Will fetch a copy from the palm and do a full sync"<<endl;
+#endif
+		struct DBInfo dbinfo;
+		char nm[50];
+		strncpy(&nm[0], &dbinfo.name[0], sizeof(nm));
+		if (fHandle->findDatabase(&nm[0], &dbinfo)<0 ){
+#ifdef DEBUG
+			DEBUGCONDUIT<<fname<<": Could not get DBInfo for "<<nm<<"! Skipping databse"<<endl;
+#endif
+			goto error;
+		}
+		dbinfo.flags &= ~dlpDBFlagOpen;
+		if (!fHandle->retrieveDatabase(fBackupDatabase->dbPathName(), &dbinfo) ) goto error;
+		KPILOT_DELETE(fBackupDatabase);
+		fBackupDatabase=new PilotLocalDatabase(dbinfo.name);
+		if (!fBackupDatabase || ! fBackupDatabase->isDBOpen() ) goto error;
+		fFullSync=true;
+	}
 
+	fCurrentDatabase = new PilotSerialDatabase(pilotSocket(), dbinfo.name, this, dbinfo.name );
+	
 	// error messages if any of them could not be loaded
-	if (!fCurrentDatabase)
-		kdWarning() << k_funcinfo << ": Couldn't open database "<<dbinfo.name<<" on Pilot" << endl;
-	if (!fBackupDatabase)
-		kdWarning() << k_funcinfo << ": Couldn't open local copy for "<<dbinfo.name << endl;
-
 	if (!fCurrentDatabase || !fBackupDatabase || !fCurrentDatabase->isDBOpen() || !fBackupDatabase->isDBOpen()) {
 		emit logError(i18n("Couldn't open the calendar databases."));
-		QTimer::singleShot(0, this, SLOT(syncNextDB()));
-		return;
+		goto skip;
 	}
 
 
 	// Start the sync by emitting syncRecord()
 	QTimer::singleShot(0,this,SLOT(syncNextRecord()));
-	// TODO: maybe we should also set a timer at, say 5 Minutes so that the conduit won't wait forever...
+	return;
+	
+error:
+	emit logError(i18n("Sync failed for database: ")+dbinfo.name);
+skip:
+	QTimer::singleShot(0, this, SLOT(syncNextDB()));
+	return;
 }
 
 
@@ -210,6 +230,8 @@ bool MultiDBConduit::GetSyncType(DBInfo dbinfo, DBSyncInfo*syncinfo) {
 	KConfigGroupSaver cfgs(fConfig, conduitSettingsGroup());
 	
 	dbases=fConfig->readListEntry(settingsFileList());
+	conflictResolution = fConfig->readNumEntry(MultiDBConduitFactory::conflictResolution);
+	archive = fConfig->readBoolEntry(MultiDBConduitFactory::archive);
 	
 		#ifdef DEBUG
 		DEBUGCONDUIT<<k_funcinfo<<": starting sync with syncNextDB "<<endl;
@@ -258,6 +280,9 @@ bool MultiDBConduit::GetSyncType(DBInfo dbinfo, DBSyncInfo*syncinfo) {
 }
 
 // $Log$
+// Revision 1.3  2002/04/08 12:56:43  mhunter
+// Corrected typographical errors
+//
 // Revision 1.2  2002/04/07 20:19:48  cschumac
 // Compile fixes.
 //

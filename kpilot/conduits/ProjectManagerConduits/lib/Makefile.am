@@ -6,7 +6,8 @@
 ### Makefile for the Project manager conduit lib.
 ###
 
-INCLUDES= -I$(top_srcdir)/kpilot/lib -I$(top_srcdir)/libkcal $(all_includes)
+INCLUDES= -I$(top_srcdir)/kpilot/lib -I$(top_srcdir)/libkcal \
+	$(PISOCK_INCLUDE) $(all_includes)
 
 METASOURCES = AUTO
 
@@ -26,5 +27,5 @@ libProjectsConduit_la_SOURCES = DatabaseAction.cc DatabaseActionDialog.ui \
 	MultiDB-factory.cc MultiDB-setup.cc MultiDBWidgetPrivate.cpp \
 	Organizer-conduit.cc Organizer-factory.cc pilotOrganizerEntry.cc
 libProjectsConduit_la_LDFLAGS = $(KDE_RPATH) -L$(top_srcdir)/kpilot/lib -L$(top_srcdir)/libkcal --no-undefined
-libProjectsConduit_la_LIBADD = -lkpilot -lkcal -lqt -lkdecore -lkdeui
+libProjectsConduit_la_LIBADD = -lkpilot -lkcal 
 

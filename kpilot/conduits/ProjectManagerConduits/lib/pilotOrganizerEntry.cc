@@ -84,7 +84,7 @@ PilotOrganizerEntry & PilotOrganizerEntry::operator = (const PilotOrganizerEntry
 	}
 	return *this;
 }				// end of assignment operator
-	
+
 void PilotOrganizerEntry::setDate(const po_date_type tp, unsigned short int d) {
 	QTime tm;
 	if (d == 0xffff) { QDate dt; fData.dates[tp].setDate(dt); fData.dates[tp].setTime(tm); return;}
@@ -160,6 +160,9 @@ void PilotOrganizerEntry::free_OrganizerEntry(OrganizerEntry*entry) {
 
 
 // $Log$
+// Revision 1.1  2002/04/07 12:09:43  kainhofe
+// Initial checkin of the conduit. The gui works mostly, but syncing crashes KPilot...
+//
 // Revision 1.7  2002/04/07 11:56:19  reinhold
 // Last version before moving to KDE CVS
 //

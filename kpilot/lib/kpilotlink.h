@@ -131,6 +131,12 @@ public:
 	* (ie. the physical Pilot is waiting for sync commands)
 	*/
 	bool getConnected() const { return fStatus == AcceptedDevice; }
+	
+public slots:
+	/**
+	* Tickle the palm to reset the timeout
+	*/
+	void tickle() const;
 
 private:
 	LinkStatus fStatus;
@@ -317,6 +323,9 @@ bool operator < ( const struct db &, const struct db &) ;
 
 
 // $Log$
+// Revision 1.5  2002/05/03 17:21:51  kainhofe
+// Added a method findDatabase to KPilotDeviceLink to look up a single db on the palm
+//
 // Revision 1.4  2002/04/07 20:19:48  cschumac
 // Compile fixes.
 //
