@@ -170,6 +170,7 @@ bool OpenGroupware::doLoad()
   }
 
   mIncidencesForDownload.clear();
+  mVersionsPendingDownload.clear();
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(), i18n("Downloading calendar") );
@@ -226,8 +227,6 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
       mProgress = 0;
     }
   } else {
-    mIncidencesForDownload.clear();
-    mVersionsPendingDownload.clear();
     QDomDocument doc = mListEventsJob->response();
 
     //kdDebug(7000) << " Doc: " << doc.toString() << endl;
@@ -255,30 +254,30 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
       if ( !localId.isNull() )
         i = mCalendar.incidence( localId );
       if ( !i ) {
-        // kdDebug(7000) << "Not locally present, download: " << location << endl;
+         kdDebug(7000) << "Not locally present, download: " << location << endl;
         download = true;
       } else {
-        // kdDebug(7000) << "Locally present " << endl;
+         kdDebug(7000) << "Locally present " << endl;
         /* locally present, let's check if it's newer than what we have */
         const QString &oldFingerprint = idMapper().fingerprint( i->uid() );
         if ( oldFingerprint != newFingerprint ) {
-          // kdDebug(7000) << "Fingerprint changed old: " << oldFingerprint << " new: " << newFingerprint << endl;
+          kdDebug(7000) << "Fingerprint changed old: " << oldFingerprint << " new: " << newFingerprint << endl;
           // something changed on the server, let's see if we also changed it locally
           if ( deletedIncidences().find( i ) != deletedIncidences().end()
             || changedIncidences().find( i ) != changedIncidences().end() ) {
             // TODO conflict resolution
-            // kdDebug(7000) << "TODO conflict resolution" << endl;
+             kdDebug(7000) << "TODO conflict resolution" << endl;
             download = true;
           } else {
             download = true;
           }
         } else {
-          // kdDebug(7000) << "Fingerprint did not change, don't download this one " << endl;
+          kdDebug(7000) << "Fingerprint did not change, don't download this one " << endl;
         }
-        if ( download ) {
-          mIncidencesForDownload << entry;
-          mVersionsPendingDownload.insert( location, newFingerprint );
-        }
+      }
+      if ( download ) {
+        mIncidencesForDownload << entry;
+        mVersionsPendingDownload.insert( location, newFingerprint );
       }
     }
   }
@@ -290,6 +289,7 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
 
 void OpenGroupware::downloadNextIncidence()
 {
+  kdDebug(7000) << " downloadNextIncidence " << endl;
   if ( !mIncidencesForDownload.isEmpty() ) {
     const QString entry = mIncidencesForDownload.front();
     mIncidencesForDownload.pop_front();
@@ -303,15 +303,14 @@ void OpenGroupware::downloadNextIncidence()
     mJobData = QString::null;
 
     mDownloadJob = KIO::get( url, false, false );
+    mDownloadJob->addMetaData( "PropagateHTTPHeader", "true" );
     connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
         SLOT( slotJobResult( KIO::Job * ) ) );
     connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
         SLOT( slotJobData( KIO::Job *, const QByteArray & ) ) );
   } else {
-
     if ( mProgress ) mProgress->setComplete();
     mProgress = 0;
-
     loadFinished();
   }
 }
@@ -349,6 +348,8 @@ void OpenGroupware::slotJobResult( KIO::Job *job )
     loadError( job->errorString() );
     mIsShowingError = false;
   } else {
+    const QString& headers = job->queryMetaData( "HTTP-Headers" );
+    kdDebug(7000) << "HEADERS: " << endl << headers << endl;
     CalendarLocal calendar;
     ICalFormat ical;
     if ( !ical.fromString( &calendar, mJobData ) ) {
