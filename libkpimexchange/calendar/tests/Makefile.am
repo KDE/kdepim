@@ -1,4 +1,4 @@
-INCLUDES = -I.. $(all_includes) -I$(top_srcdir)/libkcal
+INCLUDES = -I.. -I$(top_srcdir)/libkcal $(all_includes)
 
 LDFLAGS = $(KDE_RPATH)
 
