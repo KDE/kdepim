@@ -169,7 +169,7 @@ QString KNLVItemBase::shortString(QString text, int, int width, QFontMetrics fm)
 
 
 KNListView::KNListView(QWidget *parent, const char *name)
-  : KListView(parent,name), s_ortAsc(true), s_ortCol(-1), d_elayedCenter(-1), a_ctiveItem(0)
+  : KListView(parent,name), s_ortAsc(true), s_ortCol(-1), d_elayedCenter(-1), a_ctiveItem(0), k_eepSelection(false)
 {
   connect(header(), SIGNAL(clicked(int)),
           this, SLOT(slotSortList(int)));
