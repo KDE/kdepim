@@ -32,8 +32,8 @@ class MobileGui : public MobileGui_base, virtual public KandyIface
     void savePhonebook();
     void refreshStatus();
     void writePhonebook();
-    void readKab();
-    void writeKab();
+    void readKabc();
+    void writeKabc();
     void mergePhonebooks();
     void syncPhonebooks();
 

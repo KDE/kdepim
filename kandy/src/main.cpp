@@ -17,7 +17,7 @@
 static const char *description =
     I18N_NOOP("Communicating with your mobile phone.");
 
-static const char *version = "0.2";
+static const char *version = "0.3";
 
 static KCmdLineOptions options[] = 
 {

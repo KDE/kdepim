@@ -8,10 +8,11 @@
 
 #include <kdebug.h>
 #include <kfiledialog.h>
-#include <kabapi.h>
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kapp.h>
+
+#include <kabc/stdaddressbook.h>
 
 #include "atcommand.h"
 #include "commandscheduler.h"
@@ -45,7 +46,7 @@ class SyncEntryKab : public SyncEntry {
     QString mPhone;
     QString mPhonetype;
 
-    KabKey mKey;
+    KABC::Addressee mAddressee;
 };
 
 class SyncEntryMobile : public SyncEntry {
@@ -205,71 +206,32 @@ void MobileGui::writePhonebook()
   emit statusMessage(i18n("Writing mobile phonebook..."));  
 }
 
-void MobileGui::readKab()
+void MobileGui::readKabc()
 {
-  kdDebug() << "MobileGui::readKab()" << endl;
+  kdDebug() << "MobileGui::readKabc()" << endl;
 
   mSyncer->mKabEntries.clear();
 
-  KabAPI kab(0);
-  if (kab.init() != AddressBook::NoError) {
-    kdDebug() << "Error initing kab" << endl;
-    return;
-  }
+  KABC::AddressBook *addressBook = KABC::StdAddressBook::self();
 
-  KabKey key;
-  AddressBook::Entry entry;
-
-  // Search for entry that has same X-KANDY-Index
-  int num = kab.addressbook()->noOfEntries();
-  for (int i = 0; i < num; ++i) {
-    if (AddressBook::NoError != kab.addressbook()->getKey(i,key)) {
-      kdDebug() << "Error getting key for index " << i << " from kab." << endl;
-      continue;
-    }
-    if (AddressBook::NoError != kab.addressbook()->getEntry(key,entry))
-    {
-      kdDebug() << "Error getting entry for index " << i << " from kab." << endl;
-      continue;
-    }
-
-//    kdDebug() << "Entry: " << entry.firstname << " " << entry.lastname << endl;
-//    QStringList phones = entry.telephone;
-//    for(QStringList::ConstIterator it2 = phones.begin(); it2 != phones.end(); ++it2) {
-//      kdDebug() << "  " << (*it2) << endl;
-//    }
+  KABC::AddressBook::Iterator it;
+  for( it = addressBook->begin(); it != addressBook->end(); ++it ) {
     
-    QString index,type,name,phone;
-    QString phonetype = "1";
+    QString index = (*it).custom("KANDY","Index");
+    QString type = (*it).custom("KANDY","Type");
+    QString name = (*it).custom("KANDY","Name");
+    QString phonetype = (*it).custom("KANDY","Phonetype");
     
-    QStringList::ConstIterator cIt = entry.custom.begin();
-    while(cIt != entry.custom.end()) {
-      if ((*cIt).startsWith("X-KANDY-Index:"))
-        index = (*cIt).mid((*cIt).find(":")+1);
-      else if ((*cIt).startsWith("X-KANDY-Type:"))
-        type = (*cIt).mid((*cIt).find(":")+1);
-      else if ((*cIt).startsWith("X-KANDY-Name:"))
-        name = (*cIt).mid((*cIt).find(":")+1);
-      else if ((*cIt).startsWith("X-KANDY-Phonetype:"))
-        phonetype = (*cIt).mid((*cIt).find(":")+1);
-
-      ++cIt;
-    }
-
     // Get phonenumber according to phonetype. If no number of this type was
     // found use the first phone number as default
-    QString phoneDefault;
-    for(QStringList::ConstIterator pIt = entry.telephone.begin();
-        pIt != entry.telephone.end(); ++pIt) {
-      if ((*pIt) == phonetype) {
-        ++pIt;
-        phone = (*pIt);
-      } else {
-        ++pIt;
-      }
-      if (phoneDefault.isEmpty()) phoneDefault = (*pIt);
+    KABC::PhoneNumber phoneNumber;
+    if ( phonetype.isEmpty() ) {
+      KABC::PhoneNumber::List phoneNumbers = (*it).phoneNumbers();
+      phoneNumber = phoneNumbers.first();
+    } else {
+      phoneNumber = (*it).phoneNumber( phonetype.toInt() );
     }
-    if (phone.isEmpty()) phone = phoneDefault;
+    QString phone = phoneNumber.number();
 
     SyncEntryKab *kabEntry;
     if (!index.isEmpty()) {
@@ -278,13 +240,14 @@ void MobileGui::readKab()
     } else {
       // This entry has never been on the phone.
       index = "";
-      name = entry.fn;
+      name = (*it).realName();
       if (phone.left(1) == "+") type = "145";
       else type = "129";
       
       kabEntry = new SyncEntryKab(false,index,name,type,phone,phonetype);
     }
-    kabEntry->mKey = key;
+
+    kabEntry->mAddressee = (*it);
 
     mSyncer->mKabEntries.append(kabEntry);
   }
@@ -295,62 +258,49 @@ void MobileGui::readKab()
   emit transientStatusMessage(i18n("Read KDE address book."));
 }
 
-void MobileGui::writeKab()
+void MobileGui::writeKabc()
 {
-  kdDebug() << "MobileGui::writeKab()" << endl;
+  kdDebug() << "MobileGui::writeKabc()" << endl;
 
-  KabAPI kab(0);
-  if (kab.init() != AddressBook::NoError) {
-    kdDebug() << "Error initing kab" << endl;
+  KABC::AddressBook *addressBook = KABC::StdAddressBook::self();
+
+  KABC::AddressBook::Ticket *ticket = addressBook->requestSaveTicket();
+
+  if ( !ticket ) {
+    kdDebug() << "Error! No ticket to save." << endl;
     return;
   }
 
   for(uint i=0;i<mSyncer->mKabEntries.count();++i) {
     SyncEntryKab *kabEntry = mSyncer->mKabEntries.at(i);
 
-    AddressBook::Entry entry;
+    KABC::Addressee entry = kabEntry->mAddressee;
     
     QString name = kabEntry->mName;
     QString phonenumber = kabEntry->mPhone;
     QString index = kabEntry->mIndex;
     QString type = kabEntry->mType;
 
-    QString indexEntry = "X-KANDY-Index:" + index;
+    entry.insertCustom( "KANDY", "Index", index );
     
-    entry.fn = name;
+    entry.setFormattedName( name );
 
     // Try to identify type of phonenumber and write it to the corresponding
     // telephone entry    
+    int phoneType = 0;
     if (phonenumber.left(3) == "017" || phonenumber.left(6) == "+49017") {
-      entry.telephone << QString::number(1) << phonenumber;
-      entry.custom << "X-KANDY-Phonetype:1";
-    } else {
-      entry.telephone << QString::number(0) << phonenumber;
-      entry.custom << "X-KANDY-Phonetype:0";
+      phoneType = KABC::PhoneNumber::Cell;
     }
-    entry.custom << "X-KANDY-Name:" + name;
-    entry.custom << "X-KANDY-Type:" + type;
-    entry.custom << indexEntry;
+    entry.insertPhoneNumber( KABC::PhoneNumber( phonenumber, phoneType ) );
+    entry.insertCustom( "KANDY", "Phonetype", QString::number( phoneType ) );
+    
+    entry.insertCustom( "KANDY", "Name", name );
+    entry.insertCustom( "KANDY", "Type", type );
 
-    if (kabEntry->mKey.getKey().isEmpty()) {
-      AddressBook::ErrorCode error = kab.add(entry,kabEntry->mKey);
-      if (error != AddressBook::NoError) {
-        kdDebug() << "kab.add returned with error " << error << endl;
-      } else {
-        kdDebug() << "Added " << name << endl;
-      }
-    } else {
-      AddressBook::ErrorCode error = kab.addressbook()->change(kabEntry->mKey,
-                                                               entry);
-      if (error != AddressBook::NoError) {
-        kdDebug() << "kab.change returned with error " << error << endl;
-      } else {
-        kdDebug() << "Changed " << name << endl;
-      }
-    }
+    addressBook->insertAddressee( entry );
   }
   
-  kab.save(true);
+  addressBook->save( ticket );
   
   emit transientStatusMessage(i18n("Wrote KDE address book"));
 }
@@ -384,7 +334,7 @@ void MobileGui::processResult(ATCommand *command)
   if (command->id() == mSyncReadId) {
     mSyncReadId = "";
     mergePhonebooks();
-    writeKab();
+    writeKabc();
     writePhonebook();
     mSyncWriteId = mLastWriteId;
   }
@@ -603,7 +553,7 @@ void MobileGui::mergePhonebooks()
       mobileUpdated = true;
     } else if (mobileEntry && !kabEntry) {
       // Create kab entry
-      QString phonetype = "2";
+      QString phonetype = "0";
       entry->mKabEntry = new SyncEntryKab(true,mobileEntry->mIndex,mobileEntry->mName,
                                           mobileEntry->mType,mobileEntry->mPhone,
                                           phonetype);
@@ -627,7 +577,7 @@ void MobileGui::syncPhonebooks()
   if (mSyncing) return;
 
   mSyncing = true;
-  readKab();
+  readKabc();
   readPhonebook();
   mSyncReadId = "+cpbr=1,150";
 }

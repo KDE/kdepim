@@ -15,7 +15,7 @@ INCLUDES         = $(all_includes)
 kandy_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 
 # the libraries to link against.
-kandy_LDADD   = $(LIB_KFILE) $(LIB_KAB)
+kandy_LDADD   = $(LIB_KFILE) -lkabc
 
 # which sources should be compiled for kandy
 kandy_SOURCES =	main.cpp kandy.cpp \
