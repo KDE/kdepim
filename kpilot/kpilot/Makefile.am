@@ -90,5 +90,5 @@ updatedir = $(kde_datadir)/kconf_update
 
 ### Some additional dependencies:
 
-kpilotConfigDialog.cc : kpilotSettings.h
+kpilotConfigDialog.lo : kpilotSettings.h
 
