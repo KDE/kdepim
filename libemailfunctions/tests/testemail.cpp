@@ -234,6 +234,8 @@ int main(int argc, char *argv[])
   checkIsValidSimpleEmailAddress( "mattfruitsalad.org", "false" );
   checkIsValidSimpleEmailAddress( "matt@[123.123.123.123", "false" );
   checkIsValidSimpleEmailAddress( "matt@123.123.123.123]", "false" );
+  checkIsValidSimpleEmailAddress( "\"matt@fruitsalad.org", "false" );
+  checkIsValidSimpleEmailAddress( "matt\"@fruitsalad.org", "false" );
 
   printf("\nTest OK !\n");
 
