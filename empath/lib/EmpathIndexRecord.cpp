@@ -26,6 +26,10 @@
 #include <qdatetime.h>
 #include <qdatastream.h>
 
+// KDE includes
+#include <kglobal.h>
+#include <klocale.h>
+
 // Local includes
 #include "Empath.h"
 #include "EmpathIndexRecord.h"
@@ -130,37 +134,9 @@ EmpathIndexRecord::niceDate(bool twelveHour)
         dts += QString().setNum(then.date().year()) + " ";
 
     // If the day is the same, print the time of the message. 
-    if (then.date().daysTo(now.date()) == 0) {
-        
-        int hour = then.time().hour();
-        
-        if (twelveHour) {
-
-            if (hour > 12)
-                dts += QString().setNum(hour - 12);
-            else
-                dts += QString().setNum(hour);
-
-        } else {
-        
-            // Add leading nought to hour for twatty 24hr time.
-            if (hour < 10) dts += "0";
-            dts += QString().setNum(hour);
-        }
-
-        dts += ":";
-        int m = then.time().minute();
-        
-        // Add leading nought to minute.
-        if (m < 10) dts += "0";
-        dts += QString().setNum(m);
-        
-        if (twelveHour) {
-            if (hour > 12) dts += " PM";
-            else dts += " AM";
-        }
-    }
-
+    if (then.date().daysTo(now.date()) == 0) 
+        dts = KGlobal::locale()->formatTime(then.time());
+       
     return dts;
 }
 
