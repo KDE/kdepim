@@ -4,4 +4,4 @@
 PYTHON_DIR = 
 #endif
 
-SUBDIRS = libical libicalss $(PYTHON_DIR) test
+SUBDIRS = libical libicalss libicalvcal $(PYTHON_DIR) test
