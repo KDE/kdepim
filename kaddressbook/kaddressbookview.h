@@ -168,6 +168,11 @@ class KAddressBookView : public QWidget
     virtual void setSelected( QString uid = QString::null, bool selected = true ) = 0;
 
     /**
+      Selects the first contact in the view.
+     */
+    virtual void setFirstSelected( bool selected = true ) = 0;
+
+    /**
       Call this slot to popup a rmb menu.
 
       @param point The position where the menu shall appear.

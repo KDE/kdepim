@@ -271,6 +271,14 @@ void KAddressBookIconView::setSelected(QString uid, bool selected)
          }
     }
 }
+
+void KAddressBookIconView::setFirstSelected( bool selected )
+{
+  if ( mIconView->firstItem() ) {
+    mIconView->setSelected( mIconView->firstItem(), selected );
+    mIconView->ensureItemVisible( mIconView->firstItem() );
+  }
+}
    
 void KAddressBookIconView::addresseeExecuted(QIconViewItem *item)
 {

@@ -169,6 +169,12 @@ void ViewManager::setSelected( const QString &uid, bool selected )
     mActiveView->setSelected( uid, selected );
 }
 
+void ViewManager::setFirstSelected( bool selected )
+{
+  if ( mActiveView )
+    mActiveView->setFirstSelected( selected );
+}
+
 void ViewManager::unloadViews()
 {
   mViewDict.clear();

@@ -313,6 +313,14 @@ void KAddressBookTableView::setSelected(QString uid, bool selected)
     }
 }
 
+void KAddressBookTableView::setFirstSelected( bool selected )
+{
+  if ( mListView->firstChild() ) {
+    mListView->setSelected( mListView->firstChild(), selected );
+    mListView->ensureItemVisible( mListView->firstChild() );
+  }
+}
+
 void KAddressBookTableView::addresseeSelected()
 {
     // We need to try to find the first selected item. This might not be the

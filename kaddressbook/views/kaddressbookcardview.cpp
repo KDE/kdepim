@@ -350,6 +350,14 @@ void KAddressBookCardView::setSelected(QString uid, bool selected)
     }
 }
 
+void KAddressBookCardView::setFirstSelected( bool selected )
+{
+  if ( mCardView->firstItem() ) {
+    mCardView->setSelected( mCardView->firstItem(), selected );
+    mCardView->ensureItemVisible( mCardView->firstItem() );
+  }
+}
+
 void KAddressBookCardView::addresseeExecuted(CardViewItem *item)
 {
     AddresseeCardViewItem *aItem = dynamic_cast<AddresseeCardViewItem*>(item);

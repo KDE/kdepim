@@ -71,6 +71,7 @@ class ViewManager : public QWidget
 
   public slots:
     void setSelected( const QString &uid = QString::null, bool selected = true );
+    void setFirstSelected( bool selected = true );
 
     void refreshView( const QString &uid = QString::null );
     void editView();

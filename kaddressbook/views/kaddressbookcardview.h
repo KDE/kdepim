@@ -59,6 +59,7 @@ class KAddressBookCardView : public KAddressBookView
   public slots:
     void refresh(QString uid = QString::null);
     void setSelected(QString uid = QString::null, bool selected = true);
+    virtual void setFirstSelected( bool selected = true );
   
   protected slots:
     void addresseeExecuted(CardViewItem *item);
