@@ -135,7 +135,14 @@ available:</para>
 <term><guilabel>ldap</guilabel></term>
 <listitem><para>All contacts will be stored on a LDAP server.</para></listitem>
 </varlistentry>
+
+<varlistentry>
+<term><guilabel>net</guilabel></term>
+<listitem><para>All contacts will be stored in one file, which can be located
+on a remote server (e.g. HTTP, WebDAV, FTP or Fish).</para></listitem>
+</varlistentry>
 </variablelist>
+
 
 <para>After selecting the type, another dialog appears, where you can
 configure the resource specific settings.</para>
@@ -402,6 +409,20 @@ data. &kaddressbook; supports import and export of this format.
 </varlistentry>
 
 <varlistentry>
+<term><guilabel>PAB</guilabel></term>
+<listitem><para>PAB is the MS Exchange Personal Address Book format.
+MS Outlook and MS Outlook Express use it to store their contact
+data. &kaddressbook; supports the import of this format.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Opera</guilabel></term>
+<listitem><para>To import the contact database of the Opera web browser.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
 <term><guilabel>Bookmarks</guilabel></term>
 <listitem><para>This is a pseudo export plugin, that makes the web urls
 of your contacts available in the bookmark menu of konqueror.</para></listitem>
@@ -478,6 +499,13 @@ feature is used for new addresses.</para></listitem>
 </varlistentry>
 
 <varlistentry>
+<term><guilabel>Script-Hooks</guilabel></term>
+<listitem><para>Here you can specify the commands which shall be executed 
+whenever you click at a phone number or fax number link in the details page.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
 <term><guilabel>Extensions</guilabel></term>
 <listitem><para>In this list view you can enable and disable the single
 extensions and configure their settings.</para></listitem>
@@ -544,35 +572,6 @@ in the server list. Press <guibutton>OK</guibutton> to close the dialog.
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo>
-</shortcut>
-<guimenu>File</guimenu>
-<guimenuitem>Print</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Prints the currently selected contacts</action>.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Mail</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Opens the preferred mail program with the currently
-selected contacts as recipients</action>.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Mail vCard</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Opens the preferred mail program with the currently
-selected contacts as vCards attached</action>.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<shortcut>
 <keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo>
 </shortcut>
 <guimenu>File</guimenu>
@@ -615,6 +614,35 @@ selected contact</action>.</para></listitem>
 <guisubmenu>Export</guisubmenu>
 </menuchoice></term>
 <listitem><para><action>Lists all available export modules</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo>
+</shortcut>
+<guimenu>File</guimenu>
+<guimenuitem>Print</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Prints the currently selected contacts</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Mail</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Opens the preferred mail program with the currently
+selected contacts as recipients</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Mail vCard</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Opens the preferred mail program with the currently
+selected contacts as vCards attached</action>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -712,6 +740,30 @@ it is in a valid format</action>.</para></listitem>
 </menuchoice></term>
 <listitem><para><action>Selects all contacts</action>.</para></listitem>
 </varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Edit</guimenu>
+<guimenuitem>Set Categories</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Opens a dialog where you can set the categories
+for all currently selected contacts. When the selected categories differ
+from the categories of the contacts, the dialog will ask you, if you
+want to merge these differences or if the categories shall be overwritten
+</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Edit</guimenu>
+<guimenuitem>Set Who Am I</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Marks the currently selected contact as 'Who Am I' contact,
+which represents the users data. You should have such a contact, because other
+applications like &kmail; and &kword; can make use of these data. So you don't have
+to input them separately in every application
+</action>.</para></listitem>
+</varlistentry>
 </variablelist>
 </sect1>
 
@@ -760,13 +812,22 @@ you can modify the settings of the current view</action>.</para></listitem>
 </menuchoice></term>
 <listitem><para><action>Refreshes the current view</action>.</para></listitem>
 </varlistentry>
+</variablelist>
+</sect1>
 
+<sect1 id="tools-menu">
+<title>The <guimenu>Tools</guimenu> Menu</title>
+<para>This menu provides tools for acting on the contact database.</para>
+
+<variablelist>
 <varlistentry>
 <term><menuchoice>
-<guimenu>View</guimenu>
-<guisubmenu>Select Filter</guisubmenu>
+<guimenu>Tools</guimenu>
+<guisubmenu>Lookup Addresses in Directory</guisubmenu>
 </menuchoice></term>
-<listitem><para><action>Lists all available filters</action>.</para></listitem>
+<listitem><para><action>Opens the search dialog for addresses located on
+LDAP servers. You can configure the server settings in the
+<link linkend="preferences-address-book-contact">configure dialog</link></action>.</para></listitem>
 </varlistentry>
 </variablelist>
 </sect1>
