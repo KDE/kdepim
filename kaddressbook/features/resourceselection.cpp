@@ -140,6 +140,8 @@ void ResourceSelection::add()
   if ( dlg.exec() ) {
     core()->addressBook()->addResource( resource );
     core()->addressBook()->asyncLoad();
+
+    mLastResource = resource->identifier();
     updateView();
   } else {
     delete resource;
@@ -158,6 +160,8 @@ void ResourceSelection::edit()
   if ( dlg.exec() ) {
     mManager->change( item->resource() );
     core()->addressBook()->asyncLoad();
+
+    mLastResource = item->resource()->identifier();
     updateView();
   }
 }
@@ -174,6 +178,8 @@ void ResourceSelection::remove()
         KGuiItem( i18n( "&Remove" ), "editdelete" ) );
   if ( result == KMessageBox::Cancel )
     return;
+
+  mLastResource = item->resource()->identifier();
 
   core()->addressBook()->removeResource( item->resource() );
   core()->addressBook()->asyncLoad();
@@ -197,6 +203,8 @@ void ResourceSelection::currentChanged( QListViewItem *item )
 
     mManager->change( resource );
     core()->addressBook()->asyncLoad();
+
+    mLastResource = resource->identifier();
     updateView();
   }
 }
@@ -205,11 +213,6 @@ void ResourceSelection::updateView()
 {
   if ( !mManager )
     return;
-
-  ResourceItem *item = selectedItem();
-  QString uid;
-  if ( item )
-    uid = item->resource()->identifier();
 
   mView->clear();
 
@@ -220,7 +223,7 @@ void ResourceSelection::updateView()
   QListViewItemIterator itemIt( mView );
   while ( itemIt.current() ) {
     ResourceItem *item = static_cast<ResourceItem*>( itemIt.current() );
-    if ( item->resource()->identifier() == uid ) {
+    if ( item->resource()->identifier() == mLastResource ) {
       mView->setSelected( item, true );
       mView->ensureItemVisible( item );
       break;
@@ -233,8 +236,7 @@ void ResourceSelection::updateView()
 
 ResourceItem* ResourceSelection::selectedItem() const
 {
-  ResourceItem *item = static_cast<ResourceItem*>( mView->selectedItem() );
-  return item;
+  return static_cast<ResourceItem*>( mView->selectedItem() );
 }
 
 void ResourceSelection::initGUI()

@@ -64,6 +64,8 @@ class ResourceSelection : public KAB::ExtensionWidget
     QPushButton *mEditButton;
     QPushButton *mRemoveButton;
 
+    QString mLastResource;
+
     KRES::Manager<KABC::Resource> *mManager;
 };
 
