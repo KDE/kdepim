@@ -185,8 +185,6 @@ class KDE_EXPORT Konnector : public KRES::Resource
     /**
      * apply the filter to the synceeList()
      *
-     * @param
-     *
      * @see synceeList()
      */
     void applyFilters( FilterMode );
