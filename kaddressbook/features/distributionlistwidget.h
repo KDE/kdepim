@@ -69,9 +69,6 @@ class DistributionListWidget : public ExtensionWidget
     void selectionContactViewChanged();
     void changed();
 
-  signals:
-    void modified( KABC::Addressee::List );
-
   protected:
     void dropEvent( QDropEvent* );
 
