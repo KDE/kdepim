@@ -1,26 +1,88 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
-  <!ENTITY kgpgcertmanager "<application>KgpgCertManager</application>">
-  <!ENTITY kappname "&kgpgcertmanager;">
+  <!ENTITY kleopatra "<application>Kleopatra</application>">
+  <!ENTITY kwatchgnupg "<application>KWatchGnuPG</application>">
+  <!ENTITY gpgsm "<application>GpgSM</application>">
+  <!ENTITY gpg "<application>GPG</application>">
+  <!ENTITY gpgconf "<application>GpgConf</application>">
+  <!ENTITY kappname "&kleopatra;">
   <!ENTITY package "kdepim">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
+
+  <!ENTITY dn "<acronym>DN</acronym>">
+  <!ENTITY ca "<acronym>CA</acronym>">
+
+  <!-- FILE menu -->
+  <!ENTITY file-new-key-pair "<menuchoice><guimenu>File</guimenu><guimenuitem>New Key Pair...</guimenuitem></menuchoice>">
+  <!ENTITY file-export-certificates "<menuchoice><guimenu>File</guimenu><guimenuitem>Export Certificates...</guimenuitem></menuchoice>">
+  <!ENTITY file-export-secret-key "<menuchoice><guimenu>File</guimenu><guimenuitem>Export Secret key...</guimenuitem></menuchoice>">
+  <!ENTITY file-import-certificates "<menuchoice><guimenu>File</guimenu><guimenuitem>Import Certificates...</guimenuitem></menuchoice>">
+  <!ENTITY file-import-crls "<menuchoice><guimenu>File</guimenu><guimenuitem>Import CRLs...</guimenuitem></menuchoice>">
+  <!ENTITY file-quit "<menuchoice><shortcut><keycombo action='simul'>&Ctrl;<keycap>Q</keycap></keycombo></shortcut><guimenu>File</guimenu><guimenuitem>Quit</guimenuitem></menuchoice>">
+
+  <!-- VIEW menu -->
+  <!ENTITY view-redisplay "<menuchoice><shortcut><keycombo action='simul'><keycap>F5</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Redisplay</guimenuitem></menuchoice>">
+  <!ENTITY view-stop-operation "<menuchoice><shortcut><keycombo action='simul'><keycap>Esc</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Stop Operation</guimenuitem></menuchoice>">
+  <!ENTITY view-certificate-details "<menuchoice><guimenu>View</guimenu><guimenuitem>Certificate Details...</guimenuitem></menuchoice>">
+  <!ENTITY view-hierarchical-key-list "<menuchoice><guimenu>View</guimenu><guimenuitem>Hierarchical Key List</guimenuitem></menuchoice>">
+  <!ENTITY view-expand-all "<menuchoice><shortcut><keycombo action='simul'>&Ctrl;<keycap>.</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Expand All</guimenuitem></menuchoice>">
+  <!ENTITY view-collapse-all "<menuchoice><shortcut><keycombo action='simul'>&Ctrl;<keycap>,</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Collapse All</guimenuitem></menuchoice>">
+
+  <!-- CERTIFICATES menu -->
+ <!ENTITY certificates-validate "<menuchoice><shortcut><keycombo action='simul'>&Shift;<keycap>F5</keycap></keycombo></shortcut><guimenu>Certificates</guimenu><guimenuitem>Validate</guimenuitem></menuchoice>">
+  <!ENTITY certificates-refresh-crls "<menuchoice><guimenu>Certificates</guimenu><guimenuitem>Refresh CRLs</guimenuitem></menuchoice>">
+  <!ENTITY certificates-delete "<menuchoice><shortcut><keycombo action='simul'><keycap>Delete</keycap></keycombo></shortcut><guimenu>Certificates</guimenu><guimenuitem>Delete</guimenuitem></menuchoice>">
+  <!ENTITY certificates-download "<menuchoice><guimenu>Certificates</guimenu><guimenuitem>Download</guimenuitem></menuchoice>">
+
+  <!-- CRLS menu -->
+  <!ENTITY crls-clear-crl-cache "<menuchoice><guimenu>CRLs</guimenu><guimenuitem>Clear CRL Cache...</guimenuitem></menuchoice>">
+  <!ENTITY crls-dump-crl-cache "<menuchoice><guimenu>CRLs</guimenu><guimenuitem>Dump CRL Cache...</guimenuitem></menuchoice>">
+
+  <!-- TOOLS menu -->
+  <!ENTITY tools-gnupg-log-viewer "<menuchoice><guimenu>Tools</guimenu><guimenuitem>GnuPG Log Viewer...</guimenuitem></menuchoice>">
+
+  <!-- SETTINGS menu -->
+  <!ENTITY settings-show-statusbar "<menuchoice><guimenu>Settings</guimenu><guimenuitem>Show Statusbar</guimenuitem></menuchoice>">
+  <!ENTITY settings-configure-shortcuts "<menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Shortcuts...</guimenuitem></menuchoice>">
+  <!ENTITY settings-configure-kleopatra "<menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kleopatra;...</guimenuitem></menuchoice>">
+  <!ENTITY settings-configure-gpgme-backend "<menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure GpgME Backend...</guimenuitem></menuchoice>">
+
+  <!-- Command line options -->
+  <!ENTITY commandline-option-external "<option>--external</option>">
+  <!ENTITY commandline-option-query "<option>--query</option>">
+  <!ENTITY commandline-option-import-certificate "<option>--import-certificate</option>">
 ]>
 
 <book lang="&language;">
 
 <bookinfo>
-<title>The &kgpgcertmanager; Handbook</title>
+<title>The &kleopatra; Handbook</title>
 
 <authorgroup>
 <author>
+<firstname>Marc</firstname>
+<surname>Mutz</surname>
+<affiliation>
+<address><email>marc@klaralvdalens-datakonsult.se</email></address>
+</affiliation>
+</author>
+
+<othercredit role="developer">
+<firstname>David</firstname>
+<surname>Faure</surname>
+<contrib>Developer</contrib>
+</othercredit>
+
+<othercredit role="developer">
 <firstname>Steffen</firstname>
 <othername></othername>
 <surname>Hansen</surname>
 <affiliation>
 <address><email>steffen@klaralvdalens-datakonsult.se</email></address>
 </affiliation>
-</author>
+<contrib>Developer</contrib>
+</othercredit>
 
 <othercredit role="developer">
 <firstname>Kalle</firstname>
@@ -48,14 +110,14 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<legalnotice>&FDLNotice;</legalnotice>
+<legalnotice>&GPLNotice;</legalnotice>
 
-<date>2004-01-17</date>
-<releaseinfo>0.9</releaseinfo>
+<date>2004-06-11</date>
+<releaseinfo>0.31</releaseinfo>
 
 <abstract>
 <para>
-&kgpgcertmanager; is a tool for managing X509 certificates.
+&kleopatra; is a tool for managing X509 certificates.
 </para>
 </abstract>
 
@@ -73,51 +135,150 @@
 
 <chapter id="introduction"> <title>Introduction</title> 
 
-<para>&kgpgcertmanager; is a tool for managing X509 certificates in
-the gpgsm keybox and for retrieving certificates from
+<para>&kleopatra; is the &kde; tool for managing X.509 certificates in
+the &gpgsm; keybox and for retrieving certificates from
 <acronym>LDAP</acronym> servers.</para>
+
+<para>&kleopatra; can be started from KMail's <guimenu>Tools</guimenu>
+menu, as well as from the command line. The &kleopatra; executable is
+named <userinput><command>kleopatra</command></userinput>.</para>
+
+<note><para>This program is named after Cleopatra, a famous female
+Egyptian pharaoh that lived at the time of Julius Caesar, whom she is
+said to have had an intimate relationship with.</para>
+
+<para>The name was chosen since this program originates from the
+<ulink url="http://www.gnupg.org/aegypten2/">&Auml;gypten
+Projects</ulink> (&Auml;gypten is German for Egypt). Kleopatra is the
+German spelling of Cleopatra.</para></note>
 
 </chapter>
 
-<chapter id="functions"><title>Functions</title>
+<chapter id="functions"><title>Main Functions</title>
 
-<sect1 id="search"><title>Searching</title>
-<para>When &kgpgcertmanager; starts, it is ready to search for certificates
-in the local keybox: just type in part of the name of a certificate
-owner, press the find-button and the results will be displayed.</para>
-<para>When a result is double-clicked on a dialog with information
-about the certificate will be displayed.</para> 
-<para>The combobox in the toolbar can be switched from "in local
-certificates" to "in external certificates" to search the LDAP servers
-for certificates. When the results are displayed, each certificate can
-be double-clicked to show an information dialog; this dialog has a
-button, "Import to Local", that allows the certificate to be imported into
-the local keybox.</para>
+<sect1 id="functions-view"><title>Viewing the Local Keybox</title>
+
+<!-- Viewing and Refreshing, also Validation -->
+
+<para>&kleopatra;'s main function is to display and edit the contents
+of the local keybox, which is similar to &gpg;'s concept of keyrings,
+albeit one shouldn't stretch this analogy too much.</para>
+
+<para>The main window is divided into the large key listing area, the
+menubar and the <link linkend="functions-search">search bar</link> on
+top and a statusbar at the bottom.</para>
+
+<para>Each line in the key list corresponds to one certificate,
+identified by the so-called <guilabel>Subject &dn;</guilabel>. &dn; is
+an acronyn for <quote>Distinguished Name</quote>, a hierarchical
+identifier, much like a filesystem path with a funny syntax, that is
+supposed to globally uniquely identify a given certificate.</para>
+
+<para>To be valid, and thus usable, (public) keys need to be signed by
+a &ca; (Certification Authority). These signatures are called
+certificates, but usually the terms <quote>certificate</quote> and
+<quote>(public) key</quote> are used interchangably, and we won't
+distinguish between them in this manual either, except when explicitly
+noted. The name of the &ca; which issued the certificate (it's &dn;)
+is shown in the <guilabel>Issuer DN</guilabel> column.</para>
+
+<para>&ca;s must in turn be signed by other &ca;s to be valid. Of
+course, this must end somewhere, so the top-level &ca; (root-&ca;)
+signs it's key with itself (this is called a self-signature). Root
+certificates thus need to be assigned validity (commonly called trust)
+manually, &eg; after verifying the fingerprint with the one on the
+&ca;'s website. This is typically done by the system administrator or
+the vendor of a product using certificates, but can be done by the
+user via &gpgsm;'s command line.</para>
+
+<para>To see which of the certificates are root certificates, you can
+either compare <guilabel>Subject &dn;</guilabel> and <guilabel>Issuer
+&dn;</guilabel>, or you switch to hierarchical keylist mode with <link
+linkend="view-hierarchical-key-list">&view-hierarchical-key-list;</link>.</para>
+
+<para>You can see the details of any certificate by double-clicking it
+or using <link
+linkend="view-certificate-details">&view-certificate-details;</link>. This
+opens a dialog that shows the most common properties of the
+certificate, it's certificate chain (&ie; the chain of issuers up to
+the root-&ca;), and a dump of all information the backend is able to
+extract from the certificate.</para>
+
+<para>If you change the keybox without using &kleopatra; (&eg; using
+&gpgsm;'s command line interface), you can refresh the view with <link
+linkend="view-redisplay">&view-redisplay;</link>.</para>
+
+<para>Since validating a key may take some time (&eg; CRLs might need
+to be fetched), the normal keylisting does not attempt to check the
+validity of keys. For this, <link
+linkend="certificates-validate">&certificates-validate;</link>, a
+special variant of <link
+linkend="view-redisplay">&view-redisplay;</link>, is provided. It
+either checks the selected certificates, or all keys if none are
+selected.</para>
+
 </sect1>
 
-<sect1 id="quit"><title>File/Quit</title>
-<para>The menu item
-<menuchoice><guimenu>File</guimenu><guimenuitem>Quit</guimenuitem></menuchoice>
-exits the application.
-</para></sect1>
+<sect1 id="functions-search"><title>Searching and Importing Certificates</title>
 
-<sect1 id="redisplay"><title>View/Redisplay</title>
-<para>The menu item <menuchoice><guimenu>View</guimenu><guimenuitem>Redisplay</guimenuitem></menuchoice>
-performs the current query again and displays the results.
-</para></sect1>
+<para>Most of the time you will acquire new certificates by verifying
+signatures in emails, since certificates are embedded in the
+signatures made using them most of the time. However, if you need to
+send a mail to someone you haven't yet had contact with, you need to
+fetch the certificate from an LDAP directory (although &gpgsm; can do
+this automatically), or from a file. You also need to import your own
+certificate after receiving the &ca; answer to your certification
+request.</para>
 
-<sect1 id="newcert"><title>Certificates/New Certificate</title>
-<para>The menu item
-<menuchoice><guimenu>Certificates</guimenu><guimenuitem>New
-Certificate</guimenuitem></menuchoice> starts the certificate-
-request-creating wizard which will guide you through a number of steps
-to create a certificate request; this request can, at the end of the
-wizard, either be sent to a certificate authority (CA) to be signed or
-saved to a file (for example to a floppy, so it can be shipped to the
-CA).</para>
-<para>Whenever you are done with a step in the wizard, press
-<guibutton>Next</guibutton> to go to the next step (or
-<guibutton>Back</guibutton> to review steps that are already
+<para>To search for a certificate in an LDAP directory, switch the
+search bar's dropdown menu from <guilabel>in Local
+Certificates</guilabel> to <guilabel>in External
+Certificates</guilabel>, enter some text (&eg; the name of the person
+you want the certificate for) into the line edit, and click on the
+<guilabel>Find</guilabel> icon. The results will be displayed in the
+key list below the search bar, where you can select certificates to
+either look at them with <link
+linkend="view-certificate-details">&view-certificate-details;</link>
+or download them with <link
+linkend="certificates-download">&certificates-download;</link> into
+the local keybox. Note that you can also download the certificate from
+the details dialog, using the <guilabel>Import to Local</guilabel>
+button.</para>
+
+<para>You can configure the list of LDAP servers to search in the
+<link linkend="configuration-directory-services"><guilabel>Directory
+Services</guilabel></link> page of &kleopatra;'s <link
+linkend="configuration">configure dialog</link>.</para>
+
+<para>If you got the certificate as a file, try <link
+linkend="file-import-certificates">&file-import-certificates;</link>. &gpgsm;
+needs to understand the format of the certificate file; please refer
+to &gpgsm;'s manual for a list of supported file formats.</para>
+
+<para>If you didn't <link linkend="functions-newkey">create your
+keypair with &gpgsm;</link>, you also need to manually import the
+public, as well as the secret key from the PKCS#12 file you got from
+the &ca;. You can do this on the command line with <link
+linkend="commandline-option-import-certificate"><userinput><command>kleopatra
+&commandline-option-import-certificate;
+<filename>filename</filename></command></userinput></link> or from
+within &kleopatra; with <link
+linkend="file-import-certificates">&file-import-certificates;</link>,
+just as you would to for <quote>normal</quote> certificates.</para>
+
+</sect1>
+
+<sect1 id="functions-newkey"><title>Creating New Key Pairs</title>
+
+<para>The menu item <link
+linkend="file-new-key-pair">&file-new-key-pair;</link> starts the
+certificate- request-creating wizard which will guide you through a
+number of steps to create a certificate request; this request can, at
+the end of the wizard, either be sent to a certificate authority (CA)
+to be signed or saved to a file (for example to a floppy, so it can be
+shipped to the CA).</para> <para>Whenever you are done with a step in
+the wizard, press <guibutton>Next</guibutton> to go to the next step
+(or <guibutton>Back</guibutton> to review steps that are already
 completed). The certificate request creation can be canceled at any
 point by pressing the <guibutton>Cancel</guibutton> button.
 </para>
@@ -155,65 +316,716 @@ specify the filename or email address to send the certificate request to.
 </para></sect1>
 
 
-<sect1 id="import"><title>Import/Certificate</title>
-<para>The <menuchoice><guimenu>Import</guimenu><guimenuitem>Certificate...</guimenuitem></menuchoice>
- menu item allows you to import a certificate from a
-file into the local keybox</para><para>The format of the certificate
-file should be one understood be the gpg-backend. Please refer to the
-gpg and gpgsm manuals for specifics about this.
-</para>
+<sect1 id="functions-keybox-management"><title>Keybox Management</title>
+
+<para>In addition to <link linkend="functions-view">list and
+validate</link>, <link linkend="functions-search">search and
+import</link> certificates and <link
+linkend="functions-newkey">creating new ones</link>, &kleopatra; also
+has some less often used functions that help you manage your local
+keybox.</para>
+
+<para>These functions include deleting certificates from the local
+keybox with <link
+linkend="certificates-delete">&certificates-delete;</link>, as well as
+manual handling of CRLs (<link
+linkend="certificates-refresh-crls">&certificates-refresh-crls;</link>,
+<link linkend="crls-clear-crl-cache">&crls-clear-crl-cache;</link>,
+<link
+linkend="crls-dump-crl-cache">&crls-dump-crl-cache;</link>).</para>
+
 </sect1>
 
-<sect1 id="crl"><title>Import/CRL</title>
+</chapter>
+
+<chapter id="menu"><title>Menu Reference</title>
+
+<sect1 id="menufile"><title>File Menu</title>
+
+<variablelist>
+
+<varlistentry id="file-new-key-pair">
+<term>&file-new-key-pair;</term>
+
+<listitem>
+<para><action>Creates a new key pair (public and private)</action> and
+allows to send the public part to a certification authority
+(<acronym>CA</acronym>) for signing. The resulting certificate is then
+sent back to you, or stored in an LDAP server for you to download into
+your local keybox, from where you can use it to sign and decrypt
+mails.</para>
+
+<para>This mode of operation is called <quote>decentralized key
+generation</quote> since all keys are created locally. &kleopatra;
+(and &gpgsm;) do not support <quote>centralized key generation</quote>
+directly, but you can import the public/secret key bundle that you
+receive from the CA in PKCS#12 format via
+&file-import-certificates;.</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry id="file-export-certificates">
+<term>&file-export-certificates;</term>
+
+<listitem>
+<para><action>Exports the selected certificates</action> into a file.</para>
+
+<note><para>This exports only the public keys material, even if the
+secret key is available. Use &file-export-secret-key; to export both
+public and secret keys into a file, but note that this is almost
+always a bad idea.</para></note>
+</listitem>
+</varlistentry>
+
+
+<varlistentry id="file-export-secret-key">
+<term>&file-export-secret-key;</term>
+
+<listitem>
+<para><action>Exports both the public and the secret key to a
+(PKCS#12) file.</action></para>
+
+<warning><para>It should be rarely necessary to use this function, and
+if it is, it should be carefully planned. Planning the migration of a
+secret key involves choice of transport media and secure deletion of
+the key material on the old machine, as well as the transport medium,
+among other things.</para></warning>
+</listitem>
+</varlistentry>
+
+
+<varlistentry id="file-import-certificates">
+<term>&file-import-certificates;</term>
+
+<listitem>
+<para><action>Imports certificates and/or secret keys from files into
+the local keybox.</action></para>
+
+<para>The format of the certificate file must be one understood by
+&gpgsm;. Please refer to the &gpgsm; manual for a list of supported
+formats.</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry id="file-import-crls">
+<term>&file-import-crls;</term>
+
+<listitem>
+<para><action>Allows to manually import CRLs from
+files.</action></para>
+
 <para>Normally, Certificate Revocation Lists (CRLs) are handled
 transparently by the backend, but it might sometimes by useful to
 import a CRL manually into the local CRL cache.</para>
-<para>This can be done from the
-<menuchoice><guimenu>Import</guimenu><guimenuitem>CRL...</guimenuitem></menuchoice>
-menu item.</para>
-<para>NOTE: For CRL import to work, the "dirmngr" tool must be in the
-search PATH. If the <guimenuitem>From File...</guimenuitem> menu item
-is disabled, you should contact the system administrator and ask
-them to install dirmngr.
-</para>
-<para>
-You can view the contents of the local CRL cache from the menu item
-<menuchoice><guimenu>View</guimenu><guimenuitem>CRL
-cache...</guimenuitem></menuchoice>. This will display a dialog with
+
+<note><para>For CRL import to work, the
+<application>dirmngr</application> tool must be in the search
+<varname>PATH</varname>. If this menu item is disabled, you should
+contact the system administrator and ask them to install
+<application>dirmngr</application>.</para></note>
+
+<para>You can view the contents of the local CRL cache from the menu
+item &crls-dump-crl-cache;. This will display a dialog with
 information about the CRLs in the cache and the fingerprints of the
 certificates in each CRL.
 </para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry id="file-quit">
+<term>&file-quit;</term>
+
+<listitem>
+<para><action>Exits &kleopatra;.</action></para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1> <!-- File Menu -->
+
+
+
+<sect1 id="menuview"><title>View Menu</title>
+
+<variablelist>
+
+<varlistentry id="view-redisplay">
+<term>&view-redisplay;</term>
+
+<listitem>
+<para><action>Redisplays the selected certificates or refreshes the
+certificate list.</action></para>
+
+<para>If there are selected certificates, the refresh is restricted to
+those selected entries.</para>
+
+<para>If a query result (either remote or local) is currently
+displayed, the query is re-issued and the new results displayed in the
+place of the old ones.</para>
+
+<para>If no query has been performed, the whole keybox contents are
+re-fetched and re-displayed.</para>
+
+<para>You may use this if you changed the contents of
+the keybox by other means than &kleopatra; (&eg; by using &gpgsm;'s
+command line interface).</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry id="view-stop-operation">
+<term>&view-stop-operation;</term>
+
+<listitem>
+<para><action>Stops (cancels) all pending operations,</action> &eg; a
+search or a download.</para>
+
+<note><para>Depending on the server used, cancelling a remote search
+might block &kleopatra; for a few seconds while waiting for the
+backend to complete the procedure. This is normal.</para></note>
+</listitem>
+</varlistentry>
+
+
+<varlistentry id="view-certificate-details">
+<term>&view-certificate-details;</term>
+
+<listitem>
+<para><action>Shows the details of the currently selected
+certificate.</action></para>
+
+<para>This function is also available through double-clicking the
+corresponding item in the list view directly.</para>
+
+<!--FIXME: link to the dialog's help, but where do we put _that_?-->
+</listitem>
+</varlistentry>
+
+
+<varlistentry id="view-hierarchical-key-list">
+<term>&view-hierarchical-key-list;</term>
+
+<listitem>
+<para><action> Toggles between hierarchical and flat keylist mode.
+</action></para>
+
+<para>In hierarchical mode, certificates are arranged in
+issuer/subject relation, so it is easy to see to which certification
+hierarchy a given certificate belongs, but a given certificate is
+harder to find in the first place (though you can of course use the
+<link linkend="functions-search">search bar</link>).</para>
+
+<para>In flat mode, all certificates are displayed in a flat list,
+sorted alphabetically. In this mode, a given certificate is easy to
+find, but it is not directly clear which root certificate it belongs
+to.</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry id="view-expand-all">
+<term>&view-expand-all;</term>
+
+<listitem>
+<para>(This function is only available when <link
+linkend="view-hierarchical-key-list">&view-hierarchical-key-list;</link>
+is on.)</para>
+
+<para><action>Expands all list items in the certificate list
+view,</action> &ie; makes all items visible.</para>
+
+<para>This is the default when entering hierarchical keylist
+mode.</para>
+
+<para>You can still expand and collapse each indivitual item by
+itself, of course.</para>
+</listitem>
+</varlistentry>
+
+
+
+<varlistentry id="view-collapse-all">
+<term>&view-collapse-all;</term>
+
+<listitem>
+<para>(This function is only available when <link
+linkend="view-hierarchical-key-list">&view-hierarchical-key-list;</link>
+is on.)</para>
+
+<para><action>Collapses all list items in the certificate list
+view,</action> &ie; hides all but the top-level items.</para>
+
+<para>You can still expand and collapse each indivitual item by
+itself, of course.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
 </sect1>
 
-<sect1 id="admin"><title>Administrator's Guide</title>
-<sect2>
+<sect1 id="menucertificates"><title>Certificates Menu</title>
+
+<variablelist>
+
+<varlistentry id="certificates-validate">
+<term>&certificates-validate;</term>
+
+<listitem>
+<para><action>Validates selected (or all) keys.</action></para>
+
+<para>This is similar to <link
+linkend="view-redisplay">&view-redisplay;</link>, but performs a
+validation of the (selected) keys. Validation here means that any
+relevant CRLs are fetched and the certificate chain is checked for
+correctness. As a result, invalid or expired keys will be marked
+according to your color and font preferences set in the <link
+linkend="configuration-appearance"><guilabel>Appearance</guilabel>
+page</link> of &kleopatra;'s <link linkend="configuration">configure
+dialog</link>.</para>
+
+<warning><para>Only information from validated keys can be relied on,
+and, since any of them may be revoked at any time, even validation is
+only ever a snapshot of the current state of the local keyring. This
+is why the backend normally performs any such checks whenever the keys
+are used (&eg; for signing, signature verification, encryption or
+decryption).</para></warning>
+</listitem>
+</varlistentry>
+
+
+
+<varlistentry id="certificates-refresh-crls">
+<term>&certificates-refresh-crls;</term>
+
+<listitem>
+<para><action>Fetches the current CRLs for all selected keys,</action>
+even though they would normally not be fetched when using the
+key.</para>
+
+<para>This function only has an effect on certificates which define a
+CRL distribution point. Depending on the backend used, certificates
+stating checks should occur through OCSP will not be updated.</para>
+
+<para>You may use this &eg; if you have sideband knowledge of a key
+having been revoked, and you want the backend to reflect this
+<emphasis>now</emphasis> instead of relying on this to automatically
+happen at the next scheduled CRL update.</para>
+
+<warning><para>Excessive use of this function might put a high load on
+your provider's or company's network, since CRLs of large
+organizations can be surprisingly big (several megabytes are not
+uncommon).</para>
+
+<para>Use this function scarcly.</para></warning>
+</listitem>
+</varlistentry>
+
+
+
+<varlistentry id="certificates-delete">
+<term>&certificates-delete;</term>
+
+<listitem>
+<para><action>Deletes selected certificate(s)</action> from the local keyring.</para>
+
+<para>Use this function to remove unused keys from your local
+keybox. However, since certificates are typically attached to signed
+emails, verifying an email might result in the key just removed to pop
+back into the local keybox. So it's probably best to avoid using this
+function as much as possible. When you are lost, use the <link
+linkend="functions-search">search bar</link> or the <link
+linkend="view-hierarchical-key-list">&view-hierarchical-key-list;</link>
+function to regain control over the lot of certificates.</para>
+</listitem>
+</varlistentry>
+
+
+
+<varlistentry id="certificates-download">
+<term>&certificates-download;</term>
+
+<listitem>
+<para><action>Downloads the selected certificate(s) from the LDAP to the local keybox.</action></para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+
+
+<sect1 id="menucrls"><title>CRLs Menu</title>
+
+<variablelist>
+
+<varlistentry id="crls-clear-crl-cache">
+<term>&crls-clear-crl-cache;</term>
+
+<listitem>
+<para><action>Clears the &gpgsm; CRL cache.</action></para>
+
+<para>You probably never need this. You can force a refresh of the CRL
+cache by selecting all certificates and using <link
+linkend="certificates-refresh-crls">&certificates-refresh-crls;</link>
+instead.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="crls-dump-crl-cache">
+<term>&crls-dump-crl-cache;</term>
+
+<listitem>
+<para><action>Shows the detailed contents of the &gpgsm; CRL
+cache.</action></para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="menutools"><title>Tools Menu</title>
+
+<variablelist>
+
+<varlistentry id="tools-gnupg-log-viewer">
+<term>&tools-gnupg-log-viewer;</term>
+
+<listitem>
+<para><action>Starts <ulink url="help:/kwatchgnupg/index.html">&kwatchgnupg;</ulink></action></para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="menusettings"><title>Settings Menu</title>
+
+<variablelist>
+
+<varlistentry id="settings-show-statusbar">
+<term>&settings-show-statusbar;</term>
+
+<listitem>
+<para><action>Toggles the visibility of the bottom status bar.</action></para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="settings-configure-shortcuts">
+<term>&settings-configure-shortcuts;</term>
+
+<listitem>
+<para><action>Opens the standard &kde; shortcut configuration dialog,
+where you can assign and re-assign keyboard shortcuts for all menu
+items.</action></para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="settings-configure-kleopatra">
+<term>&settings-configure-kleopatra;</term>
+
+<listitem>
+<para><action>Opens &kleopatra;'s configure dialog.</action></para>
+
+<para>See the chapter <link linkend="configuration">Configure
+&kleopatra;</link> for more details.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="settings-configure-gpgme-backend">
+<term>&settings-configure-gpgme-backend;</term>
+
+<listitem>
+<para><action>Opens a dialog that allows to configure every aspect of
+&gpgsm; and other backend modules.</action></para>
+
+<para>This dialog is dynamically built from the output of the
+&gpgconf; utility and may thus change when backend modules are
+updated.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="menuhelp"><title>Help Menu</title>
+
+
+<para>The <guimenu>Help</guimenu> menu contains the standard &kde;
+help menu.</para>
+
+&help.menu.documentation;
+
+</sect1>
+
+</chapter>
+
+<chapter id="commandline-options"><title>Command Line Options Reference</title>
+
+<para>Only the options specific to &kleopatra; are listed here. As
+with all &kde; applications, you can get a complete list of options
+with <userinput><command>kleopatra
+<option>--help</option></command></userinput>.</para>
+
+<variablelist>
+
+<varlistentry id="commandline-option-external">
+<term>&commandline-option-external;</term>
+
+<listitem>
+<para><action>Specifies that &commandline-option-query; shall search
+remotely instead of in the local keybox.</action></para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="commandline-option-query">
+<term>&commandline-option-query;</term>
+
+<listitem>
+<para><action>Specifies that &kleopatra; shall start with the given
+query string instead of listing the complete local
+keybox.</action></para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="commandline-option-import-certificate">
+<term>&commandline-option-import-certificate;</term>
+
+<listitem>
+<para><action>Specifies a file or URL from which to import
+certificates (or secret keys) from.</action></para>
+
+<para>This is the command line equivalent of <link
+linkend="file-import-certificates">&file-import-certificates;</link>.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</chapter>
+
+<chapter id="configuration"><title>Configuring &kleopatra;</title>
+
+<para>&kleopatra;'s configure dialog can be reached via <link
+linkend="settings-configure-kleopatra">&settings-configure-kleopatra;</link>.</para>
+
+<para>Each of its pages is decribed in the sections below.</para>
+
+<sect1 id="configuration-directory-services"><title>Configuring Directory Services</title>
+
+<para>On this page, you can configure which LDAP servers to use for
+certificate searches. You can also configure their order, as well as
+some selected LDAP-related settings from the <link
+linkend="settings-configure-gpgme-backend">dynamic backend
+configuration dialog, available via
+&settings-configure-gpgme-backend;</link>.</para>
+
+<para>To add a new server, click on the <guilabel>Add
+Service...</guilabel> button. In the dialog that appears, you can set
+the <guilabel>Server name</guilabel>, the <guilabel>Port</guilabel>
+(preset to the default LDAP port), the <guilabel>Base DN</guilabel>
+(sometimes referred to as the search root or search base), and the
+usual <guilabel>User name</guilabel> and
+<guilabel>Password</guilabel>, both of which are only needed if the
+server requires authentication. Clicking <guilabel>OK</guilabel> adds
+the server details to the list of servers, while
+<guilabel>Cancel</guilabel> dismisses the input.</para>
+
+<para>To remove a server from the search list, select it in the list,
+then press the <guilabel>Remove Service</guilabel> button.</para>
+
+<para>To change the relative search order of servers, select one of
+them and move it up or down with the arrow buttons right next to the
+list.</para>
+
+<para>To set the LDAP timeout, &ie; the maximum time the backend shall
+wait for a server to respond, simply use the corresponding input field
+labelled <guilabel>LDAP timeout</guilabel>.</para>
+
+<para>If one of your servers has a large database, so that even
+reasonable searches like <userinput>Smith</userinput> hit the
+<guilabel>maximum number of items returned by query</guilabel>, you
+might want to increase this limit. You can find out easily if you hit
+the limit during a search, since in that case a dialog box will pop
+up, telling you that the results have been truncated.</para>
+
+<note><para>Some servers may impose their own limits on the number of
+items returned from a query. In this case, increasing the limit here
+will not result in more items being returned.</para></note>
+
+</sect1>
+
+<sect1 id="configuration-appearance"><title>Configuring Visual Appearance</title>
+
+<para>&kleopatra; allows you to customize the appearance of
+(validated) keys in the list view. This includes the foreground (text)
+and background colors, as well as the font.</para>
+
+<para>Each <guilabel>Key Category</guilabel> on the left is assigned a
+set of colors and a font in which keys belonging to that category are
+displayed. The category list also acts as a preview of the
+settings.</para>
+
+<para>To change the text (foreground) color of a category, select it
+in the list, and the press the <guilabel>Set Text Color...</guilabel>
+button. The standard &kde; color selection dialog will appear where
+you can select or create a new color.</para>
+
+<para>Changing the background color is done analogous, just press
+<guilabel>Set Background Color...</guilabel> instead.</para>
+
+<para>To change the font, you have essentially two options:</para>
+
+<orderedlist>
+<listitem><para>Modify the standard font, used for all list views in
+&kde;</para></listitem>
+<listitem><para>Use a custom font.</para></listitem>
+</orderedlist>
+
+<para>The first option has the advantage that the font will follow
+whetever style you choose &kde;-wide, whereas the latter gives you
+full control over the font to use. Your pick.</para>
+
+<para>To use the modified standard font, select the category in the
+list, and check or uncheck the font modifiers
+<guilabel>Italic</guilabel>, <guilabel>Bold</guilabel>, and/or
+<guilabel>Strikeout</guilabel>. You can immediately see the effect on
+the font in the category list.</para>
+
+<para>To use a custom font, press the <guilabel>Set Font...</guilabel>
+button. The standard &kde; font selection dialog will appear where you
+can select the new font. Note that you can still use the font
+modifiers to change the custom font, just as for modifying the
+standard font.</para>
+
+<para>To switch back to the standard font, you need to press the
+<guilabel>Default Appearance</guilabel> button.</para>
+
+</sect1>
+
+<sect1 id="configuration-dn-order"><title>Configuring the Order DN Attributes are Shown</title>
+
+<para>Although &dn;s are hierarchical, the order of the individual
+components (called relative &dn;s (RDNs), or &dn; attributes) isn't
+defined. The order in which the attributes are shown is thus a matter
+of personal taste or company policy, which is why it's configurable in
+&kleopatra;.</para>
+
+<note><para>This setting applies not only to &kleopatra;, but to all
+applications using &kleopatra; Technology. At the time of this
+writing, these include KMail, KAddressBook, as well as &kleopatra;
+itself, of course.</para></note>
+
+<para>This configuration page basically consists of two lists, one for
+the known attributes (<guilabel>Available attributes</guilabel>), and
+one describing the <guilabel>Current attribute order</guilabel>.</para>
+
+<para>Both lists contain entries described by the short from of the
+attribute (&eg; <guilabel>CN</guilabel>) as well as the spelled-out
+form (<guilabel>Common Name</guilabel>).</para>
+
+<para>The <guilabel>Available attributes</guilabel> list is always
+sorted alphabetically, while the <guilabel>Current attribute
+order</guilabel> list's order reflects the configured &dn; attribute
+order: the first attribute in the list is also the one displayed
+first.</para>
+
+<para>Only attributes explicitly listed in the <guilabel>Current
+attribute order</guilabel> list are displayed at all. The rest is
+hidden by default.</para>
+
+<para>However, if the placeholder entry <guilabel>_X_</guilabel>
+(<guilabel>All others</guilabel>) is in the <quote>current</quote>
+list, all unlisted attributes (whether known or not), are inserted at
+the point of <guilabel>_X_</guilabel>, in their original relative
+order.</para>
+
+<para>A small example will help clear things up:</para>
+
+<informalexample>
+<para>Given the &dn;</para>
+<blockquote>
+<para>
+ O=KDE, C=US, CN=Dave Devel, X-BAR=foo, OU=Kleopatra, X-FOO=bar,
+</para>
+</blockquote>
+<para>the default attribute order of <quote>CN, L, _X_, OU, O,
+C</quote> will produce the following formatted &dn;:</para>
+<blockquote>
+<para>
+ CN=Dave Devel, X-BAR=foo, X-FOO=bar, OU=Kleopatra, O=KDE, C=US
+</para>
+</blockquote>
+<para>while <quote>CN, L, OU, O, C</quote> will produce</para>
+<blockquote>
+<para>
+ CN=Dave Devel, OU=Kleopatra, O=KDE, C=US
+</para>
+</blockquote>
+</informalexample>
+
+<para>To add an attribute to the display order list, select it in the
+<guilabel>Available attributes</guilabel> list, and press the
+<guilabel>Add to current attribute order</guilabel> button.</para>
+
+<para>To remove an attribute from the display order list, select it in
+the <guilabel>Current attribute order</guilabel> list, and press the
+<guilabel>Remove from current attribute order</guilabel> button.</para>
+
+<para>To move an attribute to the beginning (end), select it in the
+<guilabel>Current attribute order</guilabel> list, and press the
+<guilabel>Move to top</guilabel> (<guilabel>Move to bottom</guilabel>)
+button.</para>
+
+<para>To move an attribute up (down) one slot only, select it in the
+<guilabel>Current attribute order</guilabel> list, and press the
+<guilabel>Move one up</guilabel> (<guilabel>Move one down</guilabel>)
+button.</para>
+
+</sect1>
+
+</chapter>
+
+<chapter id="admin"><title>Administrator's Guide</title>
+<sect1>
 <title>Customization of the Certificate-Creation Wizard</title>
 <para>
-&kgpgcertmanager; allows you to customize the fields that the user
+&kleopatra; allows you to customize the fields that the user
 is allowed to enter in order to create their certificate.
 </para>
 <para>
-Create a group called CertificateCreationWizard in the system-wide 
-<filename>kgpgcertmanagerrc</filename>. If you want a custom order of attributes or
-if you only want certain items to appear, create a key called <varname>DNAttributeOrder</varname>. 
-The argument is one more more of <varname>CN,SN,GN,L,T,OU,O,PC,C,SP,DC,BC,EMAIL</varname> If you want to 
-preempt fields with a certain value, write something like Attribute=value. If you want the attribute
-to be treated as a required one, follow it with an exclamation point (e.g. <varname>CN!,L,OU,O!,C!,EMAIL!</varname>,
-which happens to be the default configuration).
-</para><para>
-Using the <acronym>KIOSK</acronym> modes modifiers <varname>$e</varname> allows for retrieving
-the values from environment variables or from an evaluated script or binary. If you want 
-to additionally disallow editing of the respective field, use the modifier <varname>$i</varname>.
-If you want to disallow the use <guibutton>Insert My Address</guibutton> button, set 
+Create a group called CertificateCreationWizard in the system-wide
+<filename>kleopatrarc</filename>. If you want a custom order of
+attributes or if you only want certain items to appear, create a key
+called <varname>DNAttributeOrder</varname>. The argument is one more
+more of <varname>CN,SN,GN,L,T,OU,O,PC,C,SP,DC,BC,EMAIL</varname> If
+you want to preempt fields with a certain value, write something like
+Attribute=value. If you want the attribute to be treated as a required
+one, follow it with an exclamation point
+(e.g. <varname>CN!,L,OU,O!,C!,EMAIL!</varname>, which happens to be
+the default configuration).  </para><para> Using the
+<acronym>KIOSK</acronym> modes modifiers <varname>$e</varname> allows
+for retrieving the values from environment variables or from an
+evaluated script or binary. If you want to additionally disallow
+editing of the respective field, use the modifier
+<varname>$i</varname>.  If you want to disallow the use
+<guibutton>Insert My Address</guibutton> button, set
 <varname>ShowSetWhoAmI</varname> to false.
 </para>
 
-<tip><para>
-Due to the nature of the &kde; <acronym>KIOSK</acronym> framework, using immutable flag 
-(<varname>$i</varname>) makes it impossible for the user to override the flag. This is 
-intended behavior. <varname>$i</varname> and <varname>$e</varname> can be used with any 
-other config key in &kde; applications.
-</para></tip>
+<tip><para> Due to the nature of the &kde; <acronym>KIOSK</acronym>
+framework, using immutable flag (<varname>$i</varname>) makes it
+impossible for the user to override the flag. This is intended
+behavior. <varname>$i</varname> and <varname>$e</varname> can be used
+with any other config key in &kde; applications.  </para></tip>
 
 <para>The following example outlines possible customizations:</para>
 
@@ -227,41 +1039,38 @@ ShowSetWhoAmI[$i]=false
 CN[$e]=$USER
 
 ;sets the company name to "My Company", disallows editing
-OU[$i]=My Company
+O[$i]=My Company
 
 ;sets the department name to a value returned by a script
-O[$ei]=$(lookup_dept_from_ip)
+OU[$ei]=$(lookup_dept_from_ip)
 
 ; sets country to DE, but allows for changes by the user
 C=DE
 </programlisting>
 
 </para>
-</sect2>
 </sect1>
 
-<sect1 id="help"><title>Help</title>
 
-
-<para>The <guimenu>Help</guimenu> menu contains the standard &kde;
-help menu.</para>
-
-&help.menu.documentation;
-
-</sect1>
-
-</chapter>
+</chapter> <!-- Administrator's Guide -->
 
 <chapter id="credits-and-license">
 <title>Credits and License</title>
 
-<para>&kgpgcertmanager; copyright 2002 Steffen Hansen, Kalle Dalheimer
-and Jesper Pedersen., copyright 2004 Daniel Molkentin</para>
+<para>&kleopatra; copyright 2002 Steffen Hansen, Kalle Dalheimer
+and Jesper Pedersen., copyright 2004 Daniel Molkentin, copyright 2004 Klar&auml;lvdalens Datakonsult AB</para>
 
-<para>Documentation copyright 2002 Steffen Hansen, copyright 2004 Daniel Molkentin</para>
+<para>Documentation copyright 2002 Steffen Hansen, copyright 2004
+Daniel Molkentin, copyright 2004 Klar&auml;lvdalens Datakonsult AB</para>
 
 <itemizedlist>
 <title>Contributors</title>
+<listitem>
+<para>Marc Mutz <email>mutz@kde.org</email></para>
+</listitem>
+<listitem>
+<para>David Faure <email>faure@kde.org</email></para>
+</listitem>
 <listitem>
 <para>Steffen Hansen <email>hansen@kde.org</email></para>
 </listitem>
