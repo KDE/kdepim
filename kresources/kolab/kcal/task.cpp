@@ -323,7 +323,7 @@ void Task::saveTo( KCal::Todo* task )
   if ( hasDueDate() )
     task->setDtDue( utcToLocal( dueDate() ) );
 
-  if ( parent() != QString::null )
+  if ( !parent().isNull() )
     task->setRelatedToUid( parent() );
 
   if ( hasCompletedDate() )
