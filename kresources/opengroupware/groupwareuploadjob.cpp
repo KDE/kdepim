@@ -26,18 +26,15 @@
 #include "folderlister.h"
 #include "groupwaredataadaptor.h"
 
+#include <libemailfunctions/idmapper.h>
+#include <libkdepim/progressmanager.h>
+
 #include <kdebug.h>
-#include <klocale.h>
 #include <kurl.h>
 #include <kio/job.h>
-#include <kio/davjob.h>
 
-#include <qapplication.h>
-#include <qdatetime.h>
-#include <qptrlist.h>
 #include <qstringlist.h>
 #include <qtimer.h>
-#include <qdom.h>
 
 using namespace KPIM;
 
@@ -48,17 +45,19 @@ GroupwareUploadJob::GroupwareUploadJob( GroupwareDataAdaptor *adaptor )
 
 void GroupwareUploadJob::run()
 {
-  deleteItems();
+  deleteItem();
 }
 
-void GroupwareUploadJob::deleteItems()
+void GroupwareUploadJob::deleteItem()
 {
-  if ( mUrlsForDeletion.isEmpty() ) {
-    uploadItem();
+kdDebug()<<"GroupwareUploadJob::deleteItem()"<<endl;
+  if ( mDeletedItems.isEmpty() ) {
+    QTimer::singleShot( 0, this, SLOT( uploadItem() ) );
   } else {
-    kdDebug(7000) << " URLs for deletion: " << mUrlsForDeletion << endl;
+    kdDebug(7000) << " Deleting " << mDeletedItems.size() << " items from the server " << endl;
 
-    mDeletionJob = KIO::del( mUrlsForDeletion, false, false );
+    // TODO: What to do with servers that don't allow you to remove all incidences at once?
+    mDeletionJob = adaptor()->createRemoveItemsJob( mBaseUrl, mDeletedItems );
     connect( mDeletionJob, SIGNAL( result( KIO::Job* ) ),
              SLOT( slotDeletionResult( KIO::Job* ) ) );
   }
@@ -66,49 +65,108 @@ void GroupwareUploadJob::deleteItems()
 
 void GroupwareUploadJob::slotDeletionResult( KIO::Job *job )
 {
+  KIO::DeleteJob *deljob = dynamic_cast<KIO::DeleteJob*>(job);
   if ( job->error() ) {
     kdDebug(5006) << "slotDeletionResult failed " << endl;
     error( job->errorString() );
-  } else {
+  } else if ( deljob ) {
     kdDebug(5006) << "slotDeletionResult successfull " << endl;
     
-    QStringList::Iterator it = mIncidencesForDeletion.begin();
-    for ( ; it != mIncidencesForDeletion.end(); ++it ) {
-      KURL url( *it );
-      const QString &remote = url.path();
+    KURL::List urls( deljob->urls() );
+    for ( KURL::List::Iterator it = urls.begin(); it != urls.end(); ++it ) {
+      const QString &remote = (*it).path();
       const QString &local = adaptor()->idMapper()->localId( remote );
       if ( !local.isEmpty() ) {
         adaptor()->deleteItem( local );
       }
     }
-    
-    uploadItem();
   }
+  KPIM::GroupwareUploadItem::List::Iterator it = mDeletedItems.begin();
+  for ( ; it != mDeletedItems.end(); ++it ) {
+    delete (*it);  
+  }
+  mDeletedItems.clear();
+  uploadItem();
 }
 
 void GroupwareUploadJob::uploadItem()
 {
-  if ( !mDataForUpload.isEmpty() ) {
-    QString uid = adaptor()->extractUid( mDataForUpload.front() );
-    const QString remote = adaptor()->idMapper()->remoteId( uid );
-    KURL url;
-    if ( !remote.isEmpty() ) {
-      url = KURL( mBaseUrl );
-      url.setPath( remote );
-    } else {
-      url = KURL( adaptor()->folderLister()->writeDestinationId() );
-      adaptor()->adaptUploadUrl( url );
-      kdDebug() << "Put new URL: " << url.url() << endl;
+kdDebug()<<"GroupwareUploadJob::uploadItem()"<<endl;
+  if ( mChangedItems.isEmpty() ) {
+    uploadNewItem();
+  } else {
+    GroupwareUploadItem *item = mChangedItems.front();
+    if ( !item ) {
+      mChangedItems.pop_front();
+      emit QTimer::singleShot( 0, this, SLOT( uploadItem() ) );
+      return;
     }
-    const QString inc = mDataForUpload.front();
-    //kdDebug(7000) << "Uploading to: " << inc << endl;
-    //kdDebug(7000) << "Uploading: " << url.prettyURL() << endl;
-    mCurrentPutUrl = url;
-    mUploadJob = KIO::storedPut( inc.utf8(), url, -1, true, false, false );
-    mUploadJob->addMetaData( "PropagateHttpHeader", "true" );
-    mUploadJob->addMetaData( "content-type", adaptor()->mimeType() );
+    QString uid = item->uid();
+    const QString remote = adaptor()->idMapper()->remoteId( uid );
+    if ( remote.isEmpty() ) {
+      mAddedItems.append( item );
+      emit QTimer::singleShot( 0, this, SLOT( uploadItem() ) );
+      return;
+    }
+    KURL url( mBaseUrl );
+    url.setPath( remote );
+    mUploadJob = adaptor()->createUploadJob( url, item );
     connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
       SLOT( slotUploadJobResult( KIO::Job * ) ) );
+
+    mUploadProgress = KPIM::ProgressManager::instance()->createProgressItem(
+      KPIM::ProgressManager::getUniqueID(),
+      adaptor()->uploadProgressMessage() );
+    connect( mUploadProgress,
+      SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
+      SLOT( cancelSave() ) );
+  }
+}
+
+void GroupwareUploadJob::slotUploadJobResult( KIO::Job *job )
+{
+  kdDebug(7000) << " slotUploadJobResult " << endl;
+  KIO::TransferJob *trfjob = dynamic_cast<KIO::TransferJob*>(job);
+  if ( !trfjob ) return;
+
+  if ( job->error() ) {
+    error( job->errorString() );
+  } else {
+    adaptor()->updateFingerprintId( trfjob, mChangedItems.front() );
+    delete mChangedItems.front();
+    mChangedItems.pop_front();
+  }
+
+  if ( mUploadProgress ) {
+    mUploadProgress->incCompletedItems();
+    mUploadProgress->updateProgress();
+  }
+  mUploadJob = 0;
+
+  uploadItem();
+}
+
+void GroupwareUploadJob::uploadNewItem()
+{
+kdDebug()<<"GroupwareUploadJob::uploadNewItem()"<<endl;
+  if ( !mAddedItems.isEmpty() ) {
+    GroupwareUploadItem *item = mAddedItems.front();
+    if ( !item ) {
+      delete mAddedItems.front();
+      mAddedItems.pop_front();
+      emit QTimer::singleShot( 0, this, SLOT( uploadNewItem() ) );
+      return;
+    }
+    QString uid = item->uid();
+    
+    KURL url( adaptor()->folderLister()->writeDestinationId() );
+    adaptor()->adaptUploadUrl( url );
+    kdDebug() << "Put new URL: " << url.url() << endl;
+    
+    mUploadJob = adaptor()->createUploadNewJob( url, item );
+    
+    connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
+      SLOT( slotUploadNewJobResult( KIO::Job * ) ) );
 
     mUploadProgress = KPIM::ProgressManager::instance()->createProgressItem(
       KPIM::ProgressManager::getUniqueID(),
@@ -125,29 +183,18 @@ void GroupwareUploadJob::uploadItem()
   }
 }
 
-void GroupwareUploadJob::slotUploadJobResult( KIO::Job *job )
+void GroupwareUploadJob::slotUploadNewJobResult( KIO::Job *job )
 {
-  kdDebug(7000) << " slotUploadJobResult " << endl;
+  kdDebug(7000) << " slotUploadNewJobResult " << endl;
+  KIO::TransferJob *trfjob = dynamic_cast<KIO::TransferJob*>(job);
+  if ( !trfjob ) return;
+
   if ( job->error() ) {
     error( job->errorString() );
   } else {
-    QString uid = adaptor()->extractUid( mDataForUpload.front() );
-    adaptor()->clearChange( uid );
-
-    const QString& headers = job->queryMetaData( "HTTP-Headers" );
-    const QString& etag = WebdavHandler::getEtagFromHeaders( headers );
-
-    QString remoteId = mCurrentPutUrl.path();
-    remoteId.truncate( remoteId.findRev( "/" )+1 );
-    remoteId = remoteId + etag.left( etag.findRev( ":" ) ) + ".ics";
-    adaptor()->idMapper()->setRemoteId( uid, remoteId );
-    adaptor()->idMapper()->setFingerprint( uid, etag );
-/*
-    kdDebug() << "Setting remoteID for: " << uid << " to: " << remoteId << endl;
-    kdDebug() << "Setting etag for: " << uid << " to: " << etag << endl;
-    kdDebug() << adaptor()->idMapper()->asString() << endl;
-*/
-    mDataForUpload.pop_front();
+    adaptor()->updateFingerprintId( trfjob, mAddedItems.front() );
+    delete mAddedItems.front();
+    mAddedItems.pop_front();
   }
 
   if ( mUploadProgress ) {
@@ -156,7 +203,7 @@ void GroupwareUploadJob::slotUploadJobResult( KIO::Job *job )
   }
   mUploadJob = 0;
 
-  uploadItem();
+  uploadNewItem();
 }
 
 void GroupwareUploadJob::kill()

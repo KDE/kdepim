@@ -20,9 +20,9 @@
 */
 
 #include "kabc_resourceopengroupware.h"
-#include "kabc_resourceopengroupwareconfig.h"
+#include "kabc_resourcegroupwarebaseconfig.h"
 
 using namespace KABC;
 
-typedef KRES::PluginFactory< ResourceOpenGroupware, ResourceOpenGroupwareConfig > OpenGroupwareFactory;
+typedef KRES::PluginFactory< ResourceOpenGroupware, ResourceGroupwareBaseConfig > OpenGroupwareFactory;
 K_EXPORT_COMPONENT_FACTORY( kabc_opengroupware, OpenGroupwareFactory )

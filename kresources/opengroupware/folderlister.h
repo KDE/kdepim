@@ -19,15 +19,15 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KCAL_FOLDERLISTER_H
-#define KCAL_FOLDERLISTER_H
+#ifndef KPIM_FOLDERLISTER_H
+#define KPIM_FOLDERLISTER_H
 
 #include <kurl.h>
 
 #include <qvaluelist.h>
 #include <qstring.h>
-#include <qobject.h>
 #include <qdom.h>
+#include <qobject.h>
 
 namespace KIO {
 class DavJob;
@@ -36,12 +36,16 @@ class Job;
 
 class KConfig;
 
-namespace KCal {
+namespace KPIM {
 
 class FolderLister : public QObject
 {
     Q_OBJECT
   public:
+    enum Type { AddressBook, Calendar };
+    enum FolderType { ContactsFolder, CalendarFolder, TasksFolder, 
+                      JournalsFolder, AllIncidencesFolder, Folder, Unknown };
+  
     class Entry
     {
       public:
@@ -51,13 +55,10 @@ class FolderLister : public QObject
       
         QString id;
         QString name;
+        FolderType type;
         bool active;
     };
 
-    enum Type { AddressBook, Calendar };
-    enum FolderType { ContactsFolder, CalendarFolder, TasksFolder, 
-                      JournalsFolder, Folder, Unknown };
-  
     FolderLister( Type );
   
     virtual void retrieveFolders( const KURL & );
@@ -81,9 +82,9 @@ class FolderLister : public QObject
     void slotListJobResult( KIO::Job * );
 
   protected:
-    virtual KURL adjustUrl( const KURL &u );
-    virtual KIO::DavJob *createJob( const KURL &url );
-    virtual FolderType getFolderType( const QDomNode &folderNode );
+    virtual KURL adjustUrl( const KURL &u ) = 0;
+    virtual KIO::DavJob *createJob( const KURL &url ) = 0;
+    virtual FolderType getFolderType( const QDomNode &folderNode ) = 0;
     virtual Entry::List defaultFolders();
     KURL getUrl() const { return mUrl; }
     Type getType() const { return mType; }

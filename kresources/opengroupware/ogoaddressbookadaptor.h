@@ -19,27 +19,35 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KCAL_RESOURCEOPENGROUPWARE_H
-#define KCAL_RESOURCEOPENGROUPWARE_H
+#ifndef KABC_OGOADDRESSBOOKADAPTOR_H
+#define KABC_OGOADDRESSBOOKADAPTOR_H
 
-#include "kcal_resourcegroupwarebase.h"
+#include "addressbookadaptor.h"
 
-namespace KCal {
+#include <kabc/addressee.h>
+#include <kurl.h>
 
-class GroupwarePrefsBase;
+namespace KABC {
 
-/**
-  This class provides a resource for accessing an OpenGroupware.org server
-*/
-class ResourceOpenGroupware : public ResourceGroupwareBase
+class OGoAddressBookAdaptor : public AddressBookAdaptor
 {
-    Q_OBJECT
   public:
-    ResourceOpenGroupware();
-    ResourceOpenGroupware( const KConfig * );
+    OGoAddressBookAdaptor();
 
-  protected:
-    void init();
+    void adaptDownloadUrl( KURL &url );
+    void adaptUploadUrl( KURL &url );
+    QString mimeType() const;
+    QCString identifier() const;
+
+    QString extractFingerprint( KIO::TransferJob *job, 
+           const QString &rawText );
+    KIO::TransferJob *createListItemsJob( const KURL &url );
+    KIO::TransferJob *createDownloadItemJob( const KURL &url );
+
+    bool itemsForDownloadFromList( KIO::Job *job, 
+      QStringList &currentlyOnServer, QStringList &itemsForDownload );
+    KABC::Addressee::List parseData( KIO::TransferJob *job, const QString &rawText );
+    void updateFingerprintId( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item );
 };
 
 }

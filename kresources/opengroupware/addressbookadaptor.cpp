@@ -25,24 +25,25 @@
 #include <kabc/addressee.h>
 #include <kabc/vcardconverter.h>
 #include <libkdepim/kabcresourcecached.h>
+#include <kio/job.h>
 
-using namespace KPIM;
 
+using namespace KABC;
+
+
+AddressBookUploadItem::AddressBookUploadItem( KPIM::GroupwareDataAdaptor *adaptor, KABC::Addressee addr, GroupwareUploadItem::UploadType type ) 
+    : GroupwareUploadItem( type ) 
+{
+  setUrl( addr.custom( adaptor->identifier(), "storagelocation" ) );
+  setUid( addr.uid() );
+  KABC::VCardConverter vcard;
+  setData( vcard.createVCard( addr ) );
+}
+
+
+    
 AddressBookAdaptor::AddressBookAdaptor()
 {
-}
-
-void AddressBookAdaptor::adaptDownloadUrl( KURL & )
-{
-}
-
-QCString AddressBookAdaptor::identifier() const
-{
-  return "KABCResourceOpengroupware";
-}
-void AddressBookAdaptor::adaptUploadUrl( KURL &url )
-{
-  url.addPath( "new.vcf" );
 }
 
 QString AddressBookAdaptor::mimeType() const
@@ -78,16 +79,19 @@ void AddressBookAdaptor::deleteItem( const QString &localId )
   if ( !a.isEmpty() ) mResource->removeAddressee( a );
 }
 
-KABC::Addressee::List AddressBookAdaptor::parseData( const QString &rawText )
+KABC::Addressee::List AddressBookAdaptor::parseData( KIO::TransferJob *, const QString &rawText )
 {
   KABC::VCardConverter conv;
   return conv.parseVCards( rawText );
 }
 
-QString AddressBookAdaptor::addItem( const QString &rawText,
-  const QString &localId, const QString &storageLocation )
+QString AddressBookAdaptor::addItem( KIO::TransferJob *job, 
+     const QString &rawText, QString &fingerprint, 
+     const QString &localId, const QString &storageLocation )
 {
-  KABC::Addressee::List addressees( parseData( rawText ) );
+  fingerprint = extractFingerprint( job, rawText );
+  
+  KABC::Addressee::List addressees( parseData( job, rawText ) );
 
   if ( addressees.count() > 1 ) {
     kdError() << "More than one addressee in vCard" << endl;
@@ -113,9 +117,9 @@ QString AddressBookAdaptor::addItem( const QString &rawText,
   }
 }
 
-QString AddressBookAdaptor::extractUid( const QString &data )
+QString AddressBookAdaptor::extractUid( KIO::TransferJob *job, const QString &data )
 {
-  KABC::Addressee::List addressees = parseData( data );
+  KABC::Addressee::List addressees = parseData( job, data );
   if ( addressees.begin() == addressees.end() ) return QString::null;
   
   KABC::Addressee a = *(addressees.begin());
@@ -126,3 +130,24 @@ void AddressBookAdaptor::clearChange( const QString &uid )
 {
   mResource->clearChange( uid );
 }
+
+KPIM::GroupwareUploadItem *AddressBookAdaptor::newUploadItem( KABC::Addressee addr, 
+             KPIM::GroupwareUploadItem::UploadType type )
+{
+  return new AddressBookUploadItem( this, addr, type );
+}
+
+KIO::Job *AddressBookAdaptor::createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
+{
+  QStringList urls;
+  KPIM::GroupwareUploadItem::List::iterator it;
+  for ( it = deletedItems.begin(); it != deletedItems.end(); ++it ) {
+    //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
+    KURL url( uploadurl );
+    url.setPath( (*it)->url().url() );
+    if ( !(*it)->url().isEmpty() )
+      urls << url.url();
+  }
+  return KIO::del( urls, false, false );
+}
+// customProperty( identifier(), "storagelocation" )

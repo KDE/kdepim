@@ -30,16 +30,9 @@
 #include <klocale.h>
 #include <kurl.h>
 #include <kio/job.h>
-#include <kio/davjob.h>
+#include <libemailfunctions/idmapper.h>
+#include <libkdepim/progressmanager.h>
 
-#include <qapplication.h>
-#include <qdatetime.h>
-#include <qptrlist.h>
-#include <qstringlist.h>
-#include <qtimer.h>
-#include <qdom.h>
-
-using namespace KCal;
 using namespace KPIM;
 
 GroupwareDownloadJob::GroupwareDownloadJob( GroupwareDataAdaptor *adaptor )
@@ -79,20 +72,20 @@ void GroupwareDownloadJob::listItems()
     deleteIncidencesGoneFromServer();
     downloadItem();
   } else {
-    QDomDocument props = WebdavHandler::createItemsAndVersionsPropsRequest();
 
-    //kdDebug(7000) << "listItems: " << url.prettyURL() << endl;
     //kdDebug(7000) << "props: " << props.toString() << endl;
 
     KURL url = mFoldersForDownload.front();
     mFoldersForDownload.pop_front();
+    kdDebug(7000) << "listItems: " << url.url() << endl;
 
     adaptor()->setUserPassword( url );
     adaptor()->adaptDownloadUrl( url );
+    kdDebug(7000) << "listItems, after setUserPassword: " << url.url() << endl;
 
     kdDebug() << "OpenGroupware::listIncidences(): " << url << endl;
 
-    mListEventsJob = KIO::davPropFind( url, props, "1", false );
+    mListEventsJob = adaptor()->createListItemsJob( url );
 
     connect( mListEventsJob, SIGNAL( result( KIO::Job * ) ),
              SLOT( slotListJobResult( KIO::Job * ) ) );
@@ -110,59 +103,7 @@ void GroupwareDownloadJob::slotListJobResult( KIO::Job *job )
     }
     error( job->errorString() );
   } else {
-    QDomDocument doc = mListEventsJob->response();
-
-    //kdDebug(7000) << " Doc: " << doc.toString() << endl;
-    //kdDebug(7000) << " IdMapper: " << adaptor()->idMapper()->asString() << endl;
-
-    QDomNodeList entries = doc.elementsByTagNameNS( "DAV:", "href" );
-    QDomNodeList fingerprints = doc.elementsByTagNameNS( "DAV:", "getetag" );
-    int c = entries.count();
-    int i = 0;
-    while ( i < c ) {
-      QDomNode node = entries.item( i );
-      QDomElement e = node.toElement();
-      const QString &entry = e.text();
-      node = fingerprints.item( i );
-      e = node.toElement();
-      i++;
-
-      bool download = false;
-      KURL url ( entry );
-      const QString &location = url.path();
-      const QString &newFingerprint = e.text();
-
-      mCurrentlyOnServer << location;
-      /* if not locally present, download */
-      const QString &localId = adaptor()->idMapper()->localId( location );
-      //kdDebug(5006) << "Looking up remote: " << location << " found: " << localId << endl;
-      if ( localId.isEmpty() || !adaptor()->localItemExists( localId ) ) {
-        //kdDebug(7000) << "Not locally present, download: " << location << endl;
-        download = true;
-      } else {
-         kdDebug(7000) << "Locally present " << endl;
-        /* locally present, let's check if it's newer than what we have */
-        const QString &oldFingerprint =
-          adaptor()->idMapper()->fingerprint( localId );
-        if ( oldFingerprint != newFingerprint ) {
-          //kdDebug(7000) << "Fingerprint changed old: " << oldFingerprint <<
-          //  " new: " << newFingerprint << endl;
-          // something changed on the server, let's see if we also changed it locally
-          if ( adaptor()->localItemHasChanged( localId ) ) {
-            // TODO conflict resolution
-            kdDebug(7000) << "TODO conflict resolution" << endl;
-            download = true;
-          } else {
-            download = true;
-          }
-        } else {
-          //kdDebug(7000) << "Fingerprint did not change, don't download this one " << endl;
-        }
-      }
-      if ( download ) {
-        mItemsForDownload << entry;
-      }
-    }
+    adaptor()->itemsForDownloadFromList( job, mCurrentlyOnServer, mItemsForDownload );
   }
 
   mListEventsJob = 0;
@@ -192,15 +133,13 @@ void GroupwareDownloadJob::downloadItem()
     mItemsForDownload.pop_front();
 
     KURL url( entry );
-    url.setProtocol( "webdav" );
-    mCurrentGetUrl = url.url(); // why can't I ask the job?
+//    url.setProtocol( "webdav" );
     adaptor()->setUserPassword( url );
+    adaptor()->adaptDownloadUrl( url );
 
     mJobData = QString::null;
 
-    mDownloadJob = KIO::get( url, false, false );
-    mDownloadJob->addMetaData( "accept", adaptor()->mimeType() );
-    mDownloadJob->addMetaData( "PropagateHttpHeader", "true" );
+    mDownloadJob = adaptor()->createDownloadItemJob( url );
     connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
         SLOT( slotJobResult( KIO::Job * ) ) );
     connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
@@ -216,19 +155,21 @@ void GroupwareDownloadJob::slotJobResult( KIO::Job *job )
 {
   kdDebug() << "OpenGroupware::slotJobResult(): " << endl;
 
+  KIO::TransferJob *trfjob = dynamic_cast<KIO::TransferJob*>(job);
+  if ( !trfjob ) return;
+
   if ( job->error() ) {
     error( job->errorString() );
   } else {
-    const QString& headers = job->queryMetaData( "HTTP-Headers" );
-    const QString& etag = WebdavHandler::getEtagFromHeaders( headers );
-
-    const QString &remote = KURL( mCurrentGetUrl ).path();
+    const QString &remote = KURL( trfjob->url() ).path();
     const QString &local = adaptor()->idMapper()->localId( remote );
 
     // remove old version, we would not have downnloaded 
     // if it were still current
     adaptor()->deleteItem( local );
-    QString id = adaptor()->addItem( mJobData, local, remote );
+    
+    QString fingerprint; // <- will be set by addItem
+    QString id = adaptor()->addItem( trfjob, mJobData, fingerprint, local, remote );
 
     if ( id.isEmpty() ) {
       error( i18n("Error parsing calendar data.") );
@@ -236,7 +177,7 @@ void GroupwareDownloadJob::slotJobResult( KIO::Job *job )
       if ( local.isEmpty() ) {
         adaptor()->idMapper()->setRemoteId( id, remote );
       }
-      adaptor()->idMapper()->setFingerprint( id, etag );
+      adaptor()->idMapper()->setFingerprint( id, fingerprint );
     }
   }
 
@@ -246,16 +187,16 @@ void GroupwareDownloadJob::slotJobResult( KIO::Job *job )
   }
   mJobData = QString::null;
   mDownloadJob = 0;
-  mCurrentGetUrl = QString::null;
 
   downloadItem();
 }
 
 void GroupwareDownloadJob::slotJobData( KIO::Job *, const QByteArray &data )
 {
-//  kdDebug() << "OpenGroupware::slotJobData()" << endl;
+  kdDebug() << "OpenGroupware::slotJobData()" << endl;
 
   mJobData.append( data.data() );
+kdDebug()<<"Job data: "<<endl<<mJobData<<endl<<endl;
 }
 
 void GroupwareDownloadJob::kill()

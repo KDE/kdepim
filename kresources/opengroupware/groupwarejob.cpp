@@ -22,19 +22,8 @@
 
 #include "groupwarejob.h"
 
-#include "groupwaredataadaptor.h"
-
-#include <kdebug.h>
-#include <klocale.h>
-
-#include <qapplication.h>
-#include <qdatetime.h>
-#include <qptrlist.h>
-#include <qstringlist.h>
 #include <qtimer.h>
-#include <qdom.h>
 
-using namespace KCal;
 using namespace KPIM;
 
 GroupwareJob::GroupwareJob( GroupwareDataAdaptor *adaptor )

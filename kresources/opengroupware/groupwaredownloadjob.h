@@ -23,26 +23,20 @@
 #define KPIM_GROUPWAREDOWNLOADJOB_H
 
 #include "groupwarejob.h"
-
-#include <kurl.h>
-
-#include <libkdepim/progressmanager.h>
-
-#include <kconfig.h>
+#include <qstringlist.h>
 
 namespace KIO {
   class Job;
   class TransferJob;
-  class DavJob;
 }
 
 namespace KPIM {
 
 class GroupwareDataAdaptor;
+class ProgressItem;
 
 /**
-  This class provides a resource for accessing a Groupware kioslave-based
-  calendar.
+  This class provides a resource for accessing a Groupware calendar with local caching.
 */
 class GroupwareDownloadJob : public GroupwareJob
 {
@@ -75,10 +69,8 @@ class GroupwareDownloadJob : public GroupwareJob
     KPIM::ProgressItem *mProgress;
 
     KIO::TransferJob *mDownloadJob;
-    KIO::DavJob *mListEventsJob;
+    KIO::TransferJob *mListEventsJob;
     QString mJobData;
-
-    QString mCurrentGetUrl;
 };
 
 }

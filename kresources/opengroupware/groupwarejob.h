@@ -23,6 +23,7 @@
 #define KPIM_GROUPWAREJOB_H
 
 #include <qobject.h>
+#include <qstring.h>
 
 namespace KPIM {
 

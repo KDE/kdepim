@@ -19,43 +19,24 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KPIM_FOLDERCONFIG_H
-#define KPIM_FOLDERCONFIG_H
+#ifndef KCAL_OGOFOLDERLISTER_H
+#define KCAL_OGOFOLDERLISTER_H
 
-#include <kurl.h>
-
-#include <qwidget.h>
-
-class KListView;
-class QComboBox;
+#include "folderlister.h"
 
 namespace KPIM {
 
-class FolderLister;
-
-class FolderConfig : public QWidget
+class OGoFolderLister : public FolderLister
 {
     Q_OBJECT
   public:
-    FolderConfig( QWidget *parent );
-    ~FolderConfig();
-
-    void setFolderLister( FolderLister * );
-
-    void saveSettings();
-
-  public slots:
-    void updateFolderList();
-    void retrieveFolderList( const KURL & );
-
-  signals:
-    void updateFoldersClicked();
-
-  private:
-    KListView *mFolderList;
-    QComboBox *mWriteCombo;
-
-    FolderLister *mFolderLister;
+    OGoFolderLister( FolderLister::Type );
+  
+  protected:
+    virtual KURL adjustUrl( const KURL &u );
+    virtual KIO::DavJob *createJob( const KURL &url );
+    virtual FolderType getFolderType( const QDomNode &folderNode );
+    virtual Entry::List defaultFolders();
 };
 
 }

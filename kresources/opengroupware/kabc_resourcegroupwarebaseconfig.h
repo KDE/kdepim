@@ -18,23 +18,43 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#ifndef KABC_RESOURCEOPENGROUPWARE_H
-#define KABC_RESOURCEOPENGROUPWARE_H
+#ifndef KABC_RESOURCEGROUPWAREBASECONFIG_H
+#define KABC_RESOURCEGROUPWAREBASECONFIG_H
 
-#include "kabc_resourcegroupwarebase.h"
+#include <kresources/configwidget.h>
+
+class KLineEdit;
+class KURLRequester;
+
+namespace KPIM {
+class FolderConfig;
+}
 
 namespace KABC {
 
-class ResourceOpenGroupware : public ResourceGroupwareBase
-{
+class ResourceGroupwareBase;
+
+class ResourceGroupwareBaseConfig : public KRES::ConfigWidget
+{ 
   Q_OBJECT
 
   public:
-    ResourceOpenGroupware( const KConfig * );
-    ResourceOpenGroupware( const KURL &url,
-            const QString &user, const QString &password );
-  protected:
-    void init();
+    ResourceGroupwareBaseConfig( QWidget* parent = 0, const char* name = 0 );
+
+  public slots:
+    void loadSettings( KRES::Resource* );
+    void saveSettings( KRES::Resource* );
+
+  protected slots:
+    void updateFolders();
+
+  private:
+    KURLRequester *mURL;
+    KLineEdit *mUser;
+    KLineEdit *mPassword;
+    KPIM::FolderConfig *mFolderConfig;
+
+    ResourceGroupwareBase *mResource;
 };
 
 }

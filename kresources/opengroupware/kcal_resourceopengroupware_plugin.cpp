@@ -21,9 +21,9 @@
 */
 
 #include "kcal_resourceopengroupware.h"
-#include "kcal_resourceopengroupwareconfig.h"
+#include "kcal_resourcegroupwarebaseconfig.h"
 
 using namespace KCal;
 
-typedef KRES::PluginFactory< OpenGroupware, OpenGroupwareConfig > OpenGroupwareFactory;
+typedef KRES::PluginFactory< ResourceOpenGroupware, ResourceGroupwareBaseConfig > OpenGroupwareFactory;
 K_EXPORT_COMPONENT_FACTORY( kcal_opengroupware, OpenGroupwareFactory )

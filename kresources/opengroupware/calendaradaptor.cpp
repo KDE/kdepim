@@ -27,30 +27,35 @@
 #include <libkcal/resourcecached.h>
 #include <libkcal/icalformat.h>
 
-using namespace KPIM;
+#include <kio/job.h>
+
+#include <kdebug.h>
+
+using namespace KCal;
+
+
+CalendarUploadItem::CalendarUploadItem( CalendarAdaptor *adaptor, KCal::Incidence *incidence, KPIM::GroupwareUploadItem::UploadType type ) 
+    : GroupwareUploadItem( type )
+{
+  if ( incidence && adaptor ) {
+    setUrl( incidence->customProperty( adaptor->identifier(), "storagelocation" ) );
+    setUid( incidence->uid() );
+    
+    ICalFormat format;
+    format.setTimeZone( adaptor->resource()->timeZoneId(), true );
+    setData( format.toICalString( incidence ) );
+  }
+}
+
+
 
 CalendarAdaptor::CalendarAdaptor()
 {
 }
 
-void CalendarAdaptor::adaptDownloadUrl( KURL &url )
-{
-  url.addPath( "/Calendar" );
-}
-
-void CalendarAdaptor::adaptUploadUrl( KURL &url )
-{
-  url.setPath( url.path() + "/Calendar/new.ics" );
-}
-
 QString CalendarAdaptor::mimeType() const
 {
   return "text/calendar";
-}
-
-QCString CalendarAdaptor::identifier() const
-{
-  return "KCalResourceOpengroupware";
 }
 
 bool CalendarAdaptor::localItemExists( const QString &localId )
@@ -87,36 +92,46 @@ void CalendarAdaptor::deleteItem( const QString &localId )
   mResource->enableChangeNotification();
 }
 
-KCal::Incidence::List CalendarAdaptor::parseData( const QString &rawText )
+KCal::Incidence::List CalendarAdaptor::parseData( KIO::TransferJob */*job*/, const QString &rawText )
 {
-  // FIXME: We need to use the TZID here, otherwise all times will be 
-  // returned in UTC, and not in the tz of the resource.
   KCal::CalendarLocal calendar;
   KCal::ICalFormat ical;
+  calendar.setTimeZoneId( mResource->timeZoneId() );
   KCal::Incidence::List incidences;
-  if ( !ical.fromString( &calendar, rawText ) ) {
-    kdError() << "Unable to parse iCalendar" << endl;
-    return incidences;
+  if ( ical.fromString( &calendar, rawText ) ) {
+    KCal::Incidence::List raw = calendar.rawIncidences();
+    KCal::Incidence::List::Iterator it = raw.begin();
+    for ( ; it != raw.end(); ++it ) {
+      incidences.append( (*it)->clone() );
+    }
   } else {
-    return calendar.rawIncidences();
+    kdError() << "Unable to parse iCalendar" << endl;
   }
+  return incidences;
 }
 
-QString CalendarAdaptor::addItem( const QString &rawText,
-  const QString &localId, const QString &storageLocation )
+QString CalendarAdaptor::addItem( KIO::TransferJob *job, 
+     const QString &rawText, QString &fingerprint, 
+     const QString &localId, const QString &storageLocation )
 {
-  KCal::Incidence::List incidences = parseData( rawText );
+  fingerprint = extractFingerprint( job, rawText );
+  
+  KCal::Incidence::List incidences = parseData( job, rawText );
   if ( incidences.count() < 1 ) {
     kdError() << "Parsed iCalendar contains no event." << endl;
     return QString::null;
   } 
   if ( incidences.count() > 1 ) {
     kdError() << "More than one event in iCalendar" << endl;
+    KCal::Incidence::List::Iterator it = incidences.begin();
+    for ( ; it != incidences.end(); ++it ) {
+      delete (*it);
+    }
     return QString::null;
   }
-    
+  
   mResource->disableChangeNotification();
-  KCal::Incidence *i = (*(incidences.begin()))->clone();
+  KCal::Incidence *i = (incidences.front())->clone();
   if ( !localId.isEmpty() ) i->setUid( localId );
   i->setCustomProperty( identifier(), "storagelocation", storageLocation );
   mResource->addIncidence( i );
@@ -125,9 +140,9 @@ QString CalendarAdaptor::addItem( const QString &rawText,
   return i->uid();
 }
 
-QString CalendarAdaptor::extractUid( const QString &data )
+QString CalendarAdaptor::extractUid( KIO::TransferJob *job, const QString &data )
 {
-  KCal::Incidence::List incidences = parseData( data );
+  KCal::Incidence::List incidences = parseData( job, data );
   if ( incidences.count() > 0 ) {
     return incidences.first()->uid();
   }
@@ -138,4 +153,24 @@ void CalendarAdaptor::clearChange( const QString &uid )
 {
   KCal::Incidence *i = mResource->incidence( uid );
   mResource->clearChange( i );
+}
+
+KPIM::GroupwareUploadItem *CalendarAdaptor::newUploadItem( KCal::Incidence*it, 
+             KPIM::GroupwareUploadItem::UploadType type )
+{
+  return new CalendarUploadItem( this, it, type );
+}
+
+KIO::Job *CalendarAdaptor::createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
+{
+  QStringList urls;
+  KPIM::GroupwareUploadItem::List::iterator it;
+  for ( it = deletedItems.begin(); it != deletedItems.end(); ++it ) {
+    //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
+    KURL url( uploadurl );
+    url.setPath( (*it)->url().url() );
+    if ( !(*it)->url().isEmpty() )
+      urls << url.url();
+  }
+  return KIO::del( urls, false, false );
 }

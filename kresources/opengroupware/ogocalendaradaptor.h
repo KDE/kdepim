@@ -1,5 +1,5 @@
-/*
-    This file is part of libkcal.
+ /*
+    This file is part of kdepim.
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Till Adam <adam@kde.org>
@@ -8,56 +8,46 @@
     modify it under the terms of the GNU Library General Public
     License as published by the Free Software Foundation; either
     version 2 of the License, or (at your option) any later version.
-    
+
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     Library General Public License for more details.
-    
+
     You should have received a copy of the GNU Library General Public License
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KPIM_FOLDERCONFIG_H
-#define KPIM_FOLDERCONFIG_H
+#ifndef KCAL_OGOCALENDARADAPTOR_H
+#define KCAL_OGOCALENDARADAPTOR_H
 
+#include "calendaradaptor.h"
 #include <kurl.h>
 
-#include <qwidget.h>
+namespace KCal {
 
-class KListView;
-class QComboBox;
 
-namespace KPIM {
-
-class FolderLister;
-
-class FolderConfig : public QWidget
+class OGoCalendarAdaptor : public CalendarAdaptor
 {
-    Q_OBJECT
   public:
-    FolderConfig( QWidget *parent );
-    ~FolderConfig();
+    OGoCalendarAdaptor();
 
-    void setFolderLister( FolderLister * );
+    void adaptDownloadUrl( KURL &url );
+    void adaptUploadUrl( KURL &url );
+    QCString identifier() const { return "KCalResourceOpengroupware"; }
+    
+    QString extractFingerprint( KIO::TransferJob *job, 
+           const QString &rawText );
+    
+    KIO::TransferJob *createListItemsJob( const KURL &url );
+    KIO::TransferJob *createDownloadItemJob( const KURL &url );
 
-    void saveSettings();
-
-  public slots:
-    void updateFolderList();
-    void retrieveFolderList( const KURL & );
-
-  signals:
-    void updateFoldersClicked();
-
-  private:
-    KListView *mFolderList;
-    QComboBox *mWriteCombo;
-
-    FolderLister *mFolderLister;
+    bool itemsForDownloadFromList( KIO::Job *job, 
+      QStringList &currentlyOnServer, QStringList &itemsForDownload );
+    virtual void updateFingerprintId( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item );
 };
 
-}
+};
 
 #endif

@@ -36,7 +36,7 @@
 #include <qhbox.h>
 #include <qlabel.h>
 
-using namespace KCal;
+using namespace KPIM;
 
 class FolderItem : public QCheckListItem
 {

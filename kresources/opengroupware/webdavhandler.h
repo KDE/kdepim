@@ -21,9 +21,7 @@
 #ifndef WEBDAVHANDLER_H
 #define WEBDAVHANDLER_H
 
-#include <qvaluelist.h>
 #include <qstring.h>
-#include <qdatetime.h>
 #include <qdom.h>
 #include <kurl.h>
 

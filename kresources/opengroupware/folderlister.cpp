@@ -22,16 +22,15 @@
 
 #include "folderlister.h"
 
-#include "webdavhandler.h"
-
 #include <kio/davjob.h>
+#include <kio/job.h>
+
 #include <kdebug.h>
 #include <kconfig.h>
-#include <klocale.h>
 
 #include <qdom.h>
 
-using namespace KCal;
+using namespace KPIM;
 
 FolderLister::FolderLister( Type type )
   : mType( type )
@@ -116,27 +115,9 @@ void FolderLister::writeConfig( KConfig *config )
   config->writeEntry( "WriteDestinationId", mWriteDestinationId );
 }
 
-KURL FolderLister::adjustUrl( const KURL &u )
-{
-  KURL url = u;
-  if ( mType == Calendar ) {
-    url.addPath( "Groups" );
-  } else {
-    url.addPath( "public" );
-  }
-  return url;
-}
-
-KIO::DavJob *FolderLister::createJob( const KURL &url )
-{
-  QDomDocument props = WebdavHandler::createAllPropsRequest();
-  kdDebug(7000) << "props: " << props.toString() << endl;
-  return KIO::davPropFind( url, props, "1", false );
-}
-
 void FolderLister::retrieveFolders( const KURL &u )
 {
-  mUrl = WebdavHandler::toDAV( u );
+  mUrl = u;
 
   kdDebug(7000) << "FolderLister::retrieveFolders: " << getUrl().prettyURL() << endl;
 
@@ -153,42 +134,7 @@ FolderLister::Entry::List FolderLister::defaultFolders()
 {
   Entry::List newFolders;
 
-  // Personal calendar/addressbook
-  Entry personal;
-  KURL url = getUrl();
-  url.setUser( QString::null );
-  url.setPass( QString::null );
-  if ( mType == Calendar ) {
-    personal.name = i18n("Personal Calendar");
-    personal.id = url.url();
-  } else {
-    personal.name = i18n("Personal Addressbook");
-    url.addPath( "Contacts" );
-    personal.id = url.url();
-  }
-  newFolders.append( personal );
   return newFolders;
-}
-
-FolderLister::FolderType FolderLister::getFolderType( const QDomNode &folderNode )
-{
-  QDomNode n4;
-  for( n4 = folderNode.firstChild(); !n4.isNull(); n4 = n4.nextSibling() ) {
-    QDomElement e = n4.toElement();
-        
-    if ( e.tagName() == "resourcetype" ) {
-      if ( !e.namedItem( "vevent-collection" ).isNull() )
-        return CalendarFolder;
-      if ( !e.namedItem( "vtodo-collection" ).isNull() )
-        return TasksFolder;
-      if ( !e.namedItem( "vcard-collection" ).isNull() )
-        return ContactsFolder;
-      if ( !e.namedItem( "collection" ).isNull() ) 
-        return Folder;
-    }
-  }
-  return Unknown;
-
 }
 
 void FolderLister::slotListJobResult( KIO::Job *job )

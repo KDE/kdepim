@@ -19,26 +19,36 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KPIM_CALENDARADAPTOR_H
-#define KPIM_CALENDARADAPTOR_H
+#ifndef KCAL_CALENDARADAPTOR_H
+#define KCAL_CALENDARADAPTOR_H
 
 #include "groupwaredataadaptor.h"
 
-#include <libemailfunctions/idmapper.h>
+
 #include <libkcal/incidence.h>
 
 #include <kurl.h>
 
-#include <qstring.h>
+namespace KPIM {
+class GroupwareUploadItem;
+};
 
 namespace KCal {
-class FolderLister;
 class ResourceCached;
-}
+class CalendarAdaptor;
 
-namespace KPIM {
+class CalendarUploadItem : public KPIM::GroupwareUploadItem
+{
+  public:
+    CalendarUploadItem( CalendarAdaptor *adaptor, KCal::Incidence *incidence, UploadType type );
+    virtual ~CalendarUploadItem() {}
+    
+  protected:
+    CalendarUploadItem( UploadType type ) : KPIM::GroupwareUploadItem( type ) {}
+};
 
-class CalendarAdaptor : public GroupwareDataAdaptor
+
+class CalendarAdaptor : public KPIM::GroupwareDataAdaptor
 {
   public:
     CalendarAdaptor();
@@ -57,25 +67,32 @@ class CalendarAdaptor : public GroupwareDataAdaptor
     {
       return mResource;
     }
-
-    void adaptDownloadUrl( KURL &url );
-    void adaptUploadUrl( KURL &url );
-    QString mimeType() const;
-    QCString identifier() const;
+    
+    virtual QString mimeType() const;
     bool localItemExists( const QString &localId );
     bool localItemHasChanged( const QString &localId );
     void deleteItem( const QString &localId );
-    QString addItem( const QString &rawText,
-      const QString &localId, const QString &storageLocation );
-    QString extractUid( const QString &data );
+    QString addItem( KIO::TransferJob *job, const QString &rawText, 
+           QString &fingerprint, const QString &localId, 
+           const QString &storageLocation );
+    QString extractUid( KIO::TransferJob *job, const QString &data );
     void clearChange( const QString &uid );
-
-    virtual KCal::Incidence::List parseData( const QString &rawText );
+    
+    virtual KCal::Incidence::List parseData( KIO::TransferJob *job, 
+                                             const QString &rawText );
+    virtual KPIM::GroupwareUploadItem *newUploadItem( KCal::Incidence*it, 
+           KPIM::GroupwareUploadItem::UploadType type );
+    virtual KIO::Job *createRemoveItemsJob( const KURL &uploadurl,
+           KPIM::GroupwareUploadItem::List deletedItems );
 
   private:
     KCal::ResourceCached *mResource;
+    
+    QStringList mAddedItems;
+    QStringList mChangedItems;
+    QStringList mDeletedItems;
 };
 
-}
+};
 
 #endif

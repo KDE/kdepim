@@ -25,11 +25,8 @@
 #include "groupwarejob.h"
 
 #include <kurl.h>
-
-#include <libkdepim/progressmanager.h>
-#include <libkcal/resourcecached.h>
-
-#include <kconfig.h>
+#include <qstringlist.h>
+#include <groupwaredataadaptor.h>
 
 namespace KIO {
   class Job;
@@ -40,6 +37,7 @@ namespace KIO {
 namespace KPIM {
 
 class GroupwareDataAdaptor;
+class ProgressItem;
 
 /**
   This class provides a resource for accessing a Groupware kioslave-based
@@ -51,36 +49,13 @@ class GroupwareUploadJob : public GroupwareJob
   public:  
     GroupwareUploadJob( GroupwareDataAdaptor *adaptor );
 
-    /**
-      Set urls of objects to be deleted.
-    */
-    void setUrlsForDeletion( const QStringList &v )
-    {
-      mUrlsForDeletion = v;
-    }
-    /**
-      Get urls scheduled for deletion. See setUrlsForDeletion().
-    */
-    QStringList urlsForDeletion() const
-    {
-      return mUrlsForDeletion;
-    }
-
-    /**
-      Set data to be uploaded.
-    */
-    void setDataForUpload( const QStringList &v )
-    {
-      mDataForUpload = v;
-    }
-    /**
-      Get dataForUpload. See setDataForUpload().
-    */
-    QStringList dataForUpload() const
-    {
-      return mDataForUpload;
-    }
-
+    KPIM::GroupwareUploadItem::List addedItems() const { return mAddedItems; }
+    void setAddedItems( KPIM::GroupwareUploadItem::List items ) { mAddedItems = items; }
+    KPIM::GroupwareUploadItem::List changedItems() const { return mChangedItems; }
+    void setChangedItems( KPIM::GroupwareUploadItem::List items ) { mChangedItems = items; }
+    KPIM::GroupwareUploadItem::List deletedItems() const { return mDeletedItems; }
+    void setDeletedItems( KPIM::GroupwareUploadItem::List items ) { mDeletedItems = items; }
+    
     /**
       Set base URL.
     */
@@ -98,9 +73,10 @@ class GroupwareUploadJob : public GroupwareJob
 
     void kill();
 
-  protected:
-    void deleteItems();
+  protected slots:
+    void deleteItem();
     void uploadItem();
+    void uploadNewItem();
 
   protected slots:
     void run();
@@ -109,19 +85,19 @@ class GroupwareUploadJob : public GroupwareJob
 
     void slotDeletionResult( KIO::Job *job );
     void slotUploadJobResult( KIO::Job *job );
+    void slotUploadNewJobResult( KIO::Job *job );
   
   private:
-    QStringList mUrlsForDeletion;
-    QStringList mDataForUpload;
+    KPIM::GroupwareUploadItem::List mAddedItems;
+    KPIM::GroupwareUploadItem::List mChangedItems;
+    KPIM::GroupwareUploadItem::List mDeletedItems;
+    
     KURL mBaseUrl;
 
     KIO::TransferJob *mUploadJob;
-    KIO::DeleteJob *mDeletionJob;
+    KIO::Job *mDeletionJob;
     KPIM::ProgressItem *mUploadProgress;
 
-    QStringList mIncidencesForUpload;
-    QStringList mIncidencesForDeletion;
-    
     KURL mCurrentPutUrl;
 };
 

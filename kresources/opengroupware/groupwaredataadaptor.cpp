@@ -21,8 +21,29 @@
 */
 
 #include "groupwaredataadaptor.h"
+#include <kdebug.h>
+#include <kio/job.h>
 
 using namespace KPIM;
+    
+GroupwareUploadItem::GroupwareUploadItem( UploadType type ) : mType( type )
+{
+}
+
+KIO::TransferJob *GroupwareUploadItem::createUploadJob( GroupwareDataAdaptor *adaptor, const KURL &url )
+{
+  Q_ASSERT( adaptor );
+  if ( !adaptor ) return 0;
+  const QString dta = data();
+  //kdDebug(7000) << "Uploading: " << data << endl;
+  //kdDebug(7000) << "Uploading to: " << url.prettyURL() << endl;
+  KIO::TransferJob *job = KIO::storedPut( dta.utf8(), url, -1, true, false, false );
+  job->addMetaData( "PropagateHttpHeader", "true" );
+  if ( adaptor )
+    job->addMetaData( "content-type", adaptor->mimeType() );
+  return job;
+}
+
 
 GroupwareDataAdaptor::GroupwareDataAdaptor()
   : mFolderLister( 0 ), mIdMapper( 0 )
@@ -35,6 +56,21 @@ GroupwareDataAdaptor::~GroupwareDataAdaptor()
 
 void GroupwareDataAdaptor::setUserPassword( KURL &url )
 {
+kdDebug()<<"GroupwareDataAdaptor::setUserPassword, mUser="<<mUser<<", mPassword="<<mPassword<<endl<<endl<<endl;
   url.setUser( mUser );
   url.setPass( mPassword );
 }
+
+KIO::TransferJob *GroupwareDataAdaptor::createUploadJob( const KURL &url, GroupwareUploadItem *item )
+{
+  if ( item )
+    return item->createUploadJob( this, url );
+  else return 0;
+}
+KIO::TransferJob *GroupwareDataAdaptor::createUploadNewJob( const KURL &url, GroupwareUploadItem *item )
+{
+  if ( item )
+    return item->createUploadNewJob( this, url );
+  else return 0;
+}
+

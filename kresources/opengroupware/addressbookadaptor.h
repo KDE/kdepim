@@ -19,25 +19,28 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-#ifndef KPIM_ADDRESSBOOKADAPTOR_H
-#define KPIM_ADDRESSBOOKADAPTOR_H
+#ifndef KABC_ADDRESSBOOKADAPTOR_H
+#define KABC_ADDRESSBOOKADAPTOR_H
 
 #include "groupwaredataadaptor.h"
 
-#include <libemailfunctions/idmapper.h>
 #include <kabc/addressee.h>
 
 #include <kurl.h>
 
-#include <qstring.h>
-
 namespace KABC {
 class ResourceCached;
-}
 
-namespace KPIM {
+class AddressBookUploadItem : public KPIM::GroupwareUploadItem
+{
+  public:
+    AddressBookUploadItem( KPIM::GroupwareDataAdaptor *adaptor, KABC::Addressee addr, UploadType type );
+    virtual ~AddressBookUploadItem() {}
+  protected:
+    AddressBookUploadItem( UploadType type ) : KPIM::GroupwareUploadItem( type ) {}
+};
 
-class AddressBookAdaptor : public GroupwareDataAdaptor
+class AddressBookAdaptor : public KPIM::GroupwareDataAdaptor
 {
   public:
     AddressBookAdaptor();
@@ -57,19 +60,21 @@ class AddressBookAdaptor : public GroupwareDataAdaptor
       return mResource;
     }
 
-    void adaptDownloadUrl( KURL &url );
-    void adaptUploadUrl( KURL &url );
     QString mimeType() const;
-    QCString identifier() const;
     bool localItemExists( const QString &localId );
     bool localItemHasChanged( const QString &localId );
     void deleteItem( const QString &localId );
-    QString addItem( const QString &rawText,
-      const QString &localId, const QString &storageLocation );
-    QString extractUid( const QString &data );
+    QString addItem( KIO::TransferJob *job, const QString &rawText, 
+           QString &fingerprint, const QString &localId, 
+           const QString &storageLocation );
+    QString extractUid( KIO::TransferJob *job, const QString &data );
     void clearChange( const QString &uid );
 
-    virtual KABC::Addressee::List parseData( const QString &rawText );
+    virtual KABC::Addressee::List parseData( KIO::TransferJob *job, const QString &rawText );
+    virtual KPIM::GroupwareUploadItem *newUploadItem( KABC::Addressee addr,
+                     KPIM::GroupwareUploadItem::UploadType type );
+    KIO::Job *createRemoveItemsJob( const KURL &uploadurl,
+                     KPIM::GroupwareUploadItem::List deletedItems );
 
 
   private:
