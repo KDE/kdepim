@@ -77,6 +77,14 @@ DwBodyPart::DwBodyPart(const DwBodyPart& aPart)
     mClassName = sClassName;
 }
 
+DwBodyPart::DwBodyPart(const DwEntity& aPart)
+  : DwEntity(aPart)
+{
+    mNext = 0;
+    mClassId = kCidBodyPart;
+    mClassName = sClassName;
+}
+
 
 DwBodyPart::DwBodyPart(const DwString& aStr, DwMessageComponent* aParent)
   : DwEntity(aStr, aParent)

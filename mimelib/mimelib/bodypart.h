@@ -67,6 +67,7 @@ public:
 
     DwBodyPart();
     DwBodyPart(const DwBodyPart& aPart);
+    DwBodyPart(const DwEntity& aPart);
     DwBodyPart(const DwString& aStr, DwMessageComponent* aParent=0);
     //. The first constructor is the default constructor, which sets the
     //. {\tt DwBodyPart} object's string representation to the empty string
