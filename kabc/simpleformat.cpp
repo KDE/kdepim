@@ -31,9 +31,9 @@ bool SimpleFormat::load( AddressBook *addressBook, const QString &fileName )
       PhoneNumber n;
       n.setNumber( cfg.readEntry( "phonenumber" + (*it2) ) );
       n.setType( PhoneNumber::Type((*it2).toInt()));
-      a.setPhoneNumber( n );
+      a.insertPhoneNumber( n );
     }
-    addressBook->setAddressee( a );
+    addressBook->insertAddressee( a );
   }
 
   return true;
@@ -43,14 +43,12 @@ bool SimpleFormat::save( AddressBook *addressBook, const QString &fileName )
 {
   kdDebug() << "SimpleFormat::save(): " << fileName << endl;
 
-  Addressee::List addressees = addressBook->addressees();
-
   QFile::remove( fileName );
 
   KSimpleConfig cfg( fileName );
 
-  Addressee::List::ConstIterator it;
-  for ( it = addressees.begin(); it != addressees.end(); ++it ) {
+  AddressBook::Iterator it;
+  for ( it = addressBook->begin(); it != addressBook->end(); ++it ) {
     cfg.setGroup( (*it).uid() );
     cfg.writeEntry( "name", (*it).name() );
     cfg.writeEntry( "formattedName", (*it).formattedName() );

@@ -44,7 +44,7 @@ class Addressee
     void setEmail( const QString &email );
     QString email() const;
     
-    void setPhoneNumber( const PhoneNumber &phoneNumber );
+    void insertPhoneNumber( const PhoneNumber &phoneNumber );
     PhoneNumber phoneNumber( PhoneNumber::Type ) const;
     PhoneNumber::List phoneNumbers() const;
 

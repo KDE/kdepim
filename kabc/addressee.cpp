@@ -95,7 +95,7 @@ QString Addressee::email() const
 }
 
 
-void Addressee::setPhoneNumber( const PhoneNumber &phoneNumber )
+void Addressee::insertPhoneNumber( const PhoneNumber &phoneNumber )
 {
   detach();
 

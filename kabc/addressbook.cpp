@@ -61,15 +61,10 @@ AddressBook::Ticket *AddressBook::requestSave( const QString &fileName )
   return new Ticket( fileName );
 }
 
-Addressee::List AddressBook::addressees() const
+void AddressBook::insertAddressee( const Addressee &a )
 {
-  return mAddressees;
-}
-
-void AddressBook::setAddressee( const Addressee &a )
-{
-  Addressee::List::Iterator it;
-  for ( it = mAddressees.begin(); it != mAddressees.end(); ++it ) {
+  Iterator it;
+  for ( it = begin(); it != end(); ++it ) {
     if ( a.uid() == (*it).uid() ) {
       (*it) = a;
       return;
@@ -80,32 +75,37 @@ void AddressBook::setAddressee( const Addressee &a )
 
 void AddressBook::removeAddressee( const Addressee &a )
 {
-  Addressee::List::Iterator it;
-  for ( it = mAddressees.begin(); it != mAddressees.end(); ++it ) {
+  Iterator it;
+  for ( it = begin(); it != end(); ++it ) {
     if ( a.uid() == (*it).uid() ) {
-      mAddressees.remove( it );
+      removeAddressee( it );
       return;
     }
   }
 }
 
-Addressee AddressBook::addressee( const Addressee &a )
+void AddressBook::removeAddressee( const Iterator &it )
 {
-  Addressee::List::ConstIterator it;
-  for ( it = mAddressees.begin(); it != mAddressees.end(); ++it ) {
+  mAddressees.remove( it.mIt );
+}
+
+AddressBook::Iterator AddressBook::find( const Addressee &a )
+{
+  Iterator it;
+  for ( it = begin(); it != end(); ++it ) {
     if ( a.uid() == (*it).uid() ) {
-      return *it;
+      return it;
     }
   }
-  return a;
+  return end();
 }
 
 Addressee::List AddressBook::findByName( const QString &name )
 {
   Addressee::List results;
 
-  Addressee::List::ConstIterator it;
-  for ( it = mAddressees.begin(); it != mAddressees.end(); ++it ) {
+  Iterator it;
+  for ( it = begin(); it != end(); ++it ) {
     if ( name == (*it).name() ) {
       results.append( *it );
     }
@@ -118,8 +118,8 @@ Addressee::List AddressBook::findByEmail( const QString &email )
 {
   Addressee::List results;
 
-  Addressee::List::ConstIterator it;
-  for ( it = mAddressees.begin(); it != mAddressees.end(); ++it ) {
+  Iterator it;
+  for ( it = begin(); it != end(); ++it ) {
     if ( email == (*it).email() ) {
       results.append( *it );
     }
@@ -207,9 +207,8 @@ void AddressBook::dump() const
 {
   kdDebug() << "AddressBook::dump() --- begin ---" << endl;
 
-  Addressee::List a = addressees();
-  Addressee::List::Iterator it;
-  for( it = a.begin(); it != a.end(); ++it ) {
+  ConstIterator it;
+  for( it = begin(); it != end(); ++it ) {
     (*it).dump();
   }
 

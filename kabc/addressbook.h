@@ -17,7 +17,43 @@ class AddressBook : public QObject
 {
     Q_OBJECT
   public:
-    class Ticket {
+    class Iterator
+    {
+      public:
+        Iterator() {}
+        Iterator( const Addressee::List::Iterator &it ) : mIt( it ) {}
+      
+        const Addressee & operator*() const { return *mIt; }
+        Addressee &operator*() { return *mIt; }
+        Iterator &operator++() { mIt++; return *this; }
+        Iterator &operator++(int) { mIt++; return *this; }
+        Iterator &operator--() { mIt--; return *this; }
+        Iterator &operator--(int) { mIt--; return *this; }
+        bool operator==( const Iterator &it ) { return ( mIt == it.mIt ); }
+        bool operator!=( const Iterator &it ) { return ( mIt != it.mIt ); }
+
+        Addressee::List::Iterator mIt;
+    };
+    
+    class ConstIterator
+    {
+      public:
+        ConstIterator() {}
+        ConstIterator( const Addressee::List::ConstIterator &it ) : mIt( it ) {}
+      
+        const Addressee & operator*() const { return *mIt; }
+        ConstIterator &operator++() { mIt++; return *this; }
+        ConstIterator &operator++(int) { mIt++; return *this; }
+        ConstIterator &operator--() { mIt--; return *this; }
+        ConstIterator &operator--(int) { mIt--; return *this; }
+        bool operator==( const ConstIterator &it ) { return ( mIt == it.mIt ); }
+        bool operator!=( const ConstIterator &it ) { return ( mIt != it.mIt ); }
+
+        Addressee::List::ConstIterator mIt;
+    };
+    
+    class Ticket
+    {
         friend AddressBook;
     
         Ticket( const QString &_fileName ) : fileName( _fileName ) {}
@@ -27,18 +63,23 @@ class AddressBook : public QObject
 
     AddressBook();
     virtual ~AddressBook();
+
+    Ticket *requestSave( const QString &fileName );
     
     bool load( const QString &fileName );
     bool save( Ticket *ticket );
     
+    Iterator begin() { return Iterator( mAddressees.begin() ); }
+    ConstIterator begin() const { return ConstIterator( mAddressees.begin() ); }
+    Iterator end() { return Iterator( mAddressees.end() ); }
+    ConstIterator end() const { return ConstIterator( mAddressees.end() ); }
     void clear();
     
-    Ticket *requestSave( const QString &fileName );
-    
-    void setAddressee( const Addressee & );
+    void insertAddressee( const Addressee & );
     void removeAddressee( const Addressee & );
-    Addressee addressee( const Addressee & );
-    Addressee::List addressees() const;
+    void removeAddressee( const Iterator & );
+
+    Iterator find( const Addressee & );
 
     Addressee::List findByName( const QString & );
     Addressee::List findByEmail( const QString & );

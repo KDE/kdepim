@@ -25,38 +25,28 @@ int main(int argc,char **argv)
   Addressee a;
   a.setName( "Hans Speck" );
   a.setEmail( "hw@abc.de" );
-  ab.setAddressee( a );
+  ab.insertAddressee( a );
 
   ab.dump();
 
   Addressee b;
   b = a;
   b.setName( "Hilde Wurst" );
-  PhoneNumber p;
-  p.setType( PhoneNumber::Mobile );
-  p.setNumber( "12345" );
-  b.setPhoneNumber( p );
-  ab.setAddressee( b );
+  b.insertPhoneNumber( PhoneNumber( PhoneNumber::Mobile, "12345" ) );
+  ab.insertAddressee( b );
 
   ab.dump();
   
   Addressee c( a );
   c.setName( "Klara Klossbruehe" );
-  PhoneNumber p1;
-  p1.setType( PhoneNumber::Mobile );
-  p1.setNumber( "000000" );
-  c.setPhoneNumber( p1 );
-  PhoneNumber p2;
-  p2.setType( PhoneNumber::Fax );
-  p2.setNumber( "4711" );
-  c.setPhoneNumber( p2 );
-  ab.setAddressee( c );
+  c.insertPhoneNumber( PhoneNumber( PhoneNumber::Mobile, "00000" ) );
+  c.insertPhoneNumber( PhoneNumber( PhoneNumber::Fax, "4711" ) );
+  ab.insertAddressee( c );
   
   ab.dump();
   
-  Addressee d = ab.addressee( a );
-  d.setEmail( "neueemail@woauchimmer" );
-  ab.setAddressee( d );
+  AddressBook::Iterator it = ab.find( a );
+  (*it).setEmail( "neueemail@woauchimmer" );
   
   ab.dump();
   
