@@ -13,4 +13,7 @@ servicedir = $(kde_servicesdir)
 service_DATA = abbrowser_conduit.desktop
 kde_kcfg_DATA = abbrowserconduit.kcfg
 
+kabcustompagedir = $(kde_datadir)/kaddressbook/contacteditorpages
+kabcustompage_DATA = KPilotCustomFieldEditor.ui
+
 METASOURCES = AUTO
