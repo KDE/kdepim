@@ -45,7 +45,6 @@ KPILOT_OBJS=options.o \
 	addressEditor.o \
 	fileInstaller.o fileInstallWidget.o \
 	conduitSetup.o listCat.o listItems.o \
-	strToken.o \
 	pilotRecord.o pilotLocalDatabase.o pilotAddress.o pilotMemo.o
 KPILOT_MOCS=pilotComponent.moc logWidget.moc memoWidget.moc addressWidget.moc \
 	fileInstaller.moc addressEditor.moc \
@@ -134,6 +133,7 @@ kpilotConfigDialog_base.cc : kpilotConfigDialog_base.h kpilotConfigDialog_base.u
 	echo '#include <klocale.h>' > $@
 	$(UIC) -tr i18n -i kpilotConfigDialog_base.h kpilotConfigDialog_base.ui | \
 		sed -e "s,i18n( \"\" ),QString::null,g" >> $@
+	echo '#include "kpilotConfigDialog_base.moc"' >> $@
 
 kpilotConfigDialog_base.h : kpilotConfigDialog_base.ui
 	$(UIC) -o $@ $<

@@ -11,6 +11,23 @@ for causing noise on the mailing lists, and for being a pleasure to work
 with. Together we've wrestled with Qt designer, uic, and replacing the
 KPilot dialogs with something sensible made with designer.
 
+* kpilot/options.h
+* kpilot/kpilotConfig.{h,cc}
+* kpilot/kpilot.cc kpilot/kpilotDaemon.cc kpilot/main-*.cc
+  Factored out the --debug flags from each individual app, now in
+  options.cc. This means each file with a main() was modified too.
+  I must say it was a real bitch figuring out exactly which sequence of
+  calls were needed for KCmdLineArgs::addCmdLineOptions(), and then
+  finding out that ParsedArgs() also needed help.
+* kpilot/kpilotDaemon.cc
+  Sneaking in the QStack<> stuff just under the wire was a bad idea.
+  Fixed an uninitialized pointer bug.
+* kpilot/hotSync.cc
+  Fixed missing syncDone() signal in FileInstallAction; added some
+  logProgress() calls, extra debugging.
+* kpilot/kpilot.cc
+  Added KillDaemonOnExit logic to KPilotInstaller.
+
 2001-09-23  Adriaan de Groot
 * kpilot/uiDialog.{h,cc}
 * kpilot/kpilotConfigDialog.{h,cc}

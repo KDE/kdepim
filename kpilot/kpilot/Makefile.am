@@ -13,60 +13,44 @@
 
 noinst_PROGRAMS = kpilotTest kpilotConfig
 bin_PROGRAMS = kpilot kpilotDaemon
-noinst_LIBRARIES = libconduit.a libpilotdb.a
 
 METASOURCES = AUTO
 
 INCLUDES= $(all_includes) -I$(LIBPISOCK_PATH)
 
 ###
+### On some platforms, such as stock RH 7.1, the KDE libraries are built without
+### kdDebug() support. You may need to add -DDEBUG_CERR to the CXXFLAGS.
+###
+CXXFLAGS+=-DDEBUG -DDEBUG_CERR
+
+###
 ### Non-automake variables
 ###
 
-kpilot_SOURCES	= kpilot.cc \
-	kpilotConfig.cc \
-	messageDialog.cc gsetupDialog.cc \
-	kpilotOptions.cc \
-	pilotDaemonDCOP.stub \
-	listItems.cc kpilotDCOP.skel \
-	strToken.cc \
-	conduitSetup.cc listCat.cc \
-	pilotComponent.cc \
-	logWidget.cc fileInstaller.cc fileInstallWidget.cc \
-	memoWidget.cc \
-	addressWidget.cc addressEditor.cc \
-	options.cc
+kpilot_SOURCES	= options.cc \
+	pilotDaemonDCOP.stub kpilotDCOP.skel \
+	kpilot.cc kpilotConfig.cc \
+	uiDialog.cc kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
+	pilotComponent.cc logWidget.cc memoWidget.cc addressWidget.cc \
+	addressEditor.cc \
+	fileInstaller.cc fileInstallWidget.cc \
+	conduitSetup.cc listCat.cc listItems.cc \
+	pilotRecord.cc pilotLocalDatabase.cc pilotAddress.cc pilotMemo.cc
 
-kpilotDaemon_SOURCES = pilotDaemon.cc \
-	kpilotConfig.cc kpilotlink.cc hotSync.cc \
-	fileInstaller.cc \
-	messageDialog.cc \
-	pilotDaemonDCOP.skel \
-	kpilotDCOP.stub \
-	options.cc
+
+kpilotDaemon_SOURCES = options.cc \
+	pilotDaemonDCOP.skel kpilotDCOP.stub \
+	pilotDaemon.cc kpilotConfig.cc kpilotlink.cc hotSync.cc \
+	fileInstaller.cc
 
 kpilotTest_SOURCES = options.cc kpilotConfig.cc kpilotlink.cc \
 	logWidget.cc pilotComponent.cc \
-	main-test.cc
+	hotSync.cc main-test.cc
 
 kpilotConfig_SOURCES = options.cc kpilotConfig.cc \
-	gsetupDialog.cc listCat.cc \
-	conduitSetup.cc kpilotOptions.cc \
+	uiDialog.cc kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
 	main-config.cc
-	
-
-libconduit_a_SOURCES = baseConduit.cc conduitApp.cc \
-	messageDialog.cc gsetupDialog.cc \
-	kpilotConfig.cc kpilotlink.cc \
-	options.cc
-
-libpilotdb_a_SOURCES = \
-	pilotRecord.cc \
-	pilotTodoEntry.cc \
-	pilotDateEntry.cc \
-	pilotMemo.cc \
-	pilotAddress.cc \
-	pilotConduitDatabase.cc pilotSerialDatabase.cc pilotLocalDatabase.cc
 
 
 kpilot_LDFLAGS = $(all_libraries) -L/usr/local/lib -L. $(KDE_RPATH)
@@ -76,10 +60,12 @@ kpilotConfig_LDFLAGS = $(all_libraries) -L/usr/local/lib -L. $(KDE_RPATH)
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
-kpilot_LDADD		= -lpilotdb $(LIB_KFILE) $(LIBPISOCK)
-kpilotDaemon_LDADD	= -lpilotdb $(LIB_KFILE) $(LIBPISOCK)
+kpilot_LDADD		= $(LIB_KFILE) $(LIBPISOCK)
+kpilotDaemon_LDADD	= $(LIB_KFILE) $(LIBPISOCK)
 kpilotTest_LDADD	= $(LIB_KDEUI) $(LIBPISOCK)
 kpilotConfig_LDADD      = $(LIB_KFILE)
+
+kpilotConfig_CXXADD = -DDEBUG -DDEBUG_CERR
 
 appsdir = $(kde_appsdir)/Utilities
 servicetypedir = $(kde_servicetypesdir)
