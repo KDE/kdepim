@@ -563,9 +563,9 @@ void KPilotInstaller::initMenu()
 
 	KActionMenu *syncPopup;
 
-	syncPopup = new KActionMenu(i18n("HotSync"), CSL1("hotsync"), 
+	syncPopup = new KActionMenu(i18n("HotSync"), CSL1("hotsync"),
 		actionCollection(), "popup_hotsync");
-	connect(syncPopup, SIGNAL(activated()), 
+	connect(syncPopup, SIGNAL(activated()),
 		this, SLOT(slotHotSyncRequested()));
 
 	// File actions
@@ -575,14 +575,14 @@ void KPilotInstaller::initMenu()
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should be a normal HotSync."));
 	syncPopup->insert(a);
-	
+
 	a = new KAction(i18n("&FastSync"), CSL1("fastsync"), 0,
 		this, SLOT(slotFastSyncRequested()),
 		actionCollection(), "file_fastsync");
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should be a FastSync (run conduits only)."));
 	syncPopup->insert(a);
-	
+
 	a = new KAction(i18n("Full&Sync"), CSL1("fullsync"), 0,
 		this, SLOT(slotFullSyncRequested()),
 		actionCollection(), "file_fullsync");
@@ -650,7 +650,7 @@ void KPilotInstaller::initMenu()
 		this, SLOT(slotConfigureWizard()),
 		actionCollection(), "options_configure_wizard");
 	a->setWhatsThis(i18n("Configure KPilot using the configuration wizard."));
-	
+
 }
 
 void KPilotInstaller::fileInstalled(int)
@@ -864,13 +864,18 @@ static bool runConfigure(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 	DEBUGKPILOT << fname << ": Done with options." << endl;
 #endif
 
+	KPilotConfig::sync();
 	return ret;
 }
 
-void KPilotInstaller::slotConfigureWizard()
+static bool runWizard(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 {
 	FUNCTIONSETUP;
+	bool ret = false;
+	int rememberedSync = daemon.nextSyncType();
+	daemon.requestSync(0);
 
+	KPilotSettings::self()->readConfig();
 	// Declarations at top because of goto's in this function
 	ConfigWizard *(* f) (QWidget *, int) = 0L ;
 	ConfigWizard *w = 0L;
@@ -879,6 +884,7 @@ void KPilotInstaller::slotConfigureWizard()
 	if (!l)
 	{
 		kdWarning() << k_funcinfo << ": Couldn't load library!" << endl;
+		ret=false;
 		goto sorry;
 	}
 
@@ -890,30 +896,50 @@ void KPilotInstaller::slotConfigureWizard()
 	if (!f)
 	{
 		kdWarning() << k_funcinfo << ": No create_wizard() in library." << endl;
+		ret = false;
 		goto sorry;
 	}
 
-	w = f(this,ConfigWizard::Standalone);
+	w = f(parent,ConfigWizard::Standalone);
 	if (!w)
 	{
 		kdWarning() << k_funcinfo << ": Can't create wizard." << endl;
+		ret = false;
 		goto sorry;
 	}
 
 	if (w->exec())
 	{
 		KPilotSettings::self()->readConfig();
+		ret = true;
 	}
 	KPILOT_DELETE(w);
 
-	// Leave the library loaded, we might need it for the config dialog anyway.
-	return;
-
 sorry:
-	KMessageBox::sorry(this,i18n("Wizard Not Available"),
-		i18n("The library containing the configuration wizard for KPilot "
-			"could not be loaded, and the wizard is not available. "
-			"Please try to use the regular configuration dialog."));
+	if (!ret)
+	{
+		KMessageBox::sorry(parent,i18n("Wizard Not Available"),
+			i18n("The library containing the configuration wizard for KPilot "
+				"could not be loaded, and the wizard is not available. "
+				"Please try to use the regular configuration dialog."));
+	}
+
+	if (ret)
+	{
+		KPilotConfig::updateConfigVersion();
+		KPilotSettings::writeConfig();
+		KPilotConfig::sync();
+	}
+
+	daemon.requestSync(rememberedSync);
+	return ret;
+}
+
+void KPilotInstaller::slotConfigureWizard()
+{
+	FUNCTIONSETUP;
+
+	runWizard(getDaemon(),this);
 }
 
 void KPilotInstaller::slotConfigureKPilot()
@@ -992,7 +1018,8 @@ static KCmdLineOptions kpilotoptions[] = {
 // kpilot still does a setup the first time it is run.
 //
 //
-enum { Normal, ConfigureKPilot, ConfigureConduits, ConfigureAndContinue } run_mode = Normal;
+KPilotConfig::RunMode run_mode = KPilotConfig::Normal;
+
 
 
 int main(int argc, char **argv)
@@ -1039,10 +1066,6 @@ int main(int argc, char **argv)
 	KPilotConfig::getDebugLevel(p);
 #endif
 
-	if (p->isSet("setup") || p->isSet("conduit-setup"))
-	{
-		run_mode = ConfigureKPilot;
-	}
 
 	if (!KUniqueApplication::start())
 	{
@@ -1059,11 +1082,20 @@ int main(int argc, char **argv)
 		// Only force a reconfigure and continue if the
 		// user is expecting normal startup. Otherwise,
 		// do the configuration they're explicitly asking for.
-		if (Normal==run_mode) run_mode = ConfigureAndContinue;
-		if (!KPilotConfig::interactiveUpdate()) return 1;
+		run_mode = KPilotConfig::interactiveUpdate();
+		if (run_mode == KPilotConfig::Cancel) return 1;
 	}
 
-	if ((run_mode == ConfigureKPilot) || (run_mode == ConfigureAndContinue))
+	if (p->isSet("setup") || p->isSet("conduit-setup"))
+	{
+		if ((run_mode == KPilotConfig::Normal) ||
+			(run_mode == KPilotConfig::WizardAndContinue))
+			run_mode = KPilotConfig::ConfigureKPilot;
+	}
+
+	if ( (run_mode == KPilotConfig::ConfigureKPilot) ||
+		(run_mode == KPilotConfig::ConfigureAndContinue) ||
+		(run_mode == KPilotConfig::WizardAndContinue) )
 	{
 #ifdef DEBUG
 		DEBUGKPILOT << fname
@@ -1071,11 +1103,19 @@ int main(int argc, char **argv)
 			<< " (mode " << run_mode << ")" << endl;
 #endif
 		PilotDaemonDCOP_stub *daemon = new PilotDaemonDCOP_stub("kpilotDaemon","KPilotDaemonIface");
-		bool r = runConfigure(*daemon,0L);
+		bool r = false;
+		if (run_mode == KPilotConfig::WizardAndContinue)
+		{
+			r = runWizard(*daemon,0L);
+		}
+		else
+		{
+			r = runConfigure(*daemon,0L);
+		}
 		delete daemon;
 		if (!r) return 1;
 		// User expected configure only.
-		if (run_mode == ConfigureKPilot)
+		if (run_mode == KPilotConfig::ConfigureKPilot)
 		{
 			return 0;
 		}

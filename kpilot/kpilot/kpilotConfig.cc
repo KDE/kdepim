@@ -296,7 +296,7 @@ static void update443()
 	}
 }
 
-/* static */ bool KPilotConfig::interactiveUpdate()
+/* static */ KPilotConfig::RunMode KPilotConfig::interactiveUpdate()
 {
 	FUNCTIONSETUP;
 
@@ -307,7 +307,22 @@ static void update443()
 	// It's OK if we're already at the required level.
 	if (fileVersion >= KPilotConfig::ConfigurationVersion)
 	{
-		return true;
+		return Normal;
+	}
+
+	if (0 == fileVersion) // No config file at all
+	{
+		res = KMessageBox::questionYesNoCancel(0L,
+			i18n("KPilot is not configured for use. You may use "
+				"the configuration wizard or the normal configure dialog "
+				"to configure KPilot."),
+			i18n("Not Configured"),
+			i18n("Use &Wizard"),
+			i18n("Use &Dialog"));
+		if (res == KMessageBox::Yes) return WizardAndContinue;
+		if (res == KMessageBox::No) return ConfigureAndContinue;
+
+		return Cancel;
 	}
 
 	res = KMessageBox::warningContinueCancel(0L,
@@ -316,7 +331,7 @@ static void update443()
 			"configuration automatically. Do you wish to "
 			"continue?"),
 		i18n("Configuration File Out-of Date"));
-	if (res!=KMessageBox::Continue) return false;
+	if (res!=KMessageBox::Continue) return Cancel;
 
 #ifdef DEBUG
 	DEBUGKPILOT << fname << ": Updating from "
@@ -328,10 +343,10 @@ static void update443()
 
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::writeConfig();
-	return true;
+	return ConfigureAndContinue;
 }
 
 void KPilotConfig::sync()
 {
-  KPilotSettings::self()->config()->sync();
+	KPilotSettings::self()->config()->sync();
 }

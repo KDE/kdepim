@@ -38,6 +38,16 @@ class KCmdLineArgs;
 class KPilotConfig
 {
 public:
+	typedef enum
+	{
+		Cancel=0,
+		Normal,
+		ConfigureKPilot,
+		ConfigureConduits,
+		ConfigureAndContinue,
+		WizardAndContinue
+	} RunMode;
+
 	/**
 	 * @return QString of default path for the BackupDB files
 	 * are located
@@ -82,15 +92,18 @@ public:
 	static void sorryVersionOutdated(int fileversion);
 	/**
 	* Update the config file as best we can, and inform the user.
-	* Returns true if it's ok (ie. update finished, or file was already
-	* up-to-date) and false if the user cancels. If the user cancels,
-	* it's probably best to _not_ continue with anything, since the
-	* config is bogus.
+	* Returns a suggested run mode if it's ok (ie. update finished, or
+	* file was already up-to-date) and Cancel if the user cancels.
+	* If the user cancels, it's probably best to _not_ continue with
+	* anything, since the config is bogus.
+	*
+	* The suggested run mode might be anything - usually normal,
+	* but might return ConfigureAndContinue as well.
 	*
 	* This function can call functions to update from different versions
 	* to current; these are static in kpilotConfig.cc.
 	*/
-	static bool interactiveUpdate();
+	static RunMode interactiveUpdate();
 
 	/**
 	* Deal with --debug options.
