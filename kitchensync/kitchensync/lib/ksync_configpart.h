@@ -57,7 +57,7 @@ namespace KitchenSync {
     // responsible for configuring
     class ConfigPart : public QWidget{  // no real part yet
     public:
-        ConfigPart(const Kapabilities &, QWidget*, const char *name );
+        ConfigPart(const Kapabilities &, QWidget*, const char *name=0 );
         void setCapability(const Kapabilities & );
         Kapabilities capability(); // return the modified capability
     private:

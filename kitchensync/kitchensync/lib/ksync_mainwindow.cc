@@ -41,7 +41,10 @@
 #include <kparts/componentfactory.h>
 #include <kpopupmenu.h>
 
+#include <kapabilities.h>
 #include <konnector.h>
+
+#include "ksync_configpart.h"
 #include "ksync_configuredialog.h"
 #include "manipulatorpart.h"
 #include "partbar.h"
@@ -166,11 +169,13 @@ void KSyncMainWindow::slotRestore() {
 void KSyncMainWindow::slotConfigure() {
   ConfigureDialog dlg(this);
   ManipulatorPart *part;
+  Kapabilities cap;
+  ConfigPart par( cap, &dlg );
   for (part = m_parts.first(); part != 0; part = m_parts.next() ) {
     if( part->configIsVisible() )
       dlg.addWidget(part->configWidget(), part->name(), part->pixmap() );
   }
-
+  dlg.addWidget( &par, "Test", &QPixmap() );
   if (dlg.exec()) {
      for (part = m_parts.first(); part != 0; part = m_parts.next() ) {
        part->slotConfigOk();

@@ -49,11 +49,10 @@
 
 using namespace KitchenSync;
 
-ConfigPart::ConfigPart(const Kapabilities &, QWidget *parent, const char *name )
+ConfigPart::ConfigPart(const Kapabilities &kaps, QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
-
-
+    initialize( kaps );
 
 }
 void ConfigPart::initialize(const Kapabilities &kaps ){
@@ -150,7 +149,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     m_cmbUser = new QComboBox( m_grpModel );
     m_grpUser->setBuddy( m_cmbUser );
     m_grpLayout->addWidget(m_grpUser,  3, 0);
-    m_grpLayout->addWidget(m_cmbPass,  3, 1);
+    m_grpLayout->addWidget(m_cmbUser,  3, 1);
 
     // MODE PASS
     m_grpPass = new QLabel( i18n("Pass:"),  m_grpModel );
@@ -158,6 +157,8 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     m_grpPass->setBuddy( m_cmbPass );
     m_grpLayout->addWidget( m_grpPass,  4, 0 );
     m_grpLayout->addWidget( m_cmbPass,  4, 1 );
+
+    m_mainLayout->addWidget( m_grpModel,  4,  0 );
 }
 
 Kapabilities ConfigPart::capability()
