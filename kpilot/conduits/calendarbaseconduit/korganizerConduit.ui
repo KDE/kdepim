@@ -104,9 +104,6 @@
                                 <property name="text">
                                     <string>&amp;Standard calendar</string>
                                 </property>
-                                <property name="accel">
-                                    <string>Alt+S</string>
-                                </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>&lt;qt&gt;Select this option to synchronize with the calendar specified by the KDE calendar settings.&lt;/qt&gt;</string>
                                 </property>
