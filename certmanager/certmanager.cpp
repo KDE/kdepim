@@ -394,8 +394,7 @@ void CertManager::slotDirmngrExited()
         else
             KMessageBox::information( this, i18n( "CRL file imported successfully." ), i18n( "Certificate Manager Error" ) );
 
-    if( dirmngrProc )
-        delete dirmngrProc;
+    delete dirmngrProc; dirmngrProc = 0;
 }
 
 /**
