@@ -90,7 +90,12 @@ bool KVcfPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
     while (!done) {
 
         // read a line
-        file.readLine(linebuf, sizeof(linebuf));
+        int r = file.readLine(linebuf, sizeof( linebuf ));
+
+        if ( r < 0 ) {
+            done = true;
+            break;
+        }
 
         // have we got something useful?
         if (memcmp(linebuf, id_name, 3) == 0) {
