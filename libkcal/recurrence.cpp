@@ -39,6 +39,7 @@ Recurrence::Recurrence(Incidence *parent, int compatVersion)
 : recurs(rNone),   // by default, it's not a recurring event
   rWeekStart(1),   // default is Monday
   rDays(7),
+  mUseCachedEndDT(false),
   mFloats(parent ? parent->doesFloat() : false),
   mRecurReadOnly(false),
   mRecurExDatesCount(0),
@@ -60,6 +61,8 @@ Recurrence::Recurrence(const Recurrence &r, Incidence *parent)
   rFreq(r.rFreq),
   rDuration(r.rDuration),
   rEndDateTime(r.rEndDateTime),
+  mCachedEndDT(r.mCachedEndDT),
+  mUseCachedEndDT(r.mUseCachedEndDT),
   mRecurStart(r.mRecurStart),
   mFloats(r.mFloats),
   mRecurReadOnly(r.mRecurReadOnly),
@@ -99,6 +102,8 @@ Recurrence::~Recurrence()
 
 bool Recurrence::operator==( const Recurrence& r2 ) const
 {
+  if ( recurs == rNone  &&  r2.recurs == rNone )
+    return true;
   if ( recurs != r2.recurs
   ||   rFreq != r2.rFreq
   ||   rDuration != r2.rDuration
@@ -140,6 +145,7 @@ bool Recurrence::operator==( const Recurrence& r2 ) const
 void Recurrence::setCompatVersion(int version)
 {
   mCompatVersion = version ? version : INT_MAX;
+  mUseCachedEndDT = false;
 }
 
 ushort Recurrence::doesRecur() const
@@ -169,7 +175,7 @@ bool Recurrence::recursOnPure(const QDate &qd) const
       return recursYearlyByPos(qd);
     default:
       // catch-all.  Should never get here.
-      kdDebug(5800) << "Control should never reach here in recursOnPure()!" << endl;
+      kdError(5800) << "Control should never reach here in recursOnPure()!" << endl;
     case rNone:
       return false;
   } // case
@@ -201,64 +207,23 @@ bool Recurrence::recursAtPure(const QDateTime &dt) const
         return recursYearlyByPos(dt.date());
       default:
         // catch-all.  Should never get here.
-        kdDebug(5800) << "Control should never reach here in recursAtPure()!" << endl;
+        kdError(5800) << "Control should never reach here in recursAtPure()!" << endl;
       case rNone:
         return false;
     }
   } // case
 }
 
-QDate Recurrence::endDate() const
+QDate Recurrence::endDate(bool *result) const
 {
-  int count = 0;
-  QDate end;
-  if (recurs != rNone) {
-    if (rDuration < 0)
-      return QDate();    // infinite recurrence
-    if (rDuration == 0)
-      return rEndDateTime.date();
-
-    // The end date is determined by the recurrence count
-    QDate dStart = mRecurStart.date();
-    switch (recurs)
-    {
-    case rMinutely:
-      return mRecurStart.addSecs((rDuration-1+mRecurExDatesCount)*rFreq*60).date();
-    case rHourly:
-      return mRecurStart.addSecs((rDuration-1+mRecurExDatesCount)*rFreq*3600).date();
-    case rDaily:
-      return dStart.addDays((rDuration-1+mRecurExDatesCount)*rFreq);
-
-    case rWeekly:
-      count = weeklyCalc(END_DATE_AND_COUNT, end);
-      break;
-    case rMonthlyPos:
-    case rMonthlyDay:
-      count = monthlyCalc(END_DATE_AND_COUNT, end);
-      break;
-    case rYearlyMonth:
-      count = yearlyMonthCalc(END_DATE_AND_COUNT, end);
-      break;
-    case rYearlyDay:
-      count = yearlyDayCalc(END_DATE_AND_COUNT, end);
-      break;
-    case rYearlyPos:
-      count = yearlyPosCalc(END_DATE_AND_COUNT, end);
-      break;
-    default:
-      // catch-all.  Should never get here.
-      kdDebug(5800) << "Control should never reach here in endDate()!" << endl;
-      break;
-    }
-  }
-  if (!count)
-    return QDate();     // error - there is no recurrence
-  return end;
+  return endDateTime(result).date();
 }
 
-QDateTime Recurrence::endDateTime() const
+QDateTime Recurrence::endDateTime(bool *result) const
 {
   int count = 0;
+  if (result)
+    *result = true;
   QDate end;
   if (recurs != rNone) {
     if (rDuration < 0)
@@ -267,15 +232,24 @@ QDateTime Recurrence::endDateTime() const
       return rEndDateTime;
 
     // The end date is determined by the recurrence count
-    QDate dStart = mRecurStart.date();
+    if (mUseCachedEndDT) {
+      if (result && !mCachedEndDT.isValid())
+        *result = false;     // error - there is no recurrence
+      return mCachedEndDT;   // avoid potentially long calculation
+    }
+
+    mUseCachedEndDT = true;
     switch (recurs)
     {
     case rMinutely:
-      return mRecurStart.addSecs((rDuration-1+mRecurExDatesCount)*rFreq*60);
+      mCachedEndDT = mRecurStart.addSecs((rDuration-1+mRecurExDatesCount)*rFreq*60);
+      return mCachedEndDT;
     case rHourly:
-      return mRecurStart.addSecs((rDuration-1+mRecurExDatesCount)*rFreq*3600);
+      mCachedEndDT = mRecurStart.addSecs((rDuration-1+mRecurExDatesCount)*rFreq*3600);
+      return mCachedEndDT;
     case rDaily:
-      return dStart.addDays((rDuration-1+mRecurExDatesCount)*rFreq);
+      mCachedEndDT = mRecurStart.addDays((rDuration-1+mRecurExDatesCount)*rFreq);
+      return mCachedEndDT;
 
     case rWeekly:
       count = weeklyCalc(END_DATE_AND_COUNT, end);
@@ -295,13 +269,19 @@ QDateTime Recurrence::endDateTime() const
       break;
     default:
       // catch-all.  Should never get here.
-      kdDebug(5800) << "Control should never reach here in endDate()!" << endl;
+      kdError(5800) << "Control should never reach here in endDate()!" << endl;
+      mUseCachedEndDT = false;
       break;
     }
   }
-  if (!count)
-    return QDateTime();     // error - there is no recurrence
-  return QDateTime(end, mRecurStart.time());
+  if (!count) {
+    if (result)
+      *result = false;
+    mCachedEndDT = QDateTime();   // error - there is no recurrence
+  }
+  else
+    mCachedEndDT = QDateTime(end, mRecurStart.time());
+  return mCachedEndDT;
 }
 
 int Recurrence::durationTo(const QDate &date) const
@@ -323,6 +303,7 @@ void Recurrence::unsetRecurs()
   rMonthPositions.clear();
   rMonthDays.clear();
   rYearNums.clear();
+  mUseCachedEndDT = false;
 }
 
 void Recurrence::setRecurStart(const QDateTime &start)
@@ -345,6 +326,7 @@ void Recurrence::setRecurStart(const QDateTime &start)
       rEndDateTime.setTime(start.time());
       break;
   }
+  mUseCachedEndDT = false;
 }
 
 void Recurrence::setRecurStart(const QDate &start)
@@ -367,10 +349,14 @@ void Recurrence::setRecurStart(const QDate &start)
       mFloats = true;
       break;
   }
+  mUseCachedEndDT = false;
 }
 
 void Recurrence::setFloats(bool f)
 {
+  if (f && mFloats  ||  !f && !mFloats)
+    return;    // no change
+
   switch (recurs)
   {
     case rDaily:
@@ -391,6 +377,7 @@ void Recurrence::setFloats(bool f)
     mRecurStart.setTime(QTime(0,0,0));
     rEndDateTime.setTime(QTime(0,0,0));
   }
+  mUseCachedEndDT = false;
 }
 
 int Recurrence::frequency() const
@@ -412,6 +399,7 @@ void Recurrence::setDuration(int _rDuration)
     // so explicitly setting the duration means no backwards compatibility is needed.
     mCompatDuration = 0;
   }
+  mUseCachedEndDT = false;
 }
 
 QString Recurrence::endDateStr(bool shortfmt) const
@@ -487,8 +475,9 @@ void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
 {
   if (mRecurReadOnly || _rDuration == 0 || _rDuration < -1)
     return;
-  recurs = rWeekly;
+  mUseCachedEndDT = false;
 
+  recurs = rWeekly;
   rFreq = _rFreq;
   rDays = _rDays;
   rWeekStart = _rWeekStart;
@@ -515,8 +504,9 @@ void Recurrence::setWeekly(int _rFreq, const QBitArray &_rDays,
                                const QDate &_rEndDate, int _rWeekStart)
 {
   if (mRecurReadOnly) return;
-  recurs = rWeekly;
+  mUseCachedEndDT = false;
 
+  recurs = rWeekly;
   rFreq = _rFreq;
   rDays = _rDays;
   rWeekStart = _rWeekStart;
@@ -534,8 +524,9 @@ void Recurrence::setMonthly(short type, int _rFreq, int _rDuration)
 {
   if (mRecurReadOnly || _rDuration == 0 || _rDuration < -1)
     return;
-  recurs = type;
+  mUseCachedEndDT = false;
 
+  recurs = type;
   rFreq = _rFreq;
   rDuration = _rDuration;
   if (mCompatVersion < 310)
@@ -548,8 +539,9 @@ void Recurrence::setMonthly(short type, int _rFreq,
                             const QDate &_rEndDate)
 {
   if (mRecurReadOnly) return;
-  recurs = type;
+  mUseCachedEndDT = false;
 
+  recurs = type;
   rFreq = _rFreq;
   rEndDateTime.setDate(_rEndDate);
   rEndDateTime.setTime(mRecurStart.time());
@@ -571,6 +563,7 @@ void Recurrence::addMonthlyPos_(short _rPos, const QBitArray &_rDays)
   ||  _rPos == 0 || _rPos > 5 || _rPos < -5)    // invalid week number
     return;
 
+  mUseCachedEndDT = false;
   for (rMonthPos* it = rMonthPositions.first();  it;  it = rMonthPositions.next()) {
     int itPos = it->negative ? -it->rPos : it->rPos;
     if (_rPos == itPos) {
@@ -617,6 +610,8 @@ void Recurrence::addMonthlyDay(short _rDay)
     if (_rDay == *it)
       return;        // this day is already in the list - avoid duplication
   }
+  mUseCachedEndDT = false;
+
   int *tmpDay = new int;
   *tmpDay = _rDay;
   rMonthDays.append(tmpDay);
@@ -707,6 +702,7 @@ void Recurrence::addYearlyNum(short _rNum)
       return;        // this day/month is already in the list - avoid duplication
     ++i;
   }
+  mUseCachedEndDT = false;
 
   int *tmpNum = new int;
   *tmpNum = _rNum;
@@ -876,7 +872,7 @@ bool Recurrence::recursSecondly(const QDate &qd, int secondFreq) const
     // The date queried falls within the range of the event.
     if (secondFreq < 24*3600)
       return true;      // the event recurs at least once each day
-    int after = mRecurStart.secsTo(QDateTime(qd));
+    int after = mRecurStart.secsTo(QDateTime(qd)) - 1;
     if (after / secondFreq != (after + 24*3600) / secondFreq)
       return true;
   }
@@ -1254,6 +1250,7 @@ QDate Recurrence::getPreviousDateNoTime(const QDate &afterDate, bool *last) cons
 
 void Recurrence::setDailySub(short type, int freq, int duration)
 {
+  mUseCachedEndDT = false;
   recurs = type;
   rFreq = freq;
   rDuration = duration;
@@ -1268,6 +1265,7 @@ void Recurrence::setDailySub(short type, int freq, int duration)
 
 void Recurrence::setYearly_(short type, Feb29Type feb29type, int freq, int duration)
 {
+  mUseCachedEndDT = false;
   recurs = type;
   if (mCompatVersion < 310 && type == rYearlyDay) {
     mCompatRecurs = rYearlyDay;

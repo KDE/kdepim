@@ -90,11 +90,8 @@ class Recurrence
 
     /** Set if recurrence is read-only or can be changed. */
     void setRecurReadOnly(bool readOnly) { mRecurReadOnly = readOnly; }
-    bool recurReadOnly() const 
-    {
-        return mRecurReadOnly;
-    }
-    
+    /** Returns true if the recurrence is read-only, or false if it can be changed. */
+    bool recurReadOnly() const  { return mRecurReadOnly; }
 
     /** Set number of exception dates. */
     void setRecurExDatesCount(int count) { if (count >= 0) mRecurExDatesCount = count; }
@@ -162,14 +159,16 @@ class Recurrence
 
     /** Returns the date of the last recurrence.
      * An invalid date is returned if the recurrence has no end.
-     * Note: for some recurrence types, endDate() can involve significant calculation.
+     * @var result if non-null, *result is updated to true if successful,
+     * or false if there is no recurrence.
      */
-    QDate endDate() const;
+    QDate endDate(bool* result = 0) const;
     /** Returns the date and time of the last recurrence.
      * An invalid date is returned if the recurrence has no end.
-     * Note: for some recurrence types, endDateTime() can involve significant calculation.
+     * @var result if non-null, *result is updated to true if successful,
+     * or false if there is no recurrence.
      */
-    QDateTime endDateTime() const;
+    QDateTime endDateTime(bool* result = 0) const;
     /** Returns a string representing the recurrence end date in the format
      according to the user's locale settings. */
     QString endDateStr(bool shortfmt=true) const;
@@ -379,6 +378,9 @@ class Recurrence
     // one of the following must be specified
     int rDuration;                       // num times to recur (inc. first occurrence), -1 = infinite
     QDateTime rEndDateTime;              // date/time at which to end recurrence
+    mutable QDateTime mCachedEndDT;      // calculated end date/time for duration > 0
+                                         // (calculation can be significant for some recurrences)
+    mutable bool mUseCachedEndDT;        // true if mCachedEndDT is up to date
 
     QDateTime mRecurStart;               // date/time of first recurrence
     bool mFloats;                        // the recurrence has no time, just a date
