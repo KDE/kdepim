@@ -2,6 +2,5 @@
 	needs="X11"\
 	section="Apps/Net"\
 	hints="KDE"\
-	kderemove="y"\
 	title="KOrn"\
 	command="/usr/bin/korn"

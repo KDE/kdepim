@@ -3,7 +3,7 @@ Section: kde
 Priority: optional
 Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
 Uploaders: Christopher L Cheney <ccheney@debian.org>
-Build-Depends: automake1.8, bison, byacc, debhelper (>> 4.2.0), docbook-to-man, flex, gawk, gettext, gnokii, kdelibs4-dev (>> 4:3.2.1), libbluetooth1-dev, libgtk1.2-dev, liblockdev1-dev, libmal-dev, libpisock-dev, libreadline4-dev, sharutils, texinfo
+Build-Depends: automake1.8, bison, byacc, debhelper (>> 4.2.0), docbook-to-man, flex, gawk, gettext, kdelibs4-dev (>= 4:3.2.3-4), libbluetooth1-dev, libgnokii2-dev, libgtk1.2-dev, liblockdev1-dev, libmal-dev, libpisock-dev, libreadline4-dev, sharutils, texinfo
 Build-Depends-Indep: doxygen, qt3-doc
 Standards-Version: 3.6.1.0
 
@@ -164,7 +164,7 @@ Package: kmail
 Section: mail
 Architecture: any
 Depends: ${shlibs:Depends}, kdebase-kio-plugins
-Suggests: gnupg, khelpcenter
+Suggests: cryptplug, gnupg, khelpcenter
 Provides: imap-client, mail-reader
 Description: KDE Email client
  KDE is a powerful Open Source graphical desktop environment for Unix
@@ -189,7 +189,7 @@ Description: KDE KMail addressbook converter
  outstanding graphical design with the technological superiority of the Unix
  operating system.
  .
- Converts addressbooks to KMail format.
+ Converts mailboxes to KMail format.
  .
  This package is part of the official KDE pim module.
 

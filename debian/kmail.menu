@@ -2,6 +2,5 @@
 	needs="X11"\
 	section="Apps/Net"\
 	hints="KDE,Mail"\
-	kderemove="y"\
 	title="KMail"\
 	command="/usr/bin/kmail"

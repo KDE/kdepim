@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pilot-link 0.11.7-4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-08-21 21:53+0200\n"
+"POT-Creation-Date: 2004-04-26 22:44-0500\n"
 "PO-Revision-Date: 2003-08-14 22:08+CEST\n"
 "Last-Translator: Ludovic Rousseau <rousseau@debian.org>\n"
 "Language-Team: French <debian-l10n-french@lists.debian.org>\n"
@@ -23,18 +23,21 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. Choices
-#: ../pilot-link.templates:3
+#. Type: select
+#. choices
+#: ../kpilot.templates:3
 msgid "None, ttyS0, ttyS1, ttyS2, ttyS3, ircomm0, ttyUSB0, ttyUSB1"
 msgstr "Aucun, ttyS0, ttyS1, ttyS2, ttyS3, ircomm0, ttyUSB0, ttyUSB1"
 
-#. Description
-#: ../pilot-link.templates:4
+#. Type: select
+#. description
+#: ../kpilot.templates:4
 msgid "Which communication port to use with the Palm?"
 msgstr "Quel port de communication utiliser avec le Palm ?"
 
-#. Description
-#: ../pilot-link.templates:4
+#. Type: select
+#. description
+#: ../kpilot.templates:4
 msgid ""
 "A symbolic file /dev/pilot may be created to the port use to talk to the "
 "Palm."
@@ -42,8 +45,9 @@ msgstr ""
 "Un lien symbolique /dev/pilot peut être créé vers le port utilisé pour "
 "communiquer avec le Palm."
 
-#. Description
-#: ../pilot-link.templates:4
+#. Type: select
+#. description
+#: ../kpilot.templates:4
 msgid ""
 "ttyS? are the four serial ports, ircomm0 is the IrDA (infra red) port, "
 "ttyUSB? are the USB ports."
@@ -51,8 +55,9 @@ msgstr ""
 "ttyS? sont les quatre ports série, ircomm0 est le port IrDA (infra rouge), "
 "ttyUSB? sont les ports USB."
 
-#. Description
-#: ../pilot-link.templates:4
+#. Type: select
+#. description
+#: ../kpilot.templates:4
 msgid ""
 "To ease the use of the Palm connected to the port its access rights will be "
 "lowered to allow access to any user.  If it is a security problem for you, "

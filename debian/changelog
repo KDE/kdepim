@@ -1,3 +1,23 @@
+kdepim (4:3.2.3-1) unstable; urgency=high
+
+  * New upstream release.
+  * kmail Suggests: cryptplug. (Closes: #231797)
+
+ -- Christopher L Cheney <ccheney@debian.org>  Tue,  3 Aug 2004 23:00:00 -0500
+
+kdepim (4:3.2.2-2) unstable; urgency=high
+
+  * Build-Conflicts: gnokii - due to gnokii not being properly maintained.
+
+ -- Christopher L Cheney <ccheney@debian.org>  Mon, 26 Apr 2004 22:00:00 -0500
+
+kdepim (4:3.2.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/*.menu: remove the obsolete kderemove tag.
+
+ -- Christopher L Cheney <ccheney@debian.org>  Fri, 16 Apr 2004 19:00:00 -0500
+
 kdepim (4:3.2.1-1) unstable; urgency=low
 
   * New upstream release.

@@ -2,6 +2,5 @@
 	needs="X11"\
 	section="Apps/Tools"\
 	hints="KDE"\
-	kderemove="y"\
 	title="Kontact"\
 	command="/usr/bin/kontact"
