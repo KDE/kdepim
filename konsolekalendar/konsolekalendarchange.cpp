@@ -42,10 +42,11 @@ bool KonsoleKalendarChange::changeEvent()
 
   bool found = false;
 
-  Event::List eventList( m_variables->
-                         getCalendar()->
+  Event::List eventList( ((CalendarLocal *) m_variables->
+                         getCalendarResources())->
                          rawEventsForDate( m_variables->getStartDateTime() ) );
-
+  
+	
   Event::List::ConstIterator it;
 
   /*
@@ -55,7 +56,7 @@ bool KonsoleKalendarChange::changeEvent()
   QTime starttime = m_variables->getStartDateTime().time();
 //  QTime endtime = m_variables->getEndDateTime().time();
 
-  for( it = eventList.begin(); it != eventList.end(); ++it ) {
+  //for( it = eventList.begin(); it != eventList.end(); ++it ) {
     Event *singleEvent = *it;
 
    /*
@@ -76,12 +77,12 @@ bool KonsoleKalendarChange::changeEvent()
        singleEvent->setSummary( m_variables->getSummary() );
        singleEvent->setDescription( m_variables->getDescription() );
        m_variables->getCalendar()->addEvent( singleEvent );
-       m_variables->getCalendar()->save( m_variables->getCalendarFile() );
+       m_variables->getCalendar()->save();
      }// else
 
    } // if
 
-  } //for
+  //} //for
 
 
   return( found );

@@ -30,6 +30,8 @@
 #include <kstandarddirs.h>
 
 #include <libkcal/calendarlocal.h>
+#include <libkcal/resourcecalendar.h>
+#include <libkcal/calendarresources.h>
 #include <libkcal/calendar.h>
 #include <libkcal/event.h>
 #include <libkcal/htmlexport.h>
@@ -43,10 +45,10 @@
 using namespace KCal;
 using namespace std;
 
-KonsoleKalendar::KonsoleKalendar(KonsoleKalendarVariables &variables)
+KonsoleKalendar::KonsoleKalendar(KonsoleKalendarVariables *variables)
 {
   m_variables = variables;
-  m_Calendar =  new CalendarLocal;
+  // m_Calendar =  new ResourceCalendar;
 }
 
 KonsoleKalendar::~KonsoleKalendar()
@@ -55,25 +57,28 @@ KonsoleKalendar::~KonsoleKalendar()
 
 bool KonsoleKalendar::openCalendar()
 {
-  if( !m_Calendar->load( m_variables.getCalendarFile() ) ) {
-    kdDebug() << "konsolekalendar.cpp::openCalendar() | Can't open file: " << m_variables.getCalendarFile() << endl;
+  // Obsolette to be removed	
+	
+  /*if( !m_Calendar->load( m_variables->getCalendarFile() ) ) {
+    kdDebug() << "konsolekalendar.cpp::openCalendar() | Can't open file: " << m_variables->getCalendarFile() << endl;
     return false;
   } else {
-    kdDebug() << "konsolekalendar.cpp::openCalendar() | Successfully opened file: " << m_variables.getCalendarFile() << endl;
-    m_variables.setCalendar( m_Calendar );
+    kdDebug() << "konsolekalendar.cpp::openCalendar() | Successfully opened file: " << m_variables->getCalendarFile() << endl;
+    m_variables->setCalendar( m_Calendar );
     return true;
-  }
+  }*/
 }
 
 void KonsoleKalendar::closeCalendar()
 {
-  m_Calendar->close();
-  delete m_Calendar;
+  //m_Calendar->close();
+  //m_variables->getCalendarResources()->close();
+  //delete m_Calendar;
 }
 
 void KonsoleKalendar::importCalendar()
 {
-  KonsoleKalendarAdd add( &m_variables );
+  KonsoleKalendarAdd add( m_variables );
 
   kdDebug() << "konsolecalendar.cpp::importCalendar() | importing now!"  << endl;
   add.addImportedCalendar();
@@ -84,9 +89,9 @@ bool KonsoleKalendar::createCalendar()
   bool status = false;
   CalendarLocal newCalendar;
 
-  kdDebug() << "konsolekalendar.cpp::createCalendar() | Creating calendar file: " << m_variables.getCalendarFile() << endl;
+  kdDebug() << "konsolekalendar.cpp::createCalendar() | Creating calendar file: " << m_variables->getCalendarFile() << endl;
 
-  if( newCalendar.save( m_variables.getCalendarFile() ) ) {
+  if( newCalendar.save( m_variables->getCalendarFile() ) ) {
     newCalendar.close();
     status = true;
   }
@@ -99,18 +104,18 @@ bool KonsoleKalendar::showInstance()
   QFile f;
   QString title;
 
-  if( m_variables.isDryRun() ) {
+  if( m_variables->isDryRun() ) {
     cout << i18n("View Events <Dry Run>:").local8Bit() << endl;
-    m_variables.printSpecs("view");
+    m_variables->printSpecs("view");
   } else {
 
     kdDebug() << "konsolekalendar.cpp::showInstance() | open export file" << endl;
 
-    if( m_variables.isExportFile() ) {
-      f.setName( m_variables.getExportFile() );
+    if( m_variables->isExportFile() ) {
+      f.setName( m_variables->getExportFile() );
       if ( !f.open( IO_WriteOnly ) ) {
 	status = false;
-	kdDebug() << "konsolekalendar.cpp::showInstance() | unable to open export file " << m_variables.getExportFile() << endl;
+	kdDebug() << "konsolekalendar.cpp::showInstance() | unable to open export file " << m_variables->getExportFile() << endl;
       } // if
     } else {
       f.open( IO_WriteOnly, stdout );
@@ -121,14 +126,18 @@ bool KonsoleKalendar::showInstance()
 
       QTextStream ts( &f );
 
-      if( m_variables.getExportType() != HTML ) {
+      if( m_variables->getExportType() != HTML ) {
 
 	kdDebug() << "konsolekalendar.cpp::showInstance() | get raw events list" << endl;
 
 	Event::List *eventList;
-	eventList = new Event::List ( m_Calendar->rawEvents( m_variables.getStartDateTime().date(),
-							     m_variables.getEndDateTime().date(),
+	CalendarResources *resource = m_variables->getCalendarResources(); 
+	      
+	eventList = new Event::List ( ((CalendarLocal *) m_variables->getCalendarResources())->rawEvents( 
+							     m_variables->getStartDateTime().date(),
+							     m_variables->getEndDateTime().date(),
 							     false ) );
+	//eventList = new Event::List( m_variables->getCalendarResources()->rawEvents() );      
 
 	status = printEventList ( &ts, eventList );
 
@@ -137,10 +146,10 @@ bool KonsoleKalendar::showInstance()
       } else {
 
 	kdDebug() << "konsolekalendar.cpp::showInstance() | HTML" << endl;
-	KCal::HtmlExport Export( m_Calendar );
-	title = "Calendar for " + m_variables.getStartDateTime().date().toString(Qt::TextDate);
-	if( m_variables.getStartDateTime().date() != m_variables.getEndDateTime().date() ) {
-	  title += " - " + m_variables.getEndDateTime().date().toString(Qt::TextDate);
+	      KCal::HtmlExport Export( m_variables->getCalendarResources() );
+	title = "Calendar for " + m_variables->getStartDateTime().date().toString(Qt::TextDate);
+	if( m_variables->getStartDateTime().date() != m_variables->getEndDateTime().date() ) {
+	  title += " - " + m_variables->getEndDateTime().date().toString(Qt::TextDate);
 	}
 	Export.setTitle( title );
 	Export.setEmail( "" );
@@ -154,9 +163,9 @@ bool KonsoleKalendar::showInstance()
 	Export.setExcludePrivateEventEnabled( true );
 	Export.setExcludeConfidentialEventEnabled( true );
 // Not supporting Todos yet
-	title = "To-Do List for " + m_variables.getStartDateTime().date().toString(Qt::TextDate);
-	if( m_variables.getStartDateTime().date() != m_variables.getEndDateTime().date() ) {
-	  title += " - " + m_variables.getEndDateTime().date().toString(Qt::TextDate);
+	title = "To-Do List for " + m_variables->getStartDateTime().date().toString(Qt::TextDate);
+	if( m_variables->getStartDateTime().date() != m_variables->getEndDateTime().date() ) {
+	  title += " - " + m_variables->getEndDateTime().date().toString(Qt::TextDate);
 	}
 	Export.setTitleTodo( title );
 	Export.setTodosEnabled( false );
@@ -166,7 +175,7 @@ bool KonsoleKalendar::showInstance()
 	Export.setExcludeConfidentialTodoEnabled( false );
 	Export.setDueDateEnabled( false );
 
-	Export.setDateRange( m_variables.getStartDateTime().date(), m_variables.getEndDateTime().date());
+	Export.setDateRange( m_variables->getStartDateTime().date(), m_variables->getEndDateTime().date());
 
 	status = Export.save( &ts );
       }
@@ -193,7 +202,7 @@ bool KonsoleKalendar::printEventList( QTextStream *ts, Event::List *eventList )
     for( it = eventList->begin(); it != eventList->end(); ++it ) {
       singleEvent = *it;
 
-      if( m_variables.getExportType() == CSV ) {
+      if( m_variables->getExportType() == CSV ) {
 	status = exports.exportAsCSV( ts, singleEvent );
 	kdDebug() << "konsolekalendar.cpp::printEventList() | CSV export" << endl;
       } else {  // Default ExportType is TEXT_KONSOLEKALENDAR
@@ -216,7 +225,7 @@ bool KonsoleKalendar::printEventList( QTextStream *ts, Event::List *eventList )
 bool KonsoleKalendar::addEvent()
 {
   kdDebug() << "konsolecalendar.cpp::addEvent() | Create Adding"  << endl;
-  KonsoleKalendarAdd add( &m_variables );
+  KonsoleKalendarAdd add( m_variables );
   kdDebug() << "konsolecalendar.cpp::addEvent() | Adding Event now!"  << endl;
   return( add.addEvent() );
 }
@@ -225,7 +234,7 @@ bool KonsoleKalendar::changeEvent()
 {
 
   kdDebug() << "konsolecalendar.cpp::changeEvent() | Create Changing"  << endl;
-  KonsoleKalendarChange change( &m_variables );
+  KonsoleKalendarChange change( m_variables );
   kdDebug() << "konsolecalendar.cpp::changeEvent() | Changing Event now!"  << endl;
   return( change.changeEvent() );
 }
@@ -233,7 +242,7 @@ bool KonsoleKalendar::changeEvent()
 bool KonsoleKalendar::deleteEvent()
 {
   kdDebug() << "konsolecalendar.cpp::deleteEvent() | Create Deleting"  << endl;
-  KonsoleKalendarDelete del( &m_variables );
+  KonsoleKalendarDelete del( m_variables );
   kdDebug() << "konsolecalendar.cpp::deleteEvent() | Deleting Event now!"  << endl;
   return( del.deleteEvent() );
 }
@@ -246,7 +255,9 @@ bool KonsoleKalendar::isEvent( QDateTime startdate, QDateTime enddate, QString s
   Event::List::ConstIterator it;
  
   bool found = false;
-  Event::List eventList(m_Calendar->events( startdate.date(), TRUE));
+  
+  Event::List eventList( ((CalendarLocal *) m_variables->getCalendarResources())->
+			                    rawEventsForDate( startdate.date(), true ));
   for ( it =  eventList.begin(); it != eventList.end(); ++it ) {
     e = *it;
     if ( e->dtEnd()==enddate && e->summary()==summary ) {

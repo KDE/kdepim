@@ -27,7 +27,7 @@
 #include <libkcal/calendarlocal.h>
 #include <libkcal/calendarresources.h>
 #include <libkcal/resourcelocal.h>
-
+#include <libkcal/resourcecalendar.h>
 #include <libkcal/event.h>
 
 
@@ -98,13 +98,13 @@ class KonsoleKalendarVariables
      * Set calendar file for global use
      */
 
-   void setCalendar( CalendarLocal *calendar );
+   void setCalendar( Calendar *calendar );
 
    /**
     * Get global calendar
     */
 
-   CalendarLocal *getCalendar();
+   Calendar *getCalendar();
 
    /**
     * Set output file
@@ -149,7 +149,7 @@ class KonsoleKalendarVariables
   /**
    * Calendar resource is the new way 
    */
-   void setCalendarResources( CalendarResources *cal );
+   void setCalendarResources( CalendarResources *resource );
    
    /**
    * Calendar resource is the new way 
@@ -192,7 +192,8 @@ class KonsoleKalendarVariables
    // New resource stuff will over-ride old pne
    CalendarResources *m_resource;
    // We can use this from everywhere
-   CalendarLocal *m_calendarLocal;
+   //CalendarLocal *m_calendarLocal;   
+   Calendar *m_resourceCalendar;
    
  
 

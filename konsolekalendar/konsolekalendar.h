@@ -25,6 +25,7 @@
 #include <kapplication.h>
 
 #include <libkcal/calendarlocal.h>
+#include <libkcal/resourcecalendar.h>
 #include <libkcal/event.h>
 
 #include "konsolekalendar.h"
@@ -38,7 +39,7 @@ namespace KCal {
 class KonsoleKalendar
 {
   public:
-    KonsoleKalendar(KonsoleKalendarVariables &variables);
+    KonsoleKalendar(KonsoleKalendarVariables *variables);
     ~KonsoleKalendar();
 
    /**
@@ -108,11 +109,12 @@ class KonsoleKalendar
    /**
     * Variables that changes stuff in programm
     */
-    KonsoleKalendarVariables m_variables;
+    KonsoleKalendarVariables *m_variables;
+   
    /**
     * Calendar file itself
     */
-    CalendarLocal *m_Calendar;
+    ResourceCalendar *m_Calendar;
 };
 
 }

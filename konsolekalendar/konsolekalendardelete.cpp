@@ -42,10 +42,11 @@ bool KonsoleKalendarDelete::deleteEvent()
 
   bool found = false;
 
-  Event::List eventList( m_variables->
-                         getCalendar()->
-                         rawEventsForDate( m_variables->getStartDateTime() ) );
-  /*
+  Event::List eventList( ((CalendarLocal *)m_variables->
+                         getCalendarResources())->rawEventsForDate( m_variables->getStartDateTime() ) );
+  
+   
+   /*
    * Just to make this shorter
    */
 
@@ -54,7 +55,7 @@ bool KonsoleKalendarDelete::deleteEvent()
 
                      
   Event::List::ConstIterator it;
-  for( it = eventList.begin(); it != eventList.end(); ++it ) {
+  //for( it = eventList.begin(); it != eventList.end(); ++it ) {
     Event *singleEvent = *it;
 
     /*
@@ -72,12 +73,12 @@ bool KonsoleKalendarDelete::deleteEvent()
     } else {
       kdDebug() << "konsolekalendardelete.cpp:deleteEvent() : " << singleEvent->dtStartStr().local8Bit() << endl;
       m_variables->getCalendar()->deleteEvent( singleEvent );
-      m_variables->getCalendar()->save( m_variables->getCalendarFile() );
+      m_variables->getCalendar()->save();
     }// else
 
   } // if
  
-  } //for
+  //} //for
 
   return( found );
 }

@@ -51,6 +51,8 @@ KonsoleKalendarAdd::~KonsoleKalendarAdd()
 
 bool KonsoleKalendarAdd::addEvent()
 {
+  kdDebug() << "konsolekalendaradd.cpp::addEvent() | Add stuff " << endl;
+	
   if( !m_variables->isDescription() && m_variables->isSummary() ) {
     // If no description is provided, use the summary for the description
     m_variables->setDescription( m_variables->getSummary() );
@@ -71,9 +73,15 @@ bool KonsoleKalendarAdd::addEvent()
     event->setDtEnd( m_variables->getEndDateTime() );
     event->setSummary( m_variables->getSummary() );
     event->setFloats( m_variables->getFloating() );
-    event->setDescription( m_variables->getDescription() );
-
-    if( m_variables->getCalendar()->addEvent( event ) ) {
+    event->setDescription( m_variables->getDescription() );    
+    kdDebug() << "konsolekalendaradd.cpp::addEvent() | Do adding " << endl;
+    
+    if( !m_variables->getCalendarResources() ){
+     kdDebug() << "konsolekalendaradd.cpp::addEvent() | There is no calendar " << endl;
+     return false;     
+    }
+	  
+    if( m_variables->getCalendarResources()->addEvent( event ) ) {
       cout << i18n("Success: \"").local8Bit()
 	   << m_variables->getSummary().local8Bit() << i18n("\" inserted").local8Bit() << endl;
     } else {
@@ -81,11 +89,12 @@ bool KonsoleKalendarAdd::addEvent()
 	   << m_variables->getSummary().local8Bit() << i18n("\" not inserted").local8Bit() << endl;
     } // else
 
-    m_variables->getCalendar()->save( m_variables->getCalendarFile() );
+    m_variables->getCalendarResources()->save();
 
     delete event;
   }
 
+  kdDebug() << "konsolekalendaradd.cpp::addEvent() | Done " << endl;	
   return true;
 }
 
@@ -110,7 +119,7 @@ bool KonsoleKalendarAdd::addImportedCalendar()
    for( it = eventList.begin(); it != eventList.end(); ++it ) {
      singleEvent = *it;
 
-     m_variables->getCalendar()->addEvent( singleEvent );
+     m_variables->getCalendarResources()->addEvent( singleEvent );
      kdDebug() << "konsolekalendaradd.cpp::importCalendar() | Event imported" << endl;
 
    } // for
@@ -118,7 +127,7 @@ bool KonsoleKalendarAdd::addImportedCalendar()
  } // if
 
  importCalendar.close();
- m_variables->getCalendar()->save( m_variables->getCalendarFile() );
+ m_variables->getCalendarResources()->save();
 
  return true;
 }

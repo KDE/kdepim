@@ -434,7 +434,7 @@ int main(int argc, char *argv[])
  }
 
   
-  KonsoleKalendar *konsolekalendar = new KonsoleKalendar( variables );
+  KonsoleKalendar *konsolekalendar = new KonsoleKalendar( &variables );
   
   /*
    * All modes need to know if the calendar file exists
@@ -463,16 +463,15 @@ int main(int argc, char *argv[])
    }
 
 
-  CalendarResources calendarResource;
-  variables.setCalendarResources( &calendarResource );
-
-   
+  CalendarResources *calendarResource = new CalendarResources(); 
+  variables.setCalendarResources( calendarResource );
+  ResourceCalendar *defaultResource; 
   /*
    * File must be there when we open it;)
    */
    
   if ( args->isSet("file") ) {
-    ResourceCalendar *defaultResource = new ResourceLocal( option );
+    defaultResource = new ResourceLocal( option );
     
     defaultResource->setResourceName( i18n("Default KOrganizer resource") );
     variables.addCalendarResources( defaultResource );
@@ -636,10 +635,12 @@ int main(int argc, char *argv[])
    *
    * Adds it to konsolekalendarvariables also..
    */
+  kdDebug() << "main | modework | checking if ResourceManager is full or empty" << endl;	
+	
   if( !variables.getCalendarResourceManager()->isEmpty() ) {
+    kdDebug() << "main | modework | We have calendar" << endl;		  
 
-    variables.setCalendar( (CalendarLocal *) variables.getCalendarResources() );
-  
+
     if( importFile ) {
       konsolekalendar->importCalendar();
     }
@@ -680,7 +681,7 @@ int main(int argc, char *argv[])
       }
     }
 
-    konsolekalendar->closeCalendar();
+    // konsolekalendar->closeCalendar();
 
   } else {
 
@@ -690,7 +691,13 @@ int main(int argc, char *argv[])
   }
 
   delete konsolekalendar;
-
+	
+  if( calendarFile ){
+    delete defaultResource;   
+  }
+	
+  delete calendarResource;
+	
   kdDebug() << "main | exiting" << endl;
 
   return 0;

@@ -26,6 +26,7 @@
 
 #include <qdatetime.h>
 #include <qstring.h>
+#include <qstringlist.h>
 
 #include <stdlib.h>
 #include <iostream>
@@ -57,7 +58,7 @@ KonsoleKalendarVariables::KonsoleKalendarVariables()
 
 KonsoleKalendarVariables::~KonsoleKalendarVariables()
 {
- delete m_resource;
+ // delete m_resource;
 }
 
 void KonsoleKalendarVariables::setStartDateTime(QDateTime start)
@@ -143,14 +144,14 @@ QString KonsoleKalendarVariables::getImportFile()
 }
 
 
-void KonsoleKalendarVariables::setCalendar( CalendarLocal *calendar )
+void KonsoleKalendarVariables::setCalendar( Calendar *calendar )
 {
-  m_calendarLocal = calendar;
+  m_resourceCalendar = calendar;
 }
 
-CalendarLocal *KonsoleKalendarVariables::getCalendar()
+Calendar *KonsoleKalendarVariables::getCalendar()
 {
-  return m_calendarLocal;
+  return m_resourceCalendar;
 }
 
 
@@ -248,16 +249,17 @@ bool KonsoleKalendarVariables::getFloating()
   return m_bFloating;
 }
 
-
 bool KonsoleKalendarVariables::addCalendarResources( ResourceCalendar *resource )
 {
  if ( m_resource ) {
    // In current state we support only one calendar
    // that's a fact and we have to live with that!
-   kdDebug() << "Add to calendar resource!" << endl;
    CalendarResourceManager *manager = m_resource->resourceManager();	    
+   QStringList list = manager->resourceTypeNames();
+	 
+   kdDebug() << "Add to calendar resource!" << endl;
+   
    manager->add( resource );
-	 manager->setStandardResource( resource );
  } else {
   kdDebug() << "Cannot add to calendar resources (Not created!)" << endl;
   return false;
@@ -266,9 +268,10 @@ bool KonsoleKalendarVariables::addCalendarResources( ResourceCalendar *resource 
 return true;
 }
 
-void KonsoleKalendarVariables::setCalendarResources( CalendarResources *cal )
+void KonsoleKalendarVariables::setCalendarResources( CalendarResources *resource )
 {
-  m_resource = cal;	
+  m_resource = resource;
+  m_resource->rawEvents();
 }
 
 CalendarResources *KonsoleKalendarVariables::getCalendarResources()
