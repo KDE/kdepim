@@ -773,7 +773,7 @@ void CalPrinter::drawTTDayBox(QPainter &p, const QDate &qd,
                 int currentyPos =y+mSubHeaderHeight+height+startMinuteOff+startTime*height;
                 endTime -= mStartHour;
                 int endMinuteOff = (int) (minuteInc * currEvent->dtEnd().time().minute());
-                int eventLenght=endMinuteOff + (endTime - startTime)*height;
+                int eventLenght=(endMinuteOff-startMinuteOff) + (endTime - startTime)*height;
                 kdDebug() << currEvent->summary() << ": " << " x=" << x << " currY=" << currentyPos << " width=" << width << " lenght=" << eventLenght;
                 p.drawRect(x, currentyPos,
                 width, eventLenght);
