@@ -74,6 +74,8 @@ class ContactImportDialog : public KImportDialog
     KImportColumn *mAddressBusinessZip;
     KImportColumn *mAddressBusinessCountry;
 
+    QPtrList<KImportColumn> mCustomList;
+
     KABC::AddressBook *mDocument;
 };
 

@@ -379,15 +379,11 @@ void KAddressBook::exportCSV()
     // First output the column headings
     for (fieldIter = fields.begin(); fieldIter != fields.end(); ++fieldIter)
     {
-      // We ignore custom fields. Not sure if we should. Time will tell.
-      if (!(*fieldIter)->isCustom())
-      {
-        if (!first)
-          t << ",";
+      if (!first)
+        t << ",";
 
-        t << "\"" << (*fieldIter)->label() << "\"";
-        first = false;
-      }
+      t << "\"" << (*fieldIter)->label() << "\"";
+      first = false;
     }
     t << "\n";
 
@@ -400,14 +396,11 @@ void KAddressBook::exportCSV()
 
       for (fieldIter = fields.begin(); fieldIter != fields.end(); ++fieldIter)
       {
-        if (!(*fieldIter)->isCustom())
-        {
-          if (!first)
-            t << ",";
+        if (!first)
+          t << ",";
 
-          t << "\"" << (*fieldIter)->value( a ).replace( QRegExp("\n"), "\\n" ) << "\"";
-          first = false;
-        }
+        t << "\"" << (*fieldIter)->value( a ).replace( QRegExp("\n"), "\\n" ) << "\"";
+        first = false;
       }
 
       t << "\n";

@@ -33,6 +33,8 @@ ContactImportDialog::ContactImportDialog(KABC::AddressBook *doc,
                                          QWidget *parent)
         : KImportDialog(parent), mDocument(doc)
 {
+    mCustomList.setAutoDelete( true );
+
     mFirstName = new KImportColumn(this, KABC::Addressee::givenNameLabel(), 1);
     mLastName = new KImportColumn(this, KABC::Addressee::familyNameLabel(), 1);
     mAdditionalName = new KImportColumn(this, KABC::Addressee::additionalNameLabel());
@@ -64,6 +66,14 @@ ContactImportDialog::ContactImportDialog(KABC::AddressBook *doc,
     mAddressBusinessZip = new KImportColumn(this, KABC::Addressee::businessAddressPostalCodeLabel());
     mAddressBusinessState = new KImportColumn(this, KABC::Addressee::businessAddressRegionLabel());
     mAddressBusinessCountry = new KImportColumn(this, KABC::Addressee::businessAddressCountryLabel());
+
+    KABC::Field::List fields = mDocument->fields( KABC::Field::CustomCategory );
+    KABC::Field::List::Iterator it;
+
+    for ( it = fields.begin(); it != fields.end(); ++it ) {
+      KImportColumn *column = new KImportColumn( this, (*it)->label() );
+      mCustomList.append( column );
+    }
 
     registerColumns();
 }
@@ -121,6 +131,15 @@ void ContactImportDialog::convertRow()
   addrWork.setPostalCode(mAddressBusinessZip->convert());
   addrWork.setCountry(mAddressBusinessCountry->convert());
   a.insertAddress(addrWork);
+
+  KABC::Field::List fields = mDocument->fields( KABC::Field::CustomCategory );
+  KABC::Field::List::Iterator it;
+
+  uint counter = 0;
+  for ( it = fields.begin(); it != fields.end(); ++it ) {
+    (*it)->setValue( a, mCustomList.at( counter )->convert() );
+    ++counter;
+  }
   
   mDocument->insertAddressee(a);
 }
