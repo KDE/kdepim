@@ -1,4 +1,4 @@
-lib_LTLIBRARIES = libkdgantt.la
+noinst_LTLIBRARIES = libkdgantt.la
 
 libkdgantt_la_SOURCES = \
 			KDGanttView.cpp			\
