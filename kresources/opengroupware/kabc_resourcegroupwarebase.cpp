@@ -204,6 +204,7 @@ bool ResourceGroupwareBase::save( Ticket *ticket )
 bool ResourceGroupwareBase::asyncSave( Ticket* )
 {
   if ( mUploadJob ) {
+    // FIXME: If the user cancels, we need to reset the mUploadJob variable to 0.
     kdWarning() << "Upload still in progress." << endl;
     return false;
   }
@@ -247,6 +248,7 @@ void ResourceGroupwareBase::slotUploadJobResult( KPIM::GroupwareJob *job )
   if ( job->error() ) {
     kdError() << "job failed: " << job->errorString() << endl;
   } else {
+    // FIXME
   }
 
   mUploadJob = 0;
