@@ -8,28 +8,28 @@ for details on how an issue is resolved, since resolved issues are
 
 Essential
 =========
-1)  VCal conduit: Currently using the ResourceCalendar (standard 
-    calendar) doesn't work for some (unknown) reason. Every sync 
-		happens with the filename given in the setup dialog. Probably 
+DONE: (1)  VCal conduit: Currently using the ResourceCalendar (standard
+    calendar) doesn't work for some (unknown) reason. Every sync
+		happens with the filename given in the setup dialog. Probably
 		very easy to fix.
-2)  Redesign the config dialog of kpilot (get rid of deprecated 
+2)  Redesign the config dialog of kpilot (get rid of deprecated
     options, include conflict resolution, etc.)
-3)  Fix all conduits to use the new global options: conflict resolution, 
+3)  Fix all conduits to use the new global options: conflict resolution,
     emergency sync, sync mode etc.
-4)  VCal conduit: Fields not supported on the handheld are erased 
-    in the calendar (e.g. categories). I need to get the Event 
-		before I copy all fields over, and only overwrite the fields 
+4)  VCal conduit: Fields not supported on the handheld are erased
+    in the calendar (e.g. categories). I need to get the Event
+		before I copy all fields over, and only overwrite the fields
 		from the handheld, so the others remain unchanged.
 
 
 Important (hight priority)
 ============================
-5)  AvantGo conduit: fix the configure.in.in checks for libmal
+DONE: (5)  AvantGo conduit: fix the configure.in.in checks for libmal
 6)  ABook conduit: fix the first sync setting
 7)  Check the first-time syncing behavior of all the conduits.
 8)  Find out what's the reason of the "Invalid unique ID" crashes in 
     the calendar conduits (and the addresssbook conduit)
-9)  GJJ: PalmDOC conduit: kpalmdoc is run as a modal dialog, not as 
+9)  GJJ: PalmDOC conduit: kpalmdoc is run as a modal dialog, not as
     a standalone dialog (e.g. create a link  on the desktop to 
 		kpalmdoc and start kpalmdoc from there. You can't access the 
 		desktop until you quit kpalmdoc)
@@ -56,8 +56,8 @@ Important (hight priority)
 
 Medium (nice to have, but not essential)
 ========================================
-20) GJJ: Check all debug output, what should be put in the log (i.e. 
-    be visible to the user) and what is just debug output to track 
+20) GJJ: Check all debug output, what should be put in the log (i.e.
+    be visible to the user) and what is just debug output to track
 		down problems. 
 21) GJJ: Hunt down and kill printfs. Hunt down bad i18n.
 22) Update README, TODO, NEWS, AUTHORS in HEAD.
@@ -65,7 +65,8 @@ Medium (nice to have, but not essential)
     to a list of QCheckBoxes, like noatun's plain playlist or 
 		kdebugdialog
 24) PalmDOC conduit: choosing the bookmark type of the pdb->txt 
-    conversion is not yet implemented
+    conversion is not yet implemented. Only create .bm file, if there
+    are bookmarks in the text.
 25) ABook conduit: sync with multiple email addresses (comma separated 
     list received from handheld)
 26) ABook conduit: sync with preferred address (not home or work address)
