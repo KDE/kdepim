@@ -57,17 +57,24 @@ AddViewDialog::AddViewDialog( QDict<ViewFactory> *viewFactoryDict,
            SLOT( textChanged( const QString& ) ) );
   layout->addWidget( mViewNameEdit, 0, 1 );
 
-  mTypeGroup = new QButtonGroup( 2, Qt::Horizontal, i18n( "View Type" ), page );
+  mTypeGroup = new QButtonGroup( 0, Qt::Horizontal, i18n( "View Type" ), page );
   connect( mTypeGroup, SIGNAL( clicked( int ) ), this, SLOT( clicked( int ) ) );
   layout->addMultiCellWidget( mTypeGroup, 1, 1, 0, 1 );
+  QGridLayout *groupLayout = new QGridLayout( mTypeGroup->layout(), 3, 2 );
+  groupLayout->setSpacing( spacingHint() );
 
-  // Now create the radio buttons. This needs some layout work.
+  int row = 0;
   QDictIterator<ViewFactory> iter( *mViewFactoryDict );
   for ( iter.toFirst(); iter.current(); ++iter ) {
-    new QRadioButton( i18n((*iter)->type().utf8()), mTypeGroup,
-                      (*iter)->type().latin1() );
+    QRadioButton *button = new QRadioButton( i18n((*iter)->type().utf8()),
+                                             mTypeGroup, (*iter)->type().latin1() );
     label = new QLabel( (*iter)->description(), mTypeGroup );
-    label->setAlignment( Qt::AlignLeft | Qt::AlignTop | Qt::WordBreak );
+    label->setAlignment( Qt::WordBreak );
+
+    groupLayout->addWidget( button, row, 0, Qt::AlignTop );
+    groupLayout->addWidget( label, row, 1, Qt::AlignTop );
+
+    row++;
   }
 
   mTypeGroup->setButton( 0 );

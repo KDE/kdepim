@@ -90,6 +90,8 @@ ViewConfigureDialog::ViewConfigureDialog( ViewConfigureWidget *wdg, const QStrin
                  Ok, parent, name, true, true ), mConfigWidget( wdg )
 {
   setMainWidget( mConfigWidget );
+
+  resize( 600, 300 );
 }
 
 ViewConfigureDialog::~ViewConfigureDialog()
