@@ -136,12 +136,14 @@ NotesSettings::NotesSettings(const QString &configPath,
 {
 	FUNCTIONSETUP;
 
+#ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Reading note from "
 		<< configPath
 		<< " in dir "
 		<< notesdir
 		<< endl;
+#endif
 
 	c.setGroup("KPilot");
 	id = c.readNumEntry("pilotID",0);
@@ -157,10 +159,12 @@ NotesSettings::NotesSettings(const QString &configPath,
 	notedata.append("_data");
 	if (QFile::exists(notedata))
 	{
+#ifdef DEBUG
 		DEBUGCONDUIT << fname 
 			<< ": Data for note in " 
 			<< notedata 
 			<< endl;
+#endif
 		dP = notedata;
 	}
 	else
@@ -238,12 +242,14 @@ int NotesSettings::readNotesData(char *text)
 	memset(text,0,PilotMemo::MAX_MEMO_LEN+1);
 	int len = f.readBlock(text,filesize);
 
+#ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Read "
 		<< len
 		<< " bytes from note "
 		<< dataPath()
 		<< endl;
+#endif
 
 	return len;
 }
@@ -262,7 +268,7 @@ collectNotes()
 
 #ifdef DEBUG
 	{
-		kdDebug() << fname << ": Notes dir = " << str_notedir << endl;
+		DEBUGCONDUIT << fname << ": Notes dir = " << str_notedir << endl;
 	}
 #endif
 
@@ -278,7 +284,7 @@ collectNotes()
 
 #ifdef DEBUG
 		{
-			kdDebug() << fname << ": Reading note " << *i << endl;
+			DEBUGCONDUIT << fname << ": Reading note " << *i << endl;
 		}
 #endif
 		c = new KSimpleConfig( notedir.absFilePath(*i));
@@ -324,7 +330,7 @@ findID(NotesMap& m,unsigned long id)
 		{
 #ifdef DEBUG
 			{
-				kdDebug() << fname
+				DEBUGCONDUIT << fname
 					<< ": Found ID "
 					<< id
 					<< " in note "
@@ -340,7 +346,7 @@ findID(NotesMap& m,unsigned long id)
 
 #ifdef DEBUG
 	{
-		kdDebug() << fname
+		DEBUGCONDUIT << fname
 			<< ": ID "
 			<< id
 			<< " not found."
@@ -377,7 +383,7 @@ KNotesConduit::readConfig()
 	fDeleteNoteForMemo = c.readBoolEntry("DeleteNoteForMemo",false);
 #ifdef DEBUG
 	{
-		kdDebug() << fname
+		DEBUGCONDUIT << fname
 			<< ": Settings "
 			<< "DeleteNoteForMemo="
 			<< fDeleteNoteForMemo
@@ -408,10 +414,12 @@ KNotesConduit::doSync()
 			.arg(oldCount);
 		addSyncLogMessage(msg.local8Bit());
 
+#ifdef DEBUG
 		DEBUGCONDUIT << fname
 			<< ": "
 			<< msg
 			<< endl;
+#endif
 	}
 
 	DCOPClient *dcopptr = KApplication::kApplication()->dcopClient();
@@ -485,9 +493,11 @@ int KNotesConduit::notesToPilot(NotesMap& m)
 	NotesMap::Iterator i;
 	int count=0;
 
+#ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Adding new memos to pilot"
 		<< endl;
+#endif
 
 
 	for (i=m.begin(); i!=m.end(); ++i)
@@ -523,7 +533,7 @@ bool KNotesConduit::newMemo(NotesMap& m,unsigned long id,PilotMemo *memo)
 
 #ifdef DEBUG
 	{
-		kdDebug() << fname << ": Notes dir = " << str_notedir << endl;
+		DEBUGCONDUIT << fname << ": Notes dir = " << str_notedir << endl;
 	}
 #endif
 
@@ -536,10 +546,12 @@ bool KNotesConduit::newMemo(NotesMap& m,unsigned long id,PilotMemo *memo)
 
 	if (notedir.exists(noteName))
 	{
-		kdDebug() << fname
+#ifdef DEBUG
+		DEBUGCONDUIT << fname
 			<< ": Note " << noteName
 			<< " already exists!"
 			<< endl;
+#endif
 		return false;
 	}
 
@@ -547,7 +559,7 @@ bool KNotesConduit::newMemo(NotesMap& m,unsigned long id,PilotMemo *memo)
 	bool success = false;
 #ifdef DEBUG
 	{
-		kdDebug() << fname
+		DEBUGCONDUIT << fname
 			<< ": Creating note "
 			<< noteName
 			<< endl;
@@ -606,7 +618,7 @@ bool KNotesConduit::changeMemo(NotesMap& m,NotesMap::Iterator i,PilotMemo *memo)
 	NotesSettings n = *i;
 #ifdef DEBUG
 	{
-		kdDebug() << fname
+		DEBUGCONDUIT << fname
 			<< ": Updating note "
 			<< n.configPath()
 			<< endl;
@@ -619,7 +631,7 @@ bool KNotesConduit::changeMemo(NotesMap& m,NotesMap::Iterator i,PilotMemo *memo)
 		file.writeBlock(memo->text(),strlen(memo->text()));
 #ifdef DEBUG
 		{
-			kdDebug() << fname
+			DEBUGCONDUIT << fname
 				<< ": Succesfully updated memo "
 				<< n.configPath()
 				<< endl;
@@ -643,7 +655,7 @@ bool KNotesConduit::deleteNote(NotesMap& m,NotesMap::Iterator *i,
 	{
 #ifdef DEBUG
 		{
-			kdDebug() << fname
+			DEBUGCONDUIT << fname
 				<< ": Unknown Pilot memo "
 				<< id
 				<< " has been deleted."
@@ -657,14 +669,14 @@ bool KNotesConduit::deleteNote(NotesMap& m,NotesMap::Iterator *i,
 	{
 		if (fDeleteNoteForMemo)
 		{
-			kdDebug() << fname
+			DEBUGCONDUIT << fname
 				<< ": Deleting pilot memo "
 				<< id
 				<< endl;
 		}
 		else
 		{
-			kdDebug() << fname
+			DEBUGCONDUIT << fname
 				<< ": Pilot memo "
 				<< id
 				<< " has been deleted, note remains."
@@ -678,7 +690,7 @@ bool KNotesConduit::deleteNote(NotesMap& m,NotesMap::Iterator *i,
 
 #ifdef DEBUG
 	{
-		kdDebug() << fname
+		DEBUGCONDUIT << fname
 			<< ": Deleting note "
 			<< n.configPath()
 			<< endl;
@@ -709,10 +721,12 @@ int KNotesConduit::pilotToNotes(NotesMap& m)
 
 		success=false;
 
-		kdDebug() << fname 
+#ifdef DEBUG
+		DEBUGCONDUIT << fname 
 			<< ": Read Pilot record with ID "
 			<< id
 			<< endl;
+#endif
 
 		i = findID(m,id);
 		if (rec->getAttrib() & dlpRecAttrDeleted)
@@ -756,9 +770,11 @@ int KNotesConduit::pilotToNotes(NotesMap& m)
 		"rereadNotesDir()",
 		data))
 	{
+#ifdef DEBUG
 		DEBUGCONDUIT << fname
 			<< ": DCOP to KNotes succesful."
 			<< endl;
+#endif
 	}
 	else
 	{
@@ -811,10 +827,12 @@ KNotesConduit::doTest()
 	{
 		if ((*i).pilotID())
 		{
+#ifdef DEBUG
 			DEBUGCONDUIT << fname
 				<< ": Showing note " 
 				<< (*i).name()
 				<< endl;
+#endif
 
 			QByteArray data;
 			QDataStream arg(data,IO_WriteOnly);
@@ -824,9 +842,11 @@ KNotesConduit::doTest()
 				"showNote(QString)",
 				data))
 			{
+#ifdef DEBUG
 				DEBUGCONDUIT << fname
 					<< ": DCOP send succesful"
 					<< endl;
+#endif
 			}
 			else
 			{
@@ -837,22 +857,29 @@ KNotesConduit::doTest()
 		}
 		else
 		{
+#ifdef DEBUG
 			DEBUGCONDUIT << fname
 				<< ": Note "
 				<< (*i).name()
 				<< " not in Pilot"
 				<< endl;
+#endif
 		}
+#ifdef DEBUG
 		DEBUGCONDUIT << fname
 			<< ": Checksum = "
 			<< (*i).computeCheckSum()
 			<< endl;
+#endif
 	}
 
 	(void) knotes_conduit_id;
 }
 
 // $Log$
+// Revision 1.19  2001/12/28 13:03:29  adridg
+// Fixup some email addresses, random lil' things
+//
 // Revision 1.18  2001/09/24 22:40:27  adridg
 // Marginal extension of debugging info to track knotes-conduit bug
 //

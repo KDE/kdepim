@@ -137,9 +137,11 @@ void showResponseResult(int const ret,
 
 	if (ret>=0)
 	{
+#ifdef DEBUG
 		DEBUGCONDUIT << func
 			<< ": " << message
 			<< endl;
+#endif
 
 		// Only add the buffer contents if they're interesting
 		//
@@ -148,9 +150,11 @@ void showResponseResult(int const ret,
 		{
 			msg.append("\n");
 			msg.append(buffer);
+#ifdef DEBUG
 			DEBUGCONDUIT << func
 				<< ": " << buffer
 				<< endl;
+#endif
 		}
 	}
 
@@ -643,7 +647,7 @@ int PopMailConduit::sendViaSMTP ()
 	//
 
 #ifdef DEBUG
-		kdDebug() << fname << ": Connecting to SMTP server "
+		DEBUGCONDUIT << fname << ": Connecting to SMTP server "
 				  << smtpSrv << " on port " << smtpPort << endl;
 #endif
 
@@ -850,7 +854,7 @@ int PopMailConduit::sendViaSendmail()
 
 #ifdef DEBUG
 	{
-		kdDebug() << fname << ": Reading " << i << "th message" << endl;
+		DEBUGCONDUIT << fname << ": Reading " << i << "th message" << endl;
 	}
 #endif
       pilotRec = fDatabase->readNextRecInCategory(1);
@@ -867,7 +871,7 @@ int PopMailConduit::sendViaSendmail()
 	{
 #ifdef DEBUG
 		{
-			kdDebug() << fname << ": Skipping deleted record." << endl;
+			DEBUGCONDUIT << fname << ": Skipping deleted record." << endl;
 		}
 #endif
 		delete pilotRec;
@@ -906,7 +910,7 @@ int PopMailConduit::sendViaSendmail()
 
 #ifdef DEBUG
 	{
-		kdDebug() << fname << ": Sent " << count << " messages"
+		DEBUGCONDUIT << fname << ": Sent " << count << " messages"
 			<< endl;
 	}
 #endif
@@ -959,17 +963,21 @@ int PopMailConduit::sendViaKMail()
 	dcopptr->attach();
 	while (PilotRecord *pilotRec = fDatabase->readNextRecInCategory(1))
 	{
+#ifdef DEBUG
 		DEBUGCONDUIT << fname 
 			<< ": Reading " 
 			<< count + 1
 			<< "th message" 
 			<< endl;
+#endif
 
 		if (pilotRec->isDeleted() || pilotRec->isArchived())
 		{
+#ifdef DEBUG
 			DEBUGCONDUIT << fname
 				<< ": Skipping record."
 				<< endl;
+#endif
 			continue;
 		}
 
@@ -1034,12 +1042,14 @@ int PopMailConduit::sendViaKMail()
 			continue;
 		}
 
+#ifdef DEBUG
 		DEBUGCONDUIT << fname
 			<< ": DCOP call returned "
 			<< returnType
 			<< " of "
 			<< (const char *)returnValue
 			<< endl;
+#endif
 
 		// Mark it as filed...
 		pilotRec->setCat(3);
@@ -1093,7 +1103,7 @@ PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 
 #ifdef DEBUG
 	{
-		kdDebug() << fname << ": To: " << theMail.to << endl;
+		DEBUGCONDUIT << fname << ": To: " << theMail.to << endl;
 	}
 #endif
 
@@ -1102,7 +1112,7 @@ PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 	{
 #ifdef DEBUG
 		{
-			kdDebug() << fname << ": Sent body." << endl;
+			DEBUGCONDUIT << fname << ": Sent body." << endl;
 		}
 #endif
 		mailPipe << theMail.body << "\r\n";
@@ -1112,7 +1122,7 @@ PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
   if(!fConfig->readEntry("Signature").isEmpty()) {
 #ifdef DEBUG
 	{
-		kdDebug() << fname << ": Reading signature" << endl;
+		DEBUGCONDUIT << fname << ": Reading signature" << endl;
 	}
 #endif
 
@@ -1130,7 +1140,7 @@ PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 
 #ifdef DEBUG
 	{
-		kdDebug() << fname << ": Done" << endl;
+		DEBUGCONDUIT << fname << ": Done" << endl;
 	}
 #endif
 }
@@ -1276,7 +1286,7 @@ void PopMailConduit::retrievePOPMessages(KSocket *popSocket,int const msgcount,
 
 #ifdef DEBUG
 		{
-			kdDebug() << fname
+			DEBUGCONDUIT << fname
 				<< ": Message " << i
 				<< " is " << len << " bytes long"
 				<< endl;
@@ -1426,7 +1436,7 @@ int PopMailConduit::doPopQuery()
 
 #ifdef DEBUG
 	{
-		kdDebug() << fname
+		DEBUGCONDUIT << fname
 			<< ": Attempted to connect to POP3 server "
 			<< fConfig->readEntry("PopServer")
 			<< endl;
@@ -1449,7 +1459,7 @@ int PopMailConduit::doPopQuery()
 
 #ifdef DEBUG
 	{
-		kdDebug() << fname
+		DEBUGCONDUIT << fname
 			<< ": Connected to POP3 server socket "
 			<< popSocket->socket()
 			<< endl ;
@@ -1482,7 +1492,7 @@ int PopMailConduit::doPopQuery()
 	{
 #ifdef DEBUG
 		{
-			kdDebug() << fname
+			DEBUGCONDUIT << fname
 				<< ": Reading password from config."
 				<< endl;
 		}
@@ -1508,7 +1518,7 @@ int PopMailConduit::doPopQuery()
 		else
 		{
 #ifdef DEBUG
-			kdDebug() << fname
+			DEBUGCONDUIT << fname
 				<< ": Password dialog was canceled."
 				<< endl;
 #endif
@@ -1559,11 +1569,11 @@ int PopMailConduit::doPopQuery()
 
 #ifdef DEBUG
 	{
-		kdDebug() << fname
+		DEBUGCONDUIT << fname
 			<< ": POP STAT is "
 			<< buffer+offset
 			<< endl;
-		kdDebug() << fname
+		DEBUGCONDUIT << fname
 			<< ": Will retrieve "
 			<< msgcount << " messages."
 			<< endl;
@@ -1602,7 +1612,7 @@ int PopMailConduit::doPopQuery()
 		if (fgets(buffer,buffersize,f)==0L) break;
 #ifdef DEBUG
 		{
-			kdDebug() <<  fname << ": Got line " << buffer ;
+			DEBUGCONDUIT <<  fname << ": Got line " << buffer ;
 		}
 #endif
 
@@ -1641,7 +1651,7 @@ int PopMailConduit::doPopQuery()
 	{
 #ifdef DEBUG
 		{
-			kdDebug() << fname << ": Looking for From line." << endl;
+			DEBUGCONDUIT << fname << ": Looking for From line." << endl;
 		}
 #endif
 
@@ -1655,7 +1665,7 @@ int PopMailConduit::doPopQuery()
 
 #ifdef DEBUG
 		{
-			kdDebug() << fname << ": Found it." << endl;
+			DEBUGCONDUIT << fname << ": Found it." << endl;
 		}
 #endif
 	}
@@ -1666,7 +1676,7 @@ int PopMailConduit::doPopQuery()
 		{
 #ifdef DEBUG
 			{
-				kdDebug() << fname << ": Found end-of-headers " 
+				DEBUGCONDUIT << fname << ": Found end-of-headers " 
 					"and end-of-message."
 					<< endl;
 			}
@@ -1684,7 +1694,7 @@ int PopMailConduit::doPopQuery()
 		{
 #ifdef DEBUG
 			{
-				kdDebug() << fname << ": Found end-of-headers" 
+				DEBUGCONDUIT << fname << ": Found end-of-headers" 
 					<< endl;
 			}
 #endif
@@ -1699,7 +1709,7 @@ int PopMailConduit::doPopQuery()
 
 #ifdef DEBUG
 	{
-		kdDebug() << fname << ": Read " << count << " lines." << endl;
+		DEBUGCONDUIT << fname << ": Read " << count << " lines." << endl;
 	}
 #endif
 	strncpy(buf,line,bufsiz);
@@ -1715,7 +1725,7 @@ int PopMailConduit::doPopQuery()
 
 #ifdef DEBUG
 	{
-		kdDebug() << fname << ": Buffer @" << (int) buf << endl;
+		DEBUGCONDUIT << fname << ": Buffer @" << (int) buf << endl;
 	}
 #endif
 
@@ -1732,7 +1742,7 @@ int PopMailConduit::doPopQuery()
 
 #ifdef DEBUG
 		{
-			kdDebug() << fname << ": Got line ["  
+			DEBUGCONDUIT << fname << ": Got line ["  
 				<< (int) buf[0] << ',' << (int) buf[1] 
 				<< ']'
 				<< buf;
@@ -1795,11 +1805,11 @@ int PopMailConduit::doPopQuery()
 		messageLength=strlen(buffer);
 #ifdef DEBUG
 		{
-			kdDebug() << fname << ": Message so far:" << endl
+			DEBUGCONDUIT << fname << ": Message so far:" << endl
 				<< buffer << endl;
-			kdDebug() << fname << ": Length " 
+			DEBUGCONDUIT << fname << ": Length " 
 				<< messageLength << endl;
-			kdDebug() << fname << ": Buffer @" << (int) buffer 
+			DEBUGCONDUIT << fname << ": Buffer @" << (int) buffer 
 				<< endl;
 		}
 #endif
@@ -1854,7 +1864,7 @@ int PopMailConduit::doUnixStyle()
 
 #ifdef DEBUG
 		{
-			kdDebug() << fname << ": Trying to read mailbox "
+			DEBUGCONDUIT << fname << ": Trying to read mailbox "
 				<< filename << endl;
 		}
 #endif
@@ -1870,7 +1880,7 @@ int PopMailConduit::doUnixStyle()
 
 #ifdef DEBUG
 		{
-			kdDebug() << fname << ": Mailbox found." << endl;
+			DEBUGCONDUIT << fname << ": Mailbox found." << endl;
 		}
 #endif
 
@@ -1893,7 +1903,7 @@ int PopMailConduit::doUnixStyle()
 			messageCount++;
 #ifdef DEBUG
 			{
-				kdDebug() << fname << ": Read message "
+				DEBUGCONDUIT << fname << ": Read message "
 					<< messageCount << " from mailbox." 
 					<< endl;
 			}
@@ -1911,7 +1921,7 @@ int PopMailConduit::doUnixStyle()
 
 #ifdef DEBUG
 	{
-		kdDebug() << fname << ": Wrote "
+		DEBUGCONDUIT << fname << ": Wrote "
 			<< messageCount
 			<< " messages to pilot."
 			<< endl;
@@ -1929,10 +1939,12 @@ int PopMailConduit::doUnixStyle()
 
 	QString outbox = getKMailOutbox();
 
+#ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": KMail's outbox is "
 		<< outbox
 		<< endl;
+#endif
 }
 
 /* virtual */ void PopMailConduit::exec()
@@ -1975,6 +1987,9 @@ int PopMailConduit::doUnixStyle()
 
 
 // $Log$
+// Revision 1.37  2002/02/10 22:21:33  adridg
+// Handle pilot-link 0.10.1; spit 'n polish; m505 now supported?
+//
 // Revision 1.36  2002/01/26 15:00:57  adridg
 // Compile fixes and more
 //

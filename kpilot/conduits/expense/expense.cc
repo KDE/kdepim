@@ -287,6 +287,7 @@ ExpenseConduit::~ExpenseConduit()
 
 void ExpenseConduit::doTest()
 {
+#ifdef DEBUG
 	DEBUGCONDUIT << k_funcinfo
 		<< ": Got settings "
 		<< fDBType << " "
@@ -295,6 +296,7 @@ void ExpenseConduit::doTest()
 		<< fDBtable << " "
 		<< fDBlogin
 		<< endl;
+#endif
 }
 
 void ExpenseConduit::csvOutput(QTextStream *out,Expense *e)
@@ -477,6 +479,9 @@ void ExpenseConduit::cleanup()
 
 
 // $Log$
+// Revision 1.21  2001/12/28 13:03:08  adridg
+// Fixup some email addresses, random lil' things
+//
 // Revision 1.20  2001/12/18 07:40:49  adridg
 // Enable conduit's config & back out danimo's work
 //

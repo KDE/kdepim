@@ -442,11 +442,15 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry &dateEnt
 	if (!repeatsForever)
 	{
 		endDate = readTm(dateEntry.getRepeatEnd()).date();
+#ifdef DEBUG
 		DEBUGCONDUIT << fname << "-- end " << endDate.toString() << endl;
+#endif
 	}
 	else
 	{
+#ifdef DEBUG
 		DEBUGCONDUIT << fname << "-- noend" << endl;
+#endif
 	}
 
 	QBitArray dayArray(7);
@@ -549,6 +553,9 @@ void VCalConduit::setExceptions(KCal::Event *vevent,const PilotDateEntry &dateEn
 }
 
 // $Log$
+// Revision 1.50  2002/01/26 15:01:02  adridg
+// Compile fixes and more
+//
 // Revision 1.49  2002/01/25 21:43:12  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //

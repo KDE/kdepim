@@ -329,7 +329,7 @@ void PopMailSendPage::browseSignature()
 
 #ifdef DEBUG
 	{
-		kdDebug() << fname << ": Signature currently "
+		DEBUGCONDUIT << fname << ": Signature currently "
 			<< fSignature->text() << endl;
 	}
 #endif
@@ -347,7 +347,7 @@ void PopMailSendPage::browseSignature()
 
 #ifdef DEBUG
 	{
-		kdDebug() << fname << ": Signature selected "
+		DEBUGCONDUIT << fname << ": Signature selected "
 			<< filename << endl;
 	}
 #endif
@@ -589,7 +589,7 @@ void PopMailReceivePage::setMode(RetrievalMode m)
 
 #ifdef DEBUG
 	{
-		kdDebug() << fname << ": Mailbox currently "
+		DEBUGCONDUIT << fname << ": Mailbox currently "
 			<< fMailbox->text() << endl;
 	}
 #endif
@@ -607,7 +607,7 @@ void PopMailReceivePage::setMode(RetrievalMode m)
 
 #ifdef DEBUG
 	{
-		kdDebug() << fname << ": Mailbox selected "
+		DEBUGCONDUIT << fname << ": Mailbox selected "
 			<< filename << endl;
 	}
 #endif
@@ -674,6 +674,9 @@ PopMailOptions::setupWidget()
 
 
 // $Log$
+// Revision 1.24  2002/01/25 21:43:12  adridg
+// ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
+//
 // Revision 1.23  2002/01/20 06:46:22  waba
 // Messagebox changes.
 //

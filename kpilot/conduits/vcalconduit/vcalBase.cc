@@ -115,9 +115,11 @@ bool VCalBaseConduit::getCalendar(const QString &group)
 	}
 	else
 	{
+#ifdef DEBUG
 		DEBUGCONDUIT << fname
 			 << ": Got calendar!"
 			<< endl;
+#endif
 		fTimeZone = fCalendar->getTimeZone();
 		return true;
 	}
@@ -217,7 +219,9 @@ struct tm VCalBaseConduit::writeTm(const QDateTime &dt)
 
 void VCalBaseConduit::deleteRecord(PilotRecord *rec)
 {
-  kdDebug() << "VCalBaseConduit::deleteRecord() not yet implemented" << endl;
+#ifdef DEBUG
+  DEBUGCONDUIT << "VCalBaseConduit::deleteRecord() not yet implemented" << endl;
+#endif
 }
 
 void VCalBaseConduit::deleteFromPilot(int entryType)
@@ -349,6 +353,9 @@ bool VCalBaseConduit::isKOrganizerRunning()
 }
 
 // $Log$
+// Revision 1.13  2002/01/15 22:43:35  adridg
+// Backport to 2.2.2
+//
 // Revision 1.12  2001/12/31 09:25:05  adridg
 // Cleanup, various fixes for runtime loading
 //

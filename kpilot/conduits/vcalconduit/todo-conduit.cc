@@ -149,7 +149,9 @@ void TodoConduit::doSync()
   // now, all the stuff that was modified/new on the pilot should be
   // added to the todoendar.  We now need to add stuff to the pilot
   // that is modified/new in the todoendar (the opposite).
+#ifdef DEBUG
   DEBUGCONDUIT << fname << ": Desktop -> Pilot" << endl;
+#endif
   doLocalSync();
 
   // now we save the todoendar.
@@ -288,9 +290,11 @@ void TodoConduit::doLocalSync()
         todo->setPilotId(id);
         todo->setSyncStatus(Incidence::SYNCNONE);
       } else {
-        kdDebug() << fname
+#ifdef DEBUG
+        DEBUGCONDUIT << fname
                   << "error! writeRecord returned a pilotID <= 0!"
                   << endl;
+#endif
       }
     }
   }
@@ -446,6 +450,9 @@ void TodoConduit::firstSyncCopy(bool DeleteOnPilot)
 }
 
 // $Log$
+// Revision 1.9  2002/01/15 22:43:35  adridg
+// Backport to 2.2.2
+//
 // Revision 1.8  2001/12/31 09:25:05  adridg
 // Cleanup, various fixes for runtime loading
 //

@@ -212,6 +212,7 @@ void KNotesAction::listNotes()
 	QMap<int,QString>::ConstIterator i = fP->fNotes.begin();
 	while (i != fP->fNotes.end())
 	{
+#ifdef DEBUG
 		DEBUGCONDUIT << fname
 			<< ": "
 			<< i.key()
@@ -220,6 +221,7 @@ void KNotesAction::listNotes()
 			<< (fP->fKNotes->isNew("kpilot",i.key()) ?
 				" (new)" : "" )
 			<< endl;
+#endif
 		i++;
 	}
 
@@ -470,6 +472,9 @@ void KNotesAction::cleanupMemos()
 
 
 // $Log$
+// Revision 1.7  2002/01/20 22:42:43  adridg
+// CVS_SILENT: Administrative
+//
 // Revision 1.6  2001/12/31 09:24:25  adridg
 // Cleanup, various fixes for runtime loading
 //
