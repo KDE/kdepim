@@ -157,7 +157,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   a_ctDoPost = new KToggleAction(i18n("Send &News Article"), "filenew", 0 , this,
                    SLOT(slotToggleDoPost()), actionCollection(), "send_news");
 
-  a_ctDoMail = new KToggleAction(i18n("Send E-&Mail"), "mail_generic" , 0 , this,
+  a_ctDoMail = new KToggleAction(i18n("Send E&mail"), "mail_generic" , 0 , this,
                    SLOT(slotToggleDoMail()), actionCollection(), "send_mail");
 
   a_ctSetCharset = new KSelectAction(i18n("Set &Charset"), 0, actionCollection(), "set_charset");
