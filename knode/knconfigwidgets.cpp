@@ -2177,7 +2177,7 @@ KNConfig::PrivacyWidget::PrivacyWidget(QWidget *p, const char *n)
   QBoxLayout *topLayout = new QVBoxLayout(this, 5);
   c_onf = new Kpgp::Config(this,"knode pgp config",false);
   topLayout->addWidget(c_onf);
-  QGroupBox *optBox = new QGroupBox(i18n("KNode specific options"), this);
+  QGroupBox *optBox = new QGroupBox(i18n("KNode Specific Options"), this);
   topLayout->addWidget(optBox);
   QBoxLayout *groupL = new QVBoxLayout(optBox, KDialog::spacingHint());
   groupL->addSpacing(fontMetrics().lineSpacing());
