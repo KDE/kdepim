@@ -302,11 +302,42 @@ QString DateBook::event2string( KCal::Event *event )
             if ( array.testBit(4 ) ) day |= Friday;
             if ( array.testBit(5 ) ) day |= Saturday;
             if ( array.testBit(6 ) ) day |= Sunday;
+
+            /* need to be > 0  we set the repeat day to the day where the event takes place*/
+            if ( day < 0 ) {
+                switch( event->dtStart().date().dayOfWeek() ) {
+                case 1: // Monday
+                    day = Monday;
+                    break;
+                case 2: // Tuesday
+                    day = Tuesday;
+                    break;
+                case 3: // Wednesday
+                    day = Wednesday;
+                    break;
+                case 4: //  Thursday
+                    day = Thursday;
+                    break;
+                case 5: // Friday
+                    day = Friday;
+                    break;
+                case 6: // Staurday
+                    day = Saturday;
+                    break;
+                default:// should never happen
+                case 7: // Sunday
+                    day = Sunday;
+                    break;
+                }
+
+            }
             str.append( "rweekdays=\"" + QString::number(static_cast<int> (day) ) + "\" ");
             break;
         }
         case KCal::Recurrence::rMonthlyPos :{
-            str.append( "rposition=\"" + QString::number( week( event->dtStart().date() ) )  + "\" ");
+            int rpos = week( event->dtStart().date() );
+            if ( rpos != 0 )
+                str.append( "rposition=\"" + QString::number(rpos)  + "\" ");
             type = "MonthlyDay";
             break;
         }
