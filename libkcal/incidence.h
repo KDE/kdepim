@@ -262,8 +262,17 @@ class Incidence : public QObject
     /** get the event's priority */
     int priority() const;
 
-    /** Return the alarm object associated with this incidence. If there is none, returns an appropriate (non-0) object. */
-    Alarm *alarm() const;
+    /** All alarms that are associated with this incidence */
+    const QList<Alarm> &alarms() const;
+    /** Create a new alarm which is associated with this incidence */
+    Alarm* newAlarm();
+    /** Add an alarm which is associated with this incidence */
+    void addAlarm(Alarm*);
+    /** Remove an alarm that is associated with this incidence */
+    void removeAlarm(Alarm*);
+    /** return whether any alarm associated with this incidence is enabled */
+    bool isAlarmEnabled() const;
+
     /** Return the recurrence rule associated with this incidence. If there is none, returns an appropriate (non-0) object. */
     Recurrence *recurrence() const;
 
@@ -309,7 +318,7 @@ class Incidence : public QObject
     int mDuration;
     bool mHasDuration;
 
-    Alarm *mAlarm;
+    QPtrList<Alarm> mAlarms;
     Recurrence *mRecurrence;
 };
 

@@ -34,7 +34,7 @@ Todo::Todo()
 
   mHasDueDate = false;
   mHasStartDate = false;
-  
+
   mHasCompletedDate = false;
   mPercentComplete = 0;
 }
@@ -61,16 +61,21 @@ Incidence *Todo::clone()
 void Todo::setDtDue(const QDateTime &dtDue)
 {
   //int diffsecs = mDtDue.secsTo(dtDue);
-  
+
   /*if (mReadOnly) return;
-  if (alarm()->enabled()) {
-    alarm()->setTime(alarm()->time().addSecs(diffsecs));
-    }*/
+  const QPtrList<Alarm>& alarms = alarms();
+  for (Alarm* alarm = alarms.first(); alarm; alarm = alarms.next()) {
+    if (alarm->enabled()) {
+      alarm->setTime(alarm->time().addSecs(diffsecs));
+    }
+  }*/
   mDtDue = dtDue;
 
   //kdDebug() << "setDtDue says date is " << mDtDue.toString() << endl;
-  
-  //alarm()->setAlarmStart(mDtDue);
+
+  /*const QPtrList<Alarm>& alarms = alarms();
+  for (Alarm* alarm = alarms.first(); alarm; alarm = alarms.next())
+    alarm->setAlarmStart(mDtDue);*/
 
   emit eventUpdated(this);
 }

@@ -113,15 +113,19 @@ void AlarmDialog::eventNotification()
   EventData *evdata;
 
   for (EventData *evdata = mEvents.first();  evdata;  evdata = mEvents.next()) {
-    Alarm* alarm = evdata->event->alarm();
-    if (!alarm->programFile().isEmpty()) {
-      KProcess proc;
-      proc << alarm->programFile().latin1();
-      proc.start(KProcess::DontCare);
-    }
+    const Alarm* alarm;
+    for (QPtrListIterator<Alarm> it(evdata->event->alarms());
+         (alarm = it.current()) != 0;  ++it) {
+// TODO: Check whether this should be done for all multiple alarms
+      if (!alarm->programFile().isEmpty()) {
+        KProcess proc;
+        proc << alarm->programFile().latin1();
+        proc.start(KProcess::DontCare);
+      }
 
-    if (!alarm->audioFile().isEmpty()) {
-      KAudioPlayer::play(alarm->audioFile().latin1());
+      if (!alarm->audioFile().isEmpty()) {
+        KAudioPlayer::play(alarm->audioFile().latin1());
+      }
     }
   }
 }

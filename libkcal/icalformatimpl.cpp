@@ -88,15 +88,15 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
   if (todo->hasStartDate()) {
     icaltimetype start;
     if (todo->doesFloat()) {
-//      kdDebug() << "§§ Incidence " << todo->summary() << " floats." << endl; 
+//      kdDebug() << "§§ Incidence " << todo->summary() << " floats." << endl;
       start = writeICalDate(todo->dtStart().date());
     } else {
-//      kdDebug() << "§§ incidence " << todo->summary() << " has time." << endl; 
+//      kdDebug() << "§§ incidence " << todo->summary() << " has time." << endl;
       start = writeICalDateTime(todo->dtStart());
     }
     icalcomponent_add_property(vtodo,icalproperty_new_dtstart(start));
   }
-  
+
   // completion date
   if (todo->isCompleted()) {
     if (!todo->hasCompletedDate()) {
@@ -107,10 +107,10 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
     icaltimetype completed = writeICalDateTime(todo->completed());
     icalcomponent_add_property(vtodo,icalproperty_new_completed(completed));
   }
-  
+
   icalcomponent_add_property(vtodo,
       icalproperty_new_percentcomplete(todo->percentComplete()));
-      
+
   return vtodo;
 }
 
@@ -118,32 +118,32 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
 {
   kdDebug() << "Write Event '" << event->summary() << "' (" << event->VUID()
               << ")" << endl;
- 
+
   QString tmpStr;
   QStringList tmpStrList;
 
   icalcomponent *vevent = icalcomponent_new(ICAL_VEVENT_COMPONENT);
 
   writeIncidence(vevent,event);
-  
+
   // start time
   icaltimetype start;
   if (event->doesFloat()) {
-//    kdDebug() << "§§ Incidence " << event->summary() << " floats." << endl; 
+//    kdDebug() << "§§ Incidence " << event->summary() << " floats." << endl;
     start = writeICalDate(event->dtStart().date());
   } else {
-//    kdDebug() << "§§ incidence " << event->summary() << " has time." << endl; 
+//    kdDebug() << "§§ incidence " << event->summary() << " has time." << endl;
     start = writeICalDateTime(event->dtStart());
   }
   icalcomponent_add_property(vevent,icalproperty_new_dtstart(start));
-  
+
   // end time
   icaltimetype end;
   if (event->doesFloat()) {
-//    kdDebug() << "§§ Event " << event->summary() << " floats." << endl; 
+//    kdDebug() << "§§ Event " << event->summary() << " floats." << endl;
     end = writeICalDate(event->dtEnd().date());
   } else {
-//    kdDebug() << "§§ Event " << event->summary() << " has time." << endl; 
+//    kdDebug() << "§§ Event " << event->summary() << " has time." << endl;
     end = writeICalDateTime(event->dtEnd());
   }
   icalcomponent_add_property(vevent,icalproperty_new_dtend(end));
@@ -156,7 +156,7 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
         it != tmpStrList.end();
         ++it )
     addPropValue(vevent, VCAttachProp, (*it).ascii());
-  
+
   // resources
   tmpStrList = anEvent->resources();
   tmpStr = tmpStrList.join(";");
@@ -169,7 +169,7 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
   // transparency
 //  tmpStr.sprintf("%i",anEvent->getTransparency());
 //  addPropValue(vevent, VCTranspProp, tmpStr.ascii());
-  
+
   return vevent;
 }
 
@@ -178,7 +178,7 @@ icalcomponent *ICalFormatImpl::writeJournal(Journal *journal)
   icalcomponent *vjournal = icalcomponent_new(ICAL_VJOURNAL_COMPONENT);
 
   writeIncidence(vjournal,journal);
-  
+
   return vjournal;
 }
 
@@ -295,11 +295,11 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   icalproperty *p =
       icalproperty_new_x((QString::number(incidence->pilotId())).utf8());
   icalproperty_set_x_name(p,"X-PILOTID");
-  icalcomponent_add_property(parent,p);  
+  icalcomponent_add_property(parent,p);
   p = icalproperty_new_x((QString::number(incidence->syncStatus())).utf8());
   icalproperty_set_x_name(p,"X-PILOTSTAT");
   icalcomponent_add_property(parent,p);
-  
+
   // recurrence rule stuff
   Recurrence *recur = incidence->recurrence();
   if (recur->doesRecur()) {
@@ -316,10 +316,13 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   }
 
   // alarms
-  Alarm *alarm = incidence->alarm();
-  if (alarm->enabled()) {
-    kdDebug() << "Write alarm for " << incidence->summary() << endl;
-    icalcomponent_add_component(parent,writeAlarm(alarm));
+  Alarm* alarm;
+  for (QPtrListIterator<Alarm> it(incidence->alarms());
+       (alarm = it.current()) != 0;  ++it) {
+    if (alarm->enabled()) {
+      kdDebug() << "Write alarm for " << incidence->summary() << endl;
+      icalcomponent_add_component(parent,writeAlarm(alarm));
+    }
   }
 
   // duration
@@ -454,7 +457,7 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
       for (tmpPos = tmpPositions.first();
 	   tmpPos;
 	   tmpPos = tmpPositions.next()) {
-	
+
 	tmpStr2.sprintf("%i", tmpPos->rPos);
 	if (tmpPos->negative)
 	  tmpStr2 += "- ";
@@ -478,7 +481,7 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
         r.by_month_day[index++] = icalrecurrencetype_day_position(*tmpDay);
       }
 //      r.by_day[index] = ICAL_RECURRENCE_ARRAY_MAX;
-#if 0    
+#if 0
       tmpStr.sprintf("MD%i ", anEvent->rFreq);
       // write out all rMonthDays;
       tmpDays = anEvent->rMonthDays;
@@ -590,7 +593,7 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
       for (tmpPos = tmpPositions.first();
 	   tmpPos;
 	   tmpPos = tmpPositions.next()) {
-	
+
 	tmpStr2.sprintf("%i", tmpPos->rPos);
 	if (tmpPos->negative)
 	  tmpStr2 += "- ";
@@ -658,10 +661,10 @@ icalproperty *ICalFormatImpl::writeRecurrenceRule(Recurrence *recur)
 icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
 {
   icalcomponent *a = icalcomponent_new(ICAL_VALARM_COMPONENT);
-  
+
   icalproperty_action action;
   icalattachtype *attach;
-  
+
   if (!alarm->programFile().isEmpty()) {
     action = ICAL_ACTION_PROCEDURE;
 // The attachement crashes this function. Find the cause and reenable the code
@@ -706,7 +709,7 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
 Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
 {
   Todo *todo = new Todo;
-  
+
   readIncidence(vtodo,todo);
 
   icalproperty *p = icalcomponent_get_first_property(vtodo,ICAL_ANY_PROPERTY);
@@ -726,7 +729,7 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
         if (icaltime.is_date) {
           todo->setDtDue(QDateTime(readICalDate(icaltime),QTime(0,0,0)));
           todo->setFloats(true);
-	  
+
         } else {
           todo->setDtDue(readICalDateTime(icaltime));
           todo->setFloats(false);
@@ -753,7 +756,7 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
         // Flag that todo has start date. Value is read in by readIncidence().
 	todo->setHasStartDate(true);
         break;
-    
+
       default:
 //        kdDebug() << "ICALFormat::readTodo(): Unknown property: " << kind
 //                  << endl;
@@ -771,7 +774,7 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
   Event *event = new Event;
   event->setFloats(false);
 
-  readIncidence(vevent,event);  
+  readIncidence(vevent,event);
 
   icalproperty *p = icalcomponent_get_first_property(vevent,ICAL_ANY_PROPERTY);
 
@@ -795,7 +798,7 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
         }
         break;
 
-// TODO:  
+// TODO:
   // at this point, there should be at least a start or end time.
   // fix up for events that take up no time but have a time associated
 #if 0
@@ -804,7 +807,7 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
   if (!(vo = isAPropertyOf(vevent, VCDTendProp)))
     anEvent->setDtEnd(anEvent->dtStart());
 #endif
-  
+
 // TODO: exdates
 #if 0
   // recurrence exceptions
@@ -878,7 +881,7 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
 
   // some stupid vCal exporters ignore the standard and use Description
   // instead of Summary for the default field.  Correct for this.
-  if (event->summary().isEmpty() && 
+  if (event->summary().isEmpty() &&
       !(event->description().isEmpty())) {
     QString tmpStr = event->description().simplifyWhiteSpace();
     event->setDescription("");
@@ -893,14 +896,14 @@ Journal *ICalFormatImpl::readJournal(icalcomponent *vjournal)
   Journal *journal = new Journal;
 
   readIncidence(vjournal,journal);
-  
-  return journal;  
+
+  return journal;
 }
 
 Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
 {
   icalparameter *p = 0;
-  
+
   QString email = QString::fromUtf8(icalproperty_get_attendee(attendee));
 
   QString name;
@@ -1034,13 +1037,13 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
         text = icalproperty_get_description(p);
         incidence->setDescription(QString::fromUtf8(text));
         break;
- 
+
       case ICAL_SUMMARY_PROPERTY:  // summary
         text = icalproperty_get_summary(p);
         incidence->setSummary(QString::fromUtf8(text));
         break;
 
-#if 0  
+#if 0
   // status
   if ((vo = isAPropertyOf(vincidence, VCStatusProp)) != 0) {
     incidence->setStatus(s = fakeCString(vObjectUStringZValue(vo)));
@@ -1049,7 +1052,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
   else
     incidence->setStatus("NEEDS ACTION");
 #endif
-  
+
       case ICAL_PRIORITY_PROPERTY:  // priority
         intvalue = icalproperty_get_priority(p);
         incidence->setPriority(intvalue);
@@ -1068,7 +1071,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
         icaltime = icalproperty_get_exdate(p);
         incidence->addExDate(readICalDate(icaltime));
         break;
-        
+
       case ICAL_CLASS_PROPERTY:
         text = icalproperty_get_class(p);
         if (strcmp(text,"PUBLIC") == 0) {
@@ -1079,7 +1082,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
           incidence->setSecrecy(Incidence::SecrecyPrivate);
         }
         break;
-        
+
 
       case ICAL_X_PROPERTY:
         if (strcmp(icalproperty_get_name(p),"X-PILOTID") == 0) {
@@ -1247,7 +1250,7 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
 	else
 	  anEvent->setRecursDaily(rFreq, rDuration);
       }
-    } 
+    }
     /********************************* WEEKLY ******************************/
     else if (tmpStr.left(1) == "W") {
       int index = tmpStr.find(' ');
@@ -1280,7 +1283,7 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
 	else
 	  anEvent->setRecursWeekly(rFreq, qba, rDuration);
       }
-    } 
+    }
     /**************************** MONTHLY-BY-POS ***************************/
     else if (tmpStr.left(2) == "MP") {
       int index = tmpStr.find(' ');
@@ -1318,7 +1321,7 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
       }
       index = last; if (tmpStr.mid(index,1) == "#") index++;
       if (tmpStr.find('T', index) != -1) {
-	QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length() - 
+	QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length() -
 						    index))).date();
 	anEvent->setRecursMonthly(Event::rMonthlyPos, rFreq, rEndDate);
       } else {
@@ -1345,7 +1348,7 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
       else {
 	// e.g. MD1 3 #0
 	while (index < last) {
-	  int index2 = tmpStr.find(' ', index); 
+	  int index2 = tmpStr.find(' ', index);
 	  tmpDay = tmpStr.mid(index, (index2-index)).toShort();
 	  index = index2-1;
 	  if (tmpStr.mid(index, 1) == "-")
@@ -1443,10 +1446,10 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
 void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
 {
   //kdDebug() << "Read alarm for " << incidence->summary() << endl;
-  
-  Alarm* koalarm = incidence->alarm();
-  koalarm->setRepeatCount(0);
-  koalarm->setEnabled(true);
+
+  Alarm* ialarm = incidence->newAlarm();
+  ialarm->setRepeatCount(0);
+  ialarm->setEnabled(true);
 
   icalproperty *p = icalcomponent_get_first_property(alarm,ICAL_ANY_PROPERTY);
 
@@ -1474,43 +1477,43 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
 //            kdDebug() << "ICalFormatImpl::readAlarm(): Trigger has duration." << endl;
           }
         } else {
-          koalarm->setTime(readICalDateTime(trigger.time));
+          ialarm->setTime(readICalDateTime(trigger.time));
         }
         break;
 
       case ICAL_DURATION_PROPERTY:
         duration = icalproperty_get_duration(p);
-        koalarm->setSnoozeTime(icaldurationtype_as_int(duration)/60);
+        ialarm->setSnoozeTime(icaldurationtype_as_int(duration)/60);
         break;
 
       case ICAL_REPEAT_PROPERTY:
-        koalarm->setRepeatCount(icalproperty_get_repeat(p));
+        ialarm->setRepeatCount(icalproperty_get_repeat(p));
         break;
 
       // Only in AUDIO and PROCEDURE alarms
       case ICAL_ATTACH_PROPERTY:
         // TODO: move reading the attachement after reading the action type
         attach = icalproperty_get_attach(p);
-        koalarm->setAudioFile(QFile::decodeName(
+        ialarm->setAudioFile(QFile::decodeName(
             icalattachtype_get_url(&attach)));
         break;
-  
+
       // Only in DISPLAY and EMAIL and PROCEDURE alarms
       case ICAL_DESCRIPTION_PROPERTY:
-        koalarm->setText(icalproperty_get_description(p));
+        ialarm->setText(icalproperty_get_description(p));
         break;
 
       // Only in EMAIL alarm
       case ICAL_SUMMARY_PROPERTY:
-        koalarm->setMailSubject(icalproperty_get_summary(p));
+        ialarm->setMailSubject(icalproperty_get_summary(p));
         break;
 
       // Only in EMAIL alarm
       case ICAL_ATTENDEE_PROPERTY:
-        koalarm->setMailAddress(icalproperty_get_attendee(p));
+        ialarm->setMailAddress(icalproperty_get_attendee(p));
         // TODO: multiple attendees can be specified
         break;
-  
+
       default:
         break;
     }
@@ -1564,14 +1567,14 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
       }
     }
   }
-  
+
 #endif
 }
 
 icaltimetype ICalFormatImpl::writeICalDate(const QDate &date)
 {
   icaltimetype t;
-  
+
   t.year = date.year();
   t.month = date.month();
   t.day = date.day();
@@ -1581,7 +1584,7 @@ icaltimetype ICalFormatImpl::writeICalDate(const QDate &date)
   t.second = 0;
 
   t.is_date = 1;
-  
+
   t.is_utc = 0;
 
   t.zone = 0;
@@ -1609,9 +1612,9 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime, bool u
   } else {
     t.is_utc = 0;
   }
-  
+
   t.zone = 0;
-  
+
   return t;
 }
 
@@ -1660,7 +1663,7 @@ icaldurationtype ICalFormatImpl::writeICalDuration(int seconds)
 int ICalFormatImpl::readICalDuration(icaldurationtype d)
 {
   int result = 0;
-  
+
   result += d.weeks   * gSecondsPerWeek;
   result += d.days    * gSecondsPerDay;
   result += d.hours   * gSecondsPerHour;
@@ -1668,7 +1671,7 @@ int ICalFormatImpl::readICalDuration(icaldurationtype d)
   result += d.seconds;
 
   if (d.is_neg) result *= -1;
-  
+
   return result;
 }
 
@@ -1680,17 +1683,17 @@ icalcomponent *ICalFormatImpl::createCalendarComponent()
   calendar = icalcomponent_new(ICAL_VCALENDAR_COMPONENT);
 
   icalproperty *p;
-  
+
   // Product Identifier
   p = icalproperty_new_prodid(const_cast<char *>(_PRODUCT_ID));
   icalcomponent_add_property(calendar,p);
-  
+
   // TODO: Add time zone
-  
+
   // iCalendar version (2.0)
   p = icalproperty_new_version(const_cast<char *>(_ICAL_VERSION));
   icalcomponent_add_property(calendar,p);
-  
+
   return calendar;
 }
 
@@ -1701,7 +1704,7 @@ icalcomponent *ICalFormatImpl::createCalendarComponent()
 // that is used internally in the ICalFormatImpl.
 bool ICalFormatImpl::populate(icalcomponent *calendar)
 {
-  // this function will populate the caldict dictionary and other event 
+  // this function will populate the caldict dictionary and other event
   // lists. It turns vevents into Events and then inserts them.
 
     if (!calendar) return false;
@@ -1712,7 +1715,7 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
     char *methodType = 0;
     methodType = fakeCString(vObjectUStringZValue(curVO));
     if (mEnableDialogs)
-      KMessageBox::information(mTopWidget, 
+      KMessageBox::information(mTopWidget,
 			       i18n("This calendar is an iTIP transaction of type \"%1\".")
 			       .arg(methodType),
                                i18n("KOrganizer: iTIP Transaction"));
@@ -1727,7 +1730,7 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
     char *s = fakeCString(vObjectUStringZValue(curVO));
     if (strcmp(_PRODUCT_ID, s) != 0)
       if (mEnableDialogs)
-	KMessageBox::information(mTopWidget, 
+	KMessageBox::information(mTopWidget,
 			     i18n("This vCalendar file was not created by KOrganizer\n"
 				     "or any other product we support. Loading anyway..."),
                              i18n("KOrganizer: Unknown vCalendar Vendor"));
@@ -1736,15 +1739,15 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
 #endif
 
   icalproperty *p;
-  
+
   p = icalcomponent_get_first_property(calendar,ICAL_VERSION_PROPERTY);
   if (!p) {
     kdDebug() << "No VERSION property found" << endl;
     return false;
   } else {
     const char *version = icalproperty_get_version(p);
-    kdDebug() << "VCALENDAR version: '" << version << "'" << endl; 
-    
+    kdDebug() << "VCALENDAR version: '" << version << "'" << endl;
+
     if (strcmp(version,"1.0") == 0) {
       kdDebug() << "Expected iCalendar, got vCalendar" << endl;
       mParent->setException(new ErrorFormat(ErrorFormat::CalVersion1,
@@ -1759,13 +1762,13 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
 
 
 // TODO: check for calendar format version
-#if 0  
+#if 0
   // warn the user we might have trouble reading this unknown version.
   if ((curVO = isAPropertyOf(vcal, VCVersionProp)) != 0) {
     char *s = fakeCString(vObjectUStringZValue(curVO));
     if (strcmp(_VCAL_VERSION, s) != 0)
       if (mEnableDialogs)
-	KMessageBox::sorry(mTopWidget, 
+	KMessageBox::sorry(mTopWidget,
 			     i18n("This vCalendar file has version %1.\n"
 			          "We only support %2.")
                              .arg(s).arg(_VCAL_VERSION),
@@ -1775,7 +1778,7 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
 #endif
 
 // TODO: set time zone
-#if 0  
+#if 0
   // set the time zone
   if ((curVO = isAPropertyOf(vcal, VCTimeZoneProp)) != 0) {
     char *s = fakeCString(vObjectUStringZValue(curVO));
@@ -1799,25 +1802,25 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
     if (!mCalendar->getTodo(todo->VUID())) mCalendar->addTodo(todo);
     c = icalcomponent_get_next_component(calendar,ICAL_VTODO_COMPONENT);
   }
-  
+
   // Iterate through all events
   c = icalcomponent_get_first_component(calendar,ICAL_VEVENT_COMPONENT);
   while (c) {
-//    kdDebug() << "----Event found" << endl;  
+//    kdDebug() << "----Event found" << endl;
     Event *event = readEvent(c);
     if (!mCalendar->getEvent(event->VUID())) mCalendar->addEvent(event);
     c = icalcomponent_get_next_component(calendar,ICAL_VEVENT_COMPONENT);
   }
-  
+
   // Iterate through all journals
   c = icalcomponent_get_first_component(calendar,ICAL_VJOURNAL_COMPONENT);
   while (c) {
-//    kdDebug() << "----Journal found" << endl;  
+//    kdDebug() << "----Journal found" << endl;
     Journal *journal = readJournal(c);
     if (!mCalendar->journal(journal->VUID())) mCalendar->addJournal(journal);
     c = icalcomponent_get_next_component(calendar,ICAL_VJOURNAL_COMPONENT);
   }
-  
+
 #if 0
   initPropIterator(&i, vcal);
 
@@ -1889,7 +1892,7 @@ bool ICalFormatImpl::populate(icalcomponent *calendar)
     ;
   } // while
 #endif
-  
+
   // Post-Process list of events with relations, put Event objects in relation
   Event *ev;
   for ( ev=mEventsRelate.first(); ev != 0; ev=mEventsRelate.next() ) {
@@ -1919,7 +1922,7 @@ QString ICalFormatImpl::extractErrorProperty(icalcomponent *c)
   }
 
 //  kdDebug() << "ICalFormatImpl:extractErrorProperty: " << errorMessage << endl;
-  
+
   return errorMessage;
 }
 
@@ -1979,7 +1982,7 @@ icalcomponent *ICalFormatImpl::createScheduleComponent(Incidence *incidence,
   icalcomponent *message = createCalendarComponent();
 
   icalproperty_method icalmethod = ICAL_METHOD_NONE;
-  
+
   switch (method) {
     case Scheduler::Publish:
       icalmethod = ICAL_METHOD_PUBLISH;

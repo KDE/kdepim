@@ -68,7 +68,7 @@ void CalendarLocal::init()
 }
 
 
-CalendarLocal::~CalendarLocal() 
+CalendarLocal::~CalendarLocal()
 {
   close();
   delete mCalDict;
@@ -85,11 +85,11 @@ bool CalendarLocal::load(const QString &fileName)
   if (fileName.isEmpty()) return false;
 
   delete mFormat;
-  
+
   // Always try to load with iCalendar. It will detect, if it is actually a
   // vCalendar file.
   mFormat = new ICalFormat(this);
- 
+
   mFormat->clearException();
   bool success = mFormat->load(fileName);
 
@@ -111,7 +111,7 @@ bool CalendarLocal::load(const QString &fileName)
   } else {
 //    kdDebug() << "---Success" << endl;
   }
-  
+
   return true;
 }
 
@@ -157,7 +157,7 @@ void CalendarLocal::close()
   mCalDict->clear();
   mRecursList.clear();
   mTodoList.clear();
-  
+
   // reset oldest/newest date markers
   delete mOldestDate;
   mOldestDate = 0L;
@@ -182,7 +182,7 @@ void CalendarLocal::addEvent(Event *anEvent)
 void CalendarLocal::deleteEvent(Event *event)
 {
   kdDebug() << "CalendarLocal::deleteEvent" << endl;
-  
+
   QDate date(event->dtStart().date());
 
   QPtrList<Event> *tmpList;
@@ -191,7 +191,7 @@ void CalendarLocal::deleteEvent(Event *event)
   QDate startDate, tmpDate;
 
   tmpList = mCalDict->find(makeKey(date));
-  // if tmpList exists, the event is in the normal dictionary; 
+  // if tmpList exists, the event is in the normal dictionary;
   // it doesn't recur.
   if (tmpList) {
     for (anEvent = tmpList->first(); anEvent;
@@ -236,7 +236,7 @@ void CalendarLocal::deleteEvent(Event *event)
   // update oldest / newest dates if necessary
   // basically, first we check to see if this was the oldest
   // date in the calendar.  If it is, then we keep adding 1 to
-  // the oldest date until we come up with a location in the 
+  // the oldest date until we come up with a location in the
   // QDate dictionary which has some entries.  Now, this might
   // be the oldest date, but we want to check the recurrence list
   // to make sure it has nothing older.  We start looping through
@@ -247,7 +247,7 @@ void CalendarLocal::deleteEvent(Event *event)
   // the newest date is analogous, but sort of opposite.
   if (date == (*mOldestDate)) {
     for (; !mCalDict->find(makeKey((*mOldestDate))) &&
-	   (*mOldestDate != *mNewestDate); 
+	   (*mOldestDate != *mNewestDate);
 	 (*mOldestDate) = mOldestDate->addDays(1));
     mRecursList.first();
     while ((anEvent = mRecursList.current())) {
@@ -346,7 +346,7 @@ QPtrList<Todo> CalendarLocal::getTodosForDate(const QDate & date)
       todos.append(aTodo);
     }
   }
-  
+
   return todos;
 }
 
@@ -397,9 +397,10 @@ bool CalendarLocal::checkNonRecurringAlarms(QPtrList<Event>& alarmEvents, bool a
 {
   QIntDictIterator<QPtrList<Event> > dictIt(*mCalDict);
   QPtrList<Event> *tmpList;
-  Event *anEvent;
+  const Event *anEvent;
+  const Alarm *alarm;
   QDateTime tmpDT;
-  
+
   if (!append)
     alarmEvents.clear();
 
@@ -407,69 +408,22 @@ bool CalendarLocal::checkNonRecurringAlarms(QPtrList<Event>& alarmEvents, bool a
   // and find if any have an alarm pending.
 
   uint origSize = alarmEvents.count();
+  QDateTime now = QDateTime::currentDateTime();
   while (dictIt.current()) {
     tmpList = dictIt.current();
-    for (anEvent = tmpList->first(); anEvent;
-	 anEvent = tmpList->next()) {
-      if (anEvent->alarm()->enabled()) {
-	tmpDT = anEvent->alarm()->time();
-        //kdDebug() << "calendarlocal::checkNonRecurringAlarms - tmpDT of " << anEvent->summary() << " - " << tmpDT.date().toString() << endl;
-        if (tmpDT.date() == QDate::currentDate()
-        &&  tmpDT.time().hour() == QTime::currentTime().hour()
-        &&  tmpDT.time().minute() == QTime::currentTime().minute()) {
+    for (anEvent = tmpList->first(); anEvent; anEvent = tmpList->next()) {
+      for (QPtrListIterator<Alarm> it(anEvent->alarms());
+           (alarm = it.current()) != 0;  ++it) {
+	if (alarm->enabled()) {
+	  tmpDT = alarm->time();
+	  //kdDebug() << "calendarlocal::checkNonRecurringAlarms - tmpDT of " << anEvent->summary() << " - " << tmpDT.date().toString() << endl;
+	  if (tmpDT.date() == now.date()
+	  &&  tmpDT.time().hour() == now.time().hour()
+	  &&  tmpDT.time().minute() == now.time().minute()) {
 	    alarmEvents.append(anEvent);
+	    break;
 	  }
 	}
-      }
-    ++dictIt;
-  }
-  return alarmEvents.count() != origSize;
-}
-
-bool CalendarLocal::checkTodos(QPtrList<Todo>& alarmTodos, bool append)
-{
-  Todo *aTodo;
-  QDateTime tmpDT;
-
-  if (!append)
-    alarmTodos.clear();
-
-  uint origSize = alarmTodos.count();
-  for(aTodo = mTodoList.first(); aTodo; aTodo = mTodoList.next()) {
-    if (aTodo->alarm()->enabled()) {
-      tmpDT = aTodo->alarm()->time();
-      //kdDebug() << "calendarlocal::checkTodos - tmpDT of " << aTodo->summary() << " - " << tmpDT.date().toString() << endl;
-      if (tmpDT.date() == QDate::currentDate()) {
-	if ((tmpDT.time().hour() == QTime::currentTime().hour()) &&
-	    (tmpDT.time().minute() == QTime::currentTime().minute())) {
-	  alarmTodos.append(aTodo);
-	}
-      }
-    }
-  }
-  return alarmTodos.count() != origSize;
-}
-  
-bool CalendarLocal::checkAlarmsPast(QPtrList<Event>& alarmEvents, bool append)
-{
-  QIntDictIterator<QPtrList<Event> > dictIt(*mCalDict);
-  QPtrList<Event> *tmpList;
-  Event *anEvent;
-
-  if (!append)
-    alarmEvents.clear();
-
-  // this function has to look at every event in the whole database
-  // and find if any have an alarm pending.
-
-  uint origSize = alarmEvents.count();
-  while (dictIt.current()) {
-    tmpList = dictIt.current();
-    for (anEvent = tmpList->first(); anEvent;
-         anEvent = tmpList->next()) {
-      if (anEvent->alarm()->enabled()
-      &&  anEvent->alarm()->time() <= QDateTime::currentDateTime()) {
-        alarmEvents.append(anEvent);
       }
     }
     ++dictIt;
@@ -479,25 +433,92 @@ bool CalendarLocal::checkAlarmsPast(QPtrList<Event>& alarmEvents, bool append)
 
 bool CalendarLocal::checkRecurringAlarms(QPtrList<Event>& alarmEvents, bool append)
 {
-  Event *anEvent;
+  const Event *anEvent;
+  const Alarm *alarm;
   QDateTime tmpDT;
 
   if (!append)
     alarmEvents.clear();
 
   uint origSize = alarmEvents.count();
-  for (anEvent = mRecursList.first(); anEvent;
-       anEvent = mRecursList.next()) {
-    if (anEvent->alarm()->enabled()
-    &&  anEvent->recursOn(QDate::currentDate())) {
-      tmpDT = anEvent->alarm()->time();
-      if (tmpDT.time().hour() == QTime::currentTime().hour()
-      &&  tmpDT.time().minute() == QTime::currentTime().minute()) {
-        alarmEvents.append(anEvent);
+  QDateTime now = QDateTime::currentDateTime();
+  for (anEvent = mRecursList.first(); anEvent; anEvent = mRecursList.next()) {
+    if (anEvent->recursOn(now.date())) {
+      for (QPtrListIterator<Alarm> it(anEvent->alarms());
+           (alarm = it.current()) != 0;  ++it) {
+	if (alarm->enabled()) {
+	  tmpDT = alarm->time();
+	  if (tmpDT.time().hour() == now.time().hour()
+	  &&  tmpDT.time().minute() == now.time().minute()) {
+	    alarmEvents.append(anEvent);
+	    break;
+	  }
+	}
       }
     }
   }
   return alarmEvents.count() != origSize;
+}
+
+bool CalendarLocal::checkAlarmsPast(QPtrList<Event>& alarmEvents, bool append)
+{
+  QIntDictIterator<QPtrList<Event> > dictIt(*mCalDict);
+  QPtrList<Event> *tmpList;
+  const Event *anEvent;
+  const Alarm *alarm;
+
+  if (!append)
+    alarmEvents.clear();
+
+  // this function has to look at every event in the whole database
+  // and find if any have an alarm pending.
+
+  uint origSize = alarmEvents.count();
+  QDateTime now = QDateTime::currentDateTime();
+  while (dictIt.current()) {
+    tmpList = dictIt.current();
+    for (anEvent = tmpList->first(); anEvent; anEvent = tmpList->next()) {
+      for (QPtrListIterator<Alarm> it(anEvent->alarms());
+           (alarm = it.current()) != 0;  ++it) {
+	if (alarm->enabled()
+	&&  alarm->time() <= now) {
+	  alarmEvents.append(anEvent);
+	  break;
+	}
+      }
+    }
+    ++dictIt;
+  }
+  return alarmEvents.count() != origSize;
+}
+
+bool CalendarLocal::checkTodos(QPtrList<Todo>& alarmTodos, bool append)
+{
+  const Todo *aTodo;
+  const Alarm *alarm;
+  QDateTime tmpDT;
+
+  if (!append)
+    alarmTodos.clear();
+
+  uint origSize = alarmTodos.count();
+  QDateTime now = QDateTime::currentDateTime();
+  for(aTodo = mTodoList.first(); aTodo; aTodo = mTodoList.next()) {
+    for (QPtrListIterator<Alarm> it(aTodo->alarms());
+         (alarm = it.current()) != 0;  ++it) {
+      if (alarm->enabled()) {
+	tmpDT = alarm->time();
+	//kdDebug() << "calendarlocal::checkTodos - tmpDT of " << aTodo->summary() << " - " << tmpDT.date().toString() << endl;
+	if (tmpDT.date() == now.date()
+	&&  tmpDT.time().hour() == now.time().hour()
+	&&  tmpDT.time().minute() == now.time().minute()) {
+	  alarmTodos.append(aTodo);
+	  break;
+	}
+      }
+    }
+  }
+  return alarmTodos.count() != origSize;
 }
 
 /****************************** PROTECTED METHODS ****************************/
@@ -516,7 +537,7 @@ void CalendarLocal::updateEvent(Incidence *incidence)
   if (incidence->attendeeCount()) {
     QPtrList<Attendee> al;
     Attendee *a;
-    
+
     al = incidence->attendees();
     for (a = al.first(); a; a = al.next()) {
       if ((a->flag()) && (a->RSVP())) {
@@ -532,11 +553,11 @@ void CalendarLocal::updateEvent(Incidence *incidence)
 //    kdDebug() << "CalendarLocal::updateEvent(): Warning! Passed non-Event" << endl;
   } else {
     // we don't need to do anything to Todo events.
- 
+
     QIntDictIterator<QPtrList<Event> > qdi(*mCalDict);
     QPtrList<Event> *tmpList;
 
-    // the first thing we do is REMOVE all occurances of the event from 
+    // the first thing we do is REMOVE all occurances of the event from
     // both the dictionary and the recurrence list.  Then we reinsert it.
     // We don't bother about optimizations right now.
     qdi.toFirst();
@@ -547,7 +568,7 @@ void CalendarLocal::updateEvent(Incidence *incidence)
     // take any instances of it out of the recurrence list
     if (mRecursList.findRef(anEvent) != -1)
       mRecursList.take();
-    
+
     // ok the event is now GONE.  we want to re-insert it.
     insertEvent(anEvent);
   }
@@ -569,12 +590,12 @@ void CalendarLocal::insertEvent(const Event *anEvent)
   if (!mOldestDate) {
     mOldestDate = new QDate();
     (*mOldestDate) = anEvent->dtStart().date();
-  } 
+  }
   if (!mNewestDate) {
     mNewestDate = new QDate();
     (*mNewestDate) = anEvent->dtStart().date();
   }
-    
+
   // update oldest and newest dates if necessary.
   if (anEvent->dtStart().date() < (*mOldestDate))
     (*mOldestDate) = anEvent->dtStart().date();
@@ -623,12 +644,12 @@ long int CalendarLocal::makeKey(const QDate &d)
 }
 
 QDate CalendarLocal::keyToDate(long int key)
-{  
+{
   QString dateStr = QString::number(key);
 //  kdDebug() << "CalendarLocal::keyToDate(): " << dateStr << endl;
   QDate date(dateStr.mid(0,4).toInt(),dateStr.mid(4,2).toInt(),
              dateStr.mid(6,2).toInt());
-             
+
 //  kdDebug() << "  QDate: " << date.toString() << endl;
 
   return date;
@@ -667,7 +688,7 @@ QPtrList<Event> CalendarLocal::eventsForDate(const QDate &qd, bool sorted)
 	eventList.append(anEvent);
     }
   }
-  
+
   if (!sorted) {
     return eventList;
   }
@@ -831,11 +852,11 @@ Journal *CalendarLocal::journal(const QString &UID)
 QPtrList<Journal> CalendarLocal::journalList()
 {
   QPtrList<Journal> list;
-  
+
   QMap<QDate,Journal *>::Iterator it;
   for( it = mJournalMap.begin(); it != mJournalMap.end(); ++it ) {
     list.append(*it);
   }
- 
+
   return list;
 }

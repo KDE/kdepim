@@ -34,7 +34,6 @@ Incidence::Incidence() :
   mReadOnly(false), mRelatedTo(0), mSecrecy(SecrecyPublic), mPriority(3), mPilotId(0),
   mSyncStatus(SYNCMOD), mFloats(true), mDuration(0), mHasDuration(false)
 {
-  mAlarm = new Alarm(this);
   mRecurrence = new Recurrence(this);
 
   recreate();
@@ -43,11 +42,12 @@ Incidence::Incidence() :
   setOrganizer("Fix me");
   if (organizer().isEmpty())
     setOrganizer("x-none");
-  
+
   mSummary = "";
   mDescription = "";
 
   mExDates.setAutoDelete(true);
+  mAlarms.setAutoDelete(true);
 }
 
 Incidence::Incidence(const Incidence &i) : QObject()
@@ -79,8 +79,7 @@ Incidence::Incidence(const Incidence &i) : QObject()
   mPilotId = i.mPilotId;
   mSyncStatus = i.mSyncStatus;
   mFloats = i.mFloats;
-//  Alarm *mAlarm;                Alarm *mAlarm;
-  mAlarm = new Alarm(this);
+//  QPtrList<Alarm> mAlarms;    QPtrList<Alarm> mAlarms;
 //  Recurrence *mRecurrence;      Recurrence *mRecurrence;
   mRecurrence = new Recurrence(this);
 }
@@ -91,10 +90,9 @@ Incidence::~Incidence()
   for (ev=mRelations.first();ev;ev=mRelations.next()) {
     if (ev->relatedTo() == this) ev->setRelatedTo(0);
   }
-  if (relatedTo()) relatedTo()->removeRelation(this);  
+  if (relatedTo()) relatedTo()->removeRelation(this);
 
   delete mRecurrence;
-  delete mAlarm;
 }
 
 void Incidence::recreate()
@@ -112,7 +110,8 @@ void Incidence::setReadOnly(bool readonly)
 {
   mReadOnly = readonly;
   recurrence()->setRecurReadOnly(mReadOnly);
-  alarm()->setAlarmReadOnly(mReadOnly);
+  for (Alarm* alarm = mAlarms.first(); alarm; alarm = mAlarms.next())
+    alarm->setAlarmReadOnly(mReadOnly);
 }
 
 void Incidence::setLastModified(const QDateTime &lm)
@@ -182,15 +181,18 @@ QString Incidence::organizer() const
 void Incidence::setDtStart(const QDateTime &dtStart)
 {
   /*int diffsecs = mDtStart.secsTo(dtStart);
-  
+
   if (mReadOnly) return;
-  if (alarm()->enabled())
-  alarm()->setTime(alarm()->time().addSecs(diffsecs));*/
+  for (Alarm* alarm = mAlarms.first(); alarm; alarm = mAlarms.next()) {
+    if (alarm->enabled())
+      alarm->setTime(alarm->time().addSecs(diffsecs));
+  }*/
 
   mDtStart = dtStart;
 
   recurrence()->setRecurStart(mDtStart);
-  //alarm()->setAlarmStart(mDtStart);
+  /*for (Alarm* alarm = mAlarms.first(); alarm; alarm = mAlarms.next()) {
+    alarm->setAlarmStart(mDtStart);*/
 
   emit eventUpdated(this);
 }
@@ -414,7 +416,7 @@ void Incidence::setExDates(const char *dates)
   while ((index2 = tmpStr.find(',', index)) != -1) {
     QDate *tmpDate = new QDate;
     *tmpDate = strToDate(tmpStr.mid(index, (index2-index)));
-    
+
     mExDates.append(tmpDate);
     index = index2 + 1;
   }
@@ -567,9 +569,39 @@ int Incidence::syncStatus() const
   return mSyncStatus;
 }
 
-Alarm *Incidence::alarm() const
+const QList<Alarm> &Incidence::alarms() const
 {
-  return mAlarm;
+  return mAlarms;
+}
+
+Alarm* Incidence::newAlarm()
+{
+  Alarm* alarm = new Alarm(this);
+  mAlarms.append(alarm);
+//  emit eventUpdated(this);
+  return alarm;
+}
+
+void Incidence::addAlarm(Alarm *alarm)
+{
+  mAlarms.append(alarm);
+  emit eventUpdated(this);
+}
+
+void Incidence::removeAlarm(Alarm *alarm)
+{
+  mAlarms.removeRef(alarm);
+  emit eventUpdated(this);
+}
+
+bool Incidence::isAlarmEnabled() const
+{
+  Alarm* alarm;
+  for (QPtrListIterator<Alarm> it(mAlarms); (alarm = it.current()) != 0; ++it) {
+    if (alarm->enabled())
+      return true;
+  }
+  return false;
 }
 
 Recurrence *Incidence::recurrence() const

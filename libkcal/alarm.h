@@ -42,6 +42,8 @@ class Alarm {
     void setAlarmStart(QDateTime start) { mAlarmStart = start; }
     /** Set, if the alarm is read-only or can be changed. */
     void setAlarmReadOnly(bool readOnly ) { mAlarmReadOnly = readOnly; }
+    /** Get the alarm read-only status. */
+    bool alarmReadOnly() const { return mAlarmReadOnly; }
 
     /** set the event to have this file as the noise for the alarm. */
     void setAudioFile(const QString &audioAlarmFile);
@@ -91,6 +93,9 @@ class Alarm {
     void setEnabled(bool enable);
     /** get the alarm enabled status */
     bool enabled() const;
+
+    /** get the alarm's parent incidence */
+    Incidence *parent() const  { return mParent; }
 
   private:
     QString mAudioAlarmFile;              // url/filename of sound to play
