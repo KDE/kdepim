@@ -114,7 +114,7 @@ void CalendarLocal::deleteAllEvents()
 
 Event *CalendarLocal::event( const QString &uid )
 {
-  kdDebug(5800) << "CalendarLocal::event(): " << uid << endl;
+//  kdDebug(5800) << "CalendarLocal::event(): " << uid << endl;
   return mEvents[ uid ];
 }
 
@@ -201,7 +201,7 @@ Alarm::List CalendarLocal::alarms( const QDateTime &from, const QDateTime &to )
 
   Todo::List::ConstIterator it2;
   for( it2 = mTodoList.begin(); it2 != mTodoList.end(); ++it2 ) {
-    appendAlarms( alarms, *it2, from, to );
+    if (! (*it2)->isCompleted() ) appendAlarms( alarms, *it2, from, to );
   }
 
   return alarms;
@@ -257,7 +257,7 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
       }
       // Adjust the 'from' date/time and find the next recurrence at or after it
       qdt = incidence->recurrence()->getNextDateTime( from.addSecs(-offset - 1) );
-      if (!qdt.isValid())
+      if (!qdt.isValid() || incidence->isException(qdt.date()) )
         continue;
       // Remove the adjustment to get the alarm time
       qdt = qdt.addSecs( offset );

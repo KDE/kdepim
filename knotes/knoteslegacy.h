@@ -1,7 +1,7 @@
 /*******************************************************************
  KNotes -- Notes for the KDE project
 
- Copyright (c) 2002, 2003, Michael Brade <brade@kde.org>
+ Copyright (c) 2002-2004, Michael Brade <brade@kde.org>
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -39,8 +39,8 @@ public:
     static void cleanUp();
     static bool convert( KCal::CalendarLocal *calendar );
 private:
-    static void convertKNotes1Config( KCal::Journal *j, QDir& dir, const QString& file );
-    static void convertKNotes2Config( KCal::Journal *j, QDir& dir, const QString& file );
+    static bool convertKNotes1Config( KCal::Journal *j, QDir& dir, const QString& file );
+    static bool convertKNotes2Config( KCal::Journal *j, QDir& dir, const QString& file );
 };
 
 #endif

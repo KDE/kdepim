@@ -21,6 +21,7 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include <kedittoolbar.h>
 #include <kkeydialog.h>
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -113,11 +114,30 @@ void KAddressBookMain::initActions()
   KAction *action;
   action = KStdAction::keyBindings( this, SLOT( configureKeyBindings() ), actionCollection() );
   action->setWhatsThis( i18n( "You will be presented with a dialog, where you can configure the application wide shortcuts." ) );
+
+  KStdAction::configureToolbars( this, SLOT( configureToolbars() ), actionCollection() );
 }
 
 void KAddressBookMain::configureKeyBindings()
 {
   KKeyDialog::configure( actionCollection(), this );
+}
+
+void KAddressBookMain::configureToolbars()
+{
+  saveMainWindowSettings( KGlobal::config(), "MainWindow" );
+
+  KEditToolbar edit( factory() );
+  connect( &edit, SIGNAL( newToolbarConfig() ),
+           this, SLOT( slotNewToolbarConfig() ) );
+
+  edit.exec();
+}
+
+void KAddressBookMain::newToolbarConfig()
+{
+  createGUI();
+  applyMainWindowSettings( KGlobal::config(), "MainWindow" );
 }
 
 #include "kaddressbookmain.moc"

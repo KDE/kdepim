@@ -67,7 +67,7 @@ AlarmDialog::AlarmDialog( QWidget *parent, const char *name )
   topLayout->addWidget( suspendBox );
 
   new QLabel( i18n("Suspend duration (minutes):"), suspendBox );
-  mSuspendSpin = new QSpinBox( 1, 60, 1, suspendBox );
+  mSuspendSpin = new QSpinBox( 1, 9999, 1, suspendBox );
   mSuspendSpin->setValue( 5 );  // default suspend duration
   
   showButton( User2, false );

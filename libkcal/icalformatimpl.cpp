@@ -400,8 +400,10 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
 
 icalcomponent *ICalFormatImpl::writeEvent(Event *event)
 {
+#if 0
   kdDebug(5800) << "Write Event '" << event->summary() << "' (" << event->uid()
-              << ")" << endl;
+                << ")" << endl;
+#endif
 
   QString tmpStr;
   QStringList tmpStrList;

@@ -1,7 +1,7 @@
 /*
  *  mainwindow.cpp  -  main application window
  *  Program:  kalarm
- *  (C) 2001, 2002, 2003 by David Jarvie <software@astrojar.org.uk>
+ *  (C) 2001 - 2004 by David Jarvie <software@astrojar.org.uk>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -48,6 +48,7 @@
 #include "traywindow.h"
 #include "birthdaydlg.h"
 #include "editdlg.h"
+#include "kamail.h"
 #include "prefdlg.h"
 #include "preferences.h"
 #include "alarmlistview.h"
@@ -543,13 +544,13 @@ void KAlarmMainWindow::slotNew()
 */
 void KAlarmMainWindow::executeNew(KAlarmMainWindow* win, KAlarmEvent::Action action, const QString& text)
 {
-	EditAlarmDlg* editDlg = new EditAlarmDlg(i18n("New Alarm"), win, "editDlg");
+	EditAlarmDlg editDlg(i18n("New Alarm"), win, "editDlg");
 	if (!text.isNull())
-		editDlg->setAction(action, text);
-	if (editDlg->exec() == QDialog::Accepted)
+		editDlg.setAction(action, text);
+	if (editDlg.exec() == QDialog::Accepted)
 	{
 		KAlarmEvent event;
-		editDlg->getEvent(event);
+		editDlg.getEvent(event);
 
 		// Add the alarm to the displayed lists and to the calendar file
 		theApp()->addEvent(event, win);
@@ -560,6 +561,8 @@ void KAlarmMainWindow::executeNew(KAlarmMainWindow* win, KAlarmEvent::Action act
 			listView->clearSelection();
 			listView->setSelected(item, true);
 		}
+
+		alarmWarnings(&editDlg, event);
 	}
 }
 
@@ -573,17 +576,19 @@ void KAlarmMainWindow::slotCopy()
 	if (item)
 	{
 		KAlarmEvent event = listView->getEvent(item);
-		EditAlarmDlg* editDlg = new EditAlarmDlg(i18n("New Alarm"), this, "editDlg", &event);
-		if (editDlg->exec() == QDialog::Accepted)
+		EditAlarmDlg editDlg(i18n("New Alarm"), this, "editDlg", &event);
+		if (editDlg.exec() == QDialog::Accepted)
 		{
 			KAlarmEvent event;
-			editDlg->getEvent(event);
+			editDlg.getEvent(event);
 
 			// Add the alarm to the displayed lists and to the calendar file
 			theApp()->addEvent(event, this);
 			item = listView->addEntry(event, true);
 			listView->clearSelection();
 			listView->setSelected(item, true);
+
+			alarmWarnings(&editDlg, event);
 		}
 	}
 }
@@ -598,11 +603,11 @@ void KAlarmMainWindow::slotModify()
 	if (item)
 	{
 		KAlarmEvent event = listView->getEvent(item);
-		EditAlarmDlg* editDlg = new EditAlarmDlg(i18n("Edit Alarm"), this, "editDlg", &event);
-		if (editDlg->exec() == QDialog::Accepted)
+		EditAlarmDlg editDlg(i18n("Edit Alarm"), this, "editDlg", &event);
+		if (editDlg.exec() == QDialog::Accepted)
 		{
 			KAlarmEvent newEvent;
-			editDlg->getEvent(newEvent);
+			editDlg.getEvent(newEvent);
 
 			// Update the event in the displays and in the calendar file
 			theApp()->modifyEvent(event, newEvent, this);
@@ -610,6 +615,8 @@ void KAlarmMainWindow::slotModify()
 			item = listView->updateEntry(item, newEvent, true);
 			listView->clearSelection();
 			listView->setSelected(item, true);
+
+			alarmWarnings(&editDlg, newEvent);
 		}
 	}
 }
@@ -624,9 +631,9 @@ void KAlarmMainWindow::slotView()
 	if (item)
 	{
 		KAlarmEvent event = listView->getEvent(item);
-		EditAlarmDlg* editDlg = new EditAlarmDlg((event.expired() ? i18n("Expired Alarm") : i18n("View Alarm")),
-		                                         this, "editDlg", &event, true);
-		editDlg->exec();
+		EditAlarmDlg editDlg((event.expired() ? i18n("Expired Alarm") : i18n("View Alarm")),
+		                     this, "editDlg", &event, true);
+		editDlg.exec();
 	}
 }
 
@@ -792,13 +799,7 @@ void KAlarmMainWindow::slotResetDaemon()
 */
 void KAlarmMainWindow::slotQuit()
 {
-	if (isTrayParent())
-	{
-		hide();          // closing would also close the system tray icon
-		theApp()->quitIf();
-	}
-	else
-		close();
+	theApp()->doQuit(this);
 }
 
 /******************************************************************************
@@ -957,11 +958,16 @@ void KAlarmMainWindow::slotSelection()
 	QPtrList<AlarmListViewItem> items = listView->selectedItems();
 	int count = items.count();
 	AlarmListViewItem* item = (count == 1) ? items.first() : 0;
-	bool allExpired = true;
+	bool enableUndelete = true;
 	for (QPtrListIterator<AlarmListViewItem> it(items);  it.current();  ++it)
 	{
-		if (!listView->expired(it.current()))
-			allExpired = false;
+		if (enableUndelete)
+		{
+			const KAlarmEvent& event = it.current()->event();
+			if (!event.expired()
+			||  !event.occursAfter(QDateTime::currentDateTime()))
+				enableUndelete = false;
+		}
 	}
 
 	kdDebug(5950) << "KAlarmMainWindow::slotSelection(true)\n";
@@ -969,7 +975,7 @@ void KAlarmMainWindow::slotSelection()
 	actionModify->setEnabled(item && !listView->expired(item));
 	actionView->setEnabled(count == 1);
 	actionDelete->setEnabled(count);
-	actionUndelete->setEnabled(count && allExpired);
+	actionUndelete->setEnabled(count && enableUndelete);
 }
 
 /******************************************************************************
@@ -1034,6 +1040,16 @@ void KAlarmMainWindow::setAlarmEnabledStatus(bool status)
 {
 	kdDebug(5950) << "KAlarmMainWindow::setAlarmEnabledStatus(" << (int)status << ")\n";
 	mActionsMenu->setItemChecked(mAlarmsEnabledId, status);
+}
+
+/******************************************************************************
+* If it's an email alarm, warn if no 'From' email address is configured.
+*/
+void KAlarmMainWindow::alarmWarnings(QWidget* parent, const KAlarmEvent& event)
+{
+        if (event.action() == KAlarmEvent::EMAIL  &&  Preferences::instance()->emailAddress().isEmpty())
+                KMessageBox::information(parent, i18n("Please set the 'From' email address...",
+		                                      "%1\nPlease set it in the Preferences dialog.").arg(KAMail::i18n_NeedFromEmailAddress()));
 }
 
 /******************************************************************************

@@ -629,8 +629,6 @@ void KMMainWidget::hide()
 //-----------------------------------------------------------------------------
 void KMMainWidget::show()
 {
-  if( mPanner1 ) mPanner1->setSizes( mPanner1Sep );
-  if( mPanner2 ) mPanner2->setSizes( mPanner2Sep );
   QWidget::show();
 }
 
@@ -757,10 +755,12 @@ void KMMainWidget::slotMailChecked(bool newMail, bool sendOnCheck)
 
   if(kmkernel->xmlGuiInstance()) {
     KNotifyClient::Instance instance(kmkernel->xmlGuiInstance());
-    KNotifyClient::event(0, "new-mail-arrived", i18n("New mail arrived"));
+    KNotifyClient::event(topLevelWidget()->winId(), "new-mail-arrived", 
+      i18n("New mail arrived"));
   }
   else
-    KNotifyClient::event(0, "new-mail-arrived", i18n("New mail arrived"));
+    KNotifyClient::event(topLevelWidget()->winId(), "new-mail-arrived", 
+      i18n("New mail arrived"));
   if (mBeepOnNew) {
     KNotifyClient::beep();
   }
@@ -1587,6 +1587,7 @@ void KMMainWidget::folderSelected(KMFolder* aFolder, bool jumpToUnread)
 
   }
   mFolder = (KMFolder*)aFolder;
+  if ( mFolder ) { // == 0 -> pointing to toplevel ("Welcome to KMail") folder
   connect( mFolder, SIGNAL( changed() ),
            this, SLOT( updateMarkAsReadAction() ) );
   connect( mFolder, SIGNAL( msgHeaderChanged( KMFolder*, int ) ),
@@ -1595,6 +1596,7 @@ void KMMainWidget::folderSelected(KMFolder* aFolder, bool jumpToUnread)
            this, SLOT( updateMarkAsReadAction() ) );
   connect( mFolder, SIGNAL( msgRemoved(KMFolder *) ),
            this, SLOT( updateMarkAsReadAction() ) );
+  }
 
   readFolderConfig();
   if (mMsgView)

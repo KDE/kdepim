@@ -57,6 +57,7 @@ static const char *hotsync_id =
 #include "pilotSerialDatabase.h"
 #include "pilotLocalDatabase.h"
 #include "pilotDatabase.h"
+#include "kpilotConfig.h"
 
 #include "hotSync.moc"
 
@@ -281,24 +282,37 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 	}
 
 	fDBIndex = info.index + 1;
-
-	// Pretty sure all database names are latin1.
-	QString s = i18n("Backing up: %1")
-		.arg(QString::fromLatin1(info.name));
-	addSyncLogEntry(s);
-
-	if (!createLocalDatabase(&info))
+ 	
+	QStringList nobackupdb = KPilotConfig::getConfig().getNoBackupDatabases();
+	QStringList match = nobackupdb.grep(QString::fromLatin1(info.name));
+	if (match.isEmpty())
 	{
-		kdError() << k_funcinfo
-			<< ": Couldn't create local database for "
-			<< info.name << endl;
-		addSyncLogEntry(i18n("Backup of %1 failed.\n")
-			.arg(QString::fromLatin1(info.name)));
+
+		// Pretty sure all database names are latin1.
+		QString s = i18n("Backing up: %1")
+			.arg(QString::fromLatin1(info.name));
+		addSyncLogEntry(s);
+
+		if (!createLocalDatabase(&info))
+		{
+			kdError() << k_funcinfo
+				<< ": Couldn't create local database for "
+				<< info.name << endl;
+			addSyncLogEntry(i18n("Backup of %1 failed.\n")
+				.arg(QString::fromLatin1(info.name)));
+		}
+		else
+		{
+			addSyncLogEntry(i18n(" .. OK\n"),false); // Not in kpilot log.
+		}
 	}
 	else
 	{
-		addSyncLogEntry(i18n(" .. OK\n"),false); // Not in kpilot log.
+		QString s = CSL1("Skipping %1")
+			.arg(QString::fromLatin1(info.name));
+		addSyncLogEntry(s);
 	}
+
 }
 
 bool BackupAction::createLocalDatabase(DBInfo * info)

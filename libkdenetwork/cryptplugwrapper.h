@@ -537,6 +537,8 @@ public:
     */
     virtual ~CryptPlugWrapper();
 
+    QString protocol() const;
+
     /*! \ingroup groupAdmin
         \brief Set this CRYPTPLUG wrapper's internal \c active flag.
 

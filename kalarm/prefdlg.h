@@ -67,6 +67,9 @@ class KAlarmPrefDlg : public KDialogBase
 		virtual void slotHelp();
 		virtual void slotDefault();
 		virtual void slotCancel();
+
+	private:
+		bool               mValid;
 };
 
 // Base class for each tab in the Preferences dialog
@@ -131,6 +134,7 @@ class EmailPrefTab : public PrefsTabBase
 	public:
 		EmailPrefTab(QVBox*);
 
+		QString      validateAddress();
 		virtual void restore();
 		virtual void apply(bool syncToDisc);
 		virtual void setDefaults();
@@ -138,6 +142,7 @@ class EmailPrefTab : public PrefsTabBase
 	private slots:
 		void         slotEmailUseCCToggled(bool);
 		void         slotEmailBccUseCCToggled(bool);
+		void         slotAddressChanged()    { mAddressChanged = true; }
 
 	private:
 		void         setEmailAddress(bool useControlCentre, const QString& address);
@@ -149,6 +154,7 @@ class EmailPrefTab : public PrefsTabBase
 		QLineEdit*     mEmailBccAddress;
 		QCheckBox*     mEmailBccUseControlCentre;
 		QCheckBox*     mEmailQueuedNotify;
+		bool           mAddressChanged;
 };
 
 

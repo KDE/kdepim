@@ -233,7 +233,6 @@ class KOMonthView: public KOEventView
     MonthViewCell *mSelectedCell;
 
     KOEventPopupMenu *mEventContextMenu;
-    QPopupMenu *mGeneralContextMenu;
 };
 
 #endif

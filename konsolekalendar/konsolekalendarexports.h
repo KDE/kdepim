@@ -35,17 +35,17 @@ public:
    * These can be changed at anytime;)
    * without a notice
    */
-   
 
-  bool exportAsTxt( QTextStream *ts, Event *event );
-  bool exportAsCSV( QTextStream *ts, Event *event );
-   
+
+  bool exportAsTxt( QTextStream *ts, Event *event, QDate date );
+  bool exportAsCSV( QTextStream *ts, Event *event, QDate date );
+
 
 private:
    KonsoleKalendarVariables *m_variables;
    QDate m_lastDate;
    bool m_firstEntry;
-	   
+
 };
 
 }

@@ -25,6 +25,8 @@ class KTNEFAttach;
 
 class KTNEFView : public KListView
 {
+	Q_OBJECT
+
 public:
 	KTNEFView(QWidget *parent = 0, const char *name = 0);
 	~KTNEFView();
@@ -32,8 +34,12 @@ public:
 	void setAttachments(QPtrList<KTNEFAttach> *list);
 	QPtrList<KTNEFAttach>* getSelection();
 
+signals:
+	void dragRequested( const QValueList<KTNEFAttach*>& list );
+
 protected:
 	void resizeEvent(QResizeEvent *e);
+	void startDrag();
 
 private:
 	QPtrList<KTNEFAttach>	attachments_;

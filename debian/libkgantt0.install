@@ -1,5 +1,11 @@
-debian/tmp/usr/lib/libkdgantt.la
-debian/tmp/usr/lib/libkdgantt.so.*
-debian/tmp/usr/lib/libkgantt.la
-debian/tmp/usr/lib/libkgantt.so.*
-debian/tmp/usr/share/apps/kgantt
+debian/tmp/usr/lib/libkgantt.so.0
+debian/tmp/usr/lib/libkgantt.so.0.0.2
+debian/tmp/usr/share/apps/kgantt/icons/crystalsvg/16x16/actions/ganttSelect.png
+debian/tmp/usr/share/apps/kgantt/icons/crystalsvg/16x16/actions/ganttSelecttask.png
+debian/tmp/usr/share/apps/kgantt/icons/crystalsvg/16x16/actions/ganttUnselecttask.png
+debian/tmp/usr/share/apps/kgantt/icons/crystalsvg/22x22/actions/ganttSelect.png
+debian/tmp/usr/share/apps/kgantt/icons/crystalsvg/22x22/actions/ganttSelecttask.png
+debian/tmp/usr/share/apps/kgantt/icons/crystalsvg/22x22/actions/ganttUnselecttask.png
+debian/tmp/usr/share/apps/kgantt/icons/crystalsvg/32x32/actions/ganttSelect.png
+debian/tmp/usr/share/apps/kgantt/icons/crystalsvg/32x32/actions/ganttSelecttask.png
+debian/tmp/usr/share/apps/kgantt/icons/crystalsvg/32x32/actions/ganttUnselecttask.png

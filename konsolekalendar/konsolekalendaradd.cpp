@@ -52,7 +52,7 @@ KonsoleKalendarAdd::~KonsoleKalendarAdd()
 bool KonsoleKalendarAdd::addEvent()
 {
   kdDebug() << "konsolekalendaradd.cpp::addEvent() | Add stuff " << endl;
-	
+
   if( !m_variables->isDescription() && m_variables->isSummary() ) {
     // If no description is provided, use the summary for the description
     m_variables->setDescription( m_variables->getSummary() );
@@ -73,7 +73,7 @@ bool KonsoleKalendarAdd::addEvent()
     event->setDtEnd( m_variables->getEndDateTime() );
     event->setSummary( m_variables->getSummary() );
     event->setFloats( m_variables->getFloating() );
-    event->setDescription( m_variables->getDescription() );    
+    event->setDescription( m_variables->getDescription() );
 
     if( m_variables->getCalendar()->addEvent( event ) ) {
       cout << i18n("Success: \"").local8Bit()
@@ -86,52 +86,37 @@ bool KonsoleKalendarAdd::addEvent()
     if( !m_variables->isCalendarResources() ){
       m_variables->getCalendar()->save( m_variables->getCalendarFile() );
     } else {
-      m_variables->getCalendar()->save();	    
+      m_variables->getCalendar()->save();
     }
     delete event;
   }
 
-  kdDebug() << "konsolekalendaradd.cpp::addEvent() | Done " << endl;	
+  kdDebug() << "konsolekalendaradd.cpp::addEvent() | Done " << endl;
   return true;
 }
 
 bool KonsoleKalendarAdd::addImportedCalendar()
 {
+  if ( ! m_variables->getCalendar()->load( m_variables->getImportFile() ) ) {
+    kdDebug()
+      << "konsolekalendaradd.cpp::importCalendar() | "
+      << "Can't import file: "
+      << m_variables->getImportFile() << endl;
+    return false;
+  } else {
+    kdDebug()
+      << "konsolekalendaradd.cpp::importCalendar() | "
+      << "Successfully imported file: "
+      << m_variables->getImportFile() << endl;
+  }
 
- CalendarLocal importCalendar;
+  if( !m_variables->isCalendarResources() ){
+    m_variables->getCalendar()->save( m_variables->getCalendarFile() );
+  } else {
+    m_variables->getCalendar()->save();
+  }
 
- if( !importCalendar.load( m_variables->getImportFile() ) ){
-   kdDebug() << "konsolekalendaradd.cpp::importCalendar() | Can't open file: " << m_variables->getImportFile() << endl;
-   return false;
- } else {
-   kdDebug() << "konsolekalendaradd.cpp::importCalendar() | Successfully opened file: " << m_variables->getImportFile() << endl;
- } // else
-
- Event::List eventList( importCalendar.rawEvents() );
- Event *singleEvent;
-
- if( eventList.count() ) {
-
-   Event::List::ConstIterator it;
-   for( it = eventList.begin(); it != eventList.end(); ++it ) {
-     singleEvent = *it;
-
-     m_variables->getCalendar()->addEvent( singleEvent );
-     kdDebug() << "konsolekalendaradd.cpp::importCalendar() | Event imported" << endl;
-
-   } // for
-
- } // if
-
- importCalendar.close();
-
- if( !m_variables->isCalendarResources() ){
-   m_variables->getCalendar()->save( m_variables->getCalendarFile() );
- } else {
-   m_variables->getCalendar()->save();	    
- }
-
- return true;
+  return true;
 }
 
 void KonsoleKalendarAdd::printSpecs()

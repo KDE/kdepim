@@ -126,15 +126,9 @@ bool KMSender::send(KMMessage* aMsg, short sendNow)
     return FALSE;
   }
 
-  QString msgId = aMsg->msgId();
-  if( msgId.isEmpty() )
-  {
-    msgId = KMMessage::generateMessageId( aMsg->sender() );
+  QString msgId = KMMessage::generateMessageId( aMsg->sender() );
     //kdDebug(5006) << "Setting Message-Id to '" << msgId << "'\n";
     aMsg->setMsgId( msgId );
-  }
-  //else
-  //  kdDebug(5006) << "Message has already a Message-Id (" << msgId << ")\n";
 
   if (sendNow==-1) sendNow = mSendImmediate;
 
@@ -157,6 +151,9 @@ bool KMSender::send(KMMessage* aMsg, short sendNow)
     KMessageBox::information(0,i18n("Cannot add message to outbox folder"));
     return FALSE;
   }
+
+  //Ensure the message is correctly and fully parsed
+  kmkernel->outboxFolder()->unGetMsg( kmkernel->outboxFolder()->count() - 1 );
 
   if (sendNow && !mSendInProgress) rc = sendQueued();
   else rc = TRUE;
@@ -266,6 +263,7 @@ kdDebug(5006) << "KMSender::doSendMsg() post-processing: replace mCurrentMsg bod
 
     const KMIdentity & id = kmkernel->identityManager()
       ->identityForUoidOrDefault( mCurrentMsg->headerField( "X-KMail-Identity" ).stripWhiteSpace().toUInt() );
+    bool folderGone = false;
     if ( !mCurrentMsg->fcc().isEmpty() )
     {
       sentFolder = kmkernel->folderMgr()->findIdString( mCurrentMsg->fcc() );
@@ -276,6 +274,8 @@ kdDebug(5006) << "KMSender::doSendMsg() post-processing: replace mCurrentMsg bod
       if ( sentFolder == 0 )
         imapSentFolder =
           kmkernel->imapFolderMgr()->findIdString( mCurrentMsg->fcc() );
+      if ( !sentFolder && !imapSentFolder )
+        folderGone = true;
     }
     else if ( !id.fcc().isEmpty() )
     {
@@ -285,10 +285,17 @@ kdDebug(5006) << "KMSender::doSendMsg() post-processing: replace mCurrentMsg bod
         sentFolder = kmkernel->dimapFolderMgr()->findIdString( id.fcc() );
       if ( sentFolder == 0 )
         imapSentFolder = kmkernel->imapFolderMgr()->findIdString( id.fcc() );
+      if ( !sentFolder && !imapSentFolder )
+        folderGone = true;
     }
     if (imapSentFolder && imapSentFolder->noContent()) imapSentFolder = 0;
+    if (folderGone)
+      KMessageBox::information(0, i18n("The custom sent-mail folder for identity "
+            "\"%1\" doesn't exist (anymore). "
+            "Therefore the default sent-mail folder "
+            "will be used.").arg( id.identityName() ) );
 
-    if ( sentFolder == 0 )
+    if ( sentFolder == 0 ) 
       sentFolder = kmkernel->sentFolder();
 
     if ( sentFolder ) {
@@ -1105,7 +1112,7 @@ bool KMSendSMTP::send(KMMessage *aMsg)
     KIO::MetaData slaveConfig;
     slaveConfig.insert("tls", (ti->encryption == "TLS") ? "on" : "off");
     if (ti->auth) slaveConfig.insert("sasl", ti->authType);
-    mSlave = KIO::Scheduler::getConnectedSlave(destination.url(), slaveConfig);
+    mSlave = KIO::Scheduler::getConnectedSlave(destination, slaveConfig);
   }
 
   if (!mSlave)

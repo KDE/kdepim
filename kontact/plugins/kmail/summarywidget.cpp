@@ -110,7 +110,7 @@ void SummaryWidget::updateFolderList( const QStringList& folders )
         QString folderPath( *it );
         if ( folderPath.startsWith("/") )
           folderPath = folderPath.mid( 1 );
-        KURLLabel *urlLabel = new KURLLabel( QString::null, folderPath,
+        KURLLabel *urlLabel = new KURLLabel( QString::null, i18n( folderPath.local8Bit() ),
                                              this );
         urlLabel->setAlignment( AlignLeft );
         urlLabel->show();

@@ -125,15 +125,17 @@ void SubscriptionDialog::slotListDirectory( QStringList mSubfolderNames,
       if ( create )
       {
         KGroupInfo info(mSubfolderNames[i]);
-        if (mSubfolderNames[i].upper() == "INBOX")
+        if ( mSubfolderNames[i].upper() == "INBOX" )
           info.name = i18n("inbox");
         info.subscribed = false;
         info.path = mSubfolderPaths[i];
-        // create a new checkable item
-        if (parent)
-          item = new GroupItem(parent, info, this, true);
+        // create a new item
+        // only checkable when the folder is selectable
+        bool checkable = ( mSubfolderMimeTypes[i] == "inode/directory" ) ? false : true;
+        if ( parent )
+          item = new GroupItem(parent, info, this, checkable);
         else
-          item = new GroupItem(folderTree(), info, this, true);
+          item = new GroupItem(folderTree(), info, this, checkable);
       }
       if ( item ) // reset
         item->setOn(false);

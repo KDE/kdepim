@@ -80,7 +80,6 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   //setup splitter behavior
   manager()->setSplitterHighResolution(true);
   manager()->setSplitterOpaqueResize(true);
-  manager()->setSplitterKeepSize(true);
 
   //article view
   a_rtDock = createDockWidget("article_viewer", SmallIcon("contents"), 0,

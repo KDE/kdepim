@@ -1,8 +1,8 @@
 debian/tmp/usr/bin/knode
-debian/tmp/usr/lib/kde3/libknodepart.so.1.0.0
-debian/tmp/usr/lib/kde3/libknodepart.so.1
-debian/tmp/usr/lib/kde3/libknodepart.so
 debian/tmp/usr/lib/kde3/libknodepart.la
+debian/tmp/usr/lib/kde3/libknodepart.so
+debian/tmp/usr/lib/kde3/libknodepart.so.1
+debian/tmp/usr/lib/kde3/libknodepart.so.1.0.0
 debian/tmp/usr/share/applications/kde/KNode.desktop
 debian/tmp/usr/share/apps/knode/filters/1.fltr
 debian/tmp/usr/share/apps/knode/filters/2.fltr
@@ -27,10 +27,6 @@ debian/tmp/usr/share/apps/knode/pics/greyballchk.png
 debian/tmp/usr/share/apps/knode/pics/group.png
 debian/tmp/usr/share/apps/knode/pics/group_big.png
 debian/tmp/usr/share/apps/knode/pics/ignore.png
-debian/tmp/usr/share/apps/knode/pics/key.png
-debian/tmp/usr/share/apps/knode/pics/key_bad.png
-debian/tmp/usr/share/apps/knode/pics/key_ok.png
-debian/tmp/usr/share/apps/knode/pics/key_unknown.png
 debian/tmp/usr/share/apps/knode/pics/mail.png
 debian/tmp/usr/share/apps/knode/pics/newsubs.png
 debian/tmp/usr/share/apps/knode/pics/pgp-keys.png
@@ -84,6 +80,8 @@ debian/tmp/usr/share/doc/kde/HTML/en/knode/redballchk.png
 debian/tmp/usr/share/doc/kde/HTML/en/knode/using-firststart.docbook
 debian/tmp/usr/share/doc/kde/HTML/en/knode/using-morefeatures.docbook
 debian/tmp/usr/share/doc/kde/HTML/en/knode/using-subscribing.docbook
+debian/tmp/usr/share/icons/crystalsvg/128x128/apps/knode.png
+debian/tmp/usr/share/icons/crystalsvg/128x128/apps/knode2.png
 debian/tmp/usr/share/icons/crystalsvg/16x16/apps/knode.png
 debian/tmp/usr/share/icons/crystalsvg/16x16/apps/knode2.png
 debian/tmp/usr/share/icons/crystalsvg/32x32/apps/knode.png
@@ -92,6 +90,4 @@ debian/tmp/usr/share/icons/crystalsvg/48x48/apps/knode.png
 debian/tmp/usr/share/icons/crystalsvg/48x48/apps/knode2.png
 debian/tmp/usr/share/icons/crystalsvg/64x64/apps/knode.png
 debian/tmp/usr/share/icons/crystalsvg/64x64/apps/knode2.png
-debian/tmp/usr/share/icons/crystalsvg/128x128/apps/knode.png
-debian/tmp/usr/share/icons/crystalsvg/128x128/apps/knode2.png
 debian/tmp/usr/share/services/knewsservice.protocol

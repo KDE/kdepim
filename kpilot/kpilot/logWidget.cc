@@ -129,6 +129,8 @@ LogWidget::LogWidget(QWidget * parent) :
 	initialText.append(i18n("<qt><B>HotSync Log</B></qt>"));
 	initialText.append(CSL1(TE_EOL));
 
+	initialText.append(CSL1(TE_EOL "<QT><B>KPilot has been reported to cause "
+		"data loss. Please check with kdepim-users@kde.org.</B></QT>" TE_EOL));
 
 	fLog->setText(initialText);
 	fLog->scrollToBottom();

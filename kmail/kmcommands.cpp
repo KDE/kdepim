@@ -629,7 +629,7 @@ KURL KMSaveMsgCommand::url()
 
 void KMSaveMsgCommand::execute()
 {
-  mJob = KIO::put( mUrl, -1, false, false );
+  mJob = KIO::put( mUrl, S_IRUSR|S_IWUSR, false, false );
   mJob->slotTotalSize( mTotalSize );
   mJob->setAsyncDataEnabled( true );
   mJob->setReportDataSent( true );
@@ -734,7 +734,7 @@ void KMSaveMsgCommand::slotSaveResult(KIO::Job *job)
         == KMessageBox::Continue) {
         mOffset = 0;
 
-        mJob = KIO::put( mUrl, -1, true, false );
+        mJob = KIO::put( mUrl, S_IRUSR|S_IWUSR, true, false );
         mJob->slotTotalSize( mTotalSize );
         mJob->setAsyncDataEnabled( true );
         mJob->setReportDataSent( true );
@@ -905,6 +905,9 @@ void KMForwardCommand::execute()
         if (!msg->subject().contains("(fwd)"))
           msgPartText += " (fwd)";
         msgPartText += "\n\n";
+        // remove headers that shouldn't be forwarded
+        msg->removePrivateHeaderFields();
+        msg->removeHeaderField("BCC");
         // set the part
         msgPartText += msg->headerAsString();
         msgPartText += "\n";
@@ -1014,6 +1017,9 @@ void KMForwardAttachedCommand::execute()
 
   // iterate through all the messages to be forwarded
   for (KMMessage *msg = msgList.first(); msg; msg = msgList.next()) {
+    // remove headers that shouldn't be forwarded
+    msg->removePrivateHeaderFields();
+    msg->removeHeaderField("BCC");
     // set the part
     KMMessagePart *msgPart = new KMMessagePart;
     msgPart->setTypeStr("message");
@@ -1697,19 +1703,22 @@ KMSaveAttachmentsCommand::KMSaveAttachmentsCommand( QWidget *parent, QPtrList<pa
   : KMCommand( parent, msg ), mParent( parent ), mAttachments( attachments ), mEncoded( encoded )
 {
   // do not load the complete message but only parts
+  mMessageComplete = msg->isComplete();
   msg->setComplete( true );
   setDeletesItself( true );
 }
 
 void KMSaveAttachmentsCommand::execute()
 {
+  QPtrList<KMMessage> lst = retrievedMsgs();
+  if ( lst.count() == 1 ) // restore original complete state
+    lst.first()->setComplete(mMessageComplete);
   if ( mAttachments.count() > 0 )
   {
     saveAll( mAttachments );
     return;
   }
   KMMessage *msg = 0;
-  QPtrList<KMMessage> lst = retrievedMsgs();
   QPtrListIterator<KMMessage> itr( lst );
 
   while ( itr.current() ) {
@@ -1856,6 +1865,7 @@ void KMSaveAttachmentsCommand::saveItem( partNode *node, const QString& filename
 
     QFile file( filename );
     if( file.open( IO_WriteOnly ) ) {
+      fchmod( file.handle(), S_IRUSR | S_IWUSR );
       if ( mEncoded )
       {
         // This does not decode the Message Content-Transfer-Encoding
@@ -1867,10 +1877,34 @@ void KMSaveAttachmentsCommand::saveItem( partNode *node, const QString& filename
       else
       {
         QDataStream ds( &file );
-        if( (bSaveEncrypted || !bEncryptedParts) && bSaveWithSig ) {
-          QByteArray cstr = node->msgPart().bodyDecodedBinary();
+        if( bSaveEncrypted || !bEncryptedParts) {
+          partNode *dataNode = node;
+          if( !bSaveWithSig ) {
+            if( DwMime::kTypeMultipart == node->type() &&
+                DwMime::kSubtypeSigned == node->subType() ){
+              // carefully look for the part that is *not* the signature part:
+              if( node->findType( DwMime::kTypeApplication,
+                                  DwMime::kSubtypePgpSignature,
+                                  TRUE, false ) ){
+                dataNode = node->findTypeNot( DwMime::kTypeApplication,
+                                              DwMime::kSubtypePgpSignature,
+                                              TRUE, false );
+              }else if( node->findType( DwMime::kTypeApplication,
+                                        DwMime::kSubtypePkcs7Mime,
+                                  TRUE, false ) ){
+                dataNode = node->findTypeNot( DwMime::kTypeApplication,
+                                              DwMime::kSubtypePkcs7Mime,
+                                              TRUE, false );
+              }else{
+                dataNode = node->findTypeNot( DwMime::kTypeMultipart,
+                                              DwMime::kSubtypeUnknown,
+                                              TRUE, false );
+              }
+            }
+          }
+          QByteArray cstr = dataNode->msgPart().bodyDecodedBinary();
           size_t size = cstr.size();
-          if ( node->msgPart().type() == DwMime::kTypeText ) {
+          if ( dataNode->msgPart().type() == DwMime::kTypeText ) {
             // convert CRLF to LF before writing text attachments to disk
             size = KMFolder::crlf2lf( cstr.data(), size );
           }

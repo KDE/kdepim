@@ -159,7 +159,7 @@ int KMFolderCachedImap::remove()
     QString uidCacheFile = part1 + ".uidcache";
     if( QFile::exists(uidCacheFile) )
       unlink( QFile::encodeName( uidCacheFile ) );
-    KIO::del( part1 + ".directory" );
+    KIO::del( KURL( part1 + ".directory" ) );
   } else {
     // Don't remove the uidcache file here, since presence of that is how
     // we figure out if a directory present on the server have been deleted
@@ -982,6 +982,8 @@ void KMFolderCachedImap::slotGetMessagesData(KIO::Job * job, const QByteArray & 
       mMsgsForDownload << KMail::CachedImapJob::MsgForDownload(uid, flags, size);
       if( imapPath() == "/INBOX/" )
          mUidsForDownload << uid;
+
+      delete msg;
     }
     (*it).cdata.remove(0, pos);
     (*it).done++;
@@ -1151,7 +1153,7 @@ void KMFolderCachedImap::listDirectory2() {
 	unlink( QFile::encodeName( uidCacheFile ) );
 	foldersForDeletionOnServer << mSubfolderPaths[i];
 	// Make sure all trace of the dir is gone
-	KIO::del( part1 + ".directory" );
+	KIO::del( KURL( part1 + ".directory" ) );
       } else {
 	// This is a new folder, create the local cache
 	folder = static_cast<KMFolderCachedImap*>

@@ -276,7 +276,7 @@ void ExportWebDialog::exportWebPage(bool synchronous)
       tf.close();
       mExport->save(tfile);
       if (!KIO::NetAccess::upload (tfile, dest, this)) {
-        KNotifyClient::event (winId(),"Could not upload file.");
+        KNotifyClient::event (winId(), i18n( "Could not upload file." ));
       }
       tf.unlink();
     } else {

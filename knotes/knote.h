@@ -1,7 +1,7 @@
 /*******************************************************************
  KNotes -- Notes for the KDE project
 
- Copyright (c) 1997-2003, The KNotes Developers
+ Copyright (c) 1997-2004, The KNotes Developers
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -22,6 +22,7 @@
 #define KNOTE_H
 
 #include <qstring.h>
+#include <qevent.h>
 #include <qframe.h>
 #include <qpoint.h>
 #include <qcolor.h>
@@ -31,13 +32,14 @@
 class QLabel;
 
 class KXMLGUIBuilder;
-class KXMLGUIFactory;
 
 class KPopupMenu;
-class KToggleAction;
-class KListAction;
 class KNoteButton;
 class KNoteEdit;
+class KNoteConfig;
+class KToolBar;
+class KListAction;
+class KToggleAction;
 
 namespace KCal {
     class Journal;
@@ -68,26 +70,17 @@ public:
     void toDesktop( int desktop );
 
 public slots:
-    void slotNewNote();
-    void slotRename();
-    void slotClose();
     void slotKill( bool force = false );
-    void slotMail() /*const*/;
-    void slotPrint();
-    void slotInsDate();
-    void slotPreferences();
-
-    void slotToggleAlwaysOnTop();
-    void slotPopupActionToDesktop( int id );
-    void slotUpdateDesktopActions();
 
 signals:
-    void sigNewNote();
-    void sigKillNote( KCal::Journal* );
+    void sigRequestNewNote();
     void sigNameChanged();
-    void sigSaveData();
+    void sigDataChanged();
+    void sigColorChanged();
+    void sigKillNote( KCal::Journal* );
 
 protected:
+    virtual void showEvent( QShowEvent* );
     virtual void resizeEvent( QResizeEvent* );
     virtual void closeEvent( QCloseEvent* );
     virtual void keyPressEvent( QKeyEvent* );
@@ -95,9 +88,21 @@ protected:
     virtual bool event( QEvent* );
     virtual bool eventFilter( QObject*, QEvent* );
 
+    virtual bool focusNextPrevChild( bool );
+
 private slots:
+    void slotRename();
+    void slotClose();
+    void slotMail();
+    void slotPrint();
+    void slotInsDate();
+    void slotPreferences();
+    void slotPopupActionToDesktop( int id );
+
     void slotApplyConfig();
-    void slotSkipTaskbar( bool skip );
+    void slotUpdateKeepAboveBelow();
+    void slotUpdateShowInTaskbar();
+    void slotUpdateDesktopActions();
 
 private:
     void updateFocus();
@@ -105,26 +110,24 @@ private:
     void updateLabelAlignment();
     void setColor( const QColor&, const QColor& );
 
-    QPoint  m_pointerOffset;
-    bool    m_dragging;
-
-    QLabel      *m_label;
-    KNoteButton *m_button;
-    KNoteEdit   *m_editor;
-    QWidget     *m_tool;
-
-    KCal::Journal *m_journal;
-    QString        m_configFile;
-
-public:
-    KToggleAction *m_alwaysOnTop;
 private:
+    QPoint m_pointerOffset;
+    bool   m_dragging;
+
+    QLabel        *m_label;
+    KNoteButton   *m_button;
+    KToolBar      *m_tool;
+    KNoteEdit     *m_editor;
+
+    KNoteConfig   *m_config;
+    KCal::Journal *m_journal;
+
+    KPopupMenu    *m_menu;
+    KPopupMenu    *m_edit_menu;
+
     KListAction   *m_toDesktop;
-
-    KPopupMenu *m_menu;
-    KPopupMenu *m_edit_menu;
-
-    KXMLGUIFactory *factory;
+    KToggleAction *m_keepAbove;
+    KToggleAction *m_keepBelow;
 };
 
 #endif

@@ -24,7 +24,7 @@ fi
 CXXFLAGS="$CXXFLAGS $KDE_DEFAULT_CXXFLAGS"
 
 # check for libbluetooth (Bluetooth library) because gnokii may require it
-AC_DEFUN(KDE_CHECK_BLUETOOTH,
+AC_DEFUN([KDE_CHECK_BLUETOOTH],
 [
   AC_CHECK_HEADERS(bluetooth/bluetooth.h)
   LIB_BLUETOOTH=
@@ -37,7 +37,7 @@ AC_DEFUN(KDE_CHECK_BLUETOOTH,
 
 
 # check for libgnokii (Nokia mobile phone library)
-AC_DEFUN(KDE_CHECK_GNOKII,
+AC_DEFUN([KDE_CHECK_GNOKII],
 [
   AC_CHECK_HEADERS(gnokii.h)
   AC_REQUIRE([AC_HAVE_XPM])
@@ -59,7 +59,8 @@ AC_CHECK_HEADERS(net/errno.h net/if_ppp.h)
 AC_CHECK_HEADERS(asm/param.h)
 AC_CHECK_HEADERS(sys/file.h sys/stat.h sys/time.h sys/cdefs.h sys/sockio.h)
 AC_CHECK_HEADERS(fcntl.h unistd.h fnmatch.h sysent.h strings.h paths.h)
-AC_CHECK_HEADERS(utmp.h re_comp.h getopt.h resolv.h byteswap.h)
+AC_CHECK_HEADERS(utmp.h re_comp.h getopt.h byteswap.h)
+AC_CHECK_HEADER([resolv.h],,,[#include <netinet/in.h>])
 
 
 AC_SYS_LARGEFILE

@@ -174,6 +174,14 @@ class KFolderTree : public KListView
     virtual void setFullWidth( bool fullWidth );
 
   protected:
+    /** reimplemented in order to update the frame width in case of a changed
+        GUI style */
+    void styleChange( QStyle& oldStyle );
+
+    /** Set the width of the frame to a reasonable value for the current GUI
+        style */
+    void setStyleDependantFrameWidth();
+
     virtual void drawContentsOffset( QPainter * p, int ox, int oy,
         int cx, int cy, int cw, int ch );
 

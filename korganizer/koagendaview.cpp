@@ -66,6 +66,8 @@
 
 #include "koincidencetooltip.h"
 #include "kogroupware.h"
+#include "kodialogmanager.h"
+
 #include "koagendaview.h"
 #include "koagendaview.moc"
 
@@ -107,6 +109,7 @@ void TimeLabels::drawContents(QPainter *p,int cx, int cy, int cw, int ch)
   // these two assignments fix the weird redraw bug
   cx = contentsX() + 2;
   cw = contentsWidth() - 2;
+  int visWidth = visibleWidth();
   double cellHeight=mCellHeight;
   if (mAgenda) cellHeight=(4*mAgenda->gridSpacingY());
   // end of workaround
@@ -136,11 +139,9 @@ void TimeLabels::drawContents(QPainter *p,int cx, int cy, int cw, int ch)
     fullTime = hour + suffix;
 
     // center and draw the time label
-    int timeWidth = fm.width(fullTime);
-    int offset = this->width() - timeWidth;
-    int borderWidth = 5;
-    p->drawText(cx -borderWidth + offset, (int)y+15, fullTime);
-
+    QRect r( cx, (int)y+3, visWidth-4, (int)(y+cellHeight-3) );
+    p->drawText ( r, Qt::AlignHCenter | Qt::AlignTop | Qt::SingleLine, fullTime );
+    
     // increment indices
     y += cellHeight;
     cell++;
@@ -178,6 +179,7 @@ void TimeLabels::updateConfig()
   mCellHeight = KOPrefs::instance()->mHourSize*4;
   if (mCellHeight>mAgenda->gridSpacingY())
     mCellHeight=(int)(4*mAgenda->gridSpacingY());
+	// FIXME: Why the heck do we set the width to 50???
   resizeContents(50,mRows * mCellHeight);
 }
 
@@ -1127,9 +1129,11 @@ void KOAgendaView::slotTodoDropped( Todo *todo, int gx, int gy, bool allDay )
       todo->setDtDue( newTime );
       todo->setFloats( allDay );
       existingTodo->setHasDueDate( true );
-      calendar()->addTodo( todo );
-
-      emit todoDropped(todo);
+      if ( calendar()->addTodo( todo ) ) {
+        emit todoDropped(todo);
+      } else {
+        KODialogManager::errorSaveTodo( this );
+      }
     }
   }
 }

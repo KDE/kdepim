@@ -1237,6 +1237,8 @@ void AccountDialog::slotImapEncryptionChanged(int id)
 
 void AccountDialog::slotCheckPopCapabilities()
 {
+  if ( mPop.hostEdit->text().isEmpty() || mPop.portEdit->text().isEmpty() )
+     return;
   delete mServerTest;
   mServerTest = new KMServerTest("pop3", mPop.hostEdit->text(),
     mPop.portEdit->text().toInt());
@@ -1248,6 +1250,8 @@ void AccountDialog::slotCheckPopCapabilities()
 
 void AccountDialog::slotCheckImapCapabilities()
 {
+  if ( mImap.hostEdit->text().isEmpty() || mImap.portEdit->text().isEmpty() )
+     return;
   delete mServerTest;
   mServerTest = new KMServerTest("imap", mImap.hostEdit->text(),
     mImap.portEdit->text().toInt());

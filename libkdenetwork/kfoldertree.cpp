@@ -248,11 +248,7 @@ KFolderTree::KFolderTree( QWidget *parent, const char* name )
   : KListView( parent, name ), mUnreadIndex(-1), mTotalIndex(-1)
 {
   // GUI-options
-  // determine a reasonable line width for the frame
-  int frameWidth = style().pixelMetric( QStyle::PM_DefaultFrameWidth ) - 1;
-  if ( frameWidth < 0 )
-    frameWidth = 0;
-  setLineWidth( frameWidth );
+  setStyleDependantFrameWidth();
   setAcceptDrops(true);
   setDropVisualizer(false);
   setAllColumnsShowFocus(true);
@@ -264,6 +260,28 @@ KFolderTree::KFolderTree( QWidget *parent, const char* name )
   setAlternateBackground(QColor());
   setFullWidth(true);
   disableAutoSelection();
+}
+
+//-----------------------------------------------------------------------------
+void KFolderTree::setStyleDependantFrameWidth()
+{
+  // set the width of the frame to a reasonable value for the current GUI style
+  int frameWidth;
+  if( style().isA("KeramikStyle") )
+    frameWidth = style().pixelMetric( QStyle::PM_DefaultFrameWidth ) - 1;
+  else
+    frameWidth = style().pixelMetric( QStyle::PM_DefaultFrameWidth );
+  if ( frameWidth < 0 )
+    frameWidth = 0;
+  if ( frameWidth != lineWidth() )
+    setLineWidth( frameWidth );
+}
+
+//-----------------------------------------------------------------------------
+void KFolderTree::styleChange( QStyle& oldStyle )
+{
+  setStyleDependantFrameWidth();
+  KListView::styleChange( oldStyle );
 }
 
 //-----------------------------------------------------------------------------

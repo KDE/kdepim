@@ -1,7 +1,7 @@
 /*******************************************************************
  KNotes -- Notes for the KDE project
 
- Copyright (c) 2002, 2003, Michael Brade <brade@kde.org>
+ Copyright (c) 2002-2004, Michael Brade <brade@kde.org>
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -28,15 +28,16 @@
 #include <kdebug.h>
 #include <kapplication.h>
 #include <kglobal.h>
-#include <kstandarddirs.h>
 #include <kurl.h>
+#include <kstandarddirs.h>
 #include <ksimpleconfig.h>
 #include <kio/netaccess.h>
 
 #include <unistd.h>
 
-#include "version.h"
 #include "knoteslegacy.h"
+#include "knoteconfig.h"
+#include "version.h"
 
 #include "libkcal/calendarlocal.h"
 #include "libkcal/journal.h"
@@ -49,27 +50,18 @@ using namespace KCal;
 void KNotesLegacy::cleanUp()
 {
     // remove old (KDE 1.x) local config file if it still exists
-    QString configfile = KGlobal::dirs()->findResource( "config", "knotesrc" );
+    QString configfile = KGlobal::dirs()->saveLocation( "config" ) + "knotesrc";
     KSimpleConfig *test = new KSimpleConfig( configfile );
     test->setGroup( "General" );
-    double version = test->readDoubleNumEntry( "version", 1 );
-    if ( version == 1 )
+    double version = test->readDoubleNumEntry( "version", 1.0 );
+    delete test;
+
+    if ( version == 1.0 &&
+         !( checkAccess( configfile, W_OK ) &&
+            KIO::NetAccess::del( KURL(configfile), 0 ) ) )
     {
-        delete test;
-        if ( !( checkAccess( configfile, W_OK ) &&
-                KIO::NetAccess::del( KURL(configfile), 0 ) ) )
-        {
-            kdError(5500) << k_funcinfo << "Could not delete old config file!!" << endl;
-            // TODO
-        }
+        kdError(5500) << k_funcinfo << "Could not delete old config file!" << endl;
     }
-    else if ( version < 3 )
-    {
-        test->writeEntry( "version", KNOTES_VERSION );
-        delete test;
-    }
-    else
-        delete test;
 }
 
 bool KNotesLegacy::convert( CalendarLocal *calendar )
@@ -81,99 +73,102 @@ bool KNotesLegacy::convert( CalendarLocal *calendar )
     for ( QStringList::Iterator note = notes.begin(); note != notes.end(); note++ )
     {
         QString file = noteDir.absFilePath( *note );
-        KSimpleConfig* test = new KSimpleConfig( file, true );
+        KSimpleConfig* test = new KSimpleConfig( file );
         test->setGroup( "General" );
-        double version = test->readDoubleNumEntry( "version", 1 );
-        delete test;
+        double version = test->readDoubleNumEntry( "version", 1.0 );
 
         if ( version < 3.0 )
         {
+            delete test;
+
             // create the new note
             Journal *journal = new Journal();
+            bool success;
 
             if ( version < 2.0 )
-                convertKNotes1Config( journal, noteDir, *note );
+                success = convertKNotes1Config( journal, noteDir, *note );
             else
-                convertKNotes2Config( journal, noteDir, *note );
+                success = convertKNotes2Config( journal, noteDir, *note );
 
-            calendar->addJournal( journal );
-            converted = true;
+            // could not convert file => do not add a new note
+            if ( !success )
+                delete journal;
+            else
+            {
+                calendar->addJournal( journal );
+                converted = true;
+            }
+        }
+        // window state changed for version 3.2
+        else if ( version < 3.2 )
+        {
+            uint state = test->readUnsignedLongNumEntry( "state", NET::SkipTaskbar );
+            test->writeEntry( "ShowInTaskbar", (state & NET::SkipTaskbar) ? false : true );
+            test->writeEntry( "KeepAbove", (state & NET::KeepAbove) ? true : false );
+            test->deleteEntry( "state" );
+            delete test;
         }
     }
 
     return converted;
 }
 
-void KNotesLegacy::convertKNotes1Config( Journal *journal, QDir& noteDir,
+bool KNotesLegacy::convertKNotes1Config( Journal *journal, QDir& noteDir,
         const QString& file )
 {
     QFile infile( noteDir.absFilePath( file ) );
-
     if ( !infile.open( IO_ReadOnly ) )
     {
-        kdError(5500) << k_funcinfo << "Could not open input file: " << infile.name() << endl;
-
-        // TODO: better return false and delete current journal, same in convertKNotes2Config
-        return;
+        kdError(5500) << k_funcinfo << "Could not open input file: \""
+                      << infile.name() << "\"" << endl;
+        return false;
     }
 
     QTextStream input( &infile );
 
-    // set the new configfile's name...
+    // get the name
+    journal->setSummary( input.readLine() );
+
+    QStringList props = QStringList::split( '+', input.readLine() );
+
+    // robustness
+    if ( props.count() != 13 )
+    {
+        kdWarning(5500) << k_funcinfo << "The file \"" << infile.name()
+                        << "\" lacks version information but is not a valid "
+                        << "KNotes 1 config file either!" << endl;
+        return false;
+    }
+
+    // the new configfile's name
     QString configFile = noteDir.absFilePath( journal->uid() );
 
     // set the defaults
     KIO::NetAccess::copy(
-        KURL( KGlobal::dirs()->findResource( "config", "knotesrc" ) ), KURL( configFile ), 0
+        KURL( KGlobal::dirs()->saveLocation( "config" ) + "knotesrc" ),
+        KURL( configFile ),
+        0
     );
 
-    // get the name
-    journal->setSummary( input.readLine() );
-
-    // TODO: Needed? What about KConfig? This deletes everything else?
-    //       Test with a config file that contains a value not set here!
-    KSimpleConfig config( configFile );
-
-    config.setGroup( "General" );
-    config.writeEntry( "version", KNOTES_VERSION );
-
-    // use the new default for this group
-    config.setGroup( "Actions" );
-    config.writeEntry( "mail", "kmail --msg %f" );
-
-    config.setGroup( "Display" );
+    KNoteConfig config( KSharedConfig::openConfig( configFile, false, false ) );
+    config.readConfig();
+    config.setVersion( KNOTES_VERSION );
 
     // get the geometry
-    QString geo = input.readLine();
-
-    int pos, data[13];
-    int n = 0;
-
-    while ( (pos = geo.find('+')) != -1 )
-    {
-        if( n < 13 )
-            data[n++] = geo.left(pos).toInt();
-        geo.remove( 0, pos + 1 );
-    }
-    if ( n < 13 )
-        data[n++] = geo.toInt();
-
-    config.writeEntry( "width", data[3] );
-    config.writeEntry( "height", data[4] );
+    config.setWidth( props[3].toUInt() );
+    config.setHeight( props[4].toUInt() );
 
     // get the background color
     uint red = input.readLine().toUInt();
     uint green = input.readLine().toUInt();
     uint blue = input.readLine().toUInt();
-    config.writeEntry( "bgcolor", QColor( red, green, blue ) );
+    config.setBgColor( QColor( red, green, blue ) );
 
     // get the foreground color
     red = input.readLine().toUInt();
     green = input.readLine().toUInt();
     blue = input.readLine().toUInt();
-    config.writeEntry( "fgcolor", QColor( red, green, blue ) );
-
-    config.setGroup( "Editor" );
+    config.setFgColor( QColor( red, green, blue ) );
 
     // get the font
     QString fontfamily = input.readLine();
@@ -185,44 +180,31 @@ void KNotesLegacy::convertKNotes1Config( Journal *journal, QDir& noteDir,
     bool italic = ( input.readLine().toUInt() == 1 );
     QFont font( fontfamily, size, weight, italic );
 
-    config.writeEntry( "titlefont", font );
-    config.writeEntry( "font", font );
+    config.setTitleFont( font );
+    config.setFont( font );
 
     // 3d frame? Not supported yet!
     input.readLine();
 
     // autoindent
-    bool indent = ( input.readLine().toUInt() == 1 );
-    config.writeEntry( "autoindent", indent );
+    config.setAutoIndent( input.readLine().toUInt() == 1 );
 
-    // rich text and tabsize
-    config.writeEntry( "richtext", false );
-    config.writeEntry( "tabsize", 4 );
+    // KNotes 1 never had rich text
+    config.setRichText( false );
 
-    config.setGroup( "WindowDisplay" );
+    int note_desktop = props[0].toUInt();
 
-    // hidden
-    bool hidden = ( input.readLine().toUInt() == 1 );
-
-    int note_desktop = data[0];
-    if ( hidden )
+    // hidden or on all desktops?
+    if ( input.readLine().toUInt() == 1 )
         note_desktop = 0;
-    else if ( data[11] == 1 )
+    else if ( props[11].toUInt() == 1 )
         note_desktop = NETWinInfo::OnAllDesktops;
 
-    config.writeEntry( "desktop", note_desktop );
+    config.setDesktop( note_desktop );
+    config.setPosition( QPoint( props[1].toUInt(), props[2].toUInt() ) );
+    config.setKeepAbove( props[12].toUInt() & 2048 );
 
-    if ( data[1] >= 0 && data[2] >= 0 )   // just to be sure...
-        config.writeEntry( "position", QPoint( data[1], data[2] ) );
-    else
-        config.writeEntry( "position", QPoint( 10, 10 ) );
-
-    if ( data[12] & 2048 )
-        config.writeEntry( "state", NET::SkipTaskbar | NET::StaysOnTop );
-    else
-        config.writeEntry( "state", NET::SkipTaskbar );
-
-    config.sync();
+    config.writeConfig();
 
     // get the text
     QString text;
@@ -234,27 +216,39 @@ void KNotesLegacy::convertKNotes1Config( Journal *journal, QDir& noteDir,
     }
 
     journal->setDescription( text );
-    journal->addAttachment( new Attachment( configFile, CONFIG_MIME ) );
 
-    infile.close();
-    infile.remove();        // TODO: success?
+    if ( !infile.remove() )
+        kdWarning(5500) << k_funcinfo << "Could not delete input file: \"" << infile.name() << "\"" << endl;
+
+    return true;
 }
 
-void KNotesLegacy::convertKNotes2Config( Journal *journal, QDir& noteDir,
+bool KNotesLegacy::convertKNotes2Config( Journal *journal, QDir& noteDir,
         const QString& file )
 {
-    // new name for config file
-    noteDir.rename( file, journal->uid() );
     QString configFile = noteDir.absFilePath( journal->uid() );
+
+    // new name for config file
+    if ( !noteDir.rename( file, journal->uid() ) )
+    {
+        kdError(5500) << k_funcinfo << "Could not rename input file: \""
+                      << noteDir.absFilePath( file ) << "\" to \""
+                      << configFile << "\"!" << endl;
+        return false;
+    }
 
     // update the config
     KConfig config( configFile );
     config.setGroup( "Data" );
     journal->setSummary( config.readEntry( "name" ) );
-    config.deleteEntry( "name" );
-    config.deleteGroup( "Data", false );
+    config.deleteGroup( "Data", true );
     config.setGroup( "General" );
     config.writeEntry( "version", KNOTES_VERSION );
+    config.setGroup( "WindowDisplay" );
+    uint state = config.readUnsignedLongNumEntry( "state", NET::SkipTaskbar );
+    config.writeEntry( "ShowInTaskbar", (state & NET::SkipTaskbar) ? false : true );
+    config.writeEntry( "KeepAbove", (state & NET::KeepAbove) ? true : false );
+    config.deleteEntry( "state" );
 
     // load the saved text and put it in the journal
     QFile infile( noteDir.absFilePath( "." + file + "_data" ) );
@@ -263,11 +257,11 @@ void KNotesLegacy::convertKNotes2Config( Journal *journal, QDir& noteDir,
         QTextStream input( &infile );
         input.setEncoding( QTextStream::UnicodeUTF8 );
         journal->setDescription( input.read() );
-        infile.close();
-        infile.remove();    // TODO: success?
+        if ( !infile.remove() )
+            kdWarning(5500) << k_funcinfo << "Could not delete data file: \"" << infile.name() << "\"" << endl;
     }
     else
-        kdError(5500) << k_funcinfo << "Could not open input file: " << infile.name() << endl;
+        kdWarning(5500) << k_funcinfo << "Could not open data file: \"" << infile.name() << "\"" << endl;
 
-    journal->addAttachment( new Attachment( configFile, CONFIG_MIME ) );
+    return true;
 }

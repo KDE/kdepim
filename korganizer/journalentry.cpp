@@ -36,6 +36,8 @@
 #include <libkcal/calendarresources.h>
 #include <libkcal/resourcecalendar.h>
 
+#include "kodialogmanager.h"
+
 #include "journalentry.h"
 #include "journalentry.moc"
 
@@ -121,7 +123,7 @@ void JournalEntry::writeJournal()
   if (mEditor->text().isEmpty()) {
     mCalendar->deleteJournal( mJournal );
     delete mJournal;
-    mJournal = 0L;
+    mJournal = 0;
     return;
   }
 
@@ -130,7 +132,12 @@ void JournalEntry::writeJournal()
   if (!mJournal) {
     mJournal = new Journal;
     mJournal->setDtStart(QDateTime(mDate,QTime(0,0,0)));
-    mCalendar->addJournal(mJournal);
+    if ( !mCalendar->addJournal( mJournal ) ) {
+      KODialogManager::errorSaveJournal( this );
+      delete mJournal;
+      mJournal = 0;
+      return;
+    }
   }
 
   mJournal->setDescription(mEditor->text());

@@ -82,6 +82,8 @@ class ResourceLocal : public ResourceCached
       consistent.
     */
     virtual void update( IncidenceBase *incidence );
+
+    QDateTime readLastModified();
  
   private:
     void init();

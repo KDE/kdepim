@@ -61,7 +61,7 @@ void KMailPlugin::slotNewMail()
   (void) part(); // ensure part is loaded
   Q_ASSERT( mStub );
   if ( mStub )
-    mStub->openComposer( "", "", "", "", "", false, 0 );
+    mStub->openComposer( "", "", "", "", "", false, KURL() );
 }
 
 KMailPlugin::~KMailPlugin()

@@ -116,7 +116,14 @@ void IncidenceBase::setLastModified(const QDateTime &lm)
 {
   // DON'T! updated() because we call this from
   // Calendar::updateEvent().
-  mLastModified = lm;
+
+  // Remove milliseconds part.
+  QDateTime current = lm;
+  QTime t = current.time();
+  t.setHMS( t.hour(), t.minute(), t.second(), 0 );
+  current.setTime( t );
+
+  mLastModified = current;
 }
 
 QDateTime IncidenceBase::lastModified() const

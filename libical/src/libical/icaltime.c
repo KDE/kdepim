@@ -136,16 +136,13 @@ void unset_tz(struct set_tz_save savetz)
 	
 	strcpy(orig_env_str,"TZ=");
 	strcpy(orig_env_str+3,orig_tzid);
-
-	putenv(orig_env_str);
-
+    /* it is not very smart to store the TZ variable in a ringbuffer, */
+    /* which is later overwritten */
+	/*putenv(orig_env_str); this was the cause of many timezone problem */
+    setenv("TZ", savetz.orig_tzid,1 );
 	free(orig_tzid);
     } else {
-#if defined(__FreeBSD__) || defined(__NetBSD__)
-	unsetenv("TZ");
-#else
-	putenv("TZ"); /* Delete from environment */
-#endif
+        unsetenv("TZ");
     } 
 
     if(savetz.new_env_str != 0){

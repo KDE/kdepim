@@ -215,7 +215,7 @@ void ExchangeMonitor::slotSubscribeResult( KIO::Job * job )
       id = value.toLong();
       gotID = true;
     } else if ( tag == "content-location" ) {
-      url = toDAV( value );
+      url = toDAV( KURL( value ) );
       gotURL = true;
     }
   }

@@ -51,7 +51,7 @@ class KonsoleKalendar
     * Imports calendar file
     */
 
-   void importCalendar();
+   bool importCalendar();
 
    /**
     * Add event to calendar
@@ -97,17 +97,19 @@ class KonsoleKalendar
     * Prints event list in many formats
     *
     * @param eventlist which event we should print
+    * @param dt is the date to use when printing the event (for recurring events)
     */
 
-    bool printEventList( QTextStream *ts, Event::List *eventList );
+    bool printEventList( QTextStream *ts, Event::List *eventList, QDate dt );
 
    /**
     * Prints a single event in many formats
     *
     * @param event which we should print
+    * @param dt is the date to use when printing the event (for recurring events)
     */
 
-    bool printEvent( QTextStream *ts, Event *event );
+    bool printEvent( QTextStream *ts, Event *event, QDate dt );
 
     /**
      * Builds and then returns a list of all events sorted in time order
