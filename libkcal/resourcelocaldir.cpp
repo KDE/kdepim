@@ -117,7 +117,7 @@ bool ResourceLocalDir::doLoad()
   bool success = true;
   
   if ( !KStandardDirs::exists( dirName ) ) {
-    kdDebug(5800) << "ResourceLocalDir::load(): Directory doesn't exist yet. Creating it..." << endl;
+    kdDebug(5800) << "ResourceLocalDir::load(): Directory '" << dirName << "' doesn't exist yet. Creating it..." << endl;
     
     // Create the directory. Use 0775 to allow group-writable if the umask 
     // allows it (permissions will be 0775 & ~umask). This is desired e.g. for
@@ -153,20 +153,23 @@ bool ResourceLocalDir::doLoad()
 
 bool ResourceLocalDir::doSave()
 {
-  kdDebug(5800) << "ResourceLocalDir::save()" << endl;
+  // as all changes are immediately written to disk in doSave(Incidence *)
+  // there is no need to rewrite all single files
+  return true;
+}
 
-  Incidence::List incidences = mCalendar.rawIncidences();
+bool ResourceLocalDir::doSave( Incidence *incidence )
+{
+  mDirWatch.stopScan();  // do prohibit the dirty() signal and a following reload()
 
-  Incidence::List::ConstIterator it;
-  for( it = incidences.begin(); it != incidences.end(); ++it ) {
-    Incidence *i = *it;
-    QString fileName = mURL.path() + "/" + i->uid();
-    kdDebug(5800) << "writing '" << fileName << "'" << endl;
+  QString fileName = mURL.path() + "/" + incidence->uid();
+  kdDebug(5800) << "writing '" << fileName << "'" << endl;
 
-    CalendarLocal cal( mCalendar.timeZoneId() );
-    cal.addIncidence( i->clone() );
-    cal.save( fileName );
-  }
+  CalendarLocal cal( mCalendar.timeZoneId() );
+  cal.addIncidence( incidence->clone() );
+  cal.save( fileName );
+
+  mDirWatch.startScan();
 
   return true;
 }

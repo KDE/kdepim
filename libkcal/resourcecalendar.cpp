@@ -130,7 +130,7 @@ void ResourceCalendar::loadError( const QString &err )
   emit resourceLoadError( this, msg );
 }
 
-bool ResourceCalendar::save()
+bool ResourceCalendar::save( Incidence *incidence )
 {
   if ( !readOnly() ) {
     kdDebug(5800) << "Save resource " + resourceName() << endl;
@@ -138,7 +138,7 @@ bool ResourceCalendar::save()
     mReceivedSaveError = false;
 
     if ( !isOpen() ) return true;
-    bool success = doSave();
+    bool success = incidence ? doSave(incidence) : doSave();
     if ( !success && !mReceivedSaveError ) saveError();
 
     return success;
@@ -147,6 +147,11 @@ bool ResourceCalendar::save()
     kdDebug(5800) << "Don't save read-only resource " + resourceName() << endl;
     return true;
   }
+}
+
+bool ResourceCalendar::doSave( Incidence * )
+{
+  return doSave();
 }
 
 void ResourceCalendar::saveError( const QString &err )

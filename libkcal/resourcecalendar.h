@@ -102,9 +102,12 @@ class ResourceCalendar : public KRES::Resource
       save by emitting the signal resourceSaved().
 
       This function calls doSave() which has to be reimplented by the resource
-      to do the actual loading.
+      to do the actual saving.
+
+      @param incidence if given as 0, doSave() is called to save all incidences,
+             else doSave(incidence) is called to save only the given one
     */
-    bool save();
+    bool save( Incidence *incidence = 0 );
 
     /**
       Return true if a save operation is still in progress, otherwise return
@@ -325,6 +328,12 @@ class ResourceCalendar : public KRES::Resource
       Do the actual saving of the resource data. Called by save().
     */
     virtual bool doSave() = 0;
+
+    /**
+      Do the actual saving of the resource data. Called by save().
+      Save one Incidence. The default implementation calls doSave() to save everything
+    */
+    virtual bool doSave( Incidence * );
 
     /**
       Add info text for concrete resources. Called by infoText().

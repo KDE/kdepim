@@ -696,7 +696,7 @@ CalendarResources::Ticket *CalendarResources::requestSaveTicket( ResourceCalenda
   else return 0;
 }
 
-bool CalendarResources::save( Ticket *ticket )
+bool CalendarResources::save( Ticket *ticket, Incidence *incidence )
 {
   kdDebug(5800) << "CalendarResources::save( Ticket *)" << endl;
 
@@ -705,7 +705,7 @@ bool CalendarResources::save( Ticket *ticket )
   kdDebug(5800) << "tick " << ticket->resource()->resourceName() << endl;
 
 	// @TODO: Check if the resource was changed at all. If not, don't save.
-  if ( ticket->resource()->save() ) {
+  if ( ticket->resource()->save(incidence) ) {
     releaseSaveTicket( ticket );
     return true;
   }
@@ -759,7 +759,7 @@ bool CalendarResources::endChange( Incidence *incidence )
   int count = decrementChangeCount( r );
 
   if ( count == 0 ) {
-    bool ok = save( mTickets[ r ] );
+    bool ok = save( mTickets[ r ], incidence );
     if ( ok ) {
       mTickets.remove( r );
     } else {

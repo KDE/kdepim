@@ -74,6 +74,7 @@ class ResourceLocalDir : public ResourceCached
   protected:
     bool doLoad();
     bool doSave();
+    bool doSave( Incidence * );
 
   private:
     void init();
