@@ -25,11 +25,14 @@
 #endif
 
 #include <qwidget.h>
+
+#include <klocale.h>
+
 #include <stdio.h>
 
 
 #define KMAILCVT_VERSION " v2.1"
-#define KMAILCVT         "KMail & KAddressBook Import Filters"
+#define KMAILCVT         I18N_NOOP("KMail & KAddressBook Import Filters")
 
 void procEvents(void);
 int  dcopAddMessage(QString folderName,QString message);
@@ -41,7 +44,7 @@ void dcopReload(void);
 
 class Kmailcvt2 : public QWidget
 {
-  Q_OBJECT 
+  Q_OBJECT
   public:
     /** construtor */
     Kmailcvt2(QWidget* parent=0, const char *name=0);

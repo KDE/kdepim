@@ -70,7 +70,7 @@ Kmailcvt2::Kmailcvt2(QWidget *parent, const char *name) : QWidget(parent, name)
   connect(quit,SIGNAL(clicked()),SLOT(Quit()));
   connect(about,SIGNAL(clicked()),SLOT(About()));
 
-  setCaption(KMAILCVT KMAILCVT_VERSION);
+  setCaption(i18n(KMAILCVT) + KMAILCVT_VERSION);
 }
 
 Kmailcvt2::~Kmailcvt2()
@@ -104,11 +104,11 @@ void Kmailcvt2::Quit()
 
 void Kmailcvt2::About()
 {
-QString cap=KMAILCVT KMAILCVT_VERSION;
+QString cap=i18n(KMAILCVT) + KMAILCVT_VERSION;
 /*
 KAboutDialog dlg(KAboutDialog::AbtAppStandard,
                  cap,
-                 KAboutDialog::Ok, 
+                 KAboutDialog::Ok,
                  KAboutDialog::Ok,
                  this,
                  "kmailcvt2_about",
@@ -151,7 +151,7 @@ KAboutDialog dlg(this,"KmailCvt2");
     dlg.setAuthor(name,email,url,work);
     dlg.adjust();
   }
-  dlg.setVersion(KMAILCVT KMAILCVT_VERSION);
+  dlg.setVersion(i18n(KMAILCVT) + KMAILCVT_VERSION);
   {int X,Y;
      dlg.adjustSize();
      X=(width()-dlg.width())/2+x();
