@@ -26,6 +26,7 @@
 #include <qmap.h>
 
 #include <libkcal/calendar.h>
+#include <libkcal/htmlexportsettings.h>
 
 class QFile;
 class QTextStream;
@@ -41,123 +42,50 @@ class HtmlExport
     /**
       Create new HTML exporter for calendar.
     */
-    HtmlExport( Calendar *calendar );
+    HtmlExport( Calendar *calendar, HTMLExportSettings *settings );
     virtual ~HtmlExport() {}
 
     /**
       Writes out the calendar in HTML format.
     */
-    bool save( const QString &fileName );
+    bool save( const QString &fileName = QString::null );
 
     /**
       Writes out calendar to text stream.
     */
     bool save( QTextStream * );
 
-    void setTitle( QString title ) { mTitle = title; }
-    QString title() { return mTitle; }
-
-    void setTitleTodo( QString title ) { mTitleTodo = title; }
-    QString titleTodo() { return mTitleTodo; }
-
-    void setFullName( QString name ) { mName = name; }
-    QString fullName() { return mName; }
-
-    void setEmail( QString email ) { mEmail = email; }
-    QString email() { return mEmail; }
-
-    void setCredit( QString name, QString url ) { mCreditName = name; mCreditURL = url; }
-    QString creditName() { return mCreditName; }
-    QString creditURL() { return mCreditURL; }
-
-    void setMonthViewEnabled(bool enable=true) { mMonthViewEnabled = enable; }
-    bool monthViewEnabled() { return mMonthViewEnabled; }
-
-    void setEventsEnabled(bool enable=true) { mEventsEnabled = enable; }
-    bool eventsEnabled() { return mEventsEnabled; }
-
-    void setTodosEnabled(bool enable=true) { mTodosEnabled = enable; }
-    bool todosEnabled() { return mTodosEnabled; }
-
-    void setCategoriesTodoEnabled(bool enable=true) { mCategoriesTodoEnabled = enable; }
-    bool categoriesTodoEnabled() { return mCategoriesTodoEnabled; }
-
-    void setAttendeesTodoEnabled(bool enable=true) { mAttendeesTodoEnabled = enable; }
-    bool attendeesTodoEnabled() { return mAttendeesTodoEnabled; }
-
-    void setExcludePrivateTodoEnabled(bool enable=true) { mExcludePrivateTodoEnabled = enable; }
-    bool excludePrivateTodoEnabled() { return mExcludePrivateTodoEnabled; }
-
-    void setExcludeConfidentialTodoEnabled(bool enable=true) { mExcludeConfidentialTodoEnabled = enable; }
-    bool excludeConfidentialTodoEnabled() { return mExcludeConfidentialTodoEnabled; }
-
-    void setCategoriesEventEnabled(bool enable=true) { mCategoriesEventEnabled = enable; }
-    bool categoriesEventEnabled() { return mCategoriesEventEnabled; }
-
-    void setAttendeesEventEnabled(bool enable=true) { mAttendeesEventEnabled = enable; }
-    bool attendeesEventEnabled() { return mAttendeesEventEnabled; }
-
-    void setExcludePrivateEventEnabled(bool enable=true) { mExcludePrivateEventEnabled = enable; }
-    bool excludePrivateEventEnabled() { return mExcludePrivateEventEnabled; }
-
-    void setExcludeConfidentialEventEnabled(bool enable=true) { mExcludeConfidentialEventEnabled = enable; }
-    bool excludeConfidentialEventEnabled() { return mExcludeConfidentialEventEnabled; }
-
-    void setDueDateEnabled(bool enable=true) { mDueDateEnabled = enable; }
-    bool dueDateEnabled() { return mDueDateEnabled; }
-
-    void setDateRange(const QDate &from,const QDate &to) { mFromDate = from, mToDate = to; }
-    QDate fromDate() { return mFromDate; }
-    QDate toDate() { return mToDate; }
-
-    void setStyleSheet( const QString & );
-    QString styleSheet();
-
     void addHoliday( QDate date, QString name );
 
   protected:
-    void createHtmlMonthView (QTextStream *ts);
-    void createHtmlEventList (QTextStream *ts);
-    void createHtmlTodoList (QTextStream *ts);
+    void createWeekView( QTextStream *ts );
+    void createMonthView( QTextStream *ts );
+    void createEventList( QTextStream *ts );
+    void createTodoList( QTextStream *ts );
+    void createJournalView( QTextStream *ts );
+    void createFreeBusyView( QTextStream *ts );
 
-    void createHtmlTodo (QTextStream *ts,Todo *todo);
-    void createHtmlEvent (QTextStream *ts,Event *event,QDate date, bool withDescription = true);
+    void createTodo( QTextStream *ts, Todo *todo);
+    void createEvent( QTextStream *ts, Event *event, QDate date, 
+                      bool withDescription = true);
+    void createFooter( QTextStream *ts );
 
     bool checkSecrecy( Incidence * );
 
-    void formatHtmlCategories (QTextStream *ts,Incidence *event);
-    void formatHtmlAttendees (QTextStream *ts,Incidence *event);
-
-    QString breakString(const QString &text);
+    void formatCategories( QTextStream *ts, Incidence *event );
+    void formatAttendees( QTextStream *ts, Incidence *event );
+ 
+    QString breakString( const QString &text );
+    
+    QDate fromDate() const;
+    QDate toDate() const;
+    QString styleSheet() const;
 
   private:
-    QString cleanChars(const QString &txt);
+    QString cleanChars( const QString &txt );
 
     Calendar *mCalendar;
-
-    bool mMonthViewEnabled;
-    bool mEventsEnabled;
-    bool mTodosEnabled;
-    bool mCategoriesTodoEnabled;
-    bool mAttendeesTodoEnabled;
-    bool mCategoriesEventEnabled;
-    bool mAttendeesEventEnabled;
-    bool mDueDateEnabled;
-    bool mExcludePrivateTodoEnabled;
-    bool mExcludeConfidentialTodoEnabled;
-    bool mExcludePrivateEventEnabled;
-    bool mExcludeConfidentialEventEnabled;
-
-    QDate mFromDate;
-    QDate mToDate;
-
-    QString mStyleSheet;
-    QString mTitle;
-    QString mTitleTodo;
-    QString mName;
-    QString mEmail;
-    QString mCreditName;
-    QString mCreditURL;
+    HTMLExportSettings *mSettings;
     QMap<QDate,QString> mHolidayMap;
 
     class Private;
