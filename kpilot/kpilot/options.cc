@@ -123,18 +123,21 @@ QString charExpansion(const char *s)
 
 #else
 #ifdef TEST_DEBUG
-debugName const fname((int) id);
+debugName const fname((int) options_id);
 kndbgstream operator << (kndbgstream s, const debugName&)
 {
 	return s;
 }
 #else
-const int fname = (int) id;
+const int fname = (int) options_id;
 #endif
 #endif
 
 
 // $Log$
+// Revision 1.9  2001/02/08 08:13:44  habenich
+// exchanged the common identifier "id" with source unique <sourcename>_id for --enable-final build
+//
 // Revision 1.8  2001/02/05 20:58:48  adridg
 // Fixed copyright headers for source releases. No code changed
 //
