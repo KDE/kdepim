@@ -114,3 +114,10 @@ void Syncer::setSyncAlgorithm( SyncAlgorithm *algorithm )
   delete mAlgorithm;
   mAlgorithm = algorithm;
 }
+
+void Syncer::setSyncUi(  SyncUi *ui )
+{
+  if ( !ui ) return;
+  delete mUi;
+  mUi = ui;
+}

@@ -69,6 +69,11 @@ class Syncer
     void setSyncAlgorithm( SyncAlgorithm * );
 
     /**
+      Sets the Ui associated with the sync.
+    */
+    void setSyncUi( SyncUi * );
+
+    /**
       Add a data set, which is to be synced.
     */
     void addSyncee( Syncee * );
