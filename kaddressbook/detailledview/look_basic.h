@@ -55,10 +55,10 @@ signals:
     void saveMe();
     /** The user acticated the email address displayed. This may happen
         by, for example, clicking on the displayed mailto-URL. */
-    void sendEmail(const QString& address);
+    void sendEmail(const QString&);
     /** The user activated one of the displayed HTTP URLs. For example
         by clicking on the displayed homepage address. */
-    void browse(const QString& url);
+    void browse(const QString&);
 public slots:
     /** Set read-write state. */
     virtual void setReadonly(bool state);

@@ -63,10 +63,10 @@ void ViewContainer::slotStyleSelected(int index)
         // <HACK>:
         frameDetails->layout()->add(m_look);
         // </HACK>
-        connect(m_look, SIGNAL(sendEmail(const QString& address)),
-                SLOT(sendEmail(const QString& address)));
-        connect(m_look, SIGNAL(browse(const QString& url)),
-                SLOT(browse(const QString& url)));
+        connect(m_look, SIGNAL(sendEmail(const QString&)), this,
+                SIGNAL(sendEmail(const QString&)));
+        connect(m_look, SIGNAL(browse(const QString&)), this,
+                SIGNAL(browse(const QString&)));
     }
     // WORK_TO_DO: set current entry
     // ----- configure the style:

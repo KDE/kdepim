@@ -39,6 +39,7 @@
 #include <klocale.h>
 #include <kdialogbase.h>
 #include <kseparator.h>
+#include <kmessagebox.h>
 #include <klineedit.h>
 #include <kcombobox.h>
 #include <kdebug.h>
@@ -621,6 +622,10 @@ void AddresseeEditorWidget::emitModified()
 
 void AddresseeEditorWidget::dateChanged(QDate)
 {
+  KDateEdit *dateEdit = (KDateEdit*)sender();
+  if ( !dateEdit->inputIsValid() )
+    KMessageBox::sorry( this, i18n( "You must specify a valid date" ) );
+
   emitModified();
 }
 

@@ -486,10 +486,10 @@ void ViewManager::initGUI()
     // ----- create the details widget:
     mDetails=new ViewContainer(mQSpltDetails);
     connect(mDetails, SIGNAL(addresseeChanged()), SLOT(addresseeModified()));
-    connect(mDetails, SIGNAL(sendEmail(const QString& address)),
-            SLOT(sendMail(const QString& address)));
-    connect(mDetails, SIGNAL(browse(const QString& url)),
-            SLOT(browse(const QString& url)));
+    connect(mDetails, SIGNAL(sendEmail(const QString&)),
+            SLOT(sendMail(const QString&)));
+    connect(mDetails, SIGNAL(browse(const QString&)),
+            SLOT(browse(const QString&)));
     // ----- add the jump bar to the layout:
     mJumpButtonBar = new JumpButtonBar(this, "mJumpButtonBar");
     // ----- create the quick edit widget as part of the features tabwidget
