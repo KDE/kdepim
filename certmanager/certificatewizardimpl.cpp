@@ -71,6 +71,7 @@
 #include <qradiobutton.h>
 #include <qlayout.h>
 #include <qlabel.h>
+#include <qcombobox.h>
 
 #include <assert.h>
 
