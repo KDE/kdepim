@@ -82,6 +82,7 @@ protected:
 protected:
 //	DBRecordEditorBase*fWidget;
 	QWidget*fWidget;
+	char*fBuffer;
 protected slots:
     virtual void languageChange();
 protected:

@@ -61,6 +61,7 @@ DBRecordEditor::DBRecordEditor(PilotRecord*r, int n, QWidget *parent)
 //	fWidget=new DBRecordEditorBase(this);
 	fWidget=new QWidget(this);
 	setMainWidget(fWidget);
+	fBuffer = new char[4096];
 
 	initWidgets();
 	fillWidgets();
@@ -69,6 +70,7 @@ DBRecordEditor::DBRecordEditor(PilotRecord*r, int n, QWidget *parent)
  
 DBRecordEditor::~DBRecordEditor()
 {
+	KPILOT_DELETE( fBuffer );
 }
 
 
@@ -95,7 +97,6 @@ void DBRecordEditor::slotOk()
 				fRecordDataIf->dataSize() << endl;
 #endif
 			// take over data
-			fRecordDataIf->setAutoDelete( false );
 			rec->setData( fRecordDataIf->data(), fRecordDataIf->dataSize() );
 		}
 #endif
@@ -234,14 +235,12 @@ void DBRecordEditor::fillWidgets()
 	if( fRecordDataIf )
 	{
 		int len = rec->getLen();
-		char* buffer = new char[len];
-		memcpy( buffer, rec->getData(), len );
-		fRecordDataIf->setData( buffer, len, -1, false );
+		memcpy( fBuffer, rec->getData(), len );
+		fRecordDataIf->setData( fBuffer, len, 4096 );
 		fRecordDataIf->setMaxDataSize( 4096 );
 		fRecordDataIf->setReadOnly( false );
-		// Here we set auto delete to true. Only if we 
-		// really take over the data, set it to false.
-		fRecordDataIf->setAutoDelete( true ); 
+		// We are managing the buffer ourselves:
+		fRecordDataIf->setAutoDelete( false ); 
 	}
 #endif
 }
