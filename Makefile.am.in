@@ -24,6 +24,7 @@ COMPILE_BEFORE_libkpimexchange = kalarmd libkdepim
 COMPILE_BEFORE_kalarm = kalarmd libkdepim
 COMPILE_BEFORE_kresources = libkpimexchange knotes kaddressbook
 COMPILE_BEFORE_wizards = libkdepim korganizer kaddressbook kmail
+COMPILE_BEFORE_korn = libkdenetwork
 
 AUTOMAKE_OPTIONS = foreign 1.5
 DISTCLEANFILES = inst-apps
