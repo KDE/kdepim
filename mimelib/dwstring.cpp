@@ -40,7 +40,38 @@
 #define DW_MIN(a,b) ((a) <= (b) ? (a) : (b))
 #define DW_MAX(a,b) ((a) >= (b) ? (a) : (b))
 
+/* In some locales (such as tr_TR.UTF-8, az_AZ) using tolower() can cause
+   unexpected results. Keywords must be compared in a
+   locale-independent manner */
+static int dw_strasciicasecmp(const char* s1, size_t len1, const char* s2,
+    size_t len2)
+{
+    assert(s1 != 0);
+    assert(s2 != 0);
+    size_t len = DW_MIN(len1, len2);
+    for (size_t i=0; i < len; ++i) {
+        int c1 = s1[i];
+        int c2 = s2[i];
+        if ( c1 >= 'A' && c1 <= 'Z' )
+            c1 += 'a' - 'A';
+        if ( c2 >= 'A' && c2 <= 'Z' )
+            c2 += 'a' - 'A';
 
+        if ( c1 < c2 )
+            return -1;
+        else if ( c1 > c2 )
+            return 1;
+    }
+    if (len1 < len2) {
+        return -1;
+    }
+    else if (len1 > len2) {
+        return 1;
+    }
+    return 0;
+}
+
+#if 0
 static int dw_strcasecmp(const char* s1, size_t len1, const char* s2,
     size_t len2)
 {
@@ -65,6 +96,7 @@ static int dw_strcasecmp(const char* s1, size_t len1, const char* s2,
     }
     return 0;
 }
+#endif
 
 
 static int dw_strcmp(const char* s1, size_t len1, const char* s2, size_t len2)
@@ -187,7 +219,7 @@ DwStringRep::DwStringRep(FILE* aFile, size_t aSize)
     mPageMod = tell % pagesize;
     mSize = aSize;
     mRefCount = 1;
-    
+
     mBuffer = (char *)mmap(0, aSize + mPageMod, PROT_READ, MAP_SHARED, fileno(aFile), tell - mPageMod) + mPageMod;
     ++mPageMod;
     if (mBuffer == MAP_FAILED) {
@@ -1717,7 +1749,7 @@ int DwStrcasecmp(const DwString& aStr1, const DwString& aStr2)
     size_t len1 = aStr1.length();
     const char* s2 = aStr2.data();
     size_t len2 = aStr2.length();
-    return dw_strcasecmp(s1, len1, s2, len2);
+    return dw_strasciicasecmp(s1, len1, s2, len2);
 }
 
 
@@ -1728,7 +1760,7 @@ int DwStrcasecmp(const DwString& aStr, const char* aCstr)
     size_t len1 = aStr.length();
     const char* s2 = aCstr;
     size_t len2 = (aCstr) ? strlen(aCstr) : 0;
-    return dw_strcasecmp(s1, len1, s2, len2);
+    return dw_strasciicasecmp(s1, len1, s2, len2);
 }
 
 
@@ -1739,7 +1771,7 @@ int DwStrcasecmp(const char* aCstr, const DwString& aStr)
     size_t len1 =  (aCstr) ? strlen(aCstr) : 0;
     const char* s2 = aStr.data();
     size_t len2 = aStr.length();
-    return dw_strcasecmp(s1, len1, s2, len2);
+    return dw_strasciicasecmp(s1, len1, s2, len2);
 }
 
 
@@ -1751,7 +1783,7 @@ int DwStrncasecmp(const DwString& aStr1, const DwString& aStr2, size_t n)
     const char* s2 = aStr2.data();
     size_t len2 = aStr2.length();
     len2 = DW_MIN(len2, n);
-    return dw_strcasecmp(s1, len1, s2, len2);
+    return dw_strasciicasecmp(s1, len1, s2, len2);
 }
 
 
@@ -1764,7 +1796,7 @@ int DwStrncasecmp(const DwString& aStr, const char* aCstr, size_t n)
     const char* s2 = aCstr;
     size_t len2 = (aCstr) ? strlen(aCstr) : 0;
     len2 = DW_MIN(len2, n);
-    return dw_strcasecmp(s1, len1, s2, len2);
+    return dw_strasciicasecmp(s1, len1, s2, len2);
 }
 
 
@@ -1777,7 +1809,7 @@ int DwStrncasecmp(const char* aCstr, const DwString& aStr, size_t n)
     const char* s2 = aStr.data();
     size_t len2 = aStr.length();
     len2 = DW_MIN(len2, n);
-    return dw_strcasecmp(s1, len1, s2, len2);
+    return dw_strasciicasecmp(s1, len1, s2, len2);
 }
 
 
