@@ -8,7 +8,6 @@ INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kaddressbook/interfaces \
 kde_module_LTLIBRARIES = libkaddrbk_cryptosettings.la
 
 XXLIBS = $(top_builddir)/kaddressbook/interfaces/libkabinterfaces.la \
-	 $(top_builddir)/kaddressbook/libkaddressbook.la \
          $(top_builddir)/certmanager/lib/libkleopatra.la
 
 libkaddrbk_cryptosettings_la_SOURCES = cryptowidget.cpp

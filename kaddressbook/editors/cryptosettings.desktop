@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-X-KDE-Library=libkaddrbk_cryptowidget
+X-KDE-Library=libkaddrbk_cryptosettings
 Name=Crypto Preferrences
 Type=Service
 ServiceTypes=KAddressBook/ContactEditorWidget
