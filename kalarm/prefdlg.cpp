@@ -54,6 +54,7 @@
 #include "traywindow.h"
 #include "kamail.h"
 #include "kalarmapp.h"
+#include "soundpicker.h"
 #include "prefdlg.moc"
 
 
