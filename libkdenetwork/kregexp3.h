@@ -1,6 +1,33 @@
-// kregexp3.h - A KRegExp replacement based on QRegExp from Qt3.x
-// Copyright: (c) 2001 Marc Mutz <mutz@kde.org>
-// Licence: GPL
+/*  -*- c++ -*-
+    kregexp3.h
+
+    This file is part of libkdenetwork.
+    Copyright (c) 2001 Marc Mutz <mutz@kde.org>
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License,
+    version 2, as published by the Free Software Foundation.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this library; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    In addition, as a special exception, the copyright holders give
+    permission to link the code of this library with any edition of
+    the Qt library by Trolltech AS, Norway (or with modified versions
+    of Qt that use the same license as Qt), and distribute linked
+    combinations including the two.  You must obey the GNU General
+    Public License in all respects for all of the code used other than
+    Qt.  If you modify this file, you may extend this exception to
+    your version of the file, but you are not obligated to do so.  If
+    you do not wish to do so, delete this exception statement from
+    your version.
+*/
 
 #include <qglobal.h>
 #include <qregexp.h>
@@ -10,7 +37,7 @@
 /** This class is simply there to provide a namespace for some nice
     enhancements of the mighty @ref QRegExp (Qt3 version) regular
     expression engine, namely the method @ref replace, which can be
-    used to do search-and-replce like one is used to from perl or sed.
+    used to do search-and-replace like one is used to from perl or sed.
     
     It "simply" adds the ability to define a replacement string which
     contains references to the captured substrings. The following
