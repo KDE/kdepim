@@ -720,7 +720,9 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 /* virtual */ bool AbbrowserConduit::exec()
 {
 	FUNCTIONSETUP;
+#ifdef DEBUG
 	DEBUGCONDUIT << fname << id_conduit_address << endl;
+#endif
 
 	_prepare();
 
@@ -731,7 +733,9 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 		return false;
 	}
 
+#ifdef DEBUG
 	DEBUGCONDUIT << fname << ": First sync now " << fFirstSync << endl;
+#endif
 
 	_getAppInfo();
 	if(!_loadAddressBook())
@@ -741,10 +745,12 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 	}
 	fFirstSync = fFirstSync || (aBook->begin() == aBook->end());
 
+#ifdef DEBUG
 	DEBUGCONDUIT << fname << ": First sync now " << fFirstSync
 		<< " and addressbook is "
 		<< ((aBook->begin() == aBook->end()) ? "" : "non-")
 		<< "empty." << endl;
+#endif
 
 	// perform syncing from palm to abbrowser
 	// iterate through all records in palm pilot
