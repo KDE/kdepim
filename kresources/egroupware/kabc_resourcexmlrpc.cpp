@@ -21,6 +21,7 @@
 #include <qapplication.h>
 
 #include <kabc/addressee.h>
+#include <kaddressbook/kabprefs.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <klocale.h>
@@ -703,17 +704,14 @@ void ResourceXMLRPC::loadCategoriesFinished( const QValueList<QVariant> &mapList
   QMap<QString, QVariant> map = mapList[ 0 ].toMap();
   QMap<QString, QVariant>::Iterator it;
 
-  KPimPrefs prefs( "kaddressbookrc" );
+  KABPrefs *prefs = KABPrefs::instance();
   for ( it = map.begin(); it != map.end(); ++it ) {
     mCategoryMap.insert( it.data().toString(), it.key().toInt() );
 
-    if ( prefs.mCustomCategories.find( it.data().toString() ) == prefs.mCustomCategories.end() ) {
-      prefs.mCustomCategories.append( it.data().toString() );
+    if ( prefs->mCustomCategories.find( it.data().toString() ) == prefs->mCustomCategories.end() ) {
+      prefs->mCustomCategories.append( it.data().toString() );
     }
   }
-
-  prefs.usrWriteConfig();
-  prefs.config()->sync();
 }
 
 void ResourceXMLRPC::loadCustomFieldsFinished( const QValueList<QVariant> &mapList,
