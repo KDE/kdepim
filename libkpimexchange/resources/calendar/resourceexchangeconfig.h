@@ -52,6 +52,7 @@ protected slots:
 
 private:
   KLineEdit* mHostEdit;
+  KLineEdit* mPortEdit;
   KLineEdit* mAccountEdit;
   KLineEdit* mPasswordEdit;
   QCheckBox *mAutoMailbox;

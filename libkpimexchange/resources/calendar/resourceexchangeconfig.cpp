@@ -37,34 +37,39 @@ ResourceExchangeConfig::ResourceExchangeConfig( QWidget* parent,  const char* na
     : KRES::ConfigWidget( parent, name )
 {
   resize( 245, 115 ); 
-  QGridLayout *mainLayout = new QGridLayout( this, 7, 3 );
+  QGridLayout *mainLayout = new QGridLayout( this, 8, 3 );
 
   QLabel *label = new QLabel( i18n( "Host:" ), this );
   mHostEdit = new KLineEdit( this );
   mainLayout->addWidget( label, 1, 0 );
   mainLayout->addWidget( mHostEdit, 1, 1 );
 
+  label = new QLabel( i18n( "Port:" ), this );
+  mPortEdit = new KLineEdit( this );
+  mainLayout->addWidget( label, 2, 0 );
+  mainLayout->addWidget( mPortEdit, 2, 1 );
+
   label = new QLabel( i18n( "Account:" ), this );
   mAccountEdit = new KLineEdit( this );
-  mainLayout->addWidget( label, 2, 0 );
-  mainLayout->addWidget( mAccountEdit, 2, 1 );
+  mainLayout->addWidget( label, 3, 0 );
+  mainLayout->addWidget( mAccountEdit, 3, 1 );
 
   label = new QLabel( i18n( "Password:" ), this );
   mPasswordEdit = new KLineEdit( this );
   mPasswordEdit->setEchoMode( QLineEdit::Password );
-  mainLayout->addWidget( label, 3, 0 );
-  mainLayout->addWidget( mPasswordEdit, 3, 1 );
+  mainLayout->addWidget( label, 4, 0 );
+  mainLayout->addWidget( mPasswordEdit, 4, 1 );
 
   mAutoMailbox = new QCheckBox( i18n( "Determine mailbox &automatically" ), this );
-  mainLayout->addMultiCellWidget( mAutoMailbox, 4, 4, 0, 1 );
+  mainLayout->addMultiCellWidget( mAutoMailbox, 5, 5, 0, 1 );
   connect( mAutoMailbox, SIGNAL(toggled(bool)), this, SLOT(slotToggleAuto(bool)) );
 
   mMailboxEdit = new KLineEdit( this );
-  mainLayout->addWidget( new QLabel( i18n( "Mailbox URL:" ), this ), 5, 0 );
-  mainLayout->addWidget( mMailboxEdit, 5, 1 );
+  mainLayout->addWidget( new QLabel( i18n( "Mailbox URL:" ), this ), 6, 0 );
+  mainLayout->addWidget( mMailboxEdit, 6, 1 );
 
   mTryFindMailbox = new QPushButton( "&Find", this );
-  mainLayout->addWidget( mTryFindMailbox, 5, 2 );
+  mainLayout->addWidget( mTryFindMailbox, 6, 2 );
   connect( mTryFindMailbox, SIGNAL(clicked()), this, SLOT(slotFindClicked()) );
 
   label = new QLabel( i18n( "Cache timeout:" ), this );
@@ -80,6 +85,7 @@ void ResourceExchangeConfig::loadSettings( KRES::Resource *resource )
   ResourceExchange* res = dynamic_cast<ResourceExchange*>( resource );
   if (res) {
     mHostEdit->setText( res->mAccount->host() );
+    mPortEdit->setText( res->mAccount->port() );
     mAccountEdit->setText( res->mAccount->account() );
     mPasswordEdit->setText( res->mAccount->password() );
     mAutoMailbox->setChecked( res->mAutoMailbox );
@@ -104,6 +110,7 @@ void ResourceExchangeConfig::saveSettings( KRES::Resource *resource )
     res->mAutoMailbox = mAutoMailbox->isChecked();
 
     res->mAccount->setHost(mHostEdit->text());
+    res->mAccount->setPort(mPortEdit->text());
     res->mAccount->setAccount(mAccountEdit->text());
     res->mAccount->setPassword(mPasswordEdit->text());
     res->mAccount->setMailbox( mMailboxEdit->text() );
@@ -127,7 +134,10 @@ void ResourceExchangeConfig::slotUserChanged( const QString& /*text*/ )
 
 void ResourceExchangeConfig::slotFindClicked()
 {
-  QString mailbox = KPIM::ExchangeAccount::tryFindMailbox( mHostEdit->text(), mAccountEdit->text(), mPasswordEdit->text() );
+  QString mailbox = KPIM::ExchangeAccount::tryFindMailbox(
+      mHostEdit->text(), mPortEdit->text(),
+      mAccountEdit->text(), mPasswordEdit->text() );
+
   if ( mailbox.isNull() ) {
     KMessageBox::sorry( this, i18n( "Could not determine mailbox URL, please check your account settings." ) );
   } else {

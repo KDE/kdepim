@@ -33,23 +33,25 @@ namespace KPIM {
 class ExchangeAccount : public QObject {
   Q_OBJECT
   public:
-    ExchangeAccount( QString host, QString account, QString password );
-    ExchangeAccount( QString host, QString account, QString mailbox, QString password );
+    ExchangeAccount( const QString& host, const QString& port, const QString& account,
+                     const QString& password, const QString& mailbox = QString::null );
     /** 
      Create a new account object, read data from group app data
      */
-    ExchangeAccount( QString group );
+    ExchangeAccount( const QString& group );
     ~ExchangeAccount();
 
     void save( QString const& group );
     void load( QString const& group );
 
-    QString const & host() { return mHost; }
-    QString const & account() { return mAccount; }
-    QString const & mailbox() { return mMailbox; }
-    QString const & password() { return mPassword; }
+    QString host() { return mHost; }
+    QString port() { return mPort; }
+    QString account() { return mAccount; }
+    QString mailbox() { return mMailbox; }
+    QString password() { return mPassword; }
 
     void setHost( QString host ) { mHost = host; }
+    void setPort( QString port ) { mPort = port; }
     void setAccount( QString account ) { mAccount = account; }
     void setMailbox( QString mailbox ) { mMailbox = mailbox; }
     void setPassword( QString password ) { mPassword = password; }
@@ -58,7 +60,7 @@ class ExchangeAccount : public QObject {
     KURL calendarURL();
 
     // Returns the mailbox URL of this user. QString::null if unsuccessful
-    static QString tryFindMailbox( const QString& host, const QString& user, const QString& password );
+    static QString tryFindMailbox( const QString& host, const QString& port, const QString& user, const QString& password );
 
     //  Put authentication info in KDE password store for auto-authentication
     //  with later webdav access. Also calculates the calendar URL.
@@ -76,6 +78,7 @@ class ExchangeAccount : public QObject {
 
   private:
     QString mHost;
+    QString mPort;
     QString mAccount;
     QString mMailbox;
     QString mPassword;

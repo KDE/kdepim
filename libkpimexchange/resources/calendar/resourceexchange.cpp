@@ -70,13 +70,14 @@ ResourceExchange::ResourceExchange( const KConfig *config )
   if (config ) {
     mAccount = new ExchangeAccount(
             config->readEntry( "ExchangeHost" ),
+            config->readEntry( "ExchangePort" ),
             config->readEntry( "ExchangeAccount" ),
-            config->readEntry( "ExchangeMailbox" ),
-			KStringHandler::obscure( config->readEntry( "ExchangePassword" ) ) );
+            KStringHandler::obscure( config->readEntry( "ExchangePassword" ) ),
+            config->readEntry( "ExchangeMailbox" ) );
     mCachedSeconds = config->readNumEntry( "ExchangeCacheTimeout", 600 );
     mAutoMailbox = config->readBoolEntry( "ExchangeAutoMailbox", true );
   } else {
-    mAccount = new ExchangeAccount( "", "", "" );
+    mAccount = new ExchangeAccount( "", "", "", "" );
     mCachedSeconds = 600;
   }
 }
@@ -91,6 +92,7 @@ void ResourceExchange::writeConfig( KConfig* config )
 {
   ResourceCalendar::writeConfig( config );
   config->writeEntry( "ExchangeHost", mAccount->host() );
+  config->writeEntry( "ExchangePort", mAccount->port() );
   config->writeEntry( "ExchangeAccount", mAccount->account() );
   config->writeEntry( "ExchangeMailbox", mAccount->mailbox() );
   config->writeEntry( "ExchangePassword", KStringHandler::obscure( mAccount->password() ) );
@@ -108,7 +110,7 @@ bool ResourceExchange::doOpen()
 
   kdDebug() << "Creating monitor" << endl;
   QHostAddress ip;
-  ip.setAddress( "130.161.216.42" );
+  ip.setAddress( mAccount->host() );
   mMonitor = new ExchangeMonitor( mAccount, ExchangeMonitor::CallBack, ip );
   connect( mMonitor, SIGNAL(notify( const QValueList<long>& , const QValueList<KURL>& )), this, SLOT(slotMonitorNotify( const QValueList<long>& , const QValueList<KURL>& )) );
   connect( mMonitor, SIGNAL(error(int , const QString&)), this, SLOT(slotMonitorError(int , const QString&)) );

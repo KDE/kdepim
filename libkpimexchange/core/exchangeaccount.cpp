@@ -43,30 +43,32 @@
 
 using namespace KPIM;
 
-ExchangeAccount::ExchangeAccount( QString host, QString account, QString password )
+ExchangeAccount::ExchangeAccount( const QString& host, const QString& port, const QString& account,
+                                  const QString& password, const QString& mailbox )
 {
+  KURL url("webdav://" + host + "/exchange/" + account);
+
+  if ( !port.isEmpty() )
+  {
+    url.setPort(port.toInt());
+  }
+
   mHost = host;
+  mPort = port;
   mAccount = account;
-  mMailbox = "webdav://" + host + "/exchange/" + account;
   mPassword = password;
 
-  mCalendarURL = 0;
-}
-
-ExchangeAccount::ExchangeAccount( QString host, QString account, QString mailbox, QString password )
-{
-  mHost = host;
-  mAccount = account;
-  if ( mailbox.isNull() ) 
-    mMailbox = "webdav://" + host + "/exchange/" + account;
-  else 
+  if ( mailbox.isEmpty() ) {
+    mMailbox = url.url();
+    kdDebug() << "#!#!#!#!#!#!# mailbox url: " << mMailbox << endl;
+  }
+  else
     mMailbox = mailbox;
-  mPassword = password;
 
   mCalendarURL = 0;
 }
 
-ExchangeAccount::ExchangeAccount( QString group )
+ExchangeAccount::ExchangeAccount( const QString& group )
 {
   load( group );
 }
@@ -247,13 +249,19 @@ void ExchangeAccount::slotFolderResult( KIO::Job * job )
   kdDebug() << "Calendar URL: " << mCalendarURL->url() << endl;
 }
 
-QString ExchangeAccount::tryFindMailbox( const QString& host, const QString& user, const QString& password )
+QString ExchangeAccount::tryFindMailbox( const QString& host, const QString& port, const QString& user, const QString& password )
 {
   kdDebug() << "Entering ExchangeAccount::tryFindMailbox()" << endl;
 
-  QString result = tryMailbox( "http://" + host + "/exchange", user, password );
+  KURL url("http://" + host + "/exchange");
+  if (!port.isEmpty()) url.setPort(port.toInt());
+  
+  QString result = tryMailbox( url.url(), user, password );
   if ( result.isNull() )
-    result = tryMailbox( "https://" + host + "/exchange", user, password );
+  {
+    url.setProtocol("https");
+    result = tryMailbox( url.url(), user, password );
+  }
   return result;
 }
   
