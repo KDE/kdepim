@@ -77,7 +77,7 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &list, const QString
     else
       ok = doExport( url, tool.createVCards( list, KABC::VCard::v3_0 ) );
   } else {
-    QString msg = i18n( "You have selected a list of contacts, shall they be"
+    QString msg = i18n( "You have selected a list of contacts, shall they be "
                         "exported to several files?" );
 
     switch ( KMessageBox::questionYesNo( parentWidget(), msg ) ) {
