@@ -45,12 +45,14 @@
 
 using namespace Kolab;
 
+static unsigned int uniquifier = 0;
 
 ResourceKolabBase::ResourceKolabBase( const QCString& objId )
   : mSilent( false )
 {
   KGlobal::locale()->insertCatalogue( "kres_kolab" );
-  mConnection = new KMailConnection( this, objId );
+  QString uniqueObjId = QString( objId ) + QString::number( uniquifier++ );
+  mConnection = new KMailConnection( this, uniqueObjId.utf8() );
 }
 
 ResourceKolabBase::~ResourceKolabBase()
@@ -169,3 +171,4 @@ QString ResourceKolabBase::findWritableResource( const ResourceMap& resources )
     return QString::null;
   return possible[chosenLabel];
 }
+
