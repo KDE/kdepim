@@ -585,25 +585,20 @@ QPtrList<Event> CalendarLocal::rawEventsForDate(const QDate &qd, bool sorted)
   }
 
   //  kdDebug(5800) << "Sorting events for date\n" << endl;
-  // now, we have to sort it based on getDtStart.time()
+  // now, we have to sort it based on dtStart.time()
   QPtrList<Event> eventListSorted;
-  for (anEvent = eventList.first(); anEvent; anEvent = eventList.next()) {
-    if (!eventListSorted.isEmpty() &&
-	anEvent->dtStart().time() < eventListSorted.at(0)->dtStart().time()) {
-      eventListSorted.insert(0,anEvent);
-      goto nextToInsert;
+  Event *sortEvent, *event;
+  for ( event = eventList.first(); event; event = eventList.next() ) {
+    sortEvent = eventListSorted.first();
+    int i = 0;
+    while ( sortEvent && event->dtStart().time()>=sortEvent->dtStart().time() )
+    {
+      i++;
+      sortEvent = eventListSorted.next();
     }
-    for (i = 0; (uint) i+1 < eventListSorted.count(); i++) {
-      if (anEvent->dtStart().time() > eventListSorted.at(i)->dtStart().time() &&
-	  anEvent->dtStart().time() <= eventListSorted.at(i+1)->dtStart().time()) {
-	eventListSorted.insert(i+1,anEvent);
-	goto nextToInsert;
-      }
-    }
-    eventListSorted.append(anEvent);
-  nextToInsert:
-    continue;
+    eventListSorted.insert( i, event );
   }
+
   return eventListSorted;
 }
 
