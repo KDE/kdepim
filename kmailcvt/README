@@ -36,4 +36,7 @@ addMessage(info, folderName, tempfilepath);
 
 For a simple example, look at filter_plain
 
-                                                  Laurence Anderson, April 2003.
+Finally for the filter to appear in the combo box in the wizard you need to edit
+kselfilterpage.cpp and add an appropriate addFilter() function call.
+
+Laurence Anderson, April 2003.
