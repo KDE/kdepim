@@ -337,6 +337,7 @@ void IncidenceBase::setSyncStatus(int stat)
 {
   if (mReadOnly) return;
   mSyncStatus = stat;
+  updated();
 }
 
 int IncidenceBase::syncStatus() const
@@ -347,8 +348,8 @@ int IncidenceBase::syncStatus() const
 void IncidenceBase::setPilotId( unsigned long id )
 {
   if (mReadOnly) return;
-
   mPilotId = id;
+  updated();
 }
 
 unsigned long IncidenceBase::pilotId() const
