@@ -620,7 +620,8 @@ int main( int argc, char * argv[]  ) {
     const char * const send = argv[1] + qstrlen( argv[1] );
 
     Parser parser( scursor, send );
-    parser.setScriptBuilder( new PrintingScriptBuilder() );
+    PrintingScriptBuilder psb;
+    parser.setScriptBuilder( &psb );
     if ( parser.parse() )
       cout << "ok" << endl;
     else
@@ -649,7 +650,7 @@ int main( int argc, char * argv[]  ) {
       exit( 1 );
 
   } else { // usage error
-    cerr << "usage: test_sieve_lexer [ <string> ]" << endl;
+    cerr << "usage: parsertest [ <string> ]" << endl;
     exit( 1 );
   }
 

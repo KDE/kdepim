@@ -461,7 +461,7 @@ int main( int argc, char * argv[]  ) {
     if ( !success )
       return 1;
   } else { // usage error
-    cerr << "usage: test_sieve_lexer [ <string> ]" << endl;
+    cerr << "usage: lexertest [ <string> ]" << endl;
     exit( 1 );
   }
 
