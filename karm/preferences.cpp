@@ -320,8 +320,6 @@ void Preferences::load()
   _displayColumnV[1] = config.readBoolEntry( QString::fromLatin1("display time"), true);
   _displayColumnV[2] = config.readBoolEntry( QString::fromLatin1("display total session time"), true);
   _displayColumnV[3] = config.readBoolEntry( QString::fromLatin1("display total time"), true);
-
-  emitSignals();
 }
 
 void Preferences::save()

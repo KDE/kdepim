@@ -91,6 +91,9 @@ MainWindow::MainWindow()
   // we want to add a task.
   _taskView->load();
 
+  // Everything that uses Preferences has been created now, we can let it
+  // emit its signals
+  _preferences->emitSignals();
   slotSelectionChanged();
 }
 

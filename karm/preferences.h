@@ -35,14 +35,14 @@ class Preferences :public KDialogBase
     QString fileFormat();
     bool useLegacyFileFormat();
     bool displayColumn(int n);
+    void emitSignals();
 
   public slots:
     void showDialog();
     void load();
     void save();
-  
 
-  signals:  
+  signals:
     void detectIdleness(bool on);
     void idlenessTimeout(int minutes);
     void saveFile(QString);
@@ -60,9 +60,6 @@ class Preferences :public KDialogBase
     void autoSaveCheckBoxChanged();
     void timeLoggingCheckBoxChanged();
     void hideOnCloseCheckBoxChanged();
-  
-  protected:
-    void emitSignals();
 
   private:
     Preferences();
