@@ -21,16 +21,24 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include <kabc/addressbook.h>
+#include <kabc/resource.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kstaticdeleter.h>
 
 #include "kablock.h"
 
-// sorry for this hack, but i need AddressBook::standardResource()
-#define protected public
-#include <kabc/addressbook.h>
-#include <kabc/resource.h>
+class AddressBookWrapper : public KABC::AddressBook
+{
+  public:
+    AddressBookWrapper( KABC::AddressBook* );
+
+    KABC::Resource* getStandardResource()
+    {
+      return standardResource();
+    }
+};
 
 KABLock *KABLock::mSelf = 0;
 
@@ -75,8 +83,9 @@ bool KABLock::lock( KABC::Resource *resource )
 
 bool KABLock::unlock( KABC::Resource *resource )
 {
+  AddressBookWrapper *wrapper = static_cast<AddressBookWrapper*>( mAddressBook );
   if ( resource == 0 )
-    resource = mAddressBook->standardResource();
+    resource = wrapper->getStandardResource();
 
   if ( mLocks.find( resource ) == mLocks.end() ) { // hmm, not good...
     return false;
