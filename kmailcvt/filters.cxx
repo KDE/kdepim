@@ -167,6 +167,9 @@ bool Filter::openAddressBook( FilterInfo* info )
   saveTicket = KABC::StdAddressBook::self()->requestSaveTicket();
   if (!saveTicket) {
     info->alert(i18n("Unable to store imported data in address book."));
+    info->log(i18n("Unable to get exclusive access to the address book"));
+    info->log(i18n("If you have another program loaded that may be accessing the address book, please close it"));
+    info->log(i18n("If this error message still appears, remove all the files in %1").arg("~/.kde/share/apps/kabc/lock"));
     return false;
   }
   return true;
