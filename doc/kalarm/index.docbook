@@ -1381,8 +1381,8 @@ who kindly agreed to allow the name &kalarm; to be used by this
 
 &install.intro.documentation;
 
-<para>&kalarm; is available as a standalone package from
-<ulink url="http://www.astrojar.org.uk/linux">http://www.astrojar.org.uk/linux</ulink>
+<para>&kalarm; is available for &kde;2 and as a standalone package for
+&kde;3 from <ulink url="http://www.astrojar.org.uk/linux">http://www.astrojar.org.uk/linux</ulink>
 </para>
 
 </sect1>
