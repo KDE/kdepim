@@ -96,7 +96,7 @@ namespace {
     ~DisplayStrategy() {}
 
     QColor keyForeground( const GpgME::Key & key , const QColor & c ) const {
-      return key.canCertify() ? Qt::red : c ;
+      return key.isRevoked() ? Qt::red : c ;
     }
   };
 
