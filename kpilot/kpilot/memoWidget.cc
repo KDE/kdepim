@@ -59,6 +59,8 @@ static const char *memowidget_id =
 #include <qtooltip.h>
 #endif
 
+#include <qlabel.h>
+
 #ifndef _KAPP_H
 #include <kapp.h>
 #endif
@@ -602,6 +604,9 @@ void MemoWidget::slotExportMemo()
 }
 
 // $Log$
+// Revision 1.41  2001/10/10 22:22:39  adridg
+// Removed really weird debugging
+//
 // Revision 1.40  2001/09/30 19:51:56  adridg
 // Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
 //

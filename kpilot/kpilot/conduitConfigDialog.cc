@@ -27,7 +27,7 @@
 */
 
 static const char *conduitconfigdialog_id =
-	"$Id: $";
+	"$Id$";
 
 #include "options.h"
 
@@ -35,6 +35,7 @@ static const char *conduitconfigdialog_id =
 #include <qlabel.h>
 #include <qtooltip.h>
 #include <qfile.h>
+#include <qpushbutton.h>
 
 #include <kservice.h>
 #include <kservicetype.h>
@@ -516,6 +517,9 @@ void ConduitConfigDialog::warnSetupRunning()
 
 
 // $Log$
+// Revision 1.2  2001/10/08 22:20:18  adridg
+// Changeover to libkpilot, prepare for lib-based conduits
+//
 // Revision 1.1  2001/10/04 16:53:57  adridg
 // New files for newstyle config
 //
