@@ -1176,4 +1176,14 @@ RMM::headerNameToType(const QCString & headerName)
     
     return Text;
 }
+
+    QCString
+RMM::headerTypeToName(HeaderType t)
+{
+    if (t > HeaderUnknown)
+        return "";
+    else
+        return headerNames[t];
+}
+
 // vim:ts=4:sw=4:tw=78

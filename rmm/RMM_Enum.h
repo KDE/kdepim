@@ -205,6 +205,7 @@ QString     mimeTypeToIconName(MimeType t, MimeSubType st);
 
 HeaderType        headerNameToEnum(const QCString & s);
 HeaderDataType    headerNameToType(const QCString & s);
+QCString            headerTypeToName(HeaderType);
 
 }
 

@@ -34,7 +34,12 @@ RMimeType::RMimeType()
 }
 
 RMimeType::RMimeType(const RMimeType & t)
-    :    RHeaderBody(t)
+    :   RHeaderBody     (t),
+        boundary_       (t.boundary_.copy()),
+        name_           (t.name_.copy()),
+        type_           (t.type_),
+        subType_        (t.subType_),
+        parameterList_  (t.parameterList_)
 {
     // Empty.
 }
@@ -56,11 +61,11 @@ RMimeType::operator = (const RMimeType & t)
 {
     if (this == &t) return *this; // Avoid a = a
     
-    boundary_        = t.boundary_;
-    name_            = t.name_;
-    type_            = t.type_;
+    boundary_       = t.boundary_.copy();
+    name_           = t.name_.copy();
+    type_           = t.type_;
     subType_        = t.subType_;
-    parameterList_    = t.parameterList_;
+    parameterList_  = t.parameterList_;
     
     RHeaderBody::operator = (t);
     return *this;
@@ -133,7 +138,7 @@ RMimeType::boundary()
 RMimeType::setBoundary(const QCString & s)
 {
     parse();
-    boundary_ = s;
+    boundary_ = s.copy();
 }
 
     QCString
@@ -147,7 +152,7 @@ RMimeType::name()
 RMimeType::setName(const QCString & s)
 {
     parse();
-    name_ = s;
+    name_ = s.copy();
 }
 
     void

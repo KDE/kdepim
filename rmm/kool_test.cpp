@@ -17,7 +17,7 @@
 #include "RMM_Cte.h"
 #include "RMM_DateTime.h"
 #include "RMM_Defines.h"
-#include "RMM_DispositionType.h"
+#include "RMM_ContentDisposition.h"
 #include "RMM_Entity.h"
 #include "RMM_Enum.h"
 #include "RMM_Envelope.h"
@@ -133,9 +133,19 @@ int main(int argc, char ** argv)
     getrusage(RUSAGE_SELF, &start_usage);
 
     RMM::RMessage m(msgBuf);
-    RMM::RText subject = m.envelope().subject();
-    RMM::RAddress sender = m.envelope().firstSender();
-    RMM::RDateTime date = m.envelope().date();
+
+    // Simulate creating an index record from the message.
+    // This is what Empath does, unless I change it...
+    int i;
+    QCString s;
+    s = m.envelope().subject().asString();
+    s = m.envelope().firstSender().phrase();
+    s = m.envelope().firstSender().route();
+    s = m.envelope().date().asString();
+    i = m.status();
+    i = m.size();
+    s = m.envelope().messageID().asString();
+    s = m.envelope().parentMessageId().asString();
 
     struct timeval stop_tv;
     struct rusage  stop_usage;

@@ -13,9 +13,9 @@ RContentType::RContentType()
 }
 
 RContentType::RContentType(const RContentType & cte)
-    :    RHeaderBody(cte),
-        type_(cte.type_),
-        subType_(cte.subType_),
+    :   RHeaderBody(cte),
+        type_(cte.type_.copy()),
+        subType_(cte.subType_.copy()),
         parameterList_(cte.parameterList_)
 {
     // Empty.
@@ -37,9 +37,9 @@ RContentType::operator = (const RContentType & ct)
 {
     if (this == &ct) return *this; // Don't do a = a.
 
-    type_            = ct.type_;
-    subType_        = ct.subType_;
-    parameterList_    = ct.parameterList_;
+    type_           = ct.type_.copy();
+    subType_        = ct.subType_.copy();
+    parameterList_  = ct.parameterList_;
     
     RHeaderBody::operator = (ct);
     
@@ -123,14 +123,14 @@ RContentType::createDefault()
 RContentType::setType(const QCString & t)
 {
     parse();
-    type_ = t;
+    type_ = t.copy();
 }
 
     void
 RContentType::setSubType(const QCString & t)
 {
     parse();
-    subType_ = t;
+    subType_ = t.copy();
 }
 
     void

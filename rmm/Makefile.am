@@ -18,11 +18,8 @@ RContentDisposition.cpp \
 REnum.cpp \
 REnvelope.cpp \
 RHeader.cpp \
-RHeaderBody.cpp \
 RMailbox.cpp \
 RMechanism.cpp \
-RMessage.cpp \
-RMessageComponent.cpp \
 RMessageID.cpp \
 RMimeType.cpp \
 RParameter.cpp \
@@ -53,8 +50,6 @@ RMM_Envelope.h \
 RMM_Envelope_generated.h \
 RMM_Header.h \
 RMM_HeaderBody.h \
-RMM_HeaderBody_generated.h \
-RMM_HeaderList.h \
 RMM_Header_generated.h \
 RMM_Mailbox.h \
 RMM_Mailbox_generated.h \

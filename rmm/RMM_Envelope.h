@@ -98,15 +98,15 @@ class REnvelope : public RMessageComponent
         /**
          * Gets the specified header.
          */
-        RHeader        * get(const QCString &);
+        RHeader        get(const QCString &);
 
         RHeaderBody    * get(RMM::HeaderType h);
         
         /**
          * This applies to all similar methods:
-         * Returns an reference to an object of the given return type.
+         * Returns an object of the given return type.
          * If there is no object available, one will be created using sensible
-         * defaults, and returned, so you won't get a hanging reference.
+         * defaults.
          * Note that you can accidentally create a header you didn't want by
          * calling one of these. Use has() instead before you try.
          */

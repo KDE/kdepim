@@ -16,10 +16,18 @@ RMailbox::RMailbox()
 
 RMailbox::RMailbox(const RMailbox & mailbox)
     :   RMessageComponent(mailbox),
-        phrase_       (mailbox.phrase_),
-        route_        (mailbox.route_),
-        localPart_    (mailbox.localPart_),
-        domain_       (mailbox.domain_)
+        phrase_       (mailbox.phrase_.copy()),
+        route_        (mailbox.route_.copy()),
+        localPart_    (mailbox.localPart_.copy()),
+        domain_       (mailbox.domain_.copy())
+{
+    // Empty.
+}
+
+
+
+RMailbox::RMailbox(const QCString & s)
+    :    RMessageComponent(s)
 {
     // Empty.
 }
@@ -29,21 +37,15 @@ RMailbox::~RMailbox()
     // Empty.
 }
 
-RMailbox::RMailbox(const QCString & s)
-    :    RMessageComponent(s)
-{
-    // Empty.
-}
-
     RMailbox &
 RMailbox::operator = (const RMailbox & mailbox)
 {
     if (this == &mailbox) return *this; // Avoid a = a
     
-    phrase_       = mailbox.phrase_;
-    route_        = mailbox.route_;
-    localPart_    = mailbox.localPart_;
-    domain_       = mailbox.domain_;
+    phrase_       = mailbox.phrase_.copy();
+    route_        = mailbox.route_.copy();
+    localPart_    = mailbox.localPart_.copy();
+    domain_       = mailbox.domain_.copy();
     
     RMessageComponent::operator = (mailbox);
     
@@ -66,18 +68,19 @@ RMailbox::operator == (RMailbox & m)
 
     return (
         phrase_     == m.phrase_    &&
-        route_        == m.route_        &&
-        localPart_    == m.localPart_    &&
-        domain_        == m.domain_);
+        route_      == m.route_     &&
+        localPart_  == m.localPart_ &&
+        domain_     == m.domain_);
 }
 
     QDataStream &
 RMM::operator >> (QDataStream & s, RMailbox & mailbox)
 {
-    s    >> mailbox.phrase_
+    s   >> mailbox.phrase_
         >> mailbox.route_
         >> mailbox.localPart_
         >> mailbox.domain_;
+
     mailbox.parsed_        = true;
     mailbox.assembled_    = false;
     return s;
@@ -108,7 +111,7 @@ RMailbox::phrase()
 RMailbox::setPhrase(const QCString & s)
 {
     parse();
-    phrase_ = s.data();
+    phrase_ = s.copy();
 }
 
     QCString
@@ -122,7 +125,7 @@ RMailbox::route()
 RMailbox::setRoute(const QCString & s)
 {
     parse();
-    route_ = s.data();
+    route_ = s.copy();
 }
 
     QCString
@@ -136,7 +139,7 @@ RMailbox::localPart()
 RMailbox::setLocalPart(const QCString & s)
 {
     parse();
-    localPart_ = s.data();
+    localPart_ = s.copy();
 }
 
 
@@ -151,7 +154,7 @@ RMailbox::domain()
 RMailbox::setDomain(const QCString & s)
 {
     parse();
-    domain_ = s.data();
+    domain_ = s.copy();
 }
 
     void

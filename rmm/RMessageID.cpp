@@ -21,9 +21,9 @@ RMessageID::RMessageID()
 }
 
 RMessageID::RMessageID(const RMessageID & messageID)
-    :    RHeaderBody(messageID),
-        localPart_(messageID.localPart_),
-        domain_(messageID.domain_)
+    :   RHeaderBody (messageID),
+        localPart_  (messageID.localPart_.copy()),
+        domain_     (messageID.domain_.copy())
 {
     // Empty.
 }
@@ -55,8 +55,8 @@ RMessageID::operator = (const RMessageID & messageID)
 {
     if (this == &messageID) return *this; // Avoid a = a
     
-    localPart_ = messageID.localPart_;
-    domain_ = messageID.domain_;
+    localPart_  = messageID.localPart_.copy();
+    domain_     = messageID.domain_.copy();
     
     RHeaderBody::operator = (messageID);
     
@@ -98,10 +98,10 @@ RMessageID::localPart()
 }
 
     void
-RMessageID::setLocalPart(const QCString & localPart)
+RMessageID::setLocalPart(const QCString & s)
 {
     parse();
-    localPart_ = localPart;
+    localPart_ = s.copy();
 }
 
     QCString
@@ -112,10 +112,10 @@ RMessageID::domain()
 }
 
     void
-RMessageID::setDomain(const QCString & domain)
+RMessageID::setDomain(const QCString & s)
 {
     parse();
-    domain_ = domain;
+    domain_ = s.copy();
 }
 
     void
@@ -142,7 +142,10 @@ RMessageID::_parse()
     void
 RMessageID::_assemble()
 {
-    strRep_ = "<" + localPart_ + "@" + domain_ + ">";
+    if (localPart_.isEmpty() || domain_.isEmpty())
+        strRep_ = "";
+    else
+        strRep_ = "<" + localPart_ + "@" + domain_ + ">";
 }
 
     void

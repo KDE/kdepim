@@ -79,18 +79,23 @@ RCte::operator == (RCte & c)
     void
 RCte::_parse()
 {
-    strRep_        = strRep_.stripWhiteSpace();
+    strRep_ = strRep_.stripWhiteSpace();
     
     if (!stricmp(strRep_, "7bit"))
         mechanism_ = CteType7bit;
+
     else if (!stricmp(strRep_, "8bit"))
         mechanism_ = CteType8bit;
+
     else if (!stricmp(strRep_, "base64"))
         mechanism_ = CteTypeBase64;
+
     else if (!stricmp(strRep_, "quoted-printable"))
         mechanism_ = CteTypeQuotedPrintable;
+
     else if (!strnicmp(strRep_, "x", 1))
         mechanism_ = CteTypeXtension;
+
     else 
         mechanism_ = CteTypeBinary;
 }

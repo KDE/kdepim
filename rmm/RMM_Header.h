@@ -22,7 +22,7 @@
 #ifndef RMM_HEADER_H
 #define RMM_HEADER_H
 
-#include <qlist.h>
+#include <qvaluelist.h>
 
 #include <RMM_Enum.h>
 #include <RMM_HeaderBody.h>
@@ -51,15 +51,15 @@ class RHeader : public RMessageComponent
     private:
  
         RHeaderBody * _newHeaderBody(RMM::HeaderType);
-        RHeaderBody * _copyHeaderBody(RMM::HeaderType, RHeaderBody *);
+        void _replaceHeaderBody(RMM::HeaderType, RHeaderBody *);
         
         QCString        headerName_;
         RMM::HeaderType headerType_;
         RHeaderBody *   headerBody_;
 };
 
-typedef QListIterator<RHeader> RHeaderListIterator;
-typedef QList<RHeader> RHeaderList;
+typedef QValueList<RHeader> RHeaderList;
+typedef QValueList<RHeader>::Iterator RHeaderListIterator;
 
 }
 

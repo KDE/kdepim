@@ -39,18 +39,43 @@ class RMessageComponent {
 
     public:
 
-        virtual ~RMessageComponent();
+        virtual ~RMessageComponent()
+        {
+            // Empty.
+        }
 
-        RMessageComponent & operator = (const RMessageComponent & m);
-        RMessageComponent & operator = (const QCString & s);
-        
-        bool operator == (RMessageComponent &);
-        virtual bool operator == (const QCString &);
+        RMessageComponent & operator = (const RMessageComponent & m)
+        {
+            if (this == &m) return *this;    // Avoid a = a.
+            assembled_  = m.assembled_;
+            parsed_     = m.parsed_;
+            strRep_     = m.strRep_.copy();
+            return *this;
+        }
 
-        virtual void parse() 
-            { if (!parsed_) _parse(); parsed_ = true; assembled_ = false; }
-        virtual void assemble() 
-            { parse(); if (!assembled_) _assemble(); assembled_ = true; }
+        RMessageComponent & operator = (const QCString & s)
+        {
+            strRep_ = s.copy();
+            parsed_ = assembled_ = false;
+            return *this;
+        }
+
+        bool operator == (RMessageComponent & mc)
+        {
+            assemble();
+            return (strRep_ == mc.asString());
+        }
+
+        virtual bool operator == (const QCString & s)
+        {
+            assemble();
+            return (strRep_ == s);
+        }
+
+        void parse() 
+            { if (!parsed_) { _parse(); parsed_ = true; assembled_ = false; } }
+        void assemble() 
+            { parse(); if (!assembled_) { _assemble(); assembled_ = true; } }
 
         virtual void createDefault()    = 0L;
 
@@ -60,9 +85,28 @@ class RMessageComponent {
         
     protected:
 
-        RMessageComponent();
-        RMessageComponent(const RMessageComponent & component);
-        RMessageComponent(const QCString &);
+        RMessageComponent()
+            :   strRep_     (""),
+                parsed_     (false),
+                assembled_  (false)
+        {
+            // Empty.
+        }
+
+        RMessageComponent(const RMessageComponent & mc)
+            :   strRep_     (mc.strRep_.copy()),
+                parsed_     (mc.parsed_),
+                assembled_  (mc.assembled_)
+        {
+            // Empty.
+        }
+
+        RMessageComponent(const QCString & s)
+            :   strRep_     (s.copy()),
+                parsed_     (false),
+                assembled_  (false)
+        {
+        }
 
         virtual void _parse()       = 0L;
         virtual void _assemble()    = 0L;

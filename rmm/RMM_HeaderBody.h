@@ -29,11 +29,7 @@ namespace RMM {
 /**
  * Base class for RAddress, RContentType, RAddressList etc.
  */
-class RHeaderBody : public RMessageComponent {
-
-#include "RMM_HeaderBody_generated.h"
-        
-};
+typedef RMessageComponent RHeaderBody;
 
 };
 

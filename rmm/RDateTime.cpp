@@ -16,14 +16,8 @@
 using namespace RMM;
 
 RDateTime::RDateTime()
-    :    RHeaderBody(),
-        zone_("")
+    :    RHeaderBody()
 {
-    // Empty.
-}
-
-RDateTime::~RDateTime()
-{ 
     // Empty.
 }
 
@@ -34,10 +28,15 @@ RDateTime::RDateTime(const QCString & s)
 }
 
 RDateTime::RDateTime(const RDateTime & t)
-    :    RHeaderBody(t),
-        zone_   (t.zone_),
+    :   RHeaderBody(t),
+        zone_   (t.zone_.copy()),
         qdate_  (t.qdate_)
 {
+    // Empty.
+}
+
+RDateTime::~RDateTime()
+{ 
     // Empty.
 }
 
@@ -45,13 +44,10 @@ RDateTime::RDateTime(const RDateTime & t)
 RDateTime::operator = (const RDateTime & t)
 {
     if (this == &t) return *this; // Don't do a = a.
-    qdate_    = t.qdate_;
-    zone_    = t.zone_;
+    qdate_  = t.qdate_;
+    zone_   = t.zone_.copy();
     
     RHeaderBody::operator = (t);
-    
-    parsed_ = true;
-    assembled_ = false;
     return *this;
 }
 
@@ -74,7 +70,7 @@ RDateTime::operator == (RDateTime & dt)
     QDataStream &
 RMM::operator >> (QDataStream & s, RDateTime & dt)
 {
-    s    >> dt.qdate_
+    s   >> dt.qdate_
         >> dt.zone_;
     dt.parsed_        = true;
     dt.assembled_    = false;
@@ -88,6 +84,13 @@ RMM::operator << (QDataStream & s, RDateTime & dt)
     s    << dt.qdate_
         << dt.zone_;
     return s;
+}
+
+    QDateTime
+RDateTime::qdt()
+{
+    parse();
+    return qdate_;
 }
 
     QCString
@@ -115,8 +118,6 @@ RDateTime::_parse()
     if (tokens.count() < 6 || tokens.count() > 9) {
         // Invalid date-time !
         rmmDebug("Invalid date-time");
-        parsed_        = true;
-        assembled_    = false;
         return;
     }
     

@@ -34,9 +34,9 @@ RParameter::RParameter()
 }
 
 RParameter::RParameter(const RParameter & p)
-    :   RMessageComponent(p),
-        attribute_(p.attribute_),
-        value_(p.value_)
+    :   RMessageComponent   (p),
+        attribute_          (p.attribute_.copy()),
+        value_              (p.value_.copy())
 {
     // Empty.
 }
@@ -64,8 +64,8 @@ RParameter::operator = (const RParameter & p)
 {
     if (this == &p) return *this; // Don't do a = a.
     
-    attribute_ = p.attribute_;
-    value_ = p.value_;
+    attribute_  = p.attribute_.copy();
+    value_      = p.value_.copy();
 
     RMessageComponent::operator = (p);
     return *this;
@@ -126,16 +126,16 @@ RParameter::value()
 }
 
     void
-RParameter::setAttribute(const QCString & attribute)
+RParameter::setAttribute(const QCString & s)
 {
     parse();
-    attribute_ = attribute;
+    attribute_ = s.copy();
 }
     void
-RParameter::setValue(const QCString & value)    
+RParameter::setValue(const QCString & s)
 {
     parse();
-    value_ = value;
+    value_ = s.copy();
 }
 
 // vim:ts=4:sw=4:tw=78

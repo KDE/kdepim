@@ -29,7 +29,7 @@
     QCString
 RMM::toCrLfEol(const QCString & in)
 {
-    QCString s(in);
+    QCString s(in.copy());
     s.replace(QRegExp("[^\\r]\\n"), "\r\n");
     return s;
 }
@@ -37,7 +37,7 @@ RMM::toCrLfEol(const QCString & in)
     QCString
 RMM::toLfEol(const QCString & in)
 {
-    QCString s(in);
+    QCString s(in.copy());
     s.replace(QRegExp("\\r\\n"), "\n");
     return s;
 }
@@ -45,7 +45,7 @@ RMM::toLfEol(const QCString & in)
     QCString
 RMM::toCrEol(const QCString & in)
 {
-    QCString s(in);
+    QCString s(in.copy());
     s.replace(QRegExp("[\\r]\\n"), "\r");
     return s;
 }
@@ -53,14 +53,14 @@ RMM::toCrEol(const QCString & in)
     QCString
 RMM::encodeQuotedPrintable(const QByteArray & in)
 {
-    QCString s(in);
+    QCString s(in.copy());
     return s;
 }
 
     QByteArray
 RMM::decodeQuotedPrintable(const QCString & in)
 {
-    QCString s(in);
+    QCString s(in.copy());
     return s;
 }
 

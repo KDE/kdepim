@@ -49,7 +49,7 @@ RContentDisposition::operator = (const RContentDisposition & t)
     
     parameterList_    = t.parameterList_;
     dispType_        = t.dispType_;
-    filename_        = t.filename_;
+    filename_        = t.filename_.copy();
     
     RHeaderBody::operator = (t);
     
@@ -99,7 +99,7 @@ RContentDisposition::filename()
 RContentDisposition::setFilename(const QCString & s)
 {
     parse();
-    filename_ = s;
+    filename_ = s.copy();
 }
 
     void

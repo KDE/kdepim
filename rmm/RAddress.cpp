@@ -40,8 +40,8 @@ RAddress::RAddress()
 RAddress::RAddress(const RAddress & addr)
     :   RHeaderBody     (addr),
         mailboxList_    (addr.mailboxList_),
-        name_           (addr.name_),
-        phrase_         (addr.phrase_)
+        name_           (addr.name_.copy()),
+        phrase_         (addr.phrase_.copy())
 {
     // Empty.
 }
@@ -63,8 +63,8 @@ RAddress::operator = (const RAddress & addr)
     if (this == &addr) return *this; // Don't do a = a.
 
     mailboxList_    = addr.mailboxList_;
-    name_           = addr.name_;
-    phrase_         = addr.phrase_;
+    name_           = addr.name_.copy();
+    phrase_         = addr.phrase_.copy();
  
     RHeaderBody::operator = (addr);
 
@@ -264,7 +264,7 @@ RAddress::name()
 RAddress::setName(const QCString & s)
 {
     parse();
-    name_ = s;
+    name_ = s.copy();
 }
 
     QValueList<RMailbox>

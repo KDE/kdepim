@@ -63,10 +63,15 @@ class RBodyPart : public REntity {
 
         QCString        preamble();
         QCString        epilogue();
+        
+        void setStatus(RMM::MessageStatus s) { status_ = s; }
+        RMM::MessageStatus status() const { return status_; }
 
     protected:
         
         void                _update();
+        void                _init();
+        void                _replacePartList(QList<RBodyPart> &);
 
         REnvelope           envelope_;
         QCString            data_;
@@ -82,6 +87,8 @@ class RBodyPart : public REntity {
         QCString            charset_;
         
         QList<RBodyPart>    body_;
+        
+        RMM::MessageStatus    status_;
 };
 
 }

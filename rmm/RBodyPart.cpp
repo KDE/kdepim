@@ -33,55 +33,62 @@ using namespace RMM;
 
 
 RBodyPart::RBodyPart()
-    :    REntity()
+    :   REntity(),
+        status_(static_cast<RMM::MessageStatus>(0))
 {
-    body_.setAutoDelete(true);
+    _init();
 }
 
 RBodyPart::RBodyPart(const RBodyPart & part)
     :   REntity(part),
         envelope_           (part.envelope_),
-        data_               (part.data_),
+        data_               (part.data_.copy()),
         encoding_           (part.encoding_),
         mimeType_           (part.mimeType_),
         mimeSubType_        (part.mimeSubType_),
-        contentDescription_ (part.contentDescription_),
+        contentDescription_ (part.contentDescription_.copy()),
         disposition_        (part.disposition_),
-        boundary_           (part.boundary_),
+        boundary_           (part.boundary_.copy()),
         type_               (part.type_),
-        preamble_           (part.preamble_),
-        epilogue_           (part.epilogue_),
-        charset_            (part.charset_),
-        body_               (part.body_)
+        preamble_           (part.preamble_.copy()),
+        epilogue_           (part.epilogue_.copy()),
+        charset_            (part.charset_.copy()),
+        status_             (static_cast<RMM::MessageStatus>(0))
 {
-    // Empty
+    _init();
+    _replacePartList(part.body_);
 }
 
 RBodyPart::RBodyPart(const QCString & s)
-    :    REntity(s)
+    :   REntity(s),
+        status_(static_cast<RMM::MessageStatus>(0))
 {
-    // Empty.
+    _init();
 }
 
     RBodyPart &
 RBodyPart::operator = (const RBodyPart & part)
 {
     if (this == &part) return *this;    // Avoid a = a.
-    REntity::operator = (part);
     
     envelope_           = part.envelope_;
-    data_               = part.data_;
+    data_               = part.data_.copy();
     encoding_           = part.encoding_;
     mimeType_           = part.mimeType_;
     mimeSubType_        = part.mimeSubType_;
-    contentDescription_ = part.contentDescription_;
+    contentDescription_ = part.contentDescription_.copy();
     disposition_        = part.disposition_;
-    boundary_           = part.boundary_;
+    boundary_           = part.boundary_.copy();
     type_               = part.type_;
-    preamble_           = part.preamble_;
-    epilogue_           = part.epilogue_;
-    charset_            = part.charset_;
-    body_               = part.body_;
+    preamble_           = part.preamble_.copy();
+    epilogue_           = part.epilogue_.copy();
+    charset_            = part.charset_.copy();
+
+    _replacePartList(part_.body_);
+
+    status_ = part.status_;
+
+    REntity::operator = (part);
 
     return *this;
 }
@@ -95,6 +102,9 @@ RBodyPart::~RBodyPart()
 RBodyPart::operator = (const QCString & part)
 {
     REntity::operator = (part);
+
+    body_.clear();
+
     return *this;
 }
 
@@ -117,10 +127,10 @@ RBodyPart::operator == (RBodyPart & part)
         type_               == part.type_               &&
         preamble_           == part.preamble_           &&
         epilogue_           == part.epilogue_           &&
+        body_               == part.body_               &&
         charset_            == part.charset_ );
     
-    return (equal && false);
-    //body_                == part.body_                &&
+    return equal;
 }
 
     MimeType
@@ -183,7 +193,7 @@ RBodyPart::_parse()
         
         // The body is blank. We'll treat what there is as the envelope.
         //rmmDebug("empty body");
-        envelope_    = strRep_;
+        envelope_    = strRep_.copy();
         data_        = "";
         
     } else {
@@ -201,8 +211,6 @@ RBodyPart::_parse()
     // If there is, we might be looking at a multipart message.
     if (!envelope_.has(HeaderContentType)) {
         
-        parsed_     = true;
-        assembled_  = false;
         //rmmDebug("done parse(1)");
         //rmmDebug("=== RBodyPart parse end   =================================");
         return;
@@ -238,8 +246,6 @@ RBodyPart::_parse()
     
     if (boundary_.isEmpty()) {
         //rmmDebug("Boundary not found in ContentType header. Giving up.");
-        parsed_        = true;
-        assembled_    = false;
         return;
     }
     
@@ -250,8 +256,6 @@ RBodyPart::_parse()
 
         if (boundary_.isEmpty()) {
             //rmmDebug("The (quoted) boundary is empty ! Giving up.");
-            parsed_       = true;
-            assembled_    = false;
             //rmmDebug("done parse(2)");
             //rmmDebug("=== RBodyPart parse end   =============================");
             return;
@@ -265,8 +269,6 @@ RBodyPart::_parse()
     if (boundaryStart == -1) {
         // Let's just call it a plain text message.
         //rmmDebug("No boundary found in message. Assume plain ?");
-        parsed_     = true;
-        assembled_  = false;
         //rmmDebug("done parse (3)");
         //rmmDebug("=== RBodyPart parse end   =============================");
         return;
@@ -289,13 +291,10 @@ RBodyPart::_parse()
     while (boundaryStart != -1) {
 
         RBodyPart * newPart = new RBodyPart(
-            data_.mid(previousBoundaryEnd,
-                boundaryStart - previousBoundaryEnd));
+            data_.mid(previousBoundaryEnd, boundaryStart - previousBoundaryEnd)
+        );
 
         body_.append(newPart);
-        
-        // XXX Is this necessary ?
-//        newPart->parse();
         
         previousBoundaryEnd = boundaryStart + bound.length();
         
@@ -347,6 +346,7 @@ RBodyPart::body()
     Q_UINT32
 RBodyPart::size()
 {
+    parse();
     return data_.length();
 }
 
@@ -405,7 +405,7 @@ RBodyPart::setEnvelope(REnvelope e)
 RBodyPart::setData(const QCString & s)
 {
     parse();
-    data_ = s;
+    data_ = s.copy();
 }
 
     void
@@ -419,6 +419,7 @@ RBodyPart::setBody(QList<RBodyPart> & b)
 RBodyPart::decode()
 {
     rmmDebug("decode()");
+    parse();
     REnvelope e;
     QByteArray output;
     
@@ -441,7 +442,7 @@ RBodyPart::decode()
             case CteTypeBinary:
             case CteTypeXtension:
             default:
-                output = data_;
+                output = data_.copy();
                 break;
         }
 
@@ -457,7 +458,7 @@ RBodyPart::decode()
 RBodyPart::setDescription(const QCString & s)
 {
     parse();
-    contentDescription_ = s;
+    contentDescription_ = s.copy();
 }
 
     void
@@ -471,7 +472,7 @@ RBodyPart::setEncoding(CteType t)
 RBodyPart::setCharset(const QCString & s)
 {
     parse();
-    charset_ = s;
+    charset_ = s.copy();
 }
 
     QCString
@@ -510,6 +511,22 @@ RBodyPart::epilogue()
 {
     parse();
     return epilogue_;
+}
+
+    void
+RBodyPart::_init()
+{
+    body_.setAutoDelete(true);
+}
+
+RBodyPart::_replacePartList(QList<RBodyPart> & l)
+{
+    body_.clear();
+
+    QListIterator<RBodyPart> it(l);
+
+    for (; it.current(); ++it)
+        body_.append(new RBodyPart(*it.current()));
 }
 
     QCString
