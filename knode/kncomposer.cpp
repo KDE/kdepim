@@ -822,17 +822,24 @@ void KNComposer::slotRemoveAttachment()
   }
 }
 
+
 void KNComposer::slotSignArticle()
 {
   QString text = v_iew->e_dit->text();
   Kpgp *pgp = Kpgp::getKpgp();
-  pgp->setMessage(text.latin1());
+  bool ok=true;
+  QTextCodec *codec=KGlobal::charsets()->codecForName(c_harset, ok);
+  if(!ok) // no suitable codec found => try local settings and hope the best ;-)
+    codec=KGlobal::charsets()->codecForName(KGlobal::locale()->charset(),ok);
+
+  pgp->setMessage(codec->fromUnicode(text));
   pgp->setUser(article()->from()->email());
   kdDebug(5003) << "signing article from " << article()->from()->email() << endl;
   if (!pgp->sign(article()->from()->email()))
     KMessageBox::error(this,i18n("Sorry, couldn't sign this message!\n\n%1").arg(pgp->lastErrorMsg()));
   else {
-    v_iew->e_dit->setText( pgp->message() );
+    QCString result = pgp->message();
+    v_iew->e_dit->setText( codec->toUnicode(result.data(), result.length()) );
     v_iew->e_dit->setModified(true);
   }
 }
