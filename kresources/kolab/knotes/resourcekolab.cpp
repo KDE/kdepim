@@ -67,7 +67,7 @@ extern "C"
 }
 
 static QString configGroupName = "Note";
-static QString kmailResourceType = "Kolab/Note";
+static QString kmailResourceType = "Note";
 
 ResourceKolab::ResourceKolab( const KConfig *config )
   : ResourceNotes( config ), ResourceKolabBase( "ResourceKolab-KNotes" )
@@ -167,10 +167,7 @@ bool ResourceKolab::addNote( const QString xml, const QString& subresource,
   KCal::Journal* journal = Note::xmlToJournal( xml );
   if( journal && !mUidMap.contains( journal->uid() ) )
     return addNote( journal, subresource, sernum );
-
-  // Register in the UID map
-  mUidMap[ journal->uid() ] = StorageReference( subresource, sernum );
-  return true;
+  return false;
 }
 
 bool ResourceKolab::addNote( KCal::Journal* journal,
@@ -218,12 +215,19 @@ bool ResourceKolab::deleteNote( KCal::Journal* journal )
 
 void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* i )
 {
-#if 0
-  KCal::ICalFormat format;
-  QString note = format.toICalString( static_cast<KCal::Journal*>( i ) );
-  if( !kmailUpdate( "Kolab/Note", mUidMap[ i->uid() ], i->uid(), note ) )
-    kdError(5500) << "Communication problem in ResourceKolab::addNote()\n";
-#endif
+  QString resource;
+  Q_UINT32 sernum;
+  if ( mUidMap.contains( i->uid() ) ) {
+    resource = mUidMap[ i->uid() ].resource();
+    sernum = mUidMap[ i->uid() ].serialNumber();
+  } else {
+    resource = findWritableResource( mResources );
+    sernum = 0;
+  }
+
+  QString xml = Note::journalToXML( dynamic_cast<KCal::Journal*>( i ) );
+  if( !xml.isEmpty() && kmailUpdate( resource, sernum, xml ) )
+    mUidMap[ i->uid() ] = StorageReference( resource, sernum );
 }
 
 /*
