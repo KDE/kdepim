@@ -273,6 +273,12 @@ public:
   QString dictionary() const { return mDictionary; }
   void setDictionary( const QString& );
 
+  /** a X-Face header for this identity */
+  QString xface() const { return mXFace; }
+  void setXFace( const QString& );
+  bool isXFaceEnabled() const { return mXFaceEnabled; }
+  void setXFaceEnabled( const bool );
+
   static Identity null;
   bool isNull() const;
 protected:
@@ -288,6 +294,8 @@ protected:
   QCString mPGPEncryptionKey, mPGPSigningKey, mSMIMEEncryptionKey, mSMIMESigningKey;
   QString mFcc, mDrafts, mTransport;
   QString mDictionary;
+  QString mXFace;
+  bool mXFaceEnabled;
   Signature mSignature;
   bool      mIsDefault;
   Kleo::CryptoMessageFormat mPreferredCryptoMessageFormat;

@@ -237,7 +237,8 @@ bool Identity::isNull() const {
     mSMIMEEncryptionKey.isEmpty() && mSMIMESigningKey.isEmpty() &&
     mTransport.isEmpty() && mDictionary.isEmpty() &&
     mPreferredCryptoMessageFormat == Kleo::AutoFormat &&
-    mSignature.type() == Signature::Disabled;
+    mSignature.type() == Signature::Disabled &&
+    mXFace.isNull();
 }
 
 bool Identity::operator==( const Identity & other ) const {
@@ -253,7 +254,8 @@ bool Identity::operator==( const Identity & other ) const {
       mSMIMESigningKey == other.mSMIMESigningKey &&
       mPreferredCryptoMessageFormat == other.mPreferredCryptoMessageFormat &&
       mDrafts == other.mDrafts && mTransport == other.mTransport &&
-      mDictionary == other.mDictionary && mSignature == other.mSignature;
+      mDictionary == other.mDictionary && mSignature == other.mSignature &&
+      mXFace == other.mXFace && mXFaceEnabled == other.mXFaceEnabled;
 
 #if 0
   if ( same )
@@ -325,6 +327,8 @@ void Identity::readConfig( const KConfigBase * config )
     mDrafts = "drafts";
   mTransport = config->readEntry("Transport");
   mDictionary = config->readEntry( "Dictionary" );
+  mXFace = config->readEntry( "X-Face" );
+  mXFaceEnabled = config->readBoolEntry( "X-FaceEnabled", false );
 
   mSignature.readConfig( config );
   kdDebug(5006) << "Identity::readConfig(): UOID = " << mUoid
@@ -352,6 +356,8 @@ void Identity::writeConfig( KConfigBase * config ) const
   config->writeEntry("Fcc", mFcc);
   config->writeEntry("Drafts", mDrafts);
   config->writeEntry( "Dictionary", mDictionary );
+  config->writeEntry( "X-Face", mXFace );
+  config->writeEntry( "X-FaceEnabled", mXFaceEnabled );
 
   mSignature.writeConfig( config );
 }
@@ -374,6 +380,7 @@ QDataStream & KPIM::operator<<( QDataStream & stream, const KPIM::Identity & i )
 		<< i.drafts()
 		<< i.mSignature
                 << i.dictionary()
+                << i.xface()
 		<< QString( Kleo::cryptoMessageFormatToString( i.mPreferredCryptoMessageFormat ) );
 }
 
@@ -397,6 +404,7 @@ QDataStream & KPIM::operator>>( QDataStream & stream, KPIM::Identity & i ) {
 		>> i.mDrafts
 		>> i.mSignature
                 >> i.mDictionary
+                >> i.mXFace
 		>> format;
   i.mUoid = uoid;
   i.mPreferredCryptoMessageFormat = Kleo::stringToCryptoMessageFormat( format.latin1() );
@@ -556,6 +564,23 @@ void Identity::setDictionary( const QString &str )
   mDictionary = str;
   if ( mDictionary.isNull() )
     mDictionary = "";
+}
+
+
+//-----------------------------------------------------------------------------
+void Identity::setXFace( const QString &str )
+{
+  mXFace = str;
+  mXFace.remove( " " );
+  mXFace.remove( "\n" );
+  mXFace.remove( "\r" );
+}
+
+
+//-----------------------------------------------------------------------------
+void Identity::setXFaceEnabled( const bool on )
+{
+  mXFaceEnabled = on;
 }
 
 
