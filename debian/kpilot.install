@@ -4,7 +4,7 @@ debian/tmp/usr/bin/kpalmdoc
 debian/tmp/usr/lib/kde3/libaddressconduit.la
 debian/tmp/usr/lib/kde3/libaddressconduit.so.*
 debian/tmp/usr/lib/kde3/libdocconduit.la
-debian/tmp/usr/lib/kde3/libdocconduit.so.*
+debian/tmp/usr/lib/kde3/libdocconduit.so*
 debian/tmp/usr/lib/kde3/libexpenseconduit.la
 debian/tmp/usr/lib/kde3/libexpenseconduit.so.*
 debian/tmp/usr/lib/kde3/libknotesconduit.la
