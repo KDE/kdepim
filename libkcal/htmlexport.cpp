@@ -30,6 +30,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
+#include <kcalendarsystem.h>
 
 #include <libkcal/calendar.h>
 #include <libkcal/event.h>
@@ -130,7 +131,7 @@ void HtmlExport::createHtmlMonthView(QTextStream *ts)
 
   while ( start < toDate() ) {
     // Write header
-    *ts << "<h2>" << (i18n("month_year","%1 %2").arg(KGlobal::locale()->monthName(start.month()))
+    *ts << "<h2>" << (i18n("month_year","%1 %2").arg(KGlobal::locale()->calendar()->monthName(start))
         .arg(start.year())) << "</h2>\n";
     if (KGlobal::locale()->weekStartsMonday()) {
       start = start.addDays(1 - start.dayOfWeek());
@@ -144,7 +145,7 @@ void HtmlExport::createHtmlMonthView(QTextStream *ts)
     // Write table header
     *ts << "  <tr>";
     for(int i=0; i<7; ++i) {
-      *ts << "<th>" << KGlobal::locale()->weekDayName(start.addDays(i).dayOfWeek()) << "</th>";
+      *ts << "<th>" << KGlobal::locale()->calendar()->weekDayName( start.addDays(i) ) << "</th>";
     }
     *ts << "</tr>\n";
 
