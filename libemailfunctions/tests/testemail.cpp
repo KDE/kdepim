@@ -88,6 +88,8 @@ static QString emailTestParseResultToString( EmailParseResult errorCode )
     return "UnopenedAngleAddr";
   } else if( errorCode == DisallowedChar ) {
     return "DisallowedChar";
+  } else if( errorCode == UnexpectedComma ) {
+    return "UnexpectedComma";
   }
   return "unknown error code";
 }
@@ -290,6 +292,9 @@ int main(int argc, char *argv[])
 
   // BUG 98720
   checkIsValidEmailAddress( "mailto:@mydomain", "DisallowedChar" );
+
+  // correct error msg when a comma is inside <>
+  checkIsValidEmailAddress( "Matt Douhan <matt@fruitsalad,org>", "UnexpectedComma" );
 
   // checks for "pure" email addresses in the form of xxx@yyy.tld
   checkIsValidSimpleEmailAddress( "matt@fruitsalad.org", "true" );
