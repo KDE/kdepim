@@ -600,6 +600,7 @@ KNConfig::ReadNewsViewer::ReadNewsViewer()
 
   s_howSig=conf->readBoolEntry("showSig", true);
   i_nterpretFormatTags=conf->readBoolEntry("interpretFormatTags", true);
+  q_uoteCharacters=conf->readEntry("quoteCharacters",">:");
   i_nlineAtt=conf->readBoolEntry("inlineAtt", true);
   o_penAtt=conf->readBoolEntry("openAtt", false) ;
   s_howAlts=conf->readBoolEntry("showAlts", false);
@@ -632,6 +633,7 @@ void KNConfig::ReadNewsViewer::save()
 
   conf->writeEntry("showSig", s_howSig);
   conf->writeEntry("interpretFormatTags", i_nterpretFormatTags);
+  conf->writeEntry("quoteCharacters",q_uoteCharacters);
   conf->writeEntry("inlineAtt", i_nlineAtt);
   conf->writeEntry("openAtt", o_penAtt);
   conf->writeEntry("showAlts", s_howAlts);

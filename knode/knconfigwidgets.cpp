@@ -940,6 +940,8 @@ KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget(ReadNewsViewer *d, QWidget 
 
   s_igCB=new QCheckBox(i18n("Show sig&nature"), appgb);
   f_ormatCB=new QCheckBox(i18n("Interpret te&xt format tags"), appgb);
+  q_uoteCharacters=new QLineEdit(appgb);
+  QLabel *quoteCharL = new QLabel(q_uoteCharacters, i18n("Recognized q&uote characters:"), appgb);
 
   i_nlineCB=new QCheckBox(i18n("Show attachments &inline if possible"), agb);
   o_penAttCB=new QCheckBox(i18n("Open a&ttachments on click"), agb);
@@ -958,7 +960,7 @@ KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget(ReadNewsViewer *d, QWidget 
   connect(c_hooseBrowser, SIGNAL(clicked()), SLOT(slotChooseBrowser()));
 
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
-  QVBoxLayout *appgbL=new QVBoxLayout(appgb, 8, 5);
+  QGridLayout *appgbL=new QGridLayout(appgb, 4,2, 8,5);
   QVBoxLayout *agbL=new QVBoxLayout(agb, 8, 5);
   QGridLayout *bgbL=new QGridLayout(bgb, 3,3, 8,5);
 
@@ -967,9 +969,11 @@ KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget(ReadNewsViewer *d, QWidget 
   topL->addWidget(bgb);
   topL->addStretch(1);
 
-  appgbL->addSpacing(fontMetrics().lineSpacing()-4);
-  appgbL->addWidget(s_igCB);
-  appgbL->addWidget(f_ormatCB);
+  appgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
+  appgbL->addMultiCellWidget(s_igCB, 1,1, 0,1);
+  appgbL->addMultiCellWidget(f_ormatCB, 2,2, 0,1);
+  appgbL->addWidget(quoteCharL, 3,0);
+  appgbL->addWidget(q_uoteCharacters, 3,1);
 
   agbL->addSpacing(fontMetrics().lineSpacing()-4);
   agbL->addWidget(i_nlineCB);
@@ -988,6 +992,7 @@ KNConfig::ReadNewsViewerWidget::ReadNewsViewerWidget(ReadNewsViewer *d, QWidget 
   //init
   s_igCB->setChecked(d->s_howSig);
   f_ormatCB->setChecked(d->i_nterpretFormatTags);
+  q_uoteCharacters->setText(d->q_uoteCharacters);
   i_nlineCB->setChecked(d->i_nlineAtt);
   o_penAttCB->setChecked(d->o_penAtt);
   a_ltAttCB->setChecked(d->s_howAlts);
@@ -1010,6 +1015,7 @@ void KNConfig::ReadNewsViewerWidget::apply()
 
   d_ata->s_howSig=s_igCB->isChecked();
   d_ata->i_nterpretFormatTags=f_ormatCB->isChecked();
+  d_ata->q_uoteCharacters=q_uoteCharacters->text();
   d_ata->i_nlineAtt=i_nlineCB->isChecked();
   d_ata->o_penAtt=o_penAttCB->isChecked();
   d_ata->s_howAlts=a_ltAttCB->isChecked();

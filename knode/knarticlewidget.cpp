@@ -916,6 +916,9 @@ void KNArticleWidget::createHtmlPage()
       QStringList lines;
       QString line;
       text->decodedText(lines);
+      QString quoteChars = rnv->quoteCharacters().simplifyWhiteSpace();
+      if (quoteChars.isEmpty()) quoteChars = ">";
+
       for(QStringList::Iterator it=lines.begin(); it!=lines.end(); ++it) {
         line=(*it);
         if(!line.isEmpty()) {
@@ -939,7 +942,7 @@ void KNArticleWidget::createHtmlPage()
             while(idx < line.length()) {
               firstChar=line[idx];
               if(firstChar.isSpace()) idx++;
-              else if(firstChar.latin1()=='>') { idx++; newLevel++; }
+              else if(quoteChars.find(firstChar)!=-1) { idx++; newLevel++; }
               else break;
             }
 
@@ -980,7 +983,7 @@ void KNArticleWidget::createHtmlPage()
         ct=var->contentType();
         html+=QString("<tr><td align=center><a href=\"internal:att=%1\">%2</a></td><td align=center>%3</td><td align=center>%4</td></tr>")
               .arg(attCnt)
-              .arg(ct->name())
+              .arg((ct->name().isEmpty())? i18n("unnamed"):ct->name())
               .arg(ct->mimeType())
               .arg(toHtmlString(var->contentDescription()->asUnicodeString()));
 

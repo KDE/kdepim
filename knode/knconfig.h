@@ -509,6 +509,7 @@ class ReadNewsViewer : public Base {
 
     bool showSignature()             { return s_howSig; }
     bool interpretFormatTags()       { return i_nterpretFormatTags; }
+    QString quoteCharacters()        { return q_uoteCharacters; }
 
     bool showAttachmentsInline()     { return i_nlineAtt; }
     bool openAttachmentsOnClick()    { return o_penAtt; }
@@ -523,6 +524,7 @@ class ReadNewsViewer : public Base {
           i_nlineAtt,
           o_penAtt,
           s_howAlts;
+    QString q_uoteCharacters;
 
     browserType b_rowser;
     QString b_rowserCommand;
@@ -547,7 +549,8 @@ class ReadNewsViewerWidget : public BaseWidget {
                 *a_ltAttCB,
                 *f_ormatCB;
     QComboBox   *b_rowser;
-    QLineEdit   *b_rowserCommand;
+    QLineEdit   *b_rowserCommand,
+                *q_uoteCharacters;
     QPushButton *c_hooseBrowser;
 
     ReadNewsViewer *d_ata;
