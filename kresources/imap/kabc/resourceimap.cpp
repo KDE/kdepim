@@ -103,17 +103,25 @@ bool KABC::ResourceIMAP::load()
 {
   mAddrMap.clear();
 
-  QStringList lst;
-  if ( !kmailIncidences( lst, "Contact", "FIXME" ) ) {
-    kdError() << "Communication problem in ResourceIMAP::load()\n";
+  // Get the list of resources
+  QStringList resources;
+  if ( !kmailSubresources( resources, "Contact" ) )
     return false;
-  }
 
-  for( QStringList::iterator it = lst.begin(); it != lst.end(); ++it ) {
-    KABC::Addressee addr = mConverter.parseVCard( *it );
-    addr.setResource( this );
-    addr.setChanged( false );
-    Resource::insertAddressee( addr );
+  QStringList::ConstIterator itR;
+  for ( itR = resources.begin(); itR != resources.end(); ++itR ) {
+    QStringList lst;
+    if ( !kmailIncidences( lst, "Contact", *itR ) ) {
+      kdError() << "Communication problem in ResourceIMAP::load()\n";
+      return false;
+    }
+
+    for( QStringList::iterator it = lst.begin(); it != lst.end(); ++it ) {
+      KABC::Addressee addr = mConverter.parseVCard( *it );
+      addr.setResource( this );
+      addr.setChanged( false );
+      Resource::insertAddressee( addr );
+    }
   }
 
   return true;
@@ -239,6 +247,20 @@ void KABC::ResourceIMAP::slotRefresh( const QString& type )
 
     mSilent = silent;
   }
+}
+
+void KABC::ResourceIMAP::subresourceAdded( const QString& type,
+                                           const QString& )
+{
+  // TODO: Optimize this
+  slotRefresh( type );
+}
+
+void KABC::ResourceIMAP::subresourceDeleted( const QString& type,
+                                             const QString& )
+{
+  // TODO: Optimize this
+  slotRefresh( type );
 }
 
 

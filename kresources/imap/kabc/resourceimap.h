@@ -1,6 +1,6 @@
 /*
     This file is part of libkabc and/or kaddressbook.
-    Copyright (c) 2002 - 2004 Klarälvdalens Datakonsult AB 
+    Copyright (c) 2002 - 2004 Klarälvdalens Datakonsult AB
         <info@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
@@ -103,6 +103,10 @@ public:
    * used by record-based resources like LDAP or SQL.
    */
   virtual void removeAddressee( const Addressee& addr );
+
+  // Listen to KMail changes in the amount of sub resources
+  void subresourceAdded( const QString& type, const QString& id );
+  void subresourceDeleted( const QString& type, const QString& id );
 
 protected:
   virtual bool addIncidence( const QString& type, const QString& ical );
