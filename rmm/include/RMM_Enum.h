@@ -206,6 +206,9 @@ class RMM
 		static 	QCString	cteTypeEnumToStr(CteType t);
 
 		static	QString		mimeTypeToIconName(MimeType t, MimeSubType st);
+		
+		static	RMM::HeaderType		headerNameToEnum(const QCString & s);
+		static	RMM::HeaderDataType	headerNameToType(const QCString & s);
 };
 
 #endif

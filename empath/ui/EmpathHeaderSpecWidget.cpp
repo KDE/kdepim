@@ -18,60 +18,58 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <qpixmap.h>
-
 #include "EmpathHeaderSpecWidget.h"
-#include "EmpathHeaderNameWidget.h"
-#include "EmpathHeaderBodyWidget.h"
+#include "EmpathAddressSelectionWidget.h"
 #include "EmpathUIUtils.h"
+#include <RMM_Enum.h>
 
 EmpathHeaderSpecWidget::EmpathHeaderSpecWidget(
-		int headerIndex,
+		const QString & headerName,
+		const QString & headerBody,
 		QWidget * parent,
 		const char * name)
-	:	QWidget(parent, name)
+	:
+		QWidget(parent, name),
+		headerName_(headerName),
+		headerBody_(headerBody)
 {
 	empathDebug("ctor");
 	
 	QGridLayout * layout_	
-		= new QGridLayout(this, 1, 3, 0, 4);
+		= new QGridLayout(this, 1, 2, 0, 4);
 	CHECK_PTR(layout_);
 	
-	headerNameWidget_	= new EmpathHeaderNameWidget(
-		headerIndex, this, "headerNameWidget");
+	headerNameWidget_	= new QLabel(this, "headerNameWidget");
 	CHECK_PTR(headerNameWidget_);
+	
+	headerNameWidget_->setText(headerName_ + ":");
+	
+	RMM::HeaderType t(RMM::headerNameToEnum(headerName_.ascii()));
+	
+	if (t == RMM::AddressList	||
+		t == RMM::Address		||
+		t == RMM::MailboxList	||
+		t == RMM::Mailbox) {
 
-	QObject::connect(headerNameWidget_, SIGNAL(activated(const char *)),
-			this, SLOT(s_headerNameActivated(const char *)));
+		headerBodyWidget_	=
+			new EmpathAddressSelectionWidget(this, "headerNameWidget");
+		CHECK_PTR(headerBodyWidget_);
+		((EmpathAddressSelectionWidget *)headerBodyWidget_)->setText(headerBody_);
 	
-	headerBodyWidget_	= new EmpathHeaderBodyWidget(this, "headerNameWidget");
-	CHECK_PTR(headerBodyWidget_);
+	} else {
+
+		headerBodyWidget_	= new QLineEdit(this, "headerNameWidget");
+		CHECK_PTR(headerBodyWidget_);
+		((QLineEdit *)headerBodyWidget_)->setText(headerBody_);
+	}
 	
-	pb_selectRecipients_ = new QPushButton(this, "pb_selectRecipients");
-	CHECK_PTR(pb_selectRecipients_);
-	pb_selectRecipients_->setPixmap(empathIcon("point.png"));
 	
 	int h = headerBodyWidget_->sizeHint().height();
 	headerNameWidget_->setFixedHeight(h);
 	headerBodyWidget_->setFixedHeight(h);
-	pb_selectRecipients_->setFixedSize(h, h);
 	
-	QObject::connect(headerBodyWidget_, SIGNAL(textChanged()),
-			this, SLOT(s_headerBodyChanged()));
-
-	QObject::connect(headerBodyWidget_, SIGNAL(returnPressed()),
-			this, SLOT(s_headerBodyAccepted()));
-	
-	QObject::connect(pb_selectRecipients_, SIGNAL(clicked()),
-			this, SLOT(s_selectRecipients()));
-	
-	layout_->setColStretch(0, 3);
-	layout_->setColStretch(1, 7);
-	layout_->setColStretch(2, 0);
-
 	layout_->addWidget(headerNameWidget_, 0, 0);
 	layout_->addWidget(headerBodyWidget_, 0, 1);
-	layout_->addWidget(pb_selectRecipients_, 0, 2);
 
 	layout_->activate();
 	
@@ -84,70 +82,34 @@ EmpathHeaderSpecWidget::~EmpathHeaderSpecWidget()
 }
 
 	void
-EmpathHeaderSpecWidget::setHeaderList(const QStrList & headerList)
-{
-	headerNameWidget_->clear();
-	headerNameWidget_->insertStrList(&headerList);
-}
-
-	void
 EmpathHeaderSpecWidget::setHeaderName(const QString & headerName)
 {
-	headerNameWidget_->setHeaderName(headerName);
+	headerName_ = headerName;
+	headerNameWidget_->setText(headerName_);
 }
 
-	QCString
+	QString
 EmpathHeaderSpecWidget::header()
 {
-	QCString s;
-
-	s = QCString(headerNameWidget_->headerName().ascii());
-	s += " ";
-	s += QCString(headerBodyWidget_->headerBody().ascii());
-	
-	return s;
+//	return (headerNameWidget_->text() + " " + headerBodyWidget_->text());
 }
 
 	void
 EmpathHeaderSpecWidget::setHeaderBody(const QString & headerBody)
 {
-	empathDebug("setHeaderBody(" + headerBody + ") called");
-	headerBodyWidget_->setHeaderBody(headerBody);
+	headerBody_ = headerBody;
+//	headerBodyWidget_->setText(headerBody_);
+}
+
+	int
+EmpathHeaderSpecWidget::sizeOfColumnOne()
+{
+	return (headerNameWidget_->sizeHint().width());
 }
 
 	void
-EmpathHeaderSpecWidget::s_headerNameActivated(const char * text)
+EmpathHeaderSpecWidget::setColumnOneSize(int i)
 {
-	empathDebug("s_headerNameActivated() called");
-	emit(nameActivated(text));
-}
-
-	void
-EmpathHeaderSpecWidget::s_headerNameAccepted()
-{
-	empathDebug("s_headerNameAccepted() called");
-	empathDebug("header name text: \"" + headerNameWidget_->headerName() + "\""); 
-}
-
-	void
-EmpathHeaderSpecWidget::s_headerBodyChanged()
-{
-	empathDebug("s_headerBodyChanged() called");
-	empathDebug("header body text: \"" + headerBodyWidget_->headerBody() + "\""); 
-	emit(_empath_textChanged(0));
-}
-
-	void
-EmpathHeaderSpecWidget::s_headerBodyAccepted()
-{
-	empathDebug("s_headerBodyAccepted() called");
-	empathDebug("header body text: \"" + headerBodyWidget_->headerBody() + "\""); 
-	emit(_empath_returnPressed(0));
-}
-
-
-	void
-EmpathHeaderSpecWidget::s_selectRecipients()
-{
+	headerNameWidget_->setFixedWidth(i);
 }
 

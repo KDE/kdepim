@@ -42,6 +42,8 @@ class EmpathAddressSelectionWidget : public QWidget
 
 		QString selectedAddress() const;
 		void setAddress(const QString &);
+		QString text() const { return selectedAddress(); }
+		void setText(const QString & s) { setAddress(s); }
 
 	protected slots:
 

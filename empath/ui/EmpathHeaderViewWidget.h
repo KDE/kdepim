@@ -20,18 +20,23 @@ class EmpathHeaderViewWidget : public QWidget
 	
 		void useEnvelope(REnvelope &);
 		
-		void paintEvent(QPaintEvent *);
-		void mouseMoveEvent(QMouseEvent *);
-		void leaveEvent(QEvent * e) { mouseMoveEvent(0); }
-		void mousePressEvent(QMouseEvent * e);
-		
 	signals:
 	
 		void clipClicked();
 		
+	protected:
+		
+		void paintEvent(QPaintEvent *);
+		void resizeEvent(QResizeEvent *);
+		void mouseMoveEvent(QMouseEvent *);
+		void leaveEvent(QEvent * e) { mouseMoveEvent(0); }
+		void mousePressEvent(QMouseEvent * e);
+
 	private:
 		
+		bool			resized_;
 		QPixmap			underClip_;
+		QPixmap			buf_;
 		QStrList		headerList_;
 		QPixmap			clipIcon_;
 		QPixmap			clipGlow_;

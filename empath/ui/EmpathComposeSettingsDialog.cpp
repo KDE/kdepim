@@ -394,6 +394,7 @@ EmpathComposeSettingsDialog::saveData()
 	KConfig * c	= KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_COMPOSE);
 #define CWE c->writeEntry
+	CWE( EmpathConfig::KEY_EXTRA_HEADERS,			le_extra_->text());
 	CWE( EmpathConfig::KEY_PHRASE_REPLY_SENDER,		le_reply_->text());
 	CWE( EmpathConfig::KEY_PHRASE_REPLY_ALL,		le_replyAll_->text());
 	CWE( EmpathConfig::KEY_PHRASE_FORWARD,			le_forward_->text());
@@ -415,6 +416,9 @@ EmpathComposeSettingsDialog::loadData()
 {
 	KConfig * c	= KGlobal::config();
 	c->setGroup(EmpathConfig::GROUP_COMPOSE);
+	
+	le_extra_->setText(
+		c->readEntry(EmpathConfig::KEY_EXTRA_HEADERS));
 	
 	le_reply_->setText(
 		c->readEntry(EmpathConfig::KEY_PHRASE_REPLY_SENDER, i18n("%s wrote:")));
@@ -490,6 +494,7 @@ EmpathComposeSettingsDialog::s_apply()
 	void
 EmpathComposeSettingsDialog::s_default()
 {
+	le_extra_			->	setText		(QString::null);
 	le_reply_			->	setText		(i18n("%s wrote:"));
 	le_replyAll_		->	setText		(i18n("%s wrote:"));
 	le_forward_			->	setText		(i18n("Forwarded message from %s"));

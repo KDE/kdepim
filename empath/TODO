@@ -58,7 +58,10 @@ Little things I need to do. Highest priority first.
 
 Bugs in Qt/KDE (possibly)
 
-* Sometimes KTMainWindows get resized to a weird size on init, and are fixed.
+* KTMainWindow layout isn't working. Probably my fault, though the layout
+  code has just changed...
+
+* KHTMLWidget crashes on some valid html.
 
 * Sometimes KMenuBar doesn't show some entries until the mouse passes over them.
 

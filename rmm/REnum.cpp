@@ -1116,3 +1116,23 @@ RMM::mimeTypeToIconName(MimeType t, MimeSubType st)
 	return s;
 }
 
+	RMM::HeaderType
+RMM::headerNameToEnum(const QCString & headerName)
+{
+	for (int i = 0; i <= 42; i++)
+		if (!stricmp((headerName), RMM::headerNames[i]))
+			return (RMM::HeaderType)i;
+
+	return RMM::HeaderUnknown;
+}
+
+	RMM::HeaderDataType
+RMM::headerNameToType(const QCString & headerName)
+{
+	RMM::HeaderType t(headerNameToEnum(headerName));
+	
+	return headerTypesTable[t];
+	
+	return RMM::Text;
+}
+

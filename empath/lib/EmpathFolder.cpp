@@ -54,6 +54,7 @@ EmpathFolder::EmpathFolder(const EmpathURL & url)
 EmpathFolder::operator == (const EmpathFolder & other) const
 {
 	empathDebug("operator == () called");
+	return false;
 }
 
 EmpathFolder::~EmpathFolder()

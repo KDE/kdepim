@@ -37,7 +37,6 @@
 #include "EmpathMessageWidget.h"
 #include "EmpathFolderChooserDialog.h"
 #include "EmpathMailSender.h"
-#include "EmpathAboutBox.h"
 #include "EmpathConfig.h"
 #include "Empath.h"
 
@@ -103,6 +102,8 @@ EmpathComposeWindow::setupToolBar()
 
 	KToolBar * tb = new KToolBar(this, "tooly", i + 4 );
 	CHECK_PTR(tb);
+	
+	tb->setFullWidth(false);
 
 	this->addToolBar(tb, 0);
 
@@ -115,11 +116,11 @@ EmpathComposeWindow::setupToolBar()
 	tb->insertButton(empathIcon("save.png"), 0, SIGNAL(clicked()),
 			this, SLOT(s_fileSaveAs()), true, i18n("Save"));
 	
-	tb->insertSeparator();
-	
 	KToolBar * tb2 = new KToolBar(this, "tooly2", i + 4 );
 	CHECK_PTR(tb2);
 
+	tb2->setFullWidth(false);
+	
 	this->addToolBar(tb2, 1);
 		
 	id_confirmDelivery_		= 8;
@@ -412,7 +413,7 @@ EmpathComposeWindow::s_help()
 	void
 EmpathComposeWindow::s_aboutEmpath()
 {
-	EmpathAboutBox::create();
+	empath->s_about();
 }
 
 	void
@@ -454,9 +455,8 @@ EmpathComposeWindow::s_encrypt(bool)
 	void
 EmpathComposeWindow::bugReport()
 {
-	empathDebug("bugReport() called");
-	composeWidget_->bugReport();
 	setCaption(i18n("Bug Report - ") + kapp->getCaption());
+	composeWidget_->bugReport();
 }
 
 #include "EmpathComposeWindowMenus.cpp"

@@ -23,18 +23,13 @@
 
 // Qt includes
 #include <qwidget.h>
-#include <qlist.h>
 #include <qstring.h>
-#include <qstrlist.h>
 #include <qlayout.h>
-#include <qpushbutton.h>
+#include <qlineedit.h>
+#include <qlabel.h>
 
 // Local includes
 #include "EmpathDefines.h"
-#include <RMM_Header.h>
-
-class EmpathHeaderNameWidget;
-class EmpathHeaderBodyWidget;
 
 class EmpathHeaderSpecWidget : public QWidget
 {
@@ -43,35 +38,28 @@ class EmpathHeaderSpecWidget : public QWidget
 	public:
 		
 		EmpathHeaderSpecWidget(
-			int headerIndex, QWidget * parent = 0, const char * name = 0);
+			const QString & headerName = QString::null,
+			const QString & headerBody = QString::null,
+			QWidget * parent = 0, const char * name = 0);
+
 		~EmpathHeaderSpecWidget();
 
-		QCString	header();
-		void		setHeaderList(const QStrList & headerList);
+		int			sizeOfColumnOne();
+		void		setColumnOneSize(int);
+
+		QString		header();
+		QString		headerName();
+		QString		headerBody();
 		void		setHeaderName(const QString & headerName);
 		void		setHeaderBody(const QString & headerBody);
 
-	protected slots:
-
-		void s_headerNameActivated(const char * text);
-		void s_headerNameAccepted();
-		void s_headerBodyChanged();
-		void s_headerBodyAccepted();
-		void s_selectRecipients();
-	
-	signals:
-	
-		void nameActivated(const char * text);
-		void textChanged();
-		void returnPressed();
-		void _empath_textChanged(int);
-		void _empath_returnPressed(int);
-		
 	private:
 
-		EmpathHeaderNameWidget	* headerNameWidget_;
-		EmpathHeaderBodyWidget	* headerBodyWidget_;
-		QPushButton				* pb_selectRecipients_;
+		QLabel		* headerNameWidget_;
+		QWidget		* headerBodyWidget_;
+		
+		QString headerName_;
+		QString headerBody_;
 };
 
 #endif

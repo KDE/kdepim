@@ -29,7 +29,6 @@ EmpathFolderChooserWidget.cpp \
 EmpathFolderListItem.cpp \
 EmpathFolderWidget.cpp \
 EmpathHeaderBodyWidget.cpp \
-EmpathHeaderEditWidget.cpp \
 EmpathHeaderNameWidget.cpp \
 EmpathHeaderSpecWidget.cpp \
 EmpathHeaderViewWidget.cpp \

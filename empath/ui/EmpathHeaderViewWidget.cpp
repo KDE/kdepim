@@ -59,19 +59,31 @@ EmpathHeaderViewWidget::useEnvelope(REnvelope & e)
 		headerList_.append(h->headerBody()->asString());
 	}
 	
-	int th = QFontMetrics(kapp->generalFont()).height();
+	int th = QFontMetrics(KGlobal::generalFont()).height();
 	setFixedHeight(th * l.count() + 4);
 	
 	paintEvent(0);
+}
+
+	void
+EmpathHeaderViewWidget::resizeEvent(QResizeEvent * e)
+{
+	resized_ = true;
+
+	QWidget::resizeEvent(e);
 }
 	
 	void
 EmpathHeaderViewWidget::paintEvent(QPaintEvent * e)
 {
-	empathDebug("paintEvent()");
+	if (!resized_ && e) {
+		bitBlt(this, e->rect().topLeft(), &buf_, e->rect());
+		return;
+	}
 	
-	QPixmap buf;
-	buf.resize(width(), height());
+	resized_ = false;
+
+	buf_.resize(width(), height());
 
 	KPixmap px;
 	px.resize(width(), height());
@@ -79,12 +91,12 @@ EmpathHeaderViewWidget::paintEvent(QPaintEvent * e)
 		kapp->palette().color(QPalette::Normal, QColorGroup::Base),
 		kapp->palette().color(QPalette::Normal, QColorGroup::Background));
 	
-	int th = QFontMetrics(kapp->generalFont()).height();
+	int th = QFontMetrics(KGlobal::generalFont()).height();
 	
 	int i(0);
 	
 	QPainter p;
-	p.begin(&buf);
+	p.begin(&buf_);
 	
 	p.drawPixmap(0, 0, px);
 	
@@ -123,7 +135,7 @@ EmpathHeaderViewWidget::paintEvent(QPaintEvent * e)
 		++i;
 	}
 	
-	bitBlt(this, 0, 0, &buf);
+	bitBlt(this, 0, 0, &buf_);
 	p.end();
 }
 

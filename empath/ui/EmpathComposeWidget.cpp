@@ -31,7 +31,7 @@
 
 // Local includes
 #include "EmpathComposeWidget.h"
-#include "EmpathHeaderEditWidget.h"
+#include "EmpathAddressSelectionWidget.h"
 #include "EmpathSubjectSpecWidget.h"
 #include "EmpathEditorProcess.h"
 #include "EmpathConfig.h"
@@ -79,10 +79,22 @@ EmpathComposeWidget::EmpathComposeWidget(
 	void
 EmpathComposeWidget::_init()
 {
-	headerEditWidget_		=
-		new EmpathHeaderEditWidget(this, "headerEditWidget");
-	CHECK_PTR(headerEditWidget_);
+	maxSizeColOne_ = 0;
+	
+	// Get the layouts sorted out first.
+	layout_	= new QGridLayout(this, 2, 2, 4, 4, "layout_");
+	CHECK_PTR(layout_);
 
+	headerLayout_ = new QGridLayout(0, 1, 4);
+	CHECK_PTR(headerLayout_);
+	
+	layout_->addLayout(headerLayout_, 0, 0);
+	
+	extraLayout_ = new QGridLayout(1, 2, 4);
+	CHECK_PTR(extraLayout_);
+	
+	layout_->addLayout(extraLayout_, 0, 1);
+	
 	l_priority_			=
 		new QLabel(i18n("Priority:"), this, "l_priority_");
 	CHECK_PTR(l_priority_);
@@ -111,23 +123,25 @@ EmpathComposeWidget::_init()
 	
 	editorWidget_->setFont(c->readFontEntry(EmpathConfig::KEY_FIXED_FONT));
 
-	layout_	= new QGridLayout(this, 2, 2, 2, 0, "layout_");
-	CHECK_PTR(layout_);
 
-	midLayout_ = new QGridLayout(1, 2, 10);
-	CHECK_PTR(midLayout_);
-
-	midLayout_->addWidget(l_priority_,			0, 0);
-	midLayout_->addWidget(cmb_priority_,		0, 1);
-	layout_->addLayout(midLayout_, 0, 1);
-
-	layout_->addWidget(headerEditWidget_,	0, 0);
+	extraLayout_->addWidget(l_priority_,		0, 0);
+	extraLayout_->addWidget(cmb_priority_,		0, 1);
 	layout_->addMultiCellWidget(editorWidget_,	1, 1, 0, 1);
 
-	midLayout_->activate();
-	layout_->activate();
+	_addHeader("To");
+	_addHeader("Cc");
+	_addHeader("Bcc");
+	_addExtraHeaders();
+	_addHeader("Subject");
 
-	headerEditWidget_->setFocus();
+	QListIterator<EmpathHeaderSpecWidget> hit(headerSpecList_);
+	
+	for (; hit.current(); ++hit)
+		hit.current()->setColumnOneSize(maxSizeColOne_);
+
+	headerLayout_->activate();
+	extraLayout_->activate();
+	layout_->activate();
 
 	switch (composeType_) {
 
@@ -142,15 +156,16 @@ EmpathComposeWidget::_init()
 		return;
 	}
 	
-	headerEditWidget_->setTo(recipient_);
+//	headerEditWidget_->setTo(recipient_);
 	
 	c->setGroup(EmpathConfig::GROUP_COMPOSE);
 
 	if (c->readBoolEntry(EmpathConfig::KEY_USE_EXTERNAL_EDITOR, false)) {
 
 		editorWidget_->setEnabled(false);
-		spawnExternalEditor(editorWidget_->text().ascii());
+		_spawnExternalEditor(editorWidget_->text().ascii());
 	}
+	
 }
 
 EmpathComposeWidget::~EmpathComposeWidget()
@@ -164,7 +179,7 @@ EmpathComposeWidget::message()
 	empathDebug("message called");
 
 	QCString s;
-	s += headerEditWidget_->envelope().ascii();
+//	s += headerEditWidget_->envelope().ascii();
 
 	if (composeType_ == ComposeReply || composeType_ == ComposeReplyAll) {
 		
@@ -216,8 +231,8 @@ EmpathComposeWidget::message()
 	s += "\n";
 	
 	s +=
-		QCString("Subject: ") +
-		QCString(headerEditWidget_->subject().ascii());
+		QCString("Subject: ");// +
+//		QCString(headerEditWidget_->subject().ascii());
 	s += "\n";
 	
 	RDateTime dt;
@@ -269,7 +284,7 @@ EmpathComposeWidget::messageHasAttachments()
 }
 
 	void
-EmpathComposeWidget::spawnExternalEditor(const QCString & text)
+EmpathComposeWidget::_spawnExternalEditor(const QCString & text)
 {
 	empathDebug("spawnExternalEditor() called");
 	
@@ -305,7 +320,7 @@ EmpathComposeWidget::_reply(bool toAll)
 		else
 			to = message.envelope().to().at(0)->asString();
 		
-		headerEditWidget_->setTo(to);
+		//headerEditWidget_->setTo(to);
 	}
 	
 	if (toAll) {
@@ -313,12 +328,12 @@ EmpathComposeWidget::_reply(bool toAll)
 		if (message.envelope().has(RMM::HeaderReplyTo)) {
 		
 			to = message.envelope().replyTo().asString();
-			headerEditWidget_->setTo(to);
+		//	headerEditWidget_->setTo(to);
 		
 		} else if (message.envelope().has(RMM::HeaderFrom)) {
 		
 			to = message.envelope().from().at(0).asString();
-			headerEditWidget_->setTo(to);
+		//	headerEditWidget_->setTo(to);
 		}
 	
 	
@@ -347,16 +362,17 @@ EmpathComposeWidget::_reply(bool toAll)
 			if (!cc.isEmpty())
 				cc += message.envelope().to().asString();
 		
-		headerEditWidget_->setCc(cc);
+		//headerEditWidget_->setCc(cc);
 	}
 
 	
-	headerEditWidget_->setFocus();
+//	headerEditWidget_->setFocus();
 	
 	// Fill in the subject.
 	QString s = message.envelope().subject().asString();
 	empathDebug("Subject was \"" + s + "\""); 
 
+	/*
 	if (s.isEmpty())
 		headerEditWidget_->setSubject(
 			i18n("Re: (no subject given)"));
@@ -365,7 +381,7 @@ EmpathComposeWidget::_reply(bool toAll)
 			headerEditWidget_->setSubject(s);
 		else
 			headerEditWidget_->setSubject("Re: " + s);
-	
+	*/
 	// Now quote original message if we need to.
 	
 	KConfig * c(KGlobal::config());
@@ -424,8 +440,8 @@ EmpathComposeWidget::_forward()
 	// Fill in the subject.
 	s = message.envelope().subject().asString();
 	empathDebug("Subject was \"" + s + "\""); 
-
-	if (s.isEmpty())
+/*
+ * 	if (s.isEmpty())
 		headerEditWidget_->setSubject(
 			i18n("Fwd: (no subject given)"));
 	else
@@ -433,6 +449,7 @@ EmpathComposeWidget::_forward()
 			headerEditWidget_->setSubject(s);
 		else
 			headerEditWidget_->setSubject("Fwd: " + s);
+*/
 }
 
 	void
@@ -450,7 +467,7 @@ EmpathComposeWidget::s_editorDone(bool ok, QCString text)
 	void
 EmpathComposeWidget::bugReport()
 {
-	headerEditWidget_->setTo("rik@kde.org");
+	//headerEditWidget_->setTo("rik@kde.org");
 	QString errorStr_;
 	errorStr_ = i18n("- What were you trying to do when the problem occured ?");
 	errorStr_ += "\n\n\n\n";
@@ -462,5 +479,36 @@ EmpathComposeWidget::bugReport()
 	errorStr_ += "\n\n\n\n";
 	errorStr_ += i18n("- If you saw an error message, please try to reproduce it here");
 	editorWidget_->setText(errorStr_);
+}
+
+	void
+EmpathComposeWidget::_addExtraHeaders()
+{
+	// Now check which headers we're supposed to enable the editing of.
+	KConfig * c(KGlobal::config());
+	c->setGroup(EmpathConfig::GROUP_COMPOSE);
+	
+	QStrList l;
+	c->readListEntry(EmpathConfig::KEY_EXTRA_HEADERS, l, ',');
+	empathDebug("There are " + QString().setNum(l.count()) + " headers");
+	
+	QStrListIterator it(l);
+	
+	for (; it.current(); ++it)
+		_addHeader(it.current());
+}		
+	
+	void
+EmpathComposeWidget::_addHeader(const QString & n, const QString & b)
+{
+	EmpathHeaderSpecWidget * newHsw =
+		new EmpathHeaderSpecWidget(n, b, this);
+	CHECK_PTR(newHsw);
+
+	headerLayout_->addWidget(newHsw, headerLayout_->numRows(), 1);
+		
+	headerSpecList_.append(newHsw);
+		
+	maxSizeColOne_ = QMAX(newHsw->sizeOfColumnOne(), maxSizeColOne_);
 }
 

@@ -37,11 +37,8 @@
 #include "EmpathEnum.h"
 #include "EmpathDefines.h"
 #include "EmpathURL.h"
-
-class EmpathHeaderEditWidget;
-class EmpathSubjectSpecWidget;
-class RMessage;
-class KProcess;
+#include "EmpathHeaderSpecWidget.h"
+#include "RMM_Message.h"
 
 /**
  * The container for the various widgets used when composing.
@@ -93,23 +90,28 @@ class EmpathComposeWidget : public QWidget
 		void	_init();
 		void	_reply(bool toAll = false);
 		void	_forward();
-		void	spawnExternalEditor(const QCString & text);
+		void	_spawnExternalEditor(const QCString & text);
+		void	_addExtraHeaders();
+		void	_addHeader(const QString &, const QString & = QString::null);
+		
+		
+		QMultiLineEdit	* editorWidget_;
+		QListView		* lv_attachments_;
+		QComboBox		* cmb_priority_;
+		QLabel			* l_priority_;
+		QGridLayout		* layout_;
+		QGridLayout		* extraLayout_;
+		QGridLayout		* headerLayout_;
+		QLabel			* l_subject_;
+		QLineEdit		* le_subject_;
+		
+		QList<EmpathHeaderSpecWidget> headerSpecList_;
 
-		QMultiLineEdit				* editorWidget_;
-		EmpathHeaderEditWidget		* headerEditWidget_;
-		EmpathSubjectSpecWidget		* subjectSpecWidget_;
-		QListView					* lv_attachments_;
-		QComboBox					* cmb_priority_;
-		QLabel						* l_priority_;
-		QGridLayout					* layout_;
-		QGridLayout					* midLayout_;
-		QSplitter					* vSplit;
-		QSplitter					* hSplit;
-
-		Q_UINT32				horizPannerAbsSeparator;
-		ComposeType				composeType_;
-		EmpathURL				url_;
-		QString					recipient_;
+		ComposeType	composeType_;
+		EmpathURL	url_;
+		QString		recipient_;
+		
+		int			maxSizeColOne_;
 };
 
 #endif

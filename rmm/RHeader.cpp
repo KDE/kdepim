@@ -178,14 +178,8 @@ RHeader::_parse()
 
 	headerName_ = strRep_.left(split);
 	headerName_ = headerName_.stripWhiteSpace();
-
-	for (int i = 0; i <= 42; i++) {
-		if (!stricmp((headerName_), RMM::headerNames[i])) {
-			headerType_ = (RMM::HeaderType)i;
-			rmmDebug("I'm of type " + QCString(RMM::headerNames[i]));
-			break;
-		}
-	}
+	
+	headerType_ = RMM::headerNameToEnum(headerName_);
 
 	if (headerType_ == RMM::HeaderUnknown) {
 		rmmDebug("I'm an unknown header, \"" + headerName_ + "\"");
