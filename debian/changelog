@@ -1,3 +1,10 @@
+kdepim (4:2.2.0-0beta1-5) unstable; urgency=low
+ 
+  * Sync with upstream
+  * gcc3 build fixes
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Thu, 26 Jul 2001 20:28:00 -0700
+
 kdepim (4:2.2.0-0beta1-4) unstable; urgency=low
  
   * Sync with upstream
