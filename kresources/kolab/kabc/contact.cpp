@@ -34,6 +34,15 @@
 
 using namespace Kolab;
 
+Contact::Contact( KABC::Address* addr )
+{
+  setFields( addr );
+}
+
+Contact::~Contact()
+{
+}
+
 void Contact::setGivenName( const QString& name )
 {
   mGivenName = name;
@@ -350,4 +359,9 @@ void Contact::setPreferredAddress( const QString& address )
 QString Contact::preferredAddress() const
 {
   return mPreferredAddress;
+}
+
+void Contact::setFields( KABC::Address* address )
+{
+
 }

@@ -35,6 +35,10 @@
 
 #include <kolabbase.h>
 
+namespace KABC {
+  class Address;
+}
+
 namespace Kolab {
 
 class Contact : public KolabBase {
@@ -61,7 +65,7 @@ public:
     QString country;
   };
 
-  Contact();
+  explicit Contact( KABC::Address* address = 0 );
   ~Contact();
 
   QString type() const { return "Contact"; }
@@ -162,6 +166,9 @@ public:
   void setPreferredAddress( const QString& address );
   QString preferredAddress() const;
 
+protected:
+  void setFields( KABC::Address* );
+
 private:
   QString mGivenName;
   QString mMiddleNames;
@@ -193,7 +200,7 @@ private:
   QString mLanguage;
   QValueList<PhoneNumber> mPhoneNumbers;
   QValueList<Email> mEmails;
-  QValueList<Address>& mAddresses;
+  QValueList<Address> mAddresses;
   QString mPreferredAddress;
 };
 
