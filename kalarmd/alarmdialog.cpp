@@ -43,7 +43,7 @@
 #include "alarmdialog.moc"
 
 AlarmDialog::AlarmDialog(QWidget *parent,const char *name)
-  : KDialogBase(parent,name,false,i18n("Alarm"),Ok|User1,Ok,false,
+  : KDialogBase(parent,name,false,i18n("Alarm"),Ok|User1|User2,User2,false,
                 i18n("Suspend"))
 {
   QVBox *topBox = new QVBox(this);
@@ -62,7 +62,9 @@ AlarmDialog::AlarmDialog(QWidget *parent,const char *name)
   (void)new QLabel(i18n("Suspend duration (minutes):"),suspendBox);
   mSuspendSpin = new QSpinBox(1,60,1,suspendBox);
   mSuspendSpin->setValue(5);  // default suspend duration
-
+  
+  showButton(User2, false);
+  
   setMinimumSize(300,200);
 }
 
