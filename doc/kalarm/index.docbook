@@ -292,6 +292,9 @@ execute. The command is passed straight to the default shell (defined
 by the <envar>SHELL</envar> environment variable), and may include
 whatever options, parameters, piped commands, etc. are permitted by
 the shell in a single line command.</para>
+
+<note><para>This option is not available if &kde; is running in kiosk
+mode.</para></note>
 </listitem>
 
 <listitem>
