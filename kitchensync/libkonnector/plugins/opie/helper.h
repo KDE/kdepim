@@ -26,6 +26,7 @@ namespace OpieHelper {
         // convience method
         QStringList categoriesToNumberList( const QStringList &categories, const QString &app = QString::null );
         QString konnectorId( const QString &appName,  const QString &uid );
+        QString kdeId( const QString &appName, const QString &uid );
         CategoryEdit *m_edit;
         KonnectorUIDHelper *m_helper;
         QValueList<Kontainer> m_kde2opie;

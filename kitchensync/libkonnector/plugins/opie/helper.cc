@@ -76,3 +76,13 @@ QString Base::konnectorId( const QString &appName,  const QString &uid )
 
     return id;
 }
+QString Base::kdeId( const QString &appName,  const QString &uid )
+{
+    QString ret;
+    if ( m_helper == 0 )
+        ret = QString::fromLatin1("Konnector-")  + uid;
+    else{ // only if meta
+        ret = m_helper->kdeId( appName, uid,  "Konnector-"+uid);
+    }
+    return ret;
+}

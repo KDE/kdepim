@@ -15,54 +15,17 @@
 
 using namespace OpieHelper;
 
-namespace {
-    QString names2categories( const QStringList &list,  const QValueList<OpieCategories> &categories ) {
-        QString dummy;
-        QValueList<OpieCategories>::ConstIterator catIt;
-        bool found = false;
-        for ( QStringList::ConstIterator listIt = list.begin(); listIt != list.end(); ++listIt ) {
-            for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
-                if ( (*catIt).name() == (*listIt) ) { // the same name
-                    found= true;
-                    dummy.append( (*catIt).id() + ";");
-                }
-            }
-            //if ( !found )
-            //  ; // generate a new category and add to the xml file FIMXME
-        }
-        if ( !dummy.isEmpty() )
-            dummy.remove(dummy.length() -1,  1 ); //remove the last ;
-        return dummy;
-    }
-    QString categoryById(const QString &id, const QString &app, QValueList<OpieCategories> cate )
-    {
-        QValueList<OpieCategories>::Iterator it;
-        QString category;
-        for( it = cate.begin(); it != cate.end(); ++it ){
-            kdDebug() << "it :" << (*it).id() << "id:" << id << "ende"<<endl;
-            if( id.stripWhiteSpace() == (*it).id().stripWhiteSpace() ){
-                //if( app == (*it).app() ){
-                kdDebug() << "found category" << endl;
-                category = (*it).name();
-                break;
-                //}
-            }
-        }
-        kdDebug() << "CategoryById: " << category << endl;
-        return category;
-    };
-}
 
-ToDo::ToDo( KonnectorUIDHelper* helper,  bool meta)
+ToDo::ToDo( CategoryEdit* edit,
+            KonnectorUIDHelper* helper,  bool meta)
+    : Base( edit,  helper,  meta )
 {
-    m_helper = helper;
-    m_meta = meta;
 }
 ToDo::~ToDo()
 {
 
 }
-QPtrList<KCal::Todo> ToDo::toKDE( const QString &fileName, const QValueList<OpieCategories>&  cat)
+QPtrList<KCal::Todo> ToDo::toKDE( const QString &fileName )
 {
     QPtrList<KCal::Todo> m_list;
 
@@ -84,7 +47,7 @@ QPtrList<KCal::Todo> ToDo::toKDE( const QString &fileName, const QValueList<Opie
                         QStringList list = QStringList::split(";",  e.attribute("Categories") );
                         QStringList categories;
                         for ( uint i = 0; i < list.count(); i++ ) {
-                            categories.append( categoryById(list[i],  QString::null,  cat ) );
+                            categories.append(m_edit->categoryById(list[i], "Todo List") );
                         }
                         if (!categories.isEmpty() ) {
                             todo->setCategories( categories );
@@ -131,7 +94,7 @@ QPtrList<KCal::Todo> ToDo::toKDE( const QString &fileName, const QValueList<Opie
     } // off open
     return m_list;
 }
-QByteArray ToDo::fromKDE(KAlendarSyncEntry* entry ,  const QValueList<OpieCategories> &categories)
+QByteArray ToDo::fromKDE(KAlendarSyncEntry* entry )
 {
     // update m_helper first;
     QByteArray array;
@@ -145,7 +108,7 @@ QByteArray ToDo::fromKDE(KAlendarSyncEntry* entry ,  const QValueList<OpieCatego
         stream << "<!DOCTYPE Tasks>" << endl;
         stream << "<Tasks>" << endl;
         for ( todo = list.first(); todo != 0; todo = list.next() ) {
-            stream << todo2String( todo, categories ) << endl;
+            stream << todo2String( todo ) << endl;
         }
         stream << "</Tasks>" << endl;
         buffer.close();
@@ -154,28 +117,15 @@ QByteArray ToDo::fromKDE(KAlendarSyncEntry* entry ,  const QValueList<OpieCatego
 }
 void ToDo::setUid( KCal::Todo* todo,  const QString &uid )
 {
-    if ( m_helper == 0 )
-        todo->setUid("Konnector-"+ uid);
-    else{ // only if meta
-        todo->setUid( m_helper->kdeId( "todo", uid,  "Konnector-"+uid) );
-    }
+    todo->setUid( kdeId( "todo",  uid ) );
 }
-// after getting a KSyncEntry back the dispatcher needs to update m_helper
-// for us so we've our things installed
-int ToDo::uid( const QString &udi )
-{
-    if ( m_helper == 0 ) {
-//if ( udi.left(
-    }else{
 
-    }
-}
-QString ToDo::todo2String( KCal::Todo* todo,  const QValueList<OpieCategories> &categories )
+QString ToDo::todo2String( KCal::Todo* todo )
 {
     QString text;
     text.append("<Task ");
     QStringList list = todo->categories();
-    text.append( "Categories=\"" +names2categories( list, categories ) + "\" " );
+    text.append( "Categories=\"" + categoriesToNumber( list ) + "\" " );
     text.append( "Completed=\""+QString::number( todo->isCompleted()) + "\" " );
     if ( todo->hasDueDate() ) {
         text.append( "HasDate=\"1\" ");
@@ -197,17 +147,3 @@ QString ToDo::todo2String( KCal::Todo* todo,  const QValueList<OpieCategories> &
     return text;
 }
 
-QString ToDo::konnectorId( const QString &appName,  const QString &uid )
-{
-    QString id;
-    // Konnector-.length() ==  10
-    if ( uid.startsWith( "Konnector-" ) ) { // not converted
-        id =  uid.mid( 11 );
-    }else if ( m_helper) {
-        id =  m_helper->konnectorId( appName,  uid );
-        //                        konnector kde
-        kde2opie.append( Kontainer( id,     uid ) );
-    }
-
-    return id;
-}

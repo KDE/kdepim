@@ -8,27 +8,26 @@
 
 #include <kontainer.h>
 
+#include "helper.h"
+
 class KSyncEntry;
 class OpieCategories;
 class KonnectorUIDHelper;
 class KAlendarSyncEntry;
 namespace OpieHelper {
 
-    class ToDo {
+    class ToDo  : public Base {
     public:
-        ToDo(KonnectorUIDHelper* helper= 0,  bool meta = FALSE);
+        ToDo( CategoryEdit* edit = 0,
+              KonnectorUIDHelper* helper= 0,
+              bool meta = FALSE);
         ~ToDo();
-        QPtrList<KCal::Todo> toKDE( const QString &fileName, const QValueList<OpieCategories> & );
-        QByteArray fromKDE( KAlendarSyncEntry* entry, const QValueList<OpieCategories> & );
+
+        QPtrList<KCal::Todo> toKDE( const QString &fileName );
+        QByteArray fromKDE( KAlendarSyncEntry* entry  );
     private:
         void setUid( KCal::Todo*,  const QString &uid );
-        int uid( const QString &udi );
-        QString konnectorId(const QString &appName,  const QString &uid );
-        QString todo2String( KCal::Todo*,  const QValueList<OpieCategories> & );
-        KonnectorUIDHelper *m_helper;
-        bool m_meta:1;
-        // this map mapps kde uid to opie uid
-        QValueList<Kontainer> kde2opie;
+        QString todo2String( KCal::Todo*  );
     };
 };
 
