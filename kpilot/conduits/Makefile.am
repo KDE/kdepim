@@ -6,10 +6,6 @@
 ### installed on user systems.
 ###
 
-if include_malconduit
-MALSUBDIR=malconduit
-endif
-
 
 SUBDIRS = expense \
 	abbrowserconduit \
@@ -19,5 +15,5 @@ SUBDIRS = expense \
 	popmail \
 	timeconduit \
 	vcalconduit \
-	$(MALSUBDIR)
+	$(MAL_SUBDIR)
 

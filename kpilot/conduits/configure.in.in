@@ -15,7 +15,7 @@ dnl                     checks for the MAL conduit
 dnl
 dnl ----------------------------------------------------------------------------
 
-
+dnl 
 dnl
 dnl Check to see if MAL header and library are available
 dnl
@@ -130,7 +130,7 @@ AC_SUBST(MAL_LIBS)
 AC_SUBST(MAL_RPATH)
 AC_SUBST(MAL_SUBDIR)
 
-AM_CONDITIONAL(include_malconduit, test "$HAVE_LIBMAL" = "1")
+dnl AM_CONDITIONAL(include_malconduit, test "$HAVE_LIBMAL" = 1)
 
 ])
 KPILOT_CHECK_MAL
