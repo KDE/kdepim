@@ -2,7 +2,7 @@
 ###
 ### The expense conduit is Copyright (C) 2001 by Chris Molnar
 
-INCLUDES= -I$(top_srcdir)/kpilot/lib $(all_includes)
+INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 METASOURCES = AUTO
 
 servicedir = $(kde_servicesdir)

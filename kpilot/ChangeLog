@@ -1,5 +1,11 @@
-KPilot Developer's notes for the beginning of april 2002
+KPilot Developer's notes for mid-april 2002
 ========================================================
+
+2002-04-13  Adriaan de Groot
+* Received a patch from Carlo Perassi for handling cases where there
+  is no user name set in the Pilot.
+* Worked on configure changes to detect pilot-link automatically and
+  properly. [BRANCH]
 
 2002-04-09  Adriaan de Groot
 * Did some minor debugging in setting flags for the conduits.
