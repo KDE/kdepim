@@ -1,6 +1,6 @@
 INCLUDES= -I./printing -I$(top_srcdir) -I./detailledview $(all_includes)
 
-SUBDIRS = detailledview printing . pics csv-templates
+SUBDIRS = printing . pics csv-templates
 
 SRCDOC_DEST=$(kde_htmldir)/en/kaddressbook
 
@@ -13,11 +13,11 @@ kaddressbook_SOURCES = main.cpp
 kde_module_LTLIBRARIES = libkaddressbookpart.la
 
 libkaddressbookpart_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
-libkaddressbookpart_la_LIBADD  = ./detailledview/libdetailledview.la \
-				 ./printing/libprinter.la \
-                                 $(top_builddir)/libkdepim/libkdepim.la \
-				 $(LIB_KPARTS) $(LIB_KFILE) \
-                                 -lkabc -lkdeprint
+libkaddressbookpart_la_LIBADD  = ./printing/libprinter.la \
+	$(top_builddir)/libkdepim/libkdepim.la \
+	$(LIB_KPARTS) $(LIB_KFILE) \
+	-lkabc -lkdeprint
+
 libkaddressbookpart_la_SOURCES = kaddressbook.cpp kaddressbookiface.skel \
   undo.cpp kaddressbookview.cpp kabprefs.cpp \
   undocmds.cpp contactlistview.cpp \
@@ -38,7 +38,9 @@ libkaddressbookpart_la_SOURCES = kaddressbook.cpp kaddressbookiface.skel \
   filtereditdialog.cpp filtereditwidget.cpp filter.cpp \
   filterselectionwidget.cpp configureviewfilterpage.cpp \
   actionmanager.cpp \
-  incsearchwidget_base.ui incsearchwidget.cpp addresseeconfig.cpp
+  incsearchwidget_base.ui incsearchwidget.cpp addresseeconfig.cpp \
+  detailsviewcontainer.cpp detailsviewcontainer_base.ui look_basic.cpp \
+  look_details.cpp
 
 kaddressbook_METASOURCES = AUTO
 
@@ -56,7 +58,8 @@ noinst_HEADERS = kaddressbook.h undo.h kaddressbookview.h undocmds.h \
   nameeditdialog.h addresseditwidget.h emaileditwidget.h phoneeditwidget.h \
   actionmanager.h \
   filtereditdialog.h filtereditwidget.h filter.h filterselectionwidget.h \
-  configureviewfilterpage.h kabentrypainter.h addresseeconfig.h
+  configureviewfilterpage.h kabentrypainter.h addresseeconfig.h \
+  detailsviewcontainer.h global.h look_basic.h look_details.h
 
 rcdir = $(kde_datadir)/kaddressbook
 rc_DATA = kaddressbookui.rc

@@ -50,8 +50,7 @@
 #include "viewwrapper.h"
 #include "iconviewwrapper.h"
 #include "tableviewwrapper.h"
-#include "detailledview/detailledviewwrapper.h"
-#include "detailledview/detailsviewcontainer.h"
+#include "detailsviewcontainer.h"
 #include "cardviewwrapper.h"
 #include "addviewdialog.h"
 #include "jumpbuttonbar.h"
@@ -463,52 +462,47 @@ void ViewManager::createViewWrappers()
   wrapper = new TableViewWrapper();
   mViewWrapperDict.insert(wrapper->type(), wrapper);
 
-  wrapper = new DetailedViewWrapper();
-  mViewWrapperDict.insert(wrapper->type(), wrapper);
-
   wrapper = new CardViewWrapper();
   mViewWrapperDict.insert(wrapper->type(), wrapper);
 }
 
 void ViewManager::initGUI()
 {
-    // ----- create the layout:
-    QHBoxLayout *l=new QHBoxLayout(this);
-    l->setMargin(1 /* KDialogBase::marginHint() */);
-    l->setSpacing(KDialogBase::spacingHint());
-    // ----- create the features splitter:
-    mQSpltFeatures=new QSplitter(this);
-    mQSpltFeatures->setOrientation(Qt::Vertical);
-    // ----- create the details splitter:
-    mQSpltDetails=new QSplitter(mQSpltFeatures);
-    // ----- create the features tabwidget:
-    mFeatures=new QTabWidget(mQSpltFeatures);
-    // ----- create the widget stack for the different views
-    mViewWidgetStack = new QWidgetStack(mQSpltDetails, "mViewWidgetStack");
-    // ----- create the details widget:
-    mDetails=new ViewContainer(mQSpltDetails);
-    connect(mDetails, SIGNAL(addresseeChanged()), SLOT(addresseeModified()));
-    connect(mDetails, SIGNAL(sendEmail(const QString&)),
-            SLOT(sendMail(const QString&)));
-    connect(mDetails, SIGNAL(browse(const QString&)),
-            SLOT(browse(const QString&)));
-    // ----- add the jump bar to the layout:
-    mJumpButtonBar = new JumpButtonBar(this, "mJumpButtonBar");
-    // ----- create the quick edit widget as part of the features tabwidget
-    //       (THIS WILL BE REMOVED!):
-    mQuickEdit = new AddresseeEditorWidget(mFeatures, "mQuickEdit");
-    mFeatures->addTab(mQuickEdit, i18n("QuickEdit"));
-    connect(mQuickEdit, SIGNAL(modified()), SLOT(addresseeModified()));
-    // Connect the slots and signals
-    connect(mJumpButtonBar, SIGNAL(jumpToLetter(const QChar &)),
-            this, SLOT(jumpToLetter(const QChar &)));
-    // ----- add everything to the layout:
-    l->addWidget(mQSpltFeatures);
-    l->setStretchFactor(mQSpltFeatures, 100);
-    l->addWidget(mJumpButtonBar);
-    l->setStretchFactor(mJumpButtonBar, 1);
-}
+  QHBoxLayout *l = new QHBoxLayout( this );
+  l->setMargin( KDialogBase::marginHint() );
+  l->setSpacing( KDialogBase::spacingHint() );
 
+  mQSpltFeatures = new QSplitter( this );
+  mQSpltFeatures->setOrientation( Qt::Vertical );
+
+  mQSpltDetails = new QSplitter( mQSpltFeatures );
+
+  mFeatures = new QTabWidget( mQSpltFeatures );
+
+  mViewWidgetStack = new QWidgetStack( mQSpltDetails, "mViewWidgetStack" );
+
+  mDetails = new ViewContainer( mQSpltDetails );
+  connect( mDetails, SIGNAL(addresseeChanged()), SLOT(addresseeModified()) );
+  connect( mDetails, SIGNAL(sendEmail(const QString&)),
+            SLOT(sendMail(const QString&)) );
+  connect( mDetails, SIGNAL(browse(const QString&)),
+            SLOT(browse(const QString&)) );
+
+  mJumpButtonBar = new JumpButtonBar( this, "mJumpButtonBar" );
+  // ----- create the quick edit widget as part of the features tabwidget
+  //       (THIS WILL BE REMOVED!):
+  mQuickEdit = new AddresseeEditorWidget( mFeatures, "mQuickEdit" );
+  mFeatures->addTab( mQuickEdit, i18n("QuickEdit") );
+  connect( mQuickEdit, SIGNAL(modified()), SLOT(addresseeModified()) );
+
+  connect( mJumpButtonBar, SIGNAL(jumpToLetter(const QChar &)),
+            this, SLOT(jumpToLetter(const QChar &)) );
+
+  l->addWidget( mQSpltFeatures );
+  l->setStretchFactor( mQSpltFeatures, 100 );
+  l->addWidget( mJumpButtonBar );
+  l->setStretchFactor( mJumpButtonBar, 1 );
+}
 
 void ViewManager::refreshIncrementalSearchCombo()
 {
@@ -564,12 +558,11 @@ void ViewManager::setFeaturesVisible(bool visible)
 
 void ViewManager::setDetailsVisible(bool visible)
 {
-    if(visible)
-    {
-        mDetails->show();
-    } else {
-        mDetails->hide();
-    }
+  if( visible ) {
+    mDetails->show();
+  } else {
+    mDetails->hide();
+  }
 }
 
 // WORK_TO_DO: obsolete
@@ -672,19 +665,16 @@ void ViewManager::filtersChanged(const Filter::List &list)
 
 void ViewManager::filterActivated(int index)
 {
-  if (index < 0)
-  {
-      mCurrentFilter=Filter();
-  }
-  else
-  {
-      mCurrentFilter=mFilterList[index];
+  if (index < 0) {
+    mCurrentFilter = Filter();
+  } else {
+    mCurrentFilter = mFilterList[ index ];
   }
 
   // Check if we have a view. Since the filter combo is created before
   // the view, this slot could be called before there is a valid view.
   if ( mActiveView ) {
-    mActiveView->setFilter(mCurrentFilter);
+    mActiveView->setFilter( mCurrentFilter );
     mActiveView->refresh();
   }
 }

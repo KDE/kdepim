@@ -17,7 +17,7 @@
 
 // #include "kab_mainwidget.h"
 #include "kabentrypainter.h"
-#include "detailledview/look_basic.h"
+#include "look_basic.h"
 
 #include <kprinter.h>
 #include <qpaintdevicemetrics.h>
