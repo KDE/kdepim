@@ -195,9 +195,13 @@ KPilotInstaller::initComponents()
 	QString defaultDBPath = KGlobal::dirs()->
 		saveLocation("data", dbsubpath + lastUser + "/");
 
-	addComponentPage(new MemoWidget(getManagingWidget(),defaultDBPath));
-	addComponentPage(new AddressWidget(getManagingWidget(),defaultDBPath));
-	addComponentPage(new FileInstallWidget(getManagingWidget(),defaultDBPath));
+	addComponentPage(new MemoWidget(getManagingWidget(),defaultDBPath),
+		i18n("Memo Viewer"));
+	addComponentPage(new AddressWidget(getManagingWidget(),defaultDBPath),
+		i18n("Address Viewer"));
+	addComponentPage(new FileInstallWidget(getManagingWidget(),
+			defaultDBPath),
+		i18n("File Installer"));
 }
 
 void
@@ -926,24 +930,8 @@ KPilotInstaller::quit()
 	kapp->quit();
 }
 
-// Adds 'name' to the pull down menu of components
 void
-KPilotInstaller::addComponentPage(QWidget* widget, QString name)
-{
-	FUNCTIONSETUP;
-
-	/*
-	fToolBar->insertComboItem(KPilotInstaller::ID_COMBO, name,
-		fVisibleWidgetList.count());
-	*/
-	conduitCombo->insertItem(name,fVisibleWidgetList.count());
-	conduitMenu->insertItem(name,
-		KPilotInstaller::ID_COMBO+fVisibleWidgetList.count());
-	fVisibleWidgetList.append(widget);
-}
-
-void
-KPilotInstaller::addComponentPage(PilotComponent *p)
+KPilotInstaller::addComponentPage(PilotComponent *p, const QString &name)
 {
 	FUNCTIONSETUP;
 
@@ -960,9 +948,13 @@ KPilotInstaller::addComponentPage(PilotComponent *p)
 		<< (int) p
 		<< endl;
 
-	addComponentPage(p,p->name());
 	p->initialize();
 	fPilotComponentList.append(p);
+
+	conduitCombo->insertItem(name,fVisibleWidgetList.count());
+	conduitMenu->insertItem(name,
+		KPilotInstaller::ID_COMBO+fVisibleWidgetList.count());
+	fVisibleWidgetList.append(p);
 }
 
 void KPilotInstaller::menuCallback(int item)
@@ -1286,6 +1278,9 @@ int main(int argc, char** argv)
 
 
 // $Log$
+// Revision 1.37  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.36  2001/02/08 17:59:34  adridg
 // Removed spurious #ifdefs, and the #define that goes with it. Make KPilot exit consistently after user-requested setup actions.
 //

@@ -78,9 +78,10 @@ class KPilotInstaller : public KMainWindow
 
 
     bool getQuitAfterCopyComplete() const { return fQuitAfterCopyComplete; }
-    // Adds 'name' to the pull down menu of components
-    void addComponentPage(QWidget* widget, QString name);
-	void addComponentPage(PilotComponent *);
+
+
+	// Adds 'name' to the pull down menu of components
+	void addComponentPage(PilotComponent *, const QString &name);
 
 
 	typedef enum { Normal,
@@ -214,6 +215,9 @@ private:
 
 
 // $Log$
+// Revision 1.17  2001/02/24 14:08:13  adridg
+// Massive code cleanup, split KPilotLink
+//
 // Revision 1.16  2001/02/06 08:05:19  adridg
 // Fixed copyright notices, added CVS log, added surrounding #ifdefs. No code changes.
 //
