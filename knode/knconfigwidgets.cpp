@@ -1941,7 +1941,7 @@ KNConfig::PostNewsComposerWidget::PostNewsComposerWidget(PostNewsComposer *d, QW
   i_ntro=new QLineEdit(replyB);
   replyL->addMultiCellWidget(new QLabel(i_ntro,i18n("&Introduction Phrase:"), replyB),1,1,0,1);
   replyL->addMultiCellWidget(i_ntro, 2,2,0,1);
-  replyL->addMultiCellWidget(new QLabel(i18n("Placeholders: %NAME=name, %EMAIL=email address,\n%DATE=date, %MSID=msgid"), replyB),3,3,0,1);
+  replyL->addMultiCellWidget(new QLabel(i18n("Placeholders: %NAME=name, %EMAIL=email address,\n%DATE=date, %MSID=message-id, %GROUP=group name"), replyB),3,3,0,1);
 
   r_ewrapCB=new QCheckBox(i18n("Rewrap quoted te&xt automatically"), replyB);
   replyL->addMultiCellWidget(r_ewrapCB, 5,5,0,1);
