@@ -161,14 +161,13 @@ void FilterPMail::processFiles(const char *mask, void(FilterPMail::* workFunc)(c
 /** this function imports one *.CNM message */
 void FilterPMail::importNewMessage(const char *file)
 {
-   unsigned long added;
    const char* destFolder = "PMail-New Messages";
    QString msg;
 
    msg = i18n("To: %1").arg(destFolder);
    inf->to(msg);
 
-   kmailMessage((FilterInfo *) inf, (char *)destFolder, (char *)file, added);
+   kmailMessage((FilterInfo *) inf, (char *)destFolder, (char *)file);
 }
 
 
@@ -188,7 +187,6 @@ void FilterPMail::importMailFolder(const char *file)
    int n = 0;
    FILE *temp = NULL;
    char tempname[128];
-   unsigned long added;
 
 
    // Format of a PMM file:
@@ -254,7 +252,7 @@ void FilterPMail::importMailFolder(const char *file)
          if (ch == 0x1a) {
             // close file, send it
             fclose(temp);
-            kmailMessage((FilterInfo *) inf, (char *)folder.latin1(), tempname, added);
+            kmailMessage((FilterInfo *) inf, (char *)folder.latin1(), tempname);
             unlink(tempname);
             state = 0;
             break;
@@ -270,7 +268,7 @@ void FilterPMail::importMailFolder(const char *file)
    // did Folder end without 0x1a at the end?
    if (state != 0) {
       fclose(temp);
-      kmailMessage((FilterInfo *) inf, (char *)folder.latin1(), tempname, added);
+      kmailMessage((FilterInfo *) inf, (char *)folder.latin1(), tempname);
       unlink(tempname);
    }
 
@@ -299,7 +297,6 @@ void FilterPMail::importUnixMailFolder(const char *file)
    int n = 0;
    QRegExp regexp(MSG_SEPERATOR_REGEX);
 
-   unsigned long added;
 
    // Get folder name
    s.replace( QRegExp("mbx$"), "pmg");
@@ -327,7 +324,7 @@ void FilterPMail::importUnixMailFolder(const char *file)
          regexp.search(line) >= 0))                            // slower regexp
       {
          fclose(temp);
-         kmailMessage((FilterInfo *) inf, (char *)folder.latin1(), tempname, added);
+         kmailMessage((FilterInfo *) inf, (char *)folder.latin1(), tempname);
          unlink(tempname);
          temp = NULL;
       }
@@ -348,7 +345,7 @@ void FilterPMail::importUnixMailFolder(const char *file)
 
    if (temp) {
       fclose(temp);
-      kmailMessage((FilterInfo *) inf, (char *)folder.latin1(), tempname, added);
+      kmailMessage((FilterInfo *) inf, (char *)folder.latin1(), tempname);
       unlink(tempname);
    }
 

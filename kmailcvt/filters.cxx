@@ -157,7 +157,7 @@ KMail::~KMail()
 {
 }
 
-bool KMail::kmailMessage(FilterInfo *info,char *folder,char *_msg,unsigned long & added)
+bool KMail::kmailMessage(FilterInfo *info,char *folder,char *_msg)
 {
   QString folderName(folder);
   QString msg(_msg);
@@ -197,10 +197,6 @@ bool KMail::kmailMessage(FilterInfo *info,char *folder,char *_msg,unsigned long 
     msg=i18n("Error while adding message to folder %1 in KMail").arg(folder);
     info->alert(cap,msg);
     return false;
-  }
-
-  if (result>0) {
-    added+=1;
   }
 
   return true;

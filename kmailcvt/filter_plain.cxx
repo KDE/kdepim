@@ -94,13 +94,12 @@ int FilterPlain::countFiles(QString filter)
 void FilterPlain::processFiles(QString filter)
 {
    QDir dir (mailDir);
-   unsigned long added;
    QStringList files = dir.entryList(filter, QDir::Files, QDir::Name);
    
    for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
 	inf->from(i18n("From: %1").arg(*mailFile));
 	inf->to(i18n("To: %1").arg(dir.dirName()));
-	kmailMessage((FilterInfo *) inf, (char *)dir.dirName().latin1(), (char *)dir.filePath(*mailFile).latin1(), added);
+	kmailMessage((FilterInfo *) inf, (char *)dir.dirName().latin1(), (char *)dir.filePath(*mailFile).latin1());
         
 	inf->overall((((float) ++currentFile)/((float) totalFiles))*100.0);
    }
