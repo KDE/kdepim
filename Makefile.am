@@ -1,8 +1,9 @@
 ## kdepim/Makefile.am
 ## (C) 1997 Stephan Kulow
 
-SUBDIRS = $(TOPSUBDIRS)
-COMPILE_FIRST = vCard libimap librmm libdif 
+COMPILE_FIRST = vCard libimap librmm libdif libical
+SUBDIRS = $(COMPILE_FIRST) $(TOPSUBDIRS)
+
 AUTOMAKE_OPTIONS = foreign 1.4
 DISTCLEANFILES = inst-apps
 
