@@ -4,8 +4,13 @@ TODO
   config dialog. Some of them might make sense.
 
 
-KPilot Developer's notes for july 7th, 2002
+KPilot Developer's notes for july 17th, 2002
 ===========================================
+
+2002-07-17  Reinhold Kainhofer
+* A first almost-working version of the address conduit. Chances are, 
+  some data will be lost, but most parts work. "Duplicate entries" 
+  conflict resolution setting does not yet work.
 
 
 KPilot Developer's notes for july 4th, 2002
