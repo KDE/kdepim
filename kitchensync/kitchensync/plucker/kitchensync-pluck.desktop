@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 ServiceTypes=text/html
-Actions=JPluck-Add
+Actions=JPluck-Add;
 
 [Desktop Action JPluck-Add]
 Name=Add to KitchenSync Plucker Plugin
@@ -13,7 +13,6 @@ Name[fr]=Ajouter le module Plucker à KitchenSync
 Name[it]=Aggiungi al plugin KitchenSync Plucker
 Name[nl]=Toevoegen aan KitchenSync Plucker Plugin
 Name[pt]=Adicionar ao 'Plugin' Plucker do KitchenSync
-Name[pt_BR]=Adicionar ao 'Plugin' Plucker do KitchenSync
 Name[ru]=Добавить в модуль KitchenSync Plucker
 Name[sr]=Прикључак за додавање у KitchenSync Plucker
 Name[sr@Latn]=Прикључак за додавање у KitchenSync Plucker
@@ -21,5 +20,6 @@ Name[sv]=Lägg till i Kitchensyncs plockningsinsticksprogram
 Name[tr]=KitchenSync Plucker Eklentisine Ekle
 Name[uk]=Додати до втулку Plucker у KitchenSync
 Name[xx]=xxAdd to KitchenSync Plucker Pluginxx
+Name[zh_CN]=添加到 KitchenSync Plucker 插件
 Exec=dcop kitchensync PluckerInterface "addPluckerUrl(KURL)" %u
 Icon=knode

@@ -1,4 +1,5 @@
 [Desktop Entry]
+Encoding=UTF-8
 Type=Service
 Name=Plucker Part
 Name[es]=Parte Plucker
@@ -14,5 +15,6 @@ Name[sv]=Plockningsdel
 Name[tr]=Plucker Kısmı
 Name[uk]=Коипонент Plucker
 Name[xx]=xxPlucker Partxx
+Name[zh_CN]=Plucker 部件
 ServiceTypes=KitchenSync/ActionPart
 X-KDE-Library=libksync_pluckerpart
