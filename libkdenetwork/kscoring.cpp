@@ -1116,7 +1116,6 @@ void KScoringManager::pushRuleList()
 void KScoringManager::popRuleList()
 {
   stack.pop(allRules);
-  emit changedRules();
 }
 
 void KScoringManager::removeTOS()
