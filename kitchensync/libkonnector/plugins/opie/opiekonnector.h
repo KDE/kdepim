@@ -20,6 +20,7 @@ Q_OBJECT
   virtual bool isConnected();
   virtual bool insertFile(const QString &fileName );
   virtual QByteArray retrFile(const QString &path );
+    virtual KSyncEntry* retrEntry(const QString &path) { return 0l;};
  public slots:
   virtual void slotWrite(const QString &, const QByteArray & ) ;
   virtual void slotWrite(QPtrList<KSyncEntry> ) ;

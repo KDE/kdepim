@@ -37,7 +37,7 @@ Konnector::~Konnector()
 };
 QValueList<KDevice> Konnector::query(const QString &category )
 {
-  // lets find 
+  // lets find
     kdDebug(100200) << "query " << category << endl;
   allDevices();
   if(category.isEmpty() ){
@@ -96,7 +96,7 @@ QString Konnector::registerKonnector(const KDevice &Device )
   d->m_konnectors.insert(randStr, plugin  );
   return randStr;
 }
-Kapabilities Konnector::capabilities (const QString&  udi ) 
+Kapabilities Konnector::capabilities (const QString&  udi )
 {
   KonnectorPlugin *plugin = pluginByUDI( udi );
   if( plugin == 0)
@@ -119,6 +119,15 @@ QByteArray Konnector::file(const QString &udi, const QString &path )
     return QByteArray();
 
   return plugin->retrFile( path );
+}
+KSyncEntry* Konnector::fileAsEntry(const QString& udi,  const QString &path )
+{
+    KSyncEntry* entry = 0l;
+    KonnectorPlugin *plugin = pluginByUDI( udi );
+    if( plugin == 0l)
+        return entry;
+
+    return plugin->retrEntry( path );
 }
 void Konnector::retrieveFile(const QString &udi, const QString &file )
 {
@@ -199,7 +208,7 @@ void Konnector::allDevices()
       //}
 //end debug
 
-    } 
+    }
   }
 }
 KonnectorPlugin* Konnector::pluginByUDI(const QString &udi )

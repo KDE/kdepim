@@ -44,5 +44,9 @@ namespace KitchenSync {
     ConfigPart(const Kapabilities &, QWidget*, const char *name );
     void setCapability(const Kapabilities & );
     Kapabilities capability(); // return the modified capability
+  private:
+    void initialize(const Kapabilities & );
   };
 };
+
+
