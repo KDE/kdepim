@@ -33,8 +33,9 @@ int main(int argc, char *argv[])
   KAboutData aboutData( "kmailcvt", I18N_NOOP("KMailCVT"),
     "3", I18N_NOOP("KMail Import Filters"), KAboutData::License_GPL_V2,
     "(c) 2000-2003, The KMailCVT developers");
-  aboutData.addAuthor("Hans Dijkema","Original author", "kmailcvt@hum.org", "http://www.hum.org/kmailcvt.html");
-  aboutData.addAuthor("Laurence Anderson","New GUI & cleanups", "l.d.anderson@warwick.ac.uk");
+  aboutData.addAuthor("Hans Dijkema",I18N_NOOP("Original author"), "kmailcvt@hum.org", "http://www.hum.org/kmailcvt.html");
+  aboutData.addAuthor("Laurence Anderson", I18N_NOOP("New GUI & cleanups"), "l.d.anderson@warwick.ac.uk");
+  aboutData.addCredit("Daniel Molkentin", I18N_NOOP("New GUI & cleanups"), "molkentin@kde.org");
 
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
