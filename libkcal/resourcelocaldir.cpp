@@ -29,6 +29,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kurl.h>
+#include <kstandarddirs.h>
 
 #include "vcaldrag.h"
 #include "vcalformat.h"
@@ -125,30 +126,40 @@ bool ResourceLocalDir::doLoad()
   if ( !mOpen ) return true;
 
   mCalendar.close();
+  bool success = true;
 
   QString dirName = mURL.path();
+  if ( !KStandardDirs::exists( dirName ) ) {
+    kdDebug(5800) << "ResourceLocalDir::load(): Directory doesn't exist yet. Creating it..." << endl;
+    
+    // Create the directory. Use 0775 to allow group-writable if the umask 
+    // allows it (permissions will be 0775 & ~umask). This is desired e.g. for
+    // group-shared directories!
+    success = KStandardDirs::makeDir( dirName, 0775 );
+  } else {
 
-  kdDebug(5800) << "ResourceLocalDir::load(): '" << dirName << "'" << endl;
+    kdDebug(5800) << "ResourceLocalDir::load(): '" << dirName << "'" << endl;
 
-  QDir dir( dirName );
+    QDir dir( dirName );
 
-  QStringList entries = dir.entryList( QDir::Files | QDir::Readable );
+    QStringList entries = dir.entryList( QDir::Files | QDir::Readable );
 
-  QStringList::ConstIterator it;
-  for( it = entries.begin(); it != entries.end(); ++it ) {
-    if ( (*it).endsWith( "~" ) ) // is backup file, ignore it
-      continue;
+    QStringList::ConstIterator it;
+    for( it = entries.begin(); it != entries.end(); ++it ) {
+      if ( (*it).endsWith( "~" ) ) // is backup file, ignore it
+        continue;
 
-    QString fileName = dirName + "/" + *it;
-    kdDebug(5800) << " read '" << fileName << "'" << endl;
-    CalendarLocal cal( mCalendar.timeZoneId() );
-    cal.load( fileName );
-    Incidence::List incidences = cal.rawIncidences();
-    Incidence *i = incidences.first();
-    if ( i ) mCalendar.addIncidence( i->clone() );
+      QString fileName = dirName + "/" + *it;
+      kdDebug(5800) << " read '" << fileName << "'" << endl;
+      CalendarLocal cal( mCalendar.timeZoneId() );
+      cal.load( fileName );
+      Incidence::List incidences = cal.rawIncidences();
+      Incidence *i = incidences.first();
+      if ( i ) mCalendar.addIncidence( i->clone() );
+    }
   }
 
-  return true;
+  return success;
 }
 
 bool ResourceLocalDir::doSave()
