@@ -50,5 +50,5 @@ appsdir = $(kde_appsdir)/Utilities
 apps_DATA = kpilot.desktop kpilotdaemon.desktop
 servicetype_DATA = kpilotconduit.desktop
 servicetypedir = $(kde_servicetypesdir)
-kpiloticondir = $(kde_datadir)/kpilot
+kpiloticondir = $(kde_datadir)/kpilot/icons
 kpiloticon_ICON = AUTO
