@@ -49,7 +49,7 @@
 
 namespace KCal {
 
-  class KonsoleKalendarVariables
+  class KonsoleKalendarVariables : KCal::Event
   {
   public:
     KonsoleKalendarVariables();
