@@ -19,5 +19,4 @@ if test $ac_cv_struct_tm_gmtoff = yes; then
 fi
 
 
-AC_CHECK_HEADERS(alloca.h)
 AC_CHECK_FUNCS(memrchr)
