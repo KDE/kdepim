@@ -274,11 +274,6 @@ Event *ResourceRemote::event( const QString &uid )
   return mCalendar.event( uid );
 }
 
-int ResourceRemote::numEvents(const QDate &qd)
-{
-  return mCalendar.numEvents( qd );
-}
-
 QPtrList<Event> ResourceRemote::rawEventsForDate(const QDate &qd, bool sorted)
 {
   return mCalendar.rawEventsForDate( qd, sorted );

@@ -105,9 +105,6 @@ class ResourceRemote : public ResourceCalendar
     QPtrList<Event> rawEvents( const QDate &start, const QDate &end,
                                bool inclusive = false );
 
-    /** returns the number of events that are present on the specified date. */
-    int numEvents(const QDate &qd);
-  
 
     /*
       Returns a QString with the text of the holiday (if any) that falls

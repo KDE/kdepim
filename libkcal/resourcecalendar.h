@@ -129,9 +129,6 @@ class ResourceCalendar : public QObject, public KRES::Resource
     virtual QPtrList<Event> rawEvents( const QDate &start, const QDate &end,
                                bool inclusive = false ) = 0;
 
-    /** returns the number of events that are present on the specified date. */
-    virtual int numEvents(const QDate &qd) = 0;
-
     /** Asynchronous functions */
 
     /**

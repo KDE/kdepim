@@ -226,11 +226,6 @@ Event *ResourceIMAP::event( const QString &uid )
   return mCalendar.event(uid);
 }
 
-int ResourceIMAP::numEvents(const QDate &qd)
-{
-  return mCalendar.numEvents(qd);
-}
-
 // taking a QDate, this function will look for an eventlist in the dict
 // with that date attached -
 QPtrList<Event> ResourceIMAP::rawEventsForDate(const QDate &qd, bool sorted)

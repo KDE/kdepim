@@ -187,11 +187,6 @@ class Calendar : public QObject, public CustomProperties,
     virtual QPtrList<Event> rawEvents() = 0;
 
     /**
-      Returns the number of events that are present on the specified date.
-    */
-    virtual int numEvents( const QDate & ) { return 0; }
-  
-    /**
       Add a todo to the todolist.
       
       @return true on success, false on error.

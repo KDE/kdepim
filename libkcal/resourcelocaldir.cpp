@@ -216,11 +216,6 @@ Event *ResourceLocalDir::event( const QString &uid )
   return mCalendar.event( uid );
 }
 
-int ResourceLocalDir::numEvents(const QDate &qd)
-{
-  return mCalendar.numEvents( qd );
-}
-
 QPtrList<Event> ResourceLocalDir::rawEventsForDate(const QDate &qd, bool sorted)
 {
   return mCalendar.rawEventsForDate( qd, sorted );

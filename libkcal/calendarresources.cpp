@@ -331,18 +331,6 @@ QPtrList<Todo> CalendarResources::todos( const QDate &date )
   return result;
 }
 
-int CalendarResources::numEvents(const QDate &qd)
-{
-  kdDebug(5800) << "CalendarResources::numEvents" << endl;
-
-  int count = 0;
-  CalendarResourceManager::ActiveIterator it;
-  for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    count += (*it)->numEvents( qd );
-  }
-  return count;
-}
-
 
 Alarm::List CalendarResources::alarmsTo( const QDateTime &to )
 {

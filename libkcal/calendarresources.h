@@ -129,9 +129,6 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
     */
     QString getHolidayForDate(const QDate &qd);
 
-    /** returns the number of events that are present on the specified date. */
-    int numEvents(const QDate &qd);
-
     /**
       Add a todo to the todolist.
     */
