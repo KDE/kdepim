@@ -381,8 +381,17 @@ void KPilotDeviceLink::acceptDevice()
 	fPilotUser = new KPilotUser;
 
 	/* Ask the pilot who it is.  And see if it's who we think it is. */
+	DEBUGDAEMON << fname
+		<< ": Reading user info."
+		<< endl;
+
 	dlp_ReadUserInfo(fCurrentPilotSocket, fPilotUser->pilotUser());
 	fPilotUser->boundsCheck();
+
+	DEBUGDAEMON << fname
+		<< ": Read user name "
+		<< fPilotUser->getUserName()
+		<< endl;
 
 	emit logProgress(i18n("Checking last PC..."),70);
 
@@ -507,6 +516,9 @@ QString KPilotDeviceLink::statusString() const
 
 
 // $Log$
+// Revision 1.57  2001/09/24 19:46:17  adridg
+// Made exec() pure virtual for SyncActions, since that makes more sense than having an empty default action.
+//
 // Revision 1.56  2001/09/23 18:24:59  adridg
 // New syncing architecture
 //
