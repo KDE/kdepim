@@ -3,7 +3,11 @@
 
 2004-02-25  Adriaan de Groot
 * In the KNotes conduit: Coding style fixes. Cleanup doubled strings.
-  Improved status reporting.
+  Improved status reporting. Probably dealt with the memo viewer issue.
+* Imported another patch from David Mott, for drag-n-drop file install.
+* Added a config option and UI for running conduits during a backup.
+  Default to not, in order to fix bug 7xxxx.
+
 
 2004-02-21  Adriaan de Groot
 * At FOSDEM, not much hacking was done, but it was fun and boozy.

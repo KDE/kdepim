@@ -427,6 +427,7 @@ bool KNotesAction::modifyNoteOnPilot()
 			r->setID(nm.memo());
 
 			int newid = fDatabase->writeRecord(r);
+			fLocalDatabase->writeRecord(r);
 
 			if (newid != nm.memo())
 			{
@@ -489,7 +490,7 @@ bool KNotesAction::addNewNoteToPilot()
 		PilotRecord *r = a->pack();
 
 		int newid = fDatabase->writeRecord(r);
-
+		fLocalDatabase->writeRecord(r);
 		fP->fIdList.append(NoteAndMemo(fP->fIndex.key(),newid));
 
 		delete r;
@@ -670,6 +671,8 @@ void KNotesAction::cleanupMemos()
 	fStatus=Done;
 	fDatabase->cleanup();
 	fDatabase->resetSyncFlags();
+	fLocalDatabase->cleanup();
+	fLocalDatabase->resetSyncFlags();
 }
 
 
