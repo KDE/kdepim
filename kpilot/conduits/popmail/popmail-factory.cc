@@ -51,9 +51,9 @@ void *init_conduit_popmail()
 } ;
 
 
-/* static */ const char * const PopmailConduitFactory::group = "Popmail-conduit" ;
-const char * const PopmailConduitFactory::syncIncoming = "SyncIncoming" ;
-const char * const PopmailConduitFactory::syncOutgoing = "SyncOutgoing" ;
+/* static */ const char * const PopmailConduitFactory::fGroup = "Popmail-conduit" ;
+const char * const PopmailConduitFactory::fSyncIncoming = "SyncIncoming" ;
+const char * const PopmailConduitFactory::fSyncOutgoing = "SyncOutgoing" ;
 
 KAboutData *PopmailConduitFactory::fAbout = 0L;
 PopmailConduitFactory::PopmailConduitFactory(QObject *p, const char *n) :

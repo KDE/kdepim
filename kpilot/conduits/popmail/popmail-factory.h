@@ -67,12 +67,9 @@ public:
 
 	static KAboutData *about() { return fAbout; } ;
 
-	// Config keys for the mail conduit.
-	//
-	//
-	static const char * const group;
-	static const char * const syncOutgoing,
-		* const syncIncoming;
+	static const char *group() { return fGroup; } ;
+	static const char *syncIncoming() { return fSyncIncoming; } ;
+	static const char *syncOutgoing() { return fSyncOutgoing; } ;
 
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
@@ -82,6 +79,13 @@ protected:
 private:
 	KInstance *fInstance;
 	static KAboutData *fAbout;
+	
+	// Config keys for the mail conduit.
+	//
+	//
+	static const char * const fGroup;
+	static const char * const fSyncOutgoing,
+		* const fSyncIncoming;
 } ;
 
 extern "C"

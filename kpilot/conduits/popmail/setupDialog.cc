@@ -623,8 +623,9 @@ PopMailWidgetConfig::PopMailWidgetConfig(QWidget *p,const char *n) :
 void PopMailWidgetConfig::commit(KConfig *fConfig)
 {
 	FUNCTIONSETUP;
+	KConfigGroupSaver s(fConfig,PopmailConduitFactory::group());
 #define WR(a,b,c) fConfig->writeEntry(c,fConfigWidget->a->b);
-	WR(fSendMode,currentItem(),PopmailConduitFactory::syncIncoming);
+	WR(fSendMode,currentItem(),PopmailConduitFactory::syncIncoming());
 	WR(fEmailFrom,text(),"EmailAddress");
 	WR(fSignature,url(),"Signature");
 	WR(fLeaveMail,isChecked(),"LeaveMail");
@@ -634,8 +635,9 @@ void PopMailWidgetConfig::commit(KConfig *fConfig)
 void PopMailWidgetConfig::load(KConfig *fConfig)
 {
 	FUNCTIONSETUP;
+	KConfigGroupSaver s(fConfig,PopmailConduitFactory::group());
 #define RD(a,b,c,d,e) fConfigWidget->a->b(fConfig->read##c##Entry(d,e))
-	RD(fSendMode,setCurrentItem,Num,PopmailConduitFactory::syncIncoming,(int)NoSend);
+	RD(fSendMode,setCurrentItem,Num,PopmailConduitFactory::syncIncoming(),(int)NoSend);
 	RD(fEmailFrom,setText,,"EmailAddress",QString::null);
 	RD(fSignature,setURL,,"Signature",CSL1("$HOME/.signature"));
 	RD(fLeaveMail,setChecked,Bool,"LeaveMail",true);
