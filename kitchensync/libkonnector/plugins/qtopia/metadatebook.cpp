@@ -58,12 +58,13 @@ QString MetaDatebook::string( KSync::EventSyncEntry* ev) {
         string += rec->recurStart().date().toString("dd.MM.yyyy hh:mm:ss");
     }
     /* Alarms here */
-    KCal::Alarm* al = event->alarms().first();
+/*    KCal::Alarm* al = event->alarms().first();
     if ( al != 0 ) {
         int sec = al->offset().asSeconds();
         string += QString::number( sec );
         string += al->audioFile();
     }
+*/
     return string;
 }
 QString MetaDatebook::days( const QBitArray& ar ) {

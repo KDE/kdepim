@@ -79,11 +79,20 @@ KCal::Event* DateBook::toEvent( QDomElement e) {
     }
 
     // alarm
-    KCal::Alarm *al = new KCal::Alarm( event );
-    al->setText( event->summary() );
-    al->setOffset( e.attribute("alarm").toInt() * -60 );
-    al->setAudioFile( e.attribute("sound") );
-    event->addAlarm( al );
+    QString alarm = e.attribute("alarm");
+
+    /* there is an alarm */
+    if (!alarm.isEmpty() ) {
+        KCal::Alarm *al = new KCal::Alarm( event );
+        al->setText( event->summary() );
+        al->setOffset( alarm.toInt() * -60 );
+        al->setAudioFile( e.attribute("sound") );
+        event->addAlarm( al );
+
+        kdDebug(5229) << "Alarm offset " << al->offset().asSeconds() << endl;
+        kdDebug(5229) << "Alarm " << e.attribute("alarm") << " " << e.attribute("sound") << endl;
+    }
+
 
     // Recurrence damn I feared to do that
     QString type = e.attribute("rtype");

@@ -33,6 +33,10 @@
 
 using namespace KSync;
 
+namespace {
+    void outputIt( int area, Syncee* );
+}
+
 class QtopiaSocket::Private {
 public:
     enum CallIt {
@@ -442,6 +446,8 @@ void QtopiaSocket::readDatebook() {
         OpieHelper::MD5Map map( QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId + "/datebook.md5.qtopia" );
         OpieHelper::MetaDatebook metaBook;
         metaBook.doMeta( syncee,  map );
+        kdDebug(5229) << "Did Meta" << endl;
+        outputIt(5229, syncee );
     }
     d->m_sync.append( syncee );
 
@@ -629,22 +635,19 @@ QString QtopiaSocket::partnerIdPath()const {
 
     return str;
 };
+
+/*
+ * As long as Qtopia/Opie is broken
+ * in regards to handling timezones and events
+ * we set the TimeZone to the one from Korganizer
+ * for evolution we need to fix that!!!
+ *
+ */
 void QtopiaSocket::readTimeZones() {
-    QString tmpFileName;
-    /* read the time zone from file */
-    if ( downloadFile("/Settings/locale.conf", tmpFileName ) ) {
-        QFile file( tmpFileName );
-        if ( file.open( IO_ReadOnly ) ) {
-            QTextStream stream ( &file );
-            QString line;
-            while ( !stream.atEnd() ) {
-                line = stream.readLine();
-                if ( line.startsWith("Timezone = ") )
-                    d->tz = line.mid(11);
-            }
-        }
-    }else
-        d->tz = "America/New_York";
+    KConfig conf("korganizerrc");
+    conf.setGroup("Time & Date");
+    d->tz = conf.readEntry("TimeZoneId", QString::fromLatin1("UTC") );
+    kdDebug(5229) << "TimeZone of Korg is " << d->tz << endl;
 }
 bool QtopiaSocket::downloadFile( const QString& str, QString& dest ) {
     KURL uri = url( d->path + str );
@@ -652,4 +655,26 @@ bool QtopiaSocket::downloadFile( const QString& str, QString& dest ) {
     kdDebug(5225) << "Getting " << str << " " << b << endl;
     return b;
 }
+
+namespace {
+    void forAll( int area, QPtrList<SyncEntry> list) {
+        for (SyncEntry* entry = list.first(); entry != 0; entry = list.next() ) {
+            kdDebug(area) << "State " << entry->state() << endl;
+            kdDebug(area) << "Summary " << entry->name() << endl;
+            kdDebug(area) << "Uid " << entry->id() << endl;
+        }
+    }
+    void outputIt( int area,  Syncee* s) {
+        kdDebug(area) << "Added entries" << endl;
+        forAll( area, s->added() );
+
+        kdDebug(area) << "Modified " <<endl;
+        forAll( area, s->modified() );
+
+        kdDebug(area) << "Removed " << endl;
+        forAll( area, s->removed() );
+    }
+
+}
+
 #include "socket.moc"

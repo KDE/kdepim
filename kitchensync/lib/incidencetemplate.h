@@ -19,6 +19,7 @@ namespace KSync {
         IncidenceTemplate( const IncidenceTemplate& temp )
             : SyncEntry( temp ){
             mIncidence = (Entry*)temp.mIncidence->clone();
+
         }
         ~IncidenceTemplate() {
             delete mIncidence;

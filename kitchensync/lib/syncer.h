@@ -37,7 +37,7 @@ class SyncEntry
     enum Equalness { Different =-1, Equal=0,  EqualButModifiedThis=1,
                      EqualButModifiedOther=2, EqualButModifiedBoth=3 };
 
-    enum Status { Undefined =-1, Added = 0, Modified, Removed };
+    enum Status { Undefined =-1, Added = 0, Modified=1, Removed=2 };
 
     /**
      * This is the basic c'tor of a Syncee.

@@ -60,8 +60,10 @@ namespace OpieHelper {
                 found = true;
                 QString str = map.md5sum( entryNew->id() );
                 QString newStr = string( entryNew );
-                if ( str != md5sum( newStr )  )
+
+                if ( str != md5sum( newStr )  ) {
                     entryNew->setState( KSync::SyncEntry::Modified );
+                }
             }
             if (!found ) {
                 entryNew->setState( KSync::SyncEntry::Added );
@@ -83,8 +85,10 @@ namespace OpieHelper {
             if (!entryNew) {
                 entryNew = new Entry();
                 entryNew->setId( it.key() );
-                entryNew->setState( KSync::SyncEntry::Removed );
+
+                /* add entry first and then to setState */
                 newEntries->addEntry( entryNew );
+                entryNew->setState( KSync::SyncEntry::Removed );
             }
         }
 
@@ -96,8 +100,9 @@ namespace OpieHelper {
               entry != 0l; entry = (Entry*)syncee->nextEntry() ) {
 
             /* only save meta for not deleted SyncEntries! */
-            if ( entry->state() != KSync::SyncEntry::Removed )
+            if ( entry->state() != KSync::SyncEntry::Removed ) {
                 map.insert( entry->id(), md5sum( string( entry ) ) );
+            }
         }
     }
     template<class Syncee, class Entry>

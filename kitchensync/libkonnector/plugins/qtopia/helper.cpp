@@ -25,10 +25,15 @@ Base::~Base()
 QDateTime Base::fromUTC( time_t time )
 {
    struct tm *lt;
-   QString real_TZ = QString::fromLocal8Bit( getenv("TZ") );
+
+   /* getenv can be NULL */
+   char* ptrTz = getenv( "TZ");
+   QString real_TZ = ptrTz ? QString::fromLocal8Bit( ptrTz ) : QString::null;
+
    if (!m_tz.isEmpty() )
        setenv( "TZ", m_tz, true );
 
+   kdDebug(5229) << "TimeZone was " << real_TZ << " TimeZone now is " << m_tz << endl;
 #if defined(_OS_WIN32) || defined (Q_OS_WIN32) || defined (Q_OS_WIN64)
     _tzset();
 #else
@@ -41,8 +46,10 @@ QDateTime Base::fromUTC( time_t time )
 
     if (!m_tz.isEmpty() ) {
         unsetenv("TZ");
-        setenv("TZ",  real_TZ, true );
+        if (!real_TZ.isEmpty() )
+            setenv("TZ",  real_TZ, true );
     }
+    kdDebug(5229) << "DateTime is " << dt << endl;
     // done
     return dt;
 }
@@ -50,8 +57,14 @@ time_t Base::toUTC( const QDateTime& dt )
 {
     time_t tmp;
     struct tm *lt;
-    QString real_TZ = QString::fromLocal8Bit( getenv("TZ") );
-    setenv( "TZ", m_tz, true );
+
+    /* getenv can be NULL */
+    char* ptrTz = getenv( "TZ");
+    QString real_TZ = ptrTz ? QString::fromLocal8Bit( getenv("TZ") ) : QString::null;
+
+    if ( !m_tz.isEmpty() )
+        setenv( "TZ", m_tz, true );
+
 #if defined(_OS_WIN32) || defined (Q_OS_WIN32) || defined (Q_OS_WIN64)
     _tzset();
 #else
@@ -76,8 +89,12 @@ time_t Base::toUTC( const QDateTime& dt )
     lt->tm_isdst = -1;
     // keep tm_zone and tm_gmtoff
     tmp = mktime( lt );
-    unsetenv("TZ");
-    setenv("TZ",  real_TZ, true );
+
+    if (!m_tz.isEmpty() ) {
+        unsetenv("TZ");
+        if (!real_TZ.isEmpty() )
+            setenv("TZ",  real_TZ, true );
+    }
     return tmp;
 }
 bool Base::isMetaSyncingEnabled()const

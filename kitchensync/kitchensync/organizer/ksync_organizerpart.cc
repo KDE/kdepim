@@ -95,6 +95,7 @@ void OrganizerPart::slotConfigOk()
 }
 /* Do it for Events + Todos
  * The 10 Stages to synced data
+ * 0. get the time zone id
  * 1. get the currentProfile and currentKonnector
  * 2. get the paths + the information about using meta data
  *    from the Konnector
@@ -111,6 +112,11 @@ void OrganizerPart::slotConfigOk()
 void OrganizerPart::processEntry( const Syncee::PtrList& in,
                                   Syncee::PtrList& out )
 {
+    /* 0. */
+    KConfig conf("korganizerrc");
+    conf.setGroup("Time & Date");
+    QString timeZoneId = conf.readEntry("TimeZoneId", QString::fromLatin1("UTC") );
+
     /* 1. is fairly easy */
     Profile prof = core()->currentProfile();
     KonnectorProfile kon = core()->konnectorProfile();
@@ -143,9 +149,9 @@ void OrganizerPart::processEntry( const Syncee::PtrList& in,
     EventSyncee* events =0l;
     TodoSyncee* todos = 0l;
     if (evSyncee )
-       events = loadEvents( path );
+       events = loadEvents( path, timeZoneId );
     if (toSyncee )
-        todos = loadTodos( path );
+        todos = loadTodos( path, timeZoneId );
 
     /* 5. meta data */
     if ( met )
@@ -173,7 +179,7 @@ void OrganizerPart::processEntry( const Syncee::PtrList& in,
         writeMeta( events, todos, meta );
 
     /* 8. write back data */
-    save( events, todos, path );
+    save( events, todos, path, timeZoneId );
 
     /* 8.1 take care of the IdHelpers.... */
 
@@ -189,9 +195,9 @@ void OrganizerPart::processEntry( const Syncee::PtrList& in,
 }
 
 //AddressBookSyncee* ANY
-TodoSyncee* OrganizerPart::loadTodos( const QString& path ) {
+TodoSyncee* OrganizerPart::loadTodos( const QString& path, const QString& timeZoneId ) {
     TodoSyncee* syncee = new TodoSyncee();
-    KCal::CalendarLocal cal;
+    KCal::CalendarLocal cal(timeZoneId);
     cal.load(path);
     QPtrList<KCal::Todo> todos = cal.rawTodos();
     if ( todos.isEmpty() ) {
@@ -206,9 +212,9 @@ TodoSyncee* OrganizerPart::loadTodos( const QString& path ) {
     }
     return syncee;
 }
-EventSyncee* OrganizerPart::loadEvents(const QString& path) {
+EventSyncee* OrganizerPart::loadEvents(const QString& path,  const QString& timeZoneId) {
     EventSyncee* syncee = new EventSyncee();
-    KCal::CalendarLocal cal;
+    KCal::CalendarLocal cal(timeZoneId);
     cal.load( path );
     QPtrList<KCal::Event> events = cal.rawEvents();
     if ( events.isEmpty() ) {
@@ -220,6 +226,7 @@ EventSyncee* OrganizerPart::loadEvents(const QString& path) {
     for ( event = events.first(); event; event = events.next() ) {
         entry = new EventSyncEntry( (KCal::Event*)event->clone() );
         syncee->addEntry( entry );
+        kdDebug() << "Start Date of loaded " <<  entry->incidence()->dtStart() << " " << entry->incidence()->uid() << endl;
     }
     return syncee;
 }
@@ -297,7 +304,8 @@ void OrganizerPart::doMetaIntern( Syncee* syncee,
             kdDebug(5222) << "OrganizerPart Meta Gathering: "
                       << id << endl;
 
-            /* the previous saved list of ids
+            /*
+             * the previous saved list of ids
              *  does not contain this id
              * ->REMOVED
              * items were removed we need to create an item
@@ -310,14 +318,16 @@ void OrganizerPart::doMetaIntern( Syncee* syncee,
                     KCal::Todo *todo = new KCal::Todo();
                     todo->setUid( id );
                     TodoSyncEntry* entry = new TodoSyncEntry( todo );
-                    entry->setState( SyncEntry::Removed );
                     syncee->addEntry( entry );
+                    entry->setState( SyncEntry::Removed );
+
                 }else { // organizer
                     KCal::Event* ev = new KCal::Event();
                     ev->setUid( id );
                     EventSyncEntry* entry = new EventSyncEntry( ev );
-                    entry->setState( SyncEntry::Removed );
                     syncee->addEntry( entry );
+                    entry->setState( SyncEntry::Removed );
+                    kdDebug() << "Removed " << entry->id() << endl;
                 }
             }
         }
@@ -355,14 +365,18 @@ void OrganizerPart::writeMetaIntern( Syncee* syncee,
                                      const QString& key ) {
     SyncEntry* entry;
     for (entry = syncee->firstEntry(); entry; entry= syncee->nextEntry() ) {
+        if (entry->state() == SyncEntry::Modified )
+            continue;
+
         conf->setGroup( key + entry->id() );
         conf->writeEntry( "time", entry->timestamp() );
     }
 }
 void OrganizerPart::save( EventSyncee* evSyncee,
                           TodoSyncee* toSyncee,
-                          const QString& path) {
-    KCal::CalendarLocal* loc = new KCal::CalendarLocal();
+                          const QString& path,
+                          const QString& timeZoneId) {
+    KCal::CalendarLocal* loc = new KCal::CalendarLocal(timeZoneId);
     EventSyncEntry* evEntry=0l;
     TodoSyncEntry* toEntry=0l;
     if (evSyncee)
@@ -371,7 +385,8 @@ void OrganizerPart::save( EventSyncee* evSyncee,
             evEntry;
             evEntry = (EventSyncEntry*)evSyncee->nextEntry() )
       {
-        loc->addEvent(evEntry->incidence());
+          if (evEntry->state() != SyncEntry::Removed )
+              loc->addEvent(evEntry->incidence());
       }
     }
     if (toSyncee)
@@ -380,7 +395,8 @@ void OrganizerPart::save( EventSyncee* evSyncee,
             toEntry;
             toEntry = (TodoSyncEntry*)toSyncee->nextEntry() )
       {
-        loc->addTodo(toEntry->todo());
+          if (toEntry->state() != SyncEntry::Removed )
+              loc->addTodo(toEntry->todo());
       }
     }
     loc->save( path );
