@@ -25,6 +25,7 @@
 #include <kabc/address.h>
 #include <kdebug.h>
 #include <kglobal.h>
+#include <kglobalsettings.h>
 #include <kiconloader.h>
 #include <kstringhandler.h>
 #include <ktextbrowser.h>
@@ -36,8 +37,13 @@ KABHtmlView::KABHtmlView( QWidget *parent, const char *name )
 {
   mTextBrowser = new KTextBrowser( this );
   mTextBrowser->setWrapPolicy( QTextEdit::AtWordBoundary );
+  mTextBrowser->setLinkUnderline( false );
   mTextBrowser->setVScrollBarMode( QScrollView::AlwaysOff );
   mTextBrowser->setHScrollBarMode( QScrollView::AlwaysOff );
+
+  QStyleSheet *sheet = mTextBrowser->styleSheet();
+  QStyleSheetItem *link = sheet->item( "a" );
+  link->setColor( KGlobalSettings::linkColor() );
 }
 
 KABHtmlView::~KABHtmlView()
