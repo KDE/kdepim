@@ -879,7 +879,7 @@ void KNArticleWidget::createHtmlPage()
 
   QString html, hLine;
   if (rnv->showHeaderDecoration())
-    html=QString("<qt><table width=\"100%\" cellpadding=0 cellspacing=1><tr><td width=40 bgcolor=\"%1\"></td><td width=\"1%\"><headerblock><table cellpadding=0 cellspacing=0>")
+    html=QString("<qt><table width=\"100%\" cellpadding=0 cellspacing=1><tr><td width=40 bgcolor=\"%1\" width=\"1%\"><headerblock><table cellpadding=0 cellspacing=0>")
          .arg(app->headerDecoHexcode());
   else
     html="<qt><headerblock><table width=\"100%\" cellpadding=0 cellspacing=0><tr><td><table cellpadding=0 cellspacing=0>";
