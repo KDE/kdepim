@@ -1412,6 +1412,12 @@ void KNMainWidget::slotCheckDockWidgetStatus()
   a_ctToggleGroupView->setChecked(c_olDock->isVisible());
   a_ctToggleHeaderView->setChecked(h_drDock->isVisible());
   a_ctToggleArticleViewer->setChecked(a_rtDock->isVisible());
+  a_ctToggleGroupView->setChecked( c_olDock->isVisible() );
+  a_ctToggleGroupView->setEnabled(  c_olDock->isDockBackPossible() );
+  a_ctToggleHeaderView->setChecked( h_drDock->isVisible() );
+  a_ctToggleHeaderView->setEnabled( h_drDock->isDockBackPossible() );
+  a_ctToggleArticleViewer->setChecked(a_rtDock->isVisible() );
+  a_ctToggleArticleViewer->setEnabled( a_rtDock->isDockBackPossible() );
 }
 
 
