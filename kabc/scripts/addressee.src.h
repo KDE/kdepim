@@ -25,6 +25,7 @@ struct AddresseeData : public KShared
   Address::List addresses;
   QStringList emails;
   QStringList categories;
+  QStringList custom;
 };
 
 
@@ -62,6 +63,13 @@ class Addressee
     bool hasCategory( const QString & ) const;
     void setCategories( const QStringList & );
     QStringList categories() const;
+
+    void insertCustom( const QString &app, const QString &name,
+                       const QString &value );
+    void removeCustom( const QString &app, const QString &name );
+    QString custom( const QString &app, const QString &name ) const;
+    void setCustoms( const QStringList & );
+    QStringList customs() const;
 
     void dump() const;
   

@@ -30,6 +30,8 @@ class VCardFormatImpl {
 
     void addNValue( VCARD::VCard *, const Addressee & );
     void readNValue( VCARD::ContentLine *, Addressee & );
+    
+    void addCustomValue( VCARD::VCard *, const QString & );
 };
 
 }

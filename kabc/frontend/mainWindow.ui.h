@@ -133,6 +133,20 @@ void MainWindow::readAddressee( const KABC::Addressee &a )
     new QListViewItem( mCategoryListView, *it4 );
   }
   
+  mCustomListView->clear();  
+  QStringList customs = a.customs();
+  QStringList::ConstIterator it5;
+  for( it5 = customs.begin(); it5 != customs.end(); ++it5 ) {
+    int posDash = (*it5).find( "-" );
+    int posColon = (*it5).find( ":" );
+  
+    QString app = (*it5).left( posDash );
+    QString cname = (*it5).mid( posDash + 1, posColon - posDash - 1 );
+    QString value = (*it5).mid( posColon + 1 );
+  
+    new QListViewItem( mCustomListView, app, cname, value );
+  }
+  
   Address::List addresses = a.addresses();
   mAddressIdCombo->clear();
   Address::List::ConstIterator it;
@@ -545,5 +559,74 @@ void MainWindow::removeCategory()
   if( !item ) return;
 
   mCurrentItem->addressee().removeCategory( item->text( 0 ) );
+  delete item;  
+}
+
+
+void MainWindow::editCustom()
+{
+  if ( !mCurrentItem ) return;
+  
+  QListViewItem *item = mCustomListView->selectedItem();
+  if( !item ) return;
+
+  QString oldName = item->text( 0 ) + "-" + item->text( 1 ) + ":" +
+                    item->text( 2 );
+
+  bool ok = false;
+  QString name = QInputDialog::getText( i18n("New Custom Entry"),
+                                        i18n("Please enter custom entry.\n"
+                                             "Format: APP-NAME:VALUE"),
+                                        QLineEdit::Normal, oldName, &ok,
+                                        this );
+  if ( !ok || name.isEmpty() ) return;
+
+  int posDash = name.find( "-" );
+  int posColon = name.find( ":" );
+  
+  QString app = name.left( posDash );
+  QString cname = name.mid( posDash + 1, posColon - posDash - 1 );
+  QString value = name.mid( posColon + 1 );
+  
+  item->setText( 0, app );
+  item->setText( 1, cname );
+  item->setText( 2, value );
+  
+  mCurrentItem->addressee().removeCustom( app, cname );
+  mCurrentItem->addressee().insertCustom( app, cname, value );
+}
+
+void MainWindow::newCustom()
+{
+  if ( !mCurrentItem ) return;
+  
+  bool ok = false;
+  QString name = QInputDialog::getText( i18n("New Custom Entry"),
+                                        i18n("Please enter custom entry.\n"
+                                             "Format: APP-NAME:VALUE"),
+                                        QLineEdit::Normal, QString::null, &ok,
+                                        this );
+  if ( !ok || name.isEmpty() ) return;
+  
+  int posDash = name.find( "-" );
+  int posColon = name.find( ":" );
+  
+  QString app = name.left( posDash );
+  QString cname = name.mid( posDash + 1, posColon - posDash - 1 );
+  QString value = name.mid( posColon + 1 );
+  
+  new QListViewItem( mCustomListView, app, cname, value );
+
+  mCurrentItem->addressee().insertCustom( app, cname, value );
+}
+
+void MainWindow::removeCustom()
+{
+  if ( !mCurrentItem ) return;
+  
+  QListViewItem *item = mCustomListView->selectedItem();
+  if( !item ) return;
+
+  mCurrentItem->addressee().removeCustom( item->text( 0 ), item->text( 1 ) );
   delete item;  
 }

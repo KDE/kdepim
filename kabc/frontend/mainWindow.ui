@@ -8,7 +8,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>612</width>
+            <width>608</width>
             <height>613</height>
         </rect>
     </property>
@@ -911,6 +911,123 @@
                     </widget>
                 </grid>
             </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Custom</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>11</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <widget class="QGroupBox" row="0" column="0">
+                        <property name="name">
+                            <cstring>GroupBox2_2_2</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Custom Entries</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <property name="margin">
+                                <number>11</number>
+                            </property>
+                            <property name="spacing">
+                                <number>6</number>
+                            </property>
+                            <widget class="QListView" row="0" column="0" rowspan="4" colspan="1">
+                                <column>
+                                    <property name="text">
+                                        <string>App</string>
+                                    </property>
+                                    <property name="clickable">
+                                        <bool>true</bool>
+                                    </property>
+                                    <property name="resizeable">
+                                        <bool>true</bool>
+                                    </property>
+                                </column>
+                                <column>
+                                    <property name="text">
+                                        <string>Name</string>
+                                    </property>
+                                    <property name="clickable">
+                                        <bool>true</bool>
+                                    </property>
+                                    <property name="resizeable">
+                                        <bool>true</bool>
+                                    </property>
+                                </column>
+                                <column>
+                                    <property name="text">
+                                        <string>Value</string>
+                                    </property>
+                                    <property name="clickable">
+                                        <bool>true</bool>
+                                    </property>
+                                    <property name="resizeable">
+                                        <bool>true</bool>
+                                    </property>
+                                </column>
+                                <property name="name">
+                                    <cstring>mCustomListView</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QPushButton" row="3" column="1">
+                                <property name="name">
+                                    <cstring>PushButton6_2_2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Remove</string>
+                                </property>
+                            </widget>
+                            <widget class="QPushButton" row="2" column="1">
+                                <property name="name">
+                                    <cstring>PushButton5_2_2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Edit</string>
+                                </property>
+                            </widget>
+                            <widget class="QPushButton" row="1" column="1">
+                                <property name="name">
+                                    <cstring>PushButton7_2_2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>New</string>
+                                </property>
+                            </widget>
+                            <spacer row="0" column="1">
+                                <property name="name" stdset="0">
+                                    <cstring>Spacer2_2_2</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Vertical</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                        </grid>
+                    </widget>
+                </grid>
+            </widget>
         </widget>
     </grid>
 </widget>
@@ -1136,6 +1253,24 @@
         <receiver>MainWindow</receiver>
         <slot>removeCategory()</slot>
     </connection>
+    <connection>
+        <sender>PushButton7_2_2</sender>
+        <signal>clicked()</signal>
+        <receiver>MainWindow</receiver>
+        <slot>newCustom()</slot>
+    </connection>
+    <connection>
+        <sender>PushButton5_2_2</sender>
+        <signal>clicked()</signal>
+        <receiver>MainWindow</receiver>
+        <slot>editCustom()</slot>
+    </connection>
+    <connection>
+        <sender>PushButton6_2_2</sender>
+        <signal>clicked()</signal>
+        <receiver>MainWindow</receiver>
+        <slot>removeCustom()</slot>
+    </connection>
 </connections>
 <includes>
     <include location="global" impldecl="in declaration">addressbook.h</include>
@@ -1181,6 +1316,9 @@
     <slot>newCategory()</slot>
     <slot>editCategory()</slot>
     <slot>removeCategory()</slot>
+    <slot>editCustom()</slot>
+    <slot>newCustom()</slot>
+    <slot>removeCustom()</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

@@ -39,6 +39,17 @@ bool VCardFormatImpl::load( AddressBook *addressBook, const QString &fileName )
     Addressee a;
 
     for( cl = contentLines.first(); cl; cl = contentLines.next() ) {
+      QString n = cl->name();
+      if ( n.startsWith( "X-" ) ) {
+        n = n.mid( 2 );
+        int posDash = n.find( "-" );
+        kdDebug() << "---n: " << n << " posDash: " << posDash << endl;        
+        a.insertCustom( QString::fromUtf8( n.left( posDash ) ),
+                        QString::fromUtf8( n.mid( posDash + 1 ) ),
+                        QString::fromUtf8( cl->value()->asString() ) );
+        continue;
+      }
+    
       EntityType type = cl->entityType();
       switch( type ) {
 
@@ -151,6 +162,12 @@ bool VCardFormatImpl::save( AddressBook *addressBook, const QString &fileName )
       addTextValue( v, EntityEmail, *it4 );
     }
 
+    QStringList customs = (*it).customs();
+    QStringList::ConstIterator it5;
+    for( it5 = customs.begin(); it5 != customs.end(); ++it5 ) {
+      addCustomValue( v, *it5 );
+    }
+
     addTextValue( v, EntityURL, (*it).url().url() );
 
     addNValue( v, *it );
@@ -194,6 +211,17 @@ bool VCardFormatImpl::save( AddressBook *addressBook, const QString &fileName )
   }
 
   return true;
+}
+
+
+void VCardFormatImpl::addCustomValue( VCard *v, const QString &txt )
+{
+  if ( txt.isEmpty() ) return;
+
+  ContentLine cl;
+  cl.setName( "X-" + txt.left( txt.find( ":" ) ).utf8() );
+  cl.setValue( new TextValue( txt.mid( txt.find( ":" ) + 1 ).utf8() ) );
+  v->add(cl);
 }
 
 void VCardFormatImpl::addTextValue( VCard *v, EntityType type, const QString &txt )

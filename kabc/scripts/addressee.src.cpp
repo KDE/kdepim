@@ -253,3 +253,64 @@ QStringList Addressee::categories() const
 {
   return mData->categories;
 }
+
+void Addressee::insertCustom( const QString &app, const QString &name,
+                              const QString &value )
+{
+  detach();
+  
+  QString qualifiedName = app + "-" + name + ":";
+  
+  QStringList::Iterator it;
+  for( it = mData->custom.begin(); it != mData->custom.end(); ++it ) {
+    if ( (*it).startsWith( qualifiedName ) ) {
+      (*it) = qualifiedName + value;
+      return;
+    }
+  }
+  
+  mData->custom.append( qualifiedName + value );
+}
+
+void Addressee::removeCustom( const QString &app, const QString &name)
+{
+  detach();
+  
+  QString qualifiedName = app + "-" + name + ":";
+  
+  QStringList::Iterator it;
+  for( it = mData->custom.begin(); it != mData->custom.end(); ++it ) {
+    if ( (*it).startsWith( qualifiedName ) ) {
+      mData->custom.remove( it );
+      return;
+    }
+  }
+}
+
+QString Addressee::custom( const QString &app, const QString &name ) const
+{
+  QString qualifiedName = app + "-" + name + ":";
+  QString value;
+  
+  QStringList::ConstIterator it;
+  for( it = mData->custom.begin(); it != mData->custom.end(); ++it ) {
+    if ( (*it).startsWith( qualifiedName ) ) {
+      value = (*it).mid( (*it).find( ":" ) + 1 );
+      break;
+    }
+  }
+  
+  return value;
+}
+
+void Addressee::setCustoms( const QStringList &l )
+{
+  detach();
+  
+  mData->custom = l;
+}
+
+QStringList Addressee::customs() const
+{
+  return mData->custom;
+}
