@@ -2327,17 +2327,8 @@ void KDTimeHeaderWidget::saveCenterDateTime()
 
 void KDTimeHeaderWidget::centerDateTime( const QDateTime& center )
 {
-    if( center < myHorizonStart || center > myHorizonEnd ) {
-        myHorizonStart = center;
-        flagStartTimeSet = true;
-        //qDebug("myHorizonStart reset");
-    }
-    updateTimeTable();
-    repaint();
-    moveTimeLineTo(getCoordX( center )-(myGanttView->myCanvasView->viewport()->width() /2));
+   moveTimeLineTo(getCoordX( center )-(myGanttView->myCanvasView->viewport()->width() /2));
     //  qDebug("centerDateTime %s %d %d", center.toString().latin1(),getCoordX( center ),(myGanttView->myCanvasView->viewport()->width() /2) );
-    updateTimeTable();
-    repaint();
 }
 
 
