@@ -2,7 +2,7 @@
     knarticlemanager.cpp
 
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -226,7 +226,11 @@ void KNArticleManager::showHdrs(bool clear)
 
         if( !art->listItem() && art->filterResult() ) {
 
-          if (!expandThreads) {
+          // ### disable delayed header view item creation for now, it breaks
+          // the quick search
+          // since it doesn't seem to improve performance at all, it probably
+          // could be removed entirely (see also slotItemExpanded(), etc.)
+          /*if (!expandThreads) {
 
             if( (ref=art->displayedReference()) ) {
 
@@ -241,10 +245,11 @@ void KNArticleManager::showHdrs(bool clear)
               art->initListItem();
             }
 
-          } else {  // expandThreads == true
+        } else {  // expandThreads == true */
             createThread(art);
-            art->listItem()->setOpen(true);
-          }
+            if ( expandThreads )
+              art->listItem()->setOpen(true);
+//           }
 
         }
         else if(art->listItem()) {
