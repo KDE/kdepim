@@ -1,4 +1,4 @@
-INCLUDES= -I include $(all_includes)
+INCLUDES= -I _include $(all_includes)
 
 SUBDIRS = filters
 
