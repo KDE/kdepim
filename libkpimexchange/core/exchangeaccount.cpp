@@ -237,7 +237,7 @@ void ExchangeAccount::calcFolderURLs()
 
   mError = false;
 
-  KIO::DavJob* job = KIO::davPropFind( baseURL(), doc, "0", false );
+  KIO::DavJob* job = KIO::davPropFind( baseURL(), doc, "1", false );
   job->addMetaData( "errorPage", "false" );
   connect( job, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotFolderResult( KIO::Job * ) ) );
