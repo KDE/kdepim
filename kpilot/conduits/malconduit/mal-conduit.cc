@@ -50,6 +50,8 @@ const char *MAL_conduit_id =
 
 static MALConduit *conduitInstance=0L;
 
+int malconduit_logf(const char *, ...) __attribute__ ((format (printf, 1, 2)));
+
 int malconduit_logf(const char *format, ...)
 {
 	FUNCTIONSETUP;
