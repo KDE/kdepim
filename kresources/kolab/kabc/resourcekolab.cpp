@@ -418,7 +418,7 @@ void KABC::ResourceKolab::fromKMailRefresh( const QString& type,
 
 void KABC::ResourceKolab::fromKMailAddSubresource( const QString& type,
                                                    const QString& subResource,
-                                                   const QString& /*label*/,
+                                                   const QString& label,
                                                    bool writable,
                                                    bool )
 {
@@ -430,8 +430,7 @@ void KABC::ResourceKolab::fromKMailAddSubresource( const QString& type,
 
   KConfig config( configFile() );
   config.setGroup( "Contact" );
-  // ###### TODO label
-  loadSubResourceConfig( config, subResource, subResource, writable );
+  loadSubResourceConfig( config, subResource, label, writable );
   loadSubResource( subResource );
   addressBook()->emitAddressBookChanged();
   emit signalSubresourceAdded( this, type, subResource );
