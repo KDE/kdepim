@@ -402,7 +402,7 @@ void CustomFieldsWidget::removeField()
 
   bool ok;
   QString title = KInputDialog::getItem( i18n( "Remove Field" ),
-                                         i18n( "Select the field you want to remove." ),
+                                         i18n( "Select the field you want to remove:" ),
                                          fields, 0, false, &ok, this );
 
   if ( ok ) {

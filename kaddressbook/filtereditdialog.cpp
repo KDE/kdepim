@@ -127,7 +127,7 @@ void FilterEditDialog::initGUI()
            SLOT( filterNameTextChanged( const QString&) ) );
 
   mCategoriesView = new KListView( page );
-  mCategoriesView->addColumn( i18n( "Categories" ) );
+  mCategoriesView->addColumn( i18n( "Category" ) );
   topLayout->addMultiCellWidget( mCategoriesView, 1, 1, 0, 1 );
 
   mMatchRuleGroup = new QButtonGroup( page );

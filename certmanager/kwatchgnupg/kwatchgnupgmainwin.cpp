@@ -163,7 +163,7 @@ void KWatchGnuPGMainWindow::setGnuPGConfig()
   }
   cconfig->sync(true);
   if( logclients.isEmpty() ) {
-	KMessageBox::sorry( 0, i18n("There are no components available that support logging" ) );
+	KMessageBox::sorry( 0, i18n("There are no components available that support logging." ) );
   }
 }
 
