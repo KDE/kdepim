@@ -279,6 +279,7 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   QLineEdit * le = new QLineEdit( page );
   hlay->addWidget( new QLabel( le, i18n("&Search for:"), page ) );
   hlay->addWidget( le, 1 );
+  le->setFocus();
 
   connect( le, SIGNAL(textChanged(const QString&)),
 	   this, SLOT(slotSearch(const QString&)) );
