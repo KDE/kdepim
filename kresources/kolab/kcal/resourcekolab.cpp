@@ -38,6 +38,7 @@
 #include <qobject.h>
 
 #include <kabc/locknull.h>
+#include <libkdepim/kincidencechooser.h>
 
 using namespace KCal;
 using namespace Kolab;
@@ -255,7 +256,65 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
     return;
   }
 }
+void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subresource, Q_UINT32 sernum )
+{
+    if ( ! inc )
+        return;
+    if ( ! mResolveConflict ) {
+        // we should do no conflict resolution
+        delete inc;
+        return;
+    }
+    Incidence* local = mCalendar.incidence( inc->uid() );
+    Incidence* localIncidence = 0;
+    Incidence* addedIncidence = 0;
+    if ( local ) {
+        KIncidenceChooser* ch = new KIncidenceChooser();
+        ch->setIncidence( local ,inc );
+        if ( KIncidenceChooser::chooseMode == KIncidenceChooser::ask ) {
+            connect ( this, SIGNAL( useGlobalMode() ), ch, SLOT (  useGlobalMode() ) );
+            if ( ch->exec() )
+                if ( KIncidenceChooser::chooseMode != KIncidenceChooser::ask )
+                    emit useGlobalMode() ;
+        }
+        Incidence* result = ch->getIncidence();
+      delete ch; 
+      if ( result == local ) {
+          localIncidence = local->clone();
+          delete inc;
+      } else  if ( result == inc ) {
+          addedIncidence = inc;
+      } else if ( result == 0 ) { // take both
+          localIncidence = local->clone();
+          addedIncidence = inc;
+      }
+      if ( localIncidence )
+          localIncidence->recreate();
+      if ( addedIncidence )
+          addedIncidence->recreate();
+      bool silent = mSilent;
+      mSilent = false;
+      if ( local->type() == "Event" ) {
+          deleteEvent( (Event*)local );
+          kmailDeleteIncidence( subresource,sernum);
+          if ( localIncidence ) addEvent( (Event*)localIncidence, subresource, 0  );
+          if ( addedIncidence  ) addEvent( (Event*)addedIncidence, subresource, 0  );
+      } else if (local->type() == "Todo" ) {
+          deleteTodo((Todo*)local);
+          kmailDeleteIncidence( subresource,sernum);
+          if ( localIncidence ) addTodo( (Todo*)localIncidence, subresource, 0  );
+          if ( addedIncidence  ) addTodo( (Todo*)addedIncidence, subresource, 0  );
+      } else if ( local->type() == "Journal" ) {
+          deleteJournal((Journal*)local );
+          kmailDeleteIncidence( subresource,sernum);
+          if ( localIncidence ) addJournal( (Journal*)localIncidence, subresource, 0  );
+          if ( addedIncidence  ) addJournal( (Journal*)addedIncidence, subresource, 0  );
+      }
+      mSilent = silent;
 
+   
+  }
+}
 void ResourceKolab::addIncidence( const char* mimetype, const QString& xml,
                                   const QString& subResource, Q_UINT32 sernum )
 {
@@ -281,6 +340,8 @@ void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
   Q_ASSERT( event );
   if( event && !mUidMap.contains( event->uid() ) )
     addEvent( event, subresource, sernum );
+  else
+    resolveConflict( event, subresource, sernum );
 }
 
 bool ResourceKolab::addEvent( KCal::Event* event, const QString& _subresource,
@@ -376,6 +437,7 @@ void ResourceKolab::addTodo( const QString& xml, const QString& subresource,
   Q_ASSERT( todo );
   if( todo && !mUidMap.contains( todo->uid() ) )
     addTodo( todo, subresource, sernum );
+    resolveConflict( todo, subresource, sernum );
 }
 
 bool ResourceKolab::addTodo( KCal::Todo* todo, const QString& _subresource,
@@ -450,6 +512,8 @@ void ResourceKolab::addJournal( const QString& xml, const QString& subresource,
   Q_ASSERT( journal );
   if( journal && !mUidMap.contains( journal->uid() ) )
     addJournal( journal, subresource, sernum );
+  else
+      resolveConflict( journal, subresource, sernum );
 }
 
 bool ResourceKolab::addJournal( KCal::Journal* journal,

@@ -31,7 +31,7 @@
 using namespace KCal;
 
 ResourceCalendar::ResourceCalendar( const KConfig *config )
-    : KRES::Resource( config )
+    : KRES::Resource( config ),mResolveConflict( false )
 {
 }
 
@@ -39,6 +39,10 @@ ResourceCalendar::~ResourceCalendar()
 {
 }
 
+void ResourceCalendar::setResolveConflict( bool b)
+{
+ mResolveConflict = b;
+}
 QString ResourceCalendar::infoText() const
 {
   QString txt;
@@ -92,17 +96,6 @@ bool ResourceCalendar::load()
     success = doLoad();
   }
   if ( !success && !mReceivedLoadError ) loadError();
-  
-  // If the resource is read-only, we need to set its incidences to read-only, 
-  // too. This can't be done at a lower-level, since the read-only setting 
-  // happens at this level
-  if ( readOnly() ) {
-    Incidence::List incidences( rawIncidences() );
-    Incidence::List::Iterator it;
-    for ( it = incidences.begin(); it != incidences.end(); ++it ) {
-      (*it)->setReadOnly( true );
-    }    
-  }
 
   kdDebug(5800) << "Done loading resource " + resourceName() << endl;
 
@@ -124,20 +117,14 @@ void ResourceCalendar::loadError( const QString &err )
 
 bool ResourceCalendar::save()
 {
-  if ( !readOnly() ) {
-    kdDebug(5800) << "Save resource " + resourceName() << endl;
+  kdDebug(5800) << "Save resource " + resourceName() << endl;
 
-    mReceivedSaveError = false;
+  mReceivedSaveError = false;
 
-    bool success = doSave();
-    if ( !success && !mReceivedSaveError ) saveError();
+  bool success = doSave();
+  if ( !success && !mReceivedSaveError ) saveError();
 
-    return success;
-  } else {
-    // Read-only, just don't save...
-    kdDebug(5800) << "Don't save read-only resource " + resourceName() << endl;
-    return true;
-  }
+  return success;
 }
 
 void ResourceCalendar::saveError( const QString &err )

@@ -120,10 +120,13 @@ public:
   
   KABC::Lock* lock();
 
+signals:
+  void useGlobalMode();
 protected slots:
    void slotEmitResourceChanged();
 
-private:
+private: 
+  void resolveConflict( KCal::Incidence*, const QString& subresource, Q_UINT32 sernum );
   void addIncidence( const char* mimetype, const QString& xml,
                      const QString& subResource, Q_UINT32 sernum );
 

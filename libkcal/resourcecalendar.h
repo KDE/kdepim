@@ -57,6 +57,8 @@ class ResourceCalendar : public KRES::Resource
     ResourceCalendar( const KConfig * );
     virtual ~ResourceCalendar();
 
+    void setResolveConflict( bool b);
+
     virtual void writeConfig( KConfig* config );
 
     /**
@@ -193,7 +195,6 @@ class ResourceCalendar : public KRES::Resource
     void signalSubresourceAdded( ResourceCalendar *, const QString& type,
                                  const QString& subresource, const QString& label );
 
-    // FIXME proko2: merge once we are back in HEAD by porting imap resource
     void signalSubresourceAdded( ResourceCalendar *, const QString& type,
                                  const QString& subresource );
 
@@ -302,6 +303,8 @@ class ResourceCalendar : public KRES::Resource
     virtual void setSubresourceActive( const QString &, bool active );
 
   protected:
+
+    bool mResolveConflict;
     /**
       Do the actual loading of the resource data. Called by load().
     */
