@@ -36,6 +36,15 @@ TODO LIST (Ignore the file TODO)
 * GJJ: Create good icons for the kpalmdoc converter application.
 
 
+2003-3-24  Reinhold Kainhofer
+* Adapted the layout of the addressbook conduit's setup dialog to
+  resemble the one from the calendar/todo conduit
+* Addressbook conduit: Implemented the option to sync with an 
+  arbitrary vcard file instead of only the standard addressbook.
+	This actually involved quite a lot of dealing with resources, 
+	factories etc., so I'm still looking for an easier way to 
+	obtain the addressbook from a single local vcard file.
+
 2003-3-23  Reinhold Kainhofer
 * Lot of work on the docconduit. Finished the KPalmDOC application. 
   It converts text files to .pdb files that can be viewed as ebooks 
