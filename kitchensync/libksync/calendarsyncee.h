@@ -85,6 +85,9 @@ class CalendarSyncee : public Syncee
     bool mOwnCalendar;
     KCal::Event::List mEvents;
     KCal::Event::List::ConstIterator mCurrentEvent;
+    KCal::Todo::List mTodos;
+    KCal::Todo::List::ConstIterator mCurrentTodo;
+    bool mIteratingEvents;
     
     QMap<KCal::Incidence *,CalendarSyncEntry *> mEntries;
 };

@@ -80,13 +80,13 @@ CalendarSyncEntry *CalendarSyncEntry::clone()
 
 
 CalendarSyncee::CalendarSyncee()
-  : mOwnCalendar( true )
+  : mOwnCalendar( true ), mIteratingEvents( true )
 {
   mCalendar = new CalendarLocal;
 }
 
 CalendarSyncee::CalendarSyncee( CalendarLocal *calendar )
-  : mOwnCalendar( false )
+  : mOwnCalendar( false ), mIteratingEvents( true )
 {
   mCalendar = calendar;
 }
@@ -105,15 +105,40 @@ CalendarSyncEntry *CalendarSyncee::firstEntry()
 {
   mEvents = mCalendar->events();
   mCurrentEvent = mEvents.begin();
-  if( mCurrentEvent == mEvents.end() ) return 0;
+  mIteratingEvents = true;
+  if( mCurrentEvent == mEvents.end() ) {
+    mTodos = mCalendar->todos();
+    mCurrentTodo = mTodos.begin();
+    mIteratingEvents = false;
+    if( mCurrentTodo == mTodos.end() ) {
+      return 0;
+    }
+    return createEntry( *mCurrentTodo );
+  }
   return createEntry( *mCurrentEvent );
 }
 
 CalendarSyncEntry *CalendarSyncee::nextEntry()
 {
-  ++mCurrentEvent;
-  if ( mCurrentEvent == mEvents.end() ) return 0;
-  return createEntry( *mCurrentEvent );
+  if( mIteratingEvents ) {
+    ++mCurrentEvent;
+    if ( mCurrentEvent == mEvents.end() ) {
+      mTodos = mCalendar->todos();
+      mCurrentTodo = mTodos.begin();
+      mIteratingEvents = false;
+      if( mCurrentTodo == mTodos.end() ) {
+          return 0;
+      }
+      return createEntry( *mCurrentTodo );
+    }
+    return createEntry( *mCurrentEvent );
+  } else {
+    ++mCurrentTodo;
+    if( mCurrentTodo == mTodos.end() ) {
+      return 0;
+    }
+    return createEntry( *mCurrentTodo );
+  }
 }
 
 #if 0
@@ -133,8 +158,13 @@ void CalendarSyncee::addEntry( SyncEntry *entry )
   } else {
     Event *sourceEvent = dynamic_cast<Event *>(calEntry->incidence());
     if (!sourceEvent) {
-      kdDebug() << "CalendarSyncee::addEntry(): Incidence is not of type Event."
+        Todo *sourceTodo = dynamic_cast<Todo*>(calEntry->incidence());
+        if(!sourceTodo) {
+           kdDebug() << "CalendarSyncee::addEntry(): Incidence is not of type Event or Todo."
                 << endl;
+        }
+        Todo *todo = dynamic_cast<Todo *>(sourceTodo->clone());
+        mCalendar->addTodo(todo);
     } else {
       Event *event = dynamic_cast<Event *>(sourceEvent->clone());
       mCalendar->addEvent(event);
@@ -153,8 +183,12 @@ void CalendarSyncee::removeEntry( SyncEntry *entry )
     if (ev) {
       mCalendar->deleteEvent(ev);
     } else {
-      kdDebug() << "CalendarSyncee::removeEntry(): Incidence has wrong type."
+        Todo *td = dynamic_cast<Todo*>(calEntry->incidence());
+        if(!td) {
+        kdDebug() << "CalendarSyncee::removeEntry(): Incidence has wrong type."
                 << endl;
+        }
+        mCalendar->deleteTodo(td);
     }
   }
 }
