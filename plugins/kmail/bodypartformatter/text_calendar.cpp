@@ -53,10 +53,11 @@
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <kapplication.h>
+#include <ktempfile.h>
 
 #include <qurl.h>
-#include <qfile.h>
 #include <qdir.h>
+#include <qtextstream.h>
 
 using namespace KCal;
 
@@ -533,25 +534,15 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     bool saveFile( const QString& receiver, const QString& iCal,
                    const QString& type ) const
     {
-      QString location = locateLocal( "data", "korganizer/income." + type,
-                                      true );
-      QDir dir;
-      if ( !dir.exists( location ) ) dir.mkdir( location );
-      QString file;
-      do {
-        file = location + "/" + KApplication::randomString( 10 );
-      } while ( QFile::exists( file ) );
-      QFile f( file );
-      if ( !f.open( IO_WriteOnly ) ) {
-        KMessageBox::error( 0, i18n("Could not open file for writing:\n%1")
-                            .arg( file ) );
+      KTempFile file( locateLocal( "data", "korganizer/income." + type + '/',
+                                   true ) );
+      QTextStream* ts = file.textStream();
+      if ( !ts ) {
+        KMessageBox::error( 0, i18n("Could not save file to KOrganizer") );
         return false;
-      } else {
-        const QString message = receiver + '\n' + iCal;
-        QByteArray msgArray = message.utf8();
-        f.writeBlock( msgArray, msgArray.size() );
-        f.close();
       }
+      ts->setEncoding( QTextStream::UnicodeUTF8 );
+      (*ts) << receiver << '\n' << iCal;
       return true;
     }
 
