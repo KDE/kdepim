@@ -605,7 +605,7 @@ list.</para>
 	    <para>
 	      Note that a single <guilabel>User Id</guilabel> might
 	      refer to more than one user. Depending on the &imap;
-	      server and it's configuration, there may be User Ids
+	      server and its configuration, there may be User Ids
 	      that correspond to groups of users, anonymous users, or
 	      any user. Consult the manual of your specific &imap;
 	      server implementation for more information.
@@ -661,7 +661,7 @@ list.</para>
 		mark mails as read and store this information on the
 		server.<!-- --><footnote>
 		  <para>
-		    Every user has it's own list of read mail, so none
+		    Every user has its own list of read mail, so none
 		    of your unread mails will suddenly be marked as
 		    read just because someone else has already read them.
 		  </para>
