@@ -68,7 +68,7 @@ GpgME::Error Kleo::QGpgMEKeyListJob::start( const QStringList & patterns, bool s
   assert( !mPatterns );
 
   // create a new null-terminated C array of char* from patterns:
-  mPatterns = new (const char*)[ patterns.size() + 1 ];
+  mPatterns = new const char * [ patterns.size() + 1 ];
   const char* * pat_it = mPatterns;
   for ( QStringList::const_iterator it = patterns.begin() ; it != patterns.end() ; ++it ) {
     if ( (*it).isEmpty() )

@@ -924,7 +924,7 @@ bool CryptPlug::encryptMessage( const char*  cleartext,
   }
 
   recips.push_back( 0 );
-  const char ** patterns = new (const char*)[ recips.size() ];
+  const char ** patterns = new const char*[ recips.size() ];
   const char ** patterns_it = patterns;
   std::copy( recips.begin(), recips.end(), patterns_it );
   recips.pop_back();

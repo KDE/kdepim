@@ -80,7 +80,7 @@ GpgME::Error Kleo::QGpgMEDownloadJob::start( const QStringList & patterns ) {
   assert( !mKeyData->isNull() );
 
   // create a new null-terminated C array of char* from patterns:
-  mPatterns = new (const char*)[ patterns.size() + 1 ];
+  mPatterns = new const char*[ patterns.size() + 1 ];
   const char* * pat_it = mPatterns;
   for ( QStringList::const_iterator it = patterns.begin() ; it != patterns.end() ; ++it ) {
     if ( (*it).isEmpty() )
