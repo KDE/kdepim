@@ -177,7 +177,7 @@ void IMEditorWidget::loadContact( KABC::Addressee *addr )
 						new IMAddressLVI( mWidget->lvAddresses, protocol, *it, Any/*, false*/ );
 					}
 				}
-				else 
+				else
 					kdDebug( 5720 ) << k_funcinfo << " no protocol found for: " << app << endl;
 			}
 		}
@@ -292,7 +292,7 @@ void IMEditorWidget::slotEdit()
 
 void IMEditorWidget::slotDelete()
 {
-	if ( mWidget->lvAddresses->selectedItem() && KMessageBox::questionYesNo( this, i18n("Do you really want to delete the selected address?"), i18n("Confirm delete") ) == KMessageBox::Yes  )
+	if ( mWidget->lvAddresses->selectedItem() && KMessageBox::warningContinueCancel( this, i18n("Do you really want to delete the selected address?"), i18n("Confirm Delete"), KGuiItem(i18n("&Delete"),"editdelete") ) == KMessageBox::Continue  )
 	{
 		IMAddressLVI * current = static_cast<IMAddressLVI*>( mWidget->lvAddresses->selectedItem() );
 		if ( mChangedProtocols.find( current->protocol() ) == mChangedProtocols.end() )
