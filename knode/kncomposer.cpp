@@ -14,19 +14,6 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include "kngroupmanager.h"
-#include "kngroupselectdialog.h"
-#include "knstringsplitter.h"
-#include "utilities.h"
-#include "knglobals.h"
-#include "kncomposer.h"
-#include "knode.h"
-#include "knmime.h"
-#include "knconfigmanager.h"
-#include "knaccountmanager.h"
-#include "knnntpaccount.h"
-#include "knpgp.h"
-
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qvgroupbox.h>
@@ -49,6 +36,19 @@
 #include <kfiledialog.h>
 #include <kdebug.h>
 
+#include "kngroupmanager.h"
+#include "kngroupselectdialog.h"
+#include "knstringsplitter.h"
+#include "utilities.h"
+#include "knglobals.h"
+#include "kncomposer.h"
+#include "knode.h"
+#include "knmime.h"
+#include "knconfigmanager.h"
+#include "knaccountmanager.h"
+#include "knnntpaccount.h"
+#include "knpgp.h"
+#include "knarticlefactory.h"
 
 
 KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, const QString &unwraped, bool firstEdit)
@@ -868,16 +868,7 @@ void KNComposer::slotToggleDoMail()
           break;                                  // kmail will append one, too.
         tmp+=v_iew->e_dit->textLine(i)+"\n";
       }
-
-      KProcess proc;
-      proc << "kmail";
-      proc << "--subject";
-      proc << v_iew->s_ubject->text();
-      proc << "--body";
-      proc << tmp;
-      proc << v_iew->t_o->text();
-      proc.start(KProcess::DontCare);
-
+      knGlobals.artFactory->sendMailViaKMail(v_iew->t_o->text(), v_iew->s_ubject->text(), tmp);
       a_ctDoMail->setChecked(true); //revert
     } else {
       if (a_ctDoPost->isChecked())

@@ -57,10 +57,11 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     void createSupersede(KNArticle *a);
     void createMail(KNHeaders::AddressField *address);
 
+    // send a mail via KMail...
+    void sendMailViaKMail(const QString &address=QString::null, const QString &subject=QString::null, const QString &body=QString::null);
+
     //article handling
     void edit(KNLocalArticle *a);
-    /*void saveArticles(KNLocalArticle::List *l, KNFolder *f);
-    bool deleteArticles(KNLocalArticle::List *l, bool ask=true);*/
     void sendArticles(KNLocalArticle::List *l, bool now=true);
     void sendOutbox();
 

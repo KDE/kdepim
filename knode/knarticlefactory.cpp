@@ -233,14 +233,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   //-------------------------- </Body> -----------------------------
 
   if (mail && knGlobals.cfgManager->postNewsTechnical()->useKmail()) {
-    KProcess proc;
-    proc << "kmail";
-    proc << "--subject";
-    proc << subject;
-    proc << "--body";
-    proc << quoted;
-    proc << address.asUnicodeString();
-    proc.start(KProcess::DontCare);
+    sendMailViaKMail(address.asUnicodeString(), subject, quoted);
     mail = false;
     art->setDoMail(true);
     if (!post) {
@@ -262,10 +255,10 @@ void KNArticleFactory::createForward(KNArticle *a)
   if(!a)
     return;
 
-
   KNHeaders::ContentType *ct=a->contentType();
   QCString chset;
-  bool incAtt = ( ct->isMultipart() && ct->isSubtype("mixed") &&
+  bool incAtt = ( !knGlobals.cfgManager->postNewsTechnical()->useKmail() &&
+                  ct->isMultipart() && ct->isSubtype("mixed") &&
                   KMessageBox::Yes == KMessageBox::questionYesNo(knGlobals.topWidget,
                   i18n("This article contains attachments. Do you want them to be forwarded too?"))
                 );
@@ -326,6 +319,12 @@ void KNArticleFactory::createForward(KNArticle *a)
 
   //------------------------ </Attachments> ------------------------
 
+
+  if (knGlobals.cfgManager->postNewsTechnical()->useKmail()) {
+    sendMailViaKMail(QString::null, subject, fwd);
+    delete art;
+    return;
+  }
 
   //open composer
   KNComposer *c=new KNComposer(art, fwd, sig, QString::null, true);
@@ -488,10 +487,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
 void KNArticleFactory::createMail(KNHeaders::AddressField *address)
 {
   if (knGlobals.cfgManager->postNewsTechnical()->useKmail()) {
-    KProcess proc;
-    proc << "kmail";
-    proc << address->asUnicodeString();
-    proc.start(KProcess::DontCare);
+    sendMailViaKMail(address->asUnicodeString());
     return;
   }
 
@@ -510,6 +506,24 @@ void KNArticleFactory::createMail(KNHeaders::AddressField *address)
   c_ompList.append(c);
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
+}
+
+
+void KNArticleFactory::sendMailViaKMail(const QString &address, const QString &subject, const QString &body)
+{
+  KProcess proc;
+  proc << "kmail";
+  if (!subject.isEmpty()) {
+    proc << "--subject";
+    proc << subject;
+  }
+  if (!body.isEmpty()) {
+    proc << "--body";
+    proc << body;
+  }
+  if (!address.isEmpty())
+    proc << address;
+  proc.start(KProcess::DontCare);
 }
 
 
@@ -550,48 +564,6 @@ void KNArticleFactory::edit(KNLocalArticle *a)
   connect(com, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   com->show();
 }
-
-
-/*void KNArticleFactory::saveArticles(KNLocalArticle::List &l, KNFolder *f)
-{
-  if(!f->saveArticles(l)) {
-    KNHelper::displayInternalFileError();
-    for(KNLocalArticle *a=l->first(); a; a=l->next())
-      if(a->id()==-1)
-        delete a; //ok, this is ugly - we simply delete orphant articles
-  }
-}
-
-
-bool KNArticleFactory::deleteArticles(KNLocalArticle::List *l, bool ask)
-{
-  if(l->isEmpty())
-    return true;
-
-  if(ask) {
-    QStringList lst;
-    for(KNLocalArticle *a=l->first(); a; a=l->next()) {
-      if(a->isLocked())
-        continue;
-      if(a->subject()->isEmpty())
-        lst << i18n("no subject");
-      else
-        lst << a->subject()->asUnicodeString();
-    }
-    if( KMessageBox::No == KMessageBox::questionYesNoList(
-      knGlobals.topWidget, i18n("Do you really want to delete these articles?"), lst) )
-      return false;
-  }
-
-  KNFolder *f=static_cast<KNFolder*>(l->first()->collection());
-  if(f)
-    f->removeArticles(l, true);
-  else {
-    for(KNLocalArticle *a=l->first(); a; a=l->next())
-      delete a;
-  }
-  return true;
-}*/
 
 
 void KNArticleFactory::sendArticles(KNLocalArticle::List *l, bool now)
@@ -760,13 +732,6 @@ void KNArticleFactory::processJob(KNJobData *j)
     //article has been sent successfully => move it to the "Sent-folder"
 
     knGlobals.artManager->saveInFolder(lst, knGlobals.folManager->sent());
-    /*if(!knGlobals.folManager->sent()->saveArticles(&lst)) {
-      displayInternalFileError();
-      KNHelper::displayInternalFileError();
-      if(art->collection()==0)
-        delete art;
-    } */
-
   }
 }
 
