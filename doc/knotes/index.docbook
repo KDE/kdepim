@@ -165,8 +165,21 @@ on.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Current Font: Click to Change</guilabel></term>
-<listitem><para>Click this button to open the standard &kde; font selection
+<term><guilabel>Title Font: Click to Change</guilabel>
+<listitem><para>You can change the font used for the title of your
+notes.</para>
+
+<para>Click this button to open the standard &kde; font selection
+dialog.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Text Font: Click to Change</guilabel></term>
+<listitem>
+<para>You can change the font used for the text of your notes.</para>
+
+<para>Click this button to open the standard &kde; font selection
 dialog.</para></listitem>
 </varlistentry>
 </variablelist>
@@ -198,7 +211,7 @@ the filename of the note body to the mail command.</para>
 </listitem>
 </varlistentry>
 
-<!-- LW: Removed for KDE 3.0. May be back?
+<!-- 
 <varlistentry>
 <term><guilabel>Print</guilabel></term>
 <listitem><para>Type a printing command and any required command line switches
@@ -226,7 +239,7 @@ in this box.</para>
 <procedure>
 <step><para><mousebutton>Right</mousebutton> click on the &knotes; panel
 icon.</para></step>
-<step><para>Select New Note.</para></step>
+<step><para>Select <guimenuitem>New Note</guimenuitem>.</para></step>
 </procedure>
 
 </sect1>
@@ -312,9 +325,11 @@ bar.</para></step>
 bar.</para></step>
 <step><para>Select <guimenuitem>Print</guimenuitem>.</para></step>
 </procedure>
-
+<!-- 
 <para>What happens next depends on how you configured the Print action in the
-<guilabel>Preferences...</guilabel> dialog.</para>
+<guilabel>Preferences...</guilabel> dialog.</para> -->
+
+<para>A standard &kdeprint; dialog will open.</para>
 
 </sect1>
 
@@ -345,7 +360,7 @@ screen.  The note itself will not be deleted.</para>
 hide a note and later want to display it:</para>
 
 <procedure>
-<step><para>Right-click on the &knotes; panel icon.</para></step>
+<step><para><mousebutton>Right</mousebutton> click on the &knotes; panel icon.</para></step>
 <step><para>Select <guimenuitem>Notes</guimenuitem>.</para></step>
 <step><para>Choose the note you want to display.</para></step>
 </procedure>
@@ -481,5 +496,3 @@ End:
 
 // vim:ts=2:sw=2:tw=78:noet
 -->
-
-
