@@ -36,6 +36,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
+#include <kmacroexpander.h>
 
 #include <libkcal/calendarlocal.h>
 #include <libkcal/resourcecalendar.h>
@@ -288,6 +289,7 @@ bool KonsoleKalendar::showInstance()
 bool KonsoleKalendar::printEventList( QTextStream *ts,
                                       Event::List *eventList, QDate date )
 {
+  
   bool status = true;
 
   if ( eventList->count() ) {
@@ -302,15 +304,53 @@ bool KonsoleKalendar::printEventList( QTextStream *ts,
       status = printEvent( ts, singleEvent, date );
     }
   }
+  
   return( status );
 }
 
 bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt )
 {
   bool status = false;
-  bool sameDay = true;
-  KonsoleKalendarExports exports;
-
+  //bool sameDay = true;
+  //KonsoleKalendarExports exports;
+  QString output;
+  QString floating = "location %location, summary %summary\r\n";
+  QString sameday = "time is %start-time, location %location, summary %summary\r\n";
+  QString newday = "date is %start-date, time is %start-time, location %location, summary %summary\r\n";
+  
+  QMap<QString, QString> macros;
+  
+  
+  macros["start-date"] = KGlobal::locale()->formatDate( event->dtStart().date() );
+  macros["end-date"] = KGlobal::locale()->formatDate( event->dtEnd().date() );
+  
+  if ( !event->doesFloat() ) {
+   macros["start-time"] = KGlobal::locale()->formatTime( event->dtStart().time() );
+   macros["end-time"] = KGlobal::locale()->formatTime( event->dtEnd().time() );
+  } // if
+  
+  macros["summary"] = event->summary();
+  macros["description"] = event->description();
+  macros["location"] = event->location();
+  macros["UID"] = event->uid();
+  
+  if ( event->doesFloat() ) {
+        output = KMacroExpander::expandMacros( floating, macros, '%' );
+  } else {
+      if ( dt.daysTo( m_saveDate ) ) {
+        output = KMacroExpander::expandMacros( newday, macros, '%' );
+      } else {
+        output = KMacroExpander::expandMacros( sameday, macros, '%' );
+      }
+  }
+  
+  *ts << output ;
+    
+  
+  /* TODO
+   * Left for backup (IF EVERYTHING GOES WRONG) 
+   *
+   *
   if ( event )
   {
     switch ( m_variables->getExportType() ) {
@@ -345,7 +385,7 @@ bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt )
       status = exports.exportAsTxt( ts, event, dt );
       break;
     }
-  }
+  }*/
   return( status );
 }
 
