@@ -88,7 +88,7 @@ static const char *memowidget_id =
 #ifndef _KPILOT_PILOTLOCALDATABASE_H
 #include "pilotLocalDatabase.h"
 #endif
-
+#include "pilotMemo.h"
 
 #include "memoWidget.moc"
 

@@ -28,34 +28,35 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#ifndef KTEXTEDIT_H
-#include <ktextedit.h>
-#endif
-
-#ifndef QCOMBOBOX_H
-#include <qcombobox.h>
-#endif
-
 #include <time.h>
 
 #ifndef _PILOT_MEMO_H_
 #include <pi-memo.h>
 #endif
 
+#ifndef KDE_VERSION
+#include <kdeversion.h>
+#endif
+
+#if KDE_VERSION >= 0x30100
+#include <ktextedit.h>
+#else
+#define KTextEdit QTextEdit
+#include <qtextedit.h>
+#endif
+
+#include <qptrlist.h>
+
 class KPilotInstaller;
 class QListBox;
+class QComboBox;
+class QPushButton;
 
-
-#ifndef _KPILOT_PILOTMEMO_H
-#include "pilotMemo.h"
-#endif
+class PilotMemo;
+class PilotListItem;
 
 #ifndef _KPILOT_PILOTCOMPONENT_H
 #include "pilotComponent.h"
-#endif
-
-#ifndef _KPILOT_LISTITEMS_H
-#include "listItems.h"
 #endif
 
 class MemoWidget : public PilotComponent
@@ -71,8 +72,8 @@ public:
 	void postHotSync();
 
 	// Added by David Bishop, please move to correct location!
-	bool saveAsXML(const QString &fileName,const QList<PilotListItem> &menu_item );
-	bool saveAsText(const QString &fileName,const QList<PilotListItem> &menu_item );
+	bool saveAsXML(const QString &fileName,const QPtrList<PilotListItem> &menu_item );
+	bool saveAsText(const QString &fileName,const QPtrList<PilotListItem> &menu_item );
 	
 	typedef enum { 
 		MAX_MEMO_LEN = 8192 
@@ -104,7 +105,7 @@ private:
   
 	KTextEdit*		fTextWidget;
 	struct MemoAppInfo	fMemoAppInfo;
-	QList<PilotMemo>	fMemoList;
+	QPtrList<PilotMemo>	fMemoList;
 	QListBox*		fListBox;
 
 	QPushButton *fExportButton,*fDeleteButton;
