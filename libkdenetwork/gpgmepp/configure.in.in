@@ -63,12 +63,12 @@ AC_DEFUN([KDEPIM_PATH_GPGME],
   if test $ok = yes; then
     GPGME_CFLAGS=`$GPGME_CONFIG --cflags`
     GPGME_LIBS=`$GPGME_CONFIG --libs`
-    AC_MSG_RESULT(yes)
+    AC_MSG_RESULT([yes])
     ifelse([$2], , :, [$2])
   else
     GPGME_CFLAGS=""
     GPGME_LIBS=""
-    AC_MSG_RESULT(no)
+    AC_MSG_RESULT([no, will use local libgpgme-copy])
     ifelse([$3], , :, [$3])
   fi
   AC_SUBST(GPGME_CFLAGS)
