@@ -1,6 +1,13 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=SLOX Calendar Resource
+Name[da]=SLOX kalenderressource
+Name[et]=SLOX kalendriressurss
+Name[nl]=SLOX Agendahulpbron
+Name[sl]=Koledarski vir SLOX
+Name[sv]=SLOX-kalenderresurs
+Name[ta]=SLOX நாள்காட்டி வளம்
+Name[xx]=xxSLOX Calendar Resourcexx
 X-KDE-Library=kcal_slox
 Type=Service
 ServiceTypes=KResources/Plugin
