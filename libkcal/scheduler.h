@@ -106,6 +106,9 @@ class Scheduler {
     static QString methodName(Method);
 
   protected:
+  
+    virtual bool deleteTransaction(Incidence *incidence);
+
     Calendar *mCalendar;
     ICalFormat *mFormat;
 };

@@ -69,12 +69,14 @@ bool Scheduler::acceptTransaction(Incidence *incidence,ScheduleMessage::Status s
     case ScheduleMessage::PublishNew:
       if (!mCalendar->getEvent(incidence->VUID())) {
         mCalendar->addIncidence(incidence);
+        deleteTransaction(incidence);
       }
       return true;
     case ScheduleMessage::Obsolete:
       return true;
     case ScheduleMessage::RequestNew:
       mCalendar->addIncidence(incidence);
+      deleteTransaction(incidence);
       return true;
     default:
       return false;
@@ -103,4 +105,9 @@ QString Scheduler::methodName(Method method)
     default:
       return i18n("Unknown");
   }
+}
+
+bool Scheduler::deleteTransaction(Incidence *)
+{
+  return true;
 }
