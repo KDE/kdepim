@@ -573,10 +573,19 @@ to be used for new contacts.</para></listitem>
 <para>On this page you can configure the LDAP servers that should be used
 for <link linkend="ldap-queries">ldap queries</link> in &kaddressbook;.</para>
 
-<para>Use <guibutton>Add Host...</guibutton> to add and setting up a new server.
-You can include and exclude servers by selecting or deselecting their check boxes
-in the server list. Press <guibutton>OK</guibutton> to close the dialog.
+<para>Use <guibutton>Add Host...</guibutton> to add and setup a new server.</para>
+<screenshot>
+<screeninfo>Configuring LDAP Lookup for Kolab</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="addhost.png" format="PNG"/></imageobject>
+<textobject><phrase>Example of LDAP Lookup configuration (Kolab).</phrase></textobject>
+<caption><para>The Add Host dialog - Example of LDAP Lookup configuration (Kolab).</para></caption>
+</mediaobject>
+</screenshot>
+<para>
+You can include and exclude servers from the search by selecting or deselecting their check boxes. In the server list. Press <guibutton>OK</guibutton> to close the dialog.
 </para>
+<para>You may configure the search order by moving up or down the servers in the list. This can be done using the corresponding arrows on the right side of the dialog.</para>
 </sect2>
 </sect1>
 </chapter>
