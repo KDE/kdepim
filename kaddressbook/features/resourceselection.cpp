@@ -195,6 +195,9 @@ void ResourceSelection::currentChanged( QListViewItem *item )
   mRemoveButton->setEnabled( state );
 
   ResourceItem *resItem = static_cast<ResourceItem*>( item );
+  if ( !resItem )
+    return;
+
   KABC::Resource *resource = resItem->resource();
 
   if ( resItem->checked() != resItem->isOn() ) {
