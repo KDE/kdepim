@@ -43,6 +43,17 @@ Attendee::~Attendee()
 }
 
 
+bool KCal::operator==( const Attendee& a1, const Attendee& a2 )
+{
+    return ( operator==( (const Person&)a1, (const Person&) a2 ) &&
+             a1.RSVP() == a2.RSVP() &&
+             a1.role() == a2.role() &&
+             a1.status() == a2.status() &&
+             a1.uid() == a2.uid() );
+}
+
+
+
 void Attendee::setStatus(Attendee::PartStat s)
 {
   mStatus = s;
@@ -121,7 +132,7 @@ void Attendee::setUid(QString uid)
 mUid = uid;
 }
 
-QString Attendee::uid()
+QString Attendee::uid() const
 {
 return mUid;
 }

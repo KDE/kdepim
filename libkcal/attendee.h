@@ -62,7 +62,7 @@ class Attendee : public Person
     static QStringList roleList();
 
     /** Holds the uid of the attendee, if applicable **/
-    QString uid();
+    QString uid() const;
     void setUid (QString);
 
     /** Set status. See enum for definitions of possible values */
@@ -88,6 +88,8 @@ class Attendee : public Person
     // used to tell whether we have need to mail this person or not.
     bool mFlag;
 };
+
+    bool operator==( const Attendee& a1, const Attendee& a2 );
 
 }
 
