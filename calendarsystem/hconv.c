@@ -41,6 +41,12 @@ const char  *hmname[] = {
 	"Jumaada al-Awal", "Jumaada al-Thaani", "Rajab", "Sha`ban",
 	"Ramadan", "Shawwal", "Zul al-Qi`dah", "Zul al-Hijjah"
 };
+
+const char  *hmnameshort[] = {
+	"Muharram", "Safar", "R. Awal", "R. Thaani",
+	"J. Awal", "J. Thaani", "Rajab", "Sha`ban",
+	"Ramadan", "Shawwal", "Z. Qi`dah", "Z. Hijjah"
+};
 /*
  * Given an integer _n_ and a phase selector (nph=0,1,2,3 for
  * new,first,full,last quarters respectively, function returns the

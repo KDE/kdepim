@@ -24,10 +24,10 @@ KCalendarSystemGregorian::~KCalendarSystemGregorian()
 {
 }
 
-QString KCalendarSystemGregorian::monthName(const QDate& date)
+QString KCalendarSystemGregorian::monthName(const QDate& date, bool shortName)
 {
   kdDebug(5400) << "Gregorian month..." << endl;
-  QString q = KGlobal::locale()->monthName(date.month(),false) ;
+  QString q = KGlobal::locale()->monthName(date.month(), shortName) ;
 
   return q;
 }
@@ -55,6 +55,7 @@ void KCalendarSystemGregorian::nextMonthDate(QDate& temp)
   } else {
     temp.setYMD(temp.year(), temp.month()+1, 1);
   }
+
   if(temp.daysInMonth()<day) {
     temp.setYMD(temp.year(), temp.month(), temp.daysInMonth());
   } else {
@@ -191,6 +192,11 @@ int KCalendarSystemGregorian::maxValidYear()
 int KCalendarSystemGregorian::day(const QDate& date)
 {
   return date.day();
+}
+
+int KCalendarSystemGregorian::month(const QDate& date)
+{
+  return date.month();
 }
 
 int KCalendarSystemGregorian::numberOfDayInYear(const QDate& date)

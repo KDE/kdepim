@@ -30,7 +30,7 @@ public:
      @param date gregorian date
      @return month name 
     */
-  virtual QString monthName (const QDate & date) = 0;
+  virtual QString monthName (const QDate & date, bool shortName = false ) = 0;
 
     /**
      Gets specific calendar type year for a given gregorian date
@@ -39,6 +39,15 @@ public:
      @return year 
     */
   virtual int year (const QDate & date) = 0;
+
+
+    /**
+     Gets specific calendar type month for a given gregorian date
+
+     @param date gregorian date
+     @return  month
+    */
+  virtual int month (const QDate & date) = 0;
 
     /**
      Gets specific calendar type day/month/year formatted text date for a given gregorian date
@@ -185,8 +194,9 @@ public:
   KCalendarSystemGregorian ();
   virtual ~ KCalendarSystemGregorian ();
 
-  QString monthName (const QDate & date);
+  QString monthName (const QDate & date, bool shortName);
   int year (const QDate & date);
+  int month (const QDate & date);
   QString formatDate (const QDate & date);
   void nextMonthDate (QDate & date);
   void previousMonthDate (QDate & date);

@@ -25,13 +25,16 @@ KCalendarSystemHijri::~KCalendarSystemHijri()
 {
 }
 
-QString KCalendarSystemHijri::monthName(const QDate& date)
+QString KCalendarSystemHijri::monthName(const QDate& date, bool shortName)
 {
   kdDebug(5400) << "Arabic month..." <<  endl;
   // firstly, get hijri date from gregorian one
   SDATE  *sd;
   sd = hdate(date.year(), date.month(), date.day());
-  return QString(hmname[sd->mon-1]);
+  if ( shortName )
+  	return QString(hmnameshort[sd->mon-1]);
+  else 
+  	return QString(hmname[sd->mon-1]);
 }
 
 int KCalendarSystemHijri::year(const QDate& date)
@@ -102,7 +105,7 @@ void KCalendarSystemHijri::previousMonthDate(QDate& date)
   } else {
     //temp.setYMD(temp.year(), temp.month()-1, 1);
     sd->mon-=1;
-    sd->day = 1;
+    //sd->day = 1;
   }
   if(hndays(sd->mon, sd->year)<day) {
     //temp.setYMD(temp.year(), temp.month(), temp.daysInMonth());
@@ -113,7 +116,6 @@ void KCalendarSystemHijri::previousMonthDate(QDate& date)
   }
   // get back gregorian date from new hijri
   gd = gdate( sd -> year, sd -> mon, sd -> day);
-  kdDebug(5400) << "setting YMD " << gd->year << " , " << gd->mon << " , " << gd->day << endl;
   date.setYMD(gd->year, gd->mon, gd->day);
 }
 
@@ -258,7 +260,7 @@ QString KCalendarSystemHijri::weekDayName(int day, bool shortName)
 int KCalendarSystemHijri::dayOfTheWeek(const QDate& date)
 {
   //kdDebug(5400) << "Hijri dayOfTheWeek" << endl;
-  SDATE  *sd, *gd, *sd1;
+  SDATE  *sd;
   // firstly, we get hijri date from actual gregorian date
   sd = hdate(date.year(), date.month(), date.day());
   if( sd->dw == 0 ) 
@@ -328,6 +330,15 @@ int KCalendarSystemHijri::day(const QDate& date)
   sd = hdate(date.year(), date.month(), date.day());
 
   return sd->day;
+}
+
+int KCalendarSystemHijri::month(const QDate& date)
+{
+  SDATE  *sd;
+  // firstly, we get hijri date from actual gregorian date
+  sd = hdate(date.year(), date.month(), date.day());
+
+  return sd->mon;
 }
 
 int KCalendarSystemHijri::numberOfDayInYear(const QDate& date)
