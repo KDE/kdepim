@@ -639,7 +639,7 @@ void AddresseeEditorWidget::nameBoxChanged()
 
   if ( mFormattedNameType != NameEditDialog::CustomName ) {
     mFormattedNameLabel->setText( NameEditDialog::formattedName( mAddressee, mFormattedNameType ) );
-    mAddressee.setFormattedName( mFormattedNameLabel->text() );
+    mAddressee.setFormattedName( NameEditDialog::formattedName( mAddressee, mFormattedNameType ) );
   }
 }
 
