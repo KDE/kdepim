@@ -52,7 +52,7 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   mFieldCombo = new QComboBox( false, this );
   layout->addWidget( mFieldCombo );
 
-  QToolTip::add( mFieldCombo, i18n( "Select Incremental Search Field" ) );
+  QToolTip::add( mFieldCombo, i18n( "Select incremental search field" ) );
   QWhatsThis::add( mFieldCombo, i18n( "Here you can choose the field, which shall be used for incremental search." ) );
 
   resize( QSize(420, 50).expandedTo( sizeHint() ) );

@@ -85,7 +85,7 @@ PopMailSendPage::PopMailSendPage(QWidget *parent) :
 		this,"sb");
 
 	fNoSend=new QRadioButton(i18n("&Do not send mail"),sendGroup);
-	fSendmail=new QRadioButton(i18n("Use &Sendmail"),sendGroup);
+	fSendmail=new QRadioButton(i18n("Use &sendmail"),sendGroup);
 	fSMTP=new QRadioButton(i18n("Use S&MTP"),sendGroup);
 	fKMail=new QRadioButton(i18n("Use &KMail"),sendGroup);
 

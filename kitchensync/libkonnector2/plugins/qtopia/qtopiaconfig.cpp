@@ -128,7 +128,7 @@ void QtopiaConfig::initUI()
   m_name = new QLineEdit(this);
   m_name->setEnabled( false );
 
-  m_lblIP = new QLabel( i18n("Destination Address:"), this );
+  m_lblIP = new QLabel( i18n("Destination address:"), this );
 
   m_cmbIP = new QComboBox(this);
   m_cmbIP->setEditable( true );

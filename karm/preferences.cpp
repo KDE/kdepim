@@ -114,7 +114,7 @@ void Preferences::makeStoragePage()
   _autoSaveValueW->setSuffix(i18n(" minutes"));
 
   // iCalendar
-  QLabel* _iCalFileLabel = new QLabel( i18n("iCalendar File:"), storagePage);
+  QLabel* _iCalFileLabel = new QLabel( i18n("iCalendar file:"), storagePage);
   _iCalFileW = new KURLRequester(storagePage, "_iCalFileW");
   _iCalFileW->setFilter(QString::fromLatin1("*.ics"));
 

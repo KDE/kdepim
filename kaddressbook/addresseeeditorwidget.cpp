@@ -1,4 +1,4 @@
-/*                                                                      
+/*
     This file is part of KAddressBook.                                  
     Copyright (c) 2002 Mike Pilone <mpilone@slac.com>                   
                                                                         
@@ -155,7 +155,7 @@ void AddresseeEditorWidget::setupTab1()
   layout->addMultiCellWidget( label, 0, 1, 0, 0 );
   
   // First name
-  button = new QPushButton( i18n( "Name..." ), tab1 );
+  button = new QPushButton( i18n( "Edit Name..." ), tab1 );
   QToolTip::add( button, i18n( "Edit the contact's name" ) );
   mNameEdit = new KLineEdit( tab1, "mNameEdit" );
   connect( mNameEdit, SIGNAL( textChanged( const QString& ) ), 
@@ -265,7 +265,7 @@ void AddresseeEditorWidget::setupTab1()
   categoryBox->setSpacing( KDialogBase::spacingHint() );
   
   // Categories
-  mCategoryButton = new QPushButton( i18n( "Categories" ), categoryBox );
+  mCategoryButton = new QPushButton( i18n( "Select Categories..." ), categoryBox );
   connect( mCategoryButton, SIGNAL( clicked() ), SLOT( categoryButtonClicked() ) );
 
   mCategoryEdit = new KLineEdit( categoryBox );

@@ -118,7 +118,7 @@ void FilterEditDialog::initGUI()
 
   QGridLayout *topLayout = new QGridLayout( page, 3, 2, 0, spacingHint() );
 
-  label = new QLabel( i18n( "Name" ), page );
+  label = new QLabel( i18n( "Name:" ), page );
   mNameEdit = new KLineEdit( page );
   mNameEdit->setFocus();
   topLayout->addWidget( label, 0, 0 );
