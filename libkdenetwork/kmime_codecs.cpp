@@ -35,6 +35,7 @@
 #include "kmime_codec_base64.h"
 #include "kmime_codec_qp.h"
 #include "kmime_codec_uuencode.h"
+#include "kmime_codec_identity.h"
 
 #include <kdebug.h>
 
@@ -57,12 +58,15 @@ void Codec::fillDictionary() {
 
   all.setAutoDelete(true);
 
+  all.insert( "7bit", new SevenBitCodec() );
+  all.insert( "8bit", new EightBitCodec() );
   all.insert( "base64", new Base64Codec() );
   all.insert( "quoted-printable", new QuotedPrintableCodec() );
   all.insert( "b", new Rfc2047BEncodingCodec() );
   all.insert( "q", new Rfc2047QEncodingCodec() );
   all.insert( "x-kmime-rfc2231", new Rfc2231EncodingCodec() );
   all.insert( "x-uuencode", new UUCodec() );
+  all.insert( "binary", new BinaryCodec() );
 
 }
 

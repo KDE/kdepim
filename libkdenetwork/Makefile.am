@@ -35,6 +35,7 @@ libkdenetwork_la_SOURCES = kscoring.cpp \
 			  kmime_codec_base64.cpp \
 			  kmime_codec_uuencode.cpp \
 			  kmime_codec_qp.cpp \
+			  kmime_codec_identity.cpp \
 			  kmime_parsers.cpp \
 			  kmime_header_parsing.cpp \
 			  kmime_content.cpp \
