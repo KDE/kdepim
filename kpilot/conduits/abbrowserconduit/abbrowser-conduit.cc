@@ -414,8 +414,13 @@ bool AbbrowserConduit::_smartMerge(PilotAddress &outPilotAddress,
     bool mergeNeeded = false;
     QString mergedStr;
 
-    if (_conflict(pilotAddress.getCategoryLabel(),
-		  abEntry.getFolder(), mergeNeeded, mergedStr))
+    QString piFolder = pilotAddress.getCategoryLabel();
+    if (piFolder == "Unfiled")
+	piFolder = QString::null;
+    QString abFolder = abEntry.getFolder();
+    if (abFolder == "Unfiled")
+	abFolder = QString::null;
+    if (_conflict(piFolder, abFolder, mergeNeeded, mergedStr))
 	return false;
     if (mergeNeeded)
 	{
@@ -1246,6 +1251,7 @@ void AbbrowserConduit::doSync()
      // delete anything in pilot that is not in abbrowser
      //   (this assumes a backup has been done prior to the sync)
      _saveAbChanges();
+     _stopAbbrowser(abAlreadyRunning);
      _backupDone();
     }
 
