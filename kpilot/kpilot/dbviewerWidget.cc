@@ -30,6 +30,9 @@
 
 #include "options.h"
 
+#include <unistd.h>
+#include <stdio.h>
+
 #include <pi-file.h>
 #include <pi-dlp.h>
 

@@ -44,6 +44,7 @@
 // #define DEBUG_CERR			(1)
 
 #include "config.h"
+#include <unistd.h>     /* For size_t for pilot-link */
 #include <qglobal.h>
 #include <pi-version.h>
 

@@ -205,6 +205,8 @@ public:
 		SyncAction::SyncMode m,
 		bool local = false);
 
+	static QStringList flagsForMode(SyncAction::SyncMode m);
+
 protected:
 	virtual bool exec();
 protected slots:

@@ -99,6 +99,37 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	FUNCTIONSETUP;
 }
 
+/* static */ QStringList ConduitProxy::flagsForMode(SyncAction::SyncMode m)
+{
+	QStringList l;
+	switch(m)
+	{
+	case eBackup :
+		l.append(CSL1("--backup"));
+		break;
+	case eTest:
+		l.append(CSL1("--test"));
+		break;
+	case eFastSync: /* FALLTHRU */
+	case eHotSync:
+		/* Nothing to do for fast or hotsync */
+		break;
+	case eFullSync:
+		l.append(CSL1("--full"));
+		break;
+	case eCopyHHToPC:
+		l.append(CSL1("--copyHHToPC"));
+		break;
+	case eCopyPCToHH:
+		l.append(CSL1("--copyPCToHH"));
+		break;
+	case eRestore:
+		kdWarning() << k_funcinfo << ": Running conduits during restore." << endl;
+		l.append(CSL1("--test"));
+		break;
+	}
+}
+
 /* virtual */ bool ConduitProxy::exec()
 {
 	FUNCTIONSETUP;
@@ -141,34 +172,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 		return true;
 	}
 
-	QStringList l;
-	switch(fMode)
-	{
-	case eBackup :
-		l.append(CSL1("--backup"));
-		break;
-	case eTest:
-		l.append(CSL1("--test"));
-		break;
-	case eFastSync: /* FALLTHRU */
-	case eHotSync:
-		/* Nothing to do for fast or hotsync */
-		break;
-	case eFullSync:
-		l.append(CSL1("--full"));
-		break;
-	case eCopyHHToPC:
-		l.append(CSL1("--copyHHToPC"));
-		break;
-	case eCopyPCToHH:
-		l.append(CSL1("--copyPCToHH"));
-		break;
-	case eRestore:
-		kdWarning() << k_funcinfo << ": Running conduit "
-			<< fDesktopName << " on restore." << endl;
-		l.append(CSL1("--test"));
-		break;
-	}
+	QStringList l = flagsForMode(fMode);
 
 	if (fLocal)
 	{
@@ -205,18 +209,6 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	}
 
 	addSyncLogEntry(i18n("[Conduit %1]").arg(fDesktopName));
-
-	QString conduitFlags = i18n("Running with flags: ");
-	conduitFlags.append(l.join(CSL1(" ")));
-#if 0
-	for (QStringList::ConstIterator i = l.begin() ; i!=l.end(); ++i)
-	{
-		conduitFlags.append(*i);
-		conduitFlags.append(CSL1("  "));
-	}
-#endif
-
-	logMessage(conduitFlags);
 
 	// Handle the syncDone signal properly & unload the conduit.
 	QObject::connect(fConduit,SIGNAL(syncDone(SyncAction *)),

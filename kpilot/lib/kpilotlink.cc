@@ -28,10 +28,7 @@ static const char *kpilotlink_id = "$Id$";
 
 #include "options.h"
 
-#include <pi-source.h>
-#include <pi-socket.h>
-#include <pi-dlp.h>
-#include <pi-file.h>
+
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -41,6 +38,12 @@ static const char *kpilotlink_id = "$Id$";
 #include <errno.h>
 
 #include <iostream>
+
+#include <pi-source.h>
+#include <pi-socket.h>
+#include <pi-dlp.h>
+#include <pi-file.h>
+
 
 #include <qdir.h>
 #include <qtimer.h>
