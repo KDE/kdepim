@@ -28,6 +28,7 @@
 // $Id$
 
 #include <dcopobject.h>
+#include <qstringlist.h>
 
 class AlarmDaemonIface : virtual public DCOPObject
 {
@@ -53,7 +54,7 @@ class AlarmDaemonIface : virtual public DCOPObject
 
     virtual ASYNC forceAlarmCheck() = 0;
     virtual ASYNC dumpDebug() = 0;
-    virtual ASYNC dumpAlarms() = 0;
+    virtual QStringList dumpAlarms() = 0;
 };
 
 enum AlarmGuiChangeType    // parameters to GUI client notification

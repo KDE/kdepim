@@ -81,7 +81,7 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     void    quit();
     void    forceAlarmCheck() { checkAlarms(); }
     void    dumpDebug();
-    void    dumpAlarms();
+    QStringList    dumpAlarms();
 
   private:
 

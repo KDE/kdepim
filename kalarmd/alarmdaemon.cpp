@@ -682,25 +682,27 @@ const AlarmDaemon::GuiInfo* AlarmDaemon::getGuiInfo(const QCString& appName) con
   return 0;
 }
 
-void AlarmDaemon::dumpAlarms()
+QStringList AlarmDaemon::dumpAlarms()
 {
   QDateTime start = QDateTime( QDateTime::currentDateTime().date(),
                                QTime( 0, 0 ) );
   QDateTime end = start.addDays( 1 ).addSecs( -1 );
 
-  kdDebug(5900) << "AlarmDeamon::dumpAlarms() from " << start.toString()
-            << " to " << end.toString() << endl;
+  QStringList lst;
+  // Don't translate, this is for debugging purposes.
+  lst << QString("AlarmDeamon::dumpAlarms() from ")+start.toString()+ " to " + end.toString();
 
   CalendarList cals = calendars();
   ADCalendarBase *cal;
   for( cal = cals.first(); cal; cal = cals.next() ) {
-    kdDebug(5900) << "  Cal: " << cal->urlString() << endl;
+    lst << QString("  Cal: ") + cal->urlString();
     QValueList<Alarm*> alarms = cal->alarms( start, end );
     QValueList<Alarm*>::ConstIterator it;
     for( it = alarms.begin(); it != alarms.end(); ++it ) {
       Alarm *a = *it;
-      kdDebug(5900) << "    " << a->parent()->summary() << " ("
-                << a->time().toString() << ")" << endl;
+      lst << QString("    ") + a->parent()->summary() + " ("
+                + a->time().toString() + ")";
     }
   }
+  return lst;
 }
