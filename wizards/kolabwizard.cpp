@@ -28,9 +28,9 @@
 #include <libkcal/resourcecalendar.h>
 #include <kabc/resource.h>
 
-#include "kresources/imap/kcal/resourceimap.h"
-#include "kresources/imap/kabc/resourceimap.h"
-#include "kresources/imap/knotes/resourceimap.h"
+#include "kresources/kolab/kcal/resourcekolab.h"
+#include "kresources/kolab/kabc/resourcekolab.h"
+#include "kresources/kolab/knotes/resourcekolab.h"
 
 #include <qwhatsthis.h>
 #include <klineedit.h>
@@ -66,11 +66,11 @@ class SetupLDAPSearchAccount : public KConfigPropagator::Change
 
 };
 
-class CreateCalenderImapResource : public KConfigPropagator::Change
+class CreateCalendarKolabResource : public KConfigPropagator::Change
 {
   public:
-    CreateCalenderImapResource()
-      : KConfigPropagator::Change( i18n("Create Calender IMAP Resource") )
+    CreateCalendarKolabResource()
+      : KConfigPropagator::Change( i18n("Create Calendar Kolab Resource") )
     {
     }
 
@@ -78,19 +78,20 @@ class CreateCalenderImapResource : public KConfigPropagator::Change
     {
       KCal::CalendarResourceManager m( "calendar" );
       m.readConfig();
-      QString server = KolabConfig::self()->server();
-      KCal::ResourceIMAP *r = new KCal::ResourceIMAP( server );
+      //QString server = KolabConfig::self()->server();
+      KCal::ResourceKolab *r = new KCal::ResourceKolab( 0 );
       r->setResourceName( i18n("Kolab Server") );
+      r->setName( "kolab-resource" );
       m.add( r );
       m.writeConfig();
     }
 };
 
-class CreateContactImapResource : public KConfigPropagator::Change
+class CreateContactKolabResource : public KConfigPropagator::Change
 {
   public:
-    CreateContactImapResource()
-      : KConfigPropagator::Change( i18n("Create Contact IMAP Resource") )
+    CreateContactKolabResource()
+      : KConfigPropagator::Change( i18n("Create Contact Kolab Resource") )
     {
     }
 
@@ -98,19 +99,20 @@ class CreateContactImapResource : public KConfigPropagator::Change
     {
       KRES::Manager<KABC::Resource> m( "contact" );
       m.readConfig();
-      KABC::ResourceIMAP *r = new KABC::ResourceIMAP( 0 );
+      KABC::ResourceKolab *r = new KABC::ResourceKolab( 0 );
       r->setResourceName( i18n("Kolab Server") );
+      r->setName( "kolab-resource" );
       m.add( r );
       m.writeConfig();
     }
 
 };
 
-class CreateNotesImapResource : public KConfigPropagator::Change
+class CreateNotesKolabResource : public KConfigPropagator::Change
 {
   public:
-    CreateNotesImapResource()
-      : KConfigPropagator::Change( i18n("Create Notes IMAP Resource") )
+    CreateNotesKolabResource()
+      : KConfigPropagator::Change( i18n("Create Notes Kolab Resource") )
     {
     }
 
@@ -118,8 +120,9 @@ class CreateNotesImapResource : public KConfigPropagator::Change
     {
       KRES::Manager<ResourceNotes> m( "notes" );
       m.readConfig();
-      KNotesIMAP::ResourceIMAP *r = new KNotesIMAP::ResourceIMAP( 0 );
+      Kolab::ResourceKolab *r = new Kolab::ResourceKolab( 0 );
       r->setResourceName( i18n("Kolab Server") );
+      r->setName( "kolab-resource" );
       m.add( r );
       m.writeConfig();
     }
@@ -173,12 +176,12 @@ class KolabPropagator : public KConfigPropagator
       m.readConfig();
       KCal::CalendarResourceManager::Iterator it;
       for ( it = m.begin(); it != m.end(); ++it ) {
-        if ( (*it)->type() == "imap" ) break;
+        if ( (*it)->type() == "kolab" ) break;
       }
       if ( it == m.end() ) {
-        changes.append( new CreateCalenderImapResource );
-        changes.append( new CreateContactImapResource );
-        changes.append( new CreateNotesImapResource );
+        changes.append( new CreateCalendarKolabResource );
+        changes.append( new CreateContactKolabResource );
+        changes.append( new CreateNotesKolabResource );
       }
     }
 };
@@ -218,10 +221,14 @@ KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
 
   topLayout->setRowStretch( 4, 1 );
 
-  setupRulesPage();
+  //DF: I don't see the point in showing the user those pages.
+  //They are very 'internal' and of no use to anyone other than developers.
+  //(This is even more true for the rules page. The changes page is sort of OK)
+
+  //setupRulesPage();
   setupChangesPage();
 
-  resize( 400, 300 );
+  setInitialSize( QSize( 600, 300 ) );
 }
 
 KolabWizard::~KolabWizard()

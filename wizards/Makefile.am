@@ -14,9 +14,9 @@ groupwarewizard_SOURCES = groupwarewizard.cpp main.cpp overviewpage.cpp
 
 # Kolab
 libkolabwizard_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-libkolabwizard_la_LIBADD = $(top_builddir)/kresources/imap/kcal/libkcal_imap.la \
-                           $(top_builddir)/kresources/imap/kabc/libkabc_imap.la \
-                           $(top_builddir)/kresources/imap/knotes/libknotes_imap.la \
+libkolabwizard_la_LIBADD = $(top_builddir)/kresources/kolab/kcal/libkcalkolab.la \
+                           $(top_builddir)/kresources/kolab/kabc/libkabckolab.la \
+                           $(top_builddir)/kresources/kolab/knotes/libknoteskolab.la \
                            $(top_builddir)/libkcal/libkcal.la \
                            $(top_builddir)/libkdepim/libkdepim.la
 libkolabwizard_la_SOURCES = kolabwizard.cpp kmailchanges.cpp kolabconfig.kcfgc

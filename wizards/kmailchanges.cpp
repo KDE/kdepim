@@ -49,11 +49,12 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
     {
       KConfig c( "kmailrc" );
       c.setGroup( "General" );
+      c.writeEntry( "checkmail-startup", true );
       uint accCnt = c.readNumEntry( "accounts", 0 );
       c.writeEntry( "accounts", accCnt+1 );
       uint transCnt = c.readNumEntry( "transports", 0 );
       c.writeEntry( "transports", transCnt+1 );
-      
+
       c.setGroup( QString("Account %1").arg(accCnt+1) );
       int uid = kapp->random();
       c.writeEntry( "Folder", uid );
@@ -65,8 +66,10 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
 
       c.writeEntry( "login", KolabConfig::self()->user() );
 
-      if ( KolabConfig::self()->savePassword() )
+      if ( KolabConfig::self()->savePassword() ) {
         c.writeEntry( "pass", encryptStr(KolabConfig::self()->password()) );
+        c.writeEntry( "store-passwd", true );
+      }
 
       c.setGroup( QString("Transport %1").arg(transCnt+1) );
       c.writeEntry( "name", "Kolab Server" );
@@ -97,7 +100,8 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
 
       // This needs to be done here, since it reference just just generated id
       c.setGroup( "IMAP Resource" );
-      c.writeEntry("Folder Parent", uid);
+      c.writeEntry("TheIMAPResourceAccount", uid);
+      c.writeEntry("TheIMAPResourceFolderParent", QString(".%1.directory/INBOX").arg( uid ));
    }
 
 };
@@ -142,13 +146,6 @@ void createKMailChanges( KConfigPropagator::Change::List& changes )
   c = new KConfigPropagator::ChangeConfig;
   c->file = "kmailrc";
   c->group = "IMAP Resource";
-  c->name = "Enabled";
-  c->value = "true";
-  changes.append( c );
-
-  c = new KConfigPropagator::ChangeConfig;
-  c->file = "kmailrc";
-  c->group = "IMAP Resource";
   c->name = "TheIMAPResourceEnabled";
   c->value = "true";
   changes.append( c );
@@ -156,8 +153,8 @@ void createKMailChanges( KConfigPropagator::Change::List& changes )
   c = new KConfigPropagator::ChangeConfig;
   c->file = "kmailrc";
   c->group = "IMAP Resource";
-  c->name = "Folder Language";
-  c->value = "0"; // TODO: Fix the language
+  c->name = "TheIMAPResourceStorageFormat";
+  c->value = "XML";
   changes.append( c );
 
   changes.append( new CreateDisconnectedImapAccount );
