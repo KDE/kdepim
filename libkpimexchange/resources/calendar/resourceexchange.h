@@ -149,6 +149,8 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
 
     /** Add a Journal entry to calendar */
     virtual bool addJournal(Journal *);
+    /** deletes an event from this calendar. */
+    virtual void deleteJournal(Journal *);
     /** Return Journal for given date */
     virtual Journal *journal(const QDate &);
     /** Return Journal with given UID */

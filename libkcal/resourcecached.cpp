@@ -99,6 +99,11 @@ void ResourceCached::deleteTodo( Todo *todo )
   mCalendar.deleteTodo( todo );
 }
 
+void ResourceCached::deleteJournal( Journal *journal )
+{
+  mCalendar.deleteJournal( journal );
+}
+
 
 Todo::List ResourceCached::rawTodos()
 {

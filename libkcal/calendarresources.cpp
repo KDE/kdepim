@@ -178,7 +178,7 @@ bool CalendarResources::isSaving()
 bool CalendarResources::addIncidence( Incidence *incidence )
 {
   kdDebug(5800) << "CalendarResources::addIncidence" << endl;
-
+  
   ResourceCalendar *resource = mDestinationPolicy->destination( incidence );
 
   if ( resource ) {
@@ -483,9 +483,21 @@ bool CalendarResources::addJournal( Journal *journal )
   return addIncidence( journal );
 }
 
-void CalendarResources::deleteJournal( Journal * )
+void CalendarResources::deleteJournal( Journal *journal )
 {
-  kdError(5800) << "CalendarResources not implemented yet." << endl;
+  kdDebug(5800) << "CalendarResources::deleteJournal" << endl;
+
+  if ( mResourceMap.find(journal)!=mResourceMap.end() ) {
+    mResourceMap[journal]->deleteJournal( journal );
+    mResourceMap.remove( journal );
+  } else {
+    CalendarResourceManager::ActiveIterator it;
+    for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
+      (*it)->deleteJournal( journal );
+    }
+  }
+
+  setModified( true );
 }
 
 bool CalendarResources::addJournal(Journal *journal, ResourceCalendar *resource)

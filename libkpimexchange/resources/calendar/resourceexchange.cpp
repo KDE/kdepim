@@ -458,6 +458,15 @@ bool ResourceExchange::addJournal(Journal *journal)
   return true;
 }
 
+void ResourceExchange::deleteJournal(Journal *journal)
+{
+    if( !mCache )
+        return;
+  mCache->deleteJournal( journal );
+
+//  setModified( true );
+}
+
 Journal *ResourceExchange::journal(const QDate &date)
 {
     if( !mCache)

@@ -134,6 +134,8 @@ class ResourceKABC : public ResourceCalendar
     Todo::List todos( const QDate &date );
     /** Add a Journal entry to calendar */
     virtual bool addJournal(Journal *);
+    /** Remove journal from the calendar. */
+    void deleteJournal( Journal * );
     /** Return Journal for given date */
     virtual Journal *journal(const QDate &);
     /** Return Journal with given UID */

@@ -300,6 +300,10 @@ bool ResourceKABC::addJournal(Journal*)
   return false;
 }
 
+void ResourceKABC::deleteJournal(Journal*)
+{
+}
+
 Journal *ResourceKABC::journal(const QDate &date)
 {
 //  kdDebug(5800) << "ResourceKABC::journal() " << date.toString() << endl;

@@ -97,6 +97,9 @@ class ResourceCalendar : public KRES::Resource
     /** deletes an event from this calendar. */
     virtual void deleteEvent(Event *) = 0;
 
+    /** deletes a journal from this calendar. */
+    virtual void deleteJournal(Journal *) = 0;
+
     /** signals that an event has been changed by the app */
     // virtual void eventChanged(Event *) = 0;
 
