@@ -163,8 +163,8 @@ void PilotRecord::setData(const char *data, int len)
 
 #ifdef DEBUG
 	DEBUGKPILOT << fname
-		<< ": Got codec " << codecName().latin1() << " for setting "
-		<< s.latin1() << endl;
+		<< ": Got codec " << codecName() << " for setting "
+		<< s << endl;
 #endif
 	return codec();
 }
