@@ -151,7 +151,7 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
       mClients.append( info );
 
       // Get the client's calendar files
-#warning "TODO: check if any calendars have been deleted"
+      QStrList newCalendars;       // to contain a list of calendars configured for this client
       int len = CLIENT_CALENDAR_KEY.length();
       QMap<QString, QString> entries = clientConfig.entryMap(groupKey);
       for (QMap<QString, QString>::ConstIterator it = entries.begin();  it != entries.end();  ++it)
@@ -185,6 +185,7 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
                   mCalendars.append(cal);
                   kdDebug(5900) << "ADConfigDataBase::readConfigData(): calendar " << cal->urlString() << endl;
                 }
+                newCalendars.append(calname);
               }
             }
           }
@@ -194,6 +195,21 @@ QString ADConfigDataBase::readConfigData(bool sessionStarting, bool& deletedClie
       if (!newClients.isEmpty())
         newClients += ',';
       newClients += client;
+
+      // Remove any previous calendars which were not in the client data file
+      for (ADCalendarBase *cal = mCalendars.first();  cal;  )
+      {
+        if (cal->appName() == client)
+        {
+          if (newCalendars.find(cal->urlString()) == -1) {
+            deletedCalendars = true;
+            mCalendars.remove();
+            cal = mCalendars.current();
+          }
+          else
+            cal = mCalendars.next();
+        }
+      }
     }
   }
   return writeNewClients ? newClients : QString::null;
