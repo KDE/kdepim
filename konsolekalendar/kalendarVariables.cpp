@@ -1,6 +1,6 @@
 /***************************************************************************
-			  kalendarVariables.cpp  -  description
-			     -------------------
+        kalendarVariables.cpp  -  description
+           -------------------
     begin                : Sun Jan 6 2002
     copyright            : (C) 2002 by Tuukka Pasanen
     email                : illuusio@mailcity.com
@@ -23,123 +23,137 @@
 #include <iostream.h>
 #include <stdio.h>
 
-KalendarVariables::KalendarVariables(){
-
-		m_bIsDate = false;
-		m_bIsStartDate = false;
-    m_bIsEndDate = false;
-    m_bNext = false;
-		m_bVerbose = false;
-
-}
-/** destructor */
-KalendarVariables::~KalendarVariables(){
-
+KalendarVariables::KalendarVariables()
+{
+  m_bIsDate = false;
+  m_bIsStartDate = false;
+  m_bIsEndDate = false;
+  m_bNext = false;
+  m_bVerbose = false;
 }
 
-void KalendarVariables::setDate(QDate date){
-			m_bIsDate = true;
-			m_date = date;
-	 }
-	
-QDate KalendarVariables::getDate(){
-		return m_date;
-	 }
-	
-bool KalendarVariables::isDate(){
-			return m_bIsDate;
-	 }
-
-void KalendarVariables::setStartDate(QDate start){
-	
-			m_bIsStartDate = true;
-			m_startDate = start;
-
-  }
-	
-QDate KalendarVariables::getStartDate(){
-		return m_startDate;
-	}
-	
-bool KalendarVariables::isStartDate(){
-	return m_bIsStartDate;
-	}
-
-void KalendarVariables::setEndDate(QDate end){
-	m_bIsEndDate = true;
-		m_endDate = end;
-	}
-
-QDate KalendarVariables::getEndDate(){
-	return m_endDate;
- }
-
-bool KalendarVariables::isEndDate(){
-	return m_bIsEndDate;
-	}
-
-void KalendarVariables::setNext(bool next){
-	m_bNext = next;
-	}
-
-bool KalendarVariables::isNext(){
-		return m_bNext;
- }
-
-void KalendarVariables::setVerbose(bool verbose){
-	m_bVerbose = verbose;
-	}
-
-bool KalendarVariables::isVerbose(){
-   return m_bVerbose;
-	}
-
-void KalendarVariables::setCalendarFile(QString calendar){
-		m_calendar = calendar;
+KalendarVariables::~KalendarVariables()
+{
 }
 
-QString KalendarVariables::getCalendarFile(){
-	return m_calendar;
+void KalendarVariables::setDate(QDate date)
+{
+  m_bIsDate = true;
+  m_date = date;
+}
+  
+QDate KalendarVariables::getDate()
+{
+  return m_date;
+}
+  
+bool KalendarVariables::isDate()
+{
+  return m_bIsDate;
 }
 
-bool KalendarVariables::isAll(){
-   return m_bAll;
+void KalendarVariables::setStartDate(QDate start)
+{
+  m_bIsStartDate = true;
+  m_startDate = start;
 }
-	   
-void KalendarVariables::setAll( bool all){
-   m_bAll = all;
+  
+QDate KalendarVariables::getStartDate()
+{
+  return m_startDate;
 }
-			   
-bool KalendarVariables::getAll(){
-   return m_bAll;
+  
+bool KalendarVariables::isStartDate()
+{
+  return m_bIsStartDate;
+}
+
+void KalendarVariables::setEndDate(QDate end)
+{
+  m_bIsEndDate = true;
+  m_endDate = end;
+}
+
+QDate KalendarVariables::getEndDate()
+{
+  return m_endDate;
+}
+
+bool KalendarVariables::isEndDate()
+{
+  return m_bIsEndDate;
+}
+
+void KalendarVariables::setNext(bool next)
+{
+  m_bNext = next;
+}
+
+bool KalendarVariables::isNext()
+{
+  return m_bNext;
+}
+
+void KalendarVariables::setVerbose(bool verbose)
+{
+  m_bVerbose = verbose;
+}
+
+bool KalendarVariables::isVerbose()
+{
+  return m_bVerbose;
+}
+
+void KalendarVariables::setCalendarFile(QString calendar)
+{
+  m_calendar = calendar;
+}
+
+QString KalendarVariables::getCalendarFile()
+{
+  return m_calendar;
+}
+
+bool KalendarVariables::isAll()
+{
+  return m_bAll;
+}
+     
+void KalendarVariables::setAll( bool all)
+{
+  m_bAll = all;
+}
+         
+bool KalendarVariables::getAll()
+{
+  return m_bAll;
 }
 
 
-
-QDate KalendarVariables::parseDate(QString str){
-	
-	int strpos=0,   // actual position in string
+QDate KalendarVariables::parseDate(QString str)
+{  
+  int strpos=0,   // actual position in string
   errpos=-1;    // position of first error in string, or -1 for "no error"
 
   bool lookNumber, done;
 
   int numbers[3]; // the three numbers making up a date. Order depends on inputmode
   int numstart;
-  char separator;
+  char separator = '\0';
   int actnum=0;   // the index of the next number
-	int cursorpos = 0;
+  int cursorpos = 0;
 
   int actsep=0,     // index of the next separator
   tottok=0,     // how many items/tokens have been parsed?
   seppos;       // position of last separator parsed
 
-	int format = -1;
+  int format = -1;
 
   /* For not having to call QString::length() frequently without knowing whether
    * that function starts to count it chars every time, we save that value
    */
 
-	str_length=str.length();
+  str_length=str.length();
 
   numbers[0]=numbers[1]=numbers[2]=-1;
 
@@ -152,82 +166,73 @@ QDate KalendarVariables::parseDate(QString str){
    * - we found everything that makes up a date
    */
 
-  while( (errpos==-1) && (strpos < str_length) && (!done))
-		{
+  while( (errpos==-1) && (strpos < str_length) && (!done)) {
+    if( lookNumber ) {
+      // We are currently looking for a number
+      if(( numbers[actnum]=findNumber(str,strpos,numstart) )==-1) {
+        // but be reached the end of the string
+        done=true;
+      } else {
+        /* if num==-2, this means that there was anything else.
+         * this could mean
+         * that the user deleted the number in-between some separators
+         * and is just about to enter a new number
+         */
+        if(numbers[actnum]==-2) {
+          numbers[actnum]=-1;
+        }
 
-    if(lookNumber)
-      {
-				// We are currently looking for a number
-				if(( numbers[actnum]=findNumber(str,strpos,numstart) )==-1){
-			// but be reached the end of the string
-				done=true;
-			  }
-      else
-			{
-		/* if num==-2, this means that there was anything else.
-		* this could mean
-		* that the user deleted the number in-between some separators
-		* and is just about to enter a new number
-		*/
-			if(numbers[actnum]==-2){
-			numbers[actnum]=-1;
-					}
+        // since we found a number, we increase the counters
+        actnum++;
+        tottok++;
 
-		// since we found a number, we increase the counters
-		actnum++;
-		tottok++;
+        /* if we found a total of three numbers, we're done.
+         * if not, there should come a separator
+         */
+        if(actnum==3)
+          done=true;
+        else
+          lookNumber=false;
+      }
+    } else {
+      // We are currently looking for a separator
+      switch(actsep) {
+        case 0:
+          // It's the first sep, so look what the user preferres
+          separator = findSeparator(str,strpos,seppos);
+          switch(separator) {
+            case '.':
+              // german format 'dd.mm.yyyy'
+              format = 1;
+              break;
+            case '-':
+              format = 2;
+              break;
+            case '/':
+              // normal format 'mm/dd/yyyy' or 'mm-dd-yyyy'
+              format = 3;
+              break;
+            default:
+              // anything else we did not expect
+              errpos=seppos;
+          }
+          break;
 
-		/* if we found a total of three numbers, we're done.
-		* if not, there should come a separator
-		*/
-		if(actnum==3)
-		 done=true;
-		else
-		 lookNumber=false;
-			}//else
-      }//if
-    else
-      {
-				// We are currently looking for a separator
-				switch(actsep)
-			{
-			case 0:
-			// It's the first sep, so look what the user preferres
-			separator=findSeparator(str,strpos,seppos);
-			switch(separator)
-			{
-			case '.':
-							// german format 'dd.mm.yyyy'
-							format = 1;
-							break;
-			case '-':
-							format = 2;
-							break;
-			case '/':
-							// normal format 'mm/dd/yyyy' or 'mm-dd-yyyy'
-							format = 3;
-							break;
-			default:
-							// anything else we did not expect
-							errpos=seppos;
-			}
-	      break;//case first sep
+        case 1:
+          // The second sep must be the same as the first (Not 1-1/2000)
+          if(separator!=findSeparator(str,strpos,seppos))
+            errpos=seppos;
+          break;
 
-		case 1:
-			// The second sep must be the same as the first (Not 1-1/2000)
-			if(separator!=findSeparator(str,strpos,seppos))
-		errpos=seppos;
-	    break;//case second sep
+      }
 
-	  }// switch(actsep)
+      // Increase all the counters
+      actsep++;
+      tottok++;
 
-	// Increase all the counters
-	actsep++;
-	tottok++;
-
-	lookNumber=true;
-  };
-  }//while
+      lookNumber=true;
+    };
+  }
 
 
   /* We're through parsing.
@@ -241,26 +246,22 @@ QDate KalendarVariables::parseDate(QString str){
    *
    * The test does nothing in the first case, since the string is already used up.
    */
-  if(errpos==-1){
-
-	  if(strpos<str_length)
-      {
-			skipWhiteSpace(str,strpos);
-		
-	if(strpos<str_length)
-			// There is garbage. ERROR!!!
-			errpos=strpos;
-      }// if
-   }// errpos == -1
+  if(errpos==-1) {
+    if(strpos<str_length) {
+      skipWhiteSpace(str,strpos);
+    
+      if(strpos<str_length) {
+        // There is garbage. ERROR!!!
+        errpos=strpos;
+      }
+    }
+  }
 
   // If there was an error, we can't do anymore.
-  if(errpos!=-1)
-    {
-      cursorpos=errpos;
-      return QDate::currentDate();
-    };
-
-
+  if(errpos!=-1) {
+    cursorpos=errpos;
+    return QDate::currentDate();
+  };
 
   /* Now, we have anything the user gave us.
    *
@@ -272,34 +273,28 @@ QDate KalendarVariables::parseDate(QString str){
 
 
   // First, we sort the three numbers into day, month and year
-  switch(format)
-    {
+  switch(format) {
     case 1:
       //ddescr.day=numbers[0];
       //ddescr.month=numbers[1];
       //ddescr.year=numbers[2];
 
-	return QDate(numbers[2], numbers[1], numbers[0]);
+      return QDate(numbers[2], numbers[1], numbers[0]);
 
-			break;
     case 2:
     case 3:
+       //ddescr.day=numbers[1];
+       //ddescr.month=numbers[0];
+       //ddescr.year=numbers[2];
        return QDate(numbers[2], numbers[1], numbers[0]);
 
-      //ddescr.day=numbers[1];
-      //ddescr.month=numbers[0];
-      //ddescr.year=numbers[2];
+    default:
       break;
-
-		default:
-      break;
-    };
+  };
   return QDate::currentDate();
 }
 
-
-
-   // res: Number, -1 reached end, -2 garbage
+// res: Number, -1 reached end, -2 garbage
 int KalendarVariables::findNumber(const QString &str, int &pos, int &startpos)
 {
   skipWhiteSpace(str,pos);
@@ -324,11 +319,10 @@ char KalendarVariables::findSeparator(const QString &str, int &pos, int &seppos)
 {
   skipWhiteSpace(str,pos);
 
-  if(pos>=str_length)
-    {
-      seppos=-1;
-      return 0;
-    };
+  if(pos>=str_length) {
+    seppos=-1;
+    return 0;
+  };
 
   seppos=pos;
   pos++;
@@ -341,5 +335,3 @@ void KalendarVariables::skipWhiteSpace(const QString &str, int &pos)
   while( (pos<str_length) && ISWHITESPACE(str[pos]) )
     pos++;
 }
-
-

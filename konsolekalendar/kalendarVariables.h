@@ -2,8 +2,8 @@
 #define _KALENDAR_VARIABLES_H
 
 /***************************************************************************
-			  kalendarVariables.h  -  description
-			     -------------------
+        kalendarVariables.h  -  description
+           -------------------
     begin                : Sun Jan 6 2002
     copyright            : (C) 2002 by Tuukka Pasanen
     email                : illuusio@mailcity.com
@@ -24,63 +24,53 @@
 class KalendarVariables
 {
   public:
-
-    /** construtor */
     KalendarVariables();
-    /** destructor */
     ~KalendarVariables();
 
     void setDate(QDate date);
-		QDate getDate();
-		bool isDate();
+    QDate getDate();
+    bool isDate();
 
-		void setStartDate(QDate start);
-		QDate getStartDate();
-		bool isStartDate();
+    void setStartDate(QDate start);
+    QDate getStartDate();
+    bool isStartDate();
 
-		void setEndDate(QDate end);
-		QDate getEndDate();
-		bool isEndDate();
+    void setEndDate(QDate end);
+    QDate getEndDate();
+    bool isEndDate();
 
-		void setNext(bool next);
-		bool isNext();
+    void setNext(bool next);
+    bool isNext();
 
-		void setVerbose(bool verbose);
-		bool isVerbose();
+    void setVerbose(bool verbose);
+    bool isVerbose();
 
-		void setCalendarFile(QString calendar);
-		QString getCalendarFile();
-			
-		
-		bool isAll();
-			       
-		void setAll( bool all );
-		bool getAll();
-		
-		QDate parseDate(QString string);
-	
+    void setCalendarFile(QString calendar);
+    QString getCalendarFile();
+      
+    bool isAll();
+             
+    void setAll( bool all );
+    bool getAll();
+    
+    QDate parseDate(QString string);
 
-    private:
-
-		int findNumber(const QString &str, int &pos, int &startpos);
-		char findSeparator(const QString &str, int &pos, int &seppos);
+  private:
+    int findNumber(const QString &str, int &pos, int &startpos);
+    char findSeparator(const QString &str, int &pos, int &seppos);
     void skipWhiteSpace(const QString &str, int &pos);
-		
 
-		QDate m_date;
-		bool m_bIsDate;
-		QDate m_startDate;
-		bool m_bIsStartDate;
-		QDate m_endDate;
-		QString m_calendar;
-		bool m_bIsEndDate;
-		bool m_bNext;
-		bool m_bVerbose;
-		bool m_bAll;
-	int str_length;
-
-
-
+    QDate m_date;
+    bool m_bIsDate;
+    QDate m_startDate;
+    bool m_bIsStartDate;
+    QDate m_endDate;
+    QString m_calendar;
+    bool m_bIsEndDate;
+    bool m_bNext;
+    bool m_bVerbose;
+    bool m_bAll;
+    int str_length;
 };
 
 #endif

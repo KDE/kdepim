@@ -1,6 +1,6 @@
 /***************************************************************************
-			  konsolekalendar.h  -  description
-			     -------------------
+        konsolekalendar.h  -  description
+           -------------------
     begin                : Sun Jan  6 11:50:14 EET 2002
     copyright            : (C) 2002 by Tuukka Pasanen
     email                : illuusio@mailcity.com
@@ -18,10 +18,6 @@
 #ifndef KONSOLEKALENDAR_H
 #define KONSOLEKALENDAR_H
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <kapp.h>
 #include <qdatetime.h>
 #include "konsolekalendar.h"
@@ -36,21 +32,19 @@ namespace KCal {
 class KonsoleKalendar
 {
   public:
-    /** construtor */
     KonsoleKalendar(KalendarVariables &variables);
-    /** destructor */
     ~KonsoleKalendar();
 
     void showInstance();
 
-		private:
-		void showNext();
-		void showDate( QDate date );
-		void printEventTime(Event *event);
-		bool isHappened(Event *event);
-			
-		KalendarVariables m_variables;
-		Calendar *m_Calendar;
+  private:
+    void showNext();
+    void showDate( QDate date );
+    void printEventTime(Event *event);
+    bool isHappened(Event *event);
+      
+    KalendarVariables m_variables;
+    Calendar *m_Calendar;
 };
 
 }
