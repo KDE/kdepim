@@ -38,7 +38,10 @@
 #include <kpgpblock.h>
 #include <kprocess.h>
 #include <kqcstringsplitter.h>
-
+#include <syntaxhighlighter.h>
+using Syntaxhighlighter::DictSpellChecker;
+using Syntaxhighlighter::SpellChecker;
+#include <kapplication.h>
 #include "kngroupselectdialog.h"
 #include "utilities.h"
 #include "knglobals.h"
@@ -49,7 +52,6 @@
 #include "knnntpaccount.h"
 #include "knpgp.h"
 #include "knarticlefactory.h"
-#include "knsyntaxhighlighter.h"
 #include <kstatusbar.h>
 #include <klocale.h>
 #include <qpopupmenu.h>
@@ -1104,7 +1106,10 @@ void KNComposer::slotSpellcheck()
   a_ctSpellCheck->setEnabled(false);
 
   s_pellChecker = new KSpell(this, i18n("Spellcheck"), this, SLOT(slotSpellStarted(KSpell *)));
-
+  QStringList l = SpellChecker::personalWords();
+  for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it ) {
+      s_pellChecker->addPersonal( *it );
+  }
   connect(s_pellChecker, SIGNAL(death()), this, SLOT(slotSpellFinished()));
   connect(s_pellChecker, SIGNAL(done(const QString&)), this, SLOT(slotSpellDone(const QString&)));
   connect(s_pellChecker, SIGNAL(misspelling (const QString &, const QStringList &, unsigned int)),
@@ -1448,7 +1453,21 @@ KNComposer::ComposerView::ComposerView(QWidget *p, const char *n)
   //Editor
   e_dit=new Editor(main);
   e_dit->setMinimumHeight(50);
-  KNSyntaxHighlighter *ksh = new KNSyntaxHighlighter(e_dit);
+
+  KConfig *config = kapp->config();
+  KConfigGroupSaver saver(config, "VISUAL_APPEARANCE");
+  QColor defaultColor1( kapp->palette().active().text()); // defaults from kmreaderwin.cpp
+  QColor defaultColor2( kapp->palette().active().text() );
+  QColor defaultColor3( kapp->palette().active().text() );
+  QColor defaultForeground( kapp->palette().active().text() );
+  QColor col1 = config->readColorEntry( "ForegroundColor", &defaultForeground );
+  QColor col2 = config->readColorEntry( "quote3Color", &defaultColor3 );
+  QColor col3 = config->readColorEntry( "quote2Color", &defaultColor2 );
+  QColor col4 = config->readColorEntry( "quote1Color", &defaultColor1 );
+  QColor c = QColor("red");
+  mSpellChecker = new DictSpellChecker(e_dit, /*active*/ true, /*autoEnabled*/ true,
+    /*spellColor*/ config->readColorEntry("NewMessage", &c),
+    /*colorQuoting*/ true, col1, col2, col3, col4);
 
   QVBoxLayout *notL=new QVBoxLayout(e_dit);
   notL->addStretch(1);
@@ -1482,6 +1501,7 @@ KNComposer::ComposerView::~ComposerView()
       lst << h->sectionSize(i);
     conf->writeEntry("Att_Headers",lst);
   }
+  delete mSpellChecker;
 }
 
 

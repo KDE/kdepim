@@ -33,6 +33,9 @@ class KToggleAction;
 class KNLocalArticle;
 class KNAttachment;
 
+namespace Syntaxhighlighter {
+  class DictSpellChecker;
+}
 
 class KNComposer : public KMainWindow  {
 
@@ -207,6 +210,7 @@ class KNComposer::ComposerView  : public QSplitter {
     QPushButton     *a_ttAddBtn,
                     *a_ttRemoveBtn,
                     *a_ttEditBtn;
+    Syntaxhighlighter::DictSpellChecker *mSpellChecker;
 
     bool v_iewOpen;
 };

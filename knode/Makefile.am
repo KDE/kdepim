@@ -62,9 +62,7 @@ knode_SOURCES =   knconfigmanager.cpp \
                   knlistview.cpp \
                   knode.cpp \
                   knapplication.cpp \
-                  main.cpp \
-		  knsyntaxhighlighter.cpp
-
+                  main.cpp 
 
 noinst_HEADERS =  knconfigmanager.h \
                   knconfig.h \
@@ -125,8 +123,7 @@ noinst_HEADERS =  knconfigmanager.h \
                   knode.h \
                   knapplication.h \
                   resource.h \
-                  knglobals.h
-
+                  knglobals.h 
 
 knode_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 knode_LDADD   = -lkdeprint $(top_builddir)/libkdenetwork/libkdenetwork.la -lkspell -lkabc $(LIB_KFILE) $(LIBRESOLV)
