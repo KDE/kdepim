@@ -36,6 +36,12 @@
 <affiliation><address><email>juergen.nagel@student.fh-reutlingen.de</email></address></affiliation>
 </author>
 
+<author>
+<firstname>Michel</firstname>
+<surname>Boyer de la Giroday</surname>
+<affiliation><address><email>michel@klaralvdalens-datakonsult.se</email></address></affiliation>
+</author>
+
 <othercredit role="developer">
 <firstname>Cornelius</firstname>
 <surname>Schumacher</surname>
@@ -1359,10 +1365,11 @@ to use. You can either use &kmail; or the sendmail command (which must be instal
 on your system in order to work).</para></listitem>
 </varlistentry>
 
-<!-- <varlistentry>
+<varlistentry>
 <term><guilabel>Use Groupware Communication</guilabel></term>
-<listitem><para></para></listitem>
-</varlistentry> -->
+<listitem><para>Enables automatic mails when 
+creating, updating or deleting events, todo or journal. Check this option if you you want to use the groupware functionalities (e.g Configuring Kontact as a KDE <guilabel>Kolab</guilabel> client).</para></listitem>
+</varlistentry>
 
 <varlistentry>
 <term><guilabel>Export to HTML with every save</guilabel></term>
@@ -1373,7 +1380,9 @@ of your to-do list every time you save your changes.</para></listitem>
 <varlistentry>
 <term><guilabel>New Events/Todos Should</guilabel></term>
 <listitem><para>This option lets you choose add a new event/todo item either to
-a standard resource or have &korganizer; ask you which resource should be used.</para></listitem>
+a standard resource or have &korganizer; ask you which resource should be used.</para>
+<para><guilabel>Kolab2 server specificity:</guilabel> It is recommended to choose "Be asked which resource to use", if you intend to use the shared folders functionalities of the <guilabel>Kolab</guilabel> server or may have to manage multiple accounts using <guilabel>Kontact</guilabel> as a <guilabel>KDE Kolab client</guilabel>. This will allow you to keep control on the available resources.</para> 
+</listitem>
 </varlistentry>
 
 </variablelist>
@@ -1618,7 +1627,6 @@ you are an attendee of one event, but have another emailaddress there.
 </sect3>
 -->
 
-<!-- 
 <sect3 id="preferences-free-busy">
 <title>Free/Busy</title>
 
@@ -1627,19 +1635,48 @@ you are an attendee of one event, but have another emailaddress there.
 <varlistentry>
 <term><guilabel>Publish Tab</guilabel></term>
 <listitem>
+<para>Allow others to take your calendar's busy time schedule into account when inviting you to a meeting.</para>
 <itemizedlist>
-<listitem><para><guilabel>Publish free/busy information</guilabel></para></listitem>
-<listitem><para><guilabel>Minimum time between uploads in minutes</guilabel></para></listitem>
-<listitem><para><guilabel>Publish (default 60) days of free/busy</guilabel></para></listitem>
-<listitem><para><guilabel>Server URL</guilabel></para></listitem>
-<listitem><para><guilabel>Username</guilabel></para></listitem>
-<listitem><para><guilabel>Password</guilabel></para></listitem>
-<listitem><para><guilabel>Remember password</guilabel></para></listitem>
-<listitem><para><guilabel>Retrieve tab</guilabel></para></listitem>
+<listitem>
+<para><guilabel>Publish free/busy information</guilabel></para>
+<para>Enable this option if you wish your Free/Busy information to be uploaded 
+automatically.</para>
+<para>Note that you may skip this option and choose to mail or upload your Free/Busy information via the <guilabel>Schedule</guilabel> menu of <guilabel>KOrganizer</guilabel>.</para>
+<para>If your application is setup to work as a <guilabel>KDE Kolab client</guilabel>, this is not required. The <guilabel>Kolab2</guilabel> server taking care of publishing your Free/Busy information and manages the access to it from other users.</para>
+</listitem>
+<listitem>
+<para><guilabel>Minimum time between uploads in minutes</guilabel></para>
+<para>In case you choose to publish your information automatically, you may configure the interval of time in minutes between each upload.</para>
+</listitem>
+<listitem>
+<para><guilabel>Publish (default 60) days of free/busy</guilabel></para>
+<para>Configure the number of calendar days you wish to be published and available to others</para>
+</listitem>
+<listitem>
+<para><guilabel>Server URL</guilabel></para>
+<para>Enter the URL for the server on which your Free/Busy information shall be published. Ask the server administrator for this information.</para>
+<para><guilabel>Kolab2 server example of URL:</guilabel><userinput> webdavs://kolab2.com/freebusy/joe@kolab2.com.ifb</userinput></para>  
+</listitem>
+<listitem><para><guilabel>Username</guilabel></para>
+<para>Enter the login information relative to your account on the server</para>
+<para><guilabel>Kolab2 server specificity:</guilabel> Registered your UID (Unique IDentifier), by default your UID would be similar to your email address on the <guilabel>Kolab2 server</guilabel> but it may also be different. In the last case enter your UID. Ask about your UID to the server administrator if you dont know it.</para>
+</listitem>
+<listitem><para><guilabel>Password</guilabel></para>
+<para>Enter here your password.</para>
+</listitem>
+<listitem><para>
+<guilabel>Remember password</guilabel></para>
+<para>Check this option if you want KOrganizer to remember your password and skip asking you each time it upload your Free/Busy information.</para>
+<note>
+<para>
+It is not recommended to store your password in the configuration file for security reasons
+</para>
+</note> 
+</listitem>
 </itemizedlist>
 </listitem>
 </varlistentry>
-
+<!--
 <varlistentry>
 <term><guilabel>Retrieve Tab</guilabel></term>
 <listitem>
@@ -1654,11 +1691,10 @@ you are an attendee of one event, but have another emailaddress there.
 </itemizedlist>
 </listitem>
 </varlistentry>
-
+-->
 </variablelist>
 
 </sect3>
--->
 
 </sect2>
 
