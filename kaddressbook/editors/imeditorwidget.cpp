@@ -149,7 +149,7 @@ IMEditorWidget::IMEditorWidget(QWidget *parent, const QString &preferredIM, cons
 	connect( mWidget->lvAddresses, SIGNAL( selectionChanged() ), SLOT( slotUpdateButtons() ) );
 
 	connect( mWidget->lvAddresses, SIGNAL( doubleClicked ( QListViewItem *, const QPoint &, int ) ),SLOT( slotEdit() ) );
-	setHelp("managing-contacts-im-addresses");
+	setHelp( "managing-contacts-im-addresses" );
 	mWidget->btnEdit->setEnabled( false );
 	mWidget->btnDelete->setEnabled( false );
 	mWidget->btnSetStandard->setEnabled( false );
@@ -157,7 +157,7 @@ IMEditorWidget::IMEditorWidget(QWidget *parent, const QString &preferredIM, cons
 	//mWidget->btnUp->setEnabled( false );
 	//mWidget->btnDown->setEnabled( false );
 	mPreferred = preferredIM;
-	mPreferred = mPreferred.replace(" on ", QString(QChar(0xE120)), true);
+	mPreferred = mPreferred.replace( " on ", QString( QChar( 0xE120 ) ), true );
 	mProtocols = KPluginInfo::fromServices( KTrader::self()->query( QString::fromLatin1( "KABC/IMProtocol" ) ) );
 	//kdDebug ( 5720 ) << " found " << mProtocols.count() << " protocols " << endl;
 }
