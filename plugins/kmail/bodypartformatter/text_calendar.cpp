@@ -365,12 +365,14 @@ class Formatter : public KMail::Interface::BodyPartFormatter
                 bodyPart->makeLink( "accept" ) + "\"><b>";
         html += i18n( "[Accept]" );
         html += "</b></a></td><td> &nbsp; </td><td>";
+#if 0
         // Accept conditionally
         html += "<a href=\"" +
                 bodyPart->makeLink( "accept_conditionally" ) +
                 "\"><b>";
         html += i18n( "Accept conditionally", "[Accept cond.]" );
         html += "</b></a></td><td> &nbsp; </td><td>";
+#endif
         // Decline
         html += "<a href=\"" +
                 bodyPart->makeLink( "decline" ) + "\"><b>";
