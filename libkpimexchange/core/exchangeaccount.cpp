@@ -247,7 +247,7 @@ void ExchangeAccount::slotFolderResult( KIO::Job * job )
   kdDebug() << "Calendar URL: " << mCalendarURL->url() << endl;
 }
 
-QString ExchangeAccount::tryFindMailbox( const QString& host, const QString& user, const QString& password )
+static QString ExchangeAccount::tryFindMailbox( const QString& host, const QString& user, const QString& password )
 {
   kdDebug() << "Entering ExchangeAccount::tryFindMailbox()" << endl;
 
