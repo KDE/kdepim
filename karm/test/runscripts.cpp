@@ -60,10 +60,11 @@ int runscripts
 ( const QString &interpreter, const QString &extension, const QString &path )
 {
   int rval = 0;
-  Script* s = new Script();
   QStringList files;
 
   QDir dir( path );
+
+  Script* s = new Script( dir );
 
   dir.setNameFilter( extension );
   dir.setFilter( QDir::Files );
@@ -87,7 +88,7 @@ int runscripts
 
       rval = s->run();
       delete s;
-      s = new Script();
+      s = new Script( dir );
     }
     ++it;
   }

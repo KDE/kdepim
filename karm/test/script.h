@@ -23,6 +23,7 @@
 //#include <qvariant.h>
 #include <qobject.h>
 
+class QDir;
 class QProcess;
 class QString;
 class QStringList;
@@ -31,7 +32,7 @@ class Script : public QObject
 {
   Q_OBJECT
 public:
-  Script();
+  Script( const QDir& workingDirectory );
   virtual ~Script();
   void addArgument( const QString &arg );
   void setTimeout( int seconds );

@@ -6,30 +6,23 @@
 TESTFILE="testkarm.ics"
 TESTTODO="testtodo"
 
-# If runscripts sees output on stderr, it considers this a test failure
-DCOPID=`dcop | grep karm 2>/dev/null`
+echo "mkb: pwd=`pwd`"
 
-if [ -n $DCOPID ]; then dcop $DCOPID KarmDCOPIface quit; fi;
+echo "mkb: source __lib.sh"
+source __lib.sh 
 
-if [ -e $TESTFILE ]; then rm $TESTFILE; fi
+echo "mkb: call set_up"
+set_up
 
-karm $TESTFILE & 
-
-sleep 2
-
-DCOPID=`dcop | grep karm`
-
-# karm does not write file until data is saved.
-
-echo "dcop $DCOPID KarmDCOPIface addtodo \"$TESTTODO\""
+# make karm create the file.
+echo "mkb: dcop cmd"
 dcop $DCOPID KarmDCOPIface addtodo "$TESTTODO"
 
 RVAL=1
 if [ -e $TESTFILE ]; then RVAL=0; fi
 
-# clean up
-if [ -n $DCOPID ]; then dcop $DCOPID KarmDCOPIface quit; fi;
-if [ -e $TESTFILE ]; then rm $TESTFILE; fi
+echo "mkb: tear_down"
+tear_down
 
 if [ $RVAL -eq 0 ]
 then 

@@ -17,6 +17,7 @@
    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.
 */
+#include <qdir.h>
 #include <qprocess.h>
 #include <qstring.h>
 #include <qstringlist.h>
@@ -30,13 +31,14 @@
 // kill() doesn't let script interpreter try to clean up.
 const int NICE_KILL_TIMEOUT_IN_SECS = 5;
 
-Script::Script()
+Script::Script( const QDir& workingDirectory )
 {
   m_status = 0;
   m_stderr = false;
   m_timeoutInSeconds = 5;
 
   m_proc   = new QProcess( this );
+  m_proc->setWorkingDirectory( workingDirectory );
 
   connect ( m_proc, SIGNAL( readyReadStdout() ), 
             this  , SLOT  ( stdout() ) 
@@ -68,7 +70,7 @@ void Script::setTimeout( int seconds )
 
 int Script::run()
 {
-  //kdDebug() << "Script::running " << m_proc->arguments() << " ..." << endl;
+  kdDebug() << "Script::running " << m_proc->arguments() << " ..." << endl;
   m_proc->start();
   // This didn't work.  But Ctrl-C does.  :P
   //QTimer::singleShot( m_timeoutInSeconds * 1000, m_proc, SLOT( kill() ) );
@@ -86,9 +88,9 @@ void Script::terminate()
 
 void Script::exit()
 {
-  //kdDebug () << "Script::exit()" << endl;
+  kdDebug () << "Script::exit()" << endl;
   m_status = m_proc->exitStatus();
-  //kdDebug () << "Script::exit(), m_status = " << m_proc->exitStatus() << endl;
+  kdDebug () << "Script::exit(), m_status = " << m_proc->exitStatus() << endl;
   delete m_proc;
   m_proc = 0;
 }
@@ -105,7 +107,7 @@ void Script::stderr()
 void Script::stdout()
 {
   QString data = QString( m_proc->readStdout() );
-  //kdDebug() << "stdout:" << endl;
+  kdDebug() << "stdout:" << endl;
   kdDebug() << data << endl;
 }
 
