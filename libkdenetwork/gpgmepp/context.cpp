@@ -60,8 +60,16 @@ namespace GpgME {
     return gpgme_strerror( (gpgme_error_t)mErr );
   }
 
+  int Error::code() const {
+    return gpgme_err_code( mErr );
+  }
+
+  int Error::sourceID() const {
+    return gpgme_err_source( mErr );
+  }
+
   bool Error::isCanceled() const {
-    return gpgme_err_code( mErr ) == GPG_ERR_CANCELED;
+    return code() == GPG_ERR_CANCELED;
   }
 
   Context::Context( gpgme_ctx_t ctx ) {
