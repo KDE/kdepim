@@ -153,8 +153,16 @@ bool ResourceLocalDir::doLoad()
 
 bool ResourceLocalDir::doSave()
 {
-  // as all changes are immediately written to disk in doSave(Incidence *)
-  // there is no need to rewrite all single files
+  Incidence::List list;
+ 
+  list = addedIncidences();
+  for (Incidence::List::iterator it = list.begin(); it != list.end(); ++it)
+    doSave(*it);
+
+  list = changedIncidences();
+  for (Incidence::List::iterator it = list.begin(); it != list.end(); ++it)
+    doSave(*it);
+
   return true;
 }
 
