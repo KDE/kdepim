@@ -46,7 +46,7 @@ class FilterDialog : public KDialogBase
     ~FilterDialog();
 
     void setFilters( const Filter::List &list );
-    Filter::List &filters();
+    Filter::List filters() const;
 
   protected slots:
     void add();
@@ -59,6 +59,7 @@ class FilterDialog : public KDialogBase
     void refresh();
 
     Filter::List mFilterList;
+    Filter::List mInternalFilterList;
 
     KListBox *mFilterListBox;
     QPushButton *mAddButton;

@@ -44,21 +44,23 @@ class Filter
     enum MatchRule { Matching = 0, NotMatching = 1 };
 
     Filter();
-    Filter( const Filter& );
     Filter( const QString& name );
     ~Filter();
 
-    Filter &operator=( const Filter& );
-    
     /**
       Set the name of the filter.
      */
     void setName( const QString &name );
-    
+
     /**
       @return The name of the filter.
      */
     const QString &name() const;
+
+    /**
+      @return Whether the filter is an internal one.
+     */
+    bool isInternal() const;
     
     /**
       Apply the filter to the addressee list. All addressees not passing
@@ -145,6 +147,7 @@ class Filter
     QStringList mCategoryList;
     MatchRule mMatchRule;
     bool mEnabled;
+    bool mInternal;
 };
 
 #endif

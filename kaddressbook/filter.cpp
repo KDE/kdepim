@@ -24,42 +24,24 @@
 #include <kconfig.h>
 #include <kdebug.h>
 
+#include "kabprefs.h"
+
 #include "filter.h"
 
 Filter::Filter()
+  : mName( QString::null ), mMatchRule( Matching ), mEnabled( true ),
+    mInternal( false )
 {
-  mName = QString::null;
-  mEnabled = true;
-  mMatchRule = Matching;
 }
 
-Filter::Filter(const QString &name)
+Filter::Filter( const QString &name )
+  : mName( name ), mMatchRule( Matching ), mEnabled( true ),
+    mInternal( false )
 {
-  mName = name;
-  mEnabled = true;
-  mMatchRule = Matching;
-}
-
-Filter::Filter(const Filter &copyFrom)
-{
-  (*this) = copyFrom;
 }
 
 Filter::~Filter()
 {
-}
-
-Filter &Filter::operator=(const Filter &copyFrom)
-{
-  if (this == &copyFrom)
-    return *this;
-    
-  mName = copyFrom.mName;
-  mEnabled = copyFrom.mEnabled;
-  mMatchRule = copyFrom.mMatchRule;
-  mCategoryList = copyFrom.mCategoryList;
-  
-  return *this;
 }
 
 void Filter::setName( const QString &name )
@@ -72,19 +54,23 @@ const QString &Filter::name() const
   return mName;
 }
 
-void Filter::apply(KABC::Addressee::List &addresseeList)
+bool Filter::isInternal() const
+{
+  return mInternal;
+}
+
+void Filter::apply( KABC::Addressee::List &addresseeList )
 {
   KABC::Addressee::List::Iterator iter;
-  for (iter = addresseeList.begin(); iter != addresseeList.end(); )
-  {
-    if (filterAddressee(*iter))
+  for ( iter = addresseeList.begin(); iter != addresseeList.end(); ) {
+    if ( filterAddressee( *iter ) )
       ++iter;
     else
-      iter = addresseeList.erase(iter);
+      iter = addresseeList.erase( iter );
   }
 }
 
-bool Filter::filterAddressee(const KABC::Addressee &a)
+bool Filter::filterAddressee( const KABC::Addressee &a )
 {
   QStringList::Iterator iter;
   iter = mCategoryList.begin();
@@ -93,7 +79,7 @@ bool Filter::filterAddressee(const KABC::Addressee &a)
   if ( iter == mCategoryList.end() )
     return true;
 
-  for (; iter != mCategoryList.end(); ++iter ) {
+  for ( ; iter != mCategoryList.end(); ++iter ) {
     if ( a.hasCategory( *iter ) )
       return ( mMatchRule == Matching );
   }
@@ -121,68 +107,80 @@ const QStringList &Filter::categories() const
   return mCategoryList;
 }
 
-void Filter::save(KConfig *config)
+void Filter::save( KConfig *config )
 {
-  config->writeEntry("Name", mName);
-  config->writeEntry("Enabled", mEnabled);
-  config->writeEntry("Categories", mCategoryList);
-  config->writeEntry("MatchRule", (int)mMatchRule);
+  config->writeEntry( "Name", mName );
+  config->writeEntry( "Enabled", mEnabled );
+  config->writeEntry( "Categories", mCategoryList );
+  config->writeEntry( "MatchRule", (int)mMatchRule );
 }
 
-void Filter::restore(KConfig *config)
+void Filter::restore( KConfig *config )
 {
-  mName = config->readEntry("Name", "<internal error>");
-  mEnabled = config->readBoolEntry("Enabled", true);
-  mCategoryList = config->readListEntry("Categories");
-  mMatchRule = (MatchRule)config->readNumEntry("MatchRule", Matching);
+  mName = config->readEntry( "Name", "<internal error>" );
+  mEnabled = config->readBoolEntry( "Enabled", true );
+  mCategoryList = config->readListEntry( "Categories" );
+  mMatchRule = (MatchRule)config->readNumEntry( "MatchRule", Matching );
 }
 
-void Filter::save(KConfig *config, QString baseGroup, 
-                     Filter::List &list)
+void Filter::save( KConfig *config, QString baseGroup, Filter::List &list )
 {
   {
-    KConfigGroupSaver s(config, baseGroup);
+    KConfigGroupSaver s( config, baseGroup );
 
     // remove the old filters
     uint count = config->readNumEntry( "Count" );
     for ( uint i = 0; i < count; ++i )
-      config->deleteGroup( QString("%1_%2").arg(baseGroup).arg(i) );
+      config->deleteGroup( QString( "%1_%2" ).arg( baseGroup ).arg( i ) );
 
-    config->writeEntry("Count", list.count());
   }
-  
+
   int index = 0;
   Filter::List::Iterator iter;
-  for (iter = list.begin(); iter != list.end(); ++iter)
-  {
-    {
-      KConfigGroupSaver s(config, QString("%1_%2").arg(baseGroup).arg(index));
-      (*iter).save(config);
+  for ( iter = list.begin(); iter != list.end(); ++iter ) {
+    if ( !(*iter).mInternal ) {
+      KConfigGroupSaver s( config, QString( "%1_%2" ).arg( baseGroup )
+                                                     .arg( index ) );
+      (*iter).save( config );
+      index++;
     }
-    index++;
   }
+
+  KConfigGroupSaver s( config, baseGroup );
+  config->writeEntry( "Count", index );
 }
                      
-Filter::List Filter::restore(KConfig *config, QString baseGroup)
+Filter::List Filter::restore( KConfig *config, QString baseGroup )
 {
   Filter::List list;
   int count = 0;
   Filter f;
   
   {
-    KConfigGroupSaver s(config, baseGroup);
-    count = config->readNumEntry("Count", 0);
+    KConfigGroupSaver s( config, baseGroup );
+    count = config->readNumEntry( "Count", 0 );
   }
   
-  for (int i = 0; i < count; i++)
-  {
+  for ( int i = 0; i < count; i++ ) {
     {
-      KConfigGroupSaver s(config, QString("%1_%2").arg(baseGroup).arg(i));
-      f.restore(config);
+      KConfigGroupSaver s( config, QString( "%1_%2" ).arg( baseGroup ).arg( i ) );
+      f.restore( config );
     }
-    list.append(f);
+
+    list.append( f );
   }
-  
+
+  QStringList cats = KABPrefs::instance()->mCustomCategories;
+  for ( QStringList::Iterator it = cats.begin(); it != cats.end(); ++it ) {
+    Filter filter;
+    filter.mName = *it;
+    filter.mEnabled = true;
+    filter.mCategoryList = *it;
+    filter.mMatchRule = Matching;
+    filter.mInternal = true;
+    list.append( filter );
+  }
+
   return list;
 }
 

@@ -173,14 +173,23 @@ FilterDialog::~FilterDialog()
 void FilterDialog::setFilters( const Filter::List &list )
 {
   mFilterList.clear();
-  mFilterList = list;
+  mInternalFilterList.clear();
+
+  Filter::List::ConstIterator it;
+  for ( it = list.begin(); it != list.end(); ++it ) {
+    if ( (*it).isInternal() )
+      mInternalFilterList.append( *it );
+    else
+      mFilterList.append( *it );
+  }
 
   refresh();
 }
 
-Filter::List &FilterDialog::filters()
+Filter::List FilterDialog::filters() const
 {
-  return mFilterList;
+  Filter::List list = mFilterList + mInternalFilterList;
+  return list;
 }
 
 void FilterDialog::add()
