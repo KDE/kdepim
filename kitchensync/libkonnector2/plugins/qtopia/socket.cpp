@@ -412,16 +412,23 @@ void QtopiaSocket::writeTodoList( TodoSyncee* syncee) {
     }
 }
 void QtopiaSocket::readAddressbook() {
+    KSync::AddressBookSyncee* syncee = 0;
     emit prog( StdProgress::downloading(i18n("Addressbook") ) );
     QString tempfile;
+
     if (!downloadFile( "/Applications/addressbook/addressbook.xml", tempfile ) ) {
         emit error( StdError::downloadError(i18n("Addressbook") ) );
-        return;
+        syncee = new KSync::AddressBookSyncee;
+        tempfile = QString::null;
     }
 
     emit prog( StdProgress::converting(i18n("Addressbook") ) );
-    OpieHelper::AddressBook abDB( d->edit, d->helper, d->tz, d->meta, d->device );
-    KSync::AddressBookSyncee* syncee = abDB.toKDE( tempfile );
+
+    if (!syncee) {
+        OpieHelper::AddressBook abDB( d->edit, d->helper, d->tz, d->meta, d->device );
+        syncee = abDB.toKDE( tempfile );
+    }
+
     if (!syncee ) {
         KIO::NetAccess::removeTempFile( tempfile );
         return;
@@ -442,18 +449,27 @@ void QtopiaSocket::readAddressbook() {
     }
     d->m_sync.append( syncee );
 
-    KIO::NetAccess::removeTempFile( tempfile );
+    if (!tempfile.isEmpty() )
+        KIO::NetAccess::removeTempFile( tempfile );
 }
 void QtopiaSocket::readDatebook() {
+    KSync::EventSyncee* syncee = 0;
     emit prog( StdProgress::downloading(i18n("Datebook") ) );
     QString tempfile;
     if (!downloadFile( "/Applications/datebook/datebook.xml", tempfile ) ) {
         emit error( StdError::downloadError(i18n("Datebook") ) );
-        return;
+        syncee = new KSync::EventSyncee;
+        tempfile = QString::null;
     }
     emit prog( StdProgress::converting(i18n("Datebook") ) );
-    OpieHelper::DateBook dateDB( d->edit, d->helper, d->tz, d->meta, d->device );
-    KSync::EventSyncee* syncee = dateDB.toKDE( tempfile );
+
+    /* the datebook.xml might not exist in this case we created an empty Entry
+     * and there is no need to parse a non existint file
+     */
+    if (!syncee ) {
+        OpieHelper::DateBook dateDB( d->edit, d->helper, d->tz, d->meta, d->device );
+        syncee = dateDB.toKDE( tempfile );
+    }
     if (!syncee ) {
         KIO::NetAccess::removeTempFile( tempfile );
         return;
@@ -475,18 +491,24 @@ void QtopiaSocket::readDatebook() {
     }
     d->m_sync.append( syncee );
 
-    KIO::NetAccess::removeTempFile( tempfile );
+    if (!tempfile.isEmpty() )
+        KIO::NetAccess::removeTempFile( tempfile );
 }
 void QtopiaSocket::readTodoList() {
+    KSync::TodoSyncee* syncee = 0;
     QString tempfile;
     emit prog( StdProgress::downloading(i18n("TodoList") ) );
     if (!downloadFile( "/Applications/todolist/todolist.xml", tempfile ) ) {
         emit error( StdError::downloadError(i18n("TodoList") ) );
-        return;
+        syncee = new KSync::TodoSyncee;
+        tempfile = QString::null;
     }
 
-    OpieHelper::ToDo toDB( d->edit, d->helper, d->tz, d->meta, d->device );
-    KSync::TodoSyncee* syncee = toDB.toKDE( tempfile );
+    if (!syncee ) {
+        OpieHelper::ToDo toDB( d->edit, d->helper, d->tz, d->meta, d->device );
+        syncee = toDB.toKDE( tempfile );
+    }
+
     if (!syncee ) {
         KIO::NetAccess::removeTempFile( tempfile );
         return;
@@ -506,7 +528,8 @@ void QtopiaSocket::readTodoList() {
 
     d->m_sync.append( syncee );
 
-    KIO::NetAccess::removeTempFile( tempfile );
+    if (!tempfile.isEmpty() )
+        KIO::NetAccess::removeTempFile( tempfile );
 }
 
 void QtopiaSocket::start(const QString& line ) {
