@@ -26,6 +26,7 @@
 #include <qfont.h>
 #include <qlabel.h>
 #include <qlayout.h>
+#include <qpushbutton.h>
 
 #include <kabc/vcardconverter.h>
 #include <kdialogbase.h>
@@ -61,8 +62,24 @@ extern "C"
 class VCardViewerDialog : public KDialogBase
 {
   public:
-    VCardViewerDialog( const KABC::Addressee &addr,
+    VCardViewerDialog( const KABC::Addressee::List &list,
                        QWidget *parent, const char *name = 0 );
+
+    KABC::Addressee::List contacts() const;
+
+  protected:
+    void slotUser1();
+    void slotUser2();
+    void slotApply();
+    void slotCancel();
+
+  private:
+    void updateView();
+
+    KPIM::AddresseeView *mView;
+
+    KABC::Addressee::List mContacts;
+    KABC::Addressee::List::Iterator mIt;
 };
 
 class VCardExportSelectionDialog : public KDialogBase
@@ -193,14 +210,9 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
     }
 
     if ( !XXPortManager::importURL.isEmpty() ) { // a vcard was passed via cmd
-      KABC::AddresseeList::Iterator addrIt;
-      for ( addrIt = addrList.begin(); addrIt != addrList.end(); ++addrIt ) {
-        VCardViewerDialog dlg( *addrIt, parentWidget() );
-        if ( !dlg.exec() ) {
-          addrIt = addrList.remove( addrIt );
-          addrIt--;
-        }
-      }
+      VCardViewerDialog dlg( addrList, parentWidget() );
+      dlg.exec();
+      addrList = dlg.contacts();
     }
   }
 
@@ -309,10 +321,11 @@ KABC::AddresseeList VCardXXPort::filterContacts( const KABC::AddresseeList &addr
 
 // ---------- VCardViewer Dialog ---------------- //
 
-VCardViewerDialog::VCardViewerDialog( const KABC::Addressee &addr,
+VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list,
                                       QWidget *parent, const char *name )
-  : KDialogBase( Plain, i18n( "Import vCard" ), Ok | Cancel, Ok,
-                 parent, name, true, true )
+  : KDialogBase( Plain, i18n( "Import vCard" ), Yes | No | Apply | Cancel, Yes,
+                 parent, name, true, true, KStdGuiItem::no(), KStdGuiItem::yes() ),
+    mContacts( list )
 {
   QFrame *page = plainPage();
   QVBoxLayout *layout = new QVBoxLayout( page, marginHint(), spacingHint() );  
@@ -323,10 +336,59 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee &addr,
   label->setFont( font );
   layout->addWidget( label );
 
-  KPIM::AddresseeView *view = new KPIM::AddresseeView( page );
-  view->setAddressee( addr );
-  view->setVScrollBarMode( QScrollView::Auto );
-  layout->addWidget( view );
+  mView = new KPIM::AddresseeView( page );
+  mView->setVScrollBarMode( QScrollView::Auto );
+  layout->addWidget( mView );
+
+  setButtonText( Apply, i18n( "Import all..." ) );
+
+  mIt = mContacts.begin();
+
+  updateView();
+}
+
+KABC::Addressee::List VCardViewerDialog::contacts() const
+{
+  return mContacts;
+}
+
+void VCardViewerDialog::updateView()
+{
+  mView->setAddressee( *mIt );
+
+  KABC::Addressee::List::Iterator it = mIt;
+  actionButton( Apply )->setEnabled( (++it) != mContacts.end() );
+}
+
+void VCardViewerDialog::slotUser1()
+{
+  mIt = mContacts.remove( mIt );
+
+  if ( mIt == mContacts.end() )
+    slotApply();
+
+  updateView();
+}
+
+void VCardViewerDialog::slotUser2()
+{
+  mIt++;
+
+  if ( mIt == mContacts.end() )
+    slotApply();
+
+  updateView();
+}
+
+void VCardViewerDialog::slotApply()
+{
+  QDialog::accept();
+}
+
+void VCardViewerDialog::slotCancel()
+{
+  mContacts.clear();
+  QDialog::accept();
 }
 
 // ---------- VCardExportSelection Dialog ---------------- //
