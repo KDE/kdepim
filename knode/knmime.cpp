@@ -1231,6 +1231,44 @@ void KNMimeContent::toStream(QTextStream &ts, bool scrambleFromLines)
 }
 
 
+KNHeaders::Generic*  KNMimeContent::getNextHeader(QCString &head)
+{
+  int pos1=-1, pos2=0, len=head.length()-1;
+  bool folded(false);
+  KNHeaders::Generic *header=0;
+
+  pos1 = head.find(": ");
+
+  if (pos1>-1) {    //there is another header
+    pos2=pos1+=2; //skip the name
+
+    if (head[pos2]!='\n') {  // check if the header is not empty
+      while(1) {
+        pos2=head.find("\n", pos2+1);
+        if(pos2==-1 || pos2==len || ( head[pos2+1]!=' ' && head[pos2+1]!='\t') ) //break if we reach the end of the string, honor folded lines
+          break;
+        else
+          folded = true;
+      }
+    }
+
+    if(pos2<0) pos2=len+1; //take the rest of the string
+
+    if (!folded)
+      header = new KNHeaders::Generic(head.left(pos1-2), this, head.mid(pos1, pos2-pos1));
+    else
+      header = new KNHeaders::Generic(head.left(pos1-2), this, head.mid(pos1, pos2-pos1).replace(QRegExp("\\s*\\n\\s*")," "));
+
+    head.remove(0,pos2+1);
+  }
+  else {
+    head = "";
+  }
+
+  return header;
+}
+
+
 KNHeaders::Base* KNMimeContent::getHeaderByType(const char *type)
 {
   if(!type)

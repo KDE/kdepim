@@ -887,21 +887,17 @@ void KNArticleWidget::createHtmlPage()
     html="<qt><headerblock><table width=\"100%\" cellpadding=0 cellspacing=0><tr><td><table cellpadding=0 cellspacing=0>";
 
   if(a_ctToggleFullHdrs->isChecked()) {
-    KNStringSplitter split;
-    split.init(a_rticle->head(), "\n");
-    QString temp;
-    int pos;
-    bool splitOk=split.first();
-    while(splitOk) {
-      html+="<tr><td align=right>";
-      temp=QString::fromLatin1(split.string().data(), split.string().length());
-      if( (pos=temp.find(':'))==-1 )
-        html+=QString("</td><td width=\"100%\">%1</td></tr>").arg(toHtmlString(temp,true));
-      else
-        html+=QString("<b>%1</b></td><td width=\"100%\">%2</td></tr>")
-                      .arg(toHtmlString(temp.left(pos+1)))
-                      .arg(toHtmlString(temp.right(temp.length()-pos-2),true));
-      splitOk=split.next();
+    QCString head = a_rticle->head();
+    KNHeaders::Generic *header=0;
+
+    while(!head.isEmpty()) {
+      header = a_rticle->getNextHeader(head);
+      if (header) {
+        html+=QString("<tr><td align=right><b>%1</b></td><td width=\"100%\">%2</td></tr>")
+                      .arg(toHtmlString(header->type())+":")
+                      .arg(toHtmlString(header->asUnicodeString(),true));
+        delete header;
+      }
     }
   }
   else {

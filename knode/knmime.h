@@ -170,6 +170,8 @@ class KNMimeContent : public KNMimeBase {
 
     //header access
     QCString head()       { return h_ead; }
+    // extracts and removes the next header from head. The caller has to delete the returned header;
+    KNHeaders::Generic*  KNMimeContent::getNextHeader(QCString &head);
     virtual KNHeaders::Base* getHeaderByType(const char *type);
     virtual void setHeader(KNHeaders::Base *h);
     virtual bool removeHeader(const char *type);
