@@ -45,6 +45,16 @@
 
 using namespace KCal;
 
+ResourceCalendar *CalendarResources::StandardDestinationPolicy::destination( Incidence * )
+{
+  return resourceManager()->standardResource();
+}
+
+ResourceCalendar *CalendarResources::AskDestinationPolicy::destination( Incidence * )
+{
+  return 0;
+}
+
 CalendarResources::CalendarResources()
   : Calendar()
 {
@@ -64,20 +74,6 @@ void CalendarResources::init()
   mManager = new CalendarResourceManager( "calendar", "kcalrc" );
   mManager->load();
 
-#if 0
-  if ( mManager->isEmpty() ) {
-    QString fileName = locateLocal( "data", "kcal/std.ics" );
-
-    kdDebug() << "DEFAULT: " << fileName << endl;
-
-    ResourceCalendar *defaultResource = new ResourceLocal( fileName );
-    defaultResource->setResourceName( i18n("Default calendar resource") );
-
-    mManager->add( defaultResource );
-    mManager->setStandardResource( defaultResource );
-  }
-#endif
-
   if ( !mManager->standardResource() ) {
     kdDebug() << "Warning! No standard resource yet." << endl;
   }
@@ -91,6 +87,8 @@ void CalendarResources::init()
     // Really should remove resource if open not successful
     connectResource( *it );
   }
+
+  mDestinationPolicy = new StandardDestinationPolicy( mManager );
 
   mOpen = true;
 }
@@ -146,21 +144,28 @@ bool CalendarResources::isSaving()
   return false;
 }
 
-bool CalendarResources::addEvent(Event *anEvent)
+bool CalendarResources::addIncidence( Incidence *incidence )
 {
-  kdDebug(5800) << "CalendarResources::addEvent" << endl;
+  kdDebug(5800) << "CalendarResources::addIncidence" << endl;
 
-  if ( mManager->standardResource() ) {
-    mManager->standardResource()->addEvent( anEvent );
-    mResourceMap[anEvent] = mManager->standardResource();
+  ResourceCalendar *resource = mDestinationPolicy->destination( incidence );
+
+  if ( resource ) {
+    resource->addIncidence( incidence );
+    mResourceMap[ incidence ] = resource;
   } else {
-    kdDebug() << "FIXME: We don't have a standard resource. Adding events isn't going to work" << endl;
+    kdDebug(5800) << "CalendarResources::addIncidence(): no resource" << endl;
     return false;
   }
 
   setModified( true );
 
   return true;
+}
+
+bool CalendarResources::addEvent( Event *event )
+{
+  return addIncidence( event );
 }
 
 bool CalendarResources::addEvent(Event *anEvent, ResourceCalendar *resource)
@@ -216,21 +221,11 @@ Event *CalendarResources::event( const QString &uid )
   return 0;
 }
 
-bool CalendarResources::addTodo(Todo *todo)
+bool CalendarResources::addTodo( Todo *todo )
 {
   kdDebug(5800) << "CalendarResources::addTodo" << endl;
 
-  if ( mManager->standardResource() ) {
-    mManager->standardResource()->addTodo( todo );
-    mResourceMap[todo] = mManager->standardResource();
-  } else {
-    kdDebug() << "FIXME: We don't have a standard resource. Adding todos isn't going to work" << endl;
-    return false;
-  }
-
-  setModified( true );
-
-  return true;
+  return addIncidence( todo );
 }
 
 bool CalendarResources::addTodo(Todo *todo, ResourceCalendar *resource)
@@ -458,21 +453,11 @@ QPtrList<Event> CalendarResources::rawEvents()
 }
 
 
-bool CalendarResources::addJournal(Journal *journal)
+bool CalendarResources::addJournal( Journal *journal )
 {
   kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
 
-  if ( mManager->standardResource() ) {
-    mManager->standardResource()->addJournal( journal );
-    mResourceMap[journal] = mManager->standardResource();
-  } else {
-    kdDebug() << "FIXME: We don't have a standard resource. Adding journals isn't going to work" << endl;
-    return false;
-  }
-
-  setModified( true );
-
-  return true;
+  return addIncidence( journal );
 }
 
 bool CalendarResources::addJournal(Journal *journal, ResourceCalendar *resource)

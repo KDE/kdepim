@@ -46,7 +46,7 @@ namespace KCal {
   K_DCOP
 
   k_dcop:
-    virtual void addIncidence( const QString& type, const QString& ical );
+    virtual bool addIncidence( const QString& type, const QString& ical );
     virtual void deleteIncidence( const QString& type, const QString& uid );
 
   public:
@@ -60,7 +60,7 @@ namespace KCal {
     bool save();
 
     /** Add Event to calendar. */
-    void addEvent(Event *anEvent);
+    bool addEvent(Event *anEvent);
     /** deletes an event from this calendar. */
     void deleteEvent(Event *);
 
@@ -105,7 +105,7 @@ namespace KCal {
     /**
       Add a todo to the todolist.
     */
-    void addTodo( Todo *todo );
+    bool addTodo( Todo *todo );
     /**
       Remove a todo from the todolist.
     */
@@ -124,7 +124,7 @@ namespace KCal {
     */
     QPtrList<Todo> todos( const QDate &date );
     /** Add a Journal entry to calendar */
-    virtual void addJournal(Journal *);
+    virtual bool addJournal(Journal *);
     /**
       Remove a journal entry from the journal.
     */

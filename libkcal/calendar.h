@@ -133,7 +133,7 @@ class Calendar : public QObject, public CustomProperties,
       
       @return true on success, false on error.
     */
-    bool addIncidence( Incidence * );  
+    virtual bool addIncidence( Incidence * );  
     /**
       Return filtered list of all incidences of this calendar.
     */

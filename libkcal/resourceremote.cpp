@@ -256,9 +256,9 @@ void ResourceRemote::doClose()
 }
 
 
-void ResourceRemote::addEvent(Event *event)
+bool ResourceRemote::addEvent(Event *event)
 {
-  mCalendar.addEvent( event );
+  return mCalendar.addEvent( event );
 }
 
 void ResourceRemote::deleteEvent(Event *event)
@@ -301,9 +301,9 @@ QPtrList<Event> ResourceRemote::rawEvents()
   return mCalendar.rawEvents();
 }
 
-void ResourceRemote::addTodo(Todo *todo)
+bool ResourceRemote::addTodo(Todo *todo)
 {
-  mCalendar.addTodo( todo );
+  return mCalendar.addTodo( todo );
 }
 
 void ResourceRemote::deleteTodo(Todo *todo)
@@ -328,11 +328,11 @@ QPtrList<Todo> ResourceRemote::todos( const QDate &date )
 }
 
 
-void ResourceRemote::addJournal(Journal *journal)
+bool ResourceRemote::addJournal(Journal *journal)
 {
   kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
 
-  mCalendar.addJournal( journal );
+  return mCalendar.addJournal( journal );
 }
 
 Journal *ResourceRemote::journal(const QDate &date)

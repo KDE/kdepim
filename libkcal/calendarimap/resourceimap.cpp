@@ -162,13 +162,13 @@ bool ResourceIMAP::save()
  * Adding and removing Events
  */
 
-void ResourceIMAP::addEvent(Event *anEvent)
+bool ResourceIMAP::addEvent(Event *anEvent)
 {
   kdDebug(5800) << "ResourceIMAP::addEvent" << endl;
   mCalendar.addEvent(anEvent);
   anEvent->registerObserver( this );
   
-  if( mSilent ) return;
+  if( mSilent ) return true;
 
   // call kmail ...
   QByteArray data;
@@ -189,6 +189,8 @@ void ResourceIMAP::addEvent(Event *anEvent)
     kdError() << "DCOP error during addIncidence(QString)" << endl;
   }
   mCurrentUID = QString::null;
+
+  return true;
 }
 
 // probably not really efficient, but...it works for now.
@@ -257,12 +259,12 @@ QPtrList<Event> ResourceIMAP::rawEvents()
  * Adding and removing Todos
  */
 
-void ResourceIMAP::addTodo(Todo *todo)
+bool ResourceIMAP::addTodo(Todo *todo)
 {
   mCalendar.addTodo(todo);
   todo->registerObserver( this );
 
-  if( mSilent ) return;
+  if( mSilent ) return true;
 
   // call kmail ..
   QByteArray data;
@@ -283,6 +285,8 @@ void ResourceIMAP::addTodo(Todo *todo)
     kdError() << "DCOP error during addIncidence(QString)" << endl;
   }
   mCurrentUID = QString::null;
+
+  return true;
 }
 
 void ResourceIMAP::deleteTodo(Todo *todo)
@@ -328,13 +332,13 @@ QPtrList<Todo> ResourceIMAP::todos( const QDate &date )
  * Journal handling
  */
 
-void ResourceIMAP::addJournal(Journal *journal)
+bool ResourceIMAP::addJournal(Journal *journal)
 {
   kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
   mCalendar.addJournal(journal);
   journal->registerObserver( this );
 
-  if( mSilent ) return;
+  if( mSilent ) return true;
 
   // call kmail ..
   QByteArray data;
@@ -355,6 +359,8 @@ void ResourceIMAP::addJournal(Journal *journal)
     kdError() << "DCOP error during addIncidence(QString)" << endl;
   }
   mCurrentUID = QString::null;
+
+  return true;
 }
 
 void ResourceIMAP::deleteJournal(Journal *journal)
@@ -473,13 +479,13 @@ KCal::Incidence* ResourceIMAP::parseIncidence( const QString& str )
  return i;
 }
 
-void ResourceIMAP::addIncidence( const QString& type, const QString& ical )
+bool ResourceIMAP::addIncidence( const QString& type, const QString& ical )
 {
   kdDebug() << "ResourceIMAP::addIncidence( " << type << ", " << /*ical*/"..." << " )" << endl;
   Incidence* i = parseIncidence( ical );
-  if( !i ) return;
+  if( !i ) return false;
   // Ignore events that come from us
-  if( !mCurrentUID.isNull() && mCurrentUID == i->uid() ) return;
+  if( !mCurrentUID.isNull() && mCurrentUID == i->uid() ) return true;
 
   if( type == "Calendar" ) {
     if( i && i->type() == "Event" ) {
@@ -488,6 +494,8 @@ void ResourceIMAP::addIncidence( const QString& type, const QString& ical )
       mSilent = false;
     }
   }
+
+  return true;
 }
 
 void ResourceIMAP::deleteIncidence( const QString& type, const QString& uid )

@@ -40,6 +40,39 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
 {
     Q_OBJECT
   public:
+    class DestinationPolicy
+    {
+      public:
+        DestinationPolicy( CalendarResourceManager *manager )
+          : mManager( manager ) {}
+
+        virtual ResourceCalendar *destination( Incidence * ) = 0;
+
+      protected:
+        CalendarResourceManager *resourceManager() { return mManager; }
+
+      private:
+        CalendarResourceManager *mManager;
+    };
+
+    class StandardDestinationPolicy : public DestinationPolicy
+    {
+      public:
+        StandardDestinationPolicy( CalendarResourceManager *manager )
+          : DestinationPolicy( manager ) {}
+      
+        ResourceCalendar *destination( Incidence * );
+    };
+
+    class AskDestinationPolicy : public DestinationPolicy
+    {
+      public:
+        AskDestinationPolicy( CalendarResourceManager *manager )
+          : DestinationPolicy( manager ) {}
+
+        ResourceCalendar *destination( Incidence * );
+    };
+
     /** constructs a new calendar that uses the ResourceManager for "calendar" */
     CalendarResources();
     /** constructs a new calendar, with variables initialized to sane values. */
@@ -49,7 +82,7 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
     /**
       Return ResourceManager used by this calendar.
     */
-    KRES::ResourceManager<ResourceCalendar> *resourceManager() const
+    CalendarResourceManager *resourceManager() const
     {
       return mManager;
     }
@@ -60,6 +93,8 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
     void save();
 
     bool isSaving();
+
+    bool addIncidence( Incidence * );
 
     /** Add Event to calendar. */
     bool addEvent(Event *anEvent);
@@ -181,6 +216,8 @@ class CalendarResources : public Calendar, public KRES::ManagerListener<Resource
 
     KRES::ResourceManager<ResourceCalendar>* mManager;
     QMap <Incidence*, ResourceCalendar*> mResourceMap;
+
+    DestinationPolicy *mDestinationPolicy;
 };
 
 }

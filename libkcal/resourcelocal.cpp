@@ -170,9 +170,9 @@ void ResourceLocal::doClose()
 }
 
 
-void ResourceLocal::addEvent(Event *event)
+bool ResourceLocal::addEvent(Event *event)
 {
-  mCalendar.addEvent( event );
+  return mCalendar.addEvent( event );
 }
 
 // probably not really efficient, but...it works for now.
@@ -216,9 +216,9 @@ QPtrList<Event> ResourceLocal::rawEvents()
   return mCalendar.rawEvents();
 }
 
-void ResourceLocal::addTodo(Todo *todo)
+bool ResourceLocal::addTodo(Todo *todo)
 {
-  mCalendar.addTodo( todo );
+  return mCalendar.addTodo( todo );
 }
 
 void ResourceLocal::deleteTodo(Todo *todo)
@@ -243,11 +243,11 @@ QPtrList<Todo> ResourceLocal::todos( const QDate &date )
 }
 
 
-void ResourceLocal::addJournal(Journal *journal)
+bool ResourceLocal::addJournal(Journal *journal)
 {
   kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
 
-  mCalendar.addJournal( journal );
+  return mCalendar.addJournal( journal );
 }
 
 Journal *ResourceLocal::journal(const QDate &date)

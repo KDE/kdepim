@@ -87,8 +87,10 @@ class ResourceCalendar : public QObject, public KRES::Resource
 
     virtual bool isSaving() { return false; }
 
+    virtual bool addIncidence( Incidence * );
+
     /** Add Event to calendar. */
-    virtual void addEvent(Event *anEvent) = 0;
+    virtual bool addEvent(Event *anEvent) = 0;
 
     /** deletes an event from this calendar. */
     virtual void deleteEvent(Event *) = 0;
@@ -174,7 +176,7 @@ class ResourceCalendar : public QObject, public KRES::Resource
     /**
       Add a todo to the todolist.
     */
-    virtual void addTodo( Todo *todo ) = 0;
+    virtual bool addTodo( Todo *todo ) = 0;
     /**
       Remove a todo from the todolist.
     */
@@ -195,7 +197,7 @@ class ResourceCalendar : public QObject, public KRES::Resource
 
 
     /** Add a Journal entry to calendar */
-    virtual void addJournal(Journal *) = 0;
+    virtual bool addJournal(Journal *) = 0;
 
     /** Remove a Journal entry from calendar */
     // virtual void deleteJournal(Journal *) = 0;

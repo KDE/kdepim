@@ -198,9 +198,9 @@ void ResourceLocalDir::doClose()
 }
 
 
-void ResourceLocalDir::addEvent(Event *event)
+bool ResourceLocalDir::addEvent(Event *event)
 {
-  mCalendar.addEvent( event );
+  return mCalendar.addEvent( event );
 }
 
 void ResourceLocalDir::deleteEvent(Event *event)
@@ -243,9 +243,9 @@ QPtrList<Event> ResourceLocalDir::rawEvents()
   return mCalendar.rawEvents();
 }
 
-void ResourceLocalDir::addTodo(Todo *todo)
+bool ResourceLocalDir::addTodo(Todo *todo)
 {
-  mCalendar.addTodo( todo );
+  return mCalendar.addTodo( todo );
 }
 
 void ResourceLocalDir::deleteTodo(Todo *todo)
@@ -270,11 +270,11 @@ QPtrList<Todo> ResourceLocalDir::todos( const QDate &date )
 }
 
 
-void ResourceLocalDir::addJournal(Journal *journal)
+bool ResourceLocalDir::addJournal(Journal *journal)
 {
   kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
 
-  mCalendar.addJournal( journal );
+  return mCalendar.addJournal( journal );
 }
 
 Journal *ResourceLocalDir::journal(const QDate &date)
