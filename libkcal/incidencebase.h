@@ -34,6 +34,7 @@
 namespace KCal {
 
 typedef QValueList<QDate> DateList;
+typedef QValueList<QDateTime> DateTimeList;
 
 /**
   This class provides the base class common to all calendar components.
