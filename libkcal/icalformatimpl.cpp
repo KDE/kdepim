@@ -186,10 +186,15 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
 
 #endif
 
-// TODO: transparency
-  // transparency
-//  tmpStr.sprintf("%i",anEvent->getTransparency());
-//  addPropValue(vevent, VCTranspProp, tmpStr.utf8());
+  // Transparency
+  switch( event->transparency() ) {
+  case Event::Transparent:
+    icalcomponent_add_property(vevent, icalproperty_new_transp("TRANSPARENT"));
+    break;
+  case Event::Opaque:
+    icalcomponent_add_property(vevent, icalproperty_new_transp("OPAQUE"));
+    break;
+  }
 
   return vevent;
 }
@@ -836,6 +841,7 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
   icaltimetype icaltime;
 
   QStringList categories;
+  QString transparency;
 
   while (p) {
     icalproperty_kind kind = icalproperty_isa(p);
@@ -914,20 +920,19 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
   }
 #endif
 
-// TODO: transparency
-#if 0
-  // transparency
-  if ((vo = isAPropertyOf(vevent, VCTranspProp)) != 0) {
-    anEvent->setTransparency(atoi(s = fakeCString(vObjectUStringZValue(vo))));
-    deleteStr(s);
-  }
-#endif
-
       case ICAL_RELATEDTO_PROPERTY:  // releated event (parent)
         event->setRelatedToUid(QString::fromUtf8(icalproperty_get_relatedto(p)));
         mEventsRelate.append(event);
         break;
 
+
+      case ICAL_TRANSP_PROPERTY:  // Transparency
+	transparency = QString::fromUtf8(icalproperty_get_transp(p));
+	if( transparency == "TRANSPARENT" )
+	  event->setTransparency( Event::Transparent );
+	else
+	  event->setTransparency( Event::Opaque );
+	break;
 
       default:
 //        kdDebug(5800) << "ICALFormat::readEvent(): Unknown property: " << kind

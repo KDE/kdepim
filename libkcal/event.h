@@ -34,6 +34,8 @@ namespace KCal {
 class Event : public Incidence
 {
   public:
+    enum Transparency { Opaque, Transparent };
+
     Event();
     Event(const Event &);
     ~Event();
@@ -63,9 +65,9 @@ class Event : public Incidence
     bool isMultiDay() const;
 
     /** set the event's time transparency level. */
-    void setTransparency(int transparency);
+    void setTransparency(Transparency transparency);
     /** get the event's time transparency level. */
-    int transparency() const;
+    Transparency transparency() const;
 
     void setDuration(int seconds);
 

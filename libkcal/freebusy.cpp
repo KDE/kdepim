@@ -55,6 +55,13 @@ FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime 
   for( event = eventList.first(); event; event = eventList.next() ) {
     //This whole for loop is for recurring events, it loops through 
     //each of the days of the freebusy request
+
+    //First check if this is transparent. If it is, it shouldn't be in the
+    //freebusy list
+    if ( event->transparency() == Event::Transparent )
+      // Transparent
+      continue;
+
     for(i=0; i<=duration; i++) {
       day=(start.addDays(i).date());
       tmpStart.setDate(day);

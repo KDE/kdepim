@@ -112,14 +112,14 @@ bool Event::isMultiDay() const
 }
 
 
-void Event::setTransparency(int transparency)
+void Event::setTransparency(Transparency transparency)
 {
   if (mReadOnly) return;
   mTransparency = transparency;
   updated();
 }
 
-int Event::transparency() const
+Event::Transparency Event::transparency() const
 {
   return mTransparency;
 }

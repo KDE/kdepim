@@ -1340,7 +1340,8 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
 
   // transparency
   if ((vo = isAPropertyOf(vevent, VCTranspProp)) != 0) {
-    anEvent->setTransparency(atoi(s = fakeCString(vObjectUStringZValue(vo))));
+    int i = atoi(s = fakeCString(vObjectUStringZValue(vo)));
+    anEvent->setTransparency( i == 1 ? Event::Transparent : Event::Opaque );
     deleteStr(s);
   }
 
