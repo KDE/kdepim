@@ -304,6 +304,7 @@ bool KNFolder::unloadHdrs(bool force)
     if (a->hasContent() && !knGlobals.artManager->unloadArticle(a, force))
       return false;
   }
+  syncIndex();
   clear();
 
   return true;

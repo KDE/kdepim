@@ -1155,7 +1155,7 @@ void KNMimeContent::toStream(QTextStream &ts, bool scrambleFromLines)
   QCString ret=encodedContent(false);
 
   if (scrambleFromLines)
-    ret.replace(QRegExp("\\nFrom "), "\n>From ");
+    ret.replace(QRegExp("\\n\\nFrom "), "\n\n>From ");
 
   ts << ret;
 }

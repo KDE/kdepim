@@ -320,7 +320,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
         artStart = file->at();
         done = false;
       } else {
-        artStart = file->findString("\nFrom ");
+        artStart = file->findString("\n\nFrom ");
         if (artStart != -1) {
           file->at(artStart+1);
           s = file->readLine();
@@ -334,7 +334,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
 
     if (!done) {
       while (!file->atEnd()) {
-        artEnd = file->findString("\nFrom ");
+        artEnd = file->findString("\n\nFrom ");
 
         if (artEnd != -1) {
           file->at(artStart);    // seek the first character of the article
