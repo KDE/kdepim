@@ -26,6 +26,7 @@
 #include <qregexp.h>
 #include <qclipboard.h>
 #include <qfile.h>
+#include <qtextstream.h>
 
 #include <kdebug.h>
 #include <klocale.h>
