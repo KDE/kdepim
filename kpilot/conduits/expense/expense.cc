@@ -168,7 +168,7 @@ char * note;
 };
 */
 
-char *
+const char *
 get_entry_type(enum ExpenseType type)
  {
    switch(type) {     
@@ -233,7 +233,7 @@ get_entry_type(enum ExpenseType type)
    }
 }
 
-char *
+const char *
 get_pay_type(enum ExpensePayment type)
 {
    switch (type) {
@@ -529,6 +529,10 @@ ExpenseConduit::doTest()
 }
 
 // $Log$
+// Revision 1.14  2001/03/27 11:10:38  leitner
+// ported to Tru64 unix: changed all stream.h to iostream.h, needed some
+// #ifdef DEBUG because qstringExpand etc. were not defined.
+//
 // Revision 1.13  2001/03/23 21:08:39  molnarc
 //
 // more cleanup and commit before I rebuild all.
