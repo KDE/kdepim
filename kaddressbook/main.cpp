@@ -38,16 +38,6 @@
 #include "kaddressbookmain.h"
 #include "kabcore.h"
 
-extern "C" {
-
-void crashHandler( int )
-{
-  KABC::StdAddressBook::handleCrash();
-  ::exit( 0 );
-}
-
-}
-
 class KAddressBookApp : public KUniqueApplication {
   public:
     KAddressBookApp() : mMainWin( 0 ) {}
@@ -105,8 +95,6 @@ int KAddressBookApp::newInstance()
       mMainWin->newContact();
     }
   }
-
-  KCrash::setEmergencySaveFunction( crashHandler );
 
   return 0;
 }
