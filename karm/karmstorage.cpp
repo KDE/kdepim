@@ -28,6 +28,7 @@
 #include <cassert>
 
 #include <qfile.h>
+#include <qsize.h>
 #include <qdict.h>
 #include <qdatetime.h>
 #include <qstringlist.h>
@@ -38,6 +39,7 @@
 #include <kemailsettings.h>
 #include <klocale.h>            // i18n
 #include <kmessagebox.h>
+#include <kprogress.h>
 #include <resourcecalendar.h>
 #include <resourcelocal.h>
 #include <taskview.h>
@@ -455,6 +457,7 @@ QString KarmStorage::exportcsvFile(TaskView* taskview, const QString& filename)
 
   QString err;
   Task* task;
+  int maxdepth=0; 
 
   kdDebug(5970)
     << "KarmStorage::exportcsvFile: " << filename << endl;
@@ -466,34 +469,58 @@ QString KarmStorage::exportcsvFile(TaskView* taskview, const QString& filename)
 
   if (!err)
   {
+    QString title = i18n("Export Progress");
+    KProgressDialog dialog( taskview, 0, title );
+    dialog.setAutoClose( true );
+    dialog.setAllowCancel( true );
+    dialog.progressBar()->setTotalSteps( 2 * taskview->count() );
+
+    // The default dialog was not displaying all the text in the title bar.
+    int width = taskview->fontMetrics().width(title) * 3;
+    QSize dialogsize;
+    dialogsize.setWidth(width);
+    dialog.setInitialSize( dialogsize, true );
+    
+    if ( taskview->count() > 1 ) dialog.show();
+
     QTextStream stream(&f);
 
-    for (int tasknr=0; tasknr<=taskview->count()-1; ++tasknr)
-    {
-      task = taskview->item_at_index(tasknr);
+    // Find max task depth
+    int tasknr = 0;
+    while ( tasknr < taskview->count() && !dialog.wasCancelled() )
+    { 
+      dialog.progressBar()->advance( 1 );
+      if ( tasknr % 15 == 0 ) kapp->processEvents(); // repainting is slow 
+      if ( taskview->item_at_index(tasknr)->depth() > maxdepth ) 
+        maxdepth = taskview->item_at_index(tasknr)->depth(); 
+      tasknr++;
+    } 
 
-      kdDebug(5970) << "KarmStorage::exportcsvFile: " 
-        << task->name() << ": " << task->depth() << endl;
+    // Export to file
+    tasknr = 0;
+    while ( tasknr < taskview->count() && !dialog.wasCancelled() )
+    {
+      task = taskview->item_at_index( tasknr );
+
+      dialog.progressBar()->advance( 1 );
+      if ( tasknr % 15 == 0 ) kapp->processEvents();
 
       // indent the task in the csv-file:
-      for (int i=0; i < task->depth(); ++i)
-      {
-        stream << delim;
-      }
+      for ( int i=0; i < task->depth(); ++i ) stream << delim;
       stream << task->name().replace( delim, rdelim );
 
       // maybe other tasks are more indented, so to align the columns:
-      for (int i=0; i<task->depth(); ++i)
-      {
-        stream << delim;
-      }
+      for ( int i = 0; i < maxdepth - task->depth(); ++i ) stream << delim;
+
       stream << delim << task->sessionTime()
              << delim << task->time()
              << delim << task->totalSessionTime()
              << delim << task->totalTime()
              << endl;
+      tasknr++;
     }
     f.close();
+
   }
   return err;
 }
