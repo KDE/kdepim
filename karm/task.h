@@ -26,7 +26,7 @@ public:
 	/** constructor */
 	Task(const QString& taskame, long minutes, long sessionTime, QListView *parent = 0);
 	Task(const QString& taskame, long minutes, long sessionTime, QListViewItem *parent = 0);
-  void init(const QString& taskame, long minutes, long sessionTime);
+	void init(const QString& taskame, long minutes, long sessionTime);
 
 	/**increments the total task time
 	* @param minutes to increment by
@@ -72,10 +72,10 @@ public:
 		setText(2, Karm::formatTime(_totalTime));
 	}
 
-        void resetSessionTime();
+	void resetSessionTime();
 
-  void setRunning(bool on);
-  bool isRunning() const;
+	void setRunning(bool on);
+	bool isRunning() const;
 
 protected slots:
   void updateActiveIcon();
