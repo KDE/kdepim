@@ -162,7 +162,7 @@ KDE_CHECK_HEADER(kresources/factory.h,HAVE_KABC=1,
 AM_CONDITIONAL(include_abc, test "$HAVE_KABC" = 1)
 ])
 
-AC_DEFUN(KPILOT_CHECK_PERL,[HAVE_PERL=0
+AC_DEFUN([KPILOT_CHECK_PERL],[HAVE_PERL=0
 AC_MSG_CHECKING([for Perl embedding])
 if perl -MExtUtils::Embed -e ccopts > /dev/null 2> /dev/null ; then
 	PERL_CFLAGS=`perl -MExtUtils::Embed -e ccopts 2> /dev/null`
@@ -179,7 +179,7 @@ AC_SUBST(PERL_LDFLAGS)
 AM_CONDITIONAL(include_perl, test "$HAVE_PERL" = 1)
 ])
 
-AC_DEFUN(KPILOT_CHECK_PYTHON,[HAVE_PYTHON=0
+AC_DEFUN([KPILOT_CHECK_PYTHON],[HAVE_PYTHON=0
 AC_MSG_CHECKING([for Python embedding])
 AM_CONDITIONAL(include_python, test "$HAVE_PYTHON" = 1)
 AC_MSG_RESULT(N/A)
