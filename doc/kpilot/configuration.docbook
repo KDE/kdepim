@@ -5,7 +5,7 @@
 Once &kpilot; is installed it needs to be
 configured
 to match your hardware.
-The <link linkend="conduits">conduits</link>
+The <link linkend="config-conduits">conduits</link>
 need to be configured as well.
 After that you can use &kpilot;
 to synchronize your &PalmPilot; with
@@ -126,7 +126,7 @@ step all applicable &kpilot; conduits to sync with widely used
 <guimenu>Settings</guimenu>
 <guimenuitem>Configure &kpilot;</guimenuitem>
 </menuchoice>
-menu. Please check the <link linkend="conduits">conduits configuration</link>
+menu. Please check the <link linkend="config-conduits">conduits configuration</link>
 section of this document for more information.
 </para>
 
@@ -1033,7 +1033,7 @@ documents in your computer and the direction of the synchronization.
 Type on the text box or use the file picker to select the location of the folder
 that the Palm DOC conduit uses a as the place for the text files it will sync
 with the &handheld;. There, you may place the text documents you want install or
-synchronize to the PDA, and find the text documents created from Palm DOC
+synchronize to the <acronym>PDA</acronym>, and find the text documents created from Palm DOC
 databases in your &handheld;.
 <important><para>
 The file name has to end in <literal role="extension">.txt</literal> for the
@@ -1139,7 +1139,7 @@ in your Palm DOC documents.
 Convert tags in the format &lt;<replaceable>BookmarkName</replaceable>&gt;  
 located in the end of the text to Palm DOC bookmarks. Whenever the
 <replaceable>BookmarkName</replaceable> text appears in the text, the conduit
-will generate a the bookmark in the resulting Palm DOC document ponting to it.
+will generate a the bookmark in the resulting Palm DOC document pointing to it.
 The tag will then be removed from the resulting Palm DOC document, leaving the
 text clean. This is a simple way to create repetitive bookmarks, like one for
 each <quote>Chapter</quote> in your Palm DOC documents.
@@ -1188,7 +1188,7 @@ files created previously.</para>
 <para>Finally, the <guilabel>Convert as inline tags</guilabel> option creates
 inline tags inside the resulting text file form 
 &lt;* <replaceable>BookmarkName</replaceable> *&gt; placing each tag in the place
-that was previosly referenced by the bookmark, and using the bookmark name as
+that was previously referenced by the bookmark, and using the bookmark name as
 the <replaceable>BookmarkName</replaceable> text inside the tag. Now you You can
 edit the bookmark name, move it or delete it and convert back to Palm DOC, as
 you wish.
@@ -1231,7 +1231,7 @@ user decide on a file by file, case by case basis.
 <varlistentry>
 <term><guilabel>Always show resolution dialog, even when there are no conflicts</guilabel></term>
 <listitem><para>
-This option will always bring the conflic resolution dialog, even if there is no
+This option will always bring the conflict resolution dialog, even if there is no
 conflicts to solve. The advantage is that you can keep track of all the files
 that are being covered by the conduit.
 </para></listitem>
@@ -1374,7 +1374,7 @@ the <guilabel>Birthdate</guilabel> of your contact or the obvious:
 <para>
 If you select to store birthdays, remember to use a date format that is
 consistent with the settings in the <guilabel>Date format</guilabel> dropdown,
-so that the conduit can correctly identify the date from the record and vic versa.
+so that the conduit can correctly identify the date from the record and vice versa.
 Possible placeholders are: %d for the day, %m for the month, %y for the two-digit
 year, %Y for the four-digit year. For  example, %d.%m.%Y would generate a date
 like 27.3.1952, while %m/%d/%y would write the same date as 03/27/52.
@@ -1383,16 +1383,67 @@ like 27.3.1952, while %m/%d/%y would write the same date as 03/27/52.
 
 </sect2>
 
+<sect2 id="sysinfo-cond">
+<title>System Information Conduit Setup</title>
+
+<para>
+This conduit generates a page with your &handheld; information. Some info about
+your &kde;, &kpilot; and Pilot-Link version is included as well. The available
+output formats are <acronym>HTML</acronym>, text or custom template. The conduit
+output and in special, the debug output section of the output may help the
+developers track down bugs.
+</para>
+
+
+<screenshot>
+<screeninfo>The System Information Conduit Setup Dialog</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="conduit-sysinfo.png" format="PNG"/></imageobject>
+<textobject><phrase>System Information Conduit Setup</phrase></textobject>
+<caption><para>System Information Conduit Setup</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>
+In the <guilabel>General</guilabel> page, you can set the output location and
+format.
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Output File</guilabel></term>
+<listitem><para>
+Write  in the edit box or use the file picker to select the location and file
+name of the output file where the &handheld; system information will be written.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Type of Output</guilabel></term>
+<listitem><para>
+Choose between <guilabel>HTML</guilabel>, <guilabel>Text file</guilabel> (plain text),
+or a selectable <guilabel>Custom template</guilabel>. To create a custom template, you can
+use the default template as a reference.
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+In the <guilabel>Parts Included</guilabel> page, you can set which parts will be
+included in the output, one by one, by checking or unchecking them in the
+<guilabel>Output Type</guilabel> list.
+</para>
+
+</sect2>
+
+
 <sect2 id="todo-cond">
 <title>Todo Conduit Setup</title>
 
 <para>
-This conduit synchronizes with &korganizer;'s todo list.  
-</para>
-
-
-<para>
-This conduit will synchronize your &PalmPilot; To Do List applicaton with
+This conduit will synchronize your &PalmPilot; To Do List application with
 &korganizer; and Kontact, or to an iCalendar file of your choice. 
 The configuration dialog looks and behaves exactly the same as the configuration
 dialog for the <link linkend="vcal-cond">Calendar Conduit</link>. The only
@@ -1416,7 +1467,7 @@ the To Do List.
 
 <para>
 The MAL (AvantGo) Conduit synchronizes your &handheld; with the &AvantGo; server.
-This counduit is based on
+This conduit is based on
 <ulink url="http://jasonday.home.att.net/code/libmal/libmal.html">Jason Day's libmal</ulink>.
 The &AvantGo; server offers general content (news, guides, stock quotes, &etc;)
 in a format that is suitable for reading in a &handheld;. To use this conduit,
