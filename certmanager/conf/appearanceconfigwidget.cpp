@@ -223,6 +223,8 @@ void AppearanceConfigWidget::slotDefaultClicked()
   if ( !item )
     return;
   item->setDefaultAppearance();
+  item->repaint();
+  slotSelectionChanged( item );
   emit changed();
 }
 
