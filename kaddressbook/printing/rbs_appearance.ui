@@ -98,10 +98,7 @@
                                         <cstring>groupButton</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>group letter</string>
-                                    </property>
-                                    <property name="whatsThis" stdset="0">
-                                        <string>press this button to combine the selected letter or letter group with the letter or letter group above it</string>
+                                        <string>Group Letter</string>
                                     </property>
                                 </widget>
                                 <widget class="QPushButton">
@@ -109,10 +106,7 @@
                                         <cstring>ungroupButton</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>ungroup letter</string>
-                                    </property>
-                                    <property name="whatsThis" stdset="0">
-                                        <string>press this button to remove the last letter of a letter group from that group</string>
+                                        <string>Ungroup Letter</string>
                                     </property>
                                 </widget>
                                 <spacer>
@@ -157,7 +151,7 @@
                         <cstring>GroupBox2</cstring>
                     </property>
                     <property name="title">
-                        <string>Print contacts</string>
+                        <string>Print contact's information</string>
                     </property>
                     <vbox>
                         <property name="name">
@@ -174,7 +168,7 @@
                                 <cstring>cbPhoneNumbers</cstring>
                             </property>
                             <property name="text">
-                                <string>phone numbers</string>
+                                <string>Phone numbers</string>
                             </property>
                             <property name="accel">
                                 <string></string>
@@ -182,22 +176,16 @@
                             <property name="checked">
                                 <bool>true</bool>
                             </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>check this option to show phone numbers in printout</string>
-                            </property>
                         </widget>
                         <widget class="QCheckBox">
                             <property name="name">
                                 <cstring>cbEmails</cstring>
                             </property>
                             <property name="text">
-                                <string>email addresses</string>
+                                <string>Email addresses</string>
                             </property>
                             <property name="checked">
                                 <bool>true</bool>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>check this option to show email addresses in printout</string>
                             </property>
                         </widget>
                         <widget class="QCheckBox">
@@ -205,13 +193,10 @@
                                 <cstring>cbStreetAddresses</cstring>
                             </property>
                             <property name="text">
-                                <string>street addresses</string>
+                                <string>Street addresses</string>
                             </property>
                             <property name="checked">
                                 <bool>true</bool>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>check this option to show street address in printout</string>
                             </property>
                         </widget>
                         <widget class="QCheckBox">
@@ -219,10 +204,7 @@
                                 <cstring>cbOrganization</cstring>
                             </property>
                             <property name="text">
-                                <string>organization</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>check this option to show the organization in printout</string>
+                                <string>Organization</string>
                             </property>
                         </widget>
                         <widget class="QCheckBox">
@@ -230,10 +212,7 @@
                                 <cstring>cbBirthday</cstring>
                             </property>
                             <property name="text">
-                                <string>birthday</string>
-                            </property>
-                            <property name="whatsThis" stdset="0">
-                                <string>check this option to show the birthday in printout</string>
+                                <string>Birthday</string>
                             </property>
                         </widget>
                     </vbox>
@@ -260,7 +239,7 @@
                                 <cstring>cbFillEmpty</cstring>
                             </property>
                             <property name="text">
-                                <string>fill pages with empty address fields</string>
+                                <string>Fill pages with empty address fields</string>
                             </property>
                             <property name="checked">
                                 <bool>true</bool>
@@ -288,7 +267,7 @@
                                         <cstring>sblabel</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>min. number of empty fields</string>
+                                        <string>Min. number of empty fields</string>
                                     </property>
                                     <property name="whatsThis" stdset="0">
                                         <string>If you often add contacts to your printout manually before entering them into the KDE addressbook, you should set this option to a value greater than 0: it determines how many empty address fields must be printed; if this many do not fit onto the page, another page with empty fields only will be printed.</string>
@@ -312,7 +291,7 @@
                                 <bool>false</bool>
                             </property>
                             <property name="text">
-                                <string>always print pages for all tabs</string>
+                                <string>Always print pages for all tabs</string>
                             </property>
                             <property name="checked">
                                 <bool>true</bool>
