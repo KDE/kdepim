@@ -208,6 +208,7 @@ SyncConfigPage::SyncConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
 	CM(fSpecialSync, SIGNAL(activated(int)));
 	CM(fFullBackupCheck, SIGNAL(toggled(bool)));
+	CM(fScreenlockSecure, SIGNAL(toggled(bool)));
 	CM(fConflictResolution, SIGNAL(activated(int)));
 #undef CM
 
