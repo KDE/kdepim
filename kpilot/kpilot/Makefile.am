@@ -38,6 +38,7 @@ kpilot_SOURCES	= \
 	conduitConfigDialog.cc conduitConfigDialog_base.ui \
 	pilotComponent.cc logWidget.cc memoWidget.cc addressWidget.cc \
 	addressEditor.cc \
+	dbviewerWidget.cc datebookWidget.cc \
 	fileInstaller.cc fileInstallWidget.cc \
 	listItems.cc \
 	kroupware.cc
