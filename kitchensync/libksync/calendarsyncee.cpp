@@ -195,21 +195,21 @@ void CalendarSyncee::addEntry( SyncEntry *entry )
 
 void CalendarSyncee::removeEntry( SyncEntry *entry )
 {
-  CalendarSyncEntry *calEntry = dynamic_cast<CalendarSyncEntry *>(entry);
-  if (!calEntry) {
+  CalendarSyncEntry *calEntry = dynamic_cast<CalendarSyncEntry *>( entry );
+  if ( !calEntry ) {
     kdDebug() << "CalendarSyncee::removeEntry(): SyncEntry has wrong type."
               << endl;
   } else {
-    Event *ev = dynamic_cast<Event *>(calEntry->incidence());
-    if (ev) {
-      mCalendar->deleteEvent(ev);
+    Event *ev = dynamic_cast<Event *>( calEntry->incidence() );
+    if ( ev ) {
+      mCalendar->deleteEvent( ev );
     } else {
-        Todo *td = dynamic_cast<Todo*>(calEntry->incidence());
-        if(!td) {
+      Todo *td = dynamic_cast<Todo*>( calEntry->incidence() );
+      if( !td ) {
         kdDebug() << "CalendarSyncee::removeEntry(): Incidence has wrong type."
-                << endl;
-        }
-        mCalendar->deleteTodo(td);
+                  << endl;
+      }
+      mCalendar->deleteTodo( td );
     }
   }
 }
