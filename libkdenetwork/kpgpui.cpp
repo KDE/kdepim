@@ -1590,8 +1590,17 @@ void CipherTextDialog::setMinimumSize()
   mEditBox->setMinimumHeight( mEditBox->fontMetrics().lineSpacing() * 25 );
 
   int textWidth = mEditBox->contentsWidth() + 30;
-  int scnum = QApplication::desktop()->screenNumber(parentWidget());
-  int maxWidth = QApplication::desktop()->screenGeometry(scnum).width() - 100;
+
+  KConfig gc("kdeglobals", false, false);
+  gc.setGroup("Windows");
+  int maxWidth;
+  if (QApplication::desktop()->isVirtualDesktop() &&
+      gc.readBoolEntry("XineramaEnabled", true) &&
+      gc.readBoolEntry("XineramaPlacementEnabled", true)) {
+    maxWidth = QApplication::desktop()->screenGeometry(QApplication::desktop()->screenNumber(parentWidget())).width()-100;
+  } else {
+    maxWidth = QApplication::desktop()->geometry().width()-100;
+  }
 
   mEditBox->setMinimumWidth( QMIN( textWidth, maxWidth ) );
 }

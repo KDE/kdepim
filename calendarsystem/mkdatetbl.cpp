@@ -38,6 +38,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <knotifyclient.h>
+#include <kconfig.h>
 #include "mkdatepicker.h"
 #include "mkdatetbl.h"
 #include <qdatetime.h>
@@ -461,10 +462,9 @@ KDateTable::sizeHint() const
 KDateInternalMonthPicker::KDateInternalMonthPicker
 (int fontsize, QWidget* parent, int year, KCalendarSystem* cSystem, const char* name)
   : QGridView(parent, name),
+    result(0), // invalid
     // CALSYS
-    calendarSystem(cSystem),
-
-    result(0) // invalid
+    calendarSystem(cSystem)
 {
   QRect rect;
   QFont font;
@@ -635,8 +635,8 @@ KDateInternalYearSelector::KDateInternalYearSelector
 (int fontsize, KCalendarSystem* calSys, QWidget* parent, const char* name)
   : QLineEdit(parent, name),
     val(new QIntValidator(this)),
-    calendarSystem(calSys),
-    result(0)
+    result(0),
+    calendarSystem(calSys)
 {
   QFont font;
   // -----
@@ -745,7 +745,17 @@ void
 KPopupFrame::popup(const QPoint &pos)
 {
   // Make sure the whole popup is visible.
-  QRect d = QApplication::desktop()->screenGeometry(QApplication::desktop()->screenNumber(pos));
+  KConfig gc("kdeglobals", false, false);
+  gc.setGroup("Windows");
+  QRect d;
+  if (QApplication::desktop()->isVirtualDesktop() &&
+      gc.readBoolEntry("XineramaEnabled", true) &&
+      gc.readBoolEntry("XineramaPlacementEnabled", true)) {
+    d = QApplication::desktop()->screenGeometry(QApplication::desktop()->screenNumber(pos));
+  } else {
+    d = QApplication::desktop()->geometry();
+  }
+
   int x = pos.x();
   int y = pos.y();
   int w = width();
