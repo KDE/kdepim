@@ -192,7 +192,7 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QHBox *p,const char *n) :
 
 
 ConduitConfigDialog::ConduitConfigDialog(QWidget * _w, const char *n,
-	bool m) : UIDialog(_w, n, Ok|Cancel,m)
+	bool m) : UIDialog(_w, n, Ok|Apply|Cancel,m)
 {
 	FUNCTIONSETUP;
 
@@ -228,6 +228,11 @@ ConduitConfigDialog::~ConduitConfigDialog()
 /* virtual */ void ConduitConfigDialog::commitChanges()
 {
 	fConfigWidget->commitChanges();
+}
+
+/* virtual */ void ConduitConfigDialog::slotApply()
+{
+	commitChanges();
 }
 
 #define PAGE_SIZE	QSize(440,300)
@@ -466,6 +471,13 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 			return;
 		}
 
+		// Remove the config widget from the stack before we can add the new one
+		QWidget *oldConfigWidget = fStack->widget( NEW_CONDUIT );
+		if ( oldConfigWidget )
+		{
+			fStack->removeWidget( oldConfigWidget );
+			KPILOT_DELETE( oldConfigWidget );
+		}
 		if (fStack->addWidget(d->widget(),NEW_CONDUIT)<0)
 		{
 	#ifdef DEBUG
@@ -524,6 +536,7 @@ void ConduitConfigWidget::selected(QListViewItem *p)
 		{
 			p->setSelected(false);
 			fCurrentConduit->setSelected(true);
+			return;
 		}
 	}
 	fCurrentConduit=p;
@@ -594,6 +607,13 @@ void ConduitConfigWidget::warnNoLibrary(const QListViewItem *p)
 /* virtual */ void ConduitConfigWidget::commitChanges()
 {
 	FUNCTIONSETUP;
+	
+	// Only new-style conduits have changes that need to be commited
+	// old-style conduits have their own config dlg which commits them itself
+	if ( fStack->id( fStack->visibleWidget())==NEW_CONDUIT )
+	{
+		fCurrentConfig->commit(&KPilotConfig::getConfig());
+	}
 
 	QStringList activeConduits;
 	const QCheckListItem *p =

@@ -102,6 +102,7 @@ private:
 
 class ConduitConfigDialog : public UIDialog
 {
+Q_OBJECT;
 public:
 	ConduitConfigDialog(QWidget *,const char *,bool);
 	virtual ~ConduitConfigDialog();
@@ -110,6 +111,8 @@ protected:
 	// These are slots in the base class
 	virtual void commitChanges();
 	virtual bool validate();
+protected slots:
+	virtual void slotApply();
 
 private:
 	ConduitConfigWidget *fConfigWidget;
