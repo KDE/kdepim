@@ -49,6 +49,7 @@
 #include "knnntpaccount.h"
 #include "knpgp.h"
 #include "knarticlefactory.h"
+#include "knsyntaxhighlighter.h"
 #include <kstatusbar.h>
 #include <klocale.h>
 #include <qpopupmenu.h>
@@ -1447,6 +1448,7 @@ KNComposer::ComposerView::ComposerView(QWidget *p, const char *n)
   //Editor
   e_dit=new Editor(main);
   e_dit->setMinimumHeight(50);
+  KNSyntaxHighlighter *ksh = new KNSyntaxHighlighter(e_dit);
 
   QVBoxLayout *notL=new QVBoxLayout(e_dit);
   notL->addStretch(1);

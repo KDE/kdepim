@@ -62,7 +62,8 @@ knode_SOURCES =   knconfigmanager.cpp \
                   knlistview.cpp \
                   knode.cpp \
                   knapplication.cpp \
-                  main.cpp
+                  main.cpp \
+		  knsyntaxhighlighter.cpp
 
 
 noinst_HEADERS =  knconfigmanager.h \
