@@ -51,9 +51,11 @@ static KCmdLineOptions options[] =
   { "epoch-start <epoch-time>", I18N_NOOP("Start time in epoch format"), 0 },
   { "description <description>", I18N_NOOP("Add description to event (works with add and change)"), 0 },
   { "all", I18N_NOOP("Show all entries"), 0 },
+  { "create", I18N_NOOP("if calendar not available new caledar file"), 0 },
   { "add", I18N_NOOP("Add an event"), 0 },
   { "change", I18N_NOOP("Delete an event (currently not implemented)"), 0 },
   { "delete", I18N_NOOP("Delete an event (currently not implemented)"), 0 },
+
   KCmdLineLastOption
 };
 
