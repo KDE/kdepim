@@ -143,10 +143,11 @@ bool OpenGroupware::doLoad()
 
   mCalendar.close();
 
+#if 0
   disableChangeNotification();
   loadCache();
   enableChangeNotification();
-
+#endif
   emit resourceChanged( this );
 
   clearChanges();
@@ -213,11 +214,11 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
     }
   }
   mListEventsJob = 0;
-  slotDownloadNextIncidence();
+  downloadNextIncidence();
 }
 
 
-void OpenGroupware::slotDownloadNextIncidence()
+void OpenGroupware::downloadNextIncidence()
 {
   if ( !mEventsForDownload.isEmpty() ) {
     const QString entry = mEventsForDownload.front();
@@ -242,6 +243,30 @@ void OpenGroupware::slotDownloadNextIncidence()
     emit resourceChanged( this );
     emit resourceLoaded( this );
   }
+}
+
+void OpenGroupware::slotUploadJobResult( KIO::Job *job )
+{
+  kdDebug(7000) << " slotUploadJobResult " << endl;
+  if ( job->error() ) {
+    mIsShowingError = true;
+    loadError( job->errorString() );
+    mIsShowingError = false;
+  } else {
+    ICalFormat ical;
+    Incidence *i = ical.fromString( mIncidencesForUpload.front() );
+    clearChange( i );
+    mCalendar.deleteIncidence( i );
+    saveCache();
+    mIncidencesForUpload.pop_front();
+  }
+
+  if ( mUploadProgress ) {
+    mUploadProgress->incCompletedItems();
+    mUploadProgress->updateProgress();
+  }
+  mUploadJob = 0;
+  uploadNextIncidence();
 }
 
 void OpenGroupware::slotJobResult( KIO::Job *job )
@@ -282,7 +307,7 @@ void OpenGroupware::slotJobResult( KIO::Job *job )
   }
   mJobData = QString::null;
   mDownloadJob = 0;
-  slotDownloadNextIncidence();
+  downloadNextIncidence();
 }
 
 void OpenGroupware::slotJobData( KIO::Job *, const QByteArray &data )
@@ -311,19 +336,19 @@ bool OpenGroupware::doSave()
     kdDebug() << "No changes" << endl;
     return true;
   }
-  
   if ( !confirmSave() ) return false;
 
-#if 0
   Incidence::List::ConstIterator it;
+  mIncidencesForUpload.clear();
+  ICalFormat format;
 
   Incidence::List added = addedIncidences();
   for( it = added.begin(); it != added.end(); ++it ) {
-    if ( mServer->addIncidence( *it, this ) ) {
-      clearChange( *it );
-      saveCache();
-    }
+    mIncidencesForUpload << format.toICalString(*it);
   }
+
+  uploadNextIncidence();
+#if 0
   Incidence::List changed = changedIncidences();
   for( it = changed.begin(); it != changed.end(); ++it ) {
     if ( mServer->changeIncidence( *it ) ) clearChange( *it );
@@ -335,6 +360,40 @@ bool OpenGroupware::doSave()
 #endif
 
   return true;
+}
+
+void OpenGroupware::uploadNextIncidence()
+{
+  if ( !mIncidencesForUpload.isEmpty() ) {
+    KURL url( prefs()->url() );
+    url.setUser( prefs()->user() );
+    url.setPass( prefs()->password() );
+    url.setPath( url.path() + "/new.ics" );
+    const QString inc = mIncidencesForUpload.front();
+    kdDebug(7000) << "Uploading to: " << inc << endl;
+    kdDebug(7000) << "Uploading: " << url.prettyURL() << endl;
+    mUploadJob = KIO::storedPut( inc.utf8(), url, -1, true, false, false );
+    mUploadJob->addMetaData( "content-type", "text/calendar" );
+    connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
+        this, SLOT( slotUploadJobResult( KIO::Job * ) ) );
+
+    mUploadProgress = KPIM::ProgressManager::instance()->createProgressItem(
+        KPIM::ProgressManager::getUniqueID(), i18n("Downloading calendar") );
+    connect( mUploadProgress,
+        SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
+        SLOT( cancelSave() ) );
+  } else {
+    if ( mUploadProgress ) {
+      mUploadProgress->setComplete();
+      mUploadProgress = 0;
+    }
+    /* 
+     * After the put the server might have expanded recurring events and will
+     * also change the uids of the uploaded events. Remove them from the cache
+     * and get the fresh delta and download. 
+     */
+    doLoad();
+  }
 }
 
 // FIXME: Put this into ResourceCached
@@ -365,6 +424,14 @@ void OpenGroupware::cancelLoad()
   mListEventsJob = 0;
   if ( mProgress ) mProgress->setComplete();
   mProgress = 0;
+}
+
+void OpenGroupware::cancelSave()
+{
+  if ( mUploadJob ) mUploadJob->kill();
+  mUploadJob = 0;
+  if ( mUploadProgress ) mUploadProgress->setComplete();
+  mUploadProgress = 0;
 }
 
 #include "kcal_resourceopengroupware.moc"

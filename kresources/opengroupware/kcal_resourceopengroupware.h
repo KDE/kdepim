@@ -64,6 +64,8 @@ class OpenGroupware : public ResourceCached
     bool doSave();
 
     KABC::Lock *lock();
+    void downloadNextIncidence();
+    void uploadNextIncidence();
 
   protected:
     void init();
@@ -75,21 +77,25 @@ class OpenGroupware : public ResourceCached
 
     void slotListJobResult( KIO::Job * );
     void slotJobResult( KIO::Job * );
+    void slotUploadJobResult( KIO::Job * );
     void slotJobData( KIO::Job *, const QByteArray & );
-    void slotDownloadNextIncidence();
 
     void cancelLoad();
+    void cancelSave();
 
   private:
     OpenGroupwarePrefsBase *mPrefs;
     KABC::LockNull mLock;
 
     KIO::TransferJob *mDownloadJob;
+    KIO::TransferJob *mUploadJob;
     KIO::DavJob *mListEventsJob;
     KPIM::ProgressItem *mProgress;
+    KPIM::ProgressItem *mUploadProgress;
     QString mJobData;
 
     QStringList mEventsForDownload;
+    QStringList mIncidencesForUpload;
 
     bool mIsShowingError;
 };
