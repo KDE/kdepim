@@ -413,6 +413,10 @@ class CardView : public QScrollView
     */
     void resizeEvent(QResizeEvent *e);
 
+	/** Changes the direction the canvas scolls.
+    */
+	void wheelEvent(QWheelEvent *e);
+
     /** Sets the layout to dirty and calls for a repaint.
     */
     void setLayoutDirty(bool dirty);
