@@ -18,6 +18,8 @@
 #include<kaboutapplication.h>
 #include<kbugreport.h>
 #include<kdebug.h>
+#include <kcursor.h>
+#include "subjectsdlg.h"
 
 #include"utils.h"
 #include"shell.h"
@@ -32,6 +34,8 @@ KornShell::KornShell( QWidget *parent )
 	_configDirty( false ),
 	_toWrite( false ),
 	_layout( 0 ),
+	_currentMailDrop(0),
+	_subjectsDlg(0),
 	_optDlg( 0 )
 {
         _buttons = new QPtrList<KornButton>;
@@ -61,7 +65,7 @@ KornShell::~KornShell()
 		_manager->writeConfig( *(kapp->config()), fu("Korn"));
 		kapp->config()->sync();
 	}
-			
+
 	delete _buttons;
 	delete _menu;
 	delete _manager;
@@ -111,7 +115,7 @@ void KornShell::createButtons( KornSettings::Layout layout )
 
 	_buttons->setAutoDelete( true );
 	_buttons->clear();
-	
+
 #if 0
  	if( layout == KornSettings::Dock
  			&& !KWM::isKWMInitialized() ) {
@@ -164,9 +168,10 @@ void KornShell::createButtons( KornSettings::Layout layout )
 	int size = 0;
 
 	for( ; list.current(); ++list ) {
-		KornButton *butt = new KornButton( parent, list.current() );
+		KornButton *butt = new KornButton( parent, list.current(), this );
 
-		connect( butt, SIGNAL (rightClick()), this, SLOT(popupMenu()));
+// changed: The right mouse click on a button is handled by the button now!
+		connect( butt, SIGNAL (rightClick()), butt, SLOT(popupMenu()));
 //		connect( butt, SIGNAL (dying(KornButton *)),
 //			this, SLOT(disconnectButton(KornButton *)) );
 
@@ -207,7 +212,7 @@ void KornShell::createButtons( KornSettings::Layout layout )
   if (0 == _buttons->count()) {
     resize(30,30);
   }
-}	
+}
 
 void KornShell::show()
 {
@@ -217,9 +222,64 @@ void KornShell::show()
 	}
 }
 
+void KornShell::popup(KornButton *button)
+{
+	// store the mail box of the calling button. As the popup menu and
+	// all windows opend by it lock the KornButton's, the mail box
+	// can reside in an instance variable of KornShell and its contents
+	// is valid until the next right mouse button click
+	_currentMailDrop = button->getMailDrop();
+
+	// enabe "Read Subjects" menu item, if the mail box can read the
+	// mail subjects
+	_checkMailAction->setEnabled(_currentMailDrop->canReadSubjects());
+
+	// open the popup menu
+	popupMenu();
+}
+
 void KornShell::popupMenu()
 {
 	_menu->popup( QCursor::pos() );
+}
+
+void KornShell::reCheck()
+{
+	// _currentMailDrop must point to the mailbox belonging to
+	// the button the user clicked on.
+	if (!_currentMailDrop)
+		return; // this should never happen!
+	QApplication::setOverrideCursor( KCursor::waitCursor() );
+	if (_currentMailDrop->running())
+	{
+		// if the mail box is polled: stop the polling and restart it
+		// this resets the poll timer, prevents an interference of
+		// the polling with the re-check and re-checks (startMonitor())
+		// checks for new mails).
+		_currentMailDrop->stopMonitor();
+		_currentMailDrop->startMonitor(); // reset timer as well!
+	}
+	else
+	{
+		// if the mail box is not polled, simply re-check.
+		_currentMailDrop->recheck();
+	}
+	QApplication::restoreOverrideCursor();
+}
+
+void KornShell::readSubjects()
+{
+	// _currentMailDrop must point to the mailbox belonging to
+	// the button the user clicked on.
+	if (!_currentMailDrop)
+		return;
+
+	// create subjects dialog, if it does not exist so far.
+	if (!_subjectsDlg)
+		_subjectsDlg = new KornSubjectsDlg(this);
+
+	// show dialog
+	_subjectsDlg->showSubjectsDlg(_currentMailDrop);
 }
 
 void KornShell::optionDlg()
@@ -228,7 +288,7 @@ void KornShell::optionDlg()
 		_optDlg->show();
 		return;
 	}
-	
+
 	_optDlg = new KornOptDlg( _manager, 0 );
 
 	_optDlg->setKornLayout( _settings->layout() );
@@ -297,6 +357,11 @@ QPopupMenu *KornShell::initMenu()
 
   KStdAction::preferences(this, SLOT(optionDlg()), actions)->plug(menu);
   menu->insertSeparator();
+  (new KAction("R&e-Check", KShortcut('e'), this, SLOT(reCheck()), actions, "re_check"))->plug(menu);
+  _checkMailAction = new KAction("Read &Subjects", KShortcut('s'), this, SLOT(readSubjects()), actions, "read_subjects");
+  _checkMailAction->plug(menu);
+  _checkMailAction->setEnabled(false);
+  menu->insertSeparator();
   KStdAction::help(this, SLOT(help()), actions)->plug(menu);
   KStdAction::reportBug(this, SLOT(reportBug()), actions)->plug(menu);
   KStdAction::aboutApp(this, SLOT(about()), actions)->plug(menu);
@@ -309,11 +374,11 @@ QPopupMenu *KornShell::initMenu()
 bool KornShell::firstTimeInit()
 {
 	// ask user whether a sample config is wanted
- 
+
   // XXX Do we really need to ask ?
 
 #if 0
-	int status = KMessageBox::warningYesNo(0, 
+	int status = KMessageBox::warningYesNo(0,
 		i18n( "You do not appear to have used KOrn before.\n"
 		"Would you like a basic configuration created for you?" ),
 		i18n("Welcome to KOrn"),

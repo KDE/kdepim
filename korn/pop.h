@@ -7,10 +7,12 @@
 
 #include<qstring.h>
 #include "polldrop.h"
+#include "mimelib/string.h"
 
 class DwPopClient;
 class QWidget;
 class KDropDialog;
+class KornMailSubject;
 
 /**
 * Polling monitor for POP3 maildrops.
@@ -68,6 +70,31 @@ public:
 	virtual bool valid();
 
 	virtual bool apopAuth();
+	virtual bool canReadSubjects() {return true;}
+
+	/**
+	* Read the subjects. The signal readSubjectsTotalSteps() sends the
+	* number of message headers to read. The signal readSubjectsProgress()
+	* is send after loading each subject. stop stops the loading process.
+	*/
+	virtual QValueVector<KornMailSubject> * doReadSubjects(bool * stop);
+	virtual bool canDeleteMails() {return true;}
+
+	/**
+	* Deletes mails. The signal deleteMailsTotalSteps() sends the
+	* number of messages to delete. The signal deleteMailsProgress()
+	* is send after each mail deletion. stop stops the delete process.
+	* Returns true in most cases because the mail ids are invalid if
+	* one mail was deleted.
+	*/
+	virtual bool deleteMails(QPtrList<const KornMailId> * ids, bool * stop);
+	virtual bool canReadMail() {return true;}
+
+	/**
+	* Reads a mail. The signals readMailTotalSteps() and readMailProgress()
+	* are not used, stop is ignored.
+	*/
+	virtual QString readMail(const KornMailId * id, bool * stop);
 
 	/**
 	* KPop3Drop Destructor
@@ -86,6 +113,11 @@ private:
 	KPop3Drop& operator = ( const KPop3Drop& );
 	static void encrypt( QString& str );
 	static void decrypt( QString& str );
+
+	/**
+	* All steps to open a pop3 connection
+	*/
+	bool openConnection();
 };
 
 #endif // SSK_POPDROP_H

@@ -7,17 +7,33 @@
 class QString;
 
 class KMailDrop;
+class KornShell;
 class KornSettings;
 class KornBtnStyle;
 class KProcess;
 
+/**
+ * KornButton instances are the buttons representing one mailbox
+ */
 class KornButton: public QToolButton
 {
   Q_OBJECT
 
   public:
 
-    KornButton( QWidget *parent, KMailDrop *box );
+    /**
+     * KornButton Constructor
+     * @param parant parent widget
+     * @param box mailbox represented by this KornButton instance
+     * @param shell back reference to the KornShell instance which created this
+     */
+    KornButton( QWidget *parent, KMailDrop *box, KornShell *shell);
+
+    /**
+     * return the mailbox represented by this KornButton instance
+     * @return the mailbox
+     */
+    KMailDrop * getMailDrop() {return _box;}
 
   public slots:
 
@@ -25,6 +41,11 @@ class KornButton: public QToolButton
     void setNumber( int );
     // runs the click command associated with this mailbox.
     void runCommand(bool onlyIfUnread);
+
+    /**
+     * slot triggered if the right mouse button was clicked on the button
+     */
+    void popupMenu();
 
   protected slots:
 
@@ -46,6 +67,7 @@ class KornButton: public QToolButton
   private:
 
     KMailDrop *_box;
+    KornShell *_shell;
     int _lastNum;
 	KornBtnStyle *_style;
 };

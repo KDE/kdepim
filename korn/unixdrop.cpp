@@ -11,18 +11,22 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <time.h>
 
 #include"dropdlg.h"
 
-#include<qfileinfo.h>
-#include<qapplication.h>
-#include<kdebug.h>
+#include <qfileinfo.h>
+#include <qapplication.h>
+#include <kdebug.h>
 
 #include<kconfigbase.h>
 
-#include"utils.h"
-#include"unixcfg.h"
-#include"unixdrop.h"
+#include "utils.h"
+#include "unixcfg.h"
+#include "unixdrop.h"
+#include "mailsubject.h"
+#include <kmime_util.h>
+#include "intid.h"
 
 #define MAXSTR (1024)
 
@@ -37,7 +41,8 @@ KUnixDrop::KUnixDrop()
 	_lockInfo	( new QFileInfo ),
 	_lastSize	( 0 ),
 	_valid		( false ),
-	_buffer		( 0 )
+	_buffer		( 0 ),
+	_totalCount	( 0 )
 
 {
 }
@@ -122,6 +127,7 @@ int KUnixDrop::doCount()
         bool hasContentLen = false;
         bool msgRead = false;
         long contentLength=0;
+	_totalCount = 0;
 
         if(!mbox.open(IO_ReadOnly)) {
                 qWarning("countMail: file open error");
@@ -148,6 +154,7 @@ int KUnixDrop::doCount()
 			hasContentLen = false;
 			inHeader = true;
 			msgRead = false;
+			++_totalCount;
 		}
 		else if ( inHeader ) {
 			// check header fields if we're already in one
@@ -178,7 +185,7 @@ int KUnixDrop::doCount()
 				if ( !msgRead ) {
 					count++;
 				}
-			} 
+			}
 		}//in header
 
 		if( ++msgCount >= 1000 ) {
@@ -204,6 +211,181 @@ int KUnixDrop::doCount()
 #define skip_token(buf) skip_nonwhite(buf); if(!*buf) return false; \
 	skip_white(buf); if(!*buf) return false;
 
+
+QValueVector<KornMailSubject> * KUnixDrop::doReadSubjects(bool * stop)
+{
+	QValueVector<KornMailSubject> * result = new QValueVector<KornMailSubject>();
+
+	// prepare progress bar (with total number of messages)
+	emit readSubjectsTotalSteps(_totalCount);
+
+	// mail subject curtently reading. 0 means: do not store in result.
+	KornMailSubject * mailSubject = 0;
+
+	_info->refresh();
+
+	if (  !_info->exists() )
+	{
+		return result;
+	}
+
+	QFile mbox(_file);
+        char *buffer = lineBuffer();
+        int msgCount=0;
+        bool inHeader = false;
+        bool msgRead = false;
+	int mailCount = 0;
+
+        if(!mbox.open(IO_ReadOnly))
+	{
+                qWarning("doReadSubjects: file open error");
+                return result;
+        }
+
+	buffer[MAXSTR-1] = 0;
+
+	// contains the whole mail currently read.
+	QString currentMail;
+	bool logMail = true;
+
+	// scan the mbox file
+	while( mbox.readLine(buffer, MAXSTR-2) > 0  && (!stop || !*stop))
+	{
+		// read a line from the mailbox
+		if( !strchr(buffer, '\n') && !mbox.atEnd() )
+		{
+			// read till the end of the line if we
+			// haven't already read all of it.
+
+			int c;
+
+			while( (c=mbox.getch()) >=0 && c !='\n' )
+				;
+		}
+
+		// check if this is the start of a message
+		if( !inHeader && checkfrom(buffer) )
+		{
+			// set progress bar
+			emit readSubjectsProgress(++mailCount);
+			inHeader = true;
+			msgRead = false;
+			logMail = true;
+
+			// a new mail starts. Save the mail body of the last mail
+			// and store it in the result vector if the last mail
+			// should be stored
+			if (mailSubject)
+			{
+				mailSubject->setHeader(currentMail, true);
+				mailSubject->setSize(currentMail.length());
+				result->push_back(*mailSubject);
+				delete mailSubject;
+				mailSubject = 0;
+			}
+			currentMail = buffer;
+			const char * c = buffer + 5;
+			skip_white(c);
+			skip_token(c);
+			struct tm t;
+			strptime(c, "%c", &t);
+
+			// Prepare a KornMailSubject instance for the next mail. The
+			// id is unimportant, as this mail drop does not allow deleting
+			// or reading mails
+			mailSubject = new KornMailSubject(new KornIntId(msgCount));
+			mailSubject->setDate(mktime(&t));
+		}
+		else if ( inHeader )
+		{
+			// check header fields if we're already in one
+
+			if (logMail)
+				currentMail += buffer;
+
+			if (mailSubject && compareHeader(buffer, "From"))
+			{
+				const char *field = buffer;
+				field += 5;
+				while(field && (*field== ' '||*field == '\t'))
+					field++;
+				QString s = field;
+				s.remove(s.length()-1, 1);
+				mailSubject->setSender(s);
+			}
+			else if (mailSubject && compareHeader(buffer, "Subject"))
+			{
+				const char *field = buffer;
+				field += 8;
+				while(field && (*field== ' '||*field == '\t'))
+					field++;
+				QCString s = field;
+				s.remove(s.length()-1, 1);
+				const char *usedCS = NULL;
+				mailSubject->setSubject(KMime::decodeRFC2047String(s, &usedCS, "base64", false));
+			}
+			else if (compareHeader(buffer, "Status"))
+			{
+				const char *field = buffer;
+				field += 7;
+				while(field && (*field== ' '||*field == '\t'))
+					field++;
+
+				if ( *field == 'N' || *field == 'U' )
+					msgRead = false;
+				else
+				{
+					msgRead = true;
+
+					// do not care about this mail any more
+					logMail = false;
+				}
+			}
+			// end of mail reached
+			else if (buffer[0] == '\n' )
+			{
+
+				inHeader = false;
+
+				// no new message? delete KornMailSubject instance
+				if ( msgRead )
+				{
+					delete mailSubject;
+					mailSubject = 0;
+				}
+			}
+		}
+		// if mail should still be logged, add curent line to mail buffer
+		else if (logMail)
+			currentMail += buffer;
+
+
+		if( ++msgCount >= 1000 )
+		{
+			qApp->processEvents();
+			msgCount = 0;
+		}
+	}
+	// All mails scanned. Save the mail body of the last mail
+	// and store it in the result vector if the last mail
+	// should be stored
+	if (mailSubject)
+	{
+		mailSubject->setHeader(currentMail, true);
+		mailSubject->setSize(currentMail.length());
+		result->push_back(*mailSubject);
+		delete mailSubject;
+		mailSubject = 0;
+	}
+
+	mbox.close();
+	return result;
+}
+
+
+
+
+
 static const char *month_name[13] = {
 	"jan", "feb", "mar", "apr", "may", "jun",
 	"jul", "aug", "sep", "oct", "nov", "dec", NULL
@@ -218,7 +400,7 @@ static bool checkfrom(const char *buffer)
 
 	/*
 	A valid from line will be in the following format:
-	
+
 	From <user> <weekday> <month> <day> <hr:min:sec> [TZ1 [TZ2]] <year>
 */
 
@@ -227,7 +409,7 @@ static bool checkfrom(const char *buffer)
 	int found;
 
 	/* From */
-	
+
 	if(!buffer || !*buffer)
 		return false;
 
@@ -250,12 +432,12 @@ static bool checkfrom(const char *buffer)
 
 	if (!found)
 		return false;
-	
+
 	skip_token(buffer);
 
 	/* <month> */
 	found = 0;
-	
+
 	for (i = 0; !found && month_name[i] != NULL; i++) {
 		found = found || (qstrnicmp(month_name[i], buffer, 3) == 0);
 	}
@@ -341,7 +523,7 @@ bool KUnixDrop::readConfigGroup ( const KConfigBase& cfg )
 	KPollableDrop::readConfigGroup( cfg );
 
 	QString box = cfg.readEntry(fu(FileConfigKey));
-	
+
 	if( box.isEmpty() ) {
 		qWarning( "KUnixDrop::readConfigGroup: no file for '%s'.",
 				caption().ascii() );
@@ -365,7 +547,7 @@ bool KUnixDrop::writeConfigGroup ( KConfigBase& cfg ) const
 	return true;
 }
 
-void KUnixDrop::addConfigPage( KDropCfgDialog *dlg ) 
+void KUnixDrop::addConfigPage( KDropCfgDialog *dlg )
 {
 	dlg->addConfigPage( new KUnixCfg( this ) );
 

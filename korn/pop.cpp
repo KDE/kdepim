@@ -8,6 +8,7 @@
 #include<stdio.h>
 
 #include<kconfigbase.h>
+#include <kdebug.h>
 #include<kmdcodec.h>
 #include <klocale.h>
 #include<kmessagebox.h>
@@ -18,6 +19,15 @@
 #include"pop.h"
 #include"popcfg.h"
 #include"dropdlg.h"
+#include "intid.h"
+#include "mailsubject.h"
+
+
+#include <mimelib/message.h>
+#include <mimelib/headers.h>
+#include <mimelib/text.h>
+#include <mimelib/mboxlist.h>
+#include <kmime_util.h>
 
 KPop3Drop::KPop3Drop()
   : KPollableDrop(),
@@ -31,6 +41,164 @@ KPop3Drop::KPop3Drop()
 {
 }
 
+QValueVector<KornMailSubject> * KPop3Drop::doReadSubjects(bool * stop)
+{
+	QValueVector<KornMailSubject> * result = new QValueVector<KornMailSubject>();
+
+	// open connection
+	if (!openConnection())
+		return result;
+
+	// load the list of mail ids from the mail box
+	int ret = _pop->List();
+
+	if( ( ret == '-' ) || ( !ret ) )
+	{
+		_pop->Quit();
+		_pop->Close();
+
+		return result;
+	}
+
+	// parse the list, count mails
+	DwString response = _pop->MultiLineResponse();
+	int totalSubjects = -1, pos = 0;
+	while (pos >= 0)
+	{
+		++totalSubjects;
+		pos = response.find('\n', pos+1);
+	}
+
+	// set the progress bar
+	if (totalSubjects)
+		emit readSubjectsTotalSteps(totalSubjects);
+	int subjectNum = 0;
+	emit readSubjectsProgress(subjectNum);
+
+	// loop through all mials
+	while (response.length() && (!stop || !*stop))
+	{
+		// one line in the List() response (contains mail id)
+		DwString line = response;
+		int pos = response.find('\n');
+		if (pos != DwString::npos)
+		{
+			line = response.substr(0, pos);
+
+			// cut current line from resonse string
+			response = response.substr(pos+1);
+		}
+		else
+			response = "";
+
+		// convert id
+		int id=0, octets=0;
+		sscanf( line.c_str(), "%d %d", &id, &octets );
+
+		// prepare KornMailSubject instance
+		KornMailSubject mailSubject = KornMailSubject(new KornIntId(id));
+		mailSubject.setSize(octets);
+
+		// read mail header
+		ret = _pop->Top(id, 0);
+		if( ( ret != '-' ) && ret )
+		{
+			// parse result
+			DwMessage mMsg;
+			DwString messageHeader = _pop->MultiLineResponse();
+			mMsg.FromString(messageHeader);
+			mMsg.Parse();
+
+			// extract sender, subject and date
+			DwHeaders & header = mMsg.Headers();
+			mailSubject.setSender(header.FieldBody("From").AsString().c_str());
+			QCString subject = header.FieldBody("Subject").AsString().c_str();
+			const char *usedCS = NULL;
+
+			// decode subject if encoded in some way
+			mailSubject.setSubject(KMime::decodeRFC2047String(subject, &usedCS, "base64", false));
+			mailSubject.setDate(header.Date().AsUnixTime());
+			mailSubject.setHeader(messageHeader.c_str(), false);
+		}
+
+		// store subject in result vector
+		result->push_back(mailSubject);
+
+		// set progress bar
+		emit readSubjectsProgress(++subjectNum);
+	}
+
+	// close connection
+	_pop->Quit();
+	_pop->Close();
+
+	return result;
+}
+
+bool KPop3Drop::deleteMails(QPtrList<const KornMailId> * ids, bool * stop)
+{
+	// set progress bar
+	int count = ids->count();
+	if (count)
+		emit deleteMailsTotalSteps(count);
+	count = 0;
+	emit deleteMailsProgress(count);
+
+	// open connection
+	if (!openConnection())
+		return false;
+
+	// loop through all ids
+	for ( const KornMailId * item = ids->first(); item  && (!stop || !*stop); item = ids->next() )
+	{
+		// delete mail
+		int ret = _pop->Dele(((const KornIntId *)item)->getId());
+		if( ( ret == '-' ) || ( !ret ) )
+		{
+			// terminate on error. The reload of mail subjects
+			// will show the not deleted mails.
+			_pop->Quit();
+			_pop->Close();
+
+			return true;
+		}
+
+		// set progress bar
+		emit deleteMailsProgress(++count);
+	}
+
+	// close connection
+	_pop->Quit();
+	_pop->Close();
+	return true;
+}
+
+QString KPop3Drop::readMail(const KornMailId * id, bool * /*stop*/)
+{
+	// open connection
+	if (!openConnection())
+		return "";
+
+	// read mail
+	int ret = _pop->Retr(((KornIntId *)id)->getId());
+	if( ( ret == '-' ) || ( !ret ) )
+	{
+		// return "" on error
+		_pop->Quit();
+		_pop->Close();
+
+		return "";
+	}
+
+	//return result;
+	DwString result = _pop->MultiLineResponse();
+
+	_pop->Quit();
+	_pop->Close();
+
+	return result.c_str();
+}
+
 void KPop3Drop::setPopServer(const QString & server, int port, bool apop)
 {
 	_server = server;
@@ -38,7 +206,7 @@ void KPop3Drop::setPopServer(const QString & server, int port, bool apop)
 	_apopAuth = apop;
 }
 
-void KPop3Drop::setUser(const QString & user, const QString & password, 
+void KPop3Drop::setUser(const QString & user, const QString & password,
 	bool savepass )
 {
 	_user = user;
@@ -48,7 +216,7 @@ void KPop3Drop::setUser(const QString & user, const QString & password,
 	_valid = true;
 }
 
-void KPop3Drop::recheck()
+bool KPop3Drop::openConnection()
 {
 	if( _pop == 0 ) {
 		_pop = new DwPopClient;
@@ -60,7 +228,7 @@ void KPop3Drop::recheck()
 	if( !ret ) {
 		_valid = false;
 		if( _pop->IsOpen() ) _pop->Close();
-		return;
+		return false;
 	}
 
 	DwString response;
@@ -81,11 +249,11 @@ void KPop3Drop::recheck()
 			_pop->Quit();
 			_pop->Close();
 
-			return;
+			return false;
 		}
 
 		//Get the timestamp, e.g. <25799.1017300043@mail.host.com>
-		//*including* angle brackets 
+		//*including* angle brackets
 		apopTimestamp = response.substr( startMark, endMark - startMark +1 );
 		//cout << "apopTimestamp: " << apopTimestamp << endl;
 
@@ -101,7 +269,7 @@ void KPop3Drop::recheck()
 			_pop->Quit();
 			_pop->Close();
 
-			return;
+			return false;
 		}
 
 	} else {
@@ -113,7 +281,7 @@ void KPop3Drop::recheck()
 			_pop->Quit();
 			_pop->Close();
 
-			return;
+		return false;
 		}
 
 		//kdDebug() << "POP3: password = " << _password << endl;
@@ -124,11 +292,18 @@ void KPop3Drop::recheck()
 			_pop->Quit();
 			_pop->Close();
 
-			return;
+		return false;
 		}
+	return true;
 	}
-	
-	ret = _pop->Stat();
+        return false; // Shut up spurious compiler warning.
+}
+
+void KPop3Drop::recheck()
+{
+	if (!openConnection())
+		return;
+	int ret = _pop->Stat();
 
 	if( ( ret == '-' ) || ( !ret ) ){
 		_valid = false;
@@ -138,7 +313,7 @@ void KPop3Drop::recheck()
 		return;
 	}
 
-	response = _pop->SingleLineResponse();
+	DwString response = _pop->SingleLineResponse();
 
 	int newcount=0, octets=0;
 
@@ -170,7 +345,7 @@ KPop3Drop::~KPop3Drop()
 	delete _pop;
 }
 
-KMailDrop* KPop3Drop::clone() const 
+KMailDrop* KPop3Drop::clone() const
 {
 	KPop3Drop *clone = new KPop3Drop;
 

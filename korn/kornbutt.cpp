@@ -8,12 +8,14 @@
 #include<kprocess.h>
 
 #include"kornbutt.h"
+#include"shell.h"
 #include"maildrop.h"
 #include"btnstyle.h"
 
-KornButton::KornButton( QWidget *parent, KMailDrop *box )
+KornButton::KornButton( QWidget *parent, KMailDrop *box, KornShell *shell )
 	: QToolButton(parent, "kornbutton"),
 	_box(box),
+	_shell(shell),
 	_lastNum(0),
 	_style( 0 )
 {
@@ -153,6 +155,13 @@ KornButton::mouseReleaseEvent(QMouseEvent * e)
     case MidButton:   runCommand( false );	break;
     default:	break;
   }
+}
+
+  void
+KornButton::popupMenu()
+{
+  // call shell (which created this) tho handle event.
+  _shell->popup(this);
 }
 
 HeadButton::HeadButton( QWidget *parent )

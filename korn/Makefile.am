@@ -1,12 +1,12 @@
 KDE_CXXFLAGS = $(USE_RTTI)
 
-INCLUDES = -I$(top_srcdir)/mimelib $(all_includes)
+INCLUDES = -I$(top_srcdir)/mimelib -I$(top_srcdir)/libkdenetwork $(all_includes)
 AM_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
 METASOURCES = AUTO
 
 bin_PROGRAMS = korn
-korn_LDADD = $(top_builddir)/mimelib/libmimelib.la $(LIB_KFILE) $(LIBSOCKET)
+korn_LDADD = $(top_builddir)/mimelib/libmimelib.la $(LIB_KFILE) $(LIBSOCKET) $(top_builddir)/libkdenetwork/libkdenetwork.la
 
 korn_SOURCES = \
   dropdlg.cpp \
@@ -38,6 +38,11 @@ korn_SOURCES = \
   unixcfg.cpp \
   unixdrop.cpp \
   btnstyle.cpp \
+  subjectsdlg.cpp \
+  maildlg.cpp \
+  mailid.cpp \
+  mailsubject.cpp \
+  intid.cpp \
   kornapp.cpp
 
 noinst_HEADERS = \
@@ -69,6 +74,11 @@ noinst_HEADERS = \
   unixcfg.h \
   unixdrop.h \
   btnstyle.h \
+  subjectsdlg.h \
+  maildlg.h \
+  mailid.h \
+  mailsubject.h \
+  intid.h \
   kornapp.h
 
 srcdoc:

@@ -16,6 +16,7 @@
 #include"gencfg.h"
 #include"comcfg.h"
 #include"dropdlg.h"
+#include"mailsubject.h"
 
 const char *KMailDrop::TypeConfigKey = "type";
 const char *KMailDrop::CaptionConfigKey = "caption";
@@ -97,63 +98,104 @@ bool KMailDrop::writeConfigGroup(KConfigBase & c) const
   return true;
 }
 
-void KMailDrop::setCaption(QString s)      
+QValueVector<KornMailSubject> * KMailDrop::doReadSubjects(bool * /*stop*/)
+{
+	return new QValueVector<KornMailSubject>(); // empty vector
+}
+
+QValueVector<KornMailSubject> * KMailDrop::readSubjects(bool * stop)
+{
+	// remember timer status
+	bool timerWasRunning = running();
+
+	// stop timer to avoid conflicts with reading mesage count
+	if (timerWasRunning)
+		stopMonitor();
+
+	// read the subjects
+	QValueVector<KornMailSubject> * result = doReadSubjects(stop);
+	int newcount = result->size();
+
+	// if the mail count has changed: notify the button!
+	if( newcount != count() && (!stop || !*stop))
+	{
+		emit changed( newcount );
+	}
+
+	// if the timer was previously running, start it again
+	if (timerWasRunning)
+		startMonitor();
+	return result;
+}
+
+
+bool KMailDrop::deleteMails(QPtrList<const KornMailId> * /*ids*/, bool * /*stop*/)
+{
+	return false;
+}
+
+QString KMailDrop::readMail(const KornMailId * /*id*/, bool * /*stop*/)
+{
+	return "";
+}
+
+void KMailDrop::setCaption(QString s)
 {
   _caption = s;
   emit(configChanged());
 }
 
-void KMailDrop::setClickCmd(QString s)     
+void KMailDrop::setClickCmd(QString s)
 {
   kdDebug() << "KMailDrop::setClickCmd(" << s << ")" << endl;
   _clickCmd = s;
   emit(configChanged());
 }
 
-void KMailDrop::setNewMailCmd(QString s)   
+void KMailDrop::setNewMailCmd(QString s)
 {
   _nMailCmd = s;
   emit(configChanged());
 }
 
-void KMailDrop::setDisplayStyle(Style s)   
+void KMailDrop::setDisplayStyle(Style s)
 {
   _style = s;
   emit(configChanged());
 }
 
-void KMailDrop::setBgColour(QColor c)      
+void KMailDrop::setBgColour(QColor c)
 {
   _bgColour = c;
   emit(configChanged());
 }
 
-void KMailDrop::setFgColour(QColor c)      
+void KMailDrop::setFgColour(QColor c)
 {
   _fgColour = c;
   emit(configChanged());
 }
 
-void KMailDrop::setNewBgColour(QColor c)   
+void KMailDrop::setNewBgColour(QColor c)
 {
   _nbgColour = c;
   emit(configChanged());
 }
 
-void KMailDrop::setNewFgColour(QColor c)   
+void KMailDrop::setNewFgColour(QColor c)
 {
   _nfgColour = c;
   emit(configChanged());
 }
 
-void KMailDrop::setIcon(QString s)         
+void KMailDrop::setIcon(QString s)
 {
   kdDebug() << "KMailDrop::setIcon(" << s << ")" << endl;
   _icon = s;
   emit(configChanged());
 }
 
-void KMailDrop::setNewIcon(QString s)      
+void KMailDrop::setNewIcon(QString s)
 {
   _nIcon = s;
   emit(configChanged());

@@ -8,10 +8,14 @@
 #include<qobject.h>
 #include<qstring.h>
 #include<qcolor.h>
+#include<qvaluevector.h>
+#include <qptrlist.h>
 
 class KConfigBase;
 class KDropCfgDialog;
 class QColor;
+class KornMailSubject;
+class KornMailId;
 
 /**
 * Abstract base class for all mailbox monitors.
@@ -144,6 +148,81 @@ class KMailDrop : public QObject
      */
     virtual QString type() const = 0;
 
+    /**
+     * Return true if the concrete subclass can read the subjects of
+     * all new mails. This will enable the "Read Subjects" menu item.
+     */
+    virtual bool canReadSubjects() {return false;}
+
+    /**
+     * Read the subjects of all new mails.
+     * NOTE: the default implementation stops the timer, calls
+     * doReadSubjects, restarts the time if necessary and updates
+     * the displayed mail count. Concrete implementations should not
+     * touch readSubjects() but implement doReadSubjects() instead!
+     * @param stop: stop flag. If it is set to true during the execution,
+     * readSubjects shoulkd return as soon as possible. The return value
+     * is invalid in this case. If stop is 0, readSubjects will not
+     * terminate before all mail subjects are loaded.
+     * @return all new mails subjects as a vector.
+     */
+    virtual QValueVector<KornMailSubject> * readSubjects(bool * stop);
+
+    /**
+     * Read the subjects of all new mails. The concrete subclass has
+     * to implement it, if canReadSubjects() returns true.
+     * @param stop: stop flag. If it is set to true during the execution,
+     * readSubjects should return as soon as possible. The return value
+     * is invalid in this case. If stop is 0, readSubjects will not
+     * terminate before all mail subjects are loaded.
+     * @return all new mails subjects as a vector.
+     */
+    virtual QValueVector<KornMailSubject> * doReadSubjects(bool * stop);
+
+    /**
+     * Return true if the concrete subclass can delete individual mails.
+     * This will enable the "Delete" button in the mail subjects dialog.
+     */
+    virtual bool canDeleteMails() {return false;}
+
+    /**
+     * Delete some mails in the mailbox. The concrete subclass has
+     * to implement it, if canDeleteMails() returns true.
+     * @param ids list of mail ids to delete. The ids are taken from
+     * the corresponding KornMailSubject instances returned by a previous
+     * call to doReadSubjects().
+     * @param stop: stop flag. If it is set to true during the execution,
+     * deleteMails() should return as soon as possible. The return value
+     * is invalid in this case. If stop is 0, deleteMails() will not
+     * terminate before the mails are deleted.
+     * @return true, if the mail ids of the remaining mails might have changed.
+     * The corresponding KornMailSubject instances returned by a previous
+     * call to doReadSubjects() have to be discarded and readSubjects() must
+     * be called again to get the correct mail ids. If false is returned,
+     * the KornMailSubject instances of the remaining mails might be used
+     * further more.
+     */
+    virtual bool deleteMails(QPtrList<const KornMailId> * ids, bool * stop);
+
+    /**
+     * Return true if the concrete subclass can load individual mails fully.
+     * This will enable the "Full Message" button in the mail dialog.
+     */
+    virtual bool canReadMail() {return false;}
+
+    /**
+     * Load a mail from the mailbox fulle . The concrete subclass has
+     * to implement it, if deleteMails() returns true.
+     * @param id id of the mail to load. The id is taken from the corresponding 
+     * KornMailSubject instances returned by a previous call to doReadSubjects().
+     * @param stop: stop flag. If it is set to true during the execution,
+     * readMail() should return as soon as possible. The return value
+     * is invalid in this case. If stop is 0, readMail() will not
+     * terminate before the mail is loaded.
+     * @return the fully loaded mail (header and body) or "" on error.
+     */
+    virtual QString readMail(const KornMailId * id, bool * stop);
+
     // data that belongs in every monitor
 
     QString       caption()       const { return _caption; }
@@ -208,6 +287,54 @@ signals:
      * after it is emitted.
      */
     void notifyDisconnect();
+
+    /**
+     * readSubjects() might signal readSubjectsTotalSteps() to
+     * send the expected total number of steps to a possible
+     * progress bar. See readSubjectsProgress();
+     * @param totalSteps expected total number of steps.
+     */
+    void readSubjectsTotalSteps(int totalSteps);
+
+    /**
+     * readSubjects() might signal readSubjectsProgress() to
+     * send the current progress in relation to the
+     * expected total number of steps (see readSubjectsTotalSteps()).
+     * @param curent progress.
+     */
+    void readSubjectsProgress(int progress);
+
+    /**
+     * deleteMails() might signal deleteMailsTotalSteps() to
+     * send the expected total number of steps to a possible
+     * progress bar. See deleteMailsProgress();
+     * @param totalSteps expected total number of steps.
+     */
+    void deleteMailsTotalSteps(int totalSteps);
+
+    /**
+     * deleteMails() might signal deleteMailsProgress() to
+     * send the current progress in relation to the
+     * expected total number of steps (see deleteMailsTotalSteps()).
+     * @param curent progress.
+     */
+    void deleteMailsProgress(int progress);
+
+    /**
+     * readMail() might signal readMailTotalSteps() to
+     * send the expected total number of steps to a possible
+     * progress bar. See readMailProgress();
+     * @param totalSteps expected total number of steps.
+     */
+    void readMailTotalSteps(int totalSteps);
+
+    /**
+     * readMail() might signal readMailProgress() to
+     * send the current progress in relation to the
+     * expected total number of steps (see readMailTotalSteps()).
+     * @param curent progress.
+     */
+    void readMailProgress(int progress);
 };
 
 #endif // SSK_MAILDROP_H

@@ -17,6 +17,9 @@ class QBoxLayout;
 
 class KDropManager;
 class KornOptDlg;
+class KornButton;
+class KAction;
+class KornSubjectsDlg;
 
 
 
@@ -45,9 +48,27 @@ public:
 	 */
 	bool init();
 
+	/**
+	 * Called from KornButton if the right mouse button was clicked.
+	 * Opens the right mouse click menu, which depends on the KornButton
+	 * clicked on.
+	 * @param popup the calling KornButton instance.
+	 */
+	void popup(KornButton *button);
+
 public slots:
         void popupMenu();
         void optionDlg();
+
+	/**
+	 * Called if the menu item "Re-Check" was choosen.
+	 */
+        void reCheck();
+
+	/**
+	 * Called if the menu item "Read Subjects" was choosen.
+	 */
+        void readSubjects();
         void help();
 	void reportBug();
         void about();
@@ -79,6 +100,9 @@ private:
 	KDropManager	*_manager;
 	QPopupMenu	*_menu;
 	QBoxLayout	*_layout;
+	KAction		*_checkMailAction;
+	KMailDrop	*_currentMailDrop;
+	KornSubjectsDlg	*_subjectsDlg;
 #if defined(test_headerbutton)
   HeadButton *_headbutton;
 #endif

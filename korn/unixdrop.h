@@ -35,6 +35,7 @@ private:
 	QString		_file;
 	bool		_valid;
 	char		*_buffer;
+	int		_totalCount;
 
 	char *lineBuffer();
 
@@ -52,6 +53,14 @@ public:
 	virtual void recheck();
 
 	virtual bool valid();
+	virtual bool canReadSubjects() {return true;}
+
+	/**
+	* Read the Subjects. As the whole mbox file is scanned, the complete
+	* message is stored in the returned KornMailSubject instances. Therefore
+	* canReadMail() is useless and retunrs false (in KMailDrop).
+	*/
+	virtual QValueVector<KornMailSubject> * doReadSubjects(bool * stop);
 
 	QString file() const { return _file; }
 	void setFile(const QString & file);
