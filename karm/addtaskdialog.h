@@ -49,9 +49,9 @@ class AddTaskDialog : public KDialogBase
 
     // return user choices
     void status( long *total, long *totalDiff, 
-		 long *session, long *sessionDiff, 
-		 DesktopListType *desktopList) const;
-	
+                 long *session, long *sessionDiff, 
+                 DesktopListType *desktopList) const;
+    
   private slots:
     void slotAbsolutePressed();
     void slotRelativePressed();

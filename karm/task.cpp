@@ -47,7 +47,8 @@ void Task::init( const QString& taskName, long minutes, long sessionTime,
 {
   if (icons == 0) {
     icons = new QPtrVector<QPixmap>(8);
-    for (int i=0; i<8; i++) {
+    for (int i=0; i<8; i++)
+    {
       QPixmap *icon = new QPixmap();
       QString name;
       name.sprintf("watch-%d.xpm",i);
@@ -72,7 +73,7 @@ void Task::init( const QString& taskName, long minutes, long sessionTime,
 }
 
 
-void Task::setRunning(bool on)
+void Task::setRunning( bool on )
 {
   if (on) {
     if (!_timer->isActive()) {

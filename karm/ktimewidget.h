@@ -11,14 +11,14 @@ class KarmLineEdit;
 
 class KArmTimeWidget : public QWidget 
 {
-public:
-	KArmTimeWidget( QWidget* parent = 0, const char* name = 0 );
-	void setTime( int hour, int minute );
-	long time() const;
+  public:
+    KArmTimeWidget( QWidget* parent = 0, const char* name = 0 );
+    void setTime( int hour, int minute );
+    long time() const;
 
-private:
-	QLineEdit *_hourLE;
-	KarmLineEdit *_minuteLE;
+  private:
+    QLineEdit *_hourLE;
+    KarmLineEdit *_minuteLE;
 };
 
 #endif

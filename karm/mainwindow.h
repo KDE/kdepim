@@ -22,15 +22,15 @@ class MainWindow : public KMainWindow
 {
   Q_OBJECT
 
-private:
-  KAccel          *_accel;
-  KAccelMenuWatch *_watcher;
-  TaskView        *_taskView;
-  long            _totalSum;
-  long            _sessionSum;
-  Preferences     *_preferences;
-  bool            _hideOnClose;
-  KarmTray        *_tray;
+  private:
+    KAccel          *_accel;
+    KAccelMenuWatch *_watcher;
+    TaskView        *_taskView;
+    long            _totalSum;
+    long            _sessionSum;
+    Preferences     *_preferences;
+    bool            _hideOnClose;
+    KarmTray        *_tray;
 
   public:
     MainWindow();

@@ -11,25 +11,27 @@
  * Provide printing capabilities.
  */
 
-class MyPrinter :public KPrinter
+class MyPrinter : public KPrinter
 {
-public:
-  MyPrinter(const TaskView *taskView);
-  void print();
-  void printLine(QString total, QString session, QString name, QPainter &, int);
-  void printTask(QListViewItem *item, QPainter &,int level);  
-  int calculateReqNameWidth(QListViewItem *item, QFontMetrics &metrics, int level);
+  public:
+    MyPrinter( const TaskView *taskView );
+    void print();
+    void printLine( QString total, QString session, QString name, QPainter &,
+                    int );
+    void printTask( QListViewItem *item, QPainter &, int level );  
+    int calculateReqNameWidth( QListViewItem *item, QFontMetrics &metrics,
+                               int level);
   
-private:
-  const TaskView *_taskView;
+  private:
+    const TaskView *_taskView;
 
-  int xMargin, yMargin;
-  int yoff;
-  int totalTimeWidth;
-  int sessionTimeWidth;
-  int nameFieldWidth;
-  int lineHeight;
-  int pageHeight;  
+    int xMargin, yMargin;
+    int yoff;
+    int totalTimeWidth;
+    int sessionTimeWidth;
+    int nameFieldWidth;
+    int lineHeight;
+   int pageHeight;  
 };
 
 #endif

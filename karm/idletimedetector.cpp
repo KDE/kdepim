@@ -36,13 +36,13 @@ bool IdleTimeDetector::isIdleDetectionPossible()
 void IdleTimeDetector::check() 
 {
 #ifdef HAVE_LIBXSS
-  if (_idleDetectionPossible) {
+  if (_idleDetectionPossible)
+  {
     _mit_info = XScreenSaverAllocInfo ();
     XScreenSaverQueryInfo(qt_xdisplay(), qt_xrootwin(), _mit_info);
     int idleMinutes = (_mit_info->idle/1000)/secsPerMinute;;
-    if (idleMinutes >= _maxIdle) {
+    if (idleMinutes >= _maxIdle)
       informOverrun(idleMinutes);
-    }
   }
 #endif // HAVE_LIBXSS
 }
@@ -55,10 +55,9 @@ void IdleTimeDetector::setMaxIdle(int maxIdle)
 #ifdef HAVE_LIBXSS
 void IdleTimeDetector::informOverrun(int idleMinutes) 
 {
-  if (!_overAllIdleDetect) {
+  if (!_overAllIdleDetect)
     return; // In the preferences the user has indicated that he do not
             // want idle detection.
-  }
 
   _timer->stop();
   
@@ -66,10 +65,11 @@ void IdleTimeDetector::informOverrun(int idleMinutes)
   QDateTime idleStart = start.addSecs(-60 * _maxIdle);
   QString backThen = KGlobal::locale()->formatTime(idleStart.time());
   
-  int id =  QMessageBox::warning(0,i18n("Idle detection"),
+  int id =  QMessageBox::warning( 0, i18n("Idle detection"),
                                      i18n("Desktop has been idle since %1."
                                           " What should we do?").arg(backThen),
-                                     i18n("Revert and Stop"), i18n("Revert and Continue"),
+                                     i18n("Revert and Stop"),
+                                     i18n("Revert and Continue"),
                                      i18n("Continue Timing"),0,2);
   QDateTime end = QDateTime::currentDateTime();
   int diff = start.secsTo(end)/secsPerMinute;

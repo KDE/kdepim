@@ -34,81 +34,80 @@
 
 class KAccelMenuWatch : public QObject
 {
-	Q_OBJECT
+  Q_OBJECT
 
-private:
-	enum AccelType { StdAccel, StringAccel };
+  private:
+    enum AccelType { StdAccel, StringAccel };
 
-	typedef struct AccelItem {
-		QPopupMenu	*menu;
-		int 		itemId;
+    typedef struct AccelItem {
+      QPopupMenu  *menu;
+      int itemId;
 
-		AccelType	type;
+      AccelType type;
 
-		// only one of these is used at a time
-		QString		action;
-		KStdAccel::StdAccel stdAction;
-		
-	} AccelItem;
+      // only one of these is used at a time
+      QString action;
+      KStdAccel::StdAccel stdAction;
+    } AccelItem;
 
-	KAccel		 *_accel;
-	QPtrList<AccelItem> _accList;
-	QPtrList<QPopupMenu> _menuList;
+    KAccel *_accel;
+    QPtrList<AccelItem> _accList;
+    QPtrList<QPopupMenu> _menuList;
 
-	QPopupMenu	*_menu;
+    QPopupMenu  *_menu;
 
-	KAccelMenuWatch::AccelItem *newAccelItem( QPopupMenu *menu, 
-			int itemId, AccelType type );
+    KAccelMenuWatch::AccelItem *newAccelItem( QPopupMenu *menu, 
+                                              int itemId, AccelType type );
 
-public:
-	/**
-	* KAccelMenuWatch Constructor
-	*/
-	KAccelMenuWatch( KAccel *accel, QObject *parent = 0 );
+  public:
+    /**
+     * KAccelMenuWatch Constructor
+     */
+    KAccelMenuWatch( KAccel *accel, QObject *parent = 0 );
 
-	/**
-	* KAccelMenuWatch Destructor
-	*/
-	virtual ~KAccelMenuWatch() {}
+    /**
+     * KAccelMenuWatch Destructor
+     */
+    virtual ~KAccelMenuWatch() {}
 
-	/** 
-	 * Set the menu on which connectAccel calls will operate.
-	 * All subsequent calls to connectAccel will be associated
-	 * with this menu. You can call this function any number of
-	 * times, so multiple menus can be handled.
-	 */
-	void setMenu( QPopupMenu *menu );
+    /** 
+     * Set the menu on which connectAccel calls will operate.
+     * All subsequent calls to connectAccel will be associated
+     * with this menu. You can call this function any number of
+     * times, so multiple menus can be handled.
+     */
+    void setMenu( QPopupMenu *menu );
 
-	/** 
-	 * Return the last menu set with KAccelMenuWatch::setMenu(QPopupMenu*),
-	 * or 0 if none has been set.
-	 */
-	QPopupMenu *currentMenu() const  { return _menu; }
+    /** 
+     * Return the last menu set with KAccelMenuWatch::setMenu(QPopupMenu*),
+     * or 0 if none has been set.
+     */
+    QPopupMenu *currentMenu() const  { return _menu; }
 
-	/** 
-	 * Connect the menu item identified to currentMenu()/id to
-	 * the accelerator action.
-	 */
-	void connectAccel( int itemId, const char *action );
+    /** 
+     * Connect the menu item identified to currentMenu()/id to
+     * the accelerator action.
+     */
+    void connectAccel( int itemId, const char *action );
 
-	/** 
-	 * Same as above, but connects to standard accelerators.
-	 */
-	void connectAccel( int itemId, KStdAccel::StdAccel );
-	
-public slots:
-	/** 
-	 * Updates all menu accelerators. Call this after all accelerators
-	 * have been connected or the kaccel object has been updated.
-	 */
-	void updateMenus();
+    /** 
+     * Same as above, but connects to standard accelerators.
+     */
+    void connectAccel( int itemId, KStdAccel::StdAccel );
+  
+  public slots:
+    /** 
+     * Updates all menu accelerators. Call this after all accelerators
+     * have been connected or the kaccel object has been updated.
+     */
+    void updateMenus();
 
-private slots:
-	void removeDeadMenu();
+  private slots:
+    void removeDeadMenu();
 
-private:
-	KAccelMenuWatch& operator=( const KAccelMenuWatch& );
-	KAccelMenuWatch( const KAccelMenuWatch& );
+  private:
+    KAccelMenuWatch& operator=( const KAccelMenuWatch& );
+    KAccelMenuWatch( const KAccelMenuWatch& );
 };
 
 #endif // SSK_KACCELMENUWATCH_H

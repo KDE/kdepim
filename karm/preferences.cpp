@@ -16,53 +16,64 @@
 
 Preferences *Preferences::_instance = 0;
 
-Preferences::Preferences() : KDialogBase(KDialogBase::Tabbed, i18n("Preferences"),
-                                         KDialogBase::Ok | KDialogBase::Cancel,
-                                         KDialogBase::Ok)
+Preferences::Preferences()
+  : KDialogBase( KDialogBase::Tabbed, i18n("Preferences"),
+                 KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok )
 {
-    QVBox* tab = addVBoxPage(i18n("General"));
+  QVBox* tab = addVBoxPage( i18n("General") );
 
-    _doAutoSaveW = new QCheckBox(i18n("Automatically save tasks"), tab, "_doAutoSaveW");
-    {
-        QHBox* hbox     = new QHBox(tab);
-        _saveFileLabelW = new QLabel(i18n("File to save time information to:"), hbox, "save label");
-        _saveFileW      = new KURLRequester(hbox, "_saveFileW");
-    }
-    {
-        QHBox* hbox     = new QHBox(tab);
-        _autoSaveLabelW = new QLabel(i18n("Minutes between each auto save:"), hbox, "_autoSaveLabelW");
-        _autoSaveValueW = new QSpinBox(1, 60*24, 1, hbox, "_autoSaveValueW");
+  _doAutoSaveW      = new QCheckBox( i18n("Automatically save tasks"),
+                                     tab, "_doAutoSaveW" );
+  {
+    QHBox* hbox     = new QHBox( tab );
+    _saveFileLabelW = new QLabel( i18n("File to save time information to:"),
+                                  hbox, "save label" );
+    _saveFileW      = new KURLRequester( hbox, "_saveFileW" );
+  }
+  {
+    QHBox* hbox     = new QHBox(tab);
+    _autoSaveLabelW = new QLabel( i18n("Minutes between each auto save:" ),
+                                  hbox, "_autoSaveLabelW");
+    _autoSaveValueW = new QSpinBox( 1, 60*24, 1, hbox, "_autoSaveValueW" );
+  }
+
+  _doTimeLoggingW = new QCheckBox( i18n("Do time logging"),
+                                   tab, "_doTimeLoggingW" );
+  {
+    QHBox* hbox       = new QHBox(tab);
+    _timeLoggingLabelW = new QLabel( i18n("File to log the times to:"),
+                                     hbox, "save label");
+    _timeLogW         = new KURLRequester( hbox, "_timeLogW" );
+  }
+  {
+    QHBox* hbox   = new QHBox(tab);
+    _hideOnCloseW = new QCheckBox ( i18n("Hide taskbar icon and "
+                                         "application instead of quitting"),
+                                    hbox, "_hideOnCloseW");
+  }
+
+  _doIdleDetectionW = new QCheckBox( i18n("Try to detect idleness"),
+                                     tab,"_doIdleDetectionW");
+  {
+    QHBox* hbox       = new QHBox(tab);
+    _idleDetectLabelW = new QLabel( i18n("Minutes before informing about "
+                                         "idleness:"), hbox);
+    _idleDetectValueW = new QSpinBox(1,60*24, 1, hbox, "_idleDetectValueW");
+  }
+  {
+    QHBox* hbox = new QHBox(tab);
+    _promptDeleteW = new QCheckBox( i18n( "Prompt before deleting tasks" ),
+                                    hbox, "_promptDeleteW" );
     }
 
-    _doTimeLoggingW = new QCheckBox(i18n("Do time logging"), tab, "_doTimeLoggingW");
-    {
-        QHBox* hbox       = new QHBox(tab);
-        _timeLoggingLabelW = new QLabel(i18n("File to log the times to:"), hbox, "save label");
-        _timeLogW         = new KURLRequester(hbox, "_timeLogW");
-    }
-
-    {
-        QHBox* hbox   = new QHBox(tab);
-        _hideOnCloseW = new QCheckBox ( i18n("Hide taskbar icon and application instead of quitting"),
-                                        hbox, "_hideOnCloseW");
-    }
-
-    _doIdleDetectionW = new QCheckBox(i18n("Try to detect idleness"), tab,"_doIdleDetectionW");
-    {
-        QHBox* hbox       = new QHBox(tab);
-        _idleDetectLabelW = new QLabel(i18n("Minutes before informing about idleness:"), hbox);
-        _idleDetectValueW = new QSpinBox(1,60*24, 1, hbox, "_idleDetectValueW");
-    }
-
-    {
-        QHBox* hbox = new QHBox(tab);
-        _promptDeleteW = new QCheckBox( i18n( "Prompt before deleting tasks" ), hbox, "_promptDeleteW" );
-    }
-
-    connect(_doAutoSaveW, SIGNAL(clicked()), this, SLOT(autoSaveCheckBoxChanged()));
-    connect(_doTimeLoggingW, SIGNAL(clicked()), this, SLOT(timeLoggingCheckBoxChanged()));
-    connect(_hideOnCloseW, SIGNAL(clicked()), this, SLOT(hideOnCloseCheckBoxChanged()));
-    connect(_doIdleDetectionW, SIGNAL(clicked()), this, SLOT(idleDetectCheckBoxChanged()));
+    connect( _doAutoSaveW, SIGNAL( clicked() ), this,
+             SLOT( autoSaveCheckBoxChanged() ));
+    connect( _doTimeLoggingW, SIGNAL( clicked() ), this,
+             SLOT( timeLoggingCheckBoxChanged() ));
+    connect( _hideOnCloseW, SIGNAL( clicked() ), this,
+             SLOT(hideOnCloseCheckBoxChanged() ));
+    connect( _doIdleDetectionW, SIGNAL( clicked() ), this,
+             SLOT( idleDetectCheckBoxChanged() ));
 }
 
 Preferences *Preferences::instance()
@@ -81,9 +92,9 @@ void Preferences::disableIdleDetection()
 }
 
 
-//--------------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 //                            SLOTS
-//--------------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 void Preferences::showDialog()
 {
@@ -182,7 +193,8 @@ QString Preferences::saveFile()
 QString Preferences::activeCalendarFile()
 {
   KStandardDirs dirs;
-  QString korganizerrc = locateLocal( "config", QString::fromLatin1("korganizerrc") );
+  QString korganizerrc = locateLocal( "config",
+                                      QString::fromLatin1("korganizerrc") );
   KConfig korgconfig( korganizerrc, true );
   korgconfig.setGroup( "General" );
 
@@ -247,26 +259,31 @@ QString Preferences::fileFormat()
   return _fileFormat;
 }
 
-//--------------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 //                                  Load and Save
-//--------------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 void Preferences::load()
 {
   KConfig &config = *kapp->config();
 
   config.setGroup( QString::fromLatin1("Idle detection") );
-  _doIdleDetectionV = config.readBoolEntry(QString::fromLatin1("enabled"), true );
+  _doIdleDetectionV = config.readBoolEntry( QString::fromLatin1("enabled"),
+                                            true );
   _idleDetectValueV = config.readNumEntry(QString::fromLatin1("period"), 15);
 
   config.setGroup( QString::fromLatin1("Saving") );
-  _fileFormat     = config.readEntry( QString::fromLatin1("file format"), QString::fromLatin1("karmdata"));
+  _fileFormat     = config.readEntry( QString::fromLatin1("file format"),
+                                      QString::fromLatin1("karmdata"));
   _saveFileV      = config.readEntry( QString::fromLatin1("kcal file"),
-                                      locateLocal( "appdata", QString::fromLatin1("karmdata.ics")));
+                                      locateLocal( "appdata",
+                                                   QString::fromLatin1( "karmdata.ics")));
   _legacySaveFileV = config.readEntry( QString::fromLatin1("file"),
-                                      locateLocal( "appdata", QString::fromLatin1("karmdata.txt")));
+                                      locateLocal( "appdata",
+                                                   QString::fromLatin1("karmdata.txt")));
   _doTimeLoggingV  = config.readBoolEntry( QString::fromLatin1("time logging"), false);
   _timeLogV       = config.readEntry( QString::fromLatin1("time log file"),
-                                      locateLocal("appdata", QString::fromLatin1("karmlog.txt")));
+                                      locateLocal( "appdata",
+                                                   QString::fromLatin1("karmlog.txt")));
   _doAutoSaveV    = config.readBoolEntry( QString::fromLatin1("auto save"), true);
   _autoSaveValueV = config.readNumEntry( QString::fromLatin1("auto save period"), 5);
   _hideOnCloseV   = config.readBoolEntry( QString::fromLatin1("hide on close"), true);

@@ -46,36 +46,42 @@ TaskView::TaskView( QWidget *parent, const char *name )
   _calendar.setEmail( settings.getSetting( KEMailSettings::EmailAddress ) );
   _calendar.setOwner( settings.getSetting( KEMailSettings::RealName ) );
 
-  connect(this, SIGNAL(doubleClicked(QListViewItem *)),
-          this, SLOT(changeTimer(QListViewItem *)));
+  connect(this, SIGNAL( doubleClicked( QListViewItem * )),
+          this, SLOT( changeTimer( QListViewItem * )));
 
-  addColumn(i18n("Task Name"));
-  addColumn(i18n("Session Time"));
-  addColumn(i18n("Total Time"));
-  setAllColumnsShowFocus(true);
+  addColumn( i18n("Task Name") );
+  addColumn( i18n("Session Time") );
+  addColumn( i18n("Total Time") );
+  setAllColumnsShowFocus( true );
 
   // set up the minuteTimer
   _minuteTimer = new QTimer(this);
-  connect(_minuteTimer, SIGNAL(timeout()), this, SLOT(minuteUpdate()));
+  connect( _minuteTimer, SIGNAL( timeout() ), this, SLOT( minuteUpdate() ));
   _minuteTimer->start(1000 * secsPerMinute);
 
   // Set up the idle detection.
-  _idleTimeDetector = new IdleTimeDetector(_preferences->idlenessTimeout());
-  connect(_idleTimeDetector, SIGNAL(extractTime(int)), this, SLOT(extractTime(int)));
-  connect(_idleTimeDetector, SIGNAL(stopAllTimers()), this, SLOT(stopAllTimers()));
-  connect(_preferences, SIGNAL(idlenessTimeout(int)), _idleTimeDetector, SLOT(setMaxIdle(int)));
-  connect(_preferences, SIGNAL(detectIdleness(bool)), _idleTimeDetector, SLOT(toggleOverAllIdleDetection(bool)));
+  _idleTimeDetector = new IdleTimeDetector( _preferences->idlenessTimeout() );
+  connect( _idleTimeDetector, SIGNAL( extractTime(int) ),
+           this, SLOT( extractTime(int) ));
+  connect( _idleTimeDetector, SIGNAL( stopAllTimers() ),
+           this, SLOT( stopAllTimers() ));
+  connect( _preferences, SIGNAL( idlenessTimeout(int) ),
+           _idleTimeDetector, SLOT( setMaxIdle(int) ));
+  connect( _preferences, SIGNAL( detectIdleness(bool) ),
+           _idleTimeDetector, SLOT( toggleOverAllIdleDetection(bool) ));
   if (!_idleTimeDetector->isIdleDetectionPossible())
     _preferences->disableIdleDetection();
 
   // Setup auto save timer
   _autoSaveTimer = new QTimer(this);
-  connect(_preferences, SIGNAL(autoSave(bool)), this, SLOT(autoSaveChanged(bool)));
-  connect(_preferences, SIGNAL(autoSavePeriod(int)),
-          this, SLOT(autoSavePeriodChanged(int)));
-  connect(_autoSaveTimer, SIGNAL(timeout()), this, SLOT(save()));
+  connect( _preferences, SIGNAL( autoSave(bool) ),
+           this, SLOT( autoSaveChanged(bool) ));
+  connect( _preferences, SIGNAL( autoSavePeriod(int) ),
+           this, SLOT( autoSavePeriodChanged(int) ));
+  connect( _autoSaveTimer, SIGNAL( timeout() ), this, SLOT( save() ));
 
-  connect(&kWinModule, SIGNAL(currentDesktopChanged(int)), this, SLOT(handleDesktopChange(int)));
+  connect( &kWinModule, SIGNAL( currentDesktopChanged(int) ),
+           this, SLOT( handleDesktopChange(int) ));
 
   desktopCount = kWinModule.numberOfDesktops();
   lastDesktop = kWinModule.currentDesktop()-1;
@@ -130,19 +136,23 @@ void TaskView::loadFromKCalFormat( const QString& file, int loadMask )
 
   if ( loadMask & TaskView::loadEvent ) {
     QPtrList<KCal::Event> eventList = _calendar.rawEvents();
-    kdDebug() << "There are " << eventList.count() << " events in the calendar." << endl;
+    kdDebug() << "There are " << eventList.count()
+              << " events in the calendar." << endl;
     buildAndPositionTasks( eventList );
   }
 
   if ( loadMask & TaskView::loadTodo ) {
     QPtrList<KCal::Todo> todoList = _calendar.rawTodos();
-    kdDebug() << "There are " << todoList.count() << " todos in the calendar." << endl;
+    kdDebug() << "There are " << todoList.count()
+              << " todos in the calendar." << endl;
     buildAndPositionTasks( todoList );
   }
 
   // Calculate totals for the statusbar (from toplevel tasks only)
-  for ( QListViewItem* child = firstChild(); child; child = child->nextSibling() )
-      emit sessionTimeChanged( 0, static_cast<Task *>(child)->totalTime() );
+  for ( QListViewItem* child = firstChild();
+        child;
+        child = child->nextSibling() )
+    emit sessionTimeChanged( 0, static_cast<Task *>(child)->totalTime() );
 
   setSelected(firstChild(), true);
   setCurrentItem(firstChild());
@@ -152,7 +162,8 @@ void TaskView::loadFromKCalFormat( const QString& file, int loadMask )
 
 void TaskView::loadFromKCalFormat()
 {
-  loadFromKCalFormat( _preferences->loadFile(), TaskView::loadEvent|TaskView::loadTodo );
+  loadFromKCalFormat( _preferences->loadFile(),
+                      TaskView::loadEvent|TaskView::loadTodo );
 }
 
 void TaskView::loadFromKOrgTodos()
@@ -168,11 +179,15 @@ void TaskView::loadFromKOrgEvents()
 void TaskView::buildAndPositionTasks( QPtrList<KCal::Event>& eventList )
 {
   QDict< Task > uid_task_map;
-  for ( QPtrListIterator<KCal::Event> iter ( eventList ); iter.current(); ++iter ) {
+  for ( QPtrListIterator<KCal::Event> iter ( eventList );
+        iter.current();
+        ++iter ) {
     buildTask( *iter, uid_task_map );
   }
 
-  for ( QPtrListIterator<KCal::Event> iter ( eventList ); iter.current(); ++iter ) {
+  for ( QPtrListIterator<KCal::Event> iter ( eventList );
+        iter.current();
+        ++iter ) {
     positionTask( *iter, uid_task_map );
   }
 }
@@ -198,7 +213,8 @@ void TaskView::buildTask( KCal::Incidence* event, QDict<Task>& map )
   updateTrackers( task, task->getDesktops() );
 }
 
-void TaskView::positionTask( const KCal::Incidence* event, const QDict<Task>& map )
+void TaskView::positionTask( const KCal::Incidence* event,
+                             const QDict<Task>& map )
 {
   QString eventName = event->summary();
   if ( !event->relatedTo() ) {
@@ -220,7 +236,8 @@ void TaskView::positionTask( const KCal::Incidence* event, const QDict<Task>& ma
   }
   QString taskName = task->name();
 
-  kdDebug() << "Moving (" << taskName << ") under (" << parentName << ")" << endl;
+  kdDebug() << "Moving (" << taskName << ") under ("
+            << parentName << ")" << endl;
 
   takeItem( task );
   newParent->insertItem( task );
@@ -245,14 +262,14 @@ void TaskView::loadFromFileFormat()
   QTextStream stream(&f);
 
   while( !stream.atEnd() ) {
-    //lukas: this breaks for non-latin1 chars!!!
-    //if ( file.readLine( line, T_LINESIZE ) == 0 )
-    //	break;
+    // lukas: this breaks for non-latin1 chars!!!
+    // if ( file.readLine( line, T_LINESIZE ) == 0 )
+    //   break;
 
     line = stream.readLine();
 
     if (line.isNull())
-	break;
+      break;
 
     long minutes;
     int level;
@@ -327,7 +344,8 @@ void TaskView::updateTrackers(Task *task, DesktopListType desktopList)
       TaskVector& v = desktopTracker[i];
       TaskVector::iterator tit = std::find(v.begin(), v.end(), task);
       // Is desktop i in the desktop list?
-      if (std::find(desktopList.begin(), desktopList.end(), i) != desktopList.end()) {
+      if ( std::find( desktopList.begin(), desktopList.end(), i)
+           != desktopList.end()) {
         if (tit == v.end())  // not yet in start vector
           v.push_back(task); // track in desk i
       }
@@ -352,7 +370,8 @@ void TaskView::printTrackers() {
   }
 }
 
-bool TaskView::parseLine(QString line, long *time, QString *name, int *level, DesktopListType* desktops)
+bool TaskView::parseLine( QString line, long *time, QString *name, int *level,
+                          DesktopListType* desktops)
 {
   if (line.find('#') == 0) {
     // A comment line
@@ -393,7 +412,7 @@ bool TaskView::parseLine(QString line, long *time, QString *name, int *level, De
       ds = deskLine.left(commaIdx);
       d = ds.toInt(&ok);
       if (!ok)
-	return false;
+        return false;
 
       desktops->push_back(d);
       deskLine.remove(0,commaIdx+1);
@@ -472,7 +491,9 @@ void TaskView::saveToFileFormat()
   kdDebug() << "Saved data to file " << f.name() << endl;
 }
 
-void TaskView::writeTaskToCalendar( KCal::CalendarLocal& cal, Task* task, int level, QPtrStack< KCal::Event >& parents )
+void TaskView::writeTaskToCalendar( KCal::CalendarLocal& cal, Task* task,
+                                    int level,
+                                    QPtrStack< KCal::Event >& parents )
 {
   KCal::Event* event = task->asEvent( level );
   if ( !parents.isEmpty() ) {
@@ -483,7 +504,9 @@ void TaskView::writeTaskToCalendar( KCal::CalendarLocal& cal, Task* task, int le
 
   cal.addEvent( event );
 
-  for ( QListViewItem* nextTask = task->firstChild(); nextTask; nextTask = nextTask->nextSibling() ) {
+  for ( QListViewItem* nextTask = task->firstChild();
+        nextTask;
+        nextTask = nextTask->nextSibling() ) {
     writeTaskToCalendar( cal, static_cast<Task*>( nextTask ), level+1, parents );
   }
 
@@ -722,7 +745,8 @@ void TaskView::editTask()
   delete dialog;
 }
 
-void TaskView::updateParents( QListViewItem* task, long totalDiff, long sessionDiff )
+void TaskView::updateParents( QListViewItem* task, long totalDiff,
+                              long sessionDiff )
 {
   QListViewItem *item = task->parent();
   while (item) {
@@ -748,13 +772,15 @@ void TaskView::deleteTask()
   if ( _preferences->promptDelete() ) {
       if (item->childCount() == 0) {
           response = KMessageBox::questionYesNo(0,
-                  i18n( "Are you sure you want to delete the task named\n\"%1\"").arg(item->name()),
+                  i18n( "Are you sure you want to delete "
+                        "the task named\n\"%1\"").arg(item->name()),
                   i18n( "Deleting Task"));
       }
       else {
           response = KMessageBox::questionYesNo(0,
-                  i18n( "Are you sure you want to delete the task named\n\"%1\"\n"
-                      "NOTE: all its subtasks will also be deleted!").arg(item->name()),
+                  i18n( "Are you sure you want to delete the task named"
+                        "\n\"%1\"\n" "NOTE: all its subtasks will also "
+                        "be deleted!").arg(item->name()),
                   i18n( "Deleting Task"));
       }
   }
@@ -797,7 +823,9 @@ void TaskView::deleteTask()
 
 void TaskView::stopChildCounters(Task *item)
 {
-  for (QListViewItem *child=item->firstChild(); child; child=child->nextSibling()) {
+  for ( QListViewItem *child=item->firstChild();
+        child;
+        child=child->nextSibling()) {
     stopChildCounters((Task *)child);
   }
   activeTasks.removeRef(item);

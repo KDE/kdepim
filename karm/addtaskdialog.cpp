@@ -42,9 +42,10 @@
 #include "kwinmodule.h"
 
 
-AddTaskDialog::AddTaskDialog(QString caption, bool editDlg, DesktopListType* desktopList)
-  :KDialogBase(0, "AddTaskDialog", true, caption, Ok|Cancel, Ok, true ),
-  origTotal( 0 ), origSession( 0 )
+AddTaskDialog::AddTaskDialog( QString caption, bool editDlg,
+                              DesktopListType* desktopList)
+  : KDialogBase(0, "AddTaskDialog", true, caption, Ok|Cancel, Ok, true ),
+    origTotal( 0 ), origSession( 0 )
 {
   QWidget *page = new QWidget( this ); 
   setMainWidget(page);
@@ -69,9 +70,10 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg, DesktopListType* des
 
   // The "Edit Absolut" radio button
   lay1->addSpacing(10);lay1->addStretch(1); 
-  _absoluteRB = new QRadioButton( i18n( "Edit &absolute" ), page, "_absoluteRB" );
+  _absoluteRB = new QRadioButton( i18n( "Edit &absolute" ), page,
+                                  "_absoluteRB" );
   lay1->addWidget( _absoluteRB );
-  connect( _absoluteRB, SIGNAL( clicked() ), this, SLOT(slotAbsolutePressed()) );
+  connect( _absoluteRB, SIGNAL( clicked() ), this, SLOT( slotAbsolutePressed() ) );
   
 
   // Absolute times
@@ -101,7 +103,8 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg, DesktopListType* des
 
   // The "Edit relative" radio button
   lay1->addSpacing(10);lay1->addStretch(1);
-  _relativeRB = new QRadioButton( i18n( "Edit &relative (Apply to both session and total)" ), page, "_relativeRB" );
+  _relativeRB = new QRadioButton( i18n( "Edit &relative (Apply to both session"
+                                        "and total)" ), page, "_relativeRB" );
   lay1->addWidget( _relativeRB );
   connect( _relativeRB, SIGNAL( clicked() ), this, SLOT(slotRelativePressed()) );
   
@@ -135,12 +138,13 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg, DesktopListType* des
   {
     int lines = (int)(desktopCount/2);
     if (lines*2 != desktopCount) lines++; 
-      groupBox = new QButtonGroup(lines, QGroupBox::Horizontal, i18n("in desktop"), page, "_desktopsGB");
+      groupBox = new QButtonGroup( lines, QGroupBox::Horizontal,
+                                   i18n("in desktop"), page, "_desktopsGB");
   }
   lay1->addWidget(groupBox);
 
   QHBoxLayout *lay6 = new QHBoxLayout();
-	
+
   lay1->addLayout(lay6);
   for (int i=0; i<desktopCount; i++) {
     _deskBox.push_back(new QCheckBox(groupBox,QString::number(i).latin1()));
@@ -172,7 +176,8 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg, DesktopListType* des
 
   KIconLoader loader;
   
-  QPixmap whatsThisIM = loader.loadIcon(QString::fromLatin1("contexthelp"), KIcon::Toolbar);
+  QPixmap whatsThisIM = loader.loadIcon( QString::fromLatin1("contexthelp"),
+                                         KIcon::Toolbar);
   QPushButton* whatsThisBU = new QPushButton(page, "whatsThisLA");
   whatsThisBU->setFocusPolicy(NoFocus);
 
@@ -195,23 +200,31 @@ AddTaskDialog::AddTaskDialog(QString caption, bool editDlg, DesktopListType* des
   slotRelativePressed();
 
   // Whats this help.
-  QWhatsThis::add(_name, i18n("Enter the name of the task here. This name is for your eyes only."));
-  QWhatsThis::add(_absoluteRB, i18n("If you select this radio button, you specify that you want "
-                                    "to enter the time as absolute values. For example: "
-                                    "total for this task is 20 hours and 15 minutes.\n\n"
-                                    "The time is specified for the session time and for the total time "
-                                    "separately."));
-  QWhatsThis::add(_relativeRB, i18n("If you select this radio button, you specify that you want "
-                                    "to add or subtract time for the task. For example: I've worked 2 hours "
-                                    "and 20 minutes more on this task (without having the timer "
-                                    "running.)\n\n"
-                                    "This time will be added or subtracted for both the "
-                                    "session time and the total time."));
-  QWhatsThis::add(_totalTW, i18n("This is the overall time this task has been running."));
-  QWhatsThis::add(_sessionTW, i18n("This is the time the task has been running this session."));
-  QWhatsThis::add(_diffTW, i18n("Specify how much time to add or subtract to the overall and "
-                                "session time"));
-  
+  QWhatsThis::add( _name,
+                   i18n( "Enter the name of the task here. "
+                         "This name is for your eyes only."));
+  QWhatsThis::add( _absoluteRB,
+                   i18n( "If you select this radio button, you specify that "
+                         "you want to enter the time as absolute values. For "
+                         "example: total for this task is 20 hours and 15 "
+                         "minutes.\n\n"
+                         "The time is specified for the session time and for "
+                         "the total time separately."));
+  QWhatsThis::add( _relativeRB,
+                   i18n( "If you select this radio button, you specify that "
+                         "you want to add or subtract time for the task. For "
+                         "example: I've worked 2 hours and 20 minutes more on "
+                         "this task (without having the timer running.)\n\n"
+                         "This time will be added or subtracted for both the "
+                         "session time and the total time."));
+  QWhatsThis::add( _totalTW,
+                   i18n( "This is the overall time this task has been "
+                         "running."));
+  QWhatsThis::add( _sessionTW,
+                   i18n( "This is the time the task has been running this "
+                         "session."));
+  QWhatsThis::add( _diffTW, i18n( "Specify how much time to add or subtract "
+                                  "to the overall and session time"));
 }
 
 void AddTaskDialog::enterWhatsThis() 
@@ -277,7 +290,7 @@ QString AddTaskDialog::taskName() const
 
 
 void AddTaskDialog::status(long *total, long *totalDiff, long *session, 
-			   long *sessionDiff, DesktopListType *desktopList) const
+                           long *sessionDiff, DesktopListType *desktopList) const
 { 
   if ( _absoluteRB->isChecked() ) {
     *total = _totalTW->time();

@@ -32,9 +32,9 @@ typedef std::vector<Task*> TaskVector;
 
 class TaskView : public KListView
 {
-    Q_OBJECT
+  Q_OBJECT
 
-private: // member variables
+  private: // member variables
     IdleTimeDetector *_idleTimeDetector;
     QTimer *_minuteTimer;
     QTimer *_autoSaveTimer;
@@ -53,20 +53,21 @@ private: // member variables
 
     KCal::CalendarLocal _calendar;
 
-public:
+  public:
     TaskView( QWidget *parent = 0, const char *name = 0 );
     virtual ~TaskView();
     static QString formatTime(long minutes);
     void printTrackers();
 
-private:
+  private:
     enum { loadEvent = 1, loadTodo = 2 };
-    void updateParents( QListViewItem* task, long totalDiff, long sesssionDiff );
-    void startTimerFor(Task* item);
-    void stopTimerFor(Task* item);
+    void updateParents( QListViewItem* task, long totalDiff, long sesssionDiff);
+    void startTimerFor( Task* item );
+    void stopTimerFor( Task* item );
     void applyTrackers();
-    void updateTrackers(Task *task, DesktopListType dl);
-    bool parseLine(QString line, long *time, QString *name, int *level, DesktopListType* desktops);
+    void updateTrackers( Task *task, DesktopListType dl );
+    bool parseLine( QString line, long *time, QString *name, int *level,
+                    DesktopListType* desktops );
     void loadFromFileFormat();
     void saveToFileFormat();
     void loadFromKCalFormat( const QString& file, int loadMask );
@@ -77,58 +78,59 @@ private:
     void buildTask( KCal::Incidence* event, QDict<Task>& map );
     void positionTask( const KCal::Incidence* event, const QDict<Task>& map );
 
-public slots:
+  public slots:
     /*
-    File format:
-    zero or more lines of
-    1 		number
-    time	in minutes
-    string	task name
-    [string]    desktops, in which to count. e.g. "1,2,5" (optional)
+       File format:
+       zero or more lines of
+       1         number
+       time      in minutes
+       string    task name
+       [string]  desktops, in which to count. e.g. "1,2,5" (optional)
     */
     void load();
     void save();
-    void writeTaskToFile(QTextStream *, QListViewItem *, int);
-    void writeTaskToCalendar(KCal::CalendarLocal&, Task*, int, QPtrStack< KCal::Event >&);
+    void writeTaskToFile( QTextStream *, QListViewItem *, int );
+    void writeTaskToCalendar( KCal::CalendarLocal&, Task*, int,
+                              QPtrStack< KCal::Event >&);
     void startCurrentTimer();
     void stopCurrentTimer();
     void stopAllTimers();
-    void changeTimer(QListViewItem * = 0);
+    void changeTimer( QListViewItem * = 0 );
     void newTask();
-    void newTask(QString caption, QListViewItem *parent);
+    void newTask( QString caption, QListViewItem *parent );
     void newSubTask();
     void editTask();
     void deleteTask();
-    void extractTime(int minutes);
+    void extractTime( int minutes );
     void resetSessionTimeForAllTasks();
     void resetTimeForAllTasks();
-    void handleDesktopChange(int desktop);
+    void handleDesktopChange( int desktop );
     void loadFromKOrgTodos();
     void loadFromKOrgEvents();
 
-protected slots:
-    void autoSaveChanged(bool);
-    void autoSavePeriodChanged(int period);
+  protected slots:
+    void autoSaveChanged( bool );
+    void autoSavePeriodChanged( int period );
     void minuteUpdate();
 
-signals:
+  signals:
     void sessionTimeChanged( long, long );
     void updateButtons();
     void timerActive();
     void timerInactive();
-    void tasksChanged( QPtrList<Task> activeTasks);
+    void tasksChanged( QPtrList<Task> activeTasks );
 
 
-protected slots:
-    void stopChildCounters(Task *item);
-    void addTimeToActiveTasks(int minutes);
+  protected slots:
+    void stopChildCounters( Task *item );
+    void addTimeToActiveTasks( int minutes );
 };
 
 inline QString TaskView::formatTime( long minutes )
 {
-    QString time;
-    time.sprintf("%ld:%02ld", minutes / 60, labs(minutes % 60));
-    return time;
+  QString time;
+  time.sprintf("%ld:%02ld", minutes / 60, labs(minutes % 60));
+  return time;
 }
 
 #endif

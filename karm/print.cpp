@@ -18,31 +18,31 @@ MyPrinter::MyPrinter(const TaskView *taskView)
 
 void MyPrinter::print()
 {
-	if (setup()) {
-		// setup
-		QPainter painter(this);
-		QPaintDeviceMetrics deviceMetrics(this);
-		QFontMetrics metrics = painter.fontMetrics();
-		pageHeight = deviceMetrics.height();
-		int pageWidth = deviceMetrics.width();
+  if (setup()) {
+    // setup
+    QPainter painter(this);
+    QPaintDeviceMetrics deviceMetrics(this);
+    QFontMetrics metrics = painter.fontMetrics();
+    pageHeight = deviceMetrics.height();
+    int pageWidth = deviceMetrics.width();
     xMargin = margins().width();
     yMargin = margins().height();
     yoff = yMargin;
     lineHeight = metrics.height();
     
 
-		// Calculate the totals
+    // Calculate the totals
     // Note the totals are only calculated at the top most levels, as the
     // totals are increased together with its children.
     int totalTotal = 0;
     int sessionTotal = 0;
-		for (QListViewItem *child = _taskView->firstChild(); child;
-				 child = child->nextSibling()) {
-			Task *task = (Task *) child;
+    for (QListViewItem *child = _taskView->firstChild(); child;
+         child = child->nextSibling()) {
+      Task *task = (Task *) child;
 
       totalTotal += task->totalTime();
       sessionTotal += task->sessionTime();
-		}
+    }
 
     // Calculate the needed width for each of the fields
     totalTimeWidth = QMAX(metrics.width(i18n("Total")),
@@ -53,9 +53,11 @@ void MyPrinter::print()
     nameFieldWidth = pageWidth - xMargin - totalTimeWidth - sessionTimeWidth - 2*5;
     
     int maxReqNameFieldWidth= metrics.width(i18n("Task Name "));
-		
-    for (QListViewItem *child = _taskView->firstChild(); child;
-         child = child->nextSibling()) {
+    
+    for ( QListViewItem *child = _taskView->firstChild();
+          child;
+          child = child->nextSibling())
+    {
       int width = calculateReqNameWidth(child, metrics, 0);
       maxReqNameFieldWidth = QMAX(maxReqNameFieldWidth, width);
     }
@@ -63,33 +65,35 @@ void MyPrinter::print()
 
     int realPageWidth = nameFieldWidth + totalTimeWidth + sessionTimeWidth + 2*5;
 
-		// Print the header
-		QFont origFont, newFont;
-		origFont = painter.font();
-		newFont = origFont;
-		newFont.setPixelSize(static_cast<int>(origFont.pixelSize() * 1.5));
-		painter.setFont(newFont);
-		
-		int height = metrics.height();
-		QString now = KGlobal::locale()->formatDateTime(QDateTime::currentDateTime());
-		
-		painter.drawText(xMargin, yoff, pageWidth*2, height*2,
-				 QPainter::AlignCenter, 
-				 i18n("KArm - %1").arg(now));
-		
-		painter.setFont(origFont);
-		yoff += height + 10;
+    // Print the header
+    QFont origFont, newFont;
+    origFont = painter.font();
+    newFont = origFont;
+    newFont.setPixelSize( static_cast<int>(origFont.pixelSize() * 1.5) );
+    painter.setFont(newFont);
+    
+    int height = metrics.height();
+    QString now = KGlobal::locale()->formatDateTime(QDateTime::currentDateTime());
+    
+    painter.drawText(xMargin, yoff, pageWidth*2, height*2,
+         QPainter::AlignCenter, 
+         i18n("KArm - %1").arg(now));
+    
+    painter.setFont(origFont);
+    yoff += height + 10;
 
     // Print the second header.
     printLine(i18n("Total"), i18n("Session"), i18n("Task Name"), painter, 0);
-		
+    
     yoff += 4;
     painter.drawLine(xMargin, yoff, xMargin + realPageWidth, yoff);
     yoff += 2;
     
     // Now print the actual content
-    for (QListViewItem *child = _taskView->firstChild(); child;
-       child = child->nextSibling()) {
+    for ( QListViewItem *child = _taskView->firstChild();
+          child;
+          child = child->nextSibling() )
+    {
       printTask(child, painter, 0);
     }
     
@@ -99,23 +103,22 @@ void MyPrinter::print()
     yoff += 2;
     
     // Print the Totals
-    printLine(TaskView::formatTime(totalTotal),
-              TaskView::formatTime(sessionTotal),
-              QString(), painter, 0);
-    
-    
-	}
+    printLine( TaskView::formatTime( totalTotal ),
+               TaskView::formatTime( sessionTotal ),
+               QString(), painter, 0);
+  }
 }
 
-int MyPrinter::calculateReqNameWidth(QListViewItem *item,
-                                     QFontMetrics &metrics,
-                                     int level) 
+int MyPrinter::calculateReqNameWidth( QListViewItem *item,
+                                      QFontMetrics &metrics,
+                                      int level) 
 {
   Task *task = (Task *) item;
   int width = metrics.width(task->name()) + level * levelIndent;
 
-  for (QListViewItem *child = item->firstChild(); child;
-       child = child->nextSibling()) {
+  for ( QListViewItem *child = item->firstChild();
+        child;
+        child = child->nextSibling() ) {
     int childWidth = calculateReqNameWidth(child, metrics, level+1);
     width = QMAX(width, childWidth);
   }
@@ -130,24 +133,29 @@ void MyPrinter::printTask(QListViewItem *item, QPainter &painter, int level)
   QString name = task->name();
   printLine(totalTime, sessionTime, name, painter, level);
 
-  for (QListViewItem *child = item->firstChild(); child;
-       child = child->nextSibling()) {
+  for ( QListViewItem *child = item->firstChild();
+        child;
+        child = child->nextSibling())
+  {
     printTask(child, painter, level+1);
   }      
 }
 
-void MyPrinter::printLine(QString total, QString session, QString name, 
-                          QPainter &painter, int level)
+void MyPrinter::printLine( QString total, QString session, QString name, 
+                           QPainter &painter, int level )
 {
   int xoff = xMargin + 10 * level;
   
-  painter.drawText(xoff, yoff, nameFieldWidth, lineHeight, QPainter::AlignLeft, name);
+  painter.drawText( xoff, yoff, nameFieldWidth, lineHeight,
+                    QPainter::AlignLeft, name);
   xoff = xMargin + nameFieldWidth;
   
-  painter.drawText(xoff, yoff, sessionTimeWidth, lineHeight, QPainter::AlignRight, session);
+  painter.drawText( xoff, yoff, sessionTimeWidth, lineHeight,
+                    QPainter::AlignRight, session);
   xoff += sessionTimeWidth+ 5;
   
-  painter.drawText(xoff, yoff, totalTimeWidth, lineHeight, QPainter::AlignRight, total);
+  painter.drawText( xoff, yoff, totalTimeWidth, lineHeight,
+                    QPainter::AlignRight, total);
   xoff += totalTimeWidth+5;
 
   yoff += lineHeight;
