@@ -147,6 +147,24 @@ class KarmStorage
     QString exportcsvFile(TaskView* taskview,
         const QString& filename);
 
+    /**
+     *  Write task history to file as comma-delimited data.
+     */
+    QString exportActivityReport (
+            TaskView* taskview, 
+            const QString& filename,
+            const QDate& from, 
+            const QDate& to
+            );
+
+    void printTaskHistory (
+            const Task *task, 
+            const QMap<QString,long>& taskdaytotals, 
+            QMap<QString,long>& daytotals, 
+            const QDate& from,
+            const QDate& to, 
+            const int level, QString& s
+            );
     /*
      * Log the change in a task's time.
      *

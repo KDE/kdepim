@@ -44,6 +44,8 @@
 #include <resourcelocal.h>
 #include <kpimprefs.h>
 #include <taskview.h>
+#include <timekard.h>
+#include <karmutility.h>
 
 //#include <calendarlocal.h>
 //#include <journal.h>
@@ -471,8 +473,10 @@ void KarmStorage::adjustFromLegacyFileFormat(Task* task)
 QString KarmStorage::exportcsvFile(TaskView* taskview, const QString& filename)
 {
   QString delim = i18n( "," );
-  QString rdelim = i18n( "\\" ) + delim;
-
+  QString dquote = i18n( "\"" );
+  QString double_dquote = dquote + dquote;
+  bool to_quote;
+  
   QString err;
   Task* task;
   int maxdepth=0; 
@@ -525,8 +529,24 @@ QString KarmStorage::exportcsvFile(TaskView* taskview, const QString& filename)
 
       // indent the task in the csv-file:
       for ( int i=0; i < task->depth(); ++i ) stream << delim;
-      stream << task->name().replace( delim, rdelim );
+      
+      // CSV compliance
+      // Surround the field with quotes if the field contains 
+      // a comma (delim) or a double quote
+      if (task->name().contains(delim) || task->name().contains(dquote))
+        to_quote = TRUE;
+      else
+        to_quote = FALSE;
 
+      if (to_quote)
+        stream << dquote;
+        
+      // Double quotes replaced by a pair of consecutive double quotes 
+      stream << task->name().replace( dquote, double_dquote );
+
+      if (to_quote)
+        stream << dquote;
+      
       // maybe other tasks are more indented, so to align the columns:
       for ( int i = 0; i < maxdepth - task->depth(); ++i ) stream << delim;
 
@@ -614,16 +634,222 @@ void KarmStorage::addComment(const Task* task, const QString& comment)
   // transition to using the addComment method, we need this second param.
   QString s = comment;
 
-  // Need to wait until my libkcal-comment patch is applied for this ...
-  //todo->addComment(comment);
-
-
+  // TODO: Use libkcal comments 
+  // todo->addComment(comment);
   // temporary
   todo->setDescription(task->comment());
 
   _calendar->save(_lock);
   _lock = _calendar->requestSaveTicket
-    (_calendar->resourceManager()->standardResource());
+    ( _calendar->resourceManager()->standardResource() );
+}
+
+void KarmStorage::printTaskHistory(const Task *task, 
+    const QMap<QString,long>& taskdaytotals, 
+    QMap<QString,long>& daytotals, 
+    const QDate& from,
+    const QDate& to, const int level, QString& s)
+// to>=from is precondition
+{
+  QString delim = i18n( "," );           
+  QString dquote = i18n("\"");
+  QString double_dquote = dquote + dquote;
+  bool to_quote;
+
+  const QString cr = QString::fromLatin1("\n");
+  QString buf;
+  QString daytaskkey, daykey;
+  QDate day;
+  long sum;
+
+  day = from;
+  sum = 0;
+  while (day <= to)
+  {
+    // write the time in seconds for the given task for the given day to s
+    daykey = day.toString(QString::fromLatin1("yyyyMMdd"));
+    daytaskkey = QString::fromLatin1("%1_%2")
+      .arg(daykey)
+      .arg(task->uid());
+
+    if (taskdaytotals.contains(daytaskkey))
+    {
+      s += QString::fromLatin1("%1")
+        .arg(formatTime(taskdaytotals[daytaskkey]/60));
+      sum += taskdaytotals[daytaskkey];  // in seconds
+      
+      if (daytotals.contains(daykey))
+        daytotals.replace(daykey, daytotals[daykey] + taskdaytotals[daytaskkey]);
+      else
+        daytotals.insert(daykey, taskdaytotals[daytaskkey]);
+    }
+    s += delim;
+
+    day = day.addDays(1);
+  }
+
+  // Total for task this week
+  s += QString::fromLatin1("%1").arg(formatTime(sum/60));
+
+  // Task name
+  for ( int i = level + 1; i > 0; i-- ) s += delim;
+
+  // CSV compliance
+  // Surround the field with quotes if the field contains 
+  // a comma (delim) or a double quote
+  to_quote = task->name().contains(delim) || task->name().contains(dquote);
+  if ( to_quote) s += dquote;
+
+  // Double quotes replaced by a pair of consecutive double quotes 
+  s += task->name().replace( dquote, double_dquote );
+
+  if ( to_quote) s += dquote;
+
+  s += cr;
+
+  for (Task* subTask = task->firstChild();
+      subTask;
+      subTask = subTask->nextSibling())
+  {
+    printTaskHistory(subTask, taskdaytotals, daytotals, from, to , level+1, s);
+  }
+}
+
+// export history report as csv, all tasks X all dates in one block
+QString KarmStorage::exportActivityReport
+(TaskView* taskview, const QString& filename, const QDate& from, 
+ const QDate& to)
+{
+  QString delim = i18n( "," );            // delimiter
+  QString rdelim = i18n( "\\" ) + delim;  // escape-sequence for the delimiter
+  const QString cr = QString::fromLatin1("\n");
+  QString err;
+  
+  // below taken from timekard.cpp
+  QString retval;
+  QString taskhdr, totalhdr;
+  QString line, buf;
+  long sum;
+  
+  QValueList<Week>::iterator week;
+  QValueList<HistoryEvent> events;
+  QValueList<HistoryEvent>::iterator event;
+  QMap<QString, long> taskdaytotals;
+  QMap<QString, long> daytotals;
+  QString daytaskkey, daykey;
+  QDate day;
+  QDate dayheading;
+
+  // parameter-plausi
+  if (from>to) 
+  {
+    err = QString::fromLatin1("'to' has to be a date later than or equal to 'from'.");
+  }
+ 
+  // header
+  retval += i18n("Task History\n");
+  retval += i18n("From %1 to %2")
+    .arg(KGlobal::locale()->formatDate(from))
+    .arg(KGlobal::locale()->formatDate(to));
+  retval += cr;
+  retval += i18n("Printed on: %1")
+    .arg(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime()));
+  retval += cr;
+
+  // output one time card table for each week in the date range
+  QValueList<Week> weeks = Week::weeksFromDateRange(from, to);
+  day=from;
+
+  events = taskview->getHistory(from, to);
+  taskdaytotals.clear();
+  daytotals.clear();
+ 
+  // Build lookup dictionary used to output data in table cells.  keys are
+  // in this format: YYYYMMDD_NNNNNN, where Y = year, M = month, d = day and
+  // NNNNN = the VTODO uid.  The value is the total seconds logged against
+  // that task on that day.  Note the UID is the todo id, not the event id,
+  // so times are accumulated for each task.
+  for (event = events.begin(); event != events.end(); ++event)
+  {
+    daykey = (*event).start().date().toString(QString::fromLatin1("yyyyMMdd"));
+    daytaskkey = QString(QString::fromLatin1("%1_%2"))
+        .arg(daykey)
+        .arg((*event).todoUid());
+        
+    if (taskdaytotals.contains(daytaskkey))
+        taskdaytotals.replace(daytaskkey, 
+                taskdaytotals[daytaskkey] + (*event).duration());
+    else
+        taskdaytotals.insert(daytaskkey, (*event).duration());
+  }
+        
+  // day headings
+  dayheading=from;
+  while (dayheading<=to)
+  {
+    retval += dayheading.toString(QString::fromLatin1("yyyyMMdd"));
+    retval += delim;
+    dayheading=dayheading.addDays(1);
+  }
+  retval += cr;
+  retval += line;
+        
+  // the tasks
+  if (events.empty())
+  {
+    retval += i18n("  No hours logged.");
+  }
+  else
+  {
+    sum = 0;
+    {
+      for (Task* task= taskview->item_at_index(0); task; task= task->nextSibling())
+      {
+        printTaskHistory(task, taskdaytotals, daytotals, from, to, 0, retval);
+      }
+    } 
+    retval += line;
+        
+    // totals
+    sum = 0;
+    day = from;
+    while (day<=to)
+    {
+      daykey = day.toString(QString::fromLatin1("yyyyMMdd"));
+        
+      if (daytotals.contains(daykey))
+      {
+        retval += QString::fromLatin1("%1")
+            .arg(formatTime(daytotals[daykey]/60));
+        sum += daytotals[daykey];  // in seconds
+      }
+      retval += delim;
+      day = day.addDays(1);
+    }
+        
+    retval += QString::fromLatin1("%1%2%3")
+        .arg(formatTime(sum/60))
+        .arg(delim)
+        .arg(i18n("Total"));
+  }
+
+  // above taken from timekard.cpp
+      
+  QFile f(filename);
+  if( !f.open( IO_WriteOnly ) ) {
+      err = i18n("Could not open \"%1\".").arg(filename);
+  }
+
+  if (!err)
+  {
+
+    QTextStream stream(&f);
+    // Export to file
+    stream << retval;
+    f.close();
+
+  }
+  return err;
 }
 
 void KarmStorage::stopTimer(const Task* task)
