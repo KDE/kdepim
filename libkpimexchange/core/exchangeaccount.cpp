@@ -255,7 +255,7 @@ QString ExchangeAccount::tryFindMailbox( const QString& host, const QString& use
   return result;
 }
   
-static QString ExchangeAccount::tryMailbox( const QString& _url, const QString& user, const QString& password ) {
+QString ExchangeAccount::tryMailbox( const QString& _url, const QString& user, const QString& password ) {
   KURL url = KURL( _url );
   url.setUser( user );
   url.setPass( password );
