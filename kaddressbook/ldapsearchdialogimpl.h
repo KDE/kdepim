@@ -53,6 +53,8 @@ protected slots:
   void slotAddSelectedContacts();
   void slotSendMail();
   void slotError( const QString& );
+  void slotSelectAll();
+  void slotUnSelectAll();
 
 protected:
   QString selectedEMails() const;

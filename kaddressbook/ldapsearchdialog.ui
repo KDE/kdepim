@@ -27,8 +27,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>530</width>
-            <height>357</height>
+            <width>593</width>
+            <height>400</height>
         </rect>
     </property>
     <property name="caption">
@@ -37,7 +37,7 @@
     <property name="sizeGripEnabled">
         <bool>true</bool>
     </property>
-    <vbox>
+    <grid>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
@@ -47,7 +47,7 @@
         <property name="spacing">
             <number>6</number>
         </property>
-        <widget class="QGroupBox">
+        <widget class="QGroupBox" row="0" column="0">
             <property name="name">
                 <cstring>GroupBox1</cstring>
             </property>
@@ -172,12 +172,7 @@
                 </widget>
             </vbox>
         </widget>
-        <widget class="QListView">
-            <property name="name">
-                <cstring>resultListView</cstring>
-            </property>
-        </widget>
-        <widget class="QLayoutWidget">
+        <widget class="QLayoutWidget" row="2" column="0">
             <property name="name">
                 <cstring>Layout5</cstring>
             </property>
@@ -219,7 +214,40 @@
                     </property>
                     <property name="sizeHint">
                         <size>
-                            <width>20</width>
+                            <width>40</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>selectAllButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>S&amp;elect All</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>unselectAllButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Unselect All</string>
+                    </property>
+                </widget>
+                <spacer>
+                    <property name="name">
+                        <cstring>Spacer3_2</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>30</width>
                             <height>0</height>
                         </size>
                     </property>
@@ -234,7 +262,12 @@
                 </widget>
             </hbox>
         </widget>
-    </vbox>
+        <widget class="QListView" row="1" column="0">
+            <property name="name">
+                <cstring>resultListView</cstring>
+            </property>
+        </widget>
+    </grid>
 </widget>
 <connections>
     <connection>

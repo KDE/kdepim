@@ -98,6 +98,10 @@ LDAPSearchDialogImpl::LDAPSearchDialogImpl( KABC::AddressBook *ab, QWidget* pare
 	   this, SLOT( slotSetScope( bool ) ) );
   connect( addSelectedButton, SIGNAL( clicked() ),
 	   this, SLOT( slotAddSelectedContacts() ) );
+  connect( selectAllButton, SIGNAL( clicked() ),
+	   this, SLOT( slotSelectAll() ) );
+  connect( unselectAllButton, SIGNAL( clicked() ),
+	   this, SLOT( slotUnSelectAll() ) );
   connect( mailToButton, SIGNAL( clicked() ),
 	   this, SLOT( slotSendMail() ) );
   connect( searchButton, SIGNAL( clicked() ),
@@ -340,4 +344,15 @@ void LDAPSearchDialogImpl::slotSendMail()
 {
   kapp->invokeMailer( selectedEMails(), "" );
 }
+
+void LDAPSearchDialogImpl::slotSelectAll()
+{
+  resultListView->selectAll( true );
+}
+
+void LDAPSearchDialogImpl::slotUnSelectAll()
+{
+  resultListView->selectAll( false );
+}
+
 #include "ldapsearchdialogimpl.moc"
