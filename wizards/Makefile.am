@@ -4,7 +4,7 @@ INCLUDES = -I$(top_srcdir)/libkdepim -I$(top_srcdir)/libkcal \
            -I$(top_srcdir)/kresources/imap/shared -I$(top_srcdir) \
            $(all_includes)
 
-bin_PROGRAMS = groupwarewizard kolabwizard egroupwarewizard
+bin_PROGRAMS = groupwarewizard kolabwizard egroupwarewizard sloxwizard
 
 groupwarewizard_LDFLAGS = \
                           $(all_libraries) $(KDE_RPATH)
@@ -43,7 +43,13 @@ egroupwarewizard_LDADD = libegroupwarewizard.la
 egroupwarewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 egroupwarewizard_SOURCES = egroupwaremain.cpp
 
+sloxwizard_LDADD = ../kresources/slox/libkcal_slox.la \
+                   ../kresources/slox/libkabc_slox.la \
+                   ../libkdepim/libkdepim.la
+sloxwizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+sloxwizard_SOURCES = sloxmain.cpp sloxwizard.cpp sloxconfig.kcfgc
+
 
 noinst_HEADERS = kmailchanges.h kolabwizard.h
 
-kde_kcfg_DATA = kolab.kcfg
+kde_kcfg_DATA = kolab.kcfg slox.kcfg
