@@ -15,7 +15,7 @@ kde_module_LTLIBRARIES = conduit_popmail.la
 # Which sources should be compiled for popmail_conduit
 conduit_popmail_la_SOURCES = popmailSettings.kcfgc setup-dialog.ui \
 	popmail-factory.cc setupDialog.cc \
-	passworddialog.cc popmail-conduit.cc parsedate.c
+	popmail-conduit.cc
 conduit_popmail_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
 conduit_popmail_la_LIBADD  =  ../../lib/libkpilot.la $(LIB_KIO)
 

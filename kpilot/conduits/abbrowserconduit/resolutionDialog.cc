@@ -80,7 +80,7 @@ ResolutionCheckListItem::ResolutionCheckListItem(ResolutionItem*it,
 	fCaption(it?(it->fName):(QString::null)),
 	fText(it?(it->fResolved):(QString::null))
 {
-	FUNCTIONSETUP
+	FUNCTIONSETUP;
 	if (it && tb)
 	{
 		// If all three texts are identical, there is no need for

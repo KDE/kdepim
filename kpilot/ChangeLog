@@ -1,6 +1,11 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-04-30  Adriaan de Groot
+* Vrolijke koninginnedag!
+* Finally updated the site some.
+* Removed deprecated files, started using KDevelop, fixed random stuff.
+
 2004-04-28  Adriaan de Groot
 * [kpilotConfigDialog] Added UI for screenlockSecure option. Docs, too.
 * [kpilot] Changed hotSync button to one with a little dropdown
