@@ -99,6 +99,8 @@ EmpathViewPart::EmpathViewPart(
 
     insertChildClient(widget_->messageViewPart_);
 
+    _initActions();
+
     setXMLFile("EmpathView.rc");
 
     connect(
@@ -120,11 +122,383 @@ EmpathViewPart::~EmpathViewPart()
 }
 
     void
+EmpathViewPart::_initActions()
+{
+    (void) new KAction(
+        i18n("&View"),
+        "empath_message_view",
+        CTRL+Key_Return,
+        this,
+        SLOT(s_messageView()),
+        actionCollection(),
+        "messageView"
+    );
+        
+    (void) new KAction(
+        i18n("&Compose"),
+        "empath_message_compose",
+        Key_M,
+        this,
+        SLOT(s_messageCompose()),
+        actionCollection(),
+        "messageCompose"
+    );
+        
+    (void) new KAction(
+        i18n("&Reply"),
+        "empath_messageReply",
+        Key_R,
+        this,
+        SLOT(s_messageReply()),
+        actionCollection(),
+        "messageReply"
+    );
+        
+    (void) new KAction(
+        i18n("Reply to &All"),
+        "empath_message_reply_all",
+        Key_G,
+        this,
+        SLOT(s_messageReplyAll()),
+        actionCollection(),
+        "messageReplyAll"
+    );
+        
+    (void) new KAction(
+        i18n("&Forward"),
+        "empath_message_forward",
+        Key_F,
+        this,
+        SLOT(s_messageForward()),
+        actionCollection(),
+        "messageForward"
+    );
+        
+    (void) new KAction(
+        i18n("&Delete"),
+        "empath_message_delete",
+        Key_D,
+        this,
+        SLOT(s_messageDelete()),
+        actionCollection(),
+        "messageDelete"
+    );
+        
+    (void) new KAction(
+        i18n("&Bounce"),
+        "empath_message_bounce",
+        0,
+        this,
+        SLOT(s_messageBounce()),
+        actionCollection(),
+        "messageBounce"
+    );
+        
+    (void) new KAction(
+        i18n("Save &As..."),
+        "empath_message_save_as",
+        0,
+        this,
+        SLOT(s_messageSaveAs()),
+        actionCollection(),
+        "messageSaveAs"
+    );
+        
+    (void) new KAction(
+        i18n("&Copy To..."),
+        "empath_message_copy",
+        Key_C,
+        this,
+        SLOT(s_messageCopyTo()),
+        actionCollection(),
+        "messageCopyTo"
+    );
+        
+    (void) new KAction(
+        i18n("&Move To..."),
+        "empath_message_move",
+        0,
+        this,
+        SLOT(s_messageMoveTo()),
+        actionCollection(),
+        "messageMoveTo"
+    );
+        
+    (void) new KAction(
+        i18n("Mark..."),
+        "empath_message_mark_many",
+        0,
+        this,
+        SLOT(s_messageMarkMany()),
+        actionCollection(),
+        "messageMarkMany"
+    );
+        
+    (void) new KAction(
+        i18n("&Print"),
+        "empath_message_print",
+        0,
+        this,
+        SLOT(s_messagePrint()),
+        actionCollection(),
+        "messagePrint"
+    );
+        
+    (void) new KAction(
+        i18n("&Filter"),
+        "empath_message_filter",
+        0,
+        this,
+        SLOT(s_messageFilter()),
+        actionCollection(),
+        "messageFilter"
+    );
+        
+    (void) new KAction(
+        i18n("&Expand"),
+        "empath_thread_expand",
+        0,
+        this,
+        SLOT(s_threadExpand()),
+        actionCollection(),
+        "threadExpand"
+    );
+        
+    (void) new KAction(
+        i18n("&Collapse"),
+        "empath_thread_collapse",
+        0,
+        this,
+        SLOT(s_threadCollapse()),
+        actionCollection(),
+        "threadCollapse"
+    );
+        
+    (void) new KAction(
+        i18n("&Previous"),
+        "empath_go_previous",
+        CTRL+Key_P,
+        this,
+        SLOT(s_goPrevious()),
+        actionCollection(),
+        "goPrevious"
+    );
+        
+    (void) new KAction(
+        i18n("&Next"),
+        "empath_go_next",
+        CTRL+Key_N,
+        this,
+        SLOT(s_goNext()),
+        actionCollection(),
+        "goNext"
+    );
+        
+    (void) new KAction(
+        i18n("Next &Unread"),
+        "empath_go_next_unread",
+        Key_N,
+        this,
+        SLOT(s_goNextUnread()),
+        actionCollection(),
+        "goNextUnread"
+    );
+        
+
+    (void) new KToggleAction(
+        i18n("&Tag"),
+        "empath_message_tag",
+        0,
+        this,
+        SLOT(s_messageMark()),
+        actionCollection(),
+        "messageTag"
+     );
+        
+    (void) new KToggleAction(
+        i18n("&Mark as read"),
+        "empath_message_mark_read",
+        0,
+        this,
+        SLOT(s_messageMarkRead()),
+        actionCollection(),
+        "messageMarkRead"
+     );
+        
+    (void) new KToggleAction(
+        i18n("Mark as replied"),
+        "empath_message_mark_replied",
+        0,
+        this,
+        SLOT(s_messageMarkReplied()),
+        actionCollection(),
+        "messageMarkReplied"
+     );
+        
+    (void) new KToggleAction(
+        i18n("Hide Read"),
+        "empath_hide_read",
+        0,
+        this,
+        SLOT(s_toggleHideRead()),
+        actionCollection(),
+        "hideRead"
+     );
+        
+    (void) new KToggleAction(
+        i18n("Thread Messages"),
+        "empath_thread",
+        0,
+        this,
+        SLOT(s_toggleThread()),
+        actionCollection(),
+        "thread"
+     );
+}
+
+    void
 EmpathViewPart::s_showFolder(const EmpathURL & url)
 {
     empathDebug("showFolder(" + url.asString() + ")");
     emit(showFolder(url));
 }
+
+    void
+EmpathViewPart::s_messageView()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_messageCompose()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_messageReply()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_messageReplyAll()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_messageForward()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_messageDelete()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_messageBounce()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_messageSaveAs()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_messageCopyTo()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_messageMoveTo()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_messageMarkMany()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_messagePrint()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_messageFilter()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_threadExpand()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_threadCollapse()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_goPrevious()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_goNext()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_goNextUnread()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_messageMark()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_messageMarkRead()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_messageMarkReplied()
+{
+    EmpathURL firstSelected = widget_->messageListWidget_->firstSelected();
+}
+
+    void
+EmpathViewPart::s_toggleHideRead()
+{
+}
+
+    void
+EmpathViewPart::s_toggleThread()
+{
+}
+
 
 // -------------------------------------------------------------------------
 

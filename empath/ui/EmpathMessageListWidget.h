@@ -111,8 +111,6 @@ class EmpathMessageListWidget : public EmpathListView
         void s_currentChanged       (QListViewItem *);
         void s_startDrag            (const QList<QListViewItem> &);
         
-        void s_headerClicked        (int);
-
         void s_updateActions        (QListViewItem *);
 
     signals:
@@ -188,10 +186,10 @@ class EmpathMessageListWidget : public EmpathListView
 
         KActionCollection * actionCollection_;
         
-        QPopupMenu  messageMenu_;
-        QPopupMenu  multipleMessageMenu_;
-        QPopupMenu  messageMarkMenu_;
-        QPopupMenu  threadMenu_;
+        QPopupMenu  * messageMenu_;
+        QPopupMenu  * multipleMessageMenu_;
+        QPopupMenu  * messageMarkMenu_;
+        QPopupMenu  * threadMenu_;
  
         QPixmap px_unread_, px_read_, px_marked_, px_attachments_, px_replied_;
         
@@ -204,7 +202,6 @@ class EmpathMessageListWidget : public EmpathListView
  
         // Order dependency
         bool filling_;
-        int lastHeaderClicked_;
         bool hideRead_;
         // End order dependency
 

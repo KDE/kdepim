@@ -43,7 +43,9 @@ EmpathFolderCombo::~EmpathFolderCombo()
     void
 EmpathFolderCombo::s_update()
 {
+    qDebug("Count: %d", count());
     clear();
+    qDebug("Count: %d", count());
 
     EmpathMailboxListIterator mit(*(empath->mailboxList()));
 
@@ -61,6 +63,7 @@ EmpathFolderCombo::s_update()
         }
     }
 
+    qDebug("Count: %d", count());
 }
 
     void

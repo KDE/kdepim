@@ -127,6 +127,8 @@ EmpathMailboxList::saveConfig() const
     QStringList l;
 
     for (; it.current(); ++it) {
+        if (it.current()->name() == i18n("Local")) // FIXME
+            continue;
         l << it.current()->name();
         it.current()->saveConfig();
     }

@@ -39,6 +39,7 @@ EmpathMessageHeaderViewWidget::EmpathMessageHeaderViewWidget(QWidget * parent)
 {
     qDebug("Header view ctor");
     setTextFormat(Qt::RichText);
+    setIndent(2);
 }
 
 EmpathMessageHeaderViewWidget::~EmpathMessageHeaderViewWidget()

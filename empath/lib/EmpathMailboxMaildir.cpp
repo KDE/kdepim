@@ -52,6 +52,7 @@ EmpathMailboxMaildir::EmpathMailboxMaildir(const QString & name)
     typeString_ = "Maildir";
     seq_ = 0;
     boxList_.setAutoDelete(true);
+    empathDebug("ctor");
 }
 
 EmpathMailboxMaildir::~EmpathMailboxMaildir()

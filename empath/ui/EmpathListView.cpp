@@ -23,10 +23,6 @@
 // TODO: Make shift key work, document this class, have an indicator
 // to show when the mouse pointer is over an item. 
 
-#ifdef __GNUG__
-# pragma implementation "EmpathListView.h"
-#endif
-
 // QT includes
 #include <qapplication.h>
 

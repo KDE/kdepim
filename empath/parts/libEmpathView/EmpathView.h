@@ -84,6 +84,29 @@ class EmpathViewPart : public KParts::ReadWritePart
     protected slots:
 
         void s_showFolder(const EmpathURL &);
+        void s_messageView();
+        void s_messageCompose();
+        void s_messageReply();
+        void s_messageReplyAll();
+        void s_messageForward();
+        void s_messageDelete();
+        void s_messageBounce();
+        void s_messageSaveAs();
+        void s_messageCopyTo();
+        void s_messageMoveTo();
+        void s_messageMarkMany();
+        void s_messagePrint();
+        void s_messageFilter();
+        void s_threadExpand();
+        void s_threadCollapse();
+        void s_goPrevious();
+        void s_goNext();
+        void s_goNextUnread();
+        void s_messageMark();
+        void s_messageMarkRead();
+        void s_messageMarkReplied();
+        void s_toggleHideRead();
+        void s_toggleThread();
 
     signals:
 
@@ -96,6 +119,7 @@ class EmpathViewPart : public KParts::ReadWritePart
 
     private:
 
+        void _initActions();
         EmpathView * widget_;
 };
 

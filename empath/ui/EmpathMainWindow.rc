@@ -6,6 +6,12 @@
         <Action name="quit"/>
     </Menu>
 
+    <Menu name="settings"><text>&amp;Settings</text>
+      <Action name="config"/>
+    </Menu>
+
+    <Merge />
+
 </MenuBar>
 
 </kpartgui>

@@ -95,14 +95,22 @@ main(int argc, char ** argv)
 
 #endif
     
+    cerr << "Creating Empath." << endl;
+
     // Create the kernel.
     Empath::start();
+
+    cerr << "Creating user interface." << endl;
     
     // Create the user interface.
     EmpathUI::instance();
 
+    cerr << "Initialising empath." << endl;
+
     // Initialise the kernel.
     empath->init();
+
+    cerr << "Empath initialisation complete. Entering event loop." << endl;
     
     // Enter the event loop.
     int retval = app.exec();
