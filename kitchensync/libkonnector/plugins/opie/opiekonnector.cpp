@@ -96,3 +96,6 @@ void OpiePlugin::slotWrite(QValueList<KOperations> )
 
 }
 
+
+
+
