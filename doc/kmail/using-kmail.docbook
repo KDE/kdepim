@@ -222,7 +222,7 @@ Message</guiicon> icons in the toolbar. Moreover you can select the format that 
 installed encryption programs you can choose between:
 </para>
 
-<variablelist>
+<variablelist id="cryptographic-message-formats">
 <varlistentry>
 <term><guilabel>Any</guilabel></term>
 <listitem>

@@ -990,19 +990,57 @@ pane</guilabel>.</para>
 </listitem>
 </varlistentry>
 
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Tools</guimenu>
-<guimenuitem>Import...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Starts up <application>kmailcvt</application> (which is part of kdenetwork).
-This application lets you import messages from several proprietary email clients to
-&kmail;.</para>
-</listitem>
-</varlistentry>
+	<varlistentry id="reader-tools-certificate-manager">
+	  <term>
+	    <menuchoice>
+	      <guimenu>Tools</guimenu>
+	      <guimenuitem>Certificate Manager...</guimenuitem>
+	    </menuchoice>
+	  </term>
+	  <listitem>
+	    <para>
+	      Starts <ulink
+	      url="/kleopatra"><application>Kleopatra</application></ulink>,
+	      the &kde; certificate manager.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="reader-tools-gnupg-log-viewer">
+	  <term>
+	    <menuchoice>
+	      <guimenu>Tools</guimenu>
+	      <guimenuitem>GnuPG Log Viewer</guimenuitem>
+	    </menuchoice>
+	  </term>
+	  <listitem>
+	    <para>
+	      Starts <ulink
+	      url="/kwatchgnupg"><application>KWatchGnuPG</application></ulink>,
+	      a tool to present the debug output of
+	      <application>GnuPG</application> application. If
+	      signing, encryption, or verification mysteriously stop
+	      working, you might find out why by looking at the log.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry id="reader-tools-import-messages">
+	  <term>
+	    <menuchoice>
+	      <guimenu>Tools</guimenu>
+	      <guimenuitem>Import Messages...</guimenuitem>
+	    </menuchoice>
+	  </term>
+	  <listitem>
+	    <para>
+	      Starts up <application>kmailcvt</application> (which is
+	      part of kdepim). This application lets you import
+	      messages from several proprietary email clients to
+	      &kmail;.
+	    </para>
+	  </listitem>
+	</varlistentry>
 
 <varlistentry>
 <term>
@@ -1589,20 +1627,22 @@ You can learn more about this in the <link linkend="pgp">chapter on OpenPGP</lin
 </listitem>
 </varlistentry>
 
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Options</guimenu>
-<guisubmenu>Select Crypto Module</guisubmenu>
-</menuchoice>
-</term>
-<listitem>
-<para>This entry will only be visible if you have installed at least one
-<link linkend="configure-security-crypto-backends">crypto plugin</link>. It allows
-you to choose which plugin you want to use for encryption/signing or if
-you want to use the built-in OpenPGP encryption/signing.</para>
-</listitem>
-</varlistentry>
+	<varlistentry id="composer-options-select-crypto-message-format">
+	  <term>
+	    <menuchoice>
+	      <guimenu>Options</guimenu>
+	      <guisubmenu>Select Cryptographic Message Format</guisubmenu>
+	    </menuchoice>
+	  </term>
+	  <listitem>
+	    <para>
+	      Choose the cryptographic message format to use to
+	      digitally sign and/or encrypt the message in. See <link
+	      linkend="cryptographic-message-formats">the previous
+	      description of each option</link> for more information.
+	    </para>
+	  </listitem>
+	</varlistentry>
 
 <varlistentry>
 <term>
