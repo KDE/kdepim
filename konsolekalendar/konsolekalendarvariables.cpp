@@ -34,6 +34,8 @@ KonsoleKalendarVariables::KonsoleKalendarVariables()
   m_bIsEndDate = false;
   m_bNext = false;
   m_bVerbose = false;
+  m_description = "Default description";
+  m_summary = "Default summary";	 
 }
 
 KonsoleKalendarVariables::~KonsoleKalendarVariables()
