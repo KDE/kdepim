@@ -46,8 +46,8 @@ bool KNRangeFilter::doFilter(int a)
           ret = false;
     }
   }
-  
-  return ret;   
+
+  return ret;
 }
 
 
@@ -55,7 +55,7 @@ bool KNRangeFilter::doFilter(int a)
 bool KNRangeFilter::matchesOp(int v1, Op o, int v2)
 {
   bool ret=false;
-  
+
   switch(o) {
     case eq:      ret=(v1==v2);   break;
     case gt:      ret=(v1<v2);    break;
@@ -64,7 +64,7 @@ bool KNRangeFilter::matchesOp(int v1, Op o, int v2)
     case lt:      ret=(v1>v2);    break;
     default:      ret=false;      break;
   };
-  
+
   return ret;
 }
 
@@ -76,7 +76,7 @@ void KNRangeFilter::load(KSimpleConfig *conf)
   val1=conf->readNumEntry("val1",0);
   op1=(Op) conf->readNumEntry("op1",0);
   val2=conf->readNumEntry("val2",0);
-  op2=(Op) conf->readNumEntry("op2",0); 
+  op2=(Op) conf->readNumEntry("op2",0);
 }
 
 
@@ -88,9 +88,9 @@ void KNRangeFilter::save(KSimpleConfig *conf)
   conf->writeEntry("op1", (int)op1);
   conf->writeEntry("op2", (int)op2);
   conf->writeEntry("val2", val2);
-} 
+}
 
-    
+
 
 
 //=====================================================================================
@@ -100,12 +100,12 @@ KNRangeFilterWidget::KNRangeFilterWidget(const QString& value, int min, int max,
   : QGroupBox(value, parent)
 {
   enabled=new QCheckBox(this);
-    
+
   val1=new KIntSpinBox(min, max, 1, min, 10, this);
   val1->setSuffix(unit);
   val2=new KIntSpinBox(min, max, 1, min, 10, this);
   val2->setSuffix(unit);
-  
+
   op1=new QComboBox(this);
   op1->insertItem("<");
   op1->insertItem("<=");
@@ -116,10 +116,10 @@ KNRangeFilterWidget::KNRangeFilterWidget(const QString& value, int min, int max,
   op2->insertItem("");
   op2->insertItem("<");
   op2->insertItem("<=");
-  
+
   des=new QLabel(value, this);
-  des->setAlignment(AlignCenter); 
-  
+  des->setAlignment(AlignCenter);
+
   QGridLayout *topL=new QGridLayout(this, 2,6, 8,5 );
 
   topL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
@@ -137,7 +137,7 @@ KNRangeFilterWidget::KNRangeFilterWidget(const QString& value, int min, int max,
   connect(op1, SIGNAL(activated(int)), SLOT(slotOp1Changed(int)));
   connect(op2, SIGNAL(activated(int)), SLOT(slotOp2Changed(int)));
   connect(enabled, SIGNAL(toggled(bool)), SLOT(slotEnabled(bool)));
-  
+
   slotEnabled(false);
 }
 
@@ -154,7 +154,7 @@ KNRangeFilter KNRangeFilterWidget::filter()
   KNRangeFilter r;
   r.val1=val1->value();
   r.val2=val2->value();
-  
+
   r.op1=(KNRangeFilter::Op) op1->currentItem();
   if (op2->currentText().isEmpty())
     r.op2=KNRangeFilter::dis;
@@ -164,7 +164,7 @@ KNRangeFilter KNRangeFilterWidget::filter()
     r.op2=KNRangeFilter::gtoeq;
 
   r.enabled=enabled->isChecked();
-  
+
   return r;
 }
 
@@ -174,7 +174,7 @@ void KNRangeFilterWidget::setFilter(KNRangeFilter &f)
 {
   val1->setValue(f.val1);
   val2->setValue(f.val2);
-  
+
   op1->setCurrentItem((int)f.op1);
   if (f.op2 == KNRangeFilter::dis)
     op2->setCurrentItem(0);
@@ -199,7 +199,9 @@ void KNRangeFilterWidget::clear()
 
 void KNRangeFilterWidget::slotOp1Changed(int id)
 {
-  op2->setEnabled(op1->isEnabled() && (id<2));
+    bool state = (op1->isEnabled() && (id<2));
+  op2->setEnabled(state);
+  des->setEnabled(state);
   slotOp2Changed(op2->currentItem());
 }
 
