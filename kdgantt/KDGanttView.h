@@ -108,6 +108,7 @@ public:
 
     void setRepaintMode( RepaintMode mode );
     void setUpdateEnabled( bool enable);
+    bool getUpdateEnabled( )const;
 
     void setShowLegend( bool show );
     bool showLegend() const;

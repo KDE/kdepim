@@ -176,6 +176,14 @@ void KDGanttView::setUpdateEnabled( bool enable )
     myCanvasView->setMyContentsHeight( 0 );
   }
 }
+
+bool KDGanttView::getUpdateEnabled(  ) const
+{
+  return !myTimeTable->blockUpdating();
+}
+
+
+
 /*!
   Updates the  content of the GanttView and shows it.
   Automatically sets setUpdateEnabled( true ).
