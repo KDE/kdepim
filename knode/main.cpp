@@ -22,7 +22,7 @@
 #include "resource.h"
 #include "knode.h"
 
-#define UNIQUE_APP //comment out for debuging
+//#define UNIQUE_APP //comment out for debuging
 
 static KCmdLineOptions knoptions[] =
 {

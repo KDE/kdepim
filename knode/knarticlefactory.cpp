@@ -1,3 +1,18 @@
+/*
+  KNode, the KDE newsreader
+  Copyright (c) 1999-2000 the KNode authors.
+  See file AUTHORS for details
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+*/
+
+
 #include <qlayout.h>
 #include <qframe.h>
 
@@ -104,7 +119,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, bool post, bool mail)
   art->subject()->fromUnicodeString(subject, a->subject()->rfc2047Charset());
 
   //newsgroups
-  KNHeaders::FollowUpTo *fup2=art->followUpTo(false);
+  KNHeaders::FollowUpTo *fup2=a->followUpTo(false);
   if(fup2 && !fup2->isEmpty()) {
     if(fup2->as7BitString(false).upper()=="POSTER") { //Followup-To: poster
       art->setDoPost(false);
@@ -543,11 +558,7 @@ void KNArticleFactory::sendArticles(KNLocalArticle::List *l, bool now)
   }
 
   if(!sent.isEmpty()) {
-    if(!s_endErrDlg) {
-      s_endErrDlg=new KNSendErrorDialog();
-      connect(s_endErrDlg, SIGNAL(dialogDone()), this, SLOT(slotSendErrorDialogDone()));
-      s_endErrDlg->show();
-    }
+    showSendErrorDialog();
     for(KNLocalArticle *a=sent.first(); a; a=sent.next())
       s_endErrDlg->append(a->subject()->asUnicodeString(), i18n("Article has been sent already"));
   }
@@ -562,6 +573,15 @@ void KNArticleFactory::sendArticles(KNLocalArticle::List *l, bool now)
 
     if(a->isLocked())
       continue;
+
+    if(!a->hasContent()) {
+      KNFolder *f=static_cast<KNFolder*>(a->collection());
+      if(!f->loadArticle(a)) {
+        showSendErrorDialog();
+        s_endErrDlg->append(a->subject()->asUnicodeString(), i18n("Could not load article"));
+        continue;
+      }
+    }
 
     if(a->doPost() && !a->posted()) {
       ser=knGlobals.accManager->account(a->serverId());
@@ -581,6 +601,11 @@ void KNArticleFactory::sendOutbox()
 {
   KNLocalArticle::List lst;
   KNFolder *ob=f_olManager->outbox();
+
+  if(!ob->loadHdrs()) {
+    KMessageBox::error(knGlobals.topWidget, i18n("Could not load the outbox!"));
+    return;
+  }
 
   for(int i=0; i< ob->length(); i++)
     lst.append(ob->at(i));
@@ -657,11 +682,7 @@ void KNArticleFactory::processJob(KNJobData *j)
         delete art;
       return;
     }
-    if(!s_endErrDlg) {
-      s_endErrDlg=new KNSendErrorDialog();
-      connect(s_endErrDlg, SIGNAL(dialogDone()), this, SLOT(slotSendErrorDialogDone()));
-      s_endErrDlg->show();
-    }
+    showSendErrorDialog();
     s_endErrDlg->append(art->subject()->asUnicodeString(), j->errorString());
     delete j; //unlock article
   }
@@ -907,6 +928,16 @@ void KNArticleFactory::appendTextWPrefix(QString &result, const QString &text, c
       txt=QString::null;
     }
   }
+}
+
+
+void KNArticleFactory::showSendErrorDialog()
+{
+  if(!s_endErrDlg) {
+    s_endErrDlg=new KNSendErrorDialog();
+    connect(s_endErrDlg, SIGNAL(dialogDone()), this, SLOT(slotSendErrorDialogDone()));
+  }
+  s_endErrDlg->show();
 }
 
 

@@ -73,6 +73,9 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     int findBreakPos(const QString &text, int start);
     void appendTextWPrefix(QString &result, const QString &text, const QString &prefix);
 
+    //send-errors
+    void showSendErrorDialog();
+
     QList<KNComposer> c_ompList;
     KNFolderManager *f_olManager;
     KNGroupManager *g_rpManager;
