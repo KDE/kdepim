@@ -28,9 +28,9 @@ libkcal_la_SOURCES = \
 	compat.cpp \
 	resourcecalendar.cpp resourcelocal.cpp resourcelocalconfig.cpp \
 	resourcelocaldir.cpp resourcelocaldirconfig.cpp \
+	resourcecached.cpp resourcecachedconfig.cpp \
 	calendarresources.cpp \
 	qtopiaformat.cpp \
-	resourcecached.cpp \
 	htmlexport.cpp calendarnull.cpp \
 	freebusyurlstore.cpp
 

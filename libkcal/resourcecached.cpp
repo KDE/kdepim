@@ -1,7 +1,7 @@
 /*
     This file is part of libkcal.
 
-    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -39,8 +39,11 @@ using namespace KCal;
 
 ResourceCached::ResourceCached( const KConfig* config )
   : ResourceCalendar( config ), mReloadPolicy( ReloadNever ),
-    mReloadInterval( 10 )
+    mReloadInterval( 10 ), mReloaded( false ), mSavePolicy( SaveNever ),
+    mSaveInterval( 10 )
 {
+  connect( &mReloadTimer, SIGNAL( timeout() ), SLOT( slotReload() ) );
+  connect( &mSaveTimer, SIGNAL( timeout() ), SLOT( slotSave() ) );
 }
 
 ResourceCached::~ResourceCached()
@@ -50,6 +53,10 @@ ResourceCached::~ResourceCached()
 void ResourceCached::setReloadPolicy( int i )
 {
   mReloadPolicy = i;
+
+  if ( mReloadPolicy == ReloadInterval ) {
+    mReloadTimer.start( mReloadInterval * 60 * 1000 ); // n minutes
+  }
 }
 
 int ResourceCached::reloadPolicy() const
@@ -67,16 +74,52 @@ int ResourceCached::reloadInterval() const
   return mReloadInterval;
 }
 
+void ResourceCached::setSavePolicy( int i )
+{
+  mSavePolicy = i;
+
+  if ( mSavePolicy == SaveInterval ) {
+    mSaveTimer.start( mSaveInterval * 60 * 1000 ); // n minutes
+  }
+}
+
+int ResourceCached::savePolicy() const
+{
+  return mSavePolicy;
+}
+
+void ResourceCached::setSaveInterval( int minutes )
+{
+  mSaveInterval = minutes;
+}
+
+int ResourceCached::saveInterval() const
+{
+  return mSaveInterval;
+}
+
 void ResourceCached::readConfig( const KConfig *config )
 {
   mReloadPolicy = config->readNumEntry( "ReloadPolicy", ReloadNever );
   mReloadInterval = config->readNumEntry( "ReloadInterval", 10 );
+
+  mSavePolicy = config->readNumEntry( "SavePolicy", SaveNever );
+  mSaveInterval = config->readNumEntry( "SaveInterval", 10 );
+
+  mLastLoad = config->readDateTimeEntry( "LastLoad" );
+  mLastSave = config->readDateTimeEntry( "LastSave" );
 }
 
 void ResourceCached::writeConfig( KConfig *config )
 {
   config->writeEntry( "ReloadPolicy", mReloadPolicy );
   config->writeEntry( "ReloadInterval", mReloadInterval );
+
+  config->writeEntry( "SavePolicy", mSavePolicy );
+  config->writeEntry( "SaveInterval", mSaveInterval );
+
+  config->writeEntry( "LastLoad", mLastLoad );
+  config->writeEntry( "LastSave", mLastSave );
 }
 
 bool ResourceCached::addEvent(Event *event)
@@ -303,3 +346,41 @@ void ResourceCached::disableChangeNotification()
 {
   mCalendar.unregisterObserver( this );
 }
+
+void ResourceCached::slotReload()
+{
+  kdDebug(5800) << "ResourceCached::slotReload()" << endl;
+
+  load();
+}
+
+void ResourceCached::slotSave()
+{
+  kdDebug(5800) << "ResourceCached::slotSave()" << endl;
+
+  save();
+}
+
+void ResourceCached::checkForAutomaticSave()
+{
+  if ( mSavePolicy == SaveAlways )  {
+    save();
+  } else if ( mSavePolicy == SaveDelayed ) {
+    mSaveTimer.start( 60 * 1000, true ); // 1 minute
+  }
+}
+
+bool ResourceCached::checkForReload()
+{
+  if ( mReloadPolicy == ReloadNever ) return false;
+  if ( mReloadPolicy == ReloadOnStartup ) return !mReloaded;
+  return true;
+}
+
+bool ResourceCached::checkForSave()
+{
+  if ( mSavePolicy == SaveNever ) return false;
+  return true;
+}
+
+#include "resourcecached.moc"

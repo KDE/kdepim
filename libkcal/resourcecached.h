@@ -1,7 +1,7 @@
  /*
     This file is part of libkcal.
 
-    Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -42,13 +42,20 @@ namespace KCal {
 class ResourceCached : public ResourceCalendar,
                        public KCal::Calendar::Observer
 {
+    Q_OBJECT
   public:
     /**
       Reload policy.
       
       @see setReloadPolicy(), reloadPolicy()
     */
-    enum { ReloadNever, ReloadOnStartup, ReloadInterval, ReloadAlways };
+    enum { ReloadNever, ReloadOnStartup, ReloadInterval };
+    /**
+      Save policy.
+      
+      @see setSavePolicy(), savePolicy()
+    */
+    enum { SaveNever, SaveOnExit, SaveInterval, SaveDelayed, SaveAlways };
   
     ResourceCached( const KConfig * );
     virtual ~ResourceCached();
@@ -60,9 +67,8 @@ class ResourceCached : public ResourceCalendar,
       Set reload policy. This controls when the cache is refreshed.
 
       ReloadNever     never reload
-      ReloadOnStartup reload when resource is loaded
+      ReloadOnStartup reload when resource is started
       ReloadInterval  reload regularly after given interval
-      ReloadAlways    reload whenever the resource is accessed
     */
     void setReloadPolicy( int policy );
     /**
@@ -82,6 +88,52 @@ class ResourceCached : public ResourceCalendar,
       Return reload interval in minutes.
     */
     int reloadInterval() const;
+
+    /**
+      Set save policy. This controls when the cache is refreshed.
+
+      SaveNever     never save
+      SaveOnExit    save when resource is exited
+      SaveInterval  save regularly after given interval
+      SaveDelayed   save after small delay
+      SaveAlways    save on every change
+    */
+    void setSavePolicy( int policy );
+    /**
+      Return save policy.
+      
+      @see setsavePolicy()
+    */
+    int savePolicy() const;
+
+    /**
+      Set save interval in minutes which is used when save policy is
+      SaveInterval.
+    */
+    void setSaveInterval( int minutes );
+
+    /**
+      Return save interval in minutes.
+    */
+    int saveInterval() const;
+
+    /**
+      Set time of last load.
+    */
+    void setLastLoad( const QDateTime & );
+    /**
+      Return time of last load.
+    */
+    QDateTime lastLoad() const;
+
+    /**
+      Set time of last save.
+    */
+    void setLastSave( const QDateTime & );
+    /**
+      Return time of last save.
+    */
+    QDateTime lastSave() const;
 
     /**
       Add event to calendar.
@@ -201,9 +253,33 @@ class ResourceCached : public ResourceCalendar,
 
     CalendarLocal mCalendar;
 
+    /**
+      Check if reload required according to reload policy.
+    */    
+    bool checkForReload();
+    /**
+      Check if save required according to save policy.
+    */    
+    bool checkForSave();
+
+    void checkForAutomaticSave();
+
+  protected slots:
+    void slotReload();
+    void slotSave();
+
   private:
     int mReloadPolicy;
     int mReloadInterval;
+    QTimer mReloadTimer;
+    bool mReloaded;
+
+    int mSavePolicy;
+    int mSaveInterval;
+    QTimer mSaveTimer;
+
+    QDateTime mLastLoad;
+    QDateTime mLastSave;
 
     QMap<KCal::Incidence *,bool> mAddedIncidences;
     QMap<KCal::Incidence *,bool> mChangedIncidences;
