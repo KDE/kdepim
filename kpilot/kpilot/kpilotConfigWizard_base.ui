@@ -24,7 +24,7 @@
                 <cstring>textLabel1</cstring>
             </property>
             <property name="text">
-                <string>This wizard will help you configure kpilot. Please select how your handheld is connected to the PC:</string>
+                <string>This wizard will help you configure KPilot. Please select how your handheld is connected to the PC:</string>
             </property>
             <property name="alignment">
                 <set>WordBreak|AlignVCenter</set>

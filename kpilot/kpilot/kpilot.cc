@@ -408,7 +408,7 @@ void KPilotInstaller::slotRestoreRequested()
 {
 	FUNCTIONSETUP;
 	setupSync(SyncAction::eRestore,
-		i18n("Next sync will restort the Pilot from backup. ") +
+		i18n("Next sync will restore the Pilot from backup. ") +
 		i18n("Please press the HotSync button."));
 }
 

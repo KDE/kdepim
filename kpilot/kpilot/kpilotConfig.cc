@@ -302,7 +302,7 @@ static void update443()
 
 	int res = 0;
 	unsigned int fileVersion = KPilotSettings::configVersion();
-	// TODO!!! better config handling -> Move the config entries using kconf_update
+	// FIXME better config handling -> Move the config entries using kconf_update
 
 	// It's OK if we're already at the required level.
 	if (fileVersion >= KPilotConfig::ConfigurationVersion)

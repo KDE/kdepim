@@ -29,7 +29,7 @@
                 <cstring>mCustomFieldsGroups</cstring>
             </property>
             <property name="title">
-                <string>KPilot's custom fields</string>
+                <string>KPilot custom fields</string>
             </property>
             <property name="whatsThis" stdset="0">
                 <string>On your handheld, each address also provides four custom fields for your personal use. KPilot can sync these either to birthdate, URL, IM address, or just store them as a custom field on your PC with no special meaning. In the last case, you can change the values here. Note, however, that for all other settings the values entered here will have no effect!</string>
