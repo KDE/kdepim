@@ -295,7 +295,8 @@ QString rfcDecoder::toIMAP (const QString & inSrc)
 QString rfcDecoder::decodeQuoting(const QString &aStr)
 {
   QString result;
-  for (unsigned int i = 0; i < aStr.length(); i++)
+  unsigned int strLength(aStr.length());
+  for (unsigned int i = 0; i < strLength ; i++)
   {
     if (aStr[i] == "\\") i++;
     result += aStr[i];
