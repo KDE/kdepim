@@ -64,7 +64,8 @@ void initModem(Modem *modem)
 int main(int argc, char **argv)
 {
   KAboutData about("kandy", I18N_NOOP("Kandy"), version, description,
-  KAboutData::License_GPL, "(C) 2001 Cornelius Schumacher");
+                   KAboutData::License_GPL, "(C) 2001 Cornelius Schumacher",0,
+                   "http://devel-home.kde.org/~kandy");
   about.addAuthor( "Cornelius Schumacher", 0, "schumacher@kde.org" );
   KCmdLineArgs::init(argc,argv,&about);
   KCmdLineArgs::addCmdLineOptions(options);
