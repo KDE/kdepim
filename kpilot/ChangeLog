@@ -1,10 +1,15 @@
-KPilot Developer's notes for january 9th 2001
+KPilot Developer's notes for january 6th 2001
 ===============================================
 
-NOTE: KPILOT IS IN A MAJOR STATE OF FLUX AND MAY NOT COMPILE RIGHT NOW.
-
 Happy Millennium. I ([ade]) am off on a two-week vacation to
-Calgary, so no KPilot news from me till february. Done this week:
+Calgary, so no KPilot news from me till (almost) february. 
+
+There have been several troublesome bugreports this week,
+ranging from "all the conduits crash" to "daemon dies on
+hotsync." That don't make me happy at all.
+
+
+Done this week:
 
 * Built POSE, the Palm Emulator, so this may help in testing
   stuff for the OS versions that I don't actually have.
@@ -66,6 +71,12 @@ Todo:
 * The password dialog in the popmail conduit is probably a very bad idea
   I think kdesud should come into play here. Anyway, a KMail conduit would
   be much cooler and safer. Sigh.
+
+
+Things-to-be-considered:
+
+* Splitting kpilotlink up into its various functionalities
+
 
 KPilot Developer's notes for december 30th 2000
 ===============================================
