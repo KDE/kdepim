@@ -1,7 +1,22 @@
-KPilot Developer's notes for june 11th 2001
+KPilot Developer's notes for june 15th 2001
 ===========================================
 
-The 2.2b1 tarballs are packaged today. Whee!
+The 2.2b1 tarballs are packaged real soon now. Whee!
+This marks the release of KPilot 4.2.3 (KDE 2.2, third
+subpackage release (alpha1, alpha2, beta1)). This version
+scheme makes it much easier to keep track of what was
+released when.
+
+Many bugs were fixed after Cornelius sent a message
+asking about the KPilot code; the abbrowser conduit 
+has been renamed the KAddressBook conduit (it's still in
+conduits/abbrowser), some little stuff in the vcal conduit
+was fixed, much dead code was removed from KPilot and
+some code was simplified.
+
+Cornelius' mail also somehow pushed me into reading the
+KDE-PIM server suggestions. I'm sure you've noticed how
+much mail *that* has caused.
 
 KPilot Developer's notes for june 5th 2001
 ==========================================
