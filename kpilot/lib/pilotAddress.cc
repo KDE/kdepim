@@ -91,8 +91,8 @@ PilotAddress & PilotAddress::operator = (const PilotAddress & copyFrom)
 
 bool PilotAddress::operator==(const PilotAddress &compareTo) {
 	FUNCTIONSETUP;
-	// TODO: call == of PilotAppCategory. I don't think this is necessary, but I'm not so sure...
-//	if (!(PilotAppCategory)(this)->operator==(compareTo) ) return false;
+	// call == of PilotAppCategory to compare the Pilot ID, the category and the attributes. 
+	if (! (dynamic_cast<PilotAppCategory*>(this))->operator==(compareTo) ) return false;
 	
 	// now compare all the fields stored in the fAddressInfo.entry array of char*[19]
 	for (int i=0; i<MAXFIELDS; i++) {
@@ -320,6 +320,9 @@ void *PilotAddress::pack(void *buf, int *len)
 }
 
 // $Log$
+// Revision 1.5  2002/12/08 14:09:24  waba
+// Some cleanup
+//
 // Revision 1.4  2002/08/20 21:18:31  adridg
 // License change in lib/ to allow plugins -- which use the interfaces and
 // definitions in lib/ -- to use non-GPL'ed libraries, in particular to

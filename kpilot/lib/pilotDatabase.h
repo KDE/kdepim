@@ -73,6 +73,9 @@ public:
 	enum { MAX_APPINFO_SIZE=8192 
 		} Constants;
 
+	/** Creates the database with the given creator, type and flags on the given card (default is RAM). If the database already exists, this function does nothing. */
+	virtual bool createDatabase(long creator=0, long type=0, int cardno=0, int flags=0, int version=0) = 0;
+	
 	/** Reads the application block info, returns size. */
 	virtual int readAppBlock(unsigned char* buffer, int maxLen) = 0;
 
@@ -95,11 +98,14 @@ public:
 	virtual PilotRecord* readNextRecInCategory(int category) = 0;
 
 	/** Reads the next record from database that has the dirty flag set. */
-	virtual PilotRecord* readNextModifiedRec() = 0;
+	virtual PilotRecord* readNextModifiedRec(int *ind=NULL) = 0;
 
 	/** Writes a new record to database (if 'id' == 0, one will be assigned to newRecord) */
 	virtual recordid_t writeRecord(PilotRecord* newRecord) = 0;
 
+	/** Deletes a record with the given recordid_t from the database, or all records, if all is set to true. The recordid_t will be ignored in this case */
+	virtual int deleteRecord(recordid_t id, bool all=false) = 0;
+	
 	/** Resets all records in the database to not dirty. */
 	virtual int resetSyncFlags() = 0;
 
@@ -125,6 +131,7 @@ public:
 	
 protected:
 	virtual void openDatabase() = 0;
+public:
 	virtual void closeDatabase() = 0;
 
 	void setDBOpen(bool yesno) { fDBOpen = yesno; }
@@ -136,6 +143,9 @@ private:
 
 
 // $Log$
+// Revision 1.9  2002/11/27 21:29:07  adridg
+// See larger ChangeLog entry
+//
 // Revision 1.8  2002/08/20 21:18:31  adridg
 // License change in lib/ to allow plugins -- which use the interfaces and
 // definitions in lib/ -- to use non-GPL'ed libraries, in particular to

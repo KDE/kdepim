@@ -39,6 +39,7 @@ static const char *pilotlocaldatabase_id =
 #include <qstring.h>
 #include <qfile.h>
 #include <qregexp.h>
+#include <qdatetime.h> 
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -129,6 +130,45 @@ void PilotLocalDatabase::fixupDBName()
 	FUNCTIONSETUP;
 	fDBName = fDBName.replace(QRegExp("/"), "_");
 }
+
+bool PilotLocalDatabase::createDatabase(long creator, long type, int cardno, int flags, int version) 
+{
+	FUNCTIONSETUP;
+	
+	// if the database is already open, we cannot create it again. How about completely resetting it? (i.e. deleting it and the createing it again)
+	if (isDBOpen()) return true;
+	
+	memcpy(&fDBInfo.name[0], fDBName, 34*sizeof(char));
+	fDBInfo.creator=creator;
+	fDBInfo.type=type;
+	fDBInfo.more=0;
+	fDBInfo.flags=flags;
+	fDBInfo.miscFlags=0;
+	fDBInfo.version=version;
+	fDBInfo.modnum=0;
+	fDBInfo.index=0;
+	fDBInfo.createDate=(QDateTime::currentDateTime()).toTime_t();
+	fDBInfo.modifyDate=(QDateTime::currentDateTime()).toTime_t();
+	fDBInfo.backupDate=(QDateTime::currentDateTime()).toTime_t();
+	
+	delete[] fAppInfo;
+	fAppInfo=0L;
+	fAppLen=0;
+	
+	for (int i=0; i<fNumRecords; i++) {
+		KPILOT_DELETE(fRecords[i]);
+		fRecords[i]=NULL;
+	}
+	fNumRecords=0;
+	fCurrentRecord=0;
+	fPendingRec=0;
+	
+	// TODO: Do I have to open it explicitely???
+	setDBOpen(true);
+	return true;
+}
+
+
 
 // Reads the application block info
 int PilotLocalDatabase::readAppBlock(unsigned char *buffer, int)
@@ -251,7 +291,7 @@ PilotRecord *PilotLocalDatabase::readNextRecInCategory(int category)
 }
 
 // Reads the next record from database that has the dirty flag set.
-PilotRecord *PilotLocalDatabase::readNextModifiedRec()
+PilotRecord *PilotLocalDatabase::readNextModifiedRec(int *ind)
 {
 	FUNCTIONSETUP;
 
@@ -269,6 +309,7 @@ PilotRecord *PilotLocalDatabase::readNextModifiedRec()
 	if (fCurrentRecord == fNumRecords)
 		return 0L;
 	PilotRecord *newRecord = new PilotRecord(fRecords[fCurrentRecord]);
+	if (ind) *ind=fCurrentRecord;
 
 	fPendingRec = fCurrentRecord;	// Record which one needs the new id
 	fCurrentRecord++;	// so we skip it next time
@@ -341,6 +382,52 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 	fRecords[fNumRecords++] = new PilotRecord(newRecord);
 	return newRecord->getID();
 }
+
+// Deletes a record with the given recordid_t from the database, or all records, if all is set to true. The recordid_t will be ignored in this case
+int PilotLocalDatabase::deleteRecord(recordid_t id, bool all) 
+{
+	FUNCTIONSETUP;
+	if (isDBOpen() == false)
+	{
+		kdError() << k_funcinfo <<": DB not open"<<endl;
+		return -1;
+	}
+	
+	if (all) 
+	{
+		for (int i=0; i<fNumRecords; i++) 
+		{
+			delete fRecords[i];
+			fRecords[i]=0L;
+		}
+		fNumRecords=0;
+		fCurrentRecord=0;
+		fPendingRec=0;
+		return 0;
+	}
+	else
+	{
+		int i=0;
+		while ( (i<fNumRecords) && (fRecords[i]->getID()!=id) ) 
+			i++;
+		if (fRecords[i]->getID() == id)
+		{
+			delete fRecords[i];
+			for (int j=i+1; j<fNumRecords; j++)
+			{
+				fRecords[j-1]=fRecords[j];
+			}
+			fNumRecords--;
+		}
+		else
+		{
+			// Record with this id does not exist!
+			return -1;
+		}
+	}
+	return 0;
+}
+
 
 // Resets all records in the database to not dirty.
 int PilotLocalDatabase::resetSyncFlags()
@@ -514,6 +601,11 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 }
 
 // $Log$
+// Revision 1.7  2002/08/20 21:18:31  adridg
+// License change in lib/ to allow plugins -- which use the interfaces and
+// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
+// allow the use of libmal which is MPL.
+//
 // Revision 1.6  2002/06/30 14:49:53  kainhofe
 // added a function idList, some minor bug fixes
 //

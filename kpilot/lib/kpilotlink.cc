@@ -715,10 +715,10 @@ int KPilotDeviceLink::getNextDatabase(int index,struct DBInfo *dbinfo)
 }
 
 // Find a database with the given name. Info about the DB is stored into dbinfo (e.g. to be used later on with retrieveDatabase).
-int KPilotDeviceLink::findDatabase(char*name, struct DBInfo*dbinfo) 
+int KPilotDeviceLink::findDatabase(char*name, struct DBInfo*dbinfo, int index, long type, long creator) 
 {
 	FUNCTIONSETUP;
-	return dlp_FindDBInfo(pilotSocket(), 0, 0, name, 0, 0, dbinfo);
+	return dlp_FindDBInfo(pilotSocket(), 0, index, name, type, creator, dbinfo);
 }
 
 bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName, 
@@ -823,6 +823,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.26  2002/09/03 06:52:03  adridg
+// Everyone ships pilot-link 0.9.5, must include support
+//
 // Revision 1.25  2002/08/31 22:35:46  mhunter
 // CVS_SILENT Corrected typographical errors
 //

@@ -341,7 +341,7 @@ protected:
 	int openConduit();
 public:
 	int getNextDatabase(int index,struct DBInfo *);
-	int findDatabase(char*name, struct DBInfo*);
+	int findDatabase(char*name, struct DBInfo*, int index=0, long type=0, long creator=0);
 
 	/**
 	* Retrieve the database indicated by DBInfo *db into the
@@ -379,6 +379,9 @@ bool operator < ( const struct db &, const struct db &) ;
 
 
 // $Log$
+// Revision 1.14  2002/11/27 21:29:07  adridg
+// See larger ChangeLog entry
+//
 // Revision 1.13  2002/08/30 22:24:55  adridg
 // - Improved logging, connected the right signals now
 // - Try to handle dlp_ReadUserInfo failures sensibly

@@ -85,6 +85,11 @@ public:
 		return *this;
 	} ;
 
+	bool operator==(const PilotAppCategory &compareTo)
+	{
+		return (fAttrs==compareTo.fAttrs && fId==compareTo.fId && fCategory==compareTo.fCategory);
+	} ;
+	
 	virtual ~PilotAppCategory(void) {};
 
 	/** @return a PilotRecord that contains all of the info of the
@@ -120,6 +125,11 @@ public:
 
 
 // $Log$
+// Revision 1.3  2002/08/20 21:18:31  adridg
+// License change in lib/ to allow plugins -- which use the interfaces and
+// definitions in lib/ -- to use non-GPL'ed libraries, in particular to
+// allow the use of libmal which is MPL.
+//
 // Revision 1.2  2002/06/30 15:49:58  kainhofe
 // Some checks for null pointers
 //
