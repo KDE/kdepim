@@ -24,7 +24,7 @@
  *@author Laurence Anderson
  */
 
-class FilterOE : public Filter, protected FilterFactory< FilterOE >  {
+class FilterOE : public Filter {
   public:
     FilterOE();
     ~FilterOE();

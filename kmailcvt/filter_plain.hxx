@@ -24,7 +24,7 @@
   *@author laurence
   */
 
-class FilterPlain : public Filter, protected FilterFactory< FilterPlain >   {
+class FilterPlain : public Filter {
 public:
 	FilterPlain();
 	~FilterPlain();

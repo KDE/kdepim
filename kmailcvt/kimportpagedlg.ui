@@ -21,7 +21,7 @@
         </property>
         <widget class="QLabel" row="0" column="0" rowspan="3" colspan="1">
             <property name="name">
-                <cstring>px_introSidebar</cstring>
+                <cstring>mIntroSidebar</cstring>
             </property>
             <property name="sizePolicy">
                 <sizepolicy>

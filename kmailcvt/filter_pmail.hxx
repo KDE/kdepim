@@ -18,13 +18,11 @@
 #ifndef FILTER_PMAIL_HXX
 #define FILTER_PMAIL_HXX
 
+#include <qdir.h>
+
 #include "filters.hxx"
 
-/**imports Pegasus-Mail 3.xx messages into KMail
-  *@author root
-  */
-
-class FilterPMail : public Filter, public FilterFactory< FilterPMail >  {
+class FilterPMail : public Filter {
 public:
 	FilterPMail();
 	~FilterPMail();

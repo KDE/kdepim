@@ -21,7 +21,7 @@
         </property>
         <widget class="QLabel" row="0" column="0" rowspan="3" colspan="1">
             <property name="name">
-                <cstring>px_introSidebar</cstring>
+                <cstring>mIntroSidebar</cstring>
             </property>
             <property name="sizePolicy">
                 <sizepolicy>
@@ -52,7 +52,7 @@
         </widget>
         <widget class="QComboBox" row="1" column="1">
             <property name="name">
-                <cstring>_filters</cstring>
+                <cstring>mFilterCombo</cstring>
             </property>
             <property name="sizePolicy">
                 <sizepolicy>
@@ -94,7 +94,7 @@ This program will help you import your email from your previous email program in
         </widget>
         <widget class="QTextEdit" row="2" column="1">
             <property name="name">
-                <cstring>_desc</cstring>
+                <cstring>mDesc</cstring>
             </property>
             <property name="readOnly">
                 <bool>true</bool>

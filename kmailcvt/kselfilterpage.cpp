@@ -20,13 +20,29 @@
 #include <klocale.h>
 #include "filters.hxx"
 
+#include "filter_mbox.hxx"
+#include "filter_oe.hxx"
+#include "filter_pmail.hxx"
+#include "filter_plain.hxx"
+
 #include "kselfilterpage.h"
 
 KSelFilterPage::KSelFilterPage(QWidget *parent, const char *name ) : KSelFilterPageDlg(parent,name) {
 
-	px_introSidebar->setPixmap(locate("data", "kmailcvt/pics/step1.png"));
-	filterList.setAutoDelete( TRUE );
-	connect(_filters, SIGNAL(activated(int)), SLOT(filterSelected(int)));
+	mIntroSidebar->setPixmap(locate("data", "kmailcvt/pics/step1.png"));
+	mFilterList.setAutoDelete( TRUE );
+	connect(mFilterCombo, SIGNAL(activated(int)), SLOT(filterSelected(int)));
+
+	// Add new filters below. If this annoys you, please rewrite the stuff to use a factory.
+        // The former approach was overengineered and only worked around problems in the design
+        // For now, we have to live without the warm and fuzzy feeling a refactoring might give. 
+        // Patches appreciated. (danimo)
+
+        addFilter(new FilterOE);
+        addFilter(new FilterMBox);
+        addFilter(new FilterPlain);
+        addFilter(new FilterPMail);
+
 }
 
 KSelFilterPage::~KSelFilterPage() {
@@ -34,23 +50,23 @@ KSelFilterPage::~KSelFilterPage() {
 
 void KSelFilterPage::filterSelected(int i)
 {
-	QString info = filterList.at(i)->info();
-	QString author = filterList.at(i)->author();
+	QString info = mFilterList.at(i)->info();
+	QString author = mFilterList.at(i)->author();
 	if(!author.isEmpty())
 		info += i18n("<p><i>Written by %1.</i></p>").arg(author);
-	_desc->setText(info);
+	mDesc->setText(info);
 }
 
 void KSelFilterPage::addFilter(Filter *f)
 {
-	filterList.append(f);
-	_filters->insertItem(f->name());
-	if (_filters->count() == 1) filterSelected(0); // Setup description box with fist filter selected
+	mFilterList.append(f);
+	mFilterCombo->insertItem(f->name());
+	if (mFilterCombo->count() == 1) filterSelected(0); // Setup description box with fist filter selected
 }
 
 Filter * KSelFilterPage::getSelectedFilter(void)
 {
-	return filterList.at(_filters->currentItem());
+	return mFilterList.at(mFilterCombo->currentItem());
 }
 
 #include "kselfilterpage.moc"

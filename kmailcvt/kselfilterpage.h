@@ -32,7 +32,7 @@ public:
 	void  addFilter(Filter *f);
 	Filter *getSelectedFilter(void);
 private:
-	QPtrList<Filter> filterList;
+	QPtrList<Filter> mFilterList;
 private slots:
 	void filterSelected(int i);
 };

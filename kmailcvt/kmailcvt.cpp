@@ -31,9 +31,6 @@ KMailCVT::KMailCVT(QWidget *parent, const char *name)
 	importpage = new KImportPage(this);
 	addPage( importpage, i18n( "Step 2: Importing..." ) );
 
-	Filter::List filters = Filter::createFilters();
-	for ( Filter* filter = filters.first(); filter; filter = filters.next() )
-		selfilterpage->addFilter( filter );
 }
 
 KMailCVT::~KMailCVT() {

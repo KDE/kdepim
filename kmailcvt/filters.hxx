@@ -56,8 +56,6 @@ class FilterInfo
 class Filter
 {
   public:
-    typedef Filter* ( *Creator )();
-    typedef QPtrList< Filter > List;
     Filter( const QString& name, const QString& author,
             const QString& info = QString::null );
     virtual ~Filter() {}
@@ -65,9 +63,6 @@ class Filter
     QString author() const { return m_author; }
     QString name() const { return m_name; }
     QString info() const { return m_info; }
-
-    static void registerFilter( Creator );
-    static List createFilters();
 
   protected:
     bool addMessage( FilterInfo* info,
@@ -79,28 +74,6 @@ class Filter
     QString m_info;
 };
 
-template< class T >
-class FilterFactory
-{
-  public:
-    static Filter* create()
-      { return new T; }
-
-  protected:
-    FilterFactory()
-    {
-      static_cast< void >( s_register ); // Don't remove
-    }
-  
-  private:
-    static struct Register
-    {
-      Register()
-        { Filter::registerFilter( create ); }
-    } s_register;
-};
-template< class T >
-typename FilterFactory< T >::Register FilterFactory< T >::s_register;
 
 #endif
 

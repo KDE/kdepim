@@ -112,27 +112,6 @@ bool FilterInfo::shouldTerminate()
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-namespace
-{
-  QValueList< Filter::Creator >& registry()
-  {
-    static QValueList< Filter::Creator > list;
-    return list;
-  }
-}
-
-void Filter::registerFilter( Creator create )
-{
-  registry().append( create );
-}
-
-Filter::List Filter::createFilters()
-{
-  List result;
-  for ( QValueList< Creator >::ConstIterator it = registry().begin();
-        it != registry().end(); ++it ) result.append( ( *it )() );
-  return result;
-}
 
 Filter::Filter( const QString& name, const QString& author,
                 const QString& info )

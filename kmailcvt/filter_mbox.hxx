@@ -24,7 +24,7 @@
  *@author Laurence Anderson
  */
 
-class FilterMBox : public Filter, protected FilterFactory< FilterMBox >  {
+class FilterMBox : public Filter {
   public:
     FilterMBox();
     ~FilterMBox();
