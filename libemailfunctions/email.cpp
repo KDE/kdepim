@@ -883,13 +883,43 @@ QString KPIM::normalizeAddressesAndEncodeIDNs( const QString & str )
 }
 
 
+//-----------------------------------------------------------------------------
+// Escapes unescaped doublequotes in str.
+static QString escapeQuotes( const QString & str )
+{
+  if ( str.isEmpty() )
+    return QString();
+
+  QString escaped;
+  // reserve enough memory for the worst case ( """..."" -> \"\"\"...\"\" )
+  escaped.reserve( 2*str.length() );
+  unsigned int len = 0;
+  for ( unsigned int i = 0; i < str.length(); ++i, ++len ) {
+    if ( str[i] == '\"' ) { // unescaped doublequote
+      escaped[len] = '\\';
+      ++len;
+    }
+    else if ( str[i] == '\\' ) { // escaped character
+      escaped[len] = '\\';
+      ++len;
+      ++i;
+      if ( i >= str.length() ) // handle trailing '\' gracefully
+        break;
+    }
+    escaped[len] = str[i];
+  }
+  escaped.truncate( len );
+  return escaped;
+}
+
+//-----------------------------------------------------------------------------
 QString KPIM::quoteNameIfNecessary( const QString &str )
 {
   QString quoted = str;
 
   QRegExp needQuotes(  "[^ 0-9A-Za-z\\x0080-\\xFFFF]" );
   if ( quoted.find( needQuotes ) != -1 ) {
-    quoted = "\"" + quoted + "\"";
+    quoted = "\"" + escapeQuotes( quoted ) + "\"";
   }
 
   return quoted;
