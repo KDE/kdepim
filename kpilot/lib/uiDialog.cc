@@ -137,7 +137,7 @@ UIDialog::~UIDialog()
 	grid->addMultiCellWidget(text, 0, 0, 2, 3);
 
 	text = new QLabel(w);
-	s = p->shortDescription();
+	s = CSL1("<qt>") + p->shortDescription() + CSL1("</qt>");
 	text->setText(s);
 	grid->addMultiCellWidget(text, 1, 1, 2, 3);
 
