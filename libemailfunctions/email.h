@@ -35,17 +35,21 @@ QStringList splitEmailAddrList(const QString& aStr);
 /** Validate email address.
  * Testframework in kdepim/libemailfunctions/tests. */
 enum EmailParseResult { AddressOk, AddressEmpty, UnexpectedEnd,
-                            UnbalancedQuote, UnbalancedParens,
+                            UnbalancedParens, MissingDomainPart,
                             UnclosedAngleAddr, UnopenedAngleAddr,
-                            UnexpectedComma, MissingDomainPart,
-                            TooManyAts, TooFewAts,
-                            MissingLocalPart };
+                            TooManyAts, UnexpectedComma, 
+                            TooFewAts, MissingLocalPart };
 
 EmailParseResult isValidEmailAddress( const QString& aStr );
 
 /** Translate the enum errorcodes from emailParseResult
  * into i18n'd strings that can be used for msg boxes. */
 QString emailParseResultToString( EmailParseResult errorCode );
+
+/** Check for a simple email address and if it is valid
+ * this is used for fields where only a "pure" email
+ * is allowed, i,e emails in form xxx@yyy.tld */
+bool isValidSimpleEmailAddress( const QString& aStr ); 
 
 /** Return email address from string. Examples:
  * "Stefan Taferner <taferner@kde.org>" returns "taferner@kde.org"

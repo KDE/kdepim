@@ -22,6 +22,7 @@
 #include "email.h"
 #include <kdebug.h>
 #include <klocale.h>
+#include <qregexp.h>
 
 //-----------------------------------------------------------------------------
 QStringList KPIM::splitEmailAddrList(const QString& aStr)
@@ -271,6 +272,9 @@ QString KPIM::emailParseResultToString( EmailParseResult errorCode )
     case UnopenedAngleAddr : 
       return i18n("The email address you entered is not valid because it "
                 "contains an unopened anglebracket.");
+    case UnexpectedComma :
+      return i18n("The email address you have entered is not valid because it "
+                "contains an unexpected comma.");
     case UnexpectedEnd : 
       return i18n("The email address you entered is not valid because it ended "
                 "unexpectadly, this probably means you have used an escaping type "
@@ -280,6 +284,12 @@ QString KPIM::emailParseResultToString( EmailParseResult errorCode )
   return i18n("Unknown problem with email address");
 }
 
+//-----------------------------------------------------------------------------
+bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
+{
+  QRegExp rx( "[a-zA-Z]*[\\w\\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]" );
+  return ( rx.search( aStr ) == 0 ); // returns 0 if match and -1 for no match
+}
 
 //-----------------------------------------------------------------------------
 QCString KPIM::getEmailAddr(const QString& aStr)
