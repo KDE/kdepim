@@ -29,8 +29,8 @@
 
 #include "options.h"
 
-/*#include <qpushbutton.h>
-#include <qtabwidget.h>*/
+#include <qpushbutton.h>
+/*#include <qtabwidget.h>*/
 #include <qlineedit.h>
 #include <qbuttongroup.h>
 #include <qradiobutton.h>
@@ -48,7 +48,7 @@
 
 
 DBSettings::DBSettings(QWidget *w, const char *n, DBSyncInfo*itm, SyncTypeList_t *tps,
-	bool changeDBName=true, bool allowask=true) :
+	bool changeDBName, bool allowask) :
 	KDialogBase(w, n, true, QString::null,
 		KDialogBase::Ok | KDialogBase::Cancel,
 		KDialogBase::Ok, true) {
@@ -126,6 +126,9 @@ int DBSettings::SyncTypeToId(int tt) {
 
 
 // $Log$
+// Revision 1.1  2002/04/07 12:09:42  kainhofe
+// Initial checkin of the conduit. The gui works mostly, but syncing crashes KPilot...
+//
 // Revision 1.2  2002/04/07 11:56:19  reinhold
 // Last version before moving to KDE CVS
 //

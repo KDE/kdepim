@@ -36,6 +36,8 @@
 #include <qmessagebox.h>
 #endif
 
+#include <qtimer.h>
+
 #include <kconfig.h>
 #include <kmessagebox.h>
 
@@ -50,7 +52,7 @@ static const char *MultiDB_conduit_id = "$Id$";
 
 
 
-MultiDBConduit::MultiDBConduit(KPilotDeviceLink *d, 	const char *n, 	const QStringList &l, SyncTypeList_t *tps) : ConduitAction(d,n,l), dbases(), fBackupDatabase(), fCurrentDatabase() {
+MultiDBConduit::MultiDBConduit(KPilotDeviceLink *d, 	const char *n, 	const QStringList &l, SyncTypeList_t *tps) : ConduitAction(d,n,l), dbases(), fCurrentDatabase(), fBackupDatabase() {
 	FUNCTIONSETUP;
 	(void)MultiDB_conduit_id;
 	dbnr=0;
@@ -188,7 +190,7 @@ bool MultiDBConduit::GetSyncType(DBInfo dbinfo, DBSyncInfo*syncinfo) {
 				"sync method for the database. If you continue, the database will be "
 				"skipped during this sync, if you cancel, you will get back to the "
 				"previous dialog."),
-				i18n("&Continue"), "noEmptySyncSettingWarning") ) {
+				i18n("&Continue"), KStdGuiItem::cont(), "noEmptySyncSettingWarning") ) {
 			return false;
 		}
 	}
@@ -256,6 +258,9 @@ bool MultiDBConduit::GetSyncType(DBInfo dbinfo, DBSyncInfo*syncinfo) {
 }
 
 // $Log$
+// Revision 1.1  2002/04/07 12:09:42  kainhofe
+// Initial checkin of the conduit. The gui works mostly, but syncing crashes KPilot...
+//
 // Revision 1.2  2002/04/07 11:56:19  reinhold
 // Last version before moving to KDE CVS
 //

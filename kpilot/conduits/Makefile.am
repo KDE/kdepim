@@ -11,6 +11,5 @@ SUBDIRS = knotes \
 	null \
 	vcalconduit \
 	popmail \
-	ProjectManagerConduits \
-	JPilotPluginProxy
+	ProjectManagerConduits
 

@@ -38,6 +38,8 @@
 #include <qmessagebox.h>
 #endif
 
+#include <qtimer.h>
+
 #include <kconfig.h>
 /*
 #if KDE_VERSION < 300
@@ -393,6 +395,9 @@ void OrganizerConduit::updateLocalEntry(PilotRecord *rec, bool force) {
 
 
 // $Log$
+// Revision 1.1  2002/04/07 12:09:43  kainhofe
+// Initial checkin of the conduit. The gui works mostly, but syncing crashes KPilot...
+//
 // Revision 1.1  2002/04/07 01:03:52  reinhold
 // the list of possible actions is now created dynamically
 //

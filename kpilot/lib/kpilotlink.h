@@ -30,7 +30,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-
+#include <time.h>
 #include <pi-dlp.h>
 
 #ifndef QOBJECT_H
@@ -315,6 +315,9 @@ bool operator < ( const struct db &, const struct db &) ;
 
 
 // $Log$
+// Revision 1.3  2002/02/02 11:46:03  adridg
+// Abstracting away pilot-link stuff
+//
 // Revision 1.2  2002/01/21 23:14:03  adridg
 // Old code removed; extra abstractions added; utility extended
 //

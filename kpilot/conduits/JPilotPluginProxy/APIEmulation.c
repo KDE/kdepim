@@ -19,15 +19,15 @@
  */
 
 int jp_logf(int level, char *format, ...) {
-//#ifdef DEBUG
+/*#ifdef DEBUG*/
    printf("inside jp_logf (%s) \n",format);
-//#endif
+/*#endif*/
 	return 0;
 }
 
 int jpilot_logf(int level, char *format, ...) {
-//#ifdef DEBUG
+/*#ifdef DEBUG*/
    printf("inside jpilot_logf (%s) \n",format);
-//#endif
+/*#endif*/
 	return 0;
 }

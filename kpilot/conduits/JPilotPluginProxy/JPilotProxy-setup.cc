@@ -32,6 +32,7 @@
 #include <qbuttongroup.h>
 #include <qlineedit.h>
 #include <qlistview.h>
+#include <qpushbutton.h>
 
 #include <kconfig.h>
 #include <klistview.h>
@@ -228,6 +229,9 @@ void JPilotProxyWidgetSetup::slotUpdatePluginPath(const QString &newpath) {
 
 
 // $Log$
+// Revision 1.1  2002/04/07 11:17:54  kainhofe
+// First Version of the JPilotPlugin Proxy conduit. it can be activated, but loading a plugin or syncing a plugin crashes the palm (if no plugin is explicitely enabled, this conduit can be enabled and it won't crash KPIlot). A lot of work needs to be done, see the TODO
+//
 // Revision 1.7  2002/04/07 11:11:18  reinhold
 // If the plugin is removed, this conduit does no longer crash
 //
