@@ -139,6 +139,9 @@ class CalendarResources : public QObject, public Calendar, public KRES::ManagerL
     /** Return Resource for given uid */
     ResourceCalendar *resource(Incidence *);
 
+    /** Return a list of all resources */
+    QPtrList<KRES::Resource> resourceList();
+
   signals:
     void calendarChanged();
 
