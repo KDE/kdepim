@@ -80,6 +80,7 @@ const char *id_conduit_popmail =
 #include "popmailSettings.h"
 #include "setupDialog.h"
 
+#if 0
 static void reset_Mail(struct Mail *t)
 {
       t->to = 0;
@@ -92,6 +93,7 @@ static void reset_Mail(struct Mail *t)
       t->body = 0;
       t->dated = 0;
 }
+#endif
 
 PopMailConduit::PopMailConduit(KPilotDeviceLink *d,
 	const char *n,
