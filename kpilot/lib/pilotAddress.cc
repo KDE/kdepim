@@ -149,16 +149,16 @@ QString PilotAddress::getTextRepresentation(bool richText)
 	text += par;
 	if (!getField(entryTitle).isEmpty())
 	{
-		text += getField(entryTitle);
+		text += rtExpand(getField(entryTitle), richText);
 		text += CSL1(" ");
 	}
 
 	tmp = richText?CSL1("<b><big>%1%2%3</big></b>"):CSL1("%1%2%3");
 	if (!getField(entryFirstname).isEmpty())
-		tmp=tmp.arg(getField(entryFirstname)).arg(CSL1(" "));
+		tmp=rtExpand(tmp.arg(getField(entryFirstname)), richText).arg(CSL1(" "));
 	else
 		tmp=tmp.arg(CSL1(" ")).arg(CSL1(" "));
-	tmp=tmp.arg(getField(entryLastname));
+	tmp=tmp.arg(rtExpand(getField(entryLastname), richText));
 	text += tmp;
 	text += ps;
 
@@ -166,7 +166,7 @@ QString PilotAddress::getTextRepresentation(bool richText)
 	if (!getField(entryCompany).isEmpty())
 	{
 		text += par;
-		text += getField(entryCompany);
+		text += rtExpand(getField(entryCompany), richText);
 		text += ps;
 	}
 
@@ -186,7 +186,7 @@ QString PilotAddress::getTextRepresentation(bool richText)
 				tmp=CSL1("%1: %2");
 			tmp=tmp.arg(PilotAppCategory::codec()->toUnicode(
 				fAppInfo.phoneLabels[getPhoneLabelIndex(i-entryPhone1)]));
-			tmp=tmp.arg(getField(i));
+			tmp=tmp.arg(rtExpand(getField(i), richText));
 			text += tmp;
 			text += br;
 		}
@@ -196,27 +196,27 @@ QString PilotAddress::getTextRepresentation(bool richText)
 	text += par;
 	if (!getField(entryAddress).isEmpty())
 	{
-		text += getField(entryAddress);
+		text += rtExpand(getField(entryAddress), richText);
 		text += br;
 	}
 	if (!getField(entryCity).isEmpty())
 	{
-		text += getField(entryCity);
+		text += rtExpand(getField(entryCity), richText);
 		text += CSL1(" ");
 	}
 	if (!getField(entryState).isEmpty())
 	{
-		text += getField(entryState);
+		text += rtExpand(getField(entryState), richText);
 		text += CSL1(" ");
 	}
 	if (!getField(entryZip).isEmpty())
 	{
-		text += getField(entryZip);
+		text += rtExpand(getField(entryZip), richText);
 	}
 	text += br;
 	if (!getField(entryCountry).isEmpty())
 	{
-		text += getField(entryCountry);
+		text += rtExpand(getField(entryCountry), richText);
 		text += br;
 	}
 	text += ps;
@@ -226,7 +226,7 @@ QString PilotAddress::getTextRepresentation(bool richText)
 	for (int i = entryCustom1; i <= entryCustom4; i++)
 		if (!getField(i).isEmpty())
 		{
-			text += getField(i);
+			text += rtExpand(getField(i), richText);
 			text += br;
 		}
 	text += ps;
@@ -236,7 +236,7 @@ QString PilotAddress::getTextRepresentation(bool richText)
 	{
 		text += richText?CSL1("<hr/>"):CSL1("-----------------------------\n");
 		text += par;
-		text += getField(entryNote);
+		text += rtExpand(getField(entryNote), richText);
 		text += ps;
 	}
 	return text;

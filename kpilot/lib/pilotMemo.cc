@@ -73,8 +73,8 @@ void *PilotMemo::pack(void *buf, int *len)
 QString PilotMemo::getTextRepresentation(bool richText)
 {
 	if (richText)
-		return i18n("<i>Title:</i> %1<br><i>MemoText:</i><br>%2").
-			arg(getTitle()).arg(text());
+		return i18n("<i>Title:</i> %1<br>\n<i>MemoText:</i><br>%2").
+			arg(rtExpand(getTitle(), richText)).arg(rtExpand(text(), richText));
 	else
 		return i18n("Title: %1\nMemoText:\n%2").arg(getTitle()).arg(text());
 }

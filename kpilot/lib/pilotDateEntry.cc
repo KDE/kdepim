@@ -151,7 +151,7 @@ QString PilotDateEntry::getTextRepresentation(bool richText)
 	// title + name
 	text += par;
 	tmp=richText?CSL1("<b><big>%1</big></b>"):CSL1("%1");
-	text += tmp.arg(getDescription());
+	text += tmp.arg(rtExpand(getDescription(), richText));
 	text += ps;
 
 	QDateTime dt(readTm(getEventStart()));
@@ -256,7 +256,7 @@ QString PilotDateEntry::getTextRepresentation(bool richText)
 		text += richText?CSL1("<hr/>"):CSL1("-------------------------\n");
 		text+=par;
 		text+=richText?i18n("<b><em>Note:</em></b><br>"):i18n("Note:\n");
-		text+=getNote();
+		text+=rtExpand(getNote(), richText);
 		text+=ps;
 	}
 

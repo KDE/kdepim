@@ -127,6 +127,10 @@ using namespace std;
 extern int debug_level;
 extern const char *debug_spaces;
 
+// Function to expand newlins in rich text to <br>\n
+QString rtExpand(const QString &s, bool richText=true);
+
+
 #ifdef DEBUG
 // Both old and new-style debugging suggest (insist?) that
 // every function be started with the macro FUNCTIONSETUP,
