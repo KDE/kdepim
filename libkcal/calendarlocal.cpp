@@ -53,6 +53,7 @@ CalendarLocal::CalendarLocal( const QString &timeZoneId )
 void CalendarLocal::init()
 {
   mDeletedIncidences.setAutoDelete( true );
+	mFileName = QString::null;
 }
 
 
@@ -63,19 +64,28 @@ CalendarLocal::~CalendarLocal()
 
 bool CalendarLocal::load( const QString &fileName )
 {
+	mFileName = fileName;
   FileStorage storage( this, fileName );
   return storage.load();
 }
 
 bool CalendarLocal::save( const QString &fileName, CalFormat *format )
 {
-  FileStorage storage( this, fileName, format );
-  return storage.save();
+	// Save only if the calendar is either modified, or saved to a 
+	// different file than it was loaded from
+kdDebug()<<"CalendarLocal::save(), fileName="<<fileName<<", mFileName="<<mFileName<<", isModified="<<isModified()<<endl;
+	if ( mFileName != fileName || isModified() ) {
+    FileStorage storage( this, fileName, format );
+    return storage.save();
+	} else {
+		return true;
+	}
 }
 
 void CalendarLocal::close()
 {
   setObserversEnabled( false );
+	mFileName = QString::null;
 
   deleteAllEvents();
   deleteAllTodos();
@@ -327,20 +337,6 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
   }
 }
 
-
-void CalendarLocal::incidenceUpdated( IncidenceBase *incidence )
-{
-  incidence->setSyncStatus( Event::SYNCMOD );
-  incidence->setLastModified( QDateTime::currentDateTime() );
-  // we should probably update the revision number here,
-  // or internally in the Event itself when certain things change.
-  // need to verify with ical documentation.
-
-  // The static_cast is ok as the CalendarLocal only observes Incidence objects
-  notifyIncidenceChanged( static_cast<Incidence *>( incidence ) );
-
-  setModified( true );
-}
 
 void CalendarLocal::insertEvent( Event *event )
 {

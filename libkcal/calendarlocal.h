@@ -181,9 +181,6 @@ class CalendarLocal : public Calendar
 
   protected:
 
-    /** Notification function of IncidenceBase::Observer. */
-    void incidenceUpdated( IncidenceBase *i );
-
     /** inserts an event into its "proper place" in the calendar. */
     void insertEvent( Event *event );
 
@@ -205,6 +202,7 @@ class CalendarLocal : public Calendar
     Journal::List mJournalList;
 
     Incidence::List mDeletedIncidences;
+		QString mFileName;
 
     class Private;
     Private *d;
