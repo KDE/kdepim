@@ -93,7 +93,7 @@ static KCmdLineOptions kpilotoptions[] = {
 		I18N_NOOP("Run conduit specially designed to timeout."),
 		0 } ,
 	{ "test-usercheck",
-		I18N_NOOP("Run conduit specially designed to timeout."),
+		I18N_NOOP("Run conduit just for user check."),
 		0 } ,
 #ifdef DEBUG
 	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
@@ -294,6 +294,7 @@ int testConduit(KCmdLineArgs *p)
 	createLink();
 
 	syncStack = new ActionQueue(deviceLink);
+	syncStack->setTestMode(true);
 	syncStack->queueConduits(QStringList(s),SyncAction::eTest,true);
 
 	connectStack();
