@@ -52,8 +52,7 @@ kpilot_SOURCES	= \
 	datebookWidget.cc \
 	todoWidget.cc todoEditor.cc todoEditor_base.ui \
 	fileInstaller.cc fileInstallWidget.cc \
-	listItems.cc \
-	kroupware.cc
+	listItems.cc
 kpilot_COMPILE_FIRST = kpilotSettings.h
 
 
@@ -61,7 +60,7 @@ kpilotDaemon_SOURCES = \
 	pilotDaemonDCOP.skel kpilotDCOP.stub loggerDCOP.stub loggerDCOP.skel \
 	pilotDaemon.cc logFile.cc \
 	hotSync.cc internalEditorAction.cc interactiveSync.cc syncStack.cc \
-	fileInstaller.cc kroupware.cc
+	fileInstaller.cc
 
 kpilotTest_SOURCES = \
 	logWidget.cc pilotComponent.cc \
