@@ -184,7 +184,7 @@ VCalConduitBase::~VCalConduitBase()
 	   time is later than the last sync time). This handles (-,N),(-,M)
 		a) if it does not have a pilotID, add it to the palm and backupDB, store the PalmID
 		b) if it has a valid pilotID, update the Palm record and the backup
-	3) finally, deleteRecord goes through all records (which don't have the deleted flag) of the backup db
+	3) finally, dheleteRecord goes through all records (which don't have the deleted flag) of the backup db
 	   and if one does not exist in the Calendar, it was deleted there, so delete it from the Palm, too.
 		This handles the last remaining case of (-,D)
 
@@ -227,11 +227,18 @@ there are two special cases: a full and a first sync.
 	if (PluginUtility::isRunning("korganizer") ||
 		PluginUtility::isRunning("alarmd"))
 	{
-		addSyncLogEntry(i18n("KOrganizer is running, can't update datebook."));
+		emit logError(i18n("KOrganizer is running, can't update datebook."));
 		return false;
 	}
 
 	readConfig();
+
+	if (fCalendarFile.isEmpty())
+	{
+		kdWarning() << k_funcinfo
+			<< ": No calendar file set." << endl;
+		return false;
+	}
 
 #ifdef DEBUG
 	if (isTest())
@@ -239,6 +246,9 @@ there are two special cases: a full and a first sync.
 		DEBUGCONDUIT << fname
 			<< ": Running conduit test. Using calendar "
 			<< fCalendarFile << endl;
+		doTest();
+		delayDone();
+		return true;
 	}
 #endif
 

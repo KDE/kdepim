@@ -225,7 +225,9 @@ PilotRecord*VCalConduit::recordFromIncidence(PilotDateEntry*de, const KCal::Even
 	setExceptions(de, e);
 	de->setDescription(e->summary());
 	de->setNote(e->description());
-DEBUGCONDUIT<<"-------- "<<e->summary()<<endl;
+#ifdef DEBUG
+	DEBUGCONDUIT<<"-------- "<<e->summary()<<endl;
+#endif
 	return de->pack();
 }
 
@@ -593,7 +595,7 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 	case KCal::Recurrence::rMonthlyPos:
 		dateEntry->setRepeatType(repeatMonthlyByDay);
 		if (r->monthPositions().count()>0)
-		{ 
+		{
 			// Only take the first monthly position, as the palm allows only one
 			QPtrList<KCal::Recurrence::rMonthPos> mps=r->monthPositions();
 			const KCal::Recurrence::rMonthPos*mp=mps.first();
@@ -702,3 +704,22 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 	dateEntry->setExceptionCount(excount);
 	dateEntry->setExceptions(ex_List);
 }
+
+void VCalConduit::doTest()
+{
+	FUNCTIONSETUP;
+	bool full = false;
+// Use bool ConduitAction::openDatabases_(const QString &dbName,const QString &localPath)
+
+	openDatabases(dbname());
+	openCalendar();
+
+	int pilotindex = 0;
+	PilotRecord *r  = 0L;
+	while ((r = fDatabase->readRecordByIndex(pilotindex++)))
+	{
+		changeRecord(r,0L);
+	}
+	fP->updateIncidences();
+}
+

@@ -143,6 +143,8 @@ protected:
 	virtual void preRecord(PilotRecord*){};
 	virtual void preIncidence(KCal::Incidence *){};
 
+	virtual void doTest() {};
+
 protected:
 	KCal::CalendarLocal *fCalendar;
 

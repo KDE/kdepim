@@ -112,6 +112,7 @@ protected:
 	void setRecurrence(PilotDateEntry *, const KCal::Event * );
 	void setExceptions(PilotDateEntry *, const KCal::Event * );
 
+	/* virtual */ void doTest();
 } ;
 
 #endif
