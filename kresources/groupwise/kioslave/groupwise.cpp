@@ -250,7 +250,7 @@ void Groupwise::getAddressbook( const KURL &url )
 
   QString query = url.query();
   if ( query.isEmpty() || query == "?" ) {
-    errorMessage( i18n("No addressbook ids given.") );
+    errorMessage( i18n("No addressbook IDs given.") );
   } else {
     QStringList ids;
 
