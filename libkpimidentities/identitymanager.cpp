@@ -79,7 +79,6 @@ IdentityManager::IdentityManager( bool readonly, QObject * parent, const char * 
     KConfig kmailConf( "kmailrc", true );
     readConfig( &kmailConf );
   }
-  mShadowIdentities = mIdentities;
   // we need at least a default identity:
   if ( mIdentities.isEmpty() ) {
     kdDebug( 5006 ) << "IdentityManager: No identity found. Creating default." << endl;
@@ -114,17 +113,18 @@ void IdentityManager::commit()
 	it != mIdentities.end() ; ++it )
     seenUOIDs << (*it).uoid();
 
+  QValueList<uint> changedUOIDs;
   // find added and changed identities:
   for ( QValueList<Identity>::ConstIterator it = mShadowIdentities.begin() ;
 	it != mShadowIdentities.end() ; ++it ) {
     QValueList<uint>::Iterator uoid = seenUOIDs.find( (*it).uoid() );
     if ( uoid != seenUOIDs.end() ) {
-      const Identity & orig = identityForUoid( *uoid );
+      const Identity & orig = identityForUoid( *uoid ); // look it up in mIdentities
       if ( *it != orig ) {
-	// changed identity
-	kdDebug( 5006 ) << "emitting changed() for identity " << *uoid << endl;
-	emit changed( *it );
-	emit changed( *uoid );
+        // changed identity
+        kdDebug( 5006 ) << "emitting changed() for identity " << *uoid << endl;
+        emit changed( *it );
+        changedUOIDs << *uoid;
       }
       seenUOIDs.remove( uoid );
     } else {
@@ -143,6 +143,13 @@ void IdentityManager::commit()
 
   mIdentities = mShadowIdentities;
   writeConfig();
+
+  // now that mIdentities has all the new info, we can emit the added/changed
+  // signals that ship a uoid. This is because the slots might use identityForUoid(uoid)...
+  for ( QValueList<uint>::ConstIterator it = changedUOIDs.begin() ;
+	it != changedUOIDs.end() ; ++it )
+    emit changed( *it );
+
   emit ConfigManager::changed(); // normal signal
 
   // DCOP signal for other IdentityManager instances
@@ -238,6 +245,8 @@ void IdentityManager::readConfig(KConfigBase* config) {
     mIdentities.first().setIsDefault( true );
   }
   qHeapSort( mIdentities );
+
+  mShadowIdentities = mIdentities;
 }
 
 QStringList IdentityManager::groupList(KConfigBase* config) const {
@@ -252,11 +261,11 @@ IdentityManager::ConstIterator IdentityManager::end() const {
   return mIdentities.end();
 }
 
-IdentityManager::Iterator IdentityManager::begin() {
+IdentityManager::Iterator IdentityManager::modifyBegin() {
   return mShadowIdentities.begin();
 }
 
-IdentityManager::Iterator IdentityManager::end() {
+IdentityManager::Iterator IdentityManager::modifyEnd() {
   return mShadowIdentities.end();
 }
 
@@ -314,18 +323,18 @@ bool IdentityManager::thatIsMe( const QString & addressList ) const {
   return !identityForAddress( addressList ).isNull();
 }
 
-Identity & IdentityManager::identityForName( const QString & name )
+Identity & IdentityManager::modifyIdentityForName( const QString & name )
 {
-  for ( Iterator it = begin() ; it != end() ; ++it )
+  for ( Iterator it = modifyBegin() ; it != modifyEnd() ; ++it )
     if ( (*it).identityName() == name ) return (*it);
   kdWarning( 5006 ) << "IdentityManager::identityForName() used as newFromScratch() replacement!"
 		    << "\n  name == \"" << name << "\"" << endl;
   return newFromScratch( name );
 }
 
-Identity & IdentityManager::identityForUoid( uint uoid )
+Identity & IdentityManager::modifyIdentityForUoid( uint uoid )
 {
-  for ( Iterator it = begin() ; it != end() ; ++it )
+  for ( Iterator it = modifyBegin() ; it != modifyEnd() ; ++it )
     if ( (*it).uoid() == uoid ) return (*it);
   kdWarning( 5006 ) << "IdentityManager::identityForUoid() used as newFromScratch() replacement!"
 		    << "\n  uoid == \"" << uoid << "\"" << endl;
@@ -345,7 +354,7 @@ bool IdentityManager::setAsDefault( const QString & name ) {
   QStringList names = shadowIdentities();
   if ( names.find( name ) == names.end() ) return false;
   // Then, change the default as requested:
-  for ( Iterator it = begin() ; it != end() ; ++it )
+  for ( Iterator it = modifyBegin() ; it != modifyEnd() ; ++it )
     (*it).setIsDefault( (*it).identityName() == name );
   // and re-sort:
   sort();
@@ -364,7 +373,7 @@ bool IdentityManager::setAsDefault( uint uoid ) {
   if ( !found ) return false;
 
   // Then, change the default as requested:
-  for ( Iterator it = begin() ; it != end() ; ++it )
+  for ( Iterator it = modifyBegin() ; it != modifyEnd() ; ++it )
     (*it).setIsDefault( (*it).uoid() == uoid );
   // and re-sort:
   sort();
@@ -372,7 +381,7 @@ bool IdentityManager::setAsDefault( uint uoid ) {
 }
 
 bool IdentityManager::removeIdentity( const QString & name ) {
-  for ( Iterator it = begin() ; it != end() ; ++it )
+  for ( Iterator it = modifyBegin() ; it != modifyEnd() ; ++it )
     if ( (*it).identityName() == name ) {
       bool removedWasDefault = (*it).isDefault();
       mShadowIdentities.remove( it );

@@ -149,25 +149,27 @@ public:
   **/
   bool setAsDefault( uint uoid );
 
-  /** @return the identity named @p idenityName. This method returns a
+  /** @return the identity named @p identityName. This method returns a
       reference to the identity that can be modified. To let others
       see this change, use @ref commit.
   **/
-  Identity & identityForName( const QString & identityName );
+  Identity & modifyIdentityForName( const QString & identityName );
 
   /** @return the identity with Unique Object Identifier (UOID) @p uoid.
       This method returns a reference to the identity that can
       be modified. To let others see this change, use @ref commit.
   **/
-  Identity & identityForUoid( uint uoid );
+  Identity & modifyIdentityForUoid( uint uoid );
 
   /** Removes the identity with name @p identityName */
   bool removeIdentity( const QString & identityName );
 
   ConstIterator begin() const;
   ConstIterator end() const;
-  Iterator begin();
-  Iterator end();
+  /// Iterator used by the configuration dialog, which works on a separate list
+  /// of identities, for modification. Changes are made effective by commit().
+  Iterator modifyBegin();
+  Iterator modifyEnd();
 
   Identity & newFromScratch( const QString & name );
   Identity & newFromControlCenter( const QString & name );
