@@ -95,13 +95,13 @@ public:
      * Which ports are possible.
      * @return Array with possible ports
      */
-    QArray<int> ports()const;
+    QMemArray<int> ports()const;
 
     /**
      * Set the possible ports
      * @param the possible ports
      */
-    void setPorts(const  QArray<int>& );
+    void setPorts(const  QMemArray<int>& );
 
     /**
      * Which port is actually used.
@@ -294,7 +294,7 @@ private:
     QStringList m_propsIPs;
     QValueList< QPair<QString, QString> > m_propAuth;
     bool m_canHandle;
-    QArray<int> m_ports;
+    QMemArray<int> m_ports;
     int m_current;
     QString m_user;
     QString m_pass;

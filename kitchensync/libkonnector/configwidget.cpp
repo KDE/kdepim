@@ -10,3 +10,5 @@ ConfigWidget::ConfigWidget( QWidget* parent, const char* name )
 ConfigWidget::~ConfigWidget() {}
 
 
+
+#include "configwidget.moc"

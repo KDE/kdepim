@@ -95,7 +95,7 @@ QString KonnectorManager::registerKonnector(const QString &device )
 
 
     KonnectorPlugin* plugin =  KParts::ComponentFactory::
-                               createInstanceFromLibrary<KonnectorPlugin>(dev.library(),
+                               createInstanceFromLibrary<KonnectorPlugin>(dev.library().latin1(),
                                                                           this );
     if(!plugin) // could not load
 	return QString::null;
@@ -120,7 +120,7 @@ QString KonnectorManager::registerKonnector(const Device &device )
     QString randStr = generateUID();
 
     KonnectorPlugin* plugin =  KParts::ComponentFactory::
-                               createInstanceFromLibrary<KonnectorPlugin>( device.library(),
+                               createInstanceFromLibrary<KonnectorPlugin>( device.library().latin1(),
                                                                            this );
   if(!plugin)
     return QString::null;
