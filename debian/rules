@@ -18,7 +18,7 @@ build-stamp:
 	  $(MAKE) -f admin/Makefile.common ;\
 	fi
 	./configure $(configkdepim)
-	( cd libical ; autoconf ; automake ; ./configure $(configkdepim) ; cd .. )
+	( cd libical ; automake ; ./configure $(configkdepim) ; cd .. )
 	make
 	touch build-stamp
 
