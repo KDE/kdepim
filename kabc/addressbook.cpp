@@ -13,6 +13,7 @@
 #include "simpleformat.h"
 
 #include "addressbook.h"
+#include "addressbook.moc"
 
 using namespace KABC;
 
@@ -43,11 +44,11 @@ bool AddressBook::save( Ticket *ticket )
   bool success = mFormat->save( this, ticket->fileName );
 
   setFileName( ticket->fileName );
-  
+
   delete ticket;
   unlock( mFileName );
 
-  return success;  
+  return success;
 }
 
 void AddressBook::clear()
@@ -157,9 +158,9 @@ bool AddressBook::lock( const QString &fileName )
     emit addressBookLocked( this );
     return true;
   }
-  
+
   // TODO: check stat
-  
+
   return false;
 }
 
