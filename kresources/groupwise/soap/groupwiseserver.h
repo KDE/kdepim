@@ -55,6 +55,24 @@ class ns1__Appointment;
 class ns1__Mail;
 class ns1__Task;
 
+namespace GroupWise {
+
+class AddressBook
+{
+  public:
+    typedef QValueList<AddressBook> List;
+  
+    AddressBook() : isPersonal( false ), isFrequentContacts( false ) {}
+  
+    QString id;
+    QString name;
+    QString description;
+    bool isPersonal;
+    bool isFrequentContacts;
+};
+
+}
+
 class GroupwiseServer : public QObject
 {
   Q_OBJECT
@@ -76,7 +94,7 @@ class GroupwiseServer : public QObject
     bool readCalendarSynchronous( KCal::ResourceCached *resource );
     bool readCalendarSynchronous( KCal::Calendar *cal );
 
-    QMap<QString, QString> addressBookList();
+    GroupWise::AddressBook::List addressBookList();
 
     bool readAddressBooksSynchronous( const QStringList &addrBookIds,
       KABC::ResourceCached * );

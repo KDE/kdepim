@@ -23,8 +23,6 @@
 #include "kabc_resourcegroupwise.h"
 #include "kabc_groupwiseprefs.h"
 
-#include "soap/groupwiseserver.h"
-
 #include <kcombobox.h>
 #include <kdebug.h>
 #include <kdialog.h>
@@ -41,11 +39,15 @@ using namespace KABC;
 class AddressBookItem : public QCheckListItem
 {
   public:
-    AddressBookItem( KListView *parent, const QString &title, const QString &id )
+    AddressBookItem( KListView *parent, GroupWise::AddressBook ab )
       : QCheckListItem( parent, "", CheckBox ),
-        mId( id )
+        mId( ab.id )
     {
-      setText( 0, title );
+      setText( 0, ab.name );
+      if ( ab.isPersonal ) setText( 1, "Yes" );
+      else setText( 1, "No" );
+      if ( ab.isFrequentContacts ) setText( 2, "Yes" );
+      else setText( 2, "No" );
     }
 
     QString id() const { return mId; }
@@ -87,12 +89,14 @@ ResourceGroupwiseConfig::ResourceGroupwiseConfig( QWidget* parent,  const char* 
   mainLayout->addMultiCellWidget( updateButton, 4, 4, 0, 1 );
 
   mAddressBookView = new KListView( this );
-  mAddressBookView->addColumn( i18n( "Address Books" ) );
+  mAddressBookView->addColumn( i18n( "Address Book" ) );
+  mAddressBookView->addColumn( i18n( "Personal" ) );
+  mAddressBookView->addColumn( i18n( "Frequent Contacts" ) );
   mAddressBookView->setFullWidth( true );
 
   mainLayout->addMultiCellWidget( mAddressBookView, 5, 5, 0, 1 );
 
-  label = new QLabel( i18n( "Address Book for new Contacts:" ), this );  
+  label = new QLabel( i18n( "Address Book for new Contacts:" ), this );
   mAddressBookBox = new KComboBox( this );
 
   mainLayout->addWidget( label, 6, 0 );
@@ -113,6 +117,9 @@ void ResourceGroupwiseConfig::loadSettings( KRES::Resource *res )
   mURL->setURL( mResource->prefs()->url() );
   mUser->setText( mResource->prefs()->user() );
   mPassword->setText( mResource->prefs()->password() );
+
+  loadAddressBookSettings();
+  updateAddressBookView();
 }
 
 void ResourceGroupwiseConfig::saveSettings( KRES::Resource *res )
@@ -156,19 +163,61 @@ void ResourceGroupwiseConfig::saveAddressBookSettings()
   QStringList selectedRead;
   QString selectedWrite;
 
-  QListViewItemIterator it( mAddressBookView );
-  while ( it.current() ) {
-    AddressBookItem *item = static_cast<AddressBookItem*>( it.current() );
+  QListViewItemIterator it2( mAddressBookView );
+  while ( it2.current() ) {
+    AddressBookItem *item = static_cast<AddressBookItem*>( it2.current() );
     if ( item->isOn() )
       selectedRead.append( item->id() );
 
-    ++it;
+    ++it2;
   }
 
   selectedWrite = mWriteAddressBookIds[ mAddressBookBox->currentItem() ];
 
   mResource->prefs()->setReadAddressBooks( selectedRead );
   mResource->prefs()->setWriteAddressBook( selectedWrite );
+
+  QStringList ids;
+  QStringList names;
+  QStringList personals;
+  QStringList frequents;
+  GroupWise::AddressBook::List::ConstIterator it;
+  for( it = mAddressBookList.begin(); it != mAddressBookList.end(); ++it ) {
+    ids.append( (*it).id );
+    names.append( (*it).name );
+    personals.append( (*it).isPersonal ? "1" : "0" );
+    frequents.append( (*it).isFrequentContacts ? "1" : "0" );
+  }
+  mResource->prefs()->setIds( ids );
+  mResource->prefs()->setNames( names );
+  mResource->prefs()->setPersonals( personals );
+  mResource->prefs()->setFrequents( frequents );
+}
+
+void ResourceGroupwiseConfig::loadAddressBookSettings()
+{
+  QStringList ids = mResource->prefs()->ids();
+  QStringList names = mResource->prefs()->names();
+  QStringList personals = mResource->prefs()->personals();
+  QStringList frequents = mResource->prefs()->frequents();
+
+  if ( ids.count() != names.count() || ids.count() != personals.count() ||
+    ids.count() != frequents.count() ) {
+    kdError() << "Corrupt addressbook configuration" << endl;
+    return;
+  }
+
+  mAddressBookList.clear();
+
+  for( uint i = 0; i < ids.count(); ++i ) {
+    GroupWise::AddressBook ab;
+    ab.id = ids[ i ];
+    ab.name = names[ i ];
+    ab.isPersonal = personals[ i ] == "1";
+    ab.isFrequentContacts = frequents[ i ] == "1";
+    
+    mAddressBookList.append( ab );
+  }
 }
 
 void ResourceGroupwiseConfig::updateAddressBookView()
@@ -182,14 +231,14 @@ void ResourceGroupwiseConfig::updateAddressBookView()
 
   QStringList selectedRead = mResource->prefs()->readAddressBooks();
 
-  QMap<QString, QString>::Iterator abIt;
+  GroupWise::AddressBook::List::ConstIterator abIt;
   for ( abIt = mAddressBookList.begin(); abIt != mAddressBookList.end(); ++abIt ) {
-    AddressBookItem *item = new AddressBookItem( mAddressBookView, abIt.data(), abIt.key() );
-    if ( selectedRead.find( abIt.key() ) != selectedRead.end() )
+    AddressBookItem *item = new AddressBookItem( mAddressBookView, *abIt );
+    if ( selectedRead.find( (*abIt).id ) != selectedRead.end() )
       item->setOn( true );
 
-    mAddressBookBox->insertItem( abIt.data() );
-    mWriteAddressBookIds.append( abIt.key() );
+    mAddressBookBox->insertItem( (*abIt).name );
+    mWriteAddressBookIds.append( (*abIt).id );
   }
 
   int index = mWriteAddressBookIds.findIndex( mResource->prefs()->writeAddressBook() );

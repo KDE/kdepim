@@ -536,13 +536,13 @@ bool GroupwiseServer::getDelta()
   return true;
 }
 
-QMap<QString, QString> GroupwiseServer::addressBookList()
+GroupWise::AddressBook::List GroupwiseServer::addressBookList()
 {
-  QMap<QString, QString> map;
+  GroupWise::AddressBook::List books;
 
   if ( mSession.empty() ) {
     kdError() << "GroupwiseServer::addressBookList(): no session." << endl;
-    return map;
+    return books;
   }
 
   mSoap->header->ns1__session = mSession;
@@ -555,11 +555,19 @@ QMap<QString, QString> GroupwiseServer::addressBookList()
     std::vector<class ns1__AddressBook * > *addressBooks = addressBookListResponse.books->book;
     std::vector<class ns1__AddressBook * >::const_iterator it;
     for ( it = addressBooks->begin(); it != addressBooks->end(); ++it ) {
-      map.insert( GWConverter::stringToQString( (*it)->id ), GWConverter::stringToQString( (*it)->name ) );
+      GroupWise::AddressBook ab;
+      ab.id = GWConverter::stringToQString( (*it)->id );
+      ab.name = GWConverter::stringToQString( (*it)->name );
+      ab.description = GWConverter::stringToQString( (*it)->description );
+      if ( (*it)->isPersonal ) ab.isPersonal = (*it)->isPersonal;
+      if ( (*it)->isFrequentContacts ) {
+        ab.isFrequentContacts = (*it)->isFrequentContacts;
+      }
+      books.append( ab );
     }
   }
 
-  return map;
+  return books;
 }
 
 bool GroupwiseServer::readAddressBooksSynchronous( const QStringList &addrBookIds,

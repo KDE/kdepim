@@ -14,6 +14,18 @@
   </entry>
  </group>
  <group name="AddressBooks" >
+  <entry key="Ids" type="StringList">
+    <label>Ids of Address Books</label>
+  </entry>
+  <entry key="Names" type="StringList">
+    <label>Names of Address Books</label>
+  </entry>
+  <entry key="Personals" type="StringList">
+    <label>Personal State of Address Books</label>
+  </entry>
+  <entry key="Frequents" type="StringList">
+    <label>Frequent Contacts state of Address Books</label>
+  </entry>
   <entry key="ReadAddressBooks" type="StringList" >
    <label>Readable Address Books</label>
   </entry>

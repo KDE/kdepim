@@ -17,8 +17,10 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#ifndef RESOURCEGROUPWISECONFIG_H
-#define RESOURCEGROUPWISECONFIG_H
+#ifndef KABC_RESOURCEGROUPWISECONFIG_H
+#define KABC_RESOURCEGROUPWISECONFIG_H
+
+#include "soap/groupwiseserver.h"
 
 #include <kresources/configwidget.h>
 
@@ -50,6 +52,7 @@ class ResourceGroupwiseConfig : public KRES::ConfigWidget
   private:
     void updateAddressBookView();
     void saveAddressBookSettings();
+    void loadAddressBookSettings();
     void saveServerSettings( ResourceGroupwise *resource );
 
     KURLRequester *mURL;
@@ -59,7 +62,7 @@ class ResourceGroupwiseConfig : public KRES::ConfigWidget
     KListView *mAddressBookView;
     KComboBox *mAddressBookBox;
 
-    QMap<QString, QString> mAddressBookList;
+    GroupWise::AddressBook::List mAddressBookList;
     QStringList mWriteAddressBookIds;
 
     ResourceGroupwise *mResource;
