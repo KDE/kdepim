@@ -118,7 +118,7 @@ bool ICalFormat::fromString( Calendar *cal, const QString &text )
   // TODO: Handle more than one VCALENDAR or non-VCALENDAR top components
   icalcomponent *calendar;
 
-  calendar = icalcomponent_new_from_string( text.local8Bit().data());
+  calendar = icalcomponent_new_from_string( text.utf8().data());
   //  kdDebug(5800) << "Error: " << icalerror_perror() << endl;
   if (!calendar) {
     kdDebug(5800) << "ICalFormat::load() parse error" << endl;
@@ -224,7 +224,7 @@ QString ICalFormat::toString( Calendar *cal )
     icalcomponent_add_component( calendar, component );
   }
 
-  const char *text = icalcomponent_as_ical_string( calendar );
+  QString text = QString::fromUtf8( icalcomponent_as_ical_string( calendar ) );
 
   icalcomponent_free( calendar );
 
@@ -234,7 +234,7 @@ QString ICalFormat::toString( Calendar *cal )
     return QString::null;
   }
 
-  return QString::fromLocal8Bit( text );
+  return text;
 }
 
 QString ICalFormat::toICalString( Incidence *incidence )
@@ -250,20 +250,20 @@ QString ICalFormat::toString( Incidence *incidence )
 
   component = mImpl->writeIncidence( incidence );
 
-  const char *text = icalcomponent_as_ical_string( component );
+  QString text = QString::fromUtf8( icalcomponent_as_ical_string( component ) );
 
   icalcomponent_free( component );
 
-  return QString::fromLocal8Bit( text );
+  return text;
 }
 
 QString ICalFormat::toString( Recurrence *recurrence )
 {
   icalproperty *property;
   property = mImpl->writeRecurrenceRule( recurrence );
-  const char *text = icalproperty_as_ical_string( property );
+  QString text = QString::fromUtf8( icalproperty_as_ical_string( property ) );
   icalproperty_free( property );
-  return QString::fromLocal8Bit( text );
+  return text;
 }
 
 bool ICalFormat::fromString( Recurrence * recurrence, const QString& rrule )
