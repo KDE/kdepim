@@ -43,9 +43,9 @@ int main( int argc, char *argv[] )
 	myApp.setMainWidget( karm );
 	karm->show();
 	signal( SIGQUIT, cleanup );
-    signal( SIGINT, cleanup );
+	signal( SIGINT, cleanup );
 	int ret = myApp.exec();
 
-    delete karm;
+	delete karm;
 	return ret;
 }
