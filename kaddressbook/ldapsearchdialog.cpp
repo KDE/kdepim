@@ -36,6 +36,11 @@
 
 #include "ldapsearchdialog.h"
 
+static QString asUtf8( const QByteArray &val )
+{
+  return QString::fromUtf8( val.data(), val.size() );
+}
+
 static QString join( const KABC::LdapAttrValue& lst, const QString& sep )
 {
   QString res;
@@ -44,7 +49,7 @@ static QString join( const KABC::LdapAttrValue& lst, const QString& sep )
     if ( alredy )
       res += sep;
     alredy = TRUE;
-    res += QString::fromUtf8( *it );
+    res += asUtf8( *it );
   }
   return res;
 }
@@ -371,9 +376,9 @@ QString LDAPSearchDialog::selectedEMails() const
   ContactListItem* cli = static_cast<ContactListItem*>( mResultListView->firstChild() );
   while ( cli ) {
     if ( cli->isSelected() ) {
-      QString email = QString::fromUtf8( cli->mAttrs[ "mail" ].first() ).stripWhiteSpace();
+      QString email = asUtf8( cli->mAttrs[ "mail" ].first() ).stripWhiteSpace();
       if ( !email.isEmpty() ) {
-        QString name = QString::fromUtf8( cli->mAttrs[ "cn" ].first() ).stripWhiteSpace();
+        QString name = asUtf8( cli->mAttrs[ "cn" ].first() ).stripWhiteSpace();
         if ( name.isEmpty() ) {
           result << email;
         } else {
@@ -405,53 +410,53 @@ void LDAPSearchDialog::slotUser3()
       KABC::Addressee addr;
 
       // name
-      addr.setNameFromString( QString::fromUtf8( cli->mAttrs["cn"].first() ) );
+      addr.setNameFromString( asUtf8( cli->mAttrs["cn"].first() ) );
 
       // email
       KABC::LdapAttrValue lst = cli->mAttrs["mail"];
       KABC::LdapAttrValue::ConstIterator it = lst.begin();
       bool pref = true;
       if ( it != lst.end() ) {
-        addr.insertEmail( QString::fromUtf8( *it ), pref );
+        addr.insertEmail( asUtf8( *it ), pref );
         pref = false;
         ++it;
       }
 
-      addr.setOrganization(QString::fromUtf8( cli->mAttrs[ "o" ].first() ) );
+      addr.setOrganization( asUtf8( cli->mAttrs[ "o" ].first() ) );
       if (addr.organization().isEmpty())
-         addr.setOrganization(QString::fromUtf8( cli->mAttrs[ "Company" ].first() ) );
+         addr.setOrganization( asUtf8( cli->mAttrs[ "Company" ].first() ) );
 
-      addr.insertCustom("KADDRESSBOOK", "X-Department", QString::fromUtf8( cli->mAttrs[ "department" ].first() ) );
+      addr.insertCustom("KADDRESSBOOK", "X-Department", asUtf8( cli->mAttrs[ "department" ].first() ) );
 
       // Address
       KABC::Address workAddr(KABC::Address::Work);
 
-      workAddr.setStreet(QString::fromUtf8( cli->mAttrs[ "street" ].first()) );
-      workAddr.setLocality(QString::fromUtf8( cli->mAttrs[ "l" ].first()) );
-      workAddr.setRegion(QString::fromUtf8( cli->mAttrs[ "st" ].first()));
-      workAddr.setPostalCode(QString::fromUtf8( cli->mAttrs[ "postalCode" ].first()) );
-      workAddr.setCountry(QString::fromUtf8( cli->mAttrs[ "co" ].first()) );
+      workAddr.setStreet( asUtf8( cli->mAttrs[ "street" ].first()) );
+      workAddr.setLocality( asUtf8( cli->mAttrs[ "l" ].first()) );
+      workAddr.setRegion( asUtf8( cli->mAttrs[ "st" ].first()));
+      workAddr.setPostalCode( asUtf8( cli->mAttrs[ "postalCode" ].first()) );
+      workAddr.setCountry( asUtf8( cli->mAttrs[ "co" ].first()) );
 
       addr.insertAddress( workAddr );
 
       // phone
-      KABC::PhoneNumber homeNr = QString::fromUtf8( cli->mAttrs[  "homePhone" ].first() );
+      KABC::PhoneNumber homeNr = asUtf8( cli->mAttrs[  "homePhone" ].first() );
       homeNr.setType(KABC::PhoneNumber::Home);
       addr.insertPhoneNumber(homeNr);
 
-      KABC::PhoneNumber workNr = QString::fromUtf8( cli->mAttrs[  "telephoneNumber" ].first() );
+      KABC::PhoneNumber workNr = asUtf8( cli->mAttrs[  "telephoneNumber" ].first() );
       workNr.setType(KABC::PhoneNumber::Work);
       addr.insertPhoneNumber(workNr);
 
-      KABC::PhoneNumber faxNr = QString::fromUtf8( cli->mAttrs[  "facsimileTelephoneNumber" ].first() );
+      KABC::PhoneNumber faxNr = asUtf8( cli->mAttrs[  "facsimileTelephoneNumber" ].first() );
       faxNr.setType(KABC::PhoneNumber::Fax);
       addr.insertPhoneNumber(faxNr);
 
-      KABC::PhoneNumber cellNr = QString::fromUtf8( cli->mAttrs[  "mobile" ].first() );
+      KABC::PhoneNumber cellNr = asUtf8( cli->mAttrs[  "mobile" ].first() );
       cellNr.setType(KABC::PhoneNumber::Cell);
       addr.insertPhoneNumber(cellNr);
 
-      KABC::PhoneNumber pagerNr = QString::fromUtf8( cli->mAttrs[  "pager" ].first() );
+      KABC::PhoneNumber pagerNr = asUtf8( cli->mAttrs[  "pager" ].first() );
       pagerNr.setType(KABC::PhoneNumber::Pager);
       addr.insertPhoneNumber(pagerNr);
 
