@@ -19,6 +19,7 @@
 #include <kglobal.h>
 #include <kicontheme.h>
 #include <kiconloader.h>
+#include <kstandarddirs.h>
 
 #include <manipulatorpart.h>
 
@@ -41,12 +42,17 @@ OverviewWidget::OverviewWidget( QWidget* parent,  const char* name, WFlags fl )
     nameField->setText( i18n("Name") );
     nameField->setAlignment( int( QLabel::WordBreak | QLabel::AlignTop ) );
 
+    QPixmap logo;
+    logo.load(locate ("appdata", "pics/opie_logo.png" ) );
+
     deviceLogo = new QLabel( this, "deviceLogo" );
-    deviceLogo->setGeometry( QRect( width()-140, 20, 120, 120 ) );
+    deviceLogo->setGeometry( QRect( 360, 20, 120, 120 ) );
+    deviceLogo->setPixmap( logo );
     //deviceLogo->setScaledContents( TRUE );
 
+
     Line = new QFrame( this, "Line" );
-    Line->setGeometry( QRect( 0, 120, 611, 20 ) );
+    Line->setGeometry( QRect( 0, 140, 611, 20 ) );
     Line->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)4, (QSizePolicy::SizeType)0, 0, 0,  Line->sizePolicy().hasHeightForWidth() ) );
     Line->setProperty( "frameShape", (int)QFrame::HLine );
     Line->setFrameShadow( QFrame::Sunken );
@@ -61,7 +67,7 @@ OverviewWidget::OverviewWidget( QWidget* parent,  const char* name, WFlags fl )
     sv = new QScrollView( this );
     sv->setResizePolicy(QScrollView::AutoOneFit);
     sv->setHScrollBarMode( QScrollView::AlwaysOff );
-    sv->setGeometry (QRect( 20, 140 , this->width()-100 , this->height()-260 ) );
+    sv->setGeometry (QRect( 20, 160 , this->width()-100 , this->height()-260 ) );
     sv->setFrameShape(QFrame::NoFrame);
 
     sv->addChild(filler);
