@@ -751,37 +751,6 @@ void KABCore::save()
 
     ++it;
   }
-/*
-  KABC::StdAddressBook *b = dynamic_cast<KABC::StdAddressBook*>( mAddressBook );
-  if ( b ) {
-    if ( !b->save() ) {
-      QString text = i18n( "There was an error while attempting to save the "
-    	                   "address book. Please check that no other application "
-                           "is using it." );
-
-      KMessageBox::error( mWidget, text, i18n( "Unable to Save" ) );
-    } else {
-      setModified( false );
-    }
-  } else {
-    // FIXME: Handle locking properly, i.e. get the ticket before doing the
-    // first change to the addressbook and don't give up the ticket in case of a
-    // save error without asking the user.
-    KABC::Ticket *ticket = mAddressBook->requestSaveTicket();
-    if ( ticket ) {
-      if ( !mAddressBook->save( ticket ) ) {
-        KMessageBox::error( mWidget, i18n("Error saving address book.") );
-        mAddressBook->releaseSaveTicket( ticket );
-      } else {
-        setModified( false );
-      }
-    } else {
-      KMessageBox::error( mWidget,
-                          i18n("Unable to get access for saving the address "
-                               "book.") );
-    }
-  }
-*/
 }
 
 void KABCore::undo()
