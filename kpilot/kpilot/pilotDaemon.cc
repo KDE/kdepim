@@ -868,10 +868,36 @@ void PilotDaemon::slotRunConduitConfig()
 {
 	FUNCTIONSETUP;
 
-	KProcess *p = new KProcess;
-	*p << "kpilot" << "-c";
+	// This function tries to send the raise() DCOP call to kpilot.
+	// If it succeeds, we can assume kpilot is running and then try
+	// to send the configureConduits() DCOP call.
+	// If it fails (probably because kpilot isn't running) it tries
+	// to call kpilot via KProcess (using a command line switch to 
+	// only bring up the configure conduits dialog).
+	//
+	// Implementing the function this way catches all cases.
+	// ie 1 KPilot running with configure conduit dialog open (raise())
+	//    2 KPilot running with dialog NOT open (configureConduits())
+	//    3 KPilot NOT running (KProcess)
 
-	p->start();
+	DCOPClient *client = kapp->dcopClient();
+
+	// This DCOP call to kpilot's raise function solves the final case
+	// ie when kpilot already has the dialog open
+	
+	if (client->send("kpilot", "kpilot-mainwindow#1", "raise()",
+		QString::null))
+	{
+		client->send("kpilot", "KPilotIface", "configureConduits()",
+			QString::null);
+	}
+	else
+	{
+		KProcess *p = new KProcess;
+		*p << "kpilot" << "-c";
+
+		p->start();
+	}
 }
 
 void PilotDaemon::updateTrayStatus(const QString &s)
