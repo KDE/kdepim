@@ -13,7 +13,7 @@
 #include <kmessagebox.h>
 
 #include "dockwindow.h"
-
+#include "dockwindow.moc"
 
 AlarmDockWindow::AlarmDockWindow(AlarmDaemon& ad, const QString& defltClient,
                                  QWidget *parent, const char *name)

@@ -76,14 +76,14 @@ class ADCalendar : public CalendarLocal
 
     QString          urlString_;     // calendar file URL
     QString          appName_;       // name of application owning this calendar
-    QList<QString>   eventsPending_; // IDs of pending KALARM type events
+    QPtrList<QString>   eventsPending_; // IDs of pending KALARM type events
     Type             actionType_;    // action to take on event
     bool             loaded_;        // true if calendar file is currently loaded
     typedef QMap<QString, QString>  EventsMap;   // event ID, calendar URL
     static EventsMap  eventsHandled_; // IDs of displayed KALARM type events
 };
 
-typedef QList<ADCalendar> CalendarList;
+typedef QPtrList<ADCalendar> CalendarList;
 
 // The CalendarIteration class gives secure public access to AlarmDaemon::mCalendars
 class CalendarIteration

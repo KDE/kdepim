@@ -545,7 +545,7 @@ bool AlarmDaemon::checkAlarms(ADCalendar* cal, bool showDialog)
   bool korgAlarms = false;
   if (mDocker->alarmsOn()  &&  cal->loaded()  &&  cal->enabled())
   {
-    QList<Event> alarmEvents;
+    QPtrList<Event> alarmEvents;
     switch (cal->actionType())
     {
       case ADCalendar::KORGANISER:
