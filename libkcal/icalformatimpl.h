@@ -44,7 +44,7 @@ class ICalFormatImpl {
     icaltimetype writeICalDateTime(const QDateTime &);
     QDate readICalDate(icaltimetype);
     QDateTime readICalDateTime(icaltimetype);
-    char *writeText(const QString &);
+    QString readUtf8Text(const char *);
     icalcomponent *createCalendarComponent();
     icalcomponent *createScheduleComponent(Incidence *,Scheduler::Method);
 

@@ -152,7 +152,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 
   // unique id
   icalcomponent_add_property(parent,icalproperty_new_uid(
-      writeText(incidence->VUID())));
+      incidence->VUID().latin1()));
 
   // revision
   icalcomponent_add_property(parent,icalproperty_new_sequence(
@@ -167,7 +167,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 
   // organizer stuff
   icalcomponent_add_property(parent,icalproperty_new_organizer(
-      writeText("MAILTO:" + incidence->organizer())));
+      ("MAILTO:" + incidence->organizer()).utf8()));
 
   // attendees
   if (incidence->attendeeCount() != 0) {
@@ -196,7 +196,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
       }
       
       icalproperty *p = icalproperty_new_attendee(
-          writeText("MAILTO:" + attendee));
+          ("MAILTO:" + attendee).utf8());
       icalproperty_add_parameter(p,icalparameter_new_rsvp(
           curAttendee->RSVP() ? ICAL_RSVP_TRUE : ICAL_RSVP_FALSE ));
 // TODO: attendee status
@@ -220,13 +220,13 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   // description
   if (!incidence->description().isEmpty()) {
     icalcomponent_add_property(parent,icalproperty_new_description(
-        writeText(incidence->description())));
+        incidence->description().utf8()));
   }
 
   // summary
   if (!incidence->summary().isEmpty()) {
     icalcomponent_add_property(parent,icalproperty_new_summary(
-        writeText(incidence->summary())));
+        incidence->summary().utf8()));
   }
 
 // TODO:
@@ -241,8 +241,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   QStringList categories = incidence->categories();
   QStringList::Iterator it;
   for(it = categories.begin(); it != categories.end(); ++it ) {
-    icalcomponent_add_property(parent,icalproperty_new_categories(
-        writeText(*it)));
+    icalcomponent_add_property(parent,icalproperty_new_categories((*it).utf8()));
   }
 // TODO: Ensure correct concatenation of categories properties.
 
@@ -274,7 +273,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
   // related event
   if (incidence->relatedTo()) {
     icalcomponent_add_property(parent,icalproperty_new_relatedto(
-        writeText(incidence->relatedTo()->VUID())));
+        incidence->relatedTo()->VUID().latin1()));
   }
 
   // pilot sync stuff
@@ -653,6 +652,11 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
         mTodosRelate.append(todo);
         break;
 
+      case ICAL_DTSTART_PROPERTY:
+        // Flag that todo has start date. Value is read in by readIncidence().
+        todo->setHasStartDate(true);
+        break;
+
       default:
 //        kdDebug() << "ICALFormat::readTodo(): Unknown property: " << kind
 //                  << endl;
@@ -800,7 +804,7 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
 {
   Attendee *a;
 
-  QString text = icalproperty_get_attendee(attendee);
+  QString text = QString::fromUtf8(icalproperty_get_attendee(attendee));
   
   text = text.simplifyWhiteSpace();
   int emailPos1, emailPos2;
@@ -870,7 +874,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_ORGANIZER_PROPERTY:  // organizer
         text = icalproperty_get_organizer(p);
-        incidence->setOrganizer(text);
+        incidence->setOrganizer(QString::fromUtf8(text));
         break;
 
       case ICAL_ATTENDEE_PROPERTY:  // attendee
@@ -889,12 +893,12 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_DESCRIPTION_PROPERTY:  // description
         text = icalproperty_get_description(p);
-        incidence->setDescription(text);
+        incidence->setDescription(QString::fromUtf8(text));
         break;
  
       case ICAL_SUMMARY_PROPERTY:  // summary
         text = icalproperty_get_summary(p);
-        incidence->setSummary(text);
+        incidence->setSummary(QString::fromUtf8(text));
         break;
 
 #if 0  
@@ -914,7 +918,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_CATEGORIES_PROPERTY:  // categories
         text = icalproperty_get_categories(p);
-        categories.append(text);
+        categories.append(QString::fromUtf8(text));
         break;
 
       case ICAL_RRULE_PROPERTY:
@@ -1435,11 +1439,6 @@ QDateTime ICalFormatImpl::readICalDateTime(icaltimetype t)
 QDate ICalFormatImpl::readICalDate(icaltimetype t)
 {
   return QDate(t.year,t.month,t.day);
-}
-
-char *ICalFormatImpl::writeText(const QString &text)
-{
-  return const_cast<char *>(text.latin1());
 }
 
 icalcomponent *ICalFormatImpl::createCalendarComponent()

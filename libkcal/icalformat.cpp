@@ -52,7 +52,7 @@ bool ICalFormat::load(const QString &fileName)
 
   kdDebug() << "ICalFormat::load() " << fileName << endl;
 
-  icalfileset *fs = icalfileset_new(mImpl->writeText(fileName));
+  icalfileset *fs = icalfileset_new(QFile::encodeName(fileName));
 
   if (!fs) {
     kdDebug() << "ICalFormat::load() load error" << endl;
@@ -95,7 +95,7 @@ bool ICalFormat::save(const QString &fileName)
   QFile::remove(fileName);
 
   // Create iCalendar file
-  icalfileset *fs = icalfileset_new(mImpl->writeText(fileName));
+  icalfileset *fs = icalfileset_new(QFile::encodeName(fileName));
 
   icalcomponent *calendar = mImpl->createCalendarComponent();
   icalfileset_add_component(fs,calendar);
@@ -389,7 +389,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage(const QString &messageText)
   clearException();
 
   icalcomponent *message;
-  message = icalparser_parse_string(mImpl->writeText(messageText));
+  message = icalparser_parse_string(messageText.latin1());
   
   if (!message) return 0;
   
