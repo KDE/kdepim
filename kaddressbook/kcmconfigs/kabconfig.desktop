@@ -10,6 +10,12 @@ X-KDE-Library=kabconfig
 X-KDE-FactoryName=kabconfig
 X-KDE-HasReadOnlyMode=false
 
-Name=Address Book Configuration
+Name=Address Book
+Name[bs]=Podešavanje adresara
+Name[cs]=Nastavení knihy adres
+Name[eo]=Agordo de adresaro
+Name[fi]=Osoitekirjan asetukset
+Name[ja]=アドレス帳の設定
+Name[tr]=Adres Defteri Yapılandırması
 Comment=Configure the address book
 Keywords=kaddressbook, configure, settings
