@@ -187,8 +187,6 @@ KNArticleWidget::KNArticleWidget(QWidget *parent, const char *name )
           this, SLOT(slotPopup(const QString&, const QPoint&)));
   instances.append(this); 
 
-  p_art->view()->viewport()->setFocusPolicy(QWidget::NoFocus);
-  instances.append(this); 
   view=p_art->view();
   view->viewport()->setFocusProxy(this);
   setFocusPolicy(QWidget::WheelFocus);

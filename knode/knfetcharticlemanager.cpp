@@ -114,7 +114,6 @@ void KNFetchArticleManager::readOptions()
   c->setGroup("READNEWS");
   tOut=1000*c->readNumEntry("markSecs", 3);
   totalExpand=c->readBoolEntry("totalExpand", true);
-  //KNHdrViewItem::setTotalExpand(totalExpand);
   t_hreaded=c->readBoolEntry("showThreads", true);
   autoMark=c->readBoolEntry("autoMark", true);
 }
@@ -290,21 +289,24 @@ void KNFetchArticleManager::setAllRead(KNGroup *g, bool r)
 {
   if(!g) g=g_roup;
   if(!g) return;
-  /*view->setUpdatesEnabled(false);
-  for(int i=0; i<g->length(); i++)
-    setArticleRead(g->at(i), r, false);
-  g_roup->updateListItem();
-  updateStatusString();
-  view->setUpdatesEnabled(true);*/
+
+  int new_count = 0;
+  KNFetchArticle *a;
   for(int i=0; i<g->length(); i++) {
-    g->at(i)->setRead(r);
+    a = g->at(i);
+    if (a->isNew())
+      new_count++;
+    a->setRead(r);
   }
 
   g->updateThreadInfo();
-  if(r)
+  if(r) {
     g->setReadCount(g->length());
-  else
+    g->setNewCount(0);
+  } else {
     g->setReadCount(0);
+    g->setNewCount(new_count);
+  }
 
   g->updateListItem();
   showHdrs(true);
