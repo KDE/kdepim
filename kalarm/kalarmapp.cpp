@@ -675,6 +675,8 @@ void KAlarmApp::quitIf(int exitCode, bool force)
 		// Quit regardless, except for message windows
 		KAlarmMainWindow::closeAll();
 		displayTrayIcon(false);
+		if (MessageWin::instanceCount())
+			return;
 	}
 	else
 	{
