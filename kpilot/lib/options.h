@@ -104,7 +104,7 @@
 #define DEBUGDB         kdDebug(LIBPILOTDB_AREA)
 #endif
 
-#define KPILOT_VERSION	"4.3.2"
+#define KPILOT_VERSION	"4.3.4 (head)"
 
 // * KPilot debugging code looks like:
 //
@@ -198,6 +198,9 @@ kndbgstream& operator << (kndbgstream&,const QSize &);
 
 
 // $Log$
+// Revision 1.13  2002/05/23 17:08:32  adridg
+// Some compile fixes for non-debug mode, and KNotes syncing fixes
+//
 // Revision 1.12  2002/05/22 20:55:17  adridg
 // Allow debug and non-debug code to mix a little
 //

@@ -6,6 +6,9 @@ I know I've been sitting in the sun and relaxing. Mostly.
 
 H==HEAD, B==Branch in the bracketed notes after the patch description.
 
+2002-06-10  Adriaan de Groot
+* Using version 4.3.3 in BRANCH for the 3.0.2 release, and
+  4.3.4 in HEAD for later.
 
 2002-06-08  Adriaan de Groot
 * Conduits, conduits, conduits and documentation, documentation, documentation.
