@@ -156,7 +156,7 @@ KNRangeFilter KNRangeFilterWidget::filter()
   r.val2=val2->value();
   
   r.op1=(KNRangeFilter::Op) op1->currentItem();
-  if (op2->currentText()=="")
+  if (op2->currentText().isEmpty())
     r.op2=KNRangeFilter::dis;
   else if (op2->currentText()=="<")
     r.op2=KNRangeFilter::gt;

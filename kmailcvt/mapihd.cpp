@@ -194,7 +194,7 @@ pabfields_t::pabfields_t(pabrec & R,FilterInfo *info,QWidget * /*parent*/)
           info->addLog(m);
        }
 
-       if (E!="") {
+       if (!E.isEmpty()) {
 
          switch (e) {
            case pr_givenname: givenName=E;
@@ -255,7 +255,7 @@ pabfields_t::pabfields_t(pabrec & R,FilterInfo *info,QWidget * /*parent*/)
     }
   }
 
-  if (firstName!="" && lastName!="") {
+  if (!firstName.isEmpty() && !lastName.isEmpty()) {
     givenName=lastName+", "+firstName;
   }
 
