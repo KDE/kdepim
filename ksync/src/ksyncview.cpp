@@ -300,7 +300,7 @@ void KSyncView::synceeLoadError()
 
   mLoadError = true;
 
-  KMessageBox::error(this,i18n("Can't load syncee."),i18n("Load Error"));
+  KMessageBox::error(this,i18n("Cannot load syncee."),i18n("Load Error"));
 }
 
 void KSyncView::readConfig(KConfig *config)
