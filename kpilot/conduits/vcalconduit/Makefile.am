@@ -42,12 +42,14 @@ todo-conduit.lo : vcalconduitSettings.h
 
 todo-factory.lo : vcalconduitSettings.h
 
+todo-setup.lo : korganizerConduit.h
+
 vcal-conduitbase.lo : vcalconduitSettings.h
 
 vcal-factory.lo : vcalconduitSettings.h
 
-vcal-setup.lo : vcalconduitSettings.h
+vcal-setup.lo : vcalconduitSettings.h korganizerConduit.h
 
-vcal-setupbase.lo : vcalconduitSettings.h
+vcal-setupbase.lo : vcalconduitSettings.h korganizerConduit.h
 
 
