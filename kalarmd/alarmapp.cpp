@@ -20,6 +20,7 @@
 */
 
 // $Id$
+#include "kalarmd.h"
 
 #include <qstring.h>
 

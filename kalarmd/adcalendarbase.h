@@ -22,8 +22,6 @@
 #ifndef ADCALENDARBASE_H
 #define ADCALENDARBASE_H
 
-#include "kalarmd.h"
-
 #include <libkcal/calendarlocal.h>
 
 using namespace KCal;

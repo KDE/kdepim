@@ -1,5 +1,5 @@
 /*
- *  kalarmd.h  -  global header file
+ *  kalarmdgui.h  -  global header file
  *  Program:  kalarmd
  *  (C) 2001 by David Jarvie  software@astrojar.org.uk
  *
