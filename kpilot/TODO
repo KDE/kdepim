@@ -6,8 +6,8 @@ issues are periodically purged from this list.
 General TODO
 ============
 
-* Add tool-tip showing daemon status.
-* Fix WhatsThis for Kill daemon on exit.
+- Add tool-tip showing daemon status.
+- Fix WhatsThis for Kill daemon on exit.
 * Adjust the time of events to allow for the timezone KOrganizer is in.
 * Make the FileInstallWidget use a KDirWatcher.
 * Handle real devfs better (regular USB support seems OK now).

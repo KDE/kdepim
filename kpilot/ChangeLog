@@ -1,3 +1,23 @@
+KPilot Developer's notes for june 9th, 2002
+===========================================
+
+Not sure just what Reinhold has been up to recently, but
+I know I've been sitting in the sun and relaxing. Mostly.
+
+H==HEAD, B==Branch in the bracketed notes after the patch description.
+
+
+2002-06-08  Adriaan de Groot
+* Conduits, conduits, conduits and documentation, documentation, documentation.
+  That's what we need. Sigh.
+
+2002-06-07  Adriaan de Groot
+* Patched VCalConduitBase::cleanup() to be careful about
+  calling functions on objects that may not be allocated. [H,B]
+* Patched VCalConduitBase to use variables from ConduitBase. [H]
+* Added tooltip for daemon. Gosh, that's ugly. Should put a
+  nicer message in there. [H]
+
 KPilot Developer's notes for may 25th 2002
 ==========================================
 
