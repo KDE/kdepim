@@ -39,6 +39,7 @@
 #include <qpushbutton.h>
 #include <klineedit.h>
 #include <qbuttongroup.h>
+#include <kdebug.h>
 
 /*
  *  Constructs a DirectoryServicesConfigurationDialogImpl which is a child of 'parent', with the
@@ -114,6 +115,7 @@ void DirectoryServicesConfigurationDialogImpl::slotAddService()
                                  dlg->serverNameED->text(),
                                  dlg->portED->text(),
                                  dlg->descriptionED->text() );
+        emit changed();
     }
 }
 
@@ -130,7 +132,36 @@ void DirectoryServicesConfigurationDialogImpl::slotDeleteService()
         delete item;
     x500LV->triggerUpdate();
     slotServiceChanged( x500LV->selectedItem() );
+    emit changed();
 }
 
+
+void DirectoryServicesConfigurationDialogImpl::setInitialServices( const KURL::List& urls )
+{
+    for( KURL::List::const_iterator it = urls.begin(); it != urls.end(); ++it ) {
+        QString dn = KURL::decode_string( (*it).query().mid( 1 ) ); // decode query and skip leading '?'
+        (void)new QListViewItem( x500LV, x500LV->lastItem(),
+                                 (*it).host(),
+                                 QString::number( (*it).port() ),
+                                 dn );
+    }
+}
+
+KURL::List DirectoryServicesConfigurationDialogImpl::urlList() const
+{
+    KURL::List lst;
+    QListViewItemIterator it( x500LV );
+    for ( ; it.current() ; ++it ) {
+        QListViewItem* item = it.current();
+        KURL url;
+        url.setProtocol( "ldap" );
+        url.setHost( item->text( 0 ) );
+        url.setPort( item->text( 1 ).toInt() );
+        url.setQuery( item->text( 2 ) );
+        kdDebug() << url << endl;
+        lst << url;
+    }
+    return lst;
+}
 
 #include "directoryservicesconfigurationdialogimpl.moc"

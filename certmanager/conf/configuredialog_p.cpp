@@ -33,6 +33,13 @@
 #include <qlayout.h>
 #include "directoryservicesconfigurationdialogimpl.h"
 #include <cryptplugfactory.h>
+#include <kleo/cryptoconfig.h>
+#include <kmessagebox.h>
+#include <klocale.h>
+
+static const char s_dirserv_componentName[] = "dirmngr";
+static const char s_dirserv_groupName[] = "LDAP";
+static const char s_dirserv_entryName[] = "LDAP Server";
 
 DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( QWidget * parent, const char * name )
     : ConfigModule( parent, name )
@@ -41,21 +48,52 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( QWidget 
   mWidget = new DirectoryServicesConfigurationDialogImpl( this );
   lay->addWidget( mWidget );
   mConfig = Kleo::CryptPlugFactory::instance()->config();
+  connect( mWidget, SIGNAL( changed() ), this, SLOT( changed() ) );
+}
+
+// Helper method for load/save/defaults. Implements runtime checks on the configuration option.
+Kleo::CryptoConfigEntry* DirectoryServicesConfigurationPage::configEntry() {
+    Kleo::CryptoConfigEntry* entry = mConfig->entry( s_dirserv_componentName, s_dirserv_groupName, s_dirserv_entryName );
+    if ( !entry ) {
+        KMessageBox::error( this, i18n( "Backend error: gpgconf doesn't seem to know the entry for %1/%2/%3" ).arg( s_dirserv_componentName, s_dirserv_groupName, s_dirserv_entryName ) );
+        return 0;
+    }
+    if( entry->argType() != Kleo::CryptoConfigEntry::ArgType_URL || !entry->isList() ) {
+        KMessageBox::error( this, i18n( "Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5" ).arg( s_dirserv_componentName, s_dirserv_groupName, s_dirserv_entryName ).arg( entry->argType() ).arg( entry->isList() ) );
+        return 0;
+    }
+    return entry;
 }
 
 void DirectoryServicesConfigurationPage::load()
 {
-  // TODO
+    Kleo::CryptoConfigEntry* entry = configEntry();
+    if ( entry ) {
+        KURL::List urls = entry->urlValueList();
+        mWidget->setInitialServices( urls );
+    }
 }
 
 void DirectoryServicesConfigurationPage::save()
 {
-  // TODO
+    Kleo::CryptoConfigEntry* entry = configEntry();
+    if ( entry ) {
+        KURL::List urls = mWidget->urlList();
+        entry->setURLValueList( urls );
+        mConfig->sync( true );
+    }
 }
 
 void DirectoryServicesConfigurationPage::defaults()
 {
-  // TODO
+    Kleo::CryptoConfigEntry* entry = configEntry();
+    if ( entry ) {
+      entry->resetToDefault();
+      // ### Need to sync and reparse........ Any better way?
+      mConfig->sync( true );
+      mConfig->clear();
+      load();
+    }
 }
 
 QString DirectoryServicesConfigurationPage::helpAnchor() const

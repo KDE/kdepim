@@ -33,6 +33,7 @@
 #ifndef DIRECTORYSERVICESCONFIGURATIONDIALOGIMPL_H
 #define DIRECTORYSERVICESCONFIGURATIONDIALOGIMPL_H
 #include "directoryservicesconfigurationdialog.h"
+#include <kurl.h>
 
 class CryptPlugWrapper;
 
@@ -45,6 +46,11 @@ public:
     ~DirectoryServicesConfigurationDialogImpl();
 
     void enableDisable( CryptPlugWrapper* wrapper );
+    void setInitialServices( const KURL::List& urls );
+    KURL::List urlList() const;
+
+signals:
+    void changed();
 
 protected slots:
     void slotServiceChanged( QListViewItem* );

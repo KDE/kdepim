@@ -59,7 +59,10 @@ public:
 // If we want to use tabs (QTabWidget), see kmail-HEAD's ConfigModuleWithTabs
 
 class DirectoryServicesConfigurationDialogImpl;
-namespace Kleo { class CryptoConfig; }
+namespace Kleo {
+  class CryptoConfig;
+  class CryptoConfigEntry;
+}
 
 /**
  * DirectoryServicesConfigurationPage
@@ -76,6 +79,8 @@ public:
   virtual QString helpAnchor() const;
 
 private:
+  Kleo::CryptoConfigEntry* configEntry();
+
   DirectoryServicesConfigurationDialogImpl* mWidget;
   Kleo::CryptoConfig* mConfig;
 };
