@@ -63,7 +63,7 @@ extern "C"
   }
 }
 
-static const char* kmailEventContentsType = "Event";
+static const char* kmailCalendarContentsType = "Calendar";
 static const char* kmailTodoContentsType = "Task";
 static const char* kmailJournalContentsType = "Journal";
 static const char* eventAttachmentMimeType = "application/x-vnd.kolab.event";
@@ -117,7 +117,7 @@ bool ResourceKolab::doOpen()
 
   KConfig config( configFile() );
 
-  return openResource( config, kmailEventContentsType, mEventSubResources )
+  return openResource( config, kmailCalendarContentsType, mEventSubResources )
     && openResource( config, kmailTodoContentsType, mTodoSubResources )
     && openResource( config, kmailJournalContentsType, mJournalSubResources );
 }
@@ -248,6 +248,7 @@ bool ResourceKolab::addEvent( KCal::Event* event, const QString& subresource,
 
   QString resource =
     newEvent ? findWritableResource( mEventSubResources ) : subresource;
+  Q_ASSERT( !resource.isEmpty() );
 
   if ( !mSilent ) {
     QString xml = Event::eventToXML( event );
@@ -332,6 +333,7 @@ bool ResourceKolab::addTodo( KCal::Todo* todo, const QString& subresource,
 
   QString resource =
     newTodo ? findWritableResource( mTodoSubResources ) : subresource;
+  Q_ASSERT( !resource.isEmpty() );
 
   if ( !mSilent ) {
     QString xml = Task::taskToXML( todo );
@@ -403,6 +405,7 @@ bool ResourceKolab::addJournal( KCal::Journal* journal,
 
   QString resource =
     newJournal ? findWritableResource( mJournalSubResources ) : subresource;
+  Q_ASSERT( !resource.isEmpty() );
 
   if ( !mSilent ) {
     QString xml = Journal::journalToXML( journal );
@@ -476,7 +479,7 @@ bool ResourceKolab::fromKMailAddIncidence( const QString& type,
   mSilent = true;
 
   // If this xml file is one of ours, load it here
-  if ( type == kmailEventContentsType )
+  if ( type == kmailCalendarContentsType )
     addEvent( xml, subResource, sernum );
   else if ( type == kmailTodoContentsType )
     addTodo( xml, subResource, sernum );
@@ -493,7 +496,7 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
                                            const QString& /*subResource*/,
                                            const QString& uid )
 {
-  if ( type != kmailEventContentsType && type != kmailTodoContentsType
+  if ( type != kmailCalendarContentsType && type != kmailTodoContentsType
        && type != kmailJournalContentsType )
     // Not ours
     return;
@@ -522,7 +525,7 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
 {
   ResourceMap* map = 0;
   const char* mimetype = 0;
-  if ( type == kmailEventContentsType ) {
+  if ( type == kmailCalendarContentsType ) {
     map = &mEventSubResources;
     mimetype = eventAttachmentMimeType;
   } else if ( type == kmailTodoContentsType ) {
@@ -551,7 +554,7 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
 void ResourceKolab::fromKMailDelSubresource( const QString& type,
                                              const QString& subResource )
 {
-  if ( type == kmailEventContentsType ) {
+  if ( type == kmailCalendarContentsType ) {
     if ( mEventSubResources.contains( subResource ) )
       mEventSubResources.erase( subResource );
     else
