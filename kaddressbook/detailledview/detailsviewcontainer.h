@@ -25,7 +25,14 @@ public slots:
     void setReadonly(bool state);
 signals:
     /** The contact has been changed. */
-    void contactChanged();
+    void addresseeChanged();
+    /** The user acticated the email address displayed. This may happen
+        by, for example, clicking on the displayed mailto-URL. */
+    void sendEmail(const QString& address);
+    /** The user activated one of the displayed HTTP URLs. For example
+        by clicking on the displayed homepage address. */
+    void browse(const QString& url);
+
 protected:
     /** A style has been selected. Overloaded from base class. */
     void slotStyleSelected(int);

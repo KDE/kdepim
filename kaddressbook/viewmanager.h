@@ -128,6 +128,12 @@ class ViewManager : public QWidget
     */
     virtual void sendMail();
 
+    /** Open a composer with a message to this person. */
+    void sendMail(const QString& addressee);
+
+    /** Open a browser window displaying the URL given. */
+    void browse(const QString& url);
+
     /** This slot will delete all the selected entries. This method should
     * be called just 'delete' to be consistant with the other edit methods,
     * but good 'ol C++ wouldn't like that -mpilone
@@ -206,10 +212,12 @@ class ViewManager : public QWidget
     */
     void addresseeSelected(const QString &uid);
 
-    /** Called whenever the quick view is modified. This method will emit
-    * the modified signal and then tell the view to refresh.
+    /** Called whenever the currently displayed addressee in the details views
+        is modified.
+        This method will emit the modified signal and then tell the view to
+        refresh.
     */
-    void quickEditModified();
+    void addresseeModified();
 
   signals:
     /** Called whenever the user selects an entry in the view.

@@ -63,6 +63,10 @@ void ViewContainer::slotStyleSelected(int index)
         // <HACK>:
         frameDetails->layout()->add(m_look);
         // </HACK>
+        connect(m_look, SIGNAL(sendEmail(const QString& address)),
+                SLOT(sendEmail(const QString& address)));
+        connect(m_look, SIGNAL(browse(const QString& url)),
+                SLOT(browse(const QString& url)));
     }
     // WORK_TO_DO: set current entry
     // ----- configure the style:
@@ -91,7 +95,7 @@ KABC::Addressee ViewContainer::addressee()
 
 void ViewContainer::setReadonly(bool state)
 {
-    if(m_look)
+    if(m_look!=0)
     {
         m_look->setReadonly(state);
     }

@@ -145,6 +145,15 @@ void ViewManager::sendMail()
   kapp->invokeMailer( emailAddrs, "" );
 }
 
+void ViewManager::sendMail(const QString& addressee)
+{
+    kapp->invokeMailer(addressee, "");
+}
+
+void ViewManager::browse(const QString& url)
+{
+    kapp->invokeBrowser(url);
+}
 
 void ViewManager::deleteAddressee()
 {
@@ -476,13 +485,18 @@ void ViewManager::initGUI()
     mViewWidgetStack = new QWidgetStack(mQSpltDetails, "mViewWidgetStack");
     // ----- create the details widget:
     mDetails=new ViewContainer(mQSpltDetails);
+    connect(mDetails, SIGNAL(addresseeChanged()), SLOT(addresseeModified()));
+    connect(mDetails, SIGNAL(sendEmail(const QString& address)),
+            SLOT(sendMail(const QString& address)));
+    connect(mDetails, SIGNAL(browse(const QString& url)),
+            SLOT(browse(const QString& url)));
     // ----- add the jump bar to the layout:
     mJumpButtonBar = new JumpButtonBar(this, "mJumpButtonBar");
     // ----- create the quick edit widget as part of the features tabwidget
     //       (THIS WILL BE REMOVED!):
     mQuickEdit = new AddresseeEditorWidget(mFeatures, "mQuickEdit");
     mFeatures->addTab(mQuickEdit, i18n("QuickEdit"));
-    connect(mQuickEdit, SIGNAL(modified()), SLOT(quickEditModified()));
+    connect(mQuickEdit, SIGNAL(modified()), SLOT(addresseeModified()));
     // Connect the slots and signals
     connect(mJumpButtonBar, SIGNAL(jumpToLetter(const QChar &)),
             this, SLOT(jumpToLetter(const QChar &)));
@@ -625,14 +639,19 @@ void ViewManager::addresseeSelected(const QString &uid)
   mDetails->setAddressee(a);
 }
 
-void ViewManager::quickEditModified()
+void ViewManager::addresseeModified()
 {
-  mQuickEdit->save();
-  KABC::Addressee a = mQuickEdit->addressee();
-  mDocument->insertAddressee(a);
-  mActiveView->refresh(a.uid());
+    KABC::Addressee a;
+    // WORK_TO_DO: obsolete after port of Quick Edit to be a Details View Style
+    mQuickEdit->save();
+    // a = mQuickEdit->addressee();
+    // save the changes:
+    // WORK_TO_DO: check for emittances during build up
+    a = mDetails->addressee();
+    mDocument->insertAddressee(a);
+    mActiveView->refresh(a.uid());
 
-  emit modified();
+    emit modified();
 }
 
 void ViewManager::filtersChanged(const Filter::List &list)
