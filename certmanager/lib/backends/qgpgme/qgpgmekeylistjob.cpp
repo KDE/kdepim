@@ -120,7 +120,7 @@ void Kleo::QGpgMEKeyListJob::slotOperationDoneEvent( GpgME::Context * context, c
   if ( context == mCtx ) {
     emit done();
     // ### hmm, shall we call endKeyListing() or keyListResult() (then t.b.i.) here?
-    emit result( mCtx->endKeyListing() );
+    emit result( mCtx->keyListResult() );
     deleteLater();
   }
 }
