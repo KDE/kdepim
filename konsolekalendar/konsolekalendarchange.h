@@ -21,12 +21,22 @@
 #include <qdatetime.h>
 #include <qstring.h>
 
+#include "konsolekalendarvariables.h"
+
+namespace KCal
+{
+
 class KonsoleKalendarChange
 {
   public:
-    KonsoleKalendarChange();
+    KonsoleKalendarChange( KonsoleKalendarVariables *variables );
     ~KonsoleKalendarChange();
 
+    bool changeEvent();
+
+    private:
+     KonsoleKalendarVariables *m_variables;
 };
 
+}
 #endif
