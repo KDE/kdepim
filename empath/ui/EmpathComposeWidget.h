@@ -99,6 +99,10 @@ class EmpathComposeWidget : public QWidget
 		void	s_paste();
 		void	s_selectAll();
 		
+		void	s_addAttachment();
+		void	s_editAttachment();
+		void	s_removeAttachment();
+		
 	private:
 
 		void	_init();

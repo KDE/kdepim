@@ -22,17 +22,15 @@
 # pragma implementation "EmpathAttachmentListWidget.h"
 #endif
 
-#ifdef __GNUG__
-# pragma implementation ""
-#endif
-
 // KDE includes
 #include <klocale.h>
 #include <kconfig.h>
 #include <kapp.h>
+#include <kfiledialog.h>
 
 // Local includes
 #include "EmpathAttachmentListWidget.h"
+#include "EmpathAttachmentEditDialog.h"
 #include "EmpathConfig.h"
 #include "EmpathUIUtils.h"
 #include "Empath.h"
@@ -55,5 +53,62 @@ EmpathAttachmentListWidget::~EmpathAttachmentListWidget()
 	void
 EmpathAttachmentListWidget::use(const RMessage &)
 {
+}
+
+	void
+EmpathAttachmentListWidget::addAttachment()
+{
+	empathDebug("addAttachment() called");
+
+	QString filename =
+		KFileDialog::getOpenFileName(
+			QString::null, QString::null,
+			this, i18n("Empath: Add Attachment").ascii());
+	
+	if (filename.isEmpty())
+		return;
+	
+	EmpathAttachmentSpec newSpec;
+	newSpec.setFilename(filename);
+	
+	EmpathAttachmentEditDialog * e =
+		new EmpathAttachmentEditDialog(this, "attachmentEditDialog");
+	
+	e->setSpec(newSpec);
+	
+	if (e->exec() != QDialog::Accepted)
+		return;
+	
+	new EmpathAttachmentListItem(this, e->spec());
+}
+
+	void
+EmpathAttachmentListWidget::editAttachment()
+{
+	empathDebug("editAttachment() called");
+	
+	QListViewItem * item(currentItem());
+	
+	if (item == 0)
+		return;
+	
+	EmpathAttachmentListItem * i = (EmpathAttachmentListItem *)item;
+	
+	EmpathAttachmentEditDialog * e =
+		new EmpathAttachmentEditDialog(this, "attachmentEditDialog");
+	
+	e->setSpec(i->spec());
+	
+	if (e->exec() == QDialog::Accepted)
+		i->setSpec(e->spec());
+}
+	
+	void
+EmpathAttachmentListWidget::removeAttachment()
+{
+	empathDebug("removeAttachment() called");
+	
+	if (currentItem() != 0)
+		QListView::removeItem(currentItem());
 }
 

@@ -55,8 +55,12 @@ QListViewItem * EmpathMessageListWidget::lastSelected_ = 0;
 
 EmpathMessageListWidget::EmpathMessageListWidget(
 		QWidget * parent, const char * name)
-	:	QListView(parent, name),
-		nSelected_(0)
+	:	QListView			(parent, name),
+		parent_				((EmpathMainWindow *)parent),
+		nSelected_			(0),
+		maybeDrag_			(false),
+		wantScreenUpdates_	(false),
+		filling_			(false)
 {
 	parent_ = (EmpathMainWindow *)parent;
 	wantScreenUpdates_ = false;
@@ -348,18 +352,23 @@ EmpathMessageListWidget::s_messageBounce()
 EmpathMessageListWidget::s_messageDelete()
 {
 	empathDebug("s_messageDelete called");
-	if (!empath->remove(firstSelectedMessage())) {
-		empathDebug("Couldn't remove message !");
-		return;
-	}
 	
-	QListViewItem * i(selectedItem());
-	if (i == 0) {
-		empathDebug("No currently selected item to remove !");
-		return;
-	}
+	EmpathURL u(url_.mailboxName(), url_.folderPath(), QString::null);
 	
-	delete i;
+	QListIterator<EmpathMessageListItem> it(itemList_);
+	
+	for (; it.current(); ++it) {
+		
+		if (it.current()->isSelected()) {
+				
+			u.setMessageID(((EmpathMessageListItem *)it.current())->id());
+			
+			if (!empath->remove(u))
+				empathDebug("Couldn't remove message \"" + u.asString() + "\"");
+		
+			delete it.current();
+		}
+	}
 }
 
 	void
@@ -584,10 +593,40 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 		return;
 	}
 	
+	// Ask the folder we were showing to drop its index.
+	// Thanks to Waldo's dandy zone allocator, a few 128K blocks might
+	// just get passed back to the OS here.
+	EmpathFolder * oldFolder = empath->folder(url_);
+	
+	if (oldFolder != 0) {
+		
+		oldFolder->dropIndex();
+		
+		QObject::disconnect(
+			oldFolder,	SIGNAL(itemLeft(const QString &)),
+			this,		SLOT(s_itemGone(const QString &)));
+		
+		QObject::disconnect(
+			oldFolder,	SIGNAL(itemArrived	(const QString &)),
+			this,		SLOT(s_itemCome		(const QString &)));
+	}
+	
 	url_ = url;
 	
 	EmpathFolder * f = empath->folder(url_);
+	
+	QObject::connect(
+		f,		SIGNAL(itemLeft(const QString &)),
+		this,	SLOT(s_itemGone(const QString &)));
+	
+	QObject::connect(
+		f,		SIGNAL(itemArrived	(const QString &)),
+		this,	SLOT(s_itemCome		(const QString &)));
+	
 	if (f == 0) {
+	
+		// Can't find folder !
+	
 		emit(showing());
 	   	return;
 	}
@@ -597,99 +636,8 @@ EmpathMessageListWidget::s_showFolder(const EmpathURL & url)
 	
 	f->messageList().sync();
 	
-	EmpathTask * t(empath->addTask("Sorting messages"));
-	CHECK_PTR(t);
-	t->setMax(f->messageCount());
-	
-	EmpathIndexIterator it(f->messageList());
-	
-	KConfig * c(KGlobal::config());
-	c->setGroup(EmpathConfig::GROUP_DISPLAY);
-	
-	empathDebug("....................");
-	
-	// If we're not threading, just fire 'em in.
-	if (!c->readBoolEntry(EmpathConfig::KEY_THREAD_MESSAGES, false)) {
-		setRootIsDecorated(false);
-		setUpdatesEnabled(false);
-		itemList_.clear();
-		for (; it.current(); ++it) {
-			EmpathMessageListItem * newItem =
-				new EmpathMessageListItem(this, *it.current());
-			CHECK_PTR(newItem);
-			itemList_.append(newItem);
-			setStatus(newItem, it.current()->status());
-			t->doneOne();
-		}
-		
-		setSorting(
-			c->readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, 2),
-			c->readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, true));
-		
-		setUpdatesEnabled(true);
-		triggerUpdate();
-		t->done();
-		
-		emit(showing());
-	
-		return;
-	}
-	setRootIsDecorated(true);
-
-	// Start by putting everything into our list. This takes care of sorting so
-	// hopefully threading will be simpler.
-	for (; it.current(); ++it)
-		masterList_.inSort(it.current());
-	
-	QListIterator<EmpathIndexRecord> mit(masterList_);
-	
-	// What we doing here ?
-	// Well, we keep the time we started.
-	// When the time since 'begin' is too long (100ms) we do a
-	// kapp->processEvents(). This prevents the UI from stalling.
-	// We could then have done an update, but this takes a long time, so we
-	// don't want to do it so often. Therefore we do it every 10 times that
-	// we've had to do a processEvents().
-	
-	
-	QTime begin(QTime::currentTime());
-//	QTime begin2(begin);
-	QTime now;
-	
-	setUpdatesEnabled(false);
-
-	itemList_.clear();
-	for (; mit.current(); ++mit) {
-		
-		addItem(mit.current());
-		t->doneOne();
-		
-		now = QTime::currentTime();
-		if (begin.msecsTo(now) > 100) {
-			kapp->processEvents();
-			begin = now;
-		}
-	
-//		if (begin2.secsTo(now) > 10) {
-//			setUpdatesEnabled(true);
-//			triggerUpdate();
-//			setUpdatesEnabled(false);
-//			begin2 = now;
-//		}
-	}
-	
-	sortType_ = c->readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, true);
-	
-	setSorting(
-		c->readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, 3), sortType_);
-	
-	setUpdatesEnabled(true);
-	triggerUpdate();
-	
-	emit(showing());
-	t->done();
+	_fillDisplay(f);
 }
-
 	void
 EmpathMessageListWidget::s_headerClicked(int i)
 {
@@ -828,43 +776,8 @@ EmpathMarkAsReadTimer::s_timeout()
 	parent_->markAsRead(item_);	
 }
 
-	bool
-EmpathMessageListWidget::eventFilter(QObject * o, QEvent * e)
-{
-	if (!o || !e)
-		return false;
-	
-	if (o == header()) {
-		return QListView::eventFilter(o, e);
-	}
-	
-	QMouseEvent * me = (QMouseEvent *) e;
-	
-	switch (me->type()) {
-		
-		case QEvent::MouseButtonPress:
-			mousePressEvent(me);
-			return true;
-			break;
-			
-		case QEvent::MouseButtonRelease:
-			mouseReleaseEvent(me);
-			return true;
-			break;
-
-		case QEvent::MouseMove:
-			mouseMoveEvent(me);
-			return true;
-			break;
-
-		default:
-			break;
-	}
-	return QListView::eventFilter(o, e);
-}
-
 	void
-EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
+EmpathMessageListWidget::contentsMousePressEvent(QMouseEvent * e)
 {
 	empathDebug("MOUSE PRESS EVENT");
 	
@@ -1055,24 +968,22 @@ EmpathMessageListWidget::mousePressEvent(QMouseEvent * e)
 		nSelected_++;
 		return;
 	}
-	QListView::contentsMousePressEvent(e);
 }
 
 	void
-EmpathMessageListWidget::mouseReleaseEvent(QMouseEvent *)
+EmpathMessageListWidget::contentsMouseReleaseEvent(QMouseEvent *)
 {
 	maybeDrag_ = false;
 }
 
 	void
-EmpathMessageListWidget::mouseMoveEvent(QMouseEvent * e)
+EmpathMessageListWidget::contentsMouseMoveEvent(QMouseEvent * e)
 {
 	empathDebug("Mouse move event in progress");
 	
 	return; // XXX: Still broken.
 	
 	if (!maybeDrag_) {
-		QListView::contentsMouseMoveEvent(e);
 		return;
 	}
 	
@@ -1189,11 +1100,8 @@ EmpathMessageListWidget::selectAll()
 	void
 EmpathMessageListWidget::selectInvert()
 {
-	clearSelection();
 	setMultiSelection(true);
 	setUpdatesEnabled(false);
-	
-	nSelected_ = 0;
 	
 	wantScreenUpdates_ = false;
 
@@ -1203,12 +1111,195 @@ EmpathMessageListWidget::selectInvert()
 		if (!it.current()->isSelected()) {
 			it.current()->setSelected(true);
 			nSelected_++;
-		} else
+		} else {
 			it.current()->setSelected(false);
+			nSelected_--;
+		}
 	}
 	
 	wantScreenUpdates_ = true;
 	setUpdatesEnabled(true);
 	triggerUpdate();
 }
+
+	void
+EmpathMessageListWidget::s_itemGone(const QString & s)
+{
+	empathDebug("itemGone(" + s + ")");
+	if (filling_) return;
+	
+	QListIterator<EmpathMessageListItem> it(itemList_);
+	
+	for (; it.current(); ++it)
+		if (it.current()->id() == s)
+			delete it.current();
+}
+
+	void
+EmpathMessageListWidget::s_itemCome(const QString & s)
+{
+	empathDebug("itemCome(" + s + ")");
+	
+	if (filling_) return;
+
+	EmpathFolder * f(empath->folder(url_));
+	
+	if (f == 0)
+		return;
+		
+	EmpathIndexRecord * i(f->messageList()[s]);
+
+	if (i == 0) {
+		empathDebug("Can't find index record for \"" + s + "\"");
+		return;
+	}
+	
+	if (KGlobal::config()->readBoolEntry(EmpathConfig::KEY_THREAD_MESSAGES)) {
+	
+		addItem(i);
+	
+	} else {
+
+		EmpathMessageListItem * newItem =
+			new EmpathMessageListItem(this, *i);
+	
+		CHECK_PTR(newItem);
+
+		itemList_.append(newItem);
+
+		setStatus(newItem, i->status());
+	}
+}
+
+	void
+EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
+{
+	EmpathIndexIterator it(f->messageList());
+	
+	filling_ = true;
+	
+	itemList_.clear();
+
+	setUpdatesEnabled(false);
+	
+	KGlobal::config()->setGroup(EmpathConfig::GROUP_DISPLAY);
+
+	if (KGlobal::config()->readBoolEntry(EmpathConfig::KEY_THREAD_MESSAGES))
+		_fillThreading(f);
+	else
+		_fillNonThreading(f);
+
+	setUpdatesEnabled(true);
+	
+	triggerUpdate();
+	
+	filling_ = false;
+	
+	emit(showing());
+}
+
+	void
+EmpathMessageListWidget::_fillNonThreading(EmpathFolder * f)
+{
+	setRootIsDecorated(false);
+
+	itemList_.clear();
+
+	EmpathTask * t(empath->addTask("Sorting messages"));
+	CHECK_PTR(t);
+
+	t->setMax(f->messageCount());
+	
+	EmpathIndexIterator it(f->messageList());
+
+	for (; it.current(); ++it) {
+		
+		EmpathMessageListItem * newItem =
+			new EmpathMessageListItem(this, *it.current());
+		
+		CHECK_PTR(newItem);
+
+		itemList_.append(newItem);
+
+		setStatus(newItem, it.current()->status());
+
+		t->doneOne();
+	}
+	
+	setSorting(
+		KGlobal::config()->
+			readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, 2),
+		KGlobal::config()->
+			readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, true));
+	
+	t->done();
+}
+
+	void
+EmpathMessageListWidget::_fillThreading(EmpathFolder * f)
+{
+	setRootIsDecorated(true);
+	
+	// Start by putting everything into our list. This takes care of sorting so
+	// hopefully threading will be simpler.
+	
+	EmpathTask * t(empath->addTask("Sorting messages"));
+	CHECK_PTR(t);
+
+	t->setMax(f->messageCount());
+	
+	EmpathIndexIterator it(f->messageList());
+	
+	for (; it.current(); ++it)
+		masterList_.inSort(it.current());
+	
+	QListIterator<EmpathIndexRecord> mit(masterList_);
+	
+	// What we doing here ?
+	// Well, we keep the time we started.
+	// When the time since 'begin' is too long (100ms) we do a
+	// kapp->processEvents(). This prevents the UI from stalling.
+	// We could then have done an update, but this takes a long time, so we
+	// don't want to do it so often. Therefore we do it every 10 times that
+	// we've had to do a processEvents().
+	
+	
+	QTime begin(QTime::currentTime());
+//	QTime begin2(begin);
+	QTime now;
+	
+	setUpdatesEnabled(false);
+
+	for (; mit.current(); ++mit) {
+		
+		addItem(mit.current());
+		
+		t->doneOne();
+		
+		now = QTime::currentTime();
+		
+		if (begin.msecsTo(now) > 100) {
+		
+			kapp->processEvents();
+			begin = now;
+		}
+	
+//		if (begin2.secsTo(now) > 10) {
+//			setUpdatesEnabled(true);
+//			triggerUpdate();
+//			setUpdatesEnabled(false);
+//			begin2 = now;
+//		}
+	}
+	
+	sortType_ = KGlobal::config()->
+		readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, true);
+	
+	setSorting(
+		KGlobal::config()->
+		readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, 3), sortType_);
+	
+	t->done();
+}
+
 

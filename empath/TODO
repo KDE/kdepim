@@ -2,6 +2,9 @@ Things you might want to VOLUNTEER for :)
 
 Highest priority first.
 
+* Make forwarding work properly. If only one plain body part -> just
+  add some text stating this is forwarded, else attach as message/rfc822 ?
+
 * Drag and drop - Working on this but I need HELP ! It's not working right !
 
 * Test sendmail and qmail sending. Add user feedback.
@@ -17,8 +20,6 @@ Highest priority first.
   then I also end up refusing to show large messages ! If I resize the cache,
   and then set it back down, the message will be deleted !
  
-* Use an OpenPart for the mail editor.
-
 * Come up with an intelligent solution to the password storage problem.
 
 * Implement simple (to one host) SMTP sending.
@@ -27,44 +28,45 @@ Highest priority first.
 
 * Make printing work. HTML view will do it itself, though a little weirdly.
   Will there be a general KDE printing i/f ? Do I make stuff ps first ?
-  
-* Plug memory leaks. Basically this just means putting setAutoDelete() back
-  in various parts of rmm. I think this crashes because of a Qt bug.
-
-===============================================================================
-Little things I need to do. Highest priority first.
-
-* Make filters work again, and fix their config dialogs.
-
-* Word wrap in message view widget
-  
-* Disable menu entries where appropriate. (started)
-
-* Make forwarding work properly. If only one plain body part -> just
-  add some text stating this is forwarded, else attach as message/rfc822 ?
-  
+    
 * Use open folder icons when appropriate ?
 
 * Use inbox, outbox etc icons where appropriate ?
 
 * Make From: bit in header view widget active as HTML label - basically need
   some way to be able to mail to or add to non-existant address book.
+
+* Plug memory leaks. Basically this just means putting setAutoDelete() back
+  in various parts of rmm. I think this crashes because of a Qt bug.
   
+* Implement locking of index files. Will have to use dotlocking to ensure it'll
+  work over NFS.
+  
+* CORBA !
+  x Use an OpenPart for the mail editor.
+	(I could use KWord if I didn't loathe HTML mail !)
+	
+  x Make the mail reading stuff, the message listing stuff, the folder listing
+  stuff, etc, all into OpenParts. Perhaps. Necessary ? Well, at least the
+  compose stuff.
+
+  x Talk to Simon Hausmann again about this stuff, and get another copy of
+  that idl I lost :(
+
 ===============================================================================
 
 Bugs in Qt/KDE (possibly)
 
-* KTMainWindow layout isn't working. Probably my fault, though the layout
-  code has just changed...
+* KTMainWindow layout fixes my toplevels' size sometimes.
 
-* KHTMLWidget crashes on some valid html.
+* KHTMLWidget crashes on some valid html. ** Found out it's trying desperately
+  to parse stuff in <PRE> and failing.
 
 * Sometimes KMenuBar doesn't show some entries until the mouse passes over them.
+  ** This is being worked on, I hear
 
 * DnD doesn't work right. Me or Qt ? Probably me.
+  ** Apparently some of this is actually Qt's fault
 
-* setUpdatesEnabled doesn't work.
-
-* setSelected(!isSelected) doesn't work in list view.
-
+* QListView::setUpdatesEnabled() doesn't work.
 

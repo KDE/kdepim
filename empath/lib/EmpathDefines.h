@@ -36,8 +36,8 @@ static const int		EMPATH_VERSION_RELEASE	= 1;
 
 #ifdef DEBUG
 #include <iostream.h>
-#	define empathDebug(a) cerr << className() << ": " << \
-	QString((a)).ascii() << endl;
+#	define empathDebug(a)	cerr << className() << ": " << \
+							QString((a)).ascii() << endl;
 #else
 #	define empathDebug(a)
 #endif

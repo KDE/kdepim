@@ -108,6 +108,7 @@ class EmpathComposeWindow : public KTMainWindow
 	
 		QPopupMenu		* fileMenu_;
 		QPopupMenu		* editMenu_;
+		QPopupMenu		* attachmentMenu_;
 		QPopupMenu		* messageMenu_;
 		QPopupMenu		* helpMenu_;
 

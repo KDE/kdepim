@@ -209,7 +209,7 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 	CHECK_PTR(mle_sigPreview_);
 
 	mle_sigPreview_->setReadOnly(true);
-	mle_sigPreview_->setFont(kapp->fixedFont());
+	mle_sigPreview_->setFont(KGlobal::fixedFont());
 	mle_sigPreview_->setText(i18n("No signature set"));
 	
 	mle_sigPreview_->setMinimumHeight(h * 3);
@@ -311,7 +311,6 @@ EmpathIdentitySettingsDialog::EmpathIdentitySettingsDialog(
 	void
 EmpathIdentitySettingsDialog::s_chooseSig()
 {
-	
 	QString tempSig = KFileDialog::getOpenFileName();
 	
 	if (!tempSig.isEmpty()) {
@@ -364,15 +363,24 @@ EmpathIdentitySettingsDialog::loadData()
 	le_chooseSig_->setText		(c->readEntry(EmpathConfig::KEY_SIG_PATH));
 
 	if (!QString(le_chooseSig_->text()).isEmpty()) {
+		
 		// Preview the sig
+		
 		QFile f(le_chooseSig_->text());
-		if ( f.open(IO_ReadOnly) ) {
+
+		if (f.open(IO_ReadOnly)) {
+
 			QTextStream t(&f);
+
 			QString s;
-			while (!t.eof()) {
+
+			while (!t.eof())
 				s = s + t.readLine() + '\n';
-			}
+			
+			s.remove(s.length() - 1, 1);
+
 			f.close();
+
 			mle_sigPreview_->setText(s);
 		}
 	}
@@ -383,8 +391,11 @@ EmpathIdentitySettingsDialog::s_editSig()
 {
 	QObject::disconnect(pb_editSig_, SIGNAL(clicked()),
 			this, SLOT(s_editSig()));
+
 	mle_sigPreview_->setReadOnly(false);
+
 	pb_editSig_->setText(i18n("Save"));
+
 	QObject::connect(pb_editSig_, SIGNAL(clicked()),
 			this, SLOT(s_saveSig()));
 }
@@ -394,12 +405,19 @@ EmpathIdentitySettingsDialog::s_saveSig()
 {
 	QObject::disconnect(pb_editSig_, SIGNAL(clicked()),
 			this, SLOT(s_saveSig()));
+
 	mle_sigPreview_->setReadOnly(true);
+
 	QFile f(le_chooseSig_->text());
+
 	if (!f.open(IO_WriteOnly)) return;
+
 	QTextStream t(&f);
+
 	t << mle_sigPreview_->text();
+
 	pb_editSig_->setText(i18n("Edit"));
+
 	QObject::connect(pb_editSig_, SIGNAL(clicked()),
 			this, SLOT(s_editSig()));
 }

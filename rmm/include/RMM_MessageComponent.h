@@ -48,13 +48,13 @@ class RMessageComponent {
 		RMessageComponent & operator = (const QCString & s);
 		
 		bool operator == (RMessageComponent &);
-		bool operator == (const QCString &);
+		virtual bool operator == (const QCString &);
 
-		virtual void parse() = 0L;
-		virtual void assemble() = 0L;
-		virtual void _parse() = 0L;
-		virtual void _assemble() = 0L;
-		virtual void createDefault() = 0L;
+		virtual void parse()		= 0L;
+		virtual void assemble()		= 0L;
+		virtual void _parse()		= 0L;
+		virtual void _assemble()	= 0L;
+		virtual void createDefault()= 0L;
 
 		QCString asString() { assemble(); return strRep_; }
 

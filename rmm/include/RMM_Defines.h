@@ -20,11 +20,14 @@
 
 #ifndef RMM_DEFINES_H
 #define RMM_DEFINES_H
-#ifndef NDEBUG
-#include <qcstring.h>
-#include <iostream.h>
-# define rmmDebug(a) cerr << className() << ": " << QCString((a)).data() << endl;
+
+#ifdef DEBUG
+# include <qcstring.h>
+# include <iostream.h>
+# define rmmDebug(a)	cerr << className() << ": " << \
+						QCString((a)).data() << endl;
 #else
 # define rmmDebug(a)
 #endif
+
 #endif // Included this file

@@ -6,6 +6,9 @@ EmpathComposeWindow::setupMenuBar()
 
 	editMenu_	= new QPopupMenu();
 	CHECK_PTR(editMenu_);
+	
+	attachmentMenu_	= new QPopupMenu();
+	CHECK_PTR(attachmentMenu_);
 
 	messageMenu_	= new QPopupMenu();
 	CHECK_PTR(messageMenu_);
@@ -63,6 +66,18 @@ EmpathComposeWindow::setupMenuBar()
 	editMenu_->insertItem(empathIcon("blank.png"), i18n("Find &Again"),
 		this, SLOT(s_editFindAgain()));
 #endif
+	
+	// Attachment menu
+	
+	attachmentMenu_->insertItem(empathIcon(""), i18n("&Add attachment"),
+		composeWidget_, SLOT(s_addAttachment()));
+	
+	attachmentMenu_->insertItem(empathIcon(""), i18n("&Edit attachment"),
+		composeWidget_, SLOT(s_editAttachment()));
+	
+	attachmentMenu_->insertItem(empathIcon(""), i18n("&Remove attachment"),
+		composeWidget_, SLOT(s_removeAttachment()));
+	
 	// Message Menu
 	messageMenu_->insertItem(empathIcon("mini-compose.png"), i18n("&New"),
 		empath, SLOT(s_compose()));
@@ -91,6 +106,7 @@ EmpathComposeWindow::setupMenuBar()
 	
 	menuBar()->insertItem(i18n("&File"), fileMenu_);
 	menuBar()->insertItem(i18n("&Edit"), editMenu_);
+	menuBar()->insertItem(i18n("&Attachment"), attachmentMenu_);
 	menuBar()->insertItem(i18n("&Message"), messageMenu_);
 	menuBar()->insertSeparator();
 	menuBar()->insertItem(i18n("&Help"), helpMenu_);

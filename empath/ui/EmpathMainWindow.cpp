@@ -294,7 +294,7 @@ EmpathMainWindow::s_messageBounce()
 EmpathMainWindow::s_messageDelete()
 {
 	if (!_messageSelected()) return;
-	empath->remove(messageListWidget_->firstSelectedMessage());
+	messageListWidget_->s_messageDelete();
 }
 
 	void

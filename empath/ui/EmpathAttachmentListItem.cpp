@@ -39,20 +39,13 @@
 
 EmpathAttachmentListItem::EmpathAttachmentListItem(
 		QListView * parent,
-		const RBodyPart & part)
+		const EmpathAttachmentSpec & s)
 	:	QListViewItem(parent),
-		bodyPart_(part)
+		spec_(s)
 {
 	empathDebug("ctor");
-}
-
-EmpathAttachmentListItem::EmpathAttachmentListItem(
-		QListViewItem * parent,
-		const RBodyPart & part)
-	:	QListViewItem(parent),
-		bodyPart_(part)
-{
-	empathDebug("ctor");
+	
+	setText(0, spec_.filename());
 }
 
 EmpathAttachmentListItem::~EmpathAttachmentListItem()	
@@ -78,5 +71,12 @@ EmpathAttachmentListItem::setup()
 EmpathAttachmentListItem::key(int, bool) const
 {
 	return text(0);
+}
+
+	void
+EmpathAttachmentListItem::setSpec(const EmpathAttachmentSpec & s)
+{
+	spec_ = s;
+	setText(0, spec_.filename());
 }
 

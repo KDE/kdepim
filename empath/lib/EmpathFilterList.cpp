@@ -61,7 +61,7 @@ EmpathFilterList::save()
 	KConfig * config = KGlobal::config();
 	config->setGroup(EmpathConfig::GROUP_GENERAL);
 	
-	config->writeEntry(EmpathConfig::KEY_FILTER_LIST, list);
+	config->writeEntry(EmpathConfig::KEY_FILTER_LIST, list, ',');
 }
 
 	void
@@ -73,7 +73,7 @@ EmpathFilterList::load()
 	c->setGroup(EmpathConfig::GROUP_GENERAL);
 	
 	QStrList list;
-	c->readListEntry(EmpathConfig::KEY_FILTER_LIST, list);
+	c->readListEntry(EmpathConfig::KEY_FILTER_LIST, list, ',');
 	
 	EmpathFilter * filter;
 	

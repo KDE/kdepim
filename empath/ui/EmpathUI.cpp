@@ -31,6 +31,7 @@
 #include <kconfig.h>
 #include <kiconloader.h>
 #include <kapp.h>
+#include <kstddirs.h>
 #include <klocale.h>
 
 // Local includes
@@ -60,10 +61,10 @@ EmpathUI::EmpathUI()
 	
 	QString iconSetPath(c->readEntry(EmpathConfig::KEY_ICON_SET, "standard"));
 
-	KGlobal::iconLoader()->insertDirectory(0,
-		kapp->kde_datadir() + "/empath/pics/" + iconSetPath);
-	KGlobal::iconLoader()->insertDirectory(0,
-		kapp->kde_datadir() + "/empath/pics/mime");
+	KGlobal::dirs()->addResourceDir("toolbar", "/x/kde/share/apps/empath/pics/" + iconSetPath);
+//		kapp->kde_datadir() + "/empath/pics/" + iconSetPath);
+//	KGlobal::iconLoader()->insertDirectory(0,
+//		kapp->kde_datadir() + "/empath/pics/mime");
 	
 	QObject::connect(
 		empath,	SIGNAL(newComposer(Empath::ComposeType, const EmpathURL &)),

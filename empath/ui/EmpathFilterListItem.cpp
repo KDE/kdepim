@@ -29,7 +29,7 @@
 #include <qpixmap.h>
 
 // KDE includes
-#include <kapp.h>
+#include <kglobal.h>
 
 // Local includes
 #include "EmpathUIUtils.h"
@@ -46,6 +46,7 @@ EmpathFilterListItem::EmpathFilterListItem(
 {
 	empathDebug("ctor");
 	setPixmap(0, empathIcon("filter.png"));
+	setText(1, QString().setNum(filter_->priority()));
 }
 
 EmpathFilterListItem::~EmpathFilterListItem()
@@ -66,9 +67,9 @@ EmpathFilterListItem::setup()
 	empathDebug("setup() called");
 	
 	widthChanged();
-	int ph = pixmap(0)->height();
-	int th = QFontMetrics(kapp->generalFont()).height();
-	setHeight((ph > th ? ph : th) + 8);
+	int ph = pixmap(0) ? pixmap(0)->height() : 0;
+	int th = QFontMetrics(KGlobal::generalFont()).height();
+	setHeight(QMAX(ph,th));
 }
 
 	EmpathFilter *

@@ -48,7 +48,7 @@ class EmpathFilter : public QObject
 		void load();
 		void save();
 		
-		void setName(const QString & name);
+		void setName(const QString & name) { name_ = name; }
 		QString name() { return name_; }
 		
 		void filter(const EmpathURL & source);

@@ -41,6 +41,13 @@ RMessageComponent::RMessageComponent(const RMessageComponent & mc)
 	rmmDebug("ctor");
 }
 
+RMessageComponent::RMessageComponent(const QCString & s)
+	:	strRep_(s),
+		parsed_(false),
+		assembled_(false)
+{
+}
+
 RMessageComponent::~RMessageComponent()
 {
 	rmmDebug("dtor");
@@ -49,10 +56,10 @@ RMessageComponent::~RMessageComponent()
 	RMessageComponent &
 RMessageComponent::operator = (const RMessageComponent & m)
 {
-	rmmDebug("operator =");
 	if (this == &m) return *this;	// Avoid a = a.
-	assembled_	= false;
-	strRep_ = m.strRep_;
+	assembled_	= m.assembled_;
+	parsed_		= m.parsed_;
+	strRep_		= m.strRep_;
 	return *this;
 }
 
@@ -61,16 +68,15 @@ RMessageComponent::operator = (const QCString & s)
 {
 	strRep_		= s;
 	parsed_		= false;
+	assembled_	= false;
 	return *this;
 }
 
 	bool
 RMessageComponent::operator == (RMessageComponent & mc)
 {
-	parse();
-	mc.parse();
-
-	return (strRep_ == mc.strRep_);
+	assemble();
+	return (strRep_ == mc.asString());
 }
 
 	bool
@@ -80,8 +86,4 @@ RMessageComponent::operator == (const QCString & s)
 	return (strRep_ == s);
 }
 
-RMessageComponent::RMessageComponent(const QCString & s)
-	:	strRep_(s),
-		parsed_(false)
-{
-}
+

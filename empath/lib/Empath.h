@@ -187,7 +187,7 @@ class Empath : public QObject
 		 * the ui first, but be careful ;)
 		 */
 		void init();
-
+		
 	public slots:
 		
 		void s_newTask(EmpathTask *);

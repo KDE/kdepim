@@ -30,6 +30,7 @@
 #include "EmpathMailbox.h"
 #include "EmpathIndex.h"
 #include "EmpathUtilities.h"
+#include "EmpathIndexAllocator.h"
 
 EmpathFolder::EmpathFolder()
 	:	QObject(),
@@ -37,6 +38,7 @@ EmpathFolder::EmpathFolder()
 		unreadMessageCount_(0)
 {
 	empathDebug("default ctor !");
+	indexAllocator_ = new EmpathIndexAllocator;
 	pixmapName_ = "mini-folder-grey.png";
 }
 
@@ -46,6 +48,7 @@ EmpathFolder::EmpathFolder(const EmpathURL & url)
 		unreadMessageCount_(0),
 		url_(url)
 {
+	indexAllocator_ = new EmpathIndexAllocator;
 	empathDebug("ctor with url == \"" + url_.asString() + "\"");
 	messageList_.setFolder(this);
 	QObject::connect(this, SIGNAL(countUpdated(int, int)),
@@ -91,6 +94,15 @@ EmpathFolder::message(const EmpathURL & url)
 	EmpathMailbox * m = empath->mailbox(url_);
 	if (m == 0) return 0;
 	return m->message(url);
+}
+
+	void
+EmpathFolder::dropIndex()
+{
+	messageList_.clear();
+	
+	delete indexAllocator_;
+	indexAllocator_ = new EmpathIndexAllocator;
 }
 
 	void

@@ -8,7 +8,9 @@ libempathui_a_SOURCES = \
 EmpathAboutBox.cpp \
 EmpathAccountsSettingsDialog.cpp \
 EmpathAddressSelectionWidget.cpp \
+EmpathAttachmentEditDialog.cpp \
 EmpathAttachmentListWidget.cpp \
+EmpathAttachmentListItem.cpp \
 EmpathComposeSettingsDialog.cpp \
 EmpathComposeWidget.cpp \
 EmpathComposeWindow.cpp \

@@ -1,5 +1,10 @@
 OI !
 
+** TODAY'S WARNING **
+Empath's deliveries aren't done with correct permissions (0600) yet.
+Your mail will be readable by anyone, so take care !
+*********************
+
 Potential developers:
 
 See TODO for what you can help with.
@@ -17,13 +22,12 @@ a) A Maildir, with some mail in it. I suggest using mail from an existing
    Maildir (you can use mutt to do this). Back it up, then put it in place in
    ~/Maildir/Inbox
    
+   Instead, you could use 'maildrop' to copy your mail to your local Maildir
+   as well as your regular box. This way, you get to play without burning your
+   mail. This is what I do.
+   
 FOR INFORMATION ON THE DESIGN:
 
 Read DESIGN.html
 
-Note that the ChangeLog is now a little out of date.
-The design_docs stuff is basically me just writing stuff down so that I
-understand what I'm doing.
-
 Rik Hemsley <rik@kde.org>
-

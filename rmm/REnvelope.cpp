@@ -40,7 +40,6 @@ REnvelope::REnvelope(const REnvelope & e)
 {
 	rmmDebug("copy ctor");
 //	headerList_.setAutoDelete(true);
-	assembled_ = false;
 }
 
 REnvelope::REnvelope(const QCString & s)
@@ -48,8 +47,6 @@ REnvelope::REnvelope(const QCString & s)
 {
 	rmmDebug("ctor with QCString(" + s + ")");
 //	headerList_.setAutoDelete(true);
-	parsed_ = false;
-	assembled_ = false;
 }
 
 	REnvelope &
@@ -57,12 +54,8 @@ REnvelope::operator = (const REnvelope & e)
 {
 	rmmDebug("operator =");
     if (this == &e) return *this; // Don't do a = a.
-	rmmDebug("headerList count starts at " + QCString().setNum(e.headerList_.count()));
 	headerList_ = e.headerList_;
-	rmmDebug("headerList count ends at   " + QCString().setNum(e.headerList_.count()));
 	RMessageComponent::operator = (e);
-	parsed_ = true;
-	assembled_ = false;
 	return *this;
 }
 

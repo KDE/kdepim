@@ -38,6 +38,7 @@ class EmpathMailbox;
 class EmpathIndexRecord;
 class EmpathIndex;
 class RMessage;
+class EmpathIndexAllocator;
 
 class EmpathFolder : public QObject
 {
@@ -48,6 +49,8 @@ class EmpathFolder : public QObject
 		EmpathFolder();
 
 		EmpathFolder(const EmpathURL & url);
+		
+		EmpathIndexAllocator * indexAllocator() { return indexAllocator_; }
 
 		virtual ~EmpathFolder();
 
@@ -88,6 +91,11 @@ class EmpathFolder : public QObject
 
 		bool mark(const EmpathURL &, RMM::MessageStatus);
 		
+		void dropIndex();
+		
+		void itemGone(const QString & s) { emit(itemLeft(s));		}
+		void itemCome(const QString & s) { emit(itemArrived(s));	}
+		
 	protected slots:
 		
 		void s_update() { update(); }
@@ -95,6 +103,8 @@ class EmpathFolder : public QObject
 	signals:
 
 		void countUpdated(int, int);
+		void itemArrived(const QString &);
+		void itemLeft	(const QString &);
 
 	private:
 
@@ -109,6 +119,8 @@ class EmpathFolder : public QObject
 		EmpathIndex	messageList_;
 
 		EmpathURL url_;
+		
+		EmpathIndexAllocator * indexAllocator_;
 };
 
 #endif

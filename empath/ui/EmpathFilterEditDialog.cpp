@@ -25,9 +25,11 @@
 // KDE includes
 #include <klocale.h>
 #include <kapp.h>
+#include <kmsgbox.h>
 
 // Local includes
 #include "RikGroupBox.h"
+#include "Empath.h"
 #include "EmpathDefines.h"
 #include "EmpathMatcher.h"
 #include "EmpathMatchPropertiesDialog.h"
@@ -35,6 +37,7 @@
 #include "EmpathFilterActionDialog.h"
 #include "EmpathFilterEditDialog.h"
 #include "EmpathFilter.h"
+#include "EmpathFilterList.h"
 
 EmpathFilterEditDialog::EmpathFilterEditDialog(
 		EmpathFilter * filter,
@@ -141,9 +144,14 @@ EmpathFilterEditDialog::EmpathFilterEditDialog(
 	pb_editAction_->setFixedWidth(pb_editAction_->sizeHint().width());
 
 	rgb_action_->setMinimumHeight(h * 4);  
-	rgb_action_->setMinimumWidth(exprButtonBox_->sizeHint().width() + l_action_->sizeHint().width());
+
+	rgb_action_->setMinimumWidth(exprButtonBox_->sizeHint().width() +
+		l_action_->sizeHint().width());
+
 	rgb_matches_->setMinimumHeight(h * 6);  
-	rgb_matches_->setMinimumWidth(exprButtonBox_->sizeHint().width() + l_action_->sizeHint().width());
+
+	rgb_matches_->setMinimumWidth(exprButtonBox_->sizeHint().width() +
+		l_action_->sizeHint().width());
 	
 
 	buttonBox_ = new KButtonBox(this);
@@ -217,7 +225,22 @@ EmpathFilterEditDialog::~EmpathFilterEditDialog()
 	void
 EmpathFilterEditDialog::s_OK()
 {
+	EmpathFilterListIterator it(empath->filterList());
+
+	for (; it.current(); ++it) {
+	
+		if (it.current()->name() == le_name_->text()) {
+
+			KMsgBox::message(this, "Empath",
+				i18n("You already have a filter with that name"),
+				KMsgBox::EXCLAMATION, i18n("OK"));
+
+			return;
+		}
+	}
+	
 	hide();
+	filter_->setName(le_name_->text());
 	filter_->setURL(fcw_arrivesFolder_->selectedURL());
 	filter_->save();
 	accept();

@@ -49,12 +49,19 @@
 #include "EmpathMailbox.h"
 
 EmpathMaildir::EmpathMaildir(const QString & basePath, const EmpathURL & url)
-	:	seq_(0),
+	:	QObject(),
+		seq_(0),
 		url_(url),
 		basePath_(basePath)
 {
 	path_ = basePath + "/" + url.folderPath();
+	
 	empathDebug("ctor - path_ == " + path_);
+	
+	QObject::connect(&timer_, SIGNAL(timeout()),
+		this, SLOT(s_timerBeeped()));
+	
+	timer_.start(30000, true); // 30 seconds ok ? Hard coded for now.
 }
 
 EmpathMaildir::~EmpathMaildir()
@@ -168,19 +175,24 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 			rec->setStatus(status);
 		
 		} else {	
+			
 			// New file to add.
 			
 			// Read the file to an RMessage
 			RMessage m(_messageData(s));
 			
 			// Create an index record.
-			EmpathIndexRecord * ir = new EmpathIndexRecord(s, m);
+			EmpathIndexRecord * ir =
+				new(f->indexAllocator()) EmpathIndexRecord(s, m);
+			
 			CHECK_PTR(ir);
 			
 			ir->tag(true);
 			ir->setStatus(status);
 			
 			f->messageList().insert(s, ir);
+			
+			f->itemCome(s);
 			
 			empathDebug("New message in index with id \"" + s + "\"");
 		}
@@ -202,6 +214,8 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 			empathDebug("Message with id \"" +
 				iit.currentKey() + "\" has gone.");
 			
+			f->itemGone(iit.currentKey());
+			
 			if (!f->messageList().remove(iit.currentKey())) {
 				empathDebug("Duh.. couldn't remove index item \"" +
 					iit.currentKey() + "\"");
@@ -215,6 +229,7 @@ EmpathMaildir::sync(const EmpathURL & url, bool ignoreMtime)
 	t->done();
 	
 	_writeIndex();
+	
 	empathDebug("sync took " +
 		QString().setNum(realBegin.msecsTo(QTime::currentTime())) + " ms");
 	empathDebug("sync done");
@@ -311,10 +326,23 @@ EmpathMaildir::message(const QString & id)
 EmpathMaildir::removeMessage(const QString & id)
 {
 	empathDebug("Removing message with id \"" + id + "\"");
+	
 	QDir d(path_ + "/cur/", id + "*");
+
 	if (d.count() != 1) return false;
+	
+	EmpathFolder * folder(empath->folder(url_));
+	
 	QFile f(path_ + "/cur/" + d[0]);	
-	return f.remove();
+	
+	if (!f.remove())
+		return false;
+	
+	folder->messageList().remove(id);
+
+	_writeIndex();
+	
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -755,7 +783,8 @@ EmpathMaildir::_readIndex()
 			kapp->processEvents();
 		}
 
-		r = new EmpathIndexRecord;
+		r = new(f->indexAllocator()) EmpathIndexRecord;
+
 		CHECK_PTR(r);
 		indexStream >> *r;
 #if 0	
@@ -824,4 +853,13 @@ EmpathMaildir::_writeIndex()
 	
 	mtime_ = QDateTime::currentDateTime();
 }
+
+	void
+EmpathMaildir::s_timerBeeped()
+{
+	timer_.stop();
+	sync(url_);
+	timer_.start(30000, true);
+}
+
 

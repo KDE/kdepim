@@ -36,6 +36,7 @@
 #include <RMM_DateTime.h>
 
 // Local includes
+#include "EmpathIndexAllocator.h"
 #include "EmpathDefines.h"
 
 class RMessage;
@@ -43,6 +44,11 @@ class RMessage;
 class EmpathIndexRecord
 {
 	public:
+		
+		static void * operator new(size_t _size, EmpathIndexAllocator *a)
+		{ return a->allocate(_size); }
+		
+		static void operator delete(void *) { /* nothing */ }
 		
 		EmpathIndexRecord();
 			

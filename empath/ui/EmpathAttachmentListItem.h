@@ -30,19 +30,21 @@
 #include <qlist.h>
 
 // Local includes
-#include <RMM_BodyPart.h>
+#include "EmpathAttachmentSpec.h"
 
 class EmpathAttachmentListItem : public QListViewItem
 {
 	public:
 		
-		EmpathAttachmentListItem(QListView * parent, const RBodyPart &);
-		EmpathAttachmentListItem(QListViewItem * parent, const RBodyPart &);
+		EmpathAttachmentListItem(
+			QListView * parent, const EmpathAttachmentSpec &);
+
 		virtual ~EmpathAttachmentListItem();
 		
 		virtual void setup();
 		
-		const RBodyPart & bodyPart() const { return bodyPart_; }
+		const EmpathAttachmentSpec & spec() const { return spec_; }
+		void setSpec(const EmpathAttachmentSpec & s);
 
 		QString key(int, bool) const;
 		
@@ -50,7 +52,7 @@ class EmpathAttachmentListItem : public QListViewItem
 		
 	private:
 	
-		RBodyPart bodyPart_;
+		EmpathAttachmentSpec spec_;
 };
 
 typedef QList<EmpathAttachmentListItem> EmpathAttachmentList;

@@ -632,3 +632,25 @@ EmpathComposeWidget::haveSubject()
 	return false;
 }
 
+	void
+EmpathComposeWidget::s_addAttachment()
+{
+	empathDebug("addAttachment() called");
+	attachmentWidget_->addAttachment();
+}
+
+	void
+EmpathComposeWidget::s_editAttachment()
+{
+	empathDebug("editAttachment() called");
+	attachmentWidget_->editAttachment();
+}
+
+	void
+EmpathComposeWidget::s_removeAttachment()
+{
+	empathDebug("removeAttachment() called");
+	attachmentWidget_->removeAttachment();
+}
+
+

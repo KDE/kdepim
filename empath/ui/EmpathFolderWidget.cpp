@@ -62,7 +62,7 @@ EmpathFolderWidget::EmpathFolderWidget(
 	
 	setAllColumnsShowFocus(true);
 	setRootIsDecorated(true);
-	setSorting(1); // Don't sort this.
+	setSorting(0);
 
 	QObject::connect(this, SIGNAL(currentChanged(QListViewItem *)),
 			this, SLOT(s_currentChanged(QListViewItem *)));

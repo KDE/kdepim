@@ -73,8 +73,10 @@ EmpathFilterManagerDialog::EmpathFilterManagerDialog(
 	rgb_filters_->setWidget(w_filters_);
 	
 	l_about_ =
-		new QLabel(i18n("The following filters will be applied, in order, to new mail."),
-				w_filters_, "l_filtersFolder");
+		new QLabel(
+		i18n("The following filters will be applied, in order, to new mail."),
+			w_filters_, "l_filtersFolder");
+
 	CHECK_PTR(l_about_);
 
 	l_about_->setFixedHeight(h);
@@ -82,8 +84,10 @@ EmpathFilterManagerDialog::EmpathFilterManagerDialog(
 	lv_filters_ = new QListView(w_filters_, "lv_matches");
 	CHECK_PTR(lv_filters_);
 
-	lv_filters_->addColumn(i18n("Filter descriptions"));
+	lv_filters_->addColumn(i18n("Name"));
+	lv_filters_->addColumn(i18n("Priority"));
 	lv_filters_->setFrameStyle(QFrame::Box | QFrame::Sunken);
+	lv_filters_->setSorting(1);
 
 	filtersButtonBox_ = new KButtonBox(w_filters_, KButtonBox::VERTICAL);
 	CHECK_PTR(filtersButtonBox_);
@@ -239,28 +243,72 @@ EmpathFilterManagerDialog::s_removeFilter()
 EmpathFilterManagerDialog::s_moveUp()
 {
 	empathDebug("s_moveUp() called");
+	
+	EmpathFilterListItem * currentItem =
+		((EmpathFilterListItem *)lv_filters_->currentItem());
+	
+	EmpathFilter * editedFilter = currentItem->filter();
+	
+	if (editedFilter == 0)
+		return;
+	
+	empath->filterList().raisePriority(editedFilter);
+	
+	update();
 }
 
 	void
 EmpathFilterManagerDialog::s_moveDown()
 {
 	empathDebug("s_moveDown() called");
+
+	EmpathFilterListItem * currentItem =
+		((EmpathFilterListItem *)lv_filters_->currentItem());
+	
+	EmpathFilter * editedFilter = currentItem->filter();
+	
+	if (editedFilter == 0)
+		return;
+	
+	empath->filterList().lowerPriority(editedFilter);
+	
+	update();
 }
 
 	void
 EmpathFilterManagerDialog::update()
 {
+	EmpathFilterListItem * currentItem = 0;
+	
+	currentItem = (EmpathFilterListItem *)lv_filters_->currentItem();
+	
+	QString selected;
+
+	if (currentItem != 0)
+		selected = currentItem->filter()->name();
+	
 	lv_filters_->setUpdatesEnabled(false);
 
 	lv_filters_->clear();
+	
+	QListViewItem * reselect = 0;
 
 	EmpathFilterListIterator it(empath->filterList());
 
-	for (; it.current(); ++it)
-		new EmpathFilterListItem(lv_filters_, it.current());
+	for (; it.current(); ++it) {
+		EmpathFilterListItem * i =
+			new EmpathFilterListItem(lv_filters_, it.current());
+		if (it.current()->name() == selected)
+			reselect = (QListViewItem *)i;	
+	}
 	
 	lv_filters_->setUpdatesEnabled(true);
 	lv_filters_->triggerUpdate();
+	
+	if (reselect != 0) {
+		lv_filters_->setCurrentItem(reselect);
+		lv_filters_->setSelected(reselect, true);
+	}
 }
 
 	void

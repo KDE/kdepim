@@ -98,10 +98,10 @@ class EmpathMessageListWidget : public QListView
 		void selectAll();
 		void selectInvert();
 		
-	protected:
-		
-		virtual bool eventFilter(QObject *, QEvent *);
-		
+	public slots:
+
+		void s_messageDelete();
+
 	protected slots:
 	
 		void s_messageMark();
@@ -112,16 +112,19 @@ class EmpathMessageListWidget : public QListView
 		void s_messageReplyAll();
 		void s_messageForward();
 		void s_messageBounce();
-		void s_messageDelete();
 		void s_messageSaveAs();
 		void s_messageCopyTo();
 		void s_messagePrint();
 		void s_messageFilter();
-		void s_rightButtonPressed(QListViewItem *, const QPoint &, int);
-		void s_doubleClicked(QListViewItem *);
-		void s_currentChanged(QListViewItem *);
-		void s_showFolder(const EmpathURL &);
-		void s_headerClicked(int);
+		
+		void s_rightButtonPressed	(QListViewItem *, const QPoint &, int);
+		void s_doubleClicked		(QListViewItem *);
+		void s_currentChanged		(QListViewItem *);
+		
+		void s_showFolder		(const EmpathURL &);
+		void s_headerClicked	(int);
+		void s_itemGone			(const QString &);
+		void s_itemCome			(const QString &);
 	
 	signals:
 		
@@ -130,11 +133,15 @@ class EmpathMessageListWidget : public QListView
 		
 	private:
 		
-		void mousePressEvent(QMouseEvent *);
-		void mouseMoveEvent(QMouseEvent *);
-		void mouseReleaseEvent(QMouseEvent *);
+		void _fillDisplay		(EmpathFolder *);
+		void _fillThreading		(EmpathFolder *);
+		void _fillNonThreading	(EmpathFolder *);
+
+		void contentsMousePressEvent	(QMouseEvent *);
+		void contentsMouseMoveEvent		(QMouseEvent *);
+		void contentsMouseReleaseEvent	(QMouseEvent *);
 		
-		void	_setupMessageMenu();
+		void _setupMessageMenu();
 
 		void getDescendants(
 			EmpathMessageListItem * initialItem,
@@ -142,7 +149,6 @@ class EmpathMessageListWidget : public QListView
 
 		void append(EmpathMessageListItem * item);
 
-		EmpathMainWindow	* parent_;
 		QPopupMenu			messageMenu_;
 		QPopupMenu			multipleMessageMenu_;
 		QPopupMenu			messageMarkMenu_;
@@ -153,7 +159,6 @@ class EmpathMessageListWidget : public QListView
 		QPixmap	px_xxx_, px_Sxx_, px_xMx_, px_xxR_,
 				px_SMx_, px_SxR_, px_xMR_, px_SMR_;
 
-		bool wantScreenUpdates_;
 		
 		void setStatus(EmpathMessageListItem * item, RMM::MessageStatus status);
 
@@ -185,10 +190,15 @@ class EmpathMessageListWidget : public QListView
 		
 		static QListViewItem * lastSelected_;
 		
-		bool maybeDrag_;
 		QPoint dragStart_;
 		
-		Q_UINT32 nSelected_;
+		// Order dependency
+		EmpathMainWindow	* parent_;
+		Q_UINT32			nSelected_;
+		bool				maybeDrag_;
+		bool				wantScreenUpdates_;
+		bool				filling_;
+		// End order dependency
 };
 
 #endif

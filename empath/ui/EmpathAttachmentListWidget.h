@@ -46,10 +46,16 @@ class EmpathAttachmentListWidget : public QListView
 	
 	public:
 		
-		EmpathAttachmentListWidget(QWidget * parent = 0, const char * name = 0);
+		EmpathAttachmentListWidget(
+			QWidget * parent = 0, const char * name = 0);
+
 		~EmpathAttachmentListWidget();
 
 		void use(const RMessage &);
+		
+		void addAttachment();
+		void editAttachment();
+		void removeAttachment();
 		
 	private:
 
@@ -58,3 +64,4 @@ class EmpathAttachmentListWidget : public QListView
 };
 
 #endif
+

@@ -30,6 +30,8 @@
 #include <qstring.h>
 #include <qdir.h>
 #include <qlist.h>
+#include <qtimer.h>
+#include <qobject.h>
 
 // Local includes
 #include "EmpathURL.h"
@@ -41,17 +43,23 @@
 
 class EmpathFolder;
 
-class EmpathMaildir
+class EmpathMaildir : public QObject
 {
+	Q_OBJECT
+		
 	public:
 		
 		EmpathMaildir()
-		{ empathDebug("default ctor"); }
+			:	QObject()
+		{
+			empathDebug("default ctor");
+		}
 
 		EmpathMaildir(const QString & basePath, const EmpathURL & url);
+
 		virtual ~EmpathMaildir();
 		
-		void		init();
+		void init();
 		
 		const QString &		basePath()	const { return basePath_; }
 		const EmpathURL &	url()		const { return url_; }
@@ -68,9 +76,11 @@ class EmpathMaildir
 		bool					removeMessage			(const QString & id);
 		RBodyPart::PartType		typeOfMessage			(const QString & id);
 		
-		const char * className() const { return "EmpathMaildir"; }
-		
 		void sync(const EmpathURL & url, bool ignoreMtime = false);
+		
+	protected slots:
+		
+		void s_timerBeeped();
 		
 	private:
 		
@@ -95,6 +105,8 @@ class EmpathMaildir
 		QDir d;
 		
 		QDateTime	mtime_;
+		
+		QTimer		timer_; // Check for modification every so often.
 };
 
 typedef QList<EmpathMaildir> EmpathMaildirList;
