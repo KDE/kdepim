@@ -45,6 +45,9 @@
 #include "baseConduit.h"
 #endif
 
+#ifndef KSOCK_H
+#include "ksock.h"
+#endif
 
 class PilotRecord;
 
@@ -153,6 +156,9 @@ private:
 
 
 // $Log$
+// Revision 1.9  2001/03/09 09:46:14  adridg
+// Large-scale #include cleanup
+//
 // Revision 1.8  2001/02/07 15:46:31  adridg
 // Updated copyright headers for source release. Added CVS log. No code change.
 //
