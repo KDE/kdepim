@@ -292,7 +292,9 @@ class Recurrence
     QDate getLastDateInYear(const QDate& latestDate) const;
 
   private:
+    // Prohibit copying
     Recurrence(const Recurrence&);
+    Recurrence &operator=(const Recurrence&);
 
     short recurs;                        // should be one of the enums.
 
@@ -320,7 +322,7 @@ class Recurrence
     int  mRecurExDatesCount;             // number of recurrences (in addition to rDuration) which are excluded
 
     // Backwards compatibility for KDE < 3.1.
-    uint  mCompatVersion;                // calendar file version for backwards compatibility, or ~0
+    int   mCompatVersion;                // calendar file version for backwards compatibility
     short mCompatRecurs;                 // original 'recurs' in old calendar format, or rNone
     int   mCompatDuration;               // original 'rDuration' in old calendar format, or 0
 
