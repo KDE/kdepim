@@ -1553,9 +1553,14 @@ void VCalFormat::populate(VObject *vcal)
       anEvent = VEventToEvent(curVO);
       // we now use addEvent instead of insertEvent so that the
       // signal/slot get connected.
-      if (anEvent)
-	mCalendar->addEvent(anEvent);
-      else {
+      if (anEvent) {
+      	if ( !anEvent->dtStart().isValid() || !anEvent->dtEnd().isValid() ) {
+	  kdDebug() << "VCalFormat::populate(): Event has invalid dates."
+	            << endl;
+	} else { 
+          mCalendar->addEvent(anEvent);
+      	}
+      } else {
 	// some sort of error must have occurred while in translation.
 	goto SKIP;
       }
