@@ -31,24 +31,24 @@
 #include <mimelib/boyermor.h>
 
 
-DwBoyerMoore::DwBoyerMoore(const char* aCstr)
+DwBoyerMoore::DwBoyerMoore(const char* aCstr, bool cs)
   : mPat( 0 )
 {
     size_t len = strlen(aCstr);
-	_Assign(aCstr, len);
+    _Assign(aCstr, len, cs);
 }
 
 
-DwBoyerMoore::DwBoyerMoore(const DwString& aStr)
+DwBoyerMoore::DwBoyerMoore(const DwString& aStr, bool cs)
   : mPat( 0 )
 {
-    _Assign(aStr.data(), aStr.length());
+    _Assign(aStr.data(), aStr.length(), cs);
 }
 
 DwBoyerMoore::DwBoyerMoore(const DwBoyerMoore & other)
   : mPat( 0 )
 {
-    _Assign(other.mPat, other.mPatLen);
+    _Assign(other.mPat, other.mPatLen, other.mCS);
 }
 
 
@@ -60,46 +60,53 @@ DwBoyerMoore::~DwBoyerMoore()
 const DwBoyerMoore & DwBoyerMoore::operator=( const DwBoyerMoore & other )
 {
     if (this != &other)
-        _Assign(other.mPat, other.mPatLen);
+        _Assign(other.mPat, other.mPatLen, other.mCS);
     return *this;
 }
 
 
-void DwBoyerMoore::Assign(const char* aCstr)
+void DwBoyerMoore::Assign(const char* aCstr, bool cs)
 {
     size_t len = strlen(aCstr);
-    _Assign(aCstr, len);
+    _Assign(aCstr, len, cs);
 }
 
 
-void DwBoyerMoore::Assign(const DwString& aStr)
+void DwBoyerMoore::Assign(const DwString& aStr, bool cs)
 {
-    _Assign(aStr.data(), aStr.length());
+    _Assign(aStr.data(), aStr.length(), cs);
 }
 
 
-void DwBoyerMoore::_Assign(const char* aPat, size_t aPatLen)
+void DwBoyerMoore::_Assign(const char* aPat, size_t aPatLen, bool cs)
 {
+    mCS = cs;
     mPatLen = 0;
     delete[] mPat; mPat = 0;
     mPat = new char[aPatLen+1];
     if (mPat != 0) {
         mPatLen = aPatLen;
-        strncpy(mPat, aPat, mPatLen);
+	// for case-insensitive searcj, make a lower-case copy of the pattern:
+	for (size_t i=0; i < mPatLen; ++i) {
+	    mPat[i] = cs ? aPat[i] : tolower(aPat[i]);
+	}
         mPat[mPatLen] = 0;
         // Initialize the jump table for Boyer-Moore-Horspool algorithm
-        size_t i;
-        for (i=0; i < 256; ++i) {
+        for (size_t i=0; i < 256; ++i) {
             mSkipAmt[i] = (unsigned char) mPatLen;
         }
-        for (i=0; i < mPatLen-1; ++i) {
-            mSkipAmt[(unsigned)mPat[i]] = (unsigned char) (mPatLen - i - 1);
+        for (size_t i=0; i < mPatLen-1; ++i) {
+	    unsigned char skip = mPatLen - i - 1;
+	    mSkipAmt[(unsigned)mPat[i]] = skip;
+	    if ( !cs ) {
+		mSkipAmt[(unsigned)toupper(mPat[i])] = skip;
+	    }
         }
     }
 }
 
 
-size_t DwBoyerMoore::FindIn(const DwString& aStr, size_t aPos, bool lc) const
+size_t DwBoyerMoore::FindIn(const DwString& aStr, size_t aPos) const
 {
     if (aStr.length() <= aPos) {
         return (size_t) -1;
@@ -113,7 +120,7 @@ size_t DwBoyerMoore::FindIn(const DwString& aStr, size_t aPos, bool lc) const
     for (i=mPatLen-1; i < bufLen; i += mSkipAmt[(unsigned char)buf[i]]) {
         int iBuf = i;
         int iPat = mPatLen - 1;
-        while (iPat >= 0 && (lc ? tolower(buf[iBuf]) : buf[iBuf]) == mPat[iPat]) {
+        while (iPat >= 0 && (mCS ? buf[iBuf] : tolower(buf[iBuf])) == mPat[iPat]) {
             --iBuf;
             --iPat;
         }

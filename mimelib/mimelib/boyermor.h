@@ -51,8 +51,8 @@ class DW_EXPORT DwBoyerMoore {
 
 public:
 
-    DwBoyerMoore(const char* aCstr);
-    DwBoyerMoore(const DwString& aStr);
+    DwBoyerMoore(const char* aCstr, bool cs=true);
+    DwBoyerMoore(const DwString& aStr, bool cs=true);
     DwBoyerMoore(const DwBoyerMoore& other);
     //. Constructs a {\tt DwBoyerMoore} object for searching for a particular
     //. string.
@@ -61,11 +61,11 @@ public:
 
     const DwBoyerMoore & operator=( const DwBoyerMoore & other );
 
-    void Assign(const char* aCstr);
-    void Assign(const DwString& aStr);
+    void Assign(const char* aCstr, bool cs=true);
+    void Assign(const DwString& aStr, bool cs=true);
     //. Sets the string to search for.
 
-    size_t FindIn(const DwString& aStr, size_t aPos, bool lc = false) const;
+    size_t FindIn(const DwString& aStr, size_t aPos) const;
     //. Searches for the search string in {\tt aStr} starting at position
     //. {\tt aPos}.  If found, the function returns the first position in
     //. {\tt aStr} where the search string was found.  If not found, the
@@ -76,8 +76,9 @@ private:
     size_t mPatLen;
     char* mPat;
     unsigned char mSkipAmt[256];
+    bool mCS;
 
-    void _Assign(const char* aPat, size_t aPatLen);
+    void _Assign(const char* aPat, size_t aPatLen, bool cs);
 };
 
 #endif
