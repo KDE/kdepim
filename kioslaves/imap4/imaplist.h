@@ -26,6 +26,8 @@
 #include <qstringlist.h>
 #include <qstring.h>
 
+class parseString;
+
 //the class handling the responses from list
 class imapList
 {
@@ -35,6 +37,15 @@ public:
   imapList (const QString &);
   imapList (const imapList &);
     imapList & operator = (const imapList &);
+
+  // process the attributes  
+  void parseAttributes( parseString & );  
+
+  // return all atributes concatenated
+  QString attributesAsString() const 
+  { 
+    return attributes_.join(","); 
+  }
 
   QString hierarchyDelimiter () const
   {
@@ -118,6 +129,7 @@ private:
   bool unmarked_;
   bool hasChildren_;
   bool hasNoChildren_;
+  QStringList attributes_;
 };
 
 #endif

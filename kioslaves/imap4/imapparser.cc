@@ -506,28 +506,8 @@ void imapParser::parseList (parseString & result)
 
   result.pos++; // tie off (
 
-  //process the attributes
-  QCString attribute;
-
-  while (!result.isEmpty () && result[0] != ')')
-  {
-    attribute = parseOneWordC(result).lower();
-    if (-1 != attribute.find ("\\noinferiors"))
-      this_one.setNoInferiors (true);
-    else if (-1 != attribute.find ("\\noselect"))
-      this_one.setNoSelect (true);
-    else if (-1 != attribute.find ("\\marked"))
-      this_one.setMarked (true);
-    else if (-1 != attribute.find ("\\unmarked"))
-      this_one.setUnmarked (true);
-    else if (-1 != attribute.find ("\\haschildren"))
-      this_one.setHasChildren (true);
-    else if (-1 != attribute.find ("\\hasnochildren"))
-      this_one.setHasNoChildren (true);
-    else
-      kdDebug(7116) << "imapParser::parseList - unknown attribute " << attribute << endl;
-  }
-
+  this_one.parseAttributes( result );
+  
   result.pos++; // tie off )
   skipWS (result);
 

@@ -55,7 +55,8 @@ imapList::imapList (const imapList & lr):hierarchyDelimiter_ (lr.hierarchyDelimi
 name_ (lr.name_),
 noInferiors_ (lr.noInferiors_),
 noSelect_ (lr.noSelect_), marked_ (lr.marked_), unmarked_ (lr.unmarked_),
-hasChildren_ (lr.hasChildren_), hasNoChildren_ (lr.hasNoChildren_)
+hasChildren_ (lr.hasChildren_), hasNoChildren_ (lr.hasNoChildren_),
+attributes_ (lr.attributes_)  
 {
 }
 
@@ -73,6 +74,7 @@ imapList & imapList::operator = (const imapList & lr)
   unmarked_ = lr.unmarked_;
   hasChildren_ = lr.hasChildren_;
   hasNoChildren_ = lr.hasNoChildren_;
+  attributes_ = lr.attributes_;
 
   return *this;
 }
@@ -90,12 +92,26 @@ hasNoChildren_ (false)
 
   s.pos++;  // tie off (
 
-  //process the attributes
-  QCString attribute;
+  parseAttributes( s );
 
-  while (!s.isEmpty () && s[0] != ')')
+  s.pos++;  // tie off )
+  imapParser::skipWS (s);
+
+  hierarchyDelimiter_ = imapParser::parseOneWordC(s);
+  if (hierarchyDelimiter_ == "NIL")
+    hierarchyDelimiter_ = QString::null;
+  name_ = rfcDecoder::fromIMAP (imapParser::parseOneWord (s));  // decode modified UTF7
+}
+
+void imapList::parseAttributes( parseString & str )
+{
+  QCString attribute, orig;
+
+  while ( !str.isEmpty () && str[0] != ')' )
   {
-    attribute = imapParser::parseOneWordC(s).lower();
+    orig = imapParser::parseOneWordC(str);
+    attributes_ << orig;
+    attribute = orig.lower();
     if (-1 != attribute.find ("\\noinferiors"))
       noInferiors_ = true;
     else if (-1 != attribute.find ("\\noselect"))
@@ -111,12 +127,5 @@ hasNoChildren_ (false)
     else
       kdDebug(7116) << "imapList::imapList: bogus attribute " << attribute << endl;
   }
-
-  s.pos++;  // tie off )
-  imapParser::skipWS (s);
-
-  hierarchyDelimiter_ = imapParser::parseOneWordC(s);
-  if (hierarchyDelimiter_ == "NIL")
-    hierarchyDelimiter_ = QString::null;
-  name_ = rfcDecoder::fromIMAP (imapParser::parseOneWord (s));  // decode modified UTF7
 }
+

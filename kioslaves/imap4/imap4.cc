@@ -1923,8 +1923,13 @@ IMAP4Protocol::doListEntry (const KURL & _url, const QString & myBox,
       atom.m_str = myUser;
       entry.append (atom);
 
-      atom.m_uds = KIO::UDS_ACCESS;
+      atom.m_uds = UDS_ACCESS;
       atom.m_long = S_IRUSR | S_IXUSR | S_IWUSR;
+      entry.append (atom);
+
+      atom.m_uds = UDS_EXTRA;
+      atom.m_str = item.attributesAsString();
+      atom.m_long = 0;
       entry.append (atom);
 
       listEntry (entry, false);
