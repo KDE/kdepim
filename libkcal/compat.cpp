@@ -40,7 +40,7 @@ Compat *CompatFactory::createCompat( const QString &productId )
       int versionStop = productId.find( QRegExp( "[ /]" ), versionStart + 1 );
       if ( versionStop >= 0 ) {
         QString version = productId.mid( versionStart + 1,
-                                         versionStop - versionStart );
+                                         versionStop - versionStart - 1 );
         kdDebug(5800) << "Found KOrganizer version: " << version << endl;
         
         int versionNum = version.section( ".", 0, 0 ).toInt() * 10000 +
