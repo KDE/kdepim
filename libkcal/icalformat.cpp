@@ -77,7 +77,10 @@ bool ICalFormat::load( Calendar *calendar, const QString &fileName)
   QString text = ts.read();
   file.close();
 
-  return fromString( calendar, text );
+  if ( text.stripWhiteSpace().isEmpty() ) // empty files are valid
+    return true;
+  else
+    return fromString( calendar, text );
 }
 
 
