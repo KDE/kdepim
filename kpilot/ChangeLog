@@ -35,6 +35,17 @@ TODO LIST (Ignore the file TODO)
   the current tooltip says (resetSyncFlags() should be enough).
 * GJJ: Create good icons for the kpalmdoc converter application.
 
+KPilot Developer's notes for April 30th, 2003
+=============================================
+
+2003-4-12  Adriaan de Groot
+* Mucking about with KPilot's UI again. Trying to remove dialogs
+  and to make the viewers just viewers.
+  
+2003-4-1  Adriaan de Groot
+* My daughter, Mira Annelie Engel, was born this evening and is a
+  bouncing healthy girl. But she's going to put a crimp in KPilot
+  development, that's for sure.
 
 KPilot Developer's notes for March 26th, 2003
 =============================================
