@@ -50,7 +50,7 @@ OverviewWidget::OverviewWidget( QWidget* parent,  const char* name, WFlags fl )
     nameField->setAlignment( int( QLabel::WordBreak | QLabel::AlignTop ) );
 
     QPixmap logo;
-    kdDebug() << "Locate " << locate("appdata", "pics/opie_logo") << endl;
+//    kdDebug() << "Locate " << locate("appdata", "pics/opie_logo") << endl;
     logo.load(locate ("appdata", "pics/opie_logo.png" ) );
 
     deviceLogo = new QLabel( topBox, "deviceLogo" );
@@ -106,8 +106,8 @@ void OverviewWidget::clearProgress(const Profile& prof,  KonnectorManager* con, 
     setDeviceName( con->id( id ) );
     setNameField( prof.name() );
     QPixmap pix;
-    kdDebug() << con->iconName(id ) << endl;
-    kdDebug() << "Clear Progress " << locate("appdata",  con->iconName(id) ) << endl;
+//    kdDebug() << con->iconName(id ) << endl;
+//    kdDebug() << "Clear Progress " << locate("appdata",  con->iconName(id) ) << endl;
     QStringList list = KGlobal::dirs()->findDirs("data", "kitchensync" );
     setLogo( con->iconSet(id).pixmap()   );
     if (m_svView == 0 ) {
@@ -117,7 +117,7 @@ void OverviewWidget::clearProgress(const Profile& prof,  KonnectorManager* con, 
     }
 }
 void OverviewWidget::addProgress( ManipulatorPart* part ){
-    kdDebug() << "OverviewWidget add Progress" << endl;
+//    kdDebug() << "OverviewWidget add Progress" << endl;
     current = new NewProgress( *part->pixmap(), part->name(), sv->viewport() );
     //m_svView->addWidget( current );
     sv->addChild( current );
@@ -170,7 +170,7 @@ void NewProgress::setStatusLabel(int status) {
 
     QPixmap workingIcon( " " );
     QPixmap doneIcon(" ");
-    if (status=0) {
+    if (status==0) {
         progressItemPix->setPixmap( workingIcon );
     } else {
       progressItemPix->setPixmap( doneIcon );

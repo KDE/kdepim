@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kitchensync" version="1">
+<kpartgui name="kitchensync" version="2">
 <MenuBar>
   <Menu name="file"><text>&amp;File</text>
 	<Merge/>
@@ -12,6 +12,7 @@
   </Menu>
   <Menu name="settings"><text>&amp;Settings</text>
 	<Action name="configure"/>
+	<Action name="configure_konnector"/>
 	<Seperator/>
   </Menu>
 </MenuBar>

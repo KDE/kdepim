@@ -30,6 +30,7 @@ namespace KSync {
         void setCurrent( const KonnectorProfile& );
 
         void add( const KonnectorProfile& );
+        void replace( const KonnectorProfile& prof);
         void remove( const KonnectorProfile& );
         void clear();
 

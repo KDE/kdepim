@@ -18,7 +18,8 @@
 #include <libkcal/calendarlocal.h>
 
 #include "organizerbase.h"
-#include "ksync_mainwindow.h"
+#include <ksync_mainwindow.h>
+#include <ksync_profile.h>
 #include "ksync_organizerpart.h"
 #include <qptrlist.h>
 
@@ -34,8 +35,8 @@ OrganizerPart::OrganizerPart(QWidget *parent, const char *name,
 			     QObject *obj, const char *na, const QStringList & )
   : ManipulatorPart( parent, name )
 {
-    kdDebug() << "Parent " << parent->className() << endl;
-    kdDebug() << "Object " << obj->className() << endl;
+//    kdDebug() << "Parent " << parent->className() << endl;
+//    kdDebug() << "Object " << obj->className() << endl;
   setInstance(OrganizerPartFactory::instance() );
   m_pixmap = KGlobal::iconLoader()->loadIcon("korganizer", KIcon::Desktop, 48 );
   m_widget=0;
@@ -53,7 +54,7 @@ QPixmap* OrganizerPart::pixmap()
 }
 QWidget* OrganizerPart::widget()
 {
-  kdDebug(5222) << "widget \n";
+//  kdDebug(5222) << "widget \n";
   if(m_widget==0 ){
     m_widget = new QWidget();
     m_widget->setBackgroundColor(Qt::green);
@@ -63,8 +64,8 @@ QWidget* OrganizerPart::widget()
 QWidget* OrganizerPart::configWidget()
 {
   //  if( m_config == 0 ){ cause of the reparent ;)
-    if ( core() != 0 )
-        kdDebug() << "Config Widget "<< endl;
+//    if ( core() != 0 )
+//        kdDebug() << "Config Widget "<< endl;
     Profile prof = core()->currentProfile();
     if ( !m_configured ) {
         m_conf->setGroup( prof.name() );
@@ -72,7 +73,7 @@ QWidget* OrganizerPart::configWidget()
         m_evo = m_conf->readBoolEntry("Evo");
         m_configured = true;
     }
-    kdDebug(5222) << "configWidget \n" ;
+//    kdDebug(5222) << "configWidget \n" ;
     m_config = new OrganizerDialogBase();
     m_config->urlReq->setURL( m_path );
     m_config->ckbEvo->setChecked( m_evo );

@@ -8,6 +8,8 @@ KonnectorCheckItem::KonnectorCheckItem( QListView* parent,  const KonnectorProfi
       m_prof( prof ){
     setText(0, "");
     setText(1, prof.name() );
+    if (prof.udi() != QString::null )
+        setOn( true );
 }
 KonnectorCheckItem::~KonnectorCheckItem() {
 

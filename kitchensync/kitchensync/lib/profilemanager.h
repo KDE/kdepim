@@ -77,6 +77,11 @@ namespace KSync {
         void addProfile( const Profile& );
 
         /**
+         * replaces a profile
+         */
+        void replaceProfile( const Profile& );
+
+        /**
          * removes a Profile
          */
         void removeProfile( const Profile& );

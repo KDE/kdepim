@@ -75,6 +75,7 @@ KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
 
   m_bar = new PartBar(m_lay , "partBar" );
   m_stack = new QWidgetStack( m_lay, "dummy" );
+
   QWidget *test = new QWidget(m_stack);
   test->setBackgroundColor(Qt::red);
   m_stack->addWidget(test, 0);
@@ -82,12 +83,14 @@ KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
   m_bar->setMaximumWidth(100 );
   m_bar->setMinimumWidth(100 );
 
-  connect( m_bar, SIGNAL(activated(ManipulatorPart*) ), this, SLOT(slotActivated(ManipulatorPart*) ));
+  connect( m_bar, SIGNAL(activated(ManipulatorPart*) ),
+           this, SLOT(slotActivated(ManipulatorPart*) ));
 
   resize(600,400);
+
   m_parts.setAutoDelete( true );
 
-  kdDebug(5210) << "Init konnector" << endl;
+//  kdDebug(5210) << "Init konnector" << endl;
   initKonnector();
   initPlugins();
 
@@ -98,25 +101,37 @@ KSyncMainWindow::KSyncMainWindow(QWidget *widget, const char *name, WFlags f)
   // show systemtraypart
   initSystray();
   m_tray->show();
-
+  initProfiles();
 };
 
 KSyncMainWindow::~KSyncMainWindow()
 {
+    kdDebug() << "d'tor" << endl;
+    m_konprof->save();
+    m_prof->save();
     createGUI(0l );
 }
 void KSyncMainWindow::initActions()
 {
-  (void)new KAction( i18n("Synchronize" ), "reload", 0, this, SLOT( slotSync() ),
+  (void)new KAction( i18n("Synchronize" ), "reload", 0,
+                     this, SLOT( slotSync() ),
 		     actionCollection(), "sync" );
-  (void)new KAction( i18n("Backup") ,  "mail_get", 0, this, SLOT( slotBackup() ),
+
+  (void)new KAction( i18n("Backup") ,  "mail_get", 0,
+                     this, SLOT( slotBackup() ),
 		     actionCollection(), "backup" );
-  (void)new KAction( i18n("Restore"),  "mail_send", 0, this, SLOT (slotRestore() ),
+
+  (void)new KAction( i18n("Restore"),  "mail_send", 0,
+                     this, SLOT (slotRestore() ),
 		     actionCollection(), "restore" );
-  (void)new KAction( i18n("Quit"),  "exit", 0, this, SLOT(slotQuit()),
+
+  (void)new KAction( i18n("Quit"),  "exit", 0,
+                     this, SLOT(slotQuit()),
 		     actionCollection(), "quit" );
-  (void)new KAction( i18n("Configure Kitchensync"), "configure" , 0, this,
-		     SLOT (slotConfigure() ), actionCollection(), "configure" );
+
+  (void)new KAction( i18n("Configure Kitchensync"), "configure" , 0,
+                     this, SLOT (slotConfigure() ),
+                     actionCollection(), "configure" );
 }
 void KSyncMainWindow::initPlugins()
 {
@@ -141,13 +156,13 @@ void KSyncMainWindow::addModPart(ManipulatorPart *part)
   if( part->partIsVisible() )
   {
     int pos = -1;
-    kdDebug(5210) << "before part insert \n"  ;
+//    kdDebug(5210) << "before part insert \n"  ;
     m_stack->addWidget( part->widget(), id );
-    if( part->type() == QString::fromLatin1("Overview") ){ // Overview is special for us ;)
+    /* overview is special for us ;) */
+    if( part->type() == QString::fromLatin1("Overview") ){
       m_stack->raiseWidget(id );
       pos = 0;
     }
-
     m_bar->insertItem( part, pos );
   }
   m_parts.append( part );
@@ -163,70 +178,75 @@ void KSyncMainWindow::initSystray( void ) {
 
 }
 
-void KSyncMainWindow::slotSync()
-{
-    /*
-    kdDebug(5210) << "slotSync " << endl;
-    if (m_currentId.isEmpty() ) {
-        kdDebug(5210) << "Current Id empty" << endl;
-        //KMessageBox::
-        return; // KMessageBox
-    }
-    if (!m_profile.caps().supportsPushSync() ) {
-        kdDebug(5210) << "Can not push" << endl;
-        return; // pop up
-    }
-    if (!m_profile.isConfigured() ) {
-        kdDebug(5210) << "Not configured" << endl;
-        return; // pop up
-    }
-    kdDebug(5210) << "Ok starting sync" << endl;
-    m_konnector->startSync( m_currentId );
-    */
+void KSyncMainWindow::slotSync(){
 }
 void KSyncMainWindow::slotBackup() {
 }
-
 void KSyncMainWindow::slotRestore() {
 }
-
 void KSyncMainWindow::slotConfigure() {
-    KonnectorProfile::ValueList lst;
-    KonnectorDialog dlg(lst,  m_konnector);
-    dlg.exec();
-    /*
-  ConfigureDialog *dlg = new ConfigureDialog(this);
-  ManipulatorPart *part = 0l;
-  // get the kapabilities and update with the ones from the Profile
-  Kapabilities cap = m_konnector->capabilities( m_currentId );
-  Kapabilities cap2 = m_profile.caps();
-  cap.setSrcIP( cap2.srcIP() );
-  cap.setDestIP( cap2.destIP() );
-  cap.setUser( cap2.user() );
-  cap.setPassword( cap2.password() );
-  cap.setCurrentPort( cap2.currentPort() );
-  cap.setCurrentModel( cap2.currentModel() );
-  cap.setCurrentConnectionMode( cap2.currentConnectionMode() );
-  cap.setMetaSyncingEnabled( cap2.isMetaSyncingEnabled() );
+    KonnectorDialog dlg(m_konprof->list() ,  m_konnector);
+    /* clicked ok - now clean up*/
+    if ( dlg.exec() ) {
+        m_konprof->clear();
+        KonnectorProfile::ValueList all = dlg.devices();
+        removeDeleted(dlg.removed() );
+        loadUnloaded( dlg.toLoad(), all );
+        unloadLoaded( dlg.toUnload(), all );
 
-  ConfigPart *par = new ConfigPart(cap , dlg );
-  dlg->addWidget( par, i18n("Configure"), &QPixmap() );
-  for (part = m_parts.first(); part != 0; part = m_parts.next() ) {
-    if( part->configIsVisible() )
-      dlg->addWidget(part->configWidget(), part->name(), part->pixmap() );
-  }
-  if (dlg->exec()) {
-      m_profile.setCapability( par->capability() );
-      m_profile.setConfigured( true );
-      m_konnector->setCapabilities( m_currentId,  m_profile.caps() );
-      saveCurrentProfile();
-     for (part = m_parts.first(); part != 0; part = m_parts.next() ) {
-       part->slotConfigOk();
-     }
-  }
-    */
+        /* the rest and unchanged items */
+        for ( KonnectorProfile::ValueList::Iterator it = all.begin();
+              it != all.end(); ++it ) {
+            m_konprof->add( (*it) );
+        }
+        m_konprof->save();
+    }
 }
-
+void KSyncMainWindow::removeDeleted( const KonnectorProfile::ValueList& list ) {
+    KonnectorProfile::ValueList::ConstIterator it;
+    for ( it = list.begin(); it != list.end(); ++it ) {
+        m_konnector->unregisterKonnector( (*it).udi() );
+    }
+}
+/*
+ * loadUnloaded items need to load items and remove them from
+ * all list so we have appropriate udi and no duplicates
+ */
+void KSyncMainWindow::loadUnloaded( const KonnectorProfile::ValueList& list,
+                                    KonnectorProfile::ValueList& all ) {
+    KonnectorProfile::ValueList::ConstIterator itList;
+    KonnectorProfile::ValueList::Iterator itAll;
+    for ( itList = list.begin(); itList != list.end(); ++itList ) {
+        itAll = all.find( (*itList) );
+        /* found it */
+        if ( itAll != all.end() )  {
+            QString udi =m_konnector->registerKonnector( (*itList).device() );
+            if (!udi.isEmpty() ) {
+                KonnectorProfile prof = (*itList);
+                prof.setUdi( udi );
+                m_konnector->setCapabilities( udi, prof.kapabilities() );
+                m_konprof->add( prof );
+            }
+            all.remove( itAll );
+        }
+    }
+}
+void KSyncMainWindow::unloadLoaded( const KonnectorProfile::ValueList& list,
+                                    KonnectorProfile::ValueList& all ) {
+    KonnectorProfile::ValueList::ConstIterator itList;
+    KonnectorProfile::ValueList::Iterator itAll;
+    for ( itList = list.begin(); itList != list.end(); ++itList ) {
+        itAll = all.find( (*itList) );
+        /* found it */
+        if ( itAll != all.end() )  {
+            m_konnector->unregisterKonnector( (*itList).udi() );
+            KonnectorProfile prof = (*itList);
+            prof.setUdi( QString::null );
+            m_konprof->add( prof );
+            all.remove( itAll );
+        }
+    }
+}
 void KSyncMainWindow::slotActivated(ManipulatorPart *part) {
   m_stack->raiseWidget(part->widget() );
 
@@ -254,7 +274,7 @@ QMap<QString,QString> KSyncMainWindow::ids() const
 }
 void KSyncMainWindow::initKonnector()
 {
-    kdDebug(5210) << "init konnector" << endl;
+//    kdDebug(5210) << "init konnector" << endl;
     m_konnector = new KonnectorManager(this,  "Konnector");
 
     connect(m_konnector,SIGNAL(wantsToSync(const QString&, Syncee::PtrList ) ),
@@ -266,18 +286,46 @@ void KSyncMainWindow::initKonnector()
     connect(m_konnector, SIGNAL(konnectorError(const QString&,  int,  const QString& ) ),
             this,  SLOT(slotKonnectorError( const QString&,  int, const QString&) ) );
 
-    // ok now just load the Opie Konnector // FIXME Don't hard code
-    Device::ValueList device;
-    device = m_konnector->query();
-    for(Device::ValueList::Iterator it = device.begin(); it != device.end(); ++it ){
-        kdDebug(5210) << "Identify "  << (*it).identify() << endl;
-        kdDebug(5210) << "Group " << (*it).group() << endl;
-        kdDebug(5210) << "Vendor " << (*it).vendor() << endl;
-        kdDebug(5210) << "UNIX " << (*it).id() << endl;
-        if ( (*it).id() == QString::fromLatin1("Opie-1") ) {
-        }
-    }
 }
+/*
+ * we're now initializing the ordinary profiles
+ */
+void KSyncMainWindow::initProfiles() {
+    kdDebug(5210) << "Init profiles " << endl;
+    m_konprof = new KonnectorProfileManager();
+    kdDebug(5210) << "About to Load" << endl;
+    m_konprof->load();
+    /* now load the wasLoaded() items */
+    KonnectorProfile::ValueList list = m_konprof->list();
+    KonnectorProfile::ValueList newL;
+    KonnectorProfile::ValueList::Iterator konIt;
+    for (konIt= list.begin(); konIt != list.end(); ++konIt ) {
+        KonnectorProfile prof = (*konIt);
+        if ( (*konIt).wasLoaded() ) {
+            prof.setUdi( m_konnector->registerKonnector( prof.device() ) );
+            m_konnector->setCapabilities( prof.udi(), prof.kapabilities() );
+        }
+        newL.append( prof);
+    }
+    m_konprof->setList( newL );
+    /* end the hack */
+
+    m_prof = new ProfileManager();
+    m_prof->load();
+}
+Profile KSyncMainWindow::currentProfile()const {
+    return m_prof->currentProfile();
+}
+ProfileManager* KSyncMainWindow::profileManager()const {
+    return m_prof;
+}
+KonnectorProfile KSyncMainWindow::konnectorProfile() const {
+    return m_konprof->current();
+}
+KonnectorProfileManager* KSyncMainWindow::konnectorManager() const {
+    return m_konprof;
+}
+
 // do we need to change the Konnector first?
 // raise overview and then pipe informations
 // when switching to KSyncee/KSyncEntry we will make
@@ -338,27 +386,5 @@ void KSyncMainWindow::slotKonnectorError( const QString& udi,
                                           const QString& id )
 {
 
-}
-// Check if we already configured a device with  the id
-// It's fairly easy cause we only allow one at a time
-void KSyncMainWindow::setupKonnector( const Device& udi,  const QString &id )
-{
-}
-void KSyncMainWindow::saveCurrentProfile()
-{
-/*    KConfig *cfg = kapp->config();
-    Kapabilities cap = m_profile.caps();
-    cfg->setGroup("Opie-Konnector");
-    cfg->writeEntry( "name",  "Opie StandardProfile");
-    cfg->writeEntry( "srcIP",  cap.srcIP() );
-    cfg->writeEntry( "destIP",  cap.destIP() );
-    cfg->writeEntry( "user",  cap.user() );
-    cfg->writeEntry( "pass",  cap.password() );
-    cfg->writeEntry( "port",  cap.currentPort() );
-    cfg->writeEntry( "model",  cap.currentModel() );
-    cfg->writeEntry( "mode",  cap.currentConnectionMode() );
-    cfg->writeEntry( "meta",  cap.isMetaSyncingEnabled() );
-    cfg->writeEntry( "push",  cap.supportsPushSync() );
-*/
 }
 #include "ksync_mainwindow.moc"

@@ -1,4 +1,5 @@
 
+#include <kdebug.h>
 #include <klocale.h>
 #include <klistview.h>
 #include <kpushbutton.h>
@@ -43,7 +44,8 @@ KonnectorProfile::ValueList KonnectorDialog::toUnload()const {
     KonnectorProfile::ValueList list;
     KonnectorCheckItem* item;
     for ( item = items.first(); item != 0; item = items.next() ) {
-        if ( !item->isOn() && item->profile().udi() != QString::null ) // loaded but here disabled
+        // loaded but not marked as loaded
+        if ( !item->isOn() && item->profile().udi() != QString::null )
             list.append( item->profile() );
     }
 
@@ -51,12 +53,16 @@ KonnectorProfile::ValueList KonnectorDialog::toUnload()const {
     return list;
 }
 KonnectorProfile::ValueList KonnectorDialog::toLoad()const {
+    kdDebug() << "toLoad" << endl;
     QPtrList<KonnectorCheckItem> items = list2list();
     KonnectorProfile::ValueList list;
     KonnectorCheckItem* item;
     for ( item = items.first(); item != 0; item = items.next() ) {
-        if ( item->isOn() && item->profile().udi() == QString::null ) // not loaded but now
+        /* not loaded but marked as loaded */
+        if ( item->isOn() && item->profile().udi() == QString::null ) {
             list.append( item->profile() );
+            kdDebug() << " item " << item->profile().name() << endl;
+        }
     }
 
 
@@ -117,7 +123,9 @@ void KonnectorDialog::initListView() {
 void KonnectorDialog::slotAdd() {
 //Wizzard
     KonnectorWizard wiz(m_manager);
-    wiz.exec();
+    if ( wiz.exec() ) {
+        new KonnectorCheckItem( m_base->lstView, wiz.profile() );
+    }
 }
 void KonnectorDialog::slotRemove() {
     KonnectorCheckItem* item = (KonnectorCheckItem*) m_base->lstView->selectedItem();

@@ -67,6 +67,10 @@ void ProfileManager::save() {
 void ProfileManager::addProfile( const Profile& prof ) {
     m_list.append( prof );
 }
+void ProfileManager::replaceProfile( const Profile& prod ) {
+    m_list.remove( prod );
+    m_list.append( prod );
+}
 void ProfileManager::removeProfile( const Profile& prof ) {
     m_list.remove( prof );
 }

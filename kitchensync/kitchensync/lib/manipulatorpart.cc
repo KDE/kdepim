@@ -46,15 +46,15 @@ using namespace KSync;
 ManipulatorPart::ManipulatorPart(QObject *parent, const char *name )
   : KParts::Part(parent, name )
 {
-    kdDebug() << "M_Window " << endl;
+//    kdDebug() << "M_Window " << endl;
     m_window = 0;
 
     if ( parent && parent->inherits("KitchenSync::KSyncMainWindow") ) {
-        kdDebug() << "Cast " << endl;
+//        kdDebug() << "Cast " << endl;
         m_window = static_cast<KSyncMainWindow*>(parent);
     }else{
-        kdDebug() << "Can not cast " << endl;
-        kdDebug() << "Parent " << parent->className() << endl;
+//        kdDebug() << "Can not cast " << endl;
+//        kdDebug() << "Parent " << parent->className() << endl;
     };
 }
 

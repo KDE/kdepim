@@ -1,3 +1,5 @@
+#include <kdebug.h>
+
 #include "konnectorprofilefilemanager.h"
 #include "konnectorprofilemanager.h"
 
@@ -55,6 +57,10 @@ void KonnectorProfileManager::add( const KonnectorProfile& prof ) {
     m_list.remove( prof );
     m_list.append( prof );
 }
+void KonnectorProfileManager::replace( const KonnectorProfile& prof ) {
+    m_list.remove( prof );
+    m_list.append( prof );
+}
 void KonnectorProfileManager::remove ( const KonnectorProfile& prof ) {
     m_list.remove( prof );
 }
@@ -63,6 +69,7 @@ void KonnectorProfileManager::clear()  {
     m_current = KonnectorProfile();
 }
 void KonnectorProfileManager::load() {
+    kdDebug() << "KonnectorProfileManager::load() " << endl;
     KonnectorProfileFileManager man;
     setList( man.load() );
 }

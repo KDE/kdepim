@@ -43,7 +43,9 @@
 
 #include <manipulatorpart.h>
 #include <ksync_systemtray.h>
-#include <ksync_profile.h>
+#include <profilemanager.h>
+#include <konnectorprofilemanager.h>
+
 
 class PartBar;
 class QHBox;
@@ -59,36 +61,54 @@ namespace KSync {
     class KSyncMainWindow : public KParts::MainWindow {
        Q_OBJECT
     public:
-        KSyncMainWindow(QWidget *widget =0l, const char *name = 0l, WFlags f = WType_TopLevel );
+        KSyncMainWindow(QWidget *widget =0l,
+                        const char *name = 0l,
+                        WFlags f = WType_TopLevel );
         ~KSyncMainWindow();
+
         KSyncSystemTray *tray();
         KonnectorManager*  konnector();
         QString  currentId()const;
         QMap<QString,QString> ids()const;
-        Profile currentProfile()const { return m_profile; }
+        Profile currentProfile()const;
+        ProfileManager *profileManager()const;
+        KonnectorProfile konnectorProfile() const;
+        KonnectorProfileManager* konnectorManager() const;
+
+
+
     private:
         virtual void initActions();
-        void saveCurrentProfile();
         void addModPart( ManipulatorPart * );
         void initSystray ( void );
-        void setupKonnector(const Device &udi,  const QString &id);
+        void removeDeleted( const KonnectorProfile::ValueList& );
+        void unloadLoaded( const KonnectorProfile::ValueList& toUnload,
+                           KonnectorProfile::ValueList& items );
+        void loadUnloaded( const KonnectorProfile::ValueList& toLoad,
+                           KonnectorProfile::ValueList& items );
+
+        //
         PartBar *m_bar;
         QHBox *m_lay;
         QWidgetStack *m_stack;
         QPtrList<ManipulatorPart> m_parts;
         KSyncSystemTray *m_tray;
         KonnectorManager *m_konnector;
+        KonnectorProfileManager* m_konprof;
+        ProfileManager* m_prof;
         QString m_currentId;
         // udi + Identify
         QMap<QString, QString> m_ids;
-        Profile m_profile; //  QValueList if we support more than opie
+
     signals:
         void profileChanged(const Profile& oldProfile   );
         void konnectorChanged( const QString & );
+        void konnectorChanged( const KonnectorProfile& oldProf );
         void konnectorStateChanged( const QString &,  int mode );
    private slots:
         void initKonnector();
         void initPlugins();
+        void initProfiles();
         void slotSync();
         void slotBackup();
         void slotRestore();
