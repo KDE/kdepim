@@ -1,0 +1,28 @@
+Misc:
+=====
+
+- Configuration Merge
+  Idea: The KOffice way of life: Offer a method that adds a given wiget of a predefined type as page
+  in a KDialogBase or offer a pointer to a KDialogBase -> requires a kaplan part or an external lib per part
+
+- Merged Foldertree View
+  Idea: Let the part send a description of their folders and reaction to calls as XML, similar to XMLGUI
+
+- Toolbar Items
+  The KParts Technology only provides actions for the current part. It might be desireable to have common
+  actions that are always available.
+
+Communication/Interaction:
+==========================
+
+- Invoking parts when they are needed for the first time takes too long, starting all takes too long on startup
+  Idea: Mark complex parts as basic parts that get loaded anyway
+
+- DCOP is too slow, internal communication should be handled via a dedicated interface, communication with
+  external applications (i.e. knotes) should be done via wrapper parts that communicate with their respective 
+  IPC method to their application using the native protocol (DCOP, Corba, etc).
+
+- Security: If we use the kparts (ktrader) approach to find a parts by looking for an application
+            with the correct mime type this might raise security problems. (Martin's concern)
+
+
