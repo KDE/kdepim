@@ -617,19 +617,26 @@ void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPos
   KNGroup *g=static_cast<KNGroup*>(a->collection() );
   int changeCnt=0, idRef=0;
 
-
   for( ; a; a=l.next()) {
-    if( handleXPosts && a->newsgroups()->isCrossposted() ) {
-      QList<KNGroup> gl;
+    if( r && knGlobals.cfgManager->readNewsGeneral()->markCrossposts() &&
+        handleXPosts && a->newsgroups()->isCrossposted() ) {
+
+      QStringList groups = a->newsgroups()->getGroups();
+      KNGroup *targetGroup=0;
+      KNRemoteArticle *xp=0;
       KNRemoteArticle::List al;
-      KNRemoteArticle *xp;
       QCString mid=a->messageID()->as7BitString(false);
-      knGlobals.grpManager->getAllGroups(&gl);
-      for(KNGroup *grp=gl.first(); grp; grp=gl.next()) {
-        if( (xp=grp->byMessageId(mid)) ) {
-          al.clear();
-          al.append(xp);
-          setRead(al, r, false);
+
+      for (QStringList::Iterator it = groups.begin(); it != groups.end(); ++it) {
+        targetGroup = knGlobals.grpManager->group(*it, g->account());
+        if (targetGroup) {
+          if (targetGroup->isLoaded() && (xp=targetGroup->byMessageId(mid)) ) {
+            al.clear();
+            al.append(xp);
+            setRead(al, r, false);
+          } else {
+            targetGroup->appendXPostID(mid);
+          }
         }
       }
     }

@@ -566,6 +566,7 @@ void KNGroupManager::processJob(KNJobData *j)
       if (j->success()) {
         if(group->newCount()>0) {
           group->scoreArticles();
+          group->processXPostBuffer(true);
           group->updateListItem();
           group->saveInfo();
         }

@@ -446,6 +446,7 @@ class Newsgroups : public Base {
 
     QCString firstGroup();
     bool isCrossposted()            { return ( g_roups.find(',')>-1 ); }
+    QStringList getGroups();
 
   protected:
     QCString g_roups;

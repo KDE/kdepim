@@ -875,13 +875,14 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   m_arkSecs=new KIntSpinBox(0, 9999, 1, 0, 10, hgb);
   connect(m_arkCB, SIGNAL(toggled(bool)), m_arkSecs, SLOT(setEnabled(bool)));
   m_arkSecs->setSuffix(i18n(" sec"));
+  m_arkCrossCB=new QCheckBox(i18n("Mark c&rossposted articles as read"), hgb);
 
   e_xpThrCB=new QCheckBox(i18n("Show &whole thread on expanding"), lgb);
   s_coreCB=new QCheckBox(i18n("Show article &score"), lgb);
   l_inesCB=new QCheckBox(i18n("Show &line count"), lgb);
 
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
-  QGridLayout *hgbL=new QGridLayout(hgb, 4,2, 8,5);
+  QGridLayout *hgbL=new QGridLayout(hgb, 5,2, 8,5);
   QVBoxLayout *lgbL=new QVBoxLayout(lgb, 8, 5);
 
   topL->addWidget(hgb);
@@ -889,11 +890,12 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   topL->addStretch(1);
 
   hgbL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-  hgbL->addWidget(a_utoCB, 1,0);
+  hgbL->addMultiCellWidget(a_utoCB, 1,1, 0,1);
   hgbL->addWidget(l1, 2, 0);
   hgbL->addWidget(m_axFetch, 2,1);
   hgbL->addWidget(m_arkCB, 3,0);
   hgbL->addWidget(m_arkSecs, 3,1);
+  hgbL->addMultiCellWidget(m_arkCrossCB, 4,4, 0,1);
   hgbL->setColStretch(0,1);
 
   lgbL->addSpacing(fontMetrics().lineSpacing()-4);
@@ -909,6 +911,7 @@ KNConfig::ReadNewsGeneralWidget::ReadNewsGeneralWidget(ReadNewsGeneral *d, QWidg
   m_arkCB->setChecked(d->a_utoMark);
   m_arkSecs->setValue(d->m_arkSecs);
   m_arkSecs->setEnabled(d->a_utoMark);
+  m_arkCrossCB->setChecked(d->m_arkCrossposts);
   e_xpThrCB->setChecked(d->t_otalExpand);
   l_inesCB->setChecked(d->s_howLines);
   s_coreCB->setChecked(d->s_howScore);
@@ -929,6 +932,7 @@ void KNConfig::ReadNewsGeneralWidget::apply()
   d_ata->m_axFetch=m_axFetch->value();
   d_ata->a_utoMark=m_arkCB->isChecked();
   d_ata->m_arkSecs=m_arkSecs->value();
+  d_ata->m_arkCrossposts=m_arkCrossCB->isChecked();
   d_ata->t_otalExpand=e_xpThrCB->isChecked();
   d_ata->s_howLines=l_inesCB->isChecked();
   d_ata->s_howScore=s_coreCB->isChecked();

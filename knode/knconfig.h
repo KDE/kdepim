@@ -458,6 +458,7 @@ class ReadNewsGeneral : public Base {
     int maxToFetch()                 { return m_axFetch; }
     bool autoMark()                  { return a_utoMark; }
     int autoMarkSeconds()            { return m_arkSecs; }
+    bool markCrossposts()            { return m_arkCrossposts; }
 
     bool totalExpandThreads()        { return t_otalExpand; }
     bool showLines()                 { return s_howLines; }
@@ -466,6 +467,7 @@ class ReadNewsGeneral : public Base {
   protected:
     bool  a_utoCheck,
           a_utoMark,
+          m_arkCrossposts,
           t_otalExpand,
           s_howLines,
           s_howScore;
@@ -487,6 +489,7 @@ class ReadNewsGeneralWidget : public BaseWidget {
   protected:
     QCheckBox   *a_utoCB,
                 *m_arkCB,
+                *m_arkCrossCB,
                 *e_xpThrCB,
                 *l_inesCB,
                 *s_coreCB;

@@ -87,6 +87,10 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     void saveDynamicData(int cnt,bool ovr=false);
     void syncDynamicData();
 
+    // mark articles with this id as read when we later load the headers / fetch new articles
+    void appendXPostID(const QString &id);
+    void processXPostBuffer(bool deleteAfterwards);
+
     // article handling
     void updateThreadInfo();
     void reorganize();
@@ -128,6 +132,8 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
               u_seCharset;
 
     Status    s_tatus;
+
+    QStringList c_rosspostIDBuffer;
 
     KNConfig::Identity *i_dentity;
 

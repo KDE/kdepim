@@ -563,6 +563,7 @@ KNConfig::ReadNewsGeneral::ReadNewsGeneral()
   a_utoMark=conf->readBoolEntry("autoMark", true);
   m_arkSecs=conf->readNumEntry("markSecs", 5);
   if (m_arkSecs<0) m_arkSecs = 0;
+  m_arkCrossposts=conf->readBoolEntry("markCrossposts", true);
   t_otalExpand=conf->readBoolEntry("totalExpand", true);
   s_howLines=conf->readBoolEntry("showLines3", true);
   s_howScore=conf->readBoolEntry("showScore3", true);
@@ -585,6 +586,7 @@ void KNConfig::ReadNewsGeneral::save()
   conf->writeEntry("maxFetch", m_axFetch);
   conf->writeEntry("autoMark", a_utoMark);
   conf->writeEntry("markSecs", m_arkSecs);
+  conf->writeEntry("markCrossposts", m_arkCrossposts);
   conf->writeEntry("totalExpand", t_otalExpand);
   conf->writeEntry("showLines3", s_howLines);
   conf->writeEntry("showScore3", s_howScore);

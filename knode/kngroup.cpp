@@ -38,6 +38,7 @@
 #include "knodeview.h"
 #include "knode.h"
 #include "knscoring.h"
+#include "knarticlemanager.h"
 
 #define SORT_DEPTH 5
 
@@ -99,6 +100,7 @@ bool KNGroup::readInfo(const QString &confPath)
     s_tatus = moderated;
   else
     s_tatus = unknown;
+  c_rosspostIDBuffer = info.readListEntry("crosspostIDBuffer");
 
   i_dentity=new KNConfig::Identity(false);
   i_dentity->loadConfig(&info);
@@ -139,6 +141,7 @@ void KNGroup::saveInfo()
       case moderated: info.writeEntry("status","moderated");
                            break;
     }
+    info.writeEntry("crosspostIDBuffer", c_rosspostIDBuffer);
 
     if(i_dentity)
       i_dentity->saveConfig(&info);
@@ -312,6 +315,7 @@ bool KNGroup::loadHdrs()
   c_ount=length();
 
   updateThreadInfo();
+  processXPostBuffer(false);
   return true;
 }
 
@@ -549,6 +553,33 @@ void KNGroup::syncDynamicData()
     }
     else KNHelper::displayInternalFileError();
   }
+}
+
+
+void KNGroup::appendXPostID(const QString &id)
+{
+  c_rosspostIDBuffer.append(id);
+}
+
+
+void KNGroup::processXPostBuffer(bool deleteAfterwards)
+{
+  QStringList remainder;
+  KNRemoteArticle *xp;
+  KNRemoteArticle::List al;
+
+  for (QStringList::Iterator it = c_rosspostIDBuffer.begin(); it != c_rosspostIDBuffer.end(); ++it) {
+    if ((xp=byMessageId((*it).local8Bit())))
+      al.append(xp);
+    else
+      remainder.append(*it);
+  }
+  knGlobals.artManager->setRead(al, true, false);
+
+  if (!deleteAfterwards)
+    c_rosspostIDBuffer = remainder;
+  else
+    c_rosspostIDBuffer.clear();
 }
 
 

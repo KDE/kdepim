@@ -642,6 +642,21 @@ QCString KNHeaders::Newsgroups::firstGroup()
     return QCString();
 }
 
+
+QStringList KNHeaders::Newsgroups::getGroups()
+{
+  QStringList temp = QStringList::split(',', g_roups);
+  QStringList ret;
+  QString s;
+
+  for (QStringList::Iterator it = temp.begin(); it != temp.end(); ++it ) {
+    s = (*it).simplifyWhiteSpace();
+    ret.append(s);
+  }
+
+  return ret;
+}
+
 //-----</Newsgroups>---------------------------
 
 
