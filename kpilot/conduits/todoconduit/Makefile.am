@@ -1,4 +1,4 @@
-INCLUDES= @all_includes@ -I$(LIBPISOCK_PATH) -I$(top_srcdir)/kpilot/kpilot -I../vcalconduit/versit
+INCLUDES= @all_includes@ -I$(LIBPISOCK_PATH) -I$(top_srcdir)/kpilot/kpilot -I$(top_srcdir)/kpilot/conduits/vcalconduit/versit
 METASOURCES = AUTO
 
 servicedir  = $(kde_servicesdir)
