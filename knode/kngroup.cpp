@@ -641,7 +641,7 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
 
   // this method is called from the nntp-thread!!!
 #ifndef NDEBUG
-  qDebug("knode: KNGroup::sortHdrs() : start = %d  end = %d",start,end);
+  qDebug("knode: KNGroup::buildThreads() : start = %d  end = %d",start,end);
 #endif
 
   //resort old hdrs
@@ -916,7 +916,8 @@ void KNGroup::updateThreadInfo()
 
   for(int idx=0; idx<length(); idx++) {
     int idRef=at(idx)->idRef();
-    while(idRef!=0) {
+    int iterCount=1;         // control iteration count to avoid infinite loops
+    while((idRef!=0) && (iterCount <= length())) {
       ref=byId(idRef);
       if(!ref) {
         brokenThread=true;
@@ -928,7 +929,10 @@ void KNGroup::updateThreadInfo()
         if(at(idx)->isNew()) ref->incNewFollowUps();
       }
       idRef=ref->idRef();
+      iterCount++;
     }
+    if(iterCount > length())
+      brokenThread=true;
     if(brokenThread) break;
   }
 
