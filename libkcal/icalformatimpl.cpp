@@ -663,9 +663,9 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 */
 
   // related event
-  if (incidence->relatedTo()) {
+  if ( !incidence->relatedToUid().isEmpty() ) {
     icalcomponent_add_property(parent,icalproperty_new_relatedto(
-        incidence->relatedTo()->uid().utf8()));
+        incidence->relatedToUid().utf8()));
   }
 
   // recurrence rule stuff
