@@ -410,7 +410,7 @@ void KABCore::setWhoAmI()
   QString text( i18n( "<qt>Do you really want to use <b>%1</b> as your new personal contact?</qt>" ) );
   KABC::Addressee addr = mAddressBook->findByUid( uidList[ 0 ] );
   if ( KMessageBox::questionYesNo( this, text.arg( addr.assembledName() ) ) == KMessageBox::Yes )
-    KABC::StdAddressBook::setUsersContact( addr.uid() );
+    dynamic_cast<KABC::StdAddressBook*>( KABC::StdAddressBook::self() )->setWhoAmI( addr );
 }
 
 void KABCore::setCategories()
