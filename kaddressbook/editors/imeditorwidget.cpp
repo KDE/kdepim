@@ -47,7 +47,7 @@ extern "C" {
 
 QString IMEditorWidgetFactory::pageTitle() const
 {
-  return "IM Addresses";
+  return i18n( "IM Addresses" );
 }
 
 QString IMEditorWidgetFactory::pageIdentifier() const
