@@ -48,14 +48,14 @@ ResourceRemoteConfig::ResourceRemoteConfig( QWidget* parent,  const char* name )
   QLabel *label = new QLabel( i18n( "Download URL:" ), this );
 
   mDownloadUrl = new KURLRequester( this );
-  mDownloadUrl->setMode( KFile::Files );
+  mDownloadUrl->setMode( KFile::File );
   mainLayout->addWidget( label, 1, 0 );
   mainLayout->addWidget( mDownloadUrl, 1, 1 );
 
   // FIXME: Post 3.2: i18n("Upload to:") ( bug 67330 )
   label = new QLabel( i18n( "Upload URL:" ), this );
   mUploadUrl = new KURLRequester( this );
-  mUploadUrl->setMode( KFile::Files );
+  mUploadUrl->setMode( KFile::File );
   mainLayout->addWidget( label, 2, 0 );
   mainLayout->addWidget( mUploadUrl, 2, 1 );
 
