@@ -150,16 +150,16 @@ int main( int argc, char** argv ) {
       config->clear();
 
       // Check new value
-      const Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "<nogroup>", "ldaptimeout" );
+      Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "<nogroup>", "ldaptimeout" );
       assert( entry );
       assert( entry->dataType() == Kleo::CryptoConfigEntry::DataType_UInt );
       cout << "LDAP timeout: " << entry->uintValue() << " seconds." << endl;
       assert( entry->uintValue() == 101 );
 
       // Reset old value
-      QCString sys;
-      sys.sprintf( "echo 'ldaptimeout:%d' | gpgconf --change-options dirmngr", val );
-      system( sys.data() );
+      entry->setUIntValue( val );
+      assert( entry->isDirty() );
+      config->sync( true );
 
       cout << "LDAP timeout reset to " << val << " seconds." << endl;
     }
@@ -176,7 +176,7 @@ int main( int argc, char** argv ) {
       cout << "Log-file: " << val.local8Bit() << endl;
 
       // Test setting the option directly, then querying again
-      system( "echo 'log-file:\"/tmp/test%3a%e5ä' | gpgconf --change-options dirmngr" );
+      //system( "echo 'log-file:\"/tmp/test%3a%e5ä' | gpgconf --change-options dirmngr" );
       // Now let's do it with the C++ API instead
       entry->setStringValue( "/tmp/test:%e5ä" );
       assert( entry->isDirty() );
@@ -189,7 +189,7 @@ int main( int argc, char** argv ) {
       config->clear();
 
       // Check new value
-      const Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "<nogroup>", "log-file" );
+      Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", "<nogroup>", "log-file" );
       assert( entry );
       assert( entry->dataType() == Kleo::CryptoConfigEntry::DataType_Path );
       cout << "Log-file: " << entry->stringValue().local8Bit() << endl;
@@ -197,12 +197,17 @@ int main( int argc, char** argv ) {
       //assert( entry->stringValue() == "/tmp/test:%e5ä" ); // (or even with %e5 decoded)
 
       // Reset old value
+#if 0
       QString arg( val );
       if ( !arg.isEmpty() )
         arg.prepend( '"' );
       QCString sys;
       sys.sprintf( "echo 'log-file:%s' | gpgconf --change-options dirmngr", arg.local8Bit().data() );
       system( sys.data() );
+#endif
+      entry->setStringValue( val );
+      assert( entry->isDirty() );
+      config->sync( true );
 
       cout << "Log-file reset to " << val.local8Bit() << endl;
     }
