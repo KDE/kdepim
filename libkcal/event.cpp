@@ -40,6 +40,7 @@ Event::Event(const Event &e) : Incidence(e)
 
 Event::~Event()
 {
+//  kdDebug(5800) << "~Event() " << int( this ) << endl;
 }
 
 Event *Event::clone()
