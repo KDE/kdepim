@@ -1,3 +1,5 @@
 usr/include/rmm/*
 usr/lib/librmm.so
+usr/lib/libvcard.so
+usr/lib/libimap.so
 usr/lib/libkorganizer.so
