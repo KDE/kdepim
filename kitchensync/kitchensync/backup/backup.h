@@ -75,7 +75,8 @@ class Backup : public ManipulatorPart
     QString topBackupDir() const;
 
   protected slots:
-    void restore();
+    void restoreBackup();
+    void deleteBackup();
 
     void slotSynceesRead( Konnector *k, const SynceeList &syncees );
 

@@ -35,6 +35,7 @@
 #include <kdialog.h>
 #include <kdialogbase.h>
 #include <kstandarddirs.h>
+#include <kprocess.h>
 
 #include <qlabel.h>
 #include <qlistview.h>
@@ -71,24 +72,24 @@ class KonnectorCheckItem : public QCheckListItem
 class BackupItem : public QListViewItem
 {
   public:
-    BackupItem( QListView *parent, const QString &filename )
+    BackupItem( QListView *parent, const QString &dirName )
       : QListViewItem( parent )
     {
-      QDateTime dt = QDateTime::fromString( filename, ISODate );
+      QDateTime dt = QDateTime::fromString( dirName, ISODate );
       QString txt;
       if ( dt.isValid() ) {
         txt = KGlobal::locale()->formatDateTime( dt );
-        mFilename = filename;
+        mDirName = dirName;
       } else {
-        txt = i18n("Invalid (\"%1\")").arg( filename );
+        txt = i18n("Invalid (\"%1\")").arg( dirName );
       }
       setText( 0, txt );
     }
     
-    QString filename() const { return mFilename; }
+    QString dirName() const { return mDirName; }
     
   private:
-    QString mFilename;
+    QString mDirName;
 };
 
 Backup::Backup( QWidget *parent, const char *name,
@@ -164,7 +165,11 @@ QWidget *Backup::widget()
 
     QPushButton *button = new QPushButton( i18n("Restore"), m_widget );
     restoreLayout->addWidget( button );
-    connect( button, SIGNAL( clicked() ), SLOT( restore() ) );
+    connect( button, SIGNAL( clicked() ), SLOT( restoreBackup() ) );
+
+    button = new QPushButton( i18n("Delete"), m_widget );
+    restoreLayout->addWidget( button );
+    connect( button, SIGNAL( clicked() ), SLOT( deleteBackup() ) );
 
     mLogView = new QTextView( m_widget );
     mLogView->setTextFormat( LogText );
@@ -294,7 +299,7 @@ void Backup::slotSynceesRead( Konnector *k, const SynceeList &syncees )
   }
 }
 
-void Backup::restore()
+void Backup::restoreBackup()
 {
   BackupItem *backupItem =
     static_cast<BackupItem *>( mRestoreView->currentItem() );
@@ -304,13 +309,39 @@ void Backup::restore()
     return;
   }
 
-  if ( backupItem->filename().isEmpty() ) {
+  if ( backupItem->dirName().isEmpty() ) {
     KMessageBox::sorry( m_widget, i18n("Selected backup is invalid.") );
     return;
   }
 
-  logMessage( i18n("Restoring backup %1").arg( backupItem->filename() ) );
+  logMessage( i18n("Restoring backup %1").arg( backupItem->dirName() ) );
 
+}
+
+void Backup::deleteBackup()
+{
+  BackupItem *backupItem =
+    static_cast<BackupItem *>( mRestoreView->currentItem() );
+  
+  if ( !backupItem ) {
+    KMessageBox::sorry( m_widget, i18n("No backup selected.") );
+    return;
+  }
+
+  int result = KMessageBox::questionYesNo( m_widget,
+      i18n("Permanently delete backup '%1'?").arg( backupItem->text( 0 ) ) );
+  if ( result == KMessageBox::No ) return;
+
+  QString dirName = locateLocal( "appdata", topBackupDir() );
+  dirName += backupItem->dirName();
+
+  KProcess proc;
+  proc << "rm" << "-r" << dirName;
+  proc.start( KProcess::Block );
+
+  delete backupItem;
+  
+  logMessage( i18n("Backup '%1' deleted").arg( dirName ) );
 }
 
 #include "backup.moc"
