@@ -304,8 +304,10 @@ error:
 					"object for ResourceCalendar"<<endl;
 				return false;
 			}
+#if KDE_IS_VERSION(3,2,2)
 			rescal->readConfig();
 			rescal->load();
+#endif
 			addSyncLogEntry(i18n("Syncing with standard calendar resource."));
 			break;
 		default:
