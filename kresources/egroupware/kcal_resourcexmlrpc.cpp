@@ -456,19 +456,14 @@ void ResourceXMLRPC::deleteJournal( Journal* journal )
   mCalendar.deleteJournal( journal );
 }
 
-Journal *ResourceXMLRPC::journal( const QDate& date )
+Journal::List ResourceXMLRPC::journals( const QDate& date )
 {
-  return mCalendar.journal( date );
+  return mCalendar.journals( date );
 }
 
 Journal *ResourceXMLRPC::journal( const QString& uid )
 {
   return mCalendar.journal( uid );
-}
-
-Journal::List ResourceXMLRPC::journals()
-{
-  return mCalendar.journals();
 }
 
 
@@ -948,7 +943,7 @@ void ResourceXMLRPC::writeEvent( Event *event, QMap<QString, QVariant> &args )
   int priority = 0;
   if ( event->priority() == 1 )
     priority = CAL_PRIO_HIGH;
-  else if ( event->priority() > 1 && event->priority() <= 5 ) 
+  else if ( event->priority() > 1 && event->priority() <= 5 )
     priority = CAL_PRIO_NORMAL;
   else
     priority = CAL_PRIO_LOW;

@@ -147,14 +147,14 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     virtual bool addJournal(Journal *);
     /** deletes an event from this calendar. */
     virtual void deleteJournal(Journal *);
-    /** Return Journal for given date */
-    virtual Journal *journal(const QDate &);
+    /** Return Journals for given date */
+    virtual Journal::List journals(const QDate &);
     /** Return Journal with given UID */
     virtual Journal *journal(const QString &UID);
     /** Return list of all Journals stored in calendar */
     Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted,  SortDirection sortDirection = SortDirectionAscending );
-    /** Return journal for the given date. */
-    Journal *rawJournalForDate( const QDate & );
+    /** Return journals for the given date. */
+    Journal::List rawJournalsForDate( const QDate & );
 
     /** Return all alarms, which ocur in the given time interval. */
     Alarm::List alarms( const QDateTime &from, const QDateTime &to );

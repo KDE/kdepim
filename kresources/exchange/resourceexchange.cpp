@@ -69,7 +69,7 @@ public:
 };
 
 ResourceExchange::ResourceExchange( const KConfig *config )
-  : ResourceCalendar( config ), mClient(0), mMonitor(0), mCache(0), mDates(0), 
+  : ResourceCalendar( config ), mClient(0), mMonitor(0), mCache(0), mDates(0),
     mEventDates(0), mCacheDates(0)
 {
   mLock = new KABC::LockNull( true );
@@ -455,17 +455,17 @@ Event::List ResourceExchange::rawEventsForDate( const QDate &qd, bool sorted )
     for( it = oldEvents.begin(); it != oldEvents.end(); ++it ) {
       mCache->deleteEvent( *it );
     }
-    
+
     // FIXME: This is needed for the hack below:
     Event::List eventsBefore = mCache->rawEvents();
-    
+
     kdDebug() << "Reading events for month of " << start.toString() << endl;
     mClient->downloadSynchronous( mCache, start, end, true ); // Show progress dialog
-    
-    // FIXME: This is a terrible hack! We need to install the observer for 
-    // newly downloaded events.However, downloading is done by 
-    // mClient->downloadSynchronous, where we don't have the pointer to this 
-    // available... On the other hand, here we don't really know which events 
+
+    // FIXME: This is a terrible hack! We need to install the observer for
+    // newly downloaded events.However, downloading is done by
+    // mClient->downloadSynchronous, where we don't have the pointer to this
+    // available... On the other hand, here we don't really know which events
     // are really new.
     Event::List eventsAfter = mCache->rawEvents();
     for ( it = eventsAfter.begin(); it != eventsAfter.end(); ++it ) {
@@ -474,7 +474,7 @@ Event::List ResourceExchange::rawEventsForDate( const QDate &qd, bool sorted )
         (*it)->registerObserver( this );
       }
     }
-    
+
     mDates->add( start );
     mCacheDates->insert( start, now );
   }
@@ -535,14 +535,14 @@ void ResourceExchange::deleteJournal(Journal */*journal*/)
 //  setModified( true );
 }
 
-Journal *ResourceExchange::journal(const QDate &/*date*/)
+Journal::List ResourceExchange::journals(const QDate &/*date*/)
 {
   // We don't handle journals yet
-  return 0;
-//    if( !mCache)
-//        return 0;
-//  kdDebug(5800) << "ResourceExchange::journal() " << date.toString() << endl;
-//    return mCache->journal( date );
+  return Journal::List();
+/*  Journal::List list;
+  if ( mCache )
+	list = mCache->journals( date );
+  return list;*/
 }
 
 Journal *ResourceExchange::journal(const QString &/*uid*/)
@@ -564,13 +564,14 @@ Journal::List ResourceExchange::rawJournals( JournalSortField /*sortField*/, Sor
   return list;*/
 }
 
-Journal *ResourceExchange::rawJournalForDate( const QDate &/*date*/ )
+Journal::List ResourceExchange::rawJournalsForDate( const QDate &/*date*/ )
 {
   // We don't handle journals yet
-  return 0;
-/*  if ( !mCache )
-    return 0;
-  return mCache->rawJournalForDate( date );*/
+  return Journal::List();
+/*  Journal::List list;
+  if ( mCache )
+    list = mCache->rawJournalsForDate( date );
+  return list;*/
 }
 
 void ResourceExchange::setTimeZoneId( const QString &tzid )

@@ -141,19 +141,14 @@ class ResourceXMLRPC : public ResourceCached
     void deleteJournal( Journal* journal );
 
     /**
-      Return Journal for given date
+      Return Journals for given date
      */
-    virtual Journal *journal( const QDate& );
+    virtual Journal::List journals( const QDate& );
 
     /**
       Return Journal with given UID
      */
     virtual Journal *journal( const QString& uid );
-
-    /**
-      Return list of all Journals stored in calendar
-     */
-    Journal::List journals();
 
     /**
       Return all alarms, which ocur in the given time interval.

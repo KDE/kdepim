@@ -592,11 +592,6 @@ void ResourceKolab::deleteJournal( KCal::Journal* journal )
   deleteIncidence( journal );
 }
 
-KCal::Journal* ResourceKolab::journal( const QDate& date )
-{
-  return mCalendar.journal( date );
-}
-
 KCal::Journal* ResourceKolab::journal( const QString& uid )
 {
   return mCalendar.journal(uid);
@@ -607,9 +602,9 @@ KCal::Journal::List ResourceKolab::rawJournals( JournalSortField sortField, Sort
   return mCalendar.rawJournals( sortField, sortDirection );
 }
 
-KCal::Journal *ResourceKolab::rawJournalForDate( const QDate &date )
+KCal::Journal::List ResourceKolab::rawJournalsForDate( const QDate &date )
 {
-  return mCalendar.rawJournalForDate( date );
+  return mCalendar.rawJournalsForDate( date );
 }
 
 KCal::Alarm::List ResourceKolab::alarms( const QDateTime& from,

@@ -402,12 +402,6 @@ void ResourceIMAP::deleteJournal(Journal *journal)
   mCalendar.deleteJournal(journal);
 }
 
-
-Journal *ResourceIMAP::journal(const QDate &date)
-{
-  return mCalendar.journal(date);
-}
-
 Journal *ResourceIMAP::journal(const QString &uid)
 {
   return mCalendar.journal(uid);
@@ -418,9 +412,9 @@ Journal::List ResourceIMAP::rawJournals( JournalSortField sortField, SortDirecti
   return mCalendar.rawJournals( sortField, sortDirection );
 }
 
-Journal *ResourceIMAP::rawJournalForDate( const QDate &date )
+Journal::List ResourceIMAP::rawJournalsForDate( const QDate &date )
 {
-  return mCalendar.rawJournalForDate( date );
+  return mCalendar.rawJournalsForDate( date );
 }
 
 /***********************************************

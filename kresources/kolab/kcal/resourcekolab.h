@@ -82,10 +82,9 @@ public:
 
   bool addJournal( KCal::Journal* );
   void deleteJournal( KCal::Journal* );
-  KCal::Journal* journal( const QDate& );
   KCal::Journal* journal( const QString& uid );
   KCal::Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
-  KCal::Journal* rawJournalForDate( const QDate &date );
+  KCal::Journal::List rawJournalsForDate( const QDate &date );
 
   KCal::Alarm::List alarms( const QDateTime& from, const QDateTime& to );
   KCal::Alarm::List alarmsTo( const QDateTime& to );

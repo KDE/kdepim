@@ -114,14 +114,12 @@ public:
      Remove a journal entry from the journal.
   */
   void deleteJournal( Journal * );
-  /** Return Journal for given date */
-  virtual Journal *journal(const QDate &);
   /** Return Journal with given UID */
   virtual Journal *journal(const QString &UID);
   /** Return list of all Journals stored in calendar */
   Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
   /** Return the journal for the given date */
-  Journal *rawJournalForDate( const QDate &date );
+  Journal::List rawJournalsForDate( const QDate &date );
 
   /** Return all alarms, which ocur in the given time interval. */
   Alarm::List alarms( const QDateTime &from, const QDateTime &to );
