@@ -306,7 +306,9 @@ No implementation of fopencookie or funopen available.
 ]]))
   fi
 
-  AC_CHECK_FUNCS(isascii)
+  dnl it's a #define !!!
+  dnl AC_CHECK_FUNCS(isascii)
+
   AC_CHECK_FUNCS(putc_unlocked)
   AC_CHECK_FUNCS(memrchr)
 fi
