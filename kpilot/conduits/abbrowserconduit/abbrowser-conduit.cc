@@ -60,7 +60,7 @@ static const char *abbrowser_conduit_id=
 //
 int main(int argc, char* argv[])
     {
-    ConduitApp a(argc,argv,"abbrowser",
+    ConduitApp a(argc,argv,"abbrowserConduit",
 		 I18N_NOOP("KAddressBook Conduit"),
 		 "0.2");
     
@@ -130,8 +130,8 @@ bool AbbrowserConduit::_startAbbrowser()
 	* It's ugly to use defines, I know, but anything else is silly
 	* ie. functions have too much overhead. It's undeffed below.
 	*/
-#define PING_ABBROWSER (fDcop->call("abbrowser", \
-		"AbBrowserIface", \
+#define PING_ABBROWSER (fDcop->call("kaddressbook", \
+		"KAddressBookIface", \
 		"interfaces()",  \
 		sendData, replyTypeStr, replyData))
     foundAbbrowser = PING_ABBROWSER ;
@@ -139,7 +139,7 @@ bool AbbrowserConduit::_startAbbrowser()
 	{
 	// abbrowser not running, start it
 	KURL::List noargs;
-	KRun::run("abbrowser", noargs);
+	KRun::run("kaddressbook", noargs);
 	
 	kdDebug() << fname << "Waiting to run abbrowser" << endl;
 	alreadyRunning = false;
@@ -183,7 +183,7 @@ void AbbrowserConduit::_stopAbbrowser(bool abAlreadyRunning)
 	QByteArray replyData;
 	QCString replyTypeStr;
 	
-	if (!fDcop->call("abbrowser", "AbBrowserIface",
+	if (!fDcop->call("kaddressbook", "KAddressBookIface",
 			 "exit()",
 			 sendData, replyTypeStr, replyData))
 	    {
@@ -231,10 +231,10 @@ bool AbbrowserConduit::_getAbbrowserContacts(QDict<ContactEntry> &contacts)
     QByteArray noParamData;
     QByteArray replyDictData;
     QCString replyTypeStr;
-    if (!fDcop->call("abbrowser", "AbBrowserIface", "getEntryDict()",
+    if (!fDcop->call("kaddressbook", "KAddressBookIface", "getEntryDict()",
 		       noParamData, replyTypeStr, replyDictData))
 	{
-	kdWarning() << "AbBrowserIface::Unable to call abbrowser getEntryDict()" << endl;
+	kdWarning() << "KAddressBookIface::Unable to call abbrowser getEntryDict()" << endl;
 	return false;
 	}
     assert(replyTypeStr == "QDict<ContactEntry>");
@@ -734,7 +734,7 @@ void AbbrowserConduit::_removeAbEntry(const QString & key)
 	{
 	// new entry; just send the contact entry
 	out << key;
-	if (!fDcop->call("abbrowser", "AbBrowserIface",
+	if (!fDcop->call("kaddressbook", "KAddressBookIface",
 			 "removeEntry(QString)",
 			 sendData, replyTypeStr, replyData))
 	    {
@@ -767,7 +767,7 @@ void AbbrowserConduit::_saveAbEntry(ContactEntry &abEntry,
 	{
 	// new entry; just send the contact entry
 	out << abEntry;
-	if (!fDcop->call("abbrowser", "AbBrowserIface",
+	if (!fDcop->call("kaddressbook", "KAddressBookIface",
 			 "addEntry(ContactEntry)",
 			 sendData, replyTypeStr, replyData))
 	    {
@@ -780,7 +780,7 @@ void AbbrowserConduit::_saveAbEntry(ContactEntry &abEntry,
 	// change entry, send contact and key
 	out << key;
 	out << abEntry;
-	if (!fDcop->call("abbrowser", "AbBrowserIface",
+	if (!fDcop->call("kaddressbook", "KAddressBookIface",
 			 "changeEntry(QString, ContactEntry)",
 			 sendData, replyTypeStr, replyData))
 	    {
@@ -796,11 +796,11 @@ void AbbrowserConduit::_saveAbChanges()
     QByteArray replyData;
     QCString replyTypeStr;
 
-    if (!fDcop->call("abbrowser", "AbBrowserIface",
+    if (!fDcop->call("kaddressbook", "KAddressBookIface",
 		     "save()",
 		     sendData, replyTypeStr, replyData))
 	{
-	kdWarning() << "Unable to save abbrowser" << endl;
+	kdWarning() << "Unable to save kaddressbook" << endl;
 	qApp->exit(1);
 	}
     }
@@ -1001,7 +1001,7 @@ AbbrowserConduit::_syncPilotEntry(PilotAddress &pilotAddress,
 				  QString *outAbKey, bool deleteIfNotFound)
     {
     FUNCTIONSETUP;
-    kdDebug() << fname << " trying to sync the existing pilotAddress to the abbrowser entries" << endl;
+    kdDebug() << fname << " trying to sync the existing pilotAddress to the kaddressbook entries" << endl;
     
     QString abKey;
     // look for the possible match of names
@@ -1009,11 +1009,11 @@ AbbrowserConduit::_syncPilotEntry(PilotAddress &pilotAddress,
 	_findMatch(abbrowserContacts, pilotAddress, abKey);
     if (abEntry)
 	{
-	// if already found in abbrowser and kpilot, just assign
+	// if already found in kaddressbook and kpilot, just assign
 	// the kpilot id and save
 	if (_equal(pilotAddress, *abEntry))
 	    {
-	    kdDebug() << fname << " both records already exist and are equal, just assigning the KPILOT_ID to the abbrowser entry" << endl;
+	    kdDebug() << fname << " both records already exist and are equal, just assigning the KPILOT_ID to the kaddressbook entry" << endl;
 	    abEntry->setCustomField("KPILOT_ID", QString::number(pilotAddress.getID()));
 	    _saveAbEntry(*abEntry, abKey);
 	    }
@@ -1024,7 +1024,7 @@ AbbrowserConduit::_syncPilotEntry(PilotAddress &pilotAddress,
 	    _handleConflict(&pilotAddress, abEntry, abKey);
 	    }
 	}
-    else  // if not found in the abbrowser contacts, add it
+    else  // if not found in the kaddressbook contacts, add it
 	{
 	bool addPalm = true;
 	if (deleteIfNotFound)
@@ -1036,13 +1036,13 @@ AbbrowserConduit::_syncPilotEntry(PilotAddress &pilotAddress,
 		}
 	    // else
 	    // two possible cases: modified on palm and
-	    // deleted in abbrowser or just new in palm
+	    // deleted in kaddressbook or just new in palm
 	    // assume new in palm and add it
 	    }
 	if (addPalm)
 	    {
 	    kdDebug() << fname <<
-		" adding new pilot record to abbrowser => " << endl;
+		" adding new pilot record to kaddressbook => " << endl;
 	    showPilotAddress(pilotAddress);
 	    _addToAbbrowser(pilotAddress);
 	    }
@@ -1074,7 +1074,7 @@ bool AbbrowserConduit::_prepare(QDict<ContactEntry> &abbrowserContacts,
     _setAppInfo();
     
     
-    // get the contacts from abbrowser
+    // get the contacts from kaddressbook
     if (!_getAbbrowserContacts(abbrowserContacts))
 	{
 	kdDebug() << fname <<
@@ -1138,7 +1138,7 @@ void AbbrowserConduit::doBackup()
 	PilotAddress pilotAddress(fAddressAppInfo, record);
 	QString abKey = QString::null;
 	
-	// if already stored in the abbrowser
+	// if already stored in the kaddressbook
 	if (idContactMap.contains( pilotAddress.id() ))
 	    {
 	    abKey = idContactMap[pilotAddress.id()];

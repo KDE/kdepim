@@ -48,25 +48,25 @@ int main(int argc, char *argv[])
     QByteArray sendData;
     QByteArray replyData;
     QCString replyTypeStr;
-    if (!dcopptr->call("abbrowser", "AbBrowserIface", "interfaces()",
+    if (!dcopptr->call("kaddressbook", "KAddressBookIface", "interfaces()",
 		       sendData, replyTypeStr, replyData))
 	{
 	// abbrowser not running, start it
 	KURL::List noargs;
-	KRun::run("abbrowser", noargs);
+	KRun::run("kaddressbook", noargs);
 
 	qDebug("Waiting to run abbrowser");
-	sleep(5000);
+	sleep(15); // 5000 seems to work for greg??
 	qDebug("Back from wait");
 	
-	if (!dcopptr->call("abbrowser", "AbBrowserIface", "interfaces()",
+	if (!dcopptr->call("kaddressbook", "KAddressBookIface", "interfaces()",
 			   sendData, replyTypeStr, replyData))
 	    {
 	    kdWarning() << "Unable to call abbrowser interfaces()" << endl;
 	    return 3;
 	    }
 	}
-    if (!dcopptr->call("abbrowser", "AbBrowserIface", "getKeys()",
+    if (!dcopptr->call("kaddressbook", "KAddressBookIface", "getKeys()",
 		       sendData, replyTypeStr, replyData))
 	{
 	kdWarning() << "Unable to call abbrowser getKeys()" << endl;
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     QStringList keys;
     QDataStream keyStream(replyData, IO_ReadOnly);
     keyStream >> keys;
-    qDebug("abbrowser keys");
+    qDebug("kaddressbook keys");
     output(keys);
 
     if (argc > 1)
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 	QDataStream sendEntryStream(sendEntryData, IO_WriteOnly);
 	sendEntryStream << testAddEntry;
 	
-	if (!dcopptr->call("abbrowser", "AbBrowserIface", "addEntry(ContactEntry)",
+	if (!dcopptr->call("kaddressbook", "KAddressBookIface", "addEntry(ContactEntry)",
 			   sendEntryData, replyTypeStr, replyData))
 	    {
 	    kdWarning() << "Unable to call abbrowser addEntry" << endl;
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 	    }
 	}
     
-    if (!dcopptr->call("abbrowser", "AbBrowserIface", "getEntryDict()",
+    if (!dcopptr->call("kaddressbook", "KAddressBookIface", "getEntryDict()",
 		       sendData, replyTypeStr, replyData))
 	{
 	kdWarning() << "Unable to call abbrowser getEntryDict()" << endl;
@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
 		QByteArray sendRemoveKey;
 		QDataStream removeStream(sendRemoveKey, IO_WriteOnly);
 		removeStream << iter.currentKey();
-		if (!dcopptr->call("abbrowser", "AbBrowserIface",
+		if (!dcopptr->call("kaddressbook", "KAddressBookIface",
 				   "removeEntry(QString)",
 				   sendRemoveKey, replyTypeStr, replyData))
 		    {
@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
 		QDataStream changeStream(sendChangeName, IO_WriteOnly);
 		changeStream << iter.currentKey();
 		changeStream << *e;
-		if (!dcopptr->call("abbrowser", "AbBrowserIface",
+		if (!dcopptr->call("kaddressbook", "KAddressBookIface",
 				   "changeEntry(QString, ContactEntry)",
 				   sendChangeName, replyTypeStr, replyData))
 		    {
@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
 	}
     
     // save the changes
-    if (!dcopptr->call("abbrowser", "AbBrowserIface", "save()",
+    if (!dcopptr->call("kaddressbook", "KAddressBookIface", "save()",
 		       sendData, replyTypeStr, replyData))
 	{
 	kdWarning() << "Unable to call abbrowser save()" << endl;
