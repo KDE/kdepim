@@ -123,6 +123,7 @@ void FilterEditDialog::initGUI()
 
   label = new QLabel( i18n( "Name" ), page );
   mNameEdit = new KLineEdit( page );
+  mNameEdit->setFocus();
   topLayout->addWidget( label, 0, 0 );
   topLayout->addWidget( mNameEdit, 0, 1 );
   connect( mNameEdit, SIGNAL( textChanged( const QString& ) ),
