@@ -24,6 +24,7 @@
 #include "groupwaredataadaptor.h"
 #include "webdavhandler.h"
 #include <libemailfunctions/idmapper.h>
+#include <kdebug.h>
 
 #include <kio/job.h>
 
@@ -65,3 +66,20 @@ void OGoGlobals::updateFingerprintId( KPIM::GroupwareDataAdaptor *adaptor,
 */
 }
 
+KIO::Job *OGoGlobals::createRemoveItemsJob( const KURL &uploadurl, 
+       KPIM::GroupwareUploadItem::List deletedItems )
+{
+  QStringList urls;
+  KPIM::GroupwareUploadItem::List::iterator it;
+  kdDebug(5800) << " OGoGlobals::createRemoveItemsJob: , URL="<<uploadurl.url()<<endl;
+  for ( it = deletedItems.begin(); it != deletedItems.end(); ++it ) {
+    //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
+    kdDebug(7000) << "Delete: " <<   (*it)->url().path() << endl;
+    KURL url( uploadurl );
+    url.setPath( (*it)->url().path() );
+    if ( !(*it)->url().isEmpty() )
+      urls << url.url();
+    kdDebug(5700) << "Delete (Mod) : " <<   url.url() << endl;
+  }
+  return KIO::del( urls, false, false );
+}

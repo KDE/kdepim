@@ -73,3 +73,8 @@ void OGoCalendarAdaptor::updateFingerprintId( KIO::TransferJob *trfjob, KPIM::Gr
 {
   return OGoGlobals::updateFingerprintId( this, trfjob, item );
 }
+
+KIO::Job *OGoCalendarAdaptor::createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
+{
+  return OGoGlobals::createRemoveItemsJob( uploadurl, deletedItems );
+}

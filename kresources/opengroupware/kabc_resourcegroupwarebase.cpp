@@ -37,6 +37,7 @@ ResourceGroupwareBase::ResourceGroupwareBase( const KConfig *config )
   : ResourceCached( config ),
     mPrefs(0), mFolderLister(0), mAdaptor(0), mDownloadJob(0), mUploadJob(0)
 {
+  readConfig( config );
 }
 
 ResourceGroupwareBase::ResourceGroupwareBase( const KURL &url,
@@ -66,12 +67,17 @@ KPIM::GroupwareUploadJob *ResourceGroupwareBase::createUploadJob( AddressBookAda
   return new KPIM::GroupwareUploadJob( adaptor );
 }
 
-void ResourceGroupwareBase::setPrefs( GroupwarePrefsBase *prefs ) 
+void ResourceGroupwareBase::setPrefs( GroupwarePrefsBase *newprefs ) 
 {
-  if ( !prefs ) return;
+  if ( !newprefs ) return;
   if ( mPrefs ) delete mPrefs;
-  mPrefs = prefs;
+  mPrefs = newprefs;
   mPrefs->addGroupPrefix( identifier() );
+  
+  mPrefs->readConfig();
+  mBaseUrl = KURL( prefs()->url() );
+  mBaseUrl.setUser( prefs()->user() );
+  mBaseUrl.setPass( prefs()->password() );
 }
 
 void ResourceGroupwareBase::setFolderLister( KPIM::FolderLister *folderLister )
@@ -112,13 +118,11 @@ GroupwarePrefsBase *ResourceGroupwareBase::createPrefs()
 
 void ResourceGroupwareBase::readConfig( const KConfig *config )
 {
-  mPrefs->readConfig();
-
-  mFolderLister->readConfig( config );
-
-  mBaseUrl = KURL( prefs()->url() );
-  mBaseUrl.setUser( prefs()->user() );
-  mBaseUrl.setPass( prefs()->password() );
+  kdDebug(5700) << "KABC::ResourceGroupwareBase::readConfig()" << endl;
+//   ResourceCached::readConfig( config );
+  if ( mFolderLister ) {
+    mFolderLister->readConfig( config );
+  }
 }
 
 void ResourceGroupwareBase::writeConfig( KConfig *config )

@@ -23,10 +23,14 @@
 #define KCAL_OGOCALENDARADAPTOR_H
 
 #include "calendaradaptor.h"
+#include "groupwareuploadjob.h"
 #include <kurl.h>
 
-namespace KCal {
+namespace KIO {
+class Job;
+};
 
+namespace KCal {
 
 class OGoCalendarAdaptor : public CalendarAdaptor
 {
@@ -45,7 +49,9 @@ class OGoCalendarAdaptor : public CalendarAdaptor
 
     bool itemsForDownloadFromList( KIO::Job *job, 
       QStringList &currentlyOnServer, QStringList &itemsForDownload );
-    virtual void updateFingerprintId( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item );
+    void updateFingerprintId( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item );
+    KIO::Job *createRemoveItemsJob( const KURL &uploadurl, 
+       KPIM::GroupwareUploadItem::List deletedItems );
 };
 
 };

@@ -82,8 +82,6 @@ class CalendarAdaptor : public KPIM::GroupwareDataAdaptor
                                              const QString &rawText );
     virtual KPIM::GroupwareUploadItem *newUploadItem( KCal::Incidence*it, 
            KPIM::GroupwareUploadItem::UploadType type );
-    virtual KIO::Job *createRemoveItemsJob( const KURL &uploadurl,
-           KPIM::GroupwareUploadItem::List deletedItems );
 
   private:
     KCal::ResourceCached *mResource;

@@ -73,9 +73,6 @@ class AddressBookAdaptor : public KPIM::GroupwareDataAdaptor
     virtual KABC::Addressee::List parseData( KIO::TransferJob *job, const QString &rawText );
     virtual KPIM::GroupwareUploadItem *newUploadItem( KABC::Addressee addr,
                      KPIM::GroupwareUploadItem::UploadType type );
-    KIO::Job *createRemoveItemsJob( const KURL &uploadurl,
-                     KPIM::GroupwareUploadItem::List deletedItems );
-
 
   private:
     KABC::ResourceCached *mResource;

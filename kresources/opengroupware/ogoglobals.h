@@ -23,6 +23,7 @@
 #define OGOGLOBALS_H
 
 #include <kurl.h>
+#include <groupwareuploadjob.h>
 
 namespace KPIM {
 class GroupwareDataAdaptor;
@@ -30,6 +31,7 @@ class GroupwareUploadItem;
 };
 namespace KIO {
 class TransferJob;
+class Job;
 };
 
 class OGoGlobals
@@ -40,8 +42,10 @@ class OGoGlobals
           KPIM::GroupwareDataAdaptor *adaptor, const KURL &url );
 
     static QString extractFingerprint( KIO::TransferJob *job, const QString &rawText );
-    static void OGoGlobals::updateFingerprintId( KPIM::GroupwareDataAdaptor *adaptor, 
+    static void updateFingerprintId( KPIM::GroupwareDataAdaptor *adaptor, 
            KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item );
+    static KIO::Job *createRemoveItemsJob( const KURL &uploadurl, 
+       KPIM::GroupwareUploadItem::List deletedItems );
 };
 
 #endif

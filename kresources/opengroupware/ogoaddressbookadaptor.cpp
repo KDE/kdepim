@@ -23,6 +23,7 @@
 #include "ogoaddressbookadaptor.h"
 #include "ogoglobals.h"
 #include "davgroupwareglobals.h"
+#include "webdavhandler.h"
 
 #include <kabc/addressee.h>
 #include <kabc/vcardconverter.h>
@@ -36,8 +37,9 @@ OGoAddressBookAdaptor::OGoAddressBookAdaptor()
 {
 }
 
-void OGoAddressBookAdaptor::adaptDownloadUrl( KURL & )
+void OGoAddressBookAdaptor::adaptDownloadUrl( KURL &url )
 {
+  url = WebdavHandler::toDAV( url );
 }
 
 QCString OGoAddressBookAdaptor::identifier() const
@@ -47,6 +49,7 @@ QCString OGoAddressBookAdaptor::identifier() const
 
 void OGoAddressBookAdaptor::adaptUploadUrl( KURL &url )
 {
+  url = WebdavHandler::toDAV( url );
   url.addPath( "new.vcf" );
 }
 
@@ -85,4 +88,9 @@ bool OGoAddressBookAdaptor::itemsForDownloadFromList( KIO::Job *job, QStringList
 void OGoAddressBookAdaptor::updateFingerprintId( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item )
 {
   return OGoGlobals::updateFingerprintId( this, trfjob, item );
+}
+
+KIO::Job *OGoAddressBookAdaptor::createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
+{
+  return OGoGlobals::createRemoveItemsJob( uploadurl, deletedItems );
 }

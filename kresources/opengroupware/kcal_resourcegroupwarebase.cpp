@@ -44,6 +44,7 @@ ResourceGroupwareBase::ResourceGroupwareBase( const KConfig *config )
   : ResourceCached( config ), mPrefs(0), mFolderLister(0), 
     mLock( true ), mAdaptor(0), mDownloadJob(0), mUploadJob(0)
 {
+  readConfig( config );
 }
 
 ResourceGroupwareBase::~ResourceGroupwareBase()
@@ -71,12 +72,17 @@ KPIM::GroupwareUploadJob *ResourceGroupwareBase::createUploadJob( CalendarAdapto
   return new KPIM::GroupwareUploadJob( adaptor );
 }
 
-void ResourceGroupwareBase::setPrefs( GroupwarePrefsBase *prefs ) 
+void ResourceGroupwareBase::setPrefs( GroupwarePrefsBase *newprefs ) 
 {
-  if ( !prefs ) return;
+  if ( !newprefs ) return;
   if ( mPrefs ) delete mPrefs;
-  mPrefs = prefs;
+  mPrefs = newprefs;
   mPrefs->addGroupPrefix( identifier() );
+  
+  mPrefs->readConfig();
+  mBaseUrl = KURL( prefs()->url() );
+  mBaseUrl.setUser( prefs()->user() );
+  mBaseUrl.setPass( prefs()->password() );
 }
 
 void ResourceGroupwareBase::setFolderLister( KPIM::FolderLister *folderLister )
@@ -119,22 +125,10 @@ GroupwarePrefsBase *ResourceGroupwareBase::prefs()
 void ResourceGroupwareBase::readConfig( const KConfig *config )
 {
   kdDebug(5800) << "KCal::ResourceGroupwareBase::readConfig()" << endl;
-  // FIXME: Something doesn't seem right here: Why don't we read everything from *config?
-
-  if ( mPrefs ) {
-    mPrefs->readConfig();
-    mBaseUrl = KURL( prefs()->url() );
-    mBaseUrl.setUser( prefs()->user() );
-    mBaseUrl.setPass( prefs()->password() );
-  }
-  kdDebug(5800)<<"mBaseUrl="<<mBaseUrl.prettyURL() << endl;
-
   ResourceCached::readConfig( config );
-
   if ( mFolderLister ) {
     mFolderLister->readConfig( config );
   }
-
 }
 
 void ResourceGroupwareBase::writeConfig( KConfig *config )

@@ -136,18 +136,3 @@ KPIM::GroupwareUploadItem *AddressBookAdaptor::newUploadItem( KABC::Addressee ad
 {
   return new AddressBookUploadItem( this, addr, type );
 }
-
-KIO::Job *AddressBookAdaptor::createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
-{
-  QStringList urls;
-  KPIM::GroupwareUploadItem::List::iterator it;
-  for ( it = deletedItems.begin(); it != deletedItems.end(); ++it ) {
-    //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
-    KURL url( uploadurl );
-    url.setPath( (*it)->url().url() );
-    if ( !(*it)->url().isEmpty() )
-      urls << url.url();
-  }
-  return KIO::del( urls, false, false );
-}
-// customProperty( identifier(), "storagelocation" )

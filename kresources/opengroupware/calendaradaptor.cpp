@@ -94,6 +94,8 @@ void CalendarAdaptor::deleteItem( const QString &localId )
 
 KCal::Incidence::List CalendarAdaptor::parseData( KIO::TransferJob */*job*/, const QString &rawText )
 {
+kdDebug(5800)<<"CalendarAdaptor::parseData, iCalendar="<<endl;
+kdDebug(5800)<<rawText<<endl;
   KCal::CalendarLocal calendar;
   KCal::ICalFormat ical;
   calendar.setTimeZoneId( mResource->timeZoneId() );
@@ -161,16 +163,3 @@ KPIM::GroupwareUploadItem *CalendarAdaptor::newUploadItem( KCal::Incidence*it,
   return new CalendarUploadItem( this, it, type );
 }
 
-KIO::Job *CalendarAdaptor::createRemoveItemsJob( const KURL &uploadurl, KPIM::GroupwareUploadItem::List deletedItems )
-{
-  QStringList urls;
-  KPIM::GroupwareUploadItem::List::iterator it;
-  for ( it = deletedItems.begin(); it != deletedItems.end(); ++it ) {
-    //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
-    KURL url( uploadurl );
-    url.setPath( (*it)->url().url() );
-    if ( !(*it)->url().isEmpty() )
-      urls << url.url();
-  }
-  return KIO::del( urls, false, false );
-}

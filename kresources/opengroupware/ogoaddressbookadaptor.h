@@ -48,6 +48,8 @@ class OGoAddressBookAdaptor : public AddressBookAdaptor
       QStringList &currentlyOnServer, QStringList &itemsForDownload );
     KABC::Addressee::List parseData( KIO::TransferJob *job, const QString &rawText );
     void updateFingerprintId( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item );
+    KIO::Job *createRemoveItemsJob( const KURL &uploadurl, 
+       KPIM::GroupwareUploadItem::List deletedItems );
 };
 
 }
