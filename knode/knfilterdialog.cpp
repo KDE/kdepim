@@ -55,7 +55,7 @@ KNFilterDialog::KNFilterDialog(KNArticleFilter *f, QWidget *parent, const char *
   gbL->addWidget(l2, 1,2);
   gbL->addWidget(apon, 1,3);
   gbL->setColStretch(1,1);
-  
+
   QVBoxLayout *topL=new QVBoxLayout(page,0,5);
 
   topL->addWidget(gb);
@@ -73,11 +73,13 @@ KNFilterDialog::KNFilterDialog(KNArticleFilter *f, QWidget *parent, const char *
   fw->from->setFilter(f->from);
   fw->messageId->setFilter(f->messageId);
   fw->references->setFilter(f->references);
-  
+
   setFixedHeight(sizeHint().height());
   KNHelper::restoreWindowSize("filterDLG", this, sizeHint());
 
   setHelp("anc-using-filters");
+  connect( fname,  SIGNAL( textChanged ( const QString & )), this, SLOT( slotTextChanged( const QString & )));
+  slotTextChanged( fname->text() );
 }
 
 
@@ -87,7 +89,10 @@ KNFilterDialog::~KNFilterDialog()
   KNHelper::saveWindowSize("filterDLG", size());
 }
 
-
+void KNFilterDialog::slotTextChanged( const QString &_text )
+{
+    enableButtonOK( !_text.isEmpty() );
+}
 
 void KNFilterDialog::slotOk()
 {
@@ -107,8 +112,8 @@ void KNFilterDialog::slotOk()
       fltr->from=fw->from->filter();
       fltr->messageId=fw->messageId->filter();
       fltr->references=fw->references->filter();
-      fltr->setApplyOn(apon->currentItem());  
-    
+      fltr->setApplyOn(apon->currentItem());
+
       accept();
     }
 }
