@@ -235,10 +235,8 @@ void KNConfig::IdentityWidget::slotSignatureEdit()
 
   if (offer)
     KRun::run(*offer, u);
-  else {
-    KFileOpenWithHandler *openhandler = new KFileOpenWithHandler();
-    openhandler->displayOpenWithDialog(u);
-  }
+  else
+    KRun::displayOpenWithDialog(u);
 }
 
 

@@ -174,10 +174,8 @@ void KNArticleManager::openContent(KMime::Content *c)
 
   if (offer)
     KRun::run(*offer, lst);
-  else {
-    KFileOpenWithHandler *openhandler = new KFileOpenWithHandler();
-    openhandler->displayOpenWithDialog(lst);
-  }
+  else
+    KRun::displayOpenWithDialog(lst);
 }
 
 
