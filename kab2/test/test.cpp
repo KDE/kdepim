@@ -9,7 +9,7 @@
 
 #include "KAddressBookInterface.h"
 #include "KAddressBookInterface_stub.h"
-#include "Entity.h"
+#include "Entry.h"
 #include "Field.h"
 
   int
@@ -71,23 +71,23 @@ main(int argc, char ** argv)
 
     QListViewItem * abItem = new QListViewItem(lv, ab->name());
 
-    QStringList el(ab->entityList());
+    QStringList el(ab->entryList());
 
     count = el.count();
 
     for (QStringList::ConstIterator eit(el.begin()); eit != el.end(); ++eit)
     {
-      QString entityID = *eit;
+      QString entryID = *eit;
 
-      Entity e(ab->entity(entityID));
+      Entry e(ab->entry(entryID));
 
       if (e.isNull())
       {
-        qDebug("Entity not found");
+        qDebug("Entry not found");
         continue;
       }
 
-      QListViewItem * entityItem = new QListViewItem(abItem, e.name());
+      QListViewItem * entryItem = new QListViewItem(abItem, e.name());
 
       FieldList fl(e.fieldList());
 
@@ -95,7 +95,7 @@ main(int argc, char ** argv)
       {
         Field f(*fit);
 
-        QListViewItem * fieldItem = new QListViewItem(entityItem, f.name());
+        QListViewItem * fieldItem = new QListViewItem(entryItem, f.name());
 
         QByteArray val(f.value());
 

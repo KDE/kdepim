@@ -12,7 +12,7 @@
 
 #include "KAddressBookInterface.h"
 #include "KAddressBookInterface_stub.h"
-#include "Entity.h"
+#include "Entry.h"
 #include "Field.h"
 
 const char * accountsFilename = "/x/cvs/kde/head/kde-common/accounts";
@@ -112,7 +112,7 @@ main(int argc, char ** argv)
     qDebug("name: %s", name.ascii());
     qDebug("mail: %s", mail.ascii());
 
-    Entity e(user);
+    Entry e(user);
 
     e.addField(Field("Name", name));
     e.addField(Field("Mail", mail));

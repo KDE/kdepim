@@ -26,6 +26,29 @@ Field::Field()
   // Empty.
 }
 
+Field::Field(const QDomElement & e)
+{
+  name_ = e.attribute("name");
+
+  QString mt(e.attribute("mimetype"));
+
+  if (!mt.isEmpty())
+  {
+    int sep = mt.find('/');
+
+    if (-1 == sep)
+      type_ = mt;
+
+    else
+    {
+      type_ = mt.left(sep);
+      subType_ = mt.mid(sep + 1);
+    }
+  }
+
+//  value_ = decode it !
+}
+
 Field::Field(const QString & name)
   : name_(name)
 {
@@ -157,18 +180,17 @@ Field::setValue(const QString & s)
   str << s;
 }
 
-#if 0
- QString
-Field::toXML() const
+  QDomElement
+Field::toDomElement() const
 {
-  return QString
-    ("  <field name=\"%1\" mimetype=\"%2/%3\">%4</field>\n")
-    .arg(name_)
-    .arg(type_)
-    .arg(subType_)
-    .arg(value_);
+  QDomElement e;
+
+  e.setAttribute("name", name_);
+  e.setAttribute("mimetype", QString("%1/%2").arg(type_).arg(subType_));
+//  e.setAttribute("value", value_); encode it !
+
+  return e;
 }
-#endif
 
   QDataStream &
 operator << (QDataStream & str, const Field & f)

@@ -22,16 +22,51 @@
 #include <qcstring.h>
 
 // Local includes
-#include "Entity.h"
+#include "Entry.h"
 #include "Field.h"
 
-Entity::Entity()
+Entry::Entry()
   : dirty_(false)
 {
   // Empty.
 }
 
-Entity::Entity(const QString & name)
+Entry::Entry(const QDomElement & e)
+  : dirty_(false)
+{
+  id_   = e.attribute("id");
+  name_ = e.attribute("name");
+
+  QDomNode n = e.firstChild();
+
+  while (!n.isNull())
+  {
+    QDomElement child = n.toElement();
+
+    if (!child.isNull())
+    {
+      if (child.tagName() == "kab:child-list")
+      {
+        QDomNode n2 = child;
+
+        while (!n2.isNull())
+        {
+          QDomElement child2 = n2.toElement();
+
+          if (!child2.isNull())
+            if (child2.tagName() == "kab:child")
+              memberList_.append(child2.nodeValue());
+        }
+      }
+      else
+      {
+        fieldList_.append(Field(child));
+      }
+    }
+  }
+}
+
+Entry::Entry(const QString & name)
   : dirty_(false),
     name_(name)
 {
@@ -39,12 +74,12 @@ Entity::Entity(const QString & name)
 }
 
 
-Entity::~Entity()
+Entry::~Entry()
 {
   // Empty.
 }
 
-Entity::Entity(const Entity & e)
+Entry::Entry(const Entry & e)
   : id_         (e.id_),
     name_       (e.name_),
     fieldList_  (e.fieldList_),
@@ -52,8 +87,8 @@ Entity::Entity(const Entity & e)
 {
 }
 
-  Entity &
-Entity::operator = (const Entity & e)
+  Entry &
+Entry::operator = (const Entry & e)
 {
   if (this == &e) // Avoid a = a.
     return *this;
@@ -67,51 +102,51 @@ Entity::operator = (const Entity & e)
 }
 
   bool
-Entity::operator == (const Entity & e) const
+Entry::operator == (const Entry & e) const
 {
   return (id_ == e.id_);
 }
 
   bool
-Entity::isNull() const
+Entry::isNull() const
 {
   return id_.isNull();
 }
 
   QString
-Entity::id() const
+Entry::id() const
 {
   return id_;
 }
 
   void
-Entity::setID(const QString & id)
+Entry::setID(const QString & id)
 {
   id_ = id;
 }
 
   QString
-Entity::name() const
+Entry::name() const
 {
   return name_;
 }
 
   void
-Entity::setName(const QString & name)
+Entry::setName(const QString & name)
 {
   name_ = name;
   dirty_ = true;
 }
   
   void
-Entity::addField(const Field & f)
+Entry::addField(const Field & f)
 {
   fieldList_.append(f);
   dirty_ = true;
 }
 
   bool
-Entity::removeField(const QString & name)
+Entry::removeField(const QString & name)
 {
   FieldList::Iterator it;
 
@@ -127,7 +162,7 @@ Entity::removeField(const QString & name)
 }
 
   bool
-Entity::contains(const QString & fieldName) const
+Entry::contains(const QString & fieldName) const
 {
   FieldList::ConstIterator it;
 
@@ -140,7 +175,7 @@ Entity::contains(const QString & fieldName) const
 }
   
   Field
-Entity::field(const QString & name) const
+Entry::field(const QString & name) const
 {
   Field f;
 
@@ -154,20 +189,20 @@ Entity::field(const QString & name) const
 }
 
   FieldList
-Entity::fieldList() const
+Entry::fieldList() const
 {
   return fieldList_;
 }
   
   void
-Entity::addMember(const QString & id)
+Entry::addMember(const QString & id)
 {
   memberList_.append(id);
   dirty_ = true;
 }
 
   bool
-Entity::removeMember(const QString & id)
+Entry::removeMember(const QString & id)
 {
   QStringList::Iterator it;
 
@@ -182,35 +217,47 @@ Entity::removeMember(const QString & id)
 }
 
   QStringList
-Entity::memberList() const
+Entry::memberList() const
 {
   return memberList_;
 }
 
-#if 0
-  QString
-Entity::toXML() const
+  QDomElement
+Entry::toDomElement() const
 {
-  QString ret;
+  QDomElement e;
 
-  ret += QString("<entity id=\"%1\" name=\"%2\">\n").arg(id_).arg(name_);
+  e.setAttribute("id", id_);
+  e.setAttribute("name", name_);
 
   FieldList::ConstIterator fit = fieldList_.begin();
 
   for (; fit != fieldList_.end(); ++fit)
-    ret += QString("  %1\n").arg((*fit).toXML());
+    e.appendChild((*fit).toDomElement());
  
-  QStringList::ConstIterator it(memberList_.begin())
+  if (!memberList_.isEmpty())
+  {
+    QDomElement memberListElement;
+    memberListElement.setTagName("kab:child-list");
 
-  for (; it != memberList_.end(); ++it)
-    ret += QString("  <member id=\"%1\" />\n").arg(*it);
+    QStringList::ConstIterator it(memberList_.begin());
 
-  ret += "</entity>\n";
+    for (; it != memberList_.end(); ++it)
+    {
+      QDomElement memberElement;
+      memberElement.setTagName("kab:child");
+      memberElement.setNodeValue(*it);
+      memberListElement.appendChild(memberElement);
+    }
+
+    e.appendChild(memberListElement);
+  }
+
+  return e;
 }
-#endif
 
   QDataStream &
-operator << (QDataStream & str, const Entity & e)
+operator << (QDataStream & str, const Entry & e)
 {
   str <<  e.id_
       <<  e.name_
@@ -221,7 +268,7 @@ operator << (QDataStream & str, const Entity & e)
 }
 
   QDataStream &
-operator >> (QDataStream & str, Entity & e)
+operator >> (QDataStream & str, Entry & e)
 {
   str >>  e.id_
       >>  e.name_
@@ -234,13 +281,13 @@ operator >> (QDataStream & str, Entity & e)
 }
 
   void
-Entity::touch()
+Entry::touch()
 {
   dirty_ = true;
 }
 
   void
-Entity::replace(const QString & name, const QString & value)
+Entry::replace(const QString & name, const QString & value)
 {
   removeField(name);
   Field f;

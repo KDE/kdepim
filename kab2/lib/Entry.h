@@ -27,21 +27,25 @@
 #include <qobject.h>
 #include <qcstring.h>
 #include <qstringlist.h>
+#include <qdom.h>
 
 // Local includes
 #include "Field.h"
 
-class Entity
+class Entry
 {
   public:
 
-    Entity();
-    Entity(const QString & name);
-    Entity(const Entity &);
-    virtual ~Entity();
+    Entry();
+    Entry(const QDomElement &);
+    Entry(const QString & name);
+    Entry(const Entry &);
+    virtual ~Entry();
 
-    Entity & operator = (const Entity &);
-    bool operator == (const Entity &) const;
+    Entry & operator = (const Entry &);
+    bool operator == (const Entry &) const;
+
+    QDomElement toDomElement() const;
 
     virtual QString id() const;
     virtual void setID(const QString &);
@@ -67,8 +71,8 @@ class Entity
 
     void touch();
 
-    friend QDataStream & operator << (QDataStream &, const Entity &);
-    friend QDataStream & operator >> (QDataStream &, Entity &);
+    friend QDataStream & operator << (QDataStream &, const Entry &);
+    friend QDataStream & operator >> (QDataStream &, Entry &);
 
     bool isNull() const;
 
@@ -81,6 +85,6 @@ class Entity
     QStringList memberList_;
 };
 
-typedef QValueList<Entity> EntityList;
+typedef QValueList<Entry> EntryList;
 
 #endif

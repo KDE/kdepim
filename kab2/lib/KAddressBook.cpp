@@ -29,15 +29,15 @@
 // Qt includes
 #include <qdir.h>
 #include <qfile.h>
-#include <qdatastream.h>
+#include <qtextstream.h>
 
 // Local includes
 #include <config.h>
 #include "KAddressBookInterface.h"
-#include "Entity.h"
+#include "Entry.h"
 #include "Field.h"
 
-int KABUniqueEntityID = 0;
+int KABUniqueEntryID = 0;
 
 // Addressbook /////////////////////////////////////////////////////////////
 
@@ -65,17 +65,17 @@ KAddressBook::name()
 	return name_;
 }
 
-  Entity
-KAddressBook::entity(QString id)
+  Entry
+KAddressBook::entry(QString id)
 {
-  Entity e;
+  Entry e;
 
   if (!index_.contains(id))
     return e;
 
   for (QStringList::ConstIterator it(index_.begin()); it != index_.end(); ++it)
     if (*it == id) {
-      Entity * loaded = _readEntity(*it);
+      Entry * loaded = _readEntry(*it);
       if (loaded != 0)
         e = *loaded;
       break;
@@ -91,15 +91,15 @@ KAddressBook::contains(QString id)
 }
 
   QString
-KAddressBook::insert(Entity e)
+KAddressBook::insert(Entry e)
 {
-  qDebug("insert entity `" + e.name() + "'");
+  qDebug("insert entry `" + e.name() + "'");
 
   e.setID(_generateUniqueID());
 
   index_.append(e.id());
   
-  bool ok = _writeEntity(e);
+  bool ok = _writeEntry(e);
 
   if (!ok)
     return QString::null;
@@ -115,13 +115,13 @@ KAddressBook::remove(QString id)
 
   index_.remove(id);
 
-  _removeEntity(id);
+  _removeEntry(id);
   
   return true;
 }
 
   bool
-KAddressBook::replace(Entity /* e */)
+KAddressBook::replace(Entry /* e */)
 {
 #warning STUB needs implementing
 	return false;
@@ -131,7 +131,7 @@ KAddressBook::replace(Entity /* e */)
   QString
 KAddressBook::_generateUniqueID()
 {
-  return uniquePartOne_ + "_" + QString().setNum(KABUniqueEntityID++);
+  return uniquePartOne_ + "_" + QString().setNum(KABUniqueEntryID++);
 }
 
   void
@@ -195,9 +195,9 @@ KAddressBook::_initIndex()
 }
 
   bool
-KAddressBook::_writeEntity(Entity & e)
+KAddressBook::_writeEntry(Entry & e)
 {
-  qDebug("KAddressBook::_writeEntity()");
+  qDebug("KAddressBook::_writeEntry()");
   QString filename = path_ + "/tmp" + e.id();
 
   QFile f(filename);
@@ -217,9 +217,13 @@ KAddressBook::_writeEntity(Entity & e)
     return false;
   }
 
-  QDataStream str(&f);
+  QDomDocument doc("kab-entity");
 
-  str << e;
+  doc.appendChild(e.toDomElement());
+
+  QTextStream str(&f);
+
+  str << doc.toString();
 
   f.flush();
   f.close();
@@ -244,15 +248,15 @@ KAddressBook::_writeEntity(Entity & e)
 }
 
   QStringList
-KAddressBook::entityList()
+KAddressBook::entryList()
 {
   return
     QDir(path_ + "/entries").entryList
     (QDir::Files | QDir::NoSymLinks | QDir::Readable, QDir::Unsorted);
 }
 
-  Entity *
-KAddressBook::_readEntity(const QString & id)
+  Entry *
+KAddressBook::_readEntry(const QString & id)
 {
   QString filename = path_ + "/entries/" + id;
   QFile f(filename);
@@ -267,16 +271,35 @@ KAddressBook::_readEntity(const QString & id)
     return 0;
   }
   
-  QDataStream str(&f);
+  QDomDocument doc;
 
-  Entity * e = new Entity;
-  str >> *e;
+  if (!doc.setContent(&f))
+  {
+    qDebug("Couldn't set content to `" + filename + "'");
+    return 0;
+  }
 
-  return e;
+  QDomElement docElem = doc.documentElement();
+
+  QDomElement e = docElem.firstChild().toElement();
+
+  if (e.isNull())
+  {
+    qDebug("Can't parse file `" + filename + "'");
+    return 0;
+  }
+
+  if (e.tagName() != "kab:entry")
+  {
+    qDebug("Can't parse file `" + filename + "'");
+    return 0;
+  }
+
+  return new Entry(e);
 }
 
   bool
-KAddressBook::_removeEntity(const QString & id)
+KAddressBook::_removeEntry(const QString & id)
 {
   QFile f(path_ + "/entries/" + id);
 

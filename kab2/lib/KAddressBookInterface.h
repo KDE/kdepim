@@ -25,7 +25,7 @@
 #include <qstringlist.h>
 #include <dcopobject.h>
 
-#include <Entity.h>
+#include <Entry.h>
 
 class KAddressBook : virtual public DCOPObject
 {
@@ -40,13 +40,13 @@ class KAddressBook : virtual public DCOPObject
 
     virtual QString name();
     virtual QString path();
-    virtual Entity  entity(QString);
-    virtual QString insert(Entity);
+    virtual Entry  entry(QString);
+    virtual QString insert(Entry);
     virtual bool    remove(QString);
-    virtual bool    replace(Entity);
+    virtual bool    replace(Entry);
     virtual bool    contains(QString);
 
-    virtual QStringList entityList();
+    virtual QStringList entryList();
 
   private:
 
@@ -54,9 +54,9 @@ class KAddressBook : virtual public DCOPObject
     void      _checkDirs();
     void      _initIndex();
 
-    Entity *  _readEntity(const QString & filename);
-    bool      _writeEntity(Entity &);
-    bool      _removeEntity(const QString & id);
+    Entry *  _readEntry(const QString & filename);
+    bool      _writeEntry(Entry &);
+    bool      _removeEntry(const QString & id);
 
     QString   _generateUniqueID();
 
