@@ -99,38 +99,41 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
 {
   QString fileName;
   KABC::AddresseeList addrList;
-  KURL url;
+  KURL::List urls;
 
   if ( !XXPortManager::importData.isEmpty() )
     addrList = parseVCard( XXPortManager::importData );
   else {
     if ( XXPortManager::importURL.isEmpty() )
-      url = KFileDialog::getOpenURL( QString::null, "*.vcf|vCards", 0,
-                                     i18n( "Select vCard to Import" ) );
+      urls = KFileDialog::getOpenURLs( QString::null, "*.vcf|vCards", parentWidget(),
+                                       i18n( "Select vCard to Import" ) );
     else
-      url = XXPortManager::importURL;
+      urls.append( XXPortManager::importURL );
 
-    if ( url.isEmpty() )
+    if ( urls.count() == 0 )
       return addrList;
 
     QString caption( i18n( "vCard Import Failed" ) );
-    if ( KIO::NetAccess::download( url, fileName ) ) {
+    KURL::List::Iterator it;
+    for ( it = urls.begin(); it != urls.end(); ++it ) {
+      if ( KIO::NetAccess::download( *it, fileName ) ) {
 
-      QFile file( fileName );
+        QFile file( fileName );
 
-      file.open( IO_ReadOnly );
-      QByteArray rawData = file.readAll();
-      file.close();
+        file.open( IO_ReadOnly );
+        QByteArray rawData = file.readAll();
+        file.close();
 
-      QString data = QString::fromUtf8( rawData.data(), rawData.size() + 1 );
-      addrList = parseVCard( data );
+        QString data = QString::fromUtf8( rawData.data(), rawData.size() + 1 );
+        addrList += parseVCard( data );
 
-      if ( !url.isLocalFile() )
-        KIO::NetAccess::removeTempFile( fileName );
+        if ( !(*it).isLocalFile() )
+          KIO::NetAccess::removeTempFile( fileName );
 
-    } else {
-      QString text = i18n( "<qt>Unable to access <b>%1</b>.</qt>" );
-      KMessageBox::error( parentWidget(), text.arg( url.url() ), caption );
+      } else {
+        QString text = i18n( "<qt>Unable to access <b>%1</b>.</qt>" );
+        KMessageBox::error( parentWidget(), text.arg( (*it).url() ), caption );
+      }
     }
   }
 
