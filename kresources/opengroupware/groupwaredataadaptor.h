@@ -131,6 +131,7 @@ class GroupwareDataAdaptor
     virtual void adaptDownloadUrl( KURL &url ) = 0;
     virtual void adaptUploadUrl( KURL &url ) = 0;
     virtual QString mimeType() const = 0;
+    virtual QCString identifier() const = 0;
     virtual bool localItemExists( const QString &localId ) = 0;
     virtual bool localItemHasChanged( const QString &localId ) = 0;
     virtual void deleteItem( const QString &localId ) = 0;

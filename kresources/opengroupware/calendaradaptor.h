@@ -25,6 +25,7 @@
 #include "groupwaredataadaptor.h"
 
 #include <libemailfunctions/idmapper.h>
+#include <libkcal/incidence.h>
 
 #include <kurl.h>
 
@@ -60,6 +61,7 @@ class CalendarAdaptor : public GroupwareDataAdaptor
     void adaptDownloadUrl( KURL &url );
     void adaptUploadUrl( KURL &url );
     QString mimeType() const;
+    QCString identifier() const;
     bool localItemExists( const QString &localId );
     bool localItemHasChanged( const QString &localId );
     void deleteItem( const QString &localId );
@@ -67,6 +69,8 @@ class CalendarAdaptor : public GroupwareDataAdaptor
       const QString &localId, const QString &storageLocation );
     QString CalendarAdaptor::extractUid( const QString &data );
     void CalendarAdaptor::clearChange( const QString &uid );
+
+    virtual KCal::Incidence::List parseData( const QString &rawText );
 
   private:
     KCal::ResourceCached *mResource;

@@ -48,6 +48,11 @@ QString CalendarAdaptor::mimeType() const
   return "text/calendar";
 }
 
+QCString CalendarAdaptor::identifier() const
+{
+  return "KCalResourceOpengroupware";
+}
+
 bool CalendarAdaptor::localItemExists( const QString &localId )
 {
   KCal::Incidence *i = mResource->incidence( localId );
@@ -82,38 +87,50 @@ void CalendarAdaptor::deleteItem( const QString &localId )
   mResource->enableChangeNotification();
 }
 
+KCal::Incidence::List CalendarAdaptor::parseData( const QString &rawText )
+{
+  // FIXME: We need to use the TZID here, otherwise all times will be 
+  // returned in UTC, and not in the tz of the resource.
+  KCal::CalendarLocal calendar;
+  KCal::ICalFormat ical;
+  KCal::Incidence::List incidences;
+  if ( !ical.fromString( &calendar, rawText ) ) {
+    kdError() << "Unable to parse iCalendar" << endl;
+    return incidences;
+  } else {
+    return calendar.rawIncidences();
+  }
+}
+
 QString CalendarAdaptor::addItem( const QString &rawText,
   const QString &localId, const QString &storageLocation )
 {
-  KCal::CalendarLocal calendar;
-  KCal::ICalFormat ical;
-  if ( !ical.fromString( &calendar, rawText ) ) {
-    kdError() << "Unable to parse iCalendar" << endl;
+  KCal::Incidence::List incidences = parseData( rawText );
+  if ( incidences.count() < 1 ) {
+    kdError() << "Parsed iCalendar contains no event." << endl;
     return QString::null;
-  } else {
-    KCal::Incidence::List incidences = calendar.incidences();
-    if ( incidences.count() > 1 ) {
-      kdError() << "More than one event in iCalendar" << endl;
-      return QString::null;
-    }
-    
-    mResource->disableChangeNotification();
-    KCal::Incidence *i = (*(incidences.begin()))->clone();
-    if ( !localId.isEmpty() ) i->setUid( localId );
-    i->setCustomProperty( "KCalResourceOpengroupware", "storagelocation" ,
-      storageLocation );
-    mResource->addIncidence( i );
-    mResource->enableChangeNotification();
-  
-    return i->uid();
+  } 
+  if ( incidences.count() > 1 ) {
+    kdError() << "More than one event in iCalendar" << endl;
+    return QString::null;
   }
+    
+  mResource->disableChangeNotification();
+  KCal::Incidence *i = (*(incidences.begin()))->clone();
+  if ( !localId.isEmpty() ) i->setUid( localId );
+  i->setCustomProperty( identifier(), "storagelocation", storageLocation );
+  mResource->addIncidence( i );
+  mResource->enableChangeNotification();
+  
+  return i->uid();
 }
 
 QString CalendarAdaptor::extractUid( const QString &data )
 {
-  KCal::ICalFormat ical;
-  KCal::Incidence *i = ical.fromString( data );
-  if ( i ) return i->uid();
+  KCal::Incidence::List incidences = parseData( data );
+  if ( incidences.count() > 0 ) {
+    return incidences.first()->uid();
+  }
   else return QString::null;
 }
 

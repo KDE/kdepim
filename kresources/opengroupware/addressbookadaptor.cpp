@@ -36,6 +36,10 @@ void AddressBookAdaptor::adaptDownloadUrl( KURL & )
 {
 }
 
+QCString AddressBookAdaptor::identifier() const
+{
+  return "KABCResourceOpengroupware";
+}
 void AddressBookAdaptor::adaptUploadUrl( KURL &url )
 {
   url.addPath( "new.vcf" );
@@ -74,11 +78,16 @@ void AddressBookAdaptor::deleteItem( const QString &localId )
   if ( !a.isEmpty() ) mResource->removeAddressee( a );
 }
 
+KABC::Addressee::List AddressBookAdaptor::parseData( const QString &rawText )
+{
+  KABC::VCardConverter conv;
+  return conv.parseVCards( rawText );
+}
+
 QString AddressBookAdaptor::addItem( const QString &rawText,
   const QString &localId, const QString &storageLocation )
 {
-  KABC::VCardConverter conv;
-  KABC::Addressee::List addressees = conv.parseVCards( rawText );
+  KABC::Addressee::List addressees( parseData( rawText ) );
 
   if ( addressees.count() > 1 ) {
     kdError() << "More than one addressee in vCard" << endl;
@@ -97,8 +106,7 @@ QString AddressBookAdaptor::addItem( const QString &rawText,
   } else {
     if ( !localId.isEmpty() ) addr.setUid( localId );
     addr.setResource( mResource );
-    addr.insertCustom( "KABCResourceOpengroupware", "storagelocation",
-      storageLocation );
+    addr.insertCustom( identifier(), "storagelocation", storageLocation );
     mResource->insertAddressee( addr );
   
     return addr.uid();
@@ -107,8 +115,7 @@ QString AddressBookAdaptor::addItem( const QString &rawText,
 
 QString AddressBookAdaptor::extractUid( const QString &data )
 {
-  KABC::VCardConverter conv;
-  KABC::Addressee::List addressees = conv.parseVCards( data );
+  KABC::Addressee::List addressees = parseData( data );
   if ( addressees.begin() == addressees.end() ) return QString::null;
   
   KABC::Addressee a = *(addressees.begin());

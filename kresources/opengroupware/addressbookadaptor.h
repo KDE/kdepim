@@ -25,6 +25,7 @@
 #include "groupwaredataadaptor.h"
 
 #include <libemailfunctions/idmapper.h>
+#include <kabc/addressee.h>
 
 #include <kurl.h>
 
@@ -59,6 +60,7 @@ class AddressBookAdaptor : public GroupwareDataAdaptor
     void adaptDownloadUrl( KURL &url );
     void adaptUploadUrl( KURL &url );
     QString mimeType() const;
+    QCString identifier() const;
     bool localItemExists( const QString &localId );
     bool localItemHasChanged( const QString &localId );
     void deleteItem( const QString &localId );
@@ -66,6 +68,9 @@ class AddressBookAdaptor : public GroupwareDataAdaptor
       const QString &localId, const QString &storageLocation );
     QString extractUid( const QString &data );
     void clearChange( const QString &uid );
+
+    virtual KABC::Addressee::List parseData( const QString &rawText );
+
 
   private:
     KABC::ResourceCached *mResource;
