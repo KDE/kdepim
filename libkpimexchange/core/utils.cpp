@@ -73,7 +73,7 @@ KURL toDAV( const KURL& url ) {
   if ( result.protocol() == "http" )
     result.setProtocol( "webdav" );
   else if ( result.protocol() = "https" )
-    result.setProtocol( "https" );
+    result.setProtocol( "webdavs" );
   return result;
 }
 
@@ -82,7 +82,7 @@ KURL* toDAV( const KURL* url ) {
   if ( result->protocol() == "http" )
      result->setProtocol( "webdav" );
   else if (  result->protocol() = "https" )
-     result->setProtocol( "https" );
+     result->setProtocol( "webdavs" );
   return result;
 }
 

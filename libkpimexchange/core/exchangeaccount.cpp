@@ -168,6 +168,8 @@ void ExchangeAccount::authenticate( int windowId )
 {
   kdDebug() << "Entering ExchangeAccount::authenticate( windowId=" << windowId << " )" << endl;
 
+  kdDebug() << "Authenticating to base URL: " << baseURL().prettyURL() << endl;
+
   KIO::AuthInfo info;
   info.url = baseURL();
   info.username = mAccount;
@@ -249,7 +251,14 @@ QString ExchangeAccount::tryFindMailbox( const QString& host, const QString& use
 {
   kdDebug() << "Entering ExchangeAccount::tryFindMailbox()" << endl;
 
-  KURL url = KURL( "http://" + host + "/exchange" );
+  QString result = tryMailbox( "http://" + host + "/exchange", user, password );
+  if ( result.isNull() )
+    result = tryMailbox( "https://" + host + "/exchange", user, password );
+  return result;
+}
+  
+static QString ExchangeAccount::tryMailbox( const QString& _url, const QString& user, const QString& password ) {
+  KURL url = KURL( _url );
   url.setUser( user );
   url.setPass( password );
 
@@ -285,8 +294,8 @@ QString ExchangeAccount::tryFindMailbox( const QString& host, const QString& use
         kdWarning() << "Strange, could not get URL from " << mailboxString << " in line " << line << endl;
         continue;
       }
-      kdDebug() << "Found mailbox: " << mailbox.prettyURL( -1 ) << endl;
       result = toDAV( mailbox ).prettyURL( -1 ); // Strip ending slash from URL, if present
+      kdDebug() << "Found mailbox: " << result << endl;
     }
     file.close();
 
