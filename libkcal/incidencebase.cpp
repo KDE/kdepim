@@ -72,10 +72,11 @@ bool KCal::operator==( const IncidenceBase& i1, const IncidenceBase& i2 )
     if( i1.attendees().count() != i2.attendees().count() ) {
         return false; // no need to check further
     }
-    
-    for( Attendee* a1 = i1.attendees().first(), *a2 = i2.attendees().first();
-         a1; a1 = i1.attendees().next(), a2 = i2.attendees().next() )
-        if( *a1 == *a2 )
+
+    QPtrListIterator<Attendee> a1( i1.attendees() );
+    QPtrListIterator<Attendee> a2( i2.attendees() );
+    for( ; a1.current() && a2.current(); ++a1, ++a2 )
+        if( *a1.current() == *a2.current() )
             continue;
         else {
             return false;
