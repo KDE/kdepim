@@ -10,7 +10,7 @@
 <bookinfo>
 <title>The &kmail; Handbook</title>
 
-<!-- note from daniel.naber@t-online.de, 2001-05-05: I'm working on this
+<!-- note from daniel.naber@t-online.de, 2002-01-18: I'm working on this
 "by hand" (using nedit) so please don't mix up the formatting too much. -->
 
 <!-- TODO: 
@@ -19,6 +19,7 @@
 * better markup instead of 'quote'
 * PGP: acronym or application?
 * "permissions" or "permission"
+* Internet or internet
 -->
 
 <authorgroup>
@@ -42,13 +43,14 @@
 
 </authorgroup>
 
-<date>2002-01-05</date>
-<releaseinfo>1.03.70</releaseinfo>
+<date>2002-01-23</date>
+<releaseinfo>1.04.00</releaseinfo>
 
 <copyright>
 <year>1999</year>
 <year>2000</year>
 <year>2001</year>
+<year>2002</year>
 <holder>David Rugge</holder>
 </copyright>
 
@@ -166,7 +168,7 @@ information. Next, fill in the <guilabel>Email Address</guilabel> and
 the <guilabel>Reply-To Address</guilabel> (optional) field with your
 email address. If you are using <application>PGP</application> or
 <application>GnuPG</application> you need to set an identity in 
-the <guilabel>PGP User Identity</guilabel> field.</para>
+the <guilabel>OpenPGP Key</guilabel> field.</para>
 
 <para>Optionally, set the location of your signature file in the
 <guilabel>Signature File</guilabel> field. If you want a random 
@@ -221,39 +223,17 @@ section.</para>
 
 </sect2>
 
-<sect2 id="properties">
-<title>Properties</title>
+<sect2 id="sending">
+<title>Sending</title>
 
-<para>The <guilabel>Properties</guilabel> section lets you configure how
+<para>The <guilabel>Sending</guilabel> section lets you configure how
 and when messages are sent.</para>
         
-<para><guilabel>Default send method</guilabel> lets you define what
-happens when a message is sent. If <guilabel>Send now</guilabel> is
-selected, the message is sent to the mail server immediately, while if
-<guilabel>Send later</guilabel> is selected, the message is queued in
-the outbox to be sent later with the
-<menuchoice><guimenu>File</guimenu><guimenuitem>Send
-Queued</guimenuitem></menuchoice> command or automatically when you
-check your mail, depending on the settings in the
-<guilabel>Miscellaneous</guilabel> tab.</para>
-
-<para><guilabel>Message Property</guilabel> lets you select how your
-message will be encoded when it is sent. <guilabel>Allow
-8-bit</guilabel> means that &kmail; will send your message in 8 bit
-<acronym>ASCII</acronym>, which means that all special characters such
-as accented letters will be sent as-is. If <guilabel>MIME Compliant
-(Quoted Printable)</guilabel> is selected, special characters will be
-encoded using standard &MIME; encodings, which may be more portable to
-other mailing systems than 8-bit <acronym>ASCII</acronym>. You normally
-do not need to change the default.<!-- TODO: advise what's better
---></para>
-        
+<!-- fixme: move         
 <para>With <guilabel>Precommand</guilabel> you can specify a command 
-that will be executed before your messages will be sent.</para>
-        
-<para><guilabel>Confirm before send</guilabel> enables a dialog that
-asks, every time you click  <guilabel>Send now</guilabel>, if you 
-really want to send your mail.</para>
+that will be executed before your messages will be sent. Note that
+this is not available <guilabel>Sendmail</guilabel>.</para>
+-->
 
 </sect2>
 
@@ -374,7 +354,7 @@ Mail</guimenuitem></menuchoice>.</para>
 <para>First, you should send yourself a message to test your
 configuration. To send a message, hit <keycombo
 action="simul">&Ctrl;<keycap>N</keycap></keycombo>, select the
-<guiicon>New message</guiicon> icon (the empty sheet of paper) or select
+<guiicon>New Message</guiicon> icon (the empty sheet of paper) or select
 the <menuchoice><guimenu>Message</guimenu><guimenuitem>New
 Message...</guimenuitem></menuchoice> menu item.  The
 <guilabel>Composer</guilabel> window will appear. Fill in the
@@ -443,7 +423,9 @@ column, you can toggle sorting between <guilabel>Subject</guilabel> ascending/de
 <guilabel>Status</guilabel> ascending/descending. 
 Similarly, if you click on the <guilabel>Date</guilabel>
 column, you can toggle sorting between <guilabel>Date</guilabel> ascending/descending and 
-<guilabel>Date (Order of Arrival)</guilabel> ascending/descending.</para>
+<guilabel>Date (Order of Arrival)</guilabel> ascending/descending. Note that
+the latter doesn't sort by the date messages arrived, but it sorts by 
+the order in which messages were inserted into a folder.<!-- fixme: correct? --></para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -649,7 +631,7 @@ Attachments pane and selecting
 
 <para><application>PGP</application>/<application>GnuPG</application> keys may also 
 be attached to your message by using the appropriate options in the
-<menuchoice><guimenu>Attach</guimenu></menuchoice> menu. <acronym>PGP</acronym>
+<menuchoice><guimenu>Attach</guimenu></menuchoice> menu. <application>PGP</application>
 key attachments are handled like file attachments.</para>
 
 <!-- copied from below -->
@@ -1101,8 +1083,7 @@ indicates successful delivery of his or her message.</para> <para>This
 action allows you to select who will get delivery receipts from
 you. Though you can globally enable the sending of delivery
 confirmations in the <guilabel>Configure &kmail;...</guilabel> dialog
-(<link
-linkend="configure-security-general"><guilabel>Security</guilabel>
+(<link linkend="configure-security-general"><guilabel>Security</guilabel>
 page</link>) we recommended to not send them to everyone, since this
 makes tracking of such things as spam very easy for the sender.</para>
 </listitem>
@@ -1274,6 +1255,13 @@ that are from fj@anywhere.com.</para>
 </sect2>
 </sect1>
 
+<!-- ###fixme
+<sect1 id="popfilters">
+<title>POP Filters</title>
+<para></para>
+</sect1>
+-->
+
 <sect1 id="multiple-accounts">
 <title>Multiple Accounts</title>
 
@@ -1301,7 +1289,7 @@ Mail</guiicon> icon for some time to get a list of accounts.</para>
 <para>This is a short introduction on how to setup &kmail;'s
 <application>PGP</application> support. It will give some hints on the use of
 <application>PGP</application> too. It's written for people who are beginners in
-this area. If you are familiar with the use of <acronym>PGP</acronym>, you can
+this area. If you are familiar with the use of <application>PGP</application>, you can
 skip most of the steps. This documentation (and the &kmail; user interface) 
 generally talks only about  <quote>PGP</quote>, but it applies to 
 both <application>PGP</application> and <application>GnuPG</application>, 
@@ -1519,13 +1507,13 @@ setting's <guilabel>Security</guilabel> tab.</para>
 <chapter id="configure">
 <title>Configure &kmail;</title>
 
-<para>&kmail;'s settings window gives you a number of ways to
-configure &kmail;. You can reach it via
+<para>&kmail;'s configuration window enables you to configure &kmail;
+in many ways. You can reach it via
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
 &kmail;...</guimenuitem></menuchoice>.</para>
 
 <para>It is divided into six
-<!--fixme: update when plugin page becomes available-->
+<!-- fixme: update when plugin page becomes available -->
 pages, each of them represented by one of the
 icons in the list on the left hand side of the dialog. This chapter
 will describe each page in detail.</para>
@@ -1539,11 +1527,11 @@ linkend="getting-started">Getting Started</link> section.</para>
 
 <para>This page allows you to create one or more
 <emphasis>Identities</emphasis>, &ie; combinations of name, email
-address and other settings. Typically, you will create one identity
-for <quote>official</quote> communication (&eg; at work) and one for
-<quote>private</quote> communication. If you have more than one email
+address and other settings. For example, you can create one identity
+for business communication and one for
+personal communication. If you have more than one email
 address, you can create one identity per address. You will then be
-able to select an address on a per-mail basis.</para>
+able to select an address on a per-message basis.</para>
 
 <para>The page consists of a popup menu named
 <guilabel>Identity</guilabel>, three buttons to perform some general
@@ -1563,6 +1551,9 @@ asking for the new name of the identity.</para>
 <guibutton>Remove</guibutton> button and confirm the action in the
 dialog that pops up.</para>
 
+<para>Please note that the <guilabel>Default</guilabel>
+identity cannot be renamed and removed.</para>
+
 <para>To add a new identity to the identity list, click on the
 <guibutton>New...</guibutton> button. A dialog will come up that
 allows you to select certain defaults for your new idenity.</para>
@@ -1572,9 +1563,7 @@ allows you to select certain defaults for your new idenity.</para>
 <title>The <guilabel>New Identity</guilabel> Dialog</title>
 
 <para>You can reach this dialog via &kmail;'s <link
-linkend="configure">configure dialog</link>. If you got here by
-accident, just hit the <guibutton>Cancel</guibutton> button to leave
-the dialog without creating a new identity.</para>
+linkend="configure">configure dialog</link>.</para>
 
 <para>You can enter the name of the new identity into the
 <guilabel>New Identity</guilabel> edit field. This will be the name
@@ -1597,7 +1586,7 @@ standard values.</para>
 <para>Uses the settings of the <application>Control
 Center</application>'s default email profile (you can edit that one
 under <menuchoice><guimenu>Personalization</guimenu>
-<guimenuitem>EMail</guimenuitem></menuchoice> in the
+<guimenuitem>Email</guimenuitem></menuchoice> in the
 <application>Control Center</application>).</para>
 </listitem>
 </varlistentry>
@@ -1623,17 +1612,16 @@ basic settings for the currently selected identity.</para>
 <varlistentry>
 <term><guilabel>Name</guilabel></term>
 <listitem>
-<para>Enter your full name here. This field isn't strictly mandatory,
-but without it, your email address shows up as
-<replaceable>joe@example.com</replaceable>, &ie; without the so-called
-<emphasis>display name</emphasis>.</para>
+<para>Enter your full name here (sometimes also called <emphasis>display name</emphasis>).
+Although this field isn't strictly mandatory, it is recommended to enter 
+the correct value here.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Organization</guilabel></term>
 <listitem>
-<para>Enter your organization here. This field is purely
-optional. Most user agents will show this information in a separate
+<para>Enter your organization here. This field is 
+optional. Most programs will show this information in a separate
 header field <guilabel>Organization</guilabel>. &kmail;, however, puts
 it between parentheses and displays is together with the email address
 in the <guilabel>From</guilabel> header field.</para>
@@ -1649,7 +1637,7 @@ name</emphasis>).</para>
 </variablelist>
 <note>
 <para>If your email address is <replaceable>Joe User
-&le;joe@example.com&gt;</replaceable>, you should enter <userinput>Joe
+&lt;joe@example.com&gt;</replaceable>, you should enter <userinput>Joe
 User</userinput> into the <guilabel>Name</guilabel> field and
 <userinput>joe@example.com</userinput> into the <guilabel>Email
 Address</guilabel> field.</para>
@@ -1666,26 +1654,25 @@ selected identity.</para>
 <varlistentry>
 <term><guilabel>Reply-To Address</guilabel></term>
 <listitem>
-<para>Enter here the address to which replies to your mails should be
+<para>Enter the address to which replies to your mails should be
 sent. Only fill out this field if it is different from your normal
 address (specified using the <guilabel>Name</guilabel> and
 <guilabel>Email Address</guilabel> on the <link
 linkend="configure-identity-general"><guilabel>General</guilabel>
 tab</link>), since replies default to the sender's address
 anyway.</para>
-
 <note><para>This field is only useful if you want replies to your mail
 to go somewhere else than your regular email address, &eg; if you are
 using this identity to send emails from an email address that cannot
-receive messages. <!-- TODO: wording... -->Since there is no real <emphasis>killer
-argument</emphasis> for using this field, it will possibly be
-deprecated by newer versions of the email standard. Also, some broken
-mailing lists overwrite this header field with their post address to
+receive messages. Note that this field will possibly be
+deprecated by newer versions of the Internet email standard. Furthermore,
+some mailing lists overwrite this header field with their post address to
 make sure that replies go to the list instead of individuals. So the
 usefulness of this field is very limited and it should only be used in
 rare cases.</para></note>
 </listitem>
 </varlistentry>
+
 <varlistentry>
 <term><guilabel>OpenPGP Key</guilabel></term>
 <listitem>
@@ -1699,19 +1686,19 @@ don't need to worry about this setting.</para>
 
 <note><para>The selected key will also be used as the recipient when
 you check <link linkend="configure-security-pgp-encrypttoself">
-<guilabel>When encrypting, always include me in the list of
-recipients</guilabel></link> on the <link
-linkend="configure-security-pgp"><guilabel>PGP</guilabel> tab</link>
+<guilabel>Always encrypt to self</guilabel></link> on the <link
+linkend="configure-security-pgp"><guilabel>OpenPGP</guilabel> tab</link>
 of the <link linkend="configure-security">
 <guilabel>Security</guilabel> page</link>.</para></note>
 
 <note><para>You might need to configure your
-<application>OpenPGP</application> environment first, before the key
-selection dialog works. You can do this on the <link
+<application>OpenPGP</application> environment first, to make the key
+selection dialog work. You can do this on the <link
 linkend="configure-security"> <guilabel>Security</guilabel>
 page</link>.</para></note>
 </listitem>
 </varlistentry>
+
 <varlistentry>
 <term><guilabel>Sent-mail folder</guilabel></term>
 <listitem>
@@ -1722,8 +1709,18 @@ when using this identity.</para>
 file sent mails by creating a corresponding <link
 linkend="filters">filter</link> that is applied to outgoing
 mails.</para></tip>
+
 </listitem>
 </varlistentry>
+
+<varlistentry>
+<term><guilabel>Drafts folder</guilabel></term>
+<listitem>
+<para>Select the folder into which drafts should be filed when using 
+this identity.</para>
+</listitem>
+</varlistentry>
+
 <varlistentry>
 <term><guilabel>Special transport</guilabel></term>
 <listitem>
@@ -1737,6 +1734,7 @@ tab</link> of the <link linkend="configure-network">
 <guilabel>Network</guilabel> page</link>.</para></note>
 </listitem>
 </varlistentry>
+
 </variablelist>
 </sect2>
 
@@ -1748,15 +1746,16 @@ to be appended to each mail sent using this identity.</para>
 
 <note><para>This type of signature has nothing to do with the
 (digital) signatures for which you can select the to-be-used key on
-the <link linkend="configure-identity-advanced">previous
+the <link linkend="configure-identity-advanced">Advanced
 tab</link>. It's just bad wording to call this a signature, but since
 the term is already used everywhere else, we keep this notation. Just
 keep in mind that these signatures and digital signatures are two
-totally different things.</para></note>
+completely different things.</para></note>
 
-<para>Check the <guilabel>Enable signature</guilabel> option if you
+<para>Check the <guilabel>Enable Signature</guilabel> option if you
 want to append signatures when using this idenity.</para>
 
+<!-- fixme: move
 <para>Check the <guilabel>Automatically append signature</guilabel>
 option if you want the signature to be appended automatically to each
 mail you compose using this identity. Else, choose
@@ -1765,11 +1764,12 @@ the <link
 linkend="composer-attach-menu"><guilabel>Composer</guilabel>'s
 <guimenu>Attach</guimenu> menu</link> whenever you want to append the
 signature.</para>
+-->
 
 <para>&kmail; can obtain the signature text from various sources. The
 traditional way on Unix is to read the text from a file called
-<filename>.signature</filename> in the user's home directory. This file can
-be shared between several mail user agents, so you get the same
+<filename>.signature</filename> in your home directory. This file can
+be shared between several programs, so you get the same
 signature in each mail program you use.</para>
 
 <para>To read the text from a flat text file you select
@@ -1782,7 +1782,7 @@ button.</para>
 <para>&kmail; can also read the signature text from the output of a
 command. Thus, you can use programs such as
 <command>fortune</command> to create a new signature text for
-every mail. Everything the program outputs onto
+every message. Everything the program prints onto
 <acronym>stdout</acronym> is catched and used as the signature
 text.</para>
 
@@ -1802,9 +1802,9 @@ from the body of the message by a line containing only the three
 character <quote>-- </quote> (dash, dash, space). &kmail; will
 automatically prepend the signature text with this line if it is not
 already present in the signature text.</para>
-
 <para>If - for whatever reasons - you do not wish the separator to be
-included by &kmail;, simply append it to the signature text yourself.</para>
+included automatically by &kmail;, simply add it to the signature 
+text yourself.</para>
 </note>
 
 </sect2>
@@ -1823,9 +1823,9 @@ section.</para>
 outgoing) <emphasis>accounts</emphasis>, &ie; combinations of mail
 servers, login information and other settings. Typically, you will
 create one outgoing (used for sending mails) and one incoming (used to
-retrieve mails) account. You can create as many as you want, though,
+retrieve mails) account. You can create as many accounts as you want, though,
 and assign each one to different <link
-linkend="configure-identity">identities</link> or decide on a per-mail
+linkend="configure-identity">identities</link> or decide on a per-message
 basis.</para>
 
 <sect2 id="configure-network-sending">
@@ -1833,14 +1833,75 @@ basis.</para>
 
 <para>The <guilabel>Sending</guilabel> tab allows you to define new
 outgoing mail servers and set some common options.</para>
-<!-- fixme: more! -->
 
+<para>For basic information, see <link
+linkend="setting-up-your-account">Setting up your Account</link>.</para>
+
+<para><guilabel>Confirm before send</guilabel> will pop up a
+confirmation box every time your send a message.</para>
+
+<para><guilabel>Send mail in Outbox on check</guilabel> will send
+all messages from the outbox when you check for new messages.</para>
+
+<para><guilabel>Default send method</guilabel> lets you define what
+happens when a message is sent. If <guilabel>Send now</guilabel> is
+selected, the message is sent to the mail server immediately, while if
+<guilabel>Send later</guilabel> is selected, the message is queued in
+the outbox to be sent later with the
+<menuchoice><guimenu>File</guimenu><guimenuitem>Send
+Queued</guimenuitem></menuchoice> command or automatically when you
+check your mail, depending on the settings in the
+<guilabel>Miscellaneous</guilabel> tab.</para>
+
+<para><guilabel>Message Property</guilabel> lets you select how your
+message will be encoded when it is sent. <guilabel>Allow
+8-bit</guilabel> means that &kmail; will send your message in 8 bit
+<acronym>ASCII</acronym>, which means that all special characters such
+as accented letters will be sent as-is. If <guilabel>MIME Compliant
+(Quoted Printable)</guilabel> is selected, special characters will be
+encoded using standard &MIME; encodings, which may be more portable to
+other mailing systems than 8-bit <acronym>ASCII</acronym>. You normally
+do not need to change the default.<!-- TODO: advise what's better --></para>
 
 </sect2>
 
 <sect2 id="configure-network-receiving">
 <title><guilabel>Receiving</guilabel> Tab</title>
-<para><!-- fixme: link to somewhere else / copy from somewhere else? -->Not documented yet.</para>
+
+<para>For basic information, see <link
+linkend="setting-up-your-account">Setting up your Account</link>.</para>
+
+<para>With <guilabel>New Mail notification</guilabel> you can set
+how &kmail; will notify you if a new message has arrived. Of course
+this only makes sense if <guilabel>Enable interval mail checking</guilabel>
+is activated for at least one account:</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Beep</guilabel></term>
+<listitem>
+<para>Will play a beep sound.</para> 
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Display message box</guilabel></term>
+<listitem>
+<para>Will show a message box and make &kmail; the active window.</para> 
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<!-- fixme in kmail: why "line"??? -->
+<term><guilabel>Execute command line</guilabel></term>
+<listitem>
+<para>Will excute the command you enter in the line edit below.</para> 
+</listitem>
+</varlistentry>
+
+</variablelist>
+
 </sect2>
 
 </sect1>
@@ -2174,7 +2235,7 @@ use the same database.</para>
 <title>Menus and Keyboard Shortcuts</title>
 
 <para>Each menu item is discussed below. When there is a keyboard shortcut that
-performs a menu item function, it is listed with the menu item.</para>
+performs a menu item function, the default shortcut is listed with the menu item.</para>
 
 <sect1 id="main-mail-reader-window">
 <title>The Main Window</title>
@@ -2198,9 +2259,7 @@ performs a menu item function, it is listed with the menu item.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>S</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>S</keycap></keycombo></shortcut>
 <guimenu>File</guimenu>
 <guimenuitem>Save As...</guimenuitem>
 </menuchoice>
@@ -2214,9 +2273,7 @@ and attachments.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo></shortcut>
 <guimenu>File</guimenu>
 <guimenuitem>Print...</guimenuitem>
 </menuchoice>
@@ -2230,7 +2287,7 @@ and attachments.</para>
 <term>
 <menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Compact all folders</guimenuitem>
+<guimenuitem>Compact All folders</guimenuitem>
 </menuchoice></term>
 <listitem>
 <para>Will compact all folders, &ie; it will really move and delete the messages
@@ -2241,9 +2298,20 @@ on disk according to how you have moved and deleted them in &kmail;.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo>
-</shortcut>
+<guimenu>File</guimenu>
+<guimenuitem>Expire All folders</guimenuitem>
+</menuchoice></term>
+<listitem>
+<para>Delete old messages from all folders, according to the rules in
+each folder's <guilabel>Properties</guilabel> dialog (the default is
+not to delete old messages at all).</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo></shortcut>
 <guimenu>File</guimenu>
 <guimenuitem>Check Mail</guimenuitem>
 </menuchoice>
@@ -2257,7 +2325,7 @@ have <guilabel>Exclude from &quot;Check Mail&quot;</guilabel> enabled.</para>
 <term>
 <menuchoice>
 <guimenu>File</guimenu>
-<guisubmenu>Check Mail in</guisubmenu>
+<guisubmenu>Check Mail In</guisubmenu>
 </menuchoice>
 </term>
 <listitem>
@@ -2305,9 +2373,7 @@ This application lets you import messages from several proprietary mail clients 
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>W</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>W</keycap></keycombo></shortcut>
 <guimenu>File</guimenu>
 <guimenuitem>Close</guimenuitem>
 </menuchoice>
@@ -2330,9 +2396,7 @@ This application lets you import messages from several proprietary mail clients 
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>Z</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>Z</keycap></keycombo></shortcut>
 <guimenu>Edit</guimenu>
 <guimenuitem>Undo</guimenuitem>
 </menuchoice>
@@ -2346,11 +2410,9 @@ in the trash.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>C</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>C</keycap></keycombo></shortcut>
 <guimenu>Edit</guimenu>
-<guimenuitem>Copy text</guimenuitem>
+<guimenuitem>Copy Text</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2361,9 +2423,7 @@ in the trash.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycap>D</keycap>
-</shortcut>
+<shortcut><keycap>D</keycap></shortcut>
 <guimenu>Edit</guimenu>
 <guimenuitem>Delete</guimenuitem>
 </menuchoice>
@@ -2377,11 +2437,9 @@ messages are already in the trash folder, they will really be deleted.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycap>S</keycap>
-</shortcut>
+<shortcut><keycap>S</keycap></shortcut>
 <guimenu>Edit</guimenu>
-<guimenuitem>Search messages...</guimenuitem>
+<guimenuitem>Search Messages...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2396,11 +2454,9 @@ pane</guilabel>.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>F</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>F</keycap></keycombo></shortcut>
 <guimenu>Edit</guimenu>
-<guimenuitem>Find in message...</guimenuitem>
+<guimenuitem>Find In Message...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2411,8 +2467,8 @@ pane</guilabel>.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycap>K</keycap></shortcut><guimenu><accel>E</accel>dit</guimenu>
-<guimenuitem>Select all messages</guimenuitem>
+<guimenu>Edit</guimenu>
+<guimenuitem>Select All Messages</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2425,7 +2481,7 @@ pane</guilabel>.</para>
 <menuchoice>
 <shortcut><keycombo action="simul">&Ctrl;<keycap>A</keycap></keycombo></shortcut>
 <guimenu>Edit</guimenu>
-<guimenuitem>Select message text</guimenuitem>
+<guimenuitem>Select Message Text</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2449,7 +2505,7 @@ pane</guilabel>.</para>
 <term>
 <menuchoice>
 <guimenu>View</guimenu>
-<guimenuitem>Brief</guimenuitem>
+<guimenuitem>Brief Headers</guimenuitem>
 </menuchoice>
 <menuchoice>
 <guimenu>View</guimenu>
@@ -2465,7 +2521,7 @@ pane</guilabel>.</para>
 </menuchoice>
 <menuchoice>
 <guimenu>View</guimenu>
-<guimenuitem>All Headers Headers</guimenuitem>
+<guimenuitem>All Headers</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2482,7 +2538,7 @@ headers in the <guilabel>Message pane</guilabel>.</para>
 </menuchoice>
 <menuchoice>
 <guimenu>View</guimenu>
-<guimenuitem>Smart Attachments</guimenuitem>
+<guimenuitem>Smart Attachments</guimenuitem><!-- fixme: what's this? -->
 </menuchoice>
 <menuchoice>
 <guimenu>View</guimenu>
@@ -2492,6 +2548,22 @@ headers in the <guilabel>Message pane</guilabel>.</para>
 <listitem>
 <para>Changes the way that attachments appear in the <guilabel>Message
 pane</guilabel>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>View</guimenu>
+<guimenuitem>Fixed Font Widths</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<!-- fixme: doesn't work for me -->
+<para>Uses a fixed width (monospace) font to display the messages
+in the current folder. The font to be used can be configured in the
+<guilabel>Appearance</guilabel> section of &kmail;'s configuration
+dialog.</para>
 </listitem>
 </varlistentry>
 
@@ -2513,14 +2585,21 @@ pane</guilabel>.</para>
 </term>
 <listitem>
 <para>Opens the <guilabel>Create Folder</guilabel> dialog which lets you create
-a new folder.  You can make this new folder a sub folder if you choose a parent
-folder using the <guilabel>File under</guilabel> selection. If you're going to
-use this folder for a mailing list you may want to add the mailing list address
-in the <guilabel>Associated Mailing List</guilabel> tab. You can then use
+a new folder. You can make this new folder a sub folder if you choose a parent
+folder using the <guilabel>Belongs to</guilabel> selection. The folder
+can be either in <guilabel>mbox</guilabel> or in <guilabel>maildir</guilabel>
+format. <guilabel>mbox</guilabel> saves all messages of one folder to a file,
+whereas <guilabel>maildir</guilabel> saves each message to its own file. 
+<guilabel>maildir</guilabel> can be considered more robust, but it can be
+slower on some file systems. Note that there's currently no feature in &kmail; that
+allows to convert between both formats automatically.</para>
+<para>If you're going to use the folder for a mailing list you may want to add 
+the mailing list address
+in the <guilabel>Associated Mailing List</guilabel> section. You will then be able to use
 the <menuchoice><guimenu>Message</guimenu><guimenuitem>Reply
 list...</guimenuitem></menuchoice> menu item. It will open a reply with the
 mailing list address in the <guilabel>To:</guilabel> field (&ie; it will ignore
-the <token>Reply-To</token> of the message).  You can also click the
+the <token>Reply-To</token> of the message). You can also click the
 <mousebutton>middle</mousebutton> mousebutton in the Folders pane to post to a
 mailing list that is associated with that folder.</para>
 </listitem>
@@ -2543,6 +2622,18 @@ change the settings for the selected folder.</para>
 <term>
 <menuchoice>
 <guimenu>Folder</guimenu>
+<guimenuitem>Mark All Messages as Read</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Sets the status of all new and unread messages in the current folder to read.</para> 
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Folder</guimenu>
 <guimenuitem>Compact</guimenuitem>
 </menuchoice>
 </term>
@@ -2550,6 +2641,20 @@ change the settings for the selected folder.</para>
 <para>Compacts the folder file to reduce its disk space usage. Use this command
 if your mailboxes seem to be much larger than they ought to be.
 <!-- TODO: explain? --></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Folder</guimenu>
+<guimenuitem>Expire</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Delete old messages from the current folder, according to the rules in
+the folder's <guilabel>Properties</guilabel> dialog (the default is
+not to delete old messages at all).</para>
 </listitem>
 </varlistentry>
 
@@ -2575,7 +2680,9 @@ deleted.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Removes the selected folder.</para>
+<para>Removes the selected folder and all its contents.</para>
+<para><warning><para>Note that there's no way to access the contents
+of a folder after it has been removed.</para></warning></para>
 </listitem>
 </varlistentry>
 
@@ -2583,7 +2690,7 @@ deleted.</para>
 <term>
 <menuchoice>
 <guimenu>Folder</guimenu>
-<guimenuitem>Prefer HTML to plain text</guimenuitem>
+<guimenuitem>Prefer HTML to Plain Text</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2618,9 +2725,7 @@ they reply to.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>New Message...</guimenuitem>
 </menuchoice>
@@ -2636,9 +2741,7 @@ address.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycap>N</keycap>
-</shortcut>
+<shortcut><keycap>N</keycap></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Next</guimenuitem>
 </menuchoice>
@@ -2652,9 +2755,7 @@ address.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycap>+</keycap>
-</shortcut>
+<shortcut><keycap>+</keycap></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Next Unread</guimenuitem>
 </menuchoice>
@@ -2667,9 +2768,7 @@ address.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycap>P</keycap>
-</shortcut>
+<shortcut><keycap>P</keycap></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Previous</guimenuitem>
 </menuchoice>
@@ -2682,9 +2781,7 @@ address.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycap>-</keycap>
-</shortcut>
+<shortcut><keycap>-</keycap></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Previous Unread</guimenuitem>
 </menuchoice>
@@ -2697,9 +2794,7 @@ address.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycap>R</keycap>
-</shortcut>
+<shortcut><keycap>R</keycap></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Reply...</guimenuitem>
 </menuchoice>
@@ -2714,9 +2809,7 @@ selected message's <guilabel>Reply-To</guilabel> field in the
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycap>A</keycap>
-</shortcut>
+<shortcut><keycap>A</keycap></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Reply All...</guimenuitem>
 </menuchoice>
@@ -2733,9 +2826,7 @@ of the selected message's <guilabel>Reply-To:</guilabel> and
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycap>L</keycap>
-</shortcut>
+<shortcut><keycap>L</keycap></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Reply List...</guimenuitem>
 </menuchoice>
@@ -2751,11 +2842,9 @@ Otherwise the <guilabel>To:</guilabel> field will be empty.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Alt;<keycap>R</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Alt;<keycap>R</keycap></keycombo></shortcut>
 <guimenu>Message</guimenu>
-<guimenuitem>Reply without quote...</guimenuitem>
+<guimenuitem>Reply Without Quote...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2766,9 +2855,7 @@ text of the original message.</para>
 
 <varlistentry>
 <term><menuchoice>
-<shortcut>
-<keycap>F</keycap>
-</shortcut>
+<shortcut><keycap>F</keycap></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Forward...</guimenuitem>
 </menuchoice>
@@ -2782,12 +2869,11 @@ will be forwarded, too.</para>
 
 <varlistentry>
 <term><menuchoice>
-<shortcut>
-<keycap>F</keycap>
+<shortcut><keycombo action="simul">&Shift;<keycap>F</keycap></keycombo><keycap>F</keycap>
 </shortcut>
 <guimenu>Message</guimenu>
 <!-- fixme in kmail: "f" twice as accel -->
-<guimenuitem>Forward as attachment</guimenuitem>
+<guimenuitem>Forward as Attachment</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -2799,9 +2885,7 @@ in the original message will also be in the forwarded message's attachment.</par
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycap>E</keycap>
-</shortcut>
+<shortcut><keycap>E</keycap></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Redirect...</guimenuitem>
 </menuchoice>
@@ -2837,7 +2921,7 @@ user does not exist. Some people use this option to <quote>reply</quote> to spam
 </menuchoice>
 </term>
 <listitem>
-<para>Sends the message again.</para>
+<para>Opens a composer window with this message so it can be sent again.</para>
 </listitem>
 </varlistentry>
 
@@ -2850,16 +2934,15 @@ user does not exist. Some people use this option to <quote>reply</quote> to spam
 </term>
 <listitem>
 <para>Lets you choose the character encoding to be used in the Message
-Pane.</para>
+Pane. The default, <guilabel>Auto</guilabel>, should work in almost all cases.</para>
+<!-- fixme: does it? -->
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycap>T</keycap>
-</shortcut>
+<shortcut><keycap>T</keycap></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Edit</guimenuitem>
 </menuchoice>
@@ -2879,7 +2962,8 @@ Pane.</para>
 </term>
 <listitem>
 <para>Opens up the <link linkend="filter-dialog-id">Filter dialog</link> with a new filter added.
-This new filter is based on the fields of the current mail.</para>
+This new filter is based on fields of the current mail, depending on which
+sub menu you select.</para>
 </listitem>
 </varlistentry>
 
@@ -2887,12 +2971,12 @@ This new filter is based on the fields of the current mail.</para>
 <term>
 <menuchoice>
 <guimenu>Message</guimenu>
-<guisubmenu>Set Status</guisubmenu>
+<guisubmenu>Mark Message</guisubmenu>
 </menuchoice>
 </term>
 <listitem>
 <para>Allows you to change the status of the selected message to one of the
-below (more than one status per message is currently not supported):</para>
+following states (more than one status per message is currently not supported):</para>
 <!-- fixme: more than one somewhen supported? -->
 
 <itemizedlist>
@@ -2914,6 +2998,9 @@ below (more than one status per message is currently not supported):</para>
 <listitem>
 <para><guimenuitem>Sent</guimenuitem></para>
 </listitem>
+<listitem>
+<para><guimenuitem>Important</guimenuitem></para>
+</listitem>
 </itemizedlist>
 </listitem>
 </varlistentry>
@@ -2922,7 +3009,21 @@ below (more than one status per message is currently not supported):</para>
 <term>
 <menuchoice>
 <guimenu>Message</guimenu>
-<guisubmenu>Move to</guisubmenu>
+<guisubmenu>Mark Thread</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Allows you to change the status of all messages in a thread. The possible
+states are the same as for <menuchoice><guimenu>Message</guimenu>
+<guimenuitem>Mark Message</guimenuitem></menuchoice>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Message</guimenu>
+<guisubmenu>Move To</guisubmenu>
 </menuchoice>
 </term>
 <listitem>
@@ -2935,7 +3036,7 @@ below (more than one status per message is currently not supported):</para>
 <menuchoice>
 <guimenu>Message</guimenu>
 <!-- fixme in kmail: "c" is accel twice -->
-<guisubmenu>Copy to</guisubmenu>
+<guisubmenu>Copy To</guisubmenu>
 </menuchoice>
 </term>
 <listitem>
@@ -2946,9 +3047,7 @@ below (more than one status per message is currently not supported):</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>J</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>J</keycap></keycombo></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Apply Filters</guimenuitem>
 </menuchoice>
@@ -2961,6 +3060,7 @@ below (more than one status per message is currently not supported):</para>
 <varlistentry>
 <term>
 <menuchoice>
+<shortcut><keycap>V</keycap></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>View Source...</guimenuitem>
 </menuchoice>
@@ -3013,7 +3113,7 @@ the bottom which shows useful short messages and link targets).</para>
 <term>
 <menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Configure Key Bindings...</guimenuitem>
+<guimenuitem>Configure Shortcuts...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3039,7 +3139,7 @@ toolbar.</para>
 <term>
 <menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Configure KMail...</guimenuitem>
+<guimenuitem>Configure &kmail;...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3055,9 +3155,23 @@ toolbar.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Opens the <link linkend="filters">Configure Filters...</link> window.</para>
+<para>Opens the <link linkend="filters">Configure Filters</link> window.</para>
 </listitem>
 </varlistentry>
+
+<!-- ##fixme
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Pop Filters...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens the <link linkend="popfilters">Configure Pop Filters</link> window.</para>
+</listitem>
+</varlistentry>
+-->
 
 </variablelist>
 
@@ -3083,9 +3197,7 @@ toolbar.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>Return</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>Return</keycap></keycombo></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Send</guimenuitem>
 </menuchoice>
@@ -3111,7 +3223,7 @@ toolbar.</para>
 <term>
 <menuchoice>
 <guimenu>Message</guimenu>
-<guimenuitem>Save in drafts folder</guimenuitem>
+<guimenuitem>Save in Drafts Folder</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3128,7 +3240,7 @@ and send it later.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Inserts the selected text file into the message, starting at the cursor
+<para>Inserts a text file into the message, starting at the cursor
 position.</para>
 </listitem>
 </varlistentry>
@@ -3136,9 +3248,7 @@ position.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Print...</guimenuitem>
 </menuchoice>
@@ -3152,6 +3262,7 @@ position.</para>
 <term>
 <menuchoice>
 <guimenu>Message</guimenu>
+<!-- fixme in kmail: address book or addressbook -->
 <guimenuitem>Addressbook...</guimenuitem>
 </menuchoice>
 </term>
@@ -3163,9 +3274,7 @@ position.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>New Composer...</guimenuitem>
 </menuchoice>
@@ -3178,9 +3287,7 @@ position.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>W</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>W</keycap></keycombo></shortcut>
 <guimenu>Message</guimenu>
 <guimenuitem>Close</guimenuitem>
 </menuchoice>
@@ -3203,9 +3310,7 @@ position.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>Z</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>Z</keycap></keycombo></shortcut>
 <guimenu>Edit</guimenu>
 <guimenuitem>Undo</guimenuitem>
 </menuchoice>
@@ -3218,9 +3323,7 @@ position.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>Shift</keycap><keycap>Z</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>Z</keycap></keycombo></shortcut>
 <guimenu>Edit</guimenu>
 <guimenuitem>Redo</guimenuitem>
 </menuchoice>
@@ -3233,9 +3336,7 @@ position.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>X</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>X</keycap></keycombo></shortcut>
 <guimenu>Edit</guimenu>
 <guimenuitem>Cut</guimenuitem>
 </menuchoice>
@@ -3249,8 +3350,7 @@ drag it to a new position.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul"><keycap>Ctrl</keycap><keycap>C</keycap></keycombo>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>C</keycap></keycombo>
 </shortcut>
 <guimenu>Edit</guimenu>
 <guimenuitem>Copy</guimenuitem>
@@ -3266,9 +3366,7 @@ cut.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>V</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>V</keycap></keycombo></shortcut>
 <guimenu>Edit</guimenu>
 <guimenuitem>Paste</guimenuitem>
 </menuchoice>
@@ -3281,11 +3379,9 @@ cut.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>A</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>A</keycap></keycombo></shortcut>
 <guimenu>Edit</guimenu>
-<guimenuitem>Select <accel>A</accel>ll</guimenuitem>
+<guimenuitem>Select All</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3296,9 +3392,7 @@ cut.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>F</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>F</keycap></keycombo></shortcut>
 <guimenu>Edit</guimenu>
 <guimenuitem>Find...</guimenuitem>
 </menuchoice>
@@ -3311,9 +3405,7 @@ cut.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>R</keycap></keycombo>
-</shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>R</keycap></keycombo></shortcut>
 <guimenu>Edit</guimenu>
 <guimenuitem>Replace...</guimenuitem>
 </menuchoice>
@@ -3371,16 +3463,19 @@ options in this <guilabel>Composer</guilabel> window.</para>
 <para><guimenuitem>Identity</guimenuitem></para>
 </listitem>
 <listitem>
+<para><guimenuitem>Sent-Mail folder</guimenuitem></para>
+</listitem>
+<listitem>
 <para><guimenuitem>Mail Transport</guimenuitem></para>
 </listitem>
 <listitem>
 <para><guimenuitem>From</guimenuitem></para>
 </listitem>
 <listitem>
-<para><guimenuitem>Reply to</guimenuitem></para>
+<para><guimenuitem>Reply To</guimenuitem></para>
 </listitem>
 <listitem>
-<para><guimenuitem><accel>T</accel>o</guimenuitem></para>
+<para><guimenuitem>To</guimenuitem></para>
 </listitem>
 <listitem>
 <para><guimenuitem>Cc</guimenuitem></para>
@@ -3395,6 +3490,24 @@ options in this <guilabel>Composer</guilabel> window.</para>
 
 <para>Currently visible items have a checkmark shown next to their name in the
 menu.</para>
+
+<variablelist>
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Edit</guimenu>
+<guimenuitem>Fixed Font Widths</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<!-- fixme: doesn't work for me -->
+<para>Uses a fixed width (monospace) font to display the messages
+in the current folder. The font to be used can be configured in the
+<guilabel>Appearance</guilabel> section of &kmail;'s configuration
+dialog.</para>
+</listitem>
+</varlistentry>
+</variablelist>
 
 </sect2>
 
@@ -3421,7 +3534,7 @@ incoming messages.</para>
 <term>
 <menuchoice>
 <guimenu>Options</guimenu>
-<guimenuitem>Confirm delivery</guimenuitem>
+<guimenuitem>Confirm Delivery</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3435,7 +3548,7 @@ also supported from the receiver's side in order to work.</para>
 <term>
 <menuchoice>
 <guimenu>Options</guimenu>
-<guimenuitem>Confirm read</guimenuitem>
+<guimenuitem>Confirm Read</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3450,11 +3563,37 @@ enabled by the receiver's mail client in order to work.
 <term>
 <menuchoice>
 <guimenu>Options</guimenu>
+<guisubmenu>Sign Message</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Digitally sign the message using <application>OpenPGP</application>.
+You can learn more about this in the <link linkend="pgp">chapter on OpenPGP</link>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Options</guimenu>
+<guisubmenu>Encrypt Message</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Encrypt the message using <application>OpenPGP</application>.
+You can learn more about this in the <link linkend="pgp">chapter on OpenPGP</link>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Options</guimenu>
 <guisubmenu>Set Encoding</guisubmenu>
 </menuchoice>
 </term>
 <listitem>
-<para>Set the charset encoding of this message. It will appear in the header of
+<para>Set the charset encoding of this message. The chosen encoding will appear in the header of
 the outgoing mail.</para>
 </listitem>
 </varlistentry>
@@ -3527,7 +3666,7 @@ public key to your message using the default encoding.</para>
 <term>
 <menuchoice>
 <guimenu>Attach</guimenu>
-<guimenuitem>Attach...</guimenuitem>
+<guimenuitem>Attach File...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3613,7 +3752,7 @@ the bottom which shows useful short messages).</para>
 <term>
 <menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Configure Key Bindings...</guimenuitem>
+<guimenuitem>Configure Shortcuts...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -3746,9 +3885,9 @@ folders as subfolders.</para></answer>
 <qandaentry>
 <question><para>The button to sign messages is not enabled anymore, it was enabled 
 some time ago.</para></question>
-<answer><para>Enter your <guilabel>PGP User Identity</guilabel> in the
-<guilabel>Identity</guilabel> configuration dialog. Without a <acronym>PGP</acronym> User Identity &kmail;
-can't know which key should be used to sign your messages with.</para>
+<answer><para>Enter your <guilabel>OpenPGP Key</guilabel> in the
+<guilabel>Identity</guilabel> configuration dialog. Without a OpenPGP
+user identity &kmail; can't know which key should be used to sign your messages.</para>
 </answer>
 </qandaentry>
 
@@ -3763,9 +3902,9 @@ reply.</para></answer>
 
 <qandaentry>
 <question><para>For some messages the value in the <guilabel>Date</guilabel> field
-is <guilabel>unknown</guilabel>.</para></question>
+is <guilabel>unknown</guilabel> or it's not correct.</para></question>
 <answer><para>Probably the <quote>Date:</quote> header of these messages is broken,
-maybe it's missing the time zone information. For this case we've added
+maybe it lacks the time zone information. For this case we've added
 a workaround to mimelib. Mimelib is part of the kdenetwork
 package, you should make sure that &kde;'s mimelib is used and not a different
 one on your system. If that doesn't help, the <quote>Date:</quote> field is
@@ -3806,7 +3945,7 @@ mailing list post</ulink>.</para></answer>
 <answer>
 <para>You can find a list of submitted bugs at <ulink
 url="http://bugs.kde.org/db/pa/lkmail.html">bugs.kde.org</ulink>. Note that not all
-these bugs are valid, all in all we think that &kmail; is now a very good piece
+these bugs are valid. All in all we think that &kmail; is now a very robust piece
 of software.</para>
 <para><warning><para>However, you should not run &kmail; while another mail client is already
 accessing the files in <filename class="directory">~/Mail</filename>. If you try to do so,
@@ -3820,7 +3959,7 @@ messages.</para></question>
 <answer><para>
 To really remove deleted messages from disk, you have to compact
 your folders using <menuchoice><guimenu>File</guimenu><guimenuitem>Compact all 
-folders</guimenuitem></menuchoice> (by default, this will also happen every time you exit
+folders</guimenuitem></menuchoice> (by default this will also happen every time you exit
 &kmail;).</para>
 <!-- fixme?: doesn't work when leaving by session management?! -->
 </answer>
@@ -3828,7 +3967,7 @@ folders</guimenuitem></menuchoice> (by default, this will also happen every time
 
 <qandaentry>
 <question><para>&kmail; doesn't display <acronym>HTML</acronym> mail as
-<acronym>HTML</acronym>, I can only see the source.</para></question>
+<acronym>HTML</acronym>, I can only see plain text.</para></question>
 <answer><para>Select <menuchoice><guimenu>Folder</guimenu><guimenuitem>Prefer
 HTML to plain text</guimenuitem></menuchoice>. For security reasons you should
 only do so for trusted mails. Note that plugins (like <trademark
@@ -3840,9 +3979,9 @@ and there's no way to activate them.</para></answer>
 <qandaentry>
 <question><para>Can I use two different versions of &kmail; at the same time? Can I go
 back from a current version of &kmail; to an older one?</para></question>
-<answer><para>You can only run one instance of &kmail; at once. We recommend also
+<answer><para>You can only run one instance of &kmail; at once. We also recommend
 to stick to a certain version and not switch back and forth between different versions.
-Downgrading to an older version might cause problems, &eg; because the index file
+Downgrading to an older version will probably cause problems, &eg; because the index file
 formats might have changed. Upgrading should never be a problem.</para></answer>
 </qandaentry>
 
@@ -3869,7 +4008,7 @@ anything when receiving an email from the list.</para></question>
 filtering the mailing list messages. You have to add a new filter rule manually.
 However, once you associated a folder with a mailing list you can use <menuchoice>
 <guimenu>Message</guimenu><guimenuitem>Reply List...</guimenuitem></menuchoice> or 
-<menuchoice><guimenu>Message</guimenu><guimenuitem>New message...</guimenuitem></menuchoice>
+<menuchoice><guimenu>Message</guimenu><guimenuitem>New Message...</guimenuitem></menuchoice>
 and the mailing list address will be set in the <guilabel>To:</guilabel> field.
 </para></answer>
 </qandaentry>
@@ -3878,9 +4017,8 @@ and the mailing list address will be set in the <guilabel>To:</guilabel> field.
 <question><para>My SMTP server requires authentication. Does &kmail; support it?</para></question>
 <answer><para>There are two common techniques used for <acronym>SMTP</acronym> authentication:
 <quote>SMTP after POP3</quote> and <quote>SMTP Auth</quote>. 
-<quote>SMTP Auth</quote> can be set in the <guilabel>Security</guilabel> tab
+<quote>SMTP Auth</quote> can be set in the <guilabel>General</guilabel> tab
 of the SMTP configuration dialog.
-<!-- fixme? which of the options in the security tab is it? rename them? -->
 To use <quote>SMTP after POP3</quote> you have to collect all your mails in the
 <guilabel>outbox</guilabel> and send them just after you have fetched new mail.
 <!-- fixme: how to make it more simple? -->
@@ -4050,6 +4188,7 @@ used.</para>
 
 <qandaentry>
 <question><para>How do I leave mail on the server?</para></question>
+<!-- fixme: add pop filter section -->
 <answer><para>Open up the
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kmail;...</guimenuitem>
 </menuchoice> window. Click on the <guilabel>Network</guilabel> tab. Select your
@@ -4102,7 +4241,7 @@ Is there any documentation on the available interfaces?</para></question>
 <answer><para>You can get a list of functions by using this command in a shell:
 <userinput><command>dcop</command> 
 <option>kmail  KMailIface</option></userinput>. Some documentation is also
-in <filename>kdenetwork/kmail/kmailIface.h</filename> and
+available in <filename>kdenetwork/kmail/kmailIface.h</filename> and
 <filename>kdenetwork/kmail/mailcomposerIface.h</filename>.</para></answer>
 </qandaentry>
 
@@ -4349,7 +4488,7 @@ Marc Mutz <email>Marc.Mutz@uni-bielefeld.de</email>. Other parts
 have been contributed by the various &kmail; developers.</para>
 
 <para>&kmail; 1.0
-documentation by David Rugge <email>davidrugge@mindspring.com</email>.
+documentation by David Rugge <email>davidrugge@mediaone.net</email>.
 Original documentation by Markus Wuebben
 <email>markus.wuebben@kde.org</email>, Robert Williams
 <email>rwilliams@kde.org</email> (Editor).</para>
