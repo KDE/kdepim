@@ -41,8 +41,16 @@ KPilot Developer's notes for January 30th, 2003
 
 2003-2-1  Adriaan de Groot
 * memoWidget.{h,cc} [BRANCH] Applied patch from David Mott for the GJJ
-  "Lose QMLE". Good job!
-
+  "Lose QMLE". Good job! ... Ugh, and it breaks on KDE 3.0. Hacked.
+* pilotDatabase.h [BRANCH] Missing #include fixed. How this ever compiled
+  is a mystery to me.
+* pilotRecord.{h,cc} [BRANCH] Inlined trivial functions.
+* pilotRecord.{h,cc} pilotAppCategory.h [BRANCH] Start of codec support.
+* Put together some scripts to do more automated building and testing
+  in KDE 3.1 and 3.0 environments. This makes tarball delivery a _lot_
+  easier.
+  
+  
 2003-1-31  Adriaan de Groot
 * Let's do the time-warp again!
 * syncAction.{h,cc} [HEAD] Added a delayDone() function for use from
