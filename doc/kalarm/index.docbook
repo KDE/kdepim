@@ -1690,6 +1690,9 @@ ignored.</para></note>
 bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>, const QString&amp; <replaceable>recurrence</replaceable>)
 </synopsis>
 <synopsis>
+bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, const QFont&amp; <replaceable>font</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>, const QString&amp; <replaceable>recurrence</replaceable>)
+</synopsis>
+<synopsis>
 bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, const QDateTime&amp; <replaceable>dateTime</replaceable>, const QColor&amp; <replaceable>bg</replaceable>, int <replaceable>flags</replaceable>, const QString&amp; <replaceable>audioURL</replaceable>, int <replaceable>reminder</replaceable>, int <replaceable>simpleRepeatType</replaceable>, int <replaceable>interval</replaceable>, int <replaceable>repeatCount</replaceable>)
 </synopsis>
 <synopsis>
@@ -1718,6 +1721,13 @@ should be displayed.</para>
 <term><parameter>bg</parameter></term>
 <listitem>
 <para>Specifies the background colour for displaying the message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>font</parameter></term>
+<listitem>
+<para>Specifies the font for displaying the message.</para>
 </listitem>
 </varlistentry>
 
