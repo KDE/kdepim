@@ -1,5 +1,5 @@
 /*
-    This file is part of libkabc.
+    This file is part of kdepim.
     Copyright (c) 2003 - 2004 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or
