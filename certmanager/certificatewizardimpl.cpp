@@ -268,8 +268,11 @@ void CertificateWizardImpl::slotGenerateCertificate()
 			  i18n( "Could not start certificate generation: %1" )
 			  .arg( QString::fromLocal8Bit( err.asString() ) ),
 			  i18n( "Cerificate Manager Error" ) );
-    else
+    else {
+      generatePB->setEnabled( false );
+      setBackEnabled( generatePage, false );
       (void)new Kleo::ProgressDialog( job, i18n("Generating key"), this );
+    }
 }
 
 
@@ -280,7 +283,9 @@ void CertificateWizardImpl::slotResult( const GpgME::KeyGenerationResult & res,
 
     if ( res.error() ) {
           setNextEnabled( generatePage, false );
+	  setBackEnabled( generatePage, true );
           setFinishEnabled( finishPage, false );
+	  generatePB->setEnabled( true );
           KMessageBox::error( this,
                               i18n( "Could not generate certificate: %1" )
 			      .arg( QString::fromLatin1( res.error().asString() ) ),
@@ -290,7 +295,6 @@ void CertificateWizardImpl::slotResult( const GpgME::KeyGenerationResult & res,
         // Certificate again
         setNextEnabled( generatePage, true );
         setFinishEnabled( finishPage, true );
-	generatePB->setEnabled( false );
     }
 }
 
