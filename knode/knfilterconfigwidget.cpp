@@ -56,7 +56,7 @@ KNFilterConfigWidget::KNFilterConfigWidget(QWidget *parent, const char *name ) :
     
   add=new QWidget(this);
   QVBoxLayout *addL=new QVBoxLayout(add, 8,5);
-  score=new KNRangeFilterWidget(i18n("Score"), 0, 100, add);
+  score=new KNRangeFilterWidget(i18n("Score"), -99999, 99999, add);
   addL->addWidget(score);
   age=new KNRangeFilterWidget(i18n("Age"), 0, 999, add, i18n(" days"));
   addL->addWidget(age);
