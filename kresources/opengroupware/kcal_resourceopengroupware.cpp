@@ -214,8 +214,6 @@ void OpenGroupware::slotListJobResult( KIO::Job *job )
       e = node.toElement();
       i++;
       KURL url ( entry );
-      kdDebug(5006) << "url: " << url.path() << endl;
-      kdDebug(5006) << "node: " << e.text() << endl;
       idMapper().setFingerprint( url.path(), e.text() );
     }
 
