@@ -104,10 +104,10 @@ void KTNEFMain::setupActions()
 	new KAction(i18n("Extract"), 0, this, SLOT(extractFile()), actionCollection(), "extract_file");
 	new KAction(i18n("Extract To..."), QString("ktnef_extract_to"), 0, this, SLOT(extractFileTo()), actionCollection(), "extract_file_to");
 	new KAction(i18n("Extract All To..."), QString("ktnef_extract_all_to"), 0, this, SLOT(extractAllFiles()), actionCollection(), "extract_all_files");
-	new KAction( i18n( "Message Properties..." ), "help", 0, this, SLOT( slotShowMessageProperties() ), actionCollection(), "msg_properties" );
-	new KAction(i18n("Properties..."), QString("contents"), 0, this, SLOT(propertiesFile()), actionCollection(), "properties_file");
+	new KAction( i18n( "Message Properties" ), "help", 0, this, SLOT( slotShowMessageProperties() ), actionCollection(), "msg_properties" );
+	new KAction(i18n("Properties"), QString("contents"), 0, this, SLOT(propertiesFile()), actionCollection(), "properties_file");
 	new KAction( i18n( "Show Message Text" ), "mail_generic", 0, this, SLOT( slotShowMessageText() ), actionCollection(), "msg_text" );
-	new KAction( i18n( "Save Message Text..." ), "filesave", 0, this, SLOT( slotSaveMessageText() ), actionCollection(), "msg_save" );
+	new KAction( i18n( "Save Message Text As..." ), "filesave", 0, this, SLOT( slotSaveMessageText() ), actionCollection(), "msg_save" );
 	actionCollection()->action("view_file")->setEnabled(false);
 	actionCollection()->action("view_file_as")->setEnabled(false);
 	actionCollection()->action("extract_file")->setEnabled(false);
@@ -341,7 +341,7 @@ void KTNEFMain::viewRightButtonPressed(QListViewItem*, const QPoint& p, int)
 		if (list->count() == 1u)
 		{
 			m.insertSeparator();
-			m.insertItem(SmallIcon("contents"), i18n("Properties..."), this, SLOT(propertiesFile()));
+			m.insertItem(SmallIcon("contents"), i18n("Properties"), this, SLOT(propertiesFile()));
 		}
 	}
 	else if ( list->count() == 0 )
