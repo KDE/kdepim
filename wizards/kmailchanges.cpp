@@ -65,7 +65,6 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
 
       KConfig c( "kmailrc" );
       c.setGroup( "General" );
-      c.writeEntry( "checkmail-startup", true );
       uint accCnt = c.readNumEntry( "accounts", 0 );
       c.writeEntry( "accounts", accCnt+1 );
       uint transCnt = c.readNumEntry( "transports", 0 );
