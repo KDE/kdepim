@@ -22,7 +22,7 @@
 #include "knglobals.h"
 #include "knnntpaccount.h"
 #include "utilities.h"
-#include "knviewheader.h"
+#include "knarticlewidget.h"
 #include "knfiltermanager.h"
 #include "knarticlefilter.h"
 
@@ -924,7 +924,7 @@ KNConfig::DisplayedHeadersWidget::DisplayedHeadersWidget(DisplayedHeaders *d, QW
   topL->addRowSpacing(3,20);        // separate up/down buttons
   topL->setRowStretch(6,1);         // stretch the listbox
 
-  for(KNViewHeader *h=d->i_nstances.first(); h; h=d->i_nstances.next())
+  for(KNDisplayedHeader *h=d->h_drList.first(); h; h=d->h_drList.next())
     l_box->insertItem(generateItem(h));
 
   slotSelectionChanged();     // disable buttons initially
@@ -940,7 +940,7 @@ KNConfig::DisplayedHeadersWidget::~DisplayedHeadersWidget()
 
 
 
-KNConfig::DisplayedHeadersWidget::HdrItem* KNConfig::DisplayedHeadersWidget::generateItem(KNViewHeader *h)
+KNConfig::DisplayedHeadersWidget::HdrItem* KNConfig::DisplayedHeadersWidget::generateItem(KNDisplayedHeader *h)
 {
   QString text;
   if(h->hasName()) {
@@ -975,7 +975,7 @@ void KNConfig::DisplayedHeadersWidget::slotSelectionChanged()
 
 void KNConfig::DisplayedHeadersWidget::slotAddBtnClicked()
 {
-  KNViewHeader *h=d_ata->createNewHeader();
+  KNDisplayedHeader *h=d_ata->createNewHeader();
 
   DisplayedHeaderConfDialog* dlg=new DisplayedHeaderConfDialog(h, this);
   if(dlg->exec()) {
@@ -994,7 +994,7 @@ void KNConfig::DisplayedHeadersWidget::slotDelBtnClicked()
     return;
 
   if(KMessageBox::questionYesNo(this, i18n("Really delete this header?"))==KMessageBox::Yes) {
-    KNViewHeader *h = (static_cast<HdrItem*>(l_box->item(l_box->currentItem())))->hdr;
+    KNDisplayedHeader *h = (static_cast<HdrItem*>(l_box->item(l_box->currentItem())))->hdr;
     d_ata->remove(h);
     l_box->removeItem(l_box->currentItem());
     s_ave=true;
@@ -1006,7 +1006,7 @@ void KNConfig::DisplayedHeadersWidget::slotDelBtnClicked()
 void KNConfig::DisplayedHeadersWidget::slotEditBtnClicked()
 {
   if (l_box->currentItem()==-1) return;
-  KNViewHeader *h = (static_cast<HdrItem*>(l_box->item(l_box->currentItem())))->hdr;
+  KNDisplayedHeader *h = (static_cast<HdrItem*>(l_box->item(l_box->currentItem())))->hdr;
 
   DisplayedHeaderConfDialog* dlg=new DisplayedHeaderConfDialog(h, this);
   if(dlg->exec()) {
@@ -1023,7 +1023,7 @@ void KNConfig::DisplayedHeadersWidget::slotUpBtnClicked()
   int c=l_box->currentItem();
   if(c==0 || c==-1) return;
 
-  KNViewHeader *h = (static_cast<HdrItem*>(l_box->item(c)))->hdr;
+  KNDisplayedHeader *h = (static_cast<HdrItem*>(l_box->item(c)))->hdr;
 
   d_ata->up(h);
   l_box->insertItem(generateItem(h), c-1);
@@ -1039,7 +1039,7 @@ void KNConfig::DisplayedHeadersWidget::slotDownBtnClicked()
   int c=l_box->currentItem();
   if(c==-1 || c==(int) l_box->count()-1) return;
 
-  KNViewHeader *h = (static_cast<HdrItem*>(l_box->item(c)))->hdr;
+  KNDisplayedHeader *h = (static_cast<HdrItem*>(l_box->item(c)))->hdr;
 
   d_ata->down(h);
   l_box->insertItem(generateItem(h), c+2);
@@ -1052,7 +1052,7 @@ void KNConfig::DisplayedHeadersWidget::slotDownBtnClicked()
 //=============================================================================================
 
 
-KNConfig::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog(KNViewHeader *h, QWidget *p, char *n)
+KNConfig::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog(KNDisplayedHeader *h, QWidget *p, char *n)
   : KDialogBase(Plain, i18n("Header Properties"),Ok|Cancel|Help, Ok, p, n),
     h_dr(h)
 {
@@ -1101,7 +1101,7 @@ KNConfig::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog(KNViewHeader *h, 
   topL->setColStretch(1,1);
 
   // preset values...
-  h_drC->insertStrList(KNViewHeader::predefs());
+  h_drC->insertStrList(KNDisplayedHeader::predefs());
   h_drC->lineEdit()->setText(h->header());
   n_ameE->setText(h->translatedName());
   for(int i=0; i<4; i++) {

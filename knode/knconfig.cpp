@@ -18,7 +18,7 @@
 #include "knnntpaccount.h"
 #include "knaccountmanager.h"
 #include "kngroupmanager.h"
-#include "knviewheader.h"
+#include "knarticlewidget.h"
 #include "utilities.h"
 
 
@@ -395,7 +395,7 @@ void KNConfig::ReadNewsGeneral::save()
 
 KNConfig::DisplayedHeaders::DisplayedHeaders()
 {
-  i_nstances.setAutoDelete(true);
+  h_drList.setAutoDelete(true);
 
   QString fname(KGlobal::dirs()->findResource("appdata","headers.rc"));
   if (fname != QString::null) {
@@ -404,7 +404,7 @@ KNConfig::DisplayedHeaders::DisplayedHeaders()
     headers.remove("<default>");
     headers.sort();
 
-    KNViewHeader *h;
+    KNDisplayedHeader *h;
     QValueList<int> flags;
 
     QStringList::Iterator it;
@@ -454,7 +454,7 @@ void KNConfig::DisplayedHeaders::save()
   int idx=0;
   QString group;
 
-  for(Iterator it(i_nstances); it.current(); ++it) {
+  for(Iterator it(h_drList); it.current(); ++it) {
     group.setNum(idx++);
     while (group.length()<3)
       group.prepend("0");
@@ -474,40 +474,40 @@ void KNConfig::DisplayedHeaders::save()
 }
 
 
-KNViewHeader* KNConfig::DisplayedHeaders::createNewHeader()
+KNDisplayedHeader* KNConfig::DisplayedHeaders::createNewHeader()
 {
-  KNViewHeader *h=new KNViewHeader();
-  i_nstances.append(h);
+  KNDisplayedHeader *h=new KNDisplayedHeader();
+  h_drList.append(h);
 
   return h;
 }
 
 
-void KNConfig::DisplayedHeaders::remove(KNViewHeader *h)
+void KNConfig::DisplayedHeaders::remove(KNDisplayedHeader *h)
 {
-  if (!i_nstances.remove(h))
+  if (!h_drList.remove(h))
     kdDebug(5003) << "KNConfig::DisplayedHeaders::remove() : cannot find pointer in list !!" << endl;
 
 }
 
 
-void KNConfig::DisplayedHeaders::up(KNViewHeader *h)
+void KNConfig::DisplayedHeaders::up(KNDisplayedHeader *h)
 {
-  int idx=i_nstances.findRef(h);
+  int idx=h_drList.findRef(h);
   if(idx!=-1) {
-    i_nstances.take(idx);
-    i_nstances.insert(idx-1, h);
+    h_drList.take(idx);
+    h_drList.insert(idx-1, h);
   }
   else kdDebug(5003) << "KNConfig::DisplayedHeaders::up() : item not found in list" << endl;
 }
 
 
-void KNConfig::DisplayedHeaders::down(KNViewHeader *h)
+void KNConfig::DisplayedHeaders::down(KNDisplayedHeader *h)
 {
-  int idx=i_nstances.findRef(h);
+  int idx=h_drList.findRef(h);
   if(idx!=-1) {
-    i_nstances.take(idx);
-    i_nstances.insert(idx+1, h);
+    h_drList.take(idx);
+    h_drList.insert(idx+1, h);
   }
   else kdDebug(5003) << "KNConfig::DisplayedHeaders::down() : item not found in list" << endl;
 }

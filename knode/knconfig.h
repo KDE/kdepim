@@ -25,7 +25,7 @@ class KNNntpAccount;
 class KNAccountManager;
 class KNArticleFilter;
 class KNFilterManager;
-class KNViewHeader;
+class KNDisplayedHeader;
 class KNServerInfo;
 
 
@@ -464,23 +464,23 @@ class DisplayedHeaders : public Base {
   friend class DisplayedHeadersWidget;
 
   public:
-    typedef QListIterator<KNViewHeader> Iterator;
+    typedef QListIterator<KNDisplayedHeader> Iterator;
 
     DisplayedHeaders();
     ~DisplayedHeaders();
 
     void save();
 
-    KNViewHeader* createNewHeader();
-    void remove(KNViewHeader *h);
-    void up(KNViewHeader *h);
-    void down(KNViewHeader *h);
+    KNDisplayedHeader* createNewHeader();
+    void remove(KNDisplayedHeader *h);
+    void up(KNDisplayedHeader *h);
+    void down(KNDisplayedHeader *h);
 
-    Iterator iterator()   { return Iterator(i_nstances); }
+    Iterator iterator()   { return Iterator(h_drList); }
 
 
   protected:
-    QList<KNViewHeader> i_nstances;
+    QList<KNDisplayedHeader> h_drList;
 
 };
 
@@ -498,13 +498,13 @@ class DisplayedHeadersWidget : public BaseWidget {
      class HdrItem : public QListBoxText {
 
       public:
-        HdrItem( const QString &t, KNViewHeader *h ) : QListBoxText(t), hdr(h) {}
+        HdrItem( const QString &t, KNDisplayedHeader *h ) : QListBoxText(t), hdr(h) {}
         ~HdrItem() {}
 
-        KNViewHeader *hdr;
+        KNDisplayedHeader *hdr;
     };
 
-    HdrItem* generateItem(KNViewHeader *);
+    HdrItem* generateItem(KNDisplayedHeader *);
 
     QListBox    *l_box;
     QPushButton *a_ddBtn,
@@ -533,12 +533,12 @@ class DisplayedHeaderConfDialog : public KDialogBase {
   Q_OBJECT
 
   public:
-    DisplayedHeaderConfDialog(KNViewHeader *h, QWidget *p=0, char *n=0);
+    DisplayedHeaderConfDialog(KNDisplayedHeader *h, QWidget *p=0, char *n=0);
     ~DisplayedHeaderConfDialog();
 
 
   protected:
-    KNViewHeader *h_dr;
+    KNDisplayedHeader *h_dr;
     QComboBox *h_drC;
     QLineEdit *n_ameE;
     QCheckBox *n_ameCB[4],

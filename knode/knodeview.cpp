@@ -28,7 +28,6 @@
 #include "knodeview.h"
 #include "knode.h"
 #include "knarticlewidget.h"
-#include "knviewheader.h"
 #include "knarticlewindow.h"
 #include "knscoredialog.h"
 #include "kncollectionviewitem.h"

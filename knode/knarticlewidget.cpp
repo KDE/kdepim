@@ -42,7 +42,6 @@
 #include "resource.h"
 #include "knmime.h"
 #include "knarticlewidget.h"
-#include "knviewheader.h"
 #include "knglobals.h"
 #include "knarticlemanager.h"
 #include "knarticlefactory.h"
@@ -559,22 +558,22 @@ void KNArticleWidget::createHtmlPage()
   }
   else {
 		KNHeaders::Base *hb;
-		KNViewHeader *vh;
+		KNDisplayedHeader *dh;
     KNConfig::DisplayedHeaders::Iterator it=knGlobals.cfgManager->displayedHeaders()->iterator();
     for(; it.current(); ++it) {
-			vh=it.current();
-			hb=a_rticle->getHeaderByType(vh->header().latin1());
+			dh=it.current();
+			hb=a_rticle->getHeaderByType(dh->header().latin1());
       if(!hb) continue; //header not found
 
-      if(vh->hasName()) {
+      if(dh->hasName()) {
         html += QString("<tr><td align=right>%1%2:%3</td><td width=\"100%\">")
-        .arg(vh->nameOpenTag()).arg(toHtmlString(vh->translatedName(),false,false))
-        .arg(vh->nameCloseTag());
+        .arg(dh->nameOpenTag()).arg(toHtmlString(dh->translatedName(),false,false))
+        .arg(dh->nameCloseTag());
       }
       else
         html+="<tr><td colspan=2>";
 
-      html+=vh->headerOpenTag();
+      html+=dh->headerOpenTag();
 
       if(hb->is("From"))
 				html+=QString("<a href=\"internal:author\">%1</a>")
@@ -586,7 +585,7 @@ void KNArticleWidget::createHtmlPage()
       else
 				html+=toHtmlString(hb->asUnicodeString(), false);
 
-      html += vh->headerCloseTag()+"</td></tr>";
+      html += dh->headerCloseTag()+"</td></tr>";
     }
   }
 
@@ -917,15 +916,15 @@ void KNArticleWidget::slotPrint()
     p.setFont( QFont(font().family(), 12, QFont::Bold) );
     QFontMetrics fm=p.fontMetrics();
 
-    KNViewHeader *vh;
+    KNDisplayedHeader *dh;
     KNConfig::DisplayedHeaders::Iterator it=knGlobals.cfgManager->displayedHeaders()->iterator();
-    vh=it.current();
-    while(vh) {
-      hb=a_rticle->getHeaderByType(vh->header().latin1());
+    dh=it.current();
+    while(dh) {
+      hb=a_rticle->getHeaderByType(dh->header().latin1());
 
       if(hb && !hb->isEmpty()) {
-      	if(vh->hasName())
-          text=QString("%1: %2").arg(vh->translatedName()).arg(hb->asUnicodeString());
+      	if(dh->hasName())
+          text=QString("%1: %2").arg(dh->translatedName()).arg(hb->asUnicodeString());
         else
           text=hb->asUnicodeString();
 
@@ -933,7 +932,7 @@ void KNArticleWidget::slotPrint()
                   fm.lineSpacing(), ExpandTabs | DontClip,
                   text );
 
-        if( (vh=++it)!=0 )
+        if( (dh=++it)!=0 )
           yPos+=fm.lineSpacing();
       }
       else
@@ -1088,6 +1087,166 @@ void KNArticleWidget::collectionRemoved(KNArticleCollection *c)
   for(KNArticleWidget *i=i_nstances.first(); i; i=i_nstances.next())
     if(i->article() && i->article()->collection()==c)
       i->showBlankPage();
+}
+
+
+//=============================================================================================================
+
+
+// some standard headers
+static const char *predef[] = { "Approved","Content-Transfer-Encoding","Content-Type","Control","Date","Distribution",
+                                "Expires","Followup-To","From","Lines","Message-ID","Mime-Version","NNTP-Posting-Host",
+                                "Newsgroups","Organization","Path","References","Reply-To","Sender","Subject","Supersedes",
+                                "To", "User-Agent","X-Mailer","X-Newsreader","X-No-Archive","XRef",0 };
+
+// default display names KNode uses
+static const char *disp[] = { "Groups", 0 };
+
+void dummyHeader()
+{
+  i18n("it's not very important to translate this","Approved");
+  i18n("it's not very important to translate this","Content-Transfer-Encoding");
+  i18n("it's not very important to translate this","Content-Type");
+  i18n("it's not very important to translate this","Control");
+  i18n("it's not very important to translate this","Date");
+  i18n("it's not very important to translate this","Distribution");
+  i18n("it's not very important to translate this","Expires");
+  i18n("it's not very important to translate this","Followup-To");
+  i18n("it's not very important to translate this","From");
+  i18n("it's not very important to translate this","Lines");
+  i18n("it's not very important to translate this","Message-ID");
+  i18n("it's not very important to translate this","Mime-Version");
+  i18n("it's not very important to translate this","NNTP-Posting-Host");
+  i18n("it's not very important to translate this","Newsgroups");
+  i18n("it's not very important to translate this","Organization");
+  i18n("it's not very important to translate this","Path");
+  i18n("it's not very important to translate this","References");
+  i18n("it's not very important to translate this","Reply-To");
+  i18n("it's not very important to translate this","Sender");
+  i18n("it's not very important to translate this","Subject");
+  i18n("it's not very important to translate this","Supersedes");
+  i18n("it's not very important to translate this","To");
+  i18n("it's not very important to translate this","User-Agent");
+  i18n("it's not very important to translate this","X-Mailer");
+  i18n("it's not very important to translate this","X-Newsreader");
+  i18n("it's not very important to translate this","X-No-Archive");
+  i18n("it's not very important to translate this","XRef");
+
+  i18n("it's not very important to translate this","Groups");
+}
+
+
+//=============================================================================================================
+
+
+KNDisplayedHeader::KNDisplayedHeader()
+ : t_ranslateName(true)
+{
+  f_lags.fill(false, 8);
+  f_lags[1] = true;   // header name bold by default
+}
+
+
+KNDisplayedHeader::~KNDisplayedHeader()
+{
+}
+
+
+// some common headers
+const char** KNDisplayedHeader::predefs()
+{
+  return predef;
+}
+
+
+// *trys* to translate the name
+QString KNDisplayedHeader::translatedName()
+{
+  if (t_ranslateName) {
+    // major hack alert !!!
+    if (!n_ame.isEmpty()) {
+      if (i18n("it's not very important to translate this",n_ame.local8Bit())!=n_ame.local8Bit().data())    // try to guess if this english or not
+        return i18n("it's not very important to translate this",n_ame.local8Bit());
+      else
+        return n_ame;
+    } else
+      return QString::null;
+  } else
+    return n_ame;
+}
+
+
+// *trys* to retranslate the name to english
+void KNDisplayedHeader::setTranslatedName(const QString &s)
+{
+  bool retranslated = false;
+  for (const char **c=predef;(*c)!=0;c++) {  // ok, first the standard header names
+    if (s==i18n("it's not very important to translate this",*c)) {
+      n_ame = QString::fromLatin1(*c);
+      retranslated = true;
+      break;
+    }
+  }
+
+  if (!retranslated) {
+    for (const char **c=disp;(*c)!=0;c++)   // now our standard display names
+      if (s==i18n("it's not very important to translate this",*c)) {
+        n_ame = QString::fromLatin1(*c);
+        retranslated = true;
+        break;
+      }
+  }
+
+  if (!retranslated) {      // ok, we give up and store the maybe non-english string
+    n_ame = s;
+    t_ranslateName = false;  // and don't try to translate it, so a german user *can* use the original english name
+  } else
+    t_ranslateName = true;
+}
+
+
+void  KNDisplayedHeader::createTags()
+{
+  const char *tokens[] = {  "<large>","</large>","<b>","</b>",
+                            "<i>","</i>","<u>","</u>" };
+
+  for(int i=0; i<4; i++) t_ags[i]=QString::null;
+
+  if(f_lags.at(0)) {    // <font>
+    t_ags[0]=tokens[0];
+    t_ags[1]=tokens[1];
+  }
+  if(f_lags.at(4)) {
+    t_ags[2]=tokens[0];
+    t_ags[3]=tokens[1];
+  }
+
+  if(f_lags.at(1)) {     // <b>
+    t_ags[0]+=(tokens[2]);
+    t_ags[1].prepend(tokens[3]);
+  }
+  if(f_lags.at(5)) {
+    t_ags[2]+=tokens[2];
+    t_ags[3].prepend(tokens[3]);
+  }
+
+  if(f_lags.at(2)) {     // <i>
+    t_ags[0]+=tokens[4];
+    t_ags[1].prepend(tokens[5]);
+  }
+  if(f_lags.at(6)) {
+    t_ags[2]+=tokens[4];
+    t_ags[3].prepend(tokens[5]);
+  }
+
+  if(f_lags.at(3)) {    // <u>
+    t_ags[0]+=tokens[6];
+    t_ags[1].prepend(tokens[7]);
+  }
+  if(f_lags.at(7)) {
+    t_ags[2]+=tokens[6];
+    t_ags[3].prepend(tokens[7]);
+  }
 }
 
 

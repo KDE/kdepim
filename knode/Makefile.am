@@ -37,7 +37,6 @@ knode_SOURCES =   knconfigmanager.cpp \
                   knmime.cpp \
                   knarticlewidget.cpp \
                   knarticlewindow.cpp \
-                  knviewheader.cpp \
                   knhdrviewitem.cpp \
                   knscoredialog.cpp \
                   \
@@ -98,7 +97,6 @@ noinst_HEADERS =  knconfigmanager.h \
                   knmime.h \
                   knarticlewidget.h \
                   knarticlewindow.h \
-                  knviewheader.h \
                   knhdrviewitem.h \
                   knscoredialog.h \
                   \
