@@ -20,10 +20,10 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include <kdebug.h>
 #include <kstandarddirs.h>
-#include <kconfig.h>
 #include <kstringhandler.h>
+#include <kconfig.h>
+#include <klocale.h>
 
 #include <konnectorinfo.h>
 
@@ -52,6 +52,7 @@ extern "C"
 {
   void *init_libqtopiakonnector()
   {
+    KGlobal::locale()->insertCatalogue( "konnector_qtopia" );
     return new QtopiaKonnectorFactory();
   }
 }

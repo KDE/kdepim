@@ -38,6 +38,7 @@ extern "C"
 {
   void *init_libkcalkonnector()
   {
+    KGlobal::locale()->insertCatalogue( "konnector_kcal" );
     return new KRES::PluginFactory<KCalKonnector,KCalKonnectorConfig>();
   }
 }

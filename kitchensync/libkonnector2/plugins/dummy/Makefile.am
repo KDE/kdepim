@@ -11,3 +11,6 @@ servicedir = $(kde_servicesdir)/kresources/konnector
 service_DATA = dummykonnector.desktop
 
 METASOURCES = AUTO
+
+messages: rc.cpp
+	$(XGETTEXT) *.cpp -o $(podir)/konnector_dummy.pot

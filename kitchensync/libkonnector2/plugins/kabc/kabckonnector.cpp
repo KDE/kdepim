@@ -41,6 +41,7 @@ extern "C"
 {
   void *init_libkabckonnector()
   {
+    KGlobal::locale()->insertCatalogue( "konnector_kabc" );
     return new KRES::PluginFactory<KABCKonnector,KABCKonnectorConfig>();
   }
 }
@@ -66,7 +67,7 @@ KABCKonnector::KABCKonnector( const KConfig *config )
   mMd5sum = generateMD5Sum( mResourceIdentifier ) + "_kabckonnector.log";
 
   mResource = createResource( mResourceIdentifier );
-  if ( mResource ) {  
+  if ( mResource ) {
     mAddressBook.addResource( mResource );
 
     mAddressBookSyncee = new AddressBookSyncee( &mAddressBook );

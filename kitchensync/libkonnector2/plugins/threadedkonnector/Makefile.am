@@ -30,3 +30,6 @@ threadedkonnectordatadir = $(kde_servicesdir)/kresources/konnector
 threadedkonnectordata_DATA = threadedkonnector.desktop
 
 METASOURCES = AUTO
+
+messages: rc.cpp
+	$(XGETTEXT) *.cpp -o $(podir)/konnector_threaded.pot

@@ -21,6 +21,7 @@
 
 #include <kgenericfactory.h>
 #include <kdebug.h>
+#include <klocale.h>
 
 #include <synchistory.h>
 
@@ -51,6 +52,7 @@ extern "C"
 {
   void *init_libdummykonnector()
   {
+    KGlobal::locale()->insertCatalogue( "konnector_dummy" );
     return new DummyKonnectorFactory();
   }
 }

@@ -36,6 +36,7 @@ extern "C"
 {
   void *init_libthreadedkonnector()
   {
+    KGlobal::locale()->insertCatalogue( "konnector_threaded" );
     return new KRES::PluginFactory<ThreadedPlugin,ThreadedKonnectorConfig>();
   }
 }

@@ -12,3 +12,6 @@ kabckonnectordatadir = $(kde_servicesdir)/kresources/konnector
 kabckonnectordata_DATA = kabckonnector.desktop
 
 METASOURCES = AUTO
+
+messages: rc.cpp
+	$(XGETTEXT) *.cpp -o $(podir)/konnector_kabc.pot

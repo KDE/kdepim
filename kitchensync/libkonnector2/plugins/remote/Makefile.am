@@ -12,3 +12,6 @@ remotekonnectordatadir = $(kde_servicesdir)/kresources/konnector
 remotekonnectordata_DATA = remotekonnector.desktop
 
 METASOURCES = AUTO
+
+messages: rc.cpp
+	$(XGETTEXT) *.cpp -o $(podir)/konnector_remote.pot

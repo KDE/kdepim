@@ -46,6 +46,7 @@ extern "C"
 {
   void *init_libremotekonnector()
   {
+    KGlobal::locale()->insertCatalogue( "konnector_remote" );
     return new KRES::PluginFactory<RemoteKonnector,RemoteKonnectorConfig>();
   }
 }

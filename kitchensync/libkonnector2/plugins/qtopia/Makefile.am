@@ -44,3 +44,6 @@ SUBDIRS = .
 
 METASOURCES = AUTO
 
+
+messages: rc.cpp
+	$(XGETTEXT) *.cpp -o $(podir)/konnector_qtopia.pot

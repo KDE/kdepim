@@ -12,3 +12,6 @@ localkonnectordatadir = $(kde_servicesdir)/kresources/konnector
 localkonnectordata_DATA = localkonnector.desktop
 
 METASOURCES = AUTO
+
+messages: rc.cpp
+	$(XGETTEXT) *.cpp -o $(podir)/konnector_local.pot

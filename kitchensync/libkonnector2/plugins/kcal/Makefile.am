@@ -14,3 +14,6 @@ kcalkonnectordatadir = $(kde_servicesdir)/kresources/konnector
 kcalkonnectordata_DATA = kcalkonnector.desktop
 
 METASOURCES = AUTO
+
+messages: rc.cpp
+	$(XGETTEXT) *.cpp -o $(podir)/konnector_kcal.pot

@@ -44,13 +44,14 @@ extern "C"
 {
   void *init_liblocalkonnector()
   {
+    KGlobal::locale()->insertCatalogue( "konnector_local" );
     return new KRES::PluginFactory<LocalKonnector,LocalKonnectorConfig>();
   }
 }
 
 
 LocalKonnector::LocalKonnector( const KConfig *config )
-    : Konnector( config ), mConfigWidget( 0 ), 
+    : Konnector( config ), mConfigWidget( 0 ),
       mCalendar( KPimPrefs::timezone() ), mProgressItem( 0 )
 {
   if ( config ) {
