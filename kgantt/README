@@ -1,0 +1,9 @@
+Note :
+
+16 jan 2001, jh
+
+  shared libs result in strange behaviour of your kde-program,
+  (some icons are not shown correctly) so i recommend to
+  build libkgantt as a static library. everything works fine
+  with libkgantt.a
+
