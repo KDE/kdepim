@@ -23,14 +23,12 @@
 #include "resource.h"
 #include "knode.h"
 
-//#define UNIQUE_APP //comment out for debuging
 
 static KCmdLineOptions knoptions[] =
 {
   { "+[url]", I18N_NOOP("A 'news://server/group' URL."), 0 },
   { 0, 0, 0 }
 };
-
 
 
 int main(int argc, char* argv[])
@@ -50,7 +48,6 @@ int main(int argc, char* argv[])
   aboutData.addCredit("Stephan Johach",0,"lucardus@onlinehome.de");
   aboutData.addCredit("Matthias Kalle Dalheimer",0,"kalle@kde.org");
 
-#ifdef UNIQUE_APP
   KCmdLineArgs::init( argc, argv, &aboutData );
   KCmdLineArgs::addCmdLineOptions( knoptions );
   KUniqueApplication::addCmdLineOptions();
@@ -60,11 +57,5 @@ int main(int argc, char* argv[])
 
   KNApplication app;
   return app.exec();
-#else
-  KApplication app(argc, argv, "knode");
-	KNMainWindow *mainWin=new KNMainWindow();
-	mainWin->show();
-  return app.exec();
-#endif
 }
 
