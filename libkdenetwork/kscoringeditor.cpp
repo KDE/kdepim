@@ -191,6 +191,7 @@ SingleActionWidget::SingleActionWidget(KScoringManager *m,QWidget *p, const char
 
   // init widget stack and the types combo box
   int index = 1;
+  types->insertItem(QString::null);
   QStringList l = ActionBase::userNames();
   for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it ) {
     QString name = *it;
@@ -212,7 +213,6 @@ SingleActionWidget::SingleActionWidget(KScoringManager *m,QWidget *p, const char
       stack->addWidget(w,index++);
     }
   }
-  types->insertItem(QString::null);
 
   connect(types,SIGNAL(activated(int)),stack,SLOT(raiseWidget(int)));
 
