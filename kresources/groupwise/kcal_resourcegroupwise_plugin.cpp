@@ -34,7 +34,7 @@ extern "C"
   void *init_kcal_groupwise()
   {
     KGlobal::locale()->insertCatalogue( "libkcal" );
-    KGlobal::locale()->insertCatalogue( "kabc_groupwise" );
+    KGlobal::locale()->insertCatalogue( "kres_groupwise" );
     return new GroupwiseFactory;
   }
 }
