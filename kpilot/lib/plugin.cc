@@ -128,7 +128,8 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	fTest(args.contains(CSL1("--test"))),
 	fBackup(args.contains(CSL1("--backup"))),
 	fLocal(args.contains(CSL1("--local"))),
-	fConflictResolution(SyncAction::eAskUser)
+	fConflictResolution(SyncAction::eAskUser),
+	fFirstSync(false)
 {
 	FUNCTIONSETUP;
 	if (args.contains(CSL1("--copyPCToHH"))) fSyncDirection=SyncAction::eCopyPCToHH;
