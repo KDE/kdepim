@@ -72,6 +72,7 @@ AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
   QPushButton *editButton = new QPushButton( i18n( "&Edit Addresses..." ),
                                              this );
   connect( editButton, SIGNAL( clicked() ), SLOT( edit() ) );
+  connect( mAddressTextEdit, SIGNAL( clicked( int, int ) ), SLOT( edit() ) );
   layout->addWidget( editButton );
 }
 
