@@ -18,16 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "AdrValue.h"
-#endif
-
 #include <RToken.h>
 #include <AdrValue.h>
 #include <Value.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 AdrValue::AdrValue()
 	:	Value()
@@ -127,7 +122,5 @@ AdrValue::_assemble()
 	strRep_ += ";" +	region_;
 	strRep_ += ";" +	postCode_;
 	strRep_ += ";" +	countryName_;
-}
-
 }
 

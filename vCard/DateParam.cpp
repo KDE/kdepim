@@ -18,16 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "DateParam.h"
-#endif
-
 #include <DateParam.h>
 
 #include <Param.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 DateParam::DateParam()
 	:	Param()
@@ -80,7 +75,5 @@ DateParam::_parse()
 	void
 DateParam::_assemble()
 {
-}
-
 }
 

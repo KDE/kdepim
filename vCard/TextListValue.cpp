@@ -18,19 +18,13 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "TextListValue.h"
-#endif
-
 #include <RToken.h>
 
 #include <TextListValue.h>
 
 #include <Value.h>
 
-namespace VCARD
-{
-
+using namespace VCARD;
 
 TextListValue::TextListValue()
 	:	Value()
@@ -107,8 +101,4 @@ TextListValue::value(unsigned int i)
 	parse();
 	return valueList_.at(i);
 }
-
-
-
-} // end namespace
 

@@ -18,12 +18,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "ContentLine.h"
-#endif
-
-#include <iostream>
-
 #include <qcstring.h>
 #include <qstrlist.h>
 
@@ -61,8 +55,7 @@
 #include <Enum.h>
 #include <VCardDefines.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 ContentLine::ContentLine()
 	:	Entity(),
@@ -246,4 +239,3 @@ ContentLine::_assemble()
 		strRep_ += ":" + value_->asString();
 }
 
-}

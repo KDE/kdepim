@@ -18,16 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "SourceParam.h"
-#endif
-
 #include <SourceParam.h>
 
 #include <Param.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 SourceParam::SourceParam()
 	:	Param(),
@@ -112,4 +107,3 @@ SourceParam::_assemble()
 	else strRep_ = "";
 }
 
-}

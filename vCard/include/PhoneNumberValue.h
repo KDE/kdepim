@@ -18,10 +18,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "PhoneNumberValue.h"
-#endif
-
 #ifndef  PHONENUMBERVALUE_H
 #define  PHONENUMBERVALUE_H
 

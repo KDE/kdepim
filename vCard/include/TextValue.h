@@ -18,10 +18,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "TextValue.h"
-#endif
-
 #ifndef  TEXTVALUE_H
 #define  TEXTVALUE_H
 

@@ -18,18 +18,13 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "Param.h"
-#endif
-
 #include <Param.h>
 
 #include <Entity.h>
 
 #include <RToken.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 Param::Param()
 	:	Entity()
@@ -141,4 +136,3 @@ SubParam::value()
 	return value_;
 }
 
-}

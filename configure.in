@@ -1,0 +1,76 @@
+# Original Author was Kalle@kde.org
+# I lifted it in some mater. (Stephan Kulow)
+# I used much code from Janos Farkas
+
+dnl Process this file with autoconf to produce a configure script.
+
+AC_INIT(acinclude.m4) dnl a source file from your sub dir
+
+dnl This is so we can use kde-common
+AC_CONFIG_AUX_DIR(admin)
+
+AC_CANONICAL_SYSTEM 
+AC_ARG_PROGRAM
+
+dnl Automake doc recommends to do this only here. (Janos)
+AM_INIT_AUTOMAKE(kdenonbeta, 2.0pre) dnl searches for some needed programs
+
+dnl make $KDEDIR the default for the installation
+AC_PREFIX_DEFAULT(${KDEDIR:-/usr/local/kde})
+
+dnl generate the config header
+AM_CONFIG_HEADER(config.h) dnl at the distribution this done
+
+dnl Checks for programs.
+AC_CHECK_COMPILERS
+KDE_PROG_LIBTOOL
+
+dnl for NLS support. Call them in this order!
+dnl WITH_NLS is for the po files
+AM_KDE_WITH_NLS
+
+AC_PATH_KDE
+
+# Define a symbol, to know that we're compiling WITH kde. (for apps that
+#  can compile without KDE, optionally)
+AM_CONDITIONAL(KDE_INSTALLED, test "$have_kde" = "yes")
+
+dnl Checks for libraries. 
+AC_CHECK_FUNC(gettext, ,
+      AC_CHECK_LIB(intl, gettext, [LIBINTL="-lintl"])
+)
+AC_SUBST(LIBINTL)
+
+AC_LANG_CPLUSPLUS
+dnl Checks for header files.
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_HEADER_TIME
+
+dnl check if the compiler has bool
+AC_CHECK_BOOL
+AC_C_LONG_DOUBLE  
+
+dnl Checks for library functions.
+KDE_CHECK_DLOPEN
+KDE_CHECK_NEWLIBS
+
+dnl output files
+topdir=`pwd`
+AC_SUBST(topdir)
+
+dnl Perform program name transformation
+AC_ARG_PROGRAM
+
+DO_NOT_COMPILE="$DO_NOT_COMPILE lnk"
+
+KDE_CREATE_SUBDIRSLIST
+
+dnl this will be replaced by Makefile.am
+AC_OUTPUT( \
+Makefile \
+ldif/Makefile \
+vCard/Makefile \
+)

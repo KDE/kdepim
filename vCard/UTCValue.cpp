@@ -18,17 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "UTCValue.h"
-#endif
-
 #include <UTCValue.h>
 
 #include <Value.h>
 
-namespace VCARD
-{
-
+using namespace VCARD;
 
 UTCValue::UTCValue()
 	:	Value()
@@ -101,7 +95,4 @@ UTCValue::_assemble()
 	
 	strRep_ += QCString().setNum(minute_);
 }
-
-
-} // end namespace
 

@@ -18,17 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "AgentValue.h"
-#endif
-
 #include <AgentValue.h>
 
 #include <Value.h>
 
-namespace VCARD
-{
-
+using namespace VCARD;
 
 AgentValue::AgentValue()
 	:	Value()
@@ -81,7 +75,4 @@ AgentValue::_parse()
 AgentValue::_assemble()
 {
 }
-
-
-} // end namespace
 

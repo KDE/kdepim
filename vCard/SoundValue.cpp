@@ -18,17 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "SoundValue.h"
-#endif
-
 #include <SoundValue.h>
 
 #include <Value.h>
 
-namespace VCARD
-{
-
+using namespace VCARD;
 
 SoundValue::SoundValue()
 	:	Value()
@@ -81,7 +75,4 @@ SoundValue::_parse()
 SoundValue::_assemble()
 {
 }
-
-
-} // end namespace
 

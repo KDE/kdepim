@@ -18,10 +18,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "ImageValue.h"
-#endif
-
 #ifndef  IMAGEVALUE_H
 #define  IMAGEVALUE_H
 

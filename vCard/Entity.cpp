@@ -18,14 +18,9 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "Entity.h"
-#endif
-
 #include <Entity.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 Entity::Entity()
 	:	parsed_		(false),
@@ -129,4 +124,3 @@ Entity::assemble()
 	assembled_	= true;
 }
 
-}

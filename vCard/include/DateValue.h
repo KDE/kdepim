@@ -18,10 +18,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "DateValue.h"
-#endif
-
 #ifndef  DATEVALUE_H
 #define  DATEVALUE_H
 

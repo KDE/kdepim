@@ -18,16 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "TelParam.h"
-#endif
-
 #include <TelParam.h>
 
 #include <Param.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 TelParam::TelParam()
 	:	Param()
@@ -81,4 +76,3 @@ TelParam::_assemble()
 {
 }
 
-}

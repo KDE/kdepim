@@ -18,17 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "FloatValue.h"
-#endif
-
 #include <FloatValue.h>
 
 #include <Value.h>
 
-namespace VCARD
-{
-
+using namespace VCARD;
 
 FloatValue::FloatValue()
 	:	Value()
@@ -86,7 +80,7 @@ FloatValue::~FloatValue()
 	void
 FloatValue::_parse()
 {
-	bool negative;
+	bool negative(false);
 	
 	if (strRep_[0] == '-' || strRep_[1] == '+') {
 		
@@ -120,7 +114,4 @@ FloatValue::setValue(float f)
 	parsed_ = true;
 	value_ = f;
 }
-
-
-} // end namespace
 

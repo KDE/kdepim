@@ -18,19 +18,13 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "OrgValue.h"
-#endif
-
 #include <RToken.h>
 
 #include <OrgValue.h>
 
 #include <Value.h>
 
-namespace VCARD
-{
-
+using namespace VCARD;
 
 OrgValue::OrgValue()
 	:	Value()
@@ -107,6 +101,4 @@ OrgValue::value(unsigned int i)
 	parse();
 	return valueList_.at(i);
 }
-
-} // end namespace
 

@@ -18,16 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "AgentParam.h"
-#endif
-
 #include <AgentParam.h>
 
 #include <Param.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 AgentParam::AgentParam()
 	:	Param()
@@ -102,5 +97,4 @@ AgentParam::_assemble()
 	
 	strRep_ = uri_.asString();
 	return;
-}
 }

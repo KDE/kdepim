@@ -18,21 +18,13 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "DateValue.h"
-#endif
-
 #include <qregexp.h>
 
 #include <VCardDefines.h>
-
 #include <DateValue.h>
-
 #include <Value.h>
 
-namespace VCARD
-{
-
+using namespace VCARD;
 
 DateValue::DateValue()
 	:	Value()
@@ -57,10 +49,10 @@ DateValue::DateValue(
 		hour_			(hour),
 		minute_			(minute),
 		second_			(second),
-		secFrac_		(secFrac),
-		zonePositive_	(zonePositive),
 		zoneHour_		(zoneHour),
 		zoneMinute_		(zoneMinute),
+		secFrac_		(secFrac),
+		zonePositive_	(zonePositive),
 		hasTime_(false)
 {
 	parsed_		= true;
@@ -367,6 +359,4 @@ DateValue::hasTime()
 	parse();
 	return hasTime_;
 }
-
-} // end namespace
 

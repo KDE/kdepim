@@ -18,17 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "ClassValue.h"
-#endif
-
 #include <ClassValue.h>
 
 #include <Value.h>
 
-namespace VCARD
-{
-
+using namespace VCARD;
 
 ClassValue::ClassValue()
 	:	Value()
@@ -113,7 +107,4 @@ ClassValue::_assemble()
 			break;
 	}
 }
-
-
-} // end namespace
 

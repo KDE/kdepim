@@ -18,16 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "PhoneNumberValue.h"
-#endif
-
 #include <PhoneNumberValue.h>
 
 #include <Value.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 PhoneNumberValue::PhoneNumberValue()
 	:	Value()
@@ -81,4 +76,3 @@ PhoneNumberValue::_assemble()
 {
 }
 
-}

@@ -22,12 +22,17 @@
 #define VCARD_DEFINES_H
 
 #ifndef NDEBUG
-# include <qcstring.h>
-# include <iostream.h>
-# define vDebug(a)	cerr << className() << ": " << \
-						QCString((a)).data() << endl;
+#	include <qcstring.h>
+#	include <iostream.h>
+#	ifdef __GNUG__
+#		define vDebug(a) cerr << className() << ":" << __FUNCTION__ << " (" \
+						<< __LINE__ << "): " << QCString((a)).data() << endl;
+#	else
+#		define vDebug(a) cerr << className() << ": " \
+						<< QCString((a)).data() << endl;
+#	endif
 #else
-# define vDebug(a)
+#	define vDebug(a)
 #endif
 
 #endif // Included this file

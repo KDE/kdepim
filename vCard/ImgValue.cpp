@@ -18,16 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "ImgValue.h"
-#endif
-
 #include <ImgValue.h>
 
 #include <Value.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 ImgValue::ImgValue()
 	:	Value()
@@ -81,4 +76,3 @@ ImgValue::_assemble()
 {
 }
 
-}

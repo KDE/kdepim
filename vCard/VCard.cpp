@@ -18,12 +18,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "VCard.h"
-#endif
-
-#include <iostream>
-
 #include <qcstring.h>
 #include <qstrlist.h>
 
@@ -34,8 +28,7 @@
 
 #include <VCardDefines.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 VCard::VCard()
 	:	Entity()
@@ -254,4 +247,3 @@ VCard::contentLine(const QCString & s)
 	return 0;
 }
 
-}

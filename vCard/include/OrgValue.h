@@ -1,4 +1,3 @@
-
 /*
 	libvcard - vCard parsing library for vCard version 3.0
 	
@@ -18,10 +17,6 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
-
-#ifdef __GNUG__
-# pragma interface "OrgValue.h"
-#endif
 
 #ifndef  ORGVALUE_H
 #define  ORGVALUE_H

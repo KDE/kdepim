@@ -18,10 +18,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "NValue.h"
-#endif
-
 #include <qstrlist.h>
 
 #include <RToken.h>
@@ -29,8 +25,7 @@
 #include <Value.h>
 #include <VCardDefines.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 NValue::NValue()
 	:	Value()
@@ -122,4 +117,3 @@ NValue::_assemble()
 	strRep_ += ";" +	suffix_;
 }
 
-}

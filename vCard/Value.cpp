@@ -18,15 +18,10 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "Value.h"
-#endif
-
 #include <Entity.h>
 #include <Value.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 Value::Value()
 	:	Entity()
@@ -78,7 +73,5 @@ Value::_parse()
 	void
 Value::_assemble()
 {
-}
-
 }
 

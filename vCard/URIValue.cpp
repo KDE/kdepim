@@ -18,16 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "URIValue.h"
-#endif
-
 #include <URIValue.h>
 
 #include <Value.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 URIValue::URIValue()
 	:	Value()
@@ -133,5 +128,3 @@ URIValue::setSchemeSpecificPart(const QCString & s)
 	schemeSpecificPart_ = s;
 }
 
-
-}

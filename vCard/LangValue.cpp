@@ -18,18 +18,13 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "LangValue.h"
-#endif
-
 #include <RToken.h>
 
 #include <LangValue.h>
 
 #include <Value.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 LangValue::LangValue()
 	:	Value()
@@ -127,4 +122,3 @@ LangValue::setSubTags(const QStrList & l)
 	subtags_ = l;
 }
 
-}

@@ -18,16 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "TextValue.h"
-#endif
-
 #include <TextValue.h>
 
 #include <Value.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 TextValue::TextValue()
 	:	Value()
@@ -80,4 +75,3 @@ TextValue::_assemble()
 {
 }
 
-}

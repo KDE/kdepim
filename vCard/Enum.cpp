@@ -18,16 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "Enum.h"
-#endif
-
 #include <qcstring.h>
 
 #include <Enum.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 // There are 31 possible types, not including extensions.
 const QCString paramNames [] =
@@ -351,6 +346,4 @@ ParamNameToEntityType(const QCString & s)
 	
 	return t;
 }
-
-} // End namespace
 

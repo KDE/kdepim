@@ -18,20 +18,13 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmailParam.h"
-#endif
-
 #include <iostream.h>
 
 #include <EmailParam.h>
-
 #include <Param.h>
-
 #include <VCardDefines.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 EmailParam::EmailParam()
 	:	Param()
@@ -118,4 +111,3 @@ EmailParam::_assemble()
 		strRep_ += ",PREF";
 }
 
-}

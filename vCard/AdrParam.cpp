@@ -18,16 +18,12 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "AdrParam.h"
-#endif
-
 #include <RToken.h>
 #include <AdrParam.h>
 #include <Param.h>
 
-namespace VCARD
-{
+using namespace VCARD;
+
 AdrParam::AdrParam()
 	:	Param()
 {
@@ -124,5 +120,4 @@ AdrParam::_assemble()
 		if (it.current() != adrTypeList_.last())
 			strRep_ += ',';
 	}
-}
 }

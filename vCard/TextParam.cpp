@@ -18,16 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "TextParam.h"
-#endif
-
 #include <TextParam.h>
 
 #include <Param.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 TextParam::TextParam()
 	:	Param()
@@ -82,4 +77,3 @@ TextParam::_assemble()
 {
 }
 
-}

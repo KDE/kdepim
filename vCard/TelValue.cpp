@@ -18,17 +18,11 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "TelValue.h"
-#endif
-
 #include <TelValue.h>
 
 #include <Value.h>
 
-namespace VCARD
-{
-
+using namespace VCARD;
 
 TelValue::TelValue()
 	:	Value()
@@ -81,7 +75,4 @@ TelValue::_parse()
 TelValue::_assemble()
 {
 }
-
-
-} // end namespace
 

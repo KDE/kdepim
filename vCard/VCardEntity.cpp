@@ -18,10 +18,6 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "VCardEntity.h"
-#endif
-
 #include <qregexp.h>
 
 #include <VCardDefines.h>
@@ -30,8 +26,7 @@
 
 #include <Entity.h>
 
-namespace VCARD
-{
+using namespace VCARD;
 
 VCardEntity::VCardEntity()
 	:	Entity()
@@ -122,4 +117,3 @@ VCardEntity::setCardList(const VCardList & l)
 	cardList_ = l;
 }
 
-}
