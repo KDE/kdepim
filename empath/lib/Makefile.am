@@ -1,23 +1,22 @@
-KDE_CXXFLAGS = $(LIBQPTHREAD_CXXFLAGS) -DQT_NO_ASCII_CAST -W -Wall
+KDE_CXXFLAGS = $(LIBQPTHREAD_CXXFLAGS) -DQT_NO_ASCII_CAST
 
-INCLUDES = -I$(top_srcdir)/rmm/ $(all_includes)
+INCLUDES = -I$(top_srcdir)/librmm/ $(all_includes)
 
 lib_LTLIBRARIES = libempathkernel.la
 
 libempathkernel_la_LDFLAGS = $(all_libraries) $(LIBQPTHREAD) $(LIBPTHREAD) \
 	-version-info 1:0:0 -module 
 	
-#	Define this for testing.
-#	-no-undefined
+include_HEADERS = EmpathInterface.h
 
 libempathkernel_la_LIBADD = $(LIB_KDECORE) \
-	$(top_builddir)/rmm/librmm.la
+	$(top_builddir)/librmm/librmm.la
 
 METASOURCES = AUTO
 
 libempathkernel_la_SOURCES = \
+EmpathInterface.skel \
 Empath.cpp \
-EmpathInterface.cpp \
 EmpathJob.cpp \
 EmpathJobScheduler.cpp \
 EmpathComposeForm.cpp \

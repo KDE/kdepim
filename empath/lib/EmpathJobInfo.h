@@ -30,7 +30,7 @@
 #include <qstringlist.h>
 
 // Local includes
-#include <RMM_Message.h>
+#include <rmm/Message.h>
 #include "EmpathEnum.h"
 #include "EmpathURL.h"
 
@@ -42,7 +42,7 @@ struct EmpathJobInfoPrivate
     QString xinfo;
     QStringList IDList;
     QString messageID;
-    RMM::RMessage message;
+    RMM::Message message;
     QMap<QString, bool> successMap;
     RMM::MessageStatus status;
     bool generalSuccess;
@@ -73,7 +73,7 @@ class EmpathJobInfo
         EmpathJobInfo(
             ActionType t,
             const EmpathURL & url,
-            RMM::RMessage & msg,
+            RMM::Message & msg,
             const QString & extraInfo = QString::null);
 
         // Remove list of messages
@@ -114,13 +114,13 @@ class EmpathJobInfo
         EmpathURL to();
         QString xinfo();
         QStringList IDList();
-        RMM::RMessage message();
+        RMM::Message message();
         QString messageID();
         RMM::MessageStatus status();
         
         void setType(ActionType t);
         void setMessageID(const QString & s);
-        void setMessage(RMM::RMessage &);
+        void setMessage(RMM::Message &);
         bool success(const QString & id);
         void setSuccess(const QString & id, bool b);
         void setSuccessMap(QMap<QString, bool> map);

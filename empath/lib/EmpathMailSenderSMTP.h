@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathMailSenderSMTP.h"
-#endif
 
 #ifndef EMPATHMAILSENDERSMTP_H
 #define EMPATHMAILSENDERSMTP_H
@@ -31,7 +28,7 @@
 #include <kio/job.h>
 
 // Local includes
-#include "RMM_Message.h"
+#include "rmm/Message.h"
 #include "EmpathDefines.h"
 #include "EmpathMailSenderImpl.h"
 
@@ -60,7 +57,7 @@ class EmpathMailSenderSMTP : public EmpathMailSenderImpl
         /**
          * Send one message.
          */
-        void sendOne(RMM::RMessage message, const QString & id);
+        void sendOne(RMM::Message message, const QString & id);
         
         virtual void saveConfig();
         virtual void loadConfig();

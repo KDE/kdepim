@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathMatcher.h"
-#endif
 
 // Qt includes
 #include <qregexp.h>
@@ -128,7 +125,7 @@ EmpathMatcher::match(const EmpathURL & id)
         
         case Size:
             {
-                RMM::RMessage m(empath->message(id));
+                RMM::Message m(empath->message(id));
                 if (!m)
                     return false;
                 
@@ -144,7 +141,7 @@ EmpathMatcher::match(const EmpathURL & id)
             
         case BodyExpr:
             {
-                RMM::RMessage m(empath->message(id));
+                RMM::Message m(empath->message(id));
                 
                 if (!m)
                     return false;
@@ -159,7 +156,7 @@ EmpathMatcher::match(const EmpathURL & id)
             
         case HeaderExpr:
             {
-                RMM::RMessage m(empath->message(id));
+                RMM::Message m(empath->message(id));
                 
                 if (!m)
                     return false;
@@ -174,11 +171,11 @@ EmpathMatcher::match(const EmpathURL & id)
             
         case HasAttachments:    
             {
-                RMM::RMessage m(empath->message(id));
+                RMM::Message m(empath->message(id));
                 if (!m)
                     return false;
                 
-                bool ok = m.type() == RMM::RBodyPart::Mime;
+                bool ok = m.type() == RMM::BodyPart::Mime;
 
                 return ok;
             }

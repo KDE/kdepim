@@ -31,7 +31,7 @@
 #include <qstringlist.h>
 
 // Local includes
-#include <RMM_Message.h>
+#include <rmm/Message.h>
 #include "EmpathDefines.h"
 #include "EmpathIndexRecord.h"
 #include "EmpathEnum.h"
@@ -131,7 +131,7 @@ class EmpathWriteJob : public EmpathSingleJob
     public:
 
         EmpathWriteJob(
-            RMM::RMessage & message,
+            RMM::Message & message,
             const EmpathURL & folder
         );
 
@@ -141,7 +141,7 @@ class EmpathWriteJob : public EmpathSingleJob
 
         virtual void run();
 
-        RMM::RMessage message() const { return message_; }
+        RMM::Message message() const { return message_; }
         EmpathURL folder() const { return folder_; }
 
         QString messageID() const { return messageID_; }
@@ -154,7 +154,7 @@ class EmpathWriteJob : public EmpathSingleJob
         
         virtual void _done() { emit(done(*this)); setFinished(); }
 
-        RMM::RMessage message_;
+        RMM::Message message_;
         EmpathURL folder_;
         QString messageID_;
 };
@@ -277,7 +277,7 @@ class EmpathRetrieveJob : public EmpathSingleJob
         
         EmpathURL url() const { return url_; }
 
-        RMM::RMessage message() const { return message_; }
+        RMM::Message message() const { return message_; }
     
     signals:
 
@@ -288,7 +288,7 @@ class EmpathRetrieveJob : public EmpathSingleJob
         virtual void _done() { emit(done(*this));  setFinished(); }
 
         EmpathURL url_;
-        RMM::RMessage message_;
+        RMM::Message message_;
 };
 
 class EmpathMarkJob : public EmpathSingleJob

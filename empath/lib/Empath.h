@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "Empath.h"
-#endif
 
 #ifndef EMPATH_H
 #define EMPATH_H
@@ -37,7 +34,7 @@
 #include "EmpathIndexRecord.h"
 #include "EmpathURL.h"
 
-#include "RMM_Message.h"
+#include "rmm/Message.h"
 
 #define empath Empath::getEmpath()
 
@@ -164,10 +161,10 @@ class Empath : public QObject
     
         /**
          * Get a previously requested message.
-         * @return A pointer to an RMM::RMessage, unless the message can't
+         * @return A pointer to an RMM::Message, unless the message can't
          * be found, when it returns 0.
          */
-        RMM::RMessage message(const EmpathURL &);
+        RMM::Message message(const EmpathURL &);
 
         /**
          * Gets a pointer to the folder specified in the url, or 0.
@@ -182,13 +179,13 @@ class Empath : public QObject
         /**
          * Queue a new message for sending later.
          */
-        void queue(RMM::RMessage &);
+        void queue(RMM::Message &);
         
         /**
          * Send a message. If the user set queueing as the default,
          * it'll be queued, surprisingly.
          */
-        void send(RMM::RMessage &);
+        void send(RMM::Message &);
         
         /**
          * Attempt to send all queued messages.
@@ -205,7 +202,7 @@ class Empath : public QObject
          */
         QString generateUnique();
 
-        void cacheMessage(const EmpathURL &, RMM::RMessage);
+        void cacheMessage(const EmpathURL &, RMM::Message);
         
         EmpathMailboxList * mailboxList();
         EmpathFilterList  * filterList();
@@ -262,7 +259,7 @@ class Empath : public QObject
          * Write a new message to the specified folder.
          */
         EmpathJobID write(
-            RMM::RMessage & msg,
+            RMM::Message & msg,
             const EmpathURL & folder,
             QObject * = 0L,
             const char * = 0L

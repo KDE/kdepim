@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathMailSenderSMTP.h"
-#endif
 
 // KDE includes
 #include <kglobal.h>
@@ -31,9 +28,9 @@
 #include <kapp.h>
 
 // Local includes
-#include "RMM_Message.h"
-#include "RMM_Address.h"
-#include "RMM_Envelope.h"
+#include "rmm/Message.h"
+#include "rmm/Address.h"
+#include "rmm/Envelope.h"
 #include "EmpathMailSenderSMTP.h"
 #include "Empath.h"
 
@@ -57,7 +54,7 @@ EmpathMailSenderSMTP::setServer(const QString & _name, const Q_UINT32 _port)
 }
 
    void
-EmpathMailSenderSMTP::sendOne(RMM::RMessage m, const QString & id)
+EmpathMailSenderSMTP::sendOne(RMM::Message m, const QString & id)
 {
     currentID_ = id;
     
@@ -67,16 +64,16 @@ EmpathMailSenderSMTP::sendOne(RMM::RMessage m, const QString & id)
 
     QString recipient;
 
-    RMM::RAddressList addressList = m.envelope().to();
+    RMM::AddressList addressList = m.envelope().to();
 
     if (addressList.count() == 0) {
         // XXX: We're not sending to anyone ?
         return;
     }
     
-    RMM::RAddress address = addressList.at(0);
+    RMM::Address address = addressList.at(0);
     
-    if (address.type() == RMM::RAddress::Group) {
+    if (address.type() == RMM::Address::AddressTypeGroup) {
         // FIXME: Handle sending to a group.
         return;
     }

@@ -20,10 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathMailboxPOP3.h"
-#endif
-
 // Qt includes
 #include <qregexp.h>
 #include <qdir.h>
@@ -204,7 +200,7 @@ EmpathMailboxPOP3::s_jobFinished(int id)
                 QCString data = commandQueue_.head()->data();
                 EmpathURL from;// = commandQueue_.head()->jobInfo().from();
 
-                empath->cacheMessage(from, RMM::RMessage(data));
+                empath->cacheMessage(from, RMM::Message(data));
 
 //                commandQueue_.head()->jobInfo().done(true);
             }
@@ -287,17 +283,17 @@ EmpathMailboxPOP3::s_jobData(int, const char * data, int)
     }
 }
 
-    RMM::RMessage
+    RMM::Message
 EmpathMailboxPOP3::retrieveMessage(const EmpathURL & /* url */)
 {
     // STUB
-    RMM::RMessage retval;
+    RMM::Message retval;
     return retval;
 }
 
     QString
 EmpathMailboxPOP3::writeMessage(
-    RMM::RMessage &,
+    RMM::Message &,
     const EmpathURL &
 )
 {

@@ -39,9 +39,9 @@
 #include "EmpathMessageHeaderViewWidget.h"
 #include "EmpathMessageAttachmentViewWidget.h"
 
-#include <RMM_Message.h>
-#include <RMM_BodyPart.h>
-#include <RMM_ContentType.h>
+#include <rmm/Message.h>
+#include <rmm/BodyPart.h>
+#include <rmm/ContentType.h>
 
 extern "C"
 {
@@ -178,7 +178,7 @@ EmpathMessageViewWidget::~EmpathMessageViewWidget()
 }
 
     void
-EmpathMessageViewWidget::setMessage(RMM::RMessage & m)
+EmpathMessageViewWidget::setMessage(RMM::Message & m)
 {
     if (!m) {
       qDebug("Message is null");
@@ -195,7 +195,7 @@ EmpathMessageViewWidget::setMessage(RMM::RMessage & m)
     QColor quote1 = Qt::darkBlue; // FIXME (config->readColorEntry(UI_QUOTE_ONE, &defaultQuoteColour1));
     QColor quote2 = Qt::darkCyan; // FIXME (config->readColorEntry(UI_QUOTE_TWO, &defaultQuoteColour2));
 
-    RMM::RBodyPart message(m);
+    RMM::BodyPart message(m);
 
     headerView_->useEnvelope(message.envelope());
 
@@ -223,8 +223,8 @@ EmpathMessageViewWidget::setMessage(RMM::RMessage & m)
         
         attachmentView_->setMessage(message);
         
-        QList<RMM::RBodyPart> body(message.body());
-        QListIterator<RMM::RBodyPart> it(body);
+        QList<RMM::BodyPart> body(message.body());
+        QListIterator<RMM::BodyPart> it(body);
         
         int i = 0;
         for (; it.current(); ++it) {
@@ -240,7 +240,7 @@ EmpathMessageViewWidget::setMessage(RMM::RMessage & m)
                 
                 qDebug("Ok this part has a Content-Type");                            
                     
-                RMM::RContentType t = it.current()->envelope().contentType();
+                RMM::ContentType t = it.current()->envelope().contentType();
                 
                 qDebug("   Type of this part is \"" + t.type() + "\"");
                 qDebug("SubType of this part is \"" + t.subType() + "\"");
@@ -306,7 +306,7 @@ EmpathMessageViewPart::openFile()
     f.open(IO_ReadOnly);
     QCString s = QCString(f.readAll());
 
-    RMM::RMessage m(s);
+    RMM::Message m(s);
     w->setMessage(m);
 
     enableAllActions(true);
@@ -314,7 +314,7 @@ EmpathMessageViewPart::openFile()
 }
 
     void
-EmpathMessageViewPart::s_setMessage(RMM::RMessage & m)
+EmpathMessageViewPart::s_setMessage(RMM::Message & m)
 {
     w->setMessage(m);
     enableAllActions(true);
@@ -352,7 +352,7 @@ EmpathMessageViewWidget::s_URLSelected(QString fixedURL, int button)
 }
 
     void
-EmpathMessageViewWidget::s_partChanged(RMM::RBodyPart part)
+EmpathMessageViewWidget::s_partChanged(RMM::BodyPart part)
 {
     QString errorMsg =
         i18n("<qt type=\"detail\">No viewer for mime type <b>%1</b></qt>");
@@ -367,7 +367,7 @@ EmpathMessageViewWidget::s_partChanged(RMM::RBodyPart part)
     QColor quote1 = Qt::darkBlue; // FIXME (config->readColorEntry(UI_QUOTE_ONE, &defaultQuoteColour1));
     QColor quote2 = Qt::darkCyan; // FIXME (config->readColorEntry(UI_QUOTE_TWO, &defaultQuoteColour2));
 
-    RMM::RContentType t = part.envelope().contentType();
+    RMM::ContentType t = part.envelope().contentType();
 
     if (0 == stricmp(t.type(), "text")) {
 

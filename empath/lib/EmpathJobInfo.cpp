@@ -90,7 +90,7 @@ EmpathJobInfo::EmpathJobInfo(
 EmpathJobInfo::EmpathJobInfo(
     ActionType t,
     const EmpathURL & url,
-    RMM::RMessage & msg,
+    RMM::Message & msg,
     const QString & extraInfo)
 {
     current_.type       = t;
@@ -216,7 +216,7 @@ EmpathJobInfo::IDList()
     return current_.IDList;
 }
 
-    RMM::RMessage
+    RMM::Message
 EmpathJobInfo::message()
 {
     return current_.message;
@@ -250,7 +250,7 @@ EmpathJobInfo::setMessageID(const QString & s)
 }
 
     void
-EmpathJobInfo::setMessage(RMM::RMessage & m)
+EmpathJobInfo::setMessage(RMM::Message & m)
 {
     current_.message = m;
 }

@@ -26,6 +26,7 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kglobal.h>
+#include <kglobalsettings.h>
 #include <kstddirs.h>
 #include <kiconloader.h>
 
@@ -74,7 +75,7 @@ EmpathMessageTextViewWidget::setXML(const QString & xml)
 
     c->setGroup("EmpathMessageTextViewWidget");
     
-    QFont defaultFixed(KGlobal::fixedFont());
+    QFont defaultFixed(KGlobalSettings::fixedFont());
     
     QFont f = c->readFontEntry("Font", &defaultFixed);
 

@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "Empath.h"
-#endif
 
 // System includes
 #include <sys/time.h>
@@ -161,7 +158,7 @@ Empath::s_saveConfig()
     KGlobal::config()->sync();
 }
 
-    RMM::RMessage
+    RMM::Message
 Empath::message(const EmpathURL & source)
 {
     QCacheIterator<EmpathCachedMessage> it(cache_);
@@ -176,13 +173,13 @@ Empath::message(const EmpathURL & source)
     EmpathCachedMessage * cached = cache_[source.asString()];
 
     if (cached == 0)
-        return RMM::RMessage();
+        return RMM::Message();
 
     return cached->message();
 }
 
     void
-Empath::cacheMessage(const EmpathURL & url, RMM::RMessage m)
+Empath::cacheMessage(const EmpathURL & url, RMM::Message m)
 {
     EmpathCachedMessage * cached = cache_[url.asString()];
 
@@ -260,7 +257,7 @@ Empath::retrieve(const EmpathURL & url, QObject * o, const char * slot)
 { return _jobScheduler()->newRetrieveJob(url, o, slot); }
 
     EmpathJobID
-Empath::write(RMM::RMessage & msg, const EmpathURL & folder, QObject * o, const char * slot)
+Empath::write(RMM::Message & msg, const EmpathURL & folder, QObject * o, const char * slot)
 { return _jobScheduler()->newWriteJob(msg, folder, o, slot); } 
 
     EmpathJobID
@@ -294,11 +291,11 @@ Empath::removeFolder(const EmpathURL & url, QObject * o, const char * slot)
 { return _jobScheduler()->newRemoveFolderJob(url, o, slot); }
 
     void
-Empath::send(RMM::RMessage & m)
+Empath::send(RMM::Message & m)
 { _sender()->send(m); }
 
     void
-Empath::queue(RMM::RMessage & m)
+Empath::queue(RMM::Message & m)
 { _sender()->queue(m); }
 
     void

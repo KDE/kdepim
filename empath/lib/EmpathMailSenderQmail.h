@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathMailSenderQmail.h"
-#endif
 
 #ifndef EMPATHMAILSENDERQMAIL_H
 #define EMPATHMAILSENDERQMAIL_H
@@ -53,7 +50,7 @@ class EmpathMailSenderQmail : public EmpathMailSenderImpl
         /**
          * Send one message.
          */
-        void sendOne(RMM::RMessage message, const QString & id);
+        void sendOne(RMM::Message message, const QString & id);
 
         /**
          * Set the location of the qmail-inject binary.

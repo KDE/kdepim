@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathViewFactory.h"
-#endif
 
 #ifndef EMPATHVIEWFACTORY_H
 #define EMPATHVIEWFACTORY_H
@@ -33,13 +30,13 @@
 #include <qcstring.h>
 
 // Local includes
-#include <RMM_BodyPart.h>
+#include <rmm/BodyPart.h>
 
 class EmpathXMLMessage : public QMimeSource
 {
     public:
 
-        EmpathXMLMessage(RMM::RBodyPart &);
+        EmpathXMLMessage(RMM::BodyPart &);
 
         virtual const char * format (int n = 0) const;
         virtual bool provides (const char *) const;

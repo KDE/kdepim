@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathMailSender.h"
-#endif
 
 // Qt includes
 #include <qfile.h>
@@ -60,7 +57,7 @@ EmpathMailSender::~EmpathMailSender()
 }
 
     void
-EmpathMailSender::send(RMM::RMessage message)
+EmpathMailSender::send(RMM::Message message)
 {
     empath->write(
         message,
@@ -70,7 +67,7 @@ EmpathMailSender::send(RMM::RMessage message)
 }
 
     void
-EmpathMailSender::queue(RMM::RMessage message)
+EmpathMailSender::queue(RMM::Message message)
 {
     empath->write(
         message,
@@ -164,7 +161,7 @@ EmpathMailSender::s_movedToSent(EmpathMoveJob job)
 }
 
      void
-EmpathMailSender::_emergencyBackup(RMM::RMessage message)
+EmpathMailSender::_emergencyBackup(RMM::Message message)
 {
     empathDebug("Writing to emergency backup");
 

@@ -37,7 +37,7 @@ EmpathJobScheduler::~EmpathJobScheduler()
 
     EmpathJobID
 EmpathJobScheduler::newWriteJob(
-    RMM::RMessage & message,
+    RMM::Message & message,
     const EmpathURL & url,
     QObject * o,
     const char * slot

@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathMailSender.h"
-#endif
 
 #ifndef EMPATHMAILSENDER_H
 #define EMPATHMAILSENDER_H
@@ -38,7 +35,7 @@
 #include "EmpathEnum.h"
 #include "EmpathURL.h"
 #include "EmpathJob.h"
-#include <RMM_Message.h>
+#include <rmm/Message.h>
 
 class EmpathMailSenderImpl;
 
@@ -70,7 +67,7 @@ class EmpathMailSender : public QObject
         /**
          * Queue up a message for sending.
          */
-        void queue(RMM::RMessage);
+        void queue(RMM::Message);
 
         /**
          * Send one message.
@@ -79,7 +76,7 @@ class EmpathMailSender : public QObject
          *
          * Message will be returned to user on failure. FIXME: How ?
          */
-        void send(RMM::RMessage);
+        void send(RMM::Message);
 
         /**
          * Kick off a send using all queued messages.
@@ -110,7 +107,7 @@ class EmpathMailSender : public QObject
     private:
 
         void _startNextSend();
-        void _emergencyBackup(RMM::RMessage);
+        void _emergencyBackup(RMM::Message);
 
         QQueue<QString> sendQueue_;
 

@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathMailboxMaildir.h"
-#endif
 
 // Qt includes
 #include <qfile.h>
@@ -369,10 +366,10 @@ EmpathMailboxMaildir::_recursiveRemove(const QString & dir)
     return removedDirOK;
 }
 
-    RMM::RMessage
+    RMM::Message
 EmpathMailboxMaildir::retrieveMessage(const EmpathURL & url)
 {
-    RMM::RMessage retval;
+    RMM::Message retval;
 
     EmpathMaildir * box = _box(url);
 
@@ -386,7 +383,7 @@ EmpathMailboxMaildir::retrieveMessage(const EmpathURL & url)
 
     QString
 EmpathMailboxMaildir::writeMessage(
-    RMM::RMessage & message,
+    RMM::Message & message,
     const EmpathURL & folder
 )
 {

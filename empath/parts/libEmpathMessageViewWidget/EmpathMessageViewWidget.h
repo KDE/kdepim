@@ -31,7 +31,7 @@
 #include <klibloader.h>
 
 // Local includes
-#include <RMM_Message.h>
+#include <rmm/Message.h>
 
 class KAction;
 class KInstance;
@@ -50,7 +50,7 @@ class EmpathMessageViewWidget : public QWidget
         EmpathMessageViewWidget(QWidget * parent = 0, const char * name = 0);
         virtual ~EmpathMessageViewWidget();
 
-        void setMessage(RMM::RMessage &);
+        void setMessage(RMM::Message &);
 
     private:
         
@@ -92,7 +92,7 @@ class EmpathMessageViewPart : public KParts::ReadOnlyPart
 
     protected slots:
 
-        void s_setMessage(RMM::RMessage &);
+        void s_setMessage(RMM::Message &);
 
     signals:
 

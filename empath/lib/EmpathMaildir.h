@@ -20,10 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathMaildir.h"
-#endif
-
 #ifndef EMPATH_MAILDIR_H
 #define EMPATH_MAILDIR_H 
 
@@ -42,7 +38,7 @@
 #include "EmpathURL.h"
 #include "EmpathDefines.h"
 #include "EmpathIndexRecord.h"
-#include "RMM_Message.h"
+#include "rmm/Message.h"
 
 class EmpathFolder;
 
@@ -70,9 +66,9 @@ class EmpathMaildir : public QObject
         
         EmpathSuccessMap mark(const QStringList &, EmpathIndexRecord::Status);
         
-        QString writeMessage(RMM::RMessage);
+        QString writeMessage(RMM::Message);
         
-        RMM::RMessage message(const QString &);
+        RMM::Message message(const QString &);
         
         EmpathSuccessMap removeMessage (const QStringList &);
         
@@ -94,7 +90,7 @@ class EmpathMaildir : public QObject
         void        _markAsSeen(const QString &);
 
         bool        _removeMessage(const QString & id);
-        QString     _write(RMM::RMessage);
+        QString     _write(RMM::Message);
         QCString    _messageData(const QString &, bool isFullName = false);
         QString     _generateFlagsString(EmpathIndexRecord::Status);
 

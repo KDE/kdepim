@@ -30,6 +30,7 @@
 // KDE includes
 #include <kconfig.h>
 #include <kglobal.h>
+#include <kglobalsettings.h>
 #include <kiconloader.h>
 
 // Local includes
@@ -137,7 +138,7 @@ EmpathFolderListItem::setup()
 {
     widthChanged();
     
-    int th = QFontMetrics(KGlobal::generalFont()).height();
+    int th = QFontMetrics(KGlobalSettings::generalFont()).height();
     
     if (!pixmap(0))
         setHeight(th);

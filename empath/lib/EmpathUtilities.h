@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathUtilities.h"
-#endif
 
 #ifndef EMPATHUTILITIES_H
 #define EMPATHUTILITIES_H
@@ -32,9 +29,9 @@
 
 // Local includes
 #include "EmpathIndexRecord.h"
-#include "RMM_Message.h"
+#include "rmm/Message.h"
 
-EmpathIndexRecord indexRecordFromMessage(const QString & id, RMM::RMessage &);
+EmpathIndexRecord indexRecordFromMessage(const QString & id, RMM::Message &);
 
 #endif
 

@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathFolder.h"
-#endif
 
 // Qt includes
 #include <qregexp.h>
@@ -122,10 +119,10 @@ EmpathFolder::setContainer(bool b)
     container_ = b;
 }
 
-    RMM::RMessage
+    RMM::Message
 EmpathFolder::retrieveMessage(const QString & id)
 {
-    RMM::RMessage retval;
+    RMM::Message retval;
 
     EmpathMailbox * m = empath->mailbox(url_);
     
@@ -142,7 +139,7 @@ EmpathFolder::retrieveMessage(const QString & id)
 }
 
     QString
-EmpathFolder::writeMessage(RMM::RMessage & message)
+EmpathFolder::writeMessage(RMM::Message & message)
 {
     EmpathMailbox * m = empath->mailbox(url_);
     

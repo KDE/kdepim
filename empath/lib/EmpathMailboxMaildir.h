@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathMailboxMaildir.h"
-#endif
 
 #ifndef EMPATHMAILBOXMAILDIR_H
 #define EMPATHMAILBOXMAILDIR_H
@@ -34,7 +31,7 @@
 #include <qlist.h>
 
 // Local includes
-#include "RMM_Message.h"
+#include "rmm/Message.h"
 #include "EmpathDefines.h"
 #include "EmpathMaildir.h"
 #include "EmpathMailbox.h"
@@ -50,7 +47,7 @@ class EmpathMailboxMaildir : public EmpathMailbox
     public:
 
         EmpathMailboxMaildir(const QString & name);
-        QString writeNewMail(RMM::RMessage & message);
+        QString writeNewMail(RMM::Message & message);
         
         virtual ~EmpathMailboxMaildir();
     

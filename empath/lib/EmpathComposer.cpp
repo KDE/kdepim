@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathComposer.h"
-#endif
 
 //Qt includes
 #include <qfile.h>
@@ -38,10 +35,10 @@
 #include "EmpathComposer.h"
 #include "Empath.h"
 #include "EmpathQuotedText.h"
-#include <RMM_DateTime.h>
-#include <RMM_Token.h>
-#include <RMM_AddressList.h>
-#include <RMM_Utility.h>
+#include <rmm/DateTime.h>
+#include <rmm/Token.h>
+#include <rmm/AddressList.h>
+#include <rmm/Utilities.h>
 
 EmpathComposer * EmpathComposer::THIS = 0L;
 
@@ -57,10 +54,10 @@ EmpathComposer::~EmpathComposer()
 {
 }
 
-     RMM::RMessage 
+     RMM::Message 
 EmpathComposer::message(EmpathComposeForm composeForm)
 {
-    RMM::RMessage message;
+    RMM::Message message;
     
     // Copy the visible headers first.
     QMap<QString, QString> envelope = composeForm.visibleHeaders();
@@ -106,13 +103,13 @@ EmpathComposer::message(EmpathComposeForm composeForm)
    
     for (; it2 != attachments.end(); it2++) {
 
-        RMM::RBodyPart * newPart = new RMM::RBodyPart;
+        RMM::BodyPart * newPart = new RMM::BodyPart;
 
         newPart->setDescription ((*it2).description().utf8());
         // FIXME: Need to keep in sync to do this !
         newPart->setEncoding    (RMM::CteType((*it2).encoding()));
-        newPart->setMimeType    ((*it2).type().utf8());
-        newPart->setMimeSubType ((*it2).subType().utf8());
+        newPart->setMimeGroup   ((*it2).type().utf8());
+        newPart->setMimeValue   ((*it2).subType().utf8());
         newPart->setCharset     ((*it2).charset().utf8());
 
         message.addPart(newPart);
@@ -158,7 +155,7 @@ EmpathComposer::s_retrieveJobFinished(EmpathRetrieveJob j)
         return;
     }
 
-    RMM::RMessage m(j.message());
+    RMM::Message m(j.message());
     
     switch (jobList_[j.id()].composeType()) {
 
@@ -197,7 +194,7 @@ EmpathComposer::_initVisibleHeaders(EmpathComposeForm & composeForm)
 }
 
    void
-EmpathComposer::_reply(EmpathJobID id, RMM::RMessage message)
+EmpathComposer::_reply(EmpathJobID id, RMM::Message message)
 {
     EmpathComposeForm composeForm(jobList_[id]);
     QString to, cc;
@@ -234,8 +231,8 @@ EmpathComposer::_reply(EmpathJobID id, RMM::RMessage message)
     
         config->setGroup(QString::fromUtf8("UserInfo"));
         
-        RMM::RAddress me(config->readEntry(QString::fromUtf8("EmailAddress")).ascii());
-        RMM::RAddress msgTo(message.envelope().to().at(0));
+        RMM::Address me(config->readEntry(QString::fromUtf8("EmailAddress")).ascii());
+        RMM::Address msgTo(message.envelope().to().at(0));
         
         if (me != msgTo && !cc.isEmpty()) 
             cc += QString::fromUtf8(message.envelope().to().asString());
@@ -309,7 +306,7 @@ EmpathComposer::_reply(EmpathJobID id, RMM::RMessage message)
 }
     
     void
-EmpathComposer::_forward(EmpathJobID id, RMM::RMessage message)
+EmpathComposer::_forward(EmpathJobID id, RMM::Message message)
 {
     EmpathComposeForm composeForm(jobList_[id]);
     QString s;
@@ -338,18 +335,18 @@ EmpathComposer::_forward(EmpathJobID id, RMM::RMessage message)
 
     message.setDescription(description.utf8());
 
-    // TODO: Add setPreamble() to RBodyPart
+    // TODO: Add setPreamble() to BodyPart
 //    message.setPreamble(descriptionFilled.utf8())
 
-    // TODO: Implement setDisposition() in RBodyPart
+    // TODO: Implement setDisposition() in BodyPart
 //    message.setDisposition(RMM::DispositionTypeInline);
 
-    // TODO: Add setDispositionFilename() to RBodyPart
+    // TODO: Add setDispositionFilename() to BodyPart
 //    message.setDispositionFilename("message-" +
 //        message.envelope().messageID().asString());
 
-    message.setMimeType(RMM::MimeTypeMessage);
-    message.setMimeSubType(RMM::MimeSubTypeRFC822);
+    message.setMimeGroup(RMM::MimeGroupMessage);
+    message.setMimeValue(RMM::MimeValueRFC822);
 
     // Forward encoded as Base64. Wise ? XXX
     message.setEncoding(RMM::CteTypeBase64);
@@ -360,13 +357,13 @@ EmpathComposer::_forward(EmpathJobID id, RMM::RMessage message)
 }
 
     void
-EmpathComposer::_bounce(EmpathJobID, RMM::RMessage /* m */)
+EmpathComposer::_bounce(EmpathJobID, RMM::Message /* m */)
 {
     // TODO
 }
 
     QString
-EmpathComposer::_referenceHeaders(RMM::RMessage message)
+EmpathComposer::_referenceHeaders(RMM::Message message)
 {
     QString s;
 
@@ -388,7 +385,7 @@ EmpathComposer::_referenceHeaders(RMM::RMessage message)
     
     QStrList l;
     
-    RMM::RTokenise(refs.utf8(), " ", l);
+    RMM::tokenise(refs.utf8(), " ", l);
     
     // While there are more than 10 references, remove the one in
     // the second position. This way, we'll end up with 10 again,
@@ -448,14 +445,14 @@ EmpathComposer::_stdHeaders()
             organization +
             QString::fromUtf8("\n");
     
-    RMM::RDateTime dt;
+    RMM::DateTime dt;
     dt.createDefault();
     s +=
         QString::fromUtf8("Date: ") +
         QString::fromUtf8(dt.asString()) +
         QString::fromUtf8("\n");
     
-    RMM::RMessageID id;
+    RMM::MessageID id;
     id.createDefault();
     
     s +=

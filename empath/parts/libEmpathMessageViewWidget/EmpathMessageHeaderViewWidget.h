@@ -28,7 +28,7 @@
 #include <qlayout.h>
 
 // Local includes
-#include <RMM_Envelope.h>
+#include <rmm/Envelope.h>
 
 class EmpathMessageHeaderViewWidget : public QWidget
 {
@@ -39,7 +39,7 @@ class EmpathMessageHeaderViewWidget : public QWidget
         EmpathMessageHeaderViewWidget(QWidget * parent);
         virtual ~EmpathMessageHeaderViewWidget();
     
-        void useEnvelope(RMM::REnvelope &);
+        void useEnvelope(RMM::Envelope &);
 };
 
 #endif

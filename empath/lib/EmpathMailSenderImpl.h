@@ -31,7 +31,7 @@
 #include "EmpathDefines.h"
 #include "EmpathEnum.h"
 #include "EmpathURL.h"
-#include <RMM_Message.h>
+#include <rmm/Message.h>
 
 /**
  * @short Sender Implementation base class
@@ -52,7 +52,7 @@ class EmpathMailSenderImpl : public QObject
         /**
          * Send one message.
          */
-        virtual void sendOne(RMM::RMessage message, const QString & id) = 0L;
+        virtual void sendOne(RMM::Message message, const QString & id) = 0L;
 
         /**
          * Save your config now !

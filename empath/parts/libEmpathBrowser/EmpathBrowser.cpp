@@ -236,7 +236,7 @@ EmpathBrowser::s_retrieveJobComplete(EmpathRetrieveJob j)
     }
     qDebug("RetrievalComplete");
 
-    RMM::RMessage m(j.message());
+    RMM::Message m(j.message());
 
     emit(changeView(m));
 }
@@ -411,8 +411,8 @@ EmpathBrowser::_connectUp()
         this,               SLOT(s_view(const QString &)));
 
     QObject::connect(
-        this,               SIGNAL(changeView(RMM::RMessage &)),
-        messageViewWidget_, SLOT(s_setMessage(RMM::RMessage &)));
+        this,               SIGNAL(changeView(RMM::Message &)),
+        messageViewWidget_, SLOT(s_setMessage(RMM::Message &)));
 
     QObject::connect(
         this,               SIGNAL(setIndex(const QDict<EmpathIndexRecord> &)),

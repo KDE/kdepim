@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathURL.h"
-#endif
 
 // Qt includes
 #include <qregexp.h>
@@ -32,7 +29,7 @@
 
 // Local includes
 #include "EmpathURL.h"
-#include <RMM_Token.h>
+#include <rmm/Token.h>
 
 EmpathURL::EmpathURL()
     :   mailboxName_    (QString::null),
@@ -190,7 +187,7 @@ EmpathURL::_assemble()
 EmpathURL::folderPathList()
 {
     QStrList sl_f;
-    RMM::RTokenise(folderPath_.latin1(), "/", sl_f);
+    RMM::tokenise(folderPath_.latin1(), "/", sl_f);
     return sl_f;
 }
 

@@ -20,21 +20,18 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathUtilities.h"
-#endif
 
 // Local includes
 #include "EmpathUtilities.h"
-#include "RMM_MessageID.h"
-#include "RMM_DateTime.h"
-#include "RMM_Envelope.h"
-#include "RMM_ContentType.h"
-#include "RMM_Address.h"
-#include "RMM_Mailbox.h"
-#include "RMM_Enum.h"
+#include "rmm/MessageID.h"
+#include "rmm/DateTime.h"
+#include "rmm/Envelope.h"
+#include "rmm/ContentType.h"
+#include "rmm/Address.h"
+#include "rmm/Mailbox.h"
+#include "rmm/Enum.h"
 
-EmpathIndexRecord indexRecordFromMessage(const QString & id, RMM::RMessage & m)
+EmpathIndexRecord indexRecordFromMessage(const QString & id, RMM::Message & m)
 {
     return EmpathIndexRecord(
         id,

@@ -1,6 +1,6 @@
-KDE_CXXFLAGS=$(USE_RTTI)
+KDE_CXXFLAGS = -DNO_ASCII_CAST
 
-INCLUDES= $(all_includes)
+INCLUDES = $(all_includes)
 
 bin_PROGRAMS = mbox2maildir
 

@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathMailboxIMAP4.h"
-#endif
 
 // Local includes
 #include "EmpathMailboxIMAP4.h"

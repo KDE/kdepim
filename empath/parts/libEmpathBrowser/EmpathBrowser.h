@@ -37,7 +37,7 @@
 #include "EmpathURL.h"
 #include "EmpathJob.h"
 
-#include "RMM_Message.h"
+#include "rmm/Message.h"
 
 class EmpathBrowser : public QWidget
 {
@@ -71,7 +71,7 @@ class EmpathBrowser : public QWidget
 
     signals:
 
-        void changeView(RMM::RMessage &);
+        void changeView(RMM::Message &);
         void setIndex(const QDict<EmpathIndexRecord> &);
         void toggleHideRead();
         void toggleThread();

@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathFolder.h"
-#endif
 
 #ifndef EMPATHFOLDER_H
 #define EMPATHFOLDER_H
@@ -35,7 +32,7 @@
 #include "EmpathDefines.h"
 #include "EmpathIndexRecord.h"
 #include "EmpathURL.h"
-#include "RMM_Message.h"
+#include "rmm/Message.h"
 
 class EmpathIndex;
 class EmpathMailbox;
@@ -80,11 +77,11 @@ class EmpathFolder : public QObject
 
         /**
          */
-        QString writeMessage(RMM::RMessage &);
+        QString writeMessage(RMM::Message &);
 
         /**
          */
-        RMM::RMessage retrieveMessage(const QString & messageID);
+        RMM::Message retrieveMessage(const QString & messageID);
 
         /**
          */

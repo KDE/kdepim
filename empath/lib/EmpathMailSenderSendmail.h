@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathMailSenderSendmail.h"
-#endif
 
 #ifndef EMPATHMAILSENDERSENDMAIL_H
 #define EMPATHMAILSENDERSENDMAIL_H
@@ -61,7 +58,7 @@ class EmpathMailSenderSendmail : public EmpathMailSenderImpl
         EmpathMailSenderSendmail();
         ~EmpathMailSenderSendmail();
 
-        void sendOne(RMM::RMessage message, const QString & id);
+        void sendOne(RMM::Message message, const QString & id);
 
         void setSendmailLocation(const QString & location);
         

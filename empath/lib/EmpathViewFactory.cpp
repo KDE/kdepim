@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathViewFactory.h"
-#endif
 
 #include <stream.h>
 
@@ -37,7 +34,7 @@
 #include "EmpathDefines.h"
 #include "EmpathViewFactory.h"
 #include "Empath.h"
-#include <RMM_BodyPart.h>
+#include <rmm/BodyPart.h>
     
 EmpathViewFactory::EmpathViewFactory()
 {
@@ -59,7 +56,7 @@ EmpathViewFactory::data(const QString & abs_name) const
 {
     if (abs_name.left(9) == "empath://") {
 
-        RMM::RMessage m = empath->message(EmpathURL(abs_name));
+        RMM::Message m = empath->message(EmpathURL(abs_name));
 
         if (!m) {
             empathDebug("Oh shit, can't find the message.");
@@ -74,7 +71,7 @@ EmpathViewFactory::data(const QString & abs_name) const
     }
 }
 
-EmpathXMLMessage::EmpathXMLMessage(RMM::RBodyPart & part)
+EmpathXMLMessage::EmpathXMLMessage(RMM::BodyPart & part)
     :   QMimeSource(),
         encoded_(false)
 {

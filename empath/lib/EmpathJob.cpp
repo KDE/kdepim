@@ -180,7 +180,7 @@ EmpathRemoveFolderJob::~EmpathRemoveFolderJob()
 // ------------------------------------------------------------------------
 
 EmpathWriteJob::EmpathWriteJob(
-    RMM::RMessage & message,
+    RMM::Message & message,
     const EmpathURL & folder
 )
     :
@@ -321,7 +321,7 @@ void EmpathCopyJob::run()
         return;
     }
 
-    RMM::RMessage msg = retrieve.message();
+    RMM::Message msg = retrieve.message();
     EmpathWriteJob write(msg, destination_);
     write.run();
 
@@ -340,7 +340,7 @@ void EmpathMoveJob::run()
         return;
     }
 
-    RMM::RMessage msg = retrieve.message();
+    RMM::Message msg = retrieve.message();
 
     EmpathWriteJob write(msg, destination_);
     write.run();
@@ -392,7 +392,7 @@ void EmpathRemoveJob::run()
 
 void EmpathRetrieveJob::run()
 {
-    RMM::RMessage cached = empath->message(url_);
+    RMM::Message cached = empath->message(url_);
 
     if (!cached.isNull()) {
 

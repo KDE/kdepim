@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathFilterList.h"
-#endif
 
 #ifndef EMPATHFILTERLIST_H
 #define EMPATHFILTERLIST_H
@@ -31,7 +28,6 @@
 #include <qlist.h>
 
 // Local includes
-#include "RMM_MessageID.h"
 #include "EmpathFilter.h"
 #include "EmpathURL.h"
 

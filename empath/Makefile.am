@@ -3,7 +3,7 @@
 SUBDIRS = pics import lib parts ui
 APPSDIR = $(kde_appsdir)/Internet
 KDE_CXXFLAGS = $(LIBQPTHREAD_CXXFLAGS) -DQT_NO_ASCII_CAST
-INCLUDES = -I$(srcdir)/lib -I$(srcdir)/ui -I$(top_srcdir)/rmm $(all_includes)
+INCLUDES = -I$(srcdir)/lib -I$(srcdir)/ui -I$(top_srcdir)/librmm $(all_includes)
 
 #############################################################################
 # Compile as a library for kinit
@@ -13,10 +13,7 @@ lib_LTLIBRARIES = empath.la
 
 empath_la_SOURCES = main.cpp
 
-empath_la_LDFLAGS = \
-	$(all_libraries) -version-info 1:0:0 -module
-# Define this for testing.
-# -no-undefined
+empath_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module
 
 empath_la_LIBADD = \
 	$(top_builddir)/empath/lib/libempathkernel.la \
@@ -29,14 +26,12 @@ empath_la_LIBADD = \
 
 bin_PROGRAMS = empath
 
-empath_SOURCES = main.cpp
+empath_SOURCES  = dummy.cpp
+empath_LDFLAGS  = $(all_libraries)
+empath_LDADD    = empath.la
 
-empath_LDFLAGS = $(all_libraries)
-
-empath_LDADD = \
-	$(top_builddir)/empath/lib/libempathkernel.la \
-	$(top_builddir)/empath/ui/libempathui.la \
-	$(top_builddir)/rmm/librmm.la
+dummy.cpp:
+	echo > dummy.cpp
 
 #############################################################################
 # i18n
@@ -50,9 +45,11 @@ messages:
 # Extra data to install
 #############################################################################
 
+data_DATA = empath.desktop
+datadir = $(kde_appsdir)
+EXTRA_DIST = $(data_DATA)
+
 install-data-local: 
-	$(mkinstalldirs) $(APPSDIR)
-	$(INSTALL_DATA) $(srcdir)/empath.desktop $(APPSDIR)
 	$(mkinstalldirs) $(kde_datadir)/empath
 	$(INSTALL_DATA) $(srcdir)/empath_logo.png $(kde_datadir)/empath/empath_logo.png
 
@@ -61,7 +58,6 @@ install-data-local:
 #############################################################################
 	
 uninstall-local:
-	-rm -f $(APPSDIR)/empath.desktop
 	-rm -rf $(kde_datadir)/empath
 
 #############################################################################

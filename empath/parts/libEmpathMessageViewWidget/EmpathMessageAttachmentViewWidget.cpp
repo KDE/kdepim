@@ -29,10 +29,10 @@
 // Local includes
 #include "EmpathMessageAttachmentViewWidget.h"
 
-#include "RMM_ContentType.h"
-#include "RMM_ContentDisposition.h"
-#include "RMM_ParameterList.h"
-#include "RMM_Parameter.h"
+#include "rmm/ContentType.h"
+#include "rmm/ContentDisposition.h"
+#include "rmm/ParameterList.h"
+#include "rmm/Parameter.h"
 
 EmpathMessageAttachmentViewWidget::EmpathMessageAttachmentViewWidget(
     QWidget * parent
@@ -49,13 +49,13 @@ EmpathMessageAttachmentViewWidget::~EmpathMessageAttachmentViewWidget()
 }
 
     void
-EmpathMessageAttachmentViewWidget::setMessage(RMM::RBodyPart & message)
+EmpathMessageAttachmentViewWidget::setMessage(RMM::BodyPart & message)
 {
     clear();
     
-    QList<RMM::RBodyPart> body(message.body());
+    QList<RMM::BodyPart> body(message.body());
 
-    QListIterator<RMM::RBodyPart> it(body);
+    QListIterator<RMM::BodyPart> it(body);
 
     ++it; // Ignore first part. That's the main part of the message and
           // not an attachment.
@@ -79,10 +79,10 @@ EmpathMessageAttachmentViewWidget::setMessage(RMM::RBodyPart & message)
 
         if (text.isEmpty()) {
             
-            QValueList<RMM::RParameter> l =
+            QValueList<RMM::Parameter> l =
                 it.current()->envelope().contentType().parameterList().list();
 
-            QValueList<RMM::RParameter>::Iterator it(l.begin());
+            QValueList<RMM::Parameter>::Iterator it(l.begin());
 
             for (; it != l.end(); ++it) {
 

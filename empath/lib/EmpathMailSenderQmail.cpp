@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathMailSenderQmail.h"
-#endif
 
 // Qt includes
 #include <qcstring.h>
@@ -63,7 +60,7 @@ EmpathMailSenderQmail::setQmailLocation(const QString & location)
 }
 
     void
-EmpathMailSenderQmail::sendOne(RMM::RMessage message, const QString & id)
+EmpathMailSenderQmail::sendOne(RMM::Message message, const QString & id)
 {
     currentID_ = id;
     

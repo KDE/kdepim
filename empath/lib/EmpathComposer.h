@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathComposer.h"
-#endif
 
 #ifndef EMPATHCOMPOSER_H
 #define EMPATHCOMPOSER_H
@@ -37,7 +34,7 @@
 #include "EmpathEnum.h"
 #include "EmpathJob.h"
 #include "EmpathComposeForm.h"
-#include <RMM_Message.h>
+#include <rmm/Message.h>
 
 /**
  * @short Composer backend
@@ -77,7 +74,7 @@ class EmpathComposer : public QObject
         /**
          * Convert a composeform to a message, so that it can be sent.
          */
-        RMM::RMessage message(EmpathComposeForm);
+        RMM::Message message(EmpathComposeForm);
         
         static EmpathComposer * THIS;
  
@@ -100,13 +97,13 @@ class EmpathComposer : public QObject
    
     private:
         
-        void _reply     (EmpathJobID, RMM::RMessage);
-        void _forward   (EmpathJobID, RMM::RMessage);
-        void _bounce    (EmpathJobID, RMM::RMessage);
+        void _reply     (EmpathJobID, RMM::Message);
+        void _forward   (EmpathJobID, RMM::Message);
+        void _bounce    (EmpathJobID, RMM::Message);
 
         void _initVisibleHeaders(EmpathComposeForm &);
         
-        QString _referenceHeaders(RMM::RMessage m);
+        QString _referenceHeaders(RMM::Message m);
         QString _stdHeaders();
 
         QString _signature();

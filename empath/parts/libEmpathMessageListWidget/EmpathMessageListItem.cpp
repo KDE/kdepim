@@ -26,6 +26,7 @@
 // KDE includes
 #include <kconfig.h>
 #include <kglobal.h>
+#include <kglobalsettings.h>
 #include <klocale.h>
 #include <kiconloader.h>
 
@@ -179,7 +180,7 @@ EmpathMessageListItem::_init()
 EmpathMessageListItem::setup()
 {
     widthChanged();
-    int th = QFontMetrics(KGlobal::generalFont()).height();
+    int th = QFontMetrics(KGlobalSettings::generalFont()).height();
     setHeight(QMAX(20, th)); // 20 is just a little bigger than our icons.
 }
 

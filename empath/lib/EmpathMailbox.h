@@ -20,10 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathMailbox.h"
-#endif
-
 #ifndef EMPATHMAILBOX_H
 #define EMPATHMAILBOX_H
 
@@ -37,10 +33,10 @@
 #include "EmpathURL.h"
 #include "EmpathFolderList.h"
 #include "EmpathIndexRecord.h"
-#include <RMM_Message.h>
-#include <RMM_Envelope.h>
-#include <RMM_Message.h>
-#include <RMM_MessageID.h>
+#include <rmm/Message.h>
+#include <rmm/Envelope.h>
+#include <rmm/Message.h>
+#include <rmm/MessageID.h>
 
 class EmpathFolder;
 
@@ -96,9 +92,9 @@ class EmpathMailbox : public QObject
          */
         virtual void sync(const EmpathURL &) = 0;
 
-        virtual RMM::RMessage retrieveMessage(const EmpathURL & url) = 0;
+        virtual RMM::Message retrieveMessage(const EmpathURL & url) = 0;
 
-        virtual QString writeMessage(RMM::RMessage &, const EmpathURL & f) = 0;
+        virtual QString writeMessage(RMM::Message &, const EmpathURL & f) = 0;
         
         virtual bool removeMessage(const EmpathURL & url) = 0;
         

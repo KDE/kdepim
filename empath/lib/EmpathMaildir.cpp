@@ -20,10 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma implementation "EmpathMaildir.h"
-#endif
-
 // System includes
 #include <sys/file.h>
 #include <sys/stat.h>
@@ -109,15 +105,15 @@ EmpathMaildir::sync()
 }
 
     QString
-EmpathMaildir::writeMessage(RMM::RMessage m)
+EmpathMaildir::writeMessage(RMM::Message m)
 {
     return _write(m);
 }
 
-    RMM::RMessage
+    RMM::Message
 EmpathMaildir::message(const QString & id)
 {
-    RMM::RMessage retval;
+    RMM::Message retval;
 
     QCString s = _messageData(id);
     
@@ -126,7 +122,7 @@ EmpathMaildir::message(const QString & id)
         return retval;
     }
     
-    retval = RMM::RMessage(s);
+    retval = RMM::Message(s);
     return retval;
 }
 
@@ -345,7 +341,7 @@ EmpathMaildir::_checkDirs()
 }
 
     QString
-EmpathMaildir::_write(RMM::RMessage msg)
+EmpathMaildir::_write(RMM::Message msg)
 {
     // See docs for how this shit works.
     // I can't be bothered to maintain the comments.
@@ -526,7 +522,7 @@ EmpathMaildir::_tagAsDisappearedOrAddToIndex()
                 continue;
             }
 
-            RMM::RMessage m(messageData);
+            RMM::Message m(messageData);
             EmpathIndexRecord ir = indexRecordFromMessage(s, m);
             
             ir.setStatus(status);

@@ -27,7 +27,7 @@
 #include <qiconview.h>
 
 // Local includes
-#include "RMM_BodyPart.h"
+#include "rmm/BodyPart.h"
 
 /**
  * This widget shows the attachments of a message.
@@ -42,7 +42,7 @@ class EmpathMessageAttachmentViewWidget : public QIconView
 
         virtual ~EmpathMessageAttachmentViewWidget();
 
-        void setMessage(RMM::RBodyPart &);
+        void setMessage(RMM::BodyPart &);
 };
 
 #endif

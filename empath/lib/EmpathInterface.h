@@ -6,15 +6,10 @@
 #include <qcstring.h>
 #include <qstring.h>
 #include <qstringlist.h>
-#include <qdict.h>
 
 class EmpathInterface : virtual public DCOPObject
 {
     K_DCOP
-
-    public:
-        
-        EmpathInterface();
 
     k_dcop:
 
@@ -43,10 +38,6 @@ class EmpathInterface : virtual public DCOPObject
         virtual unsigned int remove(QString urlFolder, QStringList idList) = 0;
         virtual unsigned int mark(QString urlID, int status) = 0;
         virtual unsigned int mark(QString urlFolder, QStringList idList, int status) = 0;
-
-    private:
-
-        QDict<int> fnDict_;
 };
 
 #endif // Included this file.

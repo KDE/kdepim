@@ -26,20 +26,20 @@
 #include <qstring.h>
 #include <qstringlist.h>
 
-#include "RMM_Message.h"
+#include "rmm/Message.h"
 
 class EmpathCachedMessage
 {
     public:
 
-        EmpathCachedMessage(RMM::RMessage & m)
+        EmpathCachedMessage(RMM::Message & m)
             :   message_(m)
         { ref(); }
 
         ~EmpathCachedMessage()
         { /* Empty. */ }
 
-        RMM::RMessage message()
+        RMM::Message message()
         { deref(); return message_; }
 
         unsigned int refCount() const
@@ -55,7 +55,7 @@ class EmpathCachedMessage
 
     private:
 
-        RMM::RMessage message_;
+        RMM::Message message_;
         unsigned int refCount_;
 };
 

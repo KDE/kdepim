@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathTaskTimer.h"
-#endif
 
 #ifndef EMPATH_TASK_TIMER_H
 #define EMPATH_TASK_TIMER_H

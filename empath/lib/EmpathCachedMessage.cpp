@@ -23,7 +23,7 @@
 #include "EmpathDefines.h"
 #include "EmpathCachedMessage.h"
 
-EmpathCachedMessage::EmpathCachedMessage(RMM::RMessage & m)
+EmpathCachedMessage::EmpathCachedMessage(RMM::Message & m)
     :   message_(m)
 {
     ref();
@@ -33,7 +33,7 @@ EmpathCachedMessage::~EmpathCachedMessage()
 {
 }
 
-    RMM::RMessage
+    RMM::Message
 EmpathCachedMessage::message()
 {
     deref();

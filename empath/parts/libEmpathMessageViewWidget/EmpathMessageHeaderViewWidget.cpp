@@ -32,8 +32,8 @@
 // Local includes
 #include "EmpathMessageHeaderViewWidget.h"
 
-#include <RMM_Header.h>
-#include <RMM_DateTime.h>
+#include <rmm/Header.h>
+#include <rmm/DateTime.h>
 
 EmpathMessageHeaderViewWidget::EmpathMessageHeaderViewWidget(QWidget * parent)
     :   QWidget(parent, "EmpathMessageHeaderViewWidget")
@@ -48,7 +48,7 @@ EmpathMessageHeaderViewWidget::~EmpathMessageHeaderViewWidget()
 }
 
     void
-EmpathMessageHeaderViewWidget::useEnvelope(RMM::REnvelope & e)
+EmpathMessageHeaderViewWidget::useEnvelope(RMM::Envelope & e)
 {
     QVBoxLayout * layout_ = new QVBoxLayout(this);
     layout_->setAutoAdd(true);
@@ -75,14 +75,14 @@ EmpathMessageHeaderViewWidget::useEnvelope(RMM::REnvelope & e)
         QCString s = it.current();
         s = s.stripWhiteSpace();
     
-        RMM::RHeader h(e.get(s));
+        RMM::Header h(e.get(s));
 
         QString displayText = QString::fromUtf8(h.headerName()) + ": ";
     
-        if (RMM::headerTypesTable[h.headerType()] == RMM::DateTime) {
+        if (RMM::headerTypesTable[h.headerType()] == RMM::ClassDateTime) {
 
-            RMM::RDateTime * date =
-                static_cast<RMM::RDateTime *>(h.headerBody());
+            RMM::DateTime * date =
+                static_cast<RMM::DateTime *>(h.headerBody());
 
             displayText +=
                 KGlobal::locale()->formatDateTime(date->qdt()).ascii();

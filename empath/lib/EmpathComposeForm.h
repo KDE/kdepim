@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathComposeForm.h"
-#endif
 
 #ifndef EMPATHCOMPOSEFORM_H
 #define EMPATHCOMPOSEFORM_H

@@ -31,6 +31,7 @@
 #include "EmpathIndexRecord.h"
 #include "EmpathDefines.h"
 #include "EmpathJob.h"
+#include "rmm/Message.h"
 
 class EmpathJobScheduler : public QObject
 {
@@ -43,7 +44,7 @@ class EmpathJobScheduler : public QObject
         virtual ~EmpathJobScheduler();
 
         EmpathJobID newWriteJob(
-            RMM::RMessage &,
+            RMM::Message &,
             const EmpathURL &,
             QObject *,
             const char *

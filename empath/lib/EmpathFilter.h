@@ -20,9 +20,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifdef __GNUG__
-# pragma interface "EmpathFilter.h"
-#endif
 
 #ifndef EMPATHFILTER_H
 #define EMPATHFILTER_H
@@ -32,7 +29,6 @@
 #include <qlist.h>
 
 // Local includes
-#include "RMM_MessageID.h"
 #include "EmpathMatcher.h"
 #include "EmpathFilterEventHandler.h"
 
@@ -92,7 +88,7 @@ class EmpathFilter : public QObject
         QString name() { return name_; }
         
         /**
-         * Perform filtering on the given URL (pointing to an RMM::RMessage).
+         * Perform filtering on the given URL (pointing to an RMM::Message).
          */
         void filter(const EmpathURL & source);
 
