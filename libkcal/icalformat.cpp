@@ -113,9 +113,10 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
                   i18n( "Error saving to '%1'." ).arg( fileName ) ) );
     return false;
   }
-  QTextStream* ts = file.textStream();
-  ts->setEncoding( QTextStream::UnicodeUTF8 );
-  (*ts) << text;
+
+  // Convert to UTF8 and save
+  QCString textUtf8 = text.utf8();
+  file.file()->writeBlock( textUtf8.data(), textUtf8.size() - 1 );
 
   if ( !file.close() ) {
     setException(new ErrorFormat(ErrorFormat::SaveError,
