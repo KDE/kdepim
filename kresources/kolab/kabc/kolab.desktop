@@ -1,0 +1,20 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Addressbook on IMAP server via KMail
+Name[bg]=Адресник на сървър IMAP чрез KMail
+Name[da]=Adressebog på IMAP-server via KMail
+Name[es]=Libreta de direcciones en servidor IMAP por medio de KMail
+Name[nl]=Adresboek op IMAP-server via KMail
+Name[pt]=Livro de endereços em servidor IMAP via KMail
+Name[pt_BR]=Livro de endereços em servidor IMAP via KMail
+Name[ru]=Адресная книга на сервере IMAP через KMail
+Name[sr]=Адресар на IMAP серверу преко KMail-а
+Name[sr@Latn]=Адресар на IMAP серверу преко KMail-а
+Name[sv]=Adressbok på IMAP-server via Kmail
+Name[tr]=KMail aracılığı ile IMAP sunucusundaki adres defteri
+Name[uk]=Адресна книга на сервері IMAP через KMail
+X-KDE-Library=kabc_kolab
+Type=Service
+ServiceTypes=KResources/Plugin
+X-KDE-ResourceFamily=contact
+X-KDE-ResourceType=imap
