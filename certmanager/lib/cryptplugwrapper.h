@@ -55,6 +55,7 @@
 
 
 class KConfigBase;
+class QGpgMECryptoConfig;
 
 namespace GpgME {
   class ImportResult;
@@ -467,7 +468,7 @@ public:
         InitStatus_LoadError     = 0x1000,
         InitStatus_InitError     = 0x2000
     } InitStatus;
-    
+
     /*! \ingroup groupSignAct
         \brief Flags used to compose the SigStatusFlags value.
 
@@ -511,12 +512,12 @@ public:
     };
     typedef unsigned long SigStatusFlags;
 
-    
+
     enum {
         CertStatus_EXPIRES_NEVER = CRYPTPLUG_CERT_DOES_NEVER_EXPIRE
     };
 
-        
+
     /*! \ingroup groupAdmin
         \brief Constructor of CRYPTPLUG wrapper class.
 
@@ -641,14 +642,14 @@ public:
     */
     void setDisplayName( const QString& name );
 
-    
+
     /*! \ingroup groupAdmin
       \brief Returns the external name.
       \return the external name used for display purposes
     */
     QString displayName() const;
 
-    
+
     /*! \ingroup groupAdmin
         \brief Returns the version string of the CRYPTPLUG library
          specified in the constructor.
@@ -657,7 +658,7 @@ public:
         specified in the constructor
     */
     QString libVersion() const;
-    
+
     /*! \ingroup groupAdmin
       \brief Returns the update URL.
       \return the update URL
@@ -668,7 +669,7 @@ public:
       \brief Specifies the update URL.
     */
     void setUpdateURL( const QString& url );
-    
+
     /*! \ingroup groupGeneral
     \brief This function does two things: (a) load the lib and (b) set up all internal structures.
 
@@ -912,7 +913,7 @@ public:
     /*! \ingroup groupConfigSign
       \brief Returns the number of days that are left until the
       specified certificate expires.
-   
+
       Negative values show how many days ago the certificate DID expire,
       a zero value means the certificate expires today,
       special value CertStatus_EXPIRES_NEVER means there is
@@ -952,7 +953,7 @@ public:
     /*! \ingroup groupConfigSign
       \brief Returns the number of days that are left until the
       CA certificate of the specified certificate expires.
-   
+
       Negative values show how many days ago the certificate DID expire,
       a zero value means the certificate expires today,
       special value CertStatus_EXPIRES_NEVER means there is
@@ -991,7 +992,7 @@ public:
     /*! \ingroup groupConfigSign
       \brief Returns the number of days that are left until the
       root certificate of the specified certificate expires.
-   
+
       Negative values show how many days ago the certificate DID expire,
       a zero value means the certificate expires today,
       special value CertStatus_EXPIRES_NEVER means there is
@@ -1121,7 +1122,7 @@ public:
     /*! \ingroup groupConfigCrypt
       \brief Returns the number of days until the specified receiver
       certificate expires.
-   
+
       Negative values show how many days ago the certificate DID expire,
       a zero value means the certificate expires today,
       special value CertStatus_EXPIRES_NEVER means there is
@@ -1157,7 +1158,7 @@ public:
     /*! \ingroup groupConfigCrypt
       \brief Returns the number of days until the first certificate in
       the chain of the receiver certificate expires.
-   
+
       Negative values show how many days ago the certificate DID expire,
       a zero value means the certificate expires today,
       special value CertStatus_EXPIRES_NEVER means there is
@@ -1505,10 +1506,10 @@ public:
       QString serial;
       QString fingerprint;
 
-      QString issuer_org;      
+      QString issuer_org;
       QString issuer_reord;
       QString chainid;
-      
+
       QDateTime created;
       QDateTime expire;
 
@@ -1520,10 +1521,10 @@ public:
       bool sign     : 1;
       bool encrypt  : 1;
       bool certify  : 1;
-      
+
       QValueList< QPair<QString,QString> > dn;
     };
-    
+
     typedef QValueList<CryptPlugWrapper::CertificateInfo> CertificateInfoList;
 
     CertificateInfoList listKeys(const QString& pattern = QString::null,
@@ -1531,6 +1532,7 @@ public:
                                  bool *truncated = 0 );
 #endif // LIBKLEOPATRA_NO_COMPAT
 
+    Kleo::CryptoConfig * config() const;
     Kleo::KeyListJob * keyListJob( bool remote=false, bool includeSigs=false, bool validate=true ) const;
     Kleo::EncryptJob * encryptJob( bool armor=false, bool textmode=false ) const;
     Kleo::DecryptJob * decryptJob() const;
@@ -1565,7 +1567,8 @@ private:
     // local parameters without representation in cryptplug.h
     bool mAlwaysEncryptToSelf;
     class Config;
-    Config * config;
+    Config * _config;
+    QGpgMECryptoConfig * _cryptoConfig;
 };
 
 #endif // cryptplugwrapper_h

@@ -19,6 +19,7 @@ libkleopatra_backend_qgpgme_la_SOURCES = \
 			qgpgmeverifydetachedjob.cpp \
 			qgpgmeverifyopaquejob.cpp \
 			qgpgmesignencryptjob.cpp \
-			qgpgmedecryptverifyjob.cpp
+			qgpgmedecryptverifyjob.cpp \
+			qgpgmecryptoconfig.cpp
 
 METASOURCES = AUTO

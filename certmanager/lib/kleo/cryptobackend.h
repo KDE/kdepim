@@ -34,6 +34,7 @@
 #define __KLEO_CRYPTOBACKEND_H__
 
 namespace Kleo {
+  class CryptoConfig;
   class KeyListJob;
   class KeyGenerationJob;
   class ImportJob;
@@ -58,6 +59,7 @@ namespace Kleo {
     virtual ~CryptoBackend() {}
 
     virtual QString protocol() const = 0;
+    virtual CryptoConfig      * config() const = 0;
 
     virtual KeyListJob        * keyListJob( bool remote=false, bool includeSigs=false, bool validate=false ) const = 0;
     virtual EncryptJob        * encryptJob( bool armor=false, bool textmode=false ) const = 0;

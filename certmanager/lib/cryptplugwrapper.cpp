@@ -47,6 +47,7 @@
 #include <backends/qgpgme/qgpgmedeletejob.h>
 #include <backends/qgpgme/qgpgmesignencryptjob.h>
 #include <backends/qgpgme/qgpgmedecryptverifyjob.h>
+#include <backends/qgpgme/qgpgmecryptoconfig.h>
 
 // qgpgme
 #include <qgpgme/dataprovider.h>
@@ -415,42 +416,42 @@ const char* CryptPlugWrapper::bugURL(){ return "http://www.gnupg.org/aegypten/";
 
 void CryptPlugWrapper::setSignatureAlgorithm( SignatureAlgorithm sigAlg )
 {
-  config->signatureAlgorithm = sigAlg;
+  _config->signatureAlgorithm = sigAlg;
 }
 
 SignatureAlgorithm CryptPlugWrapper::signatureAlgorithm()
 {
-  return config->signatureAlgorithm;
+  return _config->signatureAlgorithm;
 }
 
 void CryptPlugWrapper::setSignatureCompoundMode( SignatureCompoundMode signComp )
 {
-  config->signatureCompoundMode = signComp;
+  _config->signatureCompoundMode = signComp;
 }
 
 SignatureCompoundMode CryptPlugWrapper::signatureCompoundMode()
 {
-  return config->signatureCompoundMode;
+  return _config->signatureCompoundMode;
 }
 
 void CryptPlugWrapper::setSendCertificates( SendCertificates sendCert )
 {
-  config->sendCertificates = sendCert;
+  _config->sendCertificates = sendCert;
 }
 
 SendCertificates CryptPlugWrapper::sendCertificates()
 {
-  return config->sendCertificates;
+  return _config->sendCertificates;
 }
 
 void CryptPlugWrapper::setSignEmail( SignEmail signMail )
 {
-  config->signEmail = signMail;
+  _config->signEmail = signMail;
 }
 
 SignEmail CryptPlugWrapper::signEmail()
 {
-  return config->signEmail;
+  return _config->signEmail;
 }
 
 
@@ -459,12 +460,12 @@ SignEmail CryptPlugWrapper::signEmail()
 
 void CryptPlugWrapper::setWarnSendUnsigned( bool flag )
 {
-  config->warnSendUnsigned = flag;
+  _config->warnSendUnsigned = flag;
 }
 
 bool CryptPlugWrapper::warnSendUnsigned()
 {
-  return config->warnSendUnsigned;
+  return _config->warnSendUnsigned;
 }
 
 
@@ -474,28 +475,28 @@ bool CryptPlugWrapper::warnSendUnsigned()
 
 void CryptPlugWrapper::setSaveSentSignatures( bool flag )
 {
-  config->saveSentSignatures = flag;
+  _config->saveSentSignatures = flag;
 }
 
 bool CryptPlugWrapper::saveSentSignatures()
 {
-  return config->saveSentSignatures;
+  return _config->saveSentSignatures;
 }
 
 void CryptPlugWrapper::setWarnNoCertificate( bool flag )
 {
-  config->warnNoCertificate = flag;
+  _config->warnNoCertificate = flag;
 }
 
 bool CryptPlugWrapper::warnNoCertificate()
 {
-  return config->warnNoCertificate;
+  return _config->warnNoCertificate;
 }
 
 
 void CryptPlugWrapper::setNumPINRequests( PinRequests reqMode )
 {
-  config->numPINRequests = reqMode;
+  _config->numPINRequests = reqMode;
 
   /* PENDING(g10) Put this value into gpg and make it ask for the pin
      according to this. Note that there is also
@@ -506,47 +507,47 @@ void CryptPlugWrapper::setNumPINRequests( PinRequests reqMode )
 
 PinRequests CryptPlugWrapper::numPINRequests()
 {
-  return config->numPINRequests;
+  return _config->numPINRequests;
 }
 
 
 
 void CryptPlugWrapper::setNumPINRequestsInterval( int interval )
 {
-  config->numPINRequestsInterval = interval;
+  _config->numPINRequestsInterval = interval;
 
   /* PENDING(g10) Put this value into gpg and make it ask for the pin
      according to this. Note that this should only be used if
-     config->numPINRequests (set with setNumPINRequests()) has the
+     _config->numPINRequests (set with setNumPINRequests()) has the
      value PinRequest_AfterMinutes.
   */
 }
 
 int CryptPlugWrapper::numPINRequestsInterval()
 {
-  return config->numPINRequestsInterval;
+  return _config->numPINRequestsInterval;
 }
 
 
 
 void CryptPlugWrapper::setCheckSignatureCertificatePathToRoot( bool flag )
 {
-  config->checkSignatureCertificatePathToRoot = flag;
+  _config->checkSignatureCertificatePathToRoot = flag;
 }
 
 bool CryptPlugWrapper::checkSignatureCertificatePathToRoot()
 {
-  return config->checkSignatureCertificatePathToRoot;
+  return _config->checkSignatureCertificatePathToRoot;
 }
 
 void CryptPlugWrapper::setSignatureUseCRLs( bool flag )
 {
-  config->signatureUseCRLs = flag;
+  _config->signatureUseCRLs = flag;
 }
 
 bool CryptPlugWrapper::signatureUseCRLs()
 {
-  return config->signatureUseCRLs;
+  return _config->signatureUseCRLs;
 }
 
 
@@ -556,62 +557,62 @@ bool CryptPlugWrapper::signatureUseCRLs()
 
 void CryptPlugWrapper::setSignatureCertificateExpiryNearWarning( bool flag )
 {
-  config->signatureCertificateExpiryNearWarning = flag;
+  _config->signatureCertificateExpiryNearWarning = flag;
 }
 
 bool CryptPlugWrapper::signatureCertificateExpiryNearWarning( void )
 {
-  return config->signatureCertificateExpiryNearWarning;
+  return _config->signatureCertificateExpiryNearWarning;
 }
 
 void CryptPlugWrapper::setSignatureCertificateExpiryNearInterval( int interval )
 {
-  config->signatureCertificateExpiryNearInterval = interval;
+  _config->signatureCertificateExpiryNearInterval = interval;
 }
 
 int CryptPlugWrapper::signatureCertificateExpiryNearInterval( void )
 {
-  return config->signatureCertificateExpiryNearInterval;
+  return _config->signatureCertificateExpiryNearInterval;
 }
 
 void CryptPlugWrapper::setCACertificateExpiryNearWarning( bool flag )
 {
-  config->cACertificateExpiryNearWarning = flag;
+  _config->cACertificateExpiryNearWarning = flag;
 }
 
 bool CryptPlugWrapper::caCertificateExpiryNearWarning( void )
 {
-  return config->cACertificateExpiryNearWarning;
+  return _config->cACertificateExpiryNearWarning;
 }
 
 void CryptPlugWrapper::setCACertificateExpiryNearInterval( int interval )
 {
-  config->cACertificateExpiryNearInterval = interval;
+  _config->cACertificateExpiryNearInterval = interval;
 }
 
 int CryptPlugWrapper::caCertificateExpiryNearInterval( void )
 {
-  return config->cACertificateExpiryNearInterval;
+  return _config->cACertificateExpiryNearInterval;
 }
 
 void CryptPlugWrapper::setRootCertificateExpiryNearWarning( bool flag )
 {
-  config->rootCertificateExpiryNearWarning = flag;
+  _config->rootCertificateExpiryNearWarning = flag;
 }
 
 bool CryptPlugWrapper::rootCertificateExpiryNearWarning( void )
 {
-  return config->rootCertificateExpiryNearWarning;
+  return _config->rootCertificateExpiryNearWarning;
 }
 
 void CryptPlugWrapper::setRootCertificateExpiryNearInterval( int interval )
 {
-  config->rootCertificateExpiryNearInterval = interval;
+  _config->rootCertificateExpiryNearInterval = interval;
 }
 
 int CryptPlugWrapper::rootCertificateExpiryNearInterval( void )
 {
-  return config->rootCertificateExpiryNearInterval;
+  return _config->rootCertificateExpiryNearInterval;
 }
 
 
@@ -620,22 +621,22 @@ int CryptPlugWrapper::rootCertificateExpiryNearInterval( void )
 
 void CryptPlugWrapper::setEncryptionAlgorithm( EncryptionAlgorithm cryptAlg )
 {
-  config->encryptionAlgorithm = cryptAlg;
+  _config->encryptionAlgorithm = cryptAlg;
 }
 
 EncryptionAlgorithm CryptPlugWrapper::encryptionAlgorithm()
 {
-  return config->encryptionAlgorithm;
+  return _config->encryptionAlgorithm;
 }
 
 void CryptPlugWrapper::setEncryptEmail( EncryptEmail cryptMode )
 {
-  config->encryptEmail = cryptMode;
+  _config->encryptEmail = cryptMode;
 }
 
 EncryptEmail CryptPlugWrapper::encryptEmail()
 {
-  return config->encryptEmail;
+  return _config->encryptEmail;
 }
 
 
@@ -645,12 +646,12 @@ EncryptEmail CryptPlugWrapper::encryptEmail()
 
 void CryptPlugWrapper::setWarnSendUnencrypted( bool flag )
 {
-  config->warnSendUnencrypted = flag;
+  _config->warnSendUnencrypted = flag;
 }
 
 bool CryptPlugWrapper::warnSendUnencrypted()
 {
-  return config->warnSendUnencrypted;
+  return _config->warnSendUnencrypted;
 }
 
 
@@ -663,12 +664,12 @@ bool CryptPlugWrapper::warnSendUnencrypted()
 
 void CryptPlugWrapper::setSaveMessagesEncrypted( bool flag )
 {
-  config->saveMessagesEncrypted = flag;
+  _config->saveMessagesEncrypted = flag;
 }
 
 bool CryptPlugWrapper::saveMessagesEncrypted()
 {
-  return config->saveMessagesEncrypted;
+  return _config->saveMessagesEncrypted;
 }
 
 
@@ -679,12 +680,12 @@ bool CryptPlugWrapper::saveMessagesEncrypted()
 
 void CryptPlugWrapper::setCheckCertificatePath( bool flag )
 {
-  config->checkCertificatePath = flag;
+  _config->checkCertificatePath = flag;
 }
 
 bool CryptPlugWrapper::checkCertificatePath()
 {
-  return config->checkCertificatePath;
+  return _config->checkCertificatePath;
 }
 
 
@@ -696,12 +697,12 @@ bool CryptPlugWrapper::checkCertificatePath()
 
 void CryptPlugWrapper::setCheckEncryptionCertificatePathToRoot( bool flag )
 {
-  config->checkEncryptionCertificatePathToRoot = flag;
+  _config->checkEncryptionCertificatePathToRoot = flag;
 }
 
 bool CryptPlugWrapper::checkEncryptionCertificatePathToRoot()
 {
-  return config->checkEncryptionCertificatePathToRoot;
+  return _config->checkEncryptionCertificatePathToRoot;
 }
 
 
@@ -712,54 +713,54 @@ bool CryptPlugWrapper::checkEncryptionCertificatePathToRoot()
 
 void CryptPlugWrapper::setReceiverCertificateExpiryNearWarning( bool flag )
 {
-  config->receiverCertificateExpiryNearWarning = flag;
+  _config->receiverCertificateExpiryNearWarning = flag;
 }
 
 bool CryptPlugWrapper::receiverCertificateExpiryNearWarning()
 {
-  return config->receiverCertificateExpiryNearWarning;
+  return _config->receiverCertificateExpiryNearWarning;
 }
 
 
 void CryptPlugWrapper::setReceiverCertificateExpiryNearWarningInterval( int interval )
 {
-  config->receiverCertificateExpiryNearWarningInterval = interval;
+  _config->receiverCertificateExpiryNearWarningInterval = interval;
 }
 
 int CryptPlugWrapper::receiverCertificateExpiryNearWarningInterval()
 {
-  return config->receiverCertificateExpiryNearWarningInterval;
+  return _config->receiverCertificateExpiryNearWarningInterval;
 }
 
 void CryptPlugWrapper::setCertificateInChainExpiryNearWarning( bool flag )
 {
-  config->certificateInChainExpiryNearWarning = flag;
+  _config->certificateInChainExpiryNearWarning = flag;
 }
 
 bool CryptPlugWrapper::certificateInChainExpiryNearWarning()
 {
-  return config->certificateInChainExpiryNearWarning;
+  return _config->certificateInChainExpiryNearWarning;
 }
 
 
 void CryptPlugWrapper::setCertificateInChainExpiryNearWarningInterval( int interval )
 {
-  config->certificateInChainExpiryNearWarningInterval = interval;
+  _config->certificateInChainExpiryNearWarningInterval = interval;
 }
 
 int CryptPlugWrapper::certificateInChainExpiryNearWarningInterval()
 {
-  return config->certificateInChainExpiryNearWarningInterval;
+  return _config->certificateInChainExpiryNearWarningInterval;
 }
 
 void CryptPlugWrapper::setReceiverEmailAddressNotInCertificateWarning( bool flag )
 {
-  config->receiverEmailAddressNotInCertificateWarning = flag;
+  _config->receiverEmailAddressNotInCertificateWarning = flag;
 }
 
 bool CryptPlugWrapper::receiverEmailAddressNotInCertificateWarning()
 {
-  return config->receiverEmailAddressNotInCertificateWarning;
+  return _config->receiverEmailAddressNotInCertificateWarning;
 }
 
 
@@ -771,7 +772,7 @@ bool CryptPlugWrapper::receiverEmailAddressNotInCertificateWarning()
 
 void CryptPlugWrapper::setEncryptionUseCRLs( bool flag )
 {
-  config->encryptionUseCRLs = flag;
+  _config->encryptionUseCRLs = flag;
 
   /* PENDING(g10) Store this setting in gpgme and use it. If true,
      every certificate used for encryption should be checked against
@@ -781,7 +782,7 @@ void CryptPlugWrapper::setEncryptionUseCRLs( bool flag )
 
 bool CryptPlugWrapper::encryptionUseCRLs()
 {
-  return config->encryptionUseCRLs;
+  return _config->encryptionUseCRLs;
 }
 
 
@@ -792,50 +793,50 @@ int CryptPlugWrapper::encryptionCRLsDaysLeftToExpiry()
 
 void CryptPlugWrapper::setEncryptionCRLExpiryNearWarning( bool flag )
 {
-  config->encryptionCRLExpiryNearWarning = flag;
+  _config->encryptionCRLExpiryNearWarning = flag;
 }
 
 bool CryptPlugWrapper::encryptionCRLExpiryNearWarning()
 {
-  return config->encryptionCRLExpiryNearWarning;
+  return _config->encryptionCRLExpiryNearWarning;
 }
 
 void CryptPlugWrapper::setEncryptionCRLNearExpiryInterval( int interval )
 {
-  config->encryptionCRLNearExpiryInterval = interval;
+  _config->encryptionCRLNearExpiryInterval = interval;
 }
 
 int CryptPlugWrapper::encryptionCRLNearExpiryInterval()
 {
-  return config->encryptionCRLNearExpiryInterval;
+  return _config->encryptionCRLNearExpiryInterval;
 }
 
 
 void CryptPlugWrapper::setCertificateSource( CertificateSource source )
 {
-  config->certificateSource = source;
+  _config->certificateSource = source;
 }
 
 CertificateSource CryptPlugWrapper::certificateSource()
 {
-  return config->certificateSource;
+  return _config->certificateSource;
 }
 
 void CryptPlugWrapper::setCRLSource( CertificateSource source )
 {
-  config->cRLSource = source;
+  _config->cRLSource = source;
 }
 
 CertificateSource CryptPlugWrapper::crlSource()
 {
-  return config->cRLSource;
+  return _config->cRLSource;
 }
 
 
 
 
 QString CryptPlugWrapper::libVersion() const {
-  return config && config->libVersion ? QString::fromUtf8( config->libVersion ) : QString::null ;
+  return _config && _config->libVersion ? QString::fromUtf8( _config->libVersion ) : QString::null ;
 }
 
 /* Some multi purpose functions ******************************************/
@@ -955,7 +956,8 @@ CryptPlugWrapper::CryptPlugWrapper( const QString& name,
     _active(  active  ),
     _initStatus( InitStatus_undef ),
     _cp( 0 ),
-    config( 0 )
+    _config( 0 ),
+    _cryptoConfig( 0 )
 {
 }
 
@@ -1052,13 +1054,13 @@ bool CryptPlugWrapper::initialize( InitStatus* initStatus, QString* errorMsg )
     } else {
       if ( _libName.contains( "smime" ) ) {
 	_cp = new SMIMECryptPlug();
-	config = new Config( GPGME_PROTOCOL_CMS );
+	_config = new Config( GPGME_PROTOCOL_CMS );
       } else if ( _libName.contains( "openpgp" ) ) {
 	_cp = new OpenPGPCryptPlug();
-	config = new Config( GPGME_PROTOCOL_OpenPGP );
+	_config = new Config( GPGME_PROTOCOL_OpenPGP );
       } else {
 	_cp = 0;
-	config = 0;
+	_config = 0;
       }
 
       if ( !_cp ) {
@@ -1073,7 +1075,7 @@ bool CryptPlugWrapper::initialize( InitStatus* initStatus, QString* errorMsg )
 	  if ( errorMsg )
 	    *errorMsg = _lastError;
 	  delete _cp; _cp = 0;
-	  delete config; config = 0;
+	  delete _config; _config = 0;
 	} else {
 	  _initStatus  = InitStatus_Ok;
 	}
@@ -1089,7 +1091,8 @@ bool CryptPlugWrapper::initialize( InitStatus* initStatus, QString* errorMsg )
 void CryptPlugWrapper::deinitialize()
 {
     delete _cp; _cp = 0;
-    delete config; config = 0;
+    delete _config; _config = 0;
+    delete _cryptoConfig; _cryptoConfig = 0;
 }
 
 
@@ -1159,7 +1162,7 @@ bool CryptPlugWrapper::signMessage( const char* cleartext,
 {
   return _cp && _cp->signMessage( cleartext, ciphertext, cipherLen, certificate,
 				  &structuring.data, errId, errTxt,
-				  config->sendCertificates, config->signatureCompoundMode );
+				  _config->sendCertificates, _config->signatureCompoundMode );
 }
 
 
@@ -1377,6 +1380,12 @@ GpgME::ImportResult CryptPlugWrapper::importCertificate( const char* data, size_
 
 
    return _cp->importCertificateFromMem( data, length );
+}
+
+Kleo::CryptoConfig * CryptPlugWrapper::config() const {
+    if ( !_cryptoConfig )
+        const_cast<CryptPlugWrapper*>( this )->_cryptoConfig = new QGpgMECryptoConfig;
+    return _cryptoConfig;
 }
 
 Kleo::KeyListJob * CryptPlugWrapper::keyListJob( bool remote, bool includeSigs, bool validate ) const {

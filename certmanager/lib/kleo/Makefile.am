@@ -13,7 +13,7 @@ libkleopatra_core_la_SOURCES = \
 kleodir = $(includedir)/kleo
 kleo_HEADERS = \
 	cryptobackend.h \
-	\
+	cryptoconfig.h \
 	dn.h \
 	job.h \
 	keylistjob.h keygenerationjob.h importjob.h exportjob.h downloadjob.h deletejob.h \
