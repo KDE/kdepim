@@ -268,43 +268,8 @@ EmpathComposeWindow::s_fileSendLater()
 EmpathComposeWindow::s_fileSaveAs()
 {
     empathDebug("s_fileSaveAs called");
-
-    RMM::RMessage message(composeWidget_->message());
-    
-    QString saveFilePath =
-        KFileDialog::getSaveFileName(
-            QString::null, QString::null, this,
-            i18n("Empath: Save Message").ascii());
-
-    empathDebug(saveFilePath);
-    
-    if (saveFilePath.isEmpty()) {
-        empathDebug("No filename given");
-        return;
-    }
-    
-    QFile f(saveFilePath);
-    if (!f.open(IO_WriteOnly)) {
-        // Warn user file cannot be opened.
-        empathDebug("Couldn't open file for writing");
-        QMessageBox::information(this, "Empath",
-            i18n("Sorry I can't write to that file. "
-                "Please try another filename."),
-            i18n("OK"));
-
-        return;
-    }
-
-    empathDebug("Opened " + saveFilePath + " OK");
-    
-    QDataStream d(&f);
-    
-    QCString s = message.asString();
-    
-    d.writeRawBytes(s, s.length());
-
-    f.close();
-    
+    // FIXME: We need a URL to the message !
+    empath->saveMessage(EmpathURL());
 }
 
     void

@@ -186,12 +186,13 @@ EmpathMailboxPOP3::path()
 }
     
     void
-EmpathMailboxPOP3::_retrieve(const EmpathURL & from, const EmpathURL & to, QString, QString xinfo)
+EmpathMailboxPOP3::_retrieve(const EmpathURL &, const EmpathURL &, QString, QString)
 {
+    // STUB
 }
 
     void
-EmpathMailboxPOP3::_retrieve(const EmpathURL & url, QString xinfo)
+EmpathMailboxPOP3::_retrieve(const EmpathURL & url, QString)
 {
     QString inID = url.messageID();
     

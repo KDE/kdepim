@@ -105,69 +105,29 @@ EmpathFilterEventHandler::setForward(const QString & address)
 EmpathFilterEventHandler::handleMessage(const EmpathURL & id)
 {
     empathDebug("handleMessage() called");
+
     EmpathFolder * folder = empath->folder(id);
     if (folder == 0) return;
     
     switch (actionType_) {
 
         case MoveFolder:
-            {
-                EmpathFolder * mcf = empath->folder(moveCopyFolder_);
-                if (mcf == 0) {
-                    empathDebug("Folder we'd be moving to is 0");
-                    return;
-                }
-
-                empathDebug("Moving message " + QString(id.asString()) +
-                    " to " + moveCopyFolder_.withoutMessageID().asString());
-
-                RMM::RMessage * r = empath->message(id);
-                if (r == 0) return;
-                
-                RMM::RMessage message(*r);
-                
-#warning ASYNC FIX NEEDED
-                // FIXME for async if (!mcf->writeMessage(message)) return;
-                
-                empath->remove(id);
-            }
-            
+            empath->move(id, moveCopyFolder_);
             break;
             
         case CopyFolder:
-            {
-                EmpathFolder * mcf = empath->folder(moveCopyFolder_);
-                if (mcf == 0) {
-                    empathDebug("Folder we'd be copying to is 0");
-                    return;
-                }
-
-                empathDebug("Copying message " + QString(id.asString()) +
-                    " to " + mcf->url().asString());
-
-                RMM::RMessage * r = empath->message(id);
-                if (r == 0) return;
-                
-                RMM::RMessage message(*r);
-                
-#warning ASYNC FIX NEEDED
-//                mcf->writeMessage(message);
-            }
-        
+            empath->copy(id, moveCopyFolder_);
             break;
 
         case Forward:
-            empathDebug("Forwarding message " + QString(id.asString()));
             empath->s_forward(id);
             break;
             
         case Delete:
-            empathDebug("Deleting message " + QString(id.asString()));
             empath->remove(id);
             break;
     
         case Ignore:
-            empathDebug("Ignoring message " + id.asString());
             break;
             
         default:

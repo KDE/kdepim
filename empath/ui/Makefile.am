@@ -55,7 +55,6 @@ EmpathSendingSettingsDialog.cpp \
 EmpathServerTypeDialog.cpp \
 EmpathSubjectSpecWidget.cpp \
 EmpathTaskWidget.cpp \
-EmpathTipOfTheDay.cpp \
 EmpathUI.cpp \
 EmpathUIUtils.cpp \
 RikGroupBox.cpp

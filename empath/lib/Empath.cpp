@@ -397,7 +397,7 @@ Empath::s_retrieveComplete(
     bool status,
     const EmpathURL & from,
     const EmpathURL & to,
-    QString ixinfo,
+    QString /* ixinfo */,
     QString xinfo)
 {
     emit(retrieveComplete(status, from, to, xinfo));
@@ -482,6 +482,72 @@ Empath::s_removeFolderComplete(
     QString xinfo)
 {
     emit(removeFolderComplete(status, url, xinfo));
+}
+
+    void
+Empath::saveMessage(const EmpathURL & url)
+{
+#if 0
+    QString saveFilePath =
+        KFileDialog::getSaveFileName(
+            QString::null, QString::null, this,
+            i18n("Empath: Save Message").ascii());
+    empathDebug(saveFilePath);
+    
+    if (saveFilePath.isEmpty()) {
+        empathDebug("No filename given");
+        return;
+    }
+    
+    QFile f(saveFilePath);
+    if (!f.open(IO_WriteOnly)) {
+        // Warn user file cannot be opened.
+        empathDebug("Couldn't open file for writing");
+        QMessageBox::information(this, "Empath",
+            i18n("Sorry I can't write to that file. "
+                "Please try another filename."), i18n("OK"));
+        return;
+    }
+    empathDebug("Opened " + saveFilePath + " OK");
+    
+    // FIXME: Here we should ask for the message, wait for the signal,
+    // then do the actual writing.
+    
+    QCString s =
+        message->asString();
+    
+    unsigned int blockSize = 1024; // 1k blocks
+    
+    unsigned int fileLength = s.length();
+
+    for (unsigned int i = 0 ; i < s.length() ; i += blockSize) {
+        
+        QCString outStr;
+        
+        if ((fileLength - i) < blockSize)
+            outStr = QCString(s.right(fileLength - i));
+        else
+            outStr = QCString(s.mid(i, blockSize));
+        
+        if (f.writeBlock(outStr, outStr.length()) != (int)outStr.length()) {
+            // Warn user file not written.
+            QMessageBox::information(this, "Empath",
+                i18n("Sorry I couldn't write the file successfully. "
+                    "Please try another file."), i18n("OK"));
+            delete message; message = 0;
+            return;
+        }
+        qApp->processEvents();
+    }
+
+    f.close();
+    
+    QMessageBox::information(this, "Empath",
+        i18n("Message saved to") + " " + saveFilePath + " " + i18n("OK"),
+        i18n("OK"));
+    delete message; message = 0;
+#endif
+
 }
 
 // vim:ts=4:sw=4:tw=78

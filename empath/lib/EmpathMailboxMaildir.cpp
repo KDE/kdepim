@@ -515,9 +515,10 @@ EmpathMailboxMaildir::_removeFolder(const EmpathURL & url, QString xinfo)
         return;
     }
     
-    bool retval = _recursiveRemove(path_ + url.folderPath());
+    bool retval = _recursiveRemove(path_ + "/" + url.folderPath());
 
     emit (removeFolderComplete(retval, url, xinfo));
+    emit (updateFolderLists());
 }
 
     bool

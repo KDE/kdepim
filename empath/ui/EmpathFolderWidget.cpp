@@ -389,22 +389,6 @@ EmpathFolderWidget::s_newFolder()
     EmpathURL newFolderURL(popupMenuOver->url().asString() + "/" + name + "/");
 
     empath->createFolder(newFolderURL, "");
-
-#warning ASYNC FIX NEEDED
-
-    // FIXME: Check createFolder retval !
-    
-    empathDebug("popupMenuOver == " + popupMenuOver->url().asString());
-    empathDebug("newFolderURL  == " + newFolderURL.asString());
-
-    EmpathFolderListItem * item =
-        new EmpathFolderListItem(popupMenuOver, newFolderURL);
-        
-    QObject::connect(
-        item, SIGNAL(opened()),
-        this, SLOT(s_openChanged()));
-    
-    itemList_.append(item);
 }
 
     void
@@ -414,8 +398,6 @@ EmpathFolderWidget::s_removeFolder()
         popupMenuOver->url().asString() + "\" called");
 
     empath->remove(popupMenuOver->url(), QString::null);
-#warning ASYNC FIX NEEDED
-    // FIXME: Check retval from remove()
 }
 
     void

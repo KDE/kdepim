@@ -138,7 +138,7 @@ EmpathMailSender::_startNextSend()
 }
 
     void
-EmpathMailSender::sendCompleted(const QString & id, bool sentOK)
+EmpathMailSender::sendCompleted(const QString & id, bool)
 {
     sendQueue_.dequeue();
     

@@ -269,7 +269,7 @@ EmpathMessageViewWidget::~EmpathMessageViewWidget()
 }
 
     void
-EmpathMessageViewWidget::resizeEvent(QResizeEvent * e)
+EmpathMessageViewWidget::resizeEvent(QResizeEvent *)
 {
 //    empathDebug("");
 //    s_docChanged();

@@ -365,65 +365,7 @@ EmpathMessageListWidget::s_messageDelete()
 EmpathMessageListWidget::s_messageSaveAs()
 {
     empathDebug("s_messageSaveAs called");
-    QString saveFilePath =
-        KFileDialog::getSaveFileName(
-            QString::null, QString::null, this,
-            i18n("Empath: Save Message").ascii());
-    empathDebug(saveFilePath);
-    
-    if (saveFilePath.isEmpty()) {
-        empathDebug("No filename given");
-        return;
-    }
-    
-    QFile f(saveFilePath);
-    if (!f.open(IO_WriteOnly)) {
-        // Warn user file cannot be opened.
-        empathDebug("Couldn't open file for writing");
-        QMessageBox::information(this, "Empath",
-            i18n("Sorry I can't write to that file. "
-                "Please try another filename."), i18n("OK"));
-        return;
-    }
-    empathDebug("Opened " + saveFilePath + " OK");
-    
-#warning ASYNC FIX NEEDED
-    RMM::RMessage * message(empath->message(firstSelectedMessage()));
-    if (message == 0) return;
-    
-    QCString s =
-        message->asString();
-    
-    unsigned int blockSize = 1024; // 1k blocks
-    
-    unsigned int fileLength = s.length();
-
-    for (unsigned int i = 0 ; i < s.length() ; i += blockSize) {
-        
-        QCString outStr;
-        
-        if ((fileLength - i) < blockSize)
-            outStr = QCString(s.right(fileLength - i));
-        else
-            outStr = QCString(s.mid(i, blockSize));
-        
-        if (f.writeBlock(outStr, outStr.length()) != (int)outStr.length()) {
-            // Warn user file not written.
-            QMessageBox::information(this, "Empath",
-                i18n("Sorry I couldn't write the file successfully. "
-                    "Please try another file."), i18n("OK"));
-            delete message; message = 0;
-            return;
-        }
-        qApp->processEvents();
-    }
-
-    f.close();
-    
-    QMessageBox::information(this, "Empath",
-        i18n("Message saved to") + " " + saveFilePath + " " + i18n("OK"),
-        i18n("OK"));
-    delete message; message = 0;
+    empath->saveMessage(firstSelectedMessage());
 }
 
     void
@@ -945,9 +887,10 @@ EmpathMessageListWidget::contentsMousePressEvent(QMouseEvent * e)
 }
 
     void
-EmpathMessageListWidget::contentsMouseReleaseEvent(QMouseEvent *)
+EmpathMessageListWidget::contentsMouseReleaseEvent(QMouseEvent * e)
 {
     maybeDrag_ = false;
+    QListView::contentsMouseReleaseEvent(e);
 }
 
     void
@@ -955,6 +898,7 @@ EmpathMessageListWidget::contentsMouseMoveEvent(QMouseEvent * e)
 {
     empathDebug("Mouse move event in progress");
     
+    QListView::contentsMouseMoveEvent(e);
     return; // XXX: Still broken.
     
     if (!maybeDrag_) {
@@ -1007,7 +951,7 @@ EmpathMessageListWidget::selectTagged()
 {
     _clearSelection();
 
-    setUpdatesEnabled(false);
+    viewport()->setUpdatesEnabled(false);
     
     wantScreenUpdates_ = false;
 
@@ -1023,7 +967,7 @@ EmpathMessageListWidget::selectTagged()
     }
     
     wantScreenUpdates_ = true;
-    setUpdatesEnabled(true);
+    viewport()->setUpdatesEnabled(true);
     triggerUpdate();
 }
 
@@ -1032,7 +976,7 @@ EmpathMessageListWidget::selectRead()
 {
     _clearSelection();
 
-    setUpdatesEnabled(false);
+    viewport()->setUpdatesEnabled(false);
     
     wantScreenUpdates_ = false;
 
@@ -1048,14 +992,14 @@ EmpathMessageListWidget::selectRead()
     }
     
     wantScreenUpdates_ = true;
-    setUpdatesEnabled(true);
+    viewport()->setUpdatesEnabled(true);
     triggerUpdate();
 }
 
     void
 EmpathMessageListWidget::selectAll()
 {
-    setUpdatesEnabled(false);
+    viewport()->setUpdatesEnabled(false);
     
     QListViewItemIterator it(this);
     wantScreenUpdates_ = false;
@@ -1064,14 +1008,14 @@ EmpathMessageListWidget::selectAll()
         _setSelected(it.current(), true);
     
     wantScreenUpdates_ = true;
-    setUpdatesEnabled(true);
+    viewport()->setUpdatesEnabled(true);
     triggerUpdate();
 }    
 
     void
 EmpathMessageListWidget::selectInvert()
 {
-    setUpdatesEnabled(false);
+    viewport()->setUpdatesEnabled(false);
     
     wantScreenUpdates_ = false;
 
@@ -1086,7 +1030,7 @@ EmpathMessageListWidget::selectInvert()
     }
     
     wantScreenUpdates_ = true;
-    setUpdatesEnabled(true);
+    viewport()->setUpdatesEnabled(true);
     triggerUpdate();
 }
 
@@ -1141,7 +1085,7 @@ EmpathMessageListWidget::s_itemCome(const QString & s)
 EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
 {
     filling_ = true;
-    setUpdatesEnabled(false);
+    viewport()->setUpdatesEnabled(false);
     
     selected_.clear();
     clear();
@@ -1153,7 +1097,7 @@ EmpathMessageListWidget::_fillDisplay(EmpathFolder * f)
     else
         _fillNonThreading(f);
     
-    setUpdatesEnabled(true);
+    viewport()->setUpdatesEnabled(true);
     triggerUpdate();
     filling_ = false;
     
@@ -1170,29 +1114,13 @@ EmpathMessageListWidget::_fillNonThreading(EmpathFolder * f)
 
     t->setMax(f->messageCount());
     
-    QTime begin(QTime::currentTime());
-    QTime begin2(begin);
-    QTime now;
-    
     EmpathIndexIterator it(f->messageList());
 
     for (; it.current(); ++it) {
-        
+
         EmpathMessageListItem * newItem = _addItem(this, *it.current());
-        
         setStatus(newItem, it.current()->status());
-
         t->doneOne();
-
-        now = QTime::currentTime();
-        
-        if (begin2.msecsTo(now) > 1000) {
-            setUpdatesEnabled(true);
-            triggerUpdate();
-            kapp->processEvents();
-            setUpdatesEnabled(false);
-            begin2 = now;
-        }
     }
     
     setSorting(
@@ -1202,8 +1130,7 @@ EmpathMessageListWidget::_fillNonThreading(EmpathFolder * f)
             readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, true));
     
     t->done();
-    setUpdatesEnabled(true);
-    triggerUpdate();
+
     empath->s_infoMessage(
         i18n("Finished reading mailbox") + " " + url_.asString());
 }
@@ -1228,19 +1155,6 @@ EmpathMessageListWidget::_fillThreading(EmpathFolder * f)
     
     QListIterator<EmpathIndexRecord> mit(masterList_);
     
-    // What we doing here ?
-    // Well, we keep the time we started.
-    // When the time since 'begin' is too long (100ms) we do a
-    // kapp->processEvents(). This prevents the UI from stalling.
-    // We could then have done an update, but this takes a long time, so we
-    // don't want to do it so often. Therefore we do it every 10 times that
-    // we've had to do a processEvents().
-    
-    
-    QTime begin(QTime::currentTime());
-    QTime begin2(begin);
-    QTime now;
-    
     sortType_ = KGlobal::config()->
         readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, true);
     
@@ -1249,25 +1163,13 @@ EmpathMessageListWidget::_fillThreading(EmpathFolder * f)
         readNumEntry(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, 3), sortType_);
     
     for (; mit.current(); ++mit) {
-        
+
         addItem(mit.current());
-        
         t->doneOne();
-        
-        now = QTime::currentTime();
-        
-        if (begin2.msecsTo(now) > 1000) {
-            setUpdatesEnabled(true);
-            triggerUpdate();
-            kapp->processEvents();
-            setUpdatesEnabled(false);
-            begin2 = now;
-        }
     }
     
     t->done();
-    setUpdatesEnabled(true);
-    triggerUpdate();
+
     empath->s_infoMessage(
         i18n("Finished reading mailbox") + " " + url_.asString());
 }
@@ -1333,10 +1235,10 @@ EmpathMessageListWidget::s_messageMarkMany()
     void
 EmpathMessageListWidget::_clearSelection()
 {
-    setUpdatesEnabled(false);
+    viewport()->setUpdatesEnabled(false);
     clearSelection();
     selected_.clear();
-    setUpdatesEnabled(true);
+    viewport()->setUpdatesEnabled(true);
     triggerUpdate();
 }
 

@@ -55,7 +55,6 @@ EmpathMainWindow::EmpathMainWindow(const char * name)
     empathDebug("ctor");
 
     // Resize to previous size.
-    // XXX: Use session management instead once it's been reworked.
     
     KConfig * c = KGlobal::config();
     c->setGroup(EmpathConfig::GROUP_DISPLAY);
@@ -118,10 +117,10 @@ EmpathMainWindow::_setupToolBar()
         (KToolBar::BarPosition)
         c->readNumEntry(EmpathConfig::KEY_MAIN_WINDOW_TOOLBAR_POS);
 
-    if    (    pos != KToolBar::Top    ||
-            pos != KToolBar::Left    ||
-            pos != KToolBar::Right    ||
-            pos != KToolBar::Bottom)
+    if  (   pos != KToolBar::Top    &&
+            pos != KToolBar::Left   &&
+            pos != KToolBar::Right  &&
+            pos != KToolBar::Bottom )
         pos = KToolBar::Top;
 
     tb->setBarPos(pos);
@@ -147,10 +146,6 @@ EmpathMainWindow::_setupToolBar()
     
     tb->insertButton(empathIcon("save"), 0, SIGNAL(clicked()),
             this, SLOT(s_messageSaveAs()), true, i18n("Save"));
-    
-//    // Debugging
-//    tb->insertButton(empathIcon("mini-view"), 0, SIGNAL(clicked()),
-//            this, SLOT(s_dumpWidgetList()), true, i18n("Debug"));
 }
 
     void
@@ -302,41 +297,8 @@ EmpathMainWindow::s_messageDelete()
 EmpathMainWindow::s_messageSaveAs()
 {
     if (!_messageSelected()) return;
-    
-    RMM::RMessage * m = _getFirstSelectedMessage();
-    
-    RMM::RMessage message(*m);
 
-    QString saveFilePath =
-        KFileDialog::getSaveFileName(
-            QString::null, QString::null, this, i18n("Empath: Save Message").ascii());
-    empathDebug(saveFilePath);
-    
-    if (saveFilePath.isEmpty()) {
-        empathDebug("No filename given");
-        return;
-    }
-    
-    QFile f(saveFilePath);
-    if (!f.open(IO_WriteOnly)) {
-        // Warn user file cannot be opened.
-        empathDebug("Couldn't open file for writing");
-        QMessageBox::information(this, "Empath",
-            i18n("Sorry I can't write to that file. "
-                "Please try another filename."), i18n("OK"));
-        return;
-    }
-    empathDebug("Opened " + saveFilePath + " OK");
-    
-    QDataStream d(&f);
-    
-    d << message.asString();
-
-    f.close();
-        
-//  QMessageBox::information(this, "Empath",
-//  i18n("Message saved to") + " " + saveFilePath + " " + i18n("OK"),
-//  i18n("OK"));
+    empath->saveMessage(messageListWidget_->firstSelectedMessage());
 }
 
     void
@@ -344,10 +306,6 @@ EmpathMainWindow::s_messageCopyTo()
 {
     if (!_messageSelected()) return;
 
-    RMM::RMessage * m(_getFirstSelectedMessage());
-    
-    RMM::RMessage message(*m);
-    
     EmpathFolderChooserDialog fcd((QWidget *)0L, "fcd");
 
     if (fcd.exec() != QDialog::Accepted) {
@@ -355,7 +313,7 @@ EmpathMainWindow::s_messageCopyTo()
         return;
     }
 
-    empath->write(fcd.selected(), message);
+    empath->copy(messageListWidget_->firstSelectedMessage(), fcd.selected());
 }
 
     void
@@ -363,16 +321,6 @@ EmpathMainWindow::s_messageMoveTo()
 {
     empathDebug("s_messageMoveTo called");
 
-    RMM::RMessage * m(_getFirstSelectedMessage());
-    
-    if (m == 0) {
-        QMessageBox::information(this, "Empath",
-            i18n("Please select a message first"), i18n("OK"));
-        return;
-    }
-    
-    RMM::RMessage message(*m);
-    
     EmpathFolderChooserDialog fcd((QWidget *)0L, "fcd");
 
     if (fcd.exec() != QDialog::Accepted) {
@@ -380,12 +328,8 @@ EmpathMainWindow::s_messageMoveTo()
         return;
     }
 
-
-#warning ASYNC FIX NEEDED
-    // FIXME FOR ASYNC
-//    if (copyFolder != 0)
-//        if (!copyFolder->writeMessage(message).isNull())
-//            empath->remove(messageListWidget_->firstSelectedMessage());
+    empath->move
+        (messageListWidget_->firstSelectedMessage(), fcd.selected());
 }
 
     void
@@ -463,8 +407,7 @@ EmpathMainWindow::messageListWidget()
     void
 EmpathMainWindow::s_dumpWidgetList()
 {
-//    EmpathDebugDialog d(this, "debugDialog");
-//    d.exec();
+    // STUB
 }
 
     RMM::RMessage *

@@ -224,46 +224,7 @@ EmpathMessageViewWindow::s_messageNew()
     void
 EmpathMessageViewWindow::s_messageSaveAs()
 {
-    empathDebug("s_messageSaveAs called");
-    
-    RMM::RMessage * m = empath->message(url_);
-    
-    if (m == 0) {
-        return;
-    }
-    
-    RMM::RMessage message(*m);
-
-    QString saveFilePath =
-        KFileDialog::getSaveFileName(
-            QString::null, QString::null,
-            this, i18n("Empath: Save Message").ascii());
-
-    empathDebug(saveFilePath);
-    
-    if (saveFilePath.isEmpty()) {
-        empathDebug("No filename given");
-        return;
-    }
-    
-    QFile f(saveFilePath);
-    if (!f.open(IO_WriteOnly)) {
-        // Warn user file cannot be opened.
-        empathDebug("Couldn't open file for writing");
-        QMessageBox::information(this, "Empath",
-        i18n("Sorry I can't write to that file. "
-            "Please try another filename."),
-        i18n("OK"));
-        return;
-    }
-    empathDebug("Opened " + saveFilePath + " OK");
-    
-    QDataStream d(&f);
-    
-    d << message.asString();
-
-    f.close();
-    
+    empath->saveMessage(url_);
 }
 
     void
@@ -271,14 +232,6 @@ EmpathMessageViewWindow::s_messageCopyTo()
 {
     empathDebug("s_messageCopyTo called");
 
-    RMM::RMessage * m(empath->message(url_));
-    
-    if (m == 0) {
-        return;
-    }
-    
-    RMM::RMessage message(*m);
-    
     EmpathFolderChooserDialog fcd((QWidget *)0L, "fcd");
 
     if (fcd.exec() != QDialog::Accepted) {
@@ -286,7 +239,7 @@ EmpathMessageViewWindow::s_messageCopyTo()
         return;
     }
 
-    empath->write(fcd.selected(), message);
+    empath->copy(url_, fcd.selected());
 }
 
     void
@@ -306,19 +259,8 @@ EmpathMessageViewWindow::s_messageBounce()
     void
 EmpathMessageViewWindow::s_messageDelete()
 {
-#warning ASYNC FIX NEEDED
     empathDebug("s_messageDelete called");
-    // FIXME to work with new async code
-#if 0
-    if (empath->remove(url_)) {
-        QMessageBox::information(this, "Empath",
-            i18n("Message Deleted"), i18n("OK"));
-    } else {
-        QMessageBox::information(this, "Empath",
-            i18n("Couldn't delete message"), i18n("OK"));
-    }
-    s_fileClose();
-#endif
+    empath->remove(url_);
 }
 
     void

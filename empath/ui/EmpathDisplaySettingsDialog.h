@@ -78,56 +78,53 @@ class EmpathDisplaySettingsDialog : public QDialog
 
         QButtonGroup    * buttonGroup_;
 
-        QGridLayout        * topLevelLayout_;
-        QGridLayout        * viewGroupLayout_;
-        QGridLayout        * listGroupLayout_;
+        QGridLayout     * topLevelLayout_;
+        QGridLayout     * viewGroupLayout_;
+        QGridLayout     * listGroupLayout_;
 
-        RikGroupBox        * rgb_list_;
-        RikGroupBox        * rgb_view_;
+        RikGroupBox     * rgb_list_;
+        RikGroupBox     * rgb_view_;
 
-        QWidget            * w_list_;
-        QWidget            * w_view_;
+        QWidget         * w_list_;
+        QWidget         * w_view_;
         
-        QLabel            * l_fixedFont_;
-        QLabel            * l_sampleFixed_;
-        QPushButton        * pb_chooseFixedFont_;
+        QLabel          * l_fixedFont_;
+        QLabel          * l_sampleFixed_;
+        QPushButton     * pb_chooseFixedFont_;
         
-        QLabel            * l_quoteColourTwo_;
-        QLabel            * l_quoteColourOne_;
-        QLabel            * l_linkColour_;
-        QLabel            * l_visitedLinkColour_;
+        QLabel          * l_quoteColourTwo_;
+        QLabel          * l_quoteColourOne_;
+        QLabel          * l_linkColour_;
+        QLabel          * l_visitedLinkColour_;
         
         KColorButton    * kcb_quoteColourTwo_;
         KColorButton    * kcb_quoteColourOne_;
         KColorButton    * kcb_linkColour_;
         KColorButton    * kcb_visitedLinkColour_;
         
-        QCheckBox        * cb_underlineLinks_;
+        QCheckBox       * cb_underlineLinks_;
         
-        QCheckBox        * cb_threadMessages_;
+        QCheckBox       * cb_threadMessages_;
         
-        QLabel            * l_displayHeaders_;
-        QLineEdit        * le_displayHeaders_;
+        QLabel          * l_displayHeaders_;
+        QLineEdit       * le_displayHeaders_;
 
-        QLabel            * l_sortColumn_;
-        QComboBox        * cb_sortColumn_;
+        QLabel          * l_sortColumn_;
+        QComboBox       * cb_sortColumn_;
 
-        QCheckBox        * cb_sortAscending_;
+        QCheckBox       * cb_sortAscending_;
         
-        QLabel            * l_iconSet_;
-        QComboBox        * cb_iconSet_;
+        KButtonBox      * buttonBox_;
+        QPushButton     * pb_help_;
+        QPushButton     * pb_default_;
+        QPushButton     * pb_apply_;
+        QPushButton     * pb_OK_;
+        QPushButton     * pb_cancel_;
         
-        KButtonBox        * buttonBox_;
-        QPushButton        * pb_help_;
-        QPushButton        * pb_default_;
-        QPushButton        * pb_apply_;
-        QPushButton        * pb_OK_;
-        QPushButton        * pb_cancel_;
-        
-        QCheckBox        * cb_timer_;
+        QCheckBox       * cb_timer_;
         QSpinBox        * sb_timer_;
         
-        static bool        exists_;
+        static bool     exists_;
         bool            applied_;
 };
 

@@ -41,25 +41,11 @@ Highest priority first.
   work over NFS. We can get away with this as only Empath knows about them.
   
 * CORBA !
+
   x Use an OpenPart for the mail editor.
-	(I could use KWord if I didn't loathe HTML mail !)
-	
+
   x Make the mail reading stuff, the message listing stuff, the folder listing
   stuff, etc, all into OpenParts. Perhaps. Necessary ? Well, at least the
   compose stuff.
 
-  x Talk to Simon Hausmann again about this stuff, and get another copy of
-  that idl I lost :(
-
-===============================================================================
-
-Bugs in Qt/KDE (possibly)
-
-* KHTMLWidget crashes on some valid html. ** Found out it's trying desperately
-  to parse stuff in <PRE> and failing.
-
-* DnD doesn't work right. Me or Qt ? Probably me.
-  ** Apparently some of this is actually Qt's fault
-
-* QListView::setUpdatesEnabled() doesn't work.
-
+  x Talk to Simon Hausmann about this stuff.

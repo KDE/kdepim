@@ -147,7 +147,7 @@ EmpathMailbox::retrieve(const EmpathURL & url, QString xinfo)
 
     void
 EmpathMailbox::retrieve(
-    const EmpathURL & from, const EmpathURL & to, QString xxinfo, QString xinfo)
+    const EmpathURL &, const EmpathURL &, QString, QString)
 {
 //    _enqueue(RetrieveMessage, from, to, xxinfo, xinfo);
 }

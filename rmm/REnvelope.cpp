@@ -96,7 +96,6 @@ REnvelope::asString()
 REnvelope::_parse()
 {
     const char * c = strRep_.data();
-    const char * start = c;
     const char * end = (char *)(c + strlen(c));
     char * r = new char[1024]; // rfc821 -> max length 1000 ? Can't remember.
     char * rstart = r;

@@ -259,6 +259,8 @@ class Empath : public QObject
         // Async methods.
         
         void createFolder(const EmpathURL &, QString extraInfo = QString::null);
+
+        void saveMessage(const EmpathURL &);
         
         /**
          * Ask for a message to be copied from one folder to another.

@@ -27,6 +27,7 @@
 #include <qwidgetlist.h>
 #include <qapplication.h>
 #include <qpngio.h>
+#include <qmessagebox.h>
 
 // KDE includes
 #include <kglobal.h>
@@ -50,11 +51,7 @@
 #include "EmpathSendingSettingsDialog.h"
 #include "EmpathAccountsSettingsDialog.h"
 #include "EmpathFilterManagerDialog.h"
-#include "RMM_Message.h"
 #include "EmpathConfig.h"
-#include "EmpathTipOfTheDay.h"
-#include "EmpathTask.h"
-#include "EmpathTaskWidget.h"
 
 EmpathUI::EmpathUI()
     : QObject()
@@ -65,55 +62,36 @@ EmpathUI::EmpathUI()
     
     KConfig * c(KGlobal::config());
     
-    using namespace EmpathConfig;
-    c->setGroup(GROUP_DISPLAY);
-    
-    QString iconSetPath(c->readEntry(KEY_ICON_SET, "standard"));
-    using namespace std;
+    c->setGroup(EmpathConfig::GROUP_DISPLAY);
     
     QObject::connect(
-        empath,    SIGNAL(infoMessage(const QString &)),
-        this,    SLOT(s_infoMessage(const QString &)));
+        empath, SIGNAL(infoMessage(const QString &)),
+        this,   SLOT(s_infoMessage(const QString &)));
 
     QObject::connect(
-        empath,    SIGNAL(newComposer(Empath::ComposeType, const EmpathURL &)),
-        this,    SLOT(s_newComposer(Empath::ComposeType, const EmpathURL &)));
+        empath, SIGNAL(newComposer(Empath::ComposeType, const EmpathURL &)),
+        this,   SLOT(s_newComposer(Empath::ComposeType, const EmpathURL &)));
     
     QObject::connect(
-        empath,    SIGNAL(newComposer(const QString &)),
-        this,    SLOT(s_newComposer(const QString &)));
+        empath, SIGNAL(newComposer(const QString &)),
+        this,   SLOT(s_newComposer(const QString &)));
     
     QObject::connect(
-        empath,    SIGNAL(setupDisplay()),
-        this,    SLOT(s_setupDisplay()));
-    
+        empath, SIGNAL(setupDisplay()),     this, SLOT(s_setupDisplay()));
     QObject::connect(
-        empath,    SIGNAL(setupIdentity()),
-        this,    SLOT(s_setupIdentity()));
-    
+        empath, SIGNAL(setupIdentity()),    this, SLOT(s_setupIdentity()));
     QObject::connect(
-        empath,    SIGNAL(setupSending()),
-        this,    SLOT(s_setupSending()));
-    
+        empath, SIGNAL(setupSending()),     this, SLOT(s_setupSending()));
     QObject::connect(
-        empath,    SIGNAL(setupComposing()),
-        this,    SLOT(s_setupComposing()));
-    
+        empath, SIGNAL(setupComposing()),   this, SLOT(s_setupComposing()));
     QObject::connect(
-        empath,    SIGNAL(setupAccounts()),
-        this,    SLOT(s_setupAccounts()));
-    
+        empath, SIGNAL(setupAccounts()),    this, SLOT(s_setupAccounts()));
     QObject::connect(
-        empath,    SIGNAL(setupFilters()),
-        this,    SLOT(s_setupFilters()));
-    
+        empath, SIGNAL(setupFilters()),     this, SLOT(s_setupFilters()));
     QObject::connect(
-        empath,    SIGNAL(about()),
-        this,    SLOT(s_about()));
-        
+        empath, SIGNAL(about()),            this, SLOT(s_about()));
     QObject::connect(
-        empath,    SIGNAL(bugReport()),
-        this,    SLOT(s_bugReport()));
+        empath, SIGNAL(bugReport()),        this, SLOT(s_bugReport()));
     
     EmpathMainWindow * mainWindow = new EmpathMainWindow("mainWindow");
     kapp->setMainWidget(mainWindow);
@@ -138,26 +116,6 @@ EmpathUI::s_newComposer(const QString & recipient)
     EmpathComposeWindow * c = new EmpathComposeWindow(recipient);
     CHECK_PTR(c);
     c->show();
-}
-
-    void
-EmpathUI::_showTipOfTheDay() const
-{
-    KConfig * c = KGlobal::config();
-
-    c->setGroup(EmpathConfig::GROUP_GENERAL);
-    
-    if (!c->readBoolEntry(EmpathConfig::KEY_TIP_OF_THE_DAY_AT_STARTUP, false))
-        return;
-#if 0
-    EmpathTipOfTheDay totd(
-            (QWidget *)0L,
-            "tipWidget",
-            kapp->kde_datadir() + "/empath/tips/EmpathTips",
-            QString::null,
-            0);
-    totd.exec();
-#endif
 }
 
     void
@@ -198,6 +156,9 @@ EmpathUI::s_setupFilters()
     void
 EmpathUI::s_about()
 {
+    QMessageBox::information((QWidget *)0, "Pine needles in your bed",
+        i18n("Susie is a bitch. She wants to be spanked."), i18n("Administer spanking"));
+#if 0
     KAboutDialog * about = new KAboutDialog;
     about->setLogo(KGlobal::iconLoader()->loadIcon("empath.png"));
     about->setAuthor(
@@ -211,6 +172,7 @@ EmpathUI::s_about()
         about,  SIGNAL(sendEmail(const QString &, const QString &)),
         this,   SLOT(s_sendEmail(const QString &, const QString &)));
     about->show();
+#endif
 }
 
     void
@@ -236,6 +198,7 @@ EmpathUI::s_infoMessage(const QString & s)
     }
     
     delete l;
+    l = 0;
 }
 
     void

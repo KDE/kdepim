@@ -157,7 +157,7 @@ EmpathMailboxIMAP4::init()
 }
 
     void
-EmpathMailboxIMAP4::_retrieve(const EmpathURL & from, const EmpathURL & to, QString, QString xinfo)
+EmpathMailboxIMAP4::_retrieve(const EmpathURL &, const EmpathURL &, QString, QString)
 {
     // STUB
 }

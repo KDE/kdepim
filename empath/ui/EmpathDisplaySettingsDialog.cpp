@@ -296,29 +296,6 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
             "as read after you've been looking at them for\n"
             "the time specified"));
 
-/////////////////////////////////////////////////////////////////////////
-    
-    l_iconSet_ = new QLabel(i18n("Icon set"), this, "l_iconSet");
-    CHECK_PTR(l_iconSet_);
-    
-    l_iconSet_->setFixedHeight(h);
-    
-    QWhatsThis::add(l_iconSet_, i18n(
-            "Here you get to choose the icon set\n"
-            "that will be used by Empath. This covers\n"
-            "the toolbars, the icons on menus, and\n"
-            "those in the message list and folder\n"
-            "tree. You can create your own icon sets\n"
-            "by simply copying one and changing it.\n"
-            "See the help for details.\n"
-            "<b>Note</b> that this change does not\n"
-            "take effect until Empath is restarted."));
-    
-    cb_iconSet_ = new QComboBox(this, "cb_iconSet");
-    CHECK_PTR(cb_iconSet_);
-    
-    cb_iconSet_->setFixedHeight(h);
-    
 ///////////////////////////////////////////////////////////////////////////////
 // Button box
 
@@ -357,7 +334,7 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 
     // Layouts
     
-    topLevelLayout_                = new QGridLayout(this, 4, 2, 10, 10);
+    topLevelLayout_                = new QGridLayout(this, 4, 1, 10, 10);
     CHECK_PTR(topLevelLayout_);
 
     listGroupLayout_            = new QGridLayout(w_list_, 3, 2, 0, 10);
@@ -368,36 +345,33 @@ EmpathDisplaySettingsDialog::EmpathDisplaySettingsDialog(
 
     topLevelLayout_->setRowStretch(0, 3);
     topLevelLayout_->setRowStretch(1, 7);
-    topLevelLayout_->setRowStretch(2, 0);
     topLevelLayout_->setRowStretch(3, 0);
     
-    topLevelLayout_->addMultiCellWidget(rgb_list_,        0, 0, 0, 1);
-    topLevelLayout_->addMultiCellWidget(rgb_view_,        1, 1, 0, 1);
-    topLevelLayout_->addWidget(l_iconSet_,                2, 0);
-    topLevelLayout_->addWidget(cb_iconSet_,                2, 1);
-    topLevelLayout_->addMultiCellWidget(buttonBox_,        3, 3, 0, 1);
+    topLevelLayout_->addMultiCellWidget(rgb_list_,        0, 0, 0, 0);
+    topLevelLayout_->addMultiCellWidget(rgb_view_,        1, 1, 0, 0);
+    topLevelLayout_->addMultiCellWidget(buttonBox_,       2, 2, 0, 0);
     
     listGroupLayout_->addWidget(l_sortColumn_,            0, 0);
-    listGroupLayout_->addWidget(cb_sortColumn_,            0, 1);
+    listGroupLayout_->addWidget(cb_sortColumn_,           0, 1);
     listGroupLayout_->addWidget(cb_sortAscending_,        1, 0);
-    listGroupLayout_->addWidget(cb_threadMessages_,        1, 1);
+    listGroupLayout_->addWidget(cb_threadMessages_,       1, 1);
     listGroupLayout_->addWidget(cb_timer_,                2, 0);
     listGroupLayout_->addWidget(sb_timer_,                2, 1);
     listGroupLayout_->activate();
     
-    viewGroupLayout_->addWidget(l_displayHeaders_,                0, 0);
+    viewGroupLayout_->addWidget(l_displayHeaders_,              0, 0);
     viewGroupLayout_->addMultiCellWidget(le_displayHeaders_,    0, 0, 1, 2);
-    viewGroupLayout_->addWidget(l_fixedFont_,                    1, 0);
-    viewGroupLayout_->addWidget(l_sampleFixed_,                    1, 1);
+    viewGroupLayout_->addWidget(l_fixedFont_,                   1, 0);
+    viewGroupLayout_->addWidget(l_sampleFixed_,                 1, 1);
     viewGroupLayout_->addWidget(pb_chooseFixedFont_,            1, 2);
-    viewGroupLayout_->addMultiCellWidget(l_quoteColourOne_,        2, 2, 0, 1);
+    viewGroupLayout_->addMultiCellWidget(l_quoteColourOne_,     2, 2, 0, 1);
     viewGroupLayout_->addWidget(kcb_quoteColourOne_,            2, 2);
-    viewGroupLayout_->addMultiCellWidget(l_quoteColourTwo_,        3, 3, 0, 1);
+    viewGroupLayout_->addMultiCellWidget(l_quoteColourTwo_,     3, 3, 0, 1);
     viewGroupLayout_->addWidget(kcb_quoteColourTwo_,            3, 2);
-    viewGroupLayout_->addMultiCellWidget(l_linkColour_,            4, 4, 0, 1);
+    viewGroupLayout_->addMultiCellWidget(l_linkColour_,         4, 4, 0, 1);
     viewGroupLayout_->addWidget(kcb_linkColour_,                4, 2);
-    viewGroupLayout_->addMultiCellWidget(l_visitedLinkColour_,    5, 5, 0, 1);
-    viewGroupLayout_->addWidget(kcb_visitedLinkColour_,            5, 2);
+    viewGroupLayout_->addMultiCellWidget(l_visitedLinkColour_,  5, 5, 0, 1);
+    viewGroupLayout_->addWidget(kcb_visitedLinkColour_,         5, 2);
     viewGroupLayout_->addMultiCellWidget(cb_underlineLinks_,    6, 6, 0, 2);
     viewGroupLayout_->activate();
 
@@ -423,19 +397,19 @@ EmpathDisplaySettingsDialog::saveData()
     KConfig * c(KGlobal::config());
     c->setGroup(EmpathConfig::GROUP_DISPLAY);
 #define CWE c->writeEntry
-    CWE( EmpathConfig::KEY_FIXED_FONT,            l_sampleFixed_->font());
-    CWE( EmpathConfig::KEY_UNDERLINE_LINKS,        cb_underlineLinks_->isChecked());
-    CWE( EmpathConfig::KEY_QUOTE_COLOUR_ONE,    kcb_quoteColourOne_->color());
-    CWE( EmpathConfig::KEY_QUOTE_COLOUR_TWO,    kcb_quoteColourTwo_->color());
-    CWE( EmpathConfig::KEY_LINK_COLOUR,            kcb_linkColour_->color());
-    CWE( EmpathConfig::KEY_VISITED_LINK_COLOUR,    kcb_visitedLinkColour_->color());
-    CWE( EmpathConfig::KEY_ICON_SET,            cb_iconSet_->currentText());
-    CWE( EmpathConfig::KEY_THREAD_MESSAGES,        cb_threadMessages_->isChecked());
-    CWE( EmpathConfig::KEY_MESSAGE_SORT_ASCENDING,cb_sortAscending_->isChecked());
-    CWE( EmpathConfig::KEY_SHOW_HEADERS,        le_displayHeaders_->text());
-    CWE( EmpathConfig::KEY_MESSAGE_SORT_COLUMN,    cb_sortColumn_->currentItem());
-    CWE( EmpathConfig::KEY_MARK_AS_READ,        cb_timer_->isChecked());
-    CWE( EmpathConfig::KEY_MARK_AS_READ_TIME,    sb_timer_->value());
+  CWE(EmpathConfig::KEY_FIXED_FONT, l_sampleFixed_->font());
+  CWE(EmpathConfig::KEY_UNDERLINE_LINKS, cb_underlineLinks_->isChecked());
+  CWE(EmpathConfig::KEY_QUOTE_COLOUR_ONE, kcb_quoteColourOne_->color());
+  CWE(EmpathConfig::KEY_QUOTE_COLOUR_TWO, kcb_quoteColourTwo_->color());
+  CWE(EmpathConfig::KEY_LINK_COLOUR, kcb_linkColour_->color());
+  CWE(EmpathConfig::KEY_VISITED_LINK_COLOUR,kcb_visitedLinkColour_->color());
+  
+  CWE(EmpathConfig::KEY_THREAD_MESSAGES, cb_threadMessages_->isChecked());
+  CWE(EmpathConfig::KEY_MESSAGE_SORT_ASCENDING, cb_sortAscending_->isChecked());
+  CWE(EmpathConfig::KEY_SHOW_HEADERS, le_displayHeaders_->text());
+  CWE(EmpathConfig::KEY_MESSAGE_SORT_COLUMN, cb_sortColumn_->currentItem());
+  CWE(EmpathConfig::KEY_MARK_AS_READ, cb_timer_->isChecked());
+  CWE(EmpathConfig::KEY_MARK_AS_READ_TIME, sb_timer_->value());
 #undef CWE
 }
 
@@ -491,35 +465,6 @@ EmpathDisplaySettingsDialog::loadData()
     
     sb_timer_->setValue(
         c->readNumEntry(EmpathConfig::KEY_MARK_AS_READ_TIME, 2));
-    
-    // Fill in the icon set combo.
-
-    cb_iconSet_->clear();
-    
-    QString s = c->readEntry(EmpathConfig::KEY_ICON_SET, "standard");
-    empathDebug("Saved icon set was \"" + s + "\"");
-
-    bool found = false;
-    int index = 0;
-    
-    QStringList el(KGlobal::dirs()->findDirs("pics", ""));
-
-    for (QStringList::ConstIterator it = el.begin(); it != el.end() ; ++it) {
-        
-        if ((*it).at(0) == ".")
-            continue;
-        
-        if (*it == "mime")
-            continue;
-        
-        if (*it == s)
-            found = true;
-        else
-            cb_iconSet_->insertItem(*it, index);
-    }
-    
-    if (found) cb_iconSet_->insertItem(s);
-    cb_iconSet_->setCurrentItem(cb_iconSet_->count() - 1);
 }
 
     void
