@@ -326,7 +326,6 @@ void KAddressBook::importVCardSimple()
   importVCard( KURL(), true );
 }
 
-
 void KAddressBook::importVCard( const KURL &url, bool showDialog )
 {
   QString fileName;
@@ -338,7 +337,8 @@ void KAddressBook::importVCard( const KURL &url, bool showDialog )
   else
     fileUrl = url;
 
-  if ( !KIO::NetAccess::download( fileUrl, fileName ) ) {
+  QString caption( i18n( "vCard Import Failed" ) );
+  if ( KIO::NetAccess::download( fileUrl, fileName ) ) {
     KABC::VCardConverter converter;
     KABC::Addressee addr;
     QFile file( fileName );
@@ -354,6 +354,11 @@ void KAddressBook::importVCard( const KURL &url, bool showDialog )
       ok = converter.vCardToAddressee( data, addr, KABC::VCardConverter::v3_0 );
     else if ( data.contains( "VERSION:2.1" ) )
       ok = converter.vCardToAddressee( data, addr, KABC::VCardConverter::v2_1 );
+    else {
+      KMessageBox::sorry( this, i18n( "Not supported vcard version!" ),
+                          caption );
+      return;
+    }
 
     if ( !addr.isEmpty() && ok ) {
       // Add it to the document, then let the user edit it. We use a
@@ -372,11 +377,14 @@ void KAddressBook::importVCard( const KURL &url, bool showDialog )
       QString text = i18n( "The selected file does not appear to be a valid vCard. "
                            "Please check the file and try again." );
 
-      KMessageBox::sorry( this, text, i18n( "vCard Import Failed" ) );
+      KMessageBox::sorry( this, text, caption );
     }
 
     if ( !fileUrl.isLocalFile() )
       KIO::NetAccess::removeTempFile( fileName );
+  } else {
+    QString text( "<qt>Unable to access <b>%1</b>!</qt>" );
+    KMessageBox::error( this, text.arg( fileUrl.url() ), caption );
   }
 }
 
