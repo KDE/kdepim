@@ -1,3 +1,12 @@
+kdepim (4:3.3.1-3) unstable; urgency=medium
+
+  * Disable gnokii support to attempt getting kde3.3 into sarge.
+    Closes: #284985.
+  * Disable final mode for compiling kmail, which will hopefully fix
+    the buildd timeouts.
+
+ -- Daniel Schepler <schepler@debian.org>  Sat, 11 Dec 2004 15:50:44 -0800
+
 kdepim (4:3.3.1-2) unstable; urgency=medium
 
   * Urgency medium due to fix for buildd issues.

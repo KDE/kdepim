@@ -3,8 +3,9 @@ Section: kde
 Priority: optional
 Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
 Uploaders: Christopher L Cheney <ccheney@debian.org>, Daniel Schepler <schepler@debian.org>
-Build-Depends: autoconf, automake1.9, bison, byacc, cdbs, debhelper (>= 4.2.21), flex, gawk, gettext, groff-base, kdelibs4-dev (>> 4:3.3.1), libbluetooth1-dev, libgnokii2-dev (>= 0.6.3-3), libgpgme11-dev, liblockdev1-dev, libmal-dev, libpisock-dev, libreadline4-dev, libtool, sharutils, texinfo
+Build-Depends: autoconf, automake1.9, bison, byacc, cdbs, debhelper (>= 4.2.21), flex, gawk, gettext, groff-base, kdelibs4-dev (>> 4:3.3.1), libbluetooth1-dev, libgpgme11-dev, liblockdev1-dev, libmal-dev, libpisock-dev, libreadline4-dev, libtool, sharutils, texinfo
 Build-Depends-Indep: doxygen, qt3-doc, kdelibs4-doc
+Build-Conflicts: libgnokii2-dev
 Standards-Version: 3.6.1.0
 
 Package: kdepim

@@ -1,0 +1,13 @@
+Index: kmail/Makefile.am
+===================================================================
+RCS file: /home/kde/kdepim/kmail/Makefile.am,v
+retrieving revision 1.286.2.4
+diff -u -r1.286.2.4 Makefile.am
+--- kmail/Makefile.am	19 Oct 2004 19:54:52 -0000	1.286.2.4
++++ kmail/Makefile.am	11 Dec 2004 23:04:20 -0000
+@@ -1,4 +1,4 @@
+-#KDE_OPTIONS = nofinal
++KDE_OPTIONS = nofinal
+ KDE_CXXFLAGS = $(USE_RTTI)
+ 
+ SUBDIRS = interfaces . about pics profiles avscripts
