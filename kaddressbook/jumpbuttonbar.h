@@ -25,47 +25,34 @@
 #define JUMPBUTTONBAR_H
 
 #include <qsizepolicy.h>
-#include <qvbox.h>
+#include <qwidget.h>
+
+#include "viewmanager.h"
 
 class QChar;
-class QPushButton;
-class QScrollView;
 class QResizeEvent;
 
 /**
   Used to draw the jump button bar on the right of the view.
  */
-class JumpButtonBar : public QVBox
+class JumpButtonBar : public QWidget
 {
   Q_OBJECT
   
   public:
-    JumpButtonBar( QWidget *parent, const char *name = 0 );
+    JumpButtonBar( ViewManager *parent, const char *name = 0 );
     ~JumpButtonBar();
     
     QSizePolicy sizePolicy() const;    
-    virtual void show();
-    
-  protected:
-    void resizeEvent( QResizeEvent* );
     
   protected slots:
     void letterClicked();
-    void upClicked();
-    void downClicked();
     
   signals:
     /**
       Emitted whenever a letter is selected by the user.
      */
     void jumpToLetter( const QChar &ch );
-    
-  private:
-    void updateArrowButtons();
-  
-    QScrollView *mScrollView;
-    QPushButton *mUpButton;
-    QPushButton *mDownButton;
 };
 
 #endif
