@@ -97,7 +97,7 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 	grid->addWidget(abutton, 3, 1);
 	QToolTip::add(abutton,
 		i18n
-		("<qt>Clear the list of files to install. No files wil be installed.</qt>"));
+		("<qt>Clear the list of files to install. No files will be installed.</qt>"));
 
 	abutton = new QPushButton(i18n("Add File"), this);
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotAddFile()));
@@ -191,6 +191,9 @@ void FileInstallWidget::refreshFileInstallList()
 
 
 // $Log$
+// Revision 1.21  2001/11/18 16:59:55  adridg
+// New icons, DCOP changes
+//
 // Revision 1.20  2001/09/30 16:59:22  adridg
 // Cleaned up preHotSync
 //
