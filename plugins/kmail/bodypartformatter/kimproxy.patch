@@ -1,12 +1,72 @@
-? kimproxy.patch
+? diff.tmp
+Index: kimproxy.patch
+===================================================================
+RCS file: /home/kde/kdepim/plugins/kmail/bodypartformatter/kimproxy.patch,v
+retrieving revision 1.1
+diff -u -5 -d -p -r1.1 kimproxy.patch
+--- kimproxy.patch	1 May 2004 08:05:57 -0000	1.1
++++ kimproxy.patch	4 May 2004 12:30:33 -0000
+@@ -1,50 +0,0 @@
+-? kimproxy.patch
+-Index: text_vcard.cpp
+-===================================================================
+-RCS file: /home/kde/kdepim/plugins/kmail/bodypartformatter/text_vcard.cpp,v
+-retrieving revision 1.3
+-diff -u -3 -p -r1.3 text_vcard.cpp
+---- text_vcard.cpp	30 Apr 2004 19:43:23 -0000	1.3
+-+++ text_vcard.cpp	1 May 2004 08:04:25 -0000
+-@@ -38,7 +38,9 @@
+- #include <kglobalsettings.h>
+- #include <kiconloader.h>
+- 
+-+#include <kapplication.h>
+- #include <kaddrbook.h>
+-+#include <kimproxy.h>
+- 
+- #include "interfaces/bodypartformatter.h"
+- #include "interfaces/bodypart.h"
+-@@ -57,7 +59,13 @@ using KPIM::AddresseeView;
+- namespace {
+- 
+-   class Formatter : public KMail::Interface::BodyPartFormatter {
+-+     
+-   public:
+-+
+-+    Formatter() { 
+-+      mKIMProxy = new ::KIMProxy(  kapp->dcopClient() );
+-+    }
+-+     
+-     Result format( BodyPart *bodyPart, KMail::HtmlWriter *writer ) const { 
+- 
+-        VCardConverter vcc;
+-@@ -78,7 +86,7 @@ namespace {
+-           KABC::Addressee a = (*it);
+-           if ( a.isEmpty() ) return AsIcon;
+- 
+--          QString contact = AddresseeView::vCardAsHTML( a, false, false );
+-+          QString contact = AddresseeView::vCardAsHTML( a, mKIMProxy, false, false );
+-           writer->queue( contact );
+- 
+-           QString addToLinkText = i18n( "Add this contact to the addressbook." );
+-@@ -94,6 +102,8 @@ namespace {
+- 
+-        return Ok;
+-     }
+-+  private:
+-+    ::KIMProxy *mKIMProxy;
+-   };
+- 
+-   class UrlHandler : public KMail::Interface::BodyPartURLHandler {
 Index: text_vcard.cpp
 ===================================================================
 RCS file: /home/kde/kdepim/plugins/kmail/bodypartformatter/text_vcard.cpp,v
-retrieving revision 1.3
-diff -u -3 -p -r1.3 text_vcard.cpp
---- text_vcard.cpp	30 Apr 2004 19:43:23 -0000	1.3
-+++ text_vcard.cpp	1 May 2004 08:04:25 -0000
-@@ -38,7 +38,9 @@
+retrieving revision 1.6
+diff -u -5 -d -p -r1.6 text_vcard.cpp
+--- text_vcard.cpp	3 May 2004 20:50:06 -0000	1.6
++++ text_vcard.cpp	4 May 2004 12:30:33 -0000
+@@ -36,11 +36,13 @@
+ #include <klocale.h>
+ #include <kstringhandler.h>
  #include <kglobalsettings.h>
  #include <kiconloader.h>
  
@@ -16,7 +76,11 @@ diff -u -3 -p -r1.3 text_vcard.cpp
  
  #include "interfaces/bodypartformatter.h"
  #include "interfaces/bodypart.h"
-@@ -57,7 +59,13 @@ using KPIM::AddresseeView;
+ using KMail::Interface::BodyPart;
+ #include "interfaces/bodyparturlhandler.h"
+@@ -55,11 +57,17 @@ using KABC::Addressee;
+ using KPIM::AddresseeView;
+ 
  namespace {
  
    class Formatter : public KMail::Interface::BodyPartFormatter {
@@ -30,16 +94,24 @@ diff -u -3 -p -r1.3 text_vcard.cpp
      Result format( BodyPart *bodyPart, KMail::HtmlWriter *writer ) const { 
  
         VCardConverter vcc;
-@@ -78,7 +86,7 @@ namespace {
+        const QString vCard = bodyPart->asText();
+        if ( vCard.isEmpty() ) return AsIcon;
+@@ -76,11 +84,11 @@ namespace {
+        int count = 0;
+        for ( ; it != al.end(); ++it ) {
            KABC::Addressee a = (*it);
            if ( a.isEmpty() ) return AsIcon;
  
--          QString contact = AddresseeView::vCardAsHTML( a, false, false );
-+          QString contact = AddresseeView::vCardAsHTML( a, mKIMProxy, false, false );
+-          QString contact = AddresseeView::vCardAsHTML( a, 0, false );
++          QString contact = AddresseeView::vCardAsHTML( a, mKIMProxy, 0, false );
            writer->queue( contact );
  
            QString addToLinkText = i18n( "Add this contact to the addressbook." );
-@@ -94,6 +102,8 @@ namespace {
+           QString op = QString::fromLatin1( "addToAddressBook:%1" ).arg( count );
+           writer->queue( 
+@@ -92,10 +100,12 @@ namespace {
+           count++;
+        }
  
         return Ok;
      }
@@ -48,3 +120,5 @@ diff -u -3 -p -r1.3 text_vcard.cpp
    };
  
    class UrlHandler : public KMail::Interface::BodyPartURLHandler {
+   public:
+      bool handleClick( BodyPart * bodyPart, const QString & path ) const {
