@@ -1,5 +1,7 @@
 TODO LIST (Moved again to the file TODO)
 
+2003-6-20  Adriaan de Groot
+* Updated the hardware lists on the website.
 
 2003-6-20  Reinhold Kainhofer
 * Implemented the dialog to change the database flags and the dates (DBInfo 
@@ -21,16 +23,14 @@ TODO LIST (Moved again to the file TODO)
   poses a big problem to me as it swallows all toolbar buttons.
 * Implemented a InternalEditorAction to sync changes done to the databases
   in the internal viewers. Every PilotComponent that changes a database
-  needs to mark it as dirty (e.g. markDBDirt("AddressDB")) so the 
-  Action knows which databases need to be considered. 
-  	
-	
+  needs to mark it as dirty (e.g. markDBDirt("AddressDB")) so the
+  Action knows which databases need to be considered.
+
 2003-6-15  Reinhold Kainhofer
 * Implemented a first layout of the generic database viewer. To view
   the records, I'd need a hex editor, which is not available in KDE, yet.
-  I tried using the widget that khexedit uses, but somehow I can't get 
+  I tried using the widget that khexedit uses, but somehow I can't get
   it to work :-((
-		
 
 KPilot Developer's notes for June 15th, 2003
 ============================================
