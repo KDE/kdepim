@@ -162,7 +162,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
                                            0, actionCollection(),
                                            "reset_quicksearch" );
   resetQuickSearch->plug( q_uicksearch );
-  resetQuickSearch->setWhatsThis( i18n( "<b>Reset Quick Search<b><br>"
+  resetQuickSearch->setWhatsThis( i18n( "<b>Reset Quick Search</b><br>"
                                         "Resets the quick search so that "
                                         "all messages are shown again." ) );
 
