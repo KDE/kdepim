@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
     
     AbbrowserConduit conduit(a.getMode(), a.getDBSource());
     a.setConduit(&conduit);
-    return a.exec(true /* with DCOP support */, false);
+    return a.exec(true /* with DCOP support */, true);
     
     /* NOTREACHED */
     /* Avoid const char *id not used warnings */
@@ -126,12 +126,16 @@ bool AbbrowserConduit::_startAbbrowser()
     QByteArray replyData;
     QCString replyTypeStr;
 
+
+	KConfig& c = KPilotConfig::getConfig(AbbrowserConduitOptions::Group);
+	QCString abbrowserName(c.readEntry("AbbrowserName","kaddressbook"));
+	QCString abbrowserIface(c.readEntry("AbbrowserIface","KAddressBookIface"));
 	/**
 	* It's ugly to use defines, I know, but anything else is silly
 	* ie. functions have too much overhead. It's undeffed below.
 	*/
-#define PING_ABBROWSER (fDcop->call("kaddressbook", \
-		"KAddressBookIface", \
+#define PING_ABBROWSER (fDcop->call(abbrowserName, \
+		abbrowserIface, \
 		"interfaces()",  \
 		sendData, replyTypeStr, replyData))
     foundAbbrowser = PING_ABBROWSER ;
@@ -139,9 +143,9 @@ bool AbbrowserConduit::_startAbbrowser()
 	{
 	// abbrowser not running, start it
 	KURL::List noargs;
-	KRun::run("kaddressbook", noargs);
+	KRun::run(abbrowserName, noargs);
 	
-	kdDebug() << fname << "Waiting to run abbrowser" << endl;
+	kdDebug() << fname << "Waiting to run " << abbrowserName << endl;
 	alreadyRunning = false;
 	}
 
@@ -164,7 +168,9 @@ bool AbbrowserConduit::_startAbbrowser()
 
     if (!foundAbbrowser)
 	{
-	kdDebug() << fname << " unable to connect to abbrowser through dcop; autostart failed" << endl;
+	kdDebug() << fname << " unable to connect to "
+		<< abbrowserName
+		<< " through dcop; autostart failed" << endl;
 	KApplication::kApplication()->exit(BaseConduit::PeerApplicationMissing);
 	}
     return alreadyRunning;
@@ -177,17 +183,21 @@ void AbbrowserConduit::_stopAbbrowser(bool abAlreadyRunning)
 
     kdDebug() << fname << " about to stop" << endl;
     
+	KConfig& c = KPilotConfig::getConfig(AbbrowserConduitOptions::Group);
+	QCString abbrowserName(c.readEntry("AbbrowserName","kaddressbook"));
+	QCString abbrowserIface(c.readEntry("AbbrowserIface","KAddressBookIface"));
+
     if (fCloseAbIfOpen && !abAlreadyRunning)
 	{
 	QByteArray sendData;
 	QByteArray replyData;
 	QCString replyTypeStr;
 	
-	if (!fDcop->call("kaddressbook", "KAddressBookIface",
+	if (!fDcop->call(abbrowserName, abbrowserIface,
 			 "exit()",
 			 sendData, replyTypeStr, replyData))
 	    {
-	    kdWarning() << "Unable to exit abbrowser" << endl;
+	    kdWarning() << "Unable to exit " << abbrowserName << endl;
 	    }
 	}
     }
@@ -226,15 +236,22 @@ _mapContactsToPilot(const QDict<ContactEntry> &contacts,
 
 bool AbbrowserConduit::_getAbbrowserContacts(QDict<ContactEntry> &contacts)
     {
+	FUNCTIONSETUP;
+
     QDict<ContactEntry> entryDict;
+
+	KConfig& c = KPilotConfig::getConfig(AbbrowserConduitOptions::Group);
+	QCString abbrowserName(c.readEntry("AbbrowserName","kaddressbook"));
+	QCString abbrowserIface(c.readEntry("AbbrowserIface","KAddressBookIface"));
 
     QByteArray noParamData;
     QByteArray replyDictData;
     QCString replyTypeStr;
-    if (!fDcop->call("kaddressbook", "KAddressBookIface", "getEntryDict()",
+    if (!fDcop->call(abbrowserName, abbrowserIface, "getEntryDict()",
 		       noParamData, replyTypeStr, replyDictData))
 	{
-	kdWarning() << "KAddressBookIface::Unable to call abbrowser getEntryDict()" << endl;
+	kdWarning() << fname
+			<< "Unable to call abbrowser getEntryDict()" << endl;
 	return false;
 	}
     assert(replyTypeStr == "QDict<ContactEntry>");
@@ -662,7 +679,7 @@ void AbbrowserConduit::_handleConflict(PilotAddress *pilotAddress,
 	    }
 	else
 	    { 
-	    kdDebug() << fname << "AbbrowserConduit::_handleConflict => Both records exist but both were changed => conflict, unable to merge; keeping both"
+	    kdDebug() << fname << ": Both records exist but both were changed => conflict, unable to merge; keeping both"
 		      << endl;
 	    showPilotAddress(*pilotAddress);
 	    showContactEntry(*abEntry);
@@ -726,6 +743,10 @@ void AbbrowserConduit::_removeAbEntry(const QString & key)
     
     kdDebug() << fname << " removing key " << key << endl;
 
+	KConfig& c = KPilotConfig::getConfig(AbbrowserConduitOptions::Group);
+	QCString abbrowserName(c.readEntry("AbbrowserName","kaddressbook"));
+	QCString abbrowserIface(c.readEntry("AbbrowserIface","KAddressBookIface"));
+
     QByteArray sendData;
     QByteArray replyData;
     QCString replyTypeStr;
@@ -734,12 +755,16 @@ void AbbrowserConduit::_removeAbEntry(const QString & key)
 	{
 	// new entry; just send the contact entry
 	out << key;
-	if (!fDcop->call("kaddressbook", "KAddressBookIface",
+	if (!fDcop->call(abbrowserName, abbrowserIface,
 			 "removeEntry(QString)",
 			 sendData, replyTypeStr, replyData))
 	    {
-	    kdWarning() << "Unable to call abbrowser removeEnty" << endl;
-	    qApp->exit(1);
+	    kdWarning() << "Unable to call " 
+	    	<< abbrowserName
+		<< " removeEnty" << endl;
+	    // Don't exit after all: this Sync should possibly continue
+	    //
+	    // qApp->exit(1);
 	    }
 	}
     }
@@ -749,10 +774,15 @@ void AbbrowserConduit::_saveAbEntry(ContactEntry &abEntry,
     {
     FUNCTIONSETUP;
     
+	KConfig& c = KPilotConfig::getConfig(AbbrowserConduitOptions::Group);
+	QCString abbrowserName(c.readEntry("AbbrowserName","kaddressbook"));
+	QCString abbrowserIface(c.readEntry("AbbrowserIface","KAddressBookIface"));
+
+
     // this marks that this field has been synced
     abEntry.setModified(false);
 
-    kdDebug() << fname << " saving to kab "
+    kdDebug() << fname << " saving to " << abbrowserName
 	      << abEntry.getFullName()
 	      << " " << abEntry.getCompany() << endl;
 	
@@ -767,12 +797,12 @@ void AbbrowserConduit::_saveAbEntry(ContactEntry &abEntry,
 	{
 	// new entry; just send the contact entry
 	out << abEntry;
-	if (!fDcop->call("kaddressbook", "KAddressBookIface",
+	if (!fDcop->call(abbrowserName, abbrowserIface,
 			 "addEntry(ContactEntry)",
 			 sendData, replyTypeStr, replyData))
 	    {
 	    kdWarning() << "Unable to call abbrowser addEntry" << endl;
-	    qApp->exit(1);
+	    // qApp->exit(1);
 	    }
 	}
     else
@@ -780,12 +810,14 @@ void AbbrowserConduit::_saveAbEntry(ContactEntry &abEntry,
 	// change entry, send contact and key
 	out << key;
 	out << abEntry;
-	if (!fDcop->call("kaddressbook", "KAddressBookIface",
+	if (!fDcop->call(abbrowserName, abbrowserIface,
 			 "changeEntry(QString, ContactEntry)",
 			 sendData, replyTypeStr, replyData))
 	    {
-	    kdWarning() << "Unable to call abbrowser changeEntry" << endl;
-	    qApp->exit(1);
+	    kdWarning() << "Unable to call "
+	    	<< abbrowserName
+		<< " changeEntry" << endl;
+	    // qApp->exit(1);
 	    }
 	}
     }
@@ -796,12 +828,17 @@ void AbbrowserConduit::_saveAbChanges()
     QByteArray replyData;
     QCString replyTypeStr;
 
-    if (!fDcop->call("kaddressbook", "KAddressBookIface",
+	KConfig& c = KPilotConfig::getConfig(AbbrowserConduitOptions::Group);
+	QCString abbrowserName(c.readEntry("AbbrowserName","kaddressbook"));
+	QCString abbrowserIface(c.readEntry("AbbrowserIface","KAddressBookIface"));
+
+
+    if (!fDcop->call(abbrowserName, abbrowserIface,
 		     "save()",
 		     sendData, replyTypeStr, replyData))
 	{
 	kdWarning() << "Unable to save kaddressbook" << endl;
-	qApp->exit(1);
+	// qApp->exit(1);
 	}
     }
 
@@ -1078,7 +1115,7 @@ bool AbbrowserConduit::_prepare(QDict<ContactEntry> &abbrowserContacts,
     if (!_getAbbrowserContacts(abbrowserContacts))
 	{
 	kdDebug() << fname <<
-	    "AbbrowserConduit::_prepare unable to get contacts" << endl;
+	    ": unable to get contacts" << endl;
 	return false;
 	}
 
