@@ -60,7 +60,7 @@ binary-arch: build
 	done
 	dh_undocumented
 	list=`cd debian/tmp && find ./ -type l -name "lib*.so" | sed -e 's#^./##'` ;\
-	dh_movefiles -pkdepim-dev $$list usr/lib/*.a usr/include
+	dh_movefiles -pkdepim-dev $$list usr/lib/*.a usr/include/kde
 	dh_movefiles -pabbrowser usr/share/apps/abbrowser/* \
 		usr/share/icons/hicolor/32x32/apps/abbrowser.png \
 		usr/share/icons/locolor/16x16/apps/abbrowser.png \
