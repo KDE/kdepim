@@ -79,21 +79,18 @@ public:
 
 	bool canBind( QString device )
 	{
-		FUNCTIONSETUP;
 		showList();
 		return !mBoundDevices.contains( device );
 	}
 
 	void bindDevice( QString device )
 	{
-		FUNCTIONSETUP;
 		mBoundDevices.append( device );
 		showList();
 	}
 
 	void unbindDevice( QString device )
 	{
-		FUNCTIONSETUP;
 		mBoundDevices.remove( device );
 		showList();
 	}
@@ -109,7 +106,7 @@ private:
 	inline void showList() const
 	{
 #ifdef DEBUG
-		FUNCTIONSETUP;
+		FUNCTIONSETUPL(3);
 		DEBUGDAEMON << fname << "Bound devices: "
 			<< ((mBoundDevices.count() > 0) ? mBoundDevices.join(", ") : CSL1("<none>")) << endl;
 #endif
@@ -631,7 +628,6 @@ void KPilotDeviceLink::acceptDevice()
 #endif
 
 	dlp_ReadUserInfo(fCurrentPilotSocket, fPilotUser->pilotUser());
-	fPilotUser->boundsCheck();
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname
@@ -970,6 +966,10 @@ void KPilotDeviceLink::finishSync()
 	getPilotUser()->setLastSyncPC((unsigned long) gethostid());
 	getPilotUser()->setLastSyncDate(time(0));
 
+	
+#ifdef DEBUG	
+	DEBUGDAEMON << fname << ": Writing username " << getPilotUser()->pilotUser() << endl;
+#endif
 	dlp_WriteUserInfo(pilotSocket(),getPilotUser()->pilotUser());
 	addSyncLogEntry(i18n("End of HotSync\n"));
 	endOfSync();
