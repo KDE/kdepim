@@ -23,6 +23,8 @@
 #include <qmap.h>
 #include <kdepimmacros.h>
 
+#include <kdemacros.h>
+
 class KTNEFAttach;
 class KTNEFMessage;
 class KTNEFProperty;

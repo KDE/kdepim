@@ -22,6 +22,8 @@
 #include <qvariant.h>
 #include <kdepimmacros.h>
 
+#include <kdemacros.h>
+
 class KTNEFProperty;
 
 class KDE_EXPORT KTNEFPropertySet
