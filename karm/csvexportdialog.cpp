@@ -43,7 +43,7 @@ CSVExportDialog::CSVExportDialog( ReportCriteria::REPORTTYPE rt,
       rc.reportType = rt;
       break;
     case ReportCriteria::CSVHistoryExport:
-      grpDateRange->setEnabled( false );      
+      grpDateRange->setEnabled( true );      
       rc.reportType = rt;
       break;
     default:
