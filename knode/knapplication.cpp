@@ -52,14 +52,15 @@ int KNApplication::newInstance()
       conf->writeEntry("Version", KNODE_VERSION);
   }
 
-  if (mainWidget())
-    KWin::activateWindow(mainWidget()->winId());
-  else {
+  if (!mainWidget()) {
     if (isRestored()) {
       int n = 1;
       while (KNMainWindow::canBeRestored(n)){
         if (KNMainWindow::classNameOfToplevel(n)=="KNMainWindow") {
-          (new KNMainWindow)->restore(n);
+          KNMainWindow* mainWin = new KNMainWindow;
+          mainWin->restore(n);
+          if ( n == 1 )
+            setMainWidget( mainWin );
           break;
         }
         n++;
@@ -67,14 +68,18 @@ int KNApplication::newInstance()
     }
 
     if (!mainWidget()) {
-      KNMainWindow* knode = new KNMainWindow;
-      knode->show();
+      KNMainWindow* mainWin = new KNMainWindow;
+      setMainWidget(mainWin);  // this makes the external viewer windows close on shutdown...
+      mainWin->show();
     }
   }
 
+  // Handle window activation and startup notification
+  KUniqueApplication::newInstance();
+
   // process URLs...
-  KNMainWidget *mainWin = static_cast<KNMainWidget*>(mainWidget());
-  mainWin->handleCommandLine();
+  KNMainWidget *w = static_cast<KNMainWindow*>(mainWidget())->mainWidget();
+  w->handleCommandLine();
 
   kdDebug(5003) << "KNApplication::newInstance() done" << endl;
   return 0;

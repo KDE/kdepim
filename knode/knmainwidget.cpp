@@ -68,8 +68,6 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
   knGlobals.top=this;
   knGlobals.guiClient=client;
   knGlobals.topWidget=this;
-  if ( detachable )
-    kapp->setMainWidget(this);  // this makes the external viewer windows close on shutdown...
 
   //------------------------------- <CONFIG> ----------------------------------
   c_fgManager = new KNConfigManager();
