@@ -32,139 +32,139 @@ class QColor;
 namespace EmpathConfig
 {
 
-const char * GROUP_GENERAL     = "General";
-const char * GROUP_FOLDERS     = "Folders";
-const char * GROUP_MAILBOX     = "Mailbox_";
-const char * GROUP_FILTER      = "Filter_";
-const char * GROUP_ACTION      = "Action_";
-const char * GROUP_EXPR        = "Expr_";
-const char * GROUP_DISPLAY     = "Display";
-const char * GROUP_COMPOSE     = "Compose";
-const char * GROUP_IDENTITY    = "Identity";
-const char * GROUP_SENDING     = "Sending";
-const char * GROUP_ACCOUNT     = "Account";
+#define GROUP_GENERAL     "General"
+#define GROUP_FOLDERS     "Folders"
+#define GROUP_MAILBOX     "Mailbox_"
+#define GROUP_FILTER      "Filter_"
+#define GROUP_ACTION      "Action_"
+#define GROUP_EXPR        "Expr_"
+#define GROUP_DISPLAY     "Display"
+#define GROUP_COMPOSE     "Compose"
+#define GROUP_IDENTITY    "Identity"
+#define GROUP_SENDING     "Sending"
+#define GROUP_ACCOUNT     "Account"
 
 // Keys
 
 // GENERAL
-const char * GEN_MAILBOX_LIST  = "MailboxList";
-const char * GEN_SAVE_POLICY   = "SavePolicy";
+#define GEN_MAILBOX_LIST  "MailboxList"
+#define GEN_SAVE_POLICY   "SavePolicy"
 
 // UI
-const char * UI_THREAD             = "ThreadMessages";
-const char * UI_SHOW_HEADERS       = "ShowHeaders";
-const char * UI_MAIN_WIN_X         = "MainWindowXSize";
-const char * UI_MAIN_WIN_Y         = "MainWindowYSize";
-const char * UI_MAIN_W_V           = "MainWidgetVSepPos";
-const char * UI_MAIN_W_H           = "MainWidgetHSepPos";
-const char * UI_SORT_COLUMN        = "MessageListSortColumn";
-const char * UI_SORT_ASCENDING     = "MessageListSortAscending";
-const char * UI_MAIN_WIN_TOOL      = "MainWindowToolbarPos";
-const char * UI_COMPOSE_WIN_TOOL   = "ComposeWindowToolbarPos";
-const char * UI_TIP_AT_START       = "TipOfTheDayAtStartup";
-const char * UI_MSG_LIST_SIZE      = "MessageListSizeOfColumn";
-const char * UI_MSG_LIST_POS       = "MessageListPositionOfColumn";
-const char * UI_FIXED_FONT         = "FixedFont";
-const char * UI_UNDERLINE_LINKS    = "UnderlineLinks";
-const char * UI_QUOTE_ONE          = "QuoteColourOne";
-const char * UI_QUOTE_TWO          = "QuoteColourTwo";
-const char * UI_LINK               = "LinkColour";
-const char * UI_NEW                = "NewMessageColour";
-const char * UI_STAR_PASSWORD      = "StarPassword";
-const char * UI_FOLDERS_OPEN       = "FolderListItemsOpen";
-const char * UI_MARK_READ          = "MarkAsRead";
-const char * UI_MARK_TIME          = "MarkAsReadAfterTime";
-const char * UI_LAST_SHOWN_FOLDER  = "LastShownFolder";
+#define UI_THREAD             "ThreadMessages"
+#define UI_SHOW_HEADERS       "ShowHeaders"
+#define UI_MAIN_WIN_X         "MainWindowXSize"
+#define UI_MAIN_WIN_Y         "MainWindowYSize"
+#define UI_MAIN_W_V           "MainWidgetVSepPos"
+#define UI_MAIN_W_H           "MainWidgetHSepPos"
+#define UI_SORT_COLUMN        "MessageListSortColumn"
+#define UI_SORT_ASCENDING     "MessageListSortAscending"
+#define UI_MAIN_WIN_TOOL      "MainWindowToolbarPos"
+#define UI_COMPOSE_WIN_TOOL   "ComposeWindowToolbarPos"
+#define UI_TIP_AT_START       "TipOfTheDayAtStartup"
+#define UI_MSG_LIST_SIZE      "MessageListSizeOfColumn"
+#define UI_MSG_LIST_POS       "MessageListPositionOfColumn"
+#define UI_FIXED_FONT         "FixedFont"
+#define UI_UNDERLINE_LINKS    "UnderlineLinks"
+#define UI_QUOTE_ONE          "QuoteColourOne"
+#define UI_QUOTE_TWO          "QuoteColourTwo"
+#define UI_LINK               "LinkColour"
+#define UI_NEW                "NewMessageColour"
+#define UI_STAR_PASSWORD      "StarPassword"
+#define UI_FOLDERS_OPEN       "FolderListItemsOpen"
+#define UI_MARK_READ          "MarkAsRead"
+#define UI_MARK_TIME          "MarkAsReadAfterTime"
+#define UI_LAST_SHOWN_FOLDER  "LastShownFolder"
 
 // MAILBOX
-const char * M_TYPE        = "Type";
-const char * M_NAME        = "Name";
-const char * M_PATH        = "Path";
-const char * M_FOLDER_LIST = "FolderList";
-const char * M_USERNAME    = "Username";
-const char * M_PASSWORD    = "Password";
-const char * M_ADDRESS     = "Address";
-const char * M_PORT        = "Port";
-const char * M_CHECK       = "CheckMailAtIntervals";
-const char * M_CHECK_INT   = "CheckMailInterval";
+#define M_TYPE        "Type"
+#define M_NAME        "Name"
+#define M_PATH        "Path"
+#define M_FOLDER_LIST "FolderList"
+#define M_USERNAME    "Username"
+#define M_PASSWORD    "Password"
+#define M_ADDRESS     "Address"
+#define M_PORT        "Port"
+#define M_CHECK       "CheckMailAtIntervals"
+#define M_CHECK_INT   "CheckMailInterval"
 // MAILDIR
-const char * M_INTERNAL_FILE = "EmpathMaildir";
+#define M_INTERNAL_FILE "EmpathMaildir"
 // NETWORK
-const char * M_LOGGING         = "LoggingPolicy";
-const char * M_LOG_PATH        = "LogFilePath";
-const char * M_LOG_DISPOSAL    = "LogFileDisposal";
-const char * M_MAX_LOG_SIZE    = "LogFileMaxSize";
+#define M_LOGGING         "LoggingPolicy"
+#define M_LOG_PATH        "LogFilePath"
+#define M_LOG_DISPOSAL    "LogFileDisposal"
+#define M_MAX_LOG_SIZE    "LogFileMaxSize"
 
 // FOLDERS
-const char * FOLDER_INBOX  = "Inbox";
-const char * FOLDER_DRAFTS = "Drafts";
-const char * FOLDER_OUTBOX = "Outbox";
-const char * FOLDER_SENT   = "Sent";
-const char * FOLDER_TRASH  = "Trash";
+#define FOLDER_INBOX  "Inbox"
+#define FOLDER_DRAFTS "Drafts"
+#define FOLDER_OUTBOX "Outbox"
+#define FOLDER_SENT   "Sent"
+#define FOLDER_TRASH  "Trash"
 
 // COMPOSING
-const char * C_EXTRA_HEADERS       = "ExtraHeaders";
-const char * C_PHRASE_REPLY_SENDER = "PhraseReplySender";
-const char * C_PHRASE_REPLY_ALL    = "PhraseReplyAll";
-const char * C_PHRASE_FORWARD      = "PhraseForward";
-const char * C_AUTO_QUOTE          = "AutoQuoteOnReply";
-const char * C_USE_EXT_EDIT        = "UseExternalEditor";
-const char * C_EXT_EDIT            = "ExternalEditor";
-const char * C_CC_OTHER            = "CopyOther";
-const char * C_CC_OTHER_ADDRESS    = "CopyOtherAddress";
-const char * C_SIG_PATH            = "Signature";
-const char * C_ADD_SIG             = "AddSignature";
-const char * C_ADD_DIG_SIG         = "AddDigitalSignature";
-const char * C_SEND_POLICY         = "SendPolicy";
-const char * C_WRAP_LINES          = "WrapLongLines";
-const char * C_WRAP_COLUMN         = "WrapColumn";
+#define C_EXTRA_HEADERS       "ExtraHeaders"
+#define C_PHRASE_REPLY_SENDER "PhraseReplySender"
+#define C_PHRASE_REPLY_ALL    "PhraseReplyAll"
+#define C_PHRASE_FORWARD      "PhraseForward"
+#define C_AUTO_QUOTE          "AutoQuoteOnReply"
+#define C_USE_EXT_EDIT        "UseExternalEditor"
+#define C_EXT_EDIT            "ExternalEditor"
+#define C_CC_OTHER            "CopyOther"
+#define C_CC_OTHER_ADDRESS    "CopyOtherAddress"
+#define C_SIG_PATH            "Signature"
+#define C_ADD_SIG             "AddSignature"
+#define C_ADD_DIG_SIG         "AddDigitalSignature"
+#define C_SEND_POLICY         "SendPolicy"
+#define C_WRAP_LINES          "WrapLongLines"
+#define C_WRAP_COLUMN         "WrapColumn"
 
 // SENDING
-const char * S_ENCRYPT         = "Encrypt";
-const char * S_TYPE            = "OutgoingServerType";
-const char * S_SENDMAIL        = "SendmailLocation";
-const char * S_QMAIL           = "QmailLocation";
-const char * S_SMTP            = "SMTPServerLocation";
-const char * S_SMTP_PORT       = "SMTPServerPort";
-const char * S_CONFIRM_DELIVER = "ConfirmDelivery";
-const char * S_CONFIRM_READ    = "ConfirmReading";
+#define S_ENCRYPT         "Encrypt"
+#define S_TYPE            "OutgoingServerType"
+#define S_SENDMAIL        "SendmailLocation"
+#define S_QMAIL           "QmailLocation"
+#define S_SMTP            "SMTPServerLocation"
+#define S_SMTP_PORT       "SMTPServerPort"
+#define S_CONFIRM_DELIVER "ConfirmDelivery"
+#define S_CONFIRM_READ    "ConfirmReading"
 
 // FILTERS
-const char * F_LIST            = "List";
-const char * F_EXPRS           = "MatchExpressions";
-const char * F_FOLDER          = "SourceFolder";
-const char * F_PRIORITY        = "Priority";
-const char * F_ACTION_TYPE     = "Type";
-const char * F_ACTION_FOLDER   = "Folder";
-const char * F_ACTION_ADDRESS  = "Address";
-const char * F_MATCH_TYPE      = "Type";
-const char * F_MATCH_SIZE      = "Size";
-const char * F_MATCH_EXPR      = "Expr";
-const char * F_MATCH_HEADER    = "HeaderExpr";
+#define F_LIST            "List"
+#define F_EXPRS           "MatchExpressions"
+#define F_FOLDER          "SourceFolder"
+#define F_PRIORITY        "Priority"
+#define F_ACTION_TYPE     "Type"
+#define F_ACTION_FOLDER   "Folder"
+#define F_ACTION_ADDRESS  "Address"
+#define F_MATCH_TYPE      "Type"
+#define F_MATCH_SIZE      "Size"
+#define F_MATCH_EXPR      "Expr"
+#define F_MATCH_HEADER    "HeaderExpr"
 
 // Defaults
 
-const char *   DFLT_REPLY          = "On %1, you wrote:";
-const char *   DFLT_REPLY_ALL      = "On %1, %2 wrote:";
-const char *   DFLT_FORWARD        = "Forwarded message from %1";
-const char *   DFLT_HEADERS        = "From,Date,Subject";
+#define DFLT_REPLY          "On %1, you wrote:"
+#define DFLT_REPLY_ALL      "On %1, %2 wrote:"
+#define DFLT_FORWARD        "Forwarded message from %1"
+#define DFLT_HEADERS        "From,Date,Subject"
 
-const bool      DFLT_UNDER_LINKS    = true;
-const bool      DFLT_AUTO_QUOTE     = true;
-const bool      DFLT_SIGN           = true;
-const bool      DFLT_DIG_SIGN       = false;
-const bool      DFLT_CC_ME          = false;
-const bool      DFLT_CC_OTHER       = false;
-const bool      DFLT_SEND_NOW       = true;
-const bool      DFLT_CHECK_NEW      = true;
-const bool      DFLT_THREAD         = true;
-const bool      DFLT_SORT_ASCENDING = true;
-const bool      DFLT_MARK           = true;
+#define DFLT_UNDER_LINKS    true
+#define DFLT_AUTO_QUOTE     true
+#define DFLT_SIGN           true
+#define DFLT_DIG_SIGN       false
+#define DFLT_CC_ME          false
+#define DFLT_CC_OTHER       false
+#define DFLT_SEND_NOW       true
+#define DFLT_CHECK_NEW      true
+#define DFLT_THREAD         true
+#define DFLT_SORT_ASCENDING true
+#define DFLT_MARK           true
 
-const unsigned  DFLT_MARK_TIMER     = 2;
-const unsigned  DFLT_SORT_COL       = 2;
-const unsigned  DFLT_WRAP           = 76;
-const unsigned  DFLT_CHECK_INT      = 10;
+#define DFLT_MARK_TIMER     2
+#define DFLT_SORT_COL       2
+#define DFLT_WRAP           76
+#define DFLT_CHECK_INT      10
 };
 
 #endif
