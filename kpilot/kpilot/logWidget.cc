@@ -281,11 +281,6 @@ void LogWidget::syncDone()
 	addMessage(i18n("<b>HotSync Finished!</b>"));
 }
 
-void LogWidget::initialize()
-{
-	FUNCTIONSETUP;
-}
-
 void LogWidget::hideSplash()
 {
 	FUNCTIONSETUP;

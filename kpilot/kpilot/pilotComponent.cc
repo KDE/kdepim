@@ -56,7 +56,8 @@ PilotComponent::PilotComponent(QWidget * parent,
 	const char *id,
 	const QString & path) :
 	QWidget(parent, id),
-	fDBPath(path)
+	fDBPath(path),
+	shown(false)
 {
 	FUNCTIONSETUP;
 
@@ -298,3 +299,12 @@ void PilotComponent::markDBDirty(const QString db)
 	c.sync();
 }
 
+void PilotComponent::showKPilotComponent( bool toShow )
+{
+	if ( toShow != shown )
+	{
+		shown = toShow;
+		if (shown) showComponent();
+		else hideComponent();
+	}
+}

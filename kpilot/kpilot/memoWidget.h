@@ -68,7 +68,8 @@ public:
 	virtual ~MemoWidget();
   
 	// Pilot Component Methods:
-	/* virtual */ void initialize();
+	/* virtual */ void showComponent();
+	/* virtual */ void hideComponent();
 	/* virtual */ bool preHotSync(QString &);
 	/* virtual */ void postHotSync();
 

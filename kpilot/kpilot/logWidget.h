@@ -47,8 +47,6 @@ public:
 
 	// Pilot Component Methods:
 	//
-	void initialize();
-
 	bool showTime() const { return fShowTime; } ;
 	void setShowTime(bool b) { fShowTime=b; } ;
 

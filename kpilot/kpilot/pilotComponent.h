@@ -52,10 +52,25 @@ public:
 		const QString& dbPath);
 
 	/**
-	* Load data from files, etc. Always called
-	* before the component is made visible the first time.
+	* Called when the component is shown in kpilot. It should 
+	* load the database and populate the widgets.
 	*/
-	virtual void initialize() = 0;
+	virtual void showComponent() {}
+	/**
+	* Called when the component is hidden in kpilot. It should 
+	* unload the databases and clean up to save memory. This method
+	* can be called even if the component is not visible.
+	* If there are some editing dlgs open, this needs to be deferred
+	* until they are all closed. Then, one can explicitly call hideComponent().
+	*/
+	virtual void hideComponent() {}
+	
+	/**
+	* Set the shown variable to true or false, then call showComponent
+	* or hideComponent.
+	*/
+	void showKPilotComponent( bool toShow );
+	
 
 	/**
 	* Get ready for a hotsync -- write any unflushed records
@@ -120,6 +135,8 @@ signals:
 
 private:
 	QString fDBPath;
+protected:
+	bool shown;
 } ;
 
 #endif

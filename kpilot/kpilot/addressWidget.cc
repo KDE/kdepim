@@ -135,9 +135,10 @@ int AddressWidget::getAllAddresses(PilotDatabase * addressDB)
 	return currentRecord;
 }
 
-void AddressWidget::initialize()
+void AddressWidget::showComponent()
 {
 	FUNCTIONSETUP;
+	if ( fPendingAddresses>0 ) return;
 
 #ifdef DEBUG
 	DEBUGKPILOT << fname
@@ -167,16 +168,28 @@ void AddressWidget::initialize()
 			<< ": Could not open local AddressDB" << endl;
 	}
 
-	delete addressDB;
+	KPILOT_DELETE( addressDB );
 
 	updateWidget();
+}
+
+void AddressWidget::hideComponent()
+{
+	FUNCTIONSETUP;
+	if (fPendingAddresses==0 )
+	{
+		fAddressList.clear();
+		fListBox->clear();
+	
+		updateWidget();
+	}
 }
 
 /* virtual */ bool AddressWidget::preHotSync(QString &s)
 {
 	FUNCTIONSETUP;
 
-	if (fPendingAddresses)
+	if ( fPendingAddresses )
 	{
 #ifdef DEBUG
 		DEBUGKPILOT << fname
@@ -203,8 +216,11 @@ void AddressWidget::postHotSync()
 {
 	FUNCTIONSETUP;
 
-	fAddressList.clear();
-	initialize();
+	if ( shown ) 
+	{
+		fAddressList.clear();
+		showComponent();
+	}
 }
 
 
@@ -399,6 +415,7 @@ void AddressWidget::slotSetCategory(int)
 void AddressWidget::slotEditRecord()
 {
 	FUNCTIONSETUP;
+	if ( !shown ) return;
 
 	int item = fListBox->currentItem();
 
@@ -432,6 +449,7 @@ void AddressWidget::slotEditRecord()
 void AddressWidget::slotCreateNewRecord()
 {
 	FUNCTIONSETUP;
+	if ( !shown ) return;
 
 	// Response to bug 18072: Don't even try to
 	// add records to an empty or unopened database,
@@ -461,7 +479,7 @@ void AddressWidget::slotCreateNewRecord()
 			i18n("Can't Add New Address"));
 
 		if (myDB)
-			delete myDB;
+			KPILOT_DELETE( myDB );
 
 		return;
 	}
@@ -481,6 +499,7 @@ void AddressWidget::slotCreateNewRecord()
 void AddressWidget::slotAddRecord(PilotAddress * address)
 {
 	FUNCTIONSETUP;
+	if ( !shown && fPendingAddresses==0 ) return;
 
 	int currentCatID = findSelectedCategory(fCatList,
 		&(fAddressAppInfo.category), true);
@@ -501,11 +520,13 @@ void AddressWidget::slotAddRecord(PilotAddress * address)
 	fListBox->setBottomItem(k);
 
 	fPendingAddresses--;
+	if ( !shown && fPendingAddresses==0 ) hideComponent();
 }
 
 void AddressWidget::slotUpdateRecord(PilotAddress * address)
 {
 	FUNCTIONSETUP;
+	if ( !shown && fPendingAddresses==0 ) return;
 
 	writeAddress(address);
 	int currentRecord = fListBox->currentItem();
@@ -517,6 +538,7 @@ void AddressWidget::slotUpdateRecord(PilotAddress * address)
 	emit(recordChanged(address));
 
 	fPendingAddresses--;
+	if ( !shown && fPendingAddresses==0 ) hideComponent();
 }
 
 void AddressWidget::slotEditCancelled()
@@ -524,11 +546,13 @@ void AddressWidget::slotEditCancelled()
 	FUNCTIONSETUP;
 
 	fPendingAddresses--;
+	if ( !shown && fPendingAddresses==0 ) hideComponent();
 }
 
 void AddressWidget::slotDeleteRecord()
 {
 	FUNCTIONSETUP;
+	if ( !shown ) return;
 
 	int item = fListBox->currentItem();
 
@@ -555,7 +579,7 @@ void AddressWidget::slotDeleteRecord()
 	selectedRecord->makeDeleted();
 	writeAddress(selectedRecord);
 	emit(recordChanged(selectedRecord));
-	initialize();
+	showComponent();
 }
 
 
@@ -563,6 +587,7 @@ void AddressWidget::slotDeleteRecord()
 void AddressWidget::slotShowAddress(int which)
 {
 	FUNCTIONSETUP;
+	if (!shown) return;
 
 	PilotListItem *p = (PilotListItem *) fListBox->item(which);
 	PilotAddress *addr = (PilotAddress *) p->rec();
@@ -630,7 +655,7 @@ void AddressWidget::writeAddress(PilotAddress * which,
 	//
 	if (usemyDB)
 	{
-		delete myDB;
+		KPILOT_DELETE( myDB );
 	}
 }
 

@@ -258,6 +258,8 @@ void KPilotInstaller::setupWidget()
 	fManagingWidget->setMinimumSize(500, 330);
 	fManagingWidget->show();
 	setCentralWidget(fManagingWidget);
+	connect( fManagingWidget, SIGNAL( aboutToShowPage ( QWidget* ) ),
+			this, SLOT( slotAboutToShowComponent( QWidget* ) ) );
 
 	initIcons();
 	initMenu();
@@ -339,14 +341,26 @@ void KPilotInstaller::initIcons()
 
 
 
+void KPilotInstaller::slotAboutToShowComponent( QWidget *c )
+{
+	FUNCTIONSETUP;
+	int ix = fManagingWidget->pageIndex( c );
+	PilotComponent*compToShow = fP->list().at(ix);
+DEBUGKPILOT<<"Index: "<<ix<<", Widget="<<c<<", ComToShow="<<compToShow<<endl;
+	for ( PilotComponent *comp = fP->list().first(); comp; comp = fP->list().next() )
+	{
+DEBUGKPILOT<<"comp="<<comp<<endl;
+		// Load/Unload the data needed
+		comp->showKPilotComponent( comp == compToShow );
+	}
+}
+
 void KPilotInstaller::slotSelectComponent(PilotComponent * c)
 {
 	FUNCTIONSETUP;
+	if (!c) { kdWarning() << k_funcinfo << ": Not a widget." << endl; return;}
 
-	QWidget *p = static_cast <QWidget *>(c);
-	if (!p) { kdWarning() << k_funcinfo << ": Not a widget." << endl; return;}
-
-	QObject *o = p->parent();
+	QObject *o = c->parent();
 	if (!o) { kdWarning() << k_funcinfo << ": No parent." << endl; return; }
 
 	QWidget *parent = dynamic_cast<QWidget *>(o);
@@ -359,7 +373,12 @@ void KPilotInstaller::slotSelectComponent(PilotComponent * c)
 		kdWarning() << k_funcinfo << ": Index " << index << endl;
 		return;
 	}
-
+	
+	for ( PilotComponent *comp = fP->list().first(); comp; comp = fP->list().next() )
+	{
+		// Load/Unload the data needed
+		comp->showKPilotComponent( comp == c );
+	}
 	fManagingWidget->showPage(index);
 }
 
@@ -679,11 +698,11 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 {
 	FUNCTIONSETUP;
 
-	for (PilotComponent *p = fP->list().first();
+/*	for (PilotComponent *p = fP->list().first();
 		p ; p = fP->list().next())
 	{
 		p->initialize();
-	}
+	}*/
 }
 
 #if KDE_VERSION >= 0x30080
@@ -713,7 +732,7 @@ void KPilotInstaller::optionsShowToolbar()
 void KPilotInstaller::optionsConfigureKeys()
 {
 	FUNCTIONSETUP;
-	KKeyDialog::configureKeys(actionCollection(), xmlFile());
+	KKeyDialog::configure( actionCollection() );
 }
 
 void KPilotInstaller::optionsConfigureToolbars()
@@ -790,7 +809,8 @@ void KPilotInstaller::slotConfigureKPilot()
 			fP->list().current();
 			fP->list().next())
 		{
-			fP->list().current()->initialize();
+			// TODO_RK: update the current component to use the new settings
+//			fP->list().current()->initialize();
 		}
 	}
 

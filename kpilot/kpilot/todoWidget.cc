@@ -139,9 +139,10 @@ int TodoWidget::getAllTodos(PilotDatabase * todoDB)
 	return currentRecord;
 }
 
-void TodoWidget::initialize()
+void TodoWidget::showComponent()
 {
 	FUNCTIONSETUP;
+	if ( fPendingTodos>0 ) return;
 
 #ifdef DEBUG
 	DEBUGKPILOT << fname
@@ -207,9 +208,19 @@ void TodoWidget::postHotSync()
 	FUNCTIONSETUP;
 
 	fTodoList.clear();
-	initialize();
+	showComponent();
 }
 
+void TodoWidget::hideComponent()
+{
+	FUNCTIONSETUP;
+	if ( fPendingTodos==0 )
+	{
+		fTodoList.clear();
+		fListBox->clear();
+		KPILOT_DELETE( fTodoDB );
+	}
+}
 
 void TodoWidget::setupWidget()
 {
@@ -283,6 +294,7 @@ void TodoWidget::setupWidget()
 void TodoWidget::updateWidget()
 {
 	FUNCTIONSETUP;
+	if (!shown) return;
 
 	int listIndex = 0;
 
@@ -346,6 +358,7 @@ void TodoWidget::slotEditRecord()
 void TodoWidget::slotEditRecord(QListViewItem*item)
 {
 	FUNCTIONSETUP;
+	if (!shown) return;
 
 	TodoCheckListItem*p = static_cast<TodoCheckListItem*>(item);
 	if (!p) return;
@@ -375,6 +388,7 @@ void TodoWidget::slotEditRecord(QListViewItem*item)
 void TodoWidget::slotCreateNewRecord()
 {
 	FUNCTIONSETUP;
+	if (!shown) return;
 
 	// Response to bug 18072: Don't even try to
 	// add records to an empty or unopened database,
@@ -424,6 +438,7 @@ void TodoWidget::slotCreateNewRecord()
 void TodoWidget::slotAddRecord(PilotTodoEntry * todo)
 {
 	FUNCTIONSETUP;
+	if ( !shown && fPendingTodos==0 ) return;
 
 	int currentCatID = findSelectedCategory(fCatList,
 		&(fTodoAppInfo.category), true);
@@ -443,11 +458,13 @@ void TodoWidget::slotAddRecord(PilotTodoEntry * todo)
 //	fListBox->setBottomItem(k);
 
 	fPendingTodos--;
+	if ( !shown && fPendingTodos==0 ) hideComponent();
 }
 
 void TodoWidget::slotUpdateRecord(PilotTodoEntry * todo)
 {
 	FUNCTIONSETUP;
+	if ( !shown && fPendingTodos==0 ) return;
 
 	writeTodo(todo);
 	TodoCheckListItem* currentRecord = static_cast<TodoCheckListItem*>(fListBox->currentItem());
@@ -459,6 +476,7 @@ void TodoWidget::slotUpdateRecord(PilotTodoEntry * todo)
 	emit(recordChanged(todo));
 
 	fPendingTodos--;
+	if ( !shown && fPendingTodos==0 ) hideComponent();
 }
 
 void TodoWidget::slotEditCancelled()
@@ -466,11 +484,13 @@ void TodoWidget::slotEditCancelled()
 	FUNCTIONSETUP;
 
 	fPendingTodos--;
+	if ( !shown && fPendingTodos==0 ) hideComponent();
 }
 
 void TodoWidget::slotDeleteRecord()
 {
 	FUNCTIONSETUP;
+	if (!shown) return;
 
 	TodoCheckListItem* p = static_cast<TodoCheckListItem*>(fListBox->currentItem());
 	if (p == 0L) return;
@@ -494,7 +514,7 @@ void TodoWidget::slotDeleteRecord()
 	selectedRecord->makeDeleted();
 	writeTodo(selectedRecord);
 	emit(recordChanged(selectedRecord));
-	initialize();
+	showComponent();
 }
 
 
@@ -502,6 +522,7 @@ void TodoWidget::slotDeleteRecord()
 void TodoWidget::slotShowTodo(QListViewItem*item)
 {
 	FUNCTIONSETUP;
+	if (!shown) return;
 
 	TodoCheckListItem *p = dynamic_cast<TodoCheckListItem*>(item);
 	if (!p) return;

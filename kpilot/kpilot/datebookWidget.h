@@ -45,7 +45,8 @@ public:
 	virtual ~DatebookWidget();
 
 	// Pilot component methods
-	/* virtual */ void initialize();
+	void hideComponent();
+	void showComponent();
 
 protected slots:
 	void slotDayChanged();

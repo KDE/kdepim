@@ -63,14 +63,10 @@ public:
 	* id of kpilot.o
 	*/
 	static const char *version(int kind);
-
-
-
-
+	
 
 	// Adds 'name' to the pull down menu of components
 	void addComponentPage(PilotComponent *, const QString &name);
-
 
 
 	KPilotStatus status() const { return fStatus; } ;
@@ -191,7 +187,8 @@ protected slots:
 	 * This should be called (possibly by the component itself!)
 	 * or activated through the signal mechanism.
 	 * */
-	void slotSelectComponent(PilotComponent *);
+	void slotSelectComponent( PilotComponent *c );
+	void slotAboutToShowComponent( QWidget *c );
 
 	/**
 	* Delayed initialization of the components.

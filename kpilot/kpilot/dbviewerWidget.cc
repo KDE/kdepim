@@ -141,7 +141,7 @@ GenericDBWidget::~GenericDBWidget()
 }
 
 
-void GenericDBWidget::initialize()
+void GenericDBWidget::showComponent()
 {
 	FUNCTIONSETUP;
 	fDBInfo->setText(QString::null);
@@ -149,6 +149,11 @@ void GenericDBWidget::initialize()
 
 	fDBList->show();
 	fDBInfo->show();
+}
+
+void GenericDBWidget::hideComponent()
+{
+	reset();
 }
 
 void GenericDBWidget::slotSelected(const QString &dbname)
@@ -164,6 +169,9 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 
 	if (fDB) KPILOT_DELETE(fDB);
 	currentDB=dbname;
+	
+	if (!shown) return;
+	
 	if (dbname.endsWith(".pdb") || dbname.endsWith(".PDB"))
 	{
 		// We are dealing with a database
@@ -259,6 +267,7 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 void GenericDBWidget::slotDBType(int mode)
 {
 	FUNCTIONSETUP;
+	if (!shown) return;
 
 	reset();
 
@@ -374,7 +383,7 @@ void GenericDBWidget::slotShowAppInfo()
 void GenericDBWidget::slotShowDBInfo()
 {
 	FUNCTIONSETUP;
-	if (!fDB) return;
+	if ( !fDB || !shown ) return;
 	DBInfo db=fDB->getDBInfo();
 	DBFlagsEditor*dlg=new DBFlagsEditor(&db, this);
 	if (dlg->exec())

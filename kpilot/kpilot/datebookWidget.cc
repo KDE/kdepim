@@ -90,13 +90,21 @@ DatebookWidget::~DatebookWidget()
 }
 
 
-void DatebookWidget::initialize()
+void DatebookWidget::showComponent()
 {
 	FUNCTIONSETUP;
 
 	// TODO: Open the calendar database
 	// TODO: Initialize the current month
 	// TODO: Fill the calendar and the event list
+}
+
+void DatebookWidget::hideComponent()
+{
+	FUNCTIONSETUP;
+
+	// TODO: Close the calendar database if open
+	// TODO: clear the calendar and the event list
 }
 
 void DatebookWidget::slotDayChanged()

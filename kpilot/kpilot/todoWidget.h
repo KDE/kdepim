@@ -78,9 +78,10 @@ public:
 	~TodoWidget();
 
 	// Pilot Component Methods:
-	void initialize();
 	virtual bool preHotSync(QString &);
 	virtual void postHotSync();
+	virtual void showComponent();
+	virtual void hideComponent();
 
 public slots:
 	/**

@@ -120,9 +120,6 @@ void MemoWidget::initializeMemos(PilotDatabase * memoDB)
 	fMemoList.clear();
 
 
-
-
-
 	int currentRecord = 0;
 	PilotRecord *pilotRec;
 	PilotMemo *memo;
@@ -167,10 +164,10 @@ void MemoWidget::initializeMemos(PilotDatabase * memoDB)
 }
 
 
-void MemoWidget::initialize()
+void MemoWidget::showComponent()
 {
 	FUNCTIONSETUP;
-
+	if (!shown) return;
 
 	// Get the local database - assume the call may fail and return
 	// NULL, or the database object may be returned but unopened.
@@ -228,16 +225,27 @@ void MemoWidget::initialize()
 	DEBUGKPILOT << fname << ": Finished initializing" << endl;
 #endif
 
-	delete memoDB;
+	KPILOT_DELETE( memoDB );
 
 	updateWidget();
+}
+
+void MemoWidget::hideComponent()
+{
+	FUNCTIONSETUP;
+	saveChangedMemo();
+	fCatList->clear();
+	fTextWidget->clear();
+	fMemoList.clear();
+	fListBox->clear();
+	lastSelectedMemo = -1;
 }
 
 void MemoWidget::postHotSync()
 {
 	FUNCTIONSETUP;
 	fMemoList.clear();
-	initialize();
+	showComponent();
 }
 
 
@@ -342,6 +350,7 @@ void MemoWidget::slotSetCategory(int)
 void MemoWidget::slotDeleteMemo()
 {
 	FUNCTIONSETUP;
+	if (!shown) return;
 
 	int item = fListBox->currentItem();
 
@@ -395,6 +404,7 @@ void MemoWidget::slotDeleteMemo()
 void MemoWidget::updateWidget()
 {
 	FUNCTIONSETUP;
+	if (!shown) return;
 
 	if (fCatList->currentItem() == -1)
 	{
@@ -462,8 +472,8 @@ void MemoWidget::updateWidget()
 void MemoWidget::slotShowMemo(int which)
 {
 	FUNCTIONSETUP;
-	if ( which == -1 )
-		return;
+	if ( which == -1 ) return;
+	if (!shown) return;
 
 	slotUpdateButtons();
 	if ( !fListBox->isSelected(which) )
@@ -489,19 +499,21 @@ void MemoWidget::slotShowMemo(int which)
 void MemoWidget::writeMemo(PilotMemo * which)
 {
 	FUNCTIONSETUP;
+	if (!shown) return;
 
 	PilotDatabase *memoDB = new PilotLocalDatabase(dbPath(), CSL1("MemoDB"));
 	PilotRecord *pilotRec = which->pack();
 
 	memoDB->writeRecord(pilotRec);
 	markDBDirty("MemoDB");
-	delete pilotRec;
-	delete memoDB;
+	KPILOT_DELETE( pilotRec );
+	KPILOT_DELETE( memoDB );
 }
 
 void MemoWidget::saveChangedMemo()
 {
 	FUNCTIONSETUP;
+	if (!shown) return;
 
 	if (-1 == lastSelectedMemo) return;
 	if (!fTextWidget->isModified()) return;
@@ -530,6 +542,7 @@ void MemoWidget::saveChangedMemo()
 void MemoWidget::slotImportMemo()
 {
 	FUNCTIONSETUP;
+	if (!shown) return;
 
 	int i = 0;
 	int nextChar;
@@ -566,6 +579,7 @@ void MemoWidget::slotImportMemo()
 void MemoWidget::slotExportMemo()
 {
 	FUNCTIONSETUP;
+	if (!shown) return;
 
 	int index = fListBox->numRows();
 	if (index == 0)

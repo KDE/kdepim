@@ -48,7 +48,8 @@ public:
 	virtual ~GenericDBWidget();
 
 	// Pilot component methods
-	/* virtual */ void initialize();
+	/* virtual */ void showComponent();
+	/* virtual */ void hideComponent();
 
 	QString getCurrentDB() const {  return currentDB; }
 protected:
@@ -82,7 +83,7 @@ private:
 
 	PilotLocalDatabase*fDB;
 	QString currentDB;
-	QPtrList<PilotRecord>   fRecList;
+	QPtrList<PilotRecord> fRecList;
 };
 
 

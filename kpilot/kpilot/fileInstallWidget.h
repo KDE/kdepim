@@ -51,8 +51,8 @@ public:
 	virtual ~FileInstallWidget();
 
 	// Pilot Component Methods:
-	void initialize();
-	virtual bool preHotSync(QString &);
+	void showComponent();
+	bool preHotSync(QString &);
 	void postHotSync();
 
 

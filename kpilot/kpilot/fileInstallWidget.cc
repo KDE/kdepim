@@ -121,6 +121,7 @@ void FileInstallWidget::dragEnterEvent(QDragEnterEvent * event)
 void FileInstallWidget::dropEvent(QDropEvent * drop)
 {
 	FUNCTIONSETUP;
+	if (!shown) return;
 
 	KURL::List list;
 
@@ -147,7 +148,7 @@ void FileInstallWidget::slotClearButton()
 	fInstaller->clearPending();
 }
 
-void FileInstallWidget::initialize()
+void FileInstallWidget::showComponent()
 {
 	FUNCTIONSETUP;
 	refreshFileInstallList();
@@ -156,6 +157,7 @@ void FileInstallWidget::initialize()
 void FileInstallWidget::slotAddFile()
 {
 	FUNCTIONSETUP;
+	if (!shown) return;
 
 	QStringList fileNames = KFileDialog::getOpenFileNames();
 
@@ -168,7 +170,7 @@ void FileInstallWidget::slotAddFile()
 bool FileInstallWidget::preHotSync(QString &)
 {
 	FUNCTIONSETUP;
-	
+
 	fListBox->setEnabled(false);
 	fInstaller->setEnabled(false);
 	addButton->setEnabled(false);
@@ -184,7 +186,7 @@ void FileInstallWidget::postHotSync()
 	fListBox->setEnabled(true);
 	addButton->setEnabled(true);
 	clearButton->setEnabled(true);
-	refreshFileInstallList();
+	if (shown) refreshFileInstallList();
 }
 
 
