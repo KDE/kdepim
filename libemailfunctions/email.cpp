@@ -240,6 +240,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
   if ( tooManyAtsFlag ) {
     return TooManyAts;
   }
+  return AddressEmpty;
 } 
 
 //-----------------------------------------------------------------------------
