@@ -843,7 +843,6 @@ void KABCore::configure()
   dlg.addModule( "kabconfig.desktop" );
   dlg.addModule( "kabldapconfig.desktop" );
   dlg.addModule( "kabcustomfields.desktop" );
-  dlg.addModule( "Settings/Components/kresources.desktop" );
 
   dlg.exec();
 }
