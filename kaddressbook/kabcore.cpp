@@ -427,7 +427,7 @@ void KABCore::deleteContacts( const QStringList &uids )
     QStringList names;
     QStringList::ConstIterator it = uids.begin();
     while ( it != uids.end() ) {
-      names.append( mAddressBook->findByUid( *it ).formattedName() );
+      names.append( mAddressBook->findByUid( *it ).realName() );
       ++it;
     }
 
@@ -796,7 +796,7 @@ QString KABCore::getNameByPhone( const QString &phone )
           ++phoneIter) {
       // Get rid of separator chars so just the numbers are compared.
       if ( (*phoneIter).number().replace( r, "" ) == localPhone.replace( r, "" ) ) {
-        ownerName = (*iter).formattedName();
+        ownerName = (*iter).realName();
         found = true;
       }
     }
