@@ -104,7 +104,7 @@ public:
   QString role() const;
 
   void setFreeBusyUrl( const QString& fbUrl );
-  QString freebusyUrl() const;
+  QString freeBusyUrl() const;
 
   void setOrganization( const QString& organization );
   QString organization() const;
@@ -192,12 +192,16 @@ protected:
 
 private:
   bool loadNameAttribute( QDomElement& element );
+  void saveNameAttribute( QDomElement& element ) const;
 
   bool loadPhoneAttribute( QDomElement& element );
+  void savePhoneAttributes( QDomElement& element ) const;
 
   bool loadEmailAttribute( QDomElement& element );
+  void saveEmailAttributes( QDomElement& element ) const;
 
   bool loadAddressAttribute( QDomElement& element );
+  void saveAddressAttributes( QDomElement& element ) const;
 
   QString mGivenName;
   QString mMiddleNames;

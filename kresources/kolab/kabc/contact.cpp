@@ -147,7 +147,7 @@ void Contact::setFreeBusyUrl( const QString& fbUrl )
   mFreeBusyUrl = fbUrl;
 }
 
-QString Contact::freebusyUrl() const
+QString Contact::freeBusyUrl() const
 {
   return mFreeBusyUrl;
 }
@@ -413,6 +413,19 @@ bool Contact::loadNameAttribute( QDomElement& element )
   return true;
 }
 
+void Contact::saveNameAttribute( QDomElement& element ) const
+{
+  QDomElement e = element.ownerDocument().createElement( "name" );
+
+  writeString( e, "given-name", givenName() );
+  writeString( e, "middle-names", middleNames() );
+  writeString( e, "last-name", lastName() );
+  writeString( e, "full-name", fullName() );
+  writeString( e, "initials", initials() );
+  writeString( e, "prefix", prefix() );
+  writeString( e, "suffix", suffix() );
+}
+
 bool Contact::loadPhoneAttribute( QDomElement& element )
 {
   PhoneNumber number;
@@ -439,6 +452,17 @@ bool Contact::loadPhoneAttribute( QDomElement& element )
   return true;
 }
 
+void Contact::savePhoneAttributes( QDomElement& element ) const
+{
+  QValueList<PhoneNumber>::ConstIterator it = mPhoneNumbers.begin();
+  for ( ; it != mPhoneNumbers.end(); ++it ) {
+    QDomElement e = element.ownerDocument().createElement( "phone-number" );
+    const PhoneNumber& p = *it;
+    writeString( e, "type", p.type );
+    writeString( e, "number", p.number );
+  }
+}
+
 bool Contact::loadEmailAttribute( QDomElement& element )
 {
   Email email;
@@ -463,6 +487,17 @@ bool Contact::loadEmailAttribute( QDomElement& element )
 
   addEmail( email );
   return true;
+}
+
+void Contact::saveEmailAttributes( QDomElement& element ) const
+{
+  QValueList<Email>::ConstIterator it = mEmails.begin();
+  for ( ; it != mEmails.end(); ++it ) {
+    QDomElement e = element.ownerDocument().createElement( "email" );
+    const Email& email = *it;
+    writeString( e, "display-name", email.displayName );
+    writeString( e, "smtp-address", email.smtpAddress );
+  }
 }
 
 bool Contact::loadAddressAttribute( QDomElement& element )
@@ -497,6 +532,21 @@ bool Contact::loadAddressAttribute( QDomElement& element )
 
   addAddress( address );
   return true;
+}
+
+void Contact::saveAddressAttributes( QDomElement& element ) const
+{
+  QValueList<Address>::ConstIterator it = mAddresses.begin();
+  for ( ; it != mAddresses.end(); ++it ) {
+    QDomElement e = element.ownerDocument().createElement( "address" );
+    const Address& a = *it;
+    writeString( e, "type", a.type );
+    writeString( e, "street", a.street );
+    writeString( e, "city", a.city );
+    writeString( e, "state", a.state );
+    writeString( e, "zip", a.zip );
+    writeString( e, "country", a.country );
+  }
 }
 
 bool Contact::loadAttribute( QDomElement& element )
@@ -557,13 +607,41 @@ bool Contact::loadAttribute( QDomElement& element )
 
   // We handled this
   return true;
-
 }
 
-bool Contact::saveAttributes( QDomElement& ) const
+bool Contact::saveAttributes( QDomElement& element ) const
 {
-  kdError() << "NYI: " << k_funcinfo << endl;
-  return false;
+  // Save the base class elements
+  KolabBase::saveAttributes( element );
+
+  saveNameAttribute( element );
+  writeString( element, "role", role() );
+  writeString( element, "free-busy-url", freeBusyUrl() );
+  writeString( element, "organization", organization() );
+  writeString( element, "web-page", webPage() );
+  writeString( element, "im-address", imAddress() );
+  writeString( element, "department", department() );
+  writeString( element, "office-location", officeLocation() );
+  writeString( element, "profession", profession() );
+  writeString( element, "job-title", jobTitle() );
+  writeString( element, "manager-name", managerName() );
+  writeString( element, "assistant", assistant() );
+  writeString( element, "nick-name", nickName() );
+  writeString( element, "spouse-name", spouseName() );
+  writeString( element, "birthday", dateToString( birthday() ) );
+  writeString( element, "anniversary", dateToString( anniversary() ) );
+#if 0
+  writeString( element, "picture", picture() );
+#endif
+  writeString( element, "children", children() );
+  writeString( element, "gender", gender() );
+  writeString( element, "language", language() );
+  savePhoneAttributes( element );
+  saveEmailAttributes( element );
+  saveAddressAttributes( element );
+  writeString( element, "preferred-address", preferredAddress() );
+
+  return true;
 }
 
 bool Contact::loadXML( const QDomDocument& document )
