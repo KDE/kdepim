@@ -57,7 +57,7 @@ static const char *kpilotlink_id = "$Id$";
 
 #include <kconfig.h>
 #include <kmessagebox.h>
-#include <kstandarddirs.h> 
+#include <kstandarddirs.h>
 
 #include "pilotUser.h"
 #include "pilotSysInfo.h"
@@ -67,7 +67,7 @@ static const char *kpilotlink_id = "$Id$";
 
 
 // singleton helper class
-class KPilotDeviceLink::KPilotDeviceLinkPrivate 
+class KPilotDeviceLink::KPilotDeviceLinkPrivate
 {
 public:
 	static KPilotDeviceLinkPrivate*self() { if (!mThis) mThis = new KPilotDeviceLinkPrivate(); return mThis; }
@@ -77,7 +77,7 @@ public:
 protected:
 	KPilotDeviceLinkPrivate() {}
 	~KPilotDeviceLinkPrivate() {}
-	
+
 	QStringList mBoundDevices;
 	static KPilotDeviceLinkPrivate*mThis;
 };
@@ -262,7 +262,7 @@ bool KPilotDeviceLink::open()
 		::close(fCurrentPilotSocket);
 	}
 	fCurrentPilotSocket = (-1);
-	
+
 	fRealPilotPath = KStandardDirs::realPath ( pilotPath() );
 //	if ( dv.exists() && dv.isSymLink() ) {
 //		fRealPilotPath = dv.readLink();
@@ -275,7 +275,7 @@ bool KPilotDeviceLink::open()
 		goto errInit;
 	}
 
-	
+
 	if (fPilotMasterSocket == -1)
 	{
 		if (fPilotPath.isEmpty())
@@ -449,9 +449,9 @@ void KPilotDeviceLink::acceptDevice()
 		// fSocketNotifier->setEnabled(false);
 		fSocketNotifierActive=false;
 	}
-	
+
 #ifdef DEBUG
-	DEBUGDAEMON << fname 
+	DEBUGDAEMON << fname
 		<< ": Found connection on device "<<pilotPath().latin1()<<endl;
 	DEBUGDAEMON << fname
 		<< ": Current status "
@@ -746,6 +746,11 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 	DBInfo *info)
 {
 	FUNCTIONSETUP;
+
+#ifdef DEBUG
+	DEBUGDAEMON << fname << ": Writing DB <" << info->name << "> "
+		<< " to " << fullBackupName << endl;
+#endif
 
 	// The casts here look funny because:
 	//
