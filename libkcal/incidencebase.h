@@ -123,7 +123,7 @@ class IncidenceBase : public CustomProperties
     void clearComments();
 
     /** Return all comments associated with this incidence.  */
-    QStringList comments();
+    QStringList comments() const;
 
     /**
       Add Attendee to this incidence. IncidenceBase takes ownership of the
@@ -147,16 +147,16 @@ class IncidenceBase : public CustomProperties
     /**
       Return the Attendee with this email address.
     */
-    Attendee *attendeeByMail( const QString & );
+    Attendee *attendeeByMail( const QString & ) const;
     /**
       Return first Attendee with one of the given email addresses.
     */
     Attendee *attendeeByMails( const QStringList &,
-                               const QString &email = QString::null );
+                               const QString &email = QString::null ) const;
     /**
       Return attendee with given uid.
     */
-    Attendee *attendeeByUid( const QString &uid );
+    Attendee *attendeeByUid( const QString &uid ) const;
 
     /**
       Pilot synchronization states

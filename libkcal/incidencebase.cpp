@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
+    Copyright (c) 2001,2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -28,11 +29,11 @@
 
 using namespace KCal;
 
-IncidenceBase::IncidenceBase() :
-  mReadOnly(false), mFloats(true), mDuration(0), mHasDuration(false),
-  mPilotId(0), mSyncStatus(SYNCMOD)
+IncidenceBase::IncidenceBase()
+  : mReadOnly( false ), mFloats( true ), mDuration( 0 ), mHasDuration( false ),
+    mPilotId( 0 ), mSyncStatus( SYNCMOD )
 {
-  setUid(CalFormat::createUniqueId());
+  setUid( CalFormat::createUniqueId() );
 
   mAttendees.setAutoDelete( true );
 }
@@ -70,32 +71,33 @@ IncidenceBase::~IncidenceBase()
 
 bool IncidenceBase::operator==( const IncidenceBase& i2 ) const
 {
-    if( attendees().count() != i2.attendees().count() ) {
-        return false; // no need to check further
+  if( attendees().count() != i2.attendees().count() ) {
+      return false; // no need to check further
+  }
+
+  Attendee::List al1 = attendees();
+  Attendee::List al2 = i2.attendees();
+  Attendee::List::ConstIterator a1 = al1.begin();
+  Attendee::List::ConstIterator a2 = al2.begin();
+  for( ; a1 != al1.end() && a2 != al2.end(); ++a1, ++a2 ) {
+    if( **a1 == **a2 )
+        continue;
+    else {
+        return false;
     }
+  }
 
-    Attendee::List al1 = attendees();
-    Attendee::List al2 = i2.attendees();
-    Attendee::List::ConstIterator a1 = al1.begin();
-    Attendee::List::ConstIterator a2 = al2.begin();
-    for( ; a1 != al1.end() && a2 != al2.end(); ++a1, ++a2 )
-        if( **a1 == **a2 )
-            continue;
-        else {
-            return false;
-        }
-
-    return ( dtStart() == i2.dtStart() &&
-             organizer() == i2.organizer() &&
-             uid() == i2.uid() &&
-             // Don't compare lastModified, otherwise the operator is not
-             // of much use. We are not comparing for identity, after all.
-             doesFloat() == i2.doesFloat() &&
-             duration() == i2.duration() &&
-             hasDuration() == i2.hasDuration() &&
-             pilotId() == i2.pilotId() &&
-             syncStatus() == i2.syncStatus() );
-    // no need to compare mObserver
+  return ( dtStart() == i2.dtStart() &&
+           organizer() == i2.organizer() &&
+           uid() == i2.uid() &&
+           // Don't compare lastModified, otherwise the operator is not
+           // of much use. We are not comparing for identity, after all.
+           doesFloat() == i2.doesFloat() &&
+           duration() == i2.duration() &&
+           hasDuration() == i2.hasDuration() &&
+           pilotId() == i2.pilotId() &&
+           syncStatus() == i2.syncStatus() );
+  // no need to compare mObserver
 }
 
         
@@ -193,14 +195,14 @@ void IncidenceBase::setFloats(bool f)
   updated();
 }
 
-//
-// comments
-//
-void IncidenceBase::addComment(const QString& comment) {
+
+void IncidenceBase::addComment(const QString& comment)
+{
   mComments += comment;
 }
 
-bool IncidenceBase::removeComment(QString& comment) {
+bool IncidenceBase::removeComment(QString& comment)
+{
   bool found = false;
   QStringList::Iterator i;
 
@@ -215,17 +217,17 @@ bool IncidenceBase::removeComment(QString& comment) {
   return found;
 }
 
-void IncidenceBase::clearComments() {
+void IncidenceBase::clearComments()
+{
   mComments.clear();
 }
 
-QStringList IncidenceBase::comments() {
+QStringList IncidenceBase::comments() const
+{
   return mComments;
 }
 
-//
-// attendees
-//
+
 void IncidenceBase::addAttendee(Attendee *a, bool doupdate)
 {
 //  kdDebug(5800) << "IncidenceBase::addAttendee()" << endl;
@@ -265,7 +267,7 @@ void IncidenceBase::clearAttendees()
   mAttendees.clear();
 }
 
-Attendee *IncidenceBase::attendeeByMail( const QString &email )
+Attendee *IncidenceBase::attendeeByMail( const QString &email ) const
 {
   Attendee::List::ConstIterator it;
   for( it = mAttendees.begin(); it != mAttendees.end(); ++it ) {
@@ -276,7 +278,7 @@ Attendee *IncidenceBase::attendeeByMail( const QString &email )
 }
 
 Attendee *IncidenceBase::attendeeByMails( const QStringList &emails,
-                                          const QString &email)
+                                          const QString &email) const
 {
   QStringList mails = emails;
   if ( !email.isEmpty() ) mails.append( email );
@@ -291,7 +293,7 @@ Attendee *IncidenceBase::attendeeByMails( const QStringList &emails,
   return 0;
 }
 
-Attendee *IncidenceBase::attendeeByUid( const QString &uid )
+Attendee *IncidenceBase::attendeeByUid( const QString &uid ) const
 {
   Attendee::List::ConstIterator it;
   for( it = mAttendees.begin(); it != mAttendees.end(); ++it ) {
@@ -300,6 +302,7 @@ Attendee *IncidenceBase::attendeeByUid( const QString &uid )
 
   return 0;
 }
+
 
 void IncidenceBase::setDuration(int seconds)
 {
@@ -347,7 +350,7 @@ int IncidenceBase::pilotId() const
 
 void IncidenceBase::registerObserver( IncidenceBase::Observer *observer )
 {
-  if( !mObservers.contains(observer) ) mObservers.append( observer );
+  if( !mObservers.contains( observer ) ) mObservers.append( observer );
 }
 
 void IncidenceBase::unRegisterObserver( IncidenceBase::Observer *observer )
