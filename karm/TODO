@@ -32,39 +32,26 @@
 Mark - 3.2
 --------------------------
 
-X * 2003-09-03: Timecard report.
-
   * 2003-09-17: BUG: entering a negative time increments total session time
     (maybe only if session time is zero?)
-
-X * 2003-08-15: Update karmstorage.cpp when LocalCalendar::deleteTodo works.
-      - KarmStorage::removeTask: delete "return false;" and uncomment code
-
-X * 2003-09-24: Fix "C" and "S" accelerators on file menu.
 
   * 2003-09-24: Add comments to report or put it off to 3.2.
 
   * 2003-09-24: DOCS!!
 
-X * 2003-09-24: Add my name as maintainer to About box.
-
   * 2003-09-24: Add new task action--mark as complete.  Don't load completed
     tasks.
 
-X * 2003-09-24: Add date to clipboard reports.
+X * 2003-09-17: Add license and copyright to new program headers.
 
-X * 2003-09-18: Remove "Active: " from systray tooltip text.
+  * 2003-09-24: Change menu entry from KArm to Time Clock.
 
-  * 2003-09-17: Add license and copyright to new program headers.
+  * 2003-09-24: Generate man page (look for script mentioned on kde-devel).
 
   * 2003-09-23: Auto-save should write events.
   
-X * 2003-09-23: When opening storage file, filter on ics files.
-
   * 2003-09-03: Replace all string concatenations with .arg (for i18n).
     
-X * 2003-09-16: Remove unused signal (see David Faure's email on kdepim list)
-
   * 2003-08-15: Remove code that is causing compiler warnings.
 
   * 2003-08-15: Go over code and delete all cruft.  In particular, take a look
