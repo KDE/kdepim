@@ -1,3 +1,75 @@
+KPilot Developer's notes for september 23rd 2001
+================================================
+
+My current development platform is RH 7.1 with KDE 2.1.1 -- even so I'm
+committing things into HEAD.  I'm sure this will explode sometime and
+I'll be forced to upgrade to KDE 2.2 or worse, but for now, that's the
+platform I'm aiming for.
+
+I'd like to take a moment to thank David Bishop, for sending me .ui files,
+for causing noise on the mailing lists, and for being a pleasure to work
+with. Together we've wrestled with Qt designer, uic, and replacing the
+KPilot dialogs with something sensible made with designer.
+
+2001-09-23  Adriaan de Groot
+* kpilot/uiDialog.{h,cc}
+* kpilot/kpilotConfigDialog.{h,cc}
+* kpilot/kpilotConfigDialog_base.ui
+  New files -- the .ui file is from David Bishop -- re-implementing the
+  configuration dialog using modern technology. uiDialog.{h,cc} are
+  abstract base classes, suitable for reuse. kpilotConfigDialog.{h,cc}
+  contains the behavior of the dialog, and the .ui file the UI.
+* kpilot/kpilotConfig.{h,cc}
+  Switched around #ifdef and #ifndef. This disabled setting debug levels
+  in code with debugging on. Duh. Getting it right then showed all kinds
+  of bugs in the other code. Added some documentation explaining possible
+  crashes due to missing KApplication instance.
+  FINALLY did something sensible about code duplication -- added get and
+  set methods to a subclass of KConfig for all KPilot settings.
+* kpilot/kpilotOptions.{h,cc}
+  Is deprecated and removed. Say hello to the new world of .ui files.
+* kpilot/kpilot.{h,cc}
+* kpilot/memoWidget.cc
+* kpilot/addressWidget.cc
+* kpilot/conduitSetup.cc
+  Lots of little changes to reflect the KPilotConfig changes. Mostly 
+  removing calls to setGroup() and readEntry(), which are now safely
+  encapsulated.
+* kpilot/pilotDaemon.{h,cc}
+* kpilot/pilotDaemonDCOP.h
+  Removed cruft, adapted to KPilotConfigSettings, and adapted to SyncActions.
+  Changed silly startHotSync(int) DCOP method to requestSync(int).
+
+
+2001-09-21  Adriaan de Groot
+* kpilot/hotSync.{h,cc}
+  Added an InstallFilesAction class, to run during a HotSync.
+
+2001-09-20  Adriaan de Groot
+* kpilot/kpilotlink.{h,cc}
+* kpilot/main-test.{h,cc}
+  All these files changed because of yet another re-architecting. Now we
+  have HotSyncActions, which have direct access to the PilotDeviceLink,
+  and which do "something". The test action just lists the databases
+  present on the device. This has been tested with USB and with serial
+  devices.
+* kpilot/hotSync.{h,cc}
+  Changed again to split the actions away from the device link (really,
+  how I ever decided on that is a mystery to me now).
+* kpilot/Makefile-standalone
+  A Makefile that can be tweaked, that does not use autoconf, and is
+  useful for making standalone tarballs.
+
+2001-09-17  Adriaan de Groot
+* kpilot/Makefile-kpilotConfig
+  () New file for building a standalone config program.
+* kpilot/main-config.{h,cc}
+  () New .h file, new classes for implementing some behavior. The behavior
+  is very minimal right now, but as an illustration for David (hey, now
+  he needs to learn C++ coding) it's fine.
+* TODO
+  () Thought of lots of new things to do.
+
 KPilot Developer's notes for september 16th 2001
 ================================================
 

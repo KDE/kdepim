@@ -3,7 +3,7 @@
 ## Modified by Adriaan de Groot
 
 COMPILE_FIRST = kpilot
-SUBDIRS = $(COMPILE_FIRST) conduits 
+SUBDIRS = $(COMPILE_FIRST)
 
 messages:
 	$(XGETTEXT) `find . -name "*.cc" -o -name "*.cpp"` -o $(podir)/kpilot.pot   

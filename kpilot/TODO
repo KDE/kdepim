@@ -1,4 +1,10 @@
+This is a TODO file. Open issues are marked with a *, partly resolved issues
+are marked with a +, ignored issues get an o, and resolved issues a -.
+
 * Handle real devfs better (regular USB support seems OK now).
 * Handle difference between pi_bind() "no such file" error and others.
 * Look into possible buffer overflows in pi_socket structure.
-
+* Replace gsetupDialog with files that follow the class naming convention,
+  that subclass from KDialogBase, and provide better support for making
+  dialogs based on Qt designer widgets.
+* Add behavior to the new .ui-based config dialog.
