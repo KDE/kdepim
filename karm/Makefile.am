@@ -1,7 +1,7 @@
 
 ############ Autoconf-generated variables  ###################
 AM_CPPFLAGS = -DQT_NO_CAST_ASCII
-INCLUDES = $(all_includes)
+INCLUDES = $(all_includes) -I$(top_srcdir)/libkcal
 
 bin_PROGRAMS = karm
 SUBDIRS = support pics
@@ -11,7 +11,7 @@ METASOURCES = AUTO
 karm_SOURCES =  addtaskdialog.cpp main.cpp \
 		task.cpp mainwindow.cpp kaccelmenuwatch.cpp print.cpp \
 		preferences.cpp ktimewidget.cpp taskview.cpp idletimedetector.cpp logging.cpp karmutility.cpp tray.cpp
-karm_LDADD = -lkdeprint $(LIBXSS)
+karm_LDADD = -lkdeprint $(top_builddir)/libkcal/libkcal.la $(LIBXSS)
 karm_LDFLAGS = $(all_libraries)
 noinst_HEADERS = addtaskdialog.h taskview.h task.h toolicons.h mainwindow.h kaccelmenuwatch.h \
 		version.h print.h idletimedetector.h preferences.h ktimewidget.h logging.h karmutility.h \

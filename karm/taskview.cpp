@@ -2,6 +2,7 @@
 #include <functional>
 #include <algorithm>
 #include <qptrstack.h>
+#include <qptrlist.h>
 #include <sys/types.h>
 #include <dirent.h>
 #include <stdlib.h>
@@ -19,6 +20,9 @@
 #include <kmenubar.h>
 #include <ktoolbar.h>
 #include <kmessagebox.h>
+
+#include "event.h"
+#include "calendarlocal.h"
 
 #include "task.h"
 #include "taskview.h"
@@ -73,6 +77,7 @@ TaskView::TaskView( QWidget *parent, const char *name )
 TaskView::~TaskView()
 {
   save();
+  _preferences->save();
 }
 
 void TaskView::handleDesktopChange(int desktop)
@@ -99,7 +104,70 @@ void TaskView::handleDesktopChange(int desktop)
 
 void TaskView::load()
 {
-  QFile f(_preferences->saveFile());
+  if ( _preferences->useLegacyFileFormat() )
+    loadFromFileFormat();
+  else
+    loadFromKCalFormat();
+}
+
+void TaskView::loadFromKCalFormat()
+{
+  KCal::CalendarLocal cal;
+  bool loadOk = cal.load( _preferences->loadFile() );
+  if ( !loadOk ) {
+    kdDebug() << "Failed to load the calendar!!!" << endl;
+    return;
+  }
+  kdDebug() << "Loading karm calendar data from " << _preferences->loadFile() << endl;
+
+  QPtrList<KCal::Event> eventList = cal.rawEvents();
+
+  QPtrStack<Task> stack;
+  Task *task;
+
+  for ( QPtrListIterator<KCal::Event> eventIter ( eventList ); eventIter.current(); ++eventIter ) {
+    long minutes;
+    int level;
+    QString name;
+    DesktopListType desktops;
+    if ( !Task::parseEvent( *eventIter, minutes, name, level, desktops ) )
+      continue;
+
+    unsigned int stackLevel = stack.count();
+    for (unsigned int i = level; i<=stackLevel ; i++) {
+      stack.pop();
+    }
+
+    if (level == 1) {
+      task = new Task(name, minutes, 0, desktops, this);
+      emit( sessionTimeChanged( 0, minutes ) );
+    }
+    else {
+      Task *parent = stack.top();
+      task = new Task(name, minutes, 0, desktops, parent);
+      emit( sessionTimeChanged( 0, minutes ) );
+      setRootIsDecorated(true);
+      parent->setOpen(true);
+    }
+
+    // update desktop trackers
+    updateTrackers(task, desktops);
+
+    stack.push(task);
+  }
+
+  setSelected(firstChild(), true);
+  setCurrentItem(firstChild());
+
+  applyTrackers();
+
+  //emit( sessionTimeChanged() );
+}
+
+void TaskView::loadFromFileFormat()
+{
+  QFile f(_preferences->loadFile());
+  kdDebug() << "Loading karm data from " << f.name() << endl;
 
   if( !f.exists() )
     return;
@@ -296,6 +364,24 @@ bool TaskView::parseLine(QString line, long *time, QString *name, int *level, De
 
 void TaskView::save()
 {
+  saveToKCalFormat();
+  // saveToFileFormat();
+}
+
+void TaskView::saveToKCalFormat()
+{
+  KCal::CalendarLocal cal;
+
+  for ( QListViewItem* child = firstChild(); child; child = child->nextSibling() ) {
+    writeTaskToCalendar( cal, static_cast<Task*>( child ), 1 );
+  }
+
+  cal.save( _preferences->saveFile() );
+  kdDebug() << "Saved data to calendar file " << _preferences->saveFile() << endl;
+}
+
+void TaskView::saveToFileFormat()
+{
   QFile f(_preferences->saveFile());
 
   if ( !f.open( IO_WriteOnly | IO_Truncate ) ) {
@@ -314,6 +400,18 @@ void TaskView::save()
     writeTaskToFile(&stream, child, 1);
 
   f.close();
+  kdDebug() << "Saved data to file " << f.name() << endl;
+}
+
+void TaskView::writeTaskToCalendar( KCal::CalendarLocal& cal, Task* task, int level )
+{
+  KCal::Event* event = task->asEvent( level );
+
+  cal.addEvent( event );
+
+  for ( QListViewItem* nextTask = task->firstChild(); nextTask; nextTask = nextTask->nextSibling() ) {
+    writeTaskToCalendar( cal, static_cast<Task*>( nextTask ), level+1 );
+  }
 }
 
 void TaskView::writeTaskToFile(QTextStream *strm, QListViewItem *item, int level)

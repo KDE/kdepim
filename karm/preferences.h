@@ -23,6 +23,7 @@ public:
    // Retrive information about settings
   bool detectIdleness();
   int idlenessTimeout();
+  QString loadFile();
   QString saveFile();
   bool timeLogging();
   QString timeLog();
@@ -30,6 +31,8 @@ public:
   int autoSavePeriod();
   bool hideOnClose();
   bool promptDelete();
+  QString fileFormat();
+  bool useLegacyFileFormat();
 
 public slots:
   void showDialog();
@@ -73,8 +76,8 @@ private:
   // Values for the preferences. (All variables in in V to indicate they are Values)
   bool _doIdleDetectionV, _doAutoSaveV, _doTimeLoggingV, _hideOnCloseV, _promptDeleteV;
   int  _idleDetectValueV, _autoSaveValueV;
-  QString _saveFileV, _timeLogV;
-  
+  QString _saveFileV, _legacySaveFileV, _timeLogV;
+  QString _fileFormat;
 };
 
 #endif

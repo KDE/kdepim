@@ -10,6 +10,7 @@
 #include <qtextstream.h>
 #include "kwinmodule.h"
 #include <vector>
+#include "calendarlocal.h"
 
 class KMenuBar;
 class KToolBar;
@@ -61,6 +62,10 @@ private:
     void applyTrackers();
     void updateTrackers(Task *task, DesktopListType dl);
     bool parseLine(QString line, long *time, QString *name, int *level, DesktopListType* desktops);
+    void loadFromFileFormat();
+    void saveToFileFormat();
+    void loadFromKCalFormat();
+    void saveToKCalFormat();
 
 public slots:
     /*
@@ -74,6 +79,7 @@ public slots:
     void load();
     void save();
     void writeTaskToFile(QTextStream *, QListViewItem *, int);
+    void writeTaskToCalendar(KCal::CalendarLocal&, Task*, int);
     void startCurrentTimer();
     void stopCurrentTimer();
     void stopAllTimers();

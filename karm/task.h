@@ -9,6 +9,8 @@
 #include <qpixmap.h>
 #include "taskview.h"
 #include "logging.h"
+#include "todo.h"
+#include "event.h"
 
 class QFile;
 class QTimer;
@@ -61,6 +63,8 @@ public:
 	  return _desktops;
 	}
 
+  QString getDesktopStr() const;
+
 	/** sets the name of the task
 	* @param name	a pointer to the name. A deep copy will be made.
 	*/
@@ -85,10 +89,21 @@ public:
 	void setRunning(bool on);
 	bool isRunning() const;
 
+  KCal::Todo* asTodo( int level );
+  KCal::Event* asEvent( int level );
+
+  static bool parseEvent( KCal::Event*, long&, QString&, int&, DesktopListType& );
+  static bool parseTodo( KCal::Todo*, long&, QString&, int&, DesktopListType& );
+
 protected slots:
   void updateActiveIcon();
 
 private:
+  long totalTimeInSeconds() const
+  {
+    return totalTime() * 60;
+  }
+
   void noNegativeTimes();
 
   QString _name;

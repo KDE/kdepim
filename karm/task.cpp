@@ -4,8 +4,13 @@
 #include <stdio.h>
 #include <kiconloader.h>
 #include <qtimer.h>
-#include"task.h"
-#include"logging.h"
+#include <qdatetime.h>
+#include <qcstring.h>
+#include "kapplication.h"
+#include "kdebug.h"
+#include "event.h"
+#include "task.h"
+#include "logging.h"
 
 
 QPtrVector<QPixmap> *Task::icons = 0;
@@ -139,6 +144,64 @@ void Task::noNegativeTimes()
       _totalTime = 0;
   if ( _sessionTime < 0 )
       _sessionTime = 0;
+}
+
+KCal::Event* Task::asEvent( int level )
+{
+  KCal::Event* event = new KCal::Event;
+  event->setSummary( name() );
+  QDateTime current = QDateTime::currentDateTime();
+  event->setDtStart( current );
+  event->setDtEnd( current.addSecs( totalTimeInSeconds() ) );
+  event->setCustomProperty( kapp->instanceName(), QCString( "durationInMinutes" ), QString::number( totalTime() ) );
+  event->setCustomProperty( kapp->instanceName(), QCString( "desktopList" ), getDesktopStr() );
+  event->setCustomProperty( kapp->instanceName(), QCString( "level" ), QString::number( level ) );
+  kdDebug() << "Stored task as event: Name: " << event->summary() << ", Duration: " << event->duration() << endl;
+  return event;
+}
+
+bool Task::parseEvent( KCal::Event* event, long& minutes, QString& name, int& level, DesktopListType& desktops )
+{
+  bool ok = false;
+
+  name = event->summary();
+
+  minutes = event->customProperty( kapp->instanceName(), QCString( "durationInMinutes" ) ).toInt( &ok );
+  if ( !ok )
+    minutes = 0;
+
+  level = event->customProperty( kapp->instanceName(), QCString( "level" ) ).toInt( &ok );
+  if ( !ok )
+    level = 0;
+
+  QString desktopList = event->customProperty( kapp->instanceName(), QCString( "desktopList" ) );
+  kdDebug() << "Have desktop list of: " << desktopList << endl;
+  QStringList desktopStrList = QStringList::split( QString::fromLatin1( "\\," ), desktopList );
+  desktops.clear();
+  for ( QStringList::iterator iter = desktopStrList.begin(); iter != desktopStrList.end(); ++iter ) {
+    int desktopInt = (*iter).toInt( &ok );
+    if ( ok ) {
+      desktops.push_back( desktopInt );
+      kdDebug() << "Just added desktop: " << desktopInt << endl;
+    }
+  }
+
+  kdDebug() << "Parsed event: Name: " << name << ", Minutes: " << minutes << ", level: " << level << ", desktop: " << desktopList << endl;
+
+  return true;
+}
+
+QString Task::getDesktopStr() const
+{
+  if ( _desktops.empty() )
+    return QString();
+
+  QString desktopstr;
+  for ( DesktopListType::const_iterator iter = _desktops.begin(); iter != _desktops.end(); ++iter ) {
+    desktopstr += QString::number( *iter ) + ",";
+  }
+  desktopstr.remove( desktopstr.length() - 1, 1 );
+  return desktopstr;
 }
 
 #include "task.moc"

@@ -179,6 +179,14 @@ QString Preferences::saveFile()
   return _saveFileV;
 }
 
+QString Preferences::loadFile()
+{
+  if ( useLegacyFileFormat() )
+    return _legacySaveFileV;
+  else
+    return _saveFileV;
+}
+
 QString Preferences::timeLog()
 {
   return _timeLogV;
@@ -219,6 +227,16 @@ bool Preferences::promptDelete()
     return _promptDeleteV;
 }
 
+bool Preferences::useLegacyFileFormat()
+{
+  return fileFormat() == QString::fromLatin1( "karmdata" );
+}
+
+QString Preferences::fileFormat()
+{
+  return _fileFormat;
+}
+
 //--------------------------------------------------------------------------------
 //                                  Load and Save
 //--------------------------------------------------------------------------------
@@ -231,7 +249,10 @@ void Preferences::load()
   _idleDetectValueV = config.readNumEntry(QString::fromLatin1("period"), 15);
 
   config.setGroup( QString::fromLatin1("Saving") );
-  _saveFileV      = config.readEntry( QString::fromLatin1("file"),
+  _fileFormat     = config.readEntry( QString::fromLatin1("file format"), QString::fromLatin1("karmdata"));
+  _saveFileV      = config.readEntry( QString::fromLatin1("kcal file"),
+                                      locateLocal( "appdata", QString::fromLatin1("karmdata.ics")));
+  _legacySaveFileV = config.readEntry( QString::fromLatin1("file"),
                                       locateLocal( "appdata", QString::fromLatin1("karmdata.txt")));
   _doTimeLoggingV  = config.readBoolEntry( QString::fromLatin1("time logging"), false);
   _timeLogV       = config.readEntry( QString::fromLatin1("time log file"),
@@ -253,7 +274,9 @@ void Preferences::save()
   config.writeEntry( QString::fromLatin1("period"), _idleDetectValueV);
 
   config.setGroup( QString::fromLatin1("Saving"));
-  config.writeEntry( QString::fromLatin1("file"), _saveFileV);
+  config.writeEntry( QString::fromLatin1("file format"), QString::fromLatin1("karm_kcal_1"));
+  config.writeEntry( QString::fromLatin1("file"), _legacySaveFileV);
+  config.writeEntry( QString::fromLatin1("kcal file"), _saveFileV);
   config.writeEntry( QString::fromLatin1("time logging"), _doTimeLoggingV);
   config.writeEntry( QString::fromLatin1("time log file"), _timeLogV);
   config.writeEntry( QString::fromLatin1("auto save"), _doAutoSaveV);
