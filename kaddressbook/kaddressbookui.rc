@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="10">
+<kpartgui name="kaddressbook" version="11">
 
   <MenuBar>
     <Menu name="file" noMerge="1"><text>&amp;File</text>
@@ -34,7 +34,7 @@
       <Action name="view_refresh"/>
     </Menu>
 
-    <Menu name="tools">
+    <Menu name="tools"><text>Tools</text>
       <Action name="ldap_lookup"/>
     </Menu>
 
