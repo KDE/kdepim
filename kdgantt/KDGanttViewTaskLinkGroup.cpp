@@ -382,6 +382,6 @@ void KDGanttViewTaskLinkGroup::generateAndInsertName( const QString& name )
     }
     sGroupDict.insert( newName, this );
     _name = newName;
-    qDebug("KDGanttViewTaskLinkGroup::generateAndInsertName: inserted '%s'",newName.latin1());
+    //qDebug("KDGanttViewTaskLinkGroup::generateAndInsertName: inserted '%s'",newName.latin1());
 }
 
