@@ -280,8 +280,10 @@ void CalendarLocal::deleteEvent(Event *event)
 }
 
 
-Event *CalendarLocal::getEvent(const QString &UniqueStr)
+Event *CalendarLocal::getEvent(const QString &uid)
 {
+  kdDebug(5800) << "CalendarLocal::getEvent(): " << uid << endl;
+
   QPtrList<Event> *eventList;
   QIntDictIterator<QPtrList<Event> > dictIt(*mCalDict);
   Event *anEvent;
@@ -290,7 +292,7 @@ Event *CalendarLocal::getEvent(const QString &UniqueStr)
     eventList = dictIt.current();
     for (anEvent = eventList->first(); anEvent;
 	 anEvent = eventList->next()) {
-      if (anEvent->VUID() == UniqueStr) {
+      if (anEvent->VUID() == uid) {
 	return anEvent;
       }
     }
@@ -298,7 +300,7 @@ Event *CalendarLocal::getEvent(const QString &UniqueStr)
   }
   for (anEvent = mRecursList.first(); anEvent;
        anEvent = mRecursList.next()) {
-    if (anEvent->VUID() == UniqueStr) {
+    if (anEvent->VUID() == uid) {
       return anEvent;
     }
   }
