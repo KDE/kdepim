@@ -30,10 +30,17 @@
 /** @file */
 
 /** 
-    Namespace KPIM packages up all kinds of functions specific to KDE PIM
+    \brief KPIM holds all kinds of functions specific to KDE PIM.
+
+    The KPIM namespace hides away functions, enums, and other things
+    that are KDE PIM specific and that we don't want to have polluting
+    the global namespace.
 */
 namespace KPIM {
 
+/**
+    Result type for splitAddress.
+*/
 enum EmailParseResult { AddressOk, AddressEmpty, UnexpectedEnd,
                         UnbalancedParens, MissingDomainPart,
                         UnclosedAngleAddr, UnopenedAngleAddr,
@@ -119,7 +126,7 @@ KDE_EXPORT QString simpleEmailAddressErrorMsg();
     (mailbox in RFC2822).
 
     @param address  an email address, e.g. "Joe User <joe.user@kde.org>"
-    @return         the addr-spec of @address, i.e. joe.user@kde.org in the
+    @return         the addr-spec of @p address, i.e. joe.user@kde.org in the
                       example
 */
 KDE_EXPORT QCString getEmailAddress( const QCString & address );
@@ -131,7 +138,7 @@ KDE_EXPORT QCString getEmailAddress( const QCString & address );
     (mailbox in RFC2822).
 
     @param address  an email address, e.g. "Joe User <joe.user@kde.org>"
-    @return         the addr-spec of @address, i.e. joe.user@kde.org in the
+    @return         the addr-spec of @a address, i.e. joe.user@kde.org in the
                       example
 */
 KDE_EXPORT QString getEmailAddress( const QString & address );
@@ -139,8 +146,8 @@ KDE_EXPORT QString getEmailAddress( const QString & address );
 /** Returns the pure email address (addr-spec in RFC2822) of the first
     email address of a list of addresses.
 
-    @param address  an email address, e.g. "Joe User <joe.user@kde.org>"
-    @return         the addr-spec of @address, i.e. joe.user@kde.org in the
+    @param addresses  an email address, e.g. "Joe User <joe.user@kde.org>"
+    @return         the addr-spec of @a addresses, i.e. joe.user@kde.org in the
                       example
 */
 KDE_EXPORT QCString getFirstEmailAddress( const QCString & addresses );
@@ -151,8 +158,8 @@ KDE_EXPORT QCString getFirstEmailAddress( const QCString & addresses );
     Returns the pure email address (addr-spec in RFC2822) of the first
     email address of a list of addresses.
 
-    @param address  an email address, e.g. "Joe User <joe.user@kde.org>"
-    @return         the addr-spec of @address, i.e. joe.user@kde.org in the
+    @param addresses  an email address, e.g. "Joe User <joe.user@kde.org>"
+    @return         the addr-spec of @a addresses, i.e. joe.user@kde.org in the
                       example
 */
 KDE_EXPORT QString getFirstEmailAddress( const QString & addresses );
@@ -177,9 +184,9 @@ KDE_EXPORT bool compareEmail( const QString& email1, const QString& email2,
 
 /** Returns a normalized address built from the given parts. The normalized
     address is of one the following forms:
-    - displayName (comment) <addrSpec>
-    - displayName <addrSpec>
-    - comment <addrSpec>
+    - displayName (comment) &lt;addrSpec&gt;
+    - displayName &lt;addrSpec&gt;
+    - comment &lt;addrSpec&gt;
     - addrSpec
 
     @param displayName  the display name of the address
@@ -211,7 +218,6 @@ KDE_EXPORT QString encodeIDN( const QString & addrSpec );
     @param addresses  a list of email addresses with punycoded IDNs
     @return           the email addresses in normalized form with Unicode IDNs
 
-    @also
  */
 KDE_EXPORT QString normalizeAddressesAndDecodeIDNs( const QString & addresses );
 
