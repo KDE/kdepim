@@ -104,10 +104,10 @@ ConduitTip::~ConduitTip()
 	QString s = l->text(CONDUIT_COMMENT);
 
 	if (s.isEmpty()) return;
-	if (s.find("<qt>",0,false) == -1)
+	if (s.find(CSL1("<qt>"),0,false) == -1)
 	{
-		s.prepend("<qt>");
-		s.append("</qt>");
+		s.prepend(CSL1("<qt>"));
+		s.append(CSL1("</qt>"));
 	}
 
 	tip(fListView->itemRect(l),s);
@@ -308,7 +308,7 @@ void ConduitConfigDialog::fillLists()
 		KPilotConfig::getConfig().setConduitGroup().
 		getInstalledConduits();
 	KServiceTypeProfile::OfferList offers =
-		KServiceTypeProfile::offers("KPilotConduit");
+		KServiceTypeProfile::offers(CSL1("KPilotConduit"));
 
 	// Now actually fill the two list boxes, just make
 	// sure that nothing gets listed in both.
@@ -461,7 +461,7 @@ void ConduitConfigDialog::configureConduit()
 	}
 
 	QStringList a;
-	a.append("modal");
+	a.append(CSL1("modal"));
 
 	QObject *o = f->create(this, 0L, "ConduitConfig",a);
 

@@ -59,7 +59,7 @@ kpilotTest_SOURCES = kpilotConfig.cc \
 kpilotConfig_SOURCES = kpilotConfig.cc \
 	kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
 	conduitConfigDialog_base.ui conduitConfigDialog.cc \
-	listCat.cc conduitSetup.cc main-config.cc
+	listCat.cc main-config.cc
 
 
 kpilot_LDFLAGS = $(all_libraries) $(KDE_RPATH) -L../lib

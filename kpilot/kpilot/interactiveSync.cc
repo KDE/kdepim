@@ -49,6 +49,7 @@ static const char *interactivesync_id =
 #include <qfileinfo.h>
 #include <qtl.h>
 #include <qstyle.h>
+#include <qtextcodec.h>
 
 #include <kdialogbase.h>
 #include <kglobal.h>
@@ -57,6 +58,7 @@ static const char *interactivesync_id =
 #include <kapplication.h>
 
 #include "pilotUser.h"
+#include "pilotAppCategory.h"
 #include "pilotLocalDatabase.h"
 #include "kpilotConfig.h"
 #include "kpilotlink.h"
@@ -85,9 +87,9 @@ CheckUser::~CheckUser()
 	config.resetGroup();
 
 	QString guiUserName = config.getUser();
-	const char *pilotUserName = fHandle->getPilotUser()->getUserName();
-	bool pilotUserEmpty = (!pilotUserName) || (!strlen(pilotUserName));
-
+	QString pilotUserName = PilotAppCategory::codec()->
+		toUnicode(fHandle->getPilotUser()->getUserName());
+	bool pilotUserEmpty = pilotUserName.isEmpty();
 	// 4 cases to handle:
 	//    guiUserName empty / not empty
 	//    pilotUserName empty / not empty
@@ -111,7 +113,7 @@ CheckUser::~CheckUser()
 			{
 				config.setUser(defaultUserName);
 				fHandle->getPilotUser()->
-					setUserName(defaultUserName.latin1());
+					setUserName(PilotAppCategory::codec()->fromUnicode(defaultUserName));
 			}
 
 		}
@@ -195,11 +197,11 @@ CheckUser::~CheckUser()
 	//
 	//
 	QString pathName = KGlobal::dirs()->saveLocation("data",
-		QString("kpilot/DBBackup/"));
+		CSL1("kpilot/DBBackup/"));
 	if (!guiUserName.isEmpty())
 	{
 		pathName.append(guiUserName);
-		pathName.append("/");
+		pathName.append(CSL1("/"));
 	}
 	PilotLocalDatabase::setDBPath(pathName);
 
@@ -224,7 +226,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 
 	fP = new RestoreActionPrivate;
 	fP->fDatabaseDir = KGlobal::dirs()->saveLocation("data",
-		QString("kpilot/DBBackup/"));
+		CSL1("kpilot/DBBackup/"));
 }
 
 /* virtual */ bool RestoreAction::exec()
@@ -238,7 +240,8 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 #endif
 
 	QString dirname = fP->fDatabaseDir +
-		fHandle->getPilotUser()->getUserName() + "/";
+		PilotAppCategory::codec()->toUnicode(fHandle->getPilotUser()->getUserName()) + 
+		CSL1("/");
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname << ": Restoring user " << dirname << endl;
@@ -289,7 +292,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 
 #if KDE_VERSION < 306  /* 305 ok? */
 		strncpy(dbi.name, QFile::encodeName(dirname + s), sizeof(dbi.name) - 1);
-		dbi.name[sizeof(dbi.name) - 1)] = '\0';
+		dbi.name[(sizeof(dbi.name) - 1)] = '\0';
 #else
 		strlcpy(dbi.name, QFile::encodeName(dirname + s), sizeof(dbi.name));
 #endif
@@ -438,15 +441,14 @@ nextFile:
 		return;
 	}
 
-	// addSyncLogEntry(i18n("Restoring %1...").arg(dbi.name));
 	QFileInfo databaseInfo(dbi.name);
 	addSyncLogEntry(databaseInfo.fileName());
 	emit logProgress(i18n("Restoring %1...").arg(databaseInfo.fileName()),
 		(100*fP->fDBIndex) / (fP->fDBList.count()+1)) ;
 	
 	pi_file *f =
-		pi_file_open(const_cast <
-		char *>((const char *)QFile::encodeName(dbi.name)));
+		pi_file_open( /* const_cast <
+		char *>((const char *)QFile::encodeName */ (dbi.name));
 	if (!f)
 	{
 		kdWarning() << k_funcinfo
@@ -479,14 +481,14 @@ nextFile:
 	switch (status())
 	{
 	case InstallingFiles:
-		s.append("Installing Files (");
+		s.append(CSL1("Installing Files ("));
 		s.append(QString::number(fP->fDBIndex));
-		s.append(")");
+		s.append(CSL1(")"));
 		break;
 	case GettingFileInfo:
-		s.append("Getting File Info (");
+		s.append(CSL1("Getting File Info ("));
 		s.append(QString::number(fP->fDBIndex));
-		s.append(")");
+		s.append(CSL1(")"));
 		break;
 	default:
 		return SyncAction::statusString();

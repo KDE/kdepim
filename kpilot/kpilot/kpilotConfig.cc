@@ -116,9 +116,9 @@ static const char *kpilotconfig_id =
 {
 	FUNCTIONSETUP;
 	QString lastUser = getConfig().getUser();
-	QString dbsubpath = "kpilot/DBBackup/";
+	QString dbsubpath = CSL1("kpilot/DBBackup/");
 	QString defaultDBPath = KGlobal::dirs()->
-		saveLocation("data", dbsubpath + lastUser + "/");
+		saveLocation("data", dbsubpath + lastUser + CSL1("/"));
 	return defaultDBPath;
 }
 
@@ -188,7 +188,7 @@ KPilotConfigSettings & KPilotConfig::getConfig()
 	* stand.
 	*/
 	QString existingConfig =
-		KGlobal::dirs()->findResource("config", "kpilotrc");
+		KGlobal::dirs()->findResource("config", CSL1("kpilotrc"));
 
 
 	if (existingConfig.isNull())
@@ -196,14 +196,14 @@ KPilotConfigSettings & KPilotConfig::getConfig()
 #ifdef DEBUG
 		DEBUGDB << fname << ": Making a new config file" << endl;
 #endif
-		KSimpleConfig *c = new KSimpleConfig("kpilotrc", false);
+		KSimpleConfig *c = new KSimpleConfig(CSL1("kpilotrc"), false);
 
 		c->writeEntry("Configured", ConfigurationVersion);
 		c->writeEntry("NextUniqueID", 61440);
 		c->sync();
 		delete c;
 
-		theconfig = new KPilotConfigSettings("kpilotrc");
+		theconfig = new KPilotConfigSettings(CSL1("kpilotrc"));
 	}
 	else
 	{
@@ -314,13 +314,13 @@ BoolProperty_(UseKeyField, "UseKeyField", false)
 	writeEntry(key,s); }
 
 
-StringProperty_(PilotDevice, "PilotDevice", "/dev/pilot")
+StringProperty_(PilotDevice, "PilotDevice", CSL1("/dev/pilot"))
 StringProperty_(Encoding, "Encoding", QString::null)
 
 
 StringProperty_(User, "UserName", QString::null)
-StringProperty_(BackupOnly, "BackupForSync", "Arng,PmDB,lnch")
-StringProperty_(Skip, "SkipSync", "AvGo")
+StringProperty_(BackupOnly, "BackupForSync", CSL1("Arng,PmDB,lnch"))
+StringProperty_(Skip, "SkipSync", CSL1("AvGo"))
 
 
 KPilotConfigSettings & KPilotConfigSettings::setAddressGroup()

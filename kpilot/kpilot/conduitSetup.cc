@@ -35,7 +35,6 @@
 
 #include <stdio.h>
 #include <unistd.h>
-#include <iostream>
 
 #ifndef QDIR_H
 #include <qdir.h>
@@ -287,7 +286,7 @@ void CConduitSetup::conduitExecuted(QListViewItem * p)
 	conduitSetup = new KProcess;
 	*conduitSetup << execPath << "--setup";
 	*conduitSetup << "-geometry"
-		<< QString("+%1+%2").arg(x() + 20).arg(y() + 20);
+		<< CSL1("+%1+%2").arg(x() + 20).arg(y() + 20);
 #ifdef DEBUG
 	if (debug_level)
 	{
@@ -343,7 +342,7 @@ void CConduitSetup::fillLists()
 		KPilotConfig::getConfig().setConduitGroup().
 		getInstalledConduits();
 	KServiceTypeProfile::OfferList offers =
-		KServiceTypeProfile::offers("KPilotConduit");
+		KServiceTypeProfile::offers(CSL1("KPilotConduit"));
 
 #ifdef DEBUG
 	{
@@ -481,11 +480,11 @@ void CConduitSetup::writeInstalledConduits()
 
 
 
-		currentConduit += " --info";
+		currentConduit += CSL1(" --info");
 #ifdef DEBUG
 		if (debug_level)
 		{
-			currentConduit += " --debug ";
+			currentConduit += CSL1(" --debug ");
 			currentConduit += QString().setNum(debug_level);
 		}
 
@@ -527,7 +526,7 @@ void CConduitSetup::writeInstalledConduits()
 		else
 		{
 			QStringList l = QStringList::split(QChar(','),
-				QString(dbName));
+				QString(QString::fromLatin1(dbName)));
 
 			QStringList::Iterator i;
 			const QString & m = p->text(CONDUIT_DESKTOP);

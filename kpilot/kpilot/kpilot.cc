@@ -212,7 +212,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 	}
 
 	if (!fDaemonWasRunning && KApplication::startServiceByDesktopName(
-		"kpilotdaemon",
+		CSL1("kpilotdaemon"),
 		QString::null, &daemonError, &daemonDCOP, &daemonPID
 #if (KDE_VERSION >= 220)
 			// Startup notification was added in 2.2
@@ -249,8 +249,8 @@ void KPilotInstaller::setupWidget()
 #ifdef DEBUG
 	DEBUGKPILOT << fname << ": Creating central widget." << endl;
 #endif
-
-	setCaption("KPilot");
+	
+	setCaption(CSL1("KPilot"));
 	setMinimumSize(500, 405);
 
 
@@ -264,7 +264,7 @@ void KPilotInstaller::setupWidget()
 	initMenu();
 	initComponents();
 
-	createGUI("kpilotui.rc", false);
+	createGUI(CSL1("kpilotui.rc"), false);
 #ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Got XML from "
@@ -293,21 +293,21 @@ void KPilotInstaller::initComponents()
 	w = getManagingWidget()->addVBoxPage(a,QString::null, \
 		(pixfile.isEmpty() ? QPixmap() : QPixmap(pixfile))) ;
 
-	ADDICONPAGE(i18n("HotSync"),"kpilot/kpilot-hotsync.png");
+	ADDICONPAGE(i18n("HotSync"),CSL1("kpilot/kpilot-hotsync.png"));
 	fLogWidget = new LogWidget(w);
 	addComponentPage(fLogWidget, i18n("HotSync"));
 	fLogWidget->setShowTime(true);
 
-
-	ADDICONPAGE(i18n("Memo Viewer"),"kpilot/kpilot-knotes.png");
+	
+	ADDICONPAGE(i18n("Memo Viewer"),CSL1("kpilot/kpilot-knotes.png"));
 	addComponentPage(new MemoWidget(w, defaultDBPath),
 		i18n("Memo Viewer"));
 
-	ADDICONPAGE(i18n("Address Viewer"),"kpilot/kpilot-address.png");
+	ADDICONPAGE(i18n("Address Viewer"),CSL1("kpilot/kpilot-address.png"));
 	addComponentPage(new AddressWidget(w,defaultDBPath),
 		i18n("Address Viewer"));
 
-	ADDICONPAGE(i18n("File Installer"),"kpilot/kpilot-fileinstaller.png");
+	ADDICONPAGE(i18n("File Installer"),CSL1("kpilot/kpilot-fileinstaller.png"));
 	fFileInstallWidget = new FileInstallWidget(
 		w,defaultDBPath);
 	addComponentPage(fFileInstallWidget, i18n("File Installer"));
@@ -494,23 +494,23 @@ void KPilotInstaller::initMenu()
 	KAction *p;
 
 	// File actions
-	p = new KAction(i18n("&HotSync"), "hotsync", 0,
+	p = new KAction(i18n("&HotSync"), CSL1("hotsync"), 0,
 		this, SLOT(slotHotSyncRequested()),
 		actionCollection(), "file_hotsync");
 #if 0
-	p = new KAction(i18n("&FastSync"), "fastsync", 0,
+	p = new KAction(i18n("&FastSync"), CSL1("fastsync"), 0,
 		this, SLOT(slotHotSyncRequested()),
 		actionCollection(), "file_fastsync");
 #endif
 #ifdef DEBUG
-	p = new KAction(QString::fromLatin1("List only"),"list",0,
+	p = new KAction(TODO_I18N("List only"),"list",0,
 		this,SLOT(slotListSyncRequested()),
 		actionCollection(), "file_list");
 #endif
-	p = new KAction(i18n("&Backup"), "backup", 0,
+	p = new KAction(i18n("&Backup"), CSL1("backup"), 0,
 		this, SLOT(slotBackupRequested()),
 		actionCollection(), "file_backup");
-	p = new KAction(i18n("&Restore"), "restore", 0,
+	p = new KAction(i18n("&Restore"), CSL1("restore"), 0,
 		this, SLOT(slotRestoreRequested()),
 		actionCollection(), "file_restore");
 	p = KStdAction::quit(this, SLOT(quit()), actionCollection());
@@ -527,7 +527,7 @@ void KPilotInstaller::initMenu()
 		actionCollection());
 	p = KStdAction::preferences(this, SLOT(slotConfigureKPilot()),
 		actionCollection());
-	p = new KAction(i18n("C&onfigure Conduits..."), "configure", 0, this,
+	p = new KAction(i18n("C&onfigure Conduits..."), CSL1("configure"), 0, this,
 		SLOT(slotConfigureConduits()), actionCollection(),
 		"options_configure_conduits");
 }
@@ -613,7 +613,7 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 		p, SLOT(slotShowComponent()),
 		actionCollection(), actionname);
 
-	pt->setExclusiveGroup("view_menu");
+	pt->setExclusiveGroup(CSL1("view_menu"));
 
 	connect(p, SIGNAL(showComponent(PilotComponent *)),
 		this, SLOT(slotSelectComponent(PilotComponent *)));
@@ -923,7 +923,7 @@ int main(int argc, char **argv)
 	tp->startDaemonIfNeeded();
 
 	KGlobal::dirs()->addResourceType("pilotdbs",
-		"share/apps/kpilot/DBBackup");
+		CSL1("share/apps/kpilot/DBBackup"));
 	tp->show();
 	a.setMainWidget(tp);
 	return a.exec();

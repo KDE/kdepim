@@ -102,27 +102,30 @@ LogWidget::LogWidget(QWidget * parent) :
 
 	QString initialText ;
 
-	initialText.append(QString("<b>Version:</b> KPilot %1" TE_EOL).arg(KPILOT_VERSION));
-	initialText.append(QString("<b>Version:</b> pilot-link %1.%2.%3%4" TE_EOL)
+	initialText.append(CSL1("<b>Version:</b> KPilot %1" TE_EOL)
+		.arg(QString::fromLatin1(KPILOT_VERSION)));
+	initialText.append(CSL1("<b>Version:</b> pilot-link %1.%2.%3%4" TE_EOL)
 		.arg(PILOT_LINK_VERSION)
 		.arg(PILOT_LINK_MAJOR)
 		.arg(PILOT_LINK_MINOR)
 #ifdef PILOT_LINK_PATCH
-		.arg(PILOT_LINK_PATCH)
+		.arg(QString::fromLatin1(PILOT_LINK_PATCH))
 #else
 		.arg(QString())
 #endif
 		);
 #ifdef KDE_VERSION_STRING
-	initialText.append(QString("<b>Version:</b> KDE %1" TE_EOL).arg(KDE_VERSION_STRING));
+	initialText.append(CSL1("<b>Version:</b> KDE %1" TE_EOL)
+		.arg(QString::fromLatin1(KDE_VERSION_STRING)));
 #endif
 #ifdef QT_VERSION_STR
-	initialText.append(QString("<b>Version:</b> Qt %1" TE_EOL).arg(QT_VERSION_STR));
+	initialText.append(CSL1("<b>Version:</b> Qt %1" TE_EOL)
+		.arg(QString::fromLatin1(QT_VERSION_STR)));
 #endif
 
-	initialText.append(TE_EOL);
+	initialText.append(CSL1(TE_EOL));
 	initialText.append(i18n("<qt><B>HotSync Log</B></qt>"));
-	initialText.append(TE_EOL);
+	initialText.append(CSL1(TE_EOL));
 
 
 	fLog->setText(initialText);
@@ -157,7 +160,7 @@ LogWidget::LogWidget(QWidget * parent) :
 
 	QString splashPath =
 		KGlobal::dirs()->findResource("data",
-			"kpilot/kpilot-splash.png");
+			CSL1("kpilot/kpilot-splash.png"));
 
 	if (!splashPath.isEmpty() && QFile::exists(splashPath))
 	{
@@ -169,7 +172,10 @@ LogWidget::LogWidget(QWidget * parent) :
 		QPainter painter(&splash);
 		painter.setPen(QColor(255, 0, 0));
 
-		int textWidth =fontMetrics().width(KPILOT_VERSION) ;
+		// This latin1() is ok; KPILOT_VERSION is a #define
+		// of a constant string.
+		int textWidth =fontMetrics().width(
+			QString::fromLatin1(KPILOT_VERSION)) ;
 		int textHeight = fontMetrics().height();
 
 #ifdef DEBUG
@@ -186,7 +192,7 @@ LogWidget::LogWidget(QWidget * parent) :
 			black);
 		painter.drawText(splash.width() -  25 - textWidth,
 			splash.height() - 8 - textHeight,
-			KPILOT_VERSION);
+			QString::fromLatin1(KPILOT_VERSION));
 		fSplash = new QLabel(this);
 		fSplash->setPixmap(splash);
 		fSplash->setAlignment(AlignCenter);
@@ -211,9 +217,9 @@ void LogWidget::addMessage(const QString & s)
 
 	if (fShowTime)
 	{
-		t.append("<b>");
+		t.append(CSL1("<b>"));
 		t.append(QTime::currentTime().toString());
-		t.append("</b>  ");
+		t.append(CSL1("</b>  "));
 	}
 
 	t.append(s);
@@ -239,9 +245,9 @@ void LogWidget::addError(const QString & s)
 
 	QString t;
 
-	t.append("<i>");
+	t.append(CSL1("<i>"));
 	t.append(s);
-	t.append("</i>");
+	t.append(CSL1("</i>"));
 
 	addMessage(t);
 }
@@ -329,7 +335,7 @@ void LogWidget::hideSplash()
 	{
 		QString saveFileName = KFileDialog::getSaveFileName(
 			QString::null,     /* default */
-			"*.log",           /* show log files by default */
+			CSL1("*.log"),     /* show log files by default */
 			this,
 			i18n("Save Log"));
 

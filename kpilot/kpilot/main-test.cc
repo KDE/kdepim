@@ -213,7 +213,7 @@ int listConduits(KCmdLineArgs *)
 	FUNCTIONSETUP;
 
 	KServiceTypeProfile::OfferList offers =
-		KServiceTypeProfile::offers("KPilotConduit");
+		KServiceTypeProfile::offers(CSL1("KPilotConduit"));
 
 	// Now actually fill the two list boxes, just make
 	// sure that nothing gets listed in both.

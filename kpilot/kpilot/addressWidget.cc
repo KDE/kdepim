@@ -70,6 +70,7 @@ static const char *addresswidget_id =
 #ifndef QTEXTVIEW_H
 #include <qtextview.h>
 #endif
+#include <qtextcodec.h>
 
 #ifndef _KAPP_H
 #include <kapplication.h>
@@ -179,7 +180,7 @@ void AddressWidget::initialize()
 #endif
 
 	PilotDatabase *addressDB =
-		new PilotLocalDatabase(dbPath(), "AddressDB");
+		new PilotLocalDatabase(dbPath(), CSL1("AddressDB"));
 	unsigned char buffer[BUFFERSIZE];
 	int appLen;
 
@@ -363,17 +364,15 @@ QString AddressWidget::createTitle(PilotAddress * address, int displayMode)
 	switch (displayMode)
 	{
 	case 1:
-		if (address->getField(entryCompany) &&
-			strcmp(address->getField(entryCompany), ""))
+		if (!address->getField(entryCompany).isEmpty())
 		{
 			title.append(address->getField(entryCompany));
 		}
-		if (address->getField(entryLastname) &&
-			strcmp(address->getField(entryLastname), ""))
+		if (!address->getField(entryLastname).isEmpty())
 		{
 			if (!title.isEmpty())
 			{
-				title.append( ", ");
+				title.append( CSL1(", "));
 			}
 
 			title.append(address->getField(entryLastname));
@@ -381,18 +380,16 @@ QString AddressWidget::createTitle(PilotAddress * address, int displayMode)
 		break;
 	case 0:
 	default:
-		if (address->getField(entryLastname) &&
-			strcmp(address->getField(entryLastname), ""))
+		if (!address->getField(entryLastname).isEmpty())
 		{
 			title.append(address->getField(entryLastname));
 		}
 
-		if (address->getField(entryFirstname) &&
-			strcmp(address->getField(entryFirstname), ""))
+		if (!address->getField(entryFirstname).isEmpty())
 		{
 			if (!title.isEmpty())
 			{
-				title.append( ", ");
+				title.append( CSL1(", "));
 			}
 			title.append(address->getField(entryFirstname));
 		}
@@ -401,7 +398,7 @@ QString AddressWidget::createTitle(PilotAddress * address, int displayMode)
 
 	if (title.isEmpty())	// One last try
 	{
-		if (fAddressList.current()->getField(entryCompany))
+		if (!fAddressList.current()->getField(entryCompany).isEmpty())
 		{
 			title.append(fAddressList.current()->
 				getField(entryCompany));
@@ -475,7 +472,7 @@ void AddressWidget::slotCreateNewRecord()
 	// since we don't have the DBInfo stuff to deal with it.
 	//
 	//
-	PilotDatabase *myDB = new PilotLocalDatabase(dbPath(), "AddressDB");
+	PilotDatabase *myDB = new PilotLocalDatabase(dbPath(), CSL1("AddressDB"));
 
 	if (!myDB || !myDB->isDBOpen())
 	{
@@ -626,100 +623,104 @@ void AddressWidget::slotShowAddress(int which)
 
 	QString text;
 
-	text += "<qt>";
+	text += CSL1("<qt>");
 
+	QString par = CSL1("<p>");
+	QString ps = CSL1("</p>");
+	
 	// title + name
-	text += "<p>";
-	if (addr->getField(entryTitle))
+	text += par;
+	if (!addr->getField(entryTitle).isEmpty())
 	{
 		text += addr->getField(entryTitle);
-		text += " ";
+		text += CSL1(" ");
 	}
-	text += "<b><big>";
-	if (addr->getField(entryFirstname))
+	text += CSL1("<b><big>");
+	if (!addr->getField(entryFirstname).isEmpty())
 	{
 		text += addr->getField(entryFirstname);
-		text += " ";
+		text += CSL1(" ");
 	}
 	text += addr->getField(entryLastname);
-	text += "</big></b>";
-	text += "</p>";
+	text += CSL1("</big></b>");
+	text += ps;
 
 	// company
-	if (addr->getField(entryCompany))
+	if (!addr->getField(entryCompany).isEmpty())
 	{
-		text += "<p>";
+		text += par;
 		text += addr->getField(entryCompany);
-		text += "</p>";
+		text += ps;
 	}
 
 	// phone numbers (+ labels)
-	text += "<p>";
+	text += par;
 	for (i = entryPhone1; i <= entryPhone5; i++)
-		if (addr->getField(i))
+		if (!addr->getField(i).isEmpty())
 		{
-			text += "<small>";
-			text += fAddressAppInfo.phoneLabels[addr->
-				getPhoneLabelIndex(i - entryPhone1)];
-			text += ": </small>";
+			text += CSL1("<small>");
+			text += PilotAppCategory::codec()->toUnicode(
+				fAddressAppInfo.phoneLabels[addr->
+				getPhoneLabelIndex(i - entryPhone1)]);
+			text += CSL1(": </small>");
 			if (addr->getShownPhone() == i - entryPhone1)
-				text += "<b>";
+				text += CSL1("<b>");
 			text += addr->getField(i);
 			if (addr->getShownPhone() == i - entryPhone1)
-				text += "</b>";
-			text += "<br/>";
+				text += CSL1("</b>");
+			text += CSL1("<br/>");
 		}
-	text += "</p>";
+	text += ps;
 
 	// address, city, state, country
-	text += "<p>";
-	if (addr->getField(entryAddress))
+	text += par;
+	if (!addr->getField(entryAddress).isEmpty())
 	{
 		text += addr->getField(entryAddress);
-		text += "<br/>";
+		text += CSL1("<br/>");
 	}
-	if (addr->getField(entryCity))
+	if (!addr->getField(entryCity).isEmpty())
 	{
 		text += addr->getField(entryCity);
-		text += " ";
+		text += CSL1(" ");
 	}
-	if (addr->getField(entryState))
+	if (!addr->getField(entryState).isEmpty())
 	{
 		text += addr->getField(entryState);
-		text += " ";
+		text += CSL1(" ");
 	}
-	if (addr->getField(entryZip))
+	if (!addr->getField(entryZip).isEmpty())
 	{
 		text += addr->getField(entryZip);
 	}
-	text += "<br/>";
-	if (addr->getField(entryCountry))
+	text += CSL1("<br/>");
+	if (!addr->getField(entryCountry).isEmpty())
 	{
 		text += addr->getField(entryCountry);
-		text += "<br/>";
+		text += CSL1("<br/>");
 	}
-	text += "</p>";
+	text += ps;
 
 	// custom fields
-	text += "<p>";
+	text += par;
 	for (i = entryCustom1; i <= entryCustom4; i++)
-		if (addr->getField(i))
+		if (!addr->getField(i).isEmpty())
 		{
 			text += addr->getField(i);
-			text += "<br/>";
+			text += CSL1("<br/>");
 		}
-	text += "</p>";
+	text += ps;
 
 	// note
-	if (addr->getField(entryNote))
+	if (!addr->getField(entryNote).isEmpty())
 	{
-		text += "<hr/>";
-		text += "<p>";
+		text += CSL1("<hr/>");
+		text += par;
 		text += addr->getField(entryNote);
-		text += "</p>";
+		text += ps;
 	}
 
-	text += "</qt>\n";
+	text += CSL1("</qt>\n");
 	fAddrInfo->setText(text);
 
 	slotUpdateButtons();
@@ -742,7 +743,7 @@ void AddressWidget::writeAddress(PilotAddress * which,
 
 	if (myDB == 0L || !myDB->isDBOpen())
 	{
-		myDB = new PilotLocalDatabase(dbPath(), "AddressDB");
+		myDB = new PilotLocalDatabase(dbPath(), CSL1("AddressDB"));
 		usemyDB = true;
 	}
 

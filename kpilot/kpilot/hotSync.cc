@@ -45,12 +45,14 @@ static const char *hotsync_id =
 #include <qdir.h>
 #include <qvaluelist.h>
 #include <qregexp.h>
+#include <qtextcodec.h>
 
 #include <kglobal.h>
 #include <kstandarddirs.h>
 #include <kapplication.h>
 
 #include "pilotUser.h"
+#include "pilotAppCategory.h"
 
 #include "hotSync.moc"
 
@@ -97,7 +99,9 @@ TestLink::TestLink(KPilotDeviceLink * p) :
 		// Let the Pilot User know what's happening
 		openConduit();
 		// Let the KDE User know what's happening
-		emit logMessage(i18n("Syncing database %1...").arg(db.name));
+		// Pretty sure all database names are in latin1.
+		emit logMessage(i18n("Syncing database %1...")
+			.arg(QString::fromLatin1(db.name)));
 
 		kapp->processEvents();
 	}
@@ -113,32 +117,32 @@ BackupAction::BackupAction(KPilotDeviceLink * p) :
 	FUNCTIONSETUP;
 
 	fDatabaseDir = KGlobal::dirs()->saveLocation("data",
-		QString("kpilot/DBBackup/"));
+		CSL1("kpilot/DBBackup/"));
 }
 
 /* virtual */ QString BackupAction::statusString() const
 {
 	FUNCTIONSETUP;
-	QString s("BackupAction=");
+	QString s(CSL1("BackupAction="));
 
 	switch (status())
 	{
 	case Init:
-		s.append("Init");
+		s.append(CSL1("Init"));
 		break;
 	case Error:
-		s.append("Error");
+		s.append(CSL1("Error"));
 		break;
 	case FullBackup:
-		s.append("FullBackup");
+		s.append(CSL1("FullBackup"));
 		break;
 	case BackupEnded:
-		s.append("BackupEnded");
+		s.append(CSL1("BackupEnded"));
 		break;
 	default:
-		s.append("(unknown ");
+		s.append(CSL1("(unknown "));
 		s.append(QString::number(status()));
-		s.append(")");
+		s.append(CSL1(")"));
 	}
 
 	return s;
@@ -205,7 +209,9 @@ BackupAction::BackupAction(KPilotDeviceLink * p) :
 
 	fDBIndex = info.index + 1;
 
-	QString s = i18n("Backing up: %1").arg(info.name);
+	// Pretty sure all database names are latin1.
+	QString s = i18n("Backing up: %1")
+		.arg(QString::fromLatin1(info.name));
 	addSyncLogEntry(s);
 
 	if (!createLocalDatabase(&info))
@@ -213,7 +219,8 @@ BackupAction::BackupAction(KPilotDeviceLink * p) :
 		kdError() << k_funcinfo
 			<< ": Couldn't create local database for "
 			<< info.name << endl;
-		addSyncLogEntry(i18n("Backup of %1 failed.\n").arg(info.name));
+		addSyncLogEntry(i18n("Backup of %1 failed.\n")
+			.arg(QString::fromLatin1(info.name)));
 	}
 	else
 	{
@@ -226,7 +233,9 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 	FUNCTIONSETUP;
 
 	QString fullBackupDir =
-		fDatabaseDir + fHandle->getPilotUser()->getUserName() + "/";
+		fDatabaseDir + 
+		PilotAppCategory::codec()->toUnicode(fHandle->getPilotUser()->getUserName()) +
+		CSL1("/");
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname
@@ -263,19 +272,23 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 		}
 	}
 
-	QString databaseName(info->name);
+	QString databaseName(QString::fromLatin1(info->name));
 
-	databaseName.replace(QRegExp("/"), "_");
+#if QT_VERSION < 0x30100
+	databaseName.replace(QRegExp(CSL1("/")), CSL1("_"));
+#else
+	databaseName.replace('/', CSL1("_"));
+#endif
 
 	QString fullBackupName = fullBackupDir + databaseName;
 
 	if (info->flags & dlpDBFlagResource)
 	{
-		fullBackupName.append(".prc");
+		fullBackupName.append(CSL1(".prc"));
 	}
 	else
 	{
-		fullBackupName.append(".pdb");
+		fullBackupName.append(CSL1(".pdb"));
 	}
 
 #ifdef DEBUG
@@ -444,17 +457,17 @@ nextFile:
 	FUNCTIONSETUP;
 	if (fDBIndex < 0)
 	{
-		return QString("Idle");
+		return QString(CSL1("Idle"));
 	}
 	else
 	{
 		if ((unsigned) fDBIndex >= fList.count())
 		{
-			return QString("Index out of range");
+			return QString(CSL1("Index out of range"));
 		}
 		else
 		{
-			return QString("Installing %1").arg(fList[fDBIndex]);
+			return QString(CSL1("Installing %1")).arg(fList[fDBIndex]);
 		}
 	}
 }

@@ -161,10 +161,10 @@ void PilotDaemonTray::setupWidget()
 {
 	FUNCTIONSETUP;
 
-	KGlobal::iconLoader()->addAppDir("kpilot");
-	icon = KGlobal::iconLoader()->loadIcon("hotsync", KIcon::Toolbar,
+	KGlobal::iconLoader()->addAppDir(CSL1("kpilot"));
+	icon = KGlobal::iconLoader()->loadIcon(CSL1("hotsync"), KIcon::Toolbar,
 		0, KIcon::DefaultState, 0, false);
-	busyicon = KGlobal::iconLoader()->loadIcon("busysync", KIcon::Toolbar,
+	busyicon = KGlobal::iconLoader()->loadIcon(CSL1("busysync"), KIcon::Toolbar,
 		0, KIcon::DefaultState, 0, false);
 
 	slotShowBusy();
@@ -476,39 +476,39 @@ void PilotDaemon::showTray()
 {
 	FUNCTIONSETUP;
 
-	QString s("PilotDaemon=");
+	QString s = CSL1("PilotDaemon=");
 
 	switch (status())
 	{
 	case INIT:
-		s.append(QString("Initializing"));
+		s.append(QString(CSL1("Initializing")));
 		break;
 	case READY:
-		s.append(QString("Found device"));
+		s.append(QString(CSL1("Found device")));
 		break;
 	case ERROR:
-		s.append(QString("Error"));
+		s.append(QString(CSL1("Error")));
 		break;
 	case FILE_INSTALL_REQ:
-		s.append(QString("Installing File"));
+		s.append(QString(CSL1("Installing File")));
 		break;
 	case HOTSYNC_END:
-		s.append(QString("End of Hotsync"));
+		s.append(QString(CSL1("End of Hotsync")));
 		break;
 	case HOTSYNC_START:
-		s.append(QString("Syncing"));
+		s.append(QString(CSL1("Syncing")));
 		break;
 	}
 
-	s.append(" NextSync=");
+	s.append(CSL1(" NextSync="));
 	s.append(syncTypeString(fNextSyncType));
 
-	s.append(" (");
+	s.append(CSL1(" ("));
 	if (fPilotLink)
 	{
 		s.append(fPilotLink->statusString());
 	}
-	s.append(")");
+	s.append(CSL1(")"));
 
 	return s;
 }
@@ -610,17 +610,17 @@ QString PilotDaemon::syncTypeString(int i) const
 	switch (i)
 	{
 	case PilotDaemonDCOP::Test:
-		return QString("Test");
+		return QString(CSL1("Test"));
 	case PilotDaemonDCOP::HotSync:
-		return QString("HotSync");
+		return QString(CSL1("HotSync"));
 	case PilotDaemonDCOP::FastSync:
-		return QString("FastSync");
+		return QString(CSL1("FastSync"));
 	case PilotDaemonDCOP::Backup:
-		return QString("Backup");
+		return QString(CSL1("Backup"));
 	case PilotDaemonDCOP::Restore:
-		return QString("Restore");
+		return QString(CSL1("Restore"));
 	default:
-		return QString("<unknown>");
+		return QString(CSL1("<unknown>"));
 	}
 }
 
@@ -839,7 +839,7 @@ void PilotDaemon::slotRunKPilot()
 	QCString kpilotDCOP;
 	int kpilotPID;
 
-	if (KApplication::startServiceByDesktopName("kpilot",
+	if (KApplication::startServiceByDesktopName(CSL1("kpilot"),
 			QString::null, &kpilotError, &kpilotDCOP, &kpilotPID
 #if (KDE_VERSION >= 220)
 			// Startup notification added in 2.2
