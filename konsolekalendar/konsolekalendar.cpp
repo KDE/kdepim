@@ -133,8 +133,25 @@ bool KonsoleKalendar::showInstance()
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | view events by uid list" << endl;
 	  event = m_variables->getCalendar()->event( m_variables->getUID() );
 	  status = printEvent ( &ts, event );
-	} else if( m_variables->isNext() ) {
-	  kdDebug() << "konsolekalendar.cpp::showInstance() | Show next activity in calendar" << endl;
+        } else if( m_variables->isNext() ) {
+          kdDebug() << "konsolekalendar.cpp::showInstance() | Show next activity in calendar" << endl;
+          
+          QDateTime datetime = m_variables->getStartDateTime();
+          datetime = datetime.addDays( 90 );
+          eventList = new Event::List ( m_variables->getCalendar()->rawEvents( 
+                                        m_variables->getStartDateTime().date(),
+                                        datetime.date(),
+                                        true ) );
+   
+           if( eventList->count() ) {
+                 Event::List::ConstIterator it = eventList->begin();
+                 Event *singleEvent = *it;
+                 printEvent( &ts, singleEvent );
+           } else {
+                 // if no events
+                 ts << "(no events in next 90 days)" << endl;
+           }
+   
         } else {
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | view raw events within date range list" << endl;
 	  eventList = new Event::List ( m_variables->getCalendar()->rawEvents( 
@@ -283,7 +300,7 @@ bool KonsoleKalendar::isEvent( QDateTime startdate, QDateTime enddate, QString s
 {
   // Search for an event with specified start and end date/time stamps and summaries.
 
-  Event *e;
+  Event *event;
   Event::List::ConstIterator it;
  
   bool found = false;
@@ -291,8 +308,8 @@ bool KonsoleKalendar::isEvent( QDateTime startdate, QDateTime enddate, QString s
   Event::List eventList( m_variables->getCalendar()->
 			 rawEventsForDate( startdate.date(), true ));
   for ( it =  eventList.begin(); it != eventList.end(); ++it ) {
-    e = *it;
-    if ( e->dtEnd()==enddate && e->summary()==summary ) {
+    event = *it;
+    if ( event->dtEnd()==enddate && event->summary()==summary ) {
       found = true;
       break;
     }
