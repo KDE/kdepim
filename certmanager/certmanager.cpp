@@ -242,18 +242,18 @@ void CertManager::createActions() {
 			actionCollection(), "file_new_certificate" );
 
 #ifdef NOT_IMPLEMENTED_ANYWAY
-  mRevokeCertificateAction = new KAction( i18n("Revoke Certificate"), 0,
+  mRevokeCertificateAction = new KAction( i18n("Revoke"), 0,
                                           this, SLOT(revokeCertificate()),
                                           actionCollection(), "edit_revoke_certificate" );
   connectEnableOperationSignal( this, mRevokeCertificateAction );
 
-  mExtendCertificateAction = new KAction( i18n("Extend Certificate"), 0,
+  mExtendCertificateAction = new KAction( i18n("Extend"), 0,
                                           this, SLOT(extendCertificate()),
                                           actionCollection(), "edit_extend_certificate" );
   connectEnableOperationSignal( this, mExtendCertificateAction );
 #endif
 
-  mDeleteCertificateAction = new KAction( i18n("Delete Certificate"), "editdelete", Key_Delete,
+  mDeleteCertificateAction = new KAction( i18n("Delete"), "editdelete", Key_Delete,
                                     this, SLOT(slotDeleteCertificate()),
                                     actionCollection(), "edit_delete_certificate" );
   connectEnableOperationSignal( this, mDeleteCertificateAction );
@@ -280,7 +280,7 @@ void CertManager::createActions() {
   mViewCertDetailsAction = new KAction( i18n("View Certificate Details..."), 0, 0,
                                         this, SLOT(slotViewDetails()), actionCollection(),
                                         "view_certificate_details" );
-  mDownloadCertificateAction = new KAction( i18n( "Download Certificate"), 0, 0,
+  mDownloadCertificateAction = new KAction( i18n( "Download"), 0, 0,
                                         this, SLOT(slotDownloadCertificate()), actionCollection(),
                                         "download_certificate" );
 
