@@ -42,6 +42,9 @@ PilotListItem::PilotListItem(const QString &text,
 
 
 // $Log$
+// Revision 1.2  2001/03/04 20:51:21  adridg
+// Removed spurious .moc file
+//
 // Revision 1.1  2001/03/04 11:22:12  adridg
 // In response to bug 21392, replaced fixed-length lookup table by a subclass
 // of QListBoxItem inserted into list box. This subclass carries data to
