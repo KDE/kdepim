@@ -91,7 +91,12 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
   mIsPart = !parent->isA( "KAddressBookMain" );
 
   if ( file.isEmpty() ) {
-    mAddressBook = KABC::StdAddressBook::self( true );
+    //Making this syncronous.  If you want it async, you'll have to be more careful about other functions
+    //using mAddressBook before it's loaded.
+    //Making it syncronous fixes the problem of:
+    //$>  kaddressbook ; dcop kaddressbook editContact uid
+    //not working.  This is because the dcop call happens before this has finished loading.
+    mAddressBook = KABC::StdAddressBook::self( false );    
   } else {
     kdDebug(5720) << "KABCore(): document '" << file << "'" << endl;
     mAddressBook = new KABC::AddressBook;
