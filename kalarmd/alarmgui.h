@@ -76,7 +76,7 @@ class AlarmGui : public QObject, public ADConfigData, virtual public AlarmGuiIfa
 
   private:
     // DCOP interface
-    void              alarmDaemonUpdate(const QString& change,
+    void              alarmDaemonUpdate(int alarmGuiChangeType,
                                         const QString& calendarURL,
                                         const QCString& appName);
     void              handleEvent(const QString& calendarURL,

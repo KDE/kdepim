@@ -38,6 +38,7 @@
 
 #include "dockwindow.h"
 #include "alarmdialog.h"
+#include "alarmdaemoniface_stub.h"
 
 #include "alarmgui.h"
 #include "alarmgui.moc"
@@ -89,111 +90,111 @@ AlarmGui::~AlarmGui()
 /*
  * DCOP call from the alarm daemon to notify a change.
  */
-void AlarmGui::alarmDaemonUpdate(const QString& change,
+void AlarmGui::alarmDaemonUpdate(int alarmGuiChangeType,
                                  const QString& calendarURL,
                                  const QCString& appName)
 {
-  kdDebug(5900) << "AlarmGui::alarmDaemonUpdate()\n";
-  if (change == "STATUS")
+  AlarmGuiChangeType changeType = AlarmGuiChangeType(alarmGuiChangeType);
+  switch (changeType)
   {
-    readDaemonConfig();
-    mDocker->setGuiAutostart(mAutostartDaemon);
-  }
-  else if (change == "CLIENT")
-  {
-    bool deletedClients, deletedCalendars;
-    readDaemonData(deletedClients, deletedCalendars);
-    checkDefaultClient();
-    mDocker->updateMenuClients();
-    mDocker->updateMenuCalendars(true);
-    setToolTip();
-  }
-  else
-  {
-    // It must be a calendar-related change
-    bool recreateMenu = false;
-    ADCalendarBase* cal = getCalendar(expandURL(calendarURL));
-    if (change == "ADD_CALENDAR")
+    case CHANGE_STATUS:
+      kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(CHANGE_STATUS)\n";
+      readDaemonConfig();
+      mDocker->setDaemonAutostart(mAutostartDaemon);
+      break;
+    case CHANGE_CLIENT:
     {
-      // Add a KOrganizer-type calendar
-      if (cal)
-      {
-        if (cal->actionType() == ADCalendarBase::KORGANIZER)
-        {
-          removeDialogEvents(cal);
-          cal->close();
-          cal->loadFile();
-        }
-      }
-      else
-      {
-        cal = new ADCalendarGui(calendarURL, appName, ADCalendarBase::KORGANIZER);
-        mCalendars.append(cal);
-        kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(): KORGANIZER calendar added" << endl;
-        recreateMenu = true;
-      }
+      kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(CHANGE_CLIENT)\n";
+      bool deletedClients, deletedCalendars;
+      readDaemonData(deletedClients, deletedCalendars);
+      checkDefaultClient();
+      mDocker->updateMenuClients();
+      mDocker->updateMenuCalendars(true);
+      setToolTip();
+      break;
     }
-    else if (change == "ADD_MSG_CALENDAR")
+    default:
     {
-      // Add a KAlarm-type calendar
-      if (cal)
+      // It must be a calendar-related change
+      bool recreateMenu = false;
+      ADCalendarBase* cal = getCalendar(expandURL(calendarURL));
+      switch (changeType)
       {
-        if (cal->actionType() == ADCalendarBase::KORGANIZER)
-          removeDialogEvents(cal);
-        mCalendars.remove(cal);
+        case ADD_CALENDAR:
+          // Add a KOrganizer-type calendar
+          kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(ADD_CALENDAR)\n";
+          if (cal)
+          {
+            if (cal->actionType() == ADCalendarBase::KORGANIZER)
+            {
+              removeDialogEvents(cal);
+              cal->close();
+              cal->loadFile();
+            }
+          }
+          else
+          {
+            cal = new ADCalendarGui(calendarURL, appName, ADCalendarBase::KORGANIZER);
+            mCalendars.append(cal);
+            kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(): KORGANIZER calendar added" << endl;
+            recreateMenu = true;
+          }
+          break;
+        case ADD_MSG_CALENDAR:
+          // Add a KAlarm-type calendar
+          kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(ADD_MSG_CALENDAR)\n";
+          if (cal)
+          {
+            if (cal->actionType() == ADCalendarBase::KORGANIZER)
+              removeDialogEvents(cal);
+            mCalendars.remove(cal);
+          }
+          cal = new ADCalendarGui(calendarURL, appName, ADCalendarBase::KALARM);
+          mCalendars.append(cal);
+          recreateMenu = true;
+          break;
+        default:
+          if (!cal)
+          {
+            kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(): unknown calendar: " << calendarURL << endl;
+            return;
+          }
+          switch (changeType)
+          {
+            case DELETE_CALENDAR:
+              kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(DELETE_CALENDAR)\n";
+              removeDialogEvents(cal);
+              mCalendars.remove(cal);
+              recreateMenu = true;
+              break;
+            case CALENDAR_UNAVAILABLE:
+              // Calendar is not available for monitoring
+              kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(CALENDAR_UNAVAILABLE)\n";
+              cal->setAvailable( false );
+              cal->setEnabled( false );
+              break;
+            case DISABLE_CALENDAR:
+              // Calendar is available for monitoring but is not currently being monitored
+              kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(DISABLE_CALENDAR)\n";
+              cal->setAvailable( true );
+              cal->setEnabled( false );
+              break;
+            case ENABLE_CALENDAR:
+              // Calendar is currently being monitored
+              kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(ENABLE_CALENDAR)\n";
+              cal->setAvailable( true );
+              cal->setEnabled( true );
+              break;
+            default:
+              kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(): unknown change type: " << changeType << endl;
+              return;
+          }
+          break;
       }
-      cal = new ADCalendarGui(calendarURL, appName, ADCalendarBase::KALARM);
-      mCalendars.append(cal);
-      kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(): KALARM calendar added" << endl;
-      recreateMenu = true;
+      mDocker->updateMenuCalendars(recreateMenu);
+      setToolTip();
+      break;
     }
-    else
-    {
-      if (!cal)
-      {
-        kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(): unknown calendar: " << calendarURL << endl;
-        return;
-      }
-      if (change == "DELETE_CALENDAR")
-      {
-        removeDialogEvents(cal);
-        mCalendars.remove(cal);
-        kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(): calendar removed" << endl;
-        recreateMenu = true;
-      }
-      else if (change == "CHANGE_CALENDAR")
-      {
-        removeDialogEvents(cal);
-        cal->close();
-        if (cal->loadFile())
-          kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(): calendar reloaded" << endl;
-      }
-      else if (change == "CALENDAR_UNAVAILABLE")
-      {
-        // Calendar is not available for monitoring
-        cal->setAvailable( false );
-        cal->setEnabled( false );
-      }
-      else if (change == "CALENDAR_DISABLED")
-      {
-        // Calendar is available for monitoring but is not currently being monitored
-        cal->setAvailable( true );
-        cal->setEnabled( false );
-      }
-      else if (change == "CALENDAR_ENABLED")
-      {
-        // Calendar is currently being monitored
-        cal->setAvailable( true );
-        cal->setEnabled( true );
-      }
-      else
-      {
-        kdDebug(5900) << "AlarmGui::alarmDaemonUpdate(): unknown change type: " << change << endl;
-        return;
-      }
-    }
-    mDocker->updateMenuCalendars(recreateMenu);
-    setToolTip();
   }
 }
 
@@ -210,11 +211,8 @@ void AlarmGui::handleEvent(const QString& calendarURL, const QString& eventID)
 void AlarmGui::registerWithDaemon()
 {
   kdDebug(5900)<<"AlarmGui::registerWithDaemon()\n";
-  QByteArray data;
-  QDataStream arg(data, IO_WriteOnly);
-  arg << QString(kapp->aboutData()->appName()) << QString(DCOP_OBJECT_NAME);
-  if (!kapp->dcopClient()->send(DAEMON_APP_NAME, DAEMON_DCOP_OBJECT, "registerGui(QString,QString)", data))
-     kdDebug(5900) << "KAlarmApp::startDaemon(): registerGui dcop send failed" << endl;
+  AlarmDaemonIface_stub s( DAEMON_APP_NAME, DAEMON_DCOP_OBJECT );
+  s.registerGui(kapp->aboutData()->appName(), DCOP_OBJECT_NAME);
 }
 
 // Read the Alarm Daemon's config file

@@ -73,7 +73,7 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
 
   private:
 
-    enum GuiChangeType          // parameters to GUI client notification
+/*    enum GuiChangeType          // parameters to GUI client notification
     {
       CHANGE_STATUS,           // change of alarm daemon or calendar status
       CHANGE_CLIENT,           // change to client application list
@@ -84,7 +84,7 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
       ENABLE_CALENDAR,         // calendar is now being monitored
       DISABLE_CALENDAR,        // calendar is available but not being monitored
       CALENDAR_UNAVAILABLE     // calendar is unavailable for monitoring
-    };
+    };*/
     struct GuiInfo
     {
       GuiInfo()  { }
@@ -105,8 +105,8 @@ class AlarmDaemon : public QObject, public ADConfigDataRW, virtual public AlarmD
     void        notifyPendingEvents(const QCString& appname);
     bool        notifyEvent(const ADCalendarBase*, const QString& eventID);
     void        notifyGuiCalStatus(const ADCalendarBase*);
-    void        notifyGui(GuiChangeType, const QString& calendarURL = QString::null);
-    void        notifyGui(GuiChangeType, const QString& calendarURL, const QCString &appname);
+    void        notifyGui(AlarmGuiChangeType, const QString& calendarURL = QString::null);
+    void        notifyGui(AlarmGuiChangeType, const QString& calendarURL, const QCString &appname);
 //    void        writeConfigClientGui(const QCString& appName, const QString& dcopObject);
     const GuiInfo* getGuiInfo(const QCString &appName) const;
     void        addConfigClient(KSimpleConfig&, const QCString& appName, const QString& key);

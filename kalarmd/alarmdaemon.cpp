@@ -342,8 +342,8 @@ void AlarmDaemon::checkAlarms( ADCalendarBase* cal, const QDateTime &from, const
   kdDebug(5901) << "  From: " << from.toString() << "  To: " << to.toString() << endl;
 
   QPtrList<Event> alarmEvents;
-  Alarm::List alarms;
-  Alarm::List::ConstIterator it;
+  QValueList<KOAlarm*> alarms;
+  QValueList<KOAlarm*>::ConstIterator it;
   switch ( cal->actionType() ) {
     case ADCalendar::KORGANIZER:
       alarms = cal->alarms( from, to );
@@ -559,6 +559,10 @@ void AlarmDaemon::registerGui(const QCString& appName, const QCString& dcopObjec
     mGuis.insert(appName, GuiInfo(dcopObject));
 
     writeConfigClientGui(appName, dcopObject);
+
+    for (ADCalendarBase* cal = mCalendars.first();  cal;  cal = mCalendars.next()) {
+      notifyGuiCalStatus(cal);
+    }
   }
 }
 
@@ -575,14 +579,15 @@ void AlarmDaemon::notifyGuiCalStatus(const ADCalendarBase* cal)
 /*
  * Send a DCOP message to all GUI interface applications, notifying them of a change.
  */
-void AlarmDaemon::notifyGui(GuiChangeType change, const QString& calendarURL)
+void AlarmDaemon::notifyGui(AlarmGuiChangeType change, const QString& calendarURL)
 {
   notifyGui( change, calendarURL, "" );
 }
 
-void AlarmDaemon::notifyGui(GuiChangeType change, const QString& calendarURL, const QCString& appName)
+void AlarmDaemon::notifyGui(AlarmGuiChangeType change, const QString& calendarURL, const QCString& appName)
 {
-  QString changeType;
+  kdDebug(5900) << "AlarmDaemon::notifyGui(" << change << ")\n";
+/*  QString changeType;
   switch (change)
   {
     case CHANGE_STATUS:         changeType = "STATUS";               break;
@@ -598,7 +603,7 @@ void AlarmDaemon::notifyGui(GuiChangeType change, const QString& calendarURL, co
       kdError() << "AlarmDaemon::guiNotify(): " << change << endl;
       return;
   }
-  kdDebug(5900) << "AlarmDaemon::notifyGui(" << changeType << ")\n";
+  kdDebug(5900) << "AlarmDaemon::notifyGui(" << changeType << ")\n";*/
 
   for (GuiMap::ConstIterator g = mGuis.begin();  g != mGuis.end();  ++g)
   {
@@ -608,10 +613,10 @@ void AlarmDaemon::notifyGui(GuiChangeType change, const QString& calendarURL, co
       kdDebug(5900)<<"AlarmDaemon::notifyGui() sending:" << g.key()<<" ->" << dcopObject <<endl;
       QByteArray data;
       QDataStream arg(data, IO_WriteOnly);
-      arg << changeType << calendarURL << appName;
+      arg << change << calendarURL << appName;
       if (!kapp->dcopClient()->send(static_cast<const char*>(g.key()),
                                     static_cast<const char*>( dcopObject),
-                                    "alarmDaemonUpdate(const QString&,const QString&,const QString&)",
+                                    "alarmDaemonUpdate(int,QString,QCString)",
                                     data))
         kdDebug(5900) << "AlarmDaemon::guiNotify(): dcop send failed:" << g.key() << endl;
     }
@@ -643,8 +648,8 @@ void AlarmDaemon::dumpAlarms()
   ADCalendarBase *cal;
   for( cal = cals.first(); cal; cal = cals.next() ) {
     kdDebug(5900) << "  Cal: " << cal->urlString() << endl;
-    Alarm::List alarms = cal->alarms( start, end );
-    Alarm::List::ConstIterator it;
+    QValueList<KOAlarm*> alarms = cal->alarms( start, end );
+    QValueList<KOAlarm*>::ConstIterator it;
     for( it = alarms.begin(); it != alarms.end(); ++it ) {
       Alarm *a = *it;
       kdDebug(5900) << "    " << a->parent()->summary() << " ("

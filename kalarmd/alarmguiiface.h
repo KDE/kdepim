@@ -24,12 +24,13 @@
 // $Id$
 
 #include <dcopobject.h>
+#include "alarmdaemoniface.h"
 
 class AlarmGuiIface : virtual public DCOPObject
 {
     K_DCOP
   k_dcop:
-    virtual ASYNC alarmDaemonUpdate(const QString& change,
+    virtual ASYNC alarmDaemonUpdate(int alarmGuiChangeType,
                                     const QString& calendarURL,
                                     const QCString& appName) = 0;
     virtual ASYNC handleEvent(const QString& calendarURL,

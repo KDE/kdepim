@@ -273,6 +273,7 @@ void AlarmDockWindow::selectCal(int menuIndex)
  */
 void AlarmDockWindow::setGuiAutostart(bool on)
 {
+kdDebug()<<"setGuiAutostart()="<<int(on)<<endl;
   KConfig* config = kapp->config();
   config->setGroup("General");
   config->writeEntry("Autostart", on);

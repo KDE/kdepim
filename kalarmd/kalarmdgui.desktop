@@ -1,8 +1,34 @@
 # KDE Config File
 [Desktop Entry]
 Name=Alarm daemon GUI
+Name[az]=Alarm Cini Ara Üzü
+Name[cs]=Alarm démon GUI
+Name[da]=Alarmdæmon-GUI
+Name[de]=Alarmdämon-Oberfläche
+Name[es]=Demonio de alarma GUI
+Name[he]=ממשק גרפי לתהליך שירות התזכורות
+Name[lv]=Trauksmes dēmona GUI
+Name[pt]=GUI do servidor de alarme
+Name[pt_BR]=GUI do servidor de alarme
+Name[sk]=Rozhranie pre alarm démona
+Name[sv]=Grafisk alarmdemon
+Name[xx]=xx
 Exec=kalarmdgui
 Icon=kalarmd
 Type=Application
 Comment=KOrganizer/KAlarm alarm daemon GUI
+Comment[az]=KOrganizer/KAlarm alarm demonu ara üzü
+Comment[da]=KOrganizer/KAlarm-alarmdæmon-GUI
+Comment[es]=Demonio de alarma KAlarm/KOrganizer GUI
+Comment[he]=ממשק משתמש גרפי לתהליך שירות התזכורות של KOrganizer/KAlarm
+Comment[lv]=KOrganaizera/KTrauksme trauksmes dēmona GUI
+Comment[nl]=KOrganizer/Kalarm alarmdaemon GUI
+Comment[pt]=GUI do Servidor de alarme do KAlarm/KOrganizer
+Comment[pt_BR]=GUI do Servidor de alarme do KAlarm/KOrganizer
+Comment[sk]=Rozhranie pre démona alarmov KOrganizer/KAlarm
+Comment[sv]=Grafisk Korganizer/Kalarm-alarmdemon
+Comment[xx]=xx
+Comment[zu]=KUmgqugquzeli/KAlarm alarm daemon GUI
 Terminal=0
+X-KDE-autostart-after=panel
+X-KDE-autostart-condition=kalarmdguirc:General:Autostart:true
