@@ -23,7 +23,30 @@ TODO LIST (Ignore the file TODO)
 * Do not store the RecordID with the vcalendar entry, but in the kpilot config
 * GJJ: Add a flag to the log{Error,Message} function 
   to prevent the addition of the trailing <br> and the date
+* GJJ: Make an application that just has a LogWidget and KPilot's dcop
+  interface (and registration!) so that you can follow the daemon's log
+  output without starting KPilot at all.
 
+KPilot Developer's notes for February 8th, 2003
+===============================================  
+
+2003-2-1  Adriaan de Groot
+* Some time spent tracking down double activations of slowShowMemo().
+* memoWidget.{h,cc} [BRANCH] Removed double initialization. Removed
+  heavy-handed initialize() call after memo deletion. Found potential
+  data-loss bug with deleting memos after unselecting one. Decided that
+  extended select in this case is just _evil_. I can't decide which 
+  memo to show after deselections, and there's several other problems
+  as well related to slotUpdateButtons(). Reverted the multiple-select.
+* options.h [BRANCH] Added the TODO_I18N macro to BRANCH as well,
+  where it's more important.
+* kpilotlink.cc [BRANCH] Reordered ReadSysInfo and ReadUserInfo to
+  copy JPilot's setup, maybe that will help with password issues.
+* kpilot.cc [BRANCH] Cleaned up deprecated headers.
+* conduitConfigDialog.cc [BRANCH] Preparing to repair the clumsy 
+  conduit selection and activation 
+
+  
 KPilot Developer's notes for January 30th, 2003
 ===============================================  
 
@@ -257,20 +280,6 @@ KPilot Developer's notes for november 10th, 2002
 * Thought of a new starter project: moving the popmail conduit config
   dialog to Qt Designer. Another one would be to fixup the capitalization
   of popmail in that conduit.
-* Added extra undocumented configuration option to the popmail
-  conduit in an effort to save KMail sending capability.
-
-KPilot Developer's notes for october 31st, 2002
-======================================
-
-2002-10-27  Adriaan de Groot
-* Don't you hate code / feature freezes? It always stops KPilot development
-  in it's tracks, if only because fixing the bug related to KMail's outbox
-  requires a new string. Bitch bitch, moan moan.
-* Added new TODO_I18N macro to flag I18N todos. The popmail
-  conduit is a big candidate for fixups.
-* Thought of a new starter project: moving the popmail conduit config
-  dialog to Qt Designer.
 * Added extra undocumented configuration option to the popmail
   conduit in an effort to save KMail sending capability.
 
