@@ -74,6 +74,11 @@
 
 #include <assert.h>
 
+static const unsigned int keyLengths[] = {
+  1024, 1532, 2048, 3072, 4096
+};
+static const unsigned int numKeyLengths = sizeof keyLengths / sizeof *keyLengths;
+
 static QString attributeLabel( const QString & attr, bool required ) {
   if ( attr.isEmpty() )
     return QString::null;
@@ -129,6 +134,9 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent,  const char* name
 	     this, SLOT( slotHelpClicked() ) );
     connect( insertAddressButton, SIGNAL( clicked() ),
 	     this, SLOT( slotSetValuesFromWhoAmI() ) );
+
+    for ( unsigned int i = 0 ; i < numKeyLengths ; ++i )
+      keyLengthCB->insertItem( i18n("%1 bits").arg( keyLengths[i] ) );
 }
 
 static bool requirementsAreMet( const CertificateWizardImpl::AttrPairList & list ) {
@@ -186,7 +194,7 @@ void CertificateWizardImpl::slotGenerateCertificate()
     QString certParms;
     certParms += "<GnupgKeyParms format=\"internal\">\n";
     certParms += "Key-Type: RSA\n";
-    certParms += "Key-Length: 1024\n"; // PENDING(NN) Might want to make this user-configurable
+    certParms += QString( "Key-Length: %1\n" ).arg( keyLengths[keyLengthCB->currentItem()] );
     certParms += "Key-Usage: ";
     if ( signOnlyCB->isChecked() )
       certParms += "Sign";
