@@ -677,7 +677,7 @@ void KNMainWindow::initActions()
                               SLOT(slotArtSetThreadRead()), actionCollection(), "thread_read");
   a_ctArtSetThreadUnread    = new KAction(i18n("Mark T&hread as Unread"), CTRL+Key_U , this,
                               SLOT(slotArtSetThreadUnread()), actionCollection(), "thread_unread");
-  a_ctArtOpenNewWindow      = new KAction(i18n("Open in own &Window"), "window_new", Key_O , this,
+  a_ctArtOpenNewWindow      = new KAction(i18n("Open in Own &Window"), "window_new", Key_O , this,
                               SLOT(slotArtOpenNewWindow()), actionCollection(), "article_ownWindow");
 
   // scoring

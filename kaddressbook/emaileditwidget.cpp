@@ -53,7 +53,7 @@ EmailEditWidget::EmailEditWidget(QWidget *parent, const char *name)
   connect(mEmailEdit, SIGNAL( textChanged(const QString &) ), SIGNAL( modified() ) );
   topLayout->addWidget(mEmailEdit, 0, 1);
 
-  QPushButton *editButton = new QPushButton(i18n("Edit email addresses..."), this);
+  QPushButton *editButton = new QPushButton(i18n("Edit Email Addresses..."), this);
   connect(editButton, SIGNAL(clicked()), SLOT(edit()));
   topLayout->addMultiCellWidget(editButton, 1, 1, 0, 1);
 
