@@ -1,8 +1,8 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Kolab
+Name=IMAP server via KMail
 X-KDE-Library=knotes_kolab
 Type=Service
 ServiceTypes=KResources/Plugin
 X-KDE-ResourceFamily=notes
-X-KDE-ResourceType=kolab
+X-KDE-ResourceType=imap

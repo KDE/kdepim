@@ -1,10 +1,8 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Kolab
-Name[hi]=आईएमएपी
-Name[xx]=xxKolabxx
+Name=Addressbook on IMAP server via KMail
 X-KDE-Library=kabc_kolab
 Type=Service
 ServiceTypes=KResources/Plugin
 X-KDE-ResourceFamily=contact
-X-KDE-ResourceType=kolab
+X-KDE-ResourceType=imap
