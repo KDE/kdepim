@@ -702,7 +702,7 @@ void Contact::setFields( KABC::Addressee* addressee )
   setNickName( addressee->nickName() );
   setSpouseName( addressee->custom( "KADDRESSBOOK", "X-SpousesName" ) );
   setBirthday( addressee->birthday().date() );
-  setAnniversary( QDate::fromString( addressee->custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate) );
+  setAnniversary( stringToDate( addressee->custom( "KADDRESSBOOK", "X-Anniversary" ) ) );
 #if 0
   setPicture( addressee->photo() );
 #endif
@@ -721,6 +721,36 @@ void Contact::setFields( KABC::Addressee* addressee )
 
 void Contact::saveTo( KABC::Addressee* addressee )
 {
-  kdError() << "NYFI: " << k_funcinfo << endl;
+  // TODO: This needs the same set of TODOs as the setFields method
   KolabBase::saveTo( addressee );
+
+  addressee->setGivenName( givenName() );
+  addressee->setAdditionalName( middleNames() );
+  addressee->setFamilyName( lastName() );
+  addressee->setFormattedName( fullName() );
+  addressee->setPrefix( prefix() );
+  addressee->setSuffix( suffix() );
+  addressee->setRole( role() );
+  addressee->setOrganization( organization() );
+  addressee->setUrl( webPage() );
+  addressee->insertCustom( "KADDRESSBOOK", "X-IMAddress", imAddress() );
+  addressee->insertCustom( "KADDRESSBOOK", "X-Department", department() );
+  addressee->insertCustom( "KADDRESSBOOK", "X-Office", officeLocation() );
+  addressee->insertCustom( "KADDRESSBOOK", "X-Profession", profession() );
+  addressee->setTitle( jobTitle() );
+  addressee->insertCustom( "KADDRESSBOOK", "X-ManagersName", managerName() );
+  addressee->insertCustom( "KADDRESSBOOK", "X-AssistantsName", assistant() );
+  addressee->setNickName( nickName() );
+  addressee->insertCustom( "KADDRESSBOOK", "X-SpousesName", spouseName() );
+  addressee->setBirthday( QDateTime( birthday() ) );
+
+  if ( anniversary().isValid() )
+    addressee->insertCustom( "KADDRESSBOOK", "X-Anniversary",
+                             dateToString( anniversary() ) );
+  else
+    addressee->removeCustom( "KADDRESSBOOK", "X-Anniversary" );
+
+#if 0
+  setPicture( addressee->photo() );
+#endif
 }
