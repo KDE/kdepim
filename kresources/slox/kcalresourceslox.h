@@ -159,6 +159,7 @@ class KCalResourceSlox : public KCal::ResourceCached
     KPIM::ProgressItem *mUploadProgress;
 
     KCal::Incidence *mUploadedIncidence;
+    bool mUploadIsDelete;
 
     KABC::Lock *mLock;
 

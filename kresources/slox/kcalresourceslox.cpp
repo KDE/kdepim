@@ -280,6 +280,7 @@ void KCalResourceSlox::uploadIncidences()
   QDomElement set = WebdavHandler::addElement( doc, pu, "D:set" );
   QDomElement prop = WebdavHandler::addElement( doc, set, "D:prop" );
 
+  mUploadIsDelete = false;
   Incidence::List added = addedIncidences();
   Incidence::List changed = changedIncidences();
   Incidence::List deleted = deletedIncidences();
@@ -289,8 +290,7 @@ void KCalResourceSlox::uploadIncidences()
     mUploadedIncidence = changed.first();
   } else if ( !deleted.isEmpty() ) {
     mUploadedIncidence = deleted.first();
-    // TODO
-    return;
+    mUploadIsDelete = true;
   } else {
     mUploadedIncidence = 0;
     kdDebug() << "uploadIncidences(): FINISHED" << endl;
@@ -303,20 +303,43 @@ void KCalResourceSlox::uploadIncidences()
   QString sloxId = mUploadedIncidence->customProperty( "SLOX", "ID" );
   if ( !sloxId.isEmpty() ) {
     WebdavHandler::addSloxElement( doc, prop, "S:sloxid", sloxId );
-  }
-
-  createIncidenceAttributes( doc, prop, mUploadedIncidence );
-  // FIXME: Use a visitor
-  if ( mUploadedIncidence->type() == "Event" ) {
-    url.setPath( "/servlet/webdav.calendar/file.xml" );
-    createEventAttributes( doc, prop, static_cast<Event *>( mUploadedIncidence ) );
-  } else if ( mUploadedIncidence->type() == "Todo" ) {
-    url.setPath( "/servlet/webdav.tasks/file.xml" );
-    createTodoAttributes( doc, prop, static_cast<Todo *>( mUploadedIncidence ) );
   } else {
-    kdWarning() << "uploadIncidences(): Unsupported incidence type: "
-                << mUploadedIncidence->type() << endl;
-    return;
+    if ( mUploadIsDelete ) {
+      kdError() << "Incidence to delete doesn't have a SLOX id" << endl;
+      return;
+    }
+  }
+  WebdavHandler::addSloxElement( doc, prop, "S:clientid",
+                                 mUploadedIncidence->uid() );
+
+  if ( mUploadIsDelete ) {
+    if ( mUploadedIncidence->type() == "Event" ) {
+      url.setPath( "/servlet/webdav.calendar/" + sloxId );
+    } else if ( mUploadedIncidence->type() == "Todo" ) {
+      url.setPath( "/servlet/webdav.tasks/" + sloxId );
+    } else {
+      kdWarning() << "uploadIncidences(): Unsupported incidence type: "
+                  << mUploadedIncidence->type() << endl;
+      return;
+    }
+    
+    QDomElement remove = WebdavHandler::addElement( doc, pu, "D:remove" );
+    QDomElement prop = WebdavHandler::addElement( doc, remove, "D:prop" );
+    WebdavHandler::addSloxElement( doc, prop, "S:sloxid", sloxId );
+  } else {
+    createIncidenceAttributes( doc, prop, mUploadedIncidence );
+    // FIXME: Use a visitor
+    if ( mUploadedIncidence->type() == "Event" ) {
+      url.setPath( "/servlet/webdav.calendar/file.xml" );
+      createEventAttributes( doc, prop, static_cast<Event *>( mUploadedIncidence ) );
+    } else if ( mUploadedIncidence->type() == "Todo" ) {
+      url.setPath( "/servlet/webdav.tasks/file.xml" );
+      createTodoAttributes( doc, prop, static_cast<Todo *>( mUploadedIncidence ) );
+    } else {
+      kdWarning() << "uploadIncidences(): Unsupported incidence type: "
+                  << mUploadedIncidence->type() << endl;
+      return;
+    }
   }
 
   url.setUser( mPrefs->user() );
@@ -343,9 +366,6 @@ void KCalResourceSlox::createIncidenceAttributes( QDomDocument &doc,
                                                   QDomElement &parent,
                                                   Incidence *incidence )
 {
-  WebdavHandler::addSloxElement( doc, parent, "S:clientid",
-                                 incidence->uid() );
-
   WebdavHandler::addSloxElement( doc, parent, "S:title",
                                  incidence->summary() );
   
@@ -730,33 +750,37 @@ void KCalResourceSlox::slotUploadResult( KIO::Job *job )
         }
         QDomElement sloxIdElement = sloxIdNode.toElement();
         QString sloxId = sloxIdElement.text();
-
-        QDomNode clientIdNode = prop.namedItem( "clientid" );
-        if ( clientIdNode.isNull() ) {
-          kdError() << "Unable to find client id." << endl;
-          continue;
-        }
-        QDomElement clientidElement = clientIdNode.toElement();
-        QString clientId = clientidElement.text();
-      
         kdDebug() << "SLOXID: " << sloxId << endl;
-        kdDebug() << "CLIENTID: " << clientId << endl;
 
-        Incidence *i = mUploadedIncidence->clone();
-        QString uid;
-        if ( i->type() == "Event" ) uid = sloxIdToEventUid( sloxId );
-        else if ( i->type() == "Todo" ) uid = sloxIdToTodoUid( sloxId );
-        else {
-          kdError() << "KCalResourceSlox::slotUploadResult(): Unknown type: "
-                    << i->type() << endl;
+        if ( mUploadIsDelete ) {
+          kdDebug() << "Incidence deleted" << endl;
+        } else {
+          QDomNode clientIdNode = prop.namedItem( "clientid" );
+          if ( clientIdNode.isNull() ) {
+            kdError() << "Unable to find client id." << endl;
+            continue;
+          }
+          QDomElement clientidElement = clientIdNode.toElement();
+          QString clientId = clientidElement.text();
+
+          kdDebug() << "CLIENTID: " << clientId << endl;
+
+          Incidence *i = mUploadedIncidence->clone();
+          QString uid;
+          if ( i->type() == "Event" ) uid = sloxIdToEventUid( sloxId );
+          else if ( i->type() == "Todo" ) uid = sloxIdToTodoUid( sloxId );
+          else {
+            kdError() << "KCalResourceSlox::slotUploadResult(): Unknown type: "
+                      << i->type() << endl;
+          }
+          i->setUid( uid );
+          i->setCustomProperty( "SLOX", "ID", uid );
+
+          disableChangeNotification();
+          mCalendar.deleteIncidence( mUploadedIncidence );
+          mCalendar.addIncidence( i );
+          enableChangeNotification();
         }
-        i->setUid( uid );
-        i->setCustomProperty( "SLOX", "ID", uid );
-
-        disableChangeNotification();
-        mCalendar.deleteIncidence( mUploadedIncidence );
-        mCalendar.addIncidence( i );
-        enableChangeNotification();
       }
     }
   }
