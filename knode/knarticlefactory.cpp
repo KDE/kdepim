@@ -208,7 +208,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
       tc->decodedText(text);
   }
   else
-    text = QStringList::split('\n',selectedText);
+    text = QStringList::split('\n',selectedText,true);
 
   for(line=text.begin(); line!=text.end(); ++line) {
     if(!incSig && (*line)=="-- ")
