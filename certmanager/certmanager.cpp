@@ -47,7 +47,7 @@
 #include <kleo/downloadjob.h>
 #include <kleo/importjob.h>
 #include <kleo/deletejob.h>
-#include <kleo/keylister.h>
+#include <kleo/keylistjob.h>
 #include <kleo/dn.h>
 
 #include <ui/progressdialog.h>

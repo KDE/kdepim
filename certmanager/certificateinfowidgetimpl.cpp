@@ -37,7 +37,7 @@
 #include "certificateinfowidgetimpl.h"
 
 // libkleopatra
-#include <kleo/keylister.h>
+#include <kleo/keylistjob.h>
 #include <kleo/dn.h>
 
 #include <ui/progressdialog.h>
