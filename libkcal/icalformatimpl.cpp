@@ -846,9 +846,12 @@ icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
 icalproperty *ICalFormatImpl::writeAttachment(Attachment *att)
 {
   icalattachtype *attach = icalattachtype_new();
-  if ( att->isUri() )
-    icalattachtype_set_url( attach, att->uri().utf8().data() );
-  else
+  if ( att->isUri() ) {
+    // Work-around a bug(?) in libical. We need to escape commas...
+    QString uri( att->uri() );
+    uri.replace( ',', "\\," );
+    icalattachtype_set_url( attach, uri.utf8().data() );
+  } else
     icalattachtype_set_base64( attach, att->data(), 0 );
 
   icalproperty *p = icalproperty_new_attach( attach );
