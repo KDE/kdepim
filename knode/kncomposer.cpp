@@ -34,6 +34,7 @@
 #include <kcombobox.h>
 #include <kspell.h>
 #include <ktempfile.h>
+#include <kpgp.h>
 #include <kpgpblock.h>
 #include <kprocess.h>
 #include <kqcstringsplitter.h>
@@ -623,7 +624,7 @@ bool KNComposer::applyChanges()
 
 	  block.setText( codec->fromUnicode(tmpText) );
           kdDebug(5003) << "signing article from " << article()->from()->email() << endl;
-	  if( block.clearsign( signingKey, codec->name() ) ) {
+	  if( block.clearsign( signingKey, codec->name() ) == Kpgp::Ok ) {
 	      QCString result = block.text();
               tmp = codec->toUnicode(result.data(), result.length() );
           }
