@@ -38,14 +38,14 @@ libconduit_a_SOURCES = baseConduit.cc pilotConduitDatabase.cc conduitApp.cc \
 	messageDialog.cc gsetupDialog.cc \
 	kpilotConfig.cc kpilotlink.cc options.cc
 
-kpilot_LDFLAGS = @all_libraries@ -L/usr/local/lib $(KDE_RPATH)
-kpilotDaemon_LDFLAGS = @all_libraries@ -L/usr/local/lib $(KDE_RPATH)
+kpilot_LDFLAGS = $(all_libraries) -L/usr/local/lib $(KDE_RPATH)
+kpilotDaemon_LDFLAGS = $(all_libraries) -L/usr/local/lib $(KDE_RPATH)
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
-kpilot_LDADD   = $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) -lqt -lX11 -lXext @LIBSOCKET@ $(LIBPISOCK)
+kpilot_LDADD   = $(LIB_KFILE) $(LIBPISOCK)
 # -lpicc
-kpilotDaemon_LDADD = $(LIB_KFILE) $(LIB_KDEUI) $(LIB_KDECORE) -lqt -lX11 -lXext @LIBSOCKET@ $(LIBPISOCK)
+kpilotDaemon_LDADD = $(LIB_KFILE) $(LIBPISOCK)
 
 appsdir = $(kde_appsdir)/Utilities
 servicetypedir = $(kde_servicetypesdir)
@@ -53,7 +53,7 @@ apps_DATA = kpilot.desktop kpilotdaemon.desktop
 servicetype_DATA = kpilotconduit.desktop
 
 kpiloticondir = $(kde_datadir)/kpilot/icons
-kpiloticon_ICON = AUTO
+kpiloticon_ICON = backup fastsync hotsync restore
 
 KDE_ICON = kpilot
 
