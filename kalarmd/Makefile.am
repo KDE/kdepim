@@ -60,7 +60,7 @@ METASOURCES = AUTO
 
 SUBDIRS = pixmaps
  
-autostart_DATA = kalarmd.autostart.desktop # kalarmdgui.desktop
+autostart_DATA = kalarmd.autostart.desktop korgac.desktop # kalarmdgui.desktop
 autostartdir = $(prefix)/share/autostart
 
 #datadir = $(kde_bindir)
