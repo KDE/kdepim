@@ -195,6 +195,15 @@ void TaskView::deleteItemState( QListViewItem *item )
 
 void TaskView::closeStorage() { _storage->closeStorage( this ); }
 
+void TaskView::iCalFileModified(KCal::ResourceCalendar *rc)
+{
+  kdDebug(5970) << "entering iCalFileModified" << endl;
+  kdDebug(5970) << rc->infoText() << endl;
+  rc->dump();
+  _storage->buildTaskView(rc,this);
+  kdDebug(5970) << "exiting iCalFileModified" << endl;
+}
+
 void TaskView::refresh()
 {
   kdDebug(5970) << "entering TaskView::refresh()" << endl;
@@ -420,8 +429,6 @@ void TaskView::stopCurrentTimer()
 
 void TaskView::changeTimer(QListViewItem *)
 {
-  if ( isReadOnly() )
-    return;
   Task *task = current_item();
 
   if ( task != 0 && activeTasks.findRef(task) == -1 )

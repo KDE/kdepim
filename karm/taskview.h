@@ -8,6 +8,7 @@
 #include <klistview.h>
 
 #include "desktoplist.h"
+#include "resourcecalendar.h"
 #include "karmstorage.h"
 #include <qtimer.h>
 //#include "desktoptracker.h"
@@ -74,9 +75,6 @@ class TaskView : public KListView
 
     /** Return preferences user selected on settings dialog. **/
     Preferences *preferences();
-
-    /** Return true if storage is readonly */
-    bool isReadOnly() const { return _storage->isReadOnly(); }
 
   public slots:
     /** Save to persistent storage. */
@@ -185,6 +183,7 @@ class TaskView : public KListView
     void minuteUpdate();
     void itemStateChanged( QListViewItem *item );
     void deleteItemState( QListViewItem *item );
+    void iCalFileModified(KCal::ResourceCalendar *);
 };
 
 #endif // KARM_TASK_VIEW

@@ -32,6 +32,7 @@
 #include "desktoplist.h"
 
 #include <calendarresources.h>
+#include "resourcecalendar.h"
 
 class QDateTime;
 class Preferences;
@@ -98,6 +99,8 @@ class KarmStorage
      */
     QString load(TaskView* taskview, const Preferences* preferences);
 
+    QString KarmStorage::buildTaskView(KCal::ResourceCalendar *rc, TaskView *view);
+    
     /* Close calendar and clear view.  Release lock if holding one. */
     void closeStorage(TaskView* view);
 
@@ -264,16 +267,10 @@ class KarmStorage
     /** Return a list of start/stop events for the given date range. */
     QValueList<HistoryEvent> getHistory(const QDate& from, const QDate& to);
 
-    /**
-     * @return true if the storage is readonly. Only known after load().
-     */
-    bool isReadOnly() const { return !_lock; }
-
   private:
     static KarmStorage                *_instance;
     KCal::CalendarResources           *_calendar;
     QString                           _icalfile;
-    KCal::CalendarResources::Ticket   *_lock;
 
     KarmStorage();
     void adjustFromLegacyFileFormat(Task* task);

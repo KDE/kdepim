@@ -71,7 +71,6 @@ KarmStorage *KarmStorage::instance()
 KarmStorage::KarmStorage()
 {
   _calendar = 0;
-  _lock = 0;
 }
 
 QString KarmStorage::load (TaskView* view, const Preferences* preferences)
@@ -108,6 +107,8 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
   // Create local file resource and add to resources
   _icalfile = preferences->iCalFile();
   KCal::ResourceCalendar *l = new KCal::ResourceLocal( _icalfile );
+  QObject::connect (l, SIGNAL(resourceChanged(KCal::ResourceCalendar *)),
+  	            view, SLOT(iCalFileModified(KCal::ResourceCalendar *)));
   l->setTimeZoneId( KPimPrefs::timezone() );
   l->setResourceName( QString::fromLatin1("KArm") );
   l->open();
@@ -124,18 +125,6 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
     _calendar->setOwner( KCal::Person( 
           settings.getSetting( KEMailSettings::RealName ), 
           settings.getSetting( KEMailSettings::EmailAddress ) ) );
-  }
-
-  // Get lock.  If no lock, allow read-only access to data.
-  //
-  // Note:  An improved implementation would be to behave like KOrganizer, and
-  //        allow updates, and only request lock when trying to save data.
-  _lock = _calendar->requestSaveTicket(m->standardResource());
-  if ( !_lock )
-  {
-    KMessageBox::information(0,
-        i18n("Another program is currently using this file. "
-          "Access will be read-only."));
   }
 
   // Build task view from iCal data
@@ -208,12 +197,62 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
 
   return err;
 }
+ 
+QString KarmStorage::buildTaskView(KCal::ResourceCalendar *rc, TaskView *view)
+// makes *view contain the tasks out of *rc.
+{
+  QString err;
+  KCal::Todo::List todoList;
+  KCal::Todo::List::ConstIterator todo;
+  QDict< Task > map;
+  
+  // 1. delete old tasks
+  while (view->item_at_index(0)) view->item_at_index(0)->cut();
+  
+  // 1. insert tasks form rc into taskview
+  // 1.1. Build dictionary to look up Task object from Todo uid.  Each task is a
+  // QListViewItem, and is initially added with the view as the parent.
+  todoList = rc->rawTodos();
+  for( todo = todoList.begin(); todo != todoList.end(); ++todo )
+  {
+    Task* task = new Task(*todo, view);
+    map.insert( (*todo)->uid(), task );
+    view->setRootIsDecorated(true);
+    if ((*todo)->isCompleted())
+    {
+      task->setEnabled(false);
+      task->setOpen(false);
+    }
+    else
+      task->setOpen(true);
+  }
+
+  // 1.1. Load each task under it's parent task.
+  for( todo = todoList.begin(); todo != todoList.end(); ++todo )
+  {
+    Task* task = map.find( (*todo)->uid() );
+
+    // No relatedTo incident just means this is a top-level task.
+    if ( (*todo)->relatedTo() )
+    {
+      Task* newParent = map.find( (*todo)->relatedToUid() );
+
+      // Complete the loading but return a message
+      if ( !newParent )
+        err = i18n("Error loading \"%1\": could not find parent (uid=%2)")
+          .arg(task->name())
+          .arg((*todo)->relatedToUid());
+
+      if (!err) task->move( newParent);
+    }
+  }
+  return err;
+}
 
 void KarmStorage::closeStorage(TaskView* view)
 {
   if ( _calendar )
   {
-    if ( _lock ) _calendar->releaseSaveTicket( _lock );
 
     _calendar->close();
 
@@ -227,7 +266,6 @@ void KarmStorage::closeStorage(TaskView* view)
 QString KarmStorage::save(TaskView* taskview)
 {
   QString err="";
-  if ( !_lock ) return "Do not have lock";
 
   QPtrStack< KCal::Todo > parents;
 
@@ -236,9 +274,8 @@ QString KarmStorage::save(TaskView* taskview)
     writeTaskAsTodo(task, 1, parents );
   }
 
-  if (!_calendar->save(_lock)) err="Could not save";
-  _lock = _calendar->requestSaveTicket
-    ( _calendar->resourceManager()->standardResource() );
+  if (!_calendar->save(_calendar->requestSaveTicket
+    ( _calendar->resourceManager()->standardResource() ))) err="Could not save";
 
   kdDebug(5970)
     << "KarmStorage::save : wrote "
@@ -621,7 +658,6 @@ QString KarmStorage::addTask(const Task* task, const Task* parent)
 
 bool KarmStorage::removeTask(Task* task)
 {
-  if ( !_lock ) return false;
 
   // delete history
   KCal::Event::List eventList = _calendar->rawEvents();
@@ -646,16 +682,14 @@ bool KarmStorage::removeTask(Task* task)
   _calendar->deleteTodo(todo);
 
   // Save entire file
-  _calendar->save(_lock);
-  _lock = _calendar->requestSaveTicket
-    (_calendar->resourceManager()->standardResource());
+  _calendar->save(_calendar->requestSaveTicket
+    (_calendar->resourceManager()->standardResource()));
 
   return true;
 }
 
 void KarmStorage::addComment(const Task* task, const QString& comment)
 {
-  if ( !_lock) return;
 
   KCal::Todo* todo;
 
@@ -670,9 +704,8 @@ void KarmStorage::addComment(const Task* task, const QString& comment)
   // temporary
   todo->setDescription(task->comment());
 
-  _calendar->save(_lock);
-  _lock = _calendar->requestSaveTicket
-    ( _calendar->resourceManager()->standardResource() );
+  _calendar->save(_calendar->requestSaveTicket
+    ( _calendar->resourceManager()->standardResource() ));
 }
 
 void KarmStorage::printTaskHistory (
