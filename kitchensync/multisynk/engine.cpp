@@ -118,7 +118,7 @@ void Engine::go( KonnectorPair *pair )
   for( k = mKonnectors.first(); k; k = mKonnectors.next() ) {
     logMessage( i18n("Connecting '%1'").arg( k->resourceName() ) );
     if ( !k->connectDevice() ) {
-      logError( i18n("Can't connect device '%1'.").arg( k->resourceName() ) );
+      logError( i18n("Cannot connect device '%1'.").arg( k->resourceName() ) );
     } else {
       mOpenedKonnectors.append( k );
       ++mKonnectorCount;
@@ -128,7 +128,7 @@ void Engine::go( KonnectorPair *pair )
   for ( k = mOpenedKonnectors.first(); k; k = mOpenedKonnectors.next() ) {
     logMessage( i18n("Request Syncees") );
     if ( !k->readSyncees() ) {
-      logError( i18n("Can't read data from '%1'.").arg( k->resourceName() ) );
+      logError( i18n("Cannot read data from '%1'.").arg( k->resourceName() ) );
     }
   }
 }
@@ -185,7 +185,7 @@ void Engine::executeActions()
     konnector->applyFilters( KSync::Konnector::FilterAfterSync );
 
     if ( !konnector->writeSyncees() )
-      logError( i18n("Can't write data back to '%1'.").arg( konnector->resourceName() ) );
+      logError( i18n("Cannot write data back to '%1'.").arg( konnector->resourceName() ) );
   }
 }
 
