@@ -54,6 +54,7 @@ class QDragEnterEvent;
 class QDropEvent;
 
 class PilotDaemon;
+class FileInstaller;
 
 class PilotDaemonTray : public KSystemTray
 {
@@ -97,6 +98,8 @@ private:
 	* Window for the "About KPilot" information.
 	*/
 	KAboutApplication *kap;
+
+	FileInstaller *fInstaller;
 } ;
 
 
@@ -208,11 +211,17 @@ private slots:
   void slotDBBackupFinished();
 
 	void slotRunKPilot();
+
+protected slots:
+	void slotFilesChanged();
 };
 
 #endif
 
 // $Log$
+// Revision 1.17  2001/03/04 11:23:04  adridg
+// Changed for bug 21392
+//
 // Revision 1.16  2001/02/24 14:08:13  adridg
 // Massive code cleanup, split KPilotLink
 //

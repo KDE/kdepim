@@ -64,11 +64,13 @@ static const char *id="$Id$";
 #include <kio/netaccess.h>
 #include <kdebug.h>
 #include <kprocess.h>
+#include <dcopclient.h>
 
 #include "pilotDaemon.moc"
 #include "hotsync.h"
 #include "busysync.h"
 #include "statusMessages.h"
+#include "fileInstaller.h"
 #include "kpilotlink.h"
 #include "kpilotConfig.h"
 
@@ -88,6 +90,10 @@ PilotDaemonTray::PilotDaemonTray(PilotDaemon *p) :
 	FUNCTIONSETUP;
 	setupWidget();
 	setAcceptDrops(true);
+
+	fInstaller = new FileInstaller;
+	connect(fInstaller,SIGNAL(filesChanged()),
+		p,SLOT(slotFilesChanged()));
 }
 
 /* virtual */ void PilotDaemonTray::dragEnterEvent(QDragEnterEvent *e)
@@ -97,13 +103,12 @@ PilotDaemonTray::PilotDaemonTray(PilotDaemon *p) :
 
 /* virtual */ void PilotDaemonTray::dropEvent(QDropEvent *e)
 {
+	FUNCTIONSETUP;
+
 	QStrList list;
 	QUriDrag::decode(e, list);
 
-#ifdef DEBUG
-	kdbgstream s = kdDebug(DAEMON_AREA);
-	listStrList(s,list);
-#endif
+	fInstaller->addFiles(list);
 }
 
 /* virtual */ void PilotDaemonTray::mousePressEvent(QMouseEvent *e)
@@ -943,6 +948,7 @@ PilotDaemon::slotSyncingDatabase(char* dbName)
     }  
 }
 
+
 void
 PilotDaemon::sendStatus(const int status)
 {
@@ -1035,6 +1041,31 @@ PilotDaemon::~PilotDaemon()
   delete fCommandSocket;
   delete fStatusSocket;
   
+}
+
+void PilotDaemon::slotFilesChanged()
+{
+	FUNCTIONSETUP;
+
+	DCOPClient *dcopptr = KApplication::kApplication()->dcopClient();
+	if (!dcopptr)
+	{
+		kdWarning() << __FUNCTION__
+			<< ": Can't get DCOP client pointer!"
+			<< endl;
+		return;
+	}
+
+	QByteArray data;
+	if (dcopptr->send("kpilot",
+		"KPilotIface",
+		"filesChanged()",
+		data))
+	{
+		kdWarning() << __FUNCTION__
+			<< ": No KPilot running to warn of changed files."
+			<< endl;
+	}
 }
 
 void PilotDaemon::slotRunKPilot()
@@ -1234,6 +1265,9 @@ int main(int argc, char* argv[])
 
 
 // $Log$
+// Revision 1.32  2001/03/04 11:23:04  adridg
+// Changed for bug 21392
+//
 // Revision 1.31  2001/02/26 22:09:49  adridg
 // Fixed some exit() calls; extra listener process debugging
 //
