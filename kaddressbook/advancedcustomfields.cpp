@@ -1,6 +1,8 @@
 /*
     This file is part of KAddressbook.
+
     Copyright (c) 2004 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -37,9 +39,49 @@
 #include <klineedit.h>
 #include <kstandarddirs.h>
 
+#include <libkdepim/designerfields.h>
+
 #include "customfieldswidget.h"
 
 #include "advancedcustomfields.h"
+
+class KABCStorage : public KPIM::DesignerFields::Storage
+{
+  public:
+    KABCStorage( KABC::Addressee *a, const QString &ns )
+      : mAddressee( a ), mNs( ns )
+    {
+    }
+
+    QStringList keys()
+    {
+      QStringList keys;
+    
+      QStringList customs = mAddressee->customs();
+      QStringList::ConstIterator it;
+      for ( it = customs.begin(); it != customs.end(); ++it ) {
+        QString app, name, value;
+        splitField( *it, app, name, value );
+        if ( app == mNs ) keys.append( name );
+      }
+
+      return keys;
+    }
+
+    QString read( const QString &key )
+    {
+      return mAddressee->custom( mNs, key );
+    }
+    
+    void write( const QString &key, const QString &value )
+    {
+      mAddressee->insertCustom( mNs, key, value );
+    }
+
+  private:
+    KABC::Addressee *mAddressee;
+    QString mNs;
+};
 
 
 AdvancedCustomFields::AdvancedCustomFields( const QString &uiFile, KABC::AddressBook *ab,
@@ -51,139 +93,35 @@ AdvancedCustomFields::AdvancedCustomFields( const QString &uiFile, KABC::Address
 
 void AdvancedCustomFields::loadContact( KABC::Addressee *addr )
 {
-  QStringList customs = addr->customs();
-    
   QString ns;
-  if ( (mIdentifier.upper() == "KADDRESSBOOK") ||
-        (QRegExp( "^Form\\d\\d?$").search(mIdentifier) >= 0 )
-      )
+  if ( mFields->identifier().upper() == "KADDRESSBOOK" ||
+    QRegExp( "^Form\\d\\d?$" ).search( mFields->identifier() ) >= 0 ) {
     ns = "KADDRESSBOOK";
-  else 
-    ns = mIdentifier;
-  
-  // clear all custom page widgets 
-  // we can't do this in the following loop, as it works on the 
-  // custom fields of the vcard, which may not be set.
-  QMap<QString, QWidget*>::Iterator widIt;
-  for ( widIt = mWidgets.begin(); widIt != mWidgets.end(); ++widIt ) {
-    QString value;
-    if ( widIt.data()->inherits( "QLineEdit" ) ) {
-      QLineEdit *wdg = static_cast<QLineEdit*>( widIt.data() );
-      wdg->setText( QString::null );
-    } else if ( widIt.data()->inherits( "QSpinBox" ) ) {
-      QSpinBox *wdg = static_cast<QSpinBox*>( widIt.data() );
-      wdg->setValue( wdg->minValue() );
-    } else if ( widIt.data()->inherits( "QCheckBox" ) ) {
-      QCheckBox *wdg = static_cast<QCheckBox*>( widIt.data() );
-      wdg->setChecked( false );
-    } else if ( widIt.data()->inherits( "QDateTimeEdit" ) ) {
-      QDateTimeEdit *wdg = static_cast<QDateTimeEdit*>( widIt.data() );
-      wdg->setDateTime( QDateTime::currentDateTime() );
-    } else if ( widIt.data()->inherits( "KDateTimeWidget" ) ) {
-      KDateTimeWidget *wdg = static_cast<KDateTimeWidget*>( widIt.data() );
-      wdg->setDateTime( QDateTime::currentDateTime() );
-    } else if ( widIt.data()->inherits( "KDatePicker" ) ) {
-      KDatePicker *wdg = static_cast<KDatePicker*>( widIt.data() );
-      wdg->setDate( QDate::currentDate() );
-    } else if ( widIt.data()->inherits( "QComboBox" ) ) {
-      QComboBox *wdg = static_cast<QComboBox*>( widIt.data() );
-      wdg->setCurrentItem( 0 );
-    } else if ( widIt.data()->inherits( "QTextEdit" ) ) {
-      QTextEdit *wdg = static_cast<QTextEdit*>( widIt.data() );
-      wdg->setText( QString::null );
-    }
+  } else {
+    ns = mFields->identifier();
   }
 
-  QStringList::ConstIterator it;
-  for ( it = customs.begin(); it != customs.end(); ++it ) {
-    QString app, name, value;
-    splitField( *it, app, name, value );
-
-    if ( app == ns ) {
-      QMap<QString, QWidget*>::Iterator it = mWidgets.find( name );
-      if ( it != mWidgets.end() ) {
-        if ( it.data()->inherits( "QLineEdit" ) ) {
-          QLineEdit *wdg = static_cast<QLineEdit*>( it.data() );
-          wdg->setText( value );
-        } else if ( it.data()->inherits( "QSpinBox" ) ) {
-          QSpinBox *wdg = static_cast<QSpinBox*>( it.data() );
-          wdg->setValue( value.toInt() );
-        } else if ( it.data()->inherits( "QCheckBox" ) ) {
-          QCheckBox *wdg = static_cast<QCheckBox*>( it.data() );
-          wdg->setChecked( value == "true" || value == "1" );
-        } else if ( it.data()->inherits( "QDateTimeEdit" ) ) {
-          QDateTimeEdit *wdg = static_cast<QDateTimeEdit*>( it.data() );
-          wdg->setDateTime( QDateTime::fromString( value, Qt::ISODate ) );
-        } else if ( it.data()->inherits( "KDateTimeWidget" ) ) {
-          KDateTimeWidget *wdg = static_cast<KDateTimeWidget*>( it.data() );
-          wdg->setDateTime( QDateTime::fromString( value, Qt::ISODate ) );
-        } else if ( it.data()->inherits( "KDatePicker" ) ) {
-          KDatePicker *wdg = static_cast<KDatePicker*>( it.data() );
-          wdg->setDate( QDate::fromString( value, Qt::ISODate ) );
-        } else if ( it.data()->inherits( "QComboBox" ) ) {
-          QComboBox *wdg = static_cast<QComboBox*>( it.data() );
-          wdg->setCurrentText( value );
-        } else if ( it.data()->inherits( "QTextEdit" ) ) {
-          QTextEdit *wdg = static_cast<QTextEdit*>( it.data() );
-          wdg->setText( value );
-        }
-      }
-    }
-  }
+  KABCStorage storage( addr, ns );
+  mFields->load( &storage );
 }
 
 void AdvancedCustomFields::storeContact( KABC::Addressee *addr )
 {
-  QMap<QString, QWidget*>::Iterator it;
-  for ( it = mWidgets.begin(); it != mWidgets.end(); ++it ) {
-    QString value;
-    if ( it.data()->inherits( "QLineEdit" ) ) {
-      QLineEdit *wdg = static_cast<QLineEdit*>( it.data() );
-      value = wdg->text();
-    } else if ( it.data()->inherits( "QSpinBox" ) ) {
-      QSpinBox *wdg = static_cast<QSpinBox*>( it.data() );
-      value = QString::number( wdg->value() );
-    } else if ( it.data()->inherits( "QCheckBox" ) ) {
-      QCheckBox *wdg = static_cast<QCheckBox*>( it.data() );
-      value = ( wdg->isChecked() ? "true" : "false" );
-    } else if ( it.data()->inherits( "QDateTimeEdit" ) ) {
-      QDateTimeEdit *wdg = static_cast<QDateTimeEdit*>( it.data() );
-      value = wdg->dateTime().toString( Qt::ISODate );
-    } else if ( it.data()->inherits( "KDateTimeWidget" ) ) {
-      KDateTimeWidget *wdg = static_cast<KDateTimeWidget*>( it.data() );
-      value = wdg->dateTime().toString( Qt::ISODate );
-    } else if ( it.data()->inherits( "KDatePicker" ) ) {
-      KDatePicker *wdg = static_cast<KDatePicker*>( it.data() );
-      value = wdg->date().toString( Qt::ISODate );
-    } else if ( it.data()->inherits( "QComboBox" ) ) {
-      QComboBox *wdg = static_cast<QComboBox*>( it.data() );
-      value = wdg->currentText();
-    } else if ( it.data()->inherits( "QTextEdit" ) ) {
-      QTextEdit *wdg = static_cast<QTextEdit*>( it.data() );
-      value = wdg->text();
-   }
-
-    QString ns;
-    if ( (mIdentifier.upper() == "KADDRESSBOOK") ||
-         (QRegExp( "^Form\\d\\d?$").search(mIdentifier) >= 0 )
-       )
-      ns = "KADDRESSBOOK";
-    else 
-      ns = mIdentifier;
-
-    if ( value.isEmpty() )
-      addr->removeCustom( ns.latin1(), it.key() );
-    else
-      addr->insertCustom( ns.latin1(), it.key(), value );
+  QString ns;
+  if ( mFields->identifier().upper() == "KADDRESSBOOK" ||
+    QRegExp( "^Form\\d\\d?$" ).search( mFields->identifier() ) >= 0 ) {
+    ns = "KADDRESSBOOK";
+  } else {
+    ns = mFields->identifier();
   }
+
+  KABCStorage storage( addr, ns );
+  mFields->save( &storage );
 }
 
 void AdvancedCustomFields::setReadOnly( bool readOnly )
 {
-  QMap<QString, QWidget*>::Iterator it;
-  for ( it = mWidgets.begin(); it != mWidgets.end(); ++it )
-    if ( mDisabledWidgets.find( it.data() ) == mDisabledWidgets.end() )
-      it.data()->setEnabled( !readOnly );
+  mFields->setReadOnly( readOnly );
 }
 
 void AdvancedCustomFields::initGUI( const QString &uiFile )
@@ -191,85 +129,20 @@ void AdvancedCustomFields::initGUI( const QString &uiFile )
   QVBoxLayout *layout = new QVBoxLayout( this, KDialog::marginHint(),
                                          KDialog::spacingHint() );
 
-  QWidget *wdg = QWidgetFactory::create( uiFile, 0, this );
-  if ( !wdg ) {
-    kdError() << "No ui file found" << endl;
-    return;
-  }
+  mFields = new KPIM::DesignerFields( uiFile, this );
+  layout->addWidget( mFields );
 
-  mTitle = wdg->caption();
-  mIdentifier = wdg->name();
-
-  layout->addWidget( wdg );
-
-  QObjectList *list = wdg->queryList( "QWidget" );
-  QObjectListIt it( *list );
-
-  QStringList allowedTypes;
-  allowedTypes << "QLineEdit"
-               << "QTextEdit"
-               << "QSpinBox"
-               << "QCheckBox"
-               << "QComboBox"
-               << "QDateTimeEdit"
-               << "KLineEdit"
-               << "KDateTimeWidget"
-               << "KDatePicker";
-
-  while ( it.current() ) {
-    if ( allowedTypes.contains( it.current()->className() ) ) {
-      QString name = it.current()->name();
-      if ( name.startsWith( "X_" ) ) {
-        name = name.mid( 2 );
-
-        QWidget *widget = static_cast<QWidget*>( it.current() );
-        if ( !name.isEmpty() )
-          mWidgets.insert( name, widget );
-
-        if ( it.current()->inherits( "QLineEdit" ) )
-          connect( it.current(), SIGNAL( textChanged( const QString& ) ),
-                   this, SLOT( setModified() ) );
-        else if ( it.current()->inherits( "QSpinBox" ) )
-          connect( it.current(), SIGNAL( valueChanged( int ) ),
-                   this, SLOT( setModified() ) );
-        else if ( it.current()->inherits( "QCheckBox" ) )
-          connect( it.current(), SIGNAL( toggled( bool ) ),
-                   this, SLOT( setModified() ) );
-        else if ( it.current()->inherits( "QComboBox" ) )
-          connect( it.current(), SIGNAL( activated( const QString& ) ),
-                   this, SLOT( setModified() ) );
-        else if ( it.current()->inherits( "QDateTimeEdit" ) )
-          connect( it.current(), SIGNAL( valueChanged( const QDateTime& ) ),
-                   this, SLOT( setModified() ) );
-        else if ( it.current()->inherits( "KDateTimeWidget" ) )
-          connect( it.current(), SIGNAL( valueChanged( const QDateTime& ) ),
-                   this, SLOT( setModified() ) );
-        else if ( it.current()->inherits( "KDatePicker" ) )
-          connect( it.current(), SIGNAL( dateChanged( QDate ) ),
-                   this, SLOT( setModified() ) );
-        else if ( it.current()->inherits( "QTextEdit" ) )
-          connect( it.current(), SIGNAL( textChanged() ),
-                   this, SLOT( setModified() ) );
-
-        if ( !widget->isEnabled() )
-          mDisabledWidgets.append( widget );
-      }
-    }
-
-    ++it;
-  }
-
-  delete list;
+  connect( mFields, SIGNAL( modified() ), SLOT( setModified() ) );
 }
 
 QString AdvancedCustomFields::pageIdentifier() const
 {
-  return mIdentifier;
+  return mFields->identifier();
 }
 
 QString AdvancedCustomFields::pageTitle() const
 {
-  return mTitle;
+  return mFields->title();
 }
 
 #include "advancedcustomfields.moc"

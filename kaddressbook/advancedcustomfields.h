@@ -1,6 +1,8 @@
 /*
     This file is part of KAddressbook.
+    
     Copyright (c) 2004 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,6 +32,8 @@
 #include <qpair.h>
 #include <qstringlist.h>
 
+#include <libkdepim/designerfields.h>
+
 #include "contacteditorwidget.h"
 
 class AdvancedCustomFields : public KAB::ContactEditorWidget
@@ -50,10 +54,7 @@ class AdvancedCustomFields : public KAB::ContactEditorWidget
   private:
     void initGUI( const QString& );
 
-    QMap<QString, QWidget*> mWidgets;
-    QValueList<QWidget*> mDisabledWidgets;
-    QString mTitle;
-    QString mIdentifier;
+    KPIM::DesignerFields *mFields;
 };
 
 #endif
