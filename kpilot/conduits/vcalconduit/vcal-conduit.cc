@@ -79,6 +79,8 @@ void VCalConduitPrivate::addIncidence(KCal::Incidence*e)
 
 int VCalConduitPrivate::updateIncidences()
 {
+	FUNCTIONSETUP;
+	if (!fCalendar) return 0;
 	fAllEvents = fCalendar->events();
 	fAllEvents.setAutoDelete(false);
 	return fAllEvents.count();
@@ -89,6 +91,7 @@ void VCalConduitPrivate::removeIncidence(KCal::Incidence *e)
 {
 	// use dynamic_cast which returns a null pointer if the class does not match...
 	fAllEvents.remove(dynamic_cast<KCal::Event*>(e));
+	if (!fCalendar) return 0;
 	fCalendar->deleteEvent(dynamic_cast<KCal::Event*>(e));
 }
 
@@ -108,10 +111,10 @@ KCal::Incidence *VCalConduitPrivate::findIncidence(PilotAppCategory*tosearch)
 {
 	PilotDateEntry*entry=dynamic_cast<PilotDateEntry*>(tosearch);
 	if (!entry) return 0L;
-	
+
 	QString title=entry->getDescription();
 	QDateTime dt=readTm( entry->getEventStart() );
-	
+
 	KCal::Event *event = fAllEvents.first();
 	while (event!=0)
 	{
@@ -588,7 +591,7 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 	case KCal::Recurrence::rMonthlyPos:
 		dateEntry->setRepeatType(repeatMonthlyByDay);
 		if (r->monthPositions().count()>0)
-		{ 
+		{
 			// Only take the first monthly position, as the palm allows only one
 			QPtrList<KCal::Recurrence::rMonthPos> mps=r->monthPositions();
 			const KCal::Recurrence::rMonthPos*mp=mps.first();
@@ -626,7 +629,7 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 void VCalConduit::setExceptions(KCal::Event *vevent,const PilotDateEntry *dateEntry)
 {
 	FUNCTIONSETUP;
-	
+
 	// Start from an empty exception list, and if necessary, add exceptions.
 	// At the end of the function, apply the (possibly empty) exception list.
 	KCal::DateList dl;

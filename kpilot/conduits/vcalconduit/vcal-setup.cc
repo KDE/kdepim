@@ -37,7 +37,6 @@
 #include <qcombobox.h>
 
 #include <kconfig.h>
-//#include <kfiledialog.h>
 #include <kurlrequester.h>
 
 #include "korganizerConduit.h"
@@ -77,10 +76,8 @@ VCalWidgetSetup::~VCalWidgetSetup()
 /* virtual */ void VCalWidgetSetup::commitChanges()
 {
 	FUNCTIONSETUP;
-
 	if (!fConfig) return;
 	KConfigGroupSaver s(fConfig,configGroup() );
-
 	// General page
 	fConfig->writeEntry(VCalConduitFactoryBase::calendarType,
 		fConfigWidget->fSyncDestination->id(
@@ -117,6 +114,4 @@ VCalWidgetSetup::~VCalWidgetSetup()
 	fConfigWidget->fConflictResolution->setCurrentItem(
 		fConfig->readNumEntry(VCalConduitFactoryBase::conflictResolution,
 		SyncAction::eUseGlobalSetting)-SyncAction::eCROffset);
-
-
 }

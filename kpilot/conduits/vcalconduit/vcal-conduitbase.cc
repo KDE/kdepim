@@ -347,6 +347,12 @@ error:
 
 	}
 
+	if (!fCalendar)
+	{
+		kdWarning() <<k_funcinfo << "Unable to initialize calendar object. Please check the conduit's setup."<<endl;
+		emit logError(i18n("Unable to initialize the calendar object. Please check the conduit's setup"));
+		return false;
+	}
 	fP = newVCalPrivate(fCalendar);
 	if (!fP) return false;
 	fP->updateIncidences();
