@@ -42,6 +42,7 @@ public:
 	virtual ~KPilotConfigDialog();
 
 protected:
+	virtual bool validate();
 	virtual void commitChanges();
 
 protected slots:
@@ -56,6 +57,9 @@ private:
 	void setAddressDisplay(int);
 } ;
 
-// $Log:$
+// $Log$
+// Revision 1.1  2001/09/23 18:38:07  adridg
+// Behavior for David's .ui file
+//
 
 #endif

@@ -29,15 +29,19 @@
 */
 
 static const char *kpilotconfigdialog_id = 
-	"$Id: $";
+	"$Id$";
 
 #include "options.h"
+
+#include <pi-version.h>
 
 #include <qcombobox.h>
 #include <qcheckbox.h>
 #include <qradiobutton.h>
 #include <qlineedit.h>
 #include <qtabwidget.h>
+
+#include <kmessagebox.h>
 
 #include "kpilotConfig.h"
 
@@ -53,6 +57,12 @@ KPilotConfigDialog::KPilotConfigDialog(QWidget * w, const char *n,
 	fConfigWidget->tabWidget->adjustSize();
 	fConfigWidget->resize(fConfigWidget->tabWidget->size());
 	setTabWidget(fConfigWidget->tabWidget);
+
+#if defined(PILOT_LINK_VERSION) && defined(PILOT_LINK_MAJOR) && defined(PILOT_LINK_MINOR)
+#if (PILOT_LINK_VERSION * 100 + PILOT_LINK_MAJOR * 10 + PILOT_LINK_MINOR) < 100
+	fConfigWidget->fPilotDevice->setMaxLength(13);
+#endif
+#endif
 
 	disableUnusedOptions();
 	readConfig();
@@ -108,6 +118,32 @@ void KPilotConfigDialog::readConfig()
 	setAddressDisplay(c.getAddressDisplayMode());
 
 	c.resetGroup();
+}
+
+/* virtual */ bool KPilotConfigDialog::validate()
+{
+	int r = KMessageBox::Yes;
+
+#if defined(PILOT_LINK_VERSION) && defined(PILOT_LINK_MAJOR) && defined(PILOT_LINK_MINOR)
+#if (PILOT_LINK_VERSION * 100 + PILOT_LINK_MAJOR * 10 + PILOT_LINK_MINOR) < 100
+	QString d = fConfigWidget->fPilotDevice->text();
+
+	if (d.length() > 13)
+	{
+	r = KMessageBox::questionYesNo(
+		this,
+		i18n("<qt>The device name you entered (<i>%1</i>) "
+			"is longer than 13 characters. This is "
+			"probably unsupported and can cause problems. "
+			"Are you sure you want to use this device name?</qt>")
+			.arg(d),
+		i18n("Device Name too Long")
+		) ;
+	}
+#endif
+#endif
+
+	return KMessageBox::Yes == r;
 }
 
 /* virtual */ void KPilotConfigDialog::commitChanges()
@@ -196,6 +232,9 @@ void KPilotConfigDialog::setAddressDisplay(int i)
 }
 
 // $Log$
+// Revision 1.5  2001/10/08 22:20:18  adridg
+// Changeover to libkpilot, prepare for lib-based conduits
+//
 // Revision 1.4  2001/09/30 19:51:56  adridg
 // Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
 //
