@@ -487,7 +487,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 			case KABC::PhoneNumber::Pager:
 			case KABC::PhoneNumber::Cell:	type = GN_PHONEBOOK_NUMBER_Mobile;	break;
 			case KABC::PhoneNumber::Fax:	type = GN_PHONEBOOK_NUMBER_Fax;		break;
-			default:						type = GN_PHONEBOOK_NUMBER_General;	break;
+			default:			type = GN_PHONEBOOK_NUMBER_General;	break;
 		}
 		subentry->number_type = type;
 		strncpy(subentry->data.number, makeValidPhone(s).latin1(), sizeof(subentry->data.number)-1);
@@ -666,7 +666,8 @@ try_next_phone_entry:
 			}
 		}
 
-		if (error != GN_ERR_NONE)
+		// break if we got an error on the first entry
+		if (error != GN_ERR_NONE && it==list.begin())
 			break;
 
 	} // for()
