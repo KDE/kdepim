@@ -44,8 +44,8 @@ Q_OBJECT
 public:
     KonnectorPlugin(QObject *obj, const char *name, const QStringList &args=QStringList() );
     virtual ~KonnectorPlugin() = 0;
-    virtual void setUDI(const QString & ) = 0;
-    virtual QString udi()const = 0;
+    virtual void setUDI(const QString & ) ;
+    virtual QString udi()const ;
     virtual Kapabilities capabilities( )  = 0 ;
     virtual void setCapabilities( const Kapabilities &kaps ) = 0;
     virtual bool startSync() = 0;
@@ -69,6 +69,8 @@ public slots:
 signals:
     void sync(const QString&,  Syncee::PtrList );
     void errorKonnector(const QString&, int, const QString& );
+private:
+    QString m_udi;
 };
 };
 #endif

@@ -45,6 +45,7 @@ Kapabilities::Kapabilities()
     m_meta = false;
     m_supMeta = false;
     m_needsNet = true;
+    m_current = -1;
 }
 Kapabilities::Kapabilities(const Kapabilities &kap )
     //: //d( 0 )

@@ -29,6 +29,7 @@ KAboutData *OverviewPart::createAboutData() {
 }
 
 OverviewPart::~OverviewPart() {
+    delete m_widget;
 }
 
 QPixmap* OverviewPart::pixmap() {

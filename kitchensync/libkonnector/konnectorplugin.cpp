@@ -26,6 +26,12 @@ KonnectorPlugin::KonnectorPlugin( QObject *obj, const char *name, const QStringL
 {
 
 }
+void KonnectorPlugin::setUDI( const QString& udi ) {
+    m_udi = udi;
+}
+QString KonnectorPlugin::udi() const {
+    return m_udi;
+}
 KonnectorPlugin::~KonnectorPlugin()
 {
 

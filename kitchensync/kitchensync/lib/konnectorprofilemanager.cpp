@@ -77,3 +77,9 @@ void KonnectorProfileManager::save() {
     KonnectorProfileFileManager man;
     man.save( m_list );
 }
+int KonnectorProfileManager::count()const {
+    return m_list.count();
+}
+KonnectorProfile KonnectorProfileManager::profile(int index )const {
+    return m_list[index];
+}

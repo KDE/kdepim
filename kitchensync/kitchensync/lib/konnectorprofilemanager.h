@@ -33,6 +33,8 @@ namespace KSync {
         void replace( const KonnectorProfile& prof);
         void remove( const KonnectorProfile& );
         void clear();
+        int count()const;
+        KonnectorProfile profile(int index )const;
 
         void load();
         void save();

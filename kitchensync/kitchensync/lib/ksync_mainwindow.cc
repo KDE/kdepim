@@ -221,6 +221,8 @@ void KSyncMainWindow::slotConfigure() {
             m_konprof->add( (*it) );
         }
         m_konprof->save();
+        initKonnectorList();
+        slotKonnectorProfile();
     }
 }
 void KSyncMainWindow::removeDeleted( const KonnectorProfile::ValueList& list ) {
@@ -334,11 +336,13 @@ void KSyncMainWindow::initProfiles() {
     }
     m_konprof->setList( newL );
     initKonnectorList();
+    slotKonnectorProfile();
     /* end the hack */
 
     m_prof = new ProfileManager();
     m_prof->load();
     initProfileList();
+    slotProfile();
 }
 Profile KSyncMainWindow::currentProfile()const {
     return m_prof->currentProfile();
@@ -398,6 +402,10 @@ void KSyncMainWindow::slotSync( const QString &udi,
     m_konnector->write( udi, ret );
 */
 }
+/**
+ * check if the state is from the current Konnector
+ * if yes update the state
+ */
 void KSyncMainWindow::slotStateChanged( const QString &udi,
                                         bool connected )
 {
@@ -426,6 +434,8 @@ void KSyncMainWindow::slotConfigProf() {
         m_prof->setProfiles( dlg.profiles() );
         m_prof->save();
         // switch profile
+        initProfileList();
+        slotProfile();
     }
 }
 void KSyncMainWindow::switchProfile( const Profile& prof ) {
@@ -438,7 +448,10 @@ void KSyncMainWindow::switchProfile( const Profile& prof ) {
     for (it = lst.begin(); it != lst.end(); ++it ) {
         addPart( (*it) );
     }
-    m_prof->setCurrentProfile( prof );
+    Profile oldprof = m_prof->currentProfile();
+    m_prof->setCurrentProfile( oldprof );
+    emit profileChanged( prof );
+
 }
 void KSyncMainWindow::addPart( const ManPartService& service ) {
     ManipulatorPart *part = KParts::ComponentFactory
@@ -448,7 +461,12 @@ void KSyncMainWindow::addPart( const ManPartService& service ) {
         addModPart( part );
 }
 void KSyncMainWindow::switchProfile( const KonnectorProfile& prof ) {
+    KonnectorProfile ole = m_konprof->current();
 
+    emit konnectorChanged( ole.udi() );
+    emit konnectorChanged( ole );
+
+    m_konprof->setCurrent( prof );
 }
 /*
  * configure current loaded
@@ -458,14 +476,25 @@ void KSyncMainWindow::slotConfigCur() {
 }
 
 void KSyncMainWindow::slotKonnectorProfile() {
+    int item = m_konAct->currentItem();
+    if ( item == -1 ) item = 0;
+    if (m_konprof->count() == 0 ) return;
 
+    KonnectorProfile cur = m_konprof->profile( item );
+    switchProfile( cur );
+    m_konprof->setCurrent( cur );
 }
 /*
  * the Profile was changed in the Profile KSelectAction
  */
 void KSyncMainWindow::slotProfile() {
-    kdDebug() << "Changing profile " << m_profAct->currentItem() << endl;
-    Profile cur = m_prof->profile( m_profAct->currentItem() );
+    int item = m_profAct->currentItem();
+    if (item == -1) item = 0; // for initialisation
+    if ( m_prof->count() == 0 )  return;
+
+    kdDebug() << "Changing profile " << item << endl;
+    Profile cur = m_prof->profile( item );
+
     switchProfile( cur );
     m_prof->setCurrentProfile( cur );
 }
@@ -479,6 +508,13 @@ void KSyncMainWindow::initProfileList() {
     m_profAct->setItems( lst);
 }
 void KSyncMainWindow::initKonnectorList() {
+    KonnectorProfile::ValueList list = m_konprof->list();
+    KonnectorProfile::ValueList::Iterator it;
+    QStringList lst;
 
+    for ( it = list.begin() ; it != list.end(); ++it ) {
+        lst << (*it).name();
+    }
+    m_konAct->setItems( lst );
 }
 #include "ksync_mainwindow.moc"
