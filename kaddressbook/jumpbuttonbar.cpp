@@ -86,7 +86,7 @@ JumpButtonBar::~JumpButtonBar()
 
 QSizePolicy JumpButtonBar::sizePolicy() const
 {
-	return QSizePolicy( QSizePolicy::Maximum, QSizePolicy::Minimum,
+  return QSizePolicy( QSizePolicy::Maximum, QSizePolicy::Minimum,
                       QSizePolicy::Vertically );
 }
 
@@ -110,7 +110,8 @@ void JumpButtonBar::updateButtons()
                      expandedTo( QApplication::globalStrut() );
   delete btn;
 
-  uint possibleButtons = height() / buttonSize.height();
+  int buttonHeight = buttonSize.height() + 12;
+  uint possibleButtons = height() / buttonHeight;
 
   QString character;
   KABC::AddressBook *ab = mCore->addressBook();
