@@ -12,10 +12,10 @@ SUBDIRS = support pics
 METASOURCES = AUTO
 
 karm_SOURCES =  adddlg.cpp main.cpp \
-				task.cpp top.cpp kaccelmenuwatch.cpp print.cpp \
-				preferences.cpp ktimewidget.cpp karm.cpp idle.cpp
+		task.cpp top.cpp kaccelmenuwatch.cpp print.cpp \
+		preferences.cpp ktimewidget.cpp karm.cpp idle.cpp
 noinst_HEADERS = adddlg.h karm.h task.h toolicons.h top.h kaccelmenuwatch.h \
-				 version.h print.h idle.h preferences.h ktimewidget.h
+		 version.h print.h idle.h preferences.h ktimewidget.h
 
 KDE_ICON = karm
 
@@ -23,8 +23,8 @@ rcdir = $(kde_datadir)/karm
 rc_DATA = karmui.rc
 
 install-data-local: uninstall.desktop
-	$(mkinstalldirs) $(kde_appsdir)/Utilities
-	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(kde_appsdir)/Utilities/karm.desktop
+	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/Utilities
+	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(DESTDIR)$(kde_appsdir)/Utilities/karm.desktop
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/karm.pot

@@ -46,6 +46,6 @@ KDE_ICON = \
   empath_view_thread
 
 install-data-local: 
-	$(mkinstalldirs) $(kde_datadir)/empath
-	$(INSTALL_DATA) $(srcdir)/empath_logo.png $(kde_datadir)/empath/empath_logo.png
+	$(mkinstalldirs) $(DESTDIR)$(kde_datadir)/empath
+	$(INSTALL_DATA) $(srcdir)/empath_logo.png $(DESTDIR)$(kde_datadir)/empath/empath_logo.png
 

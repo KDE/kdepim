@@ -48,8 +48,8 @@ kdelnkdir   = $(kde_appsdir)/Utilities/More
 kdelnk_DATA = kandy.desktop
 
 install-data-local: uninstall.desktop
-	$(mkinstalldirs) $(kde_appsdir)/Utilities
-	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(kde_appsdir)/Utilities/kandy.desktop
+	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/Utilities
+	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(DESTDIR)$(kde_appsdir)/Utilities/kandy.desktop
 
 # this is where the XML-GUI resource file goes
 rcdir = $(kde_datadir)/kandy

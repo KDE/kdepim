@@ -64,9 +64,9 @@ noinst_HEADERS = Job.h
 formatdir = $(kde_datadir)/kab2/formats
 
 install-data-local:
-	$(mkinstalldirs) $(formatdir)
-	$(INSTALL_DATA) $(srcdir)/default.kabformat $(formatdir)/default.kabformat
+	$(mkinstalldirs) $(DESTDIR)$(formatdir)
+	$(INSTALL_DATA) $(srcdir)/default.kabformat $(DESTDIR)$(formatdir)/default.kabformat
 
 uninstall-local:
-	-rm -f $(formatdir)/default.kabformat
+	-rm -f $(DESTDIR)$(formatdir)/default.kabformat
   

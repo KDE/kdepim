@@ -42,4 +42,3 @@ datadir = $(kde_datadir)/twister
 
 messages:
 	$(XGETTEXT) */*.cpp *.cpp -o $(podir)/twister.pot
-
