@@ -100,7 +100,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 
   initGUI();
 
-// BUG 58583: Grzegorz Jaskiewicz gj AT pointblue.com.pl
+// BUG 68193: Grzegorz Jaskiewicz gj AT pointblue.com.pl
 // init it here, as addresssBookChaned() uses mViewManager
 // which is initialised in initGUI(); 
   
