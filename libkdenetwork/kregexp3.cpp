@@ -121,7 +121,7 @@ QString KRegExp3::replace( const QString & str,
   kdDebug() << "Constructing the resultant string starts now:" << endl;
 #endif
   
-  while ( pos < str.length() ) {
+  while ( pos < (int)str.length() ) {
     pos = search( str, pos );
 
 #ifdef DEBUG_KREGEXP3
