@@ -19,5 +19,3 @@ kwatchgnupg_LDADD   = ../conf/libconf.la ../lib/libkleopatra.la $(LIB_KUTILS) $(
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp *.h -o $(podir)/kwatchgnupg.pot
-
-include ../../admin/Doxyfile.am
