@@ -54,7 +54,7 @@ public:
   void setKey( const GpgME::Key & key );
 
 signals:
-  void requestCertificateDownload( const QString & fingerprint );
+  void requestCertificateDownload( const QString & fingerprint, const QString& displayName );
 
 private slots:
   void slotShowInfo( QListViewItem* );

@@ -848,8 +848,8 @@ void CertManager::slotViewDetails( Kleo::KeyListViewItem * item ) {
   CertificateInfoWidgetImpl * top = new CertificateInfoWidgetImpl( item->key(), isRemote(), dialog );
   dialog->setMainWidget( top );
   // </UGH>
-  connect( top, SIGNAL(requestCertificateDownload(const QString&)),
-	   SLOT(slotStartCertificateDownload(const QString&)) );
+  connect( top, SIGNAL(requestCertificateDownload(const QString&, const QString&)),
+	   SLOT(slotStartCertificateDownload(const QString&, const QString&)) );
   dialog->show();
 }
 

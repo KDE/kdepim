@@ -333,7 +333,8 @@ void CertificateInfoWidgetImpl::slotImportCertificate()
 {
   if ( mChain.empty() || mChain.back().isNull() )
     return;
-  emit requestCertificateDownload( mChain.back().subkey(0).fingerprint() );
+  const Kleo::DN dn = mChain.back().userID( 0 ).id();
+  emit requestCertificateDownload( mChain.back().subkey(0).fingerprint(), dn.prettyDN() );
   importButton->setEnabled( false );
 }
 
