@@ -46,6 +46,6 @@ class DavAddressBookAdaptor : public AddressBookAdaptor
     virtual bool getFolderHasSubs( const QDomNode &folderNode ) = 0;
 };
 
-};
+}
 
 #endif

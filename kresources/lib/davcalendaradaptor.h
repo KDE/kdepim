@@ -46,6 +46,6 @@ class DavCalendarAdaptor : public CalendarAdaptor
     virtual bool getFolderHasSubs( const QDomNode &folderNode ) = 0;
 };
 
-};
+}
 
 #endif

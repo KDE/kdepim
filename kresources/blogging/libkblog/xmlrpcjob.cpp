@@ -56,7 +56,7 @@ namespace KIO {
       QString m_errorString;
       QValueList<QVariant> m_data;
   };
-};
+}
 
 class XmlrpcJob::XmlrpcJobPrivate
 {

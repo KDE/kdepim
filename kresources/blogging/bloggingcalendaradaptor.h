@@ -28,7 +28,7 @@
 
 namespace KIO {
 class Job;
-};
+}
 
 namespace KCal {
 
@@ -52,6 +52,6 @@ class BloggingCalendarAdaptor : public CalendarAdaptor
       QStringList &currentlyOnServer, QMap<QString,KPIM::GroupwareJob::ContentType> &itemsForDownload );
 };
 
-};
+}
 
 #endif
