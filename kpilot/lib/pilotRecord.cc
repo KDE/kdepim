@@ -7,7 +7,7 @@
 *** just collections of bits. See PilotAppCategory
 ** for interpreting the bits in a meaningful way.
 **
-** As a crufty hack, the non-inline parts of 
+** As a crufty hack, the non-inline parts of
 ** PilotAppCategory live in this file as well.
 */
 
@@ -47,12 +47,24 @@
 static const char *pilotRecord_id =
 	"$Id$";
 
+/* static */ int PilotRecord::fAllocated = 0;
+/* static */ int PilotRecord::fDeleted = 0;
+
+/* static */ void PilotRecord::allocationInfo()
+{
+#ifdef DEBUG
+	FUNCTIONSETUP;
+	DEBUGKPILOT << fname
+		<< ": Allocated " << fAllocated
+		<< "  Deleted " << fDeleted;
+#endif
+}
 
 PilotRecord::PilotRecord(void *data, int len, int attrib, int cat,
 	pi_uid_t uid) :
-	fData(0L), 
-	fLen(len), 
-	fAttrib(attrib), 
+	fData(0L),
+	fLen(len),
+	fAttrib(attrib),
 	fCat(cat),
 	fID(uid)
 {
@@ -60,6 +72,8 @@ PilotRecord::PilotRecord(void *data, int len, int attrib, int cat,
 	fData = new char[len];
 
 	memcpy(fData, data, len);
+
+	fAllocated++;
 	(void) pilotRecord_id;
 }
 
@@ -73,6 +87,8 @@ PilotRecord::PilotRecord(PilotRecord * orig)
 	fAttrib = orig->getAttrib();
 	fCat = orig->getCat();
 	fID = orig->getID();
+
+	fAllocated++;
 }
 
 PilotRecord & PilotRecord::operator = (PilotRecord & orig)
@@ -110,7 +126,7 @@ static const char *latin1 = "ISO8859-1" ;
 /* static */ QTextCodec *PilotAppCategory::createCodec(const char *p)
 {
 	FUNCTIONSETUP;
-	
+
 	if (!p) p=latin1;
 #ifdef DEBUG
 	DEBUGKPILOT << ": Creating codec for " << p << endl;
@@ -124,7 +140,7 @@ static const char *latin1 = "ISO8859-1" ;
 /* static */ QTextCodec *PilotAppCategory::setupPilotCodec(const QString &s)
 {
 	FUNCTIONSETUP;
-	
+
 #ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Creating codec " << s << endl;

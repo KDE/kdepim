@@ -693,7 +693,9 @@ void KPilotInstaller::slotNewToolbarConfig()
 {
 	// recreate our GUI
 	createGUI();
+#if KDE_VERSION >= 0x030180
 	applyMainWindowSettings( KGlobal::config(), autoSaveGroup() );
+#endif
 }
 
 void KPilotInstaller::slotConfigureKPilot()
@@ -716,7 +718,7 @@ void KPilotInstaller::slotConfigureKPilot()
 		kdError() << k_funcinfo
 			<< ": Can't allocate KPilotOptions object" << endl;
 		getDaemon().requestSync(rememberedSync);
-		fConfigureKPilotDialogInUse = true;
+		fConfigureKPilotDialogInUse = false;
 		return;
 	}
 

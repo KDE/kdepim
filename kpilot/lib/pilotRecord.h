@@ -37,7 +37,7 @@ class PilotRecord
 public:
 	PilotRecord(void* data, int len, int attrib, int cat, pi_uid_t uid);
 	PilotRecord(PilotRecord* orig);
-	~PilotRecord() { delete [] fData; }
+	~PilotRecord() { delete [] fData; fDeleted++; }
 
 	PilotRecord& operator=(PilotRecord& orig);
 
@@ -66,6 +66,16 @@ public:
 	inline bool isArchived() const { return fAttrib & dlpRecAttrArchived; } ;
 	inline void makeDeleted() { fAttrib |= dlpRecAttrDeleted; } ;
 	inline void makeSecret() { fAttrib |= dlpRecAttrSecret; } ;
+
+	/**
+	* This is an interface for tracking down memory leaks
+	* in the use of PilotRecords (for those without valgrind).
+	* Count the number of allocations and deallocations.
+	*/
+public:
+	static void allocationInfo();
+private:
+	static int fAllocated,fDeleted;
 };
 
 #endif
