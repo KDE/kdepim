@@ -3,10 +3,7 @@
 SUBDIRS = pics lib parts ui
 APPSDIR = $(kde_appsdir)/Internet
 KDE_CXXFLAGS = -DQT_NO_ASCII_CAST
-INCLUDES = \
-  $(all_includes) \
-  -I$(top_srcdir)/twister/lib \
-  -I$(top_srcdir)/twister/ui
+INCLUDES = -I$(top_srcdir)/twister/lib -I$(top_srcdir)/twister/ui $(all_includes)
 
 #############################################################################
 # Compile as a library for kinit
