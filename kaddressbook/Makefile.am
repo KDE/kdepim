@@ -35,7 +35,8 @@ libkaddressbookpart_la_SOURCES = \
  kaddressbookprinter.cpp kaddressbookview.cpp \
  ldapsearchdialog.ui ldapsearchdialogimpl.cpp nameeditdialog.cpp \
  phoneeditwidget.cpp prefsdialog.cpp selectfieldswidget.cpp \
- undo.cpp undocmds.cpp viewmanager.cpp viewwrapper.cpp
+ undo.cpp undocmds.cpp viewmanager.cpp viewwrapper.cpp \
+ ldapoptionswidget.cpp addhostdialog.cpp
 
 kaddressbook_METASOURCES = AUTO
 
@@ -49,7 +50,8 @@ noinst_HEADERS = \
  kaddressbookmain.h kaddressbookprinter.h kaddressbookview.h \
  ldapsearchdialogimpl.h nameeditdialog.h phoneeditwidget.h prefsdialog.h \
  selectfieldswidget.h typecombo.h undo.h undocmds.h viewmanager.h \
- viewwrapper.h
+ viewwrapper.h \
+ ldapoptionswidget.h addhostdialog.h
 
 rcdir = $(kde_datadir)/kaddressbook
 rc_DATA = kaddressbookui.rc
