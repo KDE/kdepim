@@ -5,6 +5,8 @@ ServiceTypes=KResources/Plugin
 X-KDE-Library=libkcalkonnector
 
 Name=Calendar Konnector
+Name[et]=Kalendri Konnector
+Name[sv]=Kalender Konnector
 Group=Test
 Vendor=KDE Team
 Id=kcalkonnector
