@@ -114,7 +114,6 @@ MemoWidget::MemoWidget(QWidget * parent,
 	setGeometry(0, 0,
 		parent->geometry().width(), parent->geometry().height());
 	setupWidget();
-	initialize();
 	fMemoList.setAutoDelete(true);
 	slotUpdateButtons();
 
@@ -299,11 +298,10 @@ void MemoWidget::setupWidget()
 
 	fListBox = new QListBox(this);
 	grid->addMultiCellWidget(fListBox, 1, 1, 0, 1);
-	fListBox->setSelectionMode( QListBox::Extended );
 	connect(fListBox, SIGNAL(highlighted(int)),
 		this, SLOT(slotShowMemo(int)));
 	connect(fListBox, SIGNAL(selectionChanged()),
-		this, SLOT(slotUpdateButtons()));
+		this,SLOT(slotUpdateButtons()));
 	QWhatsThis::add(fListBox,
 		i18n("This list displays all the memos\n"
 			"in the selected category. Click on\n"
@@ -344,19 +342,23 @@ void MemoWidget::slotUpdateButtons()
 {
 	FUNCTIONSETUP;
 
-	int item = fListBox->currentItem();
-
+	bool highlight = false;
+	
+	if ((fListBox->currentItem() != -1) &&
+		(fListBox->isSelected(fListBox->currentItem())))
+			highlight=true;
+	
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": Selected item " << item << endl;
+	DEBUGKPILOT << fname << ": Selected items " << highlight << endl;
 #endif
 
 	if (fExportButton)
 	{
-		fExportButton->setEnabled(item != -1);
+		fExportButton->setEnabled(highlight);
 	}
 	if (fDeleteButton)
 	{
-		fDeleteButton->setEnabled(item != -1);
+		fDeleteButton->setEnabled(highlight);
 	}
 }
 
@@ -371,7 +373,12 @@ void MemoWidget::slotDeleteMemo()
 	FUNCTIONSETUP;
 
 	int item = fListBox->currentItem();
-
+	
+	// ick! data loss here. need to check first if
+	// the item is selected, and besides, iterate 
+	// through all the selected items.
+	#warning "Memo viewer can cause data loss"
+	
 	if (item == -1)
 	{
 #ifdef DEBUG
@@ -418,7 +425,8 @@ void MemoWidget::slotDeleteMemo()
 	//
 	selectedMemo->makeDeleted();
 	writeMemo(selectedMemo);
-	initialize();
+	fMemoList.remove(selectedMemo);
+	delete p;
 }
 
 
@@ -490,15 +498,28 @@ void MemoWidget::updateWidget()
 void MemoWidget::slotShowMemo(int which)
 {
 	FUNCTIONSETUP;
-        if ( which == -1 )
-            return;
-	disconnect(fTextWidget, SIGNAL(textChanged()),
-		this, SLOT(slotTextChanged()));
+	if ( which == -1 )
+		return;
+
+	slotUpdateButtons();
+	if ( !fListBox->isSelected(which) )
+	{
+		// Handle unselecting a memo. This is easy.
+		fTextWidget->blockSignals(true);
+		fTextWidget->clear();
+		fTextWidget->blockSignals(false);
+		return;
+	}
+
+
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Displaying memo " << which << endl;
+#endif
+	fTextWidget->blockSignals(true);
 	PilotListItem *p = (PilotListItem *) fListBox->item(which);
 	PilotMemo *theMemo = (PilotMemo *) p->rec();
 	fTextWidget->setText(theMemo->text());
-	connect(fTextWidget, SIGNAL(textChanged()),
-		this, SLOT(slotTextChanged()));
+	fTextWidget->blockSignals(false);
 }
 
 void MemoWidget::writeMemo(PilotMemo * which)

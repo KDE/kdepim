@@ -82,19 +82,22 @@ public:
 protected:
 	void initializeCategories(PilotDatabase *);
 	void initializeMemos(PilotDatabase *);
-  
+
+
 public slots:
 	/**
-	* Called whenever the selected memo changes to indicate
-	* which buttons are active, mostly to prevent the delete
-	* button from being active when it can't do anything.
+	* Called whenever the selected memo changes in order to:
+	*   - display it if necessary
+	*   - update which buttons are active, to prevent the delete
+	*     button from being active when it can't do anything.
+	*
 	*/
-	void slotUpdateButtons();
 	void slotShowMemo(int);
+	void slotUpdateButtons();
 	void slotTextChanged();
 	void slotImportMemo();
 	void slotExportMemo();
-	void slotDeleteMemo(); // Delets the currently selected memo
+	void slotDeleteMemo(); // Delets the currently selected memo(s)
 	void slotSetCategory(int);
 
 private:
