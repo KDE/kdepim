@@ -3,7 +3,7 @@ SUBDIRS = toolbar pics filters
 
 bin_PROGRAMS = knode
 knode_SOURCES = kngroupbrowser.cpp knpurgeprogressdialog.cpp knsmtpclient.cpp \
-	knnntpclient.cpp knprotocolclient.cpp kncontrolarticle.cpp \
+	knnntpclient.cpp knprotocolclient.cpp \
 	knaccountmanager.cpp knnntpaccount.cpp knserverinfo.cpp \
 	kncollection.cpp knviewheader.cpp knreadhdrsettings.cpp \
 	knfiltersettings.cpp knpostcomsettings.cpp knposttechsettings.cpp \
@@ -41,7 +41,7 @@ noinst_HEADERS = knaccmailsettings.h      knglobals.h              knrangefilter
 	kncollection.h           knlistview.h             knsmtpclient.h \
 	kncollectionviewitem.h   knlvitembase.h           knstatusfilter.h \
 	kncomposer.h             knmimecontent.h          knstringfilter.h \
-	kncontrolarticle.h       knmimeinfo.h             knstringsplitter.h \
+	knmimeinfo.h             knstringsplitter.h \
 	knfetcharticle.h         knnetaccess.h            knthread.h \
 	knfetcharticlemanager.h  knnntpaccount.h          knuserentry.h \
 	knfilterconfigwidget.h   knnntpclient.h           knusersettings.h \
