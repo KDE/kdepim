@@ -54,7 +54,7 @@ KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * 
   
   actProperties = new KAction(i18n("&Properties..."), 0, this, SLOT(slotProperties()),
                               &actionCollection, "account_properties");
-  actSubscribe = new KAction(i18n("&Subscribe to Newsgroups..."),"grpdlg", 0, this, SLOT(slotSubscribe()),
+  actSubscribe = new KAction(i18n("&Subscribe to Newsgroups..."),"news_subscribe", 0, this, SLOT(slotSubscribe()),
                              &actionCollection, "account_subscribe");
   actLoadHdrs = new KAction(i18n("&Get New Articles"), "mail_get", 0, this, SLOT(slotLoadHdrs()),
                             &actionCollection, "account_dnlHeaders");
