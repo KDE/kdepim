@@ -16,6 +16,13 @@
 <email>davidrugge@mediaone.net</email>
 </address></affiliation>
 </author>
+<author>
+<firstname>Michel</firstname>
+<surname>Boyer de la Giroday</surname>
+<affiliation><address>
+<email>michel@klaralvdalens-datakonsult.se</email>
+</address></affiliation>
+</author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 <date>2004-07-13</date>
@@ -133,6 +140,12 @@ tab of the <guilabel>Identities</guilabel> section.</para>
 in the <link linkend="configure-accounts-sending">Configuration</link>
 chapter.</para>
 
+
+<sect3 id="sending-mail-kolab">
+<title>Options relevant to <acronym>Kolab</acronym> server</title>
+
+<para>When configuring a <guilabel>SMTP</guilabel> account with a <guilabel>Kolab</guilabel> server Host, you need to check the <guilabel>Server requires authentification</guilabel> option and to fill in your <guilabel>Kolab</guilabel> user's email address and password in the <guilabel>Login</guilabel> and <guilabel>Password</guilabel> fields. Select then the <guilabel>Security</guilabel> tab and click on the <guibutton>Check What the Server Supports</guibutton> for automated setup of your <guilabel>Security</guilabel> configuration. The default should be <guilabel>TLS/PLAIN</guilabel>. The <guilabel>Kolab</guilabel> server supports  <guilabel>SSL/PLAIN</guilabel> as well. Those settings may of course be configured manually.</para>
+</sect3>
 </sect2>
 
 <sect2 id="receiving-mail">
@@ -154,10 +167,30 @@ from your <acronym>ISP</acronym> or system administrator. You should not
 need to change the <guilabel>Port</guilabel> setting (the default for POP3 is
 <userinput>110</userinput>, the default for <acronym>IMAP</acronym> is
 <userinput>143</userinput>).</para>
+
+<sect3 id="receiving-mail-kolab">
+<title>Options relevant to <acronym>Kolab</acronym> server</title>
+<para>
+select <guilabel>Disconnected IMAP</guilabel> when choosing your <guilabel>Account Type</guilabel>. Fill in the <guilabel>Login</guilabel> and <guilabel>Password</guilabel> fields with respectively your user email address and password on the <guilabel>Kolab</guilabel> server. In the <guilabel>Security</guilabel> section click on the <guilabel>Check What the Server Support</guilabel> button for automated set-up of your <guilabel>Security</guilabel> configuration. The default should be <guilabel>TLS/PLAIN</guilabel>. The <guilabel>Kolab</guilabel> server supports <guilabel>SSL/PLAIN</guilabel> as well. Those settings may of course be configured manually.</para>
+<para>
+If you want to use the <guilabel>"Out of Office" Replies</guilabel> functionality of the <guilabel>Kolab</guilabel> server, set-up the <guilabel>Filtering</guilabel> section of you <guilabel>DIMAP</guilabel> account by checking the <guilabel>Server supports Sieve</guilabel> option as well as <guilabel>Reuse host and login configuration</guilabel>, <guilabel>Managesieve port</guilabel> should be set to 2000 as default. 
+</para>
+</sect3>
+
+<sect3 id="receiving-mail-dimap-misc">
+<title>Options only relevant to DIMAP (<acronym>Kolab</acronym> server)</title>
+<para>
+After having configured your <guilabel>Disconnect IMAP</guilabel> account, you 
+need to activate the <guilabel>Groupware</guilabel> functionalities and set-up 
+the <guilabel>Misc</guilabel> page for <guilabel>KMail</guilabel>.
+</para>
+<para>
+In the <guilabel>Misc</guilabel> page, of the <guilabel>Configure</guilabel> dialog, choose the <guilabel>Groupware</guilabel> tab. Check the <guilabel>Enable IMAP resource functionality</guilabel> option and select <guilabel>Kolab (XML)</guilabel> as <guilabel>Format used for the groupware folders</guilabel>. The <guilabel>Resource folders are in account</guilabel> combo-box should be set on the <guilabel>Receiving</guilabel> (kolab user) account of your choice (if you happen to have several accounts).You may if you wish hide the groupware folder by checking this option. It is recommended to check both <guilabel>Groupware Compatibility and Legacy Options</guilabel> for compatibility with an eventual <guilabel>Kolab</guilabel> Microsoft Outlook client for sending invitations and replies from a <guilabel>Kolab</guilabel> KDE client.  
+</para>
+</sect3>
         
 <sect3 id="receiving-mail-imap">
 <title>Options only relevant to <acronym>IMAP</acronym></title>
-
 <para>If you are using <acronym>IMAP</acronym>, you can optionally
 specify a path in the <guilabel>Prefix to folders</guilabel> field. This
 tells &kmail; where it can find your folders on the server. If you also
@@ -174,11 +207,10 @@ server as soon as you leave a folder. Otherwise the messages are
 only marked as deleted and it is up to you to compact the folders
 manually by using the menu item <menuchoice><guimenu>File</guimenu><guimenuitem>Compact All
 Folders</guimenuitem></menuchoice>.</para>
-
 <para>If you check <guilabel>Show hidden folders</guilabel>,
 folders whose name starts with a dot are also displayed.</para>
-
 </sect3>
+
 
 <sect3 id="receiving-mail-pop3">
 <title>Options only relevant to POP3</title>
@@ -210,7 +242,6 @@ until the program returns.</para>
 <para>On the <guilabel>Extras</guilabel> tab you can select <guilabel>Use
 pipelining for faster mail download</guilabel> if this is supported by your
 server. You should carefully test this to make sure it works safely.</para>
-
 </sect3>
 
 <sect3 id="receiving-mail-imap-pop3">

@@ -16,16 +16,23 @@
 <email>davidrugge@mediaone.net</email>
 </address></affiliation>
 </author>
-      <author>
-	<firstname>Marc</firstname>
-	<surname>Mutz</surname>
-	<affiliation>
-	  <orgname>Klar&auml;lvdalens Datakonsult AB</orgname>
-	  <address>
-	    <email>mutz@kde.org</email>
-	  </address>
-	</affiliation>
-      </author>
+<author>
+<firstname>Marc</firstname>
+<surname>Mutz</surname>
+<affiliation>
+<orgname>Klar&auml;lvdalens Datakonsult AB</orgname>
+<address>
+<email>mutz@kde.org</email>
+</address>
+</affiliation>
+</author>
+<author>
+<firstname>Michel</firstname>
+<surname>Boyer de la Giroday</surname>
+<affiliation><address>
+<email>michel@klaralvdalens-datakonsult.se</email>
+</address></affiliation>
+</author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 <date>2004-07-13</date>
@@ -387,8 +394,8 @@ of this setting, you should look at the <guilabel>Headers</guilabel> tab of the
 <term><guilabel>Sent-mail folder</guilabel></term>
 <listitem>
 <para>Select the folder into which messages should be filed after sending
-when using this identity. IMAP users should consider changing this to an 
-IMAP folder, so their sent-mail is stored on a server instead of being 
+when using this identity. <acronym>IMAP</acronym> users should consider changing this to an 
+<acronym>IMAP</acronym> folder, so their sent-mail is stored on a server instead of being 
 stored in a local folder. This way they can access these messages at a 
 different location.</para>
 
@@ -404,8 +411,8 @@ messages.</para></tip>
 <term><guilabel>Drafts folder</guilabel></term>
 <listitem>
 <para>Select the folder into which drafts should be filed when using 
-this identity. IMAP users should consider changing this to an 
-IMAP folder, so their drafts are stored on a server instead of being 
+this identity. <acronym>IMAP</acronym> users should consider changing this to an 
+<acronym>IMAP</acronym> folder, so their drafts are stored on a server instead of being 
 stored in a local folder. This way they can easily continue to work
 on their drafts at a different location.</para>
 </listitem>
@@ -1620,7 +1627,64 @@ option is selected.</para>
 
 </sect2>
 
-<!-- FIXME: Add information about the Groupware tab -->
+<sect2 id="configure-misc-groupware">
+<title>Groupware</title>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Enable IMAP resource functionality</guilabel></term>
+<listitem>
+<para>Makes it possible to store the entries from the Kontact applications (KOrganizer, KAddressBook and KNotes). This option has to be set whenever you are configuring Kontact as a <guilabel>KDE Kolab client</guilabel>. This option being enabled you will also need to add the appropriate resources from the <guilabel>KDE Kontrol Center</guilabel> (kcontrol) in the <guilabel>KDE Resources Configuration</guilabel> section. <guilabel>Kolab</guilabel> resources have to be added in case the resource functionality applies to a <guilabel>KDE Kolab client</guilabel> set-up.</para>
+</listitem>
+</varlistentry>
+<varlistentry id="configure-misc-format-groupware-folders">
+<term><guilabel>Format used for the groupware folders</guilabel></term>
+<listitem>
+<para>Choose the storage format for the groupware folders</para>
+<itemizedlist>
+<listitem>
+<para>Default format is <guilabel>Standard (Ical/Vcard)</guilabel> for calendar folders (Ical) and addressbook folders (Vcard). This makes all Kontact features available.</para>
+</listitem>
+<listitem>
+<para><guilabel>Kolab</guilabel> users should choose <guilabel>Kolab XML</guilabel>. This format uses a custom model that matches more closely to the one used in Microsoft Outlook(tm) and gives better compatibility.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Language of the groupware folders</guilabel></term>
+<listitem>
+<para>Choose between the available languages to set the folder names of the <guilabel>IMAP</guilabel> storage to your local language. Note that this option is only aimed for compatibility with Microsoft Outlook(tm). It is not recommended to change its default unless you have to, since it makes changing languages impossible.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Resource folders are in account</guilabel></term>
+<listitem>
+<para>Select the parent of the <guilabel>IMAP</guilabel> resource folders. You should select the name of your <guilabel>IMAP/DIMAP</guilabel> account. By default the <guilabel>Kolab</guilabel> server sets the <guilabel>IMAP</guilabel> inbox to be the parent.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Hide groupware folders</guilabel></term>
+<listitem>
+<para>You should not need to see the folders that hold the  <guilabel>IMAP</guilabel> resources. However if you want to see them, you can set that by enabling this option.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Mangle From:/To: headers in replies to invitations</guilabel></term>
+<listitem>
+<para>Enable this option to make Microsoft Outlook(tm) understand your answers to invitations replies.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Send invitations in the mail body</guilabel></term>
+<listitem>
+<para>Invitations use to be send as attachments to a mail. By enabling this option, you let the invitation mails to be sent in the text of the mail, which is necessary to send invitations and replies to Microsoft Outlook(tm).</para> 
+</listitem>
+</varlistentry>
+</variablelist>
+</sect2>
+
 
 </sect1>
 

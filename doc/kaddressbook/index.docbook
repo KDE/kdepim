@@ -33,6 +33,15 @@
 <address><email>dsanders@kde.org</email></address>
 </affiliation>
 </author>
+<author>
+<firstname>Michel</firstname>
+<surname>Boyer de la Giroday</surname>
+<affiliation>
+<address><email>michel@klaralvdalens-datakonsult.se</email>
+</address>
+</affiliation>
+</author>
+
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
@@ -105,48 +114,65 @@ a default resource installed that saves all contacts in a vCard file
 under $HOME/.kde/share/apps/kabc/std.vcf; you can add more resources
 by using the Resource Configuration dialog, which is available in
 <application>kcontrol</application> under
-<guilabel>KDE Components</guilabel>-><guilabel>Address Book</guilabel>:</para>
+<guilabel>KDE Components</guilabel>-><guilabel>KDE Resources Configuration</guilabel>:</para>
 
 <screenshot>
 <screeninfo>The Resource Configuration Dialog</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="resourcedlg.png" format="PNG"/></imageobject>
+<imageobject><imagedata fileref="resourcesdlg.png" format="PNG"/></imageobject>
 <textobject><phrase>The Resource Configuration Dialog.</phrase></textobject>
 <caption><para>The Resource Configuration Dialog.</para></caption>
 </mediaobject>
 </screenshot>
-
-<para>When you click the <guibutton>Add...</guibutton> a dialog will appear
-where you can select the resource type; at the moment there are four types
-available:</para>
+<para>Load the configuration module you want to add your resource(s) to. By selecting it from the combo box at the top of the <guilabel>Resources</guilabel> section. The module for &kaddressbook; being <guilabel>contact</guilabel>.</para>
+<para>Launch the <guilabel>Resource Configuration</guilabel> dialog by pushing the <guibutton>Add...</guibutton> button. Choose the resource you want to add to your <guilabel>contact</guilabel> module and click <guilabel>OK</guilabel> to confirm your choice.</para>
 
 <variablelist>
 <varlistentry>
-<term><guilabel>file</guilabel></term>
-<listitem><para>all contacts will be stored in one file;</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>dir</guilabel></term>
+<term><guilabel>Directory</guilabel></term>
 <listitem><para>each contact will be stored in its own file;</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>ldap</guilabel></term>
+<term><guilabel>File</guilabel></term>
+<listitem><para>all contacts will be stored in one file;</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>IMAP</guilabel></term>
+<listitem><para>To be written</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Kolab</guilabel></term>
+<listitem><para>The contacts will be saved in the contact folder of your DIMAP account.</para><para><guilabel>Kolab server specificities:</guilabel> The Kolab resource should never be configured as Read Only. In case you have added several types of resources you need to set your <guilabel>Kolab Server</guilabel> resource as your <guilabel>Standard</guilabel> resource.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>LDAP</guilabel></term>
 <listitem><para>all contacts will be stored on a LDAP server;</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>net</guilabel></term>
+<term><guilabel>Network</guilabel></term>
 <listitem><para>all contacts will be stored in one file, which can be located
 on a remote server (for example, through HTTP, WebDAV, FTP or Fish).</para></listitem>
 </varlistentry>
+
+<varlistentry>
+<term><guilabel>SLOX</guilabel></term>
+<listitem><para>To be written</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>XML-RPC</guilabel></term>
+<listitem><para>To be written</para></listitem>
+</varlistentry>
+
 </variablelist>
 
-
-<para>After selecting the type of resource another dialog appears where you can
-configure the resource-specific settings.</para>
-<para>The <guilabel>file</guilabel> and <guilabel>dir</guilabel> resource
+<para>After selecting the type of resource another dialog appears where you can configure the resource-specific settings.</para>
+<para>The <guilabel>File</guilabel> and <guilabel>Directory</guilabel> resource
 supports different formats for storing the contacts:</para>
 
 <variablelist>
@@ -464,7 +490,8 @@ data; the result is shown in a <acronym>HTML</acronym> view.</para></listitem>
 lists: just create a new list and select a contact in the view; then, after
 clicking <guibutton>Add contact</guibutton>, the selected contact is part
 of the distribution list.  A simpler way is to drag a contact from the
-view and drop it over the distribution list manager.</para></listitem>
+view and drop it over the distribution list manager. See <link linkend="settings-menu"> Settings Menu</link> about how to add an extension.</para>
+</listitem>
 </varlistentry>
 </variablelist>
 
@@ -682,10 +709,19 @@ to be used for new contacts.</para></listitem>
 <para>On this page you can configure the LDAP servers that should be used
 for <link linkend="ldap-queries">ldap queries</link> in &kaddressbook;.</para>
 
-<para>Use <guibutton>Add Host...</guibutton> to add and setting up a new server.
-You can include and exclude servers by selecting or deselecting their check boxes
-in the server list. Press <guibutton>OK</guibutton> to close the dialog.
+<para>Use <guibutton>Add Host...</guibutton> to add and setup a new server.</para>
+<screenshot>
+<screeninfo>Configuring LDAP Lookup for Kolab</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="addhost.png" format="PNG"/></imageobject>
+<textobject><phrase>Example of LDAP Lookup configuration (Kolab).</phrase></textobject>
+<caption><para>The Add Host dialog - Example of LDAP Lookup configuration (Kolab).</para></caption>
+</mediaobject>
+</screenshot>
+<para>
+You can include and exclude servers from the search by selecting or deselecting their check boxes. In the server list. Press <guibutton>OK</guibutton> to close the dialog.
 </para>
+<para>You may configure the search order by moving up or down the servers in the list. This can be done using the corresponding arrows on the right side of the dialog.</para>
 </sect2>
 </sect1>
 </chapter>
