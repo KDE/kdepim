@@ -132,7 +132,6 @@ void KNLVItemBase::sortChildItems(int column, bool b)
 void KNLVItemBase::expandChildren()
 {
   QListViewItemIterator it(firstChild());
-  
   for( ; it.current(); ++it) {
     if(it.current()->depth()==depth()) break;
     it.current()->setOpen(true);
@@ -240,6 +239,13 @@ void KNListView::ensureItemVisibleWithMargin(const QListViewItem *i)
 {
   if (!i)
   	return;
+  	
+ QListViewItem *parent = i->parent();
+  while (parent) {
+    if (!parent->isOpen())
+      parent->setOpen(true);
+    parent = parent->parent();
+  }
   	
   d_elayedCenter = -1;
   int y = itemPos(i);

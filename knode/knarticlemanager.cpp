@@ -62,6 +62,7 @@ KNArticleManager::KNArticleManager(KNListView *v, KNFilterManager *f) : QObject(
   f_ilter=f->currentFilter();
   f_ilterMgr=f;
   s_earchDlg=0;
+  d_isableExpander=false;
 
   connect(v, SIGNAL(expanded(QListViewItem*)), this,
     SLOT(slotItemExpanded(QListViewItem*)));
@@ -207,7 +208,7 @@ void KNArticleManager::showHdrs(bool clear)
 
     current=static_cast<KNRemoteArticle*>(knGlobals.top->articleView()->article());
 
-    if(current && !current->listItem()) {
+    if(current && (current->collection() != g_roup)) {
       current=0;
       knGlobals.top->articleView()->setArticle(0);
     }
@@ -235,6 +236,8 @@ void KNArticleManager::showHdrs(bool clear)
           ref->setVisibleFollowUps(true);
       }
 
+    d_isableExpander=true;
+
     for(int i=0; i<g_roup->length(); i++) {
 
       art=g_roup->at(i);
@@ -261,11 +264,15 @@ void KNArticleManager::showHdrs(bool clear)
 
           } else {  // expandThreads == true
             createThread(art);
+            art->listItem()->setOpen(true);
           }
 
         }
-        else if(art->listItem())
+        else if(art->listItem()) {
           art->updateListItem();
+          if (expandThreads)
+            art->listItem()->setOpen(true);
+        }
 
       }
       else {
@@ -273,24 +280,31 @@ void KNArticleManager::showHdrs(bool clear)
         if(!art->listItem() && art->filterResult()) {
           art->setListItem(new KNHdrViewItem(v_iew));
           art->initListItem();
-        }
-
-        else if(art->listItem())
+        } else if(art->listItem())
           art->updateListItem();
 
       }
 
     }
 
+    if (current && !current->filterResult()) {   // try to find a parent that is visible
+      int idRef;
+      while (current && !current->filterResult()) {
+        idRef=current->idRef();
+        if (idRef == -1)
+          break;
+        current = g_roup->byId(idRef);
+      }
+    }
+
     if(current && current->filterResult()) {
       if(!current->listItem())
-        createThread(current);
+        createCompleteThread(current);
       v_iew->setActive(current->listItem(),true);
       setFirstChild=false;
     }
 
-    if(expandThreads)
-      setAllThreadsOpen(true);
+    d_isableExpander=false;
 
     if (g_roup->isLocked() && (0!=pthread_mutex_unlock(knGlobals.netAccess->nntpMutex())))
       kdDebug(5003) << "failed to unlock nntp mutex" << endl;
@@ -364,11 +378,21 @@ void KNArticleManager::updateListViewItems()
 
 void KNArticleManager::setAllThreadsOpen(bool b)
 {
+  KNRemoteArticle *art;
   if(g_roup) {
     knGlobals.top->setCursorBusy(true);
-    for(int idx=0; idx<g_roup->length(); idx++)
-      if(g_roup->at(idx)->listItem())
-        g_roup->at(idx)->listItem()->QListViewItem::setOpen(b);
+    d_isableExpander = true;
+    for(int idx=0; idx<g_roup->length(); idx++) {
+      art = g_roup->at(idx);
+      if (art->listItem())
+        art->listItem()->setOpen(b);
+      else
+        if (b && art->filterResult()) {
+          createThread(art);
+          art->listItem()->setOpen(true);
+        }
+    }
+    d_isableExpander = false;
     knGlobals.top->setCursorBusy(false);
   }
 }
@@ -873,14 +897,6 @@ void KNArticleManager::processJob(KNJobData *j)
 }
 
 
-void KNArticleManager::createHdrItem(KNRemoteArticle *a)
-{
-  a->setListItem(new KNHdrViewItem(v_iew));
-  a->setThreadMode(knGlobals.cfgManager->readNewsGeneral()->showThreads());
-  a->initListItem();
-}
-
-
 void KNArticleManager::createThread(KNRemoteArticle *a)
 {
   KNRemoteArticle *ref=a->displayedReference();
@@ -895,6 +911,48 @@ void KNArticleManager::createThread(KNRemoteArticle *a)
 
   a->setThreadMode(knGlobals.cfgManager->readNewsGeneral()->showThreads());
   a->initListItem();
+}
+
+
+void KNArticleManager::createCompleteThread(KNRemoteArticle *a)
+{
+  KNRemoteArticle *ref=a->displayedReference(), *art, *top;
+  bool inThread=false;
+  bool showThreads=knGlobals.cfgManager->readNewsGeneral()->showThreads();
+  KNConfig::ReadNewsGeneral *rng=knGlobals.cfgManager->readNewsGeneral();
+
+  while (ref->displayedReference() != 0)
+    ref=ref->displayedReference();
+
+  top = ref;
+
+  if (!top->listItem())  // shouldn't happen
+    return;
+
+  for(int i=0; i<g_roup->count(); i++) {
+    art=g_roup->at(i);
+    if(art->filterResult() && !art->listItem()) {
+
+      if(art->displayedReference()==top) {
+        art->setListItem(new KNHdrViewItem(top->listItem()));
+        art->setThreadMode(showThreads);
+        art->initListItem();
+      }
+      else {
+        ref=art->displayedReference();
+        inThread=false;
+        while(ref && !inThread) {
+          inThread=(ref==top);
+          ref=ref->displayedReference();
+        }
+        if(inThread)
+          createThread(art);
+      }
+    }
+  }
+
+  if(rng->totalExpandThreads())
+    top->listItem()->expandChildren();
 }
 
 
@@ -951,48 +1009,51 @@ void KNArticleManager::slotSearchDialogDone()
 
 void KNArticleManager::slotItemExpanded(QListViewItem *p)
 {
+  if (d_isableExpander)  // we don't want to call this method recursively
+    return;
+  d_isableExpander = true;
+
   KNRemoteArticle *top, *art, *ref;
   KNHdrViewItem *hdrItem;
   bool inThread=false;
   bool showThreads=knGlobals.cfgManager->readNewsGeneral()->showThreads();
   KNConfig::ReadNewsGeneral *rng=knGlobals.cfgManager->readNewsGeneral();
-
-  if(p->childCount() > 0) {
-    //kdDebug(5003) << "KNFetchArticleManager::slotItemExpanded() : childCount = " << p->childCount() << " => returning" << endl;
-    return;
-  }
-
-  knGlobals.top->setCursorBusy(true);
-
   hdrItem=static_cast<KNHdrViewItem*>(p);
   top=static_cast<KNRemoteArticle*>(hdrItem->art);
 
-  for(int i=0; i<g_roup->count(); i++) {
-    art=g_roup->at(i);
-    if(art->filterResult() && !art->listItem()) {
+  if (p->childCount() == 0) {
 
-      if(art->displayedReference()==top) {
-        art->setListItem(new KNHdrViewItem(hdrItem));
-        art->setThreadMode(showThreads);
-        art->initListItem();
-      }
-      else if(rng->totalExpandThreads()) { //totalExpand
-        ref=art->displayedReference();
-        inThread=false;
-        while(ref && !inThread) {
-          inThread=(ref==top);
-          ref=ref->displayedReference();
+    knGlobals.top->setCursorBusy(true);
+
+    for(int i=0; i<g_roup->count(); i++) {
+      art=g_roup->at(i);
+      if(art->filterResult() && !art->listItem()) {
+
+        if(art->displayedReference()==top) {
+          art->setListItem(new KNHdrViewItem(hdrItem));
+          art->setThreadMode(showThreads);
+          art->initListItem();
         }
-        if(inThread)
-          createThread(art);
+        else if(rng->totalExpandThreads()) { //totalExpand
+          ref=art->displayedReference();
+          inThread=false;
+          while(ref && !inThread) {
+            inThread=(ref==top);
+            ref=ref->displayedReference();
+          }
+          if(inThread)
+            createThread(art);
+        }
       }
     }
+
+    knGlobals.top->setCursorBusy(false);
   }
 
   if(rng->totalExpandThreads())
     hdrItem->expandChildren();
 
-  knGlobals.top->setCursorBusy(false);
+  d_isableExpander = false;
 }
 
 //-----------------------------

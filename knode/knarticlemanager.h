@@ -90,8 +90,8 @@ class KNArticleManager : public QObject, public KNJobConsumer {
 
   protected:
     void processJob(KNJobData *j);
-    void createHdrItem(KNRemoteArticle *a);
     void createThread(KNRemoteArticle *a);
+    void createCompleteThread(KNRemoteArticle *a);
 
     KNListView *v_iew;
     KNGroup *g_roup;
@@ -100,6 +100,7 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     KNFilterManager *f_ilterMgr;
     KNSearchDialog *s_earchDlg;
     QList<KTempFile> t_empFiles;
+    bool d_isableExpander;
 
   public slots:
     void slotFilterChanged(KNArticleFilter *f);
