@@ -1,28 +1,27 @@
 #include "logging.h"
 #include "task.h"
 #include "preferences.h"
+
 #include <qdatetime.h>
 #include <qstring.h>
 #include <qfile.h>
 #include <qtextstream.h>
-#include <qregexp.h>
-#include <iostream>
+#include <qstylesheet.h>
 
-#define QS(c) QString::fromLatin1(c)
+#include <kdebug.h>
+
+#define QSl1(c) QString::fromLatin1(c)
 
 //
 //                            L O G    E V E N T S
 //
-QString KarmLogEvent::escapeXML( QString string )
+QString KarmLogEvent::escapeXML(const QString& string )
 {
-  QString result = QString(string);
-  result.replace( QRegExp(QS("&")),  QS("&amp;")  );
-  result.replace( QRegExp(QS("<")),  QS("&lt;")   );
-  result.replace( QRegExp(QS(">")),  QS("&gt;")   );
-  result.replace( QRegExp(QS("'")),  QS("&apos;") );
-  result.replace( QRegExp(QS("\"")), QS("&quot;") );
+  result = QStyleSheet::escape(string); // escapes <, >, &
+  result.replace( '\'', QSl1("&apos;") );
+  result.replace( '\"', QSl1("&quot;") );
   // protect also our task-separator
-  result.replace( QRegExp(QS("/")),  QS("&slash;") );
+  result.replace( '/',  QSl1("&slash;"));
 
   return result;
 }
@@ -50,10 +49,10 @@ StartLogEvent::StartLogEvent( Task *task )
 
 QString StartLogEvent::toXML()
 {
-  return QString("<starting        "
-                 " date=\"%1\" "
-                 " task=\"%2\" />\n"
-                ).arg( eventTime.toString() ).arg(
+  return QSl1("<starting        "
+              " date=\"%1\" "
+              " task=\"%2\" />\n"
+              ).arg( eventTime.toString() ).arg(
                        fullName );
 }
 
@@ -66,10 +65,10 @@ StopLogEvent::StopLogEvent( Task *task )
 
 QString StopLogEvent::toXML()
 {
-  return QString("<stopping        "
-                 " date=\"%1\" "
-                 " task=\"%2\" />\n"
-                ).arg( eventTime.toString() ).arg(
+  return QSl1("<stopping        "
+              " date=\"%1\" "
+              " task=\"%2\" />\n"
+             ).arg( eventTime.toString() ).arg(
                        fullName );
 }
 
@@ -83,11 +82,11 @@ RenameLogEvent::RenameLogEvent( Task *task, QString& old )
 
 QString RenameLogEvent::toXML()
 {
-  return QString("<renaming        "
-                 " date=\"%1\" "
-                 " task=\"%2\" "
-                 " old_name=\"%3\" />\n"
-                ).arg( eventTime.toString() ).arg(
+  return QSl1("<renaming        "
+              " date=\"%1\" "
+              " task=\"%2\" "
+              " old_name=\"%3\" />\n"
+             ).arg( eventTime.toString() ).arg(
                        fullName ).arg(
                        oldName );
 }
@@ -103,12 +102,12 @@ SessionTimeLogEvent::SessionTimeLogEvent( Task *task, long total, long change)
 
 QString SessionTimeLogEvent::toXML()
 {
-  return QString("<new_session_time"
-                 " date=\"%1\" "
-                 " task=\"%2\" "
-                 " new_total=\"%3\""
-                 " change=\"%4\" />\n"
-                ).arg( eventTime.toString() ).arg(
+  return QSl1("<new_session_time"
+              " date=\"%1\" "
+              " task=\"%2\" "
+              " new_total=\"%3\""
+              " change=\"%4\" />\n"
+             ).arg( eventTime.toString() ).arg(
                        fullName ).arg(
                        newTotal ).arg(
                        delta );
@@ -125,12 +124,12 @@ TotalTimeLogEvent::TotalTimeLogEvent( Task *task, long total, long change)
 
 QString TotalTimeLogEvent::toXML()
 {
-  return QString("<new_total_time  "
-                 " date=\"%1\" "
-                 " task=\"%2\" "
-                 " new_total=\"%3\""
-                 " change=\"%4\" />\n"
-                ).arg( eventTime.toString() ).arg(
+  return QSl1("<new_total_time  "
+              " date=\"%1\" "
+              " task=\"%2\" "
+              " new_total=\"%3\""
+              " change=\"%4\" />\n"
+             ).arg( eventTime.toString() ).arg(
                        fullName ).arg(
                        newTotal ).arg(
                        delta );
@@ -186,7 +185,7 @@ void Logging::log( KarmLogEvent* event)
       out << event->toXML();
       f.close();
     } else {
-      std::cerr << "Couldn't write to time-log file";
+      kdWarning() << "Couldn't write to time-log file" << endl;
     }
   }
 }

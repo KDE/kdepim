@@ -16,7 +16,7 @@ class KarmLogEvent
    QDateTime eventTime;
    void loadCommonFields( Task *task);
    // this really doesn't belong here ...
-   QString escapeXML( QString string);
+   QString escapeXML( const QString &string);
    
  public:
    virtual QString toXML(void) =0;
