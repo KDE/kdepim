@@ -263,7 +263,9 @@ SloxWizard::~SloxWizard()
 
 QString SloxWizard::validate()
 {
-  if( mServerEdit->text().isEmpty() ||
+  KURL server( mServerEdit->text() );
+  if ( !server.protocol().isEmpty() ||
+      mServerEdit->text().isEmpty() ||
       mUserEdit->text().isEmpty() ||
       mPasswordEdit->text().isEmpty() )
     return i18n( "Please fill in all fields." );
