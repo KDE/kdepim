@@ -221,6 +221,7 @@ void AddressBookSyncee::removeEntry( SyncEntry *entry )
                   << endl;
   } else {
     mAddressBook->removeAddressee( abEntry->addressee() );
+    abEntry->setSyncee( 0 );
     mEntries.remove( abEntry );
   }
 }

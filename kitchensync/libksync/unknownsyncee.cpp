@@ -180,6 +180,8 @@ void UnknownSyncee::removeEntry( SyncEntry *entry )
     unEntry = dynamic_cast<UnknownSyncEntry *> (entry);
     if (unEntry == 0 )
         return;
+
+    unEntry->setSyncee( 0 );
     mList.remove( unEntry );
 }
 

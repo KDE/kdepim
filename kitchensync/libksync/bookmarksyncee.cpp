@@ -107,11 +107,11 @@ BookmarkSyncee::BookmarkSyncee( KBookmarkManager *bmm ,  Merger* m)
 BookmarkSyncee::~BookmarkSyncee()
 {
   if ( mOwnBookmarkManager ) delete mBookmarkManager;
-  
+
   /* clear the created and owned sync entries */
   for(QMap<QString,BookmarkSyncEntry*>::Iterator it = mEntries.begin(); it != mEntries.end(); ++it)
     delete it.data();
-    
+
 }
 
 void BookmarkSyncee::init()
@@ -174,8 +174,9 @@ void BookmarkSyncee::addEntry( SyncEntry *entry )
     KBookmarkGroup bmGroup = findGroup( bm.parentGroup() );
     KBookmark newBookmark = bmGroup.addBookmark( mBookmarkManager,
                                                  bm.fullText(), bm.url() );
-						 
-    bmEntry->setBookmark( newBookmark );						 
+
+    bmEntry->setBookmark( newBookmark );
+    bmEntry->setSyncee( this );
     mBookmarks.append( newBookmark.internalElement() );
     mEntries.insert(bmEntry->id(), bmEntry );
   }
@@ -189,10 +190,11 @@ void BookmarkSyncee::removeEntry( SyncEntry *entry )
   } else {
     KBookmark bm = bmEntry->bookmark();
     kdDebug() << "Remove " << bm.text() << endl;
-    
+
+    bmEntry->setSyncee( 0 );
     mEntries.remove(bmEntry->id() );
     /* don't delete bmEntry here */
-    
+
     // TODO: implement
 /*
     KBookmarkGroup bmGroup = findGroup(bm.parentGroup());

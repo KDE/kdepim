@@ -215,6 +215,7 @@ void CalendarSyncee::addEntry( SyncEntry *entry )
       mCalendar->addEvent(event);
     }
     /* do not lose the syncStatus and insert the Entry directly */
+    calEntry->setSyncee( this );
     mEntries.insert(calEntry->incidence(), calEntry);
   }
 }
@@ -234,6 +235,7 @@ void CalendarSyncee::removeEntry( SyncEntry *entry )
       }
       mCalendar->deleteTodo( td );
     }
+    calEntry->setSyncee( 0l );
     mEntries.remove( calEntry->incidence() );
   }
 }

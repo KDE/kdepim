@@ -150,6 +150,8 @@ void OpieDesktopSyncee::removeEntry( SyncEntry* entry )
     opEntry = dynamic_cast<OpieDesktopSyncEntry*> (entry );
     if ( opEntry == 0l )
         return;
+
+    opEntry->setSyncee( 0 );
     mList.remove( opEntry ); // is the case useless?
 }
 
