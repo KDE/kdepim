@@ -5,7 +5,7 @@
 #include <qstring.h>
 #include <qobject.h>
 
-
+#include <kparts/mainwindow.h>
 #include <kparts/part.h>
 
 
@@ -13,11 +13,12 @@ namespace Kaplan
 {
 
 
-class Core
+class Core : public KParts::MainWindow
 {
-public:
+protected:
 
-  Core();
+  Core(QWidget *parentWidget = 0, const char *name = 0);
+public:
   virtual ~Core();
 
   virtual void addMainEntry(QString text, QString icon, QObject *reveiver, const char *slot) = 0;
