@@ -23,7 +23,7 @@ conduitExpense_LDFLAGS = $(all_libraries) \
 # that depend on the following ones.
 conduitExpense_LDADD   =  -lconduit \
 	$(LIB_KDEUI) $(LIB_KFILE) $(LIB_KDECORE) \
-	@LIBSOCKET@ -lpisock
+	@LIBSOCKET@ -lpisock -lkdbcore -lkdb_postgres -lkdb_mysql
 
 # this option you can leave out. Just, if you use "make dist", you need it
 noinst_HEADERS = expense.h setupDialog.h 

@@ -1,6 +1,6 @@
 /*expense.cc			KPilot
 **
-** Copyright (C) 2000-2001 by Adriaan de Groot
+** Copyright (C) 2000-2001 by Adriaan de Groot, Christopher Molnar
 **
 ** This file is part of the Expense conduit, a conduit for KPilot that
 ** synchronises the Pilot's expense application with .. something?
@@ -133,7 +133,8 @@ char * note;
 };
 */
 
-char *get_entry_type(enum ExpenseType type)
+char *
+get_entry_type(enum ExpenseType type)
  {
    switch(type) {     
 	case etAirfare:       
@@ -197,7 +198,8 @@ char *get_entry_type(enum ExpenseType type)
    }
 }
 
-char *get_pay_type(enum ExpensePayment type)
+char *
+get_pay_type(enum ExpensePayment type)
 {
    switch (type) {
     case epAmEx:
@@ -246,6 +248,10 @@ int main(int argc, char* argv[])
 		"Expense Conduit author",
 		"adridg@cs.kun.nl");
 
+	a.addAuthor("Christopher Molnar",
+		"Expense Conduit author",
+		"molnarc@nebsllc.com");
+
 	ExpenseConduit conduit(a.getMode());
 	a.setConduit(&conduit);
 	return a.exec();
@@ -289,6 +295,7 @@ ExpenseConduit::doSync()
 	kdDebug() << "expense" << ": Read config entry \n" << "Db name: " << mDBnm << endl;
 	
 	PilotRecord* rec;
+
         int recordcount=0;
 	int index=0;
 
@@ -297,7 +304,7 @@ ExpenseConduit::doSync()
 	if (mDBType=="1")
 	{
 		DEBUGCONDUIT << "MySQL database requested" << endl;
-
+			
 	}
 
 	if (mDBType=="2")
@@ -313,12 +320,10 @@ ExpenseConduit::doSync()
                 if (rec->isDeleted())
                 {
                         FUNCTIONSETUP;
-			kdDebug() << ": In expense doSync - Deleted Record" << endl;
                 }
                 else
                 {
                         FUNCTIONSETUP;
-			kdDebug() << ": In doSync - Non-deleted Record" << endl;
 			DEBUGCONDUIT << fname
                		 << ": Got record "
            		 << index-1
@@ -395,26 +400,26 @@ ExpenseConduit::doSync()
 	
 			if (mDBType=="0")
 			{
-				DEBUGCONDUIT << "No database requested" << endl;
+				DEBUGCONDUIT << fname << "No database requested" << endl;
 
 			}
 
 			if (mDBType=="1")
 			{
-				DEBUGCONDUIT << "MySQL database requested" << endl;
+				DEBUGCONDUIT << fname << "MySQL database requested" << endl;
 
 			}
 
 			if (mDBType=="2")
 			{
-				DEBUGCONDUIT << "PostgreSQL database requested" << endl;
+				DEBUGCONDUIT << fname << "PostgreSQL database requested" << endl;
 
 			}
 
 // REMEMBER to CLOSE database			
 
 		}
-	DEBUGCONDUIT << "Records: " << recordcount << endl;
+	DEBUGCONDUIT << fname << "Records: " << recordcount << endl;
 	}
 }
 
@@ -449,6 +454,20 @@ ExpenseConduit::doTest()
 }
 
 // $Log$
+// Revision 1.6  2001/03/16 13:31:33  molnarc
+//
+// all data now written to csv file and formatted.
+// data is in the following order:
+//
+// transaction date,
+// amount,
+// payment type (cash, visa, amex,....),
+// vendor name,
+// Expense Type (car, tolls, parking, food, ....),
+// location,
+// attendees (strips all line breaks - can't have in csv file),
+// notes (again, strips all line breaks - can't have in csv file)
+//
 // Revision 1.5  2001/03/16 01:19:49  molnarc
 //
 // added date to csv output
