@@ -112,7 +112,7 @@ namespace KSieve {
       err = i18n("Parse error: Carriage Return (CR) without Line Feed (LF)");
       break;
     case SlashWithoutAsterisk:
-      err = i18n("Parse error: Unquoted Slash ('/') without Asterisk ('*')."
+      err = i18n("Parse error: Unquoted Slash ('/') without Asterisk ('*'). "
 		 "Broken Comment?");
       break;
     case IllegalCharacter:
@@ -122,7 +122,7 @@ namespace KSieve {
       err = i18n("Parse error: Unexpected Character, probably a missing space?");
       break;
     case NoLeadingDigits:
-      err = i18n("Parse error: Tag Name begins in Digits");
+      err = i18n("Parse error: Tag Name has leading Digits");
       break;
     case NonCWSAfterTextColon:
       err = i18n("Parse error: Only whitespace and #comments may "
