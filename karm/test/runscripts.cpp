@@ -73,10 +73,11 @@ int runscripts
   QFileInfo *fi;
   while ( !rval && ( fi = it.current() ) != 0 ) 
   {
-    kdDebug() << "running " << fi->fileName() << endl;
-    // We don't want to run all scripts, e.g. shared routines.
+    // Don't run scripts that are shared routines.
     if ( ! fi->fileName().startsWith( "__" ) ) 
     {
+      kdDebug() << "runscripts: running " << fi->fileName() << endl;
+
       s->addArgument( interpreter );
       s->addArgument( path + QDir::separator() + fi->fileName().latin1() );
 
