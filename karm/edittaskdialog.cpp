@@ -21,31 +21,32 @@
  *
  * $Id$
  */
-#include <qlabel.h>
-#include <qlineedit.h>
-#include <qlayout.h>
-#include <qregexp.h>
-#include <qhbox.h>
-#include <kapplication.h>
-#include <klocale.h>
-#include <qcombobox.h>
-#include <kdebug.h>
-#include <qradiobutton.h>
 #include <qbuttongroup.h>
-#include <qpixmap.h>
-#include <kiconloader.h>
-#include <qwhatsthis.h>
-#include "addtaskdialog.h"
-#include "ktimewidget.h"
-#include <qpushbutton.h>
+#include <qcombobox.h>
 #include <qgroupbox.h>
-#include "kwinmodule.h"
+#include <qhbox.h>
+#include <qlabel.h>
+#include <qlayout.h>
+#include <qlineedit.h>
+#include <qpixmap.h>
+#include <qpushbutton.h>
+#include <qradiobutton.h>
+#include <qstring.h>
+#include <qwidget.h>
+#include <qwhatsthis.h>
+
+#include <kiconloader.h>
+#include <klocale.h>            // i18n
+#include <kwinmodule.h>
+
+#include "edittaskdialog.h"
+#include "ktimewidget.h"
 
 
-AddTaskDialog::AddTaskDialog( QString caption, bool editDlg,
-                              DesktopListType* desktopList)
-  : KDialogBase(0, "AddTaskDialog", true, caption, Ok|Cancel, Ok, true ),
-    origTotal( 0 ), origSession( 0 )
+EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
+                                DesktopList* desktopList)
+  : KDialogBase(0, "EditTaskDialog", true, caption, Ok|Cancel, Ok, true ),
+    origTime( 0 ), origSession( 0 )
 {
   QWidget *page = new QWidget( this ); 
   setMainWidget(page);
@@ -83,13 +84,13 @@ AddTaskDialog::AddTaskDialog( QString caption, bool editDlg,
   QGridLayout *lay3 = new QGridLayout( 2, 2, -1, "lay3" );
   lay5->addLayout(lay3);
   
-  // Total Time
-  _totalLA = new QLabel( i18n("&Total:"), page, "time" );
-  lay3->addWidget( _totalLA, 0, 0 );
+  // Time
+  _timeLA = new QLabel( i18n("&Time:"), page, "time" );
+  lay3->addWidget( _timeLA, 0, 0 );
 
-  _totalTW = new KArmTimeWidget( page, "_totalTW" );
-  lay3->addWidget( _totalTW, 0, 1 );
-  _totalLA->setBuddy( _totalTW );
+  _timeTW = new KArmTimeWidget( page, "_timeTW" );
+  lay3->addWidget( _timeTW, 0, 1 );
+  _timeLA->setBuddy( _timeTW );
   
 
   // Session
@@ -103,8 +104,8 @@ AddTaskDialog::AddTaskDialog( QString caption, bool editDlg,
 
   // The "Edit relative" radio button
   lay1->addSpacing(10);lay1->addStretch(1);
-  _relativeRB = new QRadioButton( i18n( "Edit &relative (Apply to both session"
-                                        "and total)" ), page, "_relativeRB" );
+  _relativeRB = new QRadioButton( i18n( "Edit &relative (Apply to both time and"
+                                        " session time)" ), page, "_relativeRB" );
   lay1->addWidget( _relativeRB );
   connect( _relativeRB, SIGNAL( clicked() ), this, SLOT(slotRelativePressed()) );
   
@@ -158,7 +159,7 @@ AddTaskDialog::AddTaskDialog( QString caption, bool editDlg,
   bool enableDesktops = false;
 
   if ((desktopList!=0) && (desktopList->size()>0)) {
-    DesktopListType::iterator it = desktopList->begin();
+    DesktopList::iterator it = desktopList->begin();
     while (it != desktopList->end()) {
       _deskBox[*it]->setChecked(true);
       it++;
@@ -206,18 +207,18 @@ AddTaskDialog::AddTaskDialog( QString caption, bool editDlg,
   QWhatsThis::add( _absoluteRB,
                    i18n( "If you select this radio button, you specify that "
                          "you want to enter the time as absolute values. For "
-                         "example: total for this task is 20 hours and 15 "
+                         "example: the time for this task is 20 hours and 15 "
                          "minutes.\n\n"
-                         "The time is specified for the session time and for "
-                         "the total time separately."));
+                         "The time is specified for the cumulated time and "
+                         "the session time separately."));
   QWhatsThis::add( _relativeRB,
                    i18n( "If you select this radio button, you specify that "
                          "you want to add or subtract time for the task. For "
                          "example: I've worked 2 hours and 20 minutes more on "
                          "this task (without having the timer running.)\n\n"
                          "This time will be added or subtracted for both the "
-                         "session time and the total time."));
-  QWhatsThis::add( _totalTW,
+                         "session time and the cumulated time."));
+  QWhatsThis::add( _timeTW,
                    i18n( "This is the overall time this task has been "
                          "running."));
   QWhatsThis::add( _sessionTW,
@@ -227,13 +228,13 @@ AddTaskDialog::AddTaskDialog( QString caption, bool editDlg,
                                   "to the overall and session time"));
 }
 
-void AddTaskDialog::enterWhatsThis() 
+void EditTaskDialog::enterWhatsThis() 
 {
   QWhatsThis::enterWhatsThisMode ();
 }
 
   
-void AddTaskDialog::slotAbsolutePressed()
+void EditTaskDialog::slotAbsolutePressed()
 {
   _relativeRB->setChecked( false );
   _absoluteRB->setChecked( true );
@@ -241,13 +242,13 @@ void AddTaskDialog::slotAbsolutePressed()
   _operator->setEnabled( false );
   _diffTW->setEnabled( false );
 
-  _totalLA->setEnabled( true );
+  _timeLA->setEnabled( true );
   _sessionLA->setEnabled( true );
-  _totalTW->setEnabled( true );
+  _timeTW->setEnabled( true );
   _sessionTW->setEnabled( true );
 }
 
-void AddTaskDialog::slotRelativePressed()
+void EditTaskDialog::slotRelativePressed()
 {
   _relativeRB->setChecked( true );
   _absoluteRB->setChecked( false );
@@ -255,13 +256,13 @@ void AddTaskDialog::slotRelativePressed()
   _operator->setEnabled( true );
   _diffTW->setEnabled( true );
 
-  _totalLA->setEnabled( false );
+  _timeLA->setEnabled( false );
   _sessionLA->setEnabled( false );
-  _totalTW->setEnabled( false );
+  _timeTW->setEnabled( false );
   _sessionTW->setEnabled( false );
 }
 
-void AddTaskDialog::slotAutoTrackingPressed()
+void EditTaskDialog::slotAutoTrackingPressed()
 {
   bool checked = _desktopCB->isChecked();
   for (unsigned int i=0; i<_deskBox.size(); i++)
@@ -272,28 +273,28 @@ void AddTaskDialog::slotAutoTrackingPressed()
       _deskBox[i]->setChecked(false);
 }
 
-void AddTaskDialog::setTask( const QString &name, long total, long session )
+void EditTaskDialog::setTask( const QString &name, long time, long session )
 {
   _name->setText( name );
   
-  _totalTW->setTime( total / 60, total % 60 );
+  _timeTW->setTime( time / 60, time % 60 );
   _sessionTW->setTime( session / 60, session % 60 );
-  origTotal = total;
+  origTime = time;
   origSession = session;
 }
 
 
-QString AddTaskDialog::taskName() const
+QString EditTaskDialog::taskName() const
 { 
   return( _name->text() ); 
 }
 
 
-void AddTaskDialog::status(long *total, long *totalDiff, long *session, 
-                           long *sessionDiff, DesktopListType *desktopList) const
+void EditTaskDialog::status(long *time, long *timeDiff, long *session, 
+                           long *sessionDiff, DesktopList *desktopList) const
 { 
   if ( _absoluteRB->isChecked() ) {
-    *total = _totalTW->time();
+    *time = _timeTW->time();
     *session = _sessionTW->time();
   }
   else {
@@ -301,11 +302,11 @@ void AddTaskDialog::status(long *total, long *totalDiff, long *session,
     if ( _operator->currentItem() == 1) {
       diff = -diff;
     }
-    *total = origTotal + diff;
+    *time = origTime + diff;
     *session = origSession + diff;
   }
 
-  *totalDiff = *total - origTotal;
+  *timeDiff = *time - origTime;
   *sessionDiff = *session - origSession;
 
   for (unsigned int i=0; i<_deskBox.size(); i++) {
@@ -314,4 +315,4 @@ void AddTaskDialog::status(long *total, long *totalDiff, long *session,
   }
 }
 
-#include "addtaskdialog.moc"
+#include "edittaskdialog.moc"

@@ -18,39 +18,41 @@
  *
  */
 
-#ifndef ADD_TASK_DIALOG_included
-#define ADD_TASK_DIALOG_included
+#ifndef KARM_EDIT_TASK_DIALOG_H
+#define KARM_EDIT_TASK_DIALOG_H
 
-#include <stdlib.h>
-#include <kdialogbase.h>
-#include <qvalidator.h>
-#include <qcheckbox.h>
 #include <vector>
 
-#include "taskview.h"       // only for DesktopListType
-#include "ktimewidget.h"
+#include <kdialogbase.h>
+#include <qcheckbox.h>
 
+#include "desktoplist.h"
+
+class QComboBox;
+class QLabel;
 class QLineEdit;
-class KArmTimeWidget;
 class QRadioButton;
+class QString;
+
+class KArmTimeWidget;
 
 /**
  * Dialog to add a new task or edit an existing task.
  */
 
-class AddTaskDialog : public KDialogBase
+class EditTaskDialog : public KDialogBase
 {
   Q_OBJECT
 
   public:
-    AddTaskDialog(QString caption, bool editDlg, DesktopListType* desktopList=0);
+    EditTaskDialog(QString caption, bool editDlg, DesktopList* desktopList=0);
     void setTask(const QString &name, long time, long sessionTime);
     QString taskName() const;
 
     // return user choices
-    void status( long *total, long *totalDiff, 
+    void status( long *time, long *timeDiff, 
                  long *session, long *sessionDiff, 
-                 DesktopListType *desktopList) const;
+                 DesktopList *desktopList) const;
     
   private slots:
     void slotAbsolutePressed();
@@ -61,14 +63,14 @@ class AddTaskDialog : public KDialogBase
 
   private:
     QLineEdit* _name;
-    KArmTimeWidget* _totalTW;
+    KArmTimeWidget* _timeTW;
     KArmTimeWidget* _sessionTW;
     KArmTimeWidget* _diffTW;
     QComboBox* _operator;
     std::vector<QCheckBox*> _deskBox; // we only need an array, but ISO forbids
                                  // passing an array as a function argument
 
-    long origTotal;
+    long origTime;
     long origSession;
 
     QRadioButton *_absoluteRB;
@@ -77,7 +79,7 @@ class AddTaskDialog : public KDialogBase
     QCheckBox *_desktopCB;
     int desktopCount;
 
-    QLabel* _totalLA;
+    QLabel* _timeLA;
     QLabel* _sessionLA;
 };
 
@@ -85,5 +87,5 @@ class AddTaskDialog : public KDialogBase
 
 
 
-#endif // ADD_TASK_DIALOG_included
+#endif // KARM_EDIT_TASK_DIALOG
 
