@@ -81,25 +81,34 @@ void KandyPrefsDialog::setupSerialTab()
   topLayout->setSpacing(spacingHint());
   topLayout->setMargin(marginHint());
   
+  // Define serial device
   serialDevice = addWidString( KandyPrefs::self()->serialDeviceItem(),
                                topFrame );
   topLayout->addWidget(serialDevice->label(),0,0);
   topLayout->addWidget(serialDevice->lineEdit(),0,1);
   
+  // Define baud rate
+  baudRate = addWidString( KandyPrefs::self()->baudRateItem(), topFrame );
+  topLayout->addWidget( baudRate->label(), 1, 0 );
+  topLayout->addWidget( baudRate->lineEdit(), 1, 1 );
+  
+  // Define location of LOCK file
   lockDir = addWidString( KandyPrefs::self()->lockDirectoryItem(),
                                topFrame );
-  topLayout->addWidget(lockDir->label(),1,0);
-  topLayout->addWidget(lockDir->lineEdit(),1,1);
+  topLayout->addWidget(lockDir->label(),2,0);
+  topLayout->addWidget(lockDir->lineEdit(),2,1);
 
+  // Define startup modem behavior
   openOnStartup = addWidBool( KandyPrefs::self()->startupModemItem(),
                               topFrame );
-  topLayout->addWidget(openOnStartup->checkBox(),2,0);
+  topLayout->addWidget(openOnStartup->checkBox(),3,0);
 
+  // Define clock setting hevahior
   autoSetClock = addWidBool( KandyPrefs::self()->autoSetClockItem(),
                              topFrame );
-  topLayout->addWidget(autoSetClock->checkBox(),3,0);
+  topLayout->addWidget(autoSetClock->checkBox(),4,0);
   
-  topLayout->setRowStretch(4,1);
+  topLayout->setRowStretch(5,1);
 }
 
 void KandyPrefsDialog::setupAddressbookTab()

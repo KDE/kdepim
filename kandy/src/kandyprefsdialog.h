@@ -53,6 +53,7 @@ class KandyPrefsDialog : public KPrefsDialog
     void setupWindowsTab();
  private:
     KPrefsWidString *serialDevice;
+    KPrefsWidString *baudRate;
     KPrefsWidString *lockDir;
     KPrefsWidBool *openOnStartup;
     KPrefsWidBool *autoSetClock;

@@ -8,6 +8,10 @@
       <label>Serial device</label>
       <default>/dev/ttyS1</default>
     </entry>
+    <entry type="String" key="Baud Rate">
+      <label>Baud rate</label>
+      <default>115200</default>
+    </entry>
     <entry type="String" key="Lock Directory">
       <label>Lock directory</label>
       <default>/var/lock</default>

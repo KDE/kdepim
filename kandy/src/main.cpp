@@ -59,7 +59,7 @@ void initModem(Modem *modem)
             << KandyPrefs::serialDevice()
             << endl;
 
-  modem->setSpeed(115200);
+  modem->setSpeed( KandyPrefs::baudRate().toUInt() );
   modem->setData(8);
   modem->setParity('N');
   modem->setStop(1);
