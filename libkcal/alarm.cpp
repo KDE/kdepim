@@ -36,6 +36,7 @@ Alarm::Alarm(Incidence *parent)
    mMailSubject(""),    // to make operator==() not fail
    mAlarmSnoozeTime(5),
    mAlarmRepeatCount(0),
+   mEndOffset(false),
    mHasTime(false),
    mAlarmEnabled(false)
 {
@@ -58,7 +59,8 @@ bool Alarm::operator==( const Alarm& rhs ) const
     if (mAlarmTime != rhs.mAlarmTime)
       return false;
   } else {
-    if (mOffset != rhs.mOffset)
+    if (mOffset != rhs.mOffset ||
+        mEndOffset != rhs.mEndOffset)
       return false;
   }
 
@@ -307,6 +309,8 @@ QDateTime Alarm::time() const
     if (mParent->type()=="Todo") {
       Todo *t = static_cast<Todo*>(mParent);
       return mOffset.end( t->dtDue() );
+    } else if (mEndOffset) {
+      return mOffset.end( mParent->dtEnd() );
     } else {
       return mOffset.end( mParent->dtStart() );
     }
@@ -360,16 +364,40 @@ bool Alarm::enabled() const
   return mAlarmEnabled;
 }
 
-void Alarm::setOffset( const Duration &offset )
+void Alarm::setStartOffset( const Duration &offset )
 {
   mOffset = offset;
+  mEndOffset = false;
   mHasTime = false;
   mParent->updated();
 }
 
-Duration Alarm::offset() const
+Duration Alarm::startOffset() const
 {
-  return mOffset;
+  return (mHasTime || mEndOffset) ? 0 : mOffset;
+}
+
+bool Alarm::hasStartOffset() const
+{
+  return !mHasTime && !mEndOffset;
+}
+
+bool Alarm::hasEndOffset() const
+{
+  return !mHasTime && mEndOffset;
+}
+
+void Alarm::setEndOffset( const Duration &offset )
+{
+  mOffset = offset;
+  mEndOffset = true;
+  mHasTime = false;
+  mParent->updated();
+}
+
+Duration Alarm::endOffset() const
+{
+  return (mHasTime || !mEndOffset) ? 0 : mOffset;
 }
 
 void Alarm::setParent( Incidence *parent )

@@ -723,16 +723,26 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
   }
   icalcomponent_add_property(a,icalproperty_new_action(action));
 
+  // Trigger time
   icaltriggertype trigger;
   if ( alarm->hasTime() ) {
     trigger.time = writeICalDateTime(alarm->time());
     trigger.duration = icaldurationtype_null_duration();
   } else {
     trigger.time = icaltime_null_time();
-    trigger.duration = icaldurationtype_from_int( alarm->offset().asSeconds() );
+    Duration offset;
+    if ( alarm->hasStartOffset() )
+      offset = alarm->startOffset();
+    else
+      offset = alarm->endOffset();
+    trigger.duration = icaldurationtype_from_int( offset.asSeconds() );
   }
-  icalcomponent_add_property(a,icalproperty_new_trigger(trigger));
+  icalproperty *p = icalproperty_new_trigger(trigger);
+  if ( alarm->hasEndOffset() )
+    icalproperty_add_parameter(p,icalparameter_new_related(ICAL_RELATED_END));
+  icalcomponent_add_property(a,p);
 
+  // Repeat count and duration
   if (alarm->repeatCount()) {
     icalcomponent_add_property(a,icalproperty_new_repeat(alarm->repeatCount()));
     icalcomponent_add_property(a,icalproperty_new_duration(
@@ -1091,9 +1101,9 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
   icalattachtype *a = icalproperty_get_attach(attach);
   icalparameter_value v = ICAL_VALUE_NONE;
   icalparameter_encoding e = ICAL_ENCODING_NONE;
-  
+ 
   Attachment *attachment = 0;
-  
+
   icalparameter *vp = icalproperty_get_first_parameter(attach, ICAL_VALUE_PARAMETER);
   if (vp)
     v = icalparameter_get_value(vp);
@@ -1101,7 +1111,7 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
   icalparameter *ep = icalproperty_get_first_parameter(attach, ICAL_ENCODING_PARAMETER);
   if (ep)
     e = icalparameter_get_encoding(ep);
-  
+
   if (v == ICAL_VALUE_BINARY && e == ICAL_ENCODING_BASE64)
     attachment = new Attachment(icalattachtype_get_base64(a));
   else if ((v == ICAL_VALUE_NONE || v == ICAL_VALUE_URI) && (e == ICAL_ENCODING_NONE || e == ICAL_ENCODING_8BIT)) {
@@ -1219,7 +1229,7 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
           incidence->setSecrecy(Incidence::SecrecyPrivate);
         }
         break;
-        
+
       case ICAL_ATTACH_PROPERTY:  // attachments
         incidence->addAttachment(readAttachment(p));
         break;
@@ -1277,7 +1287,7 @@ void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *inci
       case ICAL_ATTENDEE_PROPERTY:  // attendee
         incidenceBase->addAttendee(readAttendee(p));
         break;
-        
+
       default:
         break;
     }
@@ -1530,7 +1540,12 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
           if (icaldurationtype_is_null_duration(trigger.duration)) {
             kdDebug(5800) << "ICalFormatImpl::readAlarm(): Trigger has no time and no duration." << endl;
           } else {
-            ialarm->setOffset( Duration( icaldurationtype_as_int( trigger.duration ) ) );
+            Duration duration = icaldurationtype_as_int( trigger.duration );
+            icalparameter *param = icalproperty_get_first_parameter(p,ICAL_RELATED_PARAMETER);
+            if (param && icalparameter_get_related(param) == ICAL_RELATED_END)
+              ialarm->setEndOffset(duration);
+            else
+              ialarm->setStartOffset(duration);
           }
         } else {
           ialarm->setTime(readICalDateTime(trigger.time));
@@ -1786,7 +1801,7 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
     mLoadedProductId = QString::fromUtf8(icalproperty_get_prodid(p));
     mCalendarVersion = CalFormat::calendarVersion(mLoadedProductId);
     kdDebug(5800) << "VCALENDAR prodid: '" << mLoadedProductId << "'" << endl;
-  
+
     delete mCompat;
     mCompat = CompatFactory::createCompat( mLoadedProductId );
   }

@@ -168,9 +168,28 @@ class Alarm : public CustomProperties
     bool hasTime() const;
 
     /** Set offset of alarm in time relative to the start of the event. */
-    void setOffset(const Duration &);
-    /** Return offset of alarm in time relative to the start of the event. */
-    Duration offset() const;
+    void setStartOffset(const Duration &);
+    /** Return offset of alarm in time relative to the start of the event.
+     *  If the alarm's time is not defined in terms of an offset relative
+     *  to the start of the event, returns zero.
+     */
+    Duration startOffset() const;
+    /** Return whether the alarm is defined in terms of an offset relative
+     *  to the start of the event.
+     */
+    bool hasStartOffset() const;
+
+    /** Set offset of alarm in time relative to the end of the event. */
+    void setEndOffset(const Duration &);
+    /** Return offset of alarm in time relative to the end of the event.
+     *  If the alarm's time is not defined in terms of an offset relative
+     *  to the end of the event, returns zero.
+     */
+    Duration endOffset() const;
+    /** Return whether the alarm is defined in terms of an offset relative
+     *  to the end of the event.
+     */
+    bool hasEndOffset() const;
 
     /** Set the interval between snoozes for the alarm.
         @param snoozeTime the time in minutes between snoozes.
@@ -216,6 +235,7 @@ class Alarm : public CustomProperties
 
     QDateTime mAlarmTime;        // time at which to trigger the alarm
     Duration mOffset;            // time relative to incidence DTSTART to trigger the alarm
+    bool mEndOffset;             // if true, mOffset relates to DTEND, not DTSTART
     bool mHasTime;               // use mAlarmTime, not mOffset
     bool mAlarmEnabled;
 };
