@@ -1,0 +1,15 @@
+KPilot was written by Dan Pilone.  It is currently under
+active development by a worldwide group of contributors.
+
+o The vcal and todo conduit were written by Preston Brown.
+
+o The popclient conduit was written by Michael Kropfberger 
+	<michael.kropfberger@gmx.net>
+
+o The null conduit was written by Adriaan de Groot
+
+For more information, see:
+http://www.slac.com/pilone/kpilot_home/
+
+-- Dan Pilone 5/30/99
+-- Adriaan de Groot January 24 2000

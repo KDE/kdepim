@@ -1,0 +1,70 @@
+LIBRARY      "VERSIT"
+DESCRIPTION  'VERSIT OS/2 Dynamic Link Library'
+
+EXPORTS
+    newVObject                  @1
+    deleteVObject               @2
+    dupStr                      @3
+    deleteStr                   @4
+    setVObjectName              @5
+    setVObjectStringZValue      @6
+    setVObjectStringZValue_     @7
+    setVObjectUStringZValue     @8
+    setVObjectUStringZValue_    @9
+    setVObjectIntegerValue      @10
+    setVObjectLongValue         @11
+    setVObjectAnyValue          @12
+    setValueWithSize            @13
+    setValueWithSize_           @14
+    setVObjectVObjectValue      @15
+    vObjectName                 @16
+    vObjectStringZValue         @17
+    vObjectUStringZValue        @18
+    vObjectIntegerValue         @19
+    vObjectLongValue            @20
+    vObjectAnyValue             @21
+    vObjectVObjectValue         @22
+    addVObjectProp              @23
+    addProp                     @24
+    addProp_                    @25
+    addPropValue                @26
+    addPropSizedValue_          @27
+    addPropSizedValue           @28
+    addGroup                    @29
+    isAPropertyOf               @30
+    nextVObjectInList           @31
+    initPropIterator            @32
+    moreIteration               @33
+    nextVObject                 @34
+    printVObject                @35
+    writeVObject                @36
+    writeMemVObject             @37
+    lookupStr                   @38
+    cleanStrTbl                 @39
+    cleanVObject                @40
+    lookupProp                  @41
+    lookupProp_                 @42
+    fakeUnicode                 @43
+    uStrLen                     @44
+    fakeCString                 @45
+    Parse_MIME                  @46
+    Parse_MIME_FromFile         @47
+    vcsCreateVCal               @50
+    vcsAddEvent                 @51
+    vcsAddTodo                  @52
+    vcsAddAAlarm                @53
+    vcsAddMAlarm                @54
+    vcsAddDAlarm                @55
+    vcsAddPAlarm                @56
+    printVObjectToFile          @57
+    printVObjectsToFile         @58
+    writeVObjectToFile          @59
+    writeVObjectsToFile         @60
+    Parse_MIME_FromFileName     @61
+    registerMimeErrorHandler    @62
+    cleanVObjects               @63
+    writeMemVObjects            @64
+    unUseStr                    @65
+    vObjectValueType            @66
+
+

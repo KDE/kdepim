@@ -1,0 +1,21 @@
+*** pilotAppCategory.h.orig     Thu Oct  8 20:09:27 1998
+--- pilotAppCategory.h  Thu Oct  8 20:09:22 1998
+***************
+*** 44,51 ****
+
+      virtual PilotRecord* pack()
+          {
+!       int len;
+!       void* buff = new unsigned char[0xffff];
+        pack(buff, &len);
+        PilotRecord* rec =  new PilotRecord(buff, len, getAttrib(), getCat(), id());
+        delete [] (unsigned char*)buff;
+--- 44,51 ----
+
+      virtual PilotRecord* pack()
+          {
+!       int len = 0xffff;
+!       void* buff = new unsigned char[len];
+        pack(buff, &len);
+        PilotRecord* rec =  new PilotRecord(buff, len, getAttrib(), getCat(), id());
+        delete [] (unsigned char*)buff;

@@ -1,0 +1,37 @@
+/* XPM */
+static char *mini-kpilot[] = {
+/* width height num_colors chars_per_pixel */
+"    17    24        6            1",
+/* colors */
+". c #808080",
+"# c #000000",
+"a c #727272",
+"b c #7a8a74",
+"c c #bebebe",
+"d c #00ffff",
+/* pixels */
+".................",
+".................",
+"..#aaaaaaaaaaaaa.",
+"..#a###########a.",
+"..#abbbbbbbbbb#a.",
+"..#abbbbbbbbbb#a.",
+"..#abbbbbbbbbb#a.",
+"..#abbbbbbbbbb#a.",
+"..#abbbbbbbbbb#a.",
+"..#abbbbbbbbbb#a.",
+"..#abbbbbbbbbb#a.",
+"..#abbbbbbbbbb#a.",
+"..#abbbbbbbbbb#a.",
+"..#abbbbbbbbbb#a.",
+"..#a###########a.",
+"..#ac#######c##a.",
+"..#acc#ccccccc#a.",
+"..#ac#######c##a.",
+"..#a###########a.",
+"..da#a#aacaa##aa.",
+"..daa#aaaaa#aa#a.",
+"..#aaaaaacaaaaa#.",
+"...aaaaaaaaaaaa#.",
+"................."
+};
