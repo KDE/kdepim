@@ -34,7 +34,7 @@
 </authorgroup>
 
 <copyright>
-<year>2001</year><year>2002</year><year>2003</year>
+<year>2001</year><year>2002</year><year>2003</year><year>2004</year>
 <holder>David Jarvie</holder>
 </copyright>
 
@@ -42,8 +42,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2003-12-01</date>
-<releaseinfo>1.00.00</releaseinfo>
+<date>2004-03-08</date>
+<releaseinfo>1.01.00</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -191,7 +191,8 @@ action.</para>
 <title>Adding a new alarm</title>
 
 <para>To add a new alarm, do one of the following. This displays the
-alarm edit dialog as described below.</para>
+alarm edit dialog which is described in the
+<link linkend="edit-alarm">next section</link>.</para>
 
 <itemizedlist>
 <listitem>
@@ -228,6 +229,15 @@ context menu.</para>
 various sources:</para>
 
 <itemizedlist>
+<listitem>
+<para>To base your new alarm on an alarm template, display the alarm
+edit dialog as described above, and then click
+<guibutton>Load Template</guibutton>. Select a template from the list
+which appears and click <guibutton>OK</guibutton>. The alarm edit
+dialog is then preset with the details from the selected alarm
+template, which you can now edit as required.</para>
+</listitem>
+
 <listitem>
 <para>To base your new alarm on an existing one, highlight the existing
 alarm in the list and select <menuchoice>
@@ -278,13 +288,13 @@ amended), do one of the following:</para>
 <listitem>
 <para>Select it by clicking on its entry in the alarm list. Then
 choose <menuchoice><guimenu>Actions</guimenu>
-<guimenuitem>Modify</guimenuitem></menuchoice>.</para>
+<guimenuitem>Edit</guimenuitem></menuchoice>.</para>
 </listitem>
 
 <listitem>
 <para><mousebutton>Right</mousebutton> click on its entry in the alarm
 list and choose
-<menuchoice><guimenuitem>Modify</guimenuitem></menuchoice> from the
+<menuchoice><guimenuitem>Edit</guimenuitem></menuchoice> from the
 context menu.</para>
 </listitem>
 </itemizedlist>
@@ -334,6 +344,12 @@ tooltip appears.</para>
 display a reminder in advance of the main alarm and of each of its
 recurrences (if any). Enter how long in advance using the edit
 controls beside the checkbox.</para>
+
+<para>If the alarm recurs, check the
+<guilabel>Reminder for first recurrence only</guilabel> checkbox if
+you only want a reminder before the alarm's first recurrence. If this
+is not checked, the reminder period is limited to being less than the
+recurrence interval.</para>
 </listitem>
 
 <listitem>
@@ -598,6 +614,119 @@ from the context menu.</para>
 
 <para>See <link linkend="message-window">Alarm message window</link>
 for how to acknowledge alarms.</para>
+
+</sect2>
+
+<sect2 id="templates">
+<title>Alarm templates</title>
+
+<para>If you frequently want to set up similar alarms, you can create
+an alarm template to avoid having to enter all the details from
+scratch each time. A template can contain all the details which an
+alarm can contain, apart from the start date.</para>
+
+<para>As an example, you may regularly want to set an
+alarm to remind you about a television program whose time varies
+from week to week. The template would contain all the alarm details
+(message text, whether to play a sound, etc.) except for the time and
+date. Now, to create the alarm, all you need to do is in the alarm
+edit dialog load that template and then enter the time and
+date.</para>
+
+<sect3>
+<title>Configuring templates</title>
+
+<para>You can create, modify or delete templates using the Alarm
+Templates dialog, or you can create a new alarm template based on an
+existing alarm.</para>
+
+<para>To create a new alarm template, do one of the following:</para>
+
+<itemizedlist>
+<listitem>
+<para>Display the Alarm Templates dialog by selecting the <menuchoice>
+<guimenu>File</guimenu><guimenuitem>Templates...</guimenuitem>
+</menuchoice> menu item, and click <guibutton>New</guibutton>. This
+displays a blank template edit dialog.</para>
+</listitem>
+
+<listitem>
+<para>Display the Alarm Templates dialog by selecting the <menuchoice>
+<guimenu>File</guimenu><guimenuitem>Templates...</guimenuitem>
+</menuchoice> menu item, select an existing template from the list and
+click <guibutton>Copy</guibutton>. This opens the template edit dialog
+already filled in with a copy of the existing template's
+details.</para>
+</listitem>
+
+<listitem>
+<para>Highlight an alarm in the alarm list and select <menuchoice>
+<guimenu>Actions</guimenu><guimenuitem>Create template</guimenuitem>
+</menuchoice>. This opens the template edit dialog already filled in
+with a copy of the selected alarm's details.</para>
+</listitem>
+</itemizedlist>
+
+<para>To modify an existing template, display the Alarm Templates
+dialog by selecting the <menuchoice>
+<guimenu>File</guimenu><guimenuitem>Templates...</guimenuitem>
+</menuchoice> menu item and click <guibutton>Edit</guibutton>. This
+displays the template edit dialog which is described below.</para>
+
+<para>To delete existing templates, display the Alarm Templates
+dialog by selecting the <menuchoice>
+<guimenu>File</guimenu><guimenuitem>Templates...</guimenuitem>
+</menuchoice> menu item, select one or more templates and click
+<guibutton>Delete</guibutton>. A confirmation prompt is issued to
+prevent accidental deletions.</para>
+
+</sect3>
+
+<sect3>
+<title>Template edit dialog</title>
+
+<para>The template edit dialog is similar to the alarm edit dialog
+described in <link linkend="edit-alarm">Modifying an existing
+alarm</link>. The following controls are different:</para>
+
+<itemizedlist>
+<listitem>
+<para>Enter the template's name in <guilabel>Template name</guilabel>.
+It is the template's name which is displayed in template selection
+lists, so it is best to choose a name which will remind you of its
+function. Each template's name must be unique.</para>
+</listitem>
+
+<listitem>
+<para>In the <guilabel>Time</guilabel> group box, select one of:</para>
+
+<itemizedlist>
+<listitem>
+<para><guilabel>Default time</guilabel> if you do not wish to specify
+any trigger time. Alarms based on this template will initially
+use the normal default trigger time for new alarms.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Time</guilabel> to enter a time when the alarm is to
+be triggered.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Any time</guilabel> to specify that the alarm should
+only have a date, not a time.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem>
+<para>In the <guilabel>Recurrence Rule</guilabel> group box in the
+<guilabel>Recurrence</guilabel> tab, no day or month need be selected
+for weekly or yearly recurrences, respectively.</para>
+</listitem>
+</itemizedlist>
+
+</sect3>
 
 </sect2>
 
@@ -1047,8 +1176,8 @@ time.</para>
 <row>
   <entry><option>-b</option>, <option>--beep</option></entry>
   <entry>Make an audible beep when the message is displayed.
-  <option>--play</option> must not be present if this option is
-  specified.</entry>
+  <option>--play</option> and <option>--play-repeat</option> cannot
+  be specified with this option.</entry>
 </row>
 <row>
   <entry><option>--bcc</option></entry>
@@ -1126,8 +1255,16 @@ time.</para>
 <row>
   <entry><option>-p</option>, <option>--play <replaceable>URL</replaceable></option></entry>
   <entry>Specify the name or &URL; of an audio file to be played once
-  when the alarm message is displayed. <option>--beep</option> must
-  not be present if this option is specified.</entry>
+  when the alarm message is displayed. 
+  <option>--play-repeat</option> and <option>--beep</option> cannot be
+  specified with this option.</entry>
+</row>
+<row>
+  <entry><option>-P</option>, <option>--play-repeat <replaceable>URL</replaceable></option></entry>
+  <entry>Specify the name or &URL; of an audio file to be played
+  repeatedly for as long as the alarm message is displayed.
+  <option>--play</option> and <option>--beep</option> cannot be
+  specified with this option.</entry>
 </row>
 <row>
   <entry><option>--recurrence
@@ -1709,7 +1846,7 @@ time at which the alarm is scheduled.</para>
 </itemizedlist>
 </listitem>
 
-<listitem><para><guilabel>Modal message windows</guilabel>: This
+<listitem><para><guilabel>Message windows have a title bar and take keyboard focus</guilabel>: This
 option controls whether alarm message windows are modal or not, &ie;
 whether they grab the keyboard focus when they appear. See the
 <link linkend="message-window">Alarm message window</link> section for
@@ -1724,7 +1861,7 @@ Alarms</guimenuitem></menuchoice> menu option to change what is
 displayed.)</para>
 </listitem>
 
-<listitem><para><guilabel>System tray update interval</guilabel>: Set
+<listitem><para><guilabel>System tray icon update interval</guilabel>: Set
 the frequency at which the &kalarm; system tray icon is updated to
 reflect whether alarms are currently being monitored. This involves
 checking whether the <application>alarm daemon</application> is
@@ -1748,7 +1885,7 @@ for alarm message display.</para>
 you click on the background color combo box:</para>
 <itemizedlist>
 
-<listitem><para><guilabel>New color</guilabel>: Displays a color
+<listitem><para><guilabel>Add color...</guilabel>: Displays a color
 selection dialog which lets you choose a color to add to the
 list.</para>
 </listitem>
@@ -1760,6 +1897,10 @@ the list, and when it is displayed, this button is disabled.</para>
 </listitem>
 
 </itemizedlist>
+</listitem>
+
+<listitem><para>Select the color to be used in the alarm list to show
+expired alarms.</para>
 </listitem>
 
 </itemizedlist>
@@ -1781,8 +1922,10 @@ late</guilabel>, <guilabel>Confirm acknowledgment</guilabel> and
 <guilabel>Copy email to self</guilabel> checkboxes.</para>
 </listitem>
 
-<listitem><para>Set beep as the default for the
-<guilabel>Sound</guilabel> option.</para>
+<listitem><para>Set the default <guilabel>Beep</guilabel> or sound
+file options. Note that a default sound file may be specified even if
+<guilabel>Sound</guilabel> is unchecked or <guilabel>Beep</guilabel>
+is checked.</para>
 </listitem>
 
 <listitem><para>Set the default recurrence type.</para>
@@ -2064,7 +2207,7 @@ should be displayed.</para>
 <term><parameter>flags</parameter></term>
 <listitem>
 <para>Specifies the logical OR of the desired alarm message flags. The
-flag bits are those defined in class KAlarmEvent in
+flag bits are those defined in class KAEvent in
 <filename>alarmevent.h</filename></para>
 </listitem>
 </varlistentry>
@@ -2102,7 +2245,7 @@ month. For a non-recurring alarm, specify an empty string.</para>
 <listitem>
 <para>Specifies the recurrence type for the alarm. The permissible
 values are MINUTELY, DAILY, WEEKLY, MONTHLY_DAY, ANNUAL_DATE. These
-are defined in class KAlarmEvent in
+are defined in class KAEvent in
 <filename>alarmevent.h</filename>.</para>
 </listitem>
 </varlistentry>
@@ -2240,7 +2383,7 @@ should be displayed.</para>
 <term><parameter>flags</parameter></term>
 <listitem>
 <para>Specifies the logical OR of the desired alarm flags. The flag
-bits are those defined in class KAlarmEvent in
+bits are those defined in class KAEvent in
 <filename>alarmevent.h</filename></para>
 </listitem>
 </varlistentry>
@@ -2278,7 +2421,7 @@ month. For a non-recurring alarm, specify an empty string.</para>
 <listitem>
 <para>Specifies the recurrence type for the alarm. The permissible
 values are MINUTELY, DAILY, WEEKLY, MONTHLY_DAY, ANNUAL_DATE. These
-are defined in class KAlarmEvent in
+are defined in class KAEvent in
 <filename>alarmevent.h</filename>.</para>
 </listitem>
 </varlistentry>
@@ -2358,7 +2501,7 @@ should be executed.</para>
 <term><parameter>flags</parameter></term>
 <listitem>
 <para>Specifies the logical OR of the desired alarm flags. The flag
-bits are those defined in class KAlarmEvent in
+bits are those defined in class KAEvent in
 <filename>alarmevent.h</filename> except that the BEEP flag bit is
 ignored.</para>
 </listitem>
@@ -2380,7 +2523,7 @@ month. For a non-recurring alarm, specify an empty string.</para>
 <listitem>
 <para>Specifies the recurrence type for the alarm. The permissible
 values are MINUTELY, DAILY, WEEKLY, MONTHLY_DAY, ANNUAL_DATE. These
-are defined in class KAlarmEvent in
+are defined in class KAEvent in
 <filename>alarmevent.h</filename>.</para>
 </listitem>
 </varlistentry>
@@ -2482,7 +2625,7 @@ should be sent.</para>
 <term><parameter>flags</parameter></term>
 <listitem>
 <para>Specifies the logical OR of the desired alarm flags. The flag
-bits are those defined in class KAlarmEvent in
+bits are those defined in class KAEvent in
 <filename>alarmevent.h</filename></para>
 </listitem>
 </varlistentry>
@@ -2503,7 +2646,7 @@ month. For a non-recurring alarm, specify an empty string.</para>
 <listitem>
 <para>Specifies the recurrence type for the alarm. The permissible
 values are MINUTELY, DAILY, WEEKLY, MONTHLY_DAY, ANNUAL_DATE. These
-are defined in class KAlarmEvent in
+are defined in class KAEvent in
 <filename>alarmevent.h</filename>.</para>
 </listitem>
 </varlistentry>
@@ -2652,6 +2795,10 @@ overwriting your change.</para></note>
 <filename>$KDEHOME/share/apps/kalarm/expired.ics</filename>, unless
 a different calendar file is specified in the preferences file.</para>
 
+<para>The calendar file which stores your alarm templates is
+<filename>$KDEHOME/share/apps/kalarm/template.ics</filename>, unless
+a different calendar file is specified in the preferences file.</para>
+
 <para>Details of alarms currently being displayed are stored in the
 calendar file
 <filename>$KDEHOME/share/apps/kalarm/displaying.ics</filename>.</para>
@@ -2702,7 +2849,7 @@ previous to 3.1, there is a small application
 &kalarm;
 </para>
 <para>
-Program copyright 2001, 2002, 2003 David Jarvie <email>software@astrojar.org.uk</email>
+Program copyright 2001, 2002, 2003, 2004 David Jarvie <email>software@astrojar.org.uk</email>
 </para>
 <para>
 Alarm daemon authors:
@@ -2717,7 +2864,7 @@ Alarm daemon authors:
 </para>
 
 <para>
-Documentation copyright 2001, 2002, 2003 David Jarvie <email>software@astrojar.org.uk</email>
+Documentation copyright 2001, 2002, 2003, 2004 David Jarvie <email>software@astrojar.org.uk</email>
 </para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
