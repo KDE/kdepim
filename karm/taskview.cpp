@@ -61,7 +61,7 @@ TaskView::TaskView(QWidget *parent, const char *name):KListView(parent,name)
   _minuteTimer->start(1000 * secsPerMinute);
 
   // React when user changes iCalFile
-  connect(_preferences, SIGNAL(iCalFile(QString)), 
+  connect(_preferences, SIGNAL(iCalFile(QString)),
       this, SLOT(iCalFileChanged(QString)));
 
   // resize columns when config is changed
@@ -89,6 +89,10 @@ TaskView::TaskView(QWidget *parent, const char *name):KListView(parent,name)
   connect( _preferences, SIGNAL( autoSavePeriod(int) ),
            this, SLOT( autoSavePeriodChanged(int) ));
   connect( _autoSaveTimer, SIGNAL( timeout() ), this, SLOT( save() ));
+
+  // Setup manual save timer (to save changes a little while after they happen)
+  _manualSaveTimer = new QTimer(this);
+  connect( _manualSaveTimer, SIGNAL( timeout() ), this, SLOT( save() ));
 
   // Connect desktop tracker events to task starting/stopping
   _desktopTracker = new DesktopTracker();
@@ -137,7 +141,7 @@ void TaskView::load()
   // Register tasks with desktop tracker
   int task_idx = 0;
   for (Task* task = item_at_index(task_idx);
-      task; 
+      task;
       task = item_at_index(++task_idx))
   {
     _desktopTracker->registerForDesktops( task, task->getDesktops() );
@@ -153,7 +157,7 @@ void TaskView::loadFromFlatFile()
   kdDebug() << "TaskView::loadFromFlatFile()" << endl;
 
   //KFileDialog::getSaveFileName("icalout.ics",i18n("*.ics|ICalendars"),this);
-  
+
   QString fileName(KFileDialog::getOpenFileName(QString::null, QString::null,
         0));
   if (!fileName.isEmpty()) {
@@ -181,9 +185,19 @@ void TaskView::loadFromFlatFile()
   }
 }
 
+void TaskView::scheduleSave()
+{
+    _manualSaveTimer->start( 10, true /*single-shot*/ );
+}
+
 void TaskView::save()
 {
-
+    // DF: this code created a new event for the running task(s),
+    // at every call (very frequent with autosave) !!!
+    // -> if one wants autosave to save the current event, then
+    // Task needs to store the "current event" and we need to update
+    // it before calling save.
+#if 0
   // Stop then start all timers so history entries are written.  This is
   // inefficient if more than one task running, but it is correct.  It is
   // inefficient because the iCalendar file is saved every time a task's
@@ -191,7 +205,7 @@ void TaskView::save()
   // drag.  However, it does ensure that the data will be consistent.  And
   // if the most common use case is that one task is running most of the time,
   // it won't make any difference.
-  for (unsigned int i = 0; i < activeTasks.count(); i++) 
+  for (unsigned int i = 0; i < activeTasks.count(); i++)
   {
     activeTasks.at(i)->setRunning(false, _storage);
     activeTasks.at(i)->setRunning(true, _storage);
@@ -199,6 +213,7 @@ void TaskView::save()
 
   // If there was an active task, the iCal file has already been saved.
   if (activeTasks.count() == 0)
+#endif
   {
     _storage->save(this);
   }
@@ -449,20 +464,20 @@ void TaskView::deleteTask(bool markingascomplete)
       response = KMessageBox::warningYesNo( 0,
           i18n( "Are you sure you want to delete "
           "the task named\n\"%1\" and its entire history?")
-          .arg(task->name()), 
+          .arg(task->name()),
           i18n( "Deleting Task"));
     }
     else {
       response = KMessageBox::warningYesNo( 0,
           i18n( "Are you sure you want to delete the task named"
-          "\n\"%1\" and its entire history?\n" 
+          "\n\"%1\" and its entire history?\n"
           "NOTE: all its subtasks and their history will also "
           "be deleted!").arg(task->name()),
           i18n( "Deleting Task"));
     }
   }
 
-  if (response == KMessageBox::Yes) 
+  if (response == KMessageBox::Yes)
   {
     if (markingascomplete)
     {
@@ -514,9 +529,7 @@ void TaskView::extractTime(int minutes)
 void TaskView::autoSaveChanged(bool on)
 {
   if (on) {
-    if (!_autoSaveTimer->isActive()) {
-      _autoSaveTimer->start(_preferences->autoSavePeriod()*1000*secsPerMinute);
-    }
+    _autoSaveTimer->start(_preferences->autoSavePeriod()*1000*secsPerMinute);
   }
   else {
     if (_autoSaveTimer->isActive()) {
@@ -624,11 +637,12 @@ void TaskView::clipHistory()
 {
 
   PrintDialog *dialog = new PrintDialog();
-  if (dialog->exec()== QDialog::Accepted) 
+  if (dialog->exec()== QDialog::Accepted)
   {
     TimeKard *t = new TimeKard();
     KApplication::clipboard()->
       setText(t->historyAsText(this, dialog->from(), dialog->to()));
   }
 }
+
 #include "taskview.moc"

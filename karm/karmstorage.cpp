@@ -1,5 +1,5 @@
 /*
- *   This file only: 
+ *   This file only:
  *     Copyright (C) 2003  Mark Bucciarelli <mark@hubcapconsutling.com>
  *
  *   This program is free software; you can redistribute it and/or modify
@@ -13,9 +13,9 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License along
- *   with this program; if not, write to the 
+ *   with this program; if not, write to the
  *      Free Software Foundation, Inc.
- *      59 Temple Place - Suite 330 
+ *      59 Temple Place - Suite 330
  *      Boston, MA  02111-1307  USA.
  *
  */
@@ -121,7 +121,7 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
     kdDebug() << "KarmStorage::load "
       << "rawTodo count (includes completed todos) ="
       << todoList.count() << endl;
-    for( todo = todoList.begin(); todo != todoList.end(); ++todo ) 
+    for( todo = todoList.begin(); todo != todoList.end(); ++todo )
     {
       // Initially, if a task was complete, it was removed from the view.
       // However, this increased the complexity of reporting on task history.
@@ -143,7 +143,7 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
       Task* task = new Task(*todo, view);
       map.insert( (*todo)->uid(), task );
       view->setRootIsDecorated(true);
-      if ((*todo)->isCompleted()) 
+      if ((*todo)->isCompleted())
       {
         task->setEnabled(false);
         task->setOpen(false);
@@ -154,17 +154,17 @@ QString KarmStorage::load(TaskView* view, const Preferences* preferences)
     }
 
     // Load each task under it's parent task.
-    for( todo = todoList.begin(); todo != todoList.end(); ++todo ) 
+    for( todo = todoList.begin(); todo != todoList.end(); ++todo )
     {
       Task* task = map.find( (*todo)->uid() );
 
       // No relatedTo incident just means this is a top-level task.
-      if ( (*todo)->relatedTo() ) 
+      if ( (*todo)->relatedTo() )
       {
         Task* newParent = map.find( (*todo)->relatedToUid() );
 
-        // Complete the loading but return a message 
-        if ( !newParent ) 
+        // Complete the loading but return a message
+        if ( !newParent )
           err = i18n("Error loading \"%1\": could not find parent (uid=%2)")
             .arg(task->name())
             .arg((*todo)->relatedToUid());
@@ -185,15 +185,15 @@ void KarmStorage::save(TaskView* taskview)
 {
   QPtrStack< KCal::Todo > parents;
 
-  for (Task* task=taskview->first_child(); task; task = task->nextSibling()) 
+  for (Task* task=taskview->first_child(); task; task = task->nextSibling())
   {
     writeTaskAsTodo(task, 1, parents );
   }
 
   _calendar.save(_icalfile);
 
-  kdDebug() 
-    << "KarmStorage::save : wrote " 
+  kdDebug()
+    << "KarmStorage::save : wrote "
     << taskview->count() << " tasks to " << _icalfile << endl;
 }
 
@@ -206,13 +206,13 @@ void KarmStorage::writeTaskAsTodo(Task* task, const int level,
   todo = _calendar.todo(task->uid());
   task->asTodo(todo);
 
-  if ( !parents.isEmpty() ) 
+  if ( !parents.isEmpty() )
     todo->setRelatedTo( parents.top() );
 
   parents.push( todo );
 
   for (Task* nextTask = task->firstChild(); nextTask;
-      nextTask = nextTask->nextSibling() ) 
+      nextTask = nextTask->nextSibling() )
   {
     writeTaskAsTodo(nextTask, level+1, parents );
   }
@@ -246,7 +246,7 @@ QString KarmStorage::loadFromFlatFile(TaskView* taskview,
 {
   QString err;
 
-  kdDebug() 
+  kdDebug()
     << "KarmStorage::loadFromFlatFile: " << filename << endl;
 
   QFile f(filename);
@@ -293,7 +293,7 @@ QString KarmStorage::loadFromFlatFile(TaskView* taskview,
       }
 
       if (level == 1) {
-        kdDebug() << "KarmStorage::loadFromFlatFile - toplevel task: " 
+        kdDebug() << "KarmStorage::loadFromFlatFile - toplevel task: "
           << name << " min: " << minutes << "\n";
         task = new Task(name, minutes, 0, desktopList, taskview);
         task->setUid(addTask(task, 0));
@@ -331,7 +331,7 @@ QString KarmStorage::loadFromFlatFileCumulative(TaskView* taskview,
   if (!err)
   {
     for (Task* task = taskview->first_child(); task;
-        task = task->nextSibling()) 
+        task = task->nextSibling())
     {
       adjustFromLegacyFileFormat(task);
     }
@@ -459,22 +459,22 @@ bool KarmStorage::removeTask(Task* task)
 
   // delete history
   KCal::Event::List eventList = _calendar.rawEvents();
-  for(KCal::Event::List::iterator i = eventList.begin(); 
-      i != eventList.end(); 
-      ++i) 
+  for(KCal::Event::List::iterator i = eventList.begin();
+      i != eventList.end();
+      ++i)
   {
     //kdDebug() << "KarmStorage::removeTask: "
-    //  << (*i)->uid() << " - relatedToUid() " 
+    //  << (*i)->uid() << " - relatedToUid() "
     //  << (*i)->relatedToUid()
     //  << ", relatedTo() = " << (*i)->relatedTo() <<endl;
     if ( (*i)->relatedToUid() == task->uid()
-        || ( (*i)->relatedTo() 
+        || ( (*i)->relatedTo()
             && (*i)->relatedTo()->uid() == task->uid()))
     {
       _calendar.deleteEvent(*i);
     }
   }
-  
+
   // delete todo
   KCal::Todo *todo = _calendar.todo(task->uid());
   _calendar.deleteTodo(todo);
@@ -497,11 +497,11 @@ void KarmStorage::addComment(const Task* task, const QString& comment)
 
   // Need to wait until my libkcal-comment patch is applied for this ...
   //todo->addComment(comment);
-  
+
 
   // temporary
   todo->setDescription(task->comment());
-  
+
   _calendar.save(_icalfile);
 }
 
@@ -516,10 +516,10 @@ void KarmStorage::changeTime(const Task* task, const long deltaSeconds)
 
   KCal::Event* e;
   QDateTime end;
-  
+
   e = baseEvent(task);
 
-  // Don't use duration, as ICalFormatImpl::writeIncidence never writes a 
+  // Don't use duration, as ICalFormatImpl::writeIncidence never writes a
   // duration, even though it looks like it's used in event.cpp.
   end = task->startTime();
   if (deltaSeconds > 0)
@@ -528,24 +528,28 @@ void KarmStorage::changeTime(const Task* task, const long deltaSeconds)
 
   // Use a custom property to keep a record of negative durations
   e->setCustomProperty( kapp->instanceName(),
-      QCString("duration"), 
+      QCString("duration"),
       QString::number(deltaSeconds));
 
   _calendar.addEvent(e);
-  
+
   // This saves the entire iCal file each time, which isn't efficient but
   // ensures no data loss.  A faster implementation would be to append events
   // to a file, and then when KArm closes, append the data in this file to the
   // iCal file.
-  _calendar.save(_icalfile); 
+  //_calendar.save(_icalfile);
+  // Meanwhile, we simply use a timer to delay the full-saving until the GUI
+  // has updated, for better user feedback. Feel free to get rid of this if/when
+  // implementing the faster saving (DF).
+  task->taskView()->scheduleSave();
 }
-  
+
 
 KCal::Event* KarmStorage::baseEvent(const Task * task)
 {
   KCal::Event* e;
   QStringList categories;
-  
+
   e = new KCal::Event;
   e->setSummary(task->name());
 
@@ -554,7 +558,7 @@ KCal::Event* KarmStorage::baseEvent(const Task * task)
 
   // Debugging: some events where not getting a related-to field written.
   assert(e->relatedTo()->uid() == task->uid());
-  
+
   // Have to turn this off to get datetimes in date fields.
   e->setFloats(false);
   e->setDtStart(task->startTime());
@@ -566,7 +570,7 @@ KCal::Event* KarmStorage::baseEvent(const Task * task)
   return e;
 }
 
-HistoryEvent::HistoryEvent(QString uid, QString name, long duration, 
+HistoryEvent::HistoryEvent(QString uid, QString name, long duration,
         QDateTime start, QDateTime stop, QString todoUid)
 {
   _uid = uid;
@@ -592,7 +596,7 @@ QValueList<HistoryEvent> KarmStorage::getHistory(const QDate& from,
     events = _calendar.rawEventsForDate(d);
     for (event = events.begin(); event != events.end(); ++event)
     {
-      
+
       // KArm events have the custom property X-KDE-Karm-duration
       if (! processed.contains( (*event)->uid()))
       {
@@ -603,7 +607,7 @@ QValueList<HistoryEvent> KarmStorage::getHistory(const QDate& from,
         // an easy fix for a (hopefully) rare situation.
         processed.append( (*event)->uid());
 
-        duration = (*event)->customProperty(kapp->instanceName(), 
+        duration = (*event)->customProperty(kapp->instanceName(),
             QCString("duration"));
         if ( ! duration.isNull() )
         {
@@ -612,7 +616,7 @@ QValueList<HistoryEvent> KarmStorage::getHistory(const QDate& from,
           {
             retval.append(HistoryEvent(
                 (*event)->uid(),
-                (*event)->summary(), 
+                (*event)->summary(),
                 duration.toLong(),
                 (*event)->dtStart(),
                 (*event)->dtEnd(),
@@ -624,7 +628,7 @@ QValueList<HistoryEvent> KarmStorage::getHistory(const QDate& from,
             // does not have a todo related to it.  Could have been deleted
             // manually?  We'll continue with report on with report ...
             kdDebug() << "KarmStorage::getHistory(): "
-              << "The event " << (*event)->uid() 
+              << "The event " << (*event)->uid()
               << " is not related to a todo.  Dropped." << endl;
         }
       }
@@ -635,7 +639,7 @@ QValueList<HistoryEvent> KarmStorage::getHistory(const QDate& from,
 }
 
 /*
- * Obsolete methods for writing to flat file format.  
+ * Obsolete methods for writing to flat file format.
  * Aug 8, 2003, Mark
  *
 void KarmStorage::saveToFileFormat()

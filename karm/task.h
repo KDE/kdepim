@@ -56,6 +56,11 @@ class Task : public QObject, public QListViewItem
     Task* nextSibling() const { return (Task*)QListViewItem::nextSibling(); }
     Task* parent() const      { return (Task*)QListViewItem::parent(); }
 
+    /** Return task view for this task */
+    TaskView* taskView() const {
+        return static_cast<TaskView *>( listView() );
+    }
+
     /** Return unique iCalendar Todo ID for this task. */
     QString uid() const       { return _uid; }
 

@@ -9,6 +9,7 @@
 
 #include "desktoplist.h"
 #include "karmstorage.h"
+#include <qtimer.h>
 //#include "desktoptracker.h"
 
 //#include "karmutility.h"
@@ -65,6 +66,9 @@ class TaskView : public KListView
     QValueList<HistoryEvent> getHistory(const QDate& from, const QDate& to)
       const;
 
+    /** Schedule that we should save very soon */
+    void scheduleSave();
+
   public slots:
     /** Save to persistent storage. */
     void save();
@@ -96,18 +100,18 @@ class TaskView : public KListView
     void editTask();
 
     /**
-     * Delete task (and children) from view.  
+     * Delete task (and children) from view.
      *
      * @param markingascomplete  If false (the default), deletes history for
      * current task and all children.  If markingascomplete is true, then sets
      * percent complete to 100 and removes task and all it's children from the
-     * list view.  
+     * list view.
      */
     void deleteTask(bool markingascomplete=false);
 //    void addCommentToTask();
     void markTaskAsComplete();
 
-    /** Subtracts time from all active tasks, and does not log event. */ 
+    /** Subtracts time from all active tasks, and does not log event. */
     void extractTime( int minutes );
     void taskTotalTimesChanged( long session, long total)
                                 { emit totalTimesChanged( session, total); };
@@ -137,6 +141,7 @@ class TaskView : public KListView
     IdleTimeDetector *_idleTimeDetector;
     QTimer *_minuteTimer;
     QTimer *_autoSaveTimer;
+    QTimer *_manualSaveTimer;
     Preferences *_preferences;
     QPtrList<Task> activeTasks;
     int previousColumnWidths[4];
@@ -148,7 +153,7 @@ class TaskView : public KListView
   private:
     void updateParents( Task* task, long totalDiff, long sesssionDiff);
     void deleteChildTasks( Task *item );
-    void addTimeToActiveTasks( int minutes, bool do_logging); 
+    void addTimeToActiveTasks( int minutes, bool do_logging);
 
   protected slots:
     void autoSaveChanged( bool );
