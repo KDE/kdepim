@@ -62,7 +62,7 @@ binary-arch: build
 	dh_movefiles -pabbrowser usr/share/apps/abbrowser/* \
 		usr/share/icons/hicolor/32x32/apps/abbrowser.png \
 		usr/share/icons/locolor/16x16/apps/abbrowser.png \
-		etc/kde2/applnk/Utilities/abbrowser.desktop \
+		usr/share/applnk/Utilities/abbrowser.desktop \
 		usr/share/man/man1/abbrowser* \
 		usr/bin/abbrowser
 	dh_movefiles -pkorganizer usr/bin/* usr/share/apps/korganizer/* \
@@ -70,7 +70,7 @@ binary-arch: build
 		usr/share/icons/hicolor/48x48/apps/korganizer.png \
 		usr/share/icons/locolor/16x16/apps/korganizer.png \
 		usr/share/icons/locolor/32x32/apps/korganizer.png \
-		etc/kde2/applnk/Applications/korganizer.desktop \
+		usr/share/applnk/Applications/korganizer.desktop \
 		usr/share/doc/korganizer/* etc/kde2/korganizerrc \
 		usr/share/man/man1/korganizer* usr/lib/*korganizer* \
 		usr/share/man/man1/alarmd* \
