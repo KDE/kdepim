@@ -7,6 +7,14 @@
 ### $Id$
 ###
 
+
+### Uncomment the next two lines if you have the KHE::KHexEdit widget
+### and want to use it in the generic DB editor. Otherwise a dummy widget
+### will be shown instead
+# KHEX_LIB = -lkhexedit
+# KDE_CXXFLAGS = -DUSE_KHEXEDIT
+
+
 SUBDIRS = Icons
 
 ### Fairly large changes to allow enable final and make life easier for
@@ -74,14 +82,10 @@ kpilotDaemon_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kpilotTest_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 kpilotConfig_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
-## if USE_KHEXEDIT
-## KHEX_LIB =  -lkhexedit
-## endif
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
-## kpilot_LDADD		= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la -lkhexedit
-kpilot_LDADD		= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
+kpilot_LDADD		= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la $(KHEX_LIB)
 kpilotDaemon_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
 kpilotTest_LDADD	= $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
 kpilotConfig_LDADD      = $(LIB_KFILE) $(PISOCK_LIB) ../lib/libkpilot.la
