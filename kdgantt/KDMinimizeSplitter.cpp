@@ -492,7 +492,7 @@ QSplitterLayoutStruct *KDMinimizeSplitter::addWidget( QWidget *w, bool first )
     if ( data->list.count() > 0 ) {
 	s = new QSplitterLayoutStruct;
 	s->mode = KeepSize;
-	QString tmp = "qt_splithandle_";
+	QCString tmp = "qt_splithandle_";
 	tmp += w->name();
 	newHandle = new KDSplitterHandle( orientation(), this, tmp );
 	s->wid = newHandle;
