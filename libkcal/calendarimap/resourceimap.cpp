@@ -1,8 +1,8 @@
 /*
     This file is part of libkcal.
-    Copyright (c) 1998 Preston Brown
-    Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
+
     Copyright (c) 2003 Steffen Hansen <steffen@klaralvdalens-datakonsult.se>
+    Copyright (c) 2003 Bo Thorsen <bo@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -81,16 +81,13 @@ void ResourceIMAP::writeConfig( KConfig* config )
 
 void ResourceIMAP::init()
 {
-  // kdDebug() << "ResourceIMAP::init()" << endl;
+  kdDebug(5800) << "ResourceIMAP::init()" << endl;
 
   mSilent = false;
 
   mDCOPClient = new DCOPClient();
   mDCOPClient->attach();
   mDCOPClient->registerAs( "resourceimap", true );
-
-  // TODO: Make sure KMail is running!
-  connectToKMail();
 }
 
 
@@ -104,22 +101,6 @@ ResourceIMAP::~ResourceIMAP()
 
 QStringList ResourceIMAP::getIncidenceList( const QString& type )
 {
-#if 0
-  QByteArray data;
-  QDataStream arg(data, IO_WriteOnly);
-  arg << type;
-  QCString replyType = "QStringList";
-  QByteArray reply;
-  if( !mDCOPClient->call( "kmail", "KMailICalIface", "incidences(QString)",
-			  data, replyType, reply ) || replyType != "QStringList" ) {
-    kdError() << "DCOP error during incidences(QString)" << endl;
-  }
-  QStringList lst;
-  QDataStream ret(reply, IO_ReadOnly);
-  ret >> lst;
-  return lst;
-#endif
-
   if( !connectToKMail() ) {
     kdError() << "DCOP error during incidences(QString)\n";
     return QStringList();
@@ -142,7 +123,7 @@ bool ResourceIMAP::doOpen()
 
 bool ResourceIMAP::load()
 {
-  // kdDebug(5800) << "Loading resource " << resourceName() << " on " << mServer << endl;
+  kdDebug(5800) << "Loading resource " << resourceName() << " on " << mServer << endl;
 
   // TODO: complete this for other incidence types
   return loadAllEvents() & loadAllTasks();
@@ -204,27 +185,6 @@ bool ResourceIMAP::addEvent(Event *anEvent)
   if( mSilent ) return true;
 
   // Call kmail ...
-#if 0
-  QByteArray data;
-  QDataStream arg(data, IO_WriteOnly);
-  arg << QString::fromLatin1("Calendar");
-  arg << anEvent->uid();
-
-  // Kind of strange way to store the event
-  // but it seems to work, and should be compatible
-  // with kroupware_branch
-  arg << mFormat.createScheduleMessage( anEvent, Scheduler::Request );
-  //arg << mFormat.toString(anEvent);
-  mCurrentUID = anEvent->uid();
-  QCString replyType;
-  QByteArray replyData;
-  if( !mDCOPClient->call( "kmail", "KMailICalIface", "addIncidence(QString,QString,QString)",
-			  data, replyType, replyData )) {
-    kdError() << "DCOP error during addIncidence(QString)" << endl;
-  }
-  mCurrentUID = QString::null;
-#endif
-
   if( !connectToKMail() ) {
     kdError() << "DCOP error during addIncidence(QString)\n";
     return false;
@@ -250,20 +210,6 @@ void ResourceIMAP::deleteEvent(Event *event)
 
   // Call kmail ...
   if( !mSilent ) {
-#if 0
-    QByteArray data;
-    QDataStream arg(data, IO_WriteOnly);
-    arg << QString::fromLatin1("Calendar");
-    arg << event->uid();
-    mCurrentUID = event->uid();
-    QCString replyType;
-    QByteArray replyData;
-    if( !mDCOPClient->call( "kmail", "KMailICalIface", "deleteIncidence(QString,QString)",
-			    data, replyType, replyData )) {
-      kdError() << "DCOP error during deleteIncidence(QString)" << endl;
-    }
-#endif
-
     if( !connectToKMail() ) {
       kdError() << "DCOP error during deleteIncidence(QString)\n";
     } else {
@@ -321,28 +267,6 @@ bool ResourceIMAP::addTodo(Todo *todo)
 
   if( mSilent ) return true;
 
-#if 0
-  // call kmail ..
-  QByteArray data;
-  QDataStream arg(data, IO_WriteOnly);
-  arg << QString::fromLatin1("Task");
-  arg << todo->uid();
-
-  // Kind of strange way to store the event
-  // but it seems to work, and should be compatible
-  // with kroupware_branch
-  arg << mFormat.createScheduleMessage( todo, Scheduler::Request );
-  //arg << mFormat.toString(todo);
-  mCurrentUID = todo->uid();
-  QCString replyType;
-  QByteArray replyData;
-  if( !mDCOPClient->call( "kmail", "KMailICalIface", "addIncidence(QString,QString,QString)",
-			  data, replyType, replyData )) {
-    kdError() << "DCOP error during addIncidence(QString)" << endl;
-  }
-  mCurrentUID = QString::null;
-#endif
-
   if( !connectToKMail() ) {
     kdError() << "DCOP error during addTodo(QString)\n";
     return false;
@@ -365,21 +289,6 @@ void ResourceIMAP::deleteTodo(Todo *todo)
 {
   // call kmail ...
   if( !mSilent ) {
-#if 0
-    QByteArray data;
-    QDataStream arg(data, IO_WriteOnly);
-    arg << QString::fromLatin1("Task");
-    arg << todo->uid();
-    QCString replyType;
-    QByteArray replyData;
-    mCurrentUID = todo->uid();
-    if( !mDCOPClient->call( "kmail", "KMailICalIface", "deleteIncidence(QString,QString)",
-			    data, replyType, replyData )) {
-      kdError() << "DCOP error during deleteIncidence(QString)" << endl;
-    }
-    mCurrentUID = QString::null;
-#endif
-
     if( !connectToKMail() ) {
       kdError() << "DCOP error during deleteTodo(QString)\n";
     } else {
