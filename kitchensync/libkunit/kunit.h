@@ -16,25 +16,38 @@
     Boston, MA 02111-1307, USA.
 
 */
-#ifndef kdevice_h
-#define kdevice_h
 
+#ifndef kunit_h
+#define kunit_h
+
+#include <qobject.h>
+#include <qvaluelist.h>
 #include <qstring.h>
+#include <qcstring.h>
 
-class KDevice {
+class Kapabilities;
+class KDevice;
+class KUnit : public QObject{
+Q_OBJECT
  public:
-  KDevice(const QString &ident, const QString &group,
-	  const QString &vendor);
-  KDevice( const KDevice & );
-  ~KDevice();
-  QString identify() const;
-  QString group() const;
-  QString vendor() const;
-  KDevice &operator=(const KDevice & );
+  KUnit(QObject *, const char*);
+  QValueList<KDevice> query(const QString &category= QString::null );
+  int /*unique-dev-id*/ register(const QString &DeviceIdentification );
+  Kapabilities capabilities( int udi ) const;
+  void setConfig( int udi, const Kapabilities& );
+  QByteArray file( int udi );
+
+ public slots:
+  void write(int udi, QValueList<KSyncEntries> );
+  void write(int udi, QValueList<KOperations> );
+  void write(int udi, const QString &dest, const QByteArray& );
+ signals:
+  void wantsToSync(int udi, int way, QValueList<SyncEntries> );
 
  private:
-  class KDevicePrivate;
-  KDevicePrivate *d;
+  class KUnitPrivate;
+  KUnitPrivate *d; 
+
 };
 
 #endif

@@ -16,25 +16,26 @@
     Boston, MA 02111-1307, USA.
 
 */
-#ifndef kdevice_h
-#define kdevice_h
+
+#ifndef kapabilities_h
+#define kapabilities_h
 
 #include <qstring.h>
+#include <qstringlist.h>
 
-class KDevice {
+class Kapabilities {
  public:
-  KDevice(const QString &ident, const QString &group,
-	  const QString &vendor);
-  KDevice( const KDevice & );
-  ~KDevice();
-  QString identify() const;
-  QString group() const;
-  QString vendor() const;
-  KDevice &operator=(const KDevice & );
+  Kapabilities();
+  QStringList supportedProtocols( ) const;
+  int useProtocol( const QString & );
+  bool supportsSignaling() const;
+  bool needsConnection() const;
+  bool supportsListDir() const;
+  Kapabilities &operator=(const Kapabilities & );
 
  private:
-  class KDevicePrivate;
-  KDevicePrivate *d;
-};
+  class KapabilitiesPrivate;
+  KapabilitiesPrivate *d;
 
+};
 #endif
