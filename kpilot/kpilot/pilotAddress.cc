@@ -43,10 +43,21 @@ const int PilotAddress::APP_BUFFER_SIZE = 0xffff;
 
 PilotAddress::PilotAddress(const struct AddressAppInfo &appInfo,
 			   PilotRecord* rec)
-      : PilotAppCategory(rec), fAppInfo(appInfo)
+      : PilotAppCategory(rec), fAppInfo(appInfo), fAddressInfo()
     {
     unpack_Address(&fAddressInfo, (unsigned char*)rec->getData(), rec->getLen());
     (void)pilotadress_id;
+    }
+
+PilotAddress::PilotAddress(const struct AddressAppInfo &appInfo) :
+      PilotAppCategory(), fAppInfo(appInfo)
+    {
+    reset();
+    }
+
+PilotAddress::~PilotAddress()
+    {
+    free_Address(&fAddressInfo);
     }
 
 QString PilotAddress::_typeToStr(EPhoneType type) const
@@ -81,9 +92,13 @@ int PilotAddress::_getNextEmptyPhoneSlot() const
 void PilotAddress::setPhoneField(EPhoneType type, const char *field,
 				 bool overflowCustom)
     {
-    int fieldSlot = _getNextEmptyPhoneSlot();
+    // first look to see if the type is already assigned to a fieldSlot
     QString fieldStr(field);
     QString typeStr(_typeToStr(type));
+    int appPhoneLabelNum = _getAppPhoneLabelNum(typeStr);
+    int fieldSlot = _findPhoneFieldSlot(appPhoneLabelNum);
+    if (fieldSlot == -1)
+	fieldSlot = _getNextEmptyPhoneSlot();
     
     // store the overflow phone
     if (fieldSlot == entryCustom4)
@@ -98,8 +113,17 @@ void PilotAddress::setPhoneField(EPhoneType type, const char *field,
     else // phone field 1 - 5; straight forward storage
 	{
 	setField(fieldSlot, field);
-	fAddressInfo.phoneLabel[fieldSlot] = _getAppPhoneLabelNum(typeStr);
+	int labelIndex = fieldSlot - entryPhone1;
+	fAddressInfo.phoneLabel[labelIndex] = appPhoneLabelNum;
 	}
+    }
+
+int PilotAddress::_findPhoneFieldSlot(int appTypeNum) const
+    {
+    for (int index=0;index < 5;index++)
+	if (fAddressInfo.phoneLabel[index] == appTypeNum)
+	    return index+entryPhone1;
+    return -1;
     }
 
 const char *PilotAddress::getPhoneField(EPhoneType type,
@@ -108,9 +132,9 @@ const char *PilotAddress::getPhoneField(EPhoneType type,
     // given the type, need to find which slot is associated with it
     QString typeToStr(_typeToStr(type));
     int appTypeNum = _getAppPhoneLabelNum(typeToStr);
-    for (int index=0;index < 5;index++)
-	if (fAddressInfo.phoneLabel[index] == appTypeNum)
-	    return getField(index+entryPhone1);
+    int fieldSlot = _findPhoneFieldSlot(appTypeNum); 
+    if (fieldSlot != -1)
+	return getField(fieldSlot);
 
     // look through custom 4 for the field
     if (!checkCustom4)
@@ -173,6 +197,9 @@ PilotAddress::pack(void *buf, int *len)
     }
 
 // $Log$
+// Revision 1.12  2001/03/29 21:40:55  stern
+// Added APP_BUFFER_SIZE to pilotAddress
+//
 // Revision 1.11  2001/03/19 23:12:39  stern
 // Made changes necessary for upcoming abbrowser conduit.
 //

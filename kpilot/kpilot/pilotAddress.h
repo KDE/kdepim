@@ -68,11 +68,9 @@
 class PilotAddress : public PilotAppCategory
     {
     public:
-      PilotAddress(const struct AddressAppInfo &appInfo) : PilotAppCategory(),
-							   fAppInfo(appInfo)
-            { reset(); }
+      PilotAddress(const struct AddressAppInfo &appInfo);
       PilotAddress(const struct AddressAppInfo &appInfo, PilotRecord* rec);
-      ~PilotAddress() { free_Address(&fAddressInfo); }
+      ~PilotAddress();
 
       /** Zeros the internal address info structure, in effect clearing
        *  out all prior set values
@@ -131,6 +129,10 @@ class PilotAddress : public PilotAppCategory
        *  to the phoneType; do O(n) search though the phoneLabels array
        */
       int _getAppPhoneLabelNum(const QString &phoneType) const;
+      /** @return entryPhone1 to entryPhone5 if the appTypeNum number is
+       *  found in the phoneLabel array; return -1 if not found
+       */
+      int _findPhoneFieldSlot(int appTypeNum) const;
       
 //     int fSize;
       const struct AddressAppInfo &fAppInfo;
@@ -146,6 +148,9 @@ class PilotAddress : public PilotAppCategory
 
 
 // $Log$
+// Revision 1.9  2001/03/29 21:40:55  stern
+// Added APP_BUFFER_SIZE to pilotAddress
+//
 // Revision 1.8  2001/03/19 23:12:39  stern
 // Made changes necessary for upcoming abbrowser conduit.
 //
