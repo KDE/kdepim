@@ -49,6 +49,8 @@ protected slots:
 
   void changeBackground(const QColor& color);
   
+protected:
+
   xQGanttBarView* _barview;
 
 };
