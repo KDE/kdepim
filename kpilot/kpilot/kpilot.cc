@@ -810,7 +810,7 @@ int main(int argc, char **argv)
 
 	KAboutData about("kpilot", I18N_NOOP("KPilot"),
 		KPILOT_VERSION,
-		"KPilot - Hot-sync software for unix\n\n",
+		"KPilot - HotSync software for KDE\n\n",
 		KAboutData::License_GPL, "(c) 1998-2000,2001, Dan Pilone");
 	about.addAuthor("Dan Pilone",
 		I18N_NOOP("Project Leader"),
@@ -944,6 +944,11 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.84  2003/01/18 00:30:18  kainhofe
+// Removed the Log: tags from the conduits I maintain.
+// Cleanup of the includes.
+// Started implementing the other field sync of the addressbookconduit. Still have trouble converting a string to a QDate using a custom format
+//
 // Revision 1.83  2002/12/24 11:26:28  adridg
 // Forgot that moc can't handle #ifdef
 //
