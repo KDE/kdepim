@@ -110,6 +110,11 @@ Ticket * ResourceIMAP::requestSaveTicket()
     return createTicket( this );
 }
 
+void ResourceIMAP::releaseSaveTicket( Ticket* )
+{
+  kdDebug() << "NYI: void ResourceIMAP::releaseSaveTicket( Ticket* )\n";
+}
+
 bool ResourceIMAP::load()
 {
   KTempFile tempFile( QString::null, ".vcf" );
@@ -187,6 +192,18 @@ bool ResourceIMAP::save( Ticket* )
   bool ok2;
   argIn2 >> ok2;
   return ( ok2 && ok );
+}
+
+bool ResourceIMAP::asyncLoad()
+{
+  kdDebug() << "NYI: bool ResourceIMAP::asyncLoad()\n";
+  return false;
+}
+
+bool ResourceIMAP::asyncSave( Ticket *ticket ) {
+  Q_UNUSED( ticket );
+  kdDebug() << "NYI: bool ResourceIMAP::asyncSave( Ticket *ticket )\n";
+  return false;
 }
 
 void ResourceIMAP::removeAddressee( const Addressee& addr )

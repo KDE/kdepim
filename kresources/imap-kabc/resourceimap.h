@@ -68,9 +68,24 @@ public:
   virtual Ticket *requestSaveTicket();
 
   /**
+     Releases the ticket previousely requested with requestSaveTicket().
+     The resource has to remove its locks in this function.
+  */
+  virtual void releaseSaveTicket( Ticket* );
+
+  /**
    * Load all addressees to the addressbook
    */
   virtual bool load();
+
+  /**
+     Loads all addressees asyncronously. You have to make sure that either
+     the loadingFinished() or loadingError() signal is emitted from within
+     this function.
+
+     @return Whether the synchronous part of loading was successfully.
+  */
+  virtual bool asyncLoad();
 
   /**
    * Save all addressees to the addressbook.
@@ -78,6 +93,17 @@ public:
    * @param ticket The ticket you get by requestSaveTicket()
    */
   virtual bool save( Ticket *ticket );
+
+  /**
+     Saves all addressees asynchronously. You have to make sure that either
+     the savingFinished() or savingError() signal is emitted from within
+     this function.
+
+     @param ticket You have to release the ticket later with
+     releaseSaveTicket() explicitely.
+     @return Whether the saving was successfully.
+  */
+  virtual bool asyncSave( Ticket *ticket );
 
   /**
    * Removes a addressee from resource. This method is mainly
