@@ -630,6 +630,9 @@ CardView::CardView(QWidget *parent, const char *name)
   connect( d->mTimer, SIGNAL(timeout()), this, SLOT(tryShowFullText()) );
 
   setBackgroundMode(PaletteBackground, PaletteBase);
+
+  // no reason for a vertical scrollbar
+  setVScrollBarMode(AlwaysOff);
 }
 
 CardView::~CardView()
