@@ -512,6 +512,7 @@ void ViewManager::incSearch( const QString& text )
   if ( !text.isEmpty() ) {
     KABC::Field *field = mIncSearchWidget->currentField();
 
+#if KDE_VERSION >= 319
     KABC::AddresseeList list( mAddressBook->allAddressees() );
     list.sortByField( field );
 
@@ -522,6 +523,15 @@ void ViewManager::incSearch( const QString& text )
         return;
       }
     }
+#else
+    KABC::AddressBook::Iterator it;
+    for ( it = mAddressBook->begin(); it != mAddressBook->end(); ++it ) {
+      if ( field->value( *it ).startsWith( text ) ) {
+        mActiveView->setSelected( (*it).uid(), true );
+        return;
+      }
+    }
+#endif
   }
 }
 

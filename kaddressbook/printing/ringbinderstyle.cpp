@@ -167,7 +167,11 @@ bool RingBinderPrintStyle::printEntries( KABC::Addressee::List &contacts,
 
   // FIXME: downcast should not be necessary, change printstyle interface
   KABC::AddresseeList * tmpl = ( KABC::AddresseeList* ) & contacts;
+#if KDE_VERSION >= 319
   KABC::Field* sfield = tmpl->sortingField();
+#else
+  KABC::Field* sfield = *(KABC::Field::defaultFields().begin());
+#endif
  
   // we now collect the letter groups. For reverse sorted address books we
   // reverse the sorting of the groups:
@@ -350,8 +354,14 @@ bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact
         //   painter->drawText(5, top + (linenum*fmnorm.lineSpacing()) 
         //                            - fmnorm.leading(), (*it).typeLabel());
         painter->setFont( normfont );
+        QString formattedAddress;
+#if KDE_VERSION >= 319
+        formattedAddress = (*it).formattedAddress();
+#else
+        formattedAddress = (*it).label();
+#endif
         QStringList laddr = QStringList::split( QChar( '\n' ), 
-                                                ( *it ).formattedAddress() );
+                                                formattedAddress );
         for ( QStringList::iterator it = laddr.begin(); it != laddr.end(); ++it ) {
           linenum++;
           if ( !fake ) {

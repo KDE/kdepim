@@ -33,6 +33,7 @@
 #include <khtml_part.h>
 #include <khtmlview.h>
 #include <klocale.h>
+#include <kdeversion.h>
 
 #include <kabc/addressbook.h>
 
@@ -134,11 +135,19 @@ QString LocationWidget::createUrl( const KABC::Address &addr )
 
   QString map24Template = "http://map24.de/map24/index.php3?street0=%s&zip0=%z&city0=%l&country0=%c&force_maptype=RELOAD";
 
+#if KDE_VERSION >= 319
   return map24Template.replace( "%s", addr.street() ).
                        replace( "%r", addr.region() ).
                        replace( "%l", addr.locality() ).
                        replace( "%z", addr.postalCode() ).
                        replace( "%c", addr.countryToISO( addr.street() ) );
+#else
+  return map24Template.replace( "%s", addr.street() ).
+                       replace( "%r", addr.region() ).
+                       replace( "%l", addr.locality() ).
+                       replace( "%z", addr.postalCode() ).
+                       replace( "%c", "" );
+#endif
 }
 
 #include "locationwidget.moc"

@@ -153,12 +153,35 @@ void AddressEditWidget::updateAddressEdit()
   if ( it != mAddressList.end() ) {
     KABC::Address a = *it;
     if ( !a.isEmpty() ) {
+#if KDE_VERSION >= 319
       if ( a.type() & KABC::Address::Work ) {
         mAddressTextEdit->setText( a.formattedAddress( mAddressee.realName(),
                                    mAddressee.organization() ) );
       } else {
         mAddressTextEdit->setText( a.formattedAddress( mAddressee.realName() ) );
       }
+#else
+      QString text;
+      if ( !a.street().isEmpty() )
+        text += a.street() + "\n";
+
+      if ( !a.postOfficeBox().isEmpty() )
+        text += a.postOfficeBox() + "\n";
+
+      text += a.locality() + QString(" ") + a.region();
+
+      if ( !a.postalCode().isEmpty() )
+        text += QString(", ") + a.postalCode();
+
+      text += "\n";
+
+      if ( !a.country().isEmpty() )
+        text += a.country() + "\n";
+
+      text += a.extended();
+
+      mAddressTextEdit->setText( text );      
+#endif
     }
   }
 
