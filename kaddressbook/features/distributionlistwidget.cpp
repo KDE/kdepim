@@ -132,8 +132,8 @@ DistributionListWidget::DistributionListWidget( ViewManager *vm, QWidget *parent
   topLayout->addMultiCellWidget( mContactView, 1, 1, 0, 3 );
   connect( mContactView, SIGNAL( selectionChanged() ),
            SLOT( selectionContactViewChanged() ) );
-  connect( mContactView, SIGNAL( dropped( QDropEvent* ) ),
-           SLOT( dropped( QDropEvent* ) ) );
+  connect( mContactView, SIGNAL( dropped( QDropEvent*, QListViewItem* ) ),
+           SLOT( dropped( QDropEvent*, QListViewItem* ) ) );
 
   mAddContactButton = new QPushButton( i18n( "Add Contact" ), this );
   mAddContactButton->setEnabled( false );
@@ -361,7 +361,7 @@ QString DistributionListWidget::identifier() const
   return "distribution_list_editor";
 }
 
-void DistributionListWidget::dropped( QDropEvent *e )
+void DistributionListWidget::dropped( QDropEvent *e, QListViewItem* )
 {
   dropEvent( e );
 }
@@ -395,12 +395,12 @@ void DistributionListView::viewportDragMoveEvent( QDragMoveEvent *e )
 
 void DistributionListView::viewportDropEvent( QDropEvent *e )
 {
-  emit dropped( e );
+  emit dropped( e, 0 );
 }
 
 void DistributionListView::dropEvent( QDropEvent *e )
 {
-  emit dropped( e );
+  emit dropped( e, 0 );
 }
 
 
