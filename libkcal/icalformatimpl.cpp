@@ -653,9 +653,13 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
     icalattachtype_free(attach);
   } else if (alarm->mailAddresses().count() > 0) {
     action = ICAL_ACTION_EMAIL;
-    QStringList addresses = alarm->mailAddresses();
-    for (QStringList::Iterator ad = addresses.begin();  ad != addresses.end();  ++ad) {
-      icalcomponent_add_property(a,icalproperty_new_attendee((*ad).utf8()));
+    QValueList<Person> addresses = alarm->mailAddresses();
+    for (QValueList<Person>::Iterator ad = addresses.begin();  ad != addresses.end();  ++ad) {
+      icalproperty *p = icalproperty_new_attendee("MAILTO:" + (*ad).email().utf8());
+      if (!(*ad).name().isEmpty()) {
+        icalproperty_add_parameter(p,icalparameter_new_cn((*ad).name().utf8()));
+      }
+      icalcomponent_add_property(a,p);
     }
     icalcomponent_add_property(a,icalproperty_new_summary(alarm->mailSubject().utf8()));
     icalcomponent_add_property(a,icalproperty_new_description(alarm->text().utf8()));
@@ -1434,10 +1438,16 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
         break;
 
       // Only in EMAIL alarm
-      case ICAL_ATTENDEE_PROPERTY:
-        ialarm->addMailAddress(QString::fromUtf8(icalproperty_get_attendee(p)));
+      case ICAL_ATTENDEE_PROPERTY: {
+        QString email = QString::fromUtf8(icalproperty_get_attendee(p));
+        QString name;
+        icalparameter *param = icalproperty_get_first_parameter(p,ICAL_CN_PARAMETER);
+        if (param) {
+          name = QString::fromUtf8(icalparameter_get_cn(param));
+        }
+        ialarm->addMailAddress(Person(name, email));
         break;
-
+      }
       default:
         break;
     }

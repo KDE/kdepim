@@ -22,8 +22,10 @@
 #define KCAL_ALARM_H
 
 #include <qstring.h>
+#include <qvaluelist.h>
 
 #include "duration.h"
+#include "person.h"
 
 namespace KCal {
 
@@ -34,12 +36,16 @@ class Incidence;
 */
 class Alarm {
   public:
+    enum Type { Display, Procedure, Email, Audio };
     typedef QValueList<Alarm *> List;
 
     /** Constructs a new alarm with variables initialized to "sane" values. */
     Alarm(Incidence *parent);
     /** Destruct Alarm object. */
     ~Alarm();
+
+    /** return the type of the alarm */
+    Type type() const;
 
     /** set the event to have this file as the noise for the alarm. */
     void setAudioFile(const QString &audioAlarmFile);
@@ -52,13 +58,13 @@ class Alarm {
     QString programFile() const;
 
     /** send mail to this address when an alarm goes off */
-    void setMailAddress(const QString &mailAlarmAddress);
+    void setMailAddress(const Person &mailAlarmAddress);
     /** send mail to these addresses when an alarm goes off */
-    void setMailAddresses(const QStringList &mailAlarmAddresses);
+    void setMailAddresses(const QValueList<Person> &mailAlarmAddresses);
     /** add this address to the list of addresses to send mail to when an alarm goes off */
-    void addMailAddress(const QString &mailAlarmAddress);
+    void addMailAddress(const Person &mailAlarmAddress);
     /** return the addresses to send mail to when an alarm goes off */
-    QStringList mailAddresses() const;
+    QValueList<Person> mailAddresses() const;
 
     /** set the subject line of the mail */
     void setMailSubject(const QString &mailAlarmSubject);
@@ -116,20 +122,20 @@ class Alarm {
     Incidence *parent() const  { return mParent; }
 
   private:
-    QString mAudioAlarmFile;     // url/filename of sound to play
-    QString mProgramAlarmFile;   // filename of program to run
-    QStringList mMailAttachFiles;      // filenames to attach to email
-    QStringList mMailAlarmAddresses;   // who to mail for reminder
-    QString mMailAlarmSubject;   // subject of email
-    QString mAlarmText;          // text to display/mail for alarm
+    QString mAudioAlarmFile;      // url/filename of sound to play
+    QString mProgramAlarmFile;    // filename of program to run
+    QStringList mMailAttachFiles; // filenames to attach to email
+    QValueList<Person> mMailAlarmAddresses; // who to mail for reminder
+    QString mMailAlarmSubject;    // subject of email
+    QString mAlarmText;           // text to display/mail for alarm
 
-    int mAlarmSnoozeTime;        // number of minutes after alarm to
-                                 // snooze before ringing again
-    int mAlarmRepeatCount;       // number of times for alarm to repeat
-                                 // after the initial time
+    int mAlarmSnoozeTime;         // number of minutes after alarm to
+                                  // snooze before ringing again
+    int mAlarmRepeatCount;        // number of times for alarm to repeat
+                                  // after the initial time
     bool mAlarmEnabled;
 
-    QDateTime mAlarmTime;        // time at which to display the alarm
+    QDateTime mAlarmTime;         // time at which to display the alarm
     bool mHasTime;
     Duration mOffset;
 

@@ -43,6 +43,17 @@ Alarm::~Alarm()
 {
 }
 
+Alarm::Type Alarm::type() const
+{
+  if (!mProgramAlarmFile.isEmpty())
+    return Procedure;
+  if (!mAudioAlarmFile.isEmpty())
+    return Audio;
+  if (mMailAlarmAddresses.count() > 0)
+    return Email;
+  return Display;
+}
+
 void Alarm::setAudioFile(const QString &audioAlarmFile)
 {
   mAudioAlarmFile = audioAlarmFile;
@@ -65,26 +76,26 @@ QString Alarm::programFile() const
   return mProgramAlarmFile;
 }
 
-void Alarm::setMailAddress(const QString &mailAlarmAddress)
+void Alarm::setMailAddress(const Person &mailAlarmAddress)
 {
   mMailAlarmAddresses.clear();
   mMailAlarmAddresses += mailAlarmAddress;
   mParent->updated();
 }
 
-void Alarm::setMailAddresses(const QStringList &mailAlarmAddresses)
+void Alarm::setMailAddresses(const QValueList<Person> &mailAlarmAddresses)
 {
   mMailAlarmAddresses = mailAlarmAddresses;
   mParent->updated();
 }
 
-void Alarm::addMailAddress(const QString &mailAlarmAddress)
+void Alarm::addMailAddress(const Person &mailAlarmAddress)
 {
   mMailAlarmAddresses += mailAlarmAddress;
   mParent->updated();
 }
 
-QStringList Alarm::mailAddresses() const
+QValueList<Person> Alarm::mailAddresses() const
 {
   return mMailAlarmAddresses;
 }
