@@ -64,7 +64,7 @@ IMAddressLVI::IMAddressLVI( KListView *parent, IMProtocol protocol, QString addr
 	setProtocol( protocol );
 	
 	// set address
-	setText( 2, address );
+	setAddress( address );
 	
 	// set context
 	setContext( context );
@@ -87,7 +87,7 @@ void IMAddressLVI::setInVCard( bool inVCard )
 
 void IMAddressLVI::setAddress( QString address )
 {
-	setText( 2, address );
+	setText( 1, address );
 }
 
 void IMAddressLVI::setContext( IMContext context )
@@ -97,13 +97,13 @@ void IMAddressLVI::setContext( IMContext context )
 	switch ( context )
 	{
 	case Home:
-		setText( 3, i18n( "Home" ) );
+		setText( 2, i18n( "Home" ) );
 		break;
 	case Work:
-		setText( 3, i18n( "Work" ) );
+		setText( 2, i18n( "Work" ) );
 		break;
 	case Any:
-		setText( 3, i18n( "Any" ) );
+		setText( 2, i18n( "Any" ) );
 		break;
 	}
 }
@@ -111,43 +111,48 @@ void IMAddressLVI::setContext( IMContext context )
 void IMAddressLVI::setProtocol( IMProtocol protocol )
 {
 	mProtocol = protocol;
+	QString protoName;
+	QPixmap protoIcon;
+
 	switch ( protocol )
 	{
 	case AIM:
-		setText( 1, QString::fromLatin1( "AIM" ) );
-		setPixmap( 1, SmallIcon(QString::fromLatin1("aim_protocol") ) );
+		protoName =  QString::fromLatin1( "AIM" );
+		protoIcon =  SmallIcon(QString::fromLatin1("aim_protocol") );
 		break;
 	case GaduGadu:
-		setText( 1, QString::fromLatin1( "Gadu-Gadu" ) );
-		setPixmap( 1, SmallIcon(QString::fromLatin1("gadu_protocol") ) );
+		protoName =  QString::fromLatin1( "Gadu-Gadu" );
+		protoIcon =  SmallIcon(QString::fromLatin1("gadu_protocol") );
 		break;
 	case Jabber:
-		setText( 1, QString::fromLatin1( "Jabber" ) );
-		setPixmap( 1, SmallIcon(QString::fromLatin1("jabber_protocol") ) );
+		protoName =  QString::fromLatin1( "Jabber" );
+		protoIcon =  SmallIcon(QString::fromLatin1("jabber_protocol") );
 		break;
 	case ICQ:
-		setText( 1, QString::fromLatin1( "ICQ" ) );
-		setPixmap( 1, SmallIcon(QString::fromLatin1("icq_protocol") ) );
+		protoName =  QString::fromLatin1( "ICQ" );
+		protoIcon =  SmallIcon(QString::fromLatin1("icq_protocol") );
 		break;
 	case IRC:
-		setText( 1, QString::fromLatin1( "IRC" ) );
-		setPixmap( 1, SmallIcon(QString::fromLatin1("irc_protocol") ) );
+		protoName =  QString::fromLatin1( "IRC" );
+		protoIcon =  SmallIcon(QString::fromLatin1("irc_protocol") );
 		break;
 	case MSN:
-		setText( 1, QString::fromLatin1( "MSN" ) );
-		setPixmap( 1, SmallIcon(QString::fromLatin1("msn_protocol") ) );
+		protoName =  QString::fromLatin1( "MSN" );
+		protoIcon =  SmallIcon(QString::fromLatin1("msn_protocol") );
 		break;
 	case SMS:
-		setText( 1, QString::fromLatin1( "SMS" ) );
-		setPixmap( 1, SmallIcon(QString::fromLatin1("sms_protocol") ) );
+		protoName =  QString::fromLatin1( "SMS" );
+		protoIcon =  SmallIcon(QString::fromLatin1("sms_protocol") );
 		break;
 	case Yahoo:
-		setText( 1, QString::fromLatin1( "Yahoo" ) );
-		setPixmap( 1, SmallIcon(QString::fromLatin1("yahoo_protocol") ) );
+		protoName =  QString::fromLatin1( "Yahoo" );
+		protoIcon =  SmallIcon(QString::fromLatin1("yahoo_protocol") );
 		break;
 	default:
-		setText( 1, i18n( "Unknown" ) );
+		protoName =  i18n( "Unknown" );
 	}
+	setPixmap( 0, protoIcon );
+	setText( 0, protoName );
 }
 
 /*
