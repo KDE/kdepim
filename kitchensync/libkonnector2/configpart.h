@@ -37,8 +37,8 @@
 #include <qwidget.h>
 #include <qmap.h>
 
-#include <kapabilities.h>
-#include <configwidget.h>
+#include "kapabilities.h"
+#include "configwidget.h"
 
 class QVBox;
 class QHBox;

@@ -5,7 +5,7 @@
 
 #include <stderror.h>
 #include <stdprogress.h>
-#include <konnector.h>
+#include "konnector.h"
 
 class KURL;
 namespace KSync {

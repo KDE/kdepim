@@ -39,7 +39,7 @@ qtopiadata_DATA = qtopia.desktop
 qtopiapicsdir = $(kde_datadir)/kitchensync/pics
 qtopiapics_DATA = opie.png
 
-SUBDIRS = . test
+SUBDIRS = . 
 
 METASOURCES = AUTO
 

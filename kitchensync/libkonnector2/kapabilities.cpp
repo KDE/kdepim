@@ -18,7 +18,6 @@
 */
 
 #include <kdebug.h>
-#include <qglobal.h>
 #include "kapabilities.h"
 
 using namespace KSync;

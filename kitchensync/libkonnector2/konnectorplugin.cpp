@@ -1,5 +1,3 @@
-#include "error.h"
-#include "progress.h"
 
 #include "konnectorinfo.h"
 #include "konnectorplugin.h"

@@ -1,11 +1,9 @@
 
 #include <time.h>
 
-#include <qbuffer.h>
 #include <qdom.h>
 #include <qfile.h>
 //#include <qstring.h>
-#include <qtextstream.h>
 
 
 #include <kdebug.h>

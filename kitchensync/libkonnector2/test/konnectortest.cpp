@@ -1,14 +1,9 @@
 #include <kcmdlineargs.h>
 #include <kapplication.h>
 #include <kaboutdata.h>
-#include <qvaluelist.h>
-#include <klocale.h>
-#include <qstring.h>
-#include <qhostaddress.h>
 
 #include <kdebug.h>
 #include <kapabilities.h>
-#include <kdevice.h>
 #include <konnectormanager.h>
 
 static const char *description =

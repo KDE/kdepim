@@ -1,4 +1,3 @@
-#include <qlineedit.h>
 #include <qcombobox.h>
 #include <qlabel.h>
 

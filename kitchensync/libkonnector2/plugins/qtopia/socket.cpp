@@ -1,16 +1,10 @@
 #include <qsocket.h>
-#include <qfile.h>
 #include <qdir.h>
 #include <qtimer.h>
 
 #include <kdebug.h>
 #include <klocale.h>
-#include <kglobal.h>
-#include <ktempfile.h>
 #include <kio/netaccess.h>
-#include <kfileitem.h>
-#include <kstandarddirs.h>
-#include <kurl.h>
 
 #include <addressbooksyncee.h>
 #include <eventsyncee.h>
@@ -18,13 +12,9 @@
 
 #include <idhelper.h>
 
-#include "extramap.h"
 #include "device.h"
-#include "categoryedit.h"
-#include "opiecategories.h"
 #include "desktop.h"
 #include "datebook.h"
-#include "todo.h"
 #include "addressbook.h"
 
 #include "metaaddressbook.h"

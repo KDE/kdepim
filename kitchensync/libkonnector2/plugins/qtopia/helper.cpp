@@ -1,12 +1,8 @@
 
-#include <qstylesheet.h>
 
-#include <klocale.h>
 #include <kstandarddirs.h>
-#include <kglobal.h>
 #include <kdebug.h>
 
-#include "device.h"
 #include "helper.h"
 
 using namespace OpieHelper;

@@ -1,14 +1,9 @@
-#include <qiconset.h>
-#include <qpair.h>
-#include <qvaluelist.h>
 
 #include <kdebug.h>
-#include <kiconloader.h>
 #include <kstandarddirs.h>
 #include <kgenericfactory.h>
 
 #include <konnectorinfo.h>
-#include <kapabilities.h>
 
 #include "qtopiaconfig.h"
 #include "socket.h"

@@ -1,6 +1,4 @@
 
-#include <qstring.h>
-#include <qstringlist.h>
 
 #include <kconfig.h>
 #include <kdebug.h>

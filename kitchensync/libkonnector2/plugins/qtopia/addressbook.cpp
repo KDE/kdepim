@@ -1,16 +1,10 @@
 
 
-#include <qbuffer.h>
 #include <qdom.h>
 #include <qfile.h>
-#include <qtextstream.h>
 
-#include <kapplication.h>
 #include <kdebug.h>
 
-#include <kabc/resourcefile.h>
-#include <kabc/phonenumber.h>
-#include <kabc/address.h>
 
 #include "device.h"
 #include "addressbook.h"

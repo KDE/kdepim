@@ -1,22 +1,14 @@
 #include <qdir.h>
-#include <qmap.h>
 
 #include <kapplication.h>
 #include <kdebug.h>
 #include <kparts/componentfactory.h>
-#include <kglobal.h>
-#include <kservice.h>
 #include <kstandarddirs.h>
-#include <kstaticdeleter.h>
 
 #include "configpart.h"
-#include "filter.h"
 #include "konnectorinfo.h"
-#include "kapabilities.h"
 
 
-#include "stderror.h"
-#include "stdprogress.h"
 #include "konnectorplugin.h"
 #include "konnectormanager.h"
 

@@ -1,9 +1,5 @@
 
-#include <qbuffer.h>
 #include <qfile.h>
-#include <qvaluelist.h>
-#include <qstring.h>
-#include <qtextstream.h>
 
 #include <kdebug.h>
 
@@ -12,7 +8,6 @@
 #include <idhelper.h>
 
 #include "device.h"
-#include "opiecategories.h"
 #include "todo.h"
 
 using namespace OpieHelper;

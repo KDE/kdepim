@@ -1,9 +1,6 @@
 
-#include <qbitarray.h>
-#include <qbuffer.h>
 #include <qdom.h>
 #include <qfile.h>
-#include <qtextstream.h>
 
 #include <kdebug.h>
 

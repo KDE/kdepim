@@ -1,4 +1,3 @@
-#include <ktempfile.h>
 
 #include "converterbase.h"
 
