@@ -3,14 +3,13 @@
 
 #include <qwidget.h>
 
-#include "kandyview_base.h"
-
 class QPainter;
 class QTextStream;
 class QDataStream;
 class QDomDocument;
 class QDomElement;
 class QTextEdit;
+class QListView;
 
 class KURL;
 
