@@ -4,7 +4,7 @@
 **
 ** This file defines the SyncAction for the knotes-conduit plugin.
 */
- 
+
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 ** the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 ** MA 02111-1307, USA.
 */
- 
+
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
@@ -144,9 +144,9 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	FUNCTIONSETUP;
 
 
-	fP->fDCOP = KApplication::kApplication()->dcopClient();
+	if (fP) fP->fDCOP = KApplication::kApplication()->dcopClient();
 
-	if (!fP->fDCOP)
+	if (fP && !fP->fDCOP)
 	{
 		kdWarning() << k_funcinfo
 			<< ": Can't get DCOP client."
@@ -158,10 +158,13 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 {
 	FUNCTIONSETUP;
 
-	KPILOT_DELETE(fP->fTimer);
-	KPILOT_DELETE(fP->fKNotes);
-	// KPILOT_DELETE(fP->fDatabase);
-	KPILOT_DELETE(fP);
+	if (fP)
+	{
+		KPILOT_DELETE(fP->fTimer);
+		KPILOT_DELETE(fP->fKNotes);
+		// KPILOT_DELETE(fP->fDatabase);
+		KPILOT_DELETE(fP);
+	}
 }
 
 /* virtual */ bool KNotesAction::exec()
@@ -169,7 +172,7 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 	FUNCTIONSETUP;
 
 	QString e;
-	if (!fP->fDCOP)
+	if (!fP || !fP->fDCOP)
 	{
 		emit logError(i18n("No DCOP connection could be made. The "
 			"conduit cannot function like this."));
@@ -247,7 +250,7 @@ void KNotesAction::listNotes()
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGCONDUIT << fname 
+	DEBUGCONDUIT << fname
 		<< ": Now in state " << fStatus << endl;
 #endif
 
@@ -282,7 +285,7 @@ void KNotesAction::listNotes()
 		cleanupMemos();
 		break;
 	default :
-		fP->fTimer->stop();
+		if (fP->fTimer) fP->fTimer->stop();
 		emit syncDone(this);
 	}
 }
@@ -346,7 +349,7 @@ void KNotesAction::getAppInfo()
 
 	resetIndexes();
 	fStatus=ModifiedNotesToPilot;
-	
+
 	addSyncLogEntry(i18n("[KNotes conduit: "));
 }
 
@@ -495,7 +498,7 @@ bool KNotesAction::syncMemoToKNotes()
 	NoteAndMemo m = NoteAndMemo::findMemo(fP->fIdList,memo->id());
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Looking at memo " 
+	DEBUGCONDUIT << fname << ": Looking at memo "
 		<< memo->id()
 		<< " which was found "
 		<< m.toString()
