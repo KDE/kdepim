@@ -44,6 +44,9 @@ class KNArticleWindow : public KTMainWindow  {
   	void slotArtForward();
   	void slotArtCancel();
   	void slotArtSupersede();
+   	void slotToggleToolBar();
+  	void slotConfKeys();
+  	void slotConfToolbar();
 };
 
 #endif

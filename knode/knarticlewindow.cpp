@@ -17,6 +17,8 @@
 
 #include <kstdaction.h>
 #include <klocale.h>
+#include <kedittoolbar.h>
+#include <kkeydialog.h>
 
 #include "knarticlewindow.h"
 #include "knarticlewidget.h"
@@ -53,6 +55,10 @@ KNArticleWindow::KNArticleWindow(KNArticle *art, KNArticleCollection *col, const
                    actionCollection(), "article_cancel");
   new KAction(i18n("&Supersede"), 0 , this, SLOT(slotArtSupersede()),
                    actionCollection(), "article_supersede");
+
+  KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
+  KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
+  KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
 
   createGUI( "knreaderui.rc",false);
   guiFactory()->addClient(artW->part());
@@ -108,6 +114,35 @@ void KNArticleWindow::slotArtCancel()
 void KNArticleWindow::slotArtSupersede()
 {
 	xTop->sArtManager()->supersede(static_cast<KNFetchArticle*>(artW->article()),static_cast<KNGroup*>(artW->collection()));
+}
+
+
+
+void KNArticleWindow::slotToggleToolBar()
+{
+  if(toolBar()->isVisible())
+    toolBar()->hide();
+  else
+    toolBar()->show();
+}
+
+
+
+  	
+void KNArticleWindow::slotConfKeys()
+{
+  KKeyDialog::configureKeys(actionCollection(),xmlFile());
+}
+
+ 	
+
+  	
+void KNArticleWindow::slotConfToolbar()
+{
+  KEditToolbar dlg(actionCollection());
+  if (dlg.exec()) {
+    createGUI();
+  }
 }
 
 
