@@ -359,7 +359,7 @@ void CertManager::importCertFromFile()
 	QString info;
 	int retval = importCertificateFromFile( certFilename, &info );
 	if( retval ) {
-	  KMessageBox::error( this, i18n( "An error occurred when trying to import the certificate file. The errorcode from Cryptplug was %1 and output was: %2" ).arg(retval).arg(info), i18n( "Certificate Manager Error" ) );	  
+	  KMessageBox::error( this, i18n( "An error occurred when trying to import the certificate file. The error code from CryptPlug was %1 and output was: %2" ).arg(retval).arg(info), i18n( "Certificate Manager Error" ) );	  
 	} else {
 	  KMessageBox::information( this, i18n( "Certificate file imported successfully. Additional info: %1" ).arg(info), i18n( "Certificate Imported" ) );	  
 	}
