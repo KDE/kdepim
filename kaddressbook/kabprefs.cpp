@@ -34,35 +34,35 @@ KABPrefs::KABPrefs()
   : KPimPrefs("kaddressbookrc")
 {
   KConfigSkeleton::setCurrentGroup( "Views" );
-  addItemBool( "", "HonorSingleClick", mHonorSingleClick, false );
+  addItemBool( "HonorSingleClick", mHonorSingleClick, false );
 
   KConfigSkeleton::setCurrentGroup( "General" );
-  addItemBool( "", "AutomaticNameParsing", mAutomaticNameParsing, true );
-  addItemInt( "", "CurrentIncSearchField", mCurrentIncSearchField, 0 );
-  addItemString( "", "PhoneHookApplication", mPhoneHookApplication, "" );
-  addItemString( "", "FaxHookApplication", mFaxHookApplication,
+  addItemBool( "AutomaticNameParsing", mAutomaticNameParsing, true );
+  addItemInt( "CurrentIncSearchField", mCurrentIncSearchField, 0 );
+  addItemString( "PhoneHookApplication", mPhoneHookApplication, "" );
+  addItemString( "FaxHookApplication", mFaxHookApplication,
                  "kdeprintfax --phone %N" );
 
   KConfigSkeleton::setCurrentGroup( "MainWindow" );
-  addItemBool( "", "JumpButtonBarVisible", mJumpButtonBarVisible, false );
-  addItemBool( "", "DetailsPageVisible", mDetailsPageVisible, true );
-  addItemIntList( "", "ExtensionsSplitter", mExtensionsSplitter );
-  addItemIntList( "", "DetailsSplitter", mDetailsSplitter );
+  addItemBool( "JumpButtonBarVisible", mJumpButtonBarVisible, false );
+  addItemBool( "DetailsPageVisible", mDetailsPageVisible, true );
+  addItemIntList( "ExtensionsSplitter", mExtensionsSplitter );
+  addItemIntList( "DetailsSplitter", mDetailsSplitter );
 
   KConfigSkeleton::setCurrentGroup( "Extensions_General" );
   QStringList defaultExtensions;
   defaultExtensions << "merge";
   defaultExtensions << "distribution_list_editor";
-  addItemInt( "", "CurrentExtension", mCurrentExtension, 0 );
-  addItemStringList( "", "ActiveExtensions", mActiveExtensions, defaultExtensions );
+  addItemInt( "CurrentExtension", mCurrentExtension, 0 );
+  addItemStringList( "ActiveExtensions", mActiveExtensions, defaultExtensions );
 
   KConfigSkeleton::setCurrentGroup( "Views" );
   QString defaultView = i18n( "Default Table View" );
-  addItemString( "", "CurrentView", mCurrentView, defaultView );
-  addItemStringList( "", "ViewNames", mViewNames, defaultView );
+  addItemString( "CurrentView", mCurrentView, defaultView );
+  addItemStringList( "ViewNames", mViewNames, defaultView );
 
   KConfigSkeleton::setCurrentGroup( "Filters" );
-  addItemInt( "", "CurrentFilter", mCurrentFilter, 0 );
+  addItemInt( "CurrentFilter", mCurrentFilter, 0 );
 }
 
 KABPrefs::~KABPrefs()
