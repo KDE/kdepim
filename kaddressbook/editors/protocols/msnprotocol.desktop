@@ -6,6 +6,7 @@ ServiceTypes=KABC/IMProtocol,KPluginInfo
 X-KDE-InstantMessagingKABCField=messaging/msn
 Comment=MSN Messenger
 Comment[bg]=Протокол MSN
+Comment[fr]=Messagerie MSN
 Comment[ta]=MSN மெசஞ்சர்
 Comment[xx]=xxMSN Messengerxx
 Name=MSN Messenger
