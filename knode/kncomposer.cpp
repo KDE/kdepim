@@ -64,6 +64,7 @@ using KRecentAddress::RecentAddresses;
 #include <qpopupmenu.h>
 #include <spellingfilter.h>
 #include <qcursor.h>
+#include <kstdguiitem.h>
 
 KNLineEdit::KNLineEdit(KNComposer::ComposerView *_composerView, bool useCompletion,
                        QWidget *parent, const char *name)
@@ -866,7 +867,7 @@ void KNComposer::closeEvent(QCloseEvent *e)
   }
   else {
     switch ( KMessageBox::warningYesNoCancel( this, i18n("Do you want to save this article in the draft folder?"),
-                                              QString::null, i18n("&Save"), i18n("&Discard"))) {
+                                              QString::null, KStdGuiItem::save().text(), i18n("&Discard"))) {
       case KMessageBox::Yes :
         r_esult=CRsave;
         break;
