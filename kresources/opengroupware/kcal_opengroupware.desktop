@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Groupware Server
+X-KDE-Library=kcal_opengroupware
+Type=Service
+ServiceTypes=KResources/Plugin
+X-KDE-ResourceFamily=calendar
+X-KDE-ResourceType=opengroupware
