@@ -36,25 +36,22 @@ EventSyncee::EventSyncee()
 {
 }
 
-/* merging hell! */
-namespace {
-    typedef MergeBase<KCal::Event, EventSyncee> MergeEvent;
-    static MergeEvent* mergeMap = 0l;
-    static KStaticDeleter<MergeEvent> deleter;
-    
-    void mergeDtEnd( KCal::Event* const dest, const KCal::Event* src)
-    {
-        dest->setDtEnd( src->dtEnd() );
+typedef MergeBase<KCal::Event, EventSyncee> MergeEvent;
+static MergeEvent* mergeEventMap = 0l;
+static KStaticDeleter<MergeEvent> mergeEventDeleter;
+
+static void mergeDtEnd( KCal::Event* const dest, const KCal::Event* src)
+{
+    dest->setDtEnd( src->dtEnd() );
+}
+
+static MergeEvent* mapEve()
+{
+    if (!mergeEventMap ) {
+        mergeEventDeleter.setObject( mergeEventMap, new MergeEvent );
+        mergeEventMap->add( EventSyncee::DtEnd, mergeDtEnd );
     }
-    
-    MergeEvent* mapEve()
-    {
-        if (!mergeMap ) {
-            deleter.setObject( mergeMap, new MergeEvent );
-            mergeMap->add( EventSyncee::DtEnd, mergeDtEnd );
-        }
-        return mergeMap;
-    }
+    return mergeEventMap;
 }
 
 bool EventSyncEntry::mergeWith( SyncEntry* entry )

@@ -103,8 +103,8 @@ bool TodoSyncEntry::equals(SyncEntry* entry )
 }
 
 typedef MergeBase<Todo, TodoSyncee> MergeTodo;
-static MergeTodo* mergeMap = 0l;
-static KStaticDeleter<MergeTodo> deleter;
+static MergeTodo* mergeTodoMap = 0l;
+static KStaticDeleter<MergeTodo> MergeTodoDeleter;
 
 static void mergeDue( Todo* const dest, const Todo* const src)
 {
@@ -127,15 +127,15 @@ static void mergePer( Todo* const dest, const Todo* const src)
 }
 
 static MergeTodo* mapTo() {
-        if (!mergeMap ) {
-            deleter.setObject( mergeMap, new MergeTodo );
+        if (!mergeTodoMap ) {
+            MergeTodoDeleter.setObject( mergeTodoMap, new MergeTodo );
 
-            mergeMap->add( TodoSyncee::DtDue, mergeDue );
-            mergeMap->add( TodoSyncee::StartDate, mergeStart );
-            mergeMap->add( TodoSyncee::Completed, mergeComp );
-            mergeMap->add( TodoSyncee::Percent, mergePer );
+            mergeTodoMap->add( TodoSyncee::DtDue, mergeDue );
+            mergeTodoMap->add( TodoSyncee::StartDate, mergeStart );
+            mergeTodoMap->add( TodoSyncee::Completed, mergeComp );
+            mergeTodoMap->add( TodoSyncee::Percent, mergePer );
         }
-        return mergeMap;
+        return mergeTodoMap;
 }
 
 bool TodoSyncEntry::mergeWith( SyncEntry* entry )

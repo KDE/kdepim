@@ -1,7 +1,5 @@
 SUBDIRS = . test
 
-KDE_OPTIONS = nofinal
-
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libkcal $(all_includes)
 
 lib_LTLIBRARIES   = libksync2.la
