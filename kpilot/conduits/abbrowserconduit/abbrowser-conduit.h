@@ -35,8 +35,9 @@ class AbbrowserConduit : public BaseConduit
       virtual const char* dbInfo();
       virtual void doTest();
 
-      enum EConflictResolution { eUserChoose=0, eKeepBoth, ePilotOverides,
-				 eAbbrowserOverides, eDoNotResolve };
+      enum EConflictResolution { eUserChoose=0, eKeepBothInAbbrowser,
+				 ePilotOverides, eAbbrowserOverides,
+				 eDoNotResolve };
       EConflictResolution getResolveConflictOption() const
 		{ return fConflictResolution; }
       bool doSmartMerge() const { return fSmartMerge; }
@@ -46,20 +47,31 @@ class AbbrowserConduit : public BaseConduit
       const QString &getPilotOtherMap() const { return fPilotOtherMap; }
       bool isPilotStreetHome() const { return fPilotStreetHome; }
       bool isPilotFaxHome() const { return fPilotFaxHome; }
+      /** @return flag if should close abbrowser if it was already running
+       *  upon exit
+       */
+      bool closeAbbrowserIfOpen() const { return fCloseAbIfOpen; }
+      bool backupDone() const { return fBackupDone; }
+      
     private:
       /** Do the preperations before doSync or doBackup.
        *  Start abbrowser, set the pilot app info, assign the fDcop variable,
        *  and get the contacts from abbrowser over dcop */
       bool _prepare(QDict<ContactEntry> &abbrowserContacts,
 		    QMap<recordid_t, QString> &idContactMap,
-		    QList<ContactEntry> &newContacts);
+		    QList<ContactEntry> &newContacts,
+		    bool &abAlreadyRunning);
       /**
        * Read the global KPilot config file for settings
        * particular to the AbbrowserConduit conduit.
        */
       void readConfig();
-      /** Start the Abbrowser application */
-      void _startAbbrowser();
+      /** Start the Abbrowser application; if can't start exit's application
+       @return true if already running, false if not
+       */
+      bool _startAbbrowser();
+      void _stopAbbrowser(bool abAlreadyRunning);
+      void _saveAbChanges();
       void _setAppInfo();
       void _addToAbbrowser(const PilotAddress &address);
       void _addToPalm(ContactEntry &entry);
@@ -77,7 +89,7 @@ class AbbrowserConduit : public BaseConduit
 			    const ContactEntry::Address &abAddress);
       bool _equal(const PilotAddress &piAddress,
 		  ContactEntry &abEntry) const;
-      ContactEntry *_findMatch(const QDict<ContactEntry> entries,
+      ContactEntry *_findMatch(const QDict<ContactEntry> &entries,
 			       const PilotAddress &pilotAddress,
 			       QString &contactKey) const;
       /** Given a list of contacts, creates the pilot id to contact key map
@@ -93,7 +105,12 @@ class AbbrowserConduit : public BaseConduit
       static void showPilotAddress(const PilotAddress &pilotAddress);
       bool _conflict(const QString &str1, const QString &str2,
 		     bool &mergeNeeded, QString &mergedStr) const;
+      ContactEntry *_syncPilotEntry(PilotAddress &pilotAddress,
+		  const QDict<ContactEntry> &abbrowserContacts);
       bool _smartMerge(PilotAddress &pilotAddress, ContactEntry &abEntry);
+      void _backupDone();
+      const char *_getKabFieldForOther(const QString &desc) const;
+      int _getCatId(int catIndex) const;
       
       DCOPClient *fDcop;
       struct AddressAppInfo fAddressAppInfo;
@@ -103,6 +120,8 @@ class AbbrowserConduit : public BaseConduit
       QString fPilotOtherMap;
       bool fPilotStreetHome;
       bool fPilotFaxHome;
+      bool fCloseAbIfOpen;
+      bool fBackupDone;
     };
 // Revision 1.0  2000/12/27 00:22:28  new conduit
 // New AbbrowserConduit

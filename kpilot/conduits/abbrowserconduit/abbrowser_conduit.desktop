@@ -1,8 +1,9 @@
 [Desktop Entry]
 Type=Service
-Name=KPilot Abbrowser Conduit
-Name[de]=Leitung nach Abbrowser für KPilot
-Name[nl]=Abbrowser Synchronisatie voor KPilot
+Name=KDE Address Conduit via Abbrowser
+Name[de]=KPilot-Einrichtung für Adressbuch-Browser
+Name[hu]=KPilot Abbrowser (KDE címjegyzék) csatoló
+Name[ru]=Сопряжение KPilot с Abbrowser
 Implemented=file
 ServiceTypes=KPilotConduit
 Exec=abbrowser_conduit

@@ -20,6 +20,8 @@ class AbbrowserConduitConfig : public AbbrowserConduitConfig_base
       static const QString PILOT_OTHER_MAP_ENTRY; /* QString */
       static const QString PILOT_STREET_TYPE_ENTRY; /* QString */
       static const QString PILOT_FAX_TYPE_ENTRY; /* QString */
+      static const QString CLOSE_ABBROWSER_ON_EXIT; /* bool */
+      static const QString FIRST_TIME_SYNCING; /* bool */
     };
 
 #endif // ABBROWSERCONDUITCONFIG_H

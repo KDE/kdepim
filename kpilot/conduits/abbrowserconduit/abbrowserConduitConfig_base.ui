@@ -11,8 +11,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>379</width>
-            <height>298</height>
+            <width>375</width>
+            <height>335</height>
         </rect>
     </property>
     <property stdset="1">
@@ -28,7 +28,59 @@
             <name>spacing</name>
             <number>6</number>
         </property>
-        <widget row="0"  column="0"  rowspan="1"  colspan="3" >
+        <widget row="1"  column="0"  rowspan="1"  colspan="3" >
+            <class>QCheckBox</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>fCloseAbbrowserOnExit</cstring>
+            </property>
+            <property stdset="1">
+                <name>text</name>
+                <string>Close abbrowser application if not already running</string>
+            </property>
+        </widget>
+        <widget row="6"  column="0"  rowspan="1"  colspan="2" >
+            <class>QLabel</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>fPilotFaxTypeLabel</cstring>
+            </property>
+            <property stdset="1">
+                <name>text</name>
+                <string>Pilot fax -&gt; abbrowser phone</string>
+            </property>
+        </widget>
+        <widget row="5"  column="2" >
+            <class>KComboBox</class>
+            <item>
+                <property>
+                    <name>text</name>
+                    <string>Home Address</string>
+                </property>
+            </item>
+            <item>
+                <property>
+                    <name>text</name>
+                    <string>Business Address</string>
+                </property>
+            </item>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>fPilotStreetType</cstring>
+            </property>
+        </widget>
+        <widget row="5"  column="0"  rowspan="1"  colspan="2" >
+            <class>QLabel</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>fPilotStreetLabel</cstring>
+            </property>
+            <property stdset="1">
+                <name>text</name>
+                <string>Pilot street address -&gt; abbrowser type</string>
+            </property>
+        </widget>
+        <widget row="2"  column="0"  rowspan="1"  colspan="3" >
             <class>QCheckBox</class>
             <property stdset="1">
                 <name>name</name>
@@ -39,7 +91,52 @@
                 <string>Smartly merge new address by name or company</string>
             </property>
         </widget>
-        <widget row="1"  column="0" >
+        <widget row="6"  column="2" >
+            <class>KComboBox</class>
+            <item>
+                <property>
+                    <name>text</name>
+                    <string>Home Fax</string>
+                </property>
+            </item>
+            <item>
+                <property>
+                    <name>text</name>
+                    <string>Business Fax</string>
+                </property>
+            </item>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>fPilotFaxType</cstring>
+            </property>
+        </widget>
+        <widget row="3"  column="1"  rowspan="1"  colspan="2" >
+            <class>KComboBox</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>fConflictResolution</cstring>
+            </property>
+            <property>
+                <name>toolTip</name>
+                <string>Action to perform when a new contact on pilot and kab are added with the same name</string>
+            </property>
+        </widget>
+        <widget row="4"  column="0"  rowspan="1"  colspan="2" >
+            <class>QLabel</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>fMapLabel</cstring>
+            </property>
+            <property stdset="1">
+                <name>text</name>
+                <string>Pilot "Other" -&gt; abbrowser phone</string>
+            </property>
+            <property>
+                <name>toolTip</name>
+                <string>Abbrowser field that the pilot "other" is mapped</string>
+            </property>
+        </widget>
+        <widget row="3"  column="0" >
             <class>QLabel</class>
             <property stdset="1">
                 <name>name</name>
@@ -54,7 +151,7 @@
                 <string>Action to perform when a new contact on pilot and kab are added with the same name</string>
             </property>
         </widget>
-        <widget row="2"  column="2" >
+        <widget row="4"  column="2" >
             <class>QComboBox</class>
             <item>
                 <property>
@@ -129,90 +226,19 @@
                 <string>Abbrowser field that the pilot "other" is mapped</string>
             </property>
         </widget>
-        <widget row="1"  column="1"  rowspan="1"  colspan="2" >
-            <class>KComboBox</class>
+        <widget row="0"  column="0"  rowspan="1"  colspan="3" >
+            <class>QCheckBox</class>
             <property stdset="1">
                 <name>name</name>
-                <cstring>fConflictResolution</cstring>
+                <cstring>fFirstTimeSyncing</cstring>
+            </property>
+            <property stdset="1">
+                <name>text</name>
+                <string>First time syncing</string>
             </property>
             <property>
                 <name>toolTip</name>
-                <string>Action to perform when a new contact on pilot and kab are added with the same name</string>
-            </property>
-        </widget>
-        <widget row="2"  column="0"  rowspan="1"  colspan="2" >
-            <class>QLabel</class>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>fMapLabel</cstring>
-            </property>
-            <property stdset="1">
-                <name>text</name>
-                <string>Pilot "Other" -&gt; abbrowser phone</string>
-            </property>
-            <property>
-                <name>toolTip</name>
-                <string>Abbrowser field that the pilot "other" is mapped</string>
-            </property>
-        </widget>
-        <widget row="3"  column="0"  rowspan="1"  colspan="2" >
-            <class>QLabel</class>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>fPilotStreetLabel</cstring>
-            </property>
-            <property stdset="1">
-                <name>text</name>
-                <string>Pilot street address -&gt; abbrowser type</string>
-            </property>
-        </widget>
-        <widget row="4"  column="0"  rowspan="1"  colspan="2" >
-            <class>QLabel</class>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>fPilotFaxTypeLabel</cstring>
-            </property>
-            <property stdset="1">
-                <name>text</name>
-                <string>Pilot fax -&gt; abbrowser phone</string>
-            </property>
-        </widget>
-        <widget row="4"  column="2" >
-            <class>KComboBox</class>
-            <item>
-                <property>
-                    <name>text</name>
-                    <string>Home Fax</string>
-                </property>
-            </item>
-            <item>
-                <property>
-                    <name>text</name>
-                    <string>Business Fax</string>
-                </property>
-            </item>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>fPilotFaxType</cstring>
-            </property>
-        </widget>
-        <widget row="3"  column="2" >
-            <class>KComboBox</class>
-            <item>
-                <property>
-                    <name>text</name>
-                    <string>Home Address</string>
-                </property>
-            </item>
-            <item>
-                <property>
-                    <name>text</name>
-                    <string>Business Address</string>
-                </property>
-            </item>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>fPilotStreetType</cstring>
+                <string>Should be checked if your Palm Pilot has never been synced or backed up with abbrowser before</string>
             </property>
         </widget>
     </grid>

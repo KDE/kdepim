@@ -2,7 +2,7 @@ INCLUDES= $(all_includes) -I$(top_srcdir)/kpilot/kpilot -I$(top_srcdir)/abbrowse
 METASOURCES = AUTO
 
 servicedir = $(kde_servicesdir)
-service_DATA = abbrowser-conduit.desktop
+service_DATA = abbrowser_conduit.desktop
 
 ####### This part is very kpilot specific
 # you can add here more. This one gets installed
@@ -26,10 +26,9 @@ abbrowser_conduit_LDFLAGS = $(all_libraries) \
 # that depend on the following ones.
 abbrowser_conduit_LDADD   =  ../../kpilot/pilotAddress.o \
 	$(top_srcdir)/abbrowser/contactentry.o \
-	$(top_srcdir)/abbrowser/contactentry.moc.o \
 	-lconduit -lpilotdb \
 	$(LIB_KDEUI) $(LIB_KFILE) $(LIB_KDECORE) \
 	@LIBSOCKET@ -lpisock
 
 # this option you can leave out. Just, if you use "make dist", you need it
-noinst_HEADERS = abbrowser-conduit.h setupDialog.h
+noinst_HEADERS = abbrowser-conduit.h abbrowserConduitConfig.h setupDialog.h
