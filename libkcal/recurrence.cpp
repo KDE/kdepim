@@ -3343,11 +3343,12 @@ QDate Recurrence::getFirstDateInYear(const QDate &earliestDate) const
   QPtrListIterator<int> it(rYearNums);
   switch (recurs) {
     case rYearlyMonth: {
-      int day = rMonthDays.count() ? *rMonthDays.getFirst() : recurStart().date().day();
       int earliestYear  = earliestDate.year();
       int earliestMonth = earliestDate.month();
       int earliestDay   = earliestDate.day();
-      if (earliestDay > day) {
+      int day = rMonthDays.count() ? *rMonthDays.getFirst() : recurStart().date().day();
+      int dayThisMonth = (day > 0) ? day : earliestDate.daysInMonth() + 1 + day;
+      if (earliestDay > dayThisMonth) {
         // The earliest date is later in the month than the recurrence date,
         // so skip to the next month before starting to check
         if (++earliestMonth > 12)
@@ -3356,8 +3357,9 @@ QDate Recurrence::getFirstDateInYear(const QDate &earliestDate) const
       for ( ;  it.current();  ++it) {
         int month = *it.current();
         if (month >= earliestMonth) {
-          if (day <= 28  ||  QDate::isValid(earliestYear, month, day))
-            return QDate(earliestYear, month, day);
+          dayThisMonth = (day > 0) ? day : QDate(earliestYear, month, 1).daysInMonth() + 1 + day;
+          if (dayThisMonth <= 28  ||  QDate::isValid(earliestYear, month, dayThisMonth))
+            return QDate(earliestYear, month, dayThisMonth);
           if (day == 29  &&  month == 2) {
             // It's a recurrence on February 29th, in a non-leap year
             switch (mFeb29YearlyType) {
@@ -3416,10 +3418,11 @@ QDate Recurrence::getLastDateInYear(const QDate &latestDate) const
   QPtrListIterator<int> it(rYearNums);
   switch (recurs) {
     case rYearlyMonth: {
-      int day = rMonthDays.count() ? *rMonthDays.getFirst() : recurStart().date().day();
       int latestYear  = latestDate.year();
       int latestMonth = latestDate.month();
-      if (latestDate.day() > day) {
+      int day = rMonthDays.count() ? *rMonthDays.getFirst() : recurStart().date().day();
+      int dayThisMonth = (day > 0) ? day : latestDate.daysInMonth() + 1 + day;
+      if (latestDate.day() < dayThisMonth) {
         // The latest date is earlier in the month than the recurrence date,
         // so skip to the previous month before starting to check
         if (--latestMonth <= 0)
@@ -3428,8 +3431,9 @@ QDate Recurrence::getLastDateInYear(const QDate &latestDate) const
       for (it.toLast();  it.current();  --it) {
         int month = *it.current();
         if (month <= latestMonth) {
-          if (day <= 28  ||  QDate::isValid(latestYear, month, day))
-            return QDate(latestYear, month, day);
+          dayThisMonth = (day > 0) ? day : QDate(latestYear, month, 1).daysInMonth() + 1 + day;
+          if (dayThisMonth <= 28  ||  QDate::isValid(latestYear, month, dayThisMonth))
+            return QDate(latestYear, month, dayThisMonth);
           if (day == 29  &&  month == 2) {
             // It's a recurrence on February 29th, in a non-leap year
             switch (mFeb29YearlyType) {
