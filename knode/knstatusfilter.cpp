@@ -16,13 +16,11 @@
  ***************************************************************************/
 
 #include <qlayout.h>
-#include <qbitarray.h>
 #include <qcheckbox.h>
-
 #include <klocale.h>
 #include <ksimpleconfig.h>
 
-#include "knfetcharticle.h"
+#include "knmime.h"
 #include "knstatusfilter.h"
 
 
@@ -74,7 +72,7 @@ void KNStatusFilter::save(KSimpleConfig *conf)
 
 
 
-bool KNStatusFilter::doFilter(KNFetchArticle *a)
+bool KNStatusFilter::doFilter(KNRemoteArticle *a)
 {
   bool ret=true;  
 

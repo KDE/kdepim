@@ -23,7 +23,7 @@
 
 
 KNNntpAccount::KNNntpAccount()
-  : KNCollection(0), KNServerInfo(), u_nsentCount(0), f_etchDescriptions(true)
+  : KNCollection(0), KNServerInfo(), f_etchDescriptions(true)
 {
   l_astNewFetch = QDate::currentDate();
 }
@@ -42,7 +42,7 @@ bool KNNntpAccount::readInfo(const QString &confPath)
   KSimpleConfig conf(confPath);
 
   n_ame = conf.readEntry("name");
-  u_nsentCount = conf.readNumEntry("unsentCnt", 0);
+  //u_nsentCount = conf.readNumEntry("unsentCnt", 0);
   f_etchDescriptions = conf.readBoolEntry("fetchDescriptions", true);
   l_astNewFetch = conf.readDateTimeEntry("lastNewFetch").date();
 
@@ -65,7 +65,7 @@ void KNNntpAccount::saveInfo()
   KSimpleConfig conf(dir+"info");
   
   conf.writeEntry("name", n_ame);
-  conf.writeEntry("unsentCnt", u_nsentCount);
+  //conf.writeEntry("unsentCnt", u_nsentCount);
   conf.writeEntry("fetchDescriptions", f_etchDescriptions);
   conf.writeEntry("lastNewFetch", QDateTime(l_astNewFetch));
   KNServerInfo::saveConf(&conf);      // save not KNNntpAccount specific settings
@@ -73,14 +73,14 @@ void KNNntpAccount::saveInfo()
 
 
 
-void KNNntpAccount::syncInfo()
+/*void KNNntpAccount::syncInfo()
 {
   QString dir(path());
   if (dir == QString::null)
     return;
   KSimpleConfig conf(dir+"info");
   conf.writeEntry("unsentCnt", u_nsentCount);
-}
+}*/
 
 
     

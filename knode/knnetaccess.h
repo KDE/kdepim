@@ -24,7 +24,6 @@
 #include <qobject.h>
 #include <qqueue.h>
 
-#include <kaction.h>
 
 class QSocketNotifier;
 
@@ -39,12 +38,13 @@ class KNNetAccess : public QObject  {
 
   public:
 
-    KNNetAccess(KActionCollection* actColl, QObject *parent=0, const char *name=0);
+    KNNetAccess(QObject *parent=0, const char *name=0);
     ~KNNetAccess();
 
     void addJob(KNJobData *job);
     void stopJobsNntp(int type);         // type==0 => all jobs
     void stopJobsSmtp(int type);         // type==0 => all jobs
+    void cancelAllJobs();
 
     pthread_mutex_t* nntpMutex() { return &nntp_Mutex; }
 
@@ -54,7 +54,7 @@ class KNNetAccess : public QObject  {
     void startJobSmtp();
     void threadDoneNntp();
     void threadDoneSmtp();
-                        
+
     QString unshownMsg, unshownByteCount;    // messages from the nntp-client have priority
     int unshownProgress;                     // unshown messages get stored here
   
@@ -66,12 +66,15 @@ class KNNetAccess : public QObject  {
     pthread_mutex_t nntp_Mutex;
     int nntpInPipe[2], nntpOutPipe[2], smtpInPipe[2], smtpOutPipe[2];
     QSocketNotifier *nntpNotifier,*smtpNotifier;
-    KAction* actNetStop;
-    KActionCollection *actionCollection;
+
   
   protected slots:
     void slotThreadSignal(int i);
-    void slotCancelAllJobs();
+
+
+  signals:
+    void netActive(bool);
+
     
 };
 

@@ -20,8 +20,7 @@
 #define KNPROTOCOLCLIENT_H
 
 #include <qobject.h>
-
-#include <mimelib/string.h>
+#include <qcstring.h>
 
 class QStrList;
 class KNJobData;
@@ -61,7 +60,7 @@ class KNProtocolClient : public QObject  {
 
     virtual bool sendCommand(const QCString &cmd, int &rep);  // sends a command (one line), return code is written to rep
     bool sendCommandWCheck(const QCString &cmd, int rep);  // checks return code and calls handleErrors() if necessary
-    bool sendMsg(const DwString &msg);     // sends a message (multiple lines)
+    bool sendMsg(const QCString &msg);     // sends a message (multiple lines)
 
     bool getNextLine();                 // reads next complete line of input
     char* getCurrentLine()  { return thisLine; };  // returns pointer to current line of input  

@@ -24,10 +24,9 @@
 #include <klocale.h>
 #include <ksimpleconfig.h>
 
-#include "knappmanager.h"
 #include "kngroup.h"
-#include "knuserentry.h"
 #include "knglobals.h"
+#include "knconfigmanager.h"
 #include "knstringfilter.h"
 
 
@@ -43,7 +42,7 @@ KNStringFilter& KNStringFilter::operator=(const KNStringFilter &sf)
 
 
 
-bool KNStringFilter::doFilter(const QCString &s)
+bool KNStringFilter::doFilter(const QString &s)
 {
   bool ret=true;
 
@@ -63,25 +62,17 @@ bool KNStringFilter::doFilter(const QCString &s)
 // replace placeholders
 void KNStringFilter::expand(KNGroup *g)
 {
-  KNUserEntry *user=0;
-  KNUserEntry *duser=knGlobals.appManager->defaultUser();
-  KNUserEntry *guser=g->user();
+  KNConfig::Identity  *id=0,
+                      *defId=knGlobals.cfgManager->identity(),
+                      *grpId=g->identity();
 
   expanded = data.copy();
 
-  if ((guser) && guser->hasName())
-    user = guser;
-  else
-    user = duser;
+  ((grpId) && grpId->hasName()) ? id=grpId : id=defId;
+  expanded.replace(QRegExp("%MYNAME"), id->name());
 
-  expanded.replace(QRegExp("%MYNAME"),user->name());
-
-  if ((guser) && guser->hasEmail())
-    user = guser;
-  else
-    user = duser;
-
-  expanded.replace(QRegExp("%MYEMAIL"),user->email());
+  ((grpId) && grpId->hasEmail()) ? id=grpId : id=defId;
+  expanded.replace(QRegExp("%MYEMAIL"), id->email());
 }
 
 
@@ -90,7 +81,7 @@ void KNStringFilter::load(KSimpleConfig *conf)
 {
   enabled=conf->readBoolEntry("enabled", false);
   con=conf->readBoolEntry("contains", true);
-  data=conf->readEntry("Data").local8Bit();
+  data=conf->readEntry("Data");
   regExp=conf->readBoolEntry("regX", false);
 }
 
@@ -100,7 +91,7 @@ void KNStringFilter::save(KSimpleConfig *conf)
 {
   conf->writeEntry("enabled", enabled);
   conf->writeEntry("contains", con);
-  conf->writeEntry("Data", data.data());
+  conf->writeEntry("Data", data);
   conf->writeEntry("regX", regExp);
 }
 

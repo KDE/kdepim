@@ -16,18 +16,18 @@
 #ifndef KNGLOBALS_H
 #define KNGLOBALS_H
 
+class KNConfigManager;
 class KNNetAccess;
-class KNodeApp;
 class KNProgress;
 class KNAccountManager;
 class KNGroupManager;
-class KNFetchArticleManager;
+class KNArticleManager;
+class KNArticleFactory;
 class KNFolderManager;
-class KNSavedArticleManager;
+class QWidget;
 class KNFilterManager;
-class KNAppManager;
+class KNMainWindow;
 class KNodeView;
-
 
 // idea: Previously the manager classes were available
 //       via KNodeApp. Now they can be accessed directly,
@@ -38,16 +38,16 @@ class KNGlobals {
   public:
 
     QWidget               *topWidget;    // topWidget == top, used for message boxes,
-    KNodeApp              *top;          // no need to include knode.h everywhere
+    KNMainWindow          *top;          // no need to include knode.h everywhere
+    KNConfigManager       *cfgManager;
     KNNetAccess           *netAccess;
     KNProgress            *progressBar;
     KNAccountManager      *accManager;
-    KNGroupManager        *gManager;
-    KNFetchArticleManager *fArtManager;
-    KNFolderManager       *foManager;
-    KNSavedArticleManager *sArtManager;
-    KNFilterManager       *fiManager;
-    KNAppManager          *appManager;
+    KNGroupManager        *grpManager;
+    KNArticleManager      *artManager;
+    KNArticleFactory      *artFactory;
+    KNFolderManager       *folManager;
+    KNFilterManager       *filManager;
     KNodeView             *view;
 
 };

@@ -25,21 +25,21 @@
 #include <kdebug.h>
 
 #include "knglobals.h"
-#include "knuserentry.h"
-#include "knfetcharticle.h"
+#include "knmime.h"
 #include "knstringsplitter.h"
 #include "kncollectionviewitem.h"
 #include "kngrouppropdlg.h"
 #include "knnntpaccount.h"
 #include "utilities.h"
 #include "kngroup.h"
+#include "knconfig.h"
 
 
 #define SORT_DEPTH 5
 
 KNGroup::KNGroup(KNCollection *p)
   : KNArticleCollection(p), n_ewCount(0), r_eadCount(0),
-    l_astNr(0), m_axFetch(0), u_ser(0), l_ocked(false), l_oading(0)
+    l_astNr(0), m_axFetch(0), l_ocked(false), i_dentity(0)
 {
 }
 
@@ -47,7 +47,7 @@ KNGroup::KNGroup(KNCollection *p)
 
 KNGroup::~KNGroup()
 {
-  delete u_ser;
+  delete i_dentity;
 }
 
 
@@ -82,13 +82,6 @@ bool KNGroup::readInfo(const QString &confPath)
 {
   KSimpleConfig info(confPath);
 
-  /*if(tmp.isEmpty()) {
-    tmp=info.deleteEntry("name", false);
-    info.writeEntry("groupname", tmp);
-    kdDebug(5003) << "Group info-file converted" << endl;
-    info.sync();
-  }*/
-  
   g_roupname = info.readEntry("groupname").local8Bit();
   d_escription = info.readEntry("description").local8Bit();
   n_ame = info.readEntry("name");
@@ -96,13 +89,14 @@ bool KNGroup::readInfo(const QString &confPath)
   r_eadCount = info.readNumEntry("read",0);
   l_astNr = info.readNumEntry("lastMsg",0);
 
-  u_ser=new KNUserEntry();
-  u_ser->load(&info);
-  if(!u_ser->isEmpty()) {
-    kdDebug(5003) << "using alternative user for " << g_roupname.data() << endl;
-  } else {
-    delete u_ser;
-    u_ser=0;
+  i_dentity=new KNConfig::Identity(false);
+  i_dentity->loadConfig(&info);
+  if(!i_dentity->isEmpty()) {
+    kdDebug(5003) << "KNGroup::readInfo(const QString &confPath) : using alternative user for " << g_roupname.data() << endl;
+  }
+  else {
+    delete i_dentity;
+    i_dentity=0;
   }
   
   return (!g_roupname.isEmpty());
@@ -124,7 +118,8 @@ void KNGroup::saveInfo()
     info.writeEntry("read", r_eadCount);
     info.writeEntry("name", n_ame);
   
-    if(u_ser) u_ser->save(&info);
+    if(i_dentity)
+      i_dentity->saveConfig(&info);
     else if(info.hasKey("Email")) {
       info.deleteEntry("Name", false);
       info.deleteEntry("Email", false);
@@ -147,10 +142,10 @@ KNNntpAccount* KNGroup::account()
 
 
 
-KNFetchArticle* KNGroup::byId(int id)
+KNRemoteArticle* KNGroup::byId(int id)
 {
   int idx=findId(id);
-  if(idx!=-1) return ((KNFetchArticle*)list[idx]);
+  if(idx!=-1) return ( static_cast<KNRemoteArticle*> (list[idx]) );
   else return 0;
 }
 
@@ -165,7 +160,7 @@ bool KNGroup::loadHdrs()
     KNStringSplitter split;
     int cnt=0, id, lines;
     time_t timeT;//, fTimeT;
-    KNFetchArticle *art;
+    KNRemoteArticle *art;
 
     QString dir(path());
     if (dir == QString::null)
@@ -193,49 +188,32 @@ bool KNGroup::loadHdrs()
         }
         
         split.init(buff, "\t");
-        art=new KNFetchArticle(this);
+
+        art=new KNRemoteArticle(this);
+
         split.first();
-        art->setMessageId(split.string());
+        art->messageID()->from7BitString(split.string());
     
         split.next();
-        art->setSubject(split.string());
+        art->subject()->fromUnicodeString(QString::fromUtf8(split.string().data()));
         
         split.next();
-        art->setFromEmail(split.string());
+        art->from()->setEmail(split.string());
     
         split.next();
-        if(split.string()!="0") art->setFromName(split.string());
-        else {
-          art->setFromName(art->fromEmail());
-        }
-          
-        /*split.init(f.readLine(), ";");
-      
-        bool isRef=split.first(); 
-    
-        if(isRef){
-                
-          int RefNr=0;
-        
-          while(isRef && RefNr<5) {
-            art->setReference(RefNr, split.string());
-            isRef=split.next();
-            RefNr++;
-          }
-        }*/
-        
+        if(split.string()!="0") art->from()->setName(QString::fromUtf8(split.string().data()));
+
         buff=f.readLine();
-        if(!buff.isEmpty()) art->references().setLine(buff.copy());
+        if(buff!="0") art->references()->from7BitString(buff.copy());
                       
         buff=f.readLine();
         sscanf(buff,"%d %d %d", &id, &lines, (uint*) &timeT);//, (uint*) &fTimeT);
         //kdDebug(5003) << "id = " << id << endl;
       
         art->setId(id);
-        art->setLines(lines);
-        art->setTimeT(timeT);
-        //art->setFetchTime(fTimeT);
-                
+        art->lines()->setNumberOfLines(lines);
+        art->date()->setUnixTime(timeT);
+
         if(append(art)) cnt++;
         else {
           f.close();
@@ -315,7 +293,7 @@ bool KNGroup::loadHdrs()
 // Attention: this method is called from the network thread!
 void KNGroup::insortNewHeaders(QStrList *hdrs)
 {
-  KNFetchArticle *art=0;
+  KNRemoteArticle *art=0;
   QCString tmp;
   //DwDateTime dt;
   //time_t fTimeT=dt.AsUnixTime();
@@ -330,7 +308,7 @@ void KNGroup::insortNewHeaders(QStrList *hdrs)
     split.init(line, "\t");
       
     //new Header-Object
-    art=new KNFetchArticle(this);
+    art=new KNRemoteArticle(this);
     art->setNew(true);
     //art->setFetchTime(fTimeT);
         
@@ -340,30 +318,31 @@ void KNGroup::insortNewHeaders(QStrList *hdrs)
     
     //Subject
     split.next();
-    art->setSubject(split.string());
-    if(art->subject().isEmpty()) art->setSubject(i18n("no subject").local8Bit());
+    art->subject()->from7BitString(split.string());
+    if(art->subject()->isEmpty())
+    	art->subject()->fromUnicodeString(i18n("no subject"));
     
     //From and Email
     split.next();
-    art->parseFrom(split.string());
+    art->from()->from7BitString(split.string());
         
     //Date
     split.next();
-    art->parseDate(split.string());
+    art->date()->from7BitString(split.string());
                     
     //Message-ID
     split.next();
-    art->setMessageId(split.string().simplifyWhiteSpace());
+    art->messageID()->from7BitString(split.string().simplifyWhiteSpace());
       
     //References
     split.next();
     if(!split.string().isEmpty())
-      art->references().setLine(split.string().copy());
+      art->references()->from7BitString(split.string()); //use QCString::copy() ?
     
     //Lines
     split.next();
     split.next();
-    art->setLines(split.string().toInt());      
+    art->lines()->setNumberOfLines(split.string().toInt());
         
     if(append(art)) cnt++;
     else {
@@ -390,7 +369,7 @@ void KNGroup::insortNewHeaders(QStrList *hdrs)
 int KNGroup::saveStaticData(int cnt,bool ovr)
 {
   int idx, savedCnt=0, mode;
-  KNFetchArticle *art;
+  KNRemoteArticle *art;
   
   QString dir(path());
   if (dir == QString::null)
@@ -409,26 +388,26 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
             
       art=at(idx);    
       
-      if(!art->hasData()) continue;
+      if(art->subject()->isEmpty()) continue;
     
-      ts << art->messageId() << '\t';
-      ts << art->subject() << '\t';
-      ts << art->fromEmail() << '\t';
+      ts << art->messageID()->as7BitString(false) << '\t';
+      ts << art->subject()->asUnicodeString().utf8() << '\t';
+      ts << art->from()->email() << '\t';
 
-      if(art->fromEmail().nrefs()==1)
-        ts << art->fromName() << '\n';
+      if(art->from()->hasName())
+        ts << art->from()->name().utf8() << '\n';
       else
         ts << "0\n";
           
-      if(art->hasReferences())
-        ts << art->references().line() << "\n";
+      if(!art->references()->isEmpty())
+        ts << art->references()->as7BitString(false) << "\n";
       else
         ts << "0\n";
     
       ts << art->id() << ' ';
-      ts << art->lines() << ' ';
-      ts << art->timeT() << '\n';
-      //ts << art->fetchTime() << '\n';
+      ts << art->lines()->numberOfLines() << ' ';
+      ts << art->date()->unixTime() << '\n';
+
     
       savedCnt++;
       
@@ -447,7 +426,7 @@ void KNGroup::saveDynamicData(int cnt,bool ovr)
 {
   dynData data;
   int mode;
-  KNFetchArticle *art;  
+  KNRemoteArticle *art;
   
   if(len>0) {
     QString dir(path());
@@ -463,7 +442,7 @@ void KNGroup::saveDynamicData(int cnt,bool ovr)
         
       for(int idx=len-cnt; idx<len; idx++) {    
         art=at(idx);  
-        if(!art->hasData()) continue;
+        if(art->subject()->isEmpty()) continue;
         data.setData(art);
         f.writeBlock((char*)(&data), sizeof(dynData));
       }
@@ -479,7 +458,7 @@ void KNGroup::syncDynamicData()
 {
   dynData data;
   int cnt=0, readCnt=0, sOfData;
-  KNFetchArticle *art;
+  KNRemoteArticle *art;
   
   if(len>0) {
 
@@ -496,13 +475,13 @@ void KNGroup::syncDynamicData()
       for(int i=0; i<len; i++) {
         art=at(i);
         
-        if(art->hasChanged() && art->hasData()) {
+        if(art->hasChanged() && !art->subject()->isEmpty()) {
           
           data.setData(art);
           f.at(i*sOfData);
           f.writeBlock((char*) &data, sOfData);
           cnt++;
-          art->setHasChanged(false);
+          art->setChanged(false);
         }
       
         if(art->isRead()) readCnt++;
@@ -526,7 +505,7 @@ void KNGroup::sortHdrs(int cnt)
       start=len-cnt,
       foundCnt_1=0, foundCnt_2=0, bySubCnt=0, refCnt=0,
       resortCnt=0, idx, oldRef, idRef;
-  KNFetchArticle *art;
+  KNRemoteArticle *art;
   
   kdDebug(5003) << "KNGroup::sortHdrs() : start = " << start << "   end = " << end << endl;
   
@@ -539,7 +518,7 @@ void KNGroup::sortHdrs(int cnt)
         if(findRef(art, start, end)!=-1) {
           kdDebug(5003) << art->id() << " : old " << oldRef << "    new " << art->idRef() << "\n" << endl;
           resortCnt++;
-          art->setHasChanged(true);
+          art->setChanged(true);
         }
       }
     }
@@ -549,7 +528,7 @@ void KNGroup::sortHdrs(int cnt)
   
     art=at(idx);
     
-    if(art->hasReferences() && art->idRef()==-1){   //hdr has references
+    if(art->idRef()==-1 && !art->references()->isEmpty() ){   //hdr has references
       refCnt++;
       
       if(findRef(art, start, end)!=-1)  foundCnt_1++;   //scan new hdrs
@@ -558,7 +537,7 @@ void KNGroup::sortHdrs(int cnt)
           foundCnt_2++;
     }
     else {
-      if(strncasecmp(art->subject(),"Re:",3)!=0) {
+      if(art->subject()->isReply()) {
         art->setIdRef(0); //hdr has no references
         art->setThreadingLevel(0);
       }
@@ -570,8 +549,8 @@ void KNGroup::sortHdrs(int cnt)
   if((foundCnt_1+foundCnt_2)<refCnt) {    // if some references could not be found
   
     //try to sort by subject
-    KNFetchArticle *oldest; 
-    QList<KNFetchArticle> list;
+    KNRemoteArticle *oldest;
+    QList<KNRemoteArticle> list;
     list.setAutoDelete(false);
       
     for(idx=start; idx<end; idx++) {
@@ -598,15 +577,15 @@ void KNGroup::sortHdrs(int cnt)
       
           //find oldest
           oldest=list.first();
-          for(KNFetchArticle *var=list.next(); var; var=list.next())
-            if(var->timeT() < oldest->timeT()) oldest=var;
+          for(KNRemoteArticle *var=list.next(); var; var=list.next())
+            if(var->date()->unixTime() < oldest->date()->unixTime()) oldest=var;
           
           //oldest gets idRef 0 
           if(oldest->idRef()==-1) bySubCnt++;
           oldest->setIdRef(0);
           oldest->setThreadingLevel(6);   
           
-          for(KNFetchArticle *var=list.first(); var; var=list.next()) {
+          for(KNRemoteArticle *var=list.first(); var; var=list.next()) {
             if(var==oldest) continue;
             else if(var->idRef()==-1 || (var->idRef()!=-1 && var->threadingLevel()==6)) {
               var->setIdRef(oldest->id());
@@ -679,19 +658,19 @@ void KNGroup::sortHdrs(int cnt)
 
 
 
-int KNGroup::findRef(KNFetchArticle *a, int from, int to, bool reverse)
+int KNGroup::findRef(KNRemoteArticle *a, int from, int to, bool reverse)
 {
   bool found=false;
   int foundID=-1, idx=0;
   short refNr=0;
   QCString ref;
-  ref=a->references().first();  
+  ref=a->references()->first();
   
   if(!reverse){
     
     while(!found && !ref.isNull() && refNr < SORT_DEPTH) {
       for(idx=from; idx<to; idx++) {
-        if(at(idx)->messageId()==ref) {
+        if(at(idx)->messageID()->as7BitString(false)==ref) {
           found=true;
           foundID=at(idx)->id();
           a->setThreadingLevel(refNr+1);
@@ -699,13 +678,13 @@ int KNGroup::findRef(KNFetchArticle *a, int from, int to, bool reverse)
         }
       }
       ++refNr;
-      ref=a->references().next();
+      ref=a->references()->next();
     }
   }
   else {
     while(!found && !ref.isNull() && refNr < SORT_DEPTH) {
       for(idx=to; idx>=from; idx--) {
-        if(at(idx)->messageId()==ref){
+        if(at(idx)->messageID()->as7BitString(false)==ref){
           found=true;
           foundID=at(idx)->id();
           a->setThreadingLevel(refNr+1);
@@ -713,7 +692,7 @@ int KNGroup::findRef(KNFetchArticle *a, int from, int to, bool reverse)
         }
       }
       ++refNr;
-      ref=a->references().next();
+      ref=a->references()->next();
     }
   }
       
@@ -738,7 +717,7 @@ void KNGroup::resort()
 
 void KNGroup::updateThreadInfo()
 {
-  KNFetchArticle *ref;
+  KNRemoteArticle *ref;
   bool brokenThread=false;
   
   for(int idx=0; idx<len; idx++) {
@@ -774,12 +753,12 @@ void KNGroup::updateThreadInfo()
 
 
 
-KNFetchArticle* KNGroup::byMessageId(const QCString &mId)
+KNRemoteArticle* KNGroup::byMessageId(const QCString &mId)
 {
-  KNFetchArticle *ret=0;
+  KNRemoteArticle *ret=0;
   
   for(int i=0; i<len; i++) {
-    if(at(i)->messageId()==mId) {
+    if(at(i)->messageID()->as7BitString(false)==mId) {
       ret=at(i);
       break;
     }
@@ -791,17 +770,18 @@ KNFetchArticle* KNGroup::byMessageId(const QCString &mId)
 
 void KNGroup::showProperties()
 {
-  if(!u_ser) u_ser=new KNUserEntry();
+  if(!i_dentity) i_dentity=new KNConfig::Identity(false);
   KNGroupPropDlg *d=new KNGroupPropDlg(this, knGlobals.topWidget);
   
   if(d->exec())
     if(d->nickHasChanged())
       l_istItem->setText(0, name());
 
-  if(u_ser->isEmpty()) {
-    delete u_ser;
-    u_ser=0;
+  if(i_dentity->isEmpty()) {
+    delete i_dentity;
+    i_dentity=0;
   }
+
   delete d;
 }
 
@@ -827,7 +807,7 @@ int KNGroup::statThrWithUnread()
 
 
 
-void KNGroup::dynData::setData(KNFetchArticle *a)
+void KNGroup::dynData::setData(KNRemoteArticle *a)
 {
   id=a->id();
   idRef=a->idRef();

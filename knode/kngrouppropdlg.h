@@ -21,9 +21,11 @@
 #include <kdialogbase.h>
 
 class QLineEdit;
-class KNUserWidget;
 class KNGroup;
 
+namespace KNConfig {
+class IdentityWidget;
+};
 
 class KNGroupPropDlg : public KDialogBase  {
 
@@ -36,7 +38,7 @@ class KNGroupPropDlg : public KDialogBase  {
   protected:
     KNGroup *grp;
     bool nChanged;
-    KNUserWidget *uw;
+    KNConfig::IdentityWidget* i_dWidget;
     QLineEdit *nick;
     
   protected slots:

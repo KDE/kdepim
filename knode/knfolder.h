@@ -20,9 +20,9 @@
 #define KNFOLDER_H
 
 #include "knarticlecollection.h"
+#include "knmime.h"
 #include <time.h>
 
-class KNSavedArticle;
 
 
 class KNFolder : public KNArticleCollection  {
@@ -30,52 +30,60 @@ class KNFolder : public KNArticleCollection  {
   friend class KNCleanUp; 
 
   public:
-    KNFolder(KNCollection *p=0);
+    KNFolder(int id, const QString &n, KNCollection *p=0);
     ~KNFolder();
-    
+
+    //type
+    collectionType type()               { return CTfolder; }
+
+    //id
+    int id()                            { return i_d; }
+    void setId(int i)                   { i_d=i; }
+
+    //list item handling
     void updateListItem();
-    
+
+    //info
+    QString path();
     bool readInfo(const QString &confPath);
     void saveInfo();
-    
-    void syncDynamicData(bool force=false);             
+
+    //article access
+    KNLocalArticle* at(int i)           { return static_cast<KNLocalArticle*>(list[i]); }
+    KNLocalArticle* byId(int id);
+
+    //load, save and delete
     bool loadHdrs();
-    bool loadArticle(KNSavedArticle *a);
-    bool addArticle(KNSavedArticle *a);
-    bool saveArticle(KNSavedArticle *a);
-    void removeArticle(KNSavedArticle *a);
+    bool loadArticle(KNLocalArticle *a);
+    bool saveArticles(KNLocalArticle::List *l);
+    void removeArticles(KNLocalArticle::List *l, bool del=true);
     void deleteAll();
-    
-    ///get
-    collectionType type()               { return CTfolder; }
-    QString path();
-    KNSavedArticle* at(int i)           { return (KNSavedArticle*) list[i]; }
-    KNSavedArticle* byId(int id);       
-    int id()                            { return i_d; }
-    bool toSync()                       { return t_oSync; }
-            
-    //set
-    void setId(int i)                   { i_d=i; }  
-    void setToSync(bool b)              { t_oSync=b; }
+
+    //index synchronization
+    void syncIndex(bool force=false);
+
         
     protected:
-      void saveDynamicData(int start, int cnt, bool ovr=false);
-      void saveStaticData(int start, int cnt, bool ovr=false);
-      
-      int i_d;
-      bool t_oSync;
-      
-      class dynData {
+      void closeFiles();
+      int i_d;            //unique id
+      bool i_ndexDirty;   //do we need to sync?
+      KNFile m_boxFile;
+      QFile i_ndexFile;
+
+      /* helper-class: stores index-data of an article */
+      class DynData {
         public:
-          dynData()  {}
-          ~dynData() {}
-          void setData(KNSavedArticle *a);
+          DynData()  {}
+          ~DynData() {}
+          void setData(KNLocalArticle *a);
           
-          int id, status, so, eo, sId;
+          int id,
+              so,
+              eo,
+              sId;
           time_t ti;
+          bool flags[6];
       };
-          
-          
 };
 
 #endif

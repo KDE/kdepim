@@ -42,15 +42,15 @@ int KNApplication::newInstance()
   else {
     if (isRestored()) {
       int n = 1;
-      while (KNodeApp::canBeRestored(n)){
-        if (KNodeApp::classNameOfToplevel(n)=="KNodeApp") {
-          (new KNodeApp)->restore(n);
+      while (KNMainWindow::canBeRestored(n)){
+        if (KNMainWindow::classNameOfToplevel(n)=="KNMainWindow") {
+          (new KNMainWindow)->restore(n);
           break;
         }
         n++;
       }
     } else {
-      KNodeApp* knode = new KNodeApp;
+      KNMainWindow* knode = new KNMainWindow;
       knode->show();
     }
   }
@@ -60,7 +60,7 @@ int KNApplication::newInstance()
   if (args->count()>0) {
     KURL url = args->url(0);    // we take only one URL
     if ((url.protocol()=="news")&&(url.hasHost()))
-      static_cast<KNodeApp*>(mainWidget())->openURL(url);
+      static_cast<KNMainWindow*>(mainWidget())->openURL(url);
     else
       kdDebug(5003) << "ignoring broken URL" << endl;
   }

@@ -32,38 +32,27 @@
 #include "kngroup.h"
 #include "kngroupmanager.h"
 #include "knnntpaccount.h"
-#include "knserverinfo.h"
-#include "knsavedarticlemanager.h"
-#include "knaccnewssettings.h"
 #include "kncollectionviewitem.h"
 #include "knglobals.h"
+#include "knconfigmanager.h"
 #include "utilities.h"
 #include "knaccountmanager.h"
+#include "knfoldermanager.h"
+#include "knconfig.h"
 
-
-KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, KActionCollection* actColl, QObject * parent, const char * name)
-  : QObject(parent, name), gManager(gm), view(v), actionCollection(actColl)
+KNAccountManager::KNAccountManager(KNGroupManager *gm, KNListView *v, QObject * parent, const char * name)
+  : QObject(parent, name), gManager(gm), c_urrentAccount(0), view(v)
 {
   accList=new QList<KNNntpAccount>;
   accList->setAutoDelete(true);
   s_mtp=new KNServerInfo();
   s_mtp->setType(KNServerInfo::STsmtp);
   s_mtp->setId(0);
-  readConfig();
+  KConfig *conf=KGlobal::config();
+  conf->setGroup("MAILSERVER");
+  s_mtp->readConf(conf);
+
   loadAccounts();
-  
-  actProperties = new KAction(i18n("&Properties..."), 0, this, SLOT(slotProperties()),
-                              actionCollection, "account_properties");
-  actSubscribe = new KAction(i18n("&Subscribe to Newsgroups..."),"news_subscribe", 0, this, SLOT(slotSubscribe()),
-                             actionCollection, "account_subscribe");
-  actLoadHdrs = new KAction(i18n("&Get New Articles"), "mail_get", 0, this, SLOT(slotLoadHdrs()),
-                            actionCollection, "account_dnlHeaders");
-  actDelete = new KAction(i18n("&Delete"), 0, this, SLOT(slotDelete()),
-                          actionCollection, "account_delete");
-  actPostNewArticle = new KAction(i18n("&Post new article"), "filenew", Key_P , this, SLOT(slotPostNewArticle()),
-                                  actionCollection, "article_postNew");
-  
-  setCurrentAccount(0);
 }
 
 
@@ -75,24 +64,6 @@ KNAccountManager::~KNAccountManager()
 }
 
 
-
-void KNAccountManager::readConfig()
-{
-  KConfig *conf=KGlobal::config();
-  conf->setGroup("MAILSERVER");
-  s_mtp->readConf(conf);
-}
-
-
-
-void KNAccountManager::saveYourself()
-{
-  for(KNNntpAccount *a=accList->first(); a; a=accList->next())
-    a->syncInfo();
-}
-
-
-
 void KNAccountManager::loadAccounts()
 {
   QString dir(KGlobal::dirs()->saveLocation("appdata"));
@@ -102,17 +73,17 @@ void KNAccountManager::loadAccounts()
   }
   QDir d(dir);
   KNNntpAccount *a;
-  
+  QPixmap pm=knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::nntp);
   QStringList entries(d.entryList("nntp.*", QDir::Dirs));
 
-  QStringList::Iterator it; 
+  QStringList::Iterator it;
   for(it = entries.begin(); it != entries.end(); it++) {
     a=new KNNntpAccount();
     if (a->readInfo(dir+(*it)+"/info")) {
       accList->append(a);
       KNCollectionViewItem* cvit=new KNCollectionViewItem(view);
       a->setListItem(cvit);
-      cvit->setPixmap(0, KNLVItemBase::icon(KNLVItemBase::PTnntp));
+      cvit->setPixmap(0, pm);
       gManager->loadGroups(a);
     } else {
       delete a;
@@ -143,19 +114,6 @@ KNNntpAccount* KNAccountManager::account(int i)
 void KNAccountManager::setCurrentAccount(KNNntpAccount *a)
 {
   c_urrentAccount=a;
-  if (a) {
-    actProperties->setEnabled(true);
-    actSubscribe->setEnabled(true);
-    actLoadHdrs->setEnabled(true);
-    actDelete->setEnabled(true);
-    actPostNewArticle->setEnabled(true);
-  } else {
-    actProperties->setEnabled(false);
-    actSubscribe->setEnabled(false);
-    actLoadHdrs->setEnabled(false);
-    actDelete->setEnabled(false);
-    actPostNewArticle->setEnabled(false);   
-  }
 }
 
 
@@ -184,7 +142,7 @@ bool KNAccountManager::newAccount(KNNntpAccount *a)
     accList->append(a);
     applySettings(a);
     KNCollectionViewItem *it = new KNCollectionViewItem(view);
-    it->setPixmap(0, KNLVItemBase::icon(KNLVItemBase::PTnntp));
+    it->setPixmap(0, knGlobals.cfgManager->appearance()->icon(KNConfig::Appearance::nntp));
     a->setListItem(it);
     emit(accountAdded(a));
     return true;
@@ -214,7 +172,7 @@ void KNAccountManager::removeAccount(KNNntpAccount *a)
   if(!a) return;
 
   QList<KNGroup> *lst;
-  if(a->hasUnsent()) {
+  if(knGlobals.folManager->unsentForAccount(a->id()) > 0) {
     KMessageBox::sorry(knGlobals.topWidget, i18n("This account cannot be deleted, since there are some unsent messages for it."));
   } 
   else if(KMessageBox::questionYesNo(knGlobals.topWidget, i18n("Do you really want to delete this account?"))==KMessageBox::Yes) {
@@ -222,7 +180,7 @@ void KNAccountManager::removeAccount(KNNntpAccount *a)
     lst->setAutoDelete(false);
     gManager->getGroupsOfAccount(a, lst);
     for(KNGroup *g=lst->first(); g; g=lst->next()) {
-      if(g->locked()) {
+      if(g->isLocked()) {
         KMessageBox::sorry(knGlobals.topWidget, i18n("At least one group of this account is currently in use.\nThe account cannot be deleted at the moment."));
         return;
       }
@@ -251,54 +209,18 @@ void KNAccountManager::removeAccount(KNNntpAccount *a)
     accList->removeRef(a);      // finally delete a
   }     
 }
-  
 
 
-void KNAccountManager::slotProperties()
+void KNAccountManager::editProperties(KNNntpAccount *a)
 {
-  if (c_urrentAccount) {
-    KNAccNewsConfDialog *confDlg = new KNAccNewsConfDialog(c_urrentAccount,knGlobals.topWidget);
+  if(!a) a=c_urrentAccount;
+  if(!a) return;
 
-    if (confDlg->exec())
-      applySettings(c_urrentAccount);
+  KNConfig::NntpAccountConfDialog *confDlg = new KNConfig::NntpAccountConfDialog(a, knGlobals.topWidget);
+  if (confDlg->exec())
+    applySettings(c_urrentAccount);
 
-    delete confDlg;
-  }
-}
-    
-
-
-void KNAccountManager::slotSubscribe()
-{
-  if (c_urrentAccount)
-    gManager->showGroupDialog(c_urrentAccount);
-}
-
-  
-
-void KNAccountManager::slotLoadHdrs()
-{
-  if (c_urrentAccount)
-    gManager->checkAll(c_urrentAccount);
-}
-
-
-
-void KNAccountManager::slotDelete()
-{
-  removeAccount();
-}
-
-
-
-void KNAccountManager::slotPostNewArticle()
-{
-  if (c_urrentAccount) {
-    if(gManager->hasCurrentGroup())
-      knGlobals.sArtManager->post(gManager->currentGroup());
-    else
-      knGlobals.sArtManager->post(c_urrentAccount); 
-  }
+  delete confDlg;
 }
 
 //--------------------------------

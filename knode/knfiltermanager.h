@@ -23,52 +23,29 @@
 
 #include <kaction.h>
 
-class KNFilterSettings;
+namespace KNConfig {
+class FilterListWidget;
+}
+
 class KNArticleFilter;
 class KNFilterDialog;
-
-
-class KNFilterSelectAction : public KActionMenu
-{
-  Q_OBJECT
-
-  public:
-    KNFilterSelectAction( const QString& text, const QString& pix,
-                          QObject* parent, char *name );
-    ~KNFilterSelectAction();
-
-    void setCurrentItem(int id);
-
-  protected slots:
-    void slotMenuActivated(int id);
-
-  signals:
-    void activated(int id);
-
-  private:
-    int currentItem;
-};
-
-
-//==================================================================================
-
+class KNFilterSelectAction;
 
 class KNFilterManager : public QObject
 {
   Q_OBJECT
 
   public:
-    KNFilterManager(KActionCollection* actColl, QObject * parent=0, const char * name=0);
+    KNFilterManager(KNFilterSelectAction *a, QObject * parent=0, const char * name=0);
     ~KNFilterManager();
     
     void readOptions();
     void saveOptions();
 
-    void setIsAGroup(bool b);        // dis-/enable the filter menu
 
     KNArticleFilter* currentFilter()        { return currFilter; }    
       
-    void startConfig(KNFilterSettings *fs);
+    void startConfig(KNConfig::FilterListWidget *fs);
     void endConfig();
     void commitChanges();
     void newFilter();
@@ -86,12 +63,11 @@ class KNFilterManager : public QObject
     void updateMenu();
     
     QList<KNArticleFilter> fList;
-    KNFilterSettings *fset;
+    KNConfig::FilterListWidget *fset;
     KNArticleFilter *currFilter;
-    KNFilterSelectAction *actFilter;
+    KNFilterSelectAction *a_ctFilter;
     QValueList<int> menuOrder;  
-    KActionCollection *actionCollection;
-    bool isAGroup, commitNeeded;
+    bool commitNeeded;
   
   protected slots:
     void slotMenuActivated(int id);

@@ -19,7 +19,7 @@
 
 #include <klocale.h>
 
-#include "knsavedarticle.h"
+#include "knmime.h"
 #include "knjobdata.h"
 #include "knsmtpclient.h"
 
@@ -51,35 +51,34 @@ void KNSmtpClient::processJob()
 
 void KNSmtpClient::doMail()
 {
-  KNSavedArticle *art=(KNSavedArticle*)job->data();
+  KNLocalArticle *art=static_cast<KNLocalArticle*>(job->data());
   
   sendSignal(TSsendMail); 
-  
+
   QCString cmd = "MAIL FROM:<";
-  cmd += art->fromEmail();
+  cmd += art->from()->email();
   cmd += ">";
-  if (!sendCommandWCheck(cmd,250))
+  if(!sendCommandWCheck(cmd, 250))
     return;
     
   progressValue = 80;
 
-  cmd = "RCPT TO:<";
-  cmd += art->headerLine("To");
-  cmd += ">";
-  if (!sendCommandWCheck(cmd,250))
+  cmd = "RCPT TO:";
+  cmd += art->to()->as7BitString(false);
+  if(!sendCommandWCheck(cmd, 250))
     return;
     
   progressValue = 90;
 
-  if (!sendCommandWCheck("DATA",354))
+  if(!sendCommandWCheck("DATA", 354))
     return;
     
   progressValue = 100;
   
-  if (!sendMsg(art->encodedData()))
+  if(!sendMsg(art->encodedContent(true)))
     return;
     
-  if (!checkNextResponse(250))
+  if(!checkNextResponse(250))
     return;
 }
 

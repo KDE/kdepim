@@ -20,57 +20,60 @@
 #define KNFOLDERMANAGER_H
 
 #include <qlist.h>
-#include <kaction.h>
+
 
 class KNListView;
-class KNPurgeProgressDialog;
+//class KNPurgeProgressDialog;
 class KNFolder;
-class KNSavedArticleManager;
+class KNArticleManager;
+class KNCleanupProgress;
 
 
-class KNFolderManager : public QObject
+class KNFolderManager
 {
-  Q_OBJECT
-  
   public:
-    enum stFolder { SFdrafts=0, SFoutbox=1, SFsent=2 };
-    KNFolderManager(KNSavedArticleManager *a, KNListView *v, KActionCollection* actColl, QObject * parent=0, const char * name=0);
+    KNFolderManager(KNListView *v, KNArticleManager *a);
     ~KNFolderManager();
 
-    int count()                           { return c_ount; }
+    //folder access
+    void setCurrentFolder(KNFolder *f);
     KNFolder* currentFolder()             { return c_urrentFolder; }
     bool hasCurrentFolder()               { return (c_urrentFolder!=0); }
-    void setCurrentFolder(KNFolder *f);
-    KNFolder* standardFolder(stFolder stf);
-    KNFolder* folder(int i);
-    
-    void newFolder(KNFolder *p=0);
-    void deleteFolder(KNFolder *f=0);
-    void removeFolder(KNFolder *f=0);
-    void emptyFolder(KNFolder *f=0);
-    void compactFolder(KNFolder *f=0);
-    bool timeToCompact();
-    void compactAll(KNPurgeProgressDialog *dlg=0);
+    KNFolder* folder(int id);
+
+    //standard folders
+    KNFolder* drafts()                    { return f_List.at(0); }
+    KNFolder* outbox()                    { return f_List.at(1); }
+    KNFolder* sent()                      { return f_List.at(2); }
+
+    //folder handling
+    void newFolder(KNFolder *p);
+    void deleteFolder(KNFolder *f);
+    void removeFolder(KNFolder *f);
+    void emptyFolder(KNFolder *f);
+    void showProperties(KNFolder *f);
+
+    //unsent articles
+    int unsentForAccount(int accId);
+
+    //compacting
+    void compactFolder(KNFolder *f);
+    void compactAll(KNCleanupProgress *prg);
+
+    //synchronization
     void syncFolders();   
-  
+
+
   protected:
-    void createStandardFolders();
     int loadCustomFolders();
     void showListItems();
     void createListItem(KNFolder *f);
         
     KNFolder  *c_urrentFolder;
-    QList<KNFolder> *fList;
-    KNListView *view;
-    KNSavedArticleManager *aManager;
-    int lastId, c_ount;
-    KAction *actCompactFolder, *actEmptyFolder;
-    KActionCollection *actionCollection;
-    
-  protected slots:  
-    void slotCompactFolder()              { compactFolder(); }
-    void slotEmptyFolder()                { emptyFolder(); }
-  
+    QList<KNFolder> f_List;
+    KNListView *v_iew;
+    KNArticleManager *a_rtManager;
+
 };
 
 #endif

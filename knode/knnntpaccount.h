@@ -25,7 +25,7 @@
 #include "knserverinfo.h"
 
 
-class KNNntpAccount : public KNCollection, public KNServerInfo {
+class KNNntpAccount : public KNCollection , public KNServerInfo {
   
   public:
     KNNntpAccount();
@@ -36,24 +36,18 @@ class KNNntpAccount : public KNCollection, public KNServerInfo {
     // trys to read information, returns false if it fails to do so
     bool readInfo(const QString &confPath);
     void saveInfo();    
-    void syncInfo();
+    //void syncInfo();
     QString path();
     
     //get
-    int unsentCount()                 { return u_nsentCount; }
-    bool hasUnsent()                  { return (u_nsentCount>0); }
     bool fetchDescriptions()          { return f_etchDescriptions; }
     QDate lastNewFetch()              { return l_astNewFetch; }
   
     //set
-    void setUnsentCount(int i)        { u_nsentCount=i; }
-    void incUnsentCount(int i=1)      { u_nsentCount+=i; }
-    void decUnsentCount(int i=1)      { u_nsentCount-=i; }
     void setFetchDescriptions(bool b) { f_etchDescriptions = b; }
     void setLastNewFetch(QDate date)  { l_astNewFetch = date; }
   
   protected:
-    int u_nsentCount;
     bool f_etchDescriptions;          // use an additional "list newsgroups" command to fetch the newsgroup descriptions
     QDate l_astNewFetch;              // last use of "newgroups"
       

@@ -20,12 +20,50 @@
 #define KNJOBDATA_H
 
 #include "knserverinfo.h"
+#include <qlist.h>
+
+class KNJobData;
+
+class KNJobConsumer {
+
+  public:
+    KNJobConsumer();
+    virtual ~KNJobConsumer();
+
+    /* Send the job to KNNetAccess and append it to the
+       joblist*/
+    void emitJob(KNJobData *j);
+
+    /* Remove the job from the joblist and process it by
+       calling "processJob" */
+    void jobDone(KNJobData *j);
+
+  protected:
+    /* The actual work is done here */
+    virtual void processJob(KNJobData *j);
+    QList<KNJobData> j_obs;
+
+};
+
+
+class KNJobItem {
+
+  public:
+    KNJobItem()           {}
+    virtual ~KNJobItem()  {}
+
+    virtual bool isLocked()         { return false; }
+    virtual void setLocked(bool)    { }
+
+};
 
 
 class KNJobData {
   
   public:
-    
+
+    friend class KNJobConsumer;
+
     enum jobType {  JTLoadGroups,
                     JTFetchGroups,
                     JTCheckNewGroups,
@@ -34,14 +72,14 @@ class KNJobData {
                     JTpostArticle,
                     JTmail };                   
     
-    KNJobData(jobType t, KNServerInfo *a, void *d);
+    KNJobData(jobType t, KNJobConsumer *c, KNServerInfo *a, KNJobItem *i);
     ~KNJobData();
     
     jobType type() const                  { return t_ype; }
     
     bool net() const                      { return (t_ype!=JTLoadGroups); }
     KNServerInfo* account() const         { return a_ccount; }
-    void* data() const                    { return d_ata; }
+    KNJobItem* data() const               { return d_ata; }
     
     const QString& errorString() const    { return e_rrorString; }
     bool success() const                  { return e_rrorString.isEmpty(); }
@@ -49,14 +87,18 @@ class KNJobData {
     
     void setErrorString(const QString& s) { e_rrorString=s; }
     void cancel() { c_anceled=true; }
-    
+
+    void notifyConsumer();
+
   protected:
     jobType t_ype;
-    void *d_ata;
+    KNJobItem *d_ata;
     KNServerInfo *a_ccount;
     QString e_rrorString;
-    bool c_anceled;   
+    bool c_anceled;
+    KNJobConsumer *c_onsumer;
         
 };
+
 
 #endif

@@ -14,7 +14,7 @@
  ***************************************************************************/
 
 #include "knhdrviewitem.h"
-#include "knfetcharticle.h"
+#include "knmime.h"
 #include <stdio.h>
 
 
@@ -43,7 +43,7 @@ QString KNHdrViewItem::key(int col, bool asc) const
 {
   if(col==3) {
     QString tmpString;
-    return tmpString.sprintf("%08d",(uint)art->timeT());
+    return tmpString.sprintf("%08d",(uint)art->date()->unixTime());
   } else
     return text(col);
 }
@@ -52,9 +52,9 @@ QString KNHdrViewItem::key(int col, bool asc) const
 
 bool KNHdrViewItem::greyOut()
 {
-  if(art->type()==KNArticleBase::ATfetch)
-    return (  !((KNFetchArticle*)art)->hasUnreadFollowUps() &&
-              ((KNFetchArticle*)art)->isRead() );
+  if(art->type()==KNMimeBase::ATremote)
+    return (  !((KNRemoteArticle*)art)->hasUnreadFollowUps() &&
+              ((KNRemoteArticle*)art)->isRead() );
   else return false;  
 }
 
@@ -62,6 +62,9 @@ bool KNHdrViewItem::greyOut()
 
 bool KNHdrViewItem::firstColBold()
 {
-  return art->isNew();
+	if(art->type()==KNMimeBase::ATremote)
+		return ( static_cast<KNRemoteArticle*>(art)->isNew() );
+	else
+		return false;
 }
 

@@ -15,86 +15,28 @@
 
 #include <qheader.h>
 #include <qpixmap.h>
-
 #include <kapp.h>
 #include <kiconloader.h>
+#include <klocale.h>
+#include <kdebug.h>
 
 #include "knglobals.h"
-#include "knappmanager.h"
+#include "knconfigmanager.h"
 #include "utilities.h"
 #include "knlistview.h"
+#include "knmime.h"
+#include "knhdrviewitem.h"
 
 
-QPixmap* KNLVItemBase::pms[15];
-QColor KNLVItemBase::normal, KNLVItemBase::grey;
-
-
-void KNLVItemBase::updateAppearance()
-{
-  if (knGlobals.appManager->useColors()) {
-    normal = knGlobals.appManager->color(KNAppManager::normalText);
-    grey = knGlobals.appManager->color(KNAppManager::readArticle);
-  } else {
-    normal = kapp->palette().active().text();
-    grey = kapp->palette().disabled().text();
-  }
-}
-
-
-
-void KNLVItemBase::initIcons()
-{
-  for(int i=0; i<16; i++) pms[i]=0;
-}
-
-
-
-void KNLVItemBase::clearIcons()
-{
-  for(int i=0; i<16; i++) delete pms[i];  
-}
-
-
-
-QPixmap& KNLVItemBase::icon(pixmapType t)
-{
-  if(pms[t]==0) {
-    pms[t]=new QPixmap();
-    switch(t) {
-      case PTgreyBall:        *pms[t]=UserIcon("greyball");     break;
-      case PTredBall:         *pms[t]=UserIcon("redball");      break;
-      case PTgreyBallChkd:    *pms[t]=UserIcon("greyballchk");  break;
-      case PTredBallChkd:     *pms[t]=UserIcon("redballchk");   break;
-      case PTnewFups:         *pms[t]=UserIcon("newsubs");      break;
-      case PTeyes:            *pms[t]=UserIcon("eyes");         break;
-      case PTmail:            *pms[t]=UserIcon("mail");         break;
-      case PTposting:         *pms[t]=UserIcon("posting");      break;
-      case PTcontrol:         *pms[t]=UserIcon("ctlart");       break;      
-      case PTstatusSent:      *pms[t]=UserIcon("stat_sent");    break;
-      case PTstatusEdit:      *pms[t]=UserIcon("stat_edit");    break;
-      case PTstatusCanceled:  *pms[t]=UserIcon("stat_cncl");    break;
-      case PTnntp:            *pms[t]=UserIcon("server");       break;
-      case PTgroup:           *pms[t]=UserIcon("group");        break;
-      case PTfolder:          *pms[t]=SmallIcon("folder");       break;
-      case PTnull:            break;
-    }
-  }
-  
-  return (*pms[t]);     
-}
-
-//==================================================================================
 
 KNLVItemBase::KNLVItemBase(KNLVItemBase *item) : QListViewItem(item)
 {
 }
 
 
-
 KNLVItemBase::KNLVItemBase(KNListView *view) : QListViewItem(view)
 {
 }
-
 
 
 KNLVItemBase::~KNLVItemBase()
@@ -104,11 +46,11 @@ KNLVItemBase::~KNLVItemBase()
 }
 
 
-
 void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment)
 {
   int xText=0, xPM=3, yPM=0;
   QColor base;
+  KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
 
   QPen pen=p->pen();
   if (isSelected()) {
@@ -116,9 +58,9 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
     base=cg.highlight();
   } else {
     if (this->greyOut())
-      pen.setColor(grey);
+      pen.setColor(app->readArticleColor());
     else
-      pen.setColor(normal);
+      pen.setColor(app->textColor());
     base=cg.base();
   }
   p->setPen(pen);
@@ -165,7 +107,6 @@ void KNLVItemBase::paintCell(QPainter *p, const QColorGroup &cg, int column, int
 }
 
 
-
 int KNLVItemBase::width(const QFontMetrics &fm, const QListView *, int column)
 {
   int ret = fm.boundingRect( text(column) ).width();
@@ -184,7 +125,6 @@ int KNLVItemBase::width(const QFontMetrics &fm, const QListView *, int column)
 }
 
 
-
 void KNLVItemBase::paintFocus(QPainter *p, const QColorGroup & cg, const QRect & r)
 {
   QListView* lv = listView();
@@ -195,12 +135,10 @@ void KNLVItemBase::paintFocus(QPainter *p, const QColorGroup & cg, const QRect &
 }
 
 
-
 void KNLVItemBase::sortChildItems(int column, bool)
 {
   QListViewItem::sortChildItems(column, true);
 }
-
 
 
 void KNLVItemBase::expandChildren()
@@ -231,11 +169,9 @@ KNListView::KNListView(QWidget *parent, const char *name)
 }
 
 
-
 KNListView::~KNListView()
 {
 }
-
 
 
 void KNListView::setSelected(QListViewItem *item, bool select)
@@ -250,13 +186,11 @@ void KNListView::setSelected(QListViewItem *item, bool select)
 }
 
 
-
 void KNListView::clear()
 {
   exclusiveSelectedItem=0;
   QListView::clear();
 }
-
 
 
 void KNListView::slotSortList(int col)
@@ -293,14 +227,12 @@ void KNListView::keyPressEvent(QKeyEvent *e)
 }
 
 
-
 void KNListView::focusInEvent(QFocusEvent *e)
 {
   if ( currentItem() ) repaintItem(currentItem());   // show cursor marker
 
   emit focusChanged(e);
 }
-
 
 
 void KNListView::focusOutEvent(QFocusEvent *e)

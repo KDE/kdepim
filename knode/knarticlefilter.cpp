@@ -23,10 +23,7 @@
 #include <kdebug.h>
 
 #include "kngroup.h"
-#include "knfetcharticle.h"
-#include "knstatusfilter.h"
-#include "knrangefilter.h"
-#include "knstringfilter.h"
+#include "knmime.h"
 #include "utilities.h"
 #include "knarticlefilter.h"
 
@@ -173,7 +170,7 @@ void KNArticleFilter::save()
 void KNArticleFilter::doFilter(KNGroup *g)
 {
   c_ount=0;
-  KNFetchArticle *art, *ref;
+  KNRemoteArticle *art, *ref;
   int idRef;
   
   if(!l_oaded) load();
@@ -184,7 +181,7 @@ void KNArticleFilter::doFilter(KNGroup *g)
   for(int idx=0; idx<g->length(); idx++) {
     art=g->at(idx);
     art->setFiltered(false);
-    art->setHasFollowUps(false);
+    art->setVisibleFollowUps(false);
   }
   
     
@@ -192,14 +189,14 @@ void KNArticleFilter::doFilter(KNGroup *g)
   
     art=g->at(idx);
 
-    if(!art->filtered() && applyFilter(art)) {
+    if(!art->isFiltered() && applyFilter(art)) {
       if(apon==threads) {
         idRef=art->idRef();
         while(idRef!=0) {
           ref=g->byId(idRef);
           ref->setFilterResult(true);
           ref->setFiltered(true);
-          ref->setHasFollowUps(true);
+          ref->setVisibleFollowUps(true);
           idRef=ref->idRef();
         }
       }
@@ -207,7 +204,7 @@ void KNArticleFilter::doFilter(KNGroup *g)
         if(art->idRef() > 0) {
           ref=g->byId(art->idRef());
           if(ref)
-            ref->setHasFollowUps(true);   
+            ref->setVisibleFollowUps(true);
         }
         c_ount++;
       }
@@ -277,16 +274,19 @@ void KNArticleFilter::setTranslatedName(const QString &s)
 
 
 
-bool KNArticleFilter::applyFilter(KNFetchArticle *a)
+bool KNArticleFilter::applyFilter(KNRemoteArticle *a)
 {
   bool result=true;
   
   if(result) result=status.doFilter(a);
   if(result) result=score.doFilter(a->score());
-  if(result) result=lines.doFilter(a->lines());
-  if(result) result=age.doFilter(a->age()); 
-  if(result) result=subject.doFilter(a->subject());
-  if(result) result=from.doFilter(a->fromName()+"##"+a->fromEmail());
+  if(result) result=lines.doFilter(a->lines()->numberOfLines());
+  if(result) result=age.doFilter(a->date()->ageInDays());
+  if(result) result=subject.doFilter(a->subject()->asUnicodeString());
+  if(result) {
+  	QString tmp = (a->from()->name()+"##") + QString(a->from()->email().data());
+  	result=from.doFilter(tmp);
+  }
 
   a->setFilterResult(result);
   a->setFiltered(true);

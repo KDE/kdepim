@@ -23,10 +23,10 @@
 
 #include <klocale.h>
 
-#include "knuserwidget.h"
 #include "utilities.h"
 #include "kngroup.h"
 #include "kngrouppropdlg.h"
+#include "knconfig.h"
 
 
 KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name )
@@ -99,13 +99,10 @@ KNGroupPropDlg::KNGroupPropDlg(KNGroup *group, QWidget *parent, const char *name
     
   pageL->setRowStretch(3,2);
 
-  // Specfic Identity tab ========================================= 
+  // Specfic Identity tab =========================================
   
-  uw=new KNUserWidget(addVBoxPage(i18n("&Specific Identity"))); 
-    
-  if (grp->user())
-    uw->setData(grp->user());
-  
+  i_dWidget=new KNConfig::IdentityWidget(grp->identity(), addVBoxPage(i18n("&Specific Identity")));
+
   restoreWindowSize("groupPropDLG", this, sizeHint());
 }
 
@@ -124,6 +121,7 @@ void KNGroupPropDlg::slotOk()
     grp->setName(nick->text());
     nChanged=true;
   }
-  uw->applyData();  
+
+  i_dWidget->apply();
   accept();
 }

@@ -28,40 +28,17 @@
 #include <kdebug.h>
 #include <kmenubar.h>
 
-#include "knuserentry.h"
-#include "knjobdata.h"
-#include "knnetaccess.h"
-#include "knpurgeprogressdialog.h"
-#include "knarticlewidget.h"
-#include "knodeview.h"
-#include "knsettingsdialog.h"
-#include "knhdrviewitem.h"
-#include "kncollectionviewitem.h"
-#include "knviewheader.h"
-#include "knfetcharticlemanager.h"
-#include "knsavedarticlemanager.h"
-#include "kngroupmanager.h"
-#include "knaccountmanager.h"
-#include "knfoldermanager.h"
-#include "knfiltermanager.h"
-#include "knappmanager.h"
-#include "knfolder.h"
-#include "kngroup.h"
-#include "utilities.h"
-#include "resource.h"
-#include "knglobals.h"
-#include "knarticle.h"
-#include "knnntpaccount.h"
 #include "knode.h"
+#include "knodeview.h"
+#include "utilities.h"
+#include "knglobals.h"
+#include "knconfigmanager.h"
+
 
 
 KNGlobals knGlobals;
 
-
-//========================================================================
-//=============================== KNPROGRESS =============================
-//========================================================================
-
+//======================================================================================================
 
 KNProgress::KNProgress (int desiredHeight, int minValue, int maxValue, int value, KProgress::Orientation orient, QWidget *parent, const char *name)
  : KProgress(minValue, maxValue, value, orient, parent, name), desHeight(desiredHeight)
@@ -139,124 +116,85 @@ QSize KNProgress::sizeHint() const
 }
 
 
-
-//========================================================================
-//=============================== KNODEAPP ===============================
-//========================================================================
+//===============================================================================================
 
 
-KNodeApp::KNodeApp()
-  : KMainWindow(0,"mainWindow"), setDialog(0), blockInput(false)
+
+KNMainWindow::KNMainWindow() : KMainWindow(0,"mainWindow"), b_lockInput(false)
 {
-  bool is_first_start = firstStart();
+  //bool is_first_start = firstStart();
 
   knGlobals.top=this;
   knGlobals.topWidget=this;
   kapp->setMainWidget(this);  // this makes the external viewer windows close on shutdown...
 
-  // load color&font settings
-  AppManager = new KNAppManager();
-  knGlobals.appManager = AppManager;
+  //statusbar
+  KStatusBar *sb=statusBar();
+  p_rogBar=new KNProgress(sb->sizeHint().height()-4,0,1000,0, KProgress::Horizontal,sb );
+  knGlobals.progressBar=p_rogBar;
+  sb->addWidget(p_rogBar);
+  sb->insertItem(QString::null, SB_MAIN,2);
+  sb->setItemAlignment (SB_MAIN,AlignLeft | AlignVCenter);
+  sb->insertItem(QString::null, SB_FILTER,2);
+  sb->setItemAlignment (SB_FILTER,AlignLeft | AlignVCenter);
+  sb->insertItem(QString::null,SB_GROUP,3);
+  sb->setItemAlignment (SB_GROUP,AlignLeft | AlignVCenter);
+  setStatusMsg();
 
-  //init the GUI
+  //view
   setCaption(i18n("KDE News Reader"));
-  initView();
-  knGlobals.view = view;
-  KNLVItemBase::initIcons();
-  initStatusBar();
+  v_iew=new KNodeView(this, "knodeView");
+  setCentralWidget(v_iew);
+  knGlobals.view=v_iew;
 
-  //init Net
-  NAcc=new KNNetAccess(actionCollection());
-  knGlobals.netAccess = NAcc;
+  //actions
+  a_ccel=new KAccel(this);
+  v_iew->a_ctNavReadThrough->plugAccel(a_ccel);
 
-  //init filter manager
-  FiManager=new KNFilterManager(actionCollection());
-  knGlobals.fiManager = FiManager;
+  KStdAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
+  //KStdAction::saveOptions(this, SLOT(slotSaveOptions()), actionCollection());
+  KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
+  KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
+  KStdAction::preferences(this, SLOT(slotSettings()), actionCollection());
 
-  //init Fetch-Article Manager
-  FAManager=new KNFetchArticleManager(view->hdrView, FiManager, actionCollection());
-  knGlobals.fArtManager = FAManager;
+  a_ctWinToggleToolbar    = KStdAction::showToolbar(this, SLOT(slotWinToggleToolbar()), actionCollection());
+  a_ctWinToggleStatusbar  = KStdAction::showStatusbar(this, SLOT(slotWinToggleStatusbar()), actionCollection());
 
-  //init Group Manager
-  GManager=new KNGroupManager(FAManager, actionCollection());
-  knGlobals.gManager = GManager;
+  v_iew->slotCollectionSelected(0); //disable view-actions
+  createGUI("knodeui.rc");
+  v_iew->initPopups(this);
 
-  //init Account Manager
-  AManager=new KNAccountManager(GManager, view->collectionView, actionCollection());
-  knGlobals.accManager = AManager;
-
-  //init Saved-Article Manager
-  SAManager=new KNSavedArticleManager(view->hdrView, AManager, actionCollection());
-  knGlobals.sArtManager = SAManager;
-
-  //init Folder Manager
-  FoManager=new KNFolderManager(SAManager, view->collectionView, actionCollection());
-  knGlobals.foManager = FoManager;
-
-  // all components that provide actions are created, now
-  // build menu- & toolbar
-  initActions();
-  initPopups();
-
+  //apply settings
   KConfig *conf = KGlobal::config();
   conf->setGroup("mainWindow_options");
   resize(759,478);  // default optimized for 800x600
   applyMainWindowSettings(conf);
-  actShowToolbar->setChecked(!toolBar()->isHidden());
-  actShowStatusbar->setChecked(!statusBar()->isHidden());
+  a_ctWinToggleToolbar->setChecked(!toolBar()->isHidden());
+  a_ctWinToggleStatusbar->setChecked(!statusBar()->isHidden());
 
-  // set the keyboard focus indicator on the first item in the collectionView
-  if(view->collectionView->firstChild())
-    view->collectionView->setCurrentItem(view->collectionView->firstChild());
-  view->collectionView->setFocus();
 
-  if (is_first_start) {  // open the config dialog on the first start
+#warning FIXME
+  /*if (is_first_start) {  // open the config dialog on the first start
     show();              // the settings dialog must appear in front of the main window!
     slotSettings();
-  }
+  }*/
 }
 
 
 
-KNodeApp::~KNodeApp()
+KNMainWindow::~KNMainWindow()
 {
-  KNLVItemBase::clearIcons();
-
-  delete acc;
-  delete setDialog;
-
-  delete NAcc;
-  kdDebug(5003) << "Net deleted" << endl;
-
-  delete AManager;
-  kdDebug(5003) << "AManager deleted" << endl;
-
-  delete GManager;
-  kdDebug(5003) << "GManager deleted" << endl;
-
-  delete FAManager;
-  kdDebug(5003) << "FAManager deleted" << endl;
-
-  delete FoManager;
-  kdDebug(5003) << "FoManager deleted" << endl;
-
-  delete SAManager;
-  kdDebug(5003) << "SAManager deleted" << endl;
-
-  delete FiManager;
-  kdDebug(5003) << "FiManager deleted" << endl;
-
-  delete AppManager;
-  kdDebug(5003) << "AppManager deleted" << endl;
+  delete a_ccel;
 }
 
 
 //============================ URL handling ==============================
 
 
-void KNodeApp::openURL(const KURL &url)
+void KNMainWindow::openURL(const KURL &url)
 {
-  QString host = url.host();
+#warning FIXME
+  /*QString host = url.host();
   unsigned short int port = url.port();
   KNNntpAccount *acc;
 
@@ -302,14 +240,14 @@ void KNodeApp::openURL(const KURL &url)
     view->collectionView->setCurrentItem(item);
     view->collectionView->ensureItemVisible(item);
     view->collectionView->setSelected(item, true);
-  }
+  } */
 }
 
 
 //================================== GUI =================================
 
 
-void KNodeApp::setStatusMsg(const QString& text, int id)
+void KNMainWindow::setStatusMsg(const QString& text, int id)
 {
   statusBar()->clear();
   if (text.isEmpty() && (id==SB_MAIN))
@@ -320,14 +258,14 @@ void KNodeApp::setStatusMsg(const QString& text, int id)
 
 
 
-void KNodeApp::setStatusHelpMsg(const QString& text)
+void KNMainWindow::setStatusHelpMsg(const QString& text)
 {
    statusBar()->message(text, 2000);
 }
 
 
 
-void KNodeApp::setCursorBusy(bool b)
+void KNMainWindow::setCursorBusy(bool b)
 {
   if(b) kapp->setOverrideCursor(waitCursor);
   else  kapp->restoreOverrideCursor();
@@ -335,206 +273,41 @@ void KNodeApp::setCursorBusy(bool b)
 
 
 
-void KNodeApp::blockUI(bool b)
+void KNMainWindow::blockUI(bool b)
 {
-  blockInput = b;
+  b_lockInput = b;
   menuBar()->setEnabled(!b);
-  acc->setEnabled(!b);
+  a_ccel->setEnabled(!b);
+  v_iew->blockUI(b);
   setCursorBusy(b);
 }
 
 
 
 // processEvents with some blocking
-void KNodeApp::secureProcessEvents()
+void KNMainWindow::secureProcessEvents()
 {
-  blockInput = true;
+  b_lockInput = true;
   menuBar()->setEnabled(false);
-  acc->setEnabled(false);
+  a_ccel->setEnabled(false);
+  v_iew->blockUI(true);
 
   kapp->processEvents();
 
-  blockInput = false;
+  b_lockInput = false;
+  v_iew->blockUI(false);
   menuBar()->setEnabled(true);
-  acc->setEnabled(true);
+  a_ccel->setEnabled(true);
 }
 
 
-//============================ INIT && UPDATE ============================
-
-
-void KNodeApp::initView()
+QSize KNMainWindow::sizeHint() const
 {
-  KNArticleWidget::readOptions();
-  KNViewHeader::loadAll();
-  view = new KNodeView(actionCollection(),this,"knodeView");
-  setCentralWidget(view);
-
-  connect(view->collectionView, SIGNAL(clicked(QListViewItem *)),
-    this, SLOT(slotCollectionClicked(QListViewItem *)));
-
-  connect(view->collectionView, SIGNAL(selectionChanged(QListViewItem *)),
-    this, SLOT(slotCollectionSelected(QListViewItem *)));
-
-  connect(view->collectionView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
-    this, SLOT(slotCollectionPopup(QListViewItem*, const QPoint&, int)));
-
-  connect(view->hdrView, SIGNAL(selectionChanged(QListViewItem *)),
-    this, SLOT(slotHeaderSelected(QListViewItem *)));
-
-  connect(view->hdrView, SIGNAL(doubleClicked(QListViewItem*)),
-    this, SLOT(slotHeaderDoubleClicked(QListViewItem*)));
-
-  connect(view->hdrView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
-    this, SLOT(slotArticlePopup(QListViewItem*, const QPoint&, int)));
+  return QSize(759,478);    // default optimized for 800x600
 }
 
 
-void KNodeApp::initStatusBar()
-{
-  KStatusBar *sb=statusBar();
-
-  progBar = new KNProgress(sb->sizeHint().height()-4,0,1000,0, KProgress::Horizontal,sb );
-  knGlobals.progressBar = progBar;
-  sb->addWidget(progBar);
-
-  sb->insertItem(QString::null, SB_MAIN,2);
-  sb->setItemAlignment (SB_MAIN,AlignLeft | AlignVCenter);
-  sb->insertItem(QString::null, SB_FILTER,2);
-  sb->setItemAlignment (SB_FILTER,AlignLeft | AlignVCenter);
-  sb->insertItem(QString::null,SB_GROUP,3);
-  sb->setItemAlignment (SB_GROUP,AlignLeft | AlignVCenter);
-  setStatusMsg();
-}
-
-
-void KNodeApp::initActions()
-{
-  KStdAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
-
-  acc=new KAccel(this);
-  view->actReadThrough->plugAccel(acc);
-  actShowAllHdrs = new KToggleAction(i18n("Show &all headers"), "text_block", 0 , this, SLOT(slotToggleShowAllHdrs()),
-                                     actionCollection(), "view_showAllHdrs");
-  actShowAllHdrs->setChecked(KNArticleWidget::fullHeaders());
-
-  actCancel = new KAction(i18n("article","&Cancel"), 0 , this, SLOT(slotCancel()),
-                          actionCollection(), "article_cancel");
-  actCancel->setEnabled(false);
-  actSupersede = new KAction(i18n("S&upersede"), 0 , this, SLOT(slotSupersede()),
-                             actionCollection(), "article_supersede");
-  actSupersede->setEnabled(false);
-  connect(FAManager, SIGNAL(currentArticleChanged()), SLOT(slotCurrentArticleChanged()));
-  connect(SAManager, SIGNAL(currentArticleChanged()), SLOT(slotCurrentArticleChanged()));
-
-  actShowToolbar = KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
-  actShowStatusbar = KStdAction::showStatusbar(this, SLOT(slotToggleStatusBar()), actionCollection());
-  KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
-  KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
-  KStdAction::preferences(this, SLOT(slotSettings()), actionCollection());
-
-  createGUI("knodeui.rc");
-}
-
-
-
-void KNodeApp::initPopups()
-{
-  accPopup = static_cast<QPopupMenu *>(factory()->container("account_popup", this));
-  if (!accPopup) accPopup = new QPopupMenu();
-  groupPopup = static_cast<QPopupMenu *>(factory()->container("group_popup", this));
-  if (!groupPopup) groupPopup = new QPopupMenu();
-  folderPopup = static_cast<QPopupMenu *>(factory()->container("folder_popup", this));
-  if (!folderPopup) folderPopup = new QPopupMenu();
-  fetchPopup = static_cast<QPopupMenu *>(factory()->container("fetch_popup", this));
-  if (!fetchPopup) fetchPopup = new QPopupMenu();
-  savedPopup = static_cast<QPopupMenu *>(factory()->container("saved_popup", this));
-  if (!savedPopup) savedPopup = new QPopupMenu();
-}
-
-
-
-void KNodeApp::saveSettings()
-{
-  KConfig *conf = KGlobal::config();
-  conf->setGroup("mainWindow_options");
-  saveMainWindowSettings(conf);
-
-  view->saveOptions();
-  FiManager->saveOptions();
-  FAManager->saveOptions();
-  KNArticleWidget::saveOptions();
-  AppManager->saveOptions();
-
-  conf->setGroup("GENERAL");
-  conf->writeEntry("Version",KNODE_VERSION);
-}
-
-
-
-// checks if run for the first time, sets some global defaults (email configuration)
-bool KNodeApp::firstStart()
-{
-  KConfig *conf=KGlobal::config();
-  conf->setGroup("GENERAL");
-  QString ver = conf->readEntry("Version");
-  if (!ver.isEmpty())
-    return false;
-
-  KConfig emailConf("emaildefaults");
-
-  emailConf.setGroup("UserInfo");
-  KNUserEntry *user=new KNUserEntry();
-  user->setName(emailConf.readEntry("FullName").local8Bit());
-  user->setEmail(emailConf.readEntry("EmailAddress").local8Bit());
-  user->setOrga(emailConf.readEntry("Organization").local8Bit());
-  user->setReplyTo(emailConf.readEntry("ReplyAddr").local8Bit());
-  conf->setGroup("IDENTITY");
-  user->save(conf);
-  delete user;
-
-  emailConf.setGroup("ServerInfo");
-  KNServerInfo *serverInfo=new KNServerInfo();
-  serverInfo->setType(KNServerInfo::STsmtp);
-  serverInfo->setServer(emailConf.readEntry("Outgoing").local8Bit());
-  serverInfo->setPort(25);
-  conf->setGroup("MAILSERVER");
-  serverInfo->saveConf(conf);
-  delete serverInfo;
-
-  return true;
-}
-
-
-//================================ SLOTS =================================
-
-
-void KNodeApp::slotToggleShowAllHdrs()
-{
-  KNArticleWidget::toggleFullHeaders();
-}
-
-
-void KNodeApp::slotCancel()
-{
-  if (FAManager->hasCurrentArticle())
-    SAManager->cancel(FAManager->currentArticle(),FAManager->group());
-  else
-    SAManager->cancel();
-}
-
-
-void KNodeApp::slotSupersede()
-{
-  if (FAManager->hasCurrentArticle())
-    SAManager->supersede(FAManager->currentArticle(),FAManager->group());
-  else
-    SAManager->supersede();
-}
-
-
-
-void KNodeApp::slotToggleToolBar()
+void KNMainWindow::slotWinToggleToolbar()
 {
   if(toolBar()->isVisible())
     toolBar()->hide();
@@ -543,8 +316,7 @@ void KNodeApp::slotToggleToolBar()
 }
 
 
-
-void KNodeApp::slotToggleStatusBar()
+void KNMainWindow::slotWinToggleStatusbar()
 {
   if (statusBar()->isVisible())
     statusBar()->hide();
@@ -553,194 +325,32 @@ void KNodeApp::slotToggleStatusBar()
 }
 
 
-
-void KNodeApp::slotConfKeys()
+void KNMainWindow::slotConfKeys()
 {
   KKeyDialog::configureKeys(actionCollection(), xmlFile(), true, this);
 }
 
 
-void KNodeApp::slotConfToolbar()
+void KNMainWindow::slotConfToolbar()
 {
   KEditToolbar *dlg = new KEditToolbar(guiFactory(),this);
 
   if (dlg->exec()) {
     createGUI("knodeui.rc");
-    initPopups();
+    v_iew->initPopups(this);
   }
 
   delete dlg;
 }
 
 
-
-void KNodeApp::slotSettings()
+void KNMainWindow::slotSettings()
 {
-  if (!setDialog) {
-    setDialog = new KNSettingsDialog(this);
-    connect(setDialog, SIGNAL(finished()), this, SLOT(slotSettingsFinished()));
-    setDialog->show();
-  } else {
-    KWin::setActiveWindow(setDialog->winId());
-  }
+  v_iew->c_fgManager->configure();
 }
 
 
-
-
-void KNodeApp::slotSettingsFinished()
-{
-  setDialog->delayedDestruct();
-  setDialog=0;
-}
-
-
-
-// enable/disable Cancel & Supersede actions
-void KNodeApp::slotCurrentArticleChanged()
-{
-  bool b = FAManager->hasCurrentArticle() || SAManager->hasCurrentArticle();
-  actCancel->setEnabled(b);
-  actSupersede->setEnabled(b);
-}
-
-
-//==================== VIEW-SLOTS ======================
-
-
-
-void KNodeApp::slotCollectionClicked(QListViewItem *it)
-{
-  if(it && (static_cast<KNCollectionViewItem*>(it)->coll->type()==KNCollection::CTnntpAccount))
-    it->setOpen(!it->isOpen());
-}
-
-
-
-void KNodeApp::slotCollectionSelected(QListViewItem *it)
-{
-  if (blockInput)
-    return;
-
-  KNGroup *grp=0;
-  KNFolder *fldr=0;
-  KNNntpAccount *acc=0;
-  view->hdrView->clear();
-
-  if(it) {
-    KNCollectionViewItem* collI = static_cast<KNCollectionViewItem*>(it);
-
-    if(collI->coll->type()==KNCollection::CTgroup) {
-      if (!(view->hdrView->hasFocus())&&!(view->artView->hasFocus()))
-        view->hdrView->setFocus();
-      grp=(KNGroup*)((KNCollectionViewItem*)it)->coll;
-      acc=(KNNntpAccount*)grp->account();
-      setCaption(grp->name());
-    }
-    else if(collI->coll->type()==KNCollection::CTfolder) {
-      if (!(view->hdrView->hasFocus())&&!(view->artView->hasFocus()))
-        view->hdrView->setFocus();
-      fldr=(KNFolder*)((KNCollectionViewItem*)it)->coll;
-      setStatusMsg(QString::null, SB_FILTER);
-      setCaption(fldr->name());
-    }
-    else if(collI->coll->type()==KNCollection::CTnntpAccount) {
-      acc=(KNNntpAccount*)((KNCollectionViewItem*)it)->coll;
-      setStatusMsg(QString::null, SB_GROUP);
-      setStatusMsg(QString::null, SB_FILTER);
-      setCaption(acc->name());
-      view->artView->showBlankPage();
-    }
-  }
-
-  AManager->setCurrentAccount(acc);
-  GManager->setCurrentGroup(grp);
-  FiManager->setIsAGroup((grp));    // filters currently only work for groups
-  FoManager->setCurrentFolder(fldr);
-  view->setNotAFolder(!(fldr));
-  view->setHeaderSelected(false);
-}
-
-
-
-void KNodeApp::slotHeaderSelected(QListViewItem *it)
-{
-  if (blockInput)
-    return;
-
-  KNFetchArticle *fart=0;
-  KNSavedArticle *sart=0;
-  if(it) {
-    if(static_cast<KNHdrViewItem*>(it)->art->type()==KNArticleBase::ATfetch)
-      fart=(KNFetchArticle*)(static_cast<KNHdrViewItem*>(it)->art);
-    else
-      sart=(KNSavedArticle*)(static_cast<KNHdrViewItem*>(it)->art);
-  }
-  FAManager->setCurrentArticle(fart);
-  SAManager->setCurrentArticle(sart);
-  view->setHeaderSelected((fart));
-}
-
-
-
-void KNodeApp::slotHeaderDoubleClicked(QListViewItem *it)
-{
-  if (blockInput)
-    return;
-
-  KNFetchArticle *fart=0;
-  KNSavedArticle *sart=0;
-  if(it) {
-    if(static_cast<KNHdrViewItem*>(it)->art->type()==KNArticleBase::ATfetch) {
-      fart=(KNFetchArticle*)((KNHdrViewItem*)it)->art;
-      FAManager->articleWindow(fart);
-    }
-    else {
-      sart=(KNSavedArticle*)((KNHdrViewItem*)it)->art;
-      SAManager->editArticle(sart);
-   }
-  }
-}
-
-
-
-void KNodeApp::slotArticlePopup(QListViewItem *it, const QPoint &p, int)
-{
-  if (blockInput)
-    return;
-
-  if (it) {
-    if (static_cast<KNHdrViewItem*>(it)->art->type()==KNArticleBase::ATfetch)
-      fetchPopup->popup(p);
-    else
-      savedPopup->popup(p);
-  }
-}
-
-
-
-void KNodeApp::slotCollectionPopup(QListViewItem *it, const QPoint &p, int)
-{
-  if (blockInput)
-    return;
-
-  if (it) {
-    if ((static_cast<KNCollectionViewItem*>(it))->coll->type()==KNCollection::CTgroup) {
-      groupPopup->popup(p);
-    } else {
-      if ((static_cast<KNCollectionViewItem*>(it))->coll->type()==KNCollection::CTfolder)
-        folderPopup->popup(p);
-      else
-        accPopup->popup(p);
-    }
-  }
-}
-
-
-//================================ OTHERS ================================
-
-
-void KNodeApp::cleanup()
+/*void KNMainWindow::cleanup()
 {
   KNPurgeProgressDialog *ppdlg=0;
 
@@ -770,59 +380,30 @@ void KNodeApp::cleanup()
   KNArticleManager::deleteTempFiles();
 
   if(ppdlg) delete ppdlg;
-}
+}*/
 
 
 
-bool KNodeApp::queryClose()
+bool KNMainWindow::queryClose()
 {
-  if (blockInput)
+  if(b_lockInput)
     return false;
-  if (!SAManager->closeComposeWindows())
+  /*if (!SAManager->closeComposeWindows())
     return false;
-  cleanup();
+  cleanup();*/
   return true;
 }
 
 
-
-void KNodeApp::jobDone(KNJobData *j)
+void KNMainWindow::fontChange( const QFont & )
 {
-  if(!j) return;
-  //kdDebug(5003) << "KNodeApp::jobDone() : job received" << endl;
-
-  switch(j->type()) {
-    case KNJobData::JTLoadGroups:
-    case KNJobData::JTFetchGroups:
-    case KNJobData::JTCheckNewGroups:
-    case KNJobData::JTfetchNewHeaders:
-      kdDebug(5003) << "KNodeApp::jobDone() : job sent to GManager" << endl;
-      GManager->jobDone(j);
-    break;
-    case KNJobData::JTfetchArticle:
-      kdDebug(5003) << "KNodeApp::jobDone() : job sent to FAManager" << endl;
-      FAManager->jobDone(j);
-    break;
-    case KNJobData::JTpostArticle:
-    case KNJobData::JTmail:
-      kdDebug(5003) << "KNodeApp::jobDone() : job sent to SAManager" << endl;
-      SAManager->jobDone(j);
-    break;
-  };
+  p_rogBar->setFont(font());    // should be called automatically?
 }
 
 
-void KNodeApp::fontChange( const QFont & )
+void KNMainWindow::paletteChange( const QPalette & )
 {
-  progBar->setFont(font());    // should be called automatically?
-  AppManager->updateVisualDefaults();
-}
-
-
-void KNodeApp::paletteChange( const QPalette & )
-{
-  progBar->setPalette(palette());    // should be called automatically?
-  AppManager->updateVisualDefaults();
+  p_rogBar->setPalette(palette());    // should be called automatically?
 }
 
 

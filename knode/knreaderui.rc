@@ -12,6 +12,9 @@
     <Action name="edit_copy"/>
     <Action name="edit_select_all"/>
   </Menu>
+  <Menu noMerge="1" name="view"><text>&amp;View</text>
+    <Action name="view_showAllHdrs"/>
+  </Menu>
   <Menu name="article"><text>&amp;Article</text>
     <Action name="article_postReply"/>
     <Action name="article_mailReply"/>

@@ -21,7 +21,7 @@
 
 #include <kmainwindow.h>
 
-class KAction;
+class KToggleAction;
 
 class KNArticle;
 class KNArticleWidget;
@@ -32,7 +32,7 @@ class KNArticleWindow : public KMainWindow  {
   Q_OBJECT
   
   public:
-    KNArticleWindow(KNArticle *art=0, KNArticleCollection *col=0);
+    KNArticleWindow(KNArticle *art=0);
     ~KNArticleWindow();
     KNArticleWidget* artWidget()        { return artW; }
 
@@ -40,18 +40,11 @@ class KNArticleWindow : public KMainWindow  {
       
   protected:
     KNArticleWidget *artW;
-    KAction *actPostReply, *actMailReply, *actForward, *actCancel, *actSupersede;
-    KToggleAction *actShowToolbar;
+    KToggleAction *a_ctShowToolbar;
     static QList<KNArticleWindow> instances;
     
   protected slots:
-    void slotArticleLoaded();
     void slotFileClose();
-    void slotArtReply();
-    void slotArtRemail();
-    void slotArtForward();
-    void slotArtCancel();
-    void slotArtSupersede();
     void slotToggleToolBar();
     void slotConfKeys();
     void slotConfToolbar();

@@ -17,6 +17,8 @@
 #define KNLISTVIEW_H
 
 #include <qlistview.h>
+#include <qlist.h>
+#include <kaction.h>
 
 class KNListView;
 
@@ -24,13 +26,6 @@ class KNListView;
 class KNLVItemBase : public QListViewItem  {
   
   public:
-    enum pixmapType {   PTgreyBall=0, PTredBall=1, PTgreyBallChkd=2,
-                        PTredBallChkd=3, PTnewFups=4, PTeyes=5,
-                        PTmail=6, PTposting=7, PTcontrol=8,
-                        PTstatusSent=9, PTstatusEdit=10,
-                        PTstatusCanceled=11, PTnntp=12,
-                        PTgroup=13, PTfolder=14, PTnull=15 };
-                        
     KNLVItemBase(KNListView *view);      // restricted to KNListView to prevent that the
     KNLVItemBase(KNLVItemBase *item);    // static_cast in ~KNLVItemBase fails. (single selection in multi-mode hack)
     ~KNLVItemBase();
@@ -39,23 +34,12 @@ class KNLVItemBase : public QListViewItem  {
     int width(const QFontMetrics &fm, const QListView *lv, int column);
     void paintFocus(QPainter *, const QColorGroup & cg, const QRect & r);
     void sortChildItems(int column, bool a);
-    
     void expandChildren();
 
-    static void updateAppearance();
-    static void initIcons();
-    static void clearIcons();
-    static QPixmap& icon(pixmapType t);
-    
   protected:
     virtual bool greyOut()          { return false; }
     virtual bool firstColBold()     { return false; }
-    static QPixmap *pms[15];
-    static QColor normal, grey;
 };
-
-
-//==================================================================================
 
 
 class KNListView : public QListView  {
@@ -93,6 +77,8 @@ class KNListView : public QListView  {
     QListViewItem* exclusiveSelectedItem;     // single selection in multi mode hack... 
   
 };
+
+
 
 #endif
 

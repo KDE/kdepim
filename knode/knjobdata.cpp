@@ -18,32 +18,66 @@
 #include <qstrlist.h>
 
 #include "kngroup.h"
-#include "knfetcharticle.h"
-#include "knsavedarticle.h"
+#include "knmime.h"
 #include "knjobdata.h"
+#include "knglobals.h"
+#include "knnetaccess.h"
+
+KNJobConsumer::KNJobConsumer()
+{
+  j_obs.setAutoDelete(false);
+}
+
+
+KNJobConsumer::~KNJobConsumer()
+{
+  for(KNJobData *j=j_obs.first(); j; j=j_obs.next())
+    j->c_onsumer=0;
+}
+
+
+void KNJobConsumer::emitJob(KNJobData *j)
+{
+  if(j) {
+    j_obs.append(j);
+    knGlobals.netAccess->addJob(j);
+  }
+}
+
+
+void KNJobConsumer::jobDone(KNJobData *j)
+{
+  if(j && j_obs.removeRef(j))
+    processJob(j);
+}
+
+
+void KNJobConsumer::processJob(KNJobData *j)
+{
+  delete j;
+}
 
 
 // the assingment of a_ccount may cause race conditions, check again.... (CG)
-KNJobData::KNJobData(jobType t, KNServerInfo *a, void *d)
- : t_ype(t), d_ata(d), a_ccount(a), c_anceled(false)
+KNJobData::KNJobData(jobType t, KNJobConsumer *c, KNServerInfo *a, KNJobItem *i)
+ : t_ype(t), d_ata(i), a_ccount(a), c_anceled(false), c_onsumer(c)
 {
-  if(t_ype==JTfetchNewHeaders) ((KNGroup*)d_ata)->setLocked(true);
-  else if(t_ype==JTfetchArticle) {
-    KNFetchArticle *art =(KNFetchArticle*)d_ata;
-    art->setLocked(true);
-    art->group()->setLoading(art->group()->loading()+1);
-  } else if(t_ype==JTpostArticle || t_ype==JTmail) ((KNSavedArticle*)d_ata)->setLocked(true);
+  d_ata->setLocked(true);
 }
 
 
 
 KNJobData::~KNJobData()
 {
-  if(t_ype==JTfetchNewHeaders) ((KNGroup*)d_ata)->setLocked(false);
-  else if(t_ype==JTfetchArticle) {
-    KNFetchArticle *art =(KNFetchArticle*)d_ata;
-    art->setLocked(false);
-    if (art->group()->loading()>0)
-      art->group()->setLoading(art->group()->loading()-1);
-  } else if(t_ype==JTpostArticle || t_ype==JTmail) ((KNSavedArticle*)d_ata)->setLocked(false);
+  d_ata->setLocked(false);
+}
+
+
+void KNJobData::notifyConsumer()
+{
+
+  if(c_onsumer)
+    c_onsumer->jobDone(this);
+  else
+    delete this;
 }

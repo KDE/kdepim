@@ -20,11 +20,11 @@
 #define KNARTICLEFILTER_H
 
 #include <qstring.h>
+#include "knstatusfilter.h"
+#include "knrangefilter.h"
+#include "knstringfilter.h"
 
-class KNStatusFilter;
-class KNRangeFilter;
-class KNStringFilter;
-class KNFetchArticle;
+class KNRemoteArticle;
 class KNGroup;
 
 class KNArticleFilter {
@@ -62,7 +62,7 @@ class KNArticleFilter {
   protected:
     
     enum ApOn { articles=0 , threads=1 };
-    bool applyFilter(KNFetchArticle *a);
+    bool applyFilter(KNRemoteArticle *a);
       
     QString n_ame;
     int i_d, c_ount;

@@ -23,12 +23,11 @@
 #define private protected
 #include <qtextbrowser.h>
 #undef private
-
 #include <qlist.h>
-
 #include <kaction.h>
+#include <qtimer.h>
+#include "knjobdata.h"
 
-class QScrollView;
 
 class KPopupMenu;
 
@@ -36,47 +35,36 @@ class KNArticle;
 class KNArticleCollection;
 class KNMimeContent;
 
-class KNArticleWidget : public QTextBrowser  {
+
+class KNArticleWidget : public QTextBrowser, public KNJobConsumer {
 
   Q_OBJECT
 
   public:
-    enum browserType { BTkonqueror=0 , BTnetscape=1 };
-    enum anchorType { ATurl, ATauthor, ATreference, ATattachment, ATunknown };
+    enum browserType  { BTkonqueror=0 , BTnetscape=1 };
+    enum anchorType   { ATurl, ATauthor, ATreference, ATattachment, ATunknown };
 
     KNArticleWidget(KActionCollection* actColl, QWidget *parent=0, const char *name=0 );
     ~KNArticleWidget();
-
-//=======================================
-    static void readOptions();
-    static void saveOptions();
-    static void updateInstances();
-    static KNArticleWidget* find(KNArticle *a);
-    static KNArticleWidget* mainWidget();
-    static void showArticle(KNArticle *a);
-    static void setFullHeaders(bool b);
-    static void toggleFullHeaders();
-    static bool fullHeaders();
-//=======================================
 
     bool scrollingDownPossible();       // needed for "read-through"
     void scrollDown();
 
     void applyConfig();
 
-    void setData(KNArticle *a, KNArticleCollection *c);
-    void createHtmlPage();
+    void setArticle(KNArticle *a);
+		void createHtmlPage();
     void showBlankPage();
     void showErrorMessage(const QString &s);
 
     void updateContents();
 
     KNArticle* article()              { return a_rticle; }
-    KNArticleCollection* collection() { return c_oll; }
 
 
   protected:
-    void focusInEvent(QFocusEvent *e);
+		void processJob(KNJobData *j);
+		void focusInEvent(QFocusEvent *e);
     void focusOutEvent(QFocusEvent *e);
     void keyPressEvent(QKeyEvent *e);
     void viewportMousePressEvent(QMouseEvent *e); // RMB for links
@@ -90,30 +78,59 @@ class KNArticleWidget : public QTextBrowser  {
     void anchorClicked(const QString &a, ButtonState button=LeftButton, const QPoint *p=0);
 
     KNArticle *a_rticle;
-    KNArticleCollection *c_oll;
-    QList<KNMimeContent> *att;
-    bool h_tmlDone;
+    QList<KNMimeContent> *a_tt;
+    bool h_tmlDone, f_ullHdrs;
+   	QTimer *t_imer;
+    	
+    KPopupMenu *u_rlPopup, *a_ttPopup;
 
-    KPopupMenu *urlPopup, *attPopup;
-    KAction *actSave, *actPrint, *actSelAll, *actCopy;
-    KActionCollection *actionCollection;
 
-    static bool showSig, fullHdrs, inlineAtt, openAtt, altAsAtt;
-    static QString hexColors[4];
-    static QColor txtCol, bgCol, lnkCol;
-    static QFont htmlFont;
-    static browserType browser;
-    static QList<KNArticleWidget> instances;
+  //-------------------------- <Actions> ---------------------------
+
+    KActionCollection *a_ctions;
+
+    KAction *a_ctSave,
+            *a_ctPrint,
+            *a_ctSelAll,
+            *a_ctCopy,
+            *a_ctReply,
+            *a_ctRemail,
+            *a_ctForward,
+            *a_ctCancel,
+            *a_ctSupersede,
+            *a_ctEdit;
+    KToggleAction *a_ctToggleFullHdrs;
+
 
   protected slots:
     void slotSave();
     void slotPrint();
     void slotSelectAll(); //needed to enable the copy-action
+    void slotReply();
+    void slotRemail();
+    void slotForward();
+    void slotCancel();
+    void slotSupersede();
+    void slotEdit();
+    void slotToggleFullHdrs();
+
+  //-------------------------- </Actions> --------------------------
+
+    void slotTimeout();
 
   signals:
     void focusChanged(QFocusEvent*);
-    void articleLoaded();              // gets emited when a article is loaded sucessfully
 
+
+  //----------------------- Static members -------------------------
+  public:
+    static void configChanged();
+    static void articleRemoved(KNArticle *a);
+    static void articleChanged(KNArticle *a);
+    static void collectionRemoved(KNArticleCollection *c);
+
+  protected:
+    static QList<KNArticleWidget> i_nstances;
 };
 
 #endif

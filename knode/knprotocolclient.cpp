@@ -281,9 +281,9 @@ bool KNProtocolClient::sendCommandWCheck(const QCString &cmd, int rep)
 
 
 // sends a message (multiple lines)
-bool KNProtocolClient::sendMsg(const DwString &msg)
+bool KNProtocolClient::sendMsg(const QCString &msg)
 {
-  const char *line = msg.c_str();
+  const char *line = msg.data();
   char *end;
   QCString buffer;
   size_t length;

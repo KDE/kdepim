@@ -41,77 +41,30 @@
 #include "knfilterdialog.h"
 #include "knfiltersettings.h"
 #include "knfiltermanager.h"
-
-
-KNFilterSelectAction::KNFilterSelectAction( const QString& text, const QString& pix,
-                                            QObject* parent, char *name )
- : KActionMenu(text,pix,parent,name), currentItem(-42)
-{
-  popupMenu()->setCheckable(true);
-  connect(popupMenu(),SIGNAL(activated(int)),this,SLOT(slotMenuActivated(int)));
-  setDelayed(false);
-}
+#include "knodeview.h"
+#include "knconfig.h"
 
 
 
-KNFilterSelectAction::~KNFilterSelectAction()
-{
-}
-
-void KNFilterSelectAction::setCurrentItem(int id)
-{
-  popupMenu()->setItemChecked(currentItem, false);
-  popupMenu()->setItemChecked(id, true);
-  currentItem = id;
-}
-
-
-void KNFilterSelectAction::slotMenuActivated(int id)
-{
-  setCurrentItem(id);
-  emit(activated(id));
-}
-
-
-
-//=========================================================================================
-
-
-
-KNFilterManager::KNFilterManager(KActionCollection* actColl, QObject * parent, const char * name)
- : QObject(parent,name), fset(0), currFilter(0), actionCollection(actColl), isAGroup(false)
+KNFilterManager::KNFilterManager(KNFilterSelectAction *a, QObject * parent, const char * name)
+ : QObject(parent,name), fset(0), currFilter(0), a_ctFilter(a)
 {
   fList.setAutoDelete(true);
 
-  actFilter = new KNFilterSelectAction(i18n("&Filter"), "filter", actionCollection, "view_Filter");
-  connect(actFilter, SIGNAL(activated(int)), this,  SLOT(slotMenuActivated(int)));
-  actFilter->setEnabled(false);
+  connect(a_ctFilter, SIGNAL(activated(int)), this,  SLOT(slotMenuActivated(int)));
+  loadFilters();
 
-  loadFilters();  
-  readOptions();  
-}
-
-
-
-KNFilterManager::~KNFilterManager()
-{
-}
-
-
-
-void KNFilterManager::readOptions()
-{
-  KConfig *conf=KGlobal::config();    
+  KConfig *conf=KGlobal::config();
   conf->setGroup("READNEWS");
   setFilter(conf->readNumEntry("lastFilterID", 1));
 }
 
 
 
-void KNFilterManager::saveOptions()
+KNFilterManager::~KNFilterManager()
 {
   if (currFilter) {
-    KConfig *conf=KGlobal::config();    
+    KConfig *conf=KGlobal::config();
     conf->setGroup("READNEWS");
     conf->writeEntry("lastFilterID", currFilter->id());
   }
@@ -119,11 +72,16 @@ void KNFilterManager::saveOptions()
 
 
 
-// dis-/enable the filter menu
-void KNFilterManager::setIsAGroup(bool b)
+void KNFilterManager::readOptions()
 {
-  isAGroup = b;
-  actFilter->setEnabled(isAGroup && (menuOrder.count()));
+
+}
+
+
+
+void KNFilterManager::saveOptions()
+{
+
 }
 
 
@@ -171,7 +129,7 @@ void KNFilterManager::saveFilterLists()
 
 
 
-void KNFilterManager::startConfig(KNFilterSettings *fs)
+void KNFilterManager::startConfig(KNConfig::FilterListWidget *fs)
 {
   fset=fs;
   commitNeeded = false;
@@ -323,7 +281,7 @@ KNArticleFilter* KNFilterManager::setFilter(const int id)
   currFilter=byID(id);  
   
   if(currFilter) {
-    actFilter->setCurrentItem(currFilter->id());
+    a_ctFilter->setCurrentItem(currFilter->id());
     emit(filterChanged(currFilter));
   } else
     currFilter=bak;
@@ -347,22 +305,21 @@ KNArticleFilter* KNFilterManager::byID(int id)
 
 void KNFilterManager::updateMenu()
 {
-  actFilter->popupMenu()->clear();
+  a_ctFilter->popupMenu()->clear();
   KNArticleFilter *f=0;
 
   QValueList<int>::Iterator it = menuOrder.begin();
   while (it != menuOrder.end()) {
     if ((*it)!=-1) {
       if ((f=byID((*it))))
-        actFilter->popupMenu()->insertItem(f->translatedName(), f->id());
+        a_ctFilter->popupMenu()->insertItem(f->translatedName(), f->id());
     }
-    else actFilter->popupMenu()->insertSeparator();
+    else a_ctFilter->popupMenu()->insertSeparator();
     ++it;
   }
   
   if(currFilter)
-    actFilter->setCurrentItem(currFilter->id());
-  actFilter->setEnabled(isAGroup && (menuOrder.count()));
+    a_ctFilter->setCurrentItem(currFilter->id());
 }
 
 

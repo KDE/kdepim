@@ -20,13 +20,11 @@
 
 #include <qbuttongroup.h>
 #include <qcombobox.h>
+#include <qbitarray.h>
 
 class QCheckBox;
-class QBitArray;
-
 class KSimpleConfig;
-
-class KNFetchArticle;
+class KNRemoteArticle;
 
 
 class KNStatusFilter {
@@ -43,7 +41,7 @@ class KNStatusFilter {
     void load(KSimpleConfig *conf);
     void save(KSimpleConfig *conf); 
       
-    bool doFilter(KNFetchArticle *a);
+    bool doFilter(KNRemoteArticle *a);
     
   protected:  
     QBitArray data;

@@ -30,19 +30,21 @@
 
 #include "knpurgeprogressdialog.h"
 #include "knode.h"
-#include "knfetcharticlemanager.h"
+#include "knarticlemanager.h"
 #include "knjobdata.h"
 #include "kngroupdialog.h"
 #include "kngroup.h"
 #include "kncollectionviewitem.h"
 #include "knnntpaccount.h"
-#include "kncleanup.h"
+//#include "kncleanup.h"
 #include "knuserentry.h"
 #include "knnetaccess.h"
 #include "knglobals.h"
+#include "knconfigmanager.h"
 #include "resource.h"
 #include "utilities.h"
 #include "knarticlewindow.h"
+#include "knarticlewidget.h"
 #include "kngroupmanager.h"
 
 
@@ -191,75 +193,28 @@ QSortedList<KNGroupInfo>* KNGroupListData::extractList()
 //===============================================================================
 
 
-KNGroupManager::KNGroupManager(KNFetchArticleManager *a, KActionCollection* actColl, QObject * parent, const char * name)
-  : QObject(parent,name), aManager(a), actionCollection(actColl)
+
+KNGroupManager::KNGroupManager(KNArticleManager *a, QObject * parent, const char * name)
+  : QObject(parent,name)
 {
-  gList=new QList<KNGroup>;
-  gList->setAutoDelete(true);
-    
-  readConfig(); 
-  
-  actProperties = new KAction(i18n("&Properties..."), 0, this, SLOT(slotProperties()),
-                              actionCollection, "group_properties");
-  actLoadHdrs = new KAction(i18n("&Get New Articles"), "mail_get" , 0, this, SLOT(slotLoadHdrs()),
-                            actionCollection, "group_dnlHeaders");
-  actExpire = new KAction(i18n("E&xpire Now"), "wizard", 0, this, SLOT(slotExpire()),
-                          actionCollection, "group_expire");
-  actResort = new KAction(i18n("Res&ort"), 0, this, SLOT(slotResort()),
-                          actionCollection, "group_resort");
-  actUnsubscribe = new KAction(i18n("&Unsubscribe"), 0, this, SLOT(slotUnsubscribe()),
-                               actionCollection, "group_unsubscribe");
-  
-  setCurrentGroup(0);
+  g_List=new QList<KNGroup>;
+  g_List->setAutoDelete(true);
+  c_urrentGroup=0;
+  a_rticleMgr=a;
 }
 
 
 
 KNGroupManager::~KNGroupManager()
 {
-  delete gList;
+  syncGroups();
+  delete g_List;
 }
-
-
-
-void KNGroupManager::readConfig()
-{
-  KConfig *conf=KGlobal::config();
-  conf->setGroup("READNEWS");
-  a_utoCheck=conf->readBoolEntry("autoCheck",true);
-  defaultMaxFetch=conf->readNumEntry("maxFetch", 1000);
-}
-
-
-
-bool KNGroupManager::timeToExpire()
-{
-  KConfig *c=KGlobal::config();
-  c->setGroup("EXPIRE");
-  
-  if (!c->readBoolEntry("doExpire", true))
-    return false;
-
-  QDate today=QDate::currentDate();
-  QDate lastExpDate=c->readDateTimeEntry("lastExpire").date();
-  int interval=c->readNumEntry("expInterval", 5);
-  
-  if (lastExpDate==today) {
-    c->writeEntry("lastExpire", QDateTime::currentDateTime());  // important! otherwise lastExpDate will be at its default value (current date) forever
-    return false;
-  }
-
-  if(lastExpDate.daysTo(today) >= interval)
-    return true;
-  else
-    return false;
-}
-
 
 
 void KNGroupManager::syncGroups()
 {
-  for(KNGroup *var=gList->first(); var; var=gList->next()) {
+  for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
     var->syncDynamicData();
     var->saveInfo();
   }
@@ -270,7 +225,8 @@ void KNGroupManager::syncGroups()
 void KNGroupManager::loadGroups(KNNntpAccount *a)
 {   
   KNGroup *group;
-  
+  KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
+
   QString dir(a->path());
   if (dir == QString::null)
     return;
@@ -280,9 +236,9 @@ void KNGroupManager::loadGroups(KNNntpAccount *a)
   for(QStringList::Iterator it=entries.begin(); it != entries.end(); it++) {
     group=new KNGroup(a);
     if (group->readInfo(dir+(*it))) {
-      gList->append(group);
+      g_List->append(group);
       KNCollectionViewItem *cvit=new KNCollectionViewItem(a->listItem());
-      cvit->setPixmap(0, KNLVItemBase::icon(KNLVItemBase::PTgroup));
+      cvit->setPixmap(0, app->icon(KNConfig::Appearance::group));
       group->setListItem(cvit);
       group->updateListItem();
     } else {
@@ -297,7 +253,7 @@ void KNGroupManager::loadGroups(KNNntpAccount *a)
 void KNGroupManager::getSubscribed(KNNntpAccount *a, QStrList* l)
 {
   l->clear();
-  for(KNGroup *var=gList->first(); var; var=gList->next()) {
+  for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
     if(var->account()==a) l->append(var->groupname());
   }
 }
@@ -307,7 +263,7 @@ void KNGroupManager::getSubscribed(KNNntpAccount *a, QStrList* l)
 void KNGroupManager::getGroupsOfAccount(KNNntpAccount *a, QList<KNGroup> *l)
 {
   l->clear();
-  for(KNGroup *var=gList->first(); var; var=gList->next()) {
+  for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
     if(var->account()==a) l->append(var);
   }
 }
@@ -316,9 +272,9 @@ void KNGroupManager::getGroupsOfAccount(KNNntpAccount *a, QList<KNGroup> *l)
 
 KNGroup* KNGroupManager::group(const QCString &gName, const KNServerInfo *s)
 {
-  for(KNGroup *var=gList->first(); var; var=gList->next())
+  for(KNGroup *var=g_List->first(); var; var=g_List->next())
     if(var->account()==s && var->groupname()==gName) return var;
-  
+
   return 0;
 }
 
@@ -326,14 +282,14 @@ KNGroup* KNGroupManager::group(const QCString &gName, const KNServerInfo *s)
 
 void KNGroupManager::expireAll(KNPurgeProgressDialog *dlg)
 {
-  KNCleanUp cup;
-  
+  /*KNCleanUp cup;
+
   if (dlg) {
     knGlobals.top->blockUI(true);
-    dlg->init(i18n("Deleting expired articles ..."), gList->count());
+    dlg->init(i18n("Deleting expired articles ..."), g_List->count());
   }
 
-  for(KNGroup *var=gList->first(); var; var=gList->next()) {
+  for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
     if((var->locked()) || (var->loading()>0))
       continue;
     if(dlg) {
@@ -349,10 +305,10 @@ void KNGroupManager::expireAll(KNPurgeProgressDialog *dlg)
     knGlobals.top->blockUI(false);
     kapp->processEvents();
   }
-  
+
   KConfig *c=KGlobal::config();
   c->setGroup("EXPIRE");
-  c->writeEntry("lastExpire", QDateTime::currentDateTime());
+  c->writeEntry("lastExpire", QDateTime::currentDateTime());*/
 }
 
 
@@ -360,15 +316,15 @@ void KNGroupManager::expireAll(KNPurgeProgressDialog *dlg)
 void KNGroupManager::showGroupDialog(KNNntpAccount *a, QWidget *parent)
 {
   KNGroupDialog* gDialog=new KNGroupDialog((parent!=0)? parent:knGlobals.topWidget, a);
-  
+
   connect(gDialog, SIGNAL(loadList(KNNntpAccount*)), this, SLOT(slotLoadGroupList(KNNntpAccount*)));
   connect(gDialog, SIGNAL(fetchList(KNNntpAccount*)), this, SLOT(slotFetchGroupList(KNNntpAccount*)));
   connect(gDialog, SIGNAL(checkNew(KNNntpAccount*,QDate)), this, SLOT(slotCheckForNewGroups(KNNntpAccount*,QDate)));
   connect(this, SIGNAL(newListReady(KNGroupListData*)), gDialog, SLOT(slotReceiveList(KNGroupListData*)));
-    
+
   if(gDialog->exec()) {
     KNGroup *g=0;
-    
+
     QStrList lst;
     gDialog->toUnsubscribe(&lst);
     if (lst.count()>0) {
@@ -380,14 +336,14 @@ void KNGroupManager::showGroupDialog(KNNntpAccount *a, QWidget *parent)
         }
       }
     }
-  
+
     QSortedList<KNGroupInfo> lst2;
     gDialog->toSubscribe(&lst2);
     for(KNGroupInfo *var=lst2.first(); var; var=lst2.next()) {
       subscribeGroup(var, a);
     }
-  } 
-    
+  }
+
   delete gDialog;
 }
 
@@ -397,12 +353,12 @@ void KNGroupManager::subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a)
 {
   KNGroup *grp;
   KNCollectionViewItem *it;
-    
+
   grp=new KNGroup(a);
   grp->setGroupname(gi->name);
-  grp->setDescription(gi->description); 
+  grp->setDescription(gi->description);
   grp->saveInfo();
-  gList->append(grp);
+  g_List->append(grp);
   it=new KNCollectionViewItem(a->listItem());
   it->setPixmap(0,UserIcon("group"));
   grp->setListItem(it);
@@ -417,15 +373,17 @@ void KNGroupManager::unsubscribeGroup(KNGroup *g)
   if(!g) g=c_urrentGroup;
   if(!g) return;
 
-  if((g->locked()) || (g->loading()>0)) {
+
+  if((g->isLocked()) || (g->lockedArticles()>0)) {
     KMessageBox::sorry(knGlobals.topWidget, QString(i18n("The group \"%1\" is being updated currently.\nIt is not possible to unsubscribe it at the moment.")).arg(g->groupname()));
     return;
   }
 
   KNArticleWindow::closeAllWindowsForCollection(g);
+  KNArticleWidget::collectionRemoved(g);
 
   acc=g->account();
-  
+
   QDir dir(acc->path(),g->groupname()+"*");
   if (dir.exists()) {
     const QFileInfoList *list = dir.entryInfoList();  // get list of matching files and delete all
@@ -437,10 +395,10 @@ void KNGroupManager::unsubscribeGroup(KNGroup *g)
       }
     }
     kdDebug(5003) << "Files deleted!" << endl;
-    
+
     if(c_urrentGroup==g) setCurrentGroup(0);
-    
-    gList->removeRef(g);
+
+    g_List->removeRef(g);
   }
 }
 
@@ -459,20 +417,19 @@ void KNGroupManager::checkGroupForNewHeaders(KNGroup *g)
 {
   if(!g) g=c_urrentGroup;
   if(!g) return;
-  if(g->locked()) {
+  if(g->isLocked()) {
     kdDebug(5003) << "KNGroupManager::setCurrentGroup() : group locked - returning" << endl;
     return;
-  } 
-  g->setMaxFetch(defaultMaxFetch);
-  KNJobData *job=new KNJobData(KNJobData::JTfetchNewHeaders, g->account(), g);
-  knGlobals.netAccess->addJob(job);
+  }
+  g->setMaxFetch(knGlobals.cfgManager->readNewsGeneral()->maxToFetch());
+  emitJob( new KNJobData(KNJobData::JTfetchNewHeaders, this, g->account(), g) );
 }
 
 
 
 void KNGroupManager::expireGroupNow(KNGroup *g)
 {
-  if(!g) g=c_urrentGroup;
+  /*if(!g) g=c_urrentGroup;
   if(!g) return;
 
   if((g->locked()) || (g->loading()>0)) {
@@ -485,14 +442,14 @@ void KNGroupManager::expireGroupNow(KNGroup *g)
   KNCleanUp cup;
   cup.group(g, true);
   kdDebug(5003) << "KNExpire: " << g->groupname() << " => " << cup.deleted() << " expired , " << cup.left() << " left" << endl;
-  
+
   if(cup.deleted()>0) {
     g->updateListItem();
     if(g==c_urrentGroup) {
       if(g->loadHdrs()) aManager->showHdrs();
       else aManager->setGroup(0);
     }
-  }     
+  }*/
 }
 
 
@@ -501,37 +458,28 @@ void KNGroupManager::resortGroup(KNGroup *g)
   if(!g) g=c_urrentGroup;
   if(!g) return;
   g->resort();
-  if(g==c_urrentGroup) aManager->showHdrs();
+  if(g==c_urrentGroup)
+  	a_rticleMgr->showHdrs();
 }
 
 
-  
+
 void KNGroupManager::setCurrentGroup(KNGroup *g)
 {
   c_urrentGroup=g;
-  aManager->setGroup(g);
+  a_rticleMgr->setGroup(g);
   bool loaded;
   kdDebug(5003) << "KNGroupManager::setCurrentGroup() : group changed" << endl;
-  
+
   if (g) {
     loaded=g->loadHdrs();
     if (loaded) {
-      aManager->showHdrs();
-      if(a_utoCheck) checkGroupForNewHeaders(g);
-    } else
+     a_rticleMgr->showHdrs();
+      if(knGlobals.cfgManager->readNewsGeneral()->autoCheckGroups())
+      	checkGroupForNewHeaders(g);
+    }
+    else
       KMessageBox::error(knGlobals.topWidget, i18n("Cannot load saved headers"));
-    
-    actProperties->setEnabled(true);
-    actLoadHdrs->setEnabled(true);
-    actExpire->setEnabled(true);
-    actResort->setEnabled(true);
-    actUnsubscribe->setEnabled(true);   
-  } else {
-    actProperties->setEnabled(false);
-    actLoadHdrs->setEnabled(false);
-    actExpire->setEnabled(false);
-    actResort->setEnabled(false);
-    actUnsubscribe->setEnabled(false);    
   }
 }
 
@@ -539,32 +487,29 @@ void KNGroupManager::setCurrentGroup(KNGroup *g)
 
 void KNGroupManager::checkAll(KNNntpAccount *a)
 {
-  KNJobData *j;
   if(!a) return;
-  
-  for(KNGroup *g=gList->first(); g; g=gList->next()) {
+
+  for(KNGroup *g=g_List->first(); g; g=g_List->next()) {
     if(g->account()==a) {
-      g->setMaxFetch(defaultMaxFetch);
-      if(g->loadHdrs()) {
-        j=new KNJobData(KNJobData::JTfetchNewHeaders, a, g);
-        knGlobals.netAccess->addJob(j);
-      }
+      g->setMaxFetch(knGlobals.cfgManager->readNewsGeneral()->maxToFetch());
+      if(g->loadHdrs())
+        emitJob( new KNJobData(KNJobData::JTfetchNewHeaders, this, a, g) );
     }
-  } 
+  }
 }
 
 
 
-void KNGroupManager::jobDone(KNJobData *j)
+void KNGroupManager::processJob(KNJobData *j)
 {
   if((j->type()==KNJobData::JTLoadGroups)||(j->type()==KNJobData::JTFetchGroups)||(j->type()==KNJobData::JTCheckNewGroups)) {
-    KNGroupListData *d=static_cast<KNGroupListData*>(j->data());  
+    KNGroupListData *d=static_cast<KNGroupListData*>(j->data());
 
     if (!j->canceled()) {
       if (j->success()) {
         if ((j->type()==KNJobData::JTFetchGroups)||(j->type()==KNJobData::JTCheckNewGroups)) {
           // update the descriptions of the subscribed groups
-          for(KNGroup *var=gList->first(); var; var=gList->next()) {
+          for(KNGroup *var=g_List->first(); var; var=g_List->next()) {
             if(var->account()==j->account()) {
               for (KNGroupInfo* inf = d->groups->first(); inf; inf=d->groups->next())
                 if (inf->name == var->groupname()) {
@@ -582,7 +527,9 @@ void KNGroupManager::jobDone(KNJobData *j)
     } else
       emit(newListReady(0));
 
-    delete d;   
+    delete j;
+    delete d;
+
   
   } else {               //KNJobData::JTfetchNewHeaders
     KNGroup *group=static_cast<KNGroup*>(j->data());
@@ -596,10 +543,11 @@ void KNGroupManager::jobDone(KNJobData *j)
       } else
         KMessageBox::error(knGlobals.topWidget, j->errorString());
     }         
-    if(group==c_urrentGroup) aManager->showHdrs(false);         
+    if(group==c_urrentGroup)
+    	a_rticleMgr->showHdrs(false);
+		
+   	delete j;
   }
-  
-  delete j;
 }
 
 
@@ -624,8 +572,7 @@ void KNGroupManager::slotLoadGroupList(KNNntpAccount *a)
   getSubscribed(a,&(d->subscribed));
   d->getDescriptions = a->fetchDescriptions();
 
-  KNJobData *job=new KNJobData(KNJobData::JTLoadGroups, a, d);
-  knGlobals.netAccess->addJob(job);
+  emitJob( new KNJobData(KNJobData::JTLoadGroups, this, a, d) );
 }
 
 
@@ -637,8 +584,7 @@ void KNGroupManager::slotFetchGroupList(KNNntpAccount *a)
   getSubscribed(a,&(d->subscribed));
   d->getDescriptions = a->fetchDescriptions();
 
-  KNJobData *job=new KNJobData(KNJobData::JTFetchGroups, a, d);
-  knGlobals.netAccess->addJob(job);
+	emitJob( new KNJobData(KNJobData::JTFetchGroups, this, a, d) );
 }
 
 
@@ -651,18 +597,17 @@ void KNGroupManager::slotCheckForNewGroups(KNNntpAccount *a, QDate date)
   d->getDescriptions = a->fetchDescriptions();
   d->fetchSince = date;
   
-  KNJobData *job=new KNJobData(KNJobData::JTCheckNewGroups, a, d);
-  knGlobals.netAccess->addJob(job);
+  emitJob( new KNJobData(KNJobData::JTCheckNewGroups, this, a, d) );
 }
 
 
-void KNGroupManager::slotUnsubscribe()
+/*void KNGroupManager::slotUnsubscribe()
 {
   if (!c_urrentGroup)
     return;
   if(KMessageBox::Yes == KMessageBox::questionYesNo(knGlobals.topWidget, i18n("Do you really want to unsubscribe from %1?").arg(c_urrentGroup->groupname())))
     unsubscribeGroup();
-}
+}*/
 
 
 //--------------------------------

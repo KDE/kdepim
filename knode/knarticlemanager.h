@@ -21,17 +21,21 @@
 
 #include <qlist.h>
 #include <kurl.h>
+#include <qfile.h>
+#include <qlistview.h>
 
-class QFile;
-class QString;
+#include "knmime.h"
 
-
-class KTempFile;
-
-class KNListView;
-class KNArticleWidget;
-class KNMimeContent;
 class KNArticle;
+class KTempFile;
+class KNListView;
+class KNThread;
+class KNArticleCollection;
+class KNGroup;
+class KNFolder;
+class KNArticleFilter;
+class KNFilterManager;
+class KNSearchDialog;
 
 
 //===============================================================================
@@ -62,25 +66,69 @@ private:
 //===============================================================================
 
 
-class KNArticleManager {
-  
+class KNArticleManager : public QObject {
+
+	Q_OBJECT
+
   public:
-    KNArticleManager(KNListView *v);
+    KNArticleManager(KNListView *v, KNFilterManager *f);
     virtual ~KNArticleManager();
-    static void deleteTempFiles();
-    
-    static void saveContentToFile(KNMimeContent *c);
-    static void saveArticleToFile(KNArticle *a);
-    static QString saveContentToTemp(KNMimeContent *c);
-    static void openContent(KNMimeContent *c);
-    static void showArticle(KNArticle *a, bool force=false);
-    static void showError(KNArticle *a, const QString &error);
-    
+
+    //content handling
+    void deleteTempFiles();
+    void saveContentToFile(KNMimeContent *c);
+    void saveArticleToFile(KNArticle *a);
+    QString saveContentToTemp(KNMimeContent *c);
+    void openContent(KNMimeContent *c);
+
+    //listview handling
+    void showHdrs(bool clear=true);
+    void setAllThreadsOpen(bool b=true);
+    void toggleShowThreads()        { s_howThreads=!s_howThreads; showHdrs(true); }
+
+    //filter
+    KNArticleFilter* filter() const { return f_ilter; }
+    void search();
+
+    //collection handling
+    void setGroup(KNGroup *g)       { g_roup=g; }
+    void setFolder(KNFolder *f)     { f_older=f; }
+    KNArticleCollection* collection();
+
+    //article handling - RemoteArticles
+    void setAllRead(bool r=true);
+    void setRead(KNRemoteArticle::List *l, bool r=true);
+    void toggleWatched(KNRemoteArticle::List *l);
+    void toggleIgnored(KNRemoteArticle::List *l);
+    void setScore(KNRemoteArticle::List *a, int score=-1);
+
+    //article handling - LocalArticles
+    //soon to come ..
+
   protected:  
-    KNListView *view;
-    KNArticleWidget *mainArtWidget;
-    static QList<KTempFile> tempFiles;
+    void createHdrItem(KNRemoteArticle *a);
+    //void createHdrItem(KNLocalArticle *a);
+    void createThread(KNRemoteArticle *a);
+    void updateStatusString();
+
+    KNListView *v_iew;
+    KNGroup *g_roup;
+    KNFolder *f_older;
+    KNArticleFilter *f_ilter;
+    KNFilterManager *f_ilterMgr;
+    KNSearchDialog *s_earchDlg;
+    QList<KTempFile> t_empFiles;
+    bool s_howThreads;
+
+
+  public slots:
+    void slotFilterChanged(KNArticleFilter *f);
+    void slotSearchDialogDone();
+    void slotItemExpanded(QListViewItem *p);
 
 };
+
+
+
 
 #endif

@@ -16,43 +16,25 @@
 #ifndef KNLISTBOX_H
 #define KNLISTBOX_H
 
-#include "qlistbox.h"
+#include <qlistbox.h>
+#include <qpixmap.h>
 
-class QPixMap;
 
-
-class KNLBoxItem : public QListBoxItem  {
+class KNListBoxItem : public QListBoxItem  {
   
   public:
-    KNLBoxItem(const QString& text, void *d=0, QPixmap *_pm=0);
-    ~KNLBoxItem();
-    
-    void setPixmap(QPixmap _pm) { pm=_pm; }
-    void* data() {  return mData; }
-    void setData(void *d) { mData=d; }    
-    
-  private:
-    QPixmap pm;
-    void *mData;
-      
+    KNListBoxItem(const QString& text, QPixmap *pm=0);
+    ~KNListBoxItem();
+
+
   protected:
-    virtual void paint( QPainter * );
-    virtual int height( const QListBox * ) const;
-    virtual int width( const QListBox * ) const;
+    virtual void paint(QPainter *);
+    virtual int height(const QListBox *) const;
+    virtual int width(const QListBox *) const;
+
+    QPixmap *p_m;
 };
 
-
-//==============================================================================
-
-
-class KNListBox : public QListBox  {
-  
-  public:
-    KNListBox(QWidget *parent=0, const char *name=0);
-    ~KNListBox();
-    
-    KNLBoxItem *itemAt(int idx) { return static_cast<KNLBoxItem*>(item(idx)); }
-};
 
 
 #endif

@@ -17,8 +17,11 @@
 #include <kcmdlineargs.h>
 #include <klocale.h>
 
-#include "knapplication.h"
+#include <kapp.h>
+//#include "knapplication.h"
 #include "resource.h"
+#include "knode.h"
+
 
 
 static KCmdLineOptions knoptions[] =
@@ -26,6 +29,7 @@ static KCmdLineOptions knoptions[] =
   { "+[url]", I18N_NOOP("A 'news://server/group' URL."), 0 },
   { 0, 0, 0 }
 };
+
 
 
 int main(int argc, char* argv[])
@@ -45,14 +49,19 @@ int main(int argc, char* argv[])
   aboutData.addCredit("Stephan Johach",0,"lucardus@onlinehome.de");
   aboutData.addCredit("Matthias Kalle Dalheimer",0,"kalle@kde.org");
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( knoptions );
-  KUniqueApplication::addCmdLineOptions();
+
+  //KCmdLineArgs::init( argc, argv, &aboutData );
+  //KUniqueApplication::addCmdLineOptions();
+	//KApplication::addCmdLineOptions();
+	/*
 
   if (!KNApplication::start())
     return 0;
 
-  KNApplication app;
-
+  KNApplication app;*/
+  KApplication app(argc, argv, "knode");
+	KNMainWindow *mainWin=new KNMainWindow();
+	mainWin->show();
   return app.exec();
 }
+

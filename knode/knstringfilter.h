@@ -43,10 +43,10 @@ class KNStringFilter {
     void load(KSimpleConfig *conf);
     void save(KSimpleConfig *conf);     
           
-    bool doFilter(const QCString &s);
+    bool doFilter(const QString &s);
                 
   protected:
-    QCString data, expanded;
+    QString data, expanded;
     bool con, enabled, regExp;  
     
 };

@@ -42,14 +42,18 @@ class KNArticleCollection : public KNCollection {
     int size()                    { return siz; }
     int length()                  { return len; }
     int increment()               { return incr; }
+    unsigned int lockedArticles() { return l_ockedArticles; }
     
     //set
     void setIncrement(int i)      { incr=i; }
-    void setLastID();               
+    void setLastID();
+    void articleLocked()          { l_ockedArticles++; }
+    void articleUnlocked()        { l_ockedArticles--; }
           
   protected:
     int findId(int id);
     int siz, len, lastID, incr;
+    unsigned int l_ockedArticles;
     KNArticle **list;
 };
 

@@ -35,8 +35,8 @@
 #include "knnetaccess.h"
 
 
-KNNetAccess::KNNetAccess(KActionCollection* actColl, QObject *parent, const char *name )
-: QObject(parent,name), currentNntpJob(0L), currentSmtpJob(0L), actionCollection(actColl)
+KNNetAccess::KNNetAccess(QObject *parent, const char *name )
+: QObject(parent,name), currentNntpJob(0L), currentSmtpJob(0L)
 {
   if((pipe(nntpInPipe)==-1)||
      (pipe(nntpOutPipe)==-1)||
@@ -76,10 +76,7 @@ KNNetAccess::KNNetAccess(KActionCollection* actColl, QObject *parent, const char
   
   nntpJobQueue.setAutoDelete(false);    
   smtpJobQueue.setAutoDelete(false);    
-  
-  actNetStop = new KAction(i18n("Stop &Network"),"stop",0, this, SLOT(slotCancelAllJobs()),
-                           actionCollection, "net_stop");
-  actNetStop->setEnabled(false);
+
 }
 
 
@@ -121,6 +118,12 @@ KNNetAccess::~KNNetAccess()
 void KNNetAccess::addJob(KNJobData *job)
 {
   // kdDebug(5003) << "KNNetAccess::addJob() : job queued" << endl;
+  if(job->account()==0) {
+    job->setErrorString(i18n("Internal Error: No account set for this job!"));
+    job->notifyConsumer();
+    return;
+  }
+
   if (job->type()==KNJobData::JTmail) {
     smtpJobQueue.enqueue(job);
     if (!currentSmtpJob)   // no active job, start the new one
@@ -149,7 +152,8 @@ void KNNetAccess::stopJobsNntp(int type)
       tmp=nntpJobQueue.dequeue();
       if ((type==0)||(tmp->type()==type)) {
         tmp->cancel();
-        knGlobals.top->jobDone(tmp);
+        tmp->notifyConsumer();
+        	
       } else
         nntpJobQueue.enqueue(tmp);
     }
@@ -173,7 +177,7 @@ void KNNetAccess::stopJobsSmtp(int type)
       tmp=smtpJobQueue.dequeue();
       if ((type==0)||(tmp->type()==type)) {
         tmp->cancel();
-        knGlobals.top->jobDone(tmp);
+        tmp->notifyConsumer();
       } else
         smtpJobQueue.enqueue(tmp);
     }
@@ -202,7 +206,7 @@ void KNNetAccess::startJobNntp()
   currentNntpJob = nntpJobQueue.dequeue();
   nntpClient->insertJob(currentNntpJob);
   triggerAsyncThread(nntpOutPipe[1]);
-  actNetStop->setEnabled(true);
+  emit netActive(true);
   kdDebug(5003) << "KNNetAccess::startJobNntp(): job started" << endl;
 }
 
@@ -221,7 +225,7 @@ void KNNetAccess::startJobSmtp()
   currentSmtpJob = smtpJobQueue.dequeue();
   smtpClient->insertJob(currentSmtpJob);
   triggerAsyncThread(smtpOutPipe[1]);
-  actNetStop->setEnabled(true);
+  emit netActive(true);
   kdDebug(5003) << "KNNetAccess::startJobSmtp(): job started" << endl;
 }
 
@@ -241,7 +245,7 @@ void KNNetAccess::threadDoneNntp()
   nntpClient->removeJob();
   currentNntpJob = 0L;
   if (!currentSmtpJob) {
-    actNetStop->setEnabled(false);
+    emit netActive(false);
     knGlobals.progressBar->disableProgressBar();
     knGlobals.top->setStatusMsg();
   } else {
@@ -249,7 +253,7 @@ void KNNetAccess::threadDoneNntp()
     knGlobals.top->setStatusMsg(unshownMsg);
   }
   
-  knGlobals.top->jobDone(tmp);  
+  tmp->notifyConsumer();
 
   if (!nntpJobQueue.isEmpty())
     startJobNntp();
@@ -271,15 +275,23 @@ void KNNetAccess::threadDoneSmtp()
   smtpClient->removeJob();
   currentSmtpJob = 0L;
   if (!currentNntpJob) {
-    actNetStop->setEnabled(false);
+    emit netActive(false);
     knGlobals.progressBar->disableProgressBar();
     knGlobals.top->setStatusMsg();
   }
   
-  knGlobals.top->jobDone(tmp);  
+  tmp->notifyConsumer();
 
   if (!smtpJobQueue.isEmpty())
     startJobSmtp();
+}
+
+
+
+void KNNetAccess::cancelAllJobs()
+{
+  stopJobsNntp(0);
+  stopJobsSmtp(0);
 }
 
 
@@ -377,13 +389,6 @@ void KNNetAccess::slotThreadSignal(int i)
   }
 }
 
-
-
-void KNNetAccess::slotCancelAllJobs()
-{
-  stopJobsNntp(0);
-  stopJobsSmtp(0);
-}
 
 
 //--------------------------------

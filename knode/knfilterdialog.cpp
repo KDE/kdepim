@@ -100,7 +100,7 @@ void KNFilterDialog::slotOk()
   if (fname->text().isEmpty())
     KMessageBox::sorry(this, i18n("Please provide a name for this filter."));
   else
-    if (!knGlobals.fiManager->newNameIsOK(fltr,fname->text()))
+    if (!knGlobals.filManager->newNameIsOK(fltr,fname->text()))
       KMessageBox::sorry(this, i18n("A filter with this name exists already.\nPlease choose a different name."));
     else {
       fltr->setTranslatedName(fname->text());

@@ -19,8 +19,7 @@
 #include <qstrlist.h>
 #include <klocale.h>
 
-#include "knsavedarticle.h"
-#include "knfetcharticle.h"
+#include "knmime.h"
 #include "kngroup.h"
 #include "kngroupmanager.h"
 #include "knjobdata.h"
@@ -380,15 +379,15 @@ void KNNntpClient::doFetchNewHeaders()
 
 void KNNntpClient::doFetchArticle()
 {
-  KNFetchArticle *target = static_cast<KNFetchArticle*>(job->data());
+  KNRemoteArticle *target = static_cast<KNRemoteArticle*>(job->data());
   
   sendSignal(TSdownloadArticle);
   errorPrefix = i18n("Article could not been retrieved.\nThe following error occured:\n");
 
   progressValue = 100;
-  predictedLines = target->lines()+10;
+  predictedLines = target->lines()->numberOfLines()+10;
     
-  QCString cmd = "ARTICLE " + target->messageId();
+  QCString cmd = "ARTICLE " + target->messageID()->as7BitString(false);
   if (!sendCommandWCheck(cmd,220))       // 220 n <a> article retrieved - head and body follow
     return;
   
@@ -399,24 +398,24 @@ void KNNntpClient::doFetchArticle()
   progressValue = 1000;   
   sendSignal(TSprogressUpdate);
     
-  target->setData(&msg,false);
+  target->setContent(&msg);
   target->parse();
 }
 
 
 void KNNntpClient::doPostArticle()
 {
-  KNSavedArticle *art = static_cast<KNSavedArticle*>(job->data());
+  KNLocalArticle *art=static_cast<KNLocalArticle*>(job->data());
   
   sendSignal(TSsendArticle);  
   
-  if (!sendCommandWCheck("POST",340))       // 340 send article to be posted. End with <CR-LF>.<CR-LF>
+  if(!sendCommandWCheck("POST", 340))       // 340 send article to be posted. End with <CR-LF>.<CR-LF>
     return;
 
-  if (!sendMsg(art->encodedData()))
+  if(!sendMsg(art->encodedContent(true)))
     return;
     
-  if (!checkNextResponse(240))            // 240 article posted ok
+  if(!checkNextResponse(240))            // 240 article posted ok
     return;
 }
 

@@ -103,7 +103,7 @@ QCString KNGroupSelectDialog::selectedGroups()
   for(; it.current(); ++it) {
     if(!isFirst)
       ret+=",";
-    ret+=it.current()->text(0).local8Bit();
+    ret+=it.current()->text(0).latin1();
     isFirst=false;
   }
 

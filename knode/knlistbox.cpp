@@ -17,20 +17,19 @@
 #include "knlistbox.h"
 
 
-KNLBoxItem::KNLBoxItem(const QString& text, void *d, QPixmap *_pm)
+KNListBoxItem::KNListBoxItem(const QString& text, QPixmap *pm)
 {
-  if(_pm) pm=*_pm;
+  p_m=pm;
   setText(text);
-  mData=d;  
 }
 
 
-KNLBoxItem::~KNLBoxItem()
+KNListBoxItem::~KNListBoxItem()
 {
 }
 
 
-void KNLBoxItem::paint( QPainter *p )
+void KNListBoxItem::paint(QPainter *p)
 {
   
   QFontMetrics fm = p->fontMetrics();
@@ -39,42 +38,38 @@ void KNLBoxItem::paint( QPainter *p )
   
   tYPos = fm.ascent() + fm.leading()/2; // vertical text position
   
-  if(!pm.isNull()) {  
+  if(p_m) {
     
-    tXPos=pm.width() + 6; 
+    tXPos=p_m->width() + 6;
   
-    if ( pm.height() < fm.height() )  {
+    if ( p_m->height() < fm.height() )  {
       //tYPos = fm.ascent() + fm.leading()/2;
-      pYPos = (fm.height() - pm.height())/2;}
+      pYPos = (fm.height() - p_m->height())/2;}
     else {
-      tYPos = pm.height()/2 - fm.height()/2 + fm.ascent();
-      pYPos = 0;}
+      tYPos = p_m->height()/2 - fm.height()/2 + fm.ascent();
+      pYPos = 0;
+    }
+    p->drawPixmap( 3, pYPos ,  *p_m );
   }
   
-  p->drawPixmap( 3, pYPos ,  pm );  
+
   p->drawText( tXPos, tYPos, text() );
 }
 
 
-int KNLBoxItem::height(const QListBox *lb ) const
+int KNListBoxItem::height(const QListBox *lb) const
 {
-  return QMAX( pm.height(), lb->fontMetrics().lineSpacing() + 1 );  
+  if(p_m)
+    return QMAX( p_m->height(), lb->fontMetrics().lineSpacing() + 1 );
+  else
+    return (lb->fontMetrics().lineSpacing() + 1);
 }
 
 
-int KNLBoxItem::width(const QListBox *lb ) const
+int KNListBoxItem::width(const QListBox *lb) const
 {
-  return pm.width() + lb->fontMetrics().width( text() ) + 6;
-}
-
-
-//==============================================================================
-
-
-KNListBox::KNListBox(QWidget *parent, const char *name) : QListBox(parent,name)
-{
-}
-
-KNListBox::~KNListBox()
-{
+  if(p_m)
+    return (p_m->width() + lb->fontMetrics().width( text() ) + 6);
+  else
+    return (lb->fontMetrics().width( text() ) + 6);
 }

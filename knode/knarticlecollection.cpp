@@ -23,7 +23,7 @@
 
 #include "knglobals.h"
 #include "knarticlecollection.h"
-#include "knarticle.h"
+#include "knmime.h"
 
 
 KNArticleCollection::KNArticleCollection(KNCollection *p)
@@ -34,6 +34,7 @@ KNArticleCollection::KNArticleCollection(KNCollection *p)
   siz=0;
   list=0;
   incr=50;
+  l_ockedArticles=0;
 }
 
 

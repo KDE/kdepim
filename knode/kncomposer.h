@@ -21,20 +21,19 @@
 
 #include <qlineedit.h>
 #include <qsplitter.h>
+#include <qgroupbox.h>
+#include <qcombobox.h>
+#include <qpushbutton.h>
+#include <qlistview.h>
 
 #include <kmainwindow.h>
 #include <keditcl.h>
 #include <kdialogbase.h>
+#include <kprocess.h>
+#include <kspell.h>
+#include <ktempfile.h>
 
-class QGroupBox;
-class QComboBox;
-
-class KSpell;
-class KProcess;
-class KTempFile;
-
-class KNNntpAccount;
-class KNSavedArticle;
+class KNLocalArticle;
 class KNMimeContent;
 class KNAttachment;
 
@@ -48,97 +47,65 @@ class KNComposer : public KMainWindow  {
                           CRdel, CRsave, CRcancel };
 
     // firstEdit==true: place the cursor at the end of the article
-    // n==0: eMail
-    KNComposer(KNSavedArticle *a, const QCString &sig, bool firstEdit=false, KNNntpAccount *n=0);
+    KNComposer(KNLocalArticle *a, const QString &text=QString::null, const QString &sig=QString::null, bool firstEdit=false);
     ~KNComposer();
-    static void readConfig();
+    void setConfig();
 
-    //get
-    composerResult result()               { return r_esult; }
-    KNSavedArticle* article()             { return a_rticle; }
+    //get result
     bool hasValidData();
-    bool textChanged();
-    //bool attachementsChanged();
+    composerResult result()               { return r_esult; }
+    KNLocalArticle* article()             { return a_rticle; }
+    void applyChanges();
 
     // this tells closeEvent() whether it can accept or not:
-    void setDoneSuccess(bool b)           { doneSuccess = b; }
-    void setConfig();
-    void applyChanges();      
+    void setDoneSuccess(bool b)           { d_oneSuccess = b; }
 
-  protected:
     void closeEvent(QCloseEvent *e);
-    void initData();    
+
+    //set data from the given article
+    void initData(const QString &text);
+
     // inserts at cursor position if clear is false, replaces content otherwise
     void insertFile(QString fileName, bool clear=false);
 
-    class Editor : public KEdit {      // handle Tabs... (expanding them in textLine(), etc.)
-
-      public:
-        Editor(QWidget *parent=0, char *name=0);
-        ~Editor();
-
-        QString textLine(int line) const;
-
-      protected:
-        bool eventFilter(QObject*, QEvent* e);
-    };
-
+    //internal classes
+    class ComposerView;
+    class Editor;
     class AttachmentView;
     class AttachmentViewItem;
     class AttachmentPropertiesDlg;
 
-    class ComposerView  : public QSplitter {
-      
-      public:
-        ComposerView(QWidget *parent=0, bool mail=false);
-        ~ComposerView();
-        
-        void showAttachmentView();
-        void hideAttachmentView();
-        void showExternalNotification();
-        void hideExternalNotification();
+    //GUI
+    ComposerView *v_iew;
+    QPopupMenu *a_ttPopup;
 
-        void saveOptions();
-      
-        Editor *edit;
-        QGroupBox *notification;
-        QPushButton *cancelEditorButton, *attRemoveButton, *attEditButton;
-        QWidget *attWidget;
-        AttachmentView *attView;
-        bool viewOpen;
-        QLineEdit *subject, *dest;
-        QComboBox *fup2;
-        QCheckBox *fupCheck;
-        QPushButton *destButton;
-            
-    };
-    
-    ComposerView *view;
-    QPopupMenu *attPopup;
-    KSpell *spellChecker;
+    //Data
     composerResult r_esult;
-    KNSavedArticle *a_rticle;
-    KNNntpAccount *nntp;
-    QCString s_ignature, d_estination;
-    bool doneSuccess, externalEdited, attChanged;
-    KAction *actExternalEditor, *actSpellCheck,
-            *actRemoveAttachment, *actAttachmentProperties;
-    KToggleAction *actShowToolbar;
-    KProcess *externalEditor;
-    KTempFile *editorTempfile;
-    QList<KNAttachment> *delAttList;
+    KNLocalArticle *a_rticle;
+    QString s_ignature;
+    bool d_oneSuccess;
 
-    static bool appSig, useExternalEditor;
-    static int lineLen;
-    static QString externalEditorCommand;
+    //edit
+    bool e_xternalEdited;
+    KProcess *e_xternalEditor;
+    KTempFile *e_ditorTempfile;
+    KSpell *s_pellChecker;
+
+    //Attachments
+    QList<KNAttachment> d_elAttList;
+    bool a_ttChanged;
+
+
+  //------------------------------ <Actions> -----------------------------
+
+    KAction       *a_ctExternalEditor,
+                  *a_ctSpellCheck,
+                  *a_ctRemoveAttachment,
+                  *a_ctAttachmentProperties;
+    KToggleAction *a_ctShowToolbar;
     
+
   protected slots:
-    void slotDestinationChanged(const QString &t);
-    void slotDestButtonClicked();
-    void slotFupCheckToggled(bool b);
-    void slotSubjectChanged(const QString &t);      
-    
-    // action slots
     void slotSendNow();
     void slotSendLater();     
     void slotSaveAsDraft();   
@@ -156,30 +123,89 @@ class KNComposer : public KMainWindow  {
     void slotToggleToolBar();
     void slotConfKeys();
     void slotConfToolbar();
-    
-    // spellcheck operation
-    void slotSpellStarted(KSpell *);
-    void slotSpellDone(const QString&);
-    void slotSpellFinished();
+
+  //------------------------------ </Actions> ----------------------------
+
+    // GUI
+    void slotSubjectChanged(const QString &t);
+    void slotGroupsChanged(const QString &t);
+    void slotToBtnClicked();
+    void slotGroupsBtnClicked();
+    void slotToCheckBoxToggled(bool b);
+    void slotGroupsCheckBoxToggled(bool b);
+    void slotFupCheckBoxToggled(bool b);
 
     // external editor
     void slotEditorFinished(KProcess *);
     void slotCancelEditor();
 
-    // attachment list view
+    // attachment list
     void slotAttachmentPopup(QListViewItem *it, const QPoint &p, int);
     void slotAttachmentSelected(QListViewItem *it);
     void slotAttachmentEdit(QListViewItem *it);
     void slotAttachmentRemove(QListViewItem *it);
-          
+
+    // spellcheck operation
+    void slotSpellStarted(KSpell *);
+    void slotSpellDone(const QString&);
+    void slotSpellFinished();
+
+
   signals:
     void composerDone(KNComposer*);
               
 };
 
 
+class KNComposer::ComposerView  : public QSplitter {
 
-// === attachment handling ===========================================================
+  public:
+    ComposerView(QWidget *p=0, const char *n=0);
+    ~ComposerView();
+
+    void showAttachmentView();
+    void hideAttachmentView();
+    void showExternalNotification();
+    void hideExternalNotification();
+
+    QLineEdit   *s_ubject,
+                *g_roups,
+                *t_o;
+    QComboBox   *f_up2;
+    QCheckBox   *g_roupsCB,
+                *t_oCB,
+                *f_up2CB;
+    QPushButton *g_roupsBtn,
+                *t_oBtn;
+
+    Editor      *e_dit;
+    QGroupBox   *n_otification;
+    QPushButton *c_ancelEditorBtn;
+
+
+    QWidget         *a_ttWidget;
+    AttachmentView  *a_ttView;
+    QPushButton     *a_ttAddBtn,
+                    *a_ttRemoveBtn,
+                    *a_ttEditBtn;
+
+    bool v_iewOpen;
+};
+
+
+//internal class : handle Tabs... (expanding them in textLine(), etc.)
+class KNComposer::Editor : public KEdit {
+
+  public:
+    Editor(QWidget *parent=0, char *name=0);
+    ~Editor();
+
+    QString textLine(int line) const;
+    QString text() const;
+
+  protected:
+    bool eventFilter(QObject*, QEvent* e);
+};
 
 
 class KNComposer::AttachmentView : public QListView {
@@ -194,7 +220,7 @@ class KNComposer::AttachmentView : public QListView {
     void keyPressEvent( QKeyEvent *e );
 
   signals:
-    void delPressed ( QListViewItem * );      // the user used Key_Delete on list view item
+    void delPressed ( QListViewItem * );      // the user used Key_Delete on a list view item
 };
 
 
@@ -214,16 +240,18 @@ class KNComposer::AttachmentPropertiesDlg : public KDialogBase {
   Q_OBJECT
 
   public:
-    AttachmentPropertiesDlg(QWidget *p, KNAttachment *a);
+    AttachmentPropertiesDlg( KNAttachment *a, QWidget *p=0, const char *n=0);
     ~AttachmentPropertiesDlg();
 
     void apply();
 
   protected:
-    QLineEdit *mimeType, *description;
-    QComboBox *encoding;
-    KNAttachment *attachment;
-    bool nonTextAsText;
+    QLineEdit *m_imeType,
+              *d_escription;
+    QComboBox *e_ncoding;
+
+    KNAttachment *a_ttachment;
+    bool n_onTextAsText;
 
   protected slots:
     void accept();
