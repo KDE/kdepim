@@ -143,6 +143,39 @@ bool KonsoleKalendarVariables::getAll()
   return m_bAll;
 }
 
+void KonsoleKalendarVariables::setDescription(QString description)
+{
+	m_bDescription = true;
+	m_description = description;
+}
+
+QString KonsoleKalendarVariables::getDescription()
+{
+	return m_description;
+}
+
+bool KonsoleKalendarVariables::isDescription()
+{
+	return m_bDescription;
+}
+
+void KonsoleKalendarVariables::setSummary(QString summary)
+{
+	m_bSummary = true;
+	m_summary = summary;
+}
+
+QString KonsoleKalendarVariables::getSummary()
+{
+	return m_summary;
+}
+
+bool KonsoleKalendarVariables::isSummary()
+{
+	return m_bSummary;
+}
+
+
 QTime KonsoleKalendarVariables::parseTime( QString str )
 {
 	int strpos = 0;

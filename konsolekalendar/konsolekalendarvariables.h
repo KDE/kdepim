@@ -52,7 +52,16 @@ class KonsoleKalendarVariables
 
     void setCalendarFile(QString calendar);
     QString getCalendarFile();
-      
+
+    void setDescription(QString description);
+    QString getDescription();
+    bool isDescription();
+
+    void setSummary(QString description);
+    QString getSummary();
+    bool isSummary();
+  
+   
     bool isAll();
              
     void setAll( bool all );
@@ -84,10 +93,14 @@ class KonsoleKalendarVariables
     QDateTime m_endDate;
     bool m_bIsStartDate;
     QString m_calendar;
+    QString m_description;
+    QString m_summary;
+    bool m_bSummary;
     bool m_bIsEndDate;
     bool m_bNext;
     bool m_bVerbose;
     bool m_bAll;
+    bool m_bDescription;
     int str_length;
     // We can use this from everywhere
     CalendarLocal *m_caledarLocal;
