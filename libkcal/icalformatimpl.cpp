@@ -865,6 +865,19 @@ icalproperty *ICalFormatImpl::writeAttachment(Attachment *att)
     icalproperty_add_parameter( p,
         icalparameter_new_encoding( ICAL_ENCODING_BASE64 ) );
   }
+	
+  if ( att->showInline() ) {
+    icalparameter* icalparameter_inline = icalparameter_new_x( "inline" );
+    icalparameter_set_xname( icalparameter_inline, "X-CONTENT-DISPOSITION" );
+    icalproperty_add_parameter( p, icalparameter_inline );
+  }
+
+  if ( !att->label().isEmpty() ) {
+    icalparameter* icalparameter_label = icalparameter_new_x( att->label().utf8() );
+    icalparameter_set_xname( icalparameter_label, "X-LABEL" );
+    icalproperty_add_parameter( p, icalparameter_label );
+  }
+
   return p;
 }
 
@@ -1519,6 +1532,23 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
   if (p)
     attachment->setMimeType(QString(icalparameter_get_fmttype(p)));
 
+	QString paramvalue = QString::null;
+  p = icalproperty_get_first_parameter( attach, ICAL_X_PARAMETER );
+  while ( p ) {
+kdDebug() << "Reading Attachment X Parameter: " << icalparameter_get_xname(p) << ", value=" << icalparameter_get_xvalue(p) << endl;
+    const QString &param = icalparameter_get_xname(p);
+		const QString &paramvalue = icalparameter_get_xvalue( p );
+    if ( param == "X-CONTENT-DISPOSITION") {
+			if ( paramvalue == "inline" ) {
+				attachment->setShowInline( true );
+			}
+    } else 
+		if ( param == "X-LABEL") {
+			attachment->setLabel( paramvalue );
+    }
+    p = icalproperty_get_next_parameter( attach, ICAL_X_PARAMETER );
+  }
+					
   return attachment;
 }
 

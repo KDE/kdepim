@@ -28,6 +28,8 @@ Attachment::Attachment( const Attachment &attachment)
   mMimeType = attachment.mMimeType;
   mData = attachment.mData;
   mBinary = attachment.mBinary;
+	mShowInline = attachment.mShowInline;
+	mLabel = attachment.mLabel;
 }
 
 Attachment::Attachment(const QString& uri, const QString& mime)
@@ -35,6 +37,8 @@ Attachment::Attachment(const QString& uri, const QString& mime)
   mMimeType = mime;
   mData = uri;
   mBinary = false;
+	mShowInline = false;
+	mLabel = QString::null;
 }
 
 Attachment::Attachment(const char *base64, const QString& mime)
@@ -42,6 +46,8 @@ Attachment::Attachment(const char *base64, const QString& mime)
   mMimeType = mime;
   mData = QString::fromUtf8(base64);
   mBinary = true;
+	mShowInline = false;
+	mLabel = QString::null;
 }
 
 bool Attachment::isUri() const
@@ -90,5 +96,25 @@ QString Attachment::mimeType() const
 void Attachment::setMimeType(const QString& mime)
 {
   mMimeType = mime;
+}
+
+bool Attachment::showInline() const
+{
+  return mShowInline;
+}
+
+void Attachment::setShowInline( bool showinline )
+{
+  mShowInline = showinline;
+}
+
+QString Attachment::label() const
+{
+  return mLabel;
+}
+
+void Attachment::setLabel( const QString& label )
+{
+  mLabel = label;
 }
 

@@ -59,7 +59,7 @@ class KDE_EXPORT Attachment
     */
     Attachment( const char *base64, const QString &mime = QString::null );
 
-    /* The VALUE parameter in Cal */
+    /* The VALUE parameter in iCal */
     bool isUri() const;
     QString uri() const;
     void setUri( const QString &uri );
@@ -71,11 +71,21 @@ class KDE_EXPORT Attachment
     /* The optional FMTTYPE parameter in iCal */
     QString mimeType() const;
     void setMimeType( const QString &mime );
+		
+		/* The custom X-CONTENT-DISPOSITION parameter, used by OGo etc. */
+		bool showInline() const;
+		void setShowInline( bool showinline );
+		
+		/* The custom X-LABEL parameter to show a human-readable title */
+		QString label() const;
+		void setLabel( const QString &label );
 
   private:
     QString mMimeType;
     QString mData;
     bool mBinary;
+		bool mShowInline;
+		QString mLabel;
 
     class Private;
     Private *d;
