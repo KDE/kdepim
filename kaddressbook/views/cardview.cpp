@@ -92,12 +92,6 @@ class CardViewItemList : public QPtrList<CardViewItem>
 
       return 0;
     }
-
-  private:
-    /*int find( const CardViewItem * )
-    {
-      qDebug("DON'T USE CardViewItemList::find( item )! Use findRef( item )!");
-    }*/
 };
 
 //////////////////////////////////////

@@ -294,8 +294,6 @@ void RingBinderPrintStyle::fillEmpty( const QRect& window
         ypos += entryheight;
         fieldscounter++;
       }
-      qDebug( "fieldscounter %i", fieldscounter );
-      qDebug( "minNumFill    %i", mPageAppearance->sbMinNumFill->value() );
       if ( fieldscounter < mPageAppearance->sbMinNumFill->value() ) {
         printer->newPage();
         printPageHeader( mPageAppearance->letterListBox->text( grpnum )
