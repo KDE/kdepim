@@ -8,9 +8,9 @@
 
 const int levelIndent = 10;
 
-MyPrinter::MyPrinter(const Karm *karm)
+MyPrinter::MyPrinter(const TaskView *taskView)
 {
-  _karm = karm;
+  _taskView = taskView;
 }
 
 void MyPrinter::print()
@@ -33,7 +33,7 @@ void MyPrinter::print()
     // totals are increased together with its children.
     int totalTotal = 0;
     int sessionTotal = 0;
-		for (QListViewItem *child = _karm->firstChild(); child;
+		for (QListViewItem *child = _taskView->firstChild(); child;
 				 child = child->nextSibling()) {
 			Task *task = (Task *) child;
 
@@ -43,15 +43,15 @@ void MyPrinter::print()
 
     // Calculate the needed width for each of the fields
     totalTimeWidth = QMAX(metrics.width(i18n("Total")),
-                          metrics.width(Karm::formatTime(totalTotal)));
+                          metrics.width(TaskView::formatTime(totalTotal)));
     sessionTimeWidth = QMAX(metrics.width(i18n("Session")),
-                            metrics.width(Karm::formatTime(sessionTotal)));
+                            metrics.width(TaskView::formatTime(sessionTotal)));
 
     nameFieldWidth = pageWidth - xMargin - totalTimeWidth - sessionTimeWidth - 2*5;
     
     int maxReqNameFieldWidth= metrics.width(i18n("Task Name "));
 		
-    for (QListViewItem *child = _karm->firstChild(); child;
+    for (QListViewItem *child = _taskView->firstChild(); child;
          child = child->nextSibling()) {
       int width = calculateReqNameWidth(child, metrics, 0);
       maxReqNameFieldWidth = QMAX(maxReqNameFieldWidth, width);
@@ -85,7 +85,7 @@ void MyPrinter::print()
     yoff += 2;
     
     // Now print the actual content
-    for (QListViewItem *child = _karm->firstChild(); child;
+    for (QListViewItem *child = _taskView->firstChild(); child;
        child = child->nextSibling()) {
       printTask(child, painter, 0);
     }
@@ -96,8 +96,8 @@ void MyPrinter::print()
     yoff += 2;
     
     // Print the Totals
-    printLine(Karm::formatTime(totalTotal),
-              Karm::formatTime(sessionTotal),
+    printLine(TaskView::formatTime(totalTotal),
+              TaskView::formatTime(sessionTotal),
               QString(), painter, 0);
     
     
@@ -122,8 +122,8 @@ int MyPrinter::calculateReqNameWidth(QListViewItem *item,
 void MyPrinter::printTask(QListViewItem *item, QPainter &painter, int level)
 {
   Task *task = (Task *) item;
-  QString totalTime = Karm::formatTime(task->totalTime());
-  QString sessionTime = Karm::formatTime(task->sessionTime());
+  QString totalTime = TaskView::formatTime(task->totalTime());
+  QString sessionTime = TaskView::formatTime(task->sessionTime());
   QString name = task->name();
   printLine(totalTime, sessionTime, name, painter, level);
 

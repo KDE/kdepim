@@ -33,13 +33,13 @@
 #include <qptrlist.h>
 #include <kaction.h>
 
-#include "top.h"
+#include "mainwindow.h"
 #include "task.h"
 #include "tray.h"
 
 QPtrVector<QPixmap> *KarmTray::icons = 0;
 
-KarmTray::KarmTray(KarmWindow* parent)
+KarmTray::KarmTray(MainWindow* parent)
   : KSystemTray(parent, "Karm Tray")
 {
   // the timer that updates the "running" icon in the tray

@@ -5,7 +5,7 @@
 #include <kaboutdata.h>
 #include <kdebug.h>
 #include "version.h"
-#include "top.h"
+#include "mainwindow.h"
 
 
 namespace
@@ -39,14 +39,14 @@ int main( int argc, char *argv[] )
 	KCmdLineArgs::init( argc, argv, &aboutData );
 	KApplication myApp;
 
-	KarmWindow *karm = new KarmWindow;
+	MainWindow *mainWindow = new MainWindow;
 
-	myApp.setMainWidget( karm );
-	karm->show();
+	myApp.setMainWidget( mainWindow );
+	mainWindow->show();
 	signal( SIGQUIT, cleanup );
 	signal( SIGINT, cleanup );
 	int ret = myApp.exec();
 
-	delete karm;
+	delete mainWindow;
 	return ret;
 }

@@ -7,12 +7,12 @@
 #include <qlistview.h>
 #include <qptrvector.h>
 #include <qpixmap.h>
-#include "karm.h"
-#include "loging.h"
+#include "taskview.h"
+#include "logging.h"
 
 class QFile;
 class QTimer;
-class Loging;
+class Logging;
 
 /**
  * Store information about each task.
@@ -76,8 +76,8 @@ public:
 	 */
 	inline void update() {
 		setText(0, _name);
-		setText(1, Karm::formatTime(_sessionTime));
-		setText(2, Karm::formatTime(_totalTime));
+		setText(1, TaskView::formatTime(_sessionTime));
+		setText(2, TaskView::formatTime(_totalTime));
 	}
 
 	void resetSessionTime();
@@ -98,7 +98,7 @@ private:
   QTimer *_timer;
   int _i;
   static QPtrVector<QPixmap> *icons;
-  Loging *_loging;
+  Logging *_logging;
 
 };
 
