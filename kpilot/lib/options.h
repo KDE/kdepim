@@ -65,11 +65,6 @@
 // Some systems have changed kdWarning() and kdDebug() into nops,
 // so DEBUG_CERR changes them into cerr again. Odd and disturbing.
 //
-#ifndef NDEBUG
-#ifndef DEBUG
-#define DEBUG
-#endif
-#endif
 
 
 #ifdef DEBUG_CERR
@@ -111,7 +106,6 @@
 
 #define KPILOT_VERSION	"4.3.2"
 
-#ifdef DEBUG
 // * KPilot debugging code looks like:
 //
 //      DEBUGKPILOT << fname << ": Creating dialog window." << endl;
@@ -130,6 +124,7 @@ extern const char *debug_spaces;
 class KCmdLineOptions;
 extern KCmdLineOptions *debug_options;
 
+#ifdef DEBUG
 // Both old and new-style debugging suggest (insist?) that
 // every function be started with the macro FUNCTIONSETUP,
 // which outputs function and line information on every call.
@@ -147,23 +142,6 @@ extern KCmdLineOptions *debug_options;
 			fname << debug_spaces+(strlen(fname)) << "\n" ; }
 #endif
 
-
-class KConfig;
-
-// Next all kinds of specialty debugging functions,
-// added in an ad-hoc fashion.
-//
-//
-QString qstringExpansion(const QString &);
-QString charExpansion(const char *);
-
-class QSize;
-ostream& operator << (ostream&,const QSize &) ;
-kdbgstream& operator << (kdbgstream&,const QSize &);
-
-// class QStringList;
-// ostream& operator <<(ostream&,const QStringList &);
-// kdbgstream& operator <<(kdbgstream&,const QStringList &);
 #else
 // With debugging turned off, FUNCTIONSETUP doesn't do anything.
 // In particular it doesn't give functions a local variable fname,
@@ -182,9 +160,24 @@ kdbgstream& operator << (kdbgstream&,const QSize &);
 //
 //
 #define FUNCTIONSETUP
-
-extern const int fname;
 #endif
+
+class KConfig;
+
+// Next all kinds of specialty debugging functions,
+// added in an ad-hoc fashion.
+//
+//
+QString qstringExpansion(const QString &);
+QString charExpansion(const char *);
+
+class QSize;
+ostream& operator << (ostream&,const QSize &) ;
+kdbgstream& operator << (kdbgstream&,const QSize &);
+
+// class QStringList;
+// ostream& operator <<(ostream&,const QStringList &);
+// kdbgstream& operator <<(kdbgstream&,const QStringList &);
 
 
 // Some layout macros
@@ -204,6 +197,14 @@ extern const int fname;
 
 
 // $Log$
+// Revision 1.11  2002/05/15 17:15:33  gioele
+// kapp.h -> kapplication.h
+// I have removed KDE_VERSION checks because all that files included "options.h"
+// which #includes <kapplication.h> (which is present also in KDE_2).
+// BTW you can't have KDE_VERSION defined if you do not include
+// - <kapplication.h>: KDE3 + KDE2 compatible
+// - <kdeversion.h>: KDE3 only compatible
+//
 // Revision 1.10  2002/05/14 22:57:40  adridg
 // Merge from _BRANCH
 //
