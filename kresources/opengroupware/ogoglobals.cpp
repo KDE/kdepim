@@ -66,6 +66,8 @@ kdDebug()<<"OGoGlobals::getFolderType(...)"<<endl;
         return KPIM::FolderLister::CalendarFolder;
       if ( !e.namedItem( "vtodo-collection" ).isNull() )
         return KPIM::FolderLister::TasksFolder;
+      if ( !e.namedItem( "vjournal-collection" ).isNull() )
+        return KPIM::FolderLister::JournalsFolder;
       if ( !e.namedItem( "vcard-collection" ).isNull() )
         return KPIM::FolderLister::ContactsFolder;
       if ( !e.namedItem( "collection" ).isNull() )
@@ -128,18 +130,25 @@ kdDebug()<<"OGoGlobals::createDownloadJob, url="<<url.url()<<endl;
 }
 
 
-KIO::Job *OGoGlobals::createRemoveJob( const KURL &uploadurl,
+KIO::Job *OGoGlobals::createRemoveJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &uploadurl,
        const KPIM::GroupwareUploadItem::List &deletedItems )
 {
   QStringList urls;
   KPIM::GroupwareUploadItem::List::const_iterator it;
-  kdDebug(5800) << " OGoGlobals::createRemoveJob: , URL="<<uploadurl.url()<<endl;
+  kdDebug(5800) << " OGoGlobals::createRemoveJob: , BaseURL="<<uploadurl.url()<<endl;
   for ( it = deletedItems.constBegin(); it != deletedItems.constEnd(); ++it ) {
     //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
-    KURL url( uploadurl );
+    KURL url( (*it)->url() );
+    if ( adaptor ) {
+      adaptor->adaptUploadUrl( url );
+    }
+/*    KURL url( uploadurl );
     url.setPath( (*it)->url().path() );
-    if ( !(*it)->url().isEmpty() )
+    if ( !(*it)->url().isEmpty() )*/
+    if ( !url.isEmpty() ) {
+kdDebug() << "Deleting item at "<< url.url() << endl;
       urls << url.url();
+    }
     kdDebug(5700) << "Delete (Mod) : " <<   url.url() << endl;
   }
   return KIO::del( urls, false, false );

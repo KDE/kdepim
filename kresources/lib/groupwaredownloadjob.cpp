@@ -65,7 +65,7 @@ void GroupwareDownloadJob::run()
   connect( adaptor(), SIGNAL( itemDownloaded( const QString &, const QString &, const QString & ) ),
            SLOT( slotItemDownloaded( const QString &, const QString &, const QString & ) ) );
   connect( adaptor(), SIGNAL( itemDownloadError( const QString &, const QString & ) ),
-           SLOT( slotItemDownloaded( const QString &, const QString & ) ) );
+           SLOT( slotItemDownloadError( const QString &, const QString &, const QString & ) ) );
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(),

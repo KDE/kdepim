@@ -86,9 +86,12 @@ class GroupwareUploadJob : public GroupwareJob
 
     void cancelSave();
 
-    void slotDeletionResult( KIO::Job *job );
+    void slotDeletionJobResult( KIO::Job *job );
+    void slotDeletionJobData( KIO::Job *, const QByteArray & );
     void slotUploadJobResult( KIO::Job *job );
+    void slotUploadJobData( KIO::Job *, const QByteArray & );
     void slotUploadNewJobResult( KIO::Job *job );
+    void slotUploadNewJobData( KIO::Job *, const QByteArray & );
 
     void slotItemDeleted( const QString &localID, const QString &remoteURL );
     void slotItemUploaded( const QString &localID, const QString &remoteURL );
@@ -98,20 +101,27 @@ class GroupwareUploadJob : public GroupwareJob
     void slotItemUploadError( const QString &remoteURL, const QString &error  );
     void slotItemUploadNewError( const QString &localID, const QString &error );
 
+    void uploadCompleted();
+    
   private:
     KPIM::GroupwareUploadItem::List mAddedItems;
     KPIM::GroupwareUploadItem::List mChangedItems;
     KPIM::GroupwareUploadItem::List mDeletedItems;
 
+    KPIM::GroupwareUploadItem::List mItemsUploading;
+    KPIM::GroupwareUploadItem::List mItemsUploaded;
+    KPIM::GroupwareUploadItem::List mItemsUploadError;
+    
+    QString mDeletionJobData;
+    QString mUploadJobData;
+    QString mUploadNewJobData;
+    
     KURL mBaseUrl;
 
     KIO::TransferJob *mUploadJob;
     KIO::Job *mDeletionJob;
     KPIM::ProgressItem *mUploadProgress;
 
-    KPIM::GroupwareUploadItem::List mItemsUploading;
-    KPIM::GroupwareUploadItem::List mItemsUploaded;
-    KPIM::GroupwareUploadItem::List mItemsUploadError;
 };
 
 }

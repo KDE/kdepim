@@ -52,14 +52,17 @@ KURL GroupwareUploadItem::adaptNewItemUrl( GroupwareDataAdaptor *adaptor,
 }
 
 KIO::TransferJob *GroupwareUploadItem::createUploadJob( 
-                                GroupwareDataAdaptor *adaptor, const KURL &url )
+                                GroupwareDataAdaptor *adaptor, const KURL &/*url*/ )
 {
   Q_ASSERT( adaptor );
   if ( !adaptor ) return 0;
   const QString dta = data();
   //kdDebug(7000) << "Uploading: " << data << endl;
-  kdDebug(7000) << "Uploading to: " << url.prettyURL() << endl;
-  KIO::TransferJob *job = KIO::storedPut( dta.utf8(), url, -1, true, 
+  KURL upUrl( url() );
+  if ( adaptor )
+    adaptor->adaptUploadUrl( upUrl );
+  kdDebug(7000) << "Uploading to: " << upUrl.prettyURL() << endl;
+  KIO::TransferJob *job = KIO::storedPut( dta.utf8(), upUrl, -1, true, 
                                           false, false );
   job->addMetaData( "PropagateHttpHeader", "true" );
   if ( adaptor )
@@ -142,6 +145,74 @@ void GroupwareDataAdaptor::processDownloadListItem( const QString &entry,
   }
   if ( download ) {
     emit itemToDownload( entry, type );
+  }
+}
+
+bool GroupwareDataAdaptor::interpretRemoveJob( KIO::Job *job, const QString &/*jobData*/ )
+{
+  if ( !job ) return false;
+  KIO::DeleteJob *deljob = dynamic_cast<KIO::DeleteJob*>(job);
+  bool error = job->error();
+  const QString err = job->errorString();
+  
+  if ( deljob ) {
+    KURL::List urls( deljob->urls() );
+    for ( KURL::List::Iterator it = urls.begin(); it != urls.end(); ++it ) {
+      if ( error ) {
+        emit itemDeletionError( (*it).url(), err );
+      } else {
+        emit itemDeleted( QString::null, (*it).url() );
+      }
+    }
+    return true;
+  } else {
+    return false;
+  }
+}
+
+
+bool GroupwareDataAdaptor::interpretUploadJob( KIO::Job *job, const QString &/*jobData*/ )
+{
+  kdDebug(7000) << "GroupwareDataAdaptor::interpretUploadJob " << endl;
+  KIO::TransferJob *trfjob = dynamic_cast<KIO::TransferJob*>(job);
+  bool error = job->error();
+  const QString err = job->errorString();
+
+  if ( trfjob ) {
+    KURL url( trfjob->url() );
+    if ( error ) {
+      emit itemUploadError( url.url(), err );
+    } else {
+      // We don't know the local id here (and we don't want to extract it from
+      // the idMapper, that's the task of the receiver
+      emit itemUploaded( QString::null, url.url() );
+    }
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool GroupwareDataAdaptor::interpretUploadNewJob( KIO::Job *job, const QString &/*jobData*/ )
+{
+// TODO: How does the incidence mapper know the old/new ids???
+  kdDebug(7000) << "GroupwareDataAdaptor::interpretUploadNewJob " << endl;
+  KIO::TransferJob *trfjob = dynamic_cast<KIO::TransferJob*>(job);
+  bool error = job->error();
+  const QString err = job->errorString();
+
+  if ( trfjob ) {
+    KURL url( trfjob->url() );
+    if ( error ) {
+      emit itemUploadNewError( url.url(), err );
+    } else {
+      // We don't know the local id here (and we don't want to extract it from
+      // the idMapper, that's the task of the receiver
+      emit itemUploadedNew( QString::null, url.url() );
+    }
+    return true;
+  } else {
+    return false;
   }
 }
 

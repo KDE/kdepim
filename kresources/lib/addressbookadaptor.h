@@ -71,8 +71,6 @@ class AddressBookAdaptor : public KPIM::GroupwareDataAdaptor
 
     virtual KPIM::GroupwareUploadItem *newUploadItem( KABC::Addressee addr,
                      KPIM::GroupwareUploadItem::UploadType type );
-    virtual void uploadFinished( KIO::TransferJob *trfjob, 
-                                 KPIM::GroupwareUploadItem *item );
     virtual void addressbookItemDownloaded( KABC::Addressee addr,
                 const QString &newLocalId, const QString &remoteId,
                 const QString &fingerprint, const QString &storagelocation );

@@ -283,9 +283,10 @@ Q_OBJECT
         createListitemsJob). */
     virtual bool interpretListItemsJob( KIO::Job *, const QString &jobData ) = 0;
     virtual bool interpretDownloadItemsJob( KIO::Job *job, const QString &jobData ) = 0;
+    virtual bool interpretRemoveJob( KIO::Job *job, const QString &jobData );
+    virtual bool interpretUploadJob( KIO::Job *job, const QString &/*jobData*/ );
+    virtual bool interpretUploadNewJob( KIO::Job *job, const QString &/*jobData*/ );
 
-    virtual void uploadFinished( KIO::TransferJob *, 
-                                 GroupwareUploadItem * ) = 0;
     virtual void processDownloadListItem(  const QString &entry,
         const QString &newFingerprint, KPIM::GroupwareJob::ContentType type );
     /** Return the default file name for a new item. */
@@ -313,6 +314,7 @@ Q_OBJECT
 
     void itemToDownload( const QString &remoteURL, KPIM::GroupwareJob::ContentType type );
     void itemOnServer( const QString &remoteURL );
+    
     void itemDownloaded( const QString &localID, const QString &remoteURL,
                          const QString &fingerprint );
     void itemDeleted( const QString &localID, const QString &remoteURL );

@@ -76,20 +76,6 @@ bool AddressBookAdaptor::localItemHasChanged( const QString &localId )
   return false;
 }
 
-void AddressBookAdaptor::uploadFinished( KIO::TransferJob */*trfjob*/, 
-                                         KPIM::GroupwareUploadItem *item )
-{
-//   OGoGlobals::uploadFinished( this, trfjob, item );
-  Addressee addr( resource()->findByUid( item->uid() ) );
-  if ( !addr.isEmpty() ) {
-  // FIXME: This doesn't work yet. So for now, just don't do anything and hope 
-  //        that the next folder refresh will clean things up nicely.
-//     resource()->removeAddressee( addr );
-/*    addr.insertCustom( identifier(), "storagelocation",
-               idMapper()->remoteId( item->uid() ) );*/
-  }
-}
-
 
 void AddressBookAdaptor::deleteItem( const QString &localId )
 {

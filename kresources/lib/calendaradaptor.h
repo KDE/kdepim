@@ -77,7 +77,6 @@ class CalendarAdaptor : public KPIM::GroupwareDataAdaptor
 
     virtual KPIM::GroupwareUploadItem *newUploadItem( KCal::Incidence*it,
            KPIM::GroupwareUploadItem::UploadType type );
-    virtual void uploadFinished( KIO::TransferJob *trfjob, KPIM::GroupwareUploadItem *item );
 
   public slots:
     /** newLocalId is the new id that was (randomly) assigned to the item */

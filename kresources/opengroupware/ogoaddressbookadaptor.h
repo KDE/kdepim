@@ -53,7 +53,7 @@ class OGoAddressBookAdaptor : public DavAddressBookAdaptor
     KIO::TransferJob *createDownloadJob( const KURL &url, KPIM::GroupwareJob::ContentType ctype )
         { return OGoGlobals::createDownloadJob( this, url, ctype ); }
     KIO::Job *createRemoveJob( const KURL &uploadurl, const KPIM::GroupwareUploadItem::List &deletedItems )
-        { return OGoGlobals::createRemoveJob( uploadurl, deletedItems ); }
+        { return OGoGlobals::createRemoveJob( this, uploadurl, deletedItems ); }
 
 
     // Interpreting Jobs
