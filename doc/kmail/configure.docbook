@@ -1482,7 +1482,8 @@ of key words can be modified.</para>
               (<acronym>OCSP</acronym>).
             </para>
             <para>
-              Fill in the <acronym>URL</acronym> of the <acronym>OCSP</acronym>              responder in the field reserved at this effect.  
+              Fill in the <acronym>URL</acronym> of the <acronym>OCSP</acronym>
+              responder in the field reserved at this effect.  
 	    </para> 
 	  </listitem>
 	</varlistentry>
@@ -1506,7 +1507,7 @@ of key words can be modified.</para>
 	  </term>
 	  <listitem>
 	    <para>
-	       Select or change and enter the S/Mime key to use.
+	       Select or change and enter the &smime; key to use.
             </para>
 	  </listitem>
 	</varlistentry>
@@ -1518,7 +1519,7 @@ of key words can be modified.</para>
 	  <listitem>
 	    <para>
 	      Check this option to skip online validation using the OCSP.
-	      This Option requires <emphasis>dirmngr >= 0.9.0</emphasis>.
+	      This Option requires <emphasis>dirmngr &gt;= 0.9.0</emphasis>.
 	    </para>
 	  </listitem>
 	</varlistentry>
