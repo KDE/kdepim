@@ -45,14 +45,7 @@ class EudoraXXPortFactory : public KAB::XXPortFactory
     }
 };
 
-extern "C"
-{
-  void *init_libkaddrbk_eudora_xxport()
-  {
-    return ( new EudoraXXPortFactory() );
-  }
-}
-
+K_EXPORT_COMPONENT_FACTORY( libkaddrbk_eudora_xxport, EudoraXXPortFactory )
 
 EudoraXXPort::EudoraXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

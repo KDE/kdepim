@@ -84,14 +84,7 @@ class GNOKIIXXPortFactory : public KAB::XXPortFactory
     }
 };
 
-extern "C"
-{
-  void *init_libkaddrbk_gnokii_xxport()
-  {
-    return ( new GNOKIIXXPortFactory() );
-  }
-}
-
+K_EXPORT_COMPONENT_FACTORY( libkaddrbk_gnokii_xxport, GNOKIIXXPortFactory )
 
 GNOKIIXXPort::GNOKIIXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

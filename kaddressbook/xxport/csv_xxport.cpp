@@ -43,14 +43,7 @@ class CSVXXPortFactory : public KAB::XXPortFactory
     }
 };
 
-extern "C"
-{
-  void *init_libkaddrbk_csv_xxport()
-  {
-    return ( new CSVXXPortFactory() );
-  }
-}
-
+K_EXPORT_COMPONENT_FACTORY( libkaddrbk_csv_xxport, CSVXXPortFactory )
 
 CSVXXPort::CSVXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

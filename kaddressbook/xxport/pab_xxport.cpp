@@ -47,14 +47,7 @@ class PABXXPortFactory : public KAB::XXPortFactory
     }
 };
 
-extern "C"
-{
-  void *init_libkaddrbk_pab_xxport()
-  {
-    return ( new PABXXPortFactory() );
-  }
-}
-
+K_EXPORT_COMPONENT_FACTORY( libkaddrbk_pab_xxport, PABXXPortFactory )
 
 PABXXPort::PABXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

@@ -57,14 +57,7 @@ class LDIFXXPortFactory : public KAB::XXPortFactory
     }
 };
 
-extern "C"
-{
-  void *init_libkaddrbk_ldif_xxport()
-  {
-    return ( new LDIFXXPortFactory() );
-  }
-}
-
+K_EXPORT_COMPONENT_FACTORY( libkaddrbk_ldif_xxport, LDIFXXPortFactory )
 
 LDIFXXPort::LDIFXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

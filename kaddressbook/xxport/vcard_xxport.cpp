@@ -59,13 +59,7 @@ class VCardXXPortFactory : public KAB::XXPortFactory
     }
 };
 
-extern "C"
-{
-  void *init_libkaddrbk_vcard_xxport()
-  {
-    return ( new VCardXXPortFactory() );
-  }
-}
+K_EXPORT_COMPONENT_FACTORY( libkaddrbk_vcard_xxport, VCardXXPortFactory )
 
 class VCardViewerDialog : public KDialogBase
 {

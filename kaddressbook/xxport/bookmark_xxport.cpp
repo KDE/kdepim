@@ -40,14 +40,7 @@ class BookmarkXXPortFactory : public KAB::XXPortFactory
     }
 };
 
-extern "C"
-{
-  void *init_libkaddrbk_bookmark_xxport()
-  {
-    return ( new BookmarkXXPortFactory() );
-  }
-}
-
+K_EXPORT_COMPONENT_FACTORY( libkaddrbk_bookmark_xxport, BookmarkXXPortFactory )
 
 BookmarkXXPort::BookmarkXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

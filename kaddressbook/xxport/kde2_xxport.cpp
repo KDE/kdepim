@@ -46,14 +46,7 @@ class KDE2XXPortFactory : public KAB::XXPortFactory
     }
 };
 
-extern "C"
-{
-  void *init_libkaddrbk_kde2_xxport()
-  {
-    return ( new KDE2XXPortFactory() );
-  }
-}
-
+K_EXPORT_COMPONENT_FACTORY( libkaddrbk_kde2_xxport, KDE2XXPortFactory )
 
 KDE2XXPort::KDE2XXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )

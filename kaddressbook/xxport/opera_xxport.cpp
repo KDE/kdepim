@@ -45,14 +45,7 @@ class OperaXXPortFactory : public KAB::XXPortFactory
     }
 };
 
-extern "C"
-{
-  void *init_libkaddrbk_opera_xxport()
-  {
-    return ( new OperaXXPortFactory() );
-  }
-}
-
+K_EXPORT_COMPONENT_FACTORY( libkaddrbk_opera_xxport, OperaXXPortFactory )
 
 OperaXXPort::OperaXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )
