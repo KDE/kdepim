@@ -52,8 +52,8 @@ noinst_HEADERS = knaccmailsettings.h      knglobals.h              knrangefilter
 	knfolder.h               knprotocolclient.h       utilities.h \
 	knfoldermanager.h        knpurgeprogressdialog.h  kngroupbrowser.h
 
-knode_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-knode_LDADD   = $(LIB_KHTML) -lmimelib -lpthread $(LIB_KAB) $(LIB_KFILE)
+knode_LDFLAGS = $(all_libraries) $(KDE_RPATH) 
+knode_LDADD   = $(LIB_KHTML) -lmimelib $(LIB_KAB) $(LIB_KFILE) -lpthread
 knode_METASOURCES = AUTO
 
 appsdir = $(kde_appsdir)/Internet

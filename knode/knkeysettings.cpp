@@ -17,6 +17,7 @@
 
 #include <klocale.h>
 #include <kkeydialog.h>
+#include <qlayout.h>
 
 #include "knkeysettings.h"
 #include "knglobals.h"
@@ -28,23 +29,17 @@ KNKeySettings::KNKeySettings(QWidget *parent) : KNSettingsWidget(parent)
 	stdBtn=new QPushButton(i18n("Reset"), this);
 	stdBtn->setFixedSize(stdBtn->sizeHint());
 	connect(stdBtn, SIGNAL(clicked()), kc, SLOT(allDefault()));
+
+  QVBoxLayout *layout = new QVBoxLayout(this);
+  layout->addWidget(kc);
+  layout->addWidget(stdBtn);
+
+	layout->setResizeMode(QLayout::Minimum);
 }
-
-
 
 KNKeySettings::~KNKeySettings()
 {
 }
-
-
-
-void KNKeySettings::resizeEvent(QResizeEvent *)
-{
-	kc->setGeometry(10,10, width()-20, height()-stdBtn->height()-35);
-	stdBtn->move(10, kc->height()+25);	
-}
-
-
 
 void KNKeySettings::apply()
 {

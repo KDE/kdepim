@@ -19,13 +19,14 @@
 #ifndef KNSETTINGSDIALOG_H
 #define KNSETTINGSDIALOG_H
 
-#include <qdialog.h>
+#include <kdialogbase.h>
 #include <qlistview.h>
+#include <kjanuswidget.h>
 
-class QWidgetStack;
-class QSplitter;
+class KNSettingsWidget;
 
-class KNSettingsDialog : public QDialog  {
+
+class KNSettingsDialog : public KDialogBase  {
 	
 	Q_OBJECT	
 
@@ -36,24 +37,8 @@ class KNSettingsDialog : public QDialog  {
 		void apply();
 		
 	protected:
-		QListView *lv;
-		QWidgetStack *stack;
-		QSplitter *split;
-		QPushButton *helpBtn, *okBtn, *cancelBtn;
-				
-		class lvItem : public QListViewItem {
-			public:
-				lvItem(QListView *p, const QString& t, int i);
-				lvItem(QListViewItem *p, const  QString& t, int i);
-				~lvItem() {}
-				
-				int id;
-		};			
-			
-		
-	protected slots:
-		void slotHelpBtnClicked();
-		void slotLVChanged(QListViewItem *it);
+    QList<KNSettingsWidget> widgets;
+    virtual void slotHelp();
 };
 
 #endif

@@ -17,32 +17,27 @@
 
 #include <klocale.h>
 #include <kconfig.h>
+#include <qlayout.h>
+#include <qcheckbox.h>
 
 #include "knusersettings.h"
 #include "utilities.h"
 
 KNUserSettings::KNUserSettings(QWidget *p) : KNSettingsWidget(p)
 {
-	 user=new KNUserEntry();
-	 uw=new KNUserWidget(i18n("Identity"), this, 0);
-	 init();	
+  user=new KNUserEntry();
+  QHBoxLayout *layout = new QHBoxLayout(this);
+  uw=new KNUserWidget(i18n("Identity"), this, 0);
+  layout->addWidget(uw);
+  init();
+
+	layout->setResizeMode(QLayout::Minimum);
 }
-
-
 
 KNUserSettings::~KNUserSettings()
 {
 	delete user;
 }
-
-
-
-void KNUserSettings::resizeEvent(QResizeEvent *)
-{
-	uw->setGeometry(10,10, width()-20,height()-20);
-}
-
-
 
 void KNUserSettings::init()
 {

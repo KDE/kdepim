@@ -61,7 +61,7 @@ KNFilterSettings::KNFilterSettings(KNFilterManager *fm, QWidget *p) : KNSettings
 	mgbL->addWidget(sepRemBtn ,3,1);
 	mgbL->setRowStretch(4,1);
 	mgbL->setColStretch(0,1);
-	topL->activate();
+	topL->setResizeMode(QLayout::Minimum);
 
 	connect(addBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
 	connect(delBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));

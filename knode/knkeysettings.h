@@ -34,7 +34,6 @@ class KNKeySettings : public KNSettingsWidget  {
 		void apply();
 		
 	protected:
-	  void resizeEvent(QResizeEvent *e);
 	  KKeyChooser *kc;
 	  QPushButton *stdBtn;
 	

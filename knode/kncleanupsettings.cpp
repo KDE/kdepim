@@ -60,7 +60,6 @@ KNCleanupSettings::KNCleanupSettings(QWidget *p) : KNSettingsWidget(p)
 	topL->setColStretch(0,1);
 	topL->setRowStretch(6,1);
 	topL->setResizeMode(QLayout::Minimum);
-	topL->activate();
 	
 	connect(groupCB, SIGNAL(toggled(bool)), this, SLOT(slotGroupCBtoggled(bool)));
 	connect(folderCB, SIGNAL(toggled(bool)), this, SLOT(slotFolderCBtoggled(bool)));

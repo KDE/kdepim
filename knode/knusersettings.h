@@ -34,7 +34,6 @@ class KNUserSettings : public KNSettingsWidget  {
 		void apply();
 		
 	protected:
-		void resizeEvent(QResizeEvent *e);
 		KNUserWidget *uw;
 		KNUserEntry *user;
 };
