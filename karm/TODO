@@ -4,13 +4,8 @@
 * KarmWindow::contextMenuRequest QPopupMenu should be static!
 * put connect( ..contextMenu at the right place
 * mainwindow: move tray signals into tray.cpp
-* mainwindow.cpp: before loading view, check whether the file exists
-  and if not, create a blank one and ask wheter we want to add a task.
-  (hmmm, see my notes in iCalendar section below).
 * add mouse double-click action (start new timer, stop old) to "Configure
   Shortcuts" dialog.
-* deleting a task should be logged as well.
-* log start/stop session
 
 * Willi / desktop tracker:
 --------------------------
@@ -32,8 +27,12 @@
 Mark - 3.2
 --------------------------
 
-  * 2003-09-26: Decide on a page width and then rtrim task descriptions.
-    7pt Courier in Kate?
+  * 2003-10-22: Default history report to current month.
+
+  * 2003-10-15: BUG: Fix auto-save!!  Write event every n minutes.
+
+  * 2003-09-26: Decide on a page width and then rtrim task descriptions to fit.
+    7pt Courier in Kate as design target?
 
   * 2003-09-26: Add totals table across entire date range.
 
@@ -87,6 +86,19 @@ Mark - 3.3
       2. Append comment to VEVENTs description
       3. Make sure wrapping works according to iCalendar spec.
       4. Handle multiple comments against same VEVENT.
+      5. Show in history report.
+
+  * 2003-10-13: Get rid of session and total columns.  Just display two times:
+    total and today.  The total is total since last reset, not the total
+    across the entire history.
+
+  * 2003-10-13: If user picks an empty file as storage, pop up a
+    dialog--either add task or import tasks from another file (probably an
+    iCal file, but this import dialog isn't written yet).
+
+  * 2003-10-13: New event: publish time card.  Mark events that are published
+    as read-only.  Create plug-in framework so that when this event occurs, we
+    export to a different backend.  Write plugins for GnuCash and SQL-Ledger.
 
 
 Wishlist:
