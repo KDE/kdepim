@@ -40,7 +40,6 @@
 #include <qvaluelist.h>
 
 class KProcess;
-class KProcIO;
 class QListViewItem;
 
 namespace GpgME {
@@ -66,7 +65,8 @@ private slots:
   void slotNextKey( const GpgME::Key & key );
   void slotKeyExistanceCheckNextCandidate( const GpgME::Key & key );
   void slotKeyExistanceCheckFinished();
-  void slotCollectStdOut(KProcIO*);
+  void slotCollectStdout(KProcess *, char *, int);
+  void slotCollectStderr(KProcess *, char *, int);
   void slotDumpProcessExited(KProcess*);
 
 private:
@@ -76,6 +76,8 @@ private:
   void updateChainView();
 
 private:
+  QCString mDumpOutput;
+  QCString mDumpError;
   QValueList<GpgME::Key> mChain;
   bool mExternal;
   bool mFoundIssuer;

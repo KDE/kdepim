@@ -251,40 +251,51 @@ void CertificateInfoWidgetImpl::startCertificateChainListing() {
 }
 
 void CertificateInfoWidgetImpl::startCertificateDump() {
-  KProcIO* proc = new KProcIO( QTextCodec::codecForName( "utf8" ) );
+  KProcess* proc = new KProcess( this );
   (*proc) << "gpgsm"; // must be in the PATH
   (*proc) << "--dump-keys";
   (*proc) << mChain.front().subkey(0).fingerprint();
 
-  QObject::connect( proc, SIGNAL( readReady(KProcIO*) ),
-                    this, SLOT( slotCollectStdOut(KProcIO*) ) );
+  QObject::connect( proc, SIGNAL( receivedStdout(KProcess *, char *, int) ),
+                    this, SLOT( slotCollectStdout(KProcess *, char *, int) ) );
+  QObject::connect( proc, SIGNAL( receivedStderr(KProcess *, char *, int) ),
+                    this, SLOT( slotCollectStderr(KProcess *, char *, int) ) );
   QObject::connect( proc, SIGNAL( processExited(KProcess*) ),
                     this, SLOT( slotDumpProcessExited(KProcess*) ) );
 
-  if ( !proc->start( KProcess::NotifyOnExit, true /*stderr too*/ ) ) {
+  if ( !proc->start( KProcess::NotifyOnExit, (KProcess::Communication)(KProcess::Stdout | KProcess::Stderr) ) ) {
     QString wmsg = i18n("Failed to execute gpgsm:\n%1").arg( i18n( "program not found" ) );
     dumpView->setText( wmsg );
   }
 }
 
-void CertificateInfoWidgetImpl::slotCollectStdOut(KProcIO* proc) {
-  QString line;
-  int result;
-  while( ( result = proc->readln(line) ) != -1 ) {
-    dumpView->append( line );
-  }
+void CertificateInfoWidgetImpl::slotCollectStdout(KProcess *, char *buffer, int buflen)
+{
+  mDumpOutput += QCString(buffer, buflen+1); // like KProcIO does
+}
+
+void CertificateInfoWidgetImpl::slotCollectStderr(KProcess *, char *buffer, int buflen)
+{
+  mDumpError += QCString(buffer, buflen+1); // like KProcIO does
 }
 
 void CertificateInfoWidgetImpl::slotDumpProcessExited(KProcess* proc) {
   int rc = ( proc->normalExit() ) ? proc->exitStatus() : -1 ;
 
-  if ( rc != 0 && dumpView->length() == 0 ) {
-    QString wmsg = i18n("Failed to execute gpgsm:\n%1");
-    if ( rc == -1 )
+  if ( rc == 0 ) {
+    dumpView->setText( QString::fromUtf8( mDumpOutput ) );
+  } else {
+    if ( !mDumpError.isEmpty() ) {
+      dumpView->setText( QString::fromUtf8( mDumpError ) );
+    } else
+    {
+      QString wmsg = i18n("Failed to execute gpgsm:\n%1");
+      if ( rc == -1 )
         wmsg = wmsg.arg( i18n( "program cannot be executed" ) );
-    else
+      else
         wmsg = wmsg.arg( strerror(rc) );
-    dumpView->append( wmsg );
+      dumpView->setText( wmsg );
+    }
   }
 
   proc->deleteLater();
@@ -421,5 +432,6 @@ void CertificateInfoWidgetImpl::slotKeyExistanceCheckNextCandidate( const GpgME:
 void CertificateInfoWidgetImpl::slotKeyExistanceCheckFinished() {
   importButton->setEnabled( !mHaveKeyLocally );
 }
+
 
 #include "certificateinfowidgetimpl.moc"
