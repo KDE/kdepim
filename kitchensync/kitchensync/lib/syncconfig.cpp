@@ -14,6 +14,10 @@ SyncConfig::SyncConfig( bool confirmDelete, bool confirmSync )
 
     m_del  = new QCheckBox(i18n("Confirm before deleting."), this );
     m_del->setChecked( confirmDelete );
+
+    QWidget* dummy = new QWidget(this);
+    dummy->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
+
 }
 SyncConfig::~SyncConfig() {
 }
@@ -23,3 +27,5 @@ bool SyncConfig::confirmDelete()const {
 bool SyncConfig::confirmSync()const {
     return m_sync->isChecked();
 }
+
+#include "syncconfig.moc"

@@ -578,7 +578,7 @@ void KSyncMainWindow::slotConfigCur() {
     ConfigureDialog *dlg = new ConfigureDialog(this);
     ManipulatorPart *part = 0l;
     SyncConfig* conf = new SyncConfig( currentProfile().confirmDelete(), currentProfile().confirmSync() );
-    dlg->addWidget( conf, i18n("Configure Synchronisation"), new QPixmap( KGlobal::iconLoader()->loadIcon("package_settings", KIcon::Desktop, 48 ) ) );
+    dlg->addWidget( conf, i18n("General"), new QPixmap( KGlobal::iconLoader()->loadIcon("package_settings", KIcon::Desktop, 48 ) ) );
 
     for (part = m_parts.first(); part != 0; part = m_parts.next() ) {
         if( part->configIsVisible() )
