@@ -240,7 +240,9 @@ class GroupwisePropagator : public KConfigPropagator
         if ( !email.isEmpty() ) ca->setEmail( email );
         ca->enableSavePassword( true );
         ca->enableSieve( false );
-        ca->setEncryptionReceive( CreateDisconnectedImapAccount::TLS );
+        ca->setEncryption( CreateDisconnectedImapAccount::TLS );
+        ca->setAuthenticationSend( CreateDisconnectedImapAccount::LOGIN );
+        ca->setSmtpPort( 25 );
 
         changes.append( ca );
       }

@@ -52,7 +52,13 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
 
     enum Encryption { None, SSL, TLS };
 
-    void setEncryptionReceive( Encryption );
+    void setEncryption( Encryption );
+
+    enum Authentication { PLAIN, LOGIN };
+
+    void setAuthenticationSend( Authentication );
+
+    void setSmtpPort( int );
 
     /**
       Set custom writer. CreateDisconnectedImapAccount takes ownerhsip of the
@@ -72,7 +78,10 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
     bool mEnableSieve;
     bool mEnableSavePassword;
 
-    Encryption mEncryptionReceive;
+    Encryption mEncryption;
+    Authentication mAuthenticationSend;
+
+    int mSmtpPort;
 
     CustomWriter *mCustomWriter;
 };

@@ -33,7 +33,8 @@
 CreateDisconnectedImapAccount::CreateDisconnectedImapAccount( const QString &accountName )
   : KConfigPropagator::Change( i18n("Create Disconnected IMAP Account for KMail") ),
     mAccountName( accountName ), mEnableSieve( false ), mEnableSavePassword( true ),
-    mEncryptionReceive( None ), mCustomWriter( 0 )
+    mEncryption( None ), mAuthenticationSend( PLAIN ), mSmtpPort( 25 ),
+    mCustomWriter( 0 )
 {
 }
 
@@ -77,10 +78,21 @@ void CreateDisconnectedImapAccount::enableSavePassword( bool b )
   mEnableSavePassword = b;
 }
 
-void CreateDisconnectedImapAccount::setEncryptionReceive(
+void CreateDisconnectedImapAccount::setEncryption(
   CreateDisconnectedImapAccount::Encryption e )
 {
-  mEncryptionReceive = e;
+  mEncryption = e;
+}
+
+void CreateDisconnectedImapAccount::setAuthenticationSend(
+  CreateDisconnectedImapAccount::Authentication a )
+{
+  mAuthenticationSend = a;
+}
+
+void CreateDisconnectedImapAccount::setSmtpPort( int port )
+{
+  mSmtpPort = port;
 }
 
 void CreateDisconnectedImapAccount::setCustomWriter(
@@ -113,9 +125,9 @@ void CreateDisconnectedImapAccount::apply()
 
   c.writeEntry( "sieve-support", mEnableSieve ? "true" : "false" );
 
-  if ( mEncryptionReceive == SSL ) {
+  if ( mEncryption == SSL ) {
     c.writeEntry( "use-ssl", true );
-  } else if ( mEncryptionReceive == TLS ) {
+  } else if ( mEncryption == TLS ) {
     c.writeEntry( "use-tls", true );
   }
 
@@ -134,10 +146,18 @@ void CreateDisconnectedImapAccount::apply()
   c.writeEntry( "name", mAccountName );
   c.writeEntry( "host", mServer );
   c.writeEntry( "type", "smtp" );
-  c.writeEntry( "port", "465" );
-  c.writeEntry( "encryption", "SSL" );
+  c.writeEntry( "port", mSmtpPort );
+  if ( mEncryption == SSL ) {
+    c.writeEntry( "encryption", "SSL" );
+  } else if ( mEncryption == TLS ) {
+    c.writeEntry( "encryption", "TLS" );
+  }
   c.writeEntry( "auth", true );
-  c.writeEntry( "authtype", "PLAIN" );
+  if ( mAuthenticationSend == PLAIN ) {
+    c.writeEntry( "authtype", "PLAIN" );
+  } else if ( mAuthenticationSend == LOGIN ) {
+    c.writeEntry( "authtype", "LOGIN" );
+  }
   c.writeEntry( "user", mUser );
   if ( mEnableSavePassword ) {
     c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );

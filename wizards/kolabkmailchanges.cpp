@@ -114,7 +114,9 @@ void createKMailChanges( KConfigPropagator::Change::List& changes )
   account->setEmail( email );
   account->enableSieve( true );
   account->enableSavePassword( KolabConfig::self()->savePassword() );
-  account->setEncryptionReceive( CreateDisconnectedImapAccount::SSL );
+  account->setEncryption( CreateDisconnectedImapAccount::SSL );
+  account->setAuthenticationSend( CreateDisconnectedImapAccount::PLAIN );
+  account->setSmtpPort( 465 );
 
   account->setCustomWriter( new KolabCustomWriter );
 
