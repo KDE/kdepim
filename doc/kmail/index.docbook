@@ -219,6 +219,14 @@ characters will be encoded using standard &MIME; encodings, which may be more
 portable to other mailing systems than 8-bit <acronym>ASCII</acronym>. You
 normally do not need to change the default.<!-- TODO:
 advise what's better --></para>
+
+<para>With <guilabel>Precommand</guilabel> you can specify a command 
+that will be executed before your messages will be sent.</para>
+
+<para><guilabel>Confirm before send</guilabel> enables a dialog that
+asks, every time you click  <guilabel>Send now</guilabel>, if you 
+really want to send your mail.</para>
+
 </sect2>
 
 <sect2 id="receiving-mail">
