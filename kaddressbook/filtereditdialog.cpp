@@ -22,26 +22,27 @@
 */
 
 #include <qbuttongroup.h>
-#include <qwidget.h>
-#include <qtoolbutton.h>
-#include <qstring.h>
-#include <qlayout.h>
-#include <qradiobutton.h>
-#include <qtooltip.h>
 #include <qhbox.h>
 #include <qlabel.h>
+#include <qlayout.h>
+#include <qpushbutton.h>
+#include <qradiobutton.h>
+#include <qstring.h>
+#include <qtoolbutton.h>
+#include <qtooltip.h>
+#include <qwidget.h>
 
 #include <kbuttonbox.h>
+#include <kdebug.h>
 #include <kiconloader.h>
-#include <klocale.h>
+#include <klineedit.h>
 #include <klistbox.h>
 #include <klistview.h>
-#include <klineedit.h>
-#include <kdebug.h>
+#include <klocale.h>
 
-#include "kabprefs.h"
 #include "filtereditdialog.h"
 #include "filtereditwidget.h"
+#include "kabprefs.h"
 
 FilterEditDialog::FilterEditDialog( QWidget *parent, const char *name )
   : KDialogBase( Plain, i18n("Edit Address Book Filter"),
@@ -211,6 +212,14 @@ void FilterDialog::refresh()
     mFilterListBox->insertItem( (*iter).name() );
 }
 
+void FilterDialog::selectionChanged( QListBoxItem *item )
+{
+  bool state = ( item != 0 );
+  
+  mEditButton->setEnabled( state );
+  mRemoveButton->setEnabled( state );
+}
+
 void FilterDialog::initGUI()
 {
   resize( 330, 200 );
@@ -223,11 +232,16 @@ void FilterDialog::initGUI()
   
   mFilterListBox = new KListBox( page, "mFilterListBox" );
   topLayout->addWidget( mFilterListBox, 0, 0 );
+  connect( mFilterListBox, SIGNAL( selectionChanged( QListBoxItem * ) ),
+           SLOT( selectionChanged( QListBoxItem * ) ) );
 
   KButtonBox *buttonBox = new KButtonBox( page, Vertical );
   buttonBox->addButton( i18n( "&Add..." ), this, SLOT( add() ) );
   mEditButton = buttonBox->addButton( i18n( "&Edit..." ), this, SLOT( edit() ) );
+  mEditButton->setEnabled( false );
   mRemoveButton = buttonBox->addButton( i18n( "&Remove" ), this, SLOT( remove() ) );
+  mRemoveButton->setEnabled( false );
+
   buttonBox->layout();
   topLayout->addWidget( buttonBox, 0, 1 );
 }

@@ -51,6 +51,7 @@ class FilterDialog : public KDialogBase
     void add();
     void edit();
     void remove();
+    void selectionChanged( QListBoxItem * );
     
   private:
     void initGUI();
