@@ -376,26 +376,32 @@ QGpgMECryptoConfigEntry::QGpgMECryptoConfigEntry( const QStringList& parsedLine 
   bool isString = ( mArgType == Kleo::CryptoConfigEntry::ArgType_String
                     || mArgType == Kleo::CryptoConfigEntry::ArgType_Path
                     || mArgType == Kleo::CryptoConfigEntry::ArgType_URL );
-  if ( isString ) {
-    if ( value.isEmpty() )
-      mValue = QVariant( QString::null ); // not set  [ok with lists too?]
-    else {
-      Q_ASSERT( value[0] == '"' ); // see README.gpgconf
-      value = value.mid( 1 );
-    }
-  }
 
-  if ( !mValue.isValid() ) {
-    if ( isList() ) {
-      QValueList<QVariant> lst;
-      QStringList items = QStringList::split( ',', value );
-      for( QStringList::const_iterator valit = items.begin(); valit != items.end(); ++valit ) {
-        lst << QVariant( gpgconf_unescape( *valit ) );
-      }
-      mValue = lst;
+  if ( isList() ) {
+    QValueList<QVariant> lst;
+    QStringList items = QStringList::split( ',', value );
+    for( QStringList::const_iterator valit = items.begin(); valit != items.end(); ++valit ) {
+      QString val = *valit;
+      if ( isString ) {
+        if ( val.isEmpty() )
+          lst << QString::null;
+        else {
+          Q_ASSERT( val[0] == '"' ); // see README.gpgconf
+          lst << QVariant( gpgconf_unescape( val.mid( 1 ) ) );
+        }
+      } else
+        lst << QVariant( gpgconf_unescape( val ) );
     }
-    else
-      mValue = QVariant( gpgconf_unescape( value ) );
+    mValue = lst;
+  } else { // not a list
+    if ( isString ) {
+      if ( value.isEmpty() )
+        mValue = QVariant( QString::null ); // not set  [ok with lists too?]
+      else {
+        Q_ASSERT( value[0] == '"' ); // see README.gpgconf
+        mValue = QVariant( gpgconf_unescape( value.mid( 1 ) ) );
+      }
+    }
   }
   mDirty = false;
 }
@@ -663,9 +669,10 @@ QString QGpgMECryptoConfigEntry::outputString() const
     else if ( isList() ) { // string list
       QStringList lst = mValue.toStringList();
       for( QStringList::iterator it = lst.begin(); it != lst.end(); ++it ) {
-        *it = gpgconf_escape( *it );
+        if ( !(*it).isNull() )
+          *it = gpgconf_escape( *it ).prepend( "\"" ); // TODO: null vs empty difference?
       }
-      QString res = lst.join( "," ).prepend( "\"" );
+      QString res = lst.join( "," );
       kdDebug() << res << endl;
       return res;
     } else // normal string
