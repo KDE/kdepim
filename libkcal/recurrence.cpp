@@ -984,18 +984,21 @@ bool Recurrence::recursDaily(const QDate &qd) const
 
 bool Recurrence::recursWeekly(const QDate &qd) const
 {
+  int i = qd.dayOfWeek()-1;
+  bool weekDayMatches = rDays.testBit( (uint) i);
   QDate dStart = mRecurStart.date();
-  if ((dStart.daysTo(qd)/7) % rFreq == 0) {
+  if ( mParent->type() == "Todo" && weekDayMatches ) {
+    dStart = dStart.addDays( qd.dayOfWeek() - mRecurStart.date().dayOfWeek() );
+  }
+
+  if ((dStart.daysTo(qd)/7) % rFreq == 0 && weekDayMatches ) {
     // The date is in a week which recurs
     if (qd >= dStart
     && ((rDuration > 0 && qd <= endDate()) ||
         (rDuration == 0 && qd <= rEndDateTime.date()) ||
         rDuration == -1)) {
       // The date queried falls within the range of the event.
-      // check if the bits set match today.
-      int i = qd.dayOfWeek()-1;
-      if (rDays.testBit((uint) i))
-        return true;
+      return true;
     }
   }
   return false;
@@ -1245,11 +1248,12 @@ QDate Recurrence::getNextDateNoTime(const QDate &preDate, bool *last) const
   if (rDuration >= 0 && nextDate.isValid()) {
     // Check that the date found is within the range of the recurrence
     QDate end = endDate();
-    if (nextDate > end)
+    if ( nextDate > end )
       return QDate();
     if (last  &&  nextDate == end)
       *last = true;
   }
+
   return nextDate;
 }
 
@@ -1749,7 +1753,7 @@ int Recurrence::weeklyCalcEndDate(QDate &enddate, int daysPerWeek) const
 	  ++daysGone;
       if (rDays.testBit((uint)i)) {
         ++countGone;
-        if (--countTogo == 0) 
+        if (--countTogo == 0)
           break;
       }
     }
@@ -3521,7 +3525,7 @@ void Recurrence::dump() const
   kdDebug(5800) << "Recurrence::dump():" << endl;
 
   kdDebug(5800) << "  type: " << recurs << endl;
-  
+
   kdDebug(5800) << "  rDays: " << endl;
   int i;
   for( i = 0; i < 7; ++i ) {
