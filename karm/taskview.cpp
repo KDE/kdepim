@@ -1,22 +1,18 @@
-#include <qdict.h>
 #include <qfile.h>
 #include <qlayout.h>
 #include <qlistbox.h>
 #include <qptrlist.h>
 #include <qptrstack.h>
 #include <qtextstream.h>
+#include <qlistview.h>
 #include <qtimer.h>
 
 #include <kconfig.h>
 #include <kdebug.h>
 #include <klocale.h>            // i18n
 #include <kmessagebox.h>
-#include <kemailsettings.h>
 #include <klineeditdlg.h>
-
-#include "calendarlocal.h"
-#include "event.h"
-#include "todo.h"
+#include <kmessagebox.h>
 
 #include "desktoptracker.h"
 #include "edittaskdialog.h"
@@ -24,21 +20,17 @@
 #include "preferences.h"
 #include "task.h"
 #include "taskview.h"
+#include "karmstorage.h"
 
 #define T_LINESIZE 1023
 #define HIDDEN_COLUMN -10
 
 class DesktopTracker;
 
-TaskView::TaskView( QWidget *parent, const char *name )
-  : KListView( parent, name ),
-    _calendar()
+TaskView::TaskView(QWidget *parent, const char *name):KListView(parent,name)
 {
   _preferences = Preferences::instance();
-
-  KEMailSettings settings;
-  _calendar.setEmail( settings.getSetting( KEMailSettings::EmailAddress ) );
-  _calendar.setOwner( settings.getSetting( KEMailSettings::RealName ) );
+  _storage = KarmStorage::instance();
 
   connect(this, SIGNAL( doubleClicked( QListViewItem * )),
           this, SLOT( changeTimer( QListViewItem * )));
@@ -63,10 +55,15 @@ TaskView::TaskView( QWidget *parent, const char *name )
   connect( _minuteTimer, SIGNAL( timeout() ), this, SLOT( minuteUpdate() ));
   _minuteTimer->start(1000 * secsPerMinute);
 
+  // React when user changes iCalFile
+  connect(_preferences, SIGNAL(iCalFile(QString)), 
+      this, SLOT(iCalFileChanged(QString)));
+
   // resize columns when config is changed
-  connect( _preferences, SIGNAL( setupChanged() ), this,SLOT( adaptColumns() ));
+  connect(_preferences, SIGNAL( setupChanged() ), this,SLOT( adaptColumns() ));
 
   _minuteTimer->start(1000 * secsPerMinute);
+
   // Set up the idle detection.
   _idleTimeDetector = new IdleTimeDetector( _preferences->idlenessTimeout() );
   connect( _idleTimeDetector, SIGNAL( extractTime(int) ),
@@ -101,413 +98,107 @@ TaskView::~TaskView()
   _preferences->save();
 }
 
+Task* TaskView::first_child() const
+{
+  return static_cast<Task*>(firstChild());
+}
+
+Task* TaskView::current_item() const
+{
+  return static_cast<Task*>(currentItem());
+}
+
+Task* TaskView::item_at_index(int i)
+{
+  return static_cast<Task*>(itemAtIndex(i));
+}
+
 void TaskView::load()
 {
-  if ( _preferences->useLegacyFileFormat() )
-    loadFromFileFormat();
-  else {
-    loadFromKCalFormat();
-  }
-}
 
-void TaskView::loadFromKCalFormat( const QString& file, int loadMask )
-{
-  bool loadOk = _calendar.load( file );
-  if ( !loadOk ) {
-    kdDebug() << "Failed to load the calendar!!!" << endl;
+  QString err = _storage->load(this, _preferences);
+
+  if (!err.isEmpty())
+  {
+    KMessageBox::error(this, err);
     return;
   }
-  kdDebug() << "Loading karm calendar data from " << file << endl;
 
-  if ( loadMask & TaskView::loadEvent ) {
-    KCal::Event::List eventList = _calendar.rawEvents();
-    kdDebug() << "There are " << eventList.count()
-              << " events in the calendar." << endl;
-    buildAndPositionTasks( eventList );
+  // TODO: If empty, ask if user wants to import tasks from another file
+  //if (_storage.isEmpty())
+  //{
+  //}
+
+  // Register tasks with desktop tracker
+  int task_idx = 0;
+  for (Task* task = item_at_index(task_idx);
+      task; 
+      task = item_at_index(++task_idx))
+  {
+    _desktopTracker->registerForDesktops( task, task->getDesktops() );
   }
 
-  if ( loadMask & TaskView::loadTodo ) {
-    KCal::Todo::List todoList = _calendar.rawTodos();
-    kdDebug() << "There are " << todoList.count()
-              << " todos in the calendar." << endl;
-    buildAndPositionTasks( todoList );
-  }
-
-  adjustFromLegacyFileFormat();
-
-  setSelected(firstChild(), true);
-  setCurrentItem(firstChild());
-
+  setSelected(first_child(), true);
+  setCurrentItem(first_child());
   _desktopTracker->startTracking();
 }
 
-void TaskView::loadFromKCalFormat()
+void TaskView::loadFromFlatFile()
 {
-  loadFromKCalFormat( _preferences->loadFile(),
-                      TaskView::loadEvent|TaskView::loadTodo );
-}
+  kdDebug() << "TaskView::loadFromFlatFile()" << endl;
 
-void TaskView::loadFromKOrgTodos()
-{
-  loadFromKCalFormat( _preferences->activeCalendarFile(), TaskView::loadTodo );
-}
+  // FIXME: replace with a file open dialog
+  QString msg = QString(QString::fromLatin1("You are going to add all tasks from %1 (defined in the KArm preferences) to the current task view.  Are you sure you want to do this?")).arg(_preferences->flatFile());
 
-void TaskView::loadFromKOrgEvents()
-{
-  loadFromKCalFormat( _preferences->activeCalendarFile(), TaskView::loadEvent );
-}
-
-void TaskView::buildAndPositionTasks( KCal::Event::List &eventList )
-{
-  QDict< Task > uid_task_map;
-  KCal::Event::List::ConstIterator iter;
-  for( iter = eventList.begin(); iter != eventList.end(); ++iter ) {
-    buildTask( *iter, uid_task_map );
-  }
-
-  for( iter = eventList.begin(); iter != eventList.end(); ++iter ) {
-    positionTask( *iter, uid_task_map );
-  }
-}
-
-void TaskView::buildAndPositionTasks( KCal::Todo::List &todoList )
-{
-  QDict< Task > uid_task_map;
-  KCal::Todo::List::ConstIterator iter;
-  for( iter = todoList.begin(); iter != todoList.end(); ++iter ) {
-    buildTask( *iter, uid_task_map );
-  }
-
-  for( iter = todoList.begin(); iter != todoList.end(); ++iter ) {
-    positionTask( *iter, uid_task_map );
-  }
-}
-
-void TaskView::buildTask( KCal::Incidence* event, QDict<Task>& map )
-{
-  Task* task = new Task( event, this );
-  map.insert( event->uid(), task );
-  setRootIsDecorated(true);
-  task->setOpen(true);
-  _desktopTracker->registerForDesktops( task, task->getDesktops() );
-}
-
-void TaskView::positionTask( const KCal::Incidence* event,
-                             const QDict<Task>& map )
-{
-  QString eventName = event->summary();
-  if ( !event->relatedTo() ) {
-    kdDebug() << eventName << ", has no relations" << endl;
-    return;
-  }
-
-  Task* newParent = map.find( event->relatedToUid() );
-  if ( !newParent ) {
-    kdDebug() << "ERROR: Can't find the parent for " << eventName << endl;
-    return;
-  }
-
-  Task* task = map.find( event->uid() );
-  if ( !task ) {
-    kdDebug() << "ERROR: Can't find the task " << eventName << endl;
-    return;
-  }
-
-  QString parentName = newParent->name();
-  QString taskName = task->name();
-  kdDebug() << "Moving (" << taskName << ") under ("
-            << parentName << ")" << endl;
-
-  task->move( newParent);
-}
-
-void TaskView::loadFromFileFormat()
-{
-  QFile f(_preferences->loadFile());
-  kdDebug() << "Loading karm data from " << f.name() << endl;
-
-  if( !f.exists() )
-    return;
-
-  if( !f.open( IO_ReadOnly ) )
-    return;
-
-  QString line;
-
-  QPtrStack<Task> stack;
-  Task *task;
-
-  QTextStream stream(&f);
-
-  while( !stream.atEnd() ) {
-    // lukas: this breaks for non-latin1 chars!!!
-    // if ( file.readLine( line, T_LINESIZE ) == 0 )
-    //   break;
-
-    line = stream.readLine();
-    kdDebug() << "DEBUG: line: " << line << "\n";
-
-    if (line.isNull())
-      break;
-
-    long minutes;
-    int level;
-    QString name;
-    DesktopList desktopList;
-    if (!parseLine(line, &minutes, &name, &level, &desktopList))
-      continue;
-
-    unsigned int stackLevel = stack.count();
-    for (unsigned int i = level; i<=stackLevel ; i++) {
-      stack.pop();
+  int answer = KMessageBox::warningContinueCancel(this, msg);
+  if (answer == KMessageBox::Continue)
+  {
+    QString err = _storage->loadFromFlatFile(this, _preferences);
+    if (!err.isEmpty())
+    {
+      KMessageBox::error(this, err);
+      return;
     }
 
-    if (level == 1) {
-      kdDebug() << "DEBUG: toplevel task: " << name
-                << " min: " << minutes << "\n";
-      task = new Task(name, minutes, 0, desktopList, this);
-    }
-    else {
-      Task *parent = stack.top();
-      kdDebug() << "DEBUG:          task: " << name
-                << " min: " << minutes << " parent" << parent->name() << "\n";
-      task = new Task(name, minutes, 0, desktopList, parent);
-      // Legacy File Format (!):
-      parent->changeTimes(0, -minutes, false);
-      setRootIsDecorated(true);
-      parent->setOpen(true);
+    // Register tasks with desktop tracker
+    int task_idx = 0;
+    Task* task = item_at_index(task_idx++);
+    while (task)
+    {
+      // item_at_index returns 0 where no more items.
+      _desktopTracker->registerForDesktops( task, task->getDesktops() );
+      task = item_at_index(task_idx++);
     }
 
-    _desktopTracker->registerForDesktops(task, desktopList);
+    setSelected(first_child(), true);
+    setCurrentItem(first_child());
 
-    stack.push(task);
+    _desktopTracker->startTracking();
   }
-
-  // adjustFromLegacyFileFormat();
-
-  f.close();
-
-  setSelected(firstChild(), true);
-  setCurrentItem(firstChild());
-
-  _desktopTracker->startTracking();
-}
-
-void TaskView::adjustFromLegacyFileFormat()
-{
-  // This is code to read legacy file formats!
-  //
-  // Previously a task would save the cummulated (totalTime) in it's "time"
-  // So if we are reading from an old File format we need to substract the
-  // children's times from the parents' times
-  if (    _preferences->fileFormat().isEmpty()
-       || _preferences->fileFormat() == QString::fromLatin1("karm_kcal_1"))
-    for ( Task* task = firstChild();
-                task;
-                task = task->nextSibling() ) {
-       adjustFromLegacyFileFormat(task);
-    }
-}
-
-void TaskView::adjustFromLegacyFileFormat(Task* task)
-{
-  // unless the parent is the listView
-  if ( task->parent() )
-    task->parent()->changeTimes( -task->sessionTime(), -task->time(), false);
-
-  // traverse depth first -
-  // as soon as we're in a leaf, we'll substract it's time from the parent
-  // then, while descending back we'll do the same for each node untill
-  // we reach the root
-  for ( Task* subtask = task->firstChild();
-              subtask;
-              subtask = subtask->nextSibling() )
-    adjustFromLegacyFileFormat(subtask);
-}
-
-bool TaskView::parseLine( QString line, long *time, QString *name, int *level,
-                          DesktopList* desktopList)
-{
-  if (line.find('#') == 0) {
-    // A comment line
-    return false;
-  }
-
-  int index = line.find('\t');
-  if (index == -1) {
-    // This doesn't seem like a valid record
-    return false;
-  }
-
-  QString levelStr = line.left(index);
-  QString rest = line.remove(0,index+1);
-
-  index = rest.find('\t');
-  if (index == -1) {
-    // This doesn't seem like a valid record
-    return false;
-  }
-
-  QString timeStr = rest.left(index);
-  rest = rest.remove(0,index+1);
-
-  bool ok;
-
-  index = rest.find('\t'); // check for optional desktops string
-  if (index >= 0) {
-    *name = rest.left(index);
-    QString deskLine = rest.remove(0,index+1);
-
-    // now transform the ds string (e.g. "3", or "1,4,5") into
-    // an DesktopList
-    QString ds;
-    int d;
-    int commaIdx = deskLine.find(',');
-    while (commaIdx >= 0) {
-      ds = deskLine.left(commaIdx);
-      d = ds.toInt(&ok);
-      if (!ok)
-        return false;
-
-      desktopList->push_back(d);
-      deskLine.remove(0,commaIdx+1);
-      commaIdx = deskLine.find(',');
-    }
-
-    d = deskLine.toInt(&ok);
-
-    if (!ok)
-      return false;
-
-    desktopList->push_back(d);
-  }
-  else {
-    *name = rest.remove(0,index+1);
-  }
-
-  *time = timeStr.toLong(&ok);
-
-  if (!ok) {
-    // the time field was not a number
-    return false;
-  }
-  *level = levelStr.toInt(&ok);
-  if (!ok) {
-    // the time field was not a number
-    return false;
-  }
-
-  return true;
 }
 
 void TaskView::save()
 {
-  saveToKCalFormat();
-  // saveToFileFormat();
-}
-
-void TaskView::saveToKCalFormat()
-{
-  KCal::CalendarLocal cal;
-  KEMailSettings settings;
-  cal.setEmail( settings.getSetting( KEMailSettings::EmailAddress ) );
-  cal.setOwner( settings.getSetting( KEMailSettings::RealName ) );
-
-  QPtrStack< KCal::Event > parents;
-
-  for ( Task* child = firstChild();
-              child;
-              child = child->nextSibling() ) {
-    writeTaskToCalendar( cal, child, 1, parents );
-  }
-
-  cal.save( _preferences->saveFile() );
-  kdDebug() << "Saved data to calendar file " << _preferences->saveFile() << endl;
-}
-
-void TaskView::saveToFileFormat()
-{
-  QFile f(_preferences->saveFile());
-
-  if ( !f.open( IO_WriteOnly | IO_Truncate ) ) {
-    QString msg = i18n( "There was an error trying to save your data file.\n"
-                       "Time accumulated during this session will not be saved!\n");
-    KMessageBox::error(0, msg );
-    return;
-  }
-  const char * comment = "# TaskView save data\n";
-
-  f.writeBlock(comment, strlen(comment));  //comment
-  f.flush();
-
-  QTextStream stream(&f);
-  for (Task* child = firstChild();
-             child;
-             child = child->nextSibling())
-    writeTaskToFile(&stream, child, 1);
-
-  f.close();
-  kdDebug() << "Saved data to file " << f.name() << endl;
-}
-
-void TaskView::writeTaskToCalendar( KCal::CalendarLocal& cal, Task* task,
-                                    int level,
-                                    QPtrStack< KCal::Event >& parents )
-{
-  KCal::Event* event = task->asEvent( level );
-  if ( !parents.isEmpty() ) {
-    event->setRelatedTo( parents.top() );
-  }
-
-  parents.push( event );
-
-  cal.addEvent( event );
-
-  for ( Task* nextTask = task->firstChild();
-        nextTask;
-        nextTask = nextTask->nextSibling() ) {
-    writeTaskToCalendar( cal, nextTask, level+1, parents );
-  }
-
-  parents.pop();
-}
-
-void TaskView::writeTaskToFile( QTextStream *strm, Task *task,
-                                int level)
-{
-  //lukas: correct version for non-latin1 users
-  QString _line = QString::fromLatin1("%1\t%2\t%3").arg(level).
-          arg(task->time()).arg(task->name());
-
-  DesktopList d = task->getDesktops();
-  int dsize = d.size();
-  if (dsize>0) {
-    _line += '\t';
-    for (int i=0; i<dsize-1; i++) {
-      _line += QString::number(d[i]);
-      _line += ',';
-    }
-    _line += QString::number(d[dsize-1]);
-  }
-  *strm << _line << "\n";
-
-  for ( Task* child= task->firstChild();
-              child;
-              child=child->nextSibling()) {
-    writeTaskToFile(strm, child, level+1);
-  }
+  _storage->save(this);
 }
 
 void TaskView::startCurrentTimer()
 {
-  startTimerFor( currentItem() );
+  startTimerFor( current_item() );
+}
+
+long TaskView::count()
+{
+  long n = 0;
+  for (Task* t = item_at_index(n); t; t=item_at_index(++n));
+  return n;
 }
 
 void TaskView::startTimerFor(Task* task)
 {
   if (task != 0 && activeTasks.findRef(task) == -1) {
     _idleTimeDetector->startIdleDetection();
-    task->setRunning(true);
+    task->setRunning(true, _storage);
     activeTasks.append(task);
     emit updateButtons();
     if ( activeTasks.count() == 1 )
@@ -520,7 +211,7 @@ void TaskView::startTimerFor(Task* task)
 void TaskView::stopAllTimers()
 {
   for (unsigned int i=0; i<activeTasks.count();i++) {
-    activeTasks.at(i)->setRunning(false);
+    activeTasks.at(i)->setRunning(false, _storage);
   }
   _idleTimeDetector->stopIdleDetection();
   activeTasks.clear();
@@ -531,7 +222,7 @@ void TaskView::stopAllTimers()
 
 void TaskView::startNewSession()
 {
-  QListViewItemIterator item( firstChild());
+  QListViewItemIterator item( first_child());
   for ( ; item.current(); ++item ) {
     Task * task = (Task *) item.current();
     task->startNewSession();
@@ -540,7 +231,7 @@ void TaskView::startNewSession()
 
 void TaskView::resetTimeForAllTasks()
 {
-  QListViewItemIterator item( firstChild());
+  QListViewItemIterator item( first_child());
   for ( ; item.current(); ++item ) {
     Task * task = (Task *) item.current();
     task->resetTimes();
@@ -551,7 +242,7 @@ void TaskView::stopTimerFor(Task* task)
 {
   if (task != 0 && activeTasks.findRef(task) != -1) {
     activeTasks.removeRef(task);
-    task->setRunning(false);
+    task->setRunning(false, _storage);
     if (activeTasks.count()== 0) {
       _idleTimeDetector->stopIdleDetection();
       emit timersInactive();
@@ -563,17 +254,17 @@ void TaskView::stopTimerFor(Task* task)
 
 void TaskView::stopCurrentTimer()
 {
-  stopTimerFor( currentItem());
+  stopTimerFor( current_item());
 }
 
 
 void TaskView::changeTimer(QListViewItem *)
 {
-  Task *task = currentItem();
+  Task *task = current_item();
   if (task != 0 && activeTasks.findRef(task) == -1) {
     // Stop all the other timers.
     for (unsigned int i=0; i<activeTasks.count();i++) {
-      (activeTasks.at(i))->setRunning(false);
+      (activeTasks.at(i))->setRunning(false, _storage);
     }
     activeTasks.clear();
 
@@ -593,7 +284,7 @@ void TaskView::minuteUpdate()
 void TaskView::addTimeToActiveTasks(int minutes, bool do_logging)
 {
   for(unsigned int i=0; i<activeTasks.count();i++)
-    activeTasks.at(i)->changeTime(minutes, do_logging);
+    activeTasks.at(i)->changeTime(minutes, do_logging, _storage);
 }
 
 void TaskView::newTask()
@@ -604,19 +295,19 @@ void TaskView::newTask()
 void TaskView::newTask(QString caption, Task *parent)
 {
   EditTaskDialog *dialog = new EditTaskDialog(caption, false);
-  int result = dialog->exec();
+  long total, totalDiff, session, sessionDiff;
+  DesktopList desktopList;
+  Task *task;
 
+  int result = dialog->exec();
   if (result == QDialog::Accepted) {
     QString taskName = i18n("Unnamed Task");
     if (!dialog->taskName().isEmpty()) {
       taskName = dialog->taskName();
     }
 
-    long total, totalDiff, session, sessionDiff;
     total = totalDiff = session = sessionDiff = 0;
-    DesktopList desktopList;
     dialog->status( &total, &totalDiff, &session, &sessionDiff, &desktopList);
-    Task *task;
 
     // If all available desktops are checked, disable auto tracking,
     // since it makes no sense to track for every desktop.
@@ -624,21 +315,39 @@ void TaskView::newTask(QString caption, Task *parent)
       desktopList.clear();
 
     if (parent == 0)
+    {
       task = new Task(taskName, total, session, desktopList, this);
+      task->setUid(_storage->addTask(task, 0));
+    }
     else
+    {
       task = new Task(taskName, total, session, desktopList, parent);
+      task->setUid(_storage->addTask(task, parent));
+    }
 
-    _desktopTracker->registerForDesktops( task, desktopList );
+    if (task->uid())
+    {
+      _desktopTracker->registerForDesktops( task, desktopList );
 
-    setCurrentItem( task );
-    setSelected( task, true );
+      setCurrentItem( task );
+      setSelected( task, true );
+
+      save();
+    }
+    else
+    {
+      delete task;
+      KMessageBox::error(0,i18n(
+            "Error storing new task--your changes were not saved."));
+    }
   }
+
   delete dialog;
 }
 
 void TaskView::newSubTask()
 {
-  Task* task = currentItem();
+  Task* task = current_item();
   if(!task)
     return;
   newTask(i18n("New Sub Task"), task);
@@ -648,7 +357,7 @@ void TaskView::newSubTask()
 
 void TaskView::editTask()
 {
-  Task *task = currentItem();
+  Task *task = current_item();
   if (!task)
     return;
 
@@ -663,7 +372,8 @@ void TaskView::editTask()
     if (!dialog->taskName().isEmpty()) {
       taskName = dialog->taskName();
     }
-    task->setName(taskName);
+    // setName only does something if the new name is different
+    task->setName(taskName, _storage);
 
     // update session time as well if the time was changed
     long total, session, totalDiff, sessionDiff;
@@ -672,7 +382,7 @@ void TaskView::editTask()
     dialog->status( &total, &totalDiff, &session, &sessionDiff, &desktopList);
 
     if( totalDiff != 0 || sessionDiff != 0)
-      task->changeTimes( sessionDiff ,totalDiff, true );
+      task->changeTimes( sessionDiff ,totalDiff, true, _storage );
 
     // If all available desktops are checked, disable auto tracking,
     // since it makes no sense to track for every desktop.
@@ -690,7 +400,7 @@ void TaskView::editTask()
 
 void TaskView::addCommentToTask()
 {
-  Task *task = currentItem();
+  Task *task = current_item();
   if (!task)
     return;
 
@@ -699,12 +409,13 @@ void TaskView::addCommentToTask()
                        i18n("Log comment for task %1").arg(task->name()),
                        QString(), &ok, this);
   if ( ok )
-    task->addComment( comment );
+    task->addComment( comment, _storage );
 }
+
 
 void TaskView::deleteTask()
 {
-  Task *task = currentItem();
+  Task *task = current_item();
   if (task == 0) {
     KMessageBox::information(0,i18n("No task selected"));
     return;
@@ -729,29 +440,37 @@ void TaskView::deleteTask()
 
   if (response == KMessageBox::Yes) {
 
-    task->remove( activeTasks);
-    
-    // remove root decoration if there is no more children.
-    bool anyChilds = false;
-    for(Task* child = firstChild();
-              child;
-              child = child->nextSibling()) {
-      if (child->childCount() != 0) {
-        anyChilds = true;
-        break;
+    if (task->remove( activeTasks, _storage))
+    {
+      
+      // remove root decoration if there is no more children.
+      bool anyChilds = false;
+      for(Task* child = first_child();
+                child;
+                child = child->nextSibling()) {
+        if (child->childCount() != 0) {
+          anyChilds = true;
+          break;
+        }
       }
-    }
-    if (!anyChilds) {
-      setRootIsDecorated(false);
-    }
+      if (!anyChilds) {
+        setRootIsDecorated(false);
+      }
 
-    // Stop idle detection if no more counters are running
-    if (activeTasks.count() == 0) {
-      _idleTimeDetector->stopIdleDetection();
-      emit timersInactive();
+      // Stop idle detection if no more counters are running
+      if (activeTasks.count() == 0) {
+        _idleTimeDetector->stopIdleDetection();
+        emit timersInactive();
+      }
+      emit tasksChanged( activeTasks );
+
+      save();
     }
-    emit tasksChanged( activeTasks );
+    else
+      KMessageBox::error(0,i18n(
+            "Error deleting task--libkcal doesn't support this yet."));
   }
+
 }
 
 void TaskView::extractTime(int minutes)
@@ -819,5 +538,11 @@ void TaskView::deletingTask(Task* deletedTask)
   activeTasks.removeRef( deletedTask );
 
   emit tasksChanged( activeTasks);
+}
+
+void TaskView::iCalFileChanged(QString file)
+{
+  kdDebug() << "TaskView:iCalFileChanged: " << file << endl;
+  load();
 }
 #include "taskview.moc"

@@ -10,13 +10,14 @@
 
 #include "incidence.h"          // KCal::Incidence
 #include "event.h"              // KCal::Event
+#include "todo.h"
 
 #include "desktoplist.h"
+#include "karmstorage.h"
 
 class QFile;
 class QTimer;
 
-class Logging;
 class TaskView;
 
 /// \class Task
@@ -43,7 +44,7 @@ class Task : public QObject, public QListViewItem
           DesktopList desktops, TaskView* parent = 0);
     Task( const QString& taskame, long minutes, long sessionTime, 
           DesktopList desktops, Task* parent = 0);
-    Task( KCal::Incidence* event, TaskView* parent );
+    Task( KCal::Todo* incident, TaskView* parent );
     //@}
     /* destructor */
     ~Task();
@@ -51,9 +52,21 @@ class Task : public QObject, public QListViewItem
     /** return parent Task or null in case of TaskView.
      *  same as QListViewItem::parent()
      */
-    Task* firstChild() const   { return (Task *) QListViewItem::firstChild(); }
-    Task* nextSibling() const  { return (Task *) QListViewItem::nextSibling(); }
-    Task* parent() const       { return (Task *) QListViewItem::parent(); }
+    Task* firstChild() const  { return (Task*)QListViewItem::firstChild(); }
+    Task* nextSibling() const { return (Task*)QListViewItem::nextSibling(); }
+    Task* parent() const      { return (Task*)QListViewItem::parent(); }
+
+    /** Return unique iCalendar Todo ID for this task. */
+    QString uid() const       { return _uid; }
+
+    /**
+     * Set unique id for the task.
+     *
+     * The uid is the key used to update the storage.
+     *
+     * @param uid  The new unique id.
+     */
+    void setUid(const QString uid);
 
     /** cut Task out of parent Task or the TaskView */
     void cut();
@@ -65,22 +78,33 @@ class Task : public QObject, public QListViewItem
 
     //@{ timing related functions
  
-      /** adds minutes to time and session time
+      /** 
+       * Change task time.  Adds minutes to both total time and session time.
        *
        *  @param minutes        minutes to add to - may be negative
-       *  @param do_loggin      should the change be logged?
+       *  @param do_logging     distinguish between time changes due to
+       *    setting up task when reading from disk and changes due to a user
+       *    actually changing the tasks time.
+       *  @param storage        handles writing changes to disk
        */
-      void changeTime( long minutes, bool do_logging )
-                { changeTimes( minutes, minutes, do_logging); };
+      void changeTime( long minutes, bool do_logging, KarmStorage* storage )
+                { changeTimes( minutes, minutes, do_logging, storage); };
 
-      /** adds minutes to time and session time
+      /** 
+       * Adds minutes to time and session time, and writes to storage.
+       *
+       * If do_logging is true, then storage should be loaded with a valid
+       * storage object.
        *
        *  @param minutesSession   minutes to add to task session time
        *  @param minutes          minutes to add to task time
-       *  @param do_loggin        should the change be logged?
+       *  @param do_logging       distinguish between time changes due to
+       *    setting up task when reading from disk and changes due to a user
+       *    actually changing the tasks time.
+       *  @param storage          where and how to write the change to disk
        */
-      void changeTimes( long minutesSession, long minutes,
-                        bool do_logging);
+      void changeTimes( long minutesSession, long minutes, bool do_logging,
+              KarmStorage* storage=0);
 
       /** adds minutes to total and session time
        *
@@ -97,11 +121,15 @@ class Task : public QObject, public QListViewItem
       /*@{ returns the times accumulated by the task
        * @return total time in minutes
        */
-        long time() const        { return _time; };
-        long sessionTime() const { return _sessionTime; };
+      long time() const        { return _time; };
+      long sessionTime() const { return _sessionTime; };
+
+      /**
+       * Return time the task was started.
+       */
+      QDateTime startTime() const { return _lastStart; };
 
       /** sets session time to zero. */
-      // TODO: log
       void startNewSession() { changeTimes( -_sessionTime, 0, false); };
     //@}
 
@@ -118,23 +146,29 @@ class Task : public QObject, public QListViewItem
       /** sets the name of the task
        *  @param name    a pointer to the name. A deep copy will be made.
        */
-      void setName( const QString& name );
+      void setName( const QString& name, KarmStorage* storage );
 
       /** returns the name of this task.
        *  @return a pointer to the name.
        */
       QString name() const  { return _name; };
+
+      /** 
+       * Returns that task name, prefixed by parent tree up to root.
+       *
+       * Task names are seperated by a forward slash:  /
+       */
+      QString fullName() const;
     //@}
 
-    /** updates the content of the QListViewItem with respect to _name and
-     *  all the times */
+    /** Update the display of the task (all columns) in the UI. */
     void update();
 
     //@{ the state of a Task - stopped, running
 
       /** starts or stops a task
        *  @param on       true or false for starting or stopping a task */
-      void setRunning(bool on);
+      void setRunning(bool on, KarmStorage* storage);
 
       /** return the state of a task - if it's running or not
        *  @return         true or false depending on whether the task is running
@@ -142,26 +176,31 @@ class Task : public QObject, public QListViewItem
       bool isRunning() const;
     //@}
 
-    static bool parseIncidence( KCal::Incidence*, long&, QString&, int&,
-                                DesktopList& );
+    bool parseIncidence(KCal::Incidence*, long&, QString&, DesktopList&);
 
-    KCal::Event* asEvent( int level );
-
-    /** adds a comment to the task
-     *  currently only being passed through to the logger
+    /**
+     *  Load the todo passed in with this tasks info.
      */
-    void addComment( QString comment );
+    KCal::Todo* asTodo(KCal::Todo* calendar) const;
+
+    /** Add a comment to this task. */
+    void addComment( QString comment, KarmStorage* storage );
+
+    /** Retrieve the entire comment for the task. */
+    QString comment() const;
 
     /** tells you whether this task is the root of the task tree */
     bool isRoot() const                 { return parent() == 0; }
 
     /** remove Task with all it's children
      * @param   activeTasks - list of aktive tasks
+     * @param true if task removed sucessfully, false otherwise
      */
-    void remove( QPtrList<Task>& activeTasks );
+    bool remove( QPtrList<Task>& activeTasks, KarmStorage* storage );
+
 
   protected:
-     void changeParentTotalTimes( long minutesSession, long minutes );
+    void changeParentTotalTimes( long minutesSession, long minutes );
 
   signals:
     void totalTimesChanged( long minutesSession, long minutes);
@@ -173,6 +212,11 @@ class Task : public QObject, public QListViewItem
     void updateActiveIcon();
 
   private:
+    /** The iCal unique ID of the Todo for this task. */
+    QString _uid;
+    /** The comment associated with this Task. */
+    QString _comment;
+
     long totalTimeInSeconds() const      { return _totalTime * 60; }
     /** if the time or session time is negative set them to zero */
     void noNegativeTimes();
@@ -182,6 +226,8 @@ class Task : public QObject, public QListViewItem
 
 
     QString _name;
+    /** Last time this task was started. */
+    QDateTime _lastStart;
     //@{ totals of the whole subtree including self
       long _totalTime;
       long _totalSessionTime;
@@ -194,7 +240,6 @@ class Task : public QObject, public QListViewItem
     QTimer *_timer;
     int _currentPic;
     static QPtrVector<QPixmap> *icons;
-    Logging *_logging;
 
 };
 

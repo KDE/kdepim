@@ -9,7 +9,7 @@ SUBDIRS = support pics
 METASOURCES = AUTO
 
 karm_SOURCES =  kaccelmenuwatch.cpp main.cpp desktoptracker.cpp edittaskdialog.cpp idletimedetector.cpp \
-		karmutility.cpp ktimewidget.cpp logging.cpp \
+		karmutility.cpp ktimewidget.cpp karmstorage.cpp \
 		mainwindow.cpp preferences.cpp print.cpp task.cpp \
 		taskview.cpp tray.cpp
 karm_LDADD = -lkdeprint $(top_builddir)/libkcal/libkcal.la $(LIBXSS)

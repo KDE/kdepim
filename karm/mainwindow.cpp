@@ -41,8 +41,7 @@ MainWindow::MainWindow()
     _watcher( new KAccelMenuWatch( _accel, this ) ),
     _taskView( new TaskView( this ) ),
     _totalSum( 0 ),
-    _sessionSum( 0 ),
-    _hideOnClose( true )
+    _sessionSum( 0 )
 {
   setCentralWidget( _taskView );
   // status bar
@@ -50,8 +49,6 @@ MainWindow::MainWindow()
 
   // setup PreferenceDialog.
   _preferences = Preferences::instance();
-  connect( _preferences, SIGNAL( hideOnClose( bool ) ),
-           this, SLOT( hideOnClose( bool ) ) );
 
   // popup menus
   makeMenus();
@@ -95,11 +92,12 @@ MainWindow::MainWindow()
   // emit its signals
   _preferences->emitSignals();
   slotSelectionChanged();
+
 }
 
 void MainWindow::slotSelectionChanged()
 {
-  Task* item= static_cast<Task *>(_taskView->currentItem());
+  Task* item= _taskView->current_item();
   actionDelete->setEnabled(item);
   actionEdit->setEnabled(item);
   actionStart->setEnabled(item && !item->isRunning());
@@ -126,7 +124,7 @@ void MainWindow::quit()
 
 MainWindow::~MainWindow()
 {
-  kdDebug() << i18n("Quitting karm.") << endl;
+  kdDebug() << i18n("MainWindow::~MainWindows: Quitting karm.") << endl;
   _taskView->stopAllTimers();
   save();
 }
@@ -141,10 +139,6 @@ void MainWindow::disableStopAll()
   actionStopAll->setEnabled(false);
 }
 
-void MainWindow::hideOnClose( bool hide )
-{
-  _hideOnClose = hide;
-}
 
 /**
  * Calculate the sum of the session time and the total time for all
@@ -208,7 +202,7 @@ void MainWindow::makeMenus()
   (void) KStdAction::print( this, SLOT( print() ), actionCollection());
   actionKeyBindings = KStdAction::keyBindings( this, SLOT( keyBindings() ),
                                                actionCollection() );
-  actionPreferences = KStdAction::preferences( _preferences, SLOT(showDialog()),
+  actionPreferences = KStdAction::preferences(_preferences, SLOT(showDialog()),
                                                actionCollection() );
   (void) KStdAction::save( this, SLOT( save() ), actionCollection() );
   KAction* actionStartNewSession = new KAction( i18n("&Start New Session"),
@@ -267,14 +261,16 @@ void MainWindow::makeMenus()
                                   SLOT( addCommentToTask() ),
                                   actionCollection(),
                                   "add_comment_to_task");
-  new KAction( i18n("Import &Todos"), 0,
-                            _taskView,
-                            SLOT( loadFromKOrgTodos() ), actionCollection(),
-                            "import_korg_todos");
+
+  new KAction( i18n("Import &Legacy Flat File"), 0,
+      _taskView, SLOT(loadFromFlatFile()), actionCollection(),
+      "import_flatfile");
+  /*
   new KAction( i18n("Import E&vents"), 0,
                             _taskView,
                             SLOT( loadFromKOrgEvents() ), actionCollection(),
                             "import_korg_events");
+  */
 
   createGUI( QString::fromLatin1("karmui.rc") );
 
@@ -359,7 +355,7 @@ void MainWindow::saveGeometry()
 
 bool MainWindow::queryClose()
 {
-  if ( !kapp->sessionSaving() && _hideOnClose ) {
+  if ( !kapp->sessionSaving() ) {
     hide();
     return false;
   }

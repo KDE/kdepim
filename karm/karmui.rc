@@ -4,6 +4,8 @@
 		<text>&amp;File</text>
 		<Action name="start_new_session" />
 		<Action name="reset_all_times" />
+		<Separator />
+		<Action name="import_flatfile" />
 	</Menu>
 	<Menu name="clock" >
 		<text>&amp;Clock</text>
@@ -18,9 +20,6 @@
 		<Action name="delete_task" />
 		<Action name="edit_task" />
 		<Action name="add_comment_to_task" />
-		<Separator />
-		<Action name="import_korg_events" />
-		<Action name="import_korg_todos" />
 	</Menu>
 </MenuBar>
 <ToolBar alreadyVisited="1" position="Top" iconText="IconOnly" noMerge="1" name="mainToolBar" >

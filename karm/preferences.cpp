@@ -1,12 +1,14 @@
 #undef Unsorted // for --enable-final
 #include <qcheckbox.h>
 #include <qlabel.h>
+#include <qstring.h>
 #include <qspinbox.h>
-#include <qvbox.h>
+#include <qlayout.h>
 
 #include <kapplication.h>       // kapp
 #include <kconfig.h>
-#include <kglobal.h>
+#include <kdebug.h>
+#include <kiconloader.h>
 #include <klineedit.h>          // lineEdit()
 #include <klocale.h>            // i18n
 #include <kstandarddirs.h>
@@ -17,78 +19,16 @@
 Preferences *Preferences::_instance = 0;
 
 Preferences::Preferences()
-  : KDialogBase( KDialogBase::Tabbed, i18n("Preferences"),
-                 KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok )
+  : KDialogBase( IconList, i18n("Preferences"), Ok|Cancel, Ok )
 {
-  QVBox* tab = addVBoxPage( i18n("General") );
+  
+  setIconListAllVisible( true );
 
-  _doAutoSaveW      = new QCheckBox( i18n("Automatically save tasks"),
-                                     tab, "_doAutoSaveW" );
-  {
-    QHBox* hbox     = new QHBox( tab );
-    _saveFileLabelW = new QLabel( i18n("File to save time information to:"),
-                                  hbox, "save label" );
-    _saveFileW      = new KURLRequester( hbox, "_saveFileW" );
-  }
-  {
-    QHBox* hbox     = new QHBox(tab);
-    _autoSaveLabelW = new QLabel( i18n("Minutes between each auto save:" ),
-                                  hbox, "_autoSaveLabelW");
-    _autoSaveValueW = new QSpinBox( 1, 60*24, 1, hbox, "_autoSaveValueW" );
-  }
+  makeBehaviorPage();
+  makeDisplayPage();
+  makeStoragePage();
 
-  _doTimeLoggingW = new QCheckBox( i18n("Do time logging"),
-                                   tab, "_doTimeLoggingW" );
-  {
-    QHBox* hbox       = new QHBox(tab);
-    _timeLoggingLabelW = new QLabel( i18n("File to log the times to:"),
-                                     hbox, "save label");
-    _timeLogW         = new KURLRequester( hbox, "_timeLogW" );
-  }
-  {
-    QHBox* hbox   = new QHBox(tab);
-    _hideOnCloseW = new QCheckBox ( i18n("Hide taskbar icon and "
-                                         "application instead of quitting"),
-                                    hbox, "_hideOnCloseW");
-  }
-
-  _doIdleDetectionW = new QCheckBox( i18n("Try to detect idleness"),
-                                     tab,"_doIdleDetectionW");
-  {
-    QHBox* hbox       = new QHBox(tab);
-    _idleDetectLabelW = new QLabel( i18n("Minutes before informing about "
-                                         "idleness:"), hbox);
-    _idleDetectValueW = new QSpinBox(1,60*24, 1, hbox, "_idleDetectValueW");
-  }
-  {
-    QHBox* hbox = new QHBox(tab);
-    _promptDeleteW = new QCheckBox( i18n( "Prompt before deleting tasks" ),
-                                    hbox, "_promptDeleteW" );
-    }
-  {
-    QVBox* vbox                =  new QVBox(tab);
-    _displayColumnsLabelW      = new QLabel( i18n("The following columns should"
-                                                  " be displayed:"), vbox);
-    _displaySessionW           = new QCheckBox ( i18n("Session time"),
-                                                 vbox, "_displaySessionW");
-    _displayTimeW              = new QCheckBox ( i18n("Cumulated task time"),
-                                               vbox, "_displayTimeW");
-    _displayTotalSessionW      = new QCheckBox( i18n("Total session time"),
-                                                vbox, "_displayTotalSessionW");
-    _displayTotalTimeW         = new QCheckBox ( i18n("Total task time"),
-                                                 vbox, "_displayTotalTimeW");
-  }
-
-    connect( _doAutoSaveW, SIGNAL( clicked() ), this,
-             SLOT( autoSaveCheckBoxChanged() ));
-    connect( _doTimeLoggingW, SIGNAL( clicked() ), this,
-             SLOT( timeLoggingCheckBoxChanged() ));
-    connect( _hideOnCloseW, SIGNAL( clicked() ), this,
-             SLOT(hideOnCloseCheckBoxChanged() ));
-    connect( _doIdleDetectionW, SIGNAL( clicked() ), this,
-             SLOT( idleDetectCheckBoxChanged() ));
-
-    load();
+  load();
 }
 
 Preferences *Preferences::instance()
@@ -99,11 +39,119 @@ Preferences *Preferences::instance()
   return _instance;
 }
 
+void Preferences::makeBehaviorPage()
+{
+  QPixmap icon = KGlobal::iconLoader()->loadIcon(
+      QString::fromLatin1("kcmsystem"), KIcon::Toolbar,
+      KIcon::SizeMedium);
+  QFrame* behaviorPage = addPage( i18n("Behavior"), i18n("Behavior Settings"),
+      icon );
+
+  QVBoxLayout* topLevel = new QVBoxLayout( behaviorPage, 0, spacingHint() );
+  QGridLayout* layout = new QGridLayout( topLevel, 2, 2 );
+  layout->setColStretch( 1, 1 );
+
+  _doIdleDetectionW = new QCheckBox( i18n("Detect desktop as idle after"),
+      behaviorPage, "_doIdleDetectionW");
+  _idleDetectValueW = new QSpinBox(1,60*24, 1, behaviorPage,
+      "_idleDetectValueW");
+  _idleDetectValueW->setSuffix(i18n(" minutes"));
+  _promptDeleteW = new QCheckBox( i18n( "Prompt before deleting tasks" ),
+      behaviorPage, "_promptDeleteW" );
+
+  layout->addWidget(_doIdleDetectionW, 0, 0 );
+  layout->addWidget(_idleDetectValueW, 0, 1 );
+  layout->addWidget(_promptDeleteW, 1, 0 );
+
+  connect( _doIdleDetectionW, SIGNAL( clicked() ), this,
+      SLOT( idleDetectCheckBoxChanged() ));
+}
+
+void Preferences::makeDisplayPage()
+{
+  QPixmap icon = KGlobal::iconLoader()->loadIcon( 
+      QString::fromLatin1("viewmag"), KIcon::Toolbar, KIcon::SizeMedium );
+  QFrame* displayPage = addPage( i18n("Display"), i18n("Display Settings"),
+      icon );
+
+  QVBoxLayout* topLevel = new QVBoxLayout( displayPage, 0, spacingHint() );
+  QGridLayout* layout = new QGridLayout( topLevel, 5, 2 );
+  layout->setColStretch( 1, 1 );
+
+  QLabel* _displayColumnsLabelW = new QLabel( i18n("Columns displayed:"),
+      displayPage );
+  _displaySessionW = new QCheckBox ( i18n("Session time"),
+      displayPage, "_displaySessionW");
+  _displayTimeW = new QCheckBox ( i18n("Cumulative task time"),
+      displayPage, "_displayTimeW");
+  _displayTotalSessionW = new QCheckBox( i18n("Total session time"),
+      displayPage, "_displayTotalSessionW");
+  _displayTotalTimeW = new QCheckBox ( i18n("Total task time"),
+      displayPage, "_displayTotalTimeW");
+
+  layout->addMultiCellWidget( _displayColumnsLabelW, 0, 0, 0, 1 );
+  layout->addWidget(_displaySessionW, 1, 1 );
+  layout->addWidget(_displayTimeW, 2, 1 );
+  layout->addWidget(_displayTotalSessionW, 3, 1 );
+  layout->addWidget(_displayTotalTimeW, 4, 1 );
+}
+
+void Preferences::makeStoragePage()
+{
+  QPixmap icon = KGlobal::iconLoader()->loadIcon(QString::fromLatin1("kfm"),
+      KIcon::Toolbar, KIcon::SizeMedium );
+  QFrame* storagePage = addPage( i18n("Storage"), i18n("Storage Settings"),
+      icon );
+
+  QVBoxLayout* topLevel = new QVBoxLayout( storagePage, 0, spacingHint() );
+  QGridLayout* layout = new QGridLayout( topLevel, 4, 2 );
+  layout->setColStretch( 1, 1 );
+
+  // autosave 
+  _doAutoSaveW = new QCheckBox( i18n("Save tasks every"),
+      storagePage, "_doAutoSaveW" );
+  _autoSaveValueW = new QSpinBox(1, 60*24, 1, storagePage, "_autoSaveValueW");
+  _autoSaveValueW->setSuffix(i18n(" minutes"));
+
+  // iCalendar
+  _useiCalFileW = new QCheckBox ( i18n("Store in iCalendar File"),
+      storagePage, "_useiCalFileW");
+  _iCalFileW = new KURLRequester(storagePage, "_iCalFileW");
+
+  // flat file
+  _useFlatFileW = new QCheckBox ( i18n("Store in flat file"), storagePage,
+      "_useFlatFileW");
+  _flatFileW = new KURLRequester(storagePage, "_flatFileW");
+  
+  // logging
+  _doTimeLoggingW = new QCheckBox( i18n("Do time logging to "), storagePage,
+      "_doTimeLoggingW");
+  _logFileW = new KURLRequester(storagePage, "_logFileW" );
+  
+  // add widgets to layout
+  layout->addWidget(_doAutoSaveW, 0, 0);
+  layout->addWidget(_autoSaveValueW, 0, 1);
+  layout->addWidget(_useiCalFileW, 1, 0);
+  layout->addWidget(_iCalFileW, 1, 1 );
+  layout->addWidget(_useFlatFileW, 2, 0);
+  layout->addWidget(_flatFileW, 2, 1 );
+  layout->addWidget(_doTimeLoggingW, 3, 0);
+  layout->addWidget(_logFileW, 3, 1 );
+
+  // checkboxes disable file selection controls
+  connect( _doAutoSaveW, SIGNAL( clicked() ), this,
+      SLOT( autoSaveCheckBoxChanged() ));
+  connect( _useiCalFileW, SIGNAL( clicked() ), this,
+      SLOT( iCalFileCheckBoxChanged() ));
+  connect( _useFlatFileW, SIGNAL( clicked() ), this,
+      SLOT( flatFileCheckBoxChanged() ));
+  connect( _doTimeLoggingW, SIGNAL( clicked() ), this,
+      SLOT( timeLoggingCheckBoxChanged() ));
+}
 
 void Preferences::disableIdleDetection()
 {
   _doIdleDetectionW->setEnabled(false);
-  _idleDetectLabelW->setEnabled(false);
 }
 
 
@@ -115,10 +163,14 @@ void Preferences::showDialog()
 {
 
   // set all widgets
-  _saveFileW->lineEdit()->setText(_saveFileV);
+  _useFlatFileW->setChecked(_useFlatFileV);
+  _flatFileW->lineEdit()->setText(_flatFileV);
+
+  _useiCalFileW->setChecked(_useiCalFileV);
+  _iCalFileW->lineEdit()->setText(_iCalFileV);
 
   _doTimeLoggingW->setChecked(_doTimeLoggingV);
-  _timeLogW->lineEdit()->setText(_timeLogV);
+  _logFileW->lineEdit()->setText(_logFileV);
 
   _doIdleDetectionW->setChecked(_doIdleDetectionV);
   _idleDetectValueW->setValue(_idleDetectValueV);
@@ -126,7 +178,6 @@ void Preferences::showDialog()
   _doAutoSaveW->setChecked(_doAutoSaveV);
   _autoSaveValueW->setValue(_autoSaveValueV);
 
-  _hideOnCloseW->setChecked(_hideOnCloseV);
   _promptDeleteW->setChecked(_promptDeleteV);
 
   _displaySessionW->setChecked(_displayColumnV[0]);
@@ -138,27 +189,40 @@ void Preferences::showDialog()
   // to settings
   idleDetectCheckBoxChanged();
   timeLoggingCheckBoxChanged();
-  hideOnCloseCheckBoxChanged();
+  autoSaveCheckBoxChanged();
+  iCalFileCheckBoxChanged();
+  flatFileCheckBoxChanged();
 
   show();
 }
 
 void Preferences::slotOk()
 {
-  _saveFileV = _saveFileW->lineEdit()->text();
-  _timeLogV = _timeLogW->lineEdit()->text();
-  _doTimeLoggingV    = _doTimeLoggingW->isChecked();
+
+  // storage
+  _useFlatFileV = _useFlatFileW->isChecked();
+  _flatFileV = _flatFileW->lineEdit()->text();
+
+  _doTimeLoggingV = _doTimeLoggingW->isChecked();
+  _logFileV = _logFileW->lineEdit()->text();
+
+  _useiCalFileV = _useiCalFileW->isChecked();
+  _iCalFileV = _iCalFileW->lineEdit()->text();
+
   _doIdleDetectionV = _doIdleDetectionW->isChecked();
   _idleDetectValueV = _idleDetectValueW->value();
-  _doAutoSaveV    = _doAutoSaveW->isChecked();
+
+  _doAutoSaveV = _doAutoSaveW->isChecked();
   _autoSaveValueV = _autoSaveValueW->value();
-  _hideOnCloseV = _hideOnCloseW->isChecked();
+
+  // behavior
   _promptDeleteV = _promptDeleteW->isChecked();
 
+  // display
   _displayColumnV[0] = _displaySessionW->isChecked();
-  _displayColumnV[1]=_displayTimeW->isChecked();
-  _displayColumnV[2]=_displayTotalSessionW->isChecked();
-  _displayColumnV[3]=_displayTotalTimeW->isChecked();
+  _displayColumnV[1] = _displayTimeW->isChecked();
+  _displayColumnV[2] = _displayTotalSessionW->isChecked();
+  _displayColumnV[3] = _displayTotalTimeW->isChecked();
 
   emitSignals();
   save();
@@ -172,119 +236,104 @@ void Preferences::slotCancel()
 
 void Preferences::idleDetectCheckBoxChanged()
 {
-  bool enabled = _doIdleDetectionW->isChecked();
-  _idleDetectLabelW->setEnabled(enabled);
-  _idleDetectValueW->setEnabled(enabled);
+  _idleDetectValueW->setEnabled(_doIdleDetectionW->isChecked());
 }
 
 void Preferences::autoSaveCheckBoxChanged()
 {
-  bool enabled = _doAutoSaveW->isChecked();
-  _autoSaveLabelW->setEnabled(enabled);
-  _autoSaveValueW->setEnabled(enabled);
-  _saveFileLabelW->setEnabled(enabled);
-  _saveFileW->setEnabled(enabled);
+  _autoSaveValueW->setEnabled(_doAutoSaveW->isChecked());
+}
+
+void Preferences::iCalFileCheckBoxChanged()
+{
+  _iCalFileW->setEnabled(_useiCalFileW->isChecked());
+}
+
+void Preferences::flatFileCheckBoxChanged()
+{
+  _flatFileW->setEnabled(_useFlatFileW->isChecked());
 }
 
 void Preferences::timeLoggingCheckBoxChanged()
 {
-  bool enabled = _doTimeLoggingW->isChecked();
-  _timeLoggingLabelW->setEnabled(enabled);
-  _timeLogW->setEnabled(enabled);
-}
-
-void Preferences::hideOnCloseCheckBoxChanged()
-{
+  _logFileW->setEnabled(_doTimeLoggingW->isChecked());
 }
 
 void Preferences::emitSignals()
 {
-  emit saveFile( _saveFileV );
+  emit usingFlatFile(_useFlatFileV);
+  emit usingiCalFile(_useiCalFileV);
+  emit flatFile( _flatFileV );
+  emit iCalFile( _iCalFileV );
   emit timeLogging( _doTimeLoggingV );
-  emit timeLog( _timeLogV );
+  emit timeLog( _logFileV );
   emit detectIdleness( _doIdleDetectionV );
   emit idlenessTimeout( _idleDetectValueV );
   emit autoSave( _doAutoSaveV );
   emit autoSavePeriod( _autoSaveValueV );
-  emit setupChanged(  );
-  emit hideOnClose( _hideOnCloseV );
+  emit setupChanged();
 }
 
-QString Preferences::saveFile()
+QString Preferences::flatFile() const
 {
-  return _saveFileV;
+  return _flatFileV;
 }
 
-QString Preferences::activeCalendarFile()
+QString Preferences::iCalFile() const
 {
-  KStandardDirs dirs;
-  QString korganizerrc = locateLocal( "config",
-                                      QString::fromLatin1("korganizerrc") );
-  KConfig korgconfig( korganizerrc, true );
-  korgconfig.setGroup( "General" );
-
-  return korgconfig.readEntry( "Active Calendar" ).section( ':', 1 );
+  return _iCalFileV;
 }
-
-QString Preferences::loadFile()
+QString Preferences::activeCalendarFile() const
 {
-  if ( useLegacyFileFormat() )
-    return _legacySaveFileV;
-  else
-    return _saveFileV;
+  return _iCalFileV;
 }
 
-QString Preferences::timeLog()
+QString Preferences::timeLog() const
 {
-  return _timeLogV;
+  return _logFileV;
 }
 
-bool Preferences::detectIdleness()
+bool Preferences::usingiCalFile() const
+{
+  return _useiCalFileV;
+}
+
+bool Preferences::usingFlatFile() const
+{
+  return _useFlatFileV;
+}
+
+bool Preferences::detectIdleness() const
 {
   return _doIdleDetectionV;
 }
 
-int Preferences::idlenessTimeout()
+int Preferences::idlenessTimeout() const
 {
   return _idleDetectValueV;
 }
 
-bool Preferences::autoSave()
+bool Preferences::autoSave() const
 {
   return _doAutoSaveV;
 }
 
-bool Preferences::timeLogging() 
+bool Preferences::timeLogging() const
 {
   return _doTimeLoggingV;
 }
 
-int Preferences::autoSavePeriod()
+int Preferences::autoSavePeriod() const
 {
   return _autoSaveValueV;
 }
 
-bool Preferences::hideOnClose()
-{
-    return _hideOnCloseV;
-}
-
-bool Preferences::promptDelete()
+bool Preferences::promptDelete() const
 {
     return _promptDeleteV;
 }
 
-bool Preferences::useLegacyFileFormat()
-{
-  return fileFormat() == QString::fromLatin1( "karmdata" );
-}
-
-bool Preferences::displayColumn(int n)  { return _displayColumnV[n]; }
-
-QString Preferences::fileFormat()
-{
-  return _fileFormat;
-}
+bool Preferences::displayColumn(int n) const  { return _displayColumnV[n]; }
 
 //---------------------------------------------------------------------------
 //                                  Load and Save
@@ -295,31 +344,37 @@ void Preferences::load()
 
   config.setGroup( QString::fromLatin1("Idle detection") );
   _doIdleDetectionV = config.readBoolEntry( QString::fromLatin1("enabled"),
-                                            true );
+     true );
   _idleDetectValueV = config.readNumEntry(QString::fromLatin1("period"), 15);
 
   config.setGroup( QString::fromLatin1("Saving") );
-  _fileFormat     = config.readEntry( QString::fromLatin1("file format"),
-                                      QString::fromLatin1("karmdata"));
-  _saveFileV      = config.readPathEntry( QString::fromLatin1("kcal file"),
-                                      locateLocal( "appdata",
-                                                   QString::fromLatin1( "karmdata.ics")));
-  _legacySaveFileV= config.readPathEntry( QString::fromLatin1("file"),
-                                      locateLocal( "appdata",
-                                                   QString::fromLatin1("karmdata.txt")));
-  _doTimeLoggingV = config.readBoolEntry( QString::fromLatin1("time logging"), false);
-  _timeLogV       = config.readPathEntry( QString::fromLatin1("time log file"),
-                                      locateLocal( "appdata",
-                                                   QString::fromLatin1("karmlog.txt")));
-  _doAutoSaveV    = config.readBoolEntry( QString::fromLatin1("auto save"), true);
-  _autoSaveValueV = config.readNumEntry( QString::fromLatin1("auto save period"), 5);
-  _hideOnCloseV   = config.readBoolEntry( QString::fromLatin1("hide on close"), true);
-  _promptDeleteV  = config.readBoolEntry( QString::fromLatin1("prompt delete"), true);
+  _useFlatFileV = config.readBoolEntry( QString::fromLatin1("use flat file"),
+      false);
+  _flatFileV = config.readPathEntry( QString::fromLatin1("flat file"),
+      locateLocal( "appdata", QString::fromLatin1( "karm.data")));
+  _useiCalFileV = config.readBoolEntry( QString::fromLatin1("use ical file"),
+      true);
+  _iCalFileV = config.readPathEntry( QString::fromLatin1("ical file"),
+      locateLocal( "appdata", QString::fromLatin1( "karm.ics")));
+  _doTimeLoggingV = config.readBoolEntry( QString::fromLatin1("time logging"),
+      false);
+  _logFileV = config.readPathEntry( QString::fromLatin1("time log file"),
+      locateLocal( "appdata", QString::fromLatin1("karm.log")));
+  _doAutoSaveV = config.readBoolEntry( QString::fromLatin1("auto save"),
+      true);
+  _autoSaveValueV = config.readNumEntry( 
+      QString::fromLatin1("auto save period"), 5);
+  _promptDeleteV = config.readBoolEntry( QString::fromLatin1("prompt delete"),
+      true);
 
-  _displayColumnV[0] = config.readBoolEntry( QString::fromLatin1("display session time"), true);
-  _displayColumnV[1] = config.readBoolEntry( QString::fromLatin1("display time"), true);
-  _displayColumnV[2] = config.readBoolEntry( QString::fromLatin1("display total session time"), true);
-  _displayColumnV[3] = config.readBoolEntry( QString::fromLatin1("display total time"), true);
+  _displayColumnV[0] = config.readBoolEntry( 
+      QString::fromLatin1("display session time"), true);
+  _displayColumnV[1] = config.readBoolEntry( 
+      QString::fromLatin1("display time"), true);
+  _displayColumnV[2] = config.readBoolEntry( 
+      QString::fromLatin1("display total session time"), true);
+  _displayColumnV[3] = config.readBoolEntry( 
+      QString::fromLatin1("display total time"), true);
 }
 
 void Preferences::save()
@@ -331,20 +386,24 @@ void Preferences::save()
   config.writeEntry( QString::fromLatin1("period"), _idleDetectValueV);
 
   config.setGroup( QString::fromLatin1("Saving"));
-  config.writeEntry( QString::fromLatin1("file format"), QString::fromLatin1("karm_kcal_2"));
-  config.writePathEntry( QString::fromLatin1("file"), _legacySaveFileV);
-  config.writePathEntry( QString::fromLatin1("kcal file"), _saveFileV);
+  config.writeEntry( QString::fromLatin1("use ical file"), _useiCalFileV);
+  config.writePathEntry( QString::fromLatin1("ical file"), _iCalFileV);
+  config.writeEntry( QString::fromLatin1("use flat file"), _useFlatFileV);
+  config.writePathEntry( QString::fromLatin1("flat file"), _flatFileV);
   config.writeEntry( QString::fromLatin1("time logging"), _doTimeLoggingV);
-  config.writePathEntry( QString::fromLatin1("time log file"), _timeLogV);
+  config.writePathEntry( QString::fromLatin1("time log file"), _logFileV);
   config.writeEntry( QString::fromLatin1("auto save"), _doAutoSaveV);
   config.writeEntry( QString::fromLatin1("auto save period"), _autoSaveValueV);
-  config.writeEntry( QString::fromLatin1("hide on close"), _hideOnCloseV);
   config.writeEntry( QString::fromLatin1("prompt delete"), _promptDeleteV);
 
-  config.writeEntry( QString::fromLatin1("display session time"), _displayColumnV[0]);
-  config.writeEntry( QString::fromLatin1("display time"), _displayColumnV[1]);
-  config.writeEntry( QString::fromLatin1("display total session time"), _displayColumnV[2]);
-  config.writeEntry( QString::fromLatin1("display total time"), _displayColumnV[3]);
+  config.writeEntry( QString::fromLatin1("display session time"),
+      _displayColumnV[0]);
+  config.writeEntry( QString::fromLatin1("display time"),
+      _displayColumnV[1]);
+  config.writeEntry( QString::fromLatin1("display total session time"),
+      _displayColumnV[2]);
+  config.writeEntry( QString::fromLatin1("display total time"),
+      _displayColumnV[3]);
 
   config.sync();
 

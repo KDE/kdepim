@@ -7,11 +7,11 @@
 
 #include <klistview.h>
 
-#include "calendarlocal.h"              // KCal::CalendarLocal;
-
 #include "desktoplist.h"
+#include "karmstorage.h"
 //#include "desktoptracker.h"
-#include "karmutility.h"
+
+//#include "karmutility.h"
 
 class QListBox;
 class QTextStream;
@@ -25,6 +25,7 @@ class EditTaskDialog;
 class IdleTimeDetector;
 class Preferences;
 class Task;
+class KarmStorage;
 
 /**
  * Container and interface for the tasks.
@@ -38,39 +39,60 @@ class TaskView : public KListView
     TaskView( QWidget *parent = 0, const char *name = 0 );
     virtual ~TaskView();
 
-    Task* firstChild()  const { return (Task*)KListView::firstChild(); };
-    Task* currentItem() const { return (Task*)KListView::currentItem(); };
+    /**  Return the first item in the view, casted to a Task pointer.  */
+    Task* first_child() const;
 
+    /**  Return the current item in the view, casted to a Task pointer.  */
+    Task* current_item() const;
+
+    /**  Return the i'th item (zero-based), casted to a Task pointer.  */
+    Task* item_at_index(int i);
+
+    /** Load the view from storage.  */
     void load();
-    /*
-       File format:
-       zero or more lines of
-       1         number
-       time      in minutes
-       string    task name
-       [string]  desktops, in which to count. e.g. "1,2,5" (optional)
-    */
-    void writeTaskToFile( QTextStream *, Task*, int );
-    void writeTaskToCalendar( KCal::CalendarLocal&, Task*, int,
-                              QPtrStack< KCal::Event >&);
+
+    /** Reset session time to zero for all tasks.   */
     void startNewSession();
+
+    /** Reset session and total time to zero for all tasks.  */
     void resetTimeForAllTasks();
 
+    /** Return the total number if items in the view.  */
+    long count();
+
   public slots:
+    /** Save to persistent storage. */
     void save();
+
+    /** Start the timer on the current item (task) in view.  */
     void startCurrentTimer();
+
+    /** Stop the timer for the current item in the view.  */
     void stopCurrentTimer();
+
+    /** Stop all running timers.  */
     void stopAllTimers();
+
+    /** Stop all running timers, and start timer on current item.  */
     void changeTimer( QListViewItem * = 0 );
+
+    /** Calls newTask with caption "New Task".  */
     void newTask();
+
+    /** Display edit task dialog and create a new task with results.  */
     void newTask( QString caption, Task* parent );
+
+    /** Used to import a legacy file format. */
+    void loadFromFlatFile();
+
+    /** Calls newTask with caption "New Sub Task". */
     void newSubTask();
     void editTask();
     void deleteTask();
     void addCommentToTask();
+
+    /** Subtracts time from all active tasks, and does not log event. */ 
     void extractTime( int minutes );
-    void loadFromKOrgTodos();
-    void loadFromKOrgEvents();
     void taskTotalTimesChanged( long session, long total)
                                 { emit totalTimesChanged( session, total); };
     void adaptColumns();
@@ -78,6 +100,9 @@ class TaskView : public KListView
     void deletingTask(Task* deletedTask);
     void startTimerFor( Task* task );
     void stopTimerFor( Task* task );
+
+    /** User has picked a new iCalendar file on preferences screen. */
+    void iCalFileChanged(QString file);
 
   signals:
     void totalTimesChanged( long session, long total );
@@ -92,29 +117,16 @@ class TaskView : public KListView
     QTimer *_autoSaveTimer;
     Preferences *_preferences;
     QPtrList<Task> activeTasks;
-    KCal::CalendarLocal _calendar;
     int previousColumnWidths[4];
     DesktopTracker* _desktopTracker;
 
+    //KCal::CalendarLocal _calendar;
+    KarmStorage * _storage;
+
   private:
-    enum { loadEvent = 1, loadTodo = 2 };
     void updateParents( Task* task, long totalDiff, long sesssionDiff);
     void deleteChildTasks( Task *item );
-    bool parseLine( QString line, long *time, QString *name, int *level,
-                    DesktopList* desktopList );
-    void loadFromFileFormat();
-    void saveToFileFormat();
-    void loadFromKCalFormat( const QString& file, int loadMask );
-    void loadFromKCalFormat();
-    void saveToKCalFormat();
-    void buildAndPositionTasks( KCal::Event::List &eventList );
-    void buildAndPositionTasks( KCal::Todo::List &todoList );
-    void buildTask( KCal::Incidence* event, QDict<Task>& map );
-    void positionTask( const KCal::Incidence* event, const QDict<Task>& map );
-    void addTimeToActiveTasks( int minutes, bool do_logging );
-    /** adjust to file format changes */
-    void adjustFromLegacyFileFormat();
-    void adjustFromLegacyFileFormat(Task* task);
+    void addTimeToActiveTasks( int minutes, bool do_logging); 
 
   protected slots:
     void autoSaveChanged( bool );

@@ -19,22 +19,23 @@ class Preferences :public KDialogBase
   public:
     static Preferences *instance();
     void disableIdleDetection();
-  
+
     // Retrive information about settings
-    bool detectIdleness();
-    int idlenessTimeout();
-    QString loadFile();
-    QString saveFile();
-    QString activeCalendarFile();
-    bool timeLogging();
-    QString timeLog();
-    bool autoSave();
-    int autoSavePeriod();
-    bool hideOnClose();
-    bool promptDelete();
-    QString fileFormat();
-    bool useLegacyFileFormat();
-    bool displayColumn(int n);
+    bool detectIdleness() const;
+    int idlenessTimeout() const;
+    QString flatFile() const;
+    QString iCalFile() const;
+    QString activeCalendarFile() const;
+    bool timeLogging() const;
+    bool usingiCalFile() const;
+    bool usingFlatFile() const;
+    QString timeLog() const;
+    bool autoSave() const;
+    int autoSavePeriod() const;
+    bool promptDelete() const;
+    QString fileFormat() const;
+    bool displayColumn(int n) const;
+
     void emitSignals();
 
   public slots:
@@ -45,47 +46,49 @@ class Preferences :public KDialogBase
   signals:
     void detectIdleness(bool on);
     void idlenessTimeout(int minutes);
-    void saveFile(QString);
+    void flatFile(QString);
+    void iCalFile(QString);
     void timeLogging(bool on);
+    void usingiCalFile(bool on);
+    void usingFlatFile(bool on);
     void timeLog(QString);
     void autoSave(bool on);
     void autoSavePeriod(int minutes);
     void setupChanged();
-    void hideOnClose(bool on);
   
   protected slots:
     virtual void slotOk();
     virtual void slotCancel();
     void idleDetectCheckBoxChanged();
     void autoSaveCheckBoxChanged();
+    void iCalFileCheckBoxChanged();
+    void flatFileCheckBoxChanged();
     void timeLoggingCheckBoxChanged();
-    void hideOnCloseCheckBoxChanged();
 
   private:
+    void makeDisplayPage();
+    void makeBehaviorPage();
+    void makeStoragePage();
+  
     Preferences();
     static Preferences *_instance;
     bool _unsavedChanges;
 
-    // Widgets in the dialog
-    // (All variables ends in W to indicate that they are Widgets)
+    // Widgets
     QCheckBox *_doIdleDetectionW, *_doAutoSaveW, *_doTimeLoggingW,
-              *_hideOnCloseW, *_promptDeleteW;
+              *_promptDeleteW, *_useFlatFileW, *_useiCalFileW;
     QCheckBox *_displayTimeW, *_displaySessionW,
               *_displayTotalTimeW, *_displayTotalSessionW;
-    QLabel    *_idleDetectLabelW, *_autoSaveLabelW, *_saveFileLabelW,
-              *_timeLoggingLabelW, *_displayColumnsLabelW;
+    QLabel    *_idleDetectLabelW, *_displayColumnsLabelW;
     QSpinBox  *_idleDetectValueW, *_autoSaveValueW;
-    KURLRequester *_saveFileW, *_timeLogW;
+    KURLRequester *_flatFileW, *_logFileW, *_iCalFileW ;
   
-    // Values for the preferences.
-    // (All variables in in V to indicate they are Values)
+    // Values
     bool _doIdleDetectionV, _doAutoSaveV, _doTimeLoggingV,
-         _hideOnCloseV, _promptDeleteV;
-    /// should columns be displayed
+         _promptDeleteV, _useiCalFileV, _useFlatFileV;
     bool _displayColumnV[4];
     int  _idleDetectValueV, _autoSaveValueV;
-    QString _saveFileV, _legacySaveFileV, _timeLogV;
-    QString _fileFormat;
+    QString _flatFileV, _logFileV, _iCalFileV;
 };
 
 #endif // KARM_PREFERENCES_H

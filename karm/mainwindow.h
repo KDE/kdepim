@@ -29,7 +29,6 @@ class MainWindow : public KMainWindow
     long            _totalSum;
     long            _sessionSum;
     Preferences     *_preferences;
-    bool            _hideOnClose;
     KarmTray        *_tray;
 
   public:
@@ -46,7 +45,6 @@ class MainWindow : public KMainWindow
     void quit();
     void print();
     void slotSelectionChanged();
-    void hideOnClose( bool hide );
     void contextMenuRequest( QListViewItem*, const QPoint&, int );
     void enableStopAll();
     void disableStopAll();

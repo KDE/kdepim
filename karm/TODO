@@ -8,6 +8,7 @@ $Id$
 * mainwindow: move tray signals into tray.cpp
 * mainwindow.cpp: before loading view, check whether the file exists
   and if not, create a blank one and ask wheter we want to add a task.
+  (hmmm, see my notes in iCalendar section below).
 * add mouse double-click action (start new timer, stop old) to "Configure
   Shortcuts" dialog.
 * deleting a task should be logged as well.
@@ -30,9 +31,41 @@ $Id$
   * the desktop tracker is not able to handle a changing number of
     desktops (i.e. if we add or remove a desktop)
 
+Mark / iCalendar Work:
+--------------------------
+
+  * 2003-08-15: Update karmstorage.cpp when LocalCalendar::deleteTodo works.
+      - KarmStorage::removeTask: delete "return false;" and uncomment code
+    
+  * 2003-08-15: Update karmstorage.cpp when LocalCalendar::load() works.
+      - KarmStorage::load -- remove three deleteAll statements (and 
+      call _calendar.clear()?).
+
+  * 2003-08-15: Remove code that is causing compiler warnings.
+  
+  * 2003-08-15: Add ability to import tasks from an iCalendar file.
+      - TaskView::load()
+  
+  * 2003-08-15: If Cornelius accepts my comment patch, use the COMMENT
+    attribute to store comments, not the VTODO DESCRIPTION.
+      - KarmStorage::addComment()
+
+  * 2003-08-15: Go over code and delete all cruft.  In particular, take a look
+    at preferences.cpp and taskview.cpp.
+
+  * 2003-08-15: When importing, ask user to pick file.
+      - Currently, import gets tasks from file specified on preferences
+      screen.  This is bogus.  The old legacy fields should come off the
+      preferences screen and the user should be prompted for a file name to
+      import.  (TaskView::loadFromFlatFile)
+
+  * 2003-08-15: When loading an empty ics file, ask user if they want to
+    import a task list from another file.  If they say no, then pop up the new
+    task dialog.  (TaskView::load).
+
+
 Wishlist:
 ---------
-* a default task that would start as soon as we've launched karm
 * activeTasks should be cleaned up
 * if two timers are active, associate a percentage with them, optimaly the
   percentage should be configurable
