@@ -1,3 +1,4 @@
+debian/tmp/usr/bin/kabc2mutt
 debian/tmp/usr/bin/kaddressbook
 debian/tmp/usr/lib/kde3/libkaddressbookpart.la
 debian/tmp/usr/lib/kde3/libkaddressbookpart.so

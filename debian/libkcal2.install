@@ -1,2 +1,4 @@
 debian/tmp/usr/lib/libkcal.la
+debian/tmp/usr/lib/libkcalsystem.la
 debian/tmp/usr/lib/libkcal.so.*
+debian/tmp/usr/lib/libkcalsystem.so.*

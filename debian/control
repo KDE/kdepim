@@ -7,7 +7,7 @@ Standards-Version: 3.5.6.0
 
 Package: kdepim
 Architecture: all
-Depends: kalarm (= ${Source-Version}), kalarmd (= ${Source-Version}), kandy (= ${Source-Version}), karm (= ${Source-Version}), knotes (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), libkcal2 (= ${Source-Version}), libkgantt0 (= ${Source-Version})
+Depends: kalarm (= ${Source-Version}), kalarmd (= ${Source-Version}), kandy (= ${Source-Version}), karm (= ${Source-Version}), knotes (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), ksync (= ${Source-Version}), libkcal2 (= ${Source-Version}), libkgantt0 (= ${Source-Version})
 Description: KDE Personal Information Management metapackage
  kdepim is a collection of Personal Information Management (PIM) tools for
  the K Desktop Enviromnent (KDE).
@@ -113,6 +113,16 @@ Depends: ${shlibs:Depends}
 Suggests: knotes, korganizer
 Description: KDE Palm Pilot hot-sync tool
  KDE Palm Pilot hot-sync tool.
+
+Package: ksync
+Section: utils
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: KDE Sync
+ KSync is a small application using libksync, which provides a GUI for selecting
+ and syncing files, which contain data of the types, for which implementations of
+ the libksync interfaces exist. It is able to sync data across networks by using
+ the KDE ioslaves.
 
 Package: libkcal2
 Section: libs

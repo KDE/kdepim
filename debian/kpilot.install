@@ -1,5 +1,7 @@
 debian/tmp/usr/bin/kpilot
 debian/tmp/usr/bin/kpilotDaemon
+debian/tmp/usr/lib/kde3/libaddressconduit.la
+debian/tmp/usr/lib/kde3/libaddressconduit.so.*
 debian/tmp/usr/lib/kde3/libexpenseconduit.la
 debian/tmp/usr/lib/kde3/libexpenseconduit.so.*
 debian/tmp/usr/lib/kde3/libknotesconduit.la
@@ -27,6 +29,7 @@ debian/tmp/usr/share/icons/hicolor/32x32/apps/kpilot.png
 debian/tmp/usr/share/icons/hicolor/48x48/apps/kpilot.png
 debian/tmp/usr/share/icons/hicolor/48x48/apps/kpilotDaemon.png
 debian/tmp/usr/share/icons/locolor/16x16/apps/kpilot.png
+debian/tmp/usr/share/services/abbrowser_conduit.desktop
 debian/tmp/usr/share/services/expense-conduit.desktop
 debian/tmp/usr/share/services/knotes-conduit.desktop
 debian/tmp/usr/share/services/null-conduit.desktop
