@@ -75,6 +75,9 @@ KNSaveHelper::~KNSaveHelper()
 
 QFile* KNSaveHelper::getFile(QString dialogTitle)
 {
+  if (lastPath.isEmpty())
+    lastPath = "file:/";
+
   url = KFileDialog::getSaveURL(lastPath+s_aveName,QString::null,p_arent,dialogTitle);
 
   if (url.isEmpty())
