@@ -289,6 +289,11 @@ class Recurrence
     /** Returns the default method for handling yearly recurrences of February 29th. */
     static Feb29Type setFeb29YearlyTypeDefault()  { return mFeb29YearlyDefaultType; }
 
+    /**
+      Debug output.
+    */
+    void dump() const;
+
   protected:
     enum PeriodFunc { END_DATE_AND_COUNT, COUNT_TO_DATE, NEXT_AFTER_DATE };
     struct MonthlyData;     friend struct MonthlyData;
