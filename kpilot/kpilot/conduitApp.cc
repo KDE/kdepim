@@ -47,6 +47,10 @@ static KCmdLineOptions conduitoptions[] =
 		"with this conduit"), 0L },
 	{ "hotsync", I18N_NOOP("HotSync the databases associated "
 		"with this conduit"), 0L },
+#ifdef DEBUG
+	{ "test",I18N_NOOP("Test this conduit (possibly unimplemented)")
+		,0L },
+#endif
 	{ "debug <level>", I18N_NOOP("Set debugging level"), "0" },
 	{ 0,0,0 }
 } ;
@@ -183,6 +187,7 @@ BaseConduit::eConduitMode ConduitApp::getMode()
 	CheckArg("setup",Setup);
 	CheckArg("hotsync",HotSync);
 	CheckArg("backup",Backup);
+	CheckArg("test",Test);
 
 	if (fMode==BaseConduit::None)
 	{
@@ -225,6 +230,7 @@ int ConduitApp::exec()
 	case BaseConduit::DBInfo : cout << fConduit->dbInfo(); break;
 	case BaseConduit::HotSync : fConduit->doSync(); break;
 	case BaseConduit::Backup : fConduit->doBackup(); break;
+	case BaseConduit::Test : debug_level=-1; fConduit->doTest(); break;
 	case BaseConduit::Setup :
 		widget = fConduit->aboutAndSetup();
 		icon= fConduit->icon();
@@ -254,6 +260,9 @@ int ConduitApp::exec()
 
 
 // $Log$
+// Revision 1.11  2000/11/17 08:31:59  adridg
+// Minor changes
+//
 // Revision 1.10  2000/11/14 06:32:26  adridg
 // Ditched KDE1 stuff
 //
