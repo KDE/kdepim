@@ -1,4 +1,4 @@
-/*
+/*  -*- mode: C++; c-file-style: "gnu" -*-
     kpgp.cpp
 
     Copyright (C) 2001,2002 the KPGP authors
@@ -588,6 +588,8 @@ Module::getEncryptionKeys( KeyIDList& encryptionKeyIds,
     if( ret == KMessageBox::Cancel ) {
       return Kpgp::Canceled;
     }
+    else
+      encryptionKeyIds.clear();
   }
   else if( emptyListCount > 0 ) {
     QString str = ( emptyListCount == 1 )
