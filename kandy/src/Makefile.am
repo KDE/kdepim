@@ -28,6 +28,8 @@ messages: rc.cpp
 
 xdg_apps_DATA = kandy.desktop
 
+kde_kcfg_DATA = kandy.kcfg
+
 install-data-local: uninstall.desktop
 	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/Utilities
 	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(DESTDIR)$(kde_appsdir)/Utilities/kandy.desktop
