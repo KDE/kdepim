@@ -16,6 +16,13 @@
 <email>davidrugge@mediaone.net</email>
 </address></affiliation>
 </author>
+<author>
+<firstname>Michel</firstname>
+<surname>Boyer de la Giroday</surname>
+<affiliation><address>
+<email>michel@klaralvdalens-datakonsult.se</email>
+</address></affiliation>
+</author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 <date>2004-07-11</date>
@@ -1226,8 +1233,22 @@ the &kde; address book.</para>
 	    </para>
 	  </listitem>
 	</varlistentry>
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Tools</guimenu>
+<guisubmenu>Edit "Out of Office" Replies...</guisubmenu>
+</menuchoice>
+</term>
+<listitem>
+<para>Launch the <guilabel>Configure "Out of Office" Replies</guilabel> dialog, which allow you to set-up vacation notifications.</para>
+<note>
+<para><guilabel>Out of Office reply</guilabel> functionality relies on server-side filtering. To be able to use it you need to configure the <link linkend="receiving-mail">Filtering tab</link> (see option relevant to kolab server) of your <guilabel>IMAP</guilabel> account set-up.
+</para>
+</note>
+</listitem>
+</varlistentry>
 
-<!-- FIXME: Add Tools/Edit "Out of Office" Replies -->
 
 <varlistentry>
 <term>
