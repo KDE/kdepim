@@ -204,7 +204,8 @@ class SyncEntry
   to loss of up to 12 attributes.
   This will be avoided by a merge before a replaceEntry operation.
   This way B will take presedence on the 3 Attributes but we won't lose
-  the additional attributes
+  the additional attributes.
+  By default the support map of a Syncee is set to supports all..
 
 
   @ref Syncer operates on Syncee objects.
