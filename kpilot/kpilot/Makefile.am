@@ -35,6 +35,7 @@ kpilot_SOURCES	= \
 	pilotDaemonDCOP.stub kpilotDCOP.skel \
 	kpilot.cc kpilotConfig.cc \
 	kpilotConfigDialog.cc kpilotConfigDialog_base.ui \
+	conduitConfigDialog.cc conduitConfigDialog_base.ui \
 	pilotComponent.cc logWidget.cc memoWidget.cc addressWidget.cc \
 	addressEditor.cc \
 	fileInstaller.cc fileInstallWidget.cc \
@@ -64,10 +65,10 @@ kpilotConfig_LDFLAGS = $(all_libraries) $(KDE_RPATH) -L../lib
 
 # the libraries to link against. Be aware of the order. First the libraries,
 # that depend on the following ones.
-kpilot_LDADD		= $(LIB_KFILE) $(LIBPISOCK) -lkpilot
-kpilotDaemon_LDADD	= $(LIB_KFILE) $(LIBPISOCK) -lkpilot
-kpilotTest_LDADD	= $(LIB_KFILE) $(LIBPISOCK) -lkpilot
-kpilotConfig_LDADD      = $(LIB_KFILE) -lkpilot
+kpilot_LDADD		= $(LIB_KFILE) $(LIBPISOCK) ../lib/libkpilot.la
+kpilotDaemon_LDADD	= $(LIB_KFILE) $(LIBPISOCK) ../lib/linkpilot.la
+kpilotTest_LDADD	= $(LIB_KFILE) $(LIBPISOCK) ../lib/linkpilot.la
+kpilotConfig_LDADD      = $(LIB_KFILE) ../lib/linkpilot.la
 
 appsdir = $(kde_appsdir)/Utilities
 servicetypedir = $(kde_servicetypesdir)

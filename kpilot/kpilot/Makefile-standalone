@@ -1,7 +1,7 @@
 # Makefile for a standalone kpilotConfig
 
 QTDIR=/usr/lib/qt-2.3.0
-KDEDIR=/usr
+KDEDIR=/vol/kde/kde-2.2
 
 MOC=$(QTDIR)/bin/moc
 UIC=$(QTDIR)/bin/uic
@@ -13,63 +13,61 @@ CXXFLAGS=-DDEBUG -DDEBUG_CERR
 # INCLUDES=-I$(QTDIR)/include -I$(KDEDIR)/include
 #
 # Or, for stupid RH 7.1 systems:
-INCLUDES=-I$(QTDIR)/include -I/usr/include/kde
+INCLUDES=-I$(QTDIR)/include -I$(KDEDIR)/include -I../lib
 LDFLAGS=-L$(KDEDIR)/lib -Wl,-R -Wl,$(KDEDIR)/lib \
-	-L$(QTDIR)/lib -Wl,-R -Wl,$(QTDIR)/lib
+	-L$(QTDIR)/lib -Wl,-R -Wl,$(QTDIR)/lib \
+	-L../lib/.libs
 
 CONFIG_DISTDIR=kpilotConfig-0.2
-CONFIG_OBJS=options.o kpilotConfig.o \
-	uiDialog.o kpilotConfigDialog.o kpilotConfigDialog_base.o \
-	listCat.o \
-	conduitSetup.o conduitConfigDialog.o conduitConfigDialog_base.o \
+CONFIG_OBJS=kpilotConfig.o \
+	kpilotConfigDialog.o kpilotConfigDialog_base.o \
+	conduitConfigDialog.o conduitConfigDialog_base.o \
 	main-config.o
-CONFIG_MOCS=uiDialog.moc kpilotConfigDialog_base.moc kpilotConfigDialog.moc \
-	conduitSetup.moc conduitConfigDialog.moc conduitConfigDialog_base.moc \
-	listCat.moc
+CONFIG_MOCS=kpilotConfigDialog_base.moc kpilotConfigDialog.moc \
+	conduitConfigDialog.moc conduitConfigDialog_base.moc
+	
 CONFIG_EXTRA=kpilotConfigDialog_base.ui conduitConfigDialog_base.ui
-CONFIG_LIBS=-lkdeui -lkfile -lkdecore -lqt 
+CONFIG_LIBS=-lkdeui -lkfile -lkdecore -lqt -lkpilot
 
 TEST_DISTDIR=kpilotTest-0.2
-TEST_OBJS=options.o kpilotlink.o kpilotConfig.o \
+TEST_OBJS=kpilotConfig.o \
 	pilotComponent.o logWidget.o \
 	hotSync.o interactiveSync.o main-test.o
-TEST_MOCS=kpilotlink.moc \
-	pilotComponent.moc logWidget.moc \
+TEST_MOCS= pilotComponent.moc logWidget.moc \
 	interactiveSync.moc hotSync.moc
 TEST_EXTRA=pilotUser.h
-TEST_LIBS=-lkdeui -lqt -lpisock
+TEST_LIBS=-lkpilot -lkfile -lkdeui -lqt -lpisock 
 
 KPILOT_DISTDIR=kpilot-4.2.9
-KPILOT_OBJS=options.o \
-	pilotDaemonDCOP_stub.o \
+KPILOT_OBJS= pilotDaemonDCOP_stub.o \
 	kpilotDCOP_skel.o \
 	kpilot.o kpilotConfig.o \
-	uiDialog.o kpilotConfigDialog.o kpilotConfigDialog_base.o \
+	kpilotConfigDialog.o kpilotConfigDialog_base.o \
 	pilotComponent.o logWidget.o memoWidget.o addressWidget.o \
 	addressEditor.o \
+	listItems.o \
 	fileInstaller.o fileInstallWidget.o \
-	conduitSetup.o listCat.o listItems.o \
-	pilotRecord.o pilotLocalDatabase.o pilotAddress.o pilotMemo.o
+	conduitConfigDialog.o conduitConfigDialog_base.o
 KPILOT_MOCS=pilotComponent.moc logWidget.moc memoWidget.moc addressWidget.moc \
 	fileInstaller.moc addressEditor.moc \
 	fileInstallWidget.moc \
-	listCat.moc conduitSetup.moc \
-	uiDialog.moc kpilotConfigDialog_base.moc kpilotConfigDialog.moc \
+	kpilotConfigDialog_base.moc kpilotConfigDialog.moc \
 	kpilot.moc 
-KPILOT_EXTRA=kpilotConfigDialog_base.ui pilotDaemonDCOP.h kpilotDCOP.h \
+KPILOT_EXTRA=kpilotConfigDialog_base.ui conduitConfigDialog_base.ui \
+	pilotDaemonDCOP.h kpilotDCOP.h \
 	pilotAppCategory.h pilotDatabase.h kpilot_on_pp.h
-KPILOT_LIBS=-lkfile -lkdeui -lqt -lpisock
+KPILOT_LIBS=-lkfile -lkdeui -lqt -lkpilot -lpisock
 
 DAEMON_DISTDIR=kpilotDaemon-4.2.9
-DAEMON_OBJS=options.o \
-	pilotDaemonDCOP_skel.o kpilotDCOP_stub.o \
-	pilotDaemon.o kpilotConfig.o kpilotlink.o hotSync.o interactiveSync.o \
-	fileInstaller.o
-DAEMON_MOCS=pilotDaemon.moc kpilotlink.moc hotSync.moc interactiveSync.moc \
+DAEMON_OBJS= pilotDaemonDCOP_skel.o kpilotDCOP_stub.o \
+	pilotDaemon.o kpilotConfig.o \
+	fileInstaller.o \
+	hotSync.o interactiveSync.o
+DAEMON_MOCS=pilotDaemon.moc \
 	fileInstaller.moc
 DAEMON_EXTRA=pilotDaemonDCOP.h kpilotDCOP.h pilotUser.h \
 	hotsync.h busysync.h
-DAEMON_LIBS=-lkfile -lkdeui -lqt -lpisock
+DAEMON_LIBS=-lkfile -lkdeui -lqt -lkpilot -lpisock
 
 DISTFILES=kpilotConfig.tar.gz kpilotTest.tar.gz kpilot.tar.gz kpilotDaemon.tar.gz
 
