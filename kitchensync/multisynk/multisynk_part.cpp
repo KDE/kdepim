@@ -40,7 +40,7 @@ K_EXPORT_COMPONENT_FACTORY( libmultisynkpart, MultiSynkFactory )
 MultiSynkPart::MultiSynkPart( QWidget *parentWidget, const char *widgetName,
                               QObject *parent, const char *name,
                               const QStringList & )
-  : KPIM::Part( parent, name )
+  : KParts::ReadOnlyPart( parent, name )
 {
   setInstance( MultiSynkFactory::instance() );
 

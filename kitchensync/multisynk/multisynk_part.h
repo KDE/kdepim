@@ -24,11 +24,11 @@
 
 #include <kparts/event.h>
 #include <kparts/factory.h>
-#include <libkdepim/part.h>
+#include <kparts/part.h>
 
 class KAboutData;
 
-class MultiSynkPart: public KPIM::Part
+class MultiSynkPart: public KParts::ReadOnlyPart
 {
   Q_OBJECT
 
