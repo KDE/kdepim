@@ -64,11 +64,13 @@ static const char *id="$Id$";
 #include "pilotDaemon.h"
 
 
+#if 0
 const int KPilotInstaller::ID_FILE_QUIT = 1;
 const int KPilotInstaller::ID_FILE_SETTINGS = 2;
 const int KPilotInstaller::ID_FILE_BACKUP = 3;
 const int KPilotInstaller::ID_FILE_RESTORE = 4;
 const int KPilotInstaller::ID_FILE_HOTSYNC = 9;
+const int KPilotInstaller::ID_FILE_FASTSYNC = 10;
 const int KPilotInstaller::ID_HELP_HELP = 5;
 const int KPilotInstaller::ID_HELP_ABOUT = 6;
 const int KPilotInstaller::ID_CONDUITS_ENABLE = 7;
@@ -82,6 +84,7 @@ const int KPilotInstaller::ID_CONDUITS_SETUP = 8;
 // of ids free for the components.
 // Remember to catch this in the menu handler.
 const int KPilotInstaller::ID_COMBO = 1000;
+#endif
 
 KPilotInstaller::KPilotInstaller()
   : KTMainWindow(), fMenuBar(0L), fStatusBar(0L), fToolBar(0L),
@@ -130,7 +133,7 @@ KPilotInstaller::KPilotInstaller()
     setupWidget();
     initComponents();
     initStatusLink();  // This is separate to allow components to initialize
-    showTitlePage(true);
+    showTitlePage(QString::null,true);
     show();
     }
 
@@ -239,14 +242,21 @@ KPilotInstaller::initStatusBar()
 //
 #include "hotsync.h"
 #include "toolbar_backup.xpm"
+#include "toolbar_restore.xpm"
+#include "fastsync.xpm"
 
 void KPilotInstaller::initIcons()
 {
+	FUNCTIONSETUP;
+
 	KGlobal::iconLoader()->addAppDir("kpilot");
 	icon_hotsync = KGlobal::iconLoader()->loadIcon("hotsync",
 		KIcon::Toolbar,0,KIcon::DefaultState,0, true);
 	if (icon_hotsync.isNull())
 	{
+#ifdef DEBUG
+		kdDebug() << fname << ": Hot-Sync icon not found." << endl;
+#endif
 		icon_hotsync=QPixmap((const char **)hotsync_icon);
 	}
 
@@ -254,7 +264,30 @@ void KPilotInstaller::initIcons()
 		KIcon::Toolbar,0,KIcon::DefaultState,0, true);
 	if (icon_backup.isNull())
 	{
+#ifdef DEBUG
+		kdDebug() << fname << ": Backup icon not found." << endl;
+#endif
 		icon_backup =QPixmap((const char **)toolbar_backup);
+	}
+
+	icon_fastsync = KGlobal::iconLoader()->loadIcon("fastsync",
+		KIcon::Toolbar,0,KIcon::DefaultState,0, true);
+	if (icon_fastsync.isNull())
+	{
+#ifdef DEBUG
+		kdDebug() << fname << ": Fast-Sync icon not found." << endl;
+#endif
+		icon_fastsync = QPixmap((const char **)fastsync_xpm);
+	}
+
+	icon_restore = KGlobal::iconLoader()->loadIcon("restore",
+		KIcon::Toolbar,0,KIcon::DefaultState,0, true);
+	if (icon_restore.isNull())
+	{
+#ifdef DEBUG
+		kdDebug() << fname << ": Restore icon not found." << endl;
+#endif
+		icon_restore = QPixmap((const char **)toolbar_restore);
 	}
 }
 
@@ -264,20 +297,50 @@ KPilotInstaller::initToolBar()
   {
 	FUNCTIONSETUP;
 
-  fToolBar = new KToolBar(this, "toolbar");
+	fToolBar = new KToolBar(this, "toolbar");
 
-  fToolBar->insertButton(icon_hotsync, 
-  	0, SIGNAL(clicked()), this, SLOT(doHotSync()),
-			 TRUE, i18n("Hot-Sync"));
+	KConfig& c = KPilotLink::getConfig();
+	QStringList s = c.readListEntry("ToolbarIcons");
 
-	// This next button exactly mirrors
-	// the functionality of the menu back
-	// "backup" choice.
+
+	// We allow some kind of toolbar customisation,
+	// and we should switch to the real KDE2 configurable
+	// toolbars soon (after KDE 2.1 / KPilot 4.0.0)
 	//
 	//
-	fToolBar->insertButton(icon_backup,ID_FILE_BACKUP,
-		SIGNAL(clicked(int)),this,SLOT(menuCallback(int)),
-		TRUE, i18n("Full Backup"));
+	if (s.isEmpty() || s.contains("HotSync"))
+	{
+		fToolBar->insertButton(icon_hotsync, ID_FILE_HOTSYNC,
+			SIGNAL(clicked(int)), this, SLOT(menuCallback(int)),
+			TRUE, i18n("Hot-Sync"));
+	}
+
+	if (s.contains("FastSync"))
+	{
+		fToolBar->insertButton(icon_fastsync, ID_FILE_FASTSYNC,
+			SIGNAL(clicked(int)),this,SLOT(menuCallback(int)),
+			TRUE,i18n("Fast-Sync"));
+	}
+
+	if (s.isEmpty() || s.contains("Backup"))
+	{
+		// This next button exactly mirrors
+		// the functionality of the menu back
+		// "backup" choice.
+		//
+		//
+		fToolBar->insertButton(icon_backup,ID_FILE_BACKUP,
+			SIGNAL(clicked(int)),this,SLOT(menuCallback(int)),
+			TRUE, i18n("Full Backup"));
+	}
+
+	if (s.contains("Restore"))
+	{
+		fToolBar->insertButton(icon_restore,ID_FILE_RESTORE,
+			SIGNAL(clicked(int)),this,SLOT(menuCallback(int)),
+			TRUE, i18n("Full Restore"));
+	}
+
 
 
 
@@ -313,15 +376,17 @@ KPilotInstaller::slotModeSelected(int selected)
 {
 	FUNCTIONSETUP;
 
+#ifdef DEBUG
 	if (debug_level& UI_TEDIOUS)
 	{
-		cerr << fname << ": Responding to callback " << selected
+		kdDebug() << fname << ": Responding to callback " << selected
 			<< endl;
 	}
+#endif
 
 	if((unsigned int)selected >= fVisibleWidgetList.count())
 	{
-		cerr << fname << ": Illegal component #" 
+		kdDebug() << fname << ": Illegal component #" 
 			<< selected << " selected.\n" << endl;
 		return;
 	}
@@ -335,9 +400,11 @@ KPilotInstaller::slotModeSelected(int selected)
 	}
 		
 	fVisibleWidgetList.at(selected)->show();
+
+	fStatusBar->changeItem(conduitCombo->text(selected),0);
 }
 
-void KPilotInstaller::showTitlePage(bool force)
+void KPilotInstaller::showTitlePage(const QString& msg,bool force)
 {
 	FUNCTIONSETUP;
 
@@ -345,6 +412,11 @@ void KPilotInstaller::showTitlePage(bool force)
 	{
 		slotModeSelected(0);
 		conduitCombo->setCurrentItem(0);
+	}
+
+	if (!msg.isNull())
+	{
+		fStatusBar->changeItem(msg,0);
 	}
 }
 
@@ -617,8 +689,10 @@ KPilotInstaller::slotDaemonStatus(KSocket* daemon)
 //       fToolBar->getCombo(KPilotInstaller::ID_COMBO)->setCurrentItem(0);
 //       slotModeSelected(0);
 //       fToolBar->getCombo(KPilotInstaller::ID_COMBO)->setEnabled(false);
-      if(fLinkCommand[0] == 0L)
-	doHotSync();
+	if(fLinkCommand[0] == 0L)
+	{
+		doHotSync();
+	}
       fStatusBar->changeItem(i18n("Hot-Sync in progress..."), 0);
       ofstream out(fPilotCommandSocket->socket());
       out << fLinkCommand << flush;
@@ -661,32 +735,46 @@ KPilotInstaller::doRestore()
   fStatusBar->changeItem(i18n("Restoring pilot. Please press the hot-sync button."), 0);
   sprintf(fLinkCommand, "%d\n", KPilotLink::Restore);
 }
-  
+ 
+void KPilotInstaller::setupSync(int kind,const QString& message)
+{
+	FUNCTIONSETUP;
+
+	showTitlePage(message);
+
+	if (fLinkCommand[0] == 0)
+	{
+		sprintf(fLinkCommand, "%d\n",kind);
+		for(fPilotComponentList.first(); 
+			fPilotComponentList.current(); 
+			fPilotComponentList.next())
+		{
+#ifdef DEBUG
+			if (debug_level & SYNC_MINOR)
+			{
+				kdDebug() << fname << ": Pre-sync for builtins."
+					<< endl;
+			}
+#endif
+			fPilotComponentList.current()->preHotSync(fLinkCommand);
+		}
+	}
+}
+
+#if 0
 void
 KPilotInstaller::doHotSync()
 {
 	FUNCTIONSETUP;
 
+
 	showTitlePage();
 	fStatusBar->changeItem(i18n(
 		"Hot-Syncing.  "
 		"Please press the hot-sync button."), 0);
-	if (fLinkCommand[0] == 0)
-	{
-		sprintf(fLinkCommand, "%d\n", KPilotLink::HotSync);
-		for(fPilotComponentList.first(); 
-			fPilotComponentList.current(); 
-			fPilotComponentList.next())
-		{
-			if (debug_level & SYNC_MINOR)
-			{
-				cerr << fname << ": Pre-sync for builtins."
-					<< endl;
-			}
-			fPilotComponentList.current()->preHotSync(fLinkCommand);
-		}
-	}
+	setupSync(KPilotLink::HotSync);
 }
+#endif
 
 void
 KPilotInstaller::closeEvent(QCloseEvent *e)
@@ -707,9 +795,12 @@ KPilotInstaller::initMenu()
     fileMenu->insertSeparator(-1);
 	fileMenu->insertItem(icon_hotsync,
 		i18n("&Hot-Sync"),KPilotInstaller::ID_FILE_HOTSYNC);
+	fileMenu->insertItem(icon_fastsync,
+		i18n("&Fast-Sync"),KPilotInstaller::ID_FILE_FASTSYNC);
 	fileMenu->insertItem(icon_backup,
 		i18n("&Backup"), KPilotInstaller::ID_FILE_BACKUP);
-    fileMenu->insertItem(i18n("&Restore"), KPilotInstaller::ID_FILE_RESTORE);
+	fileMenu->insertItem(icon_restore,
+		i18n("&Restore"), KPilotInstaller::ID_FILE_RESTORE);
     fileMenu->insertSeparator(-1);
 	fileMenu->insertItem(SmallIcon("exit"),
 		i18n("&Quit"), KPilotInstaller::ID_FILE_QUIT);
@@ -906,6 +997,11 @@ void KPilotInstaller::menuCallback(int item)
 		showTitlePage();
 		doHotSync();
 		break;
+	case KPilotInstaller::ID_FILE_FASTSYNC :
+		showTitlePage();
+		fStatusBar->changeItem(i18n("Sorry, Fast-Sync isn't "
+			"implemented yet."),0);
+		break;
 	case KPilotInstaller::ID_CONDUITS_SETUP:
 		showTitlePage();
 		conSetup = new CConduitSetup(this);
@@ -1016,6 +1112,10 @@ int main(int argc, char** argv)
 		I18N_NOOP("Maintainer"),
 		"adridg@cs.kun.nl",
 		"http://www.cs.kun.nl/~adridg/kpilot/");
+	about.addAuthor("Heiko Purnhagen",
+		I18N_NOOP("Bugfixer"),
+		"purnhage@tnt.uni-hannover.de");
+
 
         KCmdLineArgs::init(argc, argv, &about);
 	KCmdLineArgs::addCmdLineOptions(kpilotoptions);

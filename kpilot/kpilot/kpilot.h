@@ -64,7 +64,8 @@ class KPilotInstaller : public KTMainWindow
 	* the component list -- the logo always remains and
 	* can hide whatever is going on in the background.
 	*/
-	void showTitlePage(bool force=false);
+	void showTitlePage(const QString& statusMsg=QString::null,
+		bool force=false);
 
 	/**
 	* Returns the user's preference for the system-wide
@@ -100,6 +101,21 @@ protected:
 
 	void readConfig(KConfig&);
 
+
+	void setupSync(int kind,const QString& msg);
+	void doHotSync() 
+	{ 
+		setupSync(KPilotLink::HotSync,
+			i18n("Hot-Syncing. ")+
+			i18n("Please press the hot-sync button."));
+	}
+	void doFastSync()
+	{ 
+		setupSync(KPilotLink::FastSync,
+			i18n("Fast-Syncing. ")+
+			i18n("Please press the hot-sync button."));
+	}
+
 private:
       void initIcons();
       void initMenu();
@@ -108,16 +124,27 @@ private:
       void setupWidget();
       void initComponents();
       
-      static const int ID_FILE_QUIT;
-      static const int ID_FILE_SETTINGS;
-      static const int ID_FILE_BACKUP;
-      static const int ID_FILE_RESTORE;
-      static const int ID_FILE_HOTSYNC;
-      static const int ID_HELP_ABOUT;
-      static const int ID_HELP_HELP;
-      static const int ID_CONDUITS_ENABLE;
-      static const int ID_CONDUITS_SETUP;
-      static const int ID_COMBO;
+	/**
+	* These are constants used in the KPilotInstaller code.
+	* Most of them are IDs for UI elements. ID_FILE_QUIT is a big
+	* number (compared to ID_COMBO) because elements that are
+	* inserted into the combo box get numbers counting from
+	* ID_COMBO+1, so we need room for all those numbers. 998
+	* internal conduits seems like plenty.
+	*/
+	typedef enum { 
+		ID_COMBO=1,
+		ID_FILE_QUIT=1000,
+		ID_FILE_SETTINGS,
+		ID_FILE_BACKUP,
+		ID_FILE_RESTORE,
+		ID_FILE_HOTSYNC,
+		ID_FILE_FASTSYNC,
+		ID_HELP_ABOUT,
+		ID_HELP_HELP,
+		ID_CONDUITS_ENABLE,
+		ID_CONDUITS_SETUP 
+		} Constants ;
       
       KMenuBar*       fMenuBar;
       KStatusBar*     fStatusBar;
@@ -150,13 +177,12 @@ private:
 	*/
 	QComboBox	*conduitCombo;
 
-	QPixmap	icon_hotsync,icon_backup;
+	QPixmap	icon_hotsync,icon_backup,icon_fastsync,icon_restore;
 	QFont fixedFont;
 
  protected slots:
       void menuCallback(int);
       void quit();
-      void doHotSync();
       void fileInstalled(int which);
       void slotModeSelected(int selected);
       void slotSyncDone(KProcess* which);

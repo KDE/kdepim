@@ -84,7 +84,10 @@ public:
    * Commands sent from KPilot requesting the daemon
    * to perform those actions.
    */
-  enum Commands { Backup, Restore, HotSync, InstallFile, TestConnection };
+	enum Commands { Backup, Restore, 
+		HotSync, FastSync,
+		InstallFile, TestConnection 
+		};
   
   /**
    * Static method to get the current link..
