@@ -272,8 +272,8 @@ xQGanttBarViewPort::mouseReleaseEvent(QMouseEvent* e)
 void
 xQGanttBarViewPort::mouseMoveEvent(QMouseEvent* e)
 {
-  if(fabs(_startPoint->x() - e->x()) < 2 &&
-     fabs(_startPoint->y() - e->y()) < 2 )
+  if(fabs((float)(_startPoint->x() - e->x())) < 2 &&
+     fabs((float)(_startPoint->y() - e->y())) < 2 )
     return;
 
   static QPen _dashPen(QColor(255,0,0),DashLine);
