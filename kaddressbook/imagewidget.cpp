@@ -107,7 +107,7 @@ ImageWidget::ImageWidget( const QString &title, QWidget *parent, const char *nam
 
   mImageUrl = new KURLRequester( box );
   mImageUrl->setFilter( KImageIO::pattern() );
-  mImageUrl->setMode( KFile::Files );
+  mImageUrl->setMode( KFile::File );
   boxLayout->addWidget( mImageUrl, 0, 1 );
 
   mUseImageUrl = new QCheckBox( i18n( "Store as URL" ), box );
