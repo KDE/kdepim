@@ -52,7 +52,7 @@ Description: Palm Pliot sync tool for KDE
 
 Package: kdepim-libs
 Architecture: any
-Section: x11
+Section: libs
 Depends: ${shlibs:Depends}
 Description: KDE libraries amd modules for kdepim
  This package contains the different interface modules and libraries
