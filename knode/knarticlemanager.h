@@ -83,8 +83,9 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     void setAllRead(bool r=true);
     void setRead(KNRemoteArticle::List &l, bool r=true, bool handleXPosts=true);
 
-    void toggleWatched(KNRemoteArticle::List &l);
-    void toggleIgnored(KNRemoteArticle::List &l);
+    // returns false if the changes were reverted (i.e. ignored articles->neutral articles)
+    bool toggleWatched(KNRemoteArticle::List &l);
+    bool toggleIgnored(KNRemoteArticle::List &l);
 
     void rescoreArticles(KNRemoteArticle::List &l);
 

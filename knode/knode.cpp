@@ -2018,10 +2018,10 @@ void KNMainWindow::slotArtToggleIgnored()
 
   KNRemoteArticle::List l;
   getSelectedThreads(l);
-  a_rtManager->toggleIgnored(l);
+  bool revert = !a_rtManager->toggleIgnored(l);
   a_rtManager->rescoreArticles(l);
 
-  if (h_drView->currentItem()) {
+  if (h_drView->currentItem() && !revert) {
     if (c_fgManager->readNewsNavigation()->ignoreThreadCloseThread())
       closeCurrentThread();
     if (c_fgManager->readNewsNavigation()->ignoreThreadGoNext())

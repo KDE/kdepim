@@ -735,10 +735,10 @@ void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPos
 
 
 
-void KNArticleManager::toggleWatched(KNRemoteArticle::List &l)
+bool KNArticleManager::toggleWatched(KNRemoteArticle::List &l)
 {
   if(l.isEmpty())
-    return;
+    return true;
 
   KNRemoteArticle *a=l.first(), *ref=0;
   bool watch = (!a->isWatched());
@@ -783,13 +783,15 @@ void KNArticleManager::toggleWatched(KNRemoteArticle::List &l)
     if(g==g_roup)
       updateStatusString();
   }
+
+  return watch;
 }
 
 
-void KNArticleManager::toggleIgnored(KNRemoteArticle::List &l)
+bool KNArticleManager::toggleIgnored(KNRemoteArticle::List &l)
 {
   if(l.isEmpty())
-    return;
+    return true;
 
   KNRemoteArticle *a=l.first(), *ref=0;
   bool ignore=(!a->isIgnored());
@@ -849,6 +851,8 @@ void KNArticleManager::toggleIgnored(KNRemoteArticle::List &l)
     if(g==g_roup)
       updateStatusString();
   }
+
+  return ignore;
 }
 
 
