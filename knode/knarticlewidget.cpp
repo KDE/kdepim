@@ -1063,8 +1063,7 @@ void KNArticleWidget::slotRemail()
 void KNArticleWidget::slotForward()
 {
   kdDebug(5003) << "KNArticleWidget::slotForward()" << endl;
-  if(a_rticle && a_rticle->type()==KNMimeBase::ATremote)
-    knGlobals.artFactory->createForward(a_rticle);
+  knGlobals.artFactory->createForward(a_rticle);
 }
 
 
