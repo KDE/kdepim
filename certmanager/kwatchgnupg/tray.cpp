@@ -35,13 +35,17 @@
 
 #include <kdebug.h>
 #include <klocale.h>
+#include <kglobal.h>
+#include <kiconloader.h>
 #include <qtooltip.h>
 
 KWatchGnuPGTray::KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin )
   : KSystemTray( mainwin, "KWatchGnuPG Tray Window" )
 {
   kdDebug() << "KWatchGnuPGTray::KWatchGnuPGTray" << endl;
-  setPixmap( loadIcon("unknown") );
+
+  KGlobal::iconLoader()->addAppDir( "kwatchgnupg" );
+  setPixmap( loadIcon("kwatchgnupg") );
 
   QToolTip::add( this, i18n("KWatchGnuPG Log Viewer") );
 }

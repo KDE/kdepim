@@ -18,5 +18,12 @@ kwatchgnupg_LDADD   = ../conf/libconf.la ../lib/libkleopatra.la $(LIB_KUTILS) $(
 #rcdir = $(kde_datadir)/kwatchgnupg
 #rc_DATA = kwatchgnupgui.rc
 
+
+pics_DATA = kwatchgnupg.png
+
+picsdir = $(kde_datadir)/kwatchgnupg/pics
+
+EXTRA_DIST = $(pics_DATA)
+
 messages: rc.cpp
 	$(XGETTEXT) *.cpp *.h -o $(podir)/kwatchgnupg.pot
