@@ -167,9 +167,6 @@ The certificates will be generated in a decentralized manner. Please contact you
                         <property name="text">
                             <string>For &amp;signing only</string>
                         </property>
-                        <property name="accel">
-                            <string>Alt+S</string>
-                        </property>
                     </widget>
                     <widget class="QRadioButton">
                         <property name="name">
@@ -178,9 +175,6 @@ The certificates will be generated in a decentralized manner. Please contact you
                         <property name="text">
                             <string>For &amp;encrypting only</string>
                         </property>
-                        <property name="accel">
-                            <string>Alt+E</string>
-                        </property>
                     </widget>
                     <widget class="QRadioButton">
                         <property name="name">
@@ -188,9 +182,6 @@ The certificates will be generated in a decentralized manner. Please contact you
                         </property>
                         <property name="text">
                             <string>For signing &amp;and encrypting</string>
-                        </property>
-                        <property name="accel">
-                            <string>Alt+A</string>
                         </property>
                         <property name="checked">
                             <bool>true</bool>
