@@ -285,19 +285,19 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   label->setBuddy( mPOBoxEdit );
   topLayout->addWidget( mPOBoxEdit, 2, 1 );
 
-  label = new QLabel( i18n( "Locality:" ), page );
+  label = new QLabel( i18n( "City:" ), page );
   topLayout->addWidget( label, 3, 0 );
   mLocalityEdit = new KLineEdit( page );
   label->setBuddy( mLocalityEdit );
   topLayout->addWidget( mLocalityEdit, 3, 1 );
 
-  label = new QLabel( i18n( "Region:" ), page );
+  label = new QLabel( i18n( "State:" ), page );
   topLayout->addWidget( label, 4, 0 );
   mRegionEdit = new KLineEdit( page );
   label->setBuddy( mRegionEdit );
   topLayout->addWidget( mRegionEdit, 4, 1 );
 
-  label = new QLabel( i18n( "Postal code:" ), page );
+  label = new QLabel( i18n( "Zip code:" ), page );
   topLayout->addWidget( label, 5, 0 );
   mPostalCodeEdit = new KLineEdit( page );
   label->setBuddy( mPostalCodeEdit );

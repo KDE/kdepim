@@ -65,11 +65,11 @@ static QMap<QString, QString>& adrbookattr2ldap()
     keys[ i18n( "Street") ] = "street";
     keys[ i18n( "State" ) ] = "st";
     keys[ i18n( "Country" ) ] = "co";
-    keys[ i18n( "Locality" ) ] = "l";
+    keys[ i18n( "City" ) ] = "l";
     keys[ i18n( "Organization" ) ] = "o";
     keys[ i18n( "Company" ) ] = "Company";
     keys[ i18n( "Department" ) ] = "department";
-    keys[ i18n( "Postal Code" ) ] = "postalCode";
+    keys[ i18n( "Zip Code" ) ] = "postalCode";
     keys[ i18n( "Postal Address" ) ] = "postalAddress";
     keys[ i18n( "Description" ) ] = "description";
     keys[ i18n( "User ID" ) ] = "uid";
@@ -241,9 +241,9 @@ void LDAPSearchDialog::restoreSettings()
     mResultListView->addColumn( i18n( "Street" ) );
     mResultListView->addColumn( i18n( "State" ) );
     mResultListView->addColumn( i18n( "Country" ) );
-    mResultListView->addColumn( i18n( "Postal Code" ) );
+    mResultListView->addColumn( i18n( "Zip Code" ) );
     mResultListView->addColumn( i18n( "Postal Address" ) );
-    mResultListView->addColumn( i18n( "Locality" ) );
+    mResultListView->addColumn( i18n( "City" ) );
     mResultListView->addColumn( i18n( "Department" ) );
     mResultListView->addColumn( i18n( "Description" ) );
     mResultListView->addColumn( i18n( "User ID" ) );
