@@ -33,6 +33,9 @@
   
   KSyncEntry objects are collected by @ref KSyncee objects.
 */
+
+#include <qstring.h>
+
 class QDateTime;
 class KSyncEntry
 {
