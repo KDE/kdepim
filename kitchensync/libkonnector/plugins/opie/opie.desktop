@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+
+X-KDE-Library=libopiekonnector
+
+Name=Opie Konnector
+Group= PDA
+Vendor = Holger 'zecke' Freyther
