@@ -304,6 +304,8 @@ class Appearance : public Base {
     const char* quotedTextHexcode(int i)  { return h_excodes[i]; }
     void updateHexcodes();
 
+    bool useFontsForAllCS()              { return u_seFontsForAllCS; }
+
     QFont articleFont();
     QFont composerFont();
     QFont groupListFont();
@@ -326,7 +328,8 @@ class Appearance : public Base {
 
     bool l_ongGroupList,
          u_seColors,
-         u_seFonts;
+         u_seFonts,
+         u_seFontsForAllCS;
     QColor  c_olors[COL_CNT];
     QString c_olorNames[COL_CNT];
     QFont   f_onts[FNT_CNT];
@@ -392,7 +395,8 @@ class AppearanceWidget : public BaseWidget {
               *f_List;
     QCheckBox *l_ongCB,
               *c_olorCB,
-              *f_ontCB;
+              *f_ontCB,
+              *f_ontCSCB;
     QPushButton *c_olDefBtn,
                 *c_olChngBtn,
                 *f_ntDefBtn,

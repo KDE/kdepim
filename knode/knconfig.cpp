@@ -206,6 +206,7 @@ KNConfig::Appearance::Appearance()
   c_olorNames[selectedItem]=i18n("Selected Item Background");
 
   //fonts
+  u_seFontsForAllCS = c->readBoolEntry("useFontsForAllCS", false);
   u_seFonts = c->readBoolEntry("customFonts", false);
 
   QFont defFont=KGlobalSettings::generalFont();
@@ -266,6 +267,7 @@ void KNConfig::Appearance::save()
   c->writeEntry("activeItemColor", c_olors[activeItem]);
   c->writeEntry("selectedItemColor", c_olors[selectedItem]);
 
+  c->writeEntry("useFontsForAllCS", u_seFontsForAllCS);
   c->writeEntry("customFonts", u_seFonts);
   c->writeEntry("articleFont", f_onts[article]);
   c->writeEntry("composerFont", f_onts[composer]);

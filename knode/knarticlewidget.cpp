@@ -696,7 +696,8 @@ void KNArticleWidget::createHtmlPage()
     }
     else {
       QFont f=app->articleFont();
-      text->setFontForContent(f);
+      if (!app->useFontsForAllCS())
+        text->setFontForContent(f);
       setFont(f);
     }
   }

@@ -101,7 +101,8 @@ QColor KNHdrViewItem::greyColor()
 
 const QFont& KNHdrViewItem::fontForColumn(int col, const QFont &font)
 {
-  if (col>1) return font;
+  if (col>1 || knGlobals.cfgManager->appearance()->useFontsForAllCS())
+    return font;
 
   QFont *f=0;
   QFont::CharSet cs;
