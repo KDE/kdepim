@@ -37,6 +37,7 @@ extern "C" {
 #include "journal.h"
 #include "icalformat.h"
 #include "icalformatimpl.h"
+#include "compat.h"
 
 #define _ICAL_VERSION "2.0"
 
@@ -50,10 +51,12 @@ const int gSecondsPerWeek   = gSecondsPerDay    * 7;
 ICalFormatImpl::ICalFormatImpl( ICalFormat *parent ) :
   mParent( parent )
 {
+  mCompat = new Compat;
 }
 
 ICalFormatImpl::~ICalFormatImpl()
 {
+  delete mCompat;
 }
 
 class ToStringVisitor : public Incidence::Visitor
@@ -156,7 +159,8 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
   icaltimetype end;
   if (event->doesFloat()) {
 //    kdDebug(5800) << "§§ Event " << event->summary() << " floats." << endl;
-    end = writeICalDate(event->dtEnd().date());
+    // +1 day because end date is non-inclusive.
+    end = writeICalDate( event->dtEnd().date().addDays( 1 ) );
   } else {
 //    kdDebug(5800) << "§§ Event " << event->summary() << " has time." << endl;
     end = writeICalDateTime(event->dtEnd());
@@ -769,8 +773,14 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
       case ICAL_DTEND_PROPERTY:  // start date and time
         icaltime = icalproperty_get_dtend(p);
         if (icaltime.is_date) {
-          event->setDtEnd(QDateTime(readICalDate(icaltime),QTime(0,0,0)));
-          event->setFloats(true);
+          event->setFloats( true );
+          // End date is non-inclusive
+          QDate endDate = readICalDate( icaltime ).addDays( -1 );
+          mCompat->fixFloatingEnd( endDate );
+          if ( endDate < event->dtStart().date() ) {
+            endDate = event->dtStart().date();
+          }
+          event->setDtEnd( QDateTime( endDate, QTime( 0, 0, 0 ) ) );
         } else {
           event->setDtEnd(readICalDateTime(icaltime));
         }
@@ -1628,6 +1638,9 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
     mLoadedProductId = QString::fromUtf8(icalproperty_get_prodid(p));
     mCalendarVersion = CalFormat::calendarVersion(mLoadedProductId);
     kdDebug(5800) << "VCALENDAR prodid: '" << mLoadedProductId << "'" << endl;
+  
+    delete mCompat;
+    mCompat = CompatFactory::createCompat( mLoadedProductId );
   }
 
 // TODO: check for unknown PRODID

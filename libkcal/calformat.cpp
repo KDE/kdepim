@@ -38,6 +38,7 @@ struct CalVersion {
 static CalVersion prodIds[] = {
   { 220, QString::fromLatin1("-//K Desktop Environment//NONSGML KOrganizer 2.2//EN") },
   { 300, QString::fromLatin1("-//K Desktop Environment//NONSGML KOrganizer 3.0//EN") },
+  { 310, QString::fromLatin1("-//K Desktop Environment//NONSGML KOrganizer 3.1//EN") },
   { 0 , QString() }
 };
 

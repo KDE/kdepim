@@ -32,6 +32,8 @@ extern "C" {
 
 namespace KCal {
 
+class Compat;
+
 /**
   This class provides the libical dependent functions for ICalFormat.
 */
@@ -92,6 +94,8 @@ class ICalFormatImpl {
     static const int mSecondsPerDay;
     static const int mSecondsPerHour;
     static const int mSecondsPerMinute;
+
+    Compat *mCompat;
 };
 
 }
