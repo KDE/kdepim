@@ -46,7 +46,7 @@ KCMKabLdapConfig::KCMKabLdapConfig( QWidget *parent, const char *name )
   mConfigWidget = new LDAPOptionsWidget( this );
   layout->addWidget( mConfigWidget );
 
-  connect( mConfigWidget, SIGNAL( changed( bool ) ), SLOT( setChanged( bool ) ) );
+  connect( mConfigWidget, SIGNAL( changed( bool ) ), SIGNAL( changed( bool ) ) );
 
   load();
 }
