@@ -28,6 +28,7 @@
 #include <kmdcodec.h>
 #include <kstandarddirs.h>
 #include <kstringhandler.h>
+#include <libkcal/freebusyurlstore.h>
 #include <libkdepim/kpimprefs.h>
 
 #include "kabc_resourcexmlrpc.h"
@@ -558,11 +559,9 @@ void ResourceXMLRPC::writeContact( const Addressee &addr, QMap<QString, QVariant
       args.insert( name, value );
   }
 
-  KConfig config( locateLocal( "data", "korganizer/freebusyurls" ) );
-  if ( config.hasGroup( addr.preferredEmail() ) ) {
-    config.setGroup( addr.preferredEmail() );
-    args.insert( "freebusy_url", config.readEntry( "url" ) );
-  }
+  QString url = KCal::FreeBusyUrlStore::self()->readUrl( addr.preferredEmail() );
+  if ( !url.isEmpty() )
+    args.insert( "freebusy_url", url );
 }
 
 void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee &addr, QString &uid )
@@ -696,10 +695,9 @@ void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee
       continue;
 
     if ( cfIt.key() == "freebusy_url" ) {
-      KConfig config( locateLocal( "data", "korganizer/freebusyurls" ) );
-      config.setGroup( addr.preferredEmail() );
-      config.writeEntry( "url", args[ cfIt.key() ].toString() );
-      config.sync();
+      KCal::FreeBusyUrlStore::self()->writeUrl( addr.preferredEmail(),
+                                                args[ cfIt.key() ].toString() );
+      KCal::FreeBusyUrlStore::self()->sync();
     } else
       addr.insertCustom( "XMLRPCResource", cfIt.key(), cfIt.data() );
   }
