@@ -60,7 +60,7 @@ IncidenceBase::IncidenceBase(const IncidenceBase &i) :
   // The copied object is a new one, so it isn't observed by the observer
   // of the original object.
   mObservers.clear();
-  
+
   mAttendees.setAutoDelete( true );
 }
 
@@ -100,7 +100,7 @@ bool IncidenceBase::operator==( const IncidenceBase& i2 ) const
   // no need to compare mObserver
 }
 
-        
+
 
 
 void IncidenceBase::setUid(const QString &uid)
@@ -206,8 +206,7 @@ bool IncidenceBase::removeComment(QString& comment)
   bool found = false;
   QStringList::Iterator i;
 
-  i = mComments.begin();
-  while (!found && ++i != mComments.end()) {
+  for ( i = mComments.begin(); !found && i != mComments.end(); ++i ) {
     if ( (*i) == comment) {
       found = true;
       mComments.remove(i);
