@@ -196,7 +196,20 @@ error:
 	setConflictResolution(res);
 }
 
+#ifdef DEBUG
+static void listResources(KCal::CalendarResources *p)
+{
+	FUNCTIONSETUP;
+	KCal::CalendarResourceManager *manager = p->resourceManager();
 
+	DEBUGCONDUIT << fname << ": Resources in calendar:" << endl;
+	KCal::CalendarResourceManager::Iterator it;
+	for( it = manager->begin(); it != manager->end(); ++it )
+	{
+		DEBUGCONDUIT << fname << ": " << (*it)->resourceName() << endl;
+	}
+}
+#endif
 
 /* virtual */ bool VCalConduitBase::openCalendar()
 {
@@ -312,6 +325,9 @@ error:
 			DEBUGCONDUIT << "Using CalendarResource!" << endl;
 #endif
 			rescal = new KCal::CalendarResources( tz );
+#ifdef DEBUG
+			listResources(rescal);
+#endif
 			fCalendar = rescal;
 			if ( !fCalendar)
 			{
@@ -322,6 +338,8 @@ error:
 #if LIBKCAL_IS_VERSION(1,1,0)
 			rescal->readConfig();
 			rescal->load();
+#else
+#error "Timezone bug is present."
 #endif
 			addSyncLogEntry(i18n("Syncing with standard calendar resource."));
 			emit logMessage(i18n("Using %1 time zone: %2")
