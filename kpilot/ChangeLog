@@ -1,4 +1,21 @@
-KPilot Developer's notes for march 3rd 2001
+KPilot Developer's notes for march 11th 2001
+============================================
+
+This weeks "cleanup" action is to normalize the #ifdef thingies in
+the header files so that they follow some kind of plan. And then reduce
+the number of #includes actually included by adding #ifdefs areound most
+of them, to prevent redundant #includes. This is a pain, but some say
+it's worth it in compile time. (See Documentation/HOWTO-CODE.txt for info).
+
+* Removed yet another silly struct tm issue. [4-3]
+* Added FileInstaller to KPilotDaemon. [4-3]
+* Added DCOP to KPilot. Files dropped on daemon show up in KPilot. [4-3]
+* Fixed double-sync, I think. [5-3]
+* Added a #define KPILOT_VERSION to unify all the version strings. [5-3]
+* Added Documentation/HOWTO-CODE.txt for the source code conventions. [5-3]
+* Fixed a bunch of Solaris compile issues. [5-3]
+
+KPilot Developer's notes for march 4th 2001
 ===========================================
 
 So after "the big cleanup" I've continued doing cleanup code in smaller
