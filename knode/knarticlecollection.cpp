@@ -21,6 +21,7 @@
 #include <kmessagebox.h>
 
 #include "knarticlecollection.h"
+#include "knarticle.h"
 
 
 KNArticleCollection::KNArticleCollection(KNCollection *p)
@@ -182,6 +183,14 @@ int KNArticleCollection::findId(int id)
   }	*/
 }
 
+
+void KNArticleCollection::setLastID()
+{
+  if(len>0)
+    lastID=list[len-1]->id();
+  else
+    lastID=0;
+}
 
 /*bool KNArticleCollection::setCurrent(KNArticle *a)
 {

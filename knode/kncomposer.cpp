@@ -18,7 +18,9 @@
 //#define HAVE_SGI_STL
 #include <qlabel.h>
 #include <qlayout.h>
-#include <qgroupbox.h>
+#include <qvgroupbox.h>
+#include <qheader.h>
+#include <qvbox.h>
 
 #include <ktempfile.h>
 #include <klocale.h>
@@ -36,19 +38,21 @@
 #include <kspell.h>
 
 #include "knsavedarticle.h"
-#include "knmimecontent.h"
 #include "kngroupselectdialog.h"
 #include "knstringsplitter.h"
 #include "utilities.h"
 #include "kncomposer.h"
 
 
-KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
-    :	KTMainWindow(0), spellChecker(0), r_esult(CRsave), a_rticle(a), nntp(n), attChanged(false),
-      externalEdited(false), externalEditor(0), editorTempfile(0)
+KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)//, int textEnc)
+    :	KTMainWindow(0), spellChecker(0), r_esult(CRsave), a_rticle(a), nntp(n),
+      externalEdited(false), attChanged(false), externalEditor(0), editorTempfile(0)//, textCTE(textEnc)
 {
-	if(!sig.isEmpty()) s_ignature=sig.copy();	
-	
+	if(!sig.isEmpty()) s_ignature=sig.copy();
+	 	
+	delAttList=new QList<KNAttachment>;
+	delAttList->setAutoDelete(true);
+		
   //init view
   view=new ComposerView(this, a_rticle->isMail());
 	setView(view);
@@ -57,7 +61,8 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
 	if(!a_rticle->isMail()) {
 		connect(view->fupCheck, SIGNAL(toggled(bool)),
       			this, SLOT(slotFupCheckToggled(bool)));
-	}
+  }
+
   connect(view->dest, SIGNAL(textChanged(const QString&)),
           this, SLOT(slotDestinationChanged(const QString&)));
   connect(view->destButton, SIGNAL(clicked()),
@@ -97,6 +102,10 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
                    actionCollection(), "insert_file");
   new KAction(i18n("Attach &File"), 0, this, SLOT(slotAttachFile()),
                    actionCollection(), "attach_file");
+  actRemoveAttachment = new KAction(i18n("&Remove"), 0, this, SLOT(slotRemoveAttachment()),
+                                    actionCollection(), "remove_attachment");
+  actAttachmentProperties = new KAction(i18n("&Properties"), 0, this, SLOT(slotAttachmentProperties()),
+                                        actionCollection(), "attachment_properties");
 
   // settings menu
   KStdAction::showToolbar(this, SLOT(slotToggleToolBar()), actionCollection());
@@ -105,6 +114,10 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
   KStdAction::preferences(this, SLOT(slotPreferences()), actionCollection());
 
   createGUI("kncomposerui.rc");
+
+  // attachment popup
+  attPopup=static_cast<QPopupMenu*> (factory()->container("attachment_popup", this));
+  slotAttachmentSelected(0);
 
 	//init data	
 	initData();
@@ -121,13 +134,14 @@ KNComposer::KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n)
 
 KNComposer::~KNComposer()
 {
+  delete delAttList;
   delete spellChecker;
   delete externalEditor;  // this also kills the editor process if it's still running
   if (editorTempfile) {
     editorTempfile->unlink();
     delete editorTempfile;
   }
-  saveWindowSize("composer", size());	
+  saveWindowSize("composer", size());
 }
 
 
@@ -143,7 +157,7 @@ void KNComposer::setConfig()
 
 void KNComposer::closeEvent(QCloseEvent *e)
 {
-  if (!textChanged() && !attachmentsChanged()) {  // nothing to save, don't show nag screen
+  if (!textChanged() && !attChanged) {  // nothing to save, don't show nag screen
     if (a_rticle->id()==-1) r_esult=CRdel;
      	else r_esult=CRcancel;
   } else {
@@ -173,15 +187,15 @@ void KNComposer::closeEvent(QCloseEvent *e)
 
 void KNComposer::initData()
 {
-	KNMimeContent *body=a_rticle->mainContent();
+	KNMimeContent *text=a_rticle->textContent();
 
 	d_estination=a_rticle->destination().copy();
 	view->dest->setText(d_estination);
 	if(!a_rticle->isMail()) slotDestinationChanged(d_estination);
 	
-	if(body) {
+	if(text) {
 	  int cnt = 0;
-		for(char *line=body->firstBodyLine(); line; line=body->nextBodyLine()) {
+		for(char *line=text->firstBodyLine(); line; line=text->nextBodyLine()) {
 			view->edit->insertLine(line);
 			cnt++;
 		}
@@ -191,6 +205,16 @@ void KNComposer::initData()
 		
 	if(a_rticle->subject().isEmpty()) slotSubjectChanged(QString::null);
 	else view->subject->setText(a_rticle->subject());
+	
+	if(a_rticle->isMultipart()) {
+	  view->showAttachmentView();
+	  QList<KNMimeContent> attList;
+	  AttachmentItem *item=0;
+	  attList.setAutoDelete(false);
+	  a_rticle->attachments(&attList);
+	  for(KNMimeContent *c=attList.first(); c; c=attList.next())
+	    item=new AttachmentItem(view->attView, new KNAttachment(c));
+	}	
 }
 
 
@@ -200,21 +224,12 @@ bool KNComposer::hasValidData()
 }
 
 
-void KNComposer::bodyContent(KNMimeContent *b)
+
+bool KNComposer::textChanged()
 {
-  b->clearBody();
-  for(int idx=0; idx < view->edit->numLines(); idx++)
-    b->addBodyLine(view->edit->textLine(idx).local8Bit());
+  return ( view->edit->isModified() );
 }
 
-
-QCString KNComposer::followUp2()
-{
-	QCString ret;
-	if(view->fupCheck->isChecked() && view->fup2->count()!=0)
-		ret=view->fup2->currentText().local8Bit();
-	return ret;
-}
 
 
 // inserts at cursor position if clear is false, replaces content otherwise
@@ -246,6 +261,60 @@ void KNComposer::insertFile(QString fileName, bool clear)
     view->edit->insertAt(temp, editLine, editCol);
   }
 }
+
+
+
+void KNComposer::applyChanges()
+{
+  KNMimeContent *text=0;
+  KNAttachment *a=0;
+
+  a_rticle->setSubject(view->subject->text().local8Bit());
+  a_rticle->setDestination(d_estination);
+  if(!a_rticle->isMail() && view->fupCheck->isChecked() && !view->fup2->currentText().isEmpty())
+    a_rticle->setHeader(KNArticleBase::HTfup2, view->fup2->currentText().local8Bit());
+  else
+    a_rticle->removeHeader("Followup-To");
+
+
+  if(attChanged) {
+
+    QListViewItemIterator it(view->attView);
+    while(it.current()) {
+      a=(static_cast<AttachmentItem*> (it.current()))->attachment;
+      if(a->hasChanged()) {
+        if(a->isAttached())
+          a->updateContentInfo();
+        else
+          a->attach(a_rticle);
+      }
+      ++it;
+    }
+
+    if(!delAttList->isEmpty())
+      for(KNAttachment *a=delAttList->first(); a; a=delAttList->next())
+        if(a->isAttached())
+          a->detach(a_rticle);
+  }
+
+
+  if(textChanged()) {
+    text=a_rticle->textContent();
+    if(!text) {
+      text=new KNMimeContent();
+      text->initContent();
+      a_rticle->addContent(text, true);
+    }
+    text->mimeInfo()->setCTMediaType(KNArticleBase::MTtext);
+    text->mimeInfo()->setCTSubType(KNArticleBase::STplain);
+    text->mimeInfo()->setCTEncoding();
+    text->clearBody();
+    for(int idx=0; idx < view->edit->numLines(); idx++)
+      text->addBodyLine(view->edit->textLine(idx).latin1());
+  }
+
+}
+
 
 
 void KNComposer::slotDestinationChanged(const QString &t)
@@ -521,10 +590,73 @@ void KNComposer::slotInsertFile()
 
 void KNComposer::slotAttachFile()
 {
-  #warning stub - attachFile
+  QString path=KFileDialog::getOpenFileName();
+
+  if(!path.isEmpty()) {
+    view->showAttachmentView();
+    (void) new AttachmentItem(view->attView, new KNAttachment(path));
+    attChanged=true;
+  }
 }
 
 
+void KNComposer::slotRemoveAttachment()
+{
+  if(!view->attView) return;
+
+  if(view->attView->currentItem()) {
+    AttachmentItem *it=static_cast<AttachmentItem*>(view->attView->currentItem());
+    if(it->attachment->isAttached()) {
+      delAttList->append(it->attachment);
+      it->attachment=0;
+    }
+    delete it;
+
+    if(view->attView->childCount()==0)
+      view->hideAttachmentView();
+
+    attChanged=true;
+  }
+}
+
+
+void KNComposer::slotAttachmentProperties()
+{
+  qDebug("KNComposer::slotAttachmentProperties()");
+  if(!view->attView) return;
+
+  if(view->attView->currentItem()) {
+    AttachmentItem *it=static_cast<AttachmentItem*>(view->attView->currentItem());
+    KNAttachmentPropertyDialog *d=new KNAttachmentPropertyDialog(this, it->attachment);
+    if(d->exec()) {
+      d->apply();
+      it->setText(1, it->attachment->contentMimeType());
+      it->setText(3, it->attachment->contentDescription());
+      it->setText(4, it->attachment->contentEncoding());
+    }
+    delete d;
+    attChanged=true;
+  }
+
+}
+
+
+void KNComposer::slotAttachmentPopup(QListViewItem *it, const QPoint &p, int)
+{
+  if(it)
+    attPopup->popup(p);
+}
+
+
+void KNComposer::slotAttachmentSelected(QListViewItem *it)
+{
+  actRemoveAttachment->setEnabled((it!=0));
+  actAttachmentProperties->setEnabled((it!=0));
+  if(it && !it->isSelected())
+    it->setSelected(true);
+}
+ 	
+  	
 void KNComposer::slotToggleToolBar()
 {
   if(toolBar()->isVisible())
@@ -685,7 +817,7 @@ KNComposer::ComposerView::ComposerView(QWidget *parent, bool mail)
 	topL->addWidget(edit, 1);
 	topL->activate();
 	
-	attList=0;
+	attView=0;
 }
 
 
@@ -696,12 +828,34 @@ KNComposer::ComposerView::~ComposerView()
 
 
 
-void KNComposer::ComposerView::showAttachmentList()
+void KNComposer::ComposerView::showAttachmentView()
 {
-	if(!attList) {
-		attList=new QListView(this);
-		attList->show();
+	if(!attView) {
+		attView=new QListView(this);
+		attView->addColumn(i18n("File"), 100);
+		attView->addColumn(i18n("Type")), 100;
+		attView->addColumn(i18n("Size"), 50);
+		attView->addColumn(i18n("Description"), 200);
+		attView->addColumn(i18n("Encoding"), 75);
+		attView->header()->setClickEnabled(false);
+		attView->setAllColumnsShowFocus(true);
+		
+		connect(attView, SIGNAL(currentChanged(QListViewItem*)),
+		  parent(), SLOT(slotAttachmentSelected(QListViewItem*)));
+		connect(attView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
+		  parent(), SLOT(slotAttachmentPopup(QListViewItem*, const QPoint&, int)));
 	}
+	
+	if(!attView->isVisible())
+	  attView->show();
+}
+
+
+
+void KNComposer::ComposerView::hideAttachmentView()
+{
+  if(attView && attView->isVisible())
+    attView->hide();
 }
 
 
@@ -721,7 +875,35 @@ void KNComposer::ComposerView::hideExternalNotification()
 }
 
 
+
 //===============================================================
+
+
+
+
+KNComposer::AttachmentItem::AttachmentItem(QListView *v, KNAttachment *a) :
+  QListViewItem(v), attachment(a)
+{
+  setText(0, a->contentName());
+  setText(1, a->contentMimeType());
+  setText(2, a->contentSize());
+  setText(3, a->contentDescription());
+  setText(4, a->contentEncoding());
+}
+
+
+
+KNComposer::AttachmentItem::~AttachmentItem()
+{
+  delete attachment;
+}
+		
+		
+		
+
+//===============================================================
+
+
 
 bool KNComposer::appSig;
 bool KNComposer::useViewFnt;
@@ -742,6 +924,110 @@ void KNComposer::readConfig()
 	conf->setGroup("FONTS-COLORS");
 	fntFam=conf->readEntry("family", "helvetica");
 }
+
+
+
+//===================================================================
+
+
+
+KNAttachmentPropertyDialog::KNAttachmentPropertyDialog(QWidget *p, KNAttachment *a) :
+  KDialogBase(p, 0, true, i18n("Properties of attachment"), Help|Ok|Cancel, Ok), attachment(a),
+  nonTextAsText(false)
+{
+  QVBox *top=makeVBoxMainWidget();
+
+  QVGroupBox *fileGB=new QVGroupBox(i18n("File"), top);
+  QLabel  *fileName=new QLabel(QString(i18n("Name: <b>%1</b>")).arg(a->contentName()), fileGB),
+          *fileSize=new QLabel(QString(i18n("Size: %1")).arg(a->contentSize()), fileGB);
+
+  QGroupBox *mimeGB=new QGroupBox(i18n("Mime"), top);
+  QLabel  *l1=new QLabel(i18n("Mime-Type:"), mimeGB),
+          *l2=new QLabel(i18n("Description:"), mimeGB),
+          *l3=new QLabel(i18n("Encoding:"), mimeGB);
+  mimeType=new QLineEdit(mimeGB);
+  description=new QLineEdit(mimeGB);
+  encoding=new QComboBox(false, mimeGB);
+  encoding->insertItem("7Bit");
+  encoding->insertItem("8Bit");
+  encoding->insertItem("quoted-printable");
+  encoding->insertItem("base64");
+  if(a->isFixedBase64()) {
+    encoding->setCurrentItem(3);
+    encoding->setEnabled(false);
+  }
+  else
+    encoding->setCurrentItem(a->cte());
+
+  QGridLayout *mimeL=new QGridLayout(mimeGB, 3,2, 20,10);
+
+  mimeL->addWidget(l1, 0,0);
+  mimeL->addWidget(mimeType, 0,1);
+  mimeL->addWidget(l2, 1,0);
+  mimeL->addWidget(description, 1,1);
+  mimeL->addWidget(l3, 2,0);
+  mimeL->addWidget(encoding, 2,1);
+  mimeL->setColStretch(1,1);
+
+  top->setStretchFactor(mimeGB, 1);
+
+  mimeType->setText(a->contentMimeType());
+  description->setText(a->contentDescription());
+
+  connect(mimeType, SIGNAL(textChanged(const QString&)),
+    this, SLOT(slotMimeTypeTextChanged(const QString&)));
+
+  restoreWindowSize("attProperties", this, QSize(300,250));
+}
+
+
+
+KNAttachmentPropertyDialog::~KNAttachmentPropertyDialog()
+{
+  saveWindowSize("attProperties", this->size());
+}
+
+
+
+void KNAttachmentPropertyDialog::apply()
+{
+  attachment->setContentDescription(description->text());
+  attachment->setContentMimeType(mimeType->text());
+  attachment->setCte(encoding->currentItem());
+}
+
+
+
+void KNAttachmentPropertyDialog::accept()
+{
+  if(mimeType->text().find('/')==-1) {
+    KMessageBox::information(this, i18n("You have set an invalid mime-type.\nPlease change it."));
+    return;
+  }
+  else if(nonTextAsText && mimeType->text().find("text/", 0, false)!=-1 &&
+       KMessageBox::warningYesNo(this,
+       i18n("You have changed the mime-type of this non-textual attachment\nto text. This might cause an error while loading or encoding the file.\nProceed?")
+       ) == KMessageBox::No) return;
+
+
+  KDialogBase::accept();
+}
+
+
+
+void KNAttachmentPropertyDialog::slotMimeTypeTextChanged(const QString &text)
+{
+  if(text.left(5)!="text/") {
+    nonTextAsText=attachment->isFixedBase64();
+    encoding->setCurrentItem(3);
+    encoding->setEnabled(false);
+  }
+  else {
+    encoding->setCurrentItem(attachment->cte());
+    encoding->setEnabled(true);
+  }
+}
+
 
 
 //--------------------------------

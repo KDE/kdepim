@@ -241,8 +241,11 @@ void KNFolderManager::emptyFolder(KNFolder *f)
 {
 	if(!f) f=c_urrentFolder;
 	if(!f) return;
-	if(KMessageBox::questionYesNo(0,i18n("Really empty this folder?"))==KMessageBox::Yes)
+	if(KMessageBox::questionYesNo(0,i18n("Really empty this folder?"))==KMessageBox::Yes) {
 		f->deleteAll();
+		if(f==c_urrentFolder)
+		  aManager->setCurrentArticle(0);
+	}		
 }
 
 

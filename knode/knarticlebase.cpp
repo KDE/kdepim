@@ -29,6 +29,8 @@
 #include "knstringsplitter.h"
 
 bool KNArticleBase::allow8bit;
+QCString KNArticleBase::defaultChSet;
+KNArticleBase::encoding KNArticleBase::defaultTEncoding;
 static char chars[] = "0123456789abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 
@@ -223,9 +225,10 @@ QCString KNArticleBase::encodeRFC1522String(const QCString aStr)
 	
 	isFirst=true;
 	
-	KGlobal::config()->setGroup("POSTNEWS");
-	chset=KGlobal::config()->readEntry("Charset", "ISO-8859-1").upper().local8Bit();
-	if(chset=="US-ASCII") chset="ISO-8859-1";
+	/*lobal::config()->setGroup("POSTNEWS");
+	chset=KGlobal::config()->readEntry("Charset", "ISO-8859-1").upper().local8Bit();*/
+	if(defaultChSet=="US-ASCII") chset="ISO-8859-1";
+	else chset=defaultChSet;
 	
 	if(!split.first()) tmp=aStr;
 	else tmp=split.string();
@@ -277,7 +280,7 @@ bool KNArticleBase::stripCRLF(char *str)
 
 void KNArticleBase::removeQuots(QCString &str)
 {
-	int pos1=0, pos2=0;
+	/*int pos1=0, pos2=0;
 	unsigned int idx=0;
 	char firstChar, lastChar;
 		
@@ -296,8 +299,14 @@ void KNArticleBase::removeQuots(QCString &str)
 	if(firstChar=='"' && lastChar=='"') {
 		str.remove(pos1,1);
 		str.remove(pos2,1);
-	}
+	}*/
 	
+	int pos1=0, pos2=0;
+	
+	if((pos1=str.find('"'))!=-1)
+	  if((pos2=str.findRev('"'))!=-1)
+	    if(pos1<pos2)
+	      str=str.mid(pos1+1, pos2-pos1-1);
 }
 
 
@@ -347,7 +356,7 @@ QCString KNArticleBase::headerTypeToString(headerType t)
 		case HTcontrol:				s="Control";                    break;
 		case HTto:						s="To";                         break;
 		case HTnewsgroups:		s="Newsgroups";                 break;
-		case HTfup2:					s="Followup-To2";               break;
+		case HTfup2:					s="Followup-To";                break;
 		case HTreplyTo:				s="Reply-To";                   break;
 		case HTdate:          s="Date";                       break;
 		case HTreferences:		s="References";                 break;
@@ -356,6 +365,7 @@ QCString KNArticleBase::headerTypeToString(headerType t)
 		case HTmimeVersion:   s="Mime-Version";               break;
 		case HTcontentType:   s="Content-Type";               break;
 		case HTencoding:      s="Content-Transfer-Encoding";  break;
+		case HTdescription:   s="Content-Description";        break;
 		case HTdisposition:   s="Content-Disposition";        break;
 		case HTuserAgent:   	s="User-Agent";                 break;
 		case HTxknstatus:     s="X-KNode-Status";             break;
@@ -387,6 +397,7 @@ int KNArticleBase::stringToHeaderType(const char *s)
 	else if(strncasecmp(s, "Mime-Version", 12)==0)                  t=HTmimeVersion;
 	else if(strncasecmp(s, "Content-Type", 12)==0)                  t=HTcontentType;
 	else if(strncasecmp(s, "Content-Transfer-Encoding", 25)==0)     t=HTencoding;
+	else if(strncasecmp(s, "Content-Description", 19)==0)           t=HTdescription;
 	else if(strncasecmp(s, "Content-Disposition", 19)==0)           t=HTdisposition;
 	else if(strncasecmp(s, "User-Agent", 10)==0)                    t=HTuserAgent;
 	else if(strncasecmp(s, "X-KNode-Status", 14)==0)                t=HTxknstatus;
@@ -395,6 +406,40 @@ int KNArticleBase::stringToHeaderType(const char *s)
 	else                                                            t=HTunknown;
 	
 	return t;
+}
+
+
+
+QCString KNArticleBase::encodingToString(encoding e)
+{
+  QCString ret;
+
+  switch(e) {
+   case ECsevenBit:           ret="7Bit"; break;
+   case ECeightBit:           ret="8Bit"; break;
+   case ECquotedPrintable:    ret="quoted-printable"; break;
+   case ECbase64:             ret="base64"; break;
+   case ECuuencode:           ret="x-uuencode"; break;
+   default:                   break;
+  }
+
+ return ret;
+}
+
+
+
+int KNArticleBase::stringToEncoding(const char *s)
+{
+  encoding ret;
+
+  if(strcasecmp(s, "7Bit")==0)                      ret=ECsevenBit;
+  else if(strcasecmp(s, "8Bit")==0)                 ret=ECeightBit;
+  else if(strcasecmp(s, "quoted-printable")==0)     ret=ECquotedPrintable;
+  else if(strcasecmp(s, "base64")==0)               ret=ECbase64;
+  else if(strcasecmp(s, "x-uuencode")==0)           ret=ECuuencode;
+  else                                              ret=ECbinary;
+
+  return ret;
 }
 
 

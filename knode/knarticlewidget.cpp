@@ -40,6 +40,7 @@
 #include "knfetcharticlemanager.h"
 #include "resource.h"
 #include "knarticlecollection.h"
+#include "knarticle.h"
 #include "knarticlewidget.h"
 #include "knviewheader.h"
 #include "knsavedarticlemanager.h"
@@ -49,9 +50,9 @@
 #define PUP_SAVE  2000
 #define PUP_COPY  3000
 #define TXT_COL 	0
-#define LNK_COL 1
+#define LNK_COL   1
 #define BK_COL	  2
-#define FG_COL 	3
+#define FG_COL 	  3
 #define QCOL_1	  4
 #define QCOL_2		5
 #define QCOL_3		6
@@ -502,10 +503,9 @@ void KNArticleWidget::openAttachement(const QString &id)
 bool KNArticleWidget::inlinePossible(KNMimeContent *c)
 {
   bool ret;
-  ret= (  c->mimeInfo()->ctMediaType()==KNArticleBase::MTtext &&
-         ( c->mimeInfo()->ctSubType()==KNArticleBase::STplain ||
-           c->mimeInfo()->ctSubType()==KNArticleBase::SThtml ) ) ||
-          c->mimeInfo()->ctMediaType()==KNArticleBase::MTimage;
+  ret= (  ( c->mimeInfo()->ctMediaType()==KNArticleBase::MTtext &&
+            c->mimeInfo()->ctSubType()!=KNArticleBase::STenriched ) ||
+          c->mimeInfo()->ctMediaType()==KNArticleBase::MTimage );
   return ret;
 }
 
@@ -649,12 +649,12 @@ void KNArticleWidget::createHtmlPage()
 		buffer+=i18n("no references");
 	buffer+="</td></tr>\n";
 	
- 	KNMimeContent *body=a_rticle->mainContent();
+ 	KNMimeContent *text=a_rticle->textContent();
 
- 	if(body) {
- 		body->prepareForDisplay();
+ 	if(text) {
+ 		text->decodeText();
  		
- 		if (!p_art->setCharset(body->ctCharset())) {
+ 		if (!p_art->setCharset(text->ctCharset())) {
  			buffer+=QString("<tr><td colspan=3 bgcolor=red width=\"100%\"><font color=black>%1</font></td></tr>\n")
  								.arg(i18n("Unknown charset! Default charset is used instead."));
 			KCharsets *c = KGlobal::charsets();  	
@@ -666,13 +666,13 @@ void KNArticleWidget::createHtmlPage()
  	p_art->write(buffer); 	
  	buffer=QString::null;
  	
-	if(!body || a_rticle->isMultipart()) {
+	if(!text || a_rticle->isMultipart()) {
  		if(att) att->clear();
  		else {
  			att=new QList<KNMimeContent>;
  			att->setAutoDelete(false);
  		}
- 		a_rticle->attachements(att, altAsAtt);
+ 		a_rticle->attachments(att, altAsAtt);
  	}	else {
  		delete att;
  		att=0;
@@ -687,10 +687,10 @@ void KNArticleWidget::createHtmlPage()
 		return;
 	}	
 	
-	if(body) {
-  	if(body->mimeInfo()->ctSubType()==KNArticleBase::SThtml) {
-  		body->prepareHtml();
-  		for(char* l=body->firstBodyLine(); l; l=body->nextBodyLine()) {
+	if(text) {
+  	if(text->mimeInfo()->ctSubType()==KNArticleBase::SThtml) {
+  		text->prepareHtml();
+  		for(char* l=text->firstBodyLine(); l; l=text->nextBodyLine()) {
   		  //qDebug("KNArticleWidget::createHtmlPage() : HTML-Line = %s", l);
   			buffer+=l;
   		}
@@ -701,7 +701,7 @@ void KNArticleWidget::createHtmlPage()
 			unsigned int idx=0;
 			bool isSig=false;
 
-  		for(const char* var=body->firstBodyLine(); var; var=body->nextBodyLine()) {
+  		for(const char* var=text->firstBodyLine(); var; var=text->nextBodyLine()) {
     		if(strcmp(var,"-- ")==0) {
     			isSig=true;
     			if(newLevel>0) {
@@ -763,19 +763,19 @@ void KNArticleWidget::createHtmlPage()
   			    }
   			  }
   			  else if(var->mimeInfo()->ctMediaType()==KNArticleBase::MTtext) {
-  			    if(var->mimeInfo()->ctSubType()==KNArticleBase::STplain) {
-  			      var->prepareForDisplay();
+  			    var->decodeText();
+  			    if(var->mimeInfo()->ctSubType()==KNArticleBase::SThtml) {
+  			      var->prepareHtml();
+  			      for(char *line=var->firstBodyLine(); line; line=var->nextBodyLine())
+  			        buffer+=line;
+  			    }
+  			    else {
   			      buffer+="<pre>";
   			      for(char *line=var->firstBodyLine(); line; line=var->nextBodyLine()) {
   			        buffer+=line;  			
   			        buffer+="<br>\n";
   			      }
   			      buffer+="</pre>";
-  			    }
-  			    else if(var->mimeInfo()->ctSubType()==KNArticleBase::SThtml) {
-  			      var->prepareHtml();
-  			      for(char *line=var->firstBodyLine(); line; line=var->nextBodyLine())
-  			        buffer+=line;
   			    }
    			  }
           buffer+="</td></tr>";			

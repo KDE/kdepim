@@ -16,16 +16,21 @@
  ***************************************************************************/
 
 #include <qtextstream.h>
+#include <qfileinfo.h>
 
 #include <mimelib/string.h>
 #include <mimelib/utility.h>
 #include <mimelib/uuencode.h>
 
 #include <klocale.h>
+#include <kmimemagic.h>
 
 #include "knarticlecollection.h"
 #include "knstringsplitter.h"
 #include "knmimecontent.h"
+#include "utilities.h"
+#include "knglobals.h"
+#include "knode.h"
 
 
 KNMimeContent::KNMimeContent()
@@ -118,8 +123,7 @@ void KNMimeContent::parse()
 	QCString tmp;
 	KNMimeContent *mCT=0, *uuContent=0;
 	QStrList *part;
-	bool mainContentFound=false;
-	contentCategory cat=CCmain;
+	contentCategory cat=CCsingle;
 		
 	//parse Header
 	mimeInfo()->parse(this);
@@ -127,8 +131,8 @@ void KNMimeContent::parse()
   //parse Body
   if(b_ody && mInfo->ctMediaType()==MTmultipart) {
   	mInfo->setCTCategory(CCcontainer);
-  	if(mInfo->ctSubType()==STalternative) cat=CCalternative;
-  	else cat=CCattachement;
+  	if(mInfo->ctSubType()==STalternative) cat=CCalternativePart;
+  	else cat=CCmixedPart;
   	
   	tmp=mInfo->getCTParameter("boundary");
   	if(!tmp.isEmpty()) {
@@ -146,18 +150,9 @@ void KNMimeContent::parse()
   			mCT=new KNMimeContent();
   			mCT->setData(part, false);
   			mCT->parse();
-  			if( this->type()!=ATmimeContent &&
-  			    !mainContentFound &&
-  			    mCT->mimeInfo()->ctMediaType()==MTtext &&
-  			    ( mCT->mimeInfo()->ctSubType()==STplain ||
-  			      mCT->mimeInfo()->ctSubType()==SThtml ) &&
-  			    mCT->mimeInfo()->ctDisposition()==DPinline ) {
-  			      mCT->mimeInfo()->setCTCategory(CCmain);
-  			      mainContentFound=true;
-  			}
-        else  mCT->mimeInfo()->setCTCategory(cat);
-  			
+  			mCT->mimeInfo()->setCTCategory(cat);
   			ct_List->append(mCT);
+  		
   		  delete part;
   		  part=mpp.nextPart();
   		};
@@ -186,14 +181,16 @@ void KNMimeContent::parse()
  			mInfo->setCTCategory(CCcontainer);
  			mInfo->setCTMediaType(MTmultipart);
  			mInfo->setCTSubType(STmixed);
+ 			mInfo->setCTEncoding(ECnone);
+ 			mInfo->setBoundaryParameter(multiPartBoundary());
  			this->KNMimeContent::assemble();
  			uuContent=new KNMimeContent();
  			uuContent->initContent();
  			uuContent->mimeInfo()->setCTMediaType(MTtext);
  			uuContent->mimeInfo()->setCTSubType(STplain);
  			uuContent->mimeInfo()->setCTEncoding(ECsevenBit);
- 			uuContent->mimeInfo()->setCTDisposition(DPattached);
- 			uuContent->mimeInfo()->setCTCategory(CCmain);
+ 			uuContent->mimeInfo()->setCTDisposition(DPinline);
+ 			uuContent->mimeInfo()->setCTCategory(CCmixedPart);
  			uuContent->assemble();
  			part=uup.textPart();
  			for(char *l=part->first(); l; l=part->next())
@@ -206,7 +203,7 @@ void KNMimeContent::parse()
  			uuContent->mimeInfo()->setCustomMimeType(tmp);
  			uuContent->mimeInfo()->setCTEncoding(ECuuencode);
  			uuContent->mimeInfo()->setCTDisposition(DPattached);
- 			uuContent->mimeInfo()->setCTCategory(CCattachement);
+ 			uuContent->mimeInfo()->setCTCategory(CCmixedPart);
  			uuContent->assemble();
  			part=uup.binaryPart();
  			for(char *l=part->first(); l; l=part->next())
@@ -224,24 +221,81 @@ void KNMimeContent::assemble()
 {
   QCString tmp;
   KNMimeInfo *i=mimeInfo();
+  int lines=0;
 
   if(this->type()!=ATmimeContent) {
     tmp="1.0";
     setHeader(HTmimeVersion, tmp, false);
+    if(!isMultipart() && b_ody)
+      lines=b_ody->count();
+    else if(ct_List)
+      for(KNMimeContent *c=ct_List->first(); c; c=ct_List->next())
+        lines+=c->contentLineCount();
+
+    tmp.setNum(lines);
+    setHeader(HTlines, tmp);
   }
   else {
     tmp=i->contentDisposition();
-    if(!tmp.isEmpty())
+    if(!tmp.isEmpty()) {
+      if(i->ctDisposition()==DPattached)
+        tmp+="; filename=\""+i->getCTParameter("name")+"\"";
       setHeader(HTdisposition, tmp, false);
+    }
+    else
+      removeHeader("Content-Disposition");
   }
 
   tmp=i->contentTransferEncoding();
+
   if(!tmp.isEmpty())
     setHeader(HTencoding, tmp, false);
+  else
+    removeHeader("Content-Transfer-Encoding");
+
+  if(i->ctMediaType()==MTtext && !i->ctParameterIsSet("charset"))
+    i->setCharsetParameter(defaultChSet);
 
   tmp=i->contentType();
   if(!tmp.isEmpty())
-    setHeader(HTcontentType, tmp, false);
+      setHeader(HTcontentType, tmp, false);
+  else
+    removeHeader("Content-Type");
+
+  if(ct_List)
+    for(KNMimeContent *var=ct_List->first(); var; var=ct_List->next())
+      var->assemble();
+}
+
+
+
+int KNMimeContent::contentSize()
+{
+  int siz=0;
+
+  if(b_ody)
+    for(char *line=b_ody->first(); line; line=b_ody->next())
+      siz+=strlen(line);
+  else if(ct_List)
+    for(KNMimeContent *c=ct_List->first(); c; c=ct_List->next())
+      siz+=c->contentSize();
+
+  return siz;
+}
+
+
+
+int KNMimeContent::contentLineCount()
+{
+  int cnt=0;
+
+  if(b_ody)
+    cnt=b_ody->count();
+  else if(ct_List)
+    for(KNMimeContent *c=ct_List->first(); c; c=ct_List->next())
+      cnt+=c->contentLineCount();
+
+  return cnt;
 }
 
 
@@ -280,10 +334,10 @@ void KNMimeContent::copyContent(KNMimeContent *c)
 
 
 
-void KNMimeContent::prepareForDisplay()
+void KNMimeContent::decodeText()
 {
 	
-	if(mInfo->isReadable()) return;
+	if(mInfo->decoded()) return;
 		
 	char *line;
 	QCString tmp;
@@ -309,7 +363,7 @@ void KNMimeContent::prepareForDisplay()
 			b_ody->append(split.string());
 		}
 		
-		mInfo->setIsReadable(true);
+		mInfo->setDecoded(true);
 	}
 }
 
@@ -352,13 +406,60 @@ void KNMimeContent::prepareHtml()
 
 
 
-KNMimeContent* KNMimeContent::mainContent()
+void KNMimeContent::changeEncoding(int e)
+{
+
+  if(mimeInfo()->ctEncoding()==e)
+    return;
+
+  if(mimeInfo()->ctMediaType()==MTtext) {
+    //if(!mimeInfo()->decoded()) // content may be encoded so we decode it first
+      decodeText();
+    mimeInfo()->setCTEncoding((encoding)e); // textual data is not encoded until it's sent or saved so we just set the new encoding
+  }
+  else {
+
+    if(e!=ECbase64) {
+      qDebug("KNMimeContent::changeEncoding() : non textual data and encoding != base64 - this should not happen => forcing base64");
+      e=ECbase64;
+    }
+		
+    if(mimeInfo()->ctEncoding()!=ECbase64) {
+		  DwString src, dst;
+      QCString tmp;
+      KNStringSplitter split;
+      bool splitOk=false;
+      src=decodedData(); // decode
+		  DwEncodeBase64(src, dst); //encode as base64
+		  b_ody->clear();
+		  tmp=dst.c_str();
+		  split.init(tmp, "\n");
+		  splitOk=split.first();
+		  if(!splitOk)
+		    b_ody->append(tmp.data());
+		  else {
+		    while(splitOk) {
+		      b_ody->append(split.string().data());
+		      splitOk=split.next();
+		    }
+		  }
+		  mimeInfo()->setDecoded(false);
+		  mimeInfo()->setCTEncoding(ECbase64);
+		}
+  }
+}
+
+
+
+KNMimeContent* KNMimeContent::textContent()
 {
 	KNMimeContent *ret=0;
-	if(this->isMainContent()) ret=this;
+	
+	if(mimeInfo()->ctMediaType()==MTtext && mimeInfo()->ctDisposition()==DPinline)
+	  ret=this;
 	else if(ct_List) {
 		for(KNMimeContent *var=ct_List->first(); var; var=ct_List->next()) {
-			ret=var->mainContent();
+			ret=var->textContent();
 			if(ret) break;
 		}
 	}
@@ -366,17 +467,19 @@ KNMimeContent* KNMimeContent::mainContent()
 }
 
 
-void KNMimeContent::attachements(QList<KNMimeContent> *dst, bool incAlternatives)
+void KNMimeContent::attachments(QList<KNMimeContent> *dst, bool incAlternatives)
 {
 	if(!ct_List) {
 		dst->append(this);
 	}
 	else {
+		KNMimeContent *textCT=textContent();
+		
 		for(KNMimeContent *var=ct_List->first(); var; var=ct_List->next()) {
-		  if(var->isMainContent() || (!incAlternatives && var->mimeInfo()->ctCategory()==CCalternative) )
+		  if(var==textCT || (!incAlternatives && var->mimeInfo()->ctCategory()==CCalternativePart) )
 		    continue;
 		  else
-			  var->attachements(dst, incAlternatives);
+			  var->attachments(dst, incAlternatives);
 	  }
 	}
 }
@@ -406,6 +509,19 @@ QCString KNMimeContent::ctMimeType()
 		else ret=tmp.left(pos1);
 	}
 	return ret;	
+}
+
+
+
+QCString KNMimeContent::ctEncoding()
+{
+  QCString ret;
+
+  ret=headerLine("Content-Transfer-Encoding");
+  if(ret.isEmpty())
+    ret=mimeInfo()->contentTransferEncoding();
+
+  return ret;
 }
 
 
@@ -440,7 +556,7 @@ QCString KNMimeContent::ctDescription()
 {
 	QCString ret;
 	ret=headerLine("Content-Description");
-	if(ret.isEmpty()) ret=i18n("none").local8Bit();
+	//if(ret.isEmpty()) ret=i18n("none").local8Bit();
 	return ret;
 }
 
@@ -656,15 +772,7 @@ void KNMimeContent::toStream(QTextStream &ts)
 {
 	char *line;
 	QCString boundary, decodedText, tmp;
-	
-	if(b_ody==0 && ct_List!=0) {
-		boundary=mimeInfo()->getCTParameter("boundary");
-		if(boundary.isEmpty()) {
-			qDebug("KNMimeContent::toStream() : no boundary found - creating new one!!");
-			mimeInfo()->setBoundaryParameter(multiPartBoundary());
-	  }
-	}	
-	
+			
 	for(line=h_ead->first(); line; line=h_ead->next())
 	  if(strncasecmp(line, "X-KNode-Tempfile", 16)==0) continue; //temporary path is not saved
 	  else ts << line << '\n';
@@ -691,6 +799,7 @@ void KNMimeContent::toStream(QTextStream &ts)
 		}	
 	}
 	else if(ct_List) {
+		boundary=mimeInfo()->getCTParameter("boundary");
 		for(KNMimeContent *con=ct_List->first(); con; con=ct_List->next()) {
 		  ts << "--" << boundary << '\n';
 	  	con->toStream(ts);
@@ -699,3 +808,256 @@ void KNMimeContent::toStream(QTextStream &ts)
 	  ts << "--" << boundary << "--\n";
 	}	  	
 }
+
+
+
+void KNMimeContent::addContent(KNMimeContent *c, bool prepend)
+{
+  if(!ct_List) {
+    ct_List=new QList<KNMimeContent>;
+    ct_List->setAutoDelete(true);
+    if(b_ody && b_ody->count() > 0) {
+      KNMimeContent * main=new KNMimeContent();
+      main->initContent();
+      *(main->b_ody) = *(this->b_ody);
+      *(main->mimeInfo()) = *(this->mimeInfo());
+      ct_List->append(main);
+    }
+    delete b_ody;
+    b_ody=0;
+    mimeInfo()->clear();
+    mimeInfo()->setCTMediaType(MTmultipart);
+    mimeInfo()->setCTSubType(STmixed);
+    mimeInfo()->setDecoded(false);
+    mimeInfo()->setCTCategory(CCcontainer);
+    mimeInfo()->setCTEncoding(ECnone);
+    mimeInfo()->setBoundaryParameter(multiPartBoundary());
+  }
+
+  if(prepend)
+    ct_List->insert(0, c);
+  else
+    ct_List->append(c);
+}
+
+
+
+void KNMimeContent::removeContent(KNMimeContent *c, bool del)
+{
+  int idx=0;
+  KNMimeContent *main=0;
+
+  if(del)
+    ct_List->removeRef(c);
+  else {
+    idx=ct_List->findRef(c);
+    ct_List->take(idx);
+  }
+
+  if(ct_List->count()==1) {
+    main=ct_List->first();
+    if(!b_ody) {
+      b_ody=new QStrList();
+      b_ody->setAutoDelete(true);
+    }
+
+    *(this->b_ody) = *(main->b_ody);
+    *(this->mimeInfo()) = *(main->mimeInfo());
+
+    delete ct_List;
+    ct_List=0;
+  }
+}
+
+
+
+//=============================================================================================
+
+
+
+KNAttachment::KNAttachment(KNMimeContent *c)
+  : c_ontent(c), i_sAttached(true), h_asChanged(false)
+{
+  c_tName=c->ctName();
+  setContentMimeType(c->ctMimeType());
+  c_tDescription=c->ctDescription();
+  c_te=c->mimeInfo()->ctEncoding();
+}
+
+
+
+
+KNAttachment::KNAttachment(const QString &path)
+  : c_ontent(0), i_sAttached(false), h_asChanged(true)
+{
+  setContentMimeType((KMimeMagic::self()->findFileType(path))->mimeType());
+  f_ile.setName(path);
+  c_tName=QFileInfo(f_ile).fileName();
+}
+
+
+
+KNAttachment::~KNAttachment()
+{
+  if(!i_sAttached && c_ontent)
+    delete c_ontent;
+}
+
+
+
+QString KNAttachment::contentEncoding()
+{
+  QString e=KNArticleBase::encodingToString(c_te);
+
+  return e;
+}
+
+
+
+QString KNAttachment::contentSize()
+{
+  QString ret;
+  int s=0;
+
+  if(c_ontent && c_ontent->hasContent())
+    s=c_ontent->contentSize();
+  else
+    s=f_ile.size();
+  if(s > 1023) {
+    s=s/1024;
+    ret.setNum(s);
+    ret+="kB";
+  }
+  else {
+    ret.setNum(s);
+    ret+="Bytes";
+  }
+
+  return ret;
+}
+
+
+
+void KNAttachment::setContentMimeType(const QString &s)
+{
+  c_tMimeType=s;
+  h_asChanged=true;
+
+  if(s.find("text/", 0, false)==-1) {
+    f_b64=true;
+    c_te=KNArticleBase::ECbase64;
+  }
+  else {
+    f_b64=false;
+    c_te=KNArticleBase::defaultTextEncoding();
+  }
+}
+
+
+
+void KNAttachment::updateContentInfo()
+{
+  if(h_asChanged) {
+
+    if(c_tDescription.isEmpty())
+      c_ontent->removeHeader("Content-Description");
+    else
+      c_ontent->setHeader(KNArticleBase::HTdescription, c_tDescription.local8Bit(), true);
+
+    c_ontent->mimeInfo()->setCustomMimeType(c_tMimeType.local8Bit());
+
+    if(i_sAttached && c_te!=c_ontent->mimeInfo()->ctEncoding())
+      c_ontent->changeEncoding(c_te);
+    else
+      c_ontent->mimeInfo()->setCTEncoding(c_te);
+  }
+}
+
+
+
+void KNAttachment::attach(KNMimeContent *c)
+{
+
+  if(!i_sAttached && !c_ontent && !f_ile.name().isEmpty()) {
+
+    if(!f_ile.open(IO_ReadOnly)) {
+      displayExternalFileError();
+      i_sAttached=false;
+      return;
+    }
+
+    c_ontent=new KNMimeContent();
+    c_ontent->initContent();
+    c_ontent->mimeInfo()->setCTDisposition(KNArticleBase::DPattached);
+    c_ontent->mimeInfo()->setCTCategory(KNArticleBase::CCmixedPart);
+    c_ontent->mimeInfo()->setCustomMimeType(c_tMimeType.local8Bit());
+    c_ontent->mimeInfo()->setNameParameter(c_tName.local8Bit());
+    updateContentInfo();
+
+
+
+    if(c_te==KNArticleBase::ECbase64 && c_ontent->mimeInfo()->ctMediaType()!=KNArticleBase::MTtext) { //encode base64
+
+      char *buff=new char[5700];
+      int readBytes=0;
+      bool splitOk=false;
+      KNStringSplitter split;
+      DwString dest;
+      DwString src;
+      QCString data;
+
+      while(!f_ile.atEnd()) {
+        // read 5700 bytes at once :
+        // 76 chars per line * 6 bit per char / 8 bit per byte => 57 bytes per line
+        // append 100 lines in a row => encode 5700 bytes
+        readBytes=f_ile.readBlock(buff, 5700);
+        src.assign(buff, readBytes);
+        DwEncodeBase64(src, dest);
+        data=dest.c_str();
+        split.init(data, "\n");
+        splitOk=split.first();
+        while(splitOk) {
+          if(!split.string().isEmpty())
+            c_ontent->addBodyLine(split.string().data());
+          splitOk=split.next();
+        }
+        //kapp->processEvents();
+      }
+
+      f_ile.close();
+      delete[] buff;
+      c_ontent->mimeInfo()->setDecoded(false);
+    }
+    else { //do not encode text
+      QCString data;
+      while(!f_ile.atEnd()) {
+        data=f_ile.readLine();
+        if(f_ile.status()==IO_Ok)
+          c_ontent->addBodyLine(data);
+        else {
+          displayExternalFileError();
+          c_ontent->clearBody();
+          break;
+        }
+      }
+
+      c_ontent->mimeInfo()->setDecoded(true);
+    }
+
+    if(c_ontent->hasContent()) {
+      c->addContent(c_ontent);
+      i_sAttached=true;
+    }
+  }
+}
+
+
+
+void KNAttachment::detach(KNMimeContent *c)
+{
+  if(i_sAttached) {
+    c->removeContent(c_ontent, false);
+    i_sAttached=false;
+  }
+}
+

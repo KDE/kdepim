@@ -18,6 +18,9 @@
     <Action name="append_signature"/>
     <Action name="insert_file"/>
     <Action name="attach_file"/>
+    <Separator/>
+    <Action name="attachment_properties"/>
+    <Action name="remove_attachment"/>
   </Menu>
 </MenuBar>
 
@@ -34,5 +37,11 @@
   <Separator/>
   <Action name="append_signature"/>
 </ToolBar>
+
+<Menu name="attachment_popup">
+  <Action name="attachment_properties"/>
+  <Action name="remove_attachment"/>
+</Menu>
+
 
 </kpartgui>

@@ -134,7 +134,7 @@ void KNArticleManager::saveArticleToFile(KNArticle *a)
   KNSaveHelper helper(a->subject().data());
 
   QFile *file = helper.getFile();
-	
+	KNMimeContent *text=0;
 	if (file) {
     DwString tmp = "";
 	  for(char *line=a->firstHeaderLine(); line; line=a->nextHeaderLine()) {
@@ -142,7 +142,9 @@ void KNArticleManager::saveArticleToFile(KNArticle *a)
   		tmp+="\n";
   	}
   	tmp+="\n";
-  	tmp+=a->mainContent()->decodedData();
+  	text=a->textContent();
+  	if(text)
+  	  tmp+=a->textContent()->decodedData();
 		file->writeBlock(tmp.data(), tmp.size());
   }
 }

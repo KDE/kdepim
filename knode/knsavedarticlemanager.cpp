@@ -95,8 +95,8 @@ void KNSavedArticleManager::readConfig()
 	incSig=conf->readBoolEntry("incSig",true);
 	quotSign=conf->readEntry("QuotSign",">").local8Bit();
 	intro=conf->readEntry("Intro", "%NAME wrote:").local8Bit();
-	charset=conf->readEntry("Charset", "us-ascii").local8Bit();
-	enc=(KNArticleBase::encoding)(conf->readNumEntry("Encoding", 0));
+	KNArticleBase::setDefaultCharset(conf->readEntry("Charset", "US-ASCII").local8Bit());
+	KNArticleBase::setDefaultTextEncoding((KNArticleBase::encoding)(conf->readNumEntry("Encoding", 0)));
 	KNArticleBase::setAllow8bitHeaders(conf->readBoolEntry("allow8bitChars", false));
 	genMId=conf->readBoolEntry("generateMId", false);
 	MIdhost=conf->readEntry("MIdhost").local8Bit();
@@ -229,7 +229,7 @@ void KNSavedArticleManager::reply(KNArticle *a, KNGroup *g)
 	int start=0, found=0;
 	bool asMail=(g==0);
 	KNSavedArticle *art;
-	KNMimeContent *body;
+	KNMimeContent *text;
 	
 	if(!a) return;
 	if(asMail) art=newArticle();
@@ -290,9 +290,9 @@ void KNSavedArticleManager::reply(KNArticle *a, KNGroup *g)
 	}
 	art->addBodyLine(introStr);
 	art->addBodyLine("");
-	body=a->mainContent();
-	if(!body->mimeInfo()->isReadable()) body->prepareForDisplay();
-	for(char *line=body->firstBodyLine(); line; line=body->nextBodyLine()) {
+	text=a->textContent();
+	if(!text->mimeInfo()->isReadable()) text->decodeText();
+	for(char *line=text->firstBodyLine(); line; line=text->nextBodyLine()) {
 		if(!incSig && strncmp("-- ", line, 3)==0) break;
 		tmp=quotSign+" ";
 		tmp+=line;
@@ -306,13 +306,13 @@ void KNSavedArticleManager::reply(KNArticle *a, KNGroup *g)
 void KNSavedArticleManager::forward(KNArticle *a)
 {
 	KNSavedArticle *art;
-	KNMimeContent *body;
+	KNMimeContent *text;
 	QCString tmp;
 	
 	if(!a) return;
 	
 		
-	body=a->mainContent();
+	text=a->textContent();
 	art=newArticle();
 	if(!art) return;
 	  	
@@ -328,8 +328,10 @@ void KNSavedArticleManager::forward(KNArticle *a)
 	art->addBodyLine(tmp);
 	art->addBodyLine("");
 	
-  if(body) {
-  	for(char *line=body->firstBodyLine(); line; line=body->nextBodyLine())
+  if(text) {
+    if(!text->mimeInfo()->isReadable())
+      text->decodeText();
+  	for(char *line=text->firstBodyLine(); line; line=text->nextBodyLine())
   		if(strcmp("-- ", line)==0) art->addBodyLine("--");
   		else art->addBodyLine(line);
   }
@@ -554,6 +556,8 @@ KNSavedArticle* KNSavedArticleManager::newArticle(KNNntpAccount *acc)
 		}		
 	}
 	
+	a->mimeInfo()->setCTMediaType(KNArticleBase::MTtext);
+	a->mimeInfo()->setCTSubType(KNArticleBase::STplain);
 	return a;	
 }
 
@@ -601,7 +605,6 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
 	KNSavedArticle *art=c->article();
 	KNUserEntry *guser=0, *usr=0;
 	KNGroup *g=0;
-	DwDateTime dt;
 	QCString tmp;
 
 	if(!c->hasValidData()) {
@@ -609,19 +612,12 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
 		return false;
 	}
 	
-	//set and assemble data
-	if(c->textChanged()) c->bodyContent(art);
-	art->setSubject(c->subject());
-	art->setDestination(c->destination());
-  art->setTimeT(dt.AsUnixTime());
-  art->mimeInfo()->setIsReadable(true);
-	art->mimeInfo()->setCTEncoding(enc);
-	art->mimeInfo()->setCTMediaType(KNArticleBase::MTtext);
-	art->mimeInfo()->setCTSubType(KNArticleBase::STplain);	
-	art->mimeInfo()->setCharsetParameter(charset);
-	art->assemble();
+	//composer
+	c->applyChanges();
 	
-	
+	//set time
+	art->setTimeT(time(0));
+
 	//set additional headers
 	if(!art->isMail()) {
 		g=knGlobals.gManager->group(art->firstDestination(), getAccount(art));
@@ -636,20 +632,7 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
 	else usr=defaultUser;
 	if(usr->hasOrga()) art->setHeader(KNArticleBase::HTorga, usr->orga(), true);
 	else art->removeHeader("Organization");
-	
-	//Lines
-	tmp.setNum(c->lines());
-	art->setHeader(KNArticleBase::HTlines, tmp);
-		
-	//Fup2
-	if(art->isMail())
-		art->removeHeader("Followup-To");
-	else {
-		tmp=c->followUp2();
-		if(!tmp.isEmpty()) art->setHeader(KNArticleBase::HTfup2, tmp);
-		else art->removeHeader("Followup-To");
-	}
-
+			
 	//Reply-To
   if(guser && guser->hasReplyTo())
 		usr=guser;
@@ -668,6 +651,9 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
 	else usr=defaultUser;
 	tmp+=usr->email()+">";			
 	art->setHeader(KNArticleBase::HTfrom, tmp, true);
+	
+	
+	art->assemble();
 		
 	return true;	
 }

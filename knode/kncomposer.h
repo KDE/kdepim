@@ -24,8 +24,10 @@
 
 #include <ktmainwindow.h>
 #include <keditcl.h>
+#include <kdialogbase.h>
 
 class QGroupBox;
+class QComboBox;
 
 class KSpell;
 class KProcess;
@@ -34,6 +36,8 @@ class KEdit;
 
 class KNNntpAccount;
 class KNSavedArticle;
+class KNMimeContent;
+class KNAttachment;
 
 
 class KNComposer : public KTMainWindow  {
@@ -46,24 +50,20 @@ class KNComposer : public KTMainWindow  {
 													
     KNComposer(KNSavedArticle *a, const QCString &sig, KNNntpAccount *n=0);
     ~KNComposer();
-    void setConfig();
+    static void readConfig();
 
-    // this tells closeEvent() whether it can accept or not:
-    void setDoneSuccess(bool b)           { doneSuccess = b; }
-		
+    //get
     composerResult result()		            { return r_esult; }
     KNSavedArticle* article()	            { return a_rticle; }
     bool hasValidData();
-		
-    bool textChanged()										{ return (view->edit->isModified() || externalEdited); }
-    bool attachmentsChanged()							{ return attChanged; }
-    void bodyContent(KNMimeContent *b);
-		QCString subject()                    { return QCString(view->subject->text().local8Bit()); }
-		QCString destination()                { return d_estination; }
-		QCString followUp2();
-		int lines()														{ return view->edit->numLines(); }
-				
-		static void readConfig();
+    bool textChanged();
+    //bool attachementsChanged();
+
+    // this tells closeEvent() whether it can accept or not:
+    void setDoneSuccess(bool b)           { doneSuccess = b; }
+		void setConfig();
+		void applyChanges();   		
+	
 	  				
 	protected:
     void closeEvent(QCloseEvent *e);
@@ -77,34 +77,46 @@ class KNComposer : public KTMainWindow  {
 			 	ComposerView(QWidget *parent=0, bool mail=false);
 			 	~ComposerView();
 			 	
-			 	void showAttachmentList();
+			 	void showAttachmentView();
+			 	void hideAttachmentView();
 			 	void showExternalNotification();
 			 	void hideExternalNotification();
 			
 				KEdit *edit;
 				QGroupBox *notification;
 				QPushButton *cancelEditorButton;
-				QListView *attList;
+				QListView *attView;
 				QLineEdit *subject, *dest;
 				QComboBox *fup2;
 				QCheckBox *fupCheck;
 				QPushButton *destButton;
-		 	
+					 	
 		};
+		
+		class AttachmentItem : public QListViewItem {
+		
+		  public:
+		    AttachmentItem(QListView *v, KNAttachment *a);
+		    ~AttachmentItem();
+		
+		    KNAttachment *attachment;
+		
+	  };
+				
+		
 		ComposerView *view;
+		QPopupMenu *attPopup;
 		KSpell *spellChecker;
-		KAction *actSpellCheck;
 		composerResult r_esult;
 		KNSavedArticle *a_rticle;
 		KNNntpAccount *nntp;
 		QCString s_ignature, d_estination;
-		bool attChanged;
-		bool doneSuccess;
-		
-		bool externalEdited;
-		KAction *actExternalEditor;
+		bool doneSuccess, externalEdited, attChanged;
+		KAction *actExternalEditor, *actSpellCheck,
+		        *actRemoveAttachment, *actAttachmentProperties;
 		KProcess *externalEditor;
 		KTempFile *editorTempfile;
+		QList<KNAttachment> *delAttList;
 
 		static bool appSig, useViewFnt, useExternalEditor;
 		static int lineLen;
@@ -129,6 +141,8 @@ class KNComposer : public KTMainWindow  {
   	void slotAppendSig();
   	void slotInsertFile();
   	void slotAttachFile();
+  	void slotRemoveAttachment();
+  	void slotAttachmentProperties();  	
    	void slotToggleToolBar();
   	void slotConfKeys();
   	void slotConfToolbar();
@@ -142,11 +156,37 @@ class KNComposer : public KTMainWindow  {
     // external editor
     void slotEditorFinished(KProcess *);
     void slotCancelEditor();
+
+    // misc slots
+    void slotAttachmentPopup(QListViewItem *it, const QPoint &p, int);
+    void slotAttachmentSelected(QListViewItem *it);
 					
  	signals:
  		void composerDone(KNComposer*);
 							
 };
 
+
+
+class KNAttachmentPropertyDialog : public KDialogBase {
+
+  Q_OBJECT
+
+  public:
+    KNAttachmentPropertyDialog(QWidget *p, KNAttachment *a);
+    ~KNAttachmentPropertyDialog();
+
+    void apply();
+
+  protected:
+    QLineEdit *mimeType, *description;
+    QComboBox *encoding;
+    KNAttachment *attachment;
+    bool nonTextAsText;
+
+  protected slots:
+    void accept();
+    void slotMimeTypeTextChanged(const QString &text);
+};
 
 #endif

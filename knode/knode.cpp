@@ -43,6 +43,7 @@
 #include "resource.h"
 #include "knglobals.h"
 #include "knode.h"
+#include "knarticle.h"
 
 
 KNGlobals knGlobals;
@@ -245,6 +246,23 @@ void KNodeApp::setCursorBusy(bool b)
 	if(b) kapp->setOverrideCursor(waitCursor);
 	else  kapp->restoreOverrideCursor();
 }
+
+
+
+void KNodeApp::blockEvents()
+{
+  kapp->installEventFilter(this);
+  setCursorBusy(true);
+}
+
+
+
+void KNodeApp::unblockEvents()
+{
+  kapp->removeEventFilter(this);
+  setCursorBusy(false);
+}
+
 
 
 //============================ INIT && UPDATE ============================
@@ -666,6 +684,19 @@ void KNodeApp::jobDone(KNJobData *j)
 			SAManager->jobDone(j);
 		break;	
 	};	
+}
+
+
+
+bool KNodeApp::eventFilter(QObject*, QEvent *e)
+{
+  if( (e->type()>1 && e->type()<10)  || //mouse and key events
+       e->type()==30 || //accel events
+       e->type()==31 // wheel events
+    )
+    return true;
+
+  return false;
 }
 
 

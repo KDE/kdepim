@@ -247,8 +247,10 @@ bool KNFolder::loadArticle(KNSavedArticle *a)
 	  			    qDebug("Corrupted mbox file, IO-error!");
 	  			    return false;
 	  			  }
-	  				isHead=false;
-	  				continue;
+	  			  else if(isHead) {
+	  				  isHead=false;
+	  				  continue;
+	  				}
 	  			}
 	  			if(isHead) a->addHeaderLine(line.data());
 	  			else a->addBodyLine(line.data());

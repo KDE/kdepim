@@ -21,12 +21,7 @@
 
 KNMimeInfo::KNMimeInfo()
 {
-	c_tMType=MTapplication;
-	c_tSType=SToctetStream;
-	c_tEncoding=ECsevenBit;
-	c_tDisposition=DPinline;
-	c_tCategory=CCmain;
-	i_sReadable=true;	
+	clear();
 }
 
 
@@ -45,9 +40,36 @@ void KNMimeInfo::operator=(const KNMimeInfo &i)
   c_tSType=i.c_tSType;
   c_tEncoding=i.c_tEncoding;
   c_tDisposition=i.c_tDisposition;
-  i_sReadable=i.i_sReadable;
+  d_ecoded=i.d_ecoded;
 }
 
+
+
+void KNMimeInfo::clear()
+{
+  c_tMType=MTapplication;
+	c_tSType=SToctetStream;
+	c_tEncoding=ECsevenBit;
+	c_tDisposition=DPinline;
+	c_tCategory=CCsingle;
+	d_ecoded=false;
+	c_ontentType="";
+}
+
+
+
+bool KNMimeInfo::isReadable()
+{
+  return (c_tMType==MTtext && ( c_tEncoding==ECsevenBit || c_tEncoding==ECeightBit || d_ecoded) );
+}
+
+
+
+bool KNMimeInfo::decoded()
+{
+  return ( c_tEncoding==ECsevenBit || c_tEncoding==ECeightBit || d_ecoded );
+}
+		
 
 
 void KNMimeInfo::parse(KNMimeContent *c)
@@ -85,7 +107,8 @@ void KNMimeInfo::parseMimeType(const QCString &s)
  	else if(s.find("video", 0, false)!=-1)      	c_tMType=MTvideo;
  	else if(s.find("multipart", 0, false)!=-1)		c_tMType=MTmultipart;
  	else if(s.find("message", 0, false)!=-1)    	c_tMType=MTmessage;
- 	else 																					c_tMType=MTapplication;																						
+ 	else if(s.find("application", 0, false)!=-1)	c_tMType=MTapplication;
+ 	else                                          c_tMType=MTcustom;																						
 	
  	switch(c_tMType) {
 	
@@ -93,24 +116,29 @@ void KNMimeInfo::parseMimeType(const QCString &s)
  			if(s.find("/plain", 0, false)!=-1)							c_tSType=STplain;
  			else if(s.find("/html", 0, false)!=-1)					c_tSType=SThtml;
  			else if(s.find("/enriched", 0, false)!=-1)			c_tSType=STenriched;
+ 			else                                            c_tSType=STcustom;
  		break;
 	
  		case MTimage:
  			if(s.find("/gif", 0, false)!=-1)								c_tSType=STgif;
  			else if(s.find("/jpeg", 0, false)!=-1)					c_tSType=STjpeg;
+ 			else                                            c_tSType=STcustom;
  		break;
 	
  		case MTaudio:
  			if(s.find("/basic", 0, false)!=-1)							c_tSType=STbasic;
+ 			else                                            c_tSType=STcustom;
  		break;
 	
  		case MTvideo:
  			if(s.find("/mpeg", 0, false)!=-1)							  c_tSType=STmpeg;
+ 			else                                            c_tSType=STcustom;
  		break;
 			
  		case MTapplication:
  			if(s.find("/postscript", 0, false)!=-1)				  c_tSType=STPostScript;
- 			else if(s.find("/octet-stream", 0, false)!=-1)	c_tSType=SToctetStream;
+ 			else if(s.find("/octet-stream", 0, false)!=-1)  c_tSType=SToctetStream;
+ 			else                                            c_tSType=STcustom;
  		break;
 	
  		case MTmultipart:
@@ -121,11 +149,11 @@ void KNMimeInfo::parseMimeType(const QCString &s)
  		break;
 	
  		case MTmessage:
- 			if(s.find("/rfc822", 0, false)!=-1)						  c_tSType=STrfc822;
- 			else if(s.find("/partial", 0, false)!=-1)				c_tSType=STpartial;
+ 			if(s.find("/partial", 0, false)!=-1)				    c_tSType=STpartial;
  			else if(s.find("/external-body", 0, false)!=-1)	c_tSType=STexternalBody;
+ 			else						                                c_tSType=STrfc822;
  		break;
-		default: 																				  c_tSType=SToctetStream;
+		default: 																				  c_tSType=STcustom;
  	}
 }
 
@@ -137,15 +165,16 @@ void KNMimeInfo::parseEncoding(const QCString &s)
     if(c_tMType==MTtext)							            c_tEncoding=ECsevenBit;
     else                                          c_tEncoding=ECbinary;
   }
-	else if(strcasecmp(s,"7bit")==0)          			c_tEncoding=ECsevenBit;
+	else
+	  c_tEncoding=stringToEncoding(s.data());
+	
+	/*if(strcasecmp(s,"7bit")==0)          			c_tEncoding=ECsevenBit;
 	else if(strcasecmp(s,"8bit")==0)          			c_tEncoding=ECeightBit;
 	else if(strcasecmp(s,"quoted-printable")==0)   	c_tEncoding=ECquotedPrintable;
 	else if(strcasecmp(s,"base64")==0)          		c_tEncoding=ECbase64;
 	else if(strcasecmp(s,"x-uuencode")==0)          c_tEncoding=ECuuencode;
-	else           																	c_tEncoding=ECbinary;
-		
-	i_sReadable=(c_tEncoding==ECsevenBit || c_tEncoding==ECeightBit);
-			
+	else           																	c_tEncoding=ECbinary;*/
+				
 }
 
 
@@ -165,8 +194,9 @@ const QCString& KNMimeInfo::contentType()
   int pos1;
 
   pos1=c_ontentType.find('/');
-  if(c_tMType==MTcustom && pos1==-1) {
-    c_ontentType="application/octet-stream";
+  if(c_tMType==MTcustom || c_tSType==STcustom) {
+    if(pos1==-1)
+      c_ontentType="application/octet-stream";
     return c_ontentType;
   }
 
@@ -186,20 +216,11 @@ const QCString& KNMimeInfo::contentType()
 
 QCString KNMimeInfo::contentTransferEncoding()
 {
-  QCString ret;
+  QCString ret=encodingToString(c_tEncoding);
 
-  switch(c_tEncoding) {
-    case ECsevenBit:        ret="7Bit";              break;
-    case ECeightBit:        ret="8Bit";              break;
-    case ECquotedPrintable: ret="quoted-printable";  break;
-    case ECbase64:          ret="base64";            break;
-    case ECuuencode:        ret="x-uuencode";        break;
-    default:
-      if(c_tMType==MTtext)
-        ret="7Bit";
-      else
-        ret="binary";
-  }
+  if(ret.isEmpty() && c_tMType==MTtext)
+    ret="7Bit";
+
   return ret;
 }
 
@@ -208,7 +229,7 @@ QCString KNMimeInfo::contentTransferEncoding()
 QCString KNMimeInfo::contentDisposition()
 {
   QCString disp;
-  if(c_tDisposition==DPattached) disp="attached";
+  if(c_tDisposition==DPattached) disp="attachment";
   else disp="inline";
 
   return disp;
@@ -232,6 +253,13 @@ QCString KNMimeInfo::getCTParameter(const char* param)
 	}
 	qDebug("KNMimeInfo::getCTParameter() : %s = %s", param, ret.data());
 	return ret;
+}
+
+
+
+bool KNMimeInfo::ctParameterIsSet(const char *param)
+{
+  return ( c_ontentType.find(param, 0, false)!=-1 );
 }
 
 
@@ -282,13 +310,17 @@ void KNMimeInfo::setNameParameter(const QCString &p)
 
 void KNMimeInfo::setCustomMimeType(const QCString &m)
 {
-  c_ontentType=m.copy();
+  int pos=c_ontentType.find(';');
+
+  if(pos==-1)
+    c_ontentType=m;
+  else {
+    QCString params=c_ontentType.right(c_ontentType.length()-pos);
+    c_ontentType=m+params;
+  }
 
   parseMimeType(c_ontentType);
-  if(c_tMType==MTapplication && c_tSType==SToctetStream) {
-    c_tMType=MTcustom;
-    c_tSType=STcustom;
-  }
+
 }
 
 

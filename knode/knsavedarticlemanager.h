@@ -97,8 +97,7 @@ class KNSavedArticleManager : public QObject, public KNArticleManager  {
 		KNFolder *f_older, *fDrafts, *fOutbox, *fSent;
 		KNUserEntry *defaultUser;
 		bool incSig, genMId;
-		QCString charset, MIdhost, intro, quotSign;
-		KNArticleBase::encoding enc;
+		QCString MIdhost, intro, quotSign;
 		KNSendErrorDialog *sedlg;
 		KNSearchDialog *sDlg;
 		//KNArticleFilter *f_ilter;

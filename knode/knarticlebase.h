@@ -46,7 +46,7 @@ class KNArticleBase {
                     	  	STcustom };
 
     enum encoding			{ 	ECsevenBit=0, ECeightBit=1, ECquotedPrintable=2,
-    											ECbinary=3, ECbase64=4, ECuuencode=5 };
+    											ECbase64=3, ECuuencode=4, ECbinary=5, ECnone=6 };
     										
     enum disposition	{ 	DPinline, DPattached };
 
@@ -55,23 +55,28 @@ class KNArticleBase {
     											AScanceled=6 , ASunknown=7 };
 
   	enum headerType {			HTmessageId=10, HTfrom=20 , HTsubject=30, HTcontrol=35,
-  												HTto=40, HTnewsgroups=50, HTfup2=60, HTreplyTo=65,
-   												HTdate=70, HTreferences=75, HTlines=80, HTorga=85,
-													HTmimeVersion=90, HTcontentType=100, HTencoding=110,
-													HTdisposition=120, HTuserAgent=140,
-													HTxknstatus=150, HTxkntempfile=160,
-													HTsupersedes=170, HTunknown=200 }; 									
+  	                      HTsupersedes=36,HTto=40, HTnewsgroups=50, HTfup2=60,
+  	                      HTreplyTo=65, HTdate=70, HTreferences=75, HTlines=80,
+  	                      HTorga=85, HTmimeVersion=90, HTcontentType=100,
+  	                      HTencoding=110, HTdescription=115, HTdisposition=120,
+  	                      HTuserAgent=140, HTxknstatus=150, HTxkntempfile=160,
+  	                      HTunknown=200 }; 									
 
 		enum controlType {		CTcancel=0, CTsupersede=2, CTunknown=1 };
 		
-		enum contentCategory  { CCmain=10, CCalternative=20, CCattachement=30,
+		enum contentCategory  { CCsingle=10, CCalternativePart=20, CCmixedPart=30,
 		                        CCcontainer=40 };
 		
 
     KNArticleBase()  {}
 		~KNArticleBase() {}                	
 
-		static void setAllow8bitHeaders(bool b)	{ allow8bit=b; }	
+		static const QCString defaultCharset()              { return defaultChSet; }
+		static encoding defaultTextEncoding()               { return defaultTEncoding; }
+				
+		static void setAllow8bitHeaders(bool b)	            { allow8bit=b; }
+		static void setDefaultCharset(const QCString &s)	  { defaultChSet=s.upper(); }
+		static void setDefaultTextEncoding(encoding e)      { defaultTEncoding=e; }
 		
 		static QCString uniqueString();
 		static QCString multiPartBoundary();
@@ -93,10 +98,15 @@ class KNArticleBase {
 		static int stringToArticleStatus(const char *s);
 		
 		static QCString headerTypeToString(headerType t);
-		static int stringToHeaderType(const char *s);                	
+		static int stringToHeaderType(const char *s);
+		
+		static QCString encodingToString(encoding e);
+		static int stringToEncoding(const char *s);                	
 
 	protected:
 	  static bool allow8bit;
+	  static QCString defaultChSet;
+	  static encoding defaultTEncoding;
 
     class FromLineParser {
 				

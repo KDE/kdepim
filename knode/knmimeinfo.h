@@ -31,6 +31,7 @@ class KNMimeInfo : public KNArticleBase {
 		~KNMimeInfo();
 	
 		void operator=(const KNMimeInfo &i);
+		void clear();
 		
 		//parse
 		void parse(KNMimeContent *c);
@@ -41,19 +42,22 @@ class KNMimeInfo : public KNArticleBase {
 		encoding ctEncoding()					  { return c_tEncoding; }
 		disposition ctDisposition()		  { return c_tDisposition; }
 		contentCategory ctCategory()    { return c_tCategory; }
-		bool isReadable()							  { return i_sReadable; }
+		bool isReadable();
+		bool decoded();							
 		const QCString& contentType();
 		QCString contentTransferEncoding();
 		QCString contentDisposition();
 		QCString getCTParameter(const char *param);
+		bool ctParameterIsSet(const char *param);
 						
 		//set
 		void setCTMediaType(mediaType mt)					{ c_tMType=mt; }
 		void setCTSubType(subType st)							{ c_tSType=st; }
 		void setCTEncoding(encoding ec)						{ c_tEncoding=ec; }
+		void setCTEncoding()                      { c_tEncoding=defaultTEncoding; }
 		void setCTDisposition(disposition dp)			{ c_tDisposition=dp; }
 		void setCTCategory(contentCategory c)     { c_tCategory=c; }
-		void setIsReadable(bool i)								{ i_sReadable=i; }
+		void setDecoded(bool b)								    { d_ecoded=b; }
 		void setCustomMimeType(const QCString &m);
 		void addCTParameter(const QCString &s);
 		void setCTParameter(const QCString &name, const QCString &value);
@@ -71,7 +75,7 @@ class KNMimeInfo : public KNArticleBase {
 	  encoding			    c_tEncoding;
 	  disposition       c_tDisposition;
 	  contentCategory   c_tCategory;
-	  bool 					    i_sReadable;
+	  bool 					    d_ecoded;
 	  QCString          c_ontentType;
 		
 };

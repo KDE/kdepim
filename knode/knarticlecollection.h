@@ -21,9 +21,9 @@
 
 #include <qfile.h>
 
-#include "knarticle.h"
 #include "kncollection.h"
 
+class KNArticle;
 
 class KNArticleCollection : public KNCollection {
 
@@ -46,7 +46,7 @@ class KNArticleCollection : public KNCollection {
 		
 		//set
 		void setIncrement(int i)			{ incr=i; }
-		void setLastID() 							{ if(len>0) lastID=list[len-1]->id(); else lastID=0; }
+		void setLastID(); 							
 					
 	protected:
 		int findId(int id);

@@ -107,6 +107,8 @@ void KNAccNewsSettings::slotRemoveItem(KNNntpAccount *a)
 		it=lb->itemAt(i);
 		if(it && it->data()==a) {
 			lb->removeItem(i);
+			if(lb->currentItem()!=-1)
+			  lb->setSelected(lb->currentItem(), true);
 			break;
 		}
 	}

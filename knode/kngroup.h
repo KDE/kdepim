@@ -25,6 +25,8 @@ class KNFetchArticle;
 class KNUserEntry;
 class KNNntpAccount;
 
+class QStrList;
+
 
 class KNGroup : public KNArticleCollection  {
 	

@@ -79,6 +79,8 @@ class KNodeApp : public KTMainWindow
   	void setStatusMsg(const QString& = QString::null, int id=SB_MAIN);
     void setStatusHelpMsg(const QString& text);
     void setCursorBusy(bool b=true);
+    void blockEvents();
+    void unblockEvents();
 
     //network
     void jobDone(KNJobData *j);
@@ -96,6 +98,9 @@ class KNodeApp : public KTMainWindow
   	//exit
     void cleanup();
     bool queryClose();
+
+    //even filter for kapp
+    bool eventFilter(QObject*, QEvent *e);
 
 	  //actions
 	  KAction *actCancel, *actSupersede;

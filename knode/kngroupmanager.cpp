@@ -411,8 +411,10 @@ void KNGroupManager::checkAll(KNNntpAccount *a)
 	for(KNGroup *g=gList->first(); g; g=gList->next()) {
 		if(g->account()==a) {
   		g->setMaxFetch(defaultMaxFetch);
-  		j=new KNJobData(KNJobData::JTfetchNewHeaders, a, g);
-  		knGlobals.netAccess->addJob(j);
+  		if(g->loadHdrs()) {
+  		  j=new KNJobData(KNJobData::JTfetchNewHeaders, a, g);
+  		  knGlobals.netAccess->addJob(j);
+  		}
   	}
 	}	
 }

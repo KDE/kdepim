@@ -20,6 +20,7 @@
 #define KNFOLDER_H
 
 #include "knarticlecollection.h"
+#include <time.h>
 
 class KNSavedArticle;
 
