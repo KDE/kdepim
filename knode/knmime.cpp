@@ -14,18 +14,21 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include <kglobal.h>
-#include <klocale.h>
 #include <ctype.h>
 #include <mimelib/mimepp.h>
 #include <stdlib.h>
 #include <unistd.h>
+
 #include <qtextcodec.h>
 #include <qfileinfo.h>
+#include <qstringlist.h>
+
+#include <kglobal.h>
+#include <klocale.h>
+#include <kio/kmdcodec.h>
 #include <kcharsets.h>
 #include <kmimemagic.h>
 #include <kdebug.h>
-#include <qstringlist.h>
 
 #include "knmime.h"
 #include "knhdrviewitem.h"
@@ -33,7 +36,6 @@
 #include "knglobals.h"
 #include "knconfigmanager.h"
 #include "utilities.h"
-
 
 
 QString KNMimeBase::decodeRFC2047String(const QCString &src, const char **usedCS, const QCString &defaultCS, bool forceCS)
@@ -153,7 +155,7 @@ QCString KNMimeBase::encodeRFC2047String(const QString &src, const char *charset
 {
   QCString encoded8Bit, result, usedCS;
   unsigned int start=0,end=0;
-  bool nonAscii=false, ok=true;
+  bool nonAscii=false, ok=true, useQEncoding=false;
   QTextCodec *codec=0;
   KNConfig::PostNewsTechnical *pnt=knGlobals.cfgManager->postNewsTechnical();
 
@@ -166,6 +168,9 @@ QCString KNMimeBase::encodeRFC2047String(const QString &src, const char *charset
     codec=KGlobal::charsets()->codecForName(usedCS, ok);
   }
 
+  if (usedCS.find("8859-")>=0)  // use "B"-Encoding for non iso-8859-x charsets
+    useQEncoding=true;
+
   encoded8Bit=codec->fromUnicode(src);
 
   if(pnt->allow8BitHeaders())
@@ -175,7 +180,8 @@ QCString KNMimeBase::encodeRFC2047String(const QString &src, const char *charset
     if (encoded8Bit[i]==' ')    // encoding starts at word boundaries
       start = i+1;
 
-    if (encoded8Bit[i]<0) {     // non us-ascii char found, now we determine where to stop encoding
+    // encode escape character, for japanese encodings...
+    if ((encoded8Bit[i]<0) || (encoded8Bit[i] == '\033')) {     // non us-ascii char found, now we determine where to stop encoding
       end = start;
       nonAscii=true;
       break;
@@ -187,34 +193,40 @@ QCString KNMimeBase::encodeRFC2047String(const QString &src, const char *charset
       end++;
 
     for (unsigned int x=end;x<encoded8Bit.length();x++)
-      if (encoded8Bit[x]<0) {                   // we found another non-ascii word
+      if ((encoded8Bit[x]<0) || (encoded8Bit[x] == '\033')) {        // we found another non-ascii word
         end = encoded8Bit.length();
 
     while ((end<encoded8Bit.length())&&(encoded8Bit[end]!=' '))  // we encode complete words
       end++;
     }
 
-    result = encoded8Bit.left(start)+"=?"+usedCS+"?Q?";
+    result = encoded8Bit.left(start)+"=?"+usedCS;
 
-    char c,hexcode;                       // implementation of the "Q"-encoding described in RFC 2047
-    for (unsigned int i=start;i<end;i++) {
-      c = encoded8Bit[i];
-      if (c == ' ')       // make the result readable with not MIME-capable readers
-        result+='_';
-      else
-        if (((c>='a')&&(c<='z'))||      // paranoid mode, we encode *all* special characters to avoid problems
-            ((c>='A')&&(c<='Z'))||      // with "From" & "To" headers
-            ((c>='0')&&(c<='9')))
-          result+=c;
-        else {
-          result += "=";                 // "stolen" from KMail ;-)
-          hexcode = ((c & 0xF0) >> 4) + 48;
-          if (hexcode >= 58) hexcode += 7;
-          result += hexcode;
-          hexcode = (c & 0x0F) + 48;
-          if (hexcode >= 58) hexcode += 7;
-          result += hexcode;
-        }
+    if (useQEncoding) {
+      result += "?Q?";
+
+      char c,hexcode;                       // implementation of the "Q"-encoding described in RFC 2047
+      for (unsigned int i=start;i<end;i++) {
+        c = encoded8Bit[i];
+        if (c == ' ')       // make the result readable with not MIME-capable readers
+          result+='_';
+        else
+          if (((c>='a')&&(c<='z'))||      // paranoid mode, we encode *all* special characters to avoid problems
+              ((c>='A')&&(c<='Z'))||      // with "From" & "To" headers
+              ((c>='0')&&(c<='9')))
+            result+=c;
+          else {
+            result += "=";                 // "stolen" from KMail ;-)
+            hexcode = ((c & 0xF0) >> 4) + 48;
+            if (hexcode >= 58) hexcode += 7;
+            result += hexcode;
+            hexcode = (c & 0x0F) + 48;
+            if (hexcode >= 58) hexcode += 7;
+            result += hexcode;
+          }
+      }
+    } else {
+      result += "?B?"+QCString(KCodecs::base64Encode(QString::fromLatin1(encoded8Bit.mid(start,end-start).data())).latin1());
     }
 
     result +="?=";
