@@ -34,10 +34,11 @@
 #include <klocale.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
+#include <kstartupinfo.h>
 
 #include "alarmapp.h"
 
-static const char* kalarmdVersion = "3.2";
+static const char kalarmdVersion[] = "3.2";
 static const KCmdLineOptions options[] =
 {
    { "login", I18N_NOOP("Application is being auto-started at KDE session start"), 0L },
@@ -60,6 +61,7 @@ int main(int argc, char **argv)
   KCmdLineArgs::init(argc,argv,&aboutData);
   KCmdLineArgs::addCmdLineOptions(options);
   KUniqueApplication::addCmdLineOptions();
+  KStartupInfo::disableAutoAppStartedSending();
 
   if (!AlarmApp::start())
     exit(0);

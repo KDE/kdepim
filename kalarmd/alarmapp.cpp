@@ -38,9 +38,10 @@
 
 
 AlarmApp::AlarmApp() :
-  KUniqueApplication(/*false,false*/),
+  KUniqueApplication(false,false),
   mAd(0L)
 {
+  disableSessionManagement();
 }
 
 AlarmApp::~AlarmApp()
@@ -51,7 +52,7 @@ int AlarmApp::newInstance()
 {
   kdDebug(5900) << "kalarmd:AlarmApp::newInstance()" << endl;
 
-  KStartupInfo::appStarted();
+  //KStartupInfo::appStarted();
 
   /* Prevent the application being restored automatically by the session manager
    * at session startup. Instead, the KDE autostart facility is used to start
