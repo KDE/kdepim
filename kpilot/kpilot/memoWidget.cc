@@ -33,7 +33,6 @@ static const char *memowidget_id =
 #endif
 
 #include <time.h>
-#include <iostream.h>
 #include <pi-macros.h>
 #include <pi-dlp.h>
 
@@ -756,6 +755,9 @@ bool MemoWidget::saveAsXML(const QString &fileName,const QList<PilotListItem> &m
 }
 
 // $Log$
+// Revision 1.49  2002/11/18 07:16:57  mlaurent
+// Fix crash when item selected is null
+//
 // Revision 1.48  2002/07/20 22:08:19  mhunter
 // Hot-Sync -> HotSync
 //
