@@ -185,12 +185,12 @@ certificates in each CRL.
 </para>
 </sect1>
 
-<sect1 id="admin"><title>Administrators Guide</title>
+<sect1 id="admin"><title>Administrator's Guide</title>
 <sect2>
-<title>Customization of the Certificate Creation Wizard</title>
+<title>Customization of the Certificate-Creation Wizard</title>
 <para>
-&kgpgcertmanager; allows to customize the fields that the user
-is allowed to enter in order to create his certificate.
+&kgpgcertmanager; allows you to customize the fields that the user
+is allowed to enter in order to create their certificate.
 </para>
 <para>
 Create a group called CertificateCreationWizard in the system-wide 
@@ -198,7 +198,7 @@ Create a group called CertificateCreationWizard in the system-wide
 if you only want certain items to appear, create a key called <varname>DNAttributeOrder</varname>. 
 The argument is one more more of <varname>CN,SN,GN,L,T,OU,O,PC,C,SP,DC,BC,EMAIL</varname> If you want to 
 preempt fields with a certain value, write something like Attribute=value. If you want the attribute
-to be treated as a required one, follow it with a bang (e.g. <varname>CN!,L,OU,O!,C!,EMAIL!</varname>,
+to be treated as a required one, follow it with an exclamation point (e.g. <varname>CN!,L,OU,O!,C!,EMAIL!</varname>,
 which happens to be the default configuration).
 </para><para>
 Using the <acronym>KIOSK</acronym> modes modifiers <varname>$e</varname> allows for retrieving
