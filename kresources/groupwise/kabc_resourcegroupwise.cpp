@@ -129,6 +129,8 @@ bool ResourceGroupwise::doOpen()
 
 void ResourceGroupwise::doClose()
 {
+  kdDebug() << "ResourceGroupwise::doClose()" << endl;
+
   cancelLoad();
 }
 
@@ -147,7 +149,6 @@ bool ResourceGroupwise::asyncLoad()
   mAddrMap.clear();
   loadCache();
 
-#if 1
   KURL url( prefs()->url() );
   if ( url.protocol() == "http" ) url.setProtocol( "groupwise" );
   else url.setProtocol( "groupwises" );
@@ -181,23 +182,6 @@ bool ResourceGroupwise::asyncLoad()
   connect( mProgress,
            SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
            SLOT( cancelLoad() ) );
-#else
-
-#if 1
-  if ( !mServer->readAddressBooksSynchronous( mPrefs->readAddressBooks(), this ) ) {
-    kdError() << "ResourceGroupwise::asyncLoad() error" << endl;
-    return false;
-  }
-
-  loadFinished();
-#else
-  if ( !mServer->readAddressBooks( mPrefs->readAddressBooks(), this ) ) {
-    kdError() << "ResourceGroupwise::asyncLoad() error" << endl;
-    return false;
-  }
-#endif
-
-#endif
 
   return true;
 }
@@ -256,17 +240,15 @@ void ResourceGroupwise::slotJobResult( KIO::Job *job )
       KABC::Addressee addr = *it;
       if ( !addr.isEmpty() ) {
         addr.setResource( this );
-#if 0      
-        QString remoteUid = converter.stringToQString( (*it)->id );
 
-        KABC::Addressee oldAddressee = findByUid( localUid( remoteUid ) );
-        if ( oldAddressee.isEmpty() ) // new addressee
-          setRemoteUid( addr.uid(), remoteUid );
-        else {
-          addr.setUid( oldAddressee.uid() );
-          removeAddressee( oldAddressee );
+        QString remote = addr.custom( "GWRESOURCE", "UID" );
+        QString local = idMapper().localId( remote );
+        if ( local.isEmpty() ) {
+          idMapper().setRemoteId( addr.uid(), remote );
+        } else {
+          addr.setUid( local );
         }
-#endif
+
         insertAddressee( addr );
         clearChange( addr );
       }
