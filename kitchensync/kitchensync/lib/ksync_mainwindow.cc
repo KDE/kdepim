@@ -487,6 +487,7 @@ void KSyncMainWindow::slotConfigCur() {
         }
     }
     delete dlg;
+    m_prof->save();
 }
 
 void KSyncMainWindow::slotKonnectorProfile() {

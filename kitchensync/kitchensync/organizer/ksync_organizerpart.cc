@@ -17,9 +17,13 @@
 #include <libkcal/icalformat.h>
 #include <libkcal/calendarlocal.h>
 
+#include <eventsyncee.h>
+#include <todosyncee.h>
+
 #include "organizerbase.h"
 #include <ksync_mainwindow.h>
 #include <ksync_profile.h>
+#include <konnectorprofile.h>
 #include "ksync_organizerpart.h"
 #include <qptrlist.h>
 
@@ -39,18 +43,13 @@ OrganizerPart::OrganizerPart(QWidget *parent, const char *name,
 //    kdDebug() << "Object " << obj->className() << endl;
   setInstance(OrganizerPartFactory::instance() );
   m_pixmap = KGlobal::iconLoader()->loadIcon("korganizer", KIcon::Desktop, 48 );
-  m_widget=0;
-  m_config=0;
-  m_conf = new KConfig( "KitchenSyncOrganizerPart");
-  m_configured = false;
 }
 OrganizerPart::~OrganizerPart()
 {
-    delete m_conf;
 }
 QPixmap* OrganizerPart::pixmap()
 {
-  return &m_pixmap;
+    return new QPixmap(m_pixmap);
 }
 QWidget* OrganizerPart::widget()
 {
@@ -63,22 +62,16 @@ QWidget* OrganizerPart::widget()
 }
 QWidget* OrganizerPart::configWidget()
 {
-  //  if( m_config == 0 ){ cause of the reparent ;)
-//    if ( core() != 0 )
-//        kdDebug() << "Config Widget "<< endl;
     Profile prof = core()->currentProfile();
-    if ( !m_configured ) {
-        m_conf->setGroup( prof.name() );
-        m_path = m_conf->readEntry("Path");
-        m_evo = m_conf->readBoolEntry("Evo");
-        m_configured = true;
-    }
-//    kdDebug(5222) << "configWidget \n" ;
+    QString path = prof.path( "OrganizerPart");
+
     m_config = new OrganizerDialogBase();
-    m_config->urlReq->setURL( m_path );
-    m_config->ckbEvo->setChecked( m_evo );
-    //m_config->setBackgroundColor( Qt::green );
-    //}
+
+    if ( path == QString::fromLatin1("evolution") )
+        m_config->ckbEvo->setChecked( true );
+    else
+        m_config->urlReq->setURL( m_path );
+
   return (QWidget*) m_config;
 };
 
@@ -90,16 +83,64 @@ KAboutData *OrganizerPart::createAboutData()
 void OrganizerPart::slotConfigOk()
 {
     Profile prof = core()->currentProfile();
-    m_path = m_config->urlReq->url();
-    m_evo = m_config->ckbEvo->isChecked();
-    m_conf->setGroup( prof.name() );
-    m_conf->writeEntry( "Path",  m_path );
-    m_conf->writeEntry( "Evo", m_evo );
+    if ( m_config->ckbEvo->isChecked() )
+        prof.setPath("OrganizerPart", "evolution");
+    else
+        prof.setPath("OrganizerPart", m_config->urlReq->url() );
+
+    core()->profileManager()->replaceProfile( prof );
+    core()->profileManager()->setCurrentProfile( prof );
 }
+/* Do it for Events + Todos
+ * The 10 Stages to synced data
+ * 1. get the currentProfile and currentKonnector
+ * 2. get the paths + the information about using meta data
+ *    from the Konnector
+ * 3. search our Syncees
+ * 4. load the File from currentProfile
+ * 5. If meta data collect it currentProfile.uid() + currentKonnectorProf.uid()
+ *    + name for the MetaInformation filename
+ * 6. SYNC using our own algorithm
+ * 7. write back meta data if necessary
+ * 8. write back file
+ * 9. append the Syncee to the out list
+ * 10. have a party and get drunk
+ */
 void OrganizerPart::processEntry( const Syncee::PtrList& in,
                                   Syncee::PtrList& out )
 {
-}
+/*    /* 1. is fairly easy */
+    Profile prof = core()->currentProfile();
+    KonnectorProfile kon = core()->konnectorProfile();
 
+    /* 2. too */
+    QString path = prof.path( realPath( kon.path("OrganizerPart") ) );
+    QString meta = prof.uid() + kon.uid() + "organizer.rc";
+    bool met = kon.kapabilities().isMetaSyncingEnabled();
+
+    /* 3. */
+    Syncee* syncee;
+    EventSyncee* evSyncee = 0l;
+    TodoSyncee* toSyncee = 0l;
+    for ( syncee = in.first(); syncee; syncee = in.next() ) {
+        if ( syncee->type() == QString::fromLatin1("EventSyncee") )
+            evSyncee = (EventSyncee*)syncee;
+        else if ( syncee->type() == QString::fromLatin1("TodoSyncee") )
+            toSyncee = (TodoSyncee*)syncee;
+        /* we got both now we can break the loop */
+        if ( evSyncee && toSyncee ) break;
+    }
+    if (!evSyncee && !toSyncee) return; // did not find both of them
+
+    /* 4. load */
+    EventSyncee* events =0l;
+    TodoSyncee* todos = 0l;
+    if (evSyncee )
+       events = loadEvents( path );
+    if (toSyncee )
+        todos = loadTodos( path );
+    */
+}
+//AddressBookSyncee* ANY
 
 #include "ksync_organizerpart.moc"

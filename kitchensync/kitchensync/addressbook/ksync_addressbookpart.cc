@@ -32,21 +32,12 @@ AddressBookPart::AddressBookPart( QWidget* parent,  const char* name,
                                   const QStringList & )
     : ManipulatorPart( parent ? parent : obj ,  name )
 {
-    kdDebug() << "parent " <<   parent << endl;
-    kdDebug() << "obj " << obj << endl;
-    if (parent)
-        kdDebug() << "parent class " << parent->className() << endl;
-    if (obj )
-        kdDebug() << "object class " << obj->className() << endl;
     setInstance( AddressBookPartFactory::instance() );
     m_pixmap = KGlobal::iconLoader()->loadIcon("kaddressbook",  KIcon::Desktop,  48 );
     m_widget = 0;
-    m_config = new KConfig( "KitchenSyncAddressBookPart");
-    m_configured = false;
 }
 AddressBookPart::~AddressBookPart()
 {
-    delete m_config;
 }
 KAboutData *AddressBookPart::createAboutData()
 {
@@ -63,15 +54,16 @@ QWidget* AddressBookPart::widget()
 QWidget* AddressBookPart::configWidget()
 {
     Profile prof = core()->currentProfile();
-    if (!m_configured ) {
-        m_config->setGroup( prof.name() );
-        m_path = m_config->readEntry("Path");
-        m_evo = m_config->readBoolEntry("Evo");
-        m_configured = true;
-    }
+    QString path = prof.path("AddressBook");
+
     m_widget = new AddressBookConfigBase();
-    m_widget->lnePath->setText( m_path );
-    m_widget->ckbEvo->setChecked( m_evo );
+    if ( QString::fromLatin1("evolution") == path ) {
+        m_widget->ckbEvo->setChecked( true );
+    }else {
+        m_widget->ckbEvo->setChecked( false );
+        m_widget->lnePath->setText( path );
+    }
+
     return m_widget;
 }
 void AddressBookPart::processEntry( const Syncee::PtrList& in,
@@ -81,10 +73,15 @@ void AddressBookPart::processEntry( const Syncee::PtrList& in,
 void AddressBookPart::slotConfigOk()
 {
     Profile prof = core()->currentProfile();
-    m_path = m_widget->lnePath->text();
-    m_evo = m_widget->ckbEvo->isChecked();
-    m_config->writeEntry( "Path",  m_path );
-    m_config->writeEntry( "Evo",  m_evo );
+    if ( m_widget->ckbEvo->isChecked() ) {
+        prof.setPath( "AddressBook", "evolution" );
+    }else {
+        prof.setPath("AddressBook",m_widget->lnePath->text() );
+    }
+    core()->profileManager()->replaceProfile( prof );
+    core()->profileManager()->setCurrentProfile( prof );
+
+
 }
 
 

@@ -13,12 +13,12 @@
 
 void AddressBookConfigBase::slotBrowse()
 {
-lnePath->setText( KFileDialog::getOpenURL().prettyURL() );
+    lnePath->setText( KFileDialog::getOpenURL().prettyURL() );
 }
 
 void AddressBookConfigBase::slotDefault()
 {
-    lnePath->setText( "file:"+locateLocal("data", "kabc/std.vcf") );
+    lnePath->setText( "default" );
 }
 
 void AddressBookConfigBase::slotEvolution( bool )
