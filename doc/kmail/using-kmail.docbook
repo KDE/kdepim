@@ -1303,14 +1303,6 @@ which you do not like.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
-<term><guilabel>bounce</guilabel></term>
-<listitem><para>Will try to return the message to the sender as undeliverable.</para>
-<warning><para>This will only work if the sender's email address is
-valid, which is <emphasis>not</emphasis> the case for most
-spam messages.</para></warning>
-</listitem>
-</varlistentry>
-<varlistentry>
 <term><guilabel>confirm delivery</guilabel></term>
 <listitem><para>Will try to return a message to the sender that
 indicates successful delivery of their message, if the sender requested that.</para> <para>This
