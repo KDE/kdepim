@@ -1,0 +1,9 @@
+MidnightCommander
+-------------------
+To see all events of the current year from a iCalendar file in the
+viewer of the MidnightCommander add the following line to your
+$HOME/.mc/bindings
+
+# iCalendar
+shell/.ics
+	View=%view{ascii} konsolekalendar --file %f --all --startdate "`date +01.01.%%Y`" --enddate "`date +31.12.%%Y`"
