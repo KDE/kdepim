@@ -159,7 +159,7 @@ int main( int argc, char *argv[] )
     I18N_NOOP( progDisplay ),        // displayable program name.
     progVersion,                     // version string
     I18N_NOOP( progDesc ),           // short porgram description
-    KAboutData::License_LGPL,        // license type
+    KAboutData::License_GPL,         // license type
     "(c) 2002-2004, Tuukka Pasanen and Allen Winter", // copyright statement
     0,                               // any free form text
     progURL,                         // program home page address
