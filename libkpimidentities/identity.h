@@ -279,7 +279,7 @@ public:
   bool isXFaceEnabled() const { return mXFaceEnabled; }
   void setXFaceEnabled( const bool );
 
-  static Identity null;
+  static const Identity null;
   bool isNull() const;
 protected:
   // if you add new members, make sure they have an operator= (or the

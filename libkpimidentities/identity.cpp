@@ -226,7 +226,7 @@ QDataStream & KPIM::operator>>( QDataStream & stream, KPIM::Signature & sig ) {
 }
 
 // ### should use a kstaticdeleter?
-Identity Identity::null;
+const Identity Identity::null;
 
 bool Identity::isNull() const {
   return mIdentity.isEmpty() && mFullName.isEmpty() && mEmailAddr.isEmpty() &&
