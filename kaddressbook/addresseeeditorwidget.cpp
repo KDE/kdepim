@@ -496,6 +496,8 @@ void AddresseeEditorWidget::load()
       mFormattedNameType = NameEditDialog::SimpleName;
     else if ( mAddressee.formattedName() == NameEditDialog::formattedName( mAddressee, NameEditDialog::FullName ) )
       mFormattedNameType = NameEditDialog::FullName;
+    else if ( mAddressee.formattedName() == NameEditDialog::formattedName( mAddressee, NameEditDialog::ReverseNameWithComma ) )
+      mFormattedNameType = NameEditDialog::ReverseNameWithComma;
     else if ( mAddressee.formattedName() == NameEditDialog::formattedName( mAddressee, NameEditDialog::ReverseName ) )
       mFormattedNameType = NameEditDialog::ReverseName;
     else

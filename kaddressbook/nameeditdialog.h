@@ -44,10 +44,11 @@ class NameEditDialog : public KDialogBase
   public:
     enum FormattedNameType
     {
-      CustomName, // returned by @ref customFormattedName()
-      SimpleName, // form: givenName familyName
-      FullName,   // form: prefix givenName additionalName familyName suffix
-      ReverseName // form: familyName, givenName
+      CustomName,           // returned by @ref customFormattedName()
+      SimpleName,           // form: givenName familyName
+      FullName,             // form: prefix givenName additionalName familyName suffix
+      ReverseNameWithComma, // form: familyName, givenName
+      ReverseName           // form: familyName givenName
     };
 
     NameEditDialog( const KABC::Addressee &addr, int type,

@@ -141,6 +141,7 @@ AddresseeWidget::AddresseeWidget( QWidget *parent, const char *name )
   mFormattedNameCombo->insertItem( i18n( "Empty" ) );
   mFormattedNameCombo->insertItem( i18n( "Simple Name" ) );
   mFormattedNameCombo->insertItem( i18n( "Full Name" ) );
+  mFormattedNameCombo->insertItem( i18n( "Reverse Name with comma" ) );
   mFormattedNameCombo->insertItem( i18n( "Reverse Name" ) );
   layout->addMultiCellWidget( mFormattedNameCombo, 1, 1, 1, 2 );
 
