@@ -24,13 +24,11 @@ class RAddress : public RHeaderBody {
 
         QValueList<RMailbox> mailboxList();
 
-        void setName(const QCString &);
         void setPhrase(const QCString &);
         void setRoute(const QCString &);
         void setLocalPart(const QCString &);
         void setDomain(const QCString &);
 
-        QCString name();
         QCString phrase();
         QCString route();
         QCString localPart();
@@ -39,7 +37,6 @@ class RAddress : public RHeaderBody {
     private:
 
         QValueList<RMailbox> mailboxList_;
-        QCString name_;
         QCString phrase_;
 };
 

@@ -40,7 +40,6 @@ RAddress::RAddress()
 RAddress::RAddress(const RAddress & addr)
     :   RHeaderBody     (addr),
         mailboxList_    (addr.mailboxList_),
-        name_           (addr.name_.copy()),
         phrase_         (addr.phrase_.copy())
 {
     // Empty.
@@ -63,7 +62,6 @@ RAddress::operator = (const RAddress & addr)
     if (this == &addr) return *this; // Don't do a = a.
 
     mailboxList_    = addr.mailboxList_;
-    name_           = addr.name_.copy();
     phrase_         = addr.phrase_.copy();
  
     RHeaderBody::operator = (addr);
@@ -88,7 +86,7 @@ RAddress::operator == (RAddress & a)
     
     if (a.type() == RAddress::Mailbox) {
 
-        ok = (name_ == a.name_ && phrase_ == a.phrase_);
+        ok = ((*(mailboxList_.at(0))) == (*(a.mailboxList_.at(0))));
 
     } else {
         // TODO
@@ -135,12 +133,9 @@ RAddress::_parse()
 	    for (QStrListIterator it(list); it.current(); ++it)
 		    mailboxList_.append(RMailbox(*it.current()));
 
-    } else {
+    } else
 
-        RMailbox m(strRep_);
-
-        mailboxList_.append(m);
-    }
+        mailboxList_.append(RMailbox(strRep_));
 }
 
     void
@@ -169,10 +164,9 @@ RAddress::_assemble()
         strRep_ += " ;";
 
 
-    } else {
+    } else
         
         strRep_ = (*mailboxList_.at(0)).asString();
-    }
 }
 
     void
@@ -182,24 +176,23 @@ RAddress::createDefault()
     RMailbox m;
     m.createDefault();
     mailboxList_.append(m);
-    assembled_ = true;
+    phrase_ = "";
+    parsed_ = assembled_ = true;
 }
 
     RAddress::Type
 RAddress::type()
 {
     parse();
-    return name_.isEmpty() ? Mailbox : Group;
+    return phrase_.isEmpty() ? Mailbox : Group;
 }
-
 
     QDataStream &
 RMM::operator >> (QDataStream & s, RMM::RAddress & addr)
 {
     unsigned int count;
 
-    s   >> addr.name_
-        >> addr.phrase_
+    s   >> addr.phrase_
         >> count;
     
     for (unsigned int i = 0; i < count; i++) {
@@ -219,8 +212,7 @@ RMM::operator << (QDataStream & s, RMM::RAddress & addr)
 {
     addr.parse();
 
-    s   << addr.name_
-        << addr.phrase_
+    s   << addr.phrase_
         << (unsigned int)(addr.mailboxList_.count());
 
     QValueList<RMailbox>::Iterator it;
@@ -235,24 +227,28 @@ RMM::operator << (QDataStream & s, RMM::RAddress & addr)
 RAddress::phrase()
 {
     parse();
-    RMailbox m(*(mailboxList_.at(0)));
-    return m.phrase();
-}
 
+    if (phrase_.isEmpty())
+        return (*(mailboxList_.at(0))).phrase();
+    else
+        return phrase_;
+}
 
     void
 RAddress::setPhrase(const QCString & s)
 {
     parse();
-    (*(mailboxList_.at(0))).setPhrase(s);
+    if (phrase_.isEmpty())
+        (*(mailboxList_.at(0))).setPhrase(s);
+    else
+        phrase_ = s.copy();
 }
 
     QCString
 RAddress::route()
 {
     parse();
-    RMailbox m(*(mailboxList_.at(0)));
-    return m.route();
+    return (*(mailboxList_.at(0))).route();
 }
 
     void
@@ -266,8 +262,7 @@ RAddress::setRoute(const QCString & s)
 RAddress::localPart()
 {
     parse();
-    RMailbox m(*(mailboxList_.at(0)));
-    return m.localPart();
+    return (*(mailboxList_.at(0))).localPart();
 }
 
     void
@@ -282,8 +277,7 @@ RAddress::setLocalPart(const QCString & s)
 RAddress::domain()
 {
     parse();
-    RMailbox m(*(mailboxList_.at(0)));
-    return m.domain();
+    return (*(mailboxList_.at(0))).domain();
 }
 
     void
@@ -291,20 +285,6 @@ RAddress::setDomain(const QCString & s)
 {
     parse();
     (*(mailboxList_.at(0))).setDomain(s);
-}
-
-   QCString
-RAddress::name()
-{
-    parse();
-    return name_;
-}
-
-    void
-RAddress::setName(const QCString & s)
-{
-    parse();
-    name_ = s.copy();
 }
 
     QValueList<RMailbox>
