@@ -43,15 +43,19 @@ public:
 
 	static KAboutData *about() { return fAbout; } ;
 	static const char *group() { return fGroup; } ;
-	static const char *faxType() { return fFaxType; } ;
-	static const char *streetType() { return fStreetType; } ;
 	static const char *smartMerge() { return fSmartMerge; } ;
-	static const char *mapOther() { return fOtherMap; } ;
 	static const char *conflictResolution() { return fResolution; } ;
+	static const char *archiveDeletedRecs() { return fArchive; };
+	static const char *streetType() { return fStreetType; } ;
+	static const char *faxType() { return fFaxType; } ;
+	static const char *syncMode() { return fSyncMode;};
 	static const char *firstSync() { return fFirstSync; } ;
-	static const char *formatName() { return fFormatName; } ;
-	static const char *closeAbbrowser() { return fCloseAbbrowser; } ;
-
+	static const char *fullSyncOnPCChange() {return fFullSyncOnPCChange; } ;
+		
+	// TODO: get rid of these:
+	static const char *mapOther() { return "dummy"; } ;
+	static const char *formatName() { return "dummy"; } ;
+	
 protected:
 	virtual QObject* createObject( QObject* parent = 0,
 		const char* name = 0,
@@ -65,24 +69,30 @@ private:
 	// KConfig entry keys.
 	//
 	//
-	static const char *fStreetType,
-		*fSmartMerge,
+	static const char *fSmartMerge,
 		*fResolution,
-		*fOtherMap,
+		*fArchive,
+		*fStreetType,
 		*fFaxType,
-		*fCloseAbbrowser,
+		*fSyncMode, 
 		*fFirstSync,
-		*fFormatName;
+//		*fFormatName,
+//		*fOtherMap,
+//		*fCloseAbbrowser,
+		*fFullSyncOnPCChange;
 } ;
 
 extern "C"
 {
 
-void *init_libknotesconduit();
+void *init_libaddressconduit();
 
 } ;
 
 // $Log$
+// Revision 1.4  2002/04/16 18:22:12  adridg
+// Wishlist fix from David B: handle formatted names when syncing
+//
 // Revision 1.3  2001/12/20 22:55:21  adridg
 // Making conduits save their configuration and doing syncs
 //

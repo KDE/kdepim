@@ -6,19 +6,20 @@ INCLUDES= $(PISOCK_INCLUDE) -I$(top_srcdir)/kpilot/lib $(all_includes)
 METASOURCES = AUTO
 
 servicedir = $(kde_servicesdir)
-service_DATA = abbrowser_conduit.desktop
+service_DATA = address_conduit.desktop
 
-kde_module_LTLIBRARIES = libabbrowserconduit.la
+kde_module_LTLIBRARIES = libaddressconduit.la
 
 
-libabbrowserconduit_la_SOURCES = \
+libaddressconduit_la_SOURCES = \
+	resolutionDialog.cc \
 	abbrowser-factory.cc \
 	abbrowser-setup.cc \
 	abbrowser-conduit.cc \
 	abbrowserConduitConfig_base.ui
-libabbrowserconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib
-libabbrowserconduit_la_LIBADD = ../../lib/libkpilot.la
+libaddressconduit_la_LDFLAGS = $(KDE_RPATH) -L../../lib 
+libaddressconduit_la_LIBADD = -lkpilot -lkabc
 # You may want to enable debugging like this on systems with broken kdelibs
 #
-libabbrowserconduit_la_CFLAGS = -DDEBUG -DDEBUG_CERR
+libaddressconduit_la_CFLAGS = -DDEBUG  -DDEBUG_CERR
 

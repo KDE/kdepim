@@ -72,8 +72,8 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 		fConfigWidget->fFirstTimeSync->isChecked());
 	fConfig->writeEntry(AbbrowserConduitFactory::formatName(),
 		fConfigWidget->fFormatName->isChecked());
-	fConfig->writeEntry(AbbrowserConduitFactory::closeAbbrowser(),
-		fConfigWidget->fCloseKab->isChecked());
+//	fConfig->writeEntry(AbbrowserConduitFactory::closeAbbrowser(),
+//		fConfigWidget->fCloseKab->isChecked());
 	fConfig->writeEntry(AbbrowserConduitFactory::smartMerge(),
 		fConfigWidget->fSmartMerge->isChecked());
 	fConfig->writeEntry(AbbrowserConduitFactory::conflictResolution(),
@@ -96,8 +96,8 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 
 	fConfigWidget->fFirstTimeSync->setChecked(
 		fConfig->readBoolEntry(AbbrowserConduitFactory::firstSync(),false));
-	fConfigWidget->fCloseKab->setChecked(
-		fConfig->readBoolEntry(AbbrowserConduitFactory::closeAbbrowser(),false));
+//	fConfigWidget->fCloseKab->setChecked(
+//		fConfig->readBoolEntry(AbbrowserConduitFactory::closeAbbrowser(),false));
 	fConfigWidget->fSmartMerge->setChecked(
 		fConfig->readBoolEntry(AbbrowserConduitFactory::smartMerge(),true));
 	fConfigWidget->fConflictStrategy->setCurrentItem(
@@ -112,6 +112,14 @@ AbbrowserWidgetSetup::~AbbrowserWidgetSetup()
 
 
 // $Log$
+// Revision 1.4  2002/05/15 17:15:32  gioele
+// kapp.h -> kapplication.h
+// I have removed KDE_VERSION checks because all that files included "options.h"
+// which #includes <kapplication.h> (which is present also in KDE_2).
+// BTW you can't have KDE_VERSION defined if you do not include
+// - <kapplication.h>: KDE3 + KDE2 compatible
+// - <kdeversion.h>: KDE3 only compatible
+//
 // Revision 1.3  2002/04/16 18:22:12  adridg
 // Wishlist fix from David B: handle formatted names when syncing
 //

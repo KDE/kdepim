@@ -47,7 +47,7 @@
 extern "C"
 {
 
-void *init_libabbrowserconduit()
+void *init_libaddressconduit()
 {
 	return new AbbrowserConduitFactory;
 }
@@ -64,12 +64,17 @@ const char *AbbrowserConduitFactory::fGroup = "Abbrowser-conduit";
 
 const char *AbbrowserConduitFactory::fSmartMerge = "SmartMerge";
 const char *AbbrowserConduitFactory::fResolution = "ConflictResolve";
-const char *AbbrowserConduitFactory::fOtherMap = "PilotOther";
+const char *AbbrowserConduitFactory::fArchive = "ArchiveDeleted";
 const char *AbbrowserConduitFactory::fStreetType = "PilotStreet";
 const char *AbbrowserConduitFactory::fFaxType = "PilotFax";
-const char *AbbrowserConduitFactory::fCloseAbbrowser = "CloseAbbrowser";
+const char *AbbrowserConduitFactory::fSyncMode = "SyncMode";
 const char *AbbrowserConduitFactory::fFirstSync = "FirstSync";
-const char *AbbrowserConduitFactory::fFormatName = "FormatName";
+const char *AbbrowserConduitFactory::fFullSyncOnPCChange = "FullSyncOnPCChange";
+
+// TODO: Get rid of these:
+//const char *AbbrowserConduitFactory::fOtherMap = "PilotOther";
+//const char *AbbrowserConduitFactory::fCloseAbbrowser = "CloseAbbrowser";
+//const char *AbbrowserConduitFactory::fFormatName = "FormatName";
 
 
 
@@ -156,6 +161,14 @@ AbbrowserConduitFactory::~AbbrowserConduitFactory()
 
 
 // $Log$
+// Revision 1.5  2002/05/15 17:15:32  gioele
+// kapp.h -> kapplication.h
+// I have removed KDE_VERSION checks because all that files included "options.h"
+// which #includes <kapplication.h> (which is present also in KDE_2).
+// BTW you can't have KDE_VERSION defined if you do not include
+// - <kapplication.h>: KDE3 + KDE2 compatible
+// - <kdeversion.h>: KDE3 only compatible
+//
 // Revision 1.4  2002/04/16 18:22:12  adridg
 // Wishlist fix from David B: handle formatted names when syncing
 //
