@@ -1,9 +1,12 @@
 INCLUDES = $(all_includes)
 
-noinst_LTLIBRARIES = libresourceimapshared.la
-libresourceimapshared_la_SOURCES = \
-	resourcekolab.cpp kmailconnection.cpp \
+noinst_HEADERS = resourcekolabbase.h kolabbase.h
+
+noinst_LTLIBRARIES = libresourcekolabshared.la
+
+libresourcekolabshared_la_SOURCES = \
+	resourcekolabbase.cpp kmailconnection.cpp kolabbase.cpp \
 	kmailconnection.skel kmailicalIface.stub
-libresourceimapshared_la_METASOURCES = AUTO
+libresourcekolabshared_la_METASOURCES = AUTO
 
 kmailicalIface_DIR = $(top_srcdir)/kmail

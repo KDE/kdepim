@@ -20,7 +20,7 @@
 */
 
 #include "kmailconnection.h"
-#include "resourcekolab.h"
+#include "resourcekolabbase.h"
 
 #include <kdebug.h>
 #include <dcopclient.h>

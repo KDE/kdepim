@@ -20,8 +20,8 @@
     Boston, MA 02111-1307, USA.
 */
 
-#ifndef KOLAB_BASE_H
-#define KOLAB_BASE_H
+#ifndef KOLABBASE_H
+#define KOLABBASE_H
 
 #include <qdom.h>
 #include <qdatetime.h>
@@ -35,12 +35,12 @@ namespace KCal {
 
 namespace ResourceKolab {
 
-class Base {
+class KolabBase {
 public:
   enum Sensitivity { Public = 0, Private = 1, Confidential = 2 };
 
-  Base();
-  virtual ~Base();
+  KolabBase();
+  virtual ~KolabBase();
 
   // Return a string identifying this type
   virtual QString type() const = 0;
@@ -113,4 +113,4 @@ protected:
 
 }
 
-#endif // BASE_H
+#endif // KOLABBASE_H

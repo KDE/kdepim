@@ -19,7 +19,7 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include "resourcekolab.h"
+#include "resourcekolabbase.h"
 #include "kmailconnection.h"
 
 #include <klocale.h>

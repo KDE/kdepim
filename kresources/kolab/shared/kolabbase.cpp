@@ -1,5 +1,5 @@
 /*
-    This file is part of libkolabformat - the library implementing the
+    This file is part of the kolab resource - the implementation of the
     Kolab storage format. See www.kolab.org for documentation on this.
 
     Copyright (c) 2004  Bo Thorsen <bo@sonofthor.dk>
@@ -20,25 +20,25 @@
     Boston, MA 02111-1307, USA.
 */
 
-#include "base.h"
+#include "kolabbase.h"
 #include <libkcal/journal.h>
 #include <qfile.h>
 
-using namespace KolabFormat;
+using namespace ResourceKolab;
 
 
-Base::Base()
+KolabBase::KolabBase()
   : mCreationDate( QDateTime::currentDateTime() ),
     mLastModified( QDateTime::currentDateTime() ),
     mSensitivity( Public )
 {
 }
 
-Base::~Base()
+KolabBase::~KolabBase()
 {
 }
 
-void Base::setFields( KCal::Incidence* incidence )
+void KolabBase::setFields( KCal::Incidence* incidence )
 {
   setUid( incidence->uid() );
   setBody( incidence->description() );
@@ -49,72 +49,72 @@ void Base::setFields( KCal::Incidence* incidence )
   // TODO: Attachments
 }
 
-/*void Base::setFields( KABC::Address* address, bool modified )
+/*void KolabBase::setFields( KABC::Address* address, bool modified )
 {
 
 }*/
 
-void Base::setUid( const QString& uid )
+void KolabBase::setUid( const QString& uid )
 {
   mUid = uid;
 }
 
-QString Base::uid() const
+QString KolabBase::uid() const
 {
   return mUid;
 }
 
-void Base::setBody( const QString& body )
+void KolabBase::setBody( const QString& body )
 {
   mBody = body;
 }
 
-QString Base::body() const
+QString KolabBase::body() const
 {
   return mBody;
 }
 
-void Base::setCategories( const QString& categories )
+void KolabBase::setCategories( const QString& categories )
 {
   mCategories = categories;
 }
 
-QString Base::categories() const
+QString KolabBase::categories() const
 {
   return mCategories;
 }
 
-void Base::setCreationDate( const QDateTime& date )
+void KolabBase::setCreationDate( const QDateTime& date )
 {
   mCreationDate = date;
 }
 
-QDateTime Base::creationDate() const
+QDateTime KolabBase::creationDate() const
 {
   return mCreationDate;
 }
 
-void Base::setLastModified( const QDateTime& date )
+void KolabBase::setLastModified( const QDateTime& date )
 {
   mLastModified = date;
 }
 
-QDateTime Base::lastModified() const
+QDateTime KolabBase::lastModified() const
 {
   return mLastModified;
 }
 
-void Base::setSensitivity( Sensitivity sensitivity )
+void KolabBase::setSensitivity( Sensitivity sensitivity )
 {
   mSensitivity = sensitivity;
 }
 
-Base::Sensitivity Base::sensitivity() const
+KolabBase::Sensitivity KolabBase::sensitivity() const
 {
   return mSensitivity;
 }
 
-bool Base::loadAttribute( QDomElement& element )
+bool KolabBase::loadAttribute( QDomElement& element )
 {
   QString tagName = element.tagName().lower();
 
@@ -135,7 +135,7 @@ bool Base::loadAttribute( QDomElement& element )
   return true;
 }
 
-bool Base::saveAttributes( QDomElement& element ) const
+bool KolabBase::saveAttributes( QDomElement& element ) const
 {
   writeString( element, "Body", body() );
   writeString( element, "Categories", categories() );
@@ -147,7 +147,7 @@ bool Base::saveAttributes( QDomElement& element ) const
   return true;
 }
 
-bool Base::load( const QString& xml )
+bool KolabBase::load( const QString& xml )
 {
   QString errorMsg;
   int errorLine, errorColumn;
@@ -164,7 +164,7 @@ bool Base::load( const QString& xml )
   return load( document );
 }
 
-bool Base::load( QFile& xml )
+bool KolabBase::load( QFile& xml )
 {
   QString errorMsg;
   int errorLine, errorColumn;
@@ -181,7 +181,7 @@ bool Base::load( QFile& xml )
   return load( document );
 }
 
-QDomDocument Base::domTree()
+QDomDocument KolabBase::domTree()
 {
   QDomDocument document( "Kolab-storage" );
 
@@ -192,17 +192,17 @@ QDomDocument Base::domTree()
 }
 
 
-QString Base::dateTimeToString( const QDateTime& time )
+QString KolabBase::dateTimeToString( const QDateTime& time )
 {
   return time.toString( "yyyyMMddhhmmss" );
 }
 
-QString Base::dateToString( const QDate& date )
+QString KolabBase::dateToString( const QDate& date )
 {
   return date.toString( "yyyyMMdd" );
 }
 
-QDateTime Base::stringToDateTime( const QString& date )
+QDateTime KolabBase::stringToDateTime( const QString& date )
 {
   int h = date.mid( 8, 2 ).toInt();
   int m = date.mid( 10, 2 ).toInt();
@@ -211,7 +211,7 @@ QDateTime Base::stringToDateTime( const QString& date )
   return QDateTime( stringToDate( date ), QTime( h, m, s ) );
 }
 
-QDate Base::stringToDate( const QString& date )
+QDate KolabBase::stringToDate( const QString& date )
 {
   int y = date.left( 4 ).toInt();
   int m = date.mid( 4, 2 ).toInt();
@@ -220,7 +220,7 @@ QDate Base::stringToDate( const QString& date )
   return QDate( y, m, d );
 }
 
-QString Base::sensitivityToString( Sensitivity s )
+QString KolabBase::sensitivityToString( Sensitivity s )
 {
   switch( s ) {
   case Private: return "Private";
@@ -231,7 +231,7 @@ QString Base::sensitivityToString( Sensitivity s )
   return "What what what???";
 }
 
-Base::Sensitivity Base::stringToSensitivity( const QString& s )
+KolabBase::Sensitivity KolabBase::stringToSensitivity( const QString& s )
 {
   if ( s == "Private" )
     return Private;
@@ -240,18 +240,18 @@ Base::Sensitivity Base::stringToSensitivity( const QString& s )
   return Public;
 }
 
-QString Base::colorToString( const QColor& color )
+QString KolabBase::colorToString( const QColor& color )
 {
   // Color is in the format "0xRRGGBB"
   return "0x" + color.name().mid( 1 );
 }
 
-QColor Base::stringToColor( const QString& s )
+QColor KolabBase::stringToColor( const QString& s )
 {
   return QColor( "#" + s.mid( 2 ) );
 }
 
-void Base::writeString( QDomElement& element, const QString& tag,
+void KolabBase::writeString( QDomElement& element, const QString& tag,
                         const QString& tagString )
 {
   QDomElement e = element.ownerDocument().createElement( tag );
