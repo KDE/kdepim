@@ -147,7 +147,7 @@ noinst_HEADERS =  knconfigmanager.h \
 		  knmainwidget.h 
 
 
-knode_METASOURCES = AUTO
+METASOURCES = AUTO
 
 xdg_apps_DATA = KNode.desktop
 
