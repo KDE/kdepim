@@ -78,8 +78,13 @@ public:
   // Call the DCOP methods
   bool kmailSubresources( QValueList<KMailICalIface::SubResource>& lst,
                           const QString& contentsType );
+  bool kmailIncidencesCount( int& count,
+                             const QString& mimetype,
+                             const QString& resource );
   bool kmailIncidences( QMap<Q_UINT32, QString>& lst, const QString& mimetype,
-                        const QString& resource );
+                        const QString& resource,
+                        int startIndex,
+                        int nbMessages );
   bool kmailGetAttachment( KURL& url, const QString& resource, Q_UINT32 sernum,
                            const QString& filename );
   bool kmailDeleteIncidence( const QString& resource, Q_UINT32 sernum );

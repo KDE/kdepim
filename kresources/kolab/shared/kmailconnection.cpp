@@ -185,14 +185,27 @@ bool KMailConnection::kmailSubresources( QValueList<KMailICalIface::SubResource>
   return mKMailIcalIfaceStub->ok();
 }
 
-bool KMailConnection::kmailIncidences( QMap<Q_UINT32, QString>& lst,
-                                       const QString& mimetype,
-                                       const QString& resource )
+bool KMailConnection::kmailIncidencesCount( int& count,
+                                            const QString& mimetype,
+                                            const QString& resource )
 {
   if ( !connectToKMail() )
     return false;
 
-  lst = mKMailIcalIfaceStub->incidencesKolab( mimetype, resource );
+  count = mKMailIcalIfaceStub->incidencesKolabCount( mimetype, resource );
+  return mKMailIcalIfaceStub->ok();
+}
+
+bool KMailConnection::kmailIncidences( QMap<Q_UINT32, QString>& lst,
+                                       const QString& mimetype,
+                                       const QString& resource,
+                                       int startIndex,
+                                       int nbMessages )
+{
+  if ( !connectToKMail() )
+    return false;
+
+  lst = mKMailIcalIfaceStub->incidencesKolab( mimetype, resource, startIndex, nbMessages );
   return mKMailIcalIfaceStub->ok();
 }
 
