@@ -82,9 +82,8 @@ static QString simpleEmailTestParseResultToString( bool validEmail )
 {
   if ( validEmail ) {
     return "true"; 
-  } else if ( !validEmail ) {
-    return "false";
-  }
+  } 
+  return "false";
 }
 
 static QString getEmailParseResultToString( QCString emailAddress )
