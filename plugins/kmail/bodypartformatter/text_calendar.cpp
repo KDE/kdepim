@@ -272,17 +272,28 @@ class Formatter : public KMail::Interface::BodyPartFormatter
 
       // First make the text of the message
       QString html;
-
+/*
       html += "<em>Hint for kdepim developers: This iCalendar attachement was "
               "formatted by the new bodypartformatter plugin.</em><br>";
+*/
+      QString tableStyle = QString::fromLatin1(
+        "style=\""
+        "border: solid 1px; "
+        "margin: 0em;\"");
+      QString tableHead = QString::fromLatin1(
+        "<div align=\"center\">"
+        "<table width=\"80%\" cellpadding=\"1\" cellspacing=\"0\" %1>"
+        "<tr><td>").arg(tableStyle);
+
+      html += tableHead;
 
       if( sMethod == "request" ) {
         // FIXME: All these "if (event) ... else ..." constructions are ugly.
         if( event ) {
-          html = i18n( "<h2>You have been invited to this meeting</h2>" );
+          html += i18n( "<h2>You have been invited to this meeting</h2>" );
           html += meetingDetails( incidence, event );
         } else {
-          html = i18n( "<h2>You have been assigned this task</h2>" );
+          html += i18n( "<h2>You have been assigned this task</h2>" );
           html += taskDetails( incidence );
         }
       } else if( sMethod == "reply" ) {
@@ -299,50 +310,50 @@ class Formatter : public KMail::Interface::BodyPartFormatter
         switch( attendee->status() ) {
         case Attendee::Accepted:
           if( event ) {
-            html = i18n( "<h2>Sender accepts this meeting invitation</h2>" );
+            html += i18n( "<h2>Sender accepts this meeting invitation</h2>" );
             html += meetingDetails( incidence, event );
           } else {
-            html = i18n( "<h2>Sender accepts this task</h2>" );
+            html += i18n( "<h2>Sender accepts this task</h2>" );
             html += taskDetails( incidence );
           }
           break;
 
         case Attendee::Tentative:
           if( event ) {
-            html = i18n( "<h2>Sender tentatively accepts this "
+            html += i18n( "<h2>Sender tentatively accepts this "
                          "meeting invitation</h2>" );
             html += meetingDetails( incidence, event );
           } else {
-            html = i18n( "<h2>Sender tentatively accepts this task</h2>" );
+            html += i18n( "<h2>Sender tentatively accepts this task</h2>" );
             html += taskDetails( incidence );
           }
           break;
 
         case Attendee::Declined:
           if( event ) {
-            html = i18n( "<h2>Sender declines this meeting invitation</h2>" );
+            html += i18n( "<h2>Sender declines this meeting invitation</h2>" );
             html += meetingDetails( incidence, event );
           } else {
-            html = i18n( "<h2>Sender declines this task</h2>" );
+            html += i18n( "<h2>Sender declines this task</h2>" );
             html += taskDetails( incidence );
           }
           break;
 
         default:
           if( event ) {
-            html = i18n( "<h2>Unknown response to this meeting invitation</h2>" );
+            html += i18n( "<h2>Unknown response to this meeting invitation</h2>" );
             html += meetingDetails( incidence, event );
           } else {
-            html = i18n( "<h2>Unknown response to this task</h2>" );
+            html += i18n( "<h2>Unknown response to this task</h2>" );
             html += taskDetails( incidence );
           }
         }
       } else if( sMethod == "cancel" ) {
         if( event ) {
-          html = i18n( "<h2>This meeting has been canceled</h2>" );
+          html += i18n( "<h2>This meeting has been canceled</h2>" );
           html += meetingDetails( incidence, event );
         } else {
-          html = i18n( "<h2>This task was canceled</h2>" );
+          html += i18n( "<h2>This task was canceled</h2>" );
           html += taskDetails( incidence );
         }
       } else if ( sMethod == "publish" ) {
@@ -422,9 +433,8 @@ class Formatter : public KMail::Interface::BodyPartFormatter
         html += sDescr + "</td></tr></table>";
       }
 
-      writer->begin( "" );
-      writer->write( html );
-      writer->end();
+      html += "</td></tr></table><br></div>";
+      writer->queue( html );
 
       return Ok;
     }
