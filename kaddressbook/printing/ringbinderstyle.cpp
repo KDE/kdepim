@@ -132,7 +132,7 @@ void RingBinderPrintStyle::print( KABC::Addressee::List &contacts, PrintProgress
   painter.setPen( Qt::black );
   printer->setFullPage( true ); // use whole page
   QPaintDeviceMetrics metrics( printer );
-  kdDebug() << "RingBinderPrintStyle::print: printing on a "
+  kdDebug(5720) << "RingBinderPrintStyle::print: printing on a "
   << metrics.width() << "x" << metrics.height()
   << " size area," << endl << "   "
   << "margins are "
@@ -210,7 +210,8 @@ bool RingBinderPrintStyle::printEntries( KABC::Addressee::List &contacts,
         } else {
           QString tmpstr = ltgroups[ grpnum + 1 ];
           nextchar = tmpstr.at( tmpstr.length() - 1 ).upper();
-          qDebug("################### " + tmpstr + " last is: " + QString(nextchar) );
+          kdDebug(5720) << "################### " << tmpstr << " last is: " <<
+            QString(nextchar) << endl;
         }
 
         // determine nowchar depending on sorting criterion
@@ -218,7 +219,8 @@ bool RingBinderPrintStyle::printEntries( KABC::Addressee::List &contacts,
           QString tmpstr = sfield->value( addressee );
           if ( !tmpstr.isEmpty() ) {
             nowchar = tmpstr.at( 0 ).upper();
-            qDebug("------------------ " + tmpstr + " has nowchar: " + QString(nowchar) );
+            kdDebug(5720) << "------------------ " << tmpstr << " has nowchar: "
+              << QString(nowchar) << endl;
           }
         }
         if (    ( !tmpl->reverseSorting() && nowchar >= nextchar )
@@ -240,7 +242,7 @@ bool RingBinderPrintStyle::printEntries( KABC::Addressee::List &contacts,
         }
       }
       // print it:
-      kdDebug() << "RingBinderPrintStyle::printEntries: printing addressee "
+      kdDebug(5720) << "RingBinderPrintStyle::printEntries: printing addressee "
       << addressee.realName() << endl;
 
       // get the bounding rect:
@@ -259,7 +261,7 @@ bool RingBinderPrintStyle::printEntries( KABC::Addressee::List &contacts,
       printEntry( addressee, window, painter, ypos );
       ypos += entryheight;
     } else {
-      kdDebug() << "RingBinderPrintStyle::printEntries: strange, addressee "
+      kdDebug(5720) << "RingBinderPrintStyle::printEntries: strange, addressee "
       << "with UID " << addressee.uid() << " not available." << endl;
     }
     mPrintProgress->setProgress( ( count++*100 ) / contacts.count() );
@@ -270,7 +272,7 @@ bool RingBinderPrintStyle::printEntries( KABC::Addressee::List &contacts,
   fillEmpty( window, printer, painter, ypos, grpnum );
   // ----- set progress:
   mPrintProgress->setProgress( 100 );
-  kdDebug() << "PLANNER STYLE: PRINT FINISHED" << endl;
+  kdDebug(5720) << "PLANNER STYLE: PRINT FINISHED" << endl;
   return true;
 }
 
