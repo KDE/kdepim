@@ -196,6 +196,7 @@ KDGanttView::KDGanttView( QWidget* parent, const char* name  ) : KDGanttMinimize
 
 KDGanttView::~KDGanttView()
 {
+  setUpdateEnabled(false);
   // delete cut item, if there is any
   myCanvasView->resetCutPaste( 0 );
 }
