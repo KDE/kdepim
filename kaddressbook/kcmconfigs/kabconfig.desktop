@@ -3,6 +3,7 @@ Encoding=UTF-8
 Icon=kaddressbook
 Type=Service
 ServiceTypes=KCModule
+DocPath=kaddressbook/preferences.html
 
 X-KDE-ModuleType=Library
 X-KDE-Library=kabconfig

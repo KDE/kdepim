@@ -3,7 +3,7 @@ Encoding=UTF-8
 Icon=dlgedit
 Type=Service
 ServiceTypes=KCModule
-DocPath=
+DocPath=kaddressbook/preferences.html
 
 X-KDE-ModuleType=Library
 X-KDE-Library=kabcustomfields
