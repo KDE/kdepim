@@ -42,6 +42,7 @@ static const char *popmail_conduit_id=
 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/utsname.h>
 #include <ctype.h>
 #include <iostream.h>
 
@@ -1986,6 +1987,11 @@ int PopMailConduit::doUnixStyle()
 
 
 // $Log$
+// Revision 1.44  2002/08/25 13:28:28  mhunter
+// CVS_SILENT Corrected typographical errors
+//
+// When replying, please CC me - I'm not subscribed
+//
 // Revision 1.43  2002/08/23 22:59:30  kainhofe
 // Implemented Adriaan's change 'signal: void exec()' -> 'bool exec()' for "my" conduits
 //
