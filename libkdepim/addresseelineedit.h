@@ -35,6 +35,8 @@ namespace KABC {
 class LdapSearch;
 }
 
+namespace KPIM {
+
 class AddresseeLineEdit : public KLineEdit
 {
   Q_OBJECT
@@ -85,6 +87,11 @@ class AddresseeLineEdit : public KLineEdit
     static KABC::LdapSearch *s_LDAPSearch;
     static QString *s_LDAPText;
     static AddresseeLineEdit *s_LDAPLineEdit;
+
+    class AddresseeLineEditPrivate;
+    AddresseeLineEditPrivate *d;
 };
+
+}
 
 #endif

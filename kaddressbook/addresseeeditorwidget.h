@@ -45,7 +45,6 @@ class KLineEdit;
 class KSqueezedTextLabel;
 
 class AddressEditWidget;
-class AddresseeLineEdit;
 class EmailEditWidget;
 class KeyWidget;
 class PhoneEditWidget;
@@ -56,6 +55,7 @@ class Core;
 }
 
 namespace KPIM {
+class AddresseeLineEdit;
 class CategorySelectDialog;
 class CategoryEditDialog;
 }
@@ -149,10 +149,10 @@ class AddresseeEditorWidget : public AddresseeEditorBase
     KLineEdit *mDepartmentEdit;
     KLineEdit *mOfficeEdit;
     KLineEdit *mProfessionEdit;
-    AddresseeLineEdit *mManagerEdit;
-    AddresseeLineEdit *mAssistantEdit;
+    KPIM::AddresseeLineEdit *mManagerEdit;
+    KPIM::AddresseeLineEdit *mAssistantEdit;
     KLineEdit *mNicknameEdit;
-    AddresseeLineEdit *mSpouseEdit;
+    KPIM::AddresseeLineEdit *mSpouseEdit;
     KDateEdit *mBirthdayPicker;
     KDateEdit *mAnniversaryPicker;
     QTextEdit *mNoteEdit;

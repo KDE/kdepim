@@ -42,6 +42,8 @@
 
 #include "addresseelineedit.h"
 
+using namespace KPIM;
+
 KCompletion * AddresseeLineEdit::s_completion = 0L;
 bool AddresseeLineEdit::s_addressesDirty = false;
 QTimer* AddresseeLineEdit::s_LDAPTimer = 0L;
