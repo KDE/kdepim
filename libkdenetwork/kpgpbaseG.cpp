@@ -706,7 +706,7 @@ BaseG::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
           QString uidString = QString::fromUtf8( uid.data() );
           // check whether uid was utf-8 encoded
           bool isUtf8 = true;
-          for ( unsigned int i = 0; i < uidString.length() - 1; ++i ) {
+          for ( unsigned int i = 0; i + 1 < uidString.length(); ++i ) {
             if ( uidString[i].unicode() == 0xdbff &&
                  uidString[i+1].row() == 0xde ) {
               // we found a non-Unicode character (see QString::fromUtf8())
@@ -727,7 +727,7 @@ BaseG::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
             // We only look at the first part of the user id (i. e. everything
             // before the email address resp. before a comment)
             for( signed char* ch = (signed char*)uid.data();
-                 ch && ( *ch != '(' ) && ( *ch != '<' );
+                 *ch && ( *ch != '(' ) && ( *ch != '<' );
                  ++ch ) {
               if( ( ( *ch >= 'A' ) && ( *ch <= 'Z' ) )
                   || ( ( *ch >= 'a' ) && ( *ch <= 'z' ) ) )
