@@ -1,7 +1,8 @@
 KDE_CXXFLAGS = $(USE_THREADS)
 
-INCLUDES=	-I$(top_srcdir)/libkdenetwork \
+INCLUDES=	-I$(top_srcdir)/libkmime \
 		-I$(top_srcdir)/libkdepim \
+		-I$(top_srcdir)/libkpgp \
                 -I$(top_srcdir) \
 		 $(all_includes)
 
@@ -24,7 +25,7 @@ kcm_knode_la_LIBADD = libknodecommon.la $(LIB_KDECORE)
 
 
 libknodecommon_la_LDFLAGS = $(all_libraries) -no-undefined
-libknodecommon_la_LIBADD = -lkdeprint -lkwalletclient $(top_builddir)/libkdenetwork/libkdenetwork.la $(top_builddir)/libkdepim/libkdepim.la $(LIB_KSPELL) $(LIB_KABC) $(LIB_KFILE) $(LIB_KUTILS) $(LIBRESOLV)
+libknodecommon_la_LIBADD = -lkdeprint -lkwalletclient $(top_builddir)/libkmime/libkmime.la $(top_builddir)/libkpgp/libkpgp.la $(top_builddir)/libkdepim/libkdepim.la $(LIB_KSPELL) $(LIB_KABC) $(LIB_KFILE) $(LIB_KUTILS) $(LIBRESOLV)
 libknodecommon_la_SOURCES =   knconfigmanager.cpp \
                   knconfig.cpp \
                   knconfigwidgets.cpp \
