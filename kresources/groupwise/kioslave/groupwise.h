@@ -31,6 +31,11 @@ class Groupwise : public KIO::SlaveBase
   protected:
     void debugMessage( const QString & );
     void errorMessage( const QString & );  
+
+    void getFreeBusy( const KURL &url );
+    void getCalendar( const KURL &url );
+
+    QString soapUrl( const KURL &url );
 };
 
 #endif
