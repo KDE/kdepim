@@ -1414,10 +1414,16 @@ QString ToolTipVisitor::dateRangeText( Event*event )
     ret += "<br>"+i18n("<i>Date:</i>&nbsp;%1").
         arg( event->dtStartDateStr().replace(" ", "&nbsp;") );
     if ( !event->doesFloat() ) {
-      tmp = "<br>" + i18n("time range for event, &nbsp; to prevent ugly line breaks",
+      if ( event->dtStartTimeStr() == event->dtEndTimeStr() ) { // to prevent 'Time: 17:00 - 17:00'
+        tmp = "<br>" + i18n("time for event, &nbsp; to prevent ugly line breaks",
+        "<i>Time:</i>&nbsp;%1").
+        arg( event->dtStartTimeStr().replace(" ", "&nbsp;") );
+      } else {
+        tmp = "<br>" + i18n("time range for event, &nbsp; to prevent ugly line breaks",
         "<i>Time:</i>&nbsp;%1&nbsp;-&nbsp;%2").
         arg( event->dtStartTimeStr().replace(" ", "&nbsp;") ).
         arg( event->dtEndTimeStr().replace(" ", "&nbsp;") );
+      }
       ret += tmp;
     }
 
