@@ -13,6 +13,8 @@
 #include <klocale.h>
 #include <kdebug.h>
 
+#include <kabc/stdaddressbook.h>
+
 using namespace KABC;
 
 class AddresseeItem : public QListViewItem
@@ -669,4 +671,10 @@ void MainWindow::addressBookLocked()
 void MainWindow::addressBookUnlocked()
 {
   kdDebug() << "AddressBook unlocked()" << endl;
+}
+
+
+void MainWindow::fileOpenStd()
+{
+  loadAddressBook( StdAddressBook::fileName() );
 }

@@ -1037,6 +1037,7 @@
     </property>
     <item text="File" name="PopupMenu">
         <action name="open"/>
+        <action name="open_std"/>
         <action name="save"/>
         <separator/>
         <action name="dump"/>
@@ -1133,6 +1134,14 @@
         </property>
         <property name="toolTip">
             <string>Dump Addressbook</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>open_std</cstring>
+        </property>
+        <property name="text">
+            <string>Open Standard Addressbook</string>
         </property>
     </action>
 </actions>
@@ -1271,6 +1280,12 @@
         <receiver>MainWindow</receiver>
         <slot>removeCustom()</slot>
     </connection>
+    <connection>
+        <sender>open_std</sender>
+        <signal>activated()</signal>
+        <receiver>MainWindow</receiver>
+        <slot>fileOpenStd()</slot>
+    </connection>
 </connections>
 <includes>
     <include location="global" impldecl="in declaration">resourcefile.h</include>
@@ -1292,22 +1307,22 @@
     <slot>destroy()</slot>
     <slot>fileSave()</slot>
     <slot>fileOpen()</slot>
-    <slot>loadAddressBook(const QString &amp; fileName)</slot>
-    <slot>updateAddressee(QListViewItem * item)</slot>
-    <slot>readAddressee(const KABC::Addressee &amp; a)</slot>
-    <slot returnType="KABC::Addressee">writeAddressee(const KABC::Addressee &amp; addressee)</slot>
+    <slot>loadAddressBook( const QString &amp; fileName )</slot>
+    <slot>updateAddressee( QListViewItem * item )</slot>
+    <slot>readAddressee( const KABC::Addressee &amp; a )</slot>
+    <slot returnType="KABC::Addressee">writeAddressee( const KABC::Addressee &amp; addressee )</slot>
     <slot>newEntry()</slot>
     <slot>removeEntry()</slot>
-    <slot>updateAddress(int id)</slot>
-    <slot returnType="KABC::Address">writeAddress(const KABC::Address &amp; address)</slot>
-    <slot>writeAddress(const QString &amp; id)</slot>
-    <slot>readAddress(const KABC::Address &amp; a)</slot>
-    <slot>readAddress(const QString &amp; id)</slot>
-    <slot>updatePhone(int id)</slot>
-    <slot returnType="KABC::PhoneNumber">writePhone(const KABC::PhoneNumber &amp; phoneNumber)</slot>
-    <slot>writePhone(const QString &amp; id)</slot>
-    <slot>readPhone(const KABC::PhoneNumber &amp; p)</slot>
-    <slot>readPhone(const QString &amp; id)</slot>
+    <slot>updateAddress( int id )</slot>
+    <slot returnType="KABC::Address">writeAddress( const KABC::Address &amp; address )</slot>
+    <slot>writeAddress( const QString &amp; id )</slot>
+    <slot>readAddress( const KABC::Address &amp; a )</slot>
+    <slot>readAddress( const QString &amp; id )</slot>
+    <slot>updatePhone( int id )</slot>
+    <slot returnType="KABC::PhoneNumber">writePhone( const KABC::PhoneNumber &amp; phoneNumber )</slot>
+    <slot>writePhone( const QString &amp; id )</slot>
+    <slot>readPhone( const KABC::PhoneNumber &amp; p )</slot>
+    <slot>readPhone( const QString &amp; id )</slot>
     <slot>newAddress()</slot>
     <slot>removeAddress()</slot>
     <slot>dumpAddressBook()</slot>
@@ -1325,6 +1340,7 @@
     <slot>addressBookChanged()</slot>
     <slot>addressBookLocked()</slot>
     <slot>addressBookUnlocked()</slot>
+    <slot>fileOpenStd()</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>
