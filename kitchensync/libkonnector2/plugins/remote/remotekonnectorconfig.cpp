@@ -43,7 +43,7 @@ RemoteKonnectorConfig::RemoteKonnectorConfig( QWidget *parent )
 {
   QBoxLayout *topLayout = new QVBoxLayout( this );
 
-  QPushButton *button = new QPushButton( i18n("Standard setup..."), this );
+  QPushButton *button = new QPushButton( i18n("Standard Setup..."), this );
   topLayout->addWidget( button );
   connect( button, SIGNAL( clicked() ), SLOT( setupStandard() ) );
 

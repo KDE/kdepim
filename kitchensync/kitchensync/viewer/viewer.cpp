@@ -104,11 +104,11 @@ QWidget *Viewer::widget()
     topLayout->addWidget( mListView );
 
     QBoxLayout *buttonLayout = new QHBoxLayout( topLayout );
-    QPushButton *button = new QPushButton( i18n("Expand all"), mTopWidget );
+    QPushButton *button = new QPushButton( i18n("Expand All"), mTopWidget );
     connect( button, SIGNAL( clicked() ), SLOT( expandAll() ) );
     buttonLayout->addWidget( button );
     
-    button = new QPushButton( i18n("Collapse all"), mTopWidget );
+    button = new QPushButton( i18n("Collapse All"), mTopWidget );
     connect( button, SIGNAL( clicked() ), SLOT( collapseAll() ) );
     buttonLayout->addWidget( button );
     

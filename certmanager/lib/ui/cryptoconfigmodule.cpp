@@ -2,7 +2,7 @@
     cryptoconfigmodule.cpp
 
     This file is part of kgpgcertmanager
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarï¿½vdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License,
@@ -429,7 +429,7 @@ void Kleo::CryptoConfigEntryLDAPURL::slotOpenDialog()
   // I'm a bad boy and I do it all on the stack. Enough classes already :)
   // This is just a simple dialog around the directory-services-widget
   KDialogBase dialog( this, 0, true /*modal*/,
-                      i18n( "Configure LDAP servers" ),
+                      i18n( "Configure LDAP Servers" ),
                       KDialogBase::Default|KDialogBase::Cancel|KDialogBase::Ok,
                       KDialogBase::Ok, true /*separator*/ );
   DirectoryServicesWidget* dirserv = new DirectoryServicesWidget( mEntry, &dialog );

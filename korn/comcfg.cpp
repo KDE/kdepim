@@ -44,7 +44,7 @@ KCommandsCfg::makeWidget(QWidget * parent)
   _passiveDate  = new QCheckBox( i18n( "P&opup contains date of mail" ), popup );
   
   //Groupbox for misc. options.
-  QGroupBox *misc = new QGroupBox( 2, Horizontal, i18n( "Miscellaneous options" ), w, "Misc" );
+  QGroupBox *misc = new QGroupBox( 2, Horizontal, i18n( "Miscellaneous Options" ), w, "Misc" );
   topLayout->addWidget( misc );
   //Fill misc. options.
   QLabel * l3 = new QLabel(i18n("Play &sound:"), misc );

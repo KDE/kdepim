@@ -275,7 +275,7 @@ void KCMKabCustomFields::initGUI()
   mPageView->setFullWidth( true );
   hbox->addWidget( mPageView );
 
-  QGroupBox *box = new QGroupBox(1, Qt::Horizontal, i18n("Preview of selected page"), this );
+  QGroupBox *box = new QGroupBox(1, Qt::Horizontal, i18n("Preview of Selected Page"), this );
 
   mPagePreview = new QLabel( box );
   mPagePreview->setMinimumWidth( 300 );

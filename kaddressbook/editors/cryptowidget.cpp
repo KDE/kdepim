@@ -1,6 +1,6 @@
 /*
     This file is part of KAddressBook.
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarï¿½vdalens Datakonsult AB
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -75,7 +75,7 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
   topLayout->setColStretch( 1, 1 );
   topLayout->setRowStretch( 4, 1 );
 
-  QVGroupBox* protGB = new QVGroupBox( i18n("Allowed protocols:"), this );
+  QVGroupBox* protGB = new QVGroupBox( i18n("Allowed Protocols"), this );
   topLayout->addMultiCellWidget( protGB,0,0,0,1 );
 
   uint msgFormat = 1;

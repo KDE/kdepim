@@ -1,5 +1,5 @@
 /* ldapsearchdialogimpl.cpp - LDAP access
- *      Copyright (C) 2002 Klarälvdalens Datakonsult AB
+ *      Copyright (C) 2002 Klarï¿½vdalens Datakonsult AB
  *
  *      Author: Steffen Hansen <hansen@kde.org>
  *
@@ -153,8 +153,8 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, QWidget* parent,
   boxLayout->addMultiCellWidget( mRecursiveCheckbox, 1, 1, 0, 4 );
 
   mSearchType = new KComboBox( groupBox );
-  mSearchType->insertItem( i18n( "Contains..." ) );
-  mSearchType->insertItem( i18n( "Starts with..." ) );
+  mSearchType->insertItem( i18n( "Contains" ) );
+  mSearchType->insertItem( i18n( "Starts With" ) );
   boxLayout->addMultiCellWidget( mSearchType, 1, 1, 3, 4 );
   
   topLayout->addWidget( groupBox );

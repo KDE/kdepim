@@ -2,7 +2,7 @@
     dnattributeorderconfigwidget.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarï¿½vdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -88,8 +88,8 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
   int row = -1;
 
   ++row;
-  glay->addWidget( new QLabel( i18n("Available Attributes:"), this ), row, 0 );
-  glay->addWidget( new QLabel( i18n("Current Attribute Order:"), this ), row, 2 );
+  glay->addWidget( new QLabel( i18n("Available attributes:"), this ), row, 0 );
+  glay->addWidget( new QLabel( i18n("Current attribute order:"), this ), row, 2 );
 
 
   ++row;

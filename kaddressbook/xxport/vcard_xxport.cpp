@@ -456,7 +456,7 @@ void VCardViewerDialog::slotCancel()
 
 VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent,
                                                         const char *name )
-  : KDialogBase( Plain, i18n( "Select vCard fields" ), Ok | Cancel, Ok,
+  : KDialogBase( Plain, i18n( "Select vCard Fields" ), Ok | Cancel, Ok,
                  parent, name, true, true )
 {
   QFrame *page = plainPage();
