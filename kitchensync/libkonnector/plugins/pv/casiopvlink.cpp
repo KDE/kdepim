@@ -326,16 +326,20 @@ QString CasioPVLink::metaId() const
 bool CasioPVLink::callConnectPV()
 {
   kdDebug(5202) << "callConnectPV()" << endl;
-
+  
   if (m_state == CONNECTED)
   {
     kdDebug(5205) << "Is already syncing!!" << endl;
-    emit errorKonnector(10002,
-          "PVPluginException: Device is already connected!\nPlease wait until running process is finished.");
+    emit errorKonnector(10002, "PVPluginException: Device is already connected!\nPlease wait until running process is finished.");
     return false;
   }
   else if (m_state == DISCONNECTED)
   {
+    if ((m_connectionMode != "/dev/ttyS0") && (m_connectionMode != "/dev/ttyS1"))
+    {
+      emit errorKonnector(10009, "PVPluginException: Wrong or no serial port selected in configuration!");
+      return false;    
+    }
     // Prepare DCOP call to connectPV()
     QByteArray data, replyData;
     QCString replyType;
@@ -343,7 +347,8 @@ bool CasioPVLink::callConnectPV()
     stream << m_connectionMode;
 
     // Call connectPV()
-    if (kapp->dcopClient()->call("pvDaemon", "PVDaemonIface", "connectPV(QString)", data, replyType, replyData ) )
+    if (kapp->dcopClient()->call("pvDaemon", "PVDaemonIface",
+                              "connectPV(QString)", data, replyType, replyData))
     {
       kdDebug(5205) << "Reply Type: " << replyType << endl;
       QDataStream answer(replyData, IO_ReadOnly);
@@ -352,7 +357,6 @@ bool CasioPVLink::callConnectPV()
       answer >> strList;
       QStringList::Iterator it = strList.begin();
       m_modelCode = (*it); ++it;
-      kdDebug(5205) << "Model Code: " << m_modelCode << endl;
       m_optionalCode = (*it); ++it;
       if (!(it == strList.end()))
       {
@@ -362,8 +366,17 @@ bool CasioPVLink::callConnectPV()
       {
         m_secretArea = false;
       }
-      // xxx Check if the correct PV model was connected
-
+      
+      // Check if the correct PV model was connected -> xxx add more models!
+      if (((m_model == "PV-750 Plus") && (!m_modelCode.startsWith("h"))) ||
+           ((m_model == "PV-S660") && (!m_modelCode.startsWith("v"))) ||
+             (m_model == ""))
+      {       
+        // disconnect PV and emit an exception
+        callDisconnectPV();
+        emit errorKonnector(10008, "PVPluginException: Wrong or no PV model selected in configuration!");
+        return false;      
+      }
       // Check if the connected PV was already synchronized before.
       /* xxx not used yet. first meta sync has to be implemented!
       if (m_meta)
