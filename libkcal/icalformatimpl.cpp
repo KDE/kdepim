@@ -1898,7 +1898,7 @@ icalcomponent *ICalFormatImpl::createScheduleComponent(IncidenceBase *incidence,
   icalcomponent_add_property(message,icalproperty_new_method(icalmethod));
 
   // TODO: check, if dynamic cast is required
-  if(incidence->type() == "ToDo") {
+  if(incidence->type() == "Todo") {
     Todo *todo = static_cast<Todo *>(incidence);
     icalcomponent_add_component(message,writeTodo(todo));
   }
