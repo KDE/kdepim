@@ -185,6 +185,8 @@ void ResourceGroupwareBase::slotDownloadJobResult( KPIM::GroupwareJob *job )
     kdError() << "job failed: " << job->errorString() << endl;
   } else {
     emit loadingFinished( this );
+    if ( addressBook() )
+      addressBook()->emitAddressBookChanged();
 //     emit addressbookChanged();
   }
 
