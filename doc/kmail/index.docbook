@@ -23,7 +23,7 @@
 </author>
 </authorgroup>
 
-<date>2001-06-09</date>
+<date>2001-06-19</date>
 <releaseinfo>1.02.00</releaseinfo>
 
 <copyright>
@@ -211,31 +211,53 @@ a dial-up connection in the <link linkend="faq">FAQ</link> section.</para>
 <para>To set up an account so you can receive mail, press the
 <guibutton>Add...</guibutton> button in the <guilabel>Incoming Mail</guilabel>
 section. You will then be prompted for the type of account.  Most users should
-select <guilabel>Pop3</guilabel> (<acronym>IMAP</acronym> accounts are not yet
-supported).<!-- fixme for 2.2 -->
- After pressing <guibutton>OK</guibutton> you will be presented with
+select <guilabel>Pop3</guilabel> or <guilabel>IMAP</guilabel>.</para>
+
+<para>After pressing <guibutton>OK</guibutton> you will be presented with
 the <guilabel>Add Account</guilabel> window. First, fill in the
 <guilabel>Name</guilabel> field to name your account. You can choose any name
 you like.  <guilabel>Login</guilabel>, <guilabel>Password</guilabel>, and
 <guilabel>Host</guilabel> should be filled in with the appropriate information
 from your <acronym>ISP</acronym> or System Administrator. Again, you should not
-need to change the <guilabel>Port</guilabel> setting (the default is
-<guilabel>110</guilabel>).</para>
+need to change the <guilabel>Port</guilabel> setting (the default for POP3 is
+<userinput>110</userinput>, the default for IMAP is <userinput>143</userinput>).</para>
 
-<!-- SSL for Pop3 is currently not part of KMail
+<sect3 id="receiving-mail-imap">
+<title>Options only relevant to IMAP</title>
+
+<para>If you are using IMAP, you can optionally specify a path
+in the <guilabel>Prefix to folders</guilabel> field. This tells
+&kmail; where it can find your folders on the server. If you also have
+a shell account on the server and the mails are stored in your home
+directory it might be useful to store the mails in a subdirectory
+<filename class="directory">/Mail/</filename>. Use this as a value
+in the <guilabel>Prefix to folders</guilabel> field so that &kmail;
+does not mix up mailbox files and other files. If you are not
+interested in this feature, simple leave the field blank.</para>
+
+<para>If you check <guilabel>Automatically expunge deleted
+messages</guilabel> &kmail; deletes the mails you deleted on the
+server as soon as you leave the folder. Otherwise the mails are
+only marked as deleted and it is up to you to compact the folders
+manually by using the menu item <guimenuitem>Compact all
+folders</guimenuitem>.</para>
+
+<para>If you check <guilabel>Show hidden folders</guilabel>,
+folders whose name starts with a dot are displayed.</para>
+
+<!-- 
+fixme:
+SSL for Pop3 is currently not part of KMail
 <para>With <guilabel>Use SSL for secure mail download</guilabel>
 you can encrypt the messages you are fetching on their way from your mailserver
 to your computer - but only if your mailserver supports that. Please understand
 that this does not encrypt your mails on their normal way through the Internet.</para>
 -->
 
-<para>If you select <guilabel>Store POP password in configuration
-file</guilabel> &kmail; will remember your password so you won't have to type it
-every time you start &kmail; and fetch new mail.</para>
+</sect3>
 
-<warning><para>Be warned that we cannot really
-encrypt the password, so people who can access your configuration files (&eg;
-system administrators) can get your password if you select this option.</para></warning>
+<sect3 id="receiving-mail-pop3">
+<title>Options only relevant to POP3</title>
 
 <para>Select <guilabel>Delete mail from server</guilabel> if you don't want to
 leave your mail on the server.</para>
@@ -245,11 +267,6 @@ don't want to check this account whenever you use <menuchoice><guimenu>Check
 mail</guimenu></menuchoice>.  You can still check for new mail on this account
 with <menuchoice><guimenu>File</guimenu><guimenuitem>Check Mail
 in</guimenuitem></menuchoice>.</para>
-
-<!-- was removed:
-<para>Select <guilabel>Retrieve all mail from server</guilabel> if you
-want to get all mails, not only the new ones.</para>
--->
 
 <para>Select <guilabel>Enable interval mail checking</guilabel> if you want
 &kmail; to check for new mail automatically. The interval can be specified below
@@ -265,7 +282,33 @@ option.</para>
 will execute just before fetching mail. Please specify the full path and note
 that &kmail; will not continue until the program returns.</para>
 
-<para>You are now ready to send and receive mail!</para>
+</sect3>
+
+<sect3 id="receiving-mail-imap-pop3">
+<title>Options for both IMAP and POP3</title>
+
+<para>If you select <guilabel>Store POP password in configuration
+file</guilabel> resp. <guilabel>Store IMAP password in configuration
+file</guilabel> &kmail; will remember your password so you won't have to type it
+every time you start &kmail; and fetch new mail.</para>
+
+<warning><para>Be warned that we cannot really
+encrypt the password, so people who can access your configuration files (&eg;
+system administrators) can get your password if you select this option.</para></warning>
+
+<para>&kmail; supports clear text authentificaton, LOGIN and CRAM-MD5. You should 
+only use <guilabel>Clear text</guilabel> if your server doesn't support any of the other two 
+authentification methods. These other methods transfer the password encrypted over the 
+network, which is more secure. Besides that anonymous IMAP is supported.</para>
+
+<!--fixme: apop etc.; pop/imap diff -->
+
+<para>You are now ready to send and receive mail! For IMAP,
+click on the <guilabel>[+]</guilabel> sign in  the folder tree in
+&kmail;'s main window. &kmail; then connects to your server and
+displays the folders it finds.</para>
+
+</sect3>
 
 </sect2>
 
@@ -745,7 +788,15 @@ below for a detailed description of each search rule type.</para>
 additional (initially empty) rule if you want to define more complex
 patterns and on <guibutton>Fewer</guibutton> to remove the last
 rule. <guibutton>Clear</guibutton> clears the pattern, &ie; it removes
-all but two rules from screen and resets those two.</para></listitem>
+all but two rules from screen and resets those two.</para>
+
+<para>Invalid or empty rules are not evaluated. In fact, they are
+removed internally. Whether a given rule is considered invalid depends
+on the type of rule, but as a rule of thumb you can assume that rules
+are considered invalid if the domain (the first combobox in
+each row) or the search string (the line edit at the end of each row)
+is empty. Thus, to effectively delete a particular rule, you only
+need to empty one of those two edit fields.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Filter Actions</guilabel></term> <listitem><para>In
@@ -758,7 +809,17 @@ description of each action type.</para>
 empty action if you want to define more than one action and on
 <guibutton>Fewer</guibutton> to remove the last
 action. <guibutton>Clear</guibutton> clears the list, &ie; it
-removes all but one action and resets that one.</para></listitem>
+removes all but one action and resets that one.</para>
+
+<para>Invalid or empty actions are not executed. In fact, they are
+removed internally. Whether a given action is considered invalid
+depends on the type of action, but as a rule of thumb you can assume
+that actions are considered empty if no type is selected or - in case
+of actions that need a textual parameter (&ie; one which must be
+entered into a line edit) - the parameter is empty. Thus, to
+effectively delete a particular action, you only need to unset its
+type, &ie; select the last (empty) item in the type combo
+box.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Advanced options</guilabel></term><listitem><para> In
@@ -3741,7 +3802,7 @@ maintainer)</para></listitem>
 <email>daniel.naber@t-online.de</email>, <application>PGP</application> part by
 Andreas Gungl <email>a.gungl@gmx.de</email>, filter part by
 Marc Mutz <email>Marc.Mutz@uni-bielefeld.de</email>. Other parts
-have been contributed by the various &kmail; maintainers.</para>
+have been contributed by the various &kmail; developers.</para>
 
 <para>&kmail; 1.0
 documentation by David Rugge <email>davidrugge@mindspring.com</email>.
