@@ -84,7 +84,7 @@ void filter_pmail::import(filterInfo *info)
    processFiles(".cnm", &filter_pmail::importNewMessage);
    info->log(i18n("Importing mail folders ('.pmm')..."));
    processFiles(".pmm", &filter_pmail::importMailFolder);
-   info->log(i18n("Importing 'unix' mail folders ('.mbx')..."));
+   info->log(i18n("Importing 'UNIX' mail folders ('.mbx')..."));
    processFiles(".mbx", &filter_pmail::importUnixMailFolder);
    kmailStop(info);
 }
