@@ -29,10 +29,16 @@
 using namespace KSync;
 using namespace PVHelper;
 
+/**
+  * Converts a QDomNode to a TodoSyncee*.
+  * @param node The node (part of an XML document) to be converted
+  * @return KSync::TodoSyncee* The converted todos
+  */
 TodoSyncee* Todo::toTodoSyncee(QDomNode& n)
 {
   kdDebug(5205) << "Begin::Todo::toTodoSyncee" << endl;
   TodoSyncee* syncee = new KSync::TodoSyncee();
+  // Define the helper
   KonnectorUIDHelper helper(QDir::homeDirPath() + "/.kitchensync/meta/idhelper");
 
   QString id;
@@ -75,7 +81,7 @@ TodoSyncee* Todo::toTodoSyncee(QDomNode& n)
         else if (el.tagName() == QString::fromLatin1("alarmdate"))
         {
           if (el.text() != "")
-          {          
+          {
             // Set alarm date
             alarmDate.setYMD(el.text().left(4).toInt(), el.text().mid(4, 2).toInt(),
                                    el.text().mid(6, 2).toInt());
@@ -89,7 +95,7 @@ TodoSyncee* Todo::toTodoSyncee(QDomNode& n)
             // Time should be calculated depending on timezone -> dirty hack! xxx
             QTime alarmTime(el.text().left(2).toInt(), el.text().right(2).toInt());
             QDateTime datTime(alarmDate, alarmTime);
-            
+
             // Calculate offset
             int offset = datTime.secsTo(todo->dtDue());
             // Add alarm as an incidence of this todo
@@ -177,8 +183,15 @@ TodoSyncee* Todo::toTodoSyncee(QDomNode& n)
 
 }
 
+/**
+  * Converts a TodoSyncee* to a QString which represents a
+  * DOM node.
+  * @param syncee The syncee to be converted
+  * @return QString The converted todos as an XML string
+  */
 QString Todo::toXML(TodoSyncee* syncee)
 {
+  // Define the helper
   KonnectorUIDHelper helper(QDir::homeDirPath() + "/.kitchensync/meta/idhelper");
 
   QStringList categories;
@@ -231,7 +244,7 @@ QString Todo::toXML(TodoSyncee* syncee)
     {
       str.append("<duedate></duedate>\n");
     }
-    
+
     // alarm
     KCal::Alarm *al = todo->alarms().first();
     if (al)
@@ -247,7 +260,7 @@ QString Todo::toXML(TodoSyncee* syncee)
       str.append("<alarmtime></alarmtime>\n");
     }
     if (todo->isCompleted())
-    {    
+    {
       QDateTime datTime = todo->completed();
       str.append("<checkdate>" + datTime.toString("yyyyMMdd") + "</checkdate>\n");
     }

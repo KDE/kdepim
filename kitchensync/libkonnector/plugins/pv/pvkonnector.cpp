@@ -36,6 +36,11 @@ K_EXPORT_COMPONENT_FACTORY(libpvkonnector, PVKonnectorPlugin);
 
 using namespace KSync;
 
+/** Constructor
+  *
+  * @param obj The Parent QObject
+  * @param name The name of this instance
+  */
 PVPlugin::PVPlugin(QObject *obj, const char *name, const QStringList)
   : KonnectorPlugin(obj, name)
 {
@@ -53,21 +58,38 @@ PVPlugin::PVPlugin(QObject *obj, const char *name, const QStringList)
     this, SLOT(slotChanged(bool)));
 }
 
+/** Destructor
+  *
+  */
 PVPlugin::~PVPlugin()
 {
     kdDebug(5202) << "PVPlugin destructor";
   delete casioPVLink;
 }
+
+/**
+  * Sets the uid of the konnector. This uid is given at loading of
+  * the plugin.
+  * @param uid The uid of the konnector
+  */ 
 void PVPlugin::setUDI(const QString &udi)
 {
   m_udi = udi;
 }
 
+/**
+  * Returns the uid of the konnector.
+  * @return QString The uid of the konnector
+  */  
 QString PVPlugin::udi()const
 {
   return m_udi;
 }
 
+/**
+  * Returns the icon of the Konnector. Not used yet!
+  * @return QIconSet The icon of the Konnector
+  */ 
 QIconSet PVPlugin::iconSet()const
 {
     kdDebug(5205) << "iconSet" << endl;
@@ -75,11 +97,21 @@ QIconSet PVPlugin::iconSet()const
     logo.load( locate("appdata",  "pics/pv_logo.png" ) );
     return QIconSet( logo );
 }
+
+/**
+  * Returns the icon name of the Konnector. Not used yet!
+  * @return QString The icon name of the Konnector
+  */  
 QString PVPlugin::iconName()const
 {
     kdDebug(5205) << "icon Name from PV" << endl;
     return QString::fromLatin1("pics/pv_logo.png");
 };
+
+/**
+  * Returns the kapabilities of the konnector.
+  * @return Kapabilities The kapabilities of the konnector
+  */   
 Kapabilities PVPlugin::capabilities( )
 {
   // create the capabilities Apply
@@ -109,6 +141,11 @@ Kapabilities PVPlugin::capabilities( )
   return caps;
 }
 
+/**
+  * Sets the kapabilities of the konnector depending on the
+  * configuration.
+  * @param uid The uid of the konnector
+  */ 
 void PVPlugin::setCapabilities(const Kapabilities &kaps)
 {
   // Set important kapabilities for syncing
@@ -118,79 +155,145 @@ void PVPlugin::setCapabilities(const Kapabilities &kaps)
   casioPVLink->setMetaSyncing(kaps.isMetaSyncingEnabled());
 }
 
+/**
+  * Starts the synchronisation procedure of the Plugin
+  * @return bool Starting of synchronisation successful (yes / no)
+  */
 bool PVPlugin::startSync()
 {
   kdDebug(5205) << "start Sync PVPlugin" << endl;
   return casioPVLink->startSync();
 }
 
+/**
+  * Starts the backup procedure of the Plugin.
+  * @param path The path of the backup file
+  * @return bool Starting of backup successful (yes / no)
+  */
 bool PVPlugin::startBackup(const QString& path)
 {
   kdDebug(5205) << "start Backup PVPlugin" << endl;
   return casioPVLink->startBackup(path);
 }
 
+/**
+  * Starts the restore procedure of the Plugin.
+  * @param path The path of the restore file
+  * @return bool Starting of restore successful (yes / no)
+  */
 bool PVPlugin::startRestore(const QString& path)
 {
   kdDebug(5205) << "start Restore PVPlugin" << endl;
   return casioPVLink->startRestore(path);
 }
-
+ 
+/**
+  * Returns whether the PV is connected.
+  * @return bool PV connected (yes / no)
+  */  
 bool PVPlugin::isConnected()
 {
   return casioPVLink->isConnected();
 }
 
+/**
+  * Filedownload to the PV. Not used yet!
+  * @param filename The path of the file to be donwloaded
+  * @return bool File download successful (yes / no)
+  */  
 bool PVPlugin::insertFile(const QString &fileName )
 {
   // Not used yet
   return false;
 }
 
+/**
+  * Fileupload from the PV. Not used yet!
+  * @param filename The path of the file to be donwloaded
+  * @return QByteArray The requested file as a QByteArray
+  */ 
 QByteArray PVPlugin::retrFile(const QString &path )
 {
   // Not used yet
   return 0;
 }
 
+/**
+  * This will write the QByteArray to the PV. Not used yet!
+  * @param dest The destination of the array
+  * @param array The array
+  */
 void PVPlugin::slotWrite(const QString &path, const QByteArray &array )
 {
   // Not used yet
 }
 
+/**
+  * This will write a List of Syncee to the PV. Is called from
+  * KitchenSync after synchronisation.
+  * @param lis The list of Syncee
+  */
 void PVPlugin::slotWrite(Syncee::PtrList entry)
 {
   casioPVLink->write(entry);
 };
 
+/**
+  * This will do the KOperations. Not used yet!
+  * @param ops Operations like delete
+  */
 void PVPlugin::slotWrite(KOperations::ValueList operations )
 {
   // Not used yet
 }
 
+/**
+  * Getting of a file from the PV returned as Syncee*.
+  * @param path The path of the file to be donwloaded
+  * @return Syncee* The requested file as a Syncee*
+  */
 Syncee* PVPlugin::retrEntry( const QString& path )
 {
   return 0;// Not used yet
 }
 
-// Public slots for signals from casioPVLink
+
+/**
+  * Will be called from the PV Library if all data was fetched from the PV
+  * @param lis The data of the PV as a Syncee::PtrList
+  */
 void PVPlugin::slotSync(Syncee::PtrList entry )
 {
   emit sync(m_udi, entry);
 }
 
+/**
+  * Will be called from the PV Library when the state of the connected PV
+  * has changed.
+  * @param state The state of the PV (connected / disconnected)
+  */ 
 void PVPlugin::slotChanged( bool state)
 {
   kdDebug(5202) << "slotChanged PVkonnector" << endl;
   emit stateChanged(m_udi, state);
 }
 
+/**
+  * Will be called from the PV Library when the connected PV reported an
+  * error
+  * @param number The error number
+  * @param msg The error message
+  */
 void PVPlugin::slotErrorKonnector(int mode, QString error)
 {
   kdDebug(5205) << "slotError PVKonnector" << endl;
   emit errorKonnector(m_udi, mode, error);
 }
 
+/**
+  * Returns the Id of the connected PV.
+  * @return QString The Id of the connected PV
+  */  
 QString PVPlugin::metaId()const
 {
   return casioPVLink->metaId();

@@ -24,7 +24,8 @@
 using namespace CasioPV;
 
 /**
-   * This method changes the return code 0x0D as it is recieved from the PV to 0x0A as it is used by Unix.
+   * This method changes the return code 0x0D as it is recieved from the PV to
+   * 0x0A as it is used by Unix.
    * @param data Data to be changed
    * @return string Changed data (return code in Unix format)
    */
@@ -39,7 +40,8 @@ string Utils::ChangeReturnCodeToUnix(string& data)
 }
 
 /**
-   * This method changes the return code 0x0A as it is used by Unix to 0x0D as it is used by the PV.
+   * This method changes the return code 0x0A as it is used by Unix to 0x0D
+   * as it is used by the PV.
    * @param data Data to be changed
    * @return string Changed data (return code in PV format)
    */
@@ -65,8 +67,8 @@ string Utils::ChangeDateToUnix(string& date)
 }
 
 /**
-   * This method changes a date in the "yyyymmdd" format in the date format used
-   * in the PV ("yyyymmdd__").
+   * This method changes a date in the "yyyymmdd" format in the date format
+   * used in the PV ("yyyymmdd__").
    * @param date Date to be changed
    * @return string Changed date (date in PV format)
    */
@@ -130,7 +132,7 @@ bool Utils::checkDate(string& strDate)
   int year = ((int)strDate[0]-0x30)*1000 + ((int)strDate[1]-0x30)*100 + ((int)strDate[2]-0x30)*10 + ((int)strDate[3]-0x30),
      month = ((int)strDate[4]-0x30)*10 + ((int)strDate[5]-0x30),
      day = ((int)strDate[6]-0x30)*10 + ((int)strDate[7]-0x30);
-     
+
   if ((strDate.length() != 8) || (month == 0) || (month > 12) || (day == 0) || (day > 31) ||
         (((month ==4) || (month == 6) || (month == 9) || (month == 11) || (month == 10) || (month == 12)) && (day > 30)) ||
         ((month == 2) && ((day > 29) || (((year%4 != 0) || ((year%100 == 0)) && (year%400 != 0)) && (day > 28)))))

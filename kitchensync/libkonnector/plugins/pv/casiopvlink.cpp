@@ -44,6 +44,11 @@
 using namespace KSync;
 using namespace PVHelper;
 
+/**
+   * Constructor.
+   * @param obj The parent object
+   * @param name The name of the object
+   */
 CasioPVLink::CasioPVLink(QObject *obj, const char *name)
     : QObject(obj, name), DCOPObject("CasioPVLinkIface")
 {
@@ -52,16 +57,23 @@ CasioPVLink::CasioPVLink(QObject *obj, const char *name)
   // Init variables
   m_state = DISCONNECTED;
   m_mode = NONE;
-  // m_first sync is set to false, if connected PV was already synchronized 
+  // m_first sync is set to false, if connected PV was already synchronized
   m_firstSync = true;
   // set categories to be synchronized
 }
 
+/**
+   * Destructor.
+   */
 CasioPVLink::~CasioPVLink()
 {
   kdDebug(5205) << "CasioPVLink destructor" << endl;
 }
 
+/**
+   * Signals that the synchronisation has to be started.
+   * @return bool Starting of synchronisation successful (yes / no)
+   */
 bool CasioPVLink::startSync()
 {
   kdDebug(5205) << "startSync CasioPVLink" << endl;
@@ -74,7 +86,7 @@ bool CasioPVLink::startSync()
     // Set categories to be synchronized
     QStringList strList;
     strList << "Contact Business" << "Contact Private" << "Contact Untitled 1"
-             << "Contact Untitled 2" << "Contact Untitled 3";    
+             << "Contact Untitled 2" << "Contact Untitled 3";
     // Additional categories on PV-750
     if (m_model == "PV-750 Plus")
     {
@@ -84,22 +96,24 @@ bool CasioPVLink::startSync()
     dataStream << strList;
     if (m_firstSync)
     {
+      // Get all entries from PV if first synchronisation
       kdDebug(5205) << "DCOP send getAllEntries()" << endl;
       if (!kapp->dcopClient()->send("pvDaemon", "PVDaemonIface",
                                      "getAllEntries(QStringList)", data))
       {
-        emit errorKonnector(1, "Error with DCOP!");
+        emit errorKonnector(10001, "PVPluginException: Error with DCOP!\nIs pvdaemon running?");
         kdDebug(5205) << "DCOP send failed" << endl;
         return false;
       }
     }
     else
     {
+      // Get changes from PV if this PV was already synchronized
       kdDebug(5205) << "DCOP send getChanges()" << endl;
       if (!kapp->dcopClient()->send("pvDaemon", "PVDaemonIface",
                                      "getChanges(QStringList)", data))
       {
-        emit errorKonnector(1, "Error with DCOP!");
+        emit errorKonnector(10001, "PVPluginException: Error with DCOP!\nIs pvdaemon running?");
         kdDebug(5205) << "DCOP send failed" << endl;
         return false;
       }
@@ -108,6 +122,11 @@ bool CasioPVLink::startSync()
   return false;
 }
 
+/**
+   * Signals that the backup has to be started.
+   * @param path The path of the backup file
+   * @return bool Starting of backup successful (yes / no)
+   */
 bool CasioPVLink::startBackup(const QString& path)
 {
   kdDebug(5205) << "startBackup CasioPVLink" << endl;
@@ -118,7 +137,7 @@ bool CasioPVLink::startBackup(const QString& path)
     m_backupPath = path;
     // Prepare DCOP send to PVDaemon
     QByteArray data;
-    QDataStream dataStream(data, IO_WriteOnly);    
+    QDataStream dataStream(data, IO_WriteOnly);
     // Set categories to be synchronized
     QStringList strList;
     strList << "Contact Business" << "Contact Private" << "Contact Untitled 1"
@@ -134,7 +153,7 @@ bool CasioPVLink::startBackup(const QString& path)
     if (!kapp->dcopClient()->send("pvDaemon", "PVDaemonIface",
                                    "getAllEntries(QStringList)", data))
     {
-      emit errorKonnector(1, "Error with DCOP!");
+      emit errorKonnector(10001, "PVPluginException: Error with DCOP!\nIs pvdaemon running?");
       kdDebug(5205) << "DCOP send failed" << endl;
       return false;
     }
@@ -143,10 +162,14 @@ bool CasioPVLink::startBackup(const QString& path)
   return false;
 }
 
-// restore data on pv
+/**
+   * Signals that the restore has to be started.
+   * @param path The path of the restore file
+   * @return bool Starting of restore successful (yes / no)
+   */
 bool CasioPVLink::startRestore(const QString& path)
 {
-  kdDebug(5205) << "CsaioPVLink::restore" << endl;
+  kdDebug(5205) << "CasioPVLink::restore" << endl;
   if (callConnectPV())
   {
     // Read backup file from HD
@@ -154,7 +177,7 @@ bool CasioPVLink::startRestore(const QString& path)
     QFile file(path);
     if (file.open(IO_ReadOnly))
     {
-      kdDebug(5205) << "CsaioPVLink::restore backup file found!" << endl;
+      kdDebug(5205) << "CasioPVLink::restore backup file found!" << endl;
       array = file.readAll();
       file.close();
       // Prepare DCOP send to PVDaemon
@@ -166,34 +189,53 @@ bool CasioPVLink::startRestore(const QString& path)
       if (!kapp->dcopClient()->send("pvDaemon", "PVDaemonIface",
                                      "setAllEntries(QByteArray)", data))
       {
-        emit errorKonnector(1, "Error with DCOP!");
+        emit errorKonnector(10001, "PVPluginException: Error with DCOP!\nIs pvdaemon running?");
         kdDebug(5205) << "DCOP send failed" << endl;
         return false;
       }
     }
     else
     {
-      emit errorKonnector(1, "File not found!"); // xxx bessere fehlermeldung
+      emit errorKonnector(10007, "PVPluginException: Restore file not found!");
     }
   }
   return false;
 }
 
+/**
+   * Sets the PV model to be synchronized depending on kapabilities
+   * chosen in configuration
+   * @param model The PV model to be synchronized
+   */
 void CasioPVLink::setModel(const QString& model)
 {
   m_model = model;
 }
 
+/**
+   * Sets the connection mode depending on kapabilities chosen
+   * in configuration.
+   * @param connectionMode The connection mode (/dev/ttyS0 or /dev/ttyS1)
+   */
 void CasioPVLink::setConnectionMode(const QString& connectionMode)
 {
   m_connectionMode = connectionMode;
 }
 
+/**
+   * Sets the meta syncing depending on kapabilities chosen in
+   * configuration. Meta syncing can be enabled or disabled.
+   * @param meta Meta synchronisation enabled (true) or disabled (false)
+   */
 void CasioPVLink::setMetaSyncing(const bool meta)
 {
   m_meta = meta;
 }
 
+/**
+   * Returns whether the PV is connected
+   * @return bool PV connected (yes / no)
+   */
 bool CasioPVLink::isConnected()
 {
   if(m_state == CONNECTED)
@@ -206,11 +248,15 @@ bool CasioPVLink::isConnected()
   }
 }
 
-// Write back to my PV
+/**
+   * Signals that the synchronisation was done and the synchronized data
+   * can be written to the PV.
+   * @param lis A Syncee::PtrList of the synchronized date
+   */
 void CasioPVLink::write(Syncee::PtrList lis)
 {
   kdDebug(5205) << "write back to PV" << endl;
-  
+
   // Convert synchronized data to XML
   //  ok lets write back the changes to the Konnector
   QByteArray array;
@@ -227,7 +273,7 @@ void CasioPVLink::write(Syncee::PtrList lis)
       // Go through all categories
       for (syncee = lis.first(); syncee != 0; syncee = lis.next())
       {
-        kdDebug(5205) << syncee->type() << " found!" << endl;      
+        kdDebug(5205) << syncee->type() << " found!" << endl;
         if (syncee->type() == QString::fromLatin1("AddressBookSyncee"))
         {
           stream << (AddressBook::toXML(dynamic_cast<AddressBookSyncee*>(syncee)));
@@ -244,10 +290,10 @@ void CasioPVLink::write(Syncee::PtrList lis)
       stream << "</pvdataentries>" << endl;
     }  // end if
 
-    /* xxx not used yet. first meta sync has to be implemented!    
+    /* xxx not used yet. first meta sync has to be implemented!
     // Store data to be written to HD (for meta syncing) after writing to PV
     m_array = array; */
-      
+
     // Prepare DCOP send to PVDaemon
     QByteArray data;
     QDataStream dataStream(data, IO_WriteOnly);
@@ -262,21 +308,30 @@ void CasioPVLink::write(Syncee::PtrList lis)
   }
 }
 
+/**
+   * Returns which PV model is connected to the PC.
+   * @return QString The PV model connected to the PC
+   */
 QString CasioPVLink::metaId() const
 {
   return m_modelCode;
 }
 
-// ----------------------- Private Methods ----------------------- //
+// ---------------------------- Private Methods ---------------------------- //
+
+/**
+   * Makes a DCOP call to the PV Library to connect the PV.
+   * @return bool DCOP call successful (yes / no)
+   */
 bool CasioPVLink::callConnectPV()
 {
-  kdDebug(5202) << "connectPV()" << endl;
+  kdDebug(5202) << "callConnectPV()" << endl;
 
   if (m_state == CONNECTED)
   {
     kdDebug(5205) << "Is already syncing!!" << endl;
-    emit errorKonnector(10000/*xxx Fehlernummer*/,
-          "Device is already connected!\nPlease wait until running process is finished.");
+    emit errorKonnector(10002,
+          "PVPluginException: Device is already connected!\nPlease wait until running process is finished.");
     return false;
   }
   else if (m_state == DISCONNECTED)
@@ -298,7 +353,7 @@ bool CasioPVLink::callConnectPV()
       QStringList::Iterator it = strList.begin();
       m_modelCode = (*it); ++it;
       kdDebug(5205) << "Model Code: " << m_modelCode << endl;
-      m_optionalCode = (*it); ++it;         
+      m_optionalCode = (*it); ++it;
       if (!(it == strList.end()))
       {
         m_secretArea = true;
@@ -308,12 +363,12 @@ bool CasioPVLink::callConnectPV()
         m_secretArea = false;
       }
       // xxx Check if the correct PV model was connected
-      
+
       // Check if the connected PV was already synchronized before.
       /* xxx not used yet. first meta sync has to be implemented!
       if (m_meta)
       {
-        m_metaPath = QString(QDir::homeDirPath() + "/.kitchensync/meta/" 
+        m_metaPath = QString(QDir::homeDirPath() + "/.kitchensync/meta/"
                               + m_optionalCode.right(12) + "/pvmeta.xml");
         kdDebug(5205) << "Path: " << m_metaPath << " Code: " << m_optionalCode << endl;
         // Optional code starts correct (maybe PV was already synced)
@@ -342,7 +397,7 @@ bool CasioPVLink::callConnectPV()
     }
     else
     {
-      emit errorKonnector(10000, "Error with DCOP!\nIs pvdaemon running?");
+      emit errorKonnector(10001, "PVPluginException: Error with DCOP!\nIs pvdaemon running?");
       kdDebug(5205) << "Error with DCOP" << endl;
       return false;
     }
@@ -350,6 +405,10 @@ bool CasioPVLink::callConnectPV()
   return true;
 }
 
+/**
+   * Makes a DCOP call to the PV Library to disconnect the PV.
+   * @return bool DCOP call successful (yes / no)
+   */
 void CasioPVLink::callDisconnectPV()
 {
   // Prepare DCOP call to disconnectPV()
@@ -369,12 +428,19 @@ void CasioPVLink::callDisconnectPV()
     }
     else
     {
-      emit errorKonnector(10000/*xxx Fehlernummer*/, "Connection could not be released!");
+      emit errorKonnector(10006, "PVPluginException: Connection could not be released!");
     }
   }
 }
 
-// -------------------- Public DCOP interface -------------------- //
+
+// ------------------------ Public DCOP interface -------------------------- //
+
+/**
+  * Belongs to the DCOP interface of the PV Plugin.
+  * This method is called when all changes are fetched from the PV.
+  * @param stream The changes from PV to be synchronized.
+  */
 void CasioPVLink::getChangesDone(const QByteArray& array)
 {
   kdDebug(5205) << "CasioPVLink::getChangesDone() received" << endl;
@@ -387,7 +453,7 @@ void CasioPVLink::getChangesDone(const QByteArray& array)
   }
 
   // Convert received data to Syncee::PtrList
- 
+
   Syncee::PtrList lis;
   QDomDocument doc("mydocument");
   // Set content of DOM document
@@ -401,9 +467,10 @@ void CasioPVLink::getChangesDone(const QByteArray& array)
       QDomNode n =  docElem.firstChild(); // child of pvdataentries -> type of entries (e.g. contacts)
       while(!n.isNull())
       {
-        QDomElement e = n.toElement();      
+        QDomElement e = n.toElement();
         kdDebug(5205) << e.tagName() << " found!" << endl;
-        QDomNode n = e.firstChild();        
+        QDomNode n = e.firstChild();
+        // Convert entries to Syncees
         if (e.tagName() == QString::fromLatin1("contacts"))
         {
           AddressBookSyncee* syncee = new AddressBookSyncee();
@@ -423,20 +490,20 @@ void CasioPVLink::getChangesDone(const QByteArray& array)
           lis.append(syncee);
         }
         n = n.nextSibling(); // jump to next element
-      }  
+      }
     }  // end of if pvdataentries
     else
     {
       kdDebug(5205) << "PVHelper::XML2Syncee -> pvdataentries not found" << endl;
-      // xxx fehlermeldung!!! syncee auf null setzen? wie geht das?
+      emit errorKonnector(10005, "PVPluginException: XML file format error. 'pvdataentries' not found!");
     }
   }  // end of if doc.setContents()
   else
   {
     kdDebug(5205) << "PVHelper::XML2Syncee !doc.setContent() " << endl;
-    // xxx fehlermeldung!!!
+      emit errorKonnector(10005, "PVPluginException: XML file format error. File is not valid!");
   }
-    
+
   Syncee* syncee;
   // Set all Syncee's to first sync mode
   for (syncee = lis.first(); syncee != 0; syncee = lis.next())
@@ -450,7 +517,7 @@ void CasioPVLink::getChangesDone(const QByteArray& array)
   if (m_meta && !m_firstSync)
   {
     Syncee::PtrList synceePtrListOld;
-    // Get meta info from file    
+    // Get meta info from file
     QFile file(m_metaPath);
     if (file.open(IO_ReadOnly))
     {
@@ -472,15 +539,20 @@ void CasioPVLink::getChangesDone(const QByteArray& array)
   emit sync(lis);
 }
 
+/**
+   * Belongs to the DCOP interface of the PV Plugin.
+   * This method is called when all data is fetched from the PV.
+   * @param stream The data from PV to be synchronized.
+   */
 void CasioPVLink::getAllEntriesDone(const QByteArray& array)
 {
   kdDebug(5205) << "CasioPVLink::getAllEntriesDone() received" << endl;
-  
+
   // Check connection mode
   if (m_mode == SYNC)
   {
     // Convert received data to Syncee::PtrList
-  
+
     Syncee::PtrList lis;
     QDomDocument doc("mydocument");
     // Set content of DOM document
@@ -494,8 +566,9 @@ void CasioPVLink::getAllEntriesDone(const QByteArray& array)
         QDomNode n =  docElem.firstChild(); // child of pvdataentries -> type of entries (e.g. contacts)
         while(!n.isNull())
         {
-          QDomElement e = n.toElement();      
+          QDomElement e = n.toElement();
           kdDebug(5205) << e.tagName() << " found!" << endl;
+          // Convert entries to Syncees
           if (e.tagName() == QString::fromLatin1("contacts"))
           {
             QDomNode n = e.firstChild();
@@ -505,33 +578,33 @@ void CasioPVLink::getAllEntriesDone(const QByteArray& array)
           }
           else if (e.tagName() == QString::fromLatin1("events"))
           {
-            QDomNode n = e.firstChild();          
+            QDomNode n = e.firstChild();
             EventSyncee* syncee = new EventSyncee();
             syncee = Event::toEventSyncee(n);
             lis.append(syncee);
           }
           else if (e.tagName() == QString::fromLatin1("todos"))
           {
-            QDomNode n = e.firstChild();          
+            QDomNode n = e.firstChild();
             TodoSyncee* syncee = new TodoSyncee();
             syncee = Todo::toTodoSyncee(n);
             lis.append(syncee);
           }
           n = n.nextSibling(); // jump to next element
-        }  
+        }
       }  // end of if pvdataentries
       else
       {
         kdDebug(5205) << "PVHelper::XML2Syncee -> pvdataentries not found" << endl;
-        // xxx fehlermeldung!!! syncee auf null setzen? wie geht das?
+      emit errorKonnector(10005, "PVPluginException: XML file format error. 'pvdataentries' not found!");
       }
     }  // end of if doc.setContents()
     else
     {
       kdDebug(5205) << "PVHelper::XML2Syncee !doc.setContent() " << endl;
-      // xxx fehlermeldung!!!
+      emit errorKonnector(10005, "PVPluginException: XML file format error. File is not valid!");
     }
-    
+
     Syncee* syncee;
     // Set all Syncee's to first sync mode
     for (syncee = lis.first(); syncee != 0; syncee = lis.next())
@@ -556,6 +629,12 @@ void CasioPVLink::getAllEntriesDone(const QByteArray& array)
   }
 }
 
+/**
+   * Belongs to the DCOP interface of the PV Plugin.
+   * This method is called when all changes were written to the PV
+   * after synchronisation.
+   * @param ok Writing successful (yes / no)
+   */
 void CasioPVLink::setChangesDone(const bool ok)
 {
   kdDebug(5205) << "CasioPVLink::setChangesDone() received" << endl;
@@ -563,7 +642,7 @@ void CasioPVLink::setChangesDone(const bool ok)
   {
     // Store synchronized data to a file for next meta syncing
     kdDebug(5205) << "storing meta data to: " << m_metaPath << endl;
-    // xxx Has to be removed if meta sync will be implemented    
+    // xxx Has to be removed if meta sync will be implemented
     QFile file(QDir::homeDirPath() + "/.kitchensync/meta/idhelper/konnector-ids.conf");
     file.remove();
     /* xxx not used yet. first meta sync has to be implemented!
@@ -574,32 +653,44 @@ void CasioPVLink::setChangesDone(const bool ok)
       file.close();
     } */
     // Call disconnectPV()
-    callDisconnectPV();    
+    callDisconnectPV();
   }
   else
   {
-    emit errorKonnector(20000, "Error while writing to PV");
+    emit errorKonnector(10003, "PVPluginException: Error while writing to PV");
   }
 }
 
+/**
+   * Belongs to the DCOP interface of the PV Plugin.
+   * This method is called when all data was written to the PV
+   * after synchronisation.
+   * @param ok Writing successful (yes / no)
+   */
 void CasioPVLink::setAllEntriesDone(const bool ok)
 {
   kdDebug(5205) << "CasioPVLink::setAllEntriesDone() received" << endl;
   if (ok)
   {
     // Call disconnectPV()
-    callDisconnectPV();  
+    callDisconnectPV();
   }
   else
-  { 
-    emit errorKonnector(20000, "Error while writing to PV");
+  {
+    emit errorKonnector(10003, "PVPluginException: Error while writing to PV");
   }
 }
 
+/**
+   * Belongs to the DCOP interface of the PV Plugin.
+   * This method is called when an error occurred in the PV Library
+   * @param msg The error message to be displayed
+   * @param errorcode The error number of the exception
+   */
 void CasioPVLink::errorPV(const QString& msg, const unsigned int errorcode)
 {
   kdDebug(5205) << "CasioPVLink::errorPV::Error received." << endl;
-  
+
   emit errorKonnector(errorcode, msg);
   m_state = DISCONNECTED;
   emit stateChanged(false);

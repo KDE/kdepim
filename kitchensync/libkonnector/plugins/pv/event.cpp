@@ -31,10 +31,16 @@
 using namespace KSync;
 using namespace PVHelper;
 
+/**
+  * Converts a QDomNode to an EventSyncee*.
+  * @param node The node (part of an XML document) to be converted
+  * @return KSync::EventSyncee* The converted events
+  */
 EventSyncee* Event::toEventSyncee(QDomNode& n)
 {
   kdDebug(5205) << "Begin::Event::toEventSyncee" << endl;
   EventSyncee* syncee = new KSync::EventSyncee();
+  // Define the helper
   KonnectorUIDHelper helper(QDir::homeDirPath() + "/.kitchensync/meta/idhelper");
 
   QString id;
@@ -60,9 +66,10 @@ EventSyncee* Event::toEventSyncee(QDomNode& n)
       QDomNode n = e.firstChild();
       QDomElement el = n.toElement();
 
-      while(!n.isNull()) // get all sub entries of element todo
+      while(!n.isNull()) // get all sub entries of element event
       {
-        QDomElement el = n.toElement();      
+        QDomElement el = n.toElement();
+        // Check the elements and fill the contents to the event
         if (el.tagName() == QString::fromLatin1("type"))
         {
           // Handle recurrence
@@ -71,7 +78,7 @@ EventSyncee* Event::toEventSyncee(QDomNode& n)
         else if (el.tagName() == QString::fromLatin1("date"))
         {
           if (el.text() != "")
-          {        
+          {
             // Convert the string to a QDate
             QDate dat;
             dat.setYMD(el.text().left(4).toInt(), el.text().mid(4, 2).toInt(),
@@ -88,7 +95,7 @@ EventSyncee* Event::toEventSyncee(QDomNode& n)
         else if (el.tagName() == QString::fromLatin1("enddate"))
         {
           if (el.text() != "")
-          {        
+          {
             // Convert the string to a QDate
             QDate dat;
             dat.setYMD(el.text().left(4).toInt(), el.text().mid(4, 2).toInt(),
@@ -153,7 +160,7 @@ EventSyncee* Event::toEventSyncee(QDomNode& n)
         // Go to next entry
         n = n.nextSibling();
       }  // end of while
-      
+
       // Set start date
       event->setDtStart(startDate);
 
@@ -181,7 +188,7 @@ EventSyncee* Event::toEventSyncee(QDomNode& n)
     }  // end of if contact
     else
     {
-      kdDebug(5205) << "PVHelper::XML2Syncee -> contact not found" << endl;
+      kdDebug(5205) << "PVHelper::XML2Syncee -> event not found" << endl;
       return 0l; // xxx bessere fehlerbehandlung!
     }
     n = n.nextSibling(); // jump to next element
@@ -190,9 +197,15 @@ EventSyncee* Event::toEventSyncee(QDomNode& n)
   return syncee;
 }
 
-
+/**
+  * Converts an EventSyncee* to a QString which represents a
+  * DOM node.
+  * @param syncee The syncee to be converted
+  * @return QString The converted events
+  */
 QString Event::toXML(EventSyncee* syncee)
 {
+  // Define the helper
   KonnectorUIDHelper helper(QDir::homeDirPath() + "/.kitchensync/meta/idhelper");
 
   QStringList categories;
@@ -273,17 +286,17 @@ QString Event::toXML(EventSyncee* syncee)
       str.append("<starttime>" + datStart.toString("hhmm") + "</starttime>\n");
       str.append("<endtime>" + datEnd.toString("hhmm") + "</endtime>\n");
 
-      // alarm
+      // Alarm
       KCal::Alarm *al = event->alarms().first();
       if (al)
       {
-      
+
         QDateTime datTime = al->time().addSecs(3600);
         str.append("<alarmtime>" + datTime.toString("hhmm") + "</alarmtime>\n");
       }
       else
       {
-        str.append("<alarmtime></alarmtime>\n");      
+        str.append("<alarmtime></alarmtime>\n");
       }
     }
 
@@ -302,17 +315,23 @@ QString Event::toXML(EventSyncee* syncee)
   return str;
 }
 
-
+/**
+  * Handles the recurrence of an event. The recurrence will be set
+  * depending on the start date and the type (daily, weekly, ...)
+  * @param rec The recurrence pointer. Will be modified inside the method
+  * @param startDate The start date of the event
+  * @param type The type of the recurrence used in the PV
+  */
 void Event::setRecurrence(KCal::Recurrence *rec, QDateTime startDatTime, int type)
 {
   QBitArray bits(7);  // Weekdays are used as a bitarray
   int week;       // Week of month
-  
+
   QDate startDate = startDatTime.date();
 
   // Set recurrence start date
   rec->setRecurStart(startDatTime);
-  
+
   // Set recurrence depending on type
   switch (type)
   {
@@ -355,7 +374,7 @@ void Event::setRecurrence(KCal::Recurrence *rec, QDateTime startDatTime, int typ
       week = (((startDate.day() - 1) / 7) + 1);
       // set frequency to 12 -> Cheat to get this category to work!
       rec->setMonthly(KCal::Recurrence::rMonthlyPos, 12, -1);
-      
+
       bits.fill(false); // clear bits
       bits.setBit(startDate.dayOfWeek() - 1);
       // Set position of recurrence
@@ -367,7 +386,11 @@ void Event::setRecurrence(KCal::Recurrence *rec, QDateTime startDatTime, int typ
   }  // switch
 }
 
-
+/**
+  * Gets the type of the recurrence of an event.
+  * @param rec The recurrence pointer of the event
+  * @return QString The type of the recurrence used in PV
+  */
 QString Event::getType(KCal::Recurrence *rec)
 {
   QString type;

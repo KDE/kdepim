@@ -129,7 +129,7 @@ void CasioPV::Protocol::SetRequestedSpeed( int speed ){
     m_speed = speed;
   } else {
     cerr << "ERROR: speed NOT supported!!!!!" << endl;
-    throw ProtocolException( "Protocol::SetRequestedSpeed : speed NOT supported", 2000 );  //check error code
+    throw ProtocolException( "Protocol::SetRequestedSpeed : speed NOT supported", 2003 );
   }
   // set the I/O speed to default until phase 1 is over
   m_com.SetInputSpeed( 9600 );
@@ -174,7 +174,7 @@ unsigned int CasioPV::Protocol::RecieveOrder( bool checklink ){
   try {
     order = m_com.ReadByte();//1000);
   } catch ( SerialException e ) {
-    if ( e.getErrorCode() == 3002 ) throw ProtocolException( "Protocol::RecieveLinkPacket : timeout", 2000 );    // check for timeout
+    if ( e.getErrorCode() == 3002 ) throw ProtocolException( "Protocol::RecieveLinkPacket : timeout", 2010 );
     if ( e.getErrorCode() == 3006 ) order = CAN;
   }
   switch ( order ) {
@@ -332,7 +332,7 @@ unsigned int CasioPV::Protocol::RecieveLinkPacket( bool order_recieved ){
     }
   } catch (SerialException e) {
     cerr << "ERROR: " << e.getMessage() << endl;
-    throw ProtocolException( "Protocol::RecieveLinkPacket : timeout", 2000 ); // check for timeout code
+    throw ProtocolException( "Protocol::RecieveLinkPacket : timeout", 2010 );
   }
 
   debugout( "END:Protocol::RecieveLinkPacket( bool order_recieved = false )" );
@@ -569,7 +569,7 @@ bool CasioPV::Protocol::RecieveCommandPacket( unsigned int& commandtype, bool or
 
   } catch ( SerialException e ) {
     cerr << "ERROR: " << e.getMessage() << endl;
-    throw ProtocolException( "Protocol::RecieveCommandPacket : timeout", 2000 );     //check errorcode for timeout
+    throw ProtocolException( "Protocol::RecieveCommandPacket : timeout", 2010 );
   }
 
   debugout( "END:Protocol::RecieveCommandPacket( unsigned int&, bool order_recieved=false )" );

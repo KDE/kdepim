@@ -35,30 +35,32 @@ namespace CasioPV {
     public:
 
       /**
-         * This method changes the return code 0x0D as it is recieved from the PV to 0x0A as it is used by Unix.
+         * This method changes the return code 0x0D as it is recieved from the
+         * PV to 0x0A as it is used by Unix.
          * @param data Data to be changed
          * @return string Changed data (return code in Unix format)
          */
       static string ChangeReturnCodeToUnix(string& data);
 
       /**
-         * This method changes the return code 0x0A as it is used by Unix to 0x0D as it is used by the PV.
+         * This method changes the return code 0x0A as it is used by Unix to
+         * 0x0D as it is used by the PV.
          * @param data Data to be changed
          * @return string Changed data (return code in PV format)
          */
       static string ChangeReturnCodeToPV(string& data);
 
       /**
-         * This method changes a date in the PV format ("yyyymmdd__") in the date
-         * format normally used by PC's ("yyyymmdd").
+         * This method changes a date in the PV format ("yyyymmdd__") in the
+         * date format normally used by PC's ("yyyymmdd").
          * @param date Date to be changed
          * @return string Changed date (date in Unix format)
          */
       static string ChangeDateToUnix(string& date);
-      
+
       /**
-         * This method changes a date in the "yyyymmdd" format in the date format used
-         * in the PV ("yyyymmdd__").
+         * This method changes a date in the "yyyymmdd" format in the date
+         * format used in the PV ("yyyymmdd__").
          * @param date Date to be changed
          * @return string Changed date (date in PV format)
          */
@@ -88,7 +90,7 @@ namespace CasioPV {
       /**
          * Converts a category (string type) to a category used in PV
          * @param string The category as string
-         * @return unsigned int The category used in PV. 0 if not found
+         * @return unsigned int The category used in PV. 0 if not found.
          */
       static unsigned int getCategoryPV(const string& strCategory);
   };

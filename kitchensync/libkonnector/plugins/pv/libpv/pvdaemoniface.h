@@ -24,6 +24,12 @@
 
 #include <dcopobject.h>
 
+/** This class implements the public DCOP interface of the PV Library.
+  * The DCOP calls are used to get signals from the PV Konnector (e.g. connect,
+  * disconnect, get all data, ...).
+  * @author Maurus Erni
+  */
+
 class PVDaemonIface : virtual public DCOPObject
 {
   K_DCOP

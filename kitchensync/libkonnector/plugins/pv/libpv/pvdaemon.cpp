@@ -18,7 +18,7 @@
 #include <iostream.h>
 #include <iomanip.h>
 #include <stdlib.h>
-#include <fstream.h> 
+#include <fstream.h>
 
 #include <kdebug.h>
 #include <kapp.h>
@@ -50,6 +50,9 @@
 
 using namespace CasioPV;
 
+/**
+   * Constructor.
+   */
 pvDaemon::pvDaemon() : DCOPObject("PVDaemonIface")
 {
   kdDebug(5205) << "pvDaemon constructor" << endl;
@@ -57,6 +60,9 @@ pvDaemon::pvDaemon() : DCOPObject("PVDaemonIface")
   casioPV = new CasioPV();
 }
 
+/**
+   * Destructor.
+   */
 pvDaemon::~pvDaemon()
 {
   kdDebug(5205) << "pvDaemon destructor" << endl;
@@ -64,16 +70,25 @@ pvDaemon::~pvDaemon()
 }
 
 
-// -------------------- Public DCOP interface -------------------- //
+// ------------------------- Public DCOP interface ------------------------- //
 
+/**
+   * Belongs to the DCOP interface of the PV Daemon.
+   * This method is called when the PV has to be connected.
+   * @param port The port where the PV is connected to (e.g. /dev/ttyS0)
+   * @return QString The parameters of the connected PV (mode code,
+   * optional code, secret area)
+   */
 QStringList pvDaemon::connectPV(const QString& port)
 {
   try
   {
     kdDebug() << "pvDaemon connectpv on port: " <<  port.latin1() << endl;
+    // Connect PV
     casioPV->OpenPort(port.latin1());
     casioPV->WakeUp();
     casioPV->WaitForLink(38400);
+    // Get Model Code, Optional Code and Secret Area
     QString modelCode = (QString)(casioPV->GetModelCode().c_str());
     QString optionalCode = (QString)(casioPV->GetOptionalCode().c_str());
     bool secretArea = casioPV->isInSecretArea();
@@ -94,6 +109,11 @@ QStringList pvDaemon::connectPV(const QString& port)
   }
 }
 
+/**
+   * Belongs to the DCOP interface of the PV Daemon.
+   * This method is called when the PV has to be disconnected.
+   * @return bool Successful disconnecting of PV (yes / no)
+   */
 bool pvDaemon::disconnectPV( void )
 {
   try
@@ -111,11 +131,17 @@ bool pvDaemon::disconnectPV( void )
   }
 }
 
+/**
+   * Belongs to the DCOP interface of the PV Daemon.
+   * This method is called to get the changes on the PV since the last
+   * synchronisation.
+   * @param categories List of categories to fetch data
+   */
 void pvDaemon::getChanges(const QStringList& categories)
 {
   try
   {
-    kdDebug(5202) << "getChanges" << endl;  
+    kdDebug(5202) << "getChanges" << endl;
     // Prepare stream
     QByteArray array;
     QBuffer buffer(array);
@@ -146,14 +172,14 @@ void pvDaemon::getChanges(const QStringList& categories)
           }
           else if ((*it).contains("To Do"))
           {
-            todos << (*it);          
-          }          
+            todos << (*it);
+          }
         }
         if (!contacts.isEmpty())
         {
           textStream << "<contacts>" << endl;
           for (QStringList::ConstIterator it = contacts.begin(); it != contacts.end(); it++)
-          {          
+          {
             unsigned int category = Utils::getCategoryPV((*it).latin1());
             kdDebug() << "Category: " << category << endl;
             // Get the PVDataEntries of one category and convert them to xml
@@ -165,19 +191,19 @@ void pvDaemon::getChanges(const QStringList& categories)
         {
           textStream << "<events>" << endl;
           for (QStringList::ConstIterator it = events.begin(); it != events.end(); it++)
-          {          
+          {
             unsigned int category = Utils::getCategoryPV((*it).latin1());
             kdDebug() << "Category: " << category << endl;
             // Get the PVDataEntries of one category and convert them to xml
             textStream << getChangesFromPV(category);
           }
           textStream << "</events>" << endl;
-        }        
+        }
         if (!todos.isEmpty())
         {
           textStream << "<todos>" << endl;
           for (QStringList::ConstIterator it = todos.begin(); it != todos.end(); it++)
-          {          
+          {
             unsigned int category = Utils::getCategoryPV((*it).latin1());
             kdDebug() << "Category: " << category << endl;
             // Get the PVDataEntries of one category and convert them to xml
@@ -187,7 +213,7 @@ void pvDaemon::getChanges(const QStringList& categories)
         }
         // Finish the XML file
         textStream << "</pvdataentries>" << endl;
-        
+
         // Prepare DCOP send to CasioPVLink
         QByteArray data;
         QDataStream dataStream(data, IO_WriteOnly);
@@ -207,17 +233,23 @@ void pvDaemon::getChanges(const QStringList& categories)
   }
 }
 
+/**
+   * Belongs to the DCOP interface of the PV Daemon.
+   * This method is called to get all data from the PV.
+   * @param categories List of categories to fetch data
+   */
 void pvDaemon::getAllEntries(const QStringList& categories)
 {
   try
   {
-    kdDebug(5202) << "getAllEntries" << endl;    
+    kdDebug(5202) << "getAllEntries" << endl;
     // Prepare stream
     QByteArray array;
     QBuffer buffer(array);
     if (buffer.open(IO_WriteOnly))
     {
       if (!categories.isEmpty())
+
       {
         QStringList contacts;
         QStringList events;
@@ -227,7 +259,7 @@ void pvDaemon::getAllEntries(const QStringList& categories)
         // Start of XML file
         textStream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE pvdataentries>" << endl
                     << "<pvdataentries>" << endl;
-                    
+
         // Get all entries of all categories
         for (QStringList::ConstIterator it = categories.begin(); it != categories.end(); it++)
         {
@@ -238,7 +270,7 @@ void pvDaemon::getAllEntries(const QStringList& categories)
           }
           else if ((*it).contains("To Do"))
           {
-            todos << (*it);          
+            todos << (*it);
           }
           else if ((*it).contains("Schedule"))
           {
@@ -249,7 +281,7 @@ void pvDaemon::getAllEntries(const QStringList& categories)
         {
           textStream << "<contacts>" << endl;
           for (QStringList::ConstIterator it = contacts.begin(); it != contacts.end(); it++)
-          {          
+          {
             unsigned int category = Utils::getCategoryPV((*it).latin1());
             kdDebug() << "Category: " << category << endl;
             // Get the PVDataEntries of one category and convert them to xml
@@ -261,7 +293,7 @@ void pvDaemon::getAllEntries(const QStringList& categories)
         {
           textStream << "<todos>" << endl;
           for (QStringList::ConstIterator it = todos.begin(); it != todos.end(); it++)
-          {          
+          {
             unsigned int category = Utils::getCategoryPV((*it).latin1());
             kdDebug() << "Category: " << category << endl;
             // Get the PVDataEntries of one category and convert them to xml
@@ -273,19 +305,19 @@ void pvDaemon::getAllEntries(const QStringList& categories)
         {
           textStream << "<events>" << endl;
           for (QStringList::ConstIterator it = events.begin(); it != events.end(); it++)
-          {          
+          {
             unsigned int category = Utils::getCategoryPV((*it).latin1());
             kdDebug() << "Category: " << category << endl;
             // Get the PVDataEntries of one category and convert them to xml
             textStream << getAllEntriesFromPV(category);
           }
           textStream << "</events>" << endl;
-        }        
+        }
         // Finish the XML file
         textStream << "</pvdataentries>" << endl;
 
         kdDebug() << "dumping entries" << array.data() << endl;
-                               
+
         // Prepare DCOP send to CasioPVLink
         QByteArray data;
         QDataStream dataStream(data, IO_WriteOnly);
@@ -305,6 +337,13 @@ void pvDaemon::getAllEntries(const QStringList& categories)
   }
 }
 
+/**
+   * Belongs to the DCOP interface of the PV Daemon.
+   * This method is called when the changes after synchronisation have
+   * to be written to the PV.
+   * @param optionalCode The optional code to be stored on the PV
+   * @param array The changed data as QByteArray
+*/
 void pvDaemon::setChanges(const QString& optionalCode, const QByteArray& array)
 {
   try
@@ -328,17 +367,17 @@ void pvDaemon::setChanges(const QString& optionalCode, const QByteArray& array)
       }  // end of if pvdataentries
       else
       {
-        sendException("XML file format error. 'pvdataentries' not found!", /*xxx*/ 10000);
+        sendException("PVPluginException: XML file format error. 'pvdataentries' not found!", 10005);
         return /*0l*/; // xxx syncee auf null setzen? wie geht das?
       }
       ok = true;
       // Change the optional code to detect at next sync if device was
       // already synced with kitchensync before
-      casioPV->ChangeOptionalCode(optionalCode.latin1());     
+      casioPV->ChangeOptionalCode(optionalCode.latin1());
     }  // end of if doc.setContents()
     else
     {
-      sendException("XML file format error! Can't set content.", /*xxx*/ 10000);      
+      sendException("PVPluginException: XML file format error! Can't set content.", 10005);
       ok = false;
     }
 
@@ -359,6 +398,12 @@ void pvDaemon::setChanges(const QString& optionalCode, const QByteArray& array)
   }
 }
 
+/**
+   * Belongs to the DCOP interface of the PV Daemon.
+   * This method is called when all entries have to be written to the
+   * PV (restore, first synchronisation).
+   * @param array The changed data as QByteArray
+   */
 void pvDaemon::setAllEntries(const QByteArray& array)
 {
   try
@@ -382,14 +427,14 @@ void pvDaemon::setAllEntries(const QByteArray& array)
       }  // end of if pvdataentries
       else
       {
-        sendException("XML file format error. 'pvdataentries' not found!", /*xxx*/ 10000);
+        sendException("PVPluginException: XML file format error. 'pvdataentries' not found!", 10005);
         return /*0l*/; // xxx syncee auf null setzen? wie geht das?
       }
       ok = true;
     }  // end of if doc.setContents()
     else
     {
-      sendException("XML file format error! Can't set content.", /*xxx*/ 10000);
+      sendException("PVPluginException: XML file format error! Can't set content.", 10005);
       ok = false;
     }
 
@@ -410,6 +455,11 @@ void pvDaemon::setAllEntries(const QByteArray& array)
   }
 }
 
+/**
+  * Belongs to the DCOP interface of the PV Daemon.
+  * This method can be used to check whether the PV is connected
+  * @return bool PV connected (true / false)
+  */
 bool pvDaemon::isConnected( void ) // xxx evtl. löschen xxx
 {
   return true;
@@ -418,6 +468,13 @@ bool pvDaemon::isConnected( void ) // xxx evtl. löschen xxx
 
 // ------------------------------ private methods -----------------------------
 
+/**
+   * Constructs a new empty entry derived from PVDataEntry. The category
+   * and the uid are used in the constructor.
+   * @param category The category of the entry
+   * @param uid The uid of the entry
+   * @return PVDataEntry* The new empty PVDataEntry
+   */
 PVDataEntry* pvDaemon::ClearEntry(unsigned int category, unsigned int uid)
 {
   PVDataEntry* entry = 0;
@@ -476,6 +533,11 @@ PVDataEntry* pvDaemon::ClearEntry(unsigned int category, unsigned int uid)
   return entry;
 }
 
+/**
+   * Gets all entries of the specified category from the PV.
+   * @param category The category where the entries are fetched from
+   * @return QString The entries as XML string
+   */
 QString pvDaemon::getAllEntriesFromPV(unsigned int category)
 {
   try
@@ -504,6 +566,11 @@ QString pvDaemon::getAllEntriesFromPV(unsigned int category)
   }
 }
 
+/**
+   * Gets the changes of the specified category from the PV.
+   * @param category The category where the entries are fetched from
+   * @return QString The entries as XML string
+   */
 QString pvDaemon::getChangesFromPV(unsigned int category)
 {
   try
@@ -513,7 +580,7 @@ QString pvDaemon::getChangesFromPV(unsigned int category)
     ModifyList modifylist; // Used to store the id's of the modified entries
     // Check which entries have changed
     modifylist = casioPV->CheckForModifiedEntries(category);
-      
+
     // get all changes
     for (ModifyList::iterator iter = modifylist.begin(); iter !=modifylist.end(); iter++)
     {
@@ -522,15 +589,15 @@ QString pvDaemon::getChangesFromPV(unsigned int category)
       {
         kdDebug() << "Modified entry found. Nr: " << (*iter).number << endl;
         casioPV->GetModifiedEntry(*entry, (*iter).number);
-        entry->setState(PVDataEntry::MODIFIED);          
+        entry->setState(PVDataEntry::MODIFIED);
         // convert the entry to an XML string
         str.append(QString(entry->toXML().c_str()));
-      }            
+      }
       else if ( (*iter).number == 0xffffff )
       {
         kdDebug() << "New entry found. Nr: " << (*iter).number << endl;
         entry->setUid(casioPV->GetNewEntry(*entry));
-        entry->setState(PVDataEntry::ADDED);          
+        entry->setState(PVDataEntry::ADDED);
         // convert the entry to an XML string
         str.append(QString(entry->toXML().c_str()));
       }
@@ -541,8 +608,8 @@ QString pvDaemon::getChangesFromPV(unsigned int category)
         kdDebug() << "Unchanged entry found. Nr: " << (*iter).number << endl;
         // convert the entry to an XML string
         str.append(QString(entry->toXML().c_str()));
-      }          
-    } // end for        
+      }
+    } // end for
     return str;
   }
   catch (CasioPVException e)
@@ -552,18 +619,22 @@ QString pvDaemon::getChangesFromPV(unsigned int category)
   }
 }
 
+/**
+   * Writes the entries included in a DOM node to the PV.
+   * @param n The dome node which holds the entries
+   */
 void pvDaemon::writeEntries(QDomNode& n)
 {
   try
   {
     PVDataEntry* entry = 0; // container to hold the PV entry to be written
-       
+
     // Process all categories (contacts, events, todos, ...)
     while(!n.isNull())
     {
-      QDomElement e = n.toElement();    
+      QDomElement e = n.toElement();
       kdDebug() << e.tagName() << " found!" << endl;
-      
+
       if ((e.tagName() == QString::fromLatin1("contacts"))
            || (e.tagName() == QString::fromLatin1("events"))
              || (e.tagName() == QString::fromLatin1("todos")))
@@ -605,7 +676,7 @@ void pvDaemon::writeEntries(QDomNode& n)
           else if (e.tagName() == QString::fromLatin1("event"))
           {
             // get category from entry
-            category = Utils::getCategoryPV((e.attribute("category")).latin1());            
+            category = Utils::getCategoryPV((e.attribute("category")).latin1());
             switch (category)
             {
               case SCHEDULE :
@@ -625,10 +696,10 @@ void pvDaemon::writeEntries(QDomNode& n)
             {
               category = TODO;
             }
-          }          
+          }
           QString str;
           QTextStream textStream(&str, IO_WriteOnly);
-          
+
           entry = ClearEntry(category, uid);
           textStream << e;
           //kdDebug() << e.tagName() << " as string: " << endl << str << endl;
@@ -636,18 +707,18 @@ void pvDaemon::writeEntries(QDomNode& n)
           {
             // convert xml to PVDataEntry
             entry->fromXML(str.latin1());
-            
+
             kdDebug() << entry->toXML().c_str() << endl;
-            
+
             if (entry->isSendable())
             {
-                kdDebug() << "adding entry" << endl;                      
+                kdDebug() << "adding entry" << endl;
               // write entry to PV if sendable
               uid = casioPV->AddEntry(*entry);
             }
             else
             {
-              sendException("Entry is not sendable. Not all necessary fields are entered!", /*xxx*/ 10000, false);
+              sendException("PVPluginException: Entry is not sendable. Not all necessary fields are entered!", 10004, false);
             }
           }
           else if (state == "modified")
@@ -655,14 +726,14 @@ void pvDaemon::writeEntries(QDomNode& n)
             // convert xml to PVDataEntry
             entry->fromXML(str.latin1());
             if (entry->isSendable())
-            {           
+            {
               // write modified entry to PV
               casioPV->ModifyEntry(*entry, entry->getUid());
             }
             else
             {
-              sendException("Entry is not sendable. Not all necessary fields are entered!", /*xxx*/ 10000, false);
-            }            
+              sendException("PVPluginException: Entry is not sendable. Not all necessary fields are entered!", 10004, false);
+            }
           }
           else if (state == "removed")
           {
@@ -676,7 +747,7 @@ void pvDaemon::writeEntries(QDomNode& n)
       }
       else
       {
-        sendException("XML file format error. Wrong category entity!", /*xxx*/ 10000);      
+        sendException("PVPluginException: XML file format error. Wrong category entity!", 10005);
       }
       n = n.nextSibling(); // jump to next category
     } // while(!n.isNull())
@@ -688,9 +759,16 @@ void pvDaemon::writeEntries(QDomNode& n)
   }
 }
 
+/**
+   * Sends an exception as a DCOP call to the PV Plugin.
+   * @param msg The error message
+   * @param number The error number
+   * @param disconnected Specifies whether the connection to the PV has
+   * to be released due to this error
+   */
 void pvDaemon::sendException(const QString& msg, const unsigned int number, bool disconnect)
 {
-  kdDebug(5205) << "sendException: " << msg << endl;  
+  kdDebug(5205) << "sendException: " << msg << endl;
   // Prepare DCOP send to CasioPVLink
   QByteArray data;
   QDataStream dataStream(data, IO_WriteOnly);

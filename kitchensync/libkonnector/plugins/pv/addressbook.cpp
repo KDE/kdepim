@@ -31,12 +31,18 @@
 using namespace KSync;
 using namespace PVHelper;
 
+/**
+  * Converts a QDomNode to an AddressBookSyncee*.
+  * @param node The node (part of an XML document) to be converted
+  * @return KSync::AddressBookSyncee* The converted addressbook
+  */
 AddressBookSyncee* AddressBook::toAddressBookSyncee(QDomNode& n)
 {
   kdDebug(5205) << "Begin::AddressBook::toAddressBookSyncee" << endl;
   AddressBookSyncee *syncee = new AddressBookSyncee();
+  // Define the helper
   KonnectorUIDHelper helper(QDir::homeDirPath() + "/.kitchensync/meta/idhelper");
-  
+
   QString id;
 
   while(!n.isNull())
@@ -53,11 +59,12 @@ AddressBookSyncee* AddressBook::toAddressBookSyncee(QDomNode& n)
       QDomNode n = e.firstChild();
       QDomElement el = n.toElement();
 
-      while(!n.isNull()) // get all sub entries of element contact
+      while(!n.isNull()) // Get all sub entries of element contact
       {
         QDomElement el = n.toElement();
+        // Get the entities and put them in the addressee
         if ((el.tagName() == QString::fromLatin1("name")) ||
-             (el.tagName() == QString::fromLatin1("field1")))        
+             (el.tagName() == QString::fromLatin1("field1")))
         {
           adr.setFamilyName(el.text());
         }
@@ -76,21 +83,21 @@ AddressBookSyncee* AddressBook::toAddressBookSyncee(QDomNode& n)
           adr.insertPhoneNumber( businessPhoneNum );
         }
         else if ((el.tagName() == QString::fromLatin1("faxnumber")) ||
-                  (el.tagName() == QString::fromLatin1("field4")))        
+                  (el.tagName() == QString::fromLatin1("field4")))
         {
           KABC::PhoneNumber homeFax (el.text(),
               KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
           adr.insertPhoneNumber(homeFax );
         }
         else if ((el.tagName() == QString::fromLatin1("businessfax")) ||
-                  (el.tagName() == QString::fromLatin1("field5")))        
+                  (el.tagName() == QString::fromLatin1("field5")))
         {
           KABC::PhoneNumber businessFaxNum ( el.text(),
                KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax);
           adr.insertPhoneNumber( businessFaxNum );
         }
         else if ((el.tagName() == QString::fromLatin1("mobile")) ||
-                  (el.tagName() == QString::fromLatin1("field6")))        
+                  (el.tagName() == QString::fromLatin1("field6")))
         {
           KABC::PhoneNumber businessMobile ( el.text(),
               KABC::PhoneNumber::Work | KABC::PhoneNumber::Cell );
@@ -104,12 +111,12 @@ AddressBookSyncee* AddressBook::toAddressBookSyncee(QDomNode& n)
           adr.insertAddress(home);
         }
         else if ((el.tagName() == QString::fromLatin1("email")) ||
-                  (el.tagName() == QString::fromLatin1("field8")))        
+                  (el.tagName() == QString::fromLatin1("field8")))
         {
           adr.insertEmail(el.text(), true); // preferred
         }
         else if ((el.tagName() == QString::fromLatin1("employer")) ||
-                  (el.tagName() == QString::fromLatin1("field9")))        
+                  (el.tagName() == QString::fromLatin1("field9")))
         {
           adr.setOrganization(el.text());
         }
@@ -123,7 +130,7 @@ AddressBookSyncee* AddressBook::toAddressBookSyncee(QDomNode& n)
         else if ((el.tagName() == QString::fromLatin1("department")) ||
                   (el.tagName() == QString::fromLatin1("field11")))
         {
-          adr.insertCustom("PV", "Department", el.text());        
+          adr.insertCustom("PV", "Department", el.text());
         }
         else if ((el.tagName() == QString::fromLatin1("position")) ||
                   (el.tagName() == QString::fromLatin1("field12")))
@@ -135,7 +142,7 @@ AddressBookSyncee* AddressBook::toAddressBookSyncee(QDomNode& n)
         {
           adr.setNote(el.text());
         }
-        n = n.nextSibling();
+        n = n.nextSibling();  // Go to the next entity
       }  // end of while
       adr.setRevision( QDateTime::currentDateTime() );
       KSync::AddressBookSyncEntry* entry = new KSync::AddressBookSyncEntry( adr );
@@ -171,19 +178,26 @@ AddressBookSyncee* AddressBook::toAddressBookSyncee(QDomNode& n)
   return syncee;
 }
 
+/**
+  * Converts an AddressBookSyncee* to a QString which represents a
+  * DOM node.
+  * @param syncee The syncee to be converted
+  * @return QString The converted addressbook
+  */
 QString AddressBook::toXML(AddressBookSyncee* syncee)
 {
+  // Define the helper
   KonnectorUIDHelper helper(QDir::homeDirPath() + "/.kitchensync/meta/idhelper");
-  
+
   QStringList categories;
- 
+
   QString str;
 
   str.append("<contacts>\n");
   // for all entries
   KABC::Addressee ab;
   KSync::AddressBookSyncEntry *entry;
-    
+
   for (entry = syncee->firstEntry(); entry != 0l; entry = syncee->nextEntry())
   {
     QString state;
@@ -192,7 +206,7 @@ QString AddressBook::toXML(AddressBookSyncee* syncee)
     ab = entry->addressee();
 
     categories = ab.categories(); // xxx only one category supported yet!
-      
+
     // Check if id is new
     id =  helper.konnectorId(categories[0],  ab.uid());
     if (id.isEmpty())
@@ -204,7 +218,7 @@ QString AddressBook::toXML(AddressBookSyncee* syncee)
     {
       state = "undefined";
     }
-      
+
     // Convert to XML string
     str.append("<contact uid='" + id + "' category='" + categories[0] + "'");
     str.append(" state='" + state + "'>\n");
@@ -242,7 +256,7 @@ QString AddressBook::toXML(AddressBookSyncee* syncee)
         str.append("<email></email>\n");
       }
       str.append("<employer>" + ab.organization() + "</employer>\n");
-       
+
       KABC::Address business = ab.address(KABC::Address::Work);
       str.append("<businessaddress>" + addressToStr(business) + "</businessaddress>\n");
 
@@ -252,7 +266,7 @@ QString AddressBook::toXML(AddressBookSyncee* syncee)
       }
       else
       {
-        str.append("<department></department>\n");      
+        str.append("<department></department>\n");
       }
       str.append("<position>" + ab.role() + "</position>\n");
       str.append("<note>" + ab.note() + "</note>\n");
@@ -260,6 +274,7 @@ QString AddressBook::toXML(AddressBookSyncee* syncee)
     } // if
     else
     {
+      // Untitled contacts
       str.append("<field1>" + ab.familyName() + "</field1>\n");
       KABC::PhoneNumber homePhoneNum = ab.phoneNumber(KABC::PhoneNumber::Home );
       str.append("<field2>" + homePhoneNum.number() + "</field2>\n");
@@ -282,7 +297,7 @@ QString AddressBook::toXML(AddressBookSyncee* syncee)
       QStringList list = ab.emails();
       if ( list.count() > 0 )
       {
-        QString email = list[0];      
+        QString email = list[0];
         str.append("<field8>" + email + "</field8>\n");
       }
       else
@@ -312,13 +327,19 @@ QString AddressBook::toXML(AddressBookSyncee* syncee)
   return str;
 }
 
+/**
+  * Converts a QString representing the address to a KABC::Address
+  * @param strAddr The QString address to be converted
+  * @param type The type of the address (e.g. home, work)
+  * @return KABC::Address The converted address
+  */
 KABC::Address AddressBook::strToAddress(const QString& strAddr, KABC::Address::Type type)
 {
   KABC::Address addr(type);
-  
-  int posline = 0, pos = 0; 
+
+  int posline = 0, pos = 0;
   posline = strAddr.find("\n");
-  
+
   if (posline)
   {
     // found street
@@ -329,8 +350,8 @@ KABC::Address AddressBook::strToAddress(const QString& strAddr, KABC::Address::T
     {
       // found postal code and city
       addr.setPostalCode(strAddr.mid(posline + 1, pos - posline - 1));
-      addr.setLocality(strAddr.right(strAddr.length() - pos - 1));      
-    }   
+      addr.setLocality(strAddr.right(strAddr.length() - pos - 1));
+    }
   }
   else
   {
@@ -340,10 +361,15 @@ KABC::Address AddressBook::strToAddress(const QString& strAddr, KABC::Address::T
   return addr;
 }
 
+/**
+  * Converts an KABC::Address to a QString
+  * @param KABC::Address The address to be converted
+  * @return QSting The converted address
+  */
 QString AddressBook::addressToStr(const KABC::Address& addr)
 {
   QString strAddr;
-            
+
   if (!addr.street().isEmpty())
   {
     strAddr.append(addr.street() + "\n");

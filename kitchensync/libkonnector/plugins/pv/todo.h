@@ -23,13 +23,29 @@
 #include <libkcal/todo.h>
 #include <todosyncee.h>
 
+/** This is a class to handle conversions of todos. The todos
+  * can be converted from a QDomNode to a TodoSyncee* and vice versa.
+  * @author Maurus Erni
+  */
+
 namespace PVHelper
 {
   class Todo
   {
     public:
+      /**
+        * Converts a QDomNode to a TodoSyncee*.
+        * @param node The node (part of an XML document) to be converted
+        * @return KSync::TodoSyncee* The converted todos
+        */
       static KSync::TodoSyncee* toTodoSyncee(QDomNode& n);
 
+      /**
+        * Converts a TodoSyncee* to a QString which represents a
+        * DOM node.
+        * @param syncee The syncee to be converted
+        * @return QString The converted todos as an XML string
+        */
       static QString toXML(KSync::TodoSyncee* syncee);
   };
 }
