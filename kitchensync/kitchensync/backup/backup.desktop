@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Name=Konnector Backup
+Name[bs]=Konnector backup
 Name[ca]=Còpia de seguretat Konnector
 Name[cs]=Záloha Konektoru
 Name[cy]=Copi-wrth-gefn Kysylltydd
@@ -14,6 +15,7 @@ Name[he]=גיבוי של Konnector
 Name[hi]=कनेक्टर बैकअप
 Name[hu]=Konnector biztonsági mentés
 Name[is]=Konnector afritun
+Name[ja]=Konnector バックアップ
 Name[nb]=Konnector sikkerhetskopiering
 Name[nl]=Konnector-reservekopie
 Name[nn]=Konnector tryggingskopi
@@ -27,6 +29,7 @@ Name[sr]=Konnector-ова резервна копија
 Name[sr@Latn]=Konnector-ova rezervna kopija
 Name[sv]=Konnector-säkerhetskopia
 Name[ta]=இணைப்பான் காப்பு நகல்
+Name[tg]=Нусхаи захиравии Konnector
 Name[tr]=Konnector Yedeği
 Name[uk]=Резервна копія Konnector
 Name[xx]=xxKonnector Backupxx

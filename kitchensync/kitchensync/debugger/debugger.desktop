@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Name=Konnector Debugger
+Name[bs]=Konnector debugger
 Name[ca]=Depurador Konnector
 Name[cs]=Ladění Konektoru
 Name[cy]=Dadnamydd Kysylltydd
@@ -13,6 +14,7 @@ Name[fr]=Débogueur Konnector
 Name[hi]=कनेक्टर डिबगर
 Name[hu]=Konnector nyomkövető
 Name[is]=Konnector aflúsun
+Name[ja]=Konnector デバッガ
 Name[ms]=Nyah-ralat Konnector
 Name[nb]=Konnector feilfinner
 Name[nl]=Konnector-debugger
@@ -28,6 +30,7 @@ Name[sr]=Konnector-ов исправљач грешака
 Name[sr@Latn]=Konnector-ov ispravljač grešaka
 Name[sv]=Konnector-felsökare
 Name[ta]=இணைப்பான் வழுநீக்கி
+Name[tg]=Тасҳеҳкунандаи Konnector
 Name[tr]=Konnector Hata Ayıklayıcı
 Name[uk]=Зневадник Konnector
 Name[xx]=xxKonnector Debuggerxx
