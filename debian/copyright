@@ -8,6 +8,19 @@ Upstream Authors: Rik Hemsley <rik@kde.org>
 
 Copyright:
 
+All programs are either under the Artistic, BSD, or GPL licenses, see below
+for details on the respective applications and additions to BSD-derivative
+licenses.
+
+On Debian systems, the complete text of these licenses can be found in:
+
+/usr/share/common-licenses/Artistic
+/usr/share/common-licenses/BSD
+/usr/share/common-licenses/GPL
+
+When in doubt, check the individual file, they should all have license
+headings and other identifying marks.
+
 empath, kab2, kalarm, kalarmd, kandy, karm, kgantt, knotes, konsolekalendar,
 korganizer, kpilot, ksync, ldif, libdif, libimap, twister
 ----------------------------------------------------------------------------
