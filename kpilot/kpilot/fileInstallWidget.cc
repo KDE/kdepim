@@ -121,6 +121,8 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 		this, SLOT(refreshFileInstallList()));
 
 	setAcceptDrops(true);
+
+	(void) fileinstallwidget_id;
 }
 
 void FileInstallWidget::dragEnterEvent(QDragEnterEvent * event)
@@ -189,6 +191,9 @@ void FileInstallWidget::refreshFileInstallList()
 
 
 // $Log$
+// Revision 1.24  2002/07/03 12:22:08  binner
+// CVS_SILENT Style guide fixes
+//
 // Revision 1.23  2002/01/25 21:43:12  adridg
 // ToolTips->WhatsThis where appropriate; vcal conduit discombobulated - it doesn't eat the .ics file anymore, but sync is limited; abstracted away more pilot-link
 //

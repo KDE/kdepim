@@ -436,7 +436,6 @@ void VCalConduit::setRecurrence(KCal::Event *event,const PilotDateEntry *dateEnt
 	}
 
 	QBitArray dayArray(7);
-	QDate evt;
 
 	switch(dateEntry->getRepeatType())
 	{
@@ -706,6 +705,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.77  2002/08/24 18:06:51  kainhofe
+// First sync no longer generates duplicates, addIncidence checks if a similar entry already exists
+//
 // Revision 1.76  2002/08/23 11:13:28  adridg
 // Trying to be KDE 3.0.x compatible is hopeless
 //

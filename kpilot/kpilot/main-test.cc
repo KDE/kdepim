@@ -205,7 +205,7 @@ int execConduit(KCmdLineArgs *p)
 }
 
 
-int listConduits(KCmdLineArgs *p)
+int listConduits(KCmdLineArgs *)
 {
 	FUNCTIONSETUP;
 
@@ -287,6 +287,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.19  2002/08/23 22:03:21  adridg
+// See ChangeLog - exec() becomes bool, debugging added
+//
 // Revision 1.18  2002/05/23 20:19:39  adridg
 // Add support for extra buttons to the logwidget; use it for reset in kpilottest
 //

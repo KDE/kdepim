@@ -756,7 +756,8 @@ bool KPilotDeviceLink::setTime(const time_t &pctime)
 unsigned long KPilotDeviceLink::ROMversion() const
 {
 	unsigned long rom;
-	dlp_ReadFeature(pilotSocket(), makelong("psys"), 1, &rom);
+	dlp_ReadFeature(pilotSocket(), 
+		makelong(const_cast<char *>("psys")), 1, &rom);
 	return rom;
 }
 unsigned long KPilotDeviceLink::majorVersion() const
@@ -787,6 +788,9 @@ bool operator < (const db & a, const db & b) {
 }
 
 // $Log$
+// Revision 1.22  2002/08/23 22:03:21  adridg
+// See ChangeLog - exec() becomes bool, debugging added
+//
 // Revision 1.21  2002/08/21 17:20:47  adridg
 // Detect and complain about common permissions errors
 //

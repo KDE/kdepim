@@ -235,7 +235,6 @@ void RichListViewItem::computeHeight(int c)
 
 	QListViewItem::setup();
 
-	QListView *v = listView();
 	int h = height();
 
 	for (int i=0; i<fColumns; i++)
@@ -281,6 +280,9 @@ void RichListViewItem::computeHeight(int c)
 
 
 // $Log$
+// Revision 1.8  2001/10/07 20:15:29  danimo
+// compile with KDE3
+//
 // Revision 1.7  2001/09/30 23:02:13  adridg
 // Add support for multi-line comments in conduit configurator and add it to kpilotConfig
 //

@@ -36,7 +36,7 @@
 // make up a binary distribution.
 //
 //
-static char *passworddialog_id="$Id$";
+static const char *passworddialog_id="$Id$";
 
 
 
@@ -126,6 +126,7 @@ PasswordDialog::PasswordDialog(QString head, QWidget* parent, const char* name, 
    
    setGeometry( x(), y(), 200, 130 );
 
+	(void) passworddialog_id;
 }
 
 const char * PasswordDialog::password()
@@ -141,6 +142,9 @@ const char * PasswordDialog::password()
 
 
 // $Log$
+// Revision 1.10  2002/05/15 16:58:02  gioele
+// kapp.h -> kapplication.h
+//
 // Revision 1.9  2001/12/28 13:01:16  adridg
 // Add SyncAction
 //

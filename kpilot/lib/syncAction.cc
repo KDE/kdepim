@@ -67,6 +67,7 @@ SyncAction::SyncAction(KPilotDeviceLink  *p,
 	fHandle(p)
 {
 	FUNCTIONSETUP;
+	(void) syncAction_id;
 }
 
 /* virtual */ QString SyncAction::statusString() const
@@ -240,6 +241,11 @@ int InteractiveAction::questionYesNo(const QString & text,
 
 	QObject::connect(timer, SIGNAL(timeout()),
 		dialog, SLOT(slotCancel()));
+	if (timeout > 0)
+	{
+		timer->start(timeout,true);
+	}
+
 	int result = dialog->exec();
 
 #ifdef DEBUG
@@ -263,6 +269,9 @@ int InteractiveAction::questionYesNo(const QString & text,
 }
 
 // $Log$
+// Revision 1.6  2002/08/23 22:03:21  adridg
+// See ChangeLog - exec() becomes bool, debugging added
+//
 // Revision 1.5  2002/08/20 21:18:31  adridg
 // License change in lib/ to allow plugins -- which use the interfaces and
 // definitions in lib/ -- to use non-GPL'ed libraries, in particular to

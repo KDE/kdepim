@@ -49,6 +49,8 @@ WelcomeAction::WelcomeAction(KPilotDeviceLink *p) :
 	SyncAction(p,"welcomeAction")
 {
 	FUNCTIONSETUP;
+
+	(void) syncStack_id;
 }
 
 /* virtual */ bool WelcomeAction::exec()
@@ -344,6 +346,9 @@ void SyncStack::actionCompleted(SyncAction *b)
 }
 
 // $Log$
+// Revision 1.8  2002/08/23 22:03:21  adridg
+// See ChangeLog - exec() becomes bool, debugging added
+//
 // Revision 1.7  2002/05/19 15:01:49  adridg
 // Patches for the KNotes conduit
 //

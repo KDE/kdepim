@@ -469,7 +469,6 @@ void KPilotInstaller::initMenu()
 	FUNCTIONSETUP;
 
 	KAction *p;
-	KToggleAction *pt;
 
 	// File actions
 	p = new KAction(i18n("&HotSync"), "hotsync", 0,
@@ -877,6 +876,9 @@ int main(int argc, char **argv)
 
 
 // $Log$
+// Revision 1.79  2002/08/15 21:51:00  kainhofe
+// Fixed the error messages (were not printed to the log), finished the categories sync of the todo conduit
+//
 // Revision 1.78  2002/08/13 11:57:37  mhunter
 // VCal -> vCal (name consistency)
 //

@@ -1,7 +1,13 @@
  TODO
 
+* Should interactiveSync and syncStack be moved to lib/ ?
 * Really need to do something about all the disabled options in the
   config dialog. Some of them might make sense.
+
+2002-08-24  Adriaan de Groot
+* (syncAction.cc) Whoops, forgot to implement the timeout feature
+  in interactive questionYesNo.
+* One more go through all the sources removing warnings.
 
 2002-08-23  Adriaan de Groot
 * (addressWidget.cc) Added more debugging output in response to bug #45977. 

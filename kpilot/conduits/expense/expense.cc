@@ -305,7 +305,6 @@ void ExpenseConduit::csvOutput(QTextStream *out,Expense *e)
 
 	//format date for csv file
 	int tmpyr=e->date.tm_year+1900;
-	char dtstng[DATESIZE];
 	int tmpday=e->date.tm_mday;
 	int tmpmon=e->date.tm_mon+1;
 
@@ -479,6 +478,9 @@ void ExpenseConduit::cleanup()
 
 
 // $Log$
+// Revision 1.23  2002/08/23 22:03:20  adridg
+// See ChangeLog - exec() becomes bool, debugging added
+//
 // Revision 1.22  2002/02/23 20:57:40  adridg
 // #ifdef DEBUG stuff
 //
