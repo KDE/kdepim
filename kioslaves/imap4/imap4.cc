@@ -1425,6 +1425,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
 void
 IMAP4Protocol::specialSearchCommand( QDataStream& stream )
 {
+  kdDebug(7116) << "IMAP4Protocol::specialSearchCommand" << endl;
   KURL _url;
   stream >> _url;
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
@@ -1593,8 +1594,10 @@ IMAP4Protocol::stat (const KURL & _url)
 {
   kdDebug(7116) << "IMAP4::stat - " << _url.prettyURL() << endl;
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
+  // parseURL with caching
   enum IMAP_TYPE aType =
-    parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
+    parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, 
+        aInfo, true);
 
   UDSEntry entry;
   UDSAtom atom;
