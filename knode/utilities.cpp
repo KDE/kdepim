@@ -154,3 +154,4 @@ void displayTempFileError()
 {
 	KMessageBox::error(0, i18n("Unable to create temporary file!"));
 }
+
