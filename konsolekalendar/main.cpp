@@ -30,7 +30,7 @@
 
 #include "konsolekalendar.h"
 #include "konsolekalendarepoch.h"
-#include "konsolekalendarexports.h"
+
 #include "konsolekalendarvariables.h"
 
 using namespace KCal;
@@ -497,13 +497,7 @@ int main(int argc, char *argv[])
     }
 
     if( view ) {
-      //here for testing
-      //should be moved to KonsoleKalendar in future
-      KonsoleKalendarExports exporter(&variables);
-
-
-
-      // konsolekalendar->showInstance();
+      konsolekalendar->showInstance();
     }
 
     konsolekalendar->closeCalendar();

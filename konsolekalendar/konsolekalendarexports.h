@@ -34,10 +34,10 @@ public:
    * without a notice
    */
    
-  void exportAsHTML();
-  void exportAsTxt();
-  void exportAsTxtKorganizer();
-  void exportAsCSV();
+  void exportAsHTML( Event *event );
+  void exportAsTxt( Event *event );
+  void exportAsTxtKorganizer( Event *event );
+  void exportAsCSV( Event *event );
 
 
 private:

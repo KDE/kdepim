@@ -32,6 +32,7 @@
 #include "konsolekalendaradd.h"
 #include "konsolekalendarchange.h"
 #include "konsolekalendardelete.h"
+#include "konsolekalendarexports.h"
 
 using namespace KCal;
 using namespace std;
@@ -107,6 +108,9 @@ void KonsoleKalendar::createCalendar()
 
 void KonsoleKalendar::showInstance()
 {
+    KonsoleKalendarExports exports;
+
+
     if( m_variables.isNext() ) {
       showNext();
     }
