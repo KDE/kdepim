@@ -1,6 +1,6 @@
 #ifndef KADDRESSBOOKIFACE_H
 #define KADDRESSBOOKIFACE_H
- 
+
 #include <dcopobject.h>
 #include <qstringlist.h>
 
@@ -10,7 +10,8 @@ class KAddressBookIface : virtual public DCOPObject
 
   k_dcop:
     virtual void addEmail( QString addr ) = 0;
- 
+    virtual void importVCard( const QString& vCardURL ) = 0;
+
     virtual ASYNC showContactEditor( QString uid ) = 0;
 
     /**
@@ -25,6 +26,12 @@ class KAddressBookIface : virtual public DCOPObject
     virtual QString getNameByPhone( QString phone ) = 0;
     virtual void save() = 0;
     virtual void exit() = 0;
+
+    /**
+     * Internal, DCOP-enabled for the kontact plugin.
+     * Return true if handled, false if command-line was empty.
+     */
+    virtual bool handleCommandLine() = 0;
 };
 
 #endif

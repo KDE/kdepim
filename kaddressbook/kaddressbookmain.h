@@ -37,7 +37,7 @@ class KABCore;
 /**
   This class serves as the main window for KAddressBook.  It handles the
   menus, toolbars, and status bars.
- 
+
   @short Main window class
   @author Don Sanders <dsanders@kde.org>
   @version 0.1
@@ -52,16 +52,17 @@ class KAddressBookMain : public KMainWindow, virtual public KAddressBookIface
 
   public slots:
     virtual void addEmail( QString addr );
-    virtual void importVCard( QString file );
+    virtual void importVCard( const QString& vCardURL );
     virtual ASYNC showContactEditor( QString uid );
     virtual void newContact();
     virtual QString getNameByPhone( QString phone );
     virtual void save();
     virtual void exit();
-    
+    virtual bool handleCommandLine();
+
   protected:
     void initActions();
-    
+
     /**
       This function is called when it is time for the app to save its
       properties for session management purposes.

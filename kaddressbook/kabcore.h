@@ -58,6 +58,7 @@ class ExtensionManager;
 class FilterSelectionWidget;
 class IncSearchWidget;
 class JumpButtonBar;
+class KAddressBookIface;
 class KAddressBookService;
 class LDAPSearchDialog;
 class ViewManager;
@@ -255,7 +256,7 @@ class KABCore : public KAB::Core
     /**
       DCOP METHOD: Imports the given vCard.
      */
-    virtual void importVCard( const QString& vCard );
+    virtual void importVCard( const QString& vCardURL );
 
     /**
       DCOP METHOD: Opens contact editor to input a new contact.
@@ -263,10 +264,17 @@ class KABCore : public KAB::Core
     virtual void newContact();
 
     /**
-      DCOP METHOD: Returns the name of the contact, that matches the given 
+      DCOP METHOD: Returns the name of the contact, that matches the given
                    phone number.
      */
     virtual QString getNameByPhone( const QString& phone );
+
+    /**
+      DCOP METHOD: Handle command line arguments, return true if handled
+      and false if no args was given. The iface is either the mainwin or the part.
+     */
+    bool handleCommandLine( KAddressBookIface* iface );
+
 
     /**
       Saves the contents of the AddressBook back to disk.

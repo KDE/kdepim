@@ -63,7 +63,7 @@ void KAddressBookMain::addEmail( QString addr )
   mCore->addEmail( addr );
 }
 
-void KAddressBookMain::importVCard( QString file )
+void KAddressBookMain::importVCard( const QString& file )
 {
   mCore->importVCard( KURL( file ) );
 }
@@ -91,6 +91,11 @@ void KAddressBookMain::save()
 void KAddressBookMain::exit()
 {
   close();
+}
+
+bool KAddressBookMain::handleCommandLine()
+{
+  return mCore->handleCommandLine( this );
 }
 
 void KAddressBookMain::saveProperties( KConfig* )

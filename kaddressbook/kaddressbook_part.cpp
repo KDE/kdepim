@@ -98,6 +98,11 @@ void KAddressbookPart::addEmail( QString addr )
   mCore->addEmail( addr );
 }
 
+void KAddressbookPart::importVCard( const QString& vCardURL )
+{
+  mCore->importVCard( vCardURL );
+}
+
 ASYNC KAddressbookPart::showContactEditor( QString uid )
 {
   mCore->editContact( uid );
@@ -140,6 +145,11 @@ bool KAddressbookPart::openURL( const KURL &url )
 bool KAddressbookPart::openFile()
 {
   return false;
+}
+
+bool KAddressbookPart::handleCommandLine()
+{
+  return mCore->handleCommandLine( this );
 }
 
 void KAddressbookPart::guiActivateEvent( KParts::GUIActivateEvent *e )

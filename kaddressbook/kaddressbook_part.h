@@ -48,17 +48,19 @@ class KAddressbookPart: public KParts::ReadOnlyPart, virtual public KAddressBook
 
   public slots:
     virtual void addEmail( QString addr );
+    virtual void importVCard( const QString& vCardURL );
     virtual ASYNC showContactEditor( QString uid );
     virtual void newContact();
     virtual QString getNameByPhone( QString phone );
     virtual void save();
     virtual void exit();
     virtual bool openURL( const KURL &url );
+    virtual bool handleCommandLine();
 
   protected:
     virtual bool openFile();
     virtual void guiActivateEvent( KParts::GUIActivateEvent* );
-    
+
   private:
     KABCore *mCore;
     KAddressbookBrowserExtension *mExtension;

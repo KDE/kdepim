@@ -38,6 +38,7 @@
 #include <kaccelmanager.h>
 #include <kapplication.h>
 #include <kactionclasses.h>
+#include <kcmdlineargs.h>
 #include <kcmultidialog.h>
 #include <kdebug.h>
 #include <kdeversion.h>
@@ -63,6 +64,7 @@
 #include "kablock.h"
 #include "kabprefs.h"
 #include "kaddressbookservice.h"
+#include "kaddressbookiface.h"
 #include "ldapsearchdialog.h"
 #include "printing/printingwizard.h"
 #include "undocmds.h"
@@ -637,9 +639,9 @@ void KABCore::importVCard( const KURL &url )
   mXXPortManager->importVCard( url );
 }
 
-void KABCore::importVCard( const QString &vCard )
+void KABCore::importVCard( const QString &vCardURL )
 {
-  mXXPortManager->importVCard( vCard );
+  mXXPortManager->importVCard( vCardURL );
 }
 
 void KABCore::editContact( const QString &uid )
@@ -1080,6 +1082,44 @@ void KABCore::editCategories()
 
   mCategoryEditDialog->show();
   mCategoryEditDialog->raise();
+}
+
+bool KABCore::handleCommandLine( KAddressBookIface* iface )
+{
+  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+  QCString addrStr = args->getOption( "addr" );
+  QCString uidStr = args->getOption( "uid" );
+
+  QString addr, uid, vcard;
+  if ( !addrStr.isEmpty() )
+    addr = QString::fromLocal8Bit( addrStr );
+  if ( !uidStr.isEmpty() )
+    uid = QString::fromLocal8Bit( uidStr );
+
+  bool doneSomething = false;
+
+  // Can not see why anyone would pass both a uid and an email address, so I'll leave it that two contact editors will show if they do
+  if ( !addr.isEmpty() ) {
+    iface->addEmail( addr );
+    doneSomething = true;
+  }
+
+  if ( !uid.isEmpty() ) {
+    iface->showContactEditor( uid );
+    doneSomething = true;
+  }
+
+  if ( args->isSet( "new-contact" ) ) {
+    iface->newContact();
+    doneSomething = true;
+  }
+
+  if ( args->count() >= 1 ) {
+    for ( int i = 0; i < args->count(); ++i )
+      iface->importVCard( args->url( i ).url() );
+    doneSomething = true;
+  }
+  return doneSomething;
 }
 
 #include "kabcore.moc"
