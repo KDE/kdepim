@@ -115,11 +115,6 @@ class KAddressBook : public QWidget
     */
     void newAddressee();
 
-    /** The same like the above method, but a dialog will appear where you
-     * can select a resource, to which the addressee should go.
-     */
-    void newResourceAddressee();
-
     /**
       Launches the configuration dialog.
     */

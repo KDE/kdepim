@@ -172,7 +172,7 @@ void KAddressBook::editAddressee(QString uid)
   }
 }
 
-void KAddressBook::newResourceAddressee()
+void KAddressBook::newAddressee()
 {
   AddresseeEditorDialog *dialog = 0;
 
@@ -186,19 +186,6 @@ void KAddressBook::newResourceAddressee()
   } else {
     return;
   }
-
-  mEditorDict.insert( dialog->addressee().uid(), dialog );
-
-  dialog->show();
-}
-
-void KAddressBook::newAddressee()
-{
-  AddresseeEditorDialog *dialog = 0;
-
-  KABC::Addressee addr;
-  dialog = createAddresseeEditorDialog( this );
-  dialog->setAddressee( addr );
 
   mEditorDict.insert( dialog->addressee().uid(), dialog );
 
