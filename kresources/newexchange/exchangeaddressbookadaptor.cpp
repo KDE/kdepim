@@ -57,6 +57,7 @@ KIO::TransferJob *ExchangeAddressBookUploadItem::createUploadNewJob( KPIM::Group
 {
 kdDebug()<<"ExchangeAddressBookUploadItem::createUploadNewJob"<<endl;
   KURL url( baseurl );
+  // TODO: Check that this URL doesn't exist yet
   url.addPath( uid() + ".EML" );
   setUrl( url );
 //url.addPath("newItem.EML");

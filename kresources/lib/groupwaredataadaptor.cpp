@@ -32,27 +32,32 @@ GroupwareUploadItem::GroupwareUploadItem( UploadType type ) : mType( type )
 }
 
 KIO::TransferJob *GroupwareUploadItem::createUploadNewJob(
-      GroupwareDataAdaptor *adaptor, const KURL &url )
+      GroupwareDataAdaptor *adaptor, const KURL &baseurl )
 {
-  return createUploadJob( adaptor, adaptNewItemUrl( adaptor, url ) );
+kdDebug()<<"GroupwareUploadItem::createUploadNewJob, baseurl=" << baseurl.url() << endl;
+  setUrl( adaptNewItemUrl( adaptor, baseurl ) );
+  return createUploadJob( adaptor, baseurl );
 }
 
-KURL GroupwareUploadItem::adaptNewItemUrl( GroupwareDataAdaptor *adaptor, 
-                                           const KURL &url ) 
+KURL GroupwareUploadItem::adaptNewItemUrl( GroupwareDataAdaptor *adaptor,
+                                           const KURL &baseurl )
 {
+kdDebug()<<"GroupwareUploadItem::adaptNewItemUrl, baseurl=" << baseurl.url() << endl;
   if ( adaptor ) {
     QString path( adaptor->defaultNewItemName( this ) );
-    KURL u( url );
+kdDebug() << "path=" << path << endl;
+    KURL u( baseurl );
     if ( path.isEmpty() ) return u;
     else {
       u.addPath( path );
+kdDebug() << "Final Path for new item: " << u.url() << endl;
       return u;
     }
-  } else return url;
+  } else return baseurl;
 }
 
-KIO::TransferJob *GroupwareUploadItem::createUploadJob( 
-                                GroupwareDataAdaptor *adaptor, const KURL &/*url*/ )
+KIO::TransferJob *GroupwareUploadItem::createUploadJob(
+                                GroupwareDataAdaptor *adaptor, const KURL &/*baseurl*/ )
 {
   Q_ASSERT( adaptor );
   if ( !adaptor ) return 0;
@@ -62,7 +67,7 @@ KIO::TransferJob *GroupwareUploadItem::createUploadJob(
   if ( adaptor )
     adaptor->adaptUploadUrl( upUrl );
   kdDebug(7000) << "Uploading to: " << upUrl.prettyURL() << endl;
-  KIO::TransferJob *job = KIO::storedPut( dta.utf8(), upUrl, -1, true, 
+  KIO::TransferJob *job = KIO::storedPut( dta.utf8(), upUrl, -1, true,
                                           false, false );
   job->addMetaData( "PropagateHttpHeader", "true" );
   if ( adaptor )
@@ -82,7 +87,7 @@ GroupwareDataAdaptor::~GroupwareDataAdaptor()
 
 void GroupwareDataAdaptor::setUserPassword( KURL &url )
 {
-  kdDebug(5800) << "GroupwareDataAdaptor::setUserPassword, mUser=" 
+  kdDebug(5800) << "GroupwareDataAdaptor::setUserPassword, mUser="
                 << mUser << endl;
   url.setUser( mUser );
   url.setPass( mPassword );
@@ -93,7 +98,7 @@ FolderLister::Entry::List GroupwareDataAdaptor::defaultFolders()
   return FolderLister::Entry::List();
 }
 
-KIO::TransferJob *GroupwareDataAdaptor::createUploadJob( const KURL &url, 
+KIO::TransferJob *GroupwareDataAdaptor::createUploadJob( const KURL &url,
                                                      GroupwareUploadItem *item )
 {
   if ( item )
@@ -101,10 +106,10 @@ KIO::TransferJob *GroupwareDataAdaptor::createUploadJob( const KURL &url,
   else return 0;
 }
 
-KIO::TransferJob *GroupwareDataAdaptor::createUploadNewJob( const KURL &url, 
+KIO::TransferJob *GroupwareDataAdaptor::createUploadNewJob( const KURL &url,
                                                      GroupwareUploadItem *item )
 {
-kdDebug()<<"GroupwareDataAdaptor::createUploadNewJob"<<endl;
+kdDebug()<<"GroupwareDataAdaptor::createUploadNewJob, url=" << url.url() << endl;
   if ( item )
     return item->createUploadNewJob( this, url );
   else return 0;
@@ -120,7 +125,7 @@ void GroupwareDataAdaptor::processDownloadListItem( const QString &entry,
   emit itemOnServer( location );
   // if not locally present, download
   const QString &localId = idMapper()->localId( location );
-  kdDebug(5800) << "Looking up remote: " << location 
+  kdDebug(5800) << "Looking up remote: " << location
                 << " found: " << localId << endl;
   if ( localId.isEmpty() || !localItemExists( localId ) ) {
     //kdDebug(7000) << "Not locally present, download: " << location << endl;
@@ -155,7 +160,7 @@ bool GroupwareDataAdaptor::interpretRemoveJob( KIO::Job *job, const QString &/*j
   KIO::DeleteJob *deljob = dynamic_cast<KIO::DeleteJob*>(job);
   bool error = job->error();
   const QString err = job->errorString();
-  
+
   if ( deljob ) {
     KURL::List urls( deljob->urls() );
     for ( KURL::List::Iterator it = urls.begin(); it != urls.end(); ++it ) {

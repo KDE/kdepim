@@ -62,6 +62,7 @@ KIO::TransferJob *ExchangeCalendarUploadItem::createUploadNewJob( KPIM::Groupwar
 {
 kdDebug()<<"ExchangeCalendarUploadItem::createUploadNewJob"<<endl;
   KURL url( baseurl );
+  // TODO: Check if this URL doesn't exist yet!
   url.addPath( uid() + ".EML" );
   setUrl( url );
 //url.addPath("newItem.EML");

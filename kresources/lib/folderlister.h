@@ -76,22 +76,22 @@ class FolderLister : public QObject
     QStringList activeFolderIds() const;
     bool isActive( const QString &id ) const;
 
-    void setWriteDestinationId( const QString & );
-    QString writeDestinationId() const { return mWriteDestinationId; }
+    void setWriteDestinationId( /*const QString &type, */const QString & );
+    QString writeDestinationId( /*const QString &type*/ ) const { return mWriteDestinationId/*[type]*/; }
 
     void readConfig( const KConfig * );
     void writeConfig( KConfig * );
 
-  
+
   signals:
     void foldersRead();
 
   protected slots:
     void slotListJobResult( KIO::Job * );
-    /** Adds the folder with the given url and display name to the folder 
-     *  tree (if is has an appropriate type) */ 
-    virtual void processFolderResult( const QString &href, 
-                                      const QString &displayName, 
+    /** Adds the folder with the given url and display name to the folder
+     *  tree (if is has an appropriate type) */
+    virtual void processFolderResult( const QString &href,
+                                      const QString &displayName,
                                       KPIM::FolderLister::FolderType  type );
     /** Retrieve information about the folder u. If it has sub-folders, it
         descends into the hierarchy */
@@ -106,15 +106,15 @@ class FolderLister : public QObject
     */
     virtual KIO::Job *createListFoldersJob( const KURL &url );
     /** Interprets the results returned by the liste job (created by
-     *  createJob(url) ). The default implementation calls 
-     *  interpretFolderListJob of the GroupwareDataAdaptor. Typically, 
-     *  this adds an Entry to the mFolders list if the job describes a 
+     *  createJob(url) ). The default implementation calls
+     *  interpretFolderListJob of the GroupwareDataAdaptor. Typically,
+     *  this adds an Entry to the mFolders list if the job describes a
      *  folder of the appropriate type, by calling processsFolderResult.
-     *  If the folder has subfolders, just call doRetrieveFolder(url) 
+     *  If the folder has subfolders, just call doRetrieveFolder(url)
      *  recursively. */
     virtual void interpretListFoldersJob( KIO::Job *job );
-    /** List of folders that will always be included (subfolders won't!). 
-     *  Usually this is not needed as you should traverse the whole folder 
+    /** List of folders that will always be included (subfolders won't!).
+     *  Usually this is not needed as you should traverse the whole folder
      *  tree starting from the user's root dir. */
     virtual Entry::List defaultFolders();
     /** Type of this folder lister (i.e. AddressBook or Calendar) */
@@ -129,6 +129,7 @@ class FolderLister : public QObject
     GroupwareDataAdaptor *mAdaptor;
   private:
     // TODO: We need multiple destinations for Events, Tasks and Journals
+//     QMap<QString, QString> mWriteDestinationId;
     QString mWriteDestinationId;
 };
 

@@ -84,7 +84,7 @@ void GroupwareUploadJob::deleteItem()
   } else {
     kdDebug(7000) << " Deleting " << mDeletedItems.size() << " items from the server " << endl;
 
-    KURL url( mBaseUrl );
+    KURL url( adaptor()->baseURL() );
     adaptor()->adaptUploadUrl( url );
     if ( adaptor()->flags() & KPIM::GroupwareDataAdaptor::GWResBatchDelete ) {
 kdDebug() << "Using batch delete " << endl;
@@ -120,7 +120,7 @@ void GroupwareUploadJob::slotDeletionJobData( KIO::Job *, const QByteArray &data
   mDeletionJobData.append( data.data() );
 }
 
-    
+
 
 void GroupwareUploadJob::slotDeletionJobResult( KIO::Job *job )
 {
@@ -141,7 +141,7 @@ void GroupwareUploadJob::uploadItem()
   } else {
     kdDebug(5800)<<"We still have "<<mChangedItems.count()<<" changed items to upload"<<endl;
 
-    KURL url( mBaseUrl );
+    KURL url( adaptor()->baseURL() );
     adaptor()->adaptUploadUrl( url );
     if ( adaptor()->flags() & KPIM::GroupwareDataAdaptor::GWResBatchModify ) {
 kdDebug() << "Using batch upload " << endl;
@@ -194,15 +194,17 @@ void GroupwareUploadJob::uploadNewItem()
 {
   kdDebug(5800)<<"GroupwareUploadJob::uploadNewItem()"<<endl;
   if ( !mAddedItems.isEmpty() ) {
-    KURL url( mBaseUrl );
+    // TODO: Use the baseURL here or the default destination folder?
+//     KURL url( adaptor()->baseURL() );
+    KURL url( adaptor()->folderLister()->writeDestinationId() );
     adaptor()->adaptUploadUrl( url );
     if ( adaptor()->flags() & KPIM::GroupwareDataAdaptor::GWResBatchCreate ) {
-kdDebug() << "Using batch create" << endl;
+kdDebug() << "Using batch create to " << url.url() << endl;
       mUploadJob = adaptor()->createUploadNewJob( url, mAddedItems );
       mItemsUploading += mAddedItems;
       mAddedItems.clear();
     } else {
-kdDebug() << "Not using batch create" << endl;
+kdDebug() << "Not using batch create to " << url.url() << endl;
       KPIM::GroupwareUploadItem *item = mAddedItems.front();
       mUploadJob = adaptor()->createUploadNewJob( url, item );
       mItemsUploading.append( mAddedItems.front() );
@@ -218,7 +220,7 @@ kdDebug() << "Not using batch create" << endl;
     } else {
       uploadNewItem();
     }
-    
+
   } else {
     kdDebug(5800)<<"We are finished uploading all items. Setting progress to completed."<<endl;
     uploadCompleted();
@@ -276,7 +278,7 @@ kdDebug()<<"Found it in the list!"<<endl;
       mItemsUploaded.append( item );
     }
   }
-  
+
   if ( mUploadProgress ) {
     mUploadProgress->incCompletedItems();
     mUploadProgress->updateProgress();
@@ -301,7 +303,7 @@ void GroupwareUploadJob::slotItemUploaded( const QString &/*localId*/, const QSt
   allit += mAddedItems;
   allit += mItemsUploading;
   allit += mItemsUploadError;
-  
+
 
   KPIM::GroupwareUploadItem::List::Iterator it = allit.begin();
   for ( ; it != allit.end(); ++it ) {
@@ -315,7 +317,7 @@ kdDebug()<<"Found it in the list!"<<endl;
       mItemsUploaded.append( item );
     }
   }
-  
+
   if ( mUploadProgress ) {
     mUploadProgress->incCompletedItems();
     mUploadProgress->updateProgress();
@@ -330,7 +332,7 @@ void GroupwareUploadJob::slotItemUploadedNew( const QString &/*localId*/, const 
 
   const QString &remote = url.path();
   // TODO: For a new item this won't return anything, so we need to insert the
-  // local<=>remote id map when creating the upload job... And maybe 
+  // local<=>remote id map when creating the upload job... And maybe
   const QString &local = adaptor()->idMapper()->localId( remote );
   if ( !local.isEmpty() ) {
 //     adaptor()->itemUploadedNew( local, remoteURL );
@@ -340,7 +342,7 @@ void GroupwareUploadJob::slotItemUploadedNew( const QString &/*localId*/, const 
   allit += mAddedItems;
   allit += mItemsUploading;
   allit += mItemsUploadError;
-  
+
 
   KPIM::GroupwareUploadItem::List::Iterator it = allit.begin();
   for ( ; it != allit.end(); ++it ) {
@@ -354,7 +356,7 @@ kdDebug()<<"Found it in the list!"<<endl;
       mItemsUploaded.append( item );
     }
   }
-  
+
   if ( mUploadProgress ) {
     mUploadProgress->incCompletedItems();
     mUploadProgress->updateProgress();
@@ -381,7 +383,7 @@ kdDebug()<<"Found it in the list!"<<endl;
       mItemsUploadError.append( item );
     }
   }
-  
+
   if ( mUploadProgress ) {
     mUploadProgress->incCompletedItems();
     mUploadProgress->updateProgress();
@@ -408,7 +410,7 @@ kdDebug()<<"Found it in the list!"<<endl;
       mItemsUploadError.append( item );
     }
   }
-  
+
   if ( mUploadProgress ) {
     mUploadProgress->incCompletedItems();
     mUploadProgress->updateProgress();
@@ -434,7 +436,7 @@ kdDebug()<<"Found it in the list!"<<endl;
       mItemsUploadError.append( item );
     }
   }
-  
+
   if ( mUploadProgress ) {
     mUploadProgress->incCompletedItems();
     mUploadProgress->updateProgress();

@@ -49,28 +49,28 @@ class GroupwareUploadJob : public GroupwareJob
   public:
     GroupwareUploadJob( GroupwareDataAdaptor *adaptor );
 
-    KPIM::GroupwareUploadItem::List addedItems() const 
-    { 
-      return mAddedItems; 
+    KPIM::GroupwareUploadItem::List addedItems() const
+    {
+      return mAddedItems;
     }
-    void setAddedItems( const KPIM::GroupwareUploadItem::List &items ) 
-    { 
-      mAddedItems = items; 
+    void setAddedItems( const KPIM::GroupwareUploadItem::List &items )
+    {
+      mAddedItems = items;
     }
-    KPIM::GroupwareUploadItem::List changedItems() const 
-    { 
+    KPIM::GroupwareUploadItem::List changedItems() const
+    {
       return mChangedItems;
     }
-    void setChangedItems( const KPIM::GroupwareUploadItem::List &items ) 
-    { 
+    void setChangedItems( const KPIM::GroupwareUploadItem::List &items )
+    {
       mChangedItems = items;
     }
-    KPIM::GroupwareUploadItem::List deletedItems() const 
-    { 
+    KPIM::GroupwareUploadItem::List deletedItems() const
+    {
       return mDeletedItems;
     }
-    void setDeletedItems( const KPIM::GroupwareUploadItem::List &items ) 
-    { 
+    void setDeletedItems( const KPIM::GroupwareUploadItem::List &items )
+    {
       mDeletedItems = items;
     }
 
@@ -96,13 +96,13 @@ class GroupwareUploadJob : public GroupwareJob
     void slotItemDeleted( const QString &localID, const QString &remoteURL );
     void slotItemUploaded( const QString &localID, const QString &remoteURL );
     void slotItemUploadedNew( const QString &localID, const QString &remoteURL );
-    
+
     void slotItemDeleteError( const QString &remoteURL, const QString &error );
     void slotItemUploadError( const QString &remoteURL, const QString &error  );
     void slotItemUploadNewError( const QString &localID, const QString &error );
 
     void uploadCompleted();
-    
+
   private:
     KPIM::GroupwareUploadItem::List mAddedItems;
     KPIM::GroupwareUploadItem::List mChangedItems;
@@ -111,12 +111,10 @@ class GroupwareUploadJob : public GroupwareJob
     KPIM::GroupwareUploadItem::List mItemsUploading;
     KPIM::GroupwareUploadItem::List mItemsUploaded;
     KPIM::GroupwareUploadItem::List mItemsUploadError;
-    
+
     QString mDeletionJobData;
     QString mUploadJobData;
     QString mUploadNewJobData;
-    
-    KURL mBaseUrl;
 
     KIO::TransferJob *mUploadJob;
     KIO::Job *mDeletionJob;
