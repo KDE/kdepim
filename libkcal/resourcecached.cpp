@@ -407,10 +407,10 @@ void ResourceCached::slotSave()
 void ResourceCached::checkForAutomaticSave()
 {
   if ( mSavePolicy == SaveAlways )  {
-    kdDebug() << "ResourceCached::checkForAutomaticSave(): save now" << endl;
+    kdDebug(5800) << "ResourceCached::checkForAutomaticSave(): save now" << endl;
     mSaveTimer.start( 1 * 1000, true ); // 1 second
   } else if ( mSavePolicy == SaveDelayed ) {
-    kdDebug() << "ResourceCached::checkForAutomaticSave(): save delayed"
+    kdDebug(5800) << "ResourceCached::checkForAutomaticSave(): save delayed"
               << endl;
     mSaveTimer.start( 15 * 1000, true ); // 15 seconds
   }
