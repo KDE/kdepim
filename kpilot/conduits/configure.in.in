@@ -132,7 +132,7 @@ NOTFOUND) AC_MSG_RESULT(searched but not found) ;;
     AC_MSG_RESULT(no (but first try gave $msg))
   else
     AC_DEFINE(HAVE_LIBMAL, 1, [Define if you have MAL libraries])
-		dnl check which version we have (pre 0.40 or >=0.40):		
+		dnl check which version we have (pre 0.40 or >=0.40):
     AC_TRY_LINK(dnl
     [#include <libmal.h>],
     [
@@ -175,6 +175,12 @@ KDE_CHECK_HEADER(kresources/factory.h,HAVE_KABC=1,
 	conduit will be compiled.]))
 AM_CONDITIONAL(include_abc, test "$HAVE_KABC" = 1)
 ])
+
+dnl ----------------------------------------------------------------------------
+dnl
+dnl                     checks for embedded language conduits
+dnl
+dnl ----------------------------------------------------------------------------
 
 AC_DEFUN([KPILOT_CHECK_PERL],[HAVE_PERL=0
 AC_MSG_CHECKING([for Perl embedding])
