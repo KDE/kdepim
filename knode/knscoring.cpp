@@ -17,6 +17,10 @@
 #include <qobject.h>
 #include <qstring.h>
 
+#if QT_VERSION < 300
+#  define Q_ASSERT ASSERT
+#endif
+
 #include <kdebug.h>
 #include <kwin.h>
 #include <kdialogbase.h>
@@ -81,7 +85,7 @@ QString KNScorableArticle::getHeaderByType(const QString& s) const
   KMime::Headers::Base *h = _a->getHeaderByType(s.latin1());
   if (!h) return "";
   QString t = _a->getHeaderByType(s.latin1())->asUnicodeString();
-  ASSERT( t );
+  Q_ASSERT( t );
   return t;
 }
 

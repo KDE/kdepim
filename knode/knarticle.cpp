@@ -503,14 +503,22 @@ void KNAttachment::updateContentInfo()
   //Content-Type
   Headers::ContentType *t=c_ontent->contentType();
   t->setMimeType(m_imeType);
+#if QT_VERSION < 300
   t->setName(n_ame, KGlobal::charsets()->charsetForLocale());
+#else
+  t->setName(n_ame, "UTF-8");
+#endif
   t->setCategory(Headers::CCmixedPart);
 
   //Content-Description
   if(d_escription.isEmpty())
     c_ontent->removeHeader("Content-Description");
   else
+#if QT_VERSION < 300
     c_ontent->contentDescription()->fromUnicodeString(d_escription, KGlobal::charsets()->charsetForLocale());
+#else
+    c_ontent->contentDescription()->fromUnicodeString(d_escription, "UTF-8");
+#endif
 
   //Content-Disposition
   Headers::CDisposition *d=c_ontent->contentDisposition();

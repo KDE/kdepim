@@ -22,10 +22,13 @@
 #include <qclipboard.h>
 #include <qfileinfo.h>
 #include <qdir.h>
-#include <kprinter.h>
 #include <qpaintdevicemetrics.h>
 #include <qstylesheet.h>
+#include <qpainter.h>
+#include <qtimer.h>
+#include <qregexp.h>
 
+#include <kprinter.h>
 #include <kiconloader.h>
 #include <kpopupmenu.h>
 #include <kdebug.h>
@@ -75,12 +78,18 @@ KNSourceViewWindow::KNSourceViewWindow(const QString &htmlCode)
   KNConfig::Appearance *app=knGlobals.cfgManager->appearance();
 
   setCaption(kapp->makeStdCaption(i18n("Article Source")));
+#if QT_VERSION < 300
   QColorGroup pcg(paperColorGroup());
   pcg.setColor(QColorGroup::Base, app->backgroundColor());
   pcg.setColor(QColorGroup::Text, app->textColor());
   setPaperColorGroup(pcg);
   setLinkColor(app->linkColor());
   setFont(knGlobals.cfgManager->appearance()->articleFixedFont());
+#else
+  setPaper( QBrush(app->backgroundColor()) );
+  setColor( app->textColor() );
+#warning KSourceViewWindow: Link color not modified. If it breaks, here is where to look.
+#endif
 
   QStyleSheetItem *style;
   style=new QStyleSheetItem(styleSheet(), "txt");
@@ -367,11 +376,18 @@ void KNArticleWidget::applyConfig()
   style->setDisplayMode(QStyleSheetItem::DisplayBlock);
   style->setWhiteSpaceMode(QStyleSheetItem::WhiteSpaceNoWrap);
 
+#if QT_VERSION < 300
   QColorGroup pcg(paperColorGroup());
   pcg.setColor(QColorGroup::Base, app->backgroundColor());
   pcg.setColor(QColorGroup::Text, app->textColor());
   setPaperColorGroup(pcg);
   setLinkColor(app->linkColor());
+#else
+  setPaper( QBrush( app->backgroundColor() ) );
+  setColor( app->textColor() );
+#warning KNArticleWidget::applyConfig(): Link color not modified. \
+If it breaks, here is where to look.
+#endif
 
   if(!knGlobals.cfgManager->readNewsGeneral()->autoMark())
     t_imer->stop();
@@ -442,7 +458,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
                                                             && (text[startIdx-1]!='}') )
             startIdx--;
 
-          regExp="[^\\s<>()\"|\\[\\]{}]+";
+          regExp.setPattern("[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
           if (regExp.match(text,startIdx,&matchLen)!=-1) {
             if (text[startIdx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
@@ -466,7 +482,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case 'h' :
         if((parseURLs)&&
            (text[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'h'
-          regExp="^https?://[^\\s<>()\"|\\[\\]{}]+";
+          regExp.setPattern("^https?://[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
           if (regExp.match(text,idx,&matchLen)!=-1) {
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
@@ -485,7 +501,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case 'w' :
         if((parseURLs)&&
            (text[idx+1].latin1()=='w')) {   // don't do all the stuff for every 'w'
-          regExp="^www\\.[^\\s<>()\"|\\[\\]{}]+\\.[^\\s<>()\"|\\[\\]{}]+";
+          regExp.setPattern("^www\\.[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+\\.[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
           if (regExp.match(text,idx,&matchLen)!=-1) {
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
@@ -504,7 +520,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case 'f' :
         if((parseURLs)&&
            (text[idx+1].latin1()=='t')) {   // don't do all the stuff for every 'f'
-          regExp="^ftp://[^\\s<>()\"|\\[\\]{}]+";
+          regExp.setPattern("^ftp://[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
           if (regExp.match(text,idx,&matchLen)!=-1) {
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
@@ -516,7 +532,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
             lastReplacement=idx;
             break;
           }
-          regExp="^ftp\\.[^\\s<>()\"|\\[\\]{}]+\\.[^\\s<>()\"|\\[\\]{}]+";
+          regExp.setPattern("^ftp\\.[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+\\.[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
           if (regExp.match(text,idx,&matchLen)!=-1) {
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
@@ -535,7 +551,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case 'n' :
         if((parseURLs)&&
            (text[idx+1].latin1()=='e')) {   // don't do all the stuff for every 'e'
-          regExp="^news:[^\\s<>()\"|\\[\\]{}]+";
+          regExp.setPattern("^news:[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
           if (regExp.match(text,idx,&matchLen)!=-1) {
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
@@ -554,7 +570,7 @@ QString KNArticleWidget::toHtmlString(const QString &line, bool parseURLs, bool 
       case 'm' :
         if((parseURLs)&&
            (text[idx+1].latin1()=='a')) {   // don't do all the stuff for every 'm'
-          regExp="^mailto:[^\\s<>()\"|\\[\\]{}]+";
+          regExp.setPattern("^mailto:[^\\s<>\\(\\)\"\\|\\[\\]\\{\\}]+");
           if (regExp.match(text,idx,&matchLen)!=-1) {
             if (text[idx+matchLen-1]=='.')   // remove trailing dot
               matchLen--;
@@ -971,8 +987,10 @@ void KNArticleWidget::createHtmlPage()
     }
     else {
       QFont f=(a_ctToggleFixedFont->isChecked()? app->articleFixedFont():app->articleFont());
+#if QT_VERSION < 300
       if (!app->useFontsForAllCS())
         KGlobal::charsets()->setQFont(f, KGlobal::charsets()->charsetForEncoding(text->contentType()->charset()));
+#endif
       setFont(f);
     }
   }

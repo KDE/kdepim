@@ -40,9 +40,10 @@
 #include "knarticlemanager.h"
 #include "kngroupmanager.h"
 
-#if QT_VERSION < 290
+#if QT_VERSION < 300
 #  define QPtrList QList
 #  define QPtrListIterator QListIterator
+#  define Q_ASSERT ASSERT
 #endif
 
 
@@ -869,7 +870,7 @@ void KNGroup::scoreArticles(bool onlynew)
     sm->initCache(groupname());
     for(int idx=0; idx<todo; idx++) {
       KNRemoteArticle *a = at(len-idx-1);
-      ASSERT( a );
+      Q_ASSERT( a );
 
       defScore = 0;
       if (a->isIgnored())
@@ -905,7 +906,7 @@ void KNGroup::reorganize()
 
   for(int idx=0; idx<length(); idx++) {
     KNRemoteArticle *a = at(idx);
-    ASSERT( a );
+    Q_ASSERT( a );
     a->setId(idx+1); //new ids
     a->setIdRef(-1);
     a->setThreadingLevel(0);

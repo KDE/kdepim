@@ -132,7 +132,9 @@ const QFont& KNHdrViewItem::fontForColumn(int col, const QFont &font)
 
   // new charset...
   f = new QFont(knGlobals.cfgManager->appearance()->articleListFont());
+#if QT_VERSION < 300
   KGlobal::charsets()->setQFont(*f, KGlobal::charsets()->charsetForEncoding(cs));
+#endif
   f_ontCache.setAutoDelete(true);
   f_ontCache.insert(cs, f);
 

@@ -15,6 +15,7 @@
 */
 
 #include <qlayout.h>
+#include <qpainter.h>
 
 #include "knglobals.h"
 #include "knconfig.h"

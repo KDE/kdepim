@@ -24,6 +24,7 @@
 #include <kdockwidget.h>
 #include <kprogress.h>
 
+class QPainter;
 
 //====================================================================================
 

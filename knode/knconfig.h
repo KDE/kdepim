@@ -905,7 +905,9 @@ class PostNewsTechnical : public Base {
     QStringList composerCharsets() { return c_omposerCharsets; }
     int indexForCharset(const QCString &str);
     QCString findComposerCharset(QCString cs);
+#if QT_VERSION < 300
     QCString findComposerCharset(QFont::CharSet cs);
+#endif
 
     bool allow8BitBody()        { return a_llow8BitBody; }
     bool useOwnCharset()        { return u_seOwnCharset; }

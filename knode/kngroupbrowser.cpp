@@ -17,7 +17,12 @@
 #include <qlayout.h>
 #include <qcheckbox.h>
 #include <qtimer.h>
-#include <qregexp3.h>
+#if QT_VERSION < 300
+#  include <qregexp3.h>
+#else
+#  include <qregexp.h>
+#  define QRegExp3 QRegExp
+#endif
 
 #include <kseparator.h>
 #include <kiconloader.h>

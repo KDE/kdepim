@@ -26,7 +26,7 @@
 #include <klistview.h>
 
 class KNListView;
-
+class QPainter;
 
 class KNLVItemBase : public QListViewItem  {
   

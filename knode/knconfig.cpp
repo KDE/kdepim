@@ -955,8 +955,10 @@ KNConfig::PostNewsTechnical::PostNewsTechnical()
 
   c_harset=conf->readEntry("Charset").latin1();
   if (c_harset.isEmpty()) {
+#if QT_VERSION < 300
     c_harset=findComposerCharset(KGlobal::charsets()->charsetForLocale());
     if (c_harset.isEmpty())
+#endif
       c_harset="iso-8859-1";  // shit
   }
 
@@ -1060,7 +1062,9 @@ QCString KNConfig::PostNewsTechnical::findComposerCharset(QCString cs)
   if (ret)
     return *ret;
 
+#if QT_VERSION < 300
   QFont::CharSet qfcs = KGlobal::charsets()->charsetForEncoding(cs);
+#endif
   QCString s;
 
   QStringList::Iterator it;
@@ -1072,12 +1076,14 @@ QCString KNConfig::PostNewsTechnical::findComposerCharset(QCString cs)
       break;
     }
 
+#if QT_VERSION < 300
     // match by charset, avoid to return "us-ascii" for iso-8859-1
     if (((*it).lower()!="us-ascii")&&
         (KGlobal::charsets()->charsetForEncoding(*it)==qfcs)) {
       s = (*it).latin1();
       break;
     }
+#endif
   }
 
   if (s.isEmpty())
@@ -1089,6 +1095,7 @@ QCString KNConfig::PostNewsTechnical::findComposerCharset(QCString cs)
 }
 
 
+#if QT_VERSION < 300
 QCString KNConfig::PostNewsTechnical::findComposerCharset(QFont::CharSet cs)
 {
   if (cs==QFont::ISO_8859_1)  // avoid to return "us-ascii"
@@ -1114,7 +1121,7 @@ QCString KNConfig::PostNewsTechnical::findComposerCharset(QFont::CharSet cs)
 
   return s;
 }
-
+#endif
 
 //==============================================================================================================
 

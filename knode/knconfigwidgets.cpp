@@ -21,6 +21,7 @@
 #include <qvbox.h>
 #include <qlabel.h>
 #include <qcheckbox.h>
+#include <qpainter.h>
 
 #include <klocale.h>
 #include <knumvalidator.h>
