@@ -14,10 +14,15 @@
     Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, US
 */
 
-#include <kconfig.h>
-
-#include "utilities.h"
 #include "knserverinfo.h"
+#include "utilities.h"
+
+#include <kmessagebox.h>
+#include <kconfig.h>
+#include <klocale.h>
+#include <kdebug.h>
+#include <kwallet.h>
+using namespace KWallet;
 
 
 KNServerInfo::KNServerInfo()
@@ -33,7 +38,7 @@ KNServerInfo::~KNServerInfo()
 }
 
 
-   
+
 void KNServerInfo::readConf(KConfig *conf)
 {
   s_erver=conf->readEntry("server", "localhost");
@@ -55,8 +60,25 @@ void KNServerInfo::readConf(KConfig *conf)
     i_d=conf->readNumEntry("id", -1);
     n_eedsLogon=conf->readBoolEntry("needsLogon",false);
     u_ser=conf->readEntry("user");
-    p_ass=KNHelper::decryptStr(conf->readEntry("pass"));
+    Wallet* wallet = openWallet();
+    if ( !wallet || wallet->readPassword( s_erver, p_ass ) ) {
+      p_ass = KNHelper::decryptStr(conf->readEntry("pass"));
+      conf->deleteEntry("pass");
+      //Save the pass in wallet as this might be the first time it's used
+      if ( wallet )
+        wallet->writePassword( s_erver, p_ass );
+    }
   }
+}
+
+Wallet* KNServerInfo::openWallet()
+{
+  QString networkWallet = Wallet::NetworkWallet();
+  Wallet* wallet = Wallet::openWallet(networkWallet);
+  if ( !wallet->hasFolder("knode") )
+    wallet->createFolder("knode");
+  wallet->setFolder("knode");
+  return wallet;
 }
 
 
@@ -71,7 +93,12 @@ void KNServerInfo::saveConf(KConfig *conf)
     conf->writeEntry("id", i_d);
     conf->writeEntry("needsLogon", n_eedsLogon);
     conf->writeEntry("user", u_ser);
-    conf->writeEntry("pass", KNHelper::encryptStr(p_ass));
+    Wallet* wallet = openWallet();
+    if ( wallet->writePassword( s_erver, p_ass ) ) {
+      KMessageBox::information( 0, i18n( "KWallet isn't running. We strongly recommend using "
+                                        "KWallet for managing your password" ) );
+      conf->writeEntry("pass", KNHelper::encryptStr(p_ass));
+    }
   }
 }
 

@@ -61,6 +61,9 @@ public:
   KNMainWidget( KXMLGUIClient *client, bool detachable, QWidget* parent, const char* name );
   ~KNMainWidget();
 
+  /** exit */
+  bool queryClose();
+
   //GUI
   void setStatusMsg(const QString& = QString::null, int id=SB_MAIN);
   void setStatusHelpMsg(const QString& text);
@@ -105,9 +108,6 @@ protected:
 
   bool requestShutdown();
   void prepareShutdown();
-
-  /** exit */
-  bool queryClose();
 
   virtual void showEvent(QShowEvent *);
 

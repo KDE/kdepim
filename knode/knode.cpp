@@ -77,4 +77,9 @@ void KNMainWindow::slotNewToolbarConfig()
   applyMainWindowSettings(KNGlobals::config(),"mainWindow_options");
 }
 
+bool KNMainWindow::queryClose()
+{
+  return m_mainWidget->queryClose();
+}
+
 #include "knode.moc"

@@ -38,12 +38,14 @@ class KNMainWindow : public KMainWindow
   Q_OBJECT
 
 public:
-    KNMainWindow( QWidget* parentWidget=0 );
-    ~KNMainWindow();
+  KNMainWindow( QWidget* parentWidget=0 );
+  ~KNMainWindow();
   void openURL( const KURL& );
 public slots:
-    void slotConfToolbar();
-    void slotNewToolbarConfig();
+  void slotConfToolbar();
+  void slotNewToolbarConfig();
+protected:
+  bool queryClose();
 private:
   KNMainWidget *m_mainWidget;
 };

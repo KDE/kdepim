@@ -515,6 +515,7 @@ void KNConfig::NntpAccountConfDialog::slotOk()
   a_ccount->setPass(p_ass->text());
   a_ccount->setIntervalChecking(i_nterval->isChecked());
   a_ccount->setCheckInterval(c_heckInterval->value());
+  a_ccount->saveInfo();
 
   i_dWidget->apply();
 

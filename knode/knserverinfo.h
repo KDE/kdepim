@@ -20,7 +20,10 @@
 #include <qstring.h>
 
 class KConfig;
-
+namespace KWallet {
+  class Wallet;
+}
+using KWallet::Wallet;
 
 class KNServerInfo {
 
@@ -58,6 +61,7 @@ class KNServerInfo {
     bool operator==(const KNServerInfo &s);
 
   protected:
+    Wallet* openWallet();
     serverType t_ype;
 
     QString  s_erver,

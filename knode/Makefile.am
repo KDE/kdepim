@@ -8,7 +8,7 @@ noinst_LTLIBRARIES = libknodecommon.la
 
 kde_module_LTLIBRARIES = libknodepart.la
 libknodepart_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -version-info 1:0
-libknodepart_la_LIBADD	= $(LIB_KHTML) $(LIB_KSPELL) $(LIB_KABC) \
+libknodepart_la_LIBADD	= $(LIB_KHTML) $(LIB_KSPELL) $(LIB_KABC) -lkwalletclient \
 			../libkdenetwork/libkdenetwork.la ../libkdepim/libkdepim.la \
 			../mimelib/libmimelib.la libknodecommon.la
 SUBDIRS = pics filters
@@ -16,7 +16,7 @@ SUBDIRS = pics filters
 bin_PROGRAMS = knode
 
 knode_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-knode_LDADD   = -lkdeprint $(top_builddir)/libkdenetwork/libkdenetwork.la ../libkdepim/libkdepim.la libknodecommon.la $(LIB_KSPELL) $(LIB_KABC) $(LIB_KFILE) $(LIBRESOLV)
+knode_LDADD   = -lkdeprint -lkwalletclient $(top_builddir)/libkdenetwork/libkdenetwork.la ../libkdepim/libkdepim.la libknodecommon.la $(LIB_KSPELL) $(LIB_KABC) $(LIB_KFILE) $(LIBRESOLV)
 
 
 libknodecommon_la_SOURCES =   knconfigmanager.cpp \
