@@ -75,7 +75,7 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
     if (todo->doesFloat()) {
       due = writeICalDate(todo->dtDue().date());
     } else {
-      due = writeICalDateTime(todo->dtDue());
+      due = writeICalDateTime(todo->dtDue(), !mCalendar->isLocalTime());
     }
     icalcomponent_add_property(vtodo,icalproperty_new_due(due));
   }
@@ -88,7 +88,7 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
       start = writeICalDate(todo->dtStart().date());
     } else {
 //      kdDebug(5800) << "§§ incidence " << todo->summary() << " has time." << endl;
-      start = writeICalDateTime(todo->dtStart());
+      start = writeICalDateTime(todo->dtStart(), !mCalendar->isLocalTime());
     }
     icalcomponent_add_property(vtodo,icalproperty_new_dtstart(start));
   }
@@ -100,7 +100,7 @@ icalcomponent *ICalFormatImpl::writeTodo(Todo *todo)
       // date. Set it to now.
       todo->setCompleted(QDateTime::currentDateTime());
     }
-    icaltimetype completed = writeICalDateTime(todo->completed());
+    icaltimetype completed = writeICalDateTime(todo->completed(), !mCalendar->isLocalTime());
     icalcomponent_add_property(vtodo,icalproperty_new_completed(completed));
   }
 
@@ -129,7 +129,7 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
     start = writeICalDate(event->dtStart().date());
   } else {
 //    kdDebug(5800) << "§§ incidence " << event->summary() << " has time." << endl;
-    start = writeICalDateTime(event->dtStart());
+    start = writeICalDateTime(event->dtStart(), !mCalendar->isLocalTime());
   }
   icalcomponent_add_property(vevent,icalproperty_new_dtstart(start));
 
@@ -140,7 +140,7 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
     end = writeICalDate(event->dtEnd().date());
   } else {
 //    kdDebug(5800) << "§§ Event " << event->summary() << " has time." << endl;
-    end = writeICalDateTime(event->dtEnd());
+    end = writeICalDateTime(event->dtEnd(), !mCalendar->isLocalTime());
   }
   icalcomponent_add_property(vevent,icalproperty_new_dtend(end));
 
@@ -182,7 +182,7 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 {
   // creation date
   icalcomponent_add_property(parent,icalproperty_new_created(
-      writeICalDateTime(incidence->created())));
+      writeICalDateTime(incidence->created(), !mCalendar->isLocalTime())));
 
   // unique id
   icalcomponent_add_property(parent,icalproperty_new_uid(
@@ -194,10 +194,10 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 
   // last modification date
   icalcomponent_add_property(parent,icalproperty_new_lastmodified(
-      writeICalDateTime(incidence->lastModified())));
+      writeICalDateTime(incidence->lastModified(), !mCalendar->isLocalTime())));
 
   icalcomponent_add_property(parent,icalproperty_new_dtstamp(
-      writeICalDateTime(QDateTime::currentDateTime())));
+      writeICalDateTime(QDateTime::currentDateTime(), !mCalendar->isLocalTime())));
 
   // organizer stuff
   icalcomponent_add_property(parent,icalproperty_new_organizer(
@@ -694,7 +694,7 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
 
   icaltriggertype trigger;
   if ( alarm->hasTime() ) {
-    trigger.time = writeICalDateTime(alarm->time());
+    trigger.time = writeICalDateTime(alarm->time(), !mCalendar->isLocalTime());
     trigger.duration = icaldurationtype_null_duration();
   } else {
     trigger.time = icaltime_null_time();
