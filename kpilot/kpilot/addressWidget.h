@@ -42,6 +42,8 @@ class AddressWidget : public PilotComponent
       void slotCreateNewRecord();
       void slotDeleteRecord(); // Deletes the currently selected record
 
+	void slotUpdateButtons();	// Enable/disable buttons
+
     protected:
       char* getFieldBySymbol(PilotAddress* rec, const char* symbol);
       void setFieldBySymbol(PilotAddress* rec, const char* symbol, const char* text);
@@ -76,6 +78,7 @@ private:
       QList<PilotAddress>   fAddressList;
       unsigned int          fLookupTable[1000];
       QListBox*             fListBox;
+	QPushButton	*fEditButton,*fDeleteButton;
 
 public:
 	typedef enum { PhoneNumberLength=16 } Constants ;

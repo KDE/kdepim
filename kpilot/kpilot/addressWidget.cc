@@ -246,15 +246,19 @@ AddressWidget::setupWidget()
 	fTextWidget->setReadOnly(TRUE);
 	grid->addMultiCellWidget(fTextWidget,1,4,2,2);
 
-	QPushButton* button = new QPushButton(i18n("Edit Record"), this);
-	grid->addWidget(button,2,0);
-	connect(button, SIGNAL(clicked()), this, SLOT(slotEditRecord()));
+	QPushButton* button ;
+	
+	fEditButton = new QPushButton(i18n("Edit Record"), this);
+	grid->addWidget(fEditButton,2,0);
+	connect(fEditButton, SIGNAL(clicked()), 
+		this, SLOT(slotEditRecord()));
 	button = new QPushButton(i18n("New Record"), this);
 	grid->addWidget(button,2,1);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotCreateNewRecord()));
-	button = new QPushButton(i18n("Delete Record"), this);
-	grid->addWidget(button,3,0);
-	connect(button, SIGNAL(clicked()), this, SLOT(slotDeleteRecord()));
+	fDeleteButton = new QPushButton(i18n("Delete Record"), this);
+	grid->addWidget(fDeleteButton,3,0);
+	connect(fDeleteButton, SIGNAL(clicked()), 
+		this, SLOT(slotDeleteRecord()));
 	button = new QPushButton(i18n("Import List"), this);
 	grid->addWidget(button,4,0);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotImportAddressList()));
@@ -319,7 +323,11 @@ AddressWidget::updateWidget()
 		kdDebug() << fname
 			<< ": " << listIndex << " records" << endl;
 	}
+
+	slotUpdateButtons();
 }
+
+
 
 char *AddressWidget::createTitle(PilotAddress *address,int displayMode)
 {
@@ -391,6 +399,17 @@ char *AddressWidget::createTitle(PilotAddress *address,int displayMode)
 	}
 
 	return title;
+}
+
+
+/* slot */ void AddressWidget::slotUpdateButtons()
+{
+	FUNCTIONSETUP;
+
+	bool enabled = (fListBox->currentItem() != -1);
+
+	fEditButton->setEnabled(enabled);
+	fDeleteButton->setEnabled(enabled);
 }
 
 void
@@ -850,6 +869,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.18  2000/11/26 01:44:54  adridg
+// Last of Heiko's patches
+//
 // Revision 1.17  2000/11/17 08:37:58  adridg
 // Minor
 //
