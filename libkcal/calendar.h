@@ -1,5 +1,6 @@
 /*
     This file is part of libkcal.
+
     Copyright (c) 1998 Preston Brown
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
 
@@ -18,9 +19,8 @@
     the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
     Boston, MA 02111-1307, USA.
 */
-
-#ifndef CALENDAR_H
-#define CALENDAR_H
+#ifndef KCAL_CALENDAR_H
+#define KCAL_CALENDAR_H
 
 #include <qobject.h>
 #include <qstring.h>

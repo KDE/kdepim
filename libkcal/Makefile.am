@@ -30,7 +30,7 @@ libkcal_la_SOURCES = \
 	calendarresources.cpp \
         qtopiaformat.cpp \
 	resourcecached.cpp \
-        htmlexport.cpp 
+        htmlexport.cpp calendarnull.cpp
 
 kde_module_LTLIBRARIES = kcal_localdir.la kcal_remote.la kcal_kabc.la
 
