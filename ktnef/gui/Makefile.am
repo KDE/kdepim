@@ -21,5 +21,5 @@ rc_DATA = ktnefui.rc
 kdelnkdir   = $(kde_appsdir)/Utilities
 kdelnk_DATA = ktnef.desktop
 
-data_DATA = ms-tnef.desktop
-datadir = $(kde_mimedir)/application
+mime_DATA = ms-tnef.desktop
+mimedir = $(kde_mimedir)/application
