@@ -69,3 +69,5 @@ appsdir = $(kde_appsdir)/Utilities
 apps_DATA = kaddressbook.desktop
 
 KDE_ICON = kaddressbook
+
+include ../admin/Doxyfile.am

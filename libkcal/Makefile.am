@@ -28,3 +28,5 @@ METASOURCES = AUTO
 
 messages:
 	$(XGETTEXT) *.cpp -o $(podir)/libkcal.pot
+
+include ../admin/Doxyfile.am

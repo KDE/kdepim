@@ -14,3 +14,5 @@ messages:
 devel-pot :
 	$(XGETTEXT) -C --keyword=i18n --keyword=I18N_NOOP -o /tmp/kpilot.po \
 		`find . -name "*.cc"`
+
+include ../admin/Doxyfile.am

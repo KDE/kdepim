@@ -2,3 +2,5 @@
 ## (C) 1997 Stephan Kulow
 
 SUBDIRS = src profiles
+
+include ../admin/Doxyfile.am

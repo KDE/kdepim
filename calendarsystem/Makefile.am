@@ -15,3 +15,5 @@ calendar3_LDADD   = $(LIB_KDEUI) ./libkcalsystem.la
 calendar3_SOURCES = calendar3.cpp  mkdatepicker.cpp mkdatetbl.cpp
 
 METASOURCES = AUTO
+
+include ../admin/Doxyfile.am
