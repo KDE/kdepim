@@ -1,3 +1,4 @@
+#include <KabEnum.h>
 #include <KabEntity.h>
 #include <KabComms.h>
 
@@ -11,7 +12,12 @@ class Member : public Entity
 {
   public:
 
-    Member(const QString & type, AddressBook & pab, const QString & name)
+    Member(EntityType type)
+      : Entity(type)
+    {
+    }
+    
+    Member(EntityType type, AddressBook & pab, const QString & name)
       : Entity(type, pab, name)
     {
       // Empty.
@@ -49,13 +55,32 @@ class Member : public Entity
     
     Comms         contactInfo()   const { return contactInfo_;  }
 
-    void setContactInfo   (const Comms          & c)
+    void setContactInfo   (const Comms & c)
     { touch(); contactInfo_ = c; }
+
+    friend QDataStream & operator << (QDataStream &, const Member &);
+    friend QDataStream & operator >> (QDataStream &, Member &);
     
   protected:
     
     Comms         contactInfo_;
 };
+
+  QDataStream &
+operator << (QDataStream & str, const Member & m)
+{
+  str << m.contactInfo_;
+  operator << (str, *((Entity *)&m));
+  return str;
+}
+
+  QDataStream &
+operator >> (QDataStream & str, Member & m)
+{
+  str >> m.contactInfo_;
+  operator >> (str, *((Entity *)&m));
+  return str;
+}
 
 } // End namespace KAB
 

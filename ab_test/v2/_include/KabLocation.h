@@ -10,8 +10,13 @@ class Location : public Entity
 {
   public:
     
+    Location()
+      : Entity(EntityTypeLocation)
+    {
+    }
+
     Location(AddressBook & pab, const QString & name)
-      : Entity("location", pab, name)
+      : Entity(EntityTypeLocation, pab, name)
     {
       // Empty.
     }
@@ -87,6 +92,9 @@ class Location : public Entity
     void  setPostCode         (const QString       & s)
     { touch(); postCode_ = s; }
     
+    friend QDataStream & operator << (QDataStream &, const Location &);
+    friend QDataStream & operator >> (QDataStream &, Location &);
+    
   private:
     
     LocationType  type_;
@@ -97,6 +105,32 @@ class Location : public Entity
     QString       postCode_;
     PersonRefList connectedPersons_;
 };
+
+  QDataStream &
+operator << (QDataStream & str, const Location & l)
+{  
+  str << (int)l.type_ << l.typeName_ << l.streetAddress_ << l.area_ 
+    << l.country_ << l.postCode_ << l.connectedPersons_;
+  
+  operator << (str, *((Entity *)&l));
+  
+  return str;
+}
+
+  QDataStream &
+operator >> (QDataStream & str, Location & l)
+{
+  int i;
+  str >> i;
+  l.type_ = (LocationType)i;
+
+  str >> l.typeName_ >> l.streetAddress_ >> l.area_ >> l.country_
+      >> l.postCode_ >> l.connectedPersons_;
+ 
+  operator >> (str, *((Entity *)&l));
+  
+  return str;
+}
 
 } // End namespace KAB
 

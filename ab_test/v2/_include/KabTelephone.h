@@ -60,6 +60,9 @@ class Telephone
     void  setNumber       (const QString & s) { number_       = s; }
     void  setExtension    (const QString & s) { extension_    = s; }
     
+    friend QDataStream & operator << (QDataStream &, const Telephone &);
+    friend QDataStream & operator >> (QDataStream &, Telephone &);
+
   private:
     
     QString countryCode_;
@@ -67,6 +70,20 @@ class Telephone
     QString number_;
     QString extension_;
 };
+
+  QDataStream &
+operator << (QDataStream & str, const Telephone & t)
+{
+  str << t.countryCode_ << t.areaCode_ << t.number_ << t.extension_;
+  return str;
+}
+
+  QDataStream &
+operator >> (QDataStream & str, Telephone & t)
+{
+  str >> t.countryCode_ >> t.areaCode_ >> t.number_ >> t.extension_;
+  return str;
+}
 
 } // End namespace KAB
 

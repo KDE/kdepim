@@ -2,6 +2,7 @@ INCLUDES= \
 -I ../../_include/ \
 -I ../../../../vCard/include \
 -I ../../../../vCard/include/generated \
+-I ../../../../kab_backend_test/ \
 $(all_includes)
 
 lib_LTLIBRARIES = libvcardfilter.la

@@ -44,21 +44,38 @@ class SubValue
       return ((name_ == s.name_) && (data_ == s.data_));
     } 
         
-    QString name()  const { return name_; }
-    Data    data()  const { return data_; }
+    QString     name()  const { return name_; }
+    QByteArray  data()  const { return data_; }
     
-    void  setName(const QString & n) { name_ = n; }
-    void  setData(const Data    & d) { data_ = d; }
+    void  setName(const QString     & n) { name_ = n; }
+    void  setData(const QByteArray  & d) { data_ = d; }
   
+    friend QDataStream & operator << (QDataStream &, const SubValue &);
+    friend QDataStream & operator >> (QDataStream &, SubValue &);
+    
   private:
     
-    QString name_;
-    Data    data_;
+    QString     name_;
+    QByteArray  data_;
 };
 
 typedef QValueList<SubValue> SubValueList;
 typedef SubValue XValue;
 typedef QValueList<XValue> XValueList;
+
+  QDataStream &
+operator << (QDataStream & str, const SubValue & v)
+{
+  str << v.name_ << v.data_;
+  return str;
+}
+
+  QDataStream &
+operator >> (QDataStream & str, SubValue & v)
+{
+  str >> v.name_ >> v.data_;
+  return str;
+}
 
 } // End namespace KAB
 

@@ -1,6 +1,7 @@
 #include <qstring.h>
 #include <qdict.h>
 #include <qvaluelist.h>
+#include <qdatastream.h>
 
 #include <KabEnum.h>
 #include <KabSubValue.h>
@@ -19,24 +20,28 @@ class Entity
   public:
     
     Entity()
-      : name_         ("unknown"  ),
-        addressBook_  (0          ),
-        type_         ("unknown"  ),
-        dirty_        (false      ),
-        seq_          (SEQ++      )
+      : name_         ("unknown"),
+        addressBook_  (0),
+        type_         (EntityTypeEntity),
+        dirty_        (false),
+        seq_          (SEQ++)
     {
       if (!initialised_) { _init(); initialised_ = true; }
       _generateID();
     }
+        
+    Entity(EntityType t)
+      : type_(t)
+    {
+    }
     
-    Entity(const QString & type, AddressBook & pab, const QString & name);
+    Entity(EntityType type, AddressBook & parentAB, const QString & name);
     
     Entity(const Entity & e)
       : id_           (e.id_          ),
         name_         (e.name_        ),
         addressBook_  (e.addressBook_ ),
         xValues_      (e.xValues_     ),
-        type_         (e.type_        ),
         dirty_        (e.dirty_       ),
         seq_          (SEQ++          )
     {
@@ -78,7 +83,7 @@ class Entity
     void setName(const QString & name)
     { touch(); name_ = name; }
     
-    QString type() const { return type_; }
+    EntityType type() const { return type_; }
     
     bool isDirty()  { return dirty_; }
     void setClean() { dirty_ = false;}
@@ -89,6 +94,12 @@ class Entity
     XValueList    xValues()       const { return xValues_;      }
     void setXValues       (const XValueList     & l)
     { touch(); xValues_ = l; } 
+    
+    bool write(const QCString &, backendWrite *) const;
+    bool read(const QCString &, backendRead *);
+
+    friend QDataStream & operator << (QDataStream &, const Entity &);
+    friend QDataStream & operator >> (QDataStream &, Entity &);
 
   protected:
     
@@ -101,7 +112,7 @@ class Entity
     
   private:
     
-    QString           type_;
+    EntityType        type_;
     bool              dirty_;
     unsigned long int seq_;
     // End order dependency

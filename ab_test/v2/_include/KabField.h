@@ -50,11 +50,28 @@ class Field
     void  setName         (const QString      & n) { name_ = n;          }
     void  setSubValueList (const SubValueList & l) { subValueList_ = l;  }
  
+    friend QDataStream & operator << (QDataStream &, const Field &);
+    friend QDataStream & operator >> (QDataStream &, Field &);
+    
   private:
     
     QString       name_;
     SubValueList  subValueList_;
 };
+  
+  QDataStream &
+operator << (QDataStream & str, const Field & f)
+{
+  str << f.name_ << f.subValueList_;
+  return str;
+}
+
+  QDataStream &
+operator >> (QDataStream & str, Field & f)
+{
+  str >> f.name_ >> f.subValueList_;
+  return str;
+}
 
 } // End namespace KAB
 

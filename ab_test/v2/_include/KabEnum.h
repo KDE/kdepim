@@ -1,19 +1,26 @@
-#include <qstringlist.h>
 #include <qstring.h>
+#include <qstrlist.h>
+#include <qcstring.h>
 #include <qvaluelist.h>
-#include <qshared.h>
-#include <qdict.h>
-#include <qlist.h>
-#include <qregexp.h>
+#include <kurl.h>
 
 #ifndef KAB_ENUM_H
 #define KAB_ENUM_H
 
+
 namespace KAB
 {
 
+class AddressBook;
+  
 enum    Gender        { GenderMale,   GenderFemale, GenderOther };
 enum    LocationType  { LocationWork, LocationHome, LocationOther };
+enum    EntityType {
+  EntityTypeEntity,
+  EntityTypeGroup,
+  EntityTypePerson,
+  EntityTypeLocation
+};
 
 typedef QString UniqueID;
 typedef QString Division;
@@ -30,10 +37,28 @@ typedef QValueList<MemberRef>     MemberRefList;
 
 typedef QValueList<Division>      DivisionList;
 
-typedef QArray<char> CharBuf;
-typedef CharBuf Data;
+int (*filterfn) (const char *, KAB::AddressBook *);
+
+typedef   void *            FilterHandle;
+typedef   typeof(filterfn)  Filter;
 
 } // End namespace KAB
+
+void      (*kab_backend_init)     (const KURL &);
+bool      (*kab_backend_read)     (const QCString &, QByteArray &);
+bool      (*kab_backend_write)    (const QCString &, const QByteArray &);
+bool      (*kab_backend_remove)   (const QCString &);
+void      (*kab_backend_all_keys) (QStrList &);
+
+typedef   void * KabBackendHandle;
+
+typedef   typeof(kab_backend_init)      backendInit;
+typedef   typeof(kab_backend_read)      backendRead;
+typedef   typeof(kab_backend_write)     backendWrite;
+typedef   typeof(kab_backend_remove)    backendRemove;
+typedef   typeof(kab_backend_all_keys)  backendAllKeys;
+
+
 
 #endif
 

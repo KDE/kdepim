@@ -10,20 +10,20 @@ namespace KAB
 class Group : public Member
 {
   public:
- 
-    Group(AddressBook & pab, const QString & name)
-      : Member("group", pab, name)
-    {
-      // Empty.
-    }
- 
-    Group(Group & parentGroup, const QString & name)
-      : Member("group", *(parentGroup.addressBook()), name),
-        parentGroup_(parentGroup.id())
-    {
-      // Empty.
-    }
     
+    Group()
+      : Member(EntityTypeGroup)
+    {
+    }
+ 
+    Group(AddressBook & pab,
+      const QString & name, const QString & parentID = QString::null)
+      : Member(EntityTypeGroup, pab, name),
+        parentGroup_(parentID)
+    {
+      // Empty.
+    }
+ 
     Group(const Group & o)
       : Member            (o),
         subGroupRefList_  (o.subGroupRefList_),
@@ -95,12 +95,33 @@ class Group : public Member
     void addSubGroup(const Group & g)
     { touch(); subGroupRefList_.append(g.id()); }
     
+    friend QDataStream & operator << (QDataStream &, const Group &);
+    friend QDataStream & operator >> (QDataStream &, Group &);
+    
+    bool isTopLevel() { return parentGroup_.isEmpty(); }
+
   private:
     
     GroupRefList  subGroupRefList_;
     MemberRefList members_;
     GroupRef      parentGroup_;
 };
+    
+  QDataStream &
+operator << (QDataStream & str, const Group & g)
+{
+  str << g.subGroupRefList_ << g.members_ << g.parentGroup_;
+  operator << (str, *((Member *)&g));
+  return str;
+}
+    
+  QDataStream &
+operator >> (QDataStream & str, Group & g)
+{
+  str >> g.subGroupRefList_ >> g.members_ >> g.parentGroup_;
+  operator >> (str, *((Member *)&g));
+  return str;
+}
 
 } // End namespace KAB
 

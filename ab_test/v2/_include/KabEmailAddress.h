@@ -47,12 +47,29 @@ class EmailAddress
     
     void setName  (const QString & s) { name_   = s; }
     void setDomain(const QString & s) { domain_ = s; }
-    
+
+    friend QDataStream & operator << (QDataStream &, const EmailAddress &);
+    friend QDataStream & operator >> (QDataStream &, EmailAddress &);
+
   private:
 
     QString name_;
     QString domain_;
 };
+    
+  QDataStream &
+operator << (QDataStream & str, const EmailAddress & a)
+{
+  str << a.name_ << a.domain_;
+  return str;
+}
+  
+  QDataStream &
+operator >> (QDataStream & str, EmailAddress & a)
+{
+  str >> a.name_ >> a.domain_;
+  return str;
+}
 
 } // End namespace KAB
 

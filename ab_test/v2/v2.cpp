@@ -1,3 +1,5 @@
+#include <qfile.h>
+
 #include "KabEnum.h"
 #include "KabAddressBook.h"
 #include "KabComms.h"
@@ -16,14 +18,53 @@
 
 #include <iostream>
 
-main()
+void create(KAB::AddressBook &);
+void print(KAB::AddressBook &);
+void testImport(KAB::AddressBook &);
+
+main(int argc, char * argv[])
 {
+  if (argc != 4) {
+    cerr << "Usage: v2 <create | print> <format> <url>" << endl;
+    cerr << "Examples: v2 create gdbm file:/tmp/test.gdbm" << endl;
+    cerr << "          v2 print  gdbm file:/tmp/test.gdbm" << endl;
+    exit(1);
+  }
   
+  bool creating(strcmp(argv[1], "create") == 0);
+  
+  QString format(argv[2]);
+  format = format.lower();
+
+  KURL url(argv[3]);
+  
+  if (creating && QFile(url.path()).exists()) {
+    cerr << "Database already exists. Remove it first !" << endl;
+    exit(1);
+  }
+  
+  KAB::AddressBook ab(format, url);
+  if (!ab.usable()) {
+    cerr << "Could not initialise addressbook for that format and location"
+      << endl;
+    exit(1);
+  }
+ 
+  if (creating)
+    create(ab);
+//    testImport(ab);
+  else
+    print(ab);
+}
+
+  void
+create(KAB::AddressBook & ab)
+{
   using namespace KAB;
+  
+  cerr << "Creating database" << endl;
 
-  AddressBook ab;
-
-  // Create some people.
+ // Create some people.
 
   Person rik(ab, "It's Rik Hemsley");
   Person don(ab, "It's Don Sanders");
@@ -49,10 +90,7 @@ main()
   
   XValue x;
   x.setName("X-Height");
-  char * mydata = "6'1\"";
-  Data d;
-  d.setRawData(mydata, strlen(mydata));
-  x.setData(d);
+  x.setData(QCString("6'1\""));
   XValueList xl;
   xl.append(x);
   rik.setXValues(xl);
@@ -82,8 +120,8 @@ main()
   Group withoutSoftware   (ab, "[[without]] software");
 
   // Create a subgroup for each group.
-  Group PIMTeam           (theKDEOrganisation,  "The PIM team");
-  Group withoutDirectors  (withoutSoftware,     "Directors");
+  Group PIMTeam           (ab, "The PIM team", theKDEOrganisation.id());
+  Group withoutDirectors  (ab, "Directors", withoutSoftware.id());
   
   // Add persons to subgroups.
   PIMTeam.addMember         (rik);
@@ -96,19 +134,32 @@ main()
   // Add the withoutDirectors subgroup to the withoutSoftware group.
   withoutSoftware   .addSubGroup(withoutDirectors.id());
   
-  // Now let's look at our data.
+  cerr << "Finished creating database" << endl;
+}
+  void
+print(KAB::AddressBook & ab)
+{
+  using namespace KAB;
+  cerr << "Printing database" << endl;
+
   // First let's show the names of all entities.
   
   cerr << "----------------------------------------------------------" << endl;
   cerr << "List of all entities" << endl;
   cerr << "----------------------------------------------------------" << endl;
 
-  EntityList allEntities = ab.allEntities();
+  QStrList l = ab.allKeys();
   
-  EntityListIterator it(allEntities);
-
-  for (; it.current(); ++it)
-    cerr << "Entity: " << (*it)->name() << endl;
+  cerr << "There are " << l.count() << " keys in the db" << endl;
+  
+  QStrListIterator it(l);
+ 
+  for (; it.current(); ++it) {
+    Entity * e = ab.entity(it.current());
+    cerr << "Entity: " << e->name() << endl;
+    delete e;
+    e = 0;
+  }
   
   cerr << "----------------------------------------------------------" << endl;
   cerr << "List of all toplevel groups and their members (recursive)" << endl;
@@ -125,45 +176,71 @@ main()
   // 
   // Note: There isn't actually a recursive function in the code :)
 
-  EntityList entities = ab.entitiesOfType("group");
+  QStrList l2 = ab.keysOfType(EntityTypeGroup);
   
-  EntityListIterator eit(entities);
+  QStrListIterator it2(l2);
   
-  for (; eit.current(); ++eit) {
+  for (; it2.current(); ++it2) {
     
     // Safe to cast here as we've been told that we're looking at groups only.
-    // We can take a reference as we know the pointer eit.current() is valid.
 
-    Group & d = *((Group *)eit.current());
+    Entity * e = ab.entity(it2.current());
+    
+    ASSERT(e != 0);
+    
+    Group * g = (Group *)e;
     
     // We don't want non-toplevel groups.
-    if (d.parent() != 0)
+    if (!g->isTopLevel()) {
+      delete e;
+      e = 0;
       continue;
+    }
     
-    cerr << "Toplevel group: " << d.name() << endl;
+    cerr << "Toplevel group: " << g->name() << endl;
 
     // Now get the list of all members of this group and its subgroups.    
-    MemberRefList members = d.allMembers();
+    MemberRefList members = g->allMembers();
+    
+    cerr << "This group has " << members.count() << " members" << endl;
     
     MemberRefList::ConstIterator mit(members.begin());
     
     for (; mit != members.end(); ++mit) {
       
-      Member & m = *((Member *)(ab.entity(*mit)));
+      Entity * e2 = ab.entity(*mit);
       
-      cerr << "  Member: " << m.name() << endl;
+      ASSERT (e2 != 0);
       
-      XValueList xValues = m.xValues();
+      Member * m = (Member *)e2;
+      
+      cerr << "  Member: " << m->name() << endl;
+      
+      XValueList xValues = m->xValues();
       
       XValueList::ConstIterator xit(xValues.begin());
       
       for (; xit != xValues.end(); ++xit)
         cerr << "    XValue: " << (*xit).name() << ": " <<
-          (*xit).data() << endl; 
+          (*xit).data() << endl;
+     
+      delete e2;
+      e2 = 0; 
     }
+    
+    delete e;
+    e = 0;
   }
   
-  // Now let's get clever. We'll create an addressbook and ask it to import
+  cerr << "Finished printing database" << endl;
+}
+
+  void
+testImport(KAB::AddressBook & ab)
+{
+  using namespace KAB;
+  
+  // Now let's get clever. We'll ask the addressbook to import
   // its own data. To specify the data type, we need only to pass a string,
   // which in this case is 'vcard'.
   
@@ -175,57 +252,114 @@ main()
     "' and import file '" << filename << "'" << endl;
   cerr << "----------------------------------------------------------" << endl;
   
-  AddressBook ab2;
-  Q_UINT32 imported = ab2.import(format, filename);
+  Q_UINT32 imported = ab.import(format, filename);
  
   // 'imported' now contains the number of entities that were imported.
   
   cerr << "----------------------------------------------------------" << endl;
   cerr << "Import finished. Read " << imported << " entities." << endl;
-  cerr << "Printing all entities" << endl;
   cerr << "----------------------------------------------------------" << endl;
 
   // Let's go through the list of entities and print some info about them.
   
-  EntityList allEntities2 = ab2.allEntities();
+  QStrList l = ab.allKeys();
   
-  cerr << "There are " << allEntities2.count() << " entities" << endl;
+  cerr << "There are " << l.count() << " keys in the db" << endl;
+  
+  QStrListIterator it(l);
 
-  EntityListIterator it2(allEntities2);
+  for (; it.current(); ++it) {
+    
+    cerr << "Looking for entity with key " << it.current() << endl;
+    Entity * e = ab.entity(it.current());
+    ASSERT(e != 0);
+    
+    if (e->type() == "person") {
+   
+      // Name of the entity.
+      
+      Person * p = (Person *)e;
+      
+      cerr << "Person: " << p->name() << endl;
+      
+      // Now, assuming this is a person, we'll print their real name using
+      // actual objects. 
+      
+      
+      PersonalName pn = p->pname();
+      
+      cerr << "  Nickname     : " << pn.nickName() << endl;
+      
+      cerr << "  First name   : " << pn.firstName() << endl;
+      
+      // To get the middle name, we need to look at the list of 'other names'.
+      // In our format, a person has an arbritary number of names, with some
+      // of them 'special' to help us out. We have:
+      //   DisplayName, Prefixes, FirstName, OtherNames,
+      //   LastName, Suffixes, Nickname, XValues
+      // This allows us to have as many names as we like. During that import
+      // we have hopefully mapped the relevant fields to our own.
+      
+      cerr << "  Middle names :";
+      QStringList otherNames = pn.otherNames();
+      QStringList::ConstIterator otherit(otherNames.begin());
+      for (; otherit != otherNames.end(); ++otherit)
+        cerr << " " << (*otherit);
+      cerr << endl;
+      
+      cerr << "  Last name    : " << pn.lastName() << endl;
+      
+      cerr << "  Email address: name: '" << p->contactInfo().email().name()
+        << "' domain: '" << p->contactInfo().email().domain() << "'" << endl;
+      
+    } else if (e->type() == "group") {
+      
+      QStrList l = ab.keysOfType(EntityTypeGroup);
+  
+      QStrListIterator it(l);
+      
+      for (; it.current(); ++it) {
+        
+        Entity * e = ab.entity(it.current());
+        
+        ASSERT(e != 0);
+        
+        Group * g = (Group *)e;
+        
+        // We don't want non-toplevel groups.
+        if (!g->isTopLevel())
+          continue;
+        
+        cerr << "Toplevel group: " << g->name() << endl;
+        cerr << "Group's parent: " << g->parent()->name() << endl;
 
-  for (; it2.current(); ++it2) {
+        // Now get the list of all members of this group and its subgroups.    
+        MemberRefList members = g->allMembers();
+        
+        MemberRefList::ConstIterator mit(members.begin());
+        
+        for (; mit != members.end(); ++mit) {
+          
+          Entity * xe = ab.entity(*mit);
+          ASSERT(xe != 0);
+          
+          Member * m = (Member *)xe;
+          
+          cerr << "  Member: " << m->name() << endl;
+          
+          XValueList xValues = m->xValues();
+          
+          XValueList::ConstIterator xit(xValues.begin());
+          
+          for (; xit != xValues.end(); ++xit)
+            cerr << "    XValue: " << (*xit).name() << ": " <<
+              (*xit).data() << endl; 
+        }
+      }
+    }
     
-    // Name of the entity.
-    
-    cerr << "Entity: " << (*it2)->name() << endl;
-    
-    // Now, assuming this is a person, we'll print their real name using
-    // actual objects. 
-    
-    cerr << "  Full name: " << endl;
-    
-    PersonalName pn = ((Person *)(*it2))->pname();
-    
-    cerr << "    First name  : " << pn.firstName() << endl;
-    
-    // To get the middle name, we need to look at the list of 'other names'.
-    // In our format, a person has an arbritary number of names, with some
-    // of them 'special' to help us out. We have:
-    //   DisplayName, Prefixes, FirstName, OtherNames,
-    //   LastName, Suffixes, Nickname, XValues
-    // This allows us to have as many names as we like. During that import
-    // we have hopefully mapped the relevant fields to our own.
-    
-    QStringList otherNames = pn.otherNames();
-    QStringList::ConstIterator otherit(otherNames.begin());
-    for (; otherit != otherNames.end(); ++otherit)
-      cerr << "    Middle name : " << *otherit << endl;
-    
-    cerr << "    Last name   : " << pn.lastName() << endl;
+    delete e;
+    e = 0;
   }
-  
-  cerr << "----------------------------------------------------------" << endl;
-  cerr << "Well, that was fun. Coffee break ?" << endl;
-  cerr << "----------------------------------------------------------" << endl;
 }
 

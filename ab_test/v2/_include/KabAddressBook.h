@@ -1,12 +1,15 @@
 #include <qregexp.h>
+#include <qstrlist.h>
+#include <KabEnum.h>
 #include <KabEntity.h>
+#include <kurl.h>
 
 #ifndef KAB_ADDRESSBOOK_H
 #define KAB_ADDRESSBOOK_H
 
 namespace KAB
 {
-
+ 
 class AddressBook
 {
   public:
@@ -15,112 +18,43 @@ class AddressBook
      * Default ctor.
      * Call init() afterwards, before using any methods.
      */
-    AddressBook()
-    {
-      // Empty.
-    }
-
+    AddressBook(const QString & format, const KURL & url);
+    /**
+     * Check this after calling the ctor. If it returns false,
+     * DO NOT use this object. (You may safely delete it)
+     */
+    bool usable() { return usable_; }
     /**
      * Copy ctor.
      */
-    AddressBook(const AddressBook & ab)
-        :  entityDict_    (ab.entityDict_)
-    {
-      // Empty.
-    }
-
+    AddressBook(const AddressBook &);
     /**
      * xxref.
      */
-    AddressBook & operator = (const AddressBook & ab)
-    {
-      if (this == &ab) return *this;
-      entityDict_ = ab.entityDict_;
-      return *this;
-    }
+    AddressBook & operator = (const AddressBook &);
     /**
      * dtor.
      */
-    ~AddressBook()
-    {
-      // Empty.
-    }
-    /**
-     * You must call this to initialise the addressbook. Do it after
-     * you have created an addressbook and before you use any of
-     * its methods.
-     */
-    void init();
+    ~AddressBook();
     /**
      *  Find the entity with the specified id.
      *  @returns 0 if not found, else a pointer to the found entity.
      */
-    Entity * entity(const QString & id)
-    {
-      return entityDict_[id];
-    }
-    
-    EntityList entitiesOfType(const QString & t)
-    {
-      EntityList l;
-      EntityDictIterator it(entityDict_);
-      for (; it.current(); ++it)
-        if (it.current()->type() == t)
-          l.append(it.current());
-      return l;
-    }
- 
-    EntityList entitiesOfType(const QRegExp & r)
-    {
-      EntityList l;
-      EntityDictIterator it(entityDict_);
-      for (; it.current(); ++it)
-        if (r.match(it.current()->type()))
-          l.append(it.current());
-      return l;
-    }
- 
-    EntityList allEntities()
-    {
-      EntityList l;
-      EntityDictIterator it(entityDict_);
-      for (; it.current(); ++it)
-          l.append(it.current());
-      return l;
-    }
- 
-    EntityList dirtyEntities()
-    {
-      EntityList l;
-      EntityDictIterator it(entityDict_);
-      for (; it.current(); ++it)
-        if (it.current()->isDirty())
-          l.append(it.current());
-      return l;
-    }
-    
+    Entity * entity(const QString &);
+    QStrList keysOfType(EntityType);
     /**
      * Add a new entity. The entity will be copied so you may delete it.
      */
-    void add(const Entity * e)
-    {
-      entityDict_.insert(e->id(), e);
-    }
+    void add(const Entity *);
     /**
      * Delete an entity.
      * @returns true if the entity existed, false if not.
      */
-    bool remove(const QString & key)
-    {
-      return entityDict_.remove(key);
-    }
+    bool remove(const QString &);
     /**
      * Replace an entity.
      */
-    void update(const Entity & e)
-    {
-      entityDict_.replace(e.id(), new Entity(e));
-    }
+    void update(Entity *);
     /**
      * Import entries from another addressbook.
      * @arg format the format the addressbook is stored in. Currently only
@@ -131,10 +65,28 @@ class AddressBook
      */
     Q_UINT32 import(const QString & format, const QString & filename);
     
+    QStrList allKeys();
+    
+    EntityType  keyToEntityType(const QCString &);
+    Entity *    createEntityOfType(EntityType);
+    
   private:
     
-    EntityDict  entityDict_;
+    bool _initBackend();
+    
+    QString format_;
+    KURL url_;
+
+    backendInit       init_;
+    backendRead       read_;
+    backendWrite      write_;
+    backendRemove     remove_;
+    backendAllKeys    allKeys_;
+    KabBackendHandle  handle_;
+    
+    bool usable_;
 };
+
 
 } // End namespace KAB
 

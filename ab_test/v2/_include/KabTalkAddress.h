@@ -48,11 +48,29 @@ class TalkAddress
     void setName  (const QString & s) { name_   = s; }
     void setDomain(const QString & s) { domain_ = s; }
     
+    friend QDataStream & operator << (QDataStream &, const TalkAddress &);
+    friend QDataStream & operator >> (QDataStream &, TalkAddress &);
+    
   private:
     
     QString name_;
     QString domain_;
 };
+
+  QDataStream &
+operator << (QDataStream & str, const TalkAddress & a)
+{
+  str << a.name_ << a.domain_;
+  return str;
+}
+
+  QDataStream &
+operator >> (QDataStream & str, TalkAddress & a)
+{
+  str >> a.name_ >> a.domain_;
+  return str;
+}
+
 
 } // End namespace KAB
 

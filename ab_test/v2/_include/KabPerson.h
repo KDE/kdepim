@@ -1,5 +1,6 @@
 #include <qstring.h>
 
+#include <KabEnum.h>
 #include <KabMember.h>
 #include <KabPersonalName.h>
 
@@ -12,9 +13,14 @@ namespace KAB
 class Person : public Member
 { 
   public:
+    
+    Person()
+      : Member(EntityTypePerson)
+    {
+    }
 
     Person(AddressBook & pab, const QString & name)
-      : Member("person", pab, name)
+      : Member(EntityTypePerson, pab, name)
     {
       // Empty.
     }
@@ -75,6 +81,9 @@ class Person : public Member
     void setNotes       (const QString        & s)
     { touch(); notes_ = s; }
     
+    friend QDataStream & operator << (QDataStream &, const Person &);
+    friend QDataStream & operator >> (QDataStream &, Person &);
+
   private:
  
     PersonalName    pname_;
@@ -82,6 +91,27 @@ class Person : public Member
     Gender          gender_;
     QString         notes_;
 };
+
+  QDataStream &
+operator << (QDataStream & str, const Person & p)
+{
+  str << p.pname_ << p.comms_ << (int)p.gender_ << p.notes_;
+  operator << (str, *((Member *)&p));
+  return str;
+}
+
+  QDataStream &
+operator >> (QDataStream & str, Person & p)
+{
+  str >> p.pname_ >> p.comms_;
+  int i;
+  str >> i;
+  p.gender_ = (Gender)i;
+  str >> p.notes_;
+  operator >> (str, *((Member *)&p));
+  return str;
+}
+
 
 } // End namespace KAB
 

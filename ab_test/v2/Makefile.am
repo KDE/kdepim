@@ -1,6 +1,6 @@
-INCLUDES= -I _include $(all_includes)
+INCLUDES= -I_include -I../../kab_backend_test/ $(all_includes)
 
-SUBDIRS = filters
+SUBDIRS = filters backends
 
 lib_LTLIBRARIES = libab_test2.la
 
