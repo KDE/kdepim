@@ -3,6 +3,11 @@
 
 using namespace KitchenSync;
 
+Profile::Profile()
+{
+
+}
+
 Profile::Profile( const KDevice& dev,  const Kapabilities& caps,  const QString& name,  bool enable )
 {
     m_device = dev;

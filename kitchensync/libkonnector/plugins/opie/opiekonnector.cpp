@@ -73,6 +73,7 @@ Kapabilities OpiePlugin::capabilities( )
   QValueList< QString > ips;
   QString  src = "192.168.1.100";
   ips.append( src );
+  caps.setIpProposals( ips );
   return caps;
 }
 

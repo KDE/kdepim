@@ -274,7 +274,7 @@ public:
      */
     void setExtraOption( const QString &, const QString & );
     QMap<QString, QString> extras()const { return m_extras; };
-
+//    void dump()const;
 private:
     class KapabilitiesPrivate;
     KapabilitiesPrivate *d;

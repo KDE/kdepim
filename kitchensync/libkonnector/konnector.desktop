@@ -1,11 +1,17 @@
 [Desktop Entry]
 Encoding=UTF-8
 Type=ServiceType
-X-KDE-ServiceType=UserAgentStrings
+X-KDE-ServiceType=KitchenSync/Konnector
 Comment=Konnector Definitions
+Comment[da]=Konnector-definitioner
+Comment[he]=הגדרות Konnector
+Comment[sv]=Anpassa Konnector
 Name=Konnector
 [PropertyDef::Group]
 Type=QString
 
 [PropertyDef::Vendor]
+Type=QString
+
+[PropertyDef::Id]
 Type=QString

@@ -56,15 +56,19 @@ ConfigPart::ConfigPart(const Kapabilities &kaps, QWidget *parent, const char *na
 
 }
 void ConfigPart::initialize(const Kapabilities &kaps ){
+//    kaps.dump();
     m_mainLayout = new QGridLayout( this, 6, 3 );
 
     if (  kaps.supportsMetaSyncing() ) {
         m_ckbMetaSyncing = new QCheckBox(i18n( "Enable Metasyncing"),  this );
         m_mainLayout->addWidget(m_ckbMetaSyncing,  0,  0);
+        m_ckbMetaSyncing->setChecked( kaps.isMetaSyncingEnabled() );
     }
 
     QLabel *lbl;
+    push = false;
     if ( kaps.supportsPushSync() ) {
+        push = true;
         lbl = new QLabel(i18n("You can push syncs to this device"), this );
     }else
         lbl = new QLabel(i18n("You need to start the synchronization from your device"),  this );
@@ -81,7 +85,8 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     m_grpConnection = new QGroupBox( i18n("Connection"),  this );
     m_conLayout = new QGridLayout(m_grpConnection,  4,  5);
 
-    if ( !kaps.needsNetworkConnection() || !kaps.canAutoHandle() ) {
+    if ( !kaps.needsNetworkConnection() || kaps.canAutoHandle() ) {
+
         m_grpConnection->setEnabled( false );
     }else{
         m_grpConnection->setEnabled( true );
@@ -101,6 +106,8 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     if (!kaps.needsIPs() || !kaps.needsSrcIP() ) {
         m_lblSrcIp->setEnabled( false );
         m_conSrcIp->setEnabled( false );
+    }else{
+        m_conSrcIp->insertItem( kaps.srcIP() );
     }
 
     //Destination
@@ -112,8 +119,14 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
     if (!kaps.needsIPs() || !kaps.needsDestIP() ) {
         m_lblDestIp->setEnabled( false );
         m_conDestIp->setEnabled( false );
+    }else{
+        QValueList<QString> ips = kaps.ipProposals();
+        QValueList<QString>::ConstIterator it;
+        for ( it = ips.begin(); it != ips.end(); ++it ) {
+            m_conDestIp->insertItem( (*it) );
+        }
+        m_conDestIp->insertItem(kaps.destIP(),  0 );
     }
-
     //user
     m_lblUser = new QLabel(i18n("User:"), m_grpConnection );
     m_conUser = new QComboBox(m_grpConnection );
@@ -135,6 +148,8 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
             m_conUser->insertItem( (*it).first );
             m_conPass->insertItem( (*it).second);
         }
+        m_conUser->insertItem(kaps.user(),  0);
+        m_conPass->insertItem(kaps.password(),  0 );
     }else{
         m_lblPass->setEnabled( false );
         m_conPass->setEnabled( false );
@@ -155,6 +170,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
         for (uint i = 0; i < ints.size(); i++ ) {
             m_conPort->insertItem( QString::number( ints[i] ) );
         }
+        m_conPort->insertItem( QString::number( kaps.currentPort() ),  0 );
     }
 
     // add the Connection Groupbox
@@ -182,6 +198,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
         for ( QStringList::ConstIterator it = devices.begin(); it != devices.end(); ++it ) {
             m_cmbDevice->insertItem( (*it) );
         }
+        m_cmbDevice->insertItem( kaps.currentModel() , 0);
     }
     // Connection Mode usb, paralell, net,....
     m_lblConnection = new QLabel( i18n("Connection:"),  m_grpModel );
@@ -197,6 +214,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
         for ( QStringList::ConstIterator it = conList.begin(); it != conList.end(); ++it ) {
             m_cmbConnection->insertItem( (*it) );
         }
+        m_cmbConnection->insertItem( kaps.currentConnectionMode(), 0);
 
     }
     //Mode USER
@@ -248,6 +266,7 @@ void ConfigPart::initialize(const Kapabilities &kaps ){
 Kapabilities ConfigPart::capability()
 {
     Kapabilities kaps;
+    kaps.setSupportsPushSync( push );
     // ok first read all the extras which is fairly easy
     if ( !m_devGroup.isEmpty() ) {
         for ( QMap<QString, QLineEdit*>::ConstIterator it = m_devGroup.begin(); it != m_devGroup.end(); ++it ) {

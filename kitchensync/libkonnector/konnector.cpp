@@ -206,7 +206,8 @@ void Konnector::allDevices()
       QString group = (service.property( QString::fromLatin1("Group")  )).toString();
       QString vendor = (service.property("Vendor" )).toString();
       kdDebug(100200) << "group : " << group << "  vendor : " << vendor << endl;
-      KDevice device( name, group, vendor, library );
+      QString id = (service.property("Id")).toString();
+      KDevice device( name, group, vendor, library, id );
       d->m_devices.append(device );
 // debug
       //QStringList lis = service.propertyNames();
@@ -275,6 +276,13 @@ QIconSet Konnector::iconSet(const QString& udi )const
 
     return plugin->iconSet();
 }
+QString Konnector::id(const QString& udi )const
+{
+    KonnectorPlugin *plugin = pluginByUDI( udi );
+    if( plugin == 0l)
+        return QString::null;
 
+    return plugin->id();
+}
 
 

@@ -127,10 +127,12 @@ public:
      * @param udi Device Id
      */
     bool startSync(const QString &udi);
+    //bool canPush(const QString& udi )const;
     /**
      * Returns an IconSet for the given udi
      */
     QIconSet iconSet(const QString& udi )const;
+    QString id(const QString& udi )const;
 public slots:
     /**
      * this will write a List of KSyncEntry
@@ -158,20 +160,20 @@ signals:
      * @param udi Device Id
      * @param param the List of KSyncEntry
      */
-    void wantsToSync(const QString &udi, QPtrList<KSyncEntry> param);
+    void wantsToSync(const QString &, QPtrList<KSyncEntry>);
     /**
      * The connection state of udi changes
      * @param udi Device Id
      * @param connected is the konnector still connected
      */
-    void stateChanged(const QString &udi, bool connected ); // udi + state
+    void stateChanged(const QString &, bool); // udi + state
     /**
      * The konnector Error
      * @param udi Device id
      * @param error the error id
      * @param id the error string
      */
-    void konnectorError(const QString &udi, int error , const QString& id );
+    void konnectorError(const QString &, int , const QString& );
 private:
     class KonnectorPrivate;
     KonnectorPrivate *d;

@@ -40,7 +40,8 @@ public:
      * @param library The libray where the Konnector/Device is in
      */
     KDevice(const QString &ident, const QString &group,
-            const QString &vendor, const QString &library);
+            const QString &vendor, const QString &library,
+            const QString &id);
     KDevice( const KDevice & );
     ~KDevice();
     /**
@@ -58,6 +59,8 @@ public:
     /**
      * @return returns the library of the KDevice
      */
+    // untranslated id
+    QString id()const;
     QString library() const;
     KDevice &operator=(const KDevice & );
 private:

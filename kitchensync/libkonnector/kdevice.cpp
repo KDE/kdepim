@@ -1,6 +1,6 @@
 /* This file is part of the KDE libraries
     Copyright (C) 2002 Holger Freyther <freyher@kde.org>
-		  
+
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
     License version 2 as published by the Free Software Foundation.
@@ -23,20 +23,23 @@ class KDevice::KDevicePrivate {
 public:
   KDevicePrivate(){
   }
-  QString id;
+  QString name;
   QString group;
   QString vendor;
   QString library;
+  QString id;
 };
 
 KDevice::KDevice(const QString &ident, const QString &group,
-		 const QString &vendor, const QString &library)
+		 const QString &vendor, const QString &library,
+                 const QString &id)
 {
   d = new KDevicePrivate();
-  d->id = ident;
+  d->name= ident;
   d->group = group;
   d->vendor = vendor;
   d->library = library;
+  d->id = id;
 }
 KDevice::KDevice()
 {
@@ -45,10 +48,19 @@ KDevice::KDevice()
 KDevice::KDevice(const KDevice &dev )
 {
   d = new KDevicePrivate();
-  d->id = dev.identify();
+  d->name = dev.identify();
   d->group = dev.group();
   d->vendor = dev.vendor();
   d->library = dev.library();
+  d->id = dev.id();
+}
+KDevice &KDevice::operator=( const KDevice &dev )
+{
+    d->name = dev.d->name;
+    d->group = dev.d->group;
+    d->vendor = dev.d->vendor;
+    d->library = dev.d->library;
+    d->id = dev.d->id;
 }
 KDevice::~KDevice()
 {
@@ -70,10 +82,14 @@ QString KDevice::library() const
 {
   return d->library;
 }
+QString KDevice::id()const
+{
+    return d->id;
+}
 bool operator==(const KDevice &orig, const KDevice &dest ){
   if( orig.identify() == dest.identify() && orig.group() == dest.group() && dest.vendor() == orig.vendor() ){
     return true;
-  }else{ 
+  }else{
     return false;
   }
 }

@@ -17,6 +17,7 @@
 
 */
 
+#include <kdebug.h>
 #include <qglobal.h>
 #include "kapabilities.h"
 
@@ -273,7 +274,17 @@ Kapabilities &Kapabilities::operator=(const Kapabilities &rhs )
 
     return (*this );
 }
+/*
+void Kapabilities::dump()const
+{
+    kdDebug() << "Needs Net " << m_needsNet << endl;
+    kdDebug() << "Can Push " << m_push << endl;
+    kdDebug() << "Needs Conn " << m_needConnection << endl;
+    kdDebug() << "ListDir" <<  m_listdir << endl;
+    kdDebug() << "Needs IP" << m_needsIp << endl;
+    kdDebug() << "Needs SRC " << m_needsSrcIp << endl;
 
-
+}
+*/
 
 

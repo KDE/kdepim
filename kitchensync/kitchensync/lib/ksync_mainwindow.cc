@@ -32,6 +32,8 @@
 #include <qsize.h>
 
 #include <kaction.h>
+#include <kapplication.h>
+#include <kconfig.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmenubar.h>
@@ -148,6 +150,7 @@ void KSyncMainWindow::addModPart(ManipulatorPart *part)
     m_stack->addWidget( part->widget(), id );
     if( part->type() == QString::fromLatin1("Overview") ){ // Overview is special for us ;)
       m_stack->raiseWidget(id );
+      pos = 0;
     }
 
     m_bar->insertItem( part, pos );
@@ -165,9 +168,24 @@ void KSyncMainWindow::initSystray( void ) {
 
 }
 
-void KSyncMainWindow::slotSync() {
+void KSyncMainWindow::slotSync()
+{
+    kdDebug() << "slotSync " << endl;
+    if (m_currentId.isEmpty() ) {
+        kdDebug() << "Current Id empty" << endl;
+        return; // QMessageBox
+    }
+    if (!m_profile.caps().supportsPushSync() ) {
+        kdDebug() << "Can not push" << endl;
+        return; // pop up
+    }
+    if (!m_profile.isConfigured() ) {
+        kdDebug() << "Not configured" << endl;
+        return; // pop up
+    }
+    kdDebug() << "Ok starting sync" << endl;
+    m_konnector->startSync( m_currentId );
 }
-
 void KSyncMainWindow::slotBackup() {
 }
 
@@ -176,16 +194,30 @@ void KSyncMainWindow::slotRestore() {
 
 void KSyncMainWindow::slotConfigure() {
   ConfigureDialog dlg(this);
-  ManipulatorPart *part;
-  Kapabilities cap;
-  cap.setExtraOption("test",  "test123");
-  ConfigPart par( cap, &dlg );
+  ManipulatorPart *part=0l;
+  // get the kapabilities and update with the ones from the Profile
+  Kapabilities cap = m_konnector->capabilities( m_currentId );
+  Kapabilities cap2 = m_profile.caps();
+  cap.setSrcIP( cap2.srcIP() );
+  cap.setDestIP( cap2.destIP() );
+  cap.setUser( cap2.user() );
+  cap.setPassword( cap2.password() );
+  cap.setCurrentPort( cap2.currentPort() );
+  cap.setCurrentModel( cap2.currentModel() );
+  cap.setCurrentConnectionMode( cap2.currentConnectionMode() );
+  cap.setMetaSyncingEnabled( cap2.isMetaSyncingEnabled() );
+
+  ConfigPart par(cap , &dlg );
+  dlg.addWidget( &par, i18n("Configure"), &QPixmap() );
   for (part = m_parts.first(); part != 0; part = m_parts.next() ) {
     if( part->configIsVisible() )
       dlg.addWidget(part->configWidget(), part->name(), part->pixmap() );
   }
-  dlg.addWidget( &par, "Test", &QPixmap() );
   if (dlg.exec()) {
+      m_profile.setCapability( par.capability() );
+      m_profile.setConfigured( true );
+      m_konnector->setCapabilities( m_currentId,  m_profile.caps() );
+      saveCurrentProfile();
      for (part = m_parts.first(); part != 0; part = m_parts.next() ) {
        part->slotConfigOk();
      }
@@ -228,6 +260,7 @@ void KSyncMainWindow::initKonnector()
 
     connect(m_konnector, SIGNAL(konnectorError(const QString&,  int,  const QString& ) ),
             this,  SLOT(slotKonnectorError( const QString&,  int, const QString&) ) );
+
     // ok now just load the Opie Konnector // FIXME Don't hard code
     QValueList<KDevice> device;
     device = m_konnector->query();
@@ -238,16 +271,20 @@ void KSyncMainWindow::initKonnector()
         kdDebug() << "UNIX " << (*it).id() << endl;
         if ( (*it).id() == QString::fromLatin1("Opie-1") ) {
             QString tmp = m_konnector->registerKonnector( (*it) );
-            if ( !tmp.isEmpty() ) {
+            if ( !tmp.isEmpty() ) { // loaded successfull
+                m_currentId = tmp;
+                setupKonnector( (*it), "Opie-1" );
 
             }
         }
     }
 }
+// do we need to change the Konnector first?
+// raise overview and then pipe informations
 void KSyncMainWindow::slotSync( const QString &udi,
                                 QPtrList<KSyncEntry> )
 {
-
+    kdDebug() << "Some data arrived" << endl;
 }
 void KSyncMainWindow::slotStateChanged( const QString &udi,
                                         bool connected )
@@ -258,6 +295,51 @@ void KSyncMainWindow::slotKonnectorError( const QString& udi,
                                           int error,
                                           const QString& id )
 {
+
+}
+// Check if we already configured a device with  the id
+// It's fairly easy cause we only allow one at a time
+void KSyncMainWindow::setupKonnector( const KDevice& udi,  const QString &id )
+{
+    bool config=false;
+    Kapabilities cap;
+    KConfig* conf = kapp->config();
+    conf->setGroup("Opie-Konnector");
+    QString name = conf->readEntry("name");
+    if ( !name.isEmpty() ) { // we already configured
+        cap.setSrcIP( conf->readEntry("srcIP") );
+        cap.setDestIP( conf->readEntry("destIP") );
+        cap.setUser( conf->readEntry("user") );
+        cap.setPassword( conf->readEntry("pass") );
+        cap.setCurrentPort( conf->readNumEntry("port") );
+        // model specific
+        cap.setCurrentModel( conf->readEntry("model") );
+        cap.setConnectionMode( conf->readEntry("mode") );
+        // meta
+        cap.setMetaSyncingEnabled( conf->readBoolEntry("meta") );
+        cap.setSupportsPushSync( conf->readBoolEntry("push") );
+        // device specific later
+        config = true;
+        kdDebug() << "Config true" << endl;
+        m_konnector->setCapabilities( m_currentId,  cap );
+    }
+    m_profile = Profile(udi, cap, "Opie-1",  config); // hard code for now
+}
+void KSyncMainWindow::saveCurrentProfile()
+{
+    KConfig *cfg = kapp->config();
+    Kapabilities cap = m_profile.caps();
+    cfg->setGroup("Opie-Konnector");
+    cfg->writeEntry( "name",  "Opie StandardProfile");
+    cfg->writeEntry( "srcIP",  cap.srcIP() );
+    cfg->writeEntry( "destIP",  cap.destIP() );
+    cfg->writeEntry( "user",  cap.user() );
+    cfg->writeEntry( "pass",  cap.password() );
+    cfg->writeEntry( "port",  cap.currentPort() );
+    cfg->writeEntry( "model",  cap.currentModel() );
+    cfg->writeEntry( "mode",  cap.currentConnectionMode() );
+    cfg->writeEntry( "meta",  cap.isMetaSyncingEnabled() );
+    cfg->writeEntry( "push",  cap.supportsPushSync() );
 
 }
 //#include "ksync_mainwindow.moc"

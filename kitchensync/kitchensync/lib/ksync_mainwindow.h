@@ -38,8 +38,10 @@
 
 #include <kparts/mainwindow.h>
 
+
 #include <manipulatorpart.h>
 #include <ksync_systemtray.h>
+#include <ksync_profile.h>
 
 class PartBar;
 class QHBox;
@@ -62,8 +64,10 @@ namespace KitchenSync {
         QMap<QString,QString> ids()const;
     private:
         virtual void initActions();
+        void saveCurrentProfile();
         void addModPart( ManipulatorPart * );
         void initSystray ( void );
+        void setupKonnector(const KDevice &udi,  const QString &id);
         PartBar *m_bar;
         QHBox *m_lay;
         QWidgetStack *m_stack;
@@ -73,6 +77,7 @@ namespace KitchenSync {
         QString m_currentId;
         // udi + Identify
         QMap<QString, QString> m_ids;
+        Profile m_profile; //  QValueList if we support more than opie
     signals:
         void konnectorChanged( const QString & );
         void konnectorStateChanged( const QString &,  int mode );

@@ -107,6 +107,7 @@ namespace KitchenSync {
         QPushButton* m_fetchBrowse;
         QPushButton* m_fetchRem;
         QListView *m_view;
+        bool push:1;
     };
 };
 
