@@ -44,13 +44,21 @@ class ICalFormat;
 class CalFilter;
 
 /**
-  * This is the main "calendar" object class for KOrganizer.  It holds
-  * information like all appointments/events, user information, etc. etc.
-  * one calendar is associated with each CalendarView (@see calendarview.h).
-  * This is an abstract base class defining the interface to a calendar. It is
-  * implemented by subclasses like @see CalendarLocal, which use different
-  * methods to store and access the data.
-  */
+  This is the main "calendar" object class for KOrganizer.  It holds
+  information like all appointments/events, user information, etc. etc.
+  one calendar is associated with each CalendarView (@see calendarview.h).
+  This is an abstract base class defining the interface to a calendar. It is
+  implemented by subclasses like @see CalendarLocal, which use different
+  methods to store and access the data.
+
+  Ownership of events etc. is handled by the following policy: As soon as an
+  event (or any other subclass of IncidenceBase) object is added to the
+  Calendar by addEvent() it is owned by the Calendar object. The Calendar takes
+  care of deleting it. All Events returned by the query functions are returned
+  as pointers, that means all changes to the returned events are immediately
+  visible in the Calendar. You shouldn't delete any Event object you get from
+  Calendar.
+*/
 class Calendar {
   public:
     /** constructs a new calendar, with variables initialized to sane values. */
