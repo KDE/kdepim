@@ -31,20 +31,11 @@ static const char *kpilot_id =
 	"$Id$";
 
 
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
 
-#ifndef QFILE_H
 #include <qfile.h>
-#endif
-
 #include <qptrlist.h>
-
-#ifndef QSTRING_H
 #include <qstring.h>
-#endif
-
 #include <qvbox.h>
 #include <qtimer.h>
 
@@ -525,12 +516,21 @@ void KPilotInstaller::initMenu()
 	// View actions
 
 	// Options actions
+#if KDE_VERSION >= 0x30180
+	createStandardStatusBarAction();
+#endif
+
+#if KDE_VERSION >= 0x30080
+	setStandardToolBarMenuEnabled(true);
+#else
 	m_toolbarAction =
 		KStdAction::showToolbar(this, SLOT(optionsShowToolbar()),
 		actionCollection());
+#endif
+
 	p = KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()),
 		actionCollection());
-	p = KStdAction::configureToolbars(this, SLOT(optionsConfigureKeys()),
+	p = KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()),
 		actionCollection());
 	p = KStdAction::preferences(this, SLOT(slotConfigureKPilot()),
 		actionCollection());
@@ -638,6 +638,13 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 }
 
 
+#if KDE_VERSION >= 0x30080
+// Included in kdelibs in KDE 3.1, but we can't #ifdef slots,
+// so include a dummy implementation.
+void KPilotInstaller::optionsShowToolbar()
+{
+}
+#else
 void KPilotInstaller::optionsShowToolbar()
 {
 	FUNCTIONSETUP;
@@ -653,6 +660,7 @@ void KPilotInstaller::optionsShowToolbar()
 	kapp->processEvents();
 	resizeEvent(0);
 }
+#endif
 
 
 void KPilotInstaller::optionsConfigureKeys()
