@@ -43,15 +43,15 @@ void FilterCSV::import(FilterInfo *info) {
      return;
    }
 
-   info->from(filename);
-   info->to(i18n("KAddressBook"));
-   info->current(i18n("Currently converting .CSV address file to KAddressBook"));
+   info->setFrom(filename);
+   info->setTo(i18n("KAddressBook"));
+   info->setCurrent(i18n("Currently converting .CSV address file to KAddressBook"));
 
    convert(filename, info);
 
-   info->current(100);
-   info->overall(100);
-   info->current(i18n("Finished converting .CSV address file to KAddressBook"));
+   info->setCurrent(100);
+   info->setOverall(100);
+   info->setCurrent(i18n("Finished converting .CSV address file to KAddressBook"));
 }
 
 
@@ -106,19 +106,21 @@ bool FilterCSV::convert(const QString &filename, FilterInfo *info) {
       if (!a.formattedName().isEmpty() || a.emails().count() > 1) {
          addContact ( a );
       } else {
-         info->log(i18n("Warning: CSV line ignored, as each line must have a valid name and email address."));
+         info->addLog(i18n("Warning: CSV line ignored, as each line must have a valid name and email address."));
       }
       
       bytesProcessed += csvLine.length();
       // update progress information
-      info->current(100 * bytesProcessed / fileSize);
-      info->overall(100 * bytesProcessed / fileSize);
+      info->setCurrent(100 * bytesProcessed / fileSize);
+      info->setOverall(100 * bytesProcessed / fileSize);
    }
 
    f.close();
     
-   if (closeAddressBook()) info->log(i18n("%1 addressbook entries sucessfully imported.").arg(numEntries));
-   else info->log(i18n("Couldn't import contacts"));
+   if (closeAddressBook()) 
+       info->addLog(i18n("%1 addressbook entries sucessfully imported.").arg(numEntries));
+   else 
+       info->addLog(i18n("Couldn't import contacts"));
 
    return true;
 }

@@ -42,11 +42,11 @@ void FilterPAB::import(FilterInfo *info)
 
   {
     pab PAB(QFile::encodeName(file),this,info);
-    info->from(file);
-    info->to(i18n("KAddressBook"));
-    info->current(i18n("Currently converting .PAB addresses to Kab"));
+    info->setFrom(file);
+    info->setTo(i18n("KAddressBook"));
+    info->setCurrent(i18n("Currently converting .PAB addresses to Kab"));
     PAB.convert();
-    info->current(i18n("Finished converting .PAB addresses to Kab"));
+    info->setCurrent(i18n("Finished converting .PAB addresses to Kab"));
   }
 }
 

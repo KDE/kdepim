@@ -50,15 +50,15 @@ void FilterLDIF::import(FilterInfo *info) {
      return;
    }
 
-   info->from(filename);
-   info->to(i18n("KAddressBook"));
-   info->current(i18n("Currently converting .LDIF address file to KAddressBook"));
+   info->setFrom(filename);
+   info->setTo(i18n("KAddressBook"));
+   info->setCurrent(i18n("Currently converting .LDIF address file to KAddressBook"));
 
    convert(filename, info);
 
-   info->current(100);
-   info->overall(100);
-   info->current(i18n("Finished converting .LDIF address file to KAddressBook"));
+   info->setCurrent(100);
+   info->setOverall(100);
+   info->setCurrent(i18n("Finished converting .LDIF address file to KAddressBook"));
 }
 
 
@@ -98,8 +98,8 @@ bool FilterLDIF::convert(const QString &filename, FilterInfo *info) {
 	bytesProcessed += s.length();
 	
 	// update progress information
-    	info->current(100 * bytesProcessed / fileSize);
-    	info->overall(100 * bytesProcessed / fileSize);
+    	info->setCurrent(100 * bytesProcessed / fileSize);
+    	info->setOverall(100 * bytesProcessed / fileSize);
 	
 	if (s.isEmpty() && t.eof()) {
 		// Newline: Write data
@@ -115,7 +115,7 @@ writeData:
 				addr = new KABC::Address();
 			}
    		} else {
-			info->log(i18n("Warning: List data is being ignored."));
+			info->addLog(i18n("Warning: List data is being ignored."));
    		}
 
 		isGroup = false;
@@ -219,7 +219,7 @@ writeData:
 	if (fieldname == "objectclass" && s == "groupOfNames")
 			isGroup = true;
 
-	info->log(i18n("Unable to handle line: %1").arg(completeline));
+	info->addLog(i18n("Unable to handle line: %1").arg(completeline));
   	  	
     } /* while !eof(f) */
     delete a;
@@ -227,7 +227,7 @@ writeData:
 
     f.close();
     
-    info->log(i18n("%1 phonebook entries sucessfully imported.").arg(numEntries));
+    info->addLog(i18n("%1 phonebook entries sucessfully imported.").arg(numEntries));
 
     closeAddressBook();
     return true;

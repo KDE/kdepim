@@ -52,10 +52,10 @@ void FilterEudoraAb::import(FilterInfo *info)
     return;
   }
 
-  info->from(file);
-  info->to(i18n("KAddressBook"));
-  info->current(i18n("Currently converting Eudora Light addresses to address book"));
-  info->current(0);
+  info->setFrom(file);
+  info->setTo(i18n("KAddressBook"));
+  info->setCurrent(i18n("Currently converting Eudora Light addresses to address book"));
+  info->setCurrent(0);
   
   QString line;
   QTextStream stream(&F);
@@ -73,12 +73,12 @@ void FilterEudoraAb::import(FilterInfo *info)
         delete a;
         a = 0;
         count++;
-        info->overall(100*bytesRead/F.size());
+        info->setOverall(100*bytesRead/F.size());
         a = new KABC::Addressee();
       } else a = new KABC::Addressee();
       a->setFormattedName(key(line));
       a->insertEmail(email(line));
-      info->log(i18n("Reading '%1'").arg(a->formattedName()));
+      info->addLog(i18n("Reading '%1'").arg(a->formattedName()));
     }
     else if (line.left(4) == "note") { 
       if (!a) break; // Must have an alias before a note
@@ -96,13 +96,13 @@ void FilterEudoraAb::import(FilterInfo *info)
     a = 0;
     count++;
   }
-  info->current(100);
-  info->log(i18n("Added %1 keys").arg(count));
+  info->setCurrent(100);
+  info->addLog(i18n("Added %1 keys").arg(count));
 
   closeAddressBook( );
-  info->current(i18n("Finished converting Eudora Light addresses to KAddressBook"));
+  info->setCurrent(i18n("Finished converting Eudora Light addresses to KAddressBook"));
   F.close();
-  info->overall(100);
+  info->setOverall(100);
 }
 
 QString FilterEudoraAb::key(const QString& line) const

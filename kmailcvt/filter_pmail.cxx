@@ -53,17 +53,17 @@ void FilterPMail::import(FilterInfo *info)
    }
 
    // Count total number of files to be processed
-   info->log(i18n("Counting files..."));
+   info->addLog(i18n("Counting files..."));
    dir.setPath (chosenDir);
    QStringList files = dir.entryList("*.cnm; *.pmm; *.mbx", QDir::Files, QDir::Name);
    totalFiles = files.count();
    kdDebug() << "Count is " << totalFiles << endl;
 
-   info->log(i18n("Importing new mail files ('.cnm')..."));
+   info->addLog(i18n("Importing new mail files ('.cnm')..."));
    processFiles("*.cnm", &FilterPMail::importNewMessage);
-   info->log(i18n("Importing mail folders ('.pmm')..."));
+   info->addLog(i18n("Importing mail folders ('.pmm')..."));
    processFiles("*.pmm", &FilterPMail::importMailFolder);
-   info->log(i18n("Importing 'UNIX' mail folders ('.mbx')..."));
+   info->addLog(i18n("Importing 'UNIX' mail folders ('.mbx')..."));
    processFiles("*.mbx", &FilterPMail::importUnixMailFolder);
 }
 
@@ -75,18 +75,18 @@ void FilterPMail::processFiles(const QString& mask, void(FilterPMail::* workFunc
    for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
       // Notify current file
       QFileInfo mailfileinfo(*mailFile);
-      inf->from(mailfileinfo.fileName());
+      inf->setFrom(mailfileinfo.fileName());
 
       // Clear the other fields
-      inf->to(QString::null);
-      inf->current(QString::null);
-      inf->current(-1);
+      inf->setTo(QString::null);
+      inf->setCurrent(QString::null);
+      inf->setCurrent(-1);
 
       // call worker function, increase progressbar
-      inf->log(i18n("Importing %1").arg(*mailFile));
+      inf->addLog(i18n("Importing %1").arg(*mailFile));
       (this->*workFunc)(dir.filePath(*mailFile));
       currentFile++;
-      inf->overall( 100 * currentFile / totalFiles );
+      inf->setOverall( 100 * currentFile / totalFiles );
    }
 }
 
@@ -95,7 +95,7 @@ void FilterPMail::processFiles(const QString& mask, void(FilterPMail::* workFunc
 void FilterPMail::importNewMessage(const QString& file)
 {
    QString destFolder("PMail-New Messages");
-   inf->to(destFolder);
+   inf->setTo(destFolder);
    addMessage(inf, destFolder, file);
 }
 
@@ -147,7 +147,7 @@ void FilterPMail::importMailFolder(const QString& file)
    f.readBlock((char *) &pmm_head, sizeof(pmm_head));
    QString folder("PMail-");
    folder.append(pmm_head.folder);
-   inf->to(folder);
+   inf->setTo(folder);
    // The folder name might contain weird characters ...
    folder.replace(QRegExp("[^a-zA-Z0-9:.-]"), ":");
 
@@ -160,7 +160,7 @@ void FilterPMail::importMailFolder(const QString& file)
          // open temp output file
          tempfile = new KTempFile;
          state = 1;
-         inf->current(i18n("Message %1").arg(n++));
+         inf->setCurrent(i18n("Message %1").arg(n++));
          // fall throught
 
       // inside a message state
@@ -224,7 +224,7 @@ void FilterPMail::importUnixMailFolder(const QString& file)
    f.close();
    folder = "PMail-";
    folder.append(pmg_head.folder);
-   inf->to(folder);
+   inf->setTo(folder);
    // The folder name might contain weird characters ...
    folder.replace(QRegExp("[^a-zA-Z0-9:.-]"), ":");
 
@@ -253,7 +253,7 @@ void FilterPMail::importUnixMailFolder(const QString& file)
          tempfile = new KTempFile;
          // Notify progress
          n++;
-         inf->current(i18n("Message %1").arg(n));
+         inf->setCurrent(i18n("Message %1").arg(n));
       }
 
       tempfile->file()->writeBlock(line.data(), line.length());

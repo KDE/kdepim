@@ -35,12 +35,12 @@ class FilterInfo
    ~FilterInfo();
 
     void setStatusMsg( const QString& status );
-    void from( const QString& from );
-    void to( const QString& to );
-    void current( const QString& current );
-    void current( int percent = 0 );
-    void overall( int percent = 0 );
-    void log( const QString& log );
+    void setFrom( const QString& from );
+    void setTo( const QString& to );
+    void setCurrent( const QString& current );
+    void setCurrent( int percent = 0 );
+    void setOverall( int percent = 0 );
+    void addLog( const QString& log );
     void clear();
     void alert( const QString& message );
 

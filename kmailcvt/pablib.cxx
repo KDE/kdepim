@@ -118,7 +118,7 @@ int N,n;
      go(cp);
      start=read();
      n+=1;
-     info->overall( 100 * n / N );
+     info->setOverall( 100 * n / N );
    }
 
 return true;
@@ -141,12 +141,12 @@ int   N,n;
     // first try processing as if this was a record. I.e. at the stop thing
     processRec(stop);
     // Then exit
-    info->current();
-    info->current(100);
+    info->setCurrent();
+    info->setCurrent(100);
     return;
   }   // This is not a table.
 
-  info->current();
+  info->setCurrent();
   N=0;
   while (cmp!=stop && REC!=pREC) {
     pREC=REC;
@@ -176,11 +176,11 @@ int   N,n;
       cmp=read();
     }
     n+=1;
-    info->current(100 * n / N);
+    info->setCurrent(100 * n / N);
   }
 
-  info->current();
-  info->current(100);
+  info->setCurrent();
+  info->setCurrent(100);
 }
 
 

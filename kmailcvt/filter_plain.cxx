@@ -49,15 +49,15 @@ void FilterPlain::import(FilterInfo *info)
    QStringList files = dir.entryList("*.[eE][mM][lL]; *.[tT][xX][tT]; *.[mM][sS][gG]", QDir::Files, QDir::Name);
 
    // Count total number of files to be processed
-   info->log(i18n("Counting files..."));
+   info->addLog(i18n("Counting files..."));
    int totalFiles = files.count();
    int currentFile = 0;
 
-   info->log(i18n("Importing new mail files..."));
+   info->addLog(i18n("Importing new mail files..."));
    for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
-      info->from(*mailFile);
-      info->to(dir.dirName());
+      info->setFrom(*mailFile);
+      info->setTo(dir.dirName());
       addMessage(info, "PLAIN-" + dir.dirName(), dir.filePath(*mailFile));
-      info->overall(100 * ++currentFile/ totalFiles);
+      info->setOverall(100 * ++currentFile/ totalFiles);
    }
 }

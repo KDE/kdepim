@@ -69,17 +69,17 @@ void FilterOE::import(FilterInfo *info)
   totalFiles = files.count();
   currentFile = 0;
 
-  inf->overall(0);
+  inf->setOverall(0);
 
   int n=0;
   for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
     importMailBox(dir.filePath(*mailFile));
-    inf->overall(100 * ++n  / files.count());
+    inf->setOverall(100 * ++n  / files.count());
   }
 
-  inf->overall(100);
-  inf->current(100);
-  inf->log(i18n("Finished importing Outlook Express emails"));
+  inf->setOverall(100);
+  inf->setCurrent(100);
+  inf->addLog(i18n("Finished importing Outlook Express emails"));
 }
 
 void FilterOE::importMailBox(const QString& fileName)
@@ -87,11 +87,11 @@ void FilterOE::importMailBox(const QString& fileName)
   QFile mailfile(fileName);
   QFileInfo mailfileinfo(fileName);
   folderName = "OE-" + mailfileinfo.baseName(TRUE);
-  inf->from(mailfileinfo.fileName());
-  inf->to(folderName);
+  inf->setFrom(mailfileinfo.fileName());
+  inf->setTo(folderName);
 
   if (!mailfile.open(IO_ReadOnly)) {
-    inf->log(i18n("Couldn't open mailbox %1").arg(fileName));
+    inf->addLog(i18n("Couldn't open mailbox %1").arg(fileName));
     return;
   }
   QDataStream mailbox(&mailfile);
@@ -101,7 +101,7 @@ void FilterOE::importMailBox(const QString& fileName)
   Q_UINT32 sig_block1, sig_block2;
   mailbox >> sig_block1 >> sig_block2;
   if (sig_block1 == OE4_SIG_1 && sig_block2 == OE4_SIG_2) {
-    inf->log(i18n("Importing OE4 Mailbox %1").arg(fileName));
+    inf->addLog(i18n("Importing OE4 Mailbox %1").arg(fileName));
     mbxImport(mailbox);
     return;
   } else {
@@ -109,16 +109,16 @@ void FilterOE::importMailBox(const QString& fileName)
     mailbox >> sig_block3 >> sig_block4;
     if (sig_block1 == OE5_SIG_1 && sig_block3 == OE5_SIG_3 && sig_block4 == OE5_SIG_4) {
       if (sig_block2 == OE5_EMAIL_SIG_2) {
-        inf->log(i18n("Importing OE5+ Mailbox %1").arg(fileName));
+        inf->addLog(i18n("Importing OE5+ Mailbox %1").arg(fileName));
         dbxImport(mailbox);
         return;
       } else if (sig_block2 == OE5_FOLDER_SIG_2) {
-        inf->log(i18n("Ignoring OE5+ Folder file %1").arg(fileName));
+        inf->addLog(i18n("Ignoring OE5+ Folder file %1").arg(fileName));
         return;
       }
     }
   }
-  inf->log(i18n("File %1 doesn't seem to be an Outlook Express mailbox").arg(fileName));
+  inf->addLog(i18n("File %1 doesn't seem to be an Outlook Express mailbox").arg(fileName));
 }
 
 /* ------------------- MBX support ------------------- */
@@ -251,7 +251,7 @@ void FilterOE::dbxReadEmail(QDataStream& ds, int filePos)
   } while (nextAddress != 0);
   tmp.close();
   addMessage(inf, folderName, tmp.name());
-  inf->current( ++currentEmail / totalEmails * 100);
+  inf->setCurrent( ++currentEmail / totalEmails * 100);
   tmp.unlink();
 
   ds.device()->at(wasAt);

@@ -48,32 +48,32 @@ void FilterInfo::setStatusMsg( const QString& status )
   m_dlg->_textStatus->setText( status );
 }
 
-void FilterInfo::from( const QString& from )
+void FilterInfo::setFrom( const QString& from )
 {
   m_dlg->_from->setText( from );
 }
 
-void FilterInfo::to( const QString& to )
+void FilterInfo::setTo( const QString& to )
 {
   m_dlg->_to->setText( to );
 }
 
-void FilterInfo::current( const QString& current )
+void FilterInfo::setCurrent( const QString& current )
 {
   m_dlg->_current->setText( current );
 }
 
-void  FilterInfo::current( int percent )
+void  FilterInfo::setCurrent( int percent )
 {
   m_dlg->_done_current->setProgress( percent );
 }
 
-void  FilterInfo::overall( int percent )
+void  FilterInfo::setOverall( int percent )
 {
   m_dlg->_done_overall->setProgress( percent );
 }
 
-void FilterInfo::log( const QString& log )
+void FilterInfo::addLog( const QString& log )
 {
   m_dlg->_log->insertItem( log );
   m_dlg->_log->setCurrentItem( m_dlg->_log->count() - 1 );
@@ -83,11 +83,11 @@ void FilterInfo::log( const QString& log )
 void FilterInfo::clear()
 {
   m_dlg->_log->clear();
-  current();
-  overall();
-  current( QString::null );
-  from( QString::null );
-  to( QString::null );
+  setCurrent();
+  setOverall();
+  setCurrent( QString::null );
+  setFrom( QString::null );
+  setTo( QString::null );
 }
 
 void FilterInfo::alert( const QString& message )
@@ -167,9 +167,9 @@ bool Filter::openAddressBook( FilterInfo* info )
   saveTicket = KABC::StdAddressBook::self()->requestSaveTicket();
   if (!saveTicket) {
     info->alert(i18n("Unable to store imported data in address book."));
-    info->log(i18n("Unable to get exclusive access to the address book"));
-    info->log(i18n("If you have another program loaded that may be accessing the address book, please close it"));
-    info->log(i18n("If this error message still appears, remove all the files in %1").arg("~/.kde/share/apps/kabc/lock"));
+    info->addLog(i18n("Unable to get exclusive access to the address book"));
+    info->addLog(i18n("If you have another program loaded that may be accessing the address book, please close it"));
+    info->addLog(i18n("If this error message still appears, remove all the files in %1").arg("~/.kde/share/apps/kabc/lock"));
     return false;
   }
   return true;
