@@ -163,7 +163,8 @@ private:
   QVariant mValue;
   uint mFlags : 4; // bitfield with 4 bits
   uint mLevel : 3; // max is 4 -> 3 bits
-  uint mArgType : 6; // max is 33 -> 6 bits
+  uint mRealArgType : 6; // max is 33 -> 6 bits
+  uint mArgType : 3; // max is 5 (ArgType enum) -> 3 bits;
   uint mDirty : 1;
   uint mSet : 1;
 };

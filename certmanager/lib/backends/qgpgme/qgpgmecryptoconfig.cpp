@@ -347,10 +347,13 @@ QGpgMECryptoConfigEntry::QGpgMECryptoConfigEntry( const QStringList& parsedLine 
   mLevel = (*it++).toInt();
   mDescription = (*it++);
   bool ok;
-  mArgType = knownArgType( (*it++).toInt(), ok );
+  // we keep the real (int) arg type, since it influences the parsing (e.g. for ldap urls)
+  mRealArgType = (*it++).toInt();
+  mArgType = knownArgType( mRealArgType, ok );
   if ( !ok && !(*it).isEmpty() ) {
     // use ALT-TYPE
-    mArgType = knownArgType( (*it).toInt(), ok );
+    mRealArgType = (*it).toInt();
+    mArgType = knownArgType( mRealArgType, ok );
   }
   if ( !ok )
     kdWarning(5150) << "Unsupported datatype: " << parsedLine[4] << " : " << *it << endl;
@@ -445,13 +448,35 @@ unsigned int QGpgMECryptoConfigEntry::uintValue() const
   return mValue.toUInt();
 }
 
+static KURL parseURL( int mRealArgType, const QString& str )
+{
+  if ( mRealArgType == 33 ) { // LDAP server
+    // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
+    QStringList items = QStringList::split( ':', str, true );
+    if ( items.count() == 5 ) {
+      QStringList::const_iterator it = items.begin();
+      KURL url;
+      url.setProtocol( "ldap" );
+      url.setHost( *it++ );
+      url.setPort( (*it++).toInt() );
+      url.setUser( *it++ );
+      url.setPass( *it++ );
+      url.setQuery( *it );
+      return url;
+    } else
+      kdWarning(5150) << "parseURL: malformed LDAP server: " << str << endl;
+  }
+  // other URLs : assume wellformed URL syntax.
+  return KURL( str );
+}
+
 KURL QGpgMECryptoConfigEntry::urlValue() const
 {
   Q_ASSERT( mArgType == ArgType_Path || mArgType == ArgType_URL );
   Q_ASSERT( !isList() );
   QString str = mValue.toString();
   if ( mArgType == ArgType_URL )
-    return KURL( str );
+    return parseURL( mRealArgType, str );
   KURL url;
   url.setPath( str );
   return url;
@@ -500,14 +525,16 @@ KURL::List QGpgMECryptoConfigEntry::urlValueList() const
   Q_ASSERT( mArgType == ArgType_Path || mArgType == ArgType_URL );
   Q_ASSERT( isList() );
   QStringList lst = mValue.toStringList();
-  if ( mArgType == ArgType_URL )
-    return KURL::List( lst );
 
   KURL::List ret;
   for( QStringList::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
-    KURL url;
-    url.setPath( *it );
-    ret << url;
+    if ( mArgType == ArgType_URL )
+      ret << parseURL( mRealArgType, *it );
+    else {
+      KURL url;
+      url.setPath( *it );
+      ret << url;
+    }
   }
   return ret;
 }

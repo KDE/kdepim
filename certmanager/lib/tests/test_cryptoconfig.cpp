@@ -110,7 +110,10 @@ int main( int argc, char** argv ) {
             cout << " uint values=" << str.local8Bit();
             break;
           }
-          case Kleo::CryptoConfigEntry::ArgType_URL:
+          case Kleo::CryptoConfigEntry::ArgType_URL: {
+              KURL::List urls = entry->urlValueList();
+              cout << " url values=" << urls.toStringList().join(" ").local8Bit() << "\n    ";
+          }
             // fallthrough
           case Kleo::CryptoConfigEntry::ArgType_Path:
             // fallthrough
