@@ -224,7 +224,7 @@ void KNCleanUp::compactFolder(KNFolder *f)
 
 
 KNCleanUp::ProgressDialog::ProgressDialog(int steps)
-  : QSemiModal(knGlobals.topWidget,0, true, WStyle_Customize | WStyle_Tool | WStyle_NoBorder)
+ : QSemiModal(knGlobals.topWidget, 0, true)
 {
   const int w=400,
             h=160;
@@ -232,9 +232,10 @@ KNCleanUp::ProgressDialog::ProgressDialog(int steps)
   p_rogress=0;
   s_teps=steps;
 
+  setCaption(kapp->makeStdCaption(i18n("Cleaning up")));
+
   setFixedSize(w,h);
   QFrame *top=new QFrame(this);
-  top->setFrameStyle(QFrame::WinPanel | QFrame::Raised);
   top->setGeometry(0,0, w,h);
 
   QVBoxLayout *topL=new QVBoxLayout(top, 10);
@@ -281,50 +282,8 @@ void KNCleanUp::ProgressDialog::doProgress()
 }
 
 
-
-/*
-void KNCleanUp::group(KNGroup *g, bool withGUI)
+void KNCleanUp::ProgressDialog::closeEvent(QCloseEvent *)
 {
-
-
-
-
-void KNCleanUp::folder(KNFolder *f)
-{
-  KNSavedArticle *art;
-  if(!f->loadHdrs()) return;
-    
-  QDir dir(f->path());
-  if (!dir.exists())
-    return; 
-  
-  QString oldName(QString("folder%1.mbox").arg(f->id()));
-  KNFile oldFile(f->path()+oldName);
-  QString newName(QString("folder%1.mbox.new").arg(f->id()));
-  KNFile newFile(f->path()+newName);  
-
-  if( (oldFile.open(IO_ReadOnly)) && (newFile.open(IO_WriteOnly)) ) {
-    QTextStream ts(&newFile);
-    for(int idx=0; idx<f->length(); idx++) {
-      art=f->at(idx);
-      if(oldFile.at(art->startOffset())) {
-        ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";
-        art->setStartOffset(newFile.at());
-        while(oldFile.at() < art->endOffset())
-          ts << oldFile.readLineWnewLine();     
-        art->setEndOffset(newFile.at());
-        newFile.putch('\n');
-      }
-    }
-    newFile.close();
-    oldFile.close();
-    f->syncDynamicData(true);
-    f->saveInfo();
-    
-    dir.remove(oldName);  
-    dir.rename(newName,oldName);
-  }
+  // do nothing => prevent that the user closes the window
 }
-*/
-
 

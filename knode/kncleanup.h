@@ -17,9 +17,9 @@
 #ifndef KNCLEANUP_H
 #define KNCLEANUP_H
 
-#include <qsemimodal.h>
 #include <qlabel.h>
 #include <qprogressbar.h>
+#include <qsemimodal.h>
 
 class KNArticleCollection;
 class KNGroup;
@@ -55,11 +55,12 @@ class KNCleanUp {
         void doProgress();
 
       protected:
+        void closeEvent(QCloseEvent *e);
+
         QLabel *m_sg;
         QProgressBar *p_bar;
 
         int s_teps, p_rogress;
-
     };
 
     ProgressDialog *d_lg;
