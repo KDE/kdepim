@@ -416,12 +416,29 @@ bool kio_sieveProtocol::deactivate()
 		return false;
 
 	if (operationSuccessful()) {
-		ksDebug() << "Script activation complete." << endl;
+		ksDebug() << "Script deactivation complete." << endl;
 		return true;
 	} else {
-		error(ERR_INTERNAL_SERVER, i18n("There was an error activating the script."));
+		error(ERR_INTERNAL_SERVER, i18n("There was an error deactivating the script."));
 		return false;
 	}
+}
+
+static void append_lf2crlf( QByteArray & out, const QByteArray & in ) {
+  if ( in.isEmpty() )
+    return;
+  const unsigned int oldOutSize = out.size();
+  out.resize( oldOutSize + 2 * in.size() );
+  const char * s = in.begin();
+  const char * const end = in.end();
+  char * d = out.begin() + oldOutSize;
+  char last = '\0';
+  while ( s < end ) {
+    if ( *s == '\n' && last != '\r' )
+      *d++ = '\r';
+    *d++ = last = *s++;
+  }
+  out.resize( d - out.begin() );
 }
 
 void kio_sieveProtocol::put(const KURL& url, int /*permissions*/, bool /*overwrite*/, bool /*resume*/)
@@ -439,28 +456,20 @@ void kio_sieveProtocol::put(const KURL& url, int /*permissions*/, bool /*overwri
 	}
 
 	QByteArray data;
-	QByteArray buffer;
-	int oldSize = 0;
-	int newSize = 0;
-
-	do {
+	for (;;) {
 		dataReq();
-		newSize = readData(buffer);
-		
-		if (newSize > 0) {
-			oldSize = data.size();
-			data.resize(oldSize + newSize);
-			memcpy(data.data() + oldSize, buffer.data(), buffer.size());
-			buffer.resize(0);
+		QByteArray buffer;
+		const int newSize = readData(buffer);
+		append_lf2crlf( data, buffer );
+		if ( newSize < 0 ) {
+		  // read error: network in unknown state so disconnect
+		  error(ERR_COULD_NOT_READ, i18n("KIO data supply error."));
+		  return;
 		}
-	} while (newSize > 0);
-
-	if (newSize < 0) {
-		// network in unknown state so disconnect
-		error(ERR_COULD_NOT_READ, i18n("KIO data supply error."));
-		return;
+		if ( newSize == 0 )
+		  break;
 	}
-	
+
 	// script size
 	int bufLen = (int)data.size() - 1;
 	totalSize(bufLen);
@@ -575,6 +584,22 @@ void kio_sieveProtocol::put(const KURL& url, int /*permissions*/, bool /*overwri
 	finished();
 }
 
+static void inplace_crlf2lf( QByteArray & in ) {
+  if ( in.isEmpty() )
+    return;
+  QByteArray & out = in; // inplace
+  const char * s = in.begin();
+  const char * const end = in.end();
+  char * d = out.begin();
+  char last = '\0';
+  while ( s < end ) {
+    if ( *s == '\n' && last == '\r' )
+      --d;
+    *d++ = last = *s++;
+  }
+  out.resize( d - out.begin() );
+}
+
 /* ---------------------------------------------------------------------------------- */
 void kio_sieveProtocol::get(const KURL& url)
 {
@@ -609,6 +634,7 @@ void kio_sieveProtocol::get(const KURL& url)
 			return;
 		}
 
+		inplace_crlf2lf( dat );
 		// send data to slaveinterface
 		data(dat);
 		processedSize(readLen);
