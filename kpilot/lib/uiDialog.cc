@@ -277,12 +277,17 @@ void UIDialog::setTabWidget(QTabWidget * w)
 {
 	FUNCTIONSETUP;
 
-	commitChanges();
-	KDialogBase::slotOk();
+	if (validate())
+	{
+		commitChanges();
+		KDialogBase::slotOk();
+	}
 }
 
-
 // $Log$
+// Revision 1.3  2001/10/19 08:48:30  adridg
+// Build fixes for qt3 and stupid typos
+//
 // Revision 1.2  2001/10/10 22:39:49  adridg
 // Some UI/Credits/About page patches
 //
