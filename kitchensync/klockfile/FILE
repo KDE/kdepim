@@ -1,5 +1,0 @@
-ksharedfile.cpp: Holger Freyther <freyther@kde.org>
-		 * File for locking and sharing files
-		 
-ksharedfile.h:   Holger Freyther <freyther@kde.org>
-		 * Header for file locking and sharing
