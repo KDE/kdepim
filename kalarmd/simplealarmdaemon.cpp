@@ -42,7 +42,8 @@
 
 using namespace KCal;
 
-SimpleAlarmDaemon::SimpleAlarmDaemon()
+SimpleAlarmDaemon::SimpleAlarmDaemon( QWidget *parent )
+  : KSystemTray( parent )
 {
   mAlarmDialog = new AlarmDialog( 0 );
 
@@ -75,7 +76,7 @@ void SimpleAlarmDaemon::checkAlarms()
 {
   kdDebug() << "SimpleAlarmDaemon::checkAlarms()" << endl;
 
-  QString calFile = locateLocal( "appdata", "calendars" );
+  QString calFile = locateLocal( "data", "simplealarmdaemon/calendars" );
 
   kdDebug() << "  calendar file: " << calFile << endl;
 
@@ -163,6 +164,8 @@ void SimpleAlarmDaemon::checkCalendar( const QString &calFile )
   }
 
   cfg->writeEntry( calFile, to );
+
+  cfg->sync();
 }
 
 #include "simplealarmdaemon.moc"

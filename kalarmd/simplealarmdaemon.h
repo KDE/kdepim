@@ -39,7 +39,7 @@ class SimpleAlarmDaemon : public KSystemTray
 {
     Q_OBJECT
   public:
-    SimpleAlarmDaemon();
+    SimpleAlarmDaemon( QWidget *parent = 0 );
     
     ~SimpleAlarmDaemon();
 
