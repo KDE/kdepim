@@ -40,8 +40,13 @@ IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> pro
 	populateProtocols();
 }
 
-IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols, KPluginInfo *protocol, const QString& address, const IMContext& context ) : IMAddressBase( parent )
+IMAddressWidget::IMAddressWidget( QWidget *parent, QValueList<KPluginInfo *> protocols,
+                                  KPluginInfo *protocol, const QString& address,
+                                  const IMContext& context )
+  : IMAddressBase( parent )
 {
+  Q_UNUSED( context );
+
 	mProtocols = protocols;
 	populateProtocols();
 	cmbProtocol->setCurrentItem( mProtocols.findIndex( protocol ) );

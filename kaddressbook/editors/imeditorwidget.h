@@ -48,39 +48,44 @@ enum IMContext { Any, Home, Work };
  */
 class IMEditorWidget : public KAB::ContactEditorWidget
 {
-	Q_OBJECT
+  Q_OBJECT
 
-	public:
-		IMEditorWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
-		~IMEditorWidget() {};
+  public:
+    IMEditorWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+    ~IMEditorWidget() {};
 
-		/**
-		 * Reimplemented from KAB::ContactEditorWidget
-		 */
-		void loadContact( KABC::Addressee *addr );
-		void storeContact( KABC::Addressee *addr );
-		void setReadOnly( bool readOnly );
-		QValueList<KPluginInfo *> availableProtocols() const;
-	protected slots:
-		void slotUpdateButtons();
-		void slotAdd();
-		void slotEdit();
-		void slotDelete();
-	protected:
-		/**
-		 * Helper method to split the contents of an addressbook field up
-		 */
-		static void splitField( const QString &str, QString &app, QString &name, QString &value );
-		/**
-		 * Find a protocol that matches the KABC key, or 0 if none found
-		 */
-		KPluginInfo * protocolFromString( const QString fieldValue );
-	private:
-		bool mReadOnly;
-		IMEditorBase *mWidget;
-		// Used to track changed protocols to reduce KABC writes
-		QValueList<KPluginInfo *> mChangedProtocols;
-		QValueList<KPluginInfo *> mProtocols;
+    /**
+     * Reimplemented from KAB::ContactEditorWidget
+     */
+    void loadContact( KABC::Addressee *addr );
+    void storeContact( KABC::Addressee *addr );
+    void setReadOnly( bool readOnly );
+    QValueList<KPluginInfo *> availableProtocols() const;
+
+  protected slots:
+    void slotUpdateButtons();
+    void slotAdd();
+    void slotEdit();
+    void slotDelete();
+
+  protected:
+    /**
+     * Helper method to split the contents of an addressbook field up
+     */
+    static void splitField( const QString &str, QString &app, QString &name, QString &value );
+
+    /**
+     * Find a protocol that matches the KABC key, or 0 if none found
+     */
+    KPluginInfo * protocolFromString( const QString fieldValue );
+
+  private:
+    bool mReadOnly;
+    IMEditorBase *mWidget;
+
+    // Used to track changed protocols to reduce KABC writes
+    QValueList<KPluginInfo *> mChangedProtocols;
+    QValueList<KPluginInfo *> mProtocols;
 };
 
 /**
@@ -90,19 +95,21 @@ class IMEditorWidget : public KAB::ContactEditorWidget
 // VCard has been disabled as there is no standard VCard location to store IM addresses yet.
 class IMAddressLVI : public KListViewItem
 {
-	public:
-		IMAddressLVI( KListView *parent, KPluginInfo * protocol, QString address, IMContext context = Any );
-		void setAddress( const QString &address );
-		void setProtocol( KPluginInfo * protocol );
-		void setContext( IMContext context );
-		void activate();
-		KPluginInfo * protocol() const;
-		QString address() const;
-		IMContext context() const;
-	private:
-		KPluginInfo * mProtocol;
-		IMContext mContext;
-		
+  public:
+    IMAddressLVI( KListView *parent, KPluginInfo * protocol,
+                  const QString &address, const IMContext &context = Any );
+
+    void setAddress( const QString &address );
+    void setProtocol( KPluginInfo * protocol );
+    void setContext( const IMContext &context );
+    void activate();
+    KPluginInfo * protocol() const;
+    QString address() const;
+    IMContext context() const;
+
+  private:
+    KPluginInfo * mProtocol;
+    IMContext mContext;
 };
 
 /**
@@ -110,15 +117,15 @@ class IMAddressLVI : public KListViewItem
  */
 class IMEditorWidgetFactory : public KAB::ContactEditorWidgetFactory
 {
-	public:
-		IMEditorWidgetFactory() {};
-		KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
-		{
-			return new IMEditorWidget( ab, parent, name );
-		}
+  public:
+    IMEditorWidgetFactory() {};
+    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    {
+      return new IMEditorWidget( ab, parent, name );
+    }
 
-		QString pageTitle() const;
-		QString pageIdentifier() const;
+    QString pageTitle() const;
+    QString pageIdentifier() const;
 };
 
 

@@ -59,18 +59,13 @@ QString IMEditorWidgetFactory::pageIdentifier() const
 
 /*===========================================================================*/
 
-IMAddressLVI::IMAddressLVI( KListView *parent, KPluginInfo *protocol, QString address, IMContext context ) : KListViewItem( parent )
+IMAddressLVI::IMAddressLVI( KListView *parent, KPluginInfo *protocol,
+                            const QString &address, const IMContext &context )
+  : KListViewItem( parent )
 {
-	//mInVCard = inVCard;
-
-	setProtocol( protocol );
-
-	// set address
-	setAddress( address );
-
-	// set context
-	setContext( context );
-
+  setProtocol( protocol );
+  setAddress( address );
+  setContext( context );
 }
 
 void IMAddressLVI::setAddress( const QString &address )
@@ -78,7 +73,7 @@ void IMAddressLVI::setAddress( const QString &address )
 	setText( 1, address );
 }
 
-void IMAddressLVI::setContext( IMContext context )
+void IMAddressLVI::setContext( const IMContext &context )
 {
 	mContext = context;
 	// set context
