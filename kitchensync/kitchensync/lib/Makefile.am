@@ -9,7 +9,7 @@ libkitchensyncui_la_SOURCES = partbar.cpp actionpart.cpp \
     actionpartservice.cpp profilemanager.cpp \
     profileconfig.cpp \
     profilecheckitem.cpp  profilewizard.cpp \
-    profileitem.cpp profiledialog.cpp syncalgo.cpp \
+    profileitem.cpp profiledialog.cpp  \
     synchelper.cpp konnectorbar.cpp syncconfig.cpp engine.cpp \
     konnectorview.cpp
     

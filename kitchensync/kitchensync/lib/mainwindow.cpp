@@ -49,7 +49,6 @@
 
 #include "konnectorbar.h"
 #include "kitchensync.h"
-#include "syncalgo.h"
 #include "actionmanager.h"
 
 #include "mainwindow.h"
