@@ -212,7 +212,7 @@ KPilotConfigSettings::~KPilotConfigSettings()
 
 IntProperty_(PilotSpeed, "PilotSpeed", 0, 4)
 IntProperty_(SyncType, "SyncType", 0, 4)
-IntProperty_(ConflictResolution, "ConflictResolution", 0,4)
+IntProperty_(ConflictResolution, "ConflictResolution", 0,5)
 IntProperty_(AddressDisplayMode, "AddressDisplay", 0, 1)
 IntProperty_(Version, "Configured", 0, 100000)
 IntProperty_(Debug, "Debug", 0, 1023)

@@ -197,6 +197,7 @@ void KPilotConfigDialog::readConfig()
 	c.setSyncType(syncmode);
 	c.setFullSyncOnPCChange(fConfigWidget->fFullBackupCheck->isChecked());
 	c.setConflictResolution(fConfigWidget->fConflictResolution->currentItem());
+
 	// c.setSyncFiles(fConfigWidget->fSyncFiles->isChecked());
 	// c.setSyncWithKMail(fConfigWidget->fSyncWithKMail->isChecked());
 

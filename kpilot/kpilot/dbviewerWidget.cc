@@ -198,7 +198,7 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 
 		while ((pilotRec = fDB->readRecordByIndex(currentRecord)) != 0L)
 		{
-			if (!(pilotRec->isDeleted()) )
+//			if (!(pilotRec->isDeleted()) )
 			{
 				PilotListViewItem*item=new PilotListViewItem(fRecordList,
 					QString::number(currentRecord), QString::number(pilotRec->getLen()),  QString::number(pilotRec->getID()), QString::null,
