@@ -1,10 +1,20 @@
 Done:
+----------------------------------------------------------------
+
+Exports:
+    Changing to new Export system
+
 
 In Progress:
+----------------------------------------------------------------
 
-*  Exports
-   - text ezport
+Exports
+    Exports have to check out. Only basic stuff works (Pasanen)
+    HTML export code must be added (Pasanen)
 
-ToDo:
-*  HTML export
-*  CSV export
+Docbooks:
+    Re-organize  command-line (Winters)
+
+Heavy testing unit:
+    Test adding and changing (deleting) (Winters)
+    Test new export system (Pasanen, Winters)
