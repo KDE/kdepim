@@ -71,15 +71,15 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
 
   pmGroup=knGlobals.configManager()->appearance()->icon(KNConfig::Appearance::group);
   pmNew=knGlobals.configManager()->appearance()->icon(KNConfig::Appearance::redBall);
-  pmRight=BarIcon( QApplication::reverseLayout()? "back": "forward");
-  pmLeft=BarIcon(  QApplication::reverseLayout() ? "forward" : "back");
+  pmRight=BarIconSet( QApplication::reverseLayout()? "back": "forward");
+  pmLeft=BarIconSet(  QApplication::reverseLayout() ? "forward" : "back");
 
   arrowBtn1=new QPushButton(page);
   arrowBtn1->setEnabled(false);
   arrowBtn2=new QPushButton(page);
   arrowBtn2->setEnabled(false);
-  arrowBtn1->setPixmap(pmRight);
-  arrowBtn2->setPixmap(pmLeft);
+  arrowBtn1->setIconSet(pmRight);
+  arrowBtn2->setIconSet(pmLeft);
   arrowBtn1->setFixedSize(35,30);
   arrowBtn2->setFixedSize(35,30);
 

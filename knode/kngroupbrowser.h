@@ -88,8 +88,8 @@ class KNGroupBrowser : public KDialogBase {
     KLineEdit *filterEdit;
     QCheckBox *noTreeCB, *subCB, *newCB;
     QPushButton  *arrowBtn1, *arrowBtn2;
-    QPixmap pmGroup, pmNew,
-            pmRight, pmLeft;
+    QPixmap pmGroup, pmNew;
+    QIconSet pmRight, pmLeft;
     QGridLayout *listL;
     QLabel *leftLabel, *rightLabel;
     QTimer *refilterTimer;

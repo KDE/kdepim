@@ -167,9 +167,9 @@ void KNGroupDialog::setButtonDirection(arrowButton b, arrowDirection d)
 
   if(btn) {
     if(d==right)
-      btn->setPixmap(pmRight);
+      btn->setIconSet(pmRight);
     else
-      btn->setPixmap(pmLeft);
+      btn->setIconSet(pmLeft);
   }
 }
 
