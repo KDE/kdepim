@@ -22,7 +22,7 @@ libkcal_xmlrpc_la_LIBADD = $(top_builddir)/libkcal/libkcal.la $(top_builddir)/li
 libknotes_xmlrpc_la_SOURCES = knotes_resourcexmlrpc.cpp knotes_resourcexmlrpcconfig.cpp xmlrpciface.cpp
 libknotes_xmlrpc_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
 libknotes_xmlrpc_la_LIBADD = $(top_builddir)/libkcal/libkcal.la -lkdeprint \
-                             $(top_builddir)/knotes/libknotes.la
+                             $(top_builddir)/knotes/libknotesresources.la
 
 kabcincludedir = $(includedir)/kabc
 kabcinclude_HEADERS = kabc_resourcexmlrpc.h kcal_resourcexmlrpc.h
