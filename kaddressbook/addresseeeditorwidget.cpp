@@ -57,6 +57,7 @@
 #include "advancedcustomfields.h"
 #include "core.h"
 #include "emaileditwidget.h"
+#include "imeditwidget.h"
 #include "kabprefs.h"
 #include "keywidget.h"
 #include "nameeditdialog.h"
@@ -219,7 +220,7 @@ void AddresseeEditorWidget::setupTab1()
   
   mAddressEditWidget = new AddressEditWidget( tab1 );
   connect( mAddressEditWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
-  layout->addMultiCellWidget( mAddressEditWidget, 5, 9, 1, 2 );
+  layout->addMultiCellWidget( mAddressEditWidget, 5, 10, 1, 2 );
 
   //////////////////////////////////////
   // Email / Web (lower right)
@@ -249,7 +250,11 @@ void AddresseeEditorWidget::setupTab1()
   layout->addWidget( label, 8, 4 );
   layout->addMultiCellWidget( mURLEdit, 8, 8, 5, 6 );
 
-  label = new QLabel( i18n( "&IM address:" ), tab1 );
+  mIMWidget = new IMEditWidget( tab1, mAddressee );
+  connect( mIMWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
+  layout->addMultiCellWidget( mIMWidget, 9,10, 4, 6 );
+
+/*  label = new QLabel( i18n( "&IM address:" ), tab1 );
   mIMAddressEdit = new KLineEdit( tab1 );
   connect( mIMAddressEdit, SIGNAL( textChanged( const QString& ) ), 
            SLOT( textChanged( const QString& ) ) );
@@ -257,10 +262,14 @@ void AddresseeEditorWidget::setupTab1()
   layout->addWidget( label, 9, 4 );
   layout->addMultiCellWidget( mIMAddressEdit, 9, 9, 5, 6 );
   
+//johnflux
+  label = new QLabel( i18n( "&IM address:" ), tab1 );
+  layout->addMultiCellWidget(label, 10,10,4,6);
+  */
   layout->addColSpacing( 6, 50 );
   
   bar = new KSeparator( KSeparator::HLine, tab1 );
-  layout->addMultiCellWidget( bar, 10, 10, 0, 6 );
+  layout->addMultiCellWidget( bar, 11, 11, 0, 6 );
   
   ///////////////////////////////////////
   QHBox *categoryBox = new QHBox( tab1 );
@@ -278,7 +287,7 @@ void AddresseeEditorWidget::setupTab1()
   mSecrecyWidget = new SecrecyWidget( categoryBox );
   connect( mSecrecyWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
 
-  layout->addMultiCellWidget( categoryBox, 11, 11, 0, 6 );
+  layout->addMultiCellWidget( categoryBox, 12, 12, 0, 6 );
   
   // Build the layout and add to the tab widget
   layout->activate(); // required
@@ -533,7 +542,7 @@ void AddresseeEditorWidget::load()
   mSecrecyWidget->setSecrecy( mAddressee.secrecy() );
 
   // Load customs
-  mIMAddressEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-IMAddress" ) );
+  mIMWidget->setPreferredIM( mAddressee.custom( "KADDRESSBOOK", "X-IMAddress" ) );
   mSpouseEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-SpousesName" ) );
   mManagerEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-ManagersName" ) );
   mAssistantEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-AssistantsName" ) );
@@ -568,9 +577,10 @@ void AddresseeEditorWidget::save()
   mAddressee.setCategories( QStringList::split( ",", mCategoryEdit->text() ) );
 
   mAddressee.setSecrecy( mSecrecyWidget->secrecy() );
+
   // save custom fields
-  if ( !mIMAddressEdit->text().isEmpty() )
-    mAddressee.insertCustom( "KADDRESSBOOK", "X-IMAddress", mIMAddressEdit->text());
+  if(!mIMWidget->preferredIM().isEmpty())
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-IMAddress", mIMWidget->preferredIM());
   else
     mAddressee.removeCustom( "KADDRESSBOOK", "X-IMAddress" );
   if ( !mSpouseEdit->text().isEmpty() )
@@ -598,7 +608,7 @@ void AddresseeEditorWidget::save()
     mAddressee.insertCustom( "KADDRESSBOOK", "X-Profession", mProfessionEdit->text() );
   else
     mAddressee.removeCustom( "KADDRESSBOOK", "X-Profession" );
-
+  
   if ( mAnniversaryPicker->inputIsValid() )
     mAddressee.insertCustom( "KADDRESSBOOK", "X-Anniversary",
                              mAnniversaryPicker->date().toString( Qt::ISODate ) );
@@ -831,7 +841,7 @@ void AddresseeEditorWidget::setReadOnly( bool readOnly )
   mAddressEditWidget->setReadOnly( readOnly );
   mEmailWidget->setReadOnly( readOnly );
   mURLEdit->setReadOnly( readOnly );
-  mIMAddressEdit->setReadOnly( readOnly );
+  mIMWidget->setReadOnly( readOnly );
   mCategoryButton->setEnabled( !readOnly );
   mSecrecyWidget->setReadOnly( readOnly );
   mDepartmentEdit->setReadOnly( readOnly );

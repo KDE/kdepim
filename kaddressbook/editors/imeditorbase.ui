@@ -8,18 +8,26 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>581</width>
-            <height>378</height>
+            <width>452</width>
+            <height>233</height>
         </rect>
+    </property>
+    <property name="sizePolicy">
+        <sizepolicy>
+            <hsizetype>7</hsizetype>
+            <vsizetype>7</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
     </property>
     <property name="caption">
         <string>IM Addresses</string>
     </property>
-    <hbox>
+    <grid>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="KListView">
+        <widget class="KListView" row="0" column="0" rowspan="4" colspan="1">
             <column>
                 <property name="text">
                     <string>Protocol</string>
@@ -45,6 +53,20 @@
             <property name="name">
                 <cstring>lvAddresses</cstring>
             </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>3</hsizetype>
+                    <vsizetype>3</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>66</width>
+                    <height>35</height>
+                </size>
+            </property>
             <property name="selectionMode" stdset="0">
                 <enum>Extended</enum>
             </property>
@@ -55,58 +77,48 @@
                 <bool>true</bool>
             </property>
         </widget>
-        <widget class="QLayoutWidget">
+        <widget class="KPushButton" row="2" column="1">
             <property name="name">
-                <cstring>layout4</cstring>
+                <cstring>btnDelete</cstring>
             </property>
-            <vbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <widget class="KPushButton">
-                    <property name="name">
-                        <cstring>btnAdd</cstring>
-                    </property>
-                    <property name="text">
-                        <string>&amp;Add...</string>
-                    </property>
-                </widget>
-                <widget class="KPushButton">
-                    <property name="name">
-                        <cstring>btnEdit</cstring>
-                    </property>
-                    <property name="text">
-                        <string>&amp;Edit...</string>
-                    </property>
-                </widget>
-                <widget class="KPushButton">
-                    <property name="name">
-                        <cstring>btnDelete</cstring>
-                    </property>
-                    <property name="text">
-                        <string>&amp;Remove</string>
-                    </property>
-                </widget>
-                <spacer>
-                    <property name="name">
-                        <cstring>spacer1</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Vertical</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>20</width>
-                            <height>266</height>
-                        </size>
-                    </property>
-                </spacer>
-            </vbox>
+            <property name="text">
+                <string>&amp;Remove</string>
+            </property>
         </widget>
-    </hbox>
+        <widget class="KPushButton" row="0" column="1">
+            <property name="name">
+                <cstring>btnAdd</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Add...</string>
+            </property>
+        </widget>
+        <spacer row="3" column="1">
+            <property name="name">
+                <cstring>spacer1</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>245</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="KPushButton" row="1" column="1">
+            <property name="name">
+                <cstring>btnEdit</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Edit...</string>
+            </property>
+        </widget>
+    </grid>
 </widget>
 <customwidgets>
 </customwidgets>

@@ -14,7 +14,7 @@
     </property>
     <property name="sizePolicy">
         <sizepolicy>
-            <hsizetype>1</hsizetype>
+            <hsizetype>0</hsizetype>
             <vsizetype>5</vsizetype>
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>

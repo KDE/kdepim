@@ -46,6 +46,7 @@ class KSqueezedTextLabel;
 
 class AddressEditWidget;
 class EmailEditWidget;
+class IMEditWidget;
 class KeyWidget;
 class PhoneEditWidget;
 class SecrecyWidget;
@@ -140,9 +141,10 @@ class AddresseeEditorWidget : public AddresseeEditorBase
     KSqueezedTextLabel *mFormattedNameLabel;
     AddressEditWidget *mAddressEditWidget;
     EmailEditWidget *mEmailWidget;
+    IMEditWidget *mIMWidget;
     PhoneEditWidget *mPhoneEditWidget;
     KLineEdit *mURLEdit;
-    KLineEdit *mIMAddressEdit;
+//    KLineEdit *mIMAddressEdit;
     QPushButton *mCategoryButton;
     KLineEdit *mCategoryEdit;
     SecrecyWidget *mSecrecyWidget;

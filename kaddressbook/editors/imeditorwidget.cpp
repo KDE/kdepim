@@ -26,6 +26,8 @@
 
 #include <qlistview.h>
 #include <qstringlist.h>
+#include <qvbox.h>
+#include <qlayout.h>
 
 #include <kdialogbase.h>
 #include <kdebug.h>
@@ -39,25 +41,6 @@
 #include "imaddresswidget.h"
 #include "imeditorwidget.h"
 
-
-extern "C" {
-  void *init_libkaddrbk_instantmessaging()
-  {
-    return ( new IMEditorWidgetFactory );
-  }
-}
-
-QString IMEditorWidgetFactory::pageTitle() const
-{
-  return i18n( "IM Addresses" );
-}
-
-QString IMEditorWidgetFactory::pageIdentifier() const
-{
-  return "instantmessaging";
-}
-
-/*===========================================================================*/
 
 IMAddressLVI::IMAddressLVI( KListView *parent, KPluginInfo *protocol,
                             const QString &address, const IMContext &context )
@@ -130,11 +113,12 @@ void IMAddressLVI::activate()
 
 /*===========================================================================*/
 
-IMEditorWidget::IMEditorWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
-: KAB::ContactEditorWidget( ab, parent, name ), mReadOnly( false )
+IMEditorWidget::IMEditorWidget(QWidget *parent, const char *name )
+    : KDialogBase( parent, name, false, i18n( "Edit Instant Messenging Address" ), Help|Ok|Cancel, Ok, false )
+    ,mReadOnly(false)
 {
 	mWidget = new IMEditorBase( this );
-
+  	setMainWidget(mWidget);
 	connect( mWidget->btnAdd, SIGNAL( clicked() ), SLOT( slotAdd() ) );
 	connect( mWidget->btnEdit, SIGNAL( clicked() ), SLOT( slotEdit() ) );
 	connect( mWidget->btnDelete, SIGNAL( clicked() ), SLOT( slotDelete() ) );
@@ -190,6 +174,7 @@ void IMEditorWidget::loadContact( KABC::Addressee *addr )
 			}
 		}
 	}
+	if( mWidget->lvAddresses->firstChild()) mWidget->lvAddresses->firstChild()->setSelected(true);
 }
 
 void IMEditorWidget::storeContact( KABC::Addressee *addr )
@@ -256,12 +241,13 @@ void IMEditorWidget::slotUpdateButtons()
 		mWidget->btnDelete->setEnabled( false );
 	}
 }
-
+void IMEditorWidget::setModified( bool modified ) { mModified = modified; }
+bool IMEditorWidget::isModified() const { return mModified; }
 void IMEditorWidget::slotAdd()
 {
 	KDialogBase *addDialog = new KDialogBase( this, "addaddress", true, i18n("Add Address"), KDialogBase::Ok|KDialogBase::Cancel );
 	IMAddressWidget *addressWid = new IMAddressWidget( addDialog, mProtocols );
-	addDialog->setMainWidget( addressWid );
+	addDialog->setMainWidget(addressWid);
 	if ( addDialog->exec() == QDialog::Accepted )
 	{
 		// add the new item

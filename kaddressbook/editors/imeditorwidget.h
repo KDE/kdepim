@@ -29,6 +29,7 @@
 
 #include <qvaluelist.h>
 #include <klistview.h>
+#include <kdialogbase.h>
 
 #include "contacteditorwidget.h"
 #include "imeditorbase.h"
@@ -46,21 +47,19 @@ enum IMContext { Any, Home, Work };
 /**
  * The widget we add to KAddressbook's contact editor dialog
  */
-class IMEditorWidget : public KAB::ContactEditorWidget
+class IMEditorWidget : public KDialogBase
 {
   Q_OBJECT
 
   public:
-    IMEditorWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+    IMEditorWidget( QWidget *parent, const char *name = 0 );
     ~IMEditorWidget() {};
 
-    /**
-     * Reimplemented from KAB::ContactEditorWidget
-     */
     void loadContact( KABC::Addressee *addr );
     void storeContact( KABC::Addressee *addr );
     void setReadOnly( bool readOnly );
     QValueList<KPluginInfo *> availableProtocols() const;
+    bool isModified() const;
 
   protected slots:
     void slotUpdateButtons();
@@ -81,7 +80,9 @@ class IMEditorWidget : public KAB::ContactEditorWidget
 
   private:
     bool mReadOnly;
+    bool mModified;
     IMEditorBase *mWidget;
+    void setModified( bool modified );
 
     // Used to track changed protocols to reduce KABC writes
     QValueList<KPluginInfo *> mChangedProtocols;
@@ -112,22 +113,5 @@ class IMAddressLVI : public KListViewItem
     IMContext mContext;
     QString mAddress;
 };
-
-/**
- * Factory class used by KAddressbook to get an instance of the widget
- */
-class IMEditorWidgetFactory : public KAB::ContactEditorWidgetFactory
-{
-  public:
-    IMEditorWidgetFactory() {};
-    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
-    {
-      return new IMEditorWidget( ab, parent, name );
-    }
-
-    QString pageTitle() const;
-    QString pageIdentifier() const;
-};
-
 
 #endif
