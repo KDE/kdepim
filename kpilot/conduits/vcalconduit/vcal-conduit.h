@@ -45,6 +45,11 @@ protected:
 
 private:
 	void getCalendar();
+	/**
+	* Retrieve the time zone set in the vcal file.
+	* Returns number of minutes relative to UTC.
+	*/
+	int getTimeZone() const;
 
 	/**
 	* Set the event to repeat forever, with repeat

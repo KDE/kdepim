@@ -61,15 +61,6 @@ VCalConduit::VCalConduit(BaseConduit::eConduitMode mode)
 	FUNCTIONSETUP;
 
 	fCalendar = 0L;
-
-	if (debug_level & SYNC_TEDIOUS)
-	{
-		kdDebug() << fname << ": Request Mode="
-			<< (int) mode
-			<< " Actual Mode="
-			<< (int) getMode()
-			<< endl;
-	}
 }
 
 
@@ -103,13 +94,15 @@ void VCalConduit::getCalendar()
 	QString calName = config.readEntry("CalFile");
 	first = getFirstTime(config);
 
-	if (debug_level & SYNC_TEDIOUS)
+#ifdef DEBUG
+	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname
 			<< ": Got calendar file " << calName
 			<< ( first ? " (first time!)" : "" )
 			<< endl;
 	}
+#endif
 
 	if ((getMode() == BaseConduit::HotSync) || 
 		(getMode() == BaseConduit::Backup)) 
@@ -140,24 +133,38 @@ void VCalConduit::getCalendar()
 
 void VCalConduit::doBackup()
 {
+	FUNCTIONSETUP;
   PilotRecord* rec;
   int index = 0;
   
 	getCalendar();
-  rec = readRecordByIndex(index++);
-  
-  // Get ALL entries from Pilot
-  while (rec) {
-    if (rec->getAttrib() & dlpRecAttrDeleted) { // tagged for deletion
-      deleteVObject(rec);
-    } else {
-       updateVObject(rec);
-    }    
-    delete rec;
-    rec = readRecordByIndex(index++);
-  }
-  // save the vCalendar
-  saveVCal();
+
+#ifdef DEBUG
+	if(debug_level & SYNC_MAJOR)
+	{
+		kdDebug() << fname
+			<< ": Performing full backup"
+			<< endl;
+	}
+#endif
+
+	// Get ALL entries from Pilot
+	//
+	//
+	while ((rec=readRecordByIndex(index++)))
+	{
+		if (rec->isDeleted()) 
+		{
+			deleteVObject(rec);
+		} 
+		else 
+		{
+			updateVObject(rec);
+		}
+		delete rec;
+	}
+
+	saveVCal();
 }
 
 void VCalConduit::doSync()
@@ -648,6 +655,72 @@ void VCalConduit::saveVCal()
 	}
 }
 
+int VCalConduit::getTimeZone() const
+{
+	FUNCTIONSETUP;
+
+	VObject *vo = isAPropertyOf(fCalendar, VCTimeZoneProp);
+
+	if (!vo)
+	{
+		return 0;
+	}
+  
+	bool neg = FALSE;
+	int hours, minutes;
+
+	QString tmpStr(s = fakeCString(vObjectUStringZValue(vo)));
+#ifdef DEBUG
+	if (debug_level & SYNC_MINOR)
+	{
+		kdDebug() << fname
+			<< ": Got time zone string "
+			<< s
+			<< endl;
+	}
+#endif
+	deleteStr(s);
+
+	if (tmpStr.left(1) == "-")
+	{
+		neg = TRUE;
+	}
+	if (tmpStr.left(1) == "-" || tmpStr.left(1) == "+")
+	{
+		tmpStr.remove(0, 1);
+	}
+
+	hours = tmpStr.left(2).toInt();
+	if (tmpStr.length() > 2)
+	{
+		minutes = tmpStr.right(2).toInt();
+	}
+	else
+	{
+		minutes = 0;
+	}
+
+
+	int timeZone = (60*hours+minutes);
+	if (neg)
+	{
+		timeZone = -timeZone;
+	}
+
+#ifdef DEBUG
+	if (debug_level & SYNC_MINOR)
+	{
+		kdDebug() << fname
+			<< ": Calculated TZ offset "
+			<< timeZone
+			<< endl;
+	}
+#endif
+
+
+	return timeZone;
+}
+
 void VCalConduit::doLocalSync()
 {
 	FUNCTIONSETUP;
@@ -676,6 +749,11 @@ void VCalConduit::doLocalSync()
 	if (first)
 	{
 		LocalOverridesPilot=true;
+#ifdef DEBUG
+		kdDebug() << fname
+			<< ": This is the first time the vcal conduit is run"
+			<< endl;
+#endif
 	}
 	else
 	{
@@ -686,6 +764,7 @@ void VCalConduit::doLocalSync()
 		LocalOverridesPilot=config.readNumEntry("OverwriteRemote",0);
 	}
 
+#ifdef DEBUG
 	if (debug_level & SYNC_MAJOR)
 	{
 		kdDebug() << fname << ": Performing local sync."
@@ -697,46 +776,44 @@ void VCalConduit::doLocalSync()
 		kdDebug() << fname << ": Getting timezone."
 			<< endl;
 	}
-  vo = isAPropertyOf(fCalendar, VCTimeZoneProp);
+#endif
+
+	timeZone = getTimeZone();
+
   
-  // deal with time zone offset
-  if (vo) {
-    bool neg = FALSE;
-    int hours, minutes;
-    QString tmpStr(s = fakeCString(vObjectUStringZValue(vo)));
-    deleteStr(s);
-    
-    if (tmpStr.left(1) == "-")
-      neg = TRUE;
-    if (tmpStr.left(1) == "-" || tmpStr.left(1) == "+")
-      tmpStr.remove(0, 1);
-    hours = tmpStr.left(2).toInt();
-    if (tmpStr.length() > 2)
-      minutes = tmpStr.right(2).toInt();
-    else
-      minutes = 0;
-    timeZone = (60*hours+minutes);
-    if (neg)
-      timeZone = -timeZone;
-  }
-  
+#ifdef DEBUG
 	if (debug_level & SYNC_MINOR)
 	{
 		kdDebug() << fname << ": Initializing iterator."
 			<< endl;
 	}
-  initPropIterator(&i, fCalendar);
+#endif
+	initPropIterator(&i, fCalendar);
   
 	int recordcount=0;
 
-  // go through the whole vCalendar.  If the event has the dirty (modified)
-  // flag set, make a new pilot record and add it.
-  // we only take events that have KPilotStatusProp as a property.  If
-  // this property isn't present, ignore the event.
-  while (moreIteration(&i)) {
-	recordcount++;
-    vevent = nextVObject(&i);
-    vo = isAPropertyOf(vevent, KPilotStatusProp);
+	  // go through the whole vCalendar.  If the event has the 
+	  // dirty (modified)
+	  // flag set, make a new pilot record and add it.
+	  // we only take events that have KPilotStatusProp as a property.  If
+	  // this property isn't present, ignore the event.
+	  //
+	  //
+	while (moreIteration(&i)) 
+	{
+		recordcount++;
+		vevent = nextVObject(&i);
+		vo = isAPropertyOf(vevent, KPilotStatusProp);
+
+#ifdef DEBUG
+		if (debug_level & SYNC_TEDIOUS)
+		{
+			kdDebug() << fname
+				<< ": Read the following calendar entry:"
+				<< endl;
+			printVObject(stderr,vevent);
+		}
+#endif
     
     if (vo && (strcmp(vObjectName(vevent), VCEventProp) == 0)) {
       status = 0;
@@ -1284,12 +1361,14 @@ void VCalConduit::doLocalSync()
 	}
 	else
 	{
-		if (debug_level & SYNC_TEDIOUS)
+#ifdef DEBUG
+		if (debug_level & SYNC_MAJOR)
 		{
-			cerr << fname << ": Leaving records in pilot, "
+			kdDebug() << fname << ": Leaving records in pilot, "
 				"even those not found in organizer."
 				<< endl;
 		}
+#endif
 	}
 
 	deletedList.clear();
@@ -1393,4 +1472,7 @@ int VCalConduit::numFromDay(const QString &day)
   return -1; // something bad happened. :)
 } 
 
-// $Log:$
+// $Log$
+// Revision 1.14  2000/11/26 01:41:48  adridg
+// Last of Heiko's patches
+//
