@@ -25,7 +25,6 @@
 
 
 FilterEudoraAb::FilterEudoraAb() : Filter(i18n("Import Filter for Eudora Light Addressbook"),"Hans Dijkema")
-, LINES(0)
 {
 }
 
@@ -57,18 +56,13 @@ void FilterEudoraAb::import(FilterInfo *info)
   info->to(i18n("KAddressBook"));
   info->current(i18n("Currently converting Eudora Light addresses to address book"));
   convert(F,info);
-  {int i,N;
-    LINES=keys.size();
-    for(i=0,N=keys.size();i<N;i++) {
-      /*   printf("%s %s %s %s %s %s\n",keys[i].latin1(),emails[i].latin1(),
-           names[i].latin1(),adr[i].latin1(),
-           phones[i].latin1(),comments[i].latin1()
-           );
-       */
-      {
-        QString msg=i18n("Adding/Merging '%1' email '%2'").arg(keys[i]).arg(emails[i]);
-        info->log(msg);
-      }
+  {
+    int i;
+    int lines=keys.size();
+    for(i=0;i<lines;i++) 
+    {
+      QString msg=i18n("Adding/Merging '%1' email '%2'").arg(keys[i]).arg(emails[i]);
+      info->log(msg);
 
       QString comment;
       if(adr[i].isEmpty())
@@ -93,7 +87,7 @@ void FilterEudoraAb::import(FilterInfo *info)
           );
 
       { 
-        info->overall(100*i/LINES);
+        info->overall(100*i/lines);
       }
     }
     {
@@ -107,22 +101,17 @@ void FilterEudoraAb::import(FilterInfo *info)
   info->overall(100);
 }
 
-#define LINELEN 10240
-
 void FilterEudoraAb::convert(QFile& f,FilterInfo *info)
 {
-  QCString line(LINELEN+1);
-  int e, i;
-  int LINE=0;
-  while(f.readLine(line.data(),LINELEN)) { LINES+=1; }
-  f.reset();
-  while(f.readLine(line.data(),LINELEN)) {
-
-    LINE+=1;
-    info->current(100 * LINE / LINES );
-
-    for(i=0;line[i]!='\n' && line[i]!='\0';i++);
-    line[i]='\0'; // Strip newline
+  info->current(0);
+  
+  QString line;
+  int e;
+  QTextStream stream(&f);
+  
+  // Do the actual convert
+  while(!stream.eof()) {
+    line = stream.readLine();
 
     if (line.left(5) == "alias") {
       QString k = key(line); 
@@ -193,15 +182,20 @@ QString FilterEudoraAb::comment(const QString& line) const
 
 QString FilterEudoraAb::get(const QString& line,const QString& key) const
 {
-  QString result;
   QString fd="<"+key+":";
   int b,e;
-  unsigned int i;
-  b=line.find(fd);if (b==-1) { return result; }
+  uint i;
+
+  // Find formatted key, return on error
+  b=line.find(fd);
+  if (b==-1) { return QString(); }
+
   b+=fd.length();
-  e=line.find('>',b);if (e==-1) { return result; }
-  e-=1;
-  result=line.mid(b,e-b+1);
+  e=line.find('>',b);
+  if (e==-1) { return QString(); }
+  
+  e--;
+  QString result=line.mid(b,e-b+1);
   for(i=0;i<result.length();i++) {
     if (result[i]==CTRL_C) { result[i]='\n'; }
   }

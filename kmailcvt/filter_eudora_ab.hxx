@@ -15,11 +15,12 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "filters.hxx"
-class QFile;
+#ifndef FILTER_EUDORA_AB
+#define FILTER_EUDORA_AB
 
-#ifndef __FILTER_EUDORA_AB__
-#define __FILTER_EUDORA_AB__
+#include "filters.hxx"
+
+class QFile;
 
 class FilterEudoraAb : public Filter, protected FilterFactory< FilterEudoraAb >
 
@@ -39,8 +40,6 @@ class FilterEudoraAb : public Filter, protected FilterFactory< FilterEudoraAb >
     int     find(const QString& key) const;
 
   private:
-    int     LINES;
-
     QStringList keys;
     QStringList emails;
     QStringList names;
