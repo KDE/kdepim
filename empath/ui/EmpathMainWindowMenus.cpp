@@ -15,6 +15,9 @@ EmpathMainWindow::_setupMenuBar()
     optionsMenu_    = new QPopupMenu;
     optionsMenu_->setCheckable(true);
 
+    QActionCollection * actionCollection 
+            = messageListWidget_->actionCollection();
+
     // File menu
     
     fileMenu_->insertItem(empathIcon("menu-send"), i18n("&Send Pending Mail"),
@@ -40,9 +43,9 @@ EmpathMainWindow::_setupMenuBar()
 
     // Go menu
   
-    messageListWidget_->a_goPrevious->plug(goMenu_);
-    messageListWidget_->a_goNext->plug(goMenu_);
-    messageListWidget_->a_goNextUnread->plug(goMenu_);
+    actionCollection->action("goPrevious")->plug(goMenu_);
+    actionCollection->action("goNext")->plug(goMenu_);
+    actionCollection->action("goNextUnread")->plug(goMenu_);
     
     // Folder menu
 
@@ -64,21 +67,21 @@ EmpathMainWindow::_setupMenuBar()
    
     // Message menu
    
-    messageListWidget_->a_messageView->plug(messageMenu_);
+    actionCollection->action("messageView")->plug(messageMenu_);
     
     messageMenu_->insertSeparator();
 
-    messageListWidget_->a_messageCompose->plug(messageMenu_);
-    messageListWidget_->a_messageReply->plug(messageMenu_);
-    messageListWidget_->a_messageReplyAll->plug(messageMenu_);
-    messageListWidget_->a_messageForward->plug(messageMenu_);
+    actionCollection->action("messageCompose")->plug(messageMenu_);
+    actionCollection->action("messageReply")->plug(messageMenu_);
+    actionCollection->action("messageReplyAll")->plug(messageMenu_);
+    actionCollection->action("messageForward")->plug(messageMenu_);
     
     messageMenu_->insertItem(empathIcon("menu-bounce"),
         i18n("&Bounce"),
         this, SLOT(s_messageBounce()));
 
-    messageListWidget_->a_messageDelete->plug(messageMenu_);
-    messageListWidget_->a_messageSaveAs->plug(messageMenu_);
+    actionCollection->action("messageDelete")->plug(messageMenu_);
+    actionCollection->action("messageSaveAs")->plug(messageMenu_);
 
     messageMenu_->insertItem(empathIcon("menu-copy"),
         i18n("&Copy to..."),

@@ -108,12 +108,12 @@ EmpathMessageListWidget::EmpathMessageListWidget(QWidget * parent)
             this, SIGNAL(linkChanged(QListViewItem *)),
             this, SLOT(s_linkChanged(QListViewItem *)));
 
-     QObject::connect(
+    QObject::connect(
             this, SIGNAL(startDrag(const QList<QListViewItem> &)),
             this, SLOT(s_startDrag(const QList<QListViewItem> &)));
     
-    // QObject::connect(this, SIGNAL(currentChanged(QListViewItem *)),
-    //         this, SLOT(s_currentChanged(QListViewItem *)));
+    QObject::connect(this, SIGNAL(currentChanged(QListViewItem *)),
+            this, SLOT(s_updateMarkActions(QListViewItem *)));
 
     // Connect return press to view.
     QObject::connect(this, SIGNAL(returnPressed(QListViewItem *)),
@@ -297,8 +297,10 @@ EmpathMessageListWidget::s_goPrevious()
         i = firstChild();
     
     if (i) {
+        setDelayedLink(true);
+        clearSelection();
         setCurrentItem(i);
-        setLinkItem(i);
+        setSelected(i, true);
         ensureItemVisible(i);
     }
 }
@@ -312,8 +314,10 @@ EmpathMessageListWidget::s_goNext()
         i = currentItem();
     
     if (i) {
+        setDelayedLink(true);
+        clearSelection();
         setCurrentItem(i);
-        setLinkItem(i);
+        setSelected(i, true);
         ensureItemVisible(i);
     }
 }
@@ -327,8 +331,10 @@ EmpathMessageListWidget::s_goNextUnread()
             static_cast<EmpathMessageListItem *>(it.current());
 
         if (!(i->status() & RMM::Read)) {
+            setDelayedLink(true);
+            clearSelection();
             setCurrentItem(i);
-            setLinkItem(currentItem());
+            setSelected(i, true);
             ensureItemVisible(currentItem());
             break;
         }
@@ -442,7 +448,7 @@ EmpathMessageListWidget::s_messageView()
 }
 
     void
-EmpathMessageListWidget::s_rightButtonPressed(QListViewItem * item, 
+EmpathMessageListWidget::s_rightButtonPressed(QListViewItem *, 
         const QPoint & pos, int, EmpathListView::Area area)
 {
     if (area == Void) return;
@@ -457,31 +463,35 @@ EmpathMessageListWidget::s_rightButtonPressed(QListViewItem * item,
         return;
     }
 
+    messageMenu_.exec(pos);
+}
+
+    void
+EmpathMessageListWidget::s_updateMarkActions(QListViewItem * item)
+{
     EmpathMessageListItem * i =
         static_cast<EmpathMessageListItem *>(item);
 
     if (i->status() & RMM::Read)
-        messageMenu_.changeItem(messageMenuItemMarkRead,
+        actionCollection()->action("messageMarkRead")->setText(
             i18n("Mark as unread"));
     else
-        messageMenu_.changeItem(messageMenuItemMarkRead,
+        actionCollection()->action("messageMarkRead")->setText(
             i18n("Mark as read"));
 
     if (i->status() & RMM::Replied)
-        messageMenu_.changeItem(messageMenuItemMarkReplied,
+        actionCollection()->action("messageMarkReplied")->setText(
             i18n("Mark as not replied to"));
     else
-        messageMenu_.changeItem(messageMenuItemMarkReplied,
+        actionCollection()->action("messageMarkReplied")->setText(
             i18n("Mark as replied to"));
     
     if (i->status() & RMM::Marked)
-        messageMenu_.changeItem(messageMenuItemMark,
+        actionCollection()->action("messageTag")->setText(
             i18n("Untag"));
     else
-        messageMenu_.changeItem(messageMenuItemMark,
+        actionCollection()->action("messageTag")->setText(
             i18n("Tag"));
-
-    messageMenu_.exec(pos);
 }
 
     void
@@ -517,6 +527,7 @@ EmpathMessageListWidget::setStatus(
 {
     item->setStatus(status);
     setStatusPixmap(item, status);
+    s_updateMarkActions(item);
 }
 
     void
@@ -631,65 +642,72 @@ EmpathMessageListWidget::s_headerClicked(int i)
     void
 EmpathMessageListWidget::_initActions()
 {
-    a_goPrevious = new KAction(i18n("&Previous"), QIconSet(BarIcon("up")), CTRL+Key_P, 
-                    this, SLOT(s_goPrevious()), this, "goPrevious");
-    a_goNext = new KAction(i18n("&Next"), QIconSet(BarIcon("down")), CTRL+Key_N,
-                    this, SLOT(s_goNext()), this, "goNext");
-    a_goNextUnread = new KAction(i18n("Next &Unread"), QIconSet(BarIcon("forward")), 0, 
-                    this, SLOT(s_goNextUnread()), this, "goNextUnread");
+    actionCollection_ = new QActionCollection(this, "actionCollection");
+
+    ac_goPrevious_ = new KAction(i18n("&Previous"), QIconSet(BarIcon("up")), CTRL+Key_P, 
+                    this, SLOT(s_goPrevious()), actionCollection(), "goPrevious");
+    ac_goNext_ = new KAction(i18n("&Next"), QIconSet(BarIcon("down")), CTRL+Key_N,
+                    this, SLOT(s_goNext()), actionCollection(), "goNext");
+    ac_goNextUnread_ = new KAction(i18n("Next &Unread"), QIconSet(BarIcon("forward")), 0, 
+                    this, SLOT(s_goNextUnread()), actionCollection(), "goNextUnread");
+    
+    ac_messageTag_ = new KToggleAction(i18n("Tag"), QIconSet(px_xMx_), 0, 
+                    this, SLOT(s_messageMark()), actionCollection(), "messageTag");
+    ac_messageMarkRead_ = new KToggleAction(i18n("&Mark as read"), QIconSet(px_Sxx_), 0, 
+                    this, SLOT(s_messageMarkRead()), actionCollection(), "messageMarkRead");
+    ac_messageMarkReplied_ = new KToggleAction(i18n("Mark as replied"), QIconSet(px_xxR_), 0, 
+                    this, SLOT(s_messageMarkReplied()), actionCollection(), "messageMarkReplied");
                     
-    a_messageView = new KAction(i18n("&View"), empathIconSet("view"), 0, 
-                    this, SLOT(s_messageCompose()), this, "messageView");
-    a_messageCompose = new KAction(i18n("&Compose"), empathIconSet("compose"), 0, 
-                    this, SLOT(s_messageCompose()), this, "messageCompose");
-    a_messageReply = new KAction(i18n("&Reply"), empathIconSet("reply"), 0,
-                    this, SLOT(s_messageReply()), this, "messageReply");
-    a_messageReplyAll = new KAction(i18n("Reply to &All"), empathIconSet("reply"), 0,
-                    this, SLOT(s_messageReplyAll()), this, "messageReplyAll");
-    a_messageForward = new KAction(i18n("&Forward"), empathIconSet("forward"), 0,
-                    this, SLOT(s_messageForward()), this, "messageForward");
-    a_messageDelete = new KAction(i18n("&Delete"), empathIconSet("delete"), 0,
-                    this, SLOT(s_messageDelete()), this, "messageDelete");
-    a_messageSaveAs = new KAction(i18n("Save &As"), empathIconSet("save"), 0,
-                    this, SLOT(s_messageSaveAs()), this, "messageSaveAs");
+    ac_messageMarkMany_ = new KAction(i18n("Mark..."), 0, 
+                    this, SLOT(s_messageMarkMany()), actionCollection(), "messageMarkMany");
+                   
+    ac_messageView_ = new KAction(i18n("&View"), empathIconSet("view"), 0, 
+                    this, SLOT(s_messageCompose()), actionCollection(), "messageView");
+    ac_messageCompose_ = new KAction(i18n("&Compose"), empathIconSet("compose"), Key_M, 
+                    this, SLOT(s_messageCompose()), actionCollection(), "messageCompose");
+    ac_messageReply_ = new KAction(i18n("&Reply"), empathIconSet("reply"), Key_R,
+                    this, SLOT(s_messageReply()), actionCollection(), "messageReply");
+    ac_messageReplyAll_ = new KAction(i18n("Reply to &All"), empathIconSet("reply"), Key_G,
+                    this, SLOT(s_messageReplyAll()), actionCollection(), "messageReplyAll");
+    ac_messageForward_ = new KAction(i18n("&Forward"), empathIconSet("forward"), Key_F,
+                    this, SLOT(s_messageForward()), actionCollection(), "messageForward");
+    ac_messageDelete_ = new KAction(i18n("&Delete"), empathIconSet("delete"), Key_D,
+                    this, SLOT(s_messageDelete()), actionCollection(), "messageDelete");
+    ac_messageSaveAs_ = new KAction(i18n("Save &As..."), empathIconSet("save"), 0,
+                    this, SLOT(s_messageSaveAs()), actionCollection(), "messageSaveAs");
+    ac_messageCopyTo_ = new KAction(i18n("&Copy To..."), empathIconSet("copy"), Key_C,
+                    this, SLOT(s_messageCopyTo()), actionCollection(), "messageCopyTo");
+    ac_messageMoveTo_ = new KAction(i18n("&Move To..."), empathIconSet("save"), 0,
+                    this, SLOT(s_messageMoveTo()), actionCollection(), "messageMoveTo");
+    ac_messagePrint_ = new KAction(i18n("&Print"), empathIconSet("print"), 0,
+                    this, SLOT(s_messagePrint()), actionCollection(), "messagePrint");
+    ac_messageFilter_ = new KAction(i18n("&Filter"), empathIconSet("filter"), 0,
+                    this, SLOT(s_messageFilter()), actionCollection(), "messageFilter");
 }
 
     void
 EmpathMessageListWidget::_setupMessageMenu()
 {
-    a_messageView->plug(&messageMenu_);
+    actionCollection()->action("messageView")->plug(&messageMenu_);
     
     messageMenu_.insertSeparator();
     
-    messageMenuItemMark =
-        messageMenu_.insertItem(
-            px_xMx_, i18n("Tag"),
-            this, SLOT(s_messageMark()));
-    
-    messageMenuItemMarkRead =
-        messageMenu_.insertItem(
-            px_Sxx_, i18n("Mark as Read"),
-            this, SLOT(s_messageMarkRead()));
-    
-    messageMenuItemMarkReplied =
-        messageMenu_.insertItem(
-            px_xxR_, i18n("Mark as Replied"),
-            this, SLOT(s_messageMarkReplied()));
-        
+    actionCollection()->action("messageTag")->plug(&messageMenu_);
+    actionCollection()->action("messageMarkRead")->plug(&messageMenu_);
+    actionCollection()->action("messageMarkReplied")->plug(&messageMenu_);
+
     messageMenu_.insertSeparator();
 
-    a_messageReply->plug(&messageMenu_);
-    a_messageReplyAll->plug(&messageMenu_);
-    a_messageForward->plug(&messageMenu_);
-    a_messageDelete->plug(&messageMenu_);
-    a_messageSaveAs->plug(&messageMenu_);
+    actionCollection()->action("messageReply")->plug(&messageMenu_);
+    actionCollection()->action("messageReplyAll")->plug(&messageMenu_);
+    actionCollection()->action("messageForward")->plug(&messageMenu_);
+    actionCollection()->action("messageDelete")->plug(&messageMenu_);
+    actionCollection()->action("messageSaveAs")->plug(&messageMenu_);
 
-    multipleMessageMenu_.insertItem(i18n("Mark..."),
-        this, SLOT(s_messageMarkMany()));
-    
-    a_messageForward->plug(&multipleMessageMenu_);
-    a_messageDelete->plug(&multipleMessageMenu_);
-    a_messageSaveAs->plug(&multipleMessageMenu_);
+    actionCollection()->action("messageMarkMany")->plug(&multipleMessageMenu_);
+    actionCollection()->action("messageForward")->plug(&multipleMessageMenu_);
+    actionCollection()->action("messageDelete")->plug(&multipleMessageMenu_);
+    actionCollection()->action("messageSaveAs")->plug(&multipleMessageMenu_);
 
     threadMenu_.insertItem(i18n("Expand"),
         this, SLOT(s_expandThread()));

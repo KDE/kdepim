@@ -44,7 +44,10 @@
 #include "EmpathMessageListItem.h"
 #include "EmpathURL.h"
 
+class QActionCollection;
+
 class KAction;
+class KToggleAction;
 
 class EmpathFolder;
 class EmpathMessageListWidget;
@@ -105,26 +108,7 @@ class EmpathMessageListWidget : public EmpathListView
 
         void listenTo(unsigned int);
 
-        // TODO: move the actions to a better place, and maybe use kparts
-        
-        // Navigation actions
-        KAction * a_goPrevious;
-        KAction * a_goNext;
-        KAction * a_goNextUnread;
-        
-        // Message related actions
-        KAction * a_messageView;
-        KAction	* a_messageCompose;
-        KAction	* a_messageReply;
-        KAction	* a_messageReplyAll;
-        KAction	* a_messageForward;
-        KAction	* a_messageBounce;
-        KAction	* a_messageDelete;
-        KAction	* a_messageSaveAs;
-        KAction	* a_messageCopyTo;
-        KAction	* a_messageMoveTo;
-        KAction	* a_messagePrint;
-        KAction	* a_messageFilter;
+        QActionCollection * actionCollection() { return actionCollection_; }
 
     public slots:
 
@@ -142,6 +126,7 @@ class EmpathMessageListWidget : public EmpathListView
         void s_messageMarkMany();
         void s_messageView();
         void s_messageCompose();
+
         void s_messageReply();
         void s_messageReplyAll();
         void s_messageForward();
@@ -165,6 +150,8 @@ class EmpathMessageListWidget : public EmpathListView
         void s_itemCome             (const QString &);
     
         void s_hideRead();
+
+        void s_updateMarkActions    (QListViewItem *);
 
     signals:
         
@@ -205,7 +192,34 @@ class EmpathMessageListWidget : public EmpathListView
         QPopupMenu  multipleMessageMenu_;
         QPopupMenu  messageMarkMenu_;
         QPopupMenu  threadMenu_;
+       
+        QActionCollection * actionCollection_;
+
+        // Navigation actions
+        KAction * ac_goPrevious_;
+        KAction * ac_goNext_;
+        KAction * ac_goNextUnread_;
         
+        // Message related actions
+        KToggleAction * ac_messageTag_;
+        KToggleAction * ac_messageMarkRead_;
+        KToggleAction * ac_messageMarkReplied_;
+        
+        KAction * ac_messageMarkMany_;
+        
+        KAction * ac_messageView_;
+        KAction	* ac_messageCompose_;
+        KAction	* ac_messageReply_;
+        KAction	* ac_messageReplyAll_;
+        KAction	* ac_messageForward_;
+        KAction	* ac_messageBounce_;
+        KAction	* ac_messageDelete_;
+        KAction	* ac_messageSaveAs_;
+        KAction	* ac_messageCopyTo_;
+        KAction	* ac_messageMoveTo_;
+        KAction	* ac_messagePrint_;
+        KAction	* ac_messageFilter_;
+       
         QPixmap px_xxx_, px_Sxx_, px_xMx_, px_xxR_,
                 px_SMx_, px_SxR_, px_xMR_, px_SMR_;
         

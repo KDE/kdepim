@@ -119,6 +119,9 @@ EmpathMainWindow::_setupToolBar()
 
     KToolBar * tb = new KToolBar(this, "tooly", i + 4 );
 
+    QActionCollection * actionCollection
+            = messageListWidget_->actionCollection();
+
     KConfig * c = KGlobal::config();
 
     using namespace EmpathConfig;
@@ -142,19 +145,21 @@ EmpathMainWindow::_setupToolBar()
     QObject::connect(tb, SIGNAL(moved(BarPosition)),
             this, SLOT(s_toolbarMoved(BarPosition)));
 
-    messageListWidget_->a_messageCompose->plug(tb);
-    messageListWidget_->a_messageReply->plug(tb);
-    messageListWidget_->a_messageForward->plug(tb);
+    actionCollection->action("messageCompose")->plug(tb);
+    actionCollection->action("messageReply")->plug(tb);
+    actionCollection->action("messageForward")->plug(tb);
+    actionCollection->action("messageForward")->plug(tb);
 
     tb->insertSeparator();
 
-    messageListWidget_->a_messageDelete->plug(tb);
-    messageListWidget_->a_messageSaveAs->plug(tb);
+    actionCollection->action("messageDelete")->plug(tb);
+    actionCollection->action("messageSaveAs")->plug(tb);
     
     tb->insertSeparator();
 
-    messageListWidget_->a_goPrevious->plug(tb);
-    messageListWidget_->a_goNext->plug(tb);
+    actionCollection->action("goPrevious")->plug(tb);
+    actionCollection->action("goNext")->plug(tb);
+    actionCollection->action("goNextUnread")->plug(tb);
 }
 
     void

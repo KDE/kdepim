@@ -50,7 +50,7 @@ EmpathMessageStructureWidget::EmpathMessageStructureWidget
     addColumn(i18n("Size"));
     
     setAllColumnsShowFocus(true);
-    setRootIsDecorated(true);
+    setRootIsDecorated(false);
     setSorting(-1); // Don't sort this.
 
     QObject::connect(this, SIGNAL(currentChanged(QListViewItem *)),
