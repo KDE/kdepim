@@ -1631,9 +1631,7 @@ void KNodeView::slotArtDelete()
     return;
 
   KNLocalArticle::List lst;
-  for(QListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
-    if(i->isSelected())
-      lst.append( static_cast<KNLocalArticle*> ((static_cast<KNHdrViewItem*>(i))->art) );
+  getSelectedArticles(lst);
 
   if(!lst.isEmpty())
     a_rtManager->deleteArticles(lst);
@@ -1650,9 +1648,7 @@ void KNodeView::slotArtSendNow()
     return;
 
   KNLocalArticle::List lst;
-  for(QListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
-    if(i->isSelected())
-      lst.append( static_cast<KNLocalArticle*> ((static_cast<KNHdrViewItem*>(i))->art) );
+  getSelectedArticles(lst);
 
   if(!lst.isEmpty())
     a_rtFactory->sendArticles(&lst, true);
