@@ -14,7 +14,7 @@
 #include <qpopmenu.h>
 #include <ktmainwindow.h>
 #include <kpilotlink.h>
-
+#include <kdockwindow.h>
 
 class KConfig;
 class KSocket;
@@ -22,7 +22,7 @@ class KProcess;
 
 class PilotDaemon;
 
-class DockingLabel : public QLabel
+class DockingLabel : public KDockWindow
 {
   Q_OBJECT
 

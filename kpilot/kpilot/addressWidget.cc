@@ -108,7 +108,7 @@ int AddressWidget::getAllAddresses(PilotDatabase *addressDB,KConfig *config)
 	PilotAddress* address;
 	bool showSecrets=0;
 
-	config->setGroup(0L);
+	config->setGroup(QString());
 	showSecrets = (bool) config->readNumEntry("ShowSecrets");
 
 

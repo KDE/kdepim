@@ -129,7 +129,7 @@ MemoWidget::initializeMemos(PilotDatabase *memoDB)
 	//
 	KConfig* config = KGlobal::config();
 	bool showSecrets=false;
-	config->setGroup(NULL);
+	config->setGroup(QString());
 	showSecrets = (bool) config->readNumEntry("ShowSecrets");
 
 	fMemoList.clear();

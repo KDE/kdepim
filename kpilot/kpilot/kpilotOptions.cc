@@ -60,7 +60,7 @@ KPilotOptionsPrivacy::KPilotOptionsPrivacy(setupDialog *p,KConfig *c) :
 	{
 		fuseSecret->adjustSize();
 		fuseSecret->move(10,12);
-		c->setGroup(0L);
+		c->setGroup(QString());
 		fuseSecret->setChecked(c->readNumEntry("ShowSecrets"));
 	}
 
@@ -102,7 +102,7 @@ KPilotOptionsPrivacy::KPilotOptionsPrivacy(setupDialog *p,KConfig *c) :
 	l2->move(10,BELOW(fBackupOnly));
 	fSkipDB->move(fBackupOnly->x(),l2->y()-4);
 
-	c->setGroup(0L);
+	c->setGroup(QString());
 	fBackupOnly->setText(c->readEntry("BackupForSync",
 		"Arng,PmDB,lnch"));
 	fSkipDB->setText(c->readEntry("SkipSync",
@@ -115,7 +115,7 @@ int KPilotOptionsPrivacy::commitChanges(KConfig *config)
 {
 	FUNCTIONSETUP;
 
-	config->setGroup(0L);
+	config->setGroup(QString());
 
 	config->writeEntry("ShowSecrets",fuseSecret->isChecked());
 	config->writeEntry("BackupForSync",fBackupOnly->text());
@@ -273,7 +273,7 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 	QLabel *currentLabel;
 	int value;
 
-	config->setGroup(0L);
+	config->setGroup(QString());
 	currentLabel = new QLabel(i18n("Pilot Device: "), this);
 	currentLabel->adjustSize();
 	currentLabel->move(10, 12);
@@ -304,7 +304,8 @@ KPilotOptionsGeneral::KPilotOptionsGeneral(setupDialog *w,KConfig *config) :
 	currentLabel->adjustSize();
 	currentLabel->move(10, 52);
 	fUserName = new QLineEdit(this);
-	fUserName->setText(config->readEntry("UserName", "$USER"));
+	QCString userName = ::getenv("USER");
+	fUserName->setText(config->readEntry("UserName", userName));
 	fUserName->resize(200, fUserName->height());
 	fUserName->move(110, 50);
 
@@ -390,7 +391,7 @@ int KPilotOptionsGeneral::commitChanges(KConfig *config)
 {
 	FUNCTIONSETUP;
 
-	config->setGroup(0L);
+	config->setGroup(QString());
 	config->writeEntry("PilotDevice", fPilotDevice->text());
 	config->writeEntry("PilotSpeed", fPilotSpeed->currentItem());
 	config->writeEntry("UserName", fUserName->text());

@@ -169,7 +169,7 @@ FileInstallWidget::preHotSync(char* command)
 {
   char buffer[10];
   KConfig* config = KGlobal::config();
-  config->setGroup(0L);
+  config->setGroup(QString());
   if(config->readNumEntry("SyncFiles"))
     {
       sprintf(buffer, "%d\n", KPilotLink::InstallFile);

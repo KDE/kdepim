@@ -100,7 +100,7 @@ KPilotInstaller::KPilotInstaller()
 	int cfg_version;
 
 	KConfig* config = KGlobal::config();
-	config->setGroup(0L);
+	config->setGroup(QString());
 	cfg_version=config->readNumEntry("Configured", 0);
 
 	if(cfg_version < ConfigurationVersion)
@@ -584,10 +584,10 @@ KPilotInstaller::slotDaemonStatus(KSocket* daemon)
   in.read(&status, sizeof(int));
   if(status == CStatusMessages::SYNC_STARTING)
     {
-      fLastWidgetSelected = fToolBar->getCombo(KPilotInstaller::ID_COMBO)->currentItem();
-      fToolBar->getCombo(KPilotInstaller::ID_COMBO)->setCurrentItem(0);
-      slotModeSelected(0);
-      fToolBar->getCombo(KPilotInstaller::ID_COMBO)->setEnabled(false);
+//       fLastWidgetSelected = fToolBar->getCombo(KPilotInstaller::ID_COMBO)->currentItem();
+//       fToolBar->getCombo(KPilotInstaller::ID_COMBO)->setCurrentItem(0);
+//       slotModeSelected(0);
+//       fToolBar->getCombo(KPilotInstaller::ID_COMBO)->setEnabled(false);
       if(fLinkCommand[0] == 0L)
 	doHotSync();
       fStatusBar->changeItem(i18n("Hot-Sync in progress..."), 0);
@@ -596,9 +596,9 @@ KPilotInstaller::slotDaemonStatus(KSocket* daemon)
     }
   else if(status == CStatusMessages::SYNC_COMPLETED)
     {
-      fToolBar->getCombo(KPilotInstaller::ID_COMBO)->setEnabled(true);
-      fToolBar->getCombo(KPilotInstaller::ID_COMBO)->setCurrentItem(fLastWidgetSelected);
-      slotModeSelected(fLastWidgetSelected);
+//       fToolBar->getCombo(KPilotInstaller::ID_COMBO)->setEnabled(true);
+//       fToolBar->getCombo(KPilotInstaller::ID_COMBO)->setCurrentItem(fLastWidgetSelected);
+//       slotModeSelected(fLastWidgetSelected);
       fStatusBar->changeItem(i18n("Hot-Sync complete."), 0);
       fLinkCommand[0] = 0L;
       for(fPilotComponentList.first(); fPilotComponentList.current(); fPilotComponentList.next())

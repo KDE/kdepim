@@ -43,6 +43,7 @@ static char *id="$Id$";
 #include <ksock.h>
 #include <kmessagebox.h>
 #include <kstddirs.h>
+#include <kpopupmenu.h>
 
 #include "pilotDaemon.moc"
 #include "hotsync.h"
@@ -87,22 +88,27 @@ void handleOptions(int& argc, char **argv)
 }
 
 
-DockingLabel::DockingLabel (PilotDaemon* daemon, QWidget* w) : QLabel(w), fDaemon(daemon)
+DockingLabel::DockingLabel (PilotDaemon* daemon, QWidget* w) : KDockWindow(), fDaemon(daemon)
 {
-	FUNCTIONSETUP;
+  FUNCTIONSETUP;
+  QPixmap icon(hotsync_icon);
+  setPixmap(icon);
+  QPopupMenu* menu = contextMenu();
+  menu->insertItem(i18n("&About"), daemon, SLOT(slotShowAbout()));
+  menu->insertSeparator();
+  menu->insertItem(i18n("&Exit"), daemon, SLOT(quitImmediately()));
 }
 
 
 void 
 DockingLabel::mousePressEvent(QMouseEvent *e)
 {
-	FUNCTIONSETUP;
-
+  FUNCTIONSETUP;
   if( e->button() == RightButton)
     {
-      int x = e->x() + this->x();
-      int y = e->y() + this->y();
-      fMenu->popup(QPoint(x, y));
+      KPopupMenu *menu = contextMenu();
+      contextMenuAboutToShow( menu );
+      menu->popup( e->globalPos() );
     }
 }
 
@@ -213,7 +219,7 @@ PilotDaemon::PilotDaemon() :
 	FUNCTIONSETUP;
 
 	KConfig* config = KPilotLink::getConfig();
-	config->setGroup(0L);
+	config->setGroup(QString());
   
   fPilotDevice = config->readEntry("PilotDevice");
 
@@ -255,7 +261,7 @@ PilotDaemon::reloadSettings()
 	FUNCTIONSETUP;
 
   KConfig* config = KPilotLink::getConfig();
-  config->setGroup(0L);
+  config->setGroup(QString());
   
   fPilotDevice = config->readEntry("PilotDevice");
 	getPilotSpeed(config);
@@ -340,19 +346,10 @@ PilotDaemon::setupWidget()
 	FUNCTIONSETUP;
 
   KConfig* config = KPilotLink::getConfig();
-  config->setGroup(0L);
+  config->setGroup(QString());
   if(config->readNumEntry("DockDaemon", 0))
     {
       fDockingLabel = new DockingLabel(this, (QWidget*)0L);
-      QPixmap icon(hotsync_icon);
-      fDockingLabel->setFixedSize(24,24);
-      fDockingLabel->setPixmap(icon);
-//       KWM::setDockWindow(fDockingLabel->winId());
-      QPopupMenu* menu = new QPopupMenu();
-      menu->insertItem("&About", this, SLOT(slotShowAbout()));
-      menu->insertSeparator();
-      menu->insertItem("&Exit", this, SLOT(quitImmediately()));
-      fDockingLabel->setPopupMenu(menu);
       fDockingLabel->show();
     }
   delete config;
@@ -448,10 +445,10 @@ PilotDaemon::slotDBBackupFinished()
 	}
 
 	KConfig* config = KPilotLink::getConfig();
-	config->setGroup(0L);
+	config->setGroup(QString());
 	if(config->readNumEntry("SyncFiles"))
 	{
-	  getPilotLink()->installFiles(KGlobal::dirs()->resourceDirs("pilotInstalls").first());
+	  getPilotLink()->installFiles(KGlobal::dirs()->saveLocation("data", QString("kpilot/pending_install/")));
 	}
 	delete config;
 	emit(endHotSync());
@@ -571,7 +568,7 @@ PilotDaemon::slotCommandReceived(KSocket*)
 	getPilotLink()->quickHotSync();
       break;
     case KPilotLink::InstallFile:
-      getPilotLink()->installFiles(KGlobal::dirs()->resourceDirs("pilotInstalls").first());
+      getPilotLink()->installFiles(KGlobal::dirs()->saveLocation("data", QString("kpilot/pending_install/")));
       break;
 	case KPilotLink::TestConnection :
 		if (debug_level & SYNC_MAJOR)
