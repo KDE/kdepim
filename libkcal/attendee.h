@@ -130,9 +130,6 @@ class Attendee : public Person
     PartStat mStatus;
     QString mUid;
 
-    // used to tell whether we have need to mail this person or not.
-    bool mFlag;
-
     class Private;
     Private *d;
 };
