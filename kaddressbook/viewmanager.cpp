@@ -622,8 +622,10 @@ void ViewManager::dropped(QDropEvent *e)
     QStringList list = QStringList::split( "\r\n\r\n", vcards );
     QStringList::Iterator it;
     for ( it = list.begin(); it != list.end(); ++it ) {
-      if ( converter.vCardToAddressee( (*it).stripWhiteSpace(), addr ) )
+      if ( converter.vCardToAddressee( (*it).stripWhiteSpace(), addr ) ) {
         mDocument->insertAddressee( addr );
+        emit modified();
+      }
     }
 
     mActiveView->refresh();

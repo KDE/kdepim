@@ -338,7 +338,7 @@ void KAddressBook::importVCard( const QString &file, bool showDialog )
 
     file.open( IO_ReadOnly );
     QByteArray rawData = file.readAll();
-    QString data = QString::fromLatin1( rawData.data(), rawData.size() + 1 );
+    QString data = QString::fromUtf8( rawData.data(), rawData.size() + 1 );
     bool ok = false;
 
     if ( data.contains( "VERSION:3.0" ) ) {
@@ -359,6 +359,7 @@ void KAddressBook::importVCard( const QString &file, bool showDialog )
       if ( showDialog )
         editAddressee( a.uid() );
 
+      emit modified( true );
     } else {
       QString text = i18n( "The selected file does not appear to be a valid vCard. "
                            "Please check the file and try again." );
