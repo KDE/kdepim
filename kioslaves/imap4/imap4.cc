@@ -222,6 +222,7 @@ IMAP4Protocol::get (const KURL & _url)
   {
     // this url is stale
     error (ERR_COULD_NOT_READ, _url.prettyURL());
+    return;
   }
   else
 #endif
@@ -720,7 +721,7 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, ulong relay)
         relayData.setRawData (readBuffer, relay);
         parseRelay (relayData);
         relayData.resetRawData (readBuffer, relay);
-        kdDebug(7116) << "relayed : " << relay << "d" << endl;
+//        kdDebug(7116) << "relayed : " << relay << "d" << endl;
       }
       // append to buffer
       {
@@ -786,8 +787,11 @@ IMAP4Protocol::put (const KURL & _url, int, bool, bool)
       aBox = aBox.right (aBox.length () - 1);
     imapCommand *cmd = doCommand (imapCommand::clientCreate (aBox));
 
-    if (cmd->result () != "OK")
+    if (cmd->result () != "OK") {
       error (ERR_COULD_NOT_WRITE, _url.prettyURL());
+      completeQueue.removeRef (cmd);
+      return;
+    }
     completeQueue.removeRef (cmd);
   }
   else
@@ -815,7 +819,6 @@ IMAP4Protocol::put (const KURL & _url, int, bool, bool)
     if (result != 0)
     {
       error (ERR_ABORTED, _url.prettyURL());
-      finished ();
       return;
     }
 
@@ -858,9 +861,14 @@ IMAP4Protocol::put (const KURL & _url, int, bool, bool)
         // TODO KDE4: pass cmd->resultInfo() as third argument.
         // ERR_CONNECTION_BROKEN expects a host, no way to pass details about the problem.
         error( ERR_CONNECTION_BROKEN, myHost );
+        completeQueue.removeRef (cmd);
+        closeConnection();
+        return;
       }
       else if (cmd->result () != "OK") {
         error( ERR_SLAVE_DEFINED, cmd->resultInfo() );
+        completeQueue.removeRef (cmd);
+        return;
       }
       else
       {
@@ -889,6 +897,8 @@ IMAP4Protocol::put (const KURL & _url, int, bool, bool)
       //error (ERR_COULD_NOT_WRITE, myHost);
       // Better ship the error message, e.g. "Over Quota"
       error (ERR_SLAVE_DEFINED, cmd->resultInfo());
+      completeQueue.removeRef (cmd);
+      return;
     }
 
     completeQueue.removeRef (cmd);
@@ -1046,6 +1056,8 @@ IMAP4Protocol::copy (const KURL & src, const KURL & dest, int, bool overwrite)
     {
       kdError(5006) << "IMAP4::copy - " << cmd->resultInfo() << endl;
       error (ERR_COULD_NOT_WRITE, dest.prettyURL());
+      completeQueue.removeRef (cmd);
+      return;
     } else {
       if (hasCapability("UIDPLUS"))
       {
@@ -1063,6 +1075,7 @@ IMAP4Protocol::copy (const KURL & src, const KURL & dest, int, bool overwrite)
   else
   {
     error (ERR_ACCESS_DENIED, src.prettyURL());
+    return;
   }
   finished ();
 }
@@ -1085,8 +1098,11 @@ IMAP4Protocol::del (const KURL & _url, bool isFile)
       {
         if (!assureBox (aBox, false)) return;
         imapCommand *cmd = doCommand (imapCommand::clientExpunge ());
-        if (cmd->result () != "OK")
+        if (cmd->result () != "OK") {
           error (ERR_CANNOT_DELETE, _url.prettyURL());
+          completeQueue.removeRef (cmd);
+          return;
+        }
         completeQueue.removeRef (cmd);
       }
       else
@@ -1096,8 +1112,11 @@ IMAP4Protocol::del (const KURL & _url, bool isFile)
         imapCommand *cmd =
           doCommand (imapCommand::
                      clientStore (aSequence, "+FLAGS.SILENT", "\\DELETED"));
-        if (cmd->result () != "OK")
+        if (cmd->result () != "OK") {
           error (ERR_CANNOT_DELETE, _url.prettyURL());
+          completeQueue.removeRef (cmd);
+          return;
+        }
         completeQueue.removeRef (cmd);
       }
     }
@@ -1153,8 +1172,11 @@ IMAP4Protocol::del (const KURL & _url, bool isFile)
   case ITYPE_DIR:
     {
       imapCommand *cmd = doCommand (imapCommand::clientDelete (aBox));
-      if (cmd->result () != "OK")
+      if (cmd->result () != "OK") {
         error (ERR_COULD_NOT_RMDIR, _url.prettyURL());
+        completeQueue.removeRef (cmd);
+        return;
+      }
       completeQueue.removeRef (cmd);
     }
     break;
@@ -1166,8 +1188,11 @@ IMAP4Protocol::del (const KURL & _url, bool isFile)
       imapCommand *cmd =
         doCommand (imapCommand::
                    clientStore (aSequence, "+FLAGS.SILENT", "\\DELETED"));
-      if (cmd->result () != "OK")
+      if (cmd->result () != "OK") {
         error (ERR_CANNOT_DELETE, _url.prettyURL());
+        completeQueue.removeRef (cmd);
+        return;
+      }
       completeQueue.removeRef (cmd);
     }
     break;
@@ -1575,14 +1600,16 @@ IMAP4Protocol::rename (const KURL & src, const KURL & dest, bool overwrite)
           if (!ok)
           {
             error(ERR_CANNOT_RENAME, i18n("Unable to close mailbox."));
-            finished ();
             return;
           }
           setState(ISTATE_LOGIN);
         }
         imapCommand *cmd = doCommand (imapCommand::clientRename (sBox, dBox));
-        if (cmd->result () != "OK")
+        if (cmd->result () != "OK") {
           error (ERR_CANNOT_RENAME, cmd->result ());
+          completeQueue.removeRef (cmd);
+          return;
+        }
         completeQueue.removeRef (cmd);
       }
       break;
@@ -1597,6 +1624,7 @@ IMAP4Protocol::rename (const KURL & src, const KURL & dest, bool overwrite)
   else
   {
     error (ERR_CANNOT_RENAME, src.prettyURL());
+    return;
   }
   finished ();
 }
