@@ -200,15 +200,26 @@ class Incidence : public IncidenceBase
 
     /** returns the list of dates which are exceptions to the recurrence rule */
     DateList exDates() const;
-    /** sets the list of dates which are exceptions to the recurrence rule */
+    /** returns the list of date/times which are exceptions to the recurrence rule */
+    DateTimeList exDateTimes() const;
+    /** Sets the list of dates which are exceptions to the recurrence rule.
+      * This does not affect the date-time exception list. */
     void setExDates(const DateList &_exDates);
     void setExDates(const char *dates);
+    /** Sets the list of date/times which are exceptions to the recurrence rule.
+     * This does not affect the date-only exception list. */
+    void setExDateTimes(const DateTimeList &exDateTimes);
     /** Add a date to the list of exceptions of the recurrence rule. */
     void addExDate(const QDate &date);
+    /** Add a date/time to the list of exceptions of the recurrence rule. */
+    void addExDateTime(const QDateTime &dateTime);
 
     /** returns true if there is an exception for this date in the recurrence
-     rule set, or false otherwise. */
+     rule set, or false otherwise. Does not check the date/time exception list. */
     bool isException(const QDate &qd) const;
+    /** returns true if there is an exception for this date/time in the recurrence
+     * rule set, or false otherwise. Does not check the date-only exception list. */
+    bool isException(const QDateTime &qdt) const;
 
     /** add attachment to this event */
     void addAttachment(Attachment *attachment);
@@ -236,6 +247,9 @@ class Incidence : public IncidenceBase
     /** returns TRUE if the date specified is one on which the event will
      * recur. */
     bool recursOn(const QDate &qd) const;
+    /** returns true if the date/time specified is one on which the event will
+     * recur. */
+    bool recursAt(const QDateTime &qdt) const;
 
     // VEVENT and VTODO, but not VJOURNAL (move to EventBase class?):
 
@@ -290,6 +304,7 @@ class Incidence : public IncidenceBase
     QString mRelatedToUid;
     Incidence::List mRelations;
     DateList mExDates;
+    DateTimeList mExDateTimes;
     Attachment::List mAttachments;
     QStringList mResources;
 

@@ -733,6 +733,47 @@ void Recurrence::addYearlyNum(short _rNum)
 }
 
 
+QValueList<QTime> Recurrence::recurTimesOn(const QDate &date) const
+{
+  QValueList<QTime> times;
+  switch (recurs)
+  {
+    case rMinutely:
+    case rHourly:
+      if ((date >= mRecurStart.date()) &&
+          ((rDuration > 0) && (date <= endDate()) ||
+           ((rDuration == 0) && (date <= rEndDateTime.date())) ||
+           (rDuration == -1))) {
+        // The date queried falls within the range of the event.
+        int secondFreq = rFreq * (recurs == rMinutely ? 60 : 3600);
+        int after = mRecurStart.secsTo(QDateTime(date)) - 1;
+        int count = (after + 24*3600) / secondFreq - after / secondFreq;
+        if (count) {
+          // It recurs at least once on the given date
+          QTime t = mRecurStart.addSecs((after / secondFreq) * secondFreq).time();
+          while (--count >= 0) {
+            t = t.addSecs(secondFreq);
+            times.append(t);
+          }
+        }
+      }
+      break;
+    case rDaily:
+    case rWeekly:
+    case rMonthlyPos:
+    case rMonthlyDay:
+    case rYearlyMonth:
+    case rYearlyDay:
+    case rYearlyPos:
+      if (recursOnPure(date))
+        times.append(mRecurStart.time());
+      break;
+    default:
+      break;
+  }
+  return times;
+}
+
 QDateTime Recurrence::getNextDateTime(const QDateTime &preDateTime, bool *last) const
 {
   int freq;

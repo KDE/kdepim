@@ -51,6 +51,7 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
   mRelatedToUid = i.mRelatedToUid;
 //  Incidence::List mRelations;    Incidence::List mRelations;
   mExDates = i.mExDates;
+  mExDateTimes = i.mExDateTimes;
   mAttachments = i.mAttachments;
   mResources = i.mResources;
   mSecrecy = i.mSecrecy;
@@ -105,7 +106,7 @@ bool Incidence::operator==( const Incidence& i2 ) const
             return false;
         }
 
-    if ( !( static_cast<const IncidenceBase&>(*this) == static_cast<const IncidenceBase&>(i2) ) )
+    if ( !IncidenceBase::operator==(i2) )
         return false;
 
     bool recurrenceEqual = ( mRecurrence == 0 && i2.mRecurrence == 0 );
@@ -126,6 +127,7 @@ bool Incidence::operator==( const Incidence& i2 ) const
         stringCompare( relatedToUid(), i2.relatedToUid() ) &&
         relations() == i2.relations() &&
         exDates() == i2.exDates() &&
+        exDateTimes() == i2.exDateTimes() &&
         attachments() == i2.attachments() &&
         resources() == i2.resources() &&
         secrecy() == i2.secrecy() &&
@@ -292,10 +294,22 @@ bool Incidence::recursOn(const QDate &qd) const
   return (mRecurrence && mRecurrence->recursOnPure(qd) && !isException(qd));
 }
 
+bool Incidence::recursAt(const QDateTime &qdt) const
+{
+  return (mRecurrence && mRecurrence->recursAtPure(qdt) && !isException(qdt.date()) && !isException(qdt));
+}
+
 void Incidence::setExDates(const DateList &exDates)
 {
   if (mReadOnly) return;
   mExDates = exDates;
+  updated();
+}
+
+void Incidence::setExDateTimes(const DateTimeList &exDateTimes)
+{
+  if (mReadOnly) return;
+  mExDateTimes = exDateTimes;
   updated();
 }
 
@@ -306,9 +320,21 @@ void Incidence::addExDate(const QDate &date)
   updated();
 }
 
+void Incidence::addExDateTime(const QDateTime &dateTime)
+{
+  if (mReadOnly) return;
+  mExDateTimes.append(dateTime);
+  updated();
+}
+
 DateList Incidence::exDates() const
 {
   return mExDates;
+}
+
+DateTimeList Incidence::exDateTimes() const
+{
+  return mExDateTimes;
 }
 
 bool Incidence::isException(const QDate &date) const
@@ -316,6 +342,18 @@ bool Incidence::isException(const QDate &date) const
   DateList::ConstIterator it;
   for( it = mExDates.begin(); it != mExDates.end(); ++it ) {
     if ( (*it) == date ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool Incidence::isException(const QDateTime &dateTime) const
+{
+  DateTimeList::ConstIterator it;
+  for( it = mExDateTimes.begin(); it != mExDateTimes.end(); ++it ) {
+    if ( (*it) == dateTime ) {
       return true;
     }
   }

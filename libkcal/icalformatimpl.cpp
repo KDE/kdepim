@@ -373,12 +373,18 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
     icalcomponent_add_property(parent,writeRecurrenceRule(incidence->recurrence()));
   }
 
-  // recurrence excpetion dates
+  // recurrence exception dates and date/times
   DateList dateList = incidence->exDates();
   DateList::ConstIterator exIt;
   for(exIt = dateList.begin(); exIt != dateList.end(); ++exIt) {
     icalcomponent_add_property(parent,icalproperty_new_exdate(
         writeICalDate(*exIt)));
+  }
+  DateTimeList dateTimeList = incidence->exDateTimes();
+  DateTimeList::ConstIterator extIt;
+  for(extIt = dateTimeList.begin(); extIt != dateTimeList.end(); ++extIt) {
+    icalcomponent_add_property(parent,icalproperty_new_exdate(
+        writeICalDateTime(*extIt)));
   }
 
   // attachments
@@ -882,15 +888,6 @@ Event *ICalFormatImpl::readEvent(icalcomponent *vevent)
     anEvent->setDtEnd(anEvent->dtStart());
 #endif
 
-// TODO: exdates
-#if 0
-  // recurrence exceptions
-  if ((vo = isAPropertyOf(vevent, VCExDateProp)) != 0) {
-    anEvent->setExDates(s = fakeCString(vObjectUStringZValue(vo)));
-    deleteStr(s);
-  }
-#endif
-
 #if 0
   // secrecy
   if ((vo = isAPropertyOf(vevent, VCClassProp)) != 0) {
@@ -1232,7 +1229,11 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
 
       case ICAL_EXDATE_PROPERTY:
         icaltime = icalproperty_get_exdate(p);
-        incidence->addExDate(readICalDate(icaltime));
+        if (icaltime.is_date) {
+          incidence->addExDate(readICalDate(icaltime));
+        } else {
+          incidence->addExDateTime(readICalDateTime(icaltime));
+        }
         break;
 
       case ICAL_CLASS_PROPERTY:
@@ -1531,7 +1532,7 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
   // Determine the alarm's action type
   icalproperty *p = icalcomponent_get_first_property(alarm,ICAL_ACTION_PROPERTY);
   Alarm::Type type = Alarm::Display;
-  icalproperty_action action;
+  icalproperty_action action = ICAL_ACTION_DISPLAY;
   if ( !p ) {
     kdDebug(5800) << "Unknown type of alarm, using default" << endl;
 //    return;

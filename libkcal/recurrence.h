@@ -109,6 +109,12 @@ class Recurrence
     /** Turns off recurrence for the event. */
     void unsetRecurs();
 
+    /** Returns a list of the times on the specified date at which the
+     * recurrence will occur.
+     * @var date the date for which to find the recurrence times.
+     */
+    QValueList<QTime> recurTimesOn(const QDate &date) const;
+
     /** Returns the date of the next recurrence, after the specified date.
      * @var preDate the date after which to find the recurrence.
      * @var last if non-null, *last is set to true if the next recurrence is the
