@@ -1,22 +1,17 @@
 <?xml version="1.0" ?>
 <!-- TODO:
-     Change license to LGPL?
-     Format for date (YYYY-MM-DD)  and time (HH:MM) specifications
-     Search for other TODOs in this file
+     + Change license to LGPL?
+     + Talk about next once it is implemented in the code
+     + Is docbook installed in the standard location so helpcenter sees it?
      END TODO -->
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN"
 "dtd/kdex.dtd" [
-  <!-- Define an entity for your application if it is not part of KDE CVS -->
+
   <!ENTITY konsolekalendar "<application>KonsoleKalendar</application>">
-  <!ENTITY kappname "&konsolekalendar;"><!-- replace kmyapplication here
-                                             do *not* replace kappname-->
-  <!ENTITY package "kde-pim"><!-- kdebase, kdeadmin, etc.  Leave
-                                  this unchanged if your
-                                  application is not maintained in KDE CVS -->
+  <!ENTITY kappname "KonsoleKalendar">
+  <!ENTITY package "kdepim">
   <!ENTITY % addindex "IGNORE">
-  <!ENTITY % English "INCLUDE"> <!-- ONLY If you are writing non-English
-                                     original documentation, change
-                                     the language here -->
+  <!ENTITY % English "INCLUDE">
 ]>
 <!-- The language must NOT be changed here. -->
 
@@ -30,20 +25,23 @@
 <author>
 <firstname>Tuukka</firstname>
 <surname>Pasanen</surname>
-<affiliation>
-<address><email>illuusio@mailcity.com</email></address>
-</affiliation>
+<affiliation><address><email>illuusio@mailcity.com</email></address></affiliation>
 </author>
 
-<othercredit role="developer">
+<author>
 <firstname>Allen</firstname>
 <surname>Winter</surname>
-<affiliation><address><email>winterz@earthlink.net</email></address></affiliation>
-<contrib>Developer</contrib>
-</othercredit>
-</authorgroup>
+<affiliation><address><email>awinterz@users.sourceforge.net</email></address></affiliation>
+</author>
 
+<othercredit role="reviewer">
+<firstname>Malcolm</firstname>
+<surname>Hunter</surname>
+<affiliation><address><email>malcolm.hunter@gmx.co.uk</email></address></affiliation>
+<contrib>Reviewer</contrib>
+</othercredit>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
 
 <copyright>
 <year>2002</year><year>2003</year><holder>Tuukka Pasanen</holder>
@@ -51,15 +49,15 @@
 
 <copyright>
 <year>2003</year>
-<holder>Allen D. Winter</holder>
+<holder>Allen Winter</holder>
 </copyright>
 
 <legalnotice>&FDLNotice;</legalnotice>
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2003-08-21</date>
-<releaseinfo>0.8</releaseinfo>
+<date>2003-11-28</date>
+<releaseinfo>1.0.0</releaseinfo>
 
 <abstract>
 <para>&konsolekalendar; is a command line interface to &kde; calendars.</para>
@@ -68,9 +66,9 @@
 
 <keywordset>
 <keyword>KDE</keyword>
-<keyword>kdepim</keyword>
-<keyword>konsolekalendar</keyword>
-<keyword>korganizer</keyword>
+<keyword>&package;</keyword>
+<keyword>&kappname;</keyword>
+<keyword>KOrganizer</keyword>
 </keywordset>
 
 </bookinfo>
@@ -82,28 +80,31 @@
 <para>&konsolekalendar; is a command line interface to &kde; calendars.
 It lets you view, insert, remove, or modify calendar events by way of
 the command line or from a scripting language.
-Additionally, &konsolekalendar; can export a &kde;
-calendar to a variety of other formats.</para>
+Additionally, &konsolekalendar; can create a new &kde; calendar,
+export a &kde; calendar to a variety of other formats, and
+import another &kde; calendar.</para>
 
 <para>In its basic mode, &konsolekalendar; displays the list of
 events in your default calendar for the current day (from 7:00 to 17:00).</para>
 
 <para>Main features of &konsolekalendar;:
 <itemizedlist>
-<listitem><para>List calendar entries from a start date/time to end date/time</para></listitem>
+<listitem><para>View calendar entries from a start date/time to end date/time</para></listitem>
 <listitem><para>Insert (add) calendar entries</para></listitem>
 <listitem><para>Remove (delete) calendar entries</para></listitem>
 <listitem><para>Modify (change) calendar entries</para></listitem>
+<listitem><para>Create a new calendar</para></listitem>
 <listitem><para>Export calendar entries to other file formats</para></listitem>
+<listitem><para>Import an existing &kde; calendar</para></listitem>
 </itemizedlist></para>
 
 <para>&konsolekalendar; is <emphasis>not</emphasis> another graphical
-user interface to a &kde; calendar (i.e, &korganizer;).  &konsolekalendar;
+user interface to a &kde; calendar (i.e. &korganizer;).  &konsolekalendar;
 is intended solely for uses where a graphical user interface is
 not practical or possible.</para>
 
-<para>&konsolekalendar; does not provide a full-featured language
-for making queries of the user's calendar: nor is it the intention
+<para>&konsolekalendar; does <emphasis>not</emphasis> provide a full-featured
+language for making queries of the user's calendar: nor is it the intention
 of the authors to ever write such a capability.  Primitive command line
 options are provided for accessing calendar events within a consecutive
 range of dates/time stamps.
@@ -113,13 +114,17 @@ range of dates/time stamps.
 
 <chapter id="features">
 <title>Features</title>
-<para>In this chapter you'll learn about the useful features of
-&konsolekalendar;: the parameters you can specify on the command line 
+<para>In this chapter you'll learn about the main features of
+&konsolekalendar; and how to control them using the command line parameters
 (remember that &konsolekalendar; is not a graphical user interface;
 it is a command line program only).</para>
 
-<para>You'll also learn about inserting, deleting, and changing
-calendar events, and about exporting events to other file formats.</para>
+<para>
+You'll learn about inserting, deleting, and changing
+calendar events, and how to export events to other file formats.
+The creation and importation of &kde; calendars will also be covered
+in this chapter.
+</para>
 
 <sect1 id="viewing">
 <title>Viewing Events</title>
@@ -128,31 +133,32 @@ calendar events, and about exporting events to other file formats.</para>
 option, &konsolekalendar; will list all events within the range of a specified
 date/time.</para>
 
-<para>Here's how to list all of today's events:</para>
-
-<informalexample>
 <para>
-<prompt>%</prompt><userinput>
-<command>konsolekalendar</command>
+<informalexample><para>To view all of today's events (from 7:00 to 17:00), simply run:</para>
+
+<para>
+<screen>
+<prompt>%</prompt><userinput> <command>konsolekalendar</command>
 </userinput>
+</screen>
 </para>
 </informalexample>
+</para>
 
-<para>In this example, we list all events for the week of August 18-22:</para>
-
-<informalexample>
 <para>
-<prompt>%</prompt><userinput>
-<command>konsolekalendar</command>
-<option>--view</option>
-<option>--date <replaceable>2003-08-18</replaceable></option>
-<option>--end-date <replaceable>2003-08-22</replaceable></option>
+<informalexample><para>In this next example, we view all events for the week of August 18-22:</para>
+
+<para>
+<screen>
+<prompt>%</prompt><userinput> <command>konsolekalendar</command> <option>--view</option> <option>--date <replaceable>2003-08-18</replaceable> </option> <option>--end-date <replaceable>2003-08-22</replaceable></option>
 </userinput>
+</screen>
 </para>
 </informalexample>
+</para>
 
 <!-- TODO -->
-<!-- <para>Shows the next event on the calendar from the current time forward:</para> -->
+<!-- <para><emphasis>Example:</emphasis> Shows the next event on the calendar from the current time forward:</para> -->
 
 <!-- <informalexample> -->
 <!-- <para> -->
@@ -168,99 +174,263 @@ date/time.</para>
 <sect1 id="inserting">
 <title>Inserting Events</title>
 
-<para>&konsolekalendar; can insert events into a &kde; calendar using the
-<parameter>--add</parameter> command line argument.</para>
+<para>&konsolekalendar; can insert events into a &kde; calendar or calendar
+resource using the <parameter>--add</parameter> command line argument.</para>
 
-<para>In the following example, an event starting on 2003-06-04 (June 4, 2003)
+<para>
+<informalexample><para>In the following example, an event starting on 2003-06-04 (June 4, 2003)
 at 1000 and ending at 1200 with summary "Doctor Visit" will be
-inserted into the user's default calendar:</para>
+inserted into the user's default calendar resource:</para>
 
-<informalexample>
+
 <para>
-<prompt>%</prompt><userinput>
-<command>konsolekalendar</command>
-<option>--add</option>
-<option>--date <replaceable>2003-06-04</replaceable></option>
-<option>--time <replaceable>10:00</replaceable></option>
-<option>--end-time <replaceable>12:00</replaceable></option>
-<option>--summary <replaceable>"Doctor Visit"</replaceable></option>
-</userinput>
+<screen><prompt>%</prompt><userinput> <command>konsolekalendar</command> <option>--add</option> <option>--date <replaceable>2003-06-04</replaceable></option> <option>--time <replaceable>10:00</replaceable></option> \
+<option>--end-time <replaceable>12:00</replaceable></option> <option>--summary <replaceable>"Doctor Visit"</replaceable></option></userinput></screen>
 </para>
 </informalexample>
+</para>
 
-<para>In this example, a birthday event is added into the user's default calendar:</para>
-
-<informalexample>
 <para>
-<prompt>%</prompt><userinput>
-<command>konsolekalendar</command>
-<option>--add</option>
-<option>--date <replaceable>2003-06-06</replaceable></option>
-<option>--summary <replaceable>"My Birthday"</replaceable></option>
-<option>--description <replaceable>"Party Time"</replaceable></option>
-</userinput>
+<informalexample><para>In this example, a birthday event is added into the
+user's default calendar resource:</para>
+
+<para>
+<screen><prompt>%</prompt><userinput> <command>konsolekalendar</command> <option>--add</option> <option>--date <replaceable>2003-06-06</replaceable></option> <option>--summary <replaceable>"My Birthday"</replaceable></option> \
+<option>--description <replaceable>"Party Time"</replaceable></option></userinput></screen>
 </para>
 </informalexample>
-
-<tip><para>
-TODO:  To add a birthday, holiday, anniversary, etc. into
-the calendar as a <emphasis>free</emphasis> event (that is,
-an event that does not take up space in the day) use the
-additional command line option <option>--time=free</option>.
 </para>
-</tip>
 
-<para>Here a week vacation is inserted into our default calendar:</para>
+<note><para>
+The current version of &konsolekalendar; does not support inserting
+<quote>free</quote> events (free events are events that
+take up no space in the day; &ie;, the time is not marked as busy).
+Birthdays, holidays, anniversaries, &etc; should ideally be inserted
+as free events.  We hope for the next &konsolekalendar; release
+to have a <quote>free</quote> event feature.
+</para></note>
 
-<informalexample>
 <para>
-<prompt>%</prompt><userinput>
-<command>konsolekalendar</command>
-<option>--add</option>
-<option>--date <replaceable>2003-08-01</replaceable></option>
-<option>--end-date <replaceable>2003-08-20</replaceable></option>
-<option>--summary <replaceable>"Vacation"</replaceable></option>
-<option>--description <replaceable>"Nobody will ever find me!"</replaceable></option>
-</userinput>
+<informalexample><para> Here a one week vacation is inserted into a shared <replaceable>vacation</replaceable> calendar:</para>
+
+<para>
+<screen><prompt>%</prompt><userinput> <command>konsolekalendar</command> <option>--add</option> <option>--file <replaceable>vacation.ics</replaceable></option> <option>--date <replaceable>2003-08-01</replaceable></option> \
+<option>--end-date <replaceable>2003-08-07</replaceable></option> <option>--summary <replaceable>"Vacation"</replaceable></option> <option>--description <replaceable>"Nobody will ever find me!"</replaceable></option></userinput></screen>
 </para>
 </informalexample>
+</para>
 
 </sect1>
 
 <sect1 id="deleting">
 <title>Removing Entries</title>
 
-<para>&konsolekalendar; can remove events from a &kde; calendar using the
-<parameter>--delete</parameter> command line argument.</para>
+<para>&konsolekalendar; supports the removal of entries in a calendar file or
+resource using the <parameter>--delete</parameter> command line argument.
+Calendar entries to be removed are specified exactly by their Unique-string
+identifier (<acronym>UID</acronym>) using the <parameter>--uid</parameter>
+option.  <acronym>UIDs</acronym> are found by first viewing the event,
+using the <parameter>--view</parameter> option.</para>
 
-<warning>
+<warning><para> When you delete something from the calendar you
+<emphasis>cannot</emphasis> undo it! In other words, when you delete an entry
+you cannot reverse the deletion. It's gone for good.</para></warning>
+
 <para>
-The delete feature has not been thoroughly tested yet.
-USE AT YOUR OWN RISK!
+<informalexample><para>Here we delete a calendar entry with <acronym>UID</acronym> <replaceable>&konsolekalendar;-1887551750.196</replaceable>:</para>
+
+<para>
+<screen><prompt>%</prompt><userinput> <command>konsolekalendar</command> <option>--delete</option> <option>--uid <replaceable>&konsolekalendar;-1887551750.196</replaceable></option></userinput></screen>
 </para>
-</warning>
+</informalexample>
+</para>
+
 </sect1>
 
 <sect1 id="changing">
 <title>Modifying Entries</title>
 
-<para>&konsolekalendar; can modify existing events into a &kde; calendar
-using the <parameter>--change</parameter> command line argument.</para>
+<para>&konsolekalendar; supports the modification of existing entries in a calendar
+file or resource using the <parameter>--change</parameter> command line argument.
+Calendar entries to be modified are specified exactly by their Unique-string
+identifier (<acronym>UID</acronym>) using the <parameter>--uid</parameter>
+option.  <acronym>UIDs</acronym> are found by first viewing the event,
+using the <parameter>--view</parameter> option.</para>
 
-<warning>
 <para>
-The change feature has not been thoroughly tested yet.
-USE AT YOUR OWN RISK!
+Changing behaves in the same way as inserting: you can change an event's start date 
+and time, end date and time, description, and summary.
 </para>
-</warning>
+
+<para><emphasis>Example:</emphasis> Here we change the summary and description
+of a calendar entry with <acronym>UID</acronym> <replaceable>&konsolekalendar;-1887551750.196</replaceable>:</para>
+
+<para>
+<informalexample>
+<para>
+<prompt>%</prompt><userinput> <command>konsolekalendar</command>
+<option>--change</option> <option>--uid
+<replaceable>&konsolekalendar;-1887551750.196</replaceable></option>
+<option>--summary <replaceable>"Get my head examined"</replaceable></option> <option>--description <replaceable>"don't go to that doctor anymore!"</replaceable></option>
+</userinput>
+</para>
+</informalexample>
+</para>
+
+</sect1>
+
+<sect1 id="creating">
+<title>Creating a New Calendar File</title>
+
+<para>&konsolekalendar; can be used to create a new &kde; calendar file.
+Since you cannot insert an entry into a calendar that does not exist,
+you must create the file first using the <parameter>--create</parameter>
+and <parameter>--file</parameter> command line arguments.</para>
+
+<para>
+<informalexample><para>Create a calendar file named
+<filename><replaceable>/data/share/calendars/vacation.ics</replaceable></filename>:</para>
+
+<para>
+<screen><prompt>%</prompt><userinput> <command>konsolekalendar</command> <option>--create</option> <option>--file <replaceable>/data/share/calendars/vacation.ics</replaceable></option></userinput></screen>
+</para>
+</informalexample>
+</para>
 
 </sect1>
 
 <sect1 id="exporting">
 <title>Exporting to Other Formats</title>
 
-<para>&konsolekalendar; can export a &kde; calendar to other well known
-formats using the <parameter>--export-type</parameter> command line argument.</para>
+<para>&konsolekalendar; can export a &kde; calendar to other well known formats.
+Exporting is a special form of viewing.  By default, events are viewed
+in <quote>&konsolekalendar; text</quote> format.  To change the viewing
+format use the <parameter>--export-type</parameter> command line argument.</para>
+
+<para>To see a list of all supported export formats, use the
+<parameter>--export-list</parameter> option, as in:</para>
+
+<para>
+<informalexample>
+<para>
+<screen><prompt>%</prompt><userinput> <command>konsolekalendar</command> <option>--export-list</option></userinput></screen>
+</para>
+</informalexample>
+</para>
+
+</sect1>
+
+<sect1 id="formats">
+<title>Export Formats</title>
+
+<para>Some, but not necessarily all, of the supported formats are
+described in the this section.</para>
+
+<sect2 id="native-format">
+<title>&konsolekalendar; Text Format</title>
+
+<para>&konsolekalendar; Text Format is &konsolekalendar;'s native format
+and is designed to be comfortable to read and to be parseable by follow-on
+scripts.</para>
+
+<para>The &konsolekalendar; Text Format is:
+<informalexample>
+<screen>
+Date and time information:
+1. row Date:	YYYY-MM-DD
+2. row 		HH:MM
+Summary:
+3. row Summary:
+4. row 		Summary text.
+Description:
+5. row Description:
+6. row		Description text
+UID:
+7. row UID:
+8. row 		UID.
+</screen>
+</informalexample>
+</para>
+
+<para>
+<informalexample>
+<screen>
+Date:   2003-11-01
+        8:00 - 9:00
+Summary:
+        Staff Meeting
+Description:
+        Meet in the big conference room with the entire staff.
+UID:
+        &konsolekalendar;-1128954167.1013
+</screen>
+</informalexample>
+</para>
+
+</sect2>
+
+<sect2 id="csv-format">
+<title>Comma-Separated Values (<acronym>CSV</acronym>) Format</title>
+
+<para>Comma-Separated Value Format displays the event values in the same order
+as &konsolekalendar; Text format. The only difference is that all the
+information is on the same row with each field separated by a comma.
+The resulting exported files can be imported directly into spreadsheet programs
+like &kspread;, <application>OpenOffice.org Calc</application>,
+and <application>&Microsoft; Excel</application>.
+Also, <acronym>CSV</acronym> format is easy to parse with follow-on scripts.</para>
+
+<para>The Comma-Separated Value (<acronym>CSV</acronym>) format is:
+<informalexample>
+<screen>
+YYYY-MM-DD,HH:MM,YYYY-MM-DD,HH:MM,Summary,Description,UID
+</screen>
+</informalexample>
+</para>
+
+<para>
+<informalexample>
+<screen>
+2003-11-01,08:00,2003-11-01,09:00,Staff Meeting,Meet in the big conference \
+room with the entire staff.,&konsolekalendar;-1128954167.1013
+</screen>
+</informalexample>
+</para>
+
+</sect2>
+
+<sect2 id="html-format">
+<title><acronym>HTML</acronym> Format</title>
+
+<para>The <acronym>HTML</acronym> export format will produce a valid
+<acronym>HTML</acronym> file that can be published to the <acronym>WWW</acronym>.
+This export format is not suitable for follow-on script parsing, but is
+very nice for publishing calendars for easy public viewing.</para>
+
+<para><emphasis>TODO:</emphasis> Insert screenshot here</para>
+
+</sect2>
+
+</sect1>
+
+<sect1 id="importing">
+<title>Importing Calendars</title>
+
+<para>&konsolekalendar; can import an <acronym>ICS</acronym> calendar file
+into a &kde; calendar.  All events from the calendar being imported from will 
+be inserted, including identical events.  In the next &konsolekalendar; release 
+identical events will not be inserted.</para>
+
+<para>
+<informalexample><para> To import calendar file
+<filename><replaceable>another.ics</replaceable></filename> into calendar
+<filename><replaceable>current.ics</replaceable></filename> run:</para>
+
+<para>
+<screen><prompt>%</prompt><userinput> <command>konsolekalendar</command> <option>--import <replaceable>another.ics</replaceable></option> <option>--file <replaceable>current.ics</replaceable></option></userinput></screen>
+</para>
+</informalexample>
+</para>
 
 </sect1>
 
@@ -269,162 +439,144 @@ formats using the <parameter>--export-type</parameter> command line argument.</p
 <chapter id="features-commandline-options">
 <title>Command Line Arguments</title>
 
-<para>&konsolekalendar; supports these following options:</para>
+<para>&konsolekalendar; supports the following options:</para>
 
 <informaltable>
-<tgroup cols="3">
+<tgroup cols="2">
 <thead>
 <row>
   <entry>Option</entry>
   <entry>Description</entry>
-  <entry>Notes</entry>
 </row>
 </thead>
 <tbody>
 <row>
-  <entry><option>--help</option></entry>
+  <entry><option>--help, --help-all</option></entry>
   <entry>Shows help about the program options.</entry>
-  <entry>N/A</entry>
 </row>
 <row>
   <entry><option>--author</option></entry>
-  <entry>Shows the program author information..</entry>
-  <entry>N/A</entry>
+  <entry>Shows the program author information.</entry>
 </row>
 <row>
-  <entry><option>-v</option>, <option>--version</option></entry>
+  <entry><option>-v, --version</option></entry>
   <entry>Shows the program version information.</entry>
-  <entry>N/A</entry>
 </row>
 <row>
   <entry><option>--license</option></entry>
   <entry>Shows the program license information.</entry>
-  <entry>N/A</entry>
 </row>
 <row>
   <entry><option>--verbose</option></entry>
   <entry>Print helpful runtime messages.</entry>
-  <entry>N/A</entry>
 </row>
 <row>
   <entry><option>--dryrun</option></entry>
-  <entry>Show what would have been done, but do not execute.  Do not change any
+  <entry>Print what would have been done, but do not execute.  Do not change any
 files; do not insert, remove, modify any existing files, nor create any new files.</entry>
-  <entry>N/A</entry>
 </row>
 <row>
   <entry><option>--file</option>
-  <replaceable>calendar-file</replaceable></entry>
-  <entry>Specify which calendar you want to use.
-  <para>Default is your default korganizer calendar
-  (Active calendar value in <filename>$<envar>HOME</envar>/.kde/share/config/korganizerrc</filename>)</para></entry>
-  <entry>N/A</entry>
+  <replaceable>&nbsp;calendar-file</replaceable></entry>
+  <entry>Specify a calendar file to use.
+  <para>If not specified then your default &korganizer; resource is used.</para></entry>
+</row>
+<row>
+  <entry><emphasis>Major Operation Modes:</emphasis></entry>
 </row>
 <row>
   <entry><option>--view</option></entry>
   <entry>Print calendar events in specified export format.</entry>
-  <entry>N/A</entry>
 </row>
 <row>
   <entry><option>--add</option></entry>
-  <entry>Insert an event to the calendar.</entry>
-  <entry>N/A</entry>
+  <entry>Insert an event into the calendar.</entry>
 </row>
 <row>
   <entry><option>--change</option></entry>
   <entry>Modify an existing calendar event.</entry>
-  <entry>N/A</entry>
 </row>
 <row>
   <entry><option>--delete</option></entry>
   <entry>Remove an existing calendar event.</entry>
-  <entry>N/A</entry>
+</row>
+<row>
+  <entry><option>--create</option></entry>
+  <entry>Create a new calendar file if one does not exist.</entry>
 </row>
 <row>
   <entry><option>--import</option>
- <replaceable>import-file</replaceable></entry>
-  <entry>Import this calendar to main calendar.</entry>
-  <entry>N/A</entry>
+ <replaceable>&nbsp;import-file</replaceable></entry>
+  <entry>Import this calendar to the main calendar.</entry>
+</row>
+<row>
+  <entry><emphasis>Operation modifiers:</emphasis></entry>
+</row>
+<row>
+  <entry><option>--all</option></entry>
+  <entry>View all calendar entries.</entry>
+</row>
+<row>
+  <entry><option>--uid</option>
+  <replaceable>&nbsp;UID</replaceable></entry>
+  <entry>View, delete, or change the event with this Unique-string IDentifier.</entry>
+</row>
+<row>
+  <entry><option>--date</option>
+  <replaceable>&nbsp;date</replaceable></entry>
+  <entry>Start at this day [YYYY-MM-DD].  Default date is Today</entry>
+</row>
+<row>
+  <entry><option>--time</option></entry>
+  <entry>Start at this time [HH:MM].  Default time is 07:00.</entry>
+</row>
+<row>
+  <entry><option>--end-date</option>
+  <replaceable>&nbsp;end-date</replaceable></entry>
+  <entry>End at this day [YYYY-MM-DD].  Default is set by <option>--date</option>.</entry>
+</row>
+<row>
+  <entry><option>--end-time</option>
+  <replaceable>&nbsp;end-time</replaceable></entry>
+  <entry>End at this time [HH:MM].   Default time is 17:00</entry>
+</row>
+<row>
+  <entry><option>--epoch-start</option>
+  <replaceable>&nbsp;epoch-time</replaceable></entry>
+  <entry>Start at this time [seconds since epoch].</entry>
+</row>
+<row>
+  <entry><option>--epoch-end</option>
+  <replaceable>&nbsp;epoch-time</replaceable></entry>
+  <entry>End at this time [seconds since epoch].</entry>
+</row>
+<row>
+  <entry><option>--summary</option>
+  <replaceable>&nbsp;summary</replaceable></entry>
+  <entry>Add summary to event (works with add and change).</entry>
+</row>
+<row>
+  <entry><option>--description</option>
+  <replaceable>&nbsp;description</replaceable></entry>
+  <entry>Add description to event (works with add and change).</entry>
+</row>
+<row>
+  <entry><emphasis>Export options:</emphasis></entry>
 </row>
 <row>
   <entry><option>--export-type</option>
-  <replaceable>export-type</replaceable></entry>
+  <replaceable>&nbsp;export-type</replaceable></entry>
   <entry>Export file type.
   Default export file type is Text</entry>
-  <entry>N/A</entry>
 </row>
 <row>
   <entry><option>--export-file</option>
-  <replaceable>export-file</replaceable></entry>
+  <replaceable>&nbsp;export-file</replaceable></entry>
   <entry>Export to file.  By default, output is written to standard output.</entry>
-  <entry>N/A</entry>
 </row>
 <row>
   <entry><option>--export-list</option></entry>
   <entry>Print list of export types supported and exit.</entry>
-  <entry>N/A</entry>
-</row>
-<row>
-  <entry><option>--next</option></entry>
-  <entry>Next activity in calendar.</entry>
-  <entry>N/A</entry>
-</row>
-<row>
-  <entry><option>--date</option>
-  <replaceable>date</replaceable></entry>
-  <entry>Start at this day [YYYY-MM-DD].  Default date is Today</entry>
-  <entry>N/A</entry>
-</row>
-<row>
-  <entry><option>--time</option></entry>
-  <entry>Start at this time [HH:MM].  Default time is 7:00.</entry>
-  <entry>N/A</entry>
-</row>
-<row>
-  <entry><option>--end-date</option>
-  <replaceable>end-date</replaceable></entry>
-  <entry>End at this day [YYYY-MM-DD].  Default is set by <replaceable>--date</replaceable>.</entry>
-  <entry>N/A</entry>
-</row>
-<row>
-  <entry><option>--end-time</option>
-  <replaceable>end-time</replaceable></entry>
-  <entry>End at this time [HH:MM].   Default time is 17:00</entry>
-  <entry>N/A</entry>
-</row>
-<row>
-  <entry><option>--epoch-start</option>
-  <replaceable>epoch-time</replaceable></entry>
-  <entry>Start from this time [seconds since epoch].</entry>
-  <entry>N/A</entry>
-</row>
-<row>
-  <entry><option>--epoch-end</option>
-  <replaceable>epoch-time</replaceable></entry>
-  <entry>End from this time [seconds since epoch].</entry>
-  <entry>N/A</entry>
-</row>
-<row>
-  <entry><option>--description</option>
-  <replaceable>description</replaceable></entry>
-  <entry>Add description to event (works with add and change).</entry>
-  <entry>N/A</entry>
-</row>
-<row>
-  <entry><option>--summary</option>
-  <replaceable>summary</replaceable></entry>
-  <entry>Add summary to event (works with add and change).</entry>
-  <entry>N/A</entry>
-</row>
-<row>
-  <entry><option>--all</option></entry>
-  <entry>Show all calendar entries.</entry>
-  <entry>N/A</entry>
-</row>
-<row>
-  <entry><option>--create</option></entry>
-  <entry>Create new calendar file if one does not exist.</entry>
-  <entry>N/A</entry>
 </row>
 </tbody>
 </tgroup>
@@ -458,6 +610,66 @@ files; do not insert, remove, modify any existing files, nor create any new file
 </answer>
 </qandaentry>
 
+<qandaentry>
+<question>
+<para>What is the date specification format?</para>
+</question>
+<answer>
+<para>&konsolekalendar; will reject dates specified on the command line
+unless they are specified according to ISO 8601 standards, namely:
+YYYY-MM-DD.  Where YYYY represents a four-digit year (like 2003), MM
+represents a two-digit month (01,02,..,12), and DD represents a two-digit day
+(01,02,...,31).</para>
+<para>&konsolekalendar; always exports dates according to the ISO 8601 format.</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>What is the time specification format?</para>
+</question>
+<answer>
+<para>&konsolekalendar; will reject times specified on the command line
+unless they are specified according to ISO 8601 standards, namely:
+HH:MM:SS.  Where HH represents a two-digit hour (01,02,...,24), MM
+represents a two-digit minute (01,02,..,60), and SS represents a two-digit
+second (01,02,...,60).</para>
+<para>&konsolekalendar; always exports times according to the ISO 8601 format.</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>Will &konsolekalendar; insert a new event that is identical to one that
+already exists in the calendar?</para>
+</question>
+<answer>
+<para>No.  See next question.</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>How does &konsolekalendar; determine if an event is identical to one that
+already exists in the calendar?</para>
+</question>
+<answer>
+<para>&konsolekalendar; checks the specified start date and time, end date and time,
+and summary against all events in the calendar.  An event match is determined
+if all three values match to an existing event.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>How do I have my question added to this <acronym>FAQ</acronym>?</para>
+</question>
+<answer>
+<para>Send your questions to <email>illuusio@lycos.com</email>.</para>
+</answer>
+</qandaentry>
+
 </qandaset>
 </chapter>
 
@@ -466,23 +678,18 @@ files; do not insert, remove, modify any existing files, nor create any new file
 
 <title>Credits and License</title>
 
-<para>
-&konsolekalendar;
-</para>
-<para>
-Program copyright 2002, 2003 Tuukka Pasanen <email>illuusio@mailcity.com</email>
-</para>
-<para>
-Contributing authors:
-<itemizedlist>
-<listitem><para>Allen Winter <email>winterz@earthlink.net</email></para>
-</listitem>
-</itemizedlist>
-</para>
+<para>&konsolekalendar; Program copyright 2002,2003:</para>
 
-<para>
-Documentation copyright 2003 Allen Winter <email>winterz@earthlink.net</email>
-</para>
+<itemizedlist>
+<listitem><para>Tuukka Pasanen <email>illuusio@mailcity.com</email></para></listitem>
+<listitem><para>Allen Winter <email>awinterz@users.sourceforge.net</email></para></listitem>
+</itemizedlist>
+
+<para>Documentation copyright 2003:</para>
+<itemizedlist>
+<listitem><para>Allen Winter <email>awinterz@users.sourceforge.net</email></para></listitem>
+<listitem><para>Tuukka Pasanen<email>illuusio@mailcity.com</email></para></listitem>
+</itemizedlist>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 
@@ -495,7 +702,7 @@ Documentation copyright 2003 Allen Winter <email>winterz@earthlink.net</email>
 <appendix id="installation">
 <title>Installation</title>
 
-<sect1 id="getting-konsolekalendar">
+<sect1 id="obtaining-application">
 <title>How to obtain &konsolekalendar;</title>
 
 &install.intro.documentation;
@@ -520,6 +727,10 @@ packages.</para>
 <sect1 id="compilation">
 <title>Compilation and installation</title>
 
+<para>This section provides a quick overview of the build process.
+Please read <ulink url="http://developer.kde.org/build/compile_kde3_2.html">
+Compiling &kde; 3.2.x</ulink> for complete instructions.</para>
+
 <para>If you cannot obtain a suitable precompiled binary package, you
 need to compile &konsolekalendar; yourself from source files. Get the source
 package file <filename>kdepim-x.x.tar.bz2</filename>.
@@ -534,11 +745,12 @@ change to the folder which has been created.</para>
 (e.g. &kde;2 and &kde;3), this may possibly install &konsolekalendar; into the
 wrong &kde; folder. If necessary, you can give the &kde; folder
 as a parameter to
-<userinput><command>./configure</command></userinput> . For example,
-if your &kde; is installed in <filename>/opt/kde3</filename>:</para>
+<userinput><command>./configure</command></userinput>. For example,
+if your &kde; is installed in <filename>/opt/kde3</filename>:
+</para>
 
-<para><userinput><command>./configure</command> --prefix=<replaceable>/opt/kde3</replaceable></userinput></para>
-</note>
+<para><userinput><command>./configure</command> --prefix=<replaceable>/opt/kde3</replaceable></userinput></para></note>
+
 </sect1>
 
 <sect1 id="configuration">
@@ -562,4 +774,3 @@ sgml-indent-step:0
 sgml-indent-data:nil
 End:
 -->
-
