@@ -731,8 +731,8 @@ void KNArticleFactory::processJob(KNJobData *j)
     //sending of this article was canceled => move it to the "Outbox-Folder"
     if(art->collection()!=knGlobals.folManager->outbox())
       knGlobals.artManager->moveIntoFolder(lst, knGlobals.folManager->outbox());    
-      
-    /* add approviate info message here !!! */
+              
+    KMessageBox::information(knGlobals.topWidget, i18n("You have aborted the posting of articles. The unsent articles are stored in the \"Outbox\" folder."));
       
     return;
   }
@@ -1065,7 +1065,8 @@ KNSendErrorDialog::KNSendErrorDialog() : QDialog(knGlobals.topWidget, 0, true)
 
   QVBoxLayout *topL=new QVBoxLayout(this, 5,5);
 
-  QLabel *l=new QLabel(QString("<b>%1</b>").arg(i18n("Failed tasks:")), this);
+  QLabel *l=new QLabel(QString("<b>%1</b><br>%2").arg(i18n("Errors occured while sending these articles:"))
+                                                 .arg(i18n("The unsent articles are stored in the \"Outbox\" folder.")), this);
   topL->addWidget(l);
 
   j_obs=new KNDialogListBox(true,this);
@@ -1077,7 +1078,7 @@ KNSendErrorDialog::KNSendErrorDialog() : QDialog(knGlobals.topWidget, 0, true)
 
   KSeparator *sep=new KSeparator(this);
   topL->addSpacing(10);
-  topL->addWidget(sep);
+  topL->addWidget(sep);   
 
   c_loseBtn=new QPushButton(i18n("&Close"), this);
   c_loseBtn->setDefault(true);
@@ -1110,7 +1111,7 @@ void KNSendErrorDialog::slotHighlighted(int idx)
 {
   LBoxItem *it=static_cast<LBoxItem*>(j_obs->item(idx));
   if(it) {
-    QString tmp=i18n("<b>Error message:</b></br>")+it->error;
+    QString tmp=i18n("<b>Error message:</b><br>")+it->error;
     e_rror->setText(tmp);
   }
 }
