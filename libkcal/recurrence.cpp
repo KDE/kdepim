@@ -40,7 +40,7 @@ Recurrence::Recurrence(Incidence *parent, int compatVersion)
   mFloats(parent ? parent->doesFloat() : false),
   mRecurReadOnly(false),
   mRecurExDatesCount(0),
-  mCompatVersion(compatVersion),
+  mCompatVersion(compatVersion ? compatVersion : INT_MAX),
   mCompatRecurs(rNone),
   mCompatDuration(0),
   mParent(parent)
@@ -90,6 +90,11 @@ Recurrence::Recurrence(const Recurrence &r, Incidence *parent)
 
 Recurrence::~Recurrence()
 {
+}
+
+void Recurrence::setCompatVersion(int version)
+{
+  mCompatVersion = version ? version : INT_MAX;
 }
 
 ushort Recurrence::doesRecur() const
@@ -358,7 +363,9 @@ void Recurrence::setDuration(int _rDuration)
   if (mRecurReadOnly) return;
   if (_rDuration > 0) {
     rDuration = _rDuration;
-    mCompatVersion = 310;
+    // Compatibility mode is only needed when reading the calendar in ICalFormatImpl,
+    // so explicitly setting the duration means no backwards compatibility is needed.
+    mCompatDuration = 0;
   }
 }
 
