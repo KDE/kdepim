@@ -39,7 +39,7 @@ AC_DEFUN([KDE_CHECK_BLUETOOTH],
 # check for libgnokii (Nokia mobile phone library)
 AC_DEFUN([KDE_CHECK_GNOKII],
 [
-  AC_CHECK_HEADERS(gnokii.h)
+  KDE_CHECK_HEADERS(gnokii.h)
   AC_REQUIRE([AC_HAVE_XPM])
   LIB_GNOKII=
   AC_CHECK_LIB(gnokii, gn_cfg_read,
