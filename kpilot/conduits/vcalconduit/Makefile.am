@@ -9,7 +9,7 @@
 SUBDIRS = versit
 
 INCLUDES= @all_includes@ -I$(LIBPISOCK_PATH) \
-	-I$(top_srcdir)/kpilot -I$(top_srcdir)/kpilot/kpilot -Iversit
+	-I$(top_srcdir)/kpilot -I$(top_srcdir)/kpilot/kpilot -I$(srcdir)/versit
 METASOURCES = AUTO
 
 servicedir  = $(kde_servicesdir)
