@@ -3,8 +3,8 @@
 Encoding=UTF-8
 Type=Application
 Exec=ksync -caption "%c" %i %m  
-Icon=ksync.png
-MiniIcon=ksync.png
+Icon=ksync
+MiniIcon=ksync
 DocPath=ksync/index.html
 Comment=
 Comment[xx]=xx
