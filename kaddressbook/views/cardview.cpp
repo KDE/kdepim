@@ -964,11 +964,6 @@ void CardView::resizeEvent(QResizeEvent *e)
   setLayoutDirty(true);
 }
 
-void CardView::wheelEvent(QWheelEvent *e)
-{
-		scrollBy(e->delta(), 0);
-}
-
 void CardView::calcLayout()
 {
   //kdDebug() << "CardView::calcLayout:" << endl;
@@ -1501,7 +1496,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
 
 void CardView::contentsWheelEvent( QWheelEvent * e )
 {
-  scrollBy(-e->delta(), 0);
+  scrollBy(e->delta()/-2, 0);
 }
 
 void CardView::setLayoutDirty(bool dirty)

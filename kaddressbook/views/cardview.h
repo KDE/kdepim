@@ -413,9 +413,9 @@ class CardView : public QScrollView
     */
     void resizeEvent(QResizeEvent *e);
 
-	/** Changes the direction the canvas scolls.
+    /** Changes the direction the canvas scolls.
     */
-	void wheelEvent(QWheelEvent *e);
+    void contentsWheelEvent(QWheelEvent *e);
 
     /** Sets the layout to dirty and calls for a repaint.
     */
@@ -436,8 +436,6 @@ class CardView : public QScrollView
     virtual void contentsMouseReleaseEvent(QMouseEvent *e);
     virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
 	
-    virtual void contentsWheelEvent( QWheelEvent * e );
-
     virtual void enterEvent( QEvent * );
     virtual void leaveEvent( QEvent * );
 
