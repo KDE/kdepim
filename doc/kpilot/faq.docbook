@@ -14,49 +14,16 @@ What do I put after <option>--debug</option>?
 </question>
 <answer>
 <para>
-The number after <option>--debug</option>
-indicates what kind of messages
-you want to see; 1023 indicates <emphasis>all messages</emphasis>.
-The exact numbers you can use are as follows:
+Nothing. Most versions of &kpilot; don't even have
+a <option>--debug</option> option, and will complain if you use it.
+For those versions that <emphasis>do</emphasis> have it,
+use a value between 1 and 4, which will control the
+amount of debugging printed (a little).
+Using a value of 1 will print a fairly complete call trace
+without the really-boring functions, while 4 will include every trivial
+function in all of &kpilot;.
 </para>
 
-<table id="faq-debug">
-<title>Debug Values</title>
-<tgroup cols="2">
-<thead>
-<row><entry>Value</entry><entry>Meaning</entry></row>
-</thead>
-<tbody>
-<row><entry>1</entry><entry>List the name of *every* function called.
-	Very tedious.
-</entry></row>
-<row><entry>2</entry><entry>Major &GUI; operations
-	(&eg; Creating windows).
-</entry></row>
-<row><entry>4</entry><entry>Minor &GUI; operations
-	(&eg; Adding visual elements).
-</entry></row>
-<row><entry>8</entry><entry><emphasis>All</emphasis> &GUI; operations
-	(&eg; Filling list boxes -- this is very tedious).
-</entry></row>
-<row><entry>16</entry><entry>Major database operations.
-</entry></row>
-<row><entry>32</entry><entry>Minor database operations.
-</entry></row>
-<row><entry>64</entry><entry>All database operations.
-</entry></row>
-<row><entry>128</entry><entry>Major sync actions.
-</entry></row>
-<row><entry>256</entry><entry>Minor sync actions.
-</entry></row>
-<row><entry>512</entry><entry>All sync actions.
-</entry></row>
-</tbody>
-</tgroup>
-</table>
-<para>
-Just add up the numbers of the kind of messages you want.
-</para>
 </answer>
 </qandaentry>
 
