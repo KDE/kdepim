@@ -4,15 +4,12 @@
 #include <kdebug.h>
 
 #include <addressbooksyncee.h>
-static const char *description =
+static const char description[] =
 	I18N_NOOP("Testapp");
-// INSERT A DESCRIPTION FOR YOUR APPLICATION HERE
-
 
 static KCmdLineOptions options[] =
 {
   KCmdLineLastOption
-  // INSERT YOUR COMMANDLINE OPTIONS HERE
 };
 
 

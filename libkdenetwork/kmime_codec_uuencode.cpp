@@ -89,7 +89,7 @@ Decoder * UUCodec::makeDecoder( bool withCRLF ) const {
 
 
 void UUDecoder::searchForBegin( const char* & scursor, const char * const send ) {
-  static const char * begin = "begin\n";
+  static const char begin[] = "begin\n";
   static const uint beginLength = 5; // sic!
 
   assert( !mSawBegin || mIntoBeginLine > 0 );
@@ -146,7 +146,7 @@ bool UUDecoder::decode( const char* & scursor, const char * const send,
 
     // Check whether we need to look for the "end" line:
     if ( mIntoEndLine > 0 ) {
-      static const char * end = "end";
+      static const char end[] = "end";
       static const uint endLength = 3;
 
       if ( ch == end[mIntoEndLine] ) {

@@ -20,8 +20,8 @@
 
 CryptPlugWrapper* pWrapper;
 
-static const char* KGPGCERTMANAGER_VERSION = I18N_NOOP("0.9");
-static const char* DESCRIPTION             = I18N_NOOP("Certificate Manager");
+static const char KGPGCERTMANAGER_VERSION[] = I18N_NOOP("0.9");
+static const char DESCRIPTION[]             = I18N_NOOP("Certificate Manager");
 
 int main( int argc, char** argv )
 {
