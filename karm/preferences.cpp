@@ -274,13 +274,15 @@ void Preferences::load()
   _idleDetectValueV = config.readNumEntry(QString::fromLatin1("period"), 15);
 
   config.setGroup( QString::fromLatin1("Saving") );
-  _saveFileV      = config.readEntry(QString::fromLatin1("file"), locateLocal("appdata", QString::fromLatin1("karmdata.txt")));
-  _doTimeLogingV  = config.readBoolEntry(QString::fromLatin1("time loging"), false);
-  _timeLogV   = config.readEntry(QString::fromLatin1("time log file"), locateLocal("appdata", QString::fromLatin1("karmlog.txt")));
-  _doAutoSaveV    = config.readBoolEntry(QString::fromLatin1("auto save"), true);
-  _autoSaveValueV = config.readNumEntry(QString::fromLatin1("auto save period"), 5);
-  _hideOnCloseV = config.readBoolEntry(QString::fromLatin1("hide on close"), true);
-  _promptDeleteV = config.readBoolEntry(QString::fromLatin1("prompt delete"), true);
+  _saveFileV      = config.readEntry( QString::fromLatin1("file"),
+                                      locateLocal( "appdata", QString::fromLatin1("karmdata.txt")));
+  _doTimeLogingV  = config.readBoolEntry( QString::fromLatin1("time loging"), false);
+  _timeLogV       = config.readEntry( QString::fromLatin1("time log file"),
+                                      locateLocal("appdata", QString::fromLatin1("karmlog.txt")));
+  _doAutoSaveV    = config.readBoolEntry( QString::fromLatin1("auto save"), true);
+  _autoSaveValueV = config.readNumEntry( QString::fromLatin1("auto save period"), 5);
+  _hideOnCloseV   = config.readBoolEntry( QString::fromLatin1("hide on close"), true);
+  _promptDeleteV  = config.readBoolEntry( QString::fromLatin1("prompt delete"), true);
 
   emitSignals();
 }
