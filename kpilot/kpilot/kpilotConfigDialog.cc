@@ -221,8 +221,9 @@ static SyncAction::SyncMode syncTypeMap[MENU_ITEM_COUNT] = {
 	SyncAction::eHotSync,
 	SyncAction::eFastSync,
 	SyncAction::eFullSync,
-	SyncAction::eCopyHHToPC,
-	SyncAction::eCopyPCToHH } ;
+	SyncAction::eCopyPCToHH,
+	SyncAction::eCopyHHToPC
+	} ;
 
 void SyncConfigPage::load()
 {
