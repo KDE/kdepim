@@ -83,7 +83,7 @@ void PilotAddress::_copyAddressInfo(const struct Address &copyFrom)
 	else
 	    fAddressInfo.entry[entryLp] = 0L;
 	}
-    return *this;
+    return;
     }
 
 
@@ -112,7 +112,7 @@ QString PilotAddress::_typeToStr(EPhoneType type) const
 
 bool PilotAddress::setCategory(const char *label)
     {
-    for (int catId;catId < 16;catId++)
+    for (int catId=0;catId < 16;catId++)
 	{
 	QString aCat = fAppInfo.category.name[catId]; 
 	if (label == aCat)
@@ -252,6 +252,9 @@ PilotAddress::pack(void *buf, int *len)
     }
 
 // $Log$
+// Revision 1.14  2001/04/04 21:20:32  stern
+// Added support for category information and copy constructors
+//
 // Revision 1.13  2001/04/02 21:56:22  stern
 // Fixed bugs in getPhoneField and setPhoneField methods
 //
