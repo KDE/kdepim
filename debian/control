@@ -7,7 +7,7 @@ Standards-Version: 3.5.6.0
 
 Package: kdepim
 Architecture: all
-Depends: kalarm (= ${Source-Version}), kalarmd (= ${Source-Version}), kandy (= ${Source-Version}), karm (= ${Source-Version}), kgantt (= ${Source-Version}), knotes (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), libkcal2 (= ${Source-Version})
+Depends: kalarm (= ${Source-Version}), kalarmd (= ${Source-Version}), kandy (= ${Source-Version}), karm (= ${Source-Version}), knotes (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), libkcal2 (= ${Source-Version}), libkgantt0 (= ${Source-Version})
 Description: KDE Personal Information Management metapackage
  kdepim is a collection of Personal Information Management (PIM) tools for
  the K Desktop Enviromnent (KDE).
@@ -15,7 +15,7 @@ Description: KDE Personal Information Management metapackage
 Package: kdepim-dev
 Section: devel
 Architecture: any
-Depends: kalarmd (= ${Source-Version}), kgantt (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), libkcal (= ${Source-Version})
+Depends: kalarmd (= ${Source-Version}), korganizer (= ${Source-Version}), kpilot (= ${Source-Version}), libkcal2 (= ${Source-Version}), libkgantt0 (= ${Source-Version})
 Description: KDE Personal Information Management (development files)
  This package contains development files needed to compile kdepim applications.
 
@@ -52,13 +52,6 @@ Depends: ${shlibs:Depends}
 Description: KDE time tracker tool
  KArm is a time tracker for busy people who need to keep track of the amount of
  time they spend on various tasks.
-
-Package: kgantt
-Section: libs
-Architecture: any
-Depends: ${shlibs:Depends}
-Description: library to display and manage Gantt diagrams
- library to display and manage Gantt diagrams
 
 Package: knotes
 Section: utils
@@ -106,3 +99,10 @@ Architecture: any
 Depends: ${shlibs:Depends}
 Description: iCalendar and vCalendar library
  iCalendar and vCalendar library
+
+Package: libkgantt0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: library to display and manage Gantt diagrams
+ library to display and manage Gantt diagrams
