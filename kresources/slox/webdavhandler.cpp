@@ -18,9 +18,16 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+#include <config.h>
+
 #include "webdavhandler.h"
 
+#ifdef HAVE_VALUES_H
 #include <values.h>
+#endif
+#ifndef MAXINT
+#include <sys/limits.h>
+#endif
 
 #include <libkdepim/kpimprefs.h>
 
@@ -28,6 +35,7 @@
 #include <kconfig.h>
 
 #include <qfile.h>
+
 
 SloxItem::SloxItem()
   : status( Invalid )
