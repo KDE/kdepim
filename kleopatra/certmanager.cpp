@@ -153,7 +153,7 @@ CertManager::CertManager( bool remote, const QString& query,
 
   // Import Certificates
   // Import from file
-  (void)new KAction( i18n("Certiftcate..."), QIconSet(),
+  (void)new KAction( i18n("Certificate..."), QIconSet(),
                                              0, this,
                                              SLOT( importCertFromFile() ),
                                              actionCollection(),
@@ -167,7 +167,7 @@ CertManager::CertManager( bool remote, const QString& query,
   importCRLFromFile->setEnabled( checkExec( lst ) );
 
   // View CRLs
-  KAction* viewCRLs = new KAction( i18n("CRL cache..."), QIconSet(), 0, this, SLOT( slotViewCRLs() ),
+  KAction* viewCRLs = new KAction( i18n("CRL Cache..."), QIconSet(), 0, this, SLOT( slotViewCRLs() ),
 				   actionCollection(), "viewCRLs");
   viewCRLs->setEnabled( importCRLFromFile->isEnabled() ); // we also need dirmngr for this
   
