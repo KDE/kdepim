@@ -382,10 +382,14 @@ void ContactDialog::setupTab3()
     lSelectFrom->setBuddy( cbSelectFrom );
     t3lay->addWidget( row1, 0);  
     
-    for (int i = 0; 
-	 tmp = i18n(Attributes::instance()->fieldListName( i )), tmp != "";
-	 ++i )
+    int i = 0;
+    tmp = Attributes::instance()->fieldListName( i++ );
+    
+    while (tmp) {
       cbSelectFrom->insertItem( tmp );
+      tmp = Attributes::instance()->fieldListName( i++ );
+    }
+
     cbSelectFrom->insertItem( i18n( "User-defined fields in folder" )); 
 
     cbSelectFrom->setCurrentItem( cbSelectFrom->count() - 1 );

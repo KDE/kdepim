@@ -8,10 +8,11 @@
 
 #include <qkeycode.h>
 
-#include <kfm.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kglobal.h>
+#include <kmenubar.h>
+#include <kconfig.h>
 
 #include "undo.h"
 #include "browserwidget.h"
@@ -74,34 +75,34 @@ Pab::Pab()
   menuBar()->insertItem(i18n("&Help"), p);
   
   // insert a quit button.  the icon is the standard one in KDE
-  toolBar()->insertButton(Icon("exit.xpm"),   // icon
+  toolBar()->insertButton(BarIcon("exit.xpm"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  kapp, SLOT(quit()), // result
 			  i18n("Exit"));      // tooltip text
 	
-  toolBar()->insertButton(Icon("filenew.xpm"),   // icon
+  toolBar()->insertButton(BarIcon("filenew.xpm"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  this, SLOT(newContact()), // result
 			  i18n("Add a new entry"));      // tooltip text
-  toolBar()->insertButton(Icon("page.xpm"),   // icon
+  toolBar()->insertButton(BarIcon("page.xpm"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  view, SLOT(properties()), // result
 			  i18n("Change this entry"));      // tooltip text
-  toolBar()->insertButton(Icon("delete.xpm"),   // icon
+  toolBar()->insertButton(BarIcon("delete.xpm"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  view, SLOT(clear()), // result
 			  i18n("Remove this entry"));      // tooltip text
-  toolBar()->insertButton(Icon("find.xpm"),   // icon
+  toolBar()->insertButton(BarIcon("find.xpm"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  this, SLOT(find()), // result
 			  i18n("Search entries"));      // tooltip text
 
-  toolBar()->insertButton(Icon("filemail.xpm"),   // icon
+  toolBar()->insertButton(BarIcon("filemail.xpm"),   // icon
 			  0,                  // button id
 			  SIGNAL(clicked()),  // action
 			  this, SLOT(mail()), // result
@@ -152,7 +153,7 @@ void Pab::saveCe() {
   ce->save( "entry.txt" );
 }
 
-void Pab::slotDropEvent(KDNDDropZone *zone)
+void Pab::slotDropEvent(/*KDNDDropZone *zone*/)
 {
   /*	// the user dropped something on our window.
 	QString url, temp_file;

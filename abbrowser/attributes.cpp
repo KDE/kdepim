@@ -285,13 +285,26 @@ Attributes::Attributes()
 
 QString Attributes::fieldListName( int index )
 {
-  const QString sFieldsList[] = { 
-    i18n( "All Contact fields" ), i18n( "Frequently-used fields" ), 
-    i18n( "Address fields" ), i18n( "E-mail fields" ), 
-    i18n( "Fax/Other number fields" ), i18n( "Miscellanous fields" ),
-    i18n( "Name fields" ), i18n( "Personal fields" ), 
-    i18n( "Phone number fields" ),
-    ""
-  };
-  return sFieldsList[index];
+  // Rikkus: Don't need to be const as we copy our retval, and we avoid
+  // segfaults by using QStringList over a C array.
+  static QStringList sFieldsList;
+  
+  sFieldsList << i18n( "All Contact fields" )
+              << i18n( "Frequently-used fields" ) 
+              << i18n( "Address fields" )
+              << i18n( "E-mail fields" ) 
+              << i18n( "Fax/Other number fields" )
+              << i18n( "Miscellanous fields" )
+              << i18n( "Name fields" )
+              << i18n( "Personal fields" )
+              << i18n( "Phone number fields" )
+              << QString::null;
+  
+  if (index > sFieldsList.count()) {
+   debug("Attributes::fieldListName() : index out of range");
+   return QString::null;
+  }
+  QString s = *(sFieldsList.at(index));
+  debug(QString("Attributes::fieldListName() : returning \"" + s + "\""));
+  return s;
 }

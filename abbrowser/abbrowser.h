@@ -40,7 +40,7 @@ public slots:
 	 * This is called whenever the user Drag n' Drops something into our
 	 * window
 	 */
-	void slotDropEvent(KDNDDropZone *);
+	void slotDropEvent(/*KDNDDropZone **/);
         void newContact();
 	void saveCe();
 	void save();

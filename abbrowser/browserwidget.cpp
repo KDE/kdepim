@@ -439,9 +439,9 @@ void PabListViewItem::refresh()
   for ( uint i = 0; i < field->count(); i++ ) {
     if ((*field)[i] == "X-FileAs")
       if (ce->find( "X-Notes" ))
-	setPixmap( i, Icon( "abentry.xpm" ));
+	setPixmap( i, BarIcon( "abentry.xpm" ));
       else
-	setPixmap( i, Icon( "group.xpm" ));
+	setPixmap( i, BarIcon( "group.xpm" ));
       
     if (ce->find( (*field)[i] ))
       setText( i, *(ce->find( (*field)[i] )));
@@ -759,7 +759,7 @@ void PabWidget::readConfig()
   fieldWidth.clear();
   QStringList::Iterator it;
   for(it = fieldWidthStr.begin(); it != fieldWidthStr.end(); ++it)
-    fieldWidth += atoi( *it );
+    fieldWidth += (*it).toInt();
   while (fieldWidth.count() < field.count())
     fieldWidth += 120;
 }
@@ -799,8 +799,8 @@ PabListView::PabListView( PabWidget *parent, const char *name )
     oldColumn( 0 )
 {
   setAllColumnsShowFocus( true );
-  up = new QIconSet( Icon("up.xpm" ), QIconSet::Small );
-  down = new QIconSet( Icon("down.xpm" ), QIconSet::Small );
+  up = new QIconSet( BarIcon("up.xpm" ), QIconSet::Small );
+  down = new QIconSet( BarIcon("down.xpm" ), QIconSet::Small );
   new DynamicTip( this );
   readConfig();
   loadBackground();
