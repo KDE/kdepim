@@ -257,7 +257,7 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
       }
       // Adjust the 'from' date/time and find the next recurrence at or after it
       qdt = incidence->recurrence()->getNextDateTime( from.addSecs(-offset - 1) );
-      if (!qdt.isValid())
+      if (!qdt.isValid() || incidence->isException(qdt.date()) )
         continue;
       // Remove the adjustment to get the alarm time
       qdt = qdt.addSecs( offset );
