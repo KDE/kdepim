@@ -25,6 +25,10 @@
 #include "todo.h"
 #include "addressbook.h"
 
+#include "metaaddressbook.h"
+#include "metadatebook.h"
+#include "metatodo.h"
+
 #include "socket.h"
 
 using namespace KSync;
@@ -340,14 +344,53 @@ void QtopiaSocket::writeCategory() {
     KURL uri = url(  d->path + "/Settings/Categories.xml" );
     KIO::NetAccess::upload( fileName,  uri );
 }
-void QtopiaSocket::writeAddressbook( AddressBookSyncee* ) {
+void QtopiaSocket::writeAddressbook( AddressBookSyncee* snycee) {
+    OpieHelper::AddressBook abDB(d->edit, d->helper, d->tz, d->meta );
+    KTempFile* file = abDB.fromKDE( syncee );
+    KURL uri = url( AddressBook );
 
+    KIO::NetAccess::upload( file->name(), uri );
+    file->unlink();
+    delete file;
+
+    if ( d->meta ) {
+        OpieHelper::MD5Map map(QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId + "/contacts.md5.qtopia");
+        OpieHelper::MetaAddressbook metaBook;
+        metaBook.saveMeta( syncee,  map );
+        map.save( );
+    }
 }
 void QtopiaSocket::writeDatebook( EventSyncee* ) {
+    OpieHelper::DateBook dbDB(d->edit, d->helper, d->tz, d->meta );
+    KTempFile* file = dbDB.fromKDE( syncee );
+    KURL uri = url( DateBook );
 
+    KIO::NetAccess::upload( file->name(), uri );
+    file->unlink();
+    delete file;
+
+    if ( d->meta ) {
+        OpieHelper::MD5Map map(QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId + "/datebook.md5.qtopia");
+        OpieHelper::MetaDatebook metaBook;
+        metaBook.saveMeta( syncee,  map );
+        map.save( );
+    }
 }
 void QtopiaSocket::writeTodoList( TodoSyncee* ) {
+    OpieHelper::ToDo toDB(d->edit, d->helper, d->tz, d->meta );
+    KTempFile* file = toDB.fromKDE( syncee );
+    KURL uri = url( TodoList );
 
+    KIO::NetAccess::upload( file->name(), uri );
+    file->unlink();
+    delete file;
+
+    if ( d->meta ) {
+        OpieHelper::MD5Map map(QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId + "/todolist.md5.qtopia");
+        OpieHelper::MetaDatebook metaBook;
+        metaBook.saveMeta( syncee,  map );
+        map.save();
+    }
 }
 void QtopiaSocket::readAddressbook() {
     QString tempfile;
@@ -369,16 +412,65 @@ void QtopiaSocket::readAddressbook() {
      */
     if ( d->meta && !d->first ) {
         syncee->setSyncMode( KSync::Syncee::MetaMode );
-
+        OpieHelper::MD5Map map( QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId + "/contacts.md5.qtopia" );
+        OpieHelper::MetaAddressbook metaBook;
+        metaBook.doMeta( syncee,  map );
     }
     d->m_sync.append( syncee );
+
     KIO::NetAccess::removeTempFile( tempfile );
 }
 void QtopiaSocket::readDatebook() {
+    QString tempfile;
+    if (!downloadFile( "/Applications/datebook/datebook.xml", tempfile ) )
+        return;
 
+    OpieHelper::DateBook dateDB( d->edit, d->helper, d->tz, d->meta );
+    KSync::EventSyncee* syncee = dateDB.toKDE( tempfile );
+    if (!syncee ) {
+        KIO::NetAccess::removeTempFile( tempfile );
+        return;
+    }
+
+    syncee->setFirstSync( d->first );
+
+    /*
+     * for meta mode get meta info
+     */
+    if ( d->meta && !d->first ) {
+        syncee->setSyncMode( KSync::Syncee::MetaMode );
+        OpieHelper::MD5Map map( QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId + "/datebook.md5.qtopia" );
+        OpieHelper::MetaDatebook metaBook;
+        metaBook.doMeta( syncee,  map );
+    }
+    d->m_sync.append( syncee );
+
+    KIO::NetAccess::removeTempFile( tempfile );
 }
 void QtopiaSocket::readTodoList() {
+    QString tempfile;
+    if (!downloadFile( "/Applications/todolist/todolist.xml", tempfile ) )
+        return;
 
+    OpieHelper::ToDo toDB( d->edit, d->helper, d->tz, d->meta );
+    KSync::TodoSyncee* syncee = toDB.toKDE( tempfile );
+    if (!syncee ) {
+        KIO::NetAccess::removeTempFile( tempfile );
+        return;
+    }
+
+    syncee->setFirstSync( d->first );
+
+    if ( d->meta && !d->first ) {
+        syncee->setSyncMode( KSync::Syncee::MetaMode );
+        OpieHelper::MD5Map map( QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId + "/todolist.md5.qtopia" );
+        OpieHelper::MetaTodo metaBook;
+        metaBook.doMeta( syncee, map );
+    }
+
+    d->m_sync.append( syncee );
+
+    KIO::NetAccess::removeTempFile( tempfile );
 }
 void QtopiaSocket::readPartner() {
 
@@ -511,15 +603,16 @@ void QtopiaSocket::initSync( const QString& ) {
     d->getMode  = d->ABook;
 }
 void QtopiaSocket::initFiles() {
-    d->first = true;
     QDir di( QDir::homeDirPath() + "/.kitchensync/meta/" + d->partnerId );
     /*
      * if our meta path exists do not recreate it
      */
-    if (di.exists()  )
+    if (di.exists()  ) {
+        d->first = false;
         return;
+    }
 
-    d->first = false;
+    d->first = true;
     QDir dir;
     dir.mkdir(QDir::homeDirPath() + "/.kitchensync");
     dir.mkdir(QDir::homeDirPath() + "/.kitchensync/meta");
