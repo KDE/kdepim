@@ -1061,17 +1061,14 @@ void KABCore::initActions()
   mActionJumpBar = new KToggleAction( i18n( "Show Jump Bar" ), "next", 0,
                                       actionCollection(), "options_show_jump_bar" );
   mActionJumpBar->setWhatsThis( i18n( "Toggle whether the jump button bar shall be visible." ) );
+  mActionJumpBar->setCheckedState( i18n( "Hide Jump Bar") );
   connect( mActionJumpBar, SIGNAL( toggled( bool ) ), SLOT( setJumpButtonBarVisible( bool ) ) );
 
   mActionDetails = new KToggleAction( i18n( "Show Details" ), 0, 0,
                                       actionCollection(), "options_show_details" );
   mActionDetails->setWhatsThis( i18n( "Toggle whether the details page shall be visible." ) );
-  connect( mActionDetails, SIGNAL( toggled( bool ) ), SLOT( setDetailsVisible( bool ) ) );
-
-#if KDE_IS_VERSION(3,2,90)
-  mActionJumpBar->setCheckedState( i18n( "Hide Jump Bar") );
   mActionDetails->setCheckedState( i18n( "Hide Details") );
-#endif
+  connect( mActionDetails, SIGNAL( toggled( bool ) ), SLOT( setDetailsVisible( bool ) ) );
 
   if ( mIsPart )
     action = new KAction( i18n( "&Configure KAddressBook..." ), "configure", 0,

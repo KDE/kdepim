@@ -189,9 +189,7 @@ KNArticleWidget::KNArticleWidget(KActionCollection* actColl, KXMLGUIClient* guiC
                           SLOT(slotVerify()), a_ctions, "article_verify");
   a_ctToggleFullHdrs    = new KToggleAction(i18n("Show &All Headers"), "text_block", 0 , this,
                           SLOT(slotToggleFullHdrs()), a_ctions, "view_showAllHdrs");
-#if KDE_IS_VERSION(3,2,90)
   a_ctToggleFullHdrs->setCheckedState(i18n("Hide &All Headers"));
-#endif
   a_ctToggleFullHdrs->setChecked(knGlobals.configManager()->readNewsViewer()->showFullHdrs());
   a_ctToggleRot13       = new KToggleAction(i18n("&Unscramble (Rot 13)"), "decrypted", 0 , this,
                           SLOT(slotToggleRot13()), a_ctions, "view_rot13");

@@ -709,9 +709,7 @@ void KNMainWidget::initActions()
                               SLOT(slotArtToggleThread()), actionCollection(), "thread_toggle");
   a_ctArtToggleShowThreads  = new KToggleAction(i18n("Show T&hreads"), 0 , this,
                               SLOT(slotArtToggleShowThreads()), actionCollection(), "view_showThreads");
-#if KDE_IS_VERSION(3,2,90)
   a_ctArtToggleShowThreads->setCheckedState(i18n("Hide T&hreads"));
-#endif
 
   a_ctArtToggleShowThreads->setChecked(c_fgManager->readNewsGeneral()->showThreads());
 
@@ -762,18 +760,16 @@ void KNMainWidget::initActions()
 
   a_ctToggleGroupView        = new KToggleAction(i18n("Show &Group View"), CTRL+Key_G, this,
                                SLOT(slotToggleGroupView()), actionCollection(), "settings_show_groupView");
+  a_ctToggleGroupView->setCheckedState(i18n("Hide &Group View"));
   a_ctToggleHeaderView       = new KToggleAction(i18n("Show &Header View"), CTRL+Key_H, this,
                                SLOT(slotToggleHeaderView()), actionCollection(), "settings_show_headerView");
+  a_ctToggleHeaderView->setCheckedState(i18n("Hide &Header View"));
   a_ctToggleArticleViewer    = new KToggleAction(i18n("Show &Article Viewer"), CTRL+Key_J, this,
                                SLOT(slotToggleArticleViewer()), actionCollection(), "settings_show_articleViewer");
+  a_ctToggleArticleViewer->setCheckedState(i18n("Hide &Article Viewer"));
   a_ctToggleQuickSearch      = new KToggleAction(i18n("Show Quick Search"), QString::null, this,
                                SLOT(slotToggleQuickSearch()), actionCollection(), "settings_show_quickSearch");
-#if KDE_IS_VERSION(3,2,90)
-  a_ctToggleGroupView->setCheckedState(i18n("Hide &Group View"));
-  a_ctToggleHeaderView->setCheckedState(i18n("Hide &Header View"));
-  a_ctToggleArticleViewer->setCheckedState(i18n("Hide &Article Viewer"));
   a_ctToggleQuickSearch->setCheckedState(i18n("Hide Quick Search"));
-#endif
   a_ctSwitchToGroupView      = new KAction(i18n("Switch to Group View"), Key_G , this,
                                SLOT(slotSwitchToGroupView()), actionCollection(), "switch_to_group_view");
   a_ctSwitchToGroupView->plugAccel(a_ccel);
