@@ -1,4 +1,4 @@
-INCLUDES = $(all_includes)
+INCLUDES = $(top_srcdir) $(all_includes)
 
 noinst_HEADERS = resourcekolabbase.h kolabbase.h
 
