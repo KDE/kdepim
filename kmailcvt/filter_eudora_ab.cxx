@@ -85,19 +85,19 @@ FILE   *F;
            else { comment=adr[i]+"\n"+comments[i]; }
  
            kabAddress(info,"Eudora Light",
-                      keys[i],(emails[i]=="") ? KAB_NIL : emails[i],
-                      KAB_NIL,KAB_NIL,KAB_NIL,
-                      (names[i]=="") ? KAB_NIL : names[i],
-                      KAB_NIL,
-                      KAB_NIL,KAB_NIL,
-                      KAB_NIL,KAB_NIL,
-                      KAB_NIL,
-                      KAB_NIL,KAB_NIL,
-                      KAB_NIL,KAB_NIL,
-                      (phones[i]=="") ? KAB_NIL : phones[i],KAB_NIL,
-                      KAB_NIL,KAB_NIL,
-                      KAB_NIL,KAB_NIL,
-                      (comments[i]=="") ? KAB_NIL : comments[i], KAB_NIL
+                      keys[i],(emails[i]=="") ? QString::null : emails[i],
+                      QString::null,QString::null,QString::null,
+                      (names[i]=="") ? QString::null : names[i],
+                      QString::null,
+                      QString::null,QString::null,
+                      QString::null,QString::null,
+                      QString::null,
+                      QString::null,QString::null,
+                      QString::null,QString::null,
+                      (phones[i]=="") ? QString::null : phones[i],QString::null,
+                      QString::null,QString::null,
+                      QString::null,QString::null,
+                      (comments[i]=="") ? QString::null : comments[i], QString::null
                      );
 
          { float perc=((float) i)/((float) LINES)*100.0;

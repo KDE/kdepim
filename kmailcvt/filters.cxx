@@ -390,7 +390,7 @@ void kab::kabStop(filterInfo *info)
 
 bool kab::checkStr( QString &str )
 {
-  if ( str == KAB_NIL ) return false;
+  if ( str == QString::null ) return false;
   str = str.stripWhiteSpace();
   if ( str.length() ) return true;
   return false;

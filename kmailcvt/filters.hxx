@@ -85,8 +85,6 @@ class kmail
     void kmailStop(filterInfo *info);
 };
 
-#define KAB_NIL "__KAB_NIL__"
-
 class kab
 {
   private:
@@ -100,19 +98,19 @@ class kab
    ~kab();
     bool kabStart(filterInfo *info);
     bool kabAddress(filterInfo *info, QString adrbookname,
-                    QString givenname, QString email=KAB_NIL,
-                    QString title=KAB_NIL,
-                    QString firstName=KAB_NIL,QString additionalName=KAB_NIL,
-                    QString lastName=KAB_NIL, QString nickname=KAB_NIL,
-                    QString adress=KAB_NIL,QString town=KAB_NIL,
-                    QString state=KAB_NIL,QString zip=KAB_NIL,
-                    QString country=KAB_NIL,
-                    QString organization=KAB_NIL,QString department=KAB_NIL,
-                    QString subDep=KAB_NIL,QString job=KAB_NIL,
-                    QString tel=KAB_NIL,QString fax=KAB_NIL,
-                    QString mobile=KAB_NIL,QString modem=KAB_NIL,
-                    QString homepage=KAB_NIL,QString talk=KAB_NIL,
-                    QString comment=KAB_NIL,QString birthday=KAB_NIL
+                    QString givenname, QString email=QString::null,
+                    QString title=QString::null,
+                    QString firstName=QString::null,QString additionalName=QString::null,
+                    QString lastName=QString::null, QString nickname=QString::null,
+                    QString adress=QString::null,QString town=QString::null,
+                    QString state=QString::null,QString zip=QString::null,
+                    QString country=QString::null,
+                    QString organization=QString::null,QString department=QString::null,
+                    QString subDep=QString::null,QString job=QString::null,
+                    QString tel=QString::null,QString fax=QString::null,
+                    QString mobile=QString::null,QString modem=QString::null,
+                    QString homepage=QString::null,QString talk=QString::null,
+                    QString comment=QString::null,QString birthday=QString::null
                    );
     void kabStop(filterInfo *info);
   private:
