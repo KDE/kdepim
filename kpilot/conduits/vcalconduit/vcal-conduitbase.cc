@@ -37,6 +37,7 @@ static const char *vcalconduitbase_id = "$Id$";
 
 #include <qdatetime.h>
 #include <qtimer.h>
+#include <qfile.h>
 
 #include <pilotUser.h>
 #include <kconfig.h>
@@ -178,9 +179,8 @@ there are two special cases: a full and a first sync.
 	fFirstSync = false;
 
 	// TODO: Check Full sync and First sync
-	if (!openDatabases(dbname(), &fFirstSync) ) goto error;
 	if (!openCalendar() ) goto error;
-
+	if (!openDatabases(dbname(), &fFirstSync) ) goto error;
 	preSync();
 
 
@@ -257,9 +257,15 @@ error:
 #ifdef DEBUG
 			DEBUGCONDUIT<<"Using CalendarLocal!"<<endl;
 #endif
+			if (fCalendarFile.isEmpty() )
+			{
+#ifdef DEBUG
+				DEBUGCONDUIT<<"empty calendar file name, cannot open"<<endl;
+#endif
+				emit logError(i18n("You selected to sync with the a iCalendar file, but did not give a filename. Please select a valid file name in the conduit's configuration dialog"));
+				return false;
+			}
 			fCalendar = new KCal::CalendarLocal(tz);
-/*			fCalendar = new KCal::CalendarLocal();
-			fCalendar->setLocalTime();*/
 			if ( !fCalendar)
 			{
 				kdWarning() << k_funcinfo <<
@@ -278,6 +284,17 @@ error:
 #ifdef DEBUG
 				DEBUGCONDUIT << "calendar file "<<fCalendarFile<<" could not be opened. Will create a new one"<<endl;
 #endif
+				// Try to create an empty file. if that fails, no vallid file name was given.
+				QFile fl(fCalendarFile);
+				if (!fl.open(IO_WriteOnly | IO_Append))
+				{
+#ifdef DEBUG
+					DEBUGCONDUIT<<"Invalid calendar file name "<<fCalendarFile<<endl;
+#endif
+					emit logError(i18n("You chose to sync with the file \"%1\", which cannot be opened or created. Please make sure to supply a valid file name in the conduit's configuration dialog. Aborting the conduit.").arg(fCalendarFile));
+					return false;
+				}
+				fl.close();
 				fFirstSync=true;
 			}
 			break;
