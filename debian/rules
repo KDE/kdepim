@@ -161,7 +161,7 @@ binary-common:
 	dh_makeshlibs -V
 	dh_installdeb
 #	dh_perl
-	dh_shlibdeps -ldebian/kalarmd/usr/lib:debian/kdepim-libs/usr/lib:debian/korganizer/usr/lib:debian/kpilot/usr/lib:debian/ksync/usr/lib
+	dh_shlibdeps -ldebian/kalarm/usr/lib:debian/kdepim-libs/usr/lib:debian/korganizer/usr/lib:debian/kaddressbook/usr/lib:debian/kpilot/usr/lib:debian/ksync/usr/lib
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
