@@ -247,7 +247,7 @@ QString AlarmDaemon::readConfig()
   QStringList clients = QStringList::split(',', clientConfig.readEntry(CLIENTS_KEY), true);
   bool writeNewClients = false;
   QString newClients;
-  for (int i = 0;  i < clients.count();  ++i)
+  for (unsigned int i = 0;  i < clients.count();  ++i)
   {
     kdDebug() << "AlarmDaemon::readConfig(): client: " << clients[i] << endl;
     if (clients[i].isEmpty()
