@@ -24,6 +24,7 @@ KonnectorDialog::KonnectorDialog( const KonnectorProfile::ValueList& list, Konne
 
     setMainWidget( m_base );
 
+    initListView();
 }
 KonnectorDialog::~KonnectorDialog() {
 
@@ -54,8 +55,12 @@ KonnectorProfile::ValueList KonnectorDialog::removed() const {
 
 }
 KonnectorProfile::ValueList KonnectorDialog::list2list() const {
+    KonnectorProfile::ValueList list;
+    QListViewItemIterator it( m_base->lstView );
+    for ( ; it.current(); ++it )
+        list.append( ((KonnectorCheckItem*)(it.current()))->profile() );
 
-
+    return list;
 }
 void KonnectorDialog::initListView() {
     KonnectorProfile::ValueList::Iterator it;
