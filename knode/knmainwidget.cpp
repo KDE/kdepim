@@ -159,9 +159,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
                                            QApplication::reverseLayout()
                                            ? "clear_left"
                                            : "locationbar_erase",
-                                           0, this,
-                                           SLOT( slotClearHeaderSearch() ),
-                                           actionCollection(),
+                                           0, actionCollection(),
                                            "reset_quicksearch" );
   resetQuickSearch->plug( q_uicksearch );
   resetQuickSearch->setWhatsThis( i18n( "<b>Reset Quick Search<b><br>"
@@ -169,10 +167,11 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, bool detachable, QWidget* par
                                         "all messages are shown again." ) );
 
   QLabel *lbl = new QLabel(i18n("&Search:"), q_uicksearch, "kde toolbar widget");
-  s_earchLineEdit = new KPIM::KListViewSearchLine(q_uicksearch, h_drView, "KListViewSearchLine");
+  QLineEdit *s_earchLineEdit = new KPIM::KListViewSearchLine(q_uicksearch, h_drView, "KListViewSearchLine");
   q_uicksearch->setStretchableWidget(s_earchLineEdit);
   lbl->setBuddy(s_earchLineEdit);
-
+  connect( resetQuickSearch, SIGNAL( activated() ), s_earchLineEdit, SLOT( clear() ));
+  
   vlay->addWidget(q_uicksearch);
   vlay->addWidget(h_drView);
 
@@ -1099,11 +1098,6 @@ void KNMainWidget::closeCurrentThread()
     item->setOpen(false);
     h_drView->ensureItemVisible(item);
   }
-}
-
-void KNMainWidget::slotClearHeaderSearch()
-{
- s_earchLineEdit->clear();
 }
 
 void KNMainWidget::slotArticleSelected(QListViewItem *i)
