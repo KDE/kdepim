@@ -28,7 +28,7 @@
 
 /** Default constructor. */
 FilterEvolution::FilterEvolution(void) : 
-  Filter(i18n("Import Evolution mails and folder structure"),
+  Filter(i18n("Import Evolution Mails and Folder Structure"),
 	 "Simon MARTIN",
 	 i18n("<p>Select the base directory of Evolution's mails (usually ~/evolution/local).</p>"
               "<p>As it is currently impossible to recreate the folder structure, it will be "

@@ -45,22 +45,22 @@ KPalmPlugin::KPalmPlugin(QObject *parent, const char *name,
 
     group = addGroupInfo(info, "General", i18n("General Information"));
     item = addItemInfo(group, "Name", i18n("Name"), QVariant::String);
-    item = addItemInfo(group, "DBType", i18n("DB type"), QVariant::String);
+    item = addItemInfo(group, "DBType", i18n("DB Type"), QVariant::String);
     item = addItemInfo(group, "TypeID", i18n("Type ID"), QVariant::String);
     item = addItemInfo(group, "CreatorID", i18n("Creator ID"), QVariant::String);
     item = addItemInfo(group, "NrRecords", i18n("# of Records"), QVariant::Int);
 
     group = addGroupInfo(info, "TimeStamps", i18n("Time Stamps"));
-    item = addItemInfo(group, "CreationDate", i18n("Creation date"), QVariant::DateTime);
-    item = addItemInfo(group, "ModificationDate", i18n("Modification date"), QVariant::DateTime);
-    item = addItemInfo(group, "BackupDate", i18n("Backup date"), QVariant::DateTime);
+    item = addItemInfo(group, "CreationDate", i18n("Creation Date"), QVariant::DateTime);
+    item = addItemInfo(group, "ModificationDate", i18n("Modification Date"), QVariant::DateTime);
+    item = addItemInfo(group, "BackupDate", i18n("Backup Date"), QVariant::DateTime);
 
     group = addGroupInfo(info, "Flags", i18n("Flags"));
     item = addItemInfo(group, "ReadOnly", i18n("Read-Only"), QVariant::String);
     item = addItemInfo(group, "MakeBackup", i18n("Make Backup"), QVariant::String);
     item = addItemInfo(group, "CopyProtected", i18n("Copy Protected"), QVariant::String);
-    item = addItemInfo(group, "Reset", i18n("Reset Handheld after Installing"), QVariant::String);
-    item = addItemInfo(group, "ExcludeFromSync", i18n("Exclude from Sync"), QVariant::String);
+    item = addItemInfo(group, "Reset", i18n("Reset Handheld After Installing"), QVariant::String);
+    item = addItemInfo(group, "ExcludeFromSync", i18n("Exclude From Sync"), QVariant::String);
 }
 
 

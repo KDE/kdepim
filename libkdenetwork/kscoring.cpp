@@ -943,7 +943,7 @@ void KScoringManager::setRuleName(KScoringRule *r, const QString& s)
     for (; it.current(); ++it) {
       if ( it.current() != r && it.current()->getName() == text ) {
         kdDebug(5100) << "rule name " << text << " is not unique" << endl;
-	text = KInputDialog::getText(i18n("Choose another rule name"),
+	text = KInputDialog::getText(i18n("Choose Another Rule Name"),
 			i18n("The rule name is already assigned, please choose another name:"),
 			text);
         cont = true;

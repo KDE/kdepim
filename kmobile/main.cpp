@@ -25,7 +25,7 @@
 #include <klocale.h>
 
 static const char description[] =
-    I18N_NOOP("KDE Mobile Devices Manager");
+    I18N_NOOP("KDE mobile devices manager");
 
 static const char version[] = "0.1";
 

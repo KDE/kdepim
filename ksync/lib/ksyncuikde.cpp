@@ -43,7 +43,7 @@ KSyncEntry *KSyncUiKde::deconflict(KSyncEntry *syncEntry,KSyncEntry *targetEntry
   text += i18n("Entry 2: '%1'\n").arg(targetEntry->name());
 
   int result = KMessageBox::warningYesNoCancel(mParent,text,
-      i18n("Resolve conflict"),i18n("Entry 1"),i18n("Entry 2"));
+      i18n("Resolve Conflict"),i18n("Entry 1"),i18n("Entry 2"));
 
   if (result == KMessageBox::Yes) {
     return syncEntry;

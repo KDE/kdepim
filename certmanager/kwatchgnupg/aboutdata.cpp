@@ -2,7 +2,7 @@
     aboutdata.cpp
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarï¿½vdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@
 #include <klocale.h>
 
 static const char kwatchgnupg_version[] = "0.01";
-static const char description[] = I18N_NOOP("GnuPG Log Viewer");
+static const char description[] = I18N_NOOP("GnuPG log viewer");
 
 struct about_data {
   const char * name;

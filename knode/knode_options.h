@@ -22,7 +22,7 @@
 
 static KCmdLineOptions knode_options[] =
 {
-  { "+[url]", I18N_NOOP("A 'news://server/group' URL."), 0 },
+  { "+[url]", I18N_NOOP("A 'news://server/group' URL"), 0 },
   KCmdLineLastOption
 };
 

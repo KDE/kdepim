@@ -10,7 +10,7 @@
 
 #include"shell.h"
 
-static const char description[] = I18N_NOOP("The KDE Mail Checker");
+static const char description[] = I18N_NOOP("KDE mail checker");
 static const char version[] = "0.2";
 
 

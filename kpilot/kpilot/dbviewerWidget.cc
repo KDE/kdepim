@@ -341,7 +341,7 @@ bool GenericDBWidget::slotEditRecord(QListViewItem*item)
 	else
 	{
 		// Either nothing selected, or some error occurred...
-		KMessageBox::information(this, i18n("You must select a record for editing."), i18n("No record selected"), i18n("Do not show this message again"));
+		KMessageBox::information(this, i18n("You must select a record for editing."), i18n("No Record Selected"), "norecordselected");
 	}
 	return false;
 }
@@ -354,7 +354,7 @@ void GenericDBWidget::slotDeleteRecord()
 {
 	FUNCTIONSETUP;
 	PilotListViewItem*currRecItem=dynamic_cast<PilotListViewItem*>(fRecordList->selectedItem());
-	if (currRecItem && (KMessageBox::questionYesNo(this, i18n("<qt>Do you really want to delete the selected record? This cannot be undone.<br><br>Delete record?<qt>"), i18n("Deleting record"))==KMessageBox::Yes) )
+	if (currRecItem && (KMessageBox::questionYesNo(this, i18n("<qt>Do you really want to delete the selected record? This cannot be undone.<br><br>Delete record?<qt>"), i18n("Deleting Record"))==KMessageBox::Yes) )
 	{
 		PilotRecord*rec=(PilotRecord*)currRecItem->rec();
 		rec->makeDeleted();

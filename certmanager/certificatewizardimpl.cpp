@@ -2,7 +2,7 @@
     certificatewizardimpl.cpp
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2001,2002,2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2001,2002,2004 Klarï¿½vdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -424,7 +424,7 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
   if ( result != 0 ) {
     kdDebug() << "Couldn't connect to KMail\n";
     KMessageBox::error( this,
-                        i18n( "DCOP Communication Error, unable to send certificate using KMail\n%1" ).arg( error ) );
+                        i18n( "DCOP Communication Error, unable to send certificate using KMail.\n%1" ).arg( error ) );
     return;
   }
 
@@ -446,7 +446,7 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
   if( !dcopClient->send( dcopService, dcopObjectId,
                          "sendCertificate(QString,QByteArray)", data ) ) {
     KMessageBox::error( this,
-                        i18n( "DCOP Communication Error, unable to send certificate using KMail" ) );
+                        i18n( "DCOP Communication Error, unable to send certificate using KMail." ) );
     return;
   }
   // All good, close dialog

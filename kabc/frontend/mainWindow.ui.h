@@ -451,7 +451,7 @@ void MainWindow::newEmail()
   
   bool ok = false;
   QString name = KInputDialog::getText( i18n("New Email Address"),
-                                        i18n("Please enter email address."),
+                                        i18n("Please enter email address:"),
                                         QString::null, &ok,
                                         this );
   if ( !ok || name.isEmpty() ) return;
@@ -471,7 +471,7 @@ void MainWindow::editEmail()
 
   bool ok = false;
   QString name = KInputDialog::getText( i18n("Edit Email Address"),
-                                        i18n("Please enter new email address."),
+                                        i18n("Please enter new email address:"),
                                         oldName, &ok,
                                         this );
   if ( !ok || name.isEmpty() ) return;
@@ -523,7 +523,7 @@ void MainWindow::newCategory()
   
   bool ok = false;
   QString name = KInputDialog::getText( i18n("New Category"),
-                                        i18n("Please enter category name."),
+                                        i18n("Please enter category name:"),
                                         QString::null, &ok,
                                         this );
   if ( !ok || name.isEmpty() ) return;
@@ -543,7 +543,7 @@ void MainWindow::editCategory()
 
   bool ok = false;
   QString name = KInputDialog::getText( i18n("Edit Category"),
-                                        i18n("Please enter new category name."),
+                                        i18n("Please enter new category name:"),
                                         oldName, &ok,
                                         this );
   if ( !ok || name.isEmpty() ) return;
@@ -636,7 +636,7 @@ void MainWindow::removeCustom()
 void MainWindow::addressBookChanged()
 {
   QMessageBox::warning( this, i18n("Address Book Changed"),
-                        i18n("The address book has changed on disk"),
+                        i18n("The address book has changed on disk."),
                         i18n("Reload") );
   loadAddressBook( "dummy" );
 }

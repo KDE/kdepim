@@ -59,9 +59,9 @@ KarmTray::KarmTray(MainWindow* parent)
   // this are experiments/tests
   /*
   for (int i=0; i<30; i++)
-    _tray->insertTitle(i18n("bla ").arg(i));
+    _tray->insertTitle(i 18n("bla ").arg(i));
   for (int i=0; i<30; i++)
-    _tray->insertTitle2(i18n("bli ").arg(i));
+    _tray->insertTitle2(i 18n("bli ").arg(i));
   */
   // experimenting with menus for the tray
   /*

@@ -136,6 +136,6 @@ QString ResourceIMAPShared::findWritableResource( const QStringList& resources,
   // Several found, ask the user
   return KInputDialog::getItem( i18n( "Select Resource Folder" ),
                                 i18n( "You have more than one writable resource folder. "
-                                      "Please select the one you want to write to." ),
+                                      "Please select the one you want to write to:" ),
                                 possible );
 }

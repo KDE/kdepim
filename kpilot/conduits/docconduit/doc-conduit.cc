@@ -391,7 +391,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
 	}
 	else
 	{
-		emit logError(i18n("Unable to open or create the database %1")
+		emit logError(i18n("Unable to open or create the database %1.")
 			.arg(QString::fromLatin1(sinfo.dbinfo.name)));
 	}
 	return res;

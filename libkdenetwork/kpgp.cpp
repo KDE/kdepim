@@ -416,7 +416,7 @@ Module::encrypt( Block& block,
     QApplication::setOverrideCursor( QCursor(QCursor::ArrowCursor) );
     int ret = KMessageBox::warningContinueCancel( 0, str,
                                                   i18n("PGP Warning"),
-                                                  i18n("&Send as is") );
+                                                  i18n("&Send as Is") );
     QApplication::restoreOverrideCursor();
     if( ret == KMessageBox::Cancel ) {
       return Kpgp::Canceled;
@@ -1229,7 +1229,7 @@ Module::getEncryptionKeys( const QString& person )
   KeyList matchingKeys;
 
   // search all keys which match the complete address
-  kdDebug(5100) << "Looking for keys matching »" << person << "« ...\n";
+  kdDebug(5100) << "Looking for keys matching " << person << " ...\n";
   for( it.toFirst(); (*it); ++it ) {
     // search case insensitively in the list of userIDs of this key
     if( (*it)->matchesUserID( person, false ) ) {
@@ -1246,7 +1246,7 @@ Module::getEncryptionKeys( const QString& person )
 
   // if no keys match the complete address look for keys which match
   // the canonical mail address
-  kdDebug(5100) << "Looking for keys matching »" << address << "« ...\n";
+  kdDebug(5100) << "Looking for keys matching " << address << " ...\n";
   if( matchingKeys.isEmpty() ) {
     for ( it.toFirst(); (*it); ++it ) {
       // search case insensitively in the list of userIDs of this key

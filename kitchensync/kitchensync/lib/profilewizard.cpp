@@ -71,7 +71,7 @@ void ProfileWizard::initUI()
   mNameEdit = new KLineEdit( topWidget );
   nameLayout->addWidget( mNameEdit );
 
-  label = new QLabel( "<qt><b>" + i18n("Which Parts to load?") + "</b></qt>", topWidget );
+  label = new QLabel( "<qt><b>" + i18n("Which parts to load?") + "</b></qt>", topWidget );
   topLayout->addWidget( label );
   
   label = new QLabel( i18n("KitchenSync supports a variety of plugins. Below\n"
@@ -162,7 +162,7 @@ void ProfileWizard::addPart()
   }
 
   QString partName = KInputDialog::getItem( i18n("Select Action Part"),
-                        i18n("Selection the action part you want to add."),
+                        i18n("Selection the action part you want to add:"),
                         partNames, 0, false, 0, this );
 
   for( it = mAvailableParts.begin(); it != mAvailableParts.end(); ++it ) {
