@@ -1,3 +1,44 @@
+changes between 0.1.13 and 0.2
+- ported to KDE2, new style guide compilant XML-GUI
+- multithreaded network-code
+- correct MIME-handling including multipart-messages
+- support for uuencoded binaries
+- ability to display attachments inline
+- posting of MIME multipart-messages (attachments)
+- significantly improved composer:
+  + all standard editor features (find, replace, select all, ...)
+  + spellchecker
+  + optional external editor
+  + nice attachment handling
+  + insert file functionality
+  + quoted text can be rewarped to preserve the orignal quoting.
+  + improved signature handling,
+    exiting sig dashes are detected
+    optional: direct entry of the signature in the configuration dialog
+  + tab key works ;-)
+- improved X-Header configuration, its possible to disable
+  the User-Agent identification header now.
+- rewritten configuration dialog
+- support for multiple newsservers
+- usage of the standard mbox format for folders
+- cancel/supersede function
+- forward articles as e-mail
+- rewritten subscribe dialog
+  + nicer interface with treeview
+  + shows group descriptions
+  + can check for new newsgroups now (NEWGROUPS)
+- ability to freely adjust the displayed article headers,
+  including custom names and format options.
+- improved font & color configuration,
+  default colors adapt to all color schemes (including inverse ones)
+- vastly improved new documentation (with screenshots)
+  written by Stephan Johach
+- implemented search functionality for newsgroups
+- added placeholders for own name and email to the filter configuration
+- new standard filters (own articles, threads with own articles)
+- header names and standard filter names are translatable now
+- many new translations, thanks to the numerous translators  ;-)
+
 changes between 0.1.12 and 0.1.13
 - fixed the "wheelmouse-bug"
 - fixed a bug that produced doubled subjects
@@ -102,7 +143,7 @@ changes between 0.1.6 and 0.1.7:
   *really* counted correctly
 
 
-changes between 0.1.5 nad 0.1.6:
+changes between 0.1.5 and 0.1.6:
 - only one bugfix : now the unread articles are counted correctly again
 
 
