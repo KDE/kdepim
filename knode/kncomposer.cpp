@@ -532,7 +532,7 @@ bool KNComposer::applyChanges()
 
   //Newsgroups
   if (m_ode != mail) {
-    a_rticle->newsgroups()->fromUnicodeString(v_iew->g_roups->text(), KMime::Headers::Latin1);
+    a_rticle->newsgroups()->fromUnicodeString(v_iew->g_roups->text().remove(QRegExp("\\s")), KMime::Headers::Latin1);
     a_rticle->setDoPost(true);
   } else
     a_rticle->setDoPost(false);
@@ -1258,7 +1258,7 @@ void KNComposer::slotGroupsBtnClicked()
   if(id==-1)
     a_rticle->setServerId(nntp->id());
 
-  KNGroupSelectDialog *dlg=new KNGroupSelectDialog(this, nntp, v_iew->g_roups->text());
+  KNGroupSelectDialog *dlg=new KNGroupSelectDialog(this, nntp, v_iew->g_roups->text().remove(QRegExp("\\s")));
 
   connect(dlg, SIGNAL(loadList(KNNntpAccount*)),
     knGlobals.grpManager, SLOT(slotLoadGroupList(KNNntpAccount*)));
