@@ -1,3 +1,10 @@
+kdepim (4:2.1-20010118-1) unstable; urgency=low
+ 
+  * New upstream cvs version
+  * Fixing overwrite problem (Closes: #82965)
+ 
+ -- Ivan E. Moore II <rkrusty@debian.org>  Sun, 21 Jan 2001 00:46:00 -0700
+
 kdepim (4:2.1-20010115-1) unstable; urgency=low
  
   * New upstream cvs version
