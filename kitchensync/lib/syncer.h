@@ -64,6 +64,7 @@ class SyncEntry
       id.
     */
     virtual QString id() = 0;
+    virtual void setId( const QString& id );
 
     /**
       Return a time stamp representing the time of the last change. This is only
@@ -353,6 +354,7 @@ class Syncee
                    const QString &kdeId );
 
 
+    virtual QString newId()const;
     /**
      * @param type The type for the ids to returned
      * @return the ids as QValueList

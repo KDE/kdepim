@@ -14,8 +14,6 @@ Desktop::~Desktop() {
 
 }
 KSync::OpieDesktopSyncee* Desktop::toSyncee( const QString& str) {
-    if ( !str.contains("[Desktop Entry]") )
-        return 0l;
     KSync::OpieDesktopSyncee* syncee;
     syncee = new KSync::OpieDesktopSyncee();
 
@@ -27,6 +25,12 @@ KSync::OpieDesktopSyncee* Desktop::toSyncee( const QString& str) {
     string.replace(QRegExp("&0x0d;"), "\n");
     string.replace(QRegExp("&0x0a;"), "\r");
     string.replace(QRegExp("\r\n"), "\n" ); // hell we're on unix
+
+    if ( !str.contains("[Desktop Entry]") ) {
+        kdDebug() <<"Desktop Entry: " << str << endl;
+        delete syncee;
+        return 0l;
+    }
     QStringList list = QStringList::split('\n', string );
     QStringList::Iterator it;
     it = list.begin();

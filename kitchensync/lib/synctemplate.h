@@ -37,6 +37,7 @@ namespace KSync {
         };
         bool read() { return true;}
         bool write() { return true; }
+
         SyncEntry* firstEntry() {
             return mList.first();
         }

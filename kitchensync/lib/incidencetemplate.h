@@ -24,6 +24,7 @@ namespace KSync {
         QString type() const { return mIncidence->type() + "SyncEntry"; }
         QString name() { return mIncidence->summary(); }
         QString id() { return mIncidence->uid(); }
+        void setId(const QString& id) { mIncidence->setUid( id ); }
         QString timestamp() { return mIncidence->lastModified().toString(); }
         Entry* incidence() { return mIncidence; };
         bool equals( SyncEntry* entry) {

@@ -2,6 +2,8 @@
 #ifndef KSYNC_SYNC_ALGO_H
 #define KSYNC_SYNC_ALGO_H
 
+#include <qptrlist.h>
+
 #include <syncalgorithm.h>
 
 namespace KSync {
@@ -20,6 +22,12 @@ namespace KSync {
         void syncMeta(Syncee* syncee,
                       Syncee* target,
                       bool over );
+        void addEntry(Syncee* in,
+                      Syncee* out,
+                      SyncEntry* entry );
+        void forAll( QPtrList<SyncEntry>,
+                     Syncee* syncee,
+                     Syncee* target,bool over );
     };
 };
 

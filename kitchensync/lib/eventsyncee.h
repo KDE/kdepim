@@ -22,6 +22,7 @@ namespace KSync {
         EventSyncee();
         Syncee* clone();
         QString type() const;
+        QString newId() const;
     };
 };
 

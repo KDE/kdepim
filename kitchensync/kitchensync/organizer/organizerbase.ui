@@ -98,6 +98,12 @@
             <property name="sizeType">
                 <enum>Expanding</enum>
             </property>
+            <property name="sizeHint">
+                <size>
+                    <width>0</width>
+                    <height>20</height>
+                </size>
+            </property>
         </spacer>
     </vbox>
 </widget>
@@ -113,6 +119,12 @@
         <signal>clicked()</signal>
         <receiver>OrganizerDialog</receiver>
         <slot>slotDefault()</slot>
+    </connection>
+    <connection>
+        <sender>ckbEvo</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>GroupBox1</receiver>
+        <slot>setDisabled(bool)</slot>
     </connection>
 </connections>
 <includes>

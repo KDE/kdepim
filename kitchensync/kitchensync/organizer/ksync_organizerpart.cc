@@ -125,8 +125,11 @@ void OrganizerPart::processEntry( const Syncee::PtrList& in,
     EventSyncee* evSyncee = 0l;
     TodoSyncee* toSyncee = 0l;
     QPtrListIterator<Syncee> syncIt( in );
+    kdDebug() << "in count " << in.count() << endl;
     for ( ; syncIt.current(); ++syncIt ) {
+        kdDebug() << "syncee pointer " <<  syncIt.current() << endl;
         syncee = syncIt.current();
+        kdDebug() << "type " << syncee->type() << endl;
         if ( syncee->type() == QString::fromLatin1("EventSyncee") )
             evSyncee = (EventSyncee*)syncee;
         else if ( syncee->type() == QString::fromLatin1("TodoSyncee") )
@@ -171,6 +174,8 @@ void OrganizerPart::processEntry( const Syncee::PtrList& in,
 
     /* 8. write back data */
     save( events, todos, path );
+
+    /* 8.1 take care of the IdHelpers.... */
 
     /* 9. */
     out.append( events );
@@ -319,6 +324,12 @@ void OrganizerPart::writeMeta( EventSyncee* evSyncee,
         dir.mkdir( str + "/.kitchensync/meta/konnector-" + kon.uid() );
     }
     KSimpleConfig conf( str );
+    /* clear config before */
+    QStringList groups = conf.groupList();
+    QStringList::Iterator it;
+    for (it = groups.begin(); it != groups.end(); ++it ) {
+        conf.deleteGroup( (*it) );
+    }
     writeMetaIntern( evSyncee, &conf, "events-");
     writeMetaIntern( toSyncee, &conf, "todos-");
 }

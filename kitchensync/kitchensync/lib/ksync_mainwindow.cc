@@ -203,8 +203,20 @@ void KSyncMainWindow::initSystray( void ) {
     popMenu->insertSeparator();
 
 }
-
+/*
+ * Get the curren konnector
+ * check if we can push
+ * and then push
+ */
 void KSyncMainWindow::slotSync(){
+    kdDebug() << "Slot sync " << endl;
+
+    KonnectorProfile prof = konnectorProfile();
+    if (prof.udi().isEmpty() ) return;
+
+    if (!prof.kapabilities().supportsPushSync() )
+        return;
+    m_konnector->startSync( prof.udi() );
 }
 void KSyncMainWindow::slotBackup() {
 }
@@ -369,22 +381,24 @@ KonnectorProfileManager* KSyncMainWindow::konnectorManager() const {
 void KSyncMainWindow::slotSync( const QString &udi,
                                 Syncee::PtrList lis)
 {
-/*    KSyncEntry::List ret;
+    Syncee::PtrList ret;
     kdDebug(5210) << "Some data arrived Yeah baby" << endl;
     kdDebug(5210) << "Lis got "  << lis.count() << "elements" << endl;
-    KSyncEntry *entry=0;
-    for ( entry = lis.first(); entry != 0; entry = lis.next() ) {
-        kdDebug() << "Type is " << entry->type() << endl;
+    Syncee *syncee=0;
+    kdDebug() << "Pointer address " << lis.at(0) << endl;
+    for ( syncee= lis.first();syncee != 0; syncee = lis.next() ) {
+        kdDebug() << "Type is " << syncee->type() << endl;
     }
     // pass them through all widgets
     ManipulatorPart* part=0l;
     ManipulatorPart* po=0l;
+
     for ( part = m_parts.first(); part != 0; part = m_parts.next() ) {
         part->startSync();
     }
     qApp->processEvents();
     for ( part = m_parts.first(); part != 0; part = m_parts.next() ) {
-    // part is the activated part
+        // part is the activated part
         // rather inefficent can QSignal be more direct? Request first?
         // but this is rather brain dead
         QPtrListIterator<ManipulatorPart> it(m_parts);
@@ -405,7 +419,7 @@ void KSyncMainWindow::slotSync( const QString &udi,
     lis.setAutoDelete( TRUE );
     lis.clear(); //there is a bug now we will leak but not crash :(
     m_konnector->write( udi, ret );
-*/
+
 }
 /**
  * check if the state is from the current Konnector
@@ -544,15 +558,12 @@ void KSyncMainWindow::initKonnectorList() {
     m_konAct->setItems( lst );
 }
 SyncUi* KSyncMainWindow::syncUi() {
-    if (!m_syncUi ) {
-        m_syncUi = new SyncUiKde(this);
-    }
+    m_syncUi = new SyncUiKde(this);
     return m_syncUi;
 }
 SyncAlgorithm* KSyncMainWindow::syncAlgorithm() {
-    if (!m_syncAlg ) {
-        m_syncAlg = new PIMSyncAlg( syncUi() );
-    }
+    m_syncAlg = new PIMSyncAlg( syncUi() );
+
     return m_syncAlg;
 }
 

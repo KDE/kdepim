@@ -10,15 +10,16 @@
 #include <kurl.h>
 #include <kglobal.h>
 #include <kstandarddirs.h>
+#include <kurlrequester.h>
 
 void AddressBookConfigBase::slotBrowse()
 {
-    lnePath->setText( KFileDialog::getOpenURL().prettyURL() );
+ //   lnePath->setText( KFileDialog::getOpenURL().prettyURL() );
 }
 
 void AddressBookConfigBase::slotDefault()
 {
-    lnePath->setText( "default" );
+    urlReq->setURL( "default" );
 }
 
 void AddressBookConfigBase::slotEvolution( bool )

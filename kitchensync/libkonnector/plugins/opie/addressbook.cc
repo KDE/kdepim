@@ -59,7 +59,7 @@ KSync::AddressBookSyncee* AddressBook::toKDE( const QString &fileName )
 		    if(!el.isNull() ){
 			kdDebug(5202) << "Contacts: " << el.tagName() << endl;
 			KABC::Addressee adr;
-			adr.setUid( kdeId( "addressbook",  el.attribute("Uid" ) ) );
+			adr.setUid( kdeId( "AddressBookSyncEntry",  el.attribute("Uid" ) ) );
 			adr.setFamilyName(el.attribute("LastName" ) );
 			adr.setGivenName(el.attribute("FirstName" ) );
 			adr.setAdditionalName(el.attribute("MiddleName" )  );
@@ -149,9 +149,9 @@ QByteArray AddressBook::fromKDE( KSync::AddressBookSyncee *syncee )
 {
     //  ok lets write back the changes from the Konnector
     m_kde2opie.clear(); // clear the reference first
-    Kontainer::ValueList newIds = syncee->ids( "addressbook");
+    Kontainer::ValueList newIds = syncee->ids( "AddressBookSyncEntry");
     for ( Kontainer::ValueList::ConstIterator idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
-        m_helper->addId("addressbook",  (*idIt).first(),  (*idIt).second() ); // FIXME update this name later
+        m_helper->addId("AddressBookSyncEntry",  (*idIt).first(),  (*idIt).second() ); // FIXME update this name later
     }
     QByteArray array;
     QBuffer buffer( array );
@@ -166,6 +166,8 @@ QByteArray AddressBook::fromKDE( KSync::AddressBookSyncee *syncee )
         KABC::Addressee ab;
         KSync::AddressBookSyncEntry *entry;
         for ( entry = syncee->firstEntry(); entry != 0l;  entry = syncee->nextEntry() ) {
+            if (entry->state() == KSync::SyncEntry::Removed )
+                continue;
             ab = entry->addressee();
             stream << "<Contact ";
             stream << "FirstName=\"" << ab.givenName() << "\" ";
@@ -227,13 +229,13 @@ QByteArray AddressBook::fromKDE( KSync::AddressBookSyncee *syncee )
             stream << "Children=\"" << ab.custom("opie", "Children" ) << "\" ";
             stream << "Notes=\"" << ab.note() << "\" ";
             stream << "Categories=\"" << categoriesToNumber( ab.categories(),  "Contacts") << "\" ";
-            stream << "Uid=\"" << konnectorId( "addressbook", ab.uid() ) << "\" ";
+            stream << "Uid=\"" << konnectorId( "AddressBookSyncEntry", ab.uid() ) << "\" ";
             stream << " />" << endl;
         } // off for
         stream << "</Contacts>" << endl;
         stream << "</AddressBook>" << endl;
     }
     // now replace the UIDs for us
-    m_helper->replaceIds( "addressbook",  m_kde2opie ); // to keep the use small
+    m_helper->replaceIds( "AddressBookSyncEntry",  m_kde2opie ); // to keep the use small
     return array;
 }

@@ -17,6 +17,7 @@ namespace KSync {
         QString type() const;
         QString name();
         QString id();
+        void setId(const QString& id );
         SyncEntry* clone();
         bool equals( SyncEntry* entry );
         QString timestamp();
@@ -30,6 +31,7 @@ namespace KSync {
         TodoSyncee();
         QString type() const;
         Syncee* clone();
+        QString newId()const;
     };
 
 };

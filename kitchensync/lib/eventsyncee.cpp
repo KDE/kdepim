@@ -1,4 +1,6 @@
 
+#include <calformat.h>
+
 #include "eventsyncee.h"
 
 
@@ -24,4 +26,7 @@ Syncee* EventSyncee::clone() {
         temp->addEntry( entry->clone() );
     }
     return temp;
+}
+QString EventSyncee::newId() const {
+    return KCal::CalFormat::createUniqueId();
 }

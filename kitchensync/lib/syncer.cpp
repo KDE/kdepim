@@ -56,12 +56,16 @@ Syncee *SyncEntry::syncee()
 {
   return mSyncee;
 }
+/* not implemented here */
+void SyncEntry::setId( const QString& ) {
 
+}
 ///// Syncee ////////////////
 Syncee::Syncee() :
   mStatusLog(0)
 {
     mSyncMode = MetaLess;
+    mFirstSync = false;
 }
 
 
@@ -101,6 +105,7 @@ void Syncee::replaceEntry(SyncEntry *oldEntry, SyncEntry *newEntry)
 
 bool Syncee::hasChanged(SyncEntry *entry)
 {
+  if ( entry->state() != SyncEntry::Undefined ) return true;
   if ( entry->timestamp().isEmpty() ) return false; // sure -zecke
 
   if (!mStatusLog ) return false;
@@ -196,10 +201,13 @@ QMap<QString, Kontainer::ValueList> Syncee::ids() const {
 bool Syncee::trustIdsOnFirstSync()const {
     return false;
 }
+QString Syncee::newId() const {
+    return QString::null;
+}
 ////////////// Syncer //////////////////////
 Syncer::Syncer(SyncUi *ui,  SyncAlgorithm *iface)
 {
-  mSyncees.setAutoDelete(true);
+//  mSyncees.setAutoDelete(true); this leads to crashes
   if (!ui) {
     mUi = new SyncUi();
   } else {

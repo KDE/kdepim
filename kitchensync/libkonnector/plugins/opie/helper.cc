@@ -162,12 +162,13 @@ QString Base::kdeId( const QString &appName,  const QString &uid )
 // code copyrighted by tt FIXME
 int Base::newId()
 {
-    QMap<int,  bool> ids;
+    static QMap<int,  bool> ids;
     int id = -1 * (int) ::time(NULL );
     while ( ids.contains( id ) ){
         id += -1;
         if ( id > 0 )
             id = -1;
     }
+    ids.insert( id, true );
     return id;
 }

@@ -112,9 +112,9 @@ QByteArray ToDo::fromKDE( KSync::TodoSyncee* syncee )
 {
     // KDE ID clear bit first
     m_kde2opie.clear();
-    Kontainer::ValueList newIds = syncee->ids( "todo");
+    Kontainer::ValueList newIds = syncee->ids( "TodoSyncEntry");
     for ( Kontainer::ValueList::ConstIterator idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
-        m_helper->addId("todo",  (*idIt).first(),  (*idIt).second() );
+        m_helper->addId("TodoSyncEntry",  (*idIt).first(),  (*idIt).second() );
     }
     // update m_helper first;
     QByteArray array;
@@ -130,18 +130,20 @@ QByteArray ToDo::fromKDE( KSync::TodoSyncee* syncee )
               entry != 0l;
               entry = (KSync::TodoSyncEntry*)syncee->nextEntry() )
         {
+            if ( entry->state() == KSync::SyncEntry::Removed )
+                continue;
             stream << todo2String( entry->todo() ) << endl;
         }
         stream << "</Tasks>" << endl;
         buffer.close();
     }
     if (m_helper)
-        m_helper->replaceIds( "todo",  m_kde2opie );
+        m_helper->replaceIds( "TodoSyncEntry",  m_kde2opie );
     return array;
 }
 void ToDo::setUid( KCal::Todo* todo,  const QString &uid )
 {
-    todo->setUid( kdeId( "todo",  uid ) );
+    todo->setUid( kdeId( "TodoSyncEntry",  uid ) );
 }
 
 QString ToDo::todo2String( KCal::Todo* todo )
@@ -168,7 +170,7 @@ QString ToDo::todo2String( KCal::Todo* todo )
     // id hacking We don't want to have the ids growing and growing
     // when an id is used again it will be put to the used list and after done
     // with syncing we will replace the former
-    text.append("Uid=\"" +konnectorId("todo", todo->uid() )+ "\" "  );
+    text.append("Uid=\"" +konnectorId("TodoSyncEntry", todo->uid() )+ "\" "  );
 
     text.append(" />");
     return text;

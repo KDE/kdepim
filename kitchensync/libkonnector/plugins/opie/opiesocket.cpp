@@ -225,15 +225,19 @@ void OpieSocket::write(const QString &path, const QByteArray &array )
 // write back to my iPAQ
 void OpieSocket::write(Syncee::PtrList lis)
 {
+    kdDebug() << "WriteBack to Opie lis count =" << lis.count() << endl;
     Syncee* syncee;
     for ( syncee = lis.first(); syncee!= 0; syncee = lis.next() ) {
         if ( syncee->type() == QString::fromLatin1("AddressBookSyncee") ) {
+            kdDebug() << "AddressBookSyncee " << endl;
             AddressBookSyncee* abSyncee = dynamic_cast<AddressBookSyncee*>( syncee);
             writeAddressbook( abSyncee );
         }else if ( syncee->type() == QString::fromLatin1("EventSyncee") ) {
+            kdDebug() << "EventSyncee " << endl;
             EventSyncee* evSyncee = dynamic_cast<EventSyncee*>(syncee );
             writeDatebook( evSyncee );
         }else if ( syncee->type() == QString::fromLatin1("TodoSyncee") ) {
+            kdDebug() << "TodoSyncee" << endl;
             TodoSyncee* tdSyncee = dynamic_cast<TodoSyncee*>(syncee);
             writeTodoList( tdSyncee );
         }// else if UnknownSyncEntry.... upload
@@ -473,7 +477,10 @@ void OpieSocket::manageCall(const QString &line )
         // FIXME      OpieHelperClass helper;
 //	helper.toOpieDesktopEntry( line, &d->m_sync, d->edit  );
         OpieHelper::Desktop desk( d->edit );
-        d->m_sync.append( desk.toSyncee( line ) );
+        Syncee* sync = desk.toSyncee( line );
+        if ( sync == 0l ) kdDebug() << "--" << endl << "DocLinks null" << endl;
+        if (sync )
+            d->m_sync.append( desk.toSyncee( line ) );
     }
     switch( d->getMode ){
     case d->HANDSHAKE: {
@@ -643,6 +650,7 @@ void OpieSocket::doTodo() {
     OpieHelper::ToDo todoDB( d->edit, d->helper, d->tz, d->meta );
     KSync::TodoSyncee* synceeNew = todoDB.toKDE( tempfile );
     if (!synceeNew ) {
+        kdDebug() <<"No Todo from Opie" << endl;
         KIO::NetAccess::removeTempFile( tempfile );
         return;
     }
@@ -665,7 +673,8 @@ void OpieSocket::doTodo() {
             synceeNew = meta.doMeta( synceeNew, synceeOld );
         }
     };
-
+    if (synceeNew == 0l )
+        kdDebug() << "syncee new == 0l" << endl;
     d->m_sync.append( synceeNew );
     KIO::NetAccess::removeTempFile( tempfile );
 };
@@ -699,6 +708,8 @@ void OpieSocket::doDatebook() {
         }
     };
 
+    if (synceeNew == 0l )
+        kdDebug() << "Cal Syncee == 0l" << endl;
     d->m_sync.append( synceeNew );
     KIO::NetAccess::removeTempFile( tempfile );
 }
@@ -733,6 +744,8 @@ void OpieSocket::doAddressbook()
         }
     };
 
+    if ( synceeNew == 0l )
+        kdDebug() << "Adi == 0l " << endl;
     d->m_sync.append( synceeNew );
     KIO::NetAccess::removeTempFile( tempfile );
 }

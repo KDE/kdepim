@@ -16,6 +16,7 @@ namespace KSync {
 
         QString name();
         QString id();
+        void setId(const QString& id );
         QString timestamp();
         QString type()const;
 
@@ -53,6 +54,7 @@ namespace KSync {
         SyncEntry::PtrList removed();
         Syncee* clone();
 	QString type() const;
+        QString newId()const;
 
     private:
         AddressBookSyncEntry *createEntry( const KABC::Addressee & );

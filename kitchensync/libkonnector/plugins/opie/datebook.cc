@@ -62,7 +62,7 @@ KCal::Event* DateBook::toEvent( QDomElement e) {
     }
     //event->setDescription(e.attribute("Description") );
     event->setSummary( e.attribute("description") );
-    event->setUid( kdeId( "event",  e.attribute("uid") ) );
+    event->setUid( kdeId( "EventSyncEntry",  e.attribute("uid") ) );
     event->setDescription( e.attribute("note") );
     event->setLocation( e.attribute("location") );
     // time
@@ -230,10 +230,10 @@ KSync::EventSyncee* DateBook::toKDE( const QString& fileName )
 QByteArray DateBook::fromKDE( KSync::EventSyncee* syncee )
 {
     m_kde2opie.clear();
-    Kontainer::ValueList newIds = syncee->ids( "event");
+    Kontainer::ValueList newIds = syncee->ids( "EventSyncEntry");
     Kontainer::ValueList::ConstIterator idIt;
     for ( idIt = newIds.begin(); idIt != newIds.end(); ++idIt ) {
-        m_helper->addId("event",  (*idIt).first(),  (*idIt).second() );
+        m_helper->addId("EventSyncEntry",  (*idIt).first(),  (*idIt).second() );
     }
     QByteArray array;
     QBuffer buffer( array );
@@ -249,6 +249,8 @@ QByteArray DateBook::fromKDE( KSync::EventSyncee* syncee )
               entry != 0;
               entry = (KSync::EventSyncEntry*) syncee->nextEntry() )
         {
+            if (entry->state() == KSync::SyncEntry::Removed )
+                continue;
             event = entry->incidence();
             stream << event2string( event ) << endl;
         }
@@ -257,7 +259,7 @@ QByteArray DateBook::fromKDE( KSync::EventSyncee* syncee )
 
     }
     if (m_helper )
-        m_helper->replaceIds( "event",  m_kde2opie );
+        m_helper->replaceIds( "EventSyncEntry",  m_kde2opie );
     return array;
 }
 QString DateBook::event2string( KCal::Event *event )
@@ -267,7 +269,7 @@ QString DateBook::event2string( KCal::Event *event )
     str.append( "description=\"" +event->summary()  + "\" ");
     str.append( "location=\"" + event->location() + "\" ");
     str.append( "categories=\"" +  categoriesToNumber( event->categories() ) + "\" ");
-    str.append( "uid=\"" +  konnectorId("event",  event->uid() ) + "\" ");
+    str.append( "uid=\"" +  konnectorId("EventSyncEntry", event->uid() ) + "\" ");
     str.append( "start=\"" + QString::number( toUTC( event->dtStart() ) ) + "\" ");
     str.append( "end=\"" +  QString::number(  toUTC( event->dtEnd() ) ) + "\" ");
     str.append( "note=\"" + event->description() + "\" "); //use escapeString copied from TT

@@ -1,3 +1,4 @@
+#include <kapplication.h>
 #include <kdebug.h>
 #include <kabc/resourcefile.h>
 
@@ -23,12 +24,15 @@ QString AddressBookSyncEntry::id()
 {
   return mAddressee.uid();
 }
+void AddressBookSyncEntry::setId(const QString& id) {
+    mAddressee.setUid( id );
+}
 SyncEntry* AddressBookSyncEntry::clone() {
     return new AddressBookSyncEntry( *this );
 }
 QString AddressBookSyncEntry::timestamp()
 {
-  return QString::null;
+  return mAddressee.revision().toString();
 }
 QString AddressBookSyncEntry::type() const{
     return QString::fromLatin1("AddressBookSyncEntry");
@@ -178,4 +182,7 @@ SyncEntry::PtrList AddressBookSyncee::find( int state ) {
 }
 QString AddressBookSyncee::type() const {
     return QString::fromLatin1("AddressBookSyncee");
+}
+QString AddressBookSyncee::newId()const {
+    return KApplication::randomString( 10 );
 }

@@ -8,9 +8,17 @@
 class KAboutData;
 class KConfig;
 class AddressBookConfigBase;
+class KSimpleConfig;
+
+namespace KABC {
+    class AddressBook;
+}
 
 namespace KSync {
 
+    class Syncee;
+    class SyncEntry;
+    class AddressBookSyncee;
     class AddressBookPart : public ManipulatorPart{
         Q_OBJECT
     public:
@@ -32,6 +40,12 @@ namespace KSync {
     public:
         void slotConfigOk();
     private:
+        AddressBookSyncee* load( const QString& path );
+        void doMeta( Syncee*,  const QString& path );
+        void writeMeta( Syncee*, const QString& path );
+        void save( AddressBookSyncee*, const QString& path );
+        bool pathIsDefault( const QString& path );
+        AddressBookSyncee* book2syncee( KABC::AddressBook* );
         QPixmap m_pixmap;
         AddressBookConfigBase* m_widget;
         QString m_path;

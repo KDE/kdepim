@@ -1,4 +1,4 @@
-
+#include <calformat.h>
 #include "todosyncee.h"
 
 
@@ -36,6 +36,9 @@ QString TodoSyncEntry::name() {
 QString TodoSyncEntry::id() {
     return mTodo->uid();
 }
+void TodoSyncEntry::setId(const QString& id ) {
+    mTodo->setUid( id );
+}
 QString TodoSyncEntry::timestamp() {
     return mTodo->lastModified().toString();
 }
@@ -67,4 +70,7 @@ Syncee* TodoSyncee::clone() {
         temp->addEntry( entry->clone() );
     }
     return temp;
+}
+QString TodoSyncee::newId() const {
+return KCal::CalFormat::createUniqueId();
 }
