@@ -574,7 +574,8 @@ void KPilotLink::resumeDB()
 		return;
 	}
 
-	delete fCurrentDB;
+	if (fCurrentDB) delete fCurrentDB;
+	fCurrentDB=0L;
 
   // Get our backup copy.
   if(slowSyncRequired()) // We are in the middle of backing up, continue
@@ -679,7 +680,8 @@ KPilotLink::registeredConduit(const QString &dbName)
 void
 KPilotLink::slotConduitConnected(KSocket* theSocket)
 {
-  //   cout << "Got conduit connection" << endl;
+	FUNCTIONSETUP;
+
   connect(theSocket, SIGNAL(readEvent(KSocket*)),
 	  this, SLOT(slotConduitRead(KSocket*)));
   connect(theSocket, SIGNAL(closeEvent(KSocket*)),
@@ -1714,6 +1716,9 @@ PilotLocalDatabase *KPilotLink::openLocalDatabase(const QString &database)
 #endif
 
 // $Log$
+// Revision 1.42  2001/04/16 13:54:17  adridg
+// --enable-final file inclusion fixups
+//
 // Revision 1.41  2001/04/11 21:33:07  adridg
 // Make version number consistent across KPilot applications
 //
