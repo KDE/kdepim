@@ -365,40 +365,12 @@ return;
 		{
 			de=new PilotDateEntry(s);
 			updateEventOnPalm(e, de);
-#ifdef DEBUG
-			DEBUGCONDUIT<<fname<<": nach updateEventOnPalm , vor delete de"<<endl;
-			DEBUGCONDUIT<<fname<<": description: "<<de->getDescription()<<endl;
-			DEBUGCONDUIT<<fname<<": note: "<<de->getNote()<<endl;
-			DEBUGCONDUIT<<fname<<": Exception: "<<de->getExceptions()<<endl;
-			if (de->getExceptions()) {
-			struct tm ttm1=(*(de->getExceptions()));
-			if (de->getExceptions()) {
-				DEBUGCONDUIT << fname << ": Exception: " << readTm(ttm1).toString() << endl;
-			}}
-#endif
 			delete de;
-#ifdef DEBUG
-			DEBUGCONDUIT << fname << ": nach delete de " << endl;
-#endif
 		}
 	} else {
 		de=new PilotDateEntry();
 		updateEventOnPalm(e, de);
-#ifdef DEBUG
-		DEBUGCONDUIT<<fname<<": nach updateEventOnPalm , vor delete de"<<endl;
-		DEBUGCONDUIT<<fname<<": description: "<<de->getDescription()<<endl;
-		DEBUGCONDUIT<<fname<<": note: "<<de->getNote()<<endl;
-		DEBUGCONDUIT<<fname<<": Exception: "<<de->getExceptions()<<endl;
-		if (de->getExceptions()) {
-		struct tm ttm1=(*(de->getExceptions()));
-		if (de->getExceptions()) {
-			DEBUGCONDUIT << fname << ": Exception: " << readTm(ttm1).toString() << endl;
-		}}
-#endif
 		delete de;
-#ifdef DEBUG
-		DEBUGCONDUIT<<fname<<": nach delete de "<<endl;
-#endif
 	}
 	KPILOT_DELETE(s);
 	QTimer::singleShot(0, this, SLOT(syncEvent()));
@@ -505,9 +477,6 @@ void VCalConduit::updateEventOnPalm(KCal::Event*e, PilotDateEntry*de)
 	}
 	PilotRecord*r=entryFromEvent(de, e);
 
-#ifdef DEBUG
-		DEBUGCONDUIT << fname << ": After entryFromEvent..." << endl;
-#endif
 	if (r)
 	{
 		fBackupDatabase->writeRecord(r);
@@ -515,9 +484,6 @@ void VCalConduit::updateEventOnPalm(KCal::Event*e, PilotDateEntry*de)
 		e->setSyncStatus(KCal::Incidence::SYNCNONE);
 		e->setPilotId(r->getID());
 	}
-#ifdef DEBUG
-		DEBUGCONDUIT << fname << ": Endof updateEventOnPalm..." << endl;
-#endif
 }
 
 PilotRecord*VCalConduit::entryFromEvent(PilotDateEntry*de, const KCal::Event*e)
@@ -922,6 +888,9 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 }
 
 // $Log$
+// Revision 1.53  2002/04/16 23:40:36  kainhofe
+// Exceptions no longer crash the daemon, recurrences are correct now, end date is set correctly. Problems: All events are off 1 day, lots of duplicates, exceptions are duplicate, too.
+//
 // Revision 1.52  2002/04/14 22:18:16  kainhofe
 // Implemented the second part of the sync (PC=>Palm), but disabled it, because it corrupts the Palm datebook
 //
