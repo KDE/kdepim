@@ -200,7 +200,7 @@ LogWidget::LogWidget(QWidget * parent) :
 		fSplash = new QLabel(this);
 		fSplash->setPixmap(splash);
 		fSplash->setAlignment(AlignCenter);
-		QTimer::singleShot(30000,this,SLOT(hideSplash()));
+		QTimer::singleShot(3000,this,SLOT(hideSplash()));
 		grid->addMultiCellWidget(fSplash,1,3,1,2);
 		grid->addColSpacing(0,10);
 		grid->setColStretch(1,50);
