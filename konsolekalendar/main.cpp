@@ -59,7 +59,7 @@ using namespace std;
 
 static const char progName[] = "konsolekalendar";
 static const char progDisplay[] = "KonsoleKalendar";
-static const char progVersion[] = "0.9.9";
+static const char progVersion[] = "1.0.0";
 static const char description[] = I18N_NOOP("A command line interface to KDE calendars");
 
 static KCmdLineOptions options[] =
@@ -67,16 +67,16 @@ static KCmdLineOptions options[] =
   { "help", I18N_NOOP("Print this help and exit"), 0 },
   { "verbose", I18N_NOOP("Print helpful runtime messages"), 0 },
   { "dry-run", I18N_NOOP("Print what would have been done, but do not execute"), 0 },
-  { "file <calendar-file>", I18N_NOOP("Specify which calendar you want to use"), 0 },
-  { "make-default", I18N_NOOP("Make calendar file as default resource (You should know what you are doing!)"), 0 },
+  //{ "file <calendar-file>", I18N_NOOP("Specify which calendar you want to use"), 0 },
+  //{ "make-default", I18N_NOOP("Make calendar file as default resource (You should know what you are doing!)"), 0 },
 
   { ":", I18N_NOOP(" Major operation modes:"), 0 },
   { "view", I18N_NOOP("  Print calendar events in specified export format"), 0 },
   { "add", I18N_NOOP("  Insert an event into the calendar"), 0 },
   { "change", I18N_NOOP("  Modify an existing calendar event"), 0 },
   { "delete", I18N_NOOP("  Remove an existing calendar event"), 0 },
-  { "import <import-file>", I18N_NOOP("  Import this calendar to main calendar"), 0 },
-  { "create", I18N_NOOP("  Create new calendar file if one does not exist"), 0 },
+  //{ "import <import-file>", I18N_NOOP("  Import this calendar to main calendar"), 0 },
+  // { "create", I18N_NOOP("  Create new calendar file if one does not exist"), 0 },
 
   { ":", I18N_NOOP(" Operation modifiers:"), 0 },
   { "next", I18N_NOOP("  View next activity in calendar"), 0 },
@@ -240,10 +240,10 @@ int main(int argc, char *argv[])
    *   Makes calendar as default resource
    *
    */
-  if ( args->isSet("make-default") ) {
+  /*if ( args->isSet("make-default") ) {
      variables.setDefault( true );
      kdDebug() << "main | parse options | Set calendar as default (needs --file to work)" << endl;
-  }
+  }*/
 	
 	
   /*
@@ -283,12 +283,13 @@ int main(int argc, char *argv[])
    *  Switch on Create
    *
    */
-  if ( args->isSet("create") ) {
+  /*if ( args->isSet("create") ) {
     view=false;
     create=true;
 
     kdDebug() << "main | parse options | Calendar File: (Create)" << endl;
-  }
+    
+  }*/
 
 
   /*
@@ -442,20 +443,22 @@ int main(int argc, char *argv[])
     variables.setAll( false );
   }
 
-  if ( args->isSet("import") ) {
+  /*if ( args->isSet("import") ) {
     importFile = true;
     option = args->getOption("import");
     variables.setImportFile( option );
 
     kdDebug() << "main | parse options | importing file from: (" << option << ")" << endl;
-  }
+  }*/
 
 
- if ( args->isSet("file") ) {
+ /*if ( args->isSet("file") ) {
     calendarFile = true;
     option = args->getOption("file");
     variables.setCalendarFile( option );
- }
+    
+
+ }*/
 
   
   KonsoleKalendar *konsolekalendar = new KonsoleKalendar( &variables );
@@ -465,7 +468,7 @@ int main(int argc, char *argv[])
    * This must be done before we get to opening biz
    */
    
-  QFile fileExists( variables.getCalendarFile() );
+  /*QFile fileExists( variables.getCalendarFile() );
   bool exists = fileExists.exists();
   fileExists.close();
 
@@ -484,7 +487,7 @@ int main(int argc, char *argv[])
       kdError() << i18n("Unable to create calendar: ").local8Bit() << variables.getCalendarFile() << endl;
       return(1);
     }
-   }
+   }*/
 
 
   CalendarResources *calendarResource = new CalendarResources(); 
@@ -492,9 +495,11 @@ int main(int argc, char *argv[])
   ResourceCalendar *defaultResource = NULL; 
   /*
    * File must be there when we open it;)
+   *
+   * NO NEEDED ANYMORE WE CAN'T DO ANYTHING
    */
    
-  if ( args->isSet("file") ) {
+  /*if ( args->isSet("file") ) {
     defaultResource = new ResourceLocal( option );
     
     defaultResource->setResourceName( option );
@@ -521,7 +526,7 @@ int main(int argc, char *argv[])
        return(-1);
      }
      
-   }
+   }*/
 
   /***************************************************************************
    * Glorious date/time checking and setting code                            *
