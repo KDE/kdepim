@@ -158,15 +158,20 @@ public:
    * values stored in this class by using the findRef() function
    * and by using their associated keys
    */
-  void setFirstName(const QString &v) { replaceValue("X-FirstName",v);}
-  void setLastName(const QString &v) { replaceValue("X-LastName",v); }
-  void setMiddleName(const QString &v) { replaceValue("X-MiddleName",v); }
+  void setFirstName(const QString &v)
+	    { replaceValue("firstname", v); replaceValue("X-FirstName",v);}
+  void setLastName(const QString &v)
+	    { replaceValue("lastname", v); replaceValue("X-LastName",v); }
+  void setMiddleName(const QString &v)
+	    { replaceValue("middlename", v); replaceValue("X-MiddleName",v); }
   void setNamePrefix(const QString &v) { replaceValue("X-Title", v); }
   /** Use Prefix, First, Last, Middle to set the name */
   void setName();
-  void setJobTitle(const QString &v) { replaceValue("ROLE", v); }
+  void setJobTitle(const QString &v)
+	    { replaceValue("title", v); replaceValue("ROLE", v); }
   void setCompany(const QString &v) { replaceValue("ORG", v); }
-  void setEmail(const QString &v) { replaceValue("EMAIL", v); }
+  void setEmail(const QString &v)
+	    { replaceValue("emails", v + "\\e"); replaceValue("EMAIL", v); }
   void setNickname(const QString &v) { replaceValue("NICKNAME", v); }
   void setNote(const QString &v) { replaceValue("X-Note", v); }
   void setBusinessPhone(const QString &v)
@@ -230,11 +235,11 @@ public:
 	
       protected :
 	Address(ContactEntry *parent, const QString &type) :
-	      fParent(parent), fPre("X-" + type + "Address")
+	      fParent(parent),
+	      fPre("X-" + type + "Address")
 		  { }
 	    
       private :
-	
 	ContactEntry *fParent;
 	QString fPre;
       };

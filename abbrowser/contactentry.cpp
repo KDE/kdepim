@@ -283,6 +283,7 @@ void ContactEntry::setName()
     name += last;
     replaceValue("N", name);
     replaceValue("X-FileAs", name);
+    replaceValue("fn", name);
     }
 
 const QString &ContactEntry::getFolder() const
@@ -343,13 +344,13 @@ bool ContactEntry::isModified() const
     return (val != 0);
     }
 
-ContactEntry::Address *ContactEntry::getHomeAddress()
+ContactEntry::Address *ContactEntry::getHomeAddress() 
     {
     Address *a = new Address(this, "Home");
     return a;    
     }
 
-ContactEntry::Address *ContactEntry::getBusinessAddress()
+ContactEntry::Address *ContactEntry::getBusinessAddress() 
     {
     Address *a = new Address(this, "Business");
     return a;
