@@ -379,22 +379,25 @@ EmpathMessageListWidget::s_linkChanged(QListViewItem * item)
 }
 
     void
-EmpathMessageListWidget::s_hideRead()
+EmpathMessageListWidget::s_setHideRead(bool b)
 {
-    filling_ = false;
-    hideRead_ = !hideRead_;
-    _fillDisplay();
+    hideRead_ = b;
 }
 
     void
-EmpathMessageListWidget::s_showFolder(const QDict<EmpathIndexRecord> & l)
+EmpathMessageListWidget::s_setThread(bool b)
 {
-    qDebug("Hi");
+    thread_ = b;
+}
+
+    void
+EmpathMessageListWidget::s_setIndex(const QDict<EmpathIndexRecord> & l)
+{
     filling_ = false;
     index_ = l;
     _fillDisplay();
 }
-    
+
     void
 EmpathMessageListWidget::s_headerClicked(int i)
 {
@@ -417,7 +420,7 @@ EmpathMessageListWidget::_initActions()
     actionCollection_ = new QActionCollection(this, "actionCollection");
 
 #define CA(visibleName, name, key, slot) \
-    new KAction(visibleName, QIconSet(BarIcon(name)), key, \
+    new KAction(visibleName, name, key, \
         this, slot, actionCollection(), name);
 
 

@@ -288,7 +288,8 @@ EmpathMessageListItem::initStatic()
 
     KConfig * c(KGlobal::config());
     c->setGroup("EmpathMessageListWidget");
-    unreadColour_ = new QColor(c->readColorEntry("UnreadMessageColor"));
+    QColor dflt = Qt::darkRed;
+    unreadColour_ = new QColor(c->readColorEntry("UnreadMessageColor", &dflt));
 }
 
 // vim:ts=4:sw=4:tw=78

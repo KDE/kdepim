@@ -62,9 +62,6 @@ class EmpathMessageListWidget : public EmpathListView
         
         QString     firstSelected();
         QStringList selection();
-
-        void setThreading(bool);
-        bool threading() { return thread_; }
         
         QActionCollection * actionCollection() { return actionCollection_; }
  
@@ -75,7 +72,9 @@ class EmpathMessageListWidget : public EmpathListView
  
     public slots:
 
-        void s_showFolder(const QDict<EmpathIndexRecord> &);
+        void s_setHideRead(bool);
+        void s_setThread(bool);
+        void s_setIndex(const QDict<EmpathIndexRecord> &);
 
     protected slots:
  
@@ -117,8 +116,6 @@ class EmpathMessageListWidget : public EmpathListView
         void s_headerClicked        (int);
         void s_itemGone             (const EmpathIndexRecord &);
         void s_itemCome             (const EmpathIndexRecord &);
-    
-        void s_hideRead();
 
         void s_updateActions        (QListViewItem *);
 

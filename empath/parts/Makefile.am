@@ -1,1 +1,2 @@
-SUBDIRS = libEmpathMessageListWidget
+SUBDIRS = libEmpathMessageListWidget libEmpathMessageViewWidget
+#libEmpathComposeWidget
