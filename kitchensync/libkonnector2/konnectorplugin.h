@@ -40,29 +40,78 @@ class Kapabilities;
 class ConfigWidget;
 
 /**
- *  The base class of all plugins. The functions are
- *  the same as in konnector
- */
+  This class provides the interface for a Konnector. A Konnector is a class
+  responsible for communication with a certain kind of PIM data source. It does
+  the actual transport of the data and conversion of data is needed. It provides
+  the PIM data in a generic way using the KSyncee class which is suitable for
+  further processing within KDE, e.g. for syncing or being accessed by a
+  kioslave.
+*/
 class Konnector : public QObject
 {
     Q_OBJECT
   public:
+    /**
+      Create Konnector object. The Konnector is usually created by the
+      corresponding manager class by loading as plugin.
+    */
     Konnector( QObject *obj, const char *name,
                const QStringList &args = QStringList() );
+    /**
+      Destruct Konnector object.
+    */
     virtual ~Konnector();
 
+    /**
+      Return capabilities of the Konnector.
+    */
     virtual Kapabilities capabilities() = 0;
+    /**
+      Set capabilities.
+      TODO: Shouldn't this be internally done by the implementation?
+    */
     virtual void setCapabilities( const Kapabilities &kaps ) = 0;
+
+    /**
+      Start sync. By calling this function a synchronisation process is
+      initiated. As response to this function a list of Syncees is delivered by
+      the sync() signal.
+
+      @return False, if error occured while trying to start syncing, otherwise
+              true.
+    */
     virtual bool startSync() = 0;
+    /**
+      Start restore.
+    */
     virtual bool startRestore( const QString &path ) = 0;
+    /**
+      Start backup.
+    */
     virtual bool startBackup( const QString &path ) = 0;
+
+    /**
+      Connect device. Return true, if device could be connected.
+    */
     virtual bool connectDevice() = 0;
+    /**
+      Disconnect device.
+    */
     virtual bool disconnectDevice() = 0;
 
+    /**
+      Return meta information about this Konnector.
+    */
     virtual KonnectorInfo info() const = 0;
 
+    /**
+      Return configuration widget of this Konnector.
+    */
     virtual ConfigWidget *configWidget( const Kapabilities &, QWidget *parent,
                                         const char *name = 0 );
+    /**
+      Return configuration widget of this Konnector.
+    */
     virtual ConfigWidget *configWidget( QWidget *parent, const char *name = 0 );
 
     virtual void add( const QString &res );
@@ -91,11 +140,18 @@ class Konnector : public QObject
 //    virtual void slotWrite( const QString &, const QByteArray & ) = 0;
 
   protected:
+    /**
+      Write data contained in list of Syncee object back to device.
+    */
     virtual void write(Syncee::PtrList ) = 0;
 //    virtual void slotWrite(KOperations::ValueList ) = 0;
 
   signals:
+    /**
+      This signal is emitted to provide the results to a startSync() call.
+    */
     void sync( Konnector *,  Syncee::PtrList );
+
     void sig_progress( Konnector *, const Progress & );
     void sig_error( Konnector *, const Error & );
     void sig_downloaded( Konnector *, Syncee::PtrList );
