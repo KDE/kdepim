@@ -102,16 +102,6 @@ static QString simpleEmailTestParseResultToString( bool validEmail )
   return "false";
 }
 
-static QString getEmailParseResultToString( QCString emailAddress )
-{
-  return QString( emailAddress );
-}
-
-static QString getSplitEmailParseResultToString( QStringList emailAddresses )
-{
-  return QString( emailAddresses.join( "," ) );
-}
-
 static bool checkIsValidEmailAddress( const QString& input, const QString&  expErrorCode )
 {
   EmailParseResult errorCode = KPIM::isValidEmailAddress( input );
