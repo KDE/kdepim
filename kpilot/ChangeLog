@@ -1,3 +1,30 @@
+KPilot Developer's notes for december 31st 2001
+===============================================
+
+Time to go out with a bang, eh.
+
+Fixing the VCal conduits so they actually do a sync was a fair bit of 
+work, partly because it was so weirdly crufty, partly because of the
+peculiar separation of the todo from the vcal conduit.
+
+
+2001-12-28  Adriaan de Groot
+* conduits/vcalconduit/vcalBase.{h,cc}
+* conduits/vcalconduit/vcal-conduit.{h,cc}
+* conduits/vcalconduit/todo-conduit.{h,cc}
+  - Well, it compiles now.
+* lib/plugin.{h,cc}
+  - Added isBackup() so that conduits can now also do their own
+    backups. Note that conduits aren't called (yet) during a backup
+    action.
+* conduits/popmail/*
+  - Why the heck does this (still) use FILE *?
+  - It compiles and there is a sync action.
+
+Next up is checking out kpilotTest and making sure that it does sensible 
+things, like closing the device handle, allowing multiple syncs, and
+running file install correctly. After that, testing testing testing.
+
 KPilot Developer's notes for december 27th 2001
 ===============================================
 
