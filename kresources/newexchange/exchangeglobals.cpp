@@ -30,11 +30,9 @@
 
 #include <libkcal/resourcecached.h>
 #include <libemailfunctions/idmapper.h>
-// #include <kio/job.h>
+#include <kio/job.h>
 #include <kio/davjob.h>
 #include <kdebug.h>
-
-// #include <qdom.h>
 
 KPIM::GroupwareJob::ContentType ExchangeGlobals::getContentType( const QDomElement &prop )
 {
@@ -164,19 +162,17 @@ KIO::Job *ExchangeGlobals::createRemoveJob( const KURL &uploadurl,
 {
   QStringList urls;
   KPIM::GroupwareUploadItem::List::const_iterator it;
-  kdDebug(5800) << " ExchangeGlobals::createRemoveJob: , URL="<<uploadurl.url()<<endl;
+  kdDebug() << " ExchangeGlobals::createRemoveJob: , URL="<<uploadurl.url()<<endl;
   for ( it = deletedItems.begin(); it != deletedItems.end(); ++it ) {
     //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
-    kdDebug(7000) << "Delete: " <<   (*it)->url().url() << endl;
+    kdDebug() << "Delete: " <<   (*it)->url().url() << endl;
     KURL url( uploadurl );
-    url.setPath( (*it)->url().url() );
-    if ( !(*it)->url().isEmpty() )
+    url.setPath( (*it)->url().path() );
+    if ( !url.isEmpty() )
       urls << url.url();
-    kdDebug(5700) << "Delete (Mod) : " <<   url.url() << endl;
+    kdDebug() << "Delete (Mod) : " <<   url.url() << endl;
   }
-//  return KIO::del( urls, false, false );
-  // TODO
-  return 0;
+  return KIO::del( urls, false, false );
 }
 
 
