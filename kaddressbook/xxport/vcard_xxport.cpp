@@ -21,6 +21,7 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include <qcheckbox.h>
 #include <qfile.h>
 #include <qfont.h>
 #include <qlabel.h>
@@ -64,6 +65,21 @@ class VCardViewerDialog : public KDialogBase
                        QWidget *parent, const char *name = 0 );
 };
 
+class VCardExportSelectionDialog : public KDialogBase
+{
+  public:
+    VCardExportSelectionDialog( QWidget *parent, const char *name = 0 );
+    ~VCardExportSelectionDialog();
+
+    bool exportPrivateFields() const;
+    bool exportBusinessFields() const;
+    bool exportOtherFields() const;
+
+  private:
+    QCheckBox *mPrivateBox;
+    QCheckBox *mBusinessBox;
+    QCheckBox *mOtherBox;
+};
 
 VCardXXPort::VCardXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )
@@ -73,13 +89,18 @@ VCardXXPort::VCardXXPort( KABC::AddressBook *ab, QWidget *parent, const char *na
   createExportAction( i18n( "Export vCard 3.0..." ), "v30" );
 }
 
-bool VCardXXPort::exportContacts( const KABC::AddresseeList &list, const QString &data )
+bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QString &data )
 {
   KABC::VCardConverter converter;
   KURL url;
+  KABC::AddresseeList list;
+
+  list = filterContacts( addrList );
 
   bool ok = true;
-  if ( list.count() == 1 ) {
+  if ( list.isEmpty() ) {
+    return ok;
+  } else if ( list.count() == 1 ) {
     url = KFileDialog::getSaveURL( list[ 0 ].givenName() + "_" + list[ 0 ].familyName() + ".vcf" );
     if ( url.isEmpty() )
       return true;
@@ -207,6 +228,85 @@ bool VCardXXPort::doExport( const KURL &url, const QString &data )
   return KIO::NetAccess::upload( tmpFile.name(), url, parentWidget() );
 }
 
+KABC::AddresseeList VCardXXPort::filterContacts( const KABC::AddresseeList &addrList )
+{
+  KABC::AddresseeList list;
+
+  if ( addrList.isEmpty() )
+    return addrList;
+
+  VCardExportSelectionDialog dlg( parentWidget() );
+  if ( !dlg.exec() )
+    return list;
+
+  KABC::AddresseeList::ConstIterator it;
+  for ( it = addrList.begin(); it != addrList.end(); ++it ) {
+    KABC::Addressee addr;
+
+    addr.setUid( (*it).uid() );
+    addr.setFormattedName( (*it).formattedName() );
+    addr.setPrefix( (*it).prefix() );
+    addr.setGivenName( (*it).givenName() );
+    addr.setAdditionalName( (*it).additionalName() );
+    addr.setFamilyName( (*it).familyName() );
+    addr.setSuffix( (*it).suffix() );
+    addr.setNickName( (*it).nickName() );
+    addr.setMailer( (*it).mailer() );
+    addr.setTimeZone( (*it).timeZone() );
+    addr.setGeo( (*it).geo() );
+    addr.setProductId( (*it).productId() );
+    addr.setSortString( (*it).sortString() );
+    addr.setUrl( (*it).url() );
+    addr.setSecrecy( (*it).secrecy() );
+    addr.setSound( (*it).sound() );
+    addr.setEmails( (*it).emails() );
+    addr.setCategories( (*it).categories() );
+
+    if ( dlg.exportPrivateFields() ) {
+      addr.setBirthday( (*it).birthday() );
+      addr.setNote( (*it).note() );
+      addr.setPhoto( (*it).photo() );
+
+      // TODO: add all numbers with type != WORK
+      KABC::PhoneNumber::List phones = (*it).phoneNumbers( KABC::PhoneNumber::Home );
+      KABC::PhoneNumber::List::Iterator phoneIt;
+      for ( phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt )
+        addr.insertPhoneNumber( *phoneIt );
+
+      // TODO: add all addresses with type != WORK
+      KABC::Address::List addresses = (*it).addresses( KABC::Address::Home );
+      KABC::Address::List::Iterator addrIt;
+      for ( addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt )
+        addr.insertAddress( *addrIt );
+    }
+
+    if ( dlg.exportBusinessFields() ) {
+      addr.setTitle( (*it).title() );
+      addr.setRole( (*it).role() );
+      addr.setOrganization( (*it).organization() );
+
+      addr.setLogo( (*it).logo() );
+
+      KABC::PhoneNumber::List phones = (*it).phoneNumbers( KABC::PhoneNumber::Work );
+      KABC::PhoneNumber::List::Iterator phoneIt;
+      for ( phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt )
+        addr.insertPhoneNumber( *phoneIt );
+
+      KABC::Address::List addresses = (*it).addresses( KABC::Address::Work );
+      KABC::Address::List::Iterator addrIt;
+      for ( addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt )
+        addr.insertAddress( *addrIt );
+    }
+
+    if ( dlg.exportOtherFields() )
+      addr.setCustoms( (*it).customs() );
+
+    list.append( addr );
+  }
+
+  return list;
+}
+
 // ---------- VCardViewer Dialog ---------------- //
 
 VCardViewerDialog::VCardViewerDialog( const KABC::Addressee &addr,
@@ -227,6 +327,62 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee &addr,
   view->setAddressee( addr );
   view->setVScrollBarMode( QScrollView::Auto );
   layout->addWidget( view );
+}
+
+// ---------- VCardExportSelection Dialog ---------------- //
+
+VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent,
+                                                        const char *name )
+  : KDialogBase( Plain, i18n( "Select vCard fields" ), Ok | Cancel, Ok,
+                 parent, name, true, true )
+{
+  QFrame *page = plainPage();
+
+  QVBoxLayout *layout = new QVBoxLayout( page, marginHint(), spacingHint() );
+
+  QLabel *label = new QLabel( i18n( "Select the fields which shall be exported in the vCard." ), page );
+  layout->addWidget( label );
+
+  mPrivateBox = new QCheckBox( i18n( "Private fields" ), page );
+  layout->addWidget( mPrivateBox );
+
+  mBusinessBox = new QCheckBox( i18n( "Business fields" ), page );
+  layout->addWidget( mBusinessBox );
+
+  mOtherBox = new QCheckBox( i18n( "Other fields" ), page );
+  layout->addWidget( mOtherBox );
+
+  KConfig config( "kaddressbookrc" );
+  config.setGroup( "XXPortVCard" );
+
+  mPrivateBox->setChecked( config.readBoolEntry( "ExportPrivateFields", true ) );
+  mBusinessBox->setChecked( config.readBoolEntry( "ExportBusinessFields", false ) );
+  mOtherBox->setChecked( config.readBoolEntry( "ExportOtherFields", false ) );
+}
+
+VCardExportSelectionDialog::~VCardExportSelectionDialog()
+{
+  KConfig config( "kaddressbookrc" );
+  config.setGroup( "XXPortVCard" );
+
+  config.writeEntry( "ExportPrivateFields", mPrivateBox->isChecked() );
+  config.writeEntry( "ExportBusinessFields", mBusinessBox->isChecked() );
+  config.writeEntry( "ExportOtherFields", mOtherBox->isChecked() );
+}
+
+bool VCardExportSelectionDialog::exportPrivateFields() const
+{
+  return mPrivateBox->isChecked();
+}
+
+bool VCardExportSelectionDialog::exportBusinessFields() const
+{
+  return mBusinessBox->isChecked();
+}
+
+bool VCardExportSelectionDialog::exportOtherFields() const
+{
+  return mOtherBox->isChecked();
 }
 
 #include "vcard_xxport.moc"
