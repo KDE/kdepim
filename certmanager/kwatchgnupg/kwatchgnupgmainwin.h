@@ -48,6 +48,7 @@ public:
 public slots:
   void slotWatcherExited();
   void slotReadStdout();
+  void slotAckRead();
 
   void slotSaveAs();
   void slotQuit();

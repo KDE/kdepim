@@ -50,6 +50,7 @@
 #include <qtextedit.h>
 #include <qdir.h>
 #include <qeventloop.h>
+#include <qtimer.h>
 
 #define WATCHGNUPGBINARY "watchgnupg"
 #define WATCHGNUPGSOCKET ( QDir::home().canonicalPath() + "/.gnupg/log-socket")
@@ -179,6 +180,8 @@ void KWatchGnuPGMainWindow::slotWatcherExited()
 
 void KWatchGnuPGMainWindow::slotReadStdout()
 {
+  if ( !mWatcher )
+    return;
   QString str;
   while( mWatcher->readln(str,false) > 0 ) {
 	mCentralWidget->append( str );
@@ -188,7 +191,12 @@ void KWatchGnuPGMainWindow::slotReadStdout()
 	  mSysTray->setAttention(true);
 	}
   }
-  mWatcher->ackRead();
+  QTimer::singleShot( 0, this, SLOT(slotAckRead()) );
+}
+
+void KWatchGnuPGMainWindow::slotAckRead() {
+  if ( mWatcher )
+    mWatcher->ackRead();
 }
 
 void KWatchGnuPGMainWindow::show()
