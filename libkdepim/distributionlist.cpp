@@ -12,8 +12,6 @@ KPIM::DistributionList::DistributionList()
 KPIM::DistributionList::DistributionList( const KABC::Addressee& addr )
  : KABC::Addressee( addr )
 {
-  // used when loading, so the custom field is already there
-  Q_ASSERT( isDistributionList( addr ) );
 }
 
 void KPIM::DistributionList::setName( const QString &name )
@@ -53,17 +51,31 @@ static ParseList parseCustom( const QString& str )
   return res;
 }
 
-void KPIM::DistributionList::insertEntry( const Addressee &addr, const QString &email )
+void KPIM::DistributionList::insertEntry( const Addressee& addr, const QString& email )
+{
+  // insertEntry will removeEntry(uid), but not with formattedName
+  removeEntry( addr.formattedName(), email );
+  insertEntry( addr.uid(), email );
+}
+
+void KPIM::DistributionList::insertEntry( const QString& uid, const QString& email )
 {
   Q_ASSERT( !email.isEmpty() || email.isNull() ); // hopefully never called with "", would lead to confusion
-  removeEntry( addr, email ); // avoid duplicates
+  removeEntry( uid, email ); // avoid duplicates
   QString str = custom( "KADDRESSBOOK", s_customFieldName );
   // Assumption: UIDs don't contain ; nor ,
-  str += ";" + addr.uid() + "," + email;
+  str += ";" + uid + "," + email;
   insertCustom( "KADDRESSBOOK", s_customFieldName, str ); // replace old value
 }
 
-void KPIM::DistributionList::removeEntry( const Addressee &addr, const QString &email )
+void KPIM::DistributionList::removeEntry( const Addressee& addr, const QString& email )
+{
+  removeEntry( addr.uid(), email );
+  // Also remove entries with the full name as uid (for the kolab thing)
+  removeEntry( addr.formattedName(), email );
+}
+
+void KPIM::DistributionList::removeEntry( const QString& uid, const QString& email )
 {
   Q_ASSERT( !email.isEmpty() || email.isNull() ); // hopefully never called with "", would lead to confusion
   ParseList parseList = parseCustom( custom( "KADDRESSBOOK", s_customFieldName ) );
@@ -71,7 +83,7 @@ void KPIM::DistributionList::removeEntry( const Addressee &addr, const QString &
   for( ParseList::ConstIterator it = parseList.begin(); it != parseList.end(); ++it ) {
     const QString thisUid = (*it).first;
     const QString thisEmail = (*it).second;
-    if ( thisUid == addr.uid() && thisEmail == email ) {
+    if ( thisUid == uid && thisEmail == email ) {
       continue; // remove that one
     }
     str += ";" + thisUid + "," + thisEmail;
@@ -85,6 +97,23 @@ bool KPIM::DistributionList::isDistributionList( const KABC::Addressee& addr )
 {
   const QString str = addr.custom( "KADDRESSBOOK", s_customFieldName );
   return !str.isEmpty();
+}
+
+// ###### KDE4: add findByFormattedName to KABC::AddressBook
+static KABC::Addressee::List findByFormattedName( KABC::AddressBook* book,
+                                            const QString& name,
+                                            bool caseSensitive = true )
+{
+  KABC::Addressee::List res;
+  KABC::AddressBook::Iterator abIt;
+  for ( abIt = book->begin(); abIt != book->end(); ++abIt )
+  {
+    if ( caseSensitive && (*abIt).formattedName() == name )
+      res.append( *abIt );
+    if ( !caseSensitive && (*abIt).formattedName().lower() == name.lower() )
+      res.append( *abIt );
+  }
+  return res;
 }
 
 KPIM::DistributionList KPIM::DistributionList::findByName( KABC::AddressBook* book,
@@ -105,6 +134,28 @@ KPIM::DistributionList KPIM::DistributionList::findByName( KABC::AddressBook* bo
   return DistributionList();
 }
 
+static KABC::Addressee findByUidOrName( KABC::AddressBook* book, const QString& uidOrName, const QString& email )
+{
+  KABC::Addressee a = book->findByUid( uidOrName );
+  if ( a.isEmpty() ) {
+    // uid not found, check if maybe this is an email instead. Used by kolab resource.
+    // (But this has to be done here, since when loading we might not have the entries yet)
+    KABC::Addressee::List lst = findByFormattedName( book, uidOrName );
+
+    if ( !lst.isEmpty() && email.isEmpty() ) // no email specified, take first match
+      a = lst.first();
+    else {
+      KABC::Addressee::List::ConstIterator listit = lst.begin();
+      for ( ; listit != lst.end(); ++listit )
+        if ( (*listit).emails().contains( email ) ) {
+          a = *listit;
+          break;
+        }
+    }
+  }
+  return a;
+}
+
 KPIM::DistributionList::Entry::List KPIM::DistributionList::entries( KABC::AddressBook* book ) const
 {
   Entry::List res;
@@ -114,7 +165,7 @@ KPIM::DistributionList::Entry::List KPIM::DistributionList::entries( KABC::Addre
     const QString uid = (*it).first;
     const QString email = (*it).second;
     // look up contact
-    KABC::Addressee a = book->findByUid( uid );
+    KABC::Addressee a = findByUidOrName( book, uid, email );
     if ( a.isEmpty() ) {
       // ## The old DistributionListManager had a "missing entries" list...
       kdWarning() << "Addressee not found: " << uid << endl;
@@ -137,7 +188,7 @@ QStringList KPIM::DistributionList::emails( KABC::AddressBook* book ) const
     const QString thisEmail = (*it).second;
 
     // look up contact
-    KABC::Addressee a = book->findByUid( thisUid );
+    KABC::Addressee a = findByUidOrName( book, thisUid, thisEmail );
     if ( a.isEmpty() ) {
       // ## The old DistributionListManager had a "missing entries" list...
       continue;

@@ -67,6 +67,7 @@ void TestDistrList::setup()
     // and two contacts
     KABC::Addressee addr1;
     addr1.setName( "addr1" );
+    addr1.setFormattedName( "addr1" );
     addr1.insertEmail( "addr1@kde.org", true );
     addr1.insertEmail( "addr1-alternate@kde.org" );
     ab->insertAddressee( addr1 );
@@ -135,28 +136,32 @@ void TestDistrList::testNewList()
     DistributionList dl;
     dl.setName( "foo" );
     assert( !dl.isEmpty() );
-    check( "name set", dl.name(), "foo" );
+    check( "name set", dl.formattedName(), "foo" );
     assert( DistributionList::isDistributionList( dl ) );
 
     KABC::AddressBook *ab = KABC::StdAddressBook::self();
     ab->insertAddressee( dl );
+#if 0 // can't do that until we have KABC::AddressBook::findByFormattedName, or we use setName()
     KABC::Addressee::List addrList = ab->findByName( "foo" );
     assert( addrList.count() == 1 );
     KABC::Addressee addr = addrList.first();
     assert( !addr.isEmpty() );
     check( "correct name", addr.name(), "foo" );
     assert( DistributionList::isDistributionList( addr ) );
+#else
+    KABC::Addressee addr = dl;
+#endif
 
     DistributionList dl2 = DistributionList::findByName( ab, "foo" );
     assert( !dl2.isEmpty() );
-    check( "correct name", dl2.name(), "foo" );
+    check( "correct name", dl2.formattedName(), "foo" );
     assert( DistributionList::isDistributionList( dl2 ) );
 
     // Test the ctor that takes an addressee
     DistributionList dl3( addr );
     assert( !dl3.isEmpty() );
     assert( DistributionList::isDistributionList( dl3 ) );
-    check( "correct name", dl3.name(), "foo" );
+    check( "correct name", dl3.formattedName(), "foo" );
 }
 
 void TestDistrList::testInsertEntry()
@@ -166,9 +171,13 @@ void TestDistrList::testInsertEntry()
     DistributionList dl = DistributionList::findByName( ab, "foo" );
     assert( !dl.isEmpty() );
 
+#if 0 // the usual method
     KABC::Addressee addr1 = ab->findByName( "addr1" ).first();
     assert( !addr1.isEmpty() );
     dl.insertEntry( addr1 );
+#else // the kolab-resource method
+    dl.insertEntry( "addr1" );
+#endif
 
     KABC::Addressee addr2 = ab->findByName( "addr2" ).first();
     assert( !addr2.isEmpty() );
@@ -192,6 +201,7 @@ void TestDistrList::testInsertEntry()
 
     // Test emails()
     QStringList emails = dl.emails( ab );
+    kdDebug() << emails << endl;
     assert( emails.count() == 3 );
     check( "first email", emails[0], "addr1 <addr1@kde.org>" );
     check( "second email", emails[1], "addr2 <addr2-alternate@kde.org>" );
@@ -255,6 +265,7 @@ void TestDistrList::testDuplicate()
     addr.insertEmail( "foo@kde.org", true );
     ab->insertAddressee( addr );
 
+#if 0 // we need a findByFormattedName
     KABC::Addressee::List addrList = ab->findByName( "foo" );
     assert( addrList.count() == 2 );
 
@@ -264,11 +275,12 @@ void TestDistrList::testDuplicate()
     assert( a || b );
     //
     assert( ! ( a && b ) );
+#endif
 
     DistributionList dl = DistributionList::findByName( ab, "foo" );
     assert( !dl.isEmpty() );
     assert( DistributionList::isDistributionList( dl ) );
-    assert( dl.name() == "foo" );
+    assert( dl.formattedName() == "foo" );
 }
 
 void TestDistrList::testDeleteList()

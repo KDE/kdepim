@@ -74,6 +74,12 @@ class DistributionList : public KABC::Addressee
     */
     void removeEntry( const Addressee &, const QString &email=QString::null );
 
+    /// Overload, used by resources to avoid looking up the addressee
+    void insertEntry( const QString& uid, const QString& email=QString::null );
+    /// Overload, used by resources to avoid looking up the addressee
+    void removeEntry( const QString& uid, const QString& email=QString::null );
+
+
     /**
       Return list of email addresses, which belong to this distributon list.
       These addresses can be directly used by e.g. a mail client.
