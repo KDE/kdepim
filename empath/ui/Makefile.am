@@ -1,3 +1,5 @@
+KDE_CXXFLAGS = $(LIBQPTHREAD_CXXFLAGS)
+
 INCLUDES = -I$(top_srcdir)/rmm -I$(top_srcdir)/empath/lib $(all_includes)
 
 lib_LTLIBRARIES = libempathui.la
@@ -31,6 +33,7 @@ EmpathFolderChooserDialog.cpp \
 EmpathFolderChooserWidget.cpp \
 EmpathFolderListItem.cpp \
 EmpathFolderWidget.cpp \
+EmpathHeaderBodyWidget.cpp \
 EmpathHeaderSpecWidget.cpp \
 EmpathHeaderViewWidget.cpp \
 EmpathIdentitySettingsDialog.cpp \
@@ -51,6 +54,7 @@ EmpathMessageWidget.cpp \
 EmpathPathSelectWidget.cpp \
 EmpathPasswordEditWidget.cpp \
 EmpathTaskWidget.cpp \
+EmpathTextSelectionWidget.cpp \
 EmpathSubjectSpecWidget.cpp \
 EmpathSendingSettingsDialog.cpp \
 EmpathSetupWizard.cpp \
