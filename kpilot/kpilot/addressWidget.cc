@@ -278,7 +278,6 @@ void AddressWidget::setupWidget()
 
 	// address info text view
 	fAddrInfo = new QTextView(this);
-	fAddrInfo->setPaper(this->backgroundColor());
 	grid->addMultiCellWidget(fAddrInfo, 1, 4, 2, 2);
 
 	QPushButton *button;
@@ -775,6 +774,9 @@ void AddressWidget::writeAddress(PilotAddress * which,
 }
 
 // $Log$
+// Revision 1.43  2001/10/17 08:46:08  adridg
+// Minor cleanups
+//
 // Revision 1.42  2001/09/30 19:51:56  adridg
 // Some last-minute layout, compile, and __FUNCTION__ (for Tru64) changes.
 //
