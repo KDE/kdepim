@@ -21,6 +21,8 @@
 #include <qlayout.h>
 #include <qcheckbox.h>
 
+#include "knappmanager.h"
+#include "knglobals.h"
 #include "knuserwidget.h"
 #include "knuserentry.h"
 #include "knusersettings.h"
@@ -28,7 +30,6 @@
 
 KNUserSettings::KNUserSettings(QWidget *p) : KNSettingsWidget(p)
 {
-  user=new KNUserEntry();
   QHBoxLayout *layout = new QHBoxLayout(this);
   uw=new KNUserWidget(this);
   layout->addWidget(uw);
@@ -41,25 +42,18 @@ KNUserSettings::KNUserSettings(QWidget *p) : KNSettingsWidget(p)
 
 KNUserSettings::~KNUserSettings()
 {
-  delete user;
 }
 
 
 
 void KNUserSettings::init()
 {
-  KConfig *conf=KGlobal::config();
-  conf->setGroup("IDENTITY");
-  user->load(conf);
-  uw->setData(user);
+  uw->setData(knGlobals.appManager->defaultUser());
 }
 
 
 
 void KNUserSettings::apply()
 {
-  KConfig *conf=KGlobal::config();
-  conf->setGroup("IDENTITY");
   uw->applyData();
-  user->save(conf);
 }

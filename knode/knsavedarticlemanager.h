@@ -99,9 +99,8 @@ class KNSavedArticleManager : public QObject, public KNArticleManager  {
         
     KNSavedArticle *c_urrentArticle;
     KNFolder *f_older, *fDrafts, *fOutbox, *fSent;
-    KNUserEntry *defaultUser;
     int warpAt;
-    bool rewarp, incSig, genMId;
+    bool rewarp, incSig, genMId, dontIncUA;
     QCString MIdhost, intro;
     QString quotSign;
     KNSendErrorDialog *sedlg;

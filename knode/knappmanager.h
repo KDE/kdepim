@@ -23,6 +23,8 @@
 #include <qfont.h>
 #include <qstringlist.h>
 
+class KNUserEntry;
+
 
 class KNAppManager {
 
@@ -54,12 +56,18 @@ class KNAppManager {
     QFont& font(int code)       { return fonts[code]; }
     QString& fontName(int code) { return fontNames[code]; }
 
+    // ok, this has nothing to do with appearance, but we need to
+    // convert the whole configuration management anyway...
+    KNUserEntry* defaultUser()    { return d_efaultUser; }
+
   protected:
 
     bool l_ongGroupList, u_seColors, u_seFonts;
     QValueList<QColor> colors;
     QValueList<QFont> fonts;
     QStringList colorNames, fontNames;
+
+    KNUserEntry *d_efaultUser;
 
 };
 

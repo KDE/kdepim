@@ -173,8 +173,10 @@ void KNArticleFilter::doFilter(KNGroup *g)
   int idRef;
   
   if(!l_oaded) load();
-  
-  
+
+  subject.expand(g);  // replace placeholders
+  from.expand(g);
+
   for(int idx=0; idx<g->length(); idx++) {
     art=g->at(idx);
     art->setFiltered(false);
@@ -273,8 +275,8 @@ bool KNArticleFilter::applyFilter(KNFetchArticle *a)
   if(result) result=lines.doFilter(a->lines());
   if(result) result=age.doFilter(a->age()); 
   if(result) result=subject.doFilter(a->subject());
-  if(result) result=from.doFilter(a->fromName());
-  
+  if(result) result=from.doFilter(a->fromName()+"##"+a->fromEmail());
+
   a->setFilterResult(result);
   a->setFiltered(true);
     

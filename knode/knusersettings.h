@@ -36,8 +36,7 @@ class KNUserSettings : public KNSettingsWidget  {
   protected:
     void init();  
     KNUserWidget *uw;
-    KNUserEntry *user;
-    
+
 };
 
 #endif

@@ -147,7 +147,7 @@ void KNFilterSettings::updateItem(KNArticleFilter *f)
   if (i!=-1) {
     if(f->isEnabled()) {
       flb->changeItem(new KNLBoxItem(f->translatedName(),f,&active), i);
-      mlb->changeItem(new KNLBoxItem(f->translatedName()), findItem(mlb, f));
+      mlb->changeItem(new KNLBoxItem(f->translatedName(),f), findItem(mlb, f));
     } else
       flb->changeItem(new KNLBoxItem(f->translatedName(),f,&disabled), i);
   }

@@ -26,6 +26,7 @@ class QLineEdit;
 
 class KSimpleConfig;
 
+class KNGroup;
 
 class KNStringFilter {
   
@@ -34,8 +35,10 @@ class KNStringFilter {
   public:
     KNStringFilter()  { enabled=false; con=true; regExp=false;}
     ~KNStringFilter() {}
-  
+
     KNStringFilter& operator=(const KNStringFilter &sf);
+
+    void expand(KNGroup *g);  // replace placeholders
           
     void load(KSimpleConfig *conf);
     void save(KSimpleConfig *conf);     
@@ -43,7 +46,7 @@ class KNStringFilter {
     bool doFilter(const QCString &s);
                 
   protected:
-    QCString data;
+    QCString data, expanded;
     bool con, enabled, regExp;  
     
 };

@@ -38,7 +38,7 @@ KNFilterConfigWidget::KNFilterConfigWidget(QWidget *parent, const char *name ) :
   subject=new KNStringFilterWidget(i18n("Subject"), sf);
   from=new KNStringFilterWidget(i18n("From"), sf);
   new QLabel(i18n("The following placeholders are supported:\n%MYNAME=own name, %MYEMAIL=own email address,\n%MYREPLYTO=own reply address"),sf);
-  sfL->addStretch(1);
+  sfL->addStretch(1);          // it's impossible to implement %MYREPLYTO!!! message has to be corrected after freeze
   addTab(sf, i18n("Subject + &From"));
       
   status=new KNStatusFilterWidget(this);

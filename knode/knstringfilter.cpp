@@ -24,6 +24,10 @@
 #include <klocale.h>
 #include <ksimpleconfig.h>
 
+#include "knappmanager.h"
+#include "kngroup.h"
+#include "knuserentry.h"
+#include "knglobals.h"
 #include "knstringfilter.h"
 
 
@@ -42,17 +46,42 @@ KNStringFilter& KNStringFilter::operator=(const KNStringFilter &sf)
 bool KNStringFilter::doFilter(const QCString &s)
 {
   bool ret=true;
-  
-  
+
   if(enabled) {
-    if(regExp) ret=(s.contains(QRegExp(data)) > 0);
-    else ret=(s.find(data,0,false)!=-1);
+    if(regExp) ret=(s.contains(QRegExp(expanded)) > 0);
+    else ret=(s.find(expanded,0,false)!=-1);
 
     if(!con) ret=!ret;
 
   }
 
   return ret;
+}
+
+
+
+// replace placeholders
+void KNStringFilter::expand(KNGroup *g)
+{
+  KNUserEntry *user=0;
+  KNUserEntry *duser=knGlobals.appManager->defaultUser();
+  KNUserEntry *guser=g->user();
+
+  expanded = data.copy();
+
+  if ((guser) && guser->hasName())
+    user = guser;
+  else
+    user = duser;
+
+  expanded.replace(QRegExp("%MYNAME"),user->name());
+
+  if ((guser) && guser->hasEmail())
+    user = guser;
+  else
+    user = duser;
+
+  expanded.replace(QRegExp("%MYEMAIL"),user->email());
 }
 
 
@@ -66,7 +95,7 @@ void KNStringFilter::load(KSimpleConfig *conf)
 }
 
 
-#warning uhmm, shouldnt be data a QString?
+
 void KNStringFilter::save(KSimpleConfig *conf)
 {
   conf->writeEntry("enabled", enabled);

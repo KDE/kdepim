@@ -21,18 +21,21 @@
 #include <klocale.h>
 #include <kapp.h>
 
+#include "knuserentry.h"
 #include "knappmanager.h"
 
 
 
 KNAppManager::KNAppManager()
 {
+  d_efaultUser=new KNUserEntry();
   readOptions();
 }
 
 
 KNAppManager::~KNAppManager()
 {
+  delete d_efaultUser;
 }
 
 
@@ -103,6 +106,9 @@ void KNAppManager::readOptions()
 
   fonts.append(c->readFontEntry("articleListFont",&defFont));
   fontNames.append(i18n("Article List"));
+
+  c->setGroup("IDENTITY");
+  d_efaultUser->load(c);
 }
 
 
@@ -130,6 +136,9 @@ void KNAppManager::saveOptions()
   c->writeEntry("composerFont", fonts[composer]);
   c->writeEntry("groupListFont", fonts[groupList]);
   c->writeEntry("articleListFont", fonts[articleList]);
+
+  c->setGroup("IDENTITY");
+  d_efaultUser->save(c);
 }
 
 

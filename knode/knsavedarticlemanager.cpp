@@ -26,6 +26,7 @@
 #include <kconfig.h>
 #include <kcharsets.h>
 
+#include "knappmanager.h"
 #include "knode.h"
 #include "kngroupmanager.h"
 #include "knjobdata.h"
@@ -52,7 +53,6 @@ KNSavedArticleManager::KNSavedArticleManager(KNListView *v, KNAccountManager *am
 {
   //f_ilter=0;
 
-  defaultUser=new KNUserEntry();
   comList=new QList<KNComposer>;
     
   readConfig();
@@ -78,7 +78,6 @@ KNSavedArticleManager::KNSavedArticleManager(KNListView *v, KNAccountManager *am
 
 KNSavedArticleManager::~KNSavedArticleManager()
 {
-  delete defaultUser;
   delete sDlg;
   delete sedlg;
   delete comList;
@@ -90,9 +89,8 @@ void KNSavedArticleManager::readConfig()
 {
   KConfig *conf=KGlobal::config();
   QCString tmp;
-  conf->setGroup("IDENTITY");
-  defaultUser->load(conf);
   conf->setGroup("POSTNEWS");
+  dontIncUA = conf->readBoolEntry("dontIncludeUA", false);
   warpAt = conf->readNumEntry("maxLength", 76);
   rewarp = conf->readBoolEntry("rewarp",true);
   incSig=conf->readBoolEntry("incSig",false);
@@ -203,7 +201,7 @@ void KNSavedArticleManager::setCurrentArticle(KNSavedArticle *a)
 void KNSavedArticleManager::post(KNNntpAccount *acc)
 {
   if(!acc) return;
-  if(defaultUser->isValid()) {
+  if(knGlobals.appManager->defaultUser()->isValid()) {
     KNSavedArticle *art=newArticle(acc);
     if(!art) return;
     openInComposer(art);
@@ -216,7 +214,7 @@ void KNSavedArticleManager::post(KNNntpAccount *acc)
 void KNSavedArticleManager::post(KNGroup *g)
 {
   if(!g) return;
-  if(defaultUser->isValid()) {
+  if(knGlobals.appManager->defaultUser()->isValid()) {
     KNSavedArticle *art=newArticle(g->account());
     if(!art) return;
     art->setDestination(g->name().local8Bit().copy());
@@ -271,7 +269,7 @@ void KNSavedArticleManager::reply(KNArticle *a, KNGroup *g)
   
   if(!a) return;
 
-  if (!defaultUser->isValid()) {
+  if (!knGlobals.appManager->defaultUser()->isValid()) {
     KMessageBox::sorry(knGlobals.topWidget, i18n("Please set your name and a valid e-mail address first."));
     return;
   }
@@ -648,7 +646,7 @@ void KNSavedArticleManager::openInComposer(KNSavedArticle *a, bool firstEdit)
     }
   
   KNNntpAccount *acc=getAccount(a);
-  KNUserEntry *user = defaultUser;
+  KNUserEntry *user = knGlobals.appManager->defaultUser();
   if(!a->isMail() && a->hasDestination()) {
     KNGroup *g=knGlobals.gManager->group(a->firstDestination(), acc);
     if  (g && g->user())
@@ -687,11 +685,12 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
   }
   
   //UserAgent
-  art->setHeader(KNArticleBase::HTuserAgent, "KNode/" KNODE_VERSION);
+  if (!dontIncUA)
+    art->setHeader(KNArticleBase::HTuserAgent, "KNode/" KNODE_VERSION);
   
   //Organization
   if(guser && guser->hasOrga()) usr=guser;
-  else usr=defaultUser;
+  else usr=knGlobals.appManager->defaultUser();
   if(usr->hasOrga()) art->setHeader(KNArticleBase::HTorga, usr->orga(), true);
   else art->removeHeader("Organization");
       
@@ -699,7 +698,7 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
   if(guser && guser->hasReplyTo())
     usr=guser;
   else
-    usr=defaultUser;
+    usr=knGlobals.appManager->defaultUser();
   if(usr->hasReplyTo())
     art->setHeader(KNArticleBase::HTreplyTo, usr->replyTo(), true);
   else
@@ -707,10 +706,10 @@ bool KNSavedArticleManager::getComposerData(KNComposer *c)
   
   //From
   if(guser && guser->hasName()) usr=guser;
-  else usr=defaultUser;
+  else usr=knGlobals.appManager->defaultUser();
   tmp=usr->name().copy()+" <";
   if(guser && guser->hasEmail()) usr=guser;
-  else usr=defaultUser;
+  else usr=knGlobals.appManager->defaultUser();
   tmp+=usr->email()+">";      
   art->setHeader(KNArticleBase::HTfrom, tmp, true);
   
@@ -910,7 +909,7 @@ bool KNSavedArticleManager::cancelAllowed(KNFetchArticle *a, KNGroup *g)
 {
   if (!a || !g)
     return false;
-  KNUserEntry *user = defaultUser;
+  KNUserEntry *user = knGlobals.appManager->defaultUser();
   if (g->user())
     user = g->user();
   if (user->name()!=a->fromName()||user->email()!=a->fromEmail()) {
