@@ -1,9 +1,0 @@
-# KDE Config File
-[KDE Desktop Entry]
-Name=Pilot Daemon
-Exec=pilotDaemon
-Icon=kpilot.xpm
-ServiceTypes=SyncDaemon
-Type=Service
-Terminal=0
-MiniIcon=kpilot.xpm
