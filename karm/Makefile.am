@@ -1,6 +1,6 @@
 
 ############ Autoconf-generated variables  ###################
-INCLUDES = -I$(top_srcdir)/libkcal -I$(top_srcdir)/libkdepim -I$(top_srcdir) $(all_includes)
+INCLUDES = -I$(top_srcdir)/libkcal -I$(top_srcdir)/libkdepim -I$(top_srcdir)/kresources/remote -I$(top_srcdir) $(all_includes)
 
 bin_PROGRAMS = karm
 SUBDIRS = support pics test
@@ -15,6 +15,7 @@ karm_SOURCES =  kaccelmenuwatch.cpp main.cpp desktoptracker.cpp \
 		csvexportdialog_base.ui csvexportdialog.cpp plannerparser.cpp \
 		karmdcopiface.skel
 karm_LDADD = -lkdeprint $(top_builddir)/libkcal/libkcal.la \
+	     -lkcal_resourceremote \
              $(top_builddir)/libkdepim/libkdepim.la $(LIBXSS)
 karm_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 noinst_HEADERS = desktoptracker.h edittaskdialog.h printdialog.h \

@@ -281,6 +281,7 @@ class KarmStorage
       (Task* task, const int level, QPtrStack< KCal::Todo >& parents);
 
     KCal::Event* baseEvent(const Task*);
+    bool remoteResource( const QString& file ) const;
 
     /**
      *  Writes all tasks and their totals to a Comma-Separated Values file.
@@ -342,6 +343,7 @@ class HistoryEvent
     long _duration;
     QDateTime _start;
     QDateTime _stop;
+
 };
 
 #endif // KARM_STORAGE_H

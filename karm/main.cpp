@@ -57,7 +57,16 @@ int main( int argc, char *argv[] )
   if ( args->count() > 0 ) 
   {
     QString icsfile = QString::fromLocal8Bit( args->arg( 0 ) );
-    if ( ! icsfile.startsWith( "/" ) )
+    // FIXME: there is probably a Qt or KDE fcn for this test
+    if ( icsfile.startsWith( "/" ) 
+        || icsfile.lower().startsWith( "http://" ) 
+        || icsfile.lower().startsWith( "ftp://" ) 
+        )
+    {
+      // leave as is
+      ;
+    }
+    else
     {
       icsfile = KCmdLineArgs::cwd() + "/" + icsfile;
     }

@@ -31,6 +31,7 @@
 #include <qsize.h>
 #include <qdict.h>
 #include <qdatetime.h>
+#include <qstring.h>
 #include <qstringlist.h>
 
 #include "incidence.h"
@@ -43,11 +44,13 @@
 #include <ktempfile.h>
 #include <resourcecalendar.h>
 #include <resourcelocal.h>
+#include <resourceremote.h>
 #include <kpimprefs.h>
 #include <taskview.h>
 #include <timekard.h>
 #include <karmutility.h>
 #include <kio/netaccess.h>
+#include <kurl.h>
 #include <vector>
 
 //#include <calendarlocal.h>
@@ -97,20 +100,35 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences)
   // If file doesn't exist, create a blank one to avoid ResourceLocal load
   // error.  We make it user and group read/write, others read.  This is
   // masked by the users umask.  (See man creat)
-  int handle;
-  handle = open (
-      QFile::encodeName( preferences->iCalFile() ),
-      O_CREAT|O_EXCL|O_WRONLY,
-      S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH
-      );
-  if (handle != -1) close(handle);
+  if ( ! remoteResource( _icalfile ) )
+  {
+    int handle;
+    handle = open (
+        QFile::encodeName( preferences->iCalFile() ),
+        O_CREAT|O_EXCL|O_WRONLY,
+        S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH
+        );
+    if (handle != -1) close(handle);
+  }
 
   if ( _calendar) closeStorage(view);
   else _calendar = new KCal::CalendarResources();
 
   // Create local file resource and add to resources
   _icalfile = preferences->iCalFile();
-  KCal::ResourceCalendar *l = new KCal::ResourceLocal( _icalfile );
+
+  KCal::ResourceCalendar *l;
+  if ( remoteResource( _icalfile ) )
+  {
+    KURL download = KURL( _icalfile );
+    KURL upload   = KURL( _icalfile );
+    l = new KCal::ResourceRemote( upload, download );
+  }
+  else
+  {
+    l = new KCal::ResourceLocal( _icalfile );
+  }
+
   QObject::connect (l, SIGNAL(resourceChanged(ResourceCalendar *)),
   	            view, SLOT(iCalFileModified(ResourceCalendar *)));
   l->setTimeZoneId( KPimPrefs::timezone() );
@@ -1124,6 +1142,15 @@ QValueList<HistoryEvent> KarmStorage::getHistory(const QDate& from,
   }
 
   return retval;
+}
+
+bool KarmStorage::remoteResource( const QString& file ) const
+{
+  QString f = file.lower();
+  bool rval = f.startsWith( "http://" ) || f.startsWith( "ftp://" );
+  
+  kdDebug(5970) << "KarmStorage::remoteResource( " << file << " ) returns " << rval  << endl;
+  return rval;
 }
 
 /*
