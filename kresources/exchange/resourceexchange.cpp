@@ -91,7 +91,10 @@ ResourceExchange::ResourceExchange( const KConfig *config )
 ResourceExchange::~ResourceExchange()
 {
   kdDebug() << "Destructing ResourceExchange" << endl;
+
   close();
+
+  delete mAccount; mAccount = 0;
 }
 
 void ResourceExchange::writeConfig( KConfig* config )
@@ -108,12 +111,15 @@ void ResourceExchange::writeConfig( KConfig* config )
 
 bool ResourceExchange::doOpen()
 {
-  mClient = new ExchangeClient( mAccount );
-  connect( mClient, SIGNAL( downloadFinished( int, const QString& ) ),
-    this, SLOT( slotDownloadFinished( int, const QString& ) ) );
-  connect( mClient, SIGNAL( event( KCal::Event*, const KURL& ) ),
-    this, SLOT( downloadedEvent( KCal::Event*, const KURL& ) ) );
+  kdDebug() << "ResourceExchange::doOpen()" << endl;
 
+  mClient = new ExchangeClient( mAccount );
+  connect( mClient, SIGNAL( downloadFinished( int, const QString & ) ),
+           SLOT( slotDownloadFinished( int, const QString & ) ) );
+  connect( mClient, SIGNAL( event( KCal::Event *, const KURL & ) ),
+           SLOT( downloadedEvent( KCal::Event *, const KURL & ) ) );
+
+#if 0
   kdDebug() << "Creating monitor" << endl;
   QHostAddress ip;
   ip.setAddress( mAccount->host() );
@@ -122,6 +128,7 @@ bool ResourceExchange::doOpen()
   connect( mMonitor, SIGNAL(error(int , const QString&)), this, SLOT(slotMonitorError(int , const QString&)) );
 
   mMonitor->addWatch( mAccount->calendarURL(), ExchangeMonitor::UpdateNewMember, 1 );
+#endif
 
   QWidgetList* widgets = QApplication::topLevelWidgets();
   if ( !widgets->isEmpty() )
@@ -144,12 +151,12 @@ bool ResourceExchange::doOpen()
 void ResourceExchange::doClose()
 {
   kdDebug() << "ResourceExchange::doClose()" << endl;
+
   // delete mNewestDate;
   // delete mOldestDate;
   delete mDates; mDates = 0;
-  delete mMonitor; mMonitor = 0;
+//  delete mMonitor; mMonitor = 0;
   delete mClient; mClient = 0;
-  delete mAccount; mAccount = 0;
   delete mEventDates; mEventDates = 0;
   delete mCacheDates; mCacheDates = 0;
   if (mCache) {
@@ -270,33 +277,36 @@ void ResourceExchange::subscribeEvents( const QDate& start, const QDate& end )
   mClient->download( start, end, false );
 }
 
-void ResourceExchange::downloadedEvent( KCal::Event* event, const KURL& url )
+void ResourceExchange::downloadedEvent( KCal::Event *event, const KURL &url )
 {
-  kdDebug() << "Downloaded event: " << event->summary() << " from url " << url.prettyURL() << endl;
+  kdDebug() << "Downloaded event: " << event->summary() << " from url "
+            << url.prettyURL() << endl;
     // FIXME: add watches to the monitor for these events
     // KURL url =
     //  mMonitor->addWatch( url, KPIM::ExchangeMonitor::Update, 0 );
 //    emit eventsAdded( events );
 }
 
-void ResourceExchange::slotDownloadFinished( int result, const QString& moreinfo )
+void ResourceExchange::slotDownloadFinished( int result,
+                                             const QString &moreinfo )
 {
   kdDebug() << "ResourceExchange::downloadFinished" << endl;
 
   if ( result != KPIM::ExchangeClient::ResultOK ) {
     // Do something useful with the error report
-    kdError() << "ResourceExchange::slotDownloadFinished(): error " << result << ": " << moreinfo << endl;
+    kdError() << "ResourceExchange::slotDownloadFinished(): error " << result
+              << ": " << moreinfo << endl;
   }
 }
 
-void ResourceExchange::unsubscribeEvents( const QDate& start, const QDate& end )
+void ResourceExchange::unsubscribeEvents( const QDate &start, const QDate &end )
 {
   kdDebug() << "ResourceExchange::unsubscribeEvents()" << endl;
 }
 
 bool ResourceExchange::addTodo(Todo *todo)
 {
-    if( !mCache)
+  if( !mCache)
         return false;
   mCache->addTodo( todo );
 
@@ -309,7 +319,7 @@ bool ResourceExchange::addTodo(Todo *todo)
 
 void ResourceExchange::deleteTodo(Todo *todo)
 {
-    if( !mCache )
+  if( !mCache )
         return;
   mCache->deleteTodo( todo );
 
@@ -367,9 +377,10 @@ void ResourceExchange::insertEvent(const Event *anEvent)
 */
 // taking a QDate, this function will look for an eventlist in the dict
 // with that date attached -
-Event::List ResourceExchange::rawEventsForDate(const QDate &qd, bool sorted)
+Event::List ResourceExchange::rawEventsForDate( const QDate &qd, bool sorted )
 {
-  // kdDebug() << "ResourceExchange::rawEventsForDate(" << qd.toString() << "," << sorted << ")" << endl;
+//  kdDebug() << "ResourceExchange::rawEventsForDate(" << qd.toString() << ","
+//            << sorted << ")" << endl;
 
   // If the events for this date are not in the cache, or if they are old,
   // get them again
@@ -378,7 +389,8 @@ Event::List ResourceExchange::rawEventsForDate(const QDate &qd, bool sorted)
   // kdDebug() << "mDates: " << mDates << endl;
   // kdDebug() << "mDates->contains(qd) is " << mDates->contains( qd ) << endl;
   QDate start = QDate( qd.year(), qd.month(), 1 ); // First day of month
-  if ( !mDates->contains( start ) || (*mCacheDates)[start].secsTo( now ) > mCachedSeconds ) {
+  if ( !mDates->contains( start ) ||
+      (*mCacheDates)[start].secsTo( now ) > mCachedSeconds ) {
     QDate end = start.addMonths( 1 ).addDays( -1 ); // Last day of month
     // Get events that occur in this period from the cache
     Event::List oldEvents = mCache->rawEvents( start, end, false );
@@ -398,54 +410,26 @@ Event::List ResourceExchange::rawEventsForDate(const QDate &qd, bool sorted)
   Event::List events = mCache->rawEventsForDate( qd, sorted );
   // kdDebug() << "Found " << events.count() << " events." << endl;
   return events;
-
-/*
-  if (!sorted) {
-    return eventList;
-  }
-
-  //  kdDebug(5800) << "Sorting events for date\n" << endl;
-  // now, we have to sort it based on getDtStart.time()
-  Event::List eventListSorted;
-  for (anEvent = eventList.first(); anEvent; anEvent = eventList.next()) {
-    if (!eventListSorted.isEmpty() &&
-	anEvent->dtStart().time() < eventListSorted.at(0)->dtStart().time()) {
-      eventListSorted.insert(0,anEvent);
-      goto nextToInsert;
-    }
-    for (i = 0; (uint) i+1 < eventListSorted.count(); i++) {
-      if (anEvent->dtStart().time() > eventListSorted.at(i)->dtStart().time() &&
-	  anEvent->dtStart().time() <= eventListSorted.at(i+1)->dtStart().time()) {
-	eventListSorted.insert(i+1,anEvent);
-	goto nextToInsert;
-      }
-    }
-    eventListSorted.append(anEvent);
-  nextToInsert:
-    continue;
-  }
-  return eventListSorted;
-*/
 }
 
 
 Event::List ResourceExchange::rawEvents( const QDate &start, const QDate &end,
                                           bool inclusive )
 {
-   kdDebug() << "ResourceExchange::rawEvents(start,end,inclusive)" << endl;
- return mCache->rawEvents( start, end, inclusive );
+  kdDebug() << "ResourceExchange::rawEvents(start,end,inclusive)" << endl;
+  return mCache->rawEvents( start, end, inclusive );
 }
 
 Event::List ResourceExchange::rawEventsForDate(const QDateTime &qdt)
 {
-   kdDebug() << "ResourceExchange::rawEventsForDate(qdt)" << endl;
- return rawEventsForDate( qdt.date() );
+  kdDebug() << "ResourceExchange::rawEventsForDate(qdt)" << endl;
+  return rawEventsForDate( qdt.date() );
 }
 
 Event::List ResourceExchange::rawEvents()
 {
-   kdDebug() << "ResourceExchange::rawEvents()" << endl;
- return mCache->rawEvents();
+  kdDebug() << "ResourceExchange::rawEvents()" << endl;
+  return mCache->rawEvents();
 }
 
 bool ResourceExchange::addJournal(Journal *journal)
@@ -462,7 +446,7 @@ bool ResourceExchange::addJournal(Journal *journal)
 
 void ResourceExchange::deleteJournal(Journal *journal)
 {
-    if( !mCache )
+  if( !mCache )
         return;
   mCache->deleteJournal( journal );
 
@@ -494,4 +478,5 @@ void ResourceExchange::setTimeZoneId( const QString &tzid )
   mTimeZoneId = tzid;
   if ( mCache ) mCache->setTimeZoneId( tzid );
 }
+
 #include "resourceexchange.moc"
