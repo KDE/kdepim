@@ -82,7 +82,7 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
 
   connect(c_olView, SIGNAL(selectionChanged(QListViewItem*)),
     this, SLOT(slotCollectionSelected(QListViewItem*)));
-  connect(c_olView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
+  connect(c_olView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
     this, SLOT(slotCollectionRMB(QListViewItem*, const QPoint&, int)));
 
   //secondary splitter
@@ -108,7 +108,7 @@ KNodeView::KNodeView(KNMainWindow *w, const char * name)
 	  this, SLOT(slotArticleSelected(QListViewItem*)));
 	connect(h_drView, SIGNAL(doubleClicked(QListViewItem*)),
 	  this, SLOT(slotArticleDoubleClicked(QListViewItem*)));
-  connect(h_drView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
+  connect(h_drView, SIGNAL(rightButtonPressed(QListViewItem*, const QPoint&, int)),
     this, SLOT(slotArticleRMB(QListViewItem*, const QPoint&, int)));
   connect(h_drView, SIGNAL(sortingChanged(int)),
     this, SLOT(slotHdrViewSortingChanged(int)));
