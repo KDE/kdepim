@@ -220,7 +220,7 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
       if ( addrList.isEmpty() ) {
         if ( anyFailures && urls.count() > 1 )
           KMessageBox::information( parentWidget(),
-                                    i18n( "No contacts were imported, due to errors with the vcards." ) );
+                                    i18n( "No contacts were imported, due to errors with the vCards." ) );
         else if ( !anyFailures )
           KMessageBox::information( parentWidget(), i18n( "The vCard does not contain any contacts." ) );
       } else {
