@@ -7,7 +7,7 @@ Standards-Version: 3.5.6.0
 
 Package: kdepim
 Architecture: all
-Depends: kalarm (= ${Source-Version}), kalarmd (= ${Source-Version}), kandy (= ${Source-Version}), karm (= ${Source-Version}), knotes (= ${Source-Version}), korganizer (= ${Source-Version}), kaddressbook (= ${Source-Version}), kpilot (= ${Source-Version}), ksync (= ${Source-Version})
+Depends: kalarm (= ${Source-Version}), kalarmd (= ${Source-Version}), kandy (= ${Source-Version}), karm (= ${Source-Version}), knotes (= ${Source-Version}), korganizer (= ${Source-Version}), kaddressbook (= ${Source-Version}), kpilot (= ${Source-Version}), ksync (= ${Source-Version}), kontact (= ${Source-Version})
 Description: KDE Personal Information Management metapackage
  kdepim is a collection of Personal Information Management (PIM) tools for
  the K Desktop Enviromnent (KDE).
@@ -121,7 +121,7 @@ Description: KDE Notes
 Package: kontact
 Section: mail
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, kmail, korganizer, knotes, kaddressbook
 Description: KDE pim application
  KDE next generation pim application.
 
