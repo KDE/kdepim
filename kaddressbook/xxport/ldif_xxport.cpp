@@ -78,7 +78,8 @@ KABC::AddresseeList LDIFXXPort::importContacts( const QString& ) const
 {
   KABC::AddresseeList addrList;
 
-  QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath(), "*.ldif *.LDIF", 0 );
+  QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath(), 
+		"*.[lL][dD][iI][fF]|LDIF file (*.ldif)", 0 );
   if ( fileName.isEmpty() )
     return addrList;
 
