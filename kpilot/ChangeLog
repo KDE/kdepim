@@ -1,3 +1,19 @@
+KPilot Developer's notes for febrary 2nd 2002
+=============================================
+
+There is no fun story yet.
+
+2002-01-26  Adriaan de Groot
+* Wherever
+  - Invented an icon for the address viewer.
+  - Doubleclick on conduit in active column configures it.
+  - Fixed some compile problems under KDE3.
+  - Messed around with the vcal conduit.
+
+I'm starting to think the logWidget belongs with the *daemon*
+(and should be showable from the daemon's context menu), not
+from KPilot (which should be just a viewer). Opinions?
+
 KPilot Developer's notes for january 25th 2002
 ==============================================
 

@@ -34,7 +34,9 @@ o Make pi_install_file amenable to use in a GUI program. [Move to a thread
 Specific JOBS
 =============
 
-[This is an assignment for Aron Insinga]
+*** 
+*** Memo Export
+*** 
 
 Part I. Make a widget (using Qt designer) for exporting memos. It should have 
 at least: (1) The possibility to choose "all" or "currently selected" memos 
@@ -52,3 +54,36 @@ work on ..../kpilotConfig.{h,cc})
 
 Part III. Write a function saveAsXML(const QString &fileName,const char 
 *memoData) that writes said memo text to a file with the given name.
+
+***
+*** PilotLocalDatabase fixups
+***
+
+The PilotLocalDatabase class is really ugly and clunky -- and far worse,
+it has a hard-coded limit of 10000 records per database. This may have hurt
+us once or twice already (consider that a Visor w/ 16Mb could *easily*
+hold 10000 addresses). It needs careful reworking.
+
+I think using a Q(Ptr)List is the way to go here -- well, maybe a QVector
+would work as well; that depends on whether QVectors resize well. The tricky
+part is implementing the "current record pointer" with the same behavior
+as the current fCurrentRecord member, since conduits may depend on it.
+
+***
+*** Debug cleanup
+***
+
+* kdDebug() everywhere needs to change into DEBUGCONDUIT, DEBUGKPILOT,
+  or one of the other DEBUG* macros defined in kpilot/lib/options.h.
+  This will send the debugging output to the sensible debug area.
+  Which one you choose depends on where the file lives -- choose wisely.
+
+* DEBUG* calls everywhere need to be surrounded by #ifdef DEBUG #endif.
+  This is because some compilers don't optimize away unused strings,
+  leading to big bulky (well, sorta) executables. Adding the #ifdefs
+  makes sure that there's nothing at all left over from the debugging code
+  when debugging is turned off.
+
+* __FUNCTION__ needs to be replaced by k_funcinfo. The popmail conduit is
+  bad for that one, at the very least.
+
