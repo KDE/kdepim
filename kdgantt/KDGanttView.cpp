@@ -3120,7 +3120,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                     QDomElement element = node.toElement();
                     if( !element.isNull() ) { // was really an element
                         QString tagName = element.tagName();
-                        if( tagName == "TaskLinkGroup" )
+                        if( tagName == "TaskLink" )
                             KDGanttViewTaskLinkGroup::createFromDomElement( element );
                     } else {
                         qDebug( "Unrecognized tag name: %s", tagName.latin1() );
