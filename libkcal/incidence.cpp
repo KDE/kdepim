@@ -83,6 +83,8 @@ Incidence::Incidence( const Incidence &i ) : IncidenceBase( i )
     mRecurrence = new Recurrence( *(i.mRecurrence), this );
   else
     mRecurrence = 0;
+
+  mSchedulingID = i.mSchedulingID;
 }
 
 Incidence::~Incidence()
@@ -148,7 +150,8 @@ bool Incidence::operator==( const Incidence& i2 ) const
         ( mStatus == StatusNone || stringCompare( mStatusString, i2.mStatusString ) ) &&
         secrecy() == i2.secrecy() &&
         priority() == i2.priority() &&
-        stringCompare( location(), i2.location() );
+        stringCompare( location(), i2.location() ) &&
+        stringCompare( schedulingID(), i2.schedulingID() );
 }
 
 
@@ -157,6 +160,7 @@ void Incidence::recreate()
   setCreated(QDateTime::currentDateTime());
 
   setUid(CalFormat::createUniqueId());
+  setSchedulingID( QString::null );
 
   setRevision(0);
 
@@ -605,4 +609,17 @@ ushort Incidence::doesRecur() const
 {
   if ( mRecurrence ) return mRecurrence->doesRecur();
   else return Recurrence::rNone;
+}
+
+void Incidence::setSchedulingID( const QString& sid )
+{
+  mSchedulingID = sid;
+}
+
+QString Incidence::schedulingID() const
+{
+  if ( mSchedulingID.isNull() )
+    // Nothing set, so use the normal uid
+    return uid();
+  return mSchedulingID;
 }

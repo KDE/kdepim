@@ -226,7 +226,7 @@ bool Scheduler::acceptRequest(IncidenceBase *newIncBase, ScheduleMessage::Status
   Incidence *newInc = dynamic_cast<Incidence *>( newIncBase );
   if ( newInc ) {
     bool res = true;
-    Incidence *exInc = mCalendar->incidence( newIncBase->uid() );
+    Incidence *exInc = mCalendar->incidenceFromSchedulingID( newIncBase->uid() );
     if ( exInc ) {
       res = false;
       if ( (newInc->revision() > exInc->revision()) ||
@@ -236,8 +236,13 @@ bool Scheduler::acceptRequest(IncidenceBase *newIncBase, ScheduleMessage::Status
         res = true;
       }
     }
-    if ( res )
+    if ( res ) {
+      // Move the uid to be the schedulingID and make a unique UID
+      newInc->setSchedulingID( newInc->uid() );
+      newInc->setUid( CalFormat::createUniqueId() );
+
       mCalendar->addIncidence(newInc);
+    }
     deleteTransaction( newIncBase );
     return res;
   }
@@ -311,7 +316,8 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
       else if ( to )
         to->updated();
     }
-  }
+  } else
+    kdError(5800) << "No incidence for scheduling\n";
   if (ret) deleteTransaction(incidence);
   return ret;
 }

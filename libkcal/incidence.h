@@ -398,6 +398,22 @@ class Incidence : public IncidenceBase
     */
     QString location() const;
 
+    /**
+      Set the event's/todo's scheduling ID. Does not make sense for journals.
+      This is used for accepted invitations as the place to store the UID
+      of the invitation. It is later used again if updates to the
+      invitation comes in.
+      If we did not set a new UID on incidences from invitations, we can
+      end up with more than one resource having events with the same UID,
+      if you have access to other peoples resources.
+    */
+    void setSchedulingID( const QString& sid );
+    /**
+      Return the event's/todo's scheduling ID. Does not make sense for journals
+      If this is not set, it will return uid().
+    */
+    QString schedulingID() const;
+
   private:
     int mRevision;
 
@@ -423,6 +439,9 @@ class Incidence : public IncidenceBase
     Recurrence *mRecurrence;
 
     QString mLocation;
+
+    // Scheduling ID - used only to identify between scheduling mails
+    QString mSchedulingID;
 
     class Private;
     Private *d;

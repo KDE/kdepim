@@ -309,7 +309,27 @@ bool ICalFormat::fromString( Recurrence * recurrence, const QString& rrule )
 QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
                                           Scheduler::Method method)
 {
-  icalcomponent *message = mImpl->createScheduleComponent(incidence,method);
+  icalcomponent *message = 0;
+
+  // Handle scheduling ID being present
+  if ( incidence->type() == "Event" || incidence->type() == "Todo" ) {
+    Incidence* i = static_cast<Incidence*>( incidence );
+    if ( i->schedulingID() != i->uid() ) {
+      // We have a separation of scheduling ID and UID
+      i = i->clone();
+      i->setUid( i->schedulingID() );
+      i->setSchedulingID( QString::null );
+
+      // Build the message with the cloned incidence
+      message = mImpl->createScheduleComponent( i, method );
+
+      // And clean up
+      delete i;
+    }
+  }
+
+  if ( message == 0 )
+    message = mImpl->createScheduleComponent(incidence,method);
 
   QString messageText = QString::fromUtf8( icalcomponent_as_ical_string(message) );
 
@@ -381,15 +401,15 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
       incidence = mImpl->readJournal(c);
     }
   }
-	
+
   if (!incidence) {
     c = icalcomponent_get_first_component(message,ICAL_VFREEBUSY_COMPONENT);
     if (c) {
       incidence = mImpl->readFreeBusy(c);
     }
   }
-	
-	
+
+
 
   if (!incidence) {
     kdDebug(5800) << "ICalFormat:parseScheduleMessage: object is not a freebusy, event, todo or journal" << endl;
@@ -443,7 +463,8 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
 
   icalcomponent *calendarComponent = mImpl->createCalendarComponent(cal);
 
-  Incidence *existingIncidence = cal->incidence(incidence->uid());
+  Incidence *existingIncidence =
+    cal->incidenceFromSchedulingID(incidence->uid());
   if (existingIncidence) {
     // TODO: check, if cast is required, or if it can be done by virtual funcs.
     // TODO: Use a visitor for this!

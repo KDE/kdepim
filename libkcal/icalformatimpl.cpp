@@ -533,6 +533,13 @@ icalcomponent *ICalFormatImpl::writeJournal(Journal *journal)
 
 void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
 {
+  if ( incidence->schedulingID() != incidence->uid() )
+    // We need to store the UID in here. The rawSchedulingID will
+    // go into the iCal UID component
+    incidence->setCustomProperty( "LIBKCAL", "ID", incidence->uid() );
+  else
+    incidence->removeCustomProperty( "LIBKCAL", "ID" );
+
   // pilot sync stuff
 // TODO: move this application-specific code to kpilot
   if (incidence->pilotId()) {
@@ -547,8 +554,10 @@ void ICalFormatImpl::writeIncidence(icalcomponent *parent,Incidence *incidence)
       writeICalDateTime(incidence->created())));
 
   // unique id
+  // If the scheduling ID is different from the real UID, the real
+  // one is stored on X-REALID above
   icalcomponent_add_property(parent,icalproperty_new_uid(
-      incidence->uid().utf8()));
+      incidence->schedulingID().utf8()));
 
   // revision
   icalcomponent_add_property(parent,icalproperty_new_sequence(
@@ -1636,6 +1645,16 @@ void ICalFormatImpl::readIncidence(icalcomponent *parent,Incidence *incidence)
     }
 
     p = icalcomponent_get_next_property(parent,ICAL_ANY_PROPERTY);
+  }
+
+  // Set the scheduling ID
+  const QString uid = incidence->customProperty( "LIBKCAL", "ID" );
+  if ( !uid.isNull() ) {
+    // The UID stored in incidencebase is actually the scheduling ID
+    // It has to be stored in the iCal UID component for compatibility
+    // with other iCal applications
+    incidence->setSchedulingID( incidence->uid() );
+    incidence->setUid( uid );
   }
 
   // kpilot stuff

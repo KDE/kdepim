@@ -1,0 +1,63 @@
+LIBKCAL
+=======
+
+libkcal provides the non-GUI part of calendaring. It is partly based
+on libical, an implementation of the iCalendar format defined in
+rfc2445. libical is an object-oriented C library, which provides basic
+but complete handling of calendaring components. libkcal puts a C++
+face on it, which fully encapsulates the library.
+
+Calendaring data is handled by the Calendar class interface, which
+provides a storage for calendar components. One implementation of the
+Calendar interface exists, the CalendarLocal class, which provides
+local storage as a file. (TODO: Explain the resources.)
+
+The Calendar class uses the CalFormat class interface to convert
+calendar data into a textual representation. There are two
+implementations, the VCalFormat for vCalendar and the ICalFormat for
+iCalendar.
+
+Actual calendaring components are handled by the classes Event, Todo
+and Journal, all inheriting from the common base class
+Incidence. These classes store the information related to an event,
+todo or journal entry.
+
+Specifics
+=========
+
+This is the place to put in developer notes for various specific
+places that need extra description.
+
+The scheduling ID
+-----------------
+
+In the Incidence class, there is an attribute called mSchedulingID.
+It is only set when you have an event or to-do that is the result of
+accepting an invitation. In this case it is the value of the UID of
+the invitation, and is used for looking up the event if you get
+changes to the original invitations - changes, canceling, updates...
+
+The get-method that returns the schedulingID checks if this is set
+at all. If not, it returns the UID. And when the incidence is saved in
+iCal, the schedulingID (i.e. the UID if no SID is there) is saved in
+the iCal UID field, and if schedulingID is not null, the UID of the
+incidence is saved in X-KDE-LIBKCAL-ID. The reason for this is
+compatibility with other iCal based applications, because they expect
+the UID of the invitation to be saved in the iCal UID field. In the
+Kolab resource XML format, there is a tag <scheduling-id> where it is
+stored if present.
+
+This is the scenario that led to the introduction of this scheme: If
+you have access to some other persons calendar - for example with the
+IMAP or Kolab resources using shared folders - and both you and the
+other accept the same invitation, then you both have an event with the
+same SID. Had this been the UID (as was previously the case and as is
+done by other applications) then you would have two incidences with
+the same UID, and libkcal is designed with a very basic assumption
+that this must never happen. By storing the UID in SID and making a
+new and private UID, there is still the link to the invitation UID
+that is necessary for scheduling, and the UIDs of the two incidences
+in your calendar are different. The scenario that really has this
+problem is the secretary scenario - the secretary will often be at the
+same events as the boss, and has access to the boss' folders. This
+means he or she would see this problem all the time.
