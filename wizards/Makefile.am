@@ -2,7 +2,7 @@ METASOURCES = AUTO
 
 INCLUDES = -I$(top_srcdir)/libkdepim \
            -I$(top_srcdir)/libkpimidentities -I$(top_srcdir)/libkcal \
-           -I$(top_srcdir)/kresources/imap/shared -I$(top_srcdir) \
+           -I$(top_srcdir)/kresources/kolab/shared -I$(top_srcdir) \
            -I$(top_srcdir)/knotes \
            -I$(top_srcdir)/certmanager/lib \
            -I$(top_builddir)/kresources/groupwise \
@@ -22,9 +22,9 @@ groupwarewizard_SOURCES = groupwarewizard.cpp main.cpp overviewpage.cpp
 
 # Kolab
 libkolabwizard_la_LDFLAGS = $(all_libraries) -no-undefined
-libkolabwizard_la_LIBADD = $(top_builddir)/kresources/imap/kcal/libkcal_imap.la \
-                           $(top_builddir)/kresources/imap/kabc/libkabc_imap.la \
-                           $(top_builddir)/kresources/imap/knotes/libknotes_imap.la \
+libkolabwizard_la_LIBADD = $(top_builddir)/kresources/kolab/kcal/libkcalkolab.la \
+                           $(top_builddir)/kresources/kolab/kabc/libkabckolab.la \
+                           $(top_builddir)/kresources/kolab/knotes/libknoteskolab.la \
                            $(top_builddir)/libkcal/libkcal.la \
                            $(top_builddir)/libkdepim/libkdepim.la \
                            $(top_builddir)/libkpimidentities/libkpimidentities.la

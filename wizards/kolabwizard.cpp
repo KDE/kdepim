@@ -25,12 +25,12 @@
 
 #include "kolabkmailchanges.h"
 
+#include "kresources/kolab/kcal/resourcekolab.h"
+#include "kresources/kolab/kabc/resourcekolab.h"
+#include "kresources/kolab/knotes/resourcekolab.h"
+
 #include <libkcal/resourcecalendar.h>
 #include <kabc/resource.h>
-
-#include "kresources/imap/kcal/resourceimap.h"
-#include "kresources/imap/kabc/resourceimap.h"
-#include "kresources/imap/knotes/resourceimap.h"
 
 #include <klineedit.h>
 #include <klocale.h>
@@ -105,7 +105,7 @@ class CreateCalendarImapResource : public KConfigPropagator::Change
     {
       KCal::CalendarResourceManager m( "calendar" );
       m.readConfig();
-      KCal::ResourceIMAP *r = new KCal::ResourceIMAP();
+      KCal::ResourceKolab *r = new KCal::ResourceKolab( 0 );
       r->setResourceName( i18n("Kolab Server") );
       m.add( r );
       m.setStandardResource( r );
@@ -125,7 +125,7 @@ class CreateContactImapResource : public KConfigPropagator::Change
     {
       KRES::Manager<KABC::Resource> m( "contact" );
       m.readConfig();
-      KABC::ResourceIMAP *r = new KABC::ResourceIMAP( 0 );
+      KABC::ResourceKolab *r = new KABC::ResourceKolab( 0 );
       r->setResourceName( i18n("Kolab Server") );
       m.add( r );
       m.setStandardResource( r );
@@ -146,7 +146,7 @@ class CreateNotesImapResource : public KConfigPropagator::Change
     {
       KRES::Manager<ResourceNotes> m( "notes" );
       m.readConfig();
-      KNotesIMAP::ResourceIMAP *r = new KNotesIMAP::ResourceIMAP( 0 );
+      Kolab::ResourceKolab *r = new Kolab::ResourceKolab( 0 );
       r->setResourceName( i18n("Kolab Server") );
       m.add( r );
       m.setStandardResource( r );
