@@ -304,6 +304,7 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
 
 void KABC::ResourceKolab::insertAddressee( const Addressee& addr )
 {
+   bool ok = false;
   // Call kmail ...
   if ( !mSilent ) {
 #if 0
@@ -319,10 +320,11 @@ void KABC::ResourceKolab::insertAddressee( const Addressee& addr )
     }
 #endif
 
-    kmailUpdateAddressee( addr );
+    ok = kmailUpdateAddressee( addr );
   }
 
-  Resource::insertAddressee( addr );
+  if ( ok )
+    Resource::insertAddressee( addr );
 }
 
 void KABC::ResourceKolab::removeAddressee( const Addressee& addr )
