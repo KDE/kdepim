@@ -50,7 +50,7 @@ class ICalFormat : public CalFormat {
       @param calendar Calendar object to be filled.
       @param fileName The name of the calendar file on disk.
     */
-    bool load( Calendar *, const QString &fileName );
+    bool load( Calendar * calendar, const QString &fileName );
     /**
       Writes out the calendar to disk in iCalendar format. Returns true if
      successful and false on error.
@@ -58,12 +58,12 @@ class ICalFormat : public CalFormat {
      @param calendar The Calendar object to be written.
      @param fileName The name of the calendar file on disk.
     */
-    bool save( Calendar *, const QString &fileName );
+    bool save( Calendar * calendar, const QString &fileName );
 
     /**
       Parse string and populate calendar with that information.
     */
-    bool fromString( Calendar *, const QString & );  
+    bool fromString( Calendar * calendar, const QString & );  
     /**
       Parse string and return first ical component.
     */
@@ -90,9 +90,9 @@ class ICalFormat : public CalFormat {
     */
     bool fromString ( Recurrence *, const QString& );
   
-    /** Create a scheduling message for event \a e using method \m */
+    /** Create a scheduling message for event @p e using method @p m */
     QString createScheduleMessage(IncidenceBase *e,Scheduler::Method m);
-    /** Parse scheduling message provided as string \s */
+    /** Parse scheduling message provided as string @p s */
     ScheduleMessage *parseScheduleMessage( Calendar *, const QString &s);
     
     /** Set id of used time zone and whether this time zone is UTC or not. */
