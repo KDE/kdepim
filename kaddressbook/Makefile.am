@@ -67,8 +67,7 @@ rc_DATA = kaddressbookui.rc
 kabdatadir = $(kde_datadir)/kaddressbook
 kabdata_DATA = zone.tab
 
-appsdir = $(kde_appsdir)/Utilities
-apps_DATA = kaddressbook.desktop
+xdg_apps_DATA = kaddressbook.desktop
 
 servicetypedir = $(kde_servicetypesdir)
 servicetype_DATA = kaddressbook_view.desktop dcopaddressbook.desktop
