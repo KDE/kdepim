@@ -1,6 +1,18 @@
 ** KPILOT CHANGELOG **
 ======================
 
+2004-09-18  Adriaan de Groot & Reinhold Kainhofer
+* Deprecated a bunch of poorly-named functions in lib/, and
+  moved everything to the new names. Finally, no more getCat(),
+  but just category().
+* Detect special case of bad resource headers in file installer.
+
+2004-08-16  Adriaan de Groot
+* Was away at a summer school for two weeks. Got no KPilot stuff
+  done except an off-by-one bug in the memo stuff.
+* Split the CopyHHtoPC code out in the knotes conduit,
+  ready for QThreading (maybe).
+
 2004-07-27  Adriaan de Groot
 * MAL conduit proxy password not loaded properly. Reported by
   Olivier D.
@@ -22,7 +34,7 @@
 2004-06-29  Reinhold Kainhofer
 * Fix the bug that todos that were marked finished on the handheld
   lost that state when synced to the PC.
-* A few layout adjustments for the perl/pyton conduits (QTextEdit
+* A few layout adjustments for the perl/python conduits (QTextEdit
   instead of QLineEdit)
 
 2004-06-29  Joern Ahrens
