@@ -1,5 +1,5 @@
 /* XPM */
-static char*kpilot[]={
+static const char *kpilot[]={
 "35 49 6 1",
 "c c #bebebe",
 "a c #727272",

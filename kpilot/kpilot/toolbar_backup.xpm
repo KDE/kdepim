@@ -1,5 +1,5 @@
 /* XPM */
-static char*toolbar_backup[]={
+static const char *toolbar_backup[]={
 "22 22 4 1",
 "b c #808080",
 "# c #000000",

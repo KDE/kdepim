@@ -8,7 +8,7 @@
 
 // $Revision$
 
-static char *id="$Id$";
+static const char *id="$Id$";
 
 
 // REVISION HISTORY 
@@ -851,6 +851,9 @@ AddressWidget::slotExportAddressList()
     }
 
 // $Log$
+// Revision 1.10  2000/10/26 10:10:09  adridg
+// Many fixes
+//
 // Revision 1.9  2000/10/25 12:19:44  adridg
 // Conflicts resolved, pilot-link-0.0.0 bug workaround
 //

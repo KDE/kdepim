@@ -1,5 +1,5 @@
 /* XPM */
-static char*kpilot_conduit[]={
+static const char *kpilot_conduit[]={
 "35 49 7 1",
 "d c #bebebe",
 "a c #727272",
