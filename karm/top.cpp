@@ -79,6 +79,7 @@ void KarmWindow::save()
 
 void KarmWindow::quit()
 {
+  _karm->stopAllTimers();
   save();
   kapp->quit();
 }
@@ -115,6 +116,7 @@ void KarmWindow::updateStatusBar()
 
 void KarmWindow::saveProperties( KConfig* )
 {
+  _karm->stopAllTimers();
   _karm->save();
 }
 

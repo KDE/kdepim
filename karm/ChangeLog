@@ -1,3 +1,20 @@
-0.2
-	Now supports floating toolbar
-	Documentation converted to linuxdoc
+KArm 1.1
+--------
+- clocks are stopped and times saved upon exit
+
+KArm 0.6
+--------
+- It is now possible to type in the time like 3:20, or 3:20 + 1:10
+- The two QListBoxes with time and description has been replaced with one
+  QListView. This makes the interface nicer, and simplifies a lot internally.
+
+KArm 0.3
+--------
+- Fixes edit task bugs
+- Complies to new FSSTND
+
+
+KArm 0.2
+--------
+- Now supports floating toolbar
+- Documentation converted to linuxdoc
