@@ -4318,6 +4318,36 @@ ultimate ownertrust. It is no longer implicitly done for you.</para>
 </answer>
 </qandaentry>
 
+<qandaentry id="faq-index-regeneration">
+<question><para>Why did &kmail; regenerate the index of a folder?</para></question>
+<answer>
+<para>&kmail; regenerates the index of a folder whenever the index appears to be
+out of date, &ie; whenever the contents of a folder is newer than the
+index. &kmail; does regenerate the index in this case in order to prevent
+the loss or corruption of messages. Unfortunately currently deleted
+messages might reappear and message flags (like important, etc.) might
+be lost when the index is regenerated.</para>
+<para>An outdated index can have several causes. The two most important causes
+are:
+<itemizedlist>
+<listitem><para>Some other program modified the contents of the folder. If you want
+to use &kmail; together with procmail then please read <link
+ linkend="faq-procmail">this &FAQ;</link>. If you want to use &kmail; together with
+another email client then please read <link 
+linkend="faq-other-muas">this &FAQ;</link>.</para></listitem>
+<listitem><para>If your mail directory (usually <filename class="directory">~/Mail</filename>)
+is on a volume which is mounted via NFS and if the clock of the NFS server is ahead of the
+clock of your computer then the NFS server sometimes reports a wrong
+file date for the index file. In this case &kmail; assumes that the index
+is outdated although in reality it is not. To fix this problem
+you (or your system administrator) have to make sure that the clock of
+the NFS server and the clock of your computer are always in sync. One
+way to achieve this is the use of the ntp daemon.</para></listitem>
+</itemizedlist>
+</para>
+</answer>
+</qandaentry>
+
 <qandaentry>
 <question><para>I cannot add addresses to my address book after upgrading to KDE 3.x.</para></question>
 <answer>
@@ -4330,7 +4360,7 @@ that the config update script was to solve.</para>
 </answer>
 </qandaentry>
 
-<qandaentry>
+<qandaentry id="faq-other-muas">
 <question><para>Can I use &kmail; together with a different email client, &eg;
 <application>mutt</application>?</para></question>
 <answer>
@@ -4561,7 +4591,7 @@ To use <quote>SMTP after POP3</quote> you have to collect all your messages in t
 </para></answer>
 </qandaentry>
 
-<qandaentry>
+<qandaentry id="faq-procmail">
 <question><para>Can I use &kmail; and <application>procmail</application>?</para></question>
 <answer><para>Yes, but it is important to do it the right way or you might lose
 mail. In order to use <application>procmail</application> and &kmail; you need 
