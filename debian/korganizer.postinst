@@ -8,9 +8,9 @@ set -e
 case "$1" in
     configure)
       /sbin/ldconfig
-      if [ -e /etc/kde2/korganizerrc ]; then
-        rm -f /etc/kde2/korganizerrc > /dev/null 2>&1
-      fi  
+      #if [ -e /etc/kde2/korganizerrc ]; then
+      #  rm -f /etc/kde2/korganizerrc > /dev/null 2>&1
+      #fi  
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
