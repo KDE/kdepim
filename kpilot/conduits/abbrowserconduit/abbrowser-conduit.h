@@ -107,7 +107,8 @@ class AbbrowserConduit : public BaseConduit
 		     bool &mergeNeeded, QString &mergedStr) const;
       ContactEntry *_syncPilotEntry(PilotAddress &pilotAddress,
 		  const QDict<ContactEntry> &abbrowserContacts,
-				    QString *outAbKey = NULL);
+				    QString *outAbKey = NULL,
+				    bool deleteIfNotFound=false);
       bool _smartMerge(PilotAddress &pilotAddress, ContactEntry &abEntry);
       void _backupDone();
       const char *_getKabFieldForOther(const QString &desc) const;

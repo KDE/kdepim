@@ -957,7 +957,7 @@ AbbrowserConduit::_findMatch(const QDict<ContactEntry> &entries,
 ContactEntry *
 AbbrowserConduit::_syncPilotEntry(PilotAddress &pilotAddress,
 			       const QDict<ContactEntry> &abbrowserContacts,
-				  QString *outAbKey)
+				  QString *outAbKey, bool deleteIfNotFound)
     {
     FUNCTIONSETUP;
     kdDebug() << fname << " trying to sync the existing pilotAddress to the abbrowser entries" << endl;
@@ -985,10 +985,26 @@ AbbrowserConduit::_syncPilotEntry(PilotAddress &pilotAddress,
 	}
     else  // if not found in the abbrowser contacts, add it
 	{
-	kdDebug() << fname <<
-	    " adding new pilot record to abbrowser => " << endl;
-	showPilotAddress(pilotAddress);
-	_addToAbbrowser(pilotAddress);
+	bool addPalm = true;
+	if (deleteIfNotFound)
+	    {
+	    if (!pilotAddress.isModified())
+		{
+		_removePilotAddress(pilotAddress);
+		addPalm = false;
+		}
+	    // else
+	    // two possible cases: modified on palm and
+	    // deleted in abbrowser or just new in palm
+	    // assume new in palm and add it
+	    }
+	if (addPalm)
+	    {
+	    kdDebug() << fname <<
+		" adding new pilot record to abbrowser => " << endl;
+	    showPilotAddress(pilotAddress);
+	    _addToAbbrowser(pilotAddress);
+	    }
 	}
     if (outAbKey)
 	*outAbKey = abKey;
@@ -1047,6 +1063,7 @@ void AbbrowserConduit::_backupDone()
 	KConfig& c = KPilotConfig::getConfig(AbbrowserConduitOptions::Group);
 	c.writeEntry(AbbrowserConduitConfig::FIRST_TIME_SYNCING, !fBackupDone);
 	setFirstTime(c, false);
+	c.sync();
 	}
 
     kdDebug() << fname << " stop" << endl;
@@ -1163,31 +1180,24 @@ void AbbrowserConduit::doSync()
 		 // backup should have been done before the first sync;
 		 // if the pilot address was modified, then query the
 		 // user what to do?
-		 if (fBackupDone)
-		     {
-		     if (pilotAddress.isModified())
-			 _handleConflict(&pilotAddress, NULL, abKey);
-		     else
-			 _removePilotAddress(pilotAddress);
-		     }
-		 else
-		     {
-		     QString abKey;
-		     ContactEntry *syncedContact = 
-			 _syncPilotEntry(pilotAddress, abbrowserContacts,
-					 &abKey);
-		     kdDebug() << fname << " SYNCED THE PILOT TO ABBROWSER"
-			       << endl;
-		     if (syncedContact)
-			 newContacts.remove(abKey);
-		     }
+		 bool deleteIfNotFound = fBackupDone;
+		 QString abKey;
+		 ContactEntry *syncedContact = 
+		     _syncPilotEntry(pilotAddress, abbrowserContacts,
+				     &abKey, deleteIfNotFound);
+		 kdDebug() << fname << " SYNCED THE PILOT TO ABBROWSER"
+			   << endl;
+		 if (syncedContact)
+		     newContacts.remove(abKey);
 		 }
 	     }
 	 else 
 	     {
+	     // get the key and the associated contact
 	     abKey = idContactMap[pilotAddress.id()];
 	     ContactEntry *abEntry = abbrowserContacts[abKey];
 	     assert(abEntry != NULL);
+	     
 	     // the record exists in the abbrowser and the palm
 	     if (pilotAddress.isModified() && abEntry->isModified())
 		 {
