@@ -2430,7 +2430,7 @@ KNConfig::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent
     top->addWidget( mDefault );
   }
 
-  mExpGroup = new QGroupBox( i18n("Newsgroup cleanup settings"), this );
+  mExpGroup = new QGroupBox( i18n("Newsgroup Cleanup Settings"), this );
   top->addWidget( mExpGroup );
   QGridLayout *grid = new QGridLayout( mExpGroup, 7, 2, KDialog::marginHint(), KDialog::spacingHint() );
 
